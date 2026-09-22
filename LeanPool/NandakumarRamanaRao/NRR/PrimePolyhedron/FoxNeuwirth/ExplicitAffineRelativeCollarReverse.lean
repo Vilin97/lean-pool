@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeSubdivisionOneStepCollar
 /-!
 # Reversal of an endpoint-identified relative affine collar
@@ -78,7 +79,7 @@ noncomputable abbrev reverseCells
           ∑ i : Fin (p + 1), w i * (C.vertex q i).time.1 := by
       rw [← Finset.sum_sub_distrib]
       exact Finset.sum_congr rfl (fun i _ => by ring)
-    rw [hw, stdSimplex.sum_eq_one]
+    rw [hw, SphereOddDegree.FiniteSimplex.sum_eq_one]
   chart_injective := by
     intro q x y h
     apply C.chart_injective q

@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.StableFullCollarOriginMargin
 
 /-!
@@ -139,7 +140,7 @@ theorem norm_localAffineValue_sub_homotopy_le_of_oscillation
       exact mul_le_mul_of_nonneg_left
         (le_of_lt (by
           have h := hosc
-            (StandardSimplex.ofDelta (stdSimplex.vertex (S := Real) i)) w
+            (StandardSimplex.ofDelta (SphereOddDegree.FiniteSimplex.vertex (S := Real) i)) w
           simpa [dist_eq_norm, C.chart_vertex, y] using h))
         (w.nonneg i)
     _ = eps := by

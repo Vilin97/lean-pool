@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ExplicitAffineRelativeCollarReverse
 /-!
 # Composition of endpoint-identified relative affine collars
@@ -157,7 +158,7 @@ noncomputable def combinedCells
               ∑ i : Fin (p + 1), w i * (D.vertex q i).time.1) / 2 := by
           rw [← Finset.sum_add_distrib, Finset.sum_div]
           exact Finset.sum_congr rfl (fun i _ => by ring)
-        rw [hw, stdSimplex.sum_eq_one]
+        rw [hw, SphereOddDegree.FiniteSimplex.sum_eq_one]
   chart_injective := by
     intro q
     cases q with

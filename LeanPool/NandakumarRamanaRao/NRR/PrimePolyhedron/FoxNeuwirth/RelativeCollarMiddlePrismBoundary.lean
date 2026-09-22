@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeCollarMiddlePrism
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismNonhorizontalCancellation
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismHorizontalEndpointIdentification
@@ -52,7 +53,7 @@ def mapVertexSignature
     (hp : Nat.Prime p)
     (tau : Delta (p - 1) → Realization p × Set.Icc (0 : Real) 1) :
     Fin p → CylinderPoint p :=
-  fun i => CylinderPoint.ofProd (tau (stdSimplex.vertex (S := Real) ((AffinePositiveRayBoundary.VertexMap.facetIndexEquiv hp).symm i)))
+  fun i => CylinderPoint.ofProd (tau (SphereOddDegree.FiniteSimplex.vertex (S := Real) ((AffinePositiveRayBoundary.VertexMap.facetIndexEquiv hp).symm i)))
 
 /-- Prime translation of an affine facet map. -/
 def translateFacetMap
@@ -85,7 +86,7 @@ theorem mapVertexSignature_occurrenceFacetMap
   rw [show mapVertexSignature hp (occurrenceFacetMap hp N L o) i =
       CylinderPoint.ofProd
         (occurrenceFacetMap hp N L o
-          (stdSimplex.vertex (S := Real)
+          (SphereOddDegree.FiniteSimplex.vertex (S := Real)
             (AffinePositiveRayBoundary.VertexMap.facetCoordinateIndex i))) by
       simp [mapVertexSignature, hi]]
   rw [occurrenceFacetMap_vertex]
@@ -668,19 +669,19 @@ private theorem fixed_refined_side_pairing_cancels (N L n : ℕ) (hp : Nat.Prime
     simp [  iteratedBoundaryMap,
       ReferenceAffineOrbitCount.topRepr,
       Simplex.realizationContinuousMap, Simplex.realizationPoint,
-      Simplex.chartWeight, cofacePoint, stdSimplex.map_coe]
+      Simplex.chartWeight, cofacePoint, SphereOddDegree.FiniteSimplex.map_coe]
     change (∑ i : Fin (n + 1 + 1),
       if (ReferenceAffineOrbitCount.topRepr hp orbit) i = c then
         (StandardSimplex.ofDelta
-          (stdSimplex.map j.succAbove (affineCompMap n N theta x))) i else 0) = _
+          (SphereOddDegree.FiniteSimplex.map j.succAbove (affineCompMap n N theta x))) i else 0) = _
     have hs := Fin.sum_univ_succAbove (fun i : Fin (n + 1 + 1) =>
       if (ReferenceAffineOrbitCount.topRepr hp orbit) i = c then
         (StandardSimplex.ofDelta
-          (stdSimplex.map j.succAbove (affineCompMap n N theta x))) i else 0) j
+          (SphereOddDegree.FiniteSimplex.map j.succAbove (affineCompMap n N theta x))) i else 0) j
     rw [hs]
     have hdeleted :
         (StandardSimplex.ofDelta
-          (stdSimplex.map j.succAbove (affineCompMap n N theta x))) j = 0 := by
+          (SphereOddDegree.FiniteSimplex.map j.succAbove (affineCompMap n N theta x))) j = 0 := by
       change (cofacePoint n j (affineCompMap n N theta x)) j = 0
       exact cofacePoint_apply_deleted n j (affineCompMap n N theta x)
     simp only [hdeleted, ite_self, zero_add]
@@ -690,10 +691,10 @@ private theorem fixed_refined_side_pairing_cancels (N L n : ℕ) (hp : Nat.Prime
       if (ReferenceAffineOrbitCount.topRepr hp orbit) (j.succAbove i) = c then _ else 0
     by_cases hic : (ReferenceAffineOrbitCount.topRepr hp orbit) (j.succAbove i) = c
     · rw [ite_eq_left hic, ite_eq_left hic]
-      change stdSimplex.map (S := Real) j.succAbove
+      change SphereOddDegree.FiniteSimplex.map (S := Real) j.succAbove
         (affineCompMap n N theta x) (j.succAbove i) =
           affineCompMap n N theta x i
-      rw [stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
+      rw [SphereOddDegree.FiniteSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
       exact Finset.sum_eq_single i (by
         intro q hq hqi
         have hsucc : j.succAbove q ≠ j.succAbove i := by
@@ -1011,7 +1012,7 @@ theorem isLowerFacet_of_indicator_lower_ne_zero
     have hmap_i := congrFun hmap i
     rw [mapVertexSignature] at hmap_i
     -- LHS time = 0, RHS time = (Cells.facetSignature o i).time
-    have hlhs_time : (CylinderPoint.ofProd (lowerEndpointMap sigma (stdSimplex.vertex ((AffinePositiveRayBoundary.VertexMap.facetIndexEquiv hp).symm i)))).time = ⟨0, by norm_num⟩ := by
+    have hlhs_time : (CylinderPoint.ofProd (lowerEndpointMap sigma (SphereOddDegree.FiniteSimplex.vertex ((AffinePositiveRayBoundary.VertexMap.facetIndexEquiv hp).symm i)))).time = ⟨0, by norm_num⟩ := by
       rfl
     rw [hmap_i] at hlhs_time
     simp [CylinderPoint.smul_time] at hlhs_time
@@ -1042,7 +1043,7 @@ theorem isUpperFacet_of_indicator_upper_ne_zero
     have hlhs_time :
         (CylinderPoint.ofProd
           (upperEndpointMap sigma
-            (stdSimplex.vertex
+            (SphereOddDegree.FiniteSimplex.vertex
               ((AffinePositiveRayBoundary.VertexMap.facetIndexEquiv hp).symm i)))).time =
           ⟨1, by norm_num⟩ := by
       rfl

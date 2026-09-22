@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.CompatibleChartMapOneStep
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeCollarMiddlePrismEndpoints
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismSubdivisionMargin
@@ -44,7 +45,7 @@ variable {p : Nat}
 
 /-- The project simplex presentation is nonempty. -/
 instance nonempty_standardSimplex (d : Nat) : Nonempty (StandardSimplex d) :=
-  ⟨StandardSimplex.ofDelta (stdSimplex.vertex (S := Real) 0)⟩
+  ⟨StandardSimplex.ofDelta (SphereOddDegree.FiniteSimplex.vertex (S := Real) 0)⟩
 
 /-- The project simplex presentation is compact. -/
 instance compactSpace_standardSimplex (d : Nat) : CompactSpace (StandardSimplex d) := by
@@ -53,7 +54,7 @@ instance compactSpace_standardSimplex (d : Nat) : CompactSpace (StandardSimplex 
     exact ⟨fun _ => Set.mem_univ _,
       fun _ => ⟨StandardSimplex.toDelta w, StandardSimplex.ofDelta_toDelta w⟩⟩
   let : CompactSpace (Delta d) :=
-    isCompact_iff_compactSpace.mp (isCompact_stdSimplex Real (Fin (d + 1)))
+    isCompact_iff_compactSpace.mp (SphereOddDegree.isCompact_finiteSimplex Real (Fin (d + 1)))
   refine isCompact_univ_iff.mp ?_
   have := isCompact_range (continuous_ofDelta (d := d))
   rwa [hrange] at this
@@ -137,7 +138,7 @@ noncomputable def localVector
     (J : ChartHomotopy hp N K0 K1)
     (L : Nat) (s : (RelativeCollarMiddlePrism.cellSystem hp N L).VertexSlot) : Fin p → Real :=
   refinedPrismValue hp J L s.1
-    (StandardSimplex.ofDelta (stdSimplex.vertex (S := Real) s.2))
+    (StandardSimplex.ofDelta (SphereOddDegree.FiniteSimplex.vertex (S := Real) s.2))
 
 /-- Prime-decorated local prism sample. -/
 noncomputable def decoratedVector
@@ -160,11 +161,11 @@ theorem decoratedVector_eq_of_coverPoint_eq
   let wa : StandardSimplex p :=
     StandardSimplex.ofDelta
       (affineCompMap p L a.2.1.2
-        (stdSimplex.vertex (S := Real) a.2.2))
+        (SphereOddDegree.FiniteSimplex.vertex (S := Real) a.2.2))
   let wb : StandardSimplex p :=
     StandardSimplex.ofDelta
       (affineCompMap p L b.2.1.2
-        (stdSimplex.vertex (S := Real) b.2.2))
+        (SphereOddDegree.FiniteSimplex.vertex (S := Real) b.2.2))
   let za := staircasePoint hp a.2.1.1.2 wa
   let zb := staircasePoint hp b.2.1.1.2 wb
   have hzspatial :
@@ -222,7 +223,7 @@ noncomputable def assignment
     (q : PrismCell hp N L) (i : Fin (p + 1)) :
     (localVertexMap hp (RelativeCollarMiddlePrism.cellSystem hp N L) (assignment hp J L) q).value i =
       refinedPrismValue hp J L q
-        (StandardSimplex.ofDelta (stdSimplex.vertex (S := Real) i)) := by
+        (StandardSimplex.ofDelta (SphereOddDegree.FiniteSimplex.vertex (S := Real) i)) := by
   rfl
 
 /-- A positive norm margin valid on every base chart of a compatible chart homotopy. -/
@@ -335,7 +336,7 @@ theorem norm_affineValue_sub_refinedPrismValue_le
           (localVertexMap hp (RelativeCollarMiddlePrism.cellSystem hp N L) (assignment hp J L) q) w - y =
         ∑ i : Fin (p + 1), w i •
           (refinedPrismValue hp J L q
-            (StandardSimplex.ofDelta (stdSimplex.vertex (S := Real) i)) - y) := by
+            (StandardSimplex.ofDelta (SphereOddDegree.FiniteSimplex.vertex (S := Real) i)) - y) := by
     funext c
     simp only [affineValue, localVertexMap_assignment_value, y, Pi.sub_apply,
       Finset.sum_apply, Pi.smul_apply, smul_eq_mul, mul_sub]
@@ -344,14 +345,14 @@ theorem norm_affineValue_sub_refinedPrismValue_le
   calc
     ‖∑ i : Fin (p + 1), w i •
         (refinedPrismValue hp J L q
-          (StandardSimplex.ofDelta (stdSimplex.vertex (S := Real) i)) - y)‖
+          (StandardSimplex.ofDelta (SphereOddDegree.FiniteSimplex.vertex (S := Real) i)) - y)‖
         ≤ ∑ i : Fin (p + 1),
           ‖w i • (refinedPrismValue hp J L q
-            (StandardSimplex.ofDelta (stdSimplex.vertex (S := Real) i)) - y)‖ :=
+            (StandardSimplex.ofDelta (SphereOddDegree.FiniteSimplex.vertex (S := Real) i)) - y)‖ :=
       norm_sum_le _ _
     _ = ∑ i : Fin (p + 1), w i *
         ‖refinedPrismValue hp J L q
-          (StandardSimplex.ofDelta (stdSimplex.vertex (S := Real) i)) - y‖ := by
+          (StandardSimplex.ofDelta (SphereOddDegree.FiniteSimplex.vertex (S := Real) i)) - y‖ := by
       apply Finset.sum_congr rfl
       intro i hi
       rw [norm_smul, Real.norm_eq_abs, abs_of_nonneg (w.nonneg i)]
@@ -361,7 +362,7 @@ theorem norm_affineValue_sub_refinedPrismValue_le
       apply mul_le_mul_of_nonneg_left _ (w.nonneg i)
       exact le_of_lt (by
         simpa [dist_eq_norm, y] using
-          hosc (StandardSimplex.ofDelta (stdSimplex.vertex (S := Real) i)) w)
+          hosc (StandardSimplex.ofDelta (SphereOddDegree.FiniteSimplex.vertex (S := Real) i)) w)
     _ = eps := by rw [← Finset.sum_mul, w.sum_eq_one, one_mul]
 
 /-- A sufficiently fine compatible chart-homotopy prism assignment avoids the origin on every
@@ -406,20 +407,20 @@ theorem lower_boundary_value
         (staircasePoint hp s.1.1.2
           (StandardSimplex.ofDelta
             (affineCompMap p L s.1.2
-              (stdSimplex.vertex (S := Real) s.2)))).1 := by
+              (SphereOddDegree.FiniteSimplex.vertex (S := Real) s.2)))).1 := by
   rw [assignment, vectorValue_assignmentOfEquivariantVector]
   change J.value s.1.1.1
       (staircasePoint hp s.1.1.2
         (StandardSimplex.ofDelta
-          (affineCompMap p L s.1.2 (stdSimplex.vertex (S := Real) s.2)))).1
+          (affineCompMap p L s.1.2 (SphereOddDegree.FiniteSimplex.vertex (S := Real) s.2)))).1
       (staircasePoint hp s.1.1.2
         (StandardSimplex.ofDelta
-          (affineCompMap p L s.1.2 (stdSimplex.vertex (S := Real) s.2)))).2 = _
+          (affineCompMap p L s.1.2 (SphereOddDegree.FiniteSimplex.vertex (S := Real) s.2)))).2 = _
   have ht :
       (staircasePoint hp s.1.1.2
         (StandardSimplex.ofDelta
           (affineCompMap p L s.1.2
-            (stdSimplex.vertex (S := Real) s.2)))).2 =
+            (SphereOddDegree.FiniteSimplex.vertex (S := Real) s.2)))).2 =
         (⟨0, by simp⟩ : Set.Icc (0 : Real) 1) := by
     apply Subtype.ext
     simpa [RelativeAffineCellSystem.slotPoint, RelativeCollarMiddlePrism.cellSystem,
@@ -441,20 +442,20 @@ theorem upper_boundary_value
         (staircasePoint hp s.1.1.2
           (StandardSimplex.ofDelta
             (affineCompMap p L s.1.2
-              (stdSimplex.vertex (S := Real) s.2)))).1 := by
+              (SphereOddDegree.FiniteSimplex.vertex (S := Real) s.2)))).1 := by
   rw [assignment, vectorValue_assignmentOfEquivariantVector]
   change J.value s.1.1.1
       (staircasePoint hp s.1.1.2
         (StandardSimplex.ofDelta
-          (affineCompMap p L s.1.2 (stdSimplex.vertex (S := Real) s.2)))).1
+          (affineCompMap p L s.1.2 (SphereOddDegree.FiniteSimplex.vertex (S := Real) s.2)))).1
       (staircasePoint hp s.1.1.2
         (StandardSimplex.ofDelta
-          (affineCompMap p L s.1.2 (stdSimplex.vertex (S := Real) s.2)))).2 = _
+          (affineCompMap p L s.1.2 (SphereOddDegree.FiniteSimplex.vertex (S := Real) s.2)))).2 = _
   have ht :
       (staircasePoint hp s.1.1.2
         (StandardSimplex.ofDelta
           (affineCompMap p L s.1.2
-            (stdSimplex.vertex (S := Real) s.2)))).2 =
+            (SphereOddDegree.FiniteSimplex.vertex (S := Real) s.2)))).2 =
         (⟨1, by simp⟩ : Set.Icc (0 : Real) 1) := by
     apply Subtype.ext
     simpa [RelativeAffineCellSystem.slotPoint, RelativeCollarMiddlePrism.cellSystem,

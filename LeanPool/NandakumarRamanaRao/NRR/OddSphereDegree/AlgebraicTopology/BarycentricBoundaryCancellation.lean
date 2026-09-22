@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionOperator
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.AffineInternalSwapFace
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.PermSignAdjacentSwap
@@ -86,14 +87,14 @@ theorem toSSetObjEquiv_map_op_naturality (X : TopCat.{0}) (n m : ℕ)
 /-- The topological coface map `Δⁿ → Δⁿ⁺¹` deleting the `k`-th vertex, as the
 affine inclusion sending vertex `t` to vertex `k.succAbove t`. -/
 noncomputable def cofaceTop (n : ℕ) (k : Fin (n + 2)) : C(Delta n, Delta (n + 1)) :=
-  ⟨stdSimplex.map (S := ℝ) (Fin.succAbove k), stdSimplex.continuous_map _⟩
+  ⟨SphereOddDegree.FiniteSimplex.map (S := ℝ) (Fin.succAbove k), SphereOddDegree.FiniteSimplex.continuous_map _⟩
 
 /-- The `k`-coordinate of `cofaceTop n k y` is zero: the affine coface never hits
 the deleted vertex `k`. -/
 theorem cofaceTop_apply_base (n : ℕ) (k : Fin (n + 2)) (y : Delta n) :
     (cofaceTop n k y : Fin (n + 2) → ℝ) k = 0 := by
-  change (stdSimplex.map (S := ℝ) (Fin.succAbove k) y : Fin (n + 2) → ℝ) k = 0
-  rw [stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
+  change (SphereOddDegree.FiniteSimplex.map (S := ℝ) (Fin.succAbove k) y : Fin (n + 2) → ℝ) k = 0
+  rw [SphereOddDegree.FiniteSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
   apply Finset.sum_eq_zero
   intro x hx
   exact (Fin.succAbove_ne k x (Finset.mem_filter.mp hx).2).elim
@@ -102,9 +103,9 @@ theorem cofaceTop_apply_base (n : ℕ) (k : Fin (n + 2)) (y : Delta n) :
 its `castSucc t` coordinate is the `t` coordinate of `y`. -/
 theorem cofaceTop_last_castSucc (n : ℕ) (t : Fin (n + 1)) (y : Delta n) :
     (cofaceTop n (Fin.last (n + 1)) y : Fin (n + 2) → ℝ) (Fin.castSucc t) = y t := by
-  change (stdSimplex.map (S := ℝ) (Fin.succAbove (Fin.last (n + 1))) y : Fin (n + 2) → ℝ)
+  change (SphereOddDegree.FiniteSimplex.map (S := ℝ) (Fin.succAbove (Fin.last (n + 1))) y : Fin (n + 2) → ℝ)
       (Fin.castSucc t) = y t
-  rw [stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply, Fin.succAbove_last]
+  rw [SphereOddDegree.FiniteSimplex.map_coe, FunOnFinite.linearMap_apply_apply, Fin.succAbove_last]
   rw [Finset.sum_eq_single t]
   · intro b hb hbt
     exact (hbt (Fin.castSucc_injective _ (Finset.mem_filter.mp hb).2)).elim
@@ -244,7 +245,7 @@ theorem faceSimplex_last_eq_subdiv_faceData (X : TopCat.{0}) (n : ℕ)
         have := cofaceTop_apply_base n (lastVertex n) y
         simpa [lastVertex] using this)
       (fun k => (cofaceTop_last_castSucc n k y).symm)
-  -- `cofaceTop n j` is exactly `stdSimplex.map (j.succAbove)`
+  -- `cofaceTop n j` is exactly `SphereOddDegree.FiniteSimplex.map (j.succAbove)`
   rw [hx]
   rfl
 

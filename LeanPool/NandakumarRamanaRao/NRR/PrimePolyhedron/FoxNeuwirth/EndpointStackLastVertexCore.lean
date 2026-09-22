@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeSubdivisionOneStepCells
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.SubdivisionZeroFreeApproximation
 /-!
@@ -52,7 +53,7 @@ theorem deltaSupport_nonempty (x : Delta d) : (deltaSupport x).Nonempty := by
     by_contra hi
     have : i ∈ deltaSupport x := (mem_deltaSupport_iff x i).2 hi
     simpa [hempty] using this
-  have hsum := stdSimplex.sum_eq_one x
+  have hsum := SphereOddDegree.FiniteSimplex.sum_eq_one x
   simpa [hzero] using hsum
 
 /-- Largest index in the nonzero barycentric support. -/
@@ -76,17 +77,17 @@ theorem lastSupportIndex_eq_of_eq {x y : Delta d} (hxy : x = y) :
   congrArg lastSupportIndex hxy
 
 @[simp] theorem deltaSupport_vertex (i : Fin (d + 1)) :
-    deltaSupport (stdSimplex.vertex (S := Real) i) = {i} := by
+    deltaSupport (SphereOddDegree.FiniteSimplex.vertex (S := Real) i) = {i} := by
   ext j
   by_cases hji : j = i
   · subst j
-    simp [deltaSupport, stdSimplex.vertex]
-  · simp [deltaSupport, stdSimplex.vertex, hji]
+    simp [deltaSupport, SphereOddDegree.FiniteSimplex.vertex]
+  · simp [deltaSupport, SphereOddDegree.FiniteSimplex.vertex, hji]
 
 /-- The last-support selector fixes every original simplex vertex. -/
 @[simp] theorem lastSupportIndex_vertex (i : Fin (d + 1)) :
-    lastSupportIndex (stdSimplex.vertex (S := Real) i) = i := by
-  have h := lastSupportIndex_mem (stdSimplex.vertex (S := Real) i)
+    lastSupportIndex (SphereOddDegree.FiniteSimplex.vertex (S := Real) i) = i := by
+  have h := lastSupportIndex_mem (SphereOddDegree.FiniteSimplex.vertex (S := Real) i)
   simpa [deltaSupport_vertex] using h
 
 /-- If one coordinate vanishes, the last-support selector cannot choose that coordinate. -/
@@ -141,7 +142,7 @@ noncomputable def retractedWeight
     · intro j
       exact Finset.sum_nonneg fun i _ => by
         split_ifs
-        · exact stdSimplex.zero_le w i
+        · exact SphereOddDegree.FiniteSimplex.zero_le w i
         · exact le_rfl
     · rw [Finset.sum_comm]
       calc
@@ -152,7 +153,7 @@ noncomputable def retractedWeight
               apply Finset.sum_congr rfl
               intro i hi
               simp
-        _ = 1 := stdSimplex.sum_eq_one w⟩
+        _ = 1 := SphereOddDegree.FiniteSimplex.sum_eq_one w⟩
 
 /-- Transport ambient endpoint weights to the recursive cylinder's vertex indexing. -/
 noncomputable def endpointCylinderWeight
@@ -162,8 +163,8 @@ noncomputable def endpointCylinderWeight
   ⟨fun i => w (Fin.cast hcard.symm i), by
     constructor
     · intro i
-      exact stdSimplex.zero_le w _
-    · exact (Equiv.sum_comp (finCongr hcard.symm) w).trans (stdSimplex.sum_eq_one w)⟩
+      exact SphereOddDegree.FiniteSimplex.zero_le w _
+    · exact (Equiv.sum_comp (finCongr hcard.symm) w).trans (SphereOddDegree.FiniteSimplex.sum_eq_one w)⟩
 
 /-- Retraction specialized to the ambient prime-cardinality simplex. -/
 noncomputable def endpointRetractedWeight

@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.CompatibleRefinedChartHomotopyPrism
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ExplicitAffineRelativeCollarAssignmentReverse
 /-!
@@ -294,7 +295,7 @@ theorem lower_boundary_represents_base
     (staircasePoint hp s.2.1.1.2
       (StandardSimplex.ofDelta
         (affineCompMap p L s.2.1.2
-          (stdSimplex.vertex (S := Real) s.2.2)))).1
+          (SphereOddDegree.FiniteSimplex.vertex (S := Real) s.2.2)))).1
   let q0 : TopCell hp N0 := ancestorTopCell hp N0 d s.2.1.1.1
   let w0 : StandardSimplex (p - 1) := ancestorWeight N0 d s.2.1.1.1 w
   refine ⟨q0, w0, ?_, ?_⟩
@@ -328,7 +329,7 @@ theorem upper_boundary_represents_base
     (staircasePoint hp s.2.1.1.2
       (StandardSimplex.ofDelta
         (affineCompMap p L s.2.1.2
-          (stdSimplex.vertex (S := Real) s.2.2)))).1
+          (SphereOddDegree.FiniteSimplex.vertex (S := Real) s.2.2)))).1
   let q0 : TopCell hp N0 := ancestorTopCell hp N0 d s.2.1.1.1
   let w0 : StandardSimplex (p - 1) := ancestorWeight N0 d s.2.1.1.1 w
   refine ⟨q0, w0, ?_, ?_⟩

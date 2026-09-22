@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricBoundaryCancellation
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionChainMap
 import Mathlib.Tactic
@@ -26,7 +27,7 @@ noncomputable def coneTailFun {k : ℕ} (x : Delta (k + 1)) : Fin (k + 1) → �
 
 theorem coneTailFun_mem {k : ℕ} (x : Delta (k + 1))
     (hx : (x : Fin (k + 1 + 1) → ℝ) 0 ≠ 1) :
-    coneTailFun x ∈ stdSimplex ℝ (Fin (k + 1)) := by
+    coneTailFun x ∈ SphereOddDegree.finiteSimplex ℝ (Fin (k + 1)) := by
   refine' ⟨fun i => _, _⟩
   · exact div_nonneg (x.2.1 _) (sub_nonneg.2 (x.2.2 ▸ Finset.single_le_sum (fun a _ => x.2.1 a) (Finset.mem_univ 0)))
   · have hxsum : (x : Fin (k + 1 + 1) → ℝ) 0 + ∑ i : Fin (k + 1), (x : Fin (k + 1 + 1) → ℝ) i.succ = 1 := by
@@ -40,7 +41,7 @@ theorem coneTailFun_mem {k : ℕ} (x : Delta (k + 1))
 
 /-- The normalized base point of a cone simplex, choosing the first vertex at the apex. -/
 noncomputable def coneTail {k : ℕ} (x : Delta (k + 1)) : Delta k :=
-  if h : (x : Fin (k + 1 + 1) → ℝ) 0 = 1 then stdSimplex.vertex (0 : Fin (k + 1))
+  if h : (x : Fin (k + 1 + 1) → ℝ) 0 = 1 then SphereOddDegree.FiniteSimplex.vertex (0 : Fin (k + 1))
   else ⟨coneTailFun x, coneTailFun_mem x h⟩
 
 theorem coneTail_apply {k : ℕ} (x : Delta (k + 1))
@@ -61,12 +62,12 @@ noncomputable def affineConeMapFun {n k : ℕ} (v : Delta n) (τ : Delta k → D
       + (1 - (x : Fin (k + 1 + 1) → ℝ) 0) * ((τ (coneTail x)) : Fin (n + 1) → ℝ) j
 
 theorem affineConeMapFun_mem {n k : ℕ} (v : Delta n) (τ : Delta k → Delta n)
-    (x : Delta (k + 1)) : affineConeMapFun v τ x ∈ stdSimplex ℝ (Fin (n + 1)) := by
+    (x : Delta (k + 1)) : affineConeMapFun v τ x ∈ SphereOddDegree.finiteSimplex ℝ (Fin (n + 1)) := by
   refine' ⟨fun j => _, _⟩
-  · exact add_nonneg (mul_nonneg (stdSimplex.zero_le x 0) (stdSimplex.zero_le v j))
-      (mul_nonneg (sub_nonneg.mpr (stdSimplex.le_one x 0)) (stdSimplex.zero_le (τ (coneTail x)) j))
+  · exact add_nonneg (mul_nonneg (SphereOddDegree.FiniteSimplex.zero_le x 0) (SphereOddDegree.FiniteSimplex.zero_le v j))
+      (mul_nonneg (sub_nonneg.mpr (SphereOddDegree.FiniteSimplex.le_one x 0)) (SphereOddDegree.FiniteSimplex.zero_le (τ (coneTail x)) j))
   · unfold affineConeMapFun
-    simp only [Finset.sum_add_distrib, ← Finset.mul_sum, stdSimplex.sum_eq_one]
+    simp only [Finset.sum_add_distrib, ← Finset.mul_sum, SphereOddDegree.FiniteSimplex.sum_eq_one]
     ring
 
 /-- The simplex map obtained by coning a given map to the chosen vertex. -/
@@ -83,28 +84,28 @@ noncomputable def affineConeMap {n k : ℕ} (v : Delta n) (τ : Delta k → Delt
 /-! ## 3. Vertex formulas -/
 
 theorem affineConeMap_vertex_zero {n k : ℕ} (v : Delta n) (τ : Delta k → Delta n) :
-    affineConeMap v τ (stdSimplex.vertex (0 : Fin (k + 1 + 1))) = v := by
+    affineConeMap v τ (SphereOddDegree.FiniteSimplex.vertex (0 : Fin (k + 1 + 1))) = v := by
   ext j
-  simp [stdSimplex.vertex]
+  simp [SphereOddDegree.FiniteSimplex.vertex]
 
 theorem affineConeMap_vertex_succ {n k : ℕ} (v : Delta n) (τ : Delta k → Delta n)
     (i : Fin (k + 1)) :
-    affineConeMap v τ (stdSimplex.vertex i.succ) = τ (stdSimplex.vertex i) := by
+    affineConeMap v τ (SphereOddDegree.FiniteSimplex.vertex i.succ) = τ (SphereOddDegree.FiniteSimplex.vertex i) := by
   ext j
-  have h_ne : (stdSimplex.vertex (S := ℝ) i.succ : Fin (k + 1 + 1) → ℝ) 0 ≠ 1 := by
+  have h_ne : (SphereOddDegree.FiniteSimplex.vertex (S := ℝ) i.succ : Fin (k + 1 + 1) → ℝ) 0 ≠ 1 := by
     change (Pi.single i.succ (1 : ℝ) : Fin (k + 1 + 1) → ℝ) 0 ≠ 1
     rw [Pi.single_eq_of_ne (Fin.succ_ne_zero i).symm]
     norm_num
-  have h_zero : (stdSimplex.vertex (S := ℝ) i.succ : Fin (k + 1 + 1) → ℝ) 0 = 0 := by
+  have h_zero : (SphereOddDegree.FiniteSimplex.vertex (S := ℝ) i.succ : Fin (k + 1 + 1) → ℝ) 0 = 0 := by
     change (Pi.single i.succ (1 : ℝ) : Fin (k + 1 + 1) → ℝ) 0 = 0
     rw [Pi.single_eq_of_ne (Fin.succ_ne_zero i).symm]
   rw [affineConeMap_coord, h_zero]
   simp only [zero_mul, sub_zero, one_mul, zero_add]
-  have h_tail : coneTail (stdSimplex.vertex i.succ) = stdSimplex.vertex i := by
+  have h_tail : coneTail (SphereOddDegree.FiniteSimplex.vertex i.succ) = SphereOddDegree.FiniteSimplex.vertex i := by
     apply Subtype.ext
     ext m
-    have h_app := coneTail_apply (stdSimplex.vertex i.succ) h_ne m
-    change (coneTail (stdSimplex.vertex i.succ) : Fin (k + 1) → ℝ) m = (Pi.single i (1 : ℝ) : Fin (k + 1) → ℝ) m
+    have h_app := coneTail_apply (SphereOddDegree.FiniteSimplex.vertex i.succ) h_ne m
+    change (coneTail (SphereOddDegree.FiniteSimplex.vertex i.succ) : Fin (k + 1) → ℝ) m = (Pi.single i (1 : ℝ) : Fin (k + 1) → ℝ) m
     rw [h_app, h_zero, sub_zero, div_one]
     change (Pi.single i.succ (1 : ℝ) : Fin (k + 1 + 1) → ℝ) m.succ = (Pi.single i (1 : ℝ) : Fin (k + 1) → ℝ) m
     rw [Pi.single_apply, Pi.single_apply]
@@ -145,7 +146,7 @@ theorem continuous_affineConeMap {n k : ℕ} (v : Delta n) (τ : C(Delta k, Delt
       refine squeeze_zero (fun _ => norm_nonneg _) (fun e => ?_) hlim
       have htau_le1 : abs (((τ (coneTail e)) : Fin (n + 1) → ℝ) j) ≤ 1 := by
         rw [abs_le]
-        exact ⟨by linarith [stdSimplex.zero_le (τ (coneTail e)) j], by linarith [stdSimplex.le_one (τ (coneTail e)) j]⟩
+        exact ⟨by linarith [SphereOddDegree.FiniteSimplex.zero_le (τ (coneTail e)) j], by linarith [SphereOddDegree.FiniteSimplex.le_one (τ (coneTail e)) j]⟩
       have hx0_le : 0 ≤ abs (1 - (e : Fin (k + 1 + 1) → ℝ) 0) := abs_nonneg _
       have h_prod : abs (1 - (e : Fin (k + 1 + 1) → ℝ) 0) * abs (((τ (coneTail e)) : Fin (n + 1) → ℝ) j) ≤ abs (1 - (e : Fin (k + 1 + 1) → ℝ) 0) * 1 :=
         mul_le_mul_of_nonneg_left htau_le1 hx0_le
@@ -191,8 +192,8 @@ theorem cone_face_zero {n k : ℕ} (v : Delta n) (τ : Delta k → Delta n) :
     change (coneTail (cofaceTop k 0 y) : Fin (k + 1) → ℝ) m = y.1 m
     rw [h_app, h0, sub_zero, div_one]
     change (cofaceTop k 0 y : Fin (k + 1 + 1) → ℝ) m.succ = y m
-    change (stdSimplex.map (S := ℝ) (Fin.succAbove 0) y : Fin (k + 1 + 1) → ℝ) m.succ = y m
-    rw [stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply, Fin.succAbove_zero]
+    change (SphereOddDegree.FiniteSimplex.map (S := ℝ) (Fin.succAbove 0) y : Fin (k + 1 + 1) → ℝ) m.succ = y m
+    rw [SphereOddDegree.FiniteSimplex.map_coe, FunOnFinite.linearMap_apply_apply, Fin.succAbove_zero]
     rw [Finset.sum_eq_single m]
     · intro b hb hbm
       exact (hbm (Fin.succ_injective _ (Finset.mem_filter.mp hb).2)).elim
@@ -204,8 +205,8 @@ theorem coneTail_cofaceTop_succ {k : ℕ} (j : Fin (k + 1 + 1)) (y : Delta (k + 
     (hy : (y : Fin (k + 1 + 1) → ℝ) 0 ≠ 1) :
     coneTail (cofaceTop (k + 1) j.succ y) = cofaceTop k j (coneTail y) := by
   have h0 : (cofaceTop (k + 1) j.succ y : Fin (k + 1 + 1 + 1) → ℝ) 0 = (y : Fin (k + 1 + 1) → ℝ) 0 := by
-    change (stdSimplex.map (S := ℝ) (Fin.succAbove j.succ) y : Fin (k + 1 + 1 + 1) → ℝ) 0 = y 0
-    rw [stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
+    change (SphereOddDegree.FiniteSimplex.map (S := ℝ) (Fin.succAbove j.succ) y : Fin (k + 1 + 1 + 1) → ℝ) 0 = y 0
+    rw [SphereOddDegree.FiniteSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
     have hj0 : (j.succ : Fin (k + 1 + 1 + 1)).succAbove 0 = 0 := by
       rw [Fin.succAbove_of_castSucc_lt]
       rfl
@@ -229,11 +230,11 @@ theorem coneTail_cofaceTop_succ {k : ℕ} (j : Fin (k + 1 + 1)) (y : Delta (k + 
   change (coneTail (cofaceTop (k + 1) j.succ y) : Fin (k + 1 + 1) → ℝ) i = (cofaceTop k j (coneTail y) : Fin (k + 1 + 1) → ℝ) i
   rw [h_app1, h0]
   change (cofaceTop (k + 1) j.succ y : Fin (k + 1 + 1 + 1) → ℝ) i.succ / (1 - (y : Fin (k + 1 + 1) → ℝ) 0)
-    = (stdSimplex.map (S := ℝ) (Fin.succAbove j) (coneTail y) : Fin (k + 1 + 1) → ℝ) i
-  rw [stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
-  change (stdSimplex.map (S := ℝ) (Fin.succAbove j.succ) y : Fin (k + 1 + 1 + 1) → ℝ) i.succ / (1 - (y : Fin (k + 1 + 1) → ℝ) 0)
+    = (SphereOddDegree.FiniteSimplex.map (S := ℝ) (Fin.succAbove j) (coneTail y) : Fin (k + 1 + 1) → ℝ) i
+  rw [SphereOddDegree.FiniteSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
+  change (SphereOddDegree.FiniteSimplex.map (S := ℝ) (Fin.succAbove j.succ) y : Fin (k + 1 + 1 + 1) → ℝ) i.succ / (1 - (y : Fin (k + 1 + 1) → ℝ) 0)
     = ∑ b ∈ Finset.filter (fun x => j.succAbove x = i) Finset.univ, (coneTail y : Fin (k + 1) → ℝ) b
-  rw [stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
+  rw [SphereOddDegree.FiniteSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
   have h_sum_tail : (∑ b ∈ Finset.filter (fun x => j.succAbove x = i) Finset.univ, (coneTail y : Fin (k + 1) → ℝ) b)
       = (∑ b ∈ Finset.filter (fun x => j.succAbove x = i) Finset.univ, (y : Fin (k + 1 + 1) → ℝ) b.succ) / (1 - (y : Fin (k + 1 + 1) → ℝ) 0) := by
     rw [Finset.sum_div]
@@ -269,8 +270,8 @@ theorem cone_face_succ {n k : ℕ} (v : Delta n) (τ : Delta (k + 1) → Delta n
       = (fun y : Delta (k + 1) => affineConeMap v (fun z : Delta k => τ (cofaceTop k j z)) y) := by
   funext y
   have h0 : (cofaceTop (k + 1) j.succ y : Fin (k + 1 + 1 + 1) → ℝ) 0 = (y : Fin (k + 1 + 1) → ℝ) 0 := by
-    change (stdSimplex.map (S := ℝ) (Fin.succAbove j.succ) y : Fin (k + 1 + 1 + 1) → ℝ) 0 = y 0
-    rw [stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
+    change (SphereOddDegree.FiniteSimplex.map (S := ℝ) (Fin.succAbove j.succ) y : Fin (k + 1 + 1 + 1) → ℝ) 0 = y 0
+    rw [SphereOddDegree.FiniteSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
     have hj0 : (j.succ : Fin (k + 1 + 1 + 1)).succAbove 0 = 0 := by
       rw [Fin.succAbove_of_castSucc_lt]; rfl; exact Fin.succ_pos j
     rw [Finset.sum_eq_single 0]

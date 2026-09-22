@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ExplicitAffineRelativeCollar
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.SubdivisionPrismAffine
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismGenericityNonzero
@@ -74,7 +75,7 @@ noncomputable def chart
 @[simp] theorem chart_vertex
     (hp : Nat.Prime p) (N L : Nat)
     (q : PrismCell hp N L) (i : Fin (p + 1)) :
-    chart hp N L q (stdSimplex.vertex (S := Real) i) = vertex hp N L q i :=
+    chart hp N L q (SphereOddDegree.FiniteSimplex.vertex (S := Real) i) = vertex hp N L q i :=
   rfl
 
 /-- The existing refined staircase prism supplies a genuine explicit finite cell system whose two

@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismNonhorizontalCancellation
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricFiniteCancellation
 /-!
@@ -131,7 +132,7 @@ theorem doubleCofacePoint_eq
       cofacePoint (n + 1) b (cofacePoint n (deletedIndex b a hab.symm) x) := by
   funext x
   unfold cofacePoint
-  rw [stdSimplex.map_comp_apply, stdSimplex.map_comp_apply]
+  rw [SphereOddDegree.FiniteSimplex.map_comp_apply, SphereOddDegree.FiniteSimplex.map_comp_apply]
   have hcomp :
       a.succAbove ∘ (deletedIndex a b hab).succAbove =
         b.succAbove ∘ (deletedIndex b a hab.symm).succAbove := by

@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.AffineBarycentricSubdivision
 
 /-!
@@ -36,15 +37,15 @@ The barycenter of a standard simplex is invariant under reindexing by an
  equivalence.
 -/
 theorem stdSimplex_map_barycenter_equiv (e : X ≃ Y) [Nonempty X] [Nonempty Y] :
-    stdSimplex.map (S := ℝ) (X := X) (Y := Y) e
-        (stdSimplex.barycenter (X := X) (𝕜 := ℝ))
-      = stdSimplex.barycenter (X := Y) (𝕜 := ℝ) := by
+    SphereOddDegree.FiniteSimplex.map (S := ℝ) (X := X) (Y := Y) e
+        (SphereOddDegree.FiniteSimplex.barycenter (X := X) (𝕜 := ℝ))
+      = SphereOddDegree.FiniteSimplex.barycenter (X := Y) (𝕜 := ℝ) := by
   classical
-  apply stdSimplex.ext
+  apply SphereOddDegree.FiniteSimplex.ext
   funext y
-  -- `stdSimplex.map` is `FunOnFinite.linearMap`; for an equivalence each fiber
+  -- `SphereOddDegree.FiniteSimplex.map` is `FunOnFinite.linearMap`; for an equivalence each fiber
   -- has exactly one point, namely `e.symm y`.
-  convert congr_arg ( fun f => f y ) ( stdSimplex.map_coe e stdSimplex.barycenter ) using 1; simp +decide [ stdSimplex.barycenter ];
+  convert congr_arg ( fun f => f y ) ( SphereOddDegree.FiniteSimplex.map_coe e SphereOddDegree.FiniteSimplex.barycenter ) using 1; simp +decide [ SphereOddDegree.FiniteSimplex.barycenter ];
   simp +decide [ FunOnFinite.linearMap, Fintype.card_congr e ];
   rfl
 
@@ -59,19 +60,19 @@ theorem prefixBarycenter_eq_of_prefix_reindex {n : ℕ}
   classical
   unfold prefixBarycenter
   calc
-    stdSimplex.map (S := ℝ) (prefixVertex n π k)
-        (stdSimplex.barycenter (X := Fin (k.val + 1)) (𝕜 := ℝ))
-        = stdSimplex.map (S := ℝ) ((prefixVertex n π' k) ∘ e)
-          (stdSimplex.barycenter (X := Fin (k.val + 1)) (𝕜 := ℝ)) := by
+    SphereOddDegree.FiniteSimplex.map (S := ℝ) (prefixVertex n π k)
+        (SphereOddDegree.FiniteSimplex.barycenter (X := Fin (k.val + 1)) (𝕜 := ℝ))
+        = SphereOddDegree.FiniteSimplex.map (S := ℝ) ((prefixVertex n π' k) ∘ e)
+          (SphereOddDegree.FiniteSimplex.barycenter (X := Fin (k.val + 1)) (𝕜 := ℝ)) := by
             congr 1
             funext t
             exact h t
-    _ = stdSimplex.map (S := ℝ) (prefixVertex n π' k)
-          (stdSimplex.map (S := ℝ) e
-            (stdSimplex.barycenter (X := Fin (k.val + 1)) (𝕜 := ℝ))) := by
-            rw [stdSimplex.map_comp_apply]
-    _ = stdSimplex.map (S := ℝ) (prefixVertex n π' k)
-          (stdSimplex.barycenter (X := Fin (k.val + 1)) (𝕜 := ℝ)) := by
+    _ = SphereOddDegree.FiniteSimplex.map (S := ℝ) (prefixVertex n π' k)
+          (SphereOddDegree.FiniteSimplex.map (S := ℝ) e
+            (SphereOddDegree.FiniteSimplex.barycenter (X := Fin (k.val + 1)) (𝕜 := ℝ))) := by
+            rw [SphereOddDegree.FiniteSimplex.map_comp_apply]
+    _ = SphereOddDegree.FiniteSimplex.map (S := ℝ) (prefixVertex n π' k)
+          (SphereOddDegree.FiniteSimplex.barycenter (X := Fin (k.val + 1)) (𝕜 := ℝ)) := by
             rw [stdSimplex_map_barycenter_equiv e]
 
 end BarycenterReindex

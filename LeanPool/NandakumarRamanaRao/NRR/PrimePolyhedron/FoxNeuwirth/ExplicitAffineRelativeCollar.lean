@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismGenericityPolynomials
 import Mathlib.Algebra.MvPolynomial.Eval
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
@@ -79,7 +80,7 @@ structure RelativeAffineCellSystem
   /-- The affine simplex chart parametrizing each collar cell. -/
   chart : Cell → Delta p → CylinderPoint p
 
-  chart_vertex : ∀ q i, chart q (stdSimplex.vertex i) = vertex q i
+  chart_vertex : ∀ q i, chart q (SphereOddDegree.FiniteSimplex.vertex i) = vertex q i
   chart_spatial_affine : ∀ q w c,
     (chart q w).spatial c =
       ∑ i : Fin (p + 1), w i * (vertex q i).spatial c

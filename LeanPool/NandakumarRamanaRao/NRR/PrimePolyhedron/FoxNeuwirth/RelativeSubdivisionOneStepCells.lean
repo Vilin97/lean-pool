@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeSubdivisionCylinderCombinatorics
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeCollarMiddlePrism
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.SubdivisionPrismAffine
@@ -71,11 +72,11 @@ noncomputable def chart
 /-- Geometric vertices are defined by restriction of the global affine chart. -/
 noncomputable def vertex
     (hp : Nat.Prime p) (N : Nat) (q : Cell hp N) (i : Fin (p + 1)) : CylinderPoint p :=
-  chart hp N q (stdSimplex.vertex (S := Real) i)
+  chart hp N q (SphereOddDegree.FiniteSimplex.vertex (S := Real) i)
 
 @[simp] theorem chart_vertex
     (hp : Nat.Prime p) (N : Nat) (q : Cell hp N) (i : Fin (p + 1)) :
-    chart hp N q (stdSimplex.vertex (S := Real) i) = vertex hp N q i := rfl
+    chart hp N q (SphereOddDegree.FiniteSimplex.vertex (S := Real) i) = vertex hp N q i := rfl
 
 /-- One coordinate of a refined realization chart as a linear functional of its standard-simplex
 barycentric coordinate vector. -/
@@ -136,7 +137,7 @@ theorem chart_spatial_affine
   | zero => exact (hp.ne_zero rfl).elim
   | succ p =>
   apply refinedChart_barycentric hp N q.1 w
-    (fun i => (localPoint hp q.2 (stdSimplex.vertex (S := Real) i)).1)
+    (fun i => (localPoint hp q.2 (SphereOddDegree.FiniteSimplex.vertex (S := Real) i)).1)
     (localPoint hp q.2 w).1
   intro r
   change (RelativeSubdivisionCylinderCombinatorics.chart
@@ -204,12 +205,12 @@ theorem vertex_injective
     Function.Injective (vertex hp N q) := by
   intro i j hij
   have hstd :
-      (stdSimplex.vertex (S := Real) i : Delta p) =
-        stdSimplex.vertex (S := Real) j :=
+      (SphereOddDegree.FiniteSimplex.vertex (S := Real) i : Delta p) =
+        SphereOddDegree.FiniteSimplex.vertex (S := Real) j :=
     chart_injective hp N q hij
   by_contra hne
   have hi := congrArg (fun w : Delta p => w i) hstd
-  simpa [stdSimplex.vertex, hne] using hi
+  simpa [SphereOddDegree.FiniteSimplex.vertex, hne] using hi
 
 /-- No two vertices of a lifted cell lie in the same nontrivial prime orbit. -/
 theorem vertex_orbit_injective
@@ -221,8 +222,8 @@ theorem vertex_orbit_injective
       g • (vertex hp N q i).spatial = (vertex hp N q j).spatial :=
     congrArg CylinderPoint.spatial h
   have hg : g = 1 := refinedChart_orbit_separated hp N q.1
-    (localPoint hp q.2 (stdSimplex.vertex (S := Real) i)).1
-    (localPoint hp q.2 (stdSimplex.vertex (S := Real) j)).1 g (by
+    (localPoint hp q.2 (SphereOddDegree.FiniteSimplex.vertex (S := Real) i)).1
+    (localPoint hp q.2 (SphereOddDegree.FiniteSimplex.vertex (S := Real) j)).1 g (by
       simpa [vertex, chart, liftPoint,
         EquivariantPrismVertexParameters.CylinderPoint.ofProd] using hspatial)
   subst g

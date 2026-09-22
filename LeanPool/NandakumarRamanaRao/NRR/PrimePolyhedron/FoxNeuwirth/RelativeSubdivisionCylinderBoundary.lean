@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeSubdivisionCylinderCombinatorics
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.FiniteSimplexDoubleBoundary
 /-!
@@ -228,7 +229,7 @@ theorem upper_boundary_pairing
             permSignCoeff R rho *
               W (fun i => RelativeSubdivisionCylinderCombinatorics.sidePoint d k (RelativeSubdivisionCylinderCombinatorics.upperBoundaryVertex d rho i)) := by
   let Wmap : (Delta d → Delta (d + 1) × Set.Icc (0 : Real) 1) → R :=
-    fun tau => W (fun i => tau (stdSimplex.vertex (S := Real) i))
+    fun tau => W (fun i => tau (SphereOddDegree.FiniteSimplex.vertex (S := Real) i))
   have h := oneStep_weighted_boundary (R := R) d
     (fun x : Delta (d + 1) => (x, ⟨1, by norm_num⟩)) Wmap
   simpa [Wmap, tupleBoundaryWeight, iteratedFacetMap, iteratedBoundaryMap,
@@ -244,7 +245,7 @@ theorem delete_lowerBoundaryVertex_eq_side
   funext i
   apply Prod.ext
   · simp [deleteTuple, sideTuple, RelativeSubdivisionCylinderCombinatorics.lowerBoundaryVertex, RelativeSubdivisionCylinderCombinatorics.sidePoint,
-      stdSimplex.map, stdSimplex.vertex]
+      SphereOddDegree.FiniteSimplex.map, SphereOddDegree.FiniteSimplex.vertex]
   · rfl
 
 /-- A recursively triangulated codimension-two side occurs twice with opposite total sign. -/
@@ -279,7 +280,7 @@ theorem recursive_side_side_zero
     have h := double_boundary_weighted_zero (R := R) n
       (fun x : Delta (n + 2) => x) Wq
     simpa [F, Wq, RelativeSubdivisionCylinderCombinatorics.sidePoint, cofacePoint,
-      stdSimplex.map, SimplicialChain.faceSign] using h
+      SphereOddDegree.FiniteSimplex.map, SimplicialChain.faceSign] using h
   calc
     (∑ k : Fin (n + 3), SimplicialChain.faceSign k *
       ∑ l : Fin (n + 2), SimplicialChain.faceSign l *

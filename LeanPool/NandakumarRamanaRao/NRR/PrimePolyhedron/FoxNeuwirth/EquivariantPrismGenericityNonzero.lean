@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismGenericityPolynomials
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.AffineSubdivisionDeterminant
 /-!
@@ -361,12 +362,12 @@ theorem prism_vertex_injective
     Function.Injective (SubdivisionPrismCharts.vertex hp N L q) := by
   intro i j hij
   have hstd :
-      (stdSimplex.vertex (S := Real) i : Delta p) =
-        stdSimplex.vertex (S := Real) j :=
+      (SphereOddDegree.FiniteSimplex.vertex (S := Real) i : Delta p) =
+        SphereOddDegree.FiniteSimplex.vertex (S := Real) j :=
     prism_chart_injective hp N L q hij
   by_contra hne
   have hi := congrArg (fun w : Delta p => w i) hstd
-  simpa [stdSimplex.vertex, hne] using hi
+  simpa [SphereOddDegree.FiniteSimplex.vertex, hne] using hi
 
 /-! ## Separation under the prime action -/
 
@@ -431,9 +432,9 @@ theorem prism_vertex_orbit_injective
   let s : Simplex p (p - 1) :=
     ReferenceAffineOrbitCount.topRepr hp q.1.1.1
   let ui : StandardSimplex p := StandardSimplex.ofDelta
-    (affineCompMap p L q.2 (stdSimplex.vertex (S := Real) i))
+    (affineCompMap p L q.2 (SphereOddDegree.FiniteSimplex.vertex (S := Real) i))
   let uj : StandardSimplex p := StandardSimplex.ofDelta
-    (affineCompMap p L q.2 (stdSimplex.vertex (S := Real) j))
+    (affineCompMap p L q.2 (SphereOddDegree.FiniteSimplex.vertex (S := Real) j))
   let sti := staircasePoint hp q.1.2 ui
   let stj := staircasePoint hp q.1.2 uj
   let rho' : Fin N → Equiv.Perm (Fin (p - 1 + 1)) :=

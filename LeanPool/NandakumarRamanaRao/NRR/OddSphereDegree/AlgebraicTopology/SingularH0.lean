@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SubChainSubspaceBridge
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionCone
 
@@ -27,16 +28,16 @@ standard `1`-simplex `Δ¹` as the unit interval. -/
 noncomputable def pathSimplex {a b : X} (p : Path a b) : singularSimplices X 1 :=
   continuousMapAsSingularSimplex X 1
     (p.toContinuousMap.comp
-      (⟨stdSimplexHomeomorphUnitInterval, stdSimplexHomeomorphUnitInterval.continuous⟩ :
+      (⟨FiniteSimplex.homeomorphUnitInterval, FiniteSimplex.homeomorphUnitInterval.continuous⟩ :
         C(Delta 1, unitInterval)))
 
-theorem test_coface0 (x : Delta 0) : cofaceTop 0 0 x = ⟨Pi.single 1 1, single_mem_stdSimplex ℝ 1⟩ := by
+theorem test_coface0 (x : Delta 0) : cofaceTop 0 0 x = ⟨Pi.single 1 1, SphereOddDegree.single_mem_finiteSimplex ℝ 1⟩ := by
   ext i
-  fin_cases i <;> simp [cofaceTop, delta0_subsingleton x (stdSimplex.vertex 0)]
+  fin_cases i <;> simp [cofaceTop, delta0_subsingleton x (SphereOddDegree.FiniteSimplex.vertex 0)]
 
-theorem test_coface1 (x : Delta 0) : cofaceTop 0 1 x = ⟨Pi.single 0 1, single_mem_stdSimplex ℝ 0⟩ := by
+theorem test_coface1 (x : Delta 0) : cofaceTop 0 1 x = ⟨Pi.single 0 1, SphereOddDegree.single_mem_finiteSimplex ℝ 0⟩ := by
   ext i
-  fin_cases i <;> simp [cofaceTop, delta0_subsingleton x (stdSimplex.vertex 0)]
+  fin_cases i <;> simp [cofaceTop, delta0_subsingleton x (SphereOddDegree.FiniteSimplex.vertex 0)]
 
 theorem faceSimplex_pathSimplex_0 {a b : X} (p : Path a b) :
     AlexanderWhitney.faceSimplex X 0 0 (pathSimplex p) = pointSimplex X b := by
@@ -46,8 +47,8 @@ theorem faceSimplex_pathSimplex_0 {a b : X} (p : Path a b) :
   simp only [pathSimplex, pointSimplex,
     singularSimplexAsContinuousMap_continuousMapAsSingularSimplex]
   ext x
-  change p (stdSimplexHomeomorphUnitInterval (cofaceTop 0 0 x)) = b
-  rw [test_coface0 x, stdSimplexHomeomorphUnitInterval_one]
+  change p (FiniteSimplex.homeomorphUnitInterval (cofaceTop 0 0 x)) = b
+  rw [test_coface0 x, FiniteSimplex.homeomorphUnitInterval_one]
   exact p.target
 
 theorem faceSimplex_pathSimplex_1 {a b : X} (p : Path a b) :
@@ -58,8 +59,8 @@ theorem faceSimplex_pathSimplex_1 {a b : X} (p : Path a b) :
   simp only [pathSimplex, pointSimplex,
     singularSimplexAsContinuousMap_continuousMapAsSingularSimplex]
   ext x
-  change p (stdSimplexHomeomorphUnitInterval (cofaceTop 0 1 x)) = a
-  rw [test_coface1 x, stdSimplexHomeomorphUnitInterval_zero]
+  change p (FiniteSimplex.homeomorphUnitInterval (cofaceTop 0 1 x)) = a
+  rw [test_coface1 x, FiniteSimplex.homeomorphUnitInterval_zero]
   exact p.source
 
 theorem boundary_pathSimplex {a b : X} (p : Path a b) :
@@ -80,7 +81,7 @@ theorem chainGenerator_sub_mem_range_of_path {a b : X} (p : Path a b) :
   ⟨chainGenerator ℤ X 1 (pathSimplex p), boundary_pathSimplex p⟩
 
 theorem pointSimplex_singularSimplex (σ : singularSimplices X 0) :
-    pointSimplex X ((singularSimplexAsContinuousMap X 0 σ) (stdSimplex.vertex 0)) = σ := by
+    pointSimplex X ((singularSimplexAsContinuousMap X 0 σ) (SphereOddDegree.FiniteSimplex.vertex 0)) = σ := by
   apply singularSimplices_ext
   change singularSimplexAsContinuousMap X 0 _ = singularSimplexAsContinuousMap X 0 σ
   rw [pointSimplex, singularSimplexAsContinuousMap_continuousMapAsSingularSimplex]
@@ -92,8 +93,8 @@ theorem pointSimplex_singularSimplex (σ : singularSimplices X 0) :
 theorem chainGenerator_sub_mem_range [PathConnectedSpace X] (σ τ : singularSimplices X 0) :
     chainGenerator ℤ X 0 σ - chainGenerator ℤ X 0 τ
       ∈ LinearMap.range (singularBoundary ℤ X 0).hom := by
-  let a := (singularSimplexAsContinuousMap X 0 σ) (stdSimplex.vertex 0)
-  let b := (singularSimplexAsContinuousMap X 0 τ) (stdSimplex.vertex 0)
+  let a := (singularSimplexAsContinuousMap X 0 σ) (SphereOddDegree.FiniteSimplex.vertex 0)
+  let b := (singularSimplexAsContinuousMap X 0 τ) (SphereOddDegree.FiniteSimplex.vertex 0)
   have hσ : σ = pointSimplex X a := (pointSimplex_singularSimplex σ).symm
   have hτ : τ = pointSimplex X b := (pointSimplex_singularSimplex τ).symm
   rw [hσ, hτ]

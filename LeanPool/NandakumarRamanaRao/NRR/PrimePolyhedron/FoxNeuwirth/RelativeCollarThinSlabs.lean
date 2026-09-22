@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeCollarMiddlePrismEndpoints
 /-!
 # Thin-time stacks of unrefined Fox--Neuwirth staircase prisms
@@ -140,7 +141,7 @@ noncomputable def chart
 @[simp] theorem chart_vertex
     (hp : Nat.Prime p) (N m : Nat) (hm : 0 < m)
     (q : Cell hp N m) (i : Fin (p + 1)) :
-    chart hp N m hm q (stdSimplex.vertex (S := Real) i) =
+    chart hp N m hm q (SphereOddDegree.FiniteSimplex.vertex (S := Real) i) =
       vertex hp N m hm q i := by
   simp [chart, vertex]
 
@@ -170,7 +171,7 @@ noncomputable def cellSystem
     simp only [chart, vertex, slabPoint_time]
     rw [hbase]
     have hsum : (∑ i : Fin (p + 1), w i) = (1 : Real) :=
-      stdSimplex.sum_eq_one w
+      SphereOddDegree.FiniteSimplex.sum_eq_one w
     have hmR : (0 : Real) < (m : Real) := by exact_mod_cast hm
     have hm0 : (m : Real) ≠ 0 := ne_of_gt hmR
     rw [div_eq_iff hm0]

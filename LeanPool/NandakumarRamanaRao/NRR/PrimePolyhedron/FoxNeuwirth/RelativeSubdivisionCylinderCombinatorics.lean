@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionHomotopyOperator
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionDiameter
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.AffineSubdivisionDeterminant
@@ -66,7 +67,7 @@ noncomputable def apex (d : Nat) : Delta d × Set.Icc (0 : Real) 1 :=
 /-- Coarse lower-boundary vertex. -/
 noncomputable def lowerBoundaryVertex
     (d : Nat) (i : Fin (d + 1)) : Delta d × Set.Icc (0 : Real) 1 :=
-  (stdSimplex.vertex (S := Real) i, ⟨0, by norm_num⟩)
+  (SphereOddDegree.FiniteSimplex.vertex (S := Real) i, ⟨0, by norm_num⟩)
 
 /-- Barycentric upper-boundary vertex. -/
 noncomputable def upperBoundaryVertex
@@ -79,15 +80,15 @@ noncomputable def sidePoint
     (d : Nat) (k : Fin (d + 2))
     (z : Delta d × Set.Icc (0 : Real) 1) :
     Delta (d + 1) × Set.Icc (0 : Real) 1 :=
-  (stdSimplex.map (S := Real) k.succAbove z.1, z.2)
+  (SphereOddDegree.FiniteSimplex.map (S := Real) k.succAbove z.1, z.2)
 
 @[simp] theorem sidePoint_spatial_succAbove
     (d : Nat) (k : Fin (d + 2))
     (z : Delta d × Set.Icc (0 : Real) 1) (i : Fin (d + 1)) :
     (sidePoint d k z).1 (k.succAbove i) = z.1 i := by
   unfold sidePoint
-  change (stdSimplex.map (S := Real) k.succAbove z.1 : Fin (d + 2) → Real) (k.succAbove i) = z.1 i
-  rw [stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
+  change (SphereOddDegree.FiniteSimplex.map (S := Real) k.succAbove z.1 : Fin (d + 2) → Real) (k.succAbove i) = z.1 i
+  rw [SphereOddDegree.FiniteSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
   have h_filter : (Finset.univ.filter (fun j => k.succAbove j = k.succAbove i)) = {i} := by
     ext j
     simp [Fin.succAbove_right_injective.eq_iff]
@@ -97,8 +98,8 @@ noncomputable def sidePoint
     (d : Nat) (k : Fin (d + 2))
     (z : Delta d × Set.Icc (0 : Real) 1) :
     (sidePoint d k z).1 k = 0 := by
-  change (stdSimplex.map (S := Real) k.succAbove z.1 : Fin (d + 2) → Real) k = 0
-  rw [stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
+  change (SphereOddDegree.FiniteSimplex.map (S := Real) k.succAbove z.1 : Fin (d + 2) → Real) k = 0
+  rw [SphereOddDegree.FiniteSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
   apply Finset.sum_eq_zero
   intro i hi
   exact (Fin.succAbove_ne k i (Finset.mem_filter.mp hi).2).elim
@@ -148,7 +149,7 @@ noncomputable def spatialPoint
     constructor
     · intro c
       exact Finset.sum_nonneg fun i _ =>
-        mul_nonneg (stdSimplex.zero_le w i) (stdSimplex.zero_le (vertex d q i).1 c)
+        mul_nonneg (SphereOddDegree.FiniteSimplex.zero_le w i) (SphereOddDegree.FiniteSimplex.zero_le (vertex d q i).1 c)
     · rw [Finset.sum_comm]
       calc
         ∑ i : Fin (d + 2), ∑ c : Fin (d + 1),
@@ -161,8 +162,8 @@ noncomputable def spatialPoint
         _ = ∑ i : Fin (d + 2), w i := by
               apply Finset.sum_congr rfl
               intro i hi
-              rw [stdSimplex.sum_eq_one, mul_one]
-        _ = 1 := stdSimplex.sum_eq_one w⟩
+              rw [SphereOddDegree.FiniteSimplex.sum_eq_one, mul_one]
+        _ = 1 := SphereOddDegree.FiniteSimplex.sum_eq_one w⟩
 
 /-- Time barycentric interpolation of a recursive cylinder cell. -/
 noncomputable def timePoint
@@ -170,15 +171,15 @@ noncomputable def timePoint
   ⟨∑ i : Fin (d + 2), w i * (vertex d q i).2.1, by
     constructor
     · exact Finset.sum_nonneg fun i _ =>
-        mul_nonneg (stdSimplex.zero_le w i) (vertex d q i).2.2.1
+        mul_nonneg (SphereOddDegree.FiniteSimplex.zero_le w i) (vertex d q i).2.2.1
     · calc
         ∑ i : Fin (d + 2), w i * (vertex d q i).2.1
             ≤ ∑ i : Fin (d + 2), w i * 1 := by
               apply Finset.sum_le_sum
               intro i hi
               exact mul_le_mul_of_nonneg_left (vertex d q i).2.2.2
-                (stdSimplex.zero_le w i)
-        _ = 1 := by simp [stdSimplex.sum_eq_one w]⟩
+                (SphereOddDegree.FiniteSimplex.zero_le w i)
+        _ = 1 := by simp [SphereOddDegree.FiniteSimplex.sum_eq_one w]⟩
 
 /-- Affine chart of one recursive one-step cylinder cell. -/
 noncomputable def chart
@@ -188,7 +189,7 @@ noncomputable def chart
 
 @[simp] theorem chart_vertex
     (d : Nat) (q : Cell d) (i : Fin (d + 2)) :
-    chart d q (stdSimplex.vertex (S := Real) i) = vertex d q i := by
+    chart d q (SphereOddDegree.FiniteSimplex.vertex (S := Real) i) = vertex d q i := by
   unfold chart;
   unfold spatialPoint timePoint;
   simp +decide [ Pi.single_apply ];
@@ -221,7 +222,7 @@ theorem chart_time_affine
     1 - w 0 / 2
   rw [Fin.sum_univ_succ]
   simp [vertex_zero, vertex_succ_upper, apex, upperBoundaryVertex]
-  have hsum := stdSimplex.sum_eq_one w
+  have hsum := SphereOddDegree.FiniteSimplex.sum_eq_one w
   rw [Fin.sum_univ_succ] at hsum
   linarith
 
@@ -242,7 +243,7 @@ theorem chart_time_affine
   change (∑ i : Fin (d + 2), w i * (vertex d (lowerCell d) i).1 c) = _
   rw [Fin.sum_univ_succ]
   simp [vertex_zero, vertex_succ_lower, apex, lowerBoundaryVertex,
-    stdSimplex.vertex, Pi.single_apply]
+    SphereOddDegree.FiniteSimplex.vertex, Pi.single_apply]
 
 @[simp] theorem spatialPoint_upper_coord
     (d : Nat) (pi : Equiv.Perm (Fin (d + 1)))
@@ -316,13 +317,13 @@ theorem vertex_injective_of_chart_injective
     Function.Injective (vertex d q) := by
   intro i j hij
   have hstd :
-      (stdSimplex.vertex (S := Real) i : Delta (d + 1)) =
-        stdSimplex.vertex (S := Real) j := by
+      (SphereOddDegree.FiniteSimplex.vertex (S := Real) i : Delta (d + 1)) =
+        SphereOddDegree.FiniteSimplex.vertex (S := Real) j := by
     apply hchart
     simpa using hij
   by_contra hne
   have hi := congrArg (fun w : Delta (d + 1) => w i) hstd
-  simpa [stdSimplex.vertex, hne] using hi
+  simpa [SphereOddDegree.FiniteSimplex.vertex, hne] using hi
 
 /-- A facet is entirely at time zero exactly for the coarse lower base facet. -/
 theorem lowerFacet_classification
@@ -405,7 +406,7 @@ theorem upperFacet_classification
 theorem sum_succ_eq_one_sub
     (n : Nat) (w : Delta (n + 1)) :
     (∑ i : Fin (n + 1), w i.succ) = 1 - w 0 := by
-  have hsum := stdSimplex.sum_eq_one w
+  have hsum := SphereOddDegree.FiniteSimplex.sum_eq_one w
   rw [Fin.sum_univ_succ] at hsum
   linarith
 
@@ -419,9 +420,9 @@ theorem succ_eq_zero_of_zero_eq_one
     ring
   have hle : w i.succ ≤ ∑ j : Fin (n + 1), w j.succ :=
     Finset.single_le_sum
-      (fun j _ => stdSimplex.zero_le w j.succ) (Finset.mem_univ i)
+      (fun j _ => SphereOddDegree.FiniteSimplex.zero_le w j.succ) (Finset.mem_univ i)
   rw [htail] at hle
-  exact le_antisymm hle (stdSimplex.zero_le w i.succ)
+  exact le_antisymm hle (SphereOddDegree.FiniteSimplex.zero_le w i.succ)
 
 /-- Normalize the tail barycentric coordinates away from the cone apex. -/
 noncomputable def coneTail
@@ -430,8 +431,8 @@ noncomputable def coneTail
     ⟨fun i => w i.succ / (1 - w 0), by
       constructor
       · intro i
-        exact div_nonneg (stdSimplex.zero_le w i.succ)
-          (sub_nonneg.mpr (stdSimplex.le_one w 0))
+        exact div_nonneg (SphereOddDegree.FiniteSimplex.zero_le w i.succ)
+          (sub_nonneg.mpr (SphereOddDegree.FiniteSimplex.le_one w 0))
       · calc
           ∑ i : Fin (n + 1), w i.succ / (1 - w 0) =
               (∑ i : Fin (n + 1), w i.succ) / (1 - w 0) := by
@@ -496,7 +497,7 @@ theorem chart_side_injective
     have hc := congrArg (fun z : Delta (d + 1) × Set.Icc (0 : Real) 1 => z.1 k) hxy
     dsimp [chart] at hc
     rw [spatialPoint_side_missing_coord, spatialPoint_side_missing_coord] at hc
-    dsimp [deltaBarycenter, stdSimplex.barycenter] at hc
+    dsimp [deltaBarycenter, SphereOddDegree.FiniteSimplex.barycenter] at hc
     have h_pos : (Fintype.card (Fin (d + 2)) : Real)⁻¹ ≠ 0 := ne_of_gt (inv_pos.mpr (by positivity))
     exact mul_right_cancel₀ h_pos hc
   by_cases hx : x 0 = 1
@@ -726,7 +727,11 @@ theorem vertex_eq_lowerBoundaryVertex_of_time_eq_zero :
   intro d;
   induction' d with d ih;
   · rintro ( _ | _ ) ( _ | _ ) <;> simp +decide [ vertex ];
-    · unfold apex lowerBoundaryVertex; aesop;
+    · unfold apex lowerBoundaryVertex
+      simp only [Prod.mk.injEq]
+      intro h
+      have hz := congrArg Subtype.val h
+      norm_num at hz
     · exact fun h => absurd h <| ne_of_gt <| Subtype.mk_lt_mk.mpr <| by norm_num;
     · unfold upperBoundaryVertex; aesop;
   · intro q i hi; rcases q with ( _ | _ | q ) <;> rcases i with ( _ | i ) <;> norm_num [ NRR.FoxNeuwirthOrderComplex.RelativeSubdivisionCylinderCombinatorics.vertex ] at hi ⊢;

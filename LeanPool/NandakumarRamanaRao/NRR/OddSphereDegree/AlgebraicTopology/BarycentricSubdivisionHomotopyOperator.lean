@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionCone
 import Mathlib.CategoryTheory.Limits.Lattice
 import Mathlib.CategoryTheory.Limits.Shapes.Countable
@@ -62,7 +63,7 @@ theorem singularChainMap_boundary (R : Type) [CommRing R] {X Y : TopCat.{0}}
 
 /-- The barycenter of the standard real simplex. -/
 noncomputable def deltaBarycenter (n : ℕ) : Delta n :=
-  stdSimplex.barycenter (X := Fin (n + 1)) (𝕜 := ℝ)
+  SphereOddDegree.FiniteSimplex.barycenter (X := Fin (n + 1)) (𝕜 := ℝ)
 
 /-- The identity map of the standard simplex viewed as a singular simplex. -/
 noncomputable def stdSimplexIdSingularSimplex (n : ℕ) :

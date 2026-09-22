@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import Mathlib.Algebra.Order.Ring.Star
 import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Analysis.InnerProductSpace.Basic
@@ -220,9 +221,9 @@ The standard vertex set has diameter at most `1`.
 theorem diam_range_stdVerts_le_one (n : ℕ) :
     Metric.diam (Set.range (stdVerts n)) ≤ 1 := by
   refine' le_trans ( Metric.diam_mono _ _ ) _;
-  exact stdSimplex ℝ ( Fin ( n + 1 ) );
-  · exact Set.range_subset_iff.mpr fun i => single_mem_stdSimplex ℝ i;
-  · exact bounded_stdSimplex _
+  exact SphereOddDegree.finiteSimplex ℝ ( Fin ( n + 1 ) );
+  · exact Set.range_subset_iff.mpr fun i => SphereOddDegree.single_mem_finiteSimplex ℝ i;
+  · exact SphereOddDegree.bounded_finiteSimplex _
   · exact diam_stdSimplex_le
 
 /-

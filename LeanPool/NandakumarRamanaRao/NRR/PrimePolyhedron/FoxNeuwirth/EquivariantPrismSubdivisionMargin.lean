@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismGenericPerturbation
 import Mathlib.Topology.UniformSpace.HeineCantor
 
@@ -242,7 +243,7 @@ theorem norm_affineValue_sub_homotopy_le_of_oscillation
         (le_of_lt (by
           simpa [dist_eq_norm, vertex, y] using
             hosc
-              (StandardSimplex.ofDelta (stdSimplex.vertex (S := Real) i)) w))
+              (StandardSimplex.ofDelta (SphereOddDegree.FiniteSimplex.vertex (S := Real) i)) w))
         (w.nonneg i)
     _ = eps := by
       rw [← Finset.sum_mul, w.sum_eq_one, one_mul]

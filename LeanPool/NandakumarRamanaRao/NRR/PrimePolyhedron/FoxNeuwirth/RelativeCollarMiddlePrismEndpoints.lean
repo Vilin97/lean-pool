@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeCollarMiddlePrismBoundary
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeCollarMiddlePrismEndpointsCore
 /-!
@@ -368,7 +369,7 @@ theorem lowerOccurrence_classification_zero
       RelativeCollarMiddlePrism.vertex, SubdivisionPrismCharts.vertex,
       SubdivisionPrismCharts.chart, staircasePoint, intervalPoint,
       intervalWeight, CylinderPoint.ofProd, StandardSimplex.ofDelta,
-      stdSimplex.vertex, Pi.single_apply, affineCompMap] at hi
+      SphereOddDegree.FiniteSimplex.vertex, Pi.single_apply, affineCompMap] at hi
     apply staircaseTime_lower
     by_contra h
     have hlt : k.val < (j.succAbove i).val := Nat.lt_of_not_ge h
@@ -417,7 +418,7 @@ theorem upperOccurrence_classification_zero
       RelativeCollarMiddlePrism.vertex, SubdivisionPrismCharts.vertex,
       SubdivisionPrismCharts.chart, staircasePoint, intervalPoint,
       intervalWeight, CylinderPoint.ofProd, StandardSimplex.ofDelta,
-      stdSimplex.vertex, Pi.single_apply, affineCompMap] at hi
+      SphereOddDegree.FiniteSimplex.vertex, Pi.single_apply, affineCompMap] at hi
     apply staircaseTime_upper
     by_contra h
     have hle : (j.succAbove i).val ≤ k.val := Nat.le_of_not_gt h

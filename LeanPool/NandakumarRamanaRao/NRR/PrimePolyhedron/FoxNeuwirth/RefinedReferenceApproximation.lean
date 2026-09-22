@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.SubdivisionZeroFreeApproximation
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantReferenceCoordinateMap
 
@@ -58,13 +59,13 @@ theorem value_zero_ofCoordinateAffineVertexMap
   rw [chart_zero hp q]
   change (fun j => ∑ i, w i * (ofCoordinateAffineVertexMap F)
       ((ReferenceAffineOrbitCount.topRepr hp q.1).realizationPoint
-        (StandardSimplex.ofDelta (stdSimplex.vertex i))) j) =
+        (StandardSimplex.ofDelta (SphereOddDegree.FiniteSimplex.vertex i))) j) =
     F.globalValue ((ReferenceAffineOrbitCount.topRepr hp q.1).realizationPoint w)
   rw [CoordinateAffineVertexMap.globalValue_realizationPoint]
   have hi (i : Fin (p - 1 + 1)) :
       (ofCoordinateAffineVertexMap F)
           ((ReferenceAffineOrbitCount.topRepr hp q.1).realizationPoint
-            (StandardSimplex.ofDelta (stdSimplex.vertex i))) =
+            (StandardSimplex.ofDelta (SphereOddDegree.FiniteSimplex.vertex i))) =
         F.vertexValue ((ReferenceAffineOrbitCount.topRepr hp q.1) i) := by
     change F.globalValue _ = _
     rw [CoordinateAffineVertexMap.globalValue_realizationPoint]

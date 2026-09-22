@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.StableCollarRelativeSubdivision
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismVertexParameters
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.IteratedSubdivisionSmallChains
@@ -189,11 +190,11 @@ def IsAffineCylinderSimplex
       (singularSimplexAsContinuousMap (RelativeCylinder p) n σ w).1 c =
         ∑ i : Fin (n + 1), w i *
           (singularSimplexAsContinuousMap (RelativeCylinder p) n σ
-            (stdSimplex.vertex i)).1 c) ∧
+            (SphereOddDegree.FiniteSimplex.vertex i)).1 c) ∧
     (singularSimplexAsContinuousMap (RelativeCylinder p) n σ w).2.1 =
       ∑ i : Fin (n + 1), w i *
         (singularSimplexAsContinuousMap (RelativeCylinder p) n σ
-          (stdSimplex.vertex i)).2.1
+          (SphereOddDegree.FiniteSimplex.vertex i)).2.1
 
 /-- The geometric realization condition for a relative subdivision boundary.
 Unlike a generic finite support, every represented collar simplex is required to be affine in the
@@ -232,7 +233,7 @@ noncomputable instance vertexSlotDecidableEq : DecidableEq (VertexSlot p B) :=
 noncomputable def slotPoint (s : VertexSlot p B) : CylinderPoint p :=
   CylinderPoint.ofProd
     ((singularSimplexAsContinuousMap (RelativeCylinder p) (n + 1)
-      ((CollarSupport p B).simplex s.1)) (stdSimplex.vertex s.2))
+      ((CollarSupport p B).simplex s.1)) (SphereOddDegree.FiniteSimplex.vertex s.2))
 
 /-- Symmetry-decorated finite collar vertex occurrences. -/
 abbrev CoverVertexSlot := PrimeSymmetry p × VertexSlot p B

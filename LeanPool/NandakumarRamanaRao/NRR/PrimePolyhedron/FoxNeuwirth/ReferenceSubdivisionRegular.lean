@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RefinedAffineMap
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.AffineSubdivisionDeterminant
 
@@ -69,10 +70,10 @@ theorem augmentedMatrix_ofCoordinateAffineVertexMap_eq_mul
   · simp only [augmentedMatrix, originalAugmentedMatrix, Matrix.mul_apply,
       AffineSubdivisionDeterminant.iterVertexMatrix,
       AffineVertexMap.augmentedMatrix, Fin.lastCases_last, one_mul]
-    exact (stdSimplex.sum_eq_one
+    exact (SphereOddDegree.FiniteSimplex.sum_eq_one
       (affineCompMap (p - 1) N
         (fun k => Simplex.refinementIndexPerm (q.2 k))
-        (stdSimplex.vertex (S := Real) i))).symm
+        (SphereOddDegree.FiniteSimplex.vertex (S := Real) i))).symm
   · let s := ReferenceAffineOrbitCount.topRepr hp q.1
     let rho : Fin N → Equiv.Perm (Fin (p - 1 + 1)) :=
       fun t => Simplex.refinementIndexPerm (q.2 t)
@@ -81,11 +82,11 @@ theorem augmentedMatrix_ofCoordinateAffineVertexMap_eq_mul
             (s.realizationPoint
               (StandardSimplex.ofDelta
                 (affineCompMap (p - 1) N rho
-                  (stdSimplex.vertex (S := Real) j)))) =
+                  (SphereOddDegree.FiniteSimplex.vertex (S := Real) j)))) =
           F.value s
             (StandardSimplex.ofDelta
               (affineCompMap (p - 1) N rho
-                (stdSimplex.vertex (S := Real) j))) :=
+                (SphereOddDegree.FiniteSimplex.vertex (S := Real) j))) :=
       CoordinateAffineVertexMap.globalValue_realizationPoint F s _
     simp only [augmentedMatrix, deviationVertexValue, vertexValue, vertex,
       chart, ofCoordinateAffineVertexMap, originalAugmentedMatrix,
@@ -97,13 +98,13 @@ theorem augmentedMatrix_ofCoordinateAffineVertexMap_eq_mul
           (s.realizationPoint
             (StandardSimplex.ofDelta
               (affineCompMap (p - 1) N rho
-                (stdSimplex.vertex (S := Real) i))))
+                (SphereOddDegree.FiniteSimplex.vertex (S := Real) i))))
           (ReferenceAffineOrbitCount.coordinateLabel hp k) -
         F.globalValue
           (s.realizationPoint
             (StandardSimplex.ofDelta
               (affineCompMap (p - 1) N rho
-                (stdSimplex.vertex (S := Real) i))))
+                (SphereOddDegree.FiniteSimplex.vertex (S := Real) i))))
           (ReferenceAffineOrbitCount.lastLabel hp) = _
     rw [hglobal i]
     simp only [CoordinateAffineVertexMap.value, StandardSimplex.ofDelta]

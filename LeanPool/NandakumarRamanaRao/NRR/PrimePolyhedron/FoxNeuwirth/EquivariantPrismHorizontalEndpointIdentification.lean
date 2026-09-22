@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismNonhorizontalCancellation
 /-!
 # Horizontal endpoint identification for the refined equivariant prism
@@ -361,12 +362,12 @@ theorem affineCompMap_succ_last_vertex_pos
     (n N : Nat) (rho : Fin (N + 1) → Equiv.Perm (Fin (n + 1)))
     (j : Fin (n + 1)) :
     0 < affineCompMap n (N + 1) rho
-      (stdSimplex.vertex (S := Real) (Fin.last n)) j := by
+      (SphereOddDegree.FiniteSimplex.vertex (S := Real) (Fin.last n)) j := by
   rw [affineCompMap_succ]
   apply affineCompMap_pos_of_forall_pos n N (fun i => rho i.castSucc)
   intro i
   change 0 < affineSubdivMap n (rho (Fin.last N))
-    (stdSimplex.vertex (S := Real) (Fin.last n)) i
+    (SphereOddDegree.FiniteSimplex.vertex (S := Real) (Fin.last n)) i
   rw [affineSubdivMap_vertex, prefixBarycenter_apply]
   have hi : i ∈ prefixSet n (rho (Fin.last N)) (Fin.last n) := by
     rw [mem_prefixSet]
@@ -462,12 +463,12 @@ theorem refinedSidePrismMap_not_lowerHorizontal
   | succ L =>
       have hw : ∀ j : Fin (p + 1),
           0 < affineCompMap p (L + 1) eta
-            (stdSimplex.vertex (S := Real) (Fin.last p)) j :=
+            (SphereOddDegree.FiniteSimplex.vertex (S := Real) (Fin.last p)) j :=
         affineCompMap_succ_last_vertex_pos p L eta
       have hp0 : 0 < p := Fin.pos_iff_nonempty.mpr ⟨h⟩
       let h' : Fin ((p - 1) + 1) := Fin.cast (by omega) h
       let x : Delta p := affineCompMap p (L + 1) eta
-        (stdSimplex.vertex (S := Real) (Fin.last p))
+        (SphereOddDegree.FiniteSimplex.vertex (S := Real) (Fin.last p))
       let e : p = (p - 1) + 1 := (Nat.sub_add_cancel hp0).symm
       let w : Delta ((p - 1) + 1) := deltaCast e x
       have hw' : ∀ j, 0 < w j := by
@@ -512,12 +513,12 @@ theorem refinedSidePrismMap_not_upperHorizontal
       have hi := hupper i
       have hw : ∀ j : Fin (p + 1),
           0 < affineCompMap p (L + 1) eta
-            (stdSimplex.vertex (S := Real) (Fin.last p)) j :=
+            (SphereOddDegree.FiniteSimplex.vertex (S := Real) (Fin.last p)) j :=
         affineCompMap_succ_last_vertex_pos p L eta
       have hp0 : 0 < p := Fin.pos_iff_nonempty.mpr ⟨h⟩
       let h' : Fin ((p - 1) + 1) := Fin.cast (by omega) h
       let x : Delta p := affineCompMap p (L + 1) eta
-        (stdSimplex.vertex (S := Real) (Fin.last p))
+        (SphereOddDegree.FiniteSimplex.vertex (S := Real) (Fin.last p))
       let e : p = (p - 1) + 1 := (Nat.sub_add_cancel hp0).symm
       let w : Delta ((p - 1) + 1) := deltaCast e x
       have hw' : ∀ j, 0 < w j := fun j => deltaCast_pos_of_forall_pos e x hw j

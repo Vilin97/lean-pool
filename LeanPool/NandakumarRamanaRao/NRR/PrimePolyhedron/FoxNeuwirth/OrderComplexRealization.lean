@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import Mathlib.Tactic
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.OrderComplex
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.CanonicalConfiguration
@@ -150,7 +151,7 @@ theorem realization_carrier_eq :
         (∀ c, 0 ≤ weight c) ∧
         (∑ c, weight c = 1) ∧
         ChainSupported weight} =
-      stdSimplex Real (BarredPermutation p) ∩
+      SphereOddDegree.finiteSimplex Real (BarredPermutation p) ∩
         {weight | ChainSupported weight} := by
   ext weight
   change
@@ -165,8 +166,8 @@ theorem isCompact_realizationCarrier :
       (∑ c, weight c = 1) ∧
       ChainSupported weight} := by
   rw [realization_carrier_eq]
-  have hsimplex : IsCompact (stdSimplex Real (BarredPermutation p)) :=
-    isCompact_stdSimplex ℝ (BarredPermutation p)
+  have hsimplex : IsCompact (SphereOddDegree.finiteSimplex Real (BarredPermutation p)) :=
+    SphereOddDegree.isCompact_finiteSimplex ℝ (BarredPermutation p)
   exact hsimplex.inter_right isClosed_chainSupported
 
 namespace Realization

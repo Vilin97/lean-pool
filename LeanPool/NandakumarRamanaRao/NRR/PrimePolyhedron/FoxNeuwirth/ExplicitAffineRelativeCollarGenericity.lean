@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ExplicitAffineRelativeCollarStokes
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismGenericPerturbation
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismSubdivisionMargin
@@ -605,13 +606,13 @@ theorem exists_positive_localAffineCoordinateNormMargin
           refine ⟨StandardSimplex.toDelta w, ?_⟩
           exact StandardSimplex.ofDelta_toDelta w
       let : CompactSpace (SphereOddDegree.AffineBarycentricSubdivision.Delta p) :=
-        isCompact_iff_compactSpace.mp (isCompact_stdSimplex ℝ (Fin (p + 1)))
+        isCompact_iff_compactSpace.mp (SphereOddDegree.isCompact_finiteSimplex ℝ (Fin (p + 1)))
       have himage : IsCompact (Set.range f) := isCompact_range hf
       rw [hrange] at himage
       exact himage
     let wdefault : StandardSimplex p :=
       StandardSimplex.ofDelta
-        (stdSimplex.vertex (S := Real) (0 : Fin (p + 1)))
+        (SphereOddDegree.FiniteSimplex.vertex (S := Real) (0 : Fin (p + 1)))
     obtain ⟨w₀, hw₀⟩ :=
       IsCompact.exists_isMinOn hcompact
         ⟨wdefault, Set.mem_univ _⟩ hcont.continuousOn

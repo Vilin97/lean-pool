@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EndpointStackAffinePullbackCore
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ExplicitAffineRelativeCollar
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RefinedChartCarrierEquivariant
@@ -83,7 +84,7 @@ noncomputable def localSpatialWeight
     (hp : Nat.Prime p) (N : Nat)
     (s : (Cells hp N).VertexSlot) : StandardSimplex (p - 1) :=
   StandardSimplex.ofDelta
-    (RelativeSubdivisionOneStepCells.localPoint hp s.1.2 (stdSimplex.vertex (S := Real) s.2)).1
+    (RelativeSubdivisionOneStepCells.localPoint hp s.1.2 (SphereOddDegree.FiniteSimplex.vertex (S := Real) s.2)).1
 
 /-- A local pullback vector is literally the parent refined affine value at the represented
 spatial point. -/
@@ -97,12 +98,12 @@ theorem pullbackVector_eq_value
         (localSpatialWeight hp A.level s) := by
   obtain ⟨k, rfl⟩ := Nat.exists_eq_succ_of_ne_zero (ne_of_gt hp.pos)
   have h := EndpointStackAffinePullbackCore.affine_pullbackEndpointValue_eq_value hp A s.1.1 s.1.2
-    (stdSimplex.vertex (S := Real) s.2)
+    (SphereOddDegree.FiniteSimplex.vertex (S := Real) s.2)
   funext c
   have hc := congrFun h c
   simp [RelativeSubdivisionOneStepCells.localWeight] at hc
   rw [show RelativeSubdivisionCylinderCombinatorics.spatialPoint k s.1.2
-      (stdSimplex.vertex (S := Real) s.2) =
+      (SphereOddDegree.FiniteSimplex.vertex (S := Real) s.2) =
       (RelativeSubdivisionCylinderCombinatorics.vertex k s.1.2 s.2).1 by
     exact congrArg Prod.fst
       (RelativeSubdivisionCylinderCombinatorics.chart_vertex k s.1.2 s.2)] at hc

@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import Mathlib.Tactic
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.CanonicalConfiguration
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.TopCells
@@ -78,7 +79,7 @@ end FoxNeuwirthTopCell
 
 /-- Barycentric coordinates on a top-dimensional Fox--Neuwirth cell. -/
 def FoxNeuwirthWeights (p : ℕ) :=
-  ↥(stdSimplex ℝ (Fin p))
+  ↥(SphereOddDegree.finiteSimplex ℝ (Fin p))
 
 namespace FoxNeuwirthWeights
 
@@ -155,7 +156,7 @@ def FoxNeuwirthTopCellModelPoint (p : ℕ) :=
 namespace FoxNeuwirthTopCellModelPoint
 
 noncomputable instance : CompactSpace (FoxNeuwirthWeights p) :=
-  isCompact_iff_compactSpace.mp (isCompact_stdSimplex ℝ (Fin p))
+  isCompact_iff_compactSpace.mp (SphereOddDegree.isCompact_finiteSimplex ℝ (Fin p))
 
 noncomputable instance : CompactSpace (FoxNeuwirthTopCell p) :=
   Finite.compactSpace

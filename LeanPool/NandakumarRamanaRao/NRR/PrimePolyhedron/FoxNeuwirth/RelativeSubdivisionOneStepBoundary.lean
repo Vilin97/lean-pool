@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeSubdivisionOneStepBoundaryBase
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeSubdivisionCylinderBoundary
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismNonhorizontalCancellation
@@ -422,19 +423,19 @@ private theorem fixed_side_refinement_cancels (d : ℕ) (hp : Nat.Prime (d + 2))
     simp [ EquivariantPrismNonhorizontalCancellation.iteratedBoundaryMap,
       ReferenceAffineOrbitCount.topRepr,
       Simplex.realizationContinuousMap, Simplex.realizationPoint,
-      Simplex.chartWeight, cofacePoint, stdSimplex.map_coe]
+      Simplex.chartWeight, cofacePoint, SphereOddDegree.FiniteSimplex.map_coe]
     change (∑ i : Fin (d + 2),
       if (ReferenceAffineOrbitCount.topRepr hp orbit) i = c then
         (StandardSimplex.ofDelta
-          (stdSimplex.map j.succAbove (affineCompMap d N theta x))) i else 0) = _
+          (SphereOddDegree.FiniteSimplex.map j.succAbove (affineCompMap d N theta x))) i else 0) = _
     have hs := Fin.sum_univ_succAbove (fun i : Fin (d + 2) =>
       if (ReferenceAffineOrbitCount.topRepr hp orbit) i = c then
         (StandardSimplex.ofDelta
-          (stdSimplex.map j.succAbove (affineCompMap d N theta x))) i else 0) j
+          (SphereOddDegree.FiniteSimplex.map j.succAbove (affineCompMap d N theta x))) i else 0) j
     rw [hs]
     have hdeleted :
         (StandardSimplex.ofDelta
-          (stdSimplex.map j.succAbove (affineCompMap d N theta x))) j = 0 := by
+          (SphereOddDegree.FiniteSimplex.map j.succAbove (affineCompMap d N theta x))) j = 0 := by
       change (cofacePoint d j (affineCompMap d N theta x)) j = 0
       exact cofacePoint_apply_deleted d j (affineCompMap d N theta x)
     simp only [hdeleted, ite_self, zero_add]
@@ -445,10 +446,10 @@ private theorem fixed_side_refinement_cancels (d : ℕ) (hp : Nat.Prime (d + 2))
         (j.succAbove i) = c then _ else 0
     by_cases hic : (ReferenceAffineOrbitCount.topRepr hp orbit) (j.succAbove i) = c
     · rw [ite_eq_left hic, ite_eq_left hic]
-      change stdSimplex.map (S := Real) j.succAbove
+      change SphereOddDegree.FiniteSimplex.map (S := Real) j.succAbove
         (affineCompMap d N theta x) (j.succAbove i) =
           affineCompMap d N theta x i
-      rw [stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
+      rw [SphereOddDegree.FiniteSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
       exact Finset.sum_eq_single i (by
         intro q hq hqi
         have hsucc : j.succAbove q ≠ j.succAbove i := by

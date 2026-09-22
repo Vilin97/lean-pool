@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeCollarMiddlePrism
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EndpointFaceRefinement
 /-!
@@ -195,7 +196,7 @@ theorem lowerOccurrence_isLower
       (lowerOccurrence hp N L q eta) := by
   intro i
   have h := congrFun (lowerOccurrenceFacetMap_eq_core hp N L q eta)
-    (stdSimplex.vertex (S := Real)
+    (SphereOddDegree.FiniteSimplex.vertex (S := Real)
       (AffinePositiveRayBoundary.VertexMap.facetCoordinateIndex i))
   rw [EquivariantPrismNonhorizontalCancellation.occurrenceFacetMap_vertex] at h
   have ht := congrArg
@@ -204,7 +205,7 @@ theorem lowerOccurrence_isLower
     ((lowerOccurrence hp N L q eta).2.succAbove i)).2.1 = 0
   calc
     _ = (lowerEndpointMap (endpointSpatialMap hp N L q eta)
-        (stdSimplex.vertex (AffinePositiveRayBoundary.VertexMap.facetCoordinateIndex i))).2.1 :=
+        (SphereOddDegree.FiniteSimplex.vertex (AffinePositiveRayBoundary.VertexMap.facetCoordinateIndex i))).2.1 :=
       congrArg Subtype.val ht
     _ = 0 := rfl
 
@@ -216,7 +217,7 @@ theorem upperOccurrence_isUpper
       (upperOccurrence hp N L q eta) := by
   intro i
   have h := congrFun (upperOccurrenceFacetMap_eq_core hp N L q eta)
-    (stdSimplex.vertex (S := Real)
+    (SphereOddDegree.FiniteSimplex.vertex (S := Real)
       (AffinePositiveRayBoundary.VertexMap.facetCoordinateIndex i))
   rw [EquivariantPrismNonhorizontalCancellation.occurrenceFacetMap_vertex] at h
   have ht := congrArg
@@ -225,7 +226,7 @@ theorem upperOccurrence_isUpper
     ((upperOccurrence hp N L q eta).2.succAbove i)).2.1 = 1
   calc
     _ = (upperEndpointMap (endpointSpatialMap hp N L q eta)
-        (stdSimplex.vertex (AffinePositiveRayBoundary.VertexMap.facetCoordinateIndex i))).2.1 :=
+        (SphereOddDegree.FiniteSimplex.vertex (AffinePositiveRayBoundary.VertexMap.facetCoordinateIndex i))).2.1 :=
       congrArg Subtype.val ht
     _ = 1 := rfl
 
@@ -262,7 +263,7 @@ theorem lowerOccurrence_facetSignature
     apply Fin.ext
     rfl
   have h := congrFun (lowerOccurrenceFacetMap_eq_core hp N L q eta)
-    (stdSimplex.vertex (S := Real)
+    (SphereOddDegree.FiniteSimplex.vertex (S := Real)
       (AffinePositiveRayBoundary.VertexMap.facetCoordinateIndex i))
   rw [EquivariantPrismNonhorizontalCancellation.occurrenceFacetMap_vertex] at h
   have hc := congrArg CylinderPoint.ofProd h
@@ -288,7 +289,7 @@ theorem upperOccurrence_facetSignature
     apply Fin.ext
     rfl
   have h := congrFun (upperOccurrenceFacetMap_eq_core hp N L q eta)
-    (stdSimplex.vertex (S := Real)
+    (SphereOddDegree.FiniteSimplex.vertex (S := Real)
       (AffinePositiveRayBoundary.VertexMap.facetCoordinateIndex i))
   rw [EquivariantPrismNonhorizontalCancellation.occurrenceFacetMap_vertex] at h
   have hc := congrArg CylinderPoint.ofProd h

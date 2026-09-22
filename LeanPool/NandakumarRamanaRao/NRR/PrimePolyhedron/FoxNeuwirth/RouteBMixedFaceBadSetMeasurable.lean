@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RouteBCanonicalCoordinateSplit
 import Mathlib.Topology.Maps.Proper.Basic
 import Mathlib.MeasureTheory.Measure.Prod
@@ -170,7 +171,7 @@ theorem isClosed_mixedFaceThresholdBadSet
       · intro _
         exact ⟨StandardSimplex.toDelta w, StandardSimplex.ofDelta_toDelta w⟩
     let : CompactSpace (SphereOddDegree.AffineBarycentricSubdivision.Delta p) :=
-      isCompact_iff_compactSpace.mp (isCompact_stdSimplex ℝ (Fin (p + 1)))
+      isCompact_iff_compactSpace.mp (SphereOddDegree.isCompact_finiteSimplex ℝ (Fin (p + 1)))
     simpa [hrange] using (isCompact_range hf)
   let : CompactSpace (StandardSimplex p) :=
     isCompact_univ_iff.mp hcompact

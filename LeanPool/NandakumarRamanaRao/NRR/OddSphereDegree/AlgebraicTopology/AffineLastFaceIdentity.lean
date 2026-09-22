@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.AffineBarycentricSubdivision
 /-!
 # Last-face affine identity for barycentric subdivision
@@ -49,7 +50,7 @@ theorem prefixBarycenter_castSucc_eq_map_of_prefix {n : ℕ}
     (hιρ : ∀ t : Fin (n + 1), ι (ρ t) = π (Fin.castSucc t))
     (k : Fin (n + 1)) :
     prefixBarycenter (n + 1) π (Fin.castSucc k)
-      = stdSimplex.map (S := ℝ) ι (prefixBarycenter n ρ k) := by
+      = SphereOddDegree.FiniteSimplex.map (S := ℝ) ι (prefixBarycenter n ρ k) := by
   have h_comp : prefixVertex (n + 1) π (Fin.castSucc k) = ι ∘ prefixVertex n ρ k := by
     ext ⟨i, hi_val⟩
     have hi : i < n + 1 := by
@@ -59,7 +60,7 @@ theorem prefixBarycenter_castSucc_eq_map_of_prefix {n : ℕ}
     have h1 : prefixVertex (n + 1) π (Fin.castSucc k) ⟨i, hi_val⟩ = π (Fin.castSucc ⟨i, hi⟩) := rfl
     have h2 : (ι ∘ prefixVertex n ρ k) ⟨i, hi_val⟩ = ι (ρ ⟨i, hi⟩) := rfl
     rw [h1, h2, ← hιρ ⟨i, hi⟩]
-  rw [prefixBarycenter_def, h_comp, ← stdSimplex.map_comp_apply, prefixBarycenter_def]
+  rw [prefixBarycenter_def, h_comp, ← SphereOddDegree.FiniteSimplex.map_comp_apply, prefixBarycenter_def]
 
 /-
 Last-face affine identity, in coordinate-face form.
@@ -81,10 +82,10 @@ theorem affineSubdiv_face_last_eq_boundary_subdiv_of_faceData {n : ℕ}
     (hxlast : x ⟨n + 1, by omega⟩ = 0)
     (hy : ∀ k : Fin (n + 1), y k = x (Fin.castSucc k)) :
     affineSubdivMap (n + 1) π x
-      = stdSimplex.map (S := ℝ) ι (affineSubdivMap n ρ y) := by
+      = SphereOddDegree.FiniteSimplex.map (S := ℝ) ι (affineSubdivMap n ρ y) := by
   classical
   ext j;
-  simp +decide [ *, affineSubdivMap_apply, FunOnFinite.linearMap_apply_apply, stdSimplex.map_coe ];
+  simp +decide [ *, affineSubdivMap_apply, FunOnFinite.linearMap_apply_apply, SphereOddDegree.FiniteSimplex.map_coe ];
   rw [ Fin.sum_univ_castSucc ];
   simp +decide [ ← hy, prefixBarycenter_castSucc_eq_map_of_prefix π ι ρ hιρ ];
   simp +decide [ Finset.sum_filter, Finset.mul_sum _ _ _, mul_comm, FunOnFinite.linearMap_apply_apply ];
@@ -102,7 +103,7 @@ theorem affineSubdiv_face_last_eq_boundary_subdiv {n : ℕ}
     (hxlast : x ⟨n + 1, by omega⟩ = 0)
     (hy : ∀ k : Fin (n + 1), y k = x (Fin.castSucc k)) :
     affineSubdivMap (n + 1) π x
-      = stdSimplex.map (S := ℝ) ι (affineSubdivMap n ρ y) :=
+      = SphereOddDegree.FiniteSimplex.map (S := ℝ) ι (affineSubdivMap n ρ y) :=
   affineSubdiv_face_last_eq_boundary_subdiv_of_faceData π ι ρ hιρ x y hxlast hy
 
 end AffineBarycentricSubdivision

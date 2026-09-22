@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.AffineBarycentricSubdivisionCarrier
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.MaximalFlagClassification
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.SubdivisionCharts
@@ -220,10 +221,10 @@ theorem refined_active_vertex_and_coefficient_eq
     i hi
   let z : Delta (p - 1) :=
     affineCompMap (p - 1) N (maximalRefinementWord N q.2)
-      (stdSimplex.vertex (S := Real) i)
+      (SphereOddDegree.FiniteSimplex.vertex (S := Real) i)
   have hzEq : z =
       affineCompMap (p - 1) N (maximalRefinementWord N r.2)
-        (stdSimplex.vertex (S := Real) i) := by
+        (SphereOddDegree.FiniteSimplex.vertex (S := Real) i) := by
     simpa [z] using hiter.1
   have hreal :
       s.realizationPoint (StandardSimplex.ofDelta u) =
@@ -246,7 +247,7 @@ theorem refined_active_vertex_and_coefficient_eq
         (if t j = c then z j else 0)
       simp [hzj]
     · have hzpos : 0 < z j :=
-        lt_of_le_of_ne (stdSimplex.zero_le z j) (Ne.symm hzj)
+        lt_of_le_of_ne (SphereOddDegree.FiniteSimplex.zero_le z j) (Ne.symm hzj)
       have hupos : 0 < u j := by
         exact affineCompMap_vertex_support_subset
           (p - 1) N (maximalRefinementWord N q.2) x
@@ -267,11 +268,11 @@ theorem refined_active_vertex_and_coefficient_eq
       s.realizationPoint
           (StandardSimplex.ofDelta
             (affineCompMap (p - 1) N (maximalRefinementWord N q.2)
-              (stdSimplex.vertex (S := Real) i))) =
+              (SphereOddDegree.FiniteSimplex.vertex (S := Real) i))) =
         t.realizationPoint
           (StandardSimplex.ofDelta
             (affineCompMap (p - 1) N (maximalRefinementWord N r.2)
-              (stdSimplex.vertex (S := Real) i))) := by
+              (SphereOddDegree.FiniteSimplex.vertex (S := Real) i))) := by
     calc
       _ = s.realizationPoint (StandardSimplex.ofDelta z) := by rfl
       _ = t.realizationPoint (StandardSimplex.ofDelta z) := hglobal
@@ -280,11 +281,11 @@ theorem refined_active_vertex_and_coefficient_eq
   · change s.realizationPoint
         (StandardSimplex.ofDelta
           (affineCompMap (p - 1) N (maximalRefinementWord N q.2)
-            (stdSimplex.vertex (S := Real) i))) =
+            (SphereOddDegree.FiniteSimplex.vertex (S := Real) i))) =
         t.realizationPoint
           (StandardSimplex.ofDelta
             (affineCompMap (p - 1) N (maximalRefinementWord N r.2)
-              (stdSimplex.vertex (S := Real) i)))
+              (SphereOddDegree.FiniteSimplex.vertex (S := Real) i)))
     exact hglobal'
   · simpa [Nat.sub_add_cancel hp.pos] using hiter.2
 

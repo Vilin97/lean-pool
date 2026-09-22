@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.AffineInternalSwapLemmas
 
 /-!
@@ -41,7 +42,7 @@ theorem affineSubdivMap_eq_of_zero_coord_and_prefixBarycenter_eq {m : ℕ}
     (hprefix : ∀ k : Fin (m + 1), k ≠ i →
       prefixBarycenter m π k = prefixBarycenter m π' k) :
     affineSubdivMap m π x = affineSubdivMap m π' x := by
-  apply stdSimplex.ext
+  apply SphereOddDegree.FiniteSimplex.ext
   funext j
   rw [affineSubdivMap_apply, affineSubdivMap_apply]
   apply Finset.sum_congr rfl

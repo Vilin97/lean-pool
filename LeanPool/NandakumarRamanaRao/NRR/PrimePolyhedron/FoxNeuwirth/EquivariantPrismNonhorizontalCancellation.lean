@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismGlobalCancellation
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RefinedChartCarrierEquivariant
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricBoundaryCancellation
@@ -55,7 +56,7 @@ variable {p : Nat}
 /-- Insert a zero barycentric coordinate at `k`. -/
 noncomputable def cofacePoint
     (n : Nat) (k : Fin (n + 2)) (x : Delta n) : Delta (n + 1) :=
-  stdSimplex.map (S := Real) k.succAbove x
+  SphereOddDegree.FiniteSimplex.map (S := Real) k.succAbove x
 
 /-- Transport a standard-simplex point across an equality of dimensions. -/
 noncomputable def deltaCast {m n : Nat} (h : m = n) : Delta m → Delta n :=
@@ -66,8 +67,8 @@ noncomputable def deltaCast {m n : Nat} (h : m = n) : Delta m → Delta n :=
 
 @[simp] theorem deltaCast_vertex {m n : Nat} (h : m = n)
     (i : Fin (m + 1)) :
-    deltaCast h (stdSimplex.vertex (S := Real) i) =
-      stdSimplex.vertex (S := Real)
+    deltaCast h (SphereOddDegree.FiniteSimplex.vertex (S := Real) i) =
+      SphereOddDegree.FiniteSimplex.vertex (S := Real)
         (Fin.cast (congrArg (fun t => t + 1) h) i) := by
   subst n
   rfl
@@ -85,18 +86,18 @@ noncomputable def deltaCast {m n : Nat} (h : m = n) : Delta m → Delta n :=
 @[simp] theorem cofacePoint_apply_deleted
     (n : Nat) (k : Fin (n + 2)) (x : Delta n) :
     cofacePoint n k x k = 0 := by
-  change (stdSimplex.map (S := Real) k.succAbove x : Fin (n + 2) → Real) k = 0
-  rw [stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
+  change (SphereOddDegree.FiniteSimplex.map (S := Real) k.succAbove x : Fin (n + 2) → Real) k = 0
+  rw [SphereOddDegree.FiniteSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
   apply Finset.sum_eq_zero
   intro i hi
   exact (Fin.succAbove_ne k i (Finset.mem_filter.mp hi).2).elim
 
 @[simp] theorem cofacePoint_vertex
     (n : Nat) (k : Fin (n + 2)) (i : Fin (n + 1)) :
-    cofacePoint n k (stdSimplex.vertex (S := Real) i) =
-      stdSimplex.vertex (S := Real) (k.succAbove i) := by
+    cofacePoint n k (SphereOddDegree.FiniteSimplex.vertex (S := Real) i) =
+      SphereOddDegree.FiniteSimplex.vertex (S := Real) (k.succAbove i) := by
   unfold cofacePoint
-  rw [stdSimplex.map_vertex]
+  rw [SphereOddDegree.FiniteSimplex.map_vertex]
 
 /-- The value of `Fin.succAbove`, exposed without proof-term-sensitive casts. -/
 theorem fin_succAbove_val {n : Nat} (k : Fin (n + 1)) (i : Fin n) :
@@ -618,7 +619,7 @@ theorem genericStaircaseSpatialPoint_internal_face
         (cofacePoint n (Fin.succ h).castSucc x) =
       genericStaircaseSpatialPoint n (Fin.succ h)
         (cofacePoint n (Fin.succ h).castSucc x) := by
-  apply stdSimplex.ext
+  apply SphereOddDegree.FiniteSimplex.ext
   funext i
   change
     (∑ j : Fin (n + 2),
@@ -775,10 +776,10 @@ noncomputable def staircaseFacetEquiv
 theorem genericStaircaseSpatialPoint_eq_map
     (n : Nat) (k : Fin (n + 1)) (w : Delta (n + 1)) :
     genericStaircaseSpatialPoint n k w =
-      stdSimplex.map (S := Real) (genericStaircaseSpatial k) w := by
-  apply stdSimplex.ext
+      SphereOddDegree.FiniteSimplex.map (S := Real) (genericStaircaseSpatial k) w := by
+  apply SphereOddDegree.FiniteSimplex.ext
   funext i
-  rw [stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
+  rw [SphereOddDegree.FiniteSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
   simp only [genericStaircaseSpatialPoint]
   rw [Finset.sum_filter]
   rfl
@@ -788,8 +789,8 @@ along `genericStaircaseTime`. -/
 theorem genericStaircaseIntervalPoint_eq_map_apply_one
     (n : Nat) (k : Fin (n + 1)) (w : Delta (n + 1)) :
     (genericStaircaseIntervalPoint n k w).1 =
-      stdSimplex.map (S := Real) (genericStaircaseTime k) w (1 : Fin 2) := by
-  rw [stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
+      SphereOddDegree.FiniteSimplex.map (S := Real) (genericStaircaseTime k) w (1 : Fin 2) := by
+  rw [SphereOddDegree.FiniteSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
   simp only [genericStaircaseIntervalPoint]
   rw [Finset.sum_filter]
 
@@ -851,16 +852,16 @@ theorem genericStaircaseSpatialPoint_side_of_le
   calc
     genericStaircaseSpatialPoint (n + 1) (Fin.succ h)
         (cofacePoint (n + 1) r.castSucc x) =
-      stdSimplex.map (S := Real)
+      SphereOddDegree.FiniteSimplex.map (S := Real)
         (genericStaircaseSpatial (Fin.succ h) ∘ r.castSucc.succAbove) x := by
           rw [genericStaircaseSpatialPoint_eq_map, cofacePoint,
-            stdSimplex.map_comp_apply]
-    _ = stdSimplex.map (S := Real)
+            SphereOddDegree.FiniteSimplex.map_comp_apply]
+    _ = SphereOddDegree.FiniteSimplex.map (S := Real)
         (r.succAbove ∘ genericStaircaseSpatial h) x := by
           rw [genericStaircaseSpatial_succ_comp_sideCoface_of_le n r h hrh]
     _ = cofacePoint n r (genericStaircaseSpatialPoint n h x) := by
           rw [genericStaircaseSpatialPoint_eq_map, cofacePoint,
-            stdSimplex.map_comp_apply]
+            SphereOddDegree.FiniteSimplex.map_comp_apply]
 
 /-- Interval-point naturality for a side face weakly before the staircase break. -/
 theorem genericStaircaseIntervalPoint_side_of_le
@@ -873,12 +874,12 @@ theorem genericStaircaseIntervalPoint_side_of_le
   calc
     (genericStaircaseIntervalPoint (n + 1) (Fin.succ h)
         (cofacePoint (n + 1) r.castSucc x)).1 =
-      stdSimplex.map (S := Real)
+      SphereOddDegree.FiniteSimplex.map (S := Real)
         (genericStaircaseTime (Fin.succ h) ∘ r.castSucc.succAbove) x
           (1 : Fin 2) := by
             rw [genericStaircaseIntervalPoint_eq_map_apply_one, cofacePoint,
-              stdSimplex.map_comp_apply]
-    _ = stdSimplex.map (S := Real) (genericStaircaseTime h) x (1 : Fin 2) := by
+              SphereOddDegree.FiniteSimplex.map_comp_apply]
+    _ = SphereOddDegree.FiniteSimplex.map (S := Real) (genericStaircaseTime h) x (1 : Fin 2) := by
           rw [genericStaircaseTime_succ_comp_sideCoface_of_le n r h hrh]
     _ = (genericStaircaseIntervalPoint n h x).1 := by
           rw [genericStaircaseIntervalPoint_eq_map_apply_one]
@@ -893,16 +894,16 @@ theorem genericStaircaseSpatialPoint_side_of_gt
   calc
     genericStaircaseSpatialPoint (n + 1) h.castSucc
         (cofacePoint (n + 1) (Fin.succ r) x) =
-      stdSimplex.map (S := Real)
+      SphereOddDegree.FiniteSimplex.map (S := Real)
         (genericStaircaseSpatial h.castSucc ∘ (Fin.succ r).succAbove) x := by
           rw [genericStaircaseSpatialPoint_eq_map, cofacePoint,
-            stdSimplex.map_comp_apply]
-    _ = stdSimplex.map (S := Real)
+            SphereOddDegree.FiniteSimplex.map_comp_apply]
+    _ = SphereOddDegree.FiniteSimplex.map (S := Real)
         (r.succAbove ∘ genericStaircaseSpatial h) x := by
           rw [genericStaircaseSpatial_castSucc_comp_sideCoface_of_gt n r h hrh]
     _ = cofacePoint n r (genericStaircaseSpatialPoint n h x) := by
           rw [genericStaircaseSpatialPoint_eq_map, cofacePoint,
-            stdSimplex.map_comp_apply]
+            SphereOddDegree.FiniteSimplex.map_comp_apply]
 
 /-- Interval-point naturality for a side face after the staircase break. -/
 theorem genericStaircaseIntervalPoint_side_of_gt
@@ -915,12 +916,12 @@ theorem genericStaircaseIntervalPoint_side_of_gt
   calc
     (genericStaircaseIntervalPoint (n + 1) h.castSucc
         (cofacePoint (n + 1) (Fin.succ r) x)).1 =
-      stdSimplex.map (S := Real)
+      SphereOddDegree.FiniteSimplex.map (S := Real)
         (genericStaircaseTime h.castSucc ∘ (Fin.succ r).succAbove) x
           (1 : Fin 2) := by
             rw [genericStaircaseIntervalPoint_eq_map_apply_one, cofacePoint,
-              stdSimplex.map_comp_apply]
-    _ = stdSimplex.map (S := Real) (genericStaircaseTime h) x (1 : Fin 2) := by
+              SphereOddDegree.FiniteSimplex.map_comp_apply]
+    _ = SphereOddDegree.FiniteSimplex.map (S := Real) (genericStaircaseTime h) x (1 : Fin 2) := by
           rw [genericStaircaseTime_castSucc_comp_sideCoface_of_gt n r h hrh]
     _ = (genericStaircaseIntervalPoint n h x).1 := by
           rw [genericStaircaseIntervalPoint_eq_map_apply_one]
@@ -933,16 +934,16 @@ theorem staircase_upper_face_eq
   apply Prod.ext
   · apply congrArg sigma
     rw [genericStaircaseSpatialPoint_eq_map, cofacePoint,
-      stdSimplex.map_comp_apply]
+      SphereOddDegree.FiniteSimplex.map_comp_apply]
     have hf : genericStaircaseSpatial (0 : Fin (n + 1)) ∘
         Fin.succAbove (0 : Fin (n + 2)) = id := by
       funext i
       apply Fin.ext
       simp [genericStaircaseSpatial]
     rw [hf]
-    apply stdSimplex.ext
+    apply SphereOddDegree.FiniteSimplex.ext
     funext i
-    rw [stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
+    rw [SphereOddDegree.FiniteSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
     exact Finset.sum_eq_single i (by simp) (by simp)
   · apply Subtype.ext
     simp only [staircasePrismMap, upperEndpointMap,
@@ -972,7 +973,7 @@ theorem staircase_lower_face_eq
   apply Prod.ext
   · apply congrArg sigma
     rw [genericStaircaseSpatialPoint_eq_map, cofacePoint,
-      stdSimplex.map_comp_apply]
+      SphereOddDegree.FiniteSimplex.map_comp_apply]
     have hf : genericStaircaseSpatial (Fin.last n) ∘
         (Fin.last (n + 1)).succAbove = id := by
       funext i
@@ -983,9 +984,9 @@ theorem staircase_lower_face_eq
       have hi : i.1 ≤ n := by omega
       simp [hi]
     rw [hf]
-    apply stdSimplex.ext
+    apply SphereOddDegree.FiniteSimplex.ext
     funext i
-    rw [stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
+    rw [SphereOddDegree.FiniteSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
     exact Finset.sum_eq_single i (by simp) (by simp)
   · apply Subtype.ext
     simp only [staircasePrismMap, lowerEndpointMap,
@@ -1196,8 +1197,8 @@ noncomputable def occurrenceFacetMap
 @[simp] theorem occurrenceCofacePoint_vertex
     (hp : Nat.Prime p) (k : Fin (p + 1)) (i : Fin p) :
     occurrenceCofacePoint hp k
-        (stdSimplex.vertex (S := Real) (facetCoordinateIndex i)) =
-      stdSimplex.vertex (S := Real) (k.succAbove i) := by
+        (SphereOddDegree.FiniteSimplex.vertex (S := Real) (facetCoordinateIndex i)) =
+      SphereOddDegree.FiniteSimplex.vertex (S := Real) (k.succAbove i) := by
   unfold occurrenceCofacePoint
   rw [cofacePoint_vertex, deltaCast_vertex]
   congr 1
@@ -1210,7 +1211,7 @@ noncomputable def occurrenceFacetMap
     (hp : Nat.Prime p) (N L : Nat)
     (o : FacetOccurrence hp N L) (i : Fin p) :
     occurrenceFacetMap hp N L o
-        (stdSimplex.vertex (S := Real) (facetCoordinateIndex i)) =
+        (SphereOddDegree.FiniteSimplex.vertex (S := Real) (facetCoordinateIndex i)) =
       SubdivisionPrismCharts.vertex hp N L o.1 (o.2.succAbove i) := by
   simp [occurrenceFacetMap, SubdivisionPrismCharts.vertex]
 
@@ -1219,7 +1220,7 @@ def mapVertexSignature
     (tau : Delta (p - 1) -> Realization p × Set.Icc (0 : Real) 1) :
     Fin p -> CylinderPoint p :=
   fun i => CylinderPoint.ofProd
-    (tau (stdSimplex.vertex (S := Real) (facetCoordinateIndex i)))
+    (tau (SphereOddDegree.FiniteSimplex.vertex (S := Real) (facetCoordinateIndex i)))
 
 /-- Prime translation of an affine facet map. -/
 def translateFacetMap
@@ -1377,13 +1378,13 @@ theorem realizedFacetWeight_translateFacetMap
 def MapIsLowerHorizontal
     (tau : Delta (p - 1) -> Realization p × Set.Icc (0 : Real) 1) : Prop :=
   ∀ i : Fin p,
-    (tau (stdSimplex.vertex (S := Real) (facetCoordinateIndex i))).2.1 = 0
+    (tau (SphereOddDegree.FiniteSimplex.vertex (S := Real) (facetCoordinateIndex i))).2.1 = 0
 
 /-- A facet map is upper horizontal when every one of its vertices has time one. -/
 def MapIsUpperHorizontal
     (tau : Delta (p - 1) -> Realization p × Set.Icc (0 : Real) 1) : Prop :=
   ∀ i : Fin p,
-    (tau (stdSimplex.vertex (S := Real) (facetCoordinateIndex i))).2.1 = 1
+    (tau (SphereOddDegree.FiniteSimplex.vertex (S := Real) (facetCoordinateIndex i))).2.1 = 1
 
 /-- Weight used for the nonhorizontal part of the boundary. -/
 noncomputable def nonhorizontalMapWeight
@@ -2097,19 +2098,19 @@ private theorem fixed_refined_side_cancels (N L n : ℕ) (hp : Nat.Prime (n + 1 
     intro c
     simp [ iteratedBoundaryMap, ReferenceAffineOrbitCount.topRepr,
       Simplex.realizationContinuousMap, Simplex.realizationPoint,
-      Simplex.chartWeight, cofacePoint, stdSimplex.map_coe]
+      Simplex.chartWeight, cofacePoint, SphereOddDegree.FiniteSimplex.map_coe]
     change (∑ i : Fin (n + 1 + 1),
       if (ReferenceAffineOrbitCount.topRepr hp orbit) i = c then
         (StandardSimplex.ofDelta
-          (stdSimplex.map j.succAbove (affineCompMap n N theta x))) i else 0) = _
+          (SphereOddDegree.FiniteSimplex.map j.succAbove (affineCompMap n N theta x))) i else 0) = _
     have hs := Fin.sum_univ_succAbove (fun i : Fin (n + 1 + 1) =>
       if (ReferenceAffineOrbitCount.topRepr hp orbit) i = c then
         (StandardSimplex.ofDelta
-          (stdSimplex.map j.succAbove (affineCompMap n N theta x))) i else 0) j
+          (SphereOddDegree.FiniteSimplex.map j.succAbove (affineCompMap n N theta x))) i else 0) j
     rw [hs]
     have hdeleted :
         (StandardSimplex.ofDelta
-          (stdSimplex.map j.succAbove (affineCompMap n N theta x))) j = 0 := by
+          (SphereOddDegree.FiniteSimplex.map j.succAbove (affineCompMap n N theta x))) j = 0 := by
       change (cofacePoint n j (affineCompMap n N theta x)) j = 0
       exact cofacePoint_apply_deleted n j (affineCompMap n N theta x)
     simp only [hdeleted, ite_self, zero_add]
@@ -2119,10 +2120,10 @@ private theorem fixed_refined_side_cancels (N L n : ℕ) (hp : Nat.Prime (n + 1 
       if (ReferenceAffineOrbitCount.topRepr hp orbit) (j.succAbove i) = c then _ else 0
     by_cases hic : (ReferenceAffineOrbitCount.topRepr hp orbit) (j.succAbove i) = c
     · rw [ite_eq_left hic, ite_eq_left hic]
-      change stdSimplex.map (S := Real) j.succAbove
+      change SphereOddDegree.FiniteSimplex.map (S := Real) j.succAbove
         (affineCompMap n N theta x) (j.succAbove i) =
           affineCompMap n N theta x i
-      rw [stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
+      rw [SphereOddDegree.FiniteSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
       exact Finset.sum_eq_single i (by
         intro q hq hqi
         have hsucc : j.succAbove q ≠ j.succAbove i := by

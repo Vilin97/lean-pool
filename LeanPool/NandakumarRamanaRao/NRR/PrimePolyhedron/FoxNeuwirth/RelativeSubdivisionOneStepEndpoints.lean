@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeSubdivisionOneStepCells
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EndpointFaceRefinement
 /-!
@@ -42,21 +43,21 @@ private theorem cylinderPoint_ext {x y : CylinderPoint p}
 private theorem localWeight_vertex_succ
     {n : Nat} (hp : Nat.Prime (n + 1)) (i : Fin (n + 1)) :
     RelativeSubdivisionOneStepCells.localWeight hp
-        (stdSimplex.vertex (S := Real) i.succ) =
-      stdSimplex.vertex (S := Real) i.succ := by
+        (SphereOddDegree.FiniteSimplex.vertex (S := Real) i.succ) =
+      SphereOddDegree.FiniteSimplex.vertex (S := Real) i.succ := by
   simp [RelativeSubdivisionOneStepCells.localWeight]
 
 private theorem localPoint_lower_vertex
     {n : Nat} (hp : Nat.Prime (n + 1)) (i : Fin (n + 1)) :
     RelativeSubdivisionOneStepCells.localPoint hp
         (RelativeSubdivisionCylinderCombinatorics.lowerCell n)
-        (stdSimplex.vertex (S := Real) i.succ) =
+        (SphereOddDegree.FiniteSimplex.vertex (S := Real) i.succ) =
       RelativeSubdivisionCylinderCombinatorics.lowerBoundaryVertex n i := by
   unfold RelativeSubdivisionOneStepCells.localPoint
   rw [localWeight_vertex_succ hp i]
   change RelativeSubdivisionCylinderCombinatorics.chart n
       (RelativeSubdivisionCylinderCombinatorics.lowerCell n)
-      (stdSimplex.vertex (S := Real) i.succ) = _
+      (SphereOddDegree.FiniteSimplex.vertex (S := Real) i.succ) = _
   exact (RelativeSubdivisionCylinderCombinatorics.chart_vertex n
     (RelativeSubdivisionCylinderCombinatorics.lowerCell n) i.succ).trans
     (RelativeSubdivisionCylinderCombinatorics.vertex_succ_lower n i)
@@ -66,13 +67,13 @@ private theorem localPoint_upper_vertex
     (pi : Equiv.Perm (Fin (n + 1))) (i : Fin (n + 1)) :
     RelativeSubdivisionOneStepCells.localPoint hp
         (RelativeSubdivisionCylinderCombinatorics.upperCell n pi)
-        (stdSimplex.vertex (S := Real) i.succ) =
+        (SphereOddDegree.FiniteSimplex.vertex (S := Real) i.succ) =
       RelativeSubdivisionCylinderCombinatorics.upperBoundaryVertex n pi i := by
   unfold RelativeSubdivisionOneStepCells.localPoint
   rw [localWeight_vertex_succ hp i]
   change RelativeSubdivisionCylinderCombinatorics.chart n
       (RelativeSubdivisionCylinderCombinatorics.upperCell n pi)
-      (stdSimplex.vertex (S := Real) i.succ) = _
+      (SphereOddDegree.FiniteSimplex.vertex (S := Real) i.succ) = _
   exact (RelativeSubdivisionCylinderCombinatorics.chart_vertex n
     (RelativeSubdivisionCylinderCombinatorics.upperCell n pi) i.succ).trans
     (RelativeSubdivisionCylinderCombinatorics.vertex_succ_upper n pi i)
@@ -207,10 +208,10 @@ theorem lowerOccurrence_facetSignature
       (RefinedAffineMap.chart hp N q
           (RelativeSubdivisionOneStepCells.localPoint hp
             (RelativeSubdivisionCylinderCombinatorics.lowerCell n)
-            (stdSimplex.vertex (S := Real) i.succ)).1,
+            (SphereOddDegree.FiniteSimplex.vertex (S := Real) i.succ)).1,
         (RelativeSubdivisionOneStepCells.localPoint hp
           (RelativeSubdivisionCylinderCombinatorics.lowerCell n)
-          (stdSimplex.vertex (S := Real) i.succ)).2) = _
+          (SphereOddDegree.FiniteSimplex.vertex (S := Real) i.succ)).2) = _
   rw [localPoint_lower_vertex hp i]
   rfl
 
@@ -241,12 +242,12 @@ theorem upperOccurrenceBase_facetSignature
   · change RefinedAffineMap.chart hp N q
         (RelativeSubdivisionOneStepCells.localPoint hp
           (RelativeSubdivisionCylinderCombinatorics.upperCell n pi)
-          (stdSimplex.vertex (S := Real) i.succ)).1 = _
+          (SphereOddDegree.FiniteSimplex.vertex (S := Real) i.succ)).1 = _
     rw [localPoint_upper_vertex hp pi i]
     exact refinedChart_snoc_vertex hp N q pi i
   · change (RelativeSubdivisionOneStepCells.localPoint hp
         (RelativeSubdivisionCylinderCombinatorics.upperCell n pi)
-        (stdSimplex.vertex (S := Real) i.succ)).2 = _
+        (SphereOddDegree.FiniteSimplex.vertex (S := Real) i.succ)).2 = _
     rw [localPoint_upper_vertex hp pi i]
     rfl
 

@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.SubdivisionCharts
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ReferenceAffineOrbitCount
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.AffinePrismObstruction
@@ -56,7 +57,7 @@ noncomputable def chart
 /-- Vertices of a refined top simplex. -/
 noncomputable def vertex
     (hp : Nat.Prime p) (N : Nat) (q : TopCell hp N) (i : Fin (p - 1 + 1)) : Realization p :=
-  chart hp N q (stdSimplex.vertex (S := Real) i)
+  chart hp N q (SphereOddDegree.FiniteSimplex.vertex (S := Real) i)
 
 /-- Vertex samples of a continuous coordinate map on one refined simplex. -/
 noncomputable def vertexValue

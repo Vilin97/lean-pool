@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.StableCollarRelativeSubdivisionExact
 import Mathlib.Topology.UniformSpace.HeineCantor
 /-!
@@ -161,16 +162,16 @@ theorem segmentSafe_refinedVertex
       (vertex hp A.toRegularApproximation.level q i) := by
   intro t
   have h := A.toRegularApproximation.zeroFreeStraightLine q
-    (StandardSimplex.ofDelta (stdSimplex.vertex (S := Real) i)) t
+    (StandardSimplex.ofDelta (SphereOddDegree.FiniteSimplex.vertex (S := Real) i)) t
   have hchart : chart hp A.toRegularApproximation.level q
       (StandardSimplex.toDelta
-        (StandardSimplex.ofDelta (stdSimplex.vertex (S := Real) i))) =
+        (StandardSimplex.ofDelta (SphereOddDegree.FiniteSimplex.vertex (S := Real) i))) =
       vertex hp A.toRegularApproximation.level q i := by
     rw [StandardSimplex.toDelta_ofDelta]
     rfl
   have hvalue : value hp A.toRegularApproximation.level
       A.toRegularApproximation.map q
-      (StandardSimplex.ofDelta (stdSimplex.vertex (S := Real) i)) =
+      (StandardSimplex.ofDelta (SphereOddDegree.FiniteSimplex.vertex (S := Real) i)) =
       A.toRegularApproximation.map
         (vertex hp A.toRegularApproximation.level q i) := by
     funext j

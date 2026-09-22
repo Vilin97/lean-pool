@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import Mathlib.Analysis.Convex.StdSimplex
 import Mathlib.Topology.Algebra.Module.Basic
 import Mathlib.Tactic
@@ -23,7 +24,7 @@ The file defines:
 
 * `prefixVertex` : the ordered prefix map `Fin (k+1) -> Fin (n+1)`;
 * `prefixBarycenter` : the barycenter of the first `k+1` vertices in that
- permuted order, as a point of `stdSimplex ℝ (Fin (n+1))`;
+ permuted order, as a point of `SphereOddDegree.finiteSimplex ℝ (Fin (n+1))`;
 * `affineSubdivMap` : the affine self-map of `Δ^n` sending vertex `k` to
  `prefixBarycenter n π k`.
 
@@ -39,7 +40,7 @@ namespace AffineBarycentricSubdivision
 
 /-- The ambient topological `n`-simplex, represented as the subtype of
 nonnegative coordinate functions on `Fin (n+1)` summing to `1`. -/
-abbrev Delta (n : ℕ) := ↑(stdSimplex ℝ (Fin (n + 1)))
+abbrev Delta (n : ℕ) := ↑(SphereOddDegree.finiteSimplex ℝ (Fin (n + 1)))
 
 /-- The `k`-prefix vertex map associated to a permutation of the vertices of
 `Δ^n`. It sends `0,...,k` into `Fin (n+1)` by the permuted order `π`. -/
@@ -52,22 +53,22 @@ def prefixVertex (n : ℕ) (π : Equiv.Perm (Fin (n + 1))) (k : Fin (n + 1)) :
 
 /-- The barycenter of the first `k+1` vertices in the order given by `π`,
 viewed as a point of the ambient simplex `Δ^n`. This uses Mathlib's existing
-`stdSimplex.barycenter` and `stdSimplex.map`, avoiding a hand proof that the
+`SphereOddDegree.FiniteSimplex.barycenter` and `SphereOddDegree.FiniteSimplex.map`, avoiding a hand proof that the
 coordinates are nonnegative and have total mass `1`. -/
 noncomputable def prefixBarycenter (n : ℕ) (π : Equiv.Perm (Fin (n + 1)))
     (k : Fin (n + 1)) : Delta n :=
-  stdSimplex.map (S := ℝ) (prefixVertex n π k)
-    (stdSimplex.barycenter (X := Fin (k.val + 1)) (𝕜 := ℝ))
+  SphereOddDegree.FiniteSimplex.map (S := ℝ) (prefixVertex n π k)
+    (SphereOddDegree.FiniteSimplex.barycenter (X := Fin (k.val + 1)) (𝕜 := ℝ))
 
 /-- Coordinate formula for `prefixBarycenter`. In words, the `j`-coordinate is
 `1/(k+1)` if `j` occurs among `π 0, ..., π k`, and `0` otherwise. We keep it as
-an unfolded `stdSimplex.map` formula because this is the form most useful for
+an unfolded `SphereOddDegree.FiniteSimplex.map` formula because this is the form most useful for
 later `simp`-based face computations. -/
 theorem prefixBarycenter_def (n : ℕ) (π : Equiv.Perm (Fin (n + 1)))
     (k : Fin (n + 1)) :
     prefixBarycenter n π k =
-      stdSimplex.map (S := ℝ) (prefixVertex n π k)
-        (stdSimplex.barycenter (X := Fin (k.val + 1)) (𝕜 := ℝ)) := rfl
+      SphereOddDegree.FiniteSimplex.map (S := ℝ) (prefixVertex n π k)
+        (SphereOddDegree.FiniteSimplex.barycenter (X := Fin (k.val + 1)) (𝕜 := ℝ)) := rfl
 
 /-- The coordinate function of the affine map attached to the permutation `π`.
 It is the convex combination of the prefix barycenters with weights given by
@@ -82,7 +83,7 @@ theorem affineSubdivMapFun_nonneg (n : ℕ) (π : Equiv.Perm (Fin (n + 1)))
     0 ≤ affineSubdivMapFun n π x j := by
   unfold affineSubdivMapFun
   exact Finset.sum_nonneg fun k _ =>
-    mul_nonneg (stdSimplex.zero_le x k) (stdSimplex.zero_le (prefixBarycenter n π k) j)
+    mul_nonneg (SphereOddDegree.FiniteSimplex.zero_le x k) (SphereOddDegree.FiniteSimplex.zero_le (prefixBarycenter n π k) j)
 
 /-- The coordinates of `affineSubdivMapFun` sum to `1`. -/
 theorem affineSubdivMapFun_sum_eq_one (n : ℕ) (π : Equiv.Perm (Fin (n + 1)))
@@ -93,9 +94,9 @@ theorem affineSubdivMapFun_sum_eq_one (n : ℕ) (π : Equiv.Perm (Fin (n + 1)))
   have hk : ∀ k : Fin (n + 1),
       (∑ j : Fin (n + 1), x k * prefixBarycenter n π k j) = x k := by
     intro k
-    rw [← Finset.mul_sum, stdSimplex.sum_eq_one, mul_one]
+    rw [← Finset.mul_sum, SphereOddDegree.FiniteSimplex.sum_eq_one, mul_one]
   rw [Finset.sum_congr rfl (fun k _ => hk k)]
-  exact stdSimplex.sum_eq_one x
+  exact SphereOddDegree.FiniteSimplex.sum_eq_one x
 
 /-- The affine self-map of `Δ^n` associated to a permutation `π`; this is the
 geometric simplex appearing as one signed summand in barycentric subdivision. -/
@@ -113,14 +114,14 @@ noncomputable def affineSubdivMap (n : ℕ) (π : Equiv.Perm (Fin (n + 1))) :
 `k`-th prefix barycenter. -/
 theorem affineSubdivMap_vertex (n : ℕ) (π : Equiv.Perm (Fin (n + 1)))
     (k : Fin (n + 1)) :
-    affineSubdivMap n π (stdSimplex.vertex (S := ℝ) k) = prefixBarycenter n π k := by
-  apply stdSimplex.ext
+    affineSubdivMap n π (SphereOddDegree.FiniteSimplex.vertex (S := ℝ) k) = prefixBarycenter n π k := by
+  apply SphereOddDegree.FiniteSimplex.ext
   funext j
   simp only [affineSubdivMap_apply]
   rw [Finset.sum_eq_single k]
-  · simp [stdSimplex.vertex]
+  · simp [SphereOddDegree.FiniteSimplex.vertex]
   · intro b _ hb
-    simp [stdSimplex.vertex, Pi.single_eq_of_ne hb]
+    simp [SphereOddDegree.FiniteSimplex.vertex, Pi.single_eq_of_ne hb]
   · intro h
     exact absurd (Finset.mem_univ k) h
 
@@ -135,14 +136,14 @@ theorem prefixVertex_comp (n : ℕ) (π τ : Equiv.Perm (Fin (n + 1)))
 
 /-- The first prefix barycenter is the first permuted vertex. -/
 theorem prefixBarycenter_zero (n : ℕ) (π : Equiv.Perm (Fin (n + 1))) :
-    prefixBarycenter n π 0 = stdSimplex.vertex (S := ℝ) (π 0) := by
+    prefixBarycenter n π 0 = SphereOddDegree.FiniteSimplex.vertex (S := ℝ) (π 0) := by
   have h1 : (0 : Fin (n + 1)).val + 1 = 1 := rfl
   have : Unique (Fin ((0 : Fin (n + 1)).val + 1)) := by
     rw [h1]
     infer_instance
-  have hb : (stdSimplex.barycenter (X := Fin ((0 : Fin (n + 1)).val + 1)) (𝕜 := ℝ)) =
-      stdSimplex.vertex 0 := Subsingleton.elim _ _
-  rw [prefixBarycenter, hb, stdSimplex.map_vertex]
+  have hb : (SphereOddDegree.FiniteSimplex.barycenter (X := Fin ((0 : Fin (n + 1)).val + 1)) (𝕜 := ℝ)) =
+      SphereOddDegree.FiniteSimplex.vertex 0 := Subsingleton.elim _ _
+  rw [prefixBarycenter, hb, SphereOddDegree.FiniteSimplex.map_vertex]
   rfl
 
 

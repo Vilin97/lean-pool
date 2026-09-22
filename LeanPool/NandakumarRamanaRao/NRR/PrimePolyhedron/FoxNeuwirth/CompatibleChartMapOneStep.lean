@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.CompatibleRefinedChartHomotopy
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ExplicitAffineRelativeCollarAssignmentCompose
 /-!
@@ -52,7 +53,7 @@ def ChartMap.IsAffine
   ∀ (q : TopCell hp N) (w : StandardSimplex (p - 1)),
     K.value q w = fun c =>
       ∑ i : Fin (p - 1 + 1), w i *
-        K.value q (StandardSimplex.ofDelta (stdSimplex.vertex (S := Real) i)) c
+        K.value q (StandardSimplex.ofDelta (SphereOddDegree.FiniteSimplex.vertex (S := Real) i)) c
 
 /-- The endpoint PL chart map is affine by construction. -/
 theorem baseOriginalPLMap_isAffine
@@ -79,23 +80,23 @@ theorem ChartMap.IsAffine.refine
       K.value r u c =
         ∑ j : Fin (p - 1 + 1), (u : Fin (p - 1 + 1) → Real) j *
           K.value r (StandardSimplex.ofDelta
-            (stdSimplex.vertex (S := Real) j)) c :=
+            (SphereOddDegree.FiniteSimplex.vertex (S := Real) j)) c :=
     fun u => congrFun (hK r u) c
   have hL : (K.refine k).value q w c =
       ∑ j : Fin (p - 1 + 1),
         (ancestorWeight N k q w : Fin (p - 1 + 1) → Real) j *
           K.value r (StandardSimplex.ofDelta
-            (stdSimplex.vertex (S := Real) j)) c := by
+            (SphereOddDegree.FiniteSimplex.vertex (S := Real) j)) c := by
     change K.value r (ancestorWeight N k q w) c = _
     rw [hval]
   have hR : ∀ x : Fin (p - 1 + 1),
       (K.refine k).value q
-          (StandardSimplex.ofDelta (stdSimplex.vertex (S := Real) x)) c =
+          (StandardSimplex.ofDelta (SphereOddDegree.FiniteSimplex.vertex (S := Real) x)) c =
         ∑ j : Fin (p - 1 + 1),
           (ancestorWeight N k q (StandardSimplex.ofDelta
-              (stdSimplex.vertex (S := Real) x)) : Fin (p - 1 + 1) → Real) j *
+              (SphereOddDegree.FiniteSimplex.vertex (S := Real) x)) : Fin (p - 1 + 1) → Real) j *
             K.value r (StandardSimplex.ofDelta
-              (stdSimplex.vertex (S := Real) j)) c := by
+              (SphereOddDegree.FiniteSimplex.vertex (S := Real) j)) c := by
     intro x
     change K.value r (ancestorWeight N k q _) c = _
     rw [hval]
@@ -103,7 +104,7 @@ theorem ChartMap.IsAffine.refine
       (ancestorWeight N k q w : Fin (p - 1 + 1) → Real) j =
         ∑ x : Fin (p - 1 + 1), (w : Fin (p - 1 + 1) → Real) x *
           (ancestorWeight N k q (StandardSimplex.ofDelta
-            (stdSimplex.vertex (S := Real) x)) : Fin (p - 1 + 1) → Real) j := by
+            (SphereOddDegree.FiniteSimplex.vertex (S := Real) x)) : Fin (p - 1 + 1) → Real) j := by
     intro j
     exact affineCompMap_coordinate_eq_sum_vertices
       (p - 1) k (fun j => Simplex.refinementIndexPerm (ancestorTail N k q j))
@@ -132,7 +133,7 @@ noncomputable def localSpatialWeight
     (hp : Nat.Prime p) (N : Nat)
     (s : (Cells hp N).VertexSlot) : StandardSimplex (p - 1) :=
   StandardSimplex.ofDelta
-    (RelativeSubdivisionOneStepCells.localPoint hp s.1.2 (stdSimplex.vertex (S := Real) s.2)).1
+    (RelativeSubdivisionOneStepCells.localPoint hp s.1.2 (SphereOddDegree.FiniteSimplex.vertex (S := Real) s.2)).1
 
 /-- Local value supplied by a compatible chart map. -/
 noncomputable def localVector
@@ -212,7 +213,7 @@ theorem affineValue_localVertexMap_assignment
       K.value q.1 u c =
         ∑ j : Fin (p - 1 + 1), (u : Fin (p - 1 + 1) → Real) j *
           K.value q.1 (StandardSimplex.ofDelta
-            (stdSimplex.vertex (S := Real) j)) c :=
+            (SphereOddDegree.FiniteSimplex.vertex (S := Real) j)) c :=
     fun u => congrFun (hK q.1 u) c
   have hlhs : affineValue (localVertexMap hp (Cells hp N) (assignment hp K) q) w c
       = ∑ i : Fin (p + 1), (w : Fin (p + 1) → Real) i *
@@ -223,7 +224,7 @@ theorem affineValue_localVertexMap_assignment
           ((w : Fin (p + 1) → Real) i *
             (localSpatialWeight hp N (q, i) : Fin (p - 1 + 1) → Real) j) *
             K.value q.1 (StandardSimplex.ofDelta
-              (stdSimplex.vertex (S := Real) j)) c := by
+              (SphereOddDegree.FiniteSimplex.vertex (S := Real) j)) c := by
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [hval, Finset.mul_sum]
     exact Finset.sum_congr rfl fun j _ => by ring
@@ -257,7 +258,7 @@ theorem lower_sample
     vectorValue hp (Cells hp N) (assignment hp K)
         (sampleVertex hp (Cells hp N)
           ((q, RelativeSubdivisionCylinderCombinatorics.lowerCell (p - 1)), i.succ)) =
-      K.value q (StandardSimplex.ofDelta (stdSimplex.vertex (S := Real)
+      K.value q (StandardSimplex.ofDelta (SphereOddDegree.FiniteSimplex.vertex (S := Real)
         (Fin.cast (Nat.sub_add_cancel hp.pos).symm i))) := by
   obtain ⟨m, rfl⟩ : ∃ m, p = m + 1 := ⟨p - 1, (Nat.succ_pred_eq_of_pos hp.pos).symm⟩
   rw [vectorValue_assignment_sample]
@@ -278,7 +279,7 @@ theorem upper_sample_refine
           ((q, RelativeSubdivisionCylinderCombinatorics.upperCell (p - 1)
             (by simpa [Nat.sub_add_cancel hp.pos] using pi)), i.succ)) =
       (K.refine 1).value (q.1, Fin.snoc q.2 pi)
-        (StandardSimplex.ofDelta (stdSimplex.vertex (S := Real)
+        (StandardSimplex.ofDelta (SphereOddDegree.FiniteSimplex.vertex (S := Real)
           (Fin.cast (Nat.sub_add_cancel hp.pos).symm i))) := by
   obtain ⟨m, rfl⟩ : ∃ m, p = m + 1 := ⟨p - 1, (Nat.succ_pred_eq_of_pos hp.pos).symm⟩
   rw [vectorValue_assignment_sample]

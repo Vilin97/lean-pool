@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EndpointStackIteratedAffinePullback
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RouteBSmallGenericPerturbation
 /-!
@@ -155,8 +156,8 @@ theorem lowerSpatialWeight_not_interior
         apply hc
         exact Finset.mem_image.mpr ⟨ks, Finset.mem_univ _, heq⟩
       rw [lowerIndex_spec ks]
-      simp [RelativeSubdivisionCylinderCombinatorics.lowerBoundaryVertex, stdSimplex.vertex, hne]
-    · have hw0 : w k = 0 := le_antisymm (le_of_not_gt hkw) (stdSimplex.zero_le w k)
+      simp [RelativeSubdivisionCylinderCombinatorics.lowerBoundaryVertex, SphereOddDegree.FiniteSimplex.vertex, hne]
+    · have hw0 : w k = 0 := le_antisymm (le_of_not_gt hkw) (SphereOddDegree.FiniteSimplex.zero_le w k)
       simp [hw0]
   have hcpos : 0 < RelativeSubdivisionCylinderCombinatorics.spatialPoint d q w c :=
     hinterior c

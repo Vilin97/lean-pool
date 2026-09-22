@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.IteratedSubdivisionSmallSimplex
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.LinearAlgebra.Matrix.Permutation
@@ -95,13 +96,13 @@ theorem det_stepVertexMatrix_ne_zero
 noncomputable def iterVertexMatrix
     (n N : Nat) (rho : Fin N → Equiv.Perm (Fin (n + 1))) :
     Matrix (Fin (n + 1)) (Fin (n + 1)) Real :=
-  fun r k => (affineCompMap n N rho (stdSimplex.vertex (S := Real) k)).val r
+  fun r k => (affineCompMap n N rho (SphereOddDegree.FiniteSimplex.vertex (S := Real) k)).val r
 
 @[simp] theorem iterVertexMatrix_zero
     (n : Nat) (rho : Fin 0 → Equiv.Perm (Fin (n + 1))) :
     iterVertexMatrix n 0 rho = 1 := by
   ext r k
-  simp [iterVertexMatrix, Matrix.one_apply, stdSimplex.vertex, Pi.single_apply]
+  simp [iterVertexMatrix, Matrix.one_apply, SphereOddDegree.FiniteSimplex.vertex, Pi.single_apply]
 
 /-- Appending one subdivision step multiplies vertex matrices. -/
 theorem iterVertexMatrix_succ
@@ -111,15 +112,15 @@ theorem iterVertexMatrix_succ
         stepVertexMatrix n (rho (Fin.last N)) := by
   ext r k
   dsimp [iterVertexMatrix, affineCompMap_succ, Matrix.mul_apply, stepVertexMatrix]
-  have h_affine : (affineSubdivMap n (rho (Fin.last N)) (stdSimplex.vertex k)).val
+  have h_affine : (affineSubdivMap n (rho (Fin.last N)) (SphereOddDegree.FiniteSimplex.vertex k)).val
       = (prefixBarycenter n (rho (Fin.last N)) k).val := by
     ext j
     rw [← affineSubdivLinear_coe, affineSubdivLinear_apply]
-    dsimp [stdSimplex.vertex]
+    dsimp [SphereOddDegree.FiniteSimplex.vertex]
     simp only [Pi.single_apply]
     simp_rw [ite_mul, one_mul, zero_mul]
     simp
-  have h_coe := affineCompMap_coe n N (fun i => rho i.castSucc) (affineSubdivMap n (rho (Fin.last N)) (stdSimplex.vertex k))
+  have h_coe := affineCompMap_coe n N (fun i => rho i.castSucc) (affineSubdivMap n (rho (Fin.last N)) (SphereOddDegree.FiniteSimplex.vertex k))
   have h_coe_r := congr_fun h_coe r
   rw [h_coe_r, h_affine]
   have h_sum : (affineCompLinear n N (fun i => rho i.castSucc)) (fun j => (prefixBarycenter n (rho (Fin.last N)) k).val j)
@@ -141,7 +142,7 @@ theorem iterVertexMatrix_succ
   intro j _
   rw [mul_comm]
   congr 1
-  have h_vert := affineCompMap_coe n N (fun i => rho i.castSucc) (stdSimplex.vertex j)
+  have h_vert := affineCompMap_coe n N (fun i => rho i.castSucc) (SphereOddDegree.FiniteSimplex.vertex j)
   have h_vert_r := congr_fun h_vert r
   rw [h_vert_r]
   rfl

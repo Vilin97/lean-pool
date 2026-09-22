@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.SubdivisionPrismCharts
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.IteratedSubdivisionSmallSimplex
 /-!
@@ -197,9 +198,9 @@ theorem chart_spatial_affine
   simp only [smul_eq_mul]
   change w i *
       prismSpatialCoordinateLinear hp N L q c
-        (stdSimplex.vertex (S := Real) i).1 =
+        (SphereOddDegree.FiniteSimplex.vertex (S := Real) i).1 =
     w i * (SubdivisionPrismCharts.vertex hp N L q i).1 c
-  rw [← chart_spatial_eq_linear hp N L q (stdSimplex.vertex (S := Real) i) c]
+  rw [← chart_spatial_eq_linear hp N L q (SphereOddDegree.FiniteSimplex.vertex (S := Real) i) c]
   rfl
 
 /-- The interval coordinate of the refined prism chart is the barycentric interpolation of its
@@ -216,9 +217,9 @@ theorem chart_time_affine
   simp only [smul_eq_mul]
   change w i *
       prismTimeCoordinateLinear hp N L q
-        (stdSimplex.vertex (S := Real) i).1 =
+        (SphereOddDegree.FiniteSimplex.vertex (S := Real) i).1 =
     w i * (SubdivisionPrismCharts.vertex hp N L q i).2.1
-  rw [← chart_time_eq_linear hp N L q (stdSimplex.vertex (S := Real) i)]
+  rw [← chart_time_eq_linear hp N L q (SphereOddDegree.FiniteSimplex.vertex (S := Real) i)]
   rfl
 
 end SubdivisionPrismAffine

@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.OrderComplexRealization
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FiniteCells
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.IteratedSubdivisionSmallSimplex
@@ -105,12 +106,12 @@ noncomputable def realizationPoint
 /-- A chart sends a standard vertex to the corresponding realization vertex. -/
 theorem realizationPoint_vertex
     (s : Simplex p d) (i : Fin (d + 1)) :
-    s.realizationPoint (StandardSimplex.ofDelta (stdSimplex.vertex (S := Real) i)) =
+    s.realizationPoint (StandardSimplex.ofDelta (SphereOddDegree.FiniteSimplex.vertex (S := Real) i)) =
       Realization.vertex (s i) := by
   apply Realization.ext
   intro c
   classical
-  change (∑ j, if s j = c then (stdSimplex.vertex (S := Real) i) j else 0) =
+  change (∑ j, if s j = c then (SphereOddDegree.FiniteSimplex.vertex (S := Real) i) j else 0) =
     if c = s i then 1 else 0
   by_cases hci : c = s i
   · subst c
@@ -124,7 +125,7 @@ theorem realizationPoint_vertex
       subst j
       exact hci hj.symm
     calc
-      (∑ j, if s j = c then (stdSimplex.vertex (S := Real) i) j else 0) = 0 := by
+      (∑ j, if s j = c then (SphereOddDegree.FiniteSimplex.vertex (S := Real) i) j else 0) = 0 := by
         apply Finset.sum_eq_zero
         intro j _
         by_cases hj : s j = c
@@ -198,12 +199,12 @@ noncomputable def refinedVertex
   have hp0 : 0 < p := Nat.pos_of_ne_zero (by intro h; subst p; exact Fin.elim0 i)
   have hdim : p - 1 + 1 = p := Nat.sub_add_cancel hp0
   exact s.refinedContinuousMap N rho
-    (stdSimplex.vertex (S := Real) (Fin.cast hdim.symm i))
+    (SphereOddDegree.FiniteSimplex.vertex (S := Real) (Fin.cast hdim.symm i))
 
 @[simp] theorem refinedPoint_vertex
     (N : Nat) (rho : RefinementWord p N) (i : Fin p) :
     s.refinedPoint N rho
-        (StandardSimplex.ofDelta (stdSimplex.vertex (S := Real)
+        (StandardSimplex.ofDelta (SphereOddDegree.FiniteSimplex.vertex (S := Real)
           (Fin.cast (Nat.sub_add_cancel (Nat.pos_of_ne_zero
             (by intro h; subst p; exact Fin.elim0 i))).symm i))) =
       s.refinedVertex N rho i := by

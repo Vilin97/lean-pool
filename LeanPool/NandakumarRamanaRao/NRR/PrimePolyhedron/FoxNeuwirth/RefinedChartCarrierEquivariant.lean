@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RefinedChartCarrierCore
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.CoordinateEquivariance
 /-!
@@ -85,7 +86,7 @@ theorem refinedVertex_prime_smul
   simpa [Simplex.refinedVertex, maximalCoordinateIndex] using
     refinedPoint_prime_smul p g s N rho
       (StandardSimplex.ofDelta
-        (stdSimplex.vertex (S := Real) (maximalCoordinateIndex i)))
+        (SphereOddDegree.FiniteSimplex.vertex (S := Real) (maximalCoordinateIndex i)))
 
 /-- Affine interpolation of samples of `F` on an arbitrary refined maximal simplex. -/
 noncomputable def simplexValue
@@ -125,11 +126,11 @@ theorem simplex_active_vertex_and_coefficient_eq
       exact hi)
   let z : Delta (p - 1) :=
     affineCompMap (p - 1) N (maximalRefinementWord N rho)
-      (stdSimplex.vertex (S := Real)
+      (SphereOddDegree.FiniteSimplex.vertex (S := Real)
         (Fin.cast (Nat.sub_add_cancel hp.pos).symm i))
   have hzEq : z =
       affineCompMap (p - 1) N (maximalRefinementWord N sigma)
-        (stdSimplex.vertex (S := Real)
+        (SphereOddDegree.FiniteSimplex.vertex (S := Real)
           (Fin.cast (Nat.sub_add_cancel hp.pos).symm i)) := by
     simpa [z] using hiter.1
   have hglobal :
@@ -146,7 +147,7 @@ theorem simplex_active_vertex_and_coefficient_eq
     · have hzj' : (StandardSimplex.ofDelta z) j = 0 := hzj
       simp [hzj']
     · have hzpos : 0 < z j :=
-        lt_of_le_of_ne (stdSimplex.zero_le z j) (Ne.symm hzj)
+        lt_of_le_of_ne (SphereOddDegree.FiniteSimplex.zero_le z j) (Ne.symm hzj)
       have hupos : 0 < u j :=
         affineCompMap_vertex_support_subset
           (p - 1) N (maximalRefinementWord N rho) x
@@ -171,7 +172,7 @@ theorem simplex_active_vertex_and_coefficient_eq
       s.realizationPoint (StandardSimplex.ofDelta z) =
         t.realizationPoint (StandardSimplex.ofDelta
           (affineCompMap (p - 1) N (maximalRefinementWord N sigma)
-            (stdSimplex.vertex (S := Real)
+            (SphereOddDegree.FiniteSimplex.vertex (S := Real)
               (Fin.cast (Nat.sub_add_cancel hp.pos).symm i))))
     rw [← hzEq]
     exact hglobal
@@ -269,7 +270,7 @@ theorem decorated_value_eq_of_decorated_chart_eq
       (Equiv.sum_comp (Fin.castOrderIso (Nat.sub_add_cancel hp.pos).symm).toEquiv
         (fun i => w i * F
           ((ReferenceAffineOrbitCount.topRepr hp q.1).refinedContinuousMap N q.2
-            (stdSimplex.vertex (S := Real) i)) j)) using 1 <;>
+            (SphereOddDegree.FiniteSimplex.vertex (S := Real) i)) j)) using 1 <;>
       simp [s, maximalCoordinateIndex, Simplex.refinedVertex]
   have htvalue : simplexValue t N r.2 F v = value hp N F r v := by
     funext j
@@ -280,7 +281,7 @@ theorem decorated_value_eq_of_decorated_chart_eq
       (Equiv.sum_comp (Fin.castOrderIso (Nat.sub_add_cancel hp.pos).symm).toEquiv
         (fun i => v i * F
           ((ReferenceAffineOrbitCount.topRepr hp r.1).refinedContinuousMap N r.2
-            (stdSimplex.vertex (S := Real) i)) j)) using 1 <;>
+            (SphereOddDegree.FiniteSimplex.vertex (S := Real) i)) j)) using 1 <;>
       simp [t, maximalCoordinateIndex, Simplex.refinedVertex]
   rw [← hsvalue, ← htvalue]
   exact hresult

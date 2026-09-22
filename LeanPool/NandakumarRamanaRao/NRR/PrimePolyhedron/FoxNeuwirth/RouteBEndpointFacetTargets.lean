@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RouteBFacetWitnessRealization
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EndpointStackIteratedAffinePullback
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
@@ -65,12 +66,12 @@ theorem cylinderVertex_time (hp : Nat.Prime p) {N : Nat}
 theorem cylinderVertex_point (hp : Nat.Prime p) {N : Nat}
     (q : (RelativeSubdivisionOneStepCells.cellSystem hp N).Cell) (i : Fin (p + 1)) :
     RelativeSubdivisionOneStepCells.localPoint hp q.2
-        (stdSimplex.vertex (S := Real) i) =
+        (SphereOddDegree.FiniteSimplex.vertex (S := Real) i) =
       RelativeSubdivisionCylinderCombinatorics.vertex (p - 1) q.2
         (Fin.cast (dimShift hp) i) := by
   obtain ⟨m, rfl⟩ : ∃ m, p = m + 1 := ⟨p - 1, (Nat.succ_pred_eq_of_pos hp.pos).symm⟩
   change RelativeSubdivisionOneStepCells.localPoint hp q.2
-      (stdSimplex.vertex (S := Real) i) =
+      (SphereOddDegree.FiniteSimplex.vertex (S := Real) i) =
     RelativeSubdivisionCylinderCombinatorics.vertex m q.2 i
   simp [RelativeSubdivisionOneStepCells.localPoint,
     CompatibleChartMapOneStep.localWeight_succ]
@@ -315,7 +316,7 @@ theorem oneStepLowerFacetTarget_respects_lower
     rw [(cylinderVertex_point hp q (k.succAbove c)).trans hspec]
     simp [baseOriginalPLMap, RefinedAffineMap.value,
       RelativeSubdivisionCylinderCombinatorics.lowerBoundaryVertex,
-      StandardSimplex.ofDelta, stdSimplex.vertex, Pi.single_apply, ite_mul,
+      StandardSimplex.ofDelta, SphereOddDegree.FiniteSimplex.vertex, Pi.single_apply, ite_mul,
       Finset.sum_ite_eq']
 
 /-- Lower-relative facet target property used by stack composition. -/

@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeSubdivisionOneStepEndpoints
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.SubdivisionZeroFreeApproximation
 /-!
@@ -80,7 +81,7 @@ theorem affine_pullbackVertexValue_eq_spatial
   funext c
   simp [pullbackVertexValue,
     RelativeSubdivisionCylinderCombinatorics.lowerBoundaryVertex,
-    stdSimplex.vertex, Pi.single_apply]
+    SphereOddDegree.FiniteSimplex.vertex, Pi.single_apply]
 
 /-- On an upper barycentric facet, affine pullback gives the parent affine value at the
 corresponding prefix barycenter. -/

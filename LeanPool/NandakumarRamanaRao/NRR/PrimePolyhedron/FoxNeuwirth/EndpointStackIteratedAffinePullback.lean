@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ChartMapCollarRepresentation
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeSubdivisionEndpointCollar
 /-!
@@ -71,7 +72,7 @@ theorem oneStepAssignment_represents_base
   · have h := chart_eq_ancestor hp N k s.2.1.1
       (StandardSimplex.ofDelta
         (RelativeSubdivisionOneStepCells.localPoint hp s.2.1.2
-          (stdSimplex.vertex (S := Real) s.2.2)).1)
+          (SphereOddDegree.FiniteSimplex.vertex (S := Real) s.2.2)).1)
     simpa [q0, w0, coverPoint, RelativeAffineCellSystem.slotPoint,
       RelativeSubdivisionOneStepCells.cellSystem,
       CompatibleChartMapOneStep.localSpatialWeight,
@@ -113,7 +114,7 @@ theorem oneStep_originalPL_lowerFixed
     RelativeSubdivisionOneStepCells.liftPoint, EquivariantPrismVertexParameters.CylinderPoint.ofProd]
   funext c
   simp [RefinedAffineMap.value, RefinedAffineMap.vertexValue, RefinedAffineMap.vertex,
-    StandardSimplex.ofDelta, stdSimplex.vertex, Pi.single_apply, ite_mul, Finset.sum_ite_eq']
+    StandardSimplex.ofDelta, SphereOddDegree.FiniteSimplex.vertex, Pi.single_apply, ite_mul, Finset.sum_ite_eq']
 
 /-- Complete data carried by a positive endpoint stack. -/
 structure Data

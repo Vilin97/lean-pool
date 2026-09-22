@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import Mathlib.Topology.MetricSpace.Pseudo.Pi
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeCollarMiddlePrismEndpointsCore
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeCollarMiddlePrismEndpoints
@@ -385,7 +386,7 @@ theorem endpointInterpolant_vertexValue
     (i : Fin p) :
     endpointInterpolant hp N L s a
         (endpointSpatialMap hp N L q eta
-          (stdSimplex.vertex (S := Real)
+          (SphereOddDegree.FiniteSimplex.vertex (S := Real)
             (Fin.cast (Nat.sub_add_cancel hp.pos).symm i))) =
       vectorValue hp N L a
         (sampleVertex hp N L
@@ -412,7 +413,7 @@ theorem endpointInterpolant_vertexValue
     ⟨sampleVertex hp N L (o.1, o.2.succAbove i), hendpoint⟩
   have hspatial : endpointSpatialPoint hp N L s v =
       endpointSpatialMap hp N L q eta
-        (stdSimplex.vertex (S := Real)
+        (SphereOddDegree.FiniteSimplex.vertex (S := Real)
             (Fin.cast (Nat.sub_add_cancel hp.pos).symm i)) := by
     cases s
     · unfold endpointSpatialPoint
@@ -651,20 +652,20 @@ def BoundaryFixed
   (∀ q : TopCell hp N, ∀ eta : RefinementWord p L, ∀ i : Fin p,
     A₀.toRegularApproximation.map
         (endpointSpatialMap hp N L q eta
-          (stdSimplex.vertex (S := Real)
+          (SphereOddDegree.FiniteSimplex.vertex (S := Real)
             (Fin.cast (Nat.sub_add_cancel hp.pos).symm i))) =
       endpointInterpolant hp N L .lower a
         (endpointSpatialMap hp N L q eta
-          (stdSimplex.vertex (S := Real)
+          (SphereOddDegree.FiniteSimplex.vertex (S := Real)
             (Fin.cast (Nat.sub_add_cancel hp.pos).symm i)))) ∧
   (∀ q : TopCell hp N, ∀ eta : RefinementWord p L, ∀ i : Fin p,
     A₁.toRegularApproximation.map
         (endpointSpatialMap hp N L q eta
-          (stdSimplex.vertex (S := Real)
+          (SphereOddDegree.FiniteSimplex.vertex (S := Real)
             (Fin.cast (Nat.sub_add_cancel hp.pos).symm i))) =
       endpointInterpolant hp N L .upper a
         (endpointSpatialMap hp N L q eta
-          (stdSimplex.vertex (S := Real)
+          (SphereOddDegree.FiniteSimplex.vertex (S := Real)
             (Fin.cast (Nat.sub_add_cancel hp.pos).symm i))))
 
 /-- The endpoint approximations extracted from a result are fixed boundaries for that same prism
@@ -838,7 +839,7 @@ theorem norm_endpoint_value_sub_homotopy_value_le
         (homotopyAssignment hp N L H) q₀ eta i') j
       rw [show RefinedAffineMap.vertex hp (N + L) (endpointTopCell hp N L q₀ eta) i =
           endpointSpatialMap hp N L q₀ eta
-            (stdSimplex.vertex (Fin.cast (Nat.sub_add_cancel hp.pos).symm i')) by
+            (SphereOddDegree.FiniteSimplex.vertex (Fin.cast (Nat.sub_add_cancel hp.pos).symm i')) by
         simp [i', RefinedAffineMap.vertex, endpointSpatialMap_eq_chart]]
       rw [ha, hb]
       exact mul_le_mul_of_nonneg_left
@@ -867,7 +868,7 @@ theorem endpointInterpolant_homotopyAssignment_value
     (homotopyAssignment hp N L H) q₀ eta i'
   rw [show RefinedAffineMap.vertex hp (N + L) (endpointTopCell hp N L q₀ eta) i =
       endpointSpatialMap hp N L q₀ eta
-        (stdSimplex.vertex (Fin.cast (Nat.sub_add_cancel hp.pos).symm i')) by
+        (SphereOddDegree.FiniteSimplex.vertex (Fin.cast (Nat.sub_add_cancel hp.pos).symm i')) by
     simp [i', RefinedAffineMap.vertex, endpointSpatialMap_eq_chart]]
   rw [hv]
   cases s
@@ -877,7 +878,7 @@ theorem endpointInterpolant_homotopyAssignment_value
           ((endpointOccurrence hp N L EndpointSide.lower q₀ eta).1,
             (endpointOccurrence hp N L EndpointSide.lower q₀ eta).2.succAbove i')) =
           (endpointSpatialMap hp N L q₀ eta
-            (stdSimplex.vertex (Fin.cast (Nat.sub_add_cancel hp.pos).symm i')), 0) := by
+            (SphereOddDegree.FiniteSimplex.vertex (Fin.cast (Nat.sub_add_cancel hp.pos).symm i')), 0) := by
       apply Prod.ext
       · simpa [slotPoint, RelativeCollarMiddlePrism.cellSystem,
           RelativeCollarMiddlePrism.vertex,
@@ -902,7 +903,7 @@ theorem endpointInterpolant_homotopyAssignment_value
           ((endpointOccurrence hp N L EndpointSide.upper q₀ eta).1,
             (endpointOccurrence hp N L EndpointSide.upper q₀ eta).2.succAbove i')) =
           (endpointSpatialMap hp N L q₀ eta
-            (stdSimplex.vertex (Fin.cast (Nat.sub_add_cancel hp.pos).symm i')), 1) := by
+            (SphereOddDegree.FiniteSimplex.vertex (Fin.cast (Nat.sub_add_cancel hp.pos).symm i')), 1) := by
       apply Prod.ext
       · simpa [slotPoint, RelativeCollarMiddlePrism.cellSystem,
           RelativeCollarMiddlePrism.vertex,
@@ -1028,11 +1029,11 @@ private theorem lower_realizedFacetWeight_eq_localIndex
     (q : TopCell hp N) (eta : RefinementWord p L)
     (hfix : ∀ i : Fin p,
       F (endpointSpatialMap hp N L q eta
-          (stdSimplex.vertex
+          (SphereOddDegree.FiniteSimplex.vertex
             (Fin.cast (Nat.sub_add_cancel hp.pos).symm i))) =
         endpointInterpolant hp N L EndpointSide.lower a
           (endpointSpatialMap hp N L q eta
-            (stdSimplex.vertex
+            (SphereOddDegree.FiniteSimplex.vertex
               (Fin.cast (Nat.sub_add_cancel hp.pos).symm i)))) :
     EquivariantPrismNonhorizontalCancellation.realizedFacetWeight
         hp N L a
@@ -1128,11 +1129,11 @@ private theorem upper_realizedFacetWeight_eq_localIndex
     (q : TopCell hp N) (eta : RefinementWord p L)
     (hfix : ∀ i : Fin p,
       F (endpointSpatialMap hp N L q eta
-          (stdSimplex.vertex
+          (SphereOddDegree.FiniteSimplex.vertex
             (Fin.cast (Nat.sub_add_cancel hp.pos).symm i))) =
         endpointInterpolant hp N L EndpointSide.upper a
           (endpointSpatialMap hp N L q eta
-            (stdSimplex.vertex
+            (SphereOddDegree.FiniteSimplex.vertex
               (Fin.cast (Nat.sub_add_cancel hp.pos).symm i)))) :
     EquivariantPrismNonhorizontalCancellation.realizedFacetWeight
         hp N L a

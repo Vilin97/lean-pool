@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SmallChains
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionDiameter
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionIter
@@ -80,7 +81,7 @@ theorem prefixBarycenter_val_eq_stepVertices (n : ℕ) (π : Equiv.Perm (Fin (n 
     (k : Fin (n + 1)) :
     (prefixBarycenter n π k).val = stepVertices n (stdVerts n) π k := by
   unfold prefixBarycenter stepVertices;
-  ext j; simp +decide [ stdSimplex.map, stdSimplex.barycenter,  stdVerts ];
+  ext j; simp +decide [ SphereOddDegree.FiniteSimplex.map, SphereOddDegree.FiniteSimplex.barycenter,  stdVerts ];
   unfold FunOnFinite.linearMap; simp +decide [ Finset.mul_sum _ _ _ ];
   simp +decide [ Finsupp.mapDomain, Finsupp.linearEquivFunOnFinite, Pi.single_apply ];
   simp +decide [ Finsupp.sum_fintype, prefixVertex ];
@@ -160,12 +161,12 @@ theorem affineCompMap_snoc (n N : ℕ) (ρs : Fin N → Equiv.Perm (Fin (n + 1))
 theorem range_affineCompMap_val (n N : ℕ) (ρs : Fin N → Equiv.Perm (Fin (n + 1))) :
     (Subtype.val) '' (Set.range (affineCompMap n N ρs))
       = convexHull ℝ (Set.range (iterVertices n N ρs (stdVerts n))) := by
-  have h_range : Set.range (fun x : Delta n => (affineCompMap n N ρs x).val) = (affineCompLinear n N ρs) '' (stdSimplex ℝ (Fin (n + 1))) := by
+  have h_range : Set.range (fun x : Delta n => (affineCompMap n N ρs x).val) = (affineCompLinear n N ρs) '' (SphereOddDegree.finiteSimplex ℝ (Fin (n + 1))) := by
     ext; simp [affineCompMap_coe];
   convert h_range using 1;
   · exact Set.ext fun x => ⟨ by rintro ⟨ y, ⟨ z, rfl ⟩, rfl ⟩; exact ⟨ z, rfl ⟩, by rintro ⟨ z, rfl ⟩; exact ⟨ _, ⟨ z, rfl ⟩, rfl ⟩ ⟩;
-  · rw [ show stdSimplex ℝ ( Fin ( n + 1 ) ) = convexHull ℝ ( Set.range ( stdVerts n ) ) from by
-          have := (convexHull_rangle_single_eq_stdSimplex ℝ (Fin (n + 1))).symm
+  · rw [ show SphereOddDegree.finiteSimplex ℝ ( Fin ( n + 1 ) ) = convexHull ℝ ( Set.range ( stdVerts n ) ) from by
+          have := (SphereOddDegree.convexHull_range_single_eq_finiteSimplex ℝ (Fin (n + 1))).symm
           exact this ];
     rw [ LinearMap.image_convexHull ]
     congr! 1

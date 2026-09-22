@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RefinedAffineMap
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.IteratedSubdivisionSmallSimplex
 /-!
@@ -167,7 +168,7 @@ noncomputable def chart
 noncomputable def vertex
     (hp : Nat.Prime p) (N L : Nat) (q : PrismCell hp N L) (i : Fin (p + 1)) :
     Realization p × Set.Icc (0 : Real) 1 :=
-  chart hp N L q (stdSimplex.vertex (S := Real) i)
+  chart hp N L q (SphereOddDegree.FiniteSimplex.vertex (S := Real) i)
 
 /-- Orientation sign of a staircase simplex. -/
 noncomputable def staircaseSign (k : Fin p) : Int := (-1 : Int) ^ k.1

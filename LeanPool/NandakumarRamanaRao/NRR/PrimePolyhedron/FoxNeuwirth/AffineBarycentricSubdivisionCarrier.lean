@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.IteratedSubdivisionSmallSimplex
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.AffineSubdivisionDeterminant
 /-!
@@ -69,7 +70,7 @@ theorem affineSubdivMap_perm_antitone
   apply Finset.sum_le_sum
   intro k hk
   have hnonneg : 0 <= x k * (k.1 + 1 : Real)⁻¹ :=
-    mul_nonneg (stdSimplex.zero_le x k) (inv_nonneg.mpr (by positivity))
+    mul_nonneg (SphereOddDegree.FiniteSimplex.zero_le x k) (inv_nonneg.mpr (by positivity))
   by_cases hsk : s.1 <= k.1
   · have hrk : r.1 <= k.1 := le_trans hrs hsk
     simp [hsk, hrk]
@@ -306,7 +307,7 @@ theorem prefixBarycenter_eq_of_affineSubdivMap_eq_of_pos
     (r : Fin (n + 1)) (hr : 0 < x r) :
     prefixBarycenter n pi r = prefixBarycenter n sigma r := by
   have hset := prefixSet_eq_of_affineSubdivMap_eq_of_pos n pi sigma x y hxy r hr
-  apply stdSimplex.ext
+  apply SphereOddDegree.FiniteSimplex.ext
   funext j
   simp [prefixBarycenter_apply, hset]
 
@@ -430,14 +431,14 @@ theorem affineSubdiv_vertexInterpolation_eq_of_map_eq
   by_cases hx : x r = 0
   · have hy : y r = 0 := by
       by_contra hy0
-      have hypos : 0 < y r := lt_of_le_of_ne (stdSimplex.zero_le y r) (Ne.symm hy0)
+      have hypos : 0 < y r := lt_of_le_of_ne (SphereOddDegree.FiniteSimplex.zero_le y r) (Ne.symm hy0)
       have hrev := affineSubdivMap_active_coefficient_eq
         n sigma pi y x hxy.symm r hypos
       apply hy0
       rw [← hrev]
       exact hx
     simp [hx, hy]
-  · have hxpos : 0 < x r := lt_of_le_of_ne (stdSimplex.zero_le x r) (Ne.symm hx)
+  · have hxpos : 0 < x r := lt_of_le_of_ne (SphereOddDegree.FiniteSimplex.zero_le x r) (Ne.symm hx)
     have hvertex := prefixBarycenter_eq_of_affineSubdivMap_eq_of_pos
       n pi sigma x y hxy r hxpos
     have hcoeff := affineSubdivMap_active_coefficient_eq
@@ -463,7 +464,7 @@ theorem affineSubdivMap_cut_pos
     intro k
     dsimp [f]
     split_ifs
-    · exact mul_nonneg (stdSimplex.zero_le x k) (inv_nonneg.mpr (by positivity))
+    · exact mul_nonneg (SphereOddDegree.FiniteSimplex.zero_le x k) (inv_nonneg.mpr (by positivity))
     · exact le_rfl
   have hle : f r <= ∑ k, f k :=
     Finset.single_le_sum (fun k _ => hf_nonneg k) (Finset.mem_univ r)
@@ -498,8 +499,8 @@ theorem affineCompMap_eq_of_vertex_eq_on_support
     (rho sigma : Fin N → Equiv.Perm (Fin (n + 1)))
     (z : Delta n)
     (hvertex : ∀ i : Fin (n + 1), z i ≠ 0 →
-      affineCompMap n N rho (stdSimplex.vertex (S := Real) i) =
-        affineCompMap n N sigma (stdSimplex.vertex (S := Real) i)) :
+      affineCompMap n N rho (SphereOddDegree.FiniteSimplex.vertex (S := Real) i) =
+        affineCompMap n N sigma (SphereOddDegree.FiniteSimplex.vertex (S := Real) i)) :
     affineCompMap n N rho z = affineCompMap n N sigma z := by
   apply Subtype.ext
   rw [affineCompMap_coe, affineCompMap_coe,
@@ -512,7 +513,7 @@ theorem affineCompMap_eq_of_vertex_eq_on_support
   · have hv := congrArg Subtype.val (hvertex i hzi)
     rw [affineCompMap_coe, affineCompMap_coe] at hv
     have hstd : BarycentricSubdivisionDiameter.stdVerts n i =
-        (stdSimplex.vertex (S := Real) i).1 := by
+        (SphereOddDegree.FiniteSimplex.vertex (S := Real) i).1 := by
       ext j
       simp [BarycentricSubdivisionDiameter.stdVerts,  Pi.single_apply]
     rw [hstd]
@@ -528,8 +529,8 @@ theorem affineCompMap_active_vertex_and_coefficient_eq
     (x y : Delta n)
     (hxy : affineCompMap n N rho x = affineCompMap n N sigma y)
     (r : Fin (n + 1)) (hr : 0 < x r) :
-    affineCompMap n N rho (stdSimplex.vertex (S := Real) r) =
-        affineCompMap n N sigma (stdSimplex.vertex (S := Real) r) ∧
+    affineCompMap n N rho (SphereOddDegree.FiniteSimplex.vertex (S := Real) r) =
+        affineCompMap n N sigma (SphereOddDegree.FiniteSimplex.vertex (S := Real) r) ∧
       y r = x r := by
   induction N generalizing x y r with
   | zero =>
@@ -547,13 +548,13 @@ theorem affineCompMap_active_vertex_and_coefficient_eq
       have houter : affineCompMap n N rho0 u = affineCompMap n N sigma0 v := by
         simpa [affineCompMap_succ, rho0, sigma0, pi, tau, u, v] using hxy
       have huv : u = v := by
-        apply stdSimplex.ext
+        apply SphereOddDegree.FiniteSimplex.ext
         funext i
         by_cases hui : u i = 0
         · have hvi : v i = 0 := by
             by_contra hvi
             have hvpos : 0 < v i :=
-              lt_of_le_of_ne (stdSimplex.zero_le v i) (Ne.symm hvi)
+              lt_of_le_of_ne (SphereOddDegree.FiniteSimplex.zero_le v i) (Ne.symm hvi)
             have hrec := ih (rho := sigma0) (sigma := rho0)
               (x := v) (y := u) (r := i) houter.symm hvpos
             apply hvi
@@ -561,7 +562,7 @@ theorem affineCompMap_active_vertex_and_coefficient_eq
             exact hui
           simp [hui, hvi]
         · have hupos : 0 < u i :=
-            lt_of_le_of_ne (stdSimplex.zero_le u i) (Ne.symm hui)
+            lt_of_le_of_ne (SphereOddDegree.FiniteSimplex.zero_le u i) (Ne.symm hui)
           have hrec := ih (rho := rho0) (sigma := sigma0)
             (x := u) (y := v) (r := i) houter hupos
           exact hrec.2.symm
@@ -572,8 +573,8 @@ theorem affineCompMap_active_vertex_and_coefficient_eq
         affineSubdivMap_active_coefficient_eq n pi tau x y huv r hr
       have hvertexSupport : ∀ i : Fin (n + 1),
           prefixBarycenter n pi r i ≠ 0 →
-          affineCompMap n N rho0 (stdSimplex.vertex (S := Real) i) =
-            affineCompMap n N sigma0 (stdSimplex.vertex (S := Real) i) := by
+          affineCompMap n N rho0 (SphereOddDegree.FiniteSimplex.vertex (S := Real) i) =
+            affineCompMap n N sigma0 (SphereOddDegree.FiniteSimplex.vertex (S := Real) i) := by
         intro i hi
         have himem : i ∈ prefixSet n pi r := by
           by_contra hnot
@@ -608,9 +609,9 @@ theorem affineComp_vertexInterpolation_eq_of_map_eq
     (hxy : affineCompMap n N rho x = affineCompMap n N sigma y)
     (V : Delta n → E) :
     (∑ r : Fin (n + 1), x r •
-        V (affineCompMap n N rho (stdSimplex.vertex (S := Real) r))) =
+        V (affineCompMap n N rho (SphereOddDegree.FiniteSimplex.vertex (S := Real) r))) =
       ∑ r : Fin (n + 1), y r •
-        V (affineCompMap n N sigma (stdSimplex.vertex (S := Real) r)) := by
+        V (affineCompMap n N sigma (SphereOddDegree.FiniteSimplex.vertex (S := Real) r)) := by
   classical
   apply Finset.sum_congr rfl
   intro r hrmem
@@ -618,7 +619,7 @@ theorem affineComp_vertexInterpolation_eq_of_map_eq
   · have hy : y r = 0 := by
       by_contra hy0
       have hypos : 0 < y r :=
-        lt_of_le_of_ne (stdSimplex.zero_le y r) (Ne.symm hy0)
+        lt_of_le_of_ne (SphereOddDegree.FiniteSimplex.zero_le y r) (Ne.symm hy0)
       have hrev := affineCompMap_active_vertex_and_coefficient_eq
         n N sigma rho y x hxy.symm r hypos
       apply hy0
@@ -626,7 +627,7 @@ theorem affineComp_vertexInterpolation_eq_of_map_eq
       exact hx
     simp [hx, hy]
   · have hxpos : 0 < x r :=
-      lt_of_le_of_ne (stdSimplex.zero_le x r) (Ne.symm hx)
+      lt_of_le_of_ne (SphereOddDegree.FiniteSimplex.zero_le x r) (Ne.symm hx)
     have hactive := affineCompMap_active_vertex_and_coefficient_eq
       n N rho sigma x y hxy r hxpos
     rw [hactive.1, hactive.2]
@@ -644,22 +645,22 @@ theorem affineCompMap_coordinate_eq_sum_vertices
     (x : Delta n) (j : Fin (n + 1)) :
     affineCompMap n N rho x j =
       ∑ r : Fin (n + 1), x r *
-        affineCompMap n N rho (stdSimplex.vertex (S := Real) r) j := by
+        affineCompMap n N rho (SphereOddDegree.FiniteSimplex.vertex (S := Real) r) j := by
   have hvec :
       (affineCompMap n N rho x).1 =
         ∑ r : Fin (n + 1), x r •
-          (affineCompMap n N rho (stdSimplex.vertex (S := Real) r)).1 := by
+          (affineCompMap n N rho (SphereOddDegree.FiniteSimplex.vertex (S := Real) r)).1 := by
     rw [affineCompMap_coe, delta_val_eq_sum_smul_stdVerts n x, map_sum]
     apply Finset.sum_congr rfl
     intro r hr
     rw [LinearMap.map_smul]
     have hstd : BarycentricSubdivisionDiameter.stdVerts n r =
-        (stdSimplex.vertex (S := Real) r).1 := by
+        (SphereOddDegree.FiniteSimplex.vertex (S := Real) r).1 := by
       ext k
       simp [BarycentricSubdivisionDiameter.stdVerts,  Pi.single_apply]
     rw [hstd]
     have hv := affineCompMap_coe n N rho
-      (stdSimplex.vertex (S := Real) r)
+      (SphereOddDegree.FiniteSimplex.vertex (S := Real) r)
     exact congrArg (fun q => x r • q) hv.symm
   have hj := congrFun hvec j
   rw [Finset.sum_apply] at hj
@@ -673,17 +674,17 @@ theorem affineCompMap_vertex_support_subset
     (x : Delta n) (r j : Fin (n + 1))
     (hr : 0 < x r)
     (hj : 0 < affineCompMap n N rho
-      (stdSimplex.vertex (S := Real) r) j) :
+      (SphereOddDegree.FiniteSimplex.vertex (S := Real) r) j) :
     0 < affineCompMap n N rho x j := by
   rw [affineCompMap_coordinate_eq_sum_vertices]
   let f : Fin (n + 1) → Real := fun k =>
-    x k * affineCompMap n N rho (stdSimplex.vertex (S := Real) k) j
+    x k * affineCompMap n N rho (SphereOddDegree.FiniteSimplex.vertex (S := Real) k) j
   change 0 < ∑ k, f k
   have hf_nonneg : ∀ k, 0 <= f k := by
     intro k
-    exact mul_nonneg (stdSimplex.zero_le x k)
-      (stdSimplex.zero_le
-        (affineCompMap n N rho (stdSimplex.vertex (S := Real) k)) j)
+    exact mul_nonneg (SphereOddDegree.FiniteSimplex.zero_le x k)
+      (SphereOddDegree.FiniteSimplex.zero_le
+        (affineCompMap n N rho (SphereOddDegree.FiniteSimplex.vertex (S := Real) k)) j)
   have hle : f r <= ∑ k, f k :=
     Finset.single_le_sum (fun k _ => hf_nonneg k) (Finset.mem_univ r)
   have hfr : 0 < f r := mul_pos hr hj
