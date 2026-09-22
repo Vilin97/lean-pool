@@ -604,7 +604,7 @@ theorem theorem8_2_residualHalfGap_unbounded_complex
 /-- **Theorem 8.2's printed conclusion `Θ < π/4` at unbounded ambient scope,
 residual alternative.** -/
 theorem theorem8_2_residualHalfGap_maximalAngle_lt_unbounded_complex
-    [TopologicalSpace.SeparableSpace Hc]
+
     {A : Hc →ₗ.[ℂ] Hc} (hA : IsSelfAdjoint A)
     (Hop : Hc →L[ℂ] Hc) (hHop : Hop.IsSymmetric)
     {P Q : Submodule ℂ Hc} [P.HasOrthogonalProjection] [Q.HasOrthogonalProjection]

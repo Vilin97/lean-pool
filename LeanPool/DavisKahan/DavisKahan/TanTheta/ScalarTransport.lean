@@ -111,17 +111,19 @@ theorem extendedGauge_scalarTransportSubspaceCLM
   exact iSup_congr fun n => by
     rw [prefixGauge_scalarTransportSubspaceCLM (e := e) N n Z T]
 
+omit [CompleteSpace H] in
 /-- Symmetric-norm ideal membership is unchanged for a transported subspace-domain map. -/
 theorem mem_scalarTransportSubspaceCLM_iff
-    (N : SymmetricNormingFunction) (Z : Submodule 𝕜 H) [Z.HasOrthogonalProjection]
+    (N : SymmetricNormingFunction) (Z : Submodule 𝕜 H)
     (T : Z →L[𝕜] H) :
     N.Mem (scalarTransportSubspaceCLM (e := e) Z T) ↔ N.Mem T := by
   unfold SymmetricNormingFunction.Mem
   rw [extendedGauge_scalarTransportSubspaceCLM]
 
+omit [CompleteSpace H] in
 /-- Every symmetric-norming gauge is unchanged for a transported subspace-domain map. -/
 theorem gauge_scalarTransportSubspaceCLM
-    (N : SymmetricNormingFunction) (Z : Submodule 𝕜 H) [Z.HasOrthogonalProjection]
+    (N : SymmetricNormingFunction) (Z : Submodule 𝕜 H)
     (T : Z →L[𝕜] H) :
     N.gauge (scalarTransportSubspaceCLM (e := e) Z T) = N.gauge T := by
   unfold SymmetricNormingFunction.gauge

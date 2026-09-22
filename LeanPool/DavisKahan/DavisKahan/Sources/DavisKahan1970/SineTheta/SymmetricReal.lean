@@ -472,6 +472,7 @@ theorem result_every_unitarilyInvariantNorm_real
       P.gap * N.gauge (crossSineSum P.U P.V) ≤ N.gauge P.perturbation :=
   N.mul_gauge_le_of_all_mul_kyFan_le P.gap_pos hH P.symmetric_all_kyFan_real
 
+omit [CompleteSpace E] in
 /-- The compiled source dictionary.  Every source norm evaluates the operator
 appearing in `result_every_unitarilyInvariantNorm_real` exactly as it evaluates
 the paper's whole-space sine singular-value list, which is the complete

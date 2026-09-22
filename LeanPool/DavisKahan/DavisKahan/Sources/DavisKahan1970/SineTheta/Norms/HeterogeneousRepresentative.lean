@@ -84,8 +84,8 @@ spaces. -/
 theorem normingMem_iff_and_gauge_eq
     {𝕜 : Type u} [RCLike 𝕜]
     {E F E₀ F₀ : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F]
     [NormedAddCommGroup E₀] [InnerProductSpace 𝕜 E₀] [CompleteSpace E₀]
     [NormedAddCommGroup F₀] [InnerProductSpace 𝕜 F₀] [CompleteSpace F₀]
     (N : SymmetricNormingFunction) {canonical : E →L[𝕜] F}

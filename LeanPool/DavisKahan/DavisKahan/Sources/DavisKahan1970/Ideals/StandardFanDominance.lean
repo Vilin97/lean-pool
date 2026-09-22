@@ -72,6 +72,7 @@ theorem minimalFullySymmetricMem_of_finiteRankGaugeClosure
     MinimalFullySymmetricMem N A :=
   ⟨A, hA, fun _ => le_rfl⟩
 
+omit [CompleteSpace E] [CompleteSpace F] in
 /-- Membership in the fully symmetric envelope implies membership in the
 maximal/Fatou ideal. -/
 theorem mem_of_minimalFullySymmetricMem

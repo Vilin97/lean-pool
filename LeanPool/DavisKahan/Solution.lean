@@ -129,6 +129,7 @@ theorem SymmetricNormingFunction.eval_eq
   exact N.evalSeq_eq_of_approximationNumber _ T
     (fun n => (singularValue_eq_approximationNumber T n).symm)
 
+omit [CompleteSpace E] [CompleteSpace F] in
 /-- Ideal membership is the same proposition on both sides of the bridge. -/
 theorem SymmetricNormingFunction.finite_iff
     (N : SymmetricNormingFunction) (T : E →L[𝕜] F) :
@@ -137,6 +138,7 @@ theorem SymmetricNormingFunction.finite_iff
   unfold TauCeti.DavisKahan.ExactSinTheta.SymmetricNormingFunction.Mem
   rw [N.eval_eq T]
 
+omit [CompleteSpace E] [CompleteSpace F] in
 /-- The real-valued operator norms agree. -/
 theorem SymmetricNormingFunction.norm_eq
     (N : SymmetricNormingFunction) (T : E →L[𝕜] F) :

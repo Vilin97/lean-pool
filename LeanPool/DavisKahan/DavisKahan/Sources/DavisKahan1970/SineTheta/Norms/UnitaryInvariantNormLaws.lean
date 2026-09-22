@@ -177,6 +177,7 @@ theorem gauge_adjoint (N : SymmetricNormingFunction) (A : E →L[𝕜] F) :
     N.gauge A.adjoint = N.gauge A := by
   rw [gauge, gauge, extendedGauge_adjoint]
 
+omit [CompleteSpace E] [CompleteSpace F] in
 /-- Unitary equivalences on either side preserve the complete source norm. -/
 theorem extendedGauge_unitary
     (N : SymmetricNormingFunction)
@@ -247,6 +248,7 @@ theorem extendedGauge_le_of_all_kyFan_le_hetero
     (le_iSup (fun m : ℕ => ENNReal.ofReal (N.prefixGauge m B)) n)
 
 omit [CompleteSpace G] in
+omit [CompleteSpace E] [CompleteSpace F] in
 /-- The two-sided ideal estimate at the extended-value level. -/
 theorem extendedGauge_comp_le (N : SymmetricNormingFunction)
     (L : F →L[𝕜] G) (A : E →L[𝕜] F) (R : E →L[𝕜] E) :
@@ -271,6 +273,7 @@ theorem extendedGauge_comp_le (N : SymmetricNormingFunction)
   refine hle.trans_eq ?_
   ring
 
+omit [CompleteSpace G] in
 /-- Membership is a two-sided operator ideal. -/
 theorem comp_mem (N : SymmetricNormingFunction)
     {A : E →L[𝕜] F} (hA : N.Mem A)
@@ -288,6 +291,7 @@ theorem comp_mem (N : SymmetricNormingFunction)
     · exact ENNReal.ofReal_ne_top
   exact hfinite (top_le_iff.mp hle)
 
+omit [CompleteSpace E] [CompleteSpace F] in
 /-- The real gauge is absolutely homogeneous on its ideal. -/
 theorem gauge_smul (N : SymmetricNormingFunction)
     (c : 𝕜) {A : E →L[𝕜] F} (_hA : N.Mem A) :
@@ -296,6 +300,7 @@ theorem gauge_smul (N : SymmetricNormingFunction)
   rw [N.extendedGauge_smul, ENNReal.toReal_mul,
     ENNReal.toReal_ofReal (norm_nonneg c)]
 
+omit [CompleteSpace E] [CompleteSpace F] in
 /-- **The extended gauge does not see a sign.** -/
 theorem extendedGauge_neg (N : SymmetricNormingFunction) (A : E →L[𝕜] F) :
     N.extendedGauge (-A) = N.extendedGauge A := by

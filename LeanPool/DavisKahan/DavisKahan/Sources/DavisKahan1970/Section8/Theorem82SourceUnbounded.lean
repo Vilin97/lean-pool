@@ -197,7 +197,7 @@ lies in the central band `[β − δ/2, α + δ/2]`, and `‖H‖ < δ/2`.  Then
 double-angle estimate is retained and the comparison is on the acute branch. -/
 theorem theorem8_2_perturbation_sourceExact_unbounded_complex
     {Hc : Type v} [NormedAddCommGroup Hc] [InnerProductSpace ℂ Hc] [CompleteSpace Hc]
-    [TopologicalSpace.SeparableSpace Hc]
+
     (N : NormalizedUnitaryInvariantNorm.{0, v} ℂ)
     {A : Hc →ₗ.[ℂ] Hc} (hA : IsSelfAdjoint A)
     (Hop : Hc →L[ℂ] Hc) (hHop : Hop.IsSymmetric)

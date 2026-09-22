@@ -343,8 +343,8 @@ Davis--Kahan inequalities. -/
 theorem all_mul_kyFan_le_of_every_symmetricNorming_gauge_le
     {𝕜 : Type u} [RCLike 𝕜]
     {E F : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F]
     {A B : E →L[𝕜] F} {c : ℝ}
     (h : ∀ N : SymmetricNormingFunction, c * N.gauge A ≤ N.gauge B) :
     ∀ k : ℕ, c * kyFanApproximationGauge k A ≤ kyFanApproximationGauge k B := by
