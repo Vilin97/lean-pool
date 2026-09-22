@@ -33,7 +33,7 @@ noncomputable def cubeAverageVec {d : ℕ}
 noncomputable def cubeLpNorm {d : ℕ} {E : Type*}
     [NormedAddCommGroup E] (S : TriadicCube d) (p : ℝ≥0∞)
     (u : Vec d → E) : ℝ :=
-  (MeasureTheory.eLpNorm u p (normalizedCubeMeasure S)).toReal
+  (Gagliardo.integralLpSeminorm u p (normalizedCubeMeasure S)).toReal
 
 theorem cubeAverage_eq_integral_normalizedCubeMeasure {d : ℕ}
     (S : TriadicCube d) (f : Vec d → ℝ) :
@@ -76,7 +76,7 @@ theorem cubeLpNorm_congr_on_cubeSet_generic {d : ℕ} {E : Type*}
     {u v : Vec d → E} (h : ∀ x ∈ cubeSet S, u x = v x) :
     cubeLpNorm S p u = cubeLpNorm S p v := by
   unfold cubeLpNorm
-  rw [MeasureTheory.eLpNorm_congr_ae]
+  rw [Gagliardo.integralLpSeminorm_congr_ae]
   rw [normalizedCubeMeasure, cubeMeasure, Filter.EventuallyEq]
   exact MeasureTheory.Measure.ae_smul_measure
     ((MeasureTheory.ae_restrict_iff' (measurableSet_cubeSet S)).2 <|
@@ -112,6 +112,8 @@ theorem cubeLpNorm_const {d : ℕ} {E : Type*} [NormedAddCommGroup E]
     (S : TriadicCube d) (p : ℝ≥0∞) (c : E) (hp : p ≠ 0) :
     cubeLpNorm S p (fun _ => c) = ‖c‖ := by
   unfold cubeLpNorm
+  rw [Gagliardo.integralLpSeminorm_eq_eLpNorm _ _ _
+    MeasureTheory.aestronglyMeasurable_const]
   rw [MeasureTheory.eLpNorm_const c hp (normalizedCubeMeasure_ne_zero S),
     normalizedCubeMeasure_apply_univ]
   simp

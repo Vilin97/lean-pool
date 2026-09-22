@@ -47,21 +47,27 @@ theorem cubeLpNorm_cubeProjection_eq_abs_cubeAverage_of_mem_descendantsAtDepth {
     {j : ℕ} (p : ℝ≥0∞) (f : Vec d → ℝ) (hR : R ∈ descendantsAtDepth Q j) (hp : p ≠ 0) :
     cubeLpNorm R p (cubeProjection Q j f) = ‖cubeAverage R f‖ := by
   unfold cubeLpNorm
-  rw [MeasureTheory.eLpNorm_congr_ae
+  rw [Gagliardo.integralLpSeminorm_congr_ae
     (cubeProjection_ae_eq_cubeAverage_of_mem_descendantsAtDepth f hR)]
+  rw [Gagliardo.integralLpSeminorm_eq_eLpNorm _ _ _
+    MeasureTheory.aestronglyMeasurable_const]
   rw [MeasureTheory.eLpNorm_const (cubeAverage R f) hp (normalizedCubeMeasure_ne_zero R),
     normalizedCubeMeasure_apply_univ]
-  simp
+  simp [Gagliardo.integralLpSeminorm_eq_eLpNorm _ _ _
+    MeasureTheory.aestronglyMeasurable_const]
 
 theorem cubeLpNorm_cubeProjection_eq_abs_cubeAverage_of_mem_descendantsAtScale {d : ℕ} {Q R : TriadicCube d}
     {k : ℤ} (p : ℝ≥0∞) (f : Vec d → ℝ) (hk : k ≤ Q.scale) (hR : R ∈ descendantsAtScale Q k)
     (hp : p ≠ 0) : cubeLpNorm R p (cubeProjection Q (Int.toNat (Q.scale - k)) f) = ‖cubeAverage R f‖ := by
   unfold cubeLpNorm
-  rw [MeasureTheory.eLpNorm_congr_ae
+  rw [Gagliardo.integralLpSeminorm_congr_ae
     (cubeProjection_ae_eq_cubeAverage_of_mem_descendantsAtScale f hk hR)]
+  rw [Gagliardo.integralLpSeminorm_eq_eLpNorm _ _ _
+    MeasureTheory.aestronglyMeasurable_const]
   rw [MeasureTheory.eLpNorm_const (cubeAverage R f) hp (normalizedCubeMeasure_ne_zero R),
     normalizedCubeMeasure_apply_univ]
-  simp
+  simp [Gagliardo.integralLpSeminorm_eq_eLpNorm _ _ _
+    MeasureTheory.aestronglyMeasurable_const]
 
 theorem cubeProjection_ae_eq_const {d : ℕ} (Q : TriadicCube d) (j : ℕ) (c : ℝ) :
     cubeProjection Q j (fun _ => c) =ᵐ[normalizedCubeMeasure Q] (fun _ => c) := by
@@ -83,16 +89,20 @@ theorem cubeLpNorm_cubeIncrement_nonneg {d : ℕ} (Q : TriadicCube d) (p : ℝ�
 theorem cubeLpNorm_cubeProjection_const {d : ℕ} (Q : TriadicCube d) (p : ℝ≥0∞) (j : ℕ)
     (c : ℝ) (hp : p ≠ 0) : cubeLpNorm Q p (cubeProjection Q j (fun _ => c)) = ‖c‖ := by
   unfold cubeLpNorm
-  rw [MeasureTheory.eLpNorm_congr_ae (cubeProjection_ae_eq_const Q j c)]
+  rw [Gagliardo.integralLpSeminorm_congr_ae (cubeProjection_ae_eq_const Q j c)]
+  rw [Gagliardo.integralLpSeminorm_eq_eLpNorm _ _ _
+    MeasureTheory.aestronglyMeasurable_const]
   rw [MeasureTheory.eLpNorm_const c hp (normalizedCubeMeasure_ne_zero Q),
     normalizedCubeMeasure_apply_univ]
-  simp
+  simp [Gagliardo.integralLpSeminorm_eq_eLpNorm _ _ _
+    MeasureTheory.aestronglyMeasurable_const]
 
 @[simp] theorem cubeLpNorm_cubeProjection_zero {d : ℕ} (Q : TriadicCube d) (p : ℝ≥0∞)
     (j : ℕ) : cubeLpNorm Q p (cubeProjection Q j (fun _ => (0 : ℝ))) = 0 := by
   unfold cubeLpNorm
-  rw [MeasureTheory.eLpNorm_congr_ae (cubeProjection_ae_eq_const Q j (0 : ℝ))]
-  simp
+  rw [Gagliardo.integralLpSeminorm_congr_ae (cubeProjection_ae_eq_const Q j (0 : ℝ))]
+  simp [Gagliardo.integralLpSeminorm_eq_eLpNorm _ _ _
+    MeasureTheory.aestronglyMeasurable_const]
 
 theorem cubeIncrement_ae_eq_zero_const_succ {d : ℕ} (Q : TriadicCube d) (j : ℕ) (c : ℝ) :
     cubeIncrement Q (j + 1) (fun _ => c) =ᵐ[normalizedCubeMeasure Q] (fun _ => (0 : ℝ)) := by
@@ -111,8 +121,9 @@ theorem cubeLpNorm_cubeIncrement_zero_const {d : ℕ} (Q : TriadicCube d) (p : �
 @[simp] theorem cubeLpNorm_cubeIncrement_succ_const {d : ℕ} (Q : TriadicCube d) (p : ℝ≥0∞)
     (j : ℕ) (c : ℝ) : cubeLpNorm Q p (cubeIncrement Q (j + 1) (fun _ => c)) = 0 := by
   unfold cubeLpNorm
-  rw [MeasureTheory.eLpNorm_congr_ae (cubeIncrement_ae_eq_zero_const_succ Q j c)]
-  simp
+  rw [Gagliardo.integralLpSeminorm_congr_ae (cubeIncrement_ae_eq_zero_const_succ Q j c)]
+  simp [Gagliardo.integralLpSeminorm_eq_eLpNorm _ _ _
+    MeasureTheory.aestronglyMeasurable_const]
 
 @[simp] theorem cubeLpNorm_cubeIncrement_zero {d : ℕ} (Q : TriadicCube d) (p : ℝ≥0∞)
     (j : ℕ) : cubeLpNorm Q p (cubeIncrement Q j (fun _ => (0 : ℝ))) = 0 := by
