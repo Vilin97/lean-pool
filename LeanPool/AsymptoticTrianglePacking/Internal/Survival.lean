@@ -32,6 +32,7 @@ namespace LeanPool.AsymptoticTrianglePacking.Internal
 ("edge `e` is retained"), each of probability `p` on the edges of `H`. -/
 structure BernoulliRetention {V : Type*} [DecidableEq V] {Ω : Type*} [MeasureSpace Ω]
     (H : Finset (Finset V)) (p : ℝ) where
+  /-- The event that the edge is retained in a nibble round. -/
   A : Finset V → Set Ω
   meas : ∀ e, MeasurableSet (A e)
   indep : iIndepSet A (ℙ : Measure Ω)
