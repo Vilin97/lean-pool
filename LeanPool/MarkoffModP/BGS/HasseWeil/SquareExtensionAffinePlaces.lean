@@ -35,6 +35,127 @@ open scoped BigOperators nonZeroDivisors Polynomial
 
 noncomputable section
 
+private theorem exists_dominatingPlace_of_nonzero_nonunit
+    {A P E : Type*} [CommRing A] [IsDomain A] [CommRing P] [Field E]
+    [Algebra A E] [IsFractionRing A E] [Algebra P E]
+    [IsDedekindDomain (integralClosure P E)] [IsFractionRing (integralClosure P E) E]
+    (m : MaximalSpectrum A)
+    (hbase : ∀ x : P, algebraMap P E x ∈ (algebraMap A E).range)
+    (b : integralClosure P E) (hb : b ≠ 0)
+    (hunit : (b : E) ∈ (dominatingValuationSubring (L := E) m).nonunits) :
+    ∃ q : HeightOneSpectrum (integralClosure P E),
+      IsDedekindDomain.HeightOneSpectrum.valuationSubringAtPrime E q =
+        dominatingValuationSubring (L := E) m := by
+  let V := dominatingValuationSubring (L := E) m
+  have hV : V ≠ ⊤ := by
+    intro htop
+    have hnontrivial : V.valuation.IsNontrivial :=
+      (Valuation.isNontrivial_iff_exists_lt_one V.valuation).2
+        ⟨(b : E), Subtype.coe_ne_coe.mpr hb, hunit⟩
+    exact ((ValuationSubring.eq_top_iff V).mp htop) hnontrivial
+  have hbMem : b ∈ dominatingIntegralClosurePrime m hbase := by
+    change integralClosureToDominatingValuationSubring m hbase b ∈
+      IsLocalRing.maximalIdeal V
+    exact ValuationSubring.coe_mem_nonunits_iff.mp hunit
+  have hne : dominatingIntegralClosurePrime m hbase ≠ ⊥ := by
+    intro hbot
+    apply hb
+    simpa only [hbot, Ideal.mem_bot] using hbMem
+  exact ⟨dominatingIntegralClosurePlace m hbase hne,
+    valuationSubringAt_dominatingIntegralClosurePlace_eq m hbase hne hV⟩
+
+private theorem exists_dominatingPlace_of_base_element
+    {A P E : Type*} [CommRing A] [IsDomain A] [CommRing P] [Field E]
+    [Algebra A E] [IsFractionRing A E] [Algebra P E]
+    [IsDedekindDomain (integralClosure P E)] [IsFractionRing (integralClosure P E) E]
+    (m : MaximalSpectrum A)
+    (hbase : ∀ x : P, algebraMap P E x ∈ (algebraMap A E).range)
+    (hinj : Function.Injective (algebraMap P E))
+    (p : P) (hp : p ≠ 0) (r : A) (hr : r ∈ m.asIdeal)
+    (hmap : algebraMap P E p = algebraMap A E r) :
+    ∃ q : HeightOneSpectrum (integralClosure P E),
+      IsDedekindDomain.HeightOneSpectrum.valuationSubringAtPrime E q =
+        dominatingValuationSubring (L := E) m := by
+  let b := algebraMap P (integralClosure P E) p
+  have hb : b ≠ 0 := by
+    intro h
+    apply hp
+    apply hinj
+    have h' := congrArg (algebraMap (integralClosure P E) E) h
+    simpa only [b, map_zero, ← IsScalarTower.algebraMap_apply] using h'
+  apply exists_dominatingPlace_of_nonzero_nonunit m hbase b hb
+  change algebraMap P E p ∈ (dominatingValuationSubring (L := E) m).nonunits
+  rw [hmap]
+  exact algebraMap_mem_dominatingValuationSubring_nonunits_of_mem m r hr
+
+private theorem residue_finrank_le_of_dominating_valuation
+    {K A E : Type*} [Field K] [CommRing A] [IsDomain A] [Field E]
+    [Algebra K A] [Algebra K E] [Algebra A E] [IsScalarTower K A E]
+    [IsFractionRing A E] (m : MaximalSpectrum A) (R : ValuationSubring E)
+    [Algebra K R]
+    [Module.Finite K (IsLocalRing.ResidueField R)]
+    (hscalar : ∀ c : K, (algebraMap K R c : E) = algebraMap K E c)
+    (hspec : R = dominatingValuationSubring (L := E) m) :
+    Module.finrank K m.asIdeal.ResidueField ≤
+      Module.finrank K (IsLocalRing.ResidueField R) := by
+  let V := dominatingValuationSubring (A := A) (L := E) m
+  let eVR : V ≃+* R :=
+    { toFun := fun x => ⟨x.1, by rw [hspec]; exact x.2⟩
+      invFun := fun x => ⟨x.1, by
+        change x.1 ∈ dominatingValuationSubring m
+        rw [← hspec]
+        exact x.2⟩
+      left_inv := fun x => Subtype.ext rfl
+      right_inv := fun x => Subtype.ext rfl
+      map_add' := fun _ _ => rfl
+      map_mul' := fun _ _ => rfl }
+  let ψ : A →+* R :=
+    eVR.toRingHom.comp
+      (coordinateRingToDominatingValuationSubring
+        (A := A) (L := E) m)
+  have hcenter : m.asIdeal =
+      Ideal.comap ψ (IsLocalRing.maximalIdeal R) := by
+    rw [pointIdeal_eq_comap_dominatingValuationSubring_maximalIdeal
+      (A := A) (L := E)]
+    ext a
+    change coordinateRingToDominatingValuationSubring m a ∈
+        IsLocalRing.maximalIdeal V ↔
+      eVR (coordinateRingToDominatingValuationSubring m a) ∈
+        IsLocalRing.maximalIdeal R
+    simp only [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
+    exact (not_congr (MulEquiv.isUnit_map (f := eVR.toMulEquiv))).symm
+  have hψcoe (a : A) : ((ψ a : R) : E) = algebraMap A E a := by
+    rfl
+  let θ : A →ₐ[K] IsLocalRing.ResidueField R :=
+    { toRingHom := (IsLocalRing.residue R).comp ψ
+      commutes' := by
+        intro c
+        rw [IsScalarTower.algebraMap_apply K R
+          (IsLocalRing.ResidueField R)]
+        apply congrArg (IsLocalRing.residue R)
+        apply Subtype.ext
+        rw [hψcoe]
+        change algebraMap A E (algebraMap K A c) = (algebraMap K R c : E)
+        rw [← IsScalarTower.algebraMap_apply K A E]
+        exact (hscalar c).symm }
+  have hker : m.asIdeal = RingHom.ker θ := by
+    ext a
+    rw [RingHom.mem_ker]
+    change a ∈ m.asIdeal ↔ IsLocalRing.residue R (ψ a) = 0
+    rw [IsLocalRing.residue_eq_zero_iff, hcenter]
+    rfl
+  let ι : m.asIdeal.ResidueField →ₐ[K]
+      IsLocalRing.ResidueField R := by
+    apply Ideal.ResidueField.liftₐ m.asIdeal θ hker.le
+    intro a ha
+    change IsUnit (θ a)
+    rw [isUnit_iff_ne_zero]
+    intro hzero
+    apply ha
+    rw [hker]
+    exact hzero
+  exact LinearMap.finrank_le_finrank_of_injective (f := ι.toLinearMap) ι.injective
+
 variable (K : Type*) [Field K] [Fintype K] [DecidableEq K]
 variable (p : ℕ) [Fact p.Prime] [CharP K p]
 
@@ -92,9 +213,9 @@ def squareExtensionPointMaximalIdeal
     MaximalSpectrum (PlaneCurveCoordinateRing f) := by
   let φ := squareExtensionPointEval K p f z
   let R := φ.range
-  letI : Finite R := inferInstance
-  letI : IsDomain R := inferInstance
-  letI : Field R := IsField.toField (Finite.isField_of_domain R)
+  let : Finite R := inferInstance
+  let : IsDomain R := inferInstance
+  let : Field R := IsField.toField (Finite.isField_of_domain R)
   refine ⟨RingHom.ker φ, ?_⟩
   rw [← AlgHom.ker_rangeRestrict φ]
   exact RingHom.ker_isMaximal_of_surjective φ.rangeRestrict.toRingHom
@@ -204,10 +325,10 @@ theorem squareExtensionClosedPointFiber_card_le_residueDegree
   let zf : SquareExtensionClosedPointFiber K p f m :=
     ⟨z, Subtype.ext hz⟩
   let ι := squareExtensionFiberResidueAlgHom K p f m zf
-  letI : Finite m.1.asIdeal.ResidueField :=
+  let : Finite m.1.asIdeal.ResidueField :=
     Finite.of_injective ι ι.injective
-  letI : Fintype m.1.asIdeal.ResidueField := Fintype.ofFinite _
-  letI : Module.Finite K m.1.asIdeal.ResidueField :=
+  let : Fintype m.1.asIdeal.ResidueField := Fintype.ofFinite _
+  let : Module.Finite K m.1.asIdeal.ResidueField :=
     Module.Finite.of_fg_top (by
       rw [Submodule.fg_def]
       exact ⟨Set.univ, Set.finite_univ, by simp⟩)
@@ -278,7 +399,7 @@ theorem squareExtensionFrobeniusElement_mem_pointMaximalIdeal
     planeCurveCoordinate f 0 ^ (Nat.card K) ^ 2 -
         planeCurveCoordinate f 0 ∈
       (squareExtensionPointMaximalIdeal K p f z).asIdeal := by
-  letI : Fintype (SquareExtension K p) := Fintype.ofFinite _
+  let : Fintype (SquareExtension K p) := Fintype.ofFinite _
   rw [squareExtensionPointMaximalIdeal_asIdeal]
   change squareExtensionPointEval K p f z
     (planeCurveCoordinate f 0 ^ (Nat.card K) ^ 2 -
@@ -289,6 +410,64 @@ theorem squareExtensionFrobeniusElement_mem_pointMaximalIdeal
     exact FiniteField.natCard_extension K p 2
   rw [← hcard, FiniteField.pow_card, sub_self]
 
+private theorem residue_finrank_le_finitePlace_degree
+    (K E A : Type*) [Field K] [Fintype K] [DecidableEq K] [DecidableEq (RatFunc K)]
+    [Field E] [Algebra (RatFunc K) E] [FiniteDimensional (RatFunc K) E]
+    [Algebra.IsSeparable (RatFunc K) E] [Algebra K E]
+    [IsScalarTower K (RatFunc K) E]
+    [CommRing A] [IsDomain A] [Algebra K A] [Algebra A E]
+    [IsScalarTower K A E] [IsFractionRing A E]
+    [IsDedekindDomain (RatFuncFiniteIntegralClosure K E)]
+    [IsFractionRing (RatFuncFiniteIntegralClosure K E) E]
+    (m : MaximalSpectrum A) (q : FiniteExtensionFinitePlace K E)
+    (hspec : IsDedekindDomain.HeightOneSpectrum.valuationSubringAtPrime E q =
+      dominatingValuationSubring (L := E) m) :
+    Module.finrank K m.asIdeal.ResidueField ≤ finiteExtensionPlaceDegree K E (.inl q) := by
+  let : Algebra (Polynomial K) E :=
+    RingHom.toAlgebra ((algebraMap (RatFunc K) E).comp
+      (algebraMap (Polynomial K) (RatFunc K)))
+  let : IsScalarTower (Polynomial K) (RatFunc K) E := IsScalarTower.of_algebraMap_eq' rfl
+  let B := RatFuncFiniteIntegralClosure K E
+  let : Algebra K B :=
+    RingHom.toAlgebra
+      ((algebraMap (Polynomial K) B).comp (algebraMap K (Polynomial K)))
+  let : IsScalarTower K (Polynomial K) B :=
+    IsScalarTower.of_algebraMap_eq' rfl
+  let : IsScalarTower K (Polynomial K) E :=
+    IsScalarTower.of_algebraMap_eq' (by
+      ext c
+      rw [IsScalarTower.algebraMap_apply K (RatFunc K) E,
+        IsScalarTower.algebraMap_apply K (Polynomial K) (RatFunc K)]
+      rfl)
+  let : IsScalarTower K B E := IsScalarTower.of_algebraMap_eq' (by
+    ext c
+    rw [IsScalarTower.algebraMap_apply K (Polynomial K) E]
+    rfl)
+  let R := IsDedekindDomain.HeightOneSpectrum.valuationSubringAtPrime E q
+  let : Algebra K R :=
+    RingHom.toAlgebra ((algebraMap B R).comp (algebraMap K B))
+  let : IsScalarTower K B R := IsScalarTower.of_algebraMap_eq' rfl
+  let e := atPrimeResidueAlgEquiv K B R q.asIdeal
+  have hplace : finiteExtensionPlaceDegree K E (.inl q) =
+      Module.finrank K q.asIdeal.ResidueField :=
+    finiteExtensionFinitePlace_degree_eq_finrank_residueField K E q
+  let : Module.Finite K q.asIdeal.ResidueField :=
+    Module.finite_of_finrank_pos (by
+      rw [← hplace]
+      exact finiteExtensionPlaceDegree_pos K E (.inl q))
+  let : Module.Finite K (IsLocalRing.ResidueField R) :=
+    Module.Finite.equiv e.toLinearEquiv
+  have hle : Module.finrank K m.asIdeal.ResidueField ≤
+      Module.finrank K (IsLocalRing.ResidueField R) :=
+    residue_finrank_le_of_dominating_valuation m R (fun c => by
+      change algebraMap B E (algebraMap K B c) = algebraMap K E c
+      exact (IsScalarTower.algebraMap_apply K B E c).symm) hspec
+  have heq : Module.finrank K (IsLocalRing.ResidueField R) =
+      Module.finrank K q.asIdeal.ResidueField :=
+    e.symm.toLinearEquiv.finrank_eq
+  rw [hplace, ← heq]
+  exact hle
+
 omit [DecidableEq K] in
 /-- Every base closed affine centre arising from a quadratic-extension point
 has an exhaustive finite place above it. -/
@@ -297,26 +476,26 @@ theorem exists_squareExtensionClosedPoint_exhaustiveFinitePlace
     (hf : Irreducible f)
     (hpartialSecond : MvPolynomial.pderiv 1 f ≠ 0)
     (m : SquareExtensionClosedPoint K p f) :
-    letI := planeCurveCoordinateRing_isDomain hf
+    let := planeCurveCoordinateRing_isDomain hf
     let hx := firstCoordinate_transcendental hf
       (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
-    letI := planeCurveFirstCoordinateRatFuncAlgebra f hx
-    letI : Algebra (Polynomial K) (PlaneCurveFunctionField f) :=
+    let := planeCurveFirstCoordinateRatFuncAlgebra f hx
+    let : Algebra (Polynomial K) (PlaneCurveFunctionField f) :=
       RingHom.toAlgebra
         ((algebraMap (RatFunc K) (PlaneCurveFunctionField f)).comp
           (algebraMap (Polynomial K) (RatFunc K)))
-    letI : IsScalarTower (Polynomial K) (RatFunc K)
+    let : IsScalarTower (Polynomial K) (RatFunc K)
         (PlaneCurveFunctionField f) :=
       IsScalarTower.of_algebraMap_eq' rfl
-    letI : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
+    let : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
       finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-    letI : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
+    let : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
       separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-    letI : IsDedekindDomain
+    let : IsDedekindDomain
         (integralClosure (Polynomial K) (PlaneCurveFunctionField f)) :=
       integralClosure.isDedekindDomain (Polynomial K) (RatFunc K)
         (PlaneCurveFunctionField f)
-    letI : IsFractionRing
+    let : IsFractionRing
         (integralClosure (Polynomial K) (PlaneCurveFunctionField f))
         (PlaneCurveFunctionField f) :=
       integralClosure.isFractionRing_of_finite_extension (RatFunc K)
@@ -326,32 +505,7 @@ theorem exists_squareExtensionClosedPoint_exhaustiveFinitePlace
       IsDedekindDomain.HeightOneSpectrum.valuationSubringAtPrime
           (PlaneCurveFunctionField f) q =
         dominatingValuationSubring m.1 := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
-    planeCurveCoordinateRing_isDomain hf
-  let hx := firstCoordinate_transcendental hf
-    (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
-  letI : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
-    planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : Algebra (Polynomial K) (PlaneCurveFunctionField f) :=
-    RingHom.toAlgebra
-      ((algebraMap (RatFunc K) (PlaneCurveFunctionField f)).comp
-        (algebraMap (Polynomial K) (RatFunc K)))
-  letI : IsScalarTower (Polynomial K) (RatFunc K)
-      (PlaneCurveFunctionField f) :=
-    IsScalarTower.of_algebraMap_eq' rfl
-  letI : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
-    finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
-    separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : IsDedekindDomain
-      (integralClosure (Polynomial K) (PlaneCurveFunctionField f)) :=
-    integralClosure.isDedekindDomain (Polynomial K) (RatFunc K)
-      (PlaneCurveFunctionField f)
-  letI : IsFractionRing
-      (integralClosure (Polynomial K) (PlaneCurveFunctionField f))
-      (PlaneCurveFunctionField f) :=
-    integralClosure.isFractionRing_of_finite_extension (RatFunc K)
-      (PlaneCurveFunctionField f)
+  intro inst hx alg poly tower finite separable dedekind fraction
   let A := PlaneCurveCoordinateRing f
   let E := PlaneCurveFunctionField f
   let B := integralClosure (Polynomial K) E
@@ -362,7 +516,6 @@ theorem exists_squareExtensionClosedPoint_exhaustiveFinitePlace
   let r : A := planeCurveCoordinate f 0 ^ (Nat.card K) ^ 2 -
     planeCurveCoordinate f 0
   let P : Polynomial K := Polynomial.X ^ (Nat.card K) ^ 2 - Polynomial.X
-  let b : B := algebraMap (Polynomial K) B P
   obtain ⟨z, hz⟩ := m.2
   have hm : squareExtensionPointMaximalIdeal K p f z = m.1 := hz
   have hr : r ∈ m.1.asIdeal := by
@@ -380,58 +533,17 @@ theorem exists_squareExtensionClosedPoint_exhaustiveFinitePlace
       (fun h : Polynomial K →+* E => h P)
       (ratFuncSpecialization_comp_polynomial_algebraMap
         (planeCurveFunction f 0) hx)
-    simpa [P] using hcomp
-  have hfun0 : planeCurveFunction f 0 ^ (Nat.card K) ^ 2 -
-      planeCurveFunction f 0 ≠ 0 := by
-    intro hzero
-    apply hP0
-    apply (transcendental_iff.mp hx) P
-    simpa [P] using hzero
+    simpa only [P, RingHom.comp_apply, map_sub, map_pow,
+      Polynomial.coe_eval₂RingHom, Polynomial.eval₂_X] using hcomp
   have hrMap : algebraMap A E r =
       planeCurveFunction f 0 ^ (Nat.card K) ^ 2 -
         planeCurveFunction f 0 := by
     simp only [r, map_sub, map_pow]
     rfl
-  have hbMap : algebraMap B E b =
-      planeCurveFunction f 0 ^ (Nat.card K) ^ 2 -
-        planeCurveFunction f 0 := by
-    rw [show algebraMap B E b = algebraMap (Polynomial K) E P by
-      exact IsScalarTower.algebraMap_apply (Polynomial K) B E P]
-    exact hPMap
-  have hb0 : b ≠ 0 := by
-    intro hb
-    apply hfun0
-    rw [← hbMap, hb, map_zero]
-  have hnonunits :
-      planeCurveFunction f 0 ^ (Nat.card K) ^ 2 -
-          planeCurveFunction f 0 ∈ V.nonunits := by
-    rw [← hrMap]
-    exact algebraMap_mem_dominatingValuationSubring_nonunits_of_mem
-      (A := A) m.1 r hr
-  have hV : V ≠ ⊤ := by
-    intro htop
-    have hnontrivial : V.valuation.IsNontrivial :=
-      (Valuation.isNontrivial_iff_exists_lt_one V.valuation).2
-        ⟨planeCurveFunction f 0 ^ (Nat.card K) ^ 2 -
-            planeCurveFunction f 0, hfun0, hnonunits⟩
-    exact ((ValuationSubring.eq_top_iff V).mp htop) hnontrivial
-  have hbMem : b ∈ dominatingIntegralClosurePrime m.1 hbase := by
-    change integralClosureToDominatingValuationSubring m.1 hbase b ∈
-      IsLocalRing.maximalIdeal V
-    apply ValuationSubring.coe_mem_nonunits_iff.mp
-    have hcoe :
-        ((integralClosureToDominatingValuationSubring
-          m.1 hbase b : V) : E) = algebraMap B E b := by
-      rfl
-    rw [hcoe, hbMap]
-    exact hnonunits
-  have hqne : dominatingIntegralClosurePrime m.1 hbase ≠ ⊥ := by
-    intro hbot
-    have : b = 0 := by simpa [hbot] using hbMem
-    exact hb0 this
-  exact ⟨dominatingIntegralClosurePlace m.1 hbase hqne,
-    valuationSubringAt_dominatingIntegralClosurePlace_eq
-      m.1 hbase hqne hV⟩
+  have hinj : Function.Injective (algebraMap (Polynomial K) E) :=
+    (algebraMap (RatFunc K) E).injective.comp (RatFunc.algebraMap_injective K)
+  exact exists_dominatingPlace_of_base_element m.1 hbase hinj P hP0 r hr
+    (hPMap.trans hrMap.symm)
 
 /-- The selected exhaustive finite place above a quadratic-extension closed
 affine centre. -/
@@ -440,20 +552,20 @@ def squareExtensionClosedPointExhaustiveFinitePlace
     (hf : Irreducible f)
     (hpartialSecond : MvPolynomial.pderiv 1 f ≠ 0)
     (m : SquareExtensionClosedPoint K p f) :
-    letI := planeCurveCoordinateRing_isDomain hf
+    let := planeCurveCoordinateRing_isDomain hf
     let hx := firstCoordinate_transcendental hf
       (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
-    letI := planeCurveFirstCoordinateRatFuncAlgebra f hx
-    letI : Algebra (Polynomial K) (PlaneCurveFunctionField f) :=
+    let := planeCurveFirstCoordinateRatFuncAlgebra f hx
+    let : Algebra (Polynomial K) (PlaneCurveFunctionField f) :=
       RingHom.toAlgebra
         ((algebraMap (RatFunc K) (PlaneCurveFunctionField f)).comp
           (algebraMap (Polynomial K) (RatFunc K)))
-    letI : IsScalarTower (Polynomial K) (RatFunc K)
+    let : IsScalarTower (Polynomial K) (RatFunc K)
         (PlaneCurveFunctionField f) :=
       IsScalarTower.of_algebraMap_eq' rfl
-    letI : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
+    let : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
       finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-    letI : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
+    let : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
       separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
     FiniteExtensionFinitePlace K (PlaneCurveFunctionField f) := by
   exact Classical.choose
@@ -467,20 +579,20 @@ theorem squareExtensionClosedPointExhaustiveFinitePlace_spec
     (hf : Irreducible f)
     (hpartialSecond : MvPolynomial.pderiv 1 f ≠ 0)
     (m : SquareExtensionClosedPoint K p f) :
-    letI := planeCurveCoordinateRing_isDomain hf
+    let := planeCurveCoordinateRing_isDomain hf
     let hx := firstCoordinate_transcendental hf
       (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
-    letI := planeCurveFirstCoordinateRatFuncAlgebra f hx
-    letI : Algebra (Polynomial K) (PlaneCurveFunctionField f) :=
+    let := planeCurveFirstCoordinateRatFuncAlgebra f hx
+    let : Algebra (Polynomial K) (PlaneCurveFunctionField f) :=
       RingHom.toAlgebra
         ((algebraMap (RatFunc K) (PlaneCurveFunctionField f)).comp
           (algebraMap (Polynomial K) (RatFunc K)))
-    letI : IsScalarTower (Polynomial K) (RatFunc K)
+    let : IsScalarTower (Polynomial K) (RatFunc K)
         (PlaneCurveFunctionField f) :=
       IsScalarTower.of_algebraMap_eq' rfl
-    letI : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
+    let : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
       finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-    letI : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
+    let : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
       separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
     IsDedekindDomain.HeightOneSpectrum.valuationSubringAtPrime
         (PlaneCurveFunctionField f)
@@ -497,40 +609,40 @@ theorem squareExtensionClosedPointExhaustiveFinitePlace_injective
     {f : MvPolynomial (Fin 2) K}
     (hf : Irreducible f)
     (hpartialSecond : MvPolynomial.pderiv 1 f ≠ 0) :
-    letI := planeCurveCoordinateRing_isDomain hf
+    let := planeCurveCoordinateRing_isDomain hf
     let hx := firstCoordinate_transcendental hf
       (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
-    letI := planeCurveFirstCoordinateRatFuncAlgebra f hx
-    letI : Algebra (Polynomial K) (PlaneCurveFunctionField f) :=
+    let := planeCurveFirstCoordinateRatFuncAlgebra f hx
+    let : Algebra (Polynomial K) (PlaneCurveFunctionField f) :=
       RingHom.toAlgebra
         ((algebraMap (RatFunc K) (PlaneCurveFunctionField f)).comp
           (algebraMap (Polynomial K) (RatFunc K)))
-    letI : IsScalarTower (Polynomial K) (RatFunc K)
+    let : IsScalarTower (Polynomial K) (RatFunc K)
         (PlaneCurveFunctionField f) :=
       IsScalarTower.of_algebraMap_eq' rfl
-    letI : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
+    let : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
       finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-    letI : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
+    let : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
       separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
     Function.Injective
       (squareExtensionClosedPointExhaustiveFinitePlace
         K p hf hpartialSecond) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
-  letI : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : Algebra (Polynomial K) (PlaneCurveFunctionField f) :=
+  let : Algebra (Polynomial K) (PlaneCurveFunctionField f) :=
     RingHom.toAlgebra
       ((algebraMap (RatFunc K) (PlaneCurveFunctionField f)).comp
         (algebraMap (Polynomial K) (RatFunc K)))
-  letI : IsScalarTower (Polynomial K) (RatFunc K)
+  let : IsScalarTower (Polynomial K) (RatFunc K)
       (PlaneCurveFunctionField f) :=
     IsScalarTower.of_algebraMap_eq' rfl
-  letI : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
     separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
   change Function.Injective
     (squareExtensionClosedPointExhaustiveFinitePlace
@@ -565,54 +677,32 @@ theorem squareExtensionClosedPoint_residueDegree_le_placeDegree
     (hf : Irreducible f)
     (hpartialSecond : MvPolynomial.pderiv 1 f ≠ 0)
     (m : SquareExtensionClosedPoint K p f) :
-    letI := planeCurveCoordinateRing_isDomain hf
+    let := planeCurveCoordinateRing_isDomain hf
     let hx := firstCoordinate_transcendental hf
       (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
-    letI := planeCurveFirstCoordinateRatFuncAlgebra f hx
-    letI : Algebra (Polynomial K) (PlaneCurveFunctionField f) :=
+    let := planeCurveFirstCoordinateRatFuncAlgebra f hx
+    let : Algebra (Polynomial K) (PlaneCurveFunctionField f) :=
       RingHom.toAlgebra
         ((algebraMap (RatFunc K) (PlaneCurveFunctionField f)).comp
           (algebraMap (Polynomial K) (RatFunc K)))
-    letI : IsScalarTower (Polynomial K) (RatFunc K)
+    let : IsScalarTower (Polynomial K) (RatFunc K)
         (PlaneCurveFunctionField f) :=
       IsScalarTower.of_algebraMap_eq' rfl
-    letI : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
+    let : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
       finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-    letI : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
+    let : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
       separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-    letI : DecidableEq (RatFunc K) := Classical.decEq _
+    let : DecidableEq (RatFunc K) := Classical.decEq _
     Module.finrank K m.1.asIdeal.ResidueField ≤
       finiteExtensionPlaceDegree K (PlaneCurveFunctionField f)
         (.inl (squareExtensionClosedPointExhaustiveFinitePlace
           K p hf hpartialSecond m)) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
-    planeCurveCoordinateRing_isDomain hf
-  let hx := firstCoordinate_transcendental hf
-    (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
-  letI : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
-    planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : Algebra (Polynomial K) (PlaneCurveFunctionField f) :=
-    RingHom.toAlgebra
-      ((algebraMap (RatFunc K) (PlaneCurveFunctionField f)).comp
-        (algebraMap (Polynomial K) (RatFunc K)))
-  letI : IsScalarTower (Polynomial K) (RatFunc K)
-      (PlaneCurveFunctionField f) :=
-    IsScalarTower.of_algebraMap_eq' rfl
-  letI : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
-    finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
-    separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
+  intro inst hx alg poly tower finite separable decEq
   let E := PlaneCurveFunctionField f
   let q : FiniteExtensionFinitePlace K E :=
     squareExtensionClosedPointExhaustiveFinitePlace
       K p hf hpartialSecond m
-  let B := RatFuncFiniteIntegralClosure K E
-  letI : Algebra K B :=
-    RingHom.toAlgebra
-      ((algebraMap (Polynomial K) B).comp (algebraMap K (Polynomial K)))
-  letI : IsScalarTower K (Polynomial K) B :=
-    IsScalarTower.of_algebraMap_eq' rfl
-  letI : IsScalarTower K (RatFunc K) E :=
+  let : IsScalarTower K (RatFunc K) E :=
     IsScalarTower.of_algebraMap_eq' (by
       ext c
       have h := congrArg
@@ -620,99 +710,8 @@ theorem squareExtensionClosedPoint_residueDegree_le_placeDegree
         (ratFuncSpecialization_comp_polynomial_algebraMap
           (planeCurveFunction f 0) hx)
       simpa [E, planeCurveFirstCoordinateRatFuncAlgebra] using h.symm)
-  letI : IsScalarTower K (Polynomial K) E :=
-    IsScalarTower.of_algebraMap_eq' (by
-      ext c
-      rw [IsScalarTower.algebraMap_apply K (RatFunc K) E,
-        IsScalarTower.algebraMap_apply K (Polynomial K) (RatFunc K)]
-      rfl)
-  letI : IsScalarTower K B E := IsScalarTower.of_algebraMap_eq' (by
-    ext c
-    rw [IsScalarTower.algebraMap_apply K (Polynomial K) E]
-    rfl)
-  let R := IsDedekindDomain.HeightOneSpectrum.valuationSubringAtPrime E q
-  letI : Algebra K R :=
-    RingHom.toAlgebra ((algebraMap B R).comp (algebraMap K B))
-  letI : IsScalarTower K B R := IsScalarTower.of_algebraMap_eq' rfl
-  let V := dominatingValuationSubring
-    (A := PlaneCurveCoordinateRing f) (L := E) m.1
-  have hspec : R = V :=
-    squareExtensionClosedPointExhaustiveFinitePlace_spec
-      K p hf hpartialSecond m
-  let eVR : V ≃+* R :=
-    { toFun := fun x => ⟨x.1, by rw [hspec]; exact x.2⟩
-      invFun := fun x => ⟨x.1, by rw [← hspec]; exact x.2⟩
-      left_inv := fun x => Subtype.ext rfl
-      right_inv := fun x => Subtype.ext rfl
-      map_add' := fun _ _ => rfl
-      map_mul' := fun _ _ => rfl }
-  let A := PlaneCurveCoordinateRing f
-  let ψ : A →+* R :=
-    eVR.toRingHom.comp
-      (coordinateRingToDominatingValuationSubring
-        (A := A) (L := E) m.1)
-  have hcenter : m.1.asIdeal =
-      Ideal.comap ψ (IsLocalRing.maximalIdeal R) := by
-    rw [pointIdeal_eq_comap_dominatingValuationSubring_maximalIdeal
-      (A := A) (L := E)]
-    ext a
-    change coordinateRingToDominatingValuationSubring m.1 a ∈
-        IsLocalRing.maximalIdeal V ↔
-      eVR (coordinateRingToDominatingValuationSubring m.1 a) ∈
-        IsLocalRing.maximalIdeal R
-    simp only [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
-    exact (not_congr (MulEquiv.isUnit_map (f := eVR.toMulEquiv))).symm
-  have hψcoe (a : A) : ((ψ a : R) : E) = algebraMap A E a := by
-    rfl
-  let θ : A →ₐ[K] IsLocalRing.ResidueField R :=
-    { toRingHom := (IsLocalRing.residue R).comp ψ
-      commutes' := by
-        intro c
-        rw [IsScalarTower.algebraMap_apply K R
-          (IsLocalRing.ResidueField R)]
-        apply congrArg (IsLocalRing.residue R)
-        apply Subtype.ext
-        rw [hψcoe]
-        change algebraMap A E (algebraMap K A c) =
-          algebraMap B E (algebraMap K B c)
-        rw [← IsScalarTower.algebraMap_apply K A E,
-          ← IsScalarTower.algebraMap_apply K B E] }
-  have hker : m.1.asIdeal = RingHom.ker θ := by
-    ext a
-    rw [RingHom.mem_ker]
-    change a ∈ m.1.asIdeal ↔ IsLocalRing.residue R (ψ a) = 0
-    rw [IsLocalRing.residue_eq_zero_iff, hcenter]
-    rfl
-  let ι : m.1.asIdeal.ResidueField →ₐ[K]
-      IsLocalRing.ResidueField R := by
-    apply Ideal.ResidueField.liftₐ m.1.asIdeal θ hker.le
-    intro a ha
-    change IsUnit (θ a)
-    rw [isUnit_iff_ne_zero]
-    intro hzero
-    apply ha
-    rw [hker]
-    exact hzero
-  let e := atPrimeResidueAlgEquiv K B R q.asIdeal
-  letI : DecidableEq (RatFunc K) := Classical.decEq _
-  have hplace : finiteExtensionPlaceDegree K E (.inl q) =
-      Module.finrank K q.asIdeal.ResidueField :=
-    finiteExtensionFinitePlace_degree_eq_finrank_residueField K E q
-  letI : Module.Finite K q.asIdeal.ResidueField :=
-    Module.finite_of_finrank_pos (by
-      rw [← hplace]
-      exact finiteExtensionPlaceDegree_pos K E (.inl q))
-  letI : Module.Finite K (IsLocalRing.ResidueField R) :=
-    Module.Finite.equiv e.toLinearEquiv
-  have hle : Module.finrank K m.1.asIdeal.ResidueField ≤
-      Module.finrank K (IsLocalRing.ResidueField R) :=
-    LinearMap.finrank_le_finrank_of_injective
-      (f := ι.toLinearMap) ι.injective
-  have heq : Module.finrank K (IsLocalRing.ResidueField R) =
-      Module.finrank K q.asIdeal.ResidueField :=
-    e.symm.toLinearEquiv.finrank_eq
-  rw [hplace, ← heq]
-  exact hle
+  exact residue_finrank_le_finitePlace_degree K E (PlaneCurveCoordinateRing f) m.1 q
+    (squareExtensionClosedPointExhaustiveFinitePlace_spec K p hf hpartialSecond m)
 
 /-- Quadratic-extension affine points are bounded by the sum of the degrees
 of one selected normalization place above each closed affine centre.  The
@@ -721,45 +720,45 @@ theorem squareExtensionAffinePoint_card_le_selectedPlaceDegreeSum
     {f : MvPolynomial (Fin 2) K}
     (hf : Irreducible f)
     (hpartialSecond : MvPolynomial.pderiv 1 f ≠ 0) :
-    letI := planeCurveCoordinateRing_isDomain hf
+    let := planeCurveCoordinateRing_isDomain hf
     let hx := firstCoordinate_transcendental hf
       (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
-    letI := planeCurveFirstCoordinateRatFuncAlgebra f hx
-    letI : Algebra (Polynomial K) (PlaneCurveFunctionField f) :=
+    let := planeCurveFirstCoordinateRatFuncAlgebra f hx
+    let : Algebra (Polynomial K) (PlaneCurveFunctionField f) :=
       RingHom.toAlgebra
         ((algebraMap (RatFunc K) (PlaneCurveFunctionField f)).comp
           (algebraMap (Polynomial K) (RatFunc K)))
-    letI : IsScalarTower (Polynomial K) (RatFunc K)
+    let : IsScalarTower (Polynomial K) (RatFunc K)
         (PlaneCurveFunctionField f) :=
       IsScalarTower.of_algebraMap_eq' rfl
-    letI : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
+    let : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
       finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-    letI : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
+    let : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
       separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-    letI : DecidableEq (RatFunc K) := Classical.decEq _
+    let : DecidableEq (RatFunc K) := Classical.decEq _
     Fintype.card (SquareExtensionAffinePoint K p f) ≤
       ∑ m : SquareExtensionClosedPoint K p f,
         finiteExtensionPlaceDegree K (PlaneCurveFunctionField f)
           (.inl (squareExtensionClosedPointExhaustiveFinitePlace
             K p hf hpartialSecond m)) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
-  letI : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : Algebra (Polynomial K) (PlaneCurveFunctionField f) :=
+  let : Algebra (Polynomial K) (PlaneCurveFunctionField f) :=
     RingHom.toAlgebra
       ((algebraMap (RatFunc K) (PlaneCurveFunctionField f)).comp
         (algebraMap (Polynomial K) (RatFunc K)))
-  letI : IsScalarTower (Polynomial K) (RatFunc K)
+  let : IsScalarTower (Polynomial K) (RatFunc K)
       (PlaneCurveFunctionField f) :=
     IsScalarTower.of_algebraMap_eq' rfl
-  letI : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
     separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : DecidableEq (RatFunc K) := Classical.decEq _
+  let : DecidableEq (RatFunc K) := Classical.decEq _
   have hcard :
       Fintype.card (SquareExtensionAffinePoint K p f) =
         ∑ m : SquareExtensionClosedPoint K p f,
@@ -782,46 +781,46 @@ theorem squareExtensionAffinePoint_card_le_finiteExtensionHeight_of_selectedPlac
     (hf : Irreducible f)
     (hpartialSecond : MvPolynomial.pderiv 1 f ≠ 0)
     (u : PlaneCurveFunctionField f) (hu : u ≠ 0) :
-    letI := planeCurveCoordinateRing_isDomain hf
+    let := planeCurveCoordinateRing_isDomain hf
     let hx := firstCoordinate_transcendental hf
       (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
-    letI := planeCurveFirstCoordinateRatFuncAlgebra f hx
-    letI : Algebra (Polynomial K) (PlaneCurveFunctionField f) :=
+    let := planeCurveFirstCoordinateRatFuncAlgebra f hx
+    let : Algebra (Polynomial K) (PlaneCurveFunctionField f) :=
       RingHom.toAlgebra
         ((algebraMap (RatFunc K) (PlaneCurveFunctionField f)).comp
           (algebraMap (Polynomial K) (RatFunc K)))
-    letI : IsScalarTower (Polynomial K) (RatFunc K)
+    let : IsScalarTower (Polynomial K) (RatFunc K)
         (PlaneCurveFunctionField f) :=
       IsScalarTower.of_algebraMap_eq' rfl
-    letI : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
+    let : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
       finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-    letI : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
+    let : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
       separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-    letI : DecidableEq (RatFunc K) := Classical.decEq _
+    let : DecidableEq (RatFunc K) := Classical.decEq _
     (∀ m : SquareExtensionClosedPoint K p f,
       0 < finiteExtensionPrincipalDivisor K (PlaneCurveFunctionField f) u
         (.inl (squareExtensionClosedPointExhaustiveFinitePlace
           K p hf hpartialSecond m))) →
       Fintype.card (SquareExtensionAffinePoint K p f) ≤
         finiteExtensionHeight K (PlaneCurveFunctionField f) u := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
-  letI : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : Algebra (Polynomial K) (PlaneCurveFunctionField f) :=
+  let : Algebra (Polynomial K) (PlaneCurveFunctionField f) :=
     RingHom.toAlgebra
       ((algebraMap (RatFunc K) (PlaneCurveFunctionField f)).comp
         (algebraMap (Polynomial K) (RatFunc K)))
-  letI : IsScalarTower (Polynomial K) (RatFunc K)
+  let : IsScalarTower (Polynomial K) (RatFunc K)
       (PlaneCurveFunctionField f) :=
     IsScalarTower.of_algebraMap_eq' rfl
-  letI : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
     separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : DecidableEq (RatFunc K) := Classical.decEq _
+  let : DecidableEq (RatFunc K) := Classical.decEq _
   change
     (∀ m : SquareExtensionClosedPoint K p f,
       0 < finiteExtensionPrincipalDivisor K (PlaneCurveFunctionField f) u
@@ -840,6 +839,8 @@ theorem squareExtensionAffinePoint_card_le_finiteExtensionHeight_of_selectedPlac
     apply squareExtensionClosedPointExhaustiveFinitePlace_injective
       K p hf hpartialSecond
     exact Sum.inl_injective hmn
+  let : DecidableEq (FiniteExtensionPlace K (PlaneCurveFunctionField f)) :=
+    @instDecidableEqSum _ _ (Classical.decEq _) (Classical.decEq _)
   let S : Finset (FiniteExtensionPlace K (PlaneCurveFunctionField f)) :=
     Finset.univ.image place
   have hsum :
