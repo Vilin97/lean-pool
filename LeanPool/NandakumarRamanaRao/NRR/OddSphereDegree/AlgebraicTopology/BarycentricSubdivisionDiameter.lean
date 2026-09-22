@@ -220,11 +220,12 @@ The standard vertex set has diameter at most `1`.
 -/
 theorem diam_range_stdVerts_le_one (n : ℕ) :
     Metric.diam (Set.range (stdVerts n)) ≤ 1 := by
-  refine' le_trans ( Metric.diam_mono _ _ ) _;
-  exact SphereOddDegree.finiteSimplex ℝ ( Fin ( n + 1 ) );
-  · exact Set.range_subset_iff.mpr fun i => SphereOddDegree.single_mem_finiteSimplex ℝ i;
-  · exact SphereOddDegree.bounded_finiteSimplex _
-  · exact diam_stdSimplex_le
+  apply Metric.diam_le_of_forall_dist_le zero_le_one
+  rintro x ⟨i, rfl⟩ y ⟨j, rfl⟩
+  apply (dist_pi_le_iff zero_le_one).2
+  intro k
+  simp only [stdVerts, Pi.single_apply, Real.dist_eq]
+  split_ifs <;> norm_num
 
 /-
 **Main theorem.** For every `ε > 0` there is a number `N` of barycentric

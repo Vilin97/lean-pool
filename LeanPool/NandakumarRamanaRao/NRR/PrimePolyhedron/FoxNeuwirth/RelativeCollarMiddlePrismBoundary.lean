@@ -342,7 +342,7 @@ theorem occurrencePairing_lower
         (W := fun tau => lowerMapWeight W
           (fun x => tau (affineCompMap p L eta x)))]
     simp only [lowerMapWeight,
-      refinedSidePrismMap_not_lowerHorizontal hp N _ _ _ L _, if_false]
+      refinedSidePrismMap_not_lowerHorizontal hp N _ _ _ L _, ite_false]
     simp only [MapIsLowerHorizontal,
       lowerEndpointMap, upperEndpointMap]
     simp only [iteratedSign,  permSignCoeff]
@@ -438,7 +438,7 @@ theorem occurrencePairing_upper
         (W := fun tau => upperMapWeight W
           (fun x => tau (affineCompMap p L eta x)))]
     simp only [upperMapWeight,
-      refinedSidePrismMap_not_upperHorizontal hp N _ _ _ L _, if_false]
+      refinedSidePrismMap_not_upperHorizontal hp N _ _ _ L _, ite_false]
     simp only [ MapIsUpperHorizontal,
       lowerEndpointMap, upperEndpointMap]
     simp only [iteratedSign,  permSignCoeff]
@@ -669,7 +669,7 @@ private theorem fixed_refined_side_pairing_cancels (N L n : ℕ) (hp : Nat.Prime
     simp [  iteratedBoundaryMap,
       ReferenceAffineOrbitCount.topRepr,
       Simplex.realizationContinuousMap, Simplex.realizationPoint,
-      Simplex.chartWeight, cofacePoint, SphereOddDegree.FiniteSimplex.map_coe]
+      Simplex.chartWeight, cofacePoint]
     change (∑ i : Fin (n + 1 + 1),
       if (ReferenceAffineOrbitCount.topRepr hp orbit) i = c then
         (StandardSimplex.ofDelta
@@ -782,7 +782,7 @@ theorem occurrencePairing_side_eq_zero
   conv_lhs =>
     enter [2, cell, 2, j]
     rw [occurrenceFacetMap_eq_iteratedFacetMap_succ]
-  simp only [subdivisionSign, staircaseSign, iteratedSign]
+  simp only [subdivisionSign, staircaseSign]
   ring_nf
   rw [Fintype.sum_prod_type]
   rw [Fintype.sum_prod_type]
@@ -982,7 +982,7 @@ theorem facetIncidence_eq_occurrencePairing
   intro o ho
   rw [facetOrbitIndicator_occurrence]
   by_cases hs : (Cells hp N L).facetClass o = s
-  · simp only [hs, if_true]
+  · simp only [hs, ite_true]
     change prismCoefficient hp N L o.1 * (-1 : ZMod p) ^ (o.2 : Nat) = _
     simp [occurrenceCoefficient, SimplicialChain.faceSign, facetFaceIndex]
   · simp [hs]

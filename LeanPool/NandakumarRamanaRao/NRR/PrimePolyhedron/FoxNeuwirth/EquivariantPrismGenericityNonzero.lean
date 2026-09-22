@@ -573,7 +573,7 @@ theorem facetWitnessTarget_succAbove
         (AffinePositiveRayBoundary.VertexMap.augmentedRowEquiv hp c) := by
   classical
   let hv : ∃ c' : Fin p, k.succAbove c = k.succAbove c' := ⟨c, rfl⟩
-  rw [facetWitnessTarget, dif_pos hv]
+  rw [facetWitnessTarget, dite_eq_left hv]
   have hc : Classical.choose hv = c := by
     exact (Fin.succAbove_right_injective (p := k)) (Classical.choose_spec hv).symm
   simp []
@@ -675,7 +675,7 @@ theorem codimTwoWitnessTarget_vertex
   classical
   let hv : ∃ i' : Fin (p - 1),
       codimTwoVertex hp f i = codimTwoVertex hp f i' := ⟨i, rfl⟩
-  rw [codimTwoWitnessTarget, dif_pos hv]
+  rw [codimTwoWitnessTarget, dite_eq_left hv]
   have hi : Classical.choose hv = i := by
     have houter := (Fin.succAbove_right_injective (p := f.1))
       (Classical.choose_spec hv).symm

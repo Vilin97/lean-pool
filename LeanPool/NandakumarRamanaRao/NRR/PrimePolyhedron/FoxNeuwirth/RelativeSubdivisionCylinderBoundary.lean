@@ -369,7 +369,7 @@ theorem sidePairing_tupleBoundaryWeight
   classical
   unfold RelativeSubdivisionCylinderCombinatorics.Oriented.sidePairing
     tupleBoundaryWeight fullBoundaryPairing
-  simp only [SimplicialChain.faceSign, facetTuple, deleteTuple]
+  simp only [SimplicialChain.faceSign, facetTuple]
   simp_rw [Finset.mul_sum]
   rw [← Finset.sum_neg_distrib]
   apply Finset.sum_congr rfl

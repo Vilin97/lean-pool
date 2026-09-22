@@ -423,7 +423,7 @@ private theorem fixed_side_refinement_cancels (d : ℕ) (hp : Nat.Prime (d + 2))
     simp [ EquivariantPrismNonhorizontalCancellation.iteratedBoundaryMap,
       ReferenceAffineOrbitCount.topRepr,
       Simplex.realizationContinuousMap, Simplex.realizationPoint,
-      Simplex.chartWeight, cofacePoint, SphereOddDegree.FiniteSimplex.map_coe]
+      Simplex.chartWeight, cofacePoint]
     change (∑ i : Fin (d + 2),
       if (ReferenceAffineOrbitCount.topRepr hp orbit) i = c then
         (StandardSimplex.ofDelta
@@ -565,8 +565,7 @@ private theorem fixedSideCell_sum_eq_zero_dim
                     (EquivariantPrismNonhorizontalCancellation.orbitFacetIndex hp k))) = 0 := by
   classical
   simp only [
-    RefinedAffineMap.subdivisionSign,
-    EquivariantPrismNonhorizontalCancellation.iteratedSign
+    RefinedAffineMap.subdivisionSign
   ]
   have hreindex (c : PrimeOrbitCycle.TopOrbit hp) :
       (∑ rho : RefinementWord (d + 2) N,
@@ -705,7 +704,6 @@ private theorem sideMapWeight_baseOccurrence_sideCell
       RelativeSubdivisionOneStepBoundaryBase.baseOccurrence,
       RelativeAffineCellSystem.facetSignature,
       RelativeSubdivisionOneStepCells.cellSystem,
-
       RelativeSubdivisionCylinderCombinatorics.sidePoint,
       RelativeSubdivisionOneStepCells.liftPoint,
       RelativeSubdivisionOneStepCells.localPoint,

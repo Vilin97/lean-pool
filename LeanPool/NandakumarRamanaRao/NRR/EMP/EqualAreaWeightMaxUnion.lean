@@ -53,7 +53,6 @@ theorem weightDifference_eq_of_equalArea
   let O : Set X := ⋃ i : I, ⋂ j : J,
     {x : X | PowerDiagram.powerDist s w' i.1 x.1 <
       PowerDiagram.powerDist s w' j.1 x.1}
-
   have hcellEq (i : I) :
       PowerDiagram.bodyCellSet K s w i.1 =
         PowerDiagram.bodyCellSet K s w' i.1 := by
@@ -61,13 +60,11 @@ theorem weightDifference_eq_of_equalArea
     intro j
     rw [show w' i.1 - w i.1 = d i.1 by rfl, i.2]
     simpa [d] using hdmax j
-
   have hcellMemEq (i : I) (x : X) :
       x.1 ∈ PowerDiagram.cell s w i.1 ↔
         x.1 ∈ PowerDiagram.cell s w' i.1 := by
     have hx := Set.ext_iff.mp (hcellEq i) x.1
     simpa [PowerDiagram.bodyCellSet, x.2] using hx
-
   have hUO : U = O := by
     ext x
     constructor
@@ -105,7 +102,6 @@ theorem weightDifference_eq_of_equalArea
         (hcellMemEq k x).mpr hxk'
       simp only [U, Set.mem_iUnion, Set.mem_ofPred_eq]
       exact ⟨k, hxk⟩
-
   have hpowerDist_cont (q : Fin n) :
       Continuous fun x : X => PowerDiagram.powerDist s w' q x.1 := by
     unfold PowerDiagram.powerDist
@@ -116,11 +112,9 @@ theorem weightDifference_eq_of_equalArea
     exact isOpen_iUnion fun i =>
       isOpen_iInter_of_finite fun j =>
         isOpen_lt (hpowerDist_cont i.1) (hpowerDist_cont j.1)
-
   have hUclosed : IsClosed U := by
     exact isClosed_iUnion_of_finite fun i =>
       (PowerDiagram.cell_isClosed s w i.1).preimage continuous_subtype_val
-
   have hUnonempty : U.Nonempty := by
     have hK : 0 < K.area :=
       (NRR.SolidConvexBody.ofConvexBody K).area_pos
@@ -133,12 +127,10 @@ theorem weightDifference_eq_of_equalArea
     refine ⟨xK, ?_⟩
     simp only [U, Set.mem_iUnion, Set.mem_ofPred_eq]
     exact ⟨xi, hxbody.2⟩
-
   let : PreconnectedSpace X :=
     Subtype.preconnectedSpace K.convex.isPreconnected
   have hUuniv : U = Set.univ :=
     (show IsClopen U from ⟨hUclosed, hUopen⟩).eq_univ hUnonempty
-
   have hUbody :
       (⋃ i : I, PowerDiagram.bodyCellSet K s w i.1) = (K : Set Plane) := by
     ext x
@@ -154,7 +146,6 @@ theorem weightDifference_eq_of_equalArea
       obtain ⟨i, hxi⟩ := hxU
       simp only [Set.mem_iUnion]
       exact ⟨i, hxK, hxi⟩
-
   have hallMax : ∀ j, d j = d i0 := by
     intro j
     by_contra hj
@@ -193,7 +184,6 @@ theorem weightDifference_eq_of_equalArea
       simp
     rw [hareaZero] at hpos
     exact (lt_irrefl (0 : Real)) hpos
-
   intro i j
   exact (hallMax i).trans (hallMax j).symm
 

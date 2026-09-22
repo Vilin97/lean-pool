@@ -224,7 +224,7 @@ private theorem facetBlockMatrix_eq_swappedRowReduced
       by_cases hr : r = ReferenceAffineOrbitCount.lastLabel hp
       · subst r
         simp [facetBlockMatrix, facetRowReducedMatrix, facetBorderSwap,
-          facetRowCoefficient, facetBorderedMatrix, facetCoordinateMatrix]
+          facetRowCoefficient, facetBorderedMatrix]
       · have hrmem : r ∈ {x : Fin p |
             x ≠ ReferenceAffineOrbitCount.lastLabel hp} := hr
         rw [← ReferenceAffineOrbitCount.coordinateLabel_range hp] at hrmem

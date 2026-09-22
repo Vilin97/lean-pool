@@ -359,7 +359,7 @@ theorem liftedTerminalChain_eq_of_terminalSource
       have hi_eq : i.castSucc = Fin.cast heq r.succ := by
         rw [rsucc_cast_eq]
         ext
-        simp only [i, Fin.castSucc_mk, Fin.succ_mk]
+        simp only [i, Fin.castSucc_mk]
         rfl
       have hi_bar_eq : barIndicator (u.1 i.castSucc) k = barIndicator (v.1 i.castSucc) k := by
         rw [hi_castSucc_u, hi_castSucc_v]

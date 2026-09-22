@@ -84,11 +84,11 @@ theorem codedFaceTerm_bottomPartner
   rw [hface]
   by_cases hf : (toSimplex hp z).restrict
       (deleteFace hp (Fin.cast (faceDimEq hp) (bottomDelIdx (p := p)))) = target
-  · simp only [hf, if_true]
+  · simp only [hf, ite_true]
     rw [coefficient_bottomPartner hp z]
     push_cast
     ring
-  · simp only [hf, if_false, neg_zero]
+  · simp only [hf, ite_false, neg_zero]
 
 /-- The code-indexed bottom-face source sum vanishes. -/
 theorem codedDeletionCoefficient_bottom_eq_zero
@@ -121,11 +121,11 @@ theorem codedFaceTerm_removalPartner
   rw [hface]
   by_cases hf : (toSimplex hp z).restrict
       (deleteFace hp (Fin.cast (faceDimEq hp) i.succ.castSucc)) = target
-  · simp only [hf, if_true]
+  · simp only [hf, ite_true]
     rw [coefficient_removalPartner hp i z]
     push_cast
     ring
-  · simp only [hf, if_false, neg_zero]
+  · simp only [hf, ite_false, neg_zero]
 
 /-- Every code-indexed positive internal source sum vanishes. -/
 theorem codedDeletionCoefficient_removal_eq_zero

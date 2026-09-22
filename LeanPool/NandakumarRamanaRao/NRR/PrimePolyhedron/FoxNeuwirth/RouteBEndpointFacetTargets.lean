@@ -230,7 +230,7 @@ theorem oneStepLowerFacetTarget_succAbove
         (augmentedRowEquiv hp (lowerFacetPermutation hp q k c)) j := by
   classical
   let h : ∃ d : Fin p, k.succAbove c = k.succAbove d := ⟨c, rfl⟩
-  rw [oneStepLowerFacetTarget, dif_pos h]
+  rw [oneStepLowerFacetTarget, dite_eq_left h]
   have hc : Classical.choose h = c :=
     Fin.succAbove_right_injective (p := k) (Classical.choose_spec h).symm
   simp

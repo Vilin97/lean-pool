@@ -44,11 +44,9 @@ theorem equivariantReferenceCoordinateMap_deviation
   funext c r
   by_cases htop : c.IsTop
   · simp [equivariantReferenceCoordinateMap,
-
       ReferenceAffineOrbitCount.topDirection, htop]
     ring
   · simp [equivariantReferenceCoordinateMap,
-
       ReferenceAffineOrbitCount.blockDifference, htop]
 
 /-- Vertex data transform by coordinate relabelling. -/

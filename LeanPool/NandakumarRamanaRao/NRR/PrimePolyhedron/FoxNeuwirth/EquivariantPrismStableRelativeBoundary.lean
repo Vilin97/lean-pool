@@ -1043,7 +1043,6 @@ private theorem lower_realizedFacetWeight_eq_localIndex
         (endpointTopCell hp N L q eta) := by
   let o :=
     RelativeCollarMiddlePrismEndpointsCore.lowerOccurrence hp N L q eta
-
   have hmap :
       EquivariantPrismNonhorizontalCancellation.occurrenceFacetMap
           hp N L o =
@@ -1052,7 +1051,6 @@ private theorem lower_realizedFacetWeight_eq_localIndex
     simpa [o] using
       RelativeCollarMiddlePrismEndpointsCore.lowerOccurrenceFacetMap_eq
         hp N L q eta
-
   have hvertex : ∀ i : Fin p,
       AffinePositiveRayBoundary.VertexMap.facetValue
           (localVertexMap hp N L a o.1) o.2 i =
@@ -1076,7 +1074,6 @@ private theorem lower_realizedFacetWeight_eq_localIndex
         ((endpointOccurrence hp N L EndpointSide.lower q eta).1,
           (endpointOccurrence hp N L EndpointSide.lower q eta).2.succAbove i))
     simpa [endpointSpatialMap_eq_chart, RefinedAffineMap.vertex] using h
-
   have haffine : ∀ w : StandardSimplex (p - 1),
       AffinePositiveRayBoundary.VertexMap.facetAffineValue
           (localVertexMap hp N L a o.1) o.2 w =
@@ -1095,7 +1092,6 @@ private theorem lower_realizedFacetWeight_eq_localIndex
     rw [facetCoordinateIndex_eq_endpointIndex hp i]
     congr 1
     exact congrFun (hvertex i) j
-
   calc
     EquivariantPrismNonhorizontalCancellation.realizedFacetWeight
         hp N L a
@@ -1143,7 +1139,6 @@ private theorem upper_realizedFacetWeight_eq_localIndex
         (endpointTopCell hp N L q eta) := by
   let o :=
     RelativeCollarMiddlePrismEndpointsCore.upperOccurrence hp N L q eta
-
   have hmap :
       EquivariantPrismNonhorizontalCancellation.occurrenceFacetMap
           hp N L o =
@@ -1152,7 +1147,6 @@ private theorem upper_realizedFacetWeight_eq_localIndex
     simpa [o] using
       RelativeCollarMiddlePrismEndpointsCore.upperOccurrenceFacetMap_eq
         hp N L q eta
-
   have hvertex : ∀ i : Fin p,
       AffinePositiveRayBoundary.VertexMap.facetValue
           (localVertexMap hp N L a o.1) o.2 i =
@@ -1176,7 +1170,6 @@ private theorem upper_realizedFacetWeight_eq_localIndex
         ((endpointOccurrence hp N L EndpointSide.upper q eta).1,
           (endpointOccurrence hp N L EndpointSide.upper q eta).2.succAbove i))
     simpa [endpointSpatialMap_eq_chart, RefinedAffineMap.vertex] using h
-
   have haffine : ∀ w : StandardSimplex (p - 1),
       AffinePositiveRayBoundary.VertexMap.facetAffineValue
           (localVertexMap hp N L a o.1) o.2 w =
@@ -1194,7 +1187,6 @@ private theorem upper_realizedFacetWeight_eq_localIndex
     ]
     congr 1
     exact congrFun (hvertex i) j
-
   calc
     EquivariantPrismNonhorizontalCancellation.realizedFacetWeight
         hp N L a

@@ -468,7 +468,7 @@ theorem horizontalFacetExhaustive_zero
     refine Quotient.inductionOn s (fun o ho => ?_) hs
     obtain ⟨q, hq⟩ := lowerOccurrence_classification_zero hp N o ho
     refine ⟨endpointTopCell hp N 0 q (emptyEndpointRefinementWord p), ?_⟩
-    simp only [lowerFacet, splitTopCellEquiv_endpointTopCell, Prod.fst]
+    simp only [lowerFacet, splitTopCellEquiv_endpointTopCell]
     calc
       _ = (RelativeCollarMiddlePrism.cellSystem hp N 0).facetClass o := hq.symm
       _ = Quotient.mk _ o := rfl
@@ -476,7 +476,7 @@ theorem horizontalFacetExhaustive_zero
     refine Quotient.inductionOn s (fun o ho => ?_) hs
     obtain ⟨q, hq⟩ := upperOccurrence_classification_zero hp N o ho
     refine ⟨endpointTopCell hp N 0 q (emptyEndpointRefinementWord p), ?_⟩
-    simp only [upperFacet, splitTopCellEquiv_endpointTopCell, Prod.fst]
+    simp only [upperFacet, splitTopCellEquiv_endpointTopCell]
     calc
       _ = (RelativeCollarMiddlePrism.cellSystem hp N 0).facetClass o := hq.symm
       _ = Quotient.mk _ o := rfl

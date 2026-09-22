@@ -614,8 +614,7 @@ theorem endpointAdjustedSiteValue_eq_of_orbitRel
     change (globalPoint hp C (g • b.1)).time.1 = _
     rw [globalPoint_smul]
     rfl
-  simp only [endpointAdjustedSiteValue,
-    CylinderPoint.smul_time]
+  simp only [endpointAdjustedSiteValue]
   rw [htime]
   split_ifs
   · have heq := A₀.equivariant g (globalPoint hp C b.1).spatial

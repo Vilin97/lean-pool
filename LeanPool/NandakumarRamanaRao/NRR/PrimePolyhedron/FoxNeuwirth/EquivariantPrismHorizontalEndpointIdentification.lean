@@ -610,7 +610,7 @@ theorem lowerHorizontalContribution_eq_neg_lowerEndpointRefinedCount
         (W := fun tau => lowerHorizontalMapWeight hp N L a
           (fun x => tau (affineCompMap p L eta x)))]
     simp only [lowerHorizontalMapWeight,
-      refinedSidePrismMap_not_lowerHorizontal hp N _ _ _ L _, if_false]
+      refinedSidePrismMap_not_lowerHorizontal hp N _ _ _ L _, ite_false]
     simp only [MapIsLowerHorizontal,
       lowerEndpointMap, upperEndpointMap]
     simp only [iteratedSign,  permSignCoeff]
@@ -704,7 +704,7 @@ theorem upperHorizontalContribution_eq_upperEndpointRefinedCount
         (W := fun tau => upperHorizontalMapWeight hp N L a
           (fun x => tau (affineCompMap p L eta x)))]
     simp only [upperHorizontalMapWeight,
-      refinedSidePrismMap_not_upperHorizontal hp N _ _ _ L _, if_false]
+      refinedSidePrismMap_not_upperHorizontal hp N _ _ _ L _, ite_false]
     simp only [ MapIsUpperHorizontal,
       lowerEndpointMap, upperEndpointMap]
     simp only [iteratedSign,  permSignCoeff]

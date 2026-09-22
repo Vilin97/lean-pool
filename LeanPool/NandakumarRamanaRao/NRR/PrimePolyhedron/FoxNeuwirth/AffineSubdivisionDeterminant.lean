@@ -39,7 +39,7 @@ theorem stepVertexMatrix_eq
     intro j; simp [Equiv.Perm.permMatrix]
   simp_rw [h_perm, ite_mul, one_mul, zero_mul]
   rw [Finset.sum_ite_eq]
-  simp only [Finset.mem_univ, if_true]
+  simp only [Finset.mem_univ, ite_true]
   dsimp [stepVertexMatrix, prefixAverageMatrix]
   have h_bary := congr_fun (prefixBarycenter_val_eq_stepVertices n pi k) r
   rw [h_bary]

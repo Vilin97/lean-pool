@@ -77,9 +77,8 @@ noncomputable def deltaCast {m n : Nat} (h : m = n) : Delta m → Delta n :=
     (n : Nat) (k : Fin (n + 2)) (x : Delta n) (i : Fin (n + 1)) :
     cofacePoint n k x (k.succAbove i) = x i := by
   unfold cofacePoint
-  simp +decide [ Finset.filter_lt_eq_Ioi]
-  simp +decide [FunOnFinite.linearMap,
-    Finset.filter_lt_eq_Ioi]
+  simp +decide [ ]
+  simp +decide [FunOnFinite.linearMap]
   simp +decide [Finsupp.mapDomain, Finsupp.single_apply]
   exact fun h => h.symm
 
@@ -148,7 +147,7 @@ theorem oneStep_internal_face_eq
   funext x
   apply congrArg sigma
   rw [affineCompMap_succ, affineCompMap_succ]
-  simp only [affineCompMap_zero, ContinuousMap.id_apply]
+  simp only [affineCompMap_zero]
   apply affineSubdiv_face_internal_swap
   exact cofacePoint_apply_deleted n (Fin.castSucc i) x
 
@@ -162,7 +161,7 @@ theorem oneStep_last_face_eq
   funext x
   apply congrArg sigma
   rw [affineCompMap_succ, affineCompMap_succ]
-  simp only [affineCompMap_zero, ContinuousMap.id_apply]
+  simp only [affineCompMap_zero]
   let pi : Equiv.Perm (Fin (n + 2)) := lastFaceEquiv n (j, rho)
   have hj : j = pi (lastVertex n) := by
     simpa [pi, lastFaceEquiv_apply] using
@@ -1160,8 +1159,7 @@ theorem staircase_weighted_boundary
               have hhr : h.1 < r.1 := Nat.lt_of_not_ge hrh
               dsimp [F]
               rw [staircase_side_face_of_gt n sigma r h hhr]
-              simp only [SimplicialChain.faceSign, Fin.val_succ,
-                Fin.castSucc_mk]
+              simp only [SimplicialChain.faceSign, Fin.val_succ]
               rw [pow_succ]
               ring
       _ = -∑ r : Fin (n + 1),
@@ -1309,7 +1307,7 @@ theorem realizedFacetWeight_occurrence
       (occurrenceFacetMap hp N L o) := by
     refine ⟨o, 1, ?_⟩
     simp
-  rw [dif_pos hex, signatureWeight_facetSignature]
+  rw [dite_eq_left hex, signatureWeight_facetSignature]
   let o' : FacetOccurrence hp N L := Classical.choose hex
   let g : PrimeSymmetry p := Classical.choose (Classical.choose_spec hex)
   have hg : mapVertexSignature (occurrenceFacetMap hp N L o) =
@@ -1349,7 +1347,7 @@ theorem realizedFacetWeight_translateFacetMap
   by_cases hright : FacetMapIsRealizedUpToPrime hp N L tau
   · have hleft : FacetMapIsRealizedUpToPrime hp N L
         (translateFacetMap p g tau) := hiff.mpr hright
-    rw [dif_pos hleft, dif_pos hright]
+    rw [dite_eq_left hleft, dite_eq_left hright]
     let oL : FacetOccurrence hp N L := Classical.choose hleft
     let hL : PrimeSymmetry p := Classical.choose (Classical.choose_spec hleft)
     have heqL : mapVertexSignature (translateFacetMap p g tau) =
@@ -1372,7 +1370,7 @@ theorem realizedFacetWeight_translateFacetMap
       hp N L a oL oR (hL⁻¹ * g * hR) horbit
   · have hleft : ¬ FacetMapIsRealizedUpToPrime hp N L
         (translateFacetMap p g tau) := fun h => hright (hiff.mp h)
-    rw [dif_neg hleft, dif_neg hright]
+    rw [dite_eq_right hleft, dite_eq_right hright]
 
 /-- A facet map is lower horizontal when every one of its vertices has time zero. -/
 def MapIsLowerHorizontal
@@ -2098,7 +2096,7 @@ private theorem fixed_refined_side_cancels (N L n : ℕ) (hp : Nat.Prime (n + 1 
     intro c
     simp [ iteratedBoundaryMap, ReferenceAffineOrbitCount.topRepr,
       Simplex.realizationContinuousMap, Simplex.realizationPoint,
-      Simplex.chartWeight, cofacePoint, SphereOddDegree.FiniteSimplex.map_coe]
+      Simplex.chartWeight, cofacePoint]
     change (∑ i : Fin (n + 1 + 1),
       if (ReferenceAffineOrbitCount.topRepr hp orbit) i = c then
         (StandardSimplex.ofDelta
@@ -2213,7 +2211,7 @@ theorem nonhorizontalContribution_eq_zero_core
   conv_lhs =>
     enter [2, cell, 2, j]
     rw [occurrenceFacetMap_eq_iteratedFacetMap_succ]
-  simp only [subdivisionSign, staircaseSign, iteratedSign]
+  simp only [subdivisionSign, staircaseSign]
   ring_nf
   rw [Fintype.sum_prod_type]
   rw [Fintype.sum_prod_type]

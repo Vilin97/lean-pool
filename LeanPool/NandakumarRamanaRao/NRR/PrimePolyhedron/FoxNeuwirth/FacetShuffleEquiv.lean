@@ -218,7 +218,7 @@ theorem firstBlockPositions_shuffleToTopExtension
       simp only [Finset.mem_image, Finset.mem_univ, true_and] at hx
       obtain ⟨j, rfl⟩ := hx
       exact s.1.orderEmbOfFin_mem s.2 j
-    · simp [Finset.card_image_of_injective _ (s.1.orderEmbOfFin s.2).injective]
+    · simp []
   exact himage.trans hfinal
 
 @[simp] theorem topExtensionToShuffle_shuffleToTopExtension

@@ -746,7 +746,7 @@ theorem det_blockVertexMatrix
   rw [Matrix.det_mul]
   rw [det_cutBasisMatrix hp z.bottom]
   rw [det_cumulativePermutationMatrix z.removal]
-  simp [coefficient, mul_assoc, mul_left_comm]
+  simp [coefficient, mul_assoc]
 
 /-- At parameter zero, expansion along the final vertex column identifies the affine
 augmented determinant with the real cast of the integral block-vertex determinant. -/
@@ -1324,7 +1324,7 @@ theorem hasInteriorZero_toSimplex_iff
           · exact div_nonneg (by norm_num) hdenom.le
           · exact div_nonneg (epsilon_pos hp).le hdenom.le
         · rw [Fin.sum_univ_castSucc]
-          simp only [hjnot, Fin.val_last, if_true, if_false, Finset.sum_const,
+          simp only [hjnot, Fin.val_last, ite_true, ite_false, Finset.sum_const,
             Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
           rw [hcast]
           field_simp

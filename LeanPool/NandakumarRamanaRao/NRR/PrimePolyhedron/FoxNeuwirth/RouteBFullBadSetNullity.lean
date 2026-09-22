@@ -59,8 +59,7 @@ theorem card_otherRetainedIndices
   have hr : κ.retained ∈
       ((Finset.univ.erase κ.omitted₀).erase κ.omitted₁ : Finset (Fin (p + 1))) := by
     simp [κ.retained_ne₀, κ.retained_ne₁]
-  simp [otherRetainedIndices, Finset.card_erase_of_mem, h1, hr,
-     κ.retained_ne₀]; omega
+  simp [otherRetainedIndices, Finset.card_erase_of_mem, h1, hr]; omega
 
 /-- Finite type of the other retained local vertices. -/
 abbrev OtherRetainedIndex (κ : MixedFaceCase hp C) :=

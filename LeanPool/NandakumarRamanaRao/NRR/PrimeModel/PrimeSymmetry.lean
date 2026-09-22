@@ -104,6 +104,6 @@ theorem PrimeSymmetry.exists_map_label
         rw [primeSymmetrySubgroup_eq_alternating p h2]
         exact hσalt
       refine ⟨⟨σ, hmem⟩, ?_⟩
-      simp [σ,   hkj]
+      simp [σ]
 
 end NRR

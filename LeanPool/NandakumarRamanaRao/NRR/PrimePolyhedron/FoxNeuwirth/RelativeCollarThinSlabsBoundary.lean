@@ -260,7 +260,6 @@ theorem facetIncidence_eq_sum_slabOccurrencePairing
   classical
   unfold RelativeAffineCellSystem.facetIncidence
     RelativeCollarMiddlePrismBoundary.occurrencePairing
-
   change
     (∑ x : (Fin m × (BaseCells hp N).Cell) × Fin (p + 1),
       if (StackCells hp N m hm).facetClass x = s then
@@ -273,7 +272,6 @@ theorem facetIncidence_eq_sum_slabOccurrencePairing
   conv_rhs =>
     enter [2, r]
     rw [Fintype.sum_prod_type]
-
   apply Finset.sum_congr rfl
   intro r hr
   apply Finset.sum_congr rfl

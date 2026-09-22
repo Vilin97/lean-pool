@@ -263,7 +263,7 @@ theorem frontSimplex_faceSimplex_of_gt (X : TopCat.{0}) (p q : ℕ) (k : Fin (p 
     (σ : (TopCat.toSSet.obj X).obj (Opposite.op (⦋p + q + 1⦌ : SimplexCategory))) :
     frontSimplex X p q (faceSimplex X (p + q) k σ) = frontSimplex X p (q + 1) σ := by
   unfold frontSimplex faceSimplex
-  rw [← FunctorToTypes.map_comp_apply, ← op_comp, frontFace_comp_δ_of_gt p q k hk]
+  rw [← Functor.map_comp_apply, ← op_comp, frontFace_comp_δ_of_gt p q k hk]
 
 /-- **Simplex-level internal back face, `p < k`.** The back `q`-face of the `k`-th
 boundary face of `σ` (for `k > p`) equals the `(k-p)`-th boundary face of the
@@ -275,7 +275,7 @@ theorem backSimplex_faceSimplex_of_gt (X : TopCat.{0}) (p q : ℕ) (k : Fin (p +
       = faceSimplex X q (⟨k.val - p, by have := k.isLt; omega⟩ : Fin (q + 2))
           (backSimplex X p (q + 1) σ) := by
   unfold backSimplex faceSimplex
-  rw [← FunctorToTypes.map_comp_apply, ← op_comp, backFace_comp_δ_of_gt p q k hk,
-    op_comp, FunctorToTypes.map_comp_apply]
+  rw [← Functor.map_comp_apply, ← op_comp, backFace_comp_δ_of_gt p q k hk,
+    op_comp, Functor.map_comp_apply]
 
 end SphereOddDegree.AlexanderWhitney

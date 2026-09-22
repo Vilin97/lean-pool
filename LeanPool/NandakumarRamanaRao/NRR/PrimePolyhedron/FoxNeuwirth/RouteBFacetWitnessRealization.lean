@@ -69,7 +69,7 @@ theorem localTargetMove_localParameter
       localParameter hp C q z.1 z.2 =
         (⟨localParameter hp C q i j, hmovable⟩ : MovableParameter hp C).1 :=
     ⟨(i, j), rfl⟩
-  rw [localTargetMove, dif_pos h]
+  rw [localTargetMove, dite_eq_left h]
   have hchosen : Classical.choose h = (i, j) := by
     apply RouteB.localParameter_injective hp C q
     exact Classical.choose_spec h
