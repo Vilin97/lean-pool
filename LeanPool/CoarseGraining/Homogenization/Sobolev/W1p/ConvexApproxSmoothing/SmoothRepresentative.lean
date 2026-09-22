@@ -156,7 +156,8 @@ theorem map_restrict_convexApproxSample
             rw [hmap_smul]
       _ = ENNReal.ofReal ((a ^ d)⁻¹) •
             MeasureTheory.Measure.map (fun y : Vec d => y + b) MeasureTheory.volume := by
-            rw [MeasureTheory.Measure.map_smul]
+            exact MeasureTheory.Measure.map_smul _
+              (measurable_id.add measurable_const).aemeasurable
       _ = ENNReal.ofReal ((a ^ d)⁻¹) • MeasureTheory.volume := by
             rw [MeasureTheory.map_add_right_eq_self]
       _ = ENNReal.ofReal (((1 - ε) ^ d)⁻¹) • MeasureTheory.volume := by
@@ -197,7 +198,7 @@ theorem eLpNorm_comp_convexApproxSample_le
     _ = ENNReal.ofReal (((1 - ε) ^ d)⁻¹) ^ (1 / p).toReal •
           MeasureTheory.eLpNorm u p
             (MeasureTheory.volume.restrict (convexApproxSample x0 z r ε '' U)) := by
-            rw [MeasureTheory.eLpNorm_smul_measure_of_ne_top hp]
+            exact MeasureTheory.eLpNorm_smul_measure_of_ne_zero (by positivity) _ _ _
     _ ≤ ENNReal.ofReal (((1 - ε) ^ d)⁻¹) ^ (1 / p).toReal •
           MeasureTheory.eLpNorm u p (MeasureTheory.volume.restrict U) := by
             exact
@@ -324,7 +325,6 @@ theorem memLpOn_convexApproxSmoothing
           MeasureTheory.eLpNorm u p (MeasureTheory.volume.restrict U) < ⊤ := by
     refine ENNReal.mul_lt_top ?_ hu.eLpNorm_lt_top
     exact ENNReal.rpow_lt_top_of_nonneg (by positivity) ENNReal.ofReal_ne_top
-  refine ⟨aestronglyMeasurable_convexApproxSmoothing hU hρ hp1 hu hball hr hε0 hε1, ?_⟩
   refine lt_of_le_of_lt ?_ hnorm_lt_top
   · exact eLpNorm_convexApproxSmoothing_le hU hρ hp1 hp hu hball hr hε0 hε1
 

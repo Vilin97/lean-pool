@@ -91,10 +91,17 @@ theorem coordinate_eLpNorm_le_euclidean {α : Type*} [MeasurableSpace α]
     (F : α → Vec d) (i : Fin d) :
     eLpNorm (fun x => F x i) p.exponent μ ≤
       eLpNorm (fun x => HilbertVec.ofVec (F x)) p.exponent μ := by
-  apply eLpNorm_mono_ae
-  filter_upwards [] with x
-  simpa only [Real.norm_eq_abs, HilbertVec.ofVec, PiLp.toLp_apply] using
-    HilbertVec.abs_apply_le_norm (HilbertVec.ofVec (F x)) i
+  by_cases hF : AEStronglyMeasurable (fun x => HilbertVec.ofVec (F x)) μ
+  · have hi : AEStronglyMeasurable (fun x => F x i) μ := by
+      simpa only [HilbertVec.continuousLinearEquivVec_apply, HilbertVec.toVec_ofVec] using
+        (continuous_apply i).comp_aestronglyMeasurable
+          ((HilbertVec.continuousLinearEquivVec d).continuous.comp_aestronglyMeasurable hF)
+    apply eLpNorm_mono_ae hi
+    filter_upwards [] with x
+    simpa only [Real.norm_eq_abs, HilbertVec.ofVec, PiLp.toLp_apply] using
+      HilbertVec.abs_apply_le_norm (HilbertVec.ofVec (F x)) i
+  · rw [eLpNorm_of_not_aestronglyMeasurable hF]
+    exact le_top
 
 /-- The finite sum of coordinate `p`-powers is bounded by `d` times the
 direct Euclidean vector `p`-power. -/
@@ -153,7 +160,9 @@ theorem euclidean_eLpNorm_le_dimension_mul_sum_coordinates
   have hvec_le_D :
       eLpNorm (fun x => HilbertVec.ofVec (F x)) p.exponent μ ≤
         eLpNorm (fun x => (d : ℝ) * D x) p.exponent μ :=
-    eLpNorm_mono_ae hpoint
+    eLpNorm_mono_ae
+      ((HilbertVec.continuousLinearEquivVec d).symm.continuous.comp_aestronglyMeasurable
+        (AEMeasurable.of_eval (fun i => (hcoord i).aemeasurable)).aestronglyMeasurable) hpoint
   have hDsum :
       eLpNorm D p.exponent μ ≤
         ∑ i : Fin d, eLpNorm (fun x => ‖F x i‖) p.exponent μ := by
@@ -161,9 +170,7 @@ theorem euclidean_eLpNorm_le_dimension_mul_sum_coordinates
       funext x
       simp [D]
     rw [hD]
-    exact eLpNorm_sum_le
-      (fun i _ => hcoord_norm_meas i)
-      (finiteLpExponent_one_le p)
+    exact eLpNorm_sum_le (finiteLpExponent_one_le p)
   calc
     eLpNorm (fun x => HilbertVec.ofVec (F x)) p.exponent μ ≤
         eLpNorm ((d : ℝ) • D) p.exponent μ := by
@@ -178,7 +185,7 @@ theorem euclidean_eLpNorm_le_dimension_mul_sum_coordinates
       congr 1
       apply Finset.sum_congr rfl
       intro i _
-      exact eLpNorm_norm (f := fun x => F x i) (p := p.exponent) (μ := μ)
+      exact eLpNorm_norm (f := fun x => F x i) (p := p.exponent) (μ := μ) (hcoord i)
 
 /-- Raising the coordinate-sum upper bound to the finite `p` power. -/
 theorem euclidean_eLpNorm_rpow_le_dimension_sum_rpow

@@ -143,7 +143,13 @@ private theorem tendsto_eLpNorm_sub_zero_convolution_scaledConvexApproxKernel_of
           (scaledConvexApproxKernel ρ (a n) ⋆[ContinuousLinearMap.lsmul ℝ ℝ, volume] f) x -
             f x)
         p volume ≤ ENNReal.ofReal δ * volume K ^ (1 / p.toReal) := by
-    exact eLpNorm_sub_le_of_dist_bdd volume hp hK_meas hδ_pos.le hdist hconv_support hf_support
+    exact eLpNorm_sub_le_of_dist_bdd volume hp hK_meas.nullMeasurableSet hδ_pos.le
+      (by
+        exact (MeasureTheory.AEStronglyMeasurable.convolution
+          (ContinuousLinearMap.lsmul ℝ ℝ)
+          (continuous_scaledConvexApproxKernel hρ.continuous (a n)).aestronglyMeasurable
+          hf_cont.aestronglyMeasurable).sub hf_cont.aestronglyMeasurable)
+      hdist hconv_support hf_support
   have hδmul : δ * cK ≤ η.toReal := by
     have hfrac_le : cK / (cK + 1) ≤ 1 := by
       exact div_le_one_of_le₀ (by linarith) (by linarith)
@@ -273,16 +279,14 @@ theorem tendsto_eLpNorm_sub_zero_convolution_scaledConvexApproxKernel
         ((k ⋆[ContinuousLinearMap.lsmul ℝ ℝ, volume] fun x => g x - f x) +
           fun x => (k ⋆[ContinuousLinearMap.lsmul ℝ ℝ, volume] f) x - f x)
         p volume < η₁ := by
-    exact hη₂ _ _ hfirst_meas hmiddle_meas hfirst_norm (by simpa only [k] using hmid)
+    exact hη₂ _ _ hfirst_norm (by simpa only [k] using hmid)
   have hsum :
       eLpNorm
         (((k ⋆[ContinuousLinearMap.lsmul ℝ ℝ, volume] fun x => g x - f x) +
           fun x => (k ⋆[ContinuousLinearMap.lsmul ℝ ℝ, volume] f) x - f x) +
           fun x => f x - g x)
         p volume < η := by
-    exact hη₁ _ _
-      (hfirst_meas.add hmiddle_meas) hthird_mem.aestronglyMeasurable
-      hfirst_middle.le hthird_norm
+    exact hη₁ _ _ hfirst_middle.le hthird_norm
   have hdecomp :
       eLpNorm
         (fun x =>

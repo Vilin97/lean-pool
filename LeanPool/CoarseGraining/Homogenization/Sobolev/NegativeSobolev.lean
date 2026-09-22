@@ -262,7 +262,13 @@ theorem smoothTestAdmissible_zero (p : ENNReal) (hp_one : 1 < p) (hp_top : p ≠
     simp
   simp [hgrad, BoundedMeasurableDomain.normalizedLpNorm,
     BoundedMeasurableDomain.normalizedLpFiniteENorm,
-    BoundedMeasurableDomain.normalizedLpENorm]
+    BoundedMeasurableDomain.normalizedLpENorm,
+    ne_of_gt (lt_trans zero_lt_one hp_one), hp_top]
+  change (MeasureTheory.eLpNorm' (0 : Vec d → ℝ) p.toReal
+    (domain hU hne).normalizedVolume).toReal ≤ 1
+  rw [MeasureTheory.eLpNorm'_zero (ENNReal.toReal_pos
+    (ne_of_gt (lt_trans zero_lt_one hp_one)) hp_top)]
+  norm_num
 
 theorem smoothTestAdmissible_neg (p : ENNReal) (hp_one : 1 < p) (hp_top : p ≠ ∞)
     {φ : SmoothTestFunction hU} (hφ : SmoothTestAdmissible hU hne p hp_one hp_top φ) :
@@ -301,7 +307,13 @@ theorem meanZeroTestAdmissible_zero (p : ENNReal) (hp_one : 1 < p) (hp_top : p �
     BoundedMeasurableDomain.normalizedEuclideanLpNorm,
     BoundedMeasurableDomain.normalizedLpNorm,
     BoundedMeasurableDomain.normalizedLpFiniteENorm,
-    BoundedMeasurableDomain.normalizedLpENorm]
+    BoundedMeasurableDomain.normalizedLpENorm,
+    ne_of_gt (lt_trans zero_lt_one hp_one), hp_top]
+  change (MeasureTheory.eLpNorm' (0 : Vec d → ℝ) p.toReal
+    (domain hU hne).normalizedVolume).toReal ≤ 1
+  rw [MeasureTheory.eLpNorm'_zero (ENNReal.toReal_pos
+    (ne_of_gt (lt_trans zero_lt_one hp_one)) hp_top)]
+  norm_num
 
 theorem meanZeroTestAdmissible_neg (p : ENNReal) (hp_one : 1 < p) (hp_top : p ≠ ∞)
     {φ : MeanZeroW1pTestFunction hU hne p}
