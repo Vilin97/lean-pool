@@ -80,7 +80,7 @@ The order structures interact in the expected way with arithmetic. In particular
 `SubtractionCommMonoid`, since the equation `x - x = 0` is only true up to equivalence.
 -/
 
-theorem Relation.transGen_iff_exists {α : Type*} {r : α → α → Prop} {x y : α} :
+private theorem Relation.transGen_iff_exists {α : Type*} {r : α → α → Prop} {x y : α} :
     Relation.TransGen r x y ↔ ∃ z, r z y ∧ (x = z ∨ TransGen r x z) := by
   rw [transGen_iff]
   simp [and_or_left, exists_or, and_comm]

@@ -73,7 +73,7 @@ theorem residualPointTail_eventually
 
 /-- Berarducci, Lemma 6.9: an eventual lower bound on values of translated truncations along
 `X(b)` gives the corresponding ordinary-product lower bound on `v_J(c)`. -/
-theorem ordinalValue_ge_of_eventually_ordinalValue_translatedTruncation_ge [CharZero K]
+theorem ordinalValue_ge_of_eventually_ordinalValue_translatedTruncation_ge
     (b : SeriesWithOrdinalValueAboveOne K) (c : Series K) {ρ : Ordinal}
     (hρ : Ordinal.IsPrincipal (fun α β ↦ α + β) ρ)
     (hc : ∀ᶠ γ in nhdsWithin (0 : ℝ) (Set.Iio 0),

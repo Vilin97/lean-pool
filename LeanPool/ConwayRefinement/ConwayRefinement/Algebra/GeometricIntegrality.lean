@@ -34,8 +34,8 @@ scalar extension by its fraction field. Polynomial and quotient tensor equivalen
 that tensor product with the required polynomial quotient.
 
 The definition quantifies over the fields of the universe `max u v` of `B ⊗[k] L`. A `Prop`
-cannot quantify over universes, and the universe-free characterization, that `B ⊗[k] k̄` is a
-domain for an algebraic closure `k̄`, is a theorem of descent that is not in Mathlib; the
+cannot quantify over universes, and the universe-free characterization, that `B ⊗[k] k_alg` is a
+domain for an algebraic closure `k_alg`, is a theorem of descent that is not in Mathlib; the
 scheme-theoretic `AlgebraicGeometry.GeometricallyIntegral` is likewise fixed to one universe. For
 the paper's quotient `P̂/I`, the statement in every universe is proved separately, by putting a
 lowering derivation on `E ⊗_K P̂` rather than from this definition.

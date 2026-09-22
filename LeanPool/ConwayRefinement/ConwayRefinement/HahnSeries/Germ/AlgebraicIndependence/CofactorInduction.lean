@@ -682,6 +682,339 @@ private theorem local_ideal_presentation_sub_sum_mul [Fintype κ']
     exact Ideal.sub_mem _ hF₀GE (Ideal.sum_mem _ hAQGE)
 
 open Classical in
+/-- A translated restriction with uniformly smaller local degree has empty target derivative. -/
+private theorem cantorBendixson_restricted_translate_eq_empty
+    (C : Set G) (z₀ : G) (c : Nonpositive G K) (β : NatOrdinal.{u})
+    (hbounds : c = 0 ∨ ∃ a : NatOrdinal.{u}, a < β ∧
+      ∀ s : G, s ≤ 0 → ν (translatedTruncLE s c) ≤ (a : WithBot NatOrdinal)) :
+    (((setRestrict C (translate z₀ (c : HahnSeries G K))).closedSupport).cantorBendixson β.val :
+      Set G) = ∅ := by
+  classical
+  let f := setRestrict C (translate z₀ (c : HahnSeries G K))
+  have hf : f = setRestrict C (translate z₀ (c : HahnSeries G K)) := rfl
+  apply Set.eq_empty_iff_forall_notMem.mpr
+  intro z hz
+  change z ∈ (f.closedSupport.cantorBendixson β.val : Set G) at hz
+  rcases hbounds with hzero | ⟨a, hab, hb⟩
+  · have hfzero : f = 0 := by
+      rw [hf, hzero]
+      rw [show ((0 : Nonpositive G K) : HahnSeries G K) = 0 from rfl, map_zero]
+      ext g
+      rw [coeff_setRestrict]
+      split_ifs <;> rfl
+    rw [hfzero] at hz
+    have hzs := TopologicalSpace.Closeds.cantorBendixson_le _ _ hz
+    rw [mem_closedSupport, HahnSeries.support_zero, closure_empty] at hzs
+    exact hzs
+  · obtain ⟨hzs, hzr⟩ := (f.mem_support_derivative_iff z β.val).mp hz
+    have h1 : f.cantorBendixsonRank z ≤
+        (translate z₀ (c : HahnSeries G K)).cantorBendixsonRank z :=
+      cantorBendixsonRank_le_of_support_subset (by
+        rw [hf, support_setRestrict]
+        exact inter_subset_left) z
+    have h2 : (translate z₀ (c :
+        HahnSeries G K)).cantorBendixsonRank z =
+        (c : HahnSeries G K).cantorBendixsonRank (z - z₀) := by
+      have := cantorBendixsonRank_translate (c : HahnSeries G K)
+        z₀ (z - z₀)
+      rw [show z₀ + (z - z₀) = z by abel] at this
+      exact this
+    have h3 : (c : HahnSeries G K).cantorBendixsonRank (z - z₀) ≤
+        a.val := by
+      by_cases hm : z - z₀ ∈
+          (c : HahnSeries G K).closedSupport
+      · have hz0 : z - z₀ ≤ 0 := closure_minimal (c).property isClosed_Iic
+          ((mem_closedSupport _ _).mp hm)
+        have hprof := hb (z - z₀) hz0
+        rw [degree_translatedTruncLE_eq, ite_eq_left hm, WithBot.coe_le_coe] at hprof
+        have hval := NatOrdinal.of.symm.monotone hprof
+        change NatOrdinal.val (NatOrdinal.of _) ≤ NatOrdinal.val _ at hval
+        rwa [NatOrdinal.val_of] at hval
+      · rw [cantorBendixsonRank_eq, TopologicalSpace.Closeds.cantorBendixsonRank_of_notMem _ _ hm]
+        exact zero_le (a := a.val)
+    have h4 : a.val < β.val := NatOrdinal.of.symm.strictMono hab
+    exact absurd hzr (not_le_of_gt (((h1.trans_eq h2).trans h3).trans_lt h4))
+
+open Classical in
+/-- Restricting to an open convex piece preserves local polynomial presentations and bounds rank. -/
+private theorem translated_convex_piece_local_data
+    [DenselyOrdered G] [NoMinOrder G] [NoMaxOrder G]
+    {ι : Type w} {κ' : Type x} {wt : ι → NatOrdinal.{u}} {V : ι → Nonpositive G K}
+    (Q : κ' → MvPolynomial ι K) (α τ : NatOrdinal.{u})
+    (u piece : Nonpositive G K) (z : G) (C : Set G) (f : HahnSeries G K)
+    (hf : f = setRestrict C (u : HahnSeries G K))
+    (hpiece : (piece : HahnSeries G K) = translate (-z) f)
+    (hCopen : IsOpen C) (hCconv : C.OrdConnected) (hCmem : z ∈ C)
+    (hCrank : ∀ y ∈ ((u : HahnSeries G K).closedSupport : Set G) ∩ C, y ≠ z →
+      (u : HahnSeries G K).cantorBendixsonRank y <
+        (u : HahnSeries G K).cantorBendixsonRank z)
+    (β : NatOrdinal.{u}) (hβ : β = NatOrdinal.of ((u : HahnSeries G K).cantorBendixsonRank z))
+    (hp : ∀ y : G, y ≤ z → ∃ F : MvPolynomial ι K,
+      (∀ d ∈ F.support, (Finsupp.weight wt) d < α) ∧
+      ν (translatedTruncLE y u - aeval V F) = ⊥ ∧
+      MvPolynomial.componentsGE wt τ F ∈ Ideal.span (Set.range Q)) :
+    (∀ s : G, (translatedTruncLE s piece : HahnSeries G K) =
+      translate (-(z + s)) (truncLE (z + s) f)) ∧
+    (∀ y ∈ C, ν (translatedTruncLE (y - z) piece - translatedTruncLE y u) = ⊥) ∧
+    (∀ s : G, s ≤ 0 → ν (translatedTruncLE s piece) ≤ (β : WithBot NatOrdinal)) ∧
+    ∀ s : G, s ≤ 0 → ∃ F : MvPolynomial ι K,
+      (∀ d ∈ F.support, (Finsupp.weight wt) d < α) ∧
+      ν (translatedTruncLE s piece - aeval V F) = ⊥ ∧
+      MvPolynomial.componentsGE wt τ F ∈ Ideal.span (Set.range Q) := by
+  classical
+  have hfC : f.support ⊆ C := by rw [hf, support_setRestrict]; exact inter_subset_right
+  have hplaced_eq : ∀ s : G,
+      ((translatedTruncLE s piece : Nonpositive G K) : HahnSeries G K) =
+        translate (-(z + s)) (truncLE (z + s) f) := by
+    intro s
+    have h2 : (z + s) - z = s := by abel
+    have hshift : ((translatedTruncLE ((z + s) - z) piece : Nonpositive G K) :
+        HahnSeries G K) = translate (-(z + s)) (truncLE (z + s)
+          (translate z ((piece : Nonpositive G K) : HahnSeries G K))) :=
+      translatedTruncLE_shift z (z + s) piece
+    rw [h2] at hshift
+    have hcancel : translate z (translate (-z) f) = f := by
+      rw [translate_add_apply, add_neg_cancel, translate_zero_apply]
+    rw [hshift, hpiece, hcancel]
+  have hloc : ∀ y' : G, y' ∈ C →
+      ν (translatedTruncLE (y' - z) piece - translatedTruncLE y' u) = ⊥ := by
+    intro y' hy'
+    obtain ⟨cst, hcst, hcsty⟩ := exists_lt_mem_of_isOpen_ordConnected (hCopen) hy'
+    apply (cantorBendixsonDegreeValuation_eq_bot_iff _).mpr
+    refine ⟨cst - y', sub_neg.mpr hcsty, ?_⟩
+    intro g hg
+    have hcoe1 : ((translatedTruncLE (y' - z) piece : Nonpositive G K) :
+        HahnSeries G K) = translate (-y') (truncLE y' f) := by
+      have h2 : z + (y' - z) = y' := by abel
+      have := hplaced_eq (y' - z)
+      rw [h2] at this
+      exact this
+    rw [AddSubgroupClass.coe_sub, hcoe1, coe_translatedTruncLE] at hg
+    have hcombine : translate (-y') (truncLE y' f) -
+        translate (-y') (truncLE y' ((u : Nonpositive G K) : HahnSeries G K)) =
+        translate (-y') (truncLE y' f -
+          truncLE y' ((u : Nonpositive G K) : HahnSeries G K)) :=
+      (map_sub (translate (-y')) _ _).symm
+    rw [hcombine, support_translate] at hg
+    obtain ⟨q, hq, rfl⟩ := hg
+    have hb2 : ∀ p ∈ ((u : Nonpositive G K) : HahnSeries G K).support, p ∉ C →
+        p ≤ y' → p ≤ cst := by
+      intro p _ hpC hpy
+      by_contra hgt
+      exact hpC ((hCconv).out hcst hy' ⟨(not_le.mp hgt).le, hpy⟩)
+    have hq2 := support_truncLE_sub_truncLE_setRestrict_subset (C)
+      ((u : Nonpositive G K) : HahnSeries G K) y' hb2
+    have hqrev : q ∈ (truncLE y' ((u : Nonpositive G K) : HahnSeries G K) -
+        truncLE y' (setRestrict (C) ((u : Nonpositive G K) : HahnSeries G K))).support := by
+      rw [← support_neg, neg_sub, ← hf]
+      exact hq
+    have hqc : q ≤ cst := hq2 hqrev
+    have h3 : -y' + q ≤ cst - y' := by
+      have h2 : -y' + q ≤ -y' + cst := add_le_add le_rfl hqc
+      calc -y' + q ≤ -y' + cst := h2
+        _ = cst - y' := by abel
+    exact mem_Iic.mpr h3
+  -- Degree profile and local ideal condition of each piece.
+  have hux_prof : ∀ s : G, s ≤ 0 →
+      ν (translatedTruncLE s piece) ≤ (β : WithBot NatOrdinal) := by
+    intro s hs
+    have hy'x : z + s ≤ z := by
+      calc z + s ≤ z + 0 := add_le_add le_rfl hs
+        _ = z := add_zero _
+    by_cases hy'C : z + s ∈ C
+    · have h1 := hloc (z + s) hy'C
+      have h2 : (z + s) - z = s := by abel
+      rw [h2] at h1
+      rw [degree_eq_of_degree_sub_eq_bot h1, degree_translatedTruncLE_eq]
+      by_cases hm : z + s ∈ ((u : Nonpositive G K) : HahnSeries G K).closedSupport
+      · rw [ite_eq_left hm]
+        rcases eq_or_ne (z + s) z with heq | hne
+        · rw [heq, hβ]
+        · have hlt' := hCrank (z + s) ⟨hm, hy'C⟩ hne
+          rw [hβ]
+          exact WithBot.coe_le_coe.mpr (NatOrdinal.of.monotone hlt'.le)
+      · rw [ite_eq_right hm]
+        exact bot_le
+    · have hbelow := lt_of_notMem_ordConnected (hCconv) (hCmem) hy'x hy'C
+      have hzero : truncLE (z + s) f = 0 :=
+        truncLE_eq_zero_of_forall_lt _ _ (fun p hp ↦ hbelow p (hfC hp))
+      have hzero' : translatedTruncLE s piece = 0 := by
+        apply Subtype.ext
+        rw [hplaced_eq s, hzero, map_zero]
+        rfl
+      rw [hzero', (ν).map_zero]
+      exact bot_le
+  have hpux : ∀ s : G, s ≤ 0 → ∃ F : MvPolynomial ι K,
+      (∀ d ∈ F.support, (Finsupp.weight wt) d < α) ∧
+      ν (translatedTruncLE s piece - aeval V F) = ⊥ ∧
+      MvPolynomial.componentsGE wt τ F ∈ Ideal.span (Set.range Q) := by
+    intro s hs
+    have hy'z : z + s ≤ z := by simpa using add_le_add_left hs z
+    by_cases hy'C : z + s ∈ C
+    · obtain ⟨F, hFw, hFbot, hFGE⟩ := hp (z + s) hy'z
+      refine ⟨F, hFw, ?_, hFGE⟩
+      have h1 := hloc (z + s) hy'C
+      have h2 : (z + s) - z = s := by abel
+      rw [h2] at h1
+      have hsplit : translatedTruncLE s piece - aeval V F =
+          (translatedTruncLE s piece - translatedTruncLE (z + s) u) +
+            (translatedTruncLE (z + s) u - aeval V F) := by
+        abel
+      rw [hsplit]
+      refine le_bot_iff.mp (((ν).map_add_le_max _ _).trans ?_)
+      rw [h1, hFbot, max_self]
+    · have hy'x : z + s ≤ z := by
+        calc z + s ≤ z + 0 := add_le_add le_rfl hs
+          _ = z := add_zero _
+      have hbelow := lt_of_notMem_ordConnected (hCconv) (hCmem) hy'x hy'C
+      have hzero : truncLE (z + s) f = 0 :=
+        truncLE_eq_zero_of_forall_lt _ _ (fun p hp ↦ hbelow p (hfC hp))
+      have hzero' : translatedTruncLE s piece = 0 := by
+        apply Subtype.ext
+        rw [hplaced_eq s, hzero, map_zero]
+        rfl
+      refine ⟨0, by simp, ?_, ?_⟩
+      · rw [hzero', map_zero, sub_zero, (ν).map_zero]
+      · rw [componentsGE_zero]
+        exact Ideal.zero_mem _
+  exact ⟨hplaced_eq, hloc, hux_prof, hpux⟩
+
+open Classical in
+/-- Local corrections on separated pieces give a global residual bound at each cutoff. -/
+private theorem SeparatedHsumFamily.degree_residual_le
+    [DenselyOrdered G] [NoMinOrder G] [NoMaxOrder G]
+    {J : Type x} [Fintype J] {X : Type w} [LinearOrder X]
+    (F : SeparatedHsumFamily J X) (R : Nonpositive G K) (v : X → Nonpositive G K)
+    (cp : X → J → Nonpositive G K) (q : J → Nonpositive G K)
+    (τ : NatOrdinal.{u}) (Pg σQ : J → NatOrdinal.{u}) (bx : X → NatOrdinal.{u})
+    (Pl : X → J → NatOrdinal.{u})
+    (hplaced : ∀ j x, F.term j x = setRestrict (F.piece x)
+      (translate (F.center x) (cp x j : HahnSeries G K)))
+    (hcp0 : ∀ x, bx x ≤ τ → ∀ j, cp x j = 0)
+    (hcpb : ∀ x j s, s ≤ 0 → ν (translatedTruncLE s (cp x j)) ≤ Pl x j)
+    (hcpres : ∀ x s, s ≤ 0 → ν (translatedTruncLE s (v x - ∑ j, cp x j * q j)) ≤ τ)
+    (hcPb : ∀ j s, s ≤ 0 → ν (translatedTruncLE s (F.sum j)) ≤ Pg j)
+    (hW : ∀ j, HasLowerTruncationDegree (q j) (σQ j))
+    (hPg : ∀ j θ, θ < σQ j → Pg j + θ < τ)
+    (hPl : ∀ x, τ < bx x → ∀ j θ, θ < σQ j → Pl x j + θ < τ)
+    (hloc : ∀ x y, y ∈ F.piece x →
+      ν (translatedTruncLE (y - F.center x) (v x) - translatedTruncLE y R) = ⊥)
+    (y : G) (hout : (¬ ∃ x, y ∈ F.piece x) →
+      ν (translatedTruncLE y R) = ⊥ ∧ ∀ j, ν (translatedTruncLE y (F.sum j)) = ⊥) :
+    ν (translatedTruncLE y (R - ∑ j, F.sum j * q j)) ≤ τ := by
+  classical
+  rw [map_sub, map_sum]
+  have hEc : ∀ j, ν (translatedTruncLE y (F.sum j * q j) -
+      translatedTruncLE y (F.sum j) * q j) < (τ : WithBot NatOrdinal) := fun j ↦
+    degree_translatedTruncLE_mul_sub_mul_lt_forall (F.sum j) (q j)
+      (Pg j) (σQ j) τ (by simpa only [translatedTruncLE_zero] using hcPb j 0 le_rfl)
+      (fun z hz ↦ hcPb j z hz.le) (fun z hz ↦ (hW j).degree_translatedTruncLE_lt hz)
+      (hPg j) y
+  by_cases hyC : ∃ x : X, y ∈ F.piece x
+  · obtain ⟨x, hyx⟩ := hyC
+    have hRloc := hloc x y hyx
+    have hcPloc : ∀ j, ν (translatedTruncLE y (F.sum j) -
+        translatedTruncLE (y - F.center x) (cp x j)) = ⊥ := fun j ↦
+      degree_translatedTruncLE_separatedHsum_sub_piece_eq_bot F.hX F.piece F.isOpen_piece
+        F.ordConnected_piece
+        (F.term j) (F.support_subset j) F.piece_lt_piece (F.separated j) x (F.center x) hyx
+        (cp x j) (hplaced j x)
+        (F.sum j) (F.coe_sum j)
+    have hEin (j : J) :=
+      degree_translatedTruncLE_mul_sub_mul_lt_of_eq_zero_or_bounds
+        (cp x j) (q j) (Pl x j) (σQ j) τ (bx x)
+        (fun h ↦ hcp0 x h j)
+        (by simpa only [translatedTruncLE_zero] using hcpb x j 0 le_rfl)
+        (fun z hz ↦ hcpb x j z hz.le)
+        (fun z hz ↦ (hW j).degree_translatedTruncLE_lt hz)
+        (fun h ↦ hPl x h j) (y - F.center x)
+    have hkey := translatedTruncLE_sub_sum_eq_local_errors y (y - F.center x) R (v x)
+      (cp x) F.sum q
+    rw [hkey]
+    apply degree_add_add_sum_le
+    · rw [degree_reverse_sub_eq_bot hRloc]
+      exact bot_le
+    · exact degree_translatedTruncLE_le_of_nonpositive (hcpres x) (y - F.center x)
+    · intro j
+      apply degree_add_add_le (hEin j).le
+      · rw [degree_mul_eq_bot_of_left
+            (b := q j) (degree_reverse_sub_eq_bot (hcPloc j))]
+        exact bot_le
+      · exact (degree_reverse_sub_lt (hEc j)).le
+  · obtain ⟨hyR, hycP⟩ := hout hyC
+    exact degree_translatedTruncLE_sub_sum_le_of_eq_bot
+      (R := R) (c := F.sum) (q := q) (y := y) (τ := τ) hyR hEc hycP
+
+open Classical in
+/-- Discrete piece centres preserve strict local degree bounds when cofactors are summed. -/
+private theorem SeparatedHsumFamily.degree_le_of_discrete_centers
+    [NoMinOrder G] [NoMaxOrder G]
+    {J : Type x} {X : Type w} [LinearOrder X] (F : SeparatedHsumFamily J X)
+    (cp : X → J → Nonpositive G K) (τ : NatOrdinal.{u}) (Pg : J → NatOrdinal.{u})
+    (bx : X → NatOrdinal.{u}) (Pl : X → J → NatOrdinal.{u})
+    (hplaced : ∀ j x, F.term j x = setRestrict (F.piece x)
+      (translate (F.center x) (cp x j : HahnSeries G K)))
+    (hcp0 : ∀ x, bx x ≤ τ → ∀ j, cp x j = 0)
+    (hcpb : ∀ x j s, s ≤ 0 → ν (translatedTruncLE s (cp x j)) ≤ Pl x j)
+    (hPlt : ∀ x j, τ < bx x → Pl x j < Pg j)
+    (hdiscP : ∀ z : G, ¬ AccPt z (𝓟 (Set.range F.center))) :
+    ∀ j y, ν (translatedTruncLE y (F.sum j)) ≤ Pg j := by
+  classical
+  have hstageP : ∀ j x,
+      (((F.term j x).closedSupport).cantorBendixson (Pg j).val : Set G) ⊆ {F.center x} := by
+    intro j x
+    have he := cantorBendixson_restricted_translate_eq_empty (F.piece x) (F.center x) (cp x j)
+      (Pg j) (by
+        by_cases h : bx x ≤ τ
+        · exact Or.inl (hcp0 x h j)
+        · exact Or.inr ⟨Pl x j, hPlt x j (lt_of_not_ge h), hcpb x j⟩)
+    rw [hplaced j x, he]
+    exact Set.empty_subset _
+  intro j y
+  have hbounds := cantorBendixsonRank_separatedHsum_bounds F.hX F.piece F.center (F.term j)
+    (F.support_subset j) (F.support_le_center j) F.center_mem F.isOpen_piece F.disjoint_piece
+    F.piece_lt_piece (F.separated j) hdiscP (Pg j).val (hstageP j)
+  rw [degree_translatedTruncLE_eq]
+  by_cases hm : y ∈ ((F.sum j : Nonpositive G K) : HahnSeries G K).closedSupport
+  · rw [ite_eq_left hm]
+    have hrank : ((F.sum j : Nonpositive G K) : HahnSeries G K).cantorBendixsonRank y ≤
+        (Pg j).val := by
+      have hr := hbounds.1 y
+      have hreq : ((F.sum j : Nonpositive G K) : HahnSeries G K).cantorBendixsonRank y =
+          (separatedHsum F.hX (F.term j) (F.separated j)).cantorBendixsonRank y := by
+        rw [F.coe_sum j]
+      rw [hreq]
+      exact hr
+    calc ((NatOrdinal.of (((F.sum j : Nonpositive G K) : HahnSeries G K).cantorBendixsonRank y)) :
+        WithBot NatOrdinal) ≤ (NatOrdinal.of ((Pg j).val) : WithBot NatOrdinal) :=
+          WithBot.coe_le_coe.mpr (NatOrdinal.of.monotone hrank)
+      _ = (Pg j : WithBot NatOrdinal) := by rw [NatOrdinal.of_val]
+  · rw [ite_eq_right hm]
+    exact bot_le
+
+/-- Adding a fixed generator degree reflects comparisons of cofactor degrees. -/
+private theorem cofactor_degree_mono {J : Type*}
+    (P : J → NatOrdinal.{u} → NatOrdinal.{u}) (σ : J → NatOrdinal.{u})
+    {τ μ : NatOrdinal.{u}} (hP : ∀ j β, τ < β → β ≤ μ → P j β + σ j = β)
+    (j : J) (β' β'' : NatOrdinal.{u}) (h1 : τ < β') (h2 : β' ≤ β'') (h3 : β'' ≤ μ) :
+    P j β' ≤ P j β'' := by
+  have h : P j β' + σ j ≤ P j β'' + σ j := by
+    rw [hP j β' h1 (h2.trans h3), hP j β'' (h1.trans_le h2) h3]
+    exact h2
+  exact le_of_add_le_add_right h
+
+/-- Strict stage comparisons remain strict after subtracting the same generator degree. -/
+private theorem cofactor_degree_lt {J : Type*}
+    (P : J → NatOrdinal.{u} → NatOrdinal.{u}) (σ : J → NatOrdinal.{u})
+    {τ μ : NatOrdinal.{u}} (hP : ∀ j β, τ < β → β ≤ μ → P j β + σ j = β)
+    (j : J) (β' β'' : NatOrdinal.{u}) (h1 : τ < β') (h2 : β' < β'') (h3 : β'' ≤ μ) :
+    P j β' < P j β'' := by
+  have h : P j β' + σ j < P j β'' + σ j := by
+    rw [hP j β' h1 (h2.le.trans h3), hP j β'' (h1.trans h2) h3]
+    exact h2
+  exact lt_of_add_lt_add_right h
+
+open Classical in
 /-- **Cofactors by well-founded induction.** Fix representatives of homogeneous classes generating
 the associated graded ring below `α`, each satisfying its assigned degree and proper-truncation
 bounds, with graded evaluation injective below `α`, finitely many weighted homogeneous ideal
@@ -739,21 +1072,9 @@ theorem exists_cofactors_degree_translatedTruncLE_le_of_locallyIdeal
     hasLowerTruncationDegree_aeval hVbounds (hQ j)
   have hPle : ∀ j β', τ < β' → β' ≤ μ → P j β' ≤ μ := by
     intro j β' h1 h2
-    have h0 : P j β' + 0 ≤ P j β' + σQ j := add_le_add le_rfl (zero_le (a := σQ j))
-    rw [add_zero, hP j β' h1 h2] at h0
-    exact h0.trans h2
-  have hPmono : ∀ j β' β'', τ < β' → β' ≤ β'' → β'' ≤ μ → P j β' ≤ P j β'' := by
-    intro j β' β'' h1 h2 h3
-    have e1 := hP j β' h1 (h2.trans h3)
-    have e2 := hP j β'' (h1.trans_le h2) h3
-    have : P j β' + σQ j ≤ P j β'' + σQ j := by rw [e1, e2]; exact h2
-    exact le_of_add_le_add_right this
-  have hPlt : ∀ j β' β'', τ < β' → β' < β'' → β'' ≤ μ → P j β' < P j β'' := by
-    intro j β' β'' h1 h2 h3
-    have e1 := hP j β' h1 (h2.le.trans h3)
-    have e2 := hP j β'' (h1.trans h2) h3
-    have : P j β' + σQ j < P j β'' + σQ j := by rw [e1, e2]; exact h2
-    exact lt_of_add_lt_add_right this
+    exact (NatOrdinal.le_add_right.trans_eq (hP j β' h1 h2)).trans h2
+  have hPmono := cofactor_degree_mono P σQ hP
+  have hPlt := cofactor_degree_lt P σQ hP
   have hPsep' : ∀ j β', τ < β' → β' ≤ μ → ∀ θ, θ < σQ j → P j β' + θ < τ := by
     intro j β' h1 h2 θ hθ
     exact (add_le_add (hPmono j β' μ h1 h2 le_rfl) le_rfl).trans_lt (hPsep j θ hθ)
@@ -831,142 +1152,30 @@ theorem exists_cofactors_degree_translatedTruncLE_le_of_locallyIdeal
         rwa [show fx x = setRestrict (C x) (R : HahnSeries G K) from rfl,
           support_setRestrict] at hp
       exact hCmax x p ⟨(mem_closedSupport _ _).mpr (subset_closure hp'.1), hp'.2⟩
-    have hsepx : ∀ i j : ↥Xset, i < j →
-        ∀ a ∈ (fx i).support, ∀ b ∈ (fx j).support, a < b :=
-      fun i j hij a ha b hb ↦ hCord i j hij a (hfxC i ha) b (hfxC j hb)
-    have hRsum : (R : HahnSeries G K) = separatedHsum hXpwo fx hsepx := by
-      have hcov : (R : HahnSeries G K).support ⊆ ⋃ x : ↥Xset, C x := fun g hg ↦
-        hCcov ((mem_closedSupport _ _).mpr (subset_closure hg))
-      exact (separatedHsum_setRestrict_eq hXpwo C (R : HahnSeries G K) hcov
-        (fun i j hij ↦ hCdisj i j hij)
-        (fun i j hij a ha b hb ↦ hCord i j hij a ha b hb)).symm
     have hfx_shift : ∀ x : ↥Xset, (translate (-(x : G)) (fx x)).support ⊆ Iic 0 := by
       intro x
       rw [support_translate]
       rintro g ⟨p, hp, rfl⟩
       have hpx := hfxle x p hp
-      have h3 : -(x : G) + p ≤ 0 := by
-        have h2 : -(x : G) + p ≤ -(x : G) + (x : G) := add_le_add le_rfl hpx
-        rwa [neg_add_cancel] at h2
-      exact mem_Iic.mpr h3
+      exact mem_Iic.mpr (by
+        simpa only [sub_eq_add_neg, add_comm] using (sub_nonpos.mpr hpx))
     let ux : ↥Xset → Nonpositive G K := fun x ↦ ⟨translate (-(x : G)) (fx x), hfx_shift x⟩
     let bx : ↥Xset → NatOrdinal.{u} := fun x ↦
       NatOrdinal.of ((R : HahnSeries G K).cantorBendixsonRank (x : G))
-    -- Locality of truncations inside a piece.
-    have hloc : ∀ (x : ↥Xset) (y' : G), y' ∈ C x →
-        ν (translatedTruncLE (y' - (x : G)) (ux x) - translatedTruncLE y' R) = ⊥ := by
-      intro x y' hy'
-      obtain ⟨cst, hcst, hcsty⟩ := exists_lt_mem_of_isOpen_ordConnected (hCopen x) hy'
-      have hdiff := support_truncLE_separatedHsum_sub_piece_subset hXpwo C fx hfxC hCord
-        hsepx x hy' hcst
-      apply (cantorBendixsonDegreeValuation_eq_bot_iff _).mpr
-      refine ⟨cst - y', sub_neg.mpr hcsty, ?_⟩
-      intro g hg
-      have hcoe1 : ((translatedTruncLE (y' - (x : G)) (ux x) : Nonpositive G K) :
-          HahnSeries G K) = translate (-y') (truncLE y' (fx x)) :=
-        translatedTruncLE_placed (x : G) y' (fx x) (hfx_shift x)
-      rw [AddSubgroupClass.coe_sub, hcoe1, coe_translatedTruncLE] at hg
-      have hcombine : translate (-y') (truncLE y' (fx x)) -
-          translate (-y') (truncLE y' (R : HahnSeries G K)) =
-          translate (-y') (truncLE y' (fx x) - truncLE y' (R : HahnSeries G K)) :=
-        (map_sub (translate (-y')) _ _).symm
-      rw [hcombine, support_translate] at hg
-      obtain ⟨q, hq, rfl⟩ := hg
-      have hq' : q ∈ (truncLE y' (separatedHsum hXpwo fx hsepx) -
-          truncLE y' (fx x)).support := by
-        rw [← support_neg, neg_sub, ← hRsum]
-        exact hq
-      have hqc : q ≤ cst := hdiff hq'
-      have h3 : -y' + q ≤ cst - y' := by
-        have h2 : -y' + q ≤ -y' + cst := add_le_add le_rfl hqc
-        calc -y' + q ≤ -y' + cst := h2
-          _ = cst - y' := by abel
-      exact mem_Iic.mpr h3
-    have hplaced_eq : ∀ (x : ↥Xset) (s : G),
-        (translatedTruncLE s (ux x) : HahnSeries G K) =
-          translate (-((x : G) + s)) (truncLE ((x : G) + s) (fx x)) := by
-      intro x s
-      have h2 : ((x : G) + s) - (x : G) = s := by abel
-      have := translatedTruncLE_placed (x : G) ((x : G) + s) (fx x) (hfx_shift x)
-      rw [h2] at this
-      exact this
-    -- The translated degree profile of each piece.
-    have hux_prof : ∀ x : ↥Xset, ∀ s : G, s ≤ 0 →
-        ν (translatedTruncLE s (ux x)) ≤ (bx x : WithBot NatOrdinal) := by
-      intro x s hs
-      have hy'x : (x : G) + s ≤ (x : G) := by
-        calc (x : G) + s ≤ (x : G) + 0 := add_le_add le_rfl hs
-          _ = (x : G) := add_zero _
-      by_cases hy'C : (x : G) + s ∈ C x
-      · have h1 := hloc x ((x : G) + s) hy'C
-        have h2 : ((x : G) + s) - (x : G) = s := by abel
-        rw [h2] at h1
-        rw [degree_eq_of_degree_sub_eq_bot h1]
-        rw [degree_translatedTruncLE_eq]
-        by_cases hm : (x : G) + s ∈ (R : HahnSeries G K).closedSupport
-        · rw [ite_eq_left hm]
-          rcases eq_or_ne ((x : G) + s) (x : G) with heq | hne
-          · rw [heq]
-          · have hlt := hCrank x ((x : G) + s) ⟨hm, hy'C⟩ hne
-            have hlt' : (R : HahnSeries G K).cantorBendixsonRank ((x : G) + s) <
-                (R : HahnSeries G K).cantorBendixsonRank (x : G) := by
-              rw [cantorBendixsonRank_eq, cantorBendixsonRank_eq]
-              exact hlt
-            exact (WithBot.coe_le_coe.mpr (NatOrdinal.of.monotone hlt'.le))
-        · rw [ite_eq_right hm]
-          exact bot_le
-      · have hbelow := lt_of_notMem_ordConnected (hCconv x) (hCmem x) hy'x hy'C
-        have hzero : truncLE ((x : G) + s) (fx x) = 0 :=
-          truncLE_eq_zero_of_forall_lt _ _ (fun p hp ↦ hbelow p (hfxC x hp))
-        have hzero' : translatedTruncLE s (ux x) = 0 := by
-          apply Subtype.ext
-          rw [hplaced_eq x s, hzero, map_zero]
-          rfl
-        rw [hzero', (ν).map_zero]
-        exact bot_le
+    have hpieceData (x : ↥Xset) := translated_convex_piece_local_data Q α τ R (ux x)
+      (x : G) (C x) (fx x) rfl rfl (hCopen x) (hCconv x) (hCmem x)
+      (fun y hy hne ↦ by
+        simpa only [cantorBendixsonRank_eq] using hCrank x y hy hne)
+      (bx x) rfl (fun y hy ↦ hpR y (hy.trans (hX0 x)))
+    have hloc := fun x ↦ (hpieceData x).2.1
+    have hux_prof := fun x ↦ (hpieceData x).2.2.1
+    have hpux := fun x ↦ (hpieceData x).2.2.2
     have hbx_lt : ∀ x : ↥Xset, bx x < β := by
       intro x
       have h1 := hRdrop (x : G) (hX0 x)
       have hm : (x : G) ∈ (R : HahnSeries G K).closedSupport := hXs x.2
       rw [degree_translatedTruncLE_eq, ite_eq_left hm] at h1
       exact WithBot.coe_lt_coe.mp h1
-    -- The local ideal condition for each piece.
-    have hpux : ∀ x : ↥Xset, ∀ s : G, s ≤ 0 → ∃ F : MvPolynomial ι K,
-        (∀ d ∈ F.support, (Finsupp.weight wt) d < α) ∧
-        ν (translatedTruncLE s (ux x) - aeval V F) = ⊥ ∧
-        MvPolynomial.componentsGE wt τ F ∈ Ideal.span (Set.range Q) := by
-      intro x s hs
-      have hy'0 : (x : G) + s ≤ 0 := by
-        calc (x : G) + s ≤ 0 + 0 := add_le_add (hX0 x) hs
-          _ = 0 := add_zero _
-      by_cases hy'C : (x : G) + s ∈ C x
-      · obtain ⟨F, hFw, hFbot, hFGE⟩ := hpR ((x : G) + s) hy'0
-        refine ⟨F, hFw, ?_, hFGE⟩
-        have h1 := hloc x ((x : G) + s) hy'C
-        have h2 : ((x : G) + s) - (x : G) = s := by abel
-        rw [h2] at h1
-        have hsplit : translatedTruncLE s (ux x) - aeval V F =
-            (translatedTruncLE s (ux x) - translatedTruncLE ((x : G) + s) R) +
-              (translatedTruncLE ((x : G) + s) R - aeval V F) := by
-          abel
-        rw [hsplit]
-        refine le_bot_iff.mp (((ν).map_add_le_max _ _).trans ?_)
-        rw [h1, hFbot, max_self]
-      · have hy'x : (x : G) + s ≤ (x : G) := by
-          calc (x : G) + s ≤ (x : G) + 0 := add_le_add le_rfl hs
-            _ = (x : G) := add_zero _
-        have hbelow := lt_of_notMem_ordConnected (hCconv x) (hCmem x) hy'x hy'C
-        have hzero : truncLE ((x : G) + s) (fx x) = 0 :=
-          truncLE_eq_zero_of_forall_lt _ _ (fun p hp ↦ hbelow p (hfxC x hp))
-        have hzero' : translatedTruncLE s (ux x) = 0 := by
-          apply Subtype.ext
-          rw [hplaced_eq x s, hzero, map_zero]
-          rfl
-        refine ⟨0, by simp, ?_, ?_⟩
-        · rw [hzero', map_zero, sub_zero, (ν).map_zero]
-        · rw [componentsGE_zero]
-          exact Ideal.zero_mem _
-    -- Recurse on every piece.
     have hpiece : ∀ x : ↥Xset, ∃ cp : κ' → Nonpositive G K,
         (∀ j, ∀ s : G, s ≤ 0 → ν (translatedTruncLE s (cp j)) ≤ P j (bx x)) ∧
         (bx x ≤ τ → ∀ j, cp j = 0) ∧
@@ -1020,84 +1229,12 @@ theorem exists_cofactors_degree_translatedTruncLE_le_of_locallyIdeal
         separated := hsepP
         sum := cP
         coe_sum := hcP_coe }
-    have hdiscP : ∀ z : G, ¬ AccPt z (𝓟 (Set.range (fun x : ↥Xset ↦ (x : G)))) := by
-      intro z
-      rw [Subtype.range_coe]
-      exact hXdisc z
-    have hplzero : ∀ j (x : ↥Xset), bx x ≤ τ → placed j x = 0 := by
-      intro j x hbxτ
-      rw [hplaced j x, hcp0 x hbxτ j]
-      rw [show ((0 : Nonpositive G K) : HahnSeries G K) = 0 from rfl, map_zero]
-      ext g
-      rw [coeff_setRestrict]
-      split_ifs <;> rfl
-    have hstageP : ∀ j (x : ↥Xset),
-        (((placed j x).closedSupport).cantorBendixson (P j β).val : Set G) ⊆ {(x : G)} := by
-      intro j x
-      by_cases hbxτ : bx x ≤ τ
-      · rw [hplzero j x hbxτ]
-        intro z hz
-        exfalso
-        have hzs := TopologicalSpace.Closeds.cantorBendixson_le _ _ hz
-        rw [mem_closedSupport, HahnSeries.support_zero, closure_empty] at hzs
-        exact hzs
-      · intro z hz
-        exfalso
-        obtain ⟨hzs, hzr⟩ := ((placed j x).mem_support_derivative_iff z (P j β).val).mp hz
-        have h1 : (placed j x).cantorBendixsonRank z ≤
-            (translate (x : G)
-              ((cp x j : Nonpositive G K) : HahnSeries G K)).cantorBendixsonRank z :=
-          cantorBendixsonRank_le_of_support_subset (by
-            rw [hplaced j x, support_setRestrict]
-            exact inter_subset_left) z
-        have h2 : (translate (x : G) ((cp x j : Nonpositive G K) :
-            HahnSeries G K)).cantorBendixsonRank z =
-            ((cp x j : Nonpositive G K) : HahnSeries G K).cantorBendixsonRank (z - (x : G)) := by
-          have := cantorBendixsonRank_translate ((cp x j : Nonpositive G K) : HahnSeries G K)
-            (x : G) (z - (x : G))
-          rw [show (x : G) + (z - (x : G)) = z by abel] at this
-          exact this
-        have h3 : ((cp x j : Nonpositive G K) : HahnSeries G K).cantorBendixsonRank (z - (x : G)) ≤
-            (P j (bx x)).val := by
-          by_cases hm : z - (x : G) ∈
-              ((cp x j : Nonpositive G K) : HahnSeries G K).closedSupport
-          · have hz0 : z - (x : G) ≤ 0 := closure_minimal (cp x j).property isClosed_Iic
-              ((mem_closedSupport _ _).mp hm)
-            have hprof := hcpb x j (z - (x : G)) hz0
-            rw [degree_translatedTruncLE_eq, ite_eq_left hm, WithBot.coe_le_coe] at hprof
-            have hval := NatOrdinal.of.symm.monotone hprof
-            change NatOrdinal.val (NatOrdinal.of _) ≤ NatOrdinal.val _ at hval
-            rwa [NatOrdinal.val_of] at hval
-          · rw [cantorBendixsonRank_eq,
-            TopologicalSpace.Closeds.cantorBendixsonRank_of_notMem _ _ hm]
-            exact zero_le (a := (P j (bx x)).val)
-        have h4 : (P j (bx x)).val < (P j β).val := by
-          have hlt := hPlt j (bx x) β (lt_of_not_ge hbxτ) (hbx_lt x) hβμ
-          have h := NatOrdinal.of.symm.strictMono hlt
-          change NatOrdinal.val _ < NatOrdinal.val _ at h
-          exact h
-        exact absurd hzr (not_le_of_gt (((h1.trans_eq h2).trans h3).trans_lt h4))
-    have hcPb : ∀ j, ∀ y : G, y ≤ 0 → ν (translatedTruncLE y (cP j)) ≤ P j β := by
-      intro j y hy
-      have hbounds := cantorBendixsonRank_separatedHsum_bounds hXpwo C (fun x ↦ (x : G)) (placed j)
-        (hplC j) (hplle j) hCmem hCopen hCdisj hCord (hsepP j) hdiscP (P j β).val (hstageP j)
-      rw [degree_translatedTruncLE_eq]
-      by_cases hm : y ∈ ((cP j : Nonpositive G K) : HahnSeries G K).closedSupport
-      · rw [ite_eq_left hm]
-        have hrank : ((cP j : Nonpositive G K) : HahnSeries G K).cantorBendixsonRank y ≤
-            (P j β).val := by
-          have hr := hbounds.1 y
-          have hreq : ((cP j : Nonpositive G K) : HahnSeries G K).cantorBendixsonRank y =
-              (separatedHsum hXpwo (placed j) (hsepP j)).cantorBendixsonRank y := by
-            rw [hcP_coe j]
-          rw [hreq]
-          exact hr
-        calc ((NatOrdinal.of (((cP j : Nonpositive G K) : HahnSeries G K).cantorBendixsonRank y)) :
-            WithBot NatOrdinal) ≤ (NatOrdinal.of ((P j β).val) : WithBot NatOrdinal) :=
-              WithBot.coe_le_coe.mpr (NatOrdinal.of.monotone hrank)
-          _ = (P j β : WithBot NatOrdinal) := by rw [NatOrdinal.of_val]
-      · rw [ite_eq_right hm]
-        exact bot_le
+    have hcPb : ∀ j y, y ≤ 0 → ν (translatedTruncLE y (cP j)) ≤ P j β := by
+      intro j y _
+      exact pieceFamily.degree_le_of_discrete_centers cp τ (fun j ↦ P j β) bx
+        (fun x j ↦ P j (bx x)) hplaced hcp0 hcpb
+        (fun x j h ↦ hPlt j (bx x) β h (hbx_lt x) hβμ)
+        (fun z ↦ by simpa only [pieceFamily, Subtype.range_coe] using hXdisc z) j y
     -- Step E: the final cofactors correct every truncation to the floor.
     refine ⟨fun j ↦ ctop j + cP j, ?_, ?_, ?_⟩
     · intro j y hy
@@ -1111,43 +1248,13 @@ theorem exists_cofactors_degree_translatedTruncLE_le_of_locallyIdeal
         rw [hR_def, Finset.sum_congr rfl fun j _ ↦ add_mul (ctop j) (cP j) (q j),
           Finset.sum_add_distrib]
         ring
-      rw [hres_eq, map_sub, map_sum]
-      have hEc : ∀ j, ν (translatedTruncLE y (cP j * q j) -
-          translatedTruncLE y (cP j) * q j) < (τ : WithBot NatOrdinal) := fun j ↦
-        degree_translatedTruncLE_mul_sub_mul_lt_forall (cP j) (q j)
-          (P j β) (σQ j) τ (by simpa only [translatedTruncLE_zero] using hcPb j 0 le_rfl)
-          (fun z hz ↦ hcPb j z hz.le) (fun z hz ↦ (hW j).degree_translatedTruncLE_lt hz)
-          (hPsep' j β hτβ hβμ) y
-      by_cases hyC : ∃ x : ↥Xset, y ∈ C x
-      · obtain ⟨x, hyx⟩ := hyC
-        have hRloc := hloc x y hyx
-        have hcPloc : ∀ j, ν (translatedTruncLE y (cP j) -
-            translatedTruncLE (y - (x : G)) (cp x j)) = ⊥ := fun j ↦
-          degree_translatedTruncLE_separatedHsum_sub_piece_eq_bot hXpwo C hCopen hCconv
-            (placed j) (hplC j) hCord (hsepP j) x (x : G) hyx (cp x j) (hplaced j x)
-            (cP j) (hcP_coe j)
-        have hEin (j : κ') :=
-          degree_translatedTruncLE_mul_sub_mul_lt_of_eq_zero_or_bounds
-            (cp x j) (q j) (P j (bx x)) (σQ j) τ (bx x)
-            (fun h ↦ hcp0 x h j)
-            (by simpa only [translatedTruncLE_zero] using hcpb x j 0 le_rfl)
-            (fun z hz ↦ hcpb x j z hz.le)
-            (fun z hz ↦ (hW j).degree_translatedTruncLE_lt hz)
-            (fun h ↦ hPsep' j (bx x) h ((hbx_lt x).le.trans hβμ)) (y - (x : G))
-        have hkey := translatedTruncLE_sub_sum_eq_local_errors y (y - (x : G)) R (ux x)
-          (cp x) cP q
-        rw [hkey]
-        apply degree_add_add_sum_le
-        · rw [degree_reverse_sub_eq_bot hRloc]
-          exact bot_le
-        · exact degree_translatedTruncLE_le_of_nonpositive (hcpres x) (y - (x : G))
-        · intro j
-          apply degree_add_add_le (hEin j).le
-          · rw [degree_mul_eq_bot_of_left
-                (b := q j) (degree_reverse_sub_eq_bot (hcPloc j))]
-            exact bot_le
-          · exact (degree_reverse_sub_lt (hEc j)).le
-      · have hyR := degree_translatedTruncLE_eq_bot_of_notMem_closedSupport (b := R) (by
+      rw [hres_eq]
+      exact pieceFamily.degree_residual_le R ux cp q τ (fun j ↦ P j β) σQ bx
+        (fun x j ↦ P j (bx x)) hplaced hcp0 hcpb hcpres hcPb hW
+        (fun j ↦ hPsep' j β hτβ hβμ)
+        (fun x h j ↦ hPsep' j (bx x) h ((hbx_lt x).le.trans hβμ)) hloc y (by
+        intro hyC
+        have hyR := degree_translatedTruncLE_eq_bot_of_notMem_closedSupport (b := R) (by
           intro hm
           exact hyC (Set.mem_iUnion.mp (hCcov hm)))
         have hXclosed : closure Xset = Xset :=
@@ -1158,10 +1265,8 @@ theorem exists_cofactors_degree_translatedTruncLE_le_of_locallyIdeal
           notMem_closure_range_subtype_coe hXclosed hyX
         have hycP :=
           pieceFamily.degree_translatedTruncLE_eq_bot_of_notMem hyPieces hyCenters
-        apply degree_translatedTruncLE_sub_sum_le_of_eq_bot
-          (G := G) (K := K) (J := κ') (R := R) (c := cP)
-          (q := q) (y := y) (τ := τ) hyR hEc
-        simpa only [pieceFamily] using hycP
+        exact ⟨hyR, by simpa only [pieceFamily] using hycP⟩)
+
 
 
 open Classical in
@@ -1329,18 +1434,8 @@ theorem exists_cofactors_degree_le_add_one_of_properly_locallyIdeal
   classical
   have hW : ∀ j, HasLowerTruncationDegree (aeval V (Q j)) (σQ j) := fun j ↦
     hasLowerTruncationDegree_aeval hVbounds (hQ j)
-  have hPmono : ∀ j β' β'', τ < β' → β' ≤ β'' → β'' ≤ μ → P j β' ≤ P j β'' := by
-    intro j β' β'' h1 h2 h3
-    have e1 := hP j β' h1 (h2.trans h3)
-    have e2 := hP j β'' (h1.trans_le h2) h3
-    have : P j β' + σQ j ≤ P j β'' + σQ j := by rw [e1, e2]; exact h2
-    exact le_of_add_le_add_right this
-  have hPlt : ∀ j β' β'', τ < β' → β' < β'' → β'' ≤ μ → P j β' < P j β'' := by
-    intro j β' β'' h1 h2 h3
-    have e1 := hP j β' h1 (h2.le.trans h3)
-    have e2 := hP j β'' (h1.trans h2) h3
-    have : P j β' + σQ j < P j β'' + σQ j := by rw [e1, e2]; exact h2
-    exact lt_of_add_lt_add_right this
+  have hPmono := cofactor_degree_mono P σQ hP
+  have hPlt := cofactor_degree_lt P σQ hP
   have hPsep' : ∀ j β', τ < β' → β' ≤ μ → ∀ θ, θ < σQ j → P j β' + θ < τ := by
     intro j β' h1 h2 θ hθ
     exact (add_le_add (hPmono j β' μ h1 h2 le_rfl) le_rfl).trans_lt (hPsep j θ hθ)
@@ -1370,9 +1465,6 @@ theorem exists_cofactors_degree_le_add_one_of_properly_locallyIdeal
     intro x p hp
     rw [hfx x, support_setRestrict] at hp
     exact hCmax x p ⟨(mem_closedSupport _ _).mpr (subset_closure hp.1), hp.2⟩
-  have hsepx : ∀ i j : ↥Xset, i < j →
-      ∀ a ∈ (fx i).support, ∀ b ∈ (fx j).support, a < b :=
-    fun i j hij a ha b hb ↦ hCord i j hij a (hfxC i ha) b (hfxC j hb)
   have hfx_shift : ∀ x : ↥Xset, (translate (-(x : G)) (fx x)).support ⊆ Iic 0 := by
     intro x
     rw [support_translate]
@@ -1396,129 +1488,15 @@ theorem exists_cofactors_degree_le_add_one_of_properly_locallyIdeal
     rw [degree_translatedTruncLE_eq, ite_eq_left hm] at h1
     rw [hbx x]
     exact WithBot.coe_lt_coe.mp h1
-  have hRsum : ((u : Nonpositive G K) : HahnSeries G K) = 0 ∨ True := Or.inr trivial
   -- Locality of truncations inside a piece.
-  have hplaced_eq : ∀ (x : ↥Xset) (s : G),
-      ((translatedTruncLE s (ux x) : Nonpositive G K) : HahnSeries G K) =
-        translate (-((x : G) + s)) (truncLE ((x : G) + s) (fx x)) := by
-    intro x s
-    have h2 : ((x : G) + s) - (x : G) = s := by abel
-    have hshift : ((translatedTruncLE (((x : G) + s) - (x : G)) (ux x) : Nonpositive G K) :
-        HahnSeries G K) = translate (-((x : G) + s)) (truncLE ((x : G) + s)
-          (translate (x : G) ((ux x : Nonpositive G K) : HahnSeries G K))) :=
-      translatedTruncLE_shift (x : G) ((x : G) + s) (ux x)
-    rw [h2] at hshift
-    have hcancel : translate (x : G) (translate (-(x : G)) (fx x)) = fx x := by
-      rw [translate_add_apply, add_neg_cancel, translate_zero_apply]
-    rw [hshift, hux x, hcancel]
-  have hloc : ∀ (x : ↥Xset) (y' : G), y' ∈ C x →
-      ν (translatedTruncLE (y' - (x : G)) (ux x) - translatedTruncLE y' u) = ⊥ := by
-    intro x y' hy'
-    obtain ⟨cst, hcst, hcsty⟩ := exists_lt_mem_of_isOpen_ordConnected (hCopen x) hy'
-    apply (cantorBendixsonDegreeValuation_eq_bot_iff _).mpr
-    refine ⟨cst - y', sub_neg.mpr hcsty, ?_⟩
-    intro g hg
-    have hcoe1 : ((translatedTruncLE (y' - (x : G)) (ux x) : Nonpositive G K) :
-        HahnSeries G K) = translate (-y') (truncLE y' (fx x)) := by
-      have h2 : (x : G) + (y' - (x : G)) = y' := by abel
-      have := hplaced_eq x (y' - (x : G))
-      rw [h2] at this
-      exact this
-    rw [AddSubgroupClass.coe_sub, hcoe1, coe_translatedTruncLE] at hg
-    have hcombine : translate (-y') (truncLE y' (fx x)) -
-        translate (-y') (truncLE y' ((u : Nonpositive G K) : HahnSeries G K)) =
-        translate (-y') (truncLE y' (fx x) -
-          truncLE y' ((u : Nonpositive G K) : HahnSeries G K)) :=
-      (map_sub (translate (-y')) _ _).symm
-    rw [hcombine, support_translate] at hg
-    obtain ⟨q, hq, rfl⟩ := hg
-    have hb2 : ∀ p ∈ ((u : Nonpositive G K) : HahnSeries G K).support, p ∉ C x →
-        p ≤ y' → p ≤ cst := by
-      intro p _ hpC hpy
-      by_contra hgt
-      exact hpC ((hCconv x).out hcst hy' ⟨(not_le.mp hgt).le, hpy⟩)
-    have hq2 := support_truncLE_sub_truncLE_setRestrict_subset (C x)
-      ((u : Nonpositive G K) : HahnSeries G K) y' hb2
-    have hqrev : q ∈ (truncLE y' ((u : Nonpositive G K) : HahnSeries G K) -
-        truncLE y' (setRestrict (C x) ((u : Nonpositive G K) : HahnSeries G K))).support := by
-      rw [← support_neg, neg_sub, ← hfx x]
-      exact hq
-    have hqc : q ≤ cst := hq2 hqrev
-    have h3 : -y' + q ≤ cst - y' := by
-      have h2 : -y' + q ≤ -y' + cst := add_le_add le_rfl hqc
-      calc -y' + q ≤ -y' + cst := h2
-        _ = cst - y' := by abel
-    exact mem_Iic.mpr h3
-  -- Degree profile and local ideal condition of each piece.
-  have hux_prof : ∀ x : ↥Xset, ∀ s : G, s ≤ 0 →
-      ν (translatedTruncLE s (ux x)) ≤ (bx x : WithBot NatOrdinal) := by
-    intro x s hs
-    have hy'x : (x : G) + s ≤ (x : G) := by
-      calc (x : G) + s ≤ (x : G) + 0 := add_le_add le_rfl hs
-        _ = (x : G) := add_zero _
-    by_cases hy'C : (x : G) + s ∈ C x
-    · have h1 := hloc x ((x : G) + s) hy'C
-      have h2 : ((x : G) + s) - (x : G) = s := by abel
-      rw [h2] at h1
-      rw [degree_eq_of_degree_sub_eq_bot h1, degree_translatedTruncLE_eq]
-      by_cases hm : (x : G) + s ∈ ((u : Nonpositive G K) : HahnSeries G K).closedSupport
-      · rw [ite_eq_left hm]
-        rcases eq_or_ne ((x : G) + s) (x : G) with heq | hne
-        · rw [heq, hbx x]
-        · have hlt := hCrank x ((x : G) + s) ⟨hm, hy'C⟩ hne
-          have hlt' : ((u : Nonpositive G K) : HahnSeries G K).cantorBendixsonRank ((x : G) + s) <
-              ((u : Nonpositive G K) : HahnSeries G K).cantorBendixsonRank (x : G) := by
-            rw [cantorBendixsonRank_eq, cantorBendixsonRank_eq]
-            exact hlt
-          rw [hbx x]
-          exact WithBot.coe_le_coe.mpr (NatOrdinal.of.monotone hlt'.le)
-      · rw [ite_eq_right hm]
-        exact bot_le
-    · have hbelow := lt_of_notMem_ordConnected (hCconv x) (hCmem x) hy'x hy'C
-      have hzero : truncLE ((x : G) + s) (fx x) = 0 :=
-        truncLE_eq_zero_of_forall_lt _ _ (fun p hp ↦ hbelow p (hfxC x hp))
-      have hzero' : translatedTruncLE s (ux x) = 0 := by
-        apply Subtype.ext
-        rw [hplaced_eq x s, hzero, map_zero]
-        rfl
-      rw [hzero', (ν).map_zero]
-      exact bot_le
-  have hpux : ∀ x : ↥Xset, ∀ s : G, s ≤ 0 → ∃ F : MvPolynomial ι K,
-      (∀ d ∈ F.support, (Finsupp.weight wt) d < α) ∧
-      ν (translatedTruncLE s (ux x) - aeval V F) = ⊥ ∧
-      MvPolynomial.componentsGE wt τ F ∈ Ideal.span (Set.range Q) := by
-    intro x s hs
-    have hy'neg : (x : G) + s < 0 := by
-      calc (x : G) + s ≤ (x : G) + 0 := add_le_add le_rfl hs
-        _ = (x : G) := add_zero _
-        _ < 0 := hXneg x
-    by_cases hy'C : (x : G) + s ∈ C x
-    · obtain ⟨F, hFw, hFbot, hFGE⟩ := hp ((x : G) + s) hy'neg
-      refine ⟨F, hFw, ?_, hFGE⟩
-      have h1 := hloc x ((x : G) + s) hy'C
-      have h2 : ((x : G) + s) - (x : G) = s := by abel
-      rw [h2] at h1
-      have hsplit : translatedTruncLE s (ux x) - aeval V F =
-          (translatedTruncLE s (ux x) - translatedTruncLE ((x : G) + s) u) +
-            (translatedTruncLE ((x : G) + s) u - aeval V F) := by
-        abel
-      rw [hsplit]
-      refine le_bot_iff.mp (((ν).map_add_le_max _ _).trans ?_)
-      rw [h1, hFbot, max_self]
-    · have hy'x : (x : G) + s ≤ (x : G) := by
-        calc (x : G) + s ≤ (x : G) + 0 := add_le_add le_rfl hs
-          _ = (x : G) := add_zero _
-      have hbelow := lt_of_notMem_ordConnected (hCconv x) (hCmem x) hy'x hy'C
-      have hzero : truncLE ((x : G) + s) (fx x) = 0 :=
-        truncLE_eq_zero_of_forall_lt _ _ (fun p hp ↦ hbelow p (hfxC x hp))
-      have hzero' : translatedTruncLE s (ux x) = 0 := by
-        apply Subtype.ext
-        rw [hplaced_eq x s, hzero, map_zero]
-        rfl
-      refine ⟨0, by simp, ?_, ?_⟩
-      · rw [hzero', map_zero, sub_zero, (ν).map_zero]
-      · rw [componentsGE_zero]
-        exact Ideal.zero_mem _
+  have hpieceData (x : ↥Xset) := translated_convex_piece_local_data Q α τ u (ux x)
+    (x : G) (C x) (fx x) (hfx x) (hux x) (hCopen x) (hCconv x) (hCmem x)
+    (fun y hy hne ↦ by
+      simpa only [cantorBendixsonRank_eq] using hCrank x y hy hne)
+    (bx x) (hbx x) (fun y hy ↦ hp y (hy.trans_lt (hXneg x)))
+  have hloc := fun x ↦ (hpieceData x).2.1
+  have hux_prof := fun x ↦ (hpieceData x).2.2.1
+  have hpux := fun x ↦ (hpieceData x).2.2.2
   -- Construct cofactors on every piece by well-founded induction at its smaller rank.
   have hpiece : ∀ x : ↥Xset, ∃ cp : κ' → Nonpositive G K,
       (∀ j, ∀ s : G, s ≤ 0 → ν (translatedTruncLE s (cp j)) ≤ P j (bx x)) ∧
@@ -1579,51 +1557,12 @@ theorem exists_cofactors_degree_le_add_one_of_properly_locallyIdeal
   have hstageP : ∀ j (x : ↥Xset),
       (((placed j x).closedSupport).cantorBendixson (P j μ).val : Set G) = ∅ := by
     intro j x
-    apply Set.eq_empty_iff_forall_notMem.mpr
-    intro z hz
-    by_cases hbxτ : bx x ≤ τ
-    · have hzero : placed j x = 0 := by
-        rw [hplaced j x, hcp0 x hbxτ j]
-        rw [show ((0 : Nonpositive G K) : HahnSeries G K) = 0 from rfl, map_zero]
-        ext g
-        rw [coeff_setRestrict]
-        split_ifs <;> rfl
-      rw [hzero] at hz
-      have hzs := TopologicalSpace.Closeds.cantorBendixson_le _ _ hz
-      rw [mem_closedSupport, HahnSeries.support_zero, closure_empty] at hzs
-      exact hzs
-    · obtain ⟨hzs, hzr⟩ := ((placed j x).mem_support_derivative_iff z (P j μ).val).mp hz
-      have h1 : (placed j x).cantorBendixsonRank z ≤
-          (translate (x : G) ((cp x j : Nonpositive G K) : HahnSeries G K)).cantorBendixsonRank z :=
-        cantorBendixsonRank_le_of_support_subset (by
-          rw [hplaced j x, support_setRestrict]
-          exact inter_subset_left) z
-      have h2 : (translate (x : G) ((cp x j : Nonpositive G K) :
-          HahnSeries G K)).cantorBendixsonRank z =
-          ((cp x j : Nonpositive G K) : HahnSeries G K).cantorBendixsonRank (z - (x : G)) := by
-        have := cantorBendixsonRank_translate ((cp x j : Nonpositive G K) : HahnSeries G K)
-          (x : G) (z - (x : G))
-        rw [show (x : G) + (z - (x : G)) = z by abel] at this
-        exact this
-      have h3 : ((cp x j : Nonpositive G K) : HahnSeries G K).cantorBendixsonRank (z - (x : G)) ≤
-          (P j (bx x)).val := by
-        by_cases hm : z - (x : G) ∈
-            ((cp x j : Nonpositive G K) : HahnSeries G K).closedSupport
-        · have hz0 : z - (x : G) ≤ 0 := closure_minimal (cp x j).property isClosed_Iic
-            ((mem_closedSupport _ _).mp hm)
-          have hprof := hcpb x j (z - (x : G)) hz0
-          rw [degree_translatedTruncLE_eq, ite_eq_left hm, WithBot.coe_le_coe] at hprof
-          have hval := NatOrdinal.of.symm.monotone hprof
-          change NatOrdinal.val (NatOrdinal.of _) ≤ NatOrdinal.val _ at hval
-          rwa [NatOrdinal.val_of] at hval
-        · rw [cantorBendixsonRank_eq, TopologicalSpace.Closeds.cantorBendixsonRank_of_notMem _ _ hm]
-          exact zero_le (a := (P j (bx x)).val)
-      have h4 : (P j (bx x)).val < (P j μ).val := by
-        have hlt := hPlt j (bx x) μ (lt_of_not_ge hbxτ) (hbx_lt x) le_rfl
-        have h := NatOrdinal.of.symm.strictMono hlt
-        change NatOrdinal.val _ < NatOrdinal.val _ at h
-        exact h
-      exact absurd hzr (not_le_of_gt (((h1.trans_eq h2).trans h3).trans_lt h4))
+    rw [hplaced j x]
+    exact cantorBendixson_restricted_translate_eq_empty (C x) (x : G) (cp x j) (P j μ) (by
+      by_cases h : bx x ≤ τ
+      · exact Or.inl (hcp0 x h j)
+      · exact Or.inr ⟨P j (bx x), hPlt j (bx x) μ (lt_of_not_ge h) (hbx_lt x) le_rfl,
+          hcpb x j⟩)
   have hclcen : closure (Set.range (fun x : ↥Xset ↦ (x : G))) ⊆
       Set.range (fun x : ↥Xset ↦ (x : G)) ∪ {0} := by
     intro z hz
@@ -1669,44 +1608,12 @@ theorem exists_cofactors_degree_le_add_one_of_properly_locallyIdeal
   have hres : ∀ y : G, y < 0 →
       ν (translatedTruncLE y (u - ∑ j, cP j * aeval V (Q j))) ≤ (τ : WithBot NatOrdinal) := by
     intro y hy
-    rw [map_sub, map_sum]
-    have hEc : ∀ j, ν (translatedTruncLE y (cP j * aeval V (Q j)) -
-        translatedTruncLE y (cP j) * aeval V (Q j)) < (τ : WithBot NatOrdinal) := fun j ↦
-      degree_translatedTruncLE_mul_sub_mul_lt_forall (cP j) (aeval V (Q j))
-        (P j μ) (σQ j) τ (hcPb j)
-        (fun z _ ↦ hcPbt j z)
-        (fun z hz ↦ (hW j).degree_translatedTruncLE_lt hz)
-        (hPsep' j μ hτμ le_rfl) y
-    by_cases hyC : ∃ x : ↥Xset, y ∈ C x
-    · obtain ⟨x, hyx⟩ := hyC
-      have hRloc := hloc x y hyx
-      have hcPloc : ∀ j, ν (translatedTruncLE y (cP j) -
-          translatedTruncLE (y - (x : G)) (cp x j)) = ⊥ := fun j ↦
-        degree_translatedTruncLE_separatedHsum_sub_piece_eq_bot hXpwo C hCopen hCconv
-          (placed j) (hplC j) hCord (hsepP j) x (x : G) hyx (cp x j) (hplaced j x)
-          (cP j) (hcP_coe j)
-      have hEin (j : κ') :=
-        degree_translatedTruncLE_mul_sub_mul_lt_of_eq_zero_or_bounds
-          (cp x j) (aeval V (Q j)) (P j (bx x)) (σQ j) τ (bx x)
-          (fun h ↦ hcp0 x h j)
-          (by simpa only [translatedTruncLE_zero] using hcpb x j 0 le_rfl)
-          (fun z hz ↦ hcpb x j z hz.le)
-          (fun z hz ↦ (hW j).degree_translatedTruncLE_lt hz)
-          (fun h ↦ hPsep' j (bx x) h (hbx_lt x).le) (y - (x : G))
-      have hkey := translatedTruncLE_sub_sum_eq_local_errors y (y - (x : G)) u (ux x)
-        (cp x) cP (fun j ↦ aeval V (Q j))
-      rw [hkey]
-      apply degree_add_add_sum_le
-      · rw [degree_reverse_sub_eq_bot hRloc]
-        exact bot_le
-      · exact degree_translatedTruncLE_le_of_nonpositive (hcpres x) (y - (x : G))
-      · intro j
-        apply degree_add_add_le (hEin j).le
-        · rw [degree_mul_eq_bot_of_left
-              (b := aeval V (Q j)) (degree_reverse_sub_eq_bot (hcPloc j))]
-          exact bot_le
-        · exact (degree_reverse_sub_lt (hEc j)).le
-    · have hyu := degree_translatedTruncLE_eq_bot_of_notMem_closedSupport (b := u) (by
+    exact pieceFamily.degree_residual_le u ux cp (fun j ↦ aeval V (Q j)) τ
+      (fun j ↦ P j μ) σQ bx (fun x j ↦ P j (bx x)) hplaced hcp0 hcpb hcpres
+      (fun j s _ ↦ hcPbt j s) hW (fun j ↦ hPsep' j μ hτμ le_rfl)
+      (fun x h j ↦ hPsep' j (bx x) h (hbx_lt x).le) hloc y (by
+      intro hyC
+      have hyu := degree_translatedTruncLE_eq_bot_of_notMem_closedSupport (b := u) (by
         intro hm
         exact hyC (Set.mem_iUnion.mp (hCcov ⟨hm, hy⟩)))
       have hyPieces : ∀ x : ↥Xset, y ∉ C x := fun x hyx ↦ hyC ⟨x, hyx⟩
@@ -1718,10 +1625,7 @@ theorem exists_cofactors_degree_le_add_one_of_properly_locallyIdeal
         · exact absurd (Set.mem_singleton_iff.mp h') (ne_of_lt hy)
       have hycP :=
         pieceFamily.degree_translatedTruncLE_eq_bot_of_notMem hyPieces hyCenters
-      apply degree_translatedTruncLE_sub_sum_le_of_eq_bot
-        (G := G) (K := K) (J := κ') (R := u) (c := cP)
-        (q := fun j ↦ aeval V (Q j)) (y := y) (τ := τ) hyu hEc
-      simpa only [pieceFamily] using hycP
+      exact ⟨hyu, by simpa only [pieceFamily] using hycP⟩)
   exact ⟨cP, hcPb, degree_le_add_one_of_forall_neg_le _ τ hres⟩
 
 open Classical in

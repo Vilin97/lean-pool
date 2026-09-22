@@ -21,7 +21,7 @@ classes of ideal elements in every weak filtration.
 
 Consequently, the associated graded ring of the least-representative quotient degree is canonically
 isomorphic to the quotient of the source associated graded ring by the initial ideal: the
-filtered-quotient isomorphism `gr_ν R ⧸ in_ν(I) ≅ gr_ν̄ (R ⧸ I)`.
+filtered-quotient isomorphism `gr_ν R ⧸ in_ν(I) ≅ gr_ν_quot (R ⧸ I)`.
 -/
 
 open scoped MaxAddDegree

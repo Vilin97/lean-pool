@@ -46,16 +46,16 @@ instance {x y a : IGame} [Numeric x] [Numeric y] [Numeric y⁻¹] [Numeric a] :
     Numeric (invOption x y a) :=
   .mul ..
 
-theorem inv_pos' {x : IGame} [Numeric x⁻¹] (hx : 0 < x) : 0 < x⁻¹ :=
+private theorem inv_pos' {x : IGame} [Numeric x⁻¹] (hx : 0 < x) : 0 < x⁻¹ :=
   Numeric.left_lt (zero_mem_leftMoves_inv hx)
 
-theorem mk_div' (x y : IGame) [Numeric x] [Numeric y⁻¹] :
+private theorem mk_div' (x y : IGame) [Numeric x] [Numeric y⁻¹] :
     Surreal.mk (x / y) = Surreal.mk x * Surreal.mk y⁻¹ :=
   rfl
 
 /-! ### Arithmetic lemmas -/
 
-lemma one_neg_mul_invOption (x : IGame) {y : IGame} (hy : y * y⁻¹ ≈ 1) (a : IGame)
+private lemma one_neg_mul_invOption (x : IGame) {y : IGame} (hy : y * y⁻¹ ≈ 1) (a : IGame)
     [Numeric x] [Numeric y] [Numeric y⁻¹] [Numeric a] :
     1 - x * invOption x y a ≈ (1 - x * a) * (y - x) / y := by
   rw [← Surreal.mk_eq_mk] at *
@@ -63,7 +63,7 @@ lemma one_neg_mul_invOption (x : IGame) {y : IGame} (hy : y * y⁻¹ ≈ 1) (a :
   simp only [one_mul, sub_eq_add_neg, add_mul, hy]
   ring
 
-lemma mulOption_self_inv (x : IGame) {y : IGame} (hy : y * y⁻¹ ≈ 1) (a : IGame)
+private lemma mulOption_self_inv (x : IGame) {y : IGame} (hy : y * y⁻¹ ≈ 1) (a : IGame)
     [Numeric x] [Numeric x⁻¹] [Numeric y] [Numeric y⁻¹] [Numeric a] :
     mulOption x x⁻¹ y a ≈ 1 + (x⁻¹ - invOption x y a) * y := by
   rw [mul_comm] at hy
@@ -72,7 +72,7 @@ lemma mulOption_self_inv (x : IGame) {y : IGame} (hy : y * y⁻¹ ≈ 1) (a : IG
   simp only [sub_eq_add_neg, add_mul, neg_mul, mul_assoc, hy]
   ring
 
-lemma mulOption_le (x y : IGame) {a b : IGame} [Numeric y] [Numeric a] [Numeric b]
+private lemma mulOption_le (x y : IGame) {a b : IGame} [Numeric y] [Numeric a] [Numeric b]
     (ha : a ≤ 0) (hb : b ≤ y) : mulOption x y a b ≤ x * b := by
   rw [mulOption, ← Game.mk_le_mk]
   dsimp
@@ -83,7 +83,7 @@ lemma mulOption_le (x y : IGame) {a b : IGame} [Numeric y] [Numeric a] [Numeric 
   rw [← add_le_add_iff_left (Game.mk (x * b))] at this
   convert this using 1 <;> abel
 
-theorem le_mulOption (x y : IGame) {a b : IGame} [Numeric y] [Numeric a] [Numeric b]
+private theorem le_mulOption (x y : IGame) {a b : IGame} [Numeric y] [Numeric a] [Numeric b]
     (ha : a ≤ 0) (hb : y ≤ b) : x * b ≤ mulOption x y a b := by
   rw [mulOption, ← Game.mk_le_mk]
   dsimp
@@ -96,7 +96,7 @@ theorem le_mulOption (x y : IGame) {a b : IGame} [Numeric y] [Numeric a] [Numeri
 
 /-! ### Inductive proof -/
 
-lemma numeric_option_inv {x : IGame} [Numeric x] (hx : 0 < x)
+private lemma numeric_option_inv {x : IGame} [Numeric x] (hx : 0 < x)
     (hl : ∀ y ∈ xᴸ, 0 < y → Numeric y⁻¹) (hr : ∀ y ∈ xᴿ, Numeric y⁻¹) :
     (∀ p, ∀ y ∈ x⁻¹.moves p, Numeric y) := by
   refine invRec hx Numeric.zero fun p₁ p₂ y hy hyx _ _ _ ↦ ?_
@@ -108,7 +108,7 @@ lemma numeric_option_inv {x : IGame} [Numeric x] (hx : 0 < x)
     | have := hr _ hyx
     infer_instance
 
-lemma mul_inv_option_mem {x : IGame} [Numeric x] (hx : 0 < x)
+private lemma mul_inv_option_mem {x : IGame} [Numeric x] (hx : 0 < x)
     (hl : ∀ y ∈ xᴸ, 0 < y → Numeric y⁻¹) (hr : ∀ y ∈ xᴿ, Numeric y⁻¹)
     (hl' : ∀ y ∈ xᴸ, 0 < y → y * y⁻¹ ≈ 1) (hr' : ∀ y ∈ xᴿ, y * y⁻¹ ≈ 1) :
     (∀ y ∈ x⁻¹ᴸ, x * y < 1) ∧ (∀ y ∈ x⁻¹ᴿ, 1 < x * y) := by
@@ -154,7 +154,7 @@ lemma mul_inv_option_mem {x : IGame} [Numeric x] (hx : 0 < x)
     · rw [IGame.sub_pos]
       exact Numeric.lt_right hyx
 
-lemma numeric_inv {x : IGame} [Numeric x] (hx : 0 < x)
+private lemma numeric_inv {x : IGame} [Numeric x] (hx : 0 < x)
     (hl : ∀ y ∈ xᴸ, 0 < y → Numeric y⁻¹) (hr : ∀ y ∈ xᴿ, Numeric y⁻¹)
     (hl' : ∀ y ∈ xᴸ, 0 < y → y * y⁻¹ ≈ 1) (hr' : ∀ y ∈ xᴿ, y * y⁻¹ ≈ 1) :
     Numeric x⁻¹ := by
@@ -165,7 +165,7 @@ lemma numeric_inv {x : IGame} [Numeric x] (hx : 0 < x)
   have := H' _ z hz
   exact (Numeric.mul_lt_mul_iff_right hx).1 <| (Hl y hy).trans (Hr z hz)
 
-lemma option_mul_inv_lt {x : IGame} [Numeric x] (hx : 0 < x)
+private lemma option_mul_inv_lt {x : IGame} [Numeric x] (hx : 0 < x)
     (hl : ∀ y ∈ xᴸ, 0 < y → Numeric y⁻¹) (hr : ∀ y ∈ xᴿ, Numeric y⁻¹)
     (hl' : ∀ y ∈ xᴸ, 0 < y → y * y⁻¹ ≈ 1) (hr' : ∀ y ∈ xᴿ, y * y⁻¹ ≈ 1) :
     (∀ y ∈ (x * x⁻¹)ᴸ, y < 1) ∧ (∀ y ∈ (x * x⁻¹)ᴿ, 1 < y) := by
@@ -211,7 +211,7 @@ lemma option_mul_inv_lt {x : IGame} [Numeric x] (hx : 0 < x)
     rw [IGame.sub_pos]
     exact Numeric.left_lt (invOption_mem_moves_inv (p₁ := left) hx hy hyx ha)
 
-lemma mul_inv_self {x : IGame} [Numeric x] (hx : 0 < x)
+private lemma mul_inv_self {x : IGame} [Numeric x] (hx : 0 < x)
     (hl : ∀ y ∈ xᴸ, 0 < y → Numeric y⁻¹) (hr : ∀ y ∈ xᴿ, Numeric y⁻¹)
     (hl' : ∀ y ∈ xᴸ, 0 < y → y * y⁻¹ ≈ 1) (hr' : ∀ y ∈ xᴿ, y * y⁻¹ ≈ 1) :
     x * x⁻¹ ≈ 1 := by
@@ -221,7 +221,7 @@ lemma mul_inv_self {x : IGame} [Numeric x] (hx : 0 < x)
   rw [Numeric.mul_equiv_zero, not_or]
   exact ⟨hx.not_antisymmRel_symm, (inv_pos' hx).not_antisymmRel_symm⟩
 
-theorem main {x : IGame} [Numeric x] (hx : 0 < x) : Numeric x⁻¹ ∧ x * x⁻¹ ≈ 1 := by
+private theorem main {x : IGame} [Numeric x] (hx : 0 < x) : Numeric x⁻¹ ∧ x * x⁻¹ ≈ 1 := by
   have IHl : ∀ y ∈ xᴸ, 0 < y → Numeric y⁻¹ ∧ y * y⁻¹ ≈ 1 :=
     fun y hy hy' ↦ have := Numeric.of_mem_moves hy; main hy'
   have IHr : ∀ y ∈ xᴿ, Numeric y⁻¹ ∧ y * y⁻¹ ≈ 1 :=

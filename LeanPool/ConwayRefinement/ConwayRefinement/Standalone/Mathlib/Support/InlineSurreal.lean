@@ -66,7 +66,8 @@ This file implements the two-element type of players (`Left`, `Right`), alongsid
 notational machinery to be used within game theory.
 -/
 
-@[expose] public section
+@[expose] public
+section
 
 universe u_inline_0
 
@@ -265,7 +266,8 @@ functor.
 
 universe u_inline_1
 
-@[expose] public section
+@[expose] public
+section
 
 /-! ### Game Functor -/
 
@@ -327,7 +329,8 @@ end GameFunctor
 
 universe u_inline_2
 
-public section
+public
+section
 
 open Set
 
@@ -454,7 +457,8 @@ universe u_inline_4
 open Set Pointwise
 
 -- Computations can be performed through the `game_cmp` tactic.
-public noncomputable section
+public noncomputable
+section
 
 /-! ### Game moves -/
 
@@ -1624,7 +1628,8 @@ The `game_cmp` tactic supplies computation for short combinatorial games.
 
 universe u_inline_6
 
-@[expose] public section
+@[expose] public
+section
 
 namespace IGame
 
@@ -1635,7 +1640,8 @@ elements of these sets are also numeric.
 
 The `Surreal` numbers are built as the quotient of numeric games under equivalence. -/
 @[mk_iff numeric_def']
-class inductive Numeric : IGame → Prop where
+class
+inductive Numeric : IGame → Prop where
   | mk {x : IGame} : (∀ y ∈ xᴸ, ∀ z ∈ xᴿ, y < z) → (∀ p, ∀ y ∈ x.moves p, Numeric y) → Numeric x
 
 theorem numeric_def {x : IGame} : Numeric x ↔
@@ -1799,7 +1805,8 @@ there exist `x₁ ≈ x₂` and `y₁ ≈ y₂` with `x₁ * y₁ ≉ x₂ * y�
 
 universe u_inline_7
 
-@[expose] public noncomputable section
+@[expose] public noncomputable
+section
 
 open IGame Set Pointwise
 
@@ -2110,7 +2117,8 @@ surreals are a field.
 
 universe u_inline_8
 
-@[expose] public noncomputable section
+@[expose] public noncomputable
+section
 
 /-! ### Simplicity theorem -/
 
@@ -2853,7 +2861,8 @@ decreasing_by all_goals (try rw [moves_neg] at *); inline_igame_wf
 
 /-! ### Instances and corollaries -/
 
-public section
+public
+section
 
 namespace IGame.Numeric
 
@@ -3030,7 +3039,8 @@ end IGame.Numeric
 end
 
 
-public noncomputable section
+public noncomputable
+section
 
 universe u
 

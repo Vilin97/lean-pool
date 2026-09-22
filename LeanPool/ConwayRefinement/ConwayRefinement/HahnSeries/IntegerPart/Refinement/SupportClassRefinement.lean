@@ -97,7 +97,7 @@ private theorem exists_nonpositive_closed_class_refinement_of_complete_tail_quot
     [AddCommGroup G] [LinearOrder G] [IsOrderedAddMonoid G]
     [Module ℚ G] [PosSMulMono ℚ G]
     [Field K] [CharZero K]
-    {κ : Cardinal} [Fact (ℵ₀ < κ)] [Fact κ.IsRegular]
+    {κ : Cardinal} [Fact (ℵ₀ < κ)]
     (T : Set (FiniteArchimedeanClass G)) [Nonempty T]
     (hT : ∀ c ∈ T, ∃ d ∈ T, c < d)
     [CompleteSpace (FiniteArchimedeanClass.TailQuotient T)]
@@ -206,7 +206,7 @@ inside the cardinal-bounded Hahn integer part. -/
 private theorem exists_integer_part_refinement_of_nonpositive_refinement
     {G : Type u} {K : Type v}
     [AddCommGroup G] [LinearOrder G] [IsOrderedAddMonoid G]
-    [Field K] {κ : Cardinal} [Fact (ℵ₀ < κ)] [Fact κ.IsRegular]
+    [Field K] {κ : Cardinal} [Fact (ℵ₀ < κ)]
     (S : Subring K) (U : Set (FiniteArchimedeanClass G))
     (a b c d : HahnSeries.cardSuppLTTruncationIntegerPart
       (G := G) (R := K) (κ := κ) S)

@@ -62,7 +62,7 @@ private theorem degreeTwoWithConstant_constantCoeff_mem :
 
 /-- The signed degree-two series has negative order: its exponent `q₀,₀` carries coefficient one
 and is negative. -/
-theorem signedDegreeTwo_order_neg :
+private theorem signedDegreeTwo_order_neg :
     (mapRealDomainToSurreal (degreeTwoWithConstant (K := ℝ)) : ℝ⟦Surreal.{u}⟧).order < 0 := by
   have hcoeff : (mapRealDomainToSurreal (degreeTwoWithConstant (K := ℝ)) :
       ℝ⟦Surreal.{u}⟧).coeff ((degreeTwoExponentPair (0, 0) : ℝ) : Surreal) ≠ 0 := by
@@ -73,7 +73,7 @@ theorem signedDegreeTwo_order_neg :
   refine (HahnSeries.order_le_of_coeff_ne_zero hcoeff).trans_lt ?_
   norm_num [degreeTwoExponentPair_apply]
 
-theorem signedDegreeTwo_order_ne_zero :
+private theorem signedDegreeTwo_order_ne_zero :
     (mapRealDomainToSurreal (degreeTwoWithConstant (K := ℝ)) : ℝ⟦Surreal.{u}⟧).order ≠ 0 :=
   signedDegreeTwo_order_neg.ne
 

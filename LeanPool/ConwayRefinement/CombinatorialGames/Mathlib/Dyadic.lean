@@ -54,7 +54,7 @@ namespace Dyadic
 
 attribute [coe] toRat
 
-instance : Coe Dyadic Rat where
+instance instCoeRatConway : Coe Dyadic Rat where
   coe := toRat
 
 @[norm_cast] alias coe_le_coe := toRat_le_toRat_iff
@@ -124,7 +124,7 @@ theorem den_ne_one_of_den_lt {x y : Dyadic} (h : x.den < y.den) : y.den ≠ 1 :=
 @[simp] theorem coe_eq_intCast {x : Dyadic} {y : ℤ} : x.toRat = y ↔ x = y := by norm_cast
 @[simp] theorem intCast_eq_coe {x : ℤ} {y : Dyadic} : x = y.toRat ↔ x = y := by norm_cast
 
-instance : Inhabited Dyadic := ⟨0⟩
+instance instInhabitedConway : Inhabited Dyadic := ⟨0⟩
 
 @[simp, norm_cast] theorem coe_zero : (0 : Dyadic).toRat = 0 := rfl
 @[simp] theorem num_zero : (0 : Dyadic).num = 0 := rfl
@@ -160,13 +160,13 @@ instance : Nontrivial Dyadic where
 @[norm_cast] alias coe_mul := toRat_mul
 @[norm_cast] alias coe_pow := toRat_pow
 
-instance : SMul Nat Dyadic where
+instance instSMulNatConway : SMul Nat Dyadic where
   smul x y := x * y
 
 @[norm_cast] theorem coe_nsmul (x : ℕ) (y : Dyadic) : (x • y).toRat = x • y.toRat :=
   (coe_mul x y).trans (by simp)
 
-instance : SMul Int Dyadic where
+instance instSMulIntConway : SMul Int Dyadic where
   smul x y := x * y
 
 @[norm_cast] theorem coe_zsmul (x : ℤ) (y : Dyadic) : (x • y).toRat = x • y.toRat :=
@@ -206,7 +206,7 @@ theorem mkRat_lt_mkRat {m n : ℤ} {k : ℕ} (h₁ h₂ : k ∈ Submonoid.powers
   rw [← coe_lt_coe]
   simp [Rat.mkRat_eq_div, div_lt_div_iff_of_pos_right hk]
 
-instance : LinearOrder Dyadic where
+instance instLinearOrderConway : LinearOrder Dyadic where
   le_refl := Dyadic.le_refl
   le_trans := @Dyadic.le_trans
   le_antisymm := @Dyadic.le_antisymm
@@ -225,7 +225,7 @@ theorem mkRat_add_mkRat_self {m n : ℤ} {k : ℕ} (h₁ h₂ : k ∈ Submonoid.
     Dyadic.mkRat m h₁ + Dyadic.mkRat n h₂ = .mkRat (m + n) h₁ := by
   ext; simp [Rat.mkRat_eq_div, add_div]
 
-instance : CommRing Dyadic where
+instance instCommRingConway : CommRing Dyadic where
   add_assoc := add_assoc
   zero_add := Dyadic.zero_add
   add_zero := Dyadic.add_zero

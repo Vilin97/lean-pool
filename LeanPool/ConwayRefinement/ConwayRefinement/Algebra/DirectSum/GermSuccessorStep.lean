@@ -167,7 +167,310 @@ private theorem not_forall_aeval_cofactors_mem_decomposable
   exact one_ne_zero hfb
 
 
+open Classical in
+omit [GradedAlgebra A] in
+/-- Syzygies of a minimal homogeneous generating set have decomposable entries. -/
+private theorem syzygy_entries_mem_decomposable
+    (hgz : GradeZeroScalars A) {δ : NatOrdinal.{z}} (hδ : 0 < δ.constantCoeff)
+    (hinj : ∀ β < δ, InjectiveAt K wt x β) (B : Finset ι)
+    (c : ι → MvPolynomial ι K) (lam : ι → NatOrdinal.{z})
+    (hlam : ∀ b : ↥B, lam b + wt b = δ)
+    (hlamc : ∀ b : ↥B, (lam b).constantCoeff = 0)
+    (hlamlt : ∀ b : ↥B, lam b < δ)
+    (hchom : ∀ b : ↥B, IsWeightedHomogeneous wt (c b) (lam b))
+    (hBmin' : ∀ b ∈ B, c b ∉ Ideal.span (c '' ((B.erase b : Finset ι) : Set ι)))
+    (TP : Finset (↥B → R)) (eT : (↥B → R) → NatOrdinal.{z})
+    (hTPhom : ∀ w ∈ TP, IsHomogeneousTuple A (fun b : ↥B ↦ lam b) w (eT w))
+    (hTPlim : ∀ w ∈ TP, ∀ (b : ↥B) β, w b ∈ A β → w b ≠ 0 → β.constantCoeff = 0)
+    (hTPsyz : ∀ w ∈ TP, ∑ b : ↥B, aeval x (c b) * w b = 0)
+    (u : ↥B → R) (a₂ : (↥B → R) → R)
+    (ha₂ : ∀ w ∈ TP, (∀ ρ, ρ + eT w = δ → a₂ w ∈ A ρ) ∧
+      ((¬ ∃ ρ, ρ + eT w = δ) → a₂ w = 0))
+    (hu_eq : u = ∑ w ∈ TP, a₂ w • w) :
+    ∀ b : ↥B, u b ∈ decomposableAt A (wt b) := by
+  classical
+  intro b
+  have hub := congrFun hu_eq b
+  rw [Finset.sum_apply] at hub
+  simp only [Pi.smul_apply, smul_eq_mul] at hub
+  rw [hub]
+  refine sum_mem fun w hw ↦ ?_
+  by_cases hwb : w b = 0
+  · rw [hwb, mul_zero]
+    exact zero_mem _
+  by_cases ha0 : a₂ w = 0
+  · rw [ha0, zero_mul]
+    exact zero_mem _
+  have hhom := (isHomogeneousTuple_iff.mp (hTPhom w hw)) b
+  obtain ⟨β, hβ⟩ : ∃ β, β + lam b = eT w := by
+    by_contra hn
+    exact hwb (hhom.2 hn)
+  have hwβ : w b ∈ A β := hhom.1 β hβ
+  obtain ⟨ρ, hρ⟩ : ∃ ρ, ρ + eT w = δ := by
+    by_contra hn
+    exact ha0 ((ha₂ w hw).2 hn)
+  have haρ : a₂ w ∈ A ρ := (ha₂ w hw).1 ρ hρ
+  have hρβ : ρ + β = wt b := by
+    apply add_right_cancel (b := lam b)
+    rw [add_assoc, hβ, hρ, add_comm]
+    exact (hlam b).symm
+  -- `ρ ≠ 0`: its finite part is that of `δ`, `n ≥ 1`
+  have hβc : β.constantCoeff = 0 := hTPlim w hw b β hwβ hwb
+  have hρ0 : ρ ≠ 0 := by
+    intro h0
+    have h1 := congrArg NatOrdinal.constantCoeff hρ
+    rw [NatOrdinal.constantCoeff_add, ← hβ, NatOrdinal.constantCoeff_add, hβc,
+      hlamc b, h0, NatOrdinal.constantCoeff_zero] at h1
+    omega
+  -- `β ≠ 0`: a scalar entry would put `c_b` in the ideal of the other `c_{b'}`
+  have hβ0 : β ≠ 0 := by
+    intro h0
+    rw [h0, zero_add] at hβ
+    rw [h0] at hwβ
+    obtain ⟨κ, hκ⟩ := (gradeZeroScalars_iff A).mp hgz (w b) hwβ
+    have hκ0 : κ ≠ 0 := by
+      rintro rfl
+      exact hwb (by rw [hκ, map_zero])
+    have hP : ∀ b' : ↥B, ∃ P : MvPolynomial ι K,
+        (∀ β', β' + lam b' = lam b → IsWeightedHomogeneous wt P β') ∧
+        ((¬ ∃ β', β' + lam b' = lam b) → P = 0) ∧ aeval x P = w b' := by
+      intro b'
+      have hhom' := (isHomogeneousTuple_iff.mp (hTPhom w hw)) b'
+      rw [← hβ] at hhom'
+      by_cases h : ∃ β', β' + lam b' = lam b
+      · obtain ⟨β', hβ'⟩ := h
+        obtain ⟨P, hPhom, hPw⟩ := hx.exists_aeval_eq hgz β'
+          (w b') (hhom'.1 β' hβ')
+        refine ⟨P, fun β'' hβ'' ↦ ?_, fun hn ↦ absurd ⟨β', hβ'⟩ hn, hPw⟩
+        rwa [add_right_cancel (hβ''.trans hβ'.symm)]
+      · exact ⟨0, fun β' hβ' ↦ absurd ⟨β', hβ'⟩ h, fun _ ↦ rfl, by rw [map_zero, hhom'.2 h]⟩
+    choose P hPhom hP0 hPw using hP
+    -- the relation `κ c_b + ∑_{b' ≠ b} c_{b'} P_{b'}` of degree `lam b < δ`
+    have hG'hom : IsWeightedHomogeneous wt
+        (C κ * c b + ∑ b' ∈ Finset.univ.erase b, c b' * P b') (lam b) := by
+      refine ((hchom b).C_mul κ).add (IsWeightedHomogeneous.sum _ _ _ fun b' _ ↦ ?_)
+      by_cases h : ∃ β', β' + lam b' = lam b
+      · obtain ⟨β', hβ'⟩ := h
+        have := (hchom b').mul (hPhom b' β' hβ')
+        rwa [add_comm, hβ'] at this
+      · rw [hP0 b' h, mul_zero]
+        exact isWeightedHomogeneous_zero K wt _
+    have hG'0 : aeval x (C κ * c b + ∑ b' ∈ Finset.univ.erase b, c b' * P b') = 0 := by
+      have hsyzw := hTPsyz w hw
+      rw [← Finset.add_sum_erase _ _ (Finset.mem_univ b), hκ] at hsyzw
+      rw [map_add, map_mul, map_sum, ← algebraMap_eq, AlgHom.commutes, Algebra.commutes,
+        Finset.sum_congr rfl fun b' _ ↦ by rw [map_mul, hPw]]
+      exact hsyzw
+    have hG'z := (injectiveAt_iff _).mp (hinj (lam b) (hlamlt b)) _ hG'hom hG'0
+    have h2 : C κ * c b = -∑ b' ∈ Finset.univ.erase b, c b' * P b' :=
+      eq_neg_of_add_eq_zero_left hG'z
+    have h3 : c b = C κ⁻¹ * (C κ * c b) := by
+      rw [← mul_assoc, ← C_mul, inv_mul_cancel₀ hκ0, C_1, one_mul]
+    refine hBmin' b b.2 ?_
+    rw [h3, h2]
+    refine Ideal.mul_mem_left _ _ ((Ideal.neg_mem_iff _).mpr (Ideal.sum_mem _ fun b' hb' ↦ ?_))
+    refine Ideal.mul_mem_right _ _ (Ideal.subset_span ⟨b', ?_, rfl⟩)
+    exact Finset.mem_coe.mpr (Finset.mem_erase.mpr
+      ⟨fun h ↦ (Finset.mem_erase.mp hb').1 (Subtype.ext h), b'.2⟩)
+  rw [← hρβ]
+  exact mul_mem_decomposableAt (A) hρ0 hβ0 haρ hwβ
+
+omit [GradedAlgebra A] in
+/-- Injective graded evaluation lifts homogeneous syzygies into the span of evaluated generators. -/
+private theorem evaluated_syzygy_mem_span_of_injective
+    (hgz : GradeZeroScalars A) {B : Type w} [Fintype B]
+    (lam : B → NatOrdinal.{z}) (c : B → MvPolynomial ι K)
+    (hchom : ∀ b, IsWeightedHomogeneous wt (c b) (lam b))
+    (L : Finset (B → MvPolynomial ι K))
+    (hLspan : ∀ U, (∑ b, c b * U b) = 0 →
+      U ∈ Submodule.span (MvPolynomial ι K) (L : Set (B → MvPolynomial ι K)))
+    (TP : Finset (B → R)) (ev : (B → MvPolynomial ι K) → (B → R))
+    (hev : ∀ σ b, ev σ b = aeval x (σ b))
+    (hev_mem : ∀ σ ∈ L, ev σ ∈ Submodule.span R (TP : Set (B → R)))
+    (d : NatOrdinal.{z}) (hinj : InjectiveAt K wt x d) (u' : B → R)
+    (hu' : IsHomogeneousTuple A lam u' d) (hsyz' : ∑ b, aeval x (c b) * u' b = 0) :
+    u' ∈ Submodule.span R (TP : Set (B → R)) := by
+  classical
+  -- polynomial representatives of the entries
+  have hU : ∀ b : B, ∃ U : MvPolynomial ι K,
+      (∀ β, β + lam b = d → IsWeightedHomogeneous wt U β) ∧
+      ((¬ ∃ β, β + lam b = d) → U = 0) ∧ aeval x U = u' b := by
+    intro b
+    have hhom := (isHomogeneousTuple_iff.mp hu') b
+    by_cases h : ∃ β, β + lam b = d
+    · obtain ⟨β, hβ⟩ := h
+      obtain ⟨U, hUhom, hUu⟩ := hx.exists_aeval_eq hgz β
+        (u' b) (hhom.1 β hβ)
+      refine ⟨U, fun β' hβ' ↦ ?_, fun hn ↦ absurd ⟨β, hβ⟩ hn, hUu⟩
+      rwa [add_right_cancel (hβ'.trans hβ.symm)]
+    · exact ⟨0, fun β hβ ↦ absurd ⟨β, hβ⟩ h, fun _ ↦ rfl, by rw [map_zero, hhom.2 h]⟩
+  choose U hUhom hU0 hUu using hU
+  -- `∑ c_b U_b` is a relation of degree `d < δ`, hence zero
+  have hG : IsWeightedHomogeneous wt (∑ b : B, c b * U b) d := by
+    refine IsWeightedHomogeneous.sum _ _ _ fun b _ ↦ ?_
+    by_cases h : ∃ β, β + lam b = d
+    · obtain ⟨β, hβ⟩ := h
+      have := (hchom b).mul (hUhom b β hβ)
+      rwa [add_comm, hβ] at this
+    · rw [hU0 b h, mul_zero]
+      exact isWeightedHomogeneous_zero K wt d
+  have hG0 : aeval x (∑ b : B, c b * U b) = 0 := by
+    rw [map_sum, ← hsyz']
+    exact Finset.sum_congr rfl fun b _ ↦ by rw [map_mul, hUu]
+  have hGz := (injectiveAt_iff _).mp hinj _ hG hG0
+  -- so `U` is a polynomial syzygy, a combination of the generators
+  obtain ⟨r, _, hr⟩ := Submodule.mem_span_finset.mp (hLspan U hGz)
+  have hu'eq : u' = ∑ σ ∈ L, aeval x (r σ) • ev σ := by
+    funext b
+    rw [Finset.sum_apply]
+    have hrb := congrFun hr b
+    rw [Finset.sum_apply] at hrb
+    simp only [Pi.smul_apply, smul_eq_mul] at hrb ⊢
+    rw [← hUu b, ← hrb, map_sum]
+    exact Finset.sum_congr rfl fun σ _ ↦ by rw [map_mul, hev]
+  rw [hu'eq]
+  refine Submodule.sum_mem _ fun σ hσ ↦ Submodule.smul_mem _ _ ?_
+  exact hev_mem σ hσ
+
 include hΔ
+
+/-- Polynomial syzygies supported in limit degrees admit finitely many homogeneous generators. -/
+private theorem exists_homogeneous_evaluated_syzygies
+    {B : Type w} [Fintype B] (lam : B → NatOrdinal.{z}) (c : B → MvPolynomial ι K)
+    (hchom : ∀ b, IsWeightedHomogeneous wt (c b) (lam b))
+    (Λ : Set ι) (hΛ : ∀ i ∈ Λ, (wt i).constantCoeff = 0)
+    (L : Finset (B → MvPolynomial ι K))
+    (hL : ∀ σ ∈ L, (∀ b, σ b ∈ supported K Λ) ∧ ∑ b, c b * σ b = 0)
+    (ev : (B → MvPolynomial ι K) → (B → R)) (hev : ∀ σ b, ev σ b = aeval x (σ b)) :
+    ∃ (TP : Finset (B → R)) (eT : (B → R) → NatOrdinal.{z}),
+      (∀ w ∈ TP, IsHomogeneousTuple A lam w (eT w)) ∧
+      (∀ w ∈ TP, ∀ b β, w b ∈ A β → w b ≠ 0 → β.constantCoeff = 0) ∧
+      (∀ w ∈ TP, ∀ b, Δ (w b) = 0) ∧
+      (∀ w ∈ TP, ∑ b, aeval x (c b) * w b = 0) ∧
+      ∀ σ ∈ L, ev σ ∈ Submodule.span R (TP : Set (B → R)) := by
+  classical
+  obtain ⟨comp, hcomp⟩ : ∃ comp : (B → R) → NatOrdinal → (B → R),
+      ∀ w e b, comp w e b = if h : ∃ β, β + lam b = e then
+        (decompose (A) (w b) (Classical.choose h) : R) else 0 :=
+    ⟨fun w e b ↦ if h : ∃ β, β + lam b = e then
+        (decompose (A) (w b) (Classical.choose h) : R) else 0,
+      fun _ _ _ ↦ rfl⟩
+  have hcomp_hom : ∀ w e, IsHomogeneousTuple A lam (comp w e) e := by
+    intro w e
+    rw [isHomogeneousTuple_iff]
+    intro b
+    refine ⟨fun β hβ ↦ ?_, fun h ↦ ?_⟩
+    · have h : ∃ β, β + lam b = e := ⟨β, hβ⟩
+      have hch : ∀ h' : ∃ β, β + lam b = e, Classical.choose h' = β := fun h' ↦
+        add_right_cancel ((Classical.choose_spec h').trans hβ.symm)
+      rw [hcomp, dite_eq_left h, hch]
+      exact (decompose (A) (w b) β).2
+    · rw [hcomp, dite_eq_right h]
+  have hcomp_syz : ∀ σ ∈ L, ∀ e, ∑ b : B, aeval x (c b) * comp (ev σ) e b = 0 := by
+    intro σ hσ e
+    have h1 : ∀ b : B, aeval x (c b) * comp (ev σ) e b =
+        GradedRing.proj (A) e (aeval x (c b) * aeval x (σ b)) := by
+      intro b
+      rw [GradedRing.proj_apply, coe_decompose_mul_of_left_mem (𝒜 := A)
+        (aeval_mem_of_forall_mem hx.mem (hchom b)) (aeval x (σ b)) e, hcomp, hev]
+      by_cases h : ∃ β, β + lam b = e
+      · rw [dite_eq_left h, dite_eq_left h]
+      · rw [dite_eq_right h, dite_eq_right h, mul_zero]
+    have h2 : ∑ b : B, aeval x (c b) * aeval x (σ b) = 0 := by
+      have := congrArg (aeval x) (hL σ hσ).2
+      rw [map_sum, map_zero] at this
+      simpa only [map_mul] using this
+    rw [Finset.sum_congr rfl fun b _ ↦ h1 b, ← map_sum, h2, map_zero]
+  have hcomp_lim : ∀ σ ∈ L, ∀ e (b : B) β, comp (ev σ) e b ∈ A β →
+      comp (ev σ) e b ≠ 0 → β.constantCoeff = 0 := by
+    intro σ hσ e b β hmem hne
+    by_contra hβ
+    apply hne
+    by_cases h : ∃ β', β' + lam b = e
+    · rw [hcomp, hev, dite_eq_left h] at hmem hne ⊢
+      -- a nonzero element of `P_β` and of `P_{β'}` forces `β = β'`
+      have hβ' : β = Classical.choose h := by
+        by_contra hne'
+        have h0 := decompose_of_mem_ne (A) hmem hne'
+        rw [decompose_of_mem_same (A)
+          (decompose (A) (aeval x (σ b)) (Classical.choose h)).2] at h0
+        exact hne h0
+      rw [hβ'] at hβ
+      rw [decompose_aeval hx.mem, weightedHomogeneousComponent_eq_zero_of_forall_vars
+        (fun i hi ↦ hΛ i (mem_supported.mp ((hL σ hσ).1 b) hi)) hβ, map_zero]
+    · rw [hcomp, dite_eq_right h] at hne
+      exact absurd rfl hne
+  -- the degrees occurring, and the sum of the components
+  set E : Finset NatOrdinal := L.biUnion fun σ ↦ Finset.univ.biUnion fun b : B ↦
+    (decompose (A) (ev σ b)).support.image (· + lam b) with hEdef
+  have hev_sum : ∀ σ ∈ L, ev σ = ∑ e ∈ E, comp (ev σ) e := by
+    intro σ hσ
+    funext b
+    rw [Finset.sum_apply]
+    have himg : (decompose (A) (ev σ b)).support.image (· + lam b) ⊆ E := by
+      intro e he
+      rw [hEdef]
+      exact Finset.mem_biUnion.mpr ⟨σ, hσ, Finset.mem_biUnion.mpr ⟨b, Finset.mem_univ b, he⟩⟩
+    rw [← Finset.sum_subset himg, Finset.sum_image fun β₁ _ β₂ _ h ↦ add_right_cancel h]
+    · conv_lhs => rw [← sum_support_decompose (A) (ev σ b)]
+      refine Finset.sum_congr rfl fun β _ ↦ ?_
+      have h : ∃ β', β' + lam b = β + lam b := ⟨β, rfl⟩
+      have hch : ∀ h' : ∃ β', β' + lam b = β + lam b, Classical.choose h' = β := fun h' ↦
+        add_right_cancel (Classical.choose_spec h')
+      rw [hcomp, dite_eq_left h, hch]
+    · intro e _ he
+      rw [hcomp]
+      split_ifs with h
+      · have hnot : Classical.choose h ∉ (decompose (A) (ev σ b)).support :=
+          fun hmem ↦ he (Finset.mem_image.mpr ⟨_, hmem, Classical.choose_spec h⟩)
+        rw [DFinsupp.notMem_support_iff.mp hnot]
+        rfl
+      · rfl
+  -- the finite set `𝒯` of homogeneous ∂-annihilated syzygies
+  set TP : Finset (B → R) := (L ×ˢ E).image fun p ↦ comp (ev p.1) p.2 with hTPdef
+  set eT : (B → R) → NatOrdinal := fun w ↦
+    if h : ∃ e, IsHomogeneousTuple A lam w e then Classical.choose h else 0
+    with heTdef
+  have hTPmem : ∀ w ∈ TP, ∃ σ ∈ L, ∃ e, w = comp (ev σ) e := by
+    intro w hw
+    obtain ⟨⟨σ, e⟩, hp, rfl⟩ := Finset.mem_image.mp hw
+    exact ⟨σ, (Finset.mem_product.mp hp).1, e, rfl⟩
+  have hTPhom : ∀ w ∈ TP, IsHomogeneousTuple A lam w (eT w) := by
+    intro w hw
+    obtain ⟨σ, _, e, rfl⟩ := hTPmem w hw
+    have h : ∃ e', IsHomogeneousTuple A lam (comp (ev σ) e) e' :=
+      ⟨e, hcomp_hom _ _⟩
+    have heT : eT (comp (ev σ) e) = Classical.choose h := by
+      simp only [heTdef]
+      rw [dite_eq_left h]
+    rw [heT]
+    exact Classical.choose_spec h
+  have hTPlim : ∀ w ∈ TP, ∀ (b : B) β, w b ∈ A β → w b ≠ 0 →
+      β.constantCoeff = 0 := by
+    intro w hw b β hmem hne
+    obtain ⟨σ, hσ, e, rfl⟩ := hTPmem w hw
+    exact hcomp_lim σ hσ e b β hmem hne
+  have hTPd : ∀ w ∈ TP, ∀ b, Δ (w b) = 0 := by
+    intro w hw b
+    by_cases h0 : w b = 0
+    · rw [h0, map_zero]
+    · have hhom := (isHomogeneousTuple_iff.mp (hTPhom w hw)) b
+      have hex : ∃ β, β + lam b = eT w := by
+        by_contra hn
+        exact h0 (hhom.2 hn)
+      obtain ⟨β, hβ⟩ := hex
+      exact hΔ.eq_zero
+        (hTPlim w hw b β (hhom.1 β hβ) h0) (hhom.1 β hβ)
+  have hTPsyz : ∀ w ∈ TP, ∑ b : B, aeval x (c b) * w b = 0 := by
+    intro w hw
+    obtain ⟨σ, hσ, e, rfl⟩ := hTPmem w hw
+    exact hcomp_syz σ hσ e
+  refine ⟨TP, eT, hTPhom, hTPlim, hTPd, hTPsyz, ?_⟩
+  intro σ hσ
+  rw [hev_sum σ hσ]
+  exact Submodule.sum_mem _ fun e he ↦ Submodule.subset_span
+    (Finset.mem_image.mpr ⟨(σ, e), Finset.mem_product.mpr ⟨hσ, he⟩, rfl⟩)
+
 
 open Classical in
 /-- **The successor step.** Evaluation is injective in a degree of positive finite part when it is
@@ -356,169 +659,17 @@ theorem injectiveAt_of_forall_lt [CharZero K] (hgz : GradeZeroScalars A)
   -- evaluations of the generators and their homogeneous components
   obtain ⟨ev, hev⟩ : ∃ ev : (↥B → MvPolynomial ι K) → (↥B → R),
       ∀ σ b, ev σ b = aeval x (σ b) := ⟨fun σ b ↦ aeval x (σ b), fun _ _ ↦ rfl⟩
-  obtain ⟨comp, hcomp⟩ : ∃ comp : (↥B → R) → NatOrdinal → (↥B → R),
-      ∀ w e b, comp w e b = if h : ∃ β, β + lam b = e then
-        (decompose (A) (w b) (Classical.choose h) : R) else 0 :=
-    ⟨fun w e b ↦ if h : ∃ β, β + lam b = e then
-        (decompose (A) (w b) (Classical.choose h) : R) else 0,
-      fun _ _ _ ↦ rfl⟩
-  have hcomp_hom : ∀ w e, IsHomogeneousTuple A (fun b : ↥B ↦ lam b) (comp w e) e := by
-    intro w e
-    rw [isHomogeneousTuple_iff]
-    intro b
-    refine ⟨fun β hβ ↦ ?_, fun h ↦ ?_⟩
-    · have h : ∃ β, β + lam b = e := ⟨β, hβ⟩
-      have hch : ∀ h' : ∃ β, β + lam b = e, Classical.choose h' = β := fun h' ↦
-        add_right_cancel ((Classical.choose_spec h').trans hβ.symm)
-      rw [hcomp, dite_eq_left h, hch]
-      exact (decompose (A) (w b) β).2
-    · rw [hcomp, dite_eq_right h]
-  have hcomp_syz : ∀ σ ∈ L, ∀ e, ∑ b : ↥B, aeval x (c b) * comp (ev σ) e b = 0 := by
-    intro σ hσ e
-    have h1 : ∀ b : ↥B, aeval x (c b) * comp (ev σ) e b =
-        GradedRing.proj (A) e (aeval x (c b) * aeval x (σ b)) := by
-      intro b
-      rw [GradedRing.proj_apply, coe_decompose_mul_of_left_mem (𝒜 := A)
-        (aeval_mem_of_forall_mem hx.mem (hchom b (hBT b.2))) (aeval x (σ b)) e, hcomp, hev]
-      by_cases h : ∃ β, β + lam b = e
-      · rw [dite_eq_left h, dite_eq_left h]
-      · rw [dite_eq_right h, dite_eq_right h, mul_zero]
-    have h2 : ∑ b : ↥B, aeval x (c b) * aeval x (σ b) = 0 := by
-      have := congrArg (aeval x) (hL σ hσ).2
-      rw [map_sum, map_zero] at this
-      simpa only [map_mul] using this
-    rw [Finset.sum_congr rfl fun b _ ↦ h1 b, ← map_sum, h2, map_zero]
-  have hcomp_lim : ∀ σ ∈ L, ∀ e (b : ↥B) β, comp (ev σ) e b ∈ A β →
-      comp (ev σ) e b ≠ 0 → β.constantCoeff = 0 := by
-    intro σ hσ e b β hmem hne
-    by_contra hβ
-    apply hne
-    by_cases h : ∃ β', β' + lam b = e
-    · rw [hcomp, hev, dite_eq_left h] at hmem hne ⊢
-      -- a nonzero element of `P_β` and of `P_{β'}` forces `β = β'`
-      have hβ' : β = Classical.choose h := by
-        by_contra hne'
-        have h0 := decompose_of_mem_ne (A) hmem hne'
-        rw [decompose_of_mem_same (A)
-          (decompose (A) (aeval x (σ b)) (Classical.choose h)).2] at h0
-        exact hne h0
-      rw [hβ'] at hβ
-      rw [decompose_aeval hx.mem, weightedHomogeneousComponent_eq_zero_of_forall_vars
-        (fun i hi ↦ hΛ i (mem_supported.mp ((hL σ hσ).1 b) hi)) hβ, map_zero]
-    · rw [hcomp, dite_eq_right h] at hne
-      exact absurd rfl hne
-  -- the degrees occurring, and the sum of the components
-  set E : Finset NatOrdinal := L.biUnion fun σ ↦ Finset.univ.biUnion fun b : ↥B ↦
-    (decompose (A) (ev σ b)).support.image (· + lam b) with hEdef
-  have hev_sum : ∀ σ ∈ L, ev σ = ∑ e ∈ E, comp (ev σ) e := by
-    intro σ hσ
-    funext b
-    rw [Finset.sum_apply]
-    have himg : (decompose (A) (ev σ b)).support.image (· + lam b) ⊆ E := by
-      intro e he
-      rw [hEdef]
-      exact Finset.mem_biUnion.mpr ⟨σ, hσ, Finset.mem_biUnion.mpr ⟨b, Finset.mem_univ b, he⟩⟩
-    rw [← Finset.sum_subset himg, Finset.sum_image fun β₁ _ β₂ _ h ↦ add_right_cancel h]
-    · conv_lhs => rw [← sum_support_decompose (A) (ev σ b)]
-      refine Finset.sum_congr rfl fun β _ ↦ ?_
-      have h : ∃ β', β' + lam b = β + lam b := ⟨β, rfl⟩
-      have hch : ∀ h' : ∃ β', β' + lam b = β + lam b, Classical.choose h' = β := fun h' ↦
-        add_right_cancel (Classical.choose_spec h')
-      rw [hcomp, dite_eq_left h, hch]
-    · intro e _ he
-      rw [hcomp]
-      split_ifs with h
-      · have hnot : Classical.choose h ∉ (decompose (A) (ev σ b)).support :=
-          fun hmem ↦ he (Finset.mem_image.mpr ⟨_, hmem, Classical.choose_spec h⟩)
-        rw [DFinsupp.notMem_support_iff.mp hnot]
-        rfl
-      · rfl
-  -- the finite set `𝒯` of homogeneous ∂-annihilated syzygies
-  set TP : Finset (↥B → R) := (L ×ˢ E).image fun p ↦ comp (ev p.1) p.2 with hTPdef
-  set eT : (↥B → R) → NatOrdinal := fun w ↦
-    if h : ∃ e, IsHomogeneousTuple A (fun b : ↥B ↦ lam b) w e then Classical.choose h else 0
-    with heTdef
-  have hTPmem : ∀ w ∈ TP, ∃ σ ∈ L, ∃ e, w = comp (ev σ) e := by
-    intro w hw
-    obtain ⟨⟨σ, e⟩, hp, rfl⟩ := Finset.mem_image.mp hw
-    exact ⟨σ, (Finset.mem_product.mp hp).1, e, rfl⟩
-  have hTPhom : ∀ w ∈ TP, IsHomogeneousTuple A (fun b : ↥B ↦ lam b) w (eT w) := by
-    intro w hw
-    obtain ⟨σ, _, e, rfl⟩ := hTPmem w hw
-    have h : ∃ e', IsHomogeneousTuple A (fun b : ↥B ↦ lam b) (comp (ev σ) e) e' :=
-      ⟨e, hcomp_hom _ _⟩
-    have heT : eT (comp (ev σ) e) = Classical.choose h := by
-      simp only [heTdef]
-      rw [dite_eq_left h]
-    rw [heT]
-    exact Classical.choose_spec h
-  have hTPlim : ∀ w ∈ TP, ∀ (b : ↥B) β, w b ∈ A β → w b ≠ 0 →
-      β.constantCoeff = 0 := by
-    intro w hw b β hmem hne
-    obtain ⟨σ, hσ, e, rfl⟩ := hTPmem w hw
-    exact hcomp_lim σ hσ e b β hmem hne
-  have hTPd : ∀ w ∈ TP, ∀ b, Δ (w b) = 0 := by
-    intro w hw b
-    by_cases h0 : w b = 0
-    · rw [h0, map_zero]
-    · have hhom := (isHomogeneousTuple_iff.mp (hTPhom w hw)) b
-      have hex : ∃ β, β + lam b = eT w := by
-        by_contra hn
-        exact h0 (hhom.2 hn)
-      obtain ⟨β, hβ⟩ := hex
-      exact hΔ.eq_zero
-        (hTPlim w hw b β (hhom.1 β hβ) h0) (hhom.1 β hβ)
-  have hTPsyz : ∀ w ∈ TP, ∑ b : ↥B, aeval x (c b) * w b = 0 := by
-    intro w hw
-    obtain ⟨σ, hσ, e, rfl⟩ := hTPmem w hw
-    exact hcomp_syz σ hσ e
+  obtain ⟨TP, eT, hTPhom, hTPlim, hTPd, hTPsyz, hev_mem⟩ :=
+    exists_homogeneous_evaluated_syzygies hx hΔ (fun b : ↥B ↦ lam b) (fun b : ↥B ↦ c b)
+      (fun b ↦ hchom b (hBT b.2)) Λ hΛ L hL ev hev
   -- the hypothesis in the degrees below `δ`: evaluation injective below `δ`
   have hbase : ∀ d < δ, d.constantCoeff = 0 → ∀ u' : ↥B → R,
       IsHomogeneousTuple A (fun b : ↥B ↦ lam b) u' d → ∑ b : ↥B, aeval x (c b) * u' b = 0 →
-      u' ∈ Submodule.span (R) (TP : Set (↥B → R)) := by
+      u' ∈ Submodule.span R (TP : Set (↥B → R)) := by
     intro d hd _ u' hu' hsyz'
-    -- polynomial representatives of the entries
-    have hU : ∀ b : ↥B, ∃ U : MvPolynomial ι K,
-        (∀ β, β + lam b = d → IsWeightedHomogeneous wt U β) ∧
-        ((¬ ∃ β, β + lam b = d) → U = 0) ∧ aeval x U = u' b := by
-      intro b
-      have hhom := (isHomogeneousTuple_iff.mp hu') b
-      by_cases h : ∃ β, β + lam b = d
-      · obtain ⟨β, hβ⟩ := h
-        obtain ⟨U, hUhom, hUu⟩ := hx.exists_aeval_eq hgz β
-          (u' b) (hhom.1 β hβ)
-        refine ⟨U, fun β' hβ' ↦ ?_, fun hn ↦ absurd ⟨β, hβ⟩ hn, hUu⟩
-        rwa [add_right_cancel (hβ'.trans hβ.symm)]
-      · exact ⟨0, fun β hβ ↦ absurd ⟨β, hβ⟩ h, fun _ ↦ rfl, by rw [map_zero, hhom.2 h]⟩
-    choose U hUhom hU0 hUu using hU
-    -- `∑ c_b U_b` is a relation of degree `d < δ`, hence zero
-    have hG : IsWeightedHomogeneous wt (∑ b : ↥B, c b * U b) d := by
-      refine IsWeightedHomogeneous.sum _ _ _ fun b _ ↦ ?_
-      by_cases h : ∃ β, β + lam b = d
-      · obtain ⟨β, hβ⟩ := h
-        have := (hchom b (hBT b.2)).mul (hUhom b β hβ)
-        rwa [add_comm, hβ] at this
-      · rw [hU0 b h, mul_zero]
-        exact isWeightedHomogeneous_zero K wt d
-    have hG0 : aeval x (∑ b : ↥B, c b * U b) = 0 := by
-      rw [map_sum, ← hsyz']
-      exact Finset.sum_congr rfl fun b _ ↦ by rw [map_mul, hUu]
-    have hGz := (injectiveAt_iff _).mp (hinj d hd) _ hG hG0
-    -- so `U` is a polynomial syzygy, a combination of the generators
-    obtain ⟨r, _, hr⟩ := Submodule.mem_span_finset.mp (hLspan U hGz)
-    have hu'eq : u' = ∑ σ ∈ L, aeval x (r σ) • ev σ := by
-      funext b
-      rw [Finset.sum_apply]
-      have hrb := congrFun hr b
-      rw [Finset.sum_apply] at hrb
-      simp only [Pi.smul_apply, smul_eq_mul] at hrb ⊢
-      rw [← hUu b, ← hrb, map_sum]
-      exact Finset.sum_congr rfl fun σ _ ↦ by rw [map_mul, hev]
-    rw [hu'eq]
-    refine Submodule.sum_mem _ fun σ hσ ↦ Submodule.smul_mem _ _ ?_
-    rw [hev_sum σ hσ]
-    exact Submodule.sum_mem _ fun e he ↦ Submodule.subset_span
-      (Finset.mem_image.mpr ⟨(σ, e), Finset.mem_product.mpr ⟨hσ, he⟩, rfl⟩)
+    exact evaluated_syzygy_mem_span_of_injective hx hgz (fun b : ↥B ↦ lam b)
+      (fun b : ↥B ↦ c b) (fun b ↦ hchom b (hBT b.2)) L hLspan TP ev hev hev_mem
+      d (hinj d hd) u' hu' hsyz'
   -- the induction on syzygies
   have huN := mem_span_of_isHomogeneousTuple_of_sum_eq_zero (c := fun b : ↥B ↦ aeval x (c b))
     (lam := fun b : ↥B ↦ lam b) hΔ (fun b ↦ aeval_mem_of_forall_mem hx.mem (hchom b (hBT b.2)))
@@ -526,92 +677,10 @@ theorem injectiveAt_of_forall_lt [CharZero K] (hgz : GradeZeroScalars A)
     δ le_rfl u hu hsyz
   obtain ⟨a₂, ha₂, hu_eq⟩ := exists_eq_sum_smul_of_mem_span hTPhom hu huN
   -- every `u_b` lies in `(P̂_+)² ∩ P_{deg b}`
-  have hudec : ∀ b : ↥B, u b ∈ decomposableAt (A) (wt b) := by
-    intro b
-    have hub := congrFun hu_eq b
-    rw [Finset.sum_apply] at hub
-    simp only [Pi.smul_apply, smul_eq_mul] at hub
-    rw [hub]
-    refine sum_mem fun w hw ↦ ?_
-    by_cases hwb : w b = 0
-    · rw [hwb, mul_zero]
-      exact zero_mem _
-    by_cases ha0 : a₂ w = 0
-    · rw [ha0, zero_mul]
-      exact zero_mem _
-    have hhom := (isHomogeneousTuple_iff.mp (hTPhom w hw)) b
-    obtain ⟨β, hβ⟩ : ∃ β, β + lam b = eT w := by
-      by_contra hn
-      exact hwb (hhom.2 hn)
-    have hwβ : w b ∈ A β := hhom.1 β hβ
-    obtain ⟨ρ, hρ⟩ : ∃ ρ, ρ + eT w = δ := by
-      by_contra hn
-      exact ha0 ((ha₂ w hw).2 hn)
-    have haρ : a₂ w ∈ A ρ := (ha₂ w hw).1 ρ hρ
-    have hρβ : ρ + β = wt b := by
-      apply add_right_cancel (b := lam b)
-      rw [add_assoc, hβ, hρ, add_comm]
-      exact (hlam b (hBT b.2)).symm
-    -- `ρ ≠ 0`: its finite part is that of `δ`, `n ≥ 1`
-    have hβc : β.constantCoeff = 0 := hTPlim w hw b β hwβ hwb
-    have hρ0 : ρ ≠ 0 := by
-      intro h0
-      have h1 := congrArg NatOrdinal.constantCoeff hρ
-      rw [NatOrdinal.constantCoeff_add, ← hβ, NatOrdinal.constantCoeff_add, hβc,
-        hlamc b (hBT b.2), h0, NatOrdinal.constantCoeff_zero] at h1
-      omega
-    -- `β ≠ 0`: a scalar entry would put `c_b` in the ideal of the other `c_{b'}`
-    have hβ0 : β ≠ 0 := by
-      intro h0
-      rw [h0, zero_add] at hβ
-      rw [h0] at hwβ
-      obtain ⟨κ, hκ⟩ := (gradeZeroScalars_iff A).mp hgz (w b) hwβ
-      have hκ0 : κ ≠ 0 := by
-        rintro rfl
-        exact hwb (by rw [hκ, map_zero])
-      have hP : ∀ b' : ↥B, ∃ P : MvPolynomial ι K,
-          (∀ β', β' + lam b' = lam b → IsWeightedHomogeneous wt P β') ∧
-          ((¬ ∃ β', β' + lam b' = lam b) → P = 0) ∧ aeval x P = w b' := by
-        intro b'
-        have hhom' := (isHomogeneousTuple_iff.mp (hTPhom w hw)) b'
-        rw [← hβ] at hhom'
-        by_cases h : ∃ β', β' + lam b' = lam b
-        · obtain ⟨β', hβ'⟩ := h
-          obtain ⟨P, hPhom, hPw⟩ := hx.exists_aeval_eq hgz β'
-            (w b') (hhom'.1 β' hβ')
-          refine ⟨P, fun β'' hβ'' ↦ ?_, fun hn ↦ absurd ⟨β', hβ'⟩ hn, hPw⟩
-          rwa [add_right_cancel (hβ''.trans hβ'.symm)]
-        · exact ⟨0, fun β' hβ' ↦ absurd ⟨β', hβ'⟩ h, fun _ ↦ rfl, by rw [map_zero, hhom'.2 h]⟩
-      choose P hPhom hP0 hPw using hP
-      -- the relation `κ c_b + ∑_{b' ≠ b} c_{b'} P_{b'}` of degree `lam b < δ`
-      have hG'hom : IsWeightedHomogeneous wt
-          (C κ * c b + ∑ b' ∈ Finset.univ.erase b, c b' * P b') (lam b) := by
-        refine ((hchom b (hBT b.2)).C_mul κ).add (IsWeightedHomogeneous.sum _ _ _ fun b' _ ↦ ?_)
-        by_cases h : ∃ β', β' + lam b' = lam b
-        · obtain ⟨β', hβ'⟩ := h
-          have := (hchom b' (hBT b'.2)).mul (hPhom b' β' hβ')
-          rwa [add_comm, hβ'] at this
-        · rw [hP0 b' h, mul_zero]
-          exact isWeightedHomogeneous_zero K wt _
-      have hG'0 : aeval x (C κ * c b + ∑ b' ∈ Finset.univ.erase b, c b' * P b') = 0 := by
-        have hsyzw := hTPsyz w hw
-        rw [← Finset.add_sum_erase _ _ (Finset.mem_univ b), hκ] at hsyzw
-        rw [map_add, map_mul, map_sum, ← algebraMap_eq, AlgHom.commutes, Algebra.commutes,
-          Finset.sum_congr rfl fun b' _ ↦ by rw [map_mul, hPw]]
-        exact hsyzw
-      have hG'z := (injectiveAt_iff _).mp (hinj (lam b) (hlamlt b (hBT b.2))) _ hG'hom hG'0
-      have h2 : C κ * c b = -∑ b' ∈ Finset.univ.erase b, c b' * P b' :=
-        eq_neg_of_add_eq_zero_left hG'z
-      have h3 : c b = C κ⁻¹ * (C κ * c b) := by
-        rw [← mul_assoc, ← C_mul, inv_mul_cancel₀ hκ0, C_1, one_mul]
-      refine hBmin' b b.2 ?_
-      rw [h3, h2]
-      refine Ideal.mul_mem_left _ _ ((Ideal.neg_mem_iff _).mpr (Ideal.sum_mem _ fun b' hb' ↦ ?_))
-      refine Ideal.mul_mem_right _ _ (Ideal.subset_span ⟨b', ?_, rfl⟩)
-      exact Finset.mem_coe.mpr (Finset.mem_erase.mpr
-        ⟨fun h ↦ (Finset.mem_erase.mp hb').1 (Subtype.ext h), b'.2⟩)
-    rw [← hρβ]
-    exact mul_mem_decomposableAt (A) hρ0 hβ0 haρ hwβ
+  have hudec := syzygy_entries_mem_decomposable hx hgz hδ hinj B c lam
+    (fun b ↦ hlam b (hBT b.2)) (fun b ↦ hlamc b (hBT b.2))
+    (fun b ↦ hlamlt b (hBT b.2)) (fun b ↦ hchom b (hBT b.2)) hBmin'
+    TP eT hTPhom hTPlim hTPsyz u a₂ ha₂ hu_eq
   exact not_forall_aeval_cofactors_mem_decomposable hx hδ T B hBT hBne lam hlam
     (fun t ht ↦ (hmemT t ht).2) V hV a'
     (fun b ↦ by rw [ha', ite_eq_left b.2, ite_eq_left rfl]) ha'hom ha'0 W hW

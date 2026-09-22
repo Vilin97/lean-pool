@@ -35,10 +35,10 @@ Then:
 * the degree over `P`, `ν_P`, is the largest degree `γ i` of a basis vector occurring in the
   expansion (`IsBasisOver.degreeOver_le_iff_forall_repr`);
 * the associated graded ring `gr_{ν_P} R` is free over `P`, which sits in degree zero, on the
-  classes `β̄ i` of the `β i` in their degrees
+  classes `[β] i` of the `β i` in their degrees
   (`IsBasisOver.closure_degreeOverSubalgebraHom_mul_layerClass_eq_top` and
   `IsBasisOver.eq_zero_of_sum_degreeOverSubalgebraHom_mul_layerClass_eq_zero`); consequently every
-  additive map `C ⊗ P → gr_{ν_P} R` sending `c i ⊗ p` to `p β̄ i`, for a basis `c` of `C`, is
+  additive map `C ⊗ P → gr_{ν_P} R` sending `c i ⊗ p` to `p [β] i`, for a basis `c` of `C`, is
   bijective (`IsBasisOver.bijective_of_tmul`);
 * an element `a ∈ P` is prime in `R` whenever `gr_{ν_P} R` is identified with a tensor product
   `C ⊗ P` carrying `1 ⊗ a` to the initial form of `a` for `ν_P`, and `C ⊗ P` and `C ⊗ (P ⧸ (a))`
@@ -46,7 +46,7 @@ Then:
   gr_{deg_S} K((ℝ^{≤0}))`.
 
 Freeness rests on one computation: the class of any `t ∈ R` in degree `d` for `ν_P` is the sum
-of the terms `pᵢ β̄ᵢ` of its expansion whose degree `γ i` is exactly `d`.
+of the terms `pᵢ [β]ᵢ` of its expansion whose degree `γ i` is exactly `d`.
 -/
 
 universe u v w x
@@ -391,7 +391,7 @@ theorem beta_mem_degreeOver_filtrationLE (i : ι) : β i ∈ (ν.degreeOver P).f
   ((ν.degreeOver P).mem_filtrationLE_iff _ _).mpr
     (ν.degreeOver_le_of_degree_le P (H.degree_beta i).le)
 
-/-- The class `β̄ i` of `β i` in degree `γ i` of `gr_{ν_P} R`. -/
+/-- The class `[β] i` of `β i` in degree `γ i` of `gr_{ν_P} R`. -/
 def layerClass (i : ι) : (ν.degreeOver P).AssociatedGraded :=
   (ν.degreeOver P).homogeneousMk (γ i) ⟨β i, H.beta_mem_degreeOver_filtrationLE i⟩
 
@@ -401,7 +401,7 @@ theorem layerClass_eq (i : ι) :
       (ν.degreeOver P).homogeneousMk (γ i) ⟨β i, H.beta_mem_degreeOver_filtrationLE i⟩ :=
   (rfl)
 
-/-- The product of the degree-zero class of `p ∈ P` with `β̄ i` is the class of `p β i`. -/
+/-- The product of the degree-zero class of `p ∈ P` with `[β] i` is the class of `p β i`. -/
 theorem degreeOverSubalgebraHom_mul_layerClass (p : P) (i : ι) :
     degreeOverSubalgebraHom ν P p * H.layerClass i =
       (ν.degreeOver P).homogeneousMk (γ i)
@@ -476,7 +476,7 @@ theorem gamma_lt_of_degreeOver_lt {t : R} {d : M} (h : ν.degreeOver P t < d) :
   exact lt_of_le_of_lt ((H.degreeOver_le_iff_forall_repr t m).mp
     ((ν.degreeOver_le_iff P t m).mpr hmem) i hi) hm
 
-/-- The class of `t` in degree `d` for `ν_P` is the sum of the terms `pᵢ β̄ᵢ` of its expansion
+/-- The class of `t` in degree `d` for `ν_P` is the sum of the terms `pᵢ [β]ᵢ` of its expansion
 with `γ i = d`. -/
 theorem homogeneousMk_eq_sum (t : R) (d : M)
     (ht : t ∈ (ν.degreeOver P).filtrationLE d) :
@@ -511,8 +511,8 @@ theorem homogeneousMk_eq_sum (t : R) (d : M)
     exact lt_of_le_of_lt (H.degreeOver_coe_mul_beta_le (f i) i)
       (WithBot.coe_lt_coe.mpr (lt_of_le_of_ne (hγ i i.2) h))
 
-/-- The classes `β̄ i` generate `gr_{ν_P} R` over `P`: every element is a finite sum of products
-`p β̄ᵢ` with `p ∈ P`. -/
+/-- The classes `[β] i` generate `gr_{ν_P} R` over `P`: every element is a finite sum of products
+`p [β]ᵢ` with `p ∈ P`. -/
 theorem closure_degreeOverSubalgebraHom_mul_layerClass_eq_top :
     AddSubmonoid.closure
       (Set.range fun x : P × ι ↦ degreeOverSubalgebraHom ν P x.1 * H.layerClass x.2) = ⊤ := by
@@ -528,7 +528,7 @@ theorem closure_degreeOverSubalgebraHom_mul_layerClass_eq_top :
       exact sum_mem fun i _ ↦ AddSubmonoid.subset_closure ⟨(_, i), rfl⟩
   | add u v hu hv => exact add_mem hu hv
 
-/-- The classes `β̄ i` are independent over `P`: a vanishing finite combination `∑ pₖ β̄ₖ` has
+/-- The classes `[β] i` are independent over `P`: a vanishing finite combination `∑ pₖ [β]ₖ` has
 every coefficient zero. -/
 theorem eq_zero_of_sum_degreeOverSubalgebraHom_mul_layerClass_eq_zero (s : Finset ι) (f : ι → P)
     (h : ∑ k ∈ s, degreeOverSubalgebraHom ν P (f k) * H.layerClass k = 0) :
@@ -575,7 +575,7 @@ variable {L' : Type*} [CommRing L'] [Algebra L' P] {C : Type*} [CommRing C] [Alg
   (hΘ : ∀ (i : ι) (p : P), Θ (c i ⊗ₜ[L'] p) = degreeOverSubalgebraHom ν P p * H.layerClass i)
 include hΘ
 
-/-- A map `C ⊗ P → gr_{ν_P} R` sending `c i ⊗ p` to `p β̄ i` is surjective. -/
+/-- A map `C ⊗ P → gr_{ν_P} R` sending `c i ⊗ p` to `p [β] i` is surjective. -/
 theorem surjective_of_tmul : Function.Surjective Θ := by
   intro z
   have hz : z ∈ AddSubmonoid.closure
@@ -587,7 +587,7 @@ theorem surjective_of_tmul : Function.Surjective Θ := by
   obtain ⟨⟨p, i⟩, rfl⟩ := hy
   exact ⟨c i ⊗ₜ[L'] p, hΘ i p⟩
 
-/-- A map `C ⊗ P → gr_{ν_P} R` sending `c i ⊗ p` to `p β̄ i` is injective. -/
+/-- A map `C ⊗ P → gr_{ν_P} R` sending `c i ⊗ p` to `p [β] i` is injective. -/
 theorem injective_of_tmul : Function.Injective Θ := by
   classical
   rw [injective_iff_map_eq_zero]
@@ -612,8 +612,8 @@ theorem injective_of_tmul : Function.Injective Θ := by
   rw [hexp]
   exact Finset.sum_eq_zero fun k hk ↦ by rw [hcoord k hk, TensorProduct.tmul_zero]
 
-/-- A map `C ⊗ P → gr_{ν_P} R` sending `c i ⊗ p` to `p β̄ i` is bijective: `gr_{ν_P} R` is free
-over `P` on the classes `β̄ i`, and `C ⊗ P` is free over `P` on `c i ⊗ 1`. -/
+/-- A map `C ⊗ P → gr_{ν_P} R` sending `c i ⊗ p` to `p [β] i` is bijective: `gr_{ν_P} R` is free
+over `P` on the classes `[β] i`, and `C ⊗ P` is free over `P` on `c i ⊗ 1`. -/
 theorem bijective_of_tmul : Function.Bijective Θ :=
   ⟨H.injective_of_tmul c Θ hΘ, H.surjective_of_tmul c Θ hΘ⟩
 

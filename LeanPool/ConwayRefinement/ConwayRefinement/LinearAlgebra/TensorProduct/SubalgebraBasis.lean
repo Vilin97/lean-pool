@@ -12,10 +12,10 @@ public import Mathlib.LinearAlgebra.Basis.Basic
 /-!
 # Base change of a basis over a subalgebra
 
-Let `Ĝ` be a commutative `K`-algebra, `S ⊆ Ĝ` a `K`-subalgebra, and `B` an `S`-basis of `Ĝ`.
-For any commutative `K`-algebra `L`, the elements `B i ⊗ 1` are a basis of `Ĝ ⊗[K] L` over the
+Let `G` be a commutative `K`-algebra, `S ⊆ G` a `K`-subalgebra, and `B` an `S`-basis of `G`.
+For any commutative `K`-algebra `L`, the elements `B i ⊗ 1` are a basis of `G ⊗[K] L` over the
 image of `S ⊗[K] L`: every element is uniquely a finite sum `∑ j(xᵢ) (B i ⊗ 1)` with
-`xᵢ ∈ S ⊗[K] L`, where `j : S ⊗[K] L → Ĝ ⊗[K] L` is induced by the inclusion.
+`xᵢ ∈ S ⊗[K] L`, where `j : S ⊗[K] L → G ⊗[K] L` is induced by the inclusion.
 -/
 
 universe u v w x
@@ -30,7 +30,7 @@ variable {K : Type u} {G : Type v} {L : Type w} {ι : Type x}
 variable [CommRing K] [CommRing G] [Algebra K G] [CommRing L] [Algebra K L]
 variable (S : Subalgebra K G) (B : Module.Basis ι S G)
 
-/-- The inclusion `S ⊗[K] L → Ĝ ⊗[K] L`. -/
+/-- The inclusion `S ⊗[K] L → G ⊗[K] L`. -/
 def tensorInclusion : S ⊗[K] L →ₐ[K] G ⊗[K] L :=
   Algebra.TensorProduct.map S.val (AlgHom.id K L)
 
@@ -51,7 +51,7 @@ theorem tensorInclusion_mul (x y : S ⊗[K] L) :
 
 variable [DecidableEq ι]
 
-/-- The coordinate equivalence `Ĝ ⊗[K] L ≃ ι →₀ (S ⊗[K] L)` induced by the basis. -/
+/-- The coordinate equivalence `G ⊗[K] L ≃ ι →₀ (S ⊗[K] L)` induced by the basis. -/
 def tensorBasisRepr : G ⊗[K] L ≃ₗ[K] ι →₀ (S ⊗[K] L) :=
   (LinearEquiv.rTensor L (B.repr.restrictScalars K)) ≪≫ₗ
     TensorProduct.finsuppLeft K K S L ι
@@ -97,7 +97,7 @@ theorem eq_zero_of_sum_tensorInclusion_mul_eq_zero (s : Finset ι) (x : ι → S
   exact h2
 
 omit [DecidableEq ι] in
-/-- Spanning: every element of `Ĝ ⊗[K] L` is a combination of the `B i ⊗ 1` over
+/-- Spanning: every element of `G ⊗[K] L` is a combination of the `B i ⊗ 1` over
 `S ⊗[K] L`. -/
 theorem exists_eq_sum_tensorInclusion_mul (g : G ⊗[K] L) :
     ∃ (s : Finset ι) (x : ι → S ⊗[K] L),

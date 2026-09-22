@@ -267,7 +267,7 @@ theorem exists_closedClassRestrict_eq_zero_of_finset_mem_supp
 at one sufficiently late class from any cofinal family. -/
 theorem exists_closedClassRestrict_fourFactor_eq
     [UniformSpace G] [IsUniformAddGroup G] [OrderTopology G] [Nontrivial G]
-    [CompleteSpace G] [NoMinOrder G] [NoMaxOrder (FiniteArchimedeanClass G)]
+    [CompleteSpace G] [NoMaxOrder (FiniteArchimedeanClass G)]
     [NoZeroDivisors R] [CharZero R]
     {a b c d e f g h : Nonpositive G R}
     (ha : Ideal.Quotient.mk (cantorBendixsonValuation (G := G) (R := R)).supp a =
@@ -304,7 +304,7 @@ theorem exists_closedClassRestrict_fourFactor_eq
 late closed-class restriction. -/
 theorem exists_closedClassRestrict_refinement
     [UniformSpace G] [IsUniformAddGroup G] [OrderTopology G] [Nontrivial G]
-    [CompleteSpace G] [NoMinOrder G] [NoMaxOrder (FiniteArchimedeanClass G)]
+    [CompleteSpace G] [NoMaxOrder (FiniteArchimedeanClass G)]
     [NoZeroDivisors R] [CharZero R]
     (hrefine : HasFourFactorRefinement
       (Nonpositive G R ⧸ (cantorBendixsonValuation (G := G) (R := R)).supp))

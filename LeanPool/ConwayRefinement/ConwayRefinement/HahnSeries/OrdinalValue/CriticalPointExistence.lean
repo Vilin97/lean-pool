@@ -162,7 +162,7 @@ private theorem ordinalValue_le_of_ordinalValueDegree_le
   rw [← WithBot.coe_le_coe]
   exact haDegree.symm.trans_le (h.trans_eq hdDegree)
 
-private theorem exists_maximal_translatedTruncation [CharZero K]
+private theorem exists_maximal_translatedTruncation
     {b : Series K} (hb : b ≠ 0) :
     ∃ x : ℝ, x ≤ 0 ∧
       ∀ y : ℝ, y ≤ 0 →
@@ -216,7 +216,7 @@ private theorem exists_maximal_translatedTruncation [CharZero K]
 
 /-- Berarducci, Lemma 10.1 and Definition 10.2: every nonzero nonpositive real Hahn series has
 a critical point. -/
-theorem exists_isCriticalPoint [CharZero K] {b : Series K} (hb : b ≠ 0) :
+theorem exists_isCriticalPoint {b : Series K} (hb : b ≠ 0) :
     ∃ x : ℝ, IsCriticalPoint b x := by
   obtain ⟨x, hx0, hxMax⟩ := exists_maximal_translatedTruncation hb
   let M : Set ℝ := {y | y ≤ 0 ∧

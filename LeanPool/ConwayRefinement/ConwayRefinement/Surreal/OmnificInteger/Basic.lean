@@ -110,7 +110,7 @@ private theorem cutGame_add_cutGame_equiv {x y : IGame.{u}}
   abel_nf
   congr <;> simp
 
-private theorem IsOmnificGame.add {x y : IGame.{u}} [IGame.Numeric x] [IGame.Numeric y]
+private theorem IsOmnificGame.add {x y : IGame.{u}}
     (hx : IsOmnificGame x) (hy : IsOmnificGame y) : IsOmnificGame (x + y) := by
   exact (IGame.add_congr hx hy).trans (cutGame_add_cutGame_equiv hx hy)
 

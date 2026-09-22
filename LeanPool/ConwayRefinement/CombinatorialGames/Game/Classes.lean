@@ -55,7 +55,8 @@ namespace IGame
 
 /-- A game `x` is dicotic if both players can move from every nonempty subposition of `x`. -/
 @[mk_iff dicotic_def']
-class inductive Dicotic : IGame → Prop where
+class
+inductive Dicotic : IGame → Prop where
   | mk {x : IGame} : (xᴸ = ∅ ↔ xᴿ = ∅) → (∀ p, ∀ y ∈ x.moves p, Dicotic y) → Dicotic x
 
 theorem dicotic_def {x : IGame} : Dicotic x ↔ (xᴸ = ∅ ↔ xᴿ = ∅) ∧ ∀ p, ∀ l ∈ x.moves p, Dicotic l :=
@@ -113,7 +114,8 @@ as we don't require `x = -x`. Despite this, the Sprague-Grundy theorem still hol
 
 In such a game, both players have the same payoffs at any subposition. -/
 @[mk_iff impartial_def']
-class inductive Impartial : IGame → Prop where
+class
+inductive Impartial : IGame → Prop where
   | mk {x : IGame} : -x ≈ x → (∀ p, ∀ y ∈ x.moves p, Impartial y) → Impartial x
 
 theorem impartial_def {x : IGame} : x.Impartial ↔ -x ≈ x ∧ ∀ p, ∀ y ∈ x.moves p, Impartial y :=
@@ -256,7 +258,8 @@ elements of these sets are also numeric.
 
 The `Surreal` numbers are built as the quotient of numeric games under equivalence. -/
 @[mk_iff numeric_def']
-class inductive Numeric : IGame → Prop where
+class
+inductive Numeric : IGame → Prop where
   | mk {x : IGame} : (∀ y ∈ xᴸ, ∀ z ∈ xᴿ, y < z) → (∀ p, ∀ y ∈ x.moves p, Numeric y) → Numeric x
 
 theorem numeric_def {x : IGame} : Numeric x ↔
@@ -406,7 +409,8 @@ end Numeric
 /-- A short game is one with finitely many subpositions. That is, the left and right sets are
 finite, and all of the games in them are short as well. -/
 @[mk_iff short_def']
-class inductive Short : IGame → Prop where
+class
+inductive Short : IGame → Prop where
   | mk' (x : IGame) : (∀ p, (x.moves p).Finite) → (∀ p, ∀ y ∈ x.moves p, Short y) → Short x
 
 theorem short_def {x : IGame} : Short x ↔ ∀ p, (x.moves p).Finite ∧ ∀ y ∈ x.moves p, Short y := by

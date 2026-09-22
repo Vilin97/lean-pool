@@ -69,7 +69,7 @@ theorem extendedBinomial_negativeOne_coeff :
         extendedBinomial negativeOne = 1 := by
   rw [extendedBinomial,
     Berarducci.principalSubringFractionScalarExtension_coeff]
-  simp [sourceBinomial, negativeOne,  
+  simp [sourceBinomial, negativeOne,
     HahnSeries.Nonpositive.finiteSupportCoefficients_apply]
 
 /-- The constant term survives coefficient extension. -/

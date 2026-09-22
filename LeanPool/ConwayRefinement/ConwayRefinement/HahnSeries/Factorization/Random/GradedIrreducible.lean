@@ -232,7 +232,7 @@ theorem rvProjection_finiteSupportGradedEmbedding
   exact congrArg _ (congrArg _ (Subtype.ext (coe_finiteSupportFiltrationRepresentative p)))
 
 /-- The graded projection kills the image of a strictly negative monomial. -/
-theorem rvProjection_finiteSupportMonomial_of_neg [CharZero K]
+theorem rvProjection_finiteSupportMonomial_of_neg
     {g : exponentMonoid ℝ} (hg : (g : ℝ) < 0) :
     rvProjection K (finiteSupportGradedEmbedding K (finiteSupportMonomial g)) = 0 := by
   rw [rvProjection_finiteSupportGradedEmbedding]

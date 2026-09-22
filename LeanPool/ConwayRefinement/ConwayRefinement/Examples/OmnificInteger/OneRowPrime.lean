@@ -56,7 +56,7 @@ private theorem withConstant_constantCoeff_mem :
   rw [withConstant_constantCoeff]
   exact Surreal.realIntegerSubring.one_mem
 
-theorem signedOneRow_order_neg :
+private theorem signedOneRow_order_neg :
     (mapRealDomainToSurreal (withConstant (K := ℝ)) : ℝ⟦Surreal.{0}⟧).order < 0 := by
   have hcoeff : (mapRealDomainToSurreal (withConstant (K := ℝ)) : ℝ⟦Surreal.{0}⟧).coeff
       ((Berarducci.OneRow.exponent 0 : ℝ) : Surreal) ≠ 0 := by
@@ -67,7 +67,7 @@ theorem signedOneRow_order_neg :
     rw [Berarducci.OneRow.exponent_apply]
     norm_num)
 
-theorem signedOneRow_order_ne_zero :
+private theorem signedOneRow_order_ne_zero :
     (mapRealDomainToSurreal (withConstant (K := ℝ)) : ℝ⟦Surreal.{0}⟧).order ≠ 0 :=
   signedOneRow_order_neg.ne
 

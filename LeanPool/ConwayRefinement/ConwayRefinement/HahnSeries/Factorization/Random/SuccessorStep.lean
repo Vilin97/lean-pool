@@ -185,6 +185,143 @@ private theorem mkQ_mem_span_singleton_of_mem_sup {V : Type*} [AddCommGroup V] [
   rw [map_add, map_smul, hz0, add_zero]
   exact Submodule.mem_span_singleton.mpr ⟨c, rfl⟩
 
+/-- Uniform truncation, Leibniz and decomposable-span estimates near zero. -/
+private theorem eventually_successor_decomposition_estimates
+    {ι : Type*} {n m : ℕ} (β γ : Fin m → NatOrdinal) (u w : Fin m → Series K)
+    (b : ι → Series K) (T : Finset ι) (r : Series K)
+    (hk : ∀ k, 0 < β k ∧ 0 < γ k ∧ β k + γ k = (n : NatOrdinal) + 1 ∧
+      ordinalValue (u k) < ω^ (β k + 1) ∧ ordinalValue (w k) < ω^ (γ k + 1))
+    (hβc : ∀ k, 0 < (β k).constantCoeff) (hγc : ∀ k, 0 < (γ k).constantCoeff)
+    (hβγ : ∀ k, (β k).removeNat 1 + γ k = n)
+    (hγβ : ∀ k, (γ k).removeNat 1 + β k = n)
+    (huw : ∀ k, ordinalValue (u k * w k) < ω^ ((n : NatOrdinal) + 1 + 1))
+    (hrlt : ordinalValue r < ω^ ((n : NatOrdinal) + 1))
+    (hcut : ∀ i, ordinalValue (b i) < ω^ ((n : NatOrdinal) + 1 + 1)) : ∀ᶠ γ' in 𝓝[<] (0 : ℝ),
+      (∀ k, ordinalValue (translatedTruncation ((u k * w k : Series K) : K⟦ℝ⟧) γ' -
+          translatedTruncation (u k : K⟦ℝ⟧) γ' * w k - u k * translatedTruncation (w k : K⟦ℝ⟧) γ')
+          < ω^ (n : NatOrdinal)) ∧
+      (∀ k, gradeClass (n : NatOrdinal) (translatedTruncation (u k : K⟦ℝ⟧) γ' * w k) ∈
+          (K ∙ gradeClass (n : NatOrdinal) (w k)) ⊔ decomposableSpan K (n : NatOrdinal)) ∧
+      (∀ k, gradeClass (n : NatOrdinal) (translatedTruncation (w k : K⟦ℝ⟧) γ' * u k) ∈
+          (K ∙ gradeClass (n : NatOrdinal) (u k)) ⊔ decomposableSpan K (n : NatOrdinal)) ∧
+      (∀ k, ordinalValue (translatedTruncation (u k : K⟦ℝ⟧) γ') < ω^ (β k)) ∧
+      (∀ k, ordinalValue (translatedTruncation (w k : K⟦ℝ⟧) γ') < ω^ (γ k)) ∧
+      (∀ k, ordinalValue (translatedTruncation ((u k * w k : Series K) : K⟦ℝ⟧) γ') <
+        ω^ ((n : NatOrdinal) + 1)) ∧
+      ordinalValue (translatedTruncation (r : K⟦ℝ⟧) γ') < ω^ (n : NatOrdinal) ∧
+      (∀ i ∈ T, ordinalValue (translatedTruncation (b i : K⟦ℝ⟧) γ') <
+        ω^ ((n : NatOrdinal) + 1)) := by
+  classical
+  refine Filter.Eventually.and (Filter.eventually_all.mpr fun k ↦ ?_)
+    (Filter.Eventually.and (Filter.eventually_all.mpr fun k ↦ ?_)
+    (Filter.Eventually.and (Filter.eventually_all.mpr fun k ↦ ?_)
+    (Filter.Eventually.and (Filter.eventually_all.mpr fun k ↦ ?_)
+    (Filter.Eventually.and (Filter.eventually_all.mpr fun k ↦ ?_)
+    (Filter.Eventually.and (Filter.eventually_all.mpr fun k ↦ ?_)
+    (Filter.Eventually.and ?_ ((Filter.eventually_all_finset T).mpr fun i _ ↦ ?_)))))))
+  · have h := eventually_ordinalValue_leibnizRemainder_lt (hβc k) (u k) (w k)
+      (hk k).2.2.2.1 (hk k).2.2.2.2
+    rwa [hβγ k] at h
+  · exact eventually_gradeClass_translatedTruncation_mul_mem (hβc k) (hk k).2.1 (hβγ k)
+      (hk k).2.2.2.1 (hk k).2.2.2.2
+  · exact eventually_gradeClass_translatedTruncation_mul_mem (hγc k) (hk k).1 (hγβ k)
+      (hk k).2.2.2.2 (hk k).2.2.2.1
+  · exact eventually_ordinalValue_translatedTruncation_lt_wpow_of_ordinalValue_lt_wpow_add_one
+      (β k) (u k) (hk k).2.2.2.1
+  · exact eventually_ordinalValue_translatedTruncation_lt_wpow_of_ordinalValue_lt_wpow_add_one
+      (γ k) (w k) (hk k).2.2.2.2
+  · exact eventually_ordinalValue_translatedTruncation_lt_wpow_of_ordinalValue_lt_wpow_add_one
+      ((n : NatOrdinal) + 1) (u k * w k) (huw k)
+  · exact eventually_ordinalValue_translatedTruncation_lt_wpow_of_ordinalValue_lt_wpow_add_one
+      (n : NatOrdinal) r hrlt
+  · exact eventually_ordinalValue_translatedTruncation_lt_wpow_of_ordinalValue_lt_wpow_add_one
+      ((n : NatOrdinal) + 1) (b i) (hcut i)
+
+/-- The grade of a translated polynomial sum is the sum of its Leibniz contributions. -/
+private theorem gradeClass_translatedTruncation_sum_products
+    {n m : ℕ} (μ : Fin m → K) (u w : Fin m → Series K) (B r : Series K) (γ' : ℝ)
+    (hBPr : B = (∑ k, (HahnSeries.Nonpositive.C : K →+* Series K) (μ k) *
+      (u k * w k)) + r)
+    (hE1 : ∀ k, ordinalValue (translatedTruncation ((u k * w k : Series K) : K⟦ℝ⟧) γ' -
+      translatedTruncation (u k : K⟦ℝ⟧) γ' * w k -
+        u k * translatedTruncation (w k : K⟦ℝ⟧) γ') < ω^ (n : NatOrdinal))
+    (hYcut : ∀ k, ordinalValue (translatedTruncation (u k : K⟦ℝ⟧) γ' * w k) <
+      ω^ ((n : NatOrdinal) + 1))
+    (hZcut : ∀ k, ordinalValue (translatedTruncation (w k : K⟦ℝ⟧) γ' * u k) <
+      ω^ ((n : NatOrdinal) + 1))
+    (hE4 : ∀ k, ordinalValue (translatedTruncation ((u k * w k : Series K) : K⟦ℝ⟧) γ') <
+      ω^ ((n : NatOrdinal) + 1))
+    (hE5 : ordinalValue (translatedTruncation (r : K⟦ℝ⟧) γ') < ω^ (n : NatOrdinal)) :
+    gradeClass (n : NatOrdinal) (translatedTruncation (B : K⟦ℝ⟧) γ') =
+      ∑ k, μ k • (gradeClass (n : NatOrdinal) (translatedTruncation (u k : K⟦ℝ⟧) γ' * w k) +
+        gradeClass (n : NatOrdinal) (translatedTruncation (w k : K⟦ℝ⟧) γ' * u k)) := by
+  classical
+  let P : Series K := ∑ k, (HahnSeries.Nonpositive.C : K →+* Series K) (μ k) * (u k * w k)
+  have hCtrunc : ∀ k ∈ (Finset.univ : Finset (Fin m)),
+      ordinalValue ((HahnSeries.Nonpositive.C : K →+* Series K) (μ k) *
+        translatedTruncation ((u k * w k : Series K) : K⟦ℝ⟧) γ') < ω^ ((n : NatOrdinal) + 1) :=
+      fun k _ ↦ by
+    simpa only [zero_add] using
+      ordinalValue_mul_lt_wpow_add_one (ordinalValue_C_lt_wpow_one (μ k)) (hE4 k)
+  have hPtrunc : ordinalValue (translatedTruncation (P : K⟦ℝ⟧) γ') < ω^ ((n : NatOrdinal) + 1) := by
+    dsimp only [P]
+    rw [translatedTruncation_sum_C_mul]
+    exact ordinalValue_sum_lt_wpow_add_one _ _ hCtrunc
+  have hrtrunc : ordinalValue (translatedTruncation (r : K⟦ℝ⟧) γ') < ω^ ((n : NatOrdinal) + 1) :=
+    hE5.trans (NatOrdinal.wpow_lt_wpow.mpr (lt_add_one _))
+  rw [hBPr, Subring.coe_add, translatedTruncation_add, gradeClass_add hPtrunc hrtrunc,
+    gradeClass_eq_zero_of_lt hE5, add_zero, translatedTruncation_sum_C_mul,
+    gradeClass_sum _ _ hCtrunc]
+  refine Finset.sum_congr rfl fun k _ ↦ ?_
+  rw [gradeClass_C_mul (μ k) (hE4 k)]
+  congr 1
+  rw [← gradeClass_add (hYcut k) (hZcut k)]
+  apply gradeClass_eq_of_sub_lt (hE4 k)
+    ((ordinalValue_add_le_max _ _).trans_lt (max_lt (hYcut k) (hZcut k)))
+  rw [mul_comm (translatedTruncation (w k : K⟦ℝ⟧) γ') (u k), ← sub_sub]
+  exact hE1 k
+
+open Classical in
+/-- A truncation relation descends to the terms of exact degree after lower-degree terms vanish. -/
+private theorem rvJ_sum_filter_of_truncation_relation
+    {ι : Type*} {n : ℕ} (T : Finset ι) (b : ι → Series K) (g : ι → K) (B : Series K)
+    (Γ : Finset ℝ) (sΓ : Finset Γ) (δ : Γ → K)
+    (hBtrunc : ∀ γ' ∈ Γ,
+      gradeClass (n : NatOrdinal) (translatedTruncation (B : K⟦ℝ⟧) γ') =
+        ∑ i ∈ T, g i • gradeClass (n : NatOrdinal) (translatedTruncation (b i : K⟦ℝ⟧) γ'))
+    (hcutT : ∀ γ' ∈ sΓ, ∀ i ∈ T,
+      ordinalValue (translatedTruncation (b i : K⟦ℝ⟧) γ') < ω^ ((n : NatOrdinal) + 1))
+    (hδmem : ∑ γ' ∈ sΓ, δ γ' • gradeClass (n : NatOrdinal)
+      (translatedTruncation (B : K⟦ℝ⟧) γ') ∈ decomposableSpan K (n : NatOrdinal)) :
+    ∑ p ∈ (sΓ ×ˢ T).filter (fun p : Γ × ι ↦
+      ordinalValue (translatedTruncation (b p.2 : K⟦ℝ⟧) p.1) = ω^ (n : NatOrdinal)),
+      (δ p.1 * g p.2) • rvJ (translatedTruncation (b p.2 : K⟦ℝ⟧) p.1) ∈
+        decomposableSpan K (n : NatOrdinal) := by
+  classical
+  have hexpand : ∑ γ' ∈ sΓ, δ γ' • gradeClass (n : NatOrdinal)
+      (translatedTruncation (B : K⟦ℝ⟧) γ') =
+      ∑ p ∈ sΓ ×ˢ T, (δ p.1 * g p.2) •
+        gradeClass (n : NatOrdinal) (translatedTruncation (b p.2 : K⟦ℝ⟧) p.1) := by
+    rw [Finset.sum_product]
+    refine Finset.sum_congr rfl fun γ' _ ↦ ?_
+    rw [hBtrunc γ' γ'.2, Finset.smul_sum]
+    exact Finset.sum_congr rfl fun i _ ↦ by rw [smul_smul]
+  rw [hexpand, ← Finset.sum_filter_add_sum_filter_not (sΓ ×ˢ T) (fun p : Γ × ι ↦
+    ordinalValue (translatedTruncation (b p.2 : K⟦ℝ⟧) p.1) = ω^ (n : NatOrdinal))] at hδmem
+  have hzero : ∑ p ∈ (sΓ ×ˢ T).filter (fun p : Γ × ι ↦
+      ¬ ordinalValue (translatedTruncation (b p.2 : K⟦ℝ⟧) p.1) = ω^ (n : NatOrdinal)),
+      (δ p.1 * g p.2) • gradeClass (n : NatOrdinal) (translatedTruncation (b p.2 : K⟦ℝ⟧) p.1)
+        = 0 := by
+    refine Finset.sum_eq_zero fun p hp ↦ ?_
+    obtain ⟨hp, hne⟩ := Finset.mem_filter.mp hp
+    obtain ⟨hγ', hi⟩ := Finset.mem_product.mp hp
+    rcases ordinalValue_eq_or_lt_of_lt_wpow_add_one (hcutT p.1 hγ' p.2 hi) with heq | hlt
+    · exact absurd heq hne
+    · rw [gradeClass_eq_zero_of_lt hlt, smul_zero]
+  rw [hzero, add_zero] at hδmem
+  convert hδmem using 2 with p hp
+  rw [rvJ_eq_gradeClass (Finset.mem_filter.mp hp).2]
+
 /-- FLLM24, Proposition 4.4, at finite degrees: `(*)_n` implies `(*)_{n+1}` for `n ≥ 1`. -/
 theorem independentModuloDecomposable_succ {n : ℕ} (hn : 1 ≤ n)
     (hstar : IndependentModuloDecomposable K n) :
@@ -275,43 +412,8 @@ theorem independentModuloDecomposable_succ {n : ℕ} (hn : 1 ≤ n)
       ← hdecomp, sub_self]
   have hBPr : B = P + r := by rw [hr]; abel
   -- The eventual statements near zero.
-  have hev : ∀ᶠ γ' in 𝓝[<] (0 : ℝ),
-      (∀ k, ordinalValue (translatedTruncation ((u k * w k : Series K) : K⟦ℝ⟧) γ' -
-          translatedTruncation (u k : K⟦ℝ⟧) γ' * w k - u k * translatedTruncation (w k : K⟦ℝ⟧) γ')
-          < ω^ (n : NatOrdinal)) ∧
-      (∀ k, gradeClass (n : NatOrdinal) (translatedTruncation (u k : K⟦ℝ⟧) γ' * w k) ∈
-          (K ∙ gradeClass (n : NatOrdinal) (w k)) ⊔ decomposableSpan K (n : NatOrdinal)) ∧
-      (∀ k, gradeClass (n : NatOrdinal) (translatedTruncation (w k : K⟦ℝ⟧) γ' * u k) ∈
-          (K ∙ gradeClass (n : NatOrdinal) (u k)) ⊔ decomposableSpan K (n : NatOrdinal)) ∧
-      (∀ k, ordinalValue (translatedTruncation (u k : K⟦ℝ⟧) γ') < ω^ (β k)) ∧
-      (∀ k, ordinalValue (translatedTruncation (w k : K⟦ℝ⟧) γ') < ω^ (γ k)) ∧
-      (∀ k, ordinalValue (translatedTruncation ((u k * w k : Series K) : K⟦ℝ⟧) γ') < ω^ N) ∧
-      ordinalValue (translatedTruncation (r : K⟦ℝ⟧) γ') < ω^ (n : NatOrdinal) ∧
-      (∀ i ∈ T, ordinalValue (translatedTruncation (b i : K⟦ℝ⟧) γ') < ω^ N) := by
-    refine Filter.Eventually.and (Filter.eventually_all.mpr fun k ↦ ?_)
-      (Filter.Eventually.and (Filter.eventually_all.mpr fun k ↦ ?_)
-      (Filter.Eventually.and (Filter.eventually_all.mpr fun k ↦ ?_)
-      (Filter.Eventually.and (Filter.eventually_all.mpr fun k ↦ ?_)
-      (Filter.Eventually.and (Filter.eventually_all.mpr fun k ↦ ?_)
-      (Filter.Eventually.and (Filter.eventually_all.mpr fun k ↦ ?_)
-      (Filter.Eventually.and ?_ ((Filter.eventually_all_finset T).mpr fun i _ ↦ ?_)))))))
-    · have h := eventually_ordinalValue_leibnizRemainder_lt (hβc k) (u k) (w k)
-        (hk k).2.2.2.1 (hk k).2.2.2.2
-      rwa [hβγ k] at h
-    · exact eventually_gradeClass_translatedTruncation_mul_mem (hβc k) (hk k).2.1 (hβγ k)
-        (hk k).2.2.2.1 (hk k).2.2.2.2
-    · exact eventually_gradeClass_translatedTruncation_mul_mem (hγc k) (hk k).1 (hγβ k)
-        (hk k).2.2.2.2 (hk k).2.2.2.1
-    · exact eventually_ordinalValue_translatedTruncation_lt_wpow_of_ordinalValue_lt_wpow_add_one
-        (β k) (u k) (hk k).2.2.2.1
-    · exact eventually_ordinalValue_translatedTruncation_lt_wpow_of_ordinalValue_lt_wpow_add_one
-        (γ k) (w k) (hk k).2.2.2.2
-    · exact eventually_ordinalValue_translatedTruncation_lt_wpow_of_ordinalValue_lt_wpow_add_one
-        N (u k * w k) (huw k)
-    · exact eventually_ordinalValue_translatedTruncation_lt_wpow_of_ordinalValue_lt_wpow_add_one
-        (n : NatOrdinal) r hrlt
-    · exact eventually_ordinalValue_translatedTruncation_lt_wpow_of_ordinalValue_lt_wpow_add_one
-        N (b i) (hcut i)
+  have hev := eventually_successor_decomposition_estimates β γ u w b T r hk
+    hβc hγc hβγ hγβ huw hrlt hcut
   obtain ⟨η, hη, hη'⟩ := eventually_nhdsLT_iff_exists.mp hev
   obtain ⟨δQ, hδQ, hQ2⟩ := hQ.truncations hn
   -- Residual points of `B` above both thresholds.
@@ -356,27 +458,8 @@ theorem independentModuloDecomposable_succ {n : ℕ} (hn : 1 ≤ n)
         exact hE9 k
       have h := ordinalValue_mul_lt_wpow_add_one h1 (hk k).2.2.2.1
       rwa [hγβ k] at h
-    have hCtrunc : ∀ k ∈ (Finset.univ : Finset (Fin m)),
-        ordinalValue ((HahnSeries.Nonpositive.C : K →+* Series K) (μ k) *
-          translatedTruncation ((u k * w k : Series K) : K⟦ℝ⟧) γ') < ω^ N := fun k _ ↦ by
-      simpa only [zero_add] using
-        ordinalValue_mul_lt_wpow_add_one (ordinalValue_C_lt_wpow_one (μ k)) (hE4 k)
-    have hPtrunc : ordinalValue (translatedTruncation (P : K⟦ℝ⟧) γ') < ω^ N := by
-      rw [hP, translatedTruncation_sum_C_mul]
-      exact ordinalValue_sum_lt_wpow_add_one _ _ hCtrunc
-    have hrtrunc : ordinalValue (translatedTruncation (r : K⟦ℝ⟧) γ') < ω^ N :=
-      hE5.trans (NatOrdinal.wpow_lt_wpow.mpr (lt_add_one _))
-    rw [hBPr, Subring.coe_add, translatedTruncation_add, gradeClass_add hPtrunc hrtrunc,
-      gradeClass_eq_zero_of_lt hE5, add_zero, hP, translatedTruncation_sum_C_mul,
-      gradeClass_sum _ _ hCtrunc]
-    refine Finset.sum_congr rfl fun k _ ↦ ?_
-    rw [gradeClass_C_mul (μ k) (hE4 k)]
-    congr 1
-    rw [← gradeClass_add (hYcut k) (hZcut k)]
-    apply gradeClass_eq_of_sub_lt (hE4 k)
-      ((ordinalValue_add_le_max _ _).trans_lt (max_lt (hYcut k) (hZcut k)))
-    rw [mul_comm (translatedTruncation (w k : K⟦ℝ⟧) γ') (u k), ← sub_sub]
-    exact hE1 k
+    exact gradeClass_translatedTruncation_sum_products μ u w B r γ' hBPr
+      hE1 hYcut hZcut hE4 hE5
   -- The classes of the `B^{|γ'}`, modulo `D_n`, lie in the span of `2m` vectors.
   let gens : Fin m ⊕ Fin m → PrincipalSubring K ⧸ decomposableSpan K (n : NatOrdinal) :=
     Sum.elim (fun k ↦ π (gradeClass (n : NatOrdinal) (u k)))
@@ -414,31 +497,7 @@ theorem independentModuloDecomposable_succ {n : ℕ} (hn : 1 ≤ n)
     exact (hη' γ' ((le_max_left η δQ).trans_lt hηγ) hγ0).2.2.2.2.2.2.2 i hi
   set S₁ := (sΓ ×ˢ T).filter (fun p : Γ × ι ↦
     ordinalValue (translatedTruncation (b p.2 : K⟦ℝ⟧) p.1) = ω^ (n : NatOrdinal)) with hS₁
-  have hrelS₁ : ∑ p ∈ S₁, (δ p.1 * g p.2) • rvJ (translatedTruncation (b p.2 : K⟦ℝ⟧) p.1) ∈
-      decomposableSpan K (n : NatOrdinal) := by
-    have hexpand : ∑ γ' ∈ sΓ, δ γ' • gradeClass (n : NatOrdinal)
-        (translatedTruncation (B : K⟦ℝ⟧) γ') =
-        ∑ p ∈ sΓ ×ˢ T, (δ p.1 * g p.2) •
-          gradeClass (n : NatOrdinal) (translatedTruncation (b p.2 : K⟦ℝ⟧) p.1) := by
-      rw [Finset.sum_product]
-      refine Finset.sum_congr rfl fun γ' _ ↦ ?_
-      rw [hBtrunc γ' γ'.2, Finset.smul_sum]
-      exact Finset.sum_congr rfl fun i _ ↦ by rw [smul_smul]
-    rw [hexpand, ← Finset.sum_filter_add_sum_filter_not (sΓ ×ˢ T) (fun p : Γ × ι ↦
-      ordinalValue (translatedTruncation (b p.2 : K⟦ℝ⟧) p.1) = ω^ (n : NatOrdinal))] at hδmem
-    have hzero : ∑ p ∈ (sΓ ×ˢ T).filter (fun p : Γ × ι ↦
-        ¬ ordinalValue (translatedTruncation (b p.2 : K⟦ℝ⟧) p.1) = ω^ (n : NatOrdinal)),
-        (δ p.1 * g p.2) • gradeClass (n : NatOrdinal) (translatedTruncation (b p.2 : K⟦ℝ⟧) p.1)
-          = 0 := by
-      refine Finset.sum_eq_zero fun p hp ↦ ?_
-      obtain ⟨hp, hne⟩ := Finset.mem_filter.mp hp
-      obtain ⟨hγ', hi⟩ := Finset.mem_product.mp hp
-      rcases ordinalValue_eq_or_lt_of_lt_wpow_add_one (hcutT p.1 hγ' p.2 hi) with heq | hlt
-      · exact absurd heq hne
-      · rw [gradeClass_eq_zero_of_lt hlt, smul_zero]
-    rw [hzero, add_zero] at hδmem
-    convert hδmem using 2 with p hp
-    rw [rvJ_eq_gradeClass (Finset.mem_filter.mp hp).2]
+  have hrelS₁ := rvJ_sum_filter_of_truncation_relation T b g B Γ sΓ δ hBtrunc hcutT hδmem
   -- Axiom 2 makes the surviving truncations hereditarily `rv_J`-independent at degree `n`.
   have hQS₁ : HereditarilyRVIndependent n
       (fun p : S₁ ↦ translatedTruncation (b p.1.2 : K⟦ℝ⟧) (p.1.1 : ℝ)) := by

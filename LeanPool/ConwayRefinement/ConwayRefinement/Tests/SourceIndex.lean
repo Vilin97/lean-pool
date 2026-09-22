@@ -210,7 +210,7 @@ example := (@Berarducci.ordinalValue_mul :
       Berarducci.ordinalValue b * Berarducci.ordinalValue c)
 
 /- Berarducci, Lemma 10.1 and Definition 10.2. -/
-example := (@Berarducci.exists_isCriticalPoint :
+example := ((fun {_} [_] [_] ↦ @Berarducci.exists_isCriticalPoint _ _) :
   ∀ {K : Type v} [Field K] [CharZero K] {b : Berarducci.Series K}, b ≠ 0 →
     ∃ x : ℝ, Berarducci.IsCriticalPoint b x)
 
@@ -1266,7 +1266,8 @@ example := ((fun {_} [_] [_] b ↦ Berarducci.residualPointTail_eventually b) :
               IsLUB (Berarducci.residualPointTail b η) 0)
 
 /- Berarducci, Lemma 6.9, with the domain of `X(b)` and `v_J^p(b)` made explicit. -/
-example := (@Berarducci.ordinalValue_ge_of_eventually_ordinalValue_translatedTruncation_ge :
+example := ((fun {_} [_] [_] ↦
+  @Berarducci.ordinalValue_ge_of_eventually_ordinalValue_translatedTruncation_ge _ _) :
   ∀ {K : Type v} [Field K] [CharZero K]
     (b : Berarducci.SeriesWithOrdinalValueAboveOne K) (c : Berarducci.Series K)
     {ρ : Ordinal}, Ordinal.IsPrincipal (fun α β ↦ α + β) ρ →

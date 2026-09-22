@@ -22,7 +22,8 @@ If this graded quotient is a domain, then `R / (q)` is a domain. The same conclu
 nonzero `a` whose initial form generates a prime ideal of the associated graded ring is prime, has
 a direct proof for a separated multiplicative degree over a well-ordered value monoid: for
 `b ∉ (a)` of least degree in its coset, `in(b) ∈ (in a)` would give `in(b) = in(a) g` with `g`
-homogeneous, and a lift `g̃` of `g` would produce `b - a g̃` of smaller degree in the same coset.
+homogeneous, and a lift `g_lift` of `g` would produce `b - a g_lift` of smaller degree in the same
+coset.
 -/
 
 open scoped MaxAddDegree
@@ -110,7 +111,7 @@ theorem exists_sub_mem_and_forall_le (ν : MaxAddDegree R M) (hν : ν.IsSeparat
 omit [WellFoundedLT M] in
 /-- For a separated multiplicative degree, an element `b ∉ (a)` of least degree in its coset
 modulo `(a)` has initial form outside `(in_ν a)`: otherwise `in_ν b = in_ν a · g` with `g`
-homogeneous, and a lift `g̃` of `g` gives `ν (b - a g̃) < ν b` in the same coset. -/
+homogeneous, and a lift `g_lift` of `g` gives `ν (b - a g_lift) < ν b` in the same coset. -/
 theorem initialForm_notMem_span_initialForm (ν : MaxAddDegree R M)
     (hν : ν.IsSeparated) {a b : R} (ha : a ≠ 0) (hb : b ∉ Ideal.span {a})
     (hmin : ∀ b', b' - b ∈ Ideal.span {a} → ν b ≤ ν b') :
