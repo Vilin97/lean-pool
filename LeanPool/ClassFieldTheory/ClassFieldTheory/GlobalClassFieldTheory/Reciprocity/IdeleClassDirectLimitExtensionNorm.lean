@@ -218,6 +218,44 @@ private noncomputable def rationalRelativeNormComparison
     relativeIdeleClassNormAdditiveValue F E
       (e (eAmbient.symm a)))
 
+private theorem rationalRelativeNormComparison_fst
+    (K L : ClosedSubgroup
+      (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
+    (hLK : L.toSubgroup ≤ K.toSubgroup)
+    (hnormal : (extensionSubgroup K L hLK).Normal)
+    [hKfinite : Finite
+      ((baseField
+        (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ)).toSubgroup ⧸
+        extensionSubgroup
+          (baseField
+            (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
+          K (le_baseField K))]
+    [hfinite : Finite
+      (K.toSubgroup ⧸ extensionSubgroup K L hLK)]
+    (a : KummerTheory.ambientFixedAddSubgroup
+      rationalIdeleClassRepresentation L) :
+  let F := abstractFixedField ℚ (SeparableClosure ℚ) K
+  let E := abstractRelativeFixedField ℚ (SeparableClosure ℚ) hLK
+  letI := hnormal
+  letI : FiniteDimensional ℚ F :=
+    abstractFixedField_finiteDimensional
+      ℚ (SeparableClosure ℚ) K hKfinite
+  letI : FiniteDimensional F E :=
+    abstractRelativeFixedField_finiteDimensional
+      ℚ (SeparableClosure ℚ) K L hLK hKfinite hfinite
+  letI : IsScalarTower ℚ F E :=
+    IsScalarTower.of_algebraMap_eq' (RingHom.ext_rat _ _)
+  letI : FiniteDimensional ℚ E :=
+    FiniteDimensional.trans ℚ F E
+  letI : NumberField F := NumberField.of_module_finite ℚ F
+  letI : NumberField E := NumberField.of_module_finite ℚ E
+  letI : IsGalois F E :=
+    abstractRelativeFixedField_isGalois
+      ℚ (SeparableClosure ℚ) K L hLK hnormal
+  let eK := rationalAbstractFixedFieldIdeleClassEquivFixed K
+  (rationalRelativeNormComparison K L hLK hnormal a).1 =
+    eK.symm (relativeNorm rationalIdeleClassRepresentation K L hLK a) := rfl
+
 private noncomputable def rationalFixedFieldIdeleClassAdditiveType
     (K : ClosedSubgroup
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))

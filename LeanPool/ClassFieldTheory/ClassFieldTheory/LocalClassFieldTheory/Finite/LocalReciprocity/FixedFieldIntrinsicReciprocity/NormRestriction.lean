@@ -459,12 +459,8 @@ theorem ambientEmbeddedNormResidueElement_norm_restriction
     exact
       (AlgHom.fieldRange iLower).fixingSubgroup_le
         hRangeHH
-  have hRangeJJ :
-      AlgHom.fieldRange jLower ≤
-        AlgHom.fieldRange j := by
-    intro x hx
-    rcases hx with ⟨y, rfl⟩
-    exact ⟨algebraMap L L' y, rfl⟩
+  have hRangeJJ : AlgHom.fieldRange jLower ≤ AlgHom.fieldRange j :=
+    Set.range_comp_subset_range (algebraMap L L') j
   let hJ'J : J'.toSubgroup ≤ J.toSubgroup := by
     change upper.extension.field.toSubgroup ≤ lower.extension.field.toSubgroup
     rw [lower.extension_field_eq, upper.extension_field_eq]
@@ -476,32 +472,12 @@ theorem ambientEmbeddedNormResidueElement_norm_restriction
         hRangeJJ
   let hJH : J.toSubgroup ≤ H.toSubgroup := lower.extension.below
   let hJ'H' : J'.toSubgroup ≤ H'.toSubgroup := upper.extension.below
-  let hJnormal :
-      (extensionSubgroup H J hJH).Normal :=
-    lower.extension.normal
-  let hJfinite : Finite
-      (H.toSubgroup ⧸ extensionSubgroup H J hJH) :=
-    lower.extension.finite
-  let hJ'normal :
-      (extensionSubgroup H' J' hJ'H').Normal :=
-    upper.extension.normal
-  let hJ'finite : Finite
-      (H'.toSubgroup ⧸ extensionSubgroup H' J' hJ'H') :=
-    upper.extension.finite
-  let hHabsolute : Finite
-      ((baseField
-        Gal(SeparableClosure K/K)).toSubgroup ⧸
-        extensionSubgroup
-          (baseField Gal(SeparableClosure K/K))
-          H (le_baseField H)) :=
-    lower.base.finite
-  let hH'absolute : Finite
-      ((baseField
-        Gal(SeparableClosure K/K)).toSubgroup ⧸
-        extensionSubgroup
-          (baseField Gal(SeparableClosure K/K))
-          H' (le_baseField H')) :=
-    upper.base.finite
+  let hJnormal := lower.extension.normal
+  let hJfinite := lower.extension.finite
+  let hJ'normal := upper.extension.normal
+  let hJ'finite := upper.extension.finite
+  let hHabsolute := lower.base.finite
+  let hH'absolute := upper.base.finite
   let hH'finite : Finite
       (H.toSubgroup ⧸ extensionSubgroup H H' hH'H) := by
     let inclusion :=
@@ -510,12 +486,10 @@ theorem ambientEmbeddedNormResidueElement_norm_restriction
     exact Finite.of_injective inclusion inclusion.injective
   let FLower :=
     abstractFixedField K (SeparableClosure K) H
-  let phiLower : K ≃ₐ[K] FLower :=
-    lower.baseEquiv
+  let phiLower := lower.baseEquiv
   let FUpper :=
     abstractFixedField K (SeparableClosure K) H'
-  let phiUpper : K' ≃ₐ[K] FUpper :=
-    upper.baseEquiv
+  let phiUpper := upper.baseEquiv
   let restrictActual :
       Gal(L'/K') →* Gal(L/K) :=
     (AlgEquiv.restrictNormalHom L).comp
@@ -527,14 +501,10 @@ theorem ambientEmbeddedNormResidueElement_norm_restriction
     exact congrArg j
       (AlgEquiv.restrictNormal_commutes
         ((AlgEquiv.restrictScalarsHom K) τ) L x)
-  have hbase : ∀ x : L,
-      j (algebraMap L L' x) = jLower x := by
-    intro x
-    rfl
+  have hbase : ∀ x : L, j (algebraMap L L' x) = jLower x := fun _ => rfl
   let aUpper : FUpperˣ :=
     Units.mapEquiv phiUpper.toMulEquiv a
-  let aNorm : Kˣ :=
-    normUnits K K' a
+  let aNorm := normUnits K K' a
   let aLower : FLowerˣ :=
     Units.mapEquiv phiLower.toMulEquiv aNorm
   let symbolUpper :=
@@ -604,39 +574,20 @@ theorem ambientEmbeddedNormResidueElement_norm_restriction
             (upper.extension.extensionQuotientMulEquiv.abelianizationCongr
               upperQuotientValue)) =
         lowerQuotientValue := by
-    refine
-      lower.extension.extensionQuotientMulEquiv.abelianizationCongr.symm_apply_eq.mpr ?_
-    calc
-      normResidueNaturalityAbelianizedRestriction
-          H H' J J' hJH hJ'H' hH'H hJ'J
-          (upper.extension.extensionQuotientMulEquiv.abelianizationCongr
-            upperQuotientValue) =
-          normResidueNaturalityAbelianizedRestriction
-            H H' J J' hJH hJ'H' hH'H hJ'J
-            ((upper.extension.extensionQuotientMulEquiv.symm.trans
-              upper.fixedFieldQuotientEquiv).abelianizationCongr.symm
-              upperSymbolValue) := by
-        simp only [← abelianizationCongr_trans,
-          ← abelianizationCongr_symm, MulEquiv.symm_trans_apply,
-          MulEquiv.symm_symm, upperQuotientValue]
-      _ = (lower.extension.extensionQuotientMulEquiv.symm.trans
-            lower.fixedFieldQuotientEquiv).abelianizationCongr.symm
-            lowerSymbolValue := hraw
-      _ = lower.extension.extensionQuotientMulEquiv.abelianizationCongr
-            lowerQuotientValue := by
-        simp only [← abelianizationCongr_trans,
-          ← abelianizationCongr_symm, MulEquiv.symm_trans_apply,
-          MulEquiv.symm_symm, lowerQuotientValue]
+    apply lower.extension.extensionQuotientMulEquiv.abelianizationCongr.symm_apply_eq.mpr
+    simpa only [← abelianizationCongr_trans, ← abelianizationCongr_symm,
+      MulEquiv.symm_trans_apply, MulEquiv.symm_symm,
+      upperQuotientValue, lowerQuotientValue] using hraw
   have hupperEval :
       upper.normResidueAbelianElement a =
         upper.quotientEquiv.abelianizationCongr
-          upperQuotientValue := by
-    exact upper.normResidueAbelianElement_apply a
+          upperQuotientValue :=
+    upper.normResidueAbelianElement_apply a
   have hlowerEval :
       lower.normResidueAbelianElement aNorm =
         lower.quotientEquiv.abelianizationCongr
-          lowerQuotientValue := by
-    exact lower.normResidueAbelianElement_apply aNorm
+          lowerQuotientValue :=
+    lower.normResidueAbelianElement_apply aNorm
   let ambientUpper : Gal(L'/K') :=
     ambientEmbeddedNormResidueElement K K' L' j eUpper a
   let ambientLower : Gal(L/K) :=
@@ -653,27 +604,9 @@ theorem ambientEmbeddedNormResidueElement_norm_restriction
         (Abelianization.equivOfComm (H := Gal(L/K))).symm
           (lower.normResidueAbelianElement aNorm)
     rw [hupperEval, hlowerEval]
-    calc
-      restrictActual
-          ((Abelianization.equivOfComm (H := Gal(L'/K'))).symm
-            (upper.quotientEquiv.abelianizationCongr
-              upperQuotientValue)) =
-        (Abelianization.equivOfComm (H := Gal(L/K))).symm
-            (lower.quotientEquiv.abelianizationCongr
-              (lower.extension.extensionQuotientMulEquiv.abelianizationCongr.symm
-                (normResidueNaturalityAbelianizedRestriction
-                  H H' J J' hJH hJ'H' hH'H hJ'J
-                  (upper.extension.extensionQuotientMulEquiv.abelianizationCongr
-                    upperQuotientValue)))) :=
-        htarget upperQuotientValue
-      _ = (Abelianization.equivOfComm (H := Gal(L/K))).symm
-            (lower.quotientEquiv.abelianizationCongr
-              lowerQuotientValue) :=
-        congrArg
-          (fun z =>
-            (Abelianization.equivOfComm (H := Gal(L/K))).symm
-              (lower.quotientEquiv.abelianizationCongr z))
-          hambient
+    exact (htarget upperQuotientValue).trans
+      (congrArg (fun z => (Abelianization.equivOfComm (H := Gal(L/K))).symm
+        (lower.quotientEquiv.abelianizationCongr z)) hambient)
   change
     restrictActual ambientUpper = ambientLower
   exact htransport
@@ -746,8 +679,7 @@ theorem abelianLocalArtinMonoidHom_norm_restriction
       Gal(L'/K') →* Gal(L/K) :=
     (AlgEquiv.restrictNormalHom L).comp
       (AlgEquiv.restrictScalarsHom K)
-  let aNorm : Kˣ :=
-    normUnits K K' a
+  let aNorm := normUnits K K' a
   let ambientUpper : Gal(L'/K') :=
     ambientEmbeddedNormResidueElement K K' L' j eUpper a
   let ambientLower : Gal(L/K) :=

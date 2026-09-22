@@ -566,6 +566,10 @@ local instance finitePlaceNormLowerValued :
 attribute [local instance] finitePlaceNormLowerValued
 
 open scoped Classical in
+private theorem finitePlaceNormLowerValued_apply (x : Cₙ) :
+    (Valued.v : Valuation Cₙ ℝ≥0) x = ‖x‖₊ := rfl
+
+open scoped Classical in
 local instance finitePlaceNormLowerValuationNontrivial :
     (Valued.v : Valuation Cₙ ℝ≥0).IsNontrivial :=
   (inferInstance :

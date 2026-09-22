@@ -996,6 +996,16 @@ theorem
   · exact ⟨k, hkΩ⟩
   · exact ((x : E) : rationalCyclotomicZHatField).property
 
+private theorem sup_restrict_sup_eq_top
+    {R Ω : Type*} [Field R] [Field Ω] [Algebra R Ω]
+    (A B : IntermediateField R Ω) :
+    B.restrict (show B ≤ A ⊔ B from le_sup_right) ⊔
+      A.restrict (show A ≤ A ⊔ B from le_sup_left) = ⊤ := by
+  apply IntermediateField.lift_injective (A ⊔ B)
+  rw [IntermediateField.lift_sup, IntermediateField.lift_restrict,
+    IntermediateField.lift_restrict, IntermediateField.lift_top]
+  exact sup_comm _ _
+
 instance
     numberFieldCyclotomicZHatFiniteCompositum_scalarTower
     (E :
@@ -1080,13 +1090,7 @@ noncomputable instance
     @IsGalois.of_algEquiv ℚ E _ _ B _ _ _ hE eE
   let : FiniteDimensional ℚ B := hfiniteB
   let : IsGalois ℚ B := hB
-  have hsup : B ⊔ A = ⊤ := by
-    apply IntermediateField.lift_injective C
-    rw [IntermediateField.lift_sup,
-      IntermediateField.lift_restrict,
-      IntermediateField.lift_restrict,
-      IntermediateField.lift_top]
-    exact sup_comm _ _
+  have hsup : B ⊔ A = ⊤ := sup_restrict_sup_eq_top _ _
   let : IsGalois A C :=
     @IsGalois.sup_right ℚ _ C _ _ B A hB hfiniteB hsup
   refine
@@ -1136,13 +1140,7 @@ noncomputable instance
       (IsAbelianGalois.tower_bot ℚ E rationalCyclotomicZHatField)
   let : FiniteDimensional ℚ B := hfiniteB
   let : IsAbelianGalois ℚ B := hB
-  have hsup : B ⊔ A = ⊤ := by
-    apply IntermediateField.lift_injective C
-    rw [IntermediateField.lift_sup,
-      IntermediateField.lift_restrict,
-      IntermediateField.lift_restrict,
-      IntermediateField.lift_top]
-    exact sup_comm _ _
+  have hsup : B ⊔ A = ⊤ := sup_restrict_sup_eq_top _ _
   let : IsGalois A C :=
     @IsGalois.sup_right ℚ _ C _ _ B A hB.toIsGalois hfiniteB hsup
   let r :
@@ -1311,6 +1309,11 @@ noncomputable def numberFieldCyclotomicZHatCompositumEmbedding :
             numberFieldInRationalSeparableClosure K from
           (AlgHom.mem_fieldRange).mpr ⟨x, rfl⟩))
 
+/-- The compositum embedding preserves the chosen separable-closure representative. -/
+theorem numberFieldCyclotomicZHatCompositumEmbedding_coe (x : K) :
+    (numberFieldCyclotomicZHatCompositumEmbedding K x : SeparableClosure ℚ) =
+      numberFieldSeparableClosureEmbedding K x := rfl
+
 /-- The rational cyclotomic `ZHat`-field embedded into its compositum
 with `K`. -/
 noncomputable def rationalCyclotomicZHatCompositumEmbedding :
@@ -1391,10 +1394,6 @@ noncomputable instance
     @IntermediateField.isGalois_extendScalars_sup_of_forall_finiteGalois
       ℚ (SeparableClosure ℚ) _ _ _ A rationalCyclotomicZHatField
       rationalCyclotomicZHatFieldIsGalois hG
-  have hfull_eq : full =
-      IntermediateField.extendScalars (F := A)
-        (E := A ⊔ rationalCyclotomicZHatField) le_sup_left := by
-    dsimp only [full, hAC, C, numberFieldCyclotomicZHatCompositum]
   have hfull : IsGalois A full := by
     change IsGalois A
       (IntermediateField.extendScalars (F := A)
@@ -1450,13 +1449,7 @@ noncomputable instance
       _ _ _ _ _ eT.symm.toAlgHom
       rationalCyclotomicZHatField_isAbelianGalois
   let : IsAbelianGalois ℚ B := hB
-  have hsup : B ⊔ A = ⊤ := by
-    apply IntermediateField.lift_injective C
-    rw [IntermediateField.lift_sup,
-      IntermediateField.lift_restrict,
-      IntermediateField.lift_restrict,
-      IntermediateField.lift_top]
-    exact sup_comm _ _
+  have hsup : B ⊔ A = ⊤ := sup_restrict_sup_eq_top _ _
   have heK (x : K) :
       algebraMap K C x =
         algebraMap A C (eK x) := by
@@ -1531,6 +1524,15 @@ noncomputable def
   IntermediateField.inclusion
     (sup_le_sup le_rfl
       (IntermediateField.lift_le E.toIntermediateField))
+
+/-- Inclusion of a finite compositum preserves its separable-closure representative. -/
+theorem numberFieldCyclotomicZHatFiniteCompositumInclusion_coe
+    (E : FiniteGaloisIntermediateField ℚ rationalCyclotomicZHatField)
+    (x : numberFieldCyclotomicZHatFiniteCompositum K E) :
+    (numberFieldCyclotomicZHatFiniteCompositumInclusion K E x : SeparableClosure ℚ) =
+      (x : SeparableClosure ℚ) :=
+  IntermediateField.coe_inclusion
+    (sup_le_sup le_rfl (IntermediateField.lift_le E.toIntermediateField)) x
 
 /-- The same finite-layer inclusion, over the chosen copy of `K`. -/
 noncomputable def
@@ -1715,13 +1717,7 @@ theorem numberFieldCyclotomicZHatCompositumRestriction_injective :
       _ _ _ _ _ eT.symm.toAlgHom
       rationalCyclotomicZHatField_isAbelianGalois
   let : IsAbelianGalois ℚ B := hB
-  have hsup : B ⊔ A = ⊤ := by
-    apply IntermediateField.lift_injective C
-    rw [IntermediateField.lift_sup,
-      IntermediateField.lift_restrict,
-      IntermediateField.lift_restrict,
-      IntermediateField.lift_top]
-    exact sup_comm _ _
+  have hsup : B ⊔ A = ⊤ := sup_restrict_sup_eq_top _ _
   let rB :
       (C ≃ₐ[A] C) →* (B ≃ₐ[ℚ] B) :=
     IntermediateField.restrictRestrictAlgEquivMapHom ℚ B A C

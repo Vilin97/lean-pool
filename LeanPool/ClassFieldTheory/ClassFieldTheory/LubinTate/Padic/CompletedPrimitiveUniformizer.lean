@@ -63,6 +63,105 @@ private theorem completedPolynomial_eval₂_mem_ideal_of_coeff_mem
   exact Ideal.sum_mem _ fun i _ =>
     Ideal.mul_mem_right (z ^ i) I (hcoeff i)
 
+private theorem eisenstein_sub_X_pow_coeff_mem
+    {R : Type*} [CommRing R] [IsDomain R] (I : Ideal R) (Q : Polynomial R)
+    (d : ℕ) (hQnatDegree : Q.natDegree = d) (hQmonic : Q.Monic)
+    (hQeisenstein : Q.IsEisensteinAt I) (i : ℕ) :
+    (Q - Polynomial.X ^ d).coeff i ∈ I := by
+  rcases lt_trichotomy i d with hi | hi | hi
+  · have hQi : Q.coeff i ∈ I := by
+      apply hQeisenstein.mem
+      rwa [hQnatDegree]
+    change (Q - Polynomial.X ^ d).coeff i ∈ I
+    rw [Polynomial.coeff_sub, Polynomial.coeff_X_pow,
+      ite_eq_right (ne_of_lt hi), sub_zero]
+    exact hQi
+  · subst i
+    have hQd : Q.coeff d = 1 := by
+      rw [← hQnatDegree]
+      exact hQmonic.coeff_natDegree
+    change (Q - Polynomial.X ^ d).coeff d ∈ I
+    rw [Polynomial.coeff_sub, hQd, Polynomial.coeff_X_pow,
+      ite_eq_left rfl, sub_self]
+    exact I.zero_mem
+  · have hQi : Q.coeff i = 0 := by
+      apply Polynomial.coeff_eq_zero_of_natDegree_lt
+      rwa [hQnatDegree]
+    change (Q - Polynomial.X ^ d).coeff i ∈ I
+    rw [Polynomial.coeff_sub, hQi, Polynomial.coeff_X_pow,
+      ite_eq_right (ne_of_gt hi), sub_zero]
+    exact I.zero_mem
+
+private theorem addVal_mul_degree_of_polynomial_tail
+    {R S : Type*} [CommRing R] [CommRing S] [IsDomain S] [IsDiscreteValuationRing S]
+    (j : R →+* S) (P : Polynomial R) (x : S) (e d : ℕ)
+    (hconst : IsDiscreteValuationRing.addVal S (j (P.coeff 0)) = (e : ℕ∞))
+    (htail : x * P.divX.eval₂ j x ∈ IsLocalRing.maximalIdeal S ^ (e + 1))
+    (hrootDecomp : x ^ d + P.eval₂ j x = 0) :
+    (d : ℕ∞) * IsDiscreteValuationRing.addVal S x = (e : ℕ∞) := by
+  let tail := P.divX.eval₂ j x
+  have hR_eval :
+      P.eval₂ j x = j (P.coeff 0) + x * tail := by
+    have h :=
+      congrArg (Polynomial.eval₂ j x)
+        (Polynomial.X_mul_divX_add P)
+    rw [Polynomial.eval₂_add, Polynomial.eval₂_mul,
+      Polynomial.eval₂_X, Polynomial.eval₂_C] at h
+    calc
+      P.eval₂ j x = x * tail + j (P.coeff 0) := by
+        simpa only [tail] using h.symm
+      _ = j (P.coeff 0) + x * tail := add_comm _ _
+  have htailVal :
+      ((e + 1 : ℕ) : ℕ∞) ≤
+        IsDiscreteValuationRing.addVal S
+          (x * tail) :=
+    (IsDiscreteValuationRing.mem_maximalIdeal_pow_iff_addVal_ge
+      (x * tail) (e + 1)).1 htail
+  have heCastLt :
+      (e : ℕ∞) <
+        IsDiscreteValuationRing.addVal S
+          (x * tail) := by
+    exact
+      (show (e : ℕ∞) < ((e + 1 : ℕ) : ℕ∞) by
+        exact_mod_cast Nat.lt_succ_self e).trans_le htailVal
+  have hdistinct :
+      IsDiscreteValuationRing.addVal S
+          (j (P.coeff 0)) ≠
+        IsDiscreteValuationRing.addVal S
+          (x * tail) := by
+    rw [hconst]
+    exact ne_of_lt heCastLt
+  have hRval :
+      IsDiscreteValuationRing.addVal S
+          (P.eval₂ j x) = (e : ℕ∞) := by
+    rw [hR_eval,
+      (IsDiscreteValuationRing.addVal
+        S).map_add_of_distinct_val hdistinct,
+      hconst, min_eq_left]
+    exact heCastLt.le
+  have hpowEq : x ^ d = -(P.eval₂ j x) :=
+    eq_neg_of_add_eq_zero_left hrootDecomp
+  have hmul :
+      (d : ℕ∞) *
+          IsDiscreteValuationRing.addVal S x =
+        (e : ℕ∞) := by
+    calc
+      (d : ℕ∞) *
+          IsDiscreteValuationRing.addVal S x =
+          d • IsDiscreteValuationRing.addVal
+            S x := by rw [nsmul_eq_mul]
+      _ = IsDiscreteValuationRing.addVal S
+          (x ^ d) := by
+        symm
+        exact IsDiscreteValuationRing.addVal_pow x d
+      _ = IsDiscreteValuationRing.addVal S
+          (-(P.eval₂ j x)) := by rw [hpowEq]
+      _ = IsDiscreteValuationRing.addVal S
+          (P.eval₂ j x) :=
+        (IsDiscreteValuationRing.addVal S).map_neg _
+      _ = (e : ℕ∞) := hRval
+  exact hmul
+
 private theorem
     padicCompletedPrimitiveRootInteger_addVal_and_ramificationIndex
     (p : ℕ) [Fact p.Prime] (n : ℕ) :
@@ -145,30 +244,8 @@ private theorem
   have hele : e ≤ d := by
     rw [hfund]
     exact Nat.le_mul_of_pos_right e (Nat.pos_of_ne_zero hf_ne)
-  have hRcoeff (i : ℕ) : R.coeff i ∈ 𝔭 := by
-    rcases lt_trichotomy i d with hi | hi | hi
-    · have hQi : Q.coeff i ∈ 𝔭 := by
-        apply hQeisenstein.mem
-        rwa [hQnatDegree]
-      change (Q - Polynomial.X ^ d).coeff i ∈ 𝔭
-      rw [Polynomial.coeff_sub, Polynomial.coeff_X_pow,
-        ite_eq_right (ne_of_lt hi), sub_zero]
-      exact hQi
-    · subst i
-      have hQd : Q.coeff d = 1 := by
-        rw [← hQnatDegree]
-        exact hQmonic.coeff_natDegree
-      change (Q - Polynomial.X ^ d).coeff d ∈ 𝔭
-      rw [Polynomial.coeff_sub, hQd, Polynomial.coeff_X_pow,
-        ite_eq_left rfl, sub_self]
-      exact 𝔭.zero_mem
-    · have hQi : Q.coeff i = 0 := by
-        apply Polynomial.coeff_eq_zero_of_natDegree_lt
-        rwa [hQnatDegree]
-      change (Q - Polynomial.X ^ d).coeff i ∈ 𝔭
-      rw [Polynomial.coeff_sub, hQi, Polynomial.coeff_X_pow,
-        ite_eq_right (ne_of_gt hi), sub_zero]
-      exact 𝔭.zero_mem
+  have hRcoeff (i : ℕ) : R.coeff i ∈ 𝔭 :=
+    eisenstein_sub_X_pow_coeff_mem 𝔭 Q d hQnatDegree hQmonic hQeisenstein i
   have hR_eval_mem_map :
       R.eval₂ j root ∈ Ideal.map j 𝔭 :=
     completedPolynomial_eval₂_mem_ideal_of_coeff_mem
@@ -239,66 +316,8 @@ private theorem
       addVal_integerMap_eq_ramificationIndex_nsmul base target πA,
       IsDiscreteValuationRing.addVal_uniformizer hπAIrreducible]
     simp only [e, nsmul_eq_mul, mul_one]
-  have hR_eval :
-      R.eval₂ j root = j (R.coeff 0) + root * tail := by
-    have h :=
-      congrArg (Polynomial.eval₂ j root)
-        (Polynomial.X_mul_divX_add R)
-    rw [Polynomial.eval₂_add, Polynomial.eval₂_mul,
-      Polynomial.eval₂_X, Polynomial.eval₂_C] at h
-    calc
-      R.eval₂ j root = root * tail + j (R.coeff 0) := by
-        simpa only [tail] using h.symm
-      _ = j (R.coeff 0) + root * tail := add_comm _ _
-  have htailVal :
-      ((e + 1 : ℕ) : ℕ∞) ≤
-        IsDiscreteValuationRing.addVal target.valuationSubring
-          (root * tail) :=
-    (IsDiscreteValuationRing.mem_maximalIdeal_pow_iff_addVal_ge
-      (root * tail) (e + 1)).1 hrootTailMem
-  have heCastLt :
-      (e : ℕ∞) <
-        IsDiscreteValuationRing.addVal target.valuationSubring
-          (root * tail) := by
-    exact
-      (show (e : ℕ∞) < ((e + 1 : ℕ) : ℕ∞) by
-        exact_mod_cast Nat.lt_succ_self e).trans_le htailVal
-  have hdistinct :
-      IsDiscreteValuationRing.addVal target.valuationSubring
-          (j (R.coeff 0)) ≠
-        IsDiscreteValuationRing.addVal target.valuationSubring
-          (root * tail) := by
-    rw [hconst]
-    exact ne_of_lt heCastLt
-  have hRval :
-      IsDiscreteValuationRing.addVal target.valuationSubring
-          (R.eval₂ j root) = (e : ℕ∞) := by
-    rw [hR_eval,
-      (IsDiscreteValuationRing.addVal
-        target.valuationSubring).map_add_of_distinct_val hdistinct,
-      hconst, min_eq_left]
-    exact heCastLt.le
-  have hpowEq : root ^ d = -(R.eval₂ j root) :=
-    eq_neg_of_add_eq_zero_left hrootDecomp
-  have hmul :
-      (d : ℕ∞) *
-          IsDiscreteValuationRing.addVal target.valuationSubring root =
-        (e : ℕ∞) := by
-    calc
-      (d : ℕ∞) *
-          IsDiscreteValuationRing.addVal target.valuationSubring root =
-          d • IsDiscreteValuationRing.addVal
-            target.valuationSubring root := by rw [nsmul_eq_mul]
-      _ = IsDiscreteValuationRing.addVal target.valuationSubring
-          (root ^ d) := by
-        symm
-        exact IsDiscreteValuationRing.addVal_pow root d
-      _ = IsDiscreteValuationRing.addVal target.valuationSubring
-          (-(R.eval₂ j root)) := by rw [hpowEq]
-      _ = IsDiscreteValuationRing.addVal target.valuationSubring
-          (R.eval₂ j root) :=
-        (IsDiscreteValuationRing.addVal target.valuationSubring).map_neg _
-      _ = (e : ℕ∞) := hRval
+  have hmul := addVal_mul_degree_of_polynomial_tail j R root e d
+    hconst hrootTailMem hrootDecomp
   have honele :
       1 ≤ IsDiscreteValuationRing.addVal
         target.valuationSubring root := by
@@ -464,30 +483,8 @@ private theorem
         simpa only [e, base, target] using
           padicCompletedLevel_ramificationIndex_eq_degree p n
       _ = d := by simpa only [base, target] using hdegree
-  have hRcoeff (i : ℕ) : R.coeff i ∈ 𝔭 := by
-    rcases lt_trichotomy i d with hi | hi | hi
-    · have hQi : Q.coeff i ∈ 𝔭 := by
-        apply hQeisenstein.mem
-        rwa [hQnatDegree]
-      change (Q - Polynomial.X ^ d).coeff i ∈ 𝔭
-      rw [Polynomial.coeff_sub, Polynomial.coeff_X_pow,
-        ite_eq_right (ne_of_lt hi), sub_zero]
-      exact hQi
-    · subst i
-      have hQd : Q.coeff d = 1 := by
-        rw [← hQnatDegree]
-        exact hQmonic.coeff_natDegree
-      change (Q - Polynomial.X ^ d).coeff d ∈ 𝔭
-      rw [Polynomial.coeff_sub, hQd, Polynomial.coeff_X_pow,
-        ite_eq_left rfl, sub_self]
-      exact 𝔭.zero_mem
-    · have hQi : Q.coeff i = 0 := by
-        apply Polynomial.coeff_eq_zero_of_natDegree_lt
-        rwa [hQnatDegree]
-      change (Q - Polynomial.X ^ d).coeff i ∈ 𝔭
-      rw [Polynomial.coeff_sub, hQi, Polynomial.coeff_X_pow,
-        ite_eq_right (ne_of_gt hi), sub_zero]
-      exact 𝔭.zero_mem
+  have hRcoeff (i : ℕ) : R.coeff i ∈ 𝔭 :=
+    eisenstein_sub_X_pow_coeff_mem 𝔭 Q d hQnatDegree hQmonic hQeisenstein i
   have hmap :
       Ideal.map j 𝔭 = 𝔓 ^ e := by
     simpa only [j, 𝔭, 𝔓, e] using
@@ -579,66 +576,8 @@ private theorem
       addVal_integerMap_eq_ramificationIndex_nsmul base target πuA,
       IsDiscreteValuationRing.addVal_uniformizer hπuAIrreducible]
     simp only [e, nsmul_eq_mul, mul_one]
-  have hR_eval :
-      R.eval₂ j θ = j (R.coeff 0) + θ * tail := by
-    have h :=
-      congrArg (Polynomial.eval₂ j θ)
-        (Polynomial.X_mul_divX_add R)
-    rw [Polynomial.eval₂_add, Polynomial.eval₂_mul,
-      Polynomial.eval₂_X, Polynomial.eval₂_C] at h
-    calc
-      R.eval₂ j θ = θ * tail + j (R.coeff 0) := by
-        simpa only [tail] using h.symm
-      _ = j (R.coeff 0) + θ * tail := add_comm _ _
-  have htailVal :
-      ((e + 1 : ℕ) : ℕ∞) ≤
-        IsDiscreteValuationRing.addVal target.valuationSubring
-          (θ * tail) :=
-    (IsDiscreteValuationRing.mem_maximalIdeal_pow_iff_addVal_ge
-      (θ * tail) (e + 1)).1 hθtail_mem
-  have heCastLt :
-      (e : ℕ∞) <
-        IsDiscreteValuationRing.addVal target.valuationSubring
-          (θ * tail) := by
-    exact
-      (show (e : ℕ∞) < ((e + 1 : ℕ) : ℕ∞) by
-        exact_mod_cast Nat.lt_succ_self e).trans_le htailVal
-  have hdistinct :
-      IsDiscreteValuationRing.addVal target.valuationSubring
-          (j (R.coeff 0)) ≠
-        IsDiscreteValuationRing.addVal target.valuationSubring
-          (θ * tail) := by
-    rw [hconst]
-    exact ne_of_lt heCastLt
-  have hRval :
-      IsDiscreteValuationRing.addVal target.valuationSubring
-          (R.eval₂ j θ) = (e : ℕ∞) := by
-    rw [hR_eval,
-      (IsDiscreteValuationRing.addVal
-        target.valuationSubring).map_add_of_distinct_val hdistinct,
-      hconst, min_eq_left]
-    exact heCastLt.le
-  have hpowEq : θ ^ d = -(R.eval₂ j θ) :=
-    eq_neg_of_add_eq_zero_left hrootDecomp
-  have hmul :
-      (d : ℕ∞) *
-          IsDiscreteValuationRing.addVal target.valuationSubring θ =
-        (e : ℕ∞) := by
-    calc
-      (d : ℕ∞) *
-          IsDiscreteValuationRing.addVal target.valuationSubring θ =
-          d • IsDiscreteValuationRing.addVal
-            target.valuationSubring θ := by rw [nsmul_eq_mul]
-      _ = IsDiscreteValuationRing.addVal target.valuationSubring
-          (θ ^ d) := by
-        symm
-        exact IsDiscreteValuationRing.addVal_pow θ d
-      _ = IsDiscreteValuationRing.addVal target.valuationSubring
-          (-(R.eval₂ j θ)) := by rw [hpowEq]
-      _ = IsDiscreteValuationRing.addVal target.valuationSubring
-          (R.eval₂ j θ) :=
-        (IsDiscreteValuationRing.addVal target.valuationSubring).map_neg _
-      _ = (e : ℕ∞) := hRval
+  have hmul := addVal_mul_degree_of_polynomial_tail j R θ e d
+    hconst hθtail_mem hrootDecomp
   have honele :
       1 ≤ IsDiscreteValuationRing.addVal
         target.valuationSubring θ := by

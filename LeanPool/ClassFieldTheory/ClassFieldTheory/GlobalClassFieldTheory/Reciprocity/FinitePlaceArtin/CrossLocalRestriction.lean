@@ -504,10 +504,7 @@ private theorem finitePlaceArtinLocalizedCompletion_globalEmbedding
     finitePlaceExtensionEquivAbove
       (K := K') (L := L') W w'
   have hU'L : finitePlaceBelow (K := L) U'.1 = U.1 := by
-    simpa only [
-      U, U',
-      finitePlaceExtensionEquivAbove_coe
-    ] using hcentres
+    simpa only [U, U', finitePlaceExtensionEquivAbove_coe] using hcentres
   let eE :
       E ≃+* U.1.adicCompletion L :=
     (AlgebraicNumberTheory.Valuations.localizedCompletionEquivCompletion
@@ -525,52 +522,17 @@ private theorem finitePlaceArtinLocalizedCompletion_globalEmbedding
           (AbsoluteValue.toAlgebraicLocalization
             vK w.1 w.2 x) =
         FinitePlace.embedding U.1 x := by
-    change
-      finitePlaceExtensionAdicCompletionRingEquiv
-          (K := K) (L := L) v w
-          (AlgebraicNumberTheory.Valuations.localizedCompletionEquivCompletion
-            vK hvK w
-            (AbsoluteValue.toAlgebraicLocalization
-              vK w.1 w.2 x)) =
-        FinitePlace.embedding U.1 x
-    rw [
-      AlgebraicNumberTheory.Valuations.localizedCompletionEquivCompletion_coe]
-    change
-      finitePlaceExtensionAdicCompletionRingEquiv
-          (K := K) (L := L) v w
-          (AbsoluteValue.toCompletion w.1 x) =
-        FinitePlace.embedding
-          (finitePlaceExtensionCentre
-            (K := K) (L := L) v w) x
-    exact
-      finitePlaceExtensionAdicCompletionRingEquiv_toCompletion
-        (K := K) (L := L) v w x
+    exact (congrArg (finitePlaceExtensionAdicCompletionRingEquiv v w)
+      (localizedCompletionEquivCompletion_coe vK hvK w _)).trans
+      (finitePlaceExtensionAdicCompletionRingEquiv_toCompletion v w x)
   have hUpperConcrete :
       eE'
           (AbsoluteValue.toAlgebraicLocalization
             vK' w'.1 w'.2 (algebraMap L L' x)) =
         FinitePlace.embedding U'.1 (algebraMap L L' x) := by
-    change
-      finitePlaceExtensionAdicCompletionRingEquiv
-          (K := K') (L := L') W w'
-          (AlgebraicNumberTheory.Valuations.localizedCompletionEquivCompletion
-            vK' hvK' w'
-            (AbsoluteValue.toAlgebraicLocalization
-              vK' w'.1 w'.2 (algebraMap L L' x))) =
-        FinitePlace.embedding U'.1 (algebraMap L L' x)
-    rw [
-      AlgebraicNumberTheory.Valuations.localizedCompletionEquivCompletion_coe]
-    change
-      finitePlaceExtensionAdicCompletionRingEquiv
-          (K := K') (L := L') W w'
-          (AbsoluteValue.toCompletion w'.1 (algebraMap L L' x)) =
-        FinitePlace.embedding
-          (finitePlaceExtensionCentre
-            (K := K') (L := L') W w')
-          (algebraMap L L' x)
-    exact
-      finitePlaceExtensionAdicCompletionRingEquiv_toCompletion
-        (K := K') (L := L') W w' (algebraMap L L' x)
+    exact (congrArg (finitePlaceExtensionAdicCompletionRingEquiv W w')
+      (localizedCompletionEquivCompletion_coe vK' hvK' w' _)).trans
+      (finitePlaceExtensionAdicCompletionRingEquiv_toCompletion W w' (algebraMap L L' x))
   apply eE'.injective
   change
     eE'
@@ -589,9 +551,7 @@ private theorem finitePlaceArtinLocalizedCompletion_globalEmbedding
         L L' U.1 ⟨U'.1, hU'L⟩
         (x : U.1.adicCompletion L) =
       (algebraMap L L' x : U'.1.adicCompletion L')
-  exact
-    finitePlaceAdicCompletionMap_coe
-      L L' U.1 ⟨U'.1, hU'L⟩ x
+  exact finitePlaceAdicCompletionMap_coe L L' U.1 ⟨U'.1, hU'L⟩ x
 
 open scoped Classical in
 /-- Localized automorphisms with the completion tower hidden behind one named

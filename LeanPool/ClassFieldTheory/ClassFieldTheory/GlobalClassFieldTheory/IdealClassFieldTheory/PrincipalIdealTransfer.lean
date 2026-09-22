@@ -525,60 +525,65 @@ private structure SmallHilbertClassFieldExplicitNormMembershipData
   membership : smallHilbertClassFieldExplicitNormMembershipStatement K
 
 open scoped Classical in
+/-- The canonical norm-membership statement realizes the literal two-stage fixed-field tower. -/
+private theorem smallHilbertClassFieldExplicitNormMembershipStatement_proof :
+    smallHilbertClassFieldExplicitNormMembershipStatement K := by
+  unfold smallHilbertClassFieldExplicitNormMembershipStatement
+  dsimp only
+  intro c
+  let K₀ :=
+    numberFieldTowerFiniteAbstractField K
+      (smallHilbertClassFieldNormAmbient K)
+  let L := smallHilbertClassFieldSubextension K
+  let N := smallHilbertTowerSecondSubextension K
+  let H := L.field
+  let hMH : N.field.toSubgroup ≤ H.toSubgroup := N.below
+  let hHK : H.toSubgroup ≤ K₀.field.toSubgroup := L.below
+  let hHKnormal :
+      (CyclicCohomology.extensionSubgroup K₀.field H hHK).Normal :=
+    L.normal
+  let hMHnormal :
+      (CyclicCohomology.extensionSubgroup H N.field hMH).Normal :=
+    N.normal
+  let hKHfinite : Finite
+      (K₀.field.toSubgroup ⧸
+        CyclicCohomology.extensionSubgroup K₀.field H hHK) :=
+    L.finite
+  let hHMfinite : Finite
+      (H.toSubgroup ⧸
+        CyclicCohomology.extensionSubgroup H N.field hMH) :=
+    N.finite
+  let hHfinite : Finite
+      ((baseField
+        (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ)).toSubgroup ⧸
+        CyclicCohomology.extensionSubgroup
+          (baseField
+            (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
+          H (le_baseField H)) :=
+    FiniteGaloisSubextension.finite_extension_trans
+      hHK (le_baseField K₀.field)
+  have hmembershipAll :=
+    smallHilbertClassFieldCanonicalNormMembershipStatement_proof K
+  unfold
+    smallHilbertClassFieldCanonicalNormMembershipStatement
+    at hmembershipAll
+  have hmembership :
+      rationalFiniteNormTransferCanonicalOrdinaryExtensionNormMembership
+        (hKfinite := K₀.finite) (hKHfinite := hKHfinite)
+        (hHLfinite := hHMfinite)
+        K₀.field H N.field hHK hMH hHKnormal hMHnormal c :=
+    hmembershipAll c
+  exact
+    rationalFiniteNormTransferCanonicalMembership_to_explicitNormMembership
+      (hKfinite := K₀.finite) (hKHfinite := hKHfinite)
+      (hHfinite := hHfinite) (hHLfinite := hHMfinite)
+      K₀.field H N.field hHK hMH hHKnormal hMHnormal c hmembership
+
+open scoped Classical in
 private noncomputable def
     smallHilbertClassFieldExplicitNormMembershipData_proof :
     SmallHilbertClassFieldExplicitNormMembershipData K where
-  membership := by
-    unfold smallHilbertClassFieldExplicitNormMembershipStatement
-    dsimp only
-    intro c
-    let K₀ :=
-      numberFieldTowerFiniteAbstractField K
-        (smallHilbertClassFieldNormAmbient K)
-    let L := smallHilbertClassFieldSubextension K
-    let N := smallHilbertTowerSecondSubextension K
-    let H := L.field
-    let hMH : N.field.toSubgroup ≤ H.toSubgroup := N.below
-    let hHK : H.toSubgroup ≤ K₀.field.toSubgroup := L.below
-    let hHKnormal :
-        (CyclicCohomology.extensionSubgroup K₀.field H hHK).Normal :=
-      L.normal
-    let hMHnormal :
-        (CyclicCohomology.extensionSubgroup H N.field hMH).Normal :=
-      N.normal
-    let hKHfinite : Finite
-        (K₀.field.toSubgroup ⧸
-          CyclicCohomology.extensionSubgroup K₀.field H hHK) :=
-      L.finite
-    let hHMfinite : Finite
-        (H.toSubgroup ⧸
-          CyclicCohomology.extensionSubgroup H N.field hMH) :=
-      N.finite
-    let hHfinite : Finite
-        ((baseField
-          (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ)).toSubgroup ⧸
-          CyclicCohomology.extensionSubgroup
-            (baseField
-              (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
-            H (le_baseField H)) :=
-      FiniteGaloisSubextension.finite_extension_trans
-        hHK (le_baseField K₀.field)
-    have hmembershipAll :=
-      smallHilbertClassFieldCanonicalNormMembershipStatement_proof K
-    unfold
-      smallHilbertClassFieldCanonicalNormMembershipStatement
-      at hmembershipAll
-    have hmembership :
-        rationalFiniteNormTransferCanonicalOrdinaryExtensionNormMembership
-          (hKfinite := K₀.finite) (hKHfinite := hKHfinite)
-          (hHLfinite := hHMfinite)
-          K₀.field H N.field hHK hMH hHKnormal hMHnormal c :=
-      hmembershipAll c
-    exact
-      rationalFiniteNormTransferCanonicalMembership_to_explicitNormMembership
-        (hKfinite := K₀.finite) (hKHfinite := hKHfinite)
-        (hHfinite := hHfinite) (hHLfinite := hHMfinite)
-        K₀.field H N.field hHK hMH hHKnormal hMHnormal c hmembership
+  membership := smallHilbertClassFieldExplicitNormMembershipStatement_proof K
 
 open scoped Classical in
 /-- The named proposition underlying the fixed-field-base form of the

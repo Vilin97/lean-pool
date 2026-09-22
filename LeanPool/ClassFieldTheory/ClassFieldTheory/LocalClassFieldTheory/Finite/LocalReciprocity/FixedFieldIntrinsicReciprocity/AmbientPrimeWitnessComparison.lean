@@ -69,28 +69,11 @@ theorem
     intro x hx
     rcases hx with ⟨y, rfl⟩
     exact ⟨algebraMap F E y, rfl⟩
-  let hSourceNormal :
-      (extensionSubgroup
-        (intrinsicAbstractBase F) EI.field EI.below).Normal :=
-    EI.normal
-  let hSourceFinite : Finite
-      ((intrinsicAbstractBase F).toSubgroup ⧸
-        extensionSubgroup
-          (intrinsicAbstractBase F) EI.field EI.below) :=
-    EI.finite
-  let hTargetNormal :
-      (extensionSubgroup H₀ J₀ hJH).Normal :=
-    ambientEmbeddedExtensionSubgroup_normal K F E j e
-  let hTargetFinite : Finite
-      (H₀.toSubgroup ⧸ extensionSubgroup H₀ J₀ hJH) :=
-    ambientEmbeddedExtensionQuotient_finite K F E j e
-  let hHabsolute : Finite
-      ((baseField
-        Gal(SeparableClosure K/K)).toSubgroup ⧸
-        extensionSubgroup
-          (baseField Gal(SeparableClosure K/K))
-          H₀ (le_baseField H₀)) := by
-    exact ambientEmbeddedAbsoluteQuotientFinite K F i
+  let hSourceNormal := EI.normal
+  let hSourceFinite := EI.finite
+  let hTargetNormal := ambientEmbeddedExtensionSubgroup_normal K F E j e
+  let hTargetFinite := ambientEmbeddedExtensionQuotient_finite K F E j e
+  let hHabsolute := ambientEmbeddedAbsoluteQuotientFinite K F i
   let H : FiniteAbstractField
       Gal(SeparableClosure K/K) :=
     ⟨H₀, ambientEmbeddedAbsoluteQuotientFinite K F i⟩
@@ -100,14 +83,7 @@ theorem
   let RF :=
     (intrinsicFiniteAbstractBase F).toFiniteResidueAbstractField
       (localResidueDatum F)
-  let _hRFFinite : Finite
-      (RF.field.toSubgroup ⧸
-        extensionSubgroup RF.field EI.field EI.below) := by
-    change Finite
-      ((intrinsicAbstractBase F).toSubgroup ⧸
-        extensionSubgroup
-          (intrinsicAbstractBase F) EI.field EI.below)
-    exact hSourceFinite
+  let _hRFFinite := hSourceFinite
   let RH :=
     H.toFiniteResidueAbstractField (localResidueDatum K)
   let zF : Abelianization EI.extensionQuotient :=
@@ -215,10 +191,7 @@ theorem
     LH.val.restrictScalars K
   let : Algebra.IsSeparable K LH := by
     let : IsScalarTower K LH (SeparableClosure K) :=
-      IsScalarTower.of_algebraMap_eq' (by
-        apply RingHom.ext
-        intro x
-        exact (iH.commutes x).symm)
+      IsScalarTower.of_algebraMap_eq' iH.comp_algebraMap.symm
     exact
       Algebra.isSeparable_tower_bot_of_isSeparable
         K LH (SeparableClosure K)
@@ -231,28 +204,11 @@ theorem
   let : Valuation.HasExtension
       (ValuativeRel.valuation K) (ValuativeRel.valuation LH) :=
     finiteExtensionSpectralValuation_hasExtension K LH
-  have hsourceRing :
-      (localSeparableValuationSubring F).comap LF.val.toRingHom =
-        (ValuativeRel.valuation LF).valuationSubring :=
-    localSeparableValuationSubring_comap_embedding F LF LF.val
-  have htargetRing :
-      (localSeparableValuationSubring K).comap iH.toRingHom =
-        (ValuativeRel.valuation LH).valuationSubring :=
-    localSeparableValuationSubring_comap_embedding K LH iH
   have hmem (x : LF) :
       x ∈ (ValuativeRel.valuation LF).valuationSubring ↔
-        phi x ∈ (ValuativeRel.valuation LH).valuationSubring := by
-    rw [← hsourceRing, ← htargetRing]
-    change
-      (x : SeparableClosure F) ∈ localSeparableValuationSubring F ↔
-        ((phi x : LH) : SeparableClosure K) ∈
-          localSeparableValuationSubring K
-    rw [hphi x]
-    have hvaluation :=
-      localSeparableValuationSubring_eq_comap_finiteExtensionEquiv
-        K F i e
-    rw [hvaluation]
-    rfl
+        phi x ∈ (ValuativeRel.valuation LH).valuationSubring :=
+    valuationSubring_mem_iff_of_separableClosureRingEquiv F K LF LH LF.val iH e.toRingEquiv
+      (localSeparableValuationSubring_eq_comap_finiteExtensionEquiv K F i e) phi hphi x
   let pF :=
     chosenValuationOneUnitOfRingEquiv LF LH phi hmem
   have hpFvalue :=
@@ -277,47 +233,16 @@ theorem
     exact
       relativeNorm_intrinsicAbstractBase_abstractFixedFieldUnit
         F SF hSFB pF
-  have hconcretePrime :
-      concreteNormResidueSymbolOfEmbedding
-          F E jI
-          (localResidueDatum F)
-          (localHenselianValuation F)
-          (separableClosureUnits_isClassFormation F) xPrime =
-        Abelianization.of (qF q) := by
-    have hprime :=
-      concreteNormResidueSymbolOfEmbedding_apply_primeNorm
-        F E jI
-        (localResidueDatum F)
-        (localHenselianValuation F)
-        (separableClosureUnits_isClassFormation F)
-        q sigma hsigma piF hpiF xPrime
-        (by
-          simpa only [RF, SF, hSFB] using hnormF.symm)
-    exact hprime
-  have hqz :
-      qF.abelianizationCongr (Abelianization.of q) = z := by
-    calc
-      qF.abelianizationCongr (Abelianization.of q) =
-          qF.abelianizationCongr zF :=
-        congrArg qF.abelianizationCongr hq
-      _ = z :=
-        qF.abelianizationCongr.apply_symm_apply z
-  have hconcretePrimeZ :
-      concreteNormResidueSymbolOfEmbedding
-          F E jI
-          (localResidueDatum F)
-          (localHenselianValuation F)
-          (separableClosureUnits_isClassFormation F) xPrime = z := by
-    rw [hconcretePrime, ← hqz]
-    exact (abelianizationCongr_of qF q).symm
-  have hxWitness :
-      ambientEmbeddedPrimeWitness K F E j e z = xPrime := by
-    rfl
+  have hconcretePrime := concreteNormResidueSymbolOfEmbedding_apply_primeNorm
+    F E jI (localResidueDatum F) (localHenselianValuation F)
+    (separableClosureUnits_isClassFormation F) q sigma hsigma piF hpiF xPrime
+    (by simpa only [RF, SF, hSFB] using hnormF.symm)
+  have hqz : qF.abelianizationCongr (Abelianization.of q) = z :=
+    (congrArg qF.abelianizationCongr hq).trans (qF.abelianizationCongr.apply_symm_apply z)
+  have hxWitness : ambientEmbeddedPrimeWitness K F E j e z = xPrime := rfl
   rw [hxWitness]
-  exact
-    (DFunLike.congr_fun
-      (localArtinMonoidHom_eq_of_embedding F E jI) xPrime).trans
-      hconcretePrimeZ
+  exact (DFunLike.congr_fun (localArtinMonoidHom_eq_of_embedding F E jI) xPrime).trans
+    (hconcretePrime.trans ((abelianizationCongr_of qF q).symm.trans hqz))
 
 /-- The chosen prime witness satisfies the ambient fixed-field
 norm-residue symbol formula. -/
@@ -362,28 +287,11 @@ theorem
     intro x hx
     rcases hx with ⟨y, rfl⟩
     exact ⟨algebraMap F E y, rfl⟩
-  let hSourceNormal :
-      (extensionSubgroup
-        (intrinsicAbstractBase F) EI.field EI.below).Normal :=
-    EI.normal
-  let hSourceFinite : Finite
-      ((intrinsicAbstractBase F).toSubgroup ⧸
-        extensionSubgroup
-          (intrinsicAbstractBase F) EI.field EI.below) :=
-    EI.finite
-  let hTargetNormal :
-      (extensionSubgroup H₀ J₀ hJH).Normal :=
-    ambientEmbeddedExtensionSubgroup_normal K F E j e
-  let hTargetFinite : Finite
-      (H₀.toSubgroup ⧸ extensionSubgroup H₀ J₀ hJH) :=
-    ambientEmbeddedExtensionQuotient_finite K F E j e
-  let hHabsolute : Finite
-      ((baseField
-        Gal(SeparableClosure K/K)).toSubgroup ⧸
-        extensionSubgroup
-          (baseField Gal(SeparableClosure K/K))
-          H₀ (le_baseField H₀)) := by
-    exact ambientEmbeddedAbsoluteQuotientFinite K F i
+  let hSourceNormal := EI.normal
+  let hSourceFinite := EI.finite
+  let hTargetNormal := ambientEmbeddedExtensionSubgroup_normal K F E j e
+  let hTargetFinite := ambientEmbeddedExtensionQuotient_finite K F E j e
+  let hHabsolute := ambientEmbeddedAbsoluteQuotientFinite K F i
   let H : FiniteAbstractField
       Gal(SeparableClosure K/K) :=
     ⟨H₀, ambientEmbeddedAbsoluteQuotientFinite K F i⟩
@@ -399,20 +307,10 @@ theorem
   let qF :=
     finiteGaloisAbstractQuotientEquivGaloisGroupOfEmbedding
       F E jI
-  let q₀ :=
-    abstractExtensionQuotientEquivGaloisGroup
-      K (SeparableClosure K) H₀ J₀ hJH hTargetNormal
   let RF :=
     (intrinsicFiniteAbstractBase F).toFiniteResidueAbstractField
       (localResidueDatum F)
-  let _hRFFinite : Finite
-      (RF.field.toSubgroup ⧸
-        extensionSubgroup RF.field EI.field EI.below) := by
-    change Finite
-      ((intrinsicAbstractBase F).toSubgroup ⧸
-        extensionSubgroup
-          (intrinsicAbstractBase F) EI.field EI.below)
-    exact hSourceFinite
+  let _hRFFinite := hSourceFinite
   let RH :=
     H.toFiniteResidueAbstractField (localResidueDatum K)
   let zF : Abelianization EI.extensionQuotient :=
@@ -426,9 +324,6 @@ theorem
   let sigmaH :=
     intrinsicFrobeniusElementToAmbientEmbeddedField
       K F E j e sigma
-  let qAmbient :=
-    (localResidueDatum K).frobeniusRestriction
-      RH J₀ hJH sigmaH
   let SF :=
     (localResidueDatum F).frobeniusFixedField
       RF EI.field EI.below sigma
@@ -446,13 +341,7 @@ theorem
   let hSHfinite :=
     (localResidueDatum K).frobeniusFixedField_finite
       RH J₀ hJH sigmaH
-  let _hSHFinite : Finite
-      (H₀.toSubgroup ⧸
-        extensionSubgroup H₀ SH hSHH) := by
-    change Finite
-      (RH.field.toSubgroup ⧸
-        extensionSubgroup RH.field SH hSHH)
-    exact hSHfinite
+  let _hSHFinite := hSHfinite
   let hSHabsolute :=
     (localResidueDatum K).frobeniusFixedField_absoluteFinite
       H J₀ hJH sigmaH
@@ -477,10 +366,8 @@ theorem
         K F E j e sigma).toRingEquiv
   have hphi (x : LF) :
       ((phi x : LH) : SeparableClosure K) =
-        e (x : SeparableClosure F) := by
-    exact
-      intrinsicFrobeniusFixedFieldEquivAmbientEmbeddedField_apply_val
-        K F E j e sigma x
+        e (x : SeparableClosure F) :=
+    intrinsicFrobeniusFixedFieldEquivAmbientEmbeddedField_apply_val K F E j e sigma x
   have hphiComm :
       RingHom.comp (algebraMap F₀ LH) phiF.toRingEquiv.toRingHom =
         RingHom.comp phi.toRingHom
@@ -526,10 +413,7 @@ theorem
     LH.val.restrictScalars K
   let : Algebra.IsSeparable K LH := by
     let : IsScalarTower K LH (SeparableClosure K) :=
-      IsScalarTower.of_algebraMap_eq' (by
-        apply RingHom.ext
-        intro x
-        exact (iH.commutes x).symm)
+      IsScalarTower.of_algebraMap_eq' iH.comp_algebraMap.symm
     exact
       Algebra.isSeparable_tower_bot_of_isSeparable
         K LH (SeparableClosure K)
@@ -544,23 +428,11 @@ theorem
     finiteExtensionSpectralValuation_hasExtension K LH
   have hmem (x : LF) :
       x ∈ (ValuativeRel.valuation LF).valuationSubring ↔
-        phi x ∈ (ValuativeRel.valuation LH).valuationSubring := by
-    exact
-      valuationSubring_mem_iff_of_separableClosureRingEquiv
-        F K LF LH LF.val iH e.toRingEquiv
-        (localSeparableValuationSubring_eq_comap_finiteExtensionEquiv
-          K F i e)
-        phi hphi
-        x
+        phi x ∈ (ValuativeRel.valuation LH).valuationSubring :=
+    valuationSubring_mem_iff_of_separableClosureRingEquiv F K LF LH LF.val iH e.toRingEquiv
+      (localSeparableValuationSubring_eq_comap_finiteExtensionEquiv K F i e) phi hphi x
   let pF :=
     chosenValuationOneUnitOfRingEquiv LF LH phi hmem
-  let xPrime : Fˣ :=
-    normUnits F LF pF
-  let xPrime0 : F₀ˣ :=
-    Units.mapEquiv phiF.toMulEquiv xPrime
-  have hxWitness :
-      ambientEmbeddedPrimeWitness K F E j e z = xPrime := by
-    rfl
   have hpHvalue :=
     chosenValuationOneUnitOfRingEquiv_target LF LH phi hmem
   let pH : LHˣ :=
@@ -581,55 +453,11 @@ theorem
     exact
       localHenselianValuation_isPrimeElement_abstractFixedField
         K SigmaH pH hpHvalue
-  have hambientPrime :
-      abstractFixedFieldNormResidueSymbol
-          K (SeparableClosure K)
-          (localResidueDatum K)
-          (localHenselianValuation K)
-          (separableClosureUnits_isClassFormation K)
-          H₀ J₀ hJH (Additive.ofMul xPrime0) =
-        Additive.ofMul
-          (q₀.abelianizationCongr
-            (Abelianization.of qAmbient)) := by
-    exact
-      abstractFixedFieldNormResidueSymbol_eq_of_transportedValuationOneUnit
-        K F LF H J₀ hJH sigmaH
-          (_hLHNorm := hLHNorm)
-          (_hLHVal := hLHVal)
-          (_hLHLocal := hLHLocal)
-          (_hF₀LHFinite := hF₀LHFinite)
-          phiF.toRingEquiv phi hphiComm hmem hpiH
-  have hxPrime0 :
-      Units.mapEquiv phiF.toMulEquiv
-          (ambientEmbeddedPrimeWitness K F E j e z) =
-        xPrime0 := by
-    exact congrArg
-      (Units.mapEquiv phiF.toMulEquiv) hxWitness
-  have hsymbolWitness :
-      abstractFixedFieldNormResidueSymbol
-          K (SeparableClosure K)
-          (localResidueDatum K)
-          (localHenselianValuation K)
-          (separableClosureUnits_isClassFormation K)
-          H₀ J₀ hJH
-          (Additive.ofMul
-            (Units.mapEquiv phiF.toMulEquiv
-              (ambientEmbeddedPrimeWitness K F E j e z))) =
-        Additive.ofMul
-          (q₀.abelianizationCongr
-            (Abelianization.of qAmbient)) := by
-    exact
-      (congrArg
-        (fun y : F₀ˣ =>
-          abstractFixedFieldNormResidueSymbol
-            K (SeparableClosure K)
-            (localResidueDatum K)
-            (localHenselianValuation K)
-            (separableClosureUnits_isClassFormation K)
-            H₀ J₀ hJH (Additive.ofMul y))
-        hxPrime0).trans hambientPrime
   unfold ambientEmbeddedPrimeSymbolProperty
-  exact hsymbolWitness
+  exact abstractFixedFieldNormResidueSymbol_eq_of_transportedValuationOneUnit
+    K F LF H J₀ hJH sigmaH (_hLHNorm := hLHNorm) (_hLHVal := hLHVal)
+    (_hLHLocal := hLHLocal) (_hF₀LHFinite := hF₀LHFinite)
+    phiF.toRingEquiv phi hphiComm hmem hpiH
 
 /-- The transported ambient symbol of the chosen prime witness equals
 its ambient Frobenius target. -/
@@ -701,28 +529,11 @@ theorem
     intro x hx
     rcases hx with ⟨y, rfl⟩
     exact ⟨algebraMap F E y, rfl⟩
-  let hSourceNormal :
-      (extensionSubgroup
-        (intrinsicAbstractBase F) EI.field EI.below).Normal :=
-    EI.normal
-  let hSourceFinite : Finite
-      ((intrinsicAbstractBase F).toSubgroup ⧸
-        extensionSubgroup
-          (intrinsicAbstractBase F) EI.field EI.below) :=
-    EI.finite
-  let hTargetNormal :
-      (extensionSubgroup H₀ J₀ hJH).Normal :=
-    ambientEmbeddedExtensionSubgroup_normal K F E j e
-  let hTargetFinite : Finite
-      (H₀.toSubgroup ⧸ extensionSubgroup H₀ J₀ hJH) :=
-    ambientEmbeddedExtensionQuotient_finite K F E j e
-  let hHabsolute : Finite
-      ((baseField
-        Gal(SeparableClosure K/K)).toSubgroup ⧸
-        extensionSubgroup
-          (baseField Gal(SeparableClosure K/K))
-          H₀ (le_baseField H₀)) := by
-    exact ambientEmbeddedAbsoluteQuotientFinite K F i
+  let hSourceNormal := EI.normal
+  let hSourceFinite := EI.finite
+  let hTargetNormal := ambientEmbeddedExtensionSubgroup_normal K F E j e
+  let hTargetFinite := ambientEmbeddedExtensionQuotient_finite K F E j e
+  let hHabsolute := ambientEmbeddedAbsoluteQuotientFinite K F i
   let H : FiniteAbstractField
       Gal(SeparableClosure K/K) :=
     ⟨H₀, ambientEmbeddedAbsoluteQuotientFinite K F i⟩
@@ -735,14 +546,7 @@ theorem
   let RF :=
     (intrinsicFiniteAbstractBase F).toFiniteResidueAbstractField
       (localResidueDatum F)
-  let _hRFFinite : Finite
-      (RF.field.toSubgroup ⧸
-        extensionSubgroup RF.field EI.field EI.below) := by
-    change Finite
-      ((intrinsicAbstractBase F).toSubgroup ⧸
-        extensionSubgroup
-          (intrinsicAbstractBase F) EI.field EI.below)
-    exact hSourceFinite
+  let _hRFFinite := hSourceFinite
   let RH :=
     H.toFiniteResidueAbstractField (localResidueDatum K)
   let zF : Abelianization EI.extensionQuotient :=

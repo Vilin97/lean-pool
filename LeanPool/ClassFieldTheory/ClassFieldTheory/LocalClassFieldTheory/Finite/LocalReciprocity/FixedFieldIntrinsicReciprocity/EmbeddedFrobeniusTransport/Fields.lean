@@ -20,6 +20,20 @@ open LocalFieldTheory RamificationTheory CyclicCohomology KummerTheory
 open ClassFormation
 open scoped ValuativeRel
 
+section EmbeddedFrobeniusTransport
+
+variable (K F E : Type)
+    [Field K] [ValuativeRel K] [TopologicalSpace K]
+    [IsNonarchimedeanLocalField K]
+    [Field F] [ValuativeRel F] [TopologicalSpace F]
+    [IsNonarchimedeanLocalField F]
+    [Field E] [Algebra K F] [Algebra F E] [Algebra K E]
+    [IsScalarTower K F E]
+    [FiniteDimensional K F] [Algebra.IsSeparable K F]
+    [Valuation.HasExtension
+      (ValuativeRel.valuation K) (ValuativeRel.valuation F)]
+    [FiniteDimensional F E] [IsGalois F E]
+
 /-- Restricting the ambient separable-closure equivalence gives an
 `F`-algebra equivalence between the intrinsic and ambient Frobenius fixed
 fields. -/
