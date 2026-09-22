@@ -146,7 +146,7 @@ theorem eq_parkedBlank_of_outAcc_nil {t : Tape} (h : OutAcc [] t) :
     funext j
     rcases Nat.eq_zero_or_pos j with hj0 | hj1
     · subst hj0; rw [hcell0, Tape.init_cells_zero]
-    · rw [htail j (by simpa using hj1), show j = (j - 1) + 1 from by omega,
+    · rw [htail j (by simpa using! hj1), show j = (j - 1) + 1 from by omega,
         Tape.init_cells_ge [] (j - 1) (by simp)]
 
 /-- The register-shaped tape at iteration `i` is `Parked`. -/

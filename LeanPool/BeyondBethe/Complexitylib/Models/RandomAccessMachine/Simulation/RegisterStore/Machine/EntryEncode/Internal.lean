@@ -131,7 +131,7 @@ theorem entryEncodeTM_hoareTime_frame_internal
     rw [TM.phase2Wrap_halted_iff]
     exact hvalueHalt
   · refine ⟨?_, ?_, ?_, ?_, hvalueSuffix, ?_, hvalueHeadFinal, ?_, ?_⟩
-    · simpa [finalCfg] using hvalueInput.trans haddressInput
+    · simpa [finalCfg] using! hvalueInput.trans haddressInput
     · change (valueDone.work tapes.address).HasBinarySuffix []
       rw [hvalueFrame tapes.address tapes.ne]
       exact haddressSuffix
@@ -147,7 +147,7 @@ theorem entryEncodeTM_hoareTime_frame_internal
     · intro i hia hiv
       change valueDone.work i = work₀ i
       exact (hvalueFrame i hiv).trans (haddressFrame i hia)
-    · simpa [finalCfg, Entry.encode, List.append_assoc] using hvalueOutput
+    · simpa [finalCfg, Entry.encode, List.append_assoc] using! hvalueOutput
 
 theorem rewindEntryEncodeTM_hoareTime_frame_internal
     (tapes : EntryEncodeTapes n) (entry : Entry)
@@ -257,7 +257,7 @@ theorem rewindEntryEncodeTM_hoareTime_frame_internal
     rw [TM.phase2Wrap_halted_iff]
     exact hvalueHalt
   · refine ⟨?_, ?_, ?_, ?_, hvalueSuffix, ?_, hvalueHeadFinal, ?_, ?_⟩
-    · simpa [finalCfg] using hvalueInput.trans haddressInput
+    · simpa [finalCfg] using! hvalueInput.trans haddressInput
     · change (valueDone.work tapes.address).HasBinarySuffix []
       rw [hvalueFrame tapes.address tapes.ne]
       exact haddressSuffix
@@ -273,7 +273,7 @@ theorem rewindEntryEncodeTM_hoareTime_frame_internal
     · intro i hia hiv
       change valueDone.work i = work₀ i
       exact (hvalueFrame i hiv).trans (haddressFrame i hia)
-    · simpa [finalCfg, Entry.encode, List.append_assoc] using hvalueOutput
+    · simpa [finalCfg, Entry.encode, List.append_assoc] using! hvalueOutput
 
 theorem rewindEntryEncodeRestoreTM_hoareTime_frame_internal
     (tapes : EntryEncodeTapes n) (entry : Entry) (emitted : List Bool)
@@ -458,7 +458,7 @@ theorem rewindEntryEncodeRestoreTM_hoareTime_frame_internal
           output := TM.transitionTape encoded.output }
         tailFinal := by
     simpa only [hencodedInputTransition, hencodedWorkTransition,
-      hencodedOutputTransition] using htailReach
+      hencodedOutputTransition] using! htailReach
   have hreach := TM.seqTM_reachesIn_of_reachesIn
     (rewindEntryEncodeTM tapes)
     (TM.seqTM (TM.rewindWorkTM tapes.address)
@@ -471,10 +471,9 @@ theorem rewindEntryEncodeRestoreTM_hoareTime_frame_internal
     ?_, hreach, ?_, ?_⟩
   · unfold rewindEntryEncodeRestoreTime
     omega
-  · change (rewindEntryEncodeRestoreTM tapes).halted finalCfg
-    unfold rewindEntryEncodeRestoreTM
-    rw [TM.phase2Wrap_halted_iff]
-    exact htailHalt
+  · exact (TM.phase2Wrap_halted_iff (rewindEntryEncodeTM tapes)
+      (TM.seqTM (TM.rewindWorkTM tapes.address) (TM.rewindWorkTM tapes.value))
+      tailFinal).mpr htailHalt
   · refine ⟨?_, hrestoredWork, ?_⟩
     · change restored.input = inp₀
       exact hvalueInput.trans (haddressInput.trans hencodedInput)

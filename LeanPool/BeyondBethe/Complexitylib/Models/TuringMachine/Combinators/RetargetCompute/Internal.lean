@@ -44,8 +44,7 @@ theorem retargetInputStarted_reachesIn_of_retargetInput_internal (M : TM k)
     (fun c => c) _ hreach
   intro c₀ c₁ hstep
   change (retargetInputStarted M).step c₀ = some c₁
-  rw [retargetInputStarted_step_eq_internal]
-  exact hstep
+  exact (retargetInputStarted_step_eq_internal M c₀).trans hstep
 
 /-- In the nondegenerate case, the wrapper start state is exactly the source
 state after its first transition from the all-sentinel configuration. -/
@@ -210,7 +209,7 @@ theorem retargetInputStarted_hoareTime_internal (M : TM k)
         retargetInputStartedCfg M y inp := by
     exact Cfg.ext rfl rfl hpre.1 hpre.2
   refine ⟨c', t, ht, ?_, hhalt, hout⟩
-  convert hreach using 1
+  exact hstart.symm ▸ hreach
 
 /-- Combined placement seam with an exact preserved physical frame. The source
 work tapes and virtual input occupy the placed middle block; all prefix and

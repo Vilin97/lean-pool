@@ -27,6 +27,8 @@ namespace RAM
 
 namespace TMConfig
 
+variable {n bound : ℕ}
+
 namespace Step
 
 

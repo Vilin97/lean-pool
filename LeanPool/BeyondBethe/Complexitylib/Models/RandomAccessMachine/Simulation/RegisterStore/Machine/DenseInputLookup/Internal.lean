@@ -804,7 +804,7 @@ theorem denseInputScanTM_reachesIn_frame_internal {n : ℕ}
   rw [← hstart] at hrun
   let done := denseInputDoneCfg counter result work₀ out₀ input address
   refine ⟨done, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · simpa [denseInputScanTime, spec, denseInputLoopSpec, done] using hrun
+  · simpa [denseInputScanTime, spec, denseInputLoopSpec, done] using! hrun
   · rfl
   · rfl
   · rfl
@@ -943,7 +943,7 @@ theorem denseInputLookupTM_hoareTime_internal {n : ℕ}
         · rw [hdoneOther i hic hir]
           exact hcopiedParked i
     exact ⟨done, denseInputScanTime input.length address, le_rfl,
-      hreach, hhalt, hdoneHead, by simpa [inp₀] using hdoneCells,
+      hreach, hhalt, hdoneHead, by simpa [inp₀] using! hdoneCells,
       hdoneCounter, hdoneResult, hdoneOther, hdoneParked, hdoneOutput⟩
   let stablePost : TM.TapePred n := fun inp work out =>
     inp.cells = inp₀.cells ∧

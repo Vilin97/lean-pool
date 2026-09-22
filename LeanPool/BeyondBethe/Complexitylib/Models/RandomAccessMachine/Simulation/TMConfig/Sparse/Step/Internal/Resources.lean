@@ -225,7 +225,7 @@ private theorem setupOps_envelopeChain {tm : TM n} {bound : ℕ}
     · simp only [Structured.Internal.Basic.writeValue]
       rw [hthirdState, hthirdZero, hstoreState, Nat.add_zero]
       exact hstateBound
-  simpa [setupOps, first, second, third, final] using
+  simpa [setupOps, first, second, third, final] using!
     And.intro henvelope
       (And.intro hfirst (And.intro hsecond (And.intro hthird hfinal)))
 
@@ -337,7 +337,7 @@ private theorem loadTapeOps_envelopeChain {tm : TM n} {bound : ℕ}
     · exact lt_trans (hrange.2.2.2.2.2.2 tape).2
         (control_lt_registerBound_internal n bound)
     · exact haddressed.value_le (addressed (addressReg n))
-  simpa [loadTapeOps, addressOps, first, multiplied, addressed, final] using
+  simpa [loadTapeOps, addressOps, first, multiplied, addressed, final] using!
     And.intro henvelope
       (And.intro hfirst (And.intro hmultiplied (And.intro haddressed hfinal)))
 
@@ -470,7 +470,7 @@ theorem continueCheck_measured_internal {tm : TM n} {bound : ℕ}
         ⟨stateCode tm cfg.state, by simp [stateCode]⟩)
       cleared final 1 (4 * wordWidth tm bound) (spaceBound tm bound) := by
     simpa [hbranchState, final, wordWidth, Structured.Internal.valueWidth,
-      spaceBound, Structured.Internal.envelopeSpace] using hbranch
+      spaceBound, Structured.Internal.envelopeSpace] using! hbranch
   have hdispatch := Structured.Switch.select_measured
     (fun code : Fin (Fintype.card tm.Q) => .basics
       [.imm (valueReg n)
@@ -699,7 +699,7 @@ theorem loop_measured_internal {tm : TM n} {steps base : ℕ}
           (spaceBound tm bound) := by
         simpa [loopBody] using hbody
       have hrun := Structured.Internal.MeasuredRuns.whileNonzeroEnvelope
-        hnonzero (by simpa [bound, Nat.add_assoc] using henvelope) hbody' hloop'
+        hnonzero (by simpa [bound, Nat.add_assoc] using! henvelope) hbody' hloop'
       refine ⟨final, ?_, hfinalRepresents, ?_⟩
       · simpa [loopSteps, loopTimeBound, hstep, bound, wordWidth,
           Structured.Internal.valueWidth, spaceBound,

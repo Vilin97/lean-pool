@@ -125,7 +125,7 @@ theorem decodedAddressEqTM_reachesIn_frame_internal {n : ℕ}
           input := inp₀
           work := work₀
           output := out₀ } finalCfg := by
-    simpa [decodedAddressEqTM, rewindTM, compareTM, finalCfg] using hfullReach
+    simpa [decodedAddressEqTM, rewindTM, compareTM, finalCfg] using! hfullReach
   have haddressStartFinal : (finalCfg.work addressIdx).cells 0 = Γ.start :=
     TM.work_cells_zero_eq_start_of_reachesIn
       (tm := decodedAddressEqTM addressIdx queryIdx resultIdx) addressIdx

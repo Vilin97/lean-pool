@@ -119,7 +119,7 @@ theorem dispatchProgramTM_hoareTime_of_execute_internal
       have hcleanLhs : cleanWork tapes.liftedLhs = blankTape := by
         have hzero := hready.1.control.lookup.destination
         change (cleanWork tapes.liftedLhs).HasBinaryNat 0 at hzero
-        simpa only [blankTape] using
+        simpa only [blankTape] using!
           Tape.HasBinaryNat.eq_init_move_right hzero
       have hwork₀Parked : ∀ i, TM.Parked (work₀ i) := by
         intro i
@@ -376,12 +376,12 @@ theorem bufferedCleanupTM_hoareTime_frame_internal
         instructionCleanupResetHeadBound sourceHeadBound slot := by
     intro slot
     fin_cases slot
-    · simpa using (hready.result.cleanup 0).2.1.le
-    · simpa using (hready.result.cleanup 1).2.1.le
-    · simpa using (hready.result.cleanup 2).2.1.le
-    · simpa using (hready.result.cleanup 3).2.1.le
-    · simpa using (hready.result.cleanup 4).2.1.le
-    · simpa using hready.result.remaining.2.1.le
+    · simpa using! (hready.result.cleanup 0).2.1.le
+    · simpa using! (hready.result.cleanup 1).2.1.le
+    · simpa using! (hready.result.cleanup 2).2.1.le
+    · simpa using! (hready.result.cleanup 3).2.1.le
+    · simpa using! (hready.result.cleanup 4).2.1.le
+    · simpa using! hready.result.remaining.2.1.le
     · exact hready.sourceHead
   have hreset := TM.resetBinaryWorkManyTM_hoareTime_frame targets resetBits
     resetHeads inp₀ initialWork out₀
@@ -472,7 +472,7 @@ theorem bufferedCleanupTM_hoareTime_frame_internal
       (List.mem_ofFn.mpr ⟨slot, rfl⟩)
   have hresetSource : resetWork tapes.liftedSource = TM.resetBinaryBlank := by
     simpa [instructionCleanupResetTape, instructionCleanupResetParentSlot,
-      ControlInstructionTapes.liftedSource] using hresetTarget 6
+      ControlInstructionTapes.liftedSource] using! hresetTarget 6
   have hrewoundSource :
       rewoundWork tapes.liftedSource = TM.resetBinaryBlank := by
     simp [rewoundWork, tapes.liftedSource_ne_buffer, hresetSource]
@@ -1083,7 +1083,7 @@ theorem instructionCleanupTM_hoareTime_frame_internal
   simpa only [nextStore, nextPC, cleanupValues, remainingValue,
     instructionCleanupTime, bufferedCleanupTime,
     instructionCleanupResetBitsAt, bufferedCleanupResetBitsAt,
-    instructionCleanupResetBits, bufferedCleanupResetBits] using hgeneric
+    instructionCleanupResetBits, bufferedCleanupResetBits] using! hgeneric
 
 /-- One selected instruction followed by cleanup realizes the next reusable
 sparse-snapshot boundary. -/
@@ -1135,7 +1135,7 @@ theorem programStepTM_hoareTime_frame_internal
       hprogram inp work out hpre
     have hsourceStart₀ :
         (work tapes.liftedSource).cells 0 = Γ.start := by
-      simpa [hpre.2.1] using hready.control.lookup.sourceStart
+      simpa [hpre.2.1] using! hready.control.lookup.sourceStart
     have hsourceStart := TM.work_cells_zero_eq_start_of_reachesIn
       tapes.liftedSource hreach hsourceStart₀
     have hbufferStart₀ :
@@ -1155,7 +1155,7 @@ theorem programStepTM_hoareTime_frame_internal
         bufferStart := hbufferStart
         sourceHead := ?_ }
     have hsourceHead₀ : (work tapes.liftedSource).head = 1 := by
-      simpa [hpre.2.1] using hready.control.lookup.sourceHead
+      simpa [hpre.2.1] using! hready.control.lookup.sourceHead
     rw [hsourceHead₀] at hsourceHead
     simp only [sourceBound, programStepSourceHeadBound]
     omega
