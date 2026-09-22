@@ -184,6 +184,7 @@ theorem minimalFullySymmetricMem_of_kyFan_dominated
     exact (hAB k).trans (hBC k)
   · simpa only [one_mul] using hAgauge.2
 
+omit [CompleteSpace E] [CompleteSpace F] in
 /-- **Fan dominance for every standard symmetric ideal.** -/
 theorem standard_fanDominance
     (I : StandardSymmetricIdeal) {A B : E →L[𝕜] F}

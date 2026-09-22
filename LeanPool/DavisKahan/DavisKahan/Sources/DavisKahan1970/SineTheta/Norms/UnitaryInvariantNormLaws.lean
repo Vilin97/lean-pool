@@ -345,6 +345,7 @@ theorem gauge_add_le
   exact hto
 
 omit [CompleteSpace G] in
+omit [CompleteSpace E] [CompleteSpace F] in
 /-- Exact ideal inequality for the real-valued source norm. -/
 theorem gauge_comp_le (N : SymmetricNormingFunction)
     {A : E →L[𝕜] F} (hA : N.Mem A)
@@ -362,6 +363,7 @@ theorem gauge_comp_le (N : SymmetricNormingFunction)
     ENNReal.toReal_ofReal (norm_nonneg R)] at hto
   exact hto
 
+omit [CompleteSpace G] in
 /-- The canonical source norm satisfies the contraction-compatibility law
 used in the paper. -/
 theorem gauge_comp_le_of_contractions (N : SymmetricNormingFunction)

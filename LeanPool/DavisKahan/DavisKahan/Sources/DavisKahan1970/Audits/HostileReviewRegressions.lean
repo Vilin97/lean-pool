@@ -98,8 +98,8 @@ theorem ambient_sinTwoTheta_is_symmetric_in_the_pair
 membership and its value. -/
 theorem source_gauge_does_not_see_the_perturbation_sign
     {𝕜 : Type*} [RCLike 𝕜] {E F : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] 
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] 
     (N : SymmetricNormingFunction) (A : E →L[𝕜] F) :
     N.gauge (-A) = N.gauge A ∧ (N.Mem (-A) ↔ N.Mem A) :=
   ⟨N.gauge_neg A, N.mem_neg⟩
