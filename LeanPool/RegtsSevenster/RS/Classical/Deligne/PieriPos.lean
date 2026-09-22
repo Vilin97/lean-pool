@@ -554,8 +554,8 @@ private theorem sum_stripDiagram_graded {ℓ n : ℕ}
     (j := fun μ _ => fun i : Fin ℓ => μ.val.rowLen (i : ℕ))
     ?_ ?_ ?_ ?_ ?_
   · intro r hr
-    rw [Finset.mem_filter]
-    exact ⟨Finset.mem_univ _, hp r (Finset.mem_filter.mp hr).1⟩
+    exact Finset.mem_filter.mpr
+      ⟨Finset.mem_univ _, hp r (Finset.mem_filter.mp hr).1⟩
   · intro μ hμ
     have hpμ : p μ.val := (Finset.mem_filter.mp hμ).2
     rw [Finset.mem_filter]

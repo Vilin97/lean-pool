@@ -90,8 +90,8 @@ theorem interchange_actLeft
           (modTensorMod A N₂ P₂) :=
       whiskerLeft_modTensorπ_act A
         (modTensorMod A N₁ P₁) (modTensorMod A N₂ P₂)
-    rw [MonoidalCategory.whiskerLeft_comp, Category.assoc, hTpin]
-    simp only [Category.assoc]
+    erw [MonoidalCategory.whiskerLeft_comp, Category.assoc, hTpin]
+    repeat' erw [Category.assoc]
   conv_rhs => rw [associator_naturality_middle_assoc,
     associator_naturality_right_assoc,
     ← MonoidalCategory.whiskerLeft_comp_assoc,
@@ -117,7 +117,7 @@ theorem interchange_actLeft
       whiskerLeft_modTensorπ_act, Category.comp_id,
       tensorHom_comp_tensorHom, tensorHom_comp_tensorHom]
     simp
-  rw [reassoc_of% hmerge]
+  erw [reassoc_of% hmerge]
   -- Extract the action from the crossing.
   have htm : ((actLeft A N₁.X ▷ N₂.X) ▷ (P₁.X ⊗ P₂.X)) ≫
       tensorμ N₁.X N₂.X P₁.X P₂.X =
@@ -157,7 +157,7 @@ theorem interchange_comm
     (modTensorπ A N₁ N₂ ⊗ₘ modTensorπ A P₁ P₂)).mp ?_
   conv_lhs => rw [BraidedCategory.braiding_naturality_assoc,
     tensorHom_π_interchange, rawInterchangeπ, rawInterchange]
-  conv_rhs => rw [tensorHom_π_interchange_assoc,
+  conv_rhs => erw [tensorHom_π_interchange_assoc,
     rawInterchangeπ, rawInterchange, Category.assoc,
     Category.assoc]
   have hswap : modTensorπ A
@@ -199,10 +199,16 @@ theorem interchange_comm
     exact Category.assoc _ _ _
   conv_lhs => rw [← Category.assoc,
     tensorμ_braiding N₁.X N₂.X P₁.X P₂.X, Category.assoc]
+  conv_rhs => erw [← Category.assoc]
+  change _ = tensorμ N₁.X N₂.X P₁.X P₂.X ≫
+      (((modTensorπ A N₁ P₁ ⊗ₘ modTensorπ A N₂ P₂) ≫
+        modTensorπ A (modTensorMod A N₁ P₁) (modTensorMod A N₂ P₂)) ≫
+      modTensorMap A (modTensorSwapMod A N₁ P₁) (modTensorSwapMod A N₂ P₂))
   refine congrArg (fun t : (N₁.X ⊗ P₁.X) ⊗ (N₂.X ⊗ P₂.X) ⟶
       modTensor A (modTensorMod A P₁ N₁)
         (modTensorMod A P₂ N₂) =>
     tensorμ N₁.X N₂.X P₁.X P₂.X ≫ t) ?_
+  erw [Category.assoc]
   exact hR.symm
 
 /-- **The interchange is linear in the second factor**: the

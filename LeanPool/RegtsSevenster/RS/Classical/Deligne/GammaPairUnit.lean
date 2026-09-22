@@ -51,7 +51,7 @@ theorem gpair_unitLeft
     (m : Y ⟶ N.X) :
     gpair (M := regularMod R) (N := N) a m ≫
         (modTensorUnitLeftMod R N).hom.hom = gact a m := by
-  rw [gpair_def, Category.assoc]
+  erw [gpair_def, Category.assoc]
   exact whisker_eq _ (modTensorπ_desc R (regularMod R) N _ _)
 
 /-- The reindexed form of `RS.gpair_unitLeft`. -/
@@ -88,7 +88,7 @@ theorem gammaPairComparison_unitLeft
           (tmulEE _ _ a m) =
         gammaPairEven L R (regularMod R) N (tmulEE _ _ a m) ≫
           (modTensorUnitLeftMod R N).hom.hom := rfl
-    rw [h, gammaPairEven_tmulEE, gpairLin_apply]
+    erw [h, gammaPairEven_tmulEE, gpairLin_apply]
     refine Eq.trans ?_ (leftUnitorHom_evenMap_tmulEE
       (M := gammaModule D L R N.X) a m).symm
     exact gpair_unitLeft' R N _ a m
@@ -98,7 +98,7 @@ theorem gammaPairComparison_unitLeft
           (tmulOO _ _ a m) =
         gammaPairEven L R (regularMod R) N (tmulOO _ _ a m) ≫
           (modTensorUnitLeftMod R N).hom.hom := rfl
-    rw [h, gammaPairEven_tmulOO, gpairLin_apply]
+    erw [h, gammaPairEven_tmulOO, gpairLin_apply]
     refine Eq.trans ?_ (leftUnitorHom_evenMap_tmulOO
       (M := gammaModule D L R N.X) a m).symm
     exact gpair_unitLeft' R N _ a m
@@ -108,7 +108,7 @@ theorem gammaPairComparison_unitLeft
           (tmulEO _ _ a m) =
         gammaPairOdd L R (regularMod R) N (tmulEO _ _ a m) ≫
           (modTensorUnitLeftMod R N).hom.hom := rfl
-    rw [h, gammaPairOdd_tmulEO, gpairLin_apply]
+    erw [h, gammaPairOdd_tmulEO, gpairLin_apply]
     refine Eq.trans ?_ (leftUnitorHom_oddMap_tmulEO
       (M := gammaModule D L R N.X) a m).symm
     exact gpair_unitLeft' R N _ a m
@@ -118,7 +118,7 @@ theorem gammaPairComparison_unitLeft
           (tmulOE _ _ a m) =
         gammaPairOdd L R (regularMod R) N (tmulOE _ _ a m) ≫
           (modTensorUnitLeftMod R N).hom.hom := rfl
-    rw [h, gammaPairOdd_tmulOE, gpairLin_apply]
+    erw [h, gammaPairOdd_tmulOE, gpairLin_apply]
     refine Eq.trans ?_ (leftUnitorHom_oddMap_tmulOE
       (M := gammaModule D L R N.X) a m).symm
     exact gpair_unitLeft' R N _ a m
@@ -140,7 +140,7 @@ theorem gpair_unitRight
   have h : gpair (M := M) (N := regularMod R) m a ≫
       (modTensorUnitRightMod R M).hom.hom =
         (m ⊗ₘ a) ≫ actRight R M.X := by
-    rw [gpair_def, Category.assoc]
+    erw [gpair_def, Category.assoc]
     exact whisker_eq _ (modTensorπ_desc R M (regularMod R) _ _)
   refine h.trans ?_
   rw [actRight, ← Category.assoc,
@@ -185,7 +185,7 @@ theorem gammaPairComparison_unitRight
           (tmulEE _ _ m a) =
         gammaPairEven L R M (regularMod R) (tmulEE _ _ m a) ≫
           (modTensorUnitRightMod R M).hom.hom := rfl
-    rw [h, gammaPairEven_tmulEE, gpairLin_apply]
+    erw [h, gammaPairEven_tmulEE, gpairLin_apply]
     refine Eq.trans ?_ (rightUnitorHom_evenMap_tmulEE
       (M := gammaModule D L R M.X) m a).symm
     refine gpair_unitRight' R M _ _ ?_ m a
@@ -196,7 +196,7 @@ theorem gammaPairComparison_unitRight
           (tmulOO _ _ m a) =
         gammaPairEven L R M (regularMod R) (tmulOO _ _ m a) ≫
           (modTensorUnitRightMod R M).hom.hom := rfl
-    rw [h, gammaPairEven_tmulOO, gpairLin_apply]
+    erw [h, gammaPairEven_tmulOO, gpairLin_apply]
     refine Eq.trans ?_ (rightUnitorHom_evenMap_tmulOO
       (M := gammaModule D L R M.X) m a).symm
     refine Eq.trans (gpair_unitRight' R M _ (-L.sq.inv) ?_ m a) ?_
@@ -208,7 +208,7 @@ theorem gammaPairComparison_unitRight
           (tmulEO _ _ m a) =
         gammaPairOdd L R M (regularMod R) (tmulEO _ _ m a) ≫
           (modTensorUnitRightMod R M).hom.hom := rfl
-    rw [h, gammaPairOdd_tmulEO, gpairLin_apply]
+    erw [h, gammaPairOdd_tmulEO, gpairLin_apply]
     refine Eq.trans ?_ (rightUnitorHom_oddMap_tmulEO
       (M := gammaModule D L R M.X) m a).symm
     refine gpair_unitRight' R M _ _ ?_ m a
@@ -220,7 +220,7 @@ theorem gammaPairComparison_unitRight
           (tmulOE _ _ m a) =
         gammaPairOdd L R M (regularMod R) (tmulOE _ _ m a) ≫
           (modTensorUnitRightMod R M).hom.hom := rfl
-    rw [h, gammaPairOdd_tmulOE, gpairLin_apply]
+    erw [h, gammaPairOdd_tmulOE, gpairLin_apply]
     refine Eq.trans ?_ (rightUnitorHom_oddMap_tmulOE
       (M := gammaModule D L R M.X) m a).symm
     refine gpair_unitRight' R M _ _ ?_ m a
@@ -275,7 +275,7 @@ instance isIso_gammaPairComparison_unitLeft
     (N : Mod D R) :
     IsIso (gammaPairComparison L R (regularMod R) N) := by
   rw [← gammaPairIsoUnitLeft_hom]
-  infer_instance
+  exact (gammaPairIsoUnitLeft L R N).isIso_hom
 
 /-- The comparison isomorphism at the regular module on the
 right. -/
@@ -323,7 +323,7 @@ instance isIso_gammaPairComparison_unitRight
     (M : Mod D R) :
     IsIso (gammaPairComparison L R M (regularMod R)) := by
   rw [← gammaPairIsoUnitRight_hom]
-  infer_instance
+  exact (gammaPairIsoUnitRight L R M).isIso_hom
 
 end
 

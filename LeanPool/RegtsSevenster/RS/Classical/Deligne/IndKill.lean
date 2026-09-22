@@ -5,6 +5,7 @@ Authors: William Whistler
 -/
 
 import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndSplit
+import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.RegularTrace
 
 /-!
 # The induction kill: block products die with their multiplicity
@@ -25,12 +26,10 @@ namespace RS
 open Finset
 
 private theorem ma_add_apply {G : Type*} (f g : MonoidAlgebra ℂ G)
-    (x : G) : (f + g) x = f x + g x :=
-  Finsupp.add_apply f g x
+    (x : G) : (f + g).coeff x = f.coeff x + g.coeff x := rfl
 
 private theorem ma_smul_apply {G : Type*} (r : ℂ)
-    (f : MonoidAlgebra ℂ G) (x : G) : (r • f) x = r * f x :=
-  (Finsupp.smul_apply r f x).trans (smul_eq_mul _ _)
+    (f : MonoidAlgebra ℂ G) (x : G) : (r • f).coeff x = r * f.coeff x := rfl
 
 /-- The trace of left multiplication on a group algebra is the
 group order times the identity coefficient. -/
@@ -38,33 +37,14 @@ theorem trace_mulLeft_monoidAlgebra {G : Type*} [Group G]
     [Fintype G] [DecidableEq G] (x : MonoidAlgebra ℂ G) :
     LinearMap.trace ℂ (MonoidAlgebra ℂ G)
       (LinearMap.mulLeft ℂ x) =
-      (Fintype.card G : ℂ) * x 1 := by
-  classical
-  have hb : LinearMap.trace ℂ (G →₀ ℂ)
-      (LinearMap.mulLeft ℂ x) =
-      Matrix.trace (LinearMap.toMatrix Finsupp.basisSingleOne
-        Finsupp.basisSingleOne (LinearMap.mulLeft ℂ x)) :=
-    LinearMap.trace_eq_matrix_trace ℂ _ _
-  show LinearMap.trace ℂ (G →₀ ℂ) (LinearMap.mulLeft ℂ x) = _
-  rw [hb, Matrix.trace]
-  have hdiag : ∀ g : G,
-      Matrix.diag (LinearMap.toMatrix Finsupp.basisSingleOne
-        Finsupp.basisSingleOne (LinearMap.mulLeft ℂ x)) g =
-      x 1 := by
-    intro g
-    rw [Matrix.diag_apply, LinearMap.toMatrix_apply]
-    simp only [Finsupp.coe_basisSingleOne,
-      Finsupp.basisSingleOne_repr, LinearEquiv.refl_apply]
-    exact (MonoidAlgebra.mul_single_apply x 1 g g).trans
-      (by rw [mul_inv_cancel, mul_one])
-  rw [Finset.sum_congr rfl fun g _ => hdiag g,
-    Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
+      (Fintype.card G : ℂ) * x.coeff 1 :=
+  trace_mulLeft x
 
 /-- An idempotent of a finite group algebra over ℂ with vanishing
 identity coefficient is zero. -/
 theorem eq_zero_of_idem_of_coeff_one {G : Type*} [Group G]
     [Fintype G] [DecidableEq G] {x : MonoidAlgebra ℂ G}
-    (hidem : x * x = x) (h1 : x 1 = 0) : x = 0 := by
+    (hidem : x * x = x) (h1 : x.coeff 1 = 0) : x = 0 := by
   classical
   set L := LinearMap.mulLeft ℂ x with hLdef
   have hLL : L ∘ₗ L = L := by
@@ -75,7 +55,7 @@ theorem eq_zero_of_idem_of_coeff_one {G : Type*} [Group G]
     exact congrArg (fun f => f z) hLL
   have htr := hproj.trace
   rw [show LinearMap.trace ℂ (MonoidAlgebra ℂ G) L =
-    (Fintype.card G : ℂ) * x 1 from
+    (Fintype.card G : ℂ) * x.coeff 1 from
       trace_mulLeft_monoidAlgebra x, h1, mul_zero] at htr
   have hrank : Module.finrank ℂ (LinearMap.range L) = 0 := by
     exact_mod_cast htr.symm
@@ -92,7 +72,7 @@ universe u
 invariant. -/
 theorem shape_e_coeff_conj (P : SchurPackage.{u}) {n : ℕ}
     (lam : Shape n) (g k : Equiv.Perm (Fin n)) :
-    Shape.e P lam (g⁻¹ * k * g) = Shape.e P lam k := by
+    (Shape.e P lam).coeff (g⁻¹ * k * g) = (Shape.e P lam).coeff k := by
   have h1 := shape_e_coeff P lam (g⁻¹ * k * g)
   have h2 := shape_e_coeff P lam k
   have hcast : permCast lam.prop.symm (g⁻¹ * k * g) =
@@ -120,18 +100,14 @@ theorem shape_e_central (P : SchurPackage.{u}) {n : ℕ}
   suffices hsingle : ∀ (g : Equiv.Perm (Fin n)) (c : ℂ),
       Shape.e P lam * MonoidAlgebra.single g c =
         MonoidAlgebra.single g c * Shape.e P lam by
-    conv_lhs => rw [← Finsupp.sum_single y]
-    conv_rhs => rw [← Finsupp.sum_single y]
-    show Shape.e P lam * (∑ g ∈ y.support,
-        Finsupp.single g (y g) : SymGroupAlgebra n) =
-      (∑ g ∈ y.support,
-        Finsupp.single g (y g) : SymGroupAlgebra n) * Shape.e P lam
-    rw [Finset.mul_sum, Finset.sum_mul]
-    exact Finset.sum_congr rfl fun g _ => hsingle g _
+    induction y using MonoidAlgebra.induction_on with
+    | of g => exact hsingle g 1
+    | add y z hy hz => rw [mul_add, add_mul, hy, hz]
+    | smul r y hy => rw [mul_smul_comm, smul_mul_assoc, hy]
   intro g c
   ext k
-  rw [MonoidAlgebra.mul_single_apply,
-    MonoidAlgebra.single_mul_apply]
+  rw [MonoidAlgebra.coeff_mul_single_apply,
+    MonoidAlgebra.coeff_single_mul_apply]
   have hconj := shape_e_coeff_conj P lam g (k * g⁻¹)
   have harg : g⁻¹ * (k * g⁻¹) * g = g⁻¹ * k := by
     group
@@ -240,7 +216,7 @@ theorem blockEmbed_inj {a b : ℕ} {σ σ' : Equiv.Perm (Fin a)}
 theorem blockAlgEmbed_apply_blockEmbed {a b : ℕ}
     (x : SymGroupAlgebra a) (y : SymGroupAlgebra b)
     (σ : Equiv.Perm (Fin a)) (τ : Equiv.Perm (Fin b)) :
-    blockAlgEmbed x y (blockEmbed σ τ) = x σ * y τ := by
+    (blockAlgEmbed x y).coeff (blockEmbed σ τ) = x.coeff σ * y.coeff τ := by
   classical
   induction x using MonoidAlgebra.induction_on with
   | of σ₀ =>
@@ -255,8 +231,8 @@ theorem blockAlgEmbed_apply_blockEmbed {a b : ℕ}
           intro he
           exact hcase (blockEmbed_inj he)
         rcases not_and_or.mp hcase with hσ | hτ
-        · simp [MonoidAlgebra.single_apply, hne, hσ]
-        · simp [MonoidAlgebra.single_apply, hne, hτ]
+        · simp [MonoidAlgebra.coeff_single_apply, hne, hσ]
+        · simp [MonoidAlgebra.coeff_single_apply, hne, hτ]
     | add y y' hy hy' =>
       rw [blockAlgEmbed_add_snd, ma_add_apply, hy, hy',
         ma_add_apply, mul_add]
@@ -278,7 +254,7 @@ theorem blockAlgEmbed_apply_eq_zero {a b : ℕ}
     {g : Equiv.Perm (Fin (a + b))}
     (h : ∀ (σ : Equiv.Perm (Fin a)) (τ : Equiv.Perm (Fin b)),
       g ≠ blockEmbed σ τ) :
-    blockAlgEmbed x y g = 0 := by
+    (blockAlgEmbed x y).coeff g = 0 := by
   classical
   induction x using MonoidAlgebra.induction_on with
   | of σ₀ =>
@@ -300,21 +276,10 @@ theorem blockAlgEmbed_apply_eq_zero {a b : ℕ}
 /-- Convolution at the identity. -/
 theorem mul_apply_one {G : Type*} [Group G] [Fintype G]
     [DecidableEq G] (x y : MonoidAlgebra ℂ G) :
-    (x * y) 1 = ∑ g : G, x g * y g⁻¹ := by
+    (x * y).coeff 1 = ∑ g : G, x.coeff g * y.coeff g⁻¹ := by
   classical
-  conv_lhs => rw [← Finsupp.sum_single x]
-  show ((∑ g ∈ x.support, MonoidAlgebra.single g (x g)) * y) 1 = _
-  rw [Finset.sum_mul]
-  have happ : ((∑ g ∈ x.support,
-      MonoidAlgebra.single g (x g) * y)) 1 =
-      ∑ g ∈ x.support,
-        (MonoidAlgebra.single g (x g) * y) 1 :=
-    Finsupp.finsetSum_apply x.support
-      (fun g => MonoidAlgebra.single g (x g) * y) 1
-  rw [happ]
-  rw [Finset.sum_congr rfl fun g _ =>
-    (MonoidAlgebra.single_mul_apply y (x g) g 1).trans
-      (by rw [mul_one])]
+  rw [MonoidAlgebra.coeff_mul_apply_left]
+  simp only [mul_one, Finsupp.sum]
   exact Finset.sum_subset (Finset.subset_univ _) fun g _ hg => by
     rw [Finsupp.notMem_support_iff.mp hg, zero_mul]
 
@@ -323,23 +288,23 @@ multiple of the induction multiplicity. -/
 theorem shape_e_mul_block_apply_one (P : SchurPackage.{u})
     {a b : ℕ} (lam : Shape (a + b)) (μ : Shape a) (ν : Shape b) :
     (Shape.e P lam *
-        blockAlgEmbed (Shape.e P μ) (Shape.e P ν)) 1 =
+        blockAlgEmbed (Shape.e P μ) (Shape.e P ν)).coeff 1 =
       (P.dim lam.val : ℂ) * (P.dim μ.val : ℂ) *
         (P.dim ν.val : ℂ) / (((a + b).factorial : ℂ)) *
         indMult lam μ ν := by
   classical
   rw [mul_apply_one]
   have hswap : (∑ g : Equiv.Perm (Fin (a + b)),
-      Shape.e P lam g *
-        blockAlgEmbed (Shape.e P μ) (Shape.e P ν) g⁻¹) =
+      (Shape.e P lam).coeff g *
+        (blockAlgEmbed (Shape.e P μ) (Shape.e P ν)).coeff g⁻¹) =
       ∑ g : Equiv.Perm (Fin (a + b)),
-        Shape.e P lam g⁻¹ *
-          blockAlgEmbed (Shape.e P μ) (Shape.e P ν) g :=
+        (Shape.e P lam).coeff g⁻¹ *
+          (blockAlgEmbed (Shape.e P μ) (Shape.e P ν)).coeff g :=
     Fintype.sum_equiv (Equiv.inv _) _ _ fun g => by
-      show Shape.e P lam g *
-          blockAlgEmbed (Shape.e P μ) (Shape.e P ν) g⁻¹ =
-        Shape.e P lam g⁻¹⁻¹ *
-          blockAlgEmbed (Shape.e P μ) (Shape.e P ν) g⁻¹
+      show (Shape.e P lam).coeff g *
+          (blockAlgEmbed (Shape.e P μ) (Shape.e P ν)).coeff g⁻¹ =
+        (Shape.e P lam).coeff g⁻¹⁻¹ *
+          (blockAlgEmbed (Shape.e P μ) (Shape.e P ν)).coeff g⁻¹
       rw [inv_inv]
   rw [hswap]
   have hoff : ∀ g ∈ (Finset.univ :
@@ -347,8 +312,8 @@ theorem shape_e_mul_block_apply_one (P : SchurPackage.{u})
       g ∉ (Finset.univ ×ˢ Finset.univ).image
         (fun p : Equiv.Perm (Fin a) × Equiv.Perm (Fin b) =>
           blockEmbed p.1 p.2) →
-      Shape.e P lam g⁻¹ *
-        blockAlgEmbed (Shape.e P μ) (Shape.e P ν) g = 0 := by
+      (Shape.e P lam).coeff g⁻¹ *
+        (blockAlgEmbed (Shape.e P μ) (Shape.e P ν)).coeff g = 0 := by
     intro g _ hg
     rw [blockAlgEmbed_apply_eq_zero _ _ fun σ τ he =>
       hg (Finset.mem_image.mpr ⟨(σ, τ),
@@ -363,8 +328,8 @@ theorem shape_e_mul_block_apply_one (P : SchurPackage.{u})
   rw [Finset.sum_product]
   have hterm : ∀ (σ : Equiv.Perm (Fin a))
       (τ : Equiv.Perm (Fin b)),
-      Shape.e P lam (blockEmbed σ τ)⁻¹ *
-        blockAlgEmbed (Shape.e P μ) (Shape.e P ν)
+      (Shape.e P lam).coeff (blockEmbed σ τ)⁻¹ *
+        (blockAlgEmbed (Shape.e P μ) (Shape.e P ν)).coeff
           (blockEmbed σ τ) =
       ((P.dim lam.val : ℂ) / (((a + b).factorial : ℂ))) *
         ((P.dim μ.val : ℂ) / ((a.factorial : ℂ))) *
@@ -375,7 +340,7 @@ theorem shape_e_mul_block_apply_one (P : SchurPackage.{u})
           jtChar ν.val (permCast ν.prop.symm τ)) := by
     intro σ τ
     rw [blockAlgEmbed_apply_blockEmbed]
-    have h1 : Shape.e P lam ((blockEmbed σ τ)⁻¹) =
+    have h1 : (Shape.e P lam).coeff ((blockEmbed σ τ)⁻¹) =
         ((P.dim lam.val : ℂ) / (((a + b).factorial : ℂ))) *
           jtChar lam.val
             (permCast lam.prop.symm (blockEmbed σ τ)) := by
@@ -384,10 +349,10 @@ theorem shape_e_mul_block_apply_one (P : SchurPackage.{u})
       exact hc
     have h2 := shape_e_coeff P μ σ
     have h3 := shape_e_coeff P ν τ
-    rw [h1, show (Shape.e P μ) σ =
+    rw [h1, show (Shape.e P μ).coeff σ =
         ((P.dim μ.val : ℂ) / ((a.factorial : ℂ))) *
           jtChar μ.val (permCast μ.prop.symm σ) from h2,
-      show (Shape.e P ν) τ =
+      show (Shape.e P ν).coeff τ =
         ((P.dim ν.val : ℂ) / ((b.factorial : ℂ))) *
           jtChar ν.val (permCast ν.prop.symm τ) from h3]
     ring

@@ -350,8 +350,8 @@ theorem chainInsP_cond
         (symPowMod A M.X q) :=
     modTensor_condition A (symPowMod A M'.X (p + 1))
       (symPowMod A M.X q)
-  rw [reassoc_of% hM, reassoc_of% hN, hcond]
-  simp only [Category.assoc]
+  erw [reassoc_of% hM, reassoc_of% hN, hcond]
+  repeat' erw [Category.assoc]
 
 /-- **Insertion into the first slot of a two-index stage**: the
 dual module enters the first symmetric power, descended through
@@ -516,8 +516,8 @@ theorem chainInsQ_cond
         (symPowMod A M.X (q + 1)) :=
     modTensor_condition A (symPowMod A M'.X p)
       (symPowMod A M.X (q + 1))
-  rw [reassoc_of% hM, reassoc_of% hN, hcond]
-  simp only [Category.assoc]
+  erw [reassoc_of% hM, reassoc_of% hN, hcond]
+  repeat' erw [Category.assoc]
 
 /-- **Insertion into the second slot of a two-index stage**: the
 module is carried past the first symmetric power and enters the

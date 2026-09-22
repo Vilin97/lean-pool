@@ -59,7 +59,7 @@ theorem modTensorπ_sandwichCon
     intro Z h
     rw [← Category.assoc, whiskerRight_modTensorπ_assocMid,
       modTensorAssocCover]
-    simp only [Category.assoc]
+    repeat' erw [Category.assoc]
   have tail : modTensorπ A M (modTensorMod A M' M) ≫
       modTensorMap A (𝟙 M) (d.pairMod) ≫
       (modTensorUnitRight A M).hom =
@@ -202,7 +202,7 @@ theorem modTensorπ_sandwichConR
     intro Z h
     rw [← Category.assoc, whiskerLeft_modTensorπ_assocInvMid,
       modTensorAssocInvCover]
-    simp only [Category.assoc]
+    repeat' erw [Category.assoc]
   have tail : modTensorπ A (modTensorMod A M' M) M' ≫
       modTensorMap A (d.pairMod) (𝟙 M') ≫
       (modTensorUnitLeft A M').hom =

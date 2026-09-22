@@ -289,7 +289,7 @@ theorem projStage_mul
       (symPowπ A M'.X (k + 2) ⊗ₘ symPowπ A M.X (k + 2)) ≫
       modTensorπ A (symPowMod A M'.X (k + 1))
         (symPowMod A M.X (k + 1)) := by
-    rw [tensorHom_π_interchange_map_assoc, hF, hG,
+    erw [tensorHom_π_interchange_map_assoc, hF, hG,
       modTensorπ_projStage A M M' (k + 1)]
     rfl
   have h3 : tensorμ (modPow A M.X (k + 1)) (modPow A M'.X (k + 1))
@@ -314,7 +314,7 @@ theorem projStage_mul
           symPowπ A M.X (k + 1 + (0 + 1)))) ≫
       modTensorπ A (symPowMod A M'.X (k + 1))
         (symPowMod A M.X (k + 1)) := by
-    rw [BraidedCategory.braiding_naturality_assoc,
+    erw [BraidedCategory.braiding_naturality_assoc,
       tensorμ_braiding_right_assoc,
       MonoidalCategory.tensorHom_comp_tensorHom_assoc]
     simp only [Category.assoc]
@@ -331,7 +331,7 @@ theorem projStage_mul
         (symPowπ A M'.X (0 + 1) ⊗ₘ symPowπ A M.X (0 + 1)) ≫
         modTensorπ A (symPowMod A M'.X 0) (symPowMod A M.X 0))) ≫
       chainMul A M M' k 0 := by
-    rw [MonoidalCategory.tensorHom_comp_tensorHom_assoc,
+    erw [MonoidalCategory.tensorHom_comp_tensorHom_assoc,
       modTensorπ_projStage A M M' k,
       modTensorπ_projStage A M M' 0]
     rfl
@@ -373,7 +373,7 @@ theorem projStage_mul
           modTensorπ A (symPowMod A M'.X 0)
             (symPowMod A M.X 0)) ≫
         chainMul A M M' k 0 := by
-      rw [← MonoidalCategory.tensorHom_comp_tensorHom_assoc,
+      erw [← MonoidalCategory.tensorHom_comp_tensorHom_assoc,
         ← MonoidalCategory.tensorHom_comp_tensorHom_assoc]
     have hmid : ((β_ (modPow A M.X (k + 1))
             (modPow A M'.X (k + 1))).hom ⊗ₘ
@@ -422,7 +422,7 @@ theorem projStage_mul
             symPowπ A M.X (k + 1 + (0 + 1)))) ≫
         modTensorπ A (symPowMod A M'.X (k + 1))
           (symPowMod A M.X (k + 1)) := by
-      rw [tensorμ_natural_assoc,
+      erw [tensorμ_natural_assoc,
         MonoidalCategory.tensorHom_comp_tensorHom_assoc,
         symPowπ_tensor_symMul A M'.X (k + 1) (0 + 1),
         symPowπ_tensor_symMul A M.X (k + 1) (0 + 1)]
@@ -456,7 +456,9 @@ theorem powDelta_projStage
       (ρ_ (powStage A M M' k)).inv)
     (congrArg (CategoryStruct.comp
         (powStage A M M' k ◁ powSeed A M M' d))
-      (projStage_mul A M M' k))
+      (by
+        erw [Category.assoc]
+        exact projStage_mul A M M' k))
 
 /-! ## The unit bridge -/
 

@@ -504,6 +504,8 @@ theorem assocHom_linear
   rw [modTensorAssocCover]
   simp only [MonoidalCategory.whiskerLeft_comp,
     Category.assoc]
+  erw [MonoidalCategory.whiskerLeft_comp]
+  repeat' erw [Category.assoc]
   refine Eq.trans ?_ (whisker_eq _ (whisker_eq _
     (whiskerLeft_π_bcActR A B φ
       (modTensorMod A M N)))).symm
