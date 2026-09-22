@@ -105,8 +105,8 @@ namespace PairwiseSpectrumGap
 /-- Pairwise spectral distance is symmetric. -/
 theorem symm
     {E F : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-    [NormedAddCommGroup F] [InnerProductSpace ℂ F] [CompleteSpace F]
+    [NormedAddCommGroup E] [InnerProductSpace ℂ E]
+    [NormedAddCommGroup F] [InnerProductSpace ℂ F]
     {A : E →ₗ.[ℂ] E}
     {B : F →ₗ.[ℂ] F} {δ : ℝ}
     (h : PairwiseSpectrumGap A B δ) :
@@ -116,8 +116,8 @@ theorem symm
 /-- Decreasing the requested distance preserves pairwise separation. -/
 theorem mono
     {E F : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-    [NormedAddCommGroup F] [InnerProductSpace ℂ F] [CompleteSpace F]
+    [NormedAddCommGroup E] [InnerProductSpace ℂ E]
+    [NormedAddCommGroup F] [InnerProductSpace ℂ F]
     {A : E →ₗ.[ℂ] E}
     {B : F →ₗ.[ℂ] F} {δ ε : ℝ}
     (h : PairwiseSpectrumGap A B δ) (hεδ : ε ≤ δ) :
@@ -127,8 +127,8 @@ theorem mono
 /-- Positive pairwise separation implies disjoint spectra. -/
 theorem disjoint
     {E F : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-    [NormedAddCommGroup F] [InnerProductSpace ℂ F] [CompleteSpace F]
+    [NormedAddCommGroup E] [InnerProductSpace ℂ E]
+    [NormedAddCommGroup F] [InnerProductSpace ℂ F]
     {A : E →ₗ.[ℂ] E}
     {B : F →ₗ.[ℂ] F} {δ : ℝ}
     (h : PairwiseSpectrumGap A B δ) (hδ : 0 < δ) :

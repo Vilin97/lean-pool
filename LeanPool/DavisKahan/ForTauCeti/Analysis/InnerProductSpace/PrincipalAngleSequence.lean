@@ -38,7 +38,7 @@ variable {H : Type v} [NormedAddCommGroup H] [InnerProductSpace 𝕜 H]
 /-- Principal angles in arbitrary Hilbert dimension, ordered by the
 approximation-number principal sines. -/
 noncomputable def principalAngleSequence (U V : Submodule 𝕜 H)
-    [U.HasOrthogonalProjection] [V.HasOrthogonalProjection] (n : ℕ) : ℝ :=
+     [V.HasOrthogonalProjection] (n : ℕ) : ℝ :=
   Real.arcsin (principalSineSequence U V n)
 
 /-- Principal angles are nonnegative. -/

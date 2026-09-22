@@ -257,6 +257,7 @@ theorem crossSineSum_eq_projectionDiff_comp_reflection
   rw [hVidem]
   module
 
+omit [CompleteSpace E] in
 /-- The cross-block sum has exactly the complete singular-value sequence of the
 projector difference. -/
 theorem crossSineSum_same_projectionDiff

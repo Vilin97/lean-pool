@@ -60,8 +60,8 @@ one operator. -/
 theorem approximationSingularValue_rankOne
     {𝕜 : Type u} [RCLike 𝕜]
     {E F : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F]
     {V : E →L[𝕜] F} (hVnorm : ‖V‖ = 1)
     (hVrank : V.rank ≤ (1 : Cardinal)) (n : ℕ) :
     approximationSingularValue n V = if n = 0 then 1 else 0 := by

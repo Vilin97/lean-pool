@@ -323,7 +323,7 @@ noncomputable def theorem63DirectedTangentDiagonalReal
 /-- A real directed tangent representative on a finite-dimensional trial space,
 diagonal in an arbitrary orthonormal basis of that space. -/
 noncomputable def theorem63DirectedTangentReal
-    (Z V : Submodule ℝ E) [Z.HasOrthogonalProjection] [V.HasOrthogonalProjection]
+    (Z V : Submodule ℝ E)  [V.HasOrthogonalProjection]
     [FiniteDimensional ℝ Z] : Z →L[ℝ] E :=
   Z.subtypeL ∘L
     (TauCeti.diagOp (stdOrthonormalBasis ℝ Z)
@@ -334,8 +334,8 @@ omit [CompleteSpace E] in
 approximation singular value of a map out of it vanishes. -/
 theorem approximationSingularValue_eq_zero_of_finrank_le_real
     (Z : Submodule ℝ E) [FiniteDimensional ℝ Z]
-    {G : Type v} [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G]
-    [CompleteSpace Z] (A : Z →L[ℝ] G) {k : Nat} (hk : Module.finrank ℝ Z ≤ k) :
+    {G : Type v} [NormedAddCommGroup G] [InnerProductSpace ℝ G]
+     (A : Z →L[ℝ] G) {k : Nat} (hk : Module.finrank ℝ Z ≤ k) :
     approximationSingularValue k A = 0 := by
   refine approximationSingularValue_eq_zero_of_rank_le_nat
     (r := Module.finrank ℝ Z) ?_ hk

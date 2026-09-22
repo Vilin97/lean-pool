@@ -98,7 +98,7 @@ theorem approximationNumber_directedSineBlock_transport
 /-- Legacy Appendix spelling of the same scalar-invariance fact. -/
 theorem approximationSingularValue_directedSineBlock_transport
     (Z V : Submodule 𝕜 H) [Z.HasOrthogonalProjection] [V.HasOrthogonalProjection]
-    [CompleteSpace Z] (n : ℕ) :
+     (n : ℕ) :
     approximationSingularValue n
         (directedSineBlock (ScalarTransport.submodule (e := e) Z)
           (ScalarTransport.submodule (e := e) V)) =

@@ -78,6 +78,7 @@ instance instModule : Module 𝕜 (IdealOperator (E := E) (F := F) N) :=
 def toOp (A : IdealOperator (E := E) (F := F) N) : E →L[𝕜] F :=
   (A : ↥(idealSubmodule (E := E) (F := F) N)).1
 
+omit [N.IsComplete] in
 /-- The underlying operator belongs to the ideal. -/
 theorem mem (A : IdealOperator (E := E) (F := F) N) : N.Mem A.toOp :=
   (A : ↥(idealSubmodule (E := E) (F := F) N)).2
@@ -86,39 +87,47 @@ theorem mem (A : IdealOperator (E := E) (F := F) N) : N.Mem A.toOp :=
 def ofMem (A : E →L[𝕜] F) (hA : N.Mem A) :
     IdealOperator (E := E) (F := F) N := ⟨A, hA⟩
 
+omit [N.IsComplete] in
 /-- Bundling a member and forgetting the witness is the identity. -/
 @[simp] theorem toOp_ofMem (A : E →L[𝕜] F) (hA : N.Mem A) :
     (ofMem N A hA).toOp = A := rfl
 
+omit [N.IsComplete] in
 /-- The zero ideal member is the zero operator. -/
 @[simp] theorem toOp_zero :
     (0 : IdealOperator (E := E) (F := F) N).toOp = 0 := rfl
 
+omit [N.IsComplete] in
 /-- Addition of ideal members is addition of the underlying operators. -/
 @[simp] theorem toOp_add
     (A B : IdealOperator (E := E) (F := F) N) :
     (A + B).toOp = A.toOp + B.toOp := rfl
 
+omit [N.IsComplete] in
 /-- Scaling an ideal member scales the underlying operator. -/
 @[simp] theorem toOp_smul
     (c : 𝕜) (A : IdealOperator (E := E) (F := F) N) :
     (c • A).toOp = c • A.toOp := rfl
 
+omit [N.IsComplete] in
 /-- Negation of an ideal member negates the underlying operator. -/
 @[simp] theorem toOp_neg
     (A : IdealOperator (E := E) (F := F) N) :
     (-A).toOp = -A.toOp := rfl
 
+omit [N.IsComplete] in
 /-- Subtraction of ideal members subtracts the underlying operators. -/
 @[simp] theorem toOp_sub
     (A B : IdealOperator (E := E) (F := F) N) :
     (A - B).toOp = A.toOp - B.toOp := rfl
 
+omit [N.IsComplete] in
 /-- The anonymous-constructor form also forgets to the underlying operator. -/
 @[simp] theorem toOp_mk
     (A : E →L[𝕜] F) (hA : N.Mem A) :
     (show IdealOperator (E := E) (F := F) N from ⟨A, hA⟩).toOp = A := rfl
 
+omit [N.IsComplete] in
 /-- Ideal members are equal when their underlying bounded operators agree. -/
 @[ext] theorem ext
     {A B : IdealOperator (E := E) (F := F) N}
@@ -131,6 +140,7 @@ noncomputable instance instNorm :
     Norm (IdealOperator (E := E) (F := F) N) :=
   ⟨fun A => N.gaugeReal A.toOp⟩
 
+omit [N.IsComplete] in
 /-- The norm on the ideal is the ideal gauge of the underlying operator. -/
 @[simp] theorem norm_def
     (A : IdealOperator (E := E) (F := F) N) :

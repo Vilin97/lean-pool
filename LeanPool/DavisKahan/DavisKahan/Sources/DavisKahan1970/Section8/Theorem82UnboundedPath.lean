@@ -158,7 +158,7 @@ Stated with the perturbed operator as a variable linked by an equation, which is
 what lets `subst` put it in the shape
 `norm_sinTwoAngleOperator_le_of_perturbedGap_unbounded_complex` consumes. -/
 theorem norm_sinTwoAngle_path_le
-    [TopologicalSpace.SeparableSpace Hc]
+
     {B0 Bt : Hc →ₗ.[ℂ] Hc} (hBt : IsSelfAdjoint Bt)
     (K : Hc →L[ℂ] Hc) (hK : K.IsSymmetric)
     (hlink : B0 = TauCeti.LinearPMap.addBounded Bt K)

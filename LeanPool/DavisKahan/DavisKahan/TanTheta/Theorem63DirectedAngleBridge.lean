@@ -243,6 +243,7 @@ private theorem sourceDirectedAngle_apply_rightSingularBasis
     Real.continuous_arcsin.continuousOn hMeig
 
 omit [FiniteDimensional ℂ ↥Z] in
+omit [Z.HasOrthogonalProjection] in
 /-- The ambient-coordinate and subspace-coordinate sine blocks have the same
 operator norm. -/
 private theorem norm_directedSine_eq_norm_coordinateSine :

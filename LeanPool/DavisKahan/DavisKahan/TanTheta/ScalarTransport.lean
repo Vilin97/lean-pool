@@ -70,9 +70,10 @@ noncomputable def scalarTransportSubspaceCLMEquiv (Z : Submodule 𝕜 H) :
     intro z
     rfl
 
+omit [CompleteSpace H] in
 /-- Transporting a subspace-domain operator preserves every approximation number. -/
 theorem approximationNumber_scalarTransportSubspaceCLM
-    (Z : Submodule 𝕜 H) [Z.HasOrthogonalProjection]
+    (Z : Submodule 𝕜 H)
     (T : Z →L[𝕜] H) (n : ℕ) :
     (scalarTransportSubspaceCLM (e := e) Z T).approximationNumber n =
       T.approximationNumber n := by
@@ -155,9 +156,10 @@ noncomputable def scalarTransportSubspaceBlockCLMEquiv
     intro z
     rfl
 
+omit [CompleteSpace H] in
 /-- Two-sided transported subspace coordinates preserve every approximation number. -/
 theorem approximationNumber_scalarTransportSubspaceBlockCLM
-    (Z W : Submodule 𝕜 H) [Z.HasOrthogonalProjection] [W.HasOrthogonalProjection]
+    (Z W : Submodule 𝕜 H)
     (T : Z →L[𝕜] W) (n : ℕ) :
     (scalarTransportSubspaceBlockCLM (e := e) Z W T).approximationNumber n =
       T.approximationNumber n := by
@@ -202,9 +204,10 @@ noncomputable def scalarTransportOrthogonalSubspaceBlockCLMInv
       T ∘L
       (ScalarTransport.submoduleSubtypeEquiv (e := e) Z).toContinuousLinearEquiv.toContinuousLinearMap)
 
+omit [CompleteSpace H] in
 /-- Orthogonal-corner transport preserves every approximation number. -/
 theorem approximationNumber_scalarTransportOrthogonalSubspaceBlockCLM
-    (Z : Submodule 𝕜 H) [Z.HasOrthogonalProjection]
+    (Z : Submodule 𝕜 H)
     (T : Z →L[𝕜] Zᗮ) (n : ℕ) :
     (scalarTransportOrthogonalSubspaceBlockCLM (e := e) Z T).approximationNumber n =
       T.approximationNumber n := by
@@ -218,9 +221,10 @@ theorem approximationNumber_scalarTransportOrthogonalSubspaceBlockCLM
   rw [← hsame n]
   exact ScalarTransport.approximationNumber_clm (e := e) T n
 
+omit [CompleteSpace H] in
 /-- Inverse orthogonal-corner transport also preserves every approximation number. -/
 theorem approximationNumber_scalarTransportOrthogonalSubspaceBlockCLMInv
-    (Z : Submodule 𝕜 H) [Z.HasOrthogonalProjection]
+    (Z : Submodule 𝕜 H)
     (T : ScalarTransport.submodule (e := e) Z →L[𝕂]
       (ScalarTransport.submodule (e := e) Z)ᗮ) (n : ℕ) :
     (scalarTransportOrthogonalSubspaceBlockCLMInv (e := e) Z T).approximationNumber n =

@@ -42,6 +42,7 @@ theorem approximationPrefix_clm (n : ℕ) (T : E →L[𝕜] F) :
   funext i
   exact ScalarTransport.approximationNumber_clm (e := e) T _
 
+omit [CompleteSpace E] [CompleteSpace F] in
 /-- Every finite source gauge is unchanged by scalar transport. -/
 theorem prefixGauge_clm (N : SymmetricNormingFunction) (n : ℕ) (T : E →L[𝕜] F) :
     N.prefixGauge n (clm (e := e) T) = N.prefixGauge n T := by

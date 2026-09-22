@@ -247,7 +247,7 @@ theorem generalizedSinTheta_of_polarData_of_sylvesterBound
 /-- Exact directed-angle version of the scalar-generic lower-frame transport. -/
 theorem generalizedSinTheta_exact_of_polarData_of_sylvesterBound
     (N : TauCeti.SymmetricOperatorIdealFamily.{u, v} 𝕜)
-    [N.toOperatorIdealFamily.IsComplete]
+
     {X : F →L[𝕜] E} {F₀ : H →L[𝕜] E} {F₁ : G →L[𝕜] E}
     {C : G →L[𝕜] F} {ε δ : ℝ} {hX : LowerFrameBound X ε} {hε : 0 < ε}
     (P : LowerFramePolarData X ε hX hε)

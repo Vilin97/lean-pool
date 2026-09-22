@@ -122,7 +122,7 @@ for the sharp pathwise block-resolvent enclosure. -/
 theorem _root_.TauCeti.DavisKahan.Foundation.FiniteGapConfiguration.exists_operatorPath_block_enclosureData
     (A K : Hspace →L[ℂ] Hspace)
     (U : Submodule ℂ Hspace) [U.HasOrthogonalProjection]
-    [CompleteSpace U] [CompleteSpace (Uᗮ : Submodule ℂ Hspace)]
+
     (hU : A.Reduces U) (hK : Submodule.IsOffDiagonal U K)
     {d : ℝ} (hfinite : FiniteGapConfiguration A U d) :
     ∃ left right : ℝ, left ≤ right ∧

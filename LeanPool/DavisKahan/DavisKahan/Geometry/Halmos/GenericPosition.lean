@@ -125,6 +125,7 @@ angles are strictly between `0` and `π/2`".
 -/
 
 omit [CompleteSpace H] in
+omit [U.HasOrthogonalProjection] [V.HasOrthogonalProjection] in
 /-- On the `U`-half of the generic part, `P_V` has trivial kernel: a vector
 there orthogonal to `V` is zero. -/
 theorem eq_zero_of_mem_inf_generic_left_of_mem_orthogonal_right
@@ -133,6 +134,7 @@ theorem eq_zero_of_mem_inf_generic_left_of_mem_orthogonal_right
   simpa [halmosGenericPart_inf_inf_eq_bot_left_rightCompl U V] using this
 
 omit [CompleteSpace H] in
+omit [U.HasOrthogonalProjection] [V.HasOrthogonalProjection] in
 /-- On the `U`-half of the generic part, `1 - P_V` has trivial kernel: a vector
 there lying in `V` is zero. -/
 theorem eq_zero_of_mem_inf_generic_left_of_mem_right
@@ -350,6 +352,7 @@ factor a unitary `M ≃ₗᵢ N` rather than a mere partial isometry.
 -/
 
 omit [CompleteSpace H] in
+omit [U.HasOrthogonalProjection] [V.HasOrthogonalProjection] in
 /-- On the `Uᗮ`-half of the generic part, a vector lying in `V` is zero. -/
 theorem eq_zero_of_mem_inf_generic_right_of_mem_right
     {x : H} (hx : x ∈ genericRightHalf U V) (hxV : x ∈ V) : x = 0 := by
@@ -357,6 +360,7 @@ theorem eq_zero_of_mem_inf_generic_right_of_mem_right
   simpa [halmosGenericPart_inf_inf_eq_bot_leftCompl_right U V] using this
 
 omit [CompleteSpace H] in
+omit [U.HasOrthogonalProjection] [V.HasOrthogonalProjection] in
 /-- On the `Uᗮ`-half of the generic part, a vector orthogonal to `V` is zero. -/
 theorem eq_zero_of_mem_inf_generic_right_of_mem_orthogonal_right
     {x : H} (hx : x ∈ genericRightHalf U V) (hxV : x ∈ Vᗮ) : x = 0 := by

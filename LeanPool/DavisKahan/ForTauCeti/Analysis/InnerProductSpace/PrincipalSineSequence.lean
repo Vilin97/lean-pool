@@ -58,13 +58,13 @@ noncomputable def principalSineSequence (U V : Submodule 𝕜 H)
 
 /-- Principal sines are nonnegative. -/
 theorem principalSineSequence_nonneg (U V : Submodule 𝕜 H)
-    [U.HasOrthogonalProjection] [V.HasOrthogonalProjection] (n : ℕ) :
+     [V.HasOrthogonalProjection] (n : ℕ) :
     0 ≤ principalSineSequence U V n :=
   (principalSineOperator U V).approximationNumber_nonneg n
 
 /-- Every principal sine lies in the unit interval. -/
 theorem principalSineSequence_le_one (U V : Submodule 𝕜 H)
-    [U.HasOrthogonalProjection] [V.HasOrthogonalProjection] (n : ℕ) :
+     [V.HasOrthogonalProjection] (n : ℕ) :
     principalSineSequence U V n ≤ 1 := by
   refine ((principalSineOperator U V).approximationNumber_le_norm n).trans ?_
   refine ContinuousLinearMap.opNorm_le_bound _ zero_le_one fun x => ?_
@@ -73,7 +73,7 @@ theorem principalSineSequence_le_one (U V : Submodule 𝕜 H)
 
 /-- The principal-sine sequence is decreasing. -/
 theorem principalSineSequence_antitone (U V : Submodule 𝕜 H)
-    [U.HasOrthogonalProjection] [V.HasOrthogonalProjection] :
+     [V.HasOrthogonalProjection] :
     Antitone (principalSineSequence U V) :=
   (principalSineOperator U V).approximationNumber_antitone
 

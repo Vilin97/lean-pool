@@ -184,6 +184,7 @@ theorem sndL_comp_blockSum_comp_blockInr (A : E₀ →L[𝕜] F₀) (B : E₁ �
   ext x
   simp
 
+omit [CompleteSpace E₀] [CompleteSpace E₁] [CompleteSpace F₀] [CompleteSpace F₁] in
 /-- Every approximation number of a summand is dominated by the corresponding
 approximation number of the block sum. -/
 theorem approximationNumber_le_blockSum_left
@@ -207,6 +208,7 @@ theorem approximationNumber_le_blockSum_left
                 ContinuousLinearMap.approximationNumber_nonneg _ _
     _ = _ := by rw [one_mul, mul_one]
 
+omit [CompleteSpace E₀] [CompleteSpace E₁] [CompleteSpace F₀] [CompleteSpace F₁] in
 /-- Every approximation number of the second summand is dominated by the
 corresponding approximation number of the block sum. -/
 theorem approximationNumber_le_blockSum_right
@@ -289,6 +291,7 @@ theorem continuousOrthogonalBlockSum_sub
   apply WithLp.ofLp_injective 2
   simp
 
+omit [CompleteSpace E₀] [CompleteSpace E₁] [CompleteSpace F₀] [CompleteSpace F₁] in
 /-- Ranks add across an orthogonal block sum. -/
 theorem rank_continuousOrthogonalBlockSum_le
     (R : E₀ →L[𝕜] F₀) (Q : E₁ →L[𝕜] F₁) :

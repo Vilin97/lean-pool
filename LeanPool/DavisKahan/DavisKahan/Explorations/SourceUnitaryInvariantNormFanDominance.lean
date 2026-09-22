@@ -2234,8 +2234,8 @@ theorem finiteRankOperatorNormGauge_eq_top_iff
 
 theorem finiteRankOperatorNormGauge_ne_top_iff
     {E F : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-    [NormedAddCommGroup F] [InnerProductSpace ℂ F] [CompleteSpace F]
+    [NormedAddCommGroup E] [InnerProductSpace ℂ E]
+    [NormedAddCommGroup F] [InnerProductSpace ℂ F]
     (A : E →L[ℂ] F) :
     finiteRankOperatorNormGauge A ≠ ⊤ ↔ ProbeFiniteRank A := by
   rw [ne_eq, finiteRankOperatorNormGauge_eq_top_iff]
@@ -2663,10 +2663,10 @@ vectors and therefore works across different Hilbert-space pairs. -/
 private theorem symmetricNorming_prefixGauge_le_cross
     (M : SymmetricNormingFunction)
     {E F E' F' : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-    [NormedAddCommGroup F] [InnerProductSpace ℂ F] [CompleteSpace F]
-    [NormedAddCommGroup E'] [InnerProductSpace ℂ E'] [CompleteSpace E']
-    [NormedAddCommGroup F'] [InnerProductSpace ℂ F'] [CompleteSpace F']
+    [NormedAddCommGroup E] [InnerProductSpace ℂ E]
+    [NormedAddCommGroup F] [InnerProductSpace ℂ F]
+    [NormedAddCommGroup E'] [InnerProductSpace ℂ E']
+    [NormedAddCommGroup F'] [InnerProductSpace ℂ F']
     {A : E →L[ℂ] F} {B : E' →L[ℂ] F'}
     (h : ∀ k : ℕ, kyFanApproximationGauge k A ≤
       kyFanApproximationGauge k B) (n : ℕ) :

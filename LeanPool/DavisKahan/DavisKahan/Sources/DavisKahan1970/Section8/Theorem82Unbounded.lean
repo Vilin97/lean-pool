@@ -192,7 +192,7 @@ the module docstring for what it would take to discharge it, and for why
 Theorem 8.1 is not what discharges it. -/
 theorem theorem8_2_branch_maximalAngle_lt_of_small_perturbation_unbounded_complex
     {Hc : Type v} [NormedAddCommGroup Hc] [InnerProductSpace ℂ Hc] [CompleteSpace Hc]
-    [TopologicalSpace.SeparableSpace Hc]
+
     {A : Hc →ₗ.[ℂ] Hc} (hA : IsSelfAdjoint A)
     (Hop : Hc →L[ℂ] Hc) (hHop : Hop.IsSymmetric)
     {P Q : Submodule ℂ Hc} [P.HasOrthogonalProjection] [Q.HasOrthogonalProjection]

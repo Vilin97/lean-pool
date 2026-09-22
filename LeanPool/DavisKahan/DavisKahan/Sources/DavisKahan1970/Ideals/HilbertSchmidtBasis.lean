@@ -155,6 +155,7 @@ theorem comp_basisProjection_apply {ι : Type*}
   rw [ContinuousLinearMap.comp_apply, basisProjection_apply, map_sum]
   simp only [map_smul]
 
+omit [CompleteSpace E] [CompleteSpace F] in
 /-- Finite-dimensional cutoff Frobenius identity: the approximation-number
 energy of the compression of `A` to a finite-dimensional subspace `K` of the
 domain is the sum of the squared column norms over any orthonormal basis

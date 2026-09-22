@@ -155,8 +155,8 @@ theorem nuclearNormingFunction_finiteGauge (n : ℕ) (x : Fin n → ℝ) :
 theorem nuclearNormingFunction_prefixGauge
     {𝕜 : Type u} [RCLike 𝕜]
     {E F : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F]
     (n : ℕ) (A : E →L[𝕜] F) :
     nuclearNormingFunction.prefixGauge n A = kyFanApproximationGauge n A := by
   have habs : ∀ i : Fin n,

@@ -588,6 +588,7 @@ theorem truncSineBlock_eq (τ : ℝ) :
       theorem63DirectedSineBlock Z V ∘L D.truncIncl τ :=
   ContinuousLinearMap.ext fun _ => rfl
 
+omit [CompleteSpace H] in
 /-- **The truncated sine block and the cut-off ambient sine block have the same
 approximation numbers.** -/
 theorem approximationSingularValue_truncSineBlock (τ : ℝ) (n : ℕ) :

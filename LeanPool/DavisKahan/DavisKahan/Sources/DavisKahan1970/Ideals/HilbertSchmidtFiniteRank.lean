@@ -67,8 +67,8 @@ theorem approximationSingularValue_eq_zero_of_rank_le_nat
 theorem approximationNumberEnergy_eq_sum_range_of_rank_le
     {𝕜 : Type u} [RCLike 𝕜]
     {E : Type v} {F : Type vF}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F]
     {A : E →L[𝕜] F} {r : ℕ}
     (hA : A.rank ≤ (r : Cardinal)) :
     approximationNumberEnergy A =

@@ -69,7 +69,7 @@ theorem spectrum_directedAngleBlockC_subset_Icc
 /-- The angle reconstructed from the positive sine modulus. -/
 noncomputable def sineDefinedDirectedAngleC
     (U V : Submodule ℂ E)
-    [U.HasOrthogonalProjection] [V.HasOrthogonalProjection] : U →L[ℂ] U :=
+    [U.HasOrthogonalProjection]  : U →L[ℂ] U :=
   cfc Real.arcsin (sineBlockModulusC U V)
 
 /-- The angle reconstructed from the sine modulus is exactly the source

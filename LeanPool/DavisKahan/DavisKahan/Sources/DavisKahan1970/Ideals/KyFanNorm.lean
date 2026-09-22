@@ -232,8 +232,8 @@ of `k` and the available prefix length. -/
 theorem kyFanNormingFunction_prefixGauge
     {𝕜 : Type u} [RCLike 𝕜]
     {E F : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F]
     (k : ℕ) (hk : 0 < k) (n : ℕ) (A : E →L[𝕜] F) :
     (kyFanNormingFunction k hk).prefixGauge n A =
       kyFanApproximationGauge (min k n) A := by
@@ -259,8 +259,8 @@ theorem kyFanNormingFunction_prefixGauge
 private theorem kyFanApproximationGauge_mono_length_local
     {𝕜 : Type u} [RCLike 𝕜]
     {E F : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] 
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] 
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F]
     (A : E →L[𝕜] F) {m k : ℕ} (hmk : m ≤ k) :
     kyFanApproximationGauge m A ≤ kyFanApproximationGauge k A := by
   unfold kyFanApproximationGauge ContinuousLinearMap.kyFanGauge

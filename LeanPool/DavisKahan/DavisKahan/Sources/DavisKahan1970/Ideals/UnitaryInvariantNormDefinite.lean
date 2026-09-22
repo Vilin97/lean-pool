@@ -32,8 +32,8 @@ namespace SymmetricNormingFunction
 theorem prefixGauge_one_eq_opNorm
     {𝕜 : Type u} [RCLike 𝕜]
     {E F : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F]
     (N : SymmetricNormingFunction) (A : E →L[𝕜] F) :
     N.prefixGauge 1 A = ‖A‖ := by
   unfold prefixGauge approximationPrefix

@@ -184,6 +184,7 @@ theorem residual_complexify_equiv
     RealComplexification.complexify_comp]
   rfl
 
+omit [CompleteSpace E] in
 /-- **The complex and real Theorem 8.2 residuals have the same complete
 approximation-singular sequence.**
 
@@ -726,7 +727,7 @@ theorem theorem8_2_real [FiniteDimensional ℝ E]
 /-- **Theorem 8.2's retained perturbation bound at the printed source scope over
 `ℝ`.** -/
 theorem theorem8_2_sinTwoTheta_perturbation_real_sourceExact
-    
+
     (N : ExactSinTheta.NormalizedUnitaryInvariantNorm.{0, _} ℝ)
     {A K : E →L[ℝ] E} (hA : A.IsSymmetric) (hK : K.IsSymmetric)
     {P Q : Submodule ℝ E} [P.HasOrthogonalProjection] [Q.HasOrthogonalProjection]
@@ -745,7 +746,7 @@ theorem theorem8_2_sinTwoTheta_perturbation_real_sourceExact
 /-- **Theorem 8.2's retained residual bound on the directed angle, at the printed
 source scope over `ℝ`.** -/
 theorem theorem8_2_sinTwoTheta_residual_directedAngle_real_sourceExact
-    
+
     (N : ExactSinTheta.NormalizedUnitaryInvariantNorm.{0, _} ℝ)
     {A K : E →L[ℝ] E} (hA : A.IsSymmetric) (hK : K.IsSymmetric)
     {P Q : Submodule ℝ E} [P.HasOrthogonalProjection] [Q.HasOrthogonalProjection]

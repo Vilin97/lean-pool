@@ -140,7 +140,7 @@ omit [CompleteSpace H] in
 /-- The finite-source singular values of the directed sine block are at most
 one. -/
 theorem theorem63_singularValues_sine_le_one
-    (Z V : Submodule ℂ H) [Z.HasOrthogonalProjection]
+    (Z V : Submodule ℂ H)
     [V.HasOrthogonalProjection] [FiniteDimensional ℂ Z]
     (i : Fin (finrank ℂ Z)) :
     finiteSourceSingularValue (theorem63DirectedSineBlock Z V) i ≤ 1 := by
@@ -248,7 +248,7 @@ private theorem finiteSourceLeftSingularVector_mem_orthogonal
 /-- The subtype adjoint acts on a nonzero directed-sine left singular vector
 by the corresponding singular relation. -/
 theorem theorem63_subtypeAdjoint_apply_finiteSourceLeftSingularVector
-    (Z V : Submodule ℂ H) [Z.HasOrthogonalProjection]
+    (Z V : Submodule ℂ H)
     [V.HasOrthogonalProjection] [FiniteDimensional ℂ Z]
     {i : Fin (finrank ℂ Z)}
     (hi : finiteSourceSingularValue (theorem63DirectedSineBlock Z V) i ≠ 0) :
@@ -526,7 +526,7 @@ The two form hypotheses are the paper's: the compression is bounded above by `α
 the crossed form is bounded below by `α + δ`. -/
 theorem theorem63ResidualWitness_scalar_of_data
     (V Z : Submodule ℂ H) [V.HasOrthogonalProjection]
-    [Z.HasOrthogonalProjection] [FiniteDimensional ℂ Z]
+     [FiniteDimensional ℂ Z]
     {alpha delta : ℝ}
     (M : Z →L[ℂ] Z) (R : Z →L[ℂ] H) (X : Z →L[ℂ] H)
     (hMupper : ∀ z : Z, RCLike.re ⟪M z, z⟫_ℂ ≤ alpha * ‖z‖ ^ 2)
@@ -766,8 +766,8 @@ private theorem theorem6_3_kyFan_core_of_le_finrank
 singular values beyond that domain dimension. -/
 theorem kyFanApproximationGauge_eq_finrank_of_finrank_le
     {E F : Type u}
-    [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-    [NormedAddCommGroup F] [InnerProductSpace ℂ F] [CompleteSpace F]
+    [NormedAddCommGroup E] [InnerProductSpace ℂ E]
+    [NormedAddCommGroup F] [InnerProductSpace ℂ F]
     [FiniteDimensional ℂ E]
     (A : E →L[ℂ] F) {k : ℕ} (hk : finrank ℂ E ≤ k) :
     kyFanApproximationGauge k A =
@@ -980,6 +980,7 @@ theorem approximationSingularValue_subtypeL_comp_complex
     _ = approximationSingularValue k A := by rw [hcomp]
 
 omit [Z.HasOrthogonalProjection] in
+omit [CompleteSpace H] in
 /-- Above the dimension of the trial space every approximation singular value of
 a map out of it vanishes. -/
 theorem approximationSingularValue_eq_zero_of_finrank_le_complex

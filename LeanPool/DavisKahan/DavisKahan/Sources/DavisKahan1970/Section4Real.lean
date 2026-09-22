@@ -884,7 +884,7 @@ private theorem kyFanApproximationGauge_diagonalPart_le_real
 omit [CompleteSpace E] in
 /-- Conjugating a real operator by a contraction pair cannot increase a Ky Fan gauge. -/
 private theorem kyFanApproximationGauge_conj_le_real {F : Type v}
-    [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
+    [NormedAddCommGroup F] [InnerProductSpace ℝ F]
     {L : E →L[ℝ] F} {R : F →L[ℝ] E}
     (hL : ‖L‖ ≤ 1) (hR : ‖R‖ ≤ 1) (A : E →L[ℝ] E) (k : ℕ) :
     kyFanApproximationGauge k (L ∘L A ∘L R) ≤ kyFanApproximationGauge k A := by

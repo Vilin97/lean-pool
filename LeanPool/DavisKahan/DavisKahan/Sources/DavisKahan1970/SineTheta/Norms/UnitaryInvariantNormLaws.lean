@@ -186,6 +186,7 @@ theorem extendedGauge_unitary
   exact N.gauge_eq_of_sameApproximationSingularValues
     (SameApproximationSingularValues.comp_isometricEquiv (A := A) U V)
 
+omit [CompleteSpace E] [CompleteSpace F] [CompleteSpace G] in
 /-- Finite Fan dominance between operators with **different codomains**.
 
 `SymmetricNormingFunction.prefixGauge_le_of_all_kyFan_le` compares two

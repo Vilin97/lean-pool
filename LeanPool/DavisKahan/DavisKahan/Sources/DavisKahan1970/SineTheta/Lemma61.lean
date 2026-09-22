@@ -49,7 +49,7 @@ def projectionBlock
 /-- The compression of `K` to the block coordinates `Γ → Ω`. -/
 def blockCompression
     (Ω Γ : Submodule 𝕜 E)
-    [Ω.HasOrthogonalProjection] 
+    [Ω.HasOrthogonalProjection]
     (K : E →L[𝕜] E) : Γ →L[𝕜] Ω :=
   Ω.subtypeL.adjoint ∘L K ∘L Γ.subtypeL
 
@@ -239,6 +239,7 @@ private theorem antitone_approximationSingularValue (A : E₀ →L[𝕜] F₀) :
   intro m n hmn
   exact_mod_cast A.approximationNumber_antitone hmn
 
+omit [CompleteSpace E₀] [CompleteSpace E₁] [CompleteSpace F₀] [CompleteSpace F₁] in
 /-- When the two blocks have identical singular sequences, the even Ky Fan
 prefixes of their orthogonal block sum double the prefixes of one block. -/
 theorem splitKyFanGauge_two_mul_of_same

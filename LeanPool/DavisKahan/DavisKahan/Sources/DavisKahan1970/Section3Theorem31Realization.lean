@@ -890,6 +890,7 @@ variable {A₀ : Type u} [NormedAddCommGroup A₀] [CompleteSpace A₀]
 variable {A₁ : Type v} [NormedAddCommGroup A₁] [CompleteSpace A₁]
 variable {H : Type w} [NormedAddCommGroup H] [CompleteSpace H]
 
+omit [CompleteSpace H] in
 /-- **Davis--Kahan 1970, Theorem 3.1, converse sentence, at the printed source
 scope over `ℂ`.**
 
@@ -916,6 +917,7 @@ theorem theorem3_1_realization_sourceExact_complex
       hspec₁ hmult hdim
   exact ⟨P, Q, _, rfl, rfl, rfl, rfl, hpair⟩
 
+omit [CompleteSpace H] in
 /-- **Davis--Kahan 1970, Theorem 3.1, converse sentence, at the printed source
 scope over `ℝ`.** -/
 theorem theorem3_1_realization_sourceExact_real

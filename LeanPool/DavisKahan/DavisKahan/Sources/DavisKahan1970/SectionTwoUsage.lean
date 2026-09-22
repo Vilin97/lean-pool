@@ -85,6 +85,7 @@ variable {H : Type v₁}
   [NormedAddCommGroup H] [InnerProductSpace 𝕜 H] [CompleteSpace H]
   [TopologicalSpace.SeparableSpace H]
 
+omit [TopologicalSpace.SeparableSpace H] in
 /-- The complete scalar-generic Section 2 `sin 2Θ` entry point from ordinary
 reducing-subspace data at the source common-domain scope.
 

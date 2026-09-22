@@ -167,6 +167,7 @@ section Corners
 
 variable (Ω Γ : Submodule ℝ E) [Ω.HasOrthogonalProjection] [Γ.HasOrthogonalProjection]
 
+omit [Γ.HasOrthogonalProjection] in
 /-- The block compression, read back into the ambient space, is the pinched
 operator.  This is `coe_blockCompression_apply` in operator form. -/
 theorem subtypeL_comp_blockCompression (K : E →L[ℝ] E) :
@@ -335,7 +336,7 @@ end Cutoff
 /-- Strong operator convergence is preserved by complexification: the two
 coordinates converge separately and `‖z‖ ≤ ‖re z‖ + ‖im z‖`. -/
 theorem stronglyTendsto_complexify {ι : Type*} {l : Filter ι}
-    {F : Type v} [NormedAddCommGroup F] [InnerProductSpace ℝ F] 
+    {F : Type v} [NormedAddCommGroup F] [InnerProductSpace ℝ F]
     {T : ι → F →L[ℝ] F} {S : F →L[ℝ] F}
     (h : TauCeti.ApproximationNumber.StronglyTendsto T l S) :
     TauCeti.ApproximationNumber.StronglyTendsto (fun i => complexify (T i)) l

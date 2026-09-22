@@ -81,10 +81,10 @@ theorem SameApproximationSingularSequence.approximationNumberEnergy_ne_top_iff
     {𝕜 : Type u} [RCLike 𝕜]
     {E₁ : Type vE1} {F₁ : Type vF1}
     {E₂ : Type vE2} {F₂ : Type vF2}
-    [NormedAddCommGroup E₁] [InnerProductSpace 𝕜 E₁] [CompleteSpace E₁]
-    [NormedAddCommGroup F₁] [InnerProductSpace 𝕜 F₁] [CompleteSpace F₁]
-    [NormedAddCommGroup E₂] [InnerProductSpace 𝕜 E₂] [CompleteSpace E₂]
-    [NormedAddCommGroup F₂] [InnerProductSpace 𝕜 F₂] [CompleteSpace F₂]
+    [NormedAddCommGroup E₁] [InnerProductSpace 𝕜 E₁]
+    [NormedAddCommGroup F₁] [InnerProductSpace 𝕜 F₁]
+    [NormedAddCommGroup E₂] [InnerProductSpace 𝕜 E₂]
+    [NormedAddCommGroup F₂] [InnerProductSpace 𝕜 F₂]
     {A : E₁ →L[𝕜] F₁} {B : E₂ →L[𝕜] F₂}
     (h : SameApproximationSingularSequence A B) :
     approximationNumberEnergy A ≠ ⊤ ↔ approximationNumberEnergy B ≠ ⊤ := by
@@ -150,8 +150,8 @@ theorem approximationNumberEnergy_smul
 theorem approximationNumberEnergy_ne_top_smul_iff
     {𝕜 : Type u} [RCLike 𝕜]
     {E : Type vE} {F : Type vF}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F]
     (c : 𝕜) (hc : c ≠ 0) (A : E →L[𝕜] F) :
     approximationNumberEnergy (c • A) ≠ ⊤ ↔ approximationNumberEnergy A ≠ ⊤ := by
   rw [approximationNumberEnergy_smul]
@@ -218,10 +218,10 @@ theorem approximationNumberEnergy_ne_top_comp
     {𝕜 : Type u} [RCLike 𝕜]
     {E : Type vE} {F : Type vF}
     {G : Type vG} {H : Type vH}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
-    [NormedAddCommGroup G] [InnerProductSpace 𝕜 G] [CompleteSpace G]
-    [NormedAddCommGroup H] [InnerProductSpace 𝕜 H] [CompleteSpace H]
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F]
+    [NormedAddCommGroup G] [InnerProductSpace 𝕜 G]
+    [NormedAddCommGroup H] [InnerProductSpace 𝕜 H]
     {A : E →L[𝕜] F} (hA : approximationNumberEnergy A ≠ ⊤)
     (L : F →L[𝕜] G) (R : H →L[𝕜] E) :
     approximationNumberEnergy (L ∘L A ∘L R) ≠ ⊤ := by

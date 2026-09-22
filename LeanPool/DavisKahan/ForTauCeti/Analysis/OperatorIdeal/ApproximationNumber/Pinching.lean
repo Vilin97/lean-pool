@@ -71,6 +71,7 @@ universe v
 variable {E : Type v} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
   [CompleteSpace E]
 
+omit [CompleteSpace E] in
 /-- **Conjugating by a reflection preserves Ky Fan approximation gauges.**
 
 A reflection is a contraction in both slots, so the gauge cannot grow; it is
@@ -105,7 +106,7 @@ The two-sided ideal inequality with both norms at most one.  Stated for a bare p
 contractions rather than for an isometry equivalence, so that the equality below can apply
 it twice with the roles exchanged. -/
 theorem kyFanApproximationGauge_conj_le_complex {F : Type v} [NormedAddCommGroup F]
-    [InnerProductSpace ℂ F] [CompleteSpace F] {L : E →L[ℂ] F} {R : F →L[ℂ] E}
+    [InnerProductSpace ℂ F]  {L : E →L[ℂ] F} {R : F →L[ℂ] E}
     (hL : ‖L‖ ≤ 1) (hR : ‖R‖ ≤ 1) (A : E →L[ℂ] E) (k : ℕ) :
     kyFanApproximationGauge k (L ∘L A ∘L R) ≤ kyFanApproximationGauge k A := by
   refine (kyFanApproximationGauge_comp_le (𝕜 := ℂ) k L A R).trans ?_
