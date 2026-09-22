@@ -191,12 +191,16 @@ theorem kroneckerFunctional_iCycles_add (X : TopCat.{0}) (n : ℕ)
   apply LinearMap.ext
   intro x
   obtain ⟨z, rfl⟩ := (ModuleCat.epi_iff_surjective ((chainCxZMod2 X).homologyπ n)).1 inferInstance x
-  have h_add := kroneckerFunctional_apply X n (((cochainCxZMod2 X).iCycles n).hom (c + c')) (cochainCoboundary_iCycles X n (c + c')) z
-  have h_c := kroneckerFunctional_apply X n (((cochainCxZMod2 X).iCycles n).hom c) (cochainCoboundary_iCycles X n c) z
-  have h_c' := kroneckerFunctional_apply X n (((cochainCxZMod2 X).iCycles n).hom c') (cochainCoboundary_iCycles X n c') z
+  have h_add := kroneckerFunctional_apply X n (((cochainCxZMod2 X).iCycles n).hom (c + c'))
+    (cochainCoboundary_iCycles X n (c + c')) z
+  have h_c := kroneckerFunctional_apply X n (((cochainCxZMod2 X).iCycles n).hom c)
+    (cochainCoboundary_iCycles X n c) z
+  have h_c' := kroneckerFunctional_apply X n (((cochainCxZMod2 X).iCycles n).hom c')
+    (cochainCoboundary_iCycles X n c') z
   rw [h_add, LinearMap.add_apply, h_c, h_c']
   have hmap : ((cochainCxZMod2 X).iCycles n).hom (c + c')
-      = ((cochainCxZMod2 X).iCycles n).hom c + ((cochainCxZMod2 X).iCycles n).hom c' := map_add _ c c'
+      = ((cochainCxZMod2 X).iCycles n).hom c + ((cochainCxZMod2 X).iCycles n).hom c' := map_add
+        _ c c'
   rw [hmap]
   rfl
 
@@ -209,8 +213,10 @@ theorem kroneckerFunctional_iCycles_smul (X : TopCat.{0}) (n : ℕ) (s : ZMod 2)
   apply LinearMap.ext
   intro x
   obtain ⟨z, rfl⟩ := (ModuleCat.epi_iff_surjective ((chainCxZMod2 X).homologyπ n)).1 inferInstance x
-  have h_smul := kroneckerFunctional_apply X n (((cochainCxZMod2 X).iCycles n).hom (s • c)) (cochainCoboundary_iCycles X n (s • c)) z
-  have h_c := kroneckerFunctional_apply X n (((cochainCxZMod2 X).iCycles n).hom c) (cochainCoboundary_iCycles X n c) z
+  have h_smul := kroneckerFunctional_apply X n (((cochainCxZMod2 X).iCycles n).hom (s • c))
+    (cochainCoboundary_iCycles X n (s • c)) z
+  have h_c := kroneckerFunctional_apply X n (((cochainCxZMod2 X).iCycles n).hom c)
+    (cochainCoboundary_iCycles X n c) z
   rw [h_smul, LinearMap.smul_apply, h_c]
   have hmap : ((cochainCxZMod2 X).iCycles n).hom (s • c)
       = s • ((cochainCxZMod2 X).iCycles n).hom c := map_smul _ s c
@@ -236,12 +242,14 @@ def kroneckerCyclesMap (X : TopCat.{0}) (n : ℕ) :
 theorem kroneckerCyclesMap_toCycles (X : TopCat.{0}) (n : ℕ) :
     (cochainCxZMod2 X).toCycles ((ComplexShape.up ℕ).prev n) n ≫ kroneckerCyclesMap X n = 0 := by
   apply ModuleCat.hom_ext; apply LinearMap.ext; intro w
-  change (kroneckerCyclesMap X n).hom (((cochainCxZMod2 X).toCycles ((ComplexShape.up ℕ).prev n) n).hom w) = 0
+  change (kroneckerCyclesMap X n).hom (((cochainCxZMod2 X).toCycles ((ComplexShape.up ℕ).prev n)
+    n).hom w) = 0
   rw [kroneckerCyclesMap_hom_apply]
   apply LinearMap.ext; intro x
   obtain ⟨z, rfl⟩ := (ModuleCat.epi_iff_surjective ((chainCxZMod2 X).homologyπ n)).1 inferInstance x
   have h_w := kroneckerFunctional_apply X n (((cochainCxZMod2 X).iCycles n).hom
-      (((cochainCxZMod2 X).toCycles ((ComplexShape.up ℕ).prev n) n).hom w)) (cochainCoboundary_iCycles X n _) z
+      (((cochainCxZMod2 X).toCycles ((ComplexShape.up ℕ).prev n) n).hom w))
+        (cochainCoboundary_iCycles X n _) z
   rw [h_w, LinearMap.zero_apply]
   have heq : ((cochainCxZMod2 X).iCycles n).hom
       (((cochainCxZMod2 X).toCycles ((ComplexShape.up ℕ).prev n) n).hom w)
@@ -252,16 +260,21 @@ theorem kroneckerCyclesMap_toCycles (X : TopCat.{0}) (n : ℕ) :
   · have hcob : (((cochainCxZMod2 X).d ((ComplexShape.up ℕ).prev n) n).hom w)
         = (chainCxZMod2 X).d n ((ComplexShape.up ℕ).prev n) ≫ w := rfl
     rw [hcob]
-    have h_comp : ((chainCxZMod2 X).d n ((ComplexShape.up ℕ).prev n) ≫ w).hom (((chainCxZMod2 X).iCycles n).hom z)
-        = w.hom ((((chainCxZMod2 X).iCycles n ≫ (chainCxZMod2 X).d n ((ComplexShape.up ℕ).prev n)).hom) z) := by
-      change w.hom (((chainCxZMod2 X).d n ((ComplexShape.up ℕ).prev n)).hom (((chainCxZMod2 X).iCycles n).hom z)) = _
+    have h_comp : ((chainCxZMod2 X).d n ((ComplexShape.up ℕ).prev n) ≫ w).hom (((chainCxZMod2
+      X).iCycles n).hom z)
+        = w.hom ((((chainCxZMod2 X).iCycles n ≫ (chainCxZMod2 X).d n ((ComplexShape.up ℕ).prev
+          n)).hom) z) := by
+      change w.hom (((chainCxZMod2 X).d n ((ComplexShape.up ℕ).prev n)).hom (((chainCxZMod2
+        X).iCycles n).hom z)) = _
       rfl
-    have h_zero : (chainCxZMod2 X).iCycles n ≫ (chainCxZMod2 X).d n ((ComplexShape.up ℕ).prev n) = 0 :=
+    have h_zero : (chainCxZMod2 X).iCycles n ≫ (chainCxZMod2 X).d n ((ComplexShape.up ℕ).prev n)
+      = 0 :=
       (chainCxZMod2 X).iCycles_d n ((ComplexShape.up ℕ).prev n)
     rw [h_comp, h_zero, ModuleCat.hom_zero, LinearMap.zero_apply]
     exact map_zero _
   · have hz : ((cochainCxZMod2 X).d ((ComplexShape.up ℕ).prev n) n).hom w = 0 := by
-      rw [(cochainCxZMod2 X).shape ((ComplexShape.up ℕ).prev n) n h, ModuleCat.hom_zero, LinearMap.zero_apply]
+      rw [(cochainCxZMod2 X).shape ((ComplexShape.up ℕ).prev n) n h, ModuleCat.hom_zero,
+        LinearMap.zero_apply]
     rw [hz]
     rfl
 
@@ -283,20 +296,25 @@ theorem kroneckerMap_cocycleClass (X : TopCat.{0}) (n : ℕ)
       = (kroneckerFunctional X n φ hφ).hom := by
   dsimp [cocycleClass]
   have h := congrArg (fun (f : (cochainCxZMod2 X).cycles n ⟶ homologyDualZMod2 X n) =>
-      f.hom ((cochainCxZMod2 X).cyclesMk φ (n + 1) (cochainCx_next n) hφ)) (kroneckerMap_homologyπ X n)
+      f.hom ((cochainCxZMod2 X).cyclesMk φ (n + 1) (cochainCx_next n) hφ))
+        (kroneckerMap_homologyπ X n)
   dsimp at h
   rw [h, kroneckerCyclesMap_hom_apply]
   have h_mk := (cochainCxZMod2 X).i_cyclesMk φ (n + 1) (cochainCx_next n) hφ
   have h_congr : kroneckerFunctional X n (((cochainCxZMod2 X).iCycles n).hom
-      ((cochainCxZMod2 X).cyclesMk φ (n + 1) (cochainCx_next n) hφ)) (cochainCoboundary_iCycles X n _)
+      ((cochainCxZMod2 X).cyclesMk φ (n + 1) (cochainCx_next n) hφ)) (cochainCoboundary_iCycles
+        X n _)
     = kroneckerFunctional X n φ hφ := by
     apply homology_hom_ext
     have h1 := kroneckerFunctional_homologyπ X n (((cochainCxZMod2 X).iCycles n).hom
-      ((cochainCxZMod2 X).cyclesMk φ (n + 1) (cochainCx_next n) hφ)) (cochainCoboundary_iCycles X n _)
+      ((cochainCxZMod2 X).cyclesMk φ (n + 1) (cochainCx_next n) hφ)) (cochainCoboundary_iCycles
+        X n _)
     have h2 := kroneckerFunctional_homologyπ X n φ hφ
-    have h_c : (chainCxZMod2 X).iCycles n ≫ ((cochainCxZMod2 X).iCycles n).hom ((cochainCxZMod2 X).cyclesMk φ (n + 1) (cochainCx_next n) hφ)
+    have h_c : (chainCxZMod2 X).iCycles n ≫ ((cochainCxZMod2 X).iCycles n).hom ((cochainCxZMod2
+      X).cyclesMk φ (n + 1) (cochainCx_next n) hφ)
         = (chainCxZMod2 X).iCycles n ≫ φ := by
-      have := congrArg (fun (ψ : singularCochainGroup (ZMod 2) X n) => (chainCxZMod2 X).iCycles n ≫ ψ) h_mk
+      have := congrArg (fun (ψ : singularCochainGroup (ZMod 2) X n) => (chainCxZMod2 X).iCycles
+        n ≫ ψ) h_mk
       exact this
     exact h1.trans (h_c.trans h2.symm)
   rw [h_congr]
@@ -363,8 +381,10 @@ theorem kroneckerMap_surjective (X : TopCat.{0}) (n : ℕ) :
     have h_hom_assoc : (chainCxZMod2 X).toCycles (n + 1) n ≫ ((chainCxZMod2 X).homologyπ n ≫ g_mor)
         = ((chainCxZMod2 X).toCycles (n + 1) n ≫ (chainCxZMod2 X).homologyπ n) ≫ g_mor :=
       (Category.assoc _ _ _).symm
-    have hzero_comp : ((chainCxZMod2 X).toCycles (n + 1) n ≫ (chainCxZMod2 X).homologyπ n) ≫ g_mor = 0 := by
-      have := congrArg (fun (f : (chainCxZMod2 X).X (n + 1) ⟶ (chainCxZMod2 X).homology n) => f ≫ g_mor) hzero
+    have hzero_comp : ((chainCxZMod2 X).toCycles (n + 1) n ≫ (chainCxZMod2 X).homologyπ n) ≫
+      g_mor = 0 := by
+      have := congrArg (fun (f : (chainCxZMod2 X).X (n + 1) ⟶ (chainCxZMod2 X).homology n) => f
+        ≫ g_mor) hzero
       exact this.trans zero_comp
     change (chainCxZMod2 X).d (n + 1) n ≫ φ = 0
     rw [h_to_assoc, h_r_iCycles, h_hom_assoc, hzero_comp]
@@ -374,7 +394,8 @@ theorem kroneckerMap_surjective (X : TopCat.{0}) (n : ℕ) :
     apply homology_hom_ext
     have hfac := kroneckerFunctional_homologyπ X n φ h_phi_cocycle
     exact hfac.trans h_r_iCycles
-  have hkf_hom := congrArg (fun (f : homologyZMod2 X n ⟶ ModuleCat.of (ZMod 2) (ZMod 2)) => f.hom) hkf
+  have hkf_hom := congrArg (fun (f : homologyZMod2 X n ⟶ ModuleCat.of (ZMod 2) (ZMod 2)) =>
+    f.hom) hkf
   dsimp [g_mor] at hkf_hom
   exact hkf_hom
 

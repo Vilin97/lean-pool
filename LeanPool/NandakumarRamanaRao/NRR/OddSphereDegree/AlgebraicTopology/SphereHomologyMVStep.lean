@@ -122,14 +122,17 @@ def eqNormSq (x : Sphere (n + 1)) : ℝ := ∑ i : Fin (n + 1), (x.val i.succ) ^
 theorem eqNormSq_eq (x : Sphere (n + 1)) : eqNormSq n x = 1 - (x.val 0) ^ 2 := by
   have h_norm_sq : ‖x.val‖^2 = ∑ i : Fin (n + 2), (x.val i)^2 := by
     rw [ EuclideanSpace.norm_eq ];
-    rw [ Real.sq_sqrt <| Finset.sum_nonneg fun _ _ => sq_nonneg _, Finset.sum_congr rfl fun _ _ => by rw [ Real.norm_eq_abs, sq_abs ] ];
+    rw [ Real.sq_sqrt <| Finset.sum_nonneg fun _ _ => sq_nonneg _, Finset.sum_congr rfl fun _ _
+      => by
+      rw [ Real.norm_eq_abs, sq_abs ] ];
   simp_all +decide [ Fin.sum_univ_succ, eqNormSq ]
 
 theorem eqNormSq_pos {x : Sphere (n + 1)} (hx : x ∈ sphereBand n) : 0 < eqNormSq n x := by
   contrapose! hx
   have h_zero : ∀ i : Fin (n + 1), x.val i.succ = 0 := by
     intro i
-    have h_sq := le_antisymm (le_trans (Finset.single_le_sum (fun a _ => sq_nonneg (x.val (Fin.succ a))) (Finset.mem_univ i)) hx) (sq_nonneg _)
+    have h_sq := le_antisymm (le_trans (Finset.single_le_sum (fun a _ => sq_nonneg (x.val
+      (Fin.succ a))) (Finset.mem_univ i)) hx) (sq_nonneg _)
     exact sq_eq_zero_iff.mp h_sq
   have h_eq0 : (x.val 0)^2 = 1 := by
     have := eqNormSq_eq n x
@@ -167,7 +170,8 @@ def fFun (x : Sphere (n + 1)) : EuclideanSpace ℝ (Fin (n + 1)) :=
 theorem fFun_mem {x : Sphere (n + 1)} (hx : x ∈ sphereBand n) :
     fFun n x ∈ Metric.sphere (0 : EuclideanSpace ℝ (Fin (n + 1))) 1 := by
       simp +decide [ fFun, EuclideanSpace.norm_eq ];
-      norm_num [ div_pow, Real.sq_sqrt ( show 0 ≤ eqNormSq n x from Finset.sum_nonneg fun _ _ => sq_nonneg _ ) ];
+      norm_num [ div_pow, Real.sq_sqrt ( show 0 ≤ eqNormSq n x from Finset.sum_nonneg fun _ _ =>
+        sq_nonneg _ ) ];
       rw [ ← Finset.sum_div _ _ _, eqNormSq ];
       exact div_self <| ne_of_gt <| eqNormSq_pos n hx
 
@@ -176,14 +180,20 @@ theorem continuous_fFun_band :
       refine' Continuous.subtype_mk _ _;
       refine' continuous_iff_continuousAt.mpr _;
       intro x
-      have h_cont : ContinuousAt (fun x : EuclideanSpace ℝ (Fin (n + 2)) => (WithLp.equiv 2 (Fin (n + 1) → ℝ)).symm (fun i => x i.succ / Real.sqrt (∑ i : Fin (n + 1), (x i.succ) ^ 2))) x.val := by
-        refine' ContinuousAt.comp ( _ : ContinuousAt ( fun x : Fin ( n + 1 ) → ℝ => ( WithLp.equiv 2 ( Fin ( n + 1 ) → ℝ ) ).symm x ) _ ) _;
+      have h_cont : ContinuousAt (fun x : EuclideanSpace ℝ (Fin (n + 2)) => (WithLp.equiv 2 (Fin
+        (n + 1) → ℝ)).symm (fun i => x i.succ / Real.sqrt (∑ i : Fin (n + 1), (x i.succ) ^ 2)))
+        x.val := by
+        refine' ContinuousAt.comp ( _ : ContinuousAt ( fun x : Fin ( n + 1 ) → ℝ => (
+          WithLp.equiv 2 ( Fin ( n + 1 ) → ℝ ) ).symm x ) _ ) _;
         · exact Continuous.continuousAt ( by continuity );
         · refine' tendsto_pi_nhds.mpr fun i => ContinuousAt.div _ _ _;
-          · exact Continuous.continuousAt ( by exact continuous_apply _ |> Continuous.comp <| by continuity );
+          · exact Continuous.continuousAt ( by
+              exact continuous_apply _ |> Continuous.comp <| by
+                continuity );
           · fun_prop;
           · exact ne_of_gt <| Real.sqrt_pos.mpr <| eqNormSq_pos n x.2;
-      exact h_cont.tendsto.comp ( continuous_subtype_val.continuousAt.comp ( continuous_subtype_val.continuousAt ) )
+      exact h_cont.tendsto.comp ( continuous_subtype_val.continuousAt.comp (
+        continuous_subtype_val.continuousAt ) )
 
 /-- The continuous map `band → Sⁿ`. -/
 def bandToSphere : C(↥(sphereBand n), Sphere n) :=
@@ -211,8 +221,10 @@ theorem continuous_gFun :
     Continuous (fun y : Sphere n =>
       (⟨⟨gFun n y, gFun_mem_sphere n y⟩, gFun_mem_band n y⟩ : ↥(sphereBand n))) := by
         refine' Continuous.subtype_mk ( Continuous.subtype_mk _ _ ) _;
-        -- The function y ↦ Fin.cons 0 (fun i => y.val i) is continuous because it is a composition of continuous functions.
-        have h_cont : Continuous (fun y : Sphere n => Fin.cons 0 (fun i => y.val i) : Sphere n → Fin (n + 2) → ℝ) := by
+        -- The function y ↦ Fin.cons 0 (fun i => y.val i) is continuous because it is a
+        -- composition of continuous functions.
+        have h_cont : Continuous (fun y : Sphere n => Fin.cons 0 (fun i => y.val i) : Sphere n →
+          Fin (n + 2) → ℝ) := by
           refine' continuous_pi_iff.mpr _;
           intro i; induction i using Fin.inductionOn <;> simp_all +decide [ Fin.cons ];
           · exact continuous_const;
@@ -240,11 +252,18 @@ theorem bandHomotopyFun_ne_zero (p : unitInterval × ↥(sphereBand n)) :
       obtain ⟨i, hi⟩ : ∃ i : Fin (n + 1), p.2.val.val i.succ ≠ 0 := by
         have h_pos : 0 < ∑ i : Fin (n + 1), (p.2.val.val i.succ) ^ 2 := by
           exact eqNormSq_pos n p.2.2;
-        exact not_forall.mp fun h => h_pos.ne' <| Finset.sum_eq_zero fun i _ => by simp +decide [ h i ];
-      intro h; have := congr_arg ( fun x => x i.succ ) h; norm_num [ hi, sphereToBand, bandToSphere, fFun, gFun ] at this;
+        exact not_forall.mp fun h => h_pos.ne' <| Finset.sum_eq_zero fun i _ => by
+          simp +decide [ h i ];
+      intro h; have := congr_arg ( fun x => x i.succ ) h; norm_num [ hi, sphereToBand,
+        bandToSphere, fFun, gFun ] at this;
       by_cases h : p.1.val = 0 <;> simp_all +decide [ div_eq_mul_inv,  mul_comm ];
       · exact absurd this ( ne_of_gt ( Real.sqrt_pos.mpr ( eqNormSq_pos n p.2.2 ) ) );
-      · exact hi ( by nlinarith [ show 0 < ( 1 - p.1.val ) * ( Real.sqrt ( eqNormSq n p.2.val ) ) ⁻¹ + p.1.val from by exact add_pos_of_nonneg_of_pos ( mul_nonneg ( sub_nonneg.2 <| p.1.2.2 ) <| inv_nonneg.2 <| Real.sqrt_nonneg _ ) <| lt_of_le_of_ne ( p.1.2.1 ) <| Ne.symm <| by aesop ] )
+      · exact hi ( by
+          nlinarith [ show 0 < ( 1 - p.1.val ) * ( Real.sqrt ( eqNormSq n p.2.val ) ) ⁻¹ +
+            p.1.val from by
+            exact add_pos_of_nonneg_of_pos ( mul_nonneg ( sub_nonneg.2 <| p.1.2.2 ) <|
+              inv_nonneg.2 <| Real.sqrt_nonneg _ ) <| lt_of_le_of_ne ( p.1.2.1 ) <| Ne.symm <| by
+              aesop ] )
 
 theorem bandHomotopy_mem_sphere (p : unitInterval × ↥(sphereBand n)) :
     (‖bandHomotopyFun n p‖⁻¹ • bandHomotopyFun n p) ∈
@@ -262,13 +281,17 @@ theorem bandHomotopy_mem_band (p : unitInterval × ↥(sphereBand n)) :
     have h_inv_pos : 0 < ‖bandHomotopyFun n p‖⁻¹ := inv_pos.mpr h_norm_pos
     intro hc
     have hc' : (bandHomotopyFun n p) (Fin.succ i) = 0 := by
-      have : (‖bandHomotopyFun n p‖⁻¹ • bandHomotopyFun n p) (Fin.succ i) = ‖bandHomotopyFun n p‖⁻¹ * (bandHomotopyFun n p) (Fin.succ i) := rfl
+      have : (‖bandHomotopyFun n p‖⁻¹ • bandHomotopyFun n p) (Fin.succ i) = ‖bandHomotopyFun n
+        p‖⁻¹ * (bandHomotopyFun n p) (Fin.succ i) := rfl
       rw [this] at hc
       exact mul_eq_zero.mp hc |>.resolve_left h_inv_pos.ne'
     dsimp [bandHomotopyFun, sphereToBand, bandToSphere, fFun, gFun] at hc'
-    have : ((1 - (p.1 : ℝ)) * (Real.sqrt (eqNormSq n p.2.val))⁻¹ + (p.1 : ℝ)) * p.2.val.val i.succ = 0 := by
+    have : ((1 - (p.1 : ℝ)) * (Real.sqrt (eqNormSq n p.2.val))⁻¹ + (p.1 : ℝ)) * p.2.val.val
+      i.succ = 0 := by
       calc ((1 - (p.1 : ℝ)) * (Real.sqrt (eqNormSq n p.2.val))⁻¹ + (p.1 : ℝ)) * p.2.val.val i.succ
-        _ = (1 - (p.1 : ℝ)) * (p.2.val.val i.succ / Real.sqrt (eqNormSq n p.2.val)) + (p.1 : ℝ) * p.2.val.val i.succ := by ring
+        _ = (1 - (p.1 : ℝ)) * (p.2.val.val i.succ / Real.sqrt (eqNormSq n p.2.val)) + (p.1 : ℝ)
+          * p.2.val.val i.succ := by
+          ring
         _ = 0 := hc'
     have h_coeff_pos : 0 < (1 - (p.1 : ℝ)) * (Real.sqrt (eqNormSq n p.2.val))⁻¹ + (p.1 : ℝ) := by
       by_cases ht : (p.1 : ℝ) = 0
@@ -299,7 +322,8 @@ theorem continuous_bandHomotopy :
     dsimp [bandHomotopyFun]
     refine Continuous.add ?_ ?_
     · refine Continuous.smul (continuous_const.sub (continuous_subtype_val.comp continuous_fst)) ?_
-      exact (sphereToBand n).continuous.comp ((bandToSphere n).continuous.comp continuous_snd) |>.subtype_val.subtype_val
+      exact (sphereToBand n).continuous.comp ((bandToSphere n).continuous.comp continuous_snd)
+        |>.subtype_val.subtype_val
     · exact (continuous_subtype_val.comp continuous_fst).smul continuous_snd.subtype_val.subtype_val
   have h_inv : Continuous (fun p : unitInterval × ↥(sphereBand n) => ‖bandHomotopyFun n p‖⁻¹) := by
     refine Continuous.inv₀ (Continuous.norm h_fun) ?_
@@ -312,7 +336,8 @@ theorem bandHomotopy_zero (x : ↥(sphereBand n)) :
         bandHomotopy_mem_band n (0, x)⟩ : ↥(sphereBand n))
       = (sphereToBand n).comp (bandToSphere n) x := by
         -- Since $t = 0$, we have $bandHomotopyFun n (0, x) = gfx$ by definition.
-        have h_bandHomotopy_zero : bandHomotopyFun n (0, x) = (sphereToBand n (bandToSphere n x)).val.val := by
+        have h_bandHomotopy_zero : bandHomotopyFun n (0, x) = (sphereToBand n (bandToSphere n
+          x)).val.val := by
           unfold bandHomotopyFun; norm_num [ sphereToBand, bandToSphere, fFun, gFun ];
         simp +decide [ h_bandHomotopy_zero ]
 

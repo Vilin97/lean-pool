@@ -113,7 +113,8 @@ theorem cocycleClass_zero (X : TopCat.{0}) (n : ℕ)
   have h : (cochainCxZMod2 X).cyclesMk (0 : singularCochainGroup (ZMod 2) X n) (n + 1)
       (cochainCx_next n) h0 = 0 := by
     apply (ModuleCat.mono_iff_injective ((cochainCxZMod2 X).iCycles n)).1 inferInstance
-    have h_mk := (cochainCxZMod2 X).i_cyclesMk (0 : singularCochainGroup (ZMod 2) X n) (n + 1) (cochainCx_next n) h0
+    have h_mk := (cochainCxZMod2 X).i_cyclesMk (0 : singularCochainGroup (ZMod 2) X n) (n + 1)
+      (cochainCx_next n) h0
     rw [map_zero]
     exact h_mk
   rw [h, map_zero]
@@ -132,17 +133,21 @@ theorem cocycleClass_coboundary_zero (X : TopCat.{0}) (m : ℕ)
     (η : singularCochainGroup (ZMod 2) X m)
     (hcoc : cochainCoboundary (ZMod 2) X (m + 1) (cochainCoboundary (ZMod 2) X m η) = 0) :
     cocycleClass X (m + 1) (cochainCoboundary (ZMod 2) X m η) hcoc = 0 := by
-  have h : (cochainCxZMod2 X).cyclesMk (cochainCoboundary (ZMod 2) X m η) (m + 2) (cochainCx_next (m + 1)) hcoc = (cochainCxZMod2 X).toCycles m (m + 1) η := by
+  have h : (cochainCxZMod2 X).cyclesMk (cochainCoboundary (ZMod 2) X m η) (m + 2)
+    (cochainCx_next (m + 1)) hcoc = (cochainCxZMod2 X).toCycles m (m + 1) η := by
     apply (ModuleCat.mono_iff_injective ((cochainCxZMod2 X).iCycles (m + 1))).1 inferInstance
-    have h_mk := (cochainCxZMod2 X).i_cyclesMk (cochainCoboundary (ZMod 2) X m η) (m + 2) (cochainCx_next (m + 1)) hcoc
+    have h_mk := (cochainCxZMod2 X).i_cyclesMk (cochainCoboundary (ZMod 2) X m η) (m + 2)
+      (cochainCx_next (m + 1)) hcoc
     have hto := HomologicalComplex.toCycles_i (cochainCxZMod2 X) m (m + 1)
-    have hto_app := congrArg (fun (f : (cochainCxZMod2 X).X m ⟶ (cochainCxZMod2 X).X (m + 1)) => f.hom η) hto
+    have hto_app := congrArg (fun (f : (cochainCxZMod2 X).X m ⟶ (cochainCxZMod2 X).X (m + 1)) =>
+      f.hom η) hto
     dsimp at hto_app
     exact h_mk.trans hto_app.symm
   dsimp [cocycleClass]
   rw [h]
   have hcomp := HomologicalComplex.toCycles_comp_homologyπ (cochainCxZMod2 X) m (m + 1)
-  have hcomp_app := congrArg (fun (f : (cochainCxZMod2 X).X m ⟶ (cochainCxZMod2 X).homology (m + 1)) => f.hom η) hcomp
+  have hcomp_app := congrArg (fun (f : (cochainCxZMod2 X).X m ⟶ (cochainCxZMod2 X).homology (m +
+    1)) => f.hom η) hcomp
   dsimp at hcomp_app
   exact hcomp_app
 
@@ -161,7 +166,8 @@ theorem cocycleClass_cast (X : TopCat.{0}) {m m' : ℕ} (h : m = m')
 /-- A degree-cast coboundary has zero cohomology class. -/
 theorem cocycleClass_cast_coboundary_zero (X : TopCat.{0}) (m m' : ℕ) (h : m + 1 = m')
     (η : singularCochainGroup (ZMod 2) X m)
-    (hcoc : cochainCoboundary (ZMod 2) X m' (cochainCast h (cochainCoboundary (ZMod 2) X m η)) = 0) :
+    (hcoc : cochainCoboundary (ZMod 2) X m' (cochainCast h (cochainCoboundary (ZMod 2) X m η)) =
+      0) :
     cocycleClass X m' (cochainCast h (cochainCoboundary (ZMod 2) X m η)) hcoc = 0 := by
   rw [cocycleClass_cast X h (cochainCoboundary (ZMod 2) X m η)
         (cochainCoboundary_cochainCoboundary X m η) hcoc,
@@ -240,14 +246,18 @@ theorem cupLeftMor_cyclesMk (X : TopCat.{0}) (p q : ℕ)
   dsimp [cupLeftMor, cocycleClass]
   congr 1
   apply (ModuleCat.mono_iff_injective ((cochainCxZMod2 X).iCycles (p + q))).1 inferInstance
-  have h_mk := (cochainCxZMod2 X).i_cyclesMk (cochainCup p q φ ψ) (p + q + 1) (cochainCx_next (p + q)) (cochainCupZMod2_respects_cocycles p q φ ψ hφ hψ)
+  have h_mk := (cochainCxZMod2 X).i_cyclesMk (cochainCup p q φ ψ) (p + q + 1) (cochainCx_next (p
+    + q)) (cochainCupZMod2_respects_cocycles p q φ ψ hφ hψ)
   have h_lift := congrArg (fun (f : (cochainCxZMod2 X).cycles p ⟶ (cochainCxZMod2 X).X (p + q)) =>
       f.hom ((cochainCxZMod2 X).cyclesMk φ (p + 1) (cochainCx_next p) hφ))
-    ((cochainCxZMod2 X).liftCycles_i ((cochainCxZMod2 X).iCycles p ≫ cupRightMor X p q ψ) (p + q + 1) (cochainCx_next (p + q)) (cupRight_cocycle_cond X p q ψ hψ))
+    ((cochainCxZMod2 X).liftCycles_i ((cochainCxZMod2 X).iCycles p ≫ cupRightMor X p q ψ) (p + q
+      + 1) (cochainCx_next (p + q)) (cupRight_cocycle_cond X p q ψ hψ))
   dsimp at h_lift
-  have h_eval : ((cochainCxZMod2 X).iCycles p ≫ cupRightMor X p q ψ).hom ((cochainCxZMod2 X).cyclesMk φ (p + 1) (cochainCx_next p) hφ) = cochainCup p q φ ψ := by
+  have h_eval : ((cochainCxZMod2 X).iCycles p ≫ cupRightMor X p q ψ).hom ((cochainCxZMod2
+    X).cyclesMk φ (p + 1) (cochainCx_next p) hφ) = cochainCup p q φ ψ := by
     simp only [ModuleCat.hom_comp, LinearMap.comp_apply, cupRightMor_hom]
-    exact congrArg (fun x => cochainCup p q x ψ) ((cochainCxZMod2 X).i_cyclesMk φ (p + 1) (cochainCx_next p) hφ)
+    exact congrArg (fun x => cochainCup p q x ψ) ((cochainCxZMod2 X).i_cyclesMk φ (p + 1)
+      (cochainCx_next p) hφ)
   exact h_lift.trans (h_eval.trans h_mk.symm)
 
 /-
@@ -263,14 +273,18 @@ theorem cupRightMor'_cyclesMk (X : TopCat.{0}) (p q : ℕ)
   dsimp [cupRightMor', cocycleClass]
   congr 1
   apply (ModuleCat.mono_iff_injective ((cochainCxZMod2 X).iCycles (p + q))).1 inferInstance
-  have h_mk := (cochainCxZMod2 X).i_cyclesMk (cochainCup p q φ ψ) (p + q + 1) (cochainCx_next (p + q)) (cochainCupZMod2_respects_cocycles p q φ ψ hφ hψ)
+  have h_mk := (cochainCxZMod2 X).i_cyclesMk (cochainCup p q φ ψ) (p + q + 1) (cochainCx_next (p
+    + q)) (cochainCupZMod2_respects_cocycles p q φ ψ hφ hψ)
   have h_lift := congrArg (fun (f : (cochainCxZMod2 X).cycles q ⟶ (cochainCxZMod2 X).X (p + q)) =>
       f.hom ((cochainCxZMod2 X).cyclesMk ψ (q + 1) (cochainCx_next q) hψ))
-    ((cochainCxZMod2 X).liftCycles_i ((cochainCxZMod2 X).iCycles q ≫ cupLeftFixedMor X p q φ) (p + q + 1) (cochainCx_next (p + q)) (cupLeftFixed_cocycle_cond X p q φ hφ))
+    ((cochainCxZMod2 X).liftCycles_i ((cochainCxZMod2 X).iCycles q ≫ cupLeftFixedMor X p q φ) (p
+      + q + 1) (cochainCx_next (p + q)) (cupLeftFixed_cocycle_cond X p q φ hφ))
   dsimp at h_lift
-  have h_eval : ((cochainCxZMod2 X).iCycles q ≫ cupLeftFixedMor X p q φ).hom ((cochainCxZMod2 X).cyclesMk ψ (q + 1) (cochainCx_next q) hψ) = cochainCup p q φ ψ := by
+  have h_eval : ((cochainCxZMod2 X).iCycles q ≫ cupLeftFixedMor X p q φ).hom ((cochainCxZMod2
+    X).cyclesMk ψ (q + 1) (cochainCx_next q) hψ) = cochainCup p q φ ψ := by
     simp only [ModuleCat.hom_comp, LinearMap.comp_apply, cupLeftFixedMor_hom]
-    exact congrArg (fun y => cochainCup p q φ y) ((cochainCxZMod2 X).i_cyclesMk ψ (q + 1) (cochainCx_next q) hψ)
+    exact congrArg (fun y => cochainCup p q φ y) ((cochainCxZMod2 X).i_cyclesMk ψ (q + 1)
+      (cochainCx_next q) hψ)
   exact h_lift.trans (h_eval.trans h_mk.symm)
 
 /-- `cupLeftMor` evaluated on a general cycle is the class of its `iCycles` cupped
@@ -520,7 +534,8 @@ theorem cochainPullback_cochainCoboundary {X Y : TopCat.{0}} (f : X ⟶ Y) (n : 
     cochainCoboundary (ZMod 2) X n (cochainPullback f n φ)
       = cochainPullback f (n + 1) (cochainCoboundary (ZMod 2) Y n φ) := by
   have hcomm := ((singularCochainComplexZMod2).map f.op).comm n (n + 1)
-  have h := congrArg (fun (g : (cochainCxZMod2 Y).X n ⟶ (cochainCxZMod2 X).X (n + 1)) => g.hom φ) hcomm
+  have h := congrArg (fun (g : (cochainCxZMod2 Y).X n ⟶ (cochainCxZMod2 X).X (n + 1)) => g.hom
+    φ) hcomm
   dsimp at h
   exact h
 
@@ -540,12 +555,14 @@ theorem cohPullback_cocycleClass {X Y : TopCat.{0}} (f : X ⟶ Y) (n : ℕ)
     (cohPullback f n).hom (cocycleClass Y n φ hφ)
       = cocycleClass X n (cochainPullback f n φ) (cochainPullback_cocycle f n φ hφ) := by
   have hnat := HomologicalComplex.homologyπ_naturality ((singularCochainComplexZMod2).map f.op) n
-  have hnat_app := congrArg (fun (g : (cochainCxZMod2 Y).cycles n ⟶ (cochainCxZMod2 X).homology n) =>
+  have hnat_app := congrArg (fun (g : (cochainCxZMod2 Y).cycles n ⟶ (cochainCxZMod2 X).homology
+    n) =>
       g.hom ((cochainCxZMod2 Y).cyclesMk φ (n + 1) (cochainCx_next n) hφ)) hnat
   dsimp at hnat_app
   have h_cyc : (HomologicalComplex.cyclesMap ((singularCochainComplexZMod2).map f.op) n).hom
       ((cochainCxZMod2 Y).cyclesMk φ (n + 1) (cochainCx_next n) hφ)
-      = (cochainCxZMod2 X).cyclesMk (cochainPullback f n φ) (n + 1) (cochainCx_next n) (cochainPullback_cocycle f n φ hφ) := by
+      = (cochainCxZMod2 X).cyclesMk (cochainPullback f n φ) (n + 1) (cochainCx_next n)
+        (cochainPullback_cocycle f n φ hφ) := by
     apply (ModuleCat.mono_iff_injective ((cochainCxZMod2 X).iCycles n)).1 inferInstance
     have h1 : ((cochainCxZMod2 X).iCycles n).hom
         ((HomologicalComplex.cyclesMap ((singularCochainComplexZMod2).map f.op) n).hom
@@ -556,8 +573,10 @@ theorem cohPullback_cocycleClass {X Y : TopCat.{0}} (f : X ⟶ Y) (n : ℕ)
           g.hom ((cochainCxZMod2 Y).cyclesMk φ (n + 1) (cochainCx_next n) hφ)) hcyc
       dsimp at hcyc_app
       have h_mk := (cochainCxZMod2 Y).i_cyclesMk φ (n + 1) (cochainCx_next n) hφ
-      exact hcyc_app.trans (congrArg (fun x => (((singularCochainComplexZMod2).map f.op).f n).hom x) h_mk)
-    have h2 := (cochainCxZMod2 X).i_cyclesMk (cochainPullback f n φ) (n + 1) (cochainCx_next n) (cochainPullback_cocycle f n φ hφ)
+      exact hcyc_app.trans (congrArg (fun x => (((singularCochainComplexZMod2).map f.op).f
+        n).hom x) h_mk)
+    have h2 := (cochainCxZMod2 X).i_cyclesMk (cochainPullback f n φ) (n + 1) (cochainCx_next n)
+      (cochainPullback_cocycle f n φ hφ)
     exact h1.trans h2.symm
   have h_res := congrArg (fun c => ((cochainCxZMod2 X).homologyπ n).hom c) h_cyc
   exact hnat_app.trans h_res

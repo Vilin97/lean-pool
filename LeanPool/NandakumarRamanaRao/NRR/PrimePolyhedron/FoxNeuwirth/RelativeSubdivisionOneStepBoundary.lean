@@ -5,9 +5,12 @@ Authors: Arseniy Akopyan
 -/
 
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeSubdivisionOneStepBoundaryBase
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeSubdivisionCylinderBoundary
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismNonhorizontalCancellation
+import
+  LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeSubdivisionOneStepBoundaryBase
+import
+  LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeSubdivisionCylinderBoundary
+import
+  LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismNonhorizontalCancellation
 /-!
 # Pointwise boundary of the one-step relative subdivision cylinder
 
@@ -89,7 +92,8 @@ theorem facetOrbitIndicator_smul
       (∃ o : (RelativeSubdivisionOneStepCells.cellSystem hp N).FacetOccurrence,
           (RelativeSubdivisionOneStepCells.cellSystem hp N).facetClass o = s ∧
             ∃ h : PrimeSymmetry p,
-              v = fun i => h • (RelativeSubdivisionOneStepCells.cellSystem hp N).facetSignature o i) := by
+              v = fun i => h • (RelativeSubdivisionOneStepCells.cellSystem hp N).facetSignature
+                o i) := by
     constructor
     · rintro ⟨o, ho, h, hh⟩
       refine ⟨o, ho, g⁻¹ * h, ?_⟩
@@ -146,7 +150,8 @@ theorem facetOrbitIndicator_occurrence
     (hp : Nat.Prime p) (N : Nat)
     (s : (RelativeSubdivisionOneStepCells.cellSystem hp N).Facet)
     (o : (RelativeSubdivisionOneStepCells.cellSystem hp N).FacetOccurrence) :
-    facetOrbitIndicator hp N s ((RelativeSubdivisionOneStepCells.cellSystem hp N).facetSignature o) =
+    facetOrbitIndicator hp N s ((RelativeSubdivisionOneStepCells.cellSystem hp N).facetSignature
+      o) =
       if (RelativeSubdivisionOneStepCells.cellSystem hp N).facetClass o = s then 1 else 0 := by
   classical
   by_cases hos : (RelativeSubdivisionOneStepCells.cellSystem hp N).facetClass o = s
@@ -154,7 +159,8 @@ theorem facetOrbitIndicator_occurrence
         (RelativeSubdivisionOneStepCells.cellSystem hp N).facetClass o' = s ∧
           ∃ g : PrimeSymmetry p,
             (RelativeSubdivisionOneStepCells.cellSystem hp N).facetSignature o =
-              fun i => g • (RelativeSubdivisionOneStepCells.cellSystem hp N).facetSignature o' i := by
+              fun i => g • (RelativeSubdivisionOneStepCells.cellSystem hp N).facetSignature o' i
+                := by
       exact ⟨o, hos, 1, by funext i; simp⟩
     unfold facetOrbitIndicator
     rw [ite_eq_left hex, ite_eq_left hos]
@@ -162,7 +168,8 @@ theorem facetOrbitIndicator_occurrence
         (RelativeSubdivisionOneStepCells.cellSystem hp N).facetClass o' = s ∧
           ∃ g : PrimeSymmetry p,
             (RelativeSubdivisionOneStepCells.cellSystem hp N).facetSignature o =
-              fun i => g • (RelativeSubdivisionOneStepCells.cellSystem hp N).facetSignature o' i := by
+              fun i => g • (RelativeSubdivisionOneStepCells.cellSystem hp N).facetSignature o' i
+                := by
       rintro ⟨o', ho', g, hg⟩
       apply hos
       have hclass : (RelativeSubdivisionOneStepCells.cellSystem hp N).facetClass o =
@@ -191,7 +198,8 @@ theorem facetIncidence_eq_localFullBoundary
     (RelativeSubdivisionOneStepCells.cellSystem hp N).facetIncidence s =
       ∑ q : TopCell hp N,
         RefinedAffineMap.coefficient hp N q *
-          NRR.FoxNeuwirthOrderComplex.RelativeSubdivisionCylinderBoundary.fullBoundaryPairing (ZMod p) (p - 1)
+          NRR.FoxNeuwirthOrderComplex.RelativeSubdivisionCylinderBoundary.fullBoundaryPairing
+            (ZMod p) (p - 1)
             (localTupleWeight hp N s q) := by
   classical
   unfold RelativeAffineCellSystem.facetIncidence
@@ -255,7 +263,8 @@ theorem facetIncidence_eq_localBase
     (RelativeSubdivisionOneStepCells.cellSystem hp N).facetIncidence s =
       ∑ q : TopCell hp N,
         RefinedAffineMap.coefficient hp N q *
-          NRR.FoxNeuwirthOrderComplex.RelativeSubdivisionCylinderBoundary.basePairing (ZMod p) (p - 1)
+          NRR.FoxNeuwirthOrderComplex.RelativeSubdivisionCylinderBoundary.basePairing (ZMod p)
+            (p - 1)
             (localTupleWeight hp N s q) := by
   rw [facetIncidence_eq_localFullBoundary]
   apply Finset.sum_congr rfl
@@ -294,8 +303,10 @@ theorem localBase_eq_globalBase
   apply Finset.sum_congr rfl
   intro r hr
   have htuple :
-      liftTuple hp N q (RelativeSubdivisionCylinderCombinatorics.Oriented.baseFacetVertex (p - 1) r) =
-        (RelativeSubdivisionOneStepCells.cellSystem hp N).facetSignature (RelativeSubdivisionOneStepBoundaryBase.baseOccurrence hp N (q, r)) := by
+      liftTuple hp N q (RelativeSubdivisionCylinderCombinatorics.Oriented.baseFacetVertex (p -
+        1) r) =
+        (RelativeSubdivisionOneStepCells.cellSystem hp N).facetSignature
+          (RelativeSubdivisionOneStepBoundaryBase.baseOccurrence hp N (q, r)) := by
     rw [← NRR.FoxNeuwirthOrderComplex.RelativeSubdivisionCylinderBoundary.facetTuple_zero_eq_base]
     exact liftTuple_facetTuple hp N q r 0
   change _ * (_ * facetOrbitIndicator hp N s
@@ -339,14 +350,16 @@ noncomputable def sideCylinderTuple
 /-- Quotient-facet weight induced on a spatial facet map by one recursive side-cylinder cell. -/
 noncomputable def sideMapWeight
     (hp : Nat.Prime p) (N : Nat)
-    (s : (RelativeSubdivisionOneStepCells.cellSystem hp N).Facet) (r : RelativeSubdivisionCylinderCombinatorics.Cell (p - 2))
+    (s : (RelativeSubdivisionOneStepCells.cellSystem hp N).Facet) (r :
+      RelativeSubdivisionCylinderCombinatorics.Cell (p - 2))
     (tau : Delta (p - 2) → Realization p) : ZMod p :=
   facetOrbitIndicator hp N s (sideCylinderTuple hp r tau)
 
 /-- The side-map weight is invariant under prime relabelling. -/
 theorem sideMapWeight_smul
     (hp : Nat.Prime p) (N : Nat)
-    (s : (RelativeSubdivisionOneStepCells.cellSystem hp N).Facet) (r : RelativeSubdivisionCylinderCombinatorics.Cell (p - 2))
+    (s : (RelativeSubdivisionOneStepCells.cellSystem hp N).Facet) (r :
+      RelativeSubdivisionCylinderCombinatorics.Cell (p - 2))
     (g : PrimeSymmetry p) (tau : Delta (p - 2) → Realization p) :
     sideMapWeight hp N s r (fun x => g • tau x) =
       sideMapWeight hp N s r tau := by
@@ -379,7 +392,8 @@ private def sideRefinementCast (hp : Nat.Prime p)
 
 /-- The prime-orbit boundary pairing vanishes for each fixed refinement word. -/
 private theorem fixed_side_refinement_cancels (d : ℕ) (hp : Nat.Prime (d + 2)) (N : ℕ)
-  (s : (RelativeSubdivisionOneStepCells.cellSystem hp N).Facet) (r : RelativeSubdivisionCylinderCombinatorics.Cell d)
+  (s : (RelativeSubdivisionOneStepCells.cellSystem hp N).Facet) (r :
+    RelativeSubdivisionCylinderCombinatorics.Cell d)
   (theta : Fin N → Equiv.Perm (Fin (d + 1))) :
   ∑ x,
       ∑ x_1,
@@ -387,7 +401,8 @@ private theorem fixed_side_refinement_cancels (d : ℕ) (hp : Nat.Prime (d + 2))
           (SimplicialChain.faceSign x_1 *
             (iteratedSign (ZMod (d + 2)) N theta *
               sideMapWeight hp N s r
-                (iteratedBoundaryMap d N (⇑(ReferenceAffineOrbitCount.topRepr hp x).realizationContinuousMap) x_1
+                (iteratedBoundaryMap d N (⇑(ReferenceAffineOrbitCount.topRepr hp
+                  x).realizationContinuousMap) x_1
                   theta))) =
     0 := by
   classical
@@ -728,7 +743,8 @@ private theorem fixedSideCell_weighted_sum_eq_zero_dim
                 SimplicialChain.faceSign j *
                   sideMapWeight hp N s r
                     (iteratedFacetMap d N
-                      (ReferenceAffineOrbitCount.topRepr hp c).realizationContinuousMap rho j)) = 0 := by
+                      (ReferenceAffineOrbitCount.topRepr hp c).realizationContinuousMap rho j))
+                        = 0 := by
   classical
   have hz := fixedSideCell_sum_eq_zero_dim d hp N s r
   rw [← hz]
@@ -743,7 +759,8 @@ private theorem sidePairing_summand_zero (d : ℕ) (hp : Nat.Prime (d + 2)) (N :
     ∀ (orbit : PrimeOrbitCycle.TopOrbit hp) (rho : RefinementWord (d + 2) N) (j : Fin (d + 2))
       (r : RelativeSubdivisionCylinderCombinatorics.Cell d),
       sideMapWeight hp N s r
-          (iteratedFacetMap d N (⇑(ReferenceAffineOrbitCount.topRepr hp orbit).realizationContinuousMap) rho j) =
+          (iteratedFacetMap d N (⇑(ReferenceAffineOrbitCount.topRepr hp
+            orbit).realizationContinuousMap) rho j) =
         if
             (RelativeSubdivisionOneStepCells.cellSystem hp N).facetClass
                 (((orbit, rho), RelativeSubdivisionCylinderCombinatorics.sideCell d j r), 0) =
@@ -756,7 +773,8 @@ private theorem sidePairing_summand_zero (d : ℕ) (hp : Nat.Prime (d + 2)) (N :
         ∑ x_2 : Fin (d + 2),
           coefficient hp N (x, x_1) *
               ((-1) ^ (x_2 : ℕ) *
-                RelativeSubdivisionCylinderCombinatorics.Oriented.coefficient (ZMod (d + 2)) d (x_2, r).2) *
+                RelativeSubdivisionCylinderCombinatorics.Oriented.coefficient (ZMod (d + 2)) d
+                  (x_2, r).2) *
             if
                 (RelativeSubdivisionOneStepCells.cellSystem hp N).facetClass
                     (((x, x_1), Sum.inr (Sum.inr (x_2, r))), 0) =
@@ -789,7 +807,8 @@ private theorem sideBasePairing_eq_zero_dim
     (s : (RelativeSubdivisionOneStepCells.cellSystem hp N).Facet) :
     RelativeSubdivisionOneStepBoundaryBase.sideBasePairing hp N (quotientIndicator s) = 0 := by
   classical
-  unfold RelativeSubdivisionOneStepBoundaryBase.sideBasePairing RelativeSubdivisionOneStepBoundaryBase.IsEndpointCell
+  unfold RelativeSubdivisionOneStepBoundaryBase.sideBasePairing
+    RelativeSubdivisionOneStepBoundaryBase.IsEndpointCell
   rw [Fintype.sum_prod_type]
   simp [RelativeSubdivisionCylinderCombinatorics.Cell,
     RelativeSubdivisionCylinderCombinatorics.lowerCell,

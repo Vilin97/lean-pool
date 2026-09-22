@@ -5,7 +5,8 @@ Authors: Arseniy Akopyan
 -/
 
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeSubdivisionCylinderCombinatorics
+import
+  LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeSubdivisionCylinderCombinatorics
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.FiniteSimplexDoubleBoundary
 /-!
 # Oriented boundary of the recursive one-step subdivision cylinder
@@ -67,7 +68,9 @@ noncomputable def fullBoundaryPairing
 noncomputable def basePairing
     (R : Type) [CommRing R] (d : Nat)
     (W : (Fin (d + 1) → Delta d × Set.Icc (0 : Real) 1) → R) : R :=
-  ∑ q : RelativeSubdivisionCylinderCombinatorics.Cell d, RelativeSubdivisionCylinderCombinatorics.Oriented.coefficient R d q * W (RelativeSubdivisionCylinderCombinatorics.Oriented.baseFacetVertex d q)
+  ∑ q : RelativeSubdivisionCylinderCombinatorics.Cell d,
+    RelativeSubdivisionCylinderCombinatorics.Oriented.coefficient R d q * W
+    (RelativeSubdivisionCylinderCombinatorics.Oriented.baseFacetVertex d q)
 
 /-- Boundary weight of one ordered `d`-simplex tuple. -/
 def tupleBoundaryWeight
@@ -82,7 +85,8 @@ def BaseChainClosed (R : Type) [CommRing R] (d : Nat) : Prop :=
   | 0 => True
   | n + 1 => ∀ W :
       (Fin (n + 1) → Delta (n + 1) × Set.Icc (0 : Real) 1) → R,
-      RelativeSubdivisionCylinderCombinatorics.Oriented.baseFacetPairing R (n + 1) (tupleBoundaryWeight (n + 1) W) = 0
+      RelativeSubdivisionCylinderCombinatorics.Oriented.baseFacetPairing R (n + 1)
+        (tupleBoundaryWeight (n + 1) W) = 0
 
 /-- Every non-base facet is the cone over the corresponding facet of the base tuple. -/
 theorem facetTuple_succ_eq_coneTuple
@@ -94,8 +98,10 @@ theorem facetTuple_succ_eq_coneTuple
             (j.succAbove i)) := by
   funext i
   refine Fin.cases ?_ (fun k => ?_) i
-  · simp [facetTuple, deleteTuple, coneTuple, RelativeSubdivisionCylinderCombinatorics.Oriented.baseFacetVertex]
-  · simp [facetTuple, deleteTuple, coneTuple, RelativeSubdivisionCylinderCombinatorics.Oriented.baseFacetVertex,
+  · simp [facetTuple, deleteTuple, coneTuple,
+      RelativeSubdivisionCylinderCombinatorics.Oriented.baseFacetVertex]
+  · simp [facetTuple, deleteTuple, coneTuple,
+      RelativeSubdivisionCylinderCombinatorics.Oriented.baseFacetVertex,
       Fin.succ_succAbove_succ]
 
 /-- The base facet is the declared triangulated-boundary simplex. -/
@@ -154,8 +160,10 @@ theorem radialPairing_eq_zero_of_baseClosed
                       (n + 1) q (j.succAbove i)))) =
           - RelativeSubdivisionCylinderCombinatorics.Oriented.baseFacetPairing R (n + 1)
               (tupleBoundaryWeight (n + 1)
-                (fun v => W (coneTuple (RelativeSubdivisionCylinderCombinatorics.apex (n + 1)) v))) := by
-            unfold RelativeSubdivisionCylinderCombinatorics.Oriented.baseFacetPairing tupleBoundaryWeight
+                (fun v => W (coneTuple (RelativeSubdivisionCylinderCombinatorics.apex (n + 1))
+                  v))) := by
+            unfold RelativeSubdivisionCylinderCombinatorics.Oriented.baseFacetPairing
+              tupleBoundaryWeight
             simp only [Finset.mul_sum]
             rw [← Finset.sum_neg_distrib]
             apply Finset.sum_congr rfl
@@ -182,7 +190,8 @@ theorem fullBoundaryPairing_eq_base_of_closed
         ∑ j : Fin (d + 2),
           SimplicialChain.faceSign j * W (facetTuple d q j)) =
       (∑ q : RelativeSubdivisionCylinderCombinatorics.Cell d,
-        RelativeSubdivisionCylinderCombinatorics.Oriented.coefficient R d q * W (RelativeSubdivisionCylinderCombinatorics.Oriented.baseFacetVertex d q)) +
+        RelativeSubdivisionCylinderCombinatorics.Oriented.coefficient R d q * W
+          (RelativeSubdivisionCylinderCombinatorics.Oriented.baseFacetVertex d q)) +
       (∑ q : RelativeSubdivisionCylinderCombinatorics.Cell d,
         RelativeSubdivisionCylinderCombinatorics.Oriented.coefficient R d q *
           ∑ j : Fin (d + 1),
@@ -222,18 +231,21 @@ theorem upper_boundary_pairing
     (W : (Fin (d + 1) → Delta (d + 1) × Set.Icc (0 : Real) 1) → R) :
     (∑ pi : Equiv.Perm (Fin (d + 2)),
       permSignCoeff R pi *
-        tupleBoundaryWeight (d + 1) W (RelativeSubdivisionCylinderCombinatorics.upperBoundaryVertex (d + 1) pi)) =
+        tupleBoundaryWeight (d + 1) W
+          (RelativeSubdivisionCylinderCombinatorics.upperBoundaryVertex (d + 1) pi)) =
       ∑ k : Fin (d + 2),
         SimplicialChain.faceSign k *
           ∑ rho : Equiv.Perm (Fin (d + 1)),
             permSignCoeff R rho *
-              W (fun i => RelativeSubdivisionCylinderCombinatorics.sidePoint d k (RelativeSubdivisionCylinderCombinatorics.upperBoundaryVertex d rho i)) := by
+              W (fun i => RelativeSubdivisionCylinderCombinatorics.sidePoint d k
+                (RelativeSubdivisionCylinderCombinatorics.upperBoundaryVertex d rho i)) := by
   let Wmap : (Delta d → Delta (d + 1) × Set.Icc (0 : Real) 1) → R :=
     fun tau => W (fun i => tau (SphereOddDegree.FiniteSimplex.vertex (S := Real) i))
   have h := oneStep_weighted_boundary (R := R) d
     (fun x : Delta (d + 1) => (x, ⟨1, by norm_num⟩)) Wmap
   simpa [Wmap, tupleBoundaryWeight, iteratedFacetMap, iteratedBoundaryMap,
-    RelativeSubdivisionCylinderCombinatorics.upperBoundaryVertex, RelativeSubdivisionCylinderCombinatorics.sidePoint, cofacePoint,
+    RelativeSubdivisionCylinderCombinatorics.upperBoundaryVertex,
+      RelativeSubdivisionCylinderCombinatorics.sidePoint, cofacePoint,
     affineCompMap_succ, affineSubdivContinuousMap_apply,
     affineSubdivMap_vertex, SimplicialChain.faceSign] using h
 
@@ -244,7 +256,8 @@ theorem delete_lowerBoundaryVertex_eq_side
       sideTuple d k (RelativeSubdivisionCylinderCombinatorics.lowerBoundaryVertex d) := by
   funext i
   apply Prod.ext
-  · simp [deleteTuple, sideTuple, RelativeSubdivisionCylinderCombinatorics.lowerBoundaryVertex, RelativeSubdivisionCylinderCombinatorics.sidePoint,
+  · simp [deleteTuple, sideTuple, RelativeSubdivisionCylinderCombinatorics.lowerBoundaryVertex,
+      RelativeSubdivisionCylinderCombinatorics.sidePoint,
       SphereOddDegree.FiniteSimplex.map, SphereOddDegree.FiniteSimplex.vertex]
   · rfl
 
@@ -259,7 +272,8 @@ theorem recursive_side_side_zero
             ∑ q : RelativeSubdivisionCylinderCombinatorics.Cell n,
               RelativeSubdivisionCylinderCombinatorics.Oriented.coefficient R n q *
                 W (fun i => RelativeSubdivisionCylinderCombinatorics.sidePoint (n + 1) k
-                  (RelativeSubdivisionCylinderCombinatorics.sidePoint n l (RelativeSubdivisionCylinderCombinatorics.vertex n q i)))) = 0 := by
+                  (RelativeSubdivisionCylinderCombinatorics.sidePoint n l
+                    (RelativeSubdivisionCylinderCombinatorics.vertex n q i)))) = 0 := by
   classical
   let F : Fin (n + 3) → Fin (n + 2) →
       RelativeSubdivisionCylinderCombinatorics.Cell n → R :=
@@ -296,18 +310,21 @@ theorem recursive_side_side_zero
             ∑ q : RelativeSubdivisionCylinderCombinatorics.Cell n,
               SimplicialChain.faceSign k *
                 (SimplicialChain.faceSign l *
-                  (RelativeSubdivisionCylinderCombinatorics.Oriented.coefficient R n q * F k l q))) =
+                  (RelativeSubdivisionCylinderCombinatorics.Oriented.coefficient R n q * F k l
+                    q))) =
             ∑ k : Fin (n + 3), ∑ q : RelativeSubdivisionCylinderCombinatorics.Cell n,
               ∑ l : Fin (n + 2), SimplicialChain.faceSign k *
                 (SimplicialChain.faceSign l *
-                  (RelativeSubdivisionCylinderCombinatorics.Oriented.coefficient R n q * F k l q)) := by
+                  (RelativeSubdivisionCylinderCombinatorics.Oriented.coefficient R n q * F k l
+                    q)) := by
               apply Finset.sum_congr rfl
               intro k hk
               exact Finset.sum_comm
           _ = ∑ q : RelativeSubdivisionCylinderCombinatorics.Cell n,
               ∑ k : Fin (n + 3), ∑ l : Fin (n + 2), SimplicialChain.faceSign k *
                 (SimplicialChain.faceSign l *
-                  (RelativeSubdivisionCylinderCombinatorics.Oriented.coefficient R n q * F k l q)) :=
+                  (RelativeSubdivisionCylinderCombinatorics.Oriented.coefficient R n q * F k l
+                    q)) :=
             Finset.sum_comm
           _ = _ := by
             apply Finset.sum_congr rfl

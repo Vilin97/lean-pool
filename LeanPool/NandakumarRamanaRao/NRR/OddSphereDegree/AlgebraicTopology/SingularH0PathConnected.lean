@@ -39,10 +39,12 @@ theorem aug_natural {Y Z : TopCat.{0}} (f : Y ⟶ Z) :
   intro τ
   apply ModuleCat.hom_ext
   apply LinearMap.ext_ring
-  change (aug Z).hom ((singularChainMap ℤ f 0).hom (chainGenerator ℤ Y 0 τ.as)) = (aug Y).hom (chainGenerator ℤ Y 0 τ.as)
+  change (aug Z).hom ((singularChainMap ℤ f 0).hom (chainGenerator ℤ Y 0 τ.as)) = (aug Y).hom
+    (chainGenerator ℤ Y 0 τ.as)
   rw [singularChainMap_generator, aug_generator, aug_generator]
 
-theorem opcyclesMap_descOpcycles {C : Type*} [Category C] [Abelian C] {K L : HomologicalComplex C (ComplexShape.down ℕ)} (φ : K ⟶ L)
+theorem opcyclesMap_descOpcycles {C : Type*} [Category C] [Abelian C] {K L : HomologicalComplex
+  C (ComplexShape.down ℕ)} (φ : K ⟶ L)
     {A : C} (kL : L.X 0 ⟶ A) (kK : K.X 0 ⟶ A)
     (prev_zero : (ComplexShape.down ℕ).prev 0 = 1)
     (hkL : L.d 1 0 ≫ kL = 0) (hkK : K.d 1 0 ≫ kK = 0)
@@ -61,7 +63,8 @@ theorem H0aug_natural {Y Z : TopCat.{0}} (f : Y ⟶ Z) :
     unfold H0aug
     have h_nat := HomologicalComplex.homologyι_naturality (singularChainℤ.map f) 0
     rw [← Category.assoc, h_nat, Category.assoc]
-    have h_desc := opcyclesMap_descOpcycles (singularChainℤ.map f) (aug Z) (aug Y) prev_zero (aug_comp_boundary_eq_zero Z) (aug_comp_boundary_eq_zero Y) h_comm
+    have h_desc := opcyclesMap_descOpcycles (singularChainℤ.map f) (aug Z) (aug Y) prev_zero
+      (aug_comp_boundary_eq_zero Z) (aug_comp_boundary_eq_zero Y) h_comm
     rw [h_desc]
   exact key
 
@@ -71,8 +74,12 @@ instance isIso_homologyι_zero (Y : TopCat.{0}) :
     rfl ((singularChainComplex ℤ Y).shape _ _ (by simp [ComplexShape.next]))
 
 lemma descOpcycles_eval (Y : TopCat.{0}) (c : singularChainGroup ℤ Y 0) :
-    (aug Y).hom c = (HomologicalComplex.descOpcycles (singularChainComplex ℤ Y) (aug Y) 1 prev_zero (aug_comp_boundary_eq_zero Y)).hom ((HomologicalComplex.pOpcycles (singularChainComplex ℤ Y) 0).hom c) := by
-  have h_p : HomologicalComplex.pOpcycles (singularChainComplex ℤ Y) 0 ≫ HomologicalComplex.descOpcycles (singularChainComplex ℤ Y) (aug Y) 1 prev_zero (aug_comp_boundary_eq_zero Y) = aug Y :=
+    (aug Y).hom c = (HomologicalComplex.descOpcycles (singularChainComplex ℤ Y) (aug Y) 1
+      prev_zero (aug_comp_boundary_eq_zero Y)).hom ((HomologicalComplex.pOpcycles
+      (singularChainComplex ℤ Y) 0).hom c) := by
+  have h_p : HomologicalComplex.pOpcycles (singularChainComplex ℤ Y) 0 ≫
+    HomologicalComplex.descOpcycles (singularChainComplex ℤ Y) (aug Y) 1 prev_zero
+    (aug_comp_boundary_eq_zero Y) = aug Y :=
     HomologicalComplex.p_descOpcycles _ _ _ _ _
   have key := DFunLike.congr_fun (congrArg ModuleCat.Hom.hom h_p) c
   erw [ModuleCat.hom_comp, LinearMap.comp_apply] at key
@@ -83,11 +90,14 @@ theorem d_one_comp_pOpcycles (K : HomologicalComplex (ModuleCat ℤ) (ComplexSha
   Eq.ndrec (motive := fun j => K.d j 0 ≫ K.pOpcycles 0 = 0) (K.sc 0).f_pOpcycles prev_zero
 
 theorem isIso_descOpcycles_aug (Y : TopCat.{0}) [Nonempty ↑Y] [PathConnectedSpace ↑Y] :
-    IsIso ((singularChainComplex ℤ Y).descOpcycles (aug Y) 1 prev_zero (aug_comp_boundary_eq_zero Y)) := by
-  have h_bijective : Function.Bijective (HomologicalComplex.descOpcycles (singularChainComplex ℤ Y) (aug Y) 1 prev_zero (aug_comp_boundary_eq_zero Y)).hom := by
+    IsIso ((singularChainComplex ℤ Y).descOpcycles (aug Y) 1 prev_zero
+      (aug_comp_boundary_eq_zero Y)) := by
+  have h_bijective : Function.Bijective (HomologicalComplex.descOpcycles (singularChainComplex ℤ
+    Y) (aug Y) 1 prev_zero (aug_comp_boundary_eq_zero Y)).hom := by
     constructor
     · intro x y hxy
-      have h_surj : Function.Surjective (HomologicalComplex.pOpcycles (singularChainComplex ℤ Y) 0).hom :=
+      have h_surj : Function.Surjective (HomologicalComplex.pOpcycles (singularChainComplex ℤ Y)
+        0).hom :=
         (ModuleCat.epi_iff_surjective _).mp inferInstance
       obtain ⟨c, rfl⟩ := h_surj x
       obtain ⟨d, rfl⟩ := h_surj y
@@ -106,12 +116,14 @@ theorem isIso_descOpcycles_aug (Y : TopCat.{0}) [Nonempty ↑Y] [PathConnectedSp
         have h_eval := DFunLike.congr_fun key (e : (singularChainComplex ℤ Y).X 1)
         erw [ModuleCat.hom_comp, LinearMap.comp_apply] at h_eval
         exact h_eval
-      have h_sub : (HomologicalComplex.pOpcycles (singularChainComplex ℤ Y) 0).hom c - (HomologicalComplex.pOpcycles (singularChainComplex ℤ Y) 0).hom d = 0 := by
+      have h_sub : (HomologicalComplex.pOpcycles (singularChainComplex ℤ Y) 0).hom c -
+        (HomologicalComplex.pOpcycles (singularChainComplex ℤ Y) 0).hom d = 0 := by
         rw [← map_sub, h_ker]
       exact sub_eq_zero.mp h_sub
     · intro n
       obtain ⟨b⟩ : Nonempty ↑Y := inferInstance
-      use (HomologicalComplex.pOpcycles (singularChainComplex ℤ Y) 0).hom (n • chainGenerator ℤ Y 0 (pointSimplex Y b))
+      use (HomologicalComplex.pOpcycles (singularChainComplex ℤ Y) 0).hom (n • chainGenerator ℤ
+        Y 0 (pointSimplex Y b))
       rw [← descOpcycles_eval, map_zsmul, aug_generator]
       simp
   exact (ConcreteCategory.isIso_iff_bijective _).mpr h_bijective
@@ -126,13 +138,16 @@ theorem surjective_H0aug (Y : TopCat.{0}) [Nonempty ↑Y] :
     Function.Surjective (H0aug Y).hom := by
   intro n
   obtain ⟨b⟩ : Nonempty ↑Y := inferInstance
-  have h_eval : (HomologicalComplex.descOpcycles (singularChainComplex ℤ Y) (aug Y) 1 prev_zero (aug_comp_boundary_eq_zero Y)).hom ((HomologicalComplex.pOpcycles (singularChainComplex ℤ Y) 0).hom (n • chainGenerator ℤ Y 0 (pointSimplex Y b))) = n := by
+  have h_eval : (HomologicalComplex.descOpcycles (singularChainComplex ℤ Y) (aug Y) 1 prev_zero
+    (aug_comp_boundary_eq_zero Y)).hom ((HomologicalComplex.pOpcycles (singularChainComplex ℤ Y)
+    0).hom (n • chainGenerator ℤ Y 0 (pointSimplex Y b))) = n := by
     rw [← descOpcycles_eval, map_zsmul, aug_generator]
     simp
   have h_iso : IsIso ((singularChainComplex ℤ Y).homologyι 0) := isIso_homologyι_zero Y
   have h_surj : Function.Surjective ((singularChainComplex ℤ Y).homologyι 0).hom :=
     (ConcreteCategory.isIso_iff_bijective _).mp h_iso |>.2
-  obtain ⟨x, hx⟩ := h_surj ((HomologicalComplex.pOpcycles (singularChainComplex ℤ Y) 0).hom (n • chainGenerator ℤ Y 0 (pointSimplex Y b)))
+  obtain ⟨x, hx⟩ := h_surj ((HomologicalComplex.pOpcycles (singularChainComplex ℤ Y) 0).hom (n •
+    chainGenerator ℤ Y 0 (pointSimplex Y b)))
   use x
   unfold H0aug
   erw [ModuleCat.hom_comp, LinearMap.comp_apply, hx, h_eval]
@@ -168,7 +183,8 @@ theorem subChainCorestrict_inclusion_square (X : TopCat.{0}) (S T : Set X) (h : 
   intro c
   apply Subtype.ext
   change (singularChainMap ℤ (sInclusion S) n).hom c =
-       (singularChainMap ℤ (sInclusion T) n).hom ((singularChainMap ℤ (setInclusionTopCat X S T h) n).hom c)
+       (singularChainMap ℤ (sInclusion T) n).hom ((singularChainMap ℤ (setInclusionTopCat X S T
+         h) n).hom c)
   have h_comp := singularChainMap_comp ℤ (setInclusionTopCat X S T h) (sInclusion T) n
   have key := DFunLike.congr_fun (congrArg ModuleCat.Hom.hom h_comp) c
   erw [ModuleCat.hom_comp, LinearMap.comp_apply] at key
@@ -182,8 +198,10 @@ theorem subH0aug_natural_inclusion (X : TopCat.{0}) (S T : Set X) (h : S ⊆ T) 
   unfold subH0aug
   rw [← cancel_epi (subspaceHomologyIso S 0).inv]
   rw [← Category.assoc (subspaceHomologyIso S 0).inv]
-  have h_inv_S : (subspaceHomologyIso S 0).inv = HomologicalComplex.homologyMap (subChainCorestrict ℤ X S) 0 := rfl
-  have h_inv_T : (subspaceHomologyIso T 0).inv = HomologicalComplex.homologyMap (subChainCorestrict ℤ X T) 0 := rfl
+  have h_inv_S : (subspaceHomologyIso S 0).inv = HomologicalComplex.homologyMap
+    (subChainCorestrict ℤ X S) 0 := rfl
+  have h_inv_T : (subspaceHomologyIso T 0).inv = HomologicalComplex.homologyMap
+    (subChainCorestrict ℤ X T) 0 := rfl
   rw [h_inv_S, ← HomologicalComplex.homologyMap_comp, h_sq]
   rw [HomologicalComplex.homologyMap_comp, Category.assoc, ← h_inv_T, Iso.inv_hom_id_assoc]
   rw [← h_inv_S, Iso.inv_hom_id_assoc]
