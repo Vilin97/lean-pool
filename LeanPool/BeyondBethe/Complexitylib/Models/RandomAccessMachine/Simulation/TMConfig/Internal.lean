@@ -20,6 +20,8 @@ namespace RAM
 
 namespace TMConfig
 
+variable {n bound : ℕ}
+
 theorem fieldReg_state_internal :
     fieldReg (stateField (n := n) (bound := bound)) = 0 := by
   rfl
@@ -123,7 +125,7 @@ theorem decode_of_represents_internal (tm : TM n) (bound : ℕ)
   · simp only [decode]
     rw [hrepresents (stateField (n := n) (bound := bound))]
     exact stateDecode_code_internal tm cfg.state
-  · simpa [decode, tapeAt_input_internal] using
+  · simpa [decode, tapeAt_input_internal] using!
       decodeTape_of_represents tm bound cfg regs hrepresents hbounded
         ⟨0, by omega⟩
   · funext i

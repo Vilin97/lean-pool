@@ -176,21 +176,21 @@ private theorem binaryRippleAddScanTM_step_terminal {n : ℕ}
           simp [finalWork]
         · by_cases hil : i = lhsIdx
           · subst i
-            simpa [finalWork, hdistinct.lhs_result] using
+            simpa [Γ.ofBool, transitionTape, Γw.toΓ, finalWork, hdistinct.lhs_result] using
               transitionTape_eq_self (by rw [hlhs]; decide)
           · by_cases hir : i = rhsIdx
             · subst i
-              simpa [finalWork, hdistinct.rhs_result] using
+              simpa [Γ.ofBool, transitionTape, Γw.toΓ, finalWork, hdistinct.rhs_result] using
                 transitionTape_eq_self (by rw [hrhs]; decide)
-            · simpa [finalWork, hires] using
+            · simpa [finalWork, hires] using!
                 transitionTape_eq_self (hother i hil hir hires)
       · simp [finalWork, hdistinct.lhs_result]
       · simp [finalWork, hdistinct.lhs_result]
       · simp [finalWork, hdistinct.rhs_result]
       · simp [finalWork, hdistinct.rhs_result]
-      · simpa [finalWork, BinaryRippleAdd.ripple] using
+      · simpa [finalWork, BinaryRippleAdd.ripple] using!
           Tape.hasBinaryPrefix_write_bit true hresult
-      · simpa [finalWork] using
+      · simpa [finalWork] using!
           Tape.hasBinaryPrefix_write_bit_cell0 true hresult hresultStart
       · intro i _ _ hires
         simp [finalWork, hires]

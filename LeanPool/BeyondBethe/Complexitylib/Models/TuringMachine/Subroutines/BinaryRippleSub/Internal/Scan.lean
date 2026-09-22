@@ -148,21 +148,21 @@ private theorem binaryRippleSubCoreTM_step_terminal {n : ℕ}
         decide) Dir3.left
     · by_cases hil : i = lhsIdx
       · subst i
-        simpa [binaryRippleSubScanTurnWork,
+        simpa [Γ.ofBool, transitionTape, Γw.toΓ, binaryRippleSubScanTurnWork,
           hdistinct.lhs_result] using
           transitionTape_eq_self (by rw [hlhs]; decide)
       · by_cases hir : i = rhsIdx
         · subst i
-          simpa [binaryRippleSubScanTurnWork,
+          simpa [Γ.ofBool, transitionTape, Γw.toΓ, binaryRippleSubScanTurnWork,
             hdistinct.rhs_result] using
             transitionTape_eq_self (by rw [hrhs]; decide)
-        · simpa [binaryRippleSubScanTurnWork, hires] using
+        · simpa [binaryRippleSubScanTurnWork, hires] using!
             transitionTape_eq_self (hother i hil hir hires)
   · simp [binaryRippleSubScanTurnWork, hdistinct.lhs_result]
   · simp [binaryRippleSubScanTurnWork, hdistinct.lhs_result]
   · simp [binaryRippleSubScanTurnWork, hdistinct.rhs_result]
   · simp [binaryRippleSubScanTurnWork, hdistinct.rhs_result]
-  · simpa [finalWork, binaryRippleSubScanTurnWork, Tape.move_cells] using
+  · simpa [finalWork, binaryRippleSubScanTurnWork, Tape.move_cells] using!
       hresult.2
   · simp [binaryRippleSubScanTurnWork, Tape.move, hresult.1]
   · simpa [finalWork, binaryRippleSubScanTurnWork, Tape.move_cells] using
@@ -222,7 +222,7 @@ private theorem binaryRippleSubCoreTM_suffix_reachesIn {n : ℕ}
             hfinalRhsHead, hfinalResult, hfinalResultHead, hfinalResultStart,
             hfinalOther⟩
           refine ⟨c', ?_, by
-            cases borrow <;> simp [c', BinaryRippleSub.scan], rfl,
+            cases borrow <;> simp [c', BinaryRippleSub.scan] <;> rfl, rfl,
             hfinalLhs, ?_, hfinalRhs, ?_, ?_, ?_,
             hfinalResultStart, hfinalOther, rfl⟩
           · have hreach :

@@ -59,6 +59,7 @@ theorem placeWorkTM_step_placeWorkCfg_internal (tm : TM n) (pre post : ℕ)
         (placeWorkCfg tm pre post (placeWorkFrameStep extras)) := by
   by_cases hhalt : c.state = tm.qhalt
   · simp [TM.step, placeWorkCfg, placeWorkTM, hhalt]
+    rfl
   · cases hstep : tm.step c with
     | none => exact absurd hstep (by simp [TM.step, hhalt])
     | some c' =>

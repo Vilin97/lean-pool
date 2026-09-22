@@ -103,7 +103,7 @@ private theorem copyInputToOutputTM_loop {n : ℕ} (x : List Bool) :
         cases hbit : x[k]'hk_lt with
         | false =>
             have hread0 : c.input.read = Γ.zero := by
-              simpa [hbit] using hread
+              simpa [Γ.ofBool, transitionTape, Γw.toΓ, hbit] using hread
             let c1 : Cfg n (copyInputToOutputTM (n := n)).Q :=
               { state := CopyPhase.copying
                 input := c.input.move Dir3.right
@@ -115,10 +115,10 @@ private theorem copyInputToOutputTM_loop {n : ℕ} (x : List Bool) :
             · simp [TM.step, hstate, copyInputToOutputTM, hread0, c1, readBackWrite]
             · simpa [c1, Tape.move_cells] using hcells
             · simp [c1, Tape.move, hhead]
-            · simpa [c1, hbit] using hprefix_next
+            · simpa [c1, hbit] using! hprefix_next
         | true =>
             have hread1 : c.input.read = Γ.one := by
-              simpa [hbit] using hread
+              simpa [Γ.ofBool, transitionTape, Γw.toΓ, hbit] using hread
             let c1 : Cfg n (copyInputToOutputTM (n := n)).Q :=
               { state := CopyPhase.copying
                 input := c.input.move Dir3.right
@@ -130,7 +130,7 @@ private theorem copyInputToOutputTM_loop {n : ℕ} (x : List Bool) :
             · simp [TM.step, hstate, copyInputToOutputTM, hread1, c1, readBackWrite]
             · simpa [c1, Tape.move_cells] using hcells
             · simp [c1, Tape.move, hhead]
-            · simpa [c1, hbit] using hprefix_next
+            · simpa [c1, hbit] using! hprefix_next
       obtain ⟨c1, hstep1, hstate1, hcells1, hhead1, hprefix1⟩ := hstep
       have hrem1 : rem = x.length - (k + 1) := by omega
       obtain ⟨c', hreach, hhalt, hcells', hhead', hprefix'⟩ :=
