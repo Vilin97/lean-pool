@@ -132,14 +132,14 @@ theorem betheBoundedEpigraphOracle_valid {m : ℕ} (hm : 0 < m)
     have hbelow : betheAffineMatrixQ (epigraphBase E.center)
         ij.1 ij.2 < δ := by
       apply firstBetheFloorViolation_is_below
-      simpa only [firstBetheFloorViolationAll] using hfloorScan
+      simpa only [firstBetheFloorViolationAll] using! hfloorScan
     have htargetFloor : (δ : ℝ) ≤
         birkhoffAffineMap
           (vectorToSquareMatrix (epigraphBase z)) ij.1 ij.2 := by
-      simpa only [BetheEpigraphTarget] using hz.1 ij.1 ij.2
+      simpa only [BetheEpigraphTarget] using! hz.1 ij.1 ij.2
     have hcut := betheFloorCut_valid hbelow htargetFloor
     rw [finiteDot, Fin.sum_univ_castSucc] at hcut ⊢
-    simpa [rationalCenterReal, epigraphBase] using hcut.le
+    simpa [rationalCenterReal, epigraphBase] using! hcut.le
   · split at hresponse <;> rename_i hheight
     · cases hresponse
       refine ⟨epigraphUpperNormal_ne_zero (m * m), ?_⟩
@@ -149,9 +149,9 @@ theorem betheBoundedEpigraphOracle_valid {m : ℕ} (hm : 0 < m)
           (fun i ↦ (epigraphUpperNormal (m * m) i : ℝ))
           (fun i ↦ z i - rationalCenterReal E i) =
           epigraphHeight z - (epigraphHeight E.center : ℚ) by
-        simpa only [rationalCenterReal] using hdot]
+        simpa only [rationalCenterReal] using! hdot]
       have hzUpper : epigraphHeight z ≤ (upper : ℝ) := by
-        simpa only [BetheEpigraphTarget] using hz.2.2
+        simpa only [BetheEpigraphTarget] using! hz.2.2
       have hheightReal : (upper : ℝ) <
           ((epigraphHeight E.center : ℚ) : ℝ) := by
         exact_mod_cast hheight
@@ -214,12 +214,12 @@ theorem BetheEpigraphOracleAccepted_exact_objective_upper {m : ℕ}
   let Xq : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ :=
     betheAffineMatrixQ y
   have hfloor : ∀ i j, δ ≤ Xq i j := by
-    simpa only [Xq, y] using haccepted.1
+    simpa only [Xq, y] using! haccepted.1
   have hX0 : ∀ i j, 0 < Xq i j := fun i j ↦
     hδ.trans_le (hfloor i j)
   have hinterior := birkhoffAffineMap_interior hm hδ
     (Y := vectorToSquareMatrix y) (by
-      simpa only [Xq, betheAffineMatrixQ] using hfloor)
+      simpa only [Xq, betheAffineMatrixQ] using! hfloor)
   have hX1 : ∀ i j, Xq i j < 1 := by
     intro i j
     have h := (hinterior.2 i).2 j |>.2
@@ -230,7 +230,7 @@ theorem BetheEpigraphOracleAccepted_exact_objective_upper {m : ℕ}
       directedNegativeObjectiveLower τ A Xq p ≤
         epigraphHeight q + 16 * (1 / 2 : ℚ) ^ p * (m * m) := by
     simpa only [BetheEpigraphOracleAccepted,
-      betheDirectedEpigraphData, Xq, y] using haccepted.2.2
+      betheDirectedEpigraphData, Xq, y] using! haccepted.2.2
   have hlowerAccepted :
       (directedNegativeObjectiveLower τ A Xq p : ℝ) ≤
         ((epigraphHeight q : ℚ) : ℝ) +
@@ -243,8 +243,9 @@ theorem BetheEpigraphOracleAccepted_exact_objective_upper {m : ℕ}
         fun i j ↦ ((Xq i j : ℚ) : ℝ) := by
     ext i j
     symm
-    simpa only [Xq, y] using cast_betheAffineMatrixQ y i j
-  rw [affineNegativeObjective, hcast]
+    simpa only [Xq, y] using! cast_betheAffineMatrixQ y i j
+  unfold affineNegativeObjective
+  rw [hcast]
   linarith [hbounds.2.1, hbounds.2.2]
 
 theorem BetheEpigraphOracleAccepted_exact_objective_upper_compact {m : ℕ}

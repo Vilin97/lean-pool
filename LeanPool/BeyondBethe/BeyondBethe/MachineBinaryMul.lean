@@ -70,16 +70,16 @@ def machineBinaryMulBits (word : List Bool) : List Bool :=
 
 theorem machineBinaryMulRemaining_mem_FP :
     machineBinaryMulRemaining ∈ Complexity.FP := by
-  simpa only [machineBinaryMulRemaining] using machinePairFirst_mem_FP
+  simpa only [machineBinaryMulRemaining] using! machinePairFirst_mem_FP
 
 theorem machineBinaryMulShift_mem_FP :
     machineBinaryMulShift ∈ Complexity.FP := by
-  simpa only [machineBinaryMulShift] using
+  simpa only [machineBinaryMulShift] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineBinaryMulAcc_mem_FP :
     machineBinaryMulAcc ∈ Complexity.FP := by
-  simpa only [machineBinaryMulAcc] using
+  simpa only [machineBinaryMulAcc] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairSecond_mem_FP
 
 theorem machineBinaryMulPack_mem_FP
@@ -96,7 +96,7 @@ theorem machineBinaryMulNextShift_mem_FP :
       (machineBinaryMulShift state)) ∈ Complexity.FP :=
     machinePair_mem_FP machineBinaryMulShift_mem_FP
       machineBinaryMulShift_mem_FP
-  simpa only [machineBinaryMulNextShift] using
+  simpa only [machineBinaryMulNextShift] using!
     machineCompose_mem_FP hpair machineBinaryAddBits_mem_FP
 
 theorem machineBinaryMulNextAcc_mem_FP :
@@ -130,7 +130,7 @@ theorem machineBinaryMulInit_mem_FP :
 
 theorem machineBinaryMulRuler_mem_FP :
     machineBinaryMulRuler ∈ Complexity.FP := by
-  simpa only [machineBinaryMulRuler] using machinePairSecond_mem_FP
+  simpa only [machineBinaryMulRuler] using! machinePairSecond_mem_FP
 
 theorem machineBinaryMulWidth_mem_FP :
     machineBinaryMulWidth ∈ Complexity.FP := by
@@ -139,7 +139,7 @@ theorem machineBinaryMulWidth_mem_FP :
   have hpadded : padded ∈ Complexity.FP :=
     machineAppend_mem_FP (machineConst_mem_FP (List.replicate 16 false))
       id_mem_FP
-  simpa only [machineBinaryMulWidth, padded] using
+  simpa only [machineBinaryMulWidth, padded] using!
     Cobham.mulLenFn_mem_FP hpadded hpadded
 
 @[simp] theorem machineBinaryMulRemaining_pack (remaining shift acc) :
@@ -246,7 +246,7 @@ theorem machineBinaryMulIterate_reachable (word : List Bool) :
   | zero => exact machineBinaryMulInit_reachable word
   | succ iterations ih =>
       rw [Function.iterate_succ_apply']
-      simpa [Nat.succ_eq_add_one] using machineBinaryMulStep_reachable ih
+      simpa [Nat.succ_eq_add_one] using! machineBinaryMulStep_reachable ih
 
 theorem machineBinaryMulIterate_length_le_width
     (word : List Bool) (iterations : ℕ)
@@ -273,7 +273,7 @@ theorem machineBinaryMulFinalState_mem_FP :
 
 theorem machineBinaryMulBits_mem_FP :
     machineBinaryMulBits ∈ Complexity.FP := by
-  simpa only [machineBinaryMulBits] using
+  simpa only [machineBinaryMulBits] using!
     machineCompose_mem_FP machineBinaryMulFinalState_mem_FP
       machineBinaryMulAcc_mem_FP
 
@@ -315,7 +315,7 @@ theorem machineBinaryMulBits_pair_natBits (lhs rhs : ℕ) :
   have hfold := binaryMulFold_natBits rhs.bits lhs 0
   calc
     (binaryMulFold rhs.bits lhs.bits []).2 =
-        (lhs * Nat.fromBitsLE rhs.bits).bits := by simpa using hfold
+        (lhs * Nat.fromBitsLE rhs.bits).bits := by simpa using! hfold
     _ = (lhs * rhs).bits := by rw [Nat.fromBitsLE_bits]
 
 end BeyondBethe

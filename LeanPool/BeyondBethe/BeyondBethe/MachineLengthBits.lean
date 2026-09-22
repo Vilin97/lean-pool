@@ -29,7 +29,7 @@ def machineLengthBits (word : List Bool) : List Bool :=
 theorem machineLengthBitsStep_mem_FP :
     machineLengthBitsStep ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP id_mem_FP (machineConst_mem_FP [true])
-  simpa only [machineLengthBitsStep] using
+  simpa only [machineLengthBitsStep] using!
     machineCompose_mem_FP hpair machineBinaryAddBits_mem_FP
 
 theorem machineLengthBitsWidth_mem_FP :
@@ -58,7 +58,7 @@ theorem machineLengthBitsIterate_length_le_width
   exact (lengthBits_natBits_length_le_self iterations).trans hiterations
 
 theorem machineLengthBits_mem_FP : machineLengthBits ∈ Complexity.FP := by
-  simpa only [machineLengthBits] using
+  simpa only [machineLengthBits] using!
     Cobham.iterate_mem_FP machineLengthBitsStep_mem_FP
       (machineConst_mem_FP []) id_mem_FP machineLengthBitsWidth_mem_FP
       machineLengthBitsIterate_length_le_width

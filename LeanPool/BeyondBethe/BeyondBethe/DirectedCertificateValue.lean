@@ -74,7 +74,7 @@ theorem nearbyBetheObjective_eq_logExpression
   have hpos : ∀ i j, 0 < X i j := fun i j ↦ (hXint i).2 j |>.1
   have hlt : ∀ i j, X i j < 1 := fun i j ↦ (hXint i).2 j |>.2
   have hpot := weighted_potentials_eq_sum hX Rr Cr
-  rw [betheObjective]
+  unfold betheObjective
   change (∑ i, betheRowObjective
     (nearbyKKTMatrix (τ : ℝ) X Rr Cr) X i) = _
   simp_rw [betheRowObjective, Real.negMulLog_def]
@@ -187,7 +187,7 @@ theorem directedNearbyBetheLower_bounds
     have hx1 : Xq i j < 1 := by
       have h := (hXint i).2 j |>.2
       change ((Xq i j : ℚ) : ℝ) < 1 at h
-      exact (Rat.cast_lt (K := ℝ)).mp (by simpa using h)
+      exact (Rat.cast_lt (K := ℝ)).mp (by simpa using! h)
     exact directedNearbyCoordinateLower_bounds hτ0 hτ1 hx0 hx1 p
   have hsumLower : (∑ i, ∑ j, lowerCoordinate i j) ≤
       ∑ i, ∑ j, exactCoordinate i j :=
@@ -212,14 +212,14 @@ theorem directedNearbyBetheLower_bounds
       (∑ i, ∑ j, (directedNearbyCoordinateLower τ (Xq i j) p : ℝ)) ≤
         ∑ i, ∑ j, (Real.log ((1 - Xq i j : ℚ) : ℝ) +
           (τ : ℝ) * (Xq i j : ℝ) * Real.log (Xq i j : ℝ)) := by
-    simpa only [lowerCoordinate, exactCoordinate] using hsumLower
+    simpa only [lowerCoordinate, exactCoordinate] using! hsumLower
   have hsumUpper' :
       (∑ i, ∑ j, (Real.log ((1 - Xq i j : ℚ) : ℝ) +
           (τ : ℝ) * (Xq i j : ℝ) * Real.log (Xq i j : ℝ))) ≤
         (∑ i, ∑ j,
           (directedNearbyCoordinateLower τ (Xq i j) p : ℝ)) +
           2 * (n : ℝ) ^ 2 * (((1 / 2 : ℚ) ^ p : ℚ) : ℝ) := by
-    simpa only [lowerCoordinate, exactCoordinate] using hsumUpper
+    simpa only [lowerCoordinate, exactCoordinate] using! hsumUpper
   norm_num only [Rat.cast_sub, Rat.cast_one, Rat.cast_pow,
     Rat.cast_div, Rat.cast_ofNat] at hsumLower' hsumUpper' ⊢
   constructor <;> linarith
@@ -253,7 +253,9 @@ theorem dyadic_399_le_logEvaluationLoss :
   have hq : (1 / 2 : ℚ) ^ 399 ≤ explicitLogEvaluationLoss := by
     rw [explicitLogEvaluationLoss, explicitCertifiedEpsilon,
       explicitCertifiedEpsilon_eq]
-      norm_num [explicitXi, explicitDelta, explicitEta, explicitRowRatio]
+    norm_num [explicitXi, explicitDelta, explicitEta, explicitRowRatio]
+    exact (pow_le_pow_of_le_one (by norm_num : 0 ≤ (1 / 2 : ℚ))
+      (by norm_num : (1 / 2 : ℚ) ≤ 1) (show 240 ≤ 399 by omega)).trans (by norm_num)
   have hcast : (((1 / 2 : ℚ) ^ 399 : ℚ) : ℝ) ≤
       (explicitLogEvaluationLoss : ℝ) := Rat.cast_le.mpr hq
   norm_num only [Rat.cast_pow, Rat.cast_div, Rat.cast_one,
@@ -271,7 +273,7 @@ theorem directedCertificatePrecision_error
   have hratio : (n : ℝ) * (1 / 2 : ℝ) ^ n ≤ 1 := by
     simp only [one_div, inv_pow]
     rw [mul_inv_le_iff₀ hpowpos]
-    simpa using hnatR
+    simpa using! hnatR
   have hconst := dyadic_399_le_logEvaluationLoss
   rw [directedCertificatePrecision, pow_add]
   norm_num only [Rat.cast_mul, Rat.cast_pow, Rat.cast_div,
@@ -337,7 +339,7 @@ theorem explicitDirectedCertificateLog_bounds
   have herr := directedCertificatePrecision_error (show 1 ≤ n by omega)
   rw [explicitDirectedCertificateLog, executableNearbyCertificateLog]
   norm_num only [Rat.cast_add, Rat.cast_sub, Rat.cast_mul, Rat.cast_natCast]
-  constructor <;> dsimp only <;> linarith
+  constructor <;> linarith
 
 theorem explicitDirectedCertificateValue_pos
     {n : ℕ} (hn : 1 ≤ n)
@@ -381,7 +383,7 @@ theorem explicitDirectedCertificate_twoSided
   have hlog := explicitDirectedCertificateLog_bounds hn R C hX hXint
   have hlog' : qlog ≤ exactLog ∧
       exactLog ≤ qlog + (explicitLogEvaluationLoss : ℝ) * n := by
-    simpa only [qlog, exactLog] using hlog
+    simpa only [qlog, exactLog] using! hlog
   have hlossQ : 0 < explicitExpEvaluationLoss * n :=
     mul_pos explicitExpEvaluationLoss_pos (by exact_mod_cast (show 0 < n by omega))
   have hexpQ := rationalExpLower_bounds
@@ -390,7 +392,7 @@ theorem explicitDirectedCertificate_twoSided
         (qlog - (explicitExpEvaluationLoss : ℝ) * n) ≤ qvalue ∧
       qvalue ≤ Real.exp qlog := by
     simpa only [qlog, qvalue, explicitDirectedCertificateValue,
-      Rat.cast_mul, Rat.cast_natCast] using hexpQ
+      Rat.cast_mul, Rat.cast_natCast] using! hexpQ
   have htransfer := executableNearbyCertificate_twoSided
     stableCoefficient hn hA hX hXint happrox
   have htransfer' : L ≤ Matrix.permanent A ∧
@@ -398,7 +400,7 @@ theorem explicitDirectedCertificate_twoSided
         (Real.sqrt 2 * Real.exp
           (-((explicitCertifiedEpsilon : ℝ) -
             2 * (explicitKKTError : ℝ)))) ^ n * L := by
-    simpa only [L, explicitCertifiedEpsilon] using htransfer
+    simpa only [L, explicitCertifiedEpsilon] using! htransfer
   have hL : L = Real.exp exactLog := by
     rfl
   constructor
@@ -517,7 +519,7 @@ theorem explicitDirectedCertificate_twoSided
                 2 * (explicitKKTError : ℝ)))) *
             (Real.exp (explicitLogEvaluationLoss : ℝ) *
               Real.exp (explicitExpEvaluationLoss : ℝ))) ^ n * qvalue := by
-        simpa [mul_pow, mul_assoc] using hraw
+        simpa [mul_pow, mul_assoc] using! hraw
       _ ≤ (preSmoothingBase (explicitCertifiedEpsilon : ℝ)) ^ n * qvalue :=
         mul_le_mul_of_nonneg_right hbasePow
           (explicitDirectedCertificateValue_pos (show 1 ≤ n by omega) X R C).le

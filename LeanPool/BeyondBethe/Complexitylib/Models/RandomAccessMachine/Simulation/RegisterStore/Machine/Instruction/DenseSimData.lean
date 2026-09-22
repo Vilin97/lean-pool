@@ -56,7 +56,7 @@ theorem denseExecuteInstructionTM_imm_hoareTime_frame
     denseInstructionCleanupValue input (.imm destination value) overlay
   have hinput : TM.Parked inp₀ := by
     refine ⟨by simp [inp₀, Tape.move], ?_⟩
-    simpa [inp₀] using Tape.init_ofBool_move_right_cells_ne_start input
+    simpa [inp₀] using! Tape.init_ofBool_move_right_cells_ne_start input
   have hlookup : EntryLookupStaticReady tapes.data.lhsLookup overlay
       baseWork :=
     instructionExecutionReady_baseLookup_internal tapes overlay pcValue
@@ -80,7 +80,7 @@ theorem denseExecuteInstructionTM_imm_hoareTime_frame
         inp = inp₀ ∧ Result work ∧
         out.HasBinaryPrefix (nextStore.flatMap Entry.encode))
       (denseImmediateInstructionTime tapes.data overlay destination value) := by
-    simpa [Result, nextStore] using hbaseRaw
+    simpa [Result, nextStore] using! hbaseRaw
   have hresult : ∀ work, Result work →
       work tapes.pc = initialWork (Fin.castSucc tapes.pc) ∧
       (work tapes.data.update.resultCount).HasBinaryNat nextStore.length ∧
@@ -142,12 +142,12 @@ theorem denseExecuteInstructionTM_imm_hoareTime_frame
       fin_cases slot
       · exact ⟨houtcome.ready.queryStart, by
           simpa [cleanupValues, denseInstructionCleanupValue,
-            instructionCleanupParentSlot] using houtcome.ready.query⟩
+            instructionCleanupParentSlot] using! houtcome.ready.query⟩
       · change (work tapes.data.update.replacement).HasBinaryNat (value + 1)
         rw [houtcome.replacement]
         exact htagValue
       · simpa [cleanupValues, denseInstructionCleanupValue,
-          instructionCleanupParentSlot] using houtcome.found
+          instructionCleanupParentSlot] using! houtcome.found
       · change (work tapes.data.lhs).HasBinaryNat 0
         rw [houtcome.frame tapes.data.lhs (fun role =>
             (tapes.data.update_ne_lhs role).symm),
@@ -217,9 +217,9 @@ theorem denseExecuteInstructionTM_imm_hoareTime_frame
       exact hready.dbl
     refine ⟨hpc, ?_, hsourceContent, hcleanup, ?_, ?_, hshift, htmp,
       hdbl, houtcome.ready.parked⟩
-    · simpa [nextStore] using houtcome.resultCount
-    · simpa using houtcome.remaining
-    · simpa [cleanupValues, denseInstructionCleanupValue] using
+    · simpa [nextStore] using! houtcome.resultCount
+    · simpa using! houtcome.remaining
+    · simpa [cleanupValues, denseInstructionCleanupValue] using!
         houtcome.ready
   have hdata := retargetBufferedDataKernel_hoareTime_frame_internal tapes
     overlay nextStore cleanupValues 0 pcValue initialWork inp₀
@@ -234,7 +234,7 @@ theorem denseExecuteInstructionTM_imm_hoareTime_frame
   simpa [denseExecuteInstructionTM, denseExecuteInstructionTime,
     DenseInstructionExecutionResult, denseInstructionStore,
     denseInstructionPC, DenseOverlay.Snapshot.stepInstr, nextStore,
-    cleanupValues] using hall
+    cleanupValues] using! hall
 
 /-- Instruction constructor corresponding to a dense direct arithmetic
 kernel. -/
@@ -277,7 +277,7 @@ theorem denseExecuteInstructionTM_direct_hoareTime_frame
   let cleanupValues := denseInstructionCleanupValue input instruction overlay
   have hinput : TM.Parked inp₀ := by
     refine ⟨by simp [inp₀, Tape.move], ?_⟩
-    simpa [inp₀] using Tape.init_ofBool_move_right_cells_ne_start input
+    simpa [inp₀] using! Tape.init_ofBool_move_right_cells_ne_start input
   have hlookup : EntryLookupStaticReady tapes.data.lhsLookup overlay
       baseWork :=
     instructionExecutionReady_baseLookup_internal tapes overlay pcValue
@@ -307,7 +307,7 @@ theorem denseExecuteInstructionTM_direct_hoareTime_frame
         out.HasBinaryPrefix (nextStore.flatMap Entry.encode))
       (denseDirectBinaryInstructionTime tapes.data op input overlay destination
         source₀ source₁) := by
-    simpa [Result, lhs, rhs, nextStore] using hbaseRaw
+    simpa [Result, lhs, rhs, nextStore] using! hbaseRaw
   have hresult : ∀ work, Result work →
       work tapes.pc = initialWork (Fin.castSucc tapes.pc) ∧
       (work tapes.data.update.resultCount).HasBinaryNat nextStore.length ∧
@@ -391,17 +391,17 @@ theorem denseExecuteInstructionTM_direct_hoareTime_frame
           cases op <;>
             simpa [instruction, denseDirectInstruction, cleanupValues,
               denseInstructionCleanupValue, instructionCleanupParentSlot]
-              using houtcome.ready.query⟩
+              using! houtcome.ready.query⟩
       · change (work tapes.data.update.replacement).HasBinaryNat _
         rw [houtcome.replacement]
         cases op <;>
           simpa [instruction, denseDirectInstruction, cleanupValues,
             denseInstructionCleanupValue, lhs, rhs, BinaryInstrOp.eval]
-            using htagValue
+            using! htagValue
       · cases op <;>
           simpa [instruction, denseDirectInstruction, cleanupValues,
             denseInstructionCleanupValue, instructionCleanupParentSlot]
-            using houtcome.found
+            using! houtcome.found
       · change (work tapes.data.lhs).HasBinaryNat _
         rw [houtcome.frame tapes.data.lhs (fun role =>
             (tapes.data.update_ne_lhs role).symm),
@@ -409,7 +409,7 @@ theorem denseExecuteInstructionTM_direct_hoareTime_frame
             (tapes.data.update_ne_lhs 10).symm]
         cases op <;>
           simpa [instruction, denseDirectInstruction, cleanupValues,
-            denseInstructionCleanupValue, lhs] using harithmetic.lhsValue
+            denseInstructionCleanupValue, lhs] using! harithmetic.lhsValue
       · change (work tapes.data.rhs).HasBinaryNat _
         rw [houtcome.frame tapes.data.rhs (fun role =>
             (tapes.data.update_ne_rhs role).symm),
@@ -417,7 +417,7 @@ theorem denseExecuteInstructionTM_direct_hoareTime_frame
             (tapes.data.update_ne_rhs 10).symm]
         cases op <;>
           simpa [instruction, denseDirectInstruction, cleanupValues,
-            denseInstructionCleanupValue, rhs] using harithmetic.rhsValue
+            denseInstructionCleanupValue, rhs] using! harithmetic.rhsValue
     have hshift : (work tapes.data.shift).HasBinaryNat 0 := by
       rw [houtcome.frame tapes.data.shift (fun slot =>
           (tapes.data.update_ne_shift slot).symm),
@@ -436,11 +436,11 @@ theorem denseExecuteInstructionTM_direct_hoareTime_frame
     refine ⟨hpcUpdate.trans (hpcTag.trans (hpcArithmetic.trans
       (hpcAddress.trans (hpcRhs.trans hpcLhs)))), ?_, hsourceContent,
       hcleanup, ?_, ?_, hshift, htmp', hdbl', houtcome.ready.parked⟩
-    · simpa [nextStore, DenseOverlay.write] using houtcome.resultCount
-    · simpa using houtcome.remaining
+    · simpa [nextStore, DenseOverlay.write] using! houtcome.resultCount
+    · simpa using! houtcome.remaining
     · cases op <;>
         simpa [instruction, denseDirectInstruction, cleanupValues,
-          denseInstructionCleanupValue] using houtcome.ready
+          denseInstructionCleanupValue] using! houtcome.ready
   have hdata := retargetBufferedDataKernel_hoareTime_frame_internal tapes
     overlay nextStore cleanupValues 0 pcValue initialWork inp₀
     (denseDirectBinaryInstructionTM tapes.data op destination source₀ source₁)
@@ -456,7 +456,7 @@ theorem denseExecuteInstructionTM_direct_hoareTime_frame
       denseExecuteInstructionTime, DenseInstructionExecutionResult,
       denseInstructionStore, denseInstructionPC,
       DenseOverlay.Snapshot.stepInstr, nextStore, cleanupValues, lhs, rhs,
-      BinaryInstrOp.eval] using hall
+      BinaryInstrOp.eval] using! hall
 
 /-- Dense direct addition has the common buffered instruction contract. -/
 theorem denseExecuteInstructionTM_add_hoareTime_frame
@@ -477,7 +477,7 @@ theorem denseExecuteInstructionTM_add_hoareTime_frame
         out = (Tape.init []).move Dir3.right)
       (denseExecuteInstructionTime tapes input
         (.add destination source₀ source₁) pcValue overlay) := by
-  simpa [denseDirectInstruction] using
+  simpa [denseDirectInstruction] using!
     denseExecuteInstructionTM_direct_hoareTime_frame tapes .add input overlay
       pcValue destination source₀ source₁ initialWork hvalid hready
 
@@ -500,7 +500,7 @@ theorem denseExecuteInstructionTM_sub_hoareTime_frame
         out = (Tape.init []).move Dir3.right)
       (denseExecuteInstructionTime tapes input
         (.sub destination source₀ source₁) pcValue overlay) := by
-  simpa [denseDirectInstruction] using
+  simpa [denseDirectInstruction] using!
     denseExecuteInstructionTM_direct_hoareTime_frame tapes .sub input overlay
       pcValue destination source₀ source₁ initialWork hvalid hready
 
@@ -523,7 +523,7 @@ theorem denseExecuteInstructionTM_mul_hoareTime_frame
         out = (Tape.init []).move Dir3.right)
       (denseExecuteInstructionTime tapes input
         (.mul destination source₀ source₁) pcValue overlay) := by
-  simpa [denseDirectInstruction] using
+  simpa [denseDirectInstruction] using!
     denseExecuteInstructionTM_direct_hoareTime_frame tapes .mul input overlay
       pcValue destination source₀ source₁ initialWork hvalid hready
 
@@ -556,7 +556,7 @@ theorem denseExecuteInstructionTM_load_hoareTime_frame
   let cleanupValues := denseInstructionCleanupValue input instruction overlay
   have hinput : TM.Parked inp₀ := by
     refine ⟨by simp [inp₀, Tape.move], ?_⟩
-    simpa [inp₀] using Tape.init_ofBool_move_right_cells_ne_start input
+    simpa [inp₀] using! Tape.init_ofBool_move_right_cells_ne_start input
   have hlookup : EntryLookupStaticReady tapes.data.lhsLookup overlay
       baseWork :=
     instructionExecutionReady_baseLookup_internal tapes overlay pcValue
@@ -582,7 +582,7 @@ theorem denseExecuteInstructionTM_load_hoareTime_frame
         out.HasBinaryPrefix (nextStore.flatMap Entry.encode))
       (denseIndirectLoadInstructionTime tapes.data input overlay destination
         addressRegister) := by
-    simpa [Result, address, value, nextStore] using hbaseRaw
+    simpa [Result, address, value, nextStore] using! hbaseRaw
   have hresult : ∀ work, Result work →
       work tapes.pc = initialWork (Fin.castSucc tapes.pc) ∧
       (work tapes.data.update.resultCount).HasBinaryNat nextStore.length ∧
@@ -647,13 +647,13 @@ theorem denseExecuteInstructionTM_load_hoareTime_frame
       fin_cases slot
       · exact ⟨houtcome.ready.queryStart, by
           simpa [instruction, cleanupValues, denseInstructionCleanupValue,
-            instructionCleanupParentSlot] using houtcome.ready.query⟩
+            instructionCleanupParentSlot] using! houtcome.ready.query⟩
       · change (work tapes.data.update.replacement).HasBinaryNat _
         rw [houtcome.replacement]
         simpa [instruction, cleanupValues, denseInstructionCleanupValue,
-          address, value] using htagValue
+          address, value] using! htagValue
       · simpa [instruction, cleanupValues, denseInstructionCleanupValue,
-          instructionCleanupParentSlot] using houtcome.found
+          instructionCleanupParentSlot] using! houtcome.found
       · change (work tapes.data.lhs).HasBinaryNat _
         rw [houtcome.frame tapes.data.lhs (fun role =>
             (tapes.data.update_ne_lhs role).symm),
@@ -666,7 +666,7 @@ theorem denseExecuteInstructionTM_load_hoareTime_frame
           show loadedWork tapes.data.lhs = addressWork tapes.data.lhs from
             hloaded.querySource]
         simpa [instruction, cleanupValues, denseInstructionCleanupValue,
-          address] using haddress.destination
+          address] using! haddress.destination
       · change (work tapes.data.rhs).HasBinaryNat _
         rw [houtcome.frame tapes.data.rhs (fun role =>
             (tapes.data.update_ne_rhs role).symm),
@@ -693,7 +693,7 @@ theorem denseExecuteInstructionTM_load_hoareTime_frame
         hloaded.frame tapes.data.shift (fun slot => by
           apply tapes.data.ne
           fin_cases slot <;> decide)]
-      simpa using haddress.querySource
+      simpa using! haddress.querySource
     have htmp' : (work tapes.data.tmp).HasBinaryNat 0 := by
       have hqueryNe : tapes.data.tmp ≠
           tapes.data.update.entry.query :=
@@ -725,10 +725,10 @@ theorem denseExecuteInstructionTM_load_hoareTime_frame
     refine ⟨hpcOutcome.trans (hpcTag.trans (hpcUpdate.trans
       (hpcLoaded.trans hpcAddress))), ?_, hsourceContent, hcleanup,
       ?_, ?_, hshift, htmp', hdbl', houtcome.ready.parked⟩
-    · simpa [nextStore, DenseOverlay.write] using houtcome.resultCount
-    · simpa using houtcome.remaining
+    · simpa [nextStore, DenseOverlay.write] using! houtcome.resultCount
+    · simpa using! houtcome.remaining
     · simpa [instruction, cleanupValues, denseInstructionCleanupValue]
-        using houtcome.ready
+        using! houtcome.ready
   have hdata := retargetBufferedDataKernel_hoareTime_frame_internal tapes
     overlay nextStore cleanupValues 0 pcValue initialWork inp₀
     (denseIndirectLoadInstructionTM tapes.data destination addressRegister)
@@ -743,7 +743,7 @@ theorem denseExecuteInstructionTM_load_hoareTime_frame
     denseExecuteInstructionTime, DenseInstructionExecutionResult,
     denseInstructionStore, denseInstructionPC,
     DenseOverlay.Snapshot.stepInstr, nextStore, cleanupValues, address,
-    value] using hall
+    value] using! hall
 
 /-- A dense indirect store produces the generic buffered endpoint and advances
 the program counter. -/
@@ -774,7 +774,7 @@ theorem denseExecuteInstructionTM_store_hoareTime_frame
   let cleanupValues := denseInstructionCleanupValue input instruction overlay
   have hinput : TM.Parked inp₀ := by
     refine ⟨by simp [inp₀, Tape.move], ?_⟩
-    simpa [inp₀] using Tape.init_ofBool_move_right_cells_ne_start input
+    simpa [inp₀] using! Tape.init_ofBool_move_right_cells_ne_start input
   have hlookup : EntryLookupStaticReady tapes.data.lhsLookup overlay
       baseWork :=
     instructionExecutionReady_baseLookup_internal tapes overlay pcValue
@@ -801,7 +801,7 @@ theorem denseExecuteInstructionTM_store_hoareTime_frame
         out.HasBinaryPrefix (nextStore.flatMap Entry.encode))
       (denseIndirectStoreInstructionTime tapes.data input overlay
         addressRegister source) := by
-    simpa [Result, address, value, nextStore] using hbaseRaw
+    simpa [Result, address, value, nextStore] using! hbaseRaw
   have hresult : ∀ work, Result work →
       work tapes.pc = initialWork (Fin.castSucc tapes.pc) ∧
       (work tapes.data.update.resultCount).HasBinaryNat nextStore.length ∧
@@ -875,14 +875,14 @@ theorem denseExecuteInstructionTM_store_hoareTime_frame
       fin_cases slot
       · exact ⟨houtcome.ready.queryStart, by
           simpa [instruction, cleanupValues, denseInstructionCleanupValue,
-            instructionCleanupParentSlot, address] using
+            instructionCleanupParentSlot, address] using!
             houtcome.ready.query⟩
       · change (work tapes.data.update.replacement).HasBinaryNat _
         rw [houtcome.replacement]
         simpa [instruction, cleanupValues, denseInstructionCleanupValue,
-          value] using htagValue
+          value] using! htagValue
       · simpa [instruction, cleanupValues, denseInstructionCleanupValue,
-          instructionCleanupParentSlot, address] using houtcome.found
+          instructionCleanupParentSlot, address] using! houtcome.found
       · change (work tapes.data.lhs).HasBinaryNat _
         rw [houtcome.frame tapes.data.lhs (fun role =>
             (tapes.data.update_ne_lhs role).symm),
@@ -899,7 +899,7 @@ theorem denseExecuteInstructionTM_store_hoareTime_frame
           hrhsResult.frame tapes.data.lhs (fun role =>
             (tapes.data.rhsLookup_ne_lhs role).symm)]
         simpa [instruction, cleanupValues, denseInstructionCleanupValue,
-          address] using hlhs.destination
+          address] using! hlhs.destination
       · change (work tapes.data.rhs).HasBinaryNat _
         rw [houtcome.frame tapes.data.rhs (fun role =>
             (tapes.data.update_ne_rhs role).symm),
@@ -914,7 +914,7 @@ theorem denseExecuteInstructionTM_store_hoareTime_frame
             exact Function.update_of_ne
               (tapes.data.update_ne_rhs 7).symm _ _]
         simpa [instruction, cleanupValues, denseInstructionCleanupValue,
-          value] using hrhsResult.destination
+          value] using! hrhsResult.destination
     have hshift : (work tapes.data.shift).HasBinaryNat 0 := by
       have hreplacementNe :
           tapes.data.shift ≠ tapes.data.update.replacement :=
@@ -927,7 +927,7 @@ theorem denseExecuteInstructionTM_store_hoareTime_frame
         htagFrame tapes.data.shift hreplacementNe,
         hupdateWork, Function.update_of_ne hreplacementNe,
         hqueryWork, Function.update_of_ne hqueryNe]
-      simpa using hrhsResult.querySource
+      simpa using! hrhsResult.querySource
     have htmp' : (work tapes.data.tmp).HasBinaryNat 0 := by
       have hreplacementNe :
           tapes.data.tmp ≠ tapes.data.update.replacement :=
@@ -965,10 +965,10 @@ theorem denseExecuteInstructionTM_store_hoareTime_frame
     refine ⟨hpcOutcome.trans (hpcTag.trans (hpcUpdate.trans
       (hpcQueryWork.trans (hpcRhs.trans hpcLhs)))), ?_, hsourceContent,
       hcleanup, ?_, ?_, hshift, htmp', hdbl', houtcome.ready.parked⟩
-    · simpa [nextStore, DenseOverlay.write] using houtcome.resultCount
-    · simpa using houtcome.remaining
+    · simpa [nextStore, DenseOverlay.write] using! houtcome.resultCount
+    · simpa using! houtcome.remaining
     · simpa [instruction, cleanupValues, denseInstructionCleanupValue,
-        address] using houtcome.ready
+        address] using! houtcome.ready
   have hdata := retargetBufferedDataKernel_hoareTime_frame_internal tapes
     overlay nextStore cleanupValues 0 pcValue initialWork inp₀
     (denseIndirectStoreInstructionTM tapes.data addressRegister source)
@@ -983,7 +983,7 @@ theorem denseExecuteInstructionTM_store_hoareTime_frame
     denseExecuteInstructionTime, DenseInstructionExecutionResult,
     denseInstructionStore, denseInstructionPC,
     DenseOverlay.Snapshot.stepInstr, nextStore, cleanupValues, address,
-    value] using hall
+    value] using! hall
 
 end Machine
 end RegisterStore

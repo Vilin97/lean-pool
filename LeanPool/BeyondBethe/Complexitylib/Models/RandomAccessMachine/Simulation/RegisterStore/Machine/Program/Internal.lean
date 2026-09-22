@@ -40,12 +40,12 @@ private theorem hasBinaryNat_parked {t : Tape} {value : ℕ}
 
 private theorem programBinaryTape_hasBinaryString (bits : List Bool) :
     (programBinaryTape bits).HasBinaryString bits := by
-  simpa only [programBinaryTape] using
+  simpa only [programBinaryTape] using!
     Tape.init_move_right_hasBinaryString bits
 
 private theorem programBinaryTape_hasBinaryNat (value : ℕ) :
     (programBinaryTape value.bits).HasBinaryNat value := by
-  simpa only [programBinaryTape] using
+  simpa only [programBinaryTape] using!
     Tape.init_move_right_hasBinaryNat value
 
 private theorem programBinaryTape_parked (bits : List Bool) :
@@ -128,10 +128,10 @@ theorem programSnapshotWork_ready_internal
   let entry := tapes.lifted.data.lhsLookup.scan.entry
   change InstructionExecutionReady tapes snapshot.store snapshot.pc work
   have hblankNat : TM.resetBinaryBlank.HasBinaryNat 0 := by
-    simpa [TM.resetBinaryBlank] using Tape.init_move_right_hasBinaryNat 0
+    simpa [TM.resetBinaryBlank] using! Tape.init_move_right_hasBinaryNat 0
   have hblankString : TM.resetBinaryBlank.HasBinaryString [] := hblankNat.2
   have hblankPrefix : TM.resetBinaryBlank.HasBinaryPrefix [] :=
-    ⟨by simpa using hblankString.1, hblankString.2⟩
+    ⟨by simpa using! hblankString.1, hblankString.2⟩
   have hblankStart : TM.resetBinaryBlank.cells 0 = Γ.start := hblankNat.1
   have hsource : work tapes.liftedSource =
       programBinaryTape (snapshot.store.flatMap Entry.encode) := by
@@ -186,28 +186,28 @@ theorem programSnapshotWork_ready_internal
       fin_cases slot
       · exact (hslot rfl).elim
       · simpa [entry, BinaryInstructionTapes.lhsLookup,
-          BinaryInstructionTapes.lhsLookupSlot] using
+          BinaryInstructionTapes.lhsLookupSlot] using!
           hdataBlank 1 (by decide) (by decide) (by decide)
       · simpa [entry, BinaryInstructionTapes.lhsLookup,
-          BinaryInstructionTapes.lhsLookupSlot] using
+          BinaryInstructionTapes.lhsLookupSlot] using!
           hdataBlank 2 (by decide) (by decide) (by decide)
       · simpa [entry, BinaryInstructionTapes.lhsLookup,
-          BinaryInstructionTapes.lhsLookupSlot] using
+          BinaryInstructionTapes.lhsLookupSlot] using!
           hdataBlank 3 (by decide) (by decide) (by decide)
       · simpa [entry, BinaryInstructionTapes.lhsLookup,
-          BinaryInstructionTapes.lhsLookupSlot] using
+          BinaryInstructionTapes.lhsLookupSlot] using!
           hdataBlank 4 (by decide) (by decide) (by decide)
       · simpa [entry, BinaryInstructionTapes.lhsLookup,
-          BinaryInstructionTapes.lhsLookupSlot] using
+          BinaryInstructionTapes.lhsLookupSlot] using!
           hdataBlank 5 (by decide) (by decide) (by decide)
       · simpa [entry, BinaryInstructionTapes.lhsLookup,
-          BinaryInstructionTapes.lhsLookupSlot] using
+          BinaryInstructionTapes.lhsLookupSlot] using!
           hdataBlank 6 (by decide) (by decide) (by decide)
       · simpa [entry, BinaryInstructionTapes.lhsLookup,
-          BinaryInstructionTapes.lhsLookupSlot] using
+          BinaryInstructionTapes.lhsLookupSlot] using!
           hdataBlank 7 (by decide) (by decide) (by decide)
       · simpa [entry, BinaryInstructionTapes.lhsLookup,
-          BinaryInstructionTapes.lhsLookupSlot] using
+          BinaryInstructionTapes.lhsLookupSlot] using!
           hdataBlank 8 (by decide) (by decide) (by decide)
     refine
       { source := by
@@ -216,62 +216,62 @@ theorem programSnapshotWork_ready_internal
           exact Tape.init_move_right_hasBinarySuffix _
         address := by
           rw [show work entry.address = TM.resetBinaryBlank by
-            simpa only [EntryMatchTapes.address] using
+            simpa only [EntryMatchTapes.address] using!
               hslotOther 1 (by decide)]
           exact hblankPrefix
         addressStart := by
           rw [show work entry.address = TM.resetBinaryBlank by
-            simpa only [EntryMatchTapes.address] using
+            simpa only [EntryMatchTapes.address] using!
               hslotOther 1 (by decide)]
           exact hblankStart
         value := by
           rw [show work entry.value = TM.resetBinaryBlank by
-            simpa only [EntryMatchTapes.value] using
+            simpa only [EntryMatchTapes.value] using!
               hslotOther 2 (by decide)]
           exact hblankPrefix
         valueStart := by
           rw [show work entry.value = TM.resetBinaryBlank by
-            simpa only [EntryMatchTapes.value] using
+            simpa only [EntryMatchTapes.value] using!
               hslotOther 2 (by decide)]
           exact hblankStart
         addressCounter := by
           rw [show work entry.addressCounter = TM.resetBinaryBlank by
-            simpa only [EntryMatchTapes.addressCounter] using
+            simpa only [EntryMatchTapes.addressCounter] using!
               hslotOther 3 (by decide)]
           exact hblankNat
         addressWidth := by
           rw [show work entry.addressWidth = TM.resetBinaryBlank by
-            simpa only [EntryMatchTapes.addressWidth] using
+            simpa only [EntryMatchTapes.addressWidth] using!
               hslotOther 4 (by decide)]
           exact hblankNat
         valueCounter := by
           rw [show work entry.valueCounter = TM.resetBinaryBlank by
-            simpa only [EntryMatchTapes.valueCounter] using
+            simpa only [EntryMatchTapes.valueCounter] using!
               hslotOther 5 (by decide)]
           exact hblankNat
         valueWidth := by
           rw [show work entry.valueWidth = TM.resetBinaryBlank by
-            simpa only [EntryMatchTapes.valueWidth] using
+            simpa only [EntryMatchTapes.valueWidth] using!
               hslotOther 6 (by decide)]
           exact hblankNat
         query := by
           rw [show work entry.query = TM.resetBinaryBlank by
-            simpa only [EntryMatchTapes.query] using
+            simpa only [EntryMatchTapes.query] using!
               hslotOther 7 (by decide)]
           exact hblankString
         queryStart := by
           rw [show work entry.query = TM.resetBinaryBlank by
-            simpa only [EntryMatchTapes.query] using
+            simpa only [EntryMatchTapes.query] using!
               hslotOther 7 (by decide)]
           exact hblankStart
         result := by
           rw [show work entry.result = TM.resetBinaryBlank by
-            simpa only [EntryMatchTapes.result] using
+            simpa only [EntryMatchTapes.result] using!
               hslotOther 8 (by decide)]
           exact hblankPrefix
         resultStart := by
           rw [show work entry.result = TM.resetBinaryBlank by
-            simpa only [EntryMatchTapes.result] using
+            simpa only [EntryMatchTapes.result] using!
               hslotOther 8 (by decide)]
           exact hblankStart
         parked := hparked
@@ -434,7 +434,7 @@ theorem programOutputTM_hoareTime_internal
       hresult.destination hinput hresult.parked
     obtain ⟨final, time, htime, hreach, hhalt, hfinalInput,
         _hfinalWork, hfinalOutput⟩ :=
-      hleaf inp work out ⟨hinp, rfl, by simpa only [blank] using hout⟩
+      hleaf inp work out ⟨hinp, rfl, by simpa only [blank] using! hout⟩
     exact ⟨final, time, htime, hreach, hhalt, hfinalInput, hfinalOutput⟩
   have hseq := TM.seqTM_hoareTime
     (entryLookupStaticTM tapes.lifted.data.lhsLookup 0)
@@ -443,7 +443,7 @@ theorem programOutputTM_hoareTime_internal
       rintro inp work out ⟨hinp, hresult, hout⟩
       have hi : TM.transitionInput inp = inp :=
         TM.transitionInput_eq_self
-          (by simpa [hinp] using hinput.read_ne_start)
+          (by simpa [hinp] using! hinput.read_ne_start)
       have hw : (fun i => TM.transitionTape (work i)) = work := by
         funext i
         exact TM.transitionTape_eq_self (hresult.parked i).read_ne_start
@@ -451,9 +451,9 @@ theorem programOutputTM_hoareTime_internal
         TM.transitionTape_eq_self
           (by rw [hout]; exact blank_parked.read_ne_start)
       rw [hi, hw, ho]
-      exact ⟨hinp, hresult, by simpa only [blank] using hout⟩)
+      exact ⟨hinp, hresult, by simpa only [blank] using! hout⟩)
     hverdict
-  simpa only [programOutputTM, programOutputTime, mid, blank] using hseq
+  simpa only [programOutputTM, programOutputTime, mid, blank] using! hseq
 
 theorem registerVerdictTM_hoareTime_haltOutput_internal
     (idx : Fin n) (value : ℕ) (inp₀ : Tape) (work₀ : Fin n → Tape)
@@ -554,7 +554,7 @@ theorem programOutputTM_hoareTime_haltOutput_internal
       hresult.destination hinput hresult.parked
     obtain ⟨final, time, htime, hreach, hhalt, hfinalInput,
         _hfinalWork, hfinalOutput⟩ :=
-      hleaf inp work out ⟨hinp, rfl, by simpa only [haltOut] using hout⟩
+      hleaf inp work out ⟨hinp, rfl, by simpa only [haltOut] using! hout⟩
     exact ⟨final, time, htime, hreach, hhalt, hfinalInput, hfinalOutput⟩
   have hseq := TM.seqTM_hoareTime
     (entryLookupStaticTM tapes.lifted.data.lhsLookup 0)
@@ -563,7 +563,7 @@ theorem programOutputTM_hoareTime_haltOutput_internal
       rintro inp work out ⟨hinp, hresult, hout⟩
       have hi : TM.transitionInput inp = inp :=
         TM.transitionInput_eq_self
-          (by simpa [hinp] using hinput.read_ne_start)
+          (by simpa [hinp] using! hinput.read_ne_start)
       have hw : (fun i => TM.transitionTape (work i)) = work := by
         funext i
         exact TM.transitionTape_eq_self (hresult.parked i).read_ne_start
@@ -571,9 +571,9 @@ theorem programOutputTM_hoareTime_haltOutput_internal
         TM.transitionTape_eq_self
           (by rw [hout]; exact hhaltOutParked.read_ne_start)
       rw [hi, hw, ho]
-      exact ⟨hinp, hresult, by simpa only [haltOut] using hout⟩)
+      exact ⟨hinp, hresult, by simpa only [haltOut] using! hout⟩)
     hverdict
-  simpa only [programOutputTM, programOutputTime, mid, haltOut] using hseq
+  simpa only [programOutputTM, programOutputTime, mid, haltOut] using! hseq
 
 theorem instructionHaltOutput_head_internal (instruction : Instr) :
     (instructionHaltOutput instruction).head = 1 := by
@@ -798,7 +798,7 @@ theorem dispatchHaltTM_hoareTime_frame_internal
       have hcleanLhs : cleanWork tapes.liftedLhs = blankTape := by
         have hzero := hready.1.control.lookup.destination
         change (cleanWork tapes.liftedLhs).HasBinaryNat 0 at hzero
-        simpa only [blankTape] using
+        simpa only [blankTape] using!
           Tape.HasBinaryNat.eq_init_move_right hzero
       have hwork₀Parked : ∀ i, TM.Parked (work₀ i) := by
         intro i
@@ -841,15 +841,15 @@ theorem dispatchHaltTM_hoareTime_frame_internal
           rintro inp work out ⟨hinp, hworkEq, hout⟩
           obtain ⟨hi, hw, ho⟩ := phaseTransition_of_parked
             (inp := inp) (work := work) (out := out)
-            (by simpa [hinp] using hinput)
-            (by simpa [hworkEq] using
+            (by simpa [hinp] using! hinput)
+            (by simpa [hworkEq] using!
               hready.1.control.lookup.scanner.parked)
-            (by simpa [hout] using blank_parked)
+            (by simpa [hout] using! blank_parked)
           rw [hi, hw, ho]
           exact ⟨hinp, hworkEq, hout⟩)
         hverdict
       simpa only [dispatchHaltTM, dispatchHaltTime,
-        selectedInstruction] using hseq
+        selectedInstruction] using! hseq
   | cons instruction program ih =>
       let pre : TM.TapePred (n + 1) := fun inp work out =>
         inp = inp₀ ∧ work = work₀ ∧
@@ -899,8 +899,8 @@ theorem dispatchHaltTM_hoareTime_frame_internal
             hfinalWork, hfinalOutput⟩ :=
           hverdict inp cleanWork out ⟨hinp, rfl, hout⟩
         refine ⟨final, time, htime, ?_, hhalt, hfinalInput, hfinalWork, ?_⟩
-        · simpa [hworkClean] using hreach
-        · simpa only [selectedInstruction] using hfinalOutput
+        · simpa [hworkClean] using! hreach
+        · simpa only [selectedInstruction] using! hfinalOutput
       have hnonblank :
           (TM.seqTM (TM.binaryPredTM tapes.liftedLhs)
             (dispatchHaltTM tapes program)).HoareTime
@@ -914,11 +914,11 @@ theorem dispatchHaltTM_hoareTime_frame_internal
           rw [hworkEq]
           rw [hsucc] at hselector
           exact hselector
-        have hinpParked : TM.Parked inp := by simpa [hinp] using hinput
-        have houtParked : TM.Parked out := by simpa [hout] using blank_parked
+        have hinpParked : TM.Parked inp := by simpa [hinp] using! hinput
+        have houtParked : TM.Parked out := by simpa [hout] using! blank_parked
         have hworkParked : ∀ i, TM.Parked (work i) := by
           intro i
-          simpa [hworkEq] using hwork₀Parked i
+          simpa [hworkEq] using! hwork₀Parked i
         have hpred := TM.binaryPredTM_hoareTime_frame tapes.liftedLhs
           (selector - 1) inp work out hvalue hinpParked.read_ne_start
           (fun i _ => (hworkParked i).read_ne_start)
@@ -961,7 +961,7 @@ theorem dispatchHaltTM_hoareTime_frame_internal
                   selectedInstruction program (selector - 1) := by
               rw [hsucc]
               rfl
-            exact ⟨hinp', hwork', by simpa only [hselected] using hout'⟩
+            exact ⟨hinp', hwork', by simpa only [hselected] using! hout'⟩
           · exact le_rfl
         have hseq := TM.seqTM_hoareTime (TM.binaryPredTM tapes.liftedLhs)
           (dispatchHaltTM tapes program) hpred'
@@ -969,7 +969,7 @@ theorem dispatchHaltTM_hoareTime_frame_internal
             rintro inp' work' out' ⟨hinp', hwork', hout'⟩
             obtain ⟨hi, hw, ho⟩ := phaseTransition_of_parked
               (inp := inp') (work := work') (out := out')
-              (by simpa [hinp', hinp] using hinput)
+              (by simpa [hinp', hinp] using! hinput)
               (by
                 intro i
                 rw [hwork']
@@ -980,7 +980,7 @@ theorem dispatchHaltTM_hoareTime_frame_internal
                     (Tape.init_move_right_hasBinaryNat (selector - 1))
                 · simp only [nextWork, Function.update_of_ne hidx]
                   exact hready.1.control.lookup.scanner.parked i)
-              (by simpa [hout', hout] using blank_parked)
+              (by simpa [hout', hout] using! blank_parked)
             rw [hi, hw, ho]
             exact ⟨hinp', hwork', hout'⟩)
           hrecursive'
@@ -993,24 +993,24 @@ theorem dispatchHaltTM_hoareTime_frame_internal
         (blankPost := post) (nonblankPost := post)
         (fun inp work out hpre => by
           have hinpParked : TM.Parked inp := by
-            simpa [hpre.1] using hinput
+            simpa [hpre.1] using! hinput
           have houtParked : TM.Parked out := by
-            simpa [hpre.2.2] using blank_parked
+            simpa [hpre.2.2] using! blank_parked
           have hworkParked : ∀ i, TM.Parked (work i) := by
             intro i
-            simpa [hpre.2.1] using hwork₀Parked i
+            simpa [hpre.2.1] using! hwork₀Parked i
           exact ⟨hinpParked.read_ne_start,
             fun i => (hworkParked i).read_ne_start,
             houtParked.read_ne_start⟩)
         (fun _ work _ hpre hread =>
           ⟨hpre, hselector.read_eq_blank_iff.mp
-            (by simpa [hpre.2.1] using hread)⟩)
+            (by simpa [hpre.2.1] using! hread)⟩)
         (fun _ work _ hpre hread =>
           ⟨hpre, fun hzero => hread (by
             rw [hpre.2.1]
             exact hselector.read_eq_blank_iff.mpr hzero)⟩)
         hblank hnonblank
-      simpa only [dispatchHaltTM, dispatchHaltTime, pre, post] using
+      simpa only [dispatchHaltTM, dispatchHaltTime, pre, post] using!
         hdispatch.consequence (fun _ _ _ h => h)
           (fun _ _ _ h => h.elim id id) le_rfl
 
@@ -1062,14 +1062,14 @@ theorem programHaltTM_hoareTime_frame_internal
       rintro inp work out ⟨hinp, hworkEq, hout⟩
       obtain ⟨hi, hw, ho⟩ := phaseTransition_of_parked
         (inp := inp) (work := work) (out := out)
-        (by simpa [hinp] using hinput)
-        (by simpa [hworkEq, selectorWork, selectorTape] using hselectorParked)
-        (by simpa [hout] using blank_parked)
+        (by simpa [hinp] using! hinput)
+        (by simpa [hworkEq, selectorWork, selectorTape] using! hselectorParked)
+        (by simpa [hout] using! blank_parked)
       rw [hi, hw, ho]
-      exact ⟨hinp, by simpa [selectorWork, selectorTape] using hworkEq, hout⟩)
+      exact ⟨hinp, by simpa [selectorWork, selectorTape] using! hworkEq, hout⟩)
     hdispatch
   simpa only [programHaltTM, programHaltTime, selectorWork,
-    selectorTape] using hseq
+    selectorTape] using! hseq
 
 /-- One loop iteration realizes one pure sparse step and either halts on the
 successor's `halt` instruction or returns to the body start with blank output. -/
@@ -1114,11 +1114,11 @@ theorem programLoopTM_iteration_internal
       hbodyInput, hnextReady, hbodyOutput⟩ :=
     hbody inp₀ initialWork blank ⟨rfl, rfl, rfl⟩
   have hbodyInputParked : TM.Parked cbody.input := by
-    simpa [hbodyInput] using hinput
+    simpa [hbodyInput] using! hinput
   have hbodyWorkParked : ∀ i, TM.Parked (cbody.work i) := by
     exact hnextReady.control.lookup.scanner.parked
   have hbodyOutputParked : TM.Parked cbody.output := by
-    simpa [hbodyOutput, blank] using blank_parked
+    simpa [hbodyOutput, blank] using! blank_parked
   have hbodyLoop := TM.loopTM_body_simulation body test hbodyReach
   have hbodyTransition :
       (⟨test.qstart, TM.transitionInput cbody.input,
@@ -1146,11 +1146,11 @@ theorem programLoopTM_iteration_internal
     selectedInstruction_eq_getElem?_getD program next.pc
   have htestOutput' :
       ctest.output = instructionHaltOutput (next.curInstr program) := by
-    simpa only [hselected] using htestOutput
+    simpa only [hselected] using! htestOutput
   have htestInputParked : TM.Parked ctest.input := by
-    simpa [htestInput] using hinput
+    simpa [htestInput] using! hinput
   have htestWorkParked : ∀ i, TM.Parked (ctest.work i) := by
-    simpa [htestWork] using hbodyWorkParked
+    simpa [htestWork] using! hbodyWorkParked
   have htestOutputParked : TM.Parked ctest.output := by
     refine ⟨?_, ?_⟩
     · rw [htestOutput', instructionHaltOutput_head_internal]
@@ -1207,40 +1207,44 @@ theorem programLoopTM_iteration_internal
       rw [htestOutput']
       exact instructionHaltOutput_cell_one_eq_one_iff_internal _ |>.2 hhalted
     have htailDone : ctail.state = Sum.inr (Sum.inl TM.LoopPhase.done) := by
-      simpa [hone] using htailState
+      simpa [hone] using! htailState
     have hcTail : ctail =
         { state := Sum.inr (Sum.inl TM.LoopPhase.done)
           input := inp₀
           work := cbody.work
           output := instructionHaltOutput (next.curInstr program) } := by
       cases ctail
-      simp only [Complexity.Cfg.mk.injEq]
-      exact ⟨htailDone, htailInput, htailWork,
-        htailOutput.trans htestOutput'⟩
-    simpa only [programLoopTM, body, test, blank, hcTail] using hreach
+      apply Complexity.Cfg.ext
+      · exact htailDone
+      · exact htailInput
+      · exact htailWork
+      · exact htailOutput.trans htestOutput'
+    simpa only [programLoopTM, body, test, blank, hcTail] using! hreach
   · right
     refine ⟨hhalted, ?_⟩
     have hcur : next.curInstr program ≠ .halt := hhalted
     have hblankOutput : ctest.output = blank := by
       rw [htestOutput']
-      simpa only [blank] using
+      simpa only [blank] using!
         instructionHaltOutput_eq_blank_of_ne_halt_internal hcur
     have hone : ctest.output.cells 1 ≠ Γ.one := by
       rw [htestOutput']
       exact fun h => hhalted
         (instructionHaltOutput_cell_one_eq_one_iff_internal _ |>.1 h)
     have htailStart : ctail.state = Sum.inl body.qstart := by
-      simpa [hone] using htailState
+      simpa [hone] using! htailState
     have hcTail : ctail =
         { state := Sum.inl body.qstart
           input := inp₀
           work := cbody.work
           output := blank } := by
       cases ctail
-      simp only [Complexity.Cfg.mk.injEq]
-      exact ⟨htailStart, htailInput, htailWork,
-        htailOutput.trans hblankOutput⟩
-    simpa only [programLoopTM, body, test, blank, hcTail] using hreach
+      apply Complexity.Cfg.ext
+      · exact htailStart
+      · exact htailInput
+      · exact htailWork
+      · exact htailOutput.trans hblankOutput
+    simpa only [programLoopTM, body, test, blank, hcTail] using! hreach
 
 theorem snapshot_step_eq_self_of_halted_internal
     (program : Program) (snapshot : Snapshot)
@@ -1286,7 +1290,7 @@ theorem programLoopTM_hoareTime_run_internal
       subst work
       subst out
       have hsnapshotHalted : snapshot.Halted program := by
-        simpa [Snapshot.run] using hhalted
+        simpa [Snapshot.run] using! hhalted
       have hstepSelf := snapshot_step_eq_self_of_halted_internal program
         snapshot hsnapshotHalted
       obtain ⟨nextWork, time, htime, hnextReady, hbranch⟩ :=
@@ -1296,7 +1300,7 @@ theorem programLoopTM_hoareTime_run_internal
           ⟨hnextRunning, _⟩
       · have hready' : InstructionExecutionReady tapes snapshot.store
             snapshot.pc nextWork := by
-          simpa only [hstepSelf] using hnextReady
+          simpa only [hstepSelf] using! hnextReady
         have hreach' : (programLoopTM tapes program).reachesIn time
             { state := (programLoopTM tapes program).qstart
               input := inp₀
@@ -1307,12 +1311,12 @@ theorem programLoopTM_hoareTime_run_internal
               work := nextWork
               output := instructionHaltOutput
                 (snapshot.curInstr program) } := by
-          simpa only [hstepSelf] using hreach
+          simpa only [hstepSelf] using! hreach
         refine ⟨_, time, ?_, hreach', rfl, rfl, ?_, ?_⟩
-        · simpa [programLoopTime] using htime
-        · simpa [Snapshot.run] using hready'
+        · simpa [programLoopTime] using! htime
+        · simpa [Snapshot.run] using! hready'
         · simp [Snapshot.run]
-      · exact (hnextRunning (by simpa only [hstepSelf] using
+      · exact (hnextRunning (by simpa only [hstepSelf] using!
           hsnapshotHalted)).elim
   | succ fuel ih =>
       intro snapshot initialWork inp₀ hready hinput hhalted
@@ -1331,7 +1335,7 @@ theorem programLoopTM_hoareTime_run_internal
             snapshot_run_halted_internal program snapshot hsnapshotHalted _
           have hready' : InstructionExecutionReady tapes snapshot.store
               snapshot.pc nextWork := by
-            simpa only [hstepSelf] using hnextReady
+            simpa only [hstepSelf] using! hnextReady
           have hreach' : (programLoopTM tapes program).reachesIn time
               { state := (programLoopTM tapes program).qstart
                 input := inp₀
@@ -1342,17 +1346,17 @@ theorem programLoopTM_hoareTime_run_internal
                 work := nextWork
                 output := instructionHaltOutput
                   (snapshot.curInstr program) } := by
-            simpa only [hstepSelf] using hreach
+            simpa only [hstepSelf] using! hreach
           refine ⟨_, time, ?_, hreach', rfl, rfl, ?_, ?_⟩
           · simp only [programLoopTime]
             omega
-          · simpa only [hfinal] using hready'
+          · simpa only [hfinal] using! hready'
           · simp only [hfinal]
-        · exact (hnextRunning (by simpa only [hstepSelf] using
+        · exact (hnextRunning (by simpa only [hstepSelf] using!
             hsnapshotHalted)).elim
       · have hrunHalted :
             ((snapshot.step program).run program fuel).Halted program := by
-          simpa [Snapshot.run, hsnapshotHalted] using hhalted
+          simpa [Snapshot.run, hsnapshotHalted] using! hhalted
         have hiter := programLoopTM_iteration_internal tapes program snapshot
           initialWork inp₀ hready hinput
         obtain ⟨nextWork, time₁, htime₁, hnextReady, hbranch⟩ := hiter
@@ -1370,7 +1374,7 @@ theorem programLoopTM_hoareTime_run_internal
           refine ⟨_, time₁, ?_, hreach₁, rfl, rfl, ?_, ?_⟩
           · simp only [programLoopTime]
             omega
-          · simpa [Snapshot.run, hsnapshotHalted, hfinal] using hnextReady
+          · simpa [Snapshot.run, hsnapshotHalted, hfinal] using! hnextReady
           · simp [Snapshot.run, hsnapshotHalted, hfinal]
         · have hrecursive := ih (snapshot.step program) nextWork inp₀
             hnextReady hinput hrunHalted
@@ -1390,8 +1394,8 @@ theorem programLoopTM_hoareTime_run_internal
                 programLoopTime tapes program (fuel + 1)
                   (snapshot.step program)
             exact Nat.add_le_add htime₁ htime₂
-          · simpa [Snapshot.run, hsnapshotHalted] using hfinalReady
-          · simpa [Snapshot.run, hsnapshotHalted] using hfinalOutput
+          · simpa [Snapshot.run, hsnapshotHalted] using! hfinalReady
+          · simpa [Snapshot.run, hsnapshotHalted] using! hfinalOutput
 
 end Machine
 
