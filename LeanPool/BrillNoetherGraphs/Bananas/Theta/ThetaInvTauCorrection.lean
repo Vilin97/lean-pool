@@ -440,7 +440,6 @@ theorem mem_effectiveDegreeOneTwistResidues_one_chip_iff
       0 ≤ rank G (one_chip w + (b : ℤ) • (one_chip u - one_chip v)) := by
   rw [mem_effectiveDegreeOneTwistResidues_iff,
     degreeTwistInt_one_chip_one]
-  exact Iff.rfl
 /-- Paper source: `thm:kgtThetas` (Theorem 4.8), the "only if" direction.
 
 For a rigidly marked theta graph, `k`-general transmission forces the marked

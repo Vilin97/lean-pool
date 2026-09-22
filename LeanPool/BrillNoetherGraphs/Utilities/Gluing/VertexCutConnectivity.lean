@@ -95,7 +95,8 @@ theorem graph_connected_left_of_connected
       apply hy
       exact Finset.mem_union_left _ (Finset.mem_image.mpr ⟨yLeft, hyA, rfl⟩)
     refine ⟨xLeft, hxA, yLeft, hyA, ?_⟩
-    simpa [leftGraph] using hxy
+    have heq := num_edges_inducedSubgraph K cut.left cut.left_nonempty xLeft yLeft
+    exact heq.symm ▸ hxy
   · let S : Finset K.V := A.image Subtype.val
     have hSplitS : ∃ x y : K.V, x ∈ S ∧ y ∉ S := by
       refine ⟨inside.val, outside.val, ?_, ?_⟩
@@ -128,7 +129,10 @@ theorem graph_connected_left_of_connected
       apply hy
       exact Finset.mem_image.mpr ⟨yLeft, hyA, rfl⟩
     refine ⟨xLeft, hxA, yLeft, hyA, ?_⟩
-    simpa [leftGraph, hxValue] using hxy
+    have heq := num_edges_inducedSubgraph K cut.left cut.left_nonempty xLeft yLeft
+    have hpositive : 0 < num_edges K xLeft.val yLeft.val := by
+      simpa only [yLeft, hxValue] using! hxy
+    exact heq.symm ▸ hpositive
 
 /-- The same cut with its two factors exchanged. -/
 def swap : OneVertexCut K where

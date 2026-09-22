@@ -123,7 +123,6 @@ theorem sectionFive_tau_reflection_of_twisted_automorphism_proved
         rankDelta M (D + (n - b) • one_chip M.u -
           (n - a) • one_chip M.v) := by
     rw [rankDelta_mark_swap, hDiv]
-    rfl
   have hShiftValue := hShift.2 a b
   have hTauValue := hTau.2 (n - b) (n - a)
   change (if tau b = a then 1 else 0) =

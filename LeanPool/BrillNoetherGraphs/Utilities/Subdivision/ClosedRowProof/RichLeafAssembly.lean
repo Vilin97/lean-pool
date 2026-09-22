@@ -111,8 +111,9 @@ theorem rich_blockSlope_bounds (d : Utilities.Certificate.DegenerateSpec.DegSpec
   have hiData : i = (w.richBlockEnds d core Γ x hW1 hx hCoord a e).blockAt k := rfl
   have hi : i < (w.blockList a.val e.val).length := by
     have := (w.richBlockEnds d core Γ x hW1 hx hCoord a e).blockAt_lt_length k hk
+    rw [richBlockEnds_length d w core Γ x hW1 hx hCoord a e] at this
     simpa [i, data, richCensusPiecewiseData,
-      Utilities.Certificate.DegenerateSpec.DegSpec.decodePiecewiseData, d] using this
+      Utilities.Certificate.DegenerateSpec.DegSpec.decodePiecewiseData, d] using! this
   obtain ⟨hLoReceipt, hHiReceipt⟩ := w.blockBounds_of_w2Checks core Γ hW2 a e i hi
   have hLo := w.blockLower_bound_of_receipt Γ x hx a.val e.val i hLoReceipt
   have hHi := w.blockUpper_bound_of_receipt Γ x hx a.val e.val i hHiReceipt
