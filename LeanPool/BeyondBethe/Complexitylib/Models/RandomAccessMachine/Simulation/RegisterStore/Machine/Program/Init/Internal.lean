@@ -52,7 +52,7 @@ private theorem programBinaryPrefixTape_parked (bits : List Bool) :
 private theorem binaryTape_parked (bits : List Bool) :
     TM.Parked (programBinaryTape bits) := by
   have hstring : (programBinaryTape bits).HasBinaryString bits := by
-    simpa only [programBinaryTape] using
+    simpa only [programBinaryTape] using!
       Tape.init_move_right_hasBinaryString bits
   exact ⟨by rw [hstring.1], hstring.hasBinaryContent.cells_ne_start⟩
 
@@ -127,19 +127,19 @@ theorem initialLoopWork_ready_internal
   have hvalue := Tape.init_move_right_hasBinaryNat 1
   have hcount := Tape.init_move_right_hasBinaryNat count
   have hblankNat : TM.resetBinaryBlank.HasBinaryNat 0 := by
-    simpa [TM.resetBinaryBlank] using Tape.init_move_right_hasBinaryNat 0
+    simpa [TM.resetBinaryBlank] using! Tape.init_move_right_hasBinaryNat 0
   have hblankParked : TM.Parked TM.resetBinaryBlank :=
     ⟨by rw [hblankNat.2.1], hblankNat.2.hasBinaryContent.cells_ne_start⟩
   refine
     { address := by
         rw [initialLoopWork_lhs]
-        simpa only [programBinaryTape] using haddress
+        simpa only [programBinaryTape] using! haddress
       value := by
         rw [initialLoopWork_rhs]
-        simpa only [programBinaryTape] using hvalue
+        simpa only [programBinaryTape] using! hvalue
       count := by
         rw [initialLoopWork_count]
-        simpa only [programBinaryTape] using hcount
+        simpa only [programBinaryTape] using! hcount
       buffer := by
         rw [initialLoopWork_buffer]
         exact programBinaryPrefixTape_hasBinaryPrefix _
@@ -415,8 +415,8 @@ private theorem copyWorkToWorkTM_exact_hoareTime
     subst out
     refine ⟨?_, ?_, hinput.read_ne_start, houtput.read_ne_start,
       houtput.1, ?_, rfl, rfl, ?_⟩
-    · simpa only [programBinaryTape] using hsrc
-    · simpa [TM.resetBinaryBlank] using hdst
+    · simpa only [programBinaryTape] using! hsrc
+    · simpa [TM.resetBinaryBlank] using! hdst
     · intro i _ _
       exact ⟨(hwork i).read_ne_start, (hwork i).1⟩
     · intro i _ _
@@ -426,11 +426,11 @@ private theorem copyWorkToWorkTM_exact_hoareTime
       hinp, hout, hframe⟩
     have hsrcEq : work src = programBinaryPrefixTape bits := by
       apply Tape.ext
-      · simpa [programBinaryPrefixTape] using hsrcHead
-      · simpa [programBinaryPrefixTape] using hsrcCells
+      · simpa [programBinaryPrefixTape] using! hsrcHead
+      · simpa [programBinaryPrefixTape] using! hsrcCells
     have hdstEq : work dst = programBinaryPrefixTape bits := by
       apply Tape.ext
-      · simpa [programBinaryPrefixTape] using hdstPrefix.1
+      · simpa [programBinaryPrefixTape] using! hdstPrefix.1
       · rw [programBinaryPrefixTape]
         exact hdstPrefix.cells_eq_init hdstStart
     refine ⟨hinp, ?_, hout⟩
@@ -480,7 +480,7 @@ private theorem eq_programBinaryPrefixTape_of_hasBinaryPrefix
     (hstart : t.cells 0 = Γ.start) :
     t = programBinaryPrefixTape bits := by
   apply Tape.ext
-  · simpa [programBinaryPrefixTape] using hprefix.1
+  · simpa [programBinaryPrefixTape] using! hprefix.1
   · rw [programBinaryPrefixTape]
     exact hprefix.cells_eq_init hstart
 
@@ -607,7 +607,7 @@ private theorem initialAbiFinalWork_eq_programSnapshotWork
   have hcountEq :
       work₀ tapes.lifted.data.update.remaining =
         programBinaryTape store.length.bits := by
-    simpa only [programBinaryTape] using hready.count.eq_init_move_right
+    simpa only [programBinaryTape] using! hready.count.eq_init_move_right
   funext i
   by_cases hlhs : i = tapes.liftedLhs
   · subst i
@@ -748,10 +748,10 @@ theorem initialOneBitTM_hoareTime_internal
   obtain ⟨emitted, emitTime, hemitTime, hemitReach, hemitHalt,
       hemitPost, hemitOutput⟩ :=
     hlift inp₀ work₀ out₀
-      ⟨⟨rfl, rfl, rfl⟩, by simpa [TM.resetBinaryBlank] using houtput⟩
+      ⟨⟨rfl, rfl, rfl⟩, by simpa [TM.resetBinaryBlank] using! houtput⟩
   rcases hemitPost with ⟨hemitInput, hemitBaseWork, hemitBuffer⟩
   have hemitOutput' : emitted.output = out₀ := by
-    exact hemitOutput.trans (by simpa [TM.resetBinaryBlank] using houtput.symm)
+    exact hemitOutput.trans (by simpa [TM.resetBinaryBlank] using! houtput.symm)
   have hemitFrame (i : Fin (n + 1)) (hi : i ≠ tapes.buffer) :
       emitted.work i = work₀ i := by
     have hil : i.val < n := by
@@ -760,7 +760,7 @@ theorem initialOneBitTM_hoareTime_internal
         intro hval
         apply hi
         apply Fin.ext
-        simpa [ControlInstructionTapes.buffer] using hval
+        simpa [ControlInstructionTapes.buffer] using! hval
       omega
     let j : Fin n := ⟨i.val, hil⟩
     have hij : i = Fin.castSucc j := by
@@ -775,7 +775,7 @@ theorem initialOneBitTM_hoareTime_internal
     rw [hemitOutput']
     rw [houtput]
     have hblankNat : TM.resetBinaryBlank.HasBinaryNat 0 := by
-      simpa [TM.resetBinaryBlank] using Tape.init_move_right_hasBinaryNat 0
+      simpa [TM.resetBinaryBlank] using! Tape.init_move_right_hasBinaryNat 0
     exact parked_of_binaryNat hblankNat
   have hemitWorkParked : ∀ i, TM.Parked (emitted.work i) := by
     intro i
@@ -853,7 +853,7 @@ theorem initialOneBitTM_hoareTime_internal
         output := TM.transitionTape counted.output }
       advanced := by
     simpa only [hcountInputTransition, hcountWorkTransition,
-      hcountOutputTransition] using haddressReach
+      hcountOutputTransition] using! haddressReach
   have htailReach := TM.seqTM_reachesIn_of_reachesIn
     (TM.binarySuccTM tapes.lifted.data.update.remaining)
     (TM.binarySuccTM tapes.liftedLhs) hcountReach hcountHalt haddressReach'
@@ -883,7 +883,7 @@ theorem initialOneBitTM_hoareTime_internal
           output := TM.transitionTape emitted.output }
         tailFinal := by
     simpa only [hemitInputTransition, hemitWorkTransition,
-      hemitOutputTransition] using htailReach
+      hemitOutputTransition] using! htailReach
   have hreach := TM.seqTM_reachesIn_of_reachesIn
     (rewindEntryEncodeRestoreTM (initialBitEntryTapes tapes)).retargetOutput
     (TM.seqTM (TM.binarySuccTM tapes.lifted.data.update.remaining)
@@ -898,8 +898,9 @@ theorem initialOneBitTM_hoareTime_internal
   · omega
   · change (initialOneBitTM tapes).halted finalCfg
     unfold initialOneBitTM
-    rw [TM.phase2Wrap_halted_iff]
-    exact htailHalt
+    exact (TM.phase2Wrap_halted_iff (rewindEntryEncodeRestoreTM (initialBitEntryTapes tapes)).retargetOutput
+    (TM.seqTM (TM.binarySuccTM tapes.lifted.data.update.remaining)
+      (TM.binarySuccTM tapes.liftedLhs)) tailFinal).mpr htailHalt
   · refine ⟨?_, ?_, ?_⟩
     · change advanced.input = inp₀
       exact haddressInput.trans (hcountInput.trans hemitInput)
@@ -924,7 +925,7 @@ theorem initialOneBitTM_hoareTime_internal
           ((entries ++ [(address, 1)]).flatMap Entry.encode)
         rw [haddressFrame _ hlhsBuffer.symm,
           hcountFrame _ hremainingBuffer.symm]
-        simpa [List.flatMap_append] using hemitBuffer
+        simpa [List.flatMap_append] using! hemitBuffer
       · intro i
         change TM.Parked (advanced.work i)
         by_cases hi : i = tapes.liftedLhs
@@ -981,11 +982,11 @@ theorem initialInputLoopTM_hoareTime_internal
         (by
           rw [houtput]
           have hblankNat : TM.resetBinaryBlank.HasBinaryNat 0 := by
-            simpa [TM.resetBinaryBlank] using
+            simpa [TM.resetBinaryBlank] using!
               Tape.init_move_right_hasBinaryNat 0
           exact (parked_of_binaryNat hblankNat).read_ne_start)
       refine ⟨done, 1, by simp [initialInputLoopTime],
-        .step (by simpa [done] using hstep) .zero, ?_, ?_⟩
+        .step (by simpa [done] using! hstep) .zero, ?_, ?_⟩
       · change done.state = (initialInputLoopTM tapes).qhalt
         rfl
       · exact ⟨hinput, by simpa [inputTrueCount, inputBitStoreFrom], rfl⟩
@@ -1004,7 +1005,7 @@ theorem initialInputLoopTM_hoareTime_internal
       have houtputParked : TM.Parked out₀ := by
         rw [houtput]
         have hblankNat : TM.resetBinaryBlank.HasBinaryNat 0 := by
-          simpa [TM.resetBinaryBlank] using Tape.init_move_right_hasBinaryNat 0
+          simpa [TM.resetBinaryBlank] using! Tape.init_move_right_hasBinaryNat 0
         exact parked_of_binaryNat hblankNat
       cases bit with
       | false =>
@@ -1015,13 +1016,13 @@ theorem initialInputLoopTM_hoareTime_internal
               work := work₀
               output := out₀ }
           have hread : inp₀.read = Γ.zero := by
-            simpa [Γ.ofBool] using hinput.read_cons
+            simpa [Γ.ofBool] using! hinput.read_cons
           have hscanStep := initialInputLoopTM_step_scan_zero tapes scan
             rfl hread (fun i => (hready.parked i).read_ne_start)
             houtputParked.read_ne_start
           have hscanReach : (initialInputLoopTM tapes).reachesIn 1 scan
               (initialInputZeroWrap tapes bodyStart) :=
-            .step (by simpa [scan, bodyStart, initialInputZeroWrap] using
+            .step (by simpa [scan, bodyStart, initialInputZeroWrap] using!
               hscanStep) .zero
           have hbody := initialZeroBitTM_hoareTime_internal tapes address
             count entries inp₀ work₀ out₀ hready hinputParked
@@ -1041,7 +1042,7 @@ theorem initialInputLoopTM_hoareTime_internal
             (by rw [hbodyOutput]; exact houtputParked.read_ne_start)
           have hseamReach : (initialInputLoopTM tapes).reachesIn 1
               (initialInputZeroWrap tapes bodyDone) nextScan :=
-            .step (by simpa [nextScan] using hseamStep) .zero
+            .step (by simpa [nextScan] using! hseamStep) .zero
           have hnextInput :
               (bodyDone.input.move Dir3.right).HasBinarySuffix rest := by
             rw [hbodyInput]
@@ -1063,10 +1064,10 @@ theorem initialInputLoopTM_hoareTime_internal
           · simp only [initialInputLoopTime, Bool.false_eq_true,
               ite_false, Nat.add_zero]
             omega
-          · simpa [Nat.add_assoc] using hreach
+          · simpa [Nat.add_assoc] using! hreach
           · refine ⟨htailInput, ?_, htailOutput.trans hbodyOutput⟩
             simpa [inputTrueCount, inputBitStoreFrom, Nat.add_assoc,
-              Nat.add_comm, Nat.add_left_comm] using htailReady
+              Nat.add_comm, Nat.add_left_comm] using! htailReady
       | true =>
           let bodyStart : Complexity.Cfg (n + 1)
               (initialOneBitTM tapes).Q :=
@@ -1075,13 +1076,13 @@ theorem initialInputLoopTM_hoareTime_internal
               work := work₀
               output := out₀ }
           have hread : inp₀.read = Γ.one := by
-            simpa [Γ.ofBool] using hinput.read_cons
+            simpa [Γ.ofBool] using! hinput.read_cons
           have hscanStep := initialInputLoopTM_step_scan_one tapes scan
             rfl hread (fun i => (hready.parked i).read_ne_start)
             houtputParked.read_ne_start
           have hscanReach : (initialInputLoopTM tapes).reachesIn 1 scan
               (initialInputOneWrap tapes bodyStart) :=
-            .step (by simpa [scan, bodyStart, initialInputOneWrap] using
+            .step (by simpa [scan, bodyStart, initialInputOneWrap] using!
               hscanStep) .zero
           have hbody := initialOneBitTM_hoareTime_internal tapes address
             count entries inp₀ work₀ out₀ hready hinputParked houtput
@@ -1100,7 +1101,7 @@ theorem initialInputLoopTM_hoareTime_internal
             (by rw [hbodyOutput]; exact houtputParked.read_ne_start)
           have hseamReach : (initialInputLoopTM tapes).reachesIn 1
               (initialInputOneWrap tapes bodyDone) nextScan :=
-            .step (by simpa [nextScan] using hseamStep) .zero
+            .step (by simpa [nextScan] using! hseamStep) .zero
           have hnextInput :
               (bodyDone.input.move Dir3.right).HasBinarySuffix rest := by
             rw [hbodyInput]
@@ -1122,10 +1123,10 @@ theorem initialInputLoopTM_hoareTime_internal
             htailHalt, ?_⟩
           · simp only [initialInputLoopTime, if_true]
             omega
-          · simpa [Nat.add_assoc] using hreach
+          · simpa [Nat.add_assoc] using! hreach
           · refine ⟨htailInput, ?_, htailOutput.trans hbodyOutput⟩
             simpa [inputTrueCount, inputBitStoreFrom, List.append_assoc,
-              Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using htailReady
+              Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using! htailReady
 
 /-- The setup phase turns the standard all-heads-on-marker configuration into
 the exact address-one/count-zero streaming boundary. -/
@@ -1174,19 +1175,19 @@ theorem initialSetupTM_hoareTime_internal
         output := Tape.init [] } skipped :=
     .step hskipStep .zero
   have hblankNat : TM.resetBinaryBlank.HasBinaryNat 0 := by
-    simpa [TM.resetBinaryBlank] using Tape.init_move_right_hasBinaryNat 0
+    simpa [TM.resetBinaryBlank] using! Tape.init_move_right_hasBinaryNat 0
   have hblankParked : TM.Parked TM.resetBinaryBlank :=
     parked_of_binaryNat hblankNat
   have hparkedInput : TM.Parked parkedInput :=
     parked_of_binarySuffix (by
-      simpa only [parkedInput] using Tape.init_move_right_hasBinarySuffix input)
+      simpa only [parkedInput] using! Tape.init_move_right_hasBinarySuffix input)
   have hlhsRun := TM.binarySuccTM_hoareTime_frame tapes.liftedLhs 0
     skipped.input skipped.work skipped.output
-    (by simpa [skipped, parkedWork] using hblankNat)
-    (by simpa [skipped] using hparkedInput.read_ne_start)
-    (fun i _ => by simpa [skipped, parkedWork] using
+    (by simpa [skipped, parkedWork] using! hblankNat)
+    (by simpa [skipped] using! hparkedInput.read_ne_start)
+    (fun i _ => by simpa [skipped, parkedWork] using!
       hblankParked.read_ne_start)
-    (by simpa [skipped] using hblankParked.read_ne_start)
+    (by simpa [skipped] using! hblankParked.read_ne_start)
   obtain ⟨lhsDone, lhsTime, hlhsTime, hlhsReach, hlhsHalt,
       hlhsInput, hlhsFrame, hlhsValue, hlhsOutput⟩ :=
     hlhsRun skipped.input skipped.work skipped.output ⟨rfl, rfl, rfl⟩
@@ -1195,20 +1196,20 @@ theorem initialSetupTM_hoareTime_internal
   have hrhsZero :
       (lhsDone.work tapes.lifted.data.rhs).HasBinaryNat 0 := by
     rw [hlhsFrame _ hlhsRhs.symm]
-    simpa [skipped, parkedWork] using hblankNat
+    simpa [skipped, parkedWork] using! hblankNat
   have hlhsInputParked : TM.Parked lhsDone.input := by
     rw [hlhsInput]
-    simpa [skipped] using hparkedInput
+    simpa [skipped] using! hparkedInput
   have hlhsOutputParked : TM.Parked lhsDone.output := by
     rw [hlhsOutput]
-    simpa [skipped] using hblankParked
+    simpa [skipped] using! hblankParked
   have hlhsWorkParked : ∀ i, TM.Parked (lhsDone.work i) := by
     intro i
     by_cases hi : i = tapes.liftedLhs
     · subst i
       exact parked_of_binaryNat hlhsValue
     · rw [hlhsFrame i hi]
-      simpa [skipped, parkedWork] using hblankParked
+      simpa [skipped, parkedWork] using! hblankParked
   have hrhsRun := TM.binarySuccTM_hoareTime_frame
     tapes.lifted.data.rhs 0 lhsDone.input lhsDone.work lhsDone.output
     hrhsZero hlhsInputParked.read_ne_start
@@ -1231,7 +1232,7 @@ theorem initialSetupTM_hoareTime_internal
         output := TM.transitionTape lhsDone.output }
       rhsDone := by
     simpa only [hlhsInputTransition, hlhsWorkTransition,
-      hlhsOutputTransition] using hrhsReach
+      hlhsOutputTransition] using! hrhsReach
   have htailReach := TM.seqTM_reachesIn_of_reachesIn
     (TM.binarySuccTM tapes.liftedLhs)
     (TM.binarySuccTM tapes.lifted.data.rhs)
@@ -1241,8 +1242,8 @@ theorem initialSetupTM_hoareTime_internal
   have htailHalt :
       (TM.seqTM (TM.binarySuccTM tapes.liftedLhs)
         (TM.binarySuccTM tapes.lifted.data.rhs)).halted tailDone := by
-    rw [TM.phase2Wrap_halted_iff]
-    exact hrhsHalt
+    exact (TM.phase2Wrap_halted_iff (TM.binarySuccTM tapes.liftedLhs)
+      (TM.binarySuccTM tapes.lifted.data.rhs) rhsDone).mpr hrhsHalt
   obtain ⟨hskipInputTransition, hskipWorkTransition,
       hskipOutputTransition⟩ :=
     TM.phaseTransition_eq_self_of_reads_ne_start
@@ -1250,13 +1251,13 @@ theorem initialSetupTM_hoareTime_internal
       hblankParked.read_ne_start
   have hskipInputTransition' :
       TM.transitionInput skipped.input = skipped.input := by
-    simpa [skipped] using hskipInputTransition
+    simpa [skipped] using! hskipInputTransition
   have hskipWorkTransition' :
       (fun i => TM.transitionTape (skipped.work i)) = skipped.work := by
-    simpa [skipped] using hskipWorkTransition
+    simpa [skipped] using! hskipWorkTransition
   have hskipOutputTransition' :
       TM.transitionTape skipped.output = skipped.output := by
-    simpa [skipped] using hskipOutputTransition
+    simpa [skipped] using! hskipOutputTransition
   have htailReach' :
       (TM.seqTM (TM.binarySuccTM tapes.liftedLhs)
         (TM.binarySuccTM tapes.lifted.data.rhs)).reachesIn
@@ -1268,7 +1269,7 @@ theorem initialSetupTM_hoareTime_internal
           output := TM.transitionTape skipped.output }
         tailDone := by
     simpa only [hskipInputTransition', hskipWorkTransition',
-      hskipOutputTransition'] using htailReach
+      hskipOutputTransition'] using! htailReach
   have hreach := TM.seqTM_reachesIn_of_reachesIn
     (TM.skipTM (n := n + 1))
     (TM.seqTM (TM.binarySuccTM tapes.liftedLhs)
@@ -1279,7 +1280,7 @@ theorem initialSetupTM_hoareTime_internal
       (TM.binarySuccTM tapes.lifted.data.rhs)) tailDone
   have hrhsInputSuffix : rhsDone.input.HasBinarySuffix input := by
     rw [hrhsInput, hlhsInput]
-    simpa [skipped, parkedInput] using Tape.init_move_right_hasBinarySuffix input
+    simpa [skipped, parkedInput] using! Tape.init_move_right_hasBinarySuffix input
   have hrhsOutputBlank : rhsDone.output = TM.resetBinaryBlank := by
     exact hrhsOutput.trans (hlhsOutput.trans (by rfl))
   have hrhsWorkParked : ∀ i, TM.Parked (rhsDone.work i) := by
@@ -1298,8 +1299,9 @@ theorem initialSetupTM_hoareTime_internal
   · omega
   · change (initialSetupTM tapes).halted finalCfg
     unfold initialSetupTM
-    rw [TM.phase2Wrap_halted_iff]
-    exact htailHalt
+    exact (TM.phase2Wrap_halted_iff (TM.skipTM (n := n + 1))
+    (TM.seqTM (TM.binarySuccTM tapes.liftedLhs)
+      (TM.binarySuccTM tapes.lifted.data.rhs)) tailDone).mpr htailHalt
   · refine ⟨?_, ?_, ?_, ?_⟩
     · change rhsDone.input.HasBinarySuffix input
       exact hrhsInputSuffix
@@ -1315,21 +1317,21 @@ theorem initialSetupTM_hoareTime_internal
           frame := ?_ }
       · change (rhsDone.work tapes.liftedLhs).HasBinaryNat 1
         rw [hrhsFrame _ hlhsRhs]
-        simpa using hlhsValue
+        simpa using! hlhsValue
       · change (rhsDone.work tapes.lifted.data.rhs).HasBinaryNat 1
-        simpa using hrhsValue
+        simpa using! hrhsValue
       · change (rhsDone.work
           tapes.lifted.data.update.remaining).HasBinaryNat 0
         rw [hrhsFrame _ hrhsRemaining, hlhsFrame _ hlhsRemaining]
-        simpa [skipped, parkedWork] using hblankNat
+        simpa [skipped, parkedWork] using! hblankNat
       · change (rhsDone.work tapes.buffer).HasBinaryPrefix []
         rw [hrhsFrame _ (tapes.liftedData_ne_buffer 14).symm,
           hlhsFrame _ (tapes.liftedData_ne_buffer 13).symm]
         have hblankString : TM.resetBinaryBlank.HasBinaryString [] :=
           hblankNat.2
-        simpa [skipped, parkedWork] using
+        simpa [skipped, parkedWork] using!
           (show TM.resetBinaryBlank.HasBinaryPrefix [] from
-            ⟨by simpa using hblankString.1, hblankString.2⟩)
+            ⟨by simpa using! hblankString.1, hblankString.2⟩)
       · intro i
         change TM.Parked (rhsDone.work i)
         exact hrhsWorkParked i
@@ -1369,7 +1371,7 @@ theorem initialLengthEmitTM_hoareTime_internal
   have hqueryBuffer : tapes.lifted.data.update.entry.query ≠
       tapes.buffer := tapes.liftedData_ne_buffer 7
   have hblankNat : TM.resetBinaryBlank.HasBinaryNat 0 := by
-    simpa [TM.resetBinaryBlank] using Tape.init_move_right_hasBinaryNat 0
+    simpa [TM.resetBinaryBlank] using! Tape.init_move_right_hasBinaryNat 0
   have hqueryZero :
       (work₀ tapes.lifted.data.update.entry.query).HasBinaryNat 0 := by
     rw [hready.frame _ hqueryLhs hqueryRhs hqueryCount hqueryBuffer]
@@ -1389,9 +1391,9 @@ theorem initialLengthEmitTM_hoareTime_internal
   obtain ⟨emitted, emitTime, hemitTime, hemitReach, hemitHalt,
       hemitInput, hemitFrame, hemitBuffer, hemitOutput⟩ :=
     hemit inp₀ work₀ out₀
-      ⟨rfl, rfl, by simpa [TM.resetBinaryBlank] using houtput⟩
+      ⟨rfl, rfl, by simpa [TM.resetBinaryBlank] using! houtput⟩
   have hemitOutput' : emitted.output = out₀ := by
-    exact hemitOutput.trans (by simpa [TM.resetBinaryBlank] using houtput.symm)
+    exact hemitOutput.trans (by simpa [TM.resetBinaryBlank] using! houtput.symm)
   have hemitInputParked : TM.Parked emitted.input := by
     rw [hemitInput]
     exact hinput
@@ -1436,7 +1438,7 @@ theorem initialLengthEmitTM_hoareTime_internal
           output := TM.transitionTape emitted.output }
         counted := by
     simpa only [hemitInputTransition, hemitWorkTransition,
-      hemitOutputTransition] using hcountReach
+      hemitOutputTransition] using! hcountReach
   have hreach := TM.seqTM_reachesIn_of_reachesIn
     (rewindEntryEncodeRestoreTM
       (initialLengthEntryTapes tapes)).retargetOutput
@@ -1464,8 +1466,9 @@ theorem initialLengthEmitTM_hoareTime_internal
   refine ⟨finalCfg, emitTime + 1 + countTime, by omega, hreach, ?_, ?_⟩
   · change (initialLengthEmitTM tapes).halted finalCfg
     unfold initialLengthEmitTM
-    rw [TM.phase2Wrap_halted_iff]
-    exact hcountHalt
+    exact (TM.phase2Wrap_halted_iff (rewindEntryEncodeRestoreTM
+      (initialLengthEntryTapes tapes)).retargetOutput
+    (TM.binarySuccTM tapes.lifted.data.update.remaining) counted).mpr hcountHalt
   · refine ⟨?_, ?_, ?_⟩
     · change counted.input = inp₀
       exact hcountInput.trans hemitInput
@@ -1485,7 +1488,7 @@ theorem initialLengthEmitTM_hoareTime_internal
       · change (counted.work tapes.buffer).HasBinaryPrefix
           ((entries ++ [(0, length)]).flatMap Entry.encode)
         rw [hcountFrame _ hcountBuffer.symm]
-        simpa [List.flatMap_append] using hemitBuffer
+        simpa [List.flatMap_append] using! hemitBuffer
       · intro i
         change TM.Parked (counted.work i)
         exact hcountWorkParked i
@@ -1525,7 +1528,7 @@ theorem initialLengthTM_hoareTime_internal
       hready.parked (by
         rw [houtput]
         have hblankNat : TM.resetBinaryBlank.HasBinaryNat 0 := by
-          simpa [TM.resetBinaryBlank] using Tape.init_move_right_hasBinaryNat 0
+          simpa [TM.resetBinaryBlank] using! Tape.init_move_right_hasBinaryNat 0
         exact parked_of_binaryNat hblankNat)
     obtain ⟨skipDone, skipTime, hskipTime, hskipReach, hskipHalt,
         hskipInput, hskipWork, hskipOutput⟩ :=
@@ -1538,7 +1541,7 @@ theorem initialLengthTM_hoareTime_internal
         (by
           rw [houtput]
           have hblankNat : TM.resetBinaryBlank.HasBinaryNat 0 := by
-            simpa [TM.resetBinaryBlank] using Tape.init_move_right_hasBinaryNat 0
+            simpa [TM.resetBinaryBlank] using! Tape.init_move_right_hasBinaryNat 0
           exact (parked_of_binaryNat hblankNat).read_ne_start)
         hskipReach hskipHalt
     refine ⟨done, skipTime + 1, ?_, hreach, hhalt, ?_⟩
@@ -1546,7 +1549,7 @@ theorem initialLengthTM_hoareTime_internal
       omega
     · refine ⟨?_, ?_, ?_⟩
       · exact hdoneInput.trans hskipInput
-      · simpa [hdoneWork, hskipWork] using hready
+      · simpa [hdoneWork, hskipWork] using! hready
       · exact hdoneOutput.trans (hskipOutput.trans rfl)
   · have hnonblank : (work₀ tapes.liftedLhs).read ≠ Γ.blank := by
       intro hblank
@@ -1564,7 +1567,7 @@ theorem initialLengthTM_hoareTime_internal
         (by
           rw [houtput]
           have hblankNat : TM.resetBinaryBlank.HasBinaryNat 0 := by
-            simpa [TM.resetBinaryBlank] using Tape.init_move_right_hasBinaryNat 0
+            simpa [TM.resetBinaryBlank] using! Tape.init_move_right_hasBinaryNat 0
           exact (parked_of_binaryNat hblankNat).read_ne_start)
         hemitReach hemitHalt
     refine ⟨done, emitTime + 1, ?_, hreach, hhalt, ?_⟩
@@ -1572,7 +1575,7 @@ theorem initialLengthTM_hoareTime_internal
       omega
     · refine ⟨?_, ?_, ?_⟩
       · exact hdoneInput.trans hemitInput
-      · simpa [hlength, hdoneWork] using hemitReady
+      · simpa [hlength, hdoneWork] using! hemitReady
       · exact hdoneOutput.trans hemitOutput
 
 /-- Restore the post-loop address and install the optional length entry. -/
@@ -1602,7 +1605,7 @@ theorem initialLengthInstallTM_hoareTime_internal
     (by
       rw [houtput]
       have hblankNat : TM.resetBinaryBlank.HasBinaryNat 0 := by
-        simpa [TM.resetBinaryBlank] using Tape.init_move_right_hasBinaryNat 0
+        simpa [TM.resetBinaryBlank] using! Tape.init_move_right_hasBinaryNat 0
       exact (parked_of_binaryNat hblankNat).read_ne_start)
   obtain ⟨predDone, predTime, hpredTime, hpredReach, hpredHalt,
       hpredInput, hpredFrame, hpredValue, hpredOutput⟩ :=
@@ -1615,7 +1618,7 @@ theorem initialLengthInstallTM_hoareTime_internal
   have hpredOutputParked : TM.Parked predDone.output := by
     rw [hpredOutputBlank]
     have hblankNat : TM.resetBinaryBlank.HasBinaryNat 0 := by
-      simpa [TM.resetBinaryBlank] using Tape.init_move_right_hasBinaryNat 0
+      simpa [TM.resetBinaryBlank] using! Tape.init_move_right_hasBinaryNat 0
     exact parked_of_binaryNat hblankNat
   have hpredWorkParked : ∀ i, TM.Parked (predDone.work i) := by
     intro i
@@ -1665,7 +1668,7 @@ theorem initialLengthInstallTM_hoareTime_internal
         output := TM.transitionTape predDone.output }
       lengthDone := by
     simpa only [hpredInputTransition, hpredWorkTransition,
-      hpredOutputTransition] using hlengthReach
+      hpredOutputTransition] using! hlengthReach
   have hreach := TM.seqTM_reachesIn_of_reachesIn
     (TM.binaryPredTM tapes.liftedLhs) (initialLengthTM tapes)
     hpredReach hpredHalt hlengthReach'
@@ -1674,8 +1677,8 @@ theorem initialLengthInstallTM_hoareTime_internal
   refine ⟨finalCfg, predTime + 1 + lengthTime, by omega, hreach, ?_, ?_⟩
   · change (initialLengthInstallTM tapes).halted finalCfg
     unfold initialLengthInstallTM
-    rw [TM.phase2Wrap_halted_iff]
-    exact hlengthHalt
+    exact (TM.phase2Wrap_halted_iff (TM.binaryPredTM tapes.liftedLhs)
+    (initialLengthTM tapes) lengthDone).mpr hlengthHalt
   · refine ⟨?_, ?_, ?_⟩
     · change lengthDone.input = inp₀
       exact hlengthInput.trans hpredInput
@@ -1710,7 +1713,7 @@ theorem initialAbiInstallTM_hoareTime_internal
   let W₅ := initialAbiBufferResetWork tapes W₄
   let W₆ := initialAbiFinalWork tapes W₅
   have hblankNat : TM.resetBinaryBlank.HasBinaryNat 0 := by
-    simpa [TM.resetBinaryBlank] using Tape.init_move_right_hasBinaryNat 0
+    simpa [TM.resetBinaryBlank] using! Tape.init_move_right_hasBinaryNat 0
   have houtputParked : TM.Parked out₀ := by
     rw [houtput]
     exact parked_of_binaryNat hblankNat
@@ -1765,7 +1768,7 @@ theorem initialAbiInstallTM_hoareTime_internal
       tapes.buffer := tapes.liftedData_ne_buffer 9
   have hcountEq : work₀ tapes.lifted.data.update.remaining =
       programBinaryTape store.length.bits := by
-    simpa only [programBinaryTape] using hready.count.eq_init_move_right
+    simpa only [programBinaryTape] using! hready.count.eq_init_move_right
   have hbufferEq : work₀ tapes.buffer = programBinaryPrefixTape storeBits := by
     exact eq_programBinaryPrefixTape_of_hasBinaryPrefix hready.buffer
       hbufferStart
@@ -1793,7 +1796,7 @@ theorem initialAbiInstallTM_hoareTime_internal
         (fun inp work out => inp = inp₀ ∧ work = work₀ ∧ out = out₀)
         (fun inp work out => inp = inp₀ ∧ work = W₁ ∧ out = out₀)
         (TM.binaryCopyTime store.length 0) := by
-    simpa only [W₁, initialAbiCountWork] using hcopy
+    simpa only [W₁, initialAbiCountWork] using! hcopy
   have hW₁Parked : ∀ i, TM.Parked (W₁ i) := by
     exact parked_update hready.parked (binaryTape_parked store.length.bits)
   have hW₁Buffer : W₁ tapes.buffer = programBinaryPrefixTape storeBits := by
@@ -1804,7 +1807,7 @@ theorem initialAbiInstallTM_hoareTime_internal
       (fun inp work out => inp = inp₀ ∧ work = W₁ ∧ out = out₀)
       (fun inp work out => inp = inp₀ ∧ work = W₂ ∧ out = out₀)
       (storeBits.length + 1 + 2) := by
-    simpa only [W₂, initialAbiBufferWork] using hrewindBuffer
+    simpa only [W₂, initialAbiBufferWork] using! hrewindBuffer
   have hW₂Parked : ∀ i, TM.Parked (W₂ i) := by
     exact parked_update hW₁Parked (binaryTape_parked storeBits)
   have hW₂Buffer : W₂ tapes.buffer = programBinaryTape storeBits := by
@@ -1822,7 +1825,7 @@ theorem initialAbiInstallTM_hoareTime_internal
         (fun inp work out => inp = inp₀ ∧ work = W₂ ∧ out = out₀)
         (fun inp work out => inp = inp₀ ∧ work = W₃ ∧ out = out₀)
         (storeBits.length + 1) := by
-    simpa only [W₃, initialAbiCopiedWork] using hcopyStore
+    simpa only [W₃, initialAbiCopiedWork] using! hcopyStore
   have hprefixParked : TM.Parked (programBinaryPrefixTape storeBits) :=
     programBinaryPrefixTape_parked storeBits
   have hW₃Parked : ∀ i, TM.Parked (W₃ i) := by
@@ -1838,7 +1841,7 @@ theorem initialAbiInstallTM_hoareTime_internal
       (fun inp work out => inp = inp₀ ∧ work = W₃ ∧ out = out₀)
       (fun inp work out => inp = inp₀ ∧ work = W₄ ∧ out = out₀)
       (storeBits.length + 1 + 2) := by
-    simpa only [W₄, initialAbiSourceWork] using hrewindSource
+    simpa only [W₄, initialAbiSourceWork] using! hrewindSource
   have hW₄Parked : ∀ i, TM.Parked (W₄ i) := by
     exact parked_update hW₃Parked (binaryTape_parked storeBits)
   have hW₄Buffer :
@@ -1857,7 +1860,7 @@ theorem initialAbiInstallTM_hoareTime_internal
       (fun inp work out => inp = inp₀ ∧ work = W₅ ∧ out = out₀)
       (TM.resetBinaryWorkTime (storeBits.length + 1) storeBits.length) := by
     simpa only [W₅, initialAbiBufferResetWork, TM.resetBinaryBlank]
-      using hresetBuffer
+      using! hresetBuffer
   have hW₅Parked : ∀ i, TM.Parked (W₅ i) := by
     exact parked_update hW₄Parked (parked_of_binaryNat hblankNat)
   have hW₅Lhs : W₅ tapes.liftedLhs = work₀ tapes.liftedLhs := by
@@ -1877,9 +1880,9 @@ theorem initialAbiInstallTM_hoareTime_internal
     simp [initialCleanupTargets] at hi
     rcases hi with rfl | rfl
     · rw [hW₅Lhs]
-      simpa [initialCleanupBits] using hready.address.2.hasBinaryContent
+      simpa [initialCleanupBits] using! hready.address.2.hasBinaryContent
     · rw [hW₅Rhs]
-      simpa [initialCleanupBits, hlhsRhs.symm] using
+      simpa [initialCleanupBits, hlhsRhs.symm] using!
         hready.value.2.hasBinaryContent
   have htargetsStart : ∀ i, i ∈ initialCleanupTargets tapes →
       (W₅ i).cells 0 = Γ.start := by
@@ -1907,7 +1910,7 @@ theorem initialAbiInstallTM_hoareTime_internal
         (fun inp work out => inp = inp₀ ∧ work = W₆ ∧ out = out₀)
         (TM.resetBinaryWorkManyTime (initialCleanupBits tapes length)
           (fun _ => 1) (initialCleanupTargets tapes)) := by
-    simpa only [W₆, initialAbiFinalWork] using hresetMany
+    simpa only [W₆, initialAbiFinalWork] using! hresetMany
   have htail₅ := TM.seqTM_hoareTime
     (TM.resetBinaryWorkTM tapes.buffer)
     (TM.resetBinaryWorkManyTM (initialCleanupTargets tapes))
@@ -1999,7 +2002,7 @@ private theorem inputBitStoreFrom_addressesNodup
         have hlower := inputBitStoreFrom_address_lower hentry
         change entry.1 = start at heq
         omega
-      · simpa [inputBitStoreFrom, hbit] using ih (start + 1)
+      · simpa [inputBitStoreFrom, hbit] using! ih (start + 1)
 
 private theorem inputBitStoreFrom_valuesNonzero
     (start : ℕ) (input : List Bool) :
@@ -2014,7 +2017,7 @@ private theorem inputBitStoreFrom_valuesNonzero
         rcases hentry with rfl | hentry
         · exact Nat.one_ne_zero
         · exact ih (start + 1) entry hentry
-      · simpa [inputBitStoreFrom, hbit] using ih (start + 1)
+      · simpa [inputBitStoreFrom, hbit] using! ih (start + 1)
 
 private theorem zero_not_mem_inputBitStoreFrom_addresses
     (input : List Bool) :
@@ -2169,7 +2172,7 @@ theorem programInitTM_hoareTime_internal
   have hsetupOutputParked : TM.Parked setupDone.output := by
     rw [hsetupOutput]
     have hblankNat : TM.resetBinaryBlank.HasBinaryNat 0 := by
-      simpa [TM.resetBinaryBlank] using Tape.init_move_right_hasBinaryNat 0
+      simpa [TM.resetBinaryBlank] using! Tape.init_move_right_hasBinaryNat 0
     exact parked_of_binaryNat hblankNat
   have hloop := initialInputLoopTM_hoareTime_internal tapes input 1 0 []
     setupDone.input setupDone.work setupDone.output hsetupInput hsetupReady
@@ -2183,7 +2186,7 @@ theorem programInitTM_hoareTime_internal
       hsetupBufferStart
   have hloopReady : InitialLoopReady tapes (input.length + 1)
       (inputTrueCount input) (inputBitStoreFrom 1 input) loopDone.work := by
-    simpa [Nat.add_comm] using hloopReadyRaw
+    simpa [Nat.add_comm] using! hloopReadyRaw
   have hloopInputParked : TM.Parked loopDone.input :=
     parked_of_binarySuffix hloopInput
   have hloopOutputBlank : loopDone.output = TM.resetBinaryBlank :=
@@ -2191,7 +2194,7 @@ theorem programInitTM_hoareTime_internal
   have hloopOutputParked : TM.Parked loopDone.output := by
     rw [hloopOutputBlank]
     have hblankNat : TM.resetBinaryBlank.HasBinaryNat 0 := by
-      simpa [TM.resetBinaryBlank] using Tape.init_move_right_hasBinaryNat 0
+      simpa [TM.resetBinaryBlank] using! Tape.init_move_right_hasBinaryNat 0
     exact parked_of_binaryNat hblankNat
   have hlength := initialLengthInstallTM_hoareTime_internal tapes
     input.length (inputTrueCount input) (inputBitStoreFrom 1 input)
@@ -2218,7 +2221,7 @@ theorem programInitTM_hoareTime_internal
   have hlengthOutputParked : TM.Parked lengthDone.output := by
     rw [hlengthOutputBlank]
     have hblankNat : TM.resetBinaryBlank.HasBinaryNat 0 := by
-      simpa [TM.resetBinaryBlank] using Tape.init_move_right_hasBinaryNat 0
+      simpa [TM.resetBinaryBlank] using! Tape.init_move_right_hasBinaryNat 0
     exact parked_of_binaryNat hblankNat
   have habi := initialAbiInstallTM_hoareTime_internal tapes
     (programInitialStore input) input.length lengthDone.input
@@ -2240,7 +2243,7 @@ theorem programInitTM_hoareTime_internal
         output := TM.transitionTape lengthDone.output }
       abiDone := by
     simpa only [hlengthInputTransition, hlengthWorkTransition,
-      hlengthOutputTransition] using habiReach
+      hlengthOutputTransition] using! habiReach
   have hfinalizeReach := TM.seqTM_reachesIn_of_reachesIn
     (initialLengthInstallTM tapes) (initialAbiInstallTM tapes)
     hlengthReach hlengthHalt habiReach'
@@ -2248,8 +2251,8 @@ theorem programInitTM_hoareTime_internal
     (initialAbiInstallTM tapes) abiDone
   have hfinalizeHalt : (initialFinalizeTM tapes).halted finalizeDone := by
     unfold initialFinalizeTM
-    rw [TM.phase2Wrap_halted_iff]
-    exact habiHalt
+    exact (TM.phase2Wrap_halted_iff (initialLengthInstallTM tapes)
+      (initialAbiInstallTM tapes) abiDone).mpr habiHalt
   have hloopInputTransition :
       TM.transitionInput loopDone.input = loopDone.input :=
     TM.transitionInput_eq_self hloopInputParked.read_ne_start
@@ -2268,7 +2271,7 @@ theorem programInitTM_hoareTime_internal
         output := TM.transitionTape loopDone.output }
       finalizeDone := by
     simpa only [hloopInputTransition, hloopWorkTransition,
-      hloopOutputTransition] using hfinalizeReach
+      hloopOutputTransition] using! hfinalizeReach
   have hloopTailReach := TM.seqTM_reachesIn_of_reachesIn
     (initialInputLoopTM tapes) (initialFinalizeTM tapes)
     hloopReach hloopHalt hfinalizeReach'
@@ -2277,8 +2280,8 @@ theorem programInitTM_hoareTime_internal
   have hloopTailHalt :
       (TM.seqTM (initialInputLoopTM tapes)
         (initialFinalizeTM tapes)).halted loopTailDone := by
-    rw [TM.phase2Wrap_halted_iff]
-    exact hfinalizeHalt
+    exact (TM.phase2Wrap_halted_iff (initialInputLoopTM tapes)
+    (initialFinalizeTM tapes) finalizeDone).mpr hfinalizeHalt
   have hsetupInputTransition :
       TM.transitionInput setupDone.input = setupDone.input :=
     TM.transitionInput_eq_self hsetupInputParked.read_ne_start
@@ -2300,7 +2303,7 @@ theorem programInitTM_hoareTime_internal
           output := TM.transitionTape setupDone.output }
         loopTailDone := by
     simpa only [hsetupInputTransition, hsetupWorkTransition,
-      hsetupOutputTransition] using hloopTailReach
+      hsetupOutputTransition] using! hloopTailReach
   have hreach := TM.seqTM_reachesIn_of_reachesIn
     (initialSetupTM tapes)
     (TM.seqTM (initialInputLoopTM tapes) (initialFinalizeTM tapes))
@@ -2315,8 +2318,9 @@ theorem programInitTM_hoareTime_internal
     omega
   · change (programInitTM tapes).halted finalCfg
     unfold programInitTM
-    rw [TM.phase2Wrap_halted_iff]
-    exact hloopTailHalt
+    exact (TM.phase2Wrap_halted_iff (initialSetupTM tapes)
+    (TM.seqTM (initialInputLoopTM tapes) (initialFinalizeTM tapes))
+    loopTailDone).mpr hloopTailHalt
   · refine ⟨?_, ?_, ?_⟩
     · change abiDone.input.HasBinarySuffix []
       rw [habiInput, hlengthInput]

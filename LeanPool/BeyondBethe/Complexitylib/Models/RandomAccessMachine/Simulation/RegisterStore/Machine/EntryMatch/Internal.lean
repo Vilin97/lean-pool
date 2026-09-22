@@ -99,81 +99,81 @@ theorem entryMatchTM_reachesIn_frame_internal {n : ℕ}
       hdecodeValueStart, hdecodeAddressCounter, hdecodeValueCounter,
       hdecodeFrame, hdecodeOutput⟩ :=
     entryDecodeLinearTM_reachesIn_frame tapes.decode entry rest inp₀ work₀ out₀
-      (by simpa using hsource) (by simpa using haddress)
-      (by simpa using hvalue) (by simpa using haddressStart)
-      (by simpa using hvalueStart)
+      (by simpa using! hsource) (by simpa using! haddress)
+      (by simpa using! hvalue) (by simpa using! haddressStart)
+      (by simpa using! hvalueStart)
       (by
-        simpa [Tape.HasBinaryPrefix, Tape.HasBinaryString] using
+        simpa [Tape.HasBinaryPrefix, Tape.HasBinaryString] using!
           haddressCounter.2)
       haddressCounter.1
       (by
-        simpa [Tape.HasBinaryPrefix, Tape.HasBinaryString] using
+        simpa [Tape.HasBinaryPrefix, Tape.HasBinaryString] using!
           hvalueCounter.2)
       hvalueCounter.1 hinput.read_ne_start
       (fun i => (hwork i).read_ne_start) houtput.read_ne_start
   have hdecodeAddressWidth :
       (decodeDone.work tapes.addressWidth).HasBinaryNat 0 := by
     rw [hdecodeFrame tapes.addressWidth
-      (by simpa using tapes.ne (show (4 : Fin 9) ≠ 0 by decide))
-      (by simpa using tapes.ne (show (4 : Fin 9) ≠ 1 by decide))
-      (by simpa using tapes.ne (show (4 : Fin 9) ≠ 2 by decide))
-      (by simpa using tapes.ne (show (4 : Fin 9) ≠ 3 by decide))
-      (by simpa using tapes.ne (show (4 : Fin 9) ≠ 5 by decide))]
+      (by simpa using! tapes.ne (show (4 : Fin 9) ≠ 0 by decide))
+      (by simpa using! tapes.ne (show (4 : Fin 9) ≠ 1 by decide))
+      (by simpa using! tapes.ne (show (4 : Fin 9) ≠ 2 by decide))
+      (by simpa using! tapes.ne (show (4 : Fin 9) ≠ 3 by decide))
+      (by simpa using! tapes.ne (show (4 : Fin 9) ≠ 5 by decide))]
     exact haddressWidth
   have hdecodeValueWidth :
       (decodeDone.work tapes.valueWidth).HasBinaryNat 0 := by
     rw [hdecodeFrame tapes.valueWidth
-      (by simpa using tapes.ne (show (6 : Fin 9) ≠ 0 by decide))
-      (by simpa using tapes.ne (show (6 : Fin 9) ≠ 1 by decide))
-      (by simpa using tapes.ne (show (6 : Fin 9) ≠ 2 by decide))
-      (by simpa using tapes.ne (show (6 : Fin 9) ≠ 3 by decide))
-      (by simpa using tapes.ne (show (6 : Fin 9) ≠ 5 by decide))]
+      (by simpa using! tapes.ne (show (6 : Fin 9) ≠ 0 by decide))
+      (by simpa using! tapes.ne (show (6 : Fin 9) ≠ 1 by decide))
+      (by simpa using! tapes.ne (show (6 : Fin 9) ≠ 2 by decide))
+      (by simpa using! tapes.ne (show (6 : Fin 9) ≠ 3 by decide))
+      (by simpa using! tapes.ne (show (6 : Fin 9) ≠ 5 by decide))]
     exact hvalueWidth
   have hdecodeQuery :
       (decodeDone.work tapes.query).HasBinaryString queryBits := by
     rw [hdecodeFrame tapes.query
-      (by simpa using tapes.ne (show (7 : Fin 9) ≠ 0 by decide))
-      (by simpa using tapes.ne (show (7 : Fin 9) ≠ 1 by decide))
-      (by simpa using tapes.ne (show (7 : Fin 9) ≠ 2 by decide))
-      (by simpa using tapes.ne (show (7 : Fin 9) ≠ 3 by decide))
-      (by simpa using tapes.ne (show (7 : Fin 9) ≠ 5 by decide))]
+      (by simpa using! tapes.ne (show (7 : Fin 9) ≠ 0 by decide))
+      (by simpa using! tapes.ne (show (7 : Fin 9) ≠ 1 by decide))
+      (by simpa using! tapes.ne (show (7 : Fin 9) ≠ 2 by decide))
+      (by simpa using! tapes.ne (show (7 : Fin 9) ≠ 3 by decide))
+      (by simpa using! tapes.ne (show (7 : Fin 9) ≠ 5 by decide))]
     exact hquery
   have hdecodeResult :
       (decodeDone.work tapes.result).HasBinaryPrefix [] := by
     rw [hdecodeFrame tapes.result
-      (by simpa using tapes.ne (show (8 : Fin 9) ≠ 0 by decide))
-      (by simpa using tapes.ne (show (8 : Fin 9) ≠ 1 by decide))
-      (by simpa using tapes.ne (show (8 : Fin 9) ≠ 2 by decide))
-      (by simpa using tapes.ne (show (8 : Fin 9) ≠ 3 by decide))
-      (by simpa using tapes.ne (show (8 : Fin 9) ≠ 5 by decide))]
+      (by simpa using! tapes.ne (show (8 : Fin 9) ≠ 0 by decide))
+      (by simpa using! tapes.ne (show (8 : Fin 9) ≠ 1 by decide))
+      (by simpa using! tapes.ne (show (8 : Fin 9) ≠ 2 by decide))
+      (by simpa using! tapes.ne (show (8 : Fin 9) ≠ 3 by decide))
+      (by simpa using! tapes.ne (show (8 : Fin 9) ≠ 5 by decide))]
     exact hresult
   have hdecodeParked : ∀ i, TM.Parked (decodeDone.work i) := by
     intro i
     by_cases his : i = tapes.source
     · subst i
-      exact parked_of_hasBinarySuffix (by simpa using hdecodeSource)
+      exact parked_of_hasBinarySuffix (by simpa using! hdecodeSource)
     · by_cases hia : i = tapes.address
       · subst i
-        exact parked_of_hasBinaryPrefix (by simpa using hdecodeAddress)
+        exact parked_of_hasBinaryPrefix (by simpa using! hdecodeAddress)
       · by_cases hiv : i = tapes.value
         · subst i
-          exact parked_of_hasBinaryPrefix (by simpa using hdecodeValue)
+          exact parked_of_hasBinaryPrefix (by simpa using! hdecodeValue)
         · by_cases hiac : i = tapes.addressCounter
           · subst i
             exact parked_of_hasBinaryPrefix
-              (by simpa using hdecodeAddressCounter)
+              (by simpa using! hdecodeAddressCounter)
           · by_cases hiaw : i = tapes.addressWidth
             · subst i
               exact parked_of_hasBinaryNat
-                (by simpa using hdecodeAddressWidth)
+                (by simpa using! hdecodeAddressWidth)
             · by_cases hivc : i = tapes.valueCounter
               · subst i
                 exact parked_of_hasBinaryPrefix
-                  (by simpa using hdecodeValueCounter)
+                  (by simpa using! hdecodeValueCounter)
               · by_cases hivw : i = tapes.valueWidth
                 · subst i
                   exact parked_of_hasBinaryNat
-                    (by simpa using hdecodeValueWidth)
+                    (by simpa using! hdecodeValueWidth)
                 · by_cases hiq : i = tapes.query
                   · subst i
                     exact ⟨by rw [hdecodeQuery.1],
@@ -181,9 +181,9 @@ theorem entryMatchTM_reachesIn_frame_internal {n : ℕ}
                   · by_cases hir : i = tapes.result
                     · subst i
                       exact parked_of_hasBinaryPrefix hdecodeResult
-                    · rw [hdecodeFrame i (by simpa using his)
-                        (by simpa using hia) (by simpa using hiv)
-                        (by simpa using hiac) (by simpa using hivc)]
+                    · rw [hdecodeFrame i (by simpa using! his)
+                        (by simpa using! hia) (by simpa using! hiv)
+                        (by simpa using! hiac) (by simpa using! hivc)]
                       exact hwork i
   have hdecodeQueryStart :
       (decodeDone.work tapes.query).cells 0 = Γ.start :=
@@ -195,8 +195,8 @@ theorem entryMatchTM_reachesIn_frame_internal {n : ℕ}
       hcompareQueryHead, hcompareQueryStart, hcompareFrame, hcompareOutput⟩ :=
     decodedAddressEqTM_reachesIn_frame tapes.address tapes.query tapes.result
       tapes.binaryEqDistinct entry.1.bits queryBits decodeDone.input
-      decodeDone.work decodeDone.output (by simpa using hdecodeAddress)
-      (by simpa using hdecodeAddressStart) hdecodeQuery hdecodeQueryStart
+      decodeDone.work decodeDone.output (by simpa using! hdecodeAddress)
+      (by simpa using! hdecodeAddressStart) hdecodeQuery hdecodeQueryStart
       hdecodeResult (by rw [hdecodeInput]; exact hinput.read_ne_start)
       (fun i _ _ _ => ⟨(hdecodeParked i).read_ne_start,
         (hdecodeParked i).1⟩)
@@ -219,9 +219,9 @@ theorem entryMatchTM_reachesIn_frame_internal {n : ℕ}
         work := fun i => TM.transitionTape (decodeDone.work i)
         output := TM.transitionTape decodeDone.output } compareDone := by
     rw [htransitionInput, htransitionWork, htransitionOutput]
-    simpa [compareTM] using hcompareReach
+    simpa [compareTM] using! hcompareReach
   have hfullReach := TM.seqTM_reachesIn_of_reachesIn decodeTM compareTM
-    (by simpa [decodeTM] using hdecodeReach) hdecodeHalt hcompareReach'
+    (by simpa [decodeTM] using! hdecodeReach) hdecodeHalt hcompareReach'
   let finalCfg := TM.phase2Wrap decodeTM compareTM compareDone
   have hresultStartFinal : (finalCfg.work tapes.result).cells 0 = Γ.start :=
     TM.work_cells_zero_eq_start_of_reachesIn
@@ -243,10 +243,10 @@ theorem entryMatchTM_reachesIn_frame_internal {n : ℕ}
     · subst i
       apply parked_of_hasBinarySuffix
       rw [hcompareFrame tapes.source
-        (by simpa using tapes.ne (show (0 : Fin 9) ≠ 1 by decide))
-        (by simpa using tapes.ne (show (0 : Fin 9) ≠ 7 by decide))
-        (by simpa using tapes.ne (show (0 : Fin 9) ≠ 8 by decide))]
-      simpa using hdecodeSource
+        (by simpa using! tapes.ne (show (0 : Fin 9) ≠ 1 by decide))
+        (by simpa using! tapes.ne (show (0 : Fin 9) ≠ 7 by decide))
+        (by simpa using! tapes.ne (show (0 : Fin 9) ≠ 8 by decide))]
+      simpa using! hdecodeSource
     · by_cases hia : i = tapes.address
       · subst i
         exact ⟨hcompareAddressHead,
@@ -255,42 +255,42 @@ theorem entryMatchTM_reachesIn_frame_internal {n : ℕ}
         · subst i
           apply parked_of_hasBinaryPrefix
           rw [hcompareFrame tapes.value
-            (by simpa using tapes.ne (show (2 : Fin 9) ≠ 1 by decide))
-            (by simpa using tapes.ne (show (2 : Fin 9) ≠ 7 by decide))
-            (by simpa using tapes.ne (show (2 : Fin 9) ≠ 8 by decide))]
-          simpa using hdecodeValue
+            (by simpa using! tapes.ne (show (2 : Fin 9) ≠ 1 by decide))
+            (by simpa using! tapes.ne (show (2 : Fin 9) ≠ 7 by decide))
+            (by simpa using! tapes.ne (show (2 : Fin 9) ≠ 8 by decide))]
+          simpa using! hdecodeValue
         · by_cases hiac : i = tapes.addressCounter
           · subst i
             apply parked_of_hasBinaryPrefix
             rw [hcompareFrame tapes.addressCounter
-              (by simpa using tapes.ne (show (3 : Fin 9) ≠ 1 by decide))
-              (by simpa using tapes.ne (show (3 : Fin 9) ≠ 7 by decide))
-              (by simpa using tapes.ne (show (3 : Fin 9) ≠ 8 by decide))]
-            simpa using hdecodeAddressCounter
+              (by simpa using! tapes.ne (show (3 : Fin 9) ≠ 1 by decide))
+              (by simpa using! tapes.ne (show (3 : Fin 9) ≠ 7 by decide))
+              (by simpa using! tapes.ne (show (3 : Fin 9) ≠ 8 by decide))]
+            simpa using! hdecodeAddressCounter
           · by_cases hiaw : i = tapes.addressWidth
             · subst i
               apply parked_of_hasBinaryNat
               rw [hcompareFrame tapes.addressWidth
-                (by simpa using tapes.ne (show (4 : Fin 9) ≠ 1 by decide))
-                (by simpa using tapes.ne (show (4 : Fin 9) ≠ 7 by decide))
-                (by simpa using tapes.ne (show (4 : Fin 9) ≠ 8 by decide))]
-              simpa using hdecodeAddressWidth
+                (by simpa using! tapes.ne (show (4 : Fin 9) ≠ 1 by decide))
+                (by simpa using! tapes.ne (show (4 : Fin 9) ≠ 7 by decide))
+                (by simpa using! tapes.ne (show (4 : Fin 9) ≠ 8 by decide))]
+              simpa using! hdecodeAddressWidth
             · by_cases hivc : i = tapes.valueCounter
               · subst i
                 apply parked_of_hasBinaryPrefix
                 rw [hcompareFrame tapes.valueCounter
-                  (by simpa using tapes.ne (show (5 : Fin 9) ≠ 1 by decide))
-                  (by simpa using tapes.ne (show (5 : Fin 9) ≠ 7 by decide))
-                  (by simpa using tapes.ne (show (5 : Fin 9) ≠ 8 by decide))]
-                simpa using hdecodeValueCounter
+                  (by simpa using! tapes.ne (show (5 : Fin 9) ≠ 1 by decide))
+                  (by simpa using! tapes.ne (show (5 : Fin 9) ≠ 7 by decide))
+                  (by simpa using! tapes.ne (show (5 : Fin 9) ≠ 8 by decide))]
+                simpa using! hdecodeValueCounter
               · by_cases hivw : i = tapes.valueWidth
                 · subst i
                   apply parked_of_hasBinaryNat
                   rw [hcompareFrame tapes.valueWidth
-                    (by simpa using tapes.ne (show (6 : Fin 9) ≠ 1 by decide))
-                    (by simpa using tapes.ne (show (6 : Fin 9) ≠ 7 by decide))
-                    (by simpa using tapes.ne (show (6 : Fin 9) ≠ 8 by decide))]
-                  simpa using hdecodeValueWidth
+                    (by simpa using! tapes.ne (show (6 : Fin 9) ≠ 1 by decide))
+                    (by simpa using! tapes.ne (show (6 : Fin 9) ≠ 7 by decide))
+                    (by simpa using! tapes.ne (show (6 : Fin 9) ≠ 8 by decide))]
+                  simpa using! hdecodeValueWidth
                 · by_cases hiq : i = tapes.query
                   · subst i
                     exact ⟨hcompareQueryHead,
@@ -299,9 +299,9 @@ theorem entryMatchTM_reachesIn_frame_internal {n : ℕ}
                     · subst i
                       exact parked_of_hasBinaryPrefix hcompareResult
                     · rw [hcompareFrame i hia hiq hir,
-                        hdecodeFrame i (by simpa using his)
-                          (by simpa using hia) (by simpa using hiv)
-                          (by simpa using hiac) (by simpa using hivc)]
+                        hdecodeFrame i (by simpa using! his)
+                          (by simpa using! hia) (by simpa using! hiv)
+                          (by simpa using! hiac) (by simpa using! hivc)]
                       exact hwork i
   refine ⟨finalCfg, entryDecodeLinearTime entry.1 entry.2 + 1 + compareTime,
     ?_, ?_, ?_, hcompareInput.trans hdecodeInput, ?_, hcompareAddress,
@@ -312,58 +312,58 @@ theorem entryMatchTM_reachesIn_frame_internal {n : ℕ}
     hcompareOutput.trans hdecodeOutput⟩
   · simp only [entryMatchTime]
     omega
-  · simpa [entryMatchTM, decodeTM, compareTM, finalCfg] using hfullReach
+  · simpa [entryMatchTM, decodeTM, compareTM, finalCfg] using! hfullReach
   · exact (TM.phase2Wrap_halted_iff decodeTM compareTM compareDone).2
       hcompareHalt
   · change (compareDone.work tapes.source).HasBinarySuffix rest
     rw [hcompareFrame tapes.source
-      (by simpa using tapes.ne (show (0 : Fin 9) ≠ 1 by decide))
-      (by simpa using tapes.ne (show (0 : Fin 9) ≠ 7 by decide))
-      (by simpa using tapes.ne (show (0 : Fin 9) ≠ 8 by decide))]
-    simpa using hdecodeSource
+      (by simpa using! tapes.ne (show (0 : Fin 9) ≠ 1 by decide))
+      (by simpa using! tapes.ne (show (0 : Fin 9) ≠ 7 by decide))
+      (by simpa using! tapes.ne (show (0 : Fin 9) ≠ 8 by decide))]
+    simpa using! hdecodeSource
   · change (compareDone.work tapes.value).HasBinaryPrefix entry.2.bits
     rw [hcompareFrame tapes.value
-      (by simpa using tapes.ne (show (2 : Fin 9) ≠ 1 by decide))
-      (by simpa using tapes.ne (show (2 : Fin 9) ≠ 7 by decide))
-      (by simpa using tapes.ne (show (2 : Fin 9) ≠ 8 by decide))]
-    simpa using hdecodeValue
+      (by simpa using! tapes.ne (show (2 : Fin 9) ≠ 1 by decide))
+      (by simpa using! tapes.ne (show (2 : Fin 9) ≠ 7 by decide))
+      (by simpa using! tapes.ne (show (2 : Fin 9) ≠ 8 by decide))]
+    simpa using! hdecodeValue
   · change (compareDone.work tapes.value).cells 0 = Γ.start
     rw [hcompareFrame tapes.value
-      (by simpa using tapes.ne (show (2 : Fin 9) ≠ 1 by decide))
-      (by simpa using tapes.ne (show (2 : Fin 9) ≠ 7 by decide))
-      (by simpa using tapes.ne (show (2 : Fin 9) ≠ 8 by decide))]
-    simpa using hdecodeValueStart
+      (by simpa using! tapes.ne (show (2 : Fin 9) ≠ 1 by decide))
+      (by simpa using! tapes.ne (show (2 : Fin 9) ≠ 7 by decide))
+      (by simpa using! tapes.ne (show (2 : Fin 9) ≠ 8 by decide))]
+    simpa using! hdecodeValueStart
   · change (compareDone.work tapes.addressCounter).HasBinaryPrefix
       (List.replicate (bitlen entry.1) true)
     rw [hcompareFrame tapes.addressCounter
-      (by simpa using tapes.ne (show (3 : Fin 9) ≠ 1 by decide))
-      (by simpa using tapes.ne (show (3 : Fin 9) ≠ 7 by decide))
-      (by simpa using tapes.ne (show (3 : Fin 9) ≠ 8 by decide))]
-    simpa using hdecodeAddressCounter
+      (by simpa using! tapes.ne (show (3 : Fin 9) ≠ 1 by decide))
+      (by simpa using! tapes.ne (show (3 : Fin 9) ≠ 7 by decide))
+      (by simpa using! tapes.ne (show (3 : Fin 9) ≠ 8 by decide))]
+    simpa using! hdecodeAddressCounter
   · change (compareDone.work tapes.addressWidth).HasBinaryNat 0
     rw [hcompareFrame tapes.addressWidth
-      (by simpa using tapes.ne (show (4 : Fin 9) ≠ 1 by decide))
-      (by simpa using tapes.ne (show (4 : Fin 9) ≠ 7 by decide))
-      (by simpa using tapes.ne (show (4 : Fin 9) ≠ 8 by decide))]
-    simpa using hdecodeAddressWidth
+      (by simpa using! tapes.ne (show (4 : Fin 9) ≠ 1 by decide))
+      (by simpa using! tapes.ne (show (4 : Fin 9) ≠ 7 by decide))
+      (by simpa using! tapes.ne (show (4 : Fin 9) ≠ 8 by decide))]
+    simpa using! hdecodeAddressWidth
   · change (compareDone.work tapes.valueCounter).HasBinaryPrefix
       (List.replicate (bitlen entry.2) true)
     rw [hcompareFrame tapes.valueCounter
-      (by simpa using tapes.ne (show (5 : Fin 9) ≠ 1 by decide))
-      (by simpa using tapes.ne (show (5 : Fin 9) ≠ 7 by decide))
-      (by simpa using tapes.ne (show (5 : Fin 9) ≠ 8 by decide))]
-    simpa using hdecodeValueCounter
+      (by simpa using! tapes.ne (show (5 : Fin 9) ≠ 1 by decide))
+      (by simpa using! tapes.ne (show (5 : Fin 9) ≠ 7 by decide))
+      (by simpa using! tapes.ne (show (5 : Fin 9) ≠ 8 by decide))]
+    simpa using! hdecodeValueCounter
   · change (compareDone.work tapes.valueWidth).HasBinaryNat 0
     rw [hcompareFrame tapes.valueWidth
-      (by simpa using tapes.ne (show (6 : Fin 9) ≠ 1 by decide))
-      (by simpa using tapes.ne (show (6 : Fin 9) ≠ 7 by decide))
-      (by simpa using tapes.ne (show (6 : Fin 9) ≠ 8 by decide))]
-    simpa using hdecodeValueWidth
+      (by simpa using! tapes.ne (show (6 : Fin 9) ≠ 1 by decide))
+      (by simpa using! tapes.ne (show (6 : Fin 9) ≠ 7 by decide))
+      (by simpa using! tapes.ne (show (6 : Fin 9) ≠ 8 by decide))]
+    simpa using! hdecodeValueWidth
   · intro i his hia hiv hiac hiaw hivc hivw hiq hir
     change compareDone.work i = work₀ i
     rw [hcompareFrame i hia hiq hir,
-      hdecodeFrame i (by simpa using his) (by simpa using hia)
-        (by simpa using hiv) (by simpa using hiac) (by simpa using hivc)]
+      hdecodeFrame i (by simpa using! his) (by simpa using! hia)
+        (by simpa using! hiv) (by simpa using! hiac) (by simpa using! hivc)]
 
 theorem entryMatchReadTM_reachesIn_frame_internal {n : ℕ}
     (tapes : EntryMatchTapes n) (entry : Entry) (rest queryBits : List Bool)
@@ -411,7 +411,7 @@ theorem entryMatchReadTM_reachesIn_frame_internal {n : ℕ}
   obtain ⟨rewindDone, rewindTime, hrewindTime, hrewindReach, hrewindHalt,
       hrewindInput, hrewindResult, hrewindFrame, hrewindOutput⟩ :=
     wordTargetRewind_reachesIn_frame tapes.result resultBits matchDone.input
-      matchDone.work matchDone.output (by simpa [resultBits] using hmatchResult)
+      matchDone.work matchDone.output (by simpa [resultBits] using! hmatchResult)
       hmatchResultStart
       (by rw [hmatchInput]; exact hinput.read_ne_start)
       (fun i _ => ⟨(hmatchParked i).read_ne_start, (hmatchParked i).1⟩)
@@ -435,9 +435,9 @@ theorem entryMatchReadTM_reachesIn_frame_internal {n : ℕ}
         work := fun i => TM.transitionTape (matchDone.work i)
         output := TM.transitionTape matchDone.output } rewindDone := by
     rw [htransitionInput, htransitionWork, htransitionOutput]
-    simpa [rewindTM] using hrewindReach
+    simpa [rewindTM] using! hrewindReach
   have hfullReach := TM.seqTM_reachesIn_of_reachesIn matchTM rewindTM
-    (by simpa [matchTM] using hmatchReach) hmatchHalt hrewindReach'
+    (by simpa [matchTM] using! hmatchReach) hmatchHalt hrewindReach'
   let finalCfg := TM.phase2Wrap matchTM rewindTM rewindDone
   have hresultStartFinal : (finalCfg.work tapes.result).cells 0 = Γ.start :=
     TM.work_cells_zero_eq_start_of_reachesIn
@@ -452,7 +452,7 @@ theorem entryMatchReadTM_reachesIn_frame_internal {n : ℕ}
     · rw [hrewindFrame i hir]
       exact hmatchParked i
   have hrewindTimeFour : rewindTime ≤ 4 := by
-    simpa [resultBits] using hrewindTime
+    simpa [resultBits] using! hrewindTime
   have hfullTime : matchTime + 1 + rewindTime ≤
       entryMatchReadTime entry queryBits := by
     simp only [entryMatchReadTime]
@@ -465,45 +465,45 @@ theorem entryMatchReadTM_reachesIn_frame_internal {n : ℕ}
       ReadableEntryMatch tapes entry rest queryBits work₀ finalCfg.work := by
     constructor
     · rw [hpreserve tapes.source
-        (by simpa using tapes.ne (show (0 : Fin 9) ≠ 8 by decide))]
+        (by simpa using! tapes.ne (show (0 : Fin 9) ≠ 8 by decide))]
       exact hmatchSource
     · rw [hpreserve tapes.address
-        (by simpa using tapes.ne (show (1 : Fin 9) ≠ 8 by decide))]
+        (by simpa using! tapes.ne (show (1 : Fin 9) ≠ 8 by decide))]
       exact hmatchAddress
     · rw [hpreserve tapes.address
-        (by simpa using tapes.ne (show (1 : Fin 9) ≠ 8 by decide))]
+        (by simpa using! tapes.ne (show (1 : Fin 9) ≠ 8 by decide))]
       exact hmatchAddressStart
     · rw [hpreserve tapes.value
-        (by simpa using tapes.ne (show (2 : Fin 9) ≠ 8 by decide))]
+        (by simpa using! tapes.ne (show (2 : Fin 9) ≠ 8 by decide))]
       exact hmatchValue
     · rw [hpreserve tapes.value
-        (by simpa using tapes.ne (show (2 : Fin 9) ≠ 8 by decide))]
+        (by simpa using! tapes.ne (show (2 : Fin 9) ≠ 8 by decide))]
       exact hmatchValueStart
     · rw [hpreserve tapes.addressCounter
-        (by simpa using tapes.ne (show (3 : Fin 9) ≠ 8 by decide))]
+        (by simpa using! tapes.ne (show (3 : Fin 9) ≠ 8 by decide))]
       exact hmatchAddressCounter
     · rw [hpreserve tapes.addressCounter
-        (by simpa using tapes.ne (show (3 : Fin 9) ≠ 8 by decide))]
+        (by simpa using! tapes.ne (show (3 : Fin 9) ≠ 8 by decide))]
       exact hmatchAddressCounterStart
     · rw [hpreserve tapes.addressWidth
-        (by simpa using tapes.ne (show (4 : Fin 9) ≠ 8 by decide))]
+        (by simpa using! tapes.ne (show (4 : Fin 9) ≠ 8 by decide))]
       exact hmatchAddressWidth
     · rw [hpreserve tapes.valueCounter
-        (by simpa using tapes.ne (show (5 : Fin 9) ≠ 8 by decide))]
+        (by simpa using! tapes.ne (show (5 : Fin 9) ≠ 8 by decide))]
       exact hmatchValueCounter
     · rw [hpreserve tapes.valueCounter
-        (by simpa using tapes.ne (show (5 : Fin 9) ≠ 8 by decide))]
+        (by simpa using! tapes.ne (show (5 : Fin 9) ≠ 8 by decide))]
       exact hmatchValueCounterStart
     · rw [hpreserve tapes.valueWidth
-        (by simpa using tapes.ne (show (6 : Fin 9) ≠ 8 by decide))]
+        (by simpa using! tapes.ne (show (6 : Fin 9) ≠ 8 by decide))]
       exact hmatchValueWidth
     · rw [hpreserve tapes.query
-        (by simpa using tapes.ne (show (7 : Fin 9) ≠ 8 by decide))]
+        (by simpa using! tapes.ne (show (7 : Fin 9) ≠ 8 by decide))]
       exact hmatchQuery
     · rw [hpreserve tapes.query
-        (by simpa using tapes.ne (show (7 : Fin 9) ≠ 8 by decide))]
+        (by simpa using! tapes.ne (show (7 : Fin 9) ≠ 8 by decide))]
       exact hmatchQueryStart
-    · simpa [resultBits] using hrewindResult
+    · simpa [resultBits] using! hrewindResult
     · exact hresultStartFinal
     · exact hfinalParked
     · intro i
@@ -511,7 +511,7 @@ theorem entryMatchReadTM_reachesIn_frame_internal {n : ℕ}
         hfullReach i
       have hhead' := le_trans hhead
         (Nat.add_le_add_left hfullTime (work₀ i).head)
-      simpa [finalCfg] using hhead'
+      simpa [finalCfg] using! hhead'
     · intro i his hia hiv hiac hiaw hivc hivw hiq hir
       rw [hpreserve i hir]
       exact hmatchFrame i his hia hiv hiac hiaw hivc hivw hiq hir
@@ -519,7 +519,7 @@ theorem entryMatchReadTM_reachesIn_frame_internal {n : ℕ}
     hrewindInput.trans hmatchInput, hreadable,
     hrewindOutput.trans hmatchOutput⟩
   · exact hfullTime
-  · simpa [entryMatchReadTM, matchTM, rewindTM, finalCfg] using hfullReach
+  · simpa [entryMatchReadTM, matchTM, rewindTM, finalCfg] using! hfullReach
   · exact (TM.phase2Wrap_halted_iff matchTM rewindTM rewindDone).2
       hrewindHalt
 

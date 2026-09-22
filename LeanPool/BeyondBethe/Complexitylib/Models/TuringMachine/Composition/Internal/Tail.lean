@@ -119,7 +119,7 @@ private theorem compositionTailTM_hoareTime_of_virtualRun_internal
           intro heq
           apply hiRaw
           apply Fin.ext
-          simpa [raw] using heq
+          simpa [raw] using! heq
         omega
       have hiUpper : i.val < nf + 1 + ng := by
         have hlt := i.isLt
@@ -127,7 +127,7 @@ private theorem compositionTailTM_hoareTime_of_virtualRun_internal
           intro heq
           apply hiVin
           apply Fin.ext
-          simpa [vin] using heq
+          simpa [vin] using! heq
         simp only [compositionTapeCount] at hlt
         omega
       let j : Fin ng := ⟨i.val - (nf + 1), by omega⟩
@@ -169,8 +169,8 @@ private theorem compositionTailTM_hoareTime_of_virtualRun_internal
   let source : Tape := { head := 1, cells := (work raw).cells }
   have hc₁Raw : c₁.work raw = source := Tape.ext hc₁Head hc₁RawCells
   have hsourceInv : Tape.StartInvariant source := by
-    exact ⟨by simpa [source] using hrawInv.1,
-      by intro j hj; simpa [source] using hrawInv.2 j hj⟩
+    exact ⟨by simpa [source] using! hrawInv.1,
+      by intro j hj; simpa [source] using! hrawInv.2 j hj⟩
   have hsourceOutput : source.HasOutput y := by
     exact (Tape.hasOutput_congr (by rfl) y).mpr hrawOutput
   have hc₁WorkStable : ∀ i, Tape.StartInvariant (c₁.work i) ∧
@@ -456,7 +456,7 @@ private theorem compositionTailTM_hoareTime_of_virtualRun_internal
             omega
           have hjlast : j = Fin.last ng := by
             apply Fin.ext
-            simpa using hjval
+            simpa using! hjval
           have hiVin : i = vin := by
             rw [← hphys, hjlast]
             exact (compositionVirtualInputIdx_eq_secondPlacedLast nf ng).symm
@@ -518,8 +518,9 @@ private theorem compositionTailTM_hoareTime_of_virtualRun_internal
     hreachFinal, ?_, ?_⟩
   · omega
   · change (seqTM tm₁ tm₂₃₄).halted cFinal
-    rw [phase2Wrap_halted_iff, phase2Wrap_halted_iff, phase2Wrap_halted_iff]
-    exact hhalt₄
+    exact (phase2Wrap_halted_iff tm₁ tm₂₃₄ c₂₃₄).mpr
+      ((phase2Wrap_halted_iff tm₂ tm₃₄ c₃₄).mpr
+        ((phase2Wrap_halted_iff tm₃ (compositionSecondTM nf tmG) C₄).mpr hhalt₄))
   · show P C₄.output
     exact hout₄
 

@@ -133,7 +133,7 @@ private theorem sndBlockTM_emit_loop :
       rw [show c.output.writeAndMove (readBackWrite c.output.read) (idleDir c.output.read)
           = c.output from by
             rw [writeAndMove_readBack c.output houtne, idleDir, ite_eq_right houtne, Tape.move]]
-      simpa using hpre
+      simpa using! hpre
   | cons bit y ih =>
       intro acc c hstate hsuf hpre
       have hread : c.input.read = Γ.ofBool bit := hsuf.read_cons
@@ -186,7 +186,7 @@ private theorem sndBlockTM_scan_loop :
       rw [show c.output.writeAndMove (readBackWrite c.output.read) (idleDir c.output.read)
           = c.output from by
             rw [writeAndMove_readBack c.output houtne, idleDir, ite_eq_right houtne, Tape.move]]
-      simpa [sndBlock] using hpre.hasOutput
+      simpa [sndBlock] using! hpre.hasOutput
   | succ fuel ih =>
       intro w hw c hstate hsuf hpre
       -- Halting helper for the malformed / end-of-input branches.
@@ -205,7 +205,7 @@ private theorem sndBlockTM_scan_loop :
           rw [show c.output.writeAndMove (readBackWrite c.output.read) (idleDir c.output.read)
               = c.output from by
                 rw [writeAndMove_readBack c.output houtne, idleDir, ite_eq_right houtne, Tape.move]]
-          simpa [sndBlock] using hpre.hasOutput
+          simpa [sndBlock] using! hpre.hasOutput
       | [false] =>
           -- scanA reads false → scanBfalse; next reads blank → done.
           have hread : c.input.read = Γ.ofBool false := hsuf.read_cons
@@ -236,7 +236,7 @@ private theorem sndBlockTM_scan_loop :
           rw [show c1.output.writeAndMove (readBackWrite c1.output.read) (idleDir c1.output.read)
               = c1.output from by
                 rw [writeAndMove_readBack c1.output houtne1, idleDir, ite_eq_right houtne1, Tape.move]]
-          simpa [sndBlock] using hpre1.hasOutput
+          simpa [sndBlock] using! hpre1.hasOutput
       | [true] =>
           have hread : c.input.read = Γ.ofBool true := hsuf.read_cons
           let c1 : Cfg 0 sndBlockTM.Q :=
@@ -266,7 +266,7 @@ private theorem sndBlockTM_scan_loop :
           rw [show c1.output.writeAndMove (readBackWrite c1.output.read) (idleDir c1.output.read)
               = c1.output from by
                 rw [writeAndMove_readBack c1.output houtne1, idleDir, ite_eq_right houtne1, Tape.move]]
-          simpa [sndBlock] using hpre1.hasOutput
+          simpa [sndBlock] using! hpre1.hasOutput
       | false :: true :: y =>
           -- separator: scanA false → scanBfalse → (reads true) → emit; copy y.
           have hreadA : c.input.read = Γ.ofBool false := hsuf.read_cons
@@ -307,7 +307,7 @@ private theorem sndBlockTM_scan_loop :
             .step hstepA (.step hstepB hreach), hhalt, ?_⟩
           have : sndBlock (false :: true :: y) = y := by simp [sndBlock, unpair?]
           rw [this]
-          simpa using hcout.hasOutput
+          simpa using! hcout.hasOutput
       | false :: false :: z =>
           have hreadA : c.input.read = Γ.ofBool false := hsuf.read_cons
           let c1 : Cfg 0 sndBlockTM.Q :=
@@ -422,7 +422,7 @@ private theorem sndBlockTM_scan_loop :
               = c1.output from by
                 rw [writeAndMove_readBack c1.output houtne1, idleDir, ite_eq_right houtne1, Tape.move]]
           have : sndBlock (true :: false :: rest) = [] := by simp [sndBlock, unpair?]
-          rw [this]; simpa using hpre1.hasOutput
+          rw [this]; simpa using! hpre1.hasOutput
 
 /-- `sndBlock` is polynomial-time, via the `sndBlockTM` scanner. -/
 theorem sndBlock_mem_FP : sndBlock ∈ FP := by
@@ -444,7 +444,7 @@ theorem sndBlock_mem_FP : sndBlock ∈ FP := by
     exact ⟨c', t + 1, by show t + 1 ≤ 2 * z.length + 3; omega,
       .step hstep1 hreach, hhalt, hcout⟩
   · have hn : (fun m : ℕ => 2 * m) =O ((· ^ 1) : ℕ → ℕ) := by
-      simpa [pow_one] using (BigO.refl (fun m : ℕ => m)).const_mul_left 2
+      simpa [pow_one] using! (BigO.refl (fun m : ℕ => m)).const_mul_left 2
     exact BigO.add hn (BigO.const_le_pow 3 1)
 
 end Cobham

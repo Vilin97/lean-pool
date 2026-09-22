@@ -81,10 +81,10 @@ private theorem readableEntryMatch_rebase_after_copy
   have hsourceNeValue : tapes.source ≠ tapes.value := tapes.ne (by decide)
   have haddressContent :
       (copiedWork tapes.address).HasBinaryContent entry.1.bits := by
-    simpa only [Tape.HasBinaryContent, haddressCells] using hmatch.address
+    simpa only [Tape.HasBinaryContent, haddressCells] using! hmatch.address
   have hvalueContent :
       (copiedWork tapes.value).HasBinaryContent entry.2.bits := by
-    simpa only [Tape.HasBinaryContent, hvalueCells] using hmatch.value.2
+    simpa only [Tape.HasBinaryContent, hvalueCells] using! hmatch.value.2
   constructor
   · rw [hframe tapes.source hsourceNeAddress hsourceNeValue]
     exact hmatch.source
@@ -171,10 +171,10 @@ theorem entryMissCopyTM_hoareTime_frame_internal
     hencode inp₀ matchedWork out₀ ⟨rfl, rfl, rfl⟩
   have hencodedWork : encoded.work = copiedWork := by
     apply entryMissCopiedWork_eq tapes entry matchedWork encoded.work
-    · simpa using haddressCells
-    · simpa using haddressHead
-    · simpa using hvalueCells
-    · simpa using hvalueHead
+    · simpa using! haddressCells
+    · simpa using! haddressHead
+    · simpa using! hvalueCells
+    · simpa using! hvalueHead
     · intro i hia hiv
       exact hencodedFrame i hia hiv
   have hmatchSelf :
@@ -183,13 +183,13 @@ theorem entryMissCopyTM_hoareTime_frame_internal
         ReadableEntryMatch tapes entry rest queryBits encoded.work encoded.work :=
       readableEntryMatch_rebase_after_copy tapes entry rest queryBits
         initialWork matchedWork encoded.work hmatch
-        (by simpa using haddressSuffix) (by simpa using haddressCells)
-        (by simpa using hvalueSuffix)
-        (by simpa using hvalueCells) (by simpa using hvalueHead)
+        (by simpa using! haddressSuffix) (by simpa using! haddressCells)
+        (by simpa using! hvalueSuffix)
+        (by simpa using! hvalueCells) (by simpa using! hvalueHead)
         (by
           intro i hia hiv
           exact hencodedFrame i hia hiv)
-    simpa [hencodedWork] using hmatchCopied
+    simpa [hencodedWork] using! hmatchCopied
   have hencodedInputParked : TM.Parked encoded.input := by
     rw [hencodedInput]
     exact hinput
@@ -201,7 +201,7 @@ theorem entryMissCopyTM_hoareTime_frame_internal
     parked_of_binaryPrefix hencodedOutput
   have hcleanup := entryMissCleanupTM_hoareTime_frame tapes entry rest queryBits
     copiedWork copiedWork encoded.input encoded.output hmatchSelf
-    (by simpa [hencodedInput] using hinput) hencodedOutputParked
+    (by simpa [hencodedInput] using! hinput) hencodedOutputParked
   obtain ⟨cleaned, cleanupTime, hcleanupTime, hcleanupReach, hcleanupHalt,
       hcleanedInput, hready, hcleanedOutput⟩ :=
     hcleanup encoded.input copiedWork encoded.output ⟨rfl, rfl, rfl⟩
@@ -220,7 +220,7 @@ theorem entryMissCopyTM_hoareTime_frame_internal
         output := TM.transitionTape encoded.output }
       cleaned := by
     simpa only [hinputTransition, hworkTransition', houtputTransition]
-      using hcleanupReach
+      using! hcleanupReach
   have hreach := TM.seqTM_reachesIn_of_reachesIn
     (rewindEntryEncodeTM tapes.encodeTapes) (entryMissCleanupTM tapes)
     hencodeReach hencodeHalt hcleanupReach'
@@ -236,8 +236,8 @@ theorem entryMissCopyTM_hoareTime_frame_internal
     omega
   · change (entryMissCopyTM tapes).halted finalCfg
     unfold entryMissCopyTM
-    rw [TM.phase2Wrap_halted_iff]
-    exact hcleanupHalt
+    exact (TM.phase2Wrap_halted_iff (rewindEntryEncodeTM tapes.encodeTapes)
+    (entryMissCleanupTM tapes) cleaned).mpr hcleanupHalt
   · have hreadyGlobal :
         EntryScanReady tapes rest queryBits initialWork cleaned.work := by
       refine ⟨hready.source, hready.address, hready.addressStart,
@@ -255,7 +255,7 @@ theorem entryMissCopyTM_hoareTime_frame_internal
           haddressCounter haddressWidth hvalueCounter hvalueWidth hquery
           hresult))
     refine ⟨?_, hreadyGlobal, ?_⟩
-    · simpa [finalCfg] using hcleanedInput.trans hencodedInput
+    · simpa [finalCfg] using! hcleanedInput.trans hencodedInput
     · change cleaned.output.HasBinaryPrefix (emitted ++ Entry.encode entry)
       rw [hcleanedOutput]
       exact hencodedOutput

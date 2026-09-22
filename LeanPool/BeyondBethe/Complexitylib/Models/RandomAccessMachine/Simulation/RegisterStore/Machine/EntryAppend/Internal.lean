@@ -78,16 +78,16 @@ theorem entryAppendRestoreTM_hoareTime_frame_internal
     hencode inp₀ readyWork out₀ ⟨rfl, rfl, rfl⟩
   have hqueryCells' : (encoded.work tapes.entry.query).cells =
       (readyWork tapes.entry.query).cells := by
-    simpa using hqueryCells
+    simpa using! hqueryCells
   have hqueryEncodedHead' : (encoded.work tapes.entry.query).head =
       address.bits.length + 1 := by
-    simpa using hqueryEncodedHead
+    simpa using! hqueryEncodedHead
   have hreplacementCells' : (encoded.work tapes.replacement).cells =
       (readyWork tapes.replacement).cells := by
-    simpa using hreplacementCells
+    simpa using! hreplacementCells
   have hreplacementEncodedHead' :
       (encoded.work tapes.replacement).head = newValue.bits.length + 1 := by
-    simpa using hreplacementEncodedHead
+    simpa using! hreplacementEncodedHead
   have hencodedInputParked : TM.Parked encoded.input := by
     rw [hencodedInput]
     exact hinput
@@ -97,15 +97,15 @@ theorem entryAppendRestoreTM_hoareTime_frame_internal
     intro i
     by_cases hiq : i = tapes.entry.query
     · subst i
-      exact parked_of_binarySuffix (by simpa using hquerySuffix)
+      exact parked_of_binarySuffix (by simpa using! hquerySuffix)
     · by_cases hir : i = tapes.replacement
       · subst i
-        exact parked_of_binarySuffix (by simpa using hreplacementSuffix)
+        exact parked_of_binarySuffix (by simpa using! hreplacementSuffix)
       · rw [hencodedFrame i hiq hir]
         exact hready.parked i
   have hqueryContent :
       (encoded.work tapes.entry.query).HasBinaryContent address.bits := by
-    simpa only [Tape.HasBinaryContent, hqueryCells'] using hready.query.2
+    simpa only [Tape.HasBinaryContent, hqueryCells'] using! hready.query.2
   have hqueryStart :
       (encoded.work tapes.entry.query).cells 0 = Γ.start := by
     rw [hqueryCells']
@@ -130,7 +130,7 @@ theorem entryAppendRestoreTM_hoareTime_frame_internal
       (queryRewound.work tapes.replacement).HasBinaryContent newValue.bits := by
     rw [hqueryFrame tapes.replacement
       (tapes.replacement_ne 7)]
-    simpa only [Tape.HasBinaryContent, hreplacementCells'] using
+    simpa only [Tape.HasBinaryContent, hreplacementCells'] using!
       hreplacement.2.hasBinaryContent
   have hreplacementStart :
       (queryRewound.work tapes.replacement).cells 0 = Γ.start := by
@@ -199,7 +199,7 @@ theorem entryAppendRestoreTM_hoareTime_frame_internal
           output := TM.transitionTape queryRewound.output }
         restored := by
     simpa only [hqueryInputTransition, hqueryWorkTransition,
-      hqueryOutputTransition] using hreplacementReach
+      hqueryOutputTransition] using! hreplacementReach
   have htailReach := TM.seqTM_reachesIn_of_reachesIn
     (TM.rewindWorkTM tapes.entry.query) (TM.rewindWorkTM tapes.replacement)
     hqueryReach hqueryHalt hreplacementReach'
@@ -227,7 +227,7 @@ theorem entryAppendRestoreTM_hoareTime_frame_internal
           output := TM.transitionTape encoded.output }
         tailFinal := by
     simpa only [hencodedInputTransition, hencodedWorkTransition,
-      hencodedOutputTransition] using htailReach
+      hencodedOutputTransition] using! htailReach
   have hreach := TM.seqTM_reachesIn_of_reachesIn
     (rewindEntryEncodeTM tapes.appendEncodeTapes)
     (TM.seqTM (TM.rewindWorkTM tapes.entry.query)
@@ -243,8 +243,9 @@ theorem entryAppendRestoreTM_hoareTime_frame_internal
     omega
   · change (entryAppendRestoreTM tapes).halted finalCfg
     unfold entryAppendRestoreTM
-    rw [TM.phase2Wrap_halted_iff]
-    exact htailHalt
+    exact (TM.phase2Wrap_halted_iff (rewindEntryEncodeTM tapes.appendEncodeTapes)
+    (TM.seqTM (TM.rewindWorkTM tapes.entry.query)
+      (TM.rewindWorkTM tapes.replacement)) tailFinal).mpr htailHalt
   · refine ⟨?_, ?_, ?_⟩
     · change restored.input = inp₀
       exact hreplacementInput.trans (hqueryInput.trans hencodedInput)

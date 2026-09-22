@@ -122,7 +122,7 @@ theorem decisionTimeBound_mono_steps_internal (tm : TM n)
   have hwidth : wordWidth tm (marshalBound n inputLength + steps) ≤
       wordWidth tm (marshalBound n inputLength + larger) := by
     have hsize := Nat.size_le_size hword
-    simpa [wordWidth, bitlen] using Nat.add_le_add_right hsize 1
+    simpa [wordWidth, bitlen] using! Nat.add_le_add_right hsize 1
   have hfactor : (steps + 1) * runFactor tm ≤
       (larger + 1) * runFactor tm :=
     Nat.mul_le_mul_right _ (Nat.add_le_add_right hle 1)
@@ -249,7 +249,7 @@ theorem marshalConstants_measured_internal (tm : TM n) (x : List Bool) :
     have hfinal := hmeasured.2
     exact ⟨hfinal.index_lt, hfinal.value_le,
       fun index _ => le_trans (hfinal.value_le index) hbaseWord⟩
-  simpa [marshalStart] using And.intro hmeasured.1
+  simpa [marshalStart] using! And.intro hmeasured.1
     (And.intro hmarshal (marshalStart_invariant_internal n x))
 
 private theorem marshalLoopOps_envelopeChain (n : ℕ) (x : List Bool)
@@ -521,15 +521,15 @@ private theorem marshalLoop_measured_aux (n : ℕ) (x : List Bool)
           (registerBound n (marshalBound n x.length + 1))
           (marshalBound n x.length) store := by
         have hp : processed = x.length := by omega
-        simpa [marshalBound, hp] using henvelope
+        simpa [marshalBound, hp] using! henvelope
       have hrun := Structured.Internal.MeasuredRuns.whileZeroEnvelope
         (body := .basics (marshalLoopOps n)) hzero hglobal
       refine ⟨store, ?_, hinvariant, ?_⟩
       · simpa [marshalLoop, marshalLoopSteps, marshalLoopTimeBound,
           marshalWidth, marshalSpaceBound,
           Structured.Internal.valueWidth,
-          Structured.Internal.envelopeSpace] using hrun
-      · simpa using henvelope
+          Structured.Internal.envelopeSpace] using! hrun
+      · simpa using! henvelope
   | succ cursor ih =>
       have hpositive : 0 < cursor + 1 := by omega
       have hnonzero : store stateReg ≠ 0 := by
@@ -549,12 +549,12 @@ private theorem marshalLoop_measured_aux (n : ℕ) (x : List Bool)
       have hmiddleInvariant : MarshalInvariant n x cursor middle := by
         have hstep := marshalLoopOps_invariant_internal n x (cursor + 1)
           store hpositive hinvariant
-        simpa [middle] using hstep
+        simpa [middle] using! hstep
       have hmiddleEnvelope : Structured.Internal.StoreEnvelope
           (registerBound n (marshalBound n x.length + 1))
           (marshalBaseBound n x.length + (processed + 1)) middle := by
         have hfinal := hchain.final
-        simpa [middle, Nat.add_assoc] using hfinal
+        simpa [middle, Nat.add_assoc] using! hfinal
       obtain ⟨final, hloop, hfinalInvariant, hfinalEnvelope⟩ :=
         ih (processed := processed + 1) (store := middle)
           (by omega) hmiddleInvariant hmiddleEnvelope
@@ -565,11 +565,11 @@ private theorem marshalLoop_measured_aux (n : ℕ) (x : List Bool)
       have hrun := Structured.Internal.MeasuredRuns.whileNonzeroEnvelope
         hnonzero hinitialGlobal hbody hloop
       refine ⟨final, ?_, hfinalInvariant, ?_⟩
-      · convert hrun using 1
+      · convert! hrun using 1
         all_goals simp [marshalLoopSteps, marshalWidth,
           Structured.Internal.valueWidth, Nat.succ_mul]
         all_goals ring
-      · convert hfinalEnvelope using 1
+      · convert! hfinalEnvelope using 1
         omega
 
 /-- The backward-copy loop has an exact source-step count, linear logarithmic
@@ -587,11 +587,11 @@ theorem marshalLoop_measured_internal {tm : TM n} (x : List Bool) :
     marshalLoop_measured_aux n x (processed := 0) (store := marshalStart n x)
       (by simp) hinvariant hmarshal.storeEnvelope
   refine ⟨final, ?_, hfinalInvariant, ?_⟩
-  · simpa using hrun
+  · simpa using! hrun
   · apply hfinalEnvelope.mono le_rfl
       (show marshalBaseBound n x.length + 0 + x.length ≤
           wordBound tm (marshalBound n x.length) by
-        simpa [marshalBound] using
+        simpa [marshalBound] using!
           (marshalValue_le_wordBound tm (processed := x.length) le_rfl))
 
 /-- The verdict extractor stays in the core envelope and has the standard
@@ -619,7 +619,7 @@ theorem extractVerdict_measured_internal {tm : TM n} {bound : ℕ}
     apply henvelope.execBasic
     · exact lt_trans hrange.2.2.2.2.1.2
         (control_lt_registerBound n bound)
-    · simpa [Structured.Internal.Basic.writeValue] using haddressValue
+    · simpa [Structured.Internal.Basic.writeValue] using! haddressValue
   have hloaded : StepEnvelope tm bound loaded := by
     apply haddressed.execBasic
     · simp [stateReg, registerBound, cellReg, outputTape, cellBase]
@@ -629,7 +629,7 @@ theorem extractVerdict_measured_internal {tm : TM n} {bound : ℕ}
   have honed : StepEnvelope tm bound oned := by
     apply hloaded.execBasic
     · exact lt_trans hrange.2.1.2 (control_lt_registerBound n bound)
-    · simpa [Structured.Internal.Basic.writeValue] using honeBound
+    · simpa [Structured.Internal.Basic.writeValue] using! honeBound
   have hfinal : StepEnvelope tm bound final := by
     apply honed.execBasic
     · simp [stateReg, registerBound, cellReg, outputTape, cellBase]
@@ -637,7 +637,7 @@ theorem extractVerdict_measured_internal {tm : TM n} {bound : ℕ}
   have hchain : Structured.Internal.Basic.EnvelopeChain
       (registerBound n (bound + 1)) (wordBound tm bound)
       (extractVerdictOps n) store := by
-    simpa [extractVerdictOps, addressed, loaded, oned, final] using
+    simpa [extractVerdictOps, addressed, loaded, oned, final] using!
       And.intro henvelope
         (And.intro haddressed (And.intro hloaded (And.intro honed hfinal)))
   have hmeasured := Structured.Internal.MeasuredRuns.basicsEnvelopeChain
@@ -645,9 +645,9 @@ theorem extractVerdict_measured_internal {tm : TM n} {bound : ℕ}
   have hverdict := extractVerdict_exec_internal hrepresents
   refine ⟨?_, hfinal, ?_⟩
   · simpa [wordWidth, spaceBound, Structured.Internal.valueWidth,
-      Structured.Internal.envelopeSpace] using hmeasured.1
+      Structured.Internal.envelopeSpace] using! hmeasured.1
   · obtain ⟨_cost, _space, _hexec, hvalue⟩ := hverdict
-    simpa [final] using hvalue
+    simpa [final] using! hvalue
 
 private theorem repairBit_measured_internal {tm : TM n} {bound valueLimit : ℕ}
     {entry : ℕ × ℕ} {store : Structured.Store}
@@ -675,20 +675,20 @@ private theorem repairBit_measured_internal {tm : TM n} {bound valueLimit : ℕ}
           (control_lt_registerBound n bound)
       · exact henvelope.index_lt index (by
           simpa [addressed, Structured.Basic.exec,
-            Function.update_of_ne heq] using hnonzero)
+            Function.update_of_ne heq] using! hnonzero)
     · intro index
       by_cases heq : index = addressReg n
       · subst index
-        simpa [addressed, Structured.Basic.exec] using
+        simpa [addressed, Structured.Basic.exec] using!
           le_trans haddressBound hwordLimit
       · simpa [addressed, Structured.Basic.exec,
-          Function.update_of_ne heq] using henvelope.value_le index
+          Function.update_of_ne heq] using! henvelope.value_le index
     · intro index hne
       by_cases heq : index = addressReg n
       · subst index
-        simpa [addressed, Structured.Basic.exec] using haddressBound
+        simpa [addressed, Structured.Basic.exec] using! haddressBound
       · simpa [addressed, Structured.Basic.exec,
-          Function.update_of_ne heq] using henvelope.value_le_of_ne index hne
+          Function.update_of_ne heq] using! henvelope.value_le_of_ne index hne
   have haddressedStore := haddressedMarshal.storeEnvelope
   have haddress : addressed (addressReg n) =
       cellReg n (inputTape n) entry.1 := by
@@ -706,7 +706,7 @@ private theorem repairBit_measured_internal {tm : TM n} {bound valueLimit : ℕ}
           (control_lt_registerBound n bound)
       · exact haddressedMarshal.index_lt index (by
           simpa [loaded, Structured.Basic.exec,
-            Function.update_of_ne heq] using hnonzero)
+            Function.update_of_ne heq] using! hnonzero)
     · intro index
       by_cases heq : index = valueReg n
       · subst index
@@ -714,7 +714,7 @@ private theorem repairBit_measured_internal {tm : TM n} {bound valueLimit : ℕ}
         exact haddressedMarshal.value_le_of_ne
           (addressed (addressReg n)) haddressNeValue
       · simpa [loaded, Structured.Basic.exec,
-          Function.update_of_ne heq] using
+          Function.update_of_ne heq] using!
           haddressedMarshal.value_le_of_ne index heq
   have hloadedLarge := hloadedEnvelope.mono le_rfl hwordLimit
   have hsetupChain : Structured.Internal.Basic.EnvelopeChain
@@ -742,7 +742,7 @@ private theorem repairBit_measured_internal {tm : TM n} {bound valueLimit : ℕ}
       rw [ite_eq_left hzero]
     refine ⟨3, ?_, ?_⟩
     · rw [hrepairStore]
-      simpa [repairBit] using hrun'
+      simpa [repairBit] using! hrun'
     · rw [hrepairStore]
       exact hloadedEnvelope
   · let valued := (Structured.Basic.imm (valueReg n) (entry.2 + 1)).exec loaded
@@ -754,7 +754,7 @@ private theorem repairBit_measured_internal {tm : TM n} {bound valueLimit : ℕ}
       apply hloadedEnvelope.execBasic
       · exact lt_trans hrange.2.2.2.2.2.1.2
           (control_lt_registerBound n bound)
-      · simpa [Structured.Internal.Basic.writeValue] using hsmall
+      · simpa [Structured.Internal.Basic.writeValue] using! hsmall
     have hvaluedAddress : valued (addressReg n) =
         cellReg n (inputTape n) entry.1 := by
       simp [valued, loaded, addressed, Structured.Basic.exec, addressReg,
@@ -796,7 +796,7 @@ private theorem repairBit_measured_internal {tm : TM n} {bound valueLimit : ℕ}
       rfl
     refine ⟨6, ?_, ?_⟩
     · rw [hrepairStore]
-      simpa [repairBit] using hrun'
+      simpa [repairBit] using! hrun'
     · rw [hrepairStore]
       exact hfinal
 
@@ -817,7 +817,7 @@ private theorem repairCaptured_fromStep_measured {tm : TM n}
   | nil =>
       have hskip := Structured.Internal.MeasuredRuns.skipEnvelope
         (henvelope.mono le_rfl hwordLimit)
-      exact ⟨store, 0, by simpa [repairCaptured] using hskip, rfl, henvelope⟩
+      exact ⟨store, 0, by simpa [repairCaptured] using! hskip, rfl, henvelope⟩
   | cons entry rest ih =>
       have hentry := hentries entry (by simp)
       obtain ⟨firstSteps, hfirst, hfirstEnvelope⟩ :=
@@ -829,10 +829,10 @@ private theorem repairCaptured_fromStep_measured {tm : TM n}
         intro candidate hmem
         exact hentries candidate (by simp [hmem])
       obtain ⟨final, restSteps, hrest, hrestStore, hfinalEnvelope⟩ :=
-        ih hrestEntries (by simpa [first] using hfirstEnvelope)
+        ih hrestEntries (by simpa [first] using! hfirstEnvelope)
       have hrun := hfirst.seq hrest
       refine ⟨final, firstSteps + restSteps, ?_, ?_, hfinalEnvelope⟩
-      · convert hrun using 1
+      · convert! hrun using 1
         simp only [List.length_cons]
         ring
       · simp [repairStore] at hrestStore ⊢
@@ -863,7 +863,7 @@ theorem repairCaptured_measured_internal {tm : TM n} {bound valueLimit : ℕ}
     repairCaptured_fromStep_measured rest hrestEntries hfirstEnvelope hwordLimit
   have hrun := hfirst.seq hrest
   refine ⟨final, firstSteps + restSteps, ?_, ?_, hfinalEnvelope⟩
-  · convert hrun using 1
+  · convert! hrun using 1
     simp only [List.length_cons]
     ring
   · simp [repairStore] at hrestStore ⊢
@@ -886,7 +886,7 @@ private theorem immWrites_envelopeChain {tm : TM n} {bound : ℕ}
           ((Structured.Basic.imm write.1 write.2).exec store) := by
         apply henvelope.execBasic
         · exact hwrite.1
-        · simpa [Structured.Internal.Basic.writeValue] using hwrite.2
+        · simpa [Structured.Internal.Basic.writeValue] using! hwrite.2
       have hrestFits : ∀ candidate, candidate ∈ rest →
           candidate.1 < registerBound n (bound + 1) ∧
             candidate.2 ≤ wordBound tm bound := by
@@ -934,9 +934,9 @@ theorem initializeConfigOps_measured_internal {tm : TM n} {bound : ℕ}
       initializeConfigWrite_fits tm bound hmem) henvelope
   have hmeasured := Structured.Internal.MeasuredRuns.basicsEnvelopeChain
     (initializeConfigOps tm) store (by
-      simpa [initializeConfigOps] using hchain)
+      simpa [initializeConfigOps] using! hchain)
   simpa [wordWidth, spaceBound, Structured.Internal.valueWidth,
-    Structured.Internal.envelopeSpace] using hmeasured
+    Structured.Internal.envelopeSpace] using! hmeasured
 
 private theorem captureValues_eq_reverse_append (store : Structured.Store)
     (regs : List ℕ) (captured : List (ℕ × ℕ)) :
@@ -999,7 +999,7 @@ private theorem marshalSpace_le_spaceBound (tm : TM n)
   have hvalue := marshalValue_le_wordBound tm
     (inputLength := inputLength) (processed := inputLength) le_rfl
   have hsize := Nat.size_le_size (by
-    simpa [marshalBound] using hvalue)
+    simpa [marshalBound] using! hvalue)
   simp only [marshalSpaceBound, spaceBound, bitlen]
   exact Nat.mul_le_mul_left _ (Nat.add_le_add_left hsize _)
 
@@ -1036,7 +1036,7 @@ theorem marshalLeaf_measured_internal (tm : TM n) (x : List Bool) :
       ((capturedInput n x).length *
         (27 * wordWidth tm (marshalBound n x.length)))
       (spaceBound tm (marshalBound n x.length)) := by
-    simpa [wordWidth, spaceBound, Structured.Internal.envelopeSpace] using
+    simpa [wordWidth, spaceBound, Structured.Internal.envelopeSpace] using!
       hrepair
   subst repaired
   let final := Structured.Basic.execList (initializeConfigOps tm)
@@ -1050,13 +1050,13 @@ theorem marshalLeaf_measured_internal (tm : TM n) (x : List Bool) :
     (marshalConstants n).length +
       (marshalLoopSteps n x.length +
         (repairSteps + (initializeConfigOps tm).length)), ?_, ?_, ?_⟩
-  · convert hrun using 1
+  · convert! hrun using 1
     simp [marshalLeafTimeBound, marshalBaseWidth,
       Structured.Internal.valueWidth, capturedInput,
       captureValues_eq_reverse_append]
     ring
-  · simpa [final, initializeStore] using hrepresents
-  · simpa [final] using hinitializeEnvelope
+  · simpa [final, initializeStore] using! hrepresents
+  · simpa [final] using! hinitializeEnvelope
 
 private theorem captureInput_measured_of_leaf {tm : TM n} (x : List Bool)
     (regs : List ℕ) (captured : List (ℕ × ℕ))
@@ -1074,7 +1074,7 @@ private theorem captureInput_measured_of_leaf {tm : TM n} (x : List Bool)
         (spaceBound tm (marshalBound n x.length)) := by
   induction regs generalizing captured with
   | nil =>
-      exact ⟨leafSteps, by simpa [captureInput, captureValues] using hleaf⟩
+      exact ⟨leafSteps, by simpa [captureInput, captureValues] using! hleaf⟩
   | cons reg rest ih =>
       have hrestBits : ∀ candidate, candidate ∈ rest →
           initRegs x candidate = 0 ∨ initRegs x candidate = 1 := by
@@ -1109,13 +1109,13 @@ private theorem captureInput_measured_of_leaf {tm : TM n} (x : List Bool)
                 wordWidth tm (marshalBound n x.length) + leafCost := by ring)
         exact ⟨restSteps + 1, by
           simpa [captureInput, hzero, spaceBound,
-            Structured.Internal.envelopeSpace] using hweakened⟩
+            Structured.Internal.envelopeSpace] using! hweakened⟩
       · have hnonzero : initRegs x reg ≠ 0 := by omega
         have hbranch := Structured.Internal.MeasuredRuns.ifNonzeroEnvelope
           (onZero := captureInput tm rest ((reg, 0) :: captured))
           hnonzero henvelope hrest
         refine ⟨restSteps + 2, ?_⟩
-        convert hbranch using 1
+        convert! hbranch using 1
         all_goals simp [captureInput, hone, wordWidth,
           Structured.Internal.valueWidth]
         all_goals ring
@@ -1136,7 +1136,7 @@ theorem marshalInput_measured_internal (tm : TM n) (x : List Bool) :
         (captureValues (initRegs x) (captureRegs n) []))
       (initRegs x) final leafSteps (marshalLeafTimeBound tm x.length)
       (spaceBound tm (marshalBound n x.length)) := by
-    simpa [capturedInput] using hleaf
+    simpa [capturedInput] using! hleaf
   have hbits : ∀ reg, reg ∈ captureRegs n →
       initRegs x reg = 0 ∨ initRegs x reg = 1 := by
     intro reg hmem
@@ -1147,7 +1147,7 @@ theorem marshalInput_measured_internal (tm : TM n) (x : List Bool) :
     (captureRegs n) [] hbits hselected
   refine ⟨final, steps, ?_, hrepresents, henvelope⟩
   simpa [marshalInput, marshalTimeBound, Nat.add_comm, Nat.add_left_comm,
-    Nat.add_assoc] using hrun
+    Nat.add_assoc] using! hrun
 
 /-- End-to-end public-ABI execution with concrete time and space bounds. -/
 theorem decisionProgram_measured_internal {tm : TM n} {steps : ℕ}
@@ -1188,7 +1188,7 @@ theorem decisionProgram_measured_internal {tm : TM n} {steps : ℕ}
     marshalSteps +
       (runSteps tm steps (tm.initCfg x) + (extractVerdictOps n).length),
     ?_, hverdict⟩
-  convert hrun using 1
+  convert! hrun using 1
   simp [decisionTimeBound]
   ring
 
@@ -1215,11 +1215,11 @@ theorem compiledDecision_resourceBound_internal {tm : TM n} {steps : ℕ}
   have hcompiled := Structured.Exec.compile_correct hexec
   refine ⟨final, sourceSteps, cost, space, hexec, hcost, hspace, ?_, ?_, ?_,
     ?_, hverdict⟩
-  · simpa [compiledDecision, initCfg] using hcompiled.1
-  · simpa [compiledDecision, initCfg] using
+  · simpa [compiledDecision, initCfg] using! hcompiled.1
+  · simpa [compiledDecision, initCfg] using!
       Structured.Exec.compile_halted hexec
-  · simpa [compiledDecision, initCfg] using hcompiled.2.1
-  · simpa [compiledDecision, initCfg] using hcompiled.2.2
+  · simpa [compiledDecision, initCfg] using! hcompiled.2.1
+  · simpa [compiledDecision, initCfg] using! hcompiled.2.2
 
 end Sparse
 

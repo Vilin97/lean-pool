@@ -48,7 +48,7 @@ private theorem readableEntryMatch_rebase_after_address_emit
     ReadableEntryMatch tapes.entry entry rest queryBits readyWork readyWork := by
   have haddressContent :
       (readyWork tapes.entry.address).HasBinaryContent entry.1.bits := by
-    simpa only [Tape.HasBinaryContent, haddressCells] using hmatch.address
+    simpa only [Tape.HasBinaryContent, haddressCells] using! hmatch.address
   constructor
   · rw [hframe tapes.entry.source (tapes.entry.ne (by decide))]
     exact hmatch.source
@@ -143,7 +143,7 @@ theorem entryReplaceCleanupTM_hoareTime_frame_internal
           (matchedWork tapes.replacement).head ≤ 1 := by
         rw [hreplacement.2.1]
         exact ⟨le_rfl, le_rfl⟩
-      simpa using hhead)
+      simpa using! hhead)
     hinput (fun i _ _ => hmatch.parked i) houtput
   obtain ⟨encoded, encodeTime, hencodeTime, hencodeReach, hencodeHalt,
       hencodedInput, haddressSuffix, haddressCells, haddressHead,
@@ -169,19 +169,19 @@ theorem entryReplaceCleanupTM_hoareTime_frame_internal
       (encoded.work tapes.replacement).HasBinaryContent newValue.bits := by
     have hcells : (encoded.work tapes.replacement).cells =
         (matchedWork tapes.replacement).cells := by
-      simpa using hreplacementCells
-    simpa only [Tape.HasBinaryContent, hcells] using
+      simpa using! hreplacementCells
+    simpa only [Tape.HasBinaryContent, hcells] using!
       hreplacement.2.hasBinaryContent
   have hreplacementStart :
       (encoded.work tapes.replacement).cells 0 = Γ.start := by
     have hcells : (encoded.work tapes.replacement).cells =
         (matchedWork tapes.replacement).cells := by
-      simpa using hreplacementCells
+      simpa using! hreplacementCells
     rw [hcells]
     exact hreplacement.1
   have hreplacementHead' : (encoded.work tapes.replacement).head =
       newValue.bits.length + 1 := by
-    simpa using hreplacementHead
+    simpa using! hreplacementHead
   have hrewind := TM.rewindBinaryWorkTM_hoareTime_frame tapes.replacement
     newValue.bits (newValue.bits.length + 1) encoded.input encoded.work
     encoded.output hreplacementContent hreplacementStart
@@ -202,10 +202,10 @@ theorem entryReplaceCleanupTM_hoareTime_frame_internal
     apply entryReplaceReadyWork_eq tapes entry matchedWork rewound.work
     · rw [hrewoundFrame tapes.entry.address
         (Ne.symm (tapes.replacement_ne 1))]
-      simpa using haddressCells
+      simpa using! haddressCells
     · rw [hrewoundFrame tapes.entry.address
         (Ne.symm (tapes.replacement_ne 1))]
-      simpa using haddressHead
+      simpa using! haddressHead
     · intro i hia
       by_cases hir : i = tapes.replacement
       · subst i
@@ -218,18 +218,18 @@ theorem entryReplaceCleanupTM_hoareTime_frame_internal
       (by
         rw [hrewoundFrame tapes.entry.address
           (Ne.symm (tapes.replacement_ne 1))]
-        simpa using haddressSuffix)
+        simpa using! haddressSuffix)
       (by
         rw [hrewoundFrame tapes.entry.address
           (Ne.symm (tapes.replacement_ne 1))]
-        simpa using haddressCells)
+        simpa using! haddressCells)
       (by
         intro i hia
         by_cases hir : i = tapes.replacement
         · subst i
           exact hreplacementRestored
         · exact (hrewoundFrame i hir).trans (hencodedFrame i hia hir))
-    simpa [hreadyWorkEq] using hmatchReady
+    simpa [hreadyWorkEq] using! hmatchReady
   have hrewoundInputParked : TM.Parked rewound.input := by
     rw [hrewoundInput, hencodedInput]
     exact hinput
@@ -262,7 +262,7 @@ theorem entryReplaceCleanupTM_hoareTime_frame_internal
         output := TM.transitionTape rewound.output }
       cleaned := by
     simpa only [hrewindInputTransition, hrewindWorkTransition',
-      hrewindOutputTransition] using hcleanupReach
+      hrewindOutputTransition] using! hcleanupReach
   have htailReach := TM.seqTM_reachesIn_of_reachesIn
     (TM.rewindWorkTM tapes.replacement) (entryMissCleanupTM tapes.entry)
     hrewindReach hrewindHalt hcleanupReach'
@@ -290,7 +290,7 @@ theorem entryReplaceCleanupTM_hoareTime_frame_internal
           output := TM.transitionTape encoded.output }
         tailFinal := by
     simpa only [hencodedInputTransition, hencodedWorkTransition,
-      hencodedOutputTransition] using htailReach
+      hencodedOutputTransition] using! htailReach
   have hreach := TM.seqTM_reachesIn_of_reachesIn
     (rewindEntryEncodeTM tapes.encodeTapes)
     (TM.seqTM (TM.rewindWorkTM tapes.replacement)
@@ -310,8 +310,9 @@ theorem entryReplaceCleanupTM_hoareTime_frame_internal
     omega
   · change (entryReplaceCleanupTM tapes).halted finalCfg
     unfold entryReplaceCleanupTM
-    rw [TM.phase2Wrap_halted_iff]
-    exact htailHalt
+    exact (TM.phase2Wrap_halted_iff (rewindEntryEncodeTM tapes.encodeTapes)
+    (TM.seqTM (TM.rewindWorkTM tapes.replacement)
+      (entryMissCleanupTM tapes.entry)) tailFinal).mpr htailHalt
   · have hreadyGlobal :
         EntryScanReady tapes.entry rest queryBits initialWork cleaned.work := by
       refine ⟨hready.source, hready.address, hready.addressStart,
