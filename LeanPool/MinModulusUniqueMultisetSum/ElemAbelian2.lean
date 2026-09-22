@@ -7,7 +7,8 @@ module
 
 public import Mathlib.Algebra.Field.ZMod
 public import Mathlib.Algebra.Group.Action.Pi
-import Mathlib.RingTheory.PicardGroup
+import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+import Mathlib.GroupTheory.GroupAction.Ring
 
 /-!
 # Elementary abelian 2-groups attain the optimal bound
@@ -127,69 +128,23 @@ private lemma eq_zero_of_sum_eq_zero {n k : ℕ} (g : Fin n → (Fin k → ZMod 
       exact h_le
     omega
   have h_sum_g : ∑ j, ((m j : ℕ) : ZMod 2) • g j = ∑ j, g j := by
-    have eq1 : ∑ j, ((m j : ℕ) : ZMod 2) • g j
-        = ∑ j ∈ S, ((m j : ℕ) : ZMod 2) • g j
-          + ∑ j ∈ Finset.univ \ S, ((m j : ℕ) : ZMod 2) • g j :=
-      (Finset.sum_add_sum_compl S _).symm
-    have eq2 : ∑ j ∈ S, ((m j : ℕ) : ZMod 2) • g j
-        = ∑ j ∈ S₁, ((m j : ℕ) : ZMod 2) • g j
-          + ∑ j ∈ S \ S₁, ((m j : ℕ) : ZMod 2) • g j := by
-      rw [← Finset.sum_sdiff hS₁_sub, add_comm]
-    rw [eq1, eq2]
-    have hs1 : ∑ j ∈ S₁, ((m j : ℕ) : ZMod 2) • g j = 0 := by
-      apply Finset.sum_eq_zero
-      intro j hj
-      dsimp [m]
-      rw [ite_eq_left hj]
-      have : ((2 : ℕ) : ZMod 2) = 0 := CharP.cast_eq_zero (ZMod 2) 2
-      rw [this, zero_smul]
-    have hs2 : ∑ j ∈ S \ S₁, ((m j : ℕ) : ZMod 2) • g j = 0 := by
-      apply Finset.sum_eq_zero
-      intro j hj
-      dsimp [m]
-      have h1 : j ∉ S₁ := (Finset.mem_sdiff.mp hj).2
-      rw [ite_eq_right h1, ite_eq_left hj]
-      have : ((0 : ℕ) : ZMod 2) = 0 := Nat.cast_zero
-      rw [this, zero_smul]
-    have hs3 : ∑ j ∈ Finset.univ \ S, ((m j : ℕ) : ZMod 2) • g j
-        = ∑ j ∈ Finset.univ \ S, g j := by
-      apply Finset.sum_congr rfl
-      intro j hj
-      dsimp [m]
-      have h1 : j ∉ S := (Finset.mem_sdiff.mp hj).2
-      have h2 : j ∉ S₁ := fun h => h1 (hS₁_sub h)
-      have h3 : j ∉ S \ S₁ := fun h => h1 (Finset.mem_sdiff.mp h).1
-      rw [ite_eq_right h2, ite_eq_right h3]
-      have : ((1 : ℕ) : ZMod 2) = 1 := Nat.cast_one
-      rw [this, one_smul]
-    rw [hs1, hs2, hs3, zero_add, zero_add]
-    have h_S_zero : ∑ j ∈ S, g j = 0 := by
-      have h_full : ∑ j, u j • g j = 0 := hu
-      have eq3 : ∑ j, u j • g j
-          = ∑ j ∈ S, u j • g j + ∑ j ∈ Finset.univ \ S, u j • g j :=
-        (Finset.sum_add_sum_compl S _).symm
-      rw [eq3] at h_full
-      have h_out : ∑ j ∈ Finset.univ \ S, u j • g j = 0 := by
-        apply Finset.sum_eq_zero
-        intro j hj
-        have hj_zero : u j = 0 := by
-          by_contra h_nz_j
-          have : j ∈ S := by
-            rw [Finset.mem_filter]
-            exact ⟨Finset.mem_univ j, h_nz_j⟩
-          have h1 : j ∉ S := (Finset.mem_sdiff.mp hj).2
-          exact h1 this
-        rw [hj_zero, zero_smul]
-      rw [h_out, add_zero] at h_full
-      have h_in : ∑ j ∈ S, u j • g j = ∑ j ∈ S, g j := by
-        apply Finset.sum_congr rfl
-        intro j hj
-        rw [h_u_one j hj, one_smul]
-      rw [← h_in]
-      exact h_full
-    have h_final : ∑ j, g j = ∑ j ∈ S, g j + ∑ j ∈ Finset.univ \ S, g j :=
-      (Finset.sum_add_sum_compl S _).symm
-    rw [h_final, h_S_zero, zero_add]
+    -- The new multiset removes precisely the kernel vector, pointwise.
+    have h_coeff : ∀ j, ((m j : ℕ) : ZMod 2) = 1 - u j := by
+      intro j
+      by_cases hj₁ : j ∈ S₁
+      · rw [h_u_one j (hS₁_sub hj₁), sub_self]
+        change ((if j ∈ S₁ then 2 else if j ∈ S \ S₁ then 0 else 1 : ℕ) : ZMod 2) = 0
+        rw [ite_eq_left hj₁]
+        exact CharP.cast_eq_zero (ZMod 2) 2
+      · by_cases hj : j ∈ S
+        · have hj₂ : j ∈ S \ S₁ := Finset.mem_sdiff.mpr ⟨hj, hj₁⟩
+          simp only [m, ite_eq_right hj₁, ite_eq_left hj₂, Nat.cast_zero, h_u_one j hj, sub_self]
+        · have hj₂ : j ∉ S \ S₁ := fun h => hj (Finset.mem_sdiff.mp h).1
+          have hu_zero : u j = 0 := by
+            simpa only [S, Finset.mem_filter, Finset.mem_univ, true_and, not_not] using hj
+          simp only [m, ite_eq_right hj₁, ite_eq_right hj₂, Nat.cast_one, hu_zero, sub_zero]
+    simp_rw [h_coeff, sub_smul, one_smul]
+    rw [Finset.sum_sub_distrib, hu, sub_zero]
   have m_ne_ones : m i ≠ 1 := by
     have hi_mem : i ∈ S := by
       rw [Finset.mem_filter]
