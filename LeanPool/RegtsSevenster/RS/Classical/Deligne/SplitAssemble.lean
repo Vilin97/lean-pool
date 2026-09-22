@@ -99,7 +99,7 @@ theorem splitOfBase_unit
   have h2 : chainBGrUnit A M M' d =
       chainSeed A M M' d ≫ chainBGrCompι A M M' d 0 0 ≫
         chainBGrι A M M' d 0 := by
-    rw [chainBGrUnit, ← Category.assoc,
+    erw [chainBGrUnit, ← Category.assoc,
       chainBUnit_chainBGrComponentZeroIso_inv, Category.assoc]
   exact h1.trans h2.symm
 

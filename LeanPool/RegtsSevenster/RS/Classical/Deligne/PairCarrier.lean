@@ -90,7 +90,7 @@ theorem copairUnit_splitPairMul
   have h2 : chainBGrUnit A M M' d =
       chainSeed A M M' d ≫ chainBGrCompι A M M' d 0 0 ≫
         chainBGrι A M M' d 0 := by
-    rw [chainBGrUnit, ← Category.assoc,
+    erw [chainBGrUnit, ← Category.assoc,
       chainBUnit_chainBGrComponentZeroIso_inv, Category.assoc]
   show copairUnit A M M' d ≫ chainPairMul A M M' d ≫
       chainStage2Cast A M M'

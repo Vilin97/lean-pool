@@ -262,7 +262,7 @@ theorem superVectHom_comp [FiniteDimensional ℂ (M.tensor (pointMod P)).even]
         ((toSuperVectEvenEquiv P N).symm ((toSuperVectEvenEquiv P N)
           (((tensorRightFunctor (pointMod P)).map u).evenMap
             ((toSuperVectEvenEquiv P M).symm x)))))
-    rw [LinearEquiv.symm_apply_apply]
+    erw [LinearEquiv.symm_apply_apply]
     rfl
   · show (toSuperVectOddEquiv P Q)
       (((tensorRightFunctor (pointMod P)).map (u ≫ v)).oddMap
@@ -273,7 +273,7 @@ theorem superVectHom_comp [FiniteDimensional ℂ (M.tensor (pointMod P)).even]
         ((toSuperVectOddEquiv P N).symm ((toSuperVectOddEquiv P N)
           (((tensorRightFunctor (pointMod P)).map u).oddMap
             ((toSuperVectOddEquiv P M).symm x)))))
-    rw [LinearEquiv.symm_apply_apply]
+    erw [LinearEquiv.symm_apply_apply]
     rfl
 
 /-- Base change is additive. -/

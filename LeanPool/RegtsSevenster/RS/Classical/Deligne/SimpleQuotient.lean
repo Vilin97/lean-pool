@@ -312,14 +312,18 @@ instance mono_subUnionHom [SmallCategory C] [Abelian C]
     have h₂ : colimit.ι (subDiagram s) j ≫
         (colimMap ((subCocone s).ι) ≫ (constColimitIso A).hom) =
         (subCocone s).ι.app j := by
-      rw [← Category.assoc, ι_colimMap, Category.assoc,
+      erw [← Category.assoc, ι_colimMap, Category.assoc,
         show colimit.ι ((Functor.const (SubIndex s)).obj
             (subCocone s).pt) j ≫ (constColimitIso A).hom = 𝟙 A from
           ι_constColimitIso A j]
       exact Category.comp_id _
     exact h₁.trans h₂.symm
   rw [hd]
-  infer_instance
+  refine ⟨fun {Z} f g h => ?_⟩
+  apply (cancel_mono (colimMap ((subCocone s).ι))).mp
+  apply (Iso.cancel_iso_hom_right _ _ (constColimitIso (J := SubIndex s) A)).mp
+  erw [Category.assoc, Category.assoc]
+  exact h
 
 /-! ## The chain condition -/
 
