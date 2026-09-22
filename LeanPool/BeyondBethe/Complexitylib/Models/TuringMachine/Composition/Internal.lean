@@ -68,11 +68,11 @@ theorem compositionTM_computesInTime_internal
   · have hreach := seqTM_reachesIn_of_reachesIn first tail
       hreachF hhaltF hreachTail
     simpa [compositionTM, first, tail, final, boundaryInput, boundaryWork,
-      boundaryOutput] using hreach
+      boundaryOutput] using! hreach
   · show (compositionTM tmF tmG).halted final
-    simpa [compositionTM, first, tail, final] using
+    simpa [compositionTM, first, tail, final] using!
       (phase2Wrap_halted_iff first tail D).2 hhaltTail
-  · simpa [final, phase2Wrap, Function.comp_apply] using houtTail
+  · simpa [final, phase2Wrap, Function.comp_apply] using! houtTail
 
 /-- Internal correctness theorem for deterministic preprocessing followed by a
 language decider. -/
@@ -116,14 +116,14 @@ theorem compositionTM_decidesInTime_preimage_internal
   · have hreach := seqTM_reachesIn_of_reachesIn first tail
       hreachF hhaltF hreachTail
     simpa [compositionTM, first, tail, final, boundaryInput, boundaryWork,
-      boundaryOutput] using hreach
+      boundaryOutput] using! hreach
   · show (compositionTM tmF tmG).halted final
-    simpa [compositionTM, first, tail, final] using
+    simpa [compositionTM, first, tail, final] using!
       (phase2Wrap_halted_iff first tail D).2 hhaltTail
   · intro hx
-    simpa [final, phase2Wrap] using hyesTail hx
+    simpa [final, phase2Wrap] using! hyesTail hx
   · intro hx
-    simpa [final, phase2Wrap] using hnoTail hx
+    simpa [final, phase2Wrap] using! hnoTail hx
 
 end TM
 

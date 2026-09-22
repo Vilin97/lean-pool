@@ -72,7 +72,7 @@ private theorem entryMissCleanupTime_canonical_le_linear {n : ℕ}
         7 * (1 + matchTime +
           2 * (bitlen entry.1 + bitlen entry.2 + 1) + 9) + 1 := by
     simpa [entryMissHeadBound, entryScanCanonicalWork,
-      TM.resetBinaryBlank, Tape.move, Tape.init] using hreset
+      TM.resetBinaryBlank, Tape.move, Tape.init] using! hreset
   unfold entryMissCleanupTime entryMissHeadBound entryScanCanonicalWork
   simp only [Function.const_apply, TM.resetBinaryBlank, Tape.move, Tape.init,
     Nat.zero_add]

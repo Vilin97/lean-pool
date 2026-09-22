@@ -63,7 +63,7 @@ theorem entryUpdateTerminal_internal
   cases found with
   | false =>
       have hfoundZero : (work tapes.found).HasBinaryNat 0 := by
-        simpa using hinv.foundCount
+        simpa using! hinv.foundCount
       have hfoundRead : (work tapes.found).read ≠ Γ.one := by
         rw [hfoundZero.read_eq_blank_iff.mpr rfl]
         decide
@@ -72,7 +72,7 @@ theorem entryUpdateTerminal_internal
         exact Bool.false_ne_true (hinv.progress.found_iff.mpr hmem)
       have hnotmemStore : address ∉ store.map Prod.fst := by
         rw [hinv.progress.store_eq]
-        simpa using hnotmemProcessed
+        simpa using! hnotmemProcessed
       by_cases hvalue : newValue = 0
       · subst newValue
         have hreplacementRead : (work tapes.replacement).read = Γ.blank :=
@@ -89,11 +89,11 @@ theorem entryUpdateTerminal_internal
             { ready := hinv.ready
               replacement := hinv.replacement_eq
               remaining := hinv.remainingCount
-              found := by simpa [hnotmemStore] using hfoundZero
+              found := by simpa [hnotmemStore] using! hfoundZero
               resultCount := by
-                simpa [hcountEq] using hinv.resultCountTape
+                simpa [hcountEq] using! hinv.resultCountTape
               frame := hinv.frame }
-        · simpa [houtputEq] using houtput
+        · simpa [houtputEq] using! houtput
       · have hreplacementRead :
             (work tapes.replacement).read ≠ Γ.blank := by
           intro hblank
@@ -181,14 +181,14 @@ theorem entryUpdateTerminal_internal
               Entry.encode) := by
           rw [hsuccOutput]
           rw [← houtputEq]
-          simpa [List.flatMap_append, List.append_assoc] using
+          simpa [List.flatMap_append, List.append_assoc] using!
             happendOutput
         have hfinalFrame : EntryUpdateFrame tapes initialWork succDone.work :=
           EntryUpdateFrame.trans_single_internal hinv.frame (12 : Fin 13)
             (by
               intro i hi
               exact hotherWork i (by
-                simpa [EntryUpdateTapes.resultCount] using hi))
+                simpa [EntryUpdateTapes.resultCount] using! hi))
         have hsuccTimeBound :=
           binarySuccTime_le_entryUpdateCountTime_internal hinv.resultCount_le
         refine ⟨entryUpdateDoneCfg tapes succDone.input succDone.work
@@ -197,7 +197,7 @@ theorem entryUpdateTerminal_internal
           ?_, htotalReach, rfl, ?_, ?_, ?_⟩
         · simp only [entryUpdateLoopTime]
           omega
-        · simpa [entryUpdateDoneCfg] using hsuccInput.trans happendInput
+        · simpa [entryUpdateDoneCfg] using! hsuccInput.trans happendInput
         · exact
             { ready := hreadyFinal
               replacement := by
@@ -213,21 +213,21 @@ theorem entryUpdateTerminal_internal
                 change (succDone.work tapes.found).HasBinaryNat
                   (if address ∈ store.map Prod.fst then 1 else 0)
                 rw [hotherWork tapes.found tapes.found_ne_resultCount]
-                simpa [hnotmemStore] using hfoundZero
-              resultCount := by simpa [hcountEq] using hsuccCount
+                simpa [hnotmemStore] using! hfoundZero
+              resultCount := by simpa [hcountEq] using! hsuccCount
               frame := hfinalFrame }
-        · simpa [entryUpdateDoneCfg] using hfinalOutput
+        · simpa [entryUpdateDoneCfg] using! hfinalOutput
   | true =>
       have hfoundOne : (work tapes.found).HasBinaryNat 1 := by
-        simpa using hinv.foundCount
+        simpa using! hinv.foundCount
       have hfoundRead : (work tapes.found).read = Γ.one := by
-        simpa [Nat.bits, Γ.ofBool] using
+        simpa [Nat.bits, Γ.ofBool] using!
           hfoundOne.2.hasBinarySuffix.read_cons
       have hmemProcessed : address ∈ processed.map Prod.fst :=
         hinv.progress.found_iff.mp rfl
       have hmemStore : address ∈ store.map Prod.fst := by
         rw [hinv.progress.store_eq]
-        simpa using hmemProcessed
+        simpa using! hmemProcessed
       have hstep := entryUpdateTM_step_test_found_internal tapes inp work out
         hremainingRead hfoundRead hinput hinv.ready.parked houtputParked
       obtain ⟨houtputEq, hcountEq⟩ :=
@@ -239,10 +239,10 @@ theorem entryUpdateTerminal_internal
           { ready := hinv.ready
             replacement := hinv.replacement_eq
             remaining := hinv.remainingCount
-            found := by simpa [hmemStore] using hfoundOne
-            resultCount := by simpa [hcountEq] using hinv.resultCountTape
+            found := by simpa [hmemStore] using! hfoundOne
+            resultCount := by simpa [hcountEq] using! hinv.resultCountTape
             frame := hinv.frame }
-      · simpa [houtputEq] using houtput
+      · simpa [houtputEq] using! houtput
 
 end Machine
 
