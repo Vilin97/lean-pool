@@ -52,7 +52,7 @@ theorem cubeEuclideanWspESeminorm_congr_ae {d : ℕ} {Q : TriadicCube d}
     (hFG : F =ᵐ[normalizedCubeMeasure Q] G) :
     cubeEuclideanWspESeminorm Q s p F = cubeEuclideanWspESeminorm Q s p G := by
   unfold cubeEuclideanWspESeminorm
-  exact eLpNorm_congr_ae (cubeEuclideanWspKernel_congr_ae hFG)
+  exact eLpNorm'_congr_ae (cubeEuclideanWspKernel_congr_ae hFG)
 
 /-- Euclidean fractional `W^{s,p}` membership is invariant under
 normalized-cube almost-everywhere replacement. -/

@@ -90,7 +90,8 @@ theorem descendantsENNAverage_normalizedEuclideanLpENorm_rpow_eq {d n : ℕ}
     unfold BoundedMeasurableDomain.normalizedEuclideanLpENorm
     unfold BoundedMeasurableDomain.normalizedLpENorm
     rw [cubeBoundedMeasurableDomain_normalizedVolume_eq_normalizedCubeMeasure,
-      MeasureTheory.eLpNorm_eq_lintegral_rpow_enorm_toReal hp0 hpt, ← ENNReal.rpow_mul]
+      ite_eq_right hp0, ite_eq_right hpt,
+      MeasureTheory.eLpNorm'_eq_lintegral_enorm, ← ENNReal.rpow_mul]
     have hpr : (1 / p.toReal) * p.toReal = 1 := by field_simp
     rw [hpr, ENNReal.rpow_one]
   calc

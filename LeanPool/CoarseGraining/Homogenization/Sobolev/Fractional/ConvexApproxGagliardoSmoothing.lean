@@ -182,8 +182,11 @@ theorem map_gagliardoCubeMeasure_diagonalConvexApproxSample {d : ℕ}
         ((ENNReal.ofReal (((1 - ε) ^ d)⁻¹) ^ 2) •
           ((volume.restrict (convexApproxSample x0 z r ε '' cubeSet Q)).prod
             (volume.restrict (convexApproxSample x0 z r ε '' cubeSet Q)))) := by
+  have hmeas : Measurable (diagonalConvexApproxSample x0 z r ε) :=
+    ((measurableEmbedding_convexApproxSample x0 z r ε hε).measurable.prodMap
+      (measurableEmbedding_convexApproxSample x0 z r ε hε).measurable)
   rw [Gagliardo.gagliardoCubeMeasure, normalizedCubeMeasure, cubeMeasure,
-    Measure.prod_smul_left, Measure.map_smul]
+    Measure.prod_smul_left, Measure.map_smul _ hmeas.aemeasurable]
   exact congrArg (ENNReal.ofReal ((cubeVolume Q)⁻¹) • ·)
     (map_prod_restrict_diagonalConvexApproxSample (measurableSet_cubeSet Q)
       x0 z r ε hε)

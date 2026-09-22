@@ -47,7 +47,7 @@ kernel. -/
 noncomputable def cubeAmbientHilbertWspESeminorm {d : ℕ}
     (Q : TriadicCube d) (s : FractionalOrder) (p : FiniteLpExponent)
     (F : Vec d → Vec d) : ℝ≥0∞ :=
-  eLpNorm (cubeAmbientHilbertWspKernel s p F) p.exponent
+  eLpNorm' (cubeAmbientHilbertWspKernel s p F) p.exponent.toReal
     (Gagliardo.gagliardoCubeMeasure Q)
 
 theorem cubeAmbientHilbertWspESeminorm_eq_lintegral {d : ℕ}
@@ -57,8 +57,7 @@ theorem cubeAmbientHilbertWspESeminorm_eq_lintegral {d : ℕ}
       (∫⁻ z, ‖cubeAmbientHilbertWspKernel s p F z‖ₑ ^ p.exponent.toReal
         ∂Gagliardo.gagliardoCubeMeasure Q) ^ (1 / p.exponent.toReal) := by
   unfold cubeAmbientHilbertWspESeminorm
-  exact eLpNorm_eq_lintegral_rpow_enorm_toReal
-    (ne_of_gt (lt_trans zero_lt_one p.one_lt)) p.lt_top.ne
+  exact eLpNorm'_eq_lintegral_enorm _ _ _
 
 /-- The scalar coordinates of the intermediate vector kernel are precisely
 the scalar ambient-distance Gagliardo kernels. -/
@@ -464,12 +463,23 @@ theorem cubeCoordinateGagliardoPowerEnergy_le_dimension_mul_ambientHilbert
     cubeCoordinateGagliardoPowerEnergy Q s p F ≤
       (d : ℝ≥0∞) *
         (cubeAmbientHilbertWspESeminorm Q s p F) ^ p.exponent.toReal := by
-  have h := sum_coordinate_eLpNorm_rpow_le_dimension_mul
-    (Gagliardo.gagliardoCubeMeasure Q) p
-    (fun z => (cubeAmbientHilbertWspKernel s p F z).toVec)
-  simpa only [cubeCoordinateGagliardoPowerEnergy,
-    cubeAmbientHilbertWspESeminorm, HilbertVec.ofVec_toVec,
-    cubeAmbientHilbertWspKernel_coordinate] using! h
+  unfold cubeCoordinateGagliardoPowerEnergy
+  calc
+    _ ≤ ∑ _i : Fin d,
+        (cubeAmbientHilbertWspESeminorm Q s p F) ^ p.exponent.toReal := by
+      apply Finset.sum_le_sum
+      intro i _
+      rw [scalar_cubeGagliardoESeminorm_rpow_eq_lintegral,
+        cubeAmbientHilbertWspESeminorm_rpow_eq_lintegral]
+      apply lintegral_mono
+      intro z
+      apply ENNReal.rpow_le_rpow _ ENNReal.toReal_nonneg
+      rw [← cubeAmbientHilbertWspKernel_coordinate s p F z i]
+      rw [← ofReal_norm, ← ofReal_norm]
+      apply ENNReal.ofReal_le_ofReal
+      simpa only [Real.norm_eq_abs] using
+        HilbertVec.abs_apply_le_norm (cubeAmbientHilbertWspKernel s p F z) i
+    _ = _ := by simp [nsmul_eq_mul]
 
 /-- The explicit finite-dimensional coordinate factor in the reverse
 Hilbert-vector comparison. -/
@@ -505,6 +515,23 @@ theorem cubeAmbientHilbertWspESeminorm_rpow_le_coordinateGagliardoPowerEnergy
     intro i
     simpa only [HilbertVec.toVec, cubeAmbientHilbertWspKernel_coordinate] using
       (scalar_gagliardoKernel_measurable s p F hF i).aestronglyMeasurable
+  have hkernel : AEStronglyMeasurable (cubeAmbientHilbertWspKernel s p F)
+      (Gagliardo.gagliardoCubeMeasure Q) := by
+    simpa only [HilbertVec.continuousLinearEquivVec_symm_apply,
+      HilbertVec.ofVec_toVec] using
+      ((HilbertVec.continuousLinearEquivVec d).symm.continuous.comp_aestronglyMeasurable
+        (AEMeasurable.of_eval (fun i => (hcoord i).aemeasurable)).aestronglyMeasurable)
+  have hscalar (i : Fin d) :
+      Gagliardo.cubeGagliardoESeminorm Q s.1 p.exponent (fun x => F x i) =
+        eLpNorm (Gagliardo.gagliardoKernel s.1 p.exponent (fun x => F x i))
+          p.exponent (Gagliardo.gagliardoCubeMeasure Q) :=
+    Gagliardo.Internal.cubeGagliardoESeminorm_def _ _ _ _
+      (scalar_gagliardoKernel_measurable s p F hF i).aestronglyMeasurable
+  have hambient : cubeAmbientHilbertWspESeminorm Q s p F =
+      eLpNorm (cubeAmbientHilbertWspKernel s p F) p.exponent
+        (Gagliardo.gagliardoCubeMeasure Q) :=
+    (eLpNorm_eq_eLpNorm' (ne_of_gt (lt_trans zero_lt_one p.one_lt)) p.lt_top.ne
+      hkernel).symm
   have hvector := euclidean_eLpNorm_rpow_le_dimension_rpow_mul_sum_rpow
     (Gagliardo.gagliardoCubeMeasure Q) p
     (fun z => (cubeAmbientHilbertWspKernel s p F z).toVec) hcoord
@@ -517,7 +544,9 @@ theorem cubeAmbientHilbertWspESeminorm_rpow_le_coordinateGagliardoPowerEnergy
           (∑ i : Fin d,
             Gagliardo.cubeGagliardoESeminorm Q s.1 p.exponent (fun x => F x i)) ^
               p.exponent.toReal := by
-      simpa only [cubeAmbientHilbertWspESeminorm, HilbertVec.ofVec_toVec,
+      rw [hambient]
+      simp_rw [hscalar]
+      simpa only [HilbertVec.ofVec_toVec,
         HilbertVec.toVec, cubeAmbientHilbertWspKernel_coordinate] using! hvector
     _ ≤ ‖(d : ℝ)‖ₑ ^ p.exponent.toReal *
         ((d : ℝ≥0∞) ^ (p.exponent.toReal - 1) *

@@ -51,7 +51,7 @@ private theorem euclideanWspTranslation_measurePreserving {d : ℕ}
   have hvol : cubeVolume (translateCube shift Q) = cubeVolume Q := rfl
   refine ⟨T.measurable, ?_⟩
   rw [normalizedCubeMeasure, normalizedCubeMeasure, cubeMeasure, cubeMeasure,
-    hvol, hres, Measure.map_smul]
+    hvol, hres, Measure.map_smul _ T.measurable.aemeasurable]
 
 private theorem euclideanWspTranslation_pair_measurePreserving {d : ℕ}
     (shift : Fin d → ℤ) (Q : TriadicCube d) :
@@ -121,10 +121,8 @@ theorem cubeEuclideanNormalizedLpENorm_translate {d : ℕ}
   unfold BoundedMeasurableDomain.normalizedLpENorm
   rw [cubeBoundedMeasurableDomain_normalizedVolume_eq_normalizedCubeMeasure,
     cubeBoundedMeasurableDomain_normalizedVolume_eq_normalizedCubeMeasure]
-  rw [eLpNorm_eq_lintegral_rpow_enorm_toReal
-    (ne_of_gt (lt_trans zero_lt_one p.one_lt)) p.lt_top.ne,
-    eLpNorm_eq_lintegral_rpow_enorm_toReal
-      (ne_of_gt (lt_trans zero_lt_one p.one_lt)) p.lt_top.ne]
+  simp only [ite_eq_right (ne_of_gt (lt_trans zero_lt_one p.one_lt)),
+    ite_eq_right p.lt_top.ne, eLpNorm'_eq_lintegral_enorm]
   congr 1
   rw [MeasurePreserving.lintegral_map_equiv _ T hMP]
   rfl
@@ -164,6 +162,7 @@ theorem memCubeEuclideanWsp_translate_iff {d : ℕ}
     funext z
     symm
     exact cubeEuclideanWspKernel_translate shift Q s p F z
+  rw [memCubeEuclideanWsp_iff, memCubeEuclideanWsp_iff]
   constructor
   · rintro ⟨hmeas, hfinite⟩
     constructor
