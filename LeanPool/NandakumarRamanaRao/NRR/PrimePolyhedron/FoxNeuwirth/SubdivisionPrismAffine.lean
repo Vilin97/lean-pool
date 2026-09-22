@@ -35,7 +35,7 @@ variable {p : Nat}
 
 /-- The staircase spatial-coordinate map, extended linearly to all coordinate vectors. -/
 noncomputable def staircaseSpatialLinear
-    (hp : Nat.Prime p) (k : Fin p) :
+    (p : Nat) (k : Fin p) :
     (Fin (p + 1) → Real) →ₗ[Real] (Fin p → Real) where
   toFun u i :=
     ∑ j : Fin (p + 1), if staircaseSpatial p k j = i then u j else 0
@@ -131,7 +131,7 @@ noncomputable def prismSpatialCoordinateLinear
     ((affineCompLinear (p - 1) N
       (fun k => Simplex.refinementIndexPerm (q.1.1.2 k))).comp
       ((maximalCoordinateReindexLinear hp).comp
-        ((staircaseSpatialLinear hp q.1.2).comp
+        ((staircaseSpatialLinear p q.1.2).comp
           (affineCompLinear p L q.2))))
 
 /-- Linear functional computing the interval coordinate of a fully refined prism chart. -/
@@ -153,7 +153,7 @@ theorem chart_spatial_eq_linear
             rw [← affineCompMap_coe]
             exact (affineCompMap p L q.2 w).property⟩ =
         maximalCoordinateReindexLinear hp
-          (staircaseSpatialLinear hp q.1.2
+          (staircaseSpatialLinear p q.1.2
             (affineCompLinear p L q.2 w.1)) := by
     funext i
     simp [spatialWeight, maximalCoordinateReindexLinear,

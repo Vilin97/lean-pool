@@ -122,7 +122,7 @@ noncomputable def samplePoint
 
 /-- Segment safety is transported by prime equivariance. -/
 theorem segmentSafe_smul
-    (hp : Nat.Prime p)
+    (p : Nat)
     (F G : ContinuousCoordinateMap p)
     (hF : IsEquivariantCoordinateMap p F)
     (hG : IsEquivariantCoordinateMap p G)
@@ -147,10 +147,10 @@ theorem segmentSafe_smul_iff
     SegmentSafe F G (g • x) ↔ SegmentSafe F G x := by
   constructor
   · intro h
-    have := segmentSafe_smul hp F G hF hG h g⁻¹
+    have := segmentSafe_smul p F G hF hG h g⁻¹
     simpa [smul_smul] using this
   · intro h
-    exact segmentSafe_smul hp F G hF hG h g
+    exact segmentSafe_smul p F G hF hG h g
 
 /-- The stored simplexwise straight-line condition is safe at every refined vertex. -/
 theorem segmentSafe_refinedVertex
@@ -186,7 +186,7 @@ theorem segmentSafe_samplePoint
     (z : SampleIndex hp A.toRegularApproximation.level) :
     SegmentSafe F.map A.toRegularApproximation.map
       (samplePoint hp A.toRegularApproximation.level z) := by
-  apply segmentSafe_smul hp F.map A.toRegularApproximation.map
+  apply segmentSafe_smul p F.map A.toRegularApproximation.map
     F.equivariant A.toRegularApproximation.equivariant
   exact segmentSafe_refinedVertex hp F A z.2.1 z.2.2
 

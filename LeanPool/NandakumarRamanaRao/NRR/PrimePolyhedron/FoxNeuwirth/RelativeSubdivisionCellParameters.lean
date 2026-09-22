@@ -211,7 +211,7 @@ def AffineCollarRealizationExists
     (B : RelativeSubdivisionBoundary (ZMod p) (RelativeCylinder p) n) : Prop :=
   Nonempty (AffineCollarRealization B)
 
-variable (hp : Nat.Prime p) {n : Nat}
+variable (p : Nat) {n : Nat}
 variable (B : RelativeSubdivisionBoundary (ZMod p) (RelativeCylinder p) n)
 
 /-- Chosen finite singular-cell support of a relative cylinder collar. -/
@@ -220,125 +220,125 @@ noncomputable abbrev CollarSupport (p : Nat)
   RelativeSubdivisionBoundary.collarRealization B
 
 /-- One vertex occurrence of one singular `(n+1)`-simplex in the finite collar support. -/
-abbrev VertexSlot (hp : Nat.Prime p)
+abbrev VertexSlot (p : Nat)
     (B : RelativeSubdivisionBoundary (ZMod p) (RelativeCylinder p) n) :=
   (CollarSupport p B).Occurrence × Fin (n + 2)
 
-noncomputable instance vertexSlotFintype : Fintype (VertexSlot hp B) := inferInstance
-noncomputable instance vertexSlotDecidableEq : DecidableEq (VertexSlot hp B) :=
+noncomputable instance vertexSlotFintype : Fintype (VertexSlot p B) := inferInstance
+noncomputable instance vertexSlotDecidableEq : DecidableEq (VertexSlot p B) :=
   Classical.decEq _
 
 /-- Geometric cylinder point at a vertex of one finite collar cell occurrence. -/
-noncomputable def slotPoint (s : VertexSlot hp B) : CylinderPoint p :=
+noncomputable def slotPoint (s : VertexSlot p B) : CylinderPoint p :=
   CylinderPoint.ofProd
     ((singularSimplexAsContinuousMap (RelativeCylinder p) (n + 1)
       ((CollarSupport p B).simplex s.1)) (stdSimplex.vertex s.2))
 
 /-- Symmetry-decorated finite collar vertex occurrences. -/
-abbrev CoverVertexSlot := PrimeSymmetry p × VertexSlot hp B
+abbrev CoverVertexSlot := PrimeSymmetry p × VertexSlot p B
 
-noncomputable instance coverVertexSlotFintype : Fintype (CoverVertexSlot hp B) := inferInstance
-noncomputable instance coverVertexSlotDecidableEq : DecidableEq (CoverVertexSlot hp B) :=
+noncomputable instance coverVertexSlotFintype : Fintype (CoverVertexSlot p B) := inferInstance
+noncomputable instance coverVertexSlotDecidableEq : DecidableEq (CoverVertexSlot p B) :=
   Classical.decEq _
 
 /-- Geometric point represented by a symmetry-decorated collar vertex occurrence. -/
-noncomputable def coverPoint (s : CoverVertexSlot hp B) : CylinderPoint p :=
-  s.1 • slotPoint hp B s.2
+noncomputable def coverPoint (s : CoverVertexSlot p B) : CylinderPoint p :=
+  s.1 • slotPoint p B s.2
 
 /-- Decorated occurrences represent one global sampled vertex exactly when their cylinder points
 are equal. -/
-noncomputable def coverVertexSetoid : Setoid (CoverVertexSlot hp B) where
-  r a b := coverPoint hp B a = coverPoint hp B b
+noncomputable def coverVertexSetoid : Setoid (CoverVertexSlot p B) where
+  r a b := coverPoint p B a = coverPoint p B b
   iseqv := ⟨fun _ => rfl, fun h => h.symm, fun h₁ h₂ => h₁.trans h₂⟩
 
 /-- Finite global vertices of the relative collar support. -/
-abbrev GlobalVertex := Quotient (coverVertexSetoid hp B)
+abbrev GlobalVertex := Quotient (coverVertexSetoid p B)
 
-noncomputable instance globalVertexFintype : Fintype (GlobalVertex hp B) :=
+noncomputable instance globalVertexFintype : Fintype (GlobalVertex p B) :=
   Fintype.ofFinite _
 
-noncomputable instance globalVertexDecidableEq : DecidableEq (GlobalVertex hp B) :=
+noncomputable instance globalVertexDecidableEq : DecidableEq (GlobalVertex p B) :=
   Classical.decEq _
 
 /-- Left multiplication on the symmetry decoration. -/
 def actCoverVertex
-    (g : PrimeSymmetry p) (s : CoverVertexSlot hp B) : CoverVertexSlot hp B :=
+    (g : PrimeSymmetry p) (s : CoverVertexSlot p B) : CoverVertexSlot p B :=
   (g * s.1, s.2)
 
 @[simp] theorem coverPoint_actCoverVertex
-    (g : PrimeSymmetry p) (s : CoverVertexSlot hp B) :
-    coverPoint hp B (actCoverVertex hp B g s) = g • coverPoint hp B s := by
+    (g : PrimeSymmetry p) (s : CoverVertexSlot p B) :
+    coverPoint p B (actCoverVertex p B g s) = g • coverPoint p B s := by
   simp [coverPoint, actCoverVertex, mul_smul]
 
 /-- Prime symmetry acts on the global relative-collar vertices. -/
 noncomputable instance globalVertexAction :
-    MulAction (PrimeSymmetry p) (GlobalVertex hp B) where
-  smul g := Quotient.map (actCoverVertex hp B g) (by
+    MulAction (PrimeSymmetry p) (GlobalVertex p B) where
+  smul g := Quotient.map (actCoverVertex p B g) (by
     intro a b hab
-    change coverPoint hp B (actCoverVertex hp B g a) =
-      coverPoint hp B (actCoverVertex hp B g b)
+    change coverPoint p B (actCoverVertex p B g a) =
+      coverPoint p B (actCoverVertex p B g b)
     simpa using congrArg (fun z : CylinderPoint p => g • z) hab)
   one_smul x := by
     refine Quotient.inductionOn x ?_
     intro s
     apply Quotient.sound
-    change coverPoint hp B (actCoverVertex hp B 1 s) = coverPoint hp B s
+    change coverPoint p B (actCoverVertex p B 1 s) = coverPoint p B s
     simp
   mul_smul g h x := by
     refine Quotient.inductionOn x ?_
     intro s
     apply Quotient.sound
-    change coverPoint hp B (actCoverVertex hp B (g * h) s) =
-      coverPoint hp B (actCoverVertex hp B g (actCoverVertex hp B h s))
+    change coverPoint p B (actCoverVertex p B (g * h) s) =
+      coverPoint p B (actCoverVertex p B g (actCoverVertex p B h s))
     simp [mul_smul]
 
 /-- Actual cylinder point represented by a global relative-collar vertex. -/
-noncomputable def globalPoint : GlobalVertex hp B → CylinderPoint p :=
-  Quotient.lift (coverPoint hp B) (by
+noncomputable def globalPoint : GlobalVertex p B → CylinderPoint p :=
+  Quotient.lift (coverPoint p B) (by
     intro a b hab
     exact hab)
 
-@[simp] theorem globalPoint_mk (s : CoverVertexSlot hp B) :
-    globalPoint hp B (Quotient.mk _ s) = coverPoint hp B s := rfl
+@[simp] theorem globalPoint_mk (s : CoverVertexSlot p B) :
+    globalPoint p B (Quotient.mk _ s) = coverPoint p B s := rfl
 
 @[simp] theorem globalPoint_smul
-    (g : PrimeSymmetry p) (x : GlobalVertex hp B) :
-    globalPoint hp B (g • x) = g • globalPoint hp B x := by
+    (g : PrimeSymmetry p) (x : GlobalVertex p B) :
+    globalPoint p B (g • x) = g • globalPoint p B x := by
   refine Quotient.inductionOn x ?_
   intro s
-  show coverPoint hp B (actCoverVertex hp B g s) = g • coverPoint hp B s
+  show coverPoint p B (actCoverVertex p B g s) = g • coverPoint p B s
   simp
 
 /-- Global sampled vertex represented by an undecorated local collar slot. -/
-noncomputable def sampleVertex (s : VertexSlot hp B) : GlobalVertex hp B :=
+noncomputable def sampleVertex (s : VertexSlot p B) : GlobalVertex p B :=
   Quotient.mk _ ((1 : PrimeSymmetry p), s)
 
-@[simp] theorem globalPoint_sampleVertex (s : VertexSlot hp B) :
-    globalPoint hp B (sampleVertex hp B s) = slotPoint hp B s := by
-  change (1 : PrimeSymmetry p) • slotPoint hp B s = _
+@[simp] theorem globalPoint_sampleVertex (s : VertexSlot p B) :
+    globalPoint p B (sampleVertex p B s) = slotPoint p B s := by
+  change (1 : PrimeSymmetry p) • slotPoint p B s = _
   exact one_smul _ _
 
 /-- Local copies of one geometric collar vertex determine the same global sampled vertex. -/
 theorem sampleVertex_eq_of_slotPoint_eq
-    {s t : VertexSlot hp B} (h : slotPoint hp B s = slotPoint hp B t) :
-    sampleVertex hp B s = sampleVertex hp B t := by
+    {s t : VertexSlot p B} (h : slotPoint p B s = slotPoint p B t) :
+    sampleVertex p B s = sampleVertex p B t := by
   apply Quotient.sound
-  change coverPoint hp B ((1 : PrimeSymmetry p), s) =
-    coverPoint hp B ((1 : PrimeSymmetry p), t)
+  change coverPoint p B ((1 : PrimeSymmetry p), s) =
+    coverPoint p B ((1 : PrimeSymmetry p), t)
   simpa [coverPoint] using h
 
 /-- Point-coordinate sites before quotienting by diagonal prime symmetry. -/
-abbrev ScalarSite := GlobalVertex hp B × Fin p
+abbrev ScalarSite := GlobalVertex p B × Fin p
 
 /-- One scalar parameter per diagonal prime orbit of relative-collar vertex-coordinate sites. -/
 abbrev Parameter :=
-  MulAction.orbitRel.Quotient (PrimeSymmetry p) (ScalarSite hp B)
+  MulAction.orbitRel.Quotient (PrimeSymmetry p) (ScalarSite p B)
 
-noncomputable instance parameterFintype : Fintype (Parameter hp B) := Fintype.ofFinite _
-noncomputable instance parameterDecidableEq : DecidableEq (Parameter hp B) := Classical.decEq _
+noncomputable instance parameterFintype : Fintype (Parameter p B) := Fintype.ofFinite _
+noncomputable instance parameterDecidableEq : DecidableEq (Parameter p B) := Classical.decEq _
 
 /-- A cylinder point lies on one of the two fixed horizontal boundaries. -/
-def IsHorizontalPoint (z : CylinderPoint p) : Prop :=
+def IsHorizontalPoint {p : Nat} (z : CylinderPoint p) : Prop :=
   z.time.1 = 0 ∨ z.time.1 = 1
 
 @[simp] theorem isHorizontalPoint_smul
@@ -347,129 +347,129 @@ def IsHorizontalPoint (z : CylinderPoint p) : Prop :=
   rfl
 
 /-- A global relative-collar vertex lies on a fixed horizontal boundary. -/
-def IsFrozenVertex (x : GlobalVertex hp B) : Prop :=
-  IsHorizontalPoint (globalPoint hp B x)
+def IsFrozenVertex (x : GlobalVertex p B) : Prop :=
+  IsHorizontalPoint (globalPoint p B x)
 
 @[simp] theorem isFrozenVertex_smul
-    (g : PrimeSymmetry p) (x : GlobalVertex hp B) :
-    IsFrozenVertex hp B (g • x) ↔ IsFrozenVertex hp B x := by
+    (g : PrimeSymmetry p) (x : GlobalVertex p B) :
+    IsFrozenVertex p B (g • x) ↔ IsFrozenVertex p B x := by
   simp [IsFrozenVertex]
 
 /-- Frozen status is well-defined on diagonal parameter orbits. -/
-noncomputable def IsFrozenParameter : Parameter hp B → Prop :=
+noncomputable def IsFrozenParameter : Parameter p B → Prop :=
   Quotient.lift
-    (fun s : ScalarSite hp B => IsFrozenVertex hp B s.1)
+    (fun s : ScalarSite p B => IsFrozenVertex p B s.1)
     (by
       intro a b hab
       obtain ⟨g, rfl⟩ : ∃ g : PrimeSymmetry p, g • b = a := hab
-      exact propext (isFrozenVertex_smul hp B g b.1))
+      exact propext (isFrozenVertex_smul p B g b.1))
 
 /-- Parameter orbits represented on the two fixed horizontal boundaries. -/
-abbrev FrozenParameter := {q : Parameter hp B // IsFrozenParameter hp B q}
+abbrev FrozenParameter := {q : Parameter p B // IsFrozenParameter p B q}
 
 /-- Parameter orbits represented only by movable interior or spatial-side vertices. -/
-abbrev MovableParameter := {q : Parameter hp B // ¬ IsFrozenParameter hp B q}
+abbrev MovableParameter := {q : Parameter p B // ¬ IsFrozenParameter p B q}
 
-noncomputable instance frozenParameterFintype : Fintype (FrozenParameter hp B) :=
+noncomputable instance frozenParameterFintype : Fintype (FrozenParameter p B) :=
   Fintype.ofFinite _
 
-noncomputable instance movableParameterFintype : Fintype (MovableParameter hp B) :=
+noncomputable instance movableParameterFintype : Fintype (MovableParameter p B) :=
   Fintype.ofFinite _
 
 /-- A scalar assignment on all relative-collar parameter orbits. -/
-abbrev Assignment := Parameter hp B → Real
+abbrev Assignment := Parameter p B → Real
 
 open Classical in
 /-- Replace only movable parameter values, leaving every horizontal-boundary orbit fixed. -/
 noncomputable def replaceMovable
-    (base : Assignment hp B) (move : MovableParameter hp B → Real) : Assignment hp B :=
-  fun q => if h : IsFrozenParameter hp B q then base q else move ⟨q, h⟩
+    (base : Assignment p B) (move : MovableParameter p B → Real) : Assignment p B :=
+  fun q => if h : IsFrozenParameter p B q then base q else move ⟨q, h⟩
 
 /-- Relative replacement agrees with the base assignment on every frozen parameter. -/
 theorem replaceMovable_eq_base
-    (base : Assignment hp B) (move : MovableParameter hp B → Real)
-    {q : Parameter hp B} (hq : IsFrozenParameter hp B q) :
-    replaceMovable hp B base move q = base q := by
+    (base : Assignment p B) (move : MovableParameter p B → Real)
+    {q : Parameter p B} (hq : IsFrozenParameter p B q) :
+    replaceMovable p B base move q = base q := by
   simp [replaceMovable, hq]
 
 /-- Relative replacement takes the prescribed value on every movable parameter. -/
 theorem replaceMovable_eq_move
-    (base : Assignment hp B) (move : MovableParameter hp B → Real)
-    (q : MovableParameter hp B) :
-    replaceMovable hp B base move q.1 = move q := by
+    (base : Assignment p B) (move : MovableParameter p B → Real)
+    (q : MovableParameter p B) :
+    replaceMovable p B base move q.1 = move q := by
   simp [replaceMovable, q.2]
 
 /-- Full polynomial ring before imposing the fixed-horizontal-boundary condition. -/
-abbrev FullPolynomialRing := MvPolynomial (Parameter hp B) Real
+abbrev FullPolynomialRing := MvPolynomial (Parameter p B) Real
 
 /-- Polynomial ring in only the movable interior and spatial-side parameter orbits. -/
-abbrev MovablePolynomialRing := MvPolynomial (MovableParameter hp B) Real
+abbrev MovablePolynomialRing := MvPolynomial (MovableParameter p B) Real
 
 open Classical in
 /-- Substitute a horizontal variable by its fixed base value and retain a movable variable as an
 indeterminate. -/
 noncomputable def relativeVariable
-    (base : Assignment hp B) (q : Parameter hp B) : MovablePolynomialRing hp B :=
-  if h : IsFrozenParameter hp B q then MvPolynomial.C (base q)
+    (base : Assignment p B) (q : Parameter p B) : MovablePolynomialRing p B :=
+  if h : IsFrozenParameter p B q then MvPolynomial.C (base q)
   else MvPolynomial.X ⟨q, h⟩
 
 /-- Restriction homomorphism from all collar variables to movable variables with fixed horizontal
 boundary values. -/
 noncomputable def restrictPolynomial
-    (base : Assignment hp B) : FullPolynomialRing hp B →+* MovablePolynomialRing hp B :=
+    (base : Assignment p B) : FullPolynomialRing p B →+* MovablePolynomialRing p B :=
   MvPolynomial.eval₂Hom
-    (MvPolynomial.C : Real →+* MovablePolynomialRing hp B) (relativeVariable hp B base)
+    (MvPolynomial.C : Real →+* MovablePolynomialRing p B) (relativeVariable p B base)
 
 @[simp] theorem eval_relativeVariable
-    (base : Assignment hp B) (move : MovableParameter hp B → Real)
-    (q : Parameter hp B) :
-    MvPolynomial.eval move (relativeVariable hp B base q) =
-      replaceMovable hp B base move q := by
-  by_cases hq : IsFrozenParameter hp B q
+    (base : Assignment p B) (move : MovableParameter p B → Real)
+    (q : Parameter p B) :
+    MvPolynomial.eval move (relativeVariable p B base q) =
+      replaceMovable p B base move q := by
+  by_cases hq : IsFrozenParameter p B q
   · simp [relativeVariable, replaceMovable, hq]
   · simp [relativeVariable, replaceMovable, hq]
 
 /-- Evaluating a restricted polynomial at movable data is the same as evaluating the original
 polynomial at the boundary-relative full assignment. -/
 theorem eval_restrictPolynomial
-    (base : Assignment hp B) (move : MovableParameter hp B → Real)
-    (P : FullPolynomialRing hp B) :
-    MvPolynomial.eval move (restrictPolynomial hp B base P) =
-      MvPolynomial.eval (replaceMovable hp B base move) P := by
+    (base : Assignment p B) (move : MovableParameter p B → Real)
+    (P : FullPolynomialRing p B) :
+    MvPolynomial.eval move (restrictPolynomial p B base P) =
+      MvPolynomial.eval (replaceMovable p B base move) P := by
   refine MvPolynomial.induction_on (motive := fun P =>
-    MvPolynomial.eval move (restrictPolynomial hp B base P) =
-      MvPolynomial.eval (replaceMovable hp B base move) P) P ?_ ?_ ?_
+    MvPolynomial.eval move (restrictPolynomial p B base P) =
+      MvPolynomial.eval (replaceMovable p B base move) P) P ?_ ?_ ?_
   · intro a
     simp [restrictPolynomial]
   · intro P Q hP hQ
     simp [map_add, hP, hQ]
   · intro P q hP
-    have hmul : restrictPolynomial hp B base (P * MvPolynomial.X q) =
-        restrictPolynomial hp B base P * relativeVariable hp B base q := by
+    have hmul : restrictPolynomial p B base (P * MvPolynomial.X q) =
+        restrictPolynomial p B base P * relativeVariable p B base q := by
       simp [restrictPolynomial]
     rw [hmul, map_mul, hP, eval_relativeVariable, map_mul, MvPolynomial.eval_X]
 
 /-- Scalar value reconstructed at a global relative-collar vertex and coordinate. -/
 noncomputable def scalarValue
-    (a : Assignment hp B) (x : GlobalVertex hp B) (j : Fin p) : Real :=
+    (a : Assignment p B) (x : GlobalVertex p B) (j : Fin p) : Real :=
   a (Quotient.mk _ (x, j))
 
 /-- Full coordinate vector reconstructed at a global relative-collar vertex. -/
 noncomputable def vectorValue
-    (a : Assignment hp B) (x : GlobalVertex hp B) : Fin p → Real :=
-  fun j => scalarValue hp B a x j
+    (a : Assignment p B) (x : GlobalVertex p B) : Fin p → Real :=
+  fun j => scalarValue p B a x j
 
 /-- Relative-collar assignments are prime-equivariant by the diagonal orbit quotient. -/
 theorem vectorValue_smul
-    (a : Assignment hp B) (g : PrimeSymmetry p) (x : GlobalVertex hp B) :
-    vectorValue hp B a (g • x) = g • vectorValue hp B a x := by
+    (a : Assignment p B) (g : PrimeSymmetry p) (x : GlobalVertex p B) :
+    vectorValue p B a (g • x) = g • vectorValue p B a x := by
   funext j
   rw [PrimeSymmetry.smul_coordinate_apply]
   let j₀ : Fin p := g⁻¹ • j
   have hsite :
-      Quotient.mk (MulAction.orbitRel (PrimeSymmetry p) (ScalarSite hp B))
+      Quotient.mk (MulAction.orbitRel (PrimeSymmetry p) (ScalarSite p B))
           (g • x, j) =
-        Quotient.mk (MulAction.orbitRel (PrimeSymmetry p) (ScalarSite hp B))
+        Quotient.mk (MulAction.orbitRel (PrimeSymmetry p) (ScalarSite p B))
           (x, j₀) := by
     apply Quotient.sound
     refine ⟨g, ?_⟩
@@ -480,21 +480,21 @@ theorem vectorValue_smul
 
 /-- Values at geometrically equal local collar vertices agree. -/
 theorem localValue_eq_of_slotPoint_eq
-    (a : Assignment hp B) {s t : VertexSlot hp B}
-    (h : slotPoint hp B s = slotPoint hp B t) :
-    vectorValue hp B a (sampleVertex hp B s) =
-      vectorValue hp B a (sampleVertex hp B t) := by
-  rw [sampleVertex_eq_of_slotPoint_eq hp B h]
+    (a : Assignment p B) {s t : VertexSlot p B}
+    (h : slotPoint p B s = slotPoint p B t) :
+    vectorValue p B a (sampleVertex p B s) =
+      vectorValue p B a (sampleVertex p B t) := by
+  rw [sampleVertex_eq_of_slotPoint_eq p B h]
 
 /-- Replacing movable parameters leaves every horizontal local vertex value unchanged. -/
 theorem replaceMovable_horizontal_localValue
-    (base : Assignment hp B) (move : MovableParameter hp B → Real)
-    (s : VertexSlot hp B) (hs : IsHorizontalPoint (slotPoint hp B s)) :
-    vectorValue hp B (replaceMovable hp B base move) (sampleVertex hp B s) =
-      vectorValue hp B base (sampleVertex hp B s) := by
+    (base : Assignment p B) (move : MovableParameter p B → Real)
+    (s : VertexSlot p B) (hs : IsHorizontalPoint (slotPoint p B s)) :
+    vectorValue p B (replaceMovable p B base move) (sampleVertex p B s) =
+      vectorValue p B base (sampleVertex p B s) := by
   funext j
-  apply replaceMovable_eq_base hp B
-  show IsFrozenVertex hp B (sampleVertex hp B s)
+  apply replaceMovable_eq_base p B
+  show IsFrozenVertex p B (sampleVertex p B s)
   simpa [IsFrozenVertex] using hs
 
 end RelativeCylinderParameters

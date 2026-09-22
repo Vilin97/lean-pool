@@ -450,7 +450,7 @@ theorem occurrencePairing_upper
 
 /-- Prime invariance is inherited by the nonhorizontal restriction of a weight. -/
 theorem sideMapWeight_translate
-    (hp : Nat.Prime p)
+    (p : Nat)
     (W : (Delta (p - 1) → Realization p × Set.Icc (0 : Real) 1) → ZMod p)
     (hW : ∀ (g : PrimeSymmetry p) tau,
       W (translateFacetMap p g tau) = W tau)
@@ -652,7 +652,7 @@ private theorem fixed_refined_side_pairing_cancels (N L n : ℕ) (hp : Nat.Prime
             · simp only [translateFacetMap, staircasePrismMap, Prod.fst]
               exact realizationPoint_prime_smul_any (n + 1 + 1) g f _
             · rfl
-      _ = _ := sideMapWeight_translate hp W hW g _
+      _ = _ := sideMapWeight_translate (n + 1 + 1) W hW g _
   have hz := orbit_boundary_pairing_eq_zero hp Vsimplex hVsimplex
   have hmap (orbit : PrimeOrbitCycle.TopOrbit hp) (j : Fin (n + 1 + 1)) :
       arbitrarySpatialSideWeight hp L (sideMapWeight W) eta h

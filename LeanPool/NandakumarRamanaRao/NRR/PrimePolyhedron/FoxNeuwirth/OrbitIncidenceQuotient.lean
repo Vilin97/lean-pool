@@ -90,6 +90,7 @@ theorem coefficient_eq_representative
   rcases MulAction.mem_orbit_iff.mp hc with ⟨g, hg⟩
   rw [← hg, E.coefficient_smul]
 
+omit [Fintype G] in
 /-- The quotient boundary sum is the original boundary sum at the chosen facet representative. -/
 theorem orbitBoundary_eq_coveringBoundary
     (E : EquivariantData (G := G) C)

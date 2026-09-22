@@ -186,7 +186,7 @@ theorem negativeReference_localIndex_zero
   rintro ⟨w, hw, hdev, hmean⟩
   let x := chart hp 0 q (StandardSimplex.toDelta w)
   have hneg := AAK.negativeEquivariantReferenceCoordinateMap_global_neg hp x
-  have hmeanneg : coordinateMean hp.pos
+  have hmeanneg : coordinateMean p
       (value hp 0
         (ofCoordinateAffineVertexMap (AAK.negativeEquivariantReferenceCoordinateMap hp)) q w) < 0 := by
     rw [value_zero_ofCoordinateAffineVertexMap]

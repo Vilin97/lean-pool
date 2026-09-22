@@ -281,7 +281,7 @@ structure FiniteOrbitZeroCountModel {p : Nat} (hp : Nat.Prime p) where
   referenceIndex_eq :
     ∀ c, referenceIndex c = referenceMap.localZeroIndex (topSimplex c)
   referenceCount_eq :
-    cycle.zeroCount referenceIndex = FoxNeuwirth.referenceSignedOrbitCount hp
+    cycle.zeroCount referenceIndex = FoxNeuwirth.referenceSignedOrbitCount p
 
 namespace FiniteOrbitZeroCountModel
 

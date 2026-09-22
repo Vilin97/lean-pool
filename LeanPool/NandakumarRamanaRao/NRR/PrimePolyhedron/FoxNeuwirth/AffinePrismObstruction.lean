@@ -104,7 +104,7 @@ noncomputable def mean
     (F : CoordinateAffineVertexMap p)
     (s : Simplex p (p - 1))
     (w : StandardSimplex (p - 1)) : Real :=
-  coordinateMean hp.pos (F.value s w)
+  coordinateMean p (F.value s w)
 
 /-- Difference coordinates commute with affine interpolation. -/
 theorem deviation_value_apply

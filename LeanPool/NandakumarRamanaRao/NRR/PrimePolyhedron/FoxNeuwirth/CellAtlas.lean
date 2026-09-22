@@ -95,7 +95,7 @@ def cellDimension (p : Nat)
   p - 1
 
  theorem cellDimension_eq
-    (hp : Nat.Prime p) (c : FoxNeuwirthTopCell p) :
+    (p : Nat) (c : FoxNeuwirthTopCell p) :
     cellDimension p c = p - 1 :=
   rfl
 

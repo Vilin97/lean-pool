@@ -35,7 +35,7 @@ def PositiveRaySkeletonFree
     (∀ r : Fin (p - 1),
       value hp N F q w (ReferenceAffineOrbitCount.coordinateLabel hp r) =
         value hp N F q w (ReferenceAffineOrbitCount.lastLabel hp)) →
-    0 < coordinateMean hp.pos (value hp N F q w) →
+    0 < coordinateMean p (value hp N F q w) →
     StandardSimplex.IsInterior w
 
 /-- A regular approximation whose positive-ray intersections are transverse to the chosen
@@ -68,7 +68,7 @@ theorem positive_coordinate
           (ReferenceAffineOrbitCount.coordinateLabel hp r) =
         value hp A.toRegularApproximation.level A.toRegularApproximation.map q w
           (ReferenceAffineOrbitCount.lastLabel hp))
-    (hmean : 0 < coordinateMean hp.pos
+    (hmean : 0 < coordinateMean p
       (value hp A.toRegularApproximation.level A.toRegularApproximation.map q w))
     (i : Fin p) :
     0 < w (Fin.cast (FoxNeuwirthChain.maximalIndex_eq hp).symm i) := by

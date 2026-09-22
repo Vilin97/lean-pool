@@ -174,7 +174,7 @@ theorem refinedChart_orbit_separated
     (affineCompMap (p - 1) N rho x)
   let wy : StandardSimplex (p - 1) := StandardSimplex.ofDelta
     (affineCompMap (p - 1) N rho y)
-  apply realizationPoint_orbit_separated hp s wx wy g
+  apply realizationPoint_orbit_separated p s wx wy g
   simpa [RefinedAffineMap.chart, Simplex.refinedContinuousMap,
     Simplex.realizationContinuousMap, s, rho, wx, wy] using h
 

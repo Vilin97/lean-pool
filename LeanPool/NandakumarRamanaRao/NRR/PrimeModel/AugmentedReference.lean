@@ -149,8 +149,8 @@ noncomputable def augmentedReference
 
  theorem coordinateMean_augmentedReference
     (M : PrimeConfigurationModel hp) (z : M.Point × SignedInterval) :
-    coordinateMean hp.pos (M.augmentedReference z) = (z.2 : ℝ) := by
-  change coordinateMean hp.pos
+    coordinateMean p (M.augmentedReference z) = (z.2 : ℝ) := by
+  change coordinateMean p
     (reconstructCoordinates p (M.scaledReference z.1, (z.2 : ℝ))) = _
   exact coordinateMean_reconstruct hp.pos _ _
 

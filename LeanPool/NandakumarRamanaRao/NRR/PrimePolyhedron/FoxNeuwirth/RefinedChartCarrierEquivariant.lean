@@ -64,7 +64,7 @@ theorem realizationPoint_prime_smul
 
 /-- Prime relabelling commutes with every iterated refined chart. -/
 theorem refinedPoint_prime_smul
-    (hp : Nat.Prime p) (g : PrimeSymmetry p)
+    (p : Nat) (g : PrimeSymmetry p)
     (s : Simplex p (p - 1)) (N : Nat) (rho : RefinementWord p N)
     (w : StandardSimplex (p - 1)) :
     (g • s).refinedPoint N rho w = g • s.refinedPoint N rho w := by
@@ -83,7 +83,7 @@ theorem refinedVertex_prime_smul
     (i : Fin p) :
     (g • s).refinedVertex N rho i = g • s.refinedVertex N rho i := by
   simpa [Simplex.refinedVertex, maximalCoordinateIndex] using
-    refinedPoint_prime_smul hp g s N rho
+    refinedPoint_prime_smul p g s N rho
       (StandardSimplex.ofDelta
         (stdSimplex.vertex (S := Real) (maximalCoordinateIndex i)))
 
@@ -252,9 +252,9 @@ theorem decorated_value_eq_of_decorated_chart_eq
       (g • s).refinedPoint N q.2 w =
         (h • t).refinedPoint N r.2 v := by
     calc
-      _ = g • s.refinedPoint N q.2 w := refinedPoint_prime_smul hp g s N q.2 w
+      _ = g • s.refinedPoint N q.2 w := refinedPoint_prime_smul p g s N q.2 w
       _ = h • t.refinedPoint N r.2 v := hpoint'
-      _ = _ := (refinedPoint_prime_smul hp h t N r.2 v).symm
+      _ = _ := (refinedPoint_prime_smul p h t N r.2 v).symm
   have hlocal := simplexValue_eq_of_refinedPoint_eq hp N
     (g • s) (h • t) q.2 r.2 F w v hrefined
   have hg := simplexValue_prime_smul hp g s N q.2 F hF w

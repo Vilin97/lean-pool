@@ -68,13 +68,10 @@ theorem convex_emptyInterior_subset_affineLine
     · exact AffineSubspace.vsub_mem_direction (subset_affineSpan ℝ _ hx)
         (Classical.choose_spec h_affine_span_nonempty)
 
-/-- A compact convex planar set with positive area has nonempty interior.
-
-The compactness hypothesis is not used; it is retained for a uniform interface. -/
-theorem interior_nonempty_of_convex_compact_positive_area
+/-- A convex planar set with positive area has nonempty interior. -/
+theorem interior_nonempty_of_convex_positive_area
     {S : Set Plane}
     (hconv : Convex ℝ S)
-    (hcomp : IsCompact S)
     (harea : 0 < (volume S).toReal) :
     (interior S).Nonempty := by
   rcases (interior S).eq_empty_or_nonempty with h | h

@@ -35,14 +35,14 @@ variable {p : Nat}
 abbrev CoordinateMap := RefinedAffineMap.ContinuousCoordinateMap (p := p)
 
 /-- Prime-equivariance of a continuous coordinate map. -/
-abbrev IsEquivariant (hp : Nat.Prime p) (F : CoordinateMap (p := p)) : Prop :=
+abbrev IsEquivariant (p : Nat) (F : CoordinateMap (p := p)) : Prop :=
   IsEquivariantCoordinateMap p F
 
 /-- A continuous prime-equivariant coordinate map avoiding the origin. -/
 structure ZeroFreeMap (hp : Nat.Prime p) where
   /-- The underlying continuous coordinate map. -/
   map : CoordinateMap
-  equivariant : IsEquivariant hp map
+  equivariant : IsEquivariant p map
   zeroFree : ∀ x, map x ≠ 0
 
 /-- A continuous equivariant homotopy through maps avoiding the origin. -/
@@ -167,7 +167,7 @@ theorem childMap_equivariant
     (hp : Nat.Prime p) (hA : 0 < A)
     (phi : NiceMV (BodySpace K (A / (p : Real))))
     (z : BodySpace K A × SignedInterval) :
-    IsEquivariant hp (childMap hp hA phi z) := by
+    IsEquivariant p (childMap hp hA phi z) := by
   intro g x
   convert (orderComplexModel hp).childTestMap_smul hA phi g
     (((z.1, x), z.2)) using 1 <;>

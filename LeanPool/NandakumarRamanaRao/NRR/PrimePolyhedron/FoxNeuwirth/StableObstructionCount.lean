@@ -88,7 +88,7 @@ noncomputable def negativeReferenceStableApproximation
     exfalso
     have hneg := AAK.negativeEquivariantReferenceCoordinateMap_global_neg hp
       (chart hp 0 q (StandardSimplex.toDelta w))
-    have hmeanneg : coordinateMean hp.pos
+    have hmeanneg : coordinateMean p
         (value hp 0
           (ofCoordinateAffineVertexMap
             (AAK.negativeEquivariantReferenceCoordinateMap hp)) q w) < 0 := by

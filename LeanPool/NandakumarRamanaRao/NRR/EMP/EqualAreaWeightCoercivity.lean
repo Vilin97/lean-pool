@@ -170,7 +170,7 @@ noncomputable def augmentedAreaDeviation
 
 lemma continuous_augmentedAreaDeviation
     (K : Geometry.ConvexBody Plane) (s : Fin n → Plane)
-    (hn : 0 < n) (hs : Function.Injective s) :
+    (hs : Function.Injective s) :
     Continuous (augmentedAreaDeviation K s) := by
   apply continuous_induced_rng.2
   apply continuous_pi
@@ -338,7 +338,7 @@ lemma augmentedPairing_pos_of_gauge_large
     have hnR : 0 < (n : Real) := Nat.cast_pos.mpr hn
     have hklarge : powerGapBound K s < u k := by
       nlinarith
-    have hdevpos := deviationPairing_pos_of_max_gt K s hn hs u hu k hkmax hklarge
+    have hdevpos := deviationPairing_pos_of_max_gt K s hn hs u hu k hklarge
     positivity
   · have hmSq : powerGapBound K s * K.area < m ^ 2 := by
       have hB : 0 ≤ powerGapBound K s * K.area := mul_nonneg hC0 hK0

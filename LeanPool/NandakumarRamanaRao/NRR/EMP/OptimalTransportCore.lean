@@ -97,7 +97,7 @@ theorem EMP.powerDiagram_equalArea_weights_exists_core
     have hF : Continuous F := by
       have hscale : Continuous (fun x : EuclideanSpace Real (Fin (d + 1)) => R • x) :=
         by fun_prop
-      exact (EMP.continuous_augmentedAreaDeviation K s (by omega) hs).comp
+      exact (EMP.continuous_augmentedAreaDeviation K s hs).comp
         hscale
     have hout : ∀ x : EuclideanSpace Real (Fin (d + 1)), ‖x‖ = 1 →
         0 < inner Real x (F x) := by

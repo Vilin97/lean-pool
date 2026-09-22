@@ -70,7 +70,7 @@ theorem finite_sum_cancel_of_fixedPointFree_involution
 
 /-- Internal barycentric boundary faces cancel for each fixed internal face index. -/
 theorem internal_faces_cancel_for_index
-    {α M : Type} [Fintype α] [DecidableEq α] [AddCommGroup M]
+    {α M : Type} [Fintype α] [AddCommGroup M]
     (ι : α → α) (hιι : Function.Involutive ι) (hneq : ∀ a, ι a ≠ a)
     (T : α → M) (hT : ∀ a, T (ι a) = - T a) :
     (∑ a : α, T a) = 0 :=

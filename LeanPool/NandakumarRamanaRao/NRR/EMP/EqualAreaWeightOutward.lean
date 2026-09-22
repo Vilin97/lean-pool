@@ -153,7 +153,7 @@ lemma deviationPairing_pos_of_max_gt
     (K : Geometry.ConvexBody Plane) (s : Fin n → Plane)
     (hn : 0 < n) (hs : Function.Injective s)
     (w : Fin n → Real) (hw : EMP.WeightNormalized w)
-    (k : Fin n) (hk : ∀ i, w i ≤ w k)
+    (k : Fin n)
     (hlarge : powerGapBound K s < w k) :
     0 < deviationPairing K s w := by
   have hK : 0 < K.area :=

@@ -544,7 +544,7 @@ def EndpointStraightLineSafe
 /-- Stable endpoint approximation extracted from one generic prism assignment. -/
 noncomputable def stableEndpointApproximation
     (hp : Nat.Prime p) (N L : Nat) (s : EndpointSide)
-    {F₀ F₁ : ZeroFreeMap hp} (H : ZeroFreeHomotopy hp F₀ F₁)
+    {F₀ F₁ : ZeroFreeMap hp}
     (a : Assignment hp N L)
     (hregular : ∀ q : PrismCell hp N L,
       FacetRegular hp (localVertexMap hp N L a q))
@@ -623,7 +623,7 @@ noncomputable def Result.lowerStableApproximation
     {m r : Real} (R : Result hp N L H m)
     (C : EndpointControl hp N L H R.assignment r) :
     StableRegularApproximation hp F₀.map :=
-  stableEndpointApproximation hp N L .lower H R.assignment
+  stableEndpointApproximation hp N L .lower (F₀ := F₀) (F₁ := F₁) R.assignment
     R.facetRegular R.avoidsCodimTwo
     (endpointStraightLineSafe_of_control hp N L H R.assignment C .lower)
 
@@ -634,7 +634,7 @@ noncomputable def Result.upperStableApproximation
     {m r : Real} (R : Result hp N L H m)
     (C : EndpointControl hp N L H R.assignment r) :
     StableRegularApproximation hp F₁.map :=
-  stableEndpointApproximation hp N L .upper H R.assignment
+  stableEndpointApproximation hp N L .upper (F₀ := F₀) (F₁ := F₁) R.assignment
     R.facetRegular R.avoidsCodimTwo
     (endpointStraightLineSafe_of_control hp N L H R.assignment C .upper)
 

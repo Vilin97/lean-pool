@@ -74,9 +74,9 @@ variable {p : ℕ}
     _ = (0 : ZeroSum p) i := (ZeroSum.zero_apply i).symm
 
  theorem coordinateMean_prime_smul
-    (hp : Nat.Prime p) (v : Fin p → ℝ) (g : PrimeSymmetry p) :
-    coordinateMean hp.pos (g • v) = coordinateMean hp.pos v :=
-  coordinateMean_relabel hp.pos (PrimeSymmetry.toPerm p g) v
+    (p : Nat) (v : Fin p → ℝ) (g : PrimeSymmetry p) :
+    coordinateMean p (g • v) = coordinateMean p v :=
+  coordinateMean_relabel p (PrimeSymmetry.toPerm p g) v
 
  theorem coordinateDeviation_prime_smul
     (hp : Nat.Prime p) (v : Fin p → ℝ) (g : PrimeSymmetry p) :

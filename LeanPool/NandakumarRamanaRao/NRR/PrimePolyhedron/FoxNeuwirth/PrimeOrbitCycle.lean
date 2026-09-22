@@ -97,7 +97,7 @@ theorem barDifferenceMatrix_smul
 
 /-- The bar-removal determinant is invariant under prime-symmetry relabelling. -/
 theorem barRemovalDeterminant_smul
-    (hp : Nat.Prime p) (g : PrimeSymmetry p) (s : Simplex p (p - 1)) :
+    (p : Nat) (g : PrimeSymmetry p) (s : Simplex p (p - 1)) :
     barRemovalDeterminant (g • s) = barRemovalDeterminant s := by
   unfold barRemovalDeterminant
   rw [barDifferenceMatrix_smul p g s]
@@ -124,7 +124,7 @@ theorem chain_smul
   push_cast
   simp only [Simplex.prime_smul_apply]
   rw [permutationOrientationSign_smul p g (s 0)]
-  rw [barRemovalDeterminant_smul hp g s]
+  rw [barRemovalDeterminant_smul p g s]
 
 /-- Simplicial incidence is invariant under simultaneous relabelling. -/
 theorem simplicialIncidence_smul

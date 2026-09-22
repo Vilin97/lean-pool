@@ -83,8 +83,8 @@ theorem eq_of_subset_of_area_eq
   have h_strict : (C.body : Set Plane) ⊂ (D.body : Set Plane) :=
     hCD.ssubset_of_ne fun h => h_neq (ConvexSubbody.ext h)
   have hDint : (interior (D.body : Set Plane)).Nonempty :=
-    Geometry.ConvexBody.interior_nonempty_of_convex_compact_positive_area
-      D.convex D.isCompact hDpos
+    Geometry.ConvexBody.interior_nonempty_of_convex_positive_area
+      D.convex hDpos
   have hlt := measure_lt_of_compact_convex_ssubset
     C.isCompact D.isCompact D.convex h_strict hDint
   exact absurd harea (ne_of_lt hlt)

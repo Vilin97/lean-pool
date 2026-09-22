@@ -98,8 +98,8 @@ noncomputable def toGeometryConvexBody
   convex' := C.body.convex
   isCompact' := C.body.isCompact
   interior_nonempty' :=
-    Geometry.ConvexBody.interior_nonempty_of_convex_compact_positive_area
-      C.body.convex C.body.isCompact (area_pos hA C)
+    Geometry.ConvexBody.interior_nonempty_of_convex_positive_area
+      C.body.convex (area_pos hA C)
 
 @[simp] theorem toGeometryConvexBody_carrier
     (C : BodySpace K A) (hA : 0 < A) :

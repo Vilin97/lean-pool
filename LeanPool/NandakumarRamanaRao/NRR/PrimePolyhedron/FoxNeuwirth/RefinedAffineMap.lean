@@ -103,7 +103,7 @@ def HasPositiveInteriorZero
       (∀ r : Fin (p - 1),
         value hp N F q w (ReferenceAffineOrbitCount.coordinateLabel hp r) =
           value hp N F q w (ReferenceAffineOrbitCount.lastLabel hp)) ∧
-      0 < coordinateMean hp.pos (value hp N F q w)
+      0 < coordinateMean p (value hp N F q w)
 
 noncomputable instance hasPositiveInteriorZeroDecidable
     (hp : Nat.Prime p) (N : Nat)

@@ -69,7 +69,7 @@ noncomputable def orientedTopChain
 /-- Applying the top incidence map to the oriented top chain is exactly the previously defined
 actual boundary coefficient. -/
 @[simp] theorem topIncidenceBoundary_orientedTopChain_apply
-    (hp : Nat.Prime p) (a : BarredPermutation p) :
+    (p : Nat) (a : BarredPermutation p) :
     topIncidenceBoundary (orientedTopChain p) a =
       actualTopBoundaryCoefficient a :=
   rfl

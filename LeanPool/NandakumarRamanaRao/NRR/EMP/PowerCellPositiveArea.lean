@@ -14,7 +14,7 @@ import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.PositiveAreaInterior
 # `NRR.EMP.PowerCellPositiveArea` — positive area of equal‑area cells
 
 If the weights `w` are equal‑area for sites `s` in a body `K` with `0 < K.area` and `0 < n`,
-then every restricted power cell has strictly positive area, and hence (by the theorem `interior_nonempty_of_convex_compact_positive_area`) nonempty interior.
+then every restricted power cell has strictly positive area, and hence (by the theorem `interior_nonempty_of_convex_positive_area`) nonempty interior.
 
 ## Public API
 
@@ -59,9 +59,8 @@ theorem bodyCellSet_interior_nonempty_of_equalArea
     (interior (PowerDiagram.bodyCellSet K s w i)).Nonempty := by
   have harea : 0 < (volume (PowerDiagram.bodyCellSet K s w i)).toReal :=
     bodyCellArea_pos_of_equalArea K s w hn hK hw i
-  exact NRR.Geometry.ConvexBody.interior_nonempty_of_convex_compact_positive_area
+  exact NRR.Geometry.ConvexBody.interior_nonempty_of_convex_positive_area
     (PowerDiagram.bodyCellSet_convex K s w i)
-    (PowerDiagram.bodyCellSet_isCompact K s w i)
     harea
 
 end NRR.PowerDiagram

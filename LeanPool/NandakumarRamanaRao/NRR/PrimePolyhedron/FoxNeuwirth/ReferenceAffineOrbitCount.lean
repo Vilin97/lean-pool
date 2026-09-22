@@ -27,7 +27,7 @@ At perturbation parameter zero the augmented affine determinant is the oriented 
 coefficient, up to the constant sign `(-1)^(p-1)`.  Since there are finitely many maximal flags, a
 single sufficiently small positive perturbation preserves all determinant signs.  This gives a
 regular affine reference map whose orbit zero count is the previously computed nonzero value
-`FoxNeuwirth.referenceSignedOrbitCount hp`.
+`FoxNeuwirth.referenceSignedOrbitCount p`.
 -/
 
 namespace NRR
@@ -1653,7 +1653,7 @@ noncomputable def selectedOrbitEquivTopSupport
     exact ⟨1, by simp only [one_smul]; exact hback⟩
 
 theorem card_selectedOrbit
-    (hp : Nat.Prime p) :
+    (p : Nat) :
     Fintype.card (SelectedOrbit p) = FoxNeuwirth.referenceOrbitMultiplicity p := by
   classical
   let X := BarredPermutation.TopCell p
@@ -1763,7 +1763,7 @@ theorem coefficient_mul_referenceIndex
 theorem referenceZeroCount_eq
     (hp : Nat.Prime p) :
     (PrimeOrbitCycle.orbitCycle hp).zeroCount (referenceIndex hp) =
-      FoxNeuwirth.referenceSignedOrbitCount hp := by
+      FoxNeuwirth.referenceSignedOrbitCount p := by
   classical
   unfold FiniteIncidenceCycle.zeroCount
   rw [show (∑ q : PrimeOrbitCycle.TopOrbit hp,
@@ -1773,7 +1773,7 @@ theorem referenceZeroCount_eq
     simp_rw [coefficient_mul_referenceIndex hp]
     exact sum_if_one_zero_eq_card _]
   rw [Fintype.card_congr (selectedOrbitEquivTopSupport hp).symm]
-  rw [card_selectedOrbit hp]
+  rw [card_selectedOrbit p]
   rfl
 
 /-- The finite orbit zero-count model supplied by the reference affine construction. -/

@@ -373,7 +373,7 @@ theorem prism_vertex_injective
 /-- A prime translate of a point in one strict simplex can lie in that same simplex only for the
 identity group element. -/
 theorem realizationPoint_orbit_separated
-    (hp : Nat.Prime p) {d : Nat} (s : Simplex p d)
+    (p : Nat) {d : Nat} (s : Simplex p d)
     (w v : StandardSimplex d) (g : PrimeSymmetry p)
     (h : g • s.realizationPoint w = s.realizationPoint v) :
     g = 1 := by
@@ -446,7 +446,7 @@ theorem prism_vertex_orbit_injective
     simpa [SubdivisionPrismCharts.vertex, SubdivisionPrismCharts.chart,
       RefinedAffineMap.chart, Simplex.refinedContinuousMap,
       Simplex.realizationContinuousMap, s, ui, uj, sti, stj, wi, wj] using hspatial
-  have hg : g = 1 := realizationPoint_orbit_separated hp s wi wj g hreal
+  have hg : g = 1 := realizationPoint_orbit_separated p s wi wj g hreal
   subst g
   have hv : SubdivisionPrismCharts.vertex hp N L q i =
       SubdivisionPrismCharts.vertex hp N L q j := by

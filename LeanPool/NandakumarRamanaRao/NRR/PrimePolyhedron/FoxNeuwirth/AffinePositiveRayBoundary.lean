@@ -54,7 +54,7 @@ noncomputable def deviation
 
 /-- Mean coordinate. -/
 noncomputable def mean (hp : Nat.Prime p) (y : Fin p → Real) : Real :=
-  coordinateMean hp.pos y
+  coordinateMean p y
 
 /-- Restriction to the facet omitting vertex `k`. -/
 noncomputable def facetValue
@@ -426,8 +426,8 @@ theorem coordinateDeviation_eq_zero_of_deviation_eq_zero
   apply ZeroSum.ext
   intro i
   rw [coordinateDeviation_apply]
-  change y i - coordinateMean hp.pos y = 0
-  rw [show coordinateMean hp.pos y =
+  change y i - coordinateMean p y = 0
+  rw [show coordinateMean p y =
       y (FoxNeuwirthOrderComplex.ReferenceAffineOrbitCount.lastLabel hp) from
     mean_eq_lastLabel_of_deviation_eq_zero hp y hdev]
   exact sub_eq_zero.mpr

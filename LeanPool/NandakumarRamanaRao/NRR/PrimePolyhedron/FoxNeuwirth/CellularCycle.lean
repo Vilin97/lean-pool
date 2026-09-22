@@ -71,13 +71,13 @@ structure CellularObstruction (hp : Nat.Prime p) where
   cycle : CellularTopCycle hp
   /-- The nonzero reference orbit count in the prime residue field. -/
   referenceCount : ZMod p
-  referenceCount_eq : referenceCount = referenceSignedOrbitCount hp
+  referenceCount_eq : referenceCount = referenceSignedOrbitCount p
   referenceCount_ne_zero : referenceCount ≠ 0
 
 /-- Canonical direct Fox--Neuwirth cellular obstruction. -/
 noncomputable def cellularObstruction (hp : Nat.Prime p) : CellularObstruction hp where
   cycle := cellularTopCycle hp
-  referenceCount := referenceSignedOrbitCount hp
+  referenceCount := referenceSignedOrbitCount p
   referenceCount_eq := rfl
   referenceCount_ne_zero := referenceSignedOrbitCount_ne_zero hp
 

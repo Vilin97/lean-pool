@@ -42,6 +42,7 @@ theorem measure_iUnion_finset_null
   intro i
   exact hnull i.1 i.2
 
+omit [PseudoMetricSpace E] in
 /-- Every set of positive measure contains a point outside a finite family of
 null bad sets.
 

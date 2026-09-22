@@ -57,7 +57,7 @@ theorem uniformWeights_relabel
 /-- Mean of any point of the standard simplex. -/
 theorem coordinateMean_weights
     (hp : Nat.Prime p) (w : FoxNeuwirthWeights p) :
-    coordinateMean hp.pos w.1 = 1 / (p : Real) := by
+    coordinateMean p w.1 = 1 / (p : Real) := by
   simp [coordinateMean, w.sum_eq_one]
 
 /-- Distinguished reference zero in the identity top cell. -/
@@ -76,14 +76,14 @@ theorem reference_eq_zero_iff_weights_eq_uniform
     funext i
     have hi := congrArg
       (fun v : ZeroSum p => v i) hz
-    change z.2 i - coordinateMean hp.pos z.2.1 = 0 at hi
+    change z.2 i - coordinateMean p z.2.1 = 0 at hi
     rw [coordinateMean_weights hp z.2] at hi
     have hi' : z.2 i = 1 / (p : Real) := sub_eq_zero.mp hi
     simpa only [uniformWeights_apply] using hi'
   · intro hz
     apply ZeroSum.ext
     intro i
-    change z.2 i - coordinateMean hp.pos z.2.1 = 0
+    change z.2 i - coordinateMean p z.2.1 = 0
     rw [coordinateMean_weights hp z.2]
     have hi := congrArg (fun w : FoxNeuwirthWeights p => w i) hz
     simpa only [uniformWeights_apply, sub_eq_zero] using hi
@@ -134,7 +134,7 @@ noncomputable def referenceOrbitMultiplicity (p : Nat) : Nat :=
 /-- For two labels the selected symmetry group is the full group, so the reference zero set has one
 orbit. -/
 theorem referenceOrbitMultiplicity_eq_one
-    (hp : Nat.Prime p) (h2 : p = 2) :
+    (p : Nat) (h2 : p = 2) :
     referenceOrbitMultiplicity p = 1 := by
   rw [referenceOrbitMultiplicity, primeSymmetrySubgroup_eq_top p h2]
   simp
@@ -159,7 +159,7 @@ theorem referenceOrbitMultiplicity_eq_two
 
 /-- Signed reference orbit count with local coefficient `1` on each restricted orbit. -/
 noncomputable def referenceSignedOrbitCount
-    (hp : Nat.Prime p) : ZMod p :=
+    (p : Nat) : ZMod p :=
   (referenceOrbitMultiplicity p : ZMod p)
 
 private theorem two_ne_zero_zmod
@@ -179,7 +179,7 @@ private theorem two_ne_zero_zmod
 /-- The signed reference orbit count is nonzero modulo `p`. -/
 theorem referenceSignedOrbitCount_ne_zero
     (hp : Nat.Prime p) :
-    referenceSignedOrbitCount hp ≠ 0 := by
+    referenceSignedOrbitCount p ≠ 0 := by
   by_cases h2 : p = 2
   · subst p
     simp [referenceSignedOrbitCount, referenceOrbitMultiplicity,
