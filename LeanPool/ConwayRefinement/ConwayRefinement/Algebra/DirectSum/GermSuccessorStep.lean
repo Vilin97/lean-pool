@@ -493,7 +493,7 @@ theorem injectiveAt_of_forall_lt [CharZero K] (hgz : GradeZeroScalars A)
   -- independence of the generators modulo `(P̂_+)² ∩ P_{deg b}`
   obtain ⟨b₀, hb₀⟩ := hBne
   obtain ⟨b, hb⟩ : ∃ b : ↥B, (b : ι) = b₀ := ⟨⟨b₀, hb₀⟩, rfl⟩
-  obtain ⟨κ', hκ'⟩ : ∃ κ' : ι → K, ∀ t, κ' t = coeff 0 (a' t b) := ⟨_, fun _ ↦ rfl⟩
+  obtain ⟨κ', hκ'⟩ : ∃ κ' : ι → K, ∀ t, κ' t = (a' t b).coeff 0 := ⟨_, fun _ ↦ rfl⟩
   obtain ⟨ℓ, hℓ⟩ : ∃ ℓ : MvPolynomial ι K, ℓ = ∑ t ∈ T, C (κ' t) * X t := ⟨_, rfl⟩
   have hdiff : aeval x (W b) - aeval x ℓ ∈ decomposableAt (A) (wt b) := by
     rw [hW, hℓ, map_sum, map_sum, ← Finset.sum_sub_distrib]
@@ -538,7 +538,7 @@ theorem injectiveAt_of_forall_lt [CharZero K] (hgz : GradeZeroScalars A)
         exact mul_mem_decomposableAt_of_mem_decomposableAt hVt
           (aeval_mem_of_forall_mem hx.mem hahom)
     · have hκ0 : κ' t = 0 := by
-        rw [hκ', ha'0 t ht b h, coeff_zero]
+        rw [hκ', ha'0 t ht b h, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply]
       rw [ha'0 t ht b h, hκ0]
       simp only [map_zero, zero_mul, sub_zero]
       exact zero_mem _
@@ -577,7 +577,7 @@ theorem injectiveAt_of_forall_lt [CharZero K] (hgz : GradeZeroScalars A)
           rw [hκ']
           exact coeff_zero_eq_zero_of_isWeightedHomogeneous hahom hβ0
       · refine absurd ?_ hi
-        rw [hκ', ha'0 i hiT b h, coeff_zero]
+        rw [hκ', ha'0 i hiT b h, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply]
     · exact absurd rfl hi
   have hfmem : Finsupp.linearCombination K x f ∈ decomposableAt (A) (wt b) := by
     rw [hℓeq]

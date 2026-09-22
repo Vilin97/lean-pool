@@ -92,7 +92,7 @@ theorem gradedTensorTwoGrade_positive_component_ne_zero :
   simpa only [map_zero] using hzero
 
 /-- The nonpositive exponent `-1` used by the finite-support factor fixture. -/
-def gradedTensorExponentNegOne : {g : ℝ // g ≤ 0} := ⟨-1, by norm_num⟩
+def gradedTensorExponentNegOne : HahnSeries.Nonpositive.exponentMonoid ℝ := ⟨-1, show (-1 : ℝ) ≤ 0 by norm_num⟩
 
 /-- The finite-support monomial at exponent `-1`. -/
 def gradedTensorFiniteMonomial : Berarducci.FiniteSupportRing (K := ℚ) :=

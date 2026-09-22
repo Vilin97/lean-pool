@@ -45,67 +45,87 @@ import LeanPool.ConwayRefinement.CombinatorialGames.Surreal.Ordinal
 # Upstream reuse checks
 
 This module pins the availability and compiler-visible signatures of selected upstream interfaces.
-It intentionally declares no mathematical API. The hash-command linter is disabled here because
-the module consists precisely of checked signature fixtures.
+The anonymous examples retain these signature checks without adding a mathematical API.
 -/
 universe u v w
-  (@Ordinal.isPrincipal_add_iff_zero_or_omega0_opow :
+
+example :
     {o : Ordinal.{u}} →
       Ordinal.IsPrincipal (· + ·) o ↔
-        o = 0 ∨ o ∈ Set.range fun e : Ordinal.{u} ↦ Ordinal.omega0 ^ e)
-  (@Ordinal.sub_omega0_opow_log_lt :
+        o = 0 ∨ o ∈ Set.range fun e : Ordinal.{u} ↦ Ordinal.omega0 ^ e :=
+  @Ordinal.isPrincipal_add_iff_zero_or_omega0_opow
+
+example :
     {o : Ordinal.{u}} →
-      o ≠ 0 → o - Ordinal.omega0 ^ Ordinal.log Ordinal.omega0 o < o)
-  (@HahnSeries.cardSuppLTSubring :
+      o ≠ 0 → o - Ordinal.omega0 ^ Ordinal.log Ordinal.omega0 o < o :=
+  @Ordinal.sub_omega0_opow_log_lt
+
+example :
     (Γ : Type u) →
       (R : Type v) →
         (κ : Cardinal.{u}) →
           [PartialOrder Γ] →
             [AddCommMonoid Γ] →
               [IsOrderedCancelAddMonoid Γ] →
-                [Ring R] → [Fact (Cardinal.aleph0 ≤ κ)] → Subring (HahnSeries Γ R))
-  (@HahnSeries.cardSuppLTSubfield :
+                [Ring R] → [Fact (Cardinal.aleph0 ≤ κ)] → Subring (HahnSeries Γ R) :=
+  @HahnSeries.cardSuppLTSubring
+
+example :
     (Γ : Type u) →
       (R : Type v) →
         (κ : Cardinal.{u}) →
           [LinearOrder Γ] →
             [AddCommGroup Γ] →
               [IsOrderedAddMonoid Γ] →
-                [Field R] → [Fact (Cardinal.aleph0 < κ)] → Subfield (HahnSeries Γ R))
-  (@Order.le_cof_iff :
+                [Field R] → [Fact (Cardinal.aleph0 < κ)] → Subfield (HahnSeries Γ R) :=
+  @HahnSeries.cardSuppLTSubfield
+
+example :
     ∀ {α : Type u} [Preorder α] {c : Cardinal.{u}},
-      c ≤ Order.cof α ↔ ∀ s : Set α, IsCofinal s → c ≤ Cardinal.mk ↥s)
-  (@not_isCofinal_iff :
+      c ≤ Order.cof α ↔ ∀ s : Set α, IsCofinal s → c ≤ Cardinal.mk ↥s :=
+  @Order.le_cof_iff
+
+example :
     ∀ {α : Type u} [LinearOrder α] {s : Set α},
-      ¬ IsCofinal s ↔ ∃ x, ∀ y ∈ s, y < x)
-  (@HahnSeries.cardSupp_single_mul_le :
+      ¬ IsCofinal s ↔ ∃ x, ∀ y ∈ s, y < x :=
+  @not_isCofinal_iff
+
+example :
     ∀ {Γ : Type u} {R : Type v} [PartialOrder Γ] [AddCommMonoid Γ]
       [IsOrderedCancelAddMonoid Γ] [NonUnitalNonAssocSemiring R]
       (x : HahnSeries Γ R) (a : Γ) (r : R),
-        (HahnSeries.single a r * x).cardSupp ≤ x.cardSupp)
-  (@HahnSeries.iterateEquiv :
+        (HahnSeries.single a r * x).cardSupp ≤ x.cardSupp :=
+  @HahnSeries.cardSupp_single_mul_le
+
+example :
     {Γ : Type u} →
       {Γ' : Type v} →
         {R : Type w} →
           [PartialOrder Γ] →
             [Zero R] →
               [PartialOrder Γ'] →
-                HahnSeries Γ (HahnSeries Γ' R) ≃ HahnSeries (Lex (Γ × Γ')) R)
-  (@HahnSeries.truncLT :
+                HahnSeries Γ (HahnSeries Γ' R) ≃ HahnSeries (Lex (Γ × Γ')) R :=
+  @HahnSeries.iterateEquiv
+
+example :
     {Γ : Type u} →
       {R : Type v} →
         [Zero R] →
           [PartialOrder Γ] →
-            [DecidableLT Γ] → Γ → ZeroHom (HahnSeries Γ R) (HahnSeries Γ R))
-  (@HahnSeries.embDomain :
+            [DecidableLT Γ] → Γ → ZeroHom (HahnSeries Γ R) (HahnSeries Γ R) :=
+  @HahnSeries.truncLT
+
+example :
     {Γ : Type u} →
       {Γ' : Type v} →
         {R : Type w} →
           [PartialOrder Γ] →
             [Zero R] →
               [PartialOrder Γ'] →
-                (Γ ↪o Γ') → HahnSeries Γ R → HahnSeries Γ' R)
-  (@HahnSeries.support_embDomain_subset :
+                (Γ ↪o Γ') → HahnSeries Γ R → HahnSeries Γ' R :=
+  @HahnSeries.embDomain
+
+example :
     {Γ : Type u} →
       {Γ' : Type v} →
         {R : Type w} →
@@ -114,8 +134,10 @@ universe u v w
               [PartialOrder Γ'] →
                 {f : Γ ↪o Γ'} →
                   {x : HahnSeries Γ R} →
-                    (HahnSeries.embDomain f x).support ⊆ f '' x.support)
-  (@WithBot.coe_sSup' :
+                    (HahnSeries.embDomain f x).support ⊆ f '' x.support :=
+  @HahnSeries.support_embDomain_subset
+
+example :
     {α : Type u} →
       [Preorder α] →
         [SupSet α] →
@@ -123,9 +145,14 @@ universe u v w
             s.Nonempty →
               BddAbove s →
                 ((sSup s : α) : WithBot α) =
-                  sSup ((fun a : α ↦ (a : WithBot α)) '' s))
-  (@SurrealHahnSeries.type_support :
+                  sSup ((fun a : α ↦ (a : WithBot α)) '' s) :=
+  @WithBot.coe_sSup'
+
+example :
     ∀ x : SurrealHahnSeries.{u},
-      Ordinal.type (α := x.support) (· > ·) = Ordinal.lift.{u + 1} x.length)
-  (@not_injective_of_ordinal :
-    ∀ {α : Type v} [Small.{u} α] (f : Ordinal.{u} → α), ¬Function.Injective f)
+      Ordinal.type (α := x.support) (· > ·) = Ordinal.lift.{u + 1} x.length :=
+  @SurrealHahnSeries.type_support
+
+example :
+    ∀ {α : Type v} [Small.{u} α] (f : Ordinal.{u} → α), ¬Function.Injective f :=
+  @not_injective_of_ordinal

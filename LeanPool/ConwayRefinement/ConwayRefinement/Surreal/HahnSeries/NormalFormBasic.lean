@@ -59,8 +59,8 @@ attribute [simp, grind .] coeff_ne_zero
 
 @[ext]
 theorem ext {s t : TermSeq} (hl : s.length = t.length)
-    (he : ∀ i (hs : i < s.length) (ht : i < t.length), s.exp ⟨i, hs⟩ = t.exp ⟨i, ht⟩)
-    (hc : ∀ i (hs : i < s.length) (ht : i < t.length), s.coeff ⟨i, hs⟩ = t.coeff ⟨i, ht⟩) :
+    (he : ∀ i (hs : i ∈ Iio s.length) (ht : i ∈ Iio t.length), s.exp ⟨i, hs⟩ = t.exp ⟨i, ht⟩)
+    (hc : ∀ i (hs : i ∈ Iio s.length) (ht : i ∈ Iio t.length), s.coeff ⟨i, hs⟩ = t.coeff ⟨i, ht⟩) :
     s = t := by
   cases s
   cases t
@@ -108,7 +108,6 @@ def toSurrealHahnSeries (s : TermSeq) : SurrealHahnSeries :=
   .mk _ (small_subset H) (.subset (by
     rw [wellFoundedOn_range]
     convert wellFounded_lt (α := Iio s.length)
-    ext
     exact s.exp_strictAnti.lt_iff_gt
   ) H)
 
@@ -143,8 +142,11 @@ theorem support_coe (s : TermSeq) : support s = range s.exp := by
 
 /-- Order isomorphism between `Iio x.length` and the range of `x.exp`. -/
 private def relIso' (s : TermSeq) : (· < · : Iio s.length → _) ≃r (· > · : range s.exp → _) := by
-  refine .ofSurjective ⟨⟨fun i ↦ ⟨s.exp i, ⟨i, rfl⟩⟩, fun a b h ↦ s.exp_strictAnti.injective ?_⟩,
-    s.exp_lt_exp_iff⟩ fun _ ↦ ?_ <;> aesop
+  refine .ofSurjective ⟨⟨fun i ↦ ⟨s.exp i, ⟨i, rfl⟩⟩, ?_⟩, s.exp_lt_exp_iff⟩ ?_
+  · intro a b h
+    exact s.exp_strictAnti.injective (congrArg Subtype.val h)
+  · rintro ⟨x, ⟨i, rfl⟩⟩
+    exact ⟨i, rfl⟩
 
 /-- Order isomorphism between `Iio s.length` and the support of `x`. -/
 private def relIso (s : TermSeq) : (· < · : Iio s.length → _) ≃r (· > · : support s → _) :=
@@ -223,10 +225,12 @@ def surrealHahnSeriesEquiv : TermSeq ≃ SurrealHahnSeries where
   toFun := toSurrealHahnSeries
   invFun := ofSurrealHahnSeries
   left_inv s := by
-    ext x _ h
-    · simp
-    · simp
-    · simp [coeffIdx_coe_of_lt h]
+    apply TermSeq.ext
+    · exact length_coe s
+    · intro i hs ht
+      exact exp_coe s ⟨i, hs⟩
+    · intro i hs ht
+      exact coeffIdx_coe_of_lt ht
   right_inv x := by
     ext i
     by_cases h : i ∈ x.support

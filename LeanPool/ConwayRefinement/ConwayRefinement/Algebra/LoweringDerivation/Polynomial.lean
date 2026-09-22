@@ -94,7 +94,7 @@ theorem exists_linear_part (hwt : ∀ i, 1 ≤ wt i)
     {F : MvPolynomial ι E} {n : ℕ} (hn : 1 ≤ n) (hF : IsWeightedHomogeneous wt F n) :
     ∃ c : ι →₀ E, (∀ i ∈ c.support, wt i = n) ∧
       aeval x F - Finsupp.linearCombination E x c ∈ decomposable A n ∧
-      ∀ i, c i = coeff (Finsupp.single i 1) F := by
+      ∀ i, c i = F.coeff (Finsupp.single i 1) := by
   exact GermPolynomial.exists_linear_part hwt hmem hn hF
 
 /-! ### The real-line derivation as a filter-germ derivation -/
@@ -179,7 +179,7 @@ end IsHomogeneousCoordinates
 /-- A positive-weight homogeneous polynomial of degree zero is constant. -/
 theorem eq_C_of_isWeightedHomogeneous_zero (hwt : ∀ i, 1 ≤ wt i)
     {p : MvPolynomial ι E} (hp : IsWeightedHomogeneous wt p 0) :
-    p = C (coeff 0 p) :=
+    p = C (p.coeff 0) :=
   GermPolynomial.eq_C_of_isWeightedHomogeneous_zero hwt hp
 
 /-- A positive-degree homogeneous polynomial in the joint kernel of the pointwise derivations is

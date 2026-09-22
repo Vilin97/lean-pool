@@ -36,7 +36,7 @@ namespace Berarducci
 
 public noncomputable section
 
-variable {K : Type v} [Field K] [CharZero K]
+variable {K : Type v} [Field K]
 
 /-- Multiplication on the finite-support tensor factor agrees with the residue-ring action on a
 fixed component of `RV̂`. -/
@@ -67,7 +67,7 @@ theorem principalComponentTensorEquiv_mulRightFactor
 
 /-- Multiplication on the finite-support tensor factor agrees with multiplication by the
 grade-zero finite-support embedding in the associated graded ring. -/
-theorem principalSubringTensorEquiv_mulRightFactor (q : FiniteSupportRing (K := K))
+theorem principalSubringTensorEquiv_mulRightFactor [CharZero K] (q : FiniteSupportRing (K := K))
     (z : PrincipalSubring K ⊗[K] FiniteSupportRing (K := K)) :
     principalSubringTensorEquiv K
         (TensorProduct.mulRightFactor q z) =
@@ -130,7 +130,6 @@ def IsLayerMaximalFiniteSupportDivisor (α : NatOrdinal)
     ∃ C : (HahnSeries.Nonpositive.degreeValuation K).Component α,
       HahnSeries.Nonpositive.degreeFiniteSupportResidueEquiv K q • C = B
 
-omit [CharZero K] in
 /-- The defining divisibility characterization for a fixed homogeneous component. -/
 theorem isLayerMaximalFiniteSupportDivisor_iff (α : NatOrdinal)
     (B : (HahnSeries.Nonpositive.degreeValuation K).Component α)
@@ -149,7 +148,6 @@ def IsGradedMaximalFiniteSupportDivisor (B : DegreeGraded K)
   IsMaximalDivisorAlong
     (finiteSupportGradedEmbedding K).toMonoidHom B a
 
-omit [CharZero K] in
 /-- The defining divisibility characterization for an element of the associated graded ring. -/
 theorem isGradedMaximalFiniteSupportDivisor_iff (B : DegreeGraded K)
     (a : Associates (FiniteSupportRing (K := K))) :
@@ -159,7 +157,6 @@ theorem isGradedMaximalFiniteSupportDivisor_iff (B : DegreeGraded K)
   rw [IsGradedMaximalFiniteSupportDivisor,
     isMaximalDivisorAlong_iff]
 
-omit [CharZero K] in
 /-- Representative form of the maximal-divisor characterization used in LM24,
 Corollary 5.4.4. -/
 theorem isGradedMaximalFiniteSupportDivisor_mk_iff (B : DegreeGraded K)
@@ -220,7 +217,7 @@ theorem isContent_principalComponentTensorEquiv_symm_iff (α : NatOrdinal)
 
 /-- Multiplying a nonzero principal fixed-degree class by a finite-support series gives a class
 whose maximal finite-support divisor is represented by that finite-support series. -/
-theorem isLayerMaximalFiniteSupportDivisor_finiteSupport_mul_principal
+theorem isLayerMaximalFiniteSupportDivisor_finiteSupport_mul_principal [CharZero K]
     (α : NatOrdinal) (p : FiniteSupportRing (K := K)) (a : Series K)
     (ha : HahnSeries.Nonpositive.IsPrincipal a)
     (haDegree : (a : K⟦ℝ⟧).degree = (α : WithBot NatOrdinal)) :
@@ -263,7 +260,7 @@ theorem isLayerMaximalFiniteSupportDivisor_finiteSupport_mul_principal
 
 /-- The graded maximal-divisor predicate is intrinsic tensor content transported through the
 global tensor equivalence. -/
-theorem isContent_principalGradedTensorEquiv_symm_iff (B : DegreeGraded K)
+theorem isContent_principalGradedTensorEquiv_symm_iff [CharZero K] (B : DegreeGraded K)
     (a : Associates (FiniteSupportRing (K := K))) :
     TensorProduct.IsContent
         ((principalSubringTensorEquiv K).symm B) a ↔
@@ -306,7 +303,7 @@ theorem isContent_principalGradedTensorEquiv_symm_iff (B : DegreeGraded K)
 
 /-- A finite-support series, embedded in grade zero, is its own maximal finite-support
 divisor. -/
-theorem isGradedMaximalFiniteSupportDivisor_finiteSupport (p : FiniteSupportRing (K := K)) :
+theorem isGradedMaximalFiniteSupportDivisor_finiteSupport [CharZero K] (p : FiniteSupportRing (K := K)) :
     IsGradedMaximalFiniteSupportDivisor
       (finiteSupportGradedEmbedding K p) (Associates.mk p) := by
   apply (isContent_principalGradedTensorEquiv_symm_iff _ (Associates.mk p)).mp
@@ -334,7 +331,7 @@ theorem isGradedMaximalFiniteSupportDivisor_finiteSupport (p : FiniteSupportRing
 
 /-- Multiplying a nonzero principal fixed-degree class by a finite-support series gives a
 homogeneous graded class whose maximal finite-support divisor is represented by that series. -/
-theorem isGradedMaximalFiniteSupportDivisor_finiteSupport_mul_principal
+theorem isGradedMaximalFiniteSupportDivisor_finiteSupport_mul_principal [CharZero K]
     (α : NatOrdinal) (p : FiniteSupportRing (K := K)) (a : Series K)
     (ha : HahnSeries.Nonpositive.IsPrincipal a)
     (haDegree : (a : K⟦ℝ⟧).degree = (α : WithBot NatOrdinal)) :
@@ -394,7 +391,6 @@ theorem isGradedMaximalFiniteSupportDivisor_finiteSupport_mul_principal
   rw [← heq, AlgEquiv.symm_apply_apply]
   exact TensorProduct.isContent_tmul_of_ne_zero X hX p
 
-omit [CharZero K] in
 /-- A fixed homogeneous component has at most one maximal finite-support divisor class. -/
 theorem IsLayerMaximalFiniteSupportDivisor.eq {α : NatOrdinal}
     {B : (HahnSeries.Nonpositive.degreeValuation K).Component α}
@@ -409,7 +405,6 @@ theorem IsLayerMaximalFiniteSupportDivisor.eq {α : NatOrdinal}
           · exact (hb p).2 ((ha p).1 le_rfl)
           · exact (ha q).2 ((hb q).1 le_rfl)
 
-omit [CharZero K] in
 /-- A graded element has at most one maximal finite-support divisor class. -/
 theorem IsGradedMaximalFiniteSupportDivisor.eq {B : DegreeGraded K}
     {a b : Associates (FiniteSupportRing (K := K))}
@@ -477,7 +472,7 @@ theorem exists_scalar_isLayerMaximalFiniteSupportDivisor_of_isPrincipal (α : Na
 
 /-- Pairwise gcd existence gives a unique maximal finite-support divisor of every element of the
 degree-graded ring. -/
-theorem existsUnique_isGradedMaximalFiniteSupportDivisor_of_exists_gcd
+theorem existsUnique_isGradedMaximalFiniteSupportDivisor_of_exists_gcd [CharZero K]
     (hgcd : ∀ p q : FiniteSupportRing (K := K),
       ∃ d : FiniteSupportRing (K := K),
         ∀ e : FiniteSupportRing (K := K),
@@ -508,7 +503,6 @@ noncomputable def layerMaximalFiniteSupportDivisor (α : NatOrdinal)
     else
       0
 
-omit [CharZero K] in
 /-- Any class satisfying the homogeneous-component characterization is the canonical class. -/
 theorem layerMaximalFiniteSupportDivisor_eq_of_is {α : NatOrdinal}
     {B : (HahnSeries.Nonpositive.degreeValuation K).Component α}
@@ -549,7 +543,6 @@ noncomputable def gradedMaximalFiniteSupportDivisor (B : DegreeGraded K) :
     else
       0
 
-omit [CharZero K] in
 /-- Any class satisfying the graded characterization is the canonical class. -/
 theorem gradedMaximalFiniteSupportDivisor_eq_of_is {B : DegreeGraded K}
     {a : Associates (FiniteSupportRing (K := K))}
@@ -563,7 +556,7 @@ theorem gradedMaximalFiniteSupportDivisor_eq_of_is {B : DegreeGraded K}
 
 /-- Under pairwise gcd existence, the canonical graded class satisfies its defining
 characterization. -/
-theorem gradedMaximalFiniteSupportDivisor_is_of_exists_gcd
+theorem gradedMaximalFiniteSupportDivisor_is_of_exists_gcd [CharZero K]
     (hgcd : ∀ p q : FiniteSupportRing (K := K),
       ∃ d : FiniteSupportRing (K := K),
         ∀ e : FiniteSupportRing (K := K),
@@ -578,7 +571,7 @@ theorem gradedMaximalFiniteSupportDivisor_is_of_exists_gcd
 
 /-- Associate-class form of LM24, Proposition 5.4.8: maximal finite-support divisor classes are
 supermultiplicative. -/
-theorem gradedMaximalFiniteSupportDivisor_mul_le_of_exists_gcd
+theorem gradedMaximalFiniteSupportDivisor_mul_le_of_exists_gcd [CharZero K]
     (hgcd : ∀ p q : FiniteSupportRing (K := K),
       ∃ d : FiniteSupportRing (K := K),
         ∀ e : FiniteSupportRing (K := K),

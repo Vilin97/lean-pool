@@ -68,7 +68,7 @@ noncomputable instance finiteLexLinearOrder : (n : ℕ) → LinearOrder (FiniteL
 instance finiteLexWellFoundedLT : (n : ℕ) → WellFoundedLT (FiniteLex n)
   | .zero => by
       change WellFoundedLT Unit
-      exact ⟨Finite.wellFounded_of_trans_of_irrefl (· < ·)⟩
+      exact Finite.wellFounded_of_trans_of_irrefl (· < ·)
   | .succ n => by
       letI : WellFoundedLT (FiniteLex n) := finiteLexWellFoundedLT n
       exact inferInstanceAs (WellFoundedLT (Lex (ℕ × FiniteLex n)))
@@ -183,6 +183,8 @@ theorem finitePowerExponent_strictMono (n : ℕ) : StrictMono (finitePowerExpone
       exact (lt_irrefl p hpq).elim
   | succ n ih =>
       intro p q hpq
+      induction p using Lex.rec with | h p =>
+      induction q using Lex.rec with | h q =>
       rcases p with ⟨m, p⟩
       rcases q with ⟨m', q⟩
       rw [Prod.Lex.lt_iff'] at hpq

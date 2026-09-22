@@ -208,7 +208,7 @@ theorem eq_zero_of_forall_weight_lt_of_degree_aeval_eq_bot
     have hlt : ∀ d ∈ F.support, (Finsupp.weight wt) d < β := by
       intro d hd
       refine lt_of_le_of_ne (hβ d hd) fun he ↦ ?_
-      have := congrArg (MvPolynomial.coeff d) hcomp0
+      have := congrArg (fun p : MvPolynomial ι K => p.coeff d) hcomp0
       rw [coeff_weightedHomogeneousComponent, ite_eq_left he, MvPolynomial.coeff_zero] at this
       exact MvPolynomial.mem_support_iff.mp hd this
     rcases eq_or_ne β 0 with rfl | hβ0
@@ -246,7 +246,7 @@ theorem forall_weight_le_degree_aeval_of_injective
     · have hlt : ∀ e ∈ F.support, (Finsupp.weight wt) e < β := by
         intro e he
         refine lt_of_le_of_ne (hβ e he) fun heq ↦ ?_
-        have hcz := congrArg (MvPolynomial.coeff e) hzero
+        have hcz := congrArg (fun p : MvPolynomial ι K => p.coeff e) hzero
         rw [coeff_weightedHomogeneousComponent, ite_eq_left heq, MvPolynomial.coeff_zero] at hcz
         exact MvPolynomial.mem_support_iff.mp he hcz
       rcases eq_or_ne β 0 with rfl | hβ0

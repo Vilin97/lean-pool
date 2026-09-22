@@ -59,7 +59,7 @@ theorem one_isNormalizedTrivialExponentSubgroupPart
 
 /-- The real exponent `-1` as a nonpositive exponent. -/
 def normalizedPartMinusOneExponent : exponentMonoid ℝ :=
-  ⟨-1, by norm_num⟩
+  ⟨-1, show (-1 : ℝ) ≤ 0 by norm_num⟩
 
 /-- The nonconstant finite-support real series `1 + t⁻¹`. -/
 def normalizedPartNonconstantSeries : FiniteSupportRing (G := ℝ) (K := ℚ) :=
