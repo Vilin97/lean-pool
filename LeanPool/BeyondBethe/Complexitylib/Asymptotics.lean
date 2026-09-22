@@ -7,6 +7,7 @@ Authors: Samuel Schlesinger
 module
 public import Mathlib.Analysis.Asymptotics.SpecificAsymptotics
 public import Mathlib.Data.Nat.Size
+public import Mathlib.Algebra.Polynomial.Eval.Degree
 
 /-!
 # Asymptotic notation for natural number functions

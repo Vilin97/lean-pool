@@ -44,7 +44,7 @@ theorem permanent_mono_real {n : Type*} [Fintype n] [DecidableEq n]
   rw [permanent, permanent]
   apply Finset.sum_le_sum
   intro σ _
-  exact Finset.prod_le_prod (fun i _ ↦ hA (σ i) i) fun i _ ↦ hAB (σ i) i
+  exact Finset.prod_le_prod₀ (fun i _ ↦ hA (σ i) i) fun i _ ↦ hAB (σ i) i
 
 /-- Degree-`n` homogeneity under global scaling, as used when the algorithm
 normalizes the largest matrix entry. -/
@@ -107,7 +107,7 @@ theorem pow_card_le_permanent_of_hasPerfectMatching
   calc
     m ^ Fintype.card n = ∏ _i : n, m := by simp
     _ ≤ ∏ i : n, A (σ i) i := by
-      exact Finset.prod_le_prod (fun _ _ ↦ hm) fun i _ ↦ hmin (σ i) i (hσ i)
+      exact Finset.prod_le_prod₀ (fun _ _ ↦ hm) fun i _ ↦ hmin (σ i) i (hσ i)
     _ ≤ ∑ τ : Equiv.Perm n, ∏ i : n, A (τ i) i := by
       exact Finset.single_le_sum
         (fun τ _ ↦ Finset.prod_nonneg fun i _ ↦ hA (τ i) i)

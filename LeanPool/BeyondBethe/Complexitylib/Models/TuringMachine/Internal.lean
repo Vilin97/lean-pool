@@ -50,14 +50,12 @@ lemma TM.toNTM_trace_reaches (tm : TM n) (c : Cfg n tm.Q)
   induction T generalizing c with
   | zero => exact Relation.ReflTransGen.refl
   | succ T ih =>
-    simp only [NTM.trace]
-    split
-    · exact Relation.ReflTransGen.refl
-    · next hne =>
-      have hne : c.state ≠ tm.qhalt := hne
+    by_cases hhalt : c.state = tm.qhalt
+    · simpa [NTM.trace, TM.toNTM, TM.reaches, hhalt] using
+        (Relation.ReflTransGen.refl : tm.reaches c c)
+    · rw [tm.toNTM_trace_step T choices hhalt]
       exact Relation.ReflTransGen.head
-        (show tm.stepRel c _ by simp [TM.stepRel, TM.step, hne, TM.toNTM])
-        (ih _ _)
+        (show tm.stepRel c _ by simp [TM.stepRel, TM.step, hhalt]) (ih _ _)
 
 /-- For `toNTM`, the trace is independent of the choice sequence since both
     transition functions are identical. -/
@@ -67,10 +65,10 @@ lemma TM.toNTM_trace_choice_irrel (tm : TM n) (T : ℕ) (c : Cfg n tm.Q)
   induction T generalizing c with
   | zero => rfl
   | succ T ih =>
-    simp only [NTM.trace]
-    split
-    · rfl
-    · simp only [TM.toNTM]; exact ih _ _ _
+    by_cases hhalt : c.state = tm.qhalt
+    · simp [NTM.trace, TM.toNTM, hhalt]
+    · rw [tm.toNTM_trace_step T ch₁ hhalt, tm.toNTM_trace_step T ch₂ hhalt]
+      exact ih _ _ _
 
 /-- If a DTM reaches `c'` in exactly `t` steps, then `toNTM.trace t` agrees. -/
 private lemma TM.toNTM_reachesIn_trace (tm : TM n) {c c' : Cfg n tm.Q} {t : ℕ}

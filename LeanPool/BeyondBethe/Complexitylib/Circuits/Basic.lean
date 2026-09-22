@@ -6,6 +6,8 @@ Authors: Samuel Schlesinger
 
 module
 public import Mathlib.Data.Nat.Lattice
+public import Mathlib.Order.Lattice.Nat
+public import Mathlib.Order.CompleteLattice.Basic
 
 /-! # Boolean Circuit Complexity
 

@@ -240,7 +240,8 @@ theorem pairTable_slice_rayleigh
         cases q with
         | false => simpa using hY
         | true => simpa using hZ)
-      simpa [a, b, cc, d, pairTableBivariateSlice_eval] using hne
+      rw [pairTableBivariateSlice_eval] at hne
+      simpa only [a, b, cc, d] using hne
     exact bivariate_rayleigh_of_bistable ha hb hcc hd hbistable
 
 end BeyondBethe

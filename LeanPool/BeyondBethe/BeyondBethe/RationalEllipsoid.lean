@@ -286,7 +286,7 @@ theorem rationalEllipsoid_volumeFactor_le_exp_neg {d : ℕ} (hd : 0 < d) :
   have hp0 : 0 < 1 - y := by
     rw [← hp]
     have hq := rationalEllipsoidParallelScale_pos hd
-    exact Rat.cast_pos.mpr hq
+    exact (Rat.cast_pos (K := ℝ)).mpr hq
   have hbase : 1 + x ≤ Real.exp x := by
     simpa [add_comm] using Real.add_one_le_exp x
   have hpow : (1 + x) ^ (d - 1) ≤ (Real.exp x) ^ (d - 1) :=
@@ -506,13 +506,13 @@ theorem rationalEllipsoid_scalar_containment
     simpa only [α] using hc
   have hdR : (1 : ℝ) ≤ d := by exact_mod_cast hd
   have hp0 : 0 < p := by
-    simpa [p] using Rat.cast_pos.mpr (rationalEllipsoidParallelScale_pos hd)
+    simpa [p] using (Rat.cast_pos (K := ℝ)).mpr (rationalEllipsoidParallelScale_pos hd)
   have hp1 : p ≤ 1 := by
     simpa [p] using Rat.cast_le.mpr (rationalEllipsoidParallelScale_le_one d)
   have hA0 : 0 < A := by
-    simpa [A] using Rat.cast_pos.mpr (rationalEllipsoidPerpScale_pos d)
+    simpa [A] using (Rat.cast_pos (K := ℝ)).mpr (rationalEllipsoidPerpScale_pos d)
   have hpA : p < A := by
-    simpa [p, A] using Rat.cast_lt.mpr (rationalEllipsoidParallel_lt_perp hd)
+    simpa [p, A] using (Rat.cast_lt (K := ℝ)).mpr (rationalEllipsoidParallel_lt_perp hd)
   have hh0' : α / d ≤ h := by simpa [α] using hh0
   have hh1' : h ≤ α := by simpa [α] using hh1
   have hhpos : 0 ≤ h := by
@@ -620,11 +620,11 @@ theorem rationalEllipsoid_direction_containment
   have hrpos : 0 < r := by simpa [r] using Real.sqrt_pos.2 hspos
   have hrsq : r ^ 2 = s := by simpa [r] using Real.sq_sqrt hs0
   have hApos : 0 < A := by
-    simpa [A] using Rat.cast_pos.mpr (rationalEllipsoidPerpScale_pos d)
+    simpa [A] using (Rat.cast_pos (K := ℝ)).mpr (rationalEllipsoidPerpScale_pos d)
   have hppos : 0 < p := by
-    simpa [p] using Rat.cast_pos.mpr (rationalEllipsoidParallelScale_pos hd)
+    simpa [p] using (Rat.cast_pos (K := ℝ)).mpr (rationalEllipsoidParallelScale_pos hd)
   have hαpos : 0 < α := by
-    simpa [α] using Rat.cast_pos.mpr (rationalEllipsoidAlpha_pos hd)
+    simpa [α] using (Rat.cast_pos (K := ℝ)).mpr (rationalEllipsoidAlpha_pos hd)
   have hqcut : q ≤ 0 := by simpa [q] using hcut
   have ht0 : t ≤ 0 := by
     dsimp only [t]
@@ -750,9 +750,9 @@ theorem rationalEllipsoid_direction_containment_of_rational
     apply hbq
     ext i
     have hi := congrFun h i
-    exact Rat.cast_eq_zero.mp (by simpa [b] using hi)
+    exact (Rat.cast_eq_zero (α := ℝ)).mp (by simpa [b] using hi)
   have huq := cutL1Scale_pos hbq
-  have hu : 0 < (cutL1Scale bq : ℝ) := Rat.cast_pos.mpr huq
+  have hu : 0 < (cutL1Scale bq : ℝ) := (Rat.cast_pos (K := ℝ)).mpr huq
   have hlowerQ := finiteNormSq_le_cutL1Scale_sq bq
   have hlower : finiteNormSq b ≤ (cutL1Scale bq : ℝ) ^ 2 := by
     rw [← cast_finiteNormSq bq]
@@ -834,14 +834,14 @@ theorem cast_directionUpdateMatrix_preimage {d : ℕ} (hd : 0 < d)
     intro h
     apply hbq
     ext i
-    exact Rat.cast_eq_zero.mp (by simpa [b] using congrFun h i)
+    exact (Rat.cast_eq_zero (α := ℝ)).mp (by simpa [b] using congrFun h i)
   have hnorm : finiteNormSq b ≠ 0 := by
     intro h
     exact hb ((finiteNormSq_eq_zero_iff b).1 h)
   have hA : (0 : ℝ) < (rationalEllipsoidPerpScale d : ℝ) :=
-    Rat.cast_pos.mpr (rationalEllipsoidPerpScale_pos d)
+    (Rat.cast_pos (K := ℝ)).mpr (rationalEllipsoidPerpScale_pos d)
   have hp : (0 : ℝ) < (rationalEllipsoidParallelScale d : ℝ) :=
-    Rat.cast_pos.mpr (rationalEllipsoidParallelScale_pos hd)
+    (Rat.cast_pos (K := ℝ)).mpr (rationalEllipsoidParallelScale_pos hd)
   have hinv := directionUpdateMatrix_preimage
     (A := (rationalEllipsoidPerpScale d : ℝ))
     (p := (rationalEllipsoidParallelScale d : ℝ))
@@ -1259,8 +1259,9 @@ theorem rationalEllipsoid_storedDet_lower_of_ball_endpoints {d : ℕ}
       rationalEllipsoidPoint E y =
         fun i ↦ z i - if i = k then r else 0) :
     r ^ d ≤ Nat.factorial d * abs ((Matrix.det E.basis : ℚ) : ℝ) := by
-  simpa only [Rat.cast_det] using
-    rationalEllipsoid_determinant_lower_of_ball_endpoints E hr hplus hminus
+  rw [Rat.cast_det]
+  change r ^ d ≤ Nat.factorial d * abs (Matrix.det (fun i j => (E.basis i j : ℝ)))
+  exact rationalEllipsoid_determinant_lower_of_ball_endpoints E hr hplus hminus
 
 /-- The elementary estimate `exp (-1) ≤ 1/2`, derived from the power-series
 lower bound `2 ≤ exp 1`. -/

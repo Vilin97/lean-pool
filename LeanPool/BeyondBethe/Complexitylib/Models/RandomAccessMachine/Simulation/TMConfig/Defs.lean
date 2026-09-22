@@ -29,6 +29,8 @@ namespace RAM
 
 namespace TMConfig
 
+variable {n bound : ℕ}
+
 /-- A field in a bounded configuration: state, a named tape head, or a named
 tape cell. Named tapes use input/work/output indices `0, 1..n, n+1`. -/
 abbrev Field (n bound : ℕ) :=

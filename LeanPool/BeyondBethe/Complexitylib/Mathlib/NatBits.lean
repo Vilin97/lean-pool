@@ -93,10 +93,9 @@ theorem Nat.toBits_fromBits : ∀ bits : List Bool,
     have hlt := Nat.fromBits_lt_pow_length rest
     have hval : Nat.fromBits (bit :: rest) =
         Nat.fromBits rest + (if bit then 1 else 0) * 2 ^ rest.length := by
-      simp only [Nat.fromBits]
       exact Nat.add_comm _ _
-    simp only [Nat.toBits, List.cons.injEq]
-    constructor
+    change (_ :: _) = (_ :: _)
+    congr 1
     · rw [hval, Nat.add_mul_div_right _ _ (Nat.two_pow_pos _), Nat.div_eq_of_lt hlt]
       cases bit <;> simp
     · rw [hval, Nat.toBits_add_pow_mul, Nat.toBits_fromBits rest]

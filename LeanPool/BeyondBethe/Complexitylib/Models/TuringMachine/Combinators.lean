@@ -85,12 +85,12 @@ private theorem moveLeftDir_start : moveLeftDir Γ.start = Dir3.right := rfl
 
 /-- If the head reads `▷`, then `idleDir` moves right — the shape of the
     `δ_right_of_start` obligation for idle tapes. -/
-theorem idleDir_right_of_start (h : head = Γ.start) : idleDir head = Dir3.right := by
+theorem idleDir_right_of_start {head : Γ} (h : head = Γ.start) : idleDir head = Dir3.right := by
   subst h; rfl
 
 /-- If the head reads `▷`, then `moveLeftDir` moves right — the shape of the
     `δ_right_of_start` obligation for tapes being rewound. -/
-theorem moveLeftDir_right_of_start (h : head = Γ.start) : moveLeftDir head = Dir3.right :=
+theorem moveLeftDir_right_of_start {head : Γ} (h : head = Γ.start) : moveLeftDir head = Dir3.right :=
   by subst h; rfl
 
 /-- Write back the same symbol read from a tape, preserving cell contents.
@@ -325,20 +325,24 @@ def unionTM (tm₁ : TM n₁) (tm₂ : TM n₂) : TM (n₁ + 1 + n₂) :=
         match m with
         | .rewindOut =>
           dsimp only [fakeOutIdx]
-          split
+          by_cases hphase : wHeads fakeOutIdx = Γ.start
+          all_goals simp only [fakeOutIdx] at hphase
+          all_goals simp only [hphase, ite_true, ite_false]
           · refine ⟨idleDir_right_of_start, ?_, idleDir_right_of_start⟩
-            intro i hwi; simp only []; split
+            intro i hwi; split
             · rfl
             · exact idleDir_right_of_start hwi
           · refine ⟨idleDir_right_of_start, ?_, idleDir_right_of_start⟩
-            intro i hwi; simp only []; split
-            · next hn heq =>
-              exfalso; apply hn
+            intro i hwi; split
+            · next heq =>
+              exfalso; apply hphase
               rwa [show wHeads ⟨n₁, by omega⟩ = wHeads i from by congr 1; ext; simp [heq]]
             · exact idleDir_right_of_start hwi
         | .checkResult =>
           dsimp only [fakeOutIdx]
-          split
+          by_cases hphase : wHeads fakeOutIdx = Γ.one
+          all_goals simp only [fakeOutIdx] at hphase
+          all_goals simp only [hphase, ite_true, ite_false]
           · exact ⟨idleDir_right_of_start, fun _ => idleDir_right_of_start, idleDir_right_of_start⟩
           · exact rightOfStart_allIdle iHead wHeads oHead
         | .rewindIn =>
