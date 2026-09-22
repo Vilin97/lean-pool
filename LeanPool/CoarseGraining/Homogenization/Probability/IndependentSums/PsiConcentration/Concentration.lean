@@ -334,7 +334,7 @@ theorem measureReal_upperTailEvent_finset_sum_le_exp_of_iIndepFun_of_mgf_le_exp
           rw [hsumfun, h_indep.mgf_sum (t := l) h_meas s]
     _ ≤ Real.exp (-l * a) * ∏ i ∈ s, Real.exp (v i) := by
           refine mul_le_mul_of_nonneg_left ?_ (by positivity)
-          refine Finset.prod_le_prod ?_ hmgf
+          refine Finset.prod_le_prod₀ ?_ hmgf
           intro i hi
           exact mgf_nonneg
     _ = Real.exp (-l * a) * Real.exp (∑ i ∈ s, v i) := by

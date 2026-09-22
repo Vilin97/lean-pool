@@ -472,7 +472,7 @@ theorem cubeCutoff_le_one {d : ℕ} (θ : QuantitativeTransitionProfile)
     (Q : TriadicCube d) (ρ₁ ρ₂ : ℝ) (x : Vec d) :
     cubeCutoff θ Q ρ₁ ρ₂ x ≤ 1 := by
   unfold cubeCutoff
-  exact Finset.prod_le_one
+  exact Finset.prod_le_one₀
     (fun i _hi => θ.nonneg _)
     (fun i _hi => θ.le_one _)
 
@@ -561,7 +561,7 @@ private theorem partialCubeCutoff_le_one {d : ℕ} (θ : QuantitativeTransitionP
     (Q : TriadicCube d) (ρ₁ ρ₂ : ℝ) (u : Finset (Fin d)) (x : Vec d) :
     partialCubeCutoff θ Q ρ₁ ρ₂ u x ≤ 1 := by
   unfold partialCubeCutoff
-  exact Finset.prod_le_one (fun i _hi => θ.nonneg _) (fun i _hi => θ.le_one _)
+  exact Finset.prod_le_one₀ (fun i _hi => θ.nonneg _) (fun i _hi => θ.le_one _)
 
 private theorem norm_iteratedFDeriv_zero_cubeFactor_le_one {d : ℕ}
     (θ : QuantitativeTransitionProfile) (Q : TriadicCube d)
@@ -618,7 +618,7 @@ private theorem norm_fderiv_partialCubeCutoff_le {d : ℕ}
         have hprod_nonneg : 0 ≤ ∏ j ∈ u.erase i, cubeFactor θ Q ρ₁ ρ₂ j x :=
           Finset.prod_nonneg fun j hj => θ.nonneg _
         have hprod_le_one : ∏ j ∈ u.erase i, cubeFactor θ Q ρ₁ ρ₂ j x ≤ 1 :=
-          Finset.prod_le_one (fun j hj => θ.nonneg _) (fun j hj => θ.le_one _)
+          Finset.prod_le_one₀ (fun j hj => θ.nonneg _) (fun j hj => θ.le_one _)
         have hfactor_bound :
             ‖fderiv ℝ (cubeFactor θ Q ρ₁ ρ₂ i) x‖ ≤
               (max 1 (max θ.derivBound θ.secondDerivBound)) *
@@ -869,7 +869,7 @@ theorem norm_fderiv_cubeCutoff_le {d : ℕ}
             Finset.prod_nonneg fun j _ => θ.nonneg _
           have hprod_le_one : ∏ j ∈ (Finset.univ : Finset (Fin d)).erase i,
               θ (cubeArgument Q ρ₁ ρ₂ j x) ≤ 1 :=
-            Finset.prod_le_one (fun j _ => θ.nonneg _) (fun j _ => θ.le_one _)
+            Finset.prod_le_one₀ (fun j _ => θ.nonneg _) (fun j _ => θ.le_one _)
           have hfactor_bound :
               ‖fderiv ℝ (fun y : Vec d => θ (cubeArgument Q ρ₁ ρ₂ i y)) x‖ ≤
                 θ.derivBound * (2 / ((ρ₂ - ρ₁) * cubeRadius Q)) := by

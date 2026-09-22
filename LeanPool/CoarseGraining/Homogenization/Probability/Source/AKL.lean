@@ -321,10 +321,10 @@ private theorem tendsto_density_mul_of_L1 {d : ℕ} {Θ : ℝ}
       eLpNorm (fun x => density e e' a x * (ψ n x - f x)) 1 volume ≤
         eLpNorm (density e e' a) ⊤ volume * eLpNorm (ψ n - f) 1 volume := by
     intro n
-    simpa using MeasureTheory.eLpNorm_le_eLpNorm_top_mul_eLpNorm
-      (p := (1 : ENNReal)) (density e e' a)
-      ((hψ n).continuous.aestronglyMeasurable.sub hf.aestronglyMeasurable)
-      (fun u v : ℝ => u * v) 1
+    simpa only [ENNReal.coe_one, one_mul, Pi.sub_apply] using
+      MeasureTheory.eLpNorm_le_eLpNorm_top_mul_eLpNorm
+      (p := (1 : ENNReal)) (g := ψ n - f) (fun u v : ℝ => u * v) 1
+      (continuous_fst.mul continuous_snd) (memLp_top_density e e' a).aestronglyMeasurable
       (Filter.Eventually.of_forall fun x => by simp)
   have hconst : eLpNorm (density e e' a) ⊤ volume ≠ ⊤ :=
     (memLp_top_density e e' a).eLpNorm_lt_top.ne
@@ -340,7 +340,8 @@ private theorem integrable_density_mul {d : ℕ} {Θ : ℝ}
     (hf : MemLp f 1 volume) :
     Integrable (fun x => density e e' a x * f x) volume := by
   rw [← memLp_one_iff_integrable]
-  simpa [Pi.mul_apply] using! hf.mul (memLp_top_density e e' a)
+  exact ((memLp_top_density e e' a).mul hf :
+    MemLp (fun x => density e e' a x * f x) 1 volume)
 
 private theorem integral_density_indicator_eq {d : ℕ} {Θ : ℝ}
     {U V : BorelRegion d} (hUV : U.1 ⊆ V.1)
@@ -402,7 +403,7 @@ private theorem measurable_generator_of_subset {d : ℕ} {Θ : ℝ}
       simp only [Pi.sub_apply]
       ring
     have hint := tendsto_setIntegral_of_L1' (fun x => density e e' a x * f x)
-      htarget.aestronglyMeasurable (Filter.Eventually.of_forall hseqint) hL1 V.1
+      (Filter.Eventually.of_forall hseqint) hL1 V.1
     have htarget_eq : (∫ x in V.1, density e e' a x * f x) =
         generator U e e' φ a := by
       simpa [f] using integral_density_indicator_eq hUV e e' φ a

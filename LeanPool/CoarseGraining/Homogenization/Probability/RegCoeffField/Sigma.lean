@@ -218,14 +218,14 @@ theorem measurable_into_sup {α β : Type*} {dom : MeasurableSpace α}
 /-- A map into `Mat d` is measurable iff every scalar entry is measurable. -/
 theorem measurable_matrix_of_entries {α : Type*} [MeasurableSpace α] {h : α → Mat d}
     (H : ∀ i j, Measurable (fun a => h a i j)) : Measurable h :=
-  measurable_pi_lambda h (fun i => measurable_pi_lambda _ (fun j => H i j))
+  measurable_pi_lambda (fun i => measurable_pi_lambda (fun j => H i j))
 
 /-- A carrier-valued map is pointwise (pi-)measurable iff every scalar entry
 evaluation is measurable. -/
 theorem measurable_toFun_of_entries {α : Type*} [MeasurableSpace α]
     {F : α → RegCoeffField d} (H : ∀ (y : Vec d) (i j : Fin d), Measurable (fun a => F a y i j)) :
     @Measurable α (Vec d → Mat d) _ MeasurableSpace.pi (fun a => (F a).toFun) :=
-  measurable_pi_lambda _ (fun y => measurable_matrix_of_entries (fun i j => H y i j))
+  measurable_pi_lambda (fun y => measurable_matrix_of_entries (fun i j => H y i j))
 
 /-- Builder for the pointwise lane. -/
 theorem measurable_into_pointwiseSigmaR {α : Type*} [MeasurableSpace α]

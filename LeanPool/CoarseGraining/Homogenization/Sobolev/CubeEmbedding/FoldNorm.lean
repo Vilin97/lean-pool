@@ -243,8 +243,11 @@ theorem eLpNorm_foldComp {v : Vec d → ℝ} (hv : Measurable v)
     (lo hi : Vec d) (hlt : ∀ k, lo k < hi k) :
     eLpNorm (fun x => v (Fold lo hi x)) 2 (volume.restrict (Box3 lo hi))
       = ((3 : ℝ≥0∞) ^ d) ^ ((1 : ℝ) / 2) * eLpNorm v 2 (volume.restrict (Box lo hi)) := by
-  rw [eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num),
-    eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num)]
+  have hcomp : AEStronglyMeasurable (fun x => v (Fold lo hi x))
+      (volume.restrict (Box3 lo hi)) :=
+    (hv.comp (continuous_Fold lo hi (fun k => (hlt k).le)).measurable).aestronglyMeasurable
+  rw [eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num) hcomp,
+    eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num) hv.aestronglyMeasurable]
   have hpt : (2 : ℝ≥0∞).toReal = 2 := by norm_num
   rw [hpt]
   have hgmeas : Measurable (fun x : Vec d => ‖v x‖ₑ ^ (2 : ℝ)) :=

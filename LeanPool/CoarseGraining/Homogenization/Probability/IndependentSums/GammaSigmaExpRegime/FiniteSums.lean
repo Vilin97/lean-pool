@@ -34,7 +34,7 @@ theorem mgf_finset_sum_le_exp_of_iIndepFun
       rw [hsumfun]
       exact h_indep.mgf_sum (t := l) h_meas s
     _ ≤ ∏ i ∈ s, Real.exp (v i) := by
-      refine Finset.prod_le_prod ?_ hmgf
+      refine Finset.prod_le_prod₀ ?_ hmgf
       intro i hi
       exact mgf_nonneg
     _ = Real.exp (∑ i ∈ s, v i) := by

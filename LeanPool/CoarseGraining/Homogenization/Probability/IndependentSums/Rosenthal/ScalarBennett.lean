@@ -351,7 +351,7 @@ theorem mgf_finset_sum_le_of_iIndepFun_of_mgf_le_bennett
       exact h_indep.mgf_sum (t := l) h_meas s
     _ ≤ ∏ i ∈ s,
           Real.exp ((v i / y ^ (2 : ℕ)) * (Real.exp (l * y) - 1 - l * y)) := by
-      refine Finset.prod_le_prod ?_ hmgf
+      refine Finset.prod_le_prod₀ ?_ hmgf
       intro i hi
       exact mgf_nonneg
     _ = Real.exp (∑ i ∈ s,

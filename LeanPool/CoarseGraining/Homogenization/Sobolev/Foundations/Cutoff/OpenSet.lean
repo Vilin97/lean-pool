@@ -79,7 +79,7 @@ theorem exists_contDiff_one_on_compact_tsupport_subset
     have hprod_nonneg : 0 ≤ ∏ x ∈ t, (1 - f x y) :=
       Finset.prod_nonneg fun x _ => sub_nonneg.mpr (hf_bounds x y).2
     have hprod_le_one : (∏ x ∈ t, (1 - f x y)) ≤ 1 :=
-      Finset.prod_le_one
+      Finset.prod_le_one₀
         (fun x _ => sub_nonneg.mpr (hf_bounds x y).2)
         (fun x _ => by linarith [(hf_bounds x y).1])
     exact ⟨sub_nonneg.mpr hprod_le_one, by linarith⟩

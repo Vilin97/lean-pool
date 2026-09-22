@@ -5,7 +5,7 @@ Authors: Scott Armstrong, Tuomo Kuusi
 -/
 
 import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.IterationLemma
-import Mathlib.MeasureTheory.Measure.MeasureSpace
+import Mathlib.MeasureTheory.Measure.Typeclasses.Finite
 
 /-!
 # Generic De Giorgi iteration (level-volume decay)

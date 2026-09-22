@@ -76,7 +76,7 @@ theorem integrable_abs_sub_integral_rpow_of_integrable_abs_rpow
     exact hmem.sub (memLp_const (∫ z, f z ∂μ))
   have hcenter_int :
       Integrable (fun ω => ‖f ω - ∫ z, f z ∂μ‖ ^ (ENNReal.ofReal p).toReal) μ :=
-    (integrable_norm_rpow_iff hcenter.1 hp_enn_ne_zero ENNReal.ofReal_ne_top).mpr hcenter
+    (integrable_norm_rpow_iff hcenter.aestronglyMeasurable hp_enn_ne_zero ENNReal.ofReal_ne_top).mpr hcenter
   simpa [Real.norm_eq_abs, ENNReal.toReal_ofReal hp_pos.le] using hcenter_int
 
 /-- On a probability space, a finite real `p`-moment gives any lower real
@@ -114,11 +114,10 @@ theorem integral_abs_rpow_rpow_inv_le_of_le
     hmem_p.mono_exponent (ENNReal.ofReal_le_ofReal hqp)
   have hcmp : eLpNorm f (ENNReal.ofReal q) μ ≤ eLpNorm f (ENNReal.ofReal p) μ :=
     eLpNorm_le_eLpNorm_of_exponent_le (ENNReal.ofReal_le_ofReal hqp)
-      hf.aestronglyMeasurable
   have hcmp_toReal :
       ENNReal.toReal (eLpNorm f (ENNReal.ofReal q) μ) ≤
         ENNReal.toReal (eLpNorm f (ENNReal.ofReal p) μ) :=
-    ENNReal.toReal_mono hmem_p.2.ne hcmp
+    ENNReal.toReal_mono hmem_p.eLpNorm_ne_top hcmp
   calc
     (∫ ω, |f ω| ^ q ∂μ) ^ q⁻¹ =
         ENNReal.toReal (eLpNorm f (ENNReal.ofReal q) μ) := by
@@ -172,18 +171,18 @@ theorem integral_abs_finsetSum_rpow_rpow_inv_le_sum
       eLpNorm g (ENNReal.ofReal p) μ ≤
         ∑ i ∈ s, eLpNorm (f i) (ENNReal.ofReal p) μ := by
     rw [hg_eq]
-    refine eLpNorm_sum_le (fun i hi => (h_meas i hi).aestronglyMeasurable) ?_
+    refine eLpNorm_sum_le ?_
     rw [← ENNReal.ofReal_one]
     exact ENNReal.ofReal_le_ofReal hp
   have hg_toReal_le :
       ENNReal.toReal (eLpNorm g (ENNReal.ofReal p) μ) ≤
         ENNReal.toReal (∑ i ∈ s, eLpNorm (f i) (ENNReal.ofReal p) μ) := by
     exact ENNReal.toReal_mono
-      (ENNReal.sum_ne_top.2 fun i hi => (h_memLp i hi).2.ne) hg_eLp
+      (ENNReal.sum_ne_top.2 fun i hi => (h_memLp i hi).eLpNorm_ne_top) hg_eLp
   have hsum_toReal :
       ENNReal.toReal (∑ i ∈ s, eLpNorm (f i) (ENNReal.ofReal p) μ) =
         ∑ i ∈ s, ENNReal.toReal (eLpNorm (f i) (ENNReal.ofReal p) μ) := by
-    exact ENNReal.toReal_sum fun i hi => (h_memLp i hi).2.ne
+    exact ENNReal.toReal_sum fun i hi => (h_memLp i hi).eLpNorm_ne_top
   calc
     (∫ ω, |∑ i ∈ s, f i ω| ^ p ∂μ) ^ p⁻¹
         = (∫ ω, |g ω| ^ p ∂μ) ^ p⁻¹ := by simp [g]

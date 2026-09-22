@@ -168,8 +168,10 @@ theorem young_convolution_nonneg_integral_one
   let μ : Measure (Vec d) := volume.withDensity fun t => ENNReal.ofReal (ρ t)
   let : IsProbabilityMeasure μ :=
     isProbabilityMeasure_withDensity_ofReal hρ_nonneg hρ_int hρ_one
-  rw [eLpNorm_eq_lintegral_rpow_enorm_toReal hp_ne_zero hp']
-  rw [eLpNorm_eq_lintegral_rpow_enorm_toReal hp_ne_zero hp']
+  rw [eLpNorm_eq_lintegral_rpow_enorm_toReal hp_ne_zero hp'
+    (MeasureTheory.AEStronglyMeasurable.convolution (ContinuousLinearMap.lsmul ℝ ℝ)
+      hρ_meas.aestronglyMeasurable hg_meas.aestronglyMeasurable)]
+  rw [eLpNorm_eq_lintegral_rpow_enorm_toReal hp_ne_zero hp' hg_meas.aestronglyMeasurable]
   apply ENNReal.rpow_le_rpow _ (by positivity : 0 ≤ 1 / p.toReal)
   have hfubini :=
     fubini_translation_key (d := d) (fun t => ENNReal.ofReal (ρ t)) g p.toReal
@@ -236,7 +238,6 @@ theorem young_convolution_nonneg_integral_one
             convert
               lintegral_withDensity_eq_lintegral_mul volume hρ_meas.ennreal_ofReal h_meas_pow
               using 2
-            simp only [Pi.mul_apply]
           rw [h_eq]
           have habs_rpow_nonneg : ∀ t, 0 ≤ |g (x - t)| ^ p.toReal :=
             fun t => Real.rpow_nonneg (abs_nonneg _) _

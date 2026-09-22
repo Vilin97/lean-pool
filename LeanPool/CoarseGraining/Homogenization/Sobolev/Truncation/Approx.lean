@@ -405,6 +405,7 @@ theorem hasWeakGradientOn_comp_of_deriv_bounded
             eLpNorm (fun x => w (σ k) x - u.toFun x) 2 (volumeMeasureOn U) := by
       intro k
       simpa [hun_def] using eLpNorm_comp_sub_le_of_lipschitz hM hGlip (w (σ k)) u.toFun
+        (hwn_memL2 (σ k)).aestronglyMeasurable u.memL2.aestronglyMeasurable
     have hrhs : Tendsto
         (fun k => ENNReal.ofReal M *
           eLpNorm (fun x => w (σ k) x - u.toFun x) 2 (volumeMeasureOn U)) atTop (𝓝 0) := by

@@ -40,7 +40,7 @@ theorem real_chebyshev_level {α : Type*} {m0 : MeasurableSpace α} {μ : Measur
   set q : ℝ := p.toReal with hq_def
   have hq : 0 < q := ENNReal.toReal_pos hp0 hptop
   -- The ENNReal Chebyshev inequality.
-  have hstep := mul_meas_ge_le_pow_eLpNorm' μ hp0 hptop hmeas (ENNReal.ofReal ε)
+  have hstep := mul_meas_ge_le_pow_eLpNorm' μ hp0 hptop (f := h) (ENNReal.ofReal ε)
   have hSsub' : S ⊆ {x | ENNReal.ofReal ε ≤ ‖h x‖ₑ} := by
     intro x hx
     have hεx : ε ≤ h x := hSsub x hx

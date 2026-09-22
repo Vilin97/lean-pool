@@ -155,7 +155,7 @@ theorem measurableSet_triadicDilateSet {d : ℕ} (k : ℕ) {U : Set (Vec d)}
     (hU : MeasurableSet U) : MeasurableSet (triadicDilateSet k U) := by
   have hk : ((3 : ℝ) ^ k) ≠ 0 := by positivity
   have hInv : Measurable (fun x : Vec d => ((3 : ℝ) ^ k)⁻¹ • x) := by
-    exact measurable_pi_lambda _ (fun i => (measurable_pi_apply i).const_mul _)
+    exact measurable_pi_lambda (fun i => (measurable_pi_apply i).const_mul _)
   have hset : triadicDilateSet k U =
       (fun x : Vec d => ((3 : ℝ) ^ k)⁻¹ • x) ⁻¹' U := by
     ext x

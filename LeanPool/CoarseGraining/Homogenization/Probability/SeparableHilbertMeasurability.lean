@@ -156,7 +156,7 @@ theorem measurable_of_measurable_inner_denseRange_polish
     Measurable F := by
   let Φ : H → (ℕ → ℝ) := fun x n => inner ℝ (u n) x
   have hΦ_meas : Measurable Φ := by
-    refine measurable_pi_lambda Φ ?_
+    refine measurable_pi_lambda ?_
     intro n
     simpa [Φ, innerSL_apply_apply] using (innerSL ℝ (u n)).measurable
   have hΦ_inj : Function.Injective Φ := by
@@ -172,7 +172,7 @@ theorem measurable_of_measurable_inner_denseRange_polish
       Continuous.ext_on hu (innerSL ℝ x).continuous (innerSL ℝ y).continuous h_on
     exact congr_fun hfun z
   exact (hΦ_meas.measurableEmbedding hΦ_inj).measurable_comp_iff.mp
-    (measurable_pi_lambda _ hInner)
+    (measurable_pi_lambda hInner)
 
 theorem measurable_of_measurable_norm_inner_denseSeq
     {Ω H : Type*} [MeasurableSpace Ω] [NormedAddCommGroup H] [InnerProductSpace ℝ H]

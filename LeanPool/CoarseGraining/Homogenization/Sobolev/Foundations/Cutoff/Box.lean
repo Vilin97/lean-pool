@@ -325,7 +325,7 @@ theorem boxCutoff_nonneg (x : Vec d) : 0 ≤ boxCutoff lo hi ℓ x :=
   Finset.prod_nonneg (fun _ _ => profile_nonneg _)
 
 theorem boxCutoff_le_one (x : Vec d) : boxCutoff lo hi ℓ x ≤ 1 :=
-  Finset.prod_le_one (fun _ _ => profile_nonneg _) (fun _ _ => profile_le_one _)
+  Finset.prod_le_one₀ (fun _ _ => profile_nonneg _) (fun _ _ => profile_le_one _)
 
 /-- On the core box `x ∈ [lo, hi]`, the cutoff is identically `1`. -/
 theorem boxCutoff_eq_one (hℓ : 0 < ℓ) {x : Vec d} (hx : x ∈ Set.Icc lo hi) :
@@ -387,7 +387,7 @@ theorem boxCutoff_deriv_bound (hℓ : 0 < ℓ) (x : Vec d) (k : Fin d) :
   rw [boxCutoff_fderiv_single, abs_mul]
   have hprod : |∏ j ∈ Finset.univ.erase k, profile (lo j) (hi j) ℓ (x j)| ≤ 1 := by
     rw [Finset.abs_prod]
-    apply Finset.prod_le_one
+    apply Finset.prod_le_one₀
     · intro j _; exact abs_nonneg _
     · intro j _; rw [abs_of_nonneg (profile_nonneg _)]; exact profile_le_one _
   have hderiv : |deriv (profile (lo k) (hi k) ℓ) (x k)| ≤ 16 / ℓ :=
