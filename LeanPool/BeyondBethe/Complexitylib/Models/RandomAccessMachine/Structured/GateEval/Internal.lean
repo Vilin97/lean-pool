@@ -272,10 +272,10 @@ private theorem address_measured (gate : CircuitCode.RawGate) (wires : List Bool
     (.add address0Reg address0Reg baseReg) (inputStore gate wires) hinitial hfirst
   have hrun1 := MeasuredRuns.basicEnvelope
     (.add address1Reg address1Reg baseReg) (addressed0 gate wires) hfirst (by
-      simpa only [addressed, addressOps, Basic.execList] using hfinal)
+      simpa only [addressed, addressOps, Basic.execList] using! hfinal)
   refine ⟨?_, hfinal⟩
   have hrun := hrun0.seq hrun1
-  convert hrun using 1
+  convert! hrun using 1
   ring
 
 private theorem load_measured (gate : CircuitCode.RawGate) (wires : List Bool)
@@ -301,10 +301,10 @@ private theorem load_measured (gate : CircuitCode.RawGate) (wires : List Bool)
     (addressed gate wires) hinitial hfirst
   have hrun1 := MeasuredRuns.basicEnvelope (.load value1Reg address1Reg)
     (loaded0 gate wires) hfirst (by
-      simpa only [loaded, loadOps, Basic.execList] using hfinal)
+      simpa only [loaded, loadOps, Basic.execList] using! hfinal)
   refine ⟨?_, hfinal⟩
   have hrun := hrun0.seq hrun1
-  convert hrun using 1
+  convert! hrun using 1
   ring
 
 private theorem negated0_measured (gate : CircuitCode.RawGate) (wires : List Bool)
@@ -368,10 +368,10 @@ private theorem negated0_measured (gate : CircuitCode.RawGate) (wires : List Boo
     (negated0Product gate wires) hproduct htwice
   have hrun3 := MeasuredRuns.basicEnvelope (.sub value0Reg outputReg scratchReg)
     (negated0Twice gate wires) htwice (by
-      simpa only [negated0, xorOps, Basic.execList] using hfinal)
+      simpa only [negated0, xorOps, Basic.execList] using! hfinal)
   refine ⟨?_, hfinal⟩
   have hrun := hrun0.seq (hrun1.seq (hrun2.seq hrun3))
-  convert hrun using 1
+  convert! hrun using 1
   ring
 
 private theorem loaded_apply_of_ne (gate : CircuitCode.RawGate) (wires : List Bool)
@@ -523,10 +523,10 @@ private theorem negated1_measured (gate : CircuitCode.RawGate) (wires : List Boo
     (negated1Product gate wires) hproduct htwice
   have hrun3 := MeasuredRuns.basicEnvelope (.sub value1Reg outputReg scratchReg)
     (negated1Twice gate wires) htwice (by
-      simpa only [negated1, xorOps, Basic.execList] using hfinal)
+      simpa only [negated1, xorOps, Basic.execList] using! hfinal)
   refine ⟨?_, hfinal⟩
   have hrun := hrun0.seq (hrun1.seq (hrun2.seq hrun3))
-  convert hrun using 1
+  convert! hrun using 1
   ring
 
 private theorem negated1_value0 (gate : CircuitCode.RawGate) (wires : List Bool)
@@ -669,10 +669,10 @@ private theorem eval_measured (gate : CircuitCode.RawGate) (wires : List Bool)
     (evalDelta gate wires) hdelta hselected
   have hrun5 := MeasuredRuns.basicEnvelope (.sub outputReg outputReg address0Reg)
     (evalSelected gate wires) hselected (by
-      simpa only [evaluated, evalOps, Basic.execList] using hfinal)
+      simpa only [evaluated, evalOps, Basic.execList] using! hfinal)
   refine ⟨?_, hfinal⟩
   have hrun := hrun0.seq (hrun1.seq (hrun2.seq (hrun3.seq (hrun4.seq hrun5))))
-  convert hrun using 1
+  convert! hrun using 1
   ring
 
 private theorem evaluated_apply_of_ne (gate : CircuitCode.RawGate)
@@ -840,7 +840,7 @@ private theorem append_measured (gate : CircuitCode.RawGate) (wires : List Bool)
     (appendAddressed gate wires) hfirst hfinal
   refine ⟨?_, hfinal⟩
   have hrun := hrun0.seq hrun1
-  convert hrun using 1
+  convert! hrun using 1
   ring
 
 private theorem routineAddressed_address0 {base : ℕ} {gate : CircuitCode.RawGate}
@@ -983,7 +983,7 @@ private theorem xor_measured {bound value negated : ℕ} {store : Store}
     twice htwice hfinal
   refine ⟨?_, hfinal⟩
   have hrun := hrun0.seq (hrun1.seq (hrun2.seq hrun3))
-  convert hrun using 1
+  convert! hrun using 1
   ring
 
 private theorem routineNegated0_value {base : ℕ} {gate : CircuitCode.RawGate}
@@ -1369,7 +1369,7 @@ theorem routine_measured_internal {bound base : ℕ}
       (routineAddressed store) 2 (8 * valueWidth bound)
       (envelopeSpace bound bound) := by
     have hrun := haddressRun0.seq haddressRun1
-    convert hrun using 1
+    convert! hrun using 1
     ring
   let loaded0 := (Basic.load value0Reg address0Reg).exec (routineAddressed store)
   have hloaded0 : StoreEnvelope bound bound loaded0 := by
@@ -1392,7 +1392,7 @@ theorem routine_measured_internal {bound base : ℕ}
       (routineLoaded store) 2 (8 * valueWidth bound)
       (envelopeSpace bound bound) := by
     have hrun := hloadRun0.seq hloadRun1
-    convert hrun using 1
+    convert! hrun using 1
     ring
   have hloadedValue0 := routineLoaded_value0 hready value0 hvalue0
   have hloadedNegated0 : routineLoaded store negated0Reg =
@@ -1433,7 +1433,7 @@ theorem routine_measured_internal {bound base : ℕ}
   have hnegated1Run : MeasuredRuns (.basics (xorOps value1Reg negated1Reg))
       (routineNegated0 store) (routineNegated1 store) 4
       (16 * valueWidth bound) (envelopeSpace bound bound) := by
-    simpa [routineNegated1] using hxor1.1
+    simpa [routineNegated1] using! hxor1.1
   have hvalue0Eq := routineNegated1_value0 hready value0 hvalue0
   have hvalue1Eq := routineNegated1_value hready value1 hvalue1
   have hopEq := routineNegated1_op hready
@@ -1528,7 +1528,7 @@ theorem routine_measured_internal {bound base : ℕ}
       (envelopeSpace bound bound) := by
     have hrun := hevalRun0.seq (hevalRun1.seq (hevalRun2.seq
       (hevalRun3.seq (hevalRun4.seq hevalRun5))))
-    convert hrun using 1
+    convert! hrun using 1
     ring
   let appendAddressed :=
     (Basic.add address1Reg baseReg wireCountReg).exec (routineEvaluated store)
@@ -1559,13 +1559,13 @@ theorem routine_measured_internal {bound base : ℕ}
       (routineFinal store) 2 (8 * valueWidth bound)
       (envelopeSpace bound bound) := by
     have hrun := happendRun0.seq happendRun1
-    convert hrun using 1
+    convert! hrun using 1
     ring
   have hrun := haddressRun.seq (hloadRun.seq
     (hnegated0Run.seq (hnegated1Run.seq (hevalRun.seq happendRun))))
   have hprogram : MeasuredRuns program store (routineFinal store) stepCount
       (80 * valueWidth bound) (envelopeSpace bound bound) := by
-    convert hrun using 1
+    convert! hrun using 1
     all_goals ring
   exact ⟨routineFinal store, hprogram, hfinal,
     routineFinal_output hready value0 value1 hvalue0 hvalue1,
@@ -1610,7 +1610,7 @@ theorem routine_exec_internal {base : ℕ} {gate : CircuitCode.RawGate}
     routineFinal_base hready, routineFinal_wireCount hready, ?_,
     routineFinal_frame hready⟩
   · rw [program]
-    convert hrun using 1
+    convert! hrun using 1
   · intro index hindex
     exact routineFinal_wire hready index hindex
 
@@ -1646,7 +1646,7 @@ theorem program_exec_internal (gate : CircuitCode.RawGate) (wires : List Bool)
     max addressSpace (max loadSpace (max negated0Space
       (max negated1Space (max evalSpace appendSpace)))), ?_, ?_⟩
   · rw [program]
-    convert hrun using 1
+    convert! hrun using 1
   · exact finalStore_output gate wires value0 value1 hvalue0 hvalue1
 
 theorem program_measured_internal (gate : CircuitCode.RawGate) (wires : List Bool)
@@ -1673,7 +1673,7 @@ theorem program_measured_internal (gate : CircuitCode.RawGate) (wires : List Boo
   have hprogram : MeasuredRuns program (inputStore gate wires)
       (finalStore gate wires) stepCount (timeBound wires.length)
       (resourceSpace wires.length) := by
-    convert hrun using 1
+    convert! hrun using 1
     simp [timeBound, width, valueWidth]
     ring
   obtain ⟨cost, space, hexec, hcost, hspace⟩ := hprogram

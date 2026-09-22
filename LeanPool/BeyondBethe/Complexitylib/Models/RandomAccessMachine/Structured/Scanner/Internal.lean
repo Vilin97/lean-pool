@@ -525,7 +525,7 @@ private theorem body_measured {spec : Spec} {bit : Bool} {rest : List Bool}
     (hindex.seq (haddress.seq (htransition.seq (hadvance.seq hdecrement)))))
   constructor
   · simp only [body, Cmd.basics, bodyOps, List.map_cons, List.map_nil, Cmd.seqList]
-    convert hrun using 1
+    convert! hrun using 1
     ring
   · exact hiterated
 
@@ -628,7 +628,7 @@ private theorem iterated_inv {spec : Spec} {bit : Bool} {rest : List Bool}
       simp [inputBase, transitionBase, twoReg]
       omega)]
     have hinput := hinv.input_eq (offset + 1)
-    convert hinput using 1
+    convert! hinput using 1
     all_goals simp [Nat.add_assoc, Nat.add_comm, Nat.add_left_comm]
 
 private def loopAdvance (spec : Spec) (state : ℕ × ℕ) (bit : Bool) : ℕ × ℕ :=
@@ -754,7 +754,7 @@ private theorem finalize_measured {spec : Spec} {inputLength state : ℕ}
   constructor
   · simp only [finalize, Cmd.basics, finalizeOps, List.map_cons, List.map_nil,
       Cmd.seqList]
-    convert hrun using 1
+    convert! hrun using 1
     ring
   · change ((Basic.load lengthReg addressReg).exec indexed) lengthReg = _
     simp [Basic.exec, haddress, htable]
@@ -799,7 +799,7 @@ theorem program_measured_internal (spec : Spec) (bits : List Bool) :
       (finalStore loopFinal) (stepCount spec bits.length)
       (timeBound spec bits.length) (resourceSpace spec bits.length) := by
     rw [program]
-    convert hwide using 1
+    convert! hwide using 1
     rw [setupOps_length]
     simp [stepCount]
     ring

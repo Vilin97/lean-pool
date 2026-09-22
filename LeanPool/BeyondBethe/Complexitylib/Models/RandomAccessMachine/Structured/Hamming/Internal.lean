@@ -213,7 +213,7 @@ private theorem body_measured {bit : Bool} {rest : List Bool}
     MeasuredRuns.basicEnvelope _ _ hadvancedBound hiteratedBound
   have hrun := hload.seq (hbranch.seq (hadvance.seq hdecrement))
   rw [body, Cmd.seqList]
-  convert hrun using 1
+  convert! hrun using 1
   · cases bit <;> simp [bitValue]
   · ring
 
@@ -278,7 +278,7 @@ private theorem iterated_inv {bit : Bool} {rest : List Bool}
   · intro offset
     rw [iterated_high bit store _ (by simp [inputBase]; omega)]
     have hinput := hinv.input_eq (offset + 1)
-    convert hinput using 1
+    convert! hinput using 1
     all_goals simp [Nat.add_assoc, Nat.add_comm, Nat.add_left_comm]
 
 private def loopAdvance (state : ℕ × ℕ) (bit : Bool) : ℕ × ℕ :=
@@ -422,7 +422,7 @@ private theorem finalize_measured {inputLength : ℕ} {store : Store}
     MeasuredRuns.basicEnvelope _ _ hzeroed hfinal
   have hrun := hzero.seq hadd
   rw [finalize, Cmd.seqList]
-  convert hrun using 1
+  convert! hrun using 1
   all_goals ring
 
 theorem program_measured_internal (bits : List Bool) :
@@ -454,7 +454,7 @@ theorem program_measured_internal (bits : List Bool) :
   have hprogram' : MeasuredRuns (setup.seq (mainLoop.seq finalize))
       (inputStore bits) (finalStore loopFinal) (stepCount bits)
       (timeBound bits.length) (resourceSpace bits.length) := by
-    convert hprogram using 1
+    convert! hprogram using 1
     unfold stepCount
     ring
   obtain ⟨cost, space, hexec, hcost, hspace⟩ := hprogram'

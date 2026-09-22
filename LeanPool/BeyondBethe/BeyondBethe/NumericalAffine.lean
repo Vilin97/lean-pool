@@ -145,11 +145,14 @@ theorem birkhoffAffineMap_affineCombination
     birkhoffAffineMap (fun i j ↦ (1 - t) * Y i j + t * Z i j) =
       fun i j ↦ (1 - t) * birkhoffAffineMap Y i j +
         t * birkhoffAffineMap Z i j := by
+  let W : Matrix (Fin n) (Fin n) ℝ := fun i j => (1 - t) * Y i j + t * Z i j
+  change birkhoffAffineMap W = _
   ext i j
   refine Fin.lastCases ?_ (fun i ↦ ?_) i <;>
     refine Fin.lastCases ?_ (fun j ↦ ?_) j
-  · simp only [birkhoffAffineMap_last_last,
-      Finset.sum_add_distrib]
+  · rw [birkhoffAffineMap_last_last W, birkhoffAffineMap_last_last Y,
+      birkhoffAffineMap_last_last Z]
+    simp only [W, Finset.sum_add_distrib]
     have hY :
         (∑ i, ∑ j, (1 - t) * Y i j) =
           (1 - t) * (∑ i, ∑ j, Y i j) := by
@@ -172,15 +175,18 @@ theorem birkhoffAffineMap_affineCombination
           rw [Finset.mul_sum]
     rw [hY, hZ]
     ring
-  · simp only [birkhoffAffineMap_last_castSucc,
-      Finset.sum_add_distrib]
+  · rw [birkhoffAffineMap_last_castSucc W j, birkhoffAffineMap_last_castSucc Y j,
+      birkhoffAffineMap_last_castSucc Z j]
+    simp only [W, Finset.sum_add_distrib]
     repeat' rw [← Finset.mul_sum]
     ring
-  · simp only [birkhoffAffineMap_castSucc_last,
-      Finset.sum_add_distrib]
+  · rw [birkhoffAffineMap_castSucc_last W i, birkhoffAffineMap_castSucc_last Y i,
+      birkhoffAffineMap_castSucc_last Z i]
+    simp only [W, Finset.sum_add_distrib]
     repeat' rw [← Finset.mul_sum]
     ring
-  · simp
+  · rw [birkhoffAffineMap_castSucc_castSucc W i j,
+      birkhoffAffineMap_castSucc_castSucc Y i j, birkhoffAffineMap_castSucc_castSucc Z i j]
 
 /-- The affine map lands in the Birkhoff affine hull exactly; only
 nonnegativity remains to be checked by rational inequalities. -/

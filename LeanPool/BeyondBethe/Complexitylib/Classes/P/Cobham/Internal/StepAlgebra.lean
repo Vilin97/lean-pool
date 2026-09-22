@@ -677,7 +677,7 @@ private theorem cellsCode_of_bits (x : List Bool) :
   | cons b x ih =>
       intro t i hcells
       rw [List.length_cons, cellsCode_succ_left, encodeBits_cons,
-        show t.cells i = Γ.ofBool b from by simpa using hcells 0 (by simp)]
+        show t.cells i = Γ.ofBool b from by simpa using! hcells 0 (by simp)]
       congr 1
       exact ih t (i + 1) fun j hj => by
         have := hcells (j + 1) (by rw [List.length_cons]; omega)

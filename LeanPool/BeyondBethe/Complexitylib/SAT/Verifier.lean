@@ -381,7 +381,7 @@ theorem CNF.decode?_sound {z : List Bool} {φ : CNF}
       simp [htok] at h
       have hz : z = encodeTokens toks := tokenize?_sound htok
       have htoks : toks = CNF.tokens φ := by
-        simpa using (parseTokensAux_sound h)
+        simpa using! (parseTokensAux_sound h)
       calc
         z = encodeTokens toks := hz
         _ = encodeTokens (CNF.tokens φ) := by rw [htoks]

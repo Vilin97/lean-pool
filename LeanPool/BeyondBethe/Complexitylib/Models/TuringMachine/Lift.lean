@@ -157,8 +157,7 @@ private theorem liftTM_step_of_extras (tm : TM n) (m : ℕ) {c : Cfg n tm.Q}
   by_cases hh : c.state = tm.qhalt
   · -- both machines are halted
     have h1 : (tm.liftTM m).step C = none := by
-      simp only [step, hs, hh, show (tm.liftTM m).qhalt = tm.qhalt from rfl,
-        ↓reduceIte]
+      exact step_eq_none_iff_halted.2 (hs.trans hh)
     have h2 : tm.step c = none := by
       simp only [step, hh, ↓reduceIte]
     rw [h1, h2]; rfl
@@ -171,9 +170,13 @@ private theorem liftTM_step_of_extras (tm : TM n) (m : ℕ) {c : Cfg n tm.Q}
       have hinner : (fun i : Fin n => (C.work (Fin.castAdd m i)).read)
           = fun i => (c.work i).read :=
         funext fun i => by rw [hw (Fin.castAdd m i) i.isLt]; rfl
-      simp only [step, Option.map_some]
+      have hnot : C.state ≠ (tm.liftTM m).qhalt := by
+        exact fun h => hh (hs.symm.trans h)
+      simp only [step, Option.map_some, ite_eq_right hnot]
       dsimp only [liftTM, liftCfg]
-      rw [hs, hi, ho, hinner, ite_eq_right hh]
+      rw [hs, hi, ho, hinner]
+      change (if c.state = tm.qhalt then (none : Option (Cfg (n + m) tm.Q)) else _) = _
+      rw [ite_eq_right hh]
       refine congrArg some (Cfg.mk.injEq _ _ _ _ _ _ _ _ |>.mpr ⟨rfl, rfl, ?_, rfl⟩)
       funext i
       by_cases hik : i.val < n
@@ -435,8 +438,7 @@ private theorem retargetOutput_step_of_extras (tm : TM n) {c : Cfg n tm.Q}
   by_cases hh : c.state = tm.qhalt
   · -- both machines are halted
     have h1 : (tm.retargetOutput).step C = none := by
-      simp only [step, hs, hh, show (tm.retargetOutput).qhalt = tm.qhalt from rfl,
-        ↓reduceIte]
+      exact step_eq_none_iff_halted.2 (hs.trans hh)
     have h2 : tm.step c = none := by
       simp only [step, hh, ↓reduceIte]
     rw [h1, h2]; rfl
@@ -450,9 +452,13 @@ private theorem retargetOutput_step_of_extras (tm : TM n) {c : Cfg n tm.Q}
           = fun i => (c.work i).read :=
         funext fun i => by rw [hw (Fin.castSucc i) i.isLt]; rfl
       have hvirt : (C.work (Fin.last n)).read = c.output.read := by rw [hlast]
-      simp only [step, Option.map_some]
+      have hnot : C.state ≠ tm.retargetOutput.qhalt := by
+        exact fun h => hh (hs.symm.trans h)
+      simp only [step, Option.map_some, ite_eq_right hnot]
       dsimp only [retargetOutput, retargetCfg]
-      rw [hs, hi, hinner, hvirt, ite_eq_right hh]
+      rw [hs, hi, hinner, hvirt]
+      change (if c.state = tm.qhalt then (none : Option (Cfg (n + 1) tm.Q)) else _) = _
+      rw [ite_eq_right hh]
       refine congrArg some (Cfg.mk.injEq _ _ _ _ _ _ _ _ |>.mpr ⟨rfl, rfl, ?_, ?_⟩)
       · funext i
         by_cases hik : i.val < n
@@ -577,7 +583,7 @@ theorem retargetOutput_computesInTime_boundary (tm : TM n)
 theorem IsTransducer.liftTM {tm : TM n} (h : tm.IsTransducer) (m : ℕ) :
     (tm.liftTM m).IsTransducer := by
   intro q iHead wHeads oHead
-  simpa only [liftTM] using h q iHead
+  simpa only [liftTM] using! h q iHead
     (fun i => wHeads (Fin.castAdd m i)) oHead
 
 /-- Redirecting output to a work tape leaves the real output direction idle,

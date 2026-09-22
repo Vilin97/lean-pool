@@ -54,7 +54,7 @@ theorem write_coversZero_internal (overlay : Store)
   by_cases haddress : address = 0
   · subst address
     simp
-  · simpa [Function.update, haddress, Ne.symm haddress] using hcovers
+  · simpa [Function.update, haddress, Ne.symm haddress] using! hcovers
 
 theorem Snapshot.initial_decode_internal (input : List Bool) :
     (Snapshot.initial input).decode input = RAM.initCfg input := by
