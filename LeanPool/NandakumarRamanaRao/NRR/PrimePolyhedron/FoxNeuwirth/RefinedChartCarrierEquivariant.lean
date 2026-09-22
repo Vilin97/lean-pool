@@ -221,7 +221,7 @@ theorem simplexValue_eq_of_refinedPoint_eq
 /-- Sampling an equivariant map after relabelling the whole refined simplex relabels the affine
 interpolant by the same prime symmetry. -/
 theorem simplexValue_prime_smul
-    (hp : Nat.Prime p) (g : PrimeSymmetry p)
+    (p : Nat) (g : PrimeSymmetry p)
     (s : Simplex p (p - 1)) (N : Nat) (rho : RefinementWord p N)
     (F : ContinuousCoordinateMap p) (hF : IsEquivariantCoordinateMap p F)
     (w : StandardSimplex (p - 1)) :
@@ -257,8 +257,8 @@ theorem decorated_value_eq_of_decorated_chart_eq
       _ = _ := (refinedPoint_prime_smul p h t N r.2 v).symm
   have hlocal := simplexValue_eq_of_refinedPoint_eq hp N
     (g • s) (h • t) q.2 r.2 F w v hrefined
-  have hg := simplexValue_prime_smul hp g s N q.2 F hF w
-  have hh := simplexValue_prime_smul hp h t N r.2 F hF v
+  have hg := simplexValue_prime_smul p g s N q.2 F hF w
+  have hh := simplexValue_prime_smul p h t N r.2 F hF v
   have hresult := hg.symm.trans (hlocal.trans hh)
   have hsvalue : simplexValue s N q.2 F w = value hp N F q w := by
     funext j
