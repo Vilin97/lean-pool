@@ -107,26 +107,26 @@ theorem machineMatrixRawSumRows_mem_FP :
 
 theorem machineMatrixRawSumCurrent_mem_FP :
     machineMatrixRawSumCurrent ∈ Complexity.FP := by
-  simpa only [machineMatrixRawSumCurrent] using
+  simpa only [machineMatrixRawSumCurrent] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineMatrixRawSumAcc_mem_FP :
     machineMatrixRawSumAcc ∈ Complexity.FP := by
-  simpa only [machineMatrixRawSumAcc] using
+  simpa only [machineMatrixRawSumAcc] using!
     machineCompose_mem_FP
       (machineCompose_mem_FP machinePairSecond_mem_FP machinePairSecond_mem_FP)
       machinePairFirst_mem_FP
 
 theorem machineMatrixRawSumBound_mem_FP :
     machineMatrixRawSumBound ∈ Complexity.FP := by
-  simpa only [machineMatrixRawSumBound] using
+  simpa only [machineMatrixRawSumBound] using!
     machineCompose_mem_FP
       (machineCompose_mem_FP machinePairSecond_mem_FP machinePairSecond_mem_FP)
       machinePairSecond_mem_FP
 
 theorem machineMatrixRawSumEntry_mem_FP :
     machineMatrixRawSumEntry ∈ Complexity.FP := by
-  simpa only [machineMatrixRawSumEntry] using
+  simpa only [machineMatrixRawSumEntry] using!
     machineCompose_mem_FP machineMatrixRawSumCurrent_mem_FP
       machineListHead_mem_FP
 
@@ -134,12 +134,12 @@ theorem machineMatrixRawSumCandidate_mem_FP :
     machineMatrixRawSumCandidate ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineMatrixRawSumAcc_mem_FP
     machineMatrixRawSumEntry_mem_FP
-  simpa only [machineMatrixRawSumCandidate] using
+  simpa only [machineMatrixRawSumCandidate] using!
     machineCompose_mem_FP hpair machineRawRatAddCode_mem_FP
 
 theorem machineMatrixRawSumNextAcc_mem_FP :
     machineMatrixRawSumNextAcc ∈ Complexity.FP := by
-  simpa only [machineMatrixRawSumNextAcc] using
+  simpa only [machineMatrixRawSumNextAcc] using!
     machineTake_mem_FP machineMatrixRawSumBound_mem_FP
       machineMatrixRawSumCandidate_mem_FP
 
@@ -227,7 +227,7 @@ theorem machineMatrixRawSumInit_bound (word : List Bool) :
     machineMatrixRawSumRows_pack, machineMatrixRawSumCurrent_pack,
     machineMatrixRawSumAcc_pack, machineMatrixRawSumBound_pack]
   refine ⟨trivial, ?_, by simp, ?_, trivial⟩
-  · simpa only [machineMatrixRowsWord] using machinePairSecond_length_le word
+  · simpa only [machineMatrixRowsWord] using! machinePairSecond_length_le word
   · simp [machineMatrixRawSumInputBound, machineBinaryMulWidth,
       rawRatBinaryCode, RawRat.zero, integerBinaryCode]
     nlinarith [sq_nonneg (word.length + 16)]
@@ -297,13 +297,13 @@ theorem machineMatrixRawSumFinalState_mem_FP :
 
 theorem machineMatrixRawSumCode_mem_FP :
     machineMatrixRawSumCode ∈ Complexity.FP := by
-  simpa only [machineMatrixRawSumCode] using
+  simpa only [machineMatrixRawSumCode] using!
     machineCompose_mem_FP machineMatrixRawSumFinalState_mem_FP
       machineMatrixRawSumAcc_mem_FP
 
 theorem machineMatrixSumOutputCode_mem_FP :
     machineMatrixSumOutputCode ∈ Complexity.FP := by
-  simpa only [machineMatrixSumOutputCode] using
+  simpa only [machineMatrixSumOutputCode] using!
     machineCompose_mem_FP machineMatrixRawSumCode_mem_FP
       machineNormalizeRawRatBinaryCode_mem_FP
 
@@ -312,12 +312,12 @@ theorem machineMatrixNormalizationScaleRawCode_mem_FP :
   have hpair := machinePair_mem_FP
     (machineConst_mem_FP (rawRatBinaryCode RawRat.one))
     machineMatrixRawSumCode_mem_FP
-  simpa only [machineMatrixNormalizationScaleRawCode] using
+  simpa only [machineMatrixNormalizationScaleRawCode] using!
     machineCompose_mem_FP hpair machineRawRatAddCode_mem_FP
 
 theorem machineMatrixNormalizationScaleOutputCode_mem_FP :
     machineMatrixNormalizationScaleOutputCode ∈ Complexity.FP := by
-  simpa only [machineMatrixNormalizationScaleOutputCode] using
+  simpa only [machineMatrixNormalizationScaleOutputCode] using!
     machineCompose_mem_FP machineMatrixNormalizationScaleRawCode_mem_FP
       machineNormalizeRawRatBinaryCode_mem_FP
 
@@ -378,7 +378,7 @@ theorem integerNatAbs_size_le_binaryCode_length (z : ℤ) :
           omega
         exact hle.trans_lt hlt
       simpa [integerBinaryCode, Nat.size_eq_bits_len,
-        Nat.add_comm] using hs
+        Nat.add_comm] using! hs
 
 theorem rawRatWidth_le_binaryCode_length (q : RawRat) :
     rawRatWidth q ≤ (rawRatBinaryCode q).length := by
@@ -406,7 +406,7 @@ theorem rawRatBinaryCode_length_le_width (q : RawRat) :
         have hsize : n.size ≤ (n + 1).size :=
           Nat.size_le_size (Nat.le_succ n)
         have habs : (n + 1).size ≤ rawRatWidth q := by
-          simpa only [hqnum, Int.natAbs_negSucc] using
+          simpa only [hqnum, Int.natAbs_negSucc] using!
             rawRat_num_size_le_width q
         omega
   have hden := rawRat_den_size_le_width q
@@ -440,7 +440,7 @@ theorem rawRatListCost_le_codeLength (xs : List ℚ) :
         binaryListCode, pair_length]
       have ih' : (qs.map fun q => rawRatWidth (rawRatOfRat q) + 1).sum ≤
           (binaryListCode rationalEntryBinaryCode qs).length := by
-        simpa only [rawRatListCost] using ih
+        simpa only [rawRatListCost] using! ih
       have hq : rawRatWidth (rawRatOfRat q) ≤
           (rationalEntryBinaryCode q).length := by
         rw [← rawRatBinaryCode_rawRatOfRat]
@@ -457,7 +457,7 @@ theorem rawRatRowsCost_le_codeLength (rows : List (List ℚ)) :
         binaryListCode, pair_length]
       have ih' : (rows.map rawRatListCost).sum ≤
           (binaryListCode (binaryListCode rationalEntryBinaryCode) rows).length := by
-        simpa only [rawRatRowsCost] using ih
+        simpa only [rawRatRowsCost] using! ih
       have hrow := rawRatListCost_le_codeLength row
       omega
 
@@ -544,7 +544,7 @@ theorem machineMatrixRawSumStep_semantics
         have hinv := matrixRawSumSemStep_invariant hs
         have hinv' : rawRatWidth (acc.add (rawRatOfRat q)) +
             rawRatListCost qs + rawRatRowsCost rows ≤ 1 + word.length := by
-          simpa only [MatrixRawSumSemInvariant, matrixRawSumSemStep] using hinv
+          simpa only [MatrixRawSumSemInvariant, matrixRawSumSemStep] using! hinv
         omega
       have hcode :
           (rawRatBinaryCode (acc.add (rawRatOfRat q))).length ≤
@@ -652,10 +652,10 @@ theorem machineMatrixRawSumFinalState_encode {n : ℕ}
         word.length := by
     calc
       _ = (machineMatrixRowsWord word).length := by
-        simpa only [word, rows] using congrArg List.length
+        simpa only [word, rows] using! congrArg List.length
           (machineMatrixRowsWord_encode A).symm
       _ ≤ word.length := by
-        simpa only [machineMatrixRowsWord] using
+        simpa only [machineMatrixRowsWord] using!
           machinePairSecond_length_le word
   have hinv : MatrixRawSumSemInvariant (1 + word.length) s := by
     simp only [MatrixRawSumSemInvariant, s, rawRatListCost,

@@ -152,10 +152,10 @@ theorem kuhnEvalIterate_reachableBound {n steps : ℕ}
     (hstate : KuhnEvalReachableBound 0 state) :
     KuhnEvalReachableBound steps ((kuhnEvalStep A)^[steps] state) := by
   induction steps with
-  | zero => simpa using hstate
+  | zero => simpa using! hstate
   | succ steps ih =>
       rw [Function.iterate_succ_apply']
-      simpa [Nat.succ_eq_add_one] using
+      simpa [Nat.succ_eq_add_one] using!
         kuhnEvalStep_reachableBound A _ ih
 
 /-! ## Length of canonical control words -/
@@ -206,7 +206,7 @@ theorem mateVectorCode_columnMate_length_le {n : ℕ}
     ((columnMateList mate).map
         (fun value ↦ 2 * (mateValueCode value).length + 2)).sum ≤
         (columnMateList mate).length * (2 * n + 4) := by
-      simpa [Nat.nsmul_eq_mul] using
+      simpa [Nat.nsmul_eq_mul] using!
         List.sum_le_card_nsmul
           ((columnMateList mate).map
             (fun value ↦ 2 * (mateValueCode value).length + 2))
@@ -306,7 +306,7 @@ theorem kuhnControlCode_length_le {n steps : ℕ}
           n * (2 * n + 4) := by
         cases hmateEq : result.mate? with
         | none => simp [kuhnSearchResultMateCode, hmateEq]
-        | some mate => simpa [kuhnSearchResultMateCode, hmateEq] using
+        | some mate => simpa [kuhnSearchResultMateCode, hmateEq] using!
             mateVectorCode_columnMate_length_le mate
       have hstackCode := kuhnStackCode_length_le stack hstack
       have hstackCode' : (kuhnStackCode stack).length ≤
@@ -399,7 +399,7 @@ theorem kuhnDimensionCode_length_le_inputBound {n : ℕ}
       (machineKuhnInputBound
         (rationalMatrixBinaryEncoding.encode ⟨n, A⟩)).length := by
   have hn := matrix_dimension_le_code_length A
-  simpa using hn.trans (kuhnMatrixCode_length_le_inputBound A)
+  simpa using! hn.trans (kuhnMatrixCode_length_le_inputBound A)
 
 theorem kuhnColumnsCode_length_le_inputBound {n : ℕ}
     (A : Matrix (Fin n) (Fin n) ℚ) :
@@ -408,7 +408,7 @@ theorem kuhnColumnsCode_length_le_inputBound {n : ℕ}
         (rationalMatrixBinaryEncoding.encode ⟨n, A⟩)).length := by
   let matrix := rationalMatrixBinaryEncoding.encode ⟨n, A⟩
   have hcolumns : (finRangeUnaryCode n).length ≤ n * (2 * n + 2) := by
-    simpa [finRangeUnaryCode, finListUnaryCode] using
+    simpa [finRangeUnaryCode, finListUnaryCode] using!
       finListUnaryCode_length_le (List.finRange n)
   have hn : n + 16 ≤ matrix.length + 16 := by
     exact Nat.add_le_add_right (matrix_dimension_le_code_length A) 16
@@ -482,7 +482,7 @@ theorem machineKuhnIterate_encode {n iterations : ℕ}
         ih hprefix]
       apply machineKuhnStep_encode A
       · exact kuhnEvalIterate_reachableBound A initial hinitial
-      · simpa [Nat.succ_eq_add_one] using hiterations
+      · simpa [Nat.succ_eq_add_one] using! hiterations
 
 @[simp] theorem kuhnEvalIterate_done {n iterations : ℕ}
     (A : Matrix (Fin n) (Fin n) ℚ) (mate : ColumnMate n) :
@@ -508,7 +508,7 @@ theorem kuhnFullEval_budget {n : ℕ}
   rw [show (kuhnEvalStep A)^[exactSteps]
         (kuhnBuildEvalState A (List.finRange n) (emptyColumnMate n)) =
       .done (kuhnColumnMate A) by
-        simpa [exactSteps] using kuhnFullBuildEvalState_iterate A]
+        simpa [exactSteps] using! kuhnFullBuildEvalState_iterate A]
   simp
 
 theorem machineKuhnFullIterate_encode {n : ℕ}

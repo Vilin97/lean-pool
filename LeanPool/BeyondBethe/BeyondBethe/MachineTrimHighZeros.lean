@@ -39,7 +39,7 @@ def machineTrimHighZeros (word : List Bool) : List Bool :=
   machineTrimPacked (pair [] word)
 
 theorem machineTrimAcc_mem_FP : machineTrimAcc ∈ Complexity.FP := by
-  simpa only [machineTrimAcc] using
+  simpa only [machineTrimAcc] using!
     machineCompose_mem_FP machinePairFirst_mem_FP machinePairSecond_mem_FP
 
 theorem machineTrimFalseStep_mem_FP :
@@ -53,12 +53,12 @@ theorem machineTrimFalseStep_mem_FP :
 
 theorem machineTrimTrueStep_mem_FP :
     machineTrimTrueStep ∈ Complexity.FP := by
-  simpa only [machineTrimTrueStep] using
+  simpa only [machineTrimTrueStep] using!
     machineCompose_mem_FP machineTrimAcc_mem_FP
       (machinePrepend_mem_FP true)
 
 theorem machineTrimPacked_mem_FP : machineTrimPacked ∈ Complexity.FP := by
-  simpa only [machineTrimPacked, Polynomial.eval_X] using
+  simpa only [machineTrimPacked, Polynomial.eval_X] using!
     Cobham.recFoldClamp_mem_FP machineTrimFalseStep_mem_FP
       machineTrimTrueStep_mem_FP (machineConst_mem_FP []) Polynomial.X
 
@@ -66,7 +66,7 @@ theorem machineTrimHighZeros_mem_FP :
     machineTrimHighZeros ∈ Complexity.FP := by
   have hpack : (fun word : List Bool => pair [] word) ∈ Complexity.FP :=
     machinePair_mem_FP (machineConst_mem_FP []) id_mem_FP
-  simpa only [machineTrimHighZeros] using
+  simpa only [machineTrimHighZeros] using!
     machineCompose_mem_FP hpack machineTrimPacked_mem_FP
 
 theorem binaryTrimHighZeros_length_le : ∀ bits : List Bool,
@@ -128,7 +128,7 @@ theorem machineAssembleCanonicalBits_mem_FP
     {query ruler : List Bool → List Bool}
     (hquery : query ∈ Complexity.FP) (hruler : ruler ∈ Complexity.FP) :
     machineAssembleCanonicalBits query ruler ∈ Complexity.FP := by
-  simpa only [machineAssembleCanonicalBits] using
+  simpa only [machineAssembleCanonicalBits] using!
     machineCompose_mem_FP (machineAssembleBits_mem_FP hquery hruler)
       machineTrimHighZeros_mem_FP
 
@@ -175,7 +175,7 @@ theorem assembledOutputBitLanguage_padded
   intro extra
   induction extra with
   | zero =>
-      simpa using assembledQueryBits_eq_take
+      simpa using! assembledQueryBits_eq_take
         (MachineRAMBridge.languageFlag (outputBitLanguage target)) target
         (outputBitLanguage_flag_pair target) word
         (target word).length le_rfl

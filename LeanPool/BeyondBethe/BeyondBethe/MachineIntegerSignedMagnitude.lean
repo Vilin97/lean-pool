@@ -45,12 +45,12 @@ theorem machineIntegerNegativeAbsBits_mem_FP :
   have hpair : (fun word : List Bool => pair word.tail [true]) ∈
       Complexity.FP :=
     machinePair_mem_FP machineTail_mem_FP (machineConst_mem_FP [true])
-  simpa only [machineIntegerNegativeAbsBits] using
+  simpa only [machineIntegerNegativeAbsBits] using!
     machineCompose_mem_FP hpair machineBinaryAddBits_mem_FP
 
 theorem machineIntegerNatAbsBits_mem_FP :
     machineIntegerNatAbsBits ∈ Complexity.FP := by
-  simpa only [machineIntegerNatAbsBits] using
+  simpa only [machineIntegerNatAbsBits] using!
     machineIfHead_mem_FP id_mem_FP machineIntegerNegativeAbsBits_mem_FP
       machineTail_mem_FP
 
@@ -59,7 +59,7 @@ theorem machineIntegerNegativePayloadBits_mem_FP :
   have hpair : (fun absBits : List Bool => pair absBits [true]) ∈
       Complexity.FP :=
     machinePair_mem_FP id_mem_FP (machineConst_mem_FP [true])
-  simpa only [machineIntegerNegativePayloadBits] using
+  simpa only [machineIntegerNegativePayloadBits] using!
     machineCompose_mem_FP hpair machineBinarySubBits_mem_FP
 
 theorem machineIntegerCodeFromSignedAbs_mem_FP :
@@ -70,7 +70,7 @@ theorem machineIntegerCodeFromSignedAbs_mem_FP :
     (machinePrepend_mem_FP true)
   have hpositive := machineCompose_mem_FP machinePairSecond_mem_FP
     (machinePrepend_mem_FP false)
-  simpa only [machineIntegerCodeFromSignedAbs] using
+  simpa only [machineIntegerCodeFromSignedAbs] using!
     machineIfHead_mem_FP machinePairFirst_mem_FP hnegative hpositive
 
 theorem machineIntegerNatAbsBits_encode (z : ℤ) :
@@ -80,7 +80,7 @@ theorem machineIntegerNatAbsBits_encode (z : ℤ) :
   | negSucc n =>
       simp only [machineIntegerNatAbsBits, integerBinaryCode,
         machineIfHead_true, machineIntegerNegativeAbsBits, List.tail_cons]
-      simpa using machineBinaryAddBits_pair_natBits n 1
+      simpa using! machineBinaryAddBits_pair_natBits n 1
 
 theorem machineIntegerCodeFromSignedAbs_ofNat (n magnitude : ℕ) :
     machineIntegerCodeFromSignedAbs

@@ -29,7 +29,7 @@ namespace BeyondBethe
     machineMatrixNormalizationScaleOutputCode
         (rationalMatrixBinaryEncoding.encode ⟨n, A⟩) =
       rationalBinaryCode (rationalNormalizationScale A) := by
-  simpa only [rationalNormalizationScale] using
+  simpa only [rationalNormalizationScale] using!
     machineMatrixNormalizationScaleOutputCode_encode A
 
 @[simp] theorem machineMatrixNormalizationScalePowerOutputCode_final {n : ℕ}
@@ -37,7 +37,7 @@ namespace BeyondBethe
     machineMatrixNormalizationScalePowerOutputCode
         (rationalMatrixBinaryEncoding.encode ⟨n, A⟩) =
       rationalBinaryCode (rationalNormalizationScale A ^ n) := by
-  simpa only [rationalNormalizationScale] using
+  simpa only [rationalNormalizationScale] using!
     machineMatrixNormalizationScalePowerOutputCode_encode A
 
 end BeyondBethe

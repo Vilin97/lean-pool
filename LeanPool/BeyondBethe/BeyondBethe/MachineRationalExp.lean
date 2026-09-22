@@ -105,55 +105,55 @@ theorem machineExpPayload_mem_FP : machineExpPayload ∈ Complexity.FP :=
 
 theorem machineExpArgumentCode_mem_FP :
     machineExpArgumentCode ∈ Complexity.FP := by
-  simpa only [machineExpArgumentCode] using
+  simpa only [machineExpArgumentCode] using!
     machineCompose_mem_FP machineExpPayload_mem_FP machinePairFirst_mem_FP
 
 theorem machineExpLossCode_mem_FP : machineExpLossCode ∈ Complexity.FP := by
-  simpa only [machineExpLossCode] using
+  simpa only [machineExpLossCode] using!
     machineCompose_mem_FP machineExpPayload_mem_FP machinePairSecond_mem_FP
 
 theorem machineExpArgumentSign_mem_FP :
     machineExpArgumentSign ∈ Complexity.FP := by
   have hnum := machineCompose_mem_FP machineExpArgumentCode_mem_FP
     machinePairFirst_mem_FP
-  simpa only [machineExpArgumentSign] using
+  simpa only [machineExpArgumentSign] using!
     machineCompose_mem_FP hnum machineHeadBit_mem_FP
 
 theorem machineExpMagnitudeCode_mem_FP :
     machineExpMagnitudeCode ∈ Complexity.FP := by
   have hneg := machineCompose_mem_FP machineExpArgumentCode_mem_FP
     machineRawRatNegCode_mem_FP
-  simpa only [machineExpMagnitudeCode] using
+  simpa only [machineExpMagnitudeCode] using!
     machineIfHead_mem_FP machineExpArgumentSign_mem_FP hneg
       machineExpArgumentCode_mem_FP
 
 theorem machineExpSquareCode_mem_FP : machineExpSquareCode ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineExpMagnitudeCode_mem_FP
     machineExpMagnitudeCode_mem_FP
-  simpa only [machineExpSquareCode] using
+  simpa only [machineExpSquareCode] using!
     machineCompose_mem_FP hpair machineRawRatMulCode_mem_FP
 
 theorem machineExpSquareOverLossCode_mem_FP :
     machineExpSquareOverLossCode ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineExpSquareCode_mem_FP
     machineExpLossCode_mem_FP
-  simpa only [machineExpSquareOverLossCode] using
+  simpa only [machineExpSquareOverLossCode] using!
     machineCompose_mem_FP hpair machineRawRatDivCode_mem_FP
 
 theorem machineExpScheduleArgumentCode_mem_FP :
     machineExpScheduleArgumentCode ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineExpMagnitudeCode_mem_FP
     machineExpSquareOverLossCode_mem_FP
-  simpa only [machineExpScheduleArgumentCode] using
+  simpa only [machineExpScheduleArgumentCode] using!
     machineCompose_mem_FP hpair machineRawRatAddCode_mem_FP
 
 theorem machineExpCeilBits_mem_FP : machineExpCeilBits ∈ Complexity.FP := by
-  simpa only [machineExpCeilBits] using
+  simpa only [machineExpCeilBits] using!
     machineCompose_mem_FP machineExpScheduleArgumentCode_mem_FP
       machineRationalCeilNatBits_mem_FP
 
 theorem machineExpStepsBits_mem_FP : machineExpStepsBits ∈ Complexity.FP := by
-  simpa only [machineExpStepsBits] using
+  simpa only [machineExpStepsBits] using!
     machineCompose_mem_FP machineExpCeilBits_mem_FP
       (machinePrepend_mem_FP true)
 
@@ -161,7 +161,7 @@ theorem machineExpStepsRuler_mem_FP :
     machineExpStepsRuler ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineExpGuard_mem_FP
     machineExpStepsBits_mem_FP
-  simpa only [machineExpStepsRuler] using
+  simpa only [machineExpStepsRuler] using!
     machineCompose_mem_FP hpair machineBoundedUnary_mem_FP
 
 theorem machineExpStepsRawRatCode_mem_FP :
@@ -174,32 +174,32 @@ theorem machineExpScaledArgumentCode_mem_FP :
     machineExpScaledArgumentCode ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineExpArgumentCode_mem_FP
     machineExpStepsRawRatCode_mem_FP
-  simpa only [machineExpScaledArgumentCode] using
+  simpa only [machineExpScaledArgumentCode] using!
     machineCompose_mem_FP hpair machineRawRatDivCode_mem_FP
 
 theorem machineExpBaseCode_mem_FP : machineExpBaseCode ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP (machineConst_mem_FP rawRatOneCode)
     machineExpScaledArgumentCode_mem_FP
-  simpa only [machineExpBaseCode] using
+  simpa only [machineExpBaseCode] using!
     machineCompose_mem_FP hpair machineRawRatAddCode_mem_FP
 
 theorem machineBoundedRationalExpLowerCode_mem_FP :
     machineBoundedRationalExpLowerCode ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineExpStepsRuler_mem_FP
     machineExpBaseCode_mem_FP
-  simpa only [machineBoundedRationalExpLowerCode] using
+  simpa only [machineBoundedRationalExpLowerCode] using!
     machineCompose_mem_FP hpair machineRationalPowerCode_mem_FP
 
 theorem machineBoundedRationalExpLowerRawPowerCode_mem_FP :
     machineBoundedRationalExpLowerRawPowerCode ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineExpStepsRuler_mem_FP
     machineExpBaseCode_mem_FP
-  simpa only [machineBoundedRationalExpLowerRawPowerCode] using
+  simpa only [machineBoundedRationalExpLowerRawPowerCode] using!
     machineCompose_mem_FP hpair machineRawRatPowerCode_mem_FP
 
 theorem machineBoundedRationalExpLowerRawEntryCode_mem_FP :
     machineBoundedRationalExpLowerRawEntryCode ∈ Complexity.FP := by
-  simpa only [machineBoundedRationalExpLowerRawEntryCode] using
+  simpa only [machineBoundedRationalExpLowerRawEntryCode] using!
     machineCompose_mem_FP
       machineBoundedRationalExpLowerRawPowerCode_mem_FP
       machineNormalizeRawRatEntryCode_mem_FP
@@ -256,7 +256,7 @@ end RawRat
         machineExpArgumentCode, machineExpPayload, rawRatBinaryCode,
         integerBinaryCode, machinePairSecond_pair, machinePairFirst_pair,
         machineHeadBit_cons, machineIfHead_true, RawRat.expMagnitude]
-      simpa only [rawRatBinaryCode] using
+      simpa only [rawRatBinaryCode] using!
         (machineRawRatNegCode_encode
           (⟨Int.negSucc n, den, hden⟩ : RawRat))
 

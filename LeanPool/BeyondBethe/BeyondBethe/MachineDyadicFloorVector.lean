@@ -25,7 +25,7 @@ def machineDyadicFloorEntryCode (word : List Bool) : List Bool :=
 
 theorem machineDyadicFloorEntryCode_mem_FP :
     machineDyadicFloorEntryCode ∈ FP := by
-  simpa only [machineDyadicFloorEntryCode] using
+  simpa only [machineDyadicFloorEntryCode] using!
     machineCompose_mem_FP machineRawDyadicFloorCode_mem_FP
       machineNormalizeRawRatEntryCode_mem_FP
 
@@ -56,7 +56,7 @@ theorem binaryRawDyadicFloorInt_natAbs_le
         exact (Nat.div_le_self _ _).trans (by omega)
       · simp only [Int.natAbs_neg]
         have hdiv := Nat.div_le_self ((n + 1) * 2 ^ p) q.den
-        simpa only [Nat.succ_eq_add_one] using Nat.add_le_add_right hdiv 1
+        simpa only [Nat.succ_eq_add_one] using! Nat.add_le_add_right hdiv 1
 
 theorem binaryRawDyadicFloor_width_le
     (p : ℕ) (q : RawRat) :
@@ -74,7 +74,7 @@ theorem binaryRawDyadicFloor_width_le
   have hdenSize : (2 ^ p).size = p + 1 := Nat.size_pow
   simp only [binaryRawDyadicFloor, rawRatWidth]
   rw [hdenSize]
-  refine max_le (by simpa only [w] using hfloorSize) ?_
+  refine max_le (by simpa only [w] using! hfloorSize) ?_
   omega
 
 def dyadicFloorVectorCanonicalWord {d : ℕ}
@@ -94,7 +94,7 @@ theorem dyadicFloorVector_entry_code_length_le {d : ℕ}
   have hq : rawRatWidth q ≤ word.length := by
     have helem' : (rationalEntryBinaryCode (v i)).length ≤
         (rationalFiniteVectorCode v).length := by
-      simpa only [rationalFiniteVectorCode] using helem
+      simpa only [rationalFiniteVectorCode] using! helem
     apply hq0.trans
     apply helem'.trans
     simp only [word, dyadicFloorVectorCanonicalWord, pair_length,
@@ -133,7 +133,7 @@ theorem dyadicFloorVector_code_length_le_bound {d : ℕ}
       simp only [word, dyadicFloorVectorCanonicalWord, pair_length,
         List.length_replicate]
       omega
-    simpa only [rationalFiniteVectorCode, List.length_ofFn] using
+    simpa only [rationalFiniteVectorCode, List.length_ofFn] using!
       hlist.trans hvector
   have heach : ∀ q ∈ List.ofFn (dyadicFloorVector p v),
       (rationalEntryBinaryCode q).length ≤ L := by
@@ -226,7 +226,7 @@ theorem machineDyadicFloorVectorCurrentEntry_mem_FP :
     machineRationalTransposeMulVectorRemaining_mem_FP machineListHead_mem_FP
   have hinput := machinePair_mem_FP
     machineRationalTransposeMulVectorStatePayload_mem_FP hhead
-  simpa only [machineDyadicFloorVectorCurrentEntry] using
+  simpa only [machineDyadicFloorVectorCurrentEntry] using!
     machineCompose_mem_FP hinput machineDyadicFloorEntryCode_mem_FP
 
 theorem machineDyadicFloorVectorCandidate_mem_FP :
@@ -236,7 +236,7 @@ theorem machineDyadicFloorVectorCandidate_mem_FP :
 
 theorem machineDyadicFloorVectorNextAccumulator_mem_FP :
     machineDyadicFloorVectorNextAccumulator ∈ FP := by
-  simpa only [machineDyadicFloorVectorNextAccumulator] using
+  simpa only [machineDyadicFloorVectorNextAccumulator] using!
     machineTake_mem_FP machineRationalTransposeMulVectorBound_mem_FP
       machineDyadicFloorVectorCandidate_mem_FP
 
@@ -343,13 +343,13 @@ theorem machineDyadicFloorVectorFinalState_mem_FP :
 
 theorem machineDyadicFloorVectorReversedCode_mem_FP :
     machineDyadicFloorVectorReversedCode ∈ FP := by
-  simpa only [machineDyadicFloorVectorReversedCode] using
+  simpa only [machineDyadicFloorVectorReversedCode] using!
     machineCompose_mem_FP machineDyadicFloorVectorFinalState_mem_FP
       machineRationalTransposeMulVectorAccumulator_mem_FP
 
 theorem machineDyadicFloorVectorCode_mem_FP :
     machineDyadicFloorVectorCode ∈ FP := by
-  simpa only [machineDyadicFloorVectorCode] using
+  simpa only [machineDyadicFloorVectorCode] using!
     machineCompose_mem_FP machineDyadicFloorVectorReversedCode_mem_FP
       machineListReverse_mem_FP
 
@@ -386,7 +386,7 @@ theorem dyadicFloorVectorPrefix_succ {d : ℕ}
         [dyadicFloor p (v ⟨k, hk⟩)] := by
   simp only [dyadicFloorVectorPrefix, List.map_take]
   have hkm : k < (List.ofFn v).length := by simpa
-  simpa using congrArg (List.map (dyadicFloor p))
+  simpa using! congrArg (List.map (dyadicFloor p))
     (List.take_concat_get hkm).symm
 
 theorem machineDyadicFloorVectorStep_semantics {d : ℕ}
@@ -423,7 +423,7 @@ theorem machineDyadicFloorVectorStep_semantics {d : ℕ}
         (binaryListCode rationalEntryBinaryCode
           (dyadicFloorVectorPrefix p v k).reverse)).length ≤
         (machineDyadicFloorVectorInputBound word).length := by
-    simpa only [hreverse, binaryListCode] using hcand
+    simpa only [hreverse, binaryListCode] using! hcand
   have hnonempty :
       binaryListCode rationalEntryBinaryCode ((List.ofFn v).drop k) ≠ [] := by
     rw [hdrop]
@@ -505,7 +505,7 @@ theorem machineDyadicFloorVectorReversedCode_encode {d : ℕ}
       simp only [word, dyadicFloorVectorCanonicalWord, pair_length,
         List.length_replicate]
       omega
-    simpa only [rationalFiniteVectorCode, List.length_ofFn] using
+    simpa only [rationalFiniteVectorCode, List.length_ofFn] using!
       hlist.trans hvector
   have hsplit : word.length = (word.length - d) + d := by omega
   change machineDyadicFloorVectorReversedCode word = _

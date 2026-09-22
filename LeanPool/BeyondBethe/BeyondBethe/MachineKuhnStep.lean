@@ -63,44 +63,44 @@ theorem machineKuhnControl_mem_FP : machineKuhnControl ∈ Complexity.FP :=
   machineKuhnStateControl_mem_FP
 
 theorem machineKuhnFuel_mem_FP : machineKuhnFuel ∈ Complexity.FP := by
-  simpa only [machineKuhnFuel] using
+  simpa only [machineKuhnFuel] using!
     machineCompose_mem_FP machineKuhnControl_mem_FP machineKuhnCallFuel_mem_FP
 theorem machineKuhnRemaining_mem_FP : machineKuhnRemaining ∈ Complexity.FP := by
-  simpa only [machineKuhnRemaining] using
+  simpa only [machineKuhnRemaining] using!
     machineCompose_mem_FP machineKuhnControl_mem_FP
       machineKuhnCallRemaining_mem_FP
 theorem machineKuhnRow_mem_FP : machineKuhnRow ∈ Complexity.FP := by
-  simpa only [machineKuhnRow] using
+  simpa only [machineKuhnRow] using!
     machineCompose_mem_FP machineKuhnControl_mem_FP machineKuhnCallRow_mem_FP
 theorem machineKuhnSeen_mem_FP : machineKuhnSeen ∈ Complexity.FP := by
-  simpa only [machineKuhnSeen] using
+  simpa only [machineKuhnSeen] using!
     machineCompose_mem_FP machineKuhnControl_mem_FP machineKuhnCallSeen_mem_FP
 theorem machineKuhnMate_mem_FP : machineKuhnMate ∈ Complexity.FP := by
-  simpa only [machineKuhnMate] using
+  simpa only [machineKuhnMate] using!
     machineCompose_mem_FP machineKuhnControl_mem_FP machineKuhnCallMate_mem_FP
 theorem machineKuhnStack_mem_FP : machineKuhnStack ∈ Complexity.FP := by
-  simpa only [machineKuhnStack] using
+  simpa only [machineKuhnStack] using!
     machineCompose_mem_FP machineKuhnControl_mem_FP machineKuhnCallStack_mem_FP
 theorem machineKuhnRetSuccess_mem_FP : machineKuhnRetSuccess ∈ Complexity.FP := by
-  simpa only [machineKuhnRetSuccess] using
+  simpa only [machineKuhnRetSuccess] using!
     machineCompose_mem_FP machineKuhnControl_mem_FP
       machineKuhnReturnSuccess_mem_FP
 theorem machineKuhnRetSeen_mem_FP : machineKuhnRetSeen ∈ Complexity.FP := by
-  simpa only [machineKuhnRetSeen] using
+  simpa only [machineKuhnRetSeen] using!
     machineCompose_mem_FP machineKuhnControl_mem_FP machineKuhnReturnSeen_mem_FP
 theorem machineKuhnRetMate_mem_FP : machineKuhnRetMate ∈ Complexity.FP := by
-  simpa only [machineKuhnRetMate] using
+  simpa only [machineKuhnRetMate] using!
     machineCompose_mem_FP machineKuhnControl_mem_FP machineKuhnReturnMate_mem_FP
 theorem machineKuhnRetStack_mem_FP : machineKuhnRetStack ∈ Complexity.FP := by
-  simpa only [machineKuhnRetStack] using
+  simpa only [machineKuhnRetStack] using!
     machineCompose_mem_FP machineKuhnControl_mem_FP
       machineKuhnReturnStack_mem_FP
 theorem machineKuhnTopFrame_mem_FP : machineKuhnTopFrame ∈ Complexity.FP := by
-  simpa only [machineKuhnTopFrame] using
+  simpa only [machineKuhnTopFrame] using!
     machineCompose_mem_FP machineKuhnRetStack_mem_FP
       machineKuhnStackHead_mem_FP
 theorem machineKuhnRestStack_mem_FP : machineKuhnRestStack ∈ Complexity.FP := by
-  simpa only [machineKuhnRestStack] using
+  simpa only [machineKuhnRestStack] using!
     machineCompose_mem_FP machineKuhnRetStack_mem_FP
       machineKuhnStackTail_mem_FP
 
@@ -120,7 +120,7 @@ def machineKuhnWithControl (state control : List Bool) : List Bool :=
 theorem machineKuhnClamp_mem_FP
     {candidate : List Bool → List Bool} (hcandidate : candidate ∈ Complexity.FP) :
     (fun state ↦ machineKuhnClamp state (candidate state)) ∈ Complexity.FP := by
-  simpa only [machineKuhnClamp] using
+  simpa only [machineKuhnClamp] using!
     machineTake_mem_FP machineKuhnStateBound_mem_FP hcandidate
 
 theorem machineKuhnWithControl_mem_FP
@@ -310,18 +310,18 @@ def machineKuhnStep (state : List Bool) : List Bool :=
 
 theorem machineKuhnCurrentColumn_mem_FP :
     machineKuhnCurrentColumn ∈ Complexity.FP := by
-  simpa only [machineKuhnCurrentColumn] using
+  simpa only [machineKuhnCurrentColumn] using!
     machineCompose_mem_FP machineKuhnRemaining_mem_FP machineListHead_mem_FP
 
 theorem machineKuhnRemainingTail_mem_FP :
     machineKuhnRemainingTail ∈ Complexity.FP := by
-  simpa only [machineKuhnRemainingTail] using
+  simpa only [machineKuhnRemainingTail] using!
     machineCompose_mem_FP machineKuhnRemaining_mem_FP machineListTail_mem_FP
 
 theorem machineKuhnSeenBit_mem_FP : machineKuhnSeenBit ∈ Complexity.FP := by
   have hp := machinePair_mem_FP machineKuhnCurrentColumn_mem_FP
     machineKuhnSeen_mem_FP
-  simpa only [machineKuhnSeenBit] using
+  simpa only [machineKuhnSeenBit] using!
     machineCompose_mem_FP hp machineBoolVectorEntryAtUnary_mem_FP
 
 theorem machineKuhnSupportBit_mem_FP :
@@ -329,7 +329,7 @@ theorem machineKuhnSupportBit_mem_FP :
   have hp := machinePair_mem_FP machineKuhnRow_mem_FP
     (machinePair_mem_FP machineKuhnCurrentColumn_mem_FP
       machineKuhnStateMatrix_mem_FP)
-  simpa only [machineKuhnSupportBit] using
+  simpa only [machineKuhnSupportBit] using!
     machineCompose_mem_FP hp machineRationalSupportBitAtUnary_mem_FP
 
 theorem machineKuhnSkipBit_mem_FP : machineKuhnSkipBit ∈ Complexity.FP := by
@@ -340,38 +340,38 @@ theorem machineKuhnSeenUpdated_mem_FP :
     machineKuhnSeenUpdated ∈ Complexity.FP := by
   have hp := machinePair_mem_FP machineKuhnCurrentColumn_mem_FP
     (machinePair_mem_FP (machineConst_mem_FP [true]) machineKuhnSeen_mem_FP)
-  simpa only [machineKuhnSeenUpdated] using
+  simpa only [machineKuhnSeenUpdated] using!
     machineCompose_mem_FP hp machineBoolVectorUpdateAtUnary_mem_FP
 
 theorem machineKuhnMateValue_mem_FP : machineKuhnMateValue ∈ Complexity.FP := by
   have hp := machinePair_mem_FP machineKuhnCurrentColumn_mem_FP
     machineKuhnMate_mem_FP
-  simpa only [machineKuhnMateValue] using
+  simpa only [machineKuhnMateValue] using!
     machineCompose_mem_FP hp machineMateVectorGetAtUnary_mem_FP
 
 theorem machineKuhnMateIsNoneBit_mem_FP :
     machineKuhnMateIsNoneBit ∈ Complexity.FP := by
-  simpa only [machineKuhnMateIsNoneBit] using
+  simpa only [machineKuhnMateIsNoneBit] using!
     machineCompose_mem_FP machineKuhnMateValue_mem_FP
       machineMateValueIsNoneBit_mem_FP
 
 theorem machineKuhnSomeCurrentRow_mem_FP :
     machineKuhnSomeCurrentRow ∈ Complexity.FP := by
-  simpa only [machineKuhnSomeCurrentRow] using
+  simpa only [machineKuhnSomeCurrentRow] using!
     machineCompose_mem_FP machineKuhnRow_mem_FP (machinePrepend_mem_FP true)
 
 theorem machineKuhnMateSetCurrent_mem_FP :
     machineKuhnMateSetCurrent ∈ Complexity.FP := by
   have hp := machinePair_mem_FP machineKuhnCurrentColumn_mem_FP
     (machinePair_mem_FP machineKuhnSomeCurrentRow_mem_FP machineKuhnMate_mem_FP)
-  simpa only [machineKuhnMateSetCurrent] using
+  simpa only [machineKuhnMateSetCurrent] using!
     machineCompose_mem_FP hp machineMateVectorUpdateAtUnary_mem_FP
 
 theorem machineKuhnMateClearCurrent_mem_FP :
     machineKuhnMateClearCurrent ∈ Complexity.FP := by
   have hp := machinePair_mem_FP machineKuhnCurrentColumn_mem_FP
     (machinePair_mem_FP (machineConst_mem_FP [false]) machineKuhnMate_mem_FP)
-  simpa only [machineKuhnMateClearCurrent] using
+  simpa only [machineKuhnMateClearCurrent] using!
     machineCompose_mem_FP hp machineMateVectorUpdateAtUnary_mem_FP
 
 theorem machineKuhnFailureControl_mem_FP :
@@ -461,7 +461,7 @@ theorem machineKuhnSearchReturnFailureControl_mem_FP :
     machineKuhnSearchReturnFailureControl ∈ Complexity.FP := by
   have hfield (f : List Bool → List Bool) (hf : f ∈ Complexity.FP) :
       (fun state ↦ f (machineKuhnTopFrame state)) ∈ Complexity.FP :=
-    by simpa only using
+    by simpa only using!
       machineCompose_mem_FP machineKuhnTopFrame_mem_FP hf
   exact machinePair_mem_FP (machineConst_mem_FP [false])
     (machinePair_mem_FP
@@ -491,7 +491,7 @@ theorem machineKuhnBuildChosenMate_mem_FP :
     machineKuhnRetMate_mem_FP hfallback
 
 theorem machineKuhnBuildRows_mem_FP : machineKuhnBuildRows ∈ Complexity.FP := by
-  simpa only [machineKuhnBuildRows] using
+  simpa only [machineKuhnBuildRows] using!
     machineCompose_mem_FP machineKuhnTopFrame_mem_FP
       machineKuhnBuildFrameRows_mem_FP
 
@@ -554,7 +554,7 @@ theorem machineKuhnNextControl_mem_FP :
   exact machineIfHead_mem_FP htag hretOrDone machineKuhnCallControl_mem_FP
 
 theorem machineKuhnStep_mem_FP : machineKuhnStep ∈ Complexity.FP := by
-  simpa only [machineKuhnStep] using
+  simpa only [machineKuhnStep] using!
     machineKuhnWithControl_mem_FP machineKuhnNextControl_mem_FP
 
 end BeyondBethe

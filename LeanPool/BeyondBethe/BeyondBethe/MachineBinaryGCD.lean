@@ -48,7 +48,7 @@ def machineBinaryGcdBits (word : List Bool) : List Bool :=
 
 theorem machineBinaryRemainderBits_mem_FP :
     machineBinaryRemainderBits ∈ Complexity.FP := by
-  simpa only [machineBinaryRemainderBits] using
+  simpa only [machineBinaryRemainderBits] using!
     machineCompose_mem_FP machineBinaryDivModBits_mem_FP
       machinePairSecond_mem_FP
 
@@ -58,7 +58,7 @@ theorem machineBinaryGcdStep_mem_FP :
       (machineBinaryRemainderBits state)) ∈ Complexity.FP :=
     machinePair_mem_FP machinePairSecond_mem_FP
       machineBinaryRemainderBits_mem_FP
-  simpa only [machineBinaryGcdStep] using
+  simpa only [machineBinaryGcdStep] using!
     machineIfEmpty_mem_FP machinePairSecond_mem_FP id_mem_FP hpair
 
 theorem machineBinaryGcdInit_mem_FP :
@@ -67,13 +67,13 @@ theorem machineBinaryGcdInit_mem_FP :
     machineTrimHighZeros_mem_FP
   have hsecond := machineCompose_mem_FP machinePairSecond_mem_FP
     machineTrimHighZeros_mem_FP
-  simpa only [machineBinaryGcdInit] using machinePair_mem_FP hfirst hsecond
+  simpa only [machineBinaryGcdInit] using! machinePair_mem_FP hfirst hsecond
 
 theorem machineBinaryGcdRuler_mem_FP :
     machineBinaryGcdRuler ∈ Complexity.FP := by
   have hsecond := machineCompose_mem_FP machinePairSecond_mem_FP
     machineTrimHighZeros_mem_FP
-  simpa only [machineBinaryGcdRuler] using machineAppend_mem_FP hsecond hsecond
+  simpa only [machineBinaryGcdRuler] using! machineAppend_mem_FP hsecond hsecond
 
 theorem machineBinaryGcdWidth_mem_FP :
     machineBinaryGcdWidth ∈ Complexity.FP := by
@@ -82,7 +82,7 @@ theorem machineBinaryGcdWidth_mem_FP :
   have hpadded : padded ∈ Complexity.FP :=
     machineAppend_mem_FP (machineConst_mem_FP (List.replicate 16 false))
       id_mem_FP
-  simpa only [machineBinaryGcdWidth, padded] using
+  simpa only [machineBinaryGcdWidth, padded] using!
     Cobham.mulLenFn_mem_FP hpadded hpadded
 
 theorem machineBinaryGcdStep_pair_natBits (a b : ℕ) :
@@ -133,7 +133,7 @@ theorem machineBinaryGcdStep_reachable {word state : List Bool}
     · simp [binaryEuclidStep, hbzero, binaryLongDiv_eq_div_mod]
     · have hsize := Nat.size_le_size (Nat.mod_le a b)
       have hbits : (a % b).bits.length ≤ a.bits.length := by
-        simpa only [Nat.size_eq_bits_len] using hsize
+        simpa only [Nat.size_eq_bits_len] using! hsize
       exact hbits.trans ha
 
 theorem machineBinaryGcdIterate_reachable (word : List Bool) :
@@ -167,7 +167,7 @@ theorem machineBinaryGcdFinalState_mem_FP :
 
 theorem machineBinaryGcdBits_mem_FP :
     machineBinaryGcdBits ∈ Complexity.FP := by
-  simpa only [machineBinaryGcdBits] using
+  simpa only [machineBinaryGcdBits] using!
     machineCompose_mem_FP machineBinaryGcdFinalState_mem_FP
       machinePairFirst_mem_FP
 
@@ -179,7 +179,7 @@ theorem machineBinaryGcdIterate_pair_natBits (steps a b : ℕ) :
   | zero => rfl
   | succ steps ih =>
       rw [Function.iterate_succ_apply, machineBinaryGcdStep_pair_natBits]
-      simpa only [binaryEuclidIterate] using
+      simpa only [binaryEuclidIterate] using!
         ih (binaryEuclidStep (a, b)).1 (binaryEuclidStep (a, b)).2
 
 theorem machineBinaryGcdBits_eq (word : List Bool) :

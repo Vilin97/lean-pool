@@ -50,7 +50,7 @@ theorem machineBetheFloorTestEntryWord_mem_FP :
 
 theorem machineBetheFloorTestEntryRawCode_mem_FP :
     machineBetheFloorTestEntryRawCode ∈ FP := by
-  simpa only [machineBetheFloorTestEntryRawCode] using
+  simpa only [machineBetheFloorTestEntryRawCode] using!
     machineCompose_mem_FP machineBetheFloorTestEntryWord_mem_FP
       machineBetheAffineEntryRawCode_mem_FP
 
@@ -59,12 +59,12 @@ theorem machineBetheFloorTestThresholdLeEntryBit_mem_FP :
   have hinput := machinePair_mem_FP
     machineBetheFloorTestThreshold_mem_FP
     machineBetheFloorTestEntryRawCode_mem_FP
-  simpa only [machineBetheFloorTestThresholdLeEntryBit] using
+  simpa only [machineBetheFloorTestThresholdLeEntryBit] using!
     machineCompose_mem_FP hinput machineRawRatLeBit_mem_FP
 
 theorem machineBetheFloorViolationBit_mem_FP :
     machineBetheFloorViolationBit ∈ FP := by
-  simpa only [machineBetheFloorViolationBit] using
+  simpa only [machineBetheFloorViolationBit] using!
     machineNotBit_mem_FP
       machineBetheFloorTestThresholdLeEntryBit_mem_FP
 

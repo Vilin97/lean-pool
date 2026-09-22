@@ -42,25 +42,25 @@ def machineRationalCeilNatBits (word : List Bool) : List Bool :=
 theorem machineRationalFloorIntegerCode_mem_FP :
     machineRationalFloorIntegerCode ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP (machineConst_mem_FP []) id_mem_FP
-  simpa only [machineRationalFloorIntegerCode] using
+  simpa only [machineRationalFloorIntegerCode] using!
     machineCompose_mem_FP hpair machineDyadicFloorIntegerCode_mem_FP
 
 theorem machineRationalCeilIntegerCode_mem_FP :
     machineRationalCeilIntegerCode ∈ Complexity.FP := by
   have hneg := machineCompose_mem_FP machineRawRatNegCode_mem_FP
     machineRationalFloorIntegerCode_mem_FP
-  simpa only [machineRationalCeilIntegerCode] using
+  simpa only [machineRationalCeilIntegerCode] using!
     machineCompose_mem_FP hneg machineIntegerNegCode_mem_FP
 
 theorem machineIntegerToNatBits_mem_FP :
     machineIntegerToNatBits ∈ Complexity.FP := by
-  simpa only [machineIntegerToNatBits] using
+  simpa only [machineIntegerToNatBits] using!
     machineIfHead_mem_FP id_mem_FP (machineConst_mem_FP [])
       machineTail_mem_FP
 
 theorem machineRationalCeilNatBits_mem_FP :
     machineRationalCeilNatBits ∈ Complexity.FP := by
-  simpa only [machineRationalCeilNatBits] using
+  simpa only [machineRationalCeilNatBits] using!
     machineCompose_mem_FP machineRationalCeilIntegerCode_mem_FP
       machineIntegerToNatBits_mem_FP
 
@@ -73,7 +73,7 @@ theorem machineRationalFloorIntegerCode_encode (q : RawRat) :
     machineRationalFloorIntegerCode (rawRatBinaryCode q) =
       integerBinaryCode (binaryRatFloor q.value) := by
   rw [machineRationalFloorIntegerCode]
-  simpa only [List.replicate_zero] using
+  simpa only [List.replicate_zero] using!
     (machineDyadicFloorIntegerCode_encode 0 q).trans
       (congrArg integerBinaryCode (binaryRawFloorInt_eq_binaryRatFloor q))
 

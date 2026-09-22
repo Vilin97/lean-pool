@@ -70,12 +70,12 @@ theorem machineListReverseRemaining_mem_FP :
 
 theorem machineListReverseAccumulator_mem_FP :
     machineListReverseAccumulator ∈ Complexity.FP := by
-  simpa only [machineListReverseAccumulator] using
+  simpa only [machineListReverseAccumulator] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineListReverseBound_mem_FP :
     machineListReverseBound ∈ Complexity.FP := by
-  simpa only [machineListReverseBound] using
+  simpa only [machineListReverseBound] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairSecond_mem_FP
 
 theorem machineListReverseCandidate_mem_FP :
@@ -86,7 +86,7 @@ theorem machineListReverseCandidate_mem_FP :
 
 theorem machineListReverseNextAccumulator_mem_FP :
     machineListReverseNextAccumulator ∈ Complexity.FP := by
-  simpa only [machineListReverseNextAccumulator] using
+  simpa only [machineListReverseNextAccumulator] using!
     machineTake_mem_FP machineListReverseBound_mem_FP
       machineListReverseCandidate_mem_FP
 
@@ -188,7 +188,7 @@ theorem machineListReverseFinalState_mem_FP :
     machineListReverseIterate_length_le_width
 
 theorem machineListReverse_mem_FP : machineListReverse ∈ Complexity.FP := by
-  simpa only [machineListReverse] using
+  simpa only [machineListReverse] using!
     machineCompose_mem_FP machineListReverseFinalState_mem_FP
       machineListReverseAccumulator_mem_FP
 
@@ -220,7 +220,7 @@ theorem machineListReverseStep_semantics
   have hprefix : (xs.take (k + 1)).reverse =
       xs[k] :: (xs.take k).reverse := by
     rw [← htake]
-    simpa only [List.concat_eq_append] using
+    simpa only [List.concat_eq_append] using!
       (List.reverse_concat (l := xs.take k) (a := xs[k]))
   have hprefixLength :
       (binaryListCode encode (xs.take (k + 1)).reverse).length ≤

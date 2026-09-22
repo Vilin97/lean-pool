@@ -130,38 +130,38 @@ theorem machineDisjointRest_mem_FP : machineDisjointRest ∈ FP :=
 
 theorem machineDisjointCandidateSecond_mem_FP :
     machineDisjointCandidateSecond ∈ FP := by
-  simpa only [machineDisjointCandidateSecond] using machineCompose_mem_FP
+  simpa only [machineDisjointCandidateSecond] using! machineCompose_mem_FP
     machineDisjointRest_mem_FP machinePairFirst_mem_FP
 
 theorem machineDisjointSelectedList_mem_FP :
     machineDisjointSelectedList ∈ FP := by
-  simpa only [machineDisjointSelectedList] using machineCompose_mem_FP
+  simpa only [machineDisjointSelectedList] using! machineCompose_mem_FP
     machineDisjointRest_mem_FP machinePairSecond_mem_FP
 
 theorem machineDisjointRemaining_mem_FP : machineDisjointRemaining ∈ FP :=
   machinePairFirst_mem_FP
 
 theorem machineDisjointConflict_mem_FP : machineDisjointConflict ∈ FP := by
-  simpa only [machineDisjointConflict] using machineCompose_mem_FP
+  simpa only [machineDisjointConflict] using! machineCompose_mem_FP
     machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineDisjointSource_mem_FP : machineDisjointSource ∈ FP := by
-  simpa only [machineDisjointSource] using machineCompose_mem_FP
+  simpa only [machineDisjointSource] using! machineCompose_mem_FP
     machinePairSecond_mem_FP machinePairSecond_mem_FP
 
 theorem machineDisjointCurrentPair_mem_FP :
     machineDisjointCurrentPair ∈ FP := by
-  simpa only [machineDisjointCurrentPair] using machineCompose_mem_FP
+  simpa only [machineDisjointCurrentPair] using! machineCompose_mem_FP
     machineDisjointRemaining_mem_FP machineListHead_mem_FP
 
 theorem machineDisjointCurrentFirst_mem_FP :
     machineDisjointCurrentFirst ∈ FP := by
-  simpa only [machineDisjointCurrentFirst] using machineCompose_mem_FP
+  simpa only [machineDisjointCurrentFirst] using! machineCompose_mem_FP
     machineDisjointCurrentPair_mem_FP machinePairFirst_mem_FP
 
 theorem machineDisjointCurrentSecond_mem_FP :
     machineDisjointCurrentSecond ∈ FP := by
-  simpa only [machineDisjointCurrentSecond] using machineCompose_mem_FP
+  simpa only [machineDisjointCurrentSecond] using! machineCompose_mem_FP
     machineDisjointCurrentPair_mem_FP machinePairSecond_mem_FP
 
 theorem machineUnaryRulersEqualBit_mem_FP
@@ -170,7 +170,7 @@ theorem machineUnaryRulersEqualBit_mem_FP
   have hl := machineCompose_mem_FP hlhs machineLengthBits_mem_FP
   have hr := machineCompose_mem_FP hrhs machineLengthBits_mem_FP
   have hinput := machinePair_mem_FP hl hr
-  simpa only [machineUnaryRulersEqualBit] using machineCompose_mem_FP hinput
+  simpa only [machineUnaryRulersEqualBit] using! machineCompose_mem_FP hinput
     machineBinaryNatEqBit_mem_FP
 
 theorem machineDisjointIFirstBit_mem_FP : machineDisjointIFirstBit ∈ FP := by
@@ -213,7 +213,7 @@ theorem machineDisjointNextConflict_mem_FP :
     machineDisjointCurrentConflictBit_mem_FP
   have hbound := machineCompose_mem_FP machineDisjointSource_mem_FP
     machineDisjointInputBound_mem_FP
-  simpa only [machineDisjointNextConflict] using machineTake_mem_FP hbound hdata
+  simpa only [machineDisjointNextConflict] using! machineTake_mem_FP hbound hdata
 
 theorem machineDisjointProcess_mem_FP : machineDisjointProcess ∈ FP := by
   have htail := machineCompose_mem_FP machineDisjointRemaining_mem_FP
@@ -223,7 +223,7 @@ theorem machineDisjointProcess_mem_FP : machineDisjointProcess ∈ FP := by
       machineDisjointSource_mem_FP)
 
 theorem machineDisjointStep_mem_FP : machineDisjointStep ∈ FP := by
-  simpa only [machineDisjointStep] using machineIfEmpty_mem_FP
+  simpa only [machineDisjointStep] using! machineIfEmpty_mem_FP
     machineDisjointRemaining_mem_FP id_mem_FP machineDisjointProcess_mem_FP
 
 theorem machineDisjointInit_mem_FP : machineDisjointInit ∈ FP :=
@@ -335,7 +335,7 @@ theorem machineDisjointFinalState_mem_FP : machineDisjointFinalState ∈ FP := b
     machineDisjointWidth_mem_FP machineDisjointIterate_length_le_width
 
 theorem machineRowPairConflictBit_mem_FP : machineRowPairConflictBit ∈ FP := by
-  simpa only [machineRowPairConflictBit] using machineCompose_mem_FP
+  simpa only [machineRowPairConflictBit] using! machineCompose_mem_FP
     machineDisjointFinalState_mem_FP machineDisjointConflict_mem_FP
 
 theorem machineRowPairDisjointBit_mem_FP : machineRowPairDisjointBit ∈ FP :=
@@ -423,7 +423,7 @@ theorem machineDisjointSemanticState_step {n : ℕ}
   have hbound : 1 ≤
       (machineDisjointInputBound (machineDisjointInput i j selected)).length :=
     machineDisjoint_one_le_bound _
-  rw [(List.take_eq_self_iff _).2 (by simpa using hbound)]
+  rw [(List.take_eq_self_iff _).2 (by simpa using! hbound)]
   rw [machineDisjointSemanticState]
   apply congrArg (fun z : Bool ↦ machineDisjointPack
     (binaryListCode orderedRowPairCode (selected.drop (k + 1))) [z]

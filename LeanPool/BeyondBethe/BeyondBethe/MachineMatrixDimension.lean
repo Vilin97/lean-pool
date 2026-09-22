@@ -27,7 +27,7 @@ theorem machineMatrixDimensionUnary_mem_FP :
     machineMatrixDimensionUnary ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP id_mem_FP
     machineMatrixDimensionWord_mem_FP
-  simpa only [machineMatrixDimensionUnary] using
+  simpa only [machineMatrixDimensionUnary] using!
     machineCompose_mem_FP hpair machineBoundedUnary_mem_FP
 
 theorem list_length_le_binaryListCode_length {α : Type*}
@@ -54,10 +54,10 @@ theorem matrix_dimension_le_code_length {n : ℕ}
     calc
       _ = (machineMatrixRowsWord
           (rationalMatrixBinaryEncoding.encode ⟨n, A⟩)).length := by
-        simpa using congrArg List.length
+        simpa using! congrArg List.length
           (machineMatrixRowsWord_encode A).symm
       _ ≤ _ := by
-        simpa only [machineMatrixRowsWord] using machinePairSecond_length_le
+        simpa only [machineMatrixRowsWord] using! machinePairSecond_length_le
           (rationalMatrixBinaryEncoding.encode ⟨n, A⟩)
   exact hlist.trans (hrows.trans hcode)
 

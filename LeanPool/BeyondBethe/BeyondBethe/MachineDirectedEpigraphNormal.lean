@@ -35,7 +35,7 @@ theorem machineDirectedEpigraphNormalSnocInput_mem_FP :
 
 theorem machineDirectedEpigraphNormalVectorCode_mem_FP :
     machineDirectedEpigraphNormalVectorCode ∈ FP := by
-  simpa only [machineDirectedEpigraphNormalVectorCode] using
+  simpa only [machineDirectedEpigraphNormalVectorCode] using!
     machineCompose_mem_FP machineDirectedEpigraphNormalSnocInput_mem_FP
       machineBinaryListSnoc_mem_FP
 
@@ -75,7 +75,7 @@ theorem ofFn_directedEpigraphNormal {m : ℕ}
         (machineDirectedObjectiveSumCanonicalWord tau A y p) =
       rationalFiniteVectorCode
         (epigraphNormal ((betheDirectedEpigraphData tau A p).gradient y)) := by
-  simpa only [betheDirectedEpigraphData, directedAffineGradientVector] using
+  simpa only [betheDirectedEpigraphData, directedAffineGradientVector] using!
     machineDirectedEpigraphNormalVectorCode_encode tau A y p
 
 end BeyondBethe

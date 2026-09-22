@@ -34,7 +34,7 @@ theorem machineRawRatMinCode_mem_FP :
 
 theorem machineRationalMinCode_mem_FP :
     machineRationalMinCode ∈ Complexity.FP := by
-  simpa only [machineRationalMinCode] using
+  simpa only [machineRationalMinCode] using!
     machineCompose_mem_FP machineRawRatMinCode_mem_FP
       machineNormalizeRawRatBinaryCode_mem_FP
 

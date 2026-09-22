@@ -83,7 +83,7 @@ theorem machineMatrixSupportNonzeroFlag_mem_FP :
     machineMatrixSupportNonzeroFlag ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineMatrixRawSumEntry_mem_FP
     (machineConst_mem_FP (rawRatBinaryCode RawRat.zero))
-  simpa only [machineMatrixSupportNonzeroFlag] using
+  simpa only [machineMatrixSupportNonzeroFlag] using!
     machineCompose_mem_FP hpair machineRawRatNeBit_mem_FP
 
 theorem machineMatrixSupportFactorCode_mem_FP :
@@ -96,12 +96,12 @@ theorem machineMatrixSupportCandidate_mem_FP :
     machineMatrixSupportCandidate ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineMatrixRawSumAcc_mem_FP
     machineMatrixSupportFactorCode_mem_FP
-  simpa only [machineMatrixSupportCandidate] using
+  simpa only [machineMatrixSupportCandidate] using!
     machineCompose_mem_FP hpair machineRawRatMulCode_mem_FP
 
 theorem machineMatrixSupportNextAcc_mem_FP :
     machineMatrixSupportNextAcc ∈ Complexity.FP := by
-  simpa only [machineMatrixSupportNextAcc] using
+  simpa only [machineMatrixSupportNextAcc] using!
     machineTake_mem_FP machineMatrixRawSumBound_mem_FP
       machineMatrixSupportCandidate_mem_FP
 
@@ -116,7 +116,7 @@ theorem machineMatrixSupportProcessEntry_mem_FP :
 
 theorem machineMatrixSupportLoadRow_mem_FP :
     machineMatrixSupportLoadRow ∈ Complexity.FP := by
-  simpa only [machineMatrixSupportLoadRow] using
+  simpa only [machineMatrixSupportLoadRow] using!
     machineMatrixRawSumLoadRow_mem_FP
 
 theorem machineMatrixSupportAfterRow_mem_FP :
@@ -155,7 +155,7 @@ theorem machineMatrixSupportInit_bound (word : List Bool) :
     machineMatrixRawSumRows_pack, machineMatrixRawSumCurrent_pack,
     machineMatrixRawSumAcc_pack, machineMatrixRawSumBound_pack]
   refine ⟨trivial, ?_, by simp, ?_, rfl⟩
-  · simpa only [machineMatrixRowsWord] using machinePairSecond_length_le word
+  · simpa only [machineMatrixRowsWord] using! machinePairSecond_length_le word
   · simp [machineMatrixRawSumInputBound, machineBinaryMulWidth,
       rawRatBinaryCode, RawRat.one, integerBinaryCode]
     nlinarith [sq_nonneg (word.length + 16)]
@@ -220,14 +220,14 @@ theorem machineMatrixSupportIterate_length_le_width
             (machineMatrixSupportInit word)) =
         machineMatrixSupportInputBound word := by
     simpa only [machineMatrixSupportInputBound,
-      machineMatrixRawSumInputBound] using hbound
+      machineMatrixRawSumInputBound] using! hbound
   have hacc' :
       (machineMatrixRawSumAcc
           ((machineMatrixSupportStep)^[iterations]
             (machineMatrixSupportInit word))).length ≤
         (machineMatrixSupportInputBound word).length := by
     simpa only [machineMatrixSupportInputBound,
-      machineMatrixRawSumInputBound] using hacc
+      machineMatrixRawSumInputBound] using! hacc
   rw [hdecomp, hbound']
   simp only [machineMatrixRawSumPack, machineMatrixSupportWidth, pair_length]
   omega
@@ -241,13 +241,13 @@ theorem machineMatrixSupportFinalState_mem_FP :
 
 theorem machineMatrixSupportRawCode_mem_FP :
     machineMatrixSupportRawCode ∈ Complexity.FP := by
-  simpa only [machineMatrixSupportRawCode] using
+  simpa only [machineMatrixSupportRawCode] using!
     machineCompose_mem_FP machineMatrixSupportFinalState_mem_FP
       machineMatrixRawSumAcc_mem_FP
 
 theorem machineMatrixSupportProductCode_mem_FP :
     machineMatrixSupportProductCode ∈ Complexity.FP := by
-  simpa only [machineMatrixSupportProductCode] using
+  simpa only [machineMatrixSupportProductCode] using!
     machineCompose_mem_FP machineMatrixSupportRawCode_mem_FP
       machineNormalizeRawRatBinaryCode_mem_FP
 
@@ -363,7 +363,7 @@ theorem machineMatrixSupportStep_semantics
         have hinv' : rawRatWidth (acc.mul (rawRatSupportFactor q)) +
             rawRatListCost qs + rawRatRowsCost rows ≤ 1 + word.length := by
           simpa only [MatrixSupportSemInvariant,
-            matrixSupportSemStep] using hinv
+            matrixSupportSemStep] using! hinv
         omega
       have hcode :
           (rawRatBinaryCode (acc.mul (rawRatSupportFactor q))).length ≤
@@ -379,7 +379,7 @@ theorem machineMatrixSupportStep_semantics
                 (rawRatBinaryCode acc)
                 (machineMatrixSupportInputBound word)) =
             rawRatBinaryCode (rawRatSupportFactor q) := by
-        simpa only [matrixRawSumSemCode] using
+        simpa only [matrixRawSumSemCode] using!
           machineMatrixSupportFactorCode_semantics rows q qs acc
             (machineMatrixSupportInputBound word)
       rw [matrixRawSumSemCode, matrixSupportSemStep,
@@ -473,10 +473,10 @@ theorem machineMatrixSupportFinalState_encode {n : ℕ}
         word.length := by
     calc
       _ = (machineMatrixRowsWord word).length := by
-        simpa only [word, rows] using congrArg List.length
+        simpa only [word, rows] using! congrArg List.length
           (machineMatrixRowsWord_encode A).symm
       _ ≤ word.length := by
-        simpa only [machineMatrixRowsWord] using
+        simpa only [machineMatrixRowsWord] using!
           machinePairSecond_length_le word
   have hinv : MatrixSupportSemInvariant (1 + word.length) s := by
     simp only [MatrixSupportSemInvariant, s, rawRatListCost,
@@ -564,7 +564,7 @@ theorem rawRatRowsSupportProduct_eq_rationalSupportFloor {n : ℕ}
           if A i j = 0 then 1 else A i j) =
         ∏ p ∈ (Finset.univ.product Finset.univ),
           if A p.1 p.2 = 0 then 1 else A p.1 p.2 := by
-    simpa using
+    simpa using!
       (Finset.prod_product' (Finset.univ : Finset (Fin n))
         (Finset.univ : Finset (Fin n))
         (fun i j ↦ if A i j = 0 then 1 else A i j)).symm

@@ -26,7 +26,7 @@ def machineDirectedAffineGradientEntryCode (word : List Bool) : List Bool :=
 
 theorem machineDirectedAffineGradientEntryCode_mem_FP :
     machineDirectedAffineGradientEntryCode ∈ FP := by
-  simpa only [machineDirectedAffineGradientEntryCode] using
+  simpa only [machineDirectedAffineGradientEntryCode] using!
     machineCompose_mem_FP machineDirectedAffineGradientEntryRawCode_mem_FP
       machineNormalizeRawRatEntryCode_mem_FP
 
@@ -71,7 +71,7 @@ theorem machineDirectedAffineGradientVectorCode_mem_FP :
     machineDirectedAffineGradientVectorCode ∈ FP := by
   have hgenerator := machineUnaryGridGeneratorCode_mem_FP
     machineDirectedAffineGradientEntryCode_mem_FP
-  simpa only [machineDirectedAffineGradientVectorCode] using
+  simpa only [machineDirectedAffineGradientVectorCode] using!
     machineCompose_mem_FP
       machineDirectedAffineGradientVectorGeneratorInput_mem_FP hgenerator
 
@@ -147,7 +147,7 @@ theorem rawDirectedNegativeGradientLower_width_le
     omega
   simp only [rawDirectedGradientCoordinateWidthBudget]
   simpa only [rawDirectedNegativeGradientLower, rawTau, logA, logX,
-    logComplement] using htotal'
+    logComplement] using! htotal'
 
 theorem rawDirectedNegativeGradientEntry_width_le_word_budget {m : ℕ}
     (tau : ℚ) (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
@@ -169,7 +169,7 @@ theorem rawDirectedNegativeGradientEntry_width_le_word_budget {m : ℕ}
     rawDirectedObjectiveSum_A_width_le_word tau A y p i j
   have hx : rawRatWidth (rawRatOfRat x) ≤ WX := by
     simpa only [x, WX, L,
-      rawDirectedObjectiveCoordinateWordXBudget] using
+      rawDirectedObjectiveCoordinateWordXBudget] using!
       rawBetheAffineMatrixQ_width_le_word tau A y p i j
   have hc0 := rawRatWidth_complement_le x
   have hc : rawRatWidth (rawRatOfRat (1 - x)) ≤ WC := by
@@ -224,7 +224,7 @@ theorem rawDirectedAffineGradientEntry_width_le_word_budget {m : ℕ}
     (((G a.castSucc b.castSucc).sub (G a.castSucc (Fin.last m))).sub
       (G (Fin.last m) b.castSucc))
     (G (Fin.last m) (Fin.last m))
-  simpa only [rawDirectedAffineGradientEntry, G, B] using hadd.trans (by omega)
+  simpa only [rawDirectedAffineGradientEntry, G, B] using! hadd.trans (by omega)
 
 theorem directedAffineGradient_entry_code_length_le {m : ℕ}
     (tau : ℚ) (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
@@ -267,7 +267,7 @@ theorem directedAffineGradient_vector_code_length_le_bound {m : ℕ}
       pair_length, List.length_replicate]
     omega
   have hB : B ≤ T ^ 20 := by
-    simpa only [B, T] using
+    simpa only [B, T] using!
       rawDirectedObjectiveCoordinateWordBudget_le_pow hmL
   have hE : E ≤ 316 * T ^ 20 := by
     have hpow : 1 ≤ T ^ 20 := one_le_pow₀ (by simp [T])
@@ -279,7 +279,7 @@ theorem directedAffineGradient_vector_code_length_le_bound {m : ℕ}
     obtain ⟨k, rfl⟩ := List.mem_ofFn.mp hq
     let ij := finProdFinEquiv.symm k
     simpa only [directedAffineGradientVector, squareMatrixToVector, ij, E,
-      B, L, word] using
+      B, L, word] using!
       directedAffineGradient_entry_code_length_le tau A y p ij.1 ij.2
   have hsum := List.sum_le_card_nsmul
     ((List.ofFn (directedAffineGradientVector tau A y p)).map
@@ -321,7 +321,7 @@ theorem directedAffineGradient_vector_code_length_le_bound {m : ℕ}
   rw [machineDirectedAffineGradientVectorBound,
     machineIteratedBinaryWidth_length]
   exact hpower.trans (by
-    simpa only [T, L, word] using
+    simpa only [T, L, word] using!
       certificateExpGuardWidth_pow_lower 5
         (machineDirectedObjectiveSumCanonicalWord tau A y p).length)
 
@@ -358,13 +358,13 @@ theorem unaryGridValues_directedAffineGradient {m : ℕ}
         rationalEntryBinaryCode (f a b) := by
     intro a b
     simpa only [payload, f,
-      machineDirectedAffineGradientEntryCanonicalWord] using
+      machineDirectedAffineGradientEntryCanonicalWord] using!
       machineDirectedAffineGradientEntryCode_encode tau A y p a b
   have hbound :
       (binaryListCode rationalEntryBinaryCode (unaryGridValues f)).length ≤
         bound.length := by
     rw [unaryGridValues_directedAffineGradient]
-    simpa only [rationalFiniteVectorCode, f, bound, payload] using
+    simpa only [rationalFiniteVectorCode, f, bound, payload] using!
       directedAffineGradient_vector_code_length_le_bound tau A y p
   rw [machineUnaryGridGeneratorCode_encode_of_bound
     machineDirectedAffineGradientEntryCode f bound payload hentry hbound,

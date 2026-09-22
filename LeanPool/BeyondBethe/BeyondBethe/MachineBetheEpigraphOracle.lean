@@ -83,67 +83,67 @@ theorem machineBetheOracleRest_mem_FP :
 
 theorem machineBetheOraclePrecision_mem_FP :
     machineBetheOraclePrecision ∈ FP := by
-  simpa only [machineBetheOraclePrecision] using
+  simpa only [machineBetheOraclePrecision] using!
     machineCompose_mem_FP machineBetheOracleRest_mem_FP
       machinePairFirst_mem_FP
 
 theorem machineBetheOracleAfterPrecision_mem_FP :
     machineBetheOracleAfterPrecision ∈ FP := by
-  simpa only [machineBetheOracleAfterPrecision] using
+  simpa only [machineBetheOracleAfterPrecision] using!
     machineCompose_mem_FP machineBetheOracleRest_mem_FP
       machinePairSecond_mem_FP
 
 theorem machineBetheOracleTau_mem_FP : machineBetheOracleTau ∈ FP := by
-  simpa only [machineBetheOracleTau] using
+  simpa only [machineBetheOracleTau] using!
     machineCompose_mem_FP machineBetheOracleAfterPrecision_mem_FP
       machinePairFirst_mem_FP
 
 theorem machineBetheOracleAfterTau_mem_FP :
     machineBetheOracleAfterTau ∈ FP := by
-  simpa only [machineBetheOracleAfterTau] using
+  simpa only [machineBetheOracleAfterTau] using!
     machineCompose_mem_FP machineBetheOracleAfterPrecision_mem_FP
       machinePairSecond_mem_FP
 
 theorem machineBetheOracleDelta_mem_FP : machineBetheOracleDelta ∈ FP := by
-  simpa only [machineBetheOracleDelta] using
+  simpa only [machineBetheOracleDelta] using!
     machineCompose_mem_FP machineBetheOracleAfterTau_mem_FP
       machinePairFirst_mem_FP
 
 theorem machineBetheOracleAfterDelta_mem_FP :
     machineBetheOracleAfterDelta ∈ FP := by
-  simpa only [machineBetheOracleAfterDelta] using
+  simpa only [machineBetheOracleAfterDelta] using!
     machineCompose_mem_FP machineBetheOracleAfterTau_mem_FP
       machinePairSecond_mem_FP
 
 theorem machineBetheOracleUpper_mem_FP : machineBetheOracleUpper ∈ FP := by
-  simpa only [machineBetheOracleUpper] using
+  simpa only [machineBetheOracleUpper] using!
     machineCompose_mem_FP machineBetheOracleAfterDelta_mem_FP
       machinePairFirst_mem_FP
 
 theorem machineBetheOracleAfterUpper_mem_FP :
     machineBetheOracleAfterUpper ∈ FP := by
-  simpa only [machineBetheOracleAfterUpper] using
+  simpa only [machineBetheOracleAfterUpper] using!
     machineCompose_mem_FP machineBetheOracleAfterDelta_mem_FP
       machinePairSecond_mem_FP
 
 theorem machineBetheOracleMatrix_mem_FP : machineBetheOracleMatrix ∈ FP := by
-  simpa only [machineBetheOracleMatrix] using
+  simpa only [machineBetheOracleMatrix] using!
     machineCompose_mem_FP machineBetheOracleAfterUpper_mem_FP
       machinePairFirst_mem_FP
 
 theorem machineBetheOracleEllipsoid_mem_FP :
     machineBetheOracleEllipsoid ∈ FP := by
-  simpa only [machineBetheOracleEllipsoid] using
+  simpa only [machineBetheOracleEllipsoid] using!
     machineCompose_mem_FP machineBetheOracleAfterUpper_mem_FP
       machinePairSecond_mem_FP
 
 theorem machineBetheOracleCenter_mem_FP : machineBetheOracleCenter ∈ FP := by
-  simpa only [machineBetheOracleCenter] using
+  simpa only [machineBetheOracleCenter] using!
     machineCompose_mem_FP machineBetheOracleEllipsoid_mem_FP
       machineRationalEllipsoidCenterWord_mem_FP
 
 theorem machineBetheOracleBase_mem_FP : machineBetheOracleBase ∈ FP := by
-  simpa only [machineBetheOracleBase] using
+  simpa only [machineBetheOracleBase] using!
     machineCompose_mem_FP machineBetheOracleCenter_mem_FP
       machineBinaryListInit_mem_FP
 
@@ -234,7 +234,7 @@ def machineBetheOracleNonlinearViolationBit
 
 theorem machineBetheOracleDimensionBits_mem_FP :
     machineBetheOracleDimensionBits ∈ FP := by
-  simpa only [machineBetheOracleDimensionBits] using
+  simpa only [machineBetheOracleDimensionBits] using!
     machineCompose_mem_FP machineBetheOracleDimension_mem_FP
       machineLengthBits_mem_FP
 
@@ -242,14 +242,14 @@ theorem machineBetheOracleBaseDimensionBits_mem_FP :
     machineBetheOracleBaseDimensionBits ∈ FP := by
   have hpair := machinePair_mem_FP machineBetheOracleDimensionBits_mem_FP
     machineBetheOracleDimensionBits_mem_FP
-  simpa only [machineBetheOracleBaseDimensionBits] using
+  simpa only [machineBetheOracleBaseDimensionBits] using!
     machineCompose_mem_FP hpair machineBinaryMulBits_mem_FP
 
 theorem machineBetheOracleBaseDimensionUnary_mem_FP :
     machineBetheOracleBaseDimensionUnary ∈ FP := by
   have hpair := machinePair_mem_FP machineBetheOracleBase_mem_FP
     machineBetheOracleBaseDimensionBits_mem_FP
-  simpa only [machineBetheOracleBaseDimensionUnary] using
+  simpa only [machineBetheOracleBaseDimensionUnary] using!
     machineCompose_mem_FP hpair machineBoundedUnary_mem_FP
 
 theorem machineBetheOracleBaseDimensionRawCode_mem_FP :
@@ -267,7 +267,7 @@ theorem machineBetheOracleFloorScanInput_mem_FP :
 
 theorem machineBetheOracleFloorScanResult_mem_FP :
     machineBetheOracleFloorScanResult ∈ FP := by
-  simpa only [machineBetheOracleFloorScanResult] using
+  simpa only [machineBetheOracleFloorScanResult] using!
     machineCompose_mem_FP machineBetheOracleFloorScanInput_mem_FP
       machineBetheFloorScanResultCode_mem_FP
 
@@ -275,21 +275,21 @@ theorem machineBetheOracleFloorFoundBit_mem_FP :
     machineBetheOracleFloorFoundBit ∈ FP := by
   have htag := machineCompose_mem_FP machineBetheOracleFloorScanResult_mem_FP
     machinePairFirst_mem_FP
-  simpa only [machineBetheOracleFloorFoundBit] using
+  simpa only [machineBetheOracleFloorFoundBit] using!
     machineCompose_mem_FP htag machineHeadBit_mem_FP
 
 theorem machineBetheOracleFloorRow_mem_FP :
     machineBetheOracleFloorRow ∈ FP := by
   have hpayload := machineCompose_mem_FP
     machineBetheOracleFloorScanResult_mem_FP machinePairSecond_mem_FP
-  simpa only [machineBetheOracleFloorRow] using
+  simpa only [machineBetheOracleFloorRow] using!
     machineCompose_mem_FP hpayload machinePairFirst_mem_FP
 
 theorem machineBetheOracleFloorColumn_mem_FP :
     machineBetheOracleFloorColumn ∈ FP := by
   have hpayload := machineCompose_mem_FP
     machineBetheOracleFloorScanResult_mem_FP machinePairSecond_mem_FP
-  simpa only [machineBetheOracleFloorColumn] using
+  simpa only [machineBetheOracleFloorColumn] using!
     machineCompose_mem_FP hpayload machinePairSecond_mem_FP
 
 theorem machineBetheOracleHeightInput_mem_FP :
@@ -300,13 +300,13 @@ theorem machineBetheOracleHeightInput_mem_FP :
 
 theorem machineBetheOracleHeightViolationBit_mem_FP :
     machineBetheOracleHeightViolationBit ∈ FP := by
-  simpa only [machineBetheOracleHeightViolationBit] using
+  simpa only [machineBetheOracleHeightViolationBit] using!
     machineCompose_mem_FP machineBetheOracleHeightInput_mem_FP
       machineBetheHeightCapViolationBit_mem_FP
 
 theorem machineBetheOracleHeightRawCode_mem_FP :
     machineBetheOracleHeightRawCode ∈ FP := by
-  simpa only [machineBetheOracleHeightRawCode] using
+  simpa only [machineBetheOracleHeightRawCode] using!
     machineCompose_mem_FP machineBetheOracleHeightInput_mem_FP
       machineBetheHeightCapEntryCode_mem_FP
 
@@ -314,7 +314,7 @@ theorem machineBetheOracleHalfPowerRawCode_mem_FP :
     machineBetheOracleHalfPowerRawCode ∈ FP := by
   have hpair := machinePair_mem_FP machineBetheOraclePrecision_mem_FP
     (machineConst_mem_FP (rawRatBinaryCode rawOptimizerHalf))
-  simpa only [machineBetheOracleHalfPowerRawCode] using
+  simpa only [machineBetheOracleHalfPowerRawCode] using!
     machineCompose_mem_FP hpair machineRawRatPowerCode_mem_FP
 
 theorem machineBetheOracleScaledErrorRawCode_mem_FP :
@@ -322,7 +322,7 @@ theorem machineBetheOracleScaledErrorRawCode_mem_FP :
   have hpair := machinePair_mem_FP
     (machineConst_mem_FP (rawRatBinaryCode rawBetheOracleSixteen))
     machineBetheOracleHalfPowerRawCode_mem_FP
-  simpa only [machineBetheOracleScaledErrorRawCode] using
+  simpa only [machineBetheOracleScaledErrorRawCode] using!
     machineCompose_mem_FP hpair machineRawRatMulCode_mem_FP
 
 theorem machineBetheOracleMarginRawCode_mem_FP :
@@ -330,7 +330,7 @@ theorem machineBetheOracleMarginRawCode_mem_FP :
   have hpair := machinePair_mem_FP
     machineBetheOracleScaledErrorRawCode_mem_FP
     machineBetheOracleBaseDimensionRawCode_mem_FP
-  simpa only [machineBetheOracleMarginRawCode] using
+  simpa only [machineBetheOracleMarginRawCode] using!
     machineCompose_mem_FP hpair machineRawRatMulCode_mem_FP
 
 theorem machineBetheOracleObjectiveInput_mem_FP :
@@ -343,7 +343,7 @@ theorem machineBetheOracleObjectiveInput_mem_FP :
 
 theorem machineBetheOracleLowerRawCode_mem_FP :
     machineBetheOracleLowerRawCode ∈ FP := by
-  simpa only [machineBetheOracleLowerRawCode] using
+  simpa only [machineBetheOracleLowerRawCode] using!
     machineCompose_mem_FP machineBetheOracleObjectiveInput_mem_FP
       machineDirectedNegativeObjectiveSumRawCode_mem_FP
 
@@ -351,7 +351,7 @@ theorem machineBetheOracleHeightPlusMarginRawCode_mem_FP :
     machineBetheOracleHeightPlusMarginRawCode ∈ FP := by
   have hpair := machinePair_mem_FP machineBetheOracleHeightRawCode_mem_FP
     machineBetheOracleMarginRawCode_mem_FP
-  simpa only [machineBetheOracleHeightPlusMarginRawCode] using
+  simpa only [machineBetheOracleHeightPlusMarginRawCode] using!
     machineCompose_mem_FP hpair machineRawRatAddCode_mem_FP
 
 theorem machineBetheOracleNonlinearViolationBit_mem_FP :
@@ -359,7 +359,7 @@ theorem machineBetheOracleNonlinearViolationBit_mem_FP :
   have hpair := machinePair_mem_FP machineBetheOracleLowerRawCode_mem_FP
     machineBetheOracleHeightPlusMarginRawCode_mem_FP
   have hle := machineCompose_mem_FP hpair machineRawRatLeBit_mem_FP
-  simpa only [machineBetheOracleNonlinearViolationBit] using
+  simpa only [machineBetheOracleNonlinearViolationBit] using!
     machineNotBit_mem_FP hle
 
 /-! ## Cut construction and final response -/
@@ -432,7 +432,7 @@ theorem machineBetheEpigraphOracleResponseCode_mem_FP :
   have hheight := machineIfHead_mem_FP
     machineBetheOracleHeightViolationBit_mem_FP
     machineBetheOracleHeightResponse_mem_FP hnonlinear
-  simpa only [machineBetheEpigraphOracleResponseCode] using
+  simpa only [machineBetheEpigraphOracleResponseCode] using!
     machineIfHead_mem_FP machineBetheOracleFloorFoundBit_mem_FP
       machineBetheOracleFloorResponse_mem_FP hheight
 
@@ -568,7 +568,7 @@ theorem ofFn_epigraph_center_split {d : ℕ}
 theorem betheOracle_baseDimension_le_baseCodeLength {m : ℕ}
     (q : Fin (m * m) → ℚ) :
     m * m ≤ (rationalFiniteVectorCode q).length := by
-  simpa only [rationalFiniteVectorCode, List.length_ofFn] using
+  simpa only [rationalFiniteVectorCode, List.length_ofFn] using!
     binaryListCode_listLength_le rationalEntryBinaryCode (List.ofFn q)
 
 @[simp] theorem machineBetheOracleBaseDimensionUnary_encode {m : ℕ}
@@ -918,7 +918,7 @@ def scannedBetheBoundedEpigraphOracle {m : ℕ}
             16 * (2 ^ p : ℚ)⁻¹ * (m * m) <
           directedNegativeObjectiveLower tau A
             (betheAffineMatrixQ (epigraphBase E.center)) p := by
-          simpa [one_div, div_pow] using hnonlinear
+          simpa [one_div, div_pow] using! hnonlinear
         simp [scannedBetheBoundedEpigraphOracle, state, hfound, hheight,
           directedEpigraphOracle, betheDirectedEpigraphData, hnonlinear']
       · rw [machineBetheOracleNonlinearViolationBit_encode]
@@ -928,7 +928,7 @@ def scannedBetheBoundedEpigraphOracle {m : ℕ}
             16 * (2 ^ p : ℚ)⁻¹ * (m * m) <
           directedNegativeObjectiveLower tau A
             (betheAffineMatrixQ (epigraphBase E.center)) p) := by
-          simpa [one_div, div_pow] using hnonlinear
+          simpa [one_div, div_pow] using! hnonlinear
         simp [scannedBetheBoundedEpigraphOracle, state, hfound, hheight,
           directedEpigraphOracle, betheDirectedEpigraphData, hnonlinear']
   · rw [machineIfHead_true,
@@ -951,7 +951,7 @@ theorem scannedBetheBoundedEpigraphOracle_valid {m : ℕ} (hm : 0 < m)
   split at hresponse <;> rename_i hfloor
   · let state := finalBetheFloorScanSemanticState delta
       (epigraphBase E.center)
-    have hfloor' : state.found = true := by simpa only [state] using hfloor
+    have hfloor' : state.found = true := by simpa only [state] using! hfloor
     cases hresponse
     refine ⟨betheFloorCutNormal_ne_zero hm state.row state.column, ?_⟩
     intro z hz
@@ -962,10 +962,10 @@ theorem scannedBetheBoundedEpigraphOracle_valid {m : ℕ} (hm : 0 < m)
     have htargetFloor : (delta.value : ℝ) ≤
         birkhoffAffineMap (vectorToSquareMatrix (epigraphBase z))
           state.row state.column := by
-      simpa only [BetheEpigraphTarget] using hz.1 state.row state.column
+      simpa only [BetheEpigraphTarget] using! hz.1 state.row state.column
     have hcut := betheFloorCut_valid hbelow htargetFloor
     rw [finiteDot, Fin.sum_univ_castSucc] at hcut ⊢
-    simpa [rationalCenterReal, epigraphBase] using hcut.le
+    simpa [rationalCenterReal, epigraphBase] using! hcut.le
   · split at hresponse <;> rename_i hheight
     · cases hresponse
       refine ⟨epigraphUpperNormal_ne_zero (m * m), ?_⟩
@@ -975,9 +975,9 @@ theorem scannedBetheBoundedEpigraphOracle_valid {m : ℕ} (hm : 0 < m)
           (fun i ↦ (epigraphUpperNormal (m * m) i : ℝ))
           (fun i ↦ z i - rationalCenterReal E i) =
           epigraphHeight z - (epigraphHeight E.center : ℚ) by
-        simpa only [rationalCenterReal] using hdot]
+        simpa only [rationalCenterReal] using! hdot]
       have hzUpper : epigraphHeight z ≤ (upper.value : ℝ) := by
-        simpa only [BetheEpigraphTarget] using hz.2.2
+        simpa only [BetheEpigraphTarget] using! hz.2.2
       have hheightReal : (upper.value : ℝ) <
           ((epigraphHeight E.center : ℚ) : ℝ) := by
         exact_mod_cast hheight
@@ -985,7 +985,7 @@ theorem scannedBetheBoundedEpigraphOracle_valid {m : ℕ} (hm : 0 < m)
     · have hqueryFloor : ∀ i j, delta.value ≤
           betheAffineMatrixQ (epigraphBase E.center) i j := by
         apply finalBetheFloorScanSemanticState_notFound_all_above
-        simpa using hfloor
+        simpa using! hfloor
       refine ⟨directedEpigraphOracle_cut_ne_zero
         (betheDirectedEpigraphData tau A p)
         (16 * (1 / 2 : ℚ) ^ p) (m * m) E hresponse, ?_⟩
@@ -1012,7 +1012,7 @@ theorem scannedBetheBoundedEpigraphOracle_acceptsOnly {m : ℕ}
       · cases hresponse
         refine ⟨?_, not_lt.mp hheight, ?_⟩
         · apply finalBetheFloorScanSemanticState_notFound_all_above
-          simpa using hfloor
+          simpa using! hfloor
         · exact not_lt.mp hnonlinear
 
 end BeyondBethe

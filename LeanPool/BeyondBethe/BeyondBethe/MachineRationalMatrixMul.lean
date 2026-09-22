@@ -68,13 +68,13 @@ theorem machineRationalMatrixMulMatrices_mem_FP :
 
 theorem machineRationalMatrixMulLeftRows_mem_FP :
     machineRationalMatrixMulLeftRows ∈ FP := by
-  simpa only [machineRationalMatrixMulLeftRows] using
+  simpa only [machineRationalMatrixMulLeftRows] using!
     machineCompose_mem_FP machineRationalMatrixMulMatrices_mem_FP
       machinePairFirst_mem_FP
 
 theorem machineRationalMatrixMulRightRows_mem_FP :
     machineRationalMatrixMulRightRows ∈ FP := by
-  simpa only [machineRationalMatrixMulRightRows] using
+  simpa only [machineRationalMatrixMulRightRows] using!
     machineCompose_mem_FP machineRationalMatrixMulMatrices_mem_FP
       machinePairSecond_mem_FP
 
@@ -92,7 +92,7 @@ theorem machineRationalMatrixMulRowCode_mem_FP :
     machineRationalMatrixMulRightRows_mem_FP
   have hinput := machinePair_mem_FP hdim
     (machinePair_mem_FP hrightRows hleftRow)
-  simpa only [machineRationalMatrixMulRowCode] using
+  simpa only [machineRationalMatrixMulRowCode] using!
     machineCompose_mem_FP hinput machineRationalTransposeMulVectorCode_mem_FP
 
 theorem rationalTransposeMulVector_row_eq_matrixMul {d : ℕ}
@@ -158,11 +158,11 @@ theorem rawRationalMatrixMulCoordinate_width_le_word {d : ℕ}
       (binaryListCode rationalEntryBinaryCode)
       (show row ∈ rationalMatrixRows A by
         simp [rationalMatrixRows, row])
-    simpa only [rationalSquareMatrixRowsCode] using helem
+    simpa only [rationalSquareMatrixRowsCode] using! helem
   have hcolumn :
       (binaryListCode rationalEntryBinaryCode column).length ≤
         (rationalSquareMatrixRowsCode B).length := by
-    simpa only [column, rationalSquareMatrixRowsCode] using
+    simpa only [column, rationalSquareMatrixRowsCode] using!
       rationalColumnOfRows_code_length_le j.1
         (rationalMatrixRows B) (rationalMatrixRows_haveColumn B j)
   have hcombined :
@@ -244,13 +244,13 @@ theorem rationalMatrixMul_code_length_le_bound {d : ℕ}
   have hd : d ≤ word.length := by
     have h := machinePairFirst_length_le word
     simpa only [word, rationalMatrixMulCanonicalWord,
-      machinePairFirst_pair, List.length_replicate] using h
+      machinePairFirst_pair, List.length_replicate] using! h
   have hn4 : 4 ≤ n := by
     simp only [n, word, rationalMatrixMulCanonicalWord, pair_length,
       List.length_replicate]
     omega
   have hcubic := rationalMatrixMul_code_length_le_cubic A B
-  have hd' : d ≤ n := by simpa only [n] using hd
+  have hd' : d ≤ n := by simpa only [n] using! hd
   have hdn : d * n ≤ n * n := Nat.mul_le_mul hd' le_rfl
   have hdd : d * d ≤ n * n := Nat.mul_le_mul hd' hd'
   have hddn : (d * d) * n ≤ (n * n) * n :=
@@ -263,7 +263,7 @@ theorem rationalMatrixMul_code_length_le_bound {d : ℕ}
       (rationalSquareMatrixRowsCode (rationalMatrixMul A B)).length ≤
         211 * n ^ 3 := by
     apply hcubic.trans
-    simpa only [n, word] using hpoly
+    simpa only [n, word] using! hpoly
   have hnx : n ≤ x := by simp [x]
   have hxpos : 0 < x := by omega
   have h211 : 211 ≤ x ^ 2 := by
@@ -273,18 +273,18 @@ theorem rationalMatrixMul_code_length_le_bound {d : ℕ}
   have hto5 : 211 * n ^ 3 ≤ x ^ 5 := by
     have h := Nat.mul_le_mul h211 hnx3
     simpa only [pow_succ, pow_two, mul_assoc, mul_left_comm,
-      mul_comm] using h
+      mul_comm] using! h
   have hto8 : x ^ 5 ≤ x ^ 8 :=
     Nat.pow_le_pow_right hxpos (by omega)
   have hxy : x ^ 2 ≤ y := by simp [y]
   have hx4y2 : x ^ 4 ≤ y ^ 2 := by
     have h := Nat.pow_le_pow_left hxy 2
-    simpa only [← pow_mul] using h
+    simpa only [← pow_mul] using! h
   have hyz : y ^ 2 ≤ z := by simp [z]
   have hx4z : x ^ 4 ≤ z := hx4y2.trans hyz
   have hx8z2 : x ^ 8 ≤ z ^ 2 := by
     have h := Nat.pow_le_pow_left hx4z 2
-    simpa only [← pow_mul] using h
+    simpa only [← pow_mul] using! h
   apply hout.trans
   apply hto5.trans
   apply hto8.trans
@@ -347,7 +347,7 @@ def machineRationalMatrixMulCode (word : List Bool) : List Bool :=
 
 theorem machineRationalMatrixMulIndices_mem_FP :
     machineRationalMatrixMulIndices ∈ FP := by
-  simpa only [machineRationalMatrixMulIndices] using
+  simpa only [machineRationalMatrixMulIndices] using!
     machineCompose_mem_FP machineRationalMatrixMulDimensionUnary_mem_FP
       machineUnaryRangeCode_mem_FP
 
@@ -356,7 +356,7 @@ theorem machineRationalMatrixMulCurrentRow_mem_FP :
   have hinput := machinePair_mem_FP
     machineRationalTransposeMulVectorCurrentIndex_mem_FP
     machineRationalTransposeMulVectorStatePayload_mem_FP
-  simpa only [machineRationalMatrixMulCurrentRow] using
+  simpa only [machineRationalMatrixMulCurrentRow] using!
     machineCompose_mem_FP hinput machineRationalMatrixMulRowCode_mem_FP
 
 theorem machineRationalMatrixMulCandidate_mem_FP :
@@ -366,7 +366,7 @@ theorem machineRationalMatrixMulCandidate_mem_FP :
 
 theorem machineRationalMatrixMulNextAccumulator_mem_FP :
     machineRationalMatrixMulNextAccumulator ∈ FP := by
-  simpa only [machineRationalMatrixMulNextAccumulator] using
+  simpa only [machineRationalMatrixMulNextAccumulator] using!
     machineTake_mem_FP machineRationalTransposeMulVectorBound_mem_FP
       machineRationalMatrixMulCandidate_mem_FP
 
@@ -412,7 +412,7 @@ theorem machineRationalMatrixMulInit_bound (word : List Bool) :
   · simpa only [machineRationalMatrixMulIndices,
       machineRationalMatrixMulDimensionUnary,
       machineRationalTransposeMulVectorIndices,
-      machineRationalTransposeMulVectorDimension] using
+      machineRationalTransposeMulVectorDimension] using!
         machineRationalTransposeMulVector_indices_le_bound word
   · exact machineRationalTransposeMulVector_word_le_bound word
 
@@ -477,13 +477,13 @@ theorem machineRationalMatrixMulFinalState_mem_FP :
 
 theorem machineRationalMatrixMulReversedCode_mem_FP :
     machineRationalMatrixMulReversedCode ∈ FP := by
-  simpa only [machineRationalMatrixMulReversedCode] using
+  simpa only [machineRationalMatrixMulReversedCode] using!
     machineCompose_mem_FP machineRationalMatrixMulFinalState_mem_FP
       machineRationalTransposeMulVectorAccumulator_mem_FP
 
 theorem machineRationalMatrixMulCode_mem_FP :
     machineRationalMatrixMulCode ∈ FP := by
-  simpa only [machineRationalMatrixMulCode] using
+  simpa only [machineRationalMatrixMulCode] using!
     machineCompose_mem_FP machineRationalMatrixMulReversedCode_mem_FP
       machineListReverse_mem_FP
 
@@ -521,7 +521,7 @@ theorem rationalMatrixMulRowsPrefix_succ {d : ℕ}
         [List.ofFn fun j ↦ rationalMatrixMul A B ⟨k, hk⟩ j] := by
   simp only [rationalMatrixMulRowsPrefix, List.map_take]
   have hkm : k < (List.finRange d).length := by simpa
-  simpa [List.getElem_finRange] using
+  simpa [List.getElem_finRange] using!
     congrArg (List.map fun i ↦
       List.ofFn fun j ↦ rationalMatrixMul A B i j)
       (List.take_concat_get hkm).symm
@@ -569,7 +569,7 @@ theorem machineRationalMatrixMulStep_semantics {d : ℕ}
         (binaryListCode (binaryListCode rationalEntryBinaryCode)
           (rationalMatrixMulRowsPrefix A B k).reverse)).length ≤
         (machineRationalMatrixMulInputBound word).length := by
-    simpa only [hreverse, binaryListCode] using hcand
+    simpa only [hreverse, binaryListCode] using! hcand
   have hnonempty :
       binaryListCode finUnaryCode ((List.finRange d).drop k) ≠ [] := by
     rw [hdrop]
@@ -649,7 +649,7 @@ theorem machineRationalMatrixMulReversedCode_encode {d : ℕ}
   have hd : d ≤ word.length := by
     have h := machinePairFirst_length_le word
     simpa only [word, rationalMatrixMulCanonicalWord,
-      machinePairFirst_pair, List.length_replicate] using h
+      machinePairFirst_pair, List.length_replicate] using! h
   have hsplit : word.length = (word.length - d) + d := by omega
   change machineRationalMatrixMulReversedCode word = _
   rw [machineRationalMatrixMulReversedCode,

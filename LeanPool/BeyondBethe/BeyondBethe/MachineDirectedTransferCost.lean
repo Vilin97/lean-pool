@@ -96,23 +96,23 @@ theorem machineTransferRest_mem_FP : machineTransferRest ∈ FP :=
 
 theorem machineTransferColumnRuler_mem_FP :
     machineTransferColumnRuler ∈ FP := by
-  simpa only [machineTransferColumnRuler] using machineCompose_mem_FP
+  simpa only [machineTransferColumnRuler] using! machineCompose_mem_FP
     machineTransferRest_mem_FP machinePairFirst_mem_FP
 
 theorem machineTransferOptimizerWord_mem_FP :
     machineTransferOptimizerWord ∈ FP := by
-  simpa only [machineTransferOptimizerWord] using machineCompose_mem_FP
+  simpa only [machineTransferOptimizerWord] using! machineCompose_mem_FP
     machineTransferRest_mem_FP machinePairSecond_mem_FP
 
 theorem machineTransferMatrixWord_mem_FP : machineTransferMatrixWord ∈ FP := by
-  simpa only [machineTransferMatrixWord] using machineCompose_mem_FP
+  simpa only [machineTransferMatrixWord] using! machineCompose_mem_FP
     machineTransferOptimizerWord_mem_FP machineOptimizerMatrixWord_mem_FP
 
 theorem machineTransferEntryCode_mem_FP : machineTransferEntryCode ∈ FP := by
   have hinput := machinePair_mem_FP machineTransferRowRuler_mem_FP
     (machinePair_mem_FP machineTransferColumnRuler_mem_FP
       machineTransferMatrixWord_mem_FP)
-  simpa only [machineTransferEntryCode] using machineCompose_mem_FP hinput
+  simpa only [machineTransferEntryCode] using! machineCompose_mem_FP hinput
     machineMatrixEntryAtUnary_mem_FP
 
 theorem machineTransferComplementInput_mem_FP :
@@ -125,7 +125,7 @@ theorem machineTransferComplementInput_mem_FP :
 
 theorem machineTransferComplementCode_mem_FP :
     machineTransferComplementCode ∈ FP := by
-  simpa only [machineTransferComplementCode] using machineCompose_mem_FP
+  simpa only [machineTransferComplementCode] using! machineCompose_mem_FP
     machineTransferComplementInput_mem_FP
     machineNearbyCoordinateComplementCode_mem_FP
 
@@ -134,7 +134,7 @@ theorem machineTransferLogXRawCode_mem_FP :
   have hp := machineCompose_mem_FP machineTransferOptimizerWord_mem_FP
     machineCertificateLogPrecisionRuler_mem_FP
   have hinput := machinePair_mem_FP hp machineTransferEntryCode_mem_FP
-  simpa only [machineTransferLogXRawCode] using machineCompose_mem_FP hinput
+  simpa only [machineTransferLogXRawCode] using! machineCompose_mem_FP hinput
     machineScheduledLogLowerRawCode_mem_FP
 
 theorem machineTransferLogComplementRawCode_mem_FP :
@@ -142,7 +142,7 @@ theorem machineTransferLogComplementRawCode_mem_FP :
   have hp := machineCompose_mem_FP machineTransferOptimizerWord_mem_FP
     machineCertificateLogPrecisionRuler_mem_FP
   have hinput := machinePair_mem_FP hp machineTransferComplementCode_mem_FP
-  simpa only [machineTransferLogComplementRawCode] using
+  simpa only [machineTransferLogComplementRawCode] using!
     machineCompose_mem_FP hinput machineScheduledLogLowerRawCode_mem_FP
 
 theorem machineTransferOnePlusTauRawCode_mem_FP :
@@ -150,7 +150,7 @@ theorem machineTransferOnePlusTauRawCode_mem_FP :
   have htau := machineCompose_mem_FP machineTransferOptimizerWord_mem_FP
     machineCertificateRegularizationScaleRawCode_mem_FP
   have hinput := machinePair_mem_FP (machineConst_mem_FP rawRatOneCode) htau
-  simpa only [machineTransferOnePlusTauRawCode] using
+  simpa only [machineTransferOnePlusTauRawCode] using!
     machineCompose_mem_FP hinput machineRawRatAddCode_mem_FP
 
 theorem machineTransferWeightedLogXRawCode_mem_FP :
@@ -158,7 +158,7 @@ theorem machineTransferWeightedLogXRawCode_mem_FP :
   have hinput := machinePair_mem_FP
     machineTransferOnePlusTauRawCode_mem_FP
     machineTransferLogXRawCode_mem_FP
-  simpa only [machineTransferWeightedLogXRawCode] using
+  simpa only [machineTransferWeightedLogXRawCode] using!
     machineCompose_mem_FP hinput machineRawRatMulCode_mem_FP
 
 theorem machineTransferNegativeDistinguishedRawCode_mem_FP :
@@ -168,14 +168,14 @@ theorem machineTransferNegativeDistinguishedRawCode_mem_FP :
   have hsecond := machineCompose_mem_FP
     machineTransferLogComplementRawCode_mem_FP machineRawRatNegCode_mem_FP
   have hinput := machinePair_mem_FP hfirst hsecond
-  simpa only [machineTransferNegativeDistinguishedRawCode] using
+  simpa only [machineTransferNegativeDistinguishedRawCode] using!
     machineCompose_mem_FP hinput machineRawRatAddCode_mem_FP
 
 theorem machineTransferRowUpperRawCode_mem_FP :
     machineTransferRowUpperRawCode ∈ FP := by
   have hinput := machinePair_mem_FP machineTransferRowRuler_mem_FP
     machineTransferOptimizerWord_mem_FP
-  simpa only [machineTransferRowUpperRawCode] using machineCompose_mem_FP hinput
+  simpa only [machineTransferRowUpperRawCode] using! machineCompose_mem_FP hinput
     machineRowComplementUpperSumRawCode_mem_FP
 
 theorem machineDirectedTransferCostUpperRawCode_mem_FP :
@@ -183,7 +183,7 @@ theorem machineDirectedTransferCostUpperRawCode_mem_FP :
   have hinput := machinePair_mem_FP
     machineTransferNegativeDistinguishedRawCode_mem_FP
     machineTransferRowUpperRawCode_mem_FP
-  simpa only [machineDirectedTransferCostUpperRawCode] using
+  simpa only [machineDirectedTransferCostUpperRawCode] using!
     machineCompose_mem_FP hinput machineRawRatAddCode_mem_FP
 
 def rawDirectedTransferCostUpper {n : ℕ}

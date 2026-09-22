@@ -213,12 +213,12 @@ theorem machineOptimizerInitialLowEntryCode_mem_FP :
   have hneg := machineCompose_mem_FP
     machineOptimizerTwiceNSquareForWidthRawCode_mem_FP
     machineRawRatNegCode_mem_FP
-  simpa only [machineOptimizerInitialLowEntryCode] using
+  simpa only [machineOptimizerInitialLowEntryCode] using!
     machineCompose_mem_FP hneg machineNormalizeRawRatEntryCode_mem_FP
 
 theorem machineOptimizerInitialWidthEntryCodeForBisection_mem_FP :
     machineOptimizerInitialWidthEntryCodeForBisection ∈ FP := by
-  simpa only [machineOptimizerInitialWidthEntryCodeForBisection] using
+  simpa only [machineOptimizerInitialWidthEntryCodeForBisection] using!
     machineCompose_mem_FP machineExplicitOptimizerInitialWidthRawCode_mem_FP
       machineNormalizeRawRatEntryCode_mem_FP
 
@@ -227,26 +227,26 @@ theorem machineOptimizerBisectionStateSource_mem_FP :
 
 theorem machineOptimizerBisectionStateRuler_mem_FP :
     machineOptimizerBisectionStateRuler ∈ FP := by
-  simpa only [machineOptimizerBisectionStateRuler] using
+  simpa only [machineOptimizerBisectionStateRuler] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineOptimizerBisectionStateIndex_mem_FP :
     machineOptimizerBisectionStateIndex ∈ FP := by
   have htail := machineCompose_mem_FP machinePairSecond_mem_FP
     machinePairSecond_mem_FP
-  simpa only [machineOptimizerBisectionStateIndex] using
+  simpa only [machineOptimizerBisectionStateIndex] using!
     machineCompose_mem_FP htail machinePairFirst_mem_FP
 
 theorem machineOptimizerBisectionStateDepth_mem_FP :
     machineOptimizerBisectionStateDepth ∈ FP := by
   have htail := machineCompose_mem_FP machinePairSecond_mem_FP
     machinePairSecond_mem_FP
-  simpa only [machineOptimizerBisectionStateDepth] using
+  simpa only [machineOptimizerBisectionStateDepth] using!
     machineCompose_mem_FP htail machinePairSecond_mem_FP
 
 theorem machineOptimizerBisectionInit_mem_FP :
     machineOptimizerBisectionInit ∈ FP := by
-  simpa only [machineOptimizerBisectionInit] using
+  simpa only [machineOptimizerBisectionInit] using!
     machinePair_mem_FP id_mem_FP
       (machinePair_mem_FP machineExplicitOptimizerBisectionStepsRuler_mem_FP
         (machinePair_mem_FP (machineConst_mem_FP [])
@@ -254,7 +254,7 @@ theorem machineOptimizerBisectionInit_mem_FP :
 
 theorem machineOptimizerBisectionEvenIndexBits_mem_FP :
     machineOptimizerBisectionEvenIndexBits ∈ FP := by
-  simpa only [machineOptimizerBisectionEvenIndexBits] using
+  simpa only [machineOptimizerBisectionEvenIndexBits] using!
     machineCompose_mem_FP
       (machinePair_mem_FP machineOptimizerBisectionStateIndex_mem_FP
         (machineConst_mem_FP [false, true]))
@@ -262,7 +262,7 @@ theorem machineOptimizerBisectionEvenIndexBits_mem_FP :
 
 theorem machineOptimizerBisectionOddIndexBits_mem_FP :
     machineOptimizerBisectionOddIndexBits ∈ FP := by
-  simpa only [machineOptimizerBisectionOddIndexBits] using
+  simpa only [machineOptimizerBisectionOddIndexBits] using!
     machineCompose_mem_FP
       (machinePair_mem_FP machineOptimizerBisectionEvenIndexBits_mem_FP
         (machineConst_mem_FP [true]))
@@ -270,13 +270,13 @@ theorem machineOptimizerBisectionOddIndexBits_mem_FP :
 
 theorem machineOptimizerBisectionNextDepth_mem_FP :
     machineOptimizerBisectionNextDepth ∈ FP := by
-  simpa only [machineOptimizerBisectionNextDepth] using
+  simpa only [machineOptimizerBisectionNextDepth] using!
     machineCompose_mem_FP machineOptimizerBisectionStateDepth_mem_FP
       (machinePrepend_mem_FP true)
 
 theorem machineOptimizerBisectionDenominatorBits_mem_FP :
     machineOptimizerBisectionDenominatorBits ∈ FP := by
-  simpa only [machineOptimizerBisectionDenominatorBits] using
+  simpa only [machineOptimizerBisectionDenominatorBits] using!
     machineCompose_mem_FP machineOptimizerBisectionNextDepth_mem_FP
       machineDirectedLogPowerTwoBits_mem_FP
 
@@ -293,7 +293,7 @@ theorem machineOptimizerBisectionScaledFractionRawCode_mem_FP :
   have hwidth := machineCompose_mem_FP
     machineOptimizerBisectionStateSource_mem_FP
     machineOptimizerInitialWidthEntryCodeForBisection_mem_FP
-  simpa only [machineOptimizerBisectionScaledFractionRawCode] using
+  simpa only [machineOptimizerBisectionScaledFractionRawCode] using!
     machineCompose_mem_FP
       (machinePair_mem_FP
         machineOptimizerBisectionFractionRawCode_mem_FP hwidth)
@@ -304,7 +304,7 @@ theorem machineOptimizerBisectionMidpointUnnormalizedRawCode_mem_FP :
   have hlow := machineCompose_mem_FP
     machineOptimizerBisectionStateSource_mem_FP
     machineOptimizerInitialLowEntryCode_mem_FP
-  simpa only [machineOptimizerBisectionMidpointUnnormalizedRawCode] using
+  simpa only [machineOptimizerBisectionMidpointUnnormalizedRawCode] using!
     machineCompose_mem_FP
       (machinePair_mem_FP hlow
         machineOptimizerBisectionScaledFractionRawCode_mem_FP)
@@ -312,7 +312,7 @@ theorem machineOptimizerBisectionMidpointUnnormalizedRawCode_mem_FP :
 
 theorem machineOptimizerBisectionMidpointRawCode_mem_FP :
     machineOptimizerBisectionMidpointRawCode ∈ FP := by
-  simpa only [machineOptimizerBisectionMidpointRawCode] using
+  simpa only [machineOptimizerBisectionMidpointRawCode] using!
     machineCompose_mem_FP
       machineOptimizerBisectionMidpointUnnormalizedRawCode_mem_FP
       machineNormalizeRawRatEntryCode_mem_FP
@@ -324,7 +324,7 @@ theorem machineOptimizerBisectionFeasibilityCall_mem_FP :
 
 theorem machineOptimizerBisectionFeasibilityResult_mem_FP :
     machineOptimizerBisectionFeasibilityResult ∈ FP := by
-  simpa only [machineOptimizerBisectionFeasibilityResult] using
+  simpa only [machineOptimizerBisectionFeasibilityResult] using!
     machineCompose_mem_FP machineOptimizerBisectionFeasibilityCall_mem_FP
       machineExplicitBetheThresholdFeasibilityCode_mem_FP
 
@@ -333,7 +333,7 @@ theorem machineOptimizerBisectionExhaustedBit_mem_FP :
   have htag := machineCompose_mem_FP
     machineOptimizerBisectionFeasibilityResult_mem_FP
     machinePairFirst_mem_FP
-  simpa only [machineOptimizerBisectionExhaustedBit] using
+  simpa only [machineOptimizerBisectionExhaustedBit] using!
     machineCompose_mem_FP htag machineHeadBit_mem_FP
 
 theorem machineOptimizerBisectionNextIndexBits_mem_FP :
@@ -467,7 +467,7 @@ theorem machineOptimizerBisectionIterate_bound (word : List Bool) : ∀ k,
   | zero => exact machineOptimizerBisectionInit_bound word
   | succ k ih =>
       rw [Function.iterate_succ_apply']
-      simpa only [Nat.succ_eq_add_one] using
+      simpa only [Nat.succ_eq_add_one] using!
         machineOptimizerBisectionStep_bound ih
 
 def machineOptimizerBisectionWidth (word : List Bool) : List Bool :=
@@ -482,7 +482,7 @@ theorem machineOptimizerBisectionWidth_mem_FP :
   have henvelope : (fun word : List Bool ↦
       false :: (word ++ machineExplicitOptimizerBisectionStepsRuler word))
       ∈ FP := machineCompose_mem_FP happend (machinePrepend_mem_FP false)
-  simpa only [machineOptimizerBisectionWidth] using
+  simpa only [machineOptimizerBisectionWidth] using!
     machinePair_mem_FP henvelope
       (machinePair_mem_FP henvelope
         (machinePair_mem_FP henvelope henvelope))
@@ -518,7 +518,7 @@ theorem machineOptimizerBisectionFinalState_mem_FP :
 
 theorem machineOptimizerBisectionHighIndexBits_mem_FP :
     machineOptimizerBisectionHighIndexBits ∈ FP := by
-  simpa only [machineOptimizerBisectionHighIndexBits] using
+  simpa only [machineOptimizerBisectionHighIndexBits] using!
     machineCompose_mem_FP
       (machinePair_mem_FP machineOptimizerBisectionStateIndex_mem_FP
         (machineConst_mem_FP [true]))
@@ -539,7 +539,7 @@ theorem machineOptimizerBisectionHighScaledRawCode_mem_FP :
   have hwidth := machineCompose_mem_FP
     machineOptimizerBisectionStateSource_mem_FP
     machineOptimizerInitialWidthEntryCodeForBisection_mem_FP
-  simpa only [machineOptimizerBisectionHighScaledRawCode] using
+  simpa only [machineOptimizerBisectionHighScaledRawCode] using!
     machineCompose_mem_FP
       (machinePair_mem_FP
         machineOptimizerBisectionHighFractionRawCode_mem_FP hwidth)
@@ -550,7 +550,7 @@ theorem machineOptimizerBisectionHighUnnormalizedRawCode_mem_FP :
   have hlow := machineCompose_mem_FP
     machineOptimizerBisectionStateSource_mem_FP
     machineOptimizerInitialLowEntryCode_mem_FP
-  simpa only [machineOptimizerBisectionHighUnnormalizedRawCode] using
+  simpa only [machineOptimizerBisectionHighUnnormalizedRawCode] using!
     machineCompose_mem_FP
       (machinePair_mem_FP hlow
         machineOptimizerBisectionHighScaledRawCode_mem_FP)
@@ -558,7 +558,7 @@ theorem machineOptimizerBisectionHighUnnormalizedRawCode_mem_FP :
 
 theorem machineOptimizerBisectionHighRawCode_mem_FP :
     machineOptimizerBisectionHighRawCode ∈ FP := by
-  simpa only [machineOptimizerBisectionHighRawCode] using
+  simpa only [machineOptimizerBisectionHighRawCode] using!
     machineCompose_mem_FP
       machineOptimizerBisectionHighUnnormalizedRawCode_mem_FP
       machineNormalizeRawRatEntryCode_mem_FP
@@ -569,13 +569,13 @@ theorem machineExplicitBetheOptimizerFeasibilityResultCode_mem_FP :
     machineOptimizerBisectionFinalState_mem_FP
     machineOptimizerBisectionHighRawCode_mem_FP
   have hcall := machinePair_mem_FP id_mem_FP hhigh
-  simpa only [machineExplicitBetheOptimizerFeasibilityResultCode] using
+  simpa only [machineExplicitBetheOptimizerFeasibilityResultCode] using!
     machineCompose_mem_FP hcall
       machineExplicitBetheThresholdFeasibilityCode_mem_FP
 
 theorem machineExplicitBetheOptimizerPointCode_mem_FP :
     machineExplicitBetheOptimizerPointCode ∈ FP := by
-  simpa only [machineExplicitBetheOptimizerPointCode] using
+  simpa only [machineExplicitBetheOptimizerPointCode] using!
     machineCompose_mem_FP
       machineExplicitBetheOptimizerFeasibilityResultCode_mem_FP
       machinePairSecond_mem_FP

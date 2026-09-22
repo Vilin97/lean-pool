@@ -32,7 +32,7 @@ def machineBinaryNatEqBit (word : List Bool) : List Bool :=
 
 theorem machineBinaryNatLeBit_mem_FP :
     machineBinaryNatLeBit ∈ Complexity.FP := by
-  simpa only [machineBinaryNatLeBit] using
+  simpa only [machineBinaryNatLeBit] using!
     machineIfEmpty_mem_FP machineBinarySubBits_mem_FP
       (machineConst_mem_FP [true]) (machineConst_mem_FP [false])
 
@@ -42,7 +42,7 @@ theorem machineBinaryNatLtBit_mem_FP :
       (machinePairFirst word)) ∈ Complexity.FP :=
     machinePair_mem_FP machinePairSecond_mem_FP machinePairFirst_mem_FP
   have hsub := machineCompose_mem_FP hswap machineBinarySubBits_mem_FP
-  simpa only [machineBinaryNatLtBit] using
+  simpa only [machineBinaryNatLtBit] using!
     machineIfEmpty_mem_FP hsub (machineConst_mem_FP [false])
       (machineConst_mem_FP [true])
 
@@ -52,7 +52,7 @@ theorem machineBinaryNatEqBit_mem_FP :
       (machinePairFirst word)) ∈ Complexity.FP :=
     machinePair_mem_FP machinePairSecond_mem_FP machinePairFirst_mem_FP
   have hswappedLe := machineCompose_mem_FP hswap machineBinaryNatLeBit_mem_FP
-  simpa only [machineBinaryNatEqBit] using
+  simpa only [machineBinaryNatEqBit] using!
     machineAndBit_mem_FP machineBinaryNatLeBit_mem_FP hswappedLe
 
 theorem machineBinaryNatLeBit_pair_natBits (lhs rhs : ℕ) :
@@ -67,7 +67,7 @@ theorem machineBinaryNatLeBit_pair_natBits (lhs rhs : ℕ) :
     | nil =>
         have hlen : (lhs - rhs).bits.length = 0 := by rw [hbits]; rfl
         have hsize : (lhs - rhs).size = 0 := by
-          simpa only [Nat.size_eq_bits_len] using hlen
+          simpa only [Nat.size_eq_bits_len] using! hlen
         have := Nat.size_eq_zero.mp hsize
         omega
     | cons bit rest => simp [hbits, h]
@@ -82,7 +82,7 @@ theorem machineBinaryNatLtBit_pair_natBits (lhs rhs : ℕ) :
     | nil =>
         have hlen : (rhs - lhs).bits.length = 0 := by rw [hbits]; rfl
         have hsize : (rhs - lhs).size = 0 := by
-          simpa only [Nat.size_eq_bits_len] using hlen
+          simpa only [Nat.size_eq_bits_len] using! hlen
         have := Nat.size_eq_zero.mp hsize
         omega
     | cons bit rest => simp [hbits, h]

@@ -133,25 +133,25 @@ theorem machineDirectionRowPayload_mem_FP :
 
 theorem machineDirectionRowDimensionUnary_mem_FP :
     machineDirectionRowDimensionUnary ∈ FP := by
-  simpa only [machineDirectionRowDimensionUnary] using
+  simpa only [machineDirectionRowDimensionUnary] using!
     machineCompose_mem_FP machineDirectionRowPayload_mem_FP
       machinePairFirst_mem_FP
 
 theorem machineDirectionRowDimensionAndVector_mem_FP :
     machineDirectionRowDimensionAndVector ∈ FP := by
-  simpa only [machineDirectionRowDimensionAndVector] using
+  simpa only [machineDirectionRowDimensionAndVector] using!
     machineCompose_mem_FP machineDirectionRowPayload_mem_FP
       machinePairSecond_mem_FP
 
 theorem machineDirectionRowDimensionBits_mem_FP :
     machineDirectionRowDimensionBits ∈ FP := by
-  simpa only [machineDirectionRowDimensionBits] using
+  simpa only [machineDirectionRowDimensionBits] using!
     machineCompose_mem_FP machineDirectionRowDimensionAndVector_mem_FP
       machinePairFirst_mem_FP
 
 theorem machineDirectionRowVectorCode_mem_FP :
     machineDirectionRowVectorCode ∈ FP := by
-  simpa only [machineDirectionRowVectorCode] using
+  simpa only [machineDirectionRowVectorCode] using!
     machineCompose_mem_FP machineDirectionRowDimensionAndVector_mem_FP
       machinePairSecond_mem_FP
 
@@ -159,7 +159,7 @@ theorem machineDirectionRowNormSqRawCode_mem_FP :
     machineDirectionRowNormSqRawCode ∈ FP := by
   have hinput := machinePair_mem_FP machineDirectionRowVectorCode_mem_FP
     machineDirectionRowVectorCode_mem_FP
-  simpa only [machineDirectionRowNormSqRawCode] using
+  simpa only [machineDirectionRowNormSqRawCode] using!
     machineCompose_mem_FP hinput machineRationalVectorDotRawCode_mem_FP
 
 theorem machineDirectionRowGapRawCode_mem_FP :
@@ -170,7 +170,7 @@ theorem machineDirectionRowGapRawCode_mem_FP :
     machineDirectionRowDimensionBits_mem_FP
     machineEllipsoidParallelScaleRawCode_mem_FP
   have hneg := machineCompose_mem_FP hparallel machineRawRatNegCode_mem_FP
-  simpa only [machineDirectionRowGapRawCode] using
+  simpa only [machineDirectionRowGapRawCode] using!
     machineCompose_mem_FP (machinePair_mem_FP hperp hneg)
       machineRawRatAddCode_mem_FP
 
@@ -178,14 +178,14 @@ theorem machineDirectionRowCoefficientRawCode_mem_FP :
     machineDirectionRowCoefficientRawCode ∈ FP := by
   have hinput := machinePair_mem_FP machineDirectionRowGapRawCode_mem_FP
     machineDirectionRowNormSqRawCode_mem_FP
-  simpa only [machineDirectionRowCoefficientRawCode] using
+  simpa only [machineDirectionRowCoefficientRawCode] using!
     machineCompose_mem_FP hinput machineRawRatDivCode_mem_FP
 
 theorem machineDirectionRowBEntry_mem_FP :
     machineDirectionRowBEntry ∈ FP := by
   have hinput := machinePair_mem_FP machineDirectionRowIndex_mem_FP
     machineDirectionRowVectorCode_mem_FP
-  simpa only [machineDirectionRowBEntry] using
+  simpa only [machineDirectionRowBEntry] using!
     machineCompose_mem_FP hinput machineListIndex_mem_FP
 
 theorem machineDirectionRowScaleRawCode_mem_FP :
@@ -193,19 +193,19 @@ theorem machineDirectionRowScaleRawCode_mem_FP :
   have hinput := machinePair_mem_FP
     machineDirectionRowCoefficientRawCode_mem_FP
     machineDirectionRowBEntry_mem_FP
-  simpa only [machineDirectionRowScaleRawCode] using
+  simpa only [machineDirectionRowScaleRawCode] using!
     machineCompose_mem_FP hinput machineRawRatMulCode_mem_FP
 
 theorem machineDirectionRowScaledVectorCode_mem_FP :
     machineDirectionRowScaledVectorCode ∈ FP := by
   have hinput := machinePair_mem_FP machineDirectionRowScaleRawCode_mem_FP
     machineDirectionRowVectorCode_mem_FP
-  simpa only [machineDirectionRowScaledVectorCode] using
+  simpa only [machineDirectionRowScaledVectorCode] using!
     machineCompose_mem_FP hinput machineRationalVectorScaleCode_mem_FP
 
 theorem machineDirectionRowZeroVectorCode_mem_FP :
     machineDirectionRowZeroVectorCode ∈ FP := by
-  simpa only [machineDirectionRowZeroVectorCode] using
+  simpa only [machineDirectionRowZeroVectorCode] using!
     machineCompose_mem_FP machineDirectionRowDimensionUnary_mem_FP
       machineRationalZeroVectorCode_mem_FP
 
@@ -216,7 +216,7 @@ theorem machineDirectionRowDiagonalCode_mem_FP :
   have hpayload := machinePair_mem_FP hperp
     machineDirectionRowZeroVectorCode_mem_FP
   have hinput := machinePair_mem_FP machineDirectionRowIndex_mem_FP hpayload
-  simpa only [machineDirectionRowDiagonalCode] using
+  simpa only [machineDirectionRowDiagonalCode] using!
     machineCompose_mem_FP hinput machineListUpdate_mem_FP
 
 theorem machineRationalDirectionUpdateRowCode_mem_FP :
@@ -225,7 +225,7 @@ theorem machineRationalDirectionUpdateRowCode_mem_FP :
     machineDirectionRowScaledVectorCode_mem_FP
   have hinput := machinePair_mem_FP machineDirectionRowDimensionUnary_mem_FP
     hpayload
-  simpa only [machineRationalDirectionUpdateRowCode] using
+  simpa only [machineRationalDirectionUpdateRowCode] using!
     machineCompose_mem_FP hinput machineRationalVectorSubCode_mem_FP
 
 /-! ## Exact semantics -/
@@ -369,13 +369,13 @@ theorem machineRationalDirectionUpdateRowCode_mem_FP :
       by_cases hji : j = i.1
       · subst j
         simp [rationalDirectionDiagonalRow]
-      · have hfin : i ≠ ⟨j, by simpa using hjRight⟩ := by
+      · have hfin : i ≠ ⟨j, by simpa using! hjRight⟩ := by
           intro h
           apply hji
           exact (congrArg Fin.val h).symm
         have hij : i.1 ≠ j := Ne.symm hji
         simp [List.getElem_set, hij, rationalDirectionDiagonalRow, hfin]
-  · simpa using i.isLt
+  · simpa using! i.isLt
 
 theorem rationalDirectionUpdateRow_eq {d : ℕ}
     (b : Fin d → ℚ) (i : Fin d) :

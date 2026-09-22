@@ -65,13 +65,13 @@ theorem machineBetheFloorCutGridRest_mem_FP :
 
 theorem machineBetheFloorCutGridBaseColumn_mem_FP :
     machineBetheFloorCutGridBaseColumn ∈ FP := by
-  simpa only [machineBetheFloorCutGridBaseColumn] using
+  simpa only [machineBetheFloorCutGridBaseColumn] using!
     machineCompose_mem_FP machineBetheFloorCutGridRest_mem_FP
       machinePairFirst_mem_FP
 
 theorem machineBetheFloorCutGridPayload_mem_FP :
     machineBetheFloorCutGridPayload ∈ FP := by
-  simpa only [machineBetheFloorCutGridPayload] using
+  simpa only [machineBetheFloorCutGridPayload] using!
     machineCompose_mem_FP machineBetheFloorCutGridRest_mem_FP
       machinePairSecond_mem_FP
 
@@ -83,13 +83,13 @@ theorem machineBetheFloorCutVectorRest_mem_FP :
 
 theorem machineBetheFloorCutVectorQueryRow_mem_FP :
     machineBetheFloorCutVectorQueryRow ∈ FP := by
-  simpa only [machineBetheFloorCutVectorQueryRow] using
+  simpa only [machineBetheFloorCutVectorQueryRow] using!
     machineCompose_mem_FP machineBetheFloorCutVectorRest_mem_FP
       machinePairFirst_mem_FP
 
 theorem machineBetheFloorCutVectorQueryColumn_mem_FP :
     machineBetheFloorCutVectorQueryColumn ∈ FP := by
-  simpa only [machineBetheFloorCutVectorQueryColumn] using
+  simpa only [machineBetheFloorCutVectorQueryColumn] using!
     machineCompose_mem_FP machineBetheFloorCutVectorRest_mem_FP
       machinePairSecond_mem_FP
 
@@ -113,7 +113,7 @@ theorem machineBetheFloorCutGridEntryInput_mem_FP :
 
 theorem machineBetheFloorCutGridEntryCode_mem_FP :
     machineBetheFloorCutGridEntryCode ∈ FP := by
-  simpa only [machineBetheFloorCutGridEntryCode] using
+  simpa only [machineBetheFloorCutGridEntryCode] using!
     machineCompose_mem_FP machineBetheFloorCutGridEntryInput_mem_FP
       machineBetheFloorCutEntryCode_mem_FP
 
@@ -151,7 +151,7 @@ theorem machineBetheFloorCutVectorBaseCode_mem_FP :
     machineBetheFloorCutVectorBaseCode ∈ FP := by
   have hgenerator := machineUnaryGridGeneratorCode_mem_FP
     machineBetheFloorCutGridEntryCode_mem_FP
-  simpa only [machineBetheFloorCutVectorBaseCode] using
+  simpa only [machineBetheFloorCutVectorBaseCode] using!
     machineCompose_mem_FP machineBetheFloorCutVectorGeneratorInput_mem_FP
       hgenerator
 
@@ -162,7 +162,7 @@ theorem machineBetheFloorCutVectorSnocInput_mem_FP :
 
 theorem machineBetheFloorCutVectorCode_mem_FP :
     machineBetheFloorCutVectorCode ∈ FP := by
-  simpa only [machineBetheFloorCutVectorCode] using
+  simpa only [machineBetheFloorCutVectorCode] using!
     machineCompose_mem_FP machineBetheFloorCutVectorSnocInput_mem_FP
       machineBinaryListSnoc_mem_FP
 
@@ -265,7 +265,7 @@ theorem betheFloorCut_base_code_length_le_bound {m : ℕ}
   rw [machineBetheFloorCutVectorBound,
     machineIteratedBinaryWidth_length]
   exact hcode.trans (by
-    simpa only [T, L, word] using
+    simpa only [T, L, word] using!
       certificateExpGuardWidth_pow_lower 1
         (machineBetheFloorCutVectorCanonicalWord i j).length)
 

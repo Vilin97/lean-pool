@@ -79,7 +79,7 @@ theorem machineBoundedUnaryDecrement_mem_FP :
     machineBoundedUnaryDecrement ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineBoundedUnaryRemaining_mem_FP
     (machineConst_mem_FP [true])
-  simpa only [machineBoundedUnaryDecrement] using
+  simpa only [machineBoundedUnaryDecrement] using!
     machineCompose_mem_FP hpair machineBinarySubBits_mem_FP
 
 theorem machineBoundedUnaryContinue_mem_FP :
@@ -90,7 +90,7 @@ theorem machineBoundedUnaryContinue_mem_FP :
 
 theorem machineBoundedUnaryStep_mem_FP :
     machineBoundedUnaryStep ∈ Complexity.FP := by
-  simpa only [machineBoundedUnaryStep] using
+  simpa only [machineBoundedUnaryStep] using!
     machineIfEmpty_mem_FP machineBoundedUnaryRemaining_mem_FP
       id_mem_FP machineBoundedUnaryContinue_mem_FP
 
@@ -198,7 +198,7 @@ theorem machineBoundedUnaryFinalState_mem_FP :
 
 theorem machineBoundedUnary_mem_FP :
     machineBoundedUnary ∈ Complexity.FP := by
-  simpa only [machineBoundedUnary] using
+  simpa only [machineBoundedUnary] using!
     machineCompose_mem_FP machineBoundedUnaryFinalState_mem_FP
       machineBoundedUnaryAcc_mem_FP
 
@@ -217,7 +217,7 @@ theorem machineBoundedUnaryStep_encode (n k : ℕ) :
       intro hnil
       have hzero : n - k = 0 := by
         have h := congrArg Nat.fromBitsLE hnil
-        simpa only [Nat.fromBitsLE_bits] using h
+        simpa only [Nat.fromBitsLE_bits] using! h
       omega
     rw [machineBoundedUnaryStep]
     simp only [boundedUnaryState, machineBoundedUnaryRemaining_pack]

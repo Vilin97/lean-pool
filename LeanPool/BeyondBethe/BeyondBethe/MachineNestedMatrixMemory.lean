@@ -53,7 +53,7 @@ theorem machineNestedMatrixEntryAtUnary_mem_FP :
   have hrowPayload := machinePair_mem_FP hrow hmatrix
   have hrowCode := machineCompose_mem_FP hrowPayload machineListIndex_mem_FP
   have hentryPayload := machinePair_mem_FP hcolumn hrowCode
-  simpa only [machineNestedMatrixEntryAtUnary] using
+  simpa only [machineNestedMatrixEntryAtUnary] using!
     machineCompose_mem_FP hentryPayload machineListIndex_mem_FP
 
 theorem machineNestedMatrixUpdateAtUnary_mem_FP :
@@ -72,7 +72,7 @@ theorem machineNestedMatrixUpdateAtUnary_mem_FP :
     machineListUpdate_mem_FP
   have hupdateMatrixPayload := machinePair_mem_FP hrow
     (machinePair_mem_FP hupdatedRow hmatrix)
-  simpa only [machineNestedMatrixUpdateAtUnary] using
+  simpa only [machineNestedMatrixUpdateAtUnary] using!
     machineCompose_mem_FP hupdateMatrixPayload machineListUpdate_mem_FP
 
 @[simp] theorem machineNestedMatrixEntryAtUnary_encode

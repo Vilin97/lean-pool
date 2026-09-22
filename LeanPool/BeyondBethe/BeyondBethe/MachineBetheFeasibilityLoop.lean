@@ -224,37 +224,37 @@ theorem machineBetheFeasibilityAfterBudget_mem_FP :
 
 theorem machineBetheFeasibilityBound_mem_FP :
     machineBetheFeasibilityBound ∈ FP := by
-  simpa only [machineBetheFeasibilityBound] using
+  simpa only [machineBetheFeasibilityBound] using!
     machineCompose_mem_FP machineBetheFeasibilityAfterBudget_mem_FP
       machinePairFirst_mem_FP
 
 theorem machineBetheFeasibilityAfterBound_mem_FP :
     machineBetheFeasibilityAfterBound ∈ FP := by
-  simpa only [machineBetheFeasibilityAfterBound] using
+  simpa only [machineBetheFeasibilityAfterBound] using!
     machineCompose_mem_FP machineBetheFeasibilityAfterBudget_mem_FP
       machinePairSecond_mem_FP
 
 theorem machineBetheFeasibilityRoundingPrecision_mem_FP :
     machineBetheFeasibilityRoundingPrecision ∈ FP := by
-  simpa only [machineBetheFeasibilityRoundingPrecision] using
+  simpa only [machineBetheFeasibilityRoundingPrecision] using!
     machineCompose_mem_FP machineBetheFeasibilityAfterBound_mem_FP
       machinePairFirst_mem_FP
 
 theorem machineBetheFeasibilityStaticAndInitial_mem_FP :
     machineBetheFeasibilityStaticAndInitial ∈ FP := by
-  simpa only [machineBetheFeasibilityStaticAndInitial] using
+  simpa only [machineBetheFeasibilityStaticAndInitial] using!
     machineCompose_mem_FP machineBetheFeasibilityAfterBound_mem_FP
       machinePairSecond_mem_FP
 
 theorem machineBetheFeasibilityOracleStatic_mem_FP :
     machineBetheFeasibilityOracleStatic ∈ FP := by
-  simpa only [machineBetheFeasibilityOracleStatic] using
+  simpa only [machineBetheFeasibilityOracleStatic] using!
     machineCompose_mem_FP machineBetheFeasibilityStaticAndInitial_mem_FP
       machinePairFirst_mem_FP
 
 theorem machineBetheFeasibilityInitialEllipsoid_mem_FP :
     machineBetheFeasibilityInitialEllipsoid ∈ FP := by
-  simpa only [machineBetheFeasibilityInitialEllipsoid] using
+  simpa only [machineBetheFeasibilityInitialEllipsoid] using!
     machineCompose_mem_FP machineBetheFeasibilityStaticAndInitial_mem_FP
       machinePairSecond_mem_FP
 
@@ -263,21 +263,21 @@ theorem machineBetheFeasibilityStateAccepted_mem_FP :
 
 theorem machineBetheFeasibilityStateSource_mem_FP :
     machineBetheFeasibilityStateSource ∈ FP := by
-  simpa only [machineBetheFeasibilityStateSource] using
+  simpa only [machineBetheFeasibilityStateSource] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineBetheFeasibilityStateEllipsoid_mem_FP :
     machineBetheFeasibilityStateEllipsoid ∈ FP := by
   have htail := machineCompose_mem_FP machinePairSecond_mem_FP
     machinePairSecond_mem_FP
-  simpa only [machineBetheFeasibilityStateEllipsoid] using
+  simpa only [machineBetheFeasibilityStateEllipsoid] using!
     machineCompose_mem_FP htail machinePairFirst_mem_FP
 
 theorem machineBetheFeasibilityStateBound_mem_FP :
     machineBetheFeasibilityStateBound ∈ FP := by
   have htail := machineCompose_mem_FP machinePairSecond_mem_FP
     machinePairSecond_mem_FP
-  simpa only [machineBetheFeasibilityStateBound] using
+  simpa only [machineBetheFeasibilityStateBound] using!
     machineCompose_mem_FP htail machinePairSecond_mem_FP
 
 theorem machineBetheFeasibilityInit_mem_FP :
@@ -292,7 +292,7 @@ theorem machineBetheFeasibilityStaticDimension_mem_FP :
   have hstatic := machineCompose_mem_FP
     machineBetheFeasibilityStateSource_mem_FP
     machineBetheFeasibilityOracleStatic_mem_FP
-  simpa only [machineBetheFeasibilityStaticDimension] using
+  simpa only [machineBetheFeasibilityStaticDimension] using!
     machineCompose_mem_FP hstatic machinePairFirst_mem_FP
 
 theorem machineBetheFeasibilityStaticRest_mem_FP :
@@ -300,54 +300,54 @@ theorem machineBetheFeasibilityStaticRest_mem_FP :
   have hstatic := machineCompose_mem_FP
     machineBetheFeasibilityStateSource_mem_FP
     machineBetheFeasibilityOracleStatic_mem_FP
-  simpa only [machineBetheFeasibilityStaticRest] using
+  simpa only [machineBetheFeasibilityStaticRest] using!
     machineCompose_mem_FP hstatic machinePairSecond_mem_FP
 
 theorem machineBetheFeasibilityStaticOraclePrecision_mem_FP :
     machineBetheFeasibilityStaticOraclePrecision ∈ FP := by
-  simpa only [machineBetheFeasibilityStaticOraclePrecision] using
+  simpa only [machineBetheFeasibilityStaticOraclePrecision] using!
     machineCompose_mem_FP machineBetheFeasibilityStaticRest_mem_FP
       machinePairFirst_mem_FP
 
 theorem machineBetheFeasibilityStaticAfterPrecision_mem_FP :
     machineBetheFeasibilityStaticAfterPrecision ∈ FP := by
-  simpa only [machineBetheFeasibilityStaticAfterPrecision] using
+  simpa only [machineBetheFeasibilityStaticAfterPrecision] using!
     machineCompose_mem_FP machineBetheFeasibilityStaticRest_mem_FP
       machinePairSecond_mem_FP
 
 theorem machineBetheFeasibilityStaticTau_mem_FP :
     machineBetheFeasibilityStaticTau ∈ FP := by
-  simpa only [machineBetheFeasibilityStaticTau] using
+  simpa only [machineBetheFeasibilityStaticTau] using!
     machineCompose_mem_FP machineBetheFeasibilityStaticAfterPrecision_mem_FP
       machinePairFirst_mem_FP
 
 theorem machineBetheFeasibilityStaticAfterTau_mem_FP :
     machineBetheFeasibilityStaticAfterTau ∈ FP := by
-  simpa only [machineBetheFeasibilityStaticAfterTau] using
+  simpa only [machineBetheFeasibilityStaticAfterTau] using!
     machineCompose_mem_FP machineBetheFeasibilityStaticAfterPrecision_mem_FP
       machinePairSecond_mem_FP
 
 theorem machineBetheFeasibilityStaticDelta_mem_FP :
     machineBetheFeasibilityStaticDelta ∈ FP := by
-  simpa only [machineBetheFeasibilityStaticDelta] using
+  simpa only [machineBetheFeasibilityStaticDelta] using!
     machineCompose_mem_FP machineBetheFeasibilityStaticAfterTau_mem_FP
       machinePairFirst_mem_FP
 
 theorem machineBetheFeasibilityStaticAfterDelta_mem_FP :
     machineBetheFeasibilityStaticAfterDelta ∈ FP := by
-  simpa only [machineBetheFeasibilityStaticAfterDelta] using
+  simpa only [machineBetheFeasibilityStaticAfterDelta] using!
     machineCompose_mem_FP machineBetheFeasibilityStaticAfterTau_mem_FP
       machinePairSecond_mem_FP
 
 theorem machineBetheFeasibilityStaticUpper_mem_FP :
     machineBetheFeasibilityStaticUpper ∈ FP := by
-  simpa only [machineBetheFeasibilityStaticUpper] using
+  simpa only [machineBetheFeasibilityStaticUpper] using!
     machineCompose_mem_FP machineBetheFeasibilityStaticAfterDelta_mem_FP
       machinePairFirst_mem_FP
 
 theorem machineBetheFeasibilityStaticMatrix_mem_FP :
     machineBetheFeasibilityStaticMatrix ∈ FP := by
-  simpa only [machineBetheFeasibilityStaticMatrix] using
+  simpa only [machineBetheFeasibilityStaticMatrix] using!
     machineCompose_mem_FP machineBetheFeasibilityStaticAfterDelta_mem_FP
       machinePairSecond_mem_FP
 
@@ -364,7 +364,7 @@ theorem machineBetheFeasibilityOracleInput_mem_FP :
 
 theorem machineBetheFeasibilityOracleResponse_mem_FP :
     machineBetheFeasibilityOracleResponse ∈ FP := by
-  simpa only [machineBetheFeasibilityOracleResponse] using
+  simpa only [machineBetheFeasibilityOracleResponse] using!
     machineCompose_mem_FP machineBetheFeasibilityOracleInput_mem_FP
       machineBetheEpigraphOracleResponseCode_mem_FP
 
@@ -373,12 +373,12 @@ theorem machineBetheFeasibilityResponseTag_mem_FP :
   have htag := machineCompose_mem_FP
     machineBetheFeasibilityOracleResponse_mem_FP
     machineRationalTaggedResultTag_mem_FP
-  simpa only [machineBetheFeasibilityResponseTag] using
+  simpa only [machineBetheFeasibilityResponseTag] using!
     machineCompose_mem_FP htag machineHeadBit_mem_FP
 
 theorem machineBetheFeasibilityResponsePayload_mem_FP :
     machineBetheFeasibilityResponsePayload ∈ FP := by
-  simpa only [machineBetheFeasibilityResponsePayload] using
+  simpa only [machineBetheFeasibilityResponsePayload] using!
     machineCompose_mem_FP machineBetheFeasibilityOracleResponse_mem_FP
       machineRationalTaggedResultPayload_mem_FP
 
@@ -393,14 +393,14 @@ theorem machineBetheFeasibilityScheduledUpdateInput_mem_FP :
 
 theorem machineBetheFeasibilityUpdatedEllipsoidCandidate_mem_FP :
     machineBetheFeasibilityUpdatedEllipsoidCandidate ∈ FP := by
-  simpa only [machineBetheFeasibilityUpdatedEllipsoidCandidate] using
+  simpa only [machineBetheFeasibilityUpdatedEllipsoidCandidate] using!
     machineCompose_mem_FP
       machineBetheFeasibilityScheduledUpdateInput_mem_FP
       machineScheduledRoundedEllipsoidCentralUpdateCode_mem_FP
 
 theorem machineBetheFeasibilityUpdatedEllipsoid_mem_FP :
     machineBetheFeasibilityUpdatedEllipsoid ∈ FP := by
-  simpa only [machineBetheFeasibilityUpdatedEllipsoid] using
+  simpa only [machineBetheFeasibilityUpdatedEllipsoid] using!
     machineTake_mem_FP machineBetheFeasibilityStateBound_mem_FP
       machineBetheFeasibilityUpdatedEllipsoidCandidate_mem_FP
 
@@ -426,7 +426,7 @@ theorem machineBetheFeasibilityStep_mem_FP :
     machineBetheFeasibilityResponseTag_mem_FP
     machineBetheFeasibilityCutState_mem_FP
     machineBetheFeasibilityAcceptState_mem_FP
-  simpa only [machineBetheFeasibilityStep] using
+  simpa only [machineBetheFeasibilityStep] using!
     machineIfHead_mem_FP haccepted id_mem_FP hbranch
 
 theorem machineBetheFeasibilityStateResultCode_mem_FP :
@@ -603,9 +603,9 @@ def machineBetheFeasibilityWidth (word : List Bool) : List Bool :=
 theorem machineBetheFeasibilityWidth_mem_FP :
     machineBetheFeasibilityWidth ∈ FP := by
   have henvelope : (fun word : List Bool ↦ false :: word) ∈ FP :=
-    by simpa only [List.singleton_append] using
+    by simpa only [List.singleton_append] using!
       machineAppend_mem_FP (machineConst_mem_FP [false]) id_mem_FP
-  simpa only [machineBetheFeasibilityWidth] using
+  simpa only [machineBetheFeasibilityWidth] using!
     machinePair_mem_FP henvelope
       (machinePair_mem_FP henvelope
         (machinePair_mem_FP henvelope henvelope))
@@ -634,7 +634,7 @@ theorem machineBetheFeasibilityFinalState_mem_FP :
 
 theorem machineBetheFeasibilityResultCode_mem_FP :
     machineBetheFeasibilityResultCode ∈ FP := by
-  simpa only [machineBetheFeasibilityResultCode] using
+  simpa only [machineBetheFeasibilityResultCode] using!
     machineCompose_mem_FP machineBetheFeasibilityFinalState_mem_FP
       machineBetheFeasibilityStateResultCode_mem_FP
 

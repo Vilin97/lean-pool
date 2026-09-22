@@ -99,30 +99,30 @@ theorem machineFourCoreRest₁_mem_FP : machineFourCoreRest₁ ∈ FP :=
 
 theorem machineFourCoreSecondRowRuler_mem_FP :
     machineFourCoreSecondRowRuler ∈ FP := by
-  simpa only [machineFourCoreSecondRowRuler] using machineCompose_mem_FP
+  simpa only [machineFourCoreSecondRowRuler] using! machineCompose_mem_FP
     machineFourCoreRest₁_mem_FP machinePairFirst_mem_FP
 
 theorem machineFourCoreRest₂_mem_FP : machineFourCoreRest₂ ∈ FP := by
-  simpa only [machineFourCoreRest₂] using machineCompose_mem_FP
+  simpa only [machineFourCoreRest₂] using! machineCompose_mem_FP
     machineFourCoreRest₁_mem_FP machinePairSecond_mem_FP
 
 theorem machineFourCoreFirstColumnRuler_mem_FP :
     machineFourCoreFirstColumnRuler ∈ FP := by
-  simpa only [machineFourCoreFirstColumnRuler] using machineCompose_mem_FP
+  simpa only [machineFourCoreFirstColumnRuler] using! machineCompose_mem_FP
     machineFourCoreRest₂_mem_FP machinePairFirst_mem_FP
 
 theorem machineFourCoreRest₃_mem_FP : machineFourCoreRest₃ ∈ FP := by
-  simpa only [machineFourCoreRest₃] using machineCompose_mem_FP
+  simpa only [machineFourCoreRest₃] using! machineCompose_mem_FP
     machineFourCoreRest₂_mem_FP machinePairSecond_mem_FP
 
 theorem machineFourCoreSecondColumnRuler_mem_FP :
     machineFourCoreSecondColumnRuler ∈ FP := by
-  simpa only [machineFourCoreSecondColumnRuler] using machineCompose_mem_FP
+  simpa only [machineFourCoreSecondColumnRuler] using! machineCompose_mem_FP
     machineFourCoreRest₃_mem_FP machinePairFirst_mem_FP
 
 theorem machineFourCoreOptimizerWord_mem_FP :
     machineFourCoreOptimizerWord ∈ FP := by
-  simpa only [machineFourCoreOptimizerWord] using machineCompose_mem_FP
+  simpa only [machineFourCoreOptimizerWord] using! machineCompose_mem_FP
     machineFourCoreRest₃_mem_FP machinePairSecond_mem_FP
 
 theorem machineFourCoreTransferInput_mem_FP
@@ -137,7 +137,7 @@ theorem machineFourCoreRACostRawCode_mem_FP :
   have hinput := machineFourCoreTransferInput_mem_FP
     machineFourCoreFirstRowRuler_mem_FP machineFourCoreFirstColumnRuler_mem_FP
     machineFourCoreOptimizerWord_mem_FP
-  simpa only [machineFourCoreRACostRawCode] using machineCompose_mem_FP hinput
+  simpa only [machineFourCoreRACostRawCode] using! machineCompose_mem_FP hinput
     machineDirectedTransferCostUpperRawCode_mem_FP
 
 theorem machineFourCoreRBCostRawCode_mem_FP :
@@ -145,7 +145,7 @@ theorem machineFourCoreRBCostRawCode_mem_FP :
   have hinput := machineFourCoreTransferInput_mem_FP
     machineFourCoreFirstRowRuler_mem_FP machineFourCoreSecondColumnRuler_mem_FP
     machineFourCoreOptimizerWord_mem_FP
-  simpa only [machineFourCoreRBCostRawCode] using machineCompose_mem_FP hinput
+  simpa only [machineFourCoreRBCostRawCode] using! machineCompose_mem_FP hinput
     machineDirectedTransferCostUpperRawCode_mem_FP
 
 theorem machineFourCoreSACostRawCode_mem_FP :
@@ -153,7 +153,7 @@ theorem machineFourCoreSACostRawCode_mem_FP :
   have hinput := machineFourCoreTransferInput_mem_FP
     machineFourCoreSecondRowRuler_mem_FP machineFourCoreFirstColumnRuler_mem_FP
     machineFourCoreOptimizerWord_mem_FP
-  simpa only [machineFourCoreSACostRawCode] using machineCompose_mem_FP hinput
+  simpa only [machineFourCoreSACostRawCode] using! machineCompose_mem_FP hinput
     machineDirectedTransferCostUpperRawCode_mem_FP
 
 theorem machineFourCoreSBCostRawCode_mem_FP :
@@ -161,21 +161,21 @@ theorem machineFourCoreSBCostRawCode_mem_FP :
   have hinput := machineFourCoreTransferInput_mem_FP
     machineFourCoreSecondRowRuler_mem_FP machineFourCoreSecondColumnRuler_mem_FP
     machineFourCoreOptimizerWord_mem_FP
-  simpa only [machineFourCoreSBCostRawCode] using machineCompose_mem_FP hinput
+  simpa only [machineFourCoreSBCostRawCode] using! machineCompose_mem_FP hinput
     machineDirectedTransferCostUpperRawCode_mem_FP
 
 theorem machineFourCoreFirstRowSumRawCode_mem_FP :
     machineFourCoreFirstRowSumRawCode ∈ FP := by
   have hinput := machinePair_mem_FP machineFourCoreRACostRawCode_mem_FP
     machineFourCoreRBCostRawCode_mem_FP
-  simpa only [machineFourCoreFirstRowSumRawCode] using machineCompose_mem_FP
+  simpa only [machineFourCoreFirstRowSumRawCode] using! machineCompose_mem_FP
     hinput machineRawRatAddCode_mem_FP
 
 theorem machineFourCoreSecondRowSumRawCode_mem_FP :
     machineFourCoreSecondRowSumRawCode ∈ FP := by
   have hinput := machinePair_mem_FP machineFourCoreSACostRawCode_mem_FP
     machineFourCoreSBCostRawCode_mem_FP
-  simpa only [machineFourCoreSecondRowSumRawCode] using machineCompose_mem_FP
+  simpa only [machineFourCoreSecondRowSumRawCode] using! machineCompose_mem_FP
     hinput machineRawRatAddCode_mem_FP
 
 theorem machineDirectedFourCoreCostUpperRawCode_mem_FP :
@@ -183,7 +183,7 @@ theorem machineDirectedFourCoreCostUpperRawCode_mem_FP :
   have hinput := machinePair_mem_FP
     machineFourCoreFirstRowSumRawCode_mem_FP
     machineFourCoreSecondRowSumRawCode_mem_FP
-  simpa only [machineDirectedFourCoreCostUpperRawCode] using
+  simpa only [machineDirectedFourCoreCostUpperRawCode] using!
     machineCompose_mem_FP hinput machineRawRatAddCode_mem_FP
 
 def rawDirectedFourCoreCostUpper {n : ℕ}

@@ -30,17 +30,17 @@ def machineBinaryListInit (word : List Bool) : List Bool :=
 
 theorem machineBinaryListInitReversed_mem_FP :
     machineBinaryListInitReversed ∈ FP := by
-  simpa only [machineBinaryListInitReversed] using
+  simpa only [machineBinaryListInitReversed] using!
     machineListReverse_mem_FP
 
 theorem machineBinaryListInitReversedTail_mem_FP :
     machineBinaryListInitReversedTail ∈ FP := by
-  simpa only [machineBinaryListInitReversedTail] using
+  simpa only [machineBinaryListInitReversedTail] using!
     machineCompose_mem_FP machineBinaryListInitReversed_mem_FP
       machineListTail_mem_FP
 
 theorem machineBinaryListInit_mem_FP : machineBinaryListInit ∈ FP := by
-  simpa only [machineBinaryListInit] using
+  simpa only [machineBinaryListInit] using!
     machineCompose_mem_FP machineBinaryListInitReversedTail_mem_FP
       machineListReverse_mem_FP
 

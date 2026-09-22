@@ -40,14 +40,14 @@ theorem machineRationalVectorScaleReciprocalCode_mem_FP :
   have hinput := machinePair_mem_FP
     (machineConst_mem_FP (rawRatBinaryCode RawRat.one))
     machinePairFirst_mem_FP
-  simpa only [machineRationalVectorScaleReciprocalCode] using
+  simpa only [machineRationalVectorScaleReciprocalCode] using!
     machineCompose_mem_FP hinput machineRawRatDivCode_mem_FP
 
 theorem machineRationalVectorScaleCode_mem_FP :
     machineRationalVectorScaleCode ∈ FP := by
   have hinput := machinePair_mem_FP
     machineRationalVectorScaleReciprocalCode_mem_FP machinePairSecond_mem_FP
-  simpa only [machineRationalVectorScaleCode] using
+  simpa only [machineRationalVectorScaleCode] using!
     machineCompose_mem_FP hinput machineRationalRowDivide_mem_FP
 
 theorem rationalRowDivideValues_reciprocal_ofFn {d : ℕ}

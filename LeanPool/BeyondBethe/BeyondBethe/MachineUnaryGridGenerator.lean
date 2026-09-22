@@ -237,13 +237,13 @@ theorem machineUnaryGridGeneratorRest_mem_FP :
 
 theorem machineUnaryGridGeneratorInputBound_mem_FP :
     machineUnaryGridGeneratorInputBound ∈ FP := by
-  simpa only [machineUnaryGridGeneratorInputBound] using
+  simpa only [machineUnaryGridGeneratorInputBound] using!
     machineCompose_mem_FP machineUnaryGridGeneratorRest_mem_FP
       machinePairFirst_mem_FP
 
 theorem machineUnaryGridGeneratorInputPayload_mem_FP :
     machineUnaryGridGeneratorInputPayload ∈ FP := by
-  simpa only [machineUnaryGridGeneratorInputPayload] using
+  simpa only [machineUnaryGridGeneratorInputPayload] using!
     machineCompose_mem_FP machineUnaryGridGeneratorRest_mem_FP
       machinePairSecond_mem_FP
 
@@ -252,14 +252,14 @@ theorem machineUnaryGridGeneratorRow_mem_FP :
 
 theorem machineUnaryGridGeneratorColumn_mem_FP :
     machineUnaryGridGeneratorColumn ∈ FP := by
-  simpa only [machineUnaryGridGeneratorColumn] using
+  simpa only [machineUnaryGridGeneratorColumn] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineUnaryGridGeneratorAccumulator_mem_FP :
     machineUnaryGridGeneratorAccumulator ∈ FP := by
   have htail := machineCompose_mem_FP machinePairSecond_mem_FP
     machinePairSecond_mem_FP
-  simpa only [machineUnaryGridGeneratorAccumulator] using
+  simpa only [machineUnaryGridGeneratorAccumulator] using!
     machineCompose_mem_FP htail machinePairFirst_mem_FP
 
 theorem machineUnaryGridGeneratorBound_mem_FP :
@@ -267,7 +267,7 @@ theorem machineUnaryGridGeneratorBound_mem_FP :
   have htailTwo := machineCompose_mem_FP machinePairSecond_mem_FP
     machinePairSecond_mem_FP
   have htailThree := machineCompose_mem_FP htailTwo machinePairSecond_mem_FP
-  simpa only [machineUnaryGridGeneratorBound] using
+  simpa only [machineUnaryGridGeneratorBound] using!
     machineCompose_mem_FP htailThree machinePairFirst_mem_FP
 
 theorem machineUnaryGridGeneratorDone_mem_FP :
@@ -276,7 +276,7 @@ theorem machineUnaryGridGeneratorDone_mem_FP :
     machinePairSecond_mem_FP
   have htailThree := machineCompose_mem_FP htailTwo machinePairSecond_mem_FP
   have htailFour := machineCompose_mem_FP htailThree machinePairSecond_mem_FP
-  simpa only [machineUnaryGridGeneratorDone] using
+  simpa only [machineUnaryGridGeneratorDone] using!
     machineCompose_mem_FP htailFour machinePairFirst_mem_FP
 
 theorem machineUnaryGridGeneratorPayload_mem_FP :
@@ -285,12 +285,12 @@ theorem machineUnaryGridGeneratorPayload_mem_FP :
     machinePairSecond_mem_FP
   have htailThree := machineCompose_mem_FP htailTwo machinePairSecond_mem_FP
   have htailFour := machineCompose_mem_FP htailThree machinePairSecond_mem_FP
-  simpa only [machineUnaryGridGeneratorPayload] using
+  simpa only [machineUnaryGridGeneratorPayload] using!
     machineCompose_mem_FP htailFour machinePairSecond_mem_FP
 
 theorem machineUnaryGridGeneratorStateDimension_mem_FP :
     machineUnaryGridGeneratorStateDimension ∈ FP := by
-  simpa only [machineUnaryGridGeneratorStateDimension] using
+  simpa only [machineUnaryGridGeneratorStateDimension] using!
     machineCompose_mem_FP machineUnaryGridGeneratorPayload_mem_FP
       machineUnaryGridGeneratorDimension_mem_FP
 
@@ -306,14 +306,14 @@ theorem machineUnaryGridGeneratorNextRow_mem_FP :
     machineUnaryGridGeneratorNextRow ∈ FP := by
   have happend := machineAppend_mem_FP machineUnaryGridGeneratorRow_mem_FP
     (machineConst_mem_FP [true])
-  simpa only [machineUnaryGridGeneratorNextRow] using
+  simpa only [machineUnaryGridGeneratorNextRow] using!
     machineTake_mem_FP machineUnaryGridGeneratorPayload_mem_FP happend
 
 theorem machineUnaryGridGeneratorNextColumn_mem_FP :
     machineUnaryGridGeneratorNextColumn ∈ FP := by
   have happend := machineAppend_mem_FP machineUnaryGridGeneratorColumn_mem_FP
     (machineConst_mem_FP [true])
-  simpa only [machineUnaryGridGeneratorNextColumn] using
+  simpa only [machineUnaryGridGeneratorNextColumn] using!
     machineTake_mem_FP machineUnaryGridGeneratorPayload_mem_FP happend
 
 theorem machineUnaryGridGeneratorColumnCompletesBit_mem_FP :
@@ -321,7 +321,7 @@ theorem machineUnaryGridGeneratorColumnCompletesBit_mem_FP :
   have heq := machineUnaryRulersEqualBit_mem_FP
     machineUnaryGridGeneratorNextColumn_mem_FP
     machineUnaryGridGeneratorStateDimension_mem_FP
-  simpa only [machineUnaryGridGeneratorColumnCompletesBit] using
+  simpa only [machineUnaryGridGeneratorColumnCompletesBit] using!
     machineCompose_mem_FP heq machineHeadBit_mem_FP
 
 theorem machineUnaryGridGeneratorRowCompletesBit_mem_FP :
@@ -329,7 +329,7 @@ theorem machineUnaryGridGeneratorRowCompletesBit_mem_FP :
   have heq := machineUnaryRulersEqualBit_mem_FP
     machineUnaryGridGeneratorNextRow_mem_FP
     machineUnaryGridGeneratorStateDimension_mem_FP
-  simpa only [machineUnaryGridGeneratorRowCompletesBit] using
+  simpa only [machineUnaryGridGeneratorRowCompletesBit] using!
     machineCompose_mem_FP heq machineHeadBit_mem_FP
 
 theorem machineUnaryGridGeneratorCandidate_mem_FP
@@ -343,7 +343,7 @@ theorem machineUnaryGridGeneratorCandidate_mem_FP
 theorem machineUnaryGridGeneratorNextAccumulator_mem_FP
     {entry : List Bool → List Bool} (hentry : entry ∈ FP) :
     machineUnaryGridGeneratorNextAccumulator entry ∈ FP := by
-  simpa only [machineUnaryGridGeneratorNextAccumulator] using
+  simpa only [machineUnaryGridGeneratorNextAccumulator] using!
     machineTake_mem_FP machineUnaryGridGeneratorBound_mem_FP
       (machineUnaryGridGeneratorCandidate_mem_FP hentry)
 
@@ -409,7 +409,7 @@ theorem machineUnaryGridGeneratorInit_mem_FP :
 
 theorem machineUnaryGridGeneratorDimensionBits_mem_FP :
     machineUnaryGridGeneratorDimensionBits ∈ FP := by
-  simpa only [machineUnaryGridGeneratorDimensionBits] using
+  simpa only [machineUnaryGridGeneratorDimensionBits] using!
     machineCompose_mem_FP machineUnaryGridGeneratorDimension_mem_FP
       machineLengthBits_mem_FP
 
@@ -418,7 +418,7 @@ theorem machineUnaryGridGeneratorWorkBits_mem_FP :
   have hinput := machinePair_mem_FP
     machineUnaryGridGeneratorDimensionBits_mem_FP
     machineUnaryGridGeneratorDimensionBits_mem_FP
-  simpa only [machineUnaryGridGeneratorWorkBits] using
+  simpa only [machineUnaryGridGeneratorWorkBits] using!
     machineCompose_mem_FP hinput machineBinaryMulBits_mem_FP
 
 theorem machineUnaryGridGeneratorGuard_mem_FP :
@@ -428,14 +428,14 @@ theorem machineUnaryGridGeneratorRuler_mem_FP :
     machineUnaryGridGeneratorRuler ∈ FP := by
   have hinput := machinePair_mem_FP machineUnaryGridGeneratorGuard_mem_FP
     machineUnaryGridGeneratorWorkBits_mem_FP
-  simpa only [machineUnaryGridGeneratorRuler] using
+  simpa only [machineUnaryGridGeneratorRuler] using!
     machineCompose_mem_FP hinput machineBoundedUnary_mem_FP
 
 theorem machineUnaryGridGeneratorEnvelope_mem_FP :
     machineUnaryGridGeneratorEnvelope ∈ FP := by
   have hpadded := machineAppend_mem_FP id_mem_FP
     (machineConst_mem_FP (List.replicate 16 false))
-  simpa only [machineUnaryGridGeneratorEnvelope] using
+  simpa only [machineUnaryGridGeneratorEnvelope] using!
     machineCompose_mem_FP hpadded (machineIteratedBinaryWidth_mem_FP 2)
 
 theorem machineUnaryGridGeneratorWidth_mem_FP :
@@ -661,7 +661,7 @@ theorem machineUnaryGridGeneratorFinalState_mem_FP
 theorem machineUnaryGridGeneratorReversedCode_mem_FP
     {entry : List Bool → List Bool} (hentry : entry ∈ FP) :
     machineUnaryGridGeneratorReversedCode entry ∈ FP := by
-  simpa only [machineUnaryGridGeneratorReversedCode] using
+  simpa only [machineUnaryGridGeneratorReversedCode] using!
     machineCompose_mem_FP
       (machineUnaryGridGeneratorFinalState_mem_FP hentry)
       machineUnaryGridGeneratorAccumulator_mem_FP
@@ -669,7 +669,7 @@ theorem machineUnaryGridGeneratorReversedCode_mem_FP
 theorem machineUnaryGridGeneratorCode_mem_FP
     {entry : List Bool → List Bool} (hentry : entry ∈ FP) :
     machineUnaryGridGeneratorCode entry ∈ FP := by
-  simpa only [machineUnaryGridGeneratorCode] using
+  simpa only [machineUnaryGridGeneratorCode] using!
     machineCompose_mem_FP
       (machineUnaryGridGeneratorReversedCode_mem_FP hentry)
       machineListReverse_mem_FP
@@ -814,7 +814,7 @@ def machineUnaryGridGeneratorSemanticCode {m : ℕ}
       List.replicate (state.row.1 + 1) true := by
     rw [show ([true] : List Bool) = List.replicate 1 true by rfl,
       List.replicate_append_replicate]
-  rw [happend, List.take_of_length_le (by simpa using hlength)]
+  rw [happend, List.take_of_length_le (by simpa using! hlength)]
 
 @[simp] theorem machineUnaryGridGeneratorNextColumn_semanticCode {m : ℕ}
     (bound payload : List Bool) (state : UnaryGridSemanticState m) :
@@ -838,7 +838,7 @@ def machineUnaryGridGeneratorSemanticCode {m : ℕ}
       List.replicate (state.column.1 + 1) true := by
     rw [show ([true] : List Bool) = List.replicate 1 true by rfl,
       List.replicate_append_replicate]
-  rw [happend, List.take_of_length_le (by simpa using hlength)]
+  rw [happend, List.take_of_length_le (by simpa using! hlength)]
 
 @[simp] theorem machineUnaryGridGeneratorColumnCompletesBit_semanticCode
     {m : ℕ} (bound payload : List Bool)
@@ -1031,7 +1031,7 @@ theorem unaryGridPrefix_succ_of_ordinal {m k : ℕ}
     rw [← hordinal]
     exact unaryGridOrdinal_lt_square row column
   have hget : (unaryGridValues f)[k] = f row column := by
-    have hk' : k < m * m := by simpa using hk
+    have hk' : k < m * m := by simpa using! hk
     let ij : Fin m × Fin m := (row, column)
     have hfin : (⟨k, hk'⟩ : Fin (m * m)) = finProdFinEquiv ij := by
       apply Fin.ext
@@ -1042,7 +1042,7 @@ theorem unaryGridPrefix_succ_of_ordinal {m k : ℕ}
     simp only [unaryGridValues, List.getElem_ofFn]
     rw [hfin, Equiv.symm_apply_apply]
   rw [unaryGridPrefix, unaryGridPrefix]
-  simpa only [List.concat_eq_append, hget] using
+  simpa only [List.concat_eq_append, hget] using!
     (List.take_concat_get hk).symm
 
 def UnaryGridValueInvariant {m : ℕ}
@@ -1217,11 +1217,11 @@ theorem machineUnaryGridGeneratorIterate_semanticCode {m : ℕ}
         rw [unaryGridSemanticStateAt_candidate_eq_prefix hm f hklt]
         have hprefixBound := binaryListCode_take_reverse_length_le
           rationalEntryBinaryCode (unaryGridValues f) (k + 1)
-        simpa only [unaryGridPrefix] using hprefixBound.trans hbound
+        simpa only [unaryGridPrefix] using! hprefixBound.trans hbound
       have hstep := machineUnaryGridGeneratorStep_semanticCode entry f
         bound payload (unaryGridSemanticStateAt hm f k) hentry hlarge
       simpa only [unaryGridSemanticStateAt,
-        Function.iterate_succ_apply'] using hstep
+        Function.iterate_succ_apply'] using! hstep
 
 theorem machineUnaryGridGeneratorReversedCode_encode_of_bound {m : ℕ}
     (entry : List Bool → List Bool) (f : Fin m → Fin m → ℚ)

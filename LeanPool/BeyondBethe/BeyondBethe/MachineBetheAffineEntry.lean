@@ -127,7 +127,7 @@ theorem machineBetheAffineEntryRest_mem_FP :
 
 theorem machineBetheAffineEntryRow_mem_FP :
     machineBetheAffineEntryRow ∈ FP := by
-  simpa only [machineBetheAffineEntryRow] using
+  simpa only [machineBetheAffineEntryRow] using!
     machineCompose_mem_FP machineBetheAffineEntryRest_mem_FP
       machinePairFirst_mem_FP
 
@@ -135,14 +135,14 @@ theorem machineBetheAffineEntryColumn_mem_FP :
     machineBetheAffineEntryColumn ∈ FP := by
   have htail := machineCompose_mem_FP machineBetheAffineEntryRest_mem_FP
     machinePairSecond_mem_FP
-  simpa only [machineBetheAffineEntryColumn] using
+  simpa only [machineBetheAffineEntryColumn] using!
     machineCompose_mem_FP htail machinePairFirst_mem_FP
 
 theorem machineBetheAffineEntryVector_mem_FP :
     machineBetheAffineEntryVector ∈ FP := by
   have htail := machineCompose_mem_FP machineBetheAffineEntryRest_mem_FP
     machinePairSecond_mem_FP
-  simpa only [machineBetheAffineEntryVector] using
+  simpa only [machineBetheAffineEntryVector] using!
     machineCompose_mem_FP htail machinePairSecond_mem_FP
 
 theorem machineBetheAffineEntryLastRowBit_mem_FP :
@@ -166,7 +166,7 @@ theorem machineBetheAffineEntryFlatInput_mem_FP :
 
 theorem machineBetheAffineEntryUpperLeft_mem_FP :
     machineBetheAffineEntryUpperLeft ∈ FP := by
-  simpa only [machineBetheAffineEntryUpperLeft] using
+  simpa only [machineBetheAffineEntryUpperLeft] using!
     machineCompose_mem_FP machineBetheAffineEntryFlatInput_mem_FP
       machineBetheFlatEntryRawCode_mem_FP
 
@@ -186,13 +186,13 @@ theorem machineBetheAffineEntryColumnSumInput_mem_FP :
 
 theorem machineBetheAffineEntryRowSum_mem_FP :
     machineBetheAffineEntryRowSum ∈ FP := by
-  simpa only [machineBetheAffineEntryRowSum] using
+  simpa only [machineBetheAffineEntryRowSum] using!
     machineCompose_mem_FP machineBetheAffineEntryRowSumInput_mem_FP
       machineBetheLineSumRawCode_mem_FP
 
 theorem machineBetheAffineEntryColumnSum_mem_FP :
     machineBetheAffineEntryColumnSum ∈ FP := by
-  simpa only [machineBetheAffineEntryColumnSum] using
+  simpa only [machineBetheAffineEntryColumnSum] using!
     machineCompose_mem_FP machineBetheAffineEntryColumnSumInput_mem_FP
       machineBetheLineSumRawCode_mem_FP
 
@@ -200,7 +200,7 @@ theorem machineRawRatSubCode_mem_FP : machineRawRatSubCode ∈ FP := by
   have hneg := machineCompose_mem_FP machinePairSecond_mem_FP
     machineRawRatNegCode_mem_FP
   have hinput := machinePair_mem_FP machinePairFirst_mem_FP hneg
-  simpa only [machineRawRatSubCode] using
+  simpa only [machineRawRatSubCode] using!
     machineCompose_mem_FP hinput machineRawRatAddCode_mem_FP
 
 theorem machineBetheAffineEntryLastColumn_mem_FP :
@@ -208,7 +208,7 @@ theorem machineBetheAffineEntryLastColumn_mem_FP :
   have hinput := machinePair_mem_FP
     (machineConst_mem_FP (rawRatBinaryCode RawRat.one))
     machineBetheAffineEntryRowSum_mem_FP
-  simpa only [machineBetheAffineEntryLastColumn] using
+  simpa only [machineBetheAffineEntryLastColumn] using!
     machineCompose_mem_FP hinput machineRawRatSubCode_mem_FP
 
 theorem machineBetheAffineEntryLastRow_mem_FP :
@@ -216,18 +216,18 @@ theorem machineBetheAffineEntryLastRow_mem_FP :
   have hinput := machinePair_mem_FP
     (machineConst_mem_FP (rawRatBinaryCode RawRat.one))
     machineBetheAffineEntryColumnSum_mem_FP
-  simpa only [machineBetheAffineEntryLastRow] using
+  simpa only [machineBetheAffineEntryLastRow] using!
     machineCompose_mem_FP hinput machineRawRatSubCode_mem_FP
 
 theorem machineBetheAffineEntryTotal_mem_FP :
     machineBetheAffineEntryTotal ∈ FP := by
-  simpa only [machineBetheAffineEntryTotal] using
+  simpa only [machineBetheAffineEntryTotal] using!
     machineCompose_mem_FP machineBetheAffineEntryVector_mem_FP
       machineRationalVectorRawSumCode_mem_FP
 
 theorem machineBetheAffineEntryDimensionBits_mem_FP :
     machineBetheAffineEntryDimensionBits ∈ FP := by
-  simpa only [machineBetheAffineEntryDimensionBits] using
+  simpa only [machineBetheAffineEntryDimensionBits] using!
     machineCompose_mem_FP machineBetheAffineEntryDimension_mem_FP
       machineLengthBits_mem_FP
 
@@ -238,7 +238,7 @@ theorem machineBetheAffineEntryDimensionMinusOneInteger_mem_FP :
     machineNaturalIntegerCode_mem_FP
   have hinput := machinePair_mem_FP hnat
     (machineConst_mem_FP (integerBinaryCode (-1)))
-  simpa only [machineBetheAffineEntryDimensionMinusOneInteger] using
+  simpa only [machineBetheAffineEntryDimensionMinusOneInteger] using!
     machineCompose_mem_FP hinput machineIntegerAddCode_mem_FP
 
 theorem machineBetheAffineEntryDimensionMinusOneRaw_mem_FP :
@@ -251,7 +251,7 @@ theorem machineBetheAffineEntryCorner_mem_FP :
     machineBetheAffineEntryCorner ∈ FP := by
   have hinput := machinePair_mem_FP machineBetheAffineEntryTotal_mem_FP
     machineBetheAffineEntryDimensionMinusOneRaw_mem_FP
-  simpa only [machineBetheAffineEntryCorner] using
+  simpa only [machineBetheAffineEntryCorner] using!
     machineCompose_mem_FP hinput machineRawRatSubCode_mem_FP
 
 theorem machineBetheAffineEntryRawCode_mem_FP :
@@ -317,7 +317,7 @@ def rawBetheAffineEntry {m : ℕ} (y : Fin (m * m) → ℚ)
       intro h
       apply hi
       apply Fin.ext
-      simpa using h
+      simpa using! h
     simp [hi, hval]
 
 @[simp] theorem machineBetheAffineEntryLastColumnBit_encode {m : ℕ}
@@ -338,7 +338,7 @@ def rawBetheAffineEntry {m : ℕ} (y : Fin (m * m) → ℚ)
       intro h
       apply hj
       apply Fin.ext
-      simpa using h
+      simpa using! h
     simp [hj, hval]
 
 @[simp] theorem machineRawRatSubCode_encode (q r : RawRat) :
@@ -427,7 +427,7 @@ def rawBetheAffineEntry {m : ℕ} (y : Fin (m * m) → ℚ)
       rawRatBinaryCode (rawRatListSum RawRat.zero (List.ofFn y)) := by
   rw [machineBetheAffineEntryTotal,
     machineBetheAffineEntryVector_encode]
-  simpa only [rationalFiniteVectorCode, rationalVectorBinaryCode] using
+  simpa only [rationalFiniteVectorCode, rationalVectorBinaryCode] using!
     machineRationalVectorRawSumCode_encode y
 
 @[simp] theorem machineBetheAffineEntryCorner_encode {m : ℕ}

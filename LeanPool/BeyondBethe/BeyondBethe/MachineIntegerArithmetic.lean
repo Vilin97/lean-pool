@@ -108,29 +108,29 @@ def machineIntegerNegCode (word : List Bool) : List Bool :=
 
 theorem machineCanonicalIntegerFromSignedAbs_mem_FP :
     machineCanonicalIntegerFromSignedAbs ∈ Complexity.FP := by
-  simpa only [machineCanonicalIntegerFromSignedAbs] using
+  simpa only [machineCanonicalIntegerFromSignedAbs] using!
     machineIfEmpty_mem_FP machinePairSecond_mem_FP
       (machineConst_mem_FP [false]) machineIntegerCodeFromSignedAbs_mem_FP
 
 theorem machineIntegerSignedMagnitude_mem_FP :
     machineIntegerSignedMagnitude ∈ Complexity.FP := by
-  simpa only [machineIntegerSignedMagnitude] using
+  simpa only [machineIntegerSignedMagnitude] using!
     machinePair_mem_FP machineHeadBit_mem_FP machineIntegerNatAbsBits_mem_FP
 
 theorem machineSignedLeftSign_mem_FP : machineSignedLeftSign ∈ Complexity.FP := by
-  simpa only [machineSignedLeftSign] using
+  simpa only [machineSignedLeftSign] using!
     machineCompose_mem_FP machinePairFirst_mem_FP machinePairFirst_mem_FP
 
 theorem machineSignedLeftAbs_mem_FP : machineSignedLeftAbs ∈ Complexity.FP := by
-  simpa only [machineSignedLeftAbs] using
+  simpa only [machineSignedLeftAbs] using!
     machineCompose_mem_FP machinePairFirst_mem_FP machinePairSecond_mem_FP
 
 theorem machineSignedRightSign_mem_FP : machineSignedRightSign ∈ Complexity.FP := by
-  simpa only [machineSignedRightSign] using
+  simpa only [machineSignedRightSign] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineSignedRightAbs_mem_FP : machineSignedRightAbs ∈ Complexity.FP := by
-  simpa only [machineSignedRightAbs] using
+  simpa only [machineSignedRightAbs] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairSecond_mem_FP
 
 theorem machineSignedSameSign_mem_FP : machineSignedSameSign ∈ Complexity.FP := by
@@ -141,27 +141,27 @@ theorem machineSignedSameSign_mem_FP : machineSignedSameSign ∈ Complexity.FP :
 theorem machineSignedAbsSum_mem_FP : machineSignedAbsSum ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineSignedLeftAbs_mem_FP
     machineSignedRightAbs_mem_FP
-  simpa only [machineSignedAbsSum] using
+  simpa only [machineSignedAbsSum] using!
     machineCompose_mem_FP hpair machineBinaryAddBits_mem_FP
 
 theorem machineSignedLeftAbsGe_mem_FP : machineSignedLeftAbsGe ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineSignedRightAbs_mem_FP
     machineSignedLeftAbs_mem_FP
-  simpa only [machineSignedLeftAbsGe] using
+  simpa only [machineSignedLeftAbsGe] using!
     machineCompose_mem_FP hpair machineBinaryNatLeBit_mem_FP
 
 theorem machineSignedAbsLeftDiff_mem_FP :
     machineSignedAbsLeftDiff ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineSignedLeftAbs_mem_FP
     machineSignedRightAbs_mem_FP
-  simpa only [machineSignedAbsLeftDiff] using
+  simpa only [machineSignedAbsLeftDiff] using!
     machineCompose_mem_FP hpair machineBinarySubBits_mem_FP
 
 theorem machineSignedAbsRightDiff_mem_FP :
     machineSignedAbsRightDiff ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineSignedRightAbs_mem_FP
     machineSignedLeftAbs_mem_FP
-  simpa only [machineSignedAbsRightDiff] using
+  simpa only [machineSignedAbsRightDiff] using!
     machineCompose_mem_FP hpair machineBinarySubBits_mem_FP
 
 theorem machineSignedDifferentAbs_mem_FP :
@@ -181,7 +181,7 @@ theorem machineSignedMagnitudeAdd_mem_FP :
   have hmagnitude := machineIfHead_mem_FP machineSignedSameSign_mem_FP
     machineSignedAbsSum_mem_FP machineSignedDifferentAbs_mem_FP
   have hpair := machinePair_mem_FP hsign hmagnitude
-  simpa only [machineSignedMagnitudeAdd] using
+  simpa only [machineSignedMagnitudeAdd] using!
     machineCompose_mem_FP hpair machineCanonicalIntegerFromSignedAbs_mem_FP
 
 theorem machineIntegerAddCode_mem_FP : machineIntegerAddCode ∈ Complexity.FP := by
@@ -190,14 +190,14 @@ theorem machineIntegerAddCode_mem_FP : machineIntegerAddCode ∈ Complexity.FP :
   have hright := machineCompose_mem_FP machinePairSecond_mem_FP
     machineIntegerSignedMagnitude_mem_FP
   have hpair := machinePair_mem_FP hleft hright
-  simpa only [machineIntegerAddCode] using
+  simpa only [machineIntegerAddCode] using!
     machineCompose_mem_FP hpair machineSignedMagnitudeAdd_mem_FP
 
 theorem machineSignedAbsProduct_mem_FP :
     machineSignedAbsProduct ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineSignedLeftAbs_mem_FP
     machineSignedRightAbs_mem_FP
-  simpa only [machineSignedAbsProduct] using
+  simpa only [machineSignedAbsProduct] using!
     machineCompose_mem_FP hpair machineBinaryMulBits_mem_FP
 
 theorem machineSignedProductSign_mem_FP :
@@ -209,7 +209,7 @@ theorem machineSignedMagnitudeMul_mem_FP :
     machineSignedMagnitudeMul ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineSignedProductSign_mem_FP
     machineSignedAbsProduct_mem_FP
-  simpa only [machineSignedMagnitudeMul] using
+  simpa only [machineSignedMagnitudeMul] using!
     machineCompose_mem_FP hpair machineCanonicalIntegerFromSignedAbs_mem_FP
 
 theorem machineIntegerMulCode_mem_FP : machineIntegerMulCode ∈ Complexity.FP := by
@@ -218,7 +218,7 @@ theorem machineIntegerMulCode_mem_FP : machineIntegerMulCode ∈ Complexity.FP :
   have hright := machineCompose_mem_FP machinePairSecond_mem_FP
     machineIntegerSignedMagnitude_mem_FP
   have hpair := machinePair_mem_FP hleft hright
-  simpa only [machineIntegerMulCode] using
+  simpa only [machineIntegerMulCode] using!
     machineCompose_mem_FP hpair machineSignedMagnitudeMul_mem_FP
 
 theorem machineIntegerNegCode_mem_FP : machineIntegerNegCode ∈ Complexity.FP := by
@@ -227,7 +227,7 @@ theorem machineIntegerNegCode_mem_FP : machineIntegerNegCode ∈ Complexity.FP :
   have hsign := machineNotBit_mem_FP hsignProjection
   have habs := machineCompose_mem_FP hsigned machinePairSecond_mem_FP
   have hpair := machinePair_mem_FP hsign habs
-  simpa only [machineIntegerNegCode] using
+  simpa only [machineIntegerNegCode] using!
     machineCompose_mem_FP hpair machineCanonicalIntegerFromSignedAbs_mem_FP
 
 @[simp] theorem machineCanonicalIntegerFromSignedAbs_pair
@@ -408,7 +408,7 @@ theorem machineIntegerNegCode_encode (z : ℤ) :
       rw [machineIntegerNegCode, machineIntegerSignedMagnitude_encode]
       simp only [machinePairFirst_pair, machinePairSecond_pair,
         machineNotBit_one, Bool.not_true]
-      simpa only [signedMagnitudeValue, ite_false] using
+      simpa only [signedMagnitudeValue, ite_false] using!
         machineCanonicalIntegerFromSignedAbs_pair false (n + 1)
 
 end BeyondBethe

@@ -44,30 +44,30 @@ theorem machineMatrixDimensionZeroBit_mem_FP :
     machineMatrixDimensionZeroBit ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineMatrixDimensionWord_mem_FP
     (machineConst_mem_FP [])
-  simpa only [machineMatrixDimensionZeroBit] using
+  simpa only [machineMatrixDimensionZeroBit] using!
     machineCompose_mem_FP hpair machineBinaryNatEqBit_mem_FP
 
 theorem machineMatrixDimensionOneBit_mem_FP :
     machineMatrixDimensionOneBit ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineMatrixDimensionWord_mem_FP
     (machineConst_mem_FP [true])
-  simpa only [machineMatrixDimensionOneBit] using
+  simpa only [machineMatrixDimensionOneBit] using!
     machineCompose_mem_FP hpair machineBinaryNatEqBit_mem_FP
 
 theorem machineMatrixFirstRowCode_mem_FP :
     machineMatrixFirstRowCode ∈ Complexity.FP := by
-  simpa only [machineMatrixFirstRowCode, machineListHead] using
+  simpa only [machineMatrixFirstRowCode, machineListHead] using!
     machineCompose_mem_FP machineMatrixRowsWord_mem_FP machinePairFirst_mem_FP
 
 theorem machineMatrixFirstEntryCode_mem_FP :
     machineMatrixFirstEntryCode ∈ Complexity.FP := by
-  simpa only [machineMatrixFirstEntryCode, machineListHead] using
+  simpa only [machineMatrixFirstEntryCode, machineListHead] using!
     machineCompose_mem_FP machineMatrixFirstRowCode_mem_FP
       machinePairFirst_mem_FP
 
 theorem machineMatrixFirstEntryOutput_mem_FP :
     machineMatrixFirstEntryOutput ∈ Complexity.FP := by
-  simpa only [machineMatrixFirstEntryOutput] using
+  simpa only [machineMatrixFirstEntryOutput] using!
     machineCompose_mem_FP machineMatrixFirstEntryCode_mem_FP
       machineRationalBinaryCode_mem_FP
 

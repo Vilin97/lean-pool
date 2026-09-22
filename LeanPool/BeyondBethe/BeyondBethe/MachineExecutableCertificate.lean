@@ -61,7 +61,7 @@ theorem machineExecutableOptimizerCertificateExpGuard_fits
       m B hBpos hBupper).trans
       (by simpa only [machineOptimizerCertificateExpGuard,
         machineCertificateSourceWord_pair,
-        machineIteratedBinaryWidth_length, source] using
+        machineIteratedBinaryWidth_length, source] using!
           explicitCertificateExpStepBound_le_guardWidth hsource)
 
 /-- Correctness of a raw certificate transducer on the concrete outputs of
@@ -85,7 +85,7 @@ def machineExecutableCertificateValueRawCode : List Bool → List Bool :=
 
 theorem machineExecutableCertificateValueRawCode_mem_FP :
     machineExecutableCertificateValueRawCode ∈ FP := by
-  simpa only [machineExecutableCertificateValueRawCode] using
+  simpa only [machineExecutableCertificateValueRawCode] using!
     machineCertificateValueRawCode_mem_FP
       machineExplicitMatchingGainRawCode_mem_FP
       machineOptimizerCertificateExpGuard_mem_FP
@@ -96,7 +96,7 @@ theorem machineExecutableCertificateValueRawCode_realizes_onPositive :
   intro m B hBpos hBupper
   simpa only [machineExecutableCertificateValueRawCode,
     executableLargeOptimizerOutput, executableScannedOptimizerOutput,
-    Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using
+    Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using!
     machineCertificateValueRawCode_encode
       (gainMachine := machineExplicitMatchingGainRawCode)
       (guardMachine := machineOptimizerCertificateExpGuard)

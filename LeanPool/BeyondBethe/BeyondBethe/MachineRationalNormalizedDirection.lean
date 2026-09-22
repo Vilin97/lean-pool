@@ -33,7 +33,7 @@ theorem machineRationalNormalizedDirectionCode_mem_FP :
     machineRationalNormalizedDirectionCode ∈ FP := by
   have hinput := machinePair_mem_FP
     machineRationalVectorL1RawCode_mem_FP id_mem_FP
-  simpa only [machineRationalNormalizedDirectionCode] using
+  simpa only [machineRationalNormalizedDirectionCode] using!
     machineCompose_mem_FP hinput machineRationalRowDivide_mem_FP
 
 theorem rationalRowDivideValues_l1_ofFn {d : ℕ}

@@ -70,19 +70,19 @@ theorem machineMateAllSomeRemaining_mem_FP :
 
 theorem machineMateAllSomeRulerState_mem_FP :
     machineMateAllSomeRulerState ∈ Complexity.FP := by
-  simpa only [machineMateAllSomeRulerState] using
+  simpa only [machineMateAllSomeRulerState] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineMateAllSomeOk_mem_FP :
     machineMateAllSomeOk ∈ Complexity.FP := by
-  simpa only [machineMateAllSomeOk] using
+  simpa only [machineMateAllSomeOk] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairSecond_mem_FP
 
 theorem machineMateAllSomeCurrentBit_mem_FP :
     machineMateAllSomeCurrentBit ∈ Complexity.FP := by
   have hhead := machineCompose_mem_FP machineMateAllSomeRemaining_mem_FP
     machineListHead_mem_FP
-  simpa only [machineMateAllSomeCurrentBit] using
+  simpa only [machineMateAllSomeCurrentBit] using!
     machineCompose_mem_FP hhead machineHeadBit_mem_FP
 
 theorem machineMateAllSomeAdvance_mem_FP :
@@ -150,8 +150,8 @@ theorem machineMateAllSomeInit_bound (word : List Bool) :
   dsimp only [MachineMateAllSomeStateBound]
   refine ⟨?_, ?_, ?_, ?_⟩
   · simp [machineMateAllSomeInit]
-  · simpa [machineMateAllSomeInit] using machinePairSecond_length_le word
-  · simpa [machineMateAllSomeInit] using machinePairFirst_length_le word
+  · simpa [machineMateAllSomeInit] using! machinePairSecond_length_le word
+  · simpa [machineMateAllSomeInit] using! machinePairFirst_length_le word
   · simp [machineMateAllSomeInit]
 
 theorem machineMateAllSomeStep_bound {word state : List Bool}
@@ -168,7 +168,7 @@ theorem machineMateAllSomeStep_bound {word state : List Bool}
       dsimp only [MachineMateAllSomeStateBound]
       refine ⟨?_, ?_, ?_, ?_⟩
       · simp
-      · simpa only [machineMateAllSomeRemaining_pack] using
+      · simpa only [machineMateAllSomeRemaining_pack] using!
           (machinePairSecond_length_le
             (machineMateAllSomeRemaining state)).trans hremaining
       · rw [hrulerEq] at hruler
@@ -181,10 +181,10 @@ theorem machineMateAllSomeStep_bound {word state : List Bool}
             (machineAndBit (machineMateAllSomeOk state)
               (machineMateAllSomeCurrentBit state)).length ≤ 1 := by
             simpa only [machineAndBit, machineMateAllSomeCurrentBit_length,
-              List.length_cons, List.length_nil, Nat.zero_add, max_self] using
+              List.length_cons, List.length_nil, Nat.zero_add, max_self] using!
               machineIfHead_length_le_max (machineMateAllSomeOk state)
                 (machineMateAllSomeCurrentBit state) [false]
-        simpa only [machineMateAllSomeOk_pack] using
+        simpa only [machineMateAllSomeOk_pack] using!
           hbit.trans (by omega : 1 ≤ word.length + 1)
 
 theorem machineMateAllSomeIterate_bound (word : List Bool) : ∀ iterations,
@@ -193,7 +193,7 @@ theorem machineMateAllSomeIterate_bound (word : List Bool) : ∀ iterations,
         (machineMateAllSomeInit word)) := by
   intro iterations
   induction iterations with
-  | zero => simpa using machineMateAllSomeInit_bound word
+  | zero => simpa using! machineMateAllSomeInit_bound word
   | succ iterations ih =>
       rw [Function.iterate_succ_apply']
       exact machineMateAllSomeStep_bound ih
@@ -214,7 +214,7 @@ theorem machineMateAllSomeIterate_length_le_width
 
 theorem machineMateAllSomeFinalState_mem_FP :
     machineMateAllSomeFinalState ∈ Complexity.FP := by
-  simpa only [machineMateAllSomeFinalState] using
+  simpa only [machineMateAllSomeFinalState] using!
     Cobham.iterate_mem_FP machineMateAllSomeStep_mem_FP
       machineMateAllSomeInit_mem_FP machineMateAllSomeInputRuler_mem_FP
       machineMateAllSomeWidth_mem_FP
@@ -222,7 +222,7 @@ theorem machineMateAllSomeFinalState_mem_FP :
 
 theorem machineMateAllSomeBit_mem_FP :
     machineMateAllSomeBit ∈ Complexity.FP := by
-  simpa only [machineMateAllSomeBit] using
+  simpa only [machineMateAllSomeBit] using!
     machineCompose_mem_FP machineMateAllSomeFinalState_mem_FP
       machineMateAllSomeOk_mem_FP
 

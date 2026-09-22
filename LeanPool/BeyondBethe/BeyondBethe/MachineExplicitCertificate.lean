@@ -23,7 +23,7 @@ def machineExplicitCertificateValueRawCode : List Bool → List Bool :=
 
 theorem machineExplicitCertificateValueRawCode_mem_FP :
     machineExplicitCertificateValueRawCode ∈ Complexity.FP := by
-  simpa only [machineExplicitCertificateValueRawCode] using
+  simpa only [machineExplicitCertificateValueRawCode] using!
     machineCertificateValueRawCode_mem_FP
       machineExplicitMatchingGainRawCode_mem_FP
       machineOptimizerCertificateExpGuard_mem_FP
@@ -31,7 +31,7 @@ theorem machineExplicitCertificateValueRawCode_mem_FP :
 theorem machineExplicitCertificateValueRawCode_realizes_onPositive :
     CertificateEvaluatorStringRealizesOnPositiveNormalized
       machineExplicitCertificateValueRawCode := by
-  simpa only [machineExplicitCertificateValueRawCode] using
+  simpa only [machineExplicitCertificateValueRawCode] using!
     machineCertificateValueRawCode_realizes_onPositive
       machineExplicitMatchingGainRawCode_realizes
       machineOptimizerCertificateExpGuard_fits_onPositiveNormalized

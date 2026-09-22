@@ -49,7 +49,7 @@ theorem machineSmoothedMatrixInputCode_mem_FP :
 
 theorem machineSmoothedMatrixNormalizedCode_mem_FP :
     machineSmoothedMatrixNormalizedCode ∈ Complexity.FP := by
-  simpa only [machineSmoothedMatrixNormalizedCode] using
+  simpa only [machineSmoothedMatrixNormalizedCode] using!
     machineCompose_mem_FP machineSmoothedMatrixInputCode_mem_FP
       machineMatrixNormalizeEntries_mem_FP
 
@@ -57,14 +57,14 @@ theorem machineSmoothedMatrixDeltaRawCode_mem_FP :
     machineSmoothedMatrixDeltaRawCode ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineSmoothedMatrixChiRawCode_mem_FP
     machineSmoothedMatrixNormalizedCode_mem_FP
-  simpa only [machineSmoothedMatrixDeltaRawCode] using
+  simpa only [machineSmoothedMatrixDeltaRawCode] using!
     machineCompose_mem_FP hpair machineSmoothingDeltaRawCode_mem_FP
 
 theorem machineSmoothedMatrixCode_mem_FP :
     machineSmoothedMatrixCode ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineSmoothedMatrixDeltaRawCode_mem_FP
     machineSmoothedMatrixNormalizedCode_mem_FP
-  simpa only [machineSmoothedMatrixCode] using
+  simpa only [machineSmoothedMatrixCode] using!
     machineCompose_mem_FP hpair machineMatrixAddDeltaEntries_mem_FP
 
 @[simp] theorem machineSmoothedMatrixNormalizedCode_encode {n : ℕ}

@@ -42,7 +42,7 @@ theorem machineRationalZeroVectorCode_mem_FP :
   have hpayload := machinePair_mem_FP id_mem_FP
     (machinePair_mem_FP (machineConst_mem_FP machineRationalZeroEntry)
       (machineConst_mem_FP []))
-  simpa only [machineRationalZeroVectorCode] using
+  simpa only [machineRationalZeroVectorCode] using!
     machineCompose_mem_FP hpayload machineRepeatPairCode_mem_FP
 
 theorem machineRationalZeroMatrixRowsCode_mem_FP :
@@ -50,7 +50,7 @@ theorem machineRationalZeroMatrixRowsCode_mem_FP :
   have hpayload := machinePair_mem_FP id_mem_FP
     (machinePair_mem_FP machineRationalZeroVectorCode_mem_FP
       (machineConst_mem_FP []))
-  simpa only [machineRationalZeroMatrixRowsCode] using
+  simpa only [machineRationalZeroMatrixRowsCode] using!
     machineCompose_mem_FP hpayload machineRepeatPairCode_mem_FP
 
 @[simp] theorem machineRationalZeroVectorCode_encode (d : ℕ) :
@@ -113,14 +113,14 @@ theorem rationalMatrixRows_diagonalPrefix_set
     {d k : ℕ} (R : ℚ) (hk : k < d) :
     let rows := rationalMatrixRows (rationalDiagonalPrefixMatrix d k R)
     rows.set k
-        ((rows[k]'(by simpa [rows, rationalMatrixRows] using hk)).set k R) =
+        ((rows[k]'(by simpa [rows, rationalMatrixRows] using! hk)).set k R) =
       rationalMatrixRows (rationalDiagonalPrefixMatrix d (k + 1) R) := by
   dsimp only
   apply List.ext_getElem
   · simp [rationalMatrixRows]
   · intro i hiLeft hiRight
     have hi : i < d := by
-      simpa [rationalMatrixRows] using hiRight
+      simpa [rationalMatrixRows] using! hiRight
     by_cases hik : i = k
     · subst i
       simp only [List.getElem_set, ↓reduceIte]
@@ -128,7 +128,7 @@ theorem rationalMatrixRows_diagonalPrefix_set
       · simp [rationalMatrixRows]
       · intro j hjLeft hjRight
         have hj : j < d := by
-          simpa [rationalMatrixRows] using hjRight
+          simpa [rationalMatrixRows] using! hjRight
         by_cases hjk : j = k
         · subst j
           simp [rationalMatrixRows, rationalDiagonalPrefixMatrix]
@@ -140,7 +140,7 @@ theorem rationalMatrixRows_diagonalPrefix_set
       apply List.ext_getElem
       · simp
       · intro j hjLeft hjRight
-        have hj : j < d := by simpa using hjRight
+        have hj : j < d := by simpa using! hjRight
         simp only [List.getElem_ofFn]
         by_cases hij : i = j
         · subst j
@@ -236,7 +236,7 @@ theorem machineDiagonalBasisRadiusEntry_mem_FP :
 
 theorem machineDiagonalBasisBound_mem_FP :
     machineDiagonalBasisBound ∈ FP := by
-  simpa only [machineDiagonalBasisBound] using
+  simpa only [machineDiagonalBasisBound] using!
     machineCompose_mem_FP machineBinaryMulWidth_mem_FP
       machineBinaryMulWidth_mem_FP
 
@@ -245,32 +245,32 @@ theorem machineDiagonalBasisIndex_mem_FP :
 
 theorem machineDiagonalBasisMatrix_mem_FP :
     machineDiagonalBasisMatrix ∈ FP := by
-  simpa only [machineDiagonalBasisMatrix] using
+  simpa only [machineDiagonalBasisMatrix] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineDiagonalBasisRadius_mem_FP :
     machineDiagonalBasisRadius ∈ FP := by
   have hsecondTwo := machineCompose_mem_FP machinePairSecond_mem_FP
     machinePairSecond_mem_FP
-  simpa only [machineDiagonalBasisRadius] using
+  simpa only [machineDiagonalBasisRadius] using!
     machineCompose_mem_FP hsecondTwo machinePairFirst_mem_FP
 
 theorem machineDiagonalBasisStateBound_mem_FP :
     machineDiagonalBasisStateBound ∈ FP := by
   have hsecondTwo := machineCompose_mem_FP machinePairSecond_mem_FP
     machinePairSecond_mem_FP
-  simpa only [machineDiagonalBasisStateBound] using
+  simpa only [machineDiagonalBasisStateBound] using!
     machineCompose_mem_FP hsecondTwo machinePairSecond_mem_FP
 
 theorem machineDiagonalBasisNextIndexCandidate_mem_FP :
     machineDiagonalBasisNextIndexCandidate ∈ FP := by
-  simpa only [machineDiagonalBasisNextIndexCandidate] using
+  simpa only [machineDiagonalBasisNextIndexCandidate] using!
     machineAppend_mem_FP (machineConst_mem_FP [true])
       machineDiagonalBasisIndex_mem_FP
 
 theorem machineDiagonalBasisNextIndex_mem_FP :
     machineDiagonalBasisNextIndex ∈ FP := by
-  simpa only [machineDiagonalBasisNextIndex] using
+  simpa only [machineDiagonalBasisNextIndex] using!
     machineTake_mem_FP machineDiagonalBasisStateBound_mem_FP
       machineDiagonalBasisNextIndexCandidate_mem_FP
 
@@ -280,12 +280,12 @@ theorem machineDiagonalBasisMatrixCandidate_mem_FP :
     (machinePair_mem_FP machineDiagonalBasisIndex_mem_FP
       (machinePair_mem_FP machineDiagonalBasisRadius_mem_FP
         machineDiagonalBasisMatrix_mem_FP))
-  simpa only [machineDiagonalBasisMatrixCandidate] using
+  simpa only [machineDiagonalBasisMatrixCandidate] using!
     machineCompose_mem_FP hpayload machineNestedMatrixUpdateAtUnary_mem_FP
 
 theorem machineDiagonalBasisNextMatrix_mem_FP :
     machineDiagonalBasisNextMatrix ∈ FP := by
-  simpa only [machineDiagonalBasisNextMatrix] using
+  simpa only [machineDiagonalBasisNextMatrix] using!
     machineTake_mem_FP machineDiagonalBasisStateBound_mem_FP
       machineDiagonalBasisMatrixCandidate_mem_FP
 
@@ -299,7 +299,7 @@ theorem machineDiagonalBasisInitialMatrix_mem_FP :
     machineDiagonalBasisInitialMatrix ∈ FP := by
   have hzero := machineCompose_mem_FP machineDiagonalBasisRuler_mem_FP
     machineRationalZeroMatrixRowsCode_mem_FP
-  simpa only [machineDiagonalBasisInitialMatrix] using
+  simpa only [machineDiagonalBasisInitialMatrix] using!
     machineTake_mem_FP machineDiagonalBasisBound_mem_FP hzero
 
 theorem machineDiagonalBasisInit_mem_FP : machineDiagonalBasisInit ∈ FP :=
@@ -401,7 +401,7 @@ theorem machineDiagonalBasisFinalState_mem_FP :
 
 theorem machineDiagonalBasisRowsCode_mem_FP :
     machineDiagonalBasisRowsCode ∈ FP := by
-  simpa only [machineDiagonalBasisRowsCode] using
+  simpa only [machineDiagonalBasisRowsCode] using!
     machineCompose_mem_FP machineDiagonalBasisFinalState_mem_FP
       machineDiagonalBasisMatrix_mem_FP
 
@@ -576,7 +576,7 @@ theorem machineDiagonalBasisStep_semantics
       machineDiagonalBasisCanonicalState,
       machineDiagonalBasisIndex_pack, machineDiagonalBasisMatrix_pack,
       machineDiagonalBasisRadius_pack]
-    simpa only [rationalSquareMatrixRowsCode] using
+    simpa only [rationalSquareMatrixRowsCode] using!
       congrArg (fun word ↦ word.take
         (machineDiagonalBasisBound
           (machineDiagonalBasisCanonicalInput d R)).length) hupdate |>.trans
@@ -600,7 +600,7 @@ theorem machineDiagonalBasisStep_semantics
         true :: List.replicate k true := by
       rw [List.replicate_succ]
     rw [← hrep]
-    exact List.take_of_length_le (by simpa using hindexFit)
+    exact List.take_of_length_le (by simpa using! hindexFit)
   simp only [machineDiagonalBasisStep, machineDiagonalBasisCanonicalState,
     machineDiagonalBasisNextIndex, machineDiagonalBasisNextIndexCandidate,
     machineDiagonalBasisIndex_pack, machineDiagonalBasisNextMatrix,
@@ -655,7 +655,7 @@ theorem machineRationalBallStateCode_mem_FP :
     machineLengthBits_mem_FP
   have hcenter := machineCompose_mem_FP machineDiagonalBasisRuler_mem_FP
     machineRationalZeroVectorCode_mem_FP
-  simpa only [machineRationalBallStateCode] using
+  simpa only [machineRationalBallStateCode] using!
     machinePair_mem_FP hdim
       (machinePair_mem_FP hcenter machineDiagonalBasisRowsCode_mem_FP)
 

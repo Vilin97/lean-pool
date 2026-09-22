@@ -86,10 +86,10 @@ def machineBinarySubBits (word : List Bool) : List Bool :=
     (machineTrimHighZeros (machineBinarySubAccRev state).reverse)
 
 theorem machineBinarySubX_mem_FP : machineBinarySubX ∈ Complexity.FP := by
-  simpa only [machineBinarySubX] using machinePairFirst_mem_FP
+  simpa only [machineBinarySubX] using! machinePairFirst_mem_FP
 
 theorem machineBinarySubY_mem_FP : machineBinarySubY ∈ Complexity.FP := by
-  simpa only [machineBinarySubY] using
+  simpa only [machineBinarySubY] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineBinarySubBorrow_mem_FP :
@@ -97,7 +97,7 @@ theorem machineBinarySubBorrow_mem_FP :
   have hsecond2 : (fun word =>
       machinePairSecond (machinePairSecond word)) ∈ Complexity.FP :=
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairSecond_mem_FP
-  simpa only [machineBinarySubBorrow] using
+  simpa only [machineBinarySubBorrow] using!
     machineCompose_mem_FP hsecond2 machinePairFirst_mem_FP
 
 theorem machineBinarySubAccRev_mem_FP :
@@ -105,7 +105,7 @@ theorem machineBinarySubAccRev_mem_FP :
   have hsecond2 : (fun word =>
       machinePairSecond (machinePairSecond word)) ∈ Complexity.FP :=
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairSecond_mem_FP
-  simpa only [machineBinarySubAccRev] using
+  simpa only [machineBinarySubAccRev] using!
     machineCompose_mem_FP hsecond2 machinePairSecond_mem_FP
 
 theorem machineBinarySubPack_mem_FP
@@ -179,7 +179,7 @@ theorem machineBinarySubWidth_mem_FP :
   have hpadded : padded ∈ Complexity.FP :=
     machineAppend_mem_FP (machineConst_mem_FP (List.replicate 8 false))
       id_mem_FP
-  simpa only [machineBinarySubWidth, padded] using
+  simpa only [machineBinarySubWidth, padded] using!
     Cobham.mulLenFn_mem_FP hpadded hpadded
 
 @[simp] theorem machineBinarySubX_pack (x y borrow accRev) :
@@ -280,7 +280,7 @@ theorem machineBinarySubIterate_wellFormed_length_le
         state.length + iterations := by
   intro iterations
   induction iterations with
-  | zero => simpa using And.intro hstate (Nat.le_refl state.length)
+  | zero => simpa using! And.intro hstate (Nat.le_refl state.length)
   | succ iterations ih =>
       rw [Function.iterate_succ_apply']
       obtain ⟨hwell, hlength⟩ := ih
@@ -340,7 +340,7 @@ theorem machineBinarySubBits_mem_FP :
       machineBinarySubAccRev_mem_FP
   have hrev := machineCompose_mem_FP hacc machineReverse_mem_FP
   have htrim := machineCompose_mem_FP hrev machineTrimHighZeros_mem_FP
-  simpa only [machineBinarySubBits] using machineIfHead_mem_FP hborrow
+  simpa only [machineBinarySubBits] using! machineIfHead_mem_FP hborrow
     (machineConst_mem_FP []) htrim
 
 private theorem machineBinarySubStep_done (borrow : Bool)

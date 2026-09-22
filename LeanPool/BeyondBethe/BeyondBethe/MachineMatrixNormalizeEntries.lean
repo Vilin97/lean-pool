@@ -115,7 +115,7 @@ theorem machineMatrixNormalizePadTwenty_length (word : List Bool) :
 
 theorem machineMatrixNormalizeInputBound_mem_FP :
     machineMatrixNormalizeInputBound ∈ Complexity.FP := by
-  simpa only [machineMatrixNormalizeInputBound] using
+  simpa only [machineMatrixNormalizeInputBound] using!
     machineCompose_mem_FP machineMatrixNormalizePadTwenty_mem_FP
       machineBinaryMulWidth_mem_FP
 
@@ -125,14 +125,14 @@ theorem machineMatrixNormalizeRemaining_mem_FP :
 
 theorem machineMatrixNormalizeAccumulator_mem_FP :
     machineMatrixNormalizeAccumulator ∈ Complexity.FP := by
-  simpa only [machineMatrixNormalizeAccumulator] using
+  simpa only [machineMatrixNormalizeAccumulator] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineMatrixNormalizeScale_mem_FP :
     machineMatrixNormalizeScale ∈ Complexity.FP := by
   have htail := machineCompose_mem_FP machinePairSecond_mem_FP
     machinePairSecond_mem_FP
-  simpa only [machineMatrixNormalizeScale] using
+  simpa only [machineMatrixNormalizeScale] using!
     machineCompose_mem_FP htail machinePairFirst_mem_FP
 
 theorem machineMatrixNormalizeDimension_mem_FP :
@@ -140,7 +140,7 @@ theorem machineMatrixNormalizeDimension_mem_FP :
   have htailTwo := machineCompose_mem_FP machinePairSecond_mem_FP
     machinePairSecond_mem_FP
   have htailThree := machineCompose_mem_FP htailTwo machinePairSecond_mem_FP
-  simpa only [machineMatrixNormalizeDimension] using
+  simpa only [machineMatrixNormalizeDimension] using!
     machineCompose_mem_FP htailThree machinePairFirst_mem_FP
 
 theorem machineMatrixNormalizeBound_mem_FP :
@@ -148,12 +148,12 @@ theorem machineMatrixNormalizeBound_mem_FP :
   have htailTwo := machineCompose_mem_FP machinePairSecond_mem_FP
     machinePairSecond_mem_FP
   have htailThree := machineCompose_mem_FP htailTwo machinePairSecond_mem_FP
-  simpa only [machineMatrixNormalizeBound] using
+  simpa only [machineMatrixNormalizeBound] using!
     machineCompose_mem_FP htailThree machinePairSecond_mem_FP
 
 theorem machineMatrixNormalizeCurrentRow_mem_FP :
     machineMatrixNormalizeCurrentRow ∈ Complexity.FP := by
-  simpa only [machineMatrixNormalizeCurrentRow] using
+  simpa only [machineMatrixNormalizeCurrentRow] using!
     machineCompose_mem_FP machineMatrixNormalizeRemaining_mem_FP
       machineListHead_mem_FP
 
@@ -161,7 +161,7 @@ theorem machineMatrixNormalizeOutputRow_mem_FP :
     machineMatrixNormalizeOutputRow ∈ Complexity.FP := by
   have hinput := machinePair_mem_FP machineMatrixNormalizeScale_mem_FP
     machineMatrixNormalizeCurrentRow_mem_FP
-  simpa only [machineMatrixNormalizeOutputRow] using
+  simpa only [machineMatrixNormalizeOutputRow] using!
     machineCompose_mem_FP hinput machineRationalRowDivide_mem_FP
 
 theorem machineMatrixNormalizeCandidate_mem_FP :
@@ -171,7 +171,7 @@ theorem machineMatrixNormalizeCandidate_mem_FP :
 
 theorem machineMatrixNormalizeNextAccumulator_mem_FP :
     machineMatrixNormalizeNextAccumulator ∈ Complexity.FP := by
-  simpa only [machineMatrixNormalizeNextAccumulator] using
+  simpa only [machineMatrixNormalizeNextAccumulator] using!
     machineTake_mem_FP machineMatrixNormalizeBound_mem_FP
       machineMatrixNormalizeCandidate_mem_FP
 
@@ -255,8 +255,8 @@ theorem machineMatrixNormalizeInit_bound (word : List Bool) :
     machineMatrixNormalizeDimension_pack,
     machineMatrixNormalizeBound_pack]
   refine ⟨trivial, ?_, by simp, trivial, ?_, trivial⟩
-  · simpa only [machineMatrixRowsWord] using machinePairSecond_length_le word
-  · simpa only [machineMatrixDimensionWord] using
+  · simpa only [machineMatrixRowsWord] using! machinePairSecond_length_le word
+  · simpa only [machineMatrixDimensionWord] using!
       machinePairFirst_length_le word
 
 theorem machineMatrixNormalizeStep_bound {word state : List Bool}
@@ -324,7 +324,7 @@ theorem machineMatrixNormalizeEntries_mem_FP :
     machineMatrixNormalizeFinalState_mem_FP
     machineMatrixNormalizeAccumulator_mem_FP
   have hrows := machineCompose_mem_FP hacc machineListReverse_mem_FP
-  simpa only [machineMatrixNormalizeEntries] using
+  simpa only [machineMatrixNormalizeEntries] using!
     machinePair_mem_FP hdimension hrows
 
 /-! ## Output-size bound on canonical matrices -/
@@ -401,7 +401,7 @@ private theorem matrixNormalize_outputCode_length_le
           simp only [Function.comp_apply]
           omega
         have hsum := matrixNormalize_natList_sum_le_length_mul hterm
-        simpa only [rationalRowDivideValues, List.length_map] using hsum
+        simpa only [rationalRowDivideValues, List.length_map] using! hsum
       have htail := ih htailEntry
       simp only [List.map_cons, binaryListCode, pair_length,
         List.map_map, List.sum_cons, List.length_cons] at htail ⊢
@@ -425,17 +425,17 @@ theorem machineMatrixNormalize_outputRows_length_le_bound {n : ℕ}
         word.length := by
     calc
       _ = (machineMatrixRowsWord word).length := by
-        simpa only [word, rows] using congrArg List.length
+        simpa only [word, rows] using! congrArg List.length
           (machineMatrixRowsWord_encode A).symm
       _ ≤ word.length := by
-        simpa only [machineMatrixRowsWord] using
+        simpa only [machineMatrixRowsWord] using!
           machinePairSecond_length_le word
   have hcost : rawRatRowsCost rows ≤ word.length :=
     (rawRatRowsCost_le_codeLength rows).trans hrowsCode
   have hsumWidth :
       rawRatWidth (rawRatRowsSum RawRat.zero rows) ≤ 1 + word.length := by
     have h := rawRatWidth_rowsSum_le RawRat.zero rows
-    simpa only [rawRatWidth_zero] using h.trans
+    simpa only [rawRatWidth_zero] using! h.trans
       (Nat.add_le_add_left hcost 1)
   have hscaleWidth : rawRatWidth scale ≤ word.length + 3 := by
     have h := rawRatWidth_add_le RawRat.one
@@ -446,7 +446,7 @@ theorem machineMatrixNormalize_outputRows_length_le_bound {n : ℕ}
             (RawRat.one.add (rawRatRowsSum RawRat.zero rows)) ≤
           word.length + 3 := by
       omega
-    simpa only [scale] using hraw
+    simpa only [scale] using! hraw
   have hentry : ∀ row ∈ rows, ∀ q ∈ row,
       (rationalEntryBinaryCode
         (binaryNormalizeRawRat ((rawRatOfRat q).div scale))).length ≤
@@ -496,7 +496,7 @@ theorem machineMatrixNormalize_outputRows_length_le_bound {n : ℕ}
               2 * rows.length ≤
             (rows.map List.length).sum * (694 + 288 * word.length) +
               rows.length * (694 + 288 * word.length) := by
-                exact Nat.add_le_add hentries (by simpa [Nat.mul_comm] using hrows)
+                exact Nat.add_le_add hentries (by simpa [Nat.mul_comm] using! hrows)
         _ = (rows.length + (rows.map List.length).sum) *
               (694 + 288 * word.length) := by ring
     have hlinear := Nat.mul_le_mul_right (694 + 288 * word.length) hwork
@@ -585,7 +585,7 @@ theorem machineMatrixNormalizeStep_semantics
   have hprefix : (output.take (k + 1)).reverse =
       output[k] :: (output.take k).reverse := by
     rw [← htake]
-    simpa only [List.concat_eq_append] using
+    simpa only [List.concat_eq_append] using!
       (List.reverse_concat (l := output.take k) (a := output[k]))
   have hprefixLength :
       (binaryListCode (binaryListCode rationalEntryBinaryCode)
@@ -593,7 +593,7 @@ theorem machineMatrixNormalizeStep_semantics
           (machineMatrixNormalizeInputBound word).length :=
     (binaryListCode_take_reverse_length_le
       (binaryListCode rationalEntryBinaryCode) output (k + 1)).trans
-        (by simpa only [output] using hfullBound)
+        (by simpa only [output] using! hfullBound)
   have htakeBound :
       (binaryListCode (binaryListCode rationalEntryBinaryCode)
           (output.take (k + 1)).reverse).take
@@ -629,7 +629,7 @@ theorem machineMatrixNormalizeStep_semantics
             (machineMatrixNormalizeInputBound word)) =
         binaryListCode rationalEntryBinaryCode output[k] := by
     rw [houtputGet]
-    simpa only [machineMatrixNormalizeSemanticState, output] using
+    simpa only [machineMatrixNormalizeSemanticState, output] using!
       machineMatrixNormalizeOutputRow_semantics
         word dimension scale rows k hk
   rw [hrow, hdrop, machineListTail_cons]
@@ -688,13 +688,13 @@ theorem machineMatrixNormalizeFinalState_encode {n : ℕ}
   let rows := rationalMatrixRows A
   let scale := RawRat.one.add (rawRatRowsSum RawRat.zero rows)
   have hrowsLength : rows.length ≤ word.length := by
-    simpa only [rows, word, rationalMatrixRows, List.length_ofFn] using
+    simpa only [rows, word, rationalMatrixRows, List.length_ofFn] using!
       matrix_dimension_le_code_length A
   have hfullBound :
       (binaryListCode (binaryListCode rationalEntryBinaryCode)
         (rationalMatrixDivideRows scale rows)).length ≤
           (machineMatrixNormalizeInputBound word).length := by
-    simpa only [word, rows, scale, rationalMatrixDivideRows] using
+    simpa only [word, rows, scale, rationalMatrixDivideRows] using!
       machineMatrixNormalize_outputRows_length_le_bound A
   have hsplit : word.length =
       (word.length - rows.length) + rows.length := by omega

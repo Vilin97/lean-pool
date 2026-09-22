@@ -137,7 +137,7 @@ theorem denseProgramDecisionTM_hoareTime_run_internal
       (fun i => (hinitWorkParked i).read_ne_start)
       hinitOutputParked.read_ne_start
     rw [hi, hw, ho]
-    simpa only [hinitInput] using htailReach
+    simpa only [hinitInput] using! htailReach
   have hreach := TM.seqTM_reachesIn_of_reachesIn
     (denseProgramInitTM tapes)
     (TM.seqTM (denseProgramLoopTM tapes program)
@@ -153,8 +153,9 @@ theorem denseProgramDecisionTM_hoareTime_run_internal
     omega
   · change (denseProgramDecisionTM tapes program).halted done
     unfold denseProgramDecisionTM
-    rw [TM.phase2Wrap_halted_iff]
-    exact htailHalt
+    exact (TM.phase2Wrap_halted_iff (denseProgramInitTM tapes)
+      (TM.seqTM (denseProgramLoopTM tapes program)
+        (denseProgramOutputTM tapes)) tailDone).mpr htailHalt
   · change outputDone.output = registerVerdictOutput
         (DenseOverlay.read input final.overlay 0)
     exact houtputVerdict

@@ -72,31 +72,31 @@ theorem machineRationalMatrixUpdateRest_mem_FP :
 
 theorem machineRationalMatrixUpdateColumn_mem_FP :
     machineRationalMatrixUpdateColumn ∈ Complexity.FP := by
-  simpa only [machineRationalMatrixUpdateColumn] using
+  simpa only [machineRationalMatrixUpdateColumn] using!
     machineCompose_mem_FP machineRationalMatrixUpdateRest_mem_FP
       machinePairFirst_mem_FP
 
 theorem machineRationalMatrixUpdatePayload_mem_FP :
     machineRationalMatrixUpdatePayload ∈ Complexity.FP := by
-  simpa only [machineRationalMatrixUpdatePayload] using
+  simpa only [machineRationalMatrixUpdatePayload] using!
     machineCompose_mem_FP machineRationalMatrixUpdateRest_mem_FP
       machinePairSecond_mem_FP
 
 theorem machineRationalMatrixUpdateReplacement_mem_FP :
     machineRationalMatrixUpdateReplacement ∈ Complexity.FP := by
-  simpa only [machineRationalMatrixUpdateReplacement] using
+  simpa only [machineRationalMatrixUpdateReplacement] using!
     machineCompose_mem_FP machineRationalMatrixUpdatePayload_mem_FP
       machinePairFirst_mem_FP
 
 theorem machineRationalMatrixUpdateMatrix_mem_FP :
     machineRationalMatrixUpdateMatrix ∈ Complexity.FP := by
-  simpa only [machineRationalMatrixUpdateMatrix] using
+  simpa only [machineRationalMatrixUpdateMatrix] using!
     machineCompose_mem_FP machineRationalMatrixUpdatePayload_mem_FP
       machinePairSecond_mem_FP
 
 theorem machineRationalMatrixUpdateRows_mem_FP :
     machineRationalMatrixUpdateRows ∈ Complexity.FP := by
-  simpa only [machineRationalMatrixUpdateRows] using
+  simpa only [machineRationalMatrixUpdateRows] using!
     machineCompose_mem_FP machineRationalMatrixUpdateMatrix_mem_FP
       machineMatrixRowsWord_mem_FP
 
@@ -104,7 +104,7 @@ theorem machineRationalMatrixUpdateCurrentRow_mem_FP :
     machineRationalMatrixUpdateCurrentRow ∈ Complexity.FP := by
   have hinput := machinePair_mem_FP machineRationalMatrixUpdateRow_mem_FP
     machineRationalMatrixUpdateRows_mem_FP
-  simpa only [machineRationalMatrixUpdateCurrentRow] using
+  simpa only [machineRationalMatrixUpdateCurrentRow] using!
     machineCompose_mem_FP hinput machineListIndex_mem_FP
 
 theorem machineRationalMatrixUpdateNewRow_mem_FP :
@@ -114,7 +114,7 @@ theorem machineRationalMatrixUpdateNewRow_mem_FP :
     machineRationalMatrixUpdateCurrentRow_mem_FP
   have hinput := machinePair_mem_FP machineRationalMatrixUpdateColumn_mem_FP
     hpayload
-  simpa only [machineRationalMatrixUpdateNewRow] using
+  simpa only [machineRationalMatrixUpdateNewRow] using!
     machineCompose_mem_FP hinput machineListUpdate_mem_FP
 
 theorem machineRationalMatrixUpdateNewRows_mem_FP :
@@ -123,7 +123,7 @@ theorem machineRationalMatrixUpdateNewRows_mem_FP :
     machineRationalMatrixUpdateRows_mem_FP
   have hinput := machinePair_mem_FP machineRationalMatrixUpdateRow_mem_FP
     hpayload
-  simpa only [machineRationalMatrixUpdateNewRows] using
+  simpa only [machineRationalMatrixUpdateNewRows] using!
     machineCompose_mem_FP hinput machineListUpdate_mem_FP
 
 theorem machineRationalMatrixUpdateAtUnary_mem_FP :

@@ -141,14 +141,14 @@ theorem machineExplicitOptimizerRhoRawCode_mem_FP :
     (machinePair_mem_FP machineExplicitOptimizerFloorRawCode_mem_FP
       (machineConst_mem_FP (rawRatBinaryCode rawOptimizerKKTError)))
     machineRawRatMulCode_mem_FP
-  simpa only [machineExplicitOptimizerRhoRawCode] using machineCompose_mem_FP
+  simpa only [machineExplicitOptimizerRhoRawCode] using! machineCompose_mem_FP
     (machinePair_mem_FP hproduct
       (machineConst_mem_FP (rawRatBinaryCode rawOptimizerFortyEight)))
     machineRawRatDivCode_mem_FP
 
 theorem machineExplicitOptimizerRhoSquareRawCode_mem_FP :
     machineExplicitOptimizerRhoSquareRawCode ∈ FP := by
-  simpa only [machineExplicitOptimizerRhoSquareRawCode] using
+  simpa only [machineExplicitOptimizerRhoSquareRawCode] using!
     machineCompose_mem_FP
       (machinePair_mem_FP machineExplicitOptimizerRhoRawCode_mem_FP
         machineExplicitOptimizerRhoRawCode_mem_FP)
@@ -156,7 +156,7 @@ theorem machineExplicitOptimizerRhoSquareRawCode_mem_FP :
 
 theorem machineExplicitOptimizerGapNumeratorRawCode_mem_FP :
     machineExplicitOptimizerGapNumeratorRawCode ∈ FP := by
-  simpa only [machineExplicitOptimizerGapNumeratorRawCode] using
+  simpa only [machineExplicitOptimizerGapNumeratorRawCode] using!
     machineCompose_mem_FP
       (machinePair_mem_FP machineOptimizerTauRawCode_mem_FP
         machineExplicitOptimizerRhoSquareRawCode_mem_FP)
@@ -164,14 +164,14 @@ theorem machineExplicitOptimizerGapNumeratorRawCode_mem_FP :
 
 theorem machineExplicitOptimizerGapRawCode_mem_FP :
     machineExplicitOptimizerGapRawCode ∈ FP := by
-  simpa only [machineExplicitOptimizerGapRawCode] using machineCompose_mem_FP
+  simpa only [machineExplicitOptimizerGapRawCode] using! machineCompose_mem_FP
     (machinePair_mem_FP machineExplicitOptimizerGapNumeratorRawCode_mem_FP
       (machineConst_mem_FP (rawRatBinaryCode rawOptimizerFour)))
     machineRawRatDivCode_mem_FP
 
 theorem machineOptimizerThreeNSquareRawCode_mem_FP :
     machineOptimizerThreeNSquareRawCode ∈ FP := by
-  simpa only [machineOptimizerThreeNSquareRawCode] using machineCompose_mem_FP
+  simpa only [machineOptimizerThreeNSquareRawCode] using! machineCompose_mem_FP
     (machinePair_mem_FP
       (machineConst_mem_FP (rawRatBinaryCode rawOptimizerThree))
       machineOptimizerNSquareRawCode_mem_FP)
@@ -179,21 +179,21 @@ theorem machineOptimizerThreeNSquareRawCode_mem_FP :
 
 theorem machineOptimizerObjectiveRangeRawCode_mem_FP :
     machineOptimizerObjectiveRangeRawCode ∈ FP := by
-  simpa only [machineOptimizerObjectiveRangeRawCode] using machineCompose_mem_FP
+  simpa only [machineOptimizerObjectiveRangeRawCode] using! machineCompose_mem_FP
     (machinePair_mem_FP machineOptimizerNBProductRawCode_mem_FP
       machineOptimizerThreeNSquareRawCode_mem_FP)
     machineRawRatAddCode_mem_FP
 
 theorem machineOptimizerRangePlusOneRawCode_mem_FP :
     machineOptimizerRangePlusOneRawCode ∈ FP := by
-  simpa only [machineOptimizerRangePlusOneRawCode] using machineCompose_mem_FP
+  simpa only [machineOptimizerRangePlusOneRawCode] using! machineCompose_mem_FP
     (machinePair_mem_FP machineOptimizerObjectiveRangeRawCode_mem_FP
       (machineConst_mem_FP (rawRatBinaryCode rawOptimizerOne)))
     machineRawRatAddCode_mem_FP
 
 theorem machineOptimizerMixDenominatorRawCode_mem_FP :
     machineOptimizerMixDenominatorRawCode ∈ FP := by
-  simpa only [machineOptimizerMixDenominatorRawCode] using machineCompose_mem_FP
+  simpa only [machineOptimizerMixDenominatorRawCode] using! machineCompose_mem_FP
     (machinePair_mem_FP
       (machineConst_mem_FP (rawRatBinaryCode rawOptimizerFour))
       machineOptimizerRangePlusOneRawCode_mem_FP)
@@ -201,14 +201,14 @@ theorem machineOptimizerMixDenominatorRawCode_mem_FP :
 
 theorem machineOptimizerMixCandidateRawCode_mem_FP :
     machineOptimizerMixCandidateRawCode ∈ FP := by
-  simpa only [machineOptimizerMixCandidateRawCode] using machineCompose_mem_FP
+  simpa only [machineOptimizerMixCandidateRawCode] using! machineCompose_mem_FP
     (machinePair_mem_FP machineExplicitOptimizerGapRawCode_mem_FP
       machineOptimizerMixDenominatorRawCode_mem_FP)
     machineRawRatDivCode_mem_FP
 
 theorem machineExplicitOptimizerMixRawCode_mem_FP :
     machineExplicitOptimizerMixRawCode ∈ FP := by
-  simpa only [machineExplicitOptimizerMixRawCode] using machineCompose_mem_FP
+  simpa only [machineExplicitOptimizerMixRawCode] using! machineCompose_mem_FP
     (machinePair_mem_FP
       (machineConst_mem_FP (rawRatBinaryCode rawOptimizerHalf))
       machineOptimizerMixCandidateRawCode_mem_FP)
@@ -216,7 +216,7 @@ theorem machineExplicitOptimizerMixRawCode_mem_FP :
 
 theorem machineOptimizerTwiceDimensionRawCode_mem_FP :
     machineOptimizerTwiceDimensionRawCode ∈ FP := by
-  simpa only [machineOptimizerTwiceDimensionRawCode] using machineCompose_mem_FP
+  simpa only [machineOptimizerTwiceDimensionRawCode] using! machineCompose_mem_FP
     (machinePair_mem_FP
       (machineConst_mem_FP (rawRatBinaryCode rawOptimizerTwo))
       machineOptimizerDimensionRawCode_mem_FP)
@@ -224,7 +224,7 @@ theorem machineOptimizerTwiceDimensionRawCode_mem_FP :
 
 theorem machineExplicitOptimizerInnerRadiusRawCode_mem_FP :
     machineExplicitOptimizerInnerRadiusRawCode ∈ FP := by
-  simpa only [machineExplicitOptimizerInnerRadiusRawCode] using
+  simpa only [machineExplicitOptimizerInnerRadiusRawCode] using!
     machineCompose_mem_FP
       (machinePair_mem_FP machineExplicitOptimizerMixRawCode_mem_FP
         machineOptimizerTwiceDimensionRawCode_mem_FP)
@@ -450,13 +450,13 @@ def machineExplicitOptimizerPrecisionRuler
 
 theorem machineExplicitOptimizerGapEntryCode_mem_FP :
     machineExplicitOptimizerGapEntryCode ∈ FP := by
-  simpa only [machineExplicitOptimizerGapEntryCode] using
+  simpa only [machineExplicitOptimizerGapEntryCode] using!
     machineCompose_mem_FP machineExplicitOptimizerGapRawCode_mem_FP
       machineNormalizeRawRatEntryCode_mem_FP
 
 theorem machineExplicitOptimizerGapLengthRuler_mem_FP :
     machineExplicitOptimizerGapLengthRuler ∈ FP := by
-  simpa only [machineExplicitOptimizerGapLengthRuler] using
+  simpa only [machineExplicitOptimizerGapLengthRuler] using!
     machineCompose_mem_FP machineExplicitOptimizerGapEntryCode_mem_FP
       machineOptimizerEntryLengthRuler_mem_FP
 
@@ -468,7 +468,7 @@ theorem machineExplicitOptimizerPrecisionRuler_mem_FP :
   have htail := machineAppend_mem_FP
     (machineConst_mem_FP
       (List.replicate (encodedBitLength ℚ explicitKKTError) true)) hdim2
-  simpa only [machineExplicitOptimizerPrecisionRuler] using
+  simpa only [machineExplicitOptimizerPrecisionRuler] using!
     machineAppend_mem_FP machineExplicitOptimizerGapLengthRuler_mem_FP htail
 
 @[simp] theorem machineExplicitOptimizerGapEntryCode_encode

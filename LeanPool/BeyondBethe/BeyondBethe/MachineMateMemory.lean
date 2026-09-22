@@ -42,7 +42,7 @@ def machineMateVectorUpdateAtUnary (word : List Bool) : List Bool :=
 
 theorem machineMateValueIsNoneBit_mem_FP :
     machineMateValueIsNoneBit ∈ Complexity.FP := by
-  simpa only [machineMateValueIsNoneBit] using
+  simpa only [machineMateValueIsNoneBit] using!
     machineNotBit_mem_FP machineHeadBit_mem_FP
 
 theorem machineMateValueRowUnary_mem_FP :

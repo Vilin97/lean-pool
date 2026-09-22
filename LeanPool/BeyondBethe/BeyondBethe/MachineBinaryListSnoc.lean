@@ -45,7 +45,7 @@ theorem machineBinaryListSnocList_mem_FP :
 
 theorem machineBinaryListSnocReversedList_mem_FP :
     machineBinaryListSnocReversedList ∈ FP := by
-  simpa only [machineBinaryListSnocReversedList] using
+  simpa only [machineBinaryListSnocReversedList] using!
     machineCompose_mem_FP machineBinaryListSnocList_mem_FP
       machineListReverse_mem_FP
 
@@ -55,7 +55,7 @@ theorem machineBinaryListSnocPrependInput_mem_FP :
     machineBinaryListSnocReversedList_mem_FP
 
 theorem machineBinaryListSnoc_mem_FP : machineBinaryListSnoc ∈ FP := by
-  simpa only [machineBinaryListSnoc] using
+  simpa only [machineBinaryListSnoc] using!
     machineCompose_mem_FP machineBinaryListSnocPrependInput_mem_FP
       machineListReverse_mem_FP
 

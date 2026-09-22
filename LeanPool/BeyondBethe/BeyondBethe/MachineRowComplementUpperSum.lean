@@ -113,16 +113,16 @@ theorem machineRowUpperSource_mem_FP : machineRowUpperSource ∈ FP :=
   machinePairFirst_mem_FP
 
 theorem machineRowUpperCurrent_mem_FP : machineRowUpperCurrent ∈ FP := by
-  simpa only [machineRowUpperCurrent] using
+  simpa only [machineRowUpperCurrent] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineRowUpperAcc_mem_FP : machineRowUpperAcc ∈ FP := by
-  simpa only [machineRowUpperAcc] using machineCompose_mem_FP
+  simpa only [machineRowUpperAcc] using! machineCompose_mem_FP
     (machineCompose_mem_FP machinePairSecond_mem_FP machinePairSecond_mem_FP)
     machinePairFirst_mem_FP
 
 theorem machineRowUpperBound_mem_FP : machineRowUpperBound ∈ FP := by
-  simpa only [machineRowUpperBound] using machineCompose_mem_FP
+  simpa only [machineRowUpperBound] using! machineCompose_mem_FP
     (machineCompose_mem_FP machinePairSecond_mem_FP machinePairSecond_mem_FP)
     machinePairSecond_mem_FP
 
@@ -133,18 +133,18 @@ theorem machineRowUpperOptimizerWord_mem_FP :
     machineRowUpperOptimizerWord ∈ FP := machinePairSecond_mem_FP
 
 theorem machineRowUpperMatrixWord_mem_FP : machineRowUpperMatrixWord ∈ FP := by
-  simpa only [machineRowUpperMatrixWord] using machineCompose_mem_FP
+  simpa only [machineRowUpperMatrixWord] using! machineCompose_mem_FP
     machineRowUpperOptimizerWord_mem_FP machineOptimizerMatrixWord_mem_FP
 
 theorem machineRowUpperInitialRow_mem_FP : machineRowUpperInitialRow ∈ FP := by
   have hrows := machineCompose_mem_FP machineRowUpperMatrixWord_mem_FP
     machineMatrixRowsWord_mem_FP
   have hpair := machinePair_mem_FP machineRowUpperRowRuler_mem_FP hrows
-  simpa only [machineRowUpperInitialRow] using
+  simpa only [machineRowUpperInitialRow] using!
     machineCompose_mem_FP hpair machineListIndex_mem_FP
 
 theorem machineRowUpperEntry_mem_FP : machineRowUpperEntry ∈ FP := by
-  simpa only [machineRowUpperEntry] using machineCompose_mem_FP
+  simpa only [machineRowUpperEntry] using! machineCompose_mem_FP
     machineRowUpperCurrent_mem_FP machineListHead_mem_FP
 
 theorem machineRowUpperComplementInput_mem_FP :
@@ -159,7 +159,7 @@ theorem machineRowUpperComplementInput_mem_FP :
 
 theorem machineRowUpperComplementCode_mem_FP :
     machineRowUpperComplementCode ∈ FP := by
-  simpa only [machineRowUpperComplementCode] using machineCompose_mem_FP
+  simpa only [machineRowUpperComplementCode] using! machineCompose_mem_FP
     machineRowUpperComplementInput_mem_FP
     machineNearbyCoordinateComplementCode_mem_FP
 
@@ -169,17 +169,17 @@ theorem machineRowUpperLogRawCode_mem_FP : machineRowUpperLogRawCode ∈ FP := b
   have hp := machineCompose_mem_FP hsourceOptimizer
     machineCertificateLogPrecisionRuler_mem_FP
   have hpair := machinePair_mem_FP hp machineRowUpperComplementCode_mem_FP
-  simpa only [machineRowUpperLogRawCode] using machineCompose_mem_FP hpair
+  simpa only [machineRowUpperLogRawCode] using! machineCompose_mem_FP hpair
     machineScheduledLogUpperRawCode_mem_FP
 
 theorem machineRowUpperCandidate_mem_FP : machineRowUpperCandidate ∈ FP := by
   have hpair := machinePair_mem_FP machineRowUpperAcc_mem_FP
     machineRowUpperLogRawCode_mem_FP
-  simpa only [machineRowUpperCandidate] using machineCompose_mem_FP hpair
+  simpa only [machineRowUpperCandidate] using! machineCompose_mem_FP hpair
     machineRawRatAddCode_mem_FP
 
 theorem machineRowUpperNextAcc_mem_FP : machineRowUpperNextAcc ∈ FP := by
-  simpa only [machineRowUpperNextAcc] using machineTake_mem_FP
+  simpa only [machineRowUpperNextAcc] using! machineTake_mem_FP
     machineRowUpperBound_mem_FP machineRowUpperCandidate_mem_FP
 
 theorem machineRowUpperStep_mem_FP : machineRowUpperStep ∈ FP := by
@@ -194,7 +194,7 @@ theorem machineRowUpperStep_mem_FP : machineRowUpperStep ∈ FP := by
 theorem machineRowUpperInputBound_mem_FP : machineRowUpperInputBound ∈ FP := by
   have h1 := machineBinaryMulWidth_mem_FP
   have h2 := machineCompose_mem_FP h1 machineBinaryMulWidth_mem_FP
-  simpa only [machineRowUpperInputBound] using
+  simpa only [machineRowUpperInputBound] using!
     machineCompose_mem_FP h2 machineBinaryMulWidth_mem_FP
 
 theorem machineRowUpperInit_mem_FP : machineRowUpperInit ∈ FP := by
@@ -307,7 +307,7 @@ theorem machineRowUpperFinalState_mem_FP : machineRowUpperFinalState ∈ FP := b
 
 theorem machineRowComplementUpperSumRawCode_mem_FP :
     machineRowComplementUpperSumRawCode ∈ FP := by
-  simpa only [machineRowComplementUpperSumRawCode] using machineCompose_mem_FP
+  simpa only [machineRowComplementUpperSumRawCode] using! machineCompose_mem_FP
     machineRowUpperFinalState_mem_FP machineRowUpperAcc_mem_FP
 
 /-! ## Exact semantics -/
@@ -431,7 +431,7 @@ theorem machineRowUpperStep_semantics {n : ℕ}
               (directedCertificatePrecision n))) +
             rawRowComplementUpperCost (directedCertificatePrecision n) qs ≤
               budget := by
-          simpa only [RowUpperSemInvariant, rowUpperSemStep] using hinv
+          simpa only [RowUpperSemInvariant, rowUpperSemStep] using! hinv
         omega
       have hcode :
           (rawRatBinaryCode
@@ -529,20 +529,20 @@ theorem rawScheduledLogUpper_complement_width_le_query
       calc
         _ = (machineMatrixRowsWord
             (rationalMatrixBinaryEncoding.encode ⟨n, X⟩)).length := by
-          simpa using congrArg List.length (machineMatrixRowsWord_encode X).symm
+          simpa using! congrArg List.length (machineMatrixRowsWord_encode X).symm
         _ ≤ (rationalMatrixBinaryEncoding.encode ⟨n, X⟩).length := by
-          simpa only [machineMatrixRowsWord] using machinePairSecond_length_le
+          simpa only [machineMatrixRowsWord] using! machinePairSecond_length_le
             (rationalMatrixBinaryEncoding.encode ⟨n, X⟩)
         _ ≤ optimizer.length := by
           simpa only [optimizer, rationalOptimizerOutputCode,
-            machinePairFirst_pair] using machinePairFirst_length_le optimizer
+            machinePairFirst_pair] using! machinePairFirst_length_le optimizer
     exact hqCode.trans (hrowCode.trans hrowsCode)
   have hxWidth : rawRatWidth (rawRatOfRat (X i j)) ≤ L := by
     have hentryRaw :
         (rawRatBinaryCode (rawRatOfRat (X i j))).length ≤ optimizer.length := by
-      simpa only [rawRatBinaryCode_rawRatOfRat] using hentryCode
+      simpa only [rawRatBinaryCode_rawRatOfRat] using! hentryCode
     have hoptimizerWord : optimizer.length ≤ word.length := by
-      simpa only [word, machinePairSecond_pair] using
+      simpa only [word, machinePairSecond_pair] using!
         machinePairSecond_length_le word
     exact (rawRatWidth_le_binaryCode_length _).trans
       (hentryRaw.trans hoptimizerWord)
@@ -554,15 +554,15 @@ theorem rawScheduledLogUpper_complement_width_le_query
     have hmatrix :
         (rationalMatrixBinaryEncoding.encode ⟨n, X⟩).length ≤ optimizer.length := by
       simpa only [optimizer, rationalOptimizerOutputCode,
-        machinePairFirst_pair] using machinePairFirst_length_le optimizer
+        machinePairFirst_pair] using! machinePairFirst_length_le optimizer
     have hoptimizerWord : optimizer.length ≤ word.length := by
-      simpa only [word, machinePairSecond_pair] using
+      simpa only [word, machinePairSecond_pair] using!
         machinePairSecond_length_le word
     exact hn.trans (hmatrix.trans hoptimizerWord)
   have hp : directedCertificatePrecision n ≤ L + 400 := by
     rw [directedCertificatePrecision]
     omega
-  simpa only [rawRowComplementUpperInputWidthBudget, L] using
+  simpa only [rawRowComplementUpperInputWidthBudget, L] using!
     rawRatWidth_scheduledLogUpper_of_bounds_le (1 - X i j) hp hcompL
 
 theorem rawRowComplementUpperCost_le_query
@@ -583,7 +583,7 @@ theorem rawRowComplementUpperCost_le_query
         (directedCertificatePrecision n)) ≤ budget := by
     intro q hq
     obtain ⟨j, rfl⟩ := List.mem_ofFn.mp hq
-    simpa only [word, budget] using
+    simpa only [word, budget] using!
       rawScheduledLogUpper_complement_width_le_query X R C i j
   have rawCost_le_uniform : ∀ xs : List ℚ,
       (∀ q ∈ xs, rawRatWidth (rawScheduledLogUpper (1 - q)
@@ -606,7 +606,7 @@ theorem rawRowComplementUpperCost_le_query
               (rawScheduledLogUpper (1 - r)
                 (directedCertificatePrecision n)) + 1).sum ≤
               qs.length * (budget + 1) := by
-          simpa only [rawRowComplementUpperCost] using ih'
+          simpa only [rawRowComplementUpperCost] using! ih'
         simp only [rawRowComplementUpperCost, List.map_cons, List.sum_cons,
           List.length_cons, Nat.add_mul]
         omega
@@ -617,12 +617,12 @@ theorem rawRowComplementUpperCost_le_query
     have hmatrix :
         (rationalMatrixBinaryEncoding.encode ⟨n, X⟩).length ≤
           (rationalOptimizerOutputCode ⟨X, R, C⟩).length := by
-      simpa only [rationalOptimizerOutputCode, machinePairFirst_pair] using
+      simpa only [rationalOptimizerOutputCode, machinePairFirst_pair] using!
         machinePairFirst_length_le
           (rationalOptimizerOutputCode ⟨X, R, C⟩)
     have hoptimizerWord :
         (rationalOptimizerOutputCode ⟨X, R, C⟩).length ≤ word.length := by
-      simpa only [word, machinePairSecond_pair] using
+      simpa only [word, machinePairSecond_pair] using!
         machinePairSecond_length_le word
     exact hnopt.trans (hmatrix.trans hoptimizerWord)
   rw [hn] at hcost
@@ -645,7 +645,7 @@ theorem machineRowUpperInputBound_length_dominates (word : List Bool) :
         (rawRowComplementUpperInputWidthBudget word.length + 1)) ≤
       4 + 3 * (1 + word.length *
         (rawNearbyCoordinateInputWidthBudget word.length + 1)) := by omega
-  simpa only [machineRowUpperInputBound, machineNearbyMatrixInputBound] using
+  simpa only [machineRowUpperInputBound, machineNearbyMatrixInputBound] using!
     htarget.trans hnear
 
 @[simp] theorem machineRowComplementUpperSumRawCode_encode
@@ -669,7 +669,7 @@ theorem machineRowUpperInputBound_length_dominates (word : List Bool) :
       word.length := by
     calc
       _ = (machineRowUpperInitialRow word).length := by
-        simpa only [word, xs] using congrArg List.length
+        simpa only [word, xs] using! congrArg List.length
           (machineRowUpperInitialRow_encode X R C i).symm
       _ ≤ word.length := by
         have hindex := machineListIndex_length_le_data

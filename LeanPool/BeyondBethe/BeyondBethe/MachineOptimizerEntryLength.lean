@@ -94,7 +94,7 @@ theorem rational_encodedBitLength_eq_boolDataLength (q : ℚ) :
   change (DataEncode.encode (rationalPayload q)).size = _
   rw [show DataEncode.encode (rationalPayload q) =
       Data.l [DataEncode.encode q.num, DataEncode.encode q.den] by
-      simpa only [rationalPayload] using DataEncode_pair q.num q.den]
+      simpa only [rationalPayload] using! DataEncode_pair q.num q.den]
   simp only [Data.size, List.map_cons, List.map_nil, List.sum_cons,
     List.sum_nil, add_zero]
   rw [← encodedBitLength_eq_dataSize,
@@ -165,7 +165,7 @@ theorem machineBoolDataContinue_mem_FP :
 
 theorem machineBoolDataStep_mem_FP :
     machineBoolDataStep ∈ Complexity.FP := by
-  simpa only [machineBoolDataStep] using
+  simpa only [machineBoolDataStep] using!
     machineIfEmpty_mem_FP machineBoolDataRemaining_mem_FP
       id_mem_FP machineBoolDataContinue_mem_FP
 
@@ -178,7 +178,7 @@ theorem machineBoolDataBound_mem_FP :
   have hdouble := machineAppend_mem_FP id_mem_FP id_mem_FP
   have htriple := machineAppend_mem_FP id_mem_FP hdouble
   have hquadruple := machineAppend_mem_FP id_mem_FP htriple
-  simpa only [machineBoolDataBound] using
+  simpa only [machineBoolDataBound] using!
     machineAppend_mem_FP
       (machineConst_mem_FP (List.replicate 4 true)) hquadruple
 
@@ -261,7 +261,7 @@ theorem machineBoolDataFinalState_mem_FP :
 
 theorem machineBoolDataLengthRuler_mem_FP :
     machineBoolDataLengthRuler ∈ Complexity.FP := by
-  simpa only [machineBoolDataLengthRuler] using
+  simpa only [machineBoolDataLengthRuler] using!
     machineCompose_mem_FP machineBoolDataFinalState_mem_FP
       machineBoolDataAcc_mem_FP
 
@@ -322,7 +322,7 @@ theorem machineOptimizerEntryNumeratorCode_mem_FP :
 
 theorem machineOptimizerEntryNatAbsBits_mem_FP :
     machineOptimizerEntryNatAbsBits ∈ Complexity.FP := by
-  simpa only [machineOptimizerEntryNatAbsBits] using
+  simpa only [machineOptimizerEntryNatAbsBits] using!
     machineCompose_mem_FP machineOptimizerEntryNumeratorCode_mem_FP
       machineIntegerNatAbsBits_mem_FP
 
@@ -334,13 +334,13 @@ theorem machineOptimizerEntrySignRuler_mem_FP :
 
 theorem machineOptimizerEntryNumeratorRuler_mem_FP :
     machineOptimizerEntryNumeratorRuler ∈ Complexity.FP := by
-  simpa only [machineOptimizerEntryNumeratorRuler] using
+  simpa only [machineOptimizerEntryNumeratorRuler] using!
     machineCompose_mem_FP machineOptimizerEntryNatAbsBits_mem_FP
       machineBoolDataLengthRuler_mem_FP
 
 theorem machineOptimizerEntryDenominatorRuler_mem_FP :
     machineOptimizerEntryDenominatorRuler ∈ Complexity.FP := by
-  simpa only [machineOptimizerEntryDenominatorRuler] using
+  simpa only [machineOptimizerEntryDenominatorRuler] using!
     machineCompose_mem_FP machineRationalEntryDenominatorWord_mem_FP
       machineBoolDataLengthRuler_mem_FP
 
@@ -351,7 +351,7 @@ theorem machineOptimizerEntryLengthRuler_mem_FP :
     machineOptimizerEntryDenominatorRuler_mem_FP
   have hpayload := machineAppend_mem_FP
     machineOptimizerEntrySignRuler_mem_FP htail
-  simpa only [machineOptimizerEntryLengthRuler] using
+  simpa only [machineOptimizerEntryLengthRuler] using!
     machineAppend_mem_FP
       (machineConst_mem_FP (List.replicate 8 true)) hpayload
 

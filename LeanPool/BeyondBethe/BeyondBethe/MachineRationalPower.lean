@@ -81,24 +81,24 @@ theorem machineRawRatPowerAccField_mem_FP :
 
 theorem machineRawRatPowerBaseField_mem_FP :
     machineRawRatPowerBaseField ∈ Complexity.FP := by
-  simpa only [machineRawRatPowerBaseField] using
+  simpa only [machineRawRatPowerBaseField] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineRawRatPowerBoundField_mem_FP :
     machineRawRatPowerBoundField ∈ Complexity.FP := by
-  simpa only [machineRawRatPowerBoundField] using
+  simpa only [machineRawRatPowerBoundField] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairSecond_mem_FP
 
 theorem machineRawRatPowerCandidate_mem_FP :
     machineRawRatPowerCandidate ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineRawRatPowerAccField_mem_FP
     machineRawRatPowerBaseField_mem_FP
-  simpa only [machineRawRatPowerCandidate] using
+  simpa only [machineRawRatPowerCandidate] using!
     machineCompose_mem_FP hpair machineRawRatMulCode_mem_FP
 
 theorem machineRawRatPowerNextAcc_mem_FP :
     machineRawRatPowerNextAcc ∈ Complexity.FP := by
-  simpa only [machineRawRatPowerNextAcc] using
+  simpa only [machineRawRatPowerNextAcc] using!
     machineTake_mem_FP machineRawRatPowerBoundField_mem_FP
       machineRawRatPowerCandidate_mem_FP
 
@@ -121,7 +121,7 @@ theorem machineRawRatPowerInputBound_mem_FP :
       machineBinaryMulWidth_mem_FP
     have htriple := machineAppend_mem_FP machineBinaryMulWidth_mem_FP hdouble
     have hquadruple := machineAppend_mem_FP machineBinaryMulWidth_mem_FP htriple
-    simpa only [machineRawRatPowerInputBound] using
+    simpa only [machineRawRatPowerInputBound] using!
       hquadruple
 
 theorem machineRawRatPowerInit_mem_FP :
@@ -224,13 +224,13 @@ theorem machineRawRatPowerFinalState_mem_FP :
 
 theorem machineRawRatPowerCode_mem_FP :
     machineRawRatPowerCode ∈ Complexity.FP := by
-  simpa only [machineRawRatPowerCode] using
+  simpa only [machineRawRatPowerCode] using!
     machineCompose_mem_FP machineRawRatPowerFinalState_mem_FP
       machineRawRatPowerAccField_mem_FP
 
 theorem machineRationalPowerCode_mem_FP :
     machineRationalPowerCode ∈ Complexity.FP := by
-  simpa only [machineRationalPowerCode] using
+  simpa only [machineRationalPowerCode] using!
     machineCompose_mem_FP machineRawRatPowerCode_mem_FP
       machineNormalizeRawRatBinaryCode_mem_FP
 
@@ -250,7 +250,7 @@ private theorem integerNatAbs_size_le_code_length (z : ℤ) :
           omega
         exact hle.trans_lt hlt
       simpa [integerBinaryCode, Nat.size_eq_bits_len,
-        Nat.add_comm] using hs
+        Nat.add_comm] using! hs
 
 private theorem rawRatWidth_le_code_length (q : RawRat) :
     rawRatWidth q ≤ (rawRatBinaryCode q).length := by
@@ -279,7 +279,7 @@ private theorem rawRatBinaryCode_length_le_width (q : RawRat) :
         have hsize : n.size ≤ (n + 1).size :=
           Nat.size_le_size (Nat.le_succ n)
         have habs : (n + 1).size ≤ rawRatWidth q := by
-          simpa only [hqnum, Int.natAbs_negSucc] using
+          simpa only [hqnum, Int.natAbs_negSucc] using!
             rawRat_num_size_le_width q
         have hnwidth : n.size ≤ rawRatWidth q := hsize.trans habs
         omega

@@ -85,7 +85,7 @@ theorem machineBoolMatrixEntryAtUnary_mem_FP :
   have hrowPayload := machinePair_mem_FP hrow hmatrix
   have hrowCode := machineCompose_mem_FP hrowPayload machineListIndex_mem_FP
   have hentryPayload := machinePair_mem_FP hcolumn hrowCode
-  simpa only [machineBoolMatrixEntryAtUnary] using
+  simpa only [machineBoolMatrixEntryAtUnary] using!
     machineCompose_mem_FP hentryPayload machineListIndex_mem_FP
 
 @[simp] theorem machineBoolMatrixEntryAtUnary_encode
@@ -147,7 +147,7 @@ theorem machineBoolMatrixUpdateAtUnary_mem_FP :
     machineListUpdate_mem_FP
   have hupdateMatrixPayload := machinePair_mem_FP hrow
     (machinePair_mem_FP hupdatedRow hmatrix)
-  simpa only [machineBoolMatrixUpdateAtUnary] using
+  simpa only [machineBoolMatrixUpdateAtUnary] using!
     machineCompose_mem_FP hupdateMatrixPayload machineListUpdate_mem_FP
 
 @[simp] theorem machineBoolMatrixUpdateAtUnary_encode
@@ -195,7 +195,7 @@ theorem machineRawRatEqBit_mem_FP :
 
 theorem machineRawRatNeBit_mem_FP :
     machineRawRatNeBit ∈ Complexity.FP := by
-  simpa only [machineRawRatNeBit] using
+  simpa only [machineRawRatNeBit] using!
     machineNotBit_mem_FP machineRawRatEqBit_mem_FP
 
 @[simp] theorem machineRawRatEqBit_encode (q r : RawRat) :
@@ -226,7 +226,7 @@ theorem machineRationalSupportBitAtUnary_mem_FP :
     machineRationalSupportBitAtUnary ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineMatrixEntryAtUnary_mem_FP
     (machineConst_mem_FP (rawRatBinaryCode RawRat.zero))
-  simpa only [machineRationalSupportBitAtUnary] using
+  simpa only [machineRationalSupportBitAtUnary] using!
     machineCompose_mem_FP hpair machineRawRatNeBit_mem_FP
 
 @[simp] theorem machineRationalSupportBitAtUnary_encode {n : ℕ}

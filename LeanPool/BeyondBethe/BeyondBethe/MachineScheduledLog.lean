@@ -77,18 +77,18 @@ theorem machineScheduledLogArgumentRawCode_mem_FP :
 
 theorem machineScheduledLogPrecisionBits_mem_FP :
     machineScheduledLogPrecisionBits ∈ Complexity.FP := by
-  simpa only [machineScheduledLogPrecisionBits] using
+  simpa only [machineScheduledLogPrecisionBits] using!
     machineCompose_mem_FP machineScheduledLogPrecisionRuler_mem_FP
       machineLengthBits_mem_FP
 
 theorem machineScheduledLogExponentIntegerCode_mem_FP :
     machineScheduledLogExponentIntegerCode ∈ Complexity.FP := by
-  simpa only [machineScheduledLogExponentIntegerCode] using
+  simpa only [machineScheduledLogExponentIntegerCode] using!
     machineDirectedLogExponentIntegerCode_mem_FP
 
 theorem machineScheduledLogExponentAbsBits_mem_FP :
     machineScheduledLogExponentAbsBits ∈ Complexity.FP := by
-  simpa only [machineScheduledLogExponentAbsBits] using
+  simpa only [machineScheduledLogExponentAbsBits] using!
     machineCompose_mem_FP machineScheduledLogExponentIntegerCode_mem_FP
       machineIntegerNatAbsBits_mem_FP
 
@@ -96,7 +96,7 @@ theorem machineScheduledLogPrecisionPlusExponentBits_mem_FP :
     machineScheduledLogPrecisionPlusExponentBits ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineScheduledLogPrecisionBits_mem_FP
     machineScheduledLogExponentAbsBits_mem_FP
-  simpa only [machineScheduledLogPrecisionPlusExponentBits] using
+  simpa only [machineScheduledLogPrecisionPlusExponentBits] using!
     machineCompose_mem_FP hpair machineBinaryAddBits_mem_FP
 
 theorem machineScheduledLogTermsBits_mem_FP :
@@ -104,7 +104,7 @@ theorem machineScheduledLogTermsBits_mem_FP :
   have hpair := machinePair_mem_FP
     machineScheduledLogPrecisionPlusExponentBits_mem_FP
     (machineConst_mem_FP (2 : ℕ).bits)
-  simpa only [machineScheduledLogTermsBits] using
+  simpa only [machineScheduledLogTermsBits] using!
     machineCompose_mem_FP hpair machineBinaryAddBits_mem_FP
 
 theorem machineScheduledLogTermsGuard_mem_FP :
@@ -115,21 +115,21 @@ theorem machineScheduledLogTermsRuler_mem_FP :
     machineScheduledLogTermsRuler ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineScheduledLogTermsGuard_mem_FP
     machineScheduledLogTermsBits_mem_FP
-  simpa only [machineScheduledLogTermsRuler] using
+  simpa only [machineScheduledLogTermsRuler] using!
     machineCompose_mem_FP hpair machineBoundedUnary_mem_FP
 
 theorem machineScheduledLogLowerRawCode_mem_FP :
     machineScheduledLogLowerRawCode ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineScheduledLogTermsRuler_mem_FP
     machineScheduledLogArgumentRawCode_mem_FP
-  simpa only [machineScheduledLogLowerRawCode] using
+  simpa only [machineScheduledLogLowerRawCode] using!
     machineCompose_mem_FP hpair machineDirectedLogLowerRawCode_mem_FP
 
 theorem machineScheduledLogUpperRawCode_mem_FP :
     machineScheduledLogUpperRawCode ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineScheduledLogTermsRuler_mem_FP
     machineScheduledLogArgumentRawCode_mem_FP
-  simpa only [machineScheduledLogUpperRawCode] using
+  simpa only [machineScheduledLogUpperRawCode] using!
     machineCompose_mem_FP hpair machineDirectedLogUpperRawCode_mem_FP
 
 @[simp] theorem machineScheduledLogPrecisionBits_encode
@@ -212,7 +212,7 @@ theorem directedLogTerms_le_scheduledLogGuard (q : ℚ) (p : ℕ) :
     nlinarith [sq_nonneg (word.length + 14)]
   simpa only [machineScheduledLogTermsGuard, machineBinaryMulWidth,
     List.length_replicate, List.length_append, pow_two,
-    List.length_cons, List.length_nil, Nat.zero_add, word, Nat.add_comm] using
+    List.length_cons, List.length_nil, Nat.zero_add, word, Nat.add_comm] using!
       hterms.trans hquad
 
 @[simp] theorem machineScheduledLogTermsRuler_encode

@@ -28,7 +28,7 @@ theorem machineRawRatLeBit_mem_FP : machineRawRatLeBit ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP
     machineRawAddLeftScaledNumerator_mem_FP
     machineRawAddRightScaledNumerator_mem_FP
-  simpa only [machineRawRatLeBit] using
+  simpa only [machineRawRatLeBit] using!
     machineCompose_mem_FP hpair machineIntegerLeCode_mem_FP
 
 theorem machineRawRatLeBit_cross_encode (q r : RawRat) :
@@ -47,7 +47,7 @@ theorem rawRat_value_le_iff_cross (q r : RawRat) :
   · intro h
     have hdiv : (q.num : ℚ) / (q.den : ℚ) ≤
         (r.num : ℚ) / (r.den : ℚ) := by
-      simpa only [RawRat.value] using h
+      simpa only [RawRat.value] using! h
     have hcross :=
       (div_le_div_iff₀ (by exact_mod_cast q.den_pos : (0 : ℚ) < q.den)
         (by exact_mod_cast r.den_pos : (0 : ℚ) < r.den)).1 hdiv
@@ -60,7 +60,7 @@ theorem rawRat_value_le_iff_cross (q r : RawRat) :
         (r.num : ℚ) / (r.den : ℚ) :=
       (div_le_div_iff₀ (by exact_mod_cast q.den_pos : (0 : ℚ) < q.den)
         (by exact_mod_cast r.den_pos : (0 : ℚ) < r.den)).2 hcross
-    simpa only [RawRat.value] using hdiv
+    simpa only [RawRat.value] using! hdiv
 
 theorem machineRawRatLeBit_encode (q r : RawRat) :
     machineRawRatLeBit

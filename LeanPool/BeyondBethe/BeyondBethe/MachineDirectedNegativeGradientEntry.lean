@@ -60,13 +60,13 @@ theorem machineDirectedGradientEntryRest_mem_FP :
 
 theorem machineDirectedGradientEntryColumn_mem_FP :
     machineDirectedGradientEntryColumn ∈ FP := by
-  simpa only [machineDirectedGradientEntryColumn] using
+  simpa only [machineDirectedGradientEntryColumn] using!
     machineCompose_mem_FP machineDirectedGradientEntryRest_mem_FP
       machinePairFirst_mem_FP
 
 theorem machineDirectedGradientEntryPayload_mem_FP :
     machineDirectedGradientEntryPayload ∈ FP := by
-  simpa only [machineDirectedGradientEntryPayload] using
+  simpa only [machineDirectedGradientEntryPayload] using!
     machineCompose_mem_FP machineDirectedGradientEntryRest_mem_FP
       machinePairSecond_mem_FP
 
@@ -85,19 +85,19 @@ theorem machineDirectedGradientEntryAsObjectiveState_mem_FP :
   have hwithColumn := machinePair_mem_FP
     machineDirectedGradientEntryColumn_mem_FP hwithAcc
   simpa only [machineDirectedGradientEntryAsObjectiveState,
-    machineDirectedObjectiveSumPack] using
+    machineDirectedObjectiveSumPack] using!
     machinePair_mem_FP machineDirectedGradientEntryRow_mem_FP hwithColumn
 
 theorem machineDirectedGradientEntryScalarInput_mem_FP :
     machineDirectedGradientEntryScalarInput ∈ FP := by
-  simpa only [machineDirectedGradientEntryScalarInput] using
+  simpa only [machineDirectedGradientEntryScalarInput] using!
     machineCompose_mem_FP
       machineDirectedGradientEntryAsObjectiveState_mem_FP
       machineDirectedObjectiveSumCoordinateInput_mem_FP
 
 theorem machineDirectedNegativeGradientEntryRawCode_mem_FP :
     machineDirectedNegativeGradientEntryRawCode ∈ FP := by
-  simpa only [machineDirectedNegativeGradientEntryRawCode] using
+  simpa only [machineDirectedNegativeGradientEntryRawCode] using!
     machineCompose_mem_FP machineDirectedGradientEntryScalarInput_mem_FP
       machineDirectedNegativeGradientLowerRawCode_mem_FP
 

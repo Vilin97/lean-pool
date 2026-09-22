@@ -156,7 +156,7 @@ theorem machineOptimizerDimensionRawCode_mem_FP :
 
 theorem machineOptimizerBitBoundBits_mem_FP :
     machineOptimizerBitBoundBits ∈ FP := by
-  simpa only [machineOptimizerBitBoundBits] using
+  simpa only [machineOptimizerBitBoundBits] using!
     machineCompose_mem_FP machineMatrixEntryBitBoundRuler_mem_FP
       machineLengthBits_mem_FP
 
@@ -169,7 +169,7 @@ theorem machineOptimizerBitBoundRawCode_mem_FP :
 
 theorem machineOptimizerFourDimensionRawCode_mem_FP :
     machineOptimizerFourDimensionRawCode ∈ FP := by
-  simpa only [machineOptimizerFourDimensionRawCode] using machineCompose_mem_FP
+  simpa only [machineOptimizerFourDimensionRawCode] using! machineCompose_mem_FP
     (machinePair_mem_FP
       (machineConst_mem_FP (rawRatBinaryCode rawOptimizerFour))
       machineOptimizerDimensionRawCode_mem_FP)
@@ -177,7 +177,7 @@ theorem machineOptimizerFourDimensionRawCode_mem_FP :
 
 theorem machineOptimizerTauRawCode_mem_FP :
     machineOptimizerTauRawCode ∈ FP := by
-  simpa only [machineOptimizerTauRawCode] using machineCompose_mem_FP
+  simpa only [machineOptimizerTauRawCode] using! machineCompose_mem_FP
     (machinePair_mem_FP
       (machineConst_mem_FP (rawRatBinaryCode rawOptimizerXi))
       machineOptimizerFourDimensionRawCode_mem_FP)
@@ -185,28 +185,28 @@ theorem machineOptimizerTauRawCode_mem_FP :
 
 theorem machineOptimizerNSquareRawCode_mem_FP :
     machineOptimizerNSquareRawCode ∈ FP := by
-  simpa only [machineOptimizerNSquareRawCode] using machineCompose_mem_FP
+  simpa only [machineOptimizerNSquareRawCode] using! machineCompose_mem_FP
     (machinePair_mem_FP machineOptimizerDimensionRawCode_mem_FP
       machineOptimizerDimensionRawCode_mem_FP)
     machineRawRatMulCode_mem_FP
 
 theorem machineOptimizerNCubeRawCode_mem_FP :
     machineOptimizerNCubeRawCode ∈ FP := by
-  simpa only [machineOptimizerNCubeRawCode] using machineCompose_mem_FP
+  simpa only [machineOptimizerNCubeRawCode] using! machineCompose_mem_FP
     (machinePair_mem_FP machineOptimizerNSquareRawCode_mem_FP
       machineOptimizerDimensionRawCode_mem_FP)
     machineRawRatMulCode_mem_FP
 
 theorem machineOptimizerNBProductRawCode_mem_FP :
     machineOptimizerNBProductRawCode ∈ FP := by
-  simpa only [machineOptimizerNBProductRawCode] using machineCompose_mem_FP
+  simpa only [machineOptimizerNBProductRawCode] using! machineCompose_mem_FP
     (machinePair_mem_FP machineOptimizerDimensionRawCode_mem_FP
       machineOptimizerBitBoundRawCode_mem_FP)
     machineRawRatMulCode_mem_FP
 
 theorem machineOptimizerTwiceNSquareRawCode_mem_FP :
     machineOptimizerTwiceNSquareRawCode ∈ FP := by
-  simpa only [machineOptimizerTwiceNSquareRawCode] using machineCompose_mem_FP
+  simpa only [machineOptimizerTwiceNSquareRawCode] using! machineCompose_mem_FP
     (machinePair_mem_FP
       (machineConst_mem_FP (rawRatBinaryCode rawOptimizerTwo))
       machineOptimizerNSquareRawCode_mem_FP)
@@ -214,35 +214,35 @@ theorem machineOptimizerTwiceNSquareRawCode_mem_FP :
 
 theorem machineOptimizerInteriorSumRawCode_mem_FP :
     machineOptimizerInteriorSumRawCode ∈ FP := by
-  simpa only [machineOptimizerInteriorSumRawCode] using machineCompose_mem_FP
+  simpa only [machineOptimizerInteriorSumRawCode] using! machineCompose_mem_FP
     (machinePair_mem_FP machineOptimizerNBProductRawCode_mem_FP
       machineOptimizerTwiceNSquareRawCode_mem_FP)
     machineRawRatAddCode_mem_FP
 
 theorem machineOptimizerNTimesInteriorSumRawCode_mem_FP :
     machineOptimizerNTimesInteriorSumRawCode ∈ FP := by
-  simpa only [machineOptimizerNTimesInteriorSumRawCode] using machineCompose_mem_FP
+  simpa only [machineOptimizerNTimesInteriorSumRawCode] using! machineCompose_mem_FP
     (machinePair_mem_FP machineOptimizerDimensionRawCode_mem_FP
       machineOptimizerInteriorSumRawCode_mem_FP)
     machineRawRatMulCode_mem_FP
 
 theorem machineOptimizerInteriorQuotientRawCode_mem_FP :
     machineOptimizerInteriorQuotientRawCode ∈ FP := by
-  simpa only [machineOptimizerInteriorQuotientRawCode] using machineCompose_mem_FP
+  simpa only [machineOptimizerInteriorQuotientRawCode] using! machineCompose_mem_FP
     (machinePair_mem_FP machineOptimizerNTimesInteriorSumRawCode_mem_FP
       machineOptimizerTauRawCode_mem_FP)
     machineRawRatDivCode_mem_FP
 
 theorem machineOptimizerInteriorK0RawCode_mem_FP :
     machineOptimizerInteriorK0RawCode ∈ FP := by
-  simpa only [machineOptimizerInteriorK0RawCode] using machineCompose_mem_FP
+  simpa only [machineOptimizerInteriorK0RawCode] using! machineCompose_mem_FP
     (machinePair_mem_FP machineOptimizerInteriorQuotientRawCode_mem_FP
       machineOptimizerNCubeRawCode_mem_FP)
     machineRawRatAddCode_mem_FP
 
 theorem machineOptimizerTwiceInteriorK0RawCode_mem_FP :
     machineOptimizerTwiceInteriorK0RawCode ∈ FP := by
-  simpa only [machineOptimizerTwiceInteriorK0RawCode] using machineCompose_mem_FP
+  simpa only [machineOptimizerTwiceInteriorK0RawCode] using! machineCompose_mem_FP
     (machinePair_mem_FP
       (machineConst_mem_FP (rawRatBinaryCode rawOptimizerTwo))
       machineOptimizerInteriorK0RawCode_mem_FP)
@@ -250,7 +250,7 @@ theorem machineOptimizerTwiceInteriorK0RawCode_mem_FP :
 
 theorem machineOptimizerInteriorExponentBits_mem_FP :
     machineOptimizerInteriorExponentBits ∈ FP := by
-  simpa only [machineOptimizerInteriorExponentBits] using
+  simpa only [machineOptimizerInteriorExponentBits] using!
     machineCompose_mem_FP machineOptimizerTwiceInteriorK0RawCode_mem_FP
       machineRationalCeilNatBits_mem_FP
 
@@ -466,10 +466,6 @@ theorem explicitOptimizerInteriorExponentCoefficient_le :
   norm_num [explicitOptimizerInteriorExponentCoefficient,
     rationalCeilNat, explicitXi, explicitDelta, explicitEta,
     explicitRowRatio]
-  change 34 *
-      (14286815467932160000000000000000000000000000000000000000000000000000000 : ℕ) +
-        2 ≤ 17 ^ 60
-  norm_num
 
 theorem numericalInteriorExponent_le_sourcePolynomial
     {n B S : ℕ} (hn : 1 ≤ n) (hnS : n ≤ S) (hBS : B ≤ 32 * S) :
@@ -530,26 +526,26 @@ def machineExplicitOptimizerFloorRawCode (word : List Bool) : List Bool :=
 
 theorem machineOptimizerInteriorExponentGuard_mem_FP :
     machineOptimizerInteriorExponentGuard ∈ FP := by
-  simpa only [machineOptimizerInteriorExponentGuard] using
+  simpa only [machineOptimizerInteriorExponentGuard] using!
     machineIteratedBinaryWidth_mem_FP 6
 
 theorem machineOptimizerInteriorExponentUnary_mem_FP :
     machineOptimizerInteriorExponentUnary ∈ FP := by
-  simpa only [machineOptimizerInteriorExponentUnary] using machineCompose_mem_FP
+  simpa only [machineOptimizerInteriorExponentUnary] using! machineCompose_mem_FP
     (machinePair_mem_FP machineOptimizerInteriorExponentGuard_mem_FP
       machineOptimizerInteriorExponentBits_mem_FP)
     machineBoundedUnary_mem_FP
 
 theorem machineOptimizerInteriorFloorRawCode_mem_FP :
     machineOptimizerInteriorFloorRawCode ∈ FP := by
-  simpa only [machineOptimizerInteriorFloorRawCode] using machineCompose_mem_FP
+  simpa only [machineOptimizerInteriorFloorRawCode] using! machineCompose_mem_FP
     (machinePair_mem_FP machineOptimizerInteriorExponentUnary_mem_FP
       (machineConst_mem_FP (rawRatBinaryCode rawOptimizerHalf)))
     machineRawRatPowerCode_mem_FP
 
 theorem machineExplicitOptimizerFloorRawCode_mem_FP :
     machineExplicitOptimizerFloorRawCode ∈ FP := by
-  simpa only [machineExplicitOptimizerFloorRawCode] using machineCompose_mem_FP
+  simpa only [machineExplicitOptimizerFloorRawCode] using! machineCompose_mem_FP
     (machinePair_mem_FP machineOptimizerInteriorFloorRawCode_mem_FP
       (machineConst_mem_FP (rawRatBinaryCode rawOptimizerTwo)))
     machineRawRatDivCode_mem_FP
@@ -563,9 +559,9 @@ theorem optimizerInteriorExponent_le_guard {n : ℕ} (hn : 1 ≤ n)
   let word := rationalMatrixBinaryEncoding.encode ⟨n, A⟩
   let S := word.length
   have hnS : n ≤ S := by
-    simpa only [S, word] using matrix_dimension_le_code_length A
+    simpa only [S, word] using! matrix_dimension_le_code_length A
   have hBS : rationalMatrixEntryBitBound A ≤ 32 * S := by
-    simpa only [S, word] using rationalMatrixEntryBitBound_le_machineCode hn A
+    simpa only [S, word] using! rationalMatrixEntryBitBound_le_machineCode hn A
   have hpoly := numericalInteriorExponent_le_sourcePolynomial hn hnS hBS
   have hcoeff :
       explicitOptimizerInteriorExponentCoefficient * S ^ 4 ≤
@@ -586,7 +582,7 @@ theorem optimizerInteriorExponent_le_guard {n : ℕ} (hn : 1 ≤ n)
         explicitOptimizerInteriorExponentCoefficient * S ^ 4 := hpoly
     _ ≤ (S + 16) ^ 64 := hcoeff
     _ ≤ certificateExpGuardWidth 6 S := by
-      simpa using certificateExpGuardWidth_pow_lower 5 S
+      simpa using! certificateExpGuardWidth_pow_lower 5 S
     _ = (machineOptimizerInteriorExponentGuard word).length := by
       simp [machineOptimizerInteriorExponentGuard, S]
 

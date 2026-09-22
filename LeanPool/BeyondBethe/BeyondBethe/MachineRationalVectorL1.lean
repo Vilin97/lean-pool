@@ -147,23 +147,23 @@ theorem machineRationalVectorL1Current_mem_FP :
 
 theorem machineRationalVectorL1Acc_mem_FP :
     machineRationalVectorL1Acc ∈ FP := by
-  simpa only [machineRationalVectorL1Acc] using
+  simpa only [machineRationalVectorL1Acc] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineRationalVectorL1Bound_mem_FP :
     machineRationalVectorL1Bound ∈ FP := by
-  simpa only [machineRationalVectorL1Bound] using
+  simpa only [machineRationalVectorL1Bound] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairSecond_mem_FP
 
 theorem machineRationalVectorL1Entry_mem_FP :
     machineRationalVectorL1Entry ∈ FP := by
-  simpa only [machineRationalVectorL1Entry] using
+  simpa only [machineRationalVectorL1Entry] using!
     machineCompose_mem_FP machineRationalVectorL1Current_mem_FP
       machineListHead_mem_FP
 
 theorem machineRationalVectorL1Magnitude_mem_FP :
     machineRationalVectorL1Magnitude ∈ FP := by
-  simpa only [machineRationalVectorL1Magnitude] using
+  simpa only [machineRationalVectorL1Magnitude] using!
     machineCompose_mem_FP machineRationalVectorL1Entry_mem_FP
       machineRawRatMagnitudeCode_mem_FP
 
@@ -171,12 +171,12 @@ theorem machineRationalVectorL1Candidate_mem_FP :
     machineRationalVectorL1Candidate ∈ FP := by
   have hp := machinePair_mem_FP machineRationalVectorL1Acc_mem_FP
     machineRationalVectorL1Magnitude_mem_FP
-  simpa only [machineRationalVectorL1Candidate] using
+  simpa only [machineRationalVectorL1Candidate] using!
     machineCompose_mem_FP hp machineRawRatAddCode_mem_FP
 
 theorem machineRationalVectorL1NextAcc_mem_FP :
     machineRationalVectorL1NextAcc ∈ FP := by
-  simpa only [machineRationalVectorL1NextAcc] using
+  simpa only [machineRationalVectorL1NextAcc] using!
     machineTake_mem_FP machineRationalVectorL1Bound_mem_FP
       machineRationalVectorL1Candidate_mem_FP
 
@@ -305,13 +305,13 @@ theorem machineRationalVectorL1FinalState_mem_FP :
 
 theorem machineRationalVectorL1RawCode_mem_FP :
     machineRationalVectorL1RawCode ∈ FP := by
-  simpa only [machineRationalVectorL1RawCode] using
+  simpa only [machineRationalVectorL1RawCode] using!
     machineCompose_mem_FP machineRationalVectorL1FinalState_mem_FP
       machineRationalVectorL1Acc_mem_FP
 
 theorem machineRationalVectorL1EntryCode_mem_FP :
     machineRationalVectorL1EntryCode ∈ FP := by
-  simpa only [machineRationalVectorL1EntryCode] using
+  simpa only [machineRationalVectorL1EntryCode] using!
     machineCompose_mem_FP machineRationalVectorL1RawCode_mem_FP
       machineNormalizeRawRatEntryCode_mem_FP
 
@@ -400,7 +400,7 @@ theorem machineRationalVectorL1Step_semantics
             rawRatWidth (acc.add (rawRatOfRat q).magnitude) +
                 rawRatListCost qs ≤ 1 + word.length := by
           simpa only [RationalVectorL1SemInvariant,
-            rationalVectorL1SemStep] using hinv
+            rationalVectorL1SemStep] using! hinv
         omega
       have hcode :
           (rawRatBinaryCode
@@ -497,7 +497,7 @@ theorem machineRationalVectorL1FinalState_encode {n : ℕ}
   have hn : n ≤ word.length := by
     have hlist := list_length_le_binaryListCode_length
       rationalEntryBinaryCode xs
-    simpa only [xs, List.length_ofFn, hcode] using hlist
+    simpa only [xs, List.length_ofFn, hcode] using! hlist
   have hsplit : word.length = (word.length - n) + n := by omega
   have hinit : machineRationalVectorL1Init word =
       rationalVectorL1SemCode
@@ -507,7 +507,7 @@ theorem machineRationalVectorL1FinalState_encode {n : ℕ}
   have hprocess :
       (rationalVectorL1SemStep)^[n] s =
         ⟨[], rawRatListL1Sum RawRat.zero xs⟩ := by
-    simpa [s, xs] using rationalVectorL1Sem_process xs RawRat.zero
+    simpa [s, xs] using! rationalVectorL1Sem_process xs RawRat.zero
   change machineRationalVectorL1FinalState word = _
   rw [machineRationalVectorL1FinalState, hsplit,
     Function.iterate_add_apply, hinit,

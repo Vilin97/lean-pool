@@ -113,12 +113,12 @@ theorem machineRationalMatrixColumnRemaining_mem_FP :
 
 theorem machineRationalMatrixColumnAccumulator_mem_FP :
     machineRationalMatrixColumnAccumulator ∈ FP := by
-  simpa only [machineRationalMatrixColumnAccumulator] using
+  simpa only [machineRationalMatrixColumnAccumulator] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineRationalMatrixColumnColumn_mem_FP :
     machineRationalMatrixColumnColumn ∈ FP := by
-  simpa only [machineRationalMatrixColumnColumn] using
+  simpa only [machineRationalMatrixColumnColumn] using!
     machineCompose_mem_FP
       (machineCompose_mem_FP machinePairSecond_mem_FP
         machinePairSecond_mem_FP)
@@ -126,7 +126,7 @@ theorem machineRationalMatrixColumnColumn_mem_FP :
 
 theorem machineRationalMatrixColumnBound_mem_FP :
     machineRationalMatrixColumnBound ∈ FP := by
-  simpa only [machineRationalMatrixColumnBound] using
+  simpa only [machineRationalMatrixColumnBound] using!
     machineCompose_mem_FP
       (machineCompose_mem_FP machinePairSecond_mem_FP
         machinePairSecond_mem_FP)
@@ -134,7 +134,7 @@ theorem machineRationalMatrixColumnBound_mem_FP :
 
 theorem machineRationalMatrixColumnCurrentRow_mem_FP :
     machineRationalMatrixColumnCurrentRow ∈ FP := by
-  simpa only [machineRationalMatrixColumnCurrentRow] using
+  simpa only [machineRationalMatrixColumnCurrentRow] using!
     machineCompose_mem_FP machineRationalMatrixColumnRemaining_mem_FP
       machineListHead_mem_FP
 
@@ -142,7 +142,7 @@ theorem machineRationalMatrixColumnCurrentEntry_mem_FP :
     machineRationalMatrixColumnCurrentEntry ∈ FP := by
   have hp := machinePair_mem_FP machineRationalMatrixColumnColumn_mem_FP
     machineRationalMatrixColumnCurrentRow_mem_FP
-  simpa only [machineRationalMatrixColumnCurrentEntry] using
+  simpa only [machineRationalMatrixColumnCurrentEntry] using!
     machineCompose_mem_FP hp machineListIndex_mem_FP
 
 theorem machineRationalMatrixColumnCandidate_mem_FP :
@@ -152,7 +152,7 @@ theorem machineRationalMatrixColumnCandidate_mem_FP :
 
 theorem machineRationalMatrixColumnNextAccumulator_mem_FP :
     machineRationalMatrixColumnNextAccumulator ∈ FP := by
-  simpa only [machineRationalMatrixColumnNextAccumulator] using
+  simpa only [machineRationalMatrixColumnNextAccumulator] using!
     machineTake_mem_FP machineRationalMatrixColumnBound_mem_FP
       machineRationalMatrixColumnCandidate_mem_FP
 
@@ -288,13 +288,13 @@ theorem machineRationalMatrixColumnFinalState_mem_FP :
 
 theorem machineRationalMatrixColumnReversedCode_mem_FP :
     machineRationalMatrixColumnReversedCode ∈ FP := by
-  simpa only [machineRationalMatrixColumnReversedCode] using
+  simpa only [machineRationalMatrixColumnReversedCode] using!
     machineCompose_mem_FP machineRationalMatrixColumnFinalState_mem_FP
       machineRationalMatrixColumnAccumulator_mem_FP
 
 theorem machineRationalMatrixColumnCode_mem_FP :
     machineRationalMatrixColumnCode ∈ FP := by
-  simpa only [machineRationalMatrixColumnCode] using
+  simpa only [machineRationalMatrixColumnCode] using!
     machineCompose_mem_FP machineRationalMatrixColumnReversedCode_mem_FP
       machineListReverse_mem_FP
 
@@ -316,7 +316,7 @@ theorem rationalEntryCode_getD_length_le
   have hencode := machineListIndex_binaryListCode
     rationalEntryBinaryCode row j hj
   rw [hencode, machineListIndexData, machinePairSecond_pair] at hlength
-  simpa only [List.getD_eq_getElem row 0 hj] using hlength
+  simpa only [List.getD_eq_getElem row 0 hj] using! hlength
 
 theorem rationalColumnOfRows_code_length_le
     (j : ℕ) : ∀ rows : List (List ℚ),
@@ -340,7 +340,7 @@ theorem rationalColumnOfRows_code_length_le
             ((rows.map fun r => r.getD j 0))).length ≤
             (binaryListCode (binaryListCode rationalEntryBinaryCode)
               rows).length := by
-        simpa only [rationalColumnOfRows] using hrec
+        simpa only [rationalColumnOfRows] using! hrec
       change
         (pair (rationalEntryBinaryCode (row.getD j 0))
           (binaryListCode rationalEntryBinaryCode
@@ -405,8 +405,8 @@ theorem machineRationalMatrixColumnStep_semantics
     simp only [rationalColumnOfRows, List.map_take]
     have hkm : k <
         (rows.map fun row => row.getD j 0).length := by
-      simpa using hk
-    simpa using
+      simpa using! hk
+    simpa using!
       (List.take_concat_get
         (l := rows.map fun row => row.getD j 0) hkm).symm
   have hreverse :
@@ -433,7 +433,7 @@ theorem machineRationalMatrixColumnStep_semantics
         (binaryListCode rationalEntryBinaryCode
           (rationalColumnOfRows (rows.take k) j).reverse)).length ≤
         bound.length := by
-    simpa only [hreverse, binaryListCode] using hcand
+    simpa only [hreverse, binaryListCode] using! hcand
   rw [machineRationalMatrixColumnStep]
   simp only [machineRationalMatrixColumnSemanticState,
     machineRationalMatrixColumnRemaining_pack]
@@ -476,7 +476,7 @@ theorem machineRationalMatrixColumnIterate_semantics
       _ ≤ word.length := machinePairSecond_length_le word
   induction k with
   | zero =>
-      simpa only [word] using
+      simpa only [word] using!
         (machineRationalMatrixColumnInit_semantics rows j)
   | succ k ih =>
       rw [Function.iterate_succ_apply', ih (by omega)]
@@ -558,7 +558,7 @@ theorem rationalColumnOfRows_matrix {d : ℕ}
     simp only [rationalColumnOfRows, rationalMatrixRows,
       List.getElem_map, List.getElem_ofFn]
     have hj : j.1 <
-        (List.ofFn fun j' : Fin d => A ⟨i, by simpa using hiRight⟩ j').length := by
+        (List.ofFn fun j' : Fin d => A ⟨i, by simpa using! hiRight⟩ j').length := by
       simp
     rw [List.getD_eq_getElem _ _ hj]
     simp
@@ -600,7 +600,7 @@ theorem machineRationalMatrixTransposeMulVectorEntryCode_mem_FP :
   have hcolumnCode := machineCompose_mem_FP hcolumnInput
     machineRationalMatrixColumnCode_mem_FP
   have hdotInput := machinePair_mem_FP hcolumnCode hvector
-  simpa only [machineRationalMatrixTransposeMulVectorEntryCode] using
+  simpa only [machineRationalMatrixTransposeMulVectorEntryCode] using!
     machineCompose_mem_FP hdotInput
       machineRationalVectorDotEntryCode_mem_FP
 

@@ -123,19 +123,19 @@ theorem machineNearbyMatrixSource_mem_FP :
 
 theorem machineNearbyMatrixRows_mem_FP :
     machineNearbyMatrixRows ∈ Complexity.FP := by
-  simpa only [machineNearbyMatrixRows] using
+  simpa only [machineNearbyMatrixRows] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineNearbyMatrixCurrent_mem_FP :
     machineNearbyMatrixCurrent ∈ Complexity.FP := by
-  simpa only [machineNearbyMatrixCurrent] using
+  simpa only [machineNearbyMatrixCurrent] using!
     machineCompose_mem_FP
       (machineCompose_mem_FP machinePairSecond_mem_FP machinePairSecond_mem_FP)
       machinePairFirst_mem_FP
 
 theorem machineNearbyMatrixAcc_mem_FP :
     machineNearbyMatrixAcc ∈ Complexity.FP := by
-  simpa only [machineNearbyMatrixAcc] using
+  simpa only [machineNearbyMatrixAcc] using!
     machineCompose_mem_FP
       (machineCompose_mem_FP
         (machineCompose_mem_FP machinePairSecond_mem_FP
@@ -145,7 +145,7 @@ theorem machineNearbyMatrixAcc_mem_FP :
 
 theorem machineNearbyMatrixBound_mem_FP :
     machineNearbyMatrixBound ∈ Complexity.FP := by
-  simpa only [machineNearbyMatrixBound] using
+  simpa only [machineNearbyMatrixBound] using!
     machineCompose_mem_FP
       (machineCompose_mem_FP
         (machineCompose_mem_FP machinePairSecond_mem_FP
@@ -155,7 +155,7 @@ theorem machineNearbyMatrixBound_mem_FP :
 
 theorem machineNearbyMatrixEntry_mem_FP :
     machineNearbyMatrixEntry ∈ Complexity.FP := by
-  simpa only [machineNearbyMatrixEntry] using
+  simpa only [machineNearbyMatrixEntry] using!
     machineCompose_mem_FP machineNearbyMatrixCurrent_mem_FP
       machineListHead_mem_FP
 
@@ -170,7 +170,7 @@ theorem machineNearbyMatrixCoordinateInput_mem_FP :
 
 theorem machineNearbyMatrixCoordinateRawCode_mem_FP :
     machineNearbyMatrixCoordinateRawCode ∈ Complexity.FP := by
-  simpa only [machineNearbyMatrixCoordinateRawCode] using
+  simpa only [machineNearbyMatrixCoordinateRawCode] using!
     machineCompose_mem_FP machineNearbyMatrixCoordinateInput_mem_FP
       machineNearbyCoordinateLowerRawCode_mem_FP
 
@@ -178,12 +178,12 @@ theorem machineNearbyMatrixCandidate_mem_FP :
     machineNearbyMatrixCandidate ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineNearbyMatrixAcc_mem_FP
     machineNearbyMatrixCoordinateRawCode_mem_FP
-  simpa only [machineNearbyMatrixCandidate] using
+  simpa only [machineNearbyMatrixCandidate] using!
     machineCompose_mem_FP hpair machineRawRatAddCode_mem_FP
 
 theorem machineNearbyMatrixNextAcc_mem_FP :
     machineNearbyMatrixNextAcc ∈ Complexity.FP := by
-  simpa only [machineNearbyMatrixNextAcc] using
+  simpa only [machineNearbyMatrixNextAcc] using!
     machineTake_mem_FP machineNearbyMatrixBound_mem_FP
       machineNearbyMatrixCandidate_mem_FP
 
@@ -223,12 +223,12 @@ theorem machineNearbyMatrixInputBound_mem_FP :
     machineNearbyMatrixInputBound ∈ Complexity.FP := by
   have h1 := machineBinaryMulWidth_mem_FP
   have h2 := machineCompose_mem_FP h1 machineBinaryMulWidth_mem_FP
-  simpa only [machineNearbyMatrixInputBound] using
+  simpa only [machineNearbyMatrixInputBound] using!
     machineCompose_mem_FP h2 machineBinaryMulWidth_mem_FP
 
 theorem machineNearbyMatrixRowsWord_mem_FP :
     machineNearbyMatrixRowsWord ∈ Complexity.FP := by
-  simpa only [machineNearbyMatrixRowsWord] using
+  simpa only [machineNearbyMatrixRowsWord] using!
     machineCompose_mem_FP machineOptimizerMatrixWord_mem_FP
       machineMatrixRowsWord_mem_FP
 
@@ -369,7 +369,7 @@ theorem machineNearbyMatrixFinalState_mem_FP :
 
 theorem machineNearbyMatrixRawSumCode_mem_FP :
     machineNearbyMatrixRawSumCode ∈ Complexity.FP := by
-  simpa only [machineNearbyMatrixRawSumCode] using
+  simpa only [machineNearbyMatrixRawSumCode] using!
     machineCompose_mem_FP machineNearbyMatrixFinalState_mem_FP
       machineNearbyMatrixAcc_mem_FP
 
@@ -400,7 +400,7 @@ theorem rawCertificateRegularizationScale_width_le_optimizer_word
   have hxi : rawRatWidth rawExplicitXi = 231 := by
     rw [rawExplicitXi, explicitXi, explicitDelta, explicitEta,
       explicitRowRatio]
-      norm_num [rawRatOfRat, rawRatWidth]
+    norm_num [rawRatOfRat, rawRatWidth]
     apply Nat.le_antisymm
     · apply max_le
       · norm_num
@@ -422,7 +422,7 @@ theorem rawCertificateRegularizationScale_width_le_optimizer_word
   have hmatrixWord :
       (rationalMatrixBinaryEncoding.encode ⟨n, X⟩).length ≤ word.length := by
     simpa only [word, rationalOptimizerOutputCode,
-      machinePairFirst_pair] using machinePairFirst_length_le word
+      machinePairFirst_pair] using! machinePairFirst_length_le word
   have hnWord : n ≤ word.length := hnMatrix.trans hmatrixWord
   simp only [rawCertificateRegularizationScale,
     rawCertificateFourDimension] at htau
@@ -450,14 +450,14 @@ theorem rawNearbyCoordinateLower_width_le_optimizer_word
     calc
       _ = (machineMatrixRowsWord
           (rationalMatrixBinaryEncoding.encode ⟨n, X⟩)).length := by
-        simpa using congrArg List.length
+        simpa using! congrArg List.length
           (machineMatrixRowsWord_encode X).symm
       _ ≤ (rationalMatrixBinaryEncoding.encode ⟨n, X⟩).length := by
-        simpa only [machineMatrixRowsWord] using machinePairSecond_length_le
+        simpa only [machineMatrixRowsWord] using! machinePairSecond_length_le
           (rationalMatrixBinaryEncoding.encode ⟨n, X⟩)
       _ ≤ word.length := by
         simpa only [word, rationalOptimizerOutputCode,
-          machinePairFirst_pair] using machinePairFirst_length_le word
+          machinePairFirst_pair] using! machinePairFirst_length_le word
       _ = L := rfl
   have hqCode := binaryListCode_element_length_le
     rationalEntryBinaryCode hq
@@ -473,7 +473,7 @@ theorem rawNearbyCoordinateLower_width_le_optimizer_word
   have hmatrixWord :
       (rationalMatrixBinaryEncoding.encode ⟨n, X⟩).length ≤ L := by
     simpa only [L, word, rationalOptimizerOutputCode,
-      machinePairFirst_pair] using machinePairFirst_length_le word
+      machinePairFirst_pair] using! machinePairFirst_length_le word
   have hnWord : n ≤ L := hnMatrix.trans hmatrixWord
   have hp : directedCertificatePrecision n ≤ L + 400 := by
     simp only [directedCertificatePrecision]
@@ -560,7 +560,7 @@ theorem rawNearbyRowsCost_le_optimizer_word
           (rawNearbyCoordinateLower (rawCertificateRegularizationScale n) q
             (directedCertificatePrecision n)) ≤ budget := by
     intro row hrow q hq
-    simpa only [rows, word, budget] using
+    simpa only [rows, word, budget] using!
       rawNearbyCoordinateLower_width_le_optimizer_word X R C hrow hq
   have hcost := rawNearbyRowsCost_le_uniform rows hcoordinate
   have hrowsCode :
@@ -569,14 +569,14 @@ theorem rawNearbyRowsCost_le_optimizer_word
     calc
       _ = (machineMatrixRowsWord
           (rationalMatrixBinaryEncoding.encode ⟨n, X⟩)).length := by
-        simpa only [rows] using congrArg List.length
+        simpa only [rows] using! congrArg List.length
           (machineMatrixRowsWord_encode X).symm
       _ ≤ (rationalMatrixBinaryEncoding.encode ⟨n, X⟩).length := by
-        simpa only [machineMatrixRowsWord] using machinePairSecond_length_le
+        simpa only [machineMatrixRowsWord] using! machinePairSecond_length_le
           (rationalMatrixBinaryEncoding.encode ⟨n, X⟩)
       _ ≤ word.length := by
         simpa only [word, rationalOptimizerOutputCode,
-          machinePairFirst_pair] using machinePairFirst_length_le word
+          machinePairFirst_pair] using! machinePairFirst_length_le word
   have hwork : matrixNonnegativeRowsWork rows ≤ word.length :=
     (binaryListCode_length_ge_work rows).trans hrowsCode
   have hentries : (rows.map List.length).sum ≤ word.length := by
@@ -591,7 +591,7 @@ theorem rawNearbyRowsCost_le_optimizer_word
           omega
     exact (hentriesWork rows).trans hwork
   have hmul := Nat.mul_le_mul_right (budget + 1) hentries
-  exact hcost.trans (by simpa only [rows, word, budget] using hmul)
+  exact hcost.trans (by simpa only [rows, word, budget] using! hmul)
 
 theorem machineNearbyMatrixInputBound_length_dominates (word : List Bool) :
     4 + 3 * (1 + word.length *
@@ -720,7 +720,7 @@ theorem nearbyMatrixSemStep_invariant {tau : RawRat} {p budget : ℕ}
         (rawNearbyCoordinateLower
           (rawCertificateRegularizationScale n) q
           (directedCertificatePrecision n)) := by
-  simpa only [nearbyMatrixSemCode] using
+  simpa only [nearbyMatrixSemCode] using!
     machineNearbyMatrixCoordinateRawCode_semCode X R C rows q qs acc bound
 
 theorem machineNearbyMatrixStep_semantics
@@ -776,7 +776,7 @@ theorem machineNearbyMatrixStep_semantics
                 (directedCertificatePrecision n) qs +
               rawNearbyRowsCost (rawCertificateRegularizationScale n)
                 (directedCertificatePrecision n) rows ≤ budget := by
-          simpa only [NearbyMatrixSemInvariant, nearbyMatrixSemStep] using hinv
+          simpa only [NearbyMatrixSemInvariant, nearbyMatrixSemStep] using! hinv
         omega
       have hcode :
           (rawRatBinaryCode
@@ -898,7 +898,7 @@ theorem machineNearbyMatrixRawSumCode_encode_of_large
         word.length := by
     calc
       _ = (machineNearbyMatrixRowsWord word).length := by
-        simpa only [word, rows] using congrArg List.length
+        simpa only [word, rows] using! congrArg List.length
           (machineNearbyMatrixRowsWord_encode X R C).symm
       _ ≤ word.length := by
         exact (machinePairSecond_length_le
@@ -918,7 +918,7 @@ theorem machineNearbyMatrixRawSumCode_encode_of_large
       binaryListCode, machineNearbyMatrixRowsWord]
   have hlarge' :
       4 + 3 * budget ≤ (machineNearbyMatrixInputBound word).length := by
-    simpa only [budget, tau, p, rows, word] using hlarge
+    simpa only [budget, tau, p, rows, word] using! hlarge
   rw [machineNearbyMatrixRawSumCode, machineNearbyMatrixFinalState,
     hsplit, Function.iterate_add_apply, hinit,
     machineNearbyMatrixIterate_semantics X R C

@@ -70,7 +70,7 @@ def machineExplicitBetheThresholdFeasibilityCode
 
 theorem machineOptimizerFeasibilityReducedDimensionUnary_mem_FP :
     machineOptimizerFeasibilityReducedDimensionUnary ∈ FP := by
-  simpa only [machineOptimizerFeasibilityReducedDimensionUnary] using
+  simpa only [machineOptimizerFeasibilityReducedDimensionUnary] using!
     machineCompose_mem_FP
       (machinePair_mem_FP machineOptimizerFeasibilitySource_mem_FP
         machineOptimizerFeasibilityReducedDimensionBits_mem_FP)
@@ -81,12 +81,12 @@ theorem machineOptimizerFeasibilityTauCode_mem_FP :
   have htau := machineCompose_mem_FP
     machineOptimizerFeasibilitySource_mem_FP
     machineOptimizerTauRawCode_mem_FP
-  simpa only [machineOptimizerFeasibilityTauCode] using
+  simpa only [machineOptimizerFeasibilityTauCode] using!
     machineCompose_mem_FP htau machineNormalizeRawRatEntryCode_mem_FP
 
 theorem machineOptimizerFeasibilityDeltaRawCode_mem_FP :
     machineOptimizerFeasibilityDeltaRawCode ∈ FP := by
-  simpa only [machineOptimizerFeasibilityDeltaRawCode] using
+  simpa only [machineOptimizerFeasibilityDeltaRawCode] using!
     machineCompose_mem_FP machineOptimizerFeasibilitySource_mem_FP
       machineExplicitOptimizerFloorRawCode_mem_FP
 
@@ -106,7 +106,7 @@ theorem machineOptimizerFeasibilityOracleStaticCode_mem_FP :
 
 theorem machineOptimizerFeasibilityInitialBallCode_mem_FP :
     machineOptimizerFeasibilityInitialBallCode ∈ FP := by
-  simpa only [machineOptimizerFeasibilityInitialBallCode] using
+  simpa only [machineOptimizerFeasibilityInitialBallCode] using!
     machineCompose_mem_FP
       (machinePair_mem_FP
         machineOptimizerFeasibilityEllipsoidDimensionUnary_mem_FP
@@ -125,7 +125,7 @@ theorem machineOptimizerFeasibilityLoopWord_mem_FP :
 
 theorem machineExplicitBetheThresholdFeasibilityCode_mem_FP :
     machineExplicitBetheThresholdFeasibilityCode ∈ FP := by
-  simpa only [machineExplicitBetheThresholdFeasibilityCode] using
+  simpa only [machineExplicitBetheThresholdFeasibilityCode] using!
     machineCompose_mem_FP machineOptimizerFeasibilityLoopWord_mem_FP
       machineBetheFeasibilityResultCode_mem_FP
 
@@ -271,7 +271,7 @@ theorem machineExplicitBetheThresholdFeasibilityCode_encode
   have htau0 : 0 ≤ tau := (explicitRegularizationScale_pos (by omega)).le
   have htau1 : tau ≤ 1 := explicitRegularizationScale_le_one (by omega)
   have hdelta : 0 < delta.value := by
-    simpa only [delta, (rawExplicitOptimizerScales_value A).1] using
+    simpa only [delta, (rawExplicitOptimizerScales_value A).1] using!
       explicitOptimizerFloor_pos A
   have hr : 0 < r := explicitOptimizerInnerRadius_pos A
   have hR : 0 < R := betheEpigraphOuterRadius_pos m hr.le
@@ -280,6 +280,6 @@ theorem machineExplicitBetheThresholdFeasibilityCode_encode
   have hmachine := machineExplicitBallBetheFeasibilityResultCode_encode
     hm htau0 htau1 hA (explicitOptimizerPrecision A) hdelta upper T hR
   simpa only [tau, delta, r, R, T,
-    runExplicitScannedBetheThresholdFeasibility] using hmachine
+    runExplicitScannedBetheThresholdFeasibility] using! hmachine
 
 end BeyondBethe

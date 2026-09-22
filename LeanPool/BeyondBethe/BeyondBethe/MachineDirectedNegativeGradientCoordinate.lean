@@ -65,7 +65,7 @@ def machineDirectedNegativeGradientLowerRawCode
 
 theorem machineDirectedGradientCoordinateNegLogA_mem_FP :
     machineDirectedGradientCoordinateNegLogA ∈ FP := by
-  simpa only [machineDirectedGradientCoordinateNegLogA] using
+  simpa only [machineDirectedGradientCoordinateNegLogA] using!
     machineCompose_mem_FP machineDirectedObjectiveCoordinateLogAUpper_mem_FP
       machineRawRatNegCode_mem_FP
 
@@ -74,12 +74,12 @@ theorem machineDirectedGradientCoordinateScaledLogX_mem_FP :
   have hinput := machinePair_mem_FP
     machineDirectedObjectiveCoordinateOnePlusTau_mem_FP
     machineDirectedObjectiveCoordinateLogXLower_mem_FP
-  simpa only [machineDirectedGradientCoordinateScaledLogX] using
+  simpa only [machineDirectedGradientCoordinateScaledLogX] using!
     machineCompose_mem_FP hinput machineRawRatMulCode_mem_FP
 
 theorem machineDirectedGradientCoordinateLogComplementLower_mem_FP :
     machineDirectedGradientCoordinateLogComplementLower ∈ FP := by
-  simpa only [machineDirectedGradientCoordinateLogComplementLower] using
+  simpa only [machineDirectedGradientCoordinateLogComplementLower] using!
     machineCompose_mem_FP
       machineDirectedObjectiveCoordinateLogComplementInput_mem_FP
       machineScheduledLogLowerRawCode_mem_FP
@@ -89,7 +89,7 @@ theorem machineDirectedGradientCoordinateFirstTwo_mem_FP :
   have hinput := machinePair_mem_FP
     machineDirectedGradientCoordinateNegLogA_mem_FP
     machineDirectedGradientCoordinateScaledLogX_mem_FP
-  simpa only [machineDirectedGradientCoordinateFirstTwo] using
+  simpa only [machineDirectedGradientCoordinateFirstTwo] using!
     machineCompose_mem_FP hinput machineRawRatAddCode_mem_FP
 
 theorem machineDirectedGradientCoordinateFirstThree_mem_FP :
@@ -97,7 +97,7 @@ theorem machineDirectedGradientCoordinateFirstThree_mem_FP :
   have hinput := machinePair_mem_FP
     machineDirectedGradientCoordinateFirstTwo_mem_FP
     machineDirectedGradientCoordinateLogComplementLower_mem_FP
-  simpa only [machineDirectedGradientCoordinateFirstThree] using
+  simpa only [machineDirectedGradientCoordinateFirstThree] using!
     machineCompose_mem_FP hinput machineRawRatAddCode_mem_FP
 
 theorem machineDirectedGradientCoordinateTwoPlusTau_mem_FP :
@@ -105,7 +105,7 @@ theorem machineDirectedGradientCoordinateTwoPlusTau_mem_FP :
   have hinput := machinePair_mem_FP
     (machineConst_mem_FP (rawRatBinaryCode RawRat.one))
     machineDirectedObjectiveCoordinateOnePlusTau_mem_FP
-  simpa only [machineDirectedGradientCoordinateTwoPlusTau] using
+  simpa only [machineDirectedGradientCoordinateTwoPlusTau] using!
     machineCompose_mem_FP hinput machineRawRatAddCode_mem_FP
 
 theorem machineDirectedNegativeGradientLowerRawCode_mem_FP :
@@ -113,7 +113,7 @@ theorem machineDirectedNegativeGradientLowerRawCode_mem_FP :
   have hinput := machinePair_mem_FP
     machineDirectedGradientCoordinateFirstThree_mem_FP
     machineDirectedGradientCoordinateTwoPlusTau_mem_FP
-  simpa only [machineDirectedNegativeGradientLowerRawCode] using
+  simpa only [machineDirectedNegativeGradientLowerRawCode] using!
     machineCompose_mem_FP hinput machineRawRatAddCode_mem_FP
 
 def rawDirectedNegativeGradientLower

@@ -111,7 +111,7 @@ theorem machineBetheFloorCutEntryRest_mem_FP :
 
 theorem machineBetheFloorCutEntryQueryRow_mem_FP :
     machineBetheFloorCutEntryQueryRow ∈ FP := by
-  simpa only [machineBetheFloorCutEntryQueryRow] using
+  simpa only [machineBetheFloorCutEntryQueryRow] using!
     machineCompose_mem_FP machineBetheFloorCutEntryRest_mem_FP
       machinePairFirst_mem_FP
 
@@ -119,7 +119,7 @@ theorem machineBetheFloorCutEntryQueryColumn_mem_FP :
     machineBetheFloorCutEntryQueryColumn ∈ FP := by
   have htail := machineCompose_mem_FP machineBetheFloorCutEntryRest_mem_FP
     machinePairSecond_mem_FP
-  simpa only [machineBetheFloorCutEntryQueryColumn] using
+  simpa only [machineBetheFloorCutEntryQueryColumn] using!
     machineCompose_mem_FP htail machinePairFirst_mem_FP
 
 theorem machineBetheFloorCutEntryBaseRow_mem_FP :
@@ -127,7 +127,7 @@ theorem machineBetheFloorCutEntryBaseRow_mem_FP :
   have htailOne := machineCompose_mem_FP
     machineBetheFloorCutEntryRest_mem_FP machinePairSecond_mem_FP
   have htailTwo := machineCompose_mem_FP htailOne machinePairSecond_mem_FP
-  simpa only [machineBetheFloorCutEntryBaseRow] using
+  simpa only [machineBetheFloorCutEntryBaseRow] using!
     machineCompose_mem_FP htailTwo machinePairFirst_mem_FP
 
 theorem machineBetheFloorCutEntryBaseColumn_mem_FP :
@@ -136,7 +136,7 @@ theorem machineBetheFloorCutEntryBaseColumn_mem_FP :
     machineBetheFloorCutEntryRest_mem_FP machinePairSecond_mem_FP
   have htailTwo := machineCompose_mem_FP htailOne machinePairSecond_mem_FP
   have htailThree := machineCompose_mem_FP htailTwo machinePairSecond_mem_FP
-  simpa only [machineBetheFloorCutEntryBaseColumn] using
+  simpa only [machineBetheFloorCutEntryBaseColumn] using!
     machineCompose_mem_FP htailThree machinePairFirst_mem_FP
 
 theorem machineBetheFloorCutEntryHeightBit_mem_FP :
@@ -145,7 +145,7 @@ theorem machineBetheFloorCutEntryHeightBit_mem_FP :
     machineBetheFloorCutEntryRest_mem_FP machinePairSecond_mem_FP
   have htailTwo := machineCompose_mem_FP htailOne machinePairSecond_mem_FP
   have htailThree := machineCompose_mem_FP htailTwo machinePairSecond_mem_FP
-  simpa only [machineBetheFloorCutEntryHeightBit] using
+  simpa only [machineBetheFloorCutEntryHeightBit] using!
     machineCompose_mem_FP htailThree machinePairSecond_mem_FP
 
 theorem machineBetheFloorCutEntryQueryLastRowBit_mem_FP :
@@ -153,7 +153,7 @@ theorem machineBetheFloorCutEntryQueryLastRowBit_mem_FP :
   have heq := machineUnaryRulersEqualBit_mem_FP
     machineBetheFloorCutEntryQueryRow_mem_FP
     machineBetheFloorCutEntryDimension_mem_FP
-  simpa only [machineBetheFloorCutEntryQueryLastRowBit] using
+  simpa only [machineBetheFloorCutEntryQueryLastRowBit] using!
     machineCompose_mem_FP heq machineHeadBit_mem_FP
 
 theorem machineBetheFloorCutEntryQueryLastColumnBit_mem_FP :
@@ -161,7 +161,7 @@ theorem machineBetheFloorCutEntryQueryLastColumnBit_mem_FP :
   have heq := machineUnaryRulersEqualBit_mem_FP
     machineBetheFloorCutEntryQueryColumn_mem_FP
     machineBetheFloorCutEntryDimension_mem_FP
-  simpa only [machineBetheFloorCutEntryQueryLastColumnBit] using
+  simpa only [machineBetheFloorCutEntryQueryLastColumnBit] using!
     machineCompose_mem_FP heq machineHeadBit_mem_FP
 
 theorem machineBetheFloorCutEntryBaseRowEqBit_mem_FP :
@@ -169,7 +169,7 @@ theorem machineBetheFloorCutEntryBaseRowEqBit_mem_FP :
   have heq := machineUnaryRulersEqualBit_mem_FP
     machineBetheFloorCutEntryBaseRow_mem_FP
     machineBetheFloorCutEntryQueryRow_mem_FP
-  simpa only [machineBetheFloorCutEntryBaseRowEqBit] using
+  simpa only [machineBetheFloorCutEntryBaseRowEqBit] using!
     machineCompose_mem_FP heq machineHeadBit_mem_FP
 
 theorem machineBetheFloorCutEntryBaseColumnEqBit_mem_FP :
@@ -177,7 +177,7 @@ theorem machineBetheFloorCutEntryBaseColumnEqBit_mem_FP :
   have heq := machineUnaryRulersEqualBit_mem_FP
     machineBetheFloorCutEntryBaseColumn_mem_FP
     machineBetheFloorCutEntryQueryColumn_mem_FP
-  simpa only [machineBetheFloorCutEntryBaseColumnEqBit] using
+  simpa only [machineBetheFloorCutEntryBaseColumnEqBit] using!
     machineCompose_mem_FP heq machineHeadBit_mem_FP
 
 theorem machineBetheFloorCutEntryBothBaseEqBit_mem_FP :
@@ -239,7 +239,7 @@ def machineBetheFloorCutEntryCanonicalWord {m : ℕ}
       intro h
       apply hi
       apply Fin.ext
-      simpa using h
+      simpa using! h
     simp [hi, hval]
 
 @[simp] theorem machineBetheFloorCutEntryQueryLastColumnBit_encode {m : ℕ}
@@ -259,7 +259,7 @@ def machineBetheFloorCutEntryCanonicalWord {m : ℕ}
       intro h
       apply hj
       apply Fin.ext
-      simpa using h
+      simpa using! h
     simp [hj, hval]
 
 @[simp] theorem machineBetheFloorCutEntryBaseRowEqBit_encode {m : ℕ}
@@ -280,7 +280,7 @@ def machineBetheFloorCutEntryCanonicalWord {m : ℕ}
       intro h
       apply hai
       apply Fin.ext
-      simpa using h
+      simpa using! h
     simp [hai, hval]
 
 @[simp] theorem machineBetheFloorCutEntryBaseColumnEqBit_encode {m : ℕ}
@@ -301,7 +301,7 @@ def machineBetheFloorCutEntryCanonicalWord {m : ℕ}
       intro h
       apply hbj
       apply Fin.ext
-      simpa using h
+      simpa using! h
     simp [hbj, hval]
 
 @[simp] theorem machineBetheFloorCutEntryHeightBit_encode {m : ℕ}

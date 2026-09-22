@@ -50,7 +50,7 @@ theorem machineNatPairLeftSquare_mem_FP :
   have hpair : (fun word => pair (machinePairFirst word)
       (machinePairFirst word)) ∈ Complexity.FP :=
     machinePair_mem_FP machinePairFirst_mem_FP machinePairFirst_mem_FP
-  simpa only [machineNatPairLeftSquare] using
+  simpa only [machineNatPairLeftSquare] using!
     machineCompose_mem_FP hpair machineBinaryMulBits_mem_FP
 
 theorem machineNatPairRightSquare_mem_FP :
@@ -58,7 +58,7 @@ theorem machineNatPairRightSquare_mem_FP :
   have hpair : (fun word => pair (machinePairSecond word)
       (machinePairSecond word)) ∈ Complexity.FP :=
     machinePair_mem_FP machinePairSecond_mem_FP machinePairSecond_mem_FP
-  simpa only [machineNatPairRightSquare] using
+  simpa only [machineNatPairRightSquare] using!
     machineCompose_mem_FP hpair machineBinaryMulBits_mem_FP
 
 theorem machineNatPairLeftBranch_mem_FP :
@@ -67,7 +67,7 @@ theorem machineNatPairLeftBranch_mem_FP :
       (machinePairFirst word)) ∈ Complexity.FP :=
     machinePair_mem_FP machineNatPairRightSquare_mem_FP
       machinePairFirst_mem_FP
-  simpa only [machineNatPairLeftBranch] using
+  simpa only [machineNatPairLeftBranch] using!
     machineCompose_mem_FP hpair machineBinaryAddBits_mem_FP
 
 theorem machineNatPairRightBranchFirst_mem_FP :
@@ -76,7 +76,7 @@ theorem machineNatPairRightBranchFirst_mem_FP :
       (machinePairFirst word)) ∈ Complexity.FP :=
     machinePair_mem_FP machineNatPairLeftSquare_mem_FP
       machinePairFirst_mem_FP
-  simpa only [machineNatPairRightBranchFirst] using
+  simpa only [machineNatPairRightBranchFirst] using!
     machineCompose_mem_FP hpair machineBinaryAddBits_mem_FP
 
 theorem machineNatPairRightBranch_mem_FP :
@@ -85,12 +85,12 @@ theorem machineNatPairRightBranch_mem_FP :
       (machinePairSecond word)) ∈ Complexity.FP :=
     machinePair_mem_FP machineNatPairRightBranchFirst_mem_FP
       machinePairSecond_mem_FP
-  simpa only [machineNatPairRightBranch] using
+  simpa only [machineNatPairRightBranch] using!
     machineCompose_mem_FP hpair machineBinaryAddBits_mem_FP
 
 theorem machineNatPairBits_mem_FP :
     machineNatPairBits ∈ Complexity.FP := by
-  simpa only [machineNatPairBits] using
+  simpa only [machineNatPairBits] using!
     machineIfHead_mem_FP machineBinaryNatLtBit_mem_FP
       machineNatPairLeftBranch_mem_FP machineNatPairRightBranch_mem_FP
 
@@ -129,7 +129,7 @@ def machineIntegerNatCodeBits (word : List Bool) : List Bool :=
 
 theorem machineIntegerMagnitudeWord_mem_FP :
     machineIntegerMagnitudeWord ∈ Complexity.FP := by
-  simpa only [machineIntegerMagnitudeWord] using machineTail_mem_FP
+  simpa only [machineIntegerMagnitudeWord] using! machineTail_mem_FP
 
 theorem machineIntegerEvenCodeBits_mem_FP :
     machineIntegerEvenCodeBits ∈ Complexity.FP := by
@@ -137,7 +137,7 @@ theorem machineIntegerEvenCodeBits_mem_FP :
       (machineIntegerMagnitudeWord word)) ∈ Complexity.FP :=
     machinePair_mem_FP machineIntegerMagnitudeWord_mem_FP
       machineIntegerMagnitudeWord_mem_FP
-  simpa only [machineIntegerEvenCodeBits] using
+  simpa only [machineIntegerEvenCodeBits] using!
     machineCompose_mem_FP hpair machineBinaryAddBits_mem_FP
 
 theorem machineIntegerOddCodeBits_mem_FP :
@@ -146,12 +146,12 @@ theorem machineIntegerOddCodeBits_mem_FP :
       Complexity.FP :=
     machinePair_mem_FP machineIntegerEvenCodeBits_mem_FP
       (machineConst_mem_FP [true])
-  simpa only [machineIntegerOddCodeBits] using
+  simpa only [machineIntegerOddCodeBits] using!
     machineCompose_mem_FP hpair machineBinaryAddBits_mem_FP
 
 theorem machineIntegerNatCodeBits_mem_FP :
     machineIntegerNatCodeBits ∈ Complexity.FP := by
-  simpa only [machineIntegerNatCodeBits] using
+  simpa only [machineIntegerNatCodeBits] using!
     machineIfHead_mem_FP id_mem_FP machineIntegerOddCodeBits_mem_FP
       machineIntegerEvenCodeBits_mem_FP
 
@@ -192,7 +192,7 @@ theorem machineRationalBinaryCode_mem_FP :
         (machineRationalEntryNumeratorWord word))
       (machineRationalEntryDenominatorWord word)) ∈ Complexity.FP :=
     machinePair_mem_FP hnum machineRationalEntryDenominatorWord_mem_FP
-  simpa only [machineRationalBinaryCode] using
+  simpa only [machineRationalBinaryCode] using!
     machineCompose_mem_FP hpair machineNatPairBits_mem_FP
 
 theorem machineRationalBinaryCode_encode (q : ℚ) :

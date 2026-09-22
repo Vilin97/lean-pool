@@ -35,7 +35,7 @@ theorem machineKuhnFinalMate_mem_FP :
     machineKuhnFinalMate ∈ Complexity.FP := by
   have hcontrol := machineCompose_mem_FP machineKuhnFinalState_mem_FP
     machineKuhnControl_mem_FP
-  simpa only [machineKuhnFinalMate] using
+  simpa only [machineKuhnFinalMate] using!
     machineCompose_mem_FP hcontrol machineKuhnDoneMate_mem_FP
 
 theorem machineKuhnPerfectMatchingInput_mem_FP :
@@ -45,7 +45,7 @@ theorem machineKuhnPerfectMatchingInput_mem_FP :
 
 theorem machineKuhnPerfectMatchingBit_mem_FP :
     machineKuhnPerfectMatchingBit ∈ Complexity.FP := by
-  simpa only [machineKuhnPerfectMatchingBit] using
+  simpa only [machineKuhnPerfectMatchingBit] using!
     machineCompose_mem_FP machineKuhnPerfectMatchingInput_mem_FP
       machineMateAllSomeBit_mem_FP
 
@@ -68,7 +68,7 @@ theorem hasPerfectMatching_of_all_columns_matched {n : ℕ}
   have rowOfColumn_injective : Function.Injective rowOfColumn := by
     intro col col' hrows
     apply hsupport.injective (rowOfColumn_spec col)
-    simpa only [hrows] using rowOfColumn_spec col'
+    simpa only [hrows] using! rowOfColumn_spec col'
   have rowOfColumn_bijective : Function.Bijective rowOfColumn :=
     (Fintype.bijective_iff_injective_and_card rowOfColumn).2
       ⟨rowOfColumn_injective, rfl⟩
@@ -99,7 +99,7 @@ theorem all_columns_matched_of_all_rows_matched {n : ℕ}
   intro col
   obtain ⟨row, hrow⟩ := colOfRow_surjective col
   refine ⟨row, ?_⟩
-  simpa only [hrow] using colOfRow_spec row
+  simpa only [hrow] using! colOfRow_spec row
 
 theorem columnMateList_all_isSome_eq_true_iff {n : ℕ}
     (mate : ColumnMate n) :
@@ -118,7 +118,7 @@ theorem columnMateList_all_isSome_eq_true_iff {n : ℕ}
     apply List.all_eq_true.mpr
     intro value hvalue
     obtain ⟨i, hi, rfl⟩ := List.mem_iff_getElem.mp hvalue
-    have hin : i < n := by simpa using hi
+    have hin : i < n := by simpa using! hi
     obtain ⟨row, hrow⟩ := hall ⟨i, hin⟩
     rw [columnMateList_getElem, hrow]
     rfl
@@ -158,7 +158,7 @@ theorem kuhnColumnMate_all_isSome_eq_true_iff {n : ℕ}
       [(columnMateList (kuhnColumnMate A)).all Option.isSome] := by
   rw [machineKuhnPerfectMatchingBit,
     machineKuhnPerfectMatchingInput_encode]
-  simpa only [columnMateList_length] using
+  simpa only [columnMateList_length] using!
     machineMateAllSomeBit_encode (columnMateList (kuhnColumnMate A))
 
 theorem machineKuhnPerfectMatchingBit_eq_true_iff {n : ℕ}

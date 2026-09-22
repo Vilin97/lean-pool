@@ -108,25 +108,25 @@ theorem machineDirectedAffineGradientEntryRest_mem_FP :
 
 theorem machineDirectedAffineGradientEntryColumn_mem_FP :
     machineDirectedAffineGradientEntryColumn ∈ FP := by
-  simpa only [machineDirectedAffineGradientEntryColumn] using
+  simpa only [machineDirectedAffineGradientEntryColumn] using!
     machineCompose_mem_FP machineDirectedAffineGradientEntryRest_mem_FP
       machinePairFirst_mem_FP
 
 theorem machineDirectedAffineGradientEntryPayload_mem_FP :
     machineDirectedAffineGradientEntryPayload ∈ FP := by
-  simpa only [machineDirectedAffineGradientEntryPayload] using
+  simpa only [machineDirectedAffineGradientEntryPayload] using!
     machineCompose_mem_FP machineDirectedAffineGradientEntryRest_mem_FP
       machinePairSecond_mem_FP
 
 theorem machineDirectedAffineGradientEntryDimension_mem_FP :
     machineDirectedAffineGradientEntryDimension ∈ FP := by
-  simpa only [machineDirectedAffineGradientEntryDimension] using
+  simpa only [machineDirectedAffineGradientEntryDimension] using!
     machineCompose_mem_FP machineDirectedAffineGradientEntryPayload_mem_FP
       machineDirectedObjectiveSumDimension_mem_FP
 
 theorem machineDirectedAffineGradientUpperLeftInput_mem_FP :
     machineDirectedAffineGradientUpperLeftInput ∈ FP := by
-  simpa only [machineDirectedAffineGradientUpperLeftInput] using
+  simpa only [machineDirectedAffineGradientUpperLeftInput] using!
     (Complexity.id_mem_FP : (fun x : List Bool => x) ∈ FP)
 
 theorem machineDirectedAffineGradientUpperRightInput_mem_FP :
@@ -149,25 +149,25 @@ theorem machineDirectedAffineGradientLowerRightInput_mem_FP :
 
 theorem machineDirectedAffineGradientUpperLeftRaw_mem_FP :
     machineDirectedAffineGradientUpperLeftRaw ∈ FP := by
-  simpa only [machineDirectedAffineGradientUpperLeftRaw] using
+  simpa only [machineDirectedAffineGradientUpperLeftRaw] using!
     machineCompose_mem_FP machineDirectedAffineGradientUpperLeftInput_mem_FP
       machineDirectedNegativeGradientEntryRawCode_mem_FP
 
 theorem machineDirectedAffineGradientUpperRightRaw_mem_FP :
     machineDirectedAffineGradientUpperRightRaw ∈ FP := by
-  simpa only [machineDirectedAffineGradientUpperRightRaw] using
+  simpa only [machineDirectedAffineGradientUpperRightRaw] using!
     machineCompose_mem_FP machineDirectedAffineGradientUpperRightInput_mem_FP
       machineDirectedNegativeGradientEntryRawCode_mem_FP
 
 theorem machineDirectedAffineGradientLowerLeftRaw_mem_FP :
     machineDirectedAffineGradientLowerLeftRaw ∈ FP := by
-  simpa only [machineDirectedAffineGradientLowerLeftRaw] using
+  simpa only [machineDirectedAffineGradientLowerLeftRaw] using!
     machineCompose_mem_FP machineDirectedAffineGradientLowerLeftInput_mem_FP
       machineDirectedNegativeGradientEntryRawCode_mem_FP
 
 theorem machineDirectedAffineGradientLowerRightRaw_mem_FP :
     machineDirectedAffineGradientLowerRightRaw ∈ FP := by
-  simpa only [machineDirectedAffineGradientLowerRightRaw] using
+  simpa only [machineDirectedAffineGradientLowerRightRaw] using!
     machineCompose_mem_FP machineDirectedAffineGradientLowerRightInput_mem_FP
       machineDirectedNegativeGradientEntryRawCode_mem_FP
 
@@ -176,7 +176,7 @@ theorem machineDirectedAffineGradientFirstDifference_mem_FP :
   have hinput := machinePair_mem_FP
     machineDirectedAffineGradientUpperLeftRaw_mem_FP
     machineDirectedAffineGradientUpperRightRaw_mem_FP
-  simpa only [machineDirectedAffineGradientFirstDifference] using
+  simpa only [machineDirectedAffineGradientFirstDifference] using!
     machineCompose_mem_FP hinput machineRawRatSubCode_mem_FP
 
 theorem machineDirectedAffineGradientSecondDifference_mem_FP :
@@ -184,7 +184,7 @@ theorem machineDirectedAffineGradientSecondDifference_mem_FP :
   have hinput := machinePair_mem_FP
     machineDirectedAffineGradientFirstDifference_mem_FP
     machineDirectedAffineGradientLowerLeftRaw_mem_FP
-  simpa only [machineDirectedAffineGradientSecondDifference] using
+  simpa only [machineDirectedAffineGradientSecondDifference] using!
     machineCompose_mem_FP hinput machineRawRatSubCode_mem_FP
 
 theorem machineDirectedAffineGradientEntryRawCode_mem_FP :
@@ -192,7 +192,7 @@ theorem machineDirectedAffineGradientEntryRawCode_mem_FP :
   have hinput := machinePair_mem_FP
     machineDirectedAffineGradientSecondDifference_mem_FP
     machineDirectedAffineGradientLowerRightRaw_mem_FP
-  simpa only [machineDirectedAffineGradientEntryRawCode] using
+  simpa only [machineDirectedAffineGradientEntryRawCode] using!
     machineCompose_mem_FP hinput machineRawRatAddCode_mem_FP
 
 def machineDirectedAffineGradientEntryCanonicalWord {m : ℕ}

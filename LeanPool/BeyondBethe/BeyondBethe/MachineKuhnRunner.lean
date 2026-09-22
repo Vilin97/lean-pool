@@ -72,19 +72,19 @@ theorem machineKuhnInitDimension_mem_FP :
 
 theorem machineKuhnInitColumns_mem_FP :
     machineKuhnInitColumns ∈ Complexity.FP := by
-  simpa only [machineKuhnInitColumns] using
+  simpa only [machineKuhnInitColumns] using!
     machineCompose_mem_FP machineKuhnInitDimension_mem_FP
       machineUnaryRangeCode_mem_FP
 
 theorem machineKuhnInitFalseSeen_mem_FP :
     machineKuhnInitFalseSeen ∈ Complexity.FP := by
-  simpa only [machineKuhnInitFalseSeen] using
+  simpa only [machineKuhnInitFalseSeen] using!
     machineCompose_mem_FP machineKuhnInitDimension_mem_FP
       machineFalseVectorCode_mem_FP
 
 theorem machineKuhnInitEmptyMate_mem_FP :
     machineKuhnInitEmptyMate ∈ Complexity.FP := by
-  simpa only [machineKuhnInitEmptyMate] using
+  simpa only [machineKuhnInitEmptyMate] using!
     machineCompose_mem_FP machineKuhnInitDimension_mem_FP
       machineEmptyMateVectorCode_mem_FP
 
@@ -123,7 +123,7 @@ theorem machineKuhnInitControl_mem_FP :
 
 theorem machineKuhnInputBound_mem_FP :
     machineKuhnInputBound ∈ Complexity.FP := by
-  simpa only [machineKuhnInputBound] using
+  simpa only [machineKuhnInputBound] using!
     machineCompose_mem_FP machineListUpdateInputBound_mem_FP
       machineBinaryMulWidth_mem_FP
 
@@ -131,7 +131,7 @@ theorem machineKuhnInputClamp_mem_FP
     {candidate : List Bool → List Bool} (hcandidate : candidate ∈ Complexity.FP) :
     (fun matrix ↦ machineKuhnInputClamp matrix (candidate matrix)) ∈
       Complexity.FP := by
-  simpa only [machineKuhnInputClamp] using
+  simpa only [machineKuhnInputClamp] using!
     machineTake_mem_FP machineKuhnInputBound_mem_FP hcandidate
 
 theorem machineKuhnInit_mem_FP : machineKuhnInit ∈ Complexity.FP := by
@@ -158,7 +158,7 @@ theorem machineKuhnInitDimension_length_le (matrix : List Bool) :
         (machineBoundedUnaryInit word))).length ≤ matrix.length at hacc
   simpa [machineKuhnInitDimension, machineMatrixDimensionUnary,
     machineBoundedUnary, machineBoundedUnaryFinalState,
-    machineBoundedUnaryRuler, word] using hacc
+    machineBoundedUnaryRuler, word] using! hacc
 
 theorem machineUnaryRangeCode_length_le_inputBound (ruler : List Bool) :
     (machineUnaryRangeCode ruler).length ≤
@@ -166,7 +166,7 @@ theorem machineUnaryRangeCode_length_le_inputBound (ruler : List Bool) :
   have hbound := machineUnaryRangeIterate_bound ruler ruler.length
   dsimp only [MachineUnaryRangeStateBound] at hbound
   rcases hbound with ⟨_hpack, _hremaining, hacc, _hbound⟩
-  simpa [machineUnaryRangeCode, machineUnaryRangeFinalState] using hacc
+  simpa [machineUnaryRangeCode, machineUnaryRangeFinalState] using! hacc
 
 @[simp] theorem machineFalseVectorCode_length (ruler : List Bool) :
     (machineFalseVectorCode ruler).length = 4 * ruler.length := by
@@ -225,7 +225,7 @@ theorem machineKuhnInitEmptyMate_length_le_bound (matrix : List Bool) :
     (machineKuhnInitEmptyMate matrix).length ≤
       (machineKuhnInputBound matrix).length := by
   simpa [machineKuhnInitEmptyMate, machineKuhnInitFalseSeen,
-    machineEmptyMateVectorCode] using
+    machineEmptyMateVectorCode] using!
       machineKuhnInitFalseSeen_length_le_bound matrix
 
 /-! ## A generic invariant for the outer bounded iteration -/
@@ -285,7 +285,7 @@ theorem machineKuhnIterate_bound (matrix : List Bool) : ∀ iterations,
       ((machineKuhnStep^[iterations]) (machineKuhnInit matrix)) := by
   intro iterations
   induction iterations with
-  | zero => simpa using machineKuhnInit_bound matrix
+  | zero => simpa using! machineKuhnInit_bound matrix
   | succ iterations ih =>
       rw [Function.iterate_succ_apply']
       exact machineKuhnStep_bound ih
@@ -295,7 +295,7 @@ def machineKuhnRunWidth (matrix : List Bool) : List Bool :=
 
 theorem machineKuhnRunWidth_mem_FP :
     machineKuhnRunWidth ∈ Complexity.FP := by
-  simpa only [machineKuhnRunWidth] using
+  simpa only [machineKuhnRunWidth] using!
     machineCompose_mem_FP machineKuhnInputBound_mem_FP
       machineBinaryMulWidth_mem_FP
 
@@ -339,7 +339,7 @@ def machineKuhnFinalState (matrix : List Bool) : List Bool :=
 
 theorem machineKuhnFinalState_mem_FP :
     machineKuhnFinalState ∈ Complexity.FP := by
-  simpa only [machineKuhnFinalState] using
+  simpa only [machineKuhnFinalState] using!
     Cobham.iterate_mem_FP machineKuhnStep_mem_FP machineKuhnInit_mem_FP
       machineKuhnInputBound_mem_FP machineKuhnRunWidth_mem_FP
       machineKuhnIterate_length_le_width

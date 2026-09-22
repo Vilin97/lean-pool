@@ -30,12 +30,12 @@ theorem machineMatrixNormalizationScalePowerRawCode_mem_FP :
     machineMatrixNormalizationScalePowerRawCode ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineMatrixDimensionUnary_mem_FP
     machineMatrixNormalizationScaleRawCode_mem_FP
-  simpa only [machineMatrixNormalizationScalePowerRawCode] using
+  simpa only [machineMatrixNormalizationScalePowerRawCode] using!
     machineCompose_mem_FP hpair machineRawRatPowerCode_mem_FP
 
 theorem machineMatrixNormalizationScalePowerOutputCode_mem_FP :
     machineMatrixNormalizationScalePowerOutputCode ∈ Complexity.FP := by
-  simpa only [machineMatrixNormalizationScalePowerOutputCode] using
+  simpa only [machineMatrixNormalizationScalePowerOutputCode] using!
     machineCompose_mem_FP
       machineMatrixNormalizationScalePowerRawCode_mem_FP
       machineNormalizeRawRatBinaryCode_mem_FP

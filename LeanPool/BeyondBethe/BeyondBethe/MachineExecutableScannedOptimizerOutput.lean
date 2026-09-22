@@ -63,25 +63,25 @@ theorem machineExecutableMatrixEntryRest_mem_FP :
 
 theorem machineExecutableMatrixEntryColumn_mem_FP :
     machineExecutableMatrixEntryColumn ∈ FP := by
-  simpa only [machineExecutableMatrixEntryColumn] using
+  simpa only [machineExecutableMatrixEntryColumn] using!
     machineCompose_mem_FP machineExecutableMatrixEntryRest_mem_FP
       machinePairFirst_mem_FP
 
 theorem machineExecutableMatrixEntryPayload_mem_FP :
     machineExecutableMatrixEntryPayload ∈ FP := by
-  simpa only [machineExecutableMatrixEntryPayload] using
+  simpa only [machineExecutableMatrixEntryPayload] using!
     machineCompose_mem_FP machineExecutableMatrixEntryRest_mem_FP
       machinePairSecond_mem_FP
 
 theorem machineExecutableMatrixEntryBaseDimension_mem_FP :
     machineExecutableMatrixEntryBaseDimension ∈ FP := by
-  simpa only [machineExecutableMatrixEntryBaseDimension] using
+  simpa only [machineExecutableMatrixEntryBaseDimension] using!
     machineCompose_mem_FP machineExecutableMatrixEntryPayload_mem_FP
       machinePairFirst_mem_FP
 
 theorem machineExecutableMatrixEntryPoint_mem_FP :
     machineExecutableMatrixEntryPoint ∈ FP := by
-  simpa only [machineExecutableMatrixEntryPoint] using
+  simpa only [machineExecutableMatrixEntryPoint] using!
     machineCompose_mem_FP machineExecutableMatrixEntryPayload_mem_FP
       machinePairSecond_mem_FP
 
@@ -97,7 +97,7 @@ theorem machineExecutableMatrixEntryCode_mem_FP :
   have hraw := machineCompose_mem_FP
     machineExecutableMatrixEntryRawInput_mem_FP
     machineBetheAffineEntryRawCode_mem_FP
-  simpa only [machineExecutableMatrixEntryCode] using
+  simpa only [machineExecutableMatrixEntryCode] using!
     machineCompose_mem_FP hraw machineNormalizeRawRatEntryCode_mem_FP
 
 @[simp] theorem machineExecutableMatrixEntryCode_encode {m : ℕ}
@@ -177,18 +177,18 @@ def machineExecutableOptimizerMatrixCode
 
 theorem machineExecutableOptimizerBaseDimensionUnary_mem_FP :
     machineExecutableOptimizerBaseDimensionUnary ∈ FP := by
-  simpa only [machineExecutableOptimizerBaseDimensionUnary] using
+  simpa only [machineExecutableOptimizerBaseDimensionUnary] using!
     machineCompose_mem_FP machineMatrixDimensionUnary_mem_FP
       machineTail_mem_FP
 
 theorem machineExecutableOptimizerPointCode_mem_FP :
     machineExecutableOptimizerPointCode ∈ FP := by
-  simpa only [machineExecutableOptimizerPointCode] using
+  simpa only [machineExecutableOptimizerPointCode] using!
     machineExplicitBetheOptimizerPointCode_mem_FP
 
 theorem machineExecutableOptimizerBasePointCode_mem_FP :
     machineExecutableOptimizerBasePointCode ∈ FP := by
-  simpa only [machineExecutableOptimizerBasePointCode] using
+  simpa only [machineExecutableOptimizerBasePointCode] using!
     machineCompose_mem_FP machineExecutableOptimizerPointCode_mem_FP
       machineBinaryListInit_mem_FP
 
@@ -211,7 +211,7 @@ theorem machineExecutableOptimizerMatrixBound_mem_FP :
   have hpadded := machineAppend_mem_FP
     machineExecutableOptimizerMatrixSeed_mem_FP
     (machineConst_mem_FP (List.replicate 1024 false))
-  simpa only [machineExecutableOptimizerMatrixBound] using
+  simpa only [machineExecutableOptimizerMatrixBound] using!
     machineCompose_mem_FP hpadded (machineIteratedBinaryWidth_mem_FP 2)
 
 theorem machineExecutableOptimizerMatrixGeneratorInput_mem_FP :
@@ -224,7 +224,7 @@ theorem machineExecutableOptimizerMatrixRowsCode_mem_FP :
     machineExecutableOptimizerMatrixRowsCode ∈ FP := by
   have hgenerator := machineUnaryMatrixGeneratorRowsCode_mem_FP
     machineExecutableMatrixEntryCode_mem_FP
-  simpa only [machineExecutableOptimizerMatrixRowsCode] using
+  simpa only [machineExecutableOptimizerMatrixRowsCode] using!
     machineCompose_mem_FP
       machineExecutableOptimizerMatrixGeneratorInput_mem_FP hgenerator
 
@@ -285,7 +285,7 @@ theorem unaryMatrixCode_length_le_of_entry_bound {n E : ℕ}
       have hrow' :
           ∑ j : Fin n,
               (2 * (rationalEntryBinaryCode (X i j)).length + 2) ≤
-            n * (2 * E + 2) := by simpa using hrow
+            n * (2 * E + 2) := by simpa using! hrow
       omega
     _ = n * (2 * (n * (2 * E + 2)) + 2) := by simp
 
@@ -319,7 +319,7 @@ theorem executableOptimizerMatrix_rowsCode_fits_bound {m : ℕ}
   have hentry : ∀ i j,
       (rationalEntryBinaryCode (betheAffineMatrixQ y i j)).length ≤ E := by
     intro i j
-    simpa only [E, L, seed] using
+    simpa only [E, L, seed] using!
       executableOptimizerMatrix_entryCode_length_le A y i j
   have hmatrix := unaryMatrixCode_length_le_of_entry_bound
     (betheAffineMatrixQ y) hentry
@@ -344,7 +344,7 @@ theorem executableOptimizerMatrix_rowsCode_fits_bound {m : ℕ}
       change _ ≤ (pair (m + 1).bits
         (binaryListCode (binaryListCode rationalEntryBinaryCode)
           (rationalMatrixRows A))).length
-      simpa only [machinePairSecond_pair] using
+      simpa only [machinePairSecond_pair] using!
         machinePairSecond_length_le
           (pair (m + 1).bits
             (binaryListCode (binaryListCode rationalEntryBinaryCode)
@@ -361,7 +361,7 @@ theorem executableOptimizerMatrix_rowsCode_fits_bound {m : ℕ}
         4096 * (L + 16) ^ 3 := by
     apply hmatrix.trans
     have hn2 : (m + 1) * (m + 1) ≤ L := by
-      simpa [pow_two] using hsquare
+      simpa [pow_two] using! hsquare
     have hbase : 1 ≤ L + 16 := by omega
     nlinarith [Nat.mul_le_mul_left (4 * L) hE,
       sq_nonneg (L + 16)]
@@ -372,7 +372,7 @@ theorem executableOptimizerMatrix_rowsCode_fits_bound {m : ℕ}
     _ ≤ 4096 * (L + 16) ^ 3 := hmatrix'
     _ ≤ (L + 1024 + 16) ^ 4 := hpow
     _ ≤ certificateExpGuardWidth 2 (L + 1024) := by
-      simpa only [show 2 ^ (1 + 1) = 4 by norm_num] using
+      simpa only [show 2 ^ (1 + 1) = 4 by norm_num] using!
         certificateExpGuardWidth_pow_lower 1 (L + 1024)
     _ = _ := by
       rw [machineIteratedBinaryWidth_length]
@@ -392,7 +392,7 @@ theorem executableOptimizerMatrix_rowsCode_fits_bound {m : ℕ}
   let y := epigraphBase q
   have hpointFull : machineExecutableOptimizerPointCode word =
       rationalFiniteVectorCode q := by
-    simpa only [machineExecutableOptimizerPointCode, word, q] using
+    simpa only [machineExecutableOptimizerPointCode, word, q] using!
       machineExplicitBetheOptimizerPointCode_encode hm A hApos hAupper
   have hpoint : machineExecutableOptimizerBasePointCode word =
       rationalFiniteVectorCode y := by
@@ -415,7 +415,7 @@ theorem executableOptimizerMatrix_rowsCode_fits_bound {m : ℕ}
     rw [machineExecutableOptimizerMatrixBound]
     rw [show machineExecutableOptimizerMatrixSeed word =
         machineDirectedObjectiveSumCanonicalWord 0 A y 0 by
-      simpa only [word] using hseed]
+      simpa only [word] using! hseed]
   rw [hdimension, hpayload, hbound]
   change machineUnaryMatrixGeneratorRowsCode machineExecutableMatrixEntryCode
       (machineUnaryMatrixGeneratorCanonicalWord (m + 1)
@@ -432,7 +432,7 @@ theorem executableOptimizerMatrix_rowsCode_fits_bound {m : ℕ}
   · rfl
   · intro i j
     exact machineExecutableMatrixEntryCode_encode y i j
-  · simpa only [unaryMatrixRows, rationalMatrixRows] using
+  · simpa only [unaryMatrixRows, rationalMatrixRows] using!
       executableOptimizerMatrix_rowsCode_fits_bound A y
 
 @[simp] theorem machineExecutableOptimizerMatrixCode_encode
@@ -509,12 +509,12 @@ def machineExecutableColumnPotentialEntryCode (word : List Bool) : List Bool :=
 
 theorem machineExecutablePotentialIndex_mem_FP :
     machineExecutablePotentialIndex ∈ FP := by
-  simpa only [machineExecutablePotentialIndex] using
+  simpa only [machineExecutablePotentialIndex] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineExecutablePotentialPayload_mem_FP :
     machineExecutablePotentialPayload ∈ FP := by
-  simpa only [machineExecutablePotentialPayload] using
+  simpa only [machineExecutablePotentialPayload] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairSecond_mem_FP
 
 theorem machineExecutablePotentialGradientInput_mem_FP
@@ -526,19 +526,19 @@ theorem machineExecutablePotentialGradientInput_mem_FP
 
 theorem machineExecutableRowPotentialGradientInput_mem_FP :
     machineExecutableRowPotentialGradientInput ∈ FP := by
-  simpa only [machineExecutableRowPotentialGradientInput] using
+  simpa only [machineExecutableRowPotentialGradientInput] using!
     machineExecutablePotentialGradientInput_mem_FP
       machineExecutablePotentialIndex_mem_FP (machineConst_mem_FP [])
 
 theorem machineExecutableColumnPotentialGradientInput_mem_FP :
     machineExecutableColumnPotentialGradientInput ∈ FP := by
-  simpa only [machineExecutableColumnPotentialGradientInput] using
+  simpa only [machineExecutableColumnPotentialGradientInput] using!
     machineExecutablePotentialGradientInput_mem_FP (machineConst_mem_FP [])
       machineExecutablePotentialIndex_mem_FP
 
 theorem machineExecutableOriginGradientInput_mem_FP :
     machineExecutableOriginGradientInput ∈ FP := by
-  simpa only [machineExecutableOriginGradientInput] using
+  simpa only [machineExecutableOriginGradientInput] using!
     machineExecutablePotentialGradientInput_mem_FP
       (machineConst_mem_FP []) (machineConst_mem_FP [])
 
@@ -549,7 +549,7 @@ theorem machineExecutableTwoPlusTauRawCode_mem_FP :
     machineDirectedObjectiveSumTau_mem_FP
   have hpair := machinePair_mem_FP
     (machineConst_mem_FP (rawRatBinaryCode rawOptimizerTwo)) htau
-  simpa only [machineExecutableTwoPlusTauRawCode] using
+  simpa only [machineExecutableTwoPlusTauRawCode] using!
     machineCompose_mem_FP hpair machineRawRatAddCode_mem_FP
 
 theorem machineExecutableRowPotentialRawCode_mem_FP :
@@ -560,7 +560,7 @@ theorem machineExecutableRowPotentialRawCode_mem_FP :
   have hneg := machineCompose_mem_FP hgradient machineRawRatNegCode_mem_FP
   have hpair := machinePair_mem_FP hneg
     machineExecutableTwoPlusTauRawCode_mem_FP
-  simpa only [machineExecutableRowPotentialRawCode] using
+  simpa only [machineExecutableRowPotentialRawCode] using!
     machineCompose_mem_FP hpair machineRawRatAddCode_mem_FP
 
 theorem machineExecutableColumnPotentialRawCode_mem_FP :
@@ -572,18 +572,18 @@ theorem machineExecutableColumnPotentialRawCode_mem_FP :
     machineExecutableColumnPotentialGradientInput_mem_FP
     machineDirectedNegativeGradientEntryRawCode_mem_FP
   have hpair := machinePair_mem_FP horigin hcolumn
-  simpa only [machineExecutableColumnPotentialRawCode] using
+  simpa only [machineExecutableColumnPotentialRawCode] using!
     machineCompose_mem_FP hpair machineRawRatSubCode_mem_FP
 
 theorem machineExecutableRowPotentialEntryCode_mem_FP :
     machineExecutableRowPotentialEntryCode ∈ FP := by
-  simpa only [machineExecutableRowPotentialEntryCode] using
+  simpa only [machineExecutableRowPotentialEntryCode] using!
     machineCompose_mem_FP machineExecutableRowPotentialRawCode_mem_FP
       machineNormalizeRawRatEntryCode_mem_FP
 
 theorem machineExecutableColumnPotentialEntryCode_mem_FP :
     machineExecutableColumnPotentialEntryCode ∈ FP := by
-  simpa only [machineExecutableColumnPotentialEntryCode] using
+  simpa only [machineExecutableColumnPotentialEntryCode] using!
     machineCompose_mem_FP machineExecutableColumnPotentialRawCode_mem_FP
       machineNormalizeRawRatEntryCode_mem_FP
 
@@ -708,7 +708,7 @@ def machineExecutableOptimizerGradientSeed
 
 theorem machineExecutableOptimizerTauCanonicalCode_mem_FP :
     machineExecutableOptimizerTauCanonicalCode ∈ FP := by
-  simpa only [machineExecutableOptimizerTauCanonicalCode] using
+  simpa only [machineExecutableOptimizerTauCanonicalCode] using!
     machineCompose_mem_FP machineOptimizerTauRawCode_mem_FP
       machineNormalizeRawRatEntryCode_mem_FP
 
@@ -745,7 +745,7 @@ theorem machineExecutableOptimizerGradientSeed_mem_FP :
   have hpointFull : machineExecutableOptimizerPointCode
       (rationalMatrixBinaryEncoding.encode ⟨m + 1, A⟩) =
       rationalFiniteVectorCode q := by
-    simpa only [machineExecutableOptimizerPointCode, q] using
+    simpa only [machineExecutableOptimizerPointCode, q] using!
       machineExplicitBetheOptimizerPointCode_encode hm A hApos hAupper
   rw [machineExecutableOptimizerBasePointCode, hpointFull,
     rationalFiniteVectorCode, ofFn_epigraph_center_split,
@@ -805,7 +805,7 @@ theorem machineExecutableOptimizerPotentialBound_mem_FP :
   have hpadded := machineAppend_mem_FP
     machineExecutableOptimizerGradientSeed_mem_FP
     (machineConst_mem_FP (List.replicate 4096 false))
-  simpa only [machineExecutableOptimizerPotentialBound] using
+  simpa only [machineExecutableOptimizerPotentialBound] using!
     machineCompose_mem_FP hpadded (machineIteratedBinaryWidth_mem_FP 6)
 
 theorem machineExecutableOptimizerPotentialGeneratorInput_mem_FP :
@@ -818,7 +818,7 @@ theorem machineExecutableOptimizerRowPotentialRowsCode_mem_FP :
     machineExecutableOptimizerRowPotentialRowsCode ∈ FP := by
   have hgenerator := machineUnaryMatrixGeneratorRowsCode_mem_FP
     machineExecutableRowPotentialEntryCode_mem_FP
-  simpa only [machineExecutableOptimizerRowPotentialRowsCode] using
+  simpa only [machineExecutableOptimizerRowPotentialRowsCode] using!
     machineCompose_mem_FP
       machineExecutableOptimizerPotentialGeneratorInput_mem_FP hgenerator
 
@@ -826,20 +826,20 @@ theorem machineExecutableOptimizerColumnPotentialRowsCode_mem_FP :
     machineExecutableOptimizerColumnPotentialRowsCode ∈ FP := by
   have hgenerator := machineUnaryMatrixGeneratorRowsCode_mem_FP
     machineExecutableColumnPotentialEntryCode_mem_FP
-  simpa only [machineExecutableOptimizerColumnPotentialRowsCode] using
+  simpa only [machineExecutableOptimizerColumnPotentialRowsCode] using!
     machineCompose_mem_FP
       machineExecutableOptimizerPotentialGeneratorInput_mem_FP hgenerator
 
 theorem machineExecutableOptimizerRowPotentialCode_mem_FP :
     machineExecutableOptimizerRowPotentialCode ∈ FP := by
-  simpa only [machineExecutableOptimizerRowPotentialCode] using
+  simpa only [machineExecutableOptimizerRowPotentialCode] using!
     machineCompose_mem_FP
       machineExecutableOptimizerRowPotentialRowsCode_mem_FP
       machineListHead_mem_FP
 
 theorem machineExecutableOptimizerColumnPotentialCode_mem_FP :
     machineExecutableOptimizerColumnPotentialCode ∈ FP := by
-  simpa only [machineExecutableOptimizerColumnPotentialCode] using
+  simpa only [machineExecutableOptimizerColumnPotentialCode] using!
     machineCompose_mem_FP
       machineExecutableOptimizerColumnPotentialRowsCode_mem_FP
       machineListHead_mem_FP
@@ -905,7 +905,7 @@ theorem rawExecutableRowPotential_width_le_word_budget {m : ℕ}
       (betheAffineMatrixQ y i 0) p).neg
     (rawOptimizerTwo.add (rawRatOfRat tau))
   rw [rawRatWidth_neg] at hsum
-  simpa only [rawExecutableRowPotential, L, B] using hsum.trans (by omega)
+  simpa only [rawExecutableRowPotential, L, B] using! hsum.trans (by omega)
 
 theorem rawExecutableColumnPotential_width_le_word_budget {m : ℕ}
     (tau : ℚ) (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
@@ -924,7 +924,7 @@ theorem rawExecutableColumnPotential_width_le_word_budget {m : ℕ}
       (betheAffineMatrixQ y 0 0) p)
     (rawDirectedNegativeGradientLower tau (A 0 j)
       (betheAffineMatrixQ y 0 j) p)
-  simpa only [rawExecutableColumnPotential, L, B] using hsub.trans (by omega)
+  simpa only [rawExecutableColumnPotential, L, B] using! hsub.trans (by omega)
 
 theorem executableRowPotential_entryCode_length_le {m : ℕ}
     (tau : ℚ) (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
@@ -998,7 +998,7 @@ theorem executableRepeatedPotential_rowsCode_fits_bound {m : ℕ}
       pair_length, List.length_replicate]
     omega
   have hB : B ≤ T ^ 20 := by
-    simpa only [B, T] using
+    simpa only [B, T] using!
       rawDirectedObjectiveCoordinateWordBudget_le_pow hmL
   have hTpos : 0 < T := by simp [T]
   have hpow19 : 1 ≤ T ^ 19 := one_le_pow₀ (by omega)
@@ -1014,7 +1014,7 @@ theorem executableRepeatedPotential_rowsCode_fits_bound {m : ℕ}
   have hmatrix := unaryMatrixCode_length_le_of_entry_bound
     (X := fun _ j ↦ v j) (E := E) (by
       intro i j
-      simpa only [E, B, L, seed] using hentry j)
+      simpa only [E, B, L, seed] using! hentry j)
   have hnT : m + 1 ≤ T := hnL.trans (by simp [T])
   have hfactor : 2 * E + 2 ≤ 258 * T ^ 20 := by omega
   have hn2 := Nat.mul_le_mul hnT hnT
@@ -1061,7 +1061,7 @@ theorem executableRepeatedPotential_rowsCode_fits_bound {m : ℕ}
   have hpowBase := Nat.pow_le_pow_left hbase 64
   exact hpowBase.trans (by
     simpa only [show 2 ^ (5 + 1) = 64 by norm_num,
-      List.length_append, List.length_replicate, T, L, seed] using
+      List.length_append, List.length_replicate, T, L, seed] using!
       certificateExpGuardWidth_pow_lower 5 (L + 4096))
 
 theorem executableRowPotential_rowsCode_fits_bound {m : ℕ}
@@ -1077,7 +1077,7 @@ theorem executableRowPotential_rowsCode_fits_bound {m : ℕ}
   apply executableRepeatedPotential_rowsCode_fits_bound
   intro i L B
   have h := executableRowPotential_entryCode_length_le tau A y p i
-  simpa only [L, B] using h.trans (by omega)
+  simpa only [L, B] using! h.trans (by omega)
 
 theorem executableColumnPotential_rowsCode_fits_bound {m : ℕ}
     (tau : ℚ) (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
@@ -1094,7 +1094,7 @@ theorem executableColumnPotential_rowsCode_fits_bound {m : ℕ}
   apply executableRepeatedPotential_rowsCode_fits_bound
   intro j L B
   have h := executableColumnPotential_entryCode_length_le tau A y p j
-  simpa only [L, B] using h.trans (by omega)
+  simpa only [L, B] using! h.trans (by omega)
 
 @[simp] theorem machineListHead_unaryMatrixRows_repeated {n : ℕ}
     (hn : 0 < n) (v : Fin n → ℚ) :
@@ -1127,14 +1127,14 @@ theorem executableColumnPotential_rowsCode_fits_bound {m : ℕ}
     fun _ i ↦ -directedNegativeGradientLowerMatrix tau A
       (betheAffineMatrixQ y) p i 0 + (2 + tau)
   have hseed : machineExecutableOptimizerGradientSeed word = seed := by
-    simpa only [word, seed, tau, y, p] using
+    simpa only [word, seed, tau, y, p] using!
       machineExecutableOptimizerGradientSeed_encode hm A hApos hAupper
   have hinput : machineExecutableOptimizerPotentialGeneratorInput word =
       machineUnaryMatrixGeneratorCanonicalWord (m + 1) bound seed := by
     rw [machineExecutableOptimizerPotentialGeneratorInput]
     rw [show machineMatrixDimensionUnary word =
         List.replicate (m + 1) true by
-      simpa only [word] using machineMatrixDimensionUnary_encode A]
+      simpa only [word] using! machineMatrixDimensionUnary_encode A]
     rw [machineExecutableOptimizerPotentialBound, hseed]
     rfl
   have hentry : ∀ i j,
@@ -1143,12 +1143,12 @@ theorem executableColumnPotential_rowsCode_fits_bound {m : ℕ}
           (pair (List.replicate j.1 true) seed)) =
         rationalEntryBinaryCode (f i j) := by
     intro i j
-    simpa only [seed, tau, y, p, f] using
+    simpa only [seed, tau, y, p, f] using!
       machineExecutableRowPotentialEntryCode_encode tau A y p i j
   have hbound :
       (binaryListCode (binaryListCode rationalEntryBinaryCode)
         (unaryMatrixRows f)).length ≤ bound.length := by
-    simpa only [f, bound, seed] using
+    simpa only [f, bound, seed] using!
       executableRowPotential_rowsCode_fits_bound tau A y p
   rw [machineExecutableOptimizerRowPotentialCode,
     machineExecutableOptimizerRowPotentialRowsCode, hinput,
@@ -1178,14 +1178,14 @@ theorem executableColumnPotential_rowsCode_fits_bound {m : ℕ}
       directedNegativeGradientLowerMatrix tau A
         (betheAffineMatrixQ y) p 0 0)
   have hseed : machineExecutableOptimizerGradientSeed word = seed := by
-    simpa only [word, seed, tau, y, p] using
+    simpa only [word, seed, tau, y, p] using!
       machineExecutableOptimizerGradientSeed_encode hm A hApos hAupper
   have hinput : machineExecutableOptimizerPotentialGeneratorInput word =
       machineUnaryMatrixGeneratorCanonicalWord (m + 1) bound seed := by
     rw [machineExecutableOptimizerPotentialGeneratorInput]
     rw [show machineMatrixDimensionUnary word =
         List.replicate (m + 1) true by
-      simpa only [word] using machineMatrixDimensionUnary_encode A]
+      simpa only [word] using! machineMatrixDimensionUnary_encode A]
     rw [machineExecutableOptimizerPotentialBound, hseed]
     rfl
   have hentry : ∀ i j,
@@ -1194,12 +1194,12 @@ theorem executableColumnPotential_rowsCode_fits_bound {m : ℕ}
           (pair (List.replicate j.1 true) seed)) =
         rationalEntryBinaryCode (f i j) := by
     intro i j
-    simpa only [seed, tau, y, p, f] using
+    simpa only [seed, tau, y, p, f] using!
       machineExecutableColumnPotentialEntryCode_encode tau A y p i j
   have hbound :
       (binaryListCode (binaryListCode rationalEntryBinaryCode)
         (unaryMatrixRows f)).length ≤ bound.length := by
-    simpa only [f, bound, seed] using
+    simpa only [f, bound, seed] using!
       executableColumnPotential_rowsCode_fits_bound tau A y p
   rw [machineExecutableOptimizerColumnPotentialCode,
     machineExecutableOptimizerColumnPotentialRowsCode, hinput,
@@ -1260,7 +1260,7 @@ theorem machineExecutableScannedOptimizerOutputCode_realizes :
       machineExecutableScannedOptimizerOutputCode := by
   intro m B hBpos hBupper
   simpa only [executableLargeOptimizerOutput, Nat.add_assoc,
-    Nat.add_comm, Nat.add_left_comm] using
+    Nat.add_comm, Nat.add_left_comm] using!
     machineExecutableScannedOptimizerOutputCode_encode
       (m := m + 1) (by omega) B hBpos hBupper
 

@@ -235,7 +235,7 @@ theorem explicitExpEvaluationLoss_le_one :
   have hq : explicitExpEvaluationLoss ≤ (1 : ℚ) := by
     rw [explicitExpEvaluationLoss, explicitCertifiedEpsilon,
       explicitCertifiedEpsilon_eq]
-      norm_num [explicitXi, explicitDelta, explicitEta, explicitRowRatio]
+    norm_num [explicitXi, explicitDelta, explicitEta, explicitRowRatio]
   exact_mod_cast hq
 
 /-- The magnitude argument depends only on the certified matrix and KKT

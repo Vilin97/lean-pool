@@ -141,7 +141,7 @@ theorem machineScheduledRoundState_mem_FP :
 
 theorem machineScheduledRoundDimensionBits_mem_FP :
     machineScheduledRoundDimensionBits ∈ FP := by
-  simpa only [machineScheduledRoundDimensionBits] using
+  simpa only [machineScheduledRoundDimensionBits] using!
     machineCompose_mem_FP machineScheduledRoundState_mem_FP
       machineRationalEllipsoidDimensionWord_mem_FP
 
@@ -149,18 +149,18 @@ theorem machineScheduledRoundDimensionUnary_mem_FP :
     machineScheduledRoundDimensionUnary ∈ FP := by
   have hinput := machinePair_mem_FP machineScheduledRoundState_mem_FP
     machineScheduledRoundDimensionBits_mem_FP
-  simpa only [machineScheduledRoundDimensionUnary] using
+  simpa only [machineScheduledRoundDimensionUnary] using!
     machineCompose_mem_FP hinput machineBoundedUnary_mem_FP
 
 theorem machineScheduledRoundCenter_mem_FP :
     machineScheduledRoundCenter ∈ FP := by
-  simpa only [machineScheduledRoundCenter] using
+  simpa only [machineScheduledRoundCenter] using!
     machineCompose_mem_FP machineScheduledRoundState_mem_FP
       machineRationalEllipsoidCenterWord_mem_FP
 
 theorem machineScheduledRoundBasis_mem_FP :
     machineScheduledRoundBasis ∈ FP := by
-  simpa only [machineScheduledRoundBasis] using
+  simpa only [machineScheduledRoundBasis] using!
     machineCompose_mem_FP machineScheduledRoundState_mem_FP
       machineRationalEllipsoidBasisWord_mem_FP
 
@@ -173,7 +173,7 @@ theorem machineRoundedInflationDimensionSquareRawCode_mem_FP :
   have hinput := machinePair_mem_FP
     machineRoundedInflationDimensionRawCode_mem_FP
     machineRoundedInflationDimensionRawCode_mem_FP
-  simpa only [machineRoundedInflationDimensionSquareRawCode] using
+  simpa only [machineRoundedInflationDimensionSquareRawCode] using!
     machineCompose_mem_FP hinput machineRawRatMulCode_mem_FP
 
 theorem machineRoundedInflationDimensionFourthRawCode_mem_FP :
@@ -181,7 +181,7 @@ theorem machineRoundedInflationDimensionFourthRawCode_mem_FP :
   have hinput := machinePair_mem_FP
     machineRoundedInflationDimensionSquareRawCode_mem_FP
     machineRoundedInflationDimensionSquareRawCode_mem_FP
-  simpa only [machineRoundedInflationDimensionFourthRawCode] using
+  simpa only [machineRoundedInflationDimensionFourthRawCode] using!
     machineCompose_mem_FP hinput machineRawRatMulCode_mem_FP
 
 theorem machineRoundedInflationDenominatorRawCode_mem_FP :
@@ -189,7 +189,7 @@ theorem machineRoundedInflationDenominatorRawCode_mem_FP :
   have hinput := machinePair_mem_FP
     (machineConst_mem_FP (rawRatBinaryCode (RawRat.ofNat 1024)))
     machineRoundedInflationDimensionFourthRawCode_mem_FP
-  simpa only [machineRoundedInflationDenominatorRawCode] using
+  simpa only [machineRoundedInflationDenominatorRawCode] using!
     machineCompose_mem_FP hinput machineRawRatMulCode_mem_FP
 
 theorem machineRoundedInflationRawCode_mem_FP :
@@ -197,7 +197,7 @@ theorem machineRoundedInflationRawCode_mem_FP :
   have hinput := machinePair_mem_FP
     (machineConst_mem_FP (rawRatBinaryCode rawEllipsoidOne))
     machineRoundedInflationDenominatorRawCode_mem_FP
-  simpa only [machineRoundedInflationRawCode] using
+  simpa only [machineRoundedInflationRawCode] using!
     machineCompose_mem_FP hinput machineRawRatDivCode_mem_FP
 
 theorem machineRoundedInflationFactorRawCode_mem_FP :
@@ -205,12 +205,12 @@ theorem machineRoundedInflationFactorRawCode_mem_FP :
   have hinput := machinePair_mem_FP
     (machineConst_mem_FP (rawRatBinaryCode rawEllipsoidOne))
     machineRoundedInflationRawCode_mem_FP
-  simpa only [machineRoundedInflationFactorRawCode] using
+  simpa only [machineRoundedInflationFactorRawCode] using!
     machineCompose_mem_FP hinput machineRawRatAddCode_mem_FP
 
 theorem machineRoundedInflationFactorEntryCode_mem_FP :
     machineRoundedInflationFactorEntryCode ∈ FP := by
-  simpa only [machineRoundedInflationFactorEntryCode] using
+  simpa only [machineRoundedInflationFactorEntryCode] using!
     machineCompose_mem_FP machineRoundedInflationFactorRawCode_mem_FP
       machineNormalizeRawRatEntryCode_mem_FP
 
@@ -218,14 +218,14 @@ theorem machineScheduledRoundCenterCode_mem_FP :
     machineScheduledRoundCenterCode ∈ FP := by
   have hinput := machinePair_mem_FP machineScheduledRoundPrecision_mem_FP
     machineScheduledRoundCenter_mem_FP
-  simpa only [machineScheduledRoundCenterCode] using
+  simpa only [machineScheduledRoundCenterCode] using!
     machineCompose_mem_FP hinput machineDyadicFloorVectorCode_mem_FP
 
 theorem machineScheduledRoundFlooredBasisCode_mem_FP :
     machineScheduledRoundFlooredBasisCode ∈ FP := by
   have hinput := machinePair_mem_FP machineScheduledRoundPrecision_mem_FP
     machineScheduledRoundBasis_mem_FP
-  simpa only [machineScheduledRoundFlooredBasisCode] using
+  simpa only [machineScheduledRoundFlooredBasisCode] using!
     machineCompose_mem_FP hinput machineDyadicFloorMatrixCode_mem_FP
 
 theorem machineScheduledRoundInflationDiagonalCode_mem_FP :
@@ -235,7 +235,7 @@ theorem machineScheduledRoundInflationDiagonalCode_mem_FP :
     machineRoundedInflationFactorEntryCode_mem_FP
   have hinput := machinePair_mem_FP
     machineScheduledRoundDimensionUnary_mem_FP hfactor
-  simpa only [machineScheduledRoundInflationDiagonalCode] using
+  simpa only [machineScheduledRoundInflationDiagonalCode] using!
     machineCompose_mem_FP hinput machineDiagonalBasisRowsCode_mem_FP
 
 theorem machineScheduledRoundBasisCode_mem_FP :
@@ -245,7 +245,7 @@ theorem machineScheduledRoundBasisCode_mem_FP :
     (machinePair_mem_FP
       machineScheduledRoundInflationDiagonalCode_mem_FP
       machineScheduledRoundFlooredBasisCode_mem_FP)
-  simpa only [machineScheduledRoundBasisCode] using
+  simpa only [machineScheduledRoundBasisCode] using!
     machineCompose_mem_FP hinput machineRationalMatrixMulCode_mem_FP
 
 theorem machineScheduledRoundedEllipsoidCode_mem_FP :
@@ -438,7 +438,7 @@ theorem machineScheduledRoundedEllipsoidCentralUpdateCode_mem_FP :
     machineRationalEllipsoidCentralUpdateCode_mem_FP
   have hinput := machinePair_mem_FP machineScheduledCentralPrecision_mem_FP
     hupdate
-  simpa only [machineScheduledRoundedEllipsoidCentralUpdateCode] using
+  simpa only [machineScheduledRoundedEllipsoidCentralUpdateCode] using!
     machineCompose_mem_FP hinput machineScheduledRoundedEllipsoidCode_mem_FP
 
 @[simp] theorem machineScheduledRoundedEllipsoidCentralUpdateCode_encode

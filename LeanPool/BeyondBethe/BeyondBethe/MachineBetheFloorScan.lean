@@ -186,13 +186,13 @@ theorem machineBetheFloorScanRest_mem_FP :
 
 theorem machineBetheFloorScanThreshold_mem_FP :
     machineBetheFloorScanThreshold ∈ FP := by
-  simpa only [machineBetheFloorScanThreshold] using
+  simpa only [machineBetheFloorScanThreshold] using!
     machineCompose_mem_FP machineBetheFloorScanRest_mem_FP
       machinePairFirst_mem_FP
 
 theorem machineBetheFloorScanVector_mem_FP :
     machineBetheFloorScanVector ∈ FP := by
-  simpa only [machineBetheFloorScanVector] using
+  simpa only [machineBetheFloorScanVector] using!
     machineCompose_mem_FP machineBetheFloorScanRest_mem_FP
       machinePairSecond_mem_FP
 
@@ -201,14 +201,14 @@ theorem machineBetheFloorScanRow_mem_FP :
 
 theorem machineBetheFloorScanColumn_mem_FP :
     machineBetheFloorScanColumn ∈ FP := by
-  simpa only [machineBetheFloorScanColumn] using
+  simpa only [machineBetheFloorScanColumn] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineBetheFloorScanFound_mem_FP :
     machineBetheFloorScanFound ∈ FP := by
   have htail := machineCompose_mem_FP machinePairSecond_mem_FP
     machinePairSecond_mem_FP
-  simpa only [machineBetheFloorScanFound] using
+  simpa only [machineBetheFloorScanFound] using!
     machineCompose_mem_FP htail machinePairFirst_mem_FP
 
 theorem machineBetheFloorScanDone_mem_FP :
@@ -216,7 +216,7 @@ theorem machineBetheFloorScanDone_mem_FP :
   have htailTwo := machineCompose_mem_FP machinePairSecond_mem_FP
     machinePairSecond_mem_FP
   have htailThree := machineCompose_mem_FP htailTwo machinePairSecond_mem_FP
-  simpa only [machineBetheFloorScanDone] using
+  simpa only [machineBetheFloorScanDone] using!
     machineCompose_mem_FP htailThree machinePairFirst_mem_FP
 
 theorem machineBetheFloorScanPayload_mem_FP :
@@ -224,24 +224,24 @@ theorem machineBetheFloorScanPayload_mem_FP :
   have htailTwo := machineCompose_mem_FP machinePairSecond_mem_FP
     machinePairSecond_mem_FP
   have htailThree := machineCompose_mem_FP htailTwo machinePairSecond_mem_FP
-  simpa only [machineBetheFloorScanPayload] using
+  simpa only [machineBetheFloorScanPayload] using!
     machineCompose_mem_FP htailThree machinePairSecond_mem_FP
 
 theorem machineBetheFloorScanStateDimension_mem_FP :
     machineBetheFloorScanStateDimension ∈ FP := by
-  simpa only [machineBetheFloorScanStateDimension] using
+  simpa only [machineBetheFloorScanStateDimension] using!
     machineCompose_mem_FP machineBetheFloorScanPayload_mem_FP
       machineBetheFloorScanDimension_mem_FP
 
 theorem machineBetheFloorScanStateThreshold_mem_FP :
     machineBetheFloorScanStateThreshold ∈ FP := by
-  simpa only [machineBetheFloorScanStateThreshold] using
+  simpa only [machineBetheFloorScanStateThreshold] using!
     machineCompose_mem_FP machineBetheFloorScanPayload_mem_FP
       machineBetheFloorScanThreshold_mem_FP
 
 theorem machineBetheFloorScanStateVector_mem_FP :
     machineBetheFloorScanStateVector ∈ FP := by
-  simpa only [machineBetheFloorScanStateVector] using
+  simpa only [machineBetheFloorScanStateVector] using!
     machineCompose_mem_FP machineBetheFloorScanPayload_mem_FP
       machineBetheFloorScanVector_mem_FP
 
@@ -269,7 +269,7 @@ theorem machineBetheFloorScanTestWord_mem_FP :
 
 theorem machineBetheFloorScanViolationBit_mem_FP :
     machineBetheFloorScanViolationBit ∈ FP := by
-  simpa only [machineBetheFloorScanViolationBit] using
+  simpa only [machineBetheFloorScanViolationBit] using!
     machineCompose_mem_FP machineBetheFloorScanTestWord_mem_FP
       machineBetheFloorViolationBit_mem_FP
 
@@ -356,7 +356,7 @@ theorem machineBetheFloorScanInit_mem_FP :
 
 theorem machineBetheFloorScanDimensionBits_mem_FP :
     machineBetheFloorScanDimensionBits ∈ FP := by
-  simpa only [machineBetheFloorScanDimensionBits] using
+  simpa only [machineBetheFloorScanDimensionBits] using!
     machineCompose_mem_FP machineBetheFloorScanDimension_mem_FP
       machineLengthBits_mem_FP
 
@@ -365,14 +365,14 @@ theorem machineBetheFloorScanOrderBits_mem_FP :
   have hinput := machinePair_mem_FP
     machineBetheFloorScanDimensionBits_mem_FP
     (machineConst_mem_FP [true])
-  simpa only [machineBetheFloorScanOrderBits] using
+  simpa only [machineBetheFloorScanOrderBits] using!
     machineCompose_mem_FP hinput machineBinaryAddBits_mem_FP
 
 theorem machineBetheFloorScanWorkBits_mem_FP :
     machineBetheFloorScanWorkBits ∈ FP := by
   have hinput := machinePair_mem_FP machineBetheFloorScanOrderBits_mem_FP
     machineBetheFloorScanOrderBits_mem_FP
-  simpa only [machineBetheFloorScanWorkBits] using
+  simpa only [machineBetheFloorScanWorkBits] using!
     machineCompose_mem_FP hinput machineBinaryMulBits_mem_FP
 
 theorem machineBetheFloorScanGuard_mem_FP :
@@ -382,12 +382,12 @@ theorem machineBetheFloorScanRuler_mem_FP :
     machineBetheFloorScanRuler ∈ FP := by
   have hinput := machinePair_mem_FP machineBetheFloorScanGuard_mem_FP
     machineBetheFloorScanWorkBits_mem_FP
-  simpa only [machineBetheFloorScanRuler] using
+  simpa only [machineBetheFloorScanRuler] using!
     machineCompose_mem_FP hinput machineBoundedUnary_mem_FP
 
 theorem machineBetheFloorScanStateEnvelope_mem_FP :
     machineBetheFloorScanStateEnvelope ∈ FP := by
-  simpa only [machineBetheFloorScanStateEnvelope] using
+  simpa only [machineBetheFloorScanStateEnvelope] using!
     machineCompose_mem_FP machineBinaryMulWidth_mem_FP
       machineBinaryMulWidth_mem_FP
 
@@ -622,7 +622,7 @@ theorem machineBetheFloorScanRuler_length_le_envelope (word : List Bool) :
   have hacc := hbound.2.2
   simpa only [machineBetheFloorScanRuler, machineBoundedUnary,
     machineBoundedUnaryFinalState, machineBoundedUnaryRuler,
-    input, machinePairFirst_pair, machineBetheFloorScanGuard] using hacc
+    input, machinePairFirst_pair, machineBetheFloorScanGuard] using! hacc
 
 theorem machineBetheFloorScanIterate_length_le_width
     (word : List Bool) (iterations : ℕ)
@@ -742,7 +742,7 @@ def betheFloorScanNextFin {m : ℕ} (i : Fin (m + 1)) : Fin (m + 1) :=
       intro h
       apply hi
       apply Fin.ext
-      simpa using h
+      simpa using! h
     omega
   simp [betheFloorScanNextFin, hlt]
 
@@ -872,7 +872,7 @@ def machineBetheFloorScanCanonicalState {m : ℕ}
       intro h
       apply hi
       apply Fin.ext
-      simpa using h
+      simpa using! h
     simp [hi, hval]
 
 @[simp] theorem machineBetheFloorScanLastColumnBit_canonicalState {m : ℕ}
@@ -891,7 +891,7 @@ def machineBetheFloorScanCanonicalState {m : ℕ}
       intro h
       apply hj
       apply Fin.ext
-      simpa using h
+      simpa using! h
     simp [hj, hval]
 
 @[simp] theorem machineBetheFloorScanEntryWord_canonicalState {m : ℕ}
@@ -1043,7 +1043,7 @@ def machineBetheFloorScanCanonicalState {m : ℕ}
                 (state.row = Fin.last m) = true := by simp [hrow]
             have hbelowLast : ¬betheAffineMatrixQ y
                 (Fin.last m) (Fin.last m) < delta.value := by
-              simpa [hrow, hcolumn] using hbelow
+              simpa [hrow, hcolumn] using! hbelow
             rw [hdecBelow, machineIfHead_false,
               machineBetheFloorScanAdvance,
               machineBetheFloorScanLastColumnBit_canonicalState,
@@ -1070,7 +1070,7 @@ def machineBetheFloorScanCanonicalState {m : ℕ}
                 (state.row = Fin.last m) = false := by simp [hrow]
             have hbelowLastColumn : ¬betheAffineMatrixQ y
                 state.row (Fin.last m) < delta.value := by
-              simpa [hcolumn] using hbelow
+              simpa [hcolumn] using! hbelow
             rw [hdecBelow, machineIfHead_false,
               machineBetheFloorScanAdvance,
               machineBetheFloorScanLastColumnBit_canonicalState,
@@ -1246,7 +1246,7 @@ theorem betheFloorScanOrdinal_lt_last_of_ne {m : ℕ}
         intro h
         apply hj
         apply Fin.ext
-        simpa using h
+        simpa using! h
       omega
     subst i
     simp only [betheFloorScanOrdinal, Fin.val_last]
@@ -1257,7 +1257,7 @@ theorem betheFloorScanOrdinal_lt_last_of_ne {m : ℕ}
         intro h
         apply hi
         apply Fin.ext
-        simpa using h
+        simpa using! h
       omega
     calc
       betheFloorScanOrdinal i j <
@@ -1360,7 +1360,7 @@ theorem betheFloorScanSemanticStep_invariant {m k : ℕ}
         · by_cases hrow : state.row = Fin.last m
           · have hbelowLast : ¬betheAffineMatrixQ y
                 (Fin.last m) (Fin.last m) < delta.value := by
-              simpa [hrow, hcolumn] using hbelow
+              simpa [hrow, hcolumn] using! hbelow
             have hcurrentLast : delta.value ≤ betheAffineMatrixQ y
                 (Fin.last m) (Fin.last m) := not_lt.mp hbelowLast
             have hstep : betheFloorScanSemanticStep delta y state =
@@ -1388,7 +1388,7 @@ theorem betheFloorScanSemanticStep_invariant {m k : ℕ}
                 exact betheFloorScanOrdinal_lt_last_of_ne i j hij
           · have hbelowLastColumn : ¬betheAffineMatrixQ y
                 state.row (Fin.last m) < delta.value := by
-              simpa [hcolumn] using hbelow
+              simpa [hcolumn] using! hbelow
             have hstep : betheFloorScanSemanticStep delta y state =
                 { state with
                     row := betheFloorScanNextFin state.row
@@ -1429,7 +1429,7 @@ theorem finalBetheFloorScanSemanticState_invariant {m : ℕ}
     (delta : RawRat) (y : Fin (m * m) → ℚ) :
     BetheFloorScanInvariant delta y ((m + 1) * (m + 1))
       (finalBetheFloorScanSemanticState delta y) := by
-  simpa only [finalBetheFloorScanSemanticState] using
+  simpa only [finalBetheFloorScanSemanticState] using!
     betheFloorScanSemanticIterate_invariant delta y
       ((m + 1) * (m + 1))
 

@@ -45,7 +45,7 @@ def machineExecutableNormalizedCertificateRawCode : List Bool → List Bool :=
 
 theorem machineExecutableNormalizedCertificateRawCode_mem_FP :
     machineExecutableNormalizedCertificateRawCode ∈ FP := by
-  simpa only [machineExecutableNormalizedCertificateRawCode] using
+  simpa only [machineExecutableNormalizedCertificateRawCode] using!
     machineNormalizedCertificateFromParts_mem_FP
       machineExecutableScannedOptimizerOutputCode_mem_FP
       machineExecutableCertificateValueRawCode_mem_FP
@@ -145,7 +145,7 @@ def machineExecutablePositiveAlgorithmRawCode : List Bool → List Bool :=
 
 theorem machineExecutablePositiveAlgorithmRawCode_mem_FP :
     machineExecutablePositiveAlgorithmRawCode ∈ FP := by
-  simpa only [machineExecutablePositiveAlgorithmRawCode] using
+  simpa only [machineExecutablePositiveAlgorithmRawCode] using!
     machinePositiveAlgorithmRawCode_mem_FP
       machineExecutableNormalizedCertificateRawCode_mem_FP
 
@@ -153,7 +153,7 @@ theorem machineExecutablePositiveAlgorithmRawCode_realizes_onPositive :
     PositiveRawStringRealizes
       machineExecutablePositiveAlgorithmRawCode
       executablePositiveAlgorithm := by
-  simpa only [machineExecutablePositiveAlgorithmRawCode] using
+  simpa only [machineExecutablePositiveAlgorithmRawCode] using!
     machinePositiveAlgorithmRawCode_realizes_executable_onPositive
       machineExecutableNormalizedCertificateRawCode_realizes_onPositive
 

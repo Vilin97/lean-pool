@@ -102,13 +102,13 @@ theorem programDecision_computesLanguageFlagInTime
       rw [← hrunEq]
       exact hyes hmember
     rw [houtput, hverdict]
-    simpa [languageFlag, hmember] using registerVerdictOutput_hasOutput 1
+    simpa [languageFlag, hmember] using! registerVerdictOutput_hasOutput 1
   · have hverdict :
         (RAM.run program firstFuel (RAM.initCfg input)).verdict = 0 := by
       rw [← hrunEq]
       exact hno hmember
     rw [houtput, hverdict]
-    simpa [languageFlag, hmember] using registerVerdictOutput_hasOutput 0
+    simpa [languageFlag, hmember] using! registerVerdictOutput_hasOutput 0
 
 /-- If the RAM time bound is a polynomial evaluation, its one-bit answer is a
 genuine deterministic Turing-machine `FP` function. -/
@@ -120,7 +120,7 @@ theorem languageFlag_mem_FP_of_ramProgram
   apply mem_FP_iff_computesInTime_polynomial.mpr
   refine ⟨20, programDecisionTM standardControlInstructionTapes program,
     programDecisionPolynomial program p, ?_⟩
-  simpa only [programDecisionPolynomial_eval] using
+  simpa only [programDecisionPolynomial_eval] using!
     programDecision_computesLanguageFlagInTime program hdecides
 
 /-- Reserve a fixed prefix of zero input registers for a RAM program's direct
@@ -130,7 +130,7 @@ def prefixZeroRegisters (count : ℕ) (word : List Bool) : List Bool :=
 
 theorem prefixZeroRegisters_mem_FP (count : ℕ) :
     prefixZeroRegisters count ∈ Complexity.FP := by
-  simpa only [prefixZeroRegisters] using
+  simpa only [prefixZeroRegisters] using!
     machineAppend_mem_FP (machineConst_mem_FP (List.replicate count false))
       id_mem_FP
 

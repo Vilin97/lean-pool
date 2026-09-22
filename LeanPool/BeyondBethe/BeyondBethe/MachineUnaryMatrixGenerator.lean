@@ -261,13 +261,13 @@ theorem machineUnaryMatrixGeneratorRest_mem_FP :
 
 theorem machineUnaryMatrixGeneratorInputBound_mem_FP :
     machineUnaryMatrixGeneratorInputBound ∈ FP := by
-  simpa only [machineUnaryMatrixGeneratorInputBound] using
+  simpa only [machineUnaryMatrixGeneratorInputBound] using!
     machineCompose_mem_FP machineUnaryMatrixGeneratorRest_mem_FP
       machinePairFirst_mem_FP
 
 theorem machineUnaryMatrixGeneratorInputPayload_mem_FP :
     machineUnaryMatrixGeneratorInputPayload ∈ FP := by
-  simpa only [machineUnaryMatrixGeneratorInputPayload] using
+  simpa only [machineUnaryMatrixGeneratorInputPayload] using!
     machineCompose_mem_FP machineUnaryMatrixGeneratorRest_mem_FP
       machinePairSecond_mem_FP
 
@@ -276,20 +276,20 @@ theorem machineUnaryMatrixGeneratorRow_mem_FP :
 
 theorem machineUnaryMatrixGeneratorColumn_mem_FP :
     machineUnaryMatrixGeneratorColumn ∈ FP := by
-  simpa only [machineUnaryMatrixGeneratorColumn] using
+  simpa only [machineUnaryMatrixGeneratorColumn] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineUnaryMatrixGeneratorCurrent_mem_FP :
     machineUnaryMatrixGeneratorCurrent ∈ FP := by
   have h := machineCompose_mem_FP machinePairSecond_mem_FP machinePairSecond_mem_FP
-  simpa only [machineUnaryMatrixGeneratorCurrent] using
+  simpa only [machineUnaryMatrixGeneratorCurrent] using!
     machineCompose_mem_FP h machinePairFirst_mem_FP
 
 theorem machineUnaryMatrixGeneratorRows_mem_FP :
     machineUnaryMatrixGeneratorRows ∈ FP := by
   have h₂ := machineCompose_mem_FP machinePairSecond_mem_FP machinePairSecond_mem_FP
   have h₃ := machineCompose_mem_FP h₂ machinePairSecond_mem_FP
-  simpa only [machineUnaryMatrixGeneratorRows] using
+  simpa only [machineUnaryMatrixGeneratorRows] using!
     machineCompose_mem_FP h₃ machinePairFirst_mem_FP
 
 theorem machineUnaryMatrixGeneratorBound_mem_FP :
@@ -297,7 +297,7 @@ theorem machineUnaryMatrixGeneratorBound_mem_FP :
   have h₂ := machineCompose_mem_FP machinePairSecond_mem_FP machinePairSecond_mem_FP
   have h₃ := machineCompose_mem_FP h₂ machinePairSecond_mem_FP
   have h₄ := machineCompose_mem_FP h₃ machinePairSecond_mem_FP
-  simpa only [machineUnaryMatrixGeneratorBound] using
+  simpa only [machineUnaryMatrixGeneratorBound] using!
     machineCompose_mem_FP h₄ machinePairFirst_mem_FP
 
 theorem machineUnaryMatrixGeneratorDone_mem_FP :
@@ -306,7 +306,7 @@ theorem machineUnaryMatrixGeneratorDone_mem_FP :
   have h₃ := machineCompose_mem_FP h₂ machinePairSecond_mem_FP
   have h₄ := machineCompose_mem_FP h₃ machinePairSecond_mem_FP
   have h₅ := machineCompose_mem_FP h₄ machinePairSecond_mem_FP
-  simpa only [machineUnaryMatrixGeneratorDone] using
+  simpa only [machineUnaryMatrixGeneratorDone] using!
     machineCompose_mem_FP h₅ machinePairFirst_mem_FP
 
 theorem machineUnaryMatrixGeneratorPayload_mem_FP :
@@ -315,12 +315,12 @@ theorem machineUnaryMatrixGeneratorPayload_mem_FP :
   have h₃ := machineCompose_mem_FP h₂ machinePairSecond_mem_FP
   have h₄ := machineCompose_mem_FP h₃ machinePairSecond_mem_FP
   have h₅ := machineCompose_mem_FP h₄ machinePairSecond_mem_FP
-  simpa only [machineUnaryMatrixGeneratorPayload] using
+  simpa only [machineUnaryMatrixGeneratorPayload] using!
     machineCompose_mem_FP h₅ machinePairSecond_mem_FP
 
 theorem machineUnaryMatrixGeneratorStateDimension_mem_FP :
     machineUnaryMatrixGeneratorStateDimension ∈ FP := by
-  simpa only [machineUnaryMatrixGeneratorStateDimension] using
+  simpa only [machineUnaryMatrixGeneratorStateDimension] using!
     machineCompose_mem_FP machineUnaryMatrixGeneratorPayload_mem_FP
       machineUnaryMatrixGeneratorDimension_mem_FP
 
@@ -336,14 +336,14 @@ theorem machineUnaryMatrixGeneratorNextRow_mem_FP :
     machineUnaryMatrixGeneratorNextRow ∈ FP := by
   have happend := machineAppend_mem_FP machineUnaryMatrixGeneratorRow_mem_FP
     (machineConst_mem_FP [true])
-  simpa only [machineUnaryMatrixGeneratorNextRow] using
+  simpa only [machineUnaryMatrixGeneratorNextRow] using!
     machineTake_mem_FP machineUnaryMatrixGeneratorPayload_mem_FP happend
 
 theorem machineUnaryMatrixGeneratorNextColumn_mem_FP :
     machineUnaryMatrixGeneratorNextColumn ∈ FP := by
   have happend := machineAppend_mem_FP machineUnaryMatrixGeneratorColumn_mem_FP
     (machineConst_mem_FP [true])
-  simpa only [machineUnaryMatrixGeneratorNextColumn] using
+  simpa only [machineUnaryMatrixGeneratorNextColumn] using!
     machineTake_mem_FP machineUnaryMatrixGeneratorPayload_mem_FP happend
 
 theorem machineUnaryMatrixGeneratorColumnCompletesBit_mem_FP :
@@ -351,7 +351,7 @@ theorem machineUnaryMatrixGeneratorColumnCompletesBit_mem_FP :
   have heq := machineUnaryRulersEqualBit_mem_FP
     machineUnaryMatrixGeneratorNextColumn_mem_FP
     machineUnaryMatrixGeneratorStateDimension_mem_FP
-  simpa only [machineUnaryMatrixGeneratorColumnCompletesBit] using
+  simpa only [machineUnaryMatrixGeneratorColumnCompletesBit] using!
     machineCompose_mem_FP heq machineHeadBit_mem_FP
 
 theorem machineUnaryMatrixGeneratorRowCompletesBit_mem_FP :
@@ -359,7 +359,7 @@ theorem machineUnaryMatrixGeneratorRowCompletesBit_mem_FP :
   have heq := machineUnaryRulersEqualBit_mem_FP
     machineUnaryMatrixGeneratorNextRow_mem_FP
     machineUnaryMatrixGeneratorStateDimension_mem_FP
-  simpa only [machineUnaryMatrixGeneratorRowCompletesBit] using
+  simpa only [machineUnaryMatrixGeneratorRowCompletesBit] using!
     machineCompose_mem_FP heq machineHeadBit_mem_FP
 
 theorem machineUnaryMatrixGeneratorCurrentCandidate_mem_FP
@@ -373,14 +373,14 @@ theorem machineUnaryMatrixGeneratorCurrentCandidate_mem_FP
 theorem machineUnaryMatrixGeneratorNextCurrent_mem_FP
     {entry : List Bool → List Bool} (hentry : entry ∈ FP) :
     machineUnaryMatrixGeneratorNextCurrent entry ∈ FP := by
-  simpa only [machineUnaryMatrixGeneratorNextCurrent] using
+  simpa only [machineUnaryMatrixGeneratorNextCurrent] using!
     machineTake_mem_FP machineUnaryMatrixGeneratorBound_mem_FP
       (machineUnaryMatrixGeneratorCurrentCandidate_mem_FP hentry)
 
 theorem machineUnaryMatrixGeneratorCompletedRow_mem_FP
     {entry : List Bool → List Bool} (hentry : entry ∈ FP) :
     machineUnaryMatrixGeneratorCompletedRow entry ∈ FP := by
-  simpa only [machineUnaryMatrixGeneratorCompletedRow] using
+  simpa only [machineUnaryMatrixGeneratorCompletedRow] using!
     machineCompose_mem_FP
       (machineUnaryMatrixGeneratorNextCurrent_mem_FP hentry)
       machineListReverse_mem_FP
@@ -394,7 +394,7 @@ theorem machineUnaryMatrixGeneratorRowsCandidate_mem_FP
 theorem machineUnaryMatrixGeneratorNextRows_mem_FP
     {entry : List Bool → List Bool} (hentry : entry ∈ FP) :
     machineUnaryMatrixGeneratorNextRows entry ∈ FP := by
-  simpa only [machineUnaryMatrixGeneratorNextRows] using
+  simpa only [machineUnaryMatrixGeneratorNextRows] using!
     machineTake_mem_FP machineUnaryMatrixGeneratorBound_mem_FP
       (machineUnaryMatrixGeneratorRowsCandidate_mem_FP hentry)
 
@@ -461,7 +461,7 @@ theorem machineUnaryMatrixGeneratorInit_mem_FP :
 
 theorem machineUnaryMatrixGeneratorDimensionBits_mem_FP :
     machineUnaryMatrixGeneratorDimensionBits ∈ FP := by
-  simpa only [machineUnaryMatrixGeneratorDimensionBits] using
+  simpa only [machineUnaryMatrixGeneratorDimensionBits] using!
     machineCompose_mem_FP machineUnaryMatrixGeneratorDimension_mem_FP
       machineLengthBits_mem_FP
 
@@ -470,7 +470,7 @@ theorem machineUnaryMatrixGeneratorWorkBits_mem_FP :
   have hinput := machinePair_mem_FP
     machineUnaryMatrixGeneratorDimensionBits_mem_FP
     machineUnaryMatrixGeneratorDimensionBits_mem_FP
-  simpa only [machineUnaryMatrixGeneratorWorkBits] using
+  simpa only [machineUnaryMatrixGeneratorWorkBits] using!
     machineCompose_mem_FP hinput machineBinaryMulBits_mem_FP
 
 theorem machineUnaryMatrixGeneratorGuard_mem_FP :
@@ -480,14 +480,14 @@ theorem machineUnaryMatrixGeneratorRuler_mem_FP :
     machineUnaryMatrixGeneratorRuler ∈ FP := by
   have hinput := machinePair_mem_FP machineUnaryMatrixGeneratorGuard_mem_FP
     machineUnaryMatrixGeneratorWorkBits_mem_FP
-  simpa only [machineUnaryMatrixGeneratorRuler] using
+  simpa only [machineUnaryMatrixGeneratorRuler] using!
     machineCompose_mem_FP hinput machineBoundedUnary_mem_FP
 
 theorem machineUnaryMatrixGeneratorEnvelope_mem_FP :
     machineUnaryMatrixGeneratorEnvelope ∈ FP := by
   have hpadded := machineAppend_mem_FP id_mem_FP
     (machineConst_mem_FP (List.replicate 16 false))
-  simpa only [machineUnaryMatrixGeneratorEnvelope] using
+  simpa only [machineUnaryMatrixGeneratorEnvelope] using!
     machineCompose_mem_FP hpadded (machineIteratedBinaryWidth_mem_FP 2)
 
 theorem machineUnaryMatrixGeneratorWidth_mem_FP :
@@ -718,7 +718,7 @@ theorem machineUnaryMatrixGeneratorFinalState_mem_FP
 theorem machineUnaryMatrixGeneratorReversedRowsCode_mem_FP
     {entry : List Bool → List Bool} (hentry : entry ∈ FP) :
     machineUnaryMatrixGeneratorReversedRowsCode entry ∈ FP := by
-  simpa only [machineUnaryMatrixGeneratorReversedRowsCode] using
+  simpa only [machineUnaryMatrixGeneratorReversedRowsCode] using!
     machineCompose_mem_FP
       (machineUnaryMatrixGeneratorFinalState_mem_FP hentry)
       machineUnaryMatrixGeneratorRows_mem_FP
@@ -726,7 +726,7 @@ theorem machineUnaryMatrixGeneratorReversedRowsCode_mem_FP
 theorem machineUnaryMatrixGeneratorRowsCode_mem_FP
     {entry : List Bool → List Bool} (hentry : entry ∈ FP) :
     machineUnaryMatrixGeneratorRowsCode entry ∈ FP := by
-  simpa only [machineUnaryMatrixGeneratorRowsCode] using
+  simpa only [machineUnaryMatrixGeneratorRowsCode] using!
     machineCompose_mem_FP
       (machineUnaryMatrixGeneratorReversedRowsCode_mem_FP hentry)
       machineListReverse_mem_FP
@@ -809,7 +809,7 @@ def unaryMatrixRows {m : ℕ}
 @[simp] theorem unaryMatrixRows_getElem {m : ℕ}
     (f : Fin m → Fin m → ℚ) (i : ℕ) (hi : i < (unaryMatrixRows f).length) :
     (unaryMatrixRows f)[i] =
-      List.ofFn (f ⟨i, by simpa using hi⟩) := by
+      List.ofFn (f ⟨i, by simpa using! hi⟩) := by
   simp [unaryMatrixRows]
 
 def unaryMatrixCurrent {m : ℕ}
@@ -868,7 +868,7 @@ def machineUnaryMatrixGeneratorSemanticCode {m : ℕ}
       List.replicate (state.row.1 + 1) true := by
     rw [show ([true] : List Bool) = List.replicate 1 true by rfl,
       List.replicate_append_replicate]
-  rw [happend, List.take_of_length_le (by simpa using hlength)]
+  rw [happend, List.take_of_length_le (by simpa using! hlength)]
 
 @[simp] theorem machineUnaryMatrixGeneratorNextColumn_semanticCode {m : ℕ}
     (f : Fin m → Fin m → ℚ) (bound payload : List Bool)
@@ -893,7 +893,7 @@ def machineUnaryMatrixGeneratorSemanticCode {m : ℕ}
       List.replicate (state.column.1 + 1) true := by
     rw [show ([true] : List Bool) = List.replicate 1 true by rfl,
       List.replicate_append_replicate]
-  rw [happend, List.take_of_length_le (by simpa using hlength)]
+  rw [happend, List.take_of_length_le (by simpa using! hlength)]
 
 @[simp] theorem machineUnaryMatrixGeneratorColumnCompletesBit_semanticCode
     {m : ℕ} (f : Fin m → Fin m → ℚ) (bound payload : List Bool)
@@ -950,7 +950,7 @@ theorem unaryMatrixCurrentCandidate_eq {m : ℕ}
       f state.row state.column := by simp
   rw [hget] at htake
   rw [← htake]
-  simpa only [List.concat_eq_append] using
+  simpa only [List.concat_eq_append] using!
     (List.reverse_concat
       (l := (List.ofFn (f state.row)).take state.column.1)
       (a := f state.row state.column)).symm
@@ -977,7 +977,7 @@ theorem unaryMatrixRowsCandidate_eq {m : ℕ}
       List.ofFn (f state.row) := by
     simp [unaryMatrixRows]
   rw [← hget, ← htake]
-  simpa only [List.concat_eq_append] using
+  simpa only [List.concat_eq_append] using!
     (List.reverse_concat
       (l := (unaryMatrixRows f).take state.row.1)
       (a := (unaryMatrixRows f)[state.row.1])).symm
@@ -1195,7 +1195,7 @@ theorem machineUnaryMatrixGeneratorIterate_semanticCode {m : ℕ}
   | succ k ih =>
       rw [Function.iterate_succ_apply', ih]
       simpa only [unaryGridSemanticStateAt,
-        Function.iterate_succ_apply'] using
+        Function.iterate_succ_apply'] using!
         machineUnaryMatrixGeneratorStep_semanticCode
           entry f bound payload (unaryGridSemanticStateAt hm f k)
             hentry hbound

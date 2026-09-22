@@ -85,19 +85,19 @@ theorem machineNearbyCoordinatePayload_mem_FP :
 
 theorem machineNearbyCoordinateTauRawCode_mem_FP :
     machineNearbyCoordinateTauRawCode ∈ Complexity.FP := by
-  simpa only [machineNearbyCoordinateTauRawCode] using
+  simpa only [machineNearbyCoordinateTauRawCode] using!
     machineCompose_mem_FP machineNearbyCoordinatePayload_mem_FP
       machinePairFirst_mem_FP
 
 theorem machineNearbyCoordinateXCode_mem_FP :
     machineNearbyCoordinateXCode ∈ Complexity.FP := by
-  simpa only [machineNearbyCoordinateXCode] using
+  simpa only [machineNearbyCoordinateXCode] using!
     machineCompose_mem_FP machineNearbyCoordinatePayload_mem_FP
       machinePairSecond_mem_FP
 
 theorem machineNearbyCoordinateNegXRawCode_mem_FP :
     machineNearbyCoordinateNegXRawCode ∈ Complexity.FP := by
-  simpa only [machineNearbyCoordinateNegXRawCode] using
+  simpa only [machineNearbyCoordinateNegXRawCode] using!
     machineCompose_mem_FP machineNearbyCoordinateXCode_mem_FP
       machineRawRatNegCode_mem_FP
 
@@ -105,12 +105,12 @@ theorem machineNearbyCoordinateComplementUnnormalizedRawCode_mem_FP :
     machineNearbyCoordinateComplementUnnormalizedRawCode ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP (machineConst_mem_FP rawRatOneCode)
     machineNearbyCoordinateNegXRawCode_mem_FP
-  simpa only [machineNearbyCoordinateComplementUnnormalizedRawCode] using
+  simpa only [machineNearbyCoordinateComplementUnnormalizedRawCode] using!
     machineCompose_mem_FP hpair machineRawRatAddCode_mem_FP
 
 theorem machineNearbyCoordinateComplementCode_mem_FP :
     machineNearbyCoordinateComplementCode ∈ Complexity.FP := by
-  simpa only [machineNearbyCoordinateComplementCode] using
+  simpa only [machineNearbyCoordinateComplementCode] using!
     machineCompose_mem_FP
       machineNearbyCoordinateComplementUnnormalizedRawCode_mem_FP
       machineNormalizeRawRatEntryCode_mem_FP
@@ -120,7 +120,7 @@ theorem machineNearbyCoordinateLogComplementRawCode_mem_FP :
   have hpair := machinePair_mem_FP
     machineNearbyCoordinatePrecisionRuler_mem_FP
     machineNearbyCoordinateComplementCode_mem_FP
-  simpa only [machineNearbyCoordinateLogComplementRawCode] using
+  simpa only [machineNearbyCoordinateLogComplementRawCode] using!
     machineCompose_mem_FP hpair machineScheduledLogLowerRawCode_mem_FP
 
 theorem machineNearbyCoordinateLogXRawCode_mem_FP :
@@ -128,14 +128,14 @@ theorem machineNearbyCoordinateLogXRawCode_mem_FP :
   have hpair := machinePair_mem_FP
     machineNearbyCoordinatePrecisionRuler_mem_FP
     machineNearbyCoordinateXCode_mem_FP
-  simpa only [machineNearbyCoordinateLogXRawCode] using
+  simpa only [machineNearbyCoordinateLogXRawCode] using!
     machineCompose_mem_FP hpair machineScheduledLogLowerRawCode_mem_FP
 
 theorem machineNearbyCoordinateTauTimesXRawCode_mem_FP :
     machineNearbyCoordinateTauTimesXRawCode ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineNearbyCoordinateTauRawCode_mem_FP
     machineNearbyCoordinateXCode_mem_FP
-  simpa only [machineNearbyCoordinateTauTimesXRawCode] using
+  simpa only [machineNearbyCoordinateTauTimesXRawCode] using!
     machineCompose_mem_FP hpair machineRawRatMulCode_mem_FP
 
 theorem machineNearbyCoordinateWeightedLogXRawCode_mem_FP :
@@ -143,7 +143,7 @@ theorem machineNearbyCoordinateWeightedLogXRawCode_mem_FP :
   have hpair := machinePair_mem_FP
     machineNearbyCoordinateTauTimesXRawCode_mem_FP
     machineNearbyCoordinateLogXRawCode_mem_FP
-  simpa only [machineNearbyCoordinateWeightedLogXRawCode] using
+  simpa only [machineNearbyCoordinateWeightedLogXRawCode] using!
     machineCompose_mem_FP hpair machineRawRatMulCode_mem_FP
 
 theorem machineNearbyCoordinateLowerRawCode_mem_FP :
@@ -151,7 +151,7 @@ theorem machineNearbyCoordinateLowerRawCode_mem_FP :
   have hpair := machinePair_mem_FP
     machineNearbyCoordinateLogComplementRawCode_mem_FP
     machineNearbyCoordinateWeightedLogXRawCode_mem_FP
-  simpa only [machineNearbyCoordinateLowerRawCode] using
+  simpa only [machineNearbyCoordinateLowerRawCode] using!
     machineCompose_mem_FP hpair machineRawRatAddCode_mem_FP
 
 def rawNearbyCoordinateComplement (x : ℚ) : RawRat :=

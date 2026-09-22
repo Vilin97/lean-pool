@@ -45,7 +45,7 @@ theorem emptyMachineTarget_mem_FP_from_paddedRAM (count : ℕ) :
         (outputBitLanguage emptyMachineTarget))
       (2 : Polynomial ℕ).eval := by
     rw [paddedOutputBitLanguage_emptyMachineTarget]
-    simpa using RAM.rejectProg_decides
+    simpa using! RAM.rejectProg_decides
   apply canonicalTarget_mem_FP_of_paddedRamBitProgram count
     emptyMachineTarget ruler RAM.rejectProg (2 : Polynomial ℕ) hdecides
   · exact machineConst_mem_FP []

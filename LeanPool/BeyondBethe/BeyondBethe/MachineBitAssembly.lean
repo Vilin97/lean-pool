@@ -72,16 +72,16 @@ def machineAssembleBits
 
 theorem machineBitAssemblyCounter_mem_FP :
     machineBitAssemblyCounter ∈ Complexity.FP := by
-  simpa only [machineBitAssemblyCounter] using machinePairFirst_mem_FP
+  simpa only [machineBitAssemblyCounter] using! machinePairFirst_mem_FP
 
 theorem machineBitAssemblyAcc_mem_FP :
     machineBitAssemblyAcc ∈ Complexity.FP := by
-  simpa only [machineBitAssemblyAcc] using
+  simpa only [machineBitAssemblyAcc] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineBitAssemblyInput_mem_FP :
     machineBitAssemblyInput ∈ Complexity.FP := by
-  simpa only [machineBitAssemblyInput] using
+  simpa only [machineBitAssemblyInput] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairSecond_mem_FP
 
 theorem machineQueriedBit_mem_FP
@@ -104,7 +104,7 @@ theorem machineBitAssemblyNextCounter_mem_FP :
         Complexity.FP :=
     machinePair_mem_FP machineBitAssemblyCounter_mem_FP
       (machineConst_mem_FP [true])
-  simpa only [machineBitAssemblyNextCounter] using
+  simpa only [machineBitAssemblyNextCounter] using!
     machineCompose_mem_FP hpayload machineBinaryAddBits_mem_FP
 
 theorem machineBitAssemblyStep_mem_FP
@@ -219,7 +219,7 @@ theorem machineAssembleBits_mem_FP
     {query ruler : List Bool → List Bool}
     (hquery : query ∈ Complexity.FP) (hruler : ruler ∈ Complexity.FP) :
     machineAssembleBits query ruler ∈ Complexity.FP := by
-  simpa only [machineAssembleBits] using
+  simpa only [machineAssembleBits] using!
     machineCompose_mem_FP
       (machineBitAssemblyFinalState_mem_FP hquery hruler)
       machineBitAssemblyAcc_mem_FP

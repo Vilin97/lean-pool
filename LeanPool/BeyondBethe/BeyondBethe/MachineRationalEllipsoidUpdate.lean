@@ -45,7 +45,7 @@ theorem machineRationalEllipsoidUpdateDirectionMatrixCode_mem_FP :
     machineRationalCenterUpdateDimensionUnary_mem_FP
     (machinePair_mem_FP machineRationalCenterUpdateDimensionBits_mem_FP
       machineRationalCenterUpdatePulledBackCode_mem_FP)
-  simpa only [machineRationalEllipsoidUpdateDirectionMatrixCode] using
+  simpa only [machineRationalEllipsoidUpdateDirectionMatrixCode] using!
     machineCompose_mem_FP hinput
       machineRationalDirectionUpdateMatrixCode_mem_FP
 
@@ -55,7 +55,7 @@ theorem machineRationalEllipsoidUpdateBasisCode_mem_FP :
     machineRationalCenterUpdateDimensionUnary_mem_FP
     (machinePair_mem_FP machineRationalCenterUpdateBasisWord_mem_FP
       machineRationalEllipsoidUpdateDirectionMatrixCode_mem_FP)
-  simpa only [machineRationalEllipsoidUpdateBasisCode] using
+  simpa only [machineRationalEllipsoidUpdateBasisCode] using!
     machineCompose_mem_FP hinput machineRationalMatrixMulCode_mem_FP
 
 theorem machineRationalEllipsoidCentralUpdateCode_mem_FP :

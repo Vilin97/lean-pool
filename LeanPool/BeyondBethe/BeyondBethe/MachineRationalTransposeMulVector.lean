@@ -64,7 +64,7 @@ theorem rawRationalTransposeCoordinate_width_le_word {d : ℕ}
       (binaryListCode rationalEntryBinaryCode column).length ≤
         (binaryListCode (binaryListCode rationalEntryBinaryCode)
           (rationalMatrixRows A)).length := by
-    simpa only [column] using hcolumn
+    simpa only [column] using! hcolumn
   have hcombined :
       1 + (binaryListCode (binaryListCode rationalEntryBinaryCode)
           (rationalMatrixRows A)).length +
@@ -103,7 +103,7 @@ theorem machineRationalTransposeMulVectorInputBound_mem_FP :
   have h1 := machineBinaryMulWidth_mem_FP
   have h2 := machineCompose_mem_FP h1 machineBinaryMulWidth_mem_FP
   have h3 := machineCompose_mem_FP h2 machineBinaryMulWidth_mem_FP
-  simpa only [machineRationalTransposeMulVectorInputBound] using h3
+  simpa only [machineRationalTransposeMulVectorInputBound] using! h3
 
 theorem rationalTransposeMulVector_code_length_le_bound {d : ℕ}
     (A : Matrix (Fin d) (Fin d) ℚ) (v : Fin d → ℚ) :
@@ -116,7 +116,7 @@ theorem rationalTransposeMulVector_code_length_le_bound {d : ℕ}
   have hdim : d ≤ word.length := by
     have hfirst := machinePairFirst_length_le word
     simpa only [word, rationalTransposeMulVectorCanonicalWord,
-      machinePairFirst_pair, List.length_replicate] using hfirst
+      machinePairFirst_pair, List.length_replicate] using! hfirst
   have heach : ∀ q ∈ List.ofFn (rationalTransposeMulVector A v),
       (rationalEntryBinaryCode q).length ≤ B := by
     intro q hq
@@ -239,7 +239,7 @@ theorem machineRationalTransposeMulVectorPayload_mem_FP :
 
 theorem machineRationalTransposeMulVectorIndices_mem_FP :
     machineRationalTransposeMulVectorIndices ∈ FP := by
-  simpa only [machineRationalTransposeMulVectorIndices] using
+  simpa only [machineRationalTransposeMulVectorIndices] using!
     machineCompose_mem_FP machineRationalTransposeMulVectorDimension_mem_FP
       machineUnaryRangeCode_mem_FP
 
@@ -248,26 +248,26 @@ theorem machineRationalTransposeMulVectorRemaining_mem_FP :
 
 theorem machineRationalTransposeMulVectorAccumulator_mem_FP :
     machineRationalTransposeMulVectorAccumulator ∈ FP := by
-  simpa only [machineRationalTransposeMulVectorAccumulator] using
+  simpa only [machineRationalTransposeMulVectorAccumulator] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineRationalTransposeMulVectorStatePayload_mem_FP :
     machineRationalTransposeMulVectorStatePayload ∈ FP := by
-  simpa only [machineRationalTransposeMulVectorStatePayload] using
+  simpa only [machineRationalTransposeMulVectorStatePayload] using!
     machineCompose_mem_FP
       (machineCompose_mem_FP machinePairSecond_mem_FP
         machinePairSecond_mem_FP) machinePairFirst_mem_FP
 
 theorem machineRationalTransposeMulVectorBound_mem_FP :
     machineRationalTransposeMulVectorBound ∈ FP := by
-  simpa only [machineRationalTransposeMulVectorBound] using
+  simpa only [machineRationalTransposeMulVectorBound] using!
     machineCompose_mem_FP
       (machineCompose_mem_FP machinePairSecond_mem_FP
         machinePairSecond_mem_FP) machinePairSecond_mem_FP
 
 theorem machineRationalTransposeMulVectorCurrentIndex_mem_FP :
     machineRationalTransposeMulVectorCurrentIndex ∈ FP := by
-  simpa only [machineRationalTransposeMulVectorCurrentIndex] using
+  simpa only [machineRationalTransposeMulVectorCurrentIndex] using!
     machineCompose_mem_FP machineRationalTransposeMulVectorRemaining_mem_FP
       machineListHead_mem_FP
 
@@ -276,7 +276,7 @@ theorem machineRationalTransposeMulVectorCurrentEntry_mem_FP :
   have hp := machinePair_mem_FP
     machineRationalTransposeMulVectorCurrentIndex_mem_FP
     machineRationalTransposeMulVectorStatePayload_mem_FP
-  simpa only [machineRationalTransposeMulVectorCurrentEntry] using
+  simpa only [machineRationalTransposeMulVectorCurrentEntry] using!
     machineCompose_mem_FP hp
       machineRationalMatrixTransposeMulVectorEntryCode_mem_FP
 
@@ -287,7 +287,7 @@ theorem machineRationalTransposeMulVectorCandidate_mem_FP :
 
 theorem machineRationalTransposeMulVectorNextAccumulator_mem_FP :
     machineRationalTransposeMulVectorNextAccumulator ∈ FP := by
-  simpa only [machineRationalTransposeMulVectorNextAccumulator] using
+  simpa only [machineRationalTransposeMulVectorNextAccumulator] using!
     machineTake_mem_FP machineRationalTransposeMulVectorBound_mem_FP
       machineRationalTransposeMulVectorCandidate_mem_FP
 
@@ -374,7 +374,7 @@ theorem machineRationalTransposeMulVector_indices_le_bound
   have hdimension' :
       (machineRationalTransposeMulVectorDimension word).length ≤
         word.length := by
-    simpa only [machineRationalTransposeMulVectorDimension] using hdimension
+    simpa only [machineRationalTransposeMulVectorDimension] using! hdimension
   have hmono := machineListUpdateInputBound_length_mono hdimension'
   apply hrange.trans (hmono.trans ?_)
   simp only [machineListUpdateInputBound,
@@ -456,13 +456,13 @@ theorem machineRationalTransposeMulVectorFinalState_mem_FP :
 
 theorem machineRationalTransposeMulVectorReversedCode_mem_FP :
     machineRationalTransposeMulVectorReversedCode ∈ FP := by
-  simpa only [machineRationalTransposeMulVectorReversedCode] using
+  simpa only [machineRationalTransposeMulVectorReversedCode] using!
     machineCompose_mem_FP machineRationalTransposeMulVectorFinalState_mem_FP
       machineRationalTransposeMulVectorAccumulator_mem_FP
 
 theorem machineRationalTransposeMulVectorCode_mem_FP :
     machineRationalTransposeMulVectorCode ∈ FP := by
-  simpa only [machineRationalTransposeMulVectorCode] using
+  simpa only [machineRationalTransposeMulVectorCode] using!
     machineCompose_mem_FP
       machineRationalTransposeMulVectorReversedCode_mem_FP
       machineListReverse_mem_FP
@@ -509,7 +509,7 @@ theorem rationalTransposePrefix_succ {d : ℕ}
         [rationalTransposeMulVector A v ⟨k, hk⟩] := by
   simp only [rationalTransposePrefix, List.map_take]
   have hkm : k < (List.finRange d).length := by simpa
-  simpa [List.getElem_finRange] using
+  simpa [List.getElem_finRange] using!
     congrArg (List.map fun j ↦ rationalTransposeMulVector A v j)
       (List.take_concat_get hkm).symm
 
@@ -556,7 +556,7 @@ theorem machineRationalTransposeMulVectorStep_semantics {d : ℕ}
         (binaryListCode rationalEntryBinaryCode
           (rationalTransposePrefix A v k).reverse)).length ≤
         (machineRationalTransposeMulVectorInputBound word).length := by
-    simpa only [hreverse, binaryListCode] using hcand
+    simpa only [hreverse, binaryListCode] using! hcand
   have hnonempty :
       binaryListCode finUnaryCode ((List.finRange d).drop k) ≠ [] := by
     rw [hdrop]
@@ -638,7 +638,7 @@ theorem machineRationalTransposeMulVectorReversedCode_encode {d : ℕ}
   have hd : d ≤ word.length := by
     have h := machinePairFirst_length_le word
     simpa only [word, rationalTransposeMulVectorCanonicalWord,
-      machinePairFirst_pair, List.length_replicate] using h
+      machinePairFirst_pair, List.length_replicate] using! h
   have hsplit : word.length = (word.length - d) + d := by omega
   change machineRationalTransposeMulVectorReversedCode word = _
   rw [machineRationalTransposeMulVectorReversedCode,

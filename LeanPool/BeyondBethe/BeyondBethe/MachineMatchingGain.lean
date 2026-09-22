@@ -71,12 +71,12 @@ theorem machineListCountRemaining_mem_FP :
 
 theorem machineListCountCounter_mem_FP :
     machineListCountCounter ∈ FP := by
-  simpa only [machineListCountCounter] using machineCompose_mem_FP
+  simpa only [machineListCountCounter] using! machineCompose_mem_FP
     machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineListCountSource_mem_FP :
     machineListCountSource ∈ FP := by
-  simpa only [machineListCountSource] using machineCompose_mem_FP
+  simpa only [machineListCountSource] using! machineCompose_mem_FP
     machinePairSecond_mem_FP machinePairSecond_mem_FP
 
 theorem machineListCountInputBound_mem_FP :
@@ -85,7 +85,7 @@ theorem machineListCountInputBound_mem_FP :
 
 theorem machineListCountBound_mem_FP :
     machineListCountBound ∈ FP := by
-  simpa only [machineListCountBound] using machineCompose_mem_FP
+  simpa only [machineListCountBound] using! machineCompose_mem_FP
     machineListCountSource_mem_FP machineListCountInputBound_mem_FP
 
 theorem machineListCountNextCounter_mem_FP :
@@ -93,7 +93,7 @@ theorem machineListCountNextCounter_mem_FP :
   have hinput := machinePair_mem_FP machineListCountCounter_mem_FP
     (machineConst_mem_FP [true])
   have hadd := machineCompose_mem_FP hinput machineBinaryAddBits_mem_FP
-  simpa only [machineListCountNextCounter] using
+  simpa only [machineListCountNextCounter] using!
     machineTake_mem_FP machineListCountBound_mem_FP hadd
 
 theorem machineListCountProcess_mem_FP :
@@ -106,7 +106,7 @@ theorem machineListCountProcess_mem_FP :
 
 theorem machineListCountStep_mem_FP :
     machineListCountStep ∈ FP := by
-  simpa only [machineListCountStep] using machineIfEmpty_mem_FP
+  simpa only [machineListCountStep] using! machineIfEmpty_mem_FP
     machineListCountRemaining_mem_FP id_mem_FP machineListCountProcess_mem_FP
 
 theorem machineListCountInit_mem_FP :
@@ -212,7 +212,7 @@ theorem machineEncodedListLengthBits_mem_FP :
     Cobham.iterate_mem_FP machineListCountStep_mem_FP
       machineListCountInit_mem_FP id_mem_FP machineListCountWidth_mem_FP
       machineListCountIterate_length_le_width
-  simpa only [machineEncodedListLengthBits] using machineCompose_mem_FP
+  simpa only [machineEncodedListLengthBits] using! machineCompose_mem_FP
     hfinal machineListCountCounter_mem_FP
 
 /-! ## Exact counting semantics -/
@@ -249,7 +249,7 @@ theorem machineListCountSemanticState_step {alpha : Type*}
     machineListCountSource_pack, machineListCountNextCounter,
     machineListCountCounter_pack]
   have hadd : machineBinaryAddBits (pair k.bits [true]) = (k + 1).bits := by
-    simpa using machineBinaryAddBits_pair_natBits k 1
+    simpa using! machineBinaryAddBits_pair_natBits k 1
   rw [hadd]
   have hbits : (k + 1).bits.length ≤
       (machineListCountInputBound (binaryListCode encode xs)).length := by
@@ -334,14 +334,14 @@ theorem machineMatchingGainFromSelected_mem_FP :
     (machineConst_mem_FP (rawRatBinaryCode rawExplicitGamma))
     machineListCountRawNatCode_mem_FP
   have hmul := machineCompose_mem_FP hinput machineRawRatMulCode_mem_FP
-  simpa only [machineMatchingGainFromSelected] using
+  simpa only [machineMatchingGainFromSelected] using!
     machineCompose_mem_FP hmul machineNormalizeRawRatEntryCode_mem_FP
 
 theorem machineExplicitMatchingGainRawCode_mem_FP :
     machineExplicitMatchingGainRawCode ∈ FP := by
   have hselected := machineCompose_mem_FP machinePairSecond_mem_FP
     machineGreedyMatchingSelected_mem_FP
-  simpa only [machineExplicitMatchingGainRawCode] using machineCompose_mem_FP
+  simpa only [machineExplicitMatchingGainRawCode] using! machineCompose_mem_FP
     hselected machineMatchingGainFromSelected_mem_FP
 
 @[simp] theorem machineListCountRawNatCode_encode {alpha : Type*}
@@ -390,7 +390,7 @@ theorem explicitCertifiedMatchingGain_eq_typed_length {n : ℕ}
       (explicitCertifiedRowWeight X) explicitGamma
     have hthreshold : explicitGamma ≤ explicitCertifiedRowWeight X q := by
       have hmem := hmax.subset hqmatching
-      simpa only [List.mem_toFinset, mem_thresholdRowPairsList_iff] using hmem
+      simpa only [List.mem_toFinset, mem_thresholdRowPairsList_iff] using! hmem
     exact certifiedConstantRowWeight_eq_gamma_of_threshold
       (explicitRegularizationScale n) X explicitKappa explicitGamma
       (directedPairCostPrecision n) q explicitGamma_pos hthreshold
@@ -418,7 +418,7 @@ theorem explicitCertifiedMatchingGain_eq_typed_length {n : ℕ}
 theorem machineExplicitMatchingGainRawCode_realizes :
     OptimizerMatchingGainStringRealizes machineExplicitMatchingGainRawCode := by
   intro m B
-  simpa only [explicitLargeOptimizerOutput] using
+  simpa only [explicitLargeOptimizerOutput] using!
     machineExplicitMatchingGainRawCode_encode
       (rationalMatrixBinaryEncoding.encode ⟨m + 2, B⟩)
       (explicitBetheOptimizerMatrix (m := m + 1) B)

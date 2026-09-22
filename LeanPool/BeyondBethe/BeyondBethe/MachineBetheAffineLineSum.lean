@@ -94,7 +94,7 @@ theorem machineBetheFlatIndexRest_mem_FP :
 
 theorem machineBetheFlatIndexDimension_mem_FP :
     machineBetheFlatIndexDimension ∈ FP := by
-  simpa only [machineBetheFlatIndexDimension] using
+  simpa only [machineBetheFlatIndexDimension] using!
     machineCompose_mem_FP machineBetheFlatIndexRest_mem_FP
       machinePairFirst_mem_FP
 
@@ -102,7 +102,7 @@ theorem machineBetheFlatIndexFixed_mem_FP :
     machineBetheFlatIndexFixed ∈ FP := by
   have htail := machineCompose_mem_FP machineBetheFlatIndexRest_mem_FP
     machinePairSecond_mem_FP
-  simpa only [machineBetheFlatIndexFixed] using
+  simpa only [machineBetheFlatIndexFixed] using!
     machineCompose_mem_FP htail machinePairFirst_mem_FP
 
 theorem machineBetheFlatIndexCurrent_mem_FP :
@@ -110,7 +110,7 @@ theorem machineBetheFlatIndexCurrent_mem_FP :
   have htail₁ := machineCompose_mem_FP machineBetheFlatIndexRest_mem_FP
     machinePairSecond_mem_FP
   have htail₂ := machineCompose_mem_FP htail₁ machinePairSecond_mem_FP
-  simpa only [machineBetheFlatIndexCurrent] using
+  simpa only [machineBetheFlatIndexCurrent] using!
     machineCompose_mem_FP htail₂ machinePairFirst_mem_FP
 
 theorem machineBetheFlatIndexVector_mem_FP :
@@ -118,24 +118,24 @@ theorem machineBetheFlatIndexVector_mem_FP :
   have htail₁ := machineCompose_mem_FP machineBetheFlatIndexRest_mem_FP
     machinePairSecond_mem_FP
   have htail₂ := machineCompose_mem_FP htail₁ machinePairSecond_mem_FP
-  simpa only [machineBetheFlatIndexVector] using
+  simpa only [machineBetheFlatIndexVector] using!
     machineCompose_mem_FP htail₂ machinePairSecond_mem_FP
 
 theorem machineBetheFlatIndexDimensionBits_mem_FP :
     machineBetheFlatIndexDimensionBits ∈ FP := by
-  simpa only [machineBetheFlatIndexDimensionBits] using
+  simpa only [machineBetheFlatIndexDimensionBits] using!
     machineCompose_mem_FP machineBetheFlatIndexDimension_mem_FP
       machineLengthBits_mem_FP
 
 theorem machineBetheFlatIndexFixedBits_mem_FP :
     machineBetheFlatIndexFixedBits ∈ FP := by
-  simpa only [machineBetheFlatIndexFixedBits] using
+  simpa only [machineBetheFlatIndexFixedBits] using!
     machineCompose_mem_FP machineBetheFlatIndexFixed_mem_FP
       machineLengthBits_mem_FP
 
 theorem machineBetheFlatIndexCurrentBits_mem_FP :
     machineBetheFlatIndexCurrentBits ∈ FP := by
-  simpa only [machineBetheFlatIndexCurrentBits] using
+  simpa only [machineBetheFlatIndexCurrentBits] using!
     machineCompose_mem_FP machineBetheFlatIndexCurrent_mem_FP
       machineLengthBits_mem_FP
 
@@ -148,7 +148,7 @@ theorem machineBetheFlatIndexRowBits_mem_FP :
     machineBinaryMulBits_mem_FP
   have haddInput := machinePair_mem_FP hmul
     machineBetheFlatIndexCurrentBits_mem_FP
-  simpa only [machineBetheFlatIndexRowBits] using
+  simpa only [machineBetheFlatIndexRowBits] using!
     machineCompose_mem_FP haddInput machineBinaryAddBits_mem_FP
 
 theorem machineBetheFlatIndexColumnBits_mem_FP :
@@ -160,7 +160,7 @@ theorem machineBetheFlatIndexColumnBits_mem_FP :
     machineBinaryMulBits_mem_FP
   have haddInput := machinePair_mem_FP hmul
     machineBetheFlatIndexFixedBits_mem_FP
-  simpa only [machineBetheFlatIndexColumnBits] using
+  simpa only [machineBetheFlatIndexColumnBits] using!
     machineCompose_mem_FP haddInput machineBinaryAddBits_mem_FP
 
 theorem machineBetheFlatIndexBits_mem_FP :
@@ -173,14 +173,14 @@ theorem machineBetheFlatIndexRuler_mem_FP :
     machineBetheFlatIndexRuler ∈ FP := by
   have hinput := machinePair_mem_FP id_mem_FP
     machineBetheFlatIndexBits_mem_FP
-  simpa only [machineBetheFlatIndexRuler] using
+  simpa only [machineBetheFlatIndexRuler] using!
     machineCompose_mem_FP hinput machineBoundedUnary_mem_FP
 
 theorem machineBetheFlatEntryRawCode_mem_FP :
     machineBetheFlatEntryRawCode ∈ FP := by
   have hinput := machinePair_mem_FP machineBetheFlatIndexRuler_mem_FP
     machineBetheFlatIndexVector_mem_FP
-  simpa only [machineBetheFlatEntryRawCode] using
+  simpa only [machineBetheFlatEntryRawCode] using!
     machineCompose_mem_FP hinput machineListIndex_mem_FP
 
 def betheFlatIndexCanonicalWord {m : ℕ} (rowMode : Bool)
@@ -240,7 +240,7 @@ theorem bethe_flat_index_lt_word_length {m : ℕ} (rowMode : Bool)
           _ ≤ m * m := Nat.mul_le_mul_right m
             (Nat.succ_le_iff.mpr fixed.isLt)
   have hvector : m * m ≤ (rationalFiniteVectorCode y).length := by
-    simpa only [rationalFiniteVectorCode, List.length_ofFn] using
+    simpa only [rationalFiniteVectorCode, List.length_ofFn] using!
       list_length_le_binaryListCode_length rationalEntryBinaryCode
         (List.ofFn y)
   have hcode : (rationalFiniteVectorCode y).length ≤
@@ -442,7 +442,7 @@ theorem machineBetheLineSumRest_mem_FP : machineBetheLineSumRest ∈ FP :=
 
 theorem machineBetheLineSumDimension_mem_FP :
     machineBetheLineSumDimension ∈ FP := by
-  simpa only [machineBetheLineSumDimension] using
+  simpa only [machineBetheLineSumDimension] using!
     machineCompose_mem_FP machineBetheLineSumRest_mem_FP
       machinePairFirst_mem_FP
 
@@ -450,14 +450,14 @@ theorem machineBetheLineSumFixed_mem_FP :
     machineBetheLineSumFixed ∈ FP := by
   have htail := machineCompose_mem_FP machineBetheLineSumRest_mem_FP
     machinePairSecond_mem_FP
-  simpa only [machineBetheLineSumFixed] using
+  simpa only [machineBetheLineSumFixed] using!
     machineCompose_mem_FP htail machinePairFirst_mem_FP
 
 theorem machineBetheLineSumVector_mem_FP :
     machineBetheLineSumVector ∈ FP := by
   have htail := machineCompose_mem_FP machineBetheLineSumRest_mem_FP
     machinePairSecond_mem_FP
-  simpa only [machineBetheLineSumVector] using
+  simpa only [machineBetheLineSumVector] using!
     machineCompose_mem_FP htail machinePairSecond_mem_FP
 
 theorem machineBetheLineSumRemaining_mem_FP :
@@ -465,14 +465,14 @@ theorem machineBetheLineSumRemaining_mem_FP :
 
 theorem machineBetheLineSumCurrent_mem_FP :
     machineBetheLineSumCurrent ∈ FP := by
-  simpa only [machineBetheLineSumCurrent] using
+  simpa only [machineBetheLineSumCurrent] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineBetheLineSumAccumulator_mem_FP :
     machineBetheLineSumAccumulator ∈ FP := by
   have htail := machineCompose_mem_FP machinePairSecond_mem_FP
     machinePairSecond_mem_FP
-  simpa only [machineBetheLineSumAccumulator] using
+  simpa only [machineBetheLineSumAccumulator] using!
     machineCompose_mem_FP htail machinePairFirst_mem_FP
 
 theorem machineBetheLineSumPayload_mem_FP :
@@ -480,7 +480,7 @@ theorem machineBetheLineSumPayload_mem_FP :
   have htail₁ := machineCompose_mem_FP machinePairSecond_mem_FP
     machinePairSecond_mem_FP
   have htail₂ := machineCompose_mem_FP htail₁ machinePairSecond_mem_FP
-  simpa only [machineBetheLineSumPayload] using
+  simpa only [machineBetheLineSumPayload] using!
     machineCompose_mem_FP htail₂ machinePairFirst_mem_FP
 
 theorem machineBetheLineSumBound_mem_FP :
@@ -488,7 +488,7 @@ theorem machineBetheLineSumBound_mem_FP :
   have htail₁ := machineCompose_mem_FP machinePairSecond_mem_FP
     machinePairSecond_mem_FP
   have htail₂ := machineCompose_mem_FP htail₁ machinePairSecond_mem_FP
-  simpa only [machineBetheLineSumBound] using
+  simpa only [machineBetheLineSumBound] using!
     machineCompose_mem_FP htail₂ machinePairSecond_mem_FP
 
 theorem machineBetheLineSumEntryInput_mem_FP :
@@ -507,7 +507,7 @@ theorem machineBetheLineSumEntryInput_mem_FP :
         (machinePair_mem_FP machineBetheLineSumCurrent_mem_FP hvector)))
 
 theorem machineBetheLineSumEntry_mem_FP : machineBetheLineSumEntry ∈ FP := by
-  simpa only [machineBetheLineSumEntry] using
+  simpa only [machineBetheLineSumEntry] using!
     machineCompose_mem_FP machineBetheLineSumEntryInput_mem_FP
       machineBetheFlatEntryRawCode_mem_FP
 
@@ -515,12 +515,12 @@ theorem machineBetheLineSumCandidate_mem_FP :
     machineBetheLineSumCandidate ∈ FP := by
   have hinput := machinePair_mem_FP machineBetheLineSumAccumulator_mem_FP
     machineBetheLineSumEntry_mem_FP
-  simpa only [machineBetheLineSumCandidate] using
+  simpa only [machineBetheLineSumCandidate] using!
     machineCompose_mem_FP hinput machineRawRatAddCode_mem_FP
 
 theorem machineBetheLineSumNextAccumulator_mem_FP :
     machineBetheLineSumNextAccumulator ∈ FP := by
-  simpa only [machineBetheLineSumNextAccumulator] using
+  simpa only [machineBetheLineSumNextAccumulator] using!
     machineTake_mem_FP machineBetheLineSumBound_mem_FP
       machineBetheLineSumCandidate_mem_FP
 
@@ -542,7 +542,7 @@ theorem machineBetheLineSumStep_mem_FP : machineBetheLineSumStep ∈ FP := by
 
 theorem machineBetheLineSumInputBound_mem_FP :
     machineBetheLineSumInputBound ∈ FP := by
-  simpa only [machineBetheLineSumInputBound] using
+  simpa only [machineBetheLineSumInputBound] using!
     machineCompose_mem_FP machineBinaryMulWidth_mem_FP
       machineBinaryMulWidth_mem_FP
 
@@ -624,7 +624,7 @@ theorem machineBetheLineSumInit_bound (word : List Bool) :
           List.length_append]
         nlinarith [sq_nonneg (word.length + 16)])
   · simpa only [machineBetheLineSumInit,
-      machineBetheLineSumPayload_pack] using
+      machineBetheLineSumPayload_pack] using!
       machineBetheLineSum_word_le_bound word
   · simp only [machineBetheLineSumInit, machineBetheLineSumBound_pack]
 
@@ -690,7 +690,7 @@ theorem machineBetheLineSumFinalState_mem_FP :
 
 theorem machineBetheLineSumRawCode_mem_FP :
     machineBetheLineSumRawCode ∈ FP := by
-  simpa only [machineBetheLineSumRawCode] using
+  simpa only [machineBetheLineSumRawCode] using!
     machineCompose_mem_FP machineBetheLineSumFinalState_mem_FP
       machineBetheLineSumAccumulator_mem_FP
 
@@ -751,7 +751,7 @@ theorem betheAffineLineValue_cost_le_word {m : ℕ} (rowMode : Bool)
     rationalEntryBinaryCode hzmem
   have hentry' : (rationalEntryBinaryCode z).length ≤
       (rationalFiniteVectorCode y).length := by
-    simpa only [rationalFiniteVectorCode] using hentry
+    simpa only [rationalFiniteVectorCode] using! hentry
   have hraw := rawRatWidth_le_binaryCode_length (rawRatOfRat z)
   rw [rawRatBinaryCode_rawRatOfRat] at hraw
   have hword := betheLineSum_vector_code_le_word rowMode fixed y
@@ -782,12 +782,12 @@ theorem rawRatListCost_betheLine_take_le {m : ℕ} (rowMode : Bool)
       rw [List.length_take]
       exact Nat.min_le_right _ _
     exact htake.trans
-      (by simpa only [values, betheAffineLineValues_length, W] using
+      (by simpa only [values, betheAffineLineValues_length, W] using!
         betheLineSum_dimension_le_word rowMode fixed y)
   have hlengthMap :
       ((values.take k).map
         fun q ↦ rawRatWidth (rawRatOfRat q) + 1).length ≤ W := by
-    simpa only [List.length_map] using hlength
+    simpa only [List.length_map] using! hlength
   simp only [rawRatListCost]
   exact hsum.trans (Nat.mul_le_mul_right (W + 1) hlengthMap)
 
@@ -808,7 +808,7 @@ theorem rawBetheAffineLinePrefix_code_le_bound {m : ℕ}
   have hwidth' : rawRatWidth (rawRatListSum RawRat.zero segment) ≤
       1 + W * (W + 1) := by
     simp only [rawRatWidth_zero] at hwidth
-    simpa only [word, W, segment] using hwidth.trans
+    simpa only [word, W, segment] using! hwidth.trans
       (Nat.add_le_add_left hcost 1)
   apply hraw.trans
   apply (Nat.add_le_add_left (Nat.mul_le_mul_left 3 hwidth') 4).trans
@@ -843,10 +843,10 @@ theorem rawBetheAffineLinePrefix_succ {m : ℕ} (rowMode : Bool)
             else y (finProdFinEquiv (⟨k, hk⟩, fixed)))) := by
   let values := betheAffineLineValues rowMode fixed y
   have hk' : k < values.length := by simpa only [values,
-    betheAffineLineValues_length] using hk
+    betheAffineLineValues_length] using! hk
   have htake : values.take (k + 1) =
       values.take k ++ [values[k]] := by
-    simpa only [List.concat_eq_append] using (List.take_concat_get hk').symm
+    simpa only [List.concat_eq_append] using! (List.take_concat_get hk').symm
   rw [show (betheAffineLineValues rowMode fixed y).take (k + 1) =
       values.take (k + 1) by rfl, htake, rawRatListSum_append]
   simp only [rawRatListSum, List.getElem_ofFn, values,
@@ -939,7 +939,7 @@ theorem machineBetheLineSumStep_semantics {m : ℕ} (rowMode : Bool)
         (machineBetheLineSumInputBound word)) =
       rawRatBinaryCode term := by
     rw [← hremaining]
-    simpa only [machineBetheLineSumSemanticState, word, segment] using hentry
+    simpa only [machineBetheLineSumSemanticState, word, segment] using! hentry
   have hprefix := rawBetheAffineLinePrefix_succ rowMode fixed y k hk
   have hcode : (rawRatBinaryCode (segment.add term)).length ≤
       (machineBetheLineSumInputBound word).length := by
@@ -1003,7 +1003,7 @@ theorem machineBetheLineSumIterate_semantics {m : ℕ} (rowMode : Bool)
     simp
   simpa [machineBetheLineSumRawCode, machineBetheLineSumFinalState,
     machineBetheLineSumDimension_canonical,
-    machineBetheLineSumSemanticState, rawBetheAffineLineSum, htake] using hstate
+    machineBetheLineSumSemanticState, rawBetheAffineLineSum, htake] using! hstate
 
 theorem rawBetheAffineLineSum_value {m : ℕ} (rowMode : Bool)
     (fixed : Fin m) (y : Fin (m * m) → ℚ) :

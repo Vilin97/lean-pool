@@ -142,46 +142,46 @@ theorem machineFixedARest₁_mem_FP : machineFixedARest₁ ∈ FP :=
 
 theorem machineFixedASecondRowRuler_mem_FP :
     machineFixedASecondRowRuler ∈ FP := by
-  simpa only [machineFixedASecondRowRuler] using machineCompose_mem_FP
+  simpa only [machineFixedASecondRowRuler] using! machineCompose_mem_FP
     machineFixedARest₁_mem_FP machinePairFirst_mem_FP
 
 theorem machineFixedARest₂_mem_FP : machineFixedARest₂ ∈ FP := by
-  simpa only [machineFixedARest₂] using machineCompose_mem_FP
+  simpa only [machineFixedARest₂] using! machineCompose_mem_FP
     machineFixedARest₁_mem_FP machinePairSecond_mem_FP
 
 theorem machineFixedAFirstColumnRuler_mem_FP :
     machineFixedAFirstColumnRuler ∈ FP := by
-  simpa only [machineFixedAFirstColumnRuler] using machineCompose_mem_FP
+  simpa only [machineFixedAFirstColumnRuler] using! machineCompose_mem_FP
     machineFixedARest₂_mem_FP machinePairFirst_mem_FP
 
 theorem machineFixedAOptimizerWord_mem_FP :
     machineFixedAOptimizerWord ∈ FP := by
-  simpa only [machineFixedAOptimizerWord] using machineCompose_mem_FP
+  simpa only [machineFixedAOptimizerWord] using! machineCompose_mem_FP
     machineFixedARest₂_mem_FP machinePairSecond_mem_FP
 
 theorem machineFixedADimensionRuler_mem_FP :
     machineFixedADimensionRuler ∈ FP := by
-  simpa only [machineFixedADimensionRuler] using machineCompose_mem_FP
+  simpa only [machineFixedADimensionRuler] using! machineCompose_mem_FP
     machineFixedAOptimizerWord_mem_FP machineCertificateDimensionUnary_mem_FP
 
 theorem machineFixedAColumnRange_mem_FP : machineFixedAColumnRange ∈ FP := by
-  simpa only [machineFixedAColumnRange] using machineCompose_mem_FP
+  simpa only [machineFixedAColumnRange] using! machineCompose_mem_FP
     machineFixedADimensionRuler_mem_FP machineUnaryRangeCode_mem_FP
 
 theorem machineFixedARemaining_mem_FP : machineFixedARemaining ∈ FP :=
   machinePairFirst_mem_FP
 
 theorem machineFixedAFound_mem_FP : machineFixedAFound ∈ FP := by
-  simpa only [machineFixedAFound] using machineCompose_mem_FP
+  simpa only [machineFixedAFound] using! machineCompose_mem_FP
     machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineFixedASource_mem_FP : machineFixedASource ∈ FP := by
-  simpa only [machineFixedASource] using machineCompose_mem_FP
+  simpa only [machineFixedASource] using! machineCompose_mem_FP
     machinePairSecond_mem_FP machinePairSecond_mem_FP
 
 theorem machineFixedACurrentSecondColumn_mem_FP :
     machineFixedACurrentSecondColumn ∈ FP := by
-  simpa only [machineFixedACurrentSecondColumn] using machineCompose_mem_FP
+  simpa only [machineFixedACurrentSecondColumn] using! machineCompose_mem_FP
     machineFixedARemaining_mem_FP machineListHead_mem_FP
 
 theorem machineFixedAColumnsEqualBit_mem_FP :
@@ -192,7 +192,7 @@ theorem machineFixedAColumnsEqualBit_mem_FP :
   have hsecond := machineCompose_mem_FP
     machineFixedACurrentSecondColumn_mem_FP machineLengthBits_mem_FP
   have hinput := machinePair_mem_FP hfirst hsecond
-  simpa only [machineFixedAColumnsEqualBit] using machineCompose_mem_FP hinput
+  simpa only [machineFixedAColumnsEqualBit] using! machineCompose_mem_FP hinput
     machineBinaryNatEqBit_mem_FP
 
 theorem machineFixedAColumnsDistinctBit_mem_FP :
@@ -217,7 +217,7 @@ theorem machineFixedAFourCoreInput_mem_FP :
 
 theorem machineFixedAFourCoreRawCode_mem_FP :
     machineFixedAFourCoreRawCode ∈ FP := by
-  simpa only [machineFixedAFourCoreRawCode] using machineCompose_mem_FP
+  simpa only [machineFixedAFourCoreRawCode] using! machineCompose_mem_FP
     machineFixedAFourCoreInput_mem_FP
     machineDirectedFourCoreCostUpperRawCode_mem_FP
 
@@ -225,7 +225,7 @@ theorem machineFixedACostPassesBit_mem_FP :
     machineFixedACostPassesBit ∈ FP := by
   have hinput := machinePair_mem_FP machineFixedAFourCoreRawCode_mem_FP
     (machineConst_mem_FP (rawRatBinaryCode rawExplicitKappa))
-  simpa only [machineFixedACostPassesBit] using machineCompose_mem_FP hinput
+  simpa only [machineFixedACostPassesBit] using! machineCompose_mem_FP hinput
     machineRawRatLeBit_mem_FP
 
 theorem machineFixedACandidateBit_mem_FP :
@@ -241,7 +241,7 @@ theorem machineFixedANextFound_mem_FP : machineFixedANextFound ∈ FP := by
     machineFixedACandidateBit_mem_FP
   have hbound := machineCompose_mem_FP machineFixedASource_mem_FP
     machineFixedAInputBound_mem_FP
-  simpa only [machineFixedANextFound] using machineTake_mem_FP hbound hdata
+  simpa only [machineFixedANextFound] using! machineTake_mem_FP hbound hdata
 
 theorem machineFixedAProcess_mem_FP : machineFixedAProcess ∈ FP := by
   have htail := machineCompose_mem_FP machineFixedARemaining_mem_FP
@@ -251,7 +251,7 @@ theorem machineFixedAProcess_mem_FP : machineFixedAProcess ∈ FP := by
       machineFixedASource_mem_FP)
 
 theorem machineFixedAStep_mem_FP : machineFixedAStep ∈ FP := by
-  simpa only [machineFixedAStep] using machineIfEmpty_mem_FP
+  simpa only [machineFixedAStep] using! machineIfEmpty_mem_FP
     machineFixedARemaining_mem_FP id_mem_FP machineFixedAProcess_mem_FP
 
 theorem machineFixedAInit_mem_FP : machineFixedAInit ∈ FP :=
@@ -285,13 +285,13 @@ def MachineFixedAStateBound (word state : List Bool) : Prop :=
 
 theorem machineFixedAInput_le_bound (word : List Bool) :
     word.length ≤ (machineFixedAInputBound word).length := by
-  simpa only [machineFixedAInputBound, machinePairFirst_pair] using
+  simpa only [machineFixedAInputBound, machinePairFirst_pair] using!
     machinePairFirst_length_le (pair word (machineFixedAColumnRange word))
 
 theorem machineFixedARange_le_bound (word : List Bool) :
     (machineFixedAColumnRange word).length ≤
       (machineFixedAInputBound word).length := by
-  simpa only [machineFixedAInputBound, machinePairSecond_pair] using
+  simpa only [machineFixedAInputBound, machinePairSecond_pair] using!
     machinePairSecond_length_le (pair word (machineFixedAColumnRange word))
 
 theorem machineFixedA_one_le_bound (word : List Bool) :
@@ -361,7 +361,7 @@ theorem machineFixedAFinalState_mem_FP : machineFixedAFinalState ∈ FP := by
 
 theorem machineFixedAEligibilityBit_mem_FP :
     machineFixedAEligibilityBit ∈ FP := by
-  simpa only [machineFixedAEligibilityBit] using machineCompose_mem_FP
+  simpa only [machineFixedAEligibilityBit] using! machineCompose_mem_FP
     machineFixedAFinalState_mem_FP machineFixedAFound_mem_FP
 
 /-! ## Exact inner-scan semantics -/
@@ -488,7 +488,7 @@ theorem machineFixedASemanticState_step {n : ℕ}
     (r s a : Fin n) (k : ℕ) (hk : k < n) :
     machineFixedAStep (machineFixedASemanticState X R C r s a k) =
       machineFixedASemanticState X R C r s a (k + 1) := by
-  have hklen : k < (List.finRange n).length := by simpa using hk
+  have hklen : k < (List.finRange n).length := by simpa using! hk
   rw [machineFixedASemanticState,
     List.drop_eq_getElem_cons hklen]
   rw [machineFixedAStep]
@@ -504,7 +504,7 @@ theorem machineFixedASemanticState_step {n : ℕ}
   have hbound : 1 ≤
       (machineFixedAInputBound (fixedAMachineInput X R C r s a)).length :=
     machineFixedA_one_le_bound _
-  rw [(List.take_eq_self_iff _).2 (by simpa using hbound)]
+  rw [(List.take_eq_self_iff _).2 (by simpa using! hbound)]
   rw [machineFixedASemanticState]
   apply congrArg (fun z : Bool ↦
     machineFixedAPack
@@ -622,37 +622,37 @@ theorem machineRowPairRest_mem_FP : machineRowPairRest ∈ FP :=
 
 theorem machineRowPairSecondRowRuler_mem_FP :
     machineRowPairSecondRowRuler ∈ FP := by
-  simpa only [machineRowPairSecondRowRuler] using machineCompose_mem_FP
+  simpa only [machineRowPairSecondRowRuler] using! machineCompose_mem_FP
     machineRowPairRest_mem_FP machinePairFirst_mem_FP
 
 theorem machineRowPairOptimizerWord_mem_FP :
     machineRowPairOptimizerWord ∈ FP := by
-  simpa only [machineRowPairOptimizerWord] using machineCompose_mem_FP
+  simpa only [machineRowPairOptimizerWord] using! machineCompose_mem_FP
     machineRowPairRest_mem_FP machinePairSecond_mem_FP
 
 theorem machineRowPairDimensionRuler_mem_FP :
     machineRowPairDimensionRuler ∈ FP := by
-  simpa only [machineRowPairDimensionRuler] using machineCompose_mem_FP
+  simpa only [machineRowPairDimensionRuler] using! machineCompose_mem_FP
     machineRowPairOptimizerWord_mem_FP machineCertificateDimensionUnary_mem_FP
 
 theorem machineRowPairColumnRange_mem_FP : machineRowPairColumnRange ∈ FP := by
-  simpa only [machineRowPairColumnRange] using machineCompose_mem_FP
+  simpa only [machineRowPairColumnRange] using! machineCompose_mem_FP
     machineRowPairDimensionRuler_mem_FP machineUnaryRangeCode_mem_FP
 
 theorem machineRowPairScanRemaining_mem_FP :
     machineRowPairScanRemaining ∈ FP := machinePairFirst_mem_FP
 
 theorem machineRowPairScanFound_mem_FP : machineRowPairScanFound ∈ FP := by
-  simpa only [machineRowPairScanFound] using machineCompose_mem_FP
+  simpa only [machineRowPairScanFound] using! machineCompose_mem_FP
     machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineRowPairScanSource_mem_FP : machineRowPairScanSource ∈ FP := by
-  simpa only [machineRowPairScanSource] using machineCompose_mem_FP
+  simpa only [machineRowPairScanSource] using! machineCompose_mem_FP
     machinePairSecond_mem_FP machinePairSecond_mem_FP
 
 theorem machineRowPairCurrentFirstColumn_mem_FP :
     machineRowPairCurrentFirstColumn ∈ FP := by
-  simpa only [machineRowPairCurrentFirstColumn] using machineCompose_mem_FP
+  simpa only [machineRowPairCurrentFirstColumn] using! machineCompose_mem_FP
     machineRowPairScanRemaining_mem_FP machineListHead_mem_FP
 
 theorem machineRowPairFixedAInput_mem_FP :
@@ -669,7 +669,7 @@ theorem machineRowPairFixedAInput_mem_FP :
 
 theorem machineRowPairCandidateBit_mem_FP :
     machineRowPairCandidateBit ∈ FP := by
-  simpa only [machineRowPairCandidateBit] using machineCompose_mem_FP
+  simpa only [machineRowPairCandidateBit] using! machineCompose_mem_FP
     machineRowPairFixedAInput_mem_FP machineFixedAEligibilityBit_mem_FP
 
 theorem machineRowPairInputBound_mem_FP : machineRowPairInputBound ∈ FP :=
@@ -680,7 +680,7 @@ theorem machineRowPairNextFound_mem_FP : machineRowPairNextFound ∈ FP := by
     machineRowPairCandidateBit_mem_FP
   have hbound := machineCompose_mem_FP machineRowPairScanSource_mem_FP
     machineRowPairInputBound_mem_FP
-  simpa only [machineRowPairNextFound] using machineTake_mem_FP hbound hdata
+  simpa only [machineRowPairNextFound] using! machineTake_mem_FP hbound hdata
 
 theorem machineRowPairProcess_mem_FP : machineRowPairProcess ∈ FP := by
   have htail := machineCompose_mem_FP machineRowPairScanRemaining_mem_FP
@@ -690,7 +690,7 @@ theorem machineRowPairProcess_mem_FP : machineRowPairProcess ∈ FP := by
       machineRowPairScanSource_mem_FP)
 
 theorem machineRowPairScanStep_mem_FP : machineRowPairScanStep ∈ FP := by
-  simpa only [machineRowPairScanStep] using machineIfEmpty_mem_FP
+  simpa only [machineRowPairScanStep] using! machineIfEmpty_mem_FP
     machineRowPairScanRemaining_mem_FP id_mem_FP machineRowPairProcess_mem_FP
 
 theorem machineRowPairScanInit_mem_FP : machineRowPairScanInit ∈ FP :=
@@ -727,13 +727,13 @@ def MachineRowPairScanStateBound (word state : List Bool) : Prop :=
 
 theorem machineRowPairInput_le_bound (word : List Bool) :
     word.length ≤ (machineRowPairInputBound word).length := by
-  simpa only [machineRowPairInputBound, machinePairFirst_pair] using
+  simpa only [machineRowPairInputBound, machinePairFirst_pair] using!
     machinePairFirst_length_le (pair word (machineRowPairColumnRange word))
 
 theorem machineRowPairRange_le_bound (word : List Bool) :
     (machineRowPairColumnRange word).length ≤
       (machineRowPairInputBound word).length := by
-  simpa only [machineRowPairInputBound, machinePairSecond_pair] using
+  simpa only [machineRowPairInputBound, machinePairSecond_pair] using!
     machinePairSecond_length_le (pair word (machineRowPairColumnRange word))
 
 theorem machineRowPair_one_le_bound (word : List Bool) :
@@ -808,7 +808,7 @@ theorem machineRowPairScanFinalState_mem_FP :
 
 theorem machineCertifiedRowPairEligibilityBit_mem_FP :
     machineCertifiedRowPairEligibilityBit ∈ FP := by
-  simpa only [machineCertifiedRowPairEligibilityBit] using
+  simpa only [machineCertifiedRowPairEligibilityBit] using!
     machineCompose_mem_FP machineRowPairScanFinalState_mem_FP
       machineRowPairScanFound_mem_FP
 
@@ -886,7 +886,7 @@ theorem machineRowPairSemanticState_step {n : ℕ}
     (r s : Fin n) (k : ℕ) (hk : k < n) :
     machineRowPairScanStep (machineRowPairSemanticState X R C r s k) =
       machineRowPairSemanticState X R C r s (k + 1) := by
-  have hklen : k < (List.finRange n).length := by simpa using hk
+  have hklen : k < (List.finRange n).length := by simpa using! hk
   rw [machineRowPairSemanticState, List.drop_eq_getElem_cons hklen,
     machineRowPairScanStep]
   simp only [machineRowPairScanRemaining_pack]
@@ -901,7 +901,7 @@ theorem machineRowPairSemanticState_step {n : ℕ}
   have hbound : 1 ≤ (machineRowPairInputBound
       (certifiedRowPairMachineInput X R C r s)).length :=
     machineRowPair_one_le_bound _
-  rw [(List.take_eq_self_iff _).2 (by simpa using hbound),
+  rw [(List.take_eq_self_iff _).2 (by simpa using! hbound),
     machineRowPairSemanticState]
   apply congrArg (fun z : Bool ↦
     machineRowPairScanPack
@@ -948,7 +948,7 @@ theorem certifiedRowPairEligibilityTest_eq_true_iff {n : ℕ}
     rw [certifiedFirstColumnTest, List.any_eq_true] at hinner
     obtain ⟨b, hb, htest⟩ := hinner
     refine ⟨a, b, ?_⟩
-    simpa only [certifiedColumnPairTest, decide_eq_true_eq] using htest
+    simpa only [certifiedColumnPairTest, decide_eq_true_eq] using! htest
   · rintro ⟨a, b, hab, hcost⟩
     refine ⟨a, by simp, ?_⟩
     rw [certifiedFirstColumnTest, List.any_eq_true]

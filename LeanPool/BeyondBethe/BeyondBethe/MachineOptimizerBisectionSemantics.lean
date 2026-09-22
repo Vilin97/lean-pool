@@ -443,13 +443,13 @@ theorem scannedOptimizerIndexStep_agrees {m : ℕ}
   | accepted q =>
       simp only [scannedOptimizerIndexStep, hrun]
       constructor
-      · simpa only [optimizerDyadicThreshold_even] using hlow
+      · simpa only [optimizerDyadicThreshold_even] using! hlow
       · rfl
   | exhausted E =>
       simp only [scannedOptimizerIndexStep, hrun]
       constructor
       · rfl
-      · simpa only [optimizerDyadicThreshold_odd_high] using hhigh
+      · simpa only [optimizerDyadicThreshold_odd_high] using! hhigh
 
 theorem runScannedOptimizerIndex_agrees {m : ℕ}
     (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
@@ -466,10 +466,10 @@ theorem runScannedOptimizerIndex_agrees {m : ℕ}
   intro N
   induction N generalizing s k t with
   | zero => simpa [runScannedBetheBisection,
-      runScannedOptimizerIndex] using hs
+      runScannedOptimizerIndex] using! hs
   | succ N ih =>
       rw [runScannedBetheBisection, runScannedOptimizerIndex]
       have hstep := scannedOptimizerIndexStep_agrees A hs
-      simpa only [Nat.add_assoc, Nat.add_comm 1 N] using ih hstep
+      simpa only [Nat.add_assoc, Nat.add_comm 1 N] using! ih hstep
 
 end BeyondBethe

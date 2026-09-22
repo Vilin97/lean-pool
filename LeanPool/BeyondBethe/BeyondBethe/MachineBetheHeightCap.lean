@@ -57,13 +57,13 @@ theorem machineBetheHeightCapRest_mem_FP :
 
 theorem machineBetheHeightCapUpper_mem_FP :
     machineBetheHeightCapUpper ∈ FP := by
-  simpa only [machineBetheHeightCapUpper] using
+  simpa only [machineBetheHeightCapUpper] using!
     machineCompose_mem_FP machineBetheHeightCapRest_mem_FP
       machinePairFirst_mem_FP
 
 theorem machineBetheHeightCapVector_mem_FP :
     machineBetheHeightCapVector ∈ FP := by
-  simpa only [machineBetheHeightCapVector] using
+  simpa only [machineBetheHeightCapVector] using!
     machineCompose_mem_FP machineBetheHeightCapRest_mem_FP
       machinePairSecond_mem_FP
 
@@ -74,7 +74,7 @@ theorem machineBetheHeightCapIndexInput_mem_FP :
 
 theorem machineBetheHeightCapEntryCode_mem_FP :
     machineBetheHeightCapEntryCode ∈ FP := by
-  simpa only [machineBetheHeightCapEntryCode] using
+  simpa only [machineBetheHeightCapEntryCode] using!
     machineCompose_mem_FP machineBetheHeightCapIndexInput_mem_FP
       machineListIndex_mem_FP
 
@@ -82,12 +82,12 @@ theorem machineBetheHeightLeUpperBit_mem_FP :
     machineBetheHeightLeUpperBit ∈ FP := by
   have hinput := machinePair_mem_FP machineBetheHeightCapEntryCode_mem_FP
     machineBetheHeightCapUpper_mem_FP
-  simpa only [machineBetheHeightLeUpperBit] using
+  simpa only [machineBetheHeightLeUpperBit] using!
     machineCompose_mem_FP hinput machineRawRatLeBit_mem_FP
 
 theorem machineBetheHeightCapViolationBit_mem_FP :
     machineBetheHeightCapViolationBit ∈ FP := by
-  simpa only [machineBetheHeightCapViolationBit] using
+  simpa only [machineBetheHeightCapViolationBit] using!
     machineNotBit_mem_FP machineBetheHeightLeUpperBit_mem_FP
 
 def machineBetheHeightCapCanonicalWord {d : ℕ}

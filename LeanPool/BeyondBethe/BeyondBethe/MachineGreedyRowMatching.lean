@@ -34,12 +34,12 @@ theorem machineMatchingDimensionRuler_mem_FP :
 
 theorem machineMatchingForwardRange_mem_FP :
     machineMatchingForwardRange ∈ FP := by
-  simpa only [machineMatchingForwardRange] using machineCompose_mem_FP
+  simpa only [machineMatchingForwardRange] using! machineCompose_mem_FP
     machineMatchingDimensionRuler_mem_FP machineUnaryRangeCode_mem_FP
 
 theorem machineMatchingReverseRange_mem_FP :
     machineMatchingReverseRange ∈ FP := by
-  simpa only [machineMatchingReverseRange] using machineCompose_mem_FP
+  simpa only [machineMatchingReverseRange] using! machineCompose_mem_FP
     machineMatchingForwardRange_mem_FP machineListReverse_mem_FP
 
 @[simp] theorem machineMatchingDimensionRuler_encode {n : ℕ}
@@ -179,12 +179,12 @@ theorem machineMatchingInnerRest_mem_FP : machineMatchingInnerRest ∈ FP :=
 
 theorem machineMatchingInnerSelectedInput_mem_FP :
     machineMatchingInnerSelectedInput ∈ FP := by
-  simpa only [machineMatchingInnerSelectedInput] using machineCompose_mem_FP
+  simpa only [machineMatchingInnerSelectedInput] using! machineCompose_mem_FP
     machineMatchingInnerRest_mem_FP machinePairFirst_mem_FP
 
 theorem machineMatchingInnerOptimizer_mem_FP :
     machineMatchingInnerOptimizer ∈ FP := by
-  simpa only [machineMatchingInnerOptimizer] using machineCompose_mem_FP
+  simpa only [machineMatchingInnerOptimizer] using! machineCompose_mem_FP
     machineMatchingInnerRest_mem_FP machinePairSecond_mem_FP
 
 theorem machineMatchingInnerRemaining_mem_FP :
@@ -192,16 +192,16 @@ theorem machineMatchingInnerRemaining_mem_FP :
 
 theorem machineMatchingInnerSelected_mem_FP :
     machineMatchingInnerSelected ∈ FP := by
-  simpa only [machineMatchingInnerSelected] using machineCompose_mem_FP
+  simpa only [machineMatchingInnerSelected] using! machineCompose_mem_FP
     machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineMatchingInnerSource_mem_FP : machineMatchingInnerSource ∈ FP := by
-  simpa only [machineMatchingInnerSource] using machineCompose_mem_FP
+  simpa only [machineMatchingInnerSource] using! machineCompose_mem_FP
     machinePairSecond_mem_FP machinePairSecond_mem_FP
 
 theorem machineMatchingInnerCurrentSecondRow_mem_FP :
     machineMatchingInnerCurrentSecondRow ∈ FP := by
-  simpa only [machineMatchingInnerCurrentSecondRow] using machineCompose_mem_FP
+  simpa only [machineMatchingInnerCurrentSecondRow] using! machineCompose_mem_FP
     machineMatchingInnerRemaining_mem_FP machineListHead_mem_FP
 
 theorem machineMatchingInnerFirstLessSecondBit_mem_FP :
@@ -212,7 +212,7 @@ theorem machineMatchingInnerFirstLessSecondBit_mem_FP :
   have hsecond := machineCompose_mem_FP
     machineMatchingInnerCurrentSecondRow_mem_FP machineLengthBits_mem_FP
   have hinput := machinePair_mem_FP hfirst hsecond
-  simpa only [machineMatchingInnerFirstLessSecondBit] using
+  simpa only [machineMatchingInnerFirstLessSecondBit] using!
     machineCompose_mem_FP hinput machineBinaryNatLtBit_mem_FP
 
 theorem machineMatchingInnerEligibilityInput_mem_FP :
@@ -226,7 +226,7 @@ theorem machineMatchingInnerEligibilityInput_mem_FP :
 
 theorem machineMatchingInnerEligibleBit_mem_FP :
     machineMatchingInnerEligibleBit ∈ FP := by
-  simpa only [machineMatchingInnerEligibleBit] using machineCompose_mem_FP
+  simpa only [machineMatchingInnerEligibleBit] using! machineCompose_mem_FP
     machineMatchingInnerEligibilityInput_mem_FP
     machineCertifiedRowPairEligibilityBit_mem_FP
 
@@ -240,7 +240,7 @@ theorem machineMatchingInnerDisjointInput_mem_FP :
 
 theorem machineMatchingInnerDisjointBit_mem_FP :
     machineMatchingInnerDisjointBit ∈ FP := by
-  simpa only [machineMatchingInnerDisjointBit] using machineCompose_mem_FP
+  simpa only [machineMatchingInnerDisjointBit] using! machineCompose_mem_FP
     machineMatchingInnerDisjointInput_mem_FP machineRowPairDisjointBit_mem_FP
 
 theorem machineMatchingInnerSelectBit_mem_FP :
@@ -267,16 +267,16 @@ theorem machineMatchingInnerInputBound_mem_FP :
         (pair word (machineMatchingReverseRange
           (machineMatchingInnerOptimizer word)))) ∈ FP :=
     machineCompose_mem_FP hbase machineBinaryMulWidth_mem_FP
-  simpa only [machineMatchingInnerInputBound] using
+  simpa only [machineMatchingInnerInputBound] using!
     machineCompose_mem_FP hfirstWidth machineBinaryMulWidth_mem_FP
 
 theorem machineMatchingInnerBound_mem_FP : machineMatchingInnerBound ∈ FP := by
-  simpa only [machineMatchingInnerBound] using machineCompose_mem_FP
+  simpa only [machineMatchingInnerBound] using! machineCompose_mem_FP
     machineMatchingInnerSource_mem_FP machineMatchingInnerInputBound_mem_FP
 
 theorem machineMatchingInnerSelectedCandidateClamped_mem_FP :
     machineMatchingInnerSelectedCandidateClamped ∈ FP := by
-  simpa only [machineMatchingInnerSelectedCandidateClamped] using
+  simpa only [machineMatchingInnerSelectedCandidateClamped] using!
     machineTake_mem_FP machineMatchingInnerBound_mem_FP
       machineMatchingInnerSelectedCandidate_mem_FP
 
@@ -295,7 +295,7 @@ theorem machineMatchingInnerProcess_mem_FP :
       machineMatchingInnerSource_mem_FP)
 
 theorem machineMatchingInnerStep_mem_FP : machineMatchingInnerStep ∈ FP := by
-  simpa only [machineMatchingInnerStep] using machineIfEmpty_mem_FP
+  simpa only [machineMatchingInnerStep] using! machineIfEmpty_mem_FP
     machineMatchingInnerRemaining_mem_FP id_mem_FP
     machineMatchingInnerProcess_mem_FP
 
@@ -343,7 +343,7 @@ theorem machineMatchingInner_base_le_bound (word : List Bool) :
 
 theorem machineMatchingInner_word_le_bound (word : List Bool) :
     word.length ≤ (machineMatchingInnerInputBound word).length := by
-  simpa only [machinePairFirst_pair] using (machinePairFirst_length_le
+  simpa only [machinePairFirst_pair] using! (machinePairFirst_length_le
     (pair word (machineMatchingReverseRange
       (machineMatchingInnerOptimizer word)))).trans
         (machineMatchingInner_base_le_bound word)
@@ -352,7 +352,7 @@ theorem machineMatchingInner_range_le_bound (word : List Bool) :
     (machineMatchingReverseRange
       (machineMatchingInnerOptimizer word)).length ≤
       (machineMatchingInnerInputBound word).length := by
-  simpa only [machinePairSecond_pair] using (machinePairSecond_length_le
+  simpa only [machinePairSecond_pair] using! (machinePairSecond_length_le
     (pair word (machineMatchingReverseRange
       (machineMatchingInnerOptimizer word)))).trans
         (machineMatchingInner_base_le_bound word)
@@ -393,11 +393,11 @@ theorem machineMatchingInnerStep_bound {word state : List Bool}
         · rw [machineMatchingInnerNextSelected]
           cases hs : machineMatchingInnerSelectBit state with
           | nil =>
-              simpa [machineIfHead, Cobham.selectHead] using hselected
+              simpa [machineIfHead, Cobham.selectHead] using! hselected
           | cons select rest =>
               cases select with
               | false =>
-                  simpa using hselected
+                  simpa using! hselected
               | true =>
                 simp only [machineIfHead_true,
                   machineMatchingInnerSelectedCandidateClamped,
@@ -444,7 +444,7 @@ theorem machineMatchingInnerFinalState_mem_FP :
 
 theorem machineMatchingInnerOutputSelected_mem_FP :
     machineMatchingInnerOutputSelected ∈ FP := by
-  simpa only [machineMatchingInnerOutputSelected] using machineCompose_mem_FP
+  simpa only [machineMatchingInnerOutputSelected] using! machineCompose_mem_FP
     machineMatchingInnerFinalState_mem_FP machineMatchingInnerSelected_mem_FP
 
 /-! ## Canonical one-step facts -/
@@ -732,10 +732,10 @@ theorem canonical_inner_candidate_length_le_bound {n : ℕ}
     simp only [pair_length]
     omega
   have hsourceP : source.length ≤ P := by
-    simpa only [P, base, machinePairFirst_pair] using
+    simpa only [P, base, machinePairFirst_pair] using!
       machinePairFirst_length_le base
   have hrangeP : range.length ≤ P := by
-    simpa only [P, base, machinePairSecond_pair] using
+    simpa only [P, base, machinePairSecond_pair] using!
       machinePairSecond_length_le base
   have hnrange : n ≤ range.length := by
     have hop : machineMatchingInnerOptimizer source =
@@ -744,7 +744,7 @@ theorem canonical_inner_candidate_length_le_bound {n : ℕ}
         machineMatchingInnerOptimizer, machineMatchingInnerRest]
     dsimp only [range]
     rw [hop, machineMatchingReverseRange_encode]
-    simpa using binaryListCode_listLength_le finUnaryCode
+    simpa using! binaryListCode_listLength_le finUnaryCode
       (List.finRange n).reverse
   have hnP : n ≤ P := hnrange.trans hrangeP
   have hinitialP :
@@ -831,7 +831,7 @@ theorem certifiedGreedyOrderedScan_take_succ {n : ℕ}
       certifiedGreedyOrderedStep X i
         (certifiedGreedyOrderedScan X i selected (js.take k)) js[k] := by
   have htake : js.take (k + 1) = js.take k ++ [js[k]] := by
-    simpa only [List.concat_eq_append] using (List.take_concat_get hk).symm
+    simpa only [List.concat_eq_append] using! (List.take_concat_get hk).symm
   unfold certifiedGreedyOrderedScan
   calc
     List.foldl (certifiedGreedyOrderedStep X i) selected (js.take (k + 1)) =
@@ -1002,17 +1002,17 @@ theorem machineMatchingOuterRemaining_mem_FP :
 
 theorem machineMatchingOuterSelected_mem_FP :
     machineMatchingOuterSelected ∈ FP := by
-  simpa only [machineMatchingOuterSelected] using machineCompose_mem_FP
+  simpa only [machineMatchingOuterSelected] using! machineCompose_mem_FP
     machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineMatchingOuterSource_mem_FP :
     machineMatchingOuterSource ∈ FP := by
-  simpa only [machineMatchingOuterSource] using machineCompose_mem_FP
+  simpa only [machineMatchingOuterSource] using! machineCompose_mem_FP
     machinePairSecond_mem_FP machinePairSecond_mem_FP
 
 theorem machineMatchingOuterCurrentFirstRow_mem_FP :
     machineMatchingOuterCurrentFirstRow ∈ FP := by
-  simpa only [machineMatchingOuterCurrentFirstRow] using machineCompose_mem_FP
+  simpa only [machineMatchingOuterCurrentFirstRow] using! machineCompose_mem_FP
     machineMatchingOuterRemaining_mem_FP machineListHead_mem_FP
 
 theorem machineMatchingOuterInnerInput_mem_FP :
@@ -1023,7 +1023,7 @@ theorem machineMatchingOuterInnerInput_mem_FP :
 
 theorem machineMatchingOuterNextSelectedRaw_mem_FP :
     machineMatchingOuterNextSelectedRaw ∈ FP := by
-  simpa only [machineMatchingOuterNextSelectedRaw] using machineCompose_mem_FP
+  simpa only [machineMatchingOuterNextSelectedRaw] using! machineCompose_mem_FP
     machineMatchingOuterInnerInput_mem_FP
     machineMatchingInnerOutputSelected_mem_FP
 
@@ -1034,17 +1034,17 @@ theorem machineMatchingOuterInputBound_mem_FP :
   have hbase := machinePair_mem_FP id_mem_FP hrange
   have h1 := machineCompose_mem_FP hbase machineBinaryMulWidth_mem_FP
   have h2 := machineCompose_mem_FP h1 machineBinaryMulWidth_mem_FP
-  simpa only [machineMatchingOuterInputBound] using
+  simpa only [machineMatchingOuterInputBound] using!
     machineCompose_mem_FP h2 machineBinaryMulWidth_mem_FP
 
 theorem machineMatchingOuterBound_mem_FP :
     machineMatchingOuterBound ∈ FP := by
-  simpa only [machineMatchingOuterBound] using machineCompose_mem_FP
+  simpa only [machineMatchingOuterBound] using! machineCompose_mem_FP
     machineMatchingOuterSource_mem_FP machineMatchingOuterInputBound_mem_FP
 
 theorem machineMatchingOuterNextSelected_mem_FP :
     machineMatchingOuterNextSelected ∈ FP := by
-  simpa only [machineMatchingOuterNextSelected] using
+  simpa only [machineMatchingOuterNextSelected] using!
     machineTake_mem_FP machineMatchingOuterBound_mem_FP
       machineMatchingOuterNextSelectedRaw_mem_FP
 
@@ -1058,7 +1058,7 @@ theorem machineMatchingOuterProcess_mem_FP :
 
 theorem machineMatchingOuterStep_mem_FP :
     machineMatchingOuterStep ∈ FP := by
-  simpa only [machineMatchingOuterStep] using machineIfEmpty_mem_FP
+  simpa only [machineMatchingOuterStep] using! machineIfEmpty_mem_FP
     machineMatchingOuterRemaining_mem_FP id_mem_FP
     machineMatchingOuterProcess_mem_FP
 
@@ -1105,7 +1105,7 @@ theorem machineMatchingOuter_base_le_bound (optimizer : List Bool) :
 
 theorem machineMatchingOuter_optimizer_le_bound (optimizer : List Bool) :
     optimizer.length ≤ (machineMatchingOuterInputBound optimizer).length := by
-  simpa only [machinePairFirst_pair] using
+  simpa only [machinePairFirst_pair] using!
     (machinePairFirst_length_le
       (pair optimizer (machineMatchingReverseRange optimizer))).trans
         (machineMatchingOuter_base_le_bound optimizer)
@@ -1113,7 +1113,7 @@ theorem machineMatchingOuter_optimizer_le_bound (optimizer : List Bool) :
 theorem machineMatchingOuter_range_le_bound (optimizer : List Bool) :
     (machineMatchingReverseRange optimizer).length ≤
       (machineMatchingOuterInputBound optimizer).length := by
-  simpa only [machinePairSecond_pair] using
+  simpa only [machinePairSecond_pair] using!
     (machinePairSecond_length_le
       (pair optimizer (machineMatchingReverseRange optimizer))).trans
         (machineMatchingOuter_base_le_bound optimizer)
@@ -1189,7 +1189,7 @@ theorem machineMatchingOuterFinalState_mem_FP :
 
 theorem machineGreedyMatchingSelected_mem_FP :
     machineGreedyMatchingSelected ∈ FP := by
-  simpa only [machineGreedyMatchingSelected] using machineCompose_mem_FP
+  simpa only [machineGreedyMatchingSelected] using! machineCompose_mem_FP
     machineMatchingOuterFinalState_mem_FP
     machineMatchingOuterSelected_mem_FP
 
@@ -1213,7 +1213,7 @@ theorem certifiedGreedyOuterStep_code_length_le {n : ℕ}
     (binaryListCode orderedRowPairCode
       (certifiedGreedyOuterStep X selected i)).length ≤
       (binaryListCode orderedRowPairCode selected).length + n * (6 * n) := by
-  simpa [certifiedGreedyOuterStep] using
+  simpa [certifiedGreedyOuterStep] using!
     certifiedGreedyOrderedScan_code_length_le X i selected
       (List.finRange n).reverse
 
@@ -1287,12 +1287,12 @@ theorem canonical_outer_selected_length_le_bound {n : ℕ}
   let base := pair optimizer range
   let P := base.length
   have hrangeP : range.length ≤ P := by
-    simpa only [P, base, machinePairSecond_pair] using
+    simpa only [P, base, machinePairSecond_pair] using!
       machinePairSecond_length_le base
   have hnrange : n ≤ range.length := by
     dsimp only [range, optimizer]
     rw [machineMatchingReverseRange_encode]
-    simpa using binaryListCode_listLength_le finUnaryCode
+    simpa using! binaryListCode_listLength_le finUnaryCode
       (List.finRange n).reverse
   have hnP : n ≤ P := hnrange.trans hrangeP
   have hcoarse : (binaryListCode orderedRowPairCode selected).length ≤
@@ -1358,7 +1358,7 @@ theorem certifiedGreedyOuterScan_take_succ {n : ℕ}
       certifiedGreedyOuterStep X
         (certifiedGreedyOuterScan X selected (is.take k)) is[k] := by
   have htake : is.take (k + 1) = is.take k ++ [is[k]] := by
-    simpa only [List.concat_eq_append] using (List.take_concat_get hk).symm
+    simpa only [List.concat_eq_append] using! (List.take_concat_get hk).symm
   unfold certifiedGreedyOuterScan
   calc
     List.foldl (certifiedGreedyOuterStep X) selected (is.take (k + 1)) =
@@ -1397,7 +1397,7 @@ theorem machineMatchingOuterSemanticState_step {n : ℕ}
       (binaryListCode orderedRowPairCode selected).length ≤
         k * (n * (6 * n)) := by
     dsimp only [selected]
-    simpa [binaryListCode] using hscan.trans (Nat.add_le_add_left
+    simpa [binaryListCode] using! hscan.trans (Nat.add_le_add_left
       (Nat.mul_le_mul_right (n * (6 * n)) htake) _)
   have hstep := certifiedGreedyOuterStep_code_length_le X selected is[k]
   have hcandidate :
@@ -1497,7 +1497,8 @@ theorem orderedPairsConflict_map_endpoints_eq_false_iff {n : ℕ}
             rowPair_eq_pair_rows r,
             rowPairRow_rowPairOfLT_zero,
             rowPairRow_rowPairOfLT_one]
-          simpa [rowPairEndpoints, Finset.disjoint_left, and_assoc] using hhead
+          simpa [rowPairEndpoints, Finset.disjoint_left, and_assoc] using!
+            (of_decide_eq_false hhead)
         · exact htail r hr
       · intro hall
         refine ⟨?_, fun r hr ↦ hall r (List.mem_cons_of_mem _ hr)⟩
@@ -1506,8 +1507,9 @@ theorem orderedPairsConflict_map_endpoints_eq_false_iff {n : ℕ}
           rowPair_eq_pair_rows q,
           rowPairRow_rowPairOfLT_zero,
           rowPairRow_rowPairOfLT_one] at hdisj
+        apply decide_eq_false
         simpa [rowPairEndpoints, rowPairOfLT,
-          Finset.disjoint_left, and_assoc] using hdisj
+          Finset.disjoint_left, and_assoc] using! hdisj
 
 /-- The same greedy update, now retaining the proof-carrying unordered row
 pair.  This is the bridge from the machine's endpoint representation to the
@@ -1727,12 +1729,12 @@ def greedyRowFinsetStep {n : ℕ}
       greedyRowFinsetStep selected.toFinset q := by
   by_cases h : ∀ r ∈ selected, Disjoint q.1 r.1
   · have hfin : ∀ r ∈ selected.toFinset, Disjoint q.1 r.1 := by
-      simpa using h
+      simpa using! h
     rw [greedyRowListStep, ite_eq_left h,
       greedyRowFinsetStep, ite_eq_left hfin]
     simp
   · have hfin : ¬(∀ r ∈ selected.toFinset, Disjoint q.1 r.1) := by
-      simpa using h
+      simpa using! h
     rw [greedyRowListStep, ite_eq_right h,
       greedyRowFinsetStep, ite_eq_right hfin]
 

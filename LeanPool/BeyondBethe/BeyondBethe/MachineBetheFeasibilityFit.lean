@@ -64,7 +64,7 @@ theorem MachineBetheFeasibilityFits.of_invariant
           let E₁ := scheduledRoundedEllipsoidCentralUpdate p E a
           have hadvance := hE.advance hd a hpulled htT
           have hE₁ : ScheduledEllipsoidInvariant d L K (t + 1) E₁ := by
-            simpa only [d, p, E₁] using hadvance.2
+            simpa only [d, p, E₁] using! hadvance.2
           constructor
           · have hexponent : K + (t + 1) * (6 + 3 * d) ≤
                 K + T * (6 + 3 * d) := by
@@ -80,7 +80,7 @@ theorem MachineBetheFeasibilityFits.of_invariant
               scheduledRoundedEllipsoidCentralUpdate_stateCode_length_le
                 hd E a hM
             simpa only [d, p, E₁,
-              scheduledFeasibilityStateCodeBound] using hcode
+              scheduledFeasibilityStateCodeBound] using! hcode
           · have hbudget' : (t + 1) + iterations ≤ T := by omega
             exact ih (t := t + 1) (E := E₁) hE₁ hbudget'
 
@@ -101,7 +101,7 @@ theorem explicitBallMachineBetheFeasibilityFits
   let K := explicitBallInitialMagnitudeExponent d R
   have hInv : ScheduledEllipsoidInvariant d L K 0
       (rationalBallEllipsoid d 0 R) := by
-    simpa only [d, L, K] using explicitBallInitialInvariant hR
+    simpa only [d, L, K] using! explicitBallInitialInvariant hR
   have hvalid := scannedBetheBoundedEpigraphOracle_valid
     hm htau0 htau1 hA hdelta oraclePrecision upper
   have hfit := MachineBetheFeasibilityFits.of_invariant
@@ -109,7 +109,7 @@ theorem explicitBallMachineBetheFeasibilityFits
     tau A oraclePrecision delta upper hvalid
     (rationalBallEllipsoid d 0 R) hInv (by omega)
   simpa only [d, L, K, explicitBallFeasibilityPrecision,
-    explicitBallFeasibilityStateCodeBound] using hfit
+    explicitBallFeasibilityStateCodeBound] using! hfit
 
 theorem machineExplicitBallBetheFeasibilityResultCode_encode
     {m : ℕ} (hm : 0 < m)

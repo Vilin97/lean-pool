@@ -137,7 +137,7 @@ theorem machineRationalRowAddPadSixteen_mem_FP :
 
 theorem machineRationalRowAddInputBound_mem_FP :
     machineRationalRowAddInputBound ∈ Complexity.FP := by
-  simpa only [machineRationalRowAddInputBound] using
+  simpa only [machineRationalRowAddInputBound] using!
     machineCompose_mem_FP machineRationalRowAddPadSixteen_mem_FP
       machineBinaryMulWidth_mem_FP
 
@@ -164,21 +164,21 @@ theorem machineRationalRowAddRemaining_mem_FP :
 
 theorem machineRationalRowAddAccumulator_mem_FP :
     machineRationalRowAddAccumulator ∈ Complexity.FP := by
-  simpa only [machineRationalRowAddAccumulator] using
+  simpa only [machineRationalRowAddAccumulator] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineRationalRowAddDeltaField_mem_FP :
     machineRationalRowAddDeltaField ∈ Complexity.FP := by
   have htail := machineCompose_mem_FP machinePairSecond_mem_FP
     machinePairSecond_mem_FP
-  simpa only [machineRationalRowAddDeltaField] using
+  simpa only [machineRationalRowAddDeltaField] using!
     machineCompose_mem_FP htail machinePairFirst_mem_FP
 
 theorem machineRationalRowAddBound_mem_FP :
     machineRationalRowAddBound ∈ Complexity.FP := by
   have htail := machineCompose_mem_FP machinePairSecond_mem_FP
     machinePairSecond_mem_FP
-  simpa only [machineRationalRowAddBound] using
+  simpa only [machineRationalRowAddBound] using!
     machineCompose_mem_FP htail machinePairSecond_mem_FP
 
 theorem machineRationalRowAddRawEntry_mem_FP :
@@ -187,12 +187,12 @@ theorem machineRationalRowAddRawEntry_mem_FP :
     machineListHead_mem_FP
   have hinput := machinePair_mem_FP hhead
     machineRationalRowAddDeltaField_mem_FP
-  simpa only [machineRationalRowAddRawEntry] using
+  simpa only [machineRationalRowAddRawEntry] using!
     machineCompose_mem_FP hinput machineRawRatAddCode_mem_FP
 
 theorem machineRationalRowAddEntry_mem_FP :
     machineRationalRowAddEntry ∈ Complexity.FP := by
-  simpa only [machineRationalRowAddEntry] using
+  simpa only [machineRationalRowAddEntry] using!
     machineCompose_mem_FP machineRationalRowAddRawEntry_mem_FP
       machineNormalizeRawRatEntryCode_mem_FP
 
@@ -203,7 +203,7 @@ theorem machineRationalRowAddCandidate_mem_FP :
 
 theorem machineRationalRowAddNextAccumulator_mem_FP :
     machineRationalRowAddNextAccumulator ∈ Complexity.FP := by
-  simpa only [machineRationalRowAddNextAccumulator] using
+  simpa only [machineRationalRowAddNextAccumulator] using!
     machineTake_mem_FP machineRationalRowAddBound_mem_FP
       machineRationalRowAddCandidate_mem_FP
 
@@ -278,9 +278,9 @@ theorem machineRationalRowAddInit_bound (word : List Bool) :
     machineRationalRowAddDeltaField_pack,
     machineRationalRowAddBound_pack]
   refine ⟨trivial, ?_, by simp, ?_, trivial⟩
-  · simpa only [machineRationalRowAddRow] using
+  · simpa only [machineRationalRowAddRow] using!
       machinePairSecond_length_le word
-  · simpa only [machineRationalRowAddDelta] using
+  · simpa only [machineRationalRowAddDelta] using!
       machinePairFirst_length_le word
 
 theorem machineRationalRowAddStep_bound {word state : List Bool}
@@ -343,7 +343,7 @@ theorem machineRationalRowAdd_mem_FP :
   have hacc := machineCompose_mem_FP
     machineRationalRowAddFinalState_mem_FP
     machineRationalRowAddAccumulator_mem_FP
-  simpa only [machineRationalRowAdd] using
+  simpa only [machineRationalRowAdd] using!
     machineCompose_mem_FP hacc machineListReverse_mem_FP
 
 /-! ## Ordinary output-size estimate -/
@@ -378,7 +378,7 @@ theorem machineRationalRowAdd_output_length_le_bound
     (binaryListCode rationalEntryBinaryCode row)
   have hdelta : rawRatWidth delta ≤ word.length := by
     have hcomponent : (rawRatBinaryCode delta).length ≤ word.length := by
-      simpa only [word, machinePairFirst_pair] using
+      simpa only [word, machinePairFirst_pair] using!
         machinePairFirst_length_le word
     exact (rawRatWidth_le_binaryCode_length delta).trans
       hcomponent
@@ -386,7 +386,7 @@ theorem machineRationalRowAdd_output_length_le_bound
     have hcomponent :
         (binaryListCode rationalEntryBinaryCode row).length ≤
           word.length := by
-      simpa only [word, machinePairSecond_pair] using
+      simpa only [word, machinePairSecond_pair] using!
         machinePairSecond_length_le word
     exact (binaryListCode_listLength_le rationalEntryBinaryCode row).trans
       hcomponent
@@ -401,11 +401,11 @@ theorem machineRationalRowAdd_output_length_le_bound
       have hentryCode :
           (rawRatBinaryCode (rawRatOfRat q)).length ≤
             (binaryListCode rationalEntryBinaryCode row).length := by
-        simpa only [rawRatBinaryCode_rawRatOfRat] using hqCode
+        simpa only [rawRatBinaryCode_rawRatOfRat] using! hqCode
       have hrowCode :
           (binaryListCode rationalEntryBinaryCode row).length ≤
             word.length := by
-        simpa only [word, machinePairSecond_pair] using
+        simpa only [word, machinePairSecond_pair] using!
           machinePairSecond_length_le word
       exact (rawRatWidth_le_binaryCode_length (rawRatOfRat q)).trans
         (hentryCode.trans hrowCode)
@@ -504,13 +504,13 @@ theorem machineRationalRowAddStep_semantics
   have hprefix : (output.take (k + 1)).reverse =
       output[k] :: (output.take k).reverse := by
     rw [← htake]
-    simpa only [List.concat_eq_append] using
+    simpa only [List.concat_eq_append] using!
       (List.reverse_concat (l := output.take k) (a := output[k]))
   have hfullBound :
       (binaryListCode rationalEntryBinaryCode output).length ≤
         (machineRationalRowAddInputBound word).length := by
     simpa only [word, output, machineRationalRowAddCanonicalInput,
-      rationalRowAddValues] using
+      rationalRowAddValues] using!
       machineRationalRowAdd_output_length_le_bound delta row
   have hprefixLength :
       (binaryListCode rationalEntryBinaryCode
@@ -550,7 +550,7 @@ theorem machineRationalRowAddStep_semantics
             (machineRationalRowAddInputBound word)) =
         rationalEntryBinaryCode output[k] := by
     rw [houtputGet]
-    simpa only [machineRationalRowAddSemanticState, output, word] using
+    simpa only [machineRationalRowAddSemanticState, output, word] using!
       machineRationalRowAddEntry_semantics delta row k hk
   rw [hentry]
   rw [hdrop, machineListTail_cons]
@@ -603,7 +603,7 @@ theorem machineRationalRowAddFinalState_encode
         (binaryListCode rationalEntryBinaryCode row).length ≤
           word.length := by
       simpa only [word, machineRationalRowAddCanonicalInput,
-        machinePairSecond_pair] using
+        machinePairSecond_pair] using!
         (show (machinePairSecond word).length ≤ word.length from
           machinePairSecond_length_le word)
     exact (binaryListCode_listLength_le rationalEntryBinaryCode row).trans

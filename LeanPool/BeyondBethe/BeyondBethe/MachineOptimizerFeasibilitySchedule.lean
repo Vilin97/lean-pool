@@ -113,18 +113,18 @@ theorem machineRawRatAbsCode_mem_FP : machineRawRatAbsCode ∈ FP := by
   have habs := machineCompose_mem_FP machinePairFirst_mem_FP
     machineIntegerNatAbsBits_mem_FP
   have hnum := machineCompose_mem_FP habs machineNaturalIntegerCode_mem_FP
-  simpa only [machineRawRatAbsCode] using
+  simpa only [machineRawRatAbsCode] using!
     machinePair_mem_FP hnum machinePairSecond_mem_FP
 
 theorem machineOptimizerFeasibilityDimensionBits_mem_FP :
     machineOptimizerFeasibilityDimensionBits ∈ FP := by
-  simpa only [machineOptimizerFeasibilityDimensionBits] using
+  simpa only [machineOptimizerFeasibilityDimensionBits] using!
     machineCompose_mem_FP machineOptimizerFeasibilitySource_mem_FP
       machineOptimizerDimensionBits_mem_FP
 
 theorem machineOptimizerFeasibilityReducedDimensionBits_mem_FP :
     machineOptimizerFeasibilityReducedDimensionBits ∈ FP := by
-  simpa only [machineOptimizerFeasibilityReducedDimensionBits] using
+  simpa only [machineOptimizerFeasibilityReducedDimensionBits] using!
     machineCompose_mem_FP
       (machinePair_mem_FP machineOptimizerFeasibilityDimensionBits_mem_FP
         (machineConst_mem_FP [true]))
@@ -132,7 +132,7 @@ theorem machineOptimizerFeasibilityReducedDimensionBits_mem_FP :
 
 theorem machineOptimizerFeasibilityReducedDimensionSquareBits_mem_FP :
     machineOptimizerFeasibilityReducedDimensionSquareBits ∈ FP := by
-  simpa only [machineOptimizerFeasibilityReducedDimensionSquareBits] using
+  simpa only [machineOptimizerFeasibilityReducedDimensionSquareBits] using!
     machineCompose_mem_FP
       (machinePair_mem_FP
         machineOptimizerFeasibilityReducedDimensionBits_mem_FP
@@ -141,7 +141,7 @@ theorem machineOptimizerFeasibilityReducedDimensionSquareBits_mem_FP :
 
 theorem machineOptimizerFeasibilityEllipsoidDimensionBits_mem_FP :
     machineOptimizerFeasibilityEllipsoidDimensionBits ∈ FP := by
-  simpa only [machineOptimizerFeasibilityEllipsoidDimensionBits] using
+  simpa only [machineOptimizerFeasibilityEllipsoidDimensionBits] using!
     machineCompose_mem_FP
       (machinePair_mem_FP
         machineOptimizerFeasibilityReducedDimensionSquareBits_mem_FP
@@ -150,7 +150,7 @@ theorem machineOptimizerFeasibilityEllipsoidDimensionBits_mem_FP :
 
 theorem machineOptimizerFeasibilityEllipsoidDimensionUnary_mem_FP :
     machineOptimizerFeasibilityEllipsoidDimensionUnary ∈ FP := by
-  simpa only [machineOptimizerFeasibilityEllipsoidDimensionUnary] using
+  simpa only [machineOptimizerFeasibilityEllipsoidDimensionUnary] using!
     machineCompose_mem_FP
       (machinePair_mem_FP machineOptimizerFeasibilitySource_mem_FP
         machineOptimizerFeasibilityEllipsoidDimensionBits_mem_FP)
@@ -158,7 +158,7 @@ theorem machineOptimizerFeasibilityEllipsoidDimensionUnary_mem_FP :
 
 theorem machineOptimizerFeasibilityEllipsoidDimensionRawCode_mem_FP :
     machineOptimizerFeasibilityEllipsoidDimensionRawCode ∈ FP := by
-  simpa only [machineOptimizerFeasibilityEllipsoidDimensionRawCode] using
+  simpa only [machineOptimizerFeasibilityEllipsoidDimensionRawCode] using!
     machinePair_mem_FP
       (machineCompose_mem_FP
         machineOptimizerFeasibilityEllipsoidDimensionBits_mem_FP
@@ -167,13 +167,13 @@ theorem machineOptimizerFeasibilityEllipsoidDimensionRawCode_mem_FP :
 
 theorem machineOptimizerFeasibilityInnerRadiusRawCode_mem_FP :
     machineOptimizerFeasibilityInnerRadiusRawCode ∈ FP := by
-  simpa only [machineOptimizerFeasibilityInnerRadiusRawCode] using
+  simpa only [machineOptimizerFeasibilityInnerRadiusRawCode] using!
     machineCompose_mem_FP machineOptimizerFeasibilitySource_mem_FP
       machineExplicitOptimizerInnerRadiusRawCode_mem_FP
 
 theorem machineOptimizerFeasibilityTwiceInnerRadiusRawCode_mem_FP :
     machineOptimizerFeasibilityTwiceInnerRadiusRawCode ∈ FP := by
-  simpa only [machineOptimizerFeasibilityTwiceInnerRadiusRawCode] using
+  simpa only [machineOptimizerFeasibilityTwiceInnerRadiusRawCode] using!
     machineCompose_mem_FP
       (machinePair_mem_FP
         (machineConst_mem_FP (rawRatBinaryCode rawOptimizerTwo))
@@ -184,7 +184,7 @@ theorem machineOptimizerFeasibilityOnePlusAbsUpperRawCode_mem_FP :
     machineOptimizerFeasibilityOnePlusAbsUpperRawCode ∈ FP := by
   have habs := machineCompose_mem_FP
     machineOptimizerFeasibilityUpperRawCode_mem_FP machineRawRatAbsCode_mem_FP
-  simpa only [machineOptimizerFeasibilityOnePlusAbsUpperRawCode] using
+  simpa only [machineOptimizerFeasibilityOnePlusAbsUpperRawCode] using!
     machineCompose_mem_FP
       (machinePair_mem_FP
         (machineConst_mem_FP (rawRatBinaryCode rawOptimizerOne)) habs)
@@ -192,7 +192,7 @@ theorem machineOptimizerFeasibilityOnePlusAbsUpperRawCode_mem_FP :
 
 theorem machineOptimizerFeasibilityRadiusFactorRawCode_mem_FP :
     machineOptimizerFeasibilityRadiusFactorRawCode ∈ FP := by
-  simpa only [machineOptimizerFeasibilityRadiusFactorRawCode] using
+  simpa only [machineOptimizerFeasibilityRadiusFactorRawCode] using!
     machineCompose_mem_FP
       (machinePair_mem_FP
         machineOptimizerFeasibilityOnePlusAbsUpperRawCode_mem_FP
@@ -201,7 +201,7 @@ theorem machineOptimizerFeasibilityRadiusFactorRawCode_mem_FP :
 
 theorem machineOptimizerFeasibilityOuterRadiusRawCode_mem_FP :
     machineOptimizerFeasibilityOuterRadiusRawCode ∈ FP := by
-  simpa only [machineOptimizerFeasibilityOuterRadiusRawCode] using
+  simpa only [machineOptimizerFeasibilityOuterRadiusRawCode] using!
     machineCompose_mem_FP
       (machinePair_mem_FP
         machineOptimizerFeasibilityEllipsoidDimensionRawCode_mem_FP
@@ -289,7 +289,7 @@ theorem optimizerEllipsoidDimension_le_sourceLength {n : ℕ}
         (binaryListCode (binaryListCode rationalEntryBinaryCode) rows).length ≤
           word.length := by
       change rowsCode.length ≤ (pair n.bits rowsCode).length
-      simpa using machinePairSecond_length_le (pair n.bits rowsCode)
+      simpa using! machinePairSecond_length_le (pair n.bits rowsCode)
     have hcount : n ^ 2 = (rows.map List.length).sum := by
       simp only [rows, rationalMatrixRows, List.map_ofFn, List.sum_ofFn,
         Function.comp_apply, List.length_ofFn]
@@ -499,33 +499,33 @@ def machineOptimizerFeasibilityBudgetUnary
 
 theorem machineOptimizerFeasibilityOuterRadiusEntryCode_mem_FP :
     machineOptimizerFeasibilityOuterRadiusEntryCode ∈ FP := by
-  simpa only [machineOptimizerFeasibilityOuterRadiusEntryCode] using
+  simpa only [machineOptimizerFeasibilityOuterRadiusEntryCode] using!
     machineCompose_mem_FP machineOptimizerFeasibilityOuterRadiusRawCode_mem_FP
       machineNormalizeRawRatEntryCode_mem_FP
 
 theorem machineOptimizerFeasibilityOuterRadiusLengthRuler_mem_FP :
     machineOptimizerFeasibilityOuterRadiusLengthRuler ∈ FP := by
-  simpa only [machineOptimizerFeasibilityOuterRadiusLengthRuler] using
+  simpa only [machineOptimizerFeasibilityOuterRadiusLengthRuler] using!
     machineCompose_mem_FP
       machineOptimizerFeasibilityOuterRadiusEntryCode_mem_FP
       machineOptimizerEntryLengthRuler_mem_FP
 
 theorem machineOptimizerFeasibilityInnerRadiusEntryCode_mem_FP :
     machineOptimizerFeasibilityInnerRadiusEntryCode ∈ FP := by
-  simpa only [machineOptimizerFeasibilityInnerRadiusEntryCode] using
+  simpa only [machineOptimizerFeasibilityInnerRadiusEntryCode] using!
     machineCompose_mem_FP machineOptimizerFeasibilityInnerRadiusRawCode_mem_FP
       machineNormalizeRawRatEntryCode_mem_FP
 
 theorem machineOptimizerFeasibilityInnerRadiusLengthRuler_mem_FP :
     machineOptimizerFeasibilityInnerRadiusLengthRuler ∈ FP := by
-  simpa only [machineOptimizerFeasibilityInnerRadiusLengthRuler] using
+  simpa only [machineOptimizerFeasibilityInnerRadiusLengthRuler] using!
     machineCompose_mem_FP
       machineOptimizerFeasibilityInnerRadiusEntryCode_mem_FP
       machineOptimizerEntryLengthRuler_mem_FP
 
 theorem machineOptimizerFeasibilityBudgetGuardSource_mem_FP :
     machineOptimizerFeasibilityBudgetGuardSource ∈ FP := by
-  simpa only [machineOptimizerFeasibilityBudgetGuardSource] using
+  simpa only [machineOptimizerFeasibilityBudgetGuardSource] using!
     machineAppend_mem_FP
       machineOptimizerFeasibilityEllipsoidDimensionUnary_mem_FP
       (machineAppend_mem_FP
@@ -538,7 +538,7 @@ theorem machineOptimizerFeasibilityDBits_mem_FP :
 
 theorem machineOptimizerFeasibilityDSquareBits_mem_FP :
     machineOptimizerFeasibilityDSquareBits ∈ FP := by
-  simpa only [machineOptimizerFeasibilityDSquareBits] using
+  simpa only [machineOptimizerFeasibilityDSquareBits] using!
     machineCompose_mem_FP
       (machinePair_mem_FP machineOptimizerFeasibilityDBits_mem_FP
         machineOptimizerFeasibilityDBits_mem_FP)
@@ -546,7 +546,7 @@ theorem machineOptimizerFeasibilityDSquareBits_mem_FP :
 
 theorem machineOptimizerFeasibilityDCubeBits_mem_FP :
     machineOptimizerFeasibilityDCubeBits ∈ FP := by
-  simpa only [machineOptimizerFeasibilityDCubeBits] using
+  simpa only [machineOptimizerFeasibilityDCubeBits] using!
     machineCompose_mem_FP
       (machinePair_mem_FP machineOptimizerFeasibilityDSquareBits_mem_FP
         machineOptimizerFeasibilityDBits_mem_FP)
@@ -554,21 +554,21 @@ theorem machineOptimizerFeasibilityDCubeBits_mem_FP :
 
 theorem machineOptimizerFeasibilityOuterLengthBits_mem_FP :
     machineOptimizerFeasibilityOuterLengthBits ∈ FP := by
-  simpa only [machineOptimizerFeasibilityOuterLengthBits] using
+  simpa only [machineOptimizerFeasibilityOuterLengthBits] using!
     machineCompose_mem_FP
       machineOptimizerFeasibilityOuterRadiusLengthRuler_mem_FP
       machineLengthBits_mem_FP
 
 theorem machineOptimizerFeasibilityInnerLengthBits_mem_FP :
     machineOptimizerFeasibilityInnerLengthBits ∈ FP := by
-  simpa only [machineOptimizerFeasibilityInnerLengthBits] using
+  simpa only [machineOptimizerFeasibilityInnerLengthBits] using!
     machineCompose_mem_FP
       machineOptimizerFeasibilityInnerRadiusLengthRuler_mem_FP
       machineLengthBits_mem_FP
 
 theorem machineOptimizerFeasibilityOuterLengthTimesDBits_mem_FP :
     machineOptimizerFeasibilityOuterLengthTimesDBits ∈ FP := by
-  simpa only [machineOptimizerFeasibilityOuterLengthTimesDBits] using
+  simpa only [machineOptimizerFeasibilityOuterLengthTimesDBits] using!
     machineCompose_mem_FP
       (machinePair_mem_FP machineOptimizerFeasibilityOuterLengthBits_mem_FP
         machineOptimizerFeasibilityDBits_mem_FP)
@@ -576,7 +576,7 @@ theorem machineOptimizerFeasibilityOuterLengthTimesDBits_mem_FP :
 
 theorem machineOptimizerFeasibilityInnerLengthTimesDBits_mem_FP :
     machineOptimizerFeasibilityInnerLengthTimesDBits ∈ FP := by
-  simpa only [machineOptimizerFeasibilityInnerLengthTimesDBits] using
+  simpa only [machineOptimizerFeasibilityInnerLengthTimesDBits] using!
     machineCompose_mem_FP
       (machinePair_mem_FP machineOptimizerFeasibilityInnerLengthBits_mem_FP
         machineOptimizerFeasibilityDBits_mem_FP)
@@ -584,7 +584,7 @@ theorem machineOptimizerFeasibilityInnerLengthTimesDBits_mem_FP :
 
 theorem machineOptimizerFeasibilityMFirstBits_mem_FP :
     machineOptimizerFeasibilityMFirstBits ∈ FP := by
-  simpa only [machineOptimizerFeasibilityMFirstBits] using
+  simpa only [machineOptimizerFeasibilityMFirstBits] using!
     machineCompose_mem_FP
       (machinePair_mem_FP machineOptimizerFeasibilityDSquareBits_mem_FP
         machineOptimizerFeasibilityOuterLengthTimesDBits_mem_FP)
@@ -592,7 +592,7 @@ theorem machineOptimizerFeasibilityMFirstBits_mem_FP :
 
 theorem machineOptimizerFeasibilityMSecondBits_mem_FP :
     machineOptimizerFeasibilityMSecondBits ∈ FP := by
-  simpa only [machineOptimizerFeasibilityMSecondBits] using
+  simpa only [machineOptimizerFeasibilityMSecondBits] using!
     machineCompose_mem_FP
       (machinePair_mem_FP machineOptimizerFeasibilityMFirstBits_mem_FP
         machineOptimizerFeasibilityInnerLengthTimesDBits_mem_FP)
@@ -600,14 +600,14 @@ theorem machineOptimizerFeasibilityMSecondBits_mem_FP :
 
 theorem machineOptimizerFeasibilityMBits_mem_FP :
     machineOptimizerFeasibilityMBits ∈ FP := by
-  simpa only [machineOptimizerFeasibilityMBits] using machineCompose_mem_FP
+  simpa only [machineOptimizerFeasibilityMBits] using! machineCompose_mem_FP
     (machinePair_mem_FP machineOptimizerFeasibilityMSecondBits_mem_FP
       (machineConst_mem_FP [true]))
     machineBinaryAddBits_mem_FP
 
 theorem machineOptimizerFeasibilityThirtyTwoDCubeBits_mem_FP :
     machineOptimizerFeasibilityThirtyTwoDCubeBits ∈ FP := by
-  simpa only [machineOptimizerFeasibilityThirtyTwoDCubeBits] using
+  simpa only [machineOptimizerFeasibilityThirtyTwoDCubeBits] using!
     machineCompose_mem_FP
       (machinePair_mem_FP (machineConst_mem_FP (32 : ℕ).bits)
         machineOptimizerFeasibilityDCubeBits_mem_FP)
@@ -615,7 +615,7 @@ theorem machineOptimizerFeasibilityThirtyTwoDCubeBits_mem_FP :
 
 theorem machineOptimizerFeasibilityBudgetBits_mem_FP :
     machineOptimizerFeasibilityBudgetBits ∈ FP := by
-  simpa only [machineOptimizerFeasibilityBudgetBits] using
+  simpa only [machineOptimizerFeasibilityBudgetBits] using!
     machineCompose_mem_FP
       (machinePair_mem_FP
         machineOptimizerFeasibilityThirtyTwoDCubeBits_mem_FP
@@ -624,13 +624,13 @@ theorem machineOptimizerFeasibilityBudgetBits_mem_FP :
 
 theorem machineOptimizerFeasibilityBudgetGuard_mem_FP :
     machineOptimizerFeasibilityBudgetGuard ∈ FP := by
-  simpa only [machineOptimizerFeasibilityBudgetGuard] using
+  simpa only [machineOptimizerFeasibilityBudgetGuard] using!
     machineCompose_mem_FP machineOptimizerFeasibilityBudgetGuardSource_mem_FP
       (machineIteratedBinaryWidth_mem_FP 3)
 
 theorem machineOptimizerFeasibilityBudgetUnary_mem_FP :
     machineOptimizerFeasibilityBudgetUnary ∈ FP := by
-  simpa only [machineOptimizerFeasibilityBudgetUnary] using
+  simpa only [machineOptimizerFeasibilityBudgetUnary] using!
     machineCompose_mem_FP
       (machinePair_mem_FP machineOptimizerFeasibilityBudgetGuard_mem_FP
         machineOptimizerFeasibilityBudgetBits_mem_FP)
@@ -731,7 +731,7 @@ theorem machineOptimizerFeasibilityBudgetUnary_mem_FP :
     ((rawExplicitOptimizerInnerRadius n
       (rationalMatrixEntryBitBound A)).value)
   have hd : machineOptimizerFeasibilityDBits word = d.bits := by
-    simpa only [machineOptimizerFeasibilityDBits, word, d] using
+    simpa only [machineOptimizerFeasibilityDBits, word, d] using!
       machineOptimizerFeasibilityEllipsoidDimensionBits_encode A upper
   have hd2 : machineOptimizerFeasibilityDSquareBits word = (d ^ 2).bits := by
     rw [machineOptimizerFeasibilityDSquareBits, hd,
@@ -744,14 +744,14 @@ theorem machineOptimizerFeasibilityBudgetUnary_mem_FP :
   have hLR : machineOptimizerFeasibilityOuterLengthBits word = LR.bits := by
     have hRuler : machineOptimizerFeasibilityOuterRadiusLengthRuler word =
         List.replicate LR true := by
-      simpa only [word, LR] using
+      simpa only [word, LR] using!
         machineOptimizerFeasibilityOuterRadiusLengthRuler_encode hn A upper
     rw [machineOptimizerFeasibilityOuterLengthBits, hRuler,
       machineLengthBits_encode, List.length_replicate]
   have hLr : machineOptimizerFeasibilityInnerLengthBits word = Lr.bits := by
     have hRuler : machineOptimizerFeasibilityInnerRadiusLengthRuler word =
         List.replicate Lr true := by
-      simpa only [word, Lr] using
+      simpa only [word, Lr] using!
         machineOptimizerFeasibilityInnerRadiusLengthRuler_encode hn A upper
     rw [machineOptimizerFeasibilityInnerLengthBits, hRuler,
       machineLengthBits_encode, List.length_replicate]
@@ -813,7 +813,7 @@ theorem optimizerFeasibilityBudget_le_guardPolynomial
         Nat.mul_le_mul hconst hq5
       _ = (Q + 16) ^ 8 := by rw [← pow_add]
   exact hbudget.trans <| hpow.trans <| by
-    simpa only [Q] using certificateExpGuardWidth_pow_lower 2 Q
+    simpa only [Q] using! certificateExpGuardWidth_pow_lower 2 Q
 
 @[simp] theorem machineOptimizerFeasibilityBudgetUnary_encode
     {n : ℕ} (hn : 2 ≤ n) (A : Matrix (Fin n) (Fin n) ℚ)
@@ -840,7 +840,7 @@ theorem optimizerFeasibilityBudget_le_guardPolynomial
   rw [machineOptimizerFeasibilityBudgetGuard,
     machineIteratedBinaryWidth_length,
     machineOptimizerFeasibilityBudgetGuardSource_length_encode hn]
-  simpa only [d, LR, Lr, rationalBallDyadicExponent] using
+  simpa only [d, LR, Lr, rationalBallDyadicExponent] using!
     optimizerFeasibilityBudget_le_guardPolynomial d LR Lr
 
 theorem machineOptimizerFeasibilityBudgetUnary_eq_thresholdBudget

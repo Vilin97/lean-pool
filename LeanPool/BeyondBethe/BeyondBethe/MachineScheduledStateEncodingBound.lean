@@ -40,10 +40,10 @@ theorem integerBinaryCode_length_le_of_natAbs_le_two_pow
     (integerBinaryCode z).length ≤ K + 2 := by
   cases z with
   | ofNat n =>
-      have hn : n ≤ 2 ^ K := by simpa using h
+      have hn : n ≤ 2 ^ K := by simpa using! h
       have hs := nat_size_le_succ_of_le_two_pow hn
       have hs' : n.bits.length ≤ K + 1 := by
-        simpa only [Nat.size_eq_bits_len] using hs
+        simpa only [Nat.size_eq_bits_len] using! hs
       simp only [integerBinaryCode, List.length_cons]
       omega
   | negSucc n =>
@@ -52,7 +52,7 @@ theorem integerBinaryCode_length_le_of_natAbs_le_two_pow
         omega
       have hs := nat_size_le_succ_of_le_two_pow hn
       have hs' : n.bits.length ≤ K + 1 := by
-        simpa only [Nat.size_eq_bits_len] using hs
+        simpa only [Nat.size_eq_bits_len] using! hs
       simp only [integerBinaryCode, List.length_cons]
       omega
 
@@ -88,7 +88,7 @@ theorem rationalFiniteVectorCode_length_le_of_bounds {d K P : ℕ}
     omega
   simpa only [rationalVectorMachineCodeBound, Finset.sum_const,
     Finset.card_univ, Fintype.card_fin, nsmul_eq_mul,
-    Nat.mul_comm] using hsum
+    Nat.mul_comm] using! hsum
 
 theorem rationalSquareMatrixRowsCode_length_le_of_bounds {d K P : ℕ}
     (A : Matrix (Fin d) (Fin d) ℚ)
@@ -110,7 +110,7 @@ theorem rationalSquareMatrixRowsCode_length_le_of_bounds {d K P : ℕ}
     omega
   simpa only [rationalMatrixMachineCodeBound, Finset.sum_const,
     Finset.card_univ, Fintype.card_fin, nsmul_eq_mul,
-    Nat.mul_comm] using hsum
+    Nat.mul_comm] using! hsum
 
 theorem nat_bits_length_le_add_one (d : ℕ) :
     d.bits.length ≤ d + 1 := by

@@ -95,7 +95,7 @@ theorem machineSmoothingMatrixCode_mem_FP :
 
 theorem machineSmoothingDimensionRuler_mem_FP :
     machineSmoothingDimensionRuler ∈ Complexity.FP := by
-  simpa only [machineSmoothingDimensionRuler] using
+  simpa only [machineSmoothingDimensionRuler] using!
     machineCompose_mem_FP machineSmoothingMatrixCode_mem_FP
       machineMatrixDimensionUnary_mem_FP
 
@@ -108,7 +108,7 @@ theorem machineSmoothingDimensionRawCode_mem_FP :
 
 theorem machineSmoothingSupportRawCode_mem_FP :
     machineSmoothingSupportRawCode ∈ Complexity.FP := by
-  simpa only [machineSmoothingSupportRawCode] using
+  simpa only [machineSmoothingSupportRawCode] using!
     machineCompose_mem_FP machineSmoothingMatrixCode_mem_FP
       machineMatrixSupportRawCode_mem_FP
 
@@ -116,12 +116,12 @@ theorem machineSmoothingSupportPowerRawCode_mem_FP :
     machineSmoothingSupportPowerRawCode ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineSmoothingDimensionRuler_mem_FP
     machineSmoothingSupportRawCode_mem_FP
-  simpa only [machineSmoothingSupportPowerRawCode] using
+  simpa only [machineSmoothingSupportPowerRawCode] using!
     machineCompose_mem_FP hpair machineRawRatPowerCode_mem_FP
 
 theorem machineSmoothingFactorialRawCode_mem_FP :
     machineSmoothingFactorialRawCode ∈ Complexity.FP := by
-  simpa only [machineSmoothingFactorialRawCode] using
+  simpa only [machineSmoothingFactorialRawCode] using!
     machineCompose_mem_FP machineSmoothingDimensionRuler_mem_FP
       machineFactorialRawRatCode_mem_FP
 
@@ -130,7 +130,7 @@ theorem machineSmoothingFirstDenominatorRawCode_mem_FP :
   have hpair := machinePair_mem_FP
     (machineConst_mem_FP (rawRatBinaryCode (RawRat.ofNat 2)))
     machineSmoothingDimensionRawCode_mem_FP
-  simpa only [machineSmoothingFirstDenominatorRawCode] using
+  simpa only [machineSmoothingFirstDenominatorRawCode] using!
     machineCompose_mem_FP hpair machineRawRatMulCode_mem_FP
 
 theorem machineSmoothingFirstRawCode_mem_FP :
@@ -138,14 +138,14 @@ theorem machineSmoothingFirstRawCode_mem_FP :
   have hpair := machinePair_mem_FP
     (machineConst_mem_FP (rawRatBinaryCode RawRat.one))
     machineSmoothingFirstDenominatorRawCode_mem_FP
-  simpa only [machineSmoothingFirstRawCode] using
+  simpa only [machineSmoothingFirstRawCode] using!
     machineCompose_mem_FP hpair machineRawRatDivCode_mem_FP
 
 theorem machineSmoothingWeightedSupportRawCode_mem_FP :
     machineSmoothingWeightedSupportRawCode ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineSmoothingChiRawCode_mem_FP
     machineSmoothingSupportPowerRawCode_mem_FP
-  simpa only [machineSmoothingWeightedSupportRawCode] using
+  simpa only [machineSmoothingWeightedSupportRawCode] using!
     machineCompose_mem_FP hpair machineRawRatMulCode_mem_FP
 
 theorem machineSmoothingSecondDenominatorRawCode_mem_FP :
@@ -153,7 +153,7 @@ theorem machineSmoothingSecondDenominatorRawCode_mem_FP :
   have hpair := machinePair_mem_FP
     (machineConst_mem_FP (rawRatBinaryCode (RawRat.ofNat 4)))
     machineSmoothingFactorialRawCode_mem_FP
-  simpa only [machineSmoothingSecondDenominatorRawCode] using
+  simpa only [machineSmoothingSecondDenominatorRawCode] using!
     machineCompose_mem_FP hpair machineRawRatMulCode_mem_FP
 
 theorem machineSmoothingSecondRawCode_mem_FP :
@@ -161,19 +161,19 @@ theorem machineSmoothingSecondRawCode_mem_FP :
   have hpair := machinePair_mem_FP
     machineSmoothingWeightedSupportRawCode_mem_FP
     machineSmoothingSecondDenominatorRawCode_mem_FP
-  simpa only [machineSmoothingSecondRawCode] using
+  simpa only [machineSmoothingSecondRawCode] using!
     machineCompose_mem_FP hpair machineRawRatDivCode_mem_FP
 
 theorem machineSmoothingDeltaRawCode_mem_FP :
     machineSmoothingDeltaRawCode ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineSmoothingFirstRawCode_mem_FP
     machineSmoothingSecondRawCode_mem_FP
-  simpa only [machineSmoothingDeltaRawCode] using
+  simpa only [machineSmoothingDeltaRawCode] using!
     machineCompose_mem_FP hpair machineRawRatMinCode_mem_FP
 
 theorem machineSmoothingDeltaCode_mem_FP :
     machineSmoothingDeltaCode ∈ Complexity.FP := by
-  simpa only [machineSmoothingDeltaCode] using
+  simpa only [machineSmoothingDeltaCode] using!
     machineCompose_mem_FP machineSmoothingDeltaRawCode_mem_FP
       machineNormalizeRawRatBinaryCode_mem_FP
 
@@ -257,6 +257,7 @@ def rawRationalSmoothingDelta {n : ℕ}
     machineRawRatMulCode_encode, machineRawRatDivCode_encode,
     machineRawRatMinCode_encode, rawRationalSmoothingDelta,
     rawRationalSmoothingFirst, rawRationalSmoothingSecond]
+  rfl
 
 theorem rawRationalSmoothingDelta_value {n : ℕ}
     (A : Matrix (Fin n) (Fin n) ℚ) (χ : RawRat) :

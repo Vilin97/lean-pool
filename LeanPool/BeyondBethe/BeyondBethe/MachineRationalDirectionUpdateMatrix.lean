@@ -74,7 +74,7 @@ theorem rawDirection_b_width_le_word {d : ℕ}
   have hvector :
       (rationalEntryBinaryCode (b i)).length ≤
         (rationalFiniteVectorCode b).length := by
-    simpa only [rationalFiniteVectorCode] using helem
+    simpa only [rationalFiniteVectorCode] using! helem
   rw [rawRatBinaryCode_rawRatOfRat] at hcanonical
   exact hcanonical.trans (hvector.trans (by
     change (rationalFiniteVectorCode b).length ≤
@@ -123,11 +123,11 @@ theorem rawEllipsoidPerpScale_width_le_direction_word {d : ℕ}
   have htwo : rawRatWidth rawEllipsoidTwo = 2 := by rfl
   have hfourWidth : rawRatWidth rawEllipsoidFour = 3 := by rfl
   have hd' : rawRatWidth (rawEllipsoidDimension d) ≤ W := by
-    simpa only [W] using hd
+    simpa only [W] using! hd
   have hdsq0 : rawRatWidth (rawEllipsoidDimensionSquare d) ≤
       rawRatWidth (rawEllipsoidDimension d) +
         rawRatWidth (rawEllipsoidDimension d) := by
-    simpa only [rawEllipsoidDimensionSquare] using hdsq
+    simpa only [rawEllipsoidDimensionSquare] using! hdsq
   have hdsq' : rawRatWidth (rawEllipsoidDimensionSquare d) ≤ 2 * W := by
     omega
   have hfour' : rawRatWidth (rawEllipsoidFourDimensionSquare d) ≤
@@ -135,35 +135,35 @@ theorem rawEllipsoidPerpScale_width_le_direction_word {d : ℕ}
     have hfour0 : rawRatWidth (rawEllipsoidFourDimensionSquare d) ≤
         rawRatWidth rawEllipsoidFour +
           rawRatWidth (rawEllipsoidDimensionSquare d) := by
-      simpa only [rawEllipsoidFourDimensionSquare] using hfour
+      simpa only [rawEllipsoidFourDimensionSquare] using! hfour
     omega
   have halpha' : rawRatWidth (rawEllipsoidAlpha d) ≤ 4 + 2 * W := by
     have halpha0 : rawRatWidth (rawEllipsoidAlpha d) ≤
         rawRatWidth rawEllipsoidOne +
           rawRatWidth (rawEllipsoidFourDimensionSquare d) := by
-      simpa only [rawEllipsoidAlpha] using halpha
+      simpa only [rawEllipsoidAlpha] using! halpha
     omega
   have halphaSq' : rawRatWidth (rawEllipsoidAlphaSquare d) ≤
       8 + 4 * W := by
     have halphaSq0 : rawRatWidth (rawEllipsoidAlphaSquare d) ≤
         rawRatWidth (rawEllipsoidAlpha d) +
           rawRatWidth (rawEllipsoidAlpha d) := by
-      simpa only [rawEllipsoidAlphaSquare] using halphaSq
+      simpa only [rawEllipsoidAlphaSquare] using! halphaSq
     omega
   have htwice' : rawRatWidth (rawEllipsoidTwiceAlphaSquare d) ≤
       10 + 4 * W := by
     have htwice0 : rawRatWidth (rawEllipsoidTwiceAlphaSquare d) ≤
         rawRatWidth rawEllipsoidTwo +
           rawRatWidth (rawEllipsoidAlphaSquare d) := by
-      simpa only [rawEllipsoidTwiceAlphaSquare] using htwice
+      simpa only [rawEllipsoidTwiceAlphaSquare] using! htwice
     omega
   have hperp' : rawRatWidth (rawEllipsoidPerpScale d) ≤ 12 + 4 * W := by
     have hperp0 : rawRatWidth (rawEllipsoidPerpScale d) ≤
         rawRatWidth rawEllipsoidOne +
           rawRatWidth (rawEllipsoidTwiceAlphaSquare d) + 1 := by
-      simpa only [rawEllipsoidPerpScale] using hperp
+      simpa only [rawEllipsoidPerpScale] using! hperp
     omega
-  simpa only [W] using hperp'
+  simpa only [W] using! hperp'
 
 theorem rawEllipsoidParallelScale_width_le_direction_word {d : ℕ}
     (b : Fin d → ℚ) :
@@ -184,11 +184,11 @@ theorem rawEllipsoidParallelScale_width_le_direction_word {d : ℕ}
   have hone : rawRatWidth rawEllipsoidOne = 1 := by rfl
   have hfourWidth : rawRatWidth rawEllipsoidFour = 3 := by rfl
   have hd' : rawRatWidth (rawEllipsoidDimension d) ≤ W := by
-    simpa only [W] using hd
+    simpa only [W] using! hd
   have hdsq0 : rawRatWidth (rawEllipsoidDimensionSquare d) ≤
       rawRatWidth (rawEllipsoidDimension d) +
         rawRatWidth (rawEllipsoidDimension d) := by
-    simpa only [rawEllipsoidDimensionSquare] using hdsq
+    simpa only [rawEllipsoidDimensionSquare] using! hdsq
   have hdsq' : rawRatWidth (rawEllipsoidDimensionSquare d) ≤ 2 * W := by
     omega
   have hfour' : rawRatWidth (rawEllipsoidFourDimensionSquare d) ≤
@@ -196,29 +196,29 @@ theorem rawEllipsoidParallelScale_width_le_direction_word {d : ℕ}
     have hfour0 : rawRatWidth (rawEllipsoidFourDimensionSquare d) ≤
         rawRatWidth rawEllipsoidFour +
           rawRatWidth (rawEllipsoidDimensionSquare d) := by
-      simpa only [rawEllipsoidFourDimensionSquare] using hfour
+      simpa only [rawEllipsoidFourDimensionSquare] using! hfour
     omega
   have halpha' : rawRatWidth (rawEllipsoidAlpha d) ≤ 4 + 2 * W := by
     have halpha0 : rawRatWidth (rawEllipsoidAlpha d) ≤
         rawRatWidth rawEllipsoidOne +
           rawRatWidth (rawEllipsoidFourDimensionSquare d) := by
-      simpa only [rawEllipsoidAlpha] using halpha
+      simpa only [rawEllipsoidAlpha] using! halpha
     omega
   have hover' : rawRatWidth (rawEllipsoidAlphaOverDimension d) ≤
       4 + 3 * W := by
     have hover0 : rawRatWidth (rawEllipsoidAlphaOverDimension d) ≤
         rawRatWidth (rawEllipsoidAlpha d) +
           rawRatWidth (rawEllipsoidDimension d) := by
-      simpa only [rawEllipsoidAlphaOverDimension] using hover
+      simpa only [rawEllipsoidAlphaOverDimension] using! hover
     omega
   have hparallel' : rawRatWidth (rawEllipsoidParallelScale d) ≤
       6 + 3 * W := by
     have hparallel0 : rawRatWidth (rawEllipsoidParallelScale d) ≤
         rawRatWidth rawEllipsoidOne +
           rawRatWidth (rawEllipsoidAlphaOverDimension d) + 1 := by
-      simpa only [rawEllipsoidParallelScale] using hparallel
+      simpa only [rawEllipsoidParallelScale] using! hparallel
     omega
-  simpa only [W] using hparallel'
+  simpa only [W] using! hparallel'
 
 theorem rawDirectionMatrixEntry_width_le_word {d : ℕ}
     (b : Fin d → ℚ) (i j : Fin d) :
@@ -231,15 +231,15 @@ theorem rawDirectionMatrixEntry_width_le_word {d : ℕ}
   have hbi := rawDirection_b_width_le_word b i
   have hbj := rawDirection_b_width_le_word b j
   have hperp' : rawRatWidth (rawEllipsoidPerpScale d) ≤ 12 + 4 * W := by
-    simpa only [W] using hperp
+    simpa only [W] using! hperp
   have hparallel' : rawRatWidth (rawEllipsoidParallelScale d) ≤
-      6 + 3 * W := by simpa only [W] using hparallel
+      6 + 3 * W := by simpa only [W] using! hparallel
   have hnorm' : rawRatWidth (rawDirectionNormSq b) ≤ 1 + 2 * W := by
-    simpa only [W] using hnorm
+    simpa only [W] using! hnorm
   have hbi' : rawRatWidth (rawRatOfRat (b i)) ≤ W := by
-    simpa only [W] using hbi
+    simpa only [W] using! hbi
   have hbj' : rawRatWidth (rawRatOfRat (b j)) ≤ W := by
-    simpa only [W] using hbj
+    simpa only [W] using! hbj
   have hgap' : rawRatWidth (rawDirectionGap d) ≤ 19 + 7 * W := by
     calc
       _ = rawRatWidth ((rawEllipsoidPerpScale d).sub
@@ -271,7 +271,7 @@ theorem rawDirectionMatrixEntry_width_le_word {d : ℕ}
   have hdiag : rawRatWidth (rawDirectionDiagonalEntry i j) ≤
       12 + 4 * W := by
     by_cases hij : i = j
-    · simpa only [rawDirectionDiagonalEntry, hij, if_true] using hperp
+    · simpa only [rawDirectionDiagonalEntry, hij, if_true] using! hperp
     · simp only [rawDirectionDiagonalEntry, hij, ite_false, rawRatWidth_zero]
       omega
   calc
@@ -355,13 +355,13 @@ theorem rationalDirectionUpdateMatrix_code_length_le_bound {d : ℕ}
   have hd : d ≤ word.length := by
     have h := machinePairFirst_length_le word
     simpa only [word, rationalDirectionUpdateCanonicalWord,
-      machinePairFirst_pair, List.length_replicate] using h
+      machinePairFirst_pair, List.length_replicate] using! h
   have hn4 : 4 ≤ n := by
     simp only [n, word, rationalDirectionUpdateCanonicalWord,
       pair_length, List.length_replicate]
     omega
   have hcubic := rationalDirectionUpdateMatrix_code_length_le_cubic b
-  have hd' : d ≤ n := by simpa only [n] using hd
+  have hd' : d ≤ n := by simpa only [n] using! hd
   have hdn : d * n ≤ n * n := Nat.mul_le_mul hd' le_rfl
   have hdd : d * d ≤ n * n := Nat.mul_le_mul hd' hd'
   have hddn : (d * d) * n ≤ (n * n) * n :=
@@ -374,7 +374,7 @@ theorem rationalDirectionUpdateMatrix_code_length_le_bound {d : ℕ}
       (rationalSquareMatrixRowsCode
         (rationalDirectionUpdateMatrix b)).length ≤ 4000 * n ^ 3 := by
     apply hcubic.trans
-    simpa only [n, word] using hpoly
+    simpa only [n, word] using! hpoly
   have hnx : n ≤ x := by simp [x]
   have hxpos : 0 < x := by omega
   have h4000 : 4000 ≤ x ^ 3 := by
@@ -383,18 +383,18 @@ theorem rationalDirectionUpdateMatrix_code_length_le_bound {d : ℕ}
   have hnx3 : n ^ 3 ≤ x ^ 3 := Nat.pow_le_pow_left hnx 3
   have hto6 : 4000 * n ^ 3 ≤ x ^ 6 := by
     have h := Nat.mul_le_mul h4000 hnx3
-    simpa only [← pow_add] using h
+    simpa only [← pow_add] using! h
   have hto8 : x ^ 6 ≤ x ^ 8 :=
     Nat.pow_le_pow_right hxpos (by omega)
   have hxy : x ^ 2 ≤ y := by simp [y]
   have hx4y2 : x ^ 4 ≤ y ^ 2 := by
     have h := Nat.pow_le_pow_left hxy 2
-    simpa only [← pow_mul] using h
+    simpa only [← pow_mul] using! h
   have hyz : y ^ 2 ≤ z := by simp [z]
   have hx4z : x ^ 4 ≤ z := hx4y2.trans hyz
   have hx8z2 : x ^ 8 ≤ z ^ 2 := by
     have h := Nat.pow_le_pow_left hx4z 2
-    simpa only [← pow_mul] using h
+    simpa only [← pow_mul] using! h
   apply hout.trans
   apply hto6.trans
   apply hto8.trans
@@ -468,7 +468,7 @@ def machineRationalDirectionUpdateMatrixCode
 
 theorem machineRationalDirectionUpdateMatrixIndices_mem_FP :
     machineRationalDirectionUpdateMatrixIndices ∈ FP := by
-  simpa only [machineRationalDirectionUpdateMatrixIndices] using
+  simpa only [machineRationalDirectionUpdateMatrixIndices] using!
     machineCompose_mem_FP machinePairFirst_mem_FP
       machineUnaryRangeCode_mem_FP
 
@@ -477,7 +477,7 @@ theorem machineRationalDirectionUpdateMatrixCurrentRow_mem_FP :
   have hinput := machinePair_mem_FP
     machineRationalTransposeMulVectorCurrentIndex_mem_FP
     machineRationalTransposeMulVectorStatePayload_mem_FP
-  simpa only [machineRationalDirectionUpdateMatrixCurrentRow] using
+  simpa only [machineRationalDirectionUpdateMatrixCurrentRow] using!
     machineCompose_mem_FP hinput
       machineRationalDirectionUpdateRowCode_mem_FP
 
@@ -488,7 +488,7 @@ theorem machineRationalDirectionUpdateMatrixCandidate_mem_FP :
 
 theorem machineRationalDirectionUpdateMatrixNextAccumulator_mem_FP :
     machineRationalDirectionUpdateMatrixNextAccumulator ∈ FP := by
-  simpa only [machineRationalDirectionUpdateMatrixNextAccumulator] using
+  simpa only [machineRationalDirectionUpdateMatrixNextAccumulator] using!
     machineTake_mem_FP machineRationalTransposeMulVectorBound_mem_FP
       machineRationalDirectionUpdateMatrixCandidate_mem_FP
 
@@ -536,7 +536,7 @@ theorem machineRationalDirectionUpdateMatrixInit_bound
   refine ⟨trivial, ?_, by simp, ?_, trivial⟩
   · simpa only [machineRationalDirectionUpdateMatrixIndices,
       machineRationalTransposeMulVectorIndices,
-      machineRationalTransposeMulVectorDimension] using
+      machineRationalTransposeMulVectorDimension] using!
         machineRationalTransposeMulVector_indices_le_bound word
   · exact machineRationalTransposeMulVector_word_le_bound word
 
@@ -604,14 +604,14 @@ theorem machineRationalDirectionUpdateMatrixFinalState_mem_FP :
 
 theorem machineRationalDirectionUpdateMatrixReversedCode_mem_FP :
     machineRationalDirectionUpdateMatrixReversedCode ∈ FP := by
-  simpa only [machineRationalDirectionUpdateMatrixReversedCode] using
+  simpa only [machineRationalDirectionUpdateMatrixReversedCode] using!
     machineCompose_mem_FP
       machineRationalDirectionUpdateMatrixFinalState_mem_FP
       machineRationalTransposeMulVectorAccumulator_mem_FP
 
 theorem machineRationalDirectionUpdateMatrixCode_mem_FP :
     machineRationalDirectionUpdateMatrixCode ∈ FP := by
-  simpa only [machineRationalDirectionUpdateMatrixCode] using
+  simpa only [machineRationalDirectionUpdateMatrixCode] using!
     machineCompose_mem_FP
       machineRationalDirectionUpdateMatrixReversedCode_mem_FP
       machineListReverse_mem_FP
@@ -651,7 +651,7 @@ theorem rationalDirectionUpdateRowsPrefix_succ {d : ℕ}
         [List.ofFn fun j ↦ rationalDirectionUpdateMatrix b ⟨k, hk⟩ j] := by
   simp only [rationalDirectionUpdateRowsPrefix, List.map_take]
   have hkm : k < (List.finRange d).length := by simpa
-  simpa [List.getElem_finRange] using
+  simpa [List.getElem_finRange] using!
     congrArg (List.map fun i ↦
       List.ofFn fun j ↦ rationalDirectionUpdateMatrix b i j)
       (List.take_concat_get hkm).symm
@@ -701,7 +701,7 @@ theorem machineRationalDirectionUpdateMatrixStep_semantics {d : ℕ}
         (binaryListCode (binaryListCode rationalEntryBinaryCode)
           (rationalDirectionUpdateRowsPrefix b k).reverse)).length ≤
         (machineRationalDirectionUpdateMatrixInputBound word).length := by
-    simpa only [hreverse, binaryListCode] using hcand
+    simpa only [hreverse, binaryListCode] using! hcand
   have hnonempty :
       binaryListCode finUnaryCode ((List.finRange d).drop k) ≠ [] := by
     rw [hdrop]
@@ -783,7 +783,7 @@ theorem machineRationalDirectionUpdateMatrixReversedCode_encode {d : ℕ}
   have hd : d ≤ word.length := by
     have h := machinePairFirst_length_le word
     simpa only [word, rationalDirectionUpdateCanonicalWord,
-      machinePairFirst_pair, List.length_replicate] using h
+      machinePairFirst_pair, List.length_replicate] using! h
   have hsplit : word.length = (word.length - d) + d := by omega
   change machineRationalDirectionUpdateMatrixReversedCode word = _
   rw [machineRationalDirectionUpdateMatrixReversedCode,

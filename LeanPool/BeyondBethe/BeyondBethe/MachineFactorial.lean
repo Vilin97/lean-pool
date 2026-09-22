@@ -74,37 +74,37 @@ theorem machineFactorialAcc_mem_FP :
 
 theorem machineFactorialNext_mem_FP :
     machineFactorialNext ∈ Complexity.FP := by
-  simpa only [machineFactorialNext] using
+  simpa only [machineFactorialNext] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineFactorialBound_mem_FP :
     machineFactorialBound ∈ Complexity.FP := by
-  simpa only [machineFactorialBound] using
+  simpa only [machineFactorialBound] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairSecond_mem_FP
 
 theorem machineFactorialSuccessor_mem_FP :
     machineFactorialSuccessor ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineFactorialNext_mem_FP
     (machineConst_mem_FP (1 : ℕ).bits)
-  simpa only [machineFactorialSuccessor] using
+  simpa only [machineFactorialSuccessor] using!
     machineCompose_mem_FP hpair machineBinaryAddBits_mem_FP
 
 theorem machineFactorialCandidate_mem_FP :
     machineFactorialCandidate ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineFactorialAcc_mem_FP
     machineFactorialNext_mem_FP
-  simpa only [machineFactorialCandidate] using
+  simpa only [machineFactorialCandidate] using!
     machineCompose_mem_FP hpair machineBinaryMulBits_mem_FP
 
 theorem machineFactorialNextAcc_mem_FP :
     machineFactorialNextAcc ∈ Complexity.FP := by
-  simpa only [machineFactorialNextAcc] using
+  simpa only [machineFactorialNextAcc] using!
     machineTake_mem_FP machineFactorialBound_mem_FP
       machineFactorialCandidate_mem_FP
 
 theorem machineFactorialNextCounter_mem_FP :
     machineFactorialNextCounter ∈ Complexity.FP := by
-  simpa only [machineFactorialNextCounter] using
+  simpa only [machineFactorialNextCounter] using!
     machineTake_mem_FP machineFactorialBound_mem_FP
       machineFactorialSuccessor_mem_FP
 
@@ -203,7 +203,7 @@ theorem machineFactorialFinalState_mem_FP :
 
 theorem machineFactorialBits_mem_FP :
     machineFactorialBits ∈ Complexity.FP := by
-  simpa only [machineFactorialBits] using
+  simpa only [machineFactorialBits] using!
     machineCompose_mem_FP machineFactorialFinalState_mem_FP
       machineFactorialAcc_mem_FP
 
@@ -276,7 +276,7 @@ theorem machineFactorialSemanticState_step (n k : ℕ) (hk : k < n) :
     machineFactorialNextCounter, machineFactorialSuccessor,
     machineBinaryAddBits_pair_natBits]
   rw [(List.take_eq_self_iff _).2 (by
-      simpa [Nat.factorial_succ, Nat.mul_comm] using hfac),
+      simpa [Nat.factorial_succ, Nat.mul_comm] using! hfac),
     (List.take_eq_self_iff _).2 hcounter]
   simp [Nat.factorial_succ, Nat.mul_comm, Nat.add_assoc]
 

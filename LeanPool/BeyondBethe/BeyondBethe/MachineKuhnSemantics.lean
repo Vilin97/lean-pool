@@ -50,7 +50,7 @@ open Complexity
         (pair (List.replicate column true)
           (pair (true :: List.replicate row true) (mateVectorCode mate))) =
       mateVectorCode (mate.set column (some row)) := by
-  simpa [mateValueCode] using
+  simpa [mateValueCode] using!
     machineMateVectorUpdateAtUnary_encode mate column (some row) hcolumn
 
 @[simp] theorem seenBoolList_empty {n : ℕ} :

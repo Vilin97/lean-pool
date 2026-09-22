@@ -102,12 +102,12 @@ theorem machineRationalVectorDotLeft_mem_FP :
 
 theorem machineRationalVectorDotRight_mem_FP :
     machineRationalVectorDotRight ∈ FP := by
-  simpa only [machineRationalVectorDotRight] using
+  simpa only [machineRationalVectorDotRight] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineRationalVectorDotAcc_mem_FP :
     machineRationalVectorDotAcc ∈ FP := by
-  simpa only [machineRationalVectorDotAcc] using
+  simpa only [machineRationalVectorDotAcc] using!
     machineCompose_mem_FP
       (machineCompose_mem_FP machinePairSecond_mem_FP
         machinePairSecond_mem_FP)
@@ -115,7 +115,7 @@ theorem machineRationalVectorDotAcc_mem_FP :
 
 theorem machineRationalVectorDotBound_mem_FP :
     machineRationalVectorDotBound ∈ FP := by
-  simpa only [machineRationalVectorDotBound] using
+  simpa only [machineRationalVectorDotBound] using!
     machineCompose_mem_FP
       (machineCompose_mem_FP machinePairSecond_mem_FP
         machinePairSecond_mem_FP)
@@ -123,13 +123,13 @@ theorem machineRationalVectorDotBound_mem_FP :
 
 theorem machineRationalVectorDotLeftEntry_mem_FP :
     machineRationalVectorDotLeftEntry ∈ FP := by
-  simpa only [machineRationalVectorDotLeftEntry] using
+  simpa only [machineRationalVectorDotLeftEntry] using!
     machineCompose_mem_FP machineRationalVectorDotLeft_mem_FP
       machineListHead_mem_FP
 
 theorem machineRationalVectorDotRightEntry_mem_FP :
     machineRationalVectorDotRightEntry ∈ FP := by
-  simpa only [machineRationalVectorDotRightEntry] using
+  simpa only [machineRationalVectorDotRightEntry] using!
     machineCompose_mem_FP machineRationalVectorDotRight_mem_FP
       machineListHead_mem_FP
 
@@ -137,19 +137,19 @@ theorem machineRationalVectorDotProduct_mem_FP :
     machineRationalVectorDotProduct ∈ FP := by
   have hp := machinePair_mem_FP machineRationalVectorDotLeftEntry_mem_FP
     machineRationalVectorDotRightEntry_mem_FP
-  simpa only [machineRationalVectorDotProduct] using
+  simpa only [machineRationalVectorDotProduct] using!
     machineCompose_mem_FP hp machineRawRatMulCode_mem_FP
 
 theorem machineRationalVectorDotCandidate_mem_FP :
     machineRationalVectorDotCandidate ∈ FP := by
   have hp := machinePair_mem_FP machineRationalVectorDotAcc_mem_FP
     machineRationalVectorDotProduct_mem_FP
-  simpa only [machineRationalVectorDotCandidate] using
+  simpa only [machineRationalVectorDotCandidate] using!
     machineCompose_mem_FP hp machineRawRatAddCode_mem_FP
 
 theorem machineRationalVectorDotNextAcc_mem_FP :
     machineRationalVectorDotNextAcc ∈ FP := by
-  simpa only [machineRationalVectorDotNextAcc] using
+  simpa only [machineRationalVectorDotNextAcc] using!
     machineTake_mem_FP machineRationalVectorDotBound_mem_FP
       machineRationalVectorDotCandidate_mem_FP
 
@@ -306,13 +306,13 @@ theorem machineRationalVectorDotFinalState_mem_FP :
 
 theorem machineRationalVectorDotRawCode_mem_FP :
     machineRationalVectorDotRawCode ∈ FP := by
-  simpa only [machineRationalVectorDotRawCode] using
+  simpa only [machineRationalVectorDotRawCode] using!
     machineCompose_mem_FP machineRationalVectorDotFinalState_mem_FP
       machineRationalVectorDotAcc_mem_FP
 
 theorem machineRationalVectorDotEntryCode_mem_FP :
     machineRationalVectorDotEntryCode ∈ FP := by
-  simpa only [machineRationalVectorDotEntryCode] using
+  simpa only [machineRationalVectorDotEntryCode] using!
     machineCompose_mem_FP machineRationalVectorDotRawCode_mem_FP
       machineNormalizeRawRatEntryCode_mem_FP
 
@@ -459,7 +459,7 @@ theorem machineRationalVectorDotStep_semantics
                   rawRatListDotCost qs rs ≤ 1 + word.length := by
               simpa only [RationalVectorDotSemInvariant,
               rationalVectorDotSemStep, rawRatListDotCost,
-                Nat.add_zero] using hinv
+                Nat.add_zero] using! hinv
             omega
           have hcode :
               (rawRatBinaryCode
@@ -538,7 +538,7 @@ theorem rationalVectorDotSem_process : ∀ (xs ys : List ℚ)
           rw [List.length_cons, Function.iterate_succ_apply,
             rationalVectorDotSemStep, ih]
           · rfl
-          · simpa using Nat.succ.inj hlen
+          · simpa using! Nat.succ.inj hlen
 
 theorem rationalVectorDotSem_done_iterate
     (extra : ℕ) (acc : RawRat) :
@@ -605,7 +605,7 @@ theorem machineRationalVectorDotFinalState_encode {n : ℕ}
   have hn : n ≤ word.length := by
     have hlist := list_length_le_binaryListCode_length
       rationalEntryBinaryCode left
-    simpa only [left, List.length_ofFn] using hlist.trans hleftCode
+    simpa only [left, List.length_ofFn] using! hlist.trans hleftCode
   have hsplit : word.length = (word.length - n) + n := by omega
   have hinit : machineRationalVectorDotInit word =
       rationalVectorDotSemCode
@@ -615,7 +615,7 @@ theorem machineRationalVectorDotFinalState_encode {n : ℕ}
   have hprocess :
       (rationalVectorDotSemStep)^[n] s =
         ⟨[], [], rawRatListDot RawRat.zero left right⟩ := by
-    simpa [s, left, right] using
+    simpa [s, left, right] using!
       (rationalVectorDotSem_process left right RawRat.zero
         (by simp [left, right]))
   change machineRationalVectorDotFinalState word = _

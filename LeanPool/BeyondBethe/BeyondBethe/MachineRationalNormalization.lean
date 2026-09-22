@@ -51,7 +51,7 @@ def machineNormalizeRawRatBinaryCode (word : List Bool) : List Bool :=
 
 theorem machineRawRatNatAbsBits_mem_FP :
     machineRawRatNatAbsBits ∈ Complexity.FP := by
-  simpa only [machineRawRatNatAbsBits] using
+  simpa only [machineRawRatNatAbsBits] using!
     machineCompose_mem_FP machinePairFirst_mem_FP
       machineIntegerNatAbsBits_mem_FP
 
@@ -61,7 +61,7 @@ theorem machineRawRatGcdBits_mem_FP :
       (machinePairSecond word)) ∈ Complexity.FP :=
     machinePair_mem_FP machineRawRatNatAbsBits_mem_FP
       machinePairSecond_mem_FP
-  simpa only [machineRawRatGcdBits] using
+  simpa only [machineRawRatGcdBits] using!
     machineCompose_mem_FP hpair machineBinaryGcdBits_mem_FP
 
 theorem machineRawRatAbsQuotientBits_mem_FP :
@@ -71,7 +71,7 @@ theorem machineRawRatAbsQuotientBits_mem_FP :
     machinePair_mem_FP machineRawRatNatAbsBits_mem_FP
       machineRawRatGcdBits_mem_FP
   have hdiv := machineCompose_mem_FP hpair machineBinaryDivModBits_mem_FP
-  simpa only [machineRawRatAbsQuotientBits] using
+  simpa only [machineRawRatAbsQuotientBits] using!
     machineCompose_mem_FP hdiv machinePairFirst_mem_FP
 
 theorem machineRawRatDenQuotientBits_mem_FP :
@@ -80,7 +80,7 @@ theorem machineRawRatDenQuotientBits_mem_FP :
       (machineRawRatGcdBits word)) ∈ Complexity.FP :=
     machinePair_mem_FP machinePairSecond_mem_FP machineRawRatGcdBits_mem_FP
   have hdiv := machineCompose_mem_FP hpair machineBinaryDivModBits_mem_FP
-  simpa only [machineRawRatDenQuotientBits] using
+  simpa only [machineRawRatDenQuotientBits] using!
     machineCompose_mem_FP hdiv machinePairFirst_mem_FP
 
 theorem machineNormalizeRawRatEntryCode_mem_FP :
@@ -91,12 +91,12 @@ theorem machineNormalizeRawRatEntryCode_mem_FP :
       machineRawRatAbsQuotientBits_mem_FP
   have hsigned := machineCompose_mem_FP hsignedPair
     machineIntegerCodeFromSignedAbs_mem_FP
-  simpa only [machineNormalizeRawRatEntryCode] using
+  simpa only [machineNormalizeRawRatEntryCode] using!
     machinePair_mem_FP hsigned machineRawRatDenQuotientBits_mem_FP
 
 theorem machineNormalizeRawRatBinaryCode_mem_FP :
     machineNormalizeRawRatBinaryCode ∈ Complexity.FP := by
-  simpa only [machineNormalizeRawRatBinaryCode] using
+  simpa only [machineNormalizeRawRatBinaryCode] using!
     machineCompose_mem_FP machineNormalizeRawRatEntryCode_mem_FP
       machineRationalBinaryCode_mem_FP
 
@@ -128,7 +128,7 @@ theorem machineRawRatDenQuotientBits_encode (q : RawRat) :
   have hg : machineRawRatGcdBits
       (pair (integerBinaryCode q.num) q.den.bits) =
       (Nat.gcd q.num.natAbs q.den).bits := by
-    simpa only [rawRatBinaryCode] using machineRawRatGcdBits_encode q
+    simpa only [rawRatBinaryCode] using! machineRawRatGcdBits_encode q
   rw [hg, machineBinaryDivModBits_pair_natBits]
   simp only [machinePairFirst_pair]
 
@@ -146,12 +146,12 @@ theorem machineNormalizeRawRatEntryCode_encode (q : RawRat) :
   have habs : machineRawRatAbsQuotientBits
       (pair (integerBinaryCode q.num) q.den.bits) =
       (q.num.natAbs / Nat.gcd q.num.natAbs q.den).bits := by
-    simpa only [rawRatBinaryCode] using
+    simpa only [rawRatBinaryCode] using!
       machineRawRatAbsQuotientBits_encode q
   have hdenq : machineRawRatDenQuotientBits
       (pair (integerBinaryCode q.num) q.den.bits) =
       (q.den / Nat.gcd q.num.natAbs q.den).bits := by
-    simpa only [rawRatBinaryCode] using
+    simpa only [rawRatBinaryCode] using!
       machineRawRatDenQuotientBits_encode q
   rw [habs, hdenq]
   change pair

@@ -257,37 +257,37 @@ theorem machineDirectedObjectiveSumRest_mem_FP :
 
 theorem machineDirectedObjectiveSumPrecision_mem_FP :
     machineDirectedObjectiveSumPrecision ∈ FP := by
-  simpa only [machineDirectedObjectiveSumPrecision] using
+  simpa only [machineDirectedObjectiveSumPrecision] using!
     machineCompose_mem_FP machineDirectedObjectiveSumRest_mem_FP
       machinePairFirst_mem_FP
 
 theorem machineDirectedObjectiveSumAfterPrecision_mem_FP :
     machineDirectedObjectiveSumAfterPrecision ∈ FP := by
-  simpa only [machineDirectedObjectiveSumAfterPrecision] using
+  simpa only [machineDirectedObjectiveSumAfterPrecision] using!
     machineCompose_mem_FP machineDirectedObjectiveSumRest_mem_FP
       machinePairSecond_mem_FP
 
 theorem machineDirectedObjectiveSumTau_mem_FP :
     machineDirectedObjectiveSumTau ∈ FP := by
-  simpa only [machineDirectedObjectiveSumTau] using
+  simpa only [machineDirectedObjectiveSumTau] using!
     machineCompose_mem_FP machineDirectedObjectiveSumAfterPrecision_mem_FP
       machinePairFirst_mem_FP
 
 theorem machineDirectedObjectiveSumAfterTau_mem_FP :
     machineDirectedObjectiveSumAfterTau ∈ FP := by
-  simpa only [machineDirectedObjectiveSumAfterTau] using
+  simpa only [machineDirectedObjectiveSumAfterTau] using!
     machineCompose_mem_FP machineDirectedObjectiveSumAfterPrecision_mem_FP
       machinePairSecond_mem_FP
 
 theorem machineDirectedObjectiveSumMatrix_mem_FP :
     machineDirectedObjectiveSumMatrix ∈ FP := by
-  simpa only [machineDirectedObjectiveSumMatrix] using
+  simpa only [machineDirectedObjectiveSumMatrix] using!
     machineCompose_mem_FP machineDirectedObjectiveSumAfterTau_mem_FP
       machinePairFirst_mem_FP
 
 theorem machineDirectedObjectiveSumVector_mem_FP :
     machineDirectedObjectiveSumVector ∈ FP := by
-  simpa only [machineDirectedObjectiveSumVector] using
+  simpa only [machineDirectedObjectiveSumVector] using!
     machineCompose_mem_FP machineDirectedObjectiveSumAfterTau_mem_FP
       machinePairSecond_mem_FP
 
@@ -296,14 +296,14 @@ theorem machineDirectedObjectiveSumRow_mem_FP :
 
 theorem machineDirectedObjectiveSumColumn_mem_FP :
     machineDirectedObjectiveSumColumn ∈ FP := by
-  simpa only [machineDirectedObjectiveSumColumn] using
+  simpa only [machineDirectedObjectiveSumColumn] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineDirectedObjectiveSumAcc_mem_FP :
     machineDirectedObjectiveSumAcc ∈ FP := by
   have htail := machineCompose_mem_FP machinePairSecond_mem_FP
     machinePairSecond_mem_FP
-  simpa only [machineDirectedObjectiveSumAcc] using
+  simpa only [machineDirectedObjectiveSumAcc] using!
     machineCompose_mem_FP htail machinePairFirst_mem_FP
 
 theorem machineDirectedObjectiveSumBound_mem_FP :
@@ -311,7 +311,7 @@ theorem machineDirectedObjectiveSumBound_mem_FP :
   have htailTwo := machineCompose_mem_FP machinePairSecond_mem_FP
     machinePairSecond_mem_FP
   have htailThree := machineCompose_mem_FP htailTwo machinePairSecond_mem_FP
-  simpa only [machineDirectedObjectiveSumBound] using
+  simpa only [machineDirectedObjectiveSumBound] using!
     machineCompose_mem_FP htailThree machinePairFirst_mem_FP
 
 theorem machineDirectedObjectiveSumDone_mem_FP :
@@ -320,7 +320,7 @@ theorem machineDirectedObjectiveSumDone_mem_FP :
     machinePairSecond_mem_FP
   have htailThree := machineCompose_mem_FP htailTwo machinePairSecond_mem_FP
   have htailFour := machineCompose_mem_FP htailThree machinePairSecond_mem_FP
-  simpa only [machineDirectedObjectiveSumDone] using
+  simpa only [machineDirectedObjectiveSumDone] using!
     machineCompose_mem_FP htailFour machinePairFirst_mem_FP
 
 theorem machineDirectedObjectiveSumPayload_mem_FP :
@@ -329,36 +329,36 @@ theorem machineDirectedObjectiveSumPayload_mem_FP :
     machinePairSecond_mem_FP
   have htailThree := machineCompose_mem_FP htailTwo machinePairSecond_mem_FP
   have htailFour := machineCompose_mem_FP htailThree machinePairSecond_mem_FP
-  simpa only [machineDirectedObjectiveSumPayload] using
+  simpa only [machineDirectedObjectiveSumPayload] using!
     machineCompose_mem_FP htailFour machinePairSecond_mem_FP
 
 theorem machineDirectedObjectiveSumStateDimension_mem_FP :
     machineDirectedObjectiveSumStateDimension ∈ FP := by
-  simpa only [machineDirectedObjectiveSumStateDimension] using
+  simpa only [machineDirectedObjectiveSumStateDimension] using!
     machineCompose_mem_FP machineDirectedObjectiveSumPayload_mem_FP
       machineDirectedObjectiveSumDimension_mem_FP
 
 theorem machineDirectedObjectiveSumStatePrecision_mem_FP :
     machineDirectedObjectiveSumStatePrecision ∈ FP := by
-  simpa only [machineDirectedObjectiveSumStatePrecision] using
+  simpa only [machineDirectedObjectiveSumStatePrecision] using!
     machineCompose_mem_FP machineDirectedObjectiveSumPayload_mem_FP
       machineDirectedObjectiveSumPrecision_mem_FP
 
 theorem machineDirectedObjectiveSumStateTau_mem_FP :
     machineDirectedObjectiveSumStateTau ∈ FP := by
-  simpa only [machineDirectedObjectiveSumStateTau] using
+  simpa only [machineDirectedObjectiveSumStateTau] using!
     machineCompose_mem_FP machineDirectedObjectiveSumPayload_mem_FP
       machineDirectedObjectiveSumTau_mem_FP
 
 theorem machineDirectedObjectiveSumStateMatrix_mem_FP :
     machineDirectedObjectiveSumStateMatrix ∈ FP := by
-  simpa only [machineDirectedObjectiveSumStateMatrix] using
+  simpa only [machineDirectedObjectiveSumStateMatrix] using!
     machineCompose_mem_FP machineDirectedObjectiveSumPayload_mem_FP
       machineDirectedObjectiveSumMatrix_mem_FP
 
 theorem machineDirectedObjectiveSumStateVector_mem_FP :
     machineDirectedObjectiveSumStateVector ∈ FP := by
-  simpa only [machineDirectedObjectiveSumStateVector] using
+  simpa only [machineDirectedObjectiveSumStateVector] using!
     machineCompose_mem_FP machineDirectedObjectiveSumPayload_mem_FP
       machineDirectedObjectiveSumVector_mem_FP
 
@@ -383,7 +383,7 @@ theorem machineDirectedObjectiveSumMatrixEntryRaw_mem_FP :
   have hentry := machineCompose_mem_FP
     machineDirectedObjectiveSumMatrixEntryInput_mem_FP
     machineMatrixEntryAtUnary_mem_FP
-  simpa only [machineDirectedObjectiveSumMatrixEntryRaw] using
+  simpa only [machineDirectedObjectiveSumMatrixEntryRaw] using!
     machineCompose_mem_FP hentry machineNormalizeRawRatEntryCode_mem_FP
 
 theorem machineDirectedObjectiveSumAffineEntryInput_mem_FP :
@@ -398,7 +398,7 @@ theorem machineDirectedObjectiveSumAffineEntryRaw_mem_FP :
   have hentry := machineCompose_mem_FP
     machineDirectedObjectiveSumAffineEntryInput_mem_FP
     machineBetheAffineEntryRawCode_mem_FP
-  simpa only [machineDirectedObjectiveSumAffineEntryRaw] using
+  simpa only [machineDirectedObjectiveSumAffineEntryRaw] using!
     machineCompose_mem_FP hentry machineNormalizeRawRatEntryCode_mem_FP
 
 theorem machineDirectedObjectiveSumCoordinateInput_mem_FP :
@@ -410,7 +410,7 @@ theorem machineDirectedObjectiveSumCoordinateInput_mem_FP :
 
 theorem machineDirectedObjectiveSumCoordinateRawCode_mem_FP :
     machineDirectedObjectiveSumCoordinateRawCode ∈ FP := by
-  simpa only [machineDirectedObjectiveSumCoordinateRawCode] using
+  simpa only [machineDirectedObjectiveSumCoordinateRawCode] using!
     machineCompose_mem_FP machineDirectedObjectiveSumCoordinateInput_mem_FP
       machineDirectedNegativeObjectiveCoordinateLowerRawCode_mem_FP
 
@@ -418,12 +418,12 @@ theorem machineDirectedObjectiveSumCandidate_mem_FP :
     machineDirectedObjectiveSumCandidate ∈ FP := by
   have hinput := machinePair_mem_FP machineDirectedObjectiveSumAcc_mem_FP
     machineDirectedObjectiveSumCoordinateRawCode_mem_FP
-  simpa only [machineDirectedObjectiveSumCandidate] using
+  simpa only [machineDirectedObjectiveSumCandidate] using!
     machineCompose_mem_FP hinput machineRawRatAddCode_mem_FP
 
 theorem machineDirectedObjectiveSumNextAcc_mem_FP :
     machineDirectedObjectiveSumNextAcc ∈ FP := by
-  simpa only [machineDirectedObjectiveSumNextAcc] using
+  simpa only [machineDirectedObjectiveSumNextAcc] using!
     machineTake_mem_FP machineDirectedObjectiveSumBound_mem_FP
       machineDirectedObjectiveSumCandidate_mem_FP
 
@@ -431,7 +431,7 @@ theorem machineDirectedObjectiveSumNextRow_mem_FP :
     machineDirectedObjectiveSumNextRow ∈ FP := by
   have happend := machineAppend_mem_FP machineDirectedObjectiveSumRow_mem_FP
     (machineConst_mem_FP [true])
-  simpa only [machineDirectedObjectiveSumNextRow] using
+  simpa only [machineDirectedObjectiveSumNextRow] using!
     machineTake_mem_FP machineDirectedObjectiveSumBound_mem_FP happend
 
 theorem machineDirectedObjectiveSumNextColumn_mem_FP :
@@ -439,7 +439,7 @@ theorem machineDirectedObjectiveSumNextColumn_mem_FP :
   have happend := machineAppend_mem_FP
     machineDirectedObjectiveSumColumn_mem_FP
     (machineConst_mem_FP [true])
-  simpa only [machineDirectedObjectiveSumNextColumn] using
+  simpa only [machineDirectedObjectiveSumNextColumn] using!
     machineTake_mem_FP machineDirectedObjectiveSumBound_mem_FP happend
 
 theorem machineDirectedObjectiveSumFinish_mem_FP :
@@ -490,12 +490,12 @@ theorem machineDirectedObjectiveSumStep_mem_FP :
 
 theorem machineDirectedObjectiveSumAccumulatorBound_mem_FP :
     machineDirectedObjectiveSumAccumulatorBound ∈ FP := by
-  simpa only [machineDirectedObjectiveSumAccumulatorBound] using
+  simpa only [machineDirectedObjectiveSumAccumulatorBound] using!
     machineIteratedBinaryWidth_mem_FP 6
 
 theorem machineDirectedObjectiveSumStateEnvelope_mem_FP :
     machineDirectedObjectiveSumStateEnvelope ∈ FP := by
-  simpa only [machineDirectedObjectiveSumStateEnvelope] using
+  simpa only [machineDirectedObjectiveSumStateEnvelope] using!
     machineIteratedBinaryWidth_mem_FP 7
 
 theorem machineDirectedObjectiveSumInit_mem_FP :
@@ -510,7 +510,7 @@ theorem machineDirectedObjectiveSumInit_mem_FP :
 
 theorem machineDirectedObjectiveSumRuler_mem_FP :
     machineDirectedObjectiveSumRuler ∈ FP := by
-  simpa only [machineDirectedObjectiveSumRuler] using
+  simpa only [machineDirectedObjectiveSumRuler] using!
     machineBetheFloorScanRuler_mem_FP
 
 theorem machineDirectedObjectiveSumWidth_mem_FP :
@@ -781,7 +781,7 @@ theorem machineDirectedObjectiveSumFinalState_mem_FP :
 
 theorem machineDirectedNegativeObjectiveSumRawCode_mem_FP :
     machineDirectedNegativeObjectiveSumRawCode ∈ FP := by
-  simpa only [machineDirectedNegativeObjectiveSumRawCode] using
+  simpa only [machineDirectedNegativeObjectiveSumRawCode] using!
     machineCompose_mem_FP machineDirectedObjectiveSumFinalState_mem_FP
       machineDirectedObjectiveSumAcc_mem_FP
 
@@ -1205,7 +1205,7 @@ theorem rawDirectedNegativeObjectiveCoordinateLower_width_le
           rawRatWidth logX + rawRatWidth logComplement + 4 := by omega
   simpa [rawDirectedNegativeObjectiveCoordinateLower,
     rawDirectedNegativeObjectiveCoordinateWidthBudget,
-    rawTau, rawX, rawComplement, logA, logX, logComplement] using
+    rawTau, rawX, rawComplement, logA, logX, logComplement] using!
     htotalBound
 
 theorem rawRatListCost_le_uniform_width {W : ℕ} : ∀ xs : List ℚ,
@@ -1272,10 +1272,10 @@ theorem rawDirectedObjectiveSum_A_width_le_word {m : ℕ}
         matrixWord.length := by
     calc
       _ = (machineMatrixRowsWord matrixWord).length := by
-        simpa only [rows, matrixWord] using congrArg List.length
+        simpa only [rows, matrixWord] using! congrArg List.length
           (machineMatrixRowsWord_encode A).symm
       _ ≤ matrixWord.length := by
-        simpa only [machineMatrixRowsWord] using
+        simpa only [machineMatrixRowsWord] using!
           machinePairSecond_length_le matrixWord
   have hmatrixWord : matrixWord.length ≤ word.length := by
     simp only [matrixWord, word, machineDirectedObjectiveSumCanonicalWord,
@@ -1339,7 +1339,7 @@ theorem rawBetheAffineLineSum_width_le_word {m : ℕ}
   rw [hlen] at hcost
   have hfinal : rawRatWidth (rawRatListSum RawRat.zero values) ≤
       1 + m * (L + 1) := hsum.trans (by omega)
-  simpa only [rawBetheAffineLineSum, values, L] using hfinal
+  simpa only [rawBetheAffineLineSum, values, L] using! hfinal
 
 theorem rawBetheAffineTotal_width_le_word {m : ℕ}
     (tau : ℚ) (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
@@ -1363,7 +1363,7 @@ theorem rawBetheAffineTotal_width_le_word {m : ℕ}
   rw [hlen] at hcost
   have hfinal : rawRatWidth (rawRatListSum RawRat.zero values) ≤
       1 + m * m * (L + 1) := hsum.trans (by omega)
-  simpa only [values, L] using hfinal
+  simpa only [values, L] using! hfinal
 
 def rawBetheAffineEntryWidthBudget (m L : ℕ) : ℕ :=
   m * m * (L + 1) + m + L + 8
@@ -1442,7 +1442,7 @@ theorem rawBetheAffineMatrixQ_width_le_word {m : ℕ}
   have hraw := rawBetheAffineEntry_width_le_word tau A y p i j
   have hraw' : rawRatWidth raw ≤ rawBetheAffineEntryWidthBudget m
       (machineDirectedObjectiveSumCanonicalWord tau A y p).length := by
-    simpa only [raw] using hraw
+    simpa only [raw] using! hraw
   have hscaled := Nat.mul_le_mul_left 12 hraw'
   calc
     rawRatWidth (rawRatOfRat (betheAffineMatrixQ y i j)) =
@@ -1497,7 +1497,7 @@ theorem rawDirectedBetheObjectiveCoordinate_width_le_word_budget {m : ℕ}
     rawDirectedObjectiveSum_A_width_le_word tau A y p i j
   have hx : rawRatWidth (rawRatOfRat x) ≤ WX := by
     simpa only [x, WX, L,
-      rawDirectedObjectiveCoordinateWordXBudget] using
+      rawDirectedObjectiveCoordinateWordXBudget] using!
       rawBetheAffineMatrixQ_width_le_word tau A y p i j
   have hc0 := rawRatWidth_complement_le x
   have hc : rawRatWidth (rawRatOfRat (1 - x)) ≤ WC := by
@@ -1520,7 +1520,7 @@ theorem rawDirectedBetheObjectiveCoordinate_width_le_word_budget {m : ℕ}
     omega
   simpa only [rawDirectedBetheObjectiveCoordinate,
     rawDirectedObjectiveCoordinateWordBudget, rawScheduledLogWordBudget,
-    WX, WC, L, x] using hfinal
+    WX, WC, L, x] using! hfinal
 
 structure DirectedObjectiveSumSemanticState (m : ℕ) where
   row : Fin (m + 1)
@@ -1577,13 +1577,13 @@ theorem directedObjectiveSumSemanticStep_acc_width {m B C : ℕ}
       (rawDirectedBetheObjectiveCoordinate tau A y p i j)
     by_cases hcolumn : j = Fin.last m
     · by_cases hrow : i = Fin.last m
-      · simpa [directedObjectiveSumSemanticStep, hcolumn, hrow] using
+      · simpa [directedObjectiveSumSemanticStep, hcolumn, hrow] using!
           hadd.trans (by omega)
-      · simpa [directedObjectiveSumSemanticStep, hcolumn, hrow] using
+      · simpa [directedObjectiveSumSemanticStep, hcolumn, hrow] using!
           hadd.trans (by omega)
-    · simpa [directedObjectiveSumSemanticStep, hcolumn] using
+    · simpa [directedObjectiveSumSemanticStep, hcolumn] using!
         hadd.trans (by omega)
-  · simpa [directedObjectiveSumSemanticStep] using
+  · simpa [directedObjectiveSumSemanticStep] using!
       hacc.trans (by omega)
 
 def machineDirectedObjectiveSumSemanticCode {m : ℕ}
@@ -1613,7 +1613,7 @@ def machineDirectedObjectiveSumSemanticCode {m : ℕ}
       intro h
       apply hi
       apply Fin.ext
-      simpa using h
+      simpa using! h
     simp [hi, hval]
 
 @[simp] theorem machineDirectedObjectiveSumLastColumnBit_canonicalState
@@ -1636,7 +1636,7 @@ def machineDirectedObjectiveSumSemanticCode {m : ℕ}
       intro h
       apply hj
       apply Fin.ext
-      simpa using h
+      simpa using! h
     simp [hj, hval]
 
 @[simp] theorem machineDirectedObjectiveSumCandidate_canonicalState
@@ -1699,7 +1699,7 @@ theorem machineDirectedObjectiveSumNextRow_canonicalState
     intro h
     apply hi
     apply Fin.ext
-    simpa using h
+    simpa using! h
   have : i.1 + 1 ≤ m := by omega
   omega
 
@@ -1726,7 +1726,7 @@ theorem machineDirectedObjectiveSumNextColumn_canonicalState
     intro h
     apply hj
     apply Fin.ext
-    simpa using h
+    simpa using! h
   have : j.1 + 1 ≤ m := by omega
   omega
 
@@ -1949,11 +1949,11 @@ theorem directedObjectiveSumSemanticStateAt_acc_width {m : ℕ}
   | succ k ih =>
       let state := directedObjectiveSumSemanticStateAt tau A y p k
       have ih' : rawRatWidth state.acc ≤ 1 + k * (B + 1) := by
-        simpa only [state, B] using ih
+        simpa only [state, B] using! ih
       have hcoordinate : rawRatWidth
           (rawDirectedBetheObjectiveCoordinate tau A y p
             state.row state.column) ≤ B := by
-        simpa only [B] using
+        simpa only [B] using!
           rawDirectedBetheObjectiveCoordinate_width_le_word_budget
             tau A y p state.row state.column
       have hstep := directedObjectiveSumSemanticStep_acc_width
@@ -1962,7 +1962,7 @@ theorem directedObjectiveSumSemanticStateAt_acc_width {m : ℕ}
       change rawRatWidth
           (directedObjectiveSumSemanticStep tau A y p state).acc ≤
         1 + (k + 1) * (B + 1)
-      simpa only [Nat.succ_eq_add_one] using hstep.trans (by
+      simpa only [Nat.succ_eq_add_one] using! hstep.trans (by
         ring_nf
         omega)
 
@@ -1978,7 +1978,7 @@ theorem rawDirectedObjectiveCoordinateWordBudget_le_pow
   have hmm := Nat.mul_le_mul hmT hmT
   have hcube0 := Nat.mul_le_mul hmm hL1T
   have hcube : m * m * (L + 1) ≤ T ^ 3 := by
-    simpa [pow_succ, mul_assoc] using hcube0
+    simpa [pow_succ, mul_assoc] using! hcube0
   have haff : rawBetheAffineEntryWidthBudget m L ≤ 2 * T ^ 3 := by
     simp only [rawBetheAffineEntryWidthBudget]
     nlinarith [sq_nonneg T]
@@ -2097,17 +2097,17 @@ theorem machineDirectedObjectiveSumAccumulatorBound_dominates_next {m : ℕ}
   have hworkSquare := Nat.mul_le_mul hm1T hm1T
   have hkT : k + 1 ≤ T ^ 2 := by
     have hk' : k + 1 ≤ (m + 1) * (m + 1) := by omega
-    exact hk'.trans (by simpa only [pow_two] using hworkSquare)
+    exact hk'.trans (by simpa only [pow_two] using! hworkSquare)
   have hB : B ≤ T ^ 20 := by
-    simpa only [B, T] using
+    simpa only [B, T] using!
       rawDirectedObjectiveCoordinateWordBudget_le_pow hmL
   have hacc : rawRatWidth state.acc ≤ 1 + k * (B + 1) := by
-    simpa only [state, B, L, word] using
+    simpa only [state, B, L, word] using!
       directedObjectiveSumSemanticStateAt_acc_width tau A y p k
   have hcoordinate : rawRatWidth
       (rawDirectedBetheObjectiveCoordinate tau A y p
         state.row state.column) ≤ B := by
-    simpa only [state, B, L, word] using
+    simpa only [state, B, L, word] using!
       rawDirectedBetheObjectiveCoordinate_width_le_word_budget
         tau A y p state.row state.column
   have hadd := rawRatWidth_add_le state.acc
@@ -2166,7 +2166,7 @@ theorem machineDirectedObjectiveSumAccumulatorBound_dominates_next {m : ℕ}
   rw [machineDirectedObjectiveSumAccumulatorBound,
     machineIteratedBinaryWidth_length]
   exact hcodePower.trans (by
-    simpa only [T, L, word] using
+    simpa only [T, L, word] using!
       certificateExpGuardWidth_pow_lower 5
         (machineDirectedObjectiveSumCanonicalWord tau A y p).length)
 
@@ -2195,7 +2195,7 @@ theorem machineDirectedObjectiveSumIterate_semanticCode_of_large {m : ℕ}
         (directedObjectiveSumSemanticStateAt tau A y p k) hbound
         (hlarge k hklt)
       simpa only [directedObjectiveSumSemanticStateAt,
-        Function.iterate_succ_apply'] using hstep
+        Function.iterate_succ_apply'] using! hstep
 
 theorem machineDirectedObjectiveSumFinalState_encode_of_large {m : ℕ}
     (tau : ℚ) (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
@@ -2223,7 +2223,7 @@ theorem machineDirectedObjectiveSumFinalState_encode_of_large {m : ℕ}
     (machineDirectedObjectiveSumDimension_le_accumulatorBound tau A y p)
     hlarge ((m + 1) * (m + 1)) (by omega)
   simpa only [directedObjectiveSumSemanticStateAt,
-    finalDirectedObjectiveSumSemanticState] using hiterate
+    finalDirectedObjectiveSumSemanticState] using! hiterate
 
 def rawDirectedNegativeObjectiveSum {m : ℕ}
     (tau : ℚ) (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
@@ -2313,7 +2313,7 @@ theorem directedNegativeObjectivePrefix_succ_of_ordinal {m k : ℕ}
     · intro hmem
       rcases hmem with hij | hprior
       · subst ij
-        simpa only [Prod.fst, Prod.snd, hordinal] using Nat.lt_succ_self k
+        simpa only [Prod.fst, Prod.snd, hordinal] using! Nat.lt_succ_self k
       · omega
   rw [directedNegativeObjectivePrefix, hfilter,
     Finset.sum_insert hcurrentNotMem]

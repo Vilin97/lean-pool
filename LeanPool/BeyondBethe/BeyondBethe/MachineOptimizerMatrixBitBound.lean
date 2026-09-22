@@ -103,26 +103,26 @@ theorem machineMatrixEntryLengthRows_mem_FP :
 
 theorem machineMatrixEntryLengthCurrent_mem_FP :
     machineMatrixEntryLengthCurrent ∈ Complexity.FP := by
-  simpa only [machineMatrixEntryLengthCurrent] using
+  simpa only [machineMatrixEntryLengthCurrent] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineMatrixEntryLengthAcc_mem_FP :
     machineMatrixEntryLengthAcc ∈ Complexity.FP := by
-  simpa only [machineMatrixEntryLengthAcc] using
+  simpa only [machineMatrixEntryLengthAcc] using!
     machineCompose_mem_FP
       (machineCompose_mem_FP machinePairSecond_mem_FP machinePairSecond_mem_FP)
       machinePairFirst_mem_FP
 
 theorem machineMatrixEntryLengthBound_mem_FP :
     machineMatrixEntryLengthBound ∈ Complexity.FP := by
-  simpa only [machineMatrixEntryLengthBound] using
+  simpa only [machineMatrixEntryLengthBound] using!
     machineCompose_mem_FP
       (machineCompose_mem_FP machinePairSecond_mem_FP machinePairSecond_mem_FP)
       machinePairSecond_mem_FP
 
 theorem machineMatrixEntryLengthEntry_mem_FP :
     machineMatrixEntryLengthEntry ∈ Complexity.FP := by
-  simpa only [machineMatrixEntryLengthEntry] using
+  simpa only [machineMatrixEntryLengthEntry] using!
     machineCompose_mem_FP machineMatrixEntryLengthCurrent_mem_FP
       machineListHead_mem_FP
 
@@ -134,7 +134,7 @@ theorem machineMatrixEntryLengthCandidate_mem_FP :
 
 theorem machineMatrixEntryLengthNextAcc_mem_FP :
     machineMatrixEntryLengthNextAcc ∈ Complexity.FP := by
-  simpa only [machineMatrixEntryLengthNextAcc] using
+  simpa only [machineMatrixEntryLengthNextAcc] using!
     machineTake_mem_FP machineMatrixEntryLengthBound_mem_FP
       machineMatrixEntryLengthCandidate_mem_FP
 
@@ -177,7 +177,7 @@ theorem machineMatrixEntryLengthInputBound_mem_FP :
   have h16 := machineAppend_mem_FP h8 h8
   have h32 := machineAppend_mem_FP h16 h16
   have h64 := machineAppend_mem_FP h32 h32
-  simpa only [machineMatrixEntryLengthInputBound] using
+  simpa only [machineMatrixEntryLengthInputBound] using!
     machineAppend_mem_FP
       (machineConst_mem_FP (List.replicate 8 false)) h64
 
@@ -242,7 +242,7 @@ theorem machineMatrixEntryLengthInit_bound (word : List Bool) :
     machineMatrixEntryLengthCurrent_pack, machineMatrixEntryLengthAcc_pack,
     machineMatrixEntryLengthBound_pack]
   refine ⟨trivial, ?_, by simp, ?_, trivial⟩
-  · simpa only [machineMatrixRowsWord] using machinePairSecond_length_le word
+  · simpa only [machineMatrixRowsWord] using! machinePairSecond_length_le word
   · simp only [machineMatrixEntryLengthInputBound_length,
       List.length_singleton]
     omega
@@ -324,7 +324,7 @@ theorem machineMatrixEntryLengthFinalState_mem_FP :
 
 theorem machineMatrixEntryBitBoundRuler_mem_FP :
     machineMatrixEntryBitBoundRuler ∈ Complexity.FP := by
-  simpa only [machineMatrixEntryBitBoundRuler] using
+  simpa only [machineMatrixEntryBitBoundRuler] using!
     machineCompose_mem_FP machineMatrixEntryLengthFinalState_mem_FP
       machineMatrixEntryLengthAcc_mem_FP
 
@@ -368,15 +368,15 @@ theorem matrixEntryLengthSemStep_invariant {L : ℕ}
   cases current with
   | cons q qs =>
       simpa [MatrixEntryLengthSemInvariant, matrixEntryLengthSemStep,
-        matrixEntryLengthListCost, Nat.add_assoc] using hs
+        matrixEntryLengthListCost, Nat.add_assoc] using! hs
   | nil =>
       cases rows with
       | nil => simpa [MatrixEntryLengthSemInvariant,
-          matrixEntryLengthSemStep] using hs
+          matrixEntryLengthSemStep] using! hs
       | cons row rows =>
           simpa [MatrixEntryLengthSemInvariant, matrixEntryLengthSemStep,
             matrixEntryLengthListCost, matrixEntryLengthRowsCost,
-            Nat.add_assoc] using hs
+            Nat.add_assoc] using! hs
 
 theorem machineMatrixEntryLengthStep_semantics
     (bound : List Bool) (s : MatrixEntryLengthSemState)
@@ -429,7 +429,7 @@ theorem machineMatrixEntryLengthStep_semantics
           List.replicate (encodedBitLength ℚ q) true =
         List.replicate (acc + encodedBitLength ℚ q) true by
             exact (List.replicate_add _ _ _).symm,
-        (List.take_eq_self_iff _).mpr (by simpa using hfit)]
+        (List.take_eq_self_iff _).mpr (by simpa using! hfit)]
       rfl
 
 theorem machineMatrixEntryLengthIterate_semantics
@@ -520,10 +520,10 @@ theorem machineMatrixEntryLengthFinalState_encode {n : ℕ}
         word.length := by
     calc
       _ = (machineMatrixRowsWord word).length := by
-        simpa only [word, rows] using congrArg List.length
+        simpa only [word, rows] using! congrArg List.length
           (machineMatrixRowsWord_encode A).symm
       _ ≤ word.length := by
-        simpa only [machineMatrixRowsWord] using
+        simpa only [machineMatrixRowsWord] using!
           machinePairSecond_length_le word
   have hcost : rationalMatrixEntryBitBound A ≤ bound.length := by
     by_cases hn : n = 0
@@ -535,13 +535,13 @@ theorem machineMatrixEntryLengthFinalState_encode {n : ℕ}
     · have hmachine := rationalMatrixEntryBitBound_le_machineCode
           (Nat.pos_of_ne_zero hn) A
       have hmachine' : rationalMatrixEntryBitBound A ≤ 32 * word.length := by
-        simpa only [word] using hmachine
+        simpa only [word] using! hmachine
       simp only [bound, machineMatrixEntryLengthInputBound_length]
       omega
   have hinv : MatrixEntryLengthSemInvariant bound.length s := by
     simpa only [MatrixEntryLengthSemInvariant, s,
       matrixEntryLengthListCost, List.map_nil, List.sum_nil, Nat.add_zero,
-      rows, matrixEntryLengthRowsCost_eq_matrixBound] using hcost
+      rows, matrixEntryLengthRowsCost_eq_matrixBound] using! hcost
   have hwork : matrixNonnegativeRowsWork rows ≤ word.length :=
     (binaryListCode_length_ge_work rows).trans hrowsLength
   have hsplit : word.length =

@@ -73,12 +73,12 @@ theorem machineUnaryRangeRemaining_mem_FP :
 
 theorem machineUnaryRangeAcc_mem_FP :
     machineUnaryRangeAcc ∈ Complexity.FP := by
-  simpa only [machineUnaryRangeAcc] using
+  simpa only [machineUnaryRangeAcc] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineUnaryRangeBound_mem_FP :
     machineUnaryRangeBound ∈ Complexity.FP := by
-  simpa only [machineUnaryRangeBound] using
+  simpa only [machineUnaryRangeBound] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairSecond_mem_FP
 
 theorem machineUnaryRangeCandidate_mem_FP :
@@ -89,7 +89,7 @@ theorem machineUnaryRangeCandidate_mem_FP :
 
 theorem machineUnaryRangeNextAcc_mem_FP :
     machineUnaryRangeNextAcc ∈ Complexity.FP := by
-  simpa only [machineUnaryRangeNextAcc] using
+  simpa only [machineUnaryRangeNextAcc] using!
     machineTake_mem_FP machineUnaryRangeBound_mem_FP
       machineUnaryRangeCandidate_mem_FP
 
@@ -184,7 +184,7 @@ theorem machineUnaryRangeIterate_bound (ruler : List Bool) : ∀ k,
       ((machineUnaryRangeStep)^[k] (machineUnaryRangeInit ruler)) := by
   intro k
   induction k with
-  | zero => simpa using machineUnaryRangeInit_bound ruler
+  | zero => simpa using! machineUnaryRangeInit_bound ruler
   | succ k ih =>
       rw [Function.iterate_succ_apply']
       exact machineUnaryRangeStep_bound ih
@@ -210,7 +210,7 @@ theorem machineUnaryRangeFinalState_mem_FP :
 
 theorem machineUnaryRangeCode_mem_FP :
     machineUnaryRangeCode ∈ Complexity.FP := by
-  simpa only [machineUnaryRangeCode] using
+  simpa only [machineUnaryRangeCode] using!
     machineCompose_mem_FP machineUnaryRangeFinalState_mem_FP
       machineUnaryRangeAcc_mem_FP
 
@@ -228,7 +228,7 @@ theorem finRangeUnaryCode_length_le_bound (n : ℕ) :
   have heach : ∀ i ∈ List.finRange n,
       (finUnaryCode i).length ≤ n := by
     intro i _
-    simpa [finUnaryCode] using i.isLt.le
+    simpa [finUnaryCode] using! i.isLt.le
   have hsum :
       ((List.finRange n).map fun i ↦ 2 * (finUnaryCode i).length + 2).sum ≤
         n * (2 * n + 2) := by
@@ -240,7 +240,7 @@ theorem finRangeUnaryCode_length_le_bound (n : ℕ) :
         obtain ⟨i, hi, rfl⟩ := hvalue
         have := heach i hi
         omega)
-    simpa [List.length_finRange, Nat.nsmul_eq_mul] using h
+    simpa [List.length_finRange, Nat.nsmul_eq_mul] using! h
   simp only [machineUnaryRangeInputBound, machineListUpdateInputBound,
     machineBinaryMulWidth, List.length_replicate, List.length_append]
   exact hsum.trans (by nlinarith)
@@ -293,7 +293,7 @@ theorem machineUnaryRangeSemanticState_step (n k : ℕ) (hk : k < n) :
         pair (List.replicate (n - k - 1) true)
           (binaryListCode finUnaryCode
             ((List.finRange n).drop (n - k - 1 + 1))) := by
-    simpa only [← hsub] using htake
+    simpa only [← hsub] using! htake
   have hnext : n - (k + 1) = n - k - 1 := by omega
   rw [machineUnaryRangeSemanticState, hsub, List.replicate_succ,
     machineUnaryRangeStep]

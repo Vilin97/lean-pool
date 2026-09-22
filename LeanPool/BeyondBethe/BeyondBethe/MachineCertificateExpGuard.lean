@@ -64,7 +64,7 @@ theorem inverse_certificate_loss_le_reciprocalCeil
   have hnQ : (1 : ℚ) ≤ n := by exact_mod_cast hn
   have hden : explicitExpEvaluationLoss ≤
       explicitExpEvaluationLoss * n := by
-    simpa only [mul_one] using mul_le_mul_of_nonneg_left hnQ hc.le
+    simpa only [mul_one] using! mul_le_mul_of_nonneg_left hnQ hc.le
   have hinv : 1 / (explicitExpEvaluationLoss * n) ≤
       1 / explicitExpEvaluationLoss :=
     one_div_le_one_div_of_le hc hden
@@ -91,9 +91,9 @@ theorem certificate_expApproxSteps_le_sourceBound_of_abs_le
     exact_mod_cast habsR
   have ht0 : 0 ≤ t := abs_nonneg q
   have hnSource : m + 2 ≤ S := by
-    simpa only [S, source] using matrix_dimension_le_code_length B
+    simpa only [S, source] using! matrix_dimension_le_code_length B
   have hBSource : rationalMatrixEntryBitBound B ≤ 32 * S := by
-    simpa only [S, source] using
+    simpa only [S, source] using!
       rationalMatrixEntryBitBound_le_machineCode (by omega) B
   have hS : 1 ≤ S := by omega
   have hK : K ≤ K₀ := by
@@ -138,7 +138,7 @@ theorem certificate_expApproxSteps_le_sourceBound_of_abs_le
   rw [RawRat.expApproxSteps, binaryRationalExpApproxSteps_eq,
     rationalExpApproxSteps, RawRat.expMagnitude_value,
     rawRatOfRat_value, hlossValue]
-  simpa only [t, K₀, S, source, explicitCertificateExpStepBound] using
+  simpa only [t, K₀, S, source, explicitCertificateExpStepBound] using!
     Nat.add_le_add_right (Nat.mul_le_mul_left 2 hceil) 1
 
 theorem optimizerCertificate_expApproxSteps_le_sourceBound
@@ -160,7 +160,7 @@ theorem optimizerCertificate_expApproxSteps_le_sourceBound
     (explicitBetheOptimizerColumnPotential (m := m + 1) B)
   have habsR := explicitOptimizerCertificateLog_abs_le m B hBpos hBupper
   exact certificate_expApproxSteps_le_sourceBound_of_abs_le m B q
-    (by simpa only [q] using habsR)
+    (by simpa only [q] using! habsR)
 
 def machineIteratedBinaryWidth : ℕ → List Bool → List Bool
   | 0, word => word
@@ -173,9 +173,9 @@ def certificateExpGuardWidth : ℕ → ℕ → ℕ
 theorem machineIteratedBinaryWidth_mem_FP (k : ℕ) :
     machineIteratedBinaryWidth k ∈ Complexity.FP := by
   induction k with
-  | zero => simpa only [machineIteratedBinaryWidth] using id_mem_FP
+  | zero => simpa only [machineIteratedBinaryWidth] using! id_mem_FP
   | succ k ih =>
-      simpa only [machineIteratedBinaryWidth] using
+      simpa only [machineIteratedBinaryWidth] using!
         machineCompose_mem_FP ih machineBinaryMulWidth_mem_FP
 
 @[simp] theorem machineIteratedBinaryWidth_length (k : ℕ)
@@ -220,7 +220,7 @@ theorem explicitCertificateExpCoefficient_le :
     apply rationalCeilNat_le_of_le_nat
     rw [explicitExpEvaluationLoss, explicitCertifiedEpsilon,
       explicitCertifiedEpsilon_eq]
-      norm_num [explicitXi, explicitDelta, explicitEta, explicitRowRatio]
+    norm_num [explicitXi, explicitDelta, explicitEta, explicitRowRatio]
   rw [explicitCertificateExpCoefficient]
   calc
     2312 * explicitExpReciprocalCeil + 69 ≤
@@ -254,14 +254,14 @@ theorem explicitCertificateExpStepBound_le_guardWidth
         Nat.mul_le_mul hpow60 hpow4
       _ = (S + 16) ^ 64 := by rw [← pow_add]
   exact hstepCoeff.trans <| hguardPolynomial.trans <|
-    (by simpa using certificateExpGuardWidth_pow_lower 5 S)
+    (by simpa using! certificateExpGuardWidth_pow_lower 5 S)
 
 def machineOptimizerCertificateExpGuard (word : List Bool) : List Bool :=
   machineIteratedBinaryWidth 6 (machineCertificateSourceWord word)
 
 theorem machineOptimizerCertificateExpGuard_mem_FP :
     machineOptimizerCertificateExpGuard ∈ Complexity.FP := by
-  simpa only [machineOptimizerCertificateExpGuard] using
+  simpa only [machineOptimizerCertificateExpGuard] using!
     machineCompose_mem_FP machineCertificateSourceWord_mem_FP
       (machineIteratedBinaryWidth_mem_FP 6)
 
@@ -286,7 +286,7 @@ theorem machineOptimizerCertificateExpGuard_fits
   exact (optimizerCertificate_expApproxSteps_le_sourceBound m B hBpos hBupper).trans
     (by simpa only [machineOptimizerCertificateExpGuard,
       machineCertificateSourceWord_pair,
-      machineIteratedBinaryWidth_length, source] using
+      machineIteratedBinaryWidth_length, source] using!
         explicitCertificateExpStepBound_le_guardWidth hsource)
 
 theorem machineOptimizerCertificateExpGuard_fits_onPositiveNormalized :

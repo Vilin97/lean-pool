@@ -80,22 +80,22 @@ def machineRationalMulCode (word : List Bool) : List Bool :=
 
 theorem machineRawLeftNumeratorCode_mem_FP :
     machineRawLeftNumeratorCode ∈ Complexity.FP := by
-  simpa only [machineRawLeftNumeratorCode] using
+  simpa only [machineRawLeftNumeratorCode] using!
     machineCompose_mem_FP machinePairFirst_mem_FP machinePairFirst_mem_FP
 
 theorem machineRawLeftDenominatorBits_mem_FP :
     machineRawLeftDenominatorBits ∈ Complexity.FP := by
-  simpa only [machineRawLeftDenominatorBits] using
+  simpa only [machineRawLeftDenominatorBits] using!
     machineCompose_mem_FP machinePairFirst_mem_FP machinePairSecond_mem_FP
 
 theorem machineRawRightNumeratorCode_mem_FP :
     machineRawRightNumeratorCode ∈ Complexity.FP := by
-  simpa only [machineRawRightNumeratorCode] using
+  simpa only [machineRawRightNumeratorCode] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineRawRightDenominatorBits_mem_FP :
     machineRawRightDenominatorBits ∈ Complexity.FP := by
-  simpa only [machineRawRightDenominatorBits] using
+  simpa only [machineRawRightDenominatorBits] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairSecond_mem_FP
 
 theorem machineNaturalIntegerCode_mem_FP :
@@ -107,7 +107,7 @@ theorem machineRawAddLeftScaledNumerator_mem_FP :
   have hden := machineCompose_mem_FP
     machineRawRightDenominatorBits_mem_FP machineNaturalIntegerCode_mem_FP
   have hpair := machinePair_mem_FP machineRawLeftNumeratorCode_mem_FP hden
-  simpa only [machineRawAddLeftScaledNumerator] using
+  simpa only [machineRawAddLeftScaledNumerator] using!
     machineCompose_mem_FP hpair machineIntegerMulCode_mem_FP
 
 theorem machineRawAddRightScaledNumerator_mem_FP :
@@ -115,7 +115,7 @@ theorem machineRawAddRightScaledNumerator_mem_FP :
   have hden := machineCompose_mem_FP
     machineRawLeftDenominatorBits_mem_FP machineNaturalIntegerCode_mem_FP
   have hpair := machinePair_mem_FP machineRawRightNumeratorCode_mem_FP hden
-  simpa only [machineRawAddRightScaledNumerator] using
+  simpa only [machineRawAddRightScaledNumerator] using!
     machineCompose_mem_FP hpair machineIntegerMulCode_mem_FP
 
 theorem machineRawAddNumeratorCode_mem_FP :
@@ -123,21 +123,21 @@ theorem machineRawAddNumeratorCode_mem_FP :
   have hpair := machinePair_mem_FP
     machineRawAddLeftScaledNumerator_mem_FP
     machineRawAddRightScaledNumerator_mem_FP
-  simpa only [machineRawAddNumeratorCode] using
+  simpa only [machineRawAddNumeratorCode] using!
     machineCompose_mem_FP hpair machineIntegerAddCode_mem_FP
 
 theorem machineRawProductNumeratorCode_mem_FP :
     machineRawProductNumeratorCode ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineRawLeftNumeratorCode_mem_FP
     machineRawRightNumeratorCode_mem_FP
-  simpa only [machineRawProductNumeratorCode] using
+  simpa only [machineRawProductNumeratorCode] using!
     machineCompose_mem_FP hpair machineIntegerMulCode_mem_FP
 
 theorem machineRawProductDenominatorBits_mem_FP :
     machineRawProductDenominatorBits ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineRawLeftDenominatorBits_mem_FP
     machineRawRightDenominatorBits_mem_FP
-  simpa only [machineRawProductDenominatorBits] using
+  simpa only [machineRawProductDenominatorBits] using!
     machineCompose_mem_FP hpair machineBinaryMulBits_mem_FP
 
 theorem machineRawRatAddCode_mem_FP : machineRawRatAddCode ∈ Complexity.FP := by
@@ -149,12 +149,12 @@ theorem machineRawRatMulCode_mem_FP : machineRawRatMulCode ∈ Complexity.FP := 
     machineRawProductDenominatorBits_mem_FP
 
 theorem machineRationalAddCode_mem_FP : machineRationalAddCode ∈ Complexity.FP := by
-  simpa only [machineRationalAddCode] using
+  simpa only [machineRationalAddCode] using!
     machineCompose_mem_FP machineRawRatAddCode_mem_FP
       machineNormalizeRawRatBinaryCode_mem_FP
 
 theorem machineRationalMulCode_mem_FP : machineRationalMulCode ∈ Complexity.FP := by
-  simpa only [machineRationalMulCode] using
+  simpa only [machineRationalMulCode] using!
     machineCompose_mem_FP machineRawRatMulCode_mem_FP
       machineNormalizeRawRatBinaryCode_mem_FP
 

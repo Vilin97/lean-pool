@@ -125,7 +125,7 @@ theorem machineEllipsoidDimensionRawCode_mem_FP :
 
 theorem machineEllipsoidDimensionSquareRawCode_mem_FP :
     machineEllipsoidDimensionSquareRawCode ∈ FP := by
-  simpa only [machineEllipsoidDimensionSquareRawCode] using
+  simpa only [machineEllipsoidDimensionSquareRawCode] using!
     machineCompose_mem_FP
       (machinePair_mem_FP machineEllipsoidDimensionRawCode_mem_FP
         machineEllipsoidDimensionRawCode_mem_FP)
@@ -133,7 +133,7 @@ theorem machineEllipsoidDimensionSquareRawCode_mem_FP :
 
 theorem machineEllipsoidFourDimensionSquareRawCode_mem_FP :
     machineEllipsoidFourDimensionSquareRawCode ∈ FP := by
-  simpa only [machineEllipsoidFourDimensionSquareRawCode] using
+  simpa only [machineEllipsoidFourDimensionSquareRawCode] using!
     machineCompose_mem_FP
       (machinePair_mem_FP
         (machineConst_mem_FP (rawRatBinaryCode rawEllipsoidFour))
@@ -142,7 +142,7 @@ theorem machineEllipsoidFourDimensionSquareRawCode_mem_FP :
 
 theorem machineEllipsoidAlphaRawCode_mem_FP :
     machineEllipsoidAlphaRawCode ∈ FP := by
-  simpa only [machineEllipsoidAlphaRawCode] using
+  simpa only [machineEllipsoidAlphaRawCode] using!
     machineCompose_mem_FP
       (machinePair_mem_FP
         (machineConst_mem_FP (rawRatBinaryCode rawEllipsoidOne))
@@ -151,7 +151,7 @@ theorem machineEllipsoidAlphaRawCode_mem_FP :
 
 theorem machineEllipsoidAlphaSquareRawCode_mem_FP :
     machineEllipsoidAlphaSquareRawCode ∈ FP := by
-  simpa only [machineEllipsoidAlphaSquareRawCode] using
+  simpa only [machineEllipsoidAlphaSquareRawCode] using!
     machineCompose_mem_FP
       (machinePair_mem_FP machineEllipsoidAlphaRawCode_mem_FP
         machineEllipsoidAlphaRawCode_mem_FP)
@@ -159,7 +159,7 @@ theorem machineEllipsoidAlphaSquareRawCode_mem_FP :
 
 theorem machineEllipsoidTwiceAlphaSquareRawCode_mem_FP :
     machineEllipsoidTwiceAlphaSquareRawCode ∈ FP := by
-  simpa only [machineEllipsoidTwiceAlphaSquareRawCode] using
+  simpa only [machineEllipsoidTwiceAlphaSquareRawCode] using!
     machineCompose_mem_FP
       (machinePair_mem_FP
         (machineConst_mem_FP (rawRatBinaryCode rawEllipsoidTwo))
@@ -168,7 +168,7 @@ theorem machineEllipsoidTwiceAlphaSquareRawCode_mem_FP :
 
 theorem machineEllipsoidPerpScaleRawCode_mem_FP :
     machineEllipsoidPerpScaleRawCode ∈ FP := by
-  simpa only [machineEllipsoidPerpScaleRawCode] using
+  simpa only [machineEllipsoidPerpScaleRawCode] using!
     machineCompose_mem_FP
       (machinePair_mem_FP
         (machineConst_mem_FP (rawRatBinaryCode rawEllipsoidOne))
@@ -177,7 +177,7 @@ theorem machineEllipsoidPerpScaleRawCode_mem_FP :
 
 theorem machineEllipsoidAlphaOverDimensionRawCode_mem_FP :
     machineEllipsoidAlphaOverDimensionRawCode ∈ FP := by
-  simpa only [machineEllipsoidAlphaOverDimensionRawCode] using
+  simpa only [machineEllipsoidAlphaOverDimensionRawCode] using!
     machineCompose_mem_FP
       (machinePair_mem_FP machineEllipsoidAlphaRawCode_mem_FP
         machineEllipsoidDimensionRawCode_mem_FP)
@@ -188,7 +188,7 @@ theorem machineEllipsoidParallelScaleRawCode_mem_FP :
   have hneg := machineCompose_mem_FP
     machineEllipsoidAlphaOverDimensionRawCode_mem_FP
     machineRawRatNegCode_mem_FP
-  simpa only [machineEllipsoidParallelScaleRawCode] using
+  simpa only [machineEllipsoidParallelScaleRawCode] using!
     machineCompose_mem_FP
       (machinePair_mem_FP
         (machineConst_mem_FP (rawRatBinaryCode rawEllipsoidOne))
@@ -197,19 +197,19 @@ theorem machineEllipsoidParallelScaleRawCode_mem_FP :
 
 theorem machineEllipsoidAlphaEntryCode_mem_FP :
     machineEllipsoidAlphaEntryCode ∈ FP := by
-  simpa only [machineEllipsoidAlphaEntryCode] using
+  simpa only [machineEllipsoidAlphaEntryCode] using!
     machineCompose_mem_FP machineEllipsoidAlphaRawCode_mem_FP
       machineNormalizeRawRatEntryCode_mem_FP
 
 theorem machineEllipsoidPerpScaleEntryCode_mem_FP :
     machineEllipsoidPerpScaleEntryCode ∈ FP := by
-  simpa only [machineEllipsoidPerpScaleEntryCode] using
+  simpa only [machineEllipsoidPerpScaleEntryCode] using!
     machineCompose_mem_FP machineEllipsoidPerpScaleRawCode_mem_FP
       machineNormalizeRawRatEntryCode_mem_FP
 
 theorem machineEllipsoidParallelScaleEntryCode_mem_FP :
     machineEllipsoidParallelScaleEntryCode ∈ FP := by
-  simpa only [machineEllipsoidParallelScaleEntryCode] using
+  simpa only [machineEllipsoidParallelScaleEntryCode] using!
     machineCompose_mem_FP machineEllipsoidParallelScaleRawCode_mem_FP
       machineNormalizeRawRatEntryCode_mem_FP
 

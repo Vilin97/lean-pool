@@ -64,7 +64,7 @@ theorem machineFalseVectorIterate_length_le_width
 
 theorem machineFalseVectorCode_mem_FP :
     machineFalseVectorCode ∈ Complexity.FP := by
-  simpa only [machineFalseVectorCode] using
+  simpa only [machineFalseVectorCode] using!
     Cobham.iterate_mem_FP machineFalseVectorStep_mem_FP
       (machineConst_mem_FP []) id_mem_FP machineFalseVectorWidth_mem_FP
       machineFalseVectorIterate_length_le_width
@@ -147,12 +147,12 @@ theorem machineRepeatedRowMatrixStateRow_mem_FP :
 
 theorem machineRepeatedRowMatrixStateAcc_mem_FP :
     machineRepeatedRowMatrixStateAcc ∈ Complexity.FP := by
-  simpa only [machineRepeatedRowMatrixStateAcc] using
+  simpa only [machineRepeatedRowMatrixStateAcc] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineRepeatedRowMatrixStateBound_mem_FP :
     machineRepeatedRowMatrixStateBound ∈ Complexity.FP := by
-  simpa only [machineRepeatedRowMatrixStateBound] using
+  simpa only [machineRepeatedRowMatrixStateBound] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairSecond_mem_FP
 
 theorem machineRepeatedRowMatrixCandidate_mem_FP :
@@ -162,7 +162,7 @@ theorem machineRepeatedRowMatrixCandidate_mem_FP :
 
 theorem machineRepeatedRowMatrixNextAcc_mem_FP :
     machineRepeatedRowMatrixNextAcc ∈ Complexity.FP := by
-  simpa only [machineRepeatedRowMatrixNextAcc] using
+  simpa only [machineRepeatedRowMatrixNextAcc] using!
     machineTake_mem_FP machineRepeatedRowMatrixStateBound_mem_FP
       machineRepeatedRowMatrixCandidate_mem_FP
 
@@ -276,7 +276,7 @@ theorem machineRepeatedRowMatrixFinalState_mem_FP :
 
 theorem machineRepeatedRowMatrixCode_mem_FP :
     machineRepeatedRowMatrixCode ∈ Complexity.FP := by
-  simpa only [machineRepeatedRowMatrixCode] using
+  simpa only [machineRepeatedRowMatrixCode] using!
     machineCompose_mem_FP machineRepeatedRowMatrixFinalState_mem_FP
       machineRepeatedRowMatrixStateAcc_mem_FP
 
@@ -324,7 +324,7 @@ theorem machineFalseSquareBuilderStep_semantics
       List.length_replicate, List.length_append]
     have hrowCode :
         (boolVectorCode (List.replicate n false)).length = 4 * n := by
-      simpa only [row] using hrowLength
+      simpa only [row] using! hrowLength
     rw [hrowCode]
     nlinarith
   have htake :
@@ -383,7 +383,7 @@ theorem machineFalseSquareMatrixCode_mem_FP :
   have hruler := machineMatrixDimensionUnary_mem_FP
   have hrow := machineCompose_mem_FP hruler machineFalseVectorCode_mem_FP
   have hpayload := machinePair_mem_FP hruler hrow
-  simpa only [machineFalseSquareMatrixCode] using
+  simpa only [machineFalseSquareMatrixCode] using!
     machineCompose_mem_FP hpayload machineRepeatedRowMatrixCode_mem_FP
 
 @[simp] theorem machineFalseSquareMatrixCode_encode {n : ℕ}

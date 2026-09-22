@@ -49,23 +49,23 @@ def machineIntegerLeCode (word : List Bool) : List Bool :=
 
 theorem machineIntegerLeftSign_mem_FP :
     machineIntegerLeftSign ∈ Complexity.FP := by
-  simpa only [machineIntegerLeftSign] using
+  simpa only [machineIntegerLeftSign] using!
     machineCompose_mem_FP machinePairFirst_mem_FP machineHeadBit_mem_FP
 
 theorem machineIntegerRightSign_mem_FP :
     machineIntegerRightSign ∈ Complexity.FP := by
-  simpa only [machineIntegerRightSign] using
+  simpa only [machineIntegerRightSign] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machineHeadBit_mem_FP
 
 theorem machineIntegerLeftAbsBits_mem_FP :
     machineIntegerLeftAbsBits ∈ Complexity.FP := by
-  simpa only [machineIntegerLeftAbsBits] using
+  simpa only [machineIntegerLeftAbsBits] using!
     machineCompose_mem_FP machinePairFirst_mem_FP
       machineIntegerNatAbsBits_mem_FP
 
 theorem machineIntegerRightAbsBits_mem_FP :
     machineIntegerRightAbsBits ∈ Complexity.FP := by
-  simpa only [machineIntegerRightAbsBits] using
+  simpa only [machineIntegerRightAbsBits] using!
     machineCompose_mem_FP machinePairSecond_mem_FP
       machineIntegerNatAbsBits_mem_FP
 
@@ -73,14 +73,14 @@ theorem machineIntegerPositiveLeBit_mem_FP :
     machineIntegerPositiveLeBit ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineIntegerLeftAbsBits_mem_FP
     machineIntegerRightAbsBits_mem_FP
-  simpa only [machineIntegerPositiveLeBit] using
+  simpa only [machineIntegerPositiveLeBit] using!
     machineCompose_mem_FP hpair machineBinaryNatLeBit_mem_FP
 
 theorem machineIntegerNegativeLeBit_mem_FP :
     machineIntegerNegativeLeBit ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineIntegerRightAbsBits_mem_FP
     machineIntegerLeftAbsBits_mem_FP
-  simpa only [machineIntegerNegativeLeBit] using
+  simpa only [machineIntegerNegativeLeBit] using!
     machineCompose_mem_FP hpair machineBinaryNatLeBit_mem_FP
 
 theorem machineIntegerLeCode_mem_FP : machineIntegerLeCode ∈ Complexity.FP := by

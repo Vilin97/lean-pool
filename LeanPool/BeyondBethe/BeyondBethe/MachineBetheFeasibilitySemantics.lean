@@ -478,7 +478,7 @@ theorem machineBetheFeasibilityIterateResult_encode {m : ℕ}
             tau A oraclePrecision delta upper) iterations current) := by
   induction iterations generalizing current with
   | zero =>
-      simpa [runFixedPrecisionRationalFeasibility] using
+      simpa [runFixedPrecisionRationalFeasibility] using!
         machineBetheFeasibilityStateResult_exhausted_encode tau A
           oraclePrecision delta upper roundingPrecision budget stateBound
           initial current

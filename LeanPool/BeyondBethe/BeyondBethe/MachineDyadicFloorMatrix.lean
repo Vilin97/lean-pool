@@ -116,13 +116,13 @@ theorem dyadicFloorMatrix_code_length_le_bound {d : ℕ}
         List.length_replicate]
       omega
     simpa only [rationalSquareMatrixRowsCode, rationalMatrixRows,
-      List.length_ofFn] using hrows.trans hmatrix
+      List.length_ofFn] using! hrows.trans hmatrix
   have hn2 : 2 ≤ n := by
     simp only [n, word, dyadicFloorMatrixCanonicalWord, pair_length,
       List.length_replicate]
     omega
   have hcubic := dyadicFloorMatrix_code_length_le_cubic p A
-  have hd' : d ≤ n := by simpa only [n] using hd
+  have hd' : d ≤ n := by simpa only [n] using! hd
   have hdd : d * d ≤ n * n := Nat.mul_le_mul hd' hd'
   have hddn : (d * d) * n ≤ (n * n) * n :=
     Nat.mul_le_mul hdd le_rfl
@@ -134,7 +134,7 @@ theorem dyadicFloorMatrix_code_length_le_bound {d : ℕ}
       (rationalSquareMatrixRowsCode (dyadicFloorMatrix p A)).length ≤
         1000 * n ^ 3 := by
     apply hcubic.trans
-    simpa only [n, word] using hpoly
+    simpa only [n, word] using! hpoly
   have hnx : n ≤ x := by simp [x]
   have hxpos : 0 < x := by omega
   have h1000 : 1000 ≤ x ^ 3 := by
@@ -143,18 +143,18 @@ theorem dyadicFloorMatrix_code_length_le_bound {d : ℕ}
   have hnx3 : n ^ 3 ≤ x ^ 3 := Nat.pow_le_pow_left hnx 3
   have hto6 : 1000 * n ^ 3 ≤ x ^ 6 := by
     have h := Nat.mul_le_mul h1000 hnx3
-    simpa only [← pow_add] using h
+    simpa only [← pow_add] using! h
   have hto8 : x ^ 6 ≤ x ^ 8 :=
     Nat.pow_le_pow_right hxpos (by omega)
   have hxy : x ^ 2 ≤ y := by simp [y]
   have hx4y2 : x ^ 4 ≤ y ^ 2 := by
     have h := Nat.pow_le_pow_left hxy 2
-    simpa only [← pow_mul] using h
+    simpa only [← pow_mul] using! h
   have hyz : y ^ 2 ≤ z := by simp [z]
   have hx4z : x ^ 4 ≤ z := hx4y2.trans hyz
   have hx8z2 : x ^ 8 ≤ z ^ 2 := by
     have h := Nat.pow_le_pow_left hx4z 2
-    simpa only [← pow_mul] using h
+    simpa only [← pow_mul] using! h
   apply hout.trans
   apply hto6.trans
   apply hto8.trans
@@ -231,7 +231,7 @@ theorem machineDyadicFloorMatrixCurrentRow_mem_FP :
     machineRationalTransposeMulVectorRemaining_mem_FP machineListHead_mem_FP
   have hinput := machinePair_mem_FP
     machineRationalTransposeMulVectorStatePayload_mem_FP hhead
-  simpa only [machineDyadicFloorMatrixCurrentRow] using
+  simpa only [machineDyadicFloorMatrixCurrentRow] using!
     machineCompose_mem_FP hinput machineDyadicFloorVectorCode_mem_FP
 
 theorem machineDyadicFloorMatrixCandidate_mem_FP :
@@ -241,7 +241,7 @@ theorem machineDyadicFloorMatrixCandidate_mem_FP :
 
 theorem machineDyadicFloorMatrixNextAccumulator_mem_FP :
     machineDyadicFloorMatrixNextAccumulator ∈ FP := by
-  simpa only [machineDyadicFloorMatrixNextAccumulator] using
+  simpa only [machineDyadicFloorMatrixNextAccumulator] using!
     machineTake_mem_FP machineRationalTransposeMulVectorBound_mem_FP
       machineDyadicFloorMatrixCandidate_mem_FP
 
@@ -348,13 +348,13 @@ theorem machineDyadicFloorMatrixFinalState_mem_FP :
 
 theorem machineDyadicFloorMatrixReversedCode_mem_FP :
     machineDyadicFloorMatrixReversedCode ∈ FP := by
-  simpa only [machineDyadicFloorMatrixReversedCode] using
+  simpa only [machineDyadicFloorMatrixReversedCode] using!
     machineCompose_mem_FP machineDyadicFloorMatrixFinalState_mem_FP
       machineRationalTransposeMulVectorAccumulator_mem_FP
 
 theorem machineDyadicFloorMatrixCode_mem_FP :
     machineDyadicFloorMatrixCode ∈ FP := by
-  simpa only [machineDyadicFloorMatrixCode] using
+  simpa only [machineDyadicFloorMatrixCode] using!
     machineCompose_mem_FP machineDyadicFloorMatrixReversedCode_mem_FP
       machineListReverse_mem_FP
 
@@ -394,7 +394,7 @@ theorem dyadicFloorMatrixRowsPrefix_succ {d : ℕ}
   simp only [dyadicFloorMatrixRowsPrefix, List.map_take]
   have hkm : k < (rationalMatrixRows A).length := by
     simp [rationalMatrixRows, hk]
-  simpa [rationalMatrixRows, List.map_ofFn] using
+  simpa [rationalMatrixRows, List.map_ofFn] using!
     congrArg (List.map (List.map (dyadicFloor p)))
       (List.take_concat_get hkm).symm
 
@@ -441,7 +441,7 @@ theorem machineDyadicFloorMatrixStep_semantics {d : ℕ}
         (binaryListCode (binaryListCode rationalEntryBinaryCode)
           (dyadicFloorMatrixRowsPrefix p A k).reverse)).length ≤
         (machineDyadicFloorMatrixInputBound word).length := by
-    simpa only [hreverse, binaryListCode] using hcand
+    simpa only [hreverse, binaryListCode] using! hcand
   have hnonempty :
       binaryListCode (binaryListCode rationalEntryBinaryCode)
         ((rationalMatrixRows A).drop k) ≠ [] := by
@@ -535,7 +535,7 @@ theorem machineDyadicFloorMatrixReversedCode_encode {d : ℕ}
         List.length_replicate]
       omega
     simpa only [rationalSquareMatrixRowsCode, rationalMatrixRows,
-      List.length_ofFn] using hrows.trans hmatrix
+      List.length_ofFn] using! hrows.trans hmatrix
   have hsplit : word.length = (word.length - d) + d := by omega
   change machineDyadicFloorMatrixReversedCode word = _
   rw [machineDyadicFloorMatrixReversedCode,

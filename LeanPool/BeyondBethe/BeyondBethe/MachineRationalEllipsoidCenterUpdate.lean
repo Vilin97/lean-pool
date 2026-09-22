@@ -90,7 +90,7 @@ theorem machineRationalCenterUpdateCutWord_mem_FP :
 
 theorem machineRationalCenterUpdateDimensionBits_mem_FP :
     machineRationalCenterUpdateDimensionBits ∈ FP := by
-  simpa only [machineRationalCenterUpdateDimensionBits] using
+  simpa only [machineRationalCenterUpdateDimensionBits] using!
     machineCompose_mem_FP machineRationalCenterUpdateStateWord_mem_FP
       machineRationalEllipsoidDimensionWord_mem_FP
 
@@ -99,18 +99,18 @@ theorem machineRationalCenterUpdateDimensionUnary_mem_FP :
   have hinput := machinePair_mem_FP
     machineRationalCenterUpdateStateWord_mem_FP
     machineRationalCenterUpdateDimensionBits_mem_FP
-  simpa only [machineRationalCenterUpdateDimensionUnary] using
+  simpa only [machineRationalCenterUpdateDimensionUnary] using!
     machineCompose_mem_FP hinput machineBoundedUnary_mem_FP
 
 theorem machineRationalCenterUpdateCenterWord_mem_FP :
     machineRationalCenterUpdateCenterWord ∈ FP := by
-  simpa only [machineRationalCenterUpdateCenterWord] using
+  simpa only [machineRationalCenterUpdateCenterWord] using!
     machineCompose_mem_FP machineRationalCenterUpdateStateWord_mem_FP
       machineRationalEllipsoidCenterWord_mem_FP
 
 theorem machineRationalCenterUpdateBasisWord_mem_FP :
     machineRationalCenterUpdateBasisWord ∈ FP := by
-  simpa only [machineRationalCenterUpdateBasisWord] using
+  simpa only [machineRationalCenterUpdateBasisWord] using!
     machineCompose_mem_FP machineRationalCenterUpdateStateWord_mem_FP
       machineRationalEllipsoidBasisWord_mem_FP
 
@@ -121,12 +121,12 @@ theorem machineRationalCenterUpdatePulledBackCode_mem_FP :
     machineRationalCenterUpdateCutWord_mem_FP
   have hinput := machinePair_mem_FP
     machineRationalCenterUpdateDimensionUnary_mem_FP hpayload
-  simpa only [machineRationalCenterUpdatePulledBackCode] using
+  simpa only [machineRationalCenterUpdatePulledBackCode] using!
     machineCompose_mem_FP hinput machineRationalTransposeMulVectorCode_mem_FP
 
 theorem machineRationalCenterUpdateNormalizedCode_mem_FP :
     machineRationalCenterUpdateNormalizedCode ∈ FP := by
-  simpa only [machineRationalCenterUpdateNormalizedCode] using
+  simpa only [machineRationalCenterUpdateNormalizedCode] using!
     machineCompose_mem_FP machineRationalCenterUpdatePulledBackCode_mem_FP
       machineRationalNormalizedDirectionCode_mem_FP
 
@@ -137,7 +137,7 @@ theorem machineRationalCenterUpdateDisplacementCode_mem_FP :
     machineRationalCenterUpdateNormalizedCode_mem_FP
   have hinput := machinePair_mem_FP
     machineRationalCenterUpdateDimensionUnary_mem_FP hpayload
-  simpa only [machineRationalCenterUpdateDisplacementCode] using
+  simpa only [machineRationalCenterUpdateDisplacementCode] using!
     machineCompose_mem_FP hinput machineRationalMatrixMulVectorCode_mem_FP
 
 theorem machineRationalCenterUpdateScaledDisplacementCode_mem_FP :
@@ -147,7 +147,7 @@ theorem machineRationalCenterUpdateScaledDisplacementCode_mem_FP :
     machineEllipsoidAlphaRawCode_mem_FP
   have hinput := machinePair_mem_FP halpha
     machineRationalCenterUpdateDisplacementCode_mem_FP
-  simpa only [machineRationalCenterUpdateScaledDisplacementCode] using
+  simpa only [machineRationalCenterUpdateScaledDisplacementCode] using!
     machineCompose_mem_FP hinput machineRationalVectorScaleCode_mem_FP
 
 theorem machineRationalEllipsoidCenterUpdateCode_mem_FP :
@@ -157,7 +157,7 @@ theorem machineRationalEllipsoidCenterUpdateCode_mem_FP :
     machineRationalCenterUpdateScaledDisplacementCode_mem_FP
   have hinput := machinePair_mem_FP
     machineRationalCenterUpdateDimensionUnary_mem_FP hpayload
-  simpa only [machineRationalEllipsoidCenterUpdateCode] using
+  simpa only [machineRationalEllipsoidCenterUpdateCode] using!
     machineCompose_mem_FP hinput machineRationalVectorSubCode_mem_FP
 
 /-! ## Exact semantics -/
@@ -176,10 +176,10 @@ theorem rationalEllipsoid_dimension_le_state_code_length {d : ℕ}
     have hsecond : payload.length ≤
         (rationalEllipsoidStateBinaryCode E).length := by
       simpa only [payload, rationalEllipsoidStateBinaryCode,
-        machinePairSecond_pair] using machinePairSecond_length_le
+        machinePairSecond_pair] using! machinePairSecond_length_le
           (rationalEllipsoidStateBinaryCode E)
-    simpa only [payload, machinePairFirst_pair] using hfirst.trans hsecond
-  simpa only [rationalFiniteVectorCode, List.length_ofFn] using
+    simpa only [payload, machinePairFirst_pair] using! hfirst.trans hsecond
+  simpa only [rationalFiniteVectorCode, List.length_ofFn] using!
     hlist.trans hcenter
 
 @[simp] theorem machineRationalCenterUpdateDimensionUnary_encode {d : ℕ}

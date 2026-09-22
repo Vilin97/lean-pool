@@ -56,7 +56,7 @@ theorem machineBetheHeightNormalBaseCode_mem_FP :
     machineBetheHeightNormalBaseCode ∈ FP := by
   have hgenerator := machineUnaryGridGeneratorCode_mem_FP
     machineBetheHeightNormalEntryCode_mem_FP
-  simpa only [machineBetheHeightNormalBaseCode] using
+  simpa only [machineBetheHeightNormalBaseCode] using!
     machineCompose_mem_FP machineBetheHeightNormalGeneratorInput_mem_FP
       hgenerator
 
@@ -67,7 +67,7 @@ theorem machineBetheHeightNormalSnocInput_mem_FP :
 
 theorem machineBetheHeightNormalVectorCode_mem_FP :
     machineBetheHeightNormalVectorCode ∈ FP := by
-  simpa only [machineBetheHeightNormalVectorCode] using
+  simpa only [machineBetheHeightNormalVectorCode] using!
     machineCompose_mem_FP machineBetheHeightNormalSnocInput_mem_FP
       machineBinaryListSnoc_mem_FP
 
@@ -116,7 +116,7 @@ theorem betheHeightNormal_base_code_length_le_bound (m : ℕ) :
   rw [machineBetheHeightNormalBound,
     machineIteratedBinaryWidth_length]
   exact hcode.trans (by
-    simpa only [T, L, word] using
+    simpa only [T, L, word] using!
       certificateExpGuardWidth_pow_lower 1
         (List.replicate m true).length)
 

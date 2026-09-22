@@ -49,7 +49,7 @@ theorem machineRationalVectorSubEntryCode_mem_FP :
   have hnegY := machineCompose_mem_FP hyEntry machineRawRatNegCode_mem_FP
   have haddInput := machinePair_mem_FP hxEntry hnegY
   have hadd := machineCompose_mem_FP haddInput machineRawRatAddCode_mem_FP
-  simpa only [machineRationalVectorSubEntryCode] using
+  simpa only [machineRationalVectorSubEntryCode] using!
     machineCompose_mem_FP hadd machineNormalizeRawRatEntryCode_mem_FP
 
 @[simp] theorem machineRationalVectorSubEntryCode_encode {d : ℕ}
@@ -109,8 +109,8 @@ theorem rawRationalVectorSubCoordinate_width_le {d : ℕ}
         (pair (rationalFiniteVectorCode x)
           (rationalFiniteVectorCode y)).length ≤ word.length := by
       simpa only [word, rationalVectorSubCanonicalWord,
-        machinePairSecond_pair] using machinePairSecond_length_le word
-    simpa only [machinePairFirst_pair] using hinner.trans hpayload
+        machinePairSecond_pair] using! machinePairSecond_length_le word
+    simpa only [machinePairFirst_pair] using! hinner.trans hpayload
   have hyVector : (rationalFiniteVectorCode y).length ≤ word.length := by
     have hinner := machinePairSecond_length_le
       (pair (rationalFiniteVectorCode x) (rationalFiniteVectorCode y))
@@ -118,14 +118,14 @@ theorem rawRationalVectorSubCoordinate_width_le {d : ℕ}
         (pair (rationalFiniteVectorCode x)
           (rationalFiniteVectorCode y)).length ≤ word.length := by
       simpa only [word, rationalVectorSubCanonicalWord,
-        machinePairSecond_pair] using machinePairSecond_length_le word
-    simpa only [machinePairSecond_pair] using hinner.trans hpayload
+        machinePairSecond_pair] using! machinePairSecond_length_le word
+    simpa only [machinePairSecond_pair] using! hinner.trans hpayload
   have hxWidth : rawRatWidth (rawRatOfRat (x i)) ≤ word.length := by
     have hxCode :
         (rawRatBinaryCode (rawRatOfRat (x i))).length ≤
           (rationalFiniteVectorCode x).length := by
       simpa only [rationalFiniteVectorCode,
-        rawRatBinaryCode_rawRatOfRat] using hxElem
+        rawRatBinaryCode_rawRatOfRat] using! hxElem
     exact (rawRatWidth_le_binaryCode_length _).trans
       (hxCode.trans hxVector)
   have hyWidth : rawRatWidth (rawRatOfRat (y i)) ≤ word.length := by
@@ -133,7 +133,7 @@ theorem rawRationalVectorSubCoordinate_width_le {d : ℕ}
         (rawRatBinaryCode (rawRatOfRat (y i))).length ≤
           (rationalFiniteVectorCode y).length := by
       simpa only [rationalFiniteVectorCode,
-        rawRatBinaryCode_rawRatOfRat] using hyElem
+        rawRatBinaryCode_rawRatOfRat] using! hyElem
     exact (rawRatWidth_le_binaryCode_length _).trans
       (hyCode.trans hyVector)
   change rawRatWidth ((rawRatOfRat (x i)).sub (rawRatOfRat (y i))) ≤
@@ -170,7 +170,7 @@ theorem rationalVectorSub_code_length_le_bound {d : ℕ}
   have hdim : d ≤ word.length := by
     have hfirst := machinePairFirst_length_le word
     simpa only [word, rationalVectorSubCanonicalWord,
-      machinePairFirst_pair, List.length_replicate] using hfirst
+      machinePairFirst_pair, List.length_replicate] using! hfirst
   have heach : ∀ q ∈ List.ofFn (rationalVectorSub x y),
       (rationalEntryBinaryCode q).length ≤ B := by
     intro q hq
@@ -254,7 +254,7 @@ theorem machineRationalVectorSubCurrentEntry_mem_FP :
   have hp := machinePair_mem_FP
     machineRationalTransposeMulVectorCurrentIndex_mem_FP
     machineRationalTransposeMulVectorStatePayload_mem_FP
-  simpa only [machineRationalVectorSubCurrentEntry] using
+  simpa only [machineRationalVectorSubCurrentEntry] using!
     machineCompose_mem_FP hp machineRationalVectorSubEntryCode_mem_FP
 
 theorem machineRationalVectorSubCandidate_mem_FP :
@@ -264,7 +264,7 @@ theorem machineRationalVectorSubCandidate_mem_FP :
 
 theorem machineRationalVectorSubNextAccumulator_mem_FP :
     machineRationalVectorSubNextAccumulator ∈ FP := by
-  simpa only [machineRationalVectorSubNextAccumulator] using
+  simpa only [machineRationalVectorSubNextAccumulator] using!
     machineTake_mem_FP machineRationalTransposeMulVectorBound_mem_FP
       machineRationalVectorSubCandidate_mem_FP
 
@@ -332,7 +332,7 @@ theorem machineRationalVectorSubIterate_bound
   | zero =>
       simpa only [machineRationalVectorSubInit,
         machineRationalVectorSubInputBound,
-        machineRationalTransposeMulVectorInit] using
+        machineRationalTransposeMulVectorInit] using!
           machineRationalTransposeMulVectorInit_bound word
   | succ k ih =>
       rw [Function.iterate_succ_apply']
@@ -361,13 +361,13 @@ theorem machineRationalVectorSubFinalState_mem_FP :
 
 theorem machineRationalVectorSubReversedCode_mem_FP :
     machineRationalVectorSubReversedCode ∈ FP := by
-  simpa only [machineRationalVectorSubReversedCode] using
+  simpa only [machineRationalVectorSubReversedCode] using!
     machineCompose_mem_FP machineRationalVectorSubFinalState_mem_FP
       machineRationalTransposeMulVectorAccumulator_mem_FP
 
 theorem machineRationalVectorSubCode_mem_FP :
     machineRationalVectorSubCode ∈ FP := by
-  simpa only [machineRationalVectorSubCode] using
+  simpa only [machineRationalVectorSubCode] using!
     machineCompose_mem_FP machineRationalVectorSubReversedCode_mem_FP
       machineListReverse_mem_FP
 
@@ -406,7 +406,7 @@ theorem rationalVectorSubPrefix_succ {d : ℕ}
         [rationalVectorSub x y ⟨k, hk⟩] := by
   simp only [rationalVectorSubPrefix, List.map_take]
   have hkm : k < (List.finRange d).length := by simpa
-  simpa [List.getElem_finRange] using
+  simpa [List.getElem_finRange] using!
     congrArg (List.map fun i ↦ rationalVectorSub x y i)
       (List.take_concat_get hkm).symm
 
@@ -449,7 +449,7 @@ theorem machineRationalVectorSubStep_semantics {d : ℕ}
         (binaryListCode rationalEntryBinaryCode
           (rationalVectorSubPrefix x y k).reverse)).length ≤
         (machineRationalVectorSubInputBound word).length := by
-    simpa only [hreverse, binaryListCode] using hcand
+    simpa only [hreverse, binaryListCode] using! hcand
   have hnonempty :
       binaryListCode finUnaryCode ((List.finRange d).drop k) ≠ [] := by
     rw [hdrop]
@@ -523,7 +523,7 @@ theorem machineRationalVectorSubReversedCode_encode {d : ℕ}
   have hd : d ≤ word.length := by
     have h := machinePairFirst_length_le word
     simpa only [word, rationalVectorSubCanonicalWord,
-      machinePairFirst_pair, List.length_replicate] using h
+      machinePairFirst_pair, List.length_replicate] using! h
   have hsplit : word.length = (word.length - d) + d := by omega
   change machineRationalVectorSubReversedCode word = _
   rw [machineRationalVectorSubReversedCode,

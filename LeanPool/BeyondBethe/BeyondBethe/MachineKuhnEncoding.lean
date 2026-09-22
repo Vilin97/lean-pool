@@ -40,13 +40,13 @@ def finListUnaryCode {n : ℕ} (xs : List (Fin n)) : List Bool :=
 
 @[simp] theorem seenBoolList_getElem {n : ℕ} (seen : Finset (Fin n))
     (i : ℕ) (hi : i < (seenBoolList seen).length) :
-    (seenBoolList seen)[i] = decide (⟨i, by simpa using hi⟩ ∈ seen) := by
+    (seenBoolList seen)[i] = decide (⟨i, by simpa using! hi⟩ ∈ seen) := by
   simp [seenBoolList]
 
 @[simp] theorem columnMateList_getElem {n : ℕ} (mate : ColumnMate n)
     (i : ℕ) (hi : i < (columnMateList mate).length) :
     (columnMateList mate)[i] =
-      (mate ⟨i, by simpa using hi⟩).map Fin.val := by
+      (mate ⟨i, by simpa using! hi⟩).map Fin.val := by
   simp [columnMateList]
 
 theorem seenBoolList_insert {n : ℕ} (seen : Finset (Fin n)) (col : Fin n) :
@@ -455,20 +455,20 @@ theorem machineKuhnStateControl_mem_FP :
     machineKuhnStateControl ∈ Complexity.FP := machinePairFirst_mem_FP
 theorem machineKuhnStateMatrix_mem_FP :
     machineKuhnStateMatrix ∈ Complexity.FP := by
-  simpa only [machineKuhnStateMatrix] using
+  simpa only [machineKuhnStateMatrix] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairFirst_mem_FP
 theorem machineKuhnStateDimension_mem_FP :
     machineKuhnStateDimension ∈ Complexity.FP := by
   have h := machineCompose_mem_FP machinePairSecond_mem_FP
     machinePairSecond_mem_FP
-  simpa only [machineKuhnStateDimension] using
+  simpa only [machineKuhnStateDimension] using!
     machineCompose_mem_FP h machinePairFirst_mem_FP
 theorem machineKuhnStateColumns_mem_FP :
     machineKuhnStateColumns ∈ Complexity.FP := by
   have h2 := machineCompose_mem_FP machinePairSecond_mem_FP
     machinePairSecond_mem_FP
   have h3 := machineCompose_mem_FP h2 machinePairSecond_mem_FP
-  simpa only [machineKuhnStateColumns] using
+  simpa only [machineKuhnStateColumns] using!
     machineCompose_mem_FP h3 machinePairFirst_mem_FP
 theorem machineKuhnStateFalseSeen_mem_FP :
     machineKuhnStateFalseSeen ∈ Complexity.FP := by
@@ -476,7 +476,7 @@ theorem machineKuhnStateFalseSeen_mem_FP :
     machinePairSecond_mem_FP
   have h3 := machineCompose_mem_FP h2 machinePairSecond_mem_FP
   have h4 := machineCompose_mem_FP h3 machinePairSecond_mem_FP
-  simpa only [machineKuhnStateFalseSeen] using
+  simpa only [machineKuhnStateFalseSeen] using!
     machineCompose_mem_FP h4 machinePairFirst_mem_FP
 theorem machineKuhnStateBound_mem_FP :
     machineKuhnStateBound ∈ Complexity.FP := by
@@ -484,7 +484,7 @@ theorem machineKuhnStateBound_mem_FP :
     machinePairSecond_mem_FP
   have h3 := machineCompose_mem_FP h2 machinePairSecond_mem_FP
   have h4 := machineCompose_mem_FP h3 machinePairSecond_mem_FP
-  simpa only [machineKuhnStateBound] using
+  simpa only [machineKuhnStateBound] using!
     machineCompose_mem_FP h4 machinePairSecond_mem_FP
 theorem machineKuhnFrameTag_mem_FP :
     machineKuhnFrameTag ∈ Complexity.FP := machinePairFirst_mem_FP
@@ -505,9 +505,9 @@ def machinePairSecondN (depth : ℕ) (word : List Bool) : List Bool :=
 theorem machinePairSecondN_mem_FP (depth : ℕ) :
     machinePairSecondN depth ∈ Complexity.FP := by
   induction depth with
-  | zero => simpa [machinePairSecondN] using id_mem_FP
+  | zero => simpa [machinePairSecondN] using! id_mem_FP
   | succ depth ih =>
-      simpa [machinePairSecondN, Function.iterate_succ_apply] using
+      simpa [machinePairSecondN, Function.iterate_succ_apply] using!
         machineCompose_mem_FP machinePairSecond_mem_FP ih
 
 theorem machineKuhnControlIsDoneBit_mem_FP :
@@ -515,47 +515,47 @@ theorem machineKuhnControlIsDoneBit_mem_FP :
   have htagTail := machineCompose_mem_FP
     (machineCompose_mem_FP machineKuhnControlTag_mem_FP machineTail_mem_FP)
     machineHeadBit_mem_FP
-  simpa only [machineKuhnControlIsDoneBit] using htagTail
+  simpa only [machineKuhnControlIsDoneBit] using! htagTail
 
 theorem machineKuhnCallFuel_mem_FP :
     machineKuhnCallFuel ∈ Complexity.FP := by
   have h := machineCompose_mem_FP (machinePairSecondN_mem_FP 1)
     machinePairFirst_mem_FP
   simpa [machineKuhnCallFuel, machineKuhnControlPayload,
-    machinePairSecondN, Function.iterate_succ_apply'] using h
+    machinePairSecondN, Function.iterate_succ_apply'] using! h
 
 theorem machineKuhnCallRemaining_mem_FP :
     machineKuhnCallRemaining ∈ Complexity.FP := by
   have h := machineCompose_mem_FP (machinePairSecondN_mem_FP 2)
     machinePairFirst_mem_FP
   simpa [machineKuhnCallRemaining, machineKuhnControlPayload,
-    machinePairSecondN, Function.iterate_succ_apply'] using h
+    machinePairSecondN, Function.iterate_succ_apply'] using! h
 
 theorem machineKuhnCallRow_mem_FP :
     machineKuhnCallRow ∈ Complexity.FP := by
   have h := machineCompose_mem_FP (machinePairSecondN_mem_FP 3)
     machinePairFirst_mem_FP
   simpa [machineKuhnCallRow, machineKuhnControlPayload,
-    machinePairSecondN, Function.iterate_succ_apply'] using h
+    machinePairSecondN, Function.iterate_succ_apply'] using! h
 
 theorem machineKuhnCallSeen_mem_FP :
     machineKuhnCallSeen ∈ Complexity.FP := by
   have h := machineCompose_mem_FP (machinePairSecondN_mem_FP 4)
     machinePairFirst_mem_FP
   simpa [machineKuhnCallSeen, machineKuhnControlPayload,
-    machinePairSecondN, Function.iterate_succ_apply'] using h
+    machinePairSecondN, Function.iterate_succ_apply'] using! h
 
 theorem machineKuhnCallMate_mem_FP :
     machineKuhnCallMate ∈ Complexity.FP := by
   have h := machineCompose_mem_FP (machinePairSecondN_mem_FP 5)
     machinePairFirst_mem_FP
   simpa [machineKuhnCallMate, machineKuhnControlPayload,
-    machinePairSecondN, Function.iterate_succ_apply'] using h
+    machinePairSecondN, Function.iterate_succ_apply'] using! h
 
 theorem machineKuhnCallStack_mem_FP :
     machineKuhnCallStack ∈ Complexity.FP := by
   simpa [machineKuhnCallStack, machineKuhnControlPayload,
-    machinePairSecondN, Function.iterate_succ_apply'] using
+    machinePairSecondN, Function.iterate_succ_apply'] using!
       machinePairSecondN_mem_FP 6
 
 theorem machineKuhnReturnSuccess_mem_FP :
@@ -563,26 +563,26 @@ theorem machineKuhnReturnSuccess_mem_FP :
   have h := machineCompose_mem_FP (machinePairSecondN_mem_FP 1)
     machinePairFirst_mem_FP
   simpa [machineKuhnReturnSuccess, machineKuhnControlPayload,
-    machinePairSecondN, Function.iterate_succ_apply'] using h
+    machinePairSecondN, Function.iterate_succ_apply'] using! h
 
 theorem machineKuhnReturnSeen_mem_FP :
     machineKuhnReturnSeen ∈ Complexity.FP := by
   have h := machineCompose_mem_FP (machinePairSecondN_mem_FP 2)
     machinePairFirst_mem_FP
   simpa [machineKuhnReturnSeen, machineKuhnControlPayload,
-    machinePairSecondN, Function.iterate_succ_apply'] using h
+    machinePairSecondN, Function.iterate_succ_apply'] using! h
 
 theorem machineKuhnReturnMate_mem_FP :
     machineKuhnReturnMate ∈ Complexity.FP := by
   have h := machineCompose_mem_FP (machinePairSecondN_mem_FP 3)
     machinePairFirst_mem_FP
   simpa [machineKuhnReturnMate, machineKuhnControlPayload,
-    machinePairSecondN, Function.iterate_succ_apply'] using h
+    machinePairSecondN, Function.iterate_succ_apply'] using! h
 
 theorem machineKuhnReturnStack_mem_FP :
     machineKuhnReturnStack ∈ Complexity.FP := by
   simpa [machineKuhnReturnStack, machineKuhnControlPayload,
-    machinePairSecondN, Function.iterate_succ_apply'] using
+    machinePairSecondN, Function.iterate_succ_apply'] using!
       machinePairSecondN_mem_FP 4
 
 theorem machineKuhnDoneMate_mem_FP :
@@ -593,44 +593,44 @@ theorem machineKuhnSearchFrameFuel_mem_FP :
   have h := machineCompose_mem_FP (machinePairSecondN_mem_FP 1)
     machinePairFirst_mem_FP
   simpa [machineKuhnSearchFrameFuel, machineKuhnFramePayload,
-    machinePairSecondN, Function.iterate_succ_apply'] using h
+    machinePairSecondN, Function.iterate_succ_apply'] using! h
 
 theorem machineKuhnSearchFrameRemaining_mem_FP :
     machineKuhnSearchFrameRemaining ∈ Complexity.FP := by
   have h := machineCompose_mem_FP (machinePairSecondN_mem_FP 2)
     machinePairFirst_mem_FP
   simpa [machineKuhnSearchFrameRemaining, machineKuhnFramePayload,
-    machinePairSecondN, Function.iterate_succ_apply'] using h
+    machinePairSecondN, Function.iterate_succ_apply'] using! h
 
 theorem machineKuhnSearchFrameRow_mem_FP :
     machineKuhnSearchFrameRow ∈ Complexity.FP := by
   have h := machineCompose_mem_FP (machinePairSecondN_mem_FP 3)
     machinePairFirst_mem_FP
   simpa [machineKuhnSearchFrameRow, machineKuhnFramePayload,
-    machinePairSecondN, Function.iterate_succ_apply'] using h
+    machinePairSecondN, Function.iterate_succ_apply'] using! h
 
 theorem machineKuhnSearchFrameMate_mem_FP :
     machineKuhnSearchFrameMate ∈ Complexity.FP := by
   have h := machineCompose_mem_FP (machinePairSecondN_mem_FP 4)
     machinePairFirst_mem_FP
   simpa [machineKuhnSearchFrameMate, machineKuhnFramePayload,
-    machinePairSecondN, Function.iterate_succ_apply'] using h
+    machinePairSecondN, Function.iterate_succ_apply'] using! h
 
 theorem machineKuhnSearchFrameColumn_mem_FP :
     machineKuhnSearchFrameColumn ∈ Complexity.FP := by
   simpa [machineKuhnSearchFrameColumn, machineKuhnFramePayload,
-    machinePairSecondN, Function.iterate_succ_apply'] using
+    machinePairSecondN, Function.iterate_succ_apply'] using!
       machinePairSecondN_mem_FP 5
 
 theorem machineKuhnBuildFrameRows_mem_FP :
     machineKuhnBuildFrameRows ∈ Complexity.FP := by
   have h := machineCompose_mem_FP machinePairSecond_mem_FP
     machinePairFirst_mem_FP
-  simpa [machineKuhnBuildFrameRows, machineKuhnFramePayload] using h
+  simpa [machineKuhnBuildFrameRows, machineKuhnFramePayload] using! h
 
 theorem machineKuhnBuildFrameFallback_mem_FP :
     machineKuhnBuildFrameFallback ∈ Complexity.FP := by
-  simpa [machineKuhnBuildFrameFallback, machineKuhnFramePayload] using
+  simpa [machineKuhnBuildFrameFallback, machineKuhnFramePayload] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairSecond_mem_FP
 
 end BeyondBethe

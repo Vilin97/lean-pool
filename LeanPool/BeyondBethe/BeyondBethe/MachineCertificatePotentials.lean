@@ -40,13 +40,13 @@ theorem machineOptimizerPotentialsWord_mem_FP :
 
 theorem machineOptimizerRowPotentialWord_mem_FP :
     machineOptimizerRowPotentialWord ∈ Complexity.FP := by
-  simpa only [machineOptimizerRowPotentialWord] using
+  simpa only [machineOptimizerRowPotentialWord] using!
     machineCompose_mem_FP machineOptimizerPotentialsWord_mem_FP
       machinePairFirst_mem_FP
 
 theorem machineOptimizerColumnPotentialWord_mem_FP :
     machineOptimizerColumnPotentialWord ∈ Complexity.FP := by
-  simpa only [machineOptimizerColumnPotentialWord] using
+  simpa only [machineOptimizerColumnPotentialWord] using!
     machineCompose_mem_FP machineOptimizerPotentialsWord_mem_FP
       machinePairSecond_mem_FP
 
@@ -91,13 +91,13 @@ def machineCertificatePotentialRawSumCode
 
 theorem machineCertificateRowPotentialRawSumCode_mem_FP :
     machineCertificateRowPotentialRawSumCode ∈ Complexity.FP := by
-  simpa only [machineCertificateRowPotentialRawSumCode] using
+  simpa only [machineCertificateRowPotentialRawSumCode] using!
     machineCompose_mem_FP machineOptimizerRowPotentialWord_mem_FP
       machineRationalVectorRawSumCode_mem_FP
 
 theorem machineCertificateColumnPotentialRawSumCode_mem_FP :
     machineCertificateColumnPotentialRawSumCode ∈ Complexity.FP := by
-  simpa only [machineCertificateColumnPotentialRawSumCode] using
+  simpa only [machineCertificateColumnPotentialRawSumCode] using!
     machineCompose_mem_FP machineOptimizerColumnPotentialWord_mem_FP
       machineRationalVectorRawSumCode_mem_FP
 
@@ -106,7 +106,7 @@ theorem machineCertificatePotentialRawSumCode_mem_FP :
   have hpair := machinePair_mem_FP
     machineCertificateRowPotentialRawSumCode_mem_FP
     machineCertificateColumnPotentialRawSumCode_mem_FP
-  simpa only [machineCertificatePotentialRawSumCode] using
+  simpa only [machineCertificatePotentialRawSumCode] using!
     machineCompose_mem_FP hpair machineRawRatAddCode_mem_FP
 
 def rawCertificatePotentialSum {n : ℕ}

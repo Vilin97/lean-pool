@@ -142,7 +142,7 @@ theorem machineDirectedObjectiveCoordinateRest_mem_FP :
 
 theorem machineDirectedObjectiveCoordinateTau_mem_FP :
     machineDirectedObjectiveCoordinateTau ∈ FP := by
-  simpa only [machineDirectedObjectiveCoordinateTau] using
+  simpa only [machineDirectedObjectiveCoordinateTau] using!
     machineCompose_mem_FP machineDirectedObjectiveCoordinateRest_mem_FP
       machinePairFirst_mem_FP
 
@@ -150,14 +150,14 @@ theorem machineDirectedObjectiveCoordinateA_mem_FP :
     machineDirectedObjectiveCoordinateA ∈ FP := by
   have htail := machineCompose_mem_FP
     machineDirectedObjectiveCoordinateRest_mem_FP machinePairSecond_mem_FP
-  simpa only [machineDirectedObjectiveCoordinateA] using
+  simpa only [machineDirectedObjectiveCoordinateA] using!
     machineCompose_mem_FP htail machinePairFirst_mem_FP
 
 theorem machineDirectedObjectiveCoordinateX_mem_FP :
     machineDirectedObjectiveCoordinateX ∈ FP := by
   have htail := machineCompose_mem_FP
     machineDirectedObjectiveCoordinateRest_mem_FP machinePairSecond_mem_FP
-  simpa only [machineDirectedObjectiveCoordinateX] using
+  simpa only [machineDirectedObjectiveCoordinateX] using!
     machineCompose_mem_FP htail machinePairSecond_mem_FP
 
 theorem machineDirectedObjectiveCoordinateComplementRaw_mem_FP :
@@ -165,12 +165,12 @@ theorem machineDirectedObjectiveCoordinateComplementRaw_mem_FP :
   have hinput := machinePair_mem_FP
     (machineConst_mem_FP (rawRatBinaryCode RawRat.one))
     machineDirectedObjectiveCoordinateX_mem_FP
-  simpa only [machineDirectedObjectiveCoordinateComplementRaw] using
+  simpa only [machineDirectedObjectiveCoordinateComplementRaw] using!
     machineCompose_mem_FP hinput machineRawRatSubCode_mem_FP
 
 theorem machineDirectedObjectiveCoordinateComplement_mem_FP :
     machineDirectedObjectiveCoordinateComplement ∈ FP := by
-  simpa only [machineDirectedObjectiveCoordinateComplement] using
+  simpa only [machineDirectedObjectiveCoordinateComplement] using!
     machineCompose_mem_FP
       machineDirectedObjectiveCoordinateComplementRaw_mem_FP
       machineNormalizeRawRatEntryCode_mem_FP
@@ -192,26 +192,26 @@ theorem machineDirectedObjectiveCoordinateLogComplementInput_mem_FP :
 
 theorem machineDirectedObjectiveCoordinateLogAUpper_mem_FP :
     machineDirectedObjectiveCoordinateLogAUpper ∈ FP := by
-  simpa only [machineDirectedObjectiveCoordinateLogAUpper] using
+  simpa only [machineDirectedObjectiveCoordinateLogAUpper] using!
     machineCompose_mem_FP machineDirectedObjectiveCoordinateLogAInput_mem_FP
       machineScheduledLogUpperRawCode_mem_FP
 
 theorem machineDirectedObjectiveCoordinateLogXLower_mem_FP :
     machineDirectedObjectiveCoordinateLogXLower ∈ FP := by
-  simpa only [machineDirectedObjectiveCoordinateLogXLower] using
+  simpa only [machineDirectedObjectiveCoordinateLogXLower] using!
     machineCompose_mem_FP machineDirectedObjectiveCoordinateLogXInput_mem_FP
       machineScheduledLogLowerRawCode_mem_FP
 
 theorem machineDirectedObjectiveCoordinateLogComplementUpper_mem_FP :
     machineDirectedObjectiveCoordinateLogComplementUpper ∈ FP := by
-  simpa only [machineDirectedObjectiveCoordinateLogComplementUpper] using
+  simpa only [machineDirectedObjectiveCoordinateLogComplementUpper] using!
     machineCompose_mem_FP
       machineDirectedObjectiveCoordinateLogComplementInput_mem_FP
       machineScheduledLogUpperRawCode_mem_FP
 
 theorem machineDirectedObjectiveCoordinateNegX_mem_FP :
     machineDirectedObjectiveCoordinateNegX ∈ FP := by
-  simpa only [machineDirectedObjectiveCoordinateNegX] using
+  simpa only [machineDirectedObjectiveCoordinateNegX] using!
     machineCompose_mem_FP machineDirectedObjectiveCoordinateX_mem_FP
       machineRawRatNegCode_mem_FP
 
@@ -220,7 +220,7 @@ theorem machineDirectedObjectiveCoordinateFirstTerm_mem_FP :
   have hinput := machinePair_mem_FP
     machineDirectedObjectiveCoordinateNegX_mem_FP
     machineDirectedObjectiveCoordinateLogAUpper_mem_FP
-  simpa only [machineDirectedObjectiveCoordinateFirstTerm] using
+  simpa only [machineDirectedObjectiveCoordinateFirstTerm] using!
     machineCompose_mem_FP hinput machineRawRatMulCode_mem_FP
 
 theorem machineDirectedObjectiveCoordinateOnePlusTau_mem_FP :
@@ -228,7 +228,7 @@ theorem machineDirectedObjectiveCoordinateOnePlusTau_mem_FP :
   have hinput := machinePair_mem_FP
     (machineConst_mem_FP (rawRatBinaryCode RawRat.one))
     machineDirectedObjectiveCoordinateTau_mem_FP
-  simpa only [machineDirectedObjectiveCoordinateOnePlusTau] using
+  simpa only [machineDirectedObjectiveCoordinateOnePlusTau] using!
     machineCompose_mem_FP hinput machineRawRatAddCode_mem_FP
 
 theorem machineDirectedObjectiveCoordinateMiddleScale_mem_FP :
@@ -236,7 +236,7 @@ theorem machineDirectedObjectiveCoordinateMiddleScale_mem_FP :
   have hinput := machinePair_mem_FP
     machineDirectedObjectiveCoordinateOnePlusTau_mem_FP
     machineDirectedObjectiveCoordinateX_mem_FP
-  simpa only [machineDirectedObjectiveCoordinateMiddleScale] using
+  simpa only [machineDirectedObjectiveCoordinateMiddleScale] using!
     machineCompose_mem_FP hinput machineRawRatMulCode_mem_FP
 
 theorem machineDirectedObjectiveCoordinateMiddleTerm_mem_FP :
@@ -244,7 +244,7 @@ theorem machineDirectedObjectiveCoordinateMiddleTerm_mem_FP :
   have hinput := machinePair_mem_FP
     machineDirectedObjectiveCoordinateMiddleScale_mem_FP
     machineDirectedObjectiveCoordinateLogXLower_mem_FP
-  simpa only [machineDirectedObjectiveCoordinateMiddleTerm] using
+  simpa only [machineDirectedObjectiveCoordinateMiddleTerm] using!
     machineCompose_mem_FP hinput machineRawRatMulCode_mem_FP
 
 theorem machineDirectedObjectiveCoordinateComplementProduct_mem_FP :
@@ -252,12 +252,12 @@ theorem machineDirectedObjectiveCoordinateComplementProduct_mem_FP :
   have hinput := machinePair_mem_FP
     machineDirectedObjectiveCoordinateComplement_mem_FP
     machineDirectedObjectiveCoordinateLogComplementUpper_mem_FP
-  simpa only [machineDirectedObjectiveCoordinateComplementProduct] using
+  simpa only [machineDirectedObjectiveCoordinateComplementProduct] using!
     machineCompose_mem_FP hinput machineRawRatMulCode_mem_FP
 
 theorem machineDirectedObjectiveCoordinateLastTerm_mem_FP :
     machineDirectedObjectiveCoordinateLastTerm ∈ FP := by
-  simpa only [machineDirectedObjectiveCoordinateLastTerm] using
+  simpa only [machineDirectedObjectiveCoordinateLastTerm] using!
     machineCompose_mem_FP
       machineDirectedObjectiveCoordinateComplementProduct_mem_FP
       machineRawRatNegCode_mem_FP
@@ -267,7 +267,7 @@ theorem machineDirectedObjectiveCoordinateFirstTwo_mem_FP :
   have hinput := machinePair_mem_FP
     machineDirectedObjectiveCoordinateFirstTerm_mem_FP
     machineDirectedObjectiveCoordinateMiddleTerm_mem_FP
-  simpa only [machineDirectedObjectiveCoordinateFirstTwo] using
+  simpa only [machineDirectedObjectiveCoordinateFirstTwo] using!
     machineCompose_mem_FP hinput machineRawRatAddCode_mem_FP
 
 theorem machineDirectedNegativeObjectiveCoordinateLowerRawCode_mem_FP :
@@ -275,7 +275,7 @@ theorem machineDirectedNegativeObjectiveCoordinateLowerRawCode_mem_FP :
   have hinput := machinePair_mem_FP
     machineDirectedObjectiveCoordinateFirstTwo_mem_FP
     machineDirectedObjectiveCoordinateLastTerm_mem_FP
-  simpa only [machineDirectedNegativeObjectiveCoordinateLowerRawCode] using
+  simpa only [machineDirectedNegativeObjectiveCoordinateLowerRawCode] using!
     machineCompose_mem_FP hinput machineRawRatAddCode_mem_FP
 
 def machineDirectedObjectiveCoordinateCanonicalWord

@@ -164,7 +164,7 @@ theorem binaryRippleAdd_length_le : ∀ (carry : Bool) (x y : List Bool),
               (BinaryRippleAdd.ripple
                 (BinaryRippleAdd.carryBit carry false bit) [] rest).length ≤
                 rest.length + 1 := by
-            simpa using hrec
+            simpa using! hrec
           omega
   | cons bit rest ih =>
       cases y with
@@ -176,7 +176,7 @@ theorem binaryRippleAdd_length_le : ∀ (carry : Bool) (x y : List Bool),
               (BinaryRippleAdd.ripple
                 (BinaryRippleAdd.carryBit carry bit false) rest []).length ≤
                 rest.length + 1 := by
-            simpa using hrec
+            simpa using! hrec
           omega
       | cons other tail =>
           simp only [BinaryRippleAdd.ripple, List.length_cons]

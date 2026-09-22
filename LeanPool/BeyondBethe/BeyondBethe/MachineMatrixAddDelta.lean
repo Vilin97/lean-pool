@@ -123,7 +123,7 @@ theorem machineMatrixAddDeltaPadTwenty_length (word : List Bool) :
 
 theorem machineMatrixAddDeltaInputBound_mem_FP :
     machineMatrixAddDeltaInputBound ∈ Complexity.FP := by
-  simpa only [machineMatrixAddDeltaInputBound] using
+  simpa only [machineMatrixAddDeltaInputBound] using!
     machineCompose_mem_FP machineMatrixAddDeltaPadTwenty_mem_FP
       machineBinaryMulWidth_mem_FP
 
@@ -151,14 +151,14 @@ theorem machineMatrixAddDeltaRemaining_mem_FP :
 
 theorem machineMatrixAddDeltaAccumulator_mem_FP :
     machineMatrixAddDeltaAccumulator ∈ Complexity.FP := by
-  simpa only [machineMatrixAddDeltaAccumulator] using
+  simpa only [machineMatrixAddDeltaAccumulator] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineMatrixAddDeltaDelta_mem_FP :
     machineMatrixAddDeltaDelta ∈ Complexity.FP := by
   have htail := machineCompose_mem_FP machinePairSecond_mem_FP
     machinePairSecond_mem_FP
-  simpa only [machineMatrixAddDeltaDelta] using
+  simpa only [machineMatrixAddDeltaDelta] using!
     machineCompose_mem_FP htail machinePairFirst_mem_FP
 
 theorem machineMatrixAddDeltaDimension_mem_FP :
@@ -166,7 +166,7 @@ theorem machineMatrixAddDeltaDimension_mem_FP :
   have htailTwo := machineCompose_mem_FP machinePairSecond_mem_FP
     machinePairSecond_mem_FP
   have htailThree := machineCompose_mem_FP htailTwo machinePairSecond_mem_FP
-  simpa only [machineMatrixAddDeltaDimension] using
+  simpa only [machineMatrixAddDeltaDimension] using!
     machineCompose_mem_FP htailThree machinePairFirst_mem_FP
 
 theorem machineMatrixAddDeltaBound_mem_FP :
@@ -174,12 +174,12 @@ theorem machineMatrixAddDeltaBound_mem_FP :
   have htailTwo := machineCompose_mem_FP machinePairSecond_mem_FP
     machinePairSecond_mem_FP
   have htailThree := machineCompose_mem_FP htailTwo machinePairSecond_mem_FP
-  simpa only [machineMatrixAddDeltaBound] using
+  simpa only [machineMatrixAddDeltaBound] using!
     machineCompose_mem_FP htailThree machinePairSecond_mem_FP
 
 theorem machineMatrixAddDeltaCurrentRow_mem_FP :
     machineMatrixAddDeltaCurrentRow ∈ Complexity.FP := by
-  simpa only [machineMatrixAddDeltaCurrentRow] using
+  simpa only [machineMatrixAddDeltaCurrentRow] using!
     machineCompose_mem_FP machineMatrixAddDeltaRemaining_mem_FP
       machineListHead_mem_FP
 
@@ -187,7 +187,7 @@ theorem machineMatrixAddDeltaOutputRow_mem_FP :
     machineMatrixAddDeltaOutputRow ∈ Complexity.FP := by
   have hinput := machinePair_mem_FP machineMatrixAddDeltaDelta_mem_FP
     machineMatrixAddDeltaCurrentRow_mem_FP
-  simpa only [machineMatrixAddDeltaOutputRow] using
+  simpa only [machineMatrixAddDeltaOutputRow] using!
     machineCompose_mem_FP hinput machineRationalRowAdd_mem_FP
 
 theorem machineMatrixAddDeltaCandidate_mem_FP :
@@ -197,7 +197,7 @@ theorem machineMatrixAddDeltaCandidate_mem_FP :
 
 theorem machineMatrixAddDeltaNextAccumulator_mem_FP :
     machineMatrixAddDeltaNextAccumulator ∈ Complexity.FP := by
-  simpa only [machineMatrixAddDeltaNextAccumulator] using
+  simpa only [machineMatrixAddDeltaNextAccumulator] using!
     machineTake_mem_FP machineMatrixAddDeltaBound_mem_FP
       machineMatrixAddDeltaCandidate_mem_FP
 
@@ -353,7 +353,7 @@ theorem machineMatrixAddDeltaEntries_mem_FP :
     machineMatrixAddDeltaFinalState_mem_FP
     machineMatrixAddDeltaAccumulator_mem_FP
   have hrows := machineCompose_mem_FP hacc machineListReverse_mem_FP
-  simpa only [machineMatrixAddDeltaEntries] using
+  simpa only [machineMatrixAddDeltaEntries] using!
     machinePair_mem_FP hdimension hrows
 
 /-! ## Output-size bound on canonical matrices -/
@@ -430,7 +430,7 @@ private theorem matrixAddDelta_outputCode_length_le
           simp only [Function.comp_apply]
           omega
         have hsum := matrixAddDelta_natList_sum_le_length_mul hterm
-        simpa only [rationalRowAddValues, List.length_map] using hsum
+        simpa only [rationalRowAddValues, List.length_map] using! hsum
       have htail := ih htailEntry
       simp only [List.map_cons, binaryListCode, pair_length,
         List.map_map, List.sum_cons, List.length_cons] at htail ⊢
@@ -453,20 +453,20 @@ theorem machineMatrixAddDelta_outputRows_length_le_bound {n : ℕ}
         matrixWord.length := by
     calc
       _ = (machineMatrixRowsWord matrixWord).length := by
-        simpa only [matrixWord, rows] using congrArg List.length
+        simpa only [matrixWord, rows] using! congrArg List.length
           (machineMatrixRowsWord_encode A).symm
       _ ≤ matrixWord.length := by
-        simpa only [machineMatrixRowsWord] using
+        simpa only [machineMatrixRowsWord] using!
           machinePairSecond_length_le matrixWord
   have hmatrixWord : matrixWord.length ≤ word.length := by
-    simpa only [word, machinePairSecond_pair] using
+    simpa only [word, machinePairSecond_pair] using!
       machinePairSecond_length_le word
   have hrowsCode :
       (binaryListCode (binaryListCode rationalEntryBinaryCode) rows).length ≤
         word.length := hrowsMatrixCode.trans hmatrixWord
   have hdeltaWidth : rawRatWidth delta ≤ word.length := by
     have hdeltaCode : (rawRatBinaryCode delta).length ≤ word.length := by
-      simpa only [word, machinePairFirst_pair] using
+      simpa only [word, machinePairFirst_pair] using!
         machinePairFirst_length_le word
     exact (rawRatWidth_le_binaryCode_length delta).trans hdeltaCode
   have hentry : ∀ row ∈ rows, ∀ q ∈ row,
@@ -518,7 +518,7 @@ theorem machineMatrixAddDelta_outputRows_length_le_bound {n : ℕ}
               2 * rows.length ≤
             (rows.map List.length).sum * (694 + 288 * word.length) +
               rows.length * (694 + 288 * word.length) := by
-                exact Nat.add_le_add hentries (by simpa [Nat.mul_comm] using hrows)
+                exact Nat.add_le_add hentries (by simpa [Nat.mul_comm] using! hrows)
         _ = (rows.length + (rows.map List.length).sum) *
               (694 + 288 * word.length) := by ring
     have hlinear := Nat.mul_le_mul_right (694 + 288 * word.length) hwork
@@ -612,7 +612,7 @@ theorem machineMatrixAddDeltaStep_semantics
   have hprefix : (output.take (k + 1)).reverse =
       output[k] :: (output.take k).reverse := by
     rw [← htake]
-    simpa only [List.concat_eq_append] using
+    simpa only [List.concat_eq_append] using!
       (List.reverse_concat (l := output.take k) (a := output[k]))
   have hprefixLength :
       (binaryListCode (binaryListCode rationalEntryBinaryCode)
@@ -620,7 +620,7 @@ theorem machineMatrixAddDeltaStep_semantics
           (machineMatrixAddDeltaInputBound word).length :=
     (binaryListCode_take_reverse_length_le
       (binaryListCode rationalEntryBinaryCode) output (k + 1)).trans
-        (by simpa only [output] using hfullBound)
+        (by simpa only [output] using! hfullBound)
   have htakeBound :
       (binaryListCode (binaryListCode rationalEntryBinaryCode)
           (output.take (k + 1)).reverse).take
@@ -656,7 +656,7 @@ theorem machineMatrixAddDeltaStep_semantics
             (machineMatrixAddDeltaInputBound word)) =
         binaryListCode rationalEntryBinaryCode output[k] := by
     rw [houtputGet]
-    simpa only [machineMatrixAddDeltaSemanticState, output] using
+    simpa only [machineMatrixAddDeltaSemanticState, output] using!
       machineMatrixAddDeltaOutputRow_semantics
         word dimension delta rows k hk
   rw [hrow, hdrop, machineListTail_cons]
@@ -715,18 +715,18 @@ theorem machineMatrixAddDeltaFinalState_encode {n : ℕ}
   let rows := rationalMatrixRows A
   have hrowsLength : rows.length ≤ word.length := by
     have hn : rows.length ≤ matrixWord.length := by
-      simpa only [rows, matrixWord, rationalMatrixRows, List.length_ofFn] using
+      simpa only [rows, matrixWord, rationalMatrixRows, List.length_ofFn] using!
         matrix_dimension_le_code_length A
     have hm : matrixWord.length ≤ word.length := by
       simpa only [word, machineMatrixAddDeltaCanonicalInput,
-        machinePairSecond_pair] using machinePairSecond_length_le word
+        machinePairSecond_pair] using! machinePairSecond_length_le word
     exact hn.trans hm
   have hfullBound :
       (binaryListCode (binaryListCode rationalEntryBinaryCode)
         (rationalMatrixAddRows delta rows)).length ≤
           (machineMatrixAddDeltaInputBound word).length := by
     simpa only [word, rows, machineMatrixAddDeltaCanonicalInput,
-      rationalMatrixAddRows] using
+      rationalMatrixAddRows] using!
       machineMatrixAddDelta_outputRows_length_le_bound delta A
   have hsplit : word.length =
       (word.length - rows.length) + rows.length := by omega

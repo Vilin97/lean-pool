@@ -35,7 +35,7 @@ theorem machineMatrixRawSumFinalState_rows_encode
   have hrowsLength :
       (binaryListCode (binaryListCode rationalEntryBinaryCode) rows).length ≤
         word.length := by
-    simpa only [word] using machinePairSecond_length_le word
+    simpa only [word] using! machinePairSecond_length_le word
   have hinv : MatrixRawSumSemInvariant (1 + word.length) s := by
     simp only [MatrixRawSumSemInvariant, s, rawRatListCost,
       List.map_nil, List.sum_nil, rawRatWidth_zero, Nat.add_zero]
@@ -82,7 +82,7 @@ theorem machineRationalVectorAsRowsWord_mem_FP :
 
 theorem machineRationalVectorRawSumCode_mem_FP :
     machineRationalVectorRawSumCode ∈ Complexity.FP := by
-  simpa only [machineRationalVectorRawSumCode] using
+  simpa only [machineRationalVectorRawSumCode] using!
     machineCompose_mem_FP machineRationalVectorAsRowsWord_mem_FP
       machineMatrixRawSumCode_mem_FP
 

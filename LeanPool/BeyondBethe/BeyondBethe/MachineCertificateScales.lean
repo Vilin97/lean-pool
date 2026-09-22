@@ -70,13 +70,13 @@ def machineCertificateExpLossRawCode
 
 theorem machineCertificateDimensionBits_mem_FP :
     machineCertificateDimensionBits ∈ Complexity.FP := by
-  simpa only [machineCertificateDimensionBits] using
+  simpa only [machineCertificateDimensionBits] using!
     machineCompose_mem_FP machineOptimizerMatrixWord_mem_FP
       machineMatrixDimensionWord_mem_FP
 
 theorem machineCertificateDimensionUnary_mem_FP :
     machineCertificateDimensionUnary ∈ Complexity.FP := by
-  simpa only [machineCertificateDimensionUnary] using
+  simpa only [machineCertificateDimensionUnary] using!
     machineCompose_mem_FP machineOptimizerMatrixWord_mem_FP
       machineMatrixDimensionUnary_mem_FP
 
@@ -96,7 +96,7 @@ theorem machineCertificateFourDimensionRawCode_mem_FP :
   have hpair := machinePair_mem_FP
     (machineConst_mem_FP (rawRatBinaryCode rawCertificateFour))
     machineCertificateDimensionRawCode_mem_FP
-  simpa only [machineCertificateFourDimensionRawCode] using
+  simpa only [machineCertificateFourDimensionRawCode] using!
     machineCompose_mem_FP hpair machineRawRatMulCode_mem_FP
 
 theorem machineCertificateRegularizationScaleRawCode_mem_FP :
@@ -104,7 +104,7 @@ theorem machineCertificateRegularizationScaleRawCode_mem_FP :
   have hpair := machinePair_mem_FP
     (machineConst_mem_FP (rawRatBinaryCode rawExplicitXi))
     machineCertificateFourDimensionRawCode_mem_FP
-  simpa only [machineCertificateRegularizationScaleRawCode] using
+  simpa only [machineCertificateRegularizationScaleRawCode] using!
     machineCompose_mem_FP hpair machineRawRatDivCode_mem_FP
 
 theorem machineCertificateKKTPenaltyRawCode_mem_FP :
@@ -112,7 +112,7 @@ theorem machineCertificateKKTPenaltyRawCode_mem_FP :
   have hpair := machinePair_mem_FP
     (machineConst_mem_FP (rawRatBinaryCode rawExplicitKKTError))
     machineCertificateDimensionRawCode_mem_FP
-  simpa only [machineCertificateKKTPenaltyRawCode] using
+  simpa only [machineCertificateKKTPenaltyRawCode] using!
     machineCompose_mem_FP hpair machineRawRatMulCode_mem_FP
 
 theorem machineCertificateExpLossRawCode_mem_FP :
@@ -121,7 +121,7 @@ theorem machineCertificateExpLossRawCode_mem_FP :
     (machineConst_mem_FP
       (rawRatBinaryCode rawExplicitExpEvaluationLoss))
     machineCertificateDimensionRawCode_mem_FP
-  simpa only [machineCertificateExpLossRawCode] using
+  simpa only [machineCertificateExpLossRawCode] using!
     machineCompose_mem_FP hpair machineRawRatMulCode_mem_FP
 
 @[simp] theorem machineCertificateDimensionBits_encode {n : ℕ}

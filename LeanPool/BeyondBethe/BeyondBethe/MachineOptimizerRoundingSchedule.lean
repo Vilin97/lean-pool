@@ -155,7 +155,7 @@ theorem machineOptimizerFeasibilityInitialMagnitudeRawCode_mem_FP :
       machineOptimizerFeasibilityEllipsoidDimensionRawCode_mem_FP
       machineOptimizerFeasibilityOuterRadiusRawCode_mem_FP)
     machineRawRatMulCode_mem_FP
-  simpa only [machineOptimizerFeasibilityInitialMagnitudeRawCode] using
+  simpa only [machineOptimizerFeasibilityInitialMagnitudeRawCode] using!
     machineCompose_mem_FP
       (machinePair_mem_FP
         (machineConst_mem_FP (rawRatBinaryCode rawOptimizerTwo)) hproduct)
@@ -163,21 +163,21 @@ theorem machineOptimizerFeasibilityInitialMagnitudeRawCode_mem_FP :
 
 theorem machineOptimizerFeasibilityInitialMagnitudeEntryCode_mem_FP :
     machineOptimizerFeasibilityInitialMagnitudeEntryCode ∈ FP := by
-  simpa only [machineOptimizerFeasibilityInitialMagnitudeEntryCode] using
+  simpa only [machineOptimizerFeasibilityInitialMagnitudeEntryCode] using!
     machineCompose_mem_FP
       machineOptimizerFeasibilityInitialMagnitudeRawCode_mem_FP
       machineNormalizeRawRatEntryCode_mem_FP
 
 theorem machineOptimizerFeasibilityInitialMagnitudeLengthRuler_mem_FP :
     machineOptimizerFeasibilityInitialMagnitudeLengthRuler ∈ FP := by
-  simpa only [machineOptimizerFeasibilityInitialMagnitudeLengthRuler] using
+  simpa only [machineOptimizerFeasibilityInitialMagnitudeLengthRuler] using!
     machineCompose_mem_FP
       machineOptimizerFeasibilityInitialMagnitudeEntryCode_mem_FP
       machineOptimizerEntryLengthRuler_mem_FP
 
 theorem machineOptimizerFeasibilityKBits_mem_FP :
     machineOptimizerFeasibilityKBits ∈ FP := by
-  simpa only [machineOptimizerFeasibilityKBits] using
+  simpa only [machineOptimizerFeasibilityKBits] using!
     machineCompose_mem_FP
       machineOptimizerFeasibilityInitialMagnitudeLengthRuler_mem_FP
       machineLengthBits_mem_FP
@@ -271,7 +271,7 @@ theorem machineOptimizerFeasibilityRoundingPrecisionBits_mem_FP :
 
 theorem machineOptimizerFeasibilityRoundingGuardSource_mem_FP :
     machineOptimizerFeasibilityRoundingGuardSource ∈ FP := by
-  simpa only [machineOptimizerFeasibilityRoundingGuardSource] using
+  simpa only [machineOptimizerFeasibilityRoundingGuardSource] using!
     machineAppend_mem_FP machineOptimizerFeasibilityBudgetUnary_mem_FP
       (machineAppend_mem_FP
         machineOptimizerFeasibilityEllipsoidDimensionUnary_mem_FP
@@ -281,14 +281,14 @@ theorem machineOptimizerFeasibilityRoundingGuardSource_mem_FP :
 
 theorem machineOptimizerFeasibilityRoundingGuard_mem_FP :
     machineOptimizerFeasibilityRoundingGuard ∈ FP := by
-  simpa only [machineOptimizerFeasibilityRoundingGuard] using
+  simpa only [machineOptimizerFeasibilityRoundingGuard] using!
     machineCompose_mem_FP
       machineOptimizerFeasibilityRoundingGuardSource_mem_FP
       (machineIteratedBinaryWidth_mem_FP 2)
 
 theorem machineOptimizerFeasibilityRoundingPrecisionUnary_mem_FP :
     machineOptimizerFeasibilityRoundingPrecisionUnary ∈ FP := by
-  simpa only [machineOptimizerFeasibilityRoundingPrecisionUnary] using
+  simpa only [machineOptimizerFeasibilityRoundingPrecisionUnary] using!
     machineCompose_mem_FP
       (machinePair_mem_FP machineOptimizerFeasibilityRoundingGuard_mem_FP
         machineOptimizerFeasibilityRoundingPrecisionBits_mem_FP)
@@ -374,12 +374,12 @@ theorem optimizerFeasibilityRoundingPrecision_eq_explicit
     (rawExplicitOptimizerInnerRadius n
       (rationalMatrixEntryBitBound A)).value
   have hd : machineOptimizerFeasibilityDBits word = d.bits := by
-    simpa only [machineOptimizerFeasibilityDBits, word, d] using
+    simpa only [machineOptimizerFeasibilityDBits, word, d] using!
       machineOptimizerFeasibilityEllipsoidDimensionBits_encode A upper
   have hLR : machineOptimizerFeasibilityOuterLengthBits word = LR.bits := by
     have hRuler : machineOptimizerFeasibilityOuterRadiusLengthRuler word =
         List.replicate LR true := by
-      simpa only [word, LR, R] using
+      simpa only [word, LR, R] using!
         machineOptimizerFeasibilityOuterRadiusLengthRuler_encode hn A upper
     rw [machineOptimizerFeasibilityOuterLengthBits, hRuler,
       machineLengthBits_encode, List.length_replicate]
@@ -387,12 +387,12 @@ theorem optimizerFeasibilityRoundingPrecision_eq_explicit
     have hRuler :
         machineOptimizerFeasibilityInitialMagnitudeLengthRuler word =
           List.replicate K true := by
-      simpa only [word, K, d, R] using
+      simpa only [word, K, d, R] using!
         machineOptimizerFeasibilityInitialMagnitudeLengthRuler_encode hn A upper
     rw [machineOptimizerFeasibilityKBits, hRuler,
       machineLengthBits_encode, List.length_replicate]
   have hT : machineOptimizerFeasibilityBudgetBits word = T.bits := by
-    simpa only [word, T, d, R] using
+    simpa only [word, T, d, R] using!
       machineOptimizerFeasibilityBudgetBits_encode hn A upper
   have hL : machineOptimizerFeasibilityLBits word = (LR * d).bits :=
     machineBinaryMulOf_natBits _ _ _ _ _ hLR hd
@@ -477,14 +477,14 @@ theorem optimizerFeasibilityRoundingPrecision_le_guardPolynomial
   have hK : K ≤ Q := by omega
   have hT : T ≤ Q := by omega
   have hLRd : LR * d ≤ Q ^ 2 := by
-    simpa only [pow_two] using Nat.mul_le_mul hLR hd
+    simpa only [pow_two] using! Nat.mul_le_mul hLR hd
   have hd2 : d ^ 2 ≤ Q ^ 2 := Nat.pow_le_pow_left hd 2
   have hdK : d * K ≤ Q ^ 2 := by
-    simpa only [pow_two] using Nat.mul_le_mul hd hK
+    simpa only [pow_two] using! Nat.mul_le_mul hd hK
   have hdT : d * T ≤ Q ^ 2 := by
-    simpa only [pow_two] using Nat.mul_le_mul hd hT
+    simpa only [pow_two] using! Nat.mul_le_mul hd hT
   have hd2T : d ^ 2 * T ≤ Q ^ 3 := by
-    simpa only [pow_two, pow_succ, pow_zero, one_mul] using
+    simpa only [pow_two, pow_succ, pow_zero, one_mul] using!
       Nat.mul_le_mul (Nat.mul_le_mul hd hd) hT
   have hcoarse : optimizerFeasibilityRoundingPrecision d LR K T ≤
       3 * Q ^ 3 + 10 * Q ^ 2 + 13 * Q + 15 := by
@@ -503,7 +503,7 @@ theorem optimizerFeasibilityRoundingPrecision_le_guardPolynomial
     _ ≤ (Q + 16) * (Q + 16) ^ 3 := Nat.mul_le_mul h8 hshift
     _ = (Q + 16) ^ 4 := by ring
     _ ≤ certificateExpGuardWidth 2 Q := by
-      simpa using certificateExpGuardWidth_pow_lower 1 Q
+      simpa using! certificateExpGuardWidth_pow_lower 1 Q
 
 @[simp] theorem machineOptimizerFeasibilityRoundingGuardSource_length_encode
     {n : ℕ} (hn : 2 ≤ n) (A : Matrix (Fin n) (Fin n) ℚ)
@@ -567,7 +567,7 @@ theorem optimizerFeasibilityRoundingPrecision_le_guardPolynomial
     machineIteratedBinaryWidth_length,
     machineOptimizerFeasibilityRoundingGuardSource_length_encode hn]
   rw [← optimizerFeasibilityRoundingPrecision_eq_explicit d T R]
-  simpa only [d, R, LR, K, T] using
+  simpa only [d, R, LR, K, T] using!
     optimizerFeasibilityRoundingPrecision_le_guardPolynomial d LR K T
 
 end BeyondBethe

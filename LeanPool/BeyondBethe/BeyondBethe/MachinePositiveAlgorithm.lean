@@ -86,7 +86,7 @@ theorem machinePositiveCertificateRawCode_mem_FP
     {certificateMachine : List Bool → List Bool}
     (hcertificate : certificateMachine ∈ Complexity.FP) :
     machinePositiveCertificateRawCode certificateMachine ∈ Complexity.FP := by
-  simpa only [machinePositiveCertificateRawCode] using
+  simpa only [machinePositiveCertificateRawCode] using!
     machineCompose_mem_FP machinePositiveNormalizedMatrixCode_mem_FP
       hcertificate
 
@@ -97,14 +97,14 @@ theorem machinePositiveLargeProductRawCode_mem_FP
   have hpair := machinePair_mem_FP
     machineMatrixNormalizationScalePowerRawCode_mem_FP
     (machinePositiveCertificateRawCode_mem_FP hcertificate)
-  simpa only [machinePositiveLargeProductRawCode] using
+  simpa only [machinePositiveLargeProductRawCode] using!
     machineCompose_mem_FP hpair machineRawRatMulCode_mem_FP
 
 theorem machinePositiveLargeRawCode_mem_FP
     {certificateMachine : List Bool → List Bool}
     (hcertificate : certificateMachine ∈ Complexity.FP) :
     machinePositiveLargeRawCode certificateMachine ∈ Complexity.FP := by
-  simpa only [machinePositiveLargeRawCode] using
+  simpa only [machinePositiveLargeRawCode] using!
     machineCompose_mem_FP
       (machinePositiveLargeProductRawCode_mem_FP hcertificate)
       machineNormalizeRawRatEntryCode_mem_FP

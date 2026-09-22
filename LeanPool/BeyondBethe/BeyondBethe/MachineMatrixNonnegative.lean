@@ -84,17 +84,17 @@ theorem machineMatrixNonnegativeRows_mem_FP :
 
 theorem machineMatrixNonnegativeCurrent_mem_FP :
     machineMatrixNonnegativeCurrent ∈ Complexity.FP := by
-  simpa only [machineMatrixNonnegativeCurrent] using
+  simpa only [machineMatrixNonnegativeCurrent] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineMatrixNonnegativeOk_mem_FP :
     machineMatrixNonnegativeOk ∈ Complexity.FP := by
-  simpa only [machineMatrixNonnegativeOk] using
+  simpa only [machineMatrixNonnegativeOk] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairSecond_mem_FP
 
 theorem machineMatrixNonnegativeEntry_mem_FP :
     machineMatrixNonnegativeEntry ∈ Complexity.FP := by
-  simpa only [machineMatrixNonnegativeEntry, machineListHead] using
+  simpa only [machineMatrixNonnegativeEntry, machineListHead] using!
     machineCompose_mem_FP machineMatrixNonnegativeCurrent_mem_FP
       machinePairFirst_mem_FP
 
@@ -103,7 +103,7 @@ theorem machineMatrixNonnegativeEntryBit_mem_FP :
   have hpair := machinePair_mem_FP
     (machineConst_mem_FP (rawRatBinaryCode RawRat.zero))
     machineMatrixNonnegativeEntry_mem_FP
-  simpa only [machineMatrixNonnegativeEntryBit] using
+  simpa only [machineMatrixNonnegativeEntryBit] using!
     machineCompose_mem_FP
       (machineCompose_mem_FP hpair machineRawRatLeBit_mem_FP)
       machineHeadBit_mem_FP
@@ -128,13 +128,13 @@ theorem machineMatrixNonnegativeLoadRow_mem_FP :
 
 theorem machineMatrixNonnegativeAfterRow_mem_FP :
     machineMatrixNonnegativeAfterRow ∈ Complexity.FP := by
-  simpa only [machineMatrixNonnegativeAfterRow] using
+  simpa only [machineMatrixNonnegativeAfterRow] using!
     machineIfEmpty_mem_FP machineMatrixNonnegativeRows_mem_FP id_mem_FP
       machineMatrixNonnegativeLoadRow_mem_FP
 
 theorem machineMatrixNonnegativeStep_mem_FP :
     machineMatrixNonnegativeStep ∈ Complexity.FP := by
-  simpa only [machineMatrixNonnegativeStep] using
+  simpa only [machineMatrixNonnegativeStep] using!
     machineIfEmpty_mem_FP machineMatrixNonnegativeCurrent_mem_FP
       machineMatrixNonnegativeAfterRow_mem_FP
       machineMatrixNonnegativeProcessEntry_mem_FP
@@ -182,7 +182,7 @@ theorem machineMatrixNonnegativeInit_bound (word : List Bool) :
     machineMatrixNonnegativeInit, machineMatrixNonnegativeRows_pack,
     machineMatrixNonnegativeCurrent_pack, machineMatrixNonnegativeOk_pack]
   refine ⟨trivial, ?_, by simp, by simp⟩
-  simpa only [machineMatrixRowsWord] using machinePairSecond_length_le word
+  simpa only [machineMatrixRowsWord] using! machinePairSecond_length_le word
 
 theorem machineMatrixNonnegativeStep_bound
     {word state : List Bool}
@@ -264,7 +264,7 @@ theorem machineMatrixNonnegativeFinalState_mem_FP :
 
 theorem machineMatrixNonnegativeBit_mem_FP :
     machineMatrixNonnegativeBit ∈ Complexity.FP := by
-  simpa only [machineMatrixNonnegativeBit] using
+  simpa only [machineMatrixNonnegativeBit] using!
     machineCompose_mem_FP machineMatrixNonnegativeFinalState_mem_FP
       machineMatrixNonnegativeOk_mem_FP
 
@@ -433,10 +433,10 @@ theorem machineMatrixNonnegativeFinalState_encode {n : ℕ}
       calc
         (binaryListCode (binaryListCode rationalEntryBinaryCode) rows).length =
             (machineMatrixRowsWord word).length := by
-              simpa only [word, rows] using congrArg List.length
+              simpa only [word, rows] using! congrArg List.length
                 (machineMatrixRowsWord_encode A).symm
         _ ≤ word.length := by
-          simpa only [machineMatrixRowsWord] using
+          simpa only [machineMatrixRowsWord] using!
             machinePairSecond_length_le word
     exact hcode.trans hrows
   have hsplit : word.length =
@@ -461,6 +461,7 @@ theorem matrixNonnegativeRowsBit_iff {n : ℕ}
   simp [matrixNonnegativeRowsBit, matrixNonnegativeRowBit,
     rationalNonnegativeBit, rationalMatrixRows, Matrix.Nonnegative]
 
+open scoped Classical in
 @[simp] theorem machineMatrixNonnegativeBit_encode {n : ℕ}
     (A : Matrix (Fin n) (Fin n) ℚ) :
     machineMatrixNonnegativeBit
@@ -471,6 +472,6 @@ theorem matrixNonnegativeRowsBit_iff {n : ℕ}
   simp only [machineMatrixNonnegativeOk_pack]
   apply congrArg singleton
   apply Bool.eq_iff_iff.mpr
-  simpa [Matrix.Nonnegative] using matrixNonnegativeRowsBit_iff A
+  simpa [Matrix.Nonnegative] using! matrixNonnegativeRowsBit_iff A
 
 end BeyondBethe

@@ -82,7 +82,7 @@ def machineExplicitOptimizerInitialWidthRawCode
 
 theorem machineOptimizerObjectiveUpperRawCode_mem_FP :
     machineOptimizerObjectiveUpperRawCode ∈ FP := by
-  simpa only [machineOptimizerObjectiveUpperRawCode] using
+  simpa only [machineOptimizerObjectiveUpperRawCode] using!
     machineCompose_mem_FP
       (machinePair_mem_FP machineOptimizerNBProductRawCode_mem_FP
         machineOptimizerDimensionRawCode_mem_FP)
@@ -90,7 +90,7 @@ theorem machineOptimizerObjectiveUpperRawCode_mem_FP :
 
 theorem machineOptimizerTwiceInnerRadiusRawCode_mem_FP :
     machineOptimizerTwiceInnerRadiusRawCode ∈ FP := by
-  simpa only [machineOptimizerTwiceInnerRadiusRawCode] using
+  simpa only [machineOptimizerTwiceInnerRadiusRawCode] using!
     machineCompose_mem_FP
       (machinePair_mem_FP
         (machineConst_mem_FP (rawRatBinaryCode rawOptimizerTwo))
@@ -99,14 +99,14 @@ theorem machineOptimizerTwiceInnerRadiusRawCode_mem_FP :
 
 theorem machineOptimizerMixRangeRawCode_mem_FP :
     machineOptimizerMixRangeRawCode ∈ FP := by
-  simpa only [machineOptimizerMixRangeRawCode] using machineCompose_mem_FP
+  simpa only [machineOptimizerMixRangeRawCode] using! machineCompose_mem_FP
     (machinePair_mem_FP machineExplicitOptimizerMixRawCode_mem_FP
       machineOptimizerObjectiveRangeRawCode_mem_FP)
     machineRawRatMulCode_mem_FP
 
 theorem machineOptimizerSmoothingSlackRawCode_mem_FP :
     machineOptimizerSmoothingSlackRawCode ∈ FP := by
-  simpa only [machineOptimizerSmoothingSlackRawCode] using
+  simpa only [machineOptimizerSmoothingSlackRawCode] using!
     machineCompose_mem_FP
       (machinePair_mem_FP machineOptimizerMixRangeRawCode_mem_FP
         machineOptimizerTwiceInnerRadiusRawCode_mem_FP)
@@ -114,14 +114,14 @@ theorem machineOptimizerSmoothingSlackRawCode_mem_FP :
 
 theorem machineOptimizerInitialHighRawCode_mem_FP :
     machineOptimizerInitialHighRawCode ∈ FP := by
-  simpa only [machineOptimizerInitialHighRawCode] using machineCompose_mem_FP
+  simpa only [machineOptimizerInitialHighRawCode] using! machineCompose_mem_FP
     (machinePair_mem_FP machineOptimizerObjectiveUpperRawCode_mem_FP
       machineOptimizerSmoothingSlackRawCode_mem_FP)
     machineRawRatAddCode_mem_FP
 
 theorem machineOptimizerTwiceNSquareForWidthRawCode_mem_FP :
     machineOptimizerTwiceNSquareForWidthRawCode ∈ FP := by
-  simpa only [machineOptimizerTwiceNSquareForWidthRawCode] using
+  simpa only [machineOptimizerTwiceNSquareForWidthRawCode] using!
     machineCompose_mem_FP
       (machinePair_mem_FP
         (machineConst_mem_FP (rawRatBinaryCode rawOptimizerTwo))
@@ -130,7 +130,7 @@ theorem machineOptimizerTwiceNSquareForWidthRawCode_mem_FP :
 
 theorem machineExplicitOptimizerInitialWidthRawCode_mem_FP :
     machineExplicitOptimizerInitialWidthRawCode ∈ FP := by
-  simpa only [machineExplicitOptimizerInitialWidthRawCode] using
+  simpa only [machineExplicitOptimizerInitialWidthRawCode] using!
     machineCompose_mem_FP
       (machinePair_mem_FP machineOptimizerInitialHighRawCode_mem_FP
         machineOptimizerTwiceNSquareForWidthRawCode_mem_FP)
@@ -278,20 +278,20 @@ def machineExplicitOptimizerBisectionStepsRuler
 
 theorem machineExplicitOptimizerInitialWidthEntryCode_mem_FP :
     machineExplicitOptimizerInitialWidthEntryCode ∈ FP := by
-  simpa only [machineExplicitOptimizerInitialWidthEntryCode] using
+  simpa only [machineExplicitOptimizerInitialWidthEntryCode] using!
     machineCompose_mem_FP machineExplicitOptimizerInitialWidthRawCode_mem_FP
       machineNormalizeRawRatEntryCode_mem_FP
 
 theorem machineExplicitOptimizerInitialWidthLengthRuler_mem_FP :
     machineExplicitOptimizerInitialWidthLengthRuler ∈ FP := by
-  simpa only [machineExplicitOptimizerInitialWidthLengthRuler] using
+  simpa only [machineExplicitOptimizerInitialWidthLengthRuler] using!
     machineCompose_mem_FP
       machineExplicitOptimizerInitialWidthEntryCode_mem_FP
       machineOptimizerEntryLengthRuler_mem_FP
 
 theorem machineExplicitOptimizerBisectionStepsRuler_mem_FP :
     machineExplicitOptimizerBisectionStepsRuler ∈ FP := by
-  simpa only [machineExplicitOptimizerBisectionStepsRuler] using
+  simpa only [machineExplicitOptimizerBisectionStepsRuler] using!
     machineAppend_mem_FP
       machineExplicitOptimizerInitialWidthLengthRuler_mem_FP
       (machineAppend_mem_FP machineExplicitOptimizerGapLengthRuler_mem_FP

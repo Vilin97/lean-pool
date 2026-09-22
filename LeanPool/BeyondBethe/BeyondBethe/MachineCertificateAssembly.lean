@@ -108,7 +108,7 @@ theorem machineCertificateNearbyRawCode_mem_FP :
     machineNearbyMatrixRawSumCode_mem_FP
   have hpair := machinePair_mem_FP
     hpotential hnearby
-  simpa only [machineCertificateNearbyRawCode] using
+  simpa only [machineCertificateNearbyRawCode] using!
     machineCompose_mem_FP hpair machineRawRatAddCode_mem_FP
 
 theorem machineCertificateLogBeforePenaltyRawCode_mem_FP
@@ -116,7 +116,7 @@ theorem machineCertificateLogBeforePenaltyRawCode_mem_FP
     (hgain : gainMachine ∈ Complexity.FP) :
     machineCertificateLogBeforePenaltyRawCode gainMachine ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineCertificateNearbyRawCode_mem_FP hgain
-  simpa only [machineCertificateLogBeforePenaltyRawCode] using
+  simpa only [machineCertificateLogBeforePenaltyRawCode] using!
     machineCompose_mem_FP hpair machineRawRatAddCode_mem_FP
 
 theorem machineCertificateLogUnnormalizedRawCode_mem_FP
@@ -129,14 +129,14 @@ theorem machineCertificateLogUnnormalizedRawCode_mem_FP
   have hneg := machineCompose_mem_FP hpenalty machineRawRatNegCode_mem_FP
   have hpair := machinePair_mem_FP
     (machineCertificateLogBeforePenaltyRawCode_mem_FP hgain) hneg
-  simpa only [machineCertificateLogUnnormalizedRawCode] using
+  simpa only [machineCertificateLogUnnormalizedRawCode] using!
     machineCompose_mem_FP hpair machineRawRatAddCode_mem_FP
 
 theorem machineCertificateLogRawCode_mem_FP
     {gainMachine : List Bool → List Bool}
     (hgain : gainMachine ∈ Complexity.FP) :
     machineCertificateLogRawCode gainMachine ∈ Complexity.FP := by
-  simpa only [machineCertificateLogRawCode] using
+  simpa only [machineCertificateLogRawCode] using!
     machineCompose_mem_FP
       (machineCertificateLogUnnormalizedRawCode_mem_FP hgain)
       machineNormalizeRawRatEntryCode_mem_FP
@@ -214,7 +214,7 @@ theorem machineCertificateValueRawCode_mem_FP
     (hgain : gainMachine ∈ Complexity.FP)
     (hguard : guardMachine ∈ Complexity.FP) :
     machineCertificateValueRawCode gainMachine guardMachine ∈ Complexity.FP := by
-  simpa only [machineCertificateValueRawCode] using
+  simpa only [machineCertificateValueRawCode] using!
     machineCompose_mem_FP (machineCertificateExpInput_mem_FP hgain hguard)
       machineBoundedRationalExpLowerRawEntryCode_mem_FP
 
@@ -298,7 +298,7 @@ theorem machineCertificateValueRawCode_realizes
     CertificateEvaluatorStringRealizes
       (machineCertificateValueRawCode gainMachine guardMachine) := by
   intro m B
-  simpa only [explicitLargeOptimizerOutput] using
+  simpa only [explicitLargeOptimizerOutput] using!
     machineCertificateValueRawCode_encode
       (gainMachine := gainMachine) (guardMachine := guardMachine)
       (rationalMatrixBinaryEncoding.encode ⟨m + 2, B⟩)
@@ -315,7 +315,7 @@ theorem machineCertificateValueRawCode_realizes_onPositive
     CertificateEvaluatorStringRealizesOnPositiveNormalized
       (machineCertificateValueRawCode gainMachine guardMachine) := by
   intro m B hBpos hBupper
-  simpa only [explicitLargeOptimizerOutput] using
+  simpa only [explicitLargeOptimizerOutput] using!
     machineCertificateValueRawCode_encode
       (gainMachine := gainMachine) (guardMachine := guardMachine)
       (rationalMatrixBinaryEncoding.encode ⟨m + 2, B⟩)

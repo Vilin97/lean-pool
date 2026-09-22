@@ -102,19 +102,19 @@ theorem machineListUpdatePayload_mem_FP :
 
 theorem machineListUpdateReplacement_mem_FP :
     machineListUpdateReplacement ∈ Complexity.FP := by
-  simpa only [machineListUpdateReplacement] using
+  simpa only [machineListUpdateReplacement] using!
     machineCompose_mem_FP machineListUpdatePayload_mem_FP
       machinePairFirst_mem_FP
 
 theorem machineListUpdateData_mem_FP :
     machineListUpdateData ∈ Complexity.FP := by
-  simpa only [machineListUpdateData] using
+  simpa only [machineListUpdateData] using!
     machineCompose_mem_FP machineListUpdatePayload_mem_FP
       machinePairSecond_mem_FP
 
 theorem machineListUpdateInputBound_mem_FP :
     machineListUpdateInputBound ∈ Complexity.FP := by
-  simpa only [machineListUpdateInputBound] using
+  simpa only [machineListUpdateInputBound] using!
     machineCompose_mem_FP machineBinaryMulWidth_mem_FP
       machineBinaryMulWidth_mem_FP
 
@@ -124,7 +124,7 @@ theorem machineBinaryMulWidth_length_mono {left right : List Bool}
       (machineBinaryMulWidth right).length := by
   simp only [machineBinaryMulWidth, List.length_replicate,
     List.length_append]
-  simpa [pow_two] using
+  simpa [pow_two] using!
     Nat.pow_le_pow_left (Nat.add_le_add_left h 16) 2
 
 theorem machineListUpdateInputBound_length_mono {left right : List Bool}
@@ -140,14 +140,14 @@ theorem machineListUpdateScanRemaining_mem_FP :
 
 theorem machineListUpdateScanPrefix_mem_FP :
     machineListUpdateScanPrefix ∈ Complexity.FP := by
-  simpa only [machineListUpdateScanPrefix] using
+  simpa only [machineListUpdateScanPrefix] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineListUpdateScanCurrent_mem_FP :
     machineListUpdateScanCurrent ∈ Complexity.FP := by
   have htail := machineCompose_mem_FP machinePairSecond_mem_FP
     machinePairSecond_mem_FP
-  simpa only [machineListUpdateScanCurrent] using
+  simpa only [machineListUpdateScanCurrent] using!
     machineCompose_mem_FP htail machinePairFirst_mem_FP
 
 theorem machineListUpdateScanReplacement_mem_FP :
@@ -155,7 +155,7 @@ theorem machineListUpdateScanReplacement_mem_FP :
   have htailTwo := machineCompose_mem_FP machinePairSecond_mem_FP
     machinePairSecond_mem_FP
   have htailThree := machineCompose_mem_FP htailTwo machinePairSecond_mem_FP
-  simpa only [machineListUpdateScanReplacement] using
+  simpa only [machineListUpdateScanReplacement] using!
     machineCompose_mem_FP htailThree machinePairFirst_mem_FP
 
 theorem machineListUpdateScanBound_mem_FP :
@@ -163,7 +163,7 @@ theorem machineListUpdateScanBound_mem_FP :
   have htailTwo := machineCompose_mem_FP machinePairSecond_mem_FP
     machinePairSecond_mem_FP
   have htailThree := machineCompose_mem_FP htailTwo machinePairSecond_mem_FP
-  simpa only [machineListUpdateScanBound] using
+  simpa only [machineListUpdateScanBound] using!
     machineCompose_mem_FP htailThree machinePairSecond_mem_FP
 
 theorem machineListUpdateScanPrefixCandidate_mem_FP :
@@ -174,7 +174,7 @@ theorem machineListUpdateScanPrefixCandidate_mem_FP :
 
 theorem machineListUpdateScanNextPrefix_mem_FP :
     machineListUpdateScanNextPrefix ∈ Complexity.FP := by
-  simpa only [machineListUpdateScanNextPrefix] using
+  simpa only [machineListUpdateScanNextPrefix] using!
     machineTake_mem_FP machineListUpdateScanBound_mem_FP
       machineListUpdateScanPrefixCandidate_mem_FP
 
@@ -195,7 +195,7 @@ theorem machineListUpdateScanStep_mem_FP :
   have hinner := machineIfEmpty_mem_FP
     machineListUpdateScanCurrent_mem_FP id_mem_FP
     machineListUpdateScanAdvance_mem_FP
-  simpa only [machineListUpdateScanStep] using
+  simpa only [machineListUpdateScanStep] using!
     machineIfEmpty_mem_FP machineListUpdateScanRemaining_mem_FP
       id_mem_FP hinner
 
@@ -415,7 +415,7 @@ theorem machineListUpdateSeed_mem_FP :
   have hbound := machineCompose_mem_FP hscan
     machineListUpdateScanBound_mem_FP
   have htaken := machineTake_mem_FP hbound hcandidate
-  simpa only [machineListUpdateSeed, scan] using
+  simpa only [machineListUpdateSeed, scan] using!
     machineIfEmpty_mem_FP hcurrent (machineConst_mem_FP []) htaken
 
 theorem machineListUpdateRebuildPrefix_mem_FP :
@@ -424,12 +424,12 @@ theorem machineListUpdateRebuildPrefix_mem_FP :
 
 theorem machineListUpdateRebuildOutput_mem_FP :
     machineListUpdateRebuildOutput ∈ Complexity.FP := by
-  simpa only [machineListUpdateRebuildOutput] using
+  simpa only [machineListUpdateRebuildOutput] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineListUpdateRebuildBound_mem_FP :
     machineListUpdateRebuildBound ∈ Complexity.FP := by
-  simpa only [machineListUpdateRebuildBound] using
+  simpa only [machineListUpdateRebuildBound] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairSecond_mem_FP
 
 theorem machineListUpdateRebuildCandidate_mem_FP :
@@ -440,7 +440,7 @@ theorem machineListUpdateRebuildCandidate_mem_FP :
 
 theorem machineListUpdateRebuildNextOutput_mem_FP :
     machineListUpdateRebuildNextOutput ∈ Complexity.FP := by
-  simpa only [machineListUpdateRebuildNextOutput] using
+  simpa only [machineListUpdateRebuildNextOutput] using!
     machineTake_mem_FP machineListUpdateRebuildBound_mem_FP
       machineListUpdateRebuildCandidate_mem_FP
 
@@ -454,7 +454,7 @@ theorem machineListUpdateRebuildAdvance_mem_FP :
 
 theorem machineListUpdateRebuildStep_mem_FP :
     machineListUpdateRebuildStep ∈ Complexity.FP := by
-  simpa only [machineListUpdateRebuildStep] using
+  simpa only [machineListUpdateRebuildStep] using!
     machineIfEmpty_mem_FP machineListUpdateRebuildPrefix_mem_FP
       id_mem_FP machineListUpdateRebuildAdvance_mem_FP
 
@@ -576,7 +576,7 @@ theorem machineListUpdateRebuildFinalState_mem_FP :
 
 theorem machineListUpdate_mem_FP :
     machineListUpdate ∈ Complexity.FP := by
-  simpa only [machineListUpdate] using
+  simpa only [machineListUpdate] using!
     machineCompose_mem_FP machineListUpdateRebuildFinalState_mem_FP
       machineListUpdateRebuildOutput_mem_FP
 
@@ -682,7 +682,7 @@ theorem machineListUpdateScanStep_semantics
   have hprefix : (xs.take (k + 1)).reverse =
       xs[k] :: (xs.take k).reverse := by
     rw [← htake]
-    simpa only [List.concat_eq_append] using
+    simpa only [List.concat_eq_append] using!
       (List.reverse_concat (l := xs.take k) (a := xs[k]))
   have hprefixLength :
       (binaryListCode encode (xs.take (k + 1)).reverse).length ≤
@@ -872,12 +872,12 @@ theorem machineListUpdateRebuildStep_semantics
   have hpart : (pref.take (k + 1)).reverse =
       pref[k] :: (pref.take k).reverse := by
     rw [← htake]
-    simpa only [List.concat_eq_append] using
+    simpa only [List.concat_eq_append] using!
       (List.reverse_concat (l := pref.take k) (a := pref[k]))
   have hprefCodeLength :
       (binaryListCode encode pref).length ≤
         (binaryListCode encode xs).length := by
-    simpa only [pref] using
+    simpa only [pref] using!
       binaryListCode_take_reverse_length_le encode xs index
   have hpartCodeLength :
       (binaryListCode encode (pref.take (k + 1)).reverse).length ≤
@@ -899,7 +899,7 @@ theorem machineListUpdateRebuildStep_semantics
         (machineListUpdateInputBound word).length := by
     rw [binaryListCode_append_length]
     exact (Nat.add_le_add hpartCodeLength hsuffixCodeLength).trans
-      (by simpa [two_mul] using
+      (by simpa [two_mul] using!
         machineListUpdate_double_word_length_le_bound word)
   have htakeBound :
       (binaryListCode encode
@@ -959,7 +959,7 @@ theorem machineListUpdateRebuildIterate_semantics
   intro k hk
   induction k with
   | zero =>
-      simpa using (machineListUpdateRebuildInit_semantics
+      simpa using! (machineListUpdateRebuildInit_semantics
         encode xs replacement index hindex)
   | succ k ih =>
       rw [Function.iterate_succ_apply', ih (by omega)]

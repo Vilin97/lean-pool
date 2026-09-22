@@ -127,21 +127,21 @@ theorem machineCompletedDimensionLtTwoBit_mem_FP :
     machineCompletedDimensionLtTwoBit ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineMatrixDimensionWord_mem_FP
     (machineConst_mem_FP (2 : ℕ).bits)
-  simpa only [machineCompletedDimensionLtTwoBit] using
+  simpa only [machineCompletedDimensionLtTwoBit] using!
     machineCompose_mem_FP hpair machineBinaryNatLtBit_mem_FP
 
 theorem machineCompletedSmoothedMatrixCode_mem_FP (χ : ℚ) :
     machineCompletedSmoothedMatrixCode χ ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP
     (machineConst_mem_FP (rawRatBinaryCode (rawRatOfRat χ))) id_mem_FP
-  simpa only [machineCompletedSmoothedMatrixCode] using
+  simpa only [machineCompletedSmoothedMatrixCode] using!
     machineCompose_mem_FP hpair machineSmoothedMatrixCode_mem_FP
 
 theorem machineCompletedPositiveRawCode_mem_FP
     {positiveMachine : List Bool → List Bool}
     (hpositive : positiveMachine ∈ Complexity.FP) (χ : ℚ) :
     machineCompletedPositiveRawCode positiveMachine χ ∈ Complexity.FP := by
-  simpa only [machineCompletedPositiveRawCode] using
+  simpa only [machineCompletedPositiveRawCode] using!
     machineCompose_mem_FP (machineCompletedSmoothedMatrixCode_mem_FP χ)
       hpositive
 
@@ -149,7 +149,7 @@ theorem machineCompletedDimensionRawCode_mem_FP (χ : ℚ) :
     machineCompletedDimensionRawCode χ ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP
     (machineConst_mem_FP (rawRatBinaryCode (rawRatOfRat χ))) id_mem_FP
-  simpa only [machineCompletedDimensionRawCode] using
+  simpa only [machineCompletedDimensionRawCode] using!
     machineCompose_mem_FP hpair machineSmoothingDimensionRawCode_mem_FP
 
 theorem machineCompletedChiTimesDimensionRawCode_mem_FP (χ : ℚ) :
@@ -157,7 +157,7 @@ theorem machineCompletedChiTimesDimensionRawCode_mem_FP (χ : ℚ) :
   have hpair := machinePair_mem_FP
     (machineConst_mem_FP (rawRatBinaryCode (rawRatOfRat χ)))
     (machineCompletedDimensionRawCode_mem_FP χ)
-  simpa only [machineCompletedChiTimesDimensionRawCode] using
+  simpa only [machineCompletedChiTimesDimensionRawCode] using!
     machineCompose_mem_FP hpair machineRawRatMulCode_mem_FP
 
 theorem machineCompletedHalfChiDimensionRawCode_mem_FP (χ : ℚ) :
@@ -165,7 +165,7 @@ theorem machineCompletedHalfChiDimensionRawCode_mem_FP (χ : ℚ) :
   have hpair := machinePair_mem_FP
     (machineCompletedChiTimesDimensionRawCode_mem_FP χ)
     (machineConst_mem_FP (rawRatBinaryCode (RawRat.ofNat 2)))
-  simpa only [machineCompletedHalfChiDimensionRawCode] using
+  simpa only [machineCompletedHalfChiDimensionRawCode] using!
     machineCompose_mem_FP hpair machineRawRatDivCode_mem_FP
 
 theorem machineCompletedCorrectionRawCode_mem_FP (χ : ℚ) :
@@ -173,7 +173,7 @@ theorem machineCompletedCorrectionRawCode_mem_FP (χ : ℚ) :
   have hpair := machinePair_mem_FP
     (machineConst_mem_FP (rawRatBinaryCode RawRat.one))
     (machineCompletedHalfChiDimensionRawCode_mem_FP χ)
-  simpa only [machineCompletedCorrectionRawCode] using
+  simpa only [machineCompletedCorrectionRawCode] using!
     machineCompose_mem_FP hpair machineRawRatAddCode_mem_FP
 
 theorem machineCompletedLargeNumeratorRawCode_mem_FP
@@ -184,7 +184,7 @@ theorem machineCompletedLargeNumeratorRawCode_mem_FP
   have hpair := machinePair_mem_FP
     machineMatrixNormalizationScalePowerRawCode_mem_FP
     (machineCompletedPositiveRawCode_mem_FP hpositive χ)
-  simpa only [machineCompletedLargeNumeratorRawCode] using
+  simpa only [machineCompletedLargeNumeratorRawCode] using!
     machineCompose_mem_FP hpair machineRawRatMulCode_mem_FP
 
 theorem machineCompletedLargeRawCode_mem_FP
@@ -194,14 +194,14 @@ theorem machineCompletedLargeRawCode_mem_FP
   have hpair := machinePair_mem_FP
     (machineCompletedLargeNumeratorRawCode_mem_FP hpositive χ)
     (machineCompletedCorrectionRawCode_mem_FP χ)
-  simpa only [machineCompletedLargeRawCode] using
+  simpa only [machineCompletedLargeRawCode] using!
     machineCompose_mem_FP hpair machineRawRatDivCode_mem_FP
 
 theorem machineCompletedLargeCode_mem_FP
     {positiveMachine : List Bool → List Bool}
     (hpositive : positiveMachine ∈ Complexity.FP) (χ : ℚ) :
     machineCompletedLargeCode positiveMachine χ ∈ Complexity.FP := by
-  simpa only [machineCompletedLargeCode] using
+  simpa only [machineCompletedLargeCode] using!
     machineCompose_mem_FP
       (machineCompletedLargeRawCode_mem_FP hpositive χ)
       machineNormalizeRawRatBinaryCode_mem_FP

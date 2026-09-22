@@ -226,14 +226,14 @@ theorem machineOptimizerFeasibilityStateGuardSource_mem_FP :
 
 theorem machineOptimizerFeasibilityStateGuard_mem_FP :
     machineOptimizerFeasibilityStateGuard ∈ FP := by
-  simpa only [machineOptimizerFeasibilityStateGuard] using
+  simpa only [machineOptimizerFeasibilityStateGuard] using!
     machineCompose_mem_FP
       machineOptimizerFeasibilityStateGuardSource_mem_FP
       (machineIteratedBinaryWidth_mem_FP 3)
 
 theorem machineOptimizerFeasibilityStateBoundUnary_mem_FP :
     machineOptimizerFeasibilityStateBoundUnary ∈ FP := by
-  simpa only [machineOptimizerFeasibilityStateBoundUnary] using
+  simpa only [machineOptimizerFeasibilityStateBoundUnary] using!
     machineCompose_mem_FP
       (machinePair_mem_FP machineOptimizerFeasibilityStateGuard_mem_FP
         machineOptimizerFeasibilityStateBoundBits_mem_FP)
@@ -278,22 +278,22 @@ theorem machineOptimizerFeasibilityStateBoundBits_encode
     push_cast
     rw [pow_two]
   have hd : machineOptimizerFeasibilityDBits word = d.bits := by
-    simpa only [machineOptimizerFeasibilityDBits, word, d] using
+    simpa only [machineOptimizerFeasibilityDBits, word, d] using!
       machineOptimizerFeasibilityEllipsoidDimensionBits_encode A upper
   have hT : machineOptimizerFeasibilityBudgetBits word = T.bits := by
     have h := machineOptimizerFeasibilityBudgetBits_encode hn A upper
     rw [hRthreshold] at h
-    simpa only [word, T, betheThresholdFeasibilityBudget, pow_two] using h
+    simpa only [word, T, betheThresholdFeasibilityBudget, pow_two] using! h
   have hK : machineOptimizerFeasibilityKBits word = K.bits := by
     have hruler :
         machineOptimizerFeasibilityInitialMagnitudeLengthRuler word =
           List.replicate K true := by
-      simpa only [word, K, d, R] using
+      simpa only [word, K, d, R] using!
         machineOptimizerFeasibilityInitialMagnitudeLengthRuler_encode hn A upper
     rw [machineOptimizerFeasibilityKBits, hruler,
       machineLengthBits_encode, List.length_replicate]
   have hp : machineOptimizerFeasibilityRoundingPrecisionBits word = p.bits := by
-    simpa only [word, p, d, T, R] using
+    simpa only [word, p, d, T, R] using!
       machineOptimizerFeasibilityRoundingPrecisionBits_encode hn A upper
   have h3d : machineOptimizerFeasibilityThreeDBits word = (3 * d).bits :=
     machineBinaryMulOf_natBits _ _ _ _ _ rfl hd
@@ -304,7 +304,7 @@ theorem machineOptimizerFeasibilityStateBoundBits_encode
       (T * (6 + 3 * d)).bits :=
     machineBinaryMulOf_natBits _ _ _ _ _ hT hgrowth
   have hKS : machineOptimizerFeasibilityKPlusGrowthBits word = KS.bits := by
-    simpa only [KS] using
+    simpa only [KS] using!
       machineBinaryAddOf_natBits _ _ _ _ _ hK hTgrowth
   have h4d : machineBinaryMulOf (machineBinaryConst 4)
       machineOptimizerFeasibilityDBits word = (4 * d).bits :=
@@ -315,7 +315,7 @@ theorem machineOptimizerFeasibilityStateBoundBits_encode
     machineBinaryAddOf_natBits _ _ _ _ _ rfl h4d
   have hP : machineOptimizerFeasibilityStateDenominatorBits word = P.bits := by
     simpa only [machineOptimizerFeasibilityStateDenominatorBits, P,
-      Nat.add_assoc] using
+      Nat.add_assoc] using!
       machineBinaryAddOf_natBits _ _ _ _ _ hp h10plus4d
   have h2KS : machineOptimizerFeasibilityStateTwiceMagnitudeBits word =
       (2 * KS).bits :=
@@ -327,7 +327,7 @@ theorem machineOptimizerFeasibilityStateBoundBits_encode
       (8 + 2 * KS).bits :=
     machineBinaryAddOf_natBits _ _ _ _ _ rfl h2KS
   have he : machineOptimizerFeasibilityStateEntryBits word = e.bits := by
-    simpa only [e, rationalEntryMachineCodeBound] using
+    simpa only [e, rationalEntryMachineCodeBound] using!
       machineBinaryAddOf_natBits _ _ _ _ _ h8plus2KS h4P
   have h2e : machineBinaryMulOf (machineBinaryConst 2)
       machineOptimizerFeasibilityStateEntryBits word = (2 * e).bits :=
@@ -336,7 +336,7 @@ theorem machineOptimizerFeasibilityStateBoundBits_encode
       (2 * e + 2).bits :=
     machineBinaryAddOf_natBits _ _ _ _ _ h2e rfl
   have hv : machineOptimizerFeasibilityStateVectorBits word = v.bits := by
-    simpa only [v, rationalVectorMachineCodeBound] using
+    simpa only [v, rationalVectorMachineCodeBound] using!
       machineBinaryMulOf_natBits _ _ _ _ _ hd h2e2
   have h2v : machineBinaryMulOf (machineBinaryConst 2)
       machineOptimizerFeasibilityStateVectorBits word = (2 * v).bits :=
@@ -345,7 +345,7 @@ theorem machineOptimizerFeasibilityStateBoundBits_encode
       (2 * v + 2).bits :=
     machineBinaryAddOf_natBits _ _ _ _ _ h2v rfl
   have hM : machineOptimizerFeasibilityStateMatrixBits word = M.bits := by
-    simpa only [M, rationalMatrixMachineCodeBound] using
+    simpa only [M, rationalMatrixMachineCodeBound] using!
       machineBinaryMulOf_natBits _ _ _ _ _ hd h2v2
   have hd1 : machineBinaryAddOf machineOptimizerFeasibilityDBits
       (machineBinaryConst 1) word = (d + 1).bits :=
@@ -404,7 +404,7 @@ theorem optimizerFeasibilityStateBound_le_guardPolynomial
     nlinarith [Nat.pow_le_pow_left (by omega : 4 ≤ Q + 16) 4,
       Nat.pow_le_pow_left (by omega : Q + 1 ≤ Q + 16) 4]
   exact hcoarse.trans <| hmain.trans <| by
-    simpa only [Q] using certificateExpGuardWidth_pow_lower 2 Q
+    simpa only [Q] using! certificateExpGuardWidth_pow_lower 2 Q
 
 @[simp] theorem machineOptimizerFeasibilityStateGuardSource_length_encode
     {n : ℕ} (hn : 2 ≤ n) (A : Matrix (Fin n) (Fin n) ℚ)
@@ -484,7 +484,7 @@ theorem optimizerFeasibilityStateBound_le_guardPolynomial
     machineIteratedBinaryWidth_length,
     machineOptimizerFeasibilityStateGuardSource_length_encode hn]
   simpa only [d, K, T, p, explicitBallFeasibilityStateCodeBound,
-    scheduledFeasibilityStateCodeBound, explicitBallInitialDetExponent] using
+    scheduledFeasibilityStateCodeBound, explicitBallInitialDetExponent] using!
     optimizerFeasibilityStateBound_le_guardPolynomial d K T p
 
 end BeyondBethe

@@ -75,21 +75,21 @@ theorem machineRawRatDivCode_mem_FP : machineRawRatDivCode ∈ Complexity.FP := 
   have hinv := machineCompose_mem_FP machinePairSecond_mem_FP
     machineRawRatInvCode_mem_FP
   have hpair := machinePair_mem_FP machinePairFirst_mem_FP hinv
-  simpa only [machineRawRatDivCode] using
+  simpa only [machineRawRatDivCode] using!
     machineCompose_mem_FP hpair machineRawRatMulCode_mem_FP
 
 theorem machineRationalNegCode_mem_FP : machineRationalNegCode ∈ Complexity.FP := by
-  simpa only [machineRationalNegCode] using
+  simpa only [machineRationalNegCode] using!
     machineCompose_mem_FP machineRawRatNegCode_mem_FP
       machineNormalizeRawRatBinaryCode_mem_FP
 
 theorem machineRationalInvCode_mem_FP : machineRationalInvCode ∈ Complexity.FP := by
-  simpa only [machineRationalInvCode] using
+  simpa only [machineRationalInvCode] using!
     machineCompose_mem_FP machineRawRatInvCode_mem_FP
       machineNormalizeRawRatBinaryCode_mem_FP
 
 theorem machineRationalDivCode_mem_FP : machineRationalDivCode ∈ Complexity.FP := by
-  simpa only [machineRationalDivCode] using
+  simpa only [machineRationalDivCode] using!
     machineCompose_mem_FP machineRawRatDivCode_mem_FP
       machineNormalizeRawRatBinaryCode_mem_FP
 
@@ -145,7 +145,7 @@ theorem machineRawRatInvCode_encode (q : RawRat) :
       (pair [false] [true])
       (machineRawRatInvNonzeroCode
         (pair (integerBinaryCode q.num) q.den.bits)) habs]
-    simpa only [rawRatBinaryCode] using
+    simpa only [rawRatBinaryCode] using!
       machineRawRatInvNonzeroCode_encode q hq
 
 theorem machineRawRatDivCode_encode (q r : RawRat) :

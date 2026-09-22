@@ -94,14 +94,14 @@ theorem machineDirectedLogParameterNumeratorCode_mem_FP :
   have hnegOne : (fun _ : List Bool => machineRawRatNegCode rawRatOneCode) ∈
       Complexity.FP := machineConst_mem_FP _
   have hpair := machinePair_mem_FP machineDirectedLogArgumentCode_mem_FP hnegOne
-  simpa only [machineDirectedLogParameterNumeratorCode] using
+  simpa only [machineDirectedLogParameterNumeratorCode] using!
     machineCompose_mem_FP hpair machineRawRatAddCode_mem_FP
 
 theorem machineDirectedLogParameterDenominatorCode_mem_FP :
     machineDirectedLogParameterDenominatorCode ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineDirectedLogArgumentCode_mem_FP
     (machineConst_mem_FP rawRatOneCode)
-  simpa only [machineDirectedLogParameterDenominatorCode] using
+  simpa only [machineDirectedLogParameterDenominatorCode] using!
     machineCompose_mem_FP hpair machineRawRatAddCode_mem_FP
 
 theorem machineDirectedLogParameterCode_mem_FP :
@@ -109,42 +109,42 @@ theorem machineDirectedLogParameterCode_mem_FP :
   have hpair := machinePair_mem_FP
     machineDirectedLogParameterNumeratorCode_mem_FP
     machineDirectedLogParameterDenominatorCode_mem_FP
-  simpa only [machineDirectedLogParameterCode] using
+  simpa only [machineDirectedLogParameterCode] using!
     machineCompose_mem_FP hpair machineRawRatDivCode_mem_FP
 
 theorem machineDirectedLogSeriesSumCode_mem_FP :
     machineDirectedLogSeriesSumCode ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineDirectedLogRuler_mem_FP
     machineDirectedLogParameterCode_mem_FP
-  simpa only [machineDirectedLogSeriesSumCode] using
+  simpa only [machineDirectedLogSeriesSumCode] using!
     machineCompose_mem_FP hpair machineRawRationalLogSeriesSumCode_mem_FP
 
 theorem machineDirectedLogUnitLowerRawCode_mem_FP :
     machineDirectedLogUnitLowerRawCode ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP (machineConst_mem_FP rawRatTwoCode)
     machineDirectedLogSeriesSumCode_mem_FP
-  simpa only [machineDirectedLogUnitLowerRawCode] using
+  simpa only [machineDirectedLogUnitLowerRawCode] using!
     machineCompose_mem_FP hpair machineRawRatMulCode_mem_FP
 
 theorem machineDirectedLogOddPowerRuler_mem_FP :
     machineDirectedLogOddPowerRuler ∈ Complexity.FP := by
   have hdouble := machineAppend_mem_FP machineDirectedLogRuler_mem_FP
     machineDirectedLogRuler_mem_FP
-  simpa only [machineDirectedLogOddPowerRuler] using
+  simpa only [machineDirectedLogOddPowerRuler] using!
     machineCompose_mem_FP hdouble (machinePrepend_mem_FP true)
 
 theorem machineDirectedLogOddPowerCode_mem_FP :
     machineDirectedLogOddPowerCode ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineDirectedLogOddPowerRuler_mem_FP
     machineDirectedLogParameterCode_mem_FP
-  simpa only [machineDirectedLogOddPowerCode] using
+  simpa only [machineDirectedLogOddPowerCode] using!
     machineCompose_mem_FP hpair machineRawRatPowerCode_mem_FP
 
 theorem machineDirectedLogParameterSquareCode_mem_FP :
     machineDirectedLogParameterSquareCode ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineDirectedLogParameterCode_mem_FP
     machineDirectedLogParameterCode_mem_FP
-  simpa only [machineDirectedLogParameterSquareCode] using
+  simpa only [machineDirectedLogParameterSquareCode] using!
     machineCompose_mem_FP hpair machineRawRatMulCode_mem_FP
 
 theorem machineDirectedLogErrorDenominatorCode_mem_FP :
@@ -152,7 +152,7 @@ theorem machineDirectedLogErrorDenominatorCode_mem_FP :
   have hneg := machineCompose_mem_FP
     machineDirectedLogParameterSquareCode_mem_FP machineRawRatNegCode_mem_FP
   have hpair := machinePair_mem_FP (machineConst_mem_FP rawRatOneCode) hneg
-  simpa only [machineDirectedLogErrorDenominatorCode] using
+  simpa only [machineDirectedLogErrorDenominatorCode] using!
     machineCompose_mem_FP hpair machineRawRatAddCode_mem_FP
 
 theorem machineDirectedLogSeriesErrorCode_mem_FP :
@@ -161,14 +161,14 @@ theorem machineDirectedLogSeriesErrorCode_mem_FP :
     machineDirectedLogErrorDenominatorCode_mem_FP
   have hratio := machineCompose_mem_FP hratioPair machineRawRatDivCode_mem_FP
   have hpair := machinePair_mem_FP (machineConst_mem_FP rawRatTwoCode) hratio
-  simpa only [machineDirectedLogSeriesErrorCode] using
+  simpa only [machineDirectedLogSeriesErrorCode] using!
     machineCompose_mem_FP hpair machineRawRatMulCode_mem_FP
 
 theorem machineDirectedLogUnitUpperRawCode_mem_FP :
     machineDirectedLogUnitUpperRawCode ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineDirectedLogUnitLowerRawCode_mem_FP
     machineDirectedLogSeriesErrorCode_mem_FP
-  simpa only [machineDirectedLogUnitUpperRawCode] using
+  simpa only [machineDirectedLogUnitUpperRawCode] using!
     machineCompose_mem_FP hpair machineRawRatAddCode_mem_FP
 
 /-! ## Dyadic range reduction -/
@@ -278,36 +278,36 @@ theorem machineDirectedLogNumeratorAbsBits_mem_FP :
     machineDirectedLogNumeratorAbsBits ∈ Complexity.FP := by
   have hnum := machineCompose_mem_FP machineDirectedLogArgumentCode_mem_FP
     machinePairFirst_mem_FP
-  simpa only [machineDirectedLogNumeratorAbsBits] using
+  simpa only [machineDirectedLogNumeratorAbsBits] using!
     machineCompose_mem_FP hnum machineIntegerNatAbsBits_mem_FP
 
 theorem machineDirectedLogDenominatorBits_mem_FP :
     machineDirectedLogDenominatorBits ∈ Complexity.FP := by
-  simpa only [machineDirectedLogDenominatorBits] using
+  simpa only [machineDirectedLogDenominatorBits] using!
     machineCompose_mem_FP machineDirectedLogArgumentCode_mem_FP
       machinePairSecond_mem_FP
 
 theorem machineDirectedLogNumeratorLogRuler_mem_FP :
     machineDirectedLogNumeratorLogRuler ∈ Complexity.FP := by
-  simpa only [machineDirectedLogNumeratorLogRuler] using
+  simpa only [machineDirectedLogNumeratorLogRuler] using!
     machineCompose_mem_FP machineDirectedLogNumeratorAbsBits_mem_FP
       machineTail_mem_FP
 
 theorem machineDirectedLogDenominatorLogRuler_mem_FP :
     machineDirectedLogDenominatorLogRuler ∈ Complexity.FP := by
-  simpa only [machineDirectedLogDenominatorLogRuler] using
+  simpa only [machineDirectedLogDenominatorLogRuler] using!
     machineCompose_mem_FP machineDirectedLogDenominatorBits_mem_FP
       machineTail_mem_FP
 
 theorem machineDirectedLogNumeratorLogBits_mem_FP :
     machineDirectedLogNumeratorLogBits ∈ Complexity.FP := by
-  simpa only [machineDirectedLogNumeratorLogBits] using
+  simpa only [machineDirectedLogNumeratorLogBits] using!
     machineCompose_mem_FP machineDirectedLogNumeratorLogRuler_mem_FP
       machineLengthBits_mem_FP
 
 theorem machineDirectedLogDenominatorLogBits_mem_FP :
     machineDirectedLogDenominatorLogBits ∈ Complexity.FP := by
-  simpa only [machineDirectedLogDenominatorLogBits] using
+  simpa only [machineDirectedLogDenominatorLogBits] using!
     machineCompose_mem_FP machineDirectedLogDenominatorLogRuler_mem_FP
       machineLengthBits_mem_FP
 
@@ -319,7 +319,7 @@ theorem machineDirectedLogExponentIntegerCode_mem_FP :
     machineDirectedLogDenominatorLogBits_mem_FP (machinePrepend_mem_FP false)
   have hden := machineCompose_mem_FP hdenNat machineIntegerNegCode_mem_FP
   have hpair := machinePair_mem_FP hnum hden
-  simpa only [machineDirectedLogExponentIntegerCode] using
+  simpa only [machineDirectedLogExponentIntegerCode] using!
     machineCompose_mem_FP hpair machineIntegerAddCode_mem_FP
 
 theorem machineDirectedLogPowerTwoBits_mem_FP :
@@ -327,7 +327,7 @@ theorem machineDirectedLogPowerTwoBits_mem_FP :
   have hzero := machineZeroBlock_mem_FP
   have hone : (fun _ : List Bool => [true]) ∈ Complexity.FP :=
     machineConst_mem_FP [true]
-  simpa only [machineDirectedLogPowerTwoBits] using
+  simpa only [machineDirectedLogPowerTwoBits] using!
     machineAppend_mem_FP hzero hone
 
 theorem machineDirectedLogScaleCode_mem_FP :
@@ -345,21 +345,21 @@ theorem machineDirectedLogResidualCode_mem_FP :
     machineDirectedLogResidualCode ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineDirectedLogArgumentCode_mem_FP
     machineDirectedLogScaleCode_mem_FP
-  simpa only [machineDirectedLogResidualCode] using
+  simpa only [machineDirectedLogResidualCode] using!
     machineCompose_mem_FP hpair machineRawRatDivCode_mem_FP
 
 theorem machineDirectedLogResidualAtLeastOne_mem_FP :
     machineDirectedLogResidualAtLeastOne ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP (machineConst_mem_FP rawRatOneCode)
     machineDirectedLogResidualCode_mem_FP
-  simpa only [machineDirectedLogResidualAtLeastOne] using
+  simpa only [machineDirectedLogResidualAtLeastOne] using!
     machineCompose_mem_FP hpair machineRawRatLeBit_mem_FP
 
 theorem machineDirectedLogUnitCode_mem_FP :
     machineDirectedLogUnitCode ∈ Complexity.FP := by
   have hinv := machineCompose_mem_FP machineDirectedLogResidualCode_mem_FP
     machineRawRatInvCode_mem_FP
-  simpa only [machineDirectedLogUnitCode] using
+  simpa only [machineDirectedLogUnitCode] using!
     machineIfHead_mem_FP machineDirectedLogResidualAtLeastOne_mem_FP
       machineDirectedLogResidualCode_mem_FP hinv
 
@@ -389,7 +389,7 @@ theorem machineDirectedLogIntegerLowerCode_mem_FP :
   have hfactor := machineIfHead_mem_FP hsign hhi hlo
   have hpair := machinePair_mem_FP
     machineDirectedLogExponentRawRatCode_mem_FP hfactor
-  simpa only [machineDirectedLogIntegerLowerCode] using
+  simpa only [machineDirectedLogIntegerLowerCode] using!
     machineCompose_mem_FP hpair machineRawRatMulCode_mem_FP
 
 theorem machineDirectedLogIntegerUpperCode_mem_FP :
@@ -403,7 +403,7 @@ theorem machineDirectedLogIntegerUpperCode_mem_FP :
   have hfactor := machineIfHead_mem_FP hsign hlo hhi
   have hpair := machinePair_mem_FP
     machineDirectedLogExponentRawRatCode_mem_FP hfactor
-  simpa only [machineDirectedLogIntegerUpperCode] using
+  simpa only [machineDirectedLogIntegerUpperCode] using!
     machineCompose_mem_FP hpair machineRawRatMulCode_mem_FP
 
 theorem machineDirectedLogResidualLowerCode_mem_FP :
@@ -413,7 +413,7 @@ theorem machineDirectedLogResidualLowerCode_mem_FP :
   have hhi := machineCompose_mem_FP machineDirectedLogUnitInput_mem_FP
     machineDirectedLogUnitUpperRawCode_mem_FP
   have hnegHi := machineCompose_mem_FP hhi machineRawRatNegCode_mem_FP
-  simpa only [machineDirectedLogResidualLowerCode] using
+  simpa only [machineDirectedLogResidualLowerCode] using!
     machineIfHead_mem_FP machineDirectedLogResidualAtLeastOne_mem_FP
       hlo hnegHi
 
@@ -424,7 +424,7 @@ theorem machineDirectedLogResidualUpperCode_mem_FP :
   have hhi := machineCompose_mem_FP machineDirectedLogUnitInput_mem_FP
     machineDirectedLogUnitUpperRawCode_mem_FP
   have hnegLo := machineCompose_mem_FP hlo machineRawRatNegCode_mem_FP
-  simpa only [machineDirectedLogResidualUpperCode] using
+  simpa only [machineDirectedLogResidualUpperCode] using!
     machineIfHead_mem_FP machineDirectedLogResidualAtLeastOne_mem_FP
       hhi hnegLo
 
@@ -432,25 +432,25 @@ theorem machineDirectedLogLowerRawCode_mem_FP :
     machineDirectedLogLowerRawCode ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineDirectedLogIntegerLowerCode_mem_FP
     machineDirectedLogResidualLowerCode_mem_FP
-  simpa only [machineDirectedLogLowerRawCode] using
+  simpa only [machineDirectedLogLowerRawCode] using!
     machineCompose_mem_FP hpair machineRawRatAddCode_mem_FP
 
 theorem machineDirectedLogUpperRawCode_mem_FP :
     machineDirectedLogUpperRawCode ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineDirectedLogIntegerUpperCode_mem_FP
     machineDirectedLogResidualUpperCode_mem_FP
-  simpa only [machineDirectedLogUpperRawCode] using
+  simpa only [machineDirectedLogUpperRawCode] using!
     machineCompose_mem_FP hpair machineRawRatAddCode_mem_FP
 
 theorem machineDirectedLogLowerCode_mem_FP :
     machineDirectedLogLowerCode ∈ Complexity.FP := by
-  simpa only [machineDirectedLogLowerCode] using
+  simpa only [machineDirectedLogLowerCode] using!
     machineCompose_mem_FP machineDirectedLogLowerRawCode_mem_FP
       machineNormalizeRawRatBinaryCode_mem_FP
 
 theorem machineDirectedLogUpperCode_mem_FP :
     machineDirectedLogUpperCode ∈ Complexity.FP := by
-  simpa only [machineDirectedLogUpperCode] using
+  simpa only [machineDirectedLogUpperCode] using!
     machineCompose_mem_FP machineDirectedLogUpperRawCode_mem_FP
       machineNormalizeRawRatBinaryCode_mem_FP
 
@@ -598,14 +598,14 @@ theorem machineDirectedLogOddPowerRuler_encode
     machineDirectedLogUnitLowerRawCode
         (pair (List.replicate N true) rawRatTwoCode) =
       rawRatBinaryCode (RawRat.logUnitLower (RawRat.ofNat 2) N) := by
-  simpa only [rawRatTwoCode] using
+  simpa only [rawRatTwoCode] using!
     machineDirectedLogUnitLowerRawCode_encode (RawRat.ofNat 2) N
 
 @[simp] theorem machineDirectedLogTwoUpperRawCode_encode (N : ℕ) :
     machineDirectedLogUnitUpperRawCode
         (pair (List.replicate N true) rawRatTwoCode) =
       rawRatBinaryCode (RawRat.logUnitUpper (RawRat.ofNat 2) N) := by
-  simpa only [rawRatTwoCode] using
+  simpa only [rawRatTwoCode] using!
     machineDirectedLogUnitUpperRawCode_encode (RawRat.ofNat 2) N
 
 private theorem directedLogPowerTwoBits_value : ∀ k : ℕ,
@@ -716,11 +716,11 @@ def logUnit (q : ℚ) : RawRat :=
     (logUnit q).value = binaryRationalLogUnit q := by
   rw [logUnit, binaryRationalLogUnit]
   by_cases h : binaryRationalBinaryResidual q < 1
-  · have hnot : ¬ 1 ≤ (logResidual q).value := by simpa using h
+  · have hnot : ¬ 1 ≤ (logResidual q).value := by simpa using! h
     rw [ite_eq_left ((binaryRatLt_eq_true_iff _ _).2 h), ite_eq_right hnot]
     simp [binaryRatInv_eq_inv]
   · have hle : 1 ≤ (logResidual q).value := by
-      simpa using (le_of_not_gt h)
+      simpa using! (le_of_not_gt h)
     have hflag : ¬ binaryRatLt (binaryRationalBinaryResidual q) 1 = true :=
       fun htrue => h ((binaryRatLt_eq_true_iff _ _).1 htrue)
     rw [ite_eq_right hflag, ite_eq_left hle]
@@ -833,16 +833,16 @@ def logUpper (q : ℚ) (N : ℕ) : RawRat :=
       else binaryDirectedLogUnitLower (binaryRationalLogUnit q) N := by
   rw [logResidualLower]
   by_cases h : binaryRationalBinaryResidual q < 1
-  · have hnot : ¬ 1 ≤ (logResidual q).value := by simpa using h
+  · have hnot : ¬ 1 ≤ (logResidual q).value := by simpa using! h
     rw [ite_eq_right hnot,
       ite_eq_left ((binaryRatLt_eq_true_iff _ _).2 h)]
     simp [binaryRatNeg_eq_neg]
   · have hle : 1 ≤ (logResidual q).value := by
-      simpa using (le_of_not_gt h)
+      simpa using! (le_of_not_gt h)
     have hflag : ¬ binaryRatLt (binaryRationalBinaryResidual q) 1 = true :=
       fun htrue => h ((binaryRatLt_eq_true_iff _ _).1 htrue)
     rw [ite_eq_left hle, ite_eq_right hflag]
-    simpa only [value_logUnit] using value_logUnitLower (logUnit q) N
+    simpa only [value_logUnit] using! value_logUnitLower (logUnit q) N
 
 @[simp] theorem value_logResidualUpper (q : ℚ) (N : ℕ) :
     (logResidualUpper q N).value =
@@ -851,16 +851,16 @@ def logUpper (q : ℚ) (N : ℕ) : RawRat :=
       else binaryDirectedLogUnitUpper (binaryRationalLogUnit q) N := by
   rw [logResidualUpper]
   by_cases h : binaryRationalBinaryResidual q < 1
-  · have hnot : ¬ 1 ≤ (logResidual q).value := by simpa using h
+  · have hnot : ¬ 1 ≤ (logResidual q).value := by simpa using! h
     rw [ite_eq_right hnot,
       ite_eq_left ((binaryRatLt_eq_true_iff _ _).2 h)]
     simp [binaryRatNeg_eq_neg]
   · have hle : 1 ≤ (logResidual q).value := by
-      simpa using (le_of_not_gt h)
+      simpa using! (le_of_not_gt h)
     have hflag : ¬ binaryRatLt (binaryRationalBinaryResidual q) 1 = true :=
       fun htrue => h ((binaryRatLt_eq_true_iff _ _).1 htrue)
     rw [ite_eq_left hle, ite_eq_right hflag]
-    simpa only [value_logUnit] using value_logUnitUpper (logUnit q) N
+    simpa only [value_logUnit] using! value_logUnitUpper (logUnit q) N
 
 @[simp] theorem value_logLower (q : ℚ) (N : ℕ) :
     (logLower q N).value = binaryDirectedLogLower q N := by

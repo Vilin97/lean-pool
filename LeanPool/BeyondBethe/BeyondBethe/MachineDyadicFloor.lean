@@ -96,30 +96,30 @@ theorem machineDyadicRawCode_mem_FP :
 
 theorem machineDyadicNumeratorCode_mem_FP :
     machineDyadicNumeratorCode ∈ Complexity.FP := by
-  simpa only [machineDyadicNumeratorCode] using
+  simpa only [machineDyadicNumeratorCode] using!
     machineCompose_mem_FP machineDyadicRawCode_mem_FP machinePairFirst_mem_FP
 
 theorem machineDyadicDenominatorBits_mem_FP :
     machineDyadicDenominatorBits ∈ Complexity.FP := by
-  simpa only [machineDyadicDenominatorBits] using
+  simpa only [machineDyadicDenominatorBits] using!
     machineCompose_mem_FP machineDyadicRawCode_mem_FP machinePairSecond_mem_FP
 
 theorem machineDyadicNumeratorSign_mem_FP :
     machineDyadicNumeratorSign ∈ Complexity.FP := by
-  simpa only [machineDyadicNumeratorSign] using
+  simpa only [machineDyadicNumeratorSign] using!
     machineCompose_mem_FP machineDyadicNumeratorCode_mem_FP
       machineHeadBit_mem_FP
 
 theorem machineDyadicNumeratorAbsBits_mem_FP :
     machineDyadicNumeratorAbsBits ∈ Complexity.FP := by
-  simpa only [machineDyadicNumeratorAbsBits] using
+  simpa only [machineDyadicNumeratorAbsBits] using!
     machineCompose_mem_FP machineDyadicNumeratorCode_mem_FP
       machineIntegerNatAbsBits_mem_FP
 
 theorem machineDyadicPrecisionZeroBits_mem_FP :
     machineDyadicPrecisionZeroBits ∈ Complexity.FP := by
   simpa only [machineDyadicPrecisionZeroBits,
-    machineDyadicPrecisionRuler] using
+    machineDyadicPrecisionRuler] using!
     machineCompose_mem_FP machinePairFirst_mem_FP machineZeroBlock_mem_FP
 
 theorem machineDyadicScaledAbsBits_mem_FP :
@@ -133,18 +133,18 @@ theorem machineDyadicDivModBits_mem_FP :
     machineDyadicDivModBits ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineDyadicScaledAbsBits_mem_FP
     machineDyadicDenominatorBits_mem_FP
-  simpa only [machineDyadicDivModBits] using
+  simpa only [machineDyadicDivModBits] using!
     machineCompose_mem_FP hpair machineBinaryDivModBits_mem_FP
 
 theorem machineDyadicQuotientBits_mem_FP :
     machineDyadicQuotientBits ∈ Complexity.FP := by
-  simpa only [machineDyadicQuotientBits] using
+  simpa only [machineDyadicQuotientBits] using!
     machineCompose_mem_FP machineDyadicDivModBits_mem_FP
       machinePairFirst_mem_FP
 
 theorem machineDyadicRemainderBits_mem_FP :
     machineDyadicRemainderBits ∈ Complexity.FP := by
-  simpa only [machineDyadicRemainderBits] using
+  simpa only [machineDyadicRemainderBits] using!
     machineCompose_mem_FP machineDyadicDivModBits_mem_FP
       machinePairSecond_mem_FP
 
@@ -152,7 +152,7 @@ theorem machineDyadicQuotientSuccBits_mem_FP :
     machineDyadicQuotientSuccBits ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineDyadicQuotientBits_mem_FP
     (machineConst_mem_FP [true])
-  simpa only [machineDyadicQuotientSuccBits] using
+  simpa only [machineDyadicQuotientSuccBits] using!
     machineCompose_mem_FP hpair machineBinaryAddBits_mem_FP
 
 theorem machineDyadicNegativeFloorAbsBits_mem_FP :
@@ -170,7 +170,7 @@ theorem machineDyadicFloorIntegerCode_mem_FP :
     machineDyadicFloorIntegerCode ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineDyadicNumeratorSign_mem_FP
     machineDyadicFloorAbsBits_mem_FP
-  simpa only [machineDyadicFloorIntegerCode] using
+  simpa only [machineDyadicFloorIntegerCode] using!
     machineCompose_mem_FP hpair machineCanonicalIntegerFromSignedAbs_mem_FP
 
 theorem machineDyadicPowerDenominatorBits_mem_FP :
@@ -184,7 +184,7 @@ theorem machineRawDyadicFloorCode_mem_FP :
     machineDyadicPowerDenominatorBits_mem_FP
 
 theorem machineDyadicFloorCode_mem_FP : machineDyadicFloorCode ∈ Complexity.FP := by
-  simpa only [machineDyadicFloorCode] using
+  simpa only [machineDyadicFloorCode] using!
     machineCompose_mem_FP machineRawDyadicFloorCode_mem_FP
       machineNormalizeRawRatBinaryCode_mem_FP
 
@@ -287,8 +287,8 @@ theorem machineDyadicScaledAbsBits_encode (p : ℕ) (q : RawRat) :
     machinePairFirst_pair, machinePairSecond_pair, rawRatBinaryCode,
     machineIntegerNatAbsBits_encode, List.length_replicate]
   cases hbits : q.num.natAbs.bits with
-  | nil => simpa [hbits] using shiftedNatBits q.num.natAbs p
-  | cons bit rest => simpa [hbits] using shiftedNatBits q.num.natAbs p
+  | nil => simpa [hbits] using! shiftedNatBits q.num.natAbs p
+  | cons bit rest => simpa [hbits] using! shiftedNatBits q.num.natAbs p
 
 theorem machineDyadicDivModBits_encode (p : ℕ) (q : RawRat) :
     machineDyadicDivModBits
@@ -328,14 +328,14 @@ theorem machineDyadicFloorIntegerCode_encode (p : ℕ) (q : RawRat) :
       (pair (List.replicate p true) (rawRatBinaryCode q)) =
       (((q.num.natAbs * 2 ^ p) / q.den) + 1).bits := by
     rw [machineDyadicQuotientSuccBits, hquot]
-    simpa using machineBinaryAddBits_pair_natBits
+    simpa using! machineBinaryAddBits_pair_natBits
       ((q.num.natAbs * 2 ^ p) / q.den) 1
   rw [machineDyadicFloorIntegerCode]
   cases hnum : q.num with
   | ofNat n =>
       have hsignFalse : machineDyadicNumeratorSign
           (pair (List.replicate p true) (rawRatBinaryCode q)) = [false] := by
-        simpa [hnum] using hsign
+        simpa [hnum] using! hsign
       simp only [machineDyadicFloorAbsBits, hsignFalse,
         machineIfHead_false, hquot]
       rw [machineCanonicalIntegerFromSignedAbs_pair]
@@ -344,7 +344,7 @@ theorem machineDyadicFloorIntegerCode_encode (p : ℕ) (q : RawRat) :
   | negSucc n =>
       have hsignTrue : machineDyadicNumeratorSign
           (pair (List.replicate p true) (rawRatBinaryCode q)) = [true] := by
-        simpa [hnum] using hsign
+        simpa [hnum] using! hsign
       simp only [machineDyadicFloorAbsBits, hsignTrue, machineIfHead_true,
         machineDyadicNegativeFloorAbsBits, hrembits, hquot, hsucc,
         hnum, Int.natAbs_negSucc]
@@ -370,7 +370,7 @@ theorem machineDyadicPowerDenominatorBits_encode (p : ℕ) (q : RawRat) :
   simp [machineDyadicPowerDenominatorBits,
     machineDyadicPrecisionZeroBits, machineDyadicPrecisionRuler,
     show List.replicate p false ++ [true] = (2 ^ p).bits by
-      simpa using (natBits_mul_pow_two_of_ne_zero 1 p (by decide)).symm]
+      simpa using! (natBits_mul_pow_two_of_ne_zero 1 p (by decide)).symm]
 
 theorem machineRawDyadicFloorCode_encode (p : ℕ) (q : RawRat) :
     machineRawDyadicFloorCode

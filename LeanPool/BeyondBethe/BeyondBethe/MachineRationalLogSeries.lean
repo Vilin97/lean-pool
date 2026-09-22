@@ -121,14 +121,14 @@ theorem machineLogSeriesSumField_mem_FP :
 
 theorem machineLogSeriesPowerField_mem_FP :
     machineLogSeriesPowerField ∈ Complexity.FP := by
-  simpa only [machineLogSeriesPowerField] using
+  simpa only [machineLogSeriesPowerField] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineLogSeriesSquareField_mem_FP :
     machineLogSeriesSquareField ∈ Complexity.FP := by
   have hrest := machineCompose_mem_FP machinePairSecond_mem_FP
     machinePairSecond_mem_FP
-  simpa only [machineLogSeriesSquareField] using
+  simpa only [machineLogSeriesSquareField] using!
     machineCompose_mem_FP hrest machinePairFirst_mem_FP
 
 theorem machineLogSeriesOddField_mem_FP :
@@ -136,7 +136,7 @@ theorem machineLogSeriesOddField_mem_FP :
   have hrest2 := machineCompose_mem_FP machinePairSecond_mem_FP
     machinePairSecond_mem_FP
   have hrest3 := machineCompose_mem_FP hrest2 machinePairSecond_mem_FP
-  simpa only [machineLogSeriesOddField] using
+  simpa only [machineLogSeriesOddField] using!
     machineCompose_mem_FP hrest3 machinePairFirst_mem_FP
 
 theorem machineLogSeriesBoundField_mem_FP :
@@ -144,7 +144,7 @@ theorem machineLogSeriesBoundField_mem_FP :
   have hrest2 := machineCompose_mem_FP machinePairSecond_mem_FP
     machinePairSecond_mem_FP
   have hrest3 := machineCompose_mem_FP hrest2 machinePairSecond_mem_FP
-  simpa only [machineLogSeriesBoundField] using
+  simpa only [machineLogSeriesBoundField] using!
     machineCompose_mem_FP hrest3 machinePairSecond_mem_FP
 
 theorem machineLogSeriesOddRawRatCode_mem_FP :
@@ -157,34 +157,34 @@ theorem machineLogSeriesTermCandidate_mem_FP :
     machineLogSeriesTermCandidate ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineLogSeriesPowerField_mem_FP
     machineLogSeriesOddRawRatCode_mem_FP
-  simpa only [machineLogSeriesTermCandidate] using
+  simpa only [machineLogSeriesTermCandidate] using!
     machineCompose_mem_FP hpair machineRawRatDivCode_mem_FP
 
 theorem machineLogSeriesSumCandidate_mem_FP :
     machineLogSeriesSumCandidate ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineLogSeriesSumField_mem_FP
     machineLogSeriesTermCandidate_mem_FP
-  simpa only [machineLogSeriesSumCandidate] using
+  simpa only [machineLogSeriesSumCandidate] using!
     machineCompose_mem_FP hpair machineRawRatAddCode_mem_FP
 
 theorem machineLogSeriesPowerCandidate_mem_FP :
     machineLogSeriesPowerCandidate ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineLogSeriesPowerField_mem_FP
     machineLogSeriesSquareField_mem_FP
-  simpa only [machineLogSeriesPowerCandidate] using
+  simpa only [machineLogSeriesPowerCandidate] using!
     machineCompose_mem_FP hpair machineRawRatMulCode_mem_FP
 
 theorem machineLogSeriesOddCandidate_mem_FP :
     machineLogSeriesOddCandidate ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineLogSeriesOddField_mem_FP
     (machineConst_mem_FP [false, true])
-  simpa only [machineLogSeriesOddCandidate] using
+  simpa only [machineLogSeriesOddCandidate] using!
     machineCompose_mem_FP hpair machineBinaryAddBits_mem_FP
 
 theorem machineLogSeriesClamp_mem_FP
     {candidate : List Bool → List Bool} (hcandidate : candidate ∈ Complexity.FP) :
     (fun state => machineLogSeriesClamp candidate state) ∈ Complexity.FP := by
-  simpa only [machineLogSeriesClamp] using
+  simpa only [machineLogSeriesClamp] using!
     machineTake_mem_FP machineLogSeriesBoundField_mem_FP hcandidate
 
 theorem machineLogSeriesStep_mem_FP :
@@ -206,7 +206,7 @@ theorem machineLogSeriesInputBase_mem_FP :
 
 theorem machineLogSeriesInputBound_mem_FP :
     machineLogSeriesInputBound ∈ Complexity.FP := by
-  simpa only [machineLogSeriesInputBound] using
+  simpa only [machineLogSeriesInputBound] using!
     machineCompose_mem_FP machineBinaryMulWidth_mem_FP
       machineBinaryMulWidth_mem_FP
 
@@ -214,7 +214,7 @@ theorem machineLogSeriesInitialSquareCandidate_mem_FP :
     machineLogSeriesInitialSquareCandidate ∈ Complexity.FP := by
   have hpair := machinePair_mem_FP machineLogSeriesInputBase_mem_FP
     machineLogSeriesInputBase_mem_FP
-  simpa only [machineLogSeriesInitialSquareCandidate] using
+  simpa only [machineLogSeriesInitialSquareCandidate] using!
     machineCompose_mem_FP hpair machineRawRatMulCode_mem_FP
 
 theorem machineLogSeriesInit_mem_FP : machineLogSeriesInit ∈ Complexity.FP := by
@@ -222,7 +222,7 @@ theorem machineLogSeriesInit_mem_FP : machineLogSeriesInit ∈ Complexity.FP := 
     machineLogSeriesInputBase_mem_FP
   have hsquare := machineTake_mem_FP machineLogSeriesInputBound_mem_FP
     machineLogSeriesInitialSquareCandidate_mem_FP
-  simpa only [machineLogSeriesInit, machineLogSeriesPack] using
+  simpa only [machineLogSeriesInit, machineLogSeriesPack] using!
     machinePair_mem_FP (machineConst_mem_FP rawRatZeroCode)
       (machinePair_mem_FP hbase
         (machinePair_mem_FP hsquare
@@ -349,13 +349,13 @@ theorem machineLogSeriesFinalState_mem_FP :
 
 theorem machineRawRationalLogSeriesSumCode_mem_FP :
     machineRawRationalLogSeriesSumCode ∈ Complexity.FP := by
-  simpa only [machineRawRationalLogSeriesSumCode] using
+  simpa only [machineRawRationalLogSeriesSumCode] using!
     machineCompose_mem_FP machineLogSeriesFinalState_mem_FP
       machineLogSeriesSumField_mem_FP
 
 theorem machineRationalLogSeriesSumCode_mem_FP :
     machineRationalLogSeriesSumCode ∈ Complexity.FP := by
-  simpa only [machineRationalLogSeriesSumCode] using
+  simpa only [machineRationalLogSeriesSumCode] using!
     machineCompose_mem_FP machineRawRationalLogSeriesSumCode_mem_FP
       machineNormalizeRawRatBinaryCode_mem_FP
 
@@ -461,7 +461,7 @@ private theorem logSeriesIntegerNatAbs_size_le_code_length (z : ℤ) :
           omega
         exact hle.trans_lt hlt
       simpa [integerBinaryCode, Nat.size_eq_bits_len,
-        Nat.add_comm] using hs
+        Nat.add_comm] using! hs
 
 private theorem logSeriesRawRatWidth_le_code_length (q : RawRat) :
     rawRatWidth q ≤ (rawRatBinaryCode q).length := by
@@ -489,12 +489,12 @@ private theorem logSeriesRawRatCode_length_le_width (q : RawRat) :
         have hsize : n.size ≤ (n + 1).size :=
           Nat.size_le_size (Nat.le_succ n)
         have habs : (n + 1).size ≤ rawRatWidth q := by
-          simpa only [hqnum, Int.natAbs_negSucc] using
+          simpa only [hqnum, Int.natAbs_negSucc] using!
             rawRat_num_size_le_width q
         omega
   have hden := rawRat_den_size_le_width q
   have hdenbits : q.den.bits.length ≤ rawRatWidth q := by
-    simpa only [Nat.size_eq_bits_len] using hden
+    simpa only [Nat.size_eq_bits_len] using! hden
   omega
 
 private theorem logSeriesCode_length_le_inputBound
@@ -576,7 +576,7 @@ private theorem logSeriesOddBits_length_le_inputBound
     rw [rawRatWidth, RawRat.ofNat] at hw
     simp only [Int.natAbs_ofNat', Nat.size_one] at hw
     have hs := (le_max_left (2 * k + 1).size 1).trans hw
-    simpa only [Nat.size_eq_bits_len] using hs
+    simpa only [Nat.size_eq_bits_len] using! hs
   let word := pair (List.replicate total true) (rawRatBinaryCode q)
   have htotal : total ≤ word.length := by
     simp only [word, pair_length, List.length_replicate]
@@ -604,7 +604,7 @@ theorem machineLogSeriesInit_encode (q : RawRat) (total : ℕ) :
   let word := pair (List.replicate total true) (rawRatBinaryCode q)
   have hbase : (rawRatBinaryCode q).length ≤
       (machineLogSeriesInputBound word).length := by
-    simpa only [RawRat.logOddPower] using
+    simpa only [RawRat.logOddPower] using!
       logSeriesPowerCode_length_le_inputBound q total 0 (by omega)
   have hsquare := logSeriesSquareCode_length_le_inputBound q total
   rw [machineLogSeriesInit]

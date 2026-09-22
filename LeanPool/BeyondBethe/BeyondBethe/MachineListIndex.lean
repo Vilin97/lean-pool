@@ -45,7 +45,7 @@ theorem machineListIndexData_mem_FP :
 
 theorem machineListTail_length_le (word : List Bool) :
     (machineListTail word).length ≤ word.length := by
-  simpa only [machineListTail] using machinePairSecond_length_le word
+  simpa only [machineListTail] using! machinePairSecond_length_le word
 
 theorem machineListTail_iterate_length_le (word : List Bool) : ∀ k,
     ((machineListTail)^[k] word).length ≤ word.length := by
@@ -73,7 +73,7 @@ theorem machineListIndexFinalState_mem_FP :
 
 theorem machineListIndex_mem_FP :
     machineListIndex ∈ Complexity.FP := by
-  simpa only [machineListIndex] using
+  simpa only [machineListIndex] using!
     machineCompose_mem_FP machineListIndexFinalState_mem_FP
       machineListHead_mem_FP
 
@@ -99,7 +99,7 @@ theorem machineListTail_iterate_binaryListCode
       | nil =>
           have htail : machineListTail [] = [] := by
             rfl
-          simpa [binaryListCode] using ih ([] : List α)
+          simpa [binaryListCode] using! ih ([] : List α)
       | cons x xs =>
           rw [machineListTail_cons, ih]
           rfl
@@ -150,7 +150,7 @@ theorem machineMatrixEntryAtUnary_mem_FP :
   have hrowPayload := machinePair_mem_FP hrowUnary hrows
   have hrowCode := machineCompose_mem_FP hrowPayload machineListIndex_mem_FP
   have hentryPayload := machinePair_mem_FP hcolumnUnary hrowCode
-  simpa only [machineMatrixEntryAtUnary] using
+  simpa only [machineMatrixEntryAtUnary] using!
     machineCompose_mem_FP hentryPayload machineListIndex_mem_FP
 
 @[simp] theorem machineMatrixEntryAtUnary_encode {n : ℕ}
