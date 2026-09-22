@@ -38,18 +38,9 @@ theorem linearPowerSeriesFactor_inv (a : ℂ) :
 
 theorem derivative_linearPowerSeriesFactor (a : ℂ) :
     PowerSeries.derivative (R := ℂ) (linearPowerSeriesFactor a) = -PowerSeries.C a := by
-  change PowerSeries.derivative (linearPowerSeriesFactor a) = -PowerSeries.C a
-  rw [linearPowerSeriesFactor, sub_eq_add_neg]
-  rw [show -(PowerSeries.C a * PowerSeries.X) =
-      (-1 : ℂ) • (PowerSeries.C a * PowerSeries.X) by simp]
-  rw [PowerSeries.derivativeFun_add, PowerSeries.derivativeFun_one,
-    PowerSeries.derivativeFun_smul, PowerSeries.derivativeFun_mul]
-  have hX : PowerSeries.derivative (PowerSeries.X : PowerSeries ℂ) = 1 :=
-    PowerSeries.derivative_X
-  have hC : PowerSeries.derivative (PowerSeries.C a) = 0 :=
-    PowerSeries.derivative_C
-  rw [hX, hC]
-  simp
+  simp only [linearPowerSeriesFactor, map_sub, PowerSeries.derivative_one,
+    Derivation.leibniz, PowerSeries.derivative_X, PowerSeries.derivative_C,
+    smul_eq_mul, mul_one, mul_zero, add_zero, zero_sub]
 
 @[simp] theorem coeff_negativeXLogDerivative_linearPowerSeriesFactor
     (a : ℂ) (n : ℕ) :
@@ -83,7 +74,7 @@ theorem negativeXLogDerivative_mul
   change -PowerSeries.X * PowerSeries.derivative (f * g) * (f * g)⁻¹ =
     -PowerSeries.X * PowerSeries.derivative f * f⁻¹ +
       -PowerSeries.X * PowerSeries.derivative g * g⁻¹
-  rw [PowerSeries.derivativeFun_mul,
+  rw [Derivation.leibniz,
     inverse_mul_of_constantCoeff_ne_zero f g hf hg]
   simp only [smul_eq_mul]
   calc

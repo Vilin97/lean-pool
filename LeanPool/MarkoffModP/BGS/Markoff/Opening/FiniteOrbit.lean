@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
 
+import Mathlib.Analysis.Complex.Polynomial.Basic
 import LeanPool.MarkoffModP.BGS.Dynamics.FiniteForwardOrbit
 import LeanPool.MarkoffModP.BGS.Markoff.Core.NormalizedOrbit
 import LeanPool.MarkoffModP.BGS.Markoff.Opening.ParabolicPeriodicity
