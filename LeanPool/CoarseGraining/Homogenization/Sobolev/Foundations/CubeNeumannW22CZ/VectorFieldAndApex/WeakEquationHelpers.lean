@@ -101,8 +101,7 @@ theorem h10WeakEquationOn_of_contDiff_tests
       simpa [gi, diff] using
         (MeasureTheory.eLpNorm_le_eLpNorm_mul_eLpNorm_of_nnnorm
           (μ := μ) (p := (2 : ENNReal)) (q := (2 : ENNReal))
-          (r := (1 : ENNReal)) hgi_meas hdiff_meas
-          (fun a b : ℝ => a * b) 1
+          (r := (1 : ENNReal)) (fun a b : ℝ => a * b) 1 (by fun_prop) hgi_meas hdiff_meas
           (Filter.Eventually.of_forall fun x => by simp))
     have hconst_ne_top : MeasureTheory.eLpNorm gi 2 μ ≠ ⊤ :=
       hgi_mem.eLpNorm_lt_top.ne
@@ -142,7 +141,7 @@ theorem h10WeakEquationOn_of_contDiff_tests
       rw [hEq]
       exact hL1
     exact MeasureTheory.tendsto_integral_of_L1'
-      (μ := μ) (f := fLim) hfLim_int.aestronglyMeasurable hFn_int hL1_diff
+      (μ := μ) (f := fLim) hFn_int hL1_diff
   have hleft_tendsto :
       Filter.Tendsto
         (fun n => ∫ x in U, vecDot (G x) (D n x) ∂MeasureTheory.volume)
@@ -222,8 +221,7 @@ theorem h10WeakEquationOn_of_contDiff_tests
       simpa [diff] using
         (MeasureTheory.eLpNorm_le_eLpNorm_mul_eLpNorm_of_nnnorm
           (μ := μ) (p := (2 : ENNReal)) (q := (2 : ENNReal))
-          (r := (1 : ENNReal)) hf_meas hdiff_meas
-          (fun a b : ℝ => a * b) 1
+          (r := (1 : ENNReal)) (fun a b : ℝ => a * b) 1 (by fun_prop) hf_meas hdiff_meas
           (Filter.Eventually.of_forall fun x => by simp))
     have hconst_ne_top : MeasureTheory.eLpNorm f 2 μ ≠ ⊤ :=
       hf.eLpNorm_lt_top.ne
@@ -263,7 +261,7 @@ theorem h10WeakEquationOn_of_contDiff_tests
       rw [hEq]
       exact hL1
     exact MeasureTheory.tendsto_integral_of_L1'
-      (μ := μ) (f := fLim) hfLim_int.aestronglyMeasurable hFn_int hL1_diff
+      (μ := μ) (f := fLim) hFn_int hL1_diff
   have hright_to_left :
       Filter.Tendsto
         (fun n => ∫ x in U, f x * φ.approx n x ∂MeasureTheory.volume)

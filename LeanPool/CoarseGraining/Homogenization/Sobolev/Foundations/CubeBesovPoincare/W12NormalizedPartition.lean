@@ -73,14 +73,16 @@ theorem openCubeSet_normalizedW1pSeminorm_two_eq_cubeLpNorm_euclideanGrad
           (Book.Ch02.openCubeSet_nonempty Q))
         (2 : ℝ≥0∞) (by norm_num) (by norm_num) u =
       cubeLpNorm Q (2 : ℝ≥0∞) (fun x => euclideanNorm (u.grad x)) := by
+  let domain := (isOpenBoundedConvexDomain_openCubeSet Q).toBoundedMeasurableDomain
+    (Book.Ch02.openCubeSet_nonempty Q)
+  change (domain.normalizedLpENorm 2 (fun x => euclideanNorm (u.grad x))).toReal = _
+  rw [domain.normalizedLpENorm_eq_eLpNorm 2 _
+    (u.gradEuclideanMemLp domain 2).aestronglyMeasurable]
   change (MeasureTheory.eLpNorm (fun x => euclideanNorm (u.grad x))
-      (2 : ℝ≥0∞)
-      ((isOpenBoundedConvexDomain_openCubeSet Q).toBoundedMeasurableDomain
-        (Book.Ch02.openCubeSet_nonempty Q)).normalizedVolume).toReal =
-    (MeasureTheory.eLpNorm (fun x => euclideanNorm (u.grad x))
-      (2 : ℝ≥0∞) (normalizedCubeMeasure Q)).toReal
-  exact congrArg ENNReal.toReal
-    (openCubeSet_boundedMeasurableDomain_normalizedVolume_eq_normalizedCubeMeasure Q ▸ rfl)
+    2 domain.normalizedVolume).toReal = _
+  rw [show domain.normalizedVolume = normalizedCubeMeasure Q from
+    openCubeSet_boundedMeasurableDomain_normalizedVolume_eq_normalizedCubeMeasure Q]
+  rfl
 
 /-- Normalized `L²` energy partitions exactly over descendants.  This is the
 measure-theoretic ingredient needed to aggregate the restricted open-cube

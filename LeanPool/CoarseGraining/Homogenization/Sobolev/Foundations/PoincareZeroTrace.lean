@@ -237,7 +237,7 @@ private theorem integral_abs_fderiv_coord_le_eLpNorm_mul_measure
     exact (MeasureTheory.measure_lt_top μ Set.univ).ne
   have hprod_ne_top : MeasureTheory.eLpNorm dg pE μ *
       μ Set.univ ^ (1 - 1 / q : ℝ) ≠ ⊤ :=
-    ENNReal.mul_ne_top hmemp.2.ne hmeasure_pow_ne_top
+    ENNReal.mul_ne_top hmemp.eLpNorm_lt_top.ne hmeasure_pow_ne_top
   calc
     ∫ x in U, |(fderiv ℝ f x) (basisVec i)| ∂MeasureTheory.volume
         = ENNReal.toReal (MeasureTheory.eLpNorm dg 1 μ) := hL1_eq
@@ -367,12 +367,11 @@ private theorem valueLpSeminorm_le_subAverage_add_constLpSeminorm_ofContDiff
               simp [avg]
       _ ≤ MeasureTheory.eLpNorm (fun x => f x - avg) pE μ +
             MeasureTheory.eLpNorm (fun _ : Vec d => avg) pE μ :=
-          MeasureTheory.eLpNorm_add_le hsub_mem.aestronglyMeasurable
-            hconst_mem.aestronglyMeasurable hp1
+          MeasureTheory.eLpNorm_add_le hp1
   have hsum_ne_top :
       MeasureTheory.eLpNorm (fun x => f x - avg) pE μ +
           MeasureTheory.eLpNorm (fun _ : Vec d => avg) pE μ ≠ ⊤ := by
-    exact ENNReal.add_ne_top.2 ⟨hsub_mem.2.ne, hconst_mem.2.ne⟩
+    exact ENNReal.add_ne_top.2 ⟨hsub_mem.eLpNorm_lt_top.ne, hconst_mem.eLpNorm_lt_top.ne⟩
   calc
     u.valueLpSeminorm = ENNReal.toReal (MeasureTheory.eLpNorm f pE μ) := by
       simp [W1pFunction.valueLpSeminorm, u, pE, μ,
@@ -384,7 +383,7 @@ private theorem valueLpSeminorm_le_subAverage_add_constLpSeminorm_ofContDiff
         ENNReal.toReal_mono hsum_ne_top htri
     _ = ENNReal.toReal (MeasureTheory.eLpNorm (fun x => f x - avg) pE μ) +
           ENNReal.toReal (MeasureTheory.eLpNorm (fun _ : Vec d => avg) pE μ) := by
-        rw [ENNReal.toReal_add hsub_mem.2.ne hconst_mem.2.ne]
+        rw [ENNReal.toReal_add hsub_mem.eLpNorm_lt_top.ne hconst_mem.eLpNorm_lt_top.ne]
     _ = u.subAverageLpSeminorm +
           ENNReal.toReal
             (MeasureTheory.eLpNorm (fun _ : Vec d => integralAverage U f) (ENNReal.ofReal q)

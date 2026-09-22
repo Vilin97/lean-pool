@@ -235,8 +235,7 @@ private theorem eventually_gradientCoordLpSeminormSum_convexApproxSmoothH1W1p_le
                 filter_upwards with x
                 simp only [Pi.add_apply]
                 ring
-        _ ≤ _ := eLpNorm_add_le hsub.aestronglyMeasurable (hgrad i).aestronglyMeasurable
-          p.one_lt.le
+        _ ≤ _ := eLpNorm_add_le p.one_lt.le
     have hn' : eLpNorm (fun x => v.grad x i - u.grad x i) p.exponent
         (volume.restrict U) ≤ 1 := by
       simpa [v, hvgrad] using hn
@@ -348,8 +347,7 @@ private theorem eventually_valueLpSeminorm_convexApproxSmoothH1W1p_le
               filter_upwards with x
               simp only [Pi.add_apply]
               ring
-      _ ≤ _ := eLpNorm_add_le hsubmem.aestronglyMeasurable hconst.aestronglyMeasurable
-        p.one_lt.le
+      _ ≤ _ := eLpNorm_add_le p.one_lt.le
   have hsum_top :
       eLpNorm (fun x => v.toFun x - integralAverage U v.toFun) p.exponent μ +
         eLpNorm (fun _ : Vec d => integralAverage U v.toFun) p.exponent μ ≠ ∞ :=
@@ -433,7 +431,6 @@ private theorem memLp_of_gradMemLp_on_isOpenBoundedConvexDomain
       simp [ψ, convexApproxSmoothH1W1p_toFun]
     have hnorm := eLpNorm_le_of_tendstoInMeasure (p := p.exponent) hbound' hmeasureψ
       (fun n => (ψ n).memLp.aestronglyMeasurable)
-    refine ⟨u.memL2.aestronglyMeasurable, ?_⟩
     exact lt_of_le_of_lt hnorm ENNReal.ofReal_lt_top
   · have hempty : U = ∅ := Set.not_nonempty_iff_eq_empty.mp hnonempty
     subst U

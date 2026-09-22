@@ -137,7 +137,7 @@ theorem blockResponse_flux_memL2_of_lowerImage_memVectorL2_of_mem_responseSpace_
     simpa [Pi.add_apply] using! hSymmLower.add hSkewPot
   have hFluxMeas :
       MeasureTheory.AEStronglyMeasurable (fun x => X.flux x) (volumeMeasureOn U) :=
-    hFlux'.1.congr hrepr.symm
+    hFlux'.aestronglyMeasurable.congr hrepr.symm
   refine hFlux'.congr_norm hFluxMeas ?_
   filter_upwards [hrepr] with x hx
   simpa using congrArg norm hx.symm
@@ -161,7 +161,7 @@ theorem blockResponse_flux_memL2_of_lowerImage_ae_eq_potential_of_mem_responseSp
         MeasureTheory.AEStronglyMeasurable
           (fun x => (blockMatVecMul (blockCoeffField a x) (X.eval x)).2)
           (volumeMeasureOn U) :=
-      hLowerPotL2.1.congr hLowerEq.symm
+      hLowerPotL2.aestronglyMeasurable.congr hLowerEq.symm
     refine hLowerPotL2.congr_norm hLowerMeas ?_
     filter_upwards [hLowerEq] with x hx
     simpa using congrArg norm hx.symm

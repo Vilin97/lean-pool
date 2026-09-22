@@ -98,7 +98,8 @@ theorem norm_toScalarL2_affineOnIsSobolevRegularDomain_le
           (fun x => (H1Function.affineOnIsSobolevRegularDomain hU p) x)
           (2 : ENNReal) (volumeMeasureOn U) ≤
         (volumeMeasureOn U) Set.univ ^ ((2 : ENNReal).toReal⁻¹) * ENNReal.ofReal C :=
-    MeasureTheory.eLpNorm_le_of_ae_bound (μ := volumeMeasureOn U) (p := (2 : ENNReal)) hbound
+    MeasureTheory.eLpNorm_le_of_ae_bound (μ := volumeMeasureOn U) (p := (2 : ENNReal))
+      (H1Function.affineOnIsSobolevRegularDomain hU p).memL2.aestronglyMeasurable hbound
   have hpow_ne_top :
       (volumeMeasureOn U) Set.univ ^ ((2 : ENNReal).toReal⁻¹) ≠ ⊤ := by
     refine (ENNReal.rpow_lt_top_of_nonneg (by positivity) ?_).ne
@@ -156,7 +157,7 @@ theorem norm_averageGradient_le_averageGradientL2ControlConst_mul
       _ = (∫⁻ x, ‖u.grad x i‖ₑ ∂μ).toReal := by
         exact MeasureTheory.integral_norm_eq_lintegral_enorm hgrad_int.aestronglyMeasurable
       _ = ENNReal.toReal (MeasureTheory.eLpNorm (fun x => u.grad x i) 1 μ) := by
-        rw [MeasureTheory.eLpNorm_one_eq_lintegral_enorm]
+        rw [MeasureTheory.eLpNorm_one_eq_lintegral_enorm hgrad_int.aestronglyMeasurable]
   have hL1_bound :
       MeasureTheory.eLpNorm (fun x => u.grad x i) 1 μ ≤
         MeasureTheory.eLpNorm (fun x => u.grad x i) 2 μ *
@@ -174,7 +175,7 @@ theorem norm_averageGradient_le_averageGradientL2ControlConst_mul
     simpa [μ] using (MeasureTheory.measure_lt_top μ Set.univ).ne
   have hMul_ne_top :
       MeasureTheory.eLpNorm (fun x => u.grad x i) 2 μ * μ Set.univ ^ ((1 : ℝ) - 1 / 2) ≠ ⊤ :=
-    ENNReal.mul_ne_top (u.grad_memL2 i).2.ne hConst_ne_top
+    ENNReal.mul_ne_top (u.grad_memL2 i).eLpNorm_lt_top.ne hConst_ne_top
   have hL1_toReal :
       ENNReal.toReal (MeasureTheory.eLpNorm (fun x => u.grad x i) 1 μ) ≤
         ENNReal.toReal

@@ -37,7 +37,9 @@ theorem normalizedCubeMeasure_originCube_map_addRight_eq {d : ℕ}
         (normalizedCubeMeasure (originCube d Q.scale)) =
       normalizedCubeMeasure Q := by
   unfold normalizedCubeMeasure
-  rw [Measure.map_smul, cubeMeasure_originCube_map_addRight_eq Q,
+  rw [Measure.map_smul _ (f := fun x : Vec d => x + triadicCubeShift Q)
+    (measurable_id.add measurable_const).aemeasurable,
+    cubeMeasure_originCube_map_addRight_eq Q,
     cubeVolume_originCube_same_scale Q]
 
 theorem measurePreserving_addRight_normalizedCubeMeasure_originCube {d : ℕ}
