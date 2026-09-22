@@ -63,8 +63,18 @@ theorem baseChangePair_cover
     simp only [Category.assoc]
     rfl
   rw [hpair]
-  refine Eq.trans ((reassoc_of%
-    (projFormula_tensorμ_cover A B φ M' M)) _) ?_
+  have hcover := congrArg (fun t => t ≫
+      modTensorMap A (𝟙 (restrictRegular φ)) d.pairMod ≫
+        (modTensorUnitRight A (restrictRegular φ)).hom)
+    (projFormula_tensorμ_cover A B φ M' M)
+  conv at hcover =>
+    lhs
+    erw [Category.assoc]
+    arg 2
+    erw [Category.assoc]
+    arg 2
+    erw [Category.assoc]
+  refine Eq.trans hcover ?_
   refine Eq.trans (Category.assoc _ _ _) ?_
   refine Eq.trans (whisker_eq _ (Category.assoc _ _ _)) ?_
   refine Eq.trans (whisker_eq _ (whisker_eq _
@@ -482,7 +492,11 @@ theorem splitCoevalDual_pair
         splitCoevalCoreDual A B φ v hv) ▷
         (modTensor A (restrictRegular φ) M))) :=
     associator_naturality_middle _ _ _
-  refine Eq.trans (whisker_eq _ ((reassoc_of% hmid) _)) ?_
+  have hmid' := congrArg (fun t => t ≫
+      (B ◁ (modTensorπ B (baseChangeMod φ M') (baseChangeMod φ M) ≫
+        (baseChangeDatum A B φ d).pair)) ≫ μ[B]) hmid
+  conv at hmid' => lhs; erw [Category.assoc]
+  refine Eq.trans (whisker_eq _ hmid') ?_
   refine Eq.trans (whisker_eq _ (Category.assoc _ _ _)) ?_
   refine Eq.trans (Category.assoc _ _ _).symm ?_
   refine Eq.trans (eq_whisker hcoh _) ?_
@@ -796,7 +810,7 @@ theorem splitCoeval_pair
   refine Eq.trans (whisker_eq _ (eq_whisker (congrArg
     (fun t => B ◁ t)
     (splitCoeval_point_pair A B φ w d hz hw)) _)) ?_
-  rw [← BraidedCategory.braiding_naturality_left_assoc,
+  erw [← BraidedCategory.braiding_naturality_left_assoc,
     IsCommMonObj.mul_comm]
   rfl
 

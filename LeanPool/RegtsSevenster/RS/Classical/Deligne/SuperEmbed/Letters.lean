@@ -1185,7 +1185,7 @@ noncomputable def colourSum {K : Type} [DecidableEq K]
     (c d : Fin n → K) : ℂ :=
   ∑ σ ∈ Finset.univ.filter
       (fun σ : Equiv.Perm (Fin n) => permIndex σ c = d),
-    x σ * parSign σ (par ∘ c)
+    x.coeff σ * parSign σ (par ∘ c)
 
 /-- The colour sum vanishes between colourings of different
 counts. -/
@@ -1213,18 +1213,17 @@ private theorem permAlg_expand
     [Preadditive A] [Linear ℂ A]
     (X : A) {n : ℕ}
     (x : SymGroupAlgebra n) :
-    permAlg X n x = ∑ σ : Equiv.Perm (Fin n), x σ • permMor X n σ
+    permAlg X n x = ∑ σ : Equiv.Perm (Fin n), x.coeff σ • permMor X n σ
     := by
   classical
   have hlift : permAlg X n x =
-      x.sum fun σ r => r • permMor X n σ := by
+      x.coeff.sum fun σ r => r • permMor X n σ := by
     rw [permAlg]
     exact MonoidAlgebra.lift_apply _ _
-  rw [hlift, show (x.sum fun σ r => r • permMor X n σ) =
-    ∑ σ ∈ x.support, x σ • permMor X n σ from rfl]
+  rw [hlift, show (x.coeff.sum fun σ r => r • permMor X n σ) =
+    ∑ σ ∈ x.coeff.support, x.coeff σ • permMor X n σ from rfl]
   refine Finset.sum_subset (Finset.subset_univ _) fun σ _ hσ => ?_
   rw [Finsupp.notMem_support_iff.mp hσ, zero_smul]
-  rfl
 
 /-- The round trip through equal colourings is the transport. -/
 private theorem nIn_nOut_of_eq
@@ -1257,7 +1256,7 @@ theorem nIn_permAlg_nOut
       else 0 := by
   have hstep : S.nIn n c ≫ permAlg M n x ≫ S.nOut n d =
       ∑ σ : Equiv.Perm (Fin n),
-        ((x σ * parSign σ (par ∘ c)) •
+        ((x.coeff σ * parSign σ (par ∘ c)) •
           (eqToHom (congrArg (tensorPow A U)
             (popCount_permIndex' σ c)) ≫
             S.nIn n (permIndex σ c))) ≫ S.nOut n d := by

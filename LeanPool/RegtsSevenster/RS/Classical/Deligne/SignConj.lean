@@ -59,11 +59,11 @@ theorem twistPow_perm_conj
     (tensorPow D V (k + 1) ◁ modPowπ A R.X (k + 1)) ≫
       (permMor V (k + 1) σ ⊗ₘ
         modPowPerm (A := A) (X := R.X) (k + 1) σ) := by
-    rw [← MonoidalCategory.id_tensorHom,
+    erw [← MonoidalCategory.id_tensorHom,
       MonoidalCategory.tensorHom_comp_tensorHom,
       MonoidalCategory.tensorHom_comp_tensorHom,
       Category.comp_id, Category.id_comp, modPowπ_perm]
-  rw [modPowπ_perm_assoc, hcov]
+  erw [modPowπ_perm_assoc, hcov]
   exact ((Category.assoc _ _ _).symm.trans
     ((eq_whisker h2 _).trans
       ((Category.assoc _ _ _).trans
@@ -111,7 +111,7 @@ theorem twistPow_perm_conj_oddLine
         (((twistPowModIso A L.obj R k).hom).hom ≫
           (tensorPow D L.obj (k + 1) ◁
             modPowPerm (A := A) (X := R.X) (k + 1) σ)) := by
-  rw [twistPow_perm_conj, oddLine_permMor,
+  erw [twistPow_perm_conj, oddLine_permMor,
     MonoidalCategory.tensorHom_def,
     MonoidalLinear.smul_whiskerRight, Linear.smul_comp,
     MonoidalCategory.id_whiskerRight, Category.id_comp]
@@ -147,7 +147,6 @@ theorem twistPow_symIdem_conj
           MonoidAlgebra.single σ (1 : ℂ) from by
         rw [MonoidAlgebra.smul_single', mul_one],
       map_smul, modPowAlg_single]
-    rfl
   -- The antisymmetriser's whiskered normal form, free of the
   -- identification.
   have hb : tensorPow D L.obj (k + 1) ◁
@@ -197,7 +196,7 @@ theorem twistPow_symIdem_conj
           modPow A ((tensorLeftMod A L.obj R).X) (k + 1) ⟶
             modPow A ((tensorLeftMod A L.obj R).X) (k + 1))) ≫
       ((twistPowModIso A L.obj R k).hom).hom = _
-  rw [Linear.smul_comp, Preadditive.sum_comp]
+  erw [Linear.smul_comp, Preadditive.sum_comp]
   exact congrArg _ (Finset.sum_congr rfl fun σ _ =>
     twistPow_perm_conj_oddLine A L R k σ)
 

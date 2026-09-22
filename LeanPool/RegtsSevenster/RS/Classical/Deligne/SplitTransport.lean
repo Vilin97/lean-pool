@@ -49,7 +49,7 @@ theorem baseChangeFreeInv_natural
   rw [baseChangeMapMod_hom, baseChangeFreeInv, baseChangeFreeInv]
   refine Eq.trans ?_ (Eq.trans (Category.assoc _ _ _)
     (whisker_eq _ hmap)).symm
-  rw [← MonoidalCategory.whiskerLeft_comp_assoc, hcore,
+  erw [← MonoidalCategory.whiskerLeft_comp_assoc, hcore,
     MonoidalCategory.whiskerLeft_comp_assoc]
   rfl
 

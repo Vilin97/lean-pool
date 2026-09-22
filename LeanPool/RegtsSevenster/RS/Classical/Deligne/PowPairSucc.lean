@@ -119,10 +119,9 @@ private theorem tensorHom_π_pairFold
         (modTensorπ A N₁' N₁ ⊗ₘ modTensorπ A N₂' N₂) ≫ t)
       t2).trans (by
         rw [← MonoidalCategory.tensorHom_comp_tensorHom_assoc])
-  rw [← Category.assoc, tensorHom_π_interchange,
-    rawInterchangeπ, rawInterchange, Category.assoc,
-    Category.assoc]
-  exact congrArg (fun t : (N₁'.X ⊗ N₁.X) ⊗ (N₂'.X ⊗ N₂.X) ⟶
+  erw [← Category.assoc, tensorHom_π_interchange, rawInterchangeπ, rawInterchange]
+  conv_lhs => erw [Category.assoc]; arg 2; erw [Category.assoc]
+  simpa only [Category.assoc] using congrArg (fun t : (N₁'.X ⊗ N₁.X) ⊗ (N₂'.X ⊗ N₂.X) ⟶
       A => tensorμ N₁'.X N₂'.X N₁.X N₂.X ≫ t) htail
 
 end Fold
@@ -201,7 +200,7 @@ theorem modPowPairing_succ_tensor
             modPowCastMod A M.X
               (by omega : 0 + 1 + n + 1 = n + 2)).hom)) ≫
       pairPow A M M' d (n + 2) := by
-    rw [← Category.assoc,
+    erw [← Category.assoc,
       MonoidalCategory.tensorHom_comp_tensorHom]
   -- The successor pairing against the swapped projection.
   have hstep : modTensorπ A (modPowMod A M.X (n + 1))
@@ -276,9 +275,9 @@ theorem modPowPairing_succ_tensor
             modPowCastMod A M.X
               (by omega : 0 + 1 + n + 1 = n + 2)).hom ⊗ₘ
           (powMulMod A M'.X n 0).hom) ≫ t) hstep
-    rw [tensorHom_π_interchange_assoc, rawInterchangeπ,
-      rawInterchange]
+    erw [tensorHom_π_interchange_assoc, rawInterchangeπ, rawInterchange]
     simp only [Category.assoc]
+    conv_lhs => arg 2; erw [Category.assoc]
     refine Eq.trans (congrArg (fun t :
         (modTensorMod A (modPowMod A M.X n)
           (modPowMod A M.X 0)).X ⊗

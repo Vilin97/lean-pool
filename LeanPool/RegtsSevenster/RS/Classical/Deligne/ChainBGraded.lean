@@ -214,8 +214,22 @@ noncomputable def chainBdegZeroStageIso
     rw [chainStage2Cast_trans]
     exact chainStage2Cast_rfl A M M' _ _
 
--- Raised budget: the graded comparison isomorphism is built from
--- the colimit cocone and the duality datum in one term.
+private theorem chainBdegZeroStage_compatibility
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
+    [HasCoequalizers D] [Linear ℂ D] [MonoidalLinear ℂ D]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorRight Z)]
+    (A : D) [MonObj A] [IsCommMonObj A] (M : Mod D A) (M' : Mod D A)
+    [HasColimitsOfShape SmallNat.{v} D]
+    (d : ModDualityDatum A M M')
+    (k : ℕ) :
+    chainDelta2 A M M' d (0 + k) (0 + k) ≫
+        (chainBdegZeroStageIso A M M' (k + 1)).hom =
+      (chainBdegZeroStageIso A M M' k).hom ≫ chainDelta2 A M M' d k k := by
+  dsimp only [chainBdegZeroStageIso]
+  exact (chainStage2Cast_delta2 A M M' d (Nat.zero_add k) (Nat.zero_add k)).symm
+
 /-- **The balanced line is the degree-zero algebra carrier**: the
 zero-offset line's colimit is the splitting-chain algebra. -/
 noncomputable def chainBdegZeroIso
@@ -233,15 +247,7 @@ noncomputable def chainBdegZeroIso
     (fun k => chainDelta2 A M M' d (0 + k) (0 + k))
     (chainDelta A M M' d)
     (chainBdegZeroStageIso A M M')
-    (fun k => by
-      show chainDelta2 A M M' d (0 + k) (0 + k) ≫
-          chainStage2Cast A M M' (Nat.zero_add (k + 1))
-            (Nat.zero_add (k + 1)) =
-        chainStage2Cast A M M' (Nat.zero_add k)
-            (Nat.zero_add k) ≫
-          chainDelta2 A M M' d k k
-      exact (chainStage2Cast_delta2 A M M' d
-        (Nat.zero_add k) (Nat.zero_add k)).symm)
+    (chainBdegZeroStage_compatibility A M M' d)
 
 end ZeroLine
 
@@ -265,8 +271,26 @@ noncomputable def chainBdegSuccStageIso
     rw [chainStage2Cast_trans]
     exact chainStage2Cast_rfl A M M' _ _
 
--- Raised budget: the graded comparison isomorphism is built from
--- the colimit cocone and the duality datum in one term.
+private theorem chainBdegSuccStage_compatibility
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
+    [HasCoequalizers D] [Linear ℂ D] [MonoidalLinear ℂ D]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorRight Z)]
+    (A : D) [MonObj A] [IsCommMonObj A] (M : Mod D A) (M' : Mod D A)
+    [HasColimitsOfShape SmallNat.{v} D]
+    (d : ModDualityDatum A M M')
+    (p₀ q₀ : ℕ)
+    (k : ℕ) :
+    chainDelta2 A M M' d (p₀ + 1 + k) (q₀ + 1 + k) ≫
+        (chainBdegSuccStageIso A M M' p₀ q₀ (k + 1)).hom =
+      (chainBdegSuccStageIso A M M' p₀ q₀ k).hom ≫
+        chainDelta2 A M M' d (p₀ + (k + 1)) (q₀ + (k + 1)) := by
+  dsimp only [chainBdegSuccStageIso]
+  exact (chainStage2Cast_delta2 A M M' d
+    (by omega : p₀ + 1 + k = p₀ + (k + 1))
+    (by omega : q₀ + 1 + k = q₀ + (k + 1))).symm
+
 /-- **The raised line is the line**: shifting both offsets by one
 is passing to the tail of the chain, which has the same
 colimit. -/
@@ -287,18 +311,7 @@ noncomputable def chainBdegSuccIso
     (fun k => chainDelta2 A M M' d (p₀ + 1 + k) (q₀ + 1 + k))
     (fun k => chainDelta2 A M M' d (p₀ + (k + 1)) (q₀ + (k + 1)))
     (chainBdegSuccStageIso A M M' p₀ q₀)
-    (fun k => by
-      show chainDelta2 A M M' d (p₀ + 1 + k) (q₀ + 1 + k) ≫
-          chainStage2Cast A M M'
-            (by omega : p₀ + 1 + (k + 1) = p₀ + (k + 1 + 1))
-            (by omega : q₀ + 1 + (k + 1) = q₀ + (k + 1 + 1)) =
-        chainStage2Cast A M M'
-            (by omega : p₀ + 1 + k = p₀ + (k + 1))
-            (by omega : q₀ + 1 + k = q₀ + (k + 1)) ≫
-          chainDelta2 A M M' d (p₀ + (k + 1)) (q₀ + (k + 1))
-      rw [chainStage2Cast_delta2 A M M' d
-        (by omega : p₀ + 1 + k = p₀ + (k + 1))
-        (by omega : q₀ + 1 + k = q₀ + (k + 1))])) ≪≫
+    (chainBdegSuccStage_compatibility A M M' d p₀ q₀)) ≪≫
   chainColimitTailIso
     (fun k => chainStage2 A M M' (p₀ + k) (q₀ + k))
     (fun k => chainDelta2 A M M' d (p₀ + k) (q₀ + k))
@@ -559,7 +572,7 @@ theorem whiskerLeft_ι_chainBdegInsP
         chainBdegι A M M' d (p₀ + 1) q₀ k := by
   show (tensorLeft M'.X).map (colimit.ι (chainDiagram _ _)
       (smallNatEquiv.functor.obj k)) ≫ _ = _
-  rw [chainBdegInsP, ι_preservesColimitIso_hom_assoc]
+  erw [chainBdegInsP, ι_preservesColimitIso_hom_assoc]
   exact colimit.ι_desc (chainBdegInsPCocone A M M' d p₀ q₀)
     (smallNatEquiv.functor.obj k)
 

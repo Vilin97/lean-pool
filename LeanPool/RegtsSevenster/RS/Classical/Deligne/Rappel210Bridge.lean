@@ -50,8 +50,8 @@ theorem splitSeed_eq [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     show (symPowOne (𝟙_ D) Y).inv =
       (modPowOne (𝟙_ D) Y).inv ≫ symPowπ (𝟙_ D) Y 1 from rfl,
     modPowOne_inv]
-  simp only [Category.assoc]
-  exact (Category.assoc _ _ _).symm
+  repeat' erw [Category.assoc]
+  rfl
 
 /-- **The stage units are the symmetrised point powers.** -/
 theorem splitUnitStage_eq
@@ -80,44 +80,56 @@ theorem splitUnitStage_eq
       rw [← MonoidalCategory.tensorHom_comp_tensorHom,
         Category.assoc, symPowπ_tensor_symMul,
         modPowπ_tensor_modPowMul_assoc]
-    calc splitUnitStage Y pt (n + 1)
-        = (tensorPowPoint pt (n + 1) ≫
+    have stage0 : (splitUnitStage Y pt (n + 1) : 𝟙_ D ⟶ splitStage Y (n + 1)) =
+      (tensorPowPoint pt (n + 1) ≫
             modPowπ (𝟙_ D) Y (n + 1) ≫
             symPowπ (𝟙_ D) Y (n + 1)) ≫
             (ρ_ (splitStage Y n)).inv ≫
             (splitStage Y n ◁ splitSeed Y pt) ≫
             symMul (𝟙_ D) Y (n + 1) 1 := by
-          rw [← splitUnitStage_succ, hIH]
-          rfl
-      _ = (ρ_ (𝟙_ D)).inv ≫
+      rw [← splitUnitStage_succ, hIH]
+      rfl
+    have stage1 : (tensorPowPoint pt (n + 1) ≫
+            modPowπ (𝟙_ D) Y (n + 1) ≫
+            symPowπ (𝟙_ D) Y (n + 1)) ≫
+            (ρ_ (splitStage Y n)).inv ≫
+            (splitStage Y n ◁ splitSeed Y pt) ≫
+            symMul (𝟙_ D) Y (n + 1) 1 =
+      ((ρ_ (𝟙_ D)).inv ≫
             ((tensorPowPoint pt (n + 1) ≫
               modPowπ (𝟙_ D) Y (n + 1) ≫
               symPowπ (𝟙_ D) Y (n + 1)) ⊗ₘ
               splitSeed Y pt) ≫
-            symMul (𝟙_ D) Y (n + 1) 1 := by
-          have ha : (tensorPowPoint pt (n + 1) ≫
-              modPowπ (𝟙_ D) Y (n + 1) ≫
-              symPowπ (𝟙_ D) Y (n + 1)) ≫
-              (ρ_ (splitStage Y n)).inv =
-            (ρ_ (𝟙_ D)).inv ≫ ((tensorPowPoint pt (n + 1) ≫
-              modPowπ (𝟙_ D) Y (n + 1) ≫
-              symPowπ (𝟙_ D) Y (n + 1)) ▷ (𝟙_ D)) :=
-            rightUnitor_inv_naturality _
-          have hb : ((tensorPowPoint pt (n + 1) ≫
-              modPowπ (𝟙_ D) Y (n + 1) ≫
-              symPowπ (𝟙_ D) Y (n + 1)) ▷ (𝟙_ D)) ≫
-              (splitStage Y n ◁ splitSeed Y pt) =
+            symMul (𝟙_ D) Y (n + 1) 1 : 𝟙_ D ⟶ splitStage Y (n + 1)) := by
+      have ha : (tensorPowPoint pt (n + 1) ≫
+          modPowπ (𝟙_ D) Y (n + 1) ≫
+          symPowπ (𝟙_ D) Y (n + 1)) ≫
+          (ρ_ (splitStage Y n)).inv =
+        (ρ_ (𝟙_ D)).inv ≫ ((tensorPowPoint pt (n + 1) ≫
+          modPowπ (𝟙_ D) Y (n + 1) ≫
+          symPowπ (𝟙_ D) Y (n + 1)) ▷ (𝟙_ D)) :=
+        rightUnitor_inv_naturality _
+      have hb : ((tensorPowPoint pt (n + 1) ≫
+          modPowπ (𝟙_ D) Y (n + 1) ≫
+          symPowπ (𝟙_ D) Y (n + 1)) ▷ (𝟙_ D)) ≫
+          (splitStage Y n ◁ splitSeed Y pt) =
+        ((tensorPowPoint pt (n + 1) ≫
+          modPowπ (𝟙_ D) Y (n + 1) ≫
+          symPowπ (𝟙_ D) Y (n + 1)) ⊗ₘ splitSeed Y pt) :=
+        (MonoidalCategory.tensorHom_def _ _).symm
+      exact (Category.assoc _ _ _).symm.trans
+        ((eq_whisker ha _).trans
+          ((Category.assoc _ _ _).trans
+            (whisker_eq _
+              ((Category.assoc _ _ _).symm.trans
+                (eq_whisker hb _)))))
+    have stage2 : ((ρ_ (𝟙_ D)).inv ≫
             ((tensorPowPoint pt (n + 1) ≫
               modPowπ (𝟙_ D) Y (n + 1) ≫
-              symPowπ (𝟙_ D) Y (n + 1)) ⊗ₘ splitSeed Y pt) :=
-            (MonoidalCategory.tensorHom_def _ _).symm
-          exact (Category.assoc _ _ _).symm.trans
-            ((eq_whisker ha _).trans
-              ((Category.assoc _ _ _).trans
-                (whisker_eq _
-                  ((Category.assoc _ _ _).symm.trans
-                    (eq_whisker hb _)))))
-      _ = (ρ_ (𝟙_ D)).inv ≫
+              symPowπ (𝟙_ D) Y (n + 1)) ⊗ₘ
+              splitSeed Y pt) ≫
+            symMul (𝟙_ D) Y (n + 1) 1 : 𝟙_ D ⟶ splitStage Y (n + 1)) =
+      (ρ_ (𝟙_ D)).inv ≫
             ((tensorPowPoint pt (n + 1) ⊗ₘ
               tensorPowPoint pt 1) ≫
               ((modPowπ (𝟙_ D) Y (n + 1) ≫
@@ -125,32 +137,51 @@ theorem splitUnitStage_eq
                 (modPowπ (𝟙_ D) Y 1 ≫
                   symPowπ (𝟙_ D) Y 1))) ≫
             symMul (𝟙_ D) Y (n + 1) 1 := by
-          rw [splitSeed_eq,
-            MonoidalCategory.tensorHom_comp_tensorHom]
-          rfl
-      _ = (ρ_ (𝟙_ D)).inv ≫
+      rw [splitSeed_eq,
+        MonoidalCategory.tensorHom_comp_tensorHom]
+      rfl
+    have stage3 : (ρ_ (𝟙_ D)).inv ≫
+            ((tensorPowPoint pt (n + 1) ⊗ₘ
+              tensorPowPoint pt 1) ≫
+              ((modPowπ (𝟙_ D) Y (n + 1) ≫
+                symPowπ (𝟙_ D) Y (n + 1)) ⊗ₘ
+                (modPowπ (𝟙_ D) Y 1 ≫
+                  symPowπ (𝟙_ D) Y 1))) ≫
+            symMul (𝟙_ D) Y (n + 1) 1 =
+      (ρ_ (𝟙_ D)).inv ≫
             ((tensorPowPoint pt (n + 1) ⊗ₘ
               tensorPowPoint pt 1) ≫
               (tensorPowConcat Y (n + 1) 1).hom) ≫
             modPowπ (𝟙_ D) Y (n + 1 + 1) ≫
             symPowπ (𝟙_ D) Y (n + 1 + 1) := by
-          rw [Category.assoc, hpair]
-          simp only [Category.assoc]
-      _ = (ρ_ (𝟙_ D)).inv ≫ ((λ_ (𝟙_ D)).hom ≫
+      rw [Category.assoc, hpair]
+      simp only [Category.assoc]
+    have stage4 : (ρ_ (𝟙_ D)).inv ≫
+            ((tensorPowPoint pt (n + 1) ⊗ₘ
+              tensorPowPoint pt 1) ≫
+              (tensorPowConcat Y (n + 1) 1).hom) ≫
+            modPowπ (𝟙_ D) Y (n + 1 + 1) ≫
+            symPowπ (𝟙_ D) Y (n + 1 + 1) =
+      (ρ_ (𝟙_ D)).inv ≫ ((λ_ (𝟙_ D)).hom ≫
             tensorPowPoint pt (n + 1 + 1)) ≫
             modPowπ (𝟙_ D) Y (n + 1 + 1) ≫
             symPowπ (𝟙_ D) Y (n + 1 + 1) := by
-          rw [tensorPowPoint_concat]
-      _ = tensorPowPoint pt (n + 1 + 1) ≫
+      rw [tensorPowPoint_concat]
+    have stage5 : (ρ_ (𝟙_ D)).inv ≫ ((λ_ (𝟙_ D)).hom ≫
+            tensorPowPoint pt (n + 1 + 1)) ≫
+            modPowπ (𝟙_ D) Y (n + 1 + 1) ≫
+            symPowπ (𝟙_ D) Y (n + 1 + 1) =
+      tensorPowPoint pt (n + 1 + 1) ≫
             modPowπ (𝟙_ D) Y (n + 1 + 1) ≫
             symPowπ (𝟙_ D) Y (n + 1 + 1) := by
-          have hrl : (ρ_ (𝟙_ D)).inv ≫ (λ_ (𝟙_ D)).hom =
-              𝟙 (𝟙_ D) := by
-            rw [unitors_equal]
-            exact (ρ_ (𝟙_ D)).inv_hom_id
-          exact (whisker_eq _ (Category.assoc _ _ _)).trans
-            ((Category.assoc _ _ _).symm.trans
-              ((eq_whisker hrl _).trans (Category.id_comp _)))
+      have hrl : (ρ_ (𝟙_ D)).inv ≫ (λ_ (𝟙_ D)).hom =
+          𝟙 (𝟙_ D) := by
+        rw [unitors_equal]
+        exact (ρ_ (𝟙_ D)).inv_hom_id
+      exact (whisker_eq _ (Category.assoc _ _ _)).trans
+        ((Category.assoc _ _ _).symm.trans
+          ((eq_whisker hrl _).trans (Category.id_comp _)))
+    exact stage0.trans (stage1.trans (stage2.trans (stage3.trans (stage4.trans (stage5)))))
 
 /-- The stage-unit nonvanishing, from mono preservation of the
 tensor factors alone — the form consumed over an
