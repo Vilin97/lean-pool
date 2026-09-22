@@ -150,7 +150,7 @@ theorem frobeniusMagnitude_memLp_normalizedCubeMeasure (Q : TriadicCube d)
     intro i _
     apply Finset.aestronglyMeasurable_fun_sum Finset.univ
     intro j _
-    exact (H.hess_memLp_normalizedCubeMeasure Q i j).1.pow 2
+    exact (H.hess_memLp_normalizedCubeMeasure Q i j).aestronglyMeasurable.pow 2
   have hmag_meas : MeasureTheory.AEStronglyMeasurable H.frobeniusMagnitude
       (normalizedCubeMeasure Q) := by
     have hsqrt := Real.continuous_sqrt.comp_aestronglyMeasurable hsquare_meas
@@ -262,7 +262,10 @@ theorem frobeniusMagnitudeNormalizedLpNorm_sq (Q : TriadicCube d)
     unfold frobeniusMagnitudeNormalizedLpNorm
       BoundedMeasurableDomain.normalizedLpNorm
       BoundedMeasurableDomain.normalizedLpFiniteENorm
-      BoundedMeasurableDomain.normalizedLpENorm
+    change ((cubeBoundedMeasurableDomain Q).normalizedLpENorm 2
+      H.frobeniusMagnitude).toReal ^ 2 = _
+    rw [BoundedMeasurableDomain.normalizedLpENorm_eq_eLpNorm _ _ _
+      hmemU.aestronglyMeasurable]
     simpa [cubeBoundedMeasurableDomain_normalizedVolume_eq_normalizedCubeMeasure] using
       (toReal_eLpNorm_two_sq_eq_integral_sq hmemU)
   calc

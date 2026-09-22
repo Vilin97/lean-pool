@@ -136,6 +136,25 @@ private theorem finiteLpExponent_toReal_pos (p : FiniteLpExponent) :
     0 < p.exponent.toReal :=
   ENNReal.toReal_pos (finiteLpExponent_ne_zero p) p.lt_top.ne
 
+private theorem aestronglyMeasurable_oddReflectionBlock_iff {d : ℕ} (Q : TriadicCube d)
+    (F : Vec d → ℝ) :
+    MeasureTheory.AEStronglyMeasurable (cubeDirichletOddReflectionScalar Q F)
+      (MeasureTheory.volume.restrict (cubeFaceReflectionBlockSet Q)) ↔
+    MeasureTheory.AEStronglyMeasurable F
+      (MeasureTheory.volume.restrict (openCubeSet Q)) := by
+  constructor
+  · intro h
+    have hrestrict := h.mono_measure (MeasureTheory.Measure.restrict_mono_set _
+      (openCubeSet_subset_cubeFaceReflectionBlockSet Q))
+    apply hrestrict.congr
+    filter_upwards [MeasureTheory.ae_restrict_mem (isOpen_openCubeSet Q).measurableSet]
+      with x hx
+    rw [cubeDirichletOddReflectionScalar_eq_self_of_mem_openCubeSet Q F hx]
+  · intro h
+    rw [cubeFaceReflectionBlockSet_eq_iUnion_cellCube Q]
+    exact MeasureTheory.AEStronglyMeasurable.iUnion fun choice =>
+      aestronglyMeasurable_cubeDirichletOddReflectionScalar_cell Q choice F h
+
 /-- The finite-`p` norm of the odd-reflected scalar on the full reflection
 block is exactly the `3^d` measure-scaling factor times the source norm. -/
 theorem eLpNorm_cubeFaceReflectionBlockSet_cubeDirichletOddReflectionScalar
@@ -146,13 +165,20 @@ theorem eLpNorm_cubeFaceReflectionBlockSet_cubeDirichletOddReflectionScalar
       ((3 : ℝ≥0∞) ^ d) ^ (1 / p.exponent.toReal) *
         MeasureTheory.eLpNorm F p.exponent
           (MeasureTheory.volume.restrict (openCubeSet Q)) := by
-  rw [MeasureTheory.eLpNorm_eq_lintegral_rpow_enorm_toReal
-      (finiteLpExponent_ne_zero p) p.lt_top.ne,
-    MeasureTheory.eLpNorm_eq_lintegral_rpow_enorm_toReal
-      (finiteLpExponent_ne_zero p) p.lt_top.ne,
-    lintegral_cubeFaceReflectionBlockSet_cubeDirichletOddReflectionScalar]
-  rw [ENNReal.mul_rpow_of_nonneg _ _
-    (one_div_nonneg.mpr (finiteLpExponent_toReal_pos p).le)]
+  by_cases h : MeasureTheory.AEStronglyMeasurable F
+      (MeasureTheory.volume.restrict (openCubeSet Q))
+  · have href := (aestronglyMeasurable_oddReflectionBlock_iff Q F).mpr h
+    rw [MeasureTheory.eLpNorm_eq_lintegral_rpow_enorm_toReal
+        (finiteLpExponent_ne_zero p) p.lt_top.ne href,
+      MeasureTheory.eLpNorm_eq_lintegral_rpow_enorm_toReal
+        (finiteLpExponent_ne_zero p) p.lt_top.ne h,
+      lintegral_cubeFaceReflectionBlockSet_cubeDirichletOddReflectionScalar]
+    rw [ENNReal.mul_rpow_of_nonneg _ _
+      (one_div_nonneg.mpr (finiteLpExponent_toReal_pos p).le)]
+  · have href := mt (aestronglyMeasurable_oddReflectionBlock_iff Q F).mp h
+    rw [MeasureTheory.eLpNorm_of_not_aestronglyMeasurable href,
+      MeasureTheory.eLpNorm_of_not_aestronglyMeasurable h]
+    rw [ENNReal.mul_top (by positivity)]
 
 /-- Finite-`p` scalar integrability transports from a cube to the complete
 Dirichlet odd-reflection block. -/
@@ -164,14 +190,7 @@ theorem memLp_cubeFaceReflectionBlockSet_cubeDirichletOddReflectionScalar
     MeasureTheory.MemLp (cubeDirichletOddReflectionScalar Q F)
       p.exponent
       (MeasureTheory.volume.restrict (cubeFaceReflectionBlockSet Q)) := by
-  have hae : MeasureTheory.AEStronglyMeasurable
-      (cubeDirichletOddReflectionScalar Q F)
-      (MeasureTheory.volume.restrict (cubeFaceReflectionBlockSet Q)) := by
-    rw [cubeFaceReflectionBlockSet_eq_iUnion_cellCube Q]
-    exact MeasureTheory.AEStronglyMeasurable.iUnion fun choice ↦
-      aestronglyMeasurable_cubeDirichletOddReflectionScalar_cell
-        Q choice F hF.aestronglyMeasurable
-  refine ⟨hae, ?_⟩
+  unfold MeasureTheory.MemLp
   rw [eLpNorm_cubeFaceReflectionBlockSet_cubeDirichletOddReflectionScalar Q F p]
   refine ENNReal.mul_lt_top ?_ hF.eLpNorm_lt_top
   exact ENNReal.rpow_lt_top_of_nonneg
@@ -291,8 +310,10 @@ theorem eLpNorm_normalizedCubeMeasure_succ_originCube_cubeDirichletOddReflection
         (normalizedCubeMeasure (originCube d m)) := by
   rw [normalizedCubeMeasure_originCube_eq_smul_restrict_openCubeSet,
     normalizedCubeMeasure_originCube_eq_smul_restrict_openCubeSet,
-    MeasureTheory.eLpNorm_smul_measure_of_ne_top p.lt_top.ne,
-    MeasureTheory.eLpNorm_smul_measure_of_ne_top p.lt_top.ne,
+    MeasureTheory.eLpNorm_smul_measure_of_ne_zero_of_ne_top
+      (finiteLpExponent_ne_zero p) p.lt_top.ne _,
+    MeasureTheory.eLpNorm_smul_measure_of_ne_zero_of_ne_top
+      (finiteLpExponent_ne_zero p) p.lt_top.ne _,
     eLpNorm_openCubeSet_succ_originCube_cubeDirichletOddReflectionScalar]
   simp only [smul_eq_mul, one_div, ENNReal.toReal_inv]
   rw [← mul_assoc, normalized_originCube_reflection_factor_cancel]

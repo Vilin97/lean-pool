@@ -183,7 +183,7 @@ theorem exists_blockResponsePairHalfState_ae_eq_of_mem_responseSpace_of_lowerIma
       simpa [sub_eq_add_neg] using! hAξL2.sub hFluxL2
     have hUpperMeas :
         MeasureTheory.AEStronglyMeasurable upper (volumeMeasureOn U) :=
-      hUpper'.1.congr hUpperEq.symm
+      hUpper'.aestronglyMeasurable.congr hUpperEq.symm
     refine hUpper'.congr_norm hUpperMeas ?_
     filter_upwards [hUpperEq] with x hx
     simpa using congrArg norm hx.symm
@@ -461,7 +461,7 @@ theorem volumeAverage_blockResponseIntegrand_eq_scalarResponse_sum_of_mem_respon
       simpa [sub_eq_add_neg] using! hAξL2.sub hFluxL2
     have hUpperMeas :
         MeasureTheory.AEStronglyMeasurable upper (volumeMeasureOn U) :=
-      hUpper'.1.congr hUpperEq.symm
+      hUpper'.aestronglyMeasurable.congr hUpperEq.symm
     refine hUpper'.congr_norm hUpperMeas ?_
     filter_upwards [hUpperEq] with x hx
     simpa using congrArg norm hx.symm

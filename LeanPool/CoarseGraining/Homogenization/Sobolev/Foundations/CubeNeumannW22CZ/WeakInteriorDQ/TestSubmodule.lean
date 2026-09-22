@@ -181,10 +181,10 @@ theorem exists_contDiff_scalarL2_tsupport_subset_eLpNorm_sub_le
         ContDiff ℝ (⊤ : ℕ∞) φ ∧ HasCompactSupport φ ∧ tsupport φ ⊆ U := by
   obtain ⟨δ, hδpos, hδ⟩ :=
     hgL2.eLpNorm_indicator_le (p := (2 : ENNReal)) (by norm_num)
-      ENNReal.ofNat_ne_top hε
+      ENNReal.ofNat_ne_top (ENNReal.ofReal_pos.mpr hε)
   obtain ⟨K, hKU, hK_compact, hK_closed, hμK⟩ :=
     hUopen.measurableSet.exists_isCompact_isClosed_sdiff_lt (μ := MeasureTheory.volume)
-      hUfinite ((ENNReal.ofReal_pos.mpr hδpos).ne')
+      hUfinite hδpos.ne'
   rcases exists_compact_closed_between hK_compact hUopen hKU with
     ⟨L, hL_compact, hL_closed, hKL, hLU⟩
   obtain ⟨η, hη_one, hη_zero, hη_range⟩ :=
@@ -208,7 +208,7 @@ theorem exists_contDiff_scalarL2_tsupport_subset_eLpNorm_sub_le
   have hφL2 : MemScalarL2 U φ :=
     hφ_cont.continuous.memLp_of_hasCompactSupport hφ_compact
   refine ⟨φ, hφL2, ?_, hφ_cont, hφ_compact, hφ_tsupport⟩
-  have hμsmall : volumeMeasureOn U (U \ K) ≤ ENNReal.ofReal δ := by
+  have hμsmall : volumeMeasureOn U (U \ K) ≤ δ := by
     unfold volumeMeasureOn
     rw [MeasureTheory.Measure.restrict_apply (hUopen.measurableSet.diff hK_closed.measurableSet)]
     simpa [Set.inter_eq_self_of_subset_left (Set.sdiff_subset : U \ K ⊆ U)] using hμK.le
@@ -216,7 +216,7 @@ theorem exists_contDiff_scalarL2_tsupport_subset_eLpNorm_sub_le
   calc
     MeasureTheory.eLpNorm (g - φ) 2 (volumeMeasureOn U)
         ≤ MeasureTheory.eLpNorm ((U \ K).indicator g) 2 (volumeMeasureOn U) := by
-          refine MeasureTheory.eLpNorm_mono_ae ?_
+          refine MeasureTheory.eLpNorm_mono_ae (hgL2.sub hφL2).aestronglyMeasurable ?_
           have hmem : ∀ᵐ x ∂ volumeMeasureOn U, x ∈ U := by
             simpa [volumeMeasureOn] using MeasureTheory.ae_restrict_mem hUopen.measurableSet
           filter_upwards [hmem] with x hxU
@@ -274,9 +274,7 @@ theorem dense_smoothCompactSupportScalarL2_tsupport_subset
               simp [Pi.sub_apply]
         _ ≤ MeasureTheory.eLpNorm ((fun x => f x) - g) 2 (volumeMeasureOn U) +
               MeasureTheory.eLpNorm (g - φ) 2 (volumeMeasureOn U) := by
-              refine MeasureTheory.eLpNorm_add_le ?_ ?_ (by norm_num : (1 : ENNReal) ≤ 2)
-              · exact (MeasureTheory.Lp.aestronglyMeasurable f).sub hgL2.aestronglyMeasurable
-              · exact hgL2.aestronglyMeasurable.sub hφL2.aestronglyMeasurable
+              exact MeasureTheory.eLpNorm_add_le (by norm_num : (1 : ENNReal) ≤ 2)
         _ ≤ ENNReal.ofReal (ε / 2) + ENNReal.ofReal (ε / 2) := add_le_add hg_err hφ_err
         _ = ENNReal.ofReal ε := by
               rw [← ENNReal.ofReal_add hε2.le hε2.le, add_halves]

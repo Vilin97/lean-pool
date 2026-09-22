@@ -262,7 +262,9 @@ private theorem eLpNorm_grad_coord_sub_le_edist_gradToHilbertVectorL2
         [u.coeFn_gradToHilbertVectorL2, v.coeFn_gradToHilbertVectorL2] with x hu hv
     simp [Pi.sub_apply, hu, hv, hilbertifyVecField]
   rw [hrhs]
-  refine MeasureTheory.eLpNorm_mono_ae (Filter.Eventually.of_forall ?_)
+  refine MeasureTheory.eLpNorm_mono_ae
+    ((u.grad_memL2 i).sub (v.grad_memL2 i)).aestronglyMeasurable
+    (Filter.Eventually.of_forall ?_)
   intro x
   have hcoord : ‖u.grad x i - v.grad x i‖ ≤ ‖u.grad x - v.grad x‖ := by
     simpa [Pi.sub_apply, Real.norm_eq_abs] using

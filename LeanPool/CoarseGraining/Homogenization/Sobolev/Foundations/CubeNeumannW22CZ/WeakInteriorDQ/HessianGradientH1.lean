@@ -79,7 +79,7 @@ theorem restrict_gradCoordH1Function_gradToVectorL2_norm_le
   have htop :
       MeasureTheory.eLpNorm (fun x => fun j : Fin d => H.hess i j x)
           (2 : ℝ≥0∞) (volumeMeasureOn U) ≠ ∞ := by
-    exact ne_of_lt (H.gradCoordH1Function i).grad_memVectorL2.2
+    exact ne_of_lt (H.gradCoordH1Function i).grad_memVectorL2.eLpNorm_lt_top
   rw [H1Function.gradToVectorL2, Homogenization.toVectorL2,
     MeasureTheory.Lp.norm_toLp]
   rw [H1Function.gradToVectorL2, Homogenization.toVectorL2,
@@ -133,17 +133,16 @@ private theorem h1Function_norm_gradToVectorL2_le_gradientCoordL2NormSum
       (MeasureTheory.eLpNorm_sum_le
         (μ := μ) (p := (2 : ℝ≥0∞)) (s := Finset.univ)
         (f := fun j : Fin d => fun x : Vec d => ‖v.grad x j‖)
-        (fun j _hj => (hcoord_mem j).1)
         (by norm_num : (1 : ℝ≥0∞) ≤ (2 : ℝ≥0∞)))
   have hsum_toReal :
       ENNReal.toReal
           (∑ j : Fin d,
             MeasureTheory.eLpNorm (fun x => ‖v.grad x j‖) (2 : ℝ≥0∞) μ) =
         ∑ j : Fin d, ‖v.gradCoordToScalarL2 j‖ := by
-    rw [ENNReal.toReal_sum (fun j _hj => (hcoord_mem j).2.ne)]
+    rw [ENNReal.toReal_sum (fun j _hj => (hcoord_mem j).eLpNorm_lt_top.ne)]
     refine Finset.sum_congr rfl ?_
     intro j _hj
-    rw [MeasureTheory.eLpNorm_norm]
+    rw [MeasureTheory.eLpNorm_norm _ (v.grad_memL2 j).aestronglyMeasurable]
     simp [H1Function.gradCoordToScalarL2, Homogenization.toScalarL2,
       MeasureTheory.Lp.norm_toLp, μ]
   have hsumLp_le :
@@ -156,7 +155,7 @@ private theorem h1Function_norm_gradToVectorL2_le_gradientCoordL2NormSum
             (∑ j : Fin d,
               MeasureTheory.eLpNorm (fun x => ‖v.grad x j‖) (2 : ℝ≥0∞) μ) := by
           refine ENNReal.toReal_mono ?_ hsum_eLp
-          exact ENNReal.sum_ne_top.2 fun j _hj => (hcoord_mem j).2.ne
+          exact ENNReal.sum_ne_top.2 fun j _hj => (hcoord_mem j).eLpNorm_lt_top.ne
       _ = v.gradientCoordL2NormSum := by
           change
             ENNReal.toReal

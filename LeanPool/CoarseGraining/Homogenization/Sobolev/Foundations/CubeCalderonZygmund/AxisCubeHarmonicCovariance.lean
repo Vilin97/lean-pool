@@ -447,7 +447,8 @@ theorem axisCubeNormalizedMeasure_eq_smul_volume_restrict {d : ℕ}
     _ = ENNReal.ofReal ((L ^ d)⁻¹) •
           MeasureTheory.Measure.map (fun x : Vec d => x + c)
             (MeasureTheory.volume.restrict (L • U0)) := by
-      rw [MeasureTheory.Measure.map_smul]
+      rw [MeasureTheory.Measure.map_smul _ (f := fun x : Vec d => x + c)
+        (measurable_id.add measurable_const).aemeasurable]
     _ = ENNReal.ofReal ((L ^ d)⁻¹) •
           MeasureTheory.volume.restrict (translateSet c (L • U0)) := by
       rw [(measurePreserving_addRight_restrict_translateSet c (L • U0)).map_eq]
