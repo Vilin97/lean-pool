@@ -73,8 +73,7 @@ theorem rTensor_mulRightFactor
     (f : V →ₗ[K] W) (q : D) (z : V ⊗[K] D) :
     f.rTensor D (mulRightFactor (K := K) q z) =
       mulRightFactor (K := K) q (f.rTensor D z) := by
-  induction z using TensorProduct.induction_on with
-  | zero => simp
+  induction z using TensorProduct.inductionOn with
   | tmul y d => simp
   | add y z hy hz => simp [map_add, hy, hz]
 
@@ -173,8 +172,7 @@ private theorem contentCoordinates_mulRightFactor_apply
     contentCoordinates (K := K) (D := D) (V := V)
         (mulRightFactor (K := K) q z) i =
       q * contentCoordinates (K := K) (D := D) (V := V) z i := by
-  induction z using TensorProduct.induction_on with
-  | zero => simp [mulRightFactor]
+  induction z using TensorProduct.inductionOn with
   | tmul x d =>
       rw [mulRightFactor_tmul]
       simp only [contentCoordinates,
@@ -269,8 +267,8 @@ private noncomputable def contentAux
 private theorem contentAux_isContent
     (gcdStructure : GCDMonoid D) (z : V ⊗[K] D) :
     IsContent z (contentAux gcdStructure z) := by
-  letI : GCDMonoid D := gcdStructure
-  letI : NormalizedGCDMonoid (Associates D) :=
+  let : GCDMonoid D := gcdStructure
+  let : NormalizedGCDMonoid (Associates D) :=
     normalizedAssociatesGCDMonoid gcdStructure
   intro q
   change Associates.mk q ∣ contentAux gcdStructure z ↔ _

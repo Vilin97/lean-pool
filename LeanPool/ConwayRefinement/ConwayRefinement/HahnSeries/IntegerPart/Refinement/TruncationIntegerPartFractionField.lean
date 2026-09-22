@@ -209,7 +209,7 @@ theorem exists_irreducible_cantorBendixson_germ_with_constantCoeff_zero :
   obtain ⟨ι, ⟨equiv⟩⟩ := exists_mvPolynomial_algEquiv_germ (G := G) (K := K)
   have hι : Nonempty ι := by
     by_contra h
-    letI : IsEmpty ι := not_nonempty_iff.mp h
+    let : IsEmpty ι := not_nonempty_iff.mp h
     let q : MvPolynomial ι K :=
       equiv.symm (Ideal.Quotient.mk J (cofinalGermNonpositive (G := G) (K := K)))
     have hq0 : q ≠ 0 := by

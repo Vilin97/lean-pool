@@ -13,8 +13,7 @@ public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.Germ.Algebra
 public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.Germ.AlgebraicIndependence.Leibniz
 public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.Germ.AlgebraicIndependence.Power
 public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.Germ.AlgebraicIndependence.Cancellation
-public import
-  LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.Germ.AlgebraicIndependence.CantorBendixsonValueMultiplicativity
+public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.Germ.AlgebraicIndependence.CantorBendixsonValueMultiplicativity
 public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.Germ.AlgebraicIndependence.Germ
 public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.Germ.AlgebraicIndependence.Graded
 public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.Germ.AlgebraicIndependence.Scalar
@@ -105,7 +104,7 @@ def accumulatingSeries : HahnSeries ℝ ℚ := by
   classical
   exact ⟨fun x ↦ if x ∈ range negRecip then 1 else 0, by
     simpa only [Function.support, ne_eq, ite_eq_right_iff, one_ne_zero, imp_false, not_not,
-      Set.setOf_mem_eq]
+      Set.ofPred_mem_eq]
       using negRecip_pwo⟩
 
 open Classical in
@@ -211,7 +210,7 @@ theorem convolution_square_nonzero_value :
     · refine ⟨(negRecip n, negRecip n), ?_, ?_⟩
       · rw [Finset.mem_antidiagonal, accumulatingSeries_support]
         exact ⟨mem_range_self n, mem_range_self n, rfl⟩
-      · simp only [accumulatingSeries_coeff, mem_range_self, if_true, one_mul, zero_lt_one]
+      · simp only [accumulatingSeries_coeff, mem_range_self, ite_true, one_mul, zero_lt_one]
   have ht := negRecip_tendsto
   apply mem_closure_of_tendsto (by simpa only [add_zero] using ht.add ht)
   exact Filter.Eventually.of_forall fun n ↦ (hcoeff n).ne'
@@ -624,7 +623,7 @@ theorem accumulatingSeries_graded_class :
       accumulatingSeries_value]
     simp
   refine ⟨b, hb, hd, ?_⟩
-  letI := cantorBendixson_associatedGraded_isDomain (G := ℝ) (R := ℚ)
+  let := cantorBendixson_associatedGraded_isDomain (G := ℝ) (R := ℚ)
   exact pow_ne_zero 2
     ((cantorBendixsonDegreeValuation (G := ℝ) (R := ℚ)).initialForm_ne_zero_of_ne_bot
       (by rw [hd]; exact WithBot.coe_ne_bot))
@@ -704,7 +703,7 @@ theorem accumulatingSeries_graded_square_not_single_copy :
   have hx : x ≠ 0 := by
     intro hx
     exact hD (by change cantorBendixsonGradedDerivation x = 0; rw [hx, map_zero])
-  letI := cantorBendixson_associatedGraded_isDomain (G := ℝ) (R := ℚ)
+  let := cantorBendixson_associatedGraded_isDomain (G := ℝ) (R := ℚ)
   have hp : cantorBendixsonGradedDerivation x *
       (x : Filter.Germ (𝓝[<] (0 : ℝ)) (ν).AssociatedGraded) ≠ 0 := by
     intro he

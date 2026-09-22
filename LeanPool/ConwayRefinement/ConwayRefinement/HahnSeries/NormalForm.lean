@@ -115,7 +115,9 @@ namespace NormalForm
 coefficient is a clause of `HahnSeries.IsNormalForm`, not data stored in this structure. -/
 @[ext]
 structure Term (R : Type v) [Ring R] where
+  /-- The nonpositive Hahn-series coefficient of the normal-form term. -/
   coefficient : Nonpositive ℝ R
+  /-- The real exponent translating the coefficient to form this term. -/
   exponent : ℝ
 
 namespace Term

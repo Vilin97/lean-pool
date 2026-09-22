@@ -111,7 +111,7 @@ omit [WellFoundedLT M] in
 /-- For a separated multiplicative degree, an element `b ∉ (a)` of least degree in its coset
 modulo `(a)` has initial form outside `(in_ν a)`: otherwise `in_ν b = in_ν a · g` with `g`
 homogeneous, and a lift `g̃` of `g` gives `ν (b - a g̃) < ν b` in the same coset. -/
-theorem initialForm_notMem_span_initialForm (ν : MaxAddDegree R M) [ν.IsMultiplicative]
+theorem initialForm_notMem_span_initialForm (ν : MaxAddDegree R M)
     (hν : ν.IsSeparated) {a b : R} (ha : a ≠ 0) (hb : b ∉ Ideal.span {a})
     (hmin : ∀ b', b' - b ∈ Ideal.span {a} → ν b ≤ ν b') :
     ν.initialForm b ∉ Ideal.span {ν.initialForm a} := by

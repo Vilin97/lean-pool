@@ -58,7 +58,7 @@ theorem den_upper_lt {x : Dyadic} (h : x.den ≠ 1) : (upper x).den < x.den := b
   exact den_mkRat_lt ((odd_num h).add_odd odd_one).two_dvd h
 
 /-- An auxiliary tactic for inducting on the denominator of a `Dyadic`. -/
-macro "dyadic_wf" : tactic =>
+macro (name := dyadicWf) "dyadic_wf" : tactic =>
   `(tactic| all_goals first | solve_by_elim
     [Prod.Lex.left, Prod.Lex.right, den_lower_lt, den_upper_lt] | decreasing_tactic)
 

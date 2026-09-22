@@ -26,7 +26,7 @@ namespace Tests
 open Ordinal
 
 private instance : WellFoundedLT (ℕ ⊕ₗ Unit) :=
-  (Sum.Lex.toLexRelIsoLT (α := ℕ) (β := Unit)).symm.toRelEmbedding.isWellFounded
+  (Sum.Lex.toLexRelIsoLT (α := ℕ) (β := Unit)).symm.toRelEmbedding.wellFounded'
 
 private def initialOmega : Set (ℕ ⊕ₗ Unit) :=
   Set.range (fun n : ℕ ↦ Sum.inlₗ n)
@@ -52,7 +52,7 @@ private theorem finalPoint_union_initialOmega :
       cases x <;> simp [finalPoint, initialOmega]
 
 private def unionOrderIso : ↥(finalPoint ∪ initialOmega) ≃o (ℕ ⊕ₗ Unit) :=
-  (OrderIso.setCongr _ _ finalPoint_union_initialOmega).trans OrderIso.Set.univ
+  (Set.orderIsoOfEq _ _ finalPoint_union_initialOmega).trans OrderIso.Set.univ
 
 private theorem initialOmega_orderType :
     (Set.IsPWO.of_linearOrder initialOmega).orderType = Ordinal.omega0 := by

@@ -238,7 +238,7 @@ theorem trunc_trunc (s : TermSeq) (i j : Ordinal) : (s.trunc i).trunc j = s.trun
   · simp
   · simp
 
-@[simp← ]
+@[simp ←]
 theorem coe_trunc (s : TermSeq) (i : Ordinal) : s.trunc i = truncIdx s i := by
   obtain hi | hi := lt_or_ge i s.length
   · rw [truncIdx_of_lt (by simpa), exp_coe]

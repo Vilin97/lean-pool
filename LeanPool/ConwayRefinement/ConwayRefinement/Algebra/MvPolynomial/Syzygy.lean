@@ -71,7 +71,8 @@ theorem exists_eq_sum_monomial_mul_C_of_sum_C_mul_eq_zero (c : B → R₀)
     ∃ (m : Finset (σ →₀ ℕ)) (v : (σ →₀ ℕ) → B → R₀),
       (∀ d ∈ m, ∑ b, c b * v d b = 0) ∧ ∀ b, u b = ∑ d ∈ m, monomial d 1 * C (v d b) := by
   classical
-  refine ⟨Finset.univ.biUnion fun b ↦ (u b).support, fun d b ↦ AddMonoidAlgebra.coeff (u b) d, fun d _ ↦ ?_,
+  refine ⟨Finset.univ.biUnion fun b ↦ (u b).support, fun d b ↦ AddMonoidAlgebra.coeff (u b) d,
+    fun d _ ↦ ?_,
     fun b ↦ ?_⟩
   · have := congrArg ((fun p => AddMonoidAlgebra.coeff p d)) hu
     rw [coeff_sum, AddMonoidAlgebra.coeff_zero] at this

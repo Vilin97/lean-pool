@@ -155,7 +155,7 @@ private theorem unboundedSeries_supportOrderType :
     unboundedSeries.supportOrderType = Ordinal.omega0 := by
   rw [HahnSeries.supportOrderType_eq_setOrderType]
   have e : unboundedSeries.support ≃o ℕ :=
-    (OrderIso.setCongr unboundedSeries.support (Set.range natCastEmbedding)
+    (Set.orderIsoOfEq unboundedSeries.support (Set.range natCastEmbedding)
       unboundedSeries_support).trans natCastEmbedding.orderIso.symm
   exact unboundedSeries.isPWO_support.orderType_eq_typeLT_of_orderIso e |>.trans
     Ordinal.type_nat_lt

@@ -26,20 +26,26 @@ namespace Tests
 
 public noncomputable section
 
+/-- The principal-subring scalar action on its fraction field in the rational client fixtures. -/
 local instance principalSubringFractionClientSelfSMul :
     SMul (Berarducci.PrincipalSubring ℚ)
       (Berarducci.PrincipalSubringFractionField ℚ) :=
   (Berarducci.principalSubringFractionSelfAlgebra ℚ).toSMul
 
+/-- The principal-subring algebra structure on its fraction field in the rational client
+fixtures. -/
 local instance principalSubringFractionClientSelfAlgebra :
     Algebra (Berarducci.PrincipalSubring ℚ)
       (Berarducci.PrincipalSubringFractionField ℚ) :=
   Berarducci.principalSubringFractionSelfAlgebra ℚ
 
+/-- The rational scalar action on the principal-subring fraction field in the client fixtures. -/
 local instance principalSubringFractionClientSMul :
     SMul ℚ (Berarducci.PrincipalSubringFractionField ℚ) :=
   (Berarducci.principalSubringFractionAlgebra ℚ).toSMul
 
+/-- The rational algebra structure on the principal-subring fraction field in the client
+fixtures. -/
 local instance principalSubringFractionClientAlgebra :
     Algebra ℚ (Berarducci.PrincipalSubringFractionField ℚ) :=
   Berarducci.principalSubringFractionAlgebra ℚ

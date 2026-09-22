@@ -82,9 +82,13 @@ structure LimitOrdinalRelationAtCutoff (α : NatOrdinal) where
   `ω^{α₁}` with `α₁ ≤ α_{≥β} ⊕ λ₀`. -/
   lam₀ : NatOrdinal
   lam₀_lt : lam₀ < NatOrdinal.partLT β α
+  /-- The exponent bounding the ordinal values of sufficiently late translated truncations of
+  the relation. -/
   α₁ : NatOrdinal
   α₁_le : α₁ ≤ NatOrdinal.partGE β α + lam₀
   α₁_le_α : α₁ ≤ α
+  /-- A positive radius on which translated truncations satisfy the designated ordinal-value
+  bound. -/
   ε₁ : ℝ
   ε₁_pos : 0 < ε₁
   truncation_lt : ∀ γ : ℝ, -ε₁ < γ → γ < 0 →

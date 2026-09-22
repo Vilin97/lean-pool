@@ -45,7 +45,7 @@ private theorem orderType_le_of_forall_inter_Iio_lt (hs : s.IsPWO) {o : Ordinal}
     hs.orderType ≤ o := by
   apply le_of_forall_lt
   intro c hc
-  letI : WellFoundedLT s := hs.isWF
+  let : WellFoundedLT s := hs.isWF
   have hType : typeLT s = hs.orderType :=
     (orderType_eq_typeLT_of_orderIso hs (OrderIso.refl s)).symm
   have hc' : c < typeLT s := hc.trans_eq hType.symm
@@ -70,7 +70,7 @@ private theorem exists_naturalAdd_split (hs : s.IsPWO) (hzero : hs.orderType ≠
     rw [hp.symm]
     exact Ordinal.isPrincipal_add_omega0_opow d
   have hp_lt : p < hs.orderType := hp_le.lt_of_ne hp_ne
-  letI : WellFoundedLT s := hs.isWF
+  let : WellFoundedLT s := hs.isWF
   have hType : typeLT s = hs.orderType :=
     (orderType_eq_typeLT_of_orderIso hs (OrderIso.refl s)).symm
   have hp_type : p < typeLT s := hp_lt.trans_eq hType.symm

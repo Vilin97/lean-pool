@@ -71,6 +71,8 @@ structure LimitOrdinalRelationAtCutoff (α : NatOrdinal.{u}) where
   with `α₁ ≤ α_{≥β} ⊕ λ₀`. -/
   lam₀ : NatOrdinal
   lam₀_lt : lam₀ < NatOrdinal.partLT β α
+  /-- An upper bound for the degrees of sufficiently late translated truncations of the
+  relation. -/
   α₁ : NatOrdinal
   α₁_le : α₁ ≤ NatOrdinal.partGE β α + lam₀
   α₁_le_α : α₁ ≤ α

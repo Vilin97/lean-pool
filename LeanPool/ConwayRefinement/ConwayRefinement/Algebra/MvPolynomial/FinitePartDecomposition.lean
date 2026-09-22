@@ -76,7 +76,7 @@ theorem exists_eq_sum_pderiv_mul_X_add_of_mem_span {δ : NatOrdinal}
         V t ∈ supported K {i | (wt i).constantCoeff ≠ δ.constantCoeff}) ∧
       F = ∑ t ∈ varsOfFinitePart wt F δ, pderiv t F * (X t + V t) := by
   classical
-  letI := weightedGradedAlgebra K wt
+  let := weightedGradedAlgebra K wt
   -- naming the index set keeps later rewrites from reaching inside it
   set T := varsOfFinitePart wt F δ with hT
   have hmemT : ∀ t : ↥T, (t : σ) ∈ F.vars ∧ (wt t).constantCoeff = δ.constantCoeff := fun t ↦

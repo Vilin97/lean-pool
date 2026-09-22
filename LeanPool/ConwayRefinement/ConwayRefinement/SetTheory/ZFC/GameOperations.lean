@@ -144,28 +144,28 @@ theorem isNumeric_one : IsNumeric (1 : GameCode.{u}) := by
 
 /-- Negation preserves numeric game codes. -/
 theorem IsNumeric.neg {x : GameCode.{u}} (h : IsNumeric x) : IsNumeric (-x) := by
-  letI : IGame.Numeric x.toIGame := (isNumeric_iff x).1 h
+  let : IGame.Numeric x.toIGame := (isNumeric_iff x).1 h
   simpa [IsNumeric] using (inferInstance : IGame.Numeric (-x.toIGame))
 
 /-- Addition preserves numeric game codes. -/
 theorem IsNumeric.add {x y : GameCode.{u}} (hx : IsNumeric x) (hy : IsNumeric y) :
     IsNumeric (x + y) := by
-  letI : IGame.Numeric x.toIGame := (isNumeric_iff x).1 hx
-  letI : IGame.Numeric y.toIGame := (isNumeric_iff y).1 hy
+  let : IGame.Numeric x.toIGame := (isNumeric_iff x).1 hx
+  let : IGame.Numeric y.toIGame := (isNumeric_iff y).1 hy
   simpa [IsNumeric] using (inferInstance : IGame.Numeric (x.toIGame + y.toIGame))
 
 /-- Subtraction preserves numeric game codes. -/
 theorem IsNumeric.sub {x y : GameCode.{u}} (hx : IsNumeric x) (hy : IsNumeric y) :
     IsNumeric (x - y) := by
-  letI : IGame.Numeric x.toIGame := (isNumeric_iff x).1 hx
-  letI : IGame.Numeric y.toIGame := (isNumeric_iff y).1 hy
+  let : IGame.Numeric x.toIGame := (isNumeric_iff x).1 hx
+  let : IGame.Numeric y.toIGame := (isNumeric_iff y).1 hy
   simpa [IsNumeric] using (inferInstance : IGame.Numeric (x.toIGame - y.toIGame))
 
 /-- Multiplication preserves numeric game codes. -/
 theorem IsNumeric.mul {x y : GameCode.{u}} (hx : IsNumeric x) (hy : IsNumeric y) :
     IsNumeric (x * y) := by
-  letI : IGame.Numeric x.toIGame := (isNumeric_iff x).1 hx
-  letI : IGame.Numeric y.toIGame := (isNumeric_iff y).1 hy
+  let : IGame.Numeric x.toIGame := (isNumeric_iff x).1 hx
+  let : IGame.Numeric y.toIGame := (isNumeric_iff y).1 hy
   simpa [IsNumeric] using (inferInstance : IGame.Numeric (x.toIGame * y.toIGame))
 
 /-- The option codes for one player, with no identification of equivalent options. -/

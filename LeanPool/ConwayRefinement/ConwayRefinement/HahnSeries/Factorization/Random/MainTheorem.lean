@@ -52,7 +52,7 @@ theorem irreducible_add_of_isRandom {n m : ℕ} (hn : 1 ≤ n) (hm : 1 ≤ m) {�
     Irreducible (b + r) := by
   obtain ⟨d⟩ := exists_blockDecomposition hn hβ hot
   have hQ : HereditarilyRVIndependent n d.block := d.hereditarilyRVIndependent_block hn hb
-  haveI : Nonempty (Fin m) := ⟨⟨0, hm⟩⟩
+  have : Nonempty (Fin m) := ⟨⟨0, hm⟩⟩
   obtain ⟨i₀, hi₀⟩ := Finite.exists_max d.exponent
   have hr' : ((d.rest + r : Series K) : K⟦ℝ⟧).degree <
       ((n : NatOrdinal) : WithBot NatOrdinal) := by

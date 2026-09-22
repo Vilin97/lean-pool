@@ -219,6 +219,7 @@ end Game
 /-- A surreal-number representative is a numeric well-founded Conway game. Two representatives
 denote the same surreal number precisely when their games are `Game.Equivalent`. -/
 structure Surreal : Type (u + 1) where
+  /-- The numeric Conway game representing this surreal number. -/
   game : Game.{u}
   numeric : Game.Numeric game
 

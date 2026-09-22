@@ -72,13 +72,14 @@ private noncomputable def finiteSupportNormalizationMonoid :
   classical
   exact (strongNormalizationMonoidOfMonoidHomRightInverse
     (α := finiteSupportSubring (G := G) (K := K))
-    normalizedAssociateRepresentativeMonoidHom normalizedAssociateRepresentative_mk).toNormalizationMonoid
+    normalizedAssociateRepresentativeMonoidHom
+      normalizedAssociateRepresentative_mk).toNormalizationMonoid
 
 /-- The nonpositive finite-support Hahn-series ring over a field is a normalized GCD domain. -/
 theorem nonemptyNormalizedGCDMonoid_finiteSupport :
     Nonempty (NormalizedGCDMonoid (finiteSupportSubring (G := G) (K := K))) := by
   classical
-  letI : NormalizationMonoid (finiteSupportSubring (G := G) (K := K)) :=
+  let : NormalizationMonoid (finiteSupportSubring (G := G) (K := K)) :=
     finiteSupportNormalizationMonoid
   exact ⟨normalizedGCDMonoidOfExistsGCD finiteSupport_pairwise_gcd_exists⟩
 

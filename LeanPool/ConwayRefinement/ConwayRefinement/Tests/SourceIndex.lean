@@ -1256,7 +1256,7 @@ example := (@Berarducci.residualPointTail_eq_inter_Ioo :
 
 /- Berarducci, Lemma 6.8. The statement is unchanged; the proof treats residual value one by
 isolated support points rather than by the failing limit-index construction in the printed proof. -/
-example := (@Berarducci.residualPointTail_eventually :
+example := ((fun {_} [_] [_] b ↦ Berarducci.residualPointTail_eventually b) :
   ∀ {K : Type v} [Field K] [CharZero K]
     (b : Berarducci.SeriesWithOrdinalValueAboveOne K),
       ∀ᶠ η in nhdsWithin (0 : ℝ) (Set.Iio 0),

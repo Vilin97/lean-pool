@@ -7,7 +7,7 @@ module
 
 public import LeanPool.ConwayRefinement.ConwayRefinement.Topology.Order.CantorBendixsonConvexCover
 public import Mathlib.Algebra.Order.Group.PiLex
-public import Mathlib.Data.Real.Basic
+public import Mathlib.Basic.Real.Basic
 public import Mathlib.Topology.Instances.Real.Lemmas
 import Mathlib.Order.Interval.Set.OrdConnected
 

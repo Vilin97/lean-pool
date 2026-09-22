@@ -5,8 +5,7 @@ Authors: Dan Abramov
 -/
 module
 
-public import
-  LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.Germ.AlgebraicIndependence.TranslatedTruncationInterpolation
+public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.Germ.AlgebraicIndependence.TranslatedTruncationInterpolation
 
 /-!
 # Interpolation of translated truncations on a set

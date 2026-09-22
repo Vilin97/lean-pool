@@ -188,7 +188,7 @@ omit [GradedAlgebra 𝒜] in
 minimal systems. -/
 theorem map_algEquiv
     {S : Type*} [CommRing S] [Algebra E S]
-    {ℬ : NatOrdinal.{o} → Submodule E S} [GradedAlgebra ℬ]
+    {ℬ : NatOrdinal.{o} → Submodule E S}
     (e : R ≃ₐ[E] S) (hgrade : ∀ (n : NatOrdinal.{o}) (r : R), r ∈ 𝒜 n ↔ e r ∈ ℬ n) :
     IsMinimalSystem ℬ wt (fun i ↦ e (x i)) where
   ne_zero := hx.ne_zero

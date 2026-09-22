@@ -8,8 +8,7 @@ module
 
 import LeanPool.ConwayRefinement.ConwayRefinement.Blueprint
 public import LeanPool.ConwayRefinement.ConwayRefinement.Algebra.MvPolynomial.RemainderBound
-public import
-  LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.OrdinalValue.AlgebraicIndependence.PrincipalRepresentatives
+public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.OrdinalValue.AlgebraicIndependence.PrincipalRepresentatives
 public import LeanPool.ConwayRefinement.ConwayRefinement.Algebra.MvPolynomial.ComponentsSpan
 public import LeanPool.ConwayRefinement.ConwayRefinement.Algebra.GradedRing.HomogeneousSpan
 
@@ -76,7 +75,7 @@ theorem weightedHomogeneousComponent_mul_of_isWeightedHomogeneous {P Q : MvPolyn
       if h : ∃ β, β + c = γ then weightedHomogeneousComponent wt (Classical.choose h) P * Q
       else 0 := by
   classical
-  letI := weightedGradedAlgebra K wt
+  let := weightedGradedAlgebra K wt
   have hdec : ∀ (R : MvPolynomial ι K) (e : NatOrdinal),
       (DirectSum.decompose (weightedHomogeneousSubmodule K wt) R e : MvPolynomial ι K) =
         weightedHomogeneousComponent wt e R := fun R e ↦ by
@@ -239,7 +238,7 @@ theorem exists_forall_componentsGE_pol_translatedTruncation_aeval_pderiv_mem
         rw [pderiv_eq_zero_of_isWeightedHomogeneous wt hF j.1 h]
         exact isWeightedHomogeneous_zero _ _ _⟩
   choose c hc using hgen
-  haveI : Finite {j : ι // j ∈ F.vars ∧ wt v' < wt j} :=
+  have : Finite {j : ι // j ∈ F.vars ∧ wt v' < wt j} :=
     (F.vars.finite_toSet.subset fun j (hj : j ∈ F.vars ∧ wt v' < wt j) ↦ hj.1).to_subtype
   refine componentsGE_mem_span wt hc ?_ τ
   refine Ideal.sum_mem _ fun j hj ↦ ?_

@@ -36,7 +36,7 @@ theorem exists_nontrivial_relation_of_mem_span_range {ι : Type w} [Fintype ι] 
   have hw' : LinearIndependent K w' := by
     refine LinearIndependent.of_comp (Submodule.span K (Set.range gens)).subtype ?_
     exact hrel
-  haveI : Module.Finite K (Submodule.span K (Set.range gens)) :=
+  have : Module.Finite K (Submodule.span K (Set.range gens)) :=
     Module.Finite.span_of_finite K (Set.finite_range gens)
   have hle := hw'.fintype_card_le_finrank
   have hrank := finrank_range_le_card (R := K) gens

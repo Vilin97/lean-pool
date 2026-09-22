@@ -75,14 +75,14 @@ theorem isReduced_toSignedNonpositiveHahn_iff_support (x : OmnificInteger.{u}) :
       constructor
       · exact (hmem (-i)).2 (by simpa only [neg_neg] using hi.1)
       · exact (hmemSub (-i)).2 (by simpa only [neg_neg] using hi.2)
-    simpa only [Set.mem_setOf_eq, ArchimedeanClass.mk_neg] using hc hsigned
+    simpa only [Set.mem_ofPred_eq, ArchimedeanClass.mk_neg] using hc hsigned
   · rintro ⟨hx0, c, hc⟩
     refine HahnSeries.Nonpositive.isReduced_of_support_inter_support_sub_one_subset
       (hzero.mpr hx0) c ?_
     intro i hi
     have hunsigned : -i ∈ (x : Surreal).support ∩ ((x : Surreal) - 1).support :=
       ⟨(hmem i).1 hi.1, (hmemSub i).1 hi.2⟩
-    simpa only [Set.mem_setOf_eq, ArchimedeanClass.mk_neg] using hc hunsigned
+    simpa only [Set.mem_ofPred_eq, ArchimedeanClass.mk_neg] using hc hunsigned
 
 end Surreal.OmnificInteger
 

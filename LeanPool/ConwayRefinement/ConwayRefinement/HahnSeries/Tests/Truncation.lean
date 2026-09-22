@@ -56,7 +56,7 @@ theorem threeTermTruncationSeries_support_truncLT :
     (HahnSeries.truncLT 0 threeTermTruncationSeries).support = {-1} := by
   rw [HahnSeries.support_truncLT, threeTermTruncationSeries_support]
   ext z
-  simp only [Set.mem_setOf_eq, Set.mem_insert_iff, Set.mem_singleton_iff]
+  simp only [Set.mem_ofPred_eq, Set.mem_insert_iff, Set.mem_singleton_iff]
   omega
 
 /-- Weak lower truncation at zero keeps exactly the exponents `-1` and `0`. -/
@@ -64,7 +64,7 @@ theorem threeTermTruncationSeries_support_truncLE :
     (HahnSeries.truncLE 0 threeTermTruncationSeries).support = {-1, 0} := by
   rw [HahnSeries.support_truncLE, threeTermTruncationSeries_support]
   ext z
-  simp only [Set.mem_setOf_eq, Set.mem_insert_iff, Set.mem_singleton_iff]
+  simp only [Set.mem_ofPred_eq, Set.mem_insert_iff, Set.mem_singleton_iff]
   omega
 
 /-- Weak upper truncation at zero keeps exactly the exponents `0` and `1`. -/
@@ -72,7 +72,7 @@ theorem threeTermTruncationSeries_support_truncGE :
     (HahnSeries.truncGE 0 threeTermTruncationSeries).support = {0, 1} := by
   rw [HahnSeries.support_truncGE, threeTermTruncationSeries_support]
   ext z
-  simp only [Set.mem_setOf_eq, Set.mem_insert_iff, Set.mem_singleton_iff]
+  simp only [Set.mem_ofPred_eq, Set.mem_insert_iff, Set.mem_singleton_iff]
   omega
 
 /-- Strict upper truncation at zero keeps exactly the exponent `1`. -/
@@ -80,7 +80,7 @@ theorem threeTermTruncationSeries_support_truncGT :
     (HahnSeries.truncGT 0 threeTermTruncationSeries).support = {1} := by
   rw [HahnSeries.support_truncGT, threeTermTruncationSeries_support]
   ext z
-  simp only [Set.mem_setOf_eq, Set.mem_insert_iff, Set.mem_singleton_iff]
+  simp only [Set.mem_ofPred_eq, Set.mem_insert_iff, Set.mem_singleton_iff]
   omega
 
 /-- At the cut exponent, the weak truncations keep the coefficient and the strict truncations
@@ -135,14 +135,14 @@ theorem threeTermTruncationSeries_boundary_truncations :
     rw [← HahnSeries.support_eq_empty_iff, HahnSeries.support_truncLT,
       threeTermTruncationSeries_support]
     ext z
-    simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false, Set.mem_insert_iff,
+    simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, Set.mem_insert_iff,
       Set.mem_singleton_iff]
     omega
   have hgt : HahnSeries.truncGT 1 threeTermTruncationSeries = 0 := by
     rw [← HahnSeries.support_eq_empty_iff, HahnSeries.support_truncGT,
       threeTermTruncationSeries_support]
     ext z
-    simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false, Set.mem_insert_iff,
+    simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, Set.mem_insert_iff,
       Set.mem_singleton_iff]
     omega
   refine ⟨hlt, ?_, ?_, hgt⟩
@@ -170,7 +170,7 @@ theorem threeTermTruncationSeries_decomposition_unique (x y : ℚ⟦ℤ⟧)
   exact hsum.trans (HahnSeries.truncLE_add_truncGT 0 threeTermTruncationSeries).symm
 
 private instance : WellFoundedLT (Unit ⊕ₗ ℕ) :=
-  (Sum.Lex.toLexRelIsoLT (α := Unit) (β := ℕ)).symm.toRelEmbedding.isWellFounded
+  (Sum.Lex.toLexRelIsoLT (α := Unit) (β := ℕ)).symm.toRelEmbedding.wellFounded'
 
 /-- The coefficient-one series on an ordered singleton followed by `ℕ`. -/
 def oneAddOmegaSplitSeries : ℚ⟦Unit ⊕ₗ ℕ⟧ where
@@ -226,7 +226,7 @@ private theorem oneAddOmegaUpper_support : oneAddOmegaUpper.support = Set.range 
 private theorem oneAddOmegaLower_supportOrderType : oneAddOmegaLower.supportOrderType = 1 := by
   rw [HahnSeries.supportOrderType_eq_setOrderType]
   have e : oneAddOmegaLower.support ≃o Unit :=
-    (OrderIso.setCongr oneAddOmegaLower.support (Set.range Sum.inlₗ)
+    (Set.orderIsoOfEq oneAddOmegaLower.support (Set.range Sum.inlₗ)
       oneAddOmegaLower_support).trans
         (OrderEmbedding.ofStrictMono Sum.inlₗ Sum.Lex.inl_strictMono).orderIso.symm
   exact oneAddOmegaLower.isPWO_support.orderType_eq_typeLT_of_orderIso e |>.trans
@@ -236,7 +236,7 @@ private theorem oneAddOmegaUpper_supportOrderType :
     oneAddOmegaUpper.supportOrderType = Ordinal.omega0 := by
   rw [HahnSeries.supportOrderType_eq_setOrderType]
   have e : oneAddOmegaUpper.support ≃o ℕ :=
-    (OrderIso.setCongr oneAddOmegaUpper.support (Set.range Sum.inrₗ)
+    (Set.orderIsoOfEq oneAddOmegaUpper.support (Set.range Sum.inrₗ)
       oneAddOmegaUpper_support).trans
         (OrderEmbedding.ofStrictMono Sum.inrₗ Sum.Lex.inr_strictMono).orderIso.symm
   exact oneAddOmegaUpper.isPWO_support.orderType_eq_typeLT_of_orderIso e |>.trans

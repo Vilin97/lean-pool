@@ -133,7 +133,7 @@ theorem ordinalValue_translatedTruncation_pos_of_mem_support
   have hmem := ordinalValue_eq_zero_iff.mp hzero
   have hcoeff := constantCoeff_eq_zero_of_mem_negativeMonomialIdeal hmem
   rw [HahnSeries.Nonpositive.constantCoeff_apply, coeff_translatedTruncation] at hcoeff
-  simp only [le_refl, if_true, add_zero] at hcoeff
+  simp only [le_refl, ite_true, add_zero] at hcoeff
   exact (HahnSeries.mem_support _ _).mp hx hcoeff
 
 /-- The maximal translated-truncation value at a critical point is positive. -/

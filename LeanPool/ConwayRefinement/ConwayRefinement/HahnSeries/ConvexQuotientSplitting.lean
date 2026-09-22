@@ -397,6 +397,7 @@ variable {R : Type v} {K : Type w} {G : Type u} [Field R]
 variable [Field K] [AddCommGroup G] [Module K G]
 variable [LinearOrder G] [IsOrderedAddMonoid G]
 
+/-- The quotient order induced by a convex submodule of the ordered exponent group. -/
 noncomputable local instance boundedQuotientLinearOrder (P : Submodule K G)
     [P.toAddSubgroup.IsConvex] : LinearOrder (G ⧸ P) :=
   ConvexQuotient.instLinearOrder (H := P.toAddSubgroup)

@@ -119,7 +119,7 @@ theorem residualPointSet_eq_setOf_ordinalValue_eq_one_of_isMultiplicativelyPrinc
     residualPointSet b =
       {γ : ℝ | γ < 0 ∧ ordinalValue (translatedTruncation (b.1 : K⟦ℝ⟧) γ) = 1} := by
   ext γ
-  rw [mem_residualPointSet_iff, Set.mem_setOf_eq,
+  rw [mem_residualPointSet_iff, Set.mem_ofPred_eq,
     b.residualValue_eq_one_of_isMultiplicativelyPrincipal hb]
 
 end Berarducci

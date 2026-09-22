@@ -87,7 +87,7 @@ theorem exists_factor_with_smaller_support_class_orderType
   let P := FiniteArchimedeanClass.tailSubmodule ℚ T
   let C : AddSubgroup G :=
     (FiniteArchimedeanClass.closedBallAddSubgroup q).comap P.mkQ.toAddMonoidHom
-  letI : C.IsConvex := by
+  let : C.IsConvex := by
     constructor
     exact (FiniteArchimedeanClass.closedBall_ordConnected q).preimage_mono
       (fun _ _ h ↦ ConvexQuotient.mk_le_mk h)

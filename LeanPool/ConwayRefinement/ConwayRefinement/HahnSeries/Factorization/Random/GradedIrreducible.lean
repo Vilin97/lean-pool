@@ -207,8 +207,7 @@ theorem coordinate_finiteSupportGradedEmbedding_mul [CharZero K] (φ : Principal
     coordinate K φ (finiteSupportGradedEmbedding K p * z) = p * coordinate K φ z := by
   obtain ⟨t, rfl⟩ := (principalSubringTensorEquiv K).surjective z
   rw [← principalSubringTensorEquiv_one_tmul, ← map_mul]
-  induction t using TensorProduct.induction_on with
-  | zero => simp
+  induction t using TensorProduct.inductionOn with
   | tmul x q =>
       rw [Algebra.TensorProduct.tmul_mul_tmul, one_mul, principalSubringTensorEquiv_tmul,
         principalSubringTensorEquiv_tmul, coordinate_tmul, coordinate_tmul, mul_smul_comm]
@@ -219,7 +218,7 @@ theorem coordinate_finiteSupportGradedEmbedding_mul [CharZero K] (φ : Principal
 
 /-- The graded projection `RV̂ → P̂` sends the image of a finite-support series `p` to the class
 of `p` in grade zero of `P̂`, which is its constant coefficient. -/
-theorem rvProjection_finiteSupportGradedEmbedding [CharZero K]
+theorem rvProjection_finiteSupportGradedEmbedding
     (p : Berarducci.FiniteSupportRing (K := K)) :
     rvProjection K (finiteSupportGradedEmbedding K p) = gradeClass 0 (p : Series K) := by
   have hcut : ordinalValue (p : Series K) < ω^ ((0 : NatOrdinal) + 1) := by
@@ -246,7 +245,7 @@ theorem rvProjection_finiteSupportMonomial_of_neg [CharZero K]
   exact zero_lt_one
 
 /-- The graded projection sends the image of `t^0 = 1` to `1`. -/
-theorem rvProjection_finiteSupportMonomial_zero [CharZero K] :
+theorem rvProjection_finiteSupportMonomial_zero :
     rvProjection K (finiteSupportGradedEmbedding K
       (finiteSupportMonomial (K := K) (0 : exponentMonoid ℝ))) = 1 := by
   have h1 : finiteSupportMonomial (K := K) (0 : exponentMonoid ℝ) = 1 := by

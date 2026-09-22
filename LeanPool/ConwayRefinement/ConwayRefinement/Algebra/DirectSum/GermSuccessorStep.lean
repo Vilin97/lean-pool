@@ -44,7 +44,130 @@ variable {ι : Type w} {wt : ι → NatOrdinal.{z}} {x : ι → R}
 variable {Δ : Derivation K R (Germ l R)}
 variable (hx : OrdinalGraded.IsMinimalSystem A wt x)
 variable (hΔ : GermPolynomial.IsLoweringDerivation A Δ)
-include hx hΔ
+include hx
+
+open Classical in
+/-- Normalized cofactors have a nonzero linear part modulo decomposable homogeneous elements. -/
+private theorem not_forall_aeval_cofactors_mem_decomposable
+    {δ : NatOrdinal.{z}} (hδ : 0 < δ.constantCoeff)
+    (T B : Finset ι) (hBT : B ⊆ T) (hBne : B.Nonempty)
+    (lam : ι → NatOrdinal.{z}) (hlam : ∀ t ∈ T, lam t + wt t = δ)
+    (hconst : ∀ t ∈ T, (wt t).constantCoeff = δ.constantCoeff)
+    (V : ι → MvPolynomial ι K)
+    (hV : ∀ t ∈ T, IsWeightedHomogeneous wt (V t) (wt t) ∧
+      V t ∈ supported K {i | (wt i).constantCoeff ≠ δ.constantCoeff})
+    (a' : ι → ↥B → MvPolynomial ι K) (ha'one : ∀ b : ↥B, a' b b = 1)
+    (ha'hom : ∀ t ∈ T, ∀ b : ↥B, ∀ β, β + lam b = lam t →
+      IsWeightedHomogeneous wt (a' t b) β)
+    (ha'0 : ∀ t ∈ T, ∀ b : ↥B, (¬ ∃ β, β + lam b = lam t) → a' t b = 0)
+    (W : ↥B → MvPolynomial ι K)
+    (hW : ∀ b, W b = ∑ t ∈ T, a' t b * (X t + V t)) :
+    ¬ ∀ b : ↥B, aeval x (W b) ∈ decomposableAt A (wt b) := by
+  classical
+  intro hWdec
+  -- the linear part `ℓ_b` of `W_b` then lies in `(P̂_+)² ∩ P_{deg b}`, contradicting the linear
+  -- independence of the generators modulo `(P̂_+)² ∩ P_{deg b}`
+  obtain ⟨b₀, hb₀⟩ := hBne
+  obtain ⟨b, hb⟩ : ∃ b : ↥B, (b : ι) = b₀ := ⟨⟨b₀, hb₀⟩, rfl⟩
+  obtain ⟨κ', hκ'⟩ : ∃ κ' : ι → K, ∀ t, κ' t = (a' t b).coeff 0 := ⟨_, fun _ ↦ rfl⟩
+  obtain ⟨ℓ, hℓ⟩ : ∃ ℓ : MvPolynomial ι K, ℓ = ∑ t ∈ T, C (κ' t) * X t := ⟨_, rfl⟩
+  have hdiff : aeval x (W b) - aeval x ℓ ∈ decomposableAt (A) (wt b) := by
+    rw [hW, hℓ, map_sum, map_sum, ← Finset.sum_sub_distrib]
+    refine sum_mem fun t ht ↦ ?_
+    rw [map_mul, map_mul, map_add, aeval_X, ← algebraMap_eq, AlgHom.commutes]
+    have hVt : aeval x (V t) ∈ decomposableAt (A) (wt t) := by
+      refine aeval_mem_decomposableAt_of_mem_supported hx.mem hx.ne_zero ?_ (hV t ht).1 ?_
+      · rw [hconst t ht]
+        exact hδ
+      · rw [hconst t ht]
+        exact (hV t ht).2
+    by_cases h : ∃ β, β + lam b = lam t
+    · obtain ⟨β, hβ⟩ := h
+      have hahom := ha'hom t ht b β hβ
+      have hdeg : β + wt t = wt b := by
+        apply add_right_cancel (b := lam b)
+        rw [add_right_comm, hβ, hlam t ht, add_comm, hlam b (hBT b.2)]
+      by_cases hβ0 : β = 0
+      · -- a scalar coefficient: the difference is `κ' t • V_t(𝓑)`
+        subst hβ0
+        have hC : a' t b = C (κ' t) := by
+          rw [hκ']
+          exact eq_C_of_isWeightedHomogeneous_zero hx.ne_zero hahom
+        rw [zero_add] at hdeg
+        rw [hC]
+        rw [← algebraMap_eq]
+        rw [AlgHom.commutes]
+        rw [mul_add]
+        rw [add_sub_cancel_left]
+        rw [mul_comm]
+        rw [← hdeg]
+        have := mul_mem_decomposableAt_of_mem_decomposableAt hVt
+          (SetLike.algebraMap_mem_graded (A) (κ' t))
+        rwa [add_zero] at this
+      · have hκ0 : κ' t = 0 := by
+          rw [hκ']
+          exact coeff_zero_eq_zero_of_isWeightedHomogeneous hahom hβ0
+        rw [hκ0, map_zero, zero_mul, sub_zero, mul_add, ← hdeg]
+        refine add_mem (mul_mem_decomposableAt (A) hβ0 (hx.ne_zero t)
+          (aeval_mem_of_forall_mem hx.mem hahom) (hx.mem t)) ?_
+        rw [mul_comm, add_comm]
+        exact mul_mem_decomposableAt_of_mem_decomposableAt hVt
+          (aeval_mem_of_forall_mem hx.mem hahom)
+    · have hκ0 : κ' t = 0 := by
+        rw [hκ', ha'0 t ht b h, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply]
+      rw [ha'0 t ht b h, hκ0]
+      simp only [map_zero, zero_mul, sub_zero]
+      exact zero_mem _
+  have hℓmem : aeval x ℓ ∈ decomposableAt (A) (wt b) := by
+    have hub := hWdec b
+    have := sub_mem hub hdiff
+    rwa [sub_sub_cancel] at this
+  -- `ℓ(𝓑)` is a linear combination of the generators of degree `wt b` with coefficient `1` on
+  -- `x_b`
+  obtain ⟨f, hf⟩ : ∃ f : ι →₀ K, f = ∑ t ∈ T, Finsupp.single t (κ' t) := ⟨_, rfl⟩
+  have hfapply : ∀ i, f i = if i ∈ T then κ' i else 0 := by
+    intro i
+    rw [hf, Finsupp.finsetSum_apply]
+    simp only [Finsupp.single_apply]
+    exact Finset.sum_ite_eq' T i κ'
+  have hℓeq : Finsupp.linearCombination K x f = aeval x ℓ := by
+    rw [hf, map_sum, hℓ, map_sum]
+    exact Finset.sum_congr rfl fun t _ ↦ by
+      rw [Finsupp.linearCombination_single, map_mul, aeval_X, ← algebraMap_eq, AlgHom.commutes,
+        Algebra.smul_def]
+  have hfsupp : ∀ i ∈ f.support, wt i = wt b := by
+    intro i hi
+    rw [Finsupp.mem_support_iff, hfapply] at hi
+    split_ifs at hi with hiT
+    · by_cases h : ∃ β, β + lam b = lam i
+      · obtain ⟨β, hβ⟩ := h
+        have hahom := ha'hom i hiT b β hβ
+        by_cases hβ0 : β = 0
+        · subst hβ0
+          rw [zero_add] at hβ
+          have := (hlam i hiT).trans (hlam b (hBT b.2)).symm
+          rw [hβ] at this
+          exact add_left_cancel this
+        · refine absurd ?_ hi
+          rw [hκ']
+          exact coeff_zero_eq_zero_of_isWeightedHomogeneous hahom hβ0
+      · refine absurd ?_ hi
+        rw [hκ', ha'0 i hiT b h, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply]
+    · exact absurd rfl hi
+  have hfmem : Finsupp.linearCombination K x f ∈ decomposableAt (A) (wt b) := by
+    rw [hℓeq]
+    exact hℓmem
+  have hf0 := hx.independent (wt b) f hfsupp hfmem
+  have hfb := congrArg (fun g : ι →₀ K ↦ g b₀) hf0
+  simp only [Finsupp.coe_zero, Pi.zero_apply] at hfb
+  rw [hfapply, ite_eq_left (hBT hb₀)] at hfb
+  have hκ1 : κ' b₀ = 1 := by
+    rw [hκ', ← hb, ha'one b, AddMonoidAlgebra.coeff_one_zero]
+  rw [hκ1] at hfb
+  exact one_ne_zero hfb
+
+
+include hΔ
 
 open Classical in
 /-- **The successor step.** Evaluation is injective in a degree of positive finite part when it is
@@ -138,7 +261,7 @@ theorem injectiveAt_of_forall_lt [CharZero K] (hgz : GradeZeroScalars A)
       (∀ b : ↥B, ∀ β, β + lam b = lam t → IsWeightedHomogeneous wt (a b) β) ∧
       (∀ b : ↥B, (¬ ∃ β, β + lam b = lam t) → a b = 0) ∧ c t = ∑ b : ↥B, c b * a b := by
     intro t ht
-    letI := weightedGradedAlgebra K wt
+    let := weightedGradedAlgebra K wt
     obtain ⟨a, ha, ha0, hsum⟩ := exists_eq_sum_mul_of_mem_span
       (𝒜 := weightedHomogeneousSubmodule K wt) (q := fun b : ↥B ↦ c b) (c := fun b : ↥B ↦ lam b)
       (fun b ↦ (mem_weightedHomogeneousSubmodule _ _ _ _).mpr (hchom b (hBT b.2)))
@@ -489,107 +612,10 @@ theorem injectiveAt_of_forall_lt [CharZero K] (hgz : GradeZeroScalars A)
         ⟨fun h ↦ (Finset.mem_erase.mp hb').1 (Subtype.ext h), b'.2⟩)
     rw [← hρβ]
     exact mul_mem_decomposableAt (A) hρ0 hβ0 haρ hwβ
-  -- the linear part `ℓ_b` of `W_b` then lies in `(P̂_+)² ∩ P_{deg b}`, contradicting the linear
-  -- independence of the generators modulo `(P̂_+)² ∩ P_{deg b}`
-  obtain ⟨b₀, hb₀⟩ := hBne
-  obtain ⟨b, hb⟩ : ∃ b : ↥B, (b : ι) = b₀ := ⟨⟨b₀, hb₀⟩, rfl⟩
-  obtain ⟨κ', hκ'⟩ : ∃ κ' : ι → K, ∀ t, κ' t = (a' t b).coeff 0 := ⟨_, fun _ ↦ rfl⟩
-  obtain ⟨ℓ, hℓ⟩ : ∃ ℓ : MvPolynomial ι K, ℓ = ∑ t ∈ T, C (κ' t) * X t := ⟨_, rfl⟩
-  have hdiff : aeval x (W b) - aeval x ℓ ∈ decomposableAt (A) (wt b) := by
-    rw [hW, hℓ, map_sum, map_sum, ← Finset.sum_sub_distrib]
-    refine sum_mem fun t ht ↦ ?_
-    rw [map_mul, map_mul, map_add, aeval_X, ← algebraMap_eq, AlgHom.commutes]
-    have hVt : aeval x (V t) ∈ decomposableAt (A) (wt t) := by
-      refine aeval_mem_decomposableAt_of_mem_supported hx.mem hx.ne_zero ?_ (hV t ht).1 ?_
-      · rw [(hmemT t ht).2]
-        exact hδ
-      · rw [(hmemT t ht).2]
-        exact (hV t ht).2
-    by_cases h : ∃ β, β + lam b = lam t
-    · obtain ⟨β, hβ⟩ := h
-      have hahom := ha'hom t ht b β hβ
-      have hdeg : β + wt t = wt b := by
-        apply add_right_cancel (b := lam b)
-        rw [add_right_comm, hβ, hlam t ht, add_comm, hlam b (hBT b.2)]
-      by_cases hβ0 : β = 0
-      · -- a scalar coefficient: the difference is `κ' t • V_t(𝓑)`
-        subst hβ0
-        have hC : a' t b = C (κ' t) := by
-          rw [hκ']
-          exact eq_C_of_isWeightedHomogeneous_zero hx.ne_zero hahom
-        rw [zero_add] at hdeg
-        rw [hC]
-        rw [← algebraMap_eq]
-        rw [AlgHom.commutes]
-        rw [mul_add]
-        rw [add_sub_cancel_left]
-        rw [mul_comm]
-        rw [← hdeg]
-        have := mul_mem_decomposableAt_of_mem_decomposableAt hVt
-          (SetLike.algebraMap_mem_graded (A) (κ' t))
-        rwa [add_zero] at this
-      · have hκ0 : κ' t = 0 := by
-          rw [hκ']
-          exact coeff_zero_eq_zero_of_isWeightedHomogeneous hahom hβ0
-        rw [hκ0, map_zero, zero_mul, sub_zero, mul_add, ← hdeg]
-        refine add_mem (mul_mem_decomposableAt (A) hβ0 (hx.ne_zero t)
-          (aeval_mem_of_forall_mem hx.mem hahom) (hx.mem t)) ?_
-        rw [mul_comm, add_comm]
-        exact mul_mem_decomposableAt_of_mem_decomposableAt hVt
-          (aeval_mem_of_forall_mem hx.mem hahom)
-    · have hκ0 : κ' t = 0 := by
-        rw [hκ', ha'0 t ht b h, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply]
-      rw [ha'0 t ht b h, hκ0]
-      simp only [map_zero, zero_mul, sub_zero]
-      exact zero_mem _
-  have hℓmem : aeval x ℓ ∈ decomposableAt (A) (wt b) := by
-    have hub : u b ∈ decomposableAt (A) (wt b) := hudec b
-    rw [hu'] at hub
-    have := sub_mem hub hdiff
-    rwa [sub_sub_cancel] at this
-  -- `ℓ(𝓑)` is a linear combination of the generators of degree `wt b` with coefficient `1` on
-  -- `x_b`
-  obtain ⟨f, hf⟩ : ∃ f : ι →₀ K, f = ∑ t ∈ T, Finsupp.single t (κ' t) := ⟨_, rfl⟩
-  have hfapply : ∀ i, f i = if i ∈ T then κ' i else 0 := by
-    intro i
-    rw [hf, Finsupp.finsetSum_apply]
-    simp only [Finsupp.single_apply]
-    exact Finset.sum_ite_eq' T i κ'
-  have hℓeq : Finsupp.linearCombination K x f = aeval x ℓ := by
-    rw [hf, map_sum, hℓ, map_sum]
-    exact Finset.sum_congr rfl fun t _ ↦ by
-      rw [Finsupp.linearCombination_single, map_mul, aeval_X, ← algebraMap_eq, AlgHom.commutes,
-        Algebra.smul_def]
-  have hfsupp : ∀ i ∈ f.support, wt i = wt b := by
-    intro i hi
-    rw [Finsupp.mem_support_iff, hfapply] at hi
-    split_ifs at hi with hiT
-    · by_cases h : ∃ β, β + lam b = lam i
-      · obtain ⟨β, hβ⟩ := h
-        have hahom := ha'hom i hiT b β hβ
-        by_cases hβ0 : β = 0
-        · subst hβ0
-          rw [zero_add] at hβ
-          have := (hlam i hiT).trans (hlam b (hBT b.2)).symm
-          rw [hβ] at this
-          exact add_left_cancel this
-        · refine absurd ?_ hi
-          rw [hκ']
-          exact coeff_zero_eq_zero_of_isWeightedHomogeneous hahom hβ0
-      · refine absurd ?_ hi
-        rw [hκ', ha'0 i hiT b h, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply]
-    · exact absurd rfl hi
-  have hfmem : Finsupp.linearCombination K x f ∈ decomposableAt (A) (wt b) := by
-    rw [hℓeq]
-    exact hℓmem
-  have hf0 := hx.independent (wt b) f hfsupp hfmem
-  have hfb := congrArg (fun g : ι →₀ K ↦ g b₀) hf0
-  simp only [Finsupp.coe_zero, Pi.zero_apply] at hfb
-  rw [hfapply, ite_eq_left (hBT hb₀)] at hfb
-  have hκ1 : κ' b₀ = 1 := by
-    rw [hκ', ha' b₀ b, ite_eq_left hb₀, ite_eq_left hb, coeff_zero_one]
-  rw [hκ1] at hfb
-  exact one_ne_zero hfb
+  exact not_forall_aeval_cofactors_mem_decomposable hx hδ T B hBT hBne lam hlam
+    (fun t ht ↦ (hmemT t ht).2) V hV a'
+    (fun b ↦ by rw [ha', ite_eq_left b.2, ite_eq_left rfl]) ha'hom ha'0 W hW
+    (fun b ↦ by simpa only [hu'] using hudec b)
 
 end OrdinalGraded
 

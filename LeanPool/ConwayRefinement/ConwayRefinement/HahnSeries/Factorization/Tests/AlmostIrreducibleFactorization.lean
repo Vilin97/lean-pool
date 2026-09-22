@@ -24,8 +24,10 @@ public noncomputable section
 
 open HahnSeries.Nonpositive
 
+/-- The full real exponent subgroup used in the explicit factorization fixtures. -/
 abbrev FactorizationExponentSubgroup : AddSubgroup ℝ := ⊤
 
+/-- Rational Hahn series over the full real subgroup, supported at nonpositive exponents. -/
 abbrev FactorizationSeries :=
   HahnSeries.Nonpositive FactorizationExponentSubgroup ℚ
 

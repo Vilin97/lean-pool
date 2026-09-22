@@ -162,7 +162,7 @@ private theorem mem_nearConstantSubgroup_of_supportOrderType_le_one
     exact (nearConstantSubgroup K).zero_mem
   · have hbTypeOne : (b : K⟦ℝ⟧).supportOrderType = 1 := by
       simpa using hbOne
-    letI : WellFoundedLT (b : K⟦ℝ⟧).support :=
+    let : WellFoundedLT (b : K⟦ℝ⟧).support :=
       (b : K⟦ℝ⟧).isWF_support
     have htype : Ordinal.type
         (fun x y : (b : K⟦ℝ⟧).support ↦ x < y) = 1 := by
@@ -170,7 +170,7 @@ private theorem mem_nearConstantSubgroup_of_supportOrderType_le_one
         (OrderIso.refl (b : K⟦ℝ⟧).support)]
       exact hbTypeOne
     obtain ⟨hUnique⟩ := Ordinal.type_eq_one_iff_unique.mp htype
-    letI : Unique (b : K⟦ℝ⟧).support := hUnique
+    let : Unique (b : K⟦ℝ⟧).support := hUnique
     let g : (b : K⟦ℝ⟧).support := default
     have hsupport : (b : K⟦ℝ⟧).support = {(g : ℝ)} := by
       ext x

@@ -209,7 +209,7 @@ theorem mk_lt_of_isPWO_topologicalClosure_span
     · exact f_ne_of_lt hlt hxy
     · exact f_ne_of_lt hgt hxy.symm
   have hspan : #(span ℚ S) < κ := by
-    letI : Nonempty S := hSne.to_subtype
+    let : Nonempty S := hSne.to_subtype
     have hinj : Function.Injective (Span.repr ℚ S) := by
       intro x y hxy
       apply Subtype.ext

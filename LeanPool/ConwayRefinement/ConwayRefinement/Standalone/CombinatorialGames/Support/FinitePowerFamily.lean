@@ -7,7 +7,7 @@ module
 
 public import LeanPool.ConwayRefinement.ConwayRefinement.Standalone.CombinatorialGames.Support.OmnificFiniteDegree
 public import Mathlib.Data.Prod.Lex
-public import Mathlib.Data.Real.Basic
+public import Mathlib.Basic.Real.Basic
 public import Mathlib.Data.Sum.Order
 public import Mathlib.SetTheory.Ordinal.Arithmetic
 public import Mathlib.SetTheory.Ordinal.Exponential
@@ -70,7 +70,7 @@ instance finiteLexWellFoundedLT : (n : ℕ) → WellFoundedLT (FiniteLex n)
       change WellFoundedLT Unit
       exact Finite.wellFounded_of_trans_of_irrefl (· < ·)
   | .succ n => by
-      letI : WellFoundedLT (FiniteLex n) := finiteLexWellFoundedLT n
+      let : WellFoundedLT (FiniteLex n) := finiteLexWellFoundedLT n
       exact inferInstanceAs (WellFoundedLT (Lex (ℕ × FiniteLex n)))
 
 /-- The lexicographic natural tuples of length `n` have order type `ω ^ n`. -/
@@ -85,7 +85,7 @@ theorem typeLT_finiteLex (n : ℕ) :
           ((· < ·) : FiniteLex n → FiniteLex n → Prop)) = _
       rw [Ordinal.type_prod_lex, Ordinal.type_nat_lt]
       rw [ih]
-      rw [← Ordinal.opow_succ]
+      rw [← Ordinal.opow_add_one]
       congr 2
 
 /-- The contraction factor separating consecutive lexicographic blocks. -/
@@ -248,7 +248,7 @@ abbrev ConwayIndex (n : ℕ) := WithTop (FiniteLex n)
 theorem typeLT_conwayIndex (n : ℕ) :
     Ordinal.type ((· < ·) : ConwayIndex n → ConwayIndex n → Prop) =
       (Ordinal.omega0 : Ordinal.{0}) ^ (n : Ordinal.{0}) + 1 := by
-  letI : WellFoundedLT (FiniteLex n ⊕ₗ PUnit) :=
+  let : WellFoundedLT (FiniteLex n ⊕ₗ PUnit) :=
     (WithTop.orderIsoSumLexPUnit (α := FiniteLex n)).symm.toOrderEmbedding.wellFoundedLT
   calc
     Ordinal.type ((· < ·) : ConwayIndex n → ConwayIndex n → Prop) =

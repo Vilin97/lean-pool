@@ -23,9 +23,11 @@ namespace Tests
 
 open HahnSeries
 
+/-- The rational monomial `5t⁻¹`, whose strict class truncation is zero. -/
 def reducedZeroTauSeries : Nonpositive ℚ ℚ :=
   Nonpositive.single (-1) 5 (by norm_num)
 
+/-- The rational series `1 + 5t⁻¹`, whose strict class truncation is one. -/
 def reducedOneTauSeries : Nonpositive ℚ ℚ :=
   1 + reducedZeroTauSeries
 

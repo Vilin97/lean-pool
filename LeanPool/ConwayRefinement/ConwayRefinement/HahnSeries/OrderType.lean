@@ -89,7 +89,7 @@ theorem supportOrderType_single {a : G} {r : R} (hr : r ≠ 0) :
     { toEquiv := Equiv.Set.singleton a
       map_rel_iff' := by simp }
   let e : (HahnSeries.single a r).support ≃o PUnit :=
-    (OrderIso.setCongr _ {a} hsupport).trans singletonOrderIso
+    (Set.orderIsoOfEq _ {a} hsupport).trans singletonOrderIso
   rw [supportOrderType_eq_typeLT e]
   exact Ordinal.type_eq_one_of_unique _
 

@@ -48,7 +48,8 @@ private theorem approachZeroPrincipalComponent_ne_zero :
 def tensorExponentZero : HahnSeries.Nonpositive.exponentMonoid ℝ := ⟨0, le_rfl⟩
 
 /-- The exponent negative one in the nonpositive real cone. -/
-def tensorExponentNegOne : HahnSeries.Nonpositive.exponentMonoid ℝ := ⟨-1, show (-1 : ℝ) ≤ 0 by norm_num⟩
+def tensorExponentNegOne : HahnSeries.Nonpositive.exponentMonoid ℝ := ⟨-1, show (-1 : ℝ) ≤ 0 by
+  norm_num⟩
 
 /-- A tensor with nonzero coordinates at the two distinct exponents `0` and `-1`. -/
 def approachZeroTwoExponentTensor :

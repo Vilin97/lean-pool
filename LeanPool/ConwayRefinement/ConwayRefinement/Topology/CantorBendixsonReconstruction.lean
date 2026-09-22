@@ -205,11 +205,11 @@ theorem closure_rank_level_eq (s : Closeds X) (hs : (s : Set X).IsPWO) (o : Ordi
     constructor
     · rintro ⟨hx, hr⟩
       have hh := (s.cantorBendixsonRank_eq_iff hs hx o).mp hr
-      simpa only [cantorBendixson_add_one, coe_derived, mem_setOf_eq] using hh
+      simpa only [cantorBendixson_add_one, coe_derived, Set.mem_ofPred_eq] using hh
     · intro hh
       have hx := s.cantorBendixson_le o hh.1
       refine ⟨hx, (s.cantorBendixsonRank_eq_iff hs hx o).mpr ?_⟩
-      simpa only [cantorBendixson_add_one, coe_derived, mem_setOf_eq] using hh
+      simpa only [cantorBendixson_add_one, coe_derived, Set.mem_ofPred_eq] using hh
   rw [he]
   exact hd
 

@@ -65,7 +65,7 @@ theorem rationalFixture_negativeOne_coeff :
     ← HahnSeries.Nonpositive.smul_finiteSupport_eq_scalar_mul,
     map_add, map_smul]
   simp [HahnSeries.Nonpositive.finiteSupportCoefficients_apply,
-    HahnSeries.Nonpositive.coe_finiteSupportScalarHom, negativeOne, Finsupp.single_apply, Subtype.ext_iff]
+    HahnSeries.Nonpositive.coe_finiteSupportScalarHom, negativeOne]
 
 /-- The constant coefficient survives scalar extension and is mapped to `3 : ℚ`. -/
 theorem rationalFixture_zero_coeff :
@@ -75,7 +75,8 @@ theorem rationalFixture_zero_coeff :
     ← HahnSeries.Nonpositive.smul_finiteSupport_eq_scalar_mul,
     map_add, map_smul]
   simp [HahnSeries.Nonpositive.finiteSupportCoefficients_apply,
-    HahnSeries.Nonpositive.coe_finiteSupportScalarHom, negativeOne, Finsupp.single_apply, Subtype.ext_iff]
+    HahnSeries.Nonpositive.coe_finiteSupportScalarHom, negativeOne,
+      Subtype.ext_iff]
 
 /-- The scalar-extended integer fixture belongs to the image by construction. -/
 theorem rationalFixture_mem_range :
@@ -98,7 +99,7 @@ theorem rationalOutside_negativeOne_coeff :
     ← HahnSeries.Nonpositive.smul_finiteSupport_eq_scalar_mul,
     map_add, map_smul]
   simp [HahnSeries.Nonpositive.finiteSupportCoefficients_apply,
-    HahnSeries.Nonpositive.coe_finiteSupportScalarHom, negativeOne, Finsupp.single_apply, Subtype.ext_iff]
+    HahnSeries.Nonpositive.coe_finiteSupportScalarHom, negativeOne]
 
 /-- A nonintegral coefficient prevents membership in the image of integer scalar extension. -/
 theorem rationalOutside_not_mem_range :

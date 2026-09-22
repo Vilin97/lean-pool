@@ -57,7 +57,7 @@ namespace GermIsPolynomialRing
 /-- The germ ring is a polynomial ring over its coefficient field. -/
 theorem of_polynomiality (K : Type u) [Field K] : GermIsPolynomialRing K := by
   intro hK
-  letI := hK
+  let := hK
   obtain ⟨ι, wt, x, hx⟩ :=
     OrdinalGraded.exists_isMinimalSystem (Berarducci.principalGrading K)
   obtain ⟨σ⟩ := Berarducci.exists_lifts hx.mem
@@ -71,11 +71,11 @@ namespace GermHasUniqueFactorization
 theorem of_polynomiality (K : Type u) [Field K] :
     GermHasUniqueFactorization K := by
   intro hK
-  letI := hK
+  let := hK
   obtain ⟨ι, ⟨equiv⟩⟩ := GermIsPolynomialRing.of_polynomiality K hK
-  haveI hdom : IsDomain (Germ K) :=
+  have hdom : IsDomain (Germ K) :=
     Function.Injective.isDomain equiv.symm.toRingHom equiv.symm.injective
-  haveI : UniqueFactorizationMonoid (Germ K) :=
+  have : UniqueFactorizationMonoid (Germ K) :=
     equiv.toMulEquiv.uniqueFactorizationMonoid inferInstance
   refine ⟨hdom, fun a ha ↦ ?_, fun f g hf hg h ↦ UniqueFactorizationMonoid.factors_unique hf hg h⟩
   obtain ⟨f, hf, hfa⟩ := UniqueFactorizationMonoid.exists_prime_factors a ha

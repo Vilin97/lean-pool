@@ -6,7 +6,7 @@ Authors: Dan Abramov
 module
 
 public import LeanPool.ConwayRefinement.CombinatorialGames.Surreal.HahnSeries.Basic
-public import Mathlib.Data.Real.Basic
+public import Mathlib.Basic.Real.Basic
 public import Mathlib.Order.TypeTags
 
 /-!

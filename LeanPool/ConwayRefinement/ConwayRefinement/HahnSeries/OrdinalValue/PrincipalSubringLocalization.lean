@@ -38,6 +38,7 @@ open HahnSeries.Nonpositive
 
 variable {K : Type v} [Field K] [CharZero K]
 
+/-- The coefficient-field algebra structure on principal-subring fractions used in localization. -/
 local instance principalSubringFractionAlgebraLocalization :
     Algebra K (PrincipalSubringFractionField K) :=
   principalSubringFractionAlgebra K
@@ -174,6 +175,7 @@ variable (K) in
 private abbrev FractionTensor :=
   PrincipalSubringFractionField K ⊗[K] FiniteSupportRing (K := K)
 
+/-- The principal-subring algebra structure on its fraction field used in tensor localization. -/
 local instance principalSubringFractionSelfAlgebraLocalization :
     Algebra (PrincipalSubring K) (PrincipalSubringFractionField K) :=
   principalSubringFractionSelfAlgebra K

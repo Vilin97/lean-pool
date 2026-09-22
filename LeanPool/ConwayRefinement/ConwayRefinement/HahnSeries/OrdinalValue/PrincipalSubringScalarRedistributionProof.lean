@@ -47,6 +47,8 @@ section Redistribution
 
 variable {K : Type v} [Field K] [CharZero K]
 
+/-- The coefficient-field algebra structure on principal-subring fractions used for scalar
+redistribution. -/
 local instance algLocal :
     Algebra K (PrincipalSubringFractionField K) := principalSubringFractionAlgebra K
 

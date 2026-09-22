@@ -59,7 +59,7 @@ theorem embDomain_restrictDomain (f : G ↪o H) (x : K⟦H⟧)
   by_cases hh : h ∈ Set.range f
   · obtain ⟨g, rfl⟩ := hh
     rw [embDomain_coeff, restrictDomain_coeff]
-  · rw [embDomain_notin_range hh]
+  · rw [HahnSeries.embDomain_of_notMem_range hh]
     have hzero : x.coeff h = 0 := by
       by_contra hne
       exact hh (hx hne)

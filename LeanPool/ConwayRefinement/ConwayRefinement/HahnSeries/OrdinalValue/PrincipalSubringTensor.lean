@@ -132,7 +132,8 @@ def principalSubringTensorMap [CharZero K] :
     (finiteSupportGradedEmbedding K)
 
 /-- On a pure tensor, the global tensor map is multiplication of the two embedded factors. -/
-theorem principalSubringTensorMap_tmul [CharZero K] (x : PrincipalSubring K) (p : FiniteSupportRing (K := K)) :
+theorem principalSubringTensorMap_tmul [CharZero K] (x : PrincipalSubring K) (p :
+  FiniteSupportRing (K := K)) :
     principalSubringTensorMap K (x ⊗ₜ p) =
       principalSubringEmbedding K x *
         finiteSupportGradedEmbedding K p :=
@@ -157,8 +158,7 @@ private theorem principalSubringTensorMap_eq_linearEquiv [CharZero K]
     (z : PrincipalSubring K ⊗[K] FiniteSupportRing (K := K)) :
     principalSubringTensorMap K z =
       principalSubringTensorLinearEquiv K z := by
-  induction z using TensorProduct.induction_on with
-  | zero => rw [map_zero, LinearEquiv.map_zero]
+  induction z using TensorProduct.inductionOn with
   | tmul x p =>
       rw [principalSubringTensorMap_tmul,
         finiteSupportGradedEmbedding_apply, mul_comm,
@@ -303,7 +303,8 @@ theorem principalSubringTensorEquiv_symm_finiteSupportGradedEmbedding [CharZero 
 /-- The inverse global tensor equivalence sends the principal graded embedding to the
 corresponding pure tensor. -/
 @[simp]
-theorem principalSubringTensorEquiv_symm_principalGradedEmbedding [CharZero K] (x : PrincipalSubring K) :
+theorem principalSubringTensorEquiv_symm_principalGradedEmbedding [CharZero K] (x :
+  PrincipalSubring K) :
     (principalSubringTensorEquiv K).symm
         (principalSubringEmbedding K x) = x ⊗ₜ 1 := by
   apply (principalSubringTensorEquiv K).injective

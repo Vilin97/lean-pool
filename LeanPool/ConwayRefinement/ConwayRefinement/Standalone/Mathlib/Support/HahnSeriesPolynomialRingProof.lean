@@ -43,7 +43,7 @@ namespace IsPolynomialRing
 theorem of_polynomiality (K : Type u) [Field K] :
     HahnPolynomial.IsPolynomialRing K := by
   intro hK
-  letI := hK
+  let := hK
   obtain ⟨ι, weight, generators, hminimal, ⟨lifts⟩⟩ :=
     Berarducci.exists_isMinimalSystem_and_generatorLifts K
   let ringEquiv : MvPolynomial ι (FiniteSupport K) ≃+* Series K :=

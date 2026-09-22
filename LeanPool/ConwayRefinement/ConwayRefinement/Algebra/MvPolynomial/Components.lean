@@ -32,11 +32,13 @@ variable {σ : Type u} {R : Type v} [CommRing R] (wt : σ → NatOrdinal)
 at least `τ`. -/
 noncomputable def componentsGE (τ : NatOrdinal) (P : MvPolynomial σ R) : MvPolynomial σ R := by
   classical
-  exact ∑ d ∈ P.support.filter fun d ↦ τ ≤ Finsupp.weight wt d, monomial d (AddMonoidAlgebra.coeff P d)
+  exact ∑ d ∈ P.support.filter fun d ↦ τ ≤ Finsupp.weight wt d, monomial d
+    (AddMonoidAlgebra.coeff P d)
 
 open Classical in
 theorem coeff_componentsGE (τ : NatOrdinal) (P : MvPolynomial σ R) (d : σ →₀ ℕ) :
-    AddMonoidAlgebra.coeff (componentsGE wt τ P) d = if τ ≤ Finsupp.weight wt d then AddMonoidAlgebra.coeff P d else 0 := by
+    AddMonoidAlgebra.coeff (componentsGE wt τ P) d = if τ ≤ Finsupp.weight wt d then
+      AddMonoidAlgebra.coeff P d else 0 := by
   classical
   rw [componentsGE]
   simp only [coeff_sum, coeff_monomial]
@@ -65,7 +67,8 @@ theorem componentsGE_neg (τ : NatOrdinal) (P : MvPolynomial σ R) :
     componentsGE wt τ (-P) = -componentsGE wt τ P := by
   classical
   ext d
-  have hneg : ∀ Q : MvPolynomial σ R, AddMonoidAlgebra.coeff (-Q) d = -AddMonoidAlgebra.coeff Q d := fun Q ↦ by
+  have hneg : ∀ Q : MvPolynomial σ R, AddMonoidAlgebra.coeff (-Q) d = -AddMonoidAlgebra.coeff Q
+    d := fun Q ↦ by
     change (coeffAddMonoidHom d) (-Q) = -(coeffAddMonoidHom d) Q
     exact map_neg _ _
   rw [hneg, coeff_componentsGE, coeff_componentsGE, hneg]

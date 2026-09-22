@@ -8,7 +8,7 @@ module
 public import LeanPool.ConwayRefinement.ConwayRefinement.Algebra.Valuation.Residue
 public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.FiniteSupport
 public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.OrderType
-public import Mathlib.Data.Real.Basic
+public import Mathlib.Basic.Real.Basic
 
 import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.DegreeValuation
 import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.FiniteSupportResidue

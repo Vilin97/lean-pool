@@ -37,23 +37,36 @@ meta def phases : Array String := #[
 
 /-- The mathematical account attached to one selected Lean declaration. -/
 structure Node where
+  /-- The fully qualified name of the Lean declaration described by this node. -/
   name : Name
+  /-- The label identifying the declaration in the mathematical proof map. -/
   label : String
+  /-- The phase of the mathematical argument containing the declaration. -/
   phase : String
+  /-- The title displayed for this declaration in the proof map. -/
   title : String
+  /-- The informal mathematical statement attached to the declaration. -/
   statement : String
+  /-- The informal proof explanation attached to the declaration. -/
   proof : String
+  /-- Whether to highlight this declaration in the proof map. -/
   highlight : Bool := false
 deriving Inhabited, ToExpr
 
 /-- Checked blueprint metadata, persisted with each compiled module. -/
 initialize nodeExt : NameMapExtension Node ← registerNameMapExtension Node
 
+/-- Syntax for specifying the phase of a blueprint declaration. -/
 syntax blueprintPhaseOption := "(" &"phase" " := " str ")"
+/-- Syntax for specifying the title of a blueprint declaration. -/
 syntax blueprintTitleOption := "(" &"title" " := " str ")"
+/-- Syntax for attaching an informal statement to a blueprint declaration. -/
 syntax blueprintStatementOption := "(" &"statement" " := " plainDocComment ")"
+/-- The proof-map option containing an informal proof as a documentation comment. -/
 syntax blueprintProofOption := "(" &"proof" " := " plainDocComment ")"
+/-- The optional marker highlighting a result in the mathematical proof map. -/
 syntax blueprintHighlightOption := "(" &"highlight" ")"
+/-- The label, phase, title, statement, proof, and optional highlight of a proof-map entry. -/
 syntax blueprintOptions :=
   str ppSpace blueprintPhaseOption ppSpace blueprintTitleOption
     ppSpace blueprintStatementOption ppSpace blueprintProofOption
@@ -67,11 +80,14 @@ syntax (name := conwayRefinementBlueprint) "conway_refinement_blueprint" ppSpace
 macro "blueprint" ppSpace options:blueprintOptions : attr =>
   `(attr| conway_refinement_blueprint $options:blueprintOptions)
 
+/-- Reject a proof-map label whose prefix does not identify a recognized mathematical result
+kind. -/
 def resultKindForLabel (label : String) : CoreM Unit := do
   unless #["def:", "thm:", "lem:", "prop:", "cor:", "fact:"].any
       (fun resultPrefix => label.startsWith resultPrefix) do
     throwError "blueprint label {label} has no recognized mathematical result kind"
 
+/-- Parse and validate the proof-map metadata attached to a declaration. -/
 def elaborateNode (name : Name) : Syntax → CoreM Node
   | `(attr| conway_refinement_blueprint $label:str
       (phase := $phase:str)

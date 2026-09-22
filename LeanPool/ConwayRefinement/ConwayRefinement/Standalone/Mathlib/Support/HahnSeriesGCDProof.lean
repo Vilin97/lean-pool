@@ -31,9 +31,9 @@ namespace SeriesHasGCDs
 /-- Every pair of series in `K((ℝ^{≤0}))` has a greatest common divisor. -/
 theorem of_polynomiality (K : Type u) [Field K] : SeriesHasGCDs K := by
   intro hK
-  letI := hK
+  let := hK
   obtain ⟨hGCD⟩ := Berarducci.nonemptyGCDMonoid (K := K)
-  letI : GCDMonoid (nonpos K) := hGCD
+  let : GCDMonoid (nonpos K) := hGCD
   intro a b
   refine ⟨gcd a b, fun e ↦ ?_⟩
   constructor
@@ -49,9 +49,9 @@ namespace SeriesIsPrimal
 /-- Every series in `K((ℝ^{≤0}))` is primal, as a consequence of the existence of gcds. -/
 theorem of_gcds (K : Type u) [Field K] : SeriesIsPrimal K := by
   intro hK
-  letI := hK
-  letI : DecidableEq (nonpos K) := Classical.decEq _
-  letI : GCDMonoid (nonpos K) :=
+  let := hK
+  let : DecidableEq (nonpos K) := Classical.decEq _
+  let : GCDMonoid (nonpos K) :=
     gcdMonoidOfExistsGCD (SeriesHasGCDs.of_polynomiality K inferInstance)
   intro a
   exact DecompositionMonoid.primal a
@@ -64,7 +64,7 @@ namespace SeriesIrreduciblesArePrime
 theorem of_primality (K : Type u) [Field K] :
     SeriesIrreduciblesArePrime K := by
   intro hK
-  letI := hK
+  let := hK
   intro a ha
   exact prime_of_irreducible_of (SeriesIsPrimal.of_gcds K) ha
 
@@ -76,7 +76,7 @@ namespace SeriesFactorizationsAreUnique
 theorem of_primality (K : Type u) [Field K] :
     SeriesFactorizationsAreUnique K := by
   intro hK
-  letI := hK
+  let := hK
   intro f g hf hg hfg
   exact factorization_unique_of (SeriesIsPrimal.of_gcds K) hf hg hfg
 

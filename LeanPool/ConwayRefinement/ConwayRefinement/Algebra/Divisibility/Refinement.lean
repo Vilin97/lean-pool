@@ -170,7 +170,7 @@ theorem hasFourFactorRefinement_iff_forall_isPrimal :
   constructor
   · exact fun hR a ↦ hR.isPrimal a
   · intro h
-    letI : DecompositionMonoid R := ⟨h⟩
+    let : DecompositionMonoid R := ⟨h⟩
     exact hasFourFactorRefinement_of_decompositionMonoid
 
 /-- Four-factor refinement is equivalent to the decomposition-monoid property. -/

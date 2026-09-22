@@ -210,7 +210,7 @@ theorem exists_nonzero_isWeaklyPrincipal_truncGE [Zero G] {x : R⟦G⟧} (hx : x
   have hprefixTrunc : truncGE last.order blocks.dropLast.sum = 0 := by
     rw [← support_eq_empty_iff, support_truncGE]
     ext i
-    simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false, not_and]
+    simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, not_and]
     intro hi
     exact fun hle ↦ (not_lt_of_ge hle) (hprefixBelow.lt hi hlastOrderMem)
   have hlastTrunc : truncGE last.order last = last := by

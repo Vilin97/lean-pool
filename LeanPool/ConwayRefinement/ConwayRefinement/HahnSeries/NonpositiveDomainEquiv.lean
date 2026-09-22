@@ -80,12 +80,12 @@ theorem lift_supportOrderType_embDomainRingEquiv (e : G ≃+o H)
     Ordinal.lift.{u, v}
         (HahnSeries.supportOrderType (embDomainRingEquiv e x : K⟦H⟧)) =
       Ordinal.lift.{v, u} (HahnSeries.supportOrderType (x : K⟦G⟧)) := by
-  letI : WellFoundedLT (x : K⟦G⟧).support := (x : K⟦G⟧).isWF_support
-  letI : WellFoundedLT (embDomainRingEquiv e x : K⟦H⟧).support :=
+  let : WellFoundedLT (x : K⟦G⟧).support := (x : K⟦G⟧).isWF_support
+  let : WellFoundedLT (embDomainRingEquiv e x : K⟦H⟧).support :=
     (embDomainRingEquiv e x : K⟦H⟧).isWF_support
   let supportEquiv : (embDomainRingEquiv e x : K⟦H⟧).support ≃o
       (x : K⟦G⟧).support :=
-    (OrderIso.setCongr _ (e '' (x : K⟦G⟧).support) (by
+    (Set.orderIsoOfEq _ (e '' (x : K⟦G⟧).support) (by
       rw [coe_embDomainRingEquiv, HahnSeries.support_embDomainRingEquiv])).trans
         (StrictMonoOn.orderIso e (x : K⟦G⟧).support
           (e.strictMono.strictMonoOn (x : K⟦G⟧).support)).symm

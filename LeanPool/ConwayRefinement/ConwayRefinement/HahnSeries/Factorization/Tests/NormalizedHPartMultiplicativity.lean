@@ -24,6 +24,7 @@ public noncomputable section
 
 open HahnSeries.Nonpositive
 
+/-- The zero exponent subgroup used to test multiplicativity of normalized factors. -/
 abbrev TrivialExponentSubgroup : AddSubgroup ℝ := ⊥
 
 /-- Every normalized finite-support series over the trivial exponent subgroup is the identity. -/

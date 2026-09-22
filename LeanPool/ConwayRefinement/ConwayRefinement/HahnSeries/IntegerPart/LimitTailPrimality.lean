@@ -120,7 +120,7 @@ theorem isPrimal_of_finite_classes_and_limit_tail_conditions
             obtain ⟨c, hc⟩ := hT₀ne
             obtain ⟨d, _hd, hcd⟩ := hT₀gt c hc
             exact ⟨⟨c, ne_top_of_lt hcd⟩, hc⟩
-          letI : Nonempty T :=
+          let : Nonempty T :=
             ⟨⟨Classical.choose hTne, Classical.choose_spec hTne⟩⟩
           have hTgt : ∀ c ∈ T, ∃ d ∈ T, c < d := by
             intro c hc
@@ -139,7 +139,7 @@ theorem isPrimal_of_finite_classes_and_limit_tail_conditions
                   exact Or.inl hc
               _ ≤ #(x : HahnSeries G R).support := Cardinal.mk_image_le
               _ < κ := x.1.2
-          letI : CompleteSpace (FiniteArchimedeanClass.TailQuotient T) :=
+          let : CompleteSpace (FiniteArchimedeanClass.TailQuotient T) :=
             Classical.choice (hcomplete T hTne hTgt hTcard)
           let P := FiniteArchimedeanClass.tailSubmodule ℚ T
           intro b c hdiv

@@ -116,7 +116,7 @@ theorem exists_ordinalValue_translatedTruncation_eq_wpow_of_ordinalValue_eq_wpow
     rw [Set.IsPWO.orderType_proof_irrel hBpwo
       ((u : K⟦ℝ⟧).isPWO_support.mono (negativeSupportTail_subset_support u η)),
       htailType η hη₀η hη, hu, NatOrdinal.val_wpow, NatOrdinal.val_add_one, hρdef,
-      ← Order.succ_eq_add_one, opow_succ]
+      Ordinal.opow_add_one]
   -- The point `y` of index `ρ`; the first block is `S = B ∩ (-∞, y)`.
   have hρlt : ρ < hBpwo.orderType := by
     rw [hBtype]

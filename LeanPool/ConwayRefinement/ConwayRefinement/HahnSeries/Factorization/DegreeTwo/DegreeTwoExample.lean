@@ -177,7 +177,7 @@ theorem degreeTwoSeries_supportOrderType :
       Ordinal.omega0 ^ (2 : Ordinal) := by
   rw [HahnSeries.supportOrderType_eq_setOrderType]
   have e : (degreeTwoSeries (K := K)).support ≃o Lex (ℕ × ℕ) :=
-    (OrderIso.setCongr (degreeTwoSeries (K := K)).support
+    (Set.orderIsoOfEq (degreeTwoSeries (K := K)).support
       (Set.range degreeTwoExponentEmbedding)
       (degreeTwoSeries_support (K := K))).trans
       degreeTwoExponentEmbedding.orderIso.symm
@@ -185,8 +185,8 @@ theorem degreeTwoSeries_supportOrderType :
   change Ordinal.type (Prod.Lex (fun a b : ℕ ↦ a < b) (fun a b : ℕ ↦ a < b)) = _
   rw [Ordinal.type_prod_lex]
   simp only [Ordinal.type_nat_lt]
-  have hsucc : Order.succ (1 : Ordinal) = 2 := one_add_one_eq_two
-  rw [← hsucc, Ordinal.opow_succ, Ordinal.opow_one]
+  have hsucc : (1 : Ordinal) + 1 = 2 := one_add_one_eq_two
+  rw [← hsucc, Ordinal.opow_add_one, Ordinal.opow_one]
 
 /-- The degree-two series regarded as a nonpositive real Hahn series. -/
 def degreeTwoNonpositive : HahnSeries.Nonpositive ℝ K :=

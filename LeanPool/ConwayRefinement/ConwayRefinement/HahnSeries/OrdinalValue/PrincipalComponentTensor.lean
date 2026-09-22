@@ -42,6 +42,7 @@ public noncomputable section
 
 variable {K : Type v} [Field K]
 
+/-- The ring of finite-support nonpositive real-exponent Hahn series over the coefficient field. -/
 abbrev FiniteSupportRing :=
   HahnSeries.Nonpositive.FiniteSupportRing (G := ℝ) (K := K)
 
@@ -231,6 +232,8 @@ theorem principalComponentToHahnDegreeLayer_mk (alpha : NatOrdinal)
   exact Or.inr ⟨p, hp, hpDegree, rfl⟩
 
 variable (K) in
+/-- Multiply a principal homogeneous class by a finite-support residue to obtain the
+corresponding Hahn degree class. -/
 def principalComponentFiniteSupportMul (alpha : NatOrdinal) :
     PrincipalComponent K alpha →ₗ[K]
       FiniteSupportRing (K := K) →ₗ[K]
@@ -275,6 +278,8 @@ theorem principalComponentFiniteSupportMul_apply (alpha : NatOrdinal)
   (rfl)
 
 variable (K) in
+/-- The linear map from principal classes tensored with finite-support series to the
+corresponding Hahn degree layer. -/
 def principalComponentTensorMap (alpha : NatOrdinal) :
     PrincipalComponent K alpha ⊗[K] FiniteSupportRing (K := K) →ₗ[K]
       (HahnSeries.Nonpositive.degreeValuation K).Component alpha :=
@@ -324,7 +329,8 @@ private theorem finiteSupportMonomial_degree (g : HahnSeries.Nonpositive.exponen
         FiniteSupportRing (K := K)) : Series K)).mp
         (HahnSeries.Nonpositive.finiteSupportMonomial (K := K) g).2
 
-private theorem coe_finiteSupportMonomial_mul (g : HahnSeries.Nonpositive.exponentMonoid ℝ) (p : Series K) :
+private theorem coe_finiteSupportMonomial_mul (g : HahnSeries.Nonpositive.exponentMonoid ℝ) (p :
+  Series K) :
     ((((HahnSeries.Nonpositive.finiteSupportMonomial (K := K) g :
         FiniteSupportRing (K := K)) : Series K) * p : Series K) : K⟦ℝ⟧) =
       HahnSeries.translate (g : ℝ) (p : K⟦ℝ⟧) := by
@@ -346,7 +352,8 @@ private theorem coe_shiftedSeries (g : HahnSeries.Nonpositive.exponentMonoid ℝ
       HahnSeries.translate (g : ℝ) (p : K⟦ℝ⟧) :=
   (rfl)
 
-private theorem finiteSupportMonomial_mul_eq_shiftedSeries (g : HahnSeries.Nonpositive.exponentMonoid ℝ) (p : Series K) :
+private theorem finiteSupportMonomial_mul_eq_shiftedSeries (g :
+  HahnSeries.Nonpositive.exponentMonoid ℝ) (p : Series K) :
     ((HahnSeries.Nonpositive.finiteSupportMonomial (K := K) g :
         FiniteSupportRing (K := K)) : Series K) * p = shiftedSeries g p := by
   apply Subtype.ext

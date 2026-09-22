@@ -72,9 +72,9 @@ variable [LinearOrder G] [LinearOrder H] [AddMonoid R]
 theorem supportOrderType_embDomainAddEquiv (e : G ≃o H) (x : R⟦G⟧) :
     (embDomainAddEquiv e x).supportOrderType = x.supportOrderType := by
   rw [supportOrderType_eq_setOrderType, supportOrderType_eq_setOrderType]
-  letI : WellFoundedLT x.support := x.isWF_support
+  let : WellFoundedLT x.support := x.isWF_support
   let supportEquiv : (embDomainAddEquiv e x).support ≃o x.support :=
-    (OrderIso.setCongr _ (e '' x.support) (support_embDomain e.toOrderEmbedding x)).trans
+    (Set.orderIsoOfEq _ (e '' x.support) (support_embDomain e.toOrderEmbedding x)).trans
       (StrictMonoOn.orderIso e x.support (e.strictMono.strictMonoOn x.support)).symm
   exact (embDomainAddEquiv e x).isPWO_support.orderType_eq_typeLT_of_orderIso supportEquiv |>.trans
     (x.isPWO_support.orderType_eq_typeLT_of_orderIso (OrderIso.refl x.support)).symm

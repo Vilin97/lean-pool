@@ -50,7 +50,7 @@ theorem exists_Ioo_inter_subset_singleton_of_small {S : Set Surreal.{u}} [Small.
   classical
   set d : Surreal.{u} → Surreal.{u} := fun s ↦ max (s - p) (p - s) with hd
   have hsub : (S \ {p} : Set Surreal.{u}) ⊆ S := Set.sdiff_subset
-  haveI : Small.{u} (S \ {p} : Set Surreal.{u}) := small_subset hsub
+  have : Small.{u} (S \ {p} : Set Surreal.{u}) := small_subset hsub
   obtain ⟨q, hq, hlt⟩ := exists_pos_lt_of_small (P := d '' (S \ {p})) (by
     rintro _ ⟨s, hs, rfl⟩
     rw [hd, lt_max_iff]

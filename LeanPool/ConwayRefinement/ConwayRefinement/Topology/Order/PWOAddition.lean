@@ -152,7 +152,7 @@ Cauchy complete. -/
 theorem Set.IsPWO.isProperMap_add [CompleteSpace G] {s t : Set G}
     (hs : s.IsPWO) (ht : t.IsPWO) (hsc : IsClosed s) (htc : IsClosed t) :
     IsProperMap (fun p : s ×ˢ t ↦ p.1.1 + p.1.2) := by
-  letI : CompleteSpace (s ×ˢ t) := (hsc.prod htc).isComplete.completeSpace_coe
+  let : CompleteSpace (s ×ˢ t) := (hsc.prod htc).isComplete.completeSpace_coe
   refine isProperMap_iff_ultrafilter_of_t2.mpr ⟨by fun_prop, ?_⟩
   intro 𝒰 y hy
   have hc : Cauchy (Filter.map (fun p : G × G ↦ p.1 + p.2)
@@ -180,7 +180,7 @@ theorem Set.IsPWO.finite_subtype_add_fiber {s t : Set G}
   have hf := (hs.finite_add_fiber ht z).preimage
     (f := (Subtype.val : s ×ˢ t → G × G)) Subtype.val_injective.injOn
   change {p : s ×ˢ t | p.1.1 + p.1.2 = z}.Finite
-  simpa only [preimage_setOf_eq, Subtype.coe_prop, true_and] using hf
+  simpa only [Set.preimage_ofPred_eq, Subtype.coe_prop, true_and] using hf
 
 /-- The sum of two closed well-ordered supports is closed. -/
 theorem Set.IsPWO.isClosed_add [CompleteSpace G] {s t : Set G}

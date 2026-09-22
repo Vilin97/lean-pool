@@ -351,7 +351,7 @@ private theorem ordinalValue_translatedTruncation_val_le_of_orderType_inter_Iio_
   have hIiow : I ∩ Set.Iio w = S ∩ Set.Iio w := by
     ext y
     exact ⟨fun hy ↦ ⟨hy.1.1, hy.2⟩, fun hy ↦ ⟨⟨hy.1, lt_trans hy.2 hwγ⟩, hy.2⟩⟩
-  letI : WellFoundedLT I := hI.isWF
+  let : WellFoundedLT I := hI.isWF
   have hsplit := hI.orderType_inter_Iio_add_inter_Ici hwI
   have hIiowot : (hI.mono (s := I ∩ Set.Iio w) Set.inter_subset_left).orderType = ρ * α := by
     rw [Set.IsPWO.orderType_congr _ (hS.mono (s := S ∩ Set.Iio w) Set.inter_subset_left) hIiow]
@@ -407,7 +407,7 @@ private theorem le_ordinalValue_translatedTruncation_of_isLUB_of_orderType_inter
     (negativeSupportTail_subset_support b.1 η)) with hSpwo
   set I := S ∩ Set.Iio γ with hIdef
   set hI := hS.mono (s := I) Set.inter_subset_left with hIpwo
-  letI : WellFoundedLT I := hI.isWF
+  let : WellFoundedLT I := hI.isWF
   apply le_ordinalValue_translatedTruncation_of_forall_le_orderType
   intro θ hθ
   obtain ⟨z, hzI, hθz, _⟩ := hLUB.exists_between hθ

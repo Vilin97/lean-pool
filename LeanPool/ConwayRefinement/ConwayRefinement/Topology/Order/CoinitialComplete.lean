@@ -153,7 +153,7 @@ theorem completeSpace_of_coinitial_of_forall_exists_mem_cut {ι : Type w} [Nonem
     (hcut : FillsCuts ι G) :
     CompleteSpace G := by
   refine ⟨fun {F} hF ↦ ?_⟩
-  haveI : F.NeBot := hF.1
+  have : F.NeBot := hF.1
   -- a set of small diameter in `F` for each index, together with a point of it
   have hsmall : ∀ i, ∃ A ∈ F, ∃ a ∈ A, ∀ x ∈ A, x - a ∈ Ioo (-ε i) (ε i) := by
     intro i
@@ -233,6 +233,6 @@ theorem completeSpace_of_fillsCuts_pos (hpos : ∃ c : G, 0 < c)
     (hhalf : ∀ c : G, 0 < c → ∃ d : G, 0 < d ∧ d + d ≤ c)
     (hcut : FillsCuts {x : G // 0 < x} G) : CompleteSpace G := by
   obtain ⟨c₀, hc₀⟩ := hpos
-  haveI : Nonempty {x : G // 0 < x} := ⟨⟨c₀, hc₀⟩⟩
+  have : Nonempty {x : G // 0 < x} := ⟨⟨c₀, hc₀⟩⟩
   exact completeSpace_of_coinitial_of_exists_half Subtype.val (fun i ↦ i.2)
     (fun c hc ↦ ⟨⟨c, hc⟩, le_rfl⟩) hhalf hcut

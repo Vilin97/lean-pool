@@ -166,7 +166,7 @@ omit [DecidableEq ι] hinj in
 /-- Splitting off one factor: `X^{d + e_i} = X^d · X_i`. -/
 theorem monomial_add_single_one (d : ι →₀ ℕ) (i : ι) :
     monomial (d + Finsupp.single i 1) (1 : K) = monomial d 1 * X i := by
-  rw [X, monomial_mul, mul_one]
+  rw [X, MvPolynomial.monomial_mul_monomial, mul_one]
 
 omit [DecidableEq ι] hinj in
 /-- The first-order terms after splitting off one factor:

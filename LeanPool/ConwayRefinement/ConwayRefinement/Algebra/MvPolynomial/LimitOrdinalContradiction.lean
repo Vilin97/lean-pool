@@ -417,11 +417,11 @@ def freeOf (B₀ : σ) : Subring (MvPolynomial σ R) where
   zero_mem' := map_zero _
   one_mem' := pderiv_one
   add_mem' hp hq := by
-    rw [Set.mem_setOf_eq, map_add, hp, hq, add_zero]
+    rw [Set.mem_ofPred_eq, map_add, hp, hq, add_zero]
   neg_mem' hp := by
-    rw [Set.mem_setOf_eq, map_neg, hp, neg_zero]
+    rw [Set.mem_ofPred_eq, map_neg, hp, neg_zero]
   mul_mem' hp hq := by
-    rw [Set.mem_setOf_eq, pderiv_mul, hp, hq, zero_mul, mul_zero, add_zero]
+    rw [Set.mem_ofPred_eq, pderiv_mul, hp, hq, zero_mul, mul_zero, add_zero]
 
 omit [NoZeroDivisors R] [CharZero R] in
 @[simp]

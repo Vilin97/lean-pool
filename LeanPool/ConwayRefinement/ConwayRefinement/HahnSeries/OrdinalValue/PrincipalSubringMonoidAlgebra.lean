@@ -68,7 +68,7 @@ theorem degreeGradedEquivPrincipalMonoidAlgebra_principal
     AlgEquiv.trans_apply, AlgEquiv.trans_apply, htensor]
   simp only [Algebra.TensorProduct.congr_apply, AlgEquiv.refl_toAlgHom,
     Algebra.TensorProduct.map_tmul, AlgHom.coe_id, id_eq, map_one,
-    AlgEquiv.coe_restrictScalars', AddMonoidAlgebra.scalarTensorEquiv_tmul]
+    AlgEquiv.coe_restrictScalars, AddMonoidAlgebra.scalarTensorEquiv_tmul]
   rw [AddMonoidAlgebra.one_def, AddMonoidAlgebra.smul_single', mul_one]
 
 variable (K) in
@@ -94,7 +94,7 @@ theorem degreeGradedEquivPrincipalMonoidAlgebra_finiteSupportMonomial
   simp only [Algebra.TensorProduct.congr_apply, AlgEquiv.refl_toAlgHom,
     Algebra.TensorProduct.map_tmul, AlgEquiv.coe_toAlgHom,
     HahnSeries.Nonpositive.finiteSupportAddMonoidAlgebraEquiv_monomial,
-    AlgEquiv.coe_restrictScalars', AddMonoidAlgebra.scalarTensorEquiv_tmul,
+    AlgEquiv.coe_restrictScalars, AddMonoidAlgebra.scalarTensorEquiv_tmul,
     AddMonoidAlgebra.mapAlgHom_single, map_one, one_smul]
 
 /-- A principal coefficient multiplied by a finite-support Hahn monomial corresponds to a

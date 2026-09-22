@@ -7,8 +7,7 @@ module
 
 public import LeanPool.ConwayRefinement.ConwayRefinement.Algebra.GradedRing.HomogeneousSpan
 public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.Germ.AlgebraicIndependence.Scalar
-public import
-  LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.Germ.AlgebraicIndependence.TranslatedTruncationInterpolation
+public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.Germ.AlgebraicIndependence.TranslatedTruncationInterpolation
 
 import LeanPool.ConwayRefinement.ConwayRefinement.Blueprint
 
@@ -211,7 +210,7 @@ theorem mem_span_of_cantorBendixsonGradedDerivation_eq_coe
       (f : Filter.Germ (𝓝[<] (0 : G)) (ν).AssociatedGraded)) :
     x ∈ Ideal.span (Set.range q) := by
   classical
-  letI := Fintype.ofFinite ι
+  let := Fintype.ofFinite ι
   obtain ⟨xδ, hxδ⟩ :=
     (DirectSum.mem_rangeLof_iff K (ν).Component (δ + 1) x).mp hx
   rw [DirectSum.lof_eq_of] at hxδ

@@ -71,6 +71,8 @@ When `y.length` is a limit ordinal, the series with `x ≺ y` describe the left 
 def truncLT (x : SurrealHahnSeries) : Set SurrealHahnSeries :=
   truncAux x (· < ·)
 
+/-- A series lies below another in the truncation order when it belongs to the latter’s lower
+truncations. -/
 notation:50 x:50 " ≺ " y:50 => x ∈ truncLT y
 recommended_spelling "truncLT" for "≺" in [«term_≺_»]
 
@@ -1041,6 +1043,8 @@ theorem wlog_sub_lt {y : PartialSum x} (h : x ≠ y.carrier) (i) :
   rw [← wlog_term, term_eq_leadingTerm_sub _ hi, ← carrier_truncIdx, wlog_leadingTerm]
   exact wlog_lt_wlog_of_vlt (by simpa [sub_eq_zero]) (vlt_def.2 <| mk_sub_strictMono hy)
 
+/-- Extend a partial sum by the leading term of its remaining difference from the target surreal
+number. -/
 @[expose]
 def succ' (y : PartialSum x) : PartialSum x where
   carrier := y.carrier + single (x - y.carrier).wlog (x - y.carrier).leadingCoeff

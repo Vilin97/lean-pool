@@ -8,7 +8,7 @@ module
 public import LeanPool.ConwayRefinement.ConwayRefinement.Standalone.Mathlib.Support.HahnLimitTailQuotient
 public import Mathlib.Algebra.Divisibility.Basic
 public import Mathlib.Algebra.Order.Module.HahnEmbedding
-public import Mathlib.Data.Real.Basic
+public import Mathlib.Basic.Real.Basic
 public import Mathlib.RingTheory.HahnSeries.Cardinal
 public import Mathlib.SetTheory.Cardinal.Cofinality.Basic
 public import Mathlib.SetTheory.Cardinal.Regular

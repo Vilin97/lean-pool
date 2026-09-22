@@ -557,16 +557,16 @@ theorem ordinalValue_relationSum_lt {beta : NatOrdinal}
     intro i
     by_cases hi : i ∈ Finset.range (d + 1)
     · rw [hu_def]
-      simp only [hi, if_true]
+      simp only [hi, ite_true]
       exact (hterm i hi).choose
     · rw [hu_def]
-      simp only [hi, if_false]
+      simp only [hi, ite_false]
       simp
   have hu_eq : ∀ j ∈ Finset.range (d + 1), u j =
       (HahnSeries.Nonpositive.C : K →+* Series K) (k j) * (b ^ j * c ^ (d - j)) := by
     intro j hj
     rw [hu_def]
-    simp only [hj, if_true]
+    simp only [hj, ite_true]
   have hcongr : ∑ i ∈ Finset.range (d + 1),
       (HahnSeries.Nonpositive.C : K →+* Series K) (k i) * (b ^ i * c ^ (d - i)) =
       ∑ i ∈ Finset.range (d + 1), u i :=
@@ -751,6 +751,7 @@ theorem exists_isRoot_of_ordinalValue_relationSum_lt {beta : NatOrdinal} {d : �
 
 /-! ### Clearing denominators -/
 
+/-- The principal-subring algebra structure used locally when clearing denominators. -/
 local instance principalSubringFractionSelfAlgebraLocal :
     Algebra (PrincipalSubring K) (PrincipalSubringFractionField K) :=
   principalSubringFractionSelfAlgebra K
@@ -759,6 +760,7 @@ local instance principalSubringFractionIsFractionRingLocal :
     IsFractionRing (PrincipalSubring K) (PrincipalSubringFractionField K) :=
   IsFractionRing.of_algEquiv (principalSubringFractionAlgEquiv K)
 
+/-- The coefficient-field algebra structure used locally when clearing denominators. -/
 local instance principalSubringFractionAlgebraLocal :
     Algebra K (PrincipalSubringFractionField K) :=
   principalSubringFractionAlgebra K
@@ -770,7 +772,7 @@ theorem exists_relation_of_aeval_eq_zero (Q : Polynomial K)
       ∑ i ∈ Finset.range (Q.natDegree + 1),
         algebraMap K (PrincipalSubring K) (Q.coeff i) * B ^ i *
           C ^ (Q.natDegree - i) = 0 := by
-  haveI : IsScalarTower K (PrincipalSubring K) (PrincipalSubringFractionField K) :=
+  have : IsScalarTower K (PrincipalSubring K) (PrincipalSubringFractionField K) :=
     principalSubringFraction_isScalarTower K
   have hinj : Function.Injective
       (algebraMap (PrincipalSubring K) (PrincipalSubringFractionField K)) :=

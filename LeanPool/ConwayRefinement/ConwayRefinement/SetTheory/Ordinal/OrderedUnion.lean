@@ -38,7 +38,7 @@ theorem typeLT_range_succ_toType (l : Ordinal.{u}) (hl : IsSuccLimit l) :
   have hpre : IsSuccPrelimit (typeLT l.ToType) := by
     rw [type_toType]
     exact hl.isSuccPrelimit
-  letI : NoMaxOrder l.ToType := isSuccPrelimit_type_lt_iff.mp hpre
+  let : NoMaxOrder l.ToType := isSuccPrelimit_type_lt_iff.mp hpre
   let f : l.ToType → Set.range (Order.succ : l.ToType → l.ToType) :=
     fun i ↦ ⟨Order.succ i, ⟨i, rfl⟩⟩
   have hf : StrictMono f := fun _ _ hij ↦ Order.succ_strictMono hij
@@ -85,7 +85,7 @@ theorem mul_le_orderType_iUnion_of_isSuccLimit
   have hpre : IsSuccPrelimit (typeLT l.ToType) := by
     rw [type_toType]
     exact hl.isSuccPrelimit
-  letI : NoMaxOrder l.ToType := isSuccPrelimit_type_lt_iff.mp hpre
+  let : NoMaxOrder l.ToType := isSuccPrelimit_type_lt_iff.mp hpre
   let predecessor : successorRange l → l.ToType :=
     fun i ↦ Classical.choose i.2
   have successor_predecessor (i : successorRange l) :
@@ -118,7 +118,7 @@ theorem mul_le_orderType_iUnion_of_isSuccLimit
   have block_embedding_exists (i : successorRange l) :
       Nonempty (ρ.ToType ↪o separatedBlock B i.1) := by
     let hblock := block_isPWO i
-    letI : WellFoundedLT (separatedBlock B i.1) := hblock.isWF
+    let : WellFoundedLT (separatedBlock B i.1) := hblock.isWF
     have hle : typeLT ρ.ToType ≤ typeLT (separatedBlock B i.1) := by
       calc
         typeLT ρ.ToType = ρ := type_toType ρ
@@ -154,7 +154,7 @@ theorem mul_le_orderType_iUnion_of_isSuccLimit
     change type (Prod.Lex (· < · : successorRange l → successorRange l → Prop)
       (· < · : ρ.ToType → ρ.ToType → Prop)) = ρ * l
     rw [type_prod_lex, type_toType, successorRange_orderType l hl]
-  letI : WellFoundedLT (⋃ i, B i) := hUnion.isWF
+  let : WellFoundedLT (⋃ i, B i) := hUnion.isWF
   calc
     ρ * l = typeLT (successorRange l ×ₗ ρ.ToType) := hdomain.symm
     _ ≤ typeLT (⋃ i, B i) := unionEmbedding.ltEmbedding.ordinal_type_le

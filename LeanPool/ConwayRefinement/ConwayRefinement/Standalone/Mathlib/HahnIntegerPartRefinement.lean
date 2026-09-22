@@ -44,7 +44,7 @@ uncountable, let `G` be a `κ`-saturated ordered rational vector space, and let 
 characteristic zero. Every equality `a * b = c * d` in
 `ℤ + R((G^{<0}))_κ` has four-factor refinement. -/
 abbrev HahnIntegerPartRefinement
-    [Module ℚ G] [IsOrderedModule ℚ G] [CharZero R] : Prop :=
+    [Module ℚ G] : Prop :=
   ∀ (κ : Cardinal.{u}), ℵ₀ < κ → κ.IsRegular → IsKappaSaturated (G := G) κ →
     ∀ a b c d : HahnSeries G R,
       a ∈ integerHahnPart κ → b ∈ integerHahnPart κ →

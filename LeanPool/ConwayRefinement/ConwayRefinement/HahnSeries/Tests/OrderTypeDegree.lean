@@ -166,7 +166,7 @@ theorem zeroOrderTypeSeries_degree :
   HahnSeries.degree_zero
 
 private instance : WellFoundedLT (Unit ⊕ₗ ℕ) :=
-  (Sum.Lex.toLexRelIsoLT (α := Unit) (β := ℕ)).symm.toRelEmbedding.isWellFounded
+  (Sum.Lex.toLexRelIsoLT (α := Unit) (β := ℕ)).symm.toRelEmbedding.wellFounded'
 
 /-- The coefficient-one Hahn series on the ordered sum of `Unit` and `ℕ`. -/
 def oneAddOmegaOrderTypeSeries : ℕ⟦Unit ⊕ₗ ℕ⟧ where
@@ -186,7 +186,7 @@ theorem oneAddOmegaOrderTypeSeries_supportOrderType :
   calc
     oneAddOmegaOrderTypeSeries.supportOrderType = typeLT (Unit ⊕ₗ ℕ) := by
       let e : oneAddOmegaOrderTypeSeries.support ≃o Unit ⊕ₗ ℕ :=
-        (OrderIso.setCongr oneAddOmegaOrderTypeSeries.support Set.univ
+        (Set.orderIsoOfEq oneAddOmegaOrderTypeSeries.support Set.univ
           oneAddOmegaOrderTypeSeries_support).trans
             (OrderIso.Set.univ (α := Unit ⊕ₗ ℕ))
       exact HahnSeries.supportOrderType_eq_typeLT e
@@ -214,7 +214,7 @@ theorem naturalOneAddOmega_ne_supportOrderType :
   exact (lt_add_one Ordinal.omega0).ne' (NatOrdinal.of.injective h)
 
 private instance : WellFoundedLT (ℕ ⊕ₗ ℕ) :=
-  (Sum.Lex.toLexRelIsoLT (α := ℕ) (β := ℕ)).symm.toRelEmbedding.isWellFounded
+  (Sum.Lex.toLexRelIsoLT (α := ℕ) (β := ℕ)).symm.toRelEmbedding.wellFounded'
 
 /-- The coefficient-one Hahn series on the ordered sum of two copies of `ℕ`. -/
 def omegaAddOmegaOrderTypeSeries : ℕ⟦ℕ ⊕ₗ ℕ⟧ where
@@ -235,7 +235,7 @@ theorem omegaAddOmegaOrderTypeSeries_supportOrderType :
   calc
     omegaAddOmegaOrderTypeSeries.supportOrderType = typeLT (ℕ ⊕ₗ ℕ) := by
       let e : omegaAddOmegaOrderTypeSeries.support ≃o ℕ ⊕ₗ ℕ :=
-        (OrderIso.setCongr omegaAddOmegaOrderTypeSeries.support Set.univ
+        (Set.orderIsoOfEq omegaAddOmegaOrderTypeSeries.support Set.univ
           omegaAddOmegaOrderTypeSeries_support).trans
             (OrderIso.Set.univ (α := ℕ ⊕ₗ ℕ))
       exact HahnSeries.supportOrderType_eq_typeLT e
@@ -251,7 +251,7 @@ theorem omegaAddOmegaOrderTypeSeries_degree :
     Ordinal.cantorDegree_omega_add_omega]
 
 private instance : WellFoundedLT (ℕ ⊕ₗ Unit) :=
-  (Sum.Lex.toLexRelIsoLT (α := ℕ) (β := Unit)).symm.toRelEmbedding.isWellFounded
+  (Sum.Lex.toLexRelIsoLT (α := ℕ) (β := Unit)).symm.toRelEmbedding.wellFounded'
 
 /-- A coefficient-one Hahn series whose support has ordinary type `(ω + 1) * ω`. -/
 def omegaSuccTimesOmegaOrderTypeSeries : ℕ⟦ℕ ×ₗ (ℕ ⊕ₗ Unit)⟧ where
@@ -273,7 +273,7 @@ theorem omegaSuccTimesOmegaOrderTypeSeries_supportOrderType :
     omegaSuccTimesOmegaOrderTypeSeries.supportOrderType =
         typeLT (ℕ ×ₗ (ℕ ⊕ₗ Unit)) := by
       let e : omegaSuccTimesOmegaOrderTypeSeries.support ≃o ℕ ×ₗ (ℕ ⊕ₗ Unit) :=
-        (OrderIso.setCongr omegaSuccTimesOmegaOrderTypeSeries.support Set.univ
+        (Set.orderIsoOfEq omegaSuccTimesOmegaOrderTypeSeries.support Set.univ
           omegaSuccTimesOmegaOrderTypeSeries_support).trans
             (OrderIso.Set.univ (α := ℕ ×ₗ (ℕ ⊕ₗ Unit)))
       exact HahnSeries.supportOrderType_eq_typeLT e
@@ -298,8 +298,8 @@ theorem omegaSuccTimesOmegaOrderTypeSeries_supportOrderType :
       Ordinal.add_mul_of_isSuccLimit Ordinal.one_add_omega0
         Ordinal.isSuccLimit_omega0
     _ = Ordinal.omega0 ^ (2 : Ordinal) := by
-      have hsucc : Order.succ (1 : Ordinal) = 2 := one_add_one_eq_two
-      rw [← hsucc, Ordinal.opow_succ, Ordinal.opow_one]
+      have hsucc : (1 : Ordinal) + 1 = 2 := one_add_one_eq_two
+      rw [← hsucc, Ordinal.opow_add_one, Ordinal.opow_one]
 
 /-- A support of ordinary ordinal type `ω²` has degree two. -/
 theorem omegaSuccTimesOmegaOrderTypeSeries_degree :
@@ -324,8 +324,8 @@ theorem naturalOmegaSuccTimesOmega_ne_supportOrderType :
     mul_lt_mul_of_pos_right hfactor homega
   have hord : Ordinal.omega0 * Ordinal.omega0 =
       Ordinal.omega0 ^ (2 : Ordinal) := by
-    have hsucc : Order.succ (1 : Ordinal) = 2 := one_add_one_eq_two
-    rw [← hsucc, Ordinal.opow_succ, Ordinal.opow_one]
+    have hsucc : (1 : Ordinal) + 1 = 2 := one_add_one_eq_two
+    rw [← hsucc, Ordinal.opow_add_one, Ordinal.opow_one]
   have hordinary : NatOrdinal.of (Ordinal.omega0 ^ (2 : Ordinal)) ≤
       NatOrdinal.of Ordinal.omega0 * NatOrdinal.of Ordinal.omega0 := by
     rw [← hord]

@@ -56,8 +56,7 @@ private theorem principalSubringTensorEquiv_mulLeft_rTensor (c : PrincipalSubrin
         ((LinearMap.mulLeft K c).rTensor (FiniteSupportRing (K := K)) z) =
       principalSubringEmbedding K c *
         principalSubringTensorEquiv K z := by
-  induction z using TensorProduct.induction_on with
-  | zero => simp
+  induction z using TensorProduct.inductionOn with
   | tmul x p =>
       rw [LinearMap.rTensor_tmul,
         principalSubringTensorEquiv_tmul,

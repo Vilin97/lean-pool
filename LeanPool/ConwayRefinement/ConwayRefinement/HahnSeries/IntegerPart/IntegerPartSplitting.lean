@@ -29,6 +29,7 @@ variable [AddCommGroup G] [LinearOrder G] [IsOrderedAddMonoid G]
 variable [Module K G] [IsOrderedModule K G]
 variable [Field R]
 
+/-- The subring of the truncation integer part fixed by truncation at the chosen closed class. -/
 def fixedIntegerPartSubring (c : FiniteArchimedeanClass G) (Z : Subring R) :
     Subring (truncationIntegerPart G Z) :=
   (truncationSubring (K := K) (R := R) c).comap
@@ -48,6 +49,7 @@ theorem coeff_zero_tauBall (c : FiniteArchimedeanClass G) (x : Nonpositive G R) 
   rw [tauBall_coeff]
   exact coeff_tau_of_mem c x (Submodule.zero_mem _)
 
+/-- The inner truncation integer part embedded in the Hahn-series ring on the class ball. -/
 def innerIntegerPartSubring (c : FiniteArchimedeanClass G) (Z : Subring R) :
     Subring R⟦ball K c⟧ :=
   (truncationIntegerPart (ball K c) Z).map
@@ -89,6 +91,8 @@ theorem tauBall_mem_innerIntegerPartSubring
     rw [coeff_tau_of_mem c (x : Nonpositive G R) b.2] at hb
     exact Subtype.coe_le_coe.mp (support_subset (x : Nonpositive G R) hb)
 
+/-- Truncate at a closed Archimedean class and split its exponents into stratum and ball
+coordinates. -/
 def splitRawRingHom
     (u : HahnEmbedding.ArchimedeanStrata K G) (c : FiniteArchimedeanClass G)
     : Nonpositive G R →+* (R⟦ball K c⟧)⟦u.stratum c⟧ :=
@@ -103,6 +107,8 @@ theorem splitRawRingHom_apply
     TClosedRingHom_apply]
   rfl
 
+/-- Split the truncation integer part into outer stratum series whose constant term lies in the
+inner integer part. -/
 def splitIntegerPartRingHom
     (u : HahnEmbedding.ArchimedeanStrata K G) (c : FiniteArchimedeanClass G)
     (Z : Subring R) : truncationIntegerPart G Z →+*
@@ -148,6 +154,8 @@ theorem coe_splitIntegerPartRingHom
   change splitRawRingHom u c (x : Nonpositive G R) = _
   rw [splitRawRingHom_apply]
 
+/-- The splitting homomorphism restricted to the integer-part subring fixed by closed-class
+truncation. -/
 def splitFixedIntegerPartRingHom
     (u : HahnEmbedding.ArchimedeanStrata K G) (c : FiniteArchimedeanClass G)
     (Z : Subring R) :
@@ -171,6 +179,8 @@ theorem coe_splitFixedIntegerPartRingHom
     change (splitRawRingHom u c (x : Nonpositive G R)) = _
     rw [splitRawRingHom_apply]
 
+/-- Reassemble an outer stratum series with an inner integer-part constant term into a fixed
+integer-part element. -/
 def unsplitIntegerPart
     (u : HahnEmbedding.ArchimedeanStrata K G) (c : FiniteArchimedeanClass G)
     (Z : Subring R)
@@ -256,6 +266,8 @@ theorem TClosed_of_fixed (c : FiniteArchimedeanClass G) (x : Nonpositive G R)
     closedBallOrderEmbedding_apply]
 
 -- Checking both inverses traverses the full nested subtype and Hahn-series equivalence stack.
+/-- The ring equivalence between the fixed integer part and its stratum series over the inner
+integer part. -/
 def splitFixedIntegerPartRingEquiv
     (u : HahnEmbedding.ArchimedeanStrata K G) (c : FiniteArchimedeanClass G)
     (Z : Subring R) :

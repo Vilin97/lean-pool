@@ -9,7 +9,7 @@ public import Mathlib.Algebra.Order.Archimedean.Basic
 public import Mathlib.Data.Set.Countable
 public import Mathlib.Order.WellFoundedSet
 
-import Mathlib.Data.Real.Embedding
+import Mathlib.Basic.Real.Embedding
 import Mathlib.Topology.Order.Basic
 import Mathlib.Topology.Instances.Real.Lemmas
 

@@ -152,7 +152,7 @@ private theorem truncLE_eq_zero_of_support_subset_Ioi
     truncLE a x = 0 := by
   rw [← support_eq_empty_iff, support_truncLE]
   ext i
-  simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false, not_and]
+  simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, not_and]
   exact fun hi hia ↦ (not_lt_of_ge hia) (h hi)
 
 private theorem support_mul_subset_Ici_add

@@ -48,8 +48,8 @@ theorem supportOrderType_outer_le_iterateRingEquiv (x : R⟦Γ'⟧⟦Γ⟧) :
     change toLex (a.1, inner a) < toLex (b.1, inner b)
     rw [Prod.Lex.toLex_lt_toLex]
     exact Or.inl hab
-  letI : WellFoundedLT ↑x.support := x.isPWO_support.isWF
-  letI : WellFoundedLT ↑(iterateRingEquiv x).support :=
+  let : WellFoundedLT ↑x.support := x.isPWO_support.isWF
+  let : WellFoundedLT ↑(iterateRingEquiv x).support :=
     (iterateRingEquiv x).isPWO_support.isWF
   rw [supportOrderType_eq_setOrderType, supportOrderType_eq_setOrderType]
   calc

@@ -99,12 +99,12 @@ def cantorBendixsonValue (b : HahnSeries Γ R) : Ordinal.{u} := by
 /-- At a closed-support point, the value is the corresponding power of `omega`. -/
 theorem cantorBendixsonValue_of_mem (b : HahnSeries Γ R) (h : 0 ∈ closure b.support) :
     b.cantorBendixsonValue = Ordinal.omega0 ^ b.cantorBendixsonRank 0 := by
-  simp only [cantorBendixsonValue, mem_closedSupport, h, if_true]
+  simp only [cantorBendixsonValue, mem_closedSupport, h, ite_true]
 
 /-- A support avoiding a neighborhood of zero has value zero. -/
 theorem cantorBendixsonValue_of_notMem (b : HahnSeries Γ R) (h : 0 ∉ closure b.support) :
     b.cantorBendixsonValue = 0 := by
-  simp only [cantorBendixsonValue, mem_closedSupport, h, if_false]
+  simp only [cantorBendixsonValue, mem_closedSupport, h, ite_false]
 
 /-- The value vanishes exactly when zero is outside the ambient closed support. -/
 theorem cantorBendixsonValue_eq_zero_iff (b : HahnSeries Γ R) :

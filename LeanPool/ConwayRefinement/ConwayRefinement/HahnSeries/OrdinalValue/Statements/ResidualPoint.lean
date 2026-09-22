@@ -56,7 +56,7 @@ variable {K : Type v} [Field K]
 
 /-- Berarducci, Lemma 6.8: sufficiently high residual-point tails have principal order type and
 least upper bound zero. -/
-theorem residualPointTail_eventually [CharZero K]
+theorem residualPointTail_eventually
     (b : SeriesWithOrdinalValueAboveOne K) :
     ∀ᶠ η in nhdsWithin (0 : ℝ) (Set.Iio 0),
       (residualPointTail b η).Nonempty ∧

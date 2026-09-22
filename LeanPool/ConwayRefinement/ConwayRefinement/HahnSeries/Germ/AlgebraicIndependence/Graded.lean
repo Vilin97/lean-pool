@@ -113,7 +113,7 @@ theorem cantorBendixson_associatedGraded_isDomain :
   have h1 : ν 1 ≠ ⊥ := by
     rw [cantorBendixsonDegreeValuation_apply, map_one, ne_eq, NatOrdinal.cantorDegree_eq_bot]
     exact one_ne_zero
-  letI : Nontrivial ν.AssociatedGraded :=
+  let : Nontrivial ν.AssociatedGraded :=
     ⟨⟨ν.initialForm 1, 0, ν.initialForm_ne_zero_of_ne_bot h1⟩⟩
   exact NoZeroDivisors.to_isDomain ν.AssociatedGraded
 

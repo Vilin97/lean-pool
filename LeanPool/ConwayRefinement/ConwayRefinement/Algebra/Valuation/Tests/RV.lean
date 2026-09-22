@@ -29,6 +29,7 @@ namespace Tests
 
 open scoped DirectSum
 
+/-- The trivial valuation pulled back along the first projection, used to test the RV quotient. -/
 def rvFirstProjectionValuation : MaxAddDegree (ℚ × ℚ) ℕ :=
   MaxAddDegree.ofValuation
     ((1 : Valuation ℚ (WithZero (Multiplicative ℕ))).comap (RingHom.fst ℚ ℚ))
@@ -36,6 +37,7 @@ def rvFirstProjectionValuation : MaxAddDegree (ℚ × ℚ) ℕ :=
 instance : rvFirstProjectionValuation.IsMultiplicative :=
   inferInstanceAs (MaxAddDegree.ofValuation _).IsMultiplicative
 
+/-- The nonzero element `(0, 1)` in the support of the first-projection valuation. -/
 def rvSupportElement : ℚ × ℚ :=
   (0, 1)
 
@@ -85,18 +87,22 @@ theorem rvHomogeneous_support_mul_one :
           rvFirstProjectionValuation.rv (1, 0)) = 0 := by
   rw [rvSupportElement_rv_eq_zero, zero_mul, map_zero]
 
+/-- The trivial valuation on the rationals in max-additive notation for RV computations. -/
 def rvTrivialValuation : MaxAddDegree ℚ ℕ :=
   MaxAddDegree.ofValuation 1
 
 instance : rvTrivialValuation.IsMultiplicative :=
   inferInstanceAs (MaxAddDegree.ofValuation _).IsMultiplicative
 
+/-- The rational number two in filtration degree zero for the RV multiplication fixture. -/
 def rvTwoRepresentative : rvTrivialValuation.filtrationLE 0 :=
   ⟨2, by simp [MaxAddDegree.ofValuation_apply, rvTrivialValuation, Valuation.one_apply_def]⟩
 
+/-- The rational number three in filtration degree zero for the RV multiplication fixture. -/
 def rvThreeRepresentative : rvTrivialValuation.filtrationLE 0 :=
   ⟨3, by simp [MaxAddDegree.ofValuation_apply, rvTrivialValuation, Valuation.one_apply_def]⟩
 
+/-- The rational number six in filtration degree zero for the RV multiplication fixture. -/
 def rvSixRepresentative : rvTrivialValuation.filtrationLE 0 :=
   ⟨6, by simp [MaxAddDegree.ofValuation_apply, rvTrivialValuation, Valuation.one_apply_def]⟩
 

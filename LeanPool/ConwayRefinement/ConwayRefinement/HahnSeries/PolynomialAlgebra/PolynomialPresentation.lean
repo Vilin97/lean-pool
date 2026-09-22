@@ -115,7 +115,7 @@ theorem exists_C_mul_eq_coordinatePolynomialMap
       (h : MvPolynomial ι (Berarducci.FiniteSupportRing (K := K))),
       u ≠ 0 ∧ MvPolynomial.C (algebraMap (Berarducci.FiniteSupportRing (K := K))
         (FiniteSupportFractionField (K := K)) u) * q = coordinatePolynomialMap K ι h := by
-  letI := MvPolynomial.algebraMvPolynomial (σ := ι)
+  let := MvPolynomial.algebraMvPolynomial (σ := ι)
     (R := Berarducci.FiniteSupportRing (K := K)) (S := FiniteSupportFractionField (K := K))
   obtain ⟨⟨h, m⟩, hm⟩ := IsLocalization.surj
     ((nonZeroDivisors (Berarducci.FiniteSupportRing (K := K))).map
@@ -332,7 +332,7 @@ theorem quotient_span_singleton_isDomain
     (haDegree : 0 < degreeValuation K (MvPolynomial.aeval b F)) :
     IsDomain (MvPolynomial ι (Berarducci.FiniteSupportRing (K := K)) ⧸ Ideal.span {F}) := by
   have hirr := hb.irreducible_coordinatePolynomialMap_of_irreducible_aeval ha haDegree
-  haveI : (Ideal.span {coordinatePolynomialMap K ι F}).IsPrime :=
+  have : (Ideal.span {coordinatePolynomialMap K ι F}).IsPrime :=
     (Ideal.span_singleton_prime hirr.ne_zero).mpr hirr.prime
   rw [hb.span_singleton_eq_comap ha haDegree]
   exact Ideal.Quotient.isDomain _
@@ -343,7 +343,7 @@ theorem prime_of_irreducible_aeval
     (ha : Irreducible (MvPolynomial.aeval b F))
     (haDegree : 0 < degreeValuation K (MvPolynomial.aeval b F)) : Prime F := by
   have hF0 : F ≠ 0 := fun h ↦ ha.ne_zero (by rw [h, map_zero])
-  haveI := hb.quotient_span_singleton_isDomain ha haDegree
+  have := hb.quotient_span_singleton_isDomain ha haDegree
   exact (Ideal.span_singleton_prime hF0).mp
     ((Ideal.Quotient.isDomain_iff_prime (Ideal.span {F})).mp inferInstance)
 

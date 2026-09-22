@@ -38,7 +38,7 @@ theorem isOmnificInteger_iff (x : GameCode.{u}) : x.IsOmnificInteger ↔
 /-- The set-code condition agrees with the actual omnific-integer predicate. -/
 theorem isOmnificInteger_iff_toSurreal (x : GameCode.{u}) (hx : x.IsNumeric) :
     x.IsOmnificInteger ↔ _root_.Surreal.IsOmnificInteger (Surreal.toSurreal (Surreal.mk x hx)) := by
-  letI : IGame.Numeric x.toIGame := (isNumeric_iff _).1 hx
+  let : IGame.Numeric x.toIGame := (isNumeric_iff _).1 hx
   rw [isOmnificInteger_iff, and_iff_right hx, Surreal.toSurreal_mk,
     _root_.Surreal.isOmnificInteger_mk_iff]
   rw [← toIGame_equiv_toIGame]

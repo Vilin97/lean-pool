@@ -7,8 +7,7 @@ module
 
 
 import LeanPool.ConwayRefinement.ConwayRefinement.Blueprint
-public import
-  LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.OrdinalValue.AlgebraicIndependence.PrincipalRepresentatives
+public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.OrdinalValue.AlgebraicIndependence.PrincipalRepresentatives
 public import LeanPool.ConwayRefinement.ConwayRefinement.Algebra.MvPolynomial.ComponentsSpan
 
 /-!

@@ -30,7 +30,7 @@ variable {K : Type v} [Field K] [CharZero K]
 theorem series_pairwise_gcd_exists (a b : Series K) :
     ∃ d : Series K, ∀ e : Series K, e ∣ a ∧ e ∣ b ↔ e ∣ d := by
   obtain ⟨inst⟩ := Berarducci.nonemptyGCDMonoid (K := K)
-  letI : GCDMonoid (Series K) := inst
+  let : GCDMonoid (Series K) := inst
   exact ⟨gcd a b, fun e ↦ (dvd_gcd_iff e a b).symm⟩
 
 /-- A gcd of `(0, a)` is associated to `a` and has the expected universal property. -/

@@ -82,12 +82,12 @@ theorem lift_supportOrderType_mapDomain (f : G →+ H) (hfi : Function.Injective
         (HahnSeries.supportOrderType (mapDomain f hfi hf b : K⟦H⟧)) =
       Ordinal.lift.{v, u} (HahnSeries.supportOrderType (b : K⟦G⟧)) := by
   let e : G ↪o H := ⟨⟨f, hfi⟩, hf _ _⟩
-  letI : WellFoundedLT (b : K⟦G⟧).support := (b : K⟦G⟧).isWF_support
-  letI : WellFoundedLT (mapDomain f hfi hf b : K⟦H⟧).support :=
+  let : WellFoundedLT (b : K⟦G⟧).support := (b : K⟦G⟧).isWF_support
+  let : WellFoundedLT (mapDomain f hfi hf b : K⟦H⟧).support :=
     (mapDomain f hfi hf b : K⟦H⟧).isWF_support
   let supportEquiv : (mapDomain f hfi hf b : K⟦H⟧).support ≃o
       (b : K⟦G⟧).support :=
-    (OrderIso.setCongr _ (f '' (b : K⟦G⟧).support)
+    (Set.orderIsoOfEq _ (f '' (b : K⟦G⟧).support)
       (support_mapDomain f hfi hf b)).trans
         (StrictMonoOn.orderIso e (b : K⟦G⟧).support
           (e.strictMono.strictMonoOn (b : K⟦G⟧).support)).symm

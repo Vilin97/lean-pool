@@ -91,7 +91,7 @@ theorem toSeries_aeval {ι : Type*} (b : ι → nonpos K) (F : MvPolynomial ι K
 /-! ### The ordinal value -/
 
 theorem ot_eq (x : HahnSeries ℝ K) : ot x = HahnSeries.supportOrderType x := by
-  haveI : WellFoundedLT x.support := (supportIsWellOrder x).wf
+  have : WellFoundedLT x.support := (supportIsWellOrder x).wf
   exact (HahnSeries.supportOrderType_eq_typeLT (OrderIso.refl _)).symm
 
 theorem memJ_iff (a : nonpos K) :
@@ -141,7 +141,7 @@ theorem ordinalValue_eq (a : nonpos K) : ordinalValue a = Berarducci.ordinalValu
       (fun h ↦ hN ((isNearConstant_iff a).mpr h))]
   congr 1
   ext o
-  simp only [Set.mem_setOf_eq, Berarducci.mem_representativeOrderTypes_iff]
+  simp only [Set.mem_ofPred_eq, Berarducci.mem_representativeOrderTypes_iff]
   constructor
   · rintro ⟨c, hc, rfl⟩
     refine ⟨toSeries c, ?_, by rw [ot_eq]; rfl⟩
@@ -346,7 +346,7 @@ open ConwayRefinement.Standalone.PrincipalRVAlgebraicIndependence
 theorem of_algebraicIndependence (K : Type u) [Field K] :
     PrincipalRVAlgebraicIndependence.MinimalFamiliesAlgebraicallyIndependent K := by
   intro hK
-  letI := hK
+  let := hK
   intro ι deg b hB α F hF hval
   -- Extend the family to a minimal homogeneous generating system of `P̂`.
   obtain ⟨ι', wt', x', e, he, hwt', hx', hmin⟩ :=

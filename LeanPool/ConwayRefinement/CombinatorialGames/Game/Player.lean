@@ -143,7 +143,7 @@ macro "!{" st:term "}'" h:term:max : term => `(OfSets.ofSets $st $h)
 macro "!{" s:term " | " t:term "}'" h:term:max : term => `(!{Player.cases $s $t}'$h)
 
 /-- A tactic which attempts to automatically solve goals which appear on `OfSets`. -/
-macro "of_sets_tactic" : tactic =>
+macro (name := ofSetsTactic) "of_sets_tactic" : tactic =>
   `(tactic| first
     | done
     | trivial

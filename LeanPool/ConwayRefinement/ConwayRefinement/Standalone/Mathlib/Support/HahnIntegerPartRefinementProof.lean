@@ -17,7 +17,7 @@ public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.IntegerPart.
 import LeanPool.ConwayRefinement.ConwayRefinement.Algebra.Order.ArchimedeanBall
 import Mathlib.Algebra.Module.Rat
 import Mathlib.Algebra.GCDMonoid.Nat
-import Mathlib.Data.Real.Embedding
+import Mathlib.Basic.Real.Embedding
 import Mathlib.SetTheory.Cardinal.Rat
 
 /-!
@@ -342,7 +342,7 @@ private theorem completeSpace_tailQuotient_of_isKappaSaturated
     (T : Set (FiniteArchimedeanClass G)) (hT : IsLimitFamily T) (hTcard : #T < κ) :
     Nonempty (CompleteSpace (G ⧸ commonTail T)) := by
   rw [isLimitFamily_iff] at hT
-  letI : Nonempty T := Set.nonempty_coe_sort.mpr hT.1
+  let : Nonempty T := Set.nonempty_coe_sort.mpr hT.1
   let Q := G ⧸ commonTail T
   let ε : T → Q := fun c ↦
     Submodule.Quotient.mk (FiniteArchimedeanClass.positiveRepresentative c.1)
@@ -727,7 +727,7 @@ theorem decompositionMonoid_of_assumptions [CharZero R]
     (hA3 : AssumptionA3 Z) (hlimit : LimitTailConditions (G := G) Z κ) :
     DecompositionMonoid (HahnSeries.cardSuppLTTruncationIntegerPart
       (G := G) (R := R) (κ := κ) Z) := by
-  letI : DecompositionMonoid Z := (assumptionA3_iff_decompositionMonoid Z).mp hA3
+  let : DecompositionMonoid Z := (assumptionA3_iff_decompositionMonoid Z).mp hA3
   rw [decompositionMonoid_iff]
   intro x
   apply isPrimal_of_finite_class_assumptions_and_limit_tail_conditions Z s
@@ -735,7 +735,7 @@ theorem decompositionMonoid_of_assumptions [CharZero R]
   · intro T hTne hTgt hTcard
     obtain ⟨hcomplete⟩ :=
       hlimit.cauchy_complete_quotient T (isLimitFamily_iff.mpr ⟨hTne, hTgt⟩) hTcard
-    letI := hcomplete
+    let := hcomplete
     exact ⟨(commonTailUniformEquiv (G := G) T).completeSpace_iff.mp inferInstance⟩
   · intro T hTne hTgt hTcard
     have hfraction := hlimit.fraction_field_commonTail T
@@ -800,18 +800,18 @@ theorem decompositionMonoid_of_saturation [CharZero R]
   (highlight)]
 theorem of_assumptions : HahnIntegerPartRefinementCriterion (G := G) (R := R) := by
   intro hR
-  letI : CharZero R := hR
+  let : CharZero R := hR
   intro κ hκcountable hκregular Z s hA1 hA2 hA3 hlimit
-  letI : Fact (ℵ₀ < κ) := ⟨hκcountable⟩
-  letI : Fact κ.IsRegular := ⟨hκregular⟩
+  let : Fact (ℵ₀ < κ) := ⟨hκcountable⟩
+  let : Fact κ.IsRegular := ⟨hκregular⟩
   let S := HahnSeries.cardSuppLTTruncationIntegerPart
     (G := G) (R := R) (κ := κ) Z
-  letI : DecompositionMonoid S :=
+  let : DecompositionMonoid S :=
     decompositionMonoid_of_assumptions Z s hA1 hA2 hA3 hlimit
   let inclusion : HahnSeries.CardSuppLTField (G := G) (R := R) (κ := κ) →+*
       HahnSeries G R := (HahnSeries.cardSuppLTSubfield G R κ).subtype
   let E := Subring.equivMapOfInjective S inclusion Subtype.val_injective
-  letI : DecompositionMonoid (S.map inclusion) :=
+  let : DecompositionMonoid (S.map inclusion) :=
     MulEquiv.decompositionMonoid E.symm.toMulEquiv
   have hmem (x : HahnSeries G R) : x ∈ S.map inclusion ↔ x ∈ hahnIntegerPart Z κ := by
     rw [Subring.mem_map, mem_hahnIntegerPart_iff]
@@ -863,8 +863,8 @@ theorem of_saturation [CharZero R]
           e ∈ hahnIntegerPart Z κ ∧ f ∈ hahnIntegerPart Z κ ∧
           g ∈ hahnIntegerPart Z κ ∧ h ∈ hahnIntegerPart Z κ ∧
             a = e * f ∧ b = g * h ∧ c = e * g ∧ d = f * h := by
-  letI : Fact (ℵ₀ < κ) := ⟨hκcount⟩
-  letI : Fact κ.IsRegular := ⟨hκregular⟩
+  let : Fact (ℵ₀ < κ) := ⟨hκcount⟩
+  let : Fact κ.IsRegular := ⟨hκregular⟩
   let s : HahnEmbedding.ArchimedeanStrata ℚ G := Classical.choice inferInstance
   have hA1 : AssumptionA1 s := by
     rw [assumptionA1_iff]

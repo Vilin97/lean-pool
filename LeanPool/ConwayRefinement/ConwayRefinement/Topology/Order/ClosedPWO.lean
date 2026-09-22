@@ -301,8 +301,8 @@ private theorem strictClosure_orderType_le_two_mul (hs : s.IsPWO) (hz : IsLUB s 
       inter_subset_left).orderType) ≤
       2 * hs.orderType := by
   let ht := hs.closure.mono (s := strictClosure (s := s) (z := z)) inter_subset_left
-  letI : WellFoundedLT (strictClosure (s := s) (z := z)) := ht.isWF
-  letI : WellFoundedLT s := hs.isWF
+  let : WellFoundedLT (strictClosure (s := s) (z := z)) := ht.isWF
+  let : WellFoundedLT s := hs.isWF
   let e : strictClosure (s := s) (z := z) ↪o s ×ₗ Fin 2 :=
     OrderEmbedding.ofStrictMono (closureEmbedding hs hz)
       (closureEmbedding_strictMono hs hz)
@@ -394,7 +394,7 @@ theorem IsPWO.cantorBendixsonRank_closure_eq_of_orderType_eq_opow
   let S : TopologicalSpace.Closeds ℝ := ⟨(_root_.closure s), isClosed_closure⟩
   let C : Set ℝ := _root_.closure s
   let hc : C.IsPWO := hs.closure
-  letI : WellFoundedLT C := hc.isWF
+  let : WellFoundedLT C := hc.isWF
   let T : Ordinal := Ordinal.type (· < · : C → C → Prop)
   let i : Iio T :=
     ⟨Ordinal.typein (· < · : C → C → Prop) ⟨z, hzc⟩,

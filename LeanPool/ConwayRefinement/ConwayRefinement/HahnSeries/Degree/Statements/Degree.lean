@@ -9,7 +9,7 @@ module
 import LeanPool.ConwayRefinement.ConwayRefinement.Blueprint
 public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.Nonpositive
 public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.OrderType
-public import Mathlib.Data.Real.Basic
+public import Mathlib.Basic.Real.Basic
 
 import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.OrdinalValue.OrderTypeMultiplicativity
 

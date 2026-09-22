@@ -38,7 +38,7 @@ variable (Z : Subring R)
 
 /-- If order-zero elements and reduced elements with nonzero order are primal, every bounded
 integer-part element meeting only finitely many Archimedean classes is primal. -/
-theorem isPrimal_of_supportArchimedeanClasses_finite_of_reduced [CharZero R]
+theorem isPrimal_of_supportArchimedeanClasses_finite_of_reduced
     (u : HahnEmbedding.ArchimedeanStrata K G)
     (hzero : ∀ y : cardSuppLTTruncationIntegerPart (G := G) (R := R) (κ := κ) Z,
       ((CardSuppLTTruncationIntegerPart.toNonpositiveRingHom Z y :

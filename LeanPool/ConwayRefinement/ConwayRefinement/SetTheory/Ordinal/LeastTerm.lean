@@ -25,9 +25,12 @@ public noncomputable section
 
 namespace NatOrdinal
 
+/-- The final additive-principal term of the ordinal, or zero when the ordinal is zero. -/
 def leastTerm (a : NatOrdinal.{u}) : NatOrdinal.{u} :=
   NatOrdinal.of (a.val.additivePrincipalTerms.getLastD 0)
 
+/-- The ordinal obtained by removing the final additive-principal term from its Cantor
+decomposition. -/
 def removeLeastTerm (a : NatOrdinal.{u}) : NatOrdinal.{u} :=
   NatOrdinal.of a.val.additivePrincipalTerms.dropLast.sum
 

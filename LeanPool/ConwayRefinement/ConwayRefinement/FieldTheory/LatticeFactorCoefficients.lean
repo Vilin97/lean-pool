@@ -50,7 +50,8 @@ theorem exists_scalar_of_mul_eq_map_lattice {k : ℕ}
     ∃ c : L, c ≠ 0 ∧ ∀ g, c * q.coeff g ∈ (algebraMap K L).range := by
   classical
   obtain ⟨psi, hpsi⟩ := AddMonoidHom.exists_injOn_finInt (q.coeff.support ∪ r.coeff.support)
-  have hsub : (q.coeff.support : Set (Fin k → ℤ)) ⊆ ((q.coeff.support ∪ r.coeff.support : Finset _) : Set _) :=
+  have hsub : (q.coeff.support : Set (Fin k → ℤ)) ⊆ ((q.coeff.support ∪ r.coeff.support : Finset
+    _) : Set _) :=
     fun x hx ↦ Finset.mem_coe.mpr (Finset.mem_union_left _ (Finset.mem_coe.mp hx))
   have hinjq : Set.InjOn psi (q.coeff.support : Set (Fin k → ℤ)) := hpsi.mono hsub
   have htransfer : ∀ g ∈ q.coeff.support,
@@ -63,10 +64,12 @@ theorem exists_scalar_of_mul_eq_map_lattice {k : ℕ}
     exact (Finsupp.mem_support_iff.mp hg) (htransfer g hg).symm
   have hr0 : AddMonoidAlgebra.mapDomainRingHom L psi r ≠ 0 := by
     obtain ⟨g, hg⟩ := Finsupp.support_nonempty_iff.mpr (coeff_eq_zero.not.mpr hr)
-    have hsubr : (r.coeff.support : Set (Fin k → ℤ)) ⊆ ((q.coeff.support ∪ r.coeff.support : Finset _) : Set _) :=
+    have hsubr : (r.coeff.support : Set (Fin k → ℤ)) ⊆ ((q.coeff.support ∪ r.coeff.support :
+      Finset _) : Set _) :=
       fun x hx ↦ Finset.mem_coe.mpr (Finset.mem_union_right _ (Finset.mem_coe.mp hx))
     intro h0
-    have := Finsupp.mapDomain_apply' ((q.coeff.support ∪ r.coeff.support : Finset _) : Set _) r.coeff hsubr hpsi
+    have := Finsupp.mapDomain_apply' ((q.coeff.support ∪ r.coeff.support : Finset _) : Set _)
+      r.coeff hsubr hpsi
       (Finset.mem_union_right _ hg)
     have h0' : Finsupp.mapDomain psi r.coeff = 0 := by
       simpa only [mapDomainRingHom_apply, mapDomain, coeff_ofCoeff, coeff_zero]

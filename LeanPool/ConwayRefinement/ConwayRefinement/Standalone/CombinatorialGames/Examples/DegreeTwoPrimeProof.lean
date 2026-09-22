@@ -101,7 +101,7 @@ namespace FoilHasNontrivialFactorization
 theorem proof : DegreeTwoExample.FoilHasNontrivialFactorization.{u} := by
   rw [DegreeTwoExample.FoilHasNontrivialFactorization]
   exact ⟨2, DegreeTwoExample.degreeTwoOz, rfl, two_not_isUnit,
-    IsPrime.proof.not_unit⟩
+    IsPrime.proof.not_isUnit⟩
 
 end FoilHasNontrivialFactorization
 

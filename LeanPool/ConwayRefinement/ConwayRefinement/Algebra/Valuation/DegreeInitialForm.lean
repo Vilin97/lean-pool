@@ -169,7 +169,8 @@ theorem initialForm_mul (x y : R) :
     have hm : (ν (x * y)).unbot hxy = (ν x).unbot hx + (ν y).unbot hy := by
       apply WithBot.coe_injective
       rw [WithBot.coe_unbot, WithBot.coe_add, ν.map_mul, WithBot.coe_unbot, WithBot.coe_unbot]
-    rw [initialForm, dite_eq_right hxy, initialForm, dite_eq_right hx, initialForm, dite_eq_right hy,
+    rw [initialForm, dite_eq_right hxy, initialForm, dite_eq_right hx, initialForm,
+      dite_eq_right hy,
       ν.homogeneousMk_mul, ν.homogeneousMk_apply, ν.homogeneousMk_apply]
     apply DirectSum.of_eq_of_gradedMonoid_eq
     apply Sigma.ext hm

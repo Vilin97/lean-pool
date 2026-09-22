@@ -75,8 +75,8 @@ theorem pairwise_supportBelow_of_isChain {l : List R⟦G⟧}
           intro c hc
           simp only [List.mem_cons] at hc
           rcases hc with rfl | hc
-          · exact hchain.rel_head
-          · exact supportBelow_trans_of_ne_zero (hne b (by simp)) hchain.rel_head
+          · exact hchain.rel
+          · exact supportBelow_trans_of_ne_zero (hne b (by simp)) hchain.rel
               ((List.pairwise_cons.mp hpair).1 c hc)
 
 end Zero

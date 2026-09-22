@@ -96,10 +96,10 @@ theorem exists_closed_class_refinement_of_complete_tail_quotient
       rw [← FiniteArchimedeanClass.tailSubmodule_toAddSubgroup ℚ T]
       simpa using hmem
     exact FiniteArchimedeanClass.positiveRepresentative_not_mem_tailKernel hT c htail
-  letI : Nontrivial C := by
+  let : Nontrivial C := by
     let c : T := Classical.arbitrary T
     exact ⟨⟨0, scale c, (hscalePos c).ne⟩⟩
-  letI : NoMaxOrder (FiniteArchimedeanClass C) :=
+  let : NoMaxOrder (FiniteArchimedeanClass C) :=
     FiniteArchimedeanClass.quotient_noMax_of_eq_tailKernel T
       (FiniteArchimedeanClass.tailSubmodule ℚ T).toAddSubgroup
       (FiniteArchimedeanClass.tailSubmodule_toAddSubgroup ℚ T) hT

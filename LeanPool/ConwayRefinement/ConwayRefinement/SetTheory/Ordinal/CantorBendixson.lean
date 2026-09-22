@@ -79,7 +79,7 @@ private theorem derivedSet_univ_eq :
     derivedSet (Set.univ : Set Ordinal.{u}) = {x | IsSuccLimit x} := by
   ext x
   rw [mem_derivedSet, AccPt]
-  simp only [principal_univ, inf_top_eq, mem_setOf_eq]
+  simp only [principal_univ, inf_top_eq, Set.mem_ofPred_eq]
   rw [← not_iff_not, not_neBot, ← isOpen_singleton_iff_punctured_nhds]
   exact SuccOrder.isOpen_singleton_iff
 
@@ -95,6 +95,7 @@ private theorem derivedSet_Ioi_zero_eq :
       (Set.Infinite.of_accPt h)
   rw [← derivedSet_univ_eq, huniv, derivedSet_union, hsingle, empty_union]
 
+/-- The positive ordinal multiples `ω ^ a * q`, with `q > 0`. -/
 def positivePrincipalMultiples (a : Ordinal.{u}) : Set Ordinal.{u} :=
   (fun x ↦ omega0 ^ a * x) '' Ioi 0
 
@@ -132,7 +133,7 @@ private theorem derivedSet_positivePrincipalMultiples (a : Ordinal.{u}) :
       exact pos_iff_ne_zero.mpr fun hz ↦ hy.ne_bot (by simp [hz])
     · symm
       change omega0 ^ a * (omega0 * z) = omega0 ^ (a + 1) * z
-      rw [show a + 1 = Order.succ a by simp, opow_succ, mul_assoc]
+      rw [Ordinal.opow_add_one, mul_assoc]
   · rintro ⟨z, hz, rfl⟩
     refine ⟨omega0 * z, ?_, ?_⟩
     · change IsSuccLimit (omega0 * z)
@@ -141,7 +142,7 @@ private theorem derivedSet_positivePrincipalMultiples (a : Ordinal.{u}) :
       rw [isMin_iff_eq_bot, Ordinal.bot_eq_zero]
       exact mul_ne_zero omega0_ne_zero hz.ne'
     · change omega0 ^ a * (omega0 * z) = omega0 ^ (a + 1) * z
-      rw [show a + 1 = Order.succ a by simp, opow_succ, mul_assoc]
+      rw [Ordinal.opow_add_one, mul_assoc]
 
 private theorem iInter_positivePrincipalMultiples {a : Ordinal.{u}} (ha : IsSuccLimit a) :
     (⋂ i : Iio a, positivePrincipalMultiples i.1) = positivePrincipalMultiples a := by
@@ -216,7 +217,7 @@ theorem cantorBendixson_top_eq (a : Ordinal.{u}) :
       rw [ih]
       by_cases ha : a = 0
       · subst a
-        simp only [zero_add, if_true, ite_eq_right one_ne_zero]
+        simp only [zero_add, ite_true, ite_eq_right one_ne_zero]
         rw [derivedSet_univ_eq, ← derivedSet_Ioi_zero_eq,
           ← positivePrincipalMultiples_zero,
           derivedSet_positivePrincipalMultiples]

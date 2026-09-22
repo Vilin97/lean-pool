@@ -80,14 +80,17 @@ theorem firstProjectionValuation_not_isSeparated :
   exact ⟨(0, 1), by simp [MaxAddDegree.ofValuation_apply, firstProjectionValuation,
     Valuation.one_apply_def]⟩
 
+/-- The element `(0, 1)` in filtration degree zero, used to test the support kernel. -/
 def supportRepresentative : firstProjectionValuation.filtrationLE 0 :=
   ⟨(0, 1), by simp [MaxAddDegree.ofValuation_apply, firstProjectionValuation,
     Valuation.one_apply_def]⟩
 
+/-- The element `(1, 1)` in filtration degree zero, whose homogeneous class is nonzero. -/
 def nonzeroRepresentative : firstProjectionValuation.filtrationLE 0 :=
   ⟨(1, 1), by simp [MaxAddDegree.ofValuation_apply, firstProjectionValuation,
     Valuation.one_apply_def]⟩
 
+/-- The element `(1, 0)` in filtration degree zero, with the same leading class as `(1, 1)`. -/
 def sameLeadingRepresentative : firstProjectionValuation.filtrationLE 0 :=
   ⟨(1, 0), by simp [MaxAddDegree.ofValuation_apply, firstProjectionValuation,
     Valuation.one_apply_def]⟩
@@ -128,6 +131,7 @@ def trivialValuation : MaxAddDegree ℚ ℕ :=
 instance : trivialValuation.IsMultiplicative :=
   inferInstanceAs (MaxAddDegree.ofValuation _).IsMultiplicative
 
+/-- The rational unit in filtration degree zero for the trivial valuation. -/
 def oneRepresentative : trivialValuation.filtrationLE 0 :=
   ⟨1, by simp [MaxAddDegree.ofValuation_apply, trivialValuation, Valuation.one_apply_def]⟩
 
@@ -160,7 +164,8 @@ theorem printedRepresentativeAdd_not_commutative :
           ((oneRepresentative : ℚ) + ((0 : trivialValuation.filtrationLE 0) : ℚ)) =
         trivialValuation oneRepresentative := by
     simp
-  rw [printedRepresentativeAdd, ite_eq_right hzeroOne, printedRepresentativeAdd, ite_eq_left honeZero]
+  rw [printedRepresentativeAdd, ite_eq_right hzeroOne, printedRepresentativeAdd, ite_eq_left
+    honeZero]
   simp only [add_zero]
   exact oneRepresentative_componentMk_ne_zero.symm
 
@@ -171,12 +176,15 @@ theorem trivialValuation_isSeparated : trivialValuation.IsSeparated := by
   · simp [MaxAddDegree.ofValuation_apply, trivialValuation, Valuation.one_apply_def, hx]
   · simp [MaxAddDegree.ofValuation_apply, trivialValuation, Valuation.one_apply_def, hx]
 
+/-- The rational number two in filtration degree zero for the trivial valuation. -/
 def twoRepresentative : trivialValuation.filtrationLE 0 :=
   ⟨2, by simp [MaxAddDegree.ofValuation_apply, trivialValuation, Valuation.one_apply_def]⟩
 
+/-- The rational number three in filtration degree zero for the trivial valuation. -/
 def threeRepresentative : trivialValuation.filtrationLE 0 :=
   ⟨3, by simp [MaxAddDegree.ofValuation_apply, trivialValuation, Valuation.one_apply_def]⟩
 
+/-- The rational number six in filtration degree zero for the trivial valuation. -/
 def sixRepresentative : trivialValuation.filtrationLE 0 :=
   ⟨6, by simp [MaxAddDegree.ofValuation_apply, trivialValuation, Valuation.one_apply_def]⟩
 

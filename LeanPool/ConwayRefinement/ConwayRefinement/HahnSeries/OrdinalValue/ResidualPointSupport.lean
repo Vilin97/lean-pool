@@ -71,7 +71,7 @@ theorem exists_strictMono_cutoff_of_residualPointTail
               b.principalValue_isInfiniteMultiplicativelyPrincipal.isAdditivelyPrincipal).2
         · exact ⟨x, hxTail, hθx⟩
       _ = b.principalValue.val := htailType
-  letI : WellFoundedLT finalTail := hfinalTail.isWF
+  let : WellFoundedLT finalTail := hfinalTail.isWF
   have htypes : typeLT b.principalValue.val.ToType = typeLT finalTail := by
     calc
       typeLT b.principalValue.val.ToType = b.principalValue.val :=

@@ -79,7 +79,7 @@ theorem prime_algebraMap_of_prime (hS : S ≤ nonZeroDivisors A) {p : A} (hp : P
 omit [IsDomain A] [IsDomain B] in
 /-- Mapping a list of primes into the localization and dropping those that become units leaves a
 prime factorisation of the image. -/
-private theorem exists_prime_factors_algebraMap [UniqueFactorizationMonoid A]
+private theorem exists_prime_factors_algebraMap
     (hS : S ≤ nonZeroDivisors A) (f : Multiset A) (hf : ∀ p ∈ f, Prime p) :
     ∃ g : Multiset B, (∀ q ∈ g, Prime q) ∧ Associated g.prod (algebraMap A B f.prod) := by
   induction f using Multiset.induction with

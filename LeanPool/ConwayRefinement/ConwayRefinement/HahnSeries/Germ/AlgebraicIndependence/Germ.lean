@@ -4,8 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dan Abramov
 -/
 module
-public import
-  LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.Germ.AlgebraicIndependence.CantorBendixsonValueMultiplicativity
+public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.Germ.AlgebraicIndependence.CantorBendixsonValueMultiplicativity
 public import LeanPool.ConwayRefinement.ConwayRefinement.SetTheory.Ordinal.NaturalOrder
 public import Mathlib.RingTheory.Valuation.Basic
 public import Mathlib.RingTheory.Ideal.Quotient.Basic

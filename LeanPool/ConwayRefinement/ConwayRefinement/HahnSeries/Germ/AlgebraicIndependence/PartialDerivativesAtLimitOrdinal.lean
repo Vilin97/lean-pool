@@ -9,6 +9,7 @@ public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.Germ.Algebra
 public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.Germ.AlgebraicIndependence.TruncationExpansion
 public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.Germ.AlgebraicIndependence.CofactorInduction
 
+import LeanPool.ConwayRefinement.ConwayRefinement.Algebra.Finset.FilterCard
 import LeanPool.ConwayRefinement.ConwayRefinement.Blueprint
 
 /-!
@@ -54,6 +55,17 @@ variable (hinj : ∀ β < α, OrdinalGraded.InjectiveAt K wt xg β)
 variable (hσ : LiftFamily.HasLowerTruncationDegrees σ)
 
 namespace LimitOrdinalRelationAtCutoff
+
+omit [DenselyOrdered G] [NoMinOrder G] [NoMaxOrder G] in
+private theorem lowDegreePartAlgebraicLE_of_not_proper {j : ι} (hj : j ∈ S.F.vars)
+    (htop : ¬ S.LowDegreePartEq j) (hL : ¬ S.HasProperLowDegreePartNotAlgebraicLE j) :
+    S.LowDegreePartAlgebraicLE j := by
+  by_contra hnd
+  rcases eq_or_ne (S.degLT j) 0 with ht | ht
+  · exact hnd ((S.lowDegreePartAlgebraicLE_iff j).mpr (by
+      rw [ht]
+      exact NatOrdinal.algebraicLE_zero _))
+  · exact hL ((S.hasProperLowDegreePartNotAlgebraicLE_iff j).mpr ⟨hj, ht, htop, hnd⟩)
 
 include Ubase hUmono hUopen hUconv hUbase S hx hinj hσ
 
@@ -164,9 +176,8 @@ theorem exists_finset_pderiv_eq_sum_of_lowDegreePartAlgebraicLE {v' : ι} (hv' :
   · exact ⟨∅, fun _ ↦ 0, fun v hv ↦ absurd hv (Finset.notMem_empty v),
       fun v hv ↦ absurd hv (Finset.notMem_empty v), by rw [hΘ0, Finset.sum_empty]⟩
   obtain ⟨h, hh⟩ := exists_add_wt_eq_of_mem_vars S.hom hv'
-  have hhα : h < α := by
-    rw [← hh]
-    exact lt_add_of_pos_right _ (pos_iff_ne_zero.mpr (hx.ne_zero v'))
+  have hhα : h < α :=
+    (lt_add_of_pos_right _ (pos_iff_ne_zero.mpr (hx.ne_zero v'))).trans_eq hh
   have hΘhom : IsWeightedHomogeneous wt Θ h := by
     rw [hΘdef]
     exact S.pderiv_hom hh
@@ -188,23 +199,9 @@ theorem exists_finset_pderiv_eq_sum_of_lowDegreePartAlgebraicLE {v' : ι} (hv' :
     by_cases hL : S.HasProperLowDegreePartNotAlgebraicLE j
     · exact Ideal.subset_span
         ⟨⟨j, (S.contributesToPartialDerivativeAt_iff v' j).mpr ⟨hj, Or.inr ⟨hL, hlt⟩⟩⟩, rfl⟩
-    have hdj : S.LowDegreePartAlgebraicLE j := by
-      by_contra hnd
-      rcases eq_or_ne (S.degLT j) 0 with ht | ht
-      · exact hnd ((S.lowDegreePartAlgebraicLE_iff j).mpr (by
-          rw [ht]
-          exact NatOrdinal.algebraicLE_zero _))
-      · exact hL ((S.hasProperLowDegreePartNotAlgebraicLE_iff j).mpr ⟨hj, ht, htop, hnd⟩)
-    have hcard : (S.F.vars.filter fun v ↦ wt j < wt v).card < n := by
-      rw [← hn]
-      refine Finset.card_lt_card
-        (Finset.ssubset_iff_subset_ne.mpr ⟨fun v hv ↦ ?_, fun heq ↦ ?_⟩)
-      · obtain ⟨hv1, hv2⟩ := Finset.mem_filter.mp hv
-        exact Finset.mem_filter.mpr ⟨hv1, hlt.trans hv2⟩
-      · have hjmem : j ∈ S.F.vars.filter fun v ↦ wt v' < wt v :=
-          Finset.mem_filter.mpr ⟨hj, hlt⟩
-        rw [← heq, Finset.mem_filter] at hjmem
-        exact lt_irrefl _ hjmem.2
+    have hdj := S.lowDegreePartAlgebraicLE_of_not_proper hj htop hL
+    have hcard : (S.F.vars.filter fun v ↦ wt j < wt v).card < n :=
+      (ConwayRefinement.card_filter_above_lt wt S.F.vars hj hlt).trans_eq hn
     obtain ⟨s, C, hs, -, heq⟩ := ih _ hcard j hj rfl hdj
     rw [heq]
     refine Ideal.sum_mem _ fun v hv ↦
@@ -224,7 +221,7 @@ theorem exists_finset_pderiv_eq_sum_of_lowDegreePartAlgebraicLE {v' : ι} (hv' :
     refine Ideal.span_le.mpr ?_ hmem
     rintro _ ⟨j, rfl⟩
     exact habove j.1 j.2.1 j.2.2
-  haveI : Finite {v // S.ContributesToPartialDerivativeAt v' v} :=
+  have : Finite {v // S.ContributesToPartialDerivativeAt v' v} :=
     S.finite_setOf_contributesToPartialDerivativeAt v'
   have hcd : ∀ v : {v // S.ContributesToPartialDerivativeAt v' v}, ∃ c, c + wt v.1 = α :=
     fun v ↦ exists_add_wt_eq_of_mem_vars S.hom
@@ -236,7 +233,7 @@ theorem exists_finset_pderiv_eq_sum_of_lowDegreePartAlgebraicLE {v' : ι} (hv' :
   let A : {v // S.ContributesToPartialDerivativeAt v' v} → Prop :=
     fun v ↦ NatOrdinal.AlgebraicLE (wt v') (wt v.1)
   have hAiff : ∀ v, A v ↔ NatOrdinal.AlgebraicLE (wt v') (wt v.1) := fun _ ↦ Iff.rfl
-  haveI : Finite {v : {v // S.ContributesToPartialDerivativeAt v' v} // A v} :=
+  have : Finite {v : {v // S.ContributesToPartialDerivativeAt v' v} // A v} :=
     Finite.of_injective (fun v ↦ v.1) Subtype.val_injective
   have hbA : ∀ v : {v : {v // S.ContributesToPartialDerivativeAt v' v} // A v},
       ∃ b, b + wt v' = wt v.1.1 := fun v ↦ by

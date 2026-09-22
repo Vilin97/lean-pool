@@ -962,13 +962,13 @@ private theorem fits_single_one_mul (g : IGame.{u}) [Numeric g] {y : SurrealHahn
         grw [hzeroOption (Or.inl hb), ← toIGame_equiv (single (Surreal.mk g) 1 * y)]
         exact_mod_cast mul_lt_mul_of_pos_left (lt_of_truncLT hb) hxpos
       · intro q _ z hz b hb
-        letI := Numeric.of_mem_moves hz
+        let := Numeric.of_mem_moves hz
         rw [Numeric.not_le]
         grw [hoption q hz (Or.inl hb), ← toIGame_equiv (single (Surreal.mk g) 1 * y)]
         exact_mod_cast mulOptionValue_lt_mul_of_lt_of_lt
           (single_dyadic_lt_single_one_of_mem_leftMoves g q hz) (lt_of_truncLT hb)
     · intro q hq z hz b hb
-      letI := Numeric.of_mem_moves hz
+      let := Numeric.of_mem_moves hz
       rw [Numeric.not_le]
       grw [hoption q hz (Or.inr hb), ← toIGame_equiv (single (Surreal.mk g) 1 * y)]
       exact_mod_cast mulOptionValue_lt_mul_of_gt_of_gt
@@ -982,13 +982,13 @@ private theorem fits_single_one_mul (g : IGame.{u}) [Numeric g] {y : SurrealHahn
         grw [← toIGame_equiv (single (Surreal.mk g) 1 * y), hzeroOption (Or.inr hb)]
         exact_mod_cast mul_lt_mul_of_pos_left (gt_of_truncGT hb) hxpos
       · intro q _ z hz b hb
-        letI := Numeric.of_mem_moves hz
+        let := Numeric.of_mem_moves hz
         rw [Numeric.not_le]
         grw [← toIGame_equiv (single (Surreal.mk g) 1 * y), hoption q hz (Or.inr hb)]
         exact_mod_cast mul_lt_mulOptionValue_of_lt_of_gt
           (single_dyadic_lt_single_one_of_mem_leftMoves g q hz) (gt_of_truncGT hb)
     · intro q hq z hz b hb
-      letI := Numeric.of_mem_moves hz
+      let := Numeric.of_mem_moves hz
       rw [Numeric.not_le]
       grw [← toIGame_equiv (single (Surreal.mk g) 1 * y), hoption q hz (Or.inl hb)]
       exact_mod_cast mul_lt_mulOptionValue_of_gt_of_lt

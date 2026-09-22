@@ -293,7 +293,7 @@ private theorem isFiniteSupportPrimitive_mul_of_induction
     hcPrimitive hpBUnit (add_sub_cancel _ _) (by rw [mul_comm, ihRight _ hdropC, mul_comm])
   have hq := dvd_gradedNormalizedMaximalFiniteSupportDivisor_rvInitialForm_of_dvd hgcd hqbc
   rw [gradedNormalizedMaximalFiniteSupportDivisor_rvInitialForm_mul hgradedMul] at hq
-  letI : GCDMonoid (FiniteSupportRing (K := K)) := gcdMonoidOfExistsGCD hgcd
+  let : GCDMonoid (FiniteSupportRing (K := K)) := gcdMonoidOfExistsGCD hgcd
   exact (hrelB.mul_right hrelC).isUnit_of_dvd hq
 
 /-- Multiplicativity of normalized maximal finite-support divisors of Hahn series follows from

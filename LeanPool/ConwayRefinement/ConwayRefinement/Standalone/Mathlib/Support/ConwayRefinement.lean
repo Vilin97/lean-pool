@@ -29,7 +29,7 @@ variable {R : Type u} [Mul R]
 
 /-- Conway's four-factor refinement schema for a predicate `P`: from `a * b = c * d`, produce
 `a = e * f`, `b = g * h`, `c = e * g`, and `d = f * h`, with all eight entries satisfying `P`. -/
-def ConwayRefinement (P : R → Prop) : Prop :=
+def HasRefinement (P : R → Prop) : Prop :=
   ∀ a b c d : R,
     P a → P b → P c → P d → a * b = c * d →
     ∃ e f g h : R,
@@ -37,7 +37,7 @@ def ConwayRefinement (P : R → Prop) : Prop :=
       a = e * f ∧ b = g * h ∧ c = e * g ∧ d = f * h
 
 /-- The standalone proposition unfolds to the four equations in Conway's refinement conjecture. -/
-theorem conwayRefinement_iff (P : R → Prop) : ConwayRefinement P ↔
+theorem conwayRefinement_iff (P : R → Prop) : HasRefinement P ↔
     ∀ a b c d : R,
       P a → P b → P c → P d → a * b = c * d →
       ∃ e f g h : R,
@@ -51,5 +51,5 @@ end ConwayRefinement.Standalone
 
 Proof module: `ConwayRefinementProof`.
 
-* `ConwayRefinement` → `ConwayRefinement.refine`
+* `HasRefinement` → `HasRefinement.refine`
 -/

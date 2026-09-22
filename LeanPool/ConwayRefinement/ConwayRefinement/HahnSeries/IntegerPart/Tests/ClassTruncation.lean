@@ -23,9 +23,11 @@ namespace Tests
 
 open HahnSeries FiniteArchimedeanClass
 
+/-- The finite Archimedean class of the nonzero rational exponent `-1`. -/
 def rationalClass : FiniteArchimedeanClass ℚ :=
   FiniteArchimedeanClass.mk (-1 : ℚ) (by norm_num)
 
+/-- The monomial `5t⁻¹` with integer coefficients, at the boundary of the rational class ball. -/
 def rationalBoundarySeries : Nonpositive ℚ ℤ :=
   Nonpositive.single (-1) 5 (by norm_num)
 

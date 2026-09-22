@@ -6,8 +6,7 @@ Authors: Dan Abramov
 module
 
 public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.Germ.AlgebraicIndependence.AlgebraicIndependence
-public import
-  LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.OrdinalValue.AlgebraicIndependence.CantorBendixsonRepresentatives
+public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.OrdinalValue.AlgebraicIndependence.CantorBendixsonRepresentatives
 public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.OrdinalValue.AlgebraicIndependence.Partials
 
 import LeanPool.ConwayRefinement.ConwayRefinement.Blueprint

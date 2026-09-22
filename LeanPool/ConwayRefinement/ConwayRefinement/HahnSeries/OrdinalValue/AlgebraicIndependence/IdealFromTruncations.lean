@@ -152,7 +152,7 @@ theorem IsPrincipal.of_principalComponentMk_mem_span_of_forall_componentsGE_mem
     have hTsupp : T.support = negativeSupportTail u (γ k) := by
       ext y
       rw [hTdef, support_truncGT, support_truncLT, mem_negativeSupportTail_iff]
-      simp only [Set.mem_setOf_eq]
+      simp only [Set.mem_ofPred_eq]
       tauto
     have hTot : T.supportOrderType = (ω^ h).val := by
       rw [supportOrderType_eq_setOrderType, ← hu]
@@ -188,7 +188,7 @@ theorem IsPrincipal.of_principalComponentMk_mem_span_of_forall_componentsGE_mem
       ext y
       rw [support_truncGT, support_truncLE, support_truncLE, hTdef, support_truncGT,
         support_truncLT]
-      simp only [Set.mem_setOf_eq]
+      simp only [Set.mem_ofPred_eq]
       constructor
       · rintro ⟨⟨h1, h2⟩, h3⟩
         exact ⟨⟨⟨h1, by linarith [hneg (k + 1)]⟩, h3⟩, h2⟩

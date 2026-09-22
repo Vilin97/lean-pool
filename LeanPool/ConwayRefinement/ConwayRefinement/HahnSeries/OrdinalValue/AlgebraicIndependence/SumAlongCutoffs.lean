@@ -365,7 +365,8 @@ theorem exists_sumAlongCutoffs (δ : NatOrdinal) (γ : ℕ → ℝ) (hγ : Stric
           toGerm (translatedTruncation ((w k : Series K) : K⟦ℝ⟧) (ξ - γ k)) := by
         rw [toGerm_eq_toGerm_iff_exists_coeff_eq]
         refine ⟨γ k + c k - ξ, by linarith, fun η hη1 hη2 ↦ ?_⟩
-        rw [coeff_translatedTruncation, coeff_translatedTruncation, ite_eq_left hη2, ite_eq_left hη2, hscoe,
+        rw [coeff_translatedTruncation, coeff_translatedTruncation, ite_eq_left hη2, ite_eq_left
+          hη2, hscoe,
           coeff_sumAlongCutoffs_of_mem w c γ hγ hdisj (k := k) ⟨by linarith, by linarith⟩,
           coeff_placedTerm,
           ite_eq_left (by linarith)]

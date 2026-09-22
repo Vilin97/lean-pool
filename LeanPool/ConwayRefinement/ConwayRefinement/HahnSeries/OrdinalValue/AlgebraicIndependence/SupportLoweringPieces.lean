@@ -99,6 +99,129 @@ theorem pol_sub {u u' : Series K} (hu : ordinalValue u < ω^ α) (hu' : ordinalV
 
 include hσ
 
+/-- Correct one exceptional cutoff by combining cofactors on intervals approaching it. -/
+private theorem IsPrincipal.exists_cofactors_at_cutoff_of_pieces {ι' : Type*}
+    [Fintype ι'] {q : ι' → MvPolynomial ι K} {c : ι' → NatOrdinal}
+    (hq : ∀ j, IsWeightedHomogeneous wt (q j) (c j)) {τ ρ : NatOrdinal} (hτρ : τ + 1 < ρ)
+    (hρα : ρ < α) {e : ι' → NatOrdinal}
+    (hsep : ∀ j, ∀ θ, θ < c j → e j + θ < τ)
+    {D : Series K} (hD : (D : K⟦ℝ⟧).supportOrderType < (ω^ (ρ + 1)).val)
+    (htrunc : ∀ ξ : ℝ, ξ ≤ 0 →
+      componentsGE wt τ (σ.pol hx α (translatedTruncation (D : K⟦ℝ⟧) ξ)) ∈
+        Ideal.span (Set.range q))
+    (hIH : ∀ E : Series K, (E : K⟦ℝ⟧).supportOrderType < (ω^ ρ).val →
+      (∀ ξ : ℝ, ξ ≤ 0 →
+        componentsGE wt τ (σ.pol hx α (translatedTruncation (E : K⟦ℝ⟧) ξ)) ∈
+          Ideal.span (Set.range q)) →
+      ∃ w : ι' → Series K, (∀ j, ((w j : Series K) : K⟦ℝ⟧).supportOrderType < (ω^ (e j)).val) ∧
+        ∀ ξ : ℝ, ξ ≤ 0 → ordinalValue (translatedTruncation
+          ((E - ∑ j, w j * aeval σ.lift (q j) : Series K) : K⟦ℝ⟧) ξ) < ω^ (τ + 1))
+    {ξ ε : ℝ} (hξ0 : ξ ≤ 0) (hε : 0 < ε)
+    (hnolevel : ∀ θ, ξ - ε < θ → θ < ξ →
+      ordinalValue (translatedTruncation (D : K⟦ℝ⟧) θ) < ω^ ρ) :
+    ∃ C : ι' → Series K,
+      (∀ j, ((C j : Series K) : K⟦ℝ⟧).supportOrderType ≤ (ω^ (e j)).val) ∧
+      (∀ j, ∀ ζ : ℝ, ζ < 0 →
+        ordinalValue (translatedTruncation (C j : K⟦ℝ⟧) ζ) < ω^ (e j)) ∧
+      ordinalValue (translatedTruncation (D : K⟦ℝ⟧) ξ -
+        ∑ j, C j * aeval σ.lift (q j)) < ω^ ρ := by
+  classical
+  have hwt : ∀ i, wt i ≠ 0 := hx.ne_zero
+  have hρ0 : ρ ≠ 0 := (lt_of_le_of_lt zero_le hτρ).ne'
+  have hτ2ρ : τ + 1 + 1 ≤ ρ := Order.add_one_le_of_lt hτρ
+  have hρα' : ρ + 1 ≤ α := Order.add_one_le_of_lt hρα
+  have hDα : ∀ ζ, ordinalValue (translatedTruncation (D : K⟦ℝ⟧) ζ) < ω^ α := fun ζ ↦
+    (ordinalValue_translatedTruncation_lt_of_supportOrderType_lt hD ζ).trans_le
+      (NatOrdinal.wpow_le_wpow.mpr hρα')
+  -- the generators evaluated at the lifts, `q_j(b_𝓑)`
+  set qt : ι' → Series K := fun j ↦ aeval σ.lift (q j) with hqtdef
+  have hqcut : ∀ j, ∀ β : ℝ, β < 0 →
+      ordinalValue (translatedTruncation (qt j : K⟦ℝ⟧) β) < ω^ (c j) := fun j β hβ ↦
+    hσ.ordinalValue_translatedTruncation_aeval_lt hwt (hq j) hβ
+  -- the piece `E` of `D` on `(ξ - ε, ξ]`, translated to `0`
+  set E : Series K := piece (ξ - ε) ξ (D : K⟦ℝ⟧) with hEdef
+  have hEcut : ∀ θ : ℝ, -ε < θ → θ ≤ 0 →
+      translatedTruncation (E : K⟦ℝ⟧) θ - translatedTruncation (D : K⟦ℝ⟧) (ξ + θ) ∈
+        Nonpositive.negativeMonomialIdeal K := fun θ h1 h2 ↦
+    translatedTruncation_window_sub_mem (ξ - ε) ξ (D : K⟦ℝ⟧) (by linarith) h2
+  -- the pieces on `(γ k, γ (k+1)]`
+  set γ : ℕ → ℝ := fun k ↦ -ε / ((k : ℝ) + 1) with hγdef
+  have hγ : StrictMono γ := strictMono_neg_div_succ hε
+  have hneg : ∀ k, γ k < 0 := neg_div_succ_neg hε
+  have hcof : ∀ η < (0 : ℝ), ∃ k, η < γ k := fun η hη ↦ exists_lt_neg_div_succ ε hη
+  have hγ0 : γ 0 = -ε := by simp [hγdef]
+  have hγ0le : ∀ k, -ε ≤ γ k := fun k ↦ hγ0 ▸ hγ.monotone (Nat.zero_le k)
+  -- each piece has support of order type below `ω^ρ` and translated truncations satisfying (p)
+  have hwin : ∀ k, ∃ w : ι' → Series K,
+      (∀ j, ((w j : Series K) : K⟦ℝ⟧).supportOrderType < (ω^ (e j)).val) ∧
+      ∀ θ : ℝ, θ ≤ 0 → ordinalValue (translatedTruncation
+        ((piece (γ k) (γ (k + 1)) (E : K⟦ℝ⟧) - ∑ j, w j * qt j : Series K) : K⟦ℝ⟧) θ) <
+          ω^ (τ + 1) := by
+    intro k
+    set Dk : Series K := piece (γ k) (γ (k + 1)) (E : K⟦ℝ⟧) with hDkdef
+    have hDkzero : ∀ θ, θ ≤ γ k - γ (k + 1) → translatedTruncation (Dk : K⟦ℝ⟧) θ = 0 :=
+      fun θ hθ ↦ translatedTruncation_eq_zero_of_forall_lt fun y hy ↦
+        lt_of_le_of_lt hθ (lt_of_mem_support_piece hy)
+    have hDkcut : ∀ θ, γ k - γ (k + 1) < θ → θ ≤ 0 →
+        translatedTruncation (Dk : K⟦ℝ⟧) θ -
+          translatedTruncation (D : K⟦ℝ⟧) (ξ + (γ (k + 1) + θ)) ∈
+            Nonpositive.negativeMonomialIdeal K := by
+      intro θ h1 h2
+      have h3 := translatedTruncation_window_sub_mem (γ k) (γ (k + 1)) (E : K⟦ℝ⟧) h1 h2
+      have h4 := hEcut (γ (k + 1) + θ) (by linarith [hγ0le k]) (by linarith [hneg (k + 1)])
+      have := add_mem h3 h4
+      rwa [sub_add_sub_cancel] at this
+    have hin : ∀ θ, γ k - γ (k + 1) < θ → θ ≤ 0 →
+        ξ - ε < ξ + (γ (k + 1) + θ) ∧ ξ + (γ (k + 1) + θ) < ξ := fun θ h1 h2 ↦
+      ⟨by linarith [hγ0le k], by linarith [hneg (k + 1)]⟩
+    have hDkot : (Dk : K⟦ℝ⟧).supportOrderType < (ω^ ρ).val := by
+      refine supportOrderType_lt_of_forall_ordinalValue_translatedTruncation_lt Dk hρ0
+        fun θ hθ ↦ ?_
+      rcases le_or_gt θ (γ k - γ (k + 1)) with h | h
+      · rw [hDkzero θ h, ordinalValue_zero]
+        exact NatOrdinal.wpow_pos _
+      · rw [ordinalValue_eq_of_sub_mem_negativeMonomialIdeal (hDkcut θ h hθ)]
+        exact hnolevel _ (hin θ h hθ).1 (hin θ h hθ).2
+    have hDkctrl : ∀ θ : ℝ, θ ≤ 0 →
+        componentsGE wt τ (σ.pol hx α (translatedTruncation (Dk : K⟦ℝ⟧) θ)) ∈
+          Ideal.span (Set.range q) := by
+      intro θ hθ
+      rcases le_or_gt θ (γ k - γ (k + 1)) with h | h
+      · rw [hDkzero θ h, σ.pol_zero hx hinj, componentsGE_zero]
+        exact Ideal.zero_mem _
+      · have hval : ordinalValue (translatedTruncation (Dk : K⟦ℝ⟧) θ) < ω^ α := by
+          rw [ordinalValue_eq_of_sub_mem_negativeMonomialIdeal (hDkcut θ h hθ)]
+          exact hDα _
+        rw [σ.pol_congr hx hinj hval (toGerm_eq_toGerm_iff.mpr (hDkcut θ h hθ))]
+        exact htrunc _ (by linarith [hneg (k + 1)])
+    exact hIH Dk hDkot hDkctrl
+  choose w hw1 hw2 using hwin
+  -- combine the cofactors of the pieces
+  refine ⟨fun j ↦ combinedCofactor γ hγ hneg w j,
+    fun j ↦ supportOrderType_combinedCofactor_le γ hγ hneg w hw1 j,
+    fun j ζ hζ ↦
+      ordinalValue_translatedTruncation_combinedCofactor_lt γ hγ hneg hcof w hw1 j hζ, ?_⟩
+  have hres : ∀ ζ, -ε < ζ → ζ < 0 → ordinalValue (translatedTruncation
+      ((E - ∑ j, combinedCofactor γ hγ hneg w j * qt j : Series K) : K⟦ℝ⟧) ζ) < ω^ (τ + 1) :=
+    fun ζ h1 h2 ↦
+      ordinalValue_translatedTruncation_sub_sum_combinedCofactor_mul_lt E γ hγ hneg hcof w
+      hw1 hqcut hsep (fun k θ _ h2 ↦ hw2 k θ h2) (by rw [hγ0]; exact h1) h2
+  have hwhole : ordinalValue (E - ∑ j, combinedCofactor γ hγ hneg w j * qt j) < ω^ (τ + 1 + 1) :=
+    ordinalValue_lt_wpow_add_one_of_forall_translatedTruncation_lt (neg_neg_of_pos hε) hres
+  have hE0 : translatedTruncation (D : K⟦ℝ⟧) ξ - E ∈ Nonpositive.negativeMonomialIdeal K := by
+    have := hEcut 0 (by linarith) le_rfl
+    rw [translatedTruncation_zero, add_zero] at this
+    rw [← neg_sub]
+    exact neg_mem this
+  have hsame : ordinalValue (translatedTruncation (D : K⟦ℝ⟧) ξ -
+      ∑ j, combinedCofactor γ hγ hneg w j * qt j) =
+        ordinalValue (E - ∑ j, combinedCofactor γ hγ hneg w j * qt j) := by
+    apply ordinalValue_eq_of_sub_mem_negativeMonomialIdeal
+    rw [sub_sub_sub_cancel_right]
+    exact hE0
+  rw [hsame]
+  exact hwhole.trans_le (NatOrdinal.wpow_le_wpow.mpr hτ2ρ)
+
 /-- **Support-order reduction by interval decomposition.** Under the stated homogeneous-degree,
 separation, and translated-truncation ideal hypotheses, cofactors reduce the support order type
 below `ω^ρ` while preserving the translated-truncation ideal condition. -/
@@ -230,89 +353,8 @@ theorem IsPrincipal.exists_supportOrderType_sub_sum_mul_aeval_lt_of_pieces {ι' 
       rw [not_lt] at hge
       have := hgap θ ⟨by linarith, hge⟩ h2
       linarith
-    -- the piece `E` of `D` on `(ξ - ε, ξ]`, translated to `0`
-    set E : Series K := piece (ξ - ε) ξ (D : K⟦ℝ⟧) with hEdef
-    have hEcut : ∀ θ : ℝ, -ε < θ → θ ≤ 0 →
-        translatedTruncation (E : K⟦ℝ⟧) θ - translatedTruncation (D : K⟦ℝ⟧) (ξ + θ) ∈
-          Nonpositive.negativeMonomialIdeal K := fun θ h1 h2 ↦
-      translatedTruncation_window_sub_mem (ξ - ε) ξ (D : K⟦ℝ⟧) (by linarith) h2
-    -- the pieces on `(γ k, γ (k+1)]`
-    set γ : ℕ → ℝ := fun k ↦ -ε / ((k : ℝ) + 1) with hγdef
-    have hγ : StrictMono γ := strictMono_neg_div_succ hε
-    have hneg : ∀ k, γ k < 0 := neg_div_succ_neg hε
-    have hcof : ∀ η < (0 : ℝ), ∃ k, η < γ k := fun η hη ↦ exists_lt_neg_div_succ ε hη
-    have hγ0 : γ 0 = -ε := by simp [hγdef]
-    have hγ0le : ∀ k, -ε ≤ γ k := fun k ↦ hγ0 ▸ hγ.monotone (Nat.zero_le k)
-    -- each piece has support of order type below `ω^ρ` and translated truncations satisfying (p)
-    have hwin : ∀ k, ∃ w : ι' → Series K,
-        (∀ j, ((w j : Series K) : K⟦ℝ⟧).supportOrderType < (ω^ (e j)).val) ∧
-        ∀ θ : ℝ, θ ≤ 0 → ordinalValue (translatedTruncation
-          ((piece (γ k) (γ (k + 1)) (E : K⟦ℝ⟧) - ∑ j, w j * qt j : Series K) : K⟦ℝ⟧) θ) <
-            ω^ (τ + 1) := by
-      intro k
-      set Dk : Series K := piece (γ k) (γ (k + 1)) (E : K⟦ℝ⟧) with hDkdef
-      have hDkzero : ∀ θ, θ ≤ γ k - γ (k + 1) → translatedTruncation (Dk : K⟦ℝ⟧) θ = 0 :=
-        fun θ hθ ↦ translatedTruncation_eq_zero_of_forall_lt fun y hy ↦
-          lt_of_le_of_lt hθ (lt_of_mem_support_piece hy)
-      have hDkcut : ∀ θ, γ k - γ (k + 1) < θ → θ ≤ 0 →
-          translatedTruncation (Dk : K⟦ℝ⟧) θ -
-            translatedTruncation (D : K⟦ℝ⟧) (ξ + (γ (k + 1) + θ)) ∈
-              Nonpositive.negativeMonomialIdeal K := by
-        intro θ h1 h2
-        have h3 := translatedTruncation_window_sub_mem (γ k) (γ (k + 1)) (E : K⟦ℝ⟧) h1 h2
-        have h4 := hEcut (γ (k + 1) + θ) (by linarith [hγ0le k]) (by linarith [hneg (k + 1)])
-        have := add_mem h3 h4
-        rwa [sub_add_sub_cancel] at this
-      have hin : ∀ θ, γ k - γ (k + 1) < θ → θ ≤ 0 →
-          ξ - ε < ξ + (γ (k + 1) + θ) ∧ ξ + (γ (k + 1) + θ) < ξ := fun θ h1 h2 ↦
-        ⟨by linarith [hγ0le k], by linarith [hneg (k + 1)]⟩
-      have hDkot : (Dk : K⟦ℝ⟧).supportOrderType < (ω^ ρ).val := by
-        refine supportOrderType_lt_of_forall_ordinalValue_translatedTruncation_lt Dk hρ0
-          fun θ hθ ↦ ?_
-        rcases le_or_gt θ (γ k - γ (k + 1)) with h | h
-        · rw [hDkzero θ h, ordinalValue_zero]
-          exact NatOrdinal.wpow_pos _
-        · rw [ordinalValue_eq_of_sub_mem_negativeMonomialIdeal (hDkcut θ h hθ)]
-          exact hnolevel _ (hin θ h hθ).1 (hin θ h hθ).2
-      have hDkctrl : ∀ θ : ℝ, θ ≤ 0 →
-          componentsGE wt τ (σ.pol hx α (translatedTruncation (Dk : K⟦ℝ⟧) θ)) ∈
-            Ideal.span (Set.range q) := by
-        intro θ hθ
-        rcases le_or_gt θ (γ k - γ (k + 1)) with h | h
-        · rw [hDkzero θ h, σ.pol_zero hx hinj, componentsGE_zero]
-          exact Ideal.zero_mem _
-        · have hval : ordinalValue (translatedTruncation (Dk : K⟦ℝ⟧) θ) < ω^ α := by
-            rw [ordinalValue_eq_of_sub_mem_negativeMonomialIdeal (hDkcut θ h hθ)]
-            exact hDα _
-          rw [σ.pol_congr hx hinj hval (toGerm_eq_toGerm_iff.mpr (hDkcut θ h hθ))]
-          exact htrunc _ (by linarith [hneg (k + 1)])
-      exact hIH Dk hDkot hDkctrl
-    choose w hw1 hw2 using hwin
-    -- combine the cofactors of the pieces
-    refine ⟨fun j ↦ combinedCofactor γ hγ hneg w j,
-      fun j ↦ supportOrderType_combinedCofactor_le γ hγ hneg w hw1 j,
-      fun j ζ hζ ↦
-        ordinalValue_translatedTruncation_combinedCofactor_lt γ hγ hneg hcof w hw1 j hζ, ?_⟩
-    have hres : ∀ ζ, -ε < ζ → ζ < 0 → ordinalValue (translatedTruncation
-        ((E - ∑ j, combinedCofactor γ hγ hneg w j * qt j : Series K) : K⟦ℝ⟧) ζ) < ω^ (τ + 1) :=
-      fun ζ h1 h2 ↦
-        ordinalValue_translatedTruncation_sub_sum_combinedCofactor_mul_lt E γ hγ hneg hcof w
-        hw1 hqcut hsep (fun k θ _ h2 ↦ hw2 k θ h2) (by rw [hγ0]; exact h1) h2
-    have hwhole : ordinalValue (E - ∑ j, combinedCofactor γ hγ hneg w j * qt j) < ω^ (τ + 1 + 1) :=
-      ordinalValue_lt_wpow_add_one_of_forall_translatedTruncation_lt (neg_neg_of_pos hε) hres
-    have hE0 : translatedTruncation (D : K⟦ℝ⟧) ξ - E ∈ Nonpositive.negativeMonomialIdeal K := by
-      have := hEcut 0 (by linarith) le_rfl
-      rw [translatedTruncation_zero, add_zero] at this
-      rw [← neg_sub]
-      exact neg_mem this
-    have hsame : ordinalValue (translatedTruncation (D : K⟦ℝ⟧) ξ -
-        ∑ j, combinedCofactor γ hγ hneg w j * qt j) =
-          ordinalValue (E - ∑ j, combinedCofactor γ hγ hneg w j * qt j) := by
-      apply ordinalValue_eq_of_sub_mem_negativeMonomialIdeal
-      rw [sub_sub_sub_cancel_right]
-      exact hE0
-    rw [hsame]
-    exact hwhole.trans_le (NatOrdinal.wpow_le_wpow.mpr hτ2ρ)
+    exact IsPrincipal.exists_cofactors_at_cutoff_of_pieces σ hx hinj hσ hq hτρ hρα hsep
+      hD htrunc hIH hξ0 hε hnolevel
   choose! C hC using hpt
   -- the terms `C^ξ_j · q_j(b_𝓑)`: translated truncations of small ordinal value, satisfying (p)
   have hCv : ∀ ξ ∈ hL.toFinset, ∀ j, ordinalValue (C ξ j) < ω^ (e j + 1) := fun ξ hξ j ↦

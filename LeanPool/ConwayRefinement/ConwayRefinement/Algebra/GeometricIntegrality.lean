@@ -61,11 +61,11 @@ def IsGeometricallyIntegral (k : Type u) (B : Type v)
 theorem IsGeometricallyIntegral.isDomain
     {k : Type u} [Field k] {B : Type v} [CommRing B] [Algebra k B]
     (hB : IsGeometricallyIntegral k B) : IsDomain B := by
-  haveI : IsDomain (B ⊗[k] ULift.{max u v} k) :=
+  have : IsDomain (B ⊗[k] ULift.{max u v} k) :=
     hB (ULift.{max u v} k)
   let e : (B ⊗[k] ULift.{max u v} k) ≃ₐ[k] (B ⊗[k] k) :=
     Algebra.TensorProduct.congr AlgEquiv.refl ULift.algEquiv
-  haveI : IsDomain (B ⊗[k] k) := e.symm.toMulEquiv.isDomain _
+  have : IsDomain (B ⊗[k] k) := e.symm.toMulEquiv.isDomain _
   exact (Algebra.TensorProduct.rid k k B).symm.toMulEquiv.isDomain _
 
 section BaseChange
@@ -75,7 +75,7 @@ theorem IsGeometricallyIntegral.of_algEquiv {k : Type u} [Field k] {A B : Type v
     [CommRing A] [Algebra k A] [CommRing B] [Algebra k B]
     (hA : IsGeometricallyIntegral k A) (e : A ≃ₐ[k] B) :
     IsGeometricallyIntegral k B := fun M _ _ ↦ by
-  haveI : IsDomain (A ⊗[k] M) := hA M
+  have : IsDomain (A ⊗[k] M) := hA M
   exact (Algebra.TensorProduct.congr e
     (AlgEquiv.refl (R := k) (A₁ := M))).symm.toMulEquiv.isDomain _
 
@@ -98,11 +98,11 @@ theorem isDomain_tensor_of_isDomain_of_forall_field {k : Type u} [Field k] {B : 
     (hB : ∀ (L : Type w) [Field L] [Algebra k L], IsDomain (B ⊗[k] L))
     (D : Type w) [CommRing D] [IsDomain D] [Algebra k D] : IsDomain (B ⊗[k] D) := by
   let L := FractionRing D
-  letI : Algebra k L := Algebra.ofModule
+  let : Algebra k L := Algebra.ofModule
     (fun r x y ↦ smul_mul_assoc r x y)
     (fun r x y ↦ mul_smul_comm r x y)
-  letI : IsScalarTower k D L := inferInstance
-  letI : IsDomain (B ⊗[k] L) := hB L
+  let : IsScalarTower k D L := inferInstance
+  let : IsDomain (B ⊗[k] L) := hB L
   let ι : D →ₐ[k] L := (IsScalarTower.toAlgHom k D L).restrictScalars k
   let Φ : B ⊗[k] D →ₐ[k] B ⊗[k] L :=
     Algebra.TensorProduct.map (AlgHom.id k B) ι
@@ -139,9 +139,9 @@ theorem IsGeometricallyIntegral.isDomain_mvPolynomial_quotient_span_map
     UniqueFactorizationMonoid.irreducible_iff_prime.mp hF
   have hIPrime : I.IsPrime := by
     exact (Ideal.span_singleton_prime hFPrime.ne_zero).mpr hFPrime
-  letI : I.IsPrime := hIPrime
+  let : I.IsPrime := hIPrime
   let D := MvPolynomial σ k ⧸ I
-  letI : IsDomain (B ⊗[k] D) := hB.isDomain_tensor_of_isDomain D
+  let : IsDomain (B ⊗[k] D) := hB.isDomain_tensor_of_isDomain D
   let ePoly : B ⊗[k] MvPolynomial σ k ≃ₐ[B] MvPolynomial σ B :=
     MvPolynomial.algebraTensorAlgEquiv k B
   let rightInclusion : MvPolynomial σ k →ₐ[k] B ⊗[k] MvPolynomial σ k :=
@@ -161,7 +161,7 @@ theorem IsGeometricallyIntegral.isDomain_mvPolynomial_quotient_span_map
     congr 2
     change ePoly (rightInclusion F) = MvPolynomial.map (algebraMap k B) F
     simp [rightInclusion, ePoly]
-  letI : IsDomain
+  let : IsDomain
       ((B ⊗[k] MvPolynomial σ k) ⧸ J) :=
     eQuot.symm.toMulEquiv.isDomain
   let eMap :
@@ -191,7 +191,7 @@ theorem IsGeometricallyIntegral.isDomain_fin_mvPolynomial_quotient_span_map
   let F' : MvPolynomial τ k := MvPolynomial.renameEquiv k liftEquiv F
   have hF' : Irreducible F' := by
     exact hF.map (MvPolynomial.renameEquiv k liftEquiv).toMulEquiv
-  letI : IsDomain
+  let : IsDomain
       (MvPolynomial τ B ⧸
         Ideal.span {MvPolynomial.map (algebraMap k B) F'}) :=
     hB.isDomain_mvPolynomial_quotient_span_map hF'

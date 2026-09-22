@@ -6,7 +6,7 @@ Authors: Dan Abramov
 module
 
 public import Mathlib.Algebra.MvPolynomial.Equiv
-public import Mathlib.Data.Real.Basic
+public import Mathlib.Basic.Real.Basic
 public import Mathlib.RingTheory.HahnSeries.Cardinal
 
 /-!
@@ -48,13 +48,13 @@ theorem mem_series_iff (x : HahnSeries ℝ K) :
 
 /-- The subring `K_fin` of nonpositive Hahn series with finite support. -/
 def FiniteSupport : Subring (Series K) :=
-  let _ : Fact (aleph0 ≤ aleph0) := ⟨le_rfl⟩
+  let _ : Fact (aleph0.{0} ≤ aleph0.{0}) := ⟨le_rfl⟩
   (HahnSeries.cardSuppLTSubring ℝ K aleph0).comap (Series K).subtype
 
 /-- Membership in `K_fin` is exactly finiteness of the Hahn-series support. -/
 theorem mem_finiteSupport_iff (x : Series K) :
     x ∈ FiniteSupport K ↔ x.1.support.Finite := by
-  letI : Fact (aleph0 ≤ aleph0) := ⟨le_rfl⟩
+  let : Fact (aleph0.{0} ≤ aleph0.{0}) := ⟨le_rfl⟩
   rw [FiniteSupport, Subring.mem_comap, HahnSeries.mem_cardSuppLTSubring,
     HahnSeries.cardSupp]
   exact Cardinal.lt_aleph0_iff_set_finite

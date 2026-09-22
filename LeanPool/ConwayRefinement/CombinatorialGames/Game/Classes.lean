@@ -8,7 +8,7 @@ module
 public import LeanPool.ConwayRefinement.CombinatorialGames.Game.IGame
 public meta import LeanPool.ConwayRefinement.CombinatorialGames.Tactic.AddInstances
 
-import Mathlib.Data.Finite.Prod
+import Mathlib.Basic.Finite.Prod
 import Mathlib.Data.Set.Finite.Lattice
 
 /-!
@@ -442,7 +442,7 @@ theorem finite_setOf_subposition (x : IGame) [Short x] : {y | Subposition y x}.F
   convert Set.finite_iUnion fun p => (finite_moves p x).biUnion fun y hy ↦
     (@ih p y hy (.of_mem_moves hy)).insert y
   ext
-  rw [Set.mem_setOf, subposition_iff_exists]
+  rw [Set.mem_ofPred, subposition_iff_exists]
   simp [wsubposition_iff_eq_or_subposition]
 
 instance (x : IGame) [Short x] : Finite {y // Subposition y x} :=

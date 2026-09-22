@@ -43,7 +43,7 @@ def fourFactorErrors (a b c d e f g h : Nonpositive G R) : Finset (Nonpositive G
 error in the valuation support ideal. -/
 theorem fourFactorErrors_mem_supp
     [UniformSpace G] [IsUniformAddGroup G] [OrderTopology G] [Nontrivial G]
-    [CompleteSpace G] [NoMinOrder G] [NoZeroDivisors R] [CharZero R]
+    [CompleteSpace G] [NoZeroDivisors R] [CharZero R]
     {a b c d e f g h : Nonpositive G R}
     (ha : Ideal.Quotient.mk (cantorBendixsonValuation (G := G) (R := R)).supp a =
       Ideal.Quotient.mk (cantorBendixsonValuation (G := G) (R := R)).supp (e * f))
@@ -185,9 +185,9 @@ theorem closedClassRestrict_mul (c : FiniteArchimedeanClass G) (a b : Nonpositiv
         simpa using add_le_add_left hp2le p.1
       have hp1C : p.1 ∈ C := hC.out hg C.zero_mem ⟨hgp1, hp1le⟩
       have hp2C : p.2 ∈ C := by simpa [← hp.2.2] using C.sub_mem hg hp1C
-      exact ⟨by simpa only [HahnSeries.support_filter, Set.mem_setOf_eq] using
+      exact ⟨by simpa only [HahnSeries.support_filter, Set.mem_ofPred_eq] using
           And.intro hp.1 hp1C,
-        by simpa only [HahnSeries.support_filter, Set.mem_setOf_eq] using
+        by simpa only [HahnSeries.support_filter, Set.mem_ofPred_eq] using
           And.intro hp.2.1 hp2C, hp.2.2⟩
     · intro p hp
       rw [Finset.mem_antidiagonal, HahnSeries.support_filter,
@@ -242,7 +242,7 @@ theorem exists_closedClassRestrict_eq_zero_of_finset
 quotient by series bounded strictly below zero. -/
 theorem exists_closedClassRestrict_eq_zero_of_finset_mem_supp
     [UniformSpace G] [IsUniformAddGroup G] [OrderTopology G] [Nontrivial G]
-    [CompleteSpace G] [NoMinOrder G] [NoMaxOrder (FiniteArchimedeanClass G)]
+    [CompleteSpace G] [NoMaxOrder (FiniteArchimedeanClass G)]
     [NoZeroDivisors R] [CharZero R]
     {s : Finset (Nonpositive G R)}
     (hs : ∀ b ∈ s, b ∈ (cantorBendixsonValuation (G := G) (R := R)).supp)

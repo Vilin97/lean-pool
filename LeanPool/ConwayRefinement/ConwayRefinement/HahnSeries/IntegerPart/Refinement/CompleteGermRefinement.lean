@@ -66,7 +66,7 @@ theorem exists_germ_refinement_of_complete_exponent_group
         (d : HahnSeries G K).coeff q = (f * h : Nonpositive G K).1.coeff q) := by
   let J := (cantorBendixsonValuation (G := G) (R := K)).supp
   obtain ⟨ι, ⟨equiv⟩⟩ := exists_mvPolynomial_algEquiv_germ (G := G) (K := K)
-  letI : DecompositionMonoid (Nonpositive G K ⧸ J) :=
+  let : DecompositionMonoid (Nonpositive G K ⧸ J) :=
     MulEquiv.decompositionMonoid equiv.symm.toMulEquiv
   have hrefinement : HasFourFactorRefinement (Nonpositive G K ⧸ J) :=
     hasFourFactorRefinement_of_decompositionMonoid

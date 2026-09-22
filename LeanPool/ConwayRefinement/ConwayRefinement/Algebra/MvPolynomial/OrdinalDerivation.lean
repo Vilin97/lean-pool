@@ -196,10 +196,12 @@ theorem exists_add_eq_weight_of_mem_support_pderiv (wt : σ → NatOrdinal) {i :
 
 /-- The coefficient of `d - X_v` in `∂_v p`, for a monomial `d` containing `X_v`. -/
 theorem coeff_sub_single_pderiv {v : σ} {p : MvPolynomial σ R} {d : σ →₀ ℕ} (hd : d v ≠ 0) :
-    AddMonoidAlgebra.coeff (pderiv v p) (d - Finsupp.single v 1) = AddMonoidAlgebra.coeff p d * (d v : R) := by
+    AddMonoidAlgebra.coeff (pderiv v p) (d - Finsupp.single v 1) = AddMonoidAlgebra.coeff p d *
+      (d v : R) := by
   classical
   have hsum : pderiv v p =
-      ∑ d' ∈ p.support, monomial (d' - Finsupp.single v 1) (AddMonoidAlgebra.coeff p d' * d' v) := by
+      ∑ d' ∈ p.support, monomial (d' - Finsupp.single v 1) (AddMonoidAlgebra.coeff p d' * d' v)
+        := by
     conv_lhs => rw [p.as_sum, map_sum]
     exact Finset.sum_congr rfl fun d' _ ↦ pderiv_monomial
   rw [hsum, MvPolynomial.coeff_sum]
@@ -242,7 +244,7 @@ theorem pderiv_ne_zero_of_mem_vars [NoZeroDivisors R] [CharZero R] {v : σ}
   have hdv' : d v ≠ 0 := Finsupp.mem_support_iff.mp hdv
   intro h
   have := coeff_sub_single_pderiv (p := p) hdv'
-  rw [h, MvPolynomial.coeff_zero] at this
+  rw [h, AddMonoidAlgebra.coeff_zero] at this
   exact mul_ne_zero (mem_support_iff.mp hd) (Nat.cast_ne_zero.mpr hdv') this.symm
 
 /-! ### Homogeneity -/

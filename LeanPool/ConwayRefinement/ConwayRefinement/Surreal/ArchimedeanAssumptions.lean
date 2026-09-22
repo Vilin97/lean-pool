@@ -270,7 +270,7 @@ theorem smallSupportCardinal_le_ball_cof (c : FiniteArchimedeanClass Surreal.{u}
       have hsSmall : Small.{u} s := by
         rw [Cardinal.small_iff_lift_mk_lt_univ]
         simpa [smallSupportCardinal] using (not_le.mp hcard)
-      letI : Small.{u} s := hsSmall
+      let : Small.{u} s := hsSmall
       exact ball_not_isCofinal_of_small (a := |a|) (abs_pos.mpr ha) s hs
 
 /-- The common tail of a small limit family of surreal Archimedean classes has cofinality at
@@ -300,7 +300,7 @@ theorem smallSupportCardinal_le_tailSubmodule_cof
   have hsSmall : Small.{u} s := by
     rw [Cardinal.small_iff_lift_mk_lt_univ]
     simpa [smallSupportCardinal] using (not_le.mp hcard)
-  letI : Small.{u} s := hsSmall
+  let : Small.{u} s := hsSmall
   let L : Set Surreal.{u} := {0} ∪
     ((↑) : ↥(FiniteArchimedeanClass.tailSubmodule ℚ T) → Surreal.{u}) '' s
   let R : Set Surreal.{u} := Set.range fun p : T × ℕ ↦
@@ -422,7 +422,7 @@ theorem assumptionA2
           exact (hzero rfl).elim
       · exact ⟨fun h ↦ h hx, fun h _ ↦ h⟩
     let e : ↥(ball ℝ c) ≃o ↥σ.ballAddSubgroup :=
-      OrderIso.setCongr _ _ hball
+      Set.orderIsoOfEq _ _ hball
     exact Or.inl (by
       rw [← e.cof_congr]
       exact smallSupportCardinal_le_ball_cof c)

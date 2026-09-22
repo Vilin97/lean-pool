@@ -54,7 +54,7 @@ namespace ExistsPrime
 /-- The displayed coefficient-one Hahn series is prime. -/
 theorem proof (K : Type u) [Field K] : ExistsPrime K := by
   intro hK
-  letI : CharZero K := hK
+  let : CharZero K := hK
   let E : NonpositiveSeries K ≃+* HahnSeries.Nonpositive ℝ K :=
     RingEquiv.subringCongr nonpositiveSeries_eq
   let x : NonpositiveSeries K := E.symm (degreeTwoWithConstant (K := K))

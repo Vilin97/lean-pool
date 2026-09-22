@@ -121,7 +121,7 @@ private theorem principalHeadExponent_nonpositive
     exact (HahnSeries.mem_support _ _).mp hy
   exact (not_le_of_gt hypos) (HahnSeries.Nonpositive.support_subset b hyb)
 
-private theorem ordinalValue_add_eq_left_of_lt [CharZero K]
+private theorem ordinalValue_add_eq_left_of_lt
     {b c : Series K} (h : ordinalValue c < ordinalValue b) :
     ordinalValue (b + c) = ordinalValue b := by
   apply le_antisymm

@@ -40,11 +40,11 @@ open Ordinal
 
 variable {α : Type u} [LinearOrder α] {s t : Set α}
 
-@[reducible] private def isWellOrder (hs : s.IsPWO) :
-    IsWellOrder s (Subrel (· < ·) (· ∈ s)) where
-  wf := hs.isWF
-  trichotomous := fun _ _ hab hba ↦
-    Subtype.ext (le_antisymm (le_of_not_gt hba) (le_of_not_gt hab))
+private theorem isWellOrder (hs : s.IsPWO) :
+    IsWellOrder s (Subrel (· < ·) (· ∈ s)) :=
+  { wf := hs.isWF
+    trichotomous := fun _ _ hab hba ↦
+      Subtype.ext (le_antisymm (le_of_not_gt hba) (le_of_not_gt hab)) }
 
 /-- The ordinary ordinal order type of a partially well-ordered subset of a linear order. -/
 def orderType (hs : s.IsPWO) : Ordinal.{u} :=
@@ -64,7 +64,7 @@ theorem orderType_proof_irrel (hs ht : s.IsPWO) : hs.orderType = ht.orderType :=
 /-- A partially well-ordered set has order type zero exactly when it is empty. -/
 @[simp]
 theorem orderType_eq_zero (hs : s.IsPWO) : hs.orderType = 0 ↔ s = ∅ := by
-  letI := isWellOrder hs
+  let := isWellOrder hs
   rw [orderType, Ordinal.type_eq_zero_iff_isEmpty, isEmpty_subtype]
   exact Set.eq_empty_iff_forall_notMem.symm
 
@@ -76,7 +76,7 @@ theorem orderType_eq_typeLT [WellFoundedLT α] (hs : s.IsPWO) :
 /-- Compute the order type through an order isomorphism from the set to a well-ordered type. -/
 theorem orderType_eq_typeLT_of_orderIso {A : Type u} [LinearOrder A] [WellFoundedLT A]
     (hs : s.IsPWO) (e : s ≃o A) : hs.orderType = typeLT A := by
-  letI := isWellOrder hs
+  let := isWellOrder hs
   let er : Subrel (· < ·) (· ∈ s) ≃r (· < · : A → A → Prop) :=
     e.toRelIsoLT
   exact er.ordinalType_congr
@@ -84,7 +84,7 @@ theorem orderType_eq_typeLT_of_orderIso {A : Type u} [LinearOrder A] [WellFounde
 /-- A partially well-ordered set is order-isomorphic to the canonical well order of its ordinary
 order type. -/
 theorem nonempty_orderIso_toType (hs : s.IsPWO) : Nonempty (hs.orderType.ToType ≃o s) := by
-  letI : WellFoundedLT s := hs.isWF
+  let : WellFoundedLT s := hs.isWF
   have htypes : typeLT hs.orderType.ToType = typeLT s := by
     rw [type_toType]
     exact hs.orderType_eq_typeLT_of_orderIso (OrderIso.refl s)
@@ -96,7 +96,7 @@ theorem orderType_eq_type_of_relIso {A : Type u} {r : A → A → Prop}
     [IsWellOrder A r] (hs : s.IsPWO)
     (e : Subrel (· < ·) (· ∈ s) ≃r r) :
     hs.orderType = Ordinal.type r := by
-  letI := isWellOrder hs
+  let := isWellOrder hs
   exact e.ordinalType_congr
 
 /-- Equal subsets have equal order types. -/
@@ -108,8 +108,8 @@ theorem orderType_congr (hs : s.IsPWO) (ht : t.IsPWO) (h : s = t) :
 /-- Inclusion of partially well-ordered subsets cannot decrease their ordinary order type. -/
 theorem orderType_mono (hs : s.IsPWO) (ht : t.IsPWO) (h : s ⊆ t) :
     hs.orderType ≤ ht.orderType := by
-  letI := isWellOrder hs
-  letI := isWellOrder ht
+  let := isWellOrder hs
+  let := isWellOrder ht
   exact (Subrel.inclusionEmbedding (· < ·) h).ordinal_type_le
 
 /-- A strictly increasing image has the same ordinary order type as the original partially
@@ -117,7 +117,7 @@ well-ordered set. -/
 theorem orderType_image_of_strictMonoOn {B : Type u} [LinearOrder B]
     (hs : s.IsPWO) {f : α → B} (hf : StrictMonoOn f s) :
     (hs.image_of_monotoneOn hf.monotoneOn).orderType = hs.orderType := by
-  letI : WellFoundedLT s := hs.isWF
+  let : WellFoundedLT s := hs.isWF
   let e : s ≃o f '' s :=
     StrictMonoOn.orderIso f s hf
   exact
@@ -137,8 +137,8 @@ theorem orderType_eq_add_iff (hs : s.IsPWO) (a b : Ordinal.{u}) :
           s = s₀ ∪ s₁ := by
   constructor
   · intro htype
-    letI : WellFoundedLT s := hs.isWF
-    letI : WellFoundedLT (a.ToType ⊕ₗ b.ToType) :=
+    let : WellFoundedLT s := hs.isWF
+    let : WellFoundedLT (a.ToType ⊕ₗ b.ToType) :=
       Sum.lex_wf wellFounded_lt wellFounded_lt
     have htypes : typeLT s = typeLT (a.ToType ⊕ₗ b.ToType) := by
       calc
@@ -224,9 +224,9 @@ theorem orderType_eq_add_iff (hs : s.IsPWO) (a b : Ordinal.{u}) :
       · exact ⟨Sum.inlₗ ⟨x, hx⟩, rfl⟩
       · exact ⟨Sum.inrₗ ⟨x, hx⟩, rfl⟩
     let e : s₀ ⊕ₗ s₁ ≃o s := hf.orderIsoOfSurjective f hsurj
-    letI : WellFoundedLT s₀ := hs₀.isWF
-    letI : WellFoundedLT s₁ := hs₁.isWF
-    letI : WellFoundedLT (s₀ ⊕ₗ s₁) :=
+    let : WellFoundedLT s₀ := hs₀.isWF
+    let : WellFoundedLT s₁ := hs₁.isWF
+    let : WellFoundedLT (s₀ ⊕ₗ s₁) :=
       Sum.lex_wf wellFounded_lt wellFounded_lt
     calc
       hs.orderType = typeLT (s₀ ⊕ₗ s₁) :=
@@ -240,7 +240,7 @@ theorem orderType_eq_add_iff (hs : s.IsPWO) (a b : Ordinal.{u}) :
 /-- A partially well-ordered set is finite exactly when its order type is below `ω`. -/
 theorem finite_iff_orderType_lt_omega (hs : s.IsPWO) :
     s.Finite ↔ hs.orderType < Ordinal.omega0 := by
-  letI := isWellOrder hs
+  let := isWellOrder hs
   rw [Set.Finite, ← Cardinal.mk_lt_aleph0_iff]
   rw [orderType, ← Ordinal.card_type (Subrel (· < ·) (· ∈ s)), Ordinal.card_lt_aleph0]
 
@@ -313,7 +313,7 @@ theorem orderType_inter_Iio_eq_typein [WellFoundedLT s]
     (hs : s.IsPWO) {x : α} (hx : x ∈ s) :
     (hs.mono (s := s ∩ Set.Iio x) Set.inter_subset_left).orderType =
       Ordinal.typein (· < · : s → s → Prop) ⟨x, hx⟩ := by
-  letI : WellFoundedLT s := hs.isWF
+  let : WellFoundedLT s := hs.isWF
   rw [orderType_eq_typeLT_of_orderIso _ (interIioOrderIso hx), ← Ordinal.type_Iio_lt]
 
 /-- Splitting a partially well-ordered set at one of its elements splits its order type. -/
@@ -322,7 +322,7 @@ theorem orderType_inter_Iio_add_inter_Ici [WellFoundedLT s]
     (hs.mono (s := s ∩ Set.Iio x) Set.inter_subset_left).orderType +
         (hs.mono (s := s ∩ Set.Ici x) Set.inter_subset_left).orderType =
       hs.orderType := by
-  letI : WellFoundedLT (Set.Iio (⟨x, hx⟩ : s) ⊕ₗ Set.Ici (⟨x, hx⟩ : s)) :=
+  let : WellFoundedLT (Set.Iio (⟨x, hx⟩ : s) ⊕ₗ Set.Ici (⟨x, hx⟩ : s)) :=
     Sum.lex_wf wellFounded_lt wellFounded_lt
   rw [orderType_eq_typeLT_of_orderIso _ (interIioOrderIso hx),
     orderType_eq_typeLT_of_orderIso _ (interIciOrderIso hx),
@@ -339,7 +339,7 @@ theorem exists_orderType_inter_Iio_eq (hs : s.IsPWO) {k : Ordinal.{u}}
     (hk : k < hs.orderType) :
     ∃ x, ∃ _ : x ∈ s,
       (hs.mono (s := s ∩ Set.Iio x) Set.inter_subset_left).orderType = k := by
-  letI : WellFoundedLT s := hs.isWF
+  let : WellFoundedLT s := hs.isWF
   have htype : k < Ordinal.type (· < · : s → s → Prop) := by
     rwa [← hs.orderType_eq_typeLT_of_orderIso (OrderIso.refl s)]
   obtain ⟨y, hy⟩ := Ordinal.typein_surj (· < · : s → s → Prop) htype
@@ -349,9 +349,9 @@ theorem exists_orderType_inter_Iio_eq (hs : s.IsPWO) {k : Ordinal.{u}}
 order type. -/
 theorem orderType_inter_Iio_lt (hs : s.IsPWO) {x : α} (hx : x ∈ s) :
     (hs.mono (s := s ∩ Set.Iio x) Set.inter_subset_left).orderType < hs.orderType := by
-  letI := isWellOrder hs
+  let := isWellOrder hs
   let hbelow := hs.mono (s := s ∩ Set.Iio x) Set.inter_subset_left
-  letI := isWellOrder hbelow
+  let := isWellOrder hbelow
   calc
     hbelow.orderType = Ordinal.type
         (Subrel (Subrel (· < ·) (· ∈ s))
@@ -369,11 +369,11 @@ theorem orderType_le_of_forall_inter_Iic_lt (hs : s.IsPWO) {o : Ordinal}
     hs.orderType ≤ o := by
   by_contra hle
   have ho : o < hs.orderType := lt_of_not_ge hle
-  letI := isWellOrder hs
+  let := isWellOrder hs
   obtain ⟨x, hx⟩ :=
     Ordinal.typein_surj (Subrel (· < ·) (· ∈ s)) ho
   let hbelow := hs.mono (s := s ∩ Set.Iio x.1) Set.inter_subset_left
-  letI := isWellOrder hbelow
+  let := isWellOrder hbelow
   have hiio :
       (hs.mono (s := s ∩ Set.Iio x.1) Set.inter_subset_left).orderType = o := by
     calc
@@ -397,12 +397,12 @@ theorem exists_gt_of_isSuccLimit_orderType
     (hs : s.IsPWO) (hlimit : Order.IsSuccLimit hs.orderType)
     {x : α} (hx : x ∈ s) :
     ∃ y ∈ s, x < y := by
-  letI : WellFoundedLT s := hs.isWF
+  let : WellFoundedLT s := hs.isWF
   have hprelimit : Order.IsSuccPrelimit
       (Ordinal.type (fun x y : s ↦ x < y)) := by
     rw [← hs.orderType_eq_typeLT_of_orderIso (OrderIso.refl s)]
     exact hlimit.isSuccPrelimit
-  letI : NoMaxOrder s :=
+  let : NoMaxOrder s :=
     Ordinal.isSuccPrelimit_type_lt_iff.mp hprelimit
   obtain ⟨y, hxy⟩ : ∃ y : s, (⟨x, hx⟩ : s) < y :=
     exists_gt (⟨x, hx⟩ : s)
@@ -413,7 +413,7 @@ the converse of `Set.IsPWO.exists_gt_of_isSuccLimit_orderType`. -/
 theorem isSuccLimit_orderType_of_forall_exists_gt
     (hs : s.IsPWO) (hne : s.Nonempty) (hgt : ∀ x ∈ s, ∃ y ∈ s, x < y) :
     Order.IsSuccLimit hs.orderType := by
-  letI : WellFoundedLT s := hs.isWF
+  let : WellFoundedLT s := hs.isWF
   have hnomax : NoMaxOrder s := by
     constructor
     rintro ⟨x, hx⟩
@@ -606,7 +606,7 @@ theorem orderType_union_le_naturalAdd (hs : s.IsPWO) (ht : t.IsPWO) :
   let e : Subrel (· < ·) (· ∈ s ∪ t) ↪r
       (· < · : total.val.ToType → total.val.ToType → Prop) :=
     RelEmbedding.ofMonotone rank fun _ _ hxy ↦ rank_strict hxy
-  letI := isWellOrder (hs.union ht)
+  let := isWellOrder (hs.union ht)
   change Ordinal.type (Subrel (· < ·) (· ∈ s ∪ t)) ≤ total.val
   simpa only [Ordinal.type_toType] using e.ordinal_type_le
 

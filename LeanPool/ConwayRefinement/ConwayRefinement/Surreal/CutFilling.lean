@@ -111,7 +111,7 @@ theorem completeSpace_tailQuotient
     [IsUniformAddGroup (Surreal.{u} ⧸ FiniteArchimedeanClass.tailKernel T)]
     [OrderTopology (Surreal.{u} ⧸ FiniteArchimedeanClass.tailKernel T)] :
     CompleteSpace (Surreal.{u} ⧸ FiniteArchimedeanClass.tailKernel T) := by
-  letI : Nonempty (Shrink.{u} T) :=
+  let : Nonempty (Shrink.{u} T) :=
     ⟨equivShrink T (Classical.arbitrary T)⟩
   exact completeSpace_quotient (FiniteArchimedeanClass.tailKernel T)
     (fun i : Shrink.{u} T ↦

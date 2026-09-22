@@ -29,9 +29,11 @@ public noncomputable section
 
 namespace Tests
 
+/-- The ring of rational finite-support Hahn series with nonpositive integer exponents. -/
 abbrev IntegerNonpositiveFiniteSupportRing :=
   HahnSeries.Nonpositive.finiteSupportSubring (G := ℤ) (K := ℚ)
 
+/-- The ring of rational finite-support Hahn series with arbitrary integer exponents. -/
 abbrev IntegerFiniteSupportRing :=
   (HahnSeries.finiteSupportSubring : Subring ℚ⟦ℤ⟧)
 

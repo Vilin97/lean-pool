@@ -39,7 +39,7 @@ Lemmas which are safe to tag with `game_cmp` are the following:
 Tagging any other lemmas might lead to `simp` failing to eliminate all quantifiers, and getting
 stuck in a goal that it can't solve.
 -/
-macro "game_cmp" : tactic =>
+macro (name := gameCmp) "game_cmp" : tactic =>
   `(tactic| {
     try simp only [lt_iff_le_not_ge, ge_iff_le, gt_iff_lt, AntisymmRel, Relation.SymmGen, IncompRel]
     repeat

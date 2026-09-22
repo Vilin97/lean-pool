@@ -130,7 +130,7 @@ theorem withoutConstant_supportOrderType :
     (withoutConstant (K := K) : K⟦ℝ⟧).supportOrderType = Ordinal.omega0 := by
   rw [HahnSeries.supportOrderType_eq_setOrderType]
   have e : (withoutConstant (K := K) : K⟦ℝ⟧).support ≃o ℕ :=
-    (OrderIso.setCongr _ (Set.range exponentEmbedding)
+    (Set.orderIsoOfEq _ (Set.range exponentEmbedding)
       (withoutConstant_support (K := K))).trans exponentEmbedding.orderIso.symm
   exact (withoutConstant (K := K) : K⟦ℝ⟧).isPWO_support
     |>.orderType_eq_typeLT_of_orderIso e |>.trans Ordinal.type_nat_lt

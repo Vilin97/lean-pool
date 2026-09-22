@@ -8,8 +8,7 @@ module
 public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.Germ.AlgebraicIndependence.LeadingCoefficient
 public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.Germ.AlgebraicIndependence.LinearMaximal
 public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.Germ.AlgebraicIndependence.Obligations
-public import
-  LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.Germ.AlgebraicIndependence.PartialDerivativesAtLimitOrdinal
+public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.Germ.AlgebraicIndependence.PartialDerivativesAtLimitOrdinal
 public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.Germ.AlgebraicIndependence.Scalar
 public import LeanPool.ConwayRefinement.ConwayRefinement.Topology.Order.ArchimedeanBallBase
 public import Mathlib.RingTheory.AlgebraicIndependent.Defs
@@ -71,10 +70,10 @@ theorem injectiveAt_of_isMinimalSystem
         S.ContributesToPartialDerivativeAt v' v) ∧
         (∀ v ∈ s, pderiv S.B₀ (U v) = 0) ∧ pderiv v' S.F = ∑ v ∈ s, pderiv v S.F * U v)
     (α : NatOrdinal.{u}) : OrdinalGraded.InjectiveAt K wt xg α := by
-  letI : Nontrivial ((cantorBendixsonDegreeValuation (G := G) (R := K)).Component 0) :=
+  let : Nontrivial ((cantorBendixsonDegreeValuation (G := G) (R := K)).Component 0) :=
     Function.Injective.nontrivial
       (cantorBendixsonLayerScalarHom_injective (G := G) (K := K))
-  letI : Nontrivial (cantorBendixsonDegreeValuation (G := G) (R := K)).AssociatedGraded :=
+  let : Nontrivial (cantorBendixsonDegreeValuation (G := G) (R := K)).AssociatedGraded :=
     Function.Injective.nontrivial (DirectSum.of_injective 0)
   exact OrdinalGraded.injectiveAt_of_zero_successor_limit
     (OrdinalGraded.injectiveAt_zero hx.ne_zero)
@@ -315,8 +314,8 @@ theorem algebraicIndependent_of_minimal_system
     (hσ : LiftFamily.HasLowerTruncationDegrees σ) : AlgebraicIndependent K xg := by
   obtain ⟨κ, hlin, hwf, U, hUmono, hUopen, hUconv, hUbase⟩ :=
     ArchimedeanClass.exists_wellFounded_archimedeanBall_basis (G := G)
-  letI := hlin
-  letI := hwf
+  let := hlin
+  let := hwf
   exact algebraicIndependent_iff_injective_aeval.mpr
     (aeval_injective_of_isMinimalSystem_of_subgroupBase σ hx U
       (fun hij ↦ hUmono hij) hUopen hUconv hUbase hσ)

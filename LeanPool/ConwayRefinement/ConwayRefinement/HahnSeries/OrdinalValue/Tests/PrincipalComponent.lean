@@ -49,6 +49,7 @@ theorem principalComponent_zero_constant_ne_zero :
   rw [Berarducci.ordinalValue_one]
   simp
 
+/-- The negative monomial `t⁻¹`, whose class vanishes in the germ quotient. -/
 def principalComponentNegativeMonomial : Berarducci.Series K :=
   HahnSeries.Nonpositive.single (-1 : ℝ) 1 (by norm_num)
 

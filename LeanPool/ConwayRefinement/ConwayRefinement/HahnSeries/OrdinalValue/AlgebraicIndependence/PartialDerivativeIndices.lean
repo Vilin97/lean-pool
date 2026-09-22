@@ -55,7 +55,7 @@ theorem componentsGE_mem_span_subtype {ι : Type w} [Finite ι] {q : ι → MvPo
     componentsGE wt τ P ∈ Ideal.span (Set.range fun j : {j // A j} ↦ q j.1) := by
   classical
   cases nonempty_fintype ι
-  letI := weightedGradedAlgebra K wt
+  let := weightedGradedAlgebra K wt
   have hdec : ∀ (R : MvPolynomial σ K) (e : NatOrdinal),
       (DirectSum.decompose (weightedHomogeneousSubmodule K wt) R e : MvPolynomial σ K) =
         weightedHomogeneousComponent wt e R := fun R e ↦ by
@@ -75,7 +75,8 @@ theorem componentsGE_mem_span_subtype {ι : Type w} [Finite ι] {q : ι → MvPo
   have hcomp : weightedHomogeneousComponent wt (Finsupp.weight wt d)
       (weightedHomogeneousComponent wt (Finsupp.weight wt d) P) =
         weightedHomogeneousComponent wt (Finsupp.weight wt d) P := by
-    rw [weightedHomogeneousComponent_of_mem (weightedHomogeneousComponent_mem wt P _), ite_eq_left rfl]
+    rw [weightedHomogeneousComponent_of_mem (weightedHomogeneousComponent_mem wt P _),
+      ite_eq_left rfl]
   rw [← hcomp, hsum]
   rw [← Finset.sum_filter_add_sum_filter_not Finset.univ A]
   have hzero : ∑ j ∈ Finset.univ.filter (fun j ↦ ¬ A j), q j * u j = 0 :=

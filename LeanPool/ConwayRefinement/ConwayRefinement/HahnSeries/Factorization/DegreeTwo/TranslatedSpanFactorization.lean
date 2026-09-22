@@ -237,7 +237,7 @@ theorem rank_translatedTruncationSpan_mul_le_two
   let s : Set (SeriesQuotientByJAddConstants K) :=
     {toSeriesQuotientByJAddConstants b, toSeriesQuotientByJAddConstants c}
   have hs : s.Finite := (Set.finite_singleton _).insert _
-  letI : Fintype s := hs.fintype
+  let : Fintype s := hs.fintype
   have hcard : s.toFinset.card ≤ 2 := by
     change ({toSeriesQuotientByJAddConstants b, toSeriesQuotientByJAddConstants c} :
       Set (SeriesQuotientByJAddConstants K)).toFinset.card ≤ 2
@@ -264,8 +264,8 @@ theorem finrank_translatedTruncationSpan_mul_le_two
   let s : Set (SeriesQuotientByJAddConstants K) :=
     {toSeriesQuotientByJAddConstants b, toSeriesQuotientByJAddConstants c}
   have hs : s.Finite := (Set.finite_singleton _).insert _
-  letI : Fintype s := hs.fintype
-  letI : Module.Finite K
+  let : Fintype s := hs.fintype
+  let : Module.Finite K
       (Submodule.span K s) := Module.Finite.span_of_finite K hs
   have hcard : s.toFinset.card ≤ 2 := by
     change ({toSeriesQuotientByJAddConstants b, toSeriesQuotientByJAddConstants c} :

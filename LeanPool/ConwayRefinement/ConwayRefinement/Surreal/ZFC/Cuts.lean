@@ -49,8 +49,8 @@ namespace ZFSet.Surreal
 @[simp]
 theorem mk_lt_mk (x y : GameCode.{u}) (hx : x.IsNumeric) (hy : y.IsNumeric) :
     mk x hx < mk y hy ↔ x < y := by
-  letI : IGame.Numeric x.toIGame := (GameCode.isNumeric_iff x).1 hx
-  letI : IGame.Numeric y.toIGame := (GameCode.isNumeric_iff y).1 hy
+  let : IGame.Numeric x.toIGame := (GameCode.isNumeric_iff x).1 hx
+  let : IGame.Numeric y.toIGame := (GameCode.isNumeric_iff y).1 hy
   rw [← toSurreal_lt_toSurreal, toSurreal_mk, toSurreal_mk,
     _root_.Surreal.mk_lt_mk, GameCode.toIGame_lt_toIGame]
 
@@ -58,8 +58,8 @@ theorem mk_lt_mk (x y : GameCode.{u}) (hx : x.IsNumeric) (hy : y.IsNumeric) :
 @[simp]
 theorem mk_le_mk (x y : GameCode.{u}) (hx : x.IsNumeric) (hy : y.IsNumeric) :
     mk x hx ≤ mk y hy ↔ x ≤ y := by
-  letI : IGame.Numeric x.toIGame := (GameCode.isNumeric_iff x).1 hx
-  letI : IGame.Numeric y.toIGame := (GameCode.isNumeric_iff y).1 hy
+  let : IGame.Numeric x.toIGame := (GameCode.isNumeric_iff x).1 hx
+  let : IGame.Numeric y.toIGame := (GameCode.isNumeric_iff y).1 hy
   rw [← toSurreal_le_toSurreal, toSurreal_mk, toSurreal_mk,
     _root_.Surreal.mk_le_mk, GameCode.toIGame_le_toIGame]
 

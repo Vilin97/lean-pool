@@ -73,7 +73,7 @@ theorem closedSupport_truncGT_locally_eq_of_lt (b : HahnSeries G R) {c x : G}
   apply isOpen_Ioi.closure_congr
   rw [support_truncGT]
   ext y
-  simp only [mem_inter_iff, mem_setOf_eq, mem_Ioi]
+  simp only [mem_inter_iff, Set.mem_ofPred_eq, mem_Ioi]
   tauto
 
 /-- A strict upper truncation preserves Cantor–Bendixson rank strictly above its cutoff. -/
@@ -256,7 +256,8 @@ theorem cantorBendixsonValue_reconstruction (b d : HahnSeries G R) (hb : b.suppo
       have hylt : y < 0 := lt_of_le_of_ne hy0 hyne
       have hval : (translate (-y) (truncLE y b)).cantorBendixsonValue =
           Ordinal.omega0 ^ a := by
-        rw [b.cantorBendixsonValue_translated_truncLE, ite_eq_left ((b.mem_closedSupport y).mpr hys),
+        rw [b.cantorBendixsonValue_translated_truncLE, ite_eq_left ((b.mem_closedSupport y).mpr
+          hys),
           hyr]
       have h := hlevel y hy hylt hval
       rw [d.cantorBendixsonValue_translated_truncLE] at h

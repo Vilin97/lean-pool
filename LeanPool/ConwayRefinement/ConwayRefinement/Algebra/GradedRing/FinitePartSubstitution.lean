@@ -90,7 +90,7 @@ theorem aeval_mem_decomposableAt_of_mem_supported
     exact hne j (le_antisymm hle zero_le)
   -- `X^d = X^{d'} * X_i`
   have hmono : monomial d (V.coeff d) = C (V.coeff d) * (monomial d' 1 * X i) := by
-    rw [X, monomial_mul, mul_one, C_mul_monomial, mul_one, hd'def,
+    rw [X, MvPolynomial.monomial_mul_monomial, mul_one, C_mul_monomial, mul_one, hd'def,
       Finsupp.sub_add_single_one_cancel (Finsupp.mem_support_iff.mp hi)]
   rw [hmono, map_mul, map_mul, ← algebraMap_eq, AlgHom.commutes, Algebra.algebraMap_eq_smul_one,
     smul_mul_assoc, one_mul]

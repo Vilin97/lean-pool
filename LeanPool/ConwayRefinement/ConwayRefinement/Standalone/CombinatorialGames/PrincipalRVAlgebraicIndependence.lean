@@ -5,7 +5,7 @@ Authors: Dan Abramov
 -/
 module
 
-public import Mathlib.Data.Real.Basic
+public import Mathlib.Basic.Real.Basic
 public import Mathlib.RingTheory.HahnSeries.Multiplication
 public import Mathlib.RingTheory.MvPolynomial.WeightedHomogeneous
 public import Mathlib.Algebra.MvPolynomial.Eval

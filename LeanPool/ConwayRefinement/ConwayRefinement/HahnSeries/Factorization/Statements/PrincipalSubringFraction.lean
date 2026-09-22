@@ -37,7 +37,7 @@ theorem isRelativelyAlgebraicallyClosed_principalGradedFractionField :
     @Algebra.IsRelativelyAlgebraicallyClosed K
       (PrincipalSubringFractionField K) _ _
       (principalSubringFractionAlgebra K) := by
-  letI := principalSubringFractionAlgebra K
+  let := principalSubringFractionAlgebra K
   apply Algebra.isRelativelyAlgebraicallyClosed_of_minpoly_natDegree_le_one
   intro x hx
   by_cases hx0 : x = 0

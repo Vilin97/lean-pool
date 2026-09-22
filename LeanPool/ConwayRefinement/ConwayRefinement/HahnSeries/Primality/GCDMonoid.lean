@@ -39,9 +39,9 @@ greatest common divisors from the corresponding polynomial ring to the series ri
 theorem GeneratorLifts.nonemptyGCDMonoid
     (hx : IsMinimalSystem (principalGrading K) wt x) (σ : GeneratorLifts wt x) :
     Nonempty (GCDMonoid (Series K)) := by
-  letI : Nonempty (NormalizedGCDMonoid (FiniteSupportRing (K := K))) :=
+  let : Nonempty (NormalizedGCDMonoid (FiniteSupportRing (K := K))) :=
     nonemptyNormalizedGCDMonoid_finiteSupport
-  letI : Nonempty (GCDMonoid (MvPolynomial ι (FiniteSupportRing (K := K)))) :=
+  let : Nonempty (GCDMonoid (MvPolynomial ι (FiniteSupportRing (K := K)))) :=
     MvPolynomial.nonemptyGCDMonoid
   exact MulEquiv.nonemptyGCDMonoid (polynomialRingEquiv hx σ).symm.toMulEquiv
 

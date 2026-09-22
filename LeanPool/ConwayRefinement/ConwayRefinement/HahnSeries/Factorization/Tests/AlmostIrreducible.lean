@@ -24,11 +24,14 @@ public noncomputable section
 
 open HahnSeries.Nonpositive
 
+/-- The full real exponent group, represented as an additive subgroup for the counterexample. -/
 abbrev RealExponentSubgroup : AddSubgroup ℝ := ⊤
 
+/-- Rational Hahn series with nonpositive exponents in the full real subgroup. -/
 abbrev RealExponentSeries :=
   HahnSeries.Nonpositive RealExponentSubgroup ℚ
 
+/-- Integer divisibility on the full real exponent subgroup, inherited from the real numbers. -/
 noncomputable local instance : DivisibleBy RealExponentSubgroup ℤ where
   div a n := ⟨DivisibleBy.div (a : ℝ) n, Set.mem_univ _⟩
   div_zero a := Subtype.ext (DivisibleBy.div_zero (a : ℝ))

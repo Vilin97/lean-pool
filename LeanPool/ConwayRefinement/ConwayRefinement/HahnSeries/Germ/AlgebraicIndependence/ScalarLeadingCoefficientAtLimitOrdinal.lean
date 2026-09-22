@@ -109,8 +109,9 @@ theorem false_of_aeval_eq_zero_of_leadingCoefficientDegree_eq_zero
   have hhne : hpoly ≠ 0 := by
     intro h
     have hc := congrArg (fun p : MvPolynomial ι K ↦ p.coeff (Finsupp.single B₀ 1)) h
-    rw [MvPolynomial.coeff_add, MvPolynomial.coeff_C_mul, MvPolynomial.coeff_X,
-      ite_eq_left rfl, mul_one, MvPolynomial.coeff_zero] at hc
+    rw [AddMonoidAlgebra.coeff_add, Finsupp.add_apply, MvPolynomial.coeff_C_mul,
+      MvPolynomial.coeff_X,
+      ite_eq_left rfl, mul_one, AddMonoidAlgebra.coeff_zero] at hc
     have hleft : (xCoeff B₀ D' F).coeff (Finsupp.single B₀ 1) = 0 := by
       by_contra hne
       exact (mem_supported.mp (hFkmem D'))

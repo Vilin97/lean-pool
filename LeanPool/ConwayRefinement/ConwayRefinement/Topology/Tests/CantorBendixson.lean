@@ -48,7 +48,7 @@ private theorem enat_derivedSet_univ : derivedSet (univ : Set ℕ∞) = {⊤} :=
     intro U hU
     have he : ∀ᶠ n : ℕ in atTop, (n : ℕ∞) ∈ U := ENat.tendsto_natCast_nhds_top hU
     obtain ⟨n, hn⟩ := he.exists
-    exact ⟨(n : ℕ∞), ⟨hn, mem_univ _⟩, ENat.coe_ne_top n⟩
+    exact ⟨(n : ℕ∞), ⟨hn, mem_univ _⟩, ENat.natCast_ne_top n⟩
 
 /-- The convergent-sequence limit survives stage one; isolated finite points do not. -/
 theorem enat_stage_one :
@@ -170,7 +170,7 @@ theorem enat_nat_rank (n : ℕ) :
   constructor
   · simp
   · rw [zero_add, enat_stage_one]
-    exact ENat.coe_ne_top n
+    exact ENat.natCast_ne_top n
 
 /-- The isolated rank-zero points are dense even though the limit point has rank one. -/
 theorem enat_rank_zero_dense :

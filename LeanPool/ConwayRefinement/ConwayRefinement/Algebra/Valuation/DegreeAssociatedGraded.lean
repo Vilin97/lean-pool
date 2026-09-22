@@ -331,9 +331,11 @@ theorem componentOne_eq_componentMk (ν : MaxAddDegree R M) :
       ν.componentMk 0 ⟨1, (ν.mem_filtrationLE_iff 0 1).mpr ν.map_one_le_zero⟩ :=
   (rfl)
 
+/-- The multiplicative identity in the degree-zero component. -/
 scoped instance (ν : MaxAddDegree R M) : GradedMonoid.GOne ν.Component where
   one := ν.componentOne
 
+/-- Multiplication of homogeneous components, with their degrees added. -/
 scoped instance (ν : MaxAddDegree R M) : GradedMonoid.GMul ν.Component where
   mul := ν.componentMul
 

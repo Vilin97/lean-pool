@@ -123,7 +123,7 @@ theorem IsAlmostIrreducible.irreducible_of_not_isUnit_of_realSupportSup_eq_zero
 assertion of LM24, Remark 6.5.1. -/
 theorem not_irreducible_of_realSupportSup_lt_zero [DivisibleBy H ℤ]
     {b : Nonpositive H K} (hbSup : realSupportSup H b < 0) : ¬Irreducible b := by
-  letI : DivisibleBy H ℕ := AddGroup.divisibleByNatOfDivisibleByInt H
+  let : DivisibleBy H ℕ := AddGroup.divisibleByNatOfDivisibleByInt H
   intro hbIrreducible
   have hbNe : b ≠ 0 := hbIrreducible.ne_zero
   have hbSupNeBot : realSupportSup H b ≠ ⊥ := by

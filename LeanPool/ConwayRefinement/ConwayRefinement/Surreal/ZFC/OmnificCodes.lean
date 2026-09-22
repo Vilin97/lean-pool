@@ -27,6 +27,7 @@ namespace ZFSet
 
 /-- A ZFC game code satisfying Conway's omnific-integer equation. -/
 structure OmnificCode where
+  /-- The underlying ZFC game code satisfying the omnific-integer condition. -/
   code : GameCode.{u}
   omnific : code.IsOmnificInteger
 
@@ -171,7 +172,7 @@ theorem isPrime_iff (x : OmnificCode.{u}) : x.IsPrime ↔ Prime x.value := by
   · intro h
     refine ⟨fun hz ↦ h.ne_zero (by
       simpa only [value_zero] using (equivalent_iff _ _).1 hz),
-      fun hu ↦ h.not_unit ((isUnit_iff _).1 hu), ?_⟩
+      fun hu ↦ h.not_isUnit ((isUnit_iff _).1 hu), ?_⟩
     intro a b hab
     have hv : x.value ∣ a.value * b.value := by
       simpa only [value_mul] using (divides_iff _ _).1 hab

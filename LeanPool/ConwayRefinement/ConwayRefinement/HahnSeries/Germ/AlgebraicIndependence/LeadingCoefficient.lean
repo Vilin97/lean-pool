@@ -7,8 +7,7 @@ module
 
 public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.Germ.AlgebraicIndependence.LimitOrdinalEvaluation
 public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.Germ.AlgebraicIndependence.TruncationPolynomial
-public import
-  LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.Germ.AlgebraicIndependence.ScalarLeadingCoefficientAtLimitOrdinal
+public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.Germ.AlgebraicIndependence.ScalarLeadingCoefficientAtLimitOrdinal
 
 import LeanPool.ConwayRefinement.ConwayRefinement.Blueprint
 

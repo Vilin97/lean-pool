@@ -111,7 +111,7 @@ theorem cantorDegree_omega_add_omega :
     simpa only [opow_one, Ordinal.mul_two, hlogTwo, add_zero] using
       log_opow_mul one_lt_omega0 1 htwo
   have hne : (ω : Ordinal.{u}) + ω ≠ 0 := fun h ↦
-    omega0_ne_zero (left_eq_zero_of_add_eq_zero h)
+    omega0_ne_zero (eq_zero_of_add_right h)
   rw [cantorDegree_of_ne_zero hne, hlog]
   rfl
 

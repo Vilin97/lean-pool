@@ -475,6 +475,212 @@ theorem degree_translatedTruncLE_sub_sum_le_of_eq_bot
 
 variable {κ : Type x} {ι : Type w} {κ' : Type w}
 
+/-- Lift a homogeneous ideal expression to a correction lowering the series degree. -/
+private theorem exists_degree_correction_of_componentsGE_mem [Fintype κ']
+    {wt : ι → NatOrdinal.{u}} {V : ι → Nonpositive G K}
+    (xg : ι → (ν).AssociatedGraded)
+    (hV : ∀ i, Represents (V i) (wt i) (xg i)) {α : NatOrdinal.{u}}
+    (hinj : ∀ (β : NatOrdinal.{u}) (F : MvPolynomial ι K), β < α →
+      IsWeightedHomogeneous wt F β → aeval xg F = 0 → F = 0)
+    (Q : κ' → MvPolynomial ι K) (σQ : κ' → NatOrdinal.{u})
+    (hQ : ∀ j, IsWeightedHomogeneous wt (Q j) (σQ j))
+    {τ β : NatOrdinal.{u}} (hτβ : τ < β)
+    (P : κ' → NatOrdinal.{u}) (hP : ∀ j, P j + σQ j = β)
+    {y : Nonpositive G K} (hνy : ν y = (β : WithBot NatOrdinal))
+    {F : MvPolynomial ι K} (hFw : ∀ d ∈ F.support, Finsupp.weight wt d < α)
+    (hFbot : ν (y - aeval V F) = ⊥)
+    (hFGE : MvPolynomial.componentsGE wt τ F ∈ Ideal.span (Set.range Q)) :
+    ∃ w : κ' → Nonpositive G K, (∀ j, ν (w j) ≤ P j) ∧
+      ν (y - ∑ j, w j * aeval V (Q j)) < (β : WithBot NatOrdinal) := by
+  classical
+  have hνF : ν (aeval V F) = (β : WithBot NatOrdinal) := by
+    rw [← degree_eq_of_degree_sub_eq_bot hFbot, hνy]
+  have hwle : ∀ d ∈ F.support, (Finsupp.weight wt) d ≤ β := by
+    intro d hd
+    have := forall_weight_le_degree_aeval_of_injective xg hV hinj hFw d hd
+    rw [hνF] at this
+    exact WithBot.coe_le_coe.mp this
+  set Fβ := weightedHomogeneousComponent wt β F with hFβ_def
+  have hFβspan : Fβ ∈ Ideal.span (Set.range Q) :=
+    weightedHomogeneousComponent_mem_span_of_componentsGE_mem wt hQ hFGE hτβ.le
+  let := weightedGradedAlgebra K wt
+  obtain ⟨A, hA, -, hAsum⟩ := OrdinalGraded.exists_eq_sum_mul_of_mem_span
+    (𝒜 := weightedHomogeneousSubmodule K wt)
+    (fun j ↦ (mem_weightedHomogeneousSubmodule _ _ _ _).mpr (hQ j))
+    ((mem_weightedHomogeneousSubmodule _ _ _ _).mpr
+      (weightedHomogeneousComponent_isWeightedHomogeneous (w := wt) (n := β) (φ := F)))
+    hFβspan
+  have hAhom : ∀ j, IsWeightedHomogeneous wt (A j) (P j) := fun j ↦
+    (mem_weightedHomogeneousSubmodule _ _ _ _).mp (hA j (P j) (hP j))
+  refine ⟨fun j ↦ aeval V (A j), fun j ↦ (represents_aeval xg hV (hAhom j)).degree_le, ?_⟩
+  have hsum : (∑ j, aeval V (A j) * aeval V (Q j)) = aeval V Fβ := by
+    rw [hFβ_def, hAsum, map_sum]
+    refine Finset.sum_congr rfl fun j _ ↦ ?_
+    rw [map_mul, mul_comm]
+  rw [hsum]
+  have hrest : ∀ d ∈ (F - Fβ).support, (Finsupp.weight wt) d < β := by
+    intro d hd
+    have hne := MvPolynomial.mem_support_iff.mp hd
+    rw [MvPolynomial.coeff_sub, hFβ_def, coeff_weightedHomogeneousComponent] at hne
+    by_cases hdw : (Finsupp.weight wt) d = β
+    · rw [ite_eq_left hdw, sub_self] at hne
+      exact absurd rfl hne
+    · rw [ite_eq_right hdw, sub_zero] at hne
+      exact lt_of_le_of_ne (hwle d (MvPolynomial.mem_support_iff.mpr hne)) hdw
+  have hkey : y - aeval V Fβ =
+      (y - aeval V F) + aeval V (F - Fβ) := by
+    rw [map_sub]
+    ring
+  rw [hkey]
+  refine ((ν).map_add_le_max _ _).trans_lt (max_lt ?_ ?_)
+  · rw [hFbot]
+    exact WithBot.bot_lt_coe β
+  · exact degree_aeval_lt_of_forall_weight_lt xg hV hrest
+
+/-- Subtracting degree-controlled generator multiples preserves local polynomial ideal data. -/
+private theorem local_ideal_presentation_sub_sum_mul [Fintype κ']
+    {wt : ι → NatOrdinal.{u}} {V : ι → Nonpositive G K}
+    (xg : ι → (ν).AssociatedGraded) (hV : ∀ i, Represents (V i) (wt i) (xg i))
+    (α : NatOrdinal.{u})
+    (hgen : ∀ β : NatOrdinal.{u}, β < α → ∀ y ∈ DirectSum.rangeLof K (ν).Component β,
+      ∃ F : MvPolynomial ι K, IsWeightedHomogeneous wt F β ∧ aeval xg F = y)
+    (Q : κ' → MvPolynomial ι K) (σQ : κ' → NatOrdinal.{u})
+    (hQ : ∀ j, IsWeightedHomogeneous wt (Q j) (σQ j))
+    (τ β : NatOrdinal.{u}) (hτα : τ < α) (hβα : β < α)
+    (P : κ' → NatOrdinal.{u}) (hP : ∀ j, P j + σQ j = β)
+    (hPsmall : ∀ j, P j < α)
+    (hW : ∀ j, HasLowerTruncationDegree (aeval V (Q j)) (σQ j))
+    (hPsep : ∀ j θ, θ < σQ j → P j + θ < τ)
+    (u : Nonpositive G K) (ctop : κ' → Nonpositive G K)
+    (hctopb : ∀ j y, y ≤ 0 → ν (translatedTruncLE y (ctop j)) ≤ P j)
+    (hp : ∀ y : G, y ≤ 0 → ∃ F : MvPolynomial ι K,
+      (∀ d ∈ F.support, Finsupp.weight wt d < α) ∧
+      ν (translatedTruncLE y u - aeval V F) = ⊥ ∧
+      MvPolynomial.componentsGE wt τ F ∈ Ideal.span (Set.range Q)) :
+    ∀ y : G, y ≤ 0 → ∃ F : MvPolynomial ι K,
+      (∀ d ∈ F.support, Finsupp.weight wt d < α) ∧
+      ν (translatedTruncLE y (u - ∑ j, ctop j * aeval V (Q j)) - aeval V F) = ⊥ ∧
+      MvPolynomial.componentsGE wt τ F ∈ Ideal.span (Set.range Q) := by
+  classical
+  let q : κ' → Nonpositive G K := fun j ↦ aeval V (Q j)
+  let R : Nonpositive G K := u - ∑ j, ctop j * q j
+  have hR_def : R = u - ∑ j, ctop j * q j := rfl
+  change ∀ y : G, y ≤ 0 → ∃ F : MvPolynomial ι K,
+    (∀ d ∈ F.support, Finsupp.weight wt d < α) ∧
+    ν (translatedTruncLE y R - aeval V F) = ⊥ ∧
+    MvPolynomial.componentsGE wt τ F ∈ Ideal.span (Set.range Q)
+  intro y hy
+  obtain ⟨F₀, hF₀w, hF₀bot, hF₀GE⟩ := hp y hy
+  have hpolc : ∀ j, ∃ A' : MvPolynomial ι K,
+      (∀ d ∈ A'.support,
+        (((Finsupp.weight wt) d : NatOrdinal) : WithBot NatOrdinal) ≤
+          ν (translatedTruncLE y (ctop j))) ∧
+      (∀ d ∈ A'.support, (Finsupp.weight wt) d < α) ∧
+      ν (translatedTruncLE y (ctop j) - aeval V A') = ⊥ := fun j ↦
+    exists_forall_weight_lt_and_degree_sub_aeval_eq_bot xg hV α hgen _
+      ((hctopb j y hy).trans_lt (WithBot.coe_lt_coe.mpr
+        (hPsmall j)))
+  choose A' hA'd hA'w hA'bot using hpolc
+  have hEbound : ∀ j, ν (translatedTruncLE y (ctop j * q j) -
+      translatedTruncLE y (ctop j) * q j) < (τ : WithBot NatOrdinal) := by
+    intro j
+    exact degree_translatedTruncLE_mul_sub_mul_lt_forall (ctop j) (q j)
+      (P j) (σQ j) τ (by simpa only [translatedTruncLE_zero] using hctopb j 0 le_rfl)
+      (fun x hx ↦ hctopb j x hx.le)
+      (fun x hx ↦ (hW j).degree_translatedTruncLE_lt hx)
+      (hPsep j) y
+  have hpolE : ∀ j, ∃ FE : MvPolynomial ι K,
+      (∀ d ∈ FE.support,
+        (((Finsupp.weight wt) d : NatOrdinal) : WithBot NatOrdinal) ≤
+          ν (translatedTruncLE y (ctop j * q j) -
+            translatedTruncLE y (ctop j) * q j)) ∧
+      (∀ d ∈ FE.support, (Finsupp.weight wt) d < α) ∧
+      ν ((translatedTruncLE y (ctop j * q j) -
+          translatedTruncLE y (ctop j) * q j) - aeval V FE) = ⊥ := fun j ↦
+    exists_forall_weight_lt_and_degree_sub_aeval_eq_bot xg hV α hgen _
+      ((hEbound j).trans (WithBot.coe_lt_coe.mpr hτα))
+  choose FE hFEd hFEw hFEbot using hpolE
+  have hFEGE : ∀ j, MvPolynomial.componentsGE wt τ (FE j) = 0 := by
+    intro j
+    apply componentsGE_eq_zero_of_forall_lt
+    intro d hd
+    have h1 := (hFEd j d hd).trans_lt (hEbound j)
+    exact WithBot.coe_lt_coe.mp h1
+  refine ⟨F₀ - ∑ j, A' j * Q j - ∑ j, FE j, ?_, ?_, ?_⟩
+  · intro d hd
+    rcases Finset.mem_union.mp (MvPolynomial.support_sub ι _ _ hd) with hd | hd
+    · rcases Finset.mem_union.mp (MvPolynomial.support_sub ι _ _ hd) with hd | hd
+      · exact hF₀w d hd
+      · have hsum := MvPolynomial.support_sum hd
+        rw [Finset.mem_biUnion] at hsum
+        obtain ⟨j, -, hdj⟩ := hsum
+        have hmul := MvPolynomial.support_mul _ _ hdj
+        rw [Finset.mem_add] at hmul
+        obtain ⟨d₁, hd₁, d₂, hd₂, rfl⟩ := hmul
+        rw [map_add]
+        have h1 : (Finsupp.weight wt) d₁ ≤ P j := by
+          have := (hA'd j d₁ hd₁).trans (hctopb j y hy)
+          exact WithBot.coe_le_coe.mp this
+        have h2 : (Finsupp.weight wt) d₂ = σQ j :=
+          hQ j (MvPolynomial.mem_support_iff.mp hd₂)
+        calc
+          (Finsupp.weight wt) d₁ + (Finsupp.weight wt) d₂ ≤ P j + σQ j := by
+            rw [h2]
+            exact add_le_add h1 le_rfl
+          _ = β := hP j
+          _ < α := hβα
+    · have hsum := MvPolynomial.support_sum hd
+      rw [Finset.mem_biUnion] at hsum
+      obtain ⟨j, -, hdj⟩ := hsum
+      exact hFEw j d hdj
+  · have hTsub : translatedTruncLE y R =
+        translatedTruncLE y u - ∑ j, translatedTruncLE y (ctop j * q j) := by
+      rw [hR_def, map_sub, map_sum]
+    have hAQ : ∀ j, aeval V (A' j * Q j) = aeval V (A' j) * q j :=
+      fun j ↦ map_mul _ _ _
+    have hcalc : translatedTruncLE y R - aeval V (F₀ - ∑ j, A' j * Q j - ∑ j, FE j) =
+        (translatedTruncLE y u - aeval V F₀) -
+          ∑ j, (translatedTruncLE y (ctop j * q j) -
+            aeval V (A' j) * q j - aeval V (FE j)) := by
+      rw [hTsub, map_sub, map_sub, map_sum, map_sum,
+        Finset.sum_congr rfl fun j _ ↦ hAQ j]
+      conv_rhs => rw [Finset.sum_sub_distrib, Finset.sum_sub_distrib]
+      abel
+    rw [hcalc]
+    have hbot1 : ∀ j, ν (translatedTruncLE y (ctop j * q j) -
+        aeval V (A' j) * q j - aeval V (FE j)) = ⊥ := by
+      intro j
+      have hshape : translatedTruncLE y (ctop j * q j) -
+          aeval V (A' j) * q j - aeval V (FE j) =
+          (translatedTruncLE y (ctop j) - aeval V (A' j)) * q j +
+            ((translatedTruncLE y (ctop j * q j) -
+              translatedTruncLE y (ctop j) * q j) - aeval V (FE j)) := by
+        ring
+      rw [hshape]
+      have h1 : ν ((translatedTruncLE y (ctop j) - aeval V (A' j)) * q j) = ⊥ := by
+        have := (ν).map_mul_le_add (translatedTruncLE y (ctop j) - aeval V (A' j))
+          (q j)
+        rw [hA'bot j, WithBot.bot_add] at this
+        exact le_bot_iff.mp this
+      have h2 := hFEbot j
+      refine le_bot_iff.mp (((ν).map_add_le_max _ _).trans ?_)
+      rw [h1, h2, max_self]
+    have hsumbot : ν (∑ j, (translatedTruncLE y (ctop j * q j) -
+        aeval V (A' j) * q j - aeval V (FE j))) = ⊥ :=
+      le_bot_iff.mp ((ν).map_sum_le_of_forall_le _ _ ⊥ fun j _ ↦ (hbot1 j).le)
+    refine le_bot_iff.mp (((ν).map_sub_le_max _ _).trans ?_)
+    rw [hF₀bot, hsumbot, max_self]
+  · rw [componentsGE_sub, componentsGE_sub, componentsGE_sum, componentsGE_sum]
+    have hAQGE : ∀ j ∈ Finset.univ, MvPolynomial.componentsGE wt τ (A' j * Q j) ∈
+        Ideal.span (Set.range Q) := by
+      intro j _
+      exact componentsGE_mem_span wt hQ
+        (Ideal.mul_mem_left _ _ (Ideal.subset_span ⟨j, rfl⟩)) τ
+    have hFEGE' : (∑ j, MvPolynomial.componentsGE wt τ (FE j)) = 0 := by
+      rw [Finset.sum_congr rfl fun j _ ↦ hFEGE j, Finset.sum_const_zero]
+    rw [hFEGE', sub_zero]
+    exact Ideal.sub_mem _ hF₀GE (Ideal.sum_mem _ hAQGE)
+
 open Classical in
 /-- **Cofactors by well-founded induction.** Fix representatives of homogeneous classes generating
 the associated graded ring below `α`, each satisfying its assigned degree and proper-truncation
@@ -580,50 +786,10 @@ theorem exists_cofactors_degree_translatedTruncLE_le_of_locallyIdeal
         ((mem_closedSupport _ _).mp hzs)
       obtain ⟨F, hFw, hFbot, hFGE⟩ := hp z hz0
       have hνT : ν (translatedTruncLE z u) = (β : WithBot NatOrdinal) := by
-        rw [degree_translatedTruncLE_eq, ite_eq_left hzs, cantorBendixsonRank_eq, hzr, NatOrdinal.of_val]
-      have hνF : ν (aeval V F) = (β : WithBot NatOrdinal) := by
-        rw [← degree_eq_of_degree_sub_eq_bot hFbot, hνT]
-      have hwle : ∀ d ∈ F.support, (Finsupp.weight wt) d ≤ β := by
-        intro d hd
-        have := forall_weight_le_degree_aeval_of_injective xg hV hinj hFw d hd
-        rw [hνF] at this
-        exact WithBot.coe_le_coe.mp this
-      set Fβ := weightedHomogeneousComponent wt β F with hFβ_def
-      have hFβspan : Fβ ∈ Ideal.span (Set.range Q) :=
-        weightedHomogeneousComponent_mem_span_of_componentsGE_mem wt hQ hFGE hτβ.le
-      letI := weightedGradedAlgebra K wt
-      obtain ⟨A, hA, -, hAsum⟩ := OrdinalGraded.exists_eq_sum_mul_of_mem_span
-        (𝒜 := weightedHomogeneousSubmodule K wt)
-        (fun j ↦ (mem_weightedHomogeneousSubmodule _ _ _ _).mpr (hQ j))
-        ((mem_weightedHomogeneousSubmodule _ _ _ _).mpr
-          (weightedHomogeneousComponent_isWeightedHomogeneous (w := wt) (n := β) (φ := F)))
-        hFβspan
-      have hAhom : ∀ j, IsWeightedHomogeneous wt (A j) (P j β) := fun j ↦
-        (mem_weightedHomogeneousSubmodule _ _ _ _).mp (hA j (P j β) (hP j β hτβ hβμ))
-      refine ⟨fun j ↦ aeval V (A j), fun j ↦ (represents_aeval xg hV (hAhom j)).degree_le, ?_⟩
-      have hsum : (∑ j, aeval V (A j) * q j) = aeval V Fβ := by
-        rw [hFβ_def, hAsum, map_sum]
-        refine Finset.sum_congr rfl fun j _ ↦ ?_
-        rw [map_mul, mul_comm]
-      rw [hsum]
-      have hrest : ∀ d ∈ (F - Fβ).support, (Finsupp.weight wt) d < β := by
-        intro d hd
-        have hne := MvPolynomial.mem_support_iff.mp hd
-        rw [MvPolynomial.coeff_sub, hFβ_def, coeff_weightedHomogeneousComponent] at hne
-        by_cases hdw : (Finsupp.weight wt) d = β
-        · rw [ite_eq_left hdw, sub_self] at hne
-          exact absurd rfl hne
-        · rw [ite_eq_right hdw, sub_zero] at hne
-          exact lt_of_le_of_ne (hwle d (MvPolynomial.mem_support_iff.mpr hne)) hdw
-      have hkey : translatedTruncLE z u - aeval V Fβ =
-          (translatedTruncLE z u - aeval V F) + aeval V (F - Fβ) := by
-        rw [map_sub]
-        ring
-      rw [hkey]
-      refine ((ν).map_add_le_max _ _).trans_lt (max_lt ?_ ?_)
-      · rw [hFbot]
-        exact WithBot.bot_lt_coe β
-      · exact degree_aeval_lt_of_forall_weight_lt xg hV hrest
+        rw [degree_translatedTruncLE_eq, ite_eq_left hzs, cantorBendixsonRank_eq, hzr,
+          NatOrdinal.of_val]
+      exact exists_degree_correction_of_componentsGE_mem xg hV hinj Q σQ hQ hτβ
+        (fun j ↦ P j β) (fun j ↦ hP j β hτβ hβμ) hνT hFw hFbot hFGE
     choose wA hwAb hwAcorr using hlocal
     obtain ⟨ctop, hctopb, hRdrop⟩ :=
       exists_forall_degree_translatedTruncLE_sub_sum_mul_lt β q
@@ -636,117 +802,10 @@ theorem exists_cofactors_degree_translatedTruncLE_le_of_locallyIdeal
         (∀ d ∈ F.support, (Finsupp.weight wt) d < α) ∧
         ν (translatedTruncLE y R - aeval V F) = ⊥ ∧
         MvPolynomial.componentsGE wt τ F ∈ Ideal.span (Set.range Q) := by
-      intro y hy
-      obtain ⟨F₀, hF₀w, hF₀bot, hF₀GE⟩ := hp y hy
-      have hpolc : ∀ j, ∃ A' : MvPolynomial ι K,
-          (∀ d ∈ A'.support,
-            (((Finsupp.weight wt) d : NatOrdinal) : WithBot NatOrdinal) ≤
-              ν (translatedTruncLE y (ctop j))) ∧
-          (∀ d ∈ A'.support, (Finsupp.weight wt) d < α) ∧
-          ν (translatedTruncLE y (ctop j) - aeval V A') = ⊥ := fun j ↦
-        exists_forall_weight_lt_and_degree_sub_aeval_eq_bot xg hV α hgen _
-          ((hctopb j y hy).trans_lt (WithBot.coe_lt_coe.mpr
-            ((hPle j β hτβ hβμ).trans_lt hμα)))
-      choose A' hA'd hA'w hA'bot using hpolc
-      have hEbound : ∀ j, ν (translatedTruncLE y (ctop j * q j) -
-          translatedTruncLE y (ctop j) * q j) < (τ : WithBot NatOrdinal) := by
-        intro j
-        exact degree_translatedTruncLE_mul_sub_mul_lt_forall (ctop j) (q j)
-          (P j β) (σQ j) τ (by simpa only [translatedTruncLE_zero] using hctopb j 0 le_rfl)
-          (fun x hx ↦ hctopb j x hx.le)
-          (fun x hx ↦ (hW j).degree_translatedTruncLE_lt hx)
-          (hPsep' j β hτβ hβμ) y
-      have hpolE : ∀ j, ∃ FE : MvPolynomial ι K,
-          (∀ d ∈ FE.support,
-            (((Finsupp.weight wt) d : NatOrdinal) : WithBot NatOrdinal) ≤
-              ν (translatedTruncLE y (ctop j * q j) -
-                translatedTruncLE y (ctop j) * q j)) ∧
-          (∀ d ∈ FE.support, (Finsupp.weight wt) d < α) ∧
-          ν ((translatedTruncLE y (ctop j * q j) -
-              translatedTruncLE y (ctop j) * q j) - aeval V FE) = ⊥ := fun j ↦
-        exists_forall_weight_lt_and_degree_sub_aeval_eq_bot xg hV α hgen _
-          ((hEbound j).trans (WithBot.coe_lt_coe.mpr hτα))
-      choose FE hFEd hFEw hFEbot using hpolE
-      have hFEGE : ∀ j, MvPolynomial.componentsGE wt τ (FE j) = 0 := by
-        intro j
-        apply componentsGE_eq_zero_of_forall_lt
-        intro d hd
-        have h1 := (hFEd j d hd).trans_lt (hEbound j)
-        exact WithBot.coe_lt_coe.mp h1
-      refine ⟨F₀ - ∑ j, A' j * Q j - ∑ j, FE j, ?_, ?_, ?_⟩
-      · intro d hd
-        rcases Finset.mem_union.mp (MvPolynomial.support_sub ι _ _ hd) with hd | hd
-        · rcases Finset.mem_union.mp (MvPolynomial.support_sub ι _ _ hd) with hd | hd
-          · exact hF₀w d hd
-          · have hsum := MvPolynomial.support_sum hd
-            rw [Finset.mem_biUnion] at hsum
-            obtain ⟨j, -, hdj⟩ := hsum
-            have hmul := MvPolynomial.support_mul _ _ hdj
-            rw [Finset.mem_add] at hmul
-            obtain ⟨d₁, hd₁, d₂, hd₂, rfl⟩ := hmul
-            rw [map_add]
-            have h1 : (Finsupp.weight wt) d₁ ≤ P j β := by
-              have := (hA'd j d₁ hd₁).trans (hctopb j y hy)
-              exact WithBot.coe_le_coe.mp this
-            have h2 : (Finsupp.weight wt) d₂ = σQ j :=
-              hQ j (MvPolynomial.mem_support_iff.mp hd₂)
-            calc
-              (Finsupp.weight wt) d₁ + (Finsupp.weight wt) d₂ ≤ P j β + σQ j := by
-                rw [h2]
-                exact add_le_add h1 le_rfl
-              _ = β := hP j β hτβ hβμ
-              _ < α := hβα
-        · have hsum := MvPolynomial.support_sum hd
-          rw [Finset.mem_biUnion] at hsum
-          obtain ⟨j, -, hdj⟩ := hsum
-          exact hFEw j d hdj
-      · have hTsub : translatedTruncLE y R =
-            translatedTruncLE y u - ∑ j, translatedTruncLE y (ctop j * q j) := by
-          rw [hR_def, map_sub, map_sum]
-        have hAQ : ∀ j, aeval V (A' j * Q j) = aeval V (A' j) * q j :=
-          fun j ↦ map_mul _ _ _
-        have hcalc : translatedTruncLE y R - aeval V (F₀ - ∑ j, A' j * Q j - ∑ j, FE j) =
-            (translatedTruncLE y u - aeval V F₀) -
-              ∑ j, (translatedTruncLE y (ctop j * q j) -
-                aeval V (A' j) * q j - aeval V (FE j)) := by
-          rw [hTsub, map_sub, map_sub, map_sum, map_sum,
-            Finset.sum_congr rfl fun j _ ↦ hAQ j]
-          conv_rhs => rw [Finset.sum_sub_distrib, Finset.sum_sub_distrib]
-          abel
-        rw [hcalc]
-        have hbot1 : ∀ j, ν (translatedTruncLE y (ctop j * q j) -
-            aeval V (A' j) * q j - aeval V (FE j)) = ⊥ := by
-          intro j
-          have hshape : translatedTruncLE y (ctop j * q j) -
-              aeval V (A' j) * q j - aeval V (FE j) =
-              (translatedTruncLE y (ctop j) - aeval V (A' j)) * q j +
-                ((translatedTruncLE y (ctop j * q j) -
-                  translatedTruncLE y (ctop j) * q j) - aeval V (FE j)) := by
-            ring
-          rw [hshape]
-          have h1 : ν ((translatedTruncLE y (ctop j) - aeval V (A' j)) * q j) = ⊥ := by
-            have := (ν).map_mul_le_add (translatedTruncLE y (ctop j) - aeval V (A' j))
-              (q j)
-            rw [hA'bot j, WithBot.bot_add] at this
-            exact le_bot_iff.mp this
-          have h2 := hFEbot j
-          refine le_bot_iff.mp (((ν).map_add_le_max _ _).trans ?_)
-          rw [h1, h2, max_self]
-        have hsumbot : ν (∑ j, (translatedTruncLE y (ctop j * q j) -
-            aeval V (A' j) * q j - aeval V (FE j))) = ⊥ :=
-          le_bot_iff.mp ((ν).map_sum_le_of_forall_le _ _ ⊥ fun j _ ↦ (hbot1 j).le)
-        refine le_bot_iff.mp (((ν).map_sub_le_max _ _).trans ?_)
-        rw [hF₀bot, hsumbot, max_self]
-      · rw [componentsGE_sub, componentsGE_sub, componentsGE_sum, componentsGE_sum]
-        have hAQGE : ∀ j ∈ Finset.univ, MvPolynomial.componentsGE wt τ (A' j * Q j) ∈
-            Ideal.span (Set.range Q) := by
-          intro j _
-          exact componentsGE_mem_span wt hQ
-            (Ideal.mul_mem_left _ _ (Ideal.subset_span ⟨j, rfl⟩)) τ
-        have hFEGE' : (∑ j, MvPolynomial.componentsGE wt τ (FE j)) = 0 := by
-          rw [Finset.sum_congr rfl fun j _ ↦ hFEGE j, Finset.sum_const_zero]
-        rw [hFEGE', sub_zero]
-        exact Ideal.sub_mem _ hF₀GE (Ideal.sum_mem _ hAQGE)
+      exact local_ideal_presentation_sub_sum_mul xg hV α hgen Q σQ hQ τ β hτα hβα
+        (fun j ↦ P j β) (fun j ↦ hP j β hτβ hβμ)
+        (fun j ↦ (hPle j β hτβ hβμ).trans_lt hμα) hW
+        (fun j ↦ hPsep' j β hτβ hβμ) u ctop hctopb hp
     -- Step C: cover the residual support by disjoint convex pieces and recurse.
     obtain ⟨Xset, C, hXs, hCmem, hCopen, hCconv, hCdisj, hCord, hCcov, hCmax, hCrank, hXdisc⟩ :=
       TopologicalSpace.Closeds.exists_disjoint_convex_cover_with_rank_lt_center
@@ -1141,7 +1200,7 @@ theorem homogeneousClass_mem_span_of_locallyIdeal
       MvPolynomial.componentsGE wt τ F ∈ Ideal.span (Set.range Q)) :
     eu ∈ Ideal.span (Set.range fun j ↦ aeval xg (Q j)) := by
   classical
-  letI := Fintype.ofFinite κ'
+  let := Fintype.ofFinite κ'
   obtain ⟨c, hcb, -, hres⟩ := exists_cofactors_degree_translatedTruncLE_le_of_locallyIdeal
     U hUmono hUopen hUconv hUbase xg hV hVbounds α hgen hinj Q σQ hQ τ μ hτμ hμα P hP hPsep
     μ le_rfl u hu hp
@@ -1727,7 +1786,7 @@ theorem homogeneousClass_mem_span_of_properly_locallyIdeal
       MvPolynomial.componentsGE wt τ F ∈ Ideal.span (Set.range Q)) :
     eu ∈ Ideal.span (Set.range fun j ↦ aeval xg (Q j)) := by
   classical
-  letI := Fintype.ofFinite κ'
+  let := Fintype.ofFinite κ'
   have hτlt : τ < μ := lt_of_le_of_lt (le_of_lt (lt_add_one τ)) hτμ
   obtain ⟨c, hcb, hres⟩ := exists_cofactors_degree_le_add_one_of_properly_locallyIdeal
     U hUmono hUopen hUconv hUbase xg hV hVbounds α hgen hinj Q σQ hQ τ μ hτlt hμα P hP hPsep

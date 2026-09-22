@@ -15,14 +15,14 @@ This proof sibling supplies the module-safe eliminator for the standalone propos
 
 public section
 
-namespace ConwayRefinement.Standalone.ConwayRefinement
+namespace ConwayRefinement.Standalone.HasRefinement
 
 universe u
 
 variable {R : Type u} [Mul R] {P : R → Prop}
 
 /-- Apply four-factor refinement to one product equation. -/
-theorem refine (hc : ConwayRefinement P)
+theorem refine (hc : HasRefinement P)
     {a b c d : R} (ha : P a) (hb : P b) (hc' : P c) (hd : P d)
     (heq : a * b = c * d) :
     ∃ e f g h : R,
@@ -30,4 +30,4 @@ theorem refine (hc : ConwayRefinement P)
       a = e * f ∧ b = g * h ∧ c = e * g ∧ d = f * h := by
   exact conwayRefinement_iff P |>.mp hc a b c d ha hb hc' hd heq
 
-end ConwayRefinement.Standalone.ConwayRefinement
+end ConwayRefinement.Standalone.HasRefinement

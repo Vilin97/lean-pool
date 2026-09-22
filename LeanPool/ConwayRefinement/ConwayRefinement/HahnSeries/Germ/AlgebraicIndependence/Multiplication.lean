@@ -60,7 +60,7 @@ theorem exists_cantorBendixsonRank_add_ge_of_mem_mul_derivative (b d : HahnSerie
   have hsub : (b * d).closedSupport ≤ s := b.closedSupport_mul_subset_add d
   have hm : z ∈ (s.cantorBendixson o : Set G) :=
     Closeds.cantorBendixson_mono hsub o hz
-  simpa only [cantorBendixsonRank_eq, mem_setOf_eq] using
+  simpa only [cantorBendixsonRank_eq, Set.mem_ofPred_eq] using
     b.closedSupport.cantorBendixson_add_subset d.closedSupport
       b.closedSupport_isPWO d.closedSupport_isPWO o hm
 

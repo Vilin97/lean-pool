@@ -532,7 +532,8 @@ theorem exists_forall_xCoeff_pol_translatedTruncation_pow_mul (hg : wt B₀ < α
         Finset.sum_eq_zero fun β hβ ↦ hfβ β hβ k (by omega)]
       obtain ⟨k', rfl⟩ : ∃ k', k = k' + 1 := ⟨k - 1, by omega⟩
       rw [xCoeff_succ_X_mul, (h₁ γ hγ₁ hγ0).1 k' (by omega), ← mul_assoc,
-        xCoeff_mul_X_pow B₀ (Subalgebra.mul_mem _ (h₃ γ hγ₃ hγ0) hu.pol_mem), ite_eq_right (by omega),
+        xCoeff_mul_X_pow B₀ (Subalgebra.mul_mem _ (h₃ γ hγ₃ hγ0) hu.pol_mem), ite_eq_right (by
+          omega),
         add_zero, add_zero]
     · -- the coefficient of `X_{B₀}^(e+1)`
       rw [hconv, map_add, map_add, hf0, hfγ, map_sum,

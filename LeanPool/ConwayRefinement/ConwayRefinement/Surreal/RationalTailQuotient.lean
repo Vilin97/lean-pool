@@ -306,7 +306,7 @@ uniformity. -/
 theorem completeSpace_rationalTailQuotient
     (T : Set (FiniteArchimedeanClass Surreal.{u})) [Small.{u} T] [Nonempty T]
     (hT : ∀ c ∈ T, ∃ d ∈ T, c < d) : CompleteSpace (RationalTailQuotient T) := by
-  letI : Nonempty (Shrink.{u} T) := ⟨equivShrink T (Classical.arbitrary T)⟩
+  let : Nonempty (Shrink.{u} T) := ⟨equivShrink T (Classical.arbitrary T)⟩
   obtain ⟨hpos, hcoinitial⟩ := rationalTailQuotientScale_pos_and_coinitial T hT
   apply completeSpace_of_coinitial_of_exists_half (rationalTailQuotientScale T)
   · exact hpos

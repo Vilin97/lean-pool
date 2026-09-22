@@ -112,7 +112,10 @@ theorem translatedTruncation_window_sub_mem (a b : ℝ) (E : K⟦ℝ⟧) {ξ : �
   rw [not_le] at hlt
   apply hδ
   by_cases h0 : δ ≤ 0
-  · rw [ite_eq_left h0, ite_eq_left h0, ite_eq_left ⟨by linarith, by linarith⟩, show ξ + δ + b = b + ξ + δ by ring,
+  · rw [ite_eq_left h0, ite_eq_left h0, ite_eq_left ⟨by
+      linarith, by
+      linarith⟩, show ξ + δ + b = b + ξ + δ by
+      ring,
       sub_self]
   · rw [ite_eq_right h0, ite_eq_right h0, sub_zero]
 

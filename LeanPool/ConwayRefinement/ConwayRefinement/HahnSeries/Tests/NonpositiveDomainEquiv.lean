@@ -23,9 +23,11 @@ namespace Tests
 
 open HahnSeries.Nonpositive
 
+/-- The identity ordered additive equivalence of the integer exponent group. -/
 def integerExponentEquiv : ℤ ≃+o ℤ :=
   OrderAddMonoidIso.refl ℤ
 
+/-- The rational monomial `7t⁻²` used to check reindexing by an exponent equivalence. -/
 def negativeIntegerMonomial : HahnSeries.Nonpositive ℤ ℚ :=
   single (-2) 7 (by omega)
 

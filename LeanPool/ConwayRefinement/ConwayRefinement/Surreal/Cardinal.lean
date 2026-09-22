@@ -30,7 +30,7 @@ namespace Surreal
 /-- Surreal numbers with option sets in universe `u` are not `u`-small. -/
 theorem not_small : ¬Small.{u} Surreal.{u} := by
   intro h
-  letI : Small.{u} Surreal.{u} := h
+  let : Small.{u} Surreal.{u} := h
   exact not_injective_of_ordinal (fun o : Ordinal.{u} ↦ (NatOrdinal.of o).toSurreal)
     (NatOrdinal.toSurreal.injective.comp NatOrdinal.of.injective)
 

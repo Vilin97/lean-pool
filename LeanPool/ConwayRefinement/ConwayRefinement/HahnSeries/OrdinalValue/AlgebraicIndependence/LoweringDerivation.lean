@@ -280,8 +280,8 @@ change `E ⊗[K] P̂` is a graded domain over `E` with a lowering derivation, it
 `E ⊗[K] P̂/I`, and the quotient `A/I` of every such ring is a domain. -/
 theorem isDomain_tensor_principalFibre (E : Type*) [Field E] [Algebra K E] :
     IsDomain (E ⊗[K] PrincipalFibre K) := by
-  haveI := charZero_of_algebra K E
-  haveI : IsDomain (E ⊗[K] PrincipalSubring K) := isDomain_tensor_principalSubring K E
+  have := charZero_of_algebra K E
+  have : IsDomain (E ⊗[K] PrincipalSubring K) := isDomain_tensor_principalSubring K E
   exact isDomain_tensor_fibre E (principalGrading K) (principalGrading_gradeZeroScalars K)
     (principalSubringDerivation_isLoweringDerivation K)
 
@@ -291,7 +291,7 @@ theorem principalFibre_isGeometricallyIntegral :
     Algebra.IsGeometricallyIntegral K (PrincipalFibre K) := by
   rw [Algebra.isGeometricallyIntegral_iff]
   intro E _ _
-  haveI := isDomain_tensor_principalFibre K E
+  have := isDomain_tensor_principalFibre K E
   exact (Algebra.TensorProduct.comm K _ _).toMulEquiv.isDomain _
 
 variable (K) in

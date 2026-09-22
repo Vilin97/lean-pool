@@ -183,7 +183,7 @@ theorem exists_minimalSystem_degree_one :
       Berarducci.minimalSystemDegree x = 1 := by
   let q := finiteDegreeApproachZeroIndecomposable
   have hq : q ≠ 0 := finiteDegreeApproachZeroIndecomposable_ne_zero
-  letI : Nontrivial (Berarducci.PrincipalIndecomposableQuotient ℚ 1) :=
+  let : Nontrivial (Berarducci.PrincipalIndecomposableQuotient ℚ 1) :=
     ⟨⟨q, 0, hq⟩⟩
   obtain ⟨i⟩ := (Berarducci.principalIndecomposableBasis ℚ 1).index_nonempty
   exact ⟨⟨⟨1, by decide⟩, i⟩, rfl⟩

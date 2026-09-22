@@ -341,10 +341,10 @@ theorem cantorBendixson_minimalSystem_aeval_injective
     Function.Injective (MvPolynomial.aeval x :
       MvPolynomial ι K →ₐ[K] (ν).AssociatedGraded) := by
   classical
-  letI : Nontrivial ((ν).Component 0) :=
+  let : Nontrivial ((ν).Component 0) :=
     Function.Injective.nontrivial
       (cantorBendixsonLayerScalarHom_injective (G := G) (K := K))
-  letI : Nontrivial (ν).AssociatedGraded :=
+  let : Nontrivial (ν).AssociatedGraded :=
     Function.Injective.nontrivial (DirectSum.of_injective 0)
   have hc := hx.isHomogeneousCoordinates cantorBendixson_gradeZeroScalars
   exact hc.aeval_injective cantorBendixson_isLoweringDerivation

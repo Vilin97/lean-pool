@@ -170,7 +170,7 @@ theorem nontrivial_of_associatedGraded_isDomain
     Nontrivial R := by
   apply not_subsingleton_iff_nontrivial.mp
   intro hsub
-  letI : Subsingleton R := hsub
+  let : Subsingleton R := hsub
   have hcomponent (m : M) (x y : ν.Component m) : x = y := by
     induction x using QuotientAddGroup.induction_on with
     | H x =>
@@ -190,9 +190,9 @@ theorem quotient_isDomain_of_associatedGraded_isDomain
     (ν : MaxAddDegree R M) (I : Ideal R) (hν : ν.IsSeparated)
     [IsDomain (ν.quotient I hν).AssociatedGraded] :
     IsDomain (R ⧸ I) := by
-  letI : Nontrivial (R ⧸ I) :=
+  let : Nontrivial (R ⧸ I) :=
     (ν.quotient I hν).nontrivial_of_associatedGraded_isDomain
-  haveI : (ν.quotient I hν).IsMultiplicative :=
+  have : (ν.quotient I hν).IsMultiplicative :=
     (ν.quotient I hν).isMultiplicative_of_associatedGraded_isDomain
       (ν.quotient_isSeparated I hν)
   exact ν.quotient_isDomain I hν

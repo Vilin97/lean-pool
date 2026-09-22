@@ -493,7 +493,8 @@ theorem eq_zero_of_eventually_mkDerivation_eq_zero [CharZero K] (hwt : ∀ i, 1 
   obtain ⟨cf, hcfw, hcf, hcfcoeff⟩ := exists_linear_part hwt hmem hn1 hhhom
   rw [haeval, zero_sub, neg_mem_iff] at hcf
   have hcx := hcfcoeff x₀
-  rw [hind (wt x₀) cf hcfw hcf, Finsupp.coe_zero, Pi.zero_apply, hh, AddMonoidAlgebra.coeff_add, Finsupp.add_apply, hc, coeff_xCoeff,
+  rw [hind (wt x₀) cf hcfw hcf, Finsupp.coe_zero, Pi.zero_apply, hh, AddMonoidAlgebra.coeff_add,
+    Finsupp.add_apply, hc, coeff_xCoeff,
     ite_eq_right (by simp), zero_add, C_mul_X_eq_monomial, coeff_monomial, ite_eq_left rfl] at hcx
   exact ha0 ((mul_eq_zero.mp hcx.symm).resolve_left (Nat.cast_ne_zero.mpr (by omega)))
 

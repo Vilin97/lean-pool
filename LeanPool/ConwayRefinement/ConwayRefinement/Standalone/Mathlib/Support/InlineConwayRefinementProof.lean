@@ -21,8 +21,11 @@ namespace ConwayRefinement.Standalone.InlineConwayRefinement
 
 universe u
 
+/-- The auxiliary game representation supplied by the standalone surreal development. -/
 abbrev SupportGame := ConwayRefinement.Standalone.InlineSurreal.IGame
 
+/-- Recursively convert an indexed Conway game to the auxiliary representation by its option
+sets. -/
 noncomputable def Game.toSupport : Game.{u} → SupportGame.{u}
   | .mk Left Right left right =>
       ConwayRefinement.Standalone.InlineSurreal.ofSets
@@ -30,6 +33,8 @@ noncomputable def Game.toSupport : Game.{u} → SupportGame.{u}
           (Set.range fun i : Left ↦ Game.toSupport (left i))
           (Set.range fun i : Right ↦ Game.toSupport (right i))) trivial
 
+/-- Convert an auxiliary game to an indexed Conway game by shrinking its left and right option
+sets. -/
 @[expose] noncomputable def Game.fromSupport (x : SupportGame.{u}) : Game.{u} :=
   ConwayRefinement.Standalone.InlineSurreal.IGame.ofSetsRecOn x fun s t _ _ hs ht ↦
     .mk (Shrink s) (Shrink t)
@@ -304,6 +309,7 @@ theorem Game.toSupport_mul (x y : Game.{u}) :
               · exact ⟨Sum.inr (i, j),
                   option_eq _ _ (Game.Move.right i) (Game.Move.left j)⟩
 
+/-- Map a numeric indexed-game representative to its surreal value in the auxiliary model. -/
 noncomputable def Surreal.toSupport (x : Surreal.{u}) :
     ConwayRefinement.Standalone.InlineSurreal.Surreal.{u} :=
   @ConwayRefinement.Standalone.InlineSurreal.Surreal.mk _ x.numeric.toSupport
@@ -312,6 +318,7 @@ theorem Surreal.toSupport_eq (x : Surreal.{u}) :
     x.toSupport = @ConwayRefinement.Standalone.InlineSurreal.Surreal.mk _ x.numeric.toSupport :=
   (rfl)
 
+/-- Choose a numeric indexed-game representative of a surreal number in the auxiliary model. -/
 noncomputable def Surreal.fromSupport
     (x : ConwayRefinement.Standalone.InlineSurreal.Surreal.{u}) : Surreal.{u} :=
   ⟨Game.fromSupport x.out, Game.Numeric.fromSupport inferInstance⟩
@@ -323,7 +330,7 @@ theorem Surreal.fromSupport_game
 theorem Surreal.toSupport_fromSupport
     (x : ConwayRefinement.Standalone.InlineSurreal.Surreal.{u}) :
     (Surreal.fromSupport x).toSupport = x := by
-  letI : ConwayRefinement.Standalone.InlineSurreal.IGame.Numeric
+  let : ConwayRefinement.Standalone.InlineSurreal.IGame.Numeric
       (Game.toSupport (Surreal.fromSupport x).game) :=
     (Surreal.fromSupport x).numeric.toSupport
   rw [Surreal.toSupport_eq]
@@ -340,9 +347,9 @@ theorem Surreal.toSupport_fromSupport
 
 theorem Surreal.gameEquivalent_iff_toSupport_eq (x y : Surreal.{u}) :
     Game.Equivalent x.game y.game ↔ x.toSupport = y.toSupport := by
-  letI : ConwayRefinement.Standalone.InlineSurreal.IGame.Numeric (Game.toSupport x.game) :=
+  let : ConwayRefinement.Standalone.InlineSurreal.IGame.Numeric (Game.toSupport x.game) :=
     x.numeric.toSupport
-  letI : ConwayRefinement.Standalone.InlineSurreal.IGame.Numeric (Game.toSupport y.game) :=
+  let : ConwayRefinement.Standalone.InlineSurreal.IGame.Numeric (Game.toSupport y.game) :=
     y.numeric.toSupport
   rw [Surreal.toSupport_eq, Surreal.toSupport_eq,
     ConwayRefinement.Standalone.InlineSurreal.Surreal.mk_eq_mk, Game.equivalent_iff]
@@ -363,6 +370,7 @@ def Surreal.QuotientModel : Type (u + 1) :=
           ((Surreal.gameEquivalent_iff_toSupport_eq _ _ |>.mp hxy).trans
             (Surreal.gameEquivalent_iff_toSupport_eq _ _ |>.mp hyz))⟩ }
 
+/-- The map from indexed games modulo numeric equivalence to the auxiliary surreal model. -/
 noncomputable def Surreal.QuotientModel.toSupport : Surreal.QuotientModel.{u} →
     ConwayRefinement.Standalone.InlineSurreal.Surreal.{u} :=
   Quotient.lift Surreal.toSupport fun _ _ h ↦
@@ -390,14 +398,17 @@ noncomputable def Surreal.quotientEquivSupport : Surreal.QuotientModel.{v} ≃
 
 namespace SupportBridge
 
+/-- Identify the left and right players of CombinatorialGames with the auxiliary player type. -/
 def playerToSupport : _root_.Player → ConwayRefinement.Standalone.InlineSurreal.Player
   | .left => .left
   | .right => .right
 
+/-- Recursively convert an auxiliary game to the CombinatorialGames representation. -/
 noncomputable def toCG (x : SupportGame.{u}) : _root_.IGame.{u} :=
   ConwayRefinement.Standalone.InlineSurreal.IGame.ofSetsRecOn x fun s t _ _ hs ht ↦
     !{Set.range fun y : s ↦ hs y.1 y.2 | Set.range fun y : t ↦ ht y.1 y.2}
 
+/-- Recursively convert a CombinatorialGames game to the auxiliary representation. -/
 noncomputable def fromCG (x : _root_.IGame.{u}) : SupportGame.{u} :=
   _root_.IGame.ofSetsRecOn x fun s t _ _ hs ht ↦
     ConwayRefinement.Standalone.InlineSurreal.ofSets
@@ -690,15 +701,20 @@ end SupportBridge
 
 namespace SupportBridge
 
+/-- The surreal-number quotient in the auxiliary standalone model. -/
 abbrev SupportSurreal := ConwayRefinement.Standalone.InlineSurreal.Surreal
+/-- The game quotient in the auxiliary standalone model. -/
 abbrev SupportQuotientGame := ConwayRefinement.Standalone.InlineSurreal.Game
 
+/-- Convert an auxiliary quotient game to the CombinatorialGames quotient. -/
 noncomputable def gameToCG (x : SupportQuotientGame.{u}) : _root_.Game.{u} :=
   _root_.Game.mk (toCG x.out)
 
+/-- Convert a surreal number from the auxiliary model to the CombinatorialGames model. -/
 noncomputable def surrealToCG (x : SupportSurreal.{u}) : _root_.Surreal.{u} :=
   @_root_.Surreal.mk (toCG x.out) (toCG_numeric inferInstance)
 
+/-- Convert a CombinatorialGames surreal number to the auxiliary model. -/
 noncomputable def surrealFromCG (x : _root_.Surreal.{u}) : SupportSurreal.{u} :=
   @ConwayRefinement.Standalone.InlineSurreal.Surreal.mk (fromCG x.out)
     (fromCG_numeric inferInstance)
@@ -771,8 +787,8 @@ theorem surrealToCG_mk (x : SupportGame.{u})
     [ConwayRefinement.Standalone.InlineSurreal.IGame.Numeric x] :
     surrealToCG (ConwayRefinement.Standalone.InlineSurreal.Surreal.mk x) =
       @_root_.Surreal.mk (toCG x) (toCG_numeric inferInstance) := by
-  letI := toCG_numeric (x := x) (inferInstance)
-  letI := toCG_numeric
+  let := toCG_numeric (x := x) (inferInstance)
+  let := toCG_numeric
     (x := (ConwayRefinement.Standalone.InlineSurreal.Surreal.mk x).out) (inferInstance)
   rw [surrealToCG, _root_.Surreal.mk_eq_mk]
   apply toCG_equiv _ _ |>.mp
@@ -783,7 +799,7 @@ theorem toGame_surrealToCG (x : SupportSurreal.{u}) :
       gameToCG (ConwayRefinement.Standalone.InlineSurreal.Surreal.toGame x) := by
   induction x using ConwayRefinement.Standalone.InlineSurreal.Surreal.ind with
   | mk x =>
-      letI : _root_.IGame.Numeric (toCG x) := toCG_numeric (by infer_instance)
+      let : _root_.IGame.Numeric (toCG x) := toCG_numeric (by infer_instance)
       rw [surrealToCG_mk, _root_.Surreal.toGame_mk,
         ConwayRefinement.Standalone.InlineSurreal.Surreal.toGame_mk, gameToCG_mk]
 
@@ -791,8 +807,8 @@ theorem surrealFromCG_mk (x : _root_.IGame.{u}) [x.Numeric] :
     surrealFromCG (_root_.Surreal.mk x) =
       @ConwayRefinement.Standalone.InlineSurreal.Surreal.mk (fromCG x)
         (fromCG_numeric inferInstance) := by
-  letI := fromCG_numeric (x := x) (inferInstance)
-  letI := fromCG_numeric (x := (_root_.Surreal.mk x).out) (inferInstance)
+  let := fromCG_numeric (x := x) (inferInstance)
+  let := fromCG_numeric (x := (_root_.Surreal.mk x).out) (inferInstance)
   rw [surrealFromCG, ConwayRefinement.Standalone.InlineSurreal.Surreal.mk_eq_mk]
   apply toCG_equiv _ _ |>.mpr
   rw [toCG_fromCG]
@@ -805,8 +821,8 @@ theorem surrealToCG_fromCG (x : _root_.Surreal.{u}) :
     surrealToCG (surrealFromCG x) = x := by
   induction x using _root_.Surreal.ind with
   | mk x =>
-      letI := fromCG_numeric (x := x) (inferInstance)
-      letI := toCG_numeric (x := fromCG x) (inferInstance)
+      let := fromCG_numeric (x := x) (inferInstance)
+      let := toCG_numeric (x := fromCG x) (inferInstance)
       rw [surrealFromCG_mk, surrealToCG_mk]
       rw [_root_.Surreal.mk_eq_mk]
       change toCG (fromCG x) ≤ x ∧ x ≤ toCG (fromCG x)
@@ -817,8 +833,8 @@ theorem surrealFromCG_toCG (x : SupportSurreal.{u}) :
     surrealFromCG (surrealToCG x) = x := by
   induction x using ConwayRefinement.Standalone.InlineSurreal.Surreal.ind with
   | mk x =>
-      letI := toCG_numeric (x := x) (inferInstance)
-      letI := fromCG_numeric (x := toCG x) (inferInstance)
+      let := toCG_numeric (x := x) (inferInstance)
+      let := fromCG_numeric (x := toCG x) (inferInstance)
       rw [surrealToCG_mk, surrealFromCG_mk]
       rw [ConwayRefinement.Standalone.InlineSurreal.Surreal.mk_eq_mk]
       apply toCG_equiv _ _ |>.mpr
@@ -834,7 +850,7 @@ noncomputable def surrealEquivCG : SupportSurreal.{u} ≃ _root_.Surreal.{u} whe
   right_inv := surrealToCG_fromCG
 
 theorem surrealToCG_zero : surrealToCG (0 : SupportSurreal.{u}) = 0 := by
-  letI : _root_.IGame.Numeric (toCG (0 : SupportGame.{u})) :=
+  let : _root_.IGame.Numeric (toCG (0 : SupportGame.{u})) :=
     toCG_numeric (by infer_instance)
   rw [← ConwayRefinement.Standalone.InlineSurreal.Surreal.mk_zero, surrealToCG_mk,
     ← _root_.Surreal.mk_zero, _root_.Surreal.mk_eq_mk]
@@ -843,7 +859,7 @@ theorem surrealToCG_zero : surrealToCG (0 : SupportSurreal.{u}) = 0 := by
   exact ⟨le_rfl, le_rfl⟩
 
 theorem surrealToCG_one : surrealToCG (1 : SupportSurreal.{u}) = 1 := by
-  letI : _root_.IGame.Numeric (toCG (1 : SupportGame.{u})) :=
+  let : _root_.IGame.Numeric (toCG (1 : SupportGame.{u})) :=
     toCG_numeric (by infer_instance)
   rw [← ConwayRefinement.Standalone.InlineSurreal.Surreal.mk_one, surrealToCG_mk,
     ← _root_.Surreal.mk_one, _root_.Surreal.mk_eq_mk]
@@ -854,8 +870,8 @@ theorem surrealToCG_one : surrealToCG (1 : SupportSurreal.{u}) = 1 := by
 theorem surrealToCG_neg (x : SupportSurreal.{u}) : surrealToCG (-x) = -surrealToCG x := by
   induction x using ConwayRefinement.Standalone.InlineSurreal.Surreal.ind with
   | mk x =>
-      letI : _root_.IGame.Numeric (toCG x) := toCG_numeric (by infer_instance)
-      letI : _root_.IGame.Numeric (toCG (-x)) := toCG_numeric (by infer_instance)
+      let : _root_.IGame.Numeric (toCG x) := toCG_numeric (by infer_instance)
+      let : _root_.IGame.Numeric (toCG (-x)) := toCG_numeric (by infer_instance)
       rw [← ConwayRefinement.Standalone.InlineSurreal.Surreal.mk_neg, surrealToCG_mk,
         surrealToCG_mk, ← _root_.Surreal.mk_neg, _root_.Surreal.mk_eq_mk]
       change toCG (-x) ≤ -toCG x ∧ -toCG x ≤ toCG (-x)
@@ -868,9 +884,9 @@ theorem surrealToCG_add (x y : SupportSurreal.{u}) :
   | mk x =>
       induction y using ConwayRefinement.Standalone.InlineSurreal.Surreal.ind with
       | mk y =>
-          letI : _root_.IGame.Numeric (toCG x) := toCG_numeric (by infer_instance)
-          letI : _root_.IGame.Numeric (toCG y) := toCG_numeric (by infer_instance)
-          letI : _root_.IGame.Numeric (toCG (x + y)) := toCG_numeric (by infer_instance)
+          let : _root_.IGame.Numeric (toCG x) := toCG_numeric (by infer_instance)
+          let : _root_.IGame.Numeric (toCG y) := toCG_numeric (by infer_instance)
+          let : _root_.IGame.Numeric (toCG (x + y)) := toCG_numeric (by infer_instance)
           rw [← ConwayRefinement.Standalone.InlineSurreal.Surreal.mk_add, surrealToCG_mk,
             surrealToCG_mk, surrealToCG_mk, ← _root_.Surreal.mk_add,
             _root_.Surreal.mk_eq_mk]
@@ -884,9 +900,9 @@ theorem surrealToCG_mul (x y : SupportSurreal.{u}) :
   | mk x =>
       induction y using ConwayRefinement.Standalone.InlineSurreal.Surreal.ind with
       | mk y =>
-          letI : _root_.IGame.Numeric (toCG x) := toCG_numeric (by infer_instance)
-          letI : _root_.IGame.Numeric (toCG y) := toCG_numeric (by infer_instance)
-          letI : _root_.IGame.Numeric (toCG (x * y)) := toCG_numeric (by infer_instance)
+          let : _root_.IGame.Numeric (toCG x) := toCG_numeric (by infer_instance)
+          let : _root_.IGame.Numeric (toCG y) := toCG_numeric (by infer_instance)
+          let : _root_.IGame.Numeric (toCG (x * y)) := toCG_numeric (by infer_instance)
           rw [← ConwayRefinement.Standalone.InlineSurreal.Surreal.mk_mul, surrealToCG_mk,
             surrealToCG_mk, surrealToCG_mk, ← _root_.Surreal.mk_mul,
             _root_.Surreal.mk_eq_mk]
@@ -1003,10 +1019,10 @@ theorem Game.equivalent_iff_toSupport (x y : Game.{u}) :
 theorem Surreal.productsEqual_iff_toSupport (a b c d : Surreal.{u}) :
     Game.Equivalent (Game.mul a.game b.game) (Game.mul c.game d.game) ↔
       a.toSupport * b.toSupport = c.toSupport * d.toSupport := by
-  letI := a.numeric.toSupport
-  letI := b.numeric.toSupport
-  letI := c.numeric.toSupport
-  letI := d.numeric.toSupport
+  let := a.numeric.toSupport
+  let := b.numeric.toSupport
+  let := c.numeric.toSupport
+  let := d.numeric.toSupport
   rw [Game.equivalent_iff_toSupport, Game.toSupport_mul, Game.toSupport_mul]
   simp only [Surreal.toSupport_eq]
   rw [← ConwayRefinement.Standalone.InlineSurreal.Surreal.mk_mul,
@@ -1017,9 +1033,9 @@ theorem Surreal.productsEqual_iff_toSupport (a b c d : Surreal.{u}) :
 theorem Surreal.equalsProduct_iff_toSupport (a e f : Surreal.{u}) :
     Game.Equivalent a.game (Game.mul e.game f.game) ↔
       a.toSupport = e.toSupport * f.toSupport := by
-  letI := a.numeric.toSupport
-  letI := e.numeric.toSupport
-  letI := f.numeric.toSupport
+  let := a.numeric.toSupport
+  let := e.numeric.toSupport
+  let := f.numeric.toSupport
   rw [Game.equivalent_iff_toSupport, Game.toSupport_mul]
   simp only [Surreal.toSupport_eq]
   rw [← ConwayRefinement.Standalone.InlineSurreal.Surreal.mk_mul]
@@ -1084,7 +1100,7 @@ theorem Game.toSupport_one : Game.toSupport (Game.one : Game.{u}) =
 theorem Game.toSupport_singletonIntegerCut_numeric (x : Surreal.{u}) :
     ConwayRefinement.Standalone.InlineSurreal.IGame.Numeric
       (Game.toSupport (Surreal.singletonIntegerCut x.game)) := by
-  letI := x.numeric.toSupport
+  let := x.numeric.toSupport
   rw [Surreal.singletonIntegerCut_eq]
   rw [Game.toSupport_mk]
   rw [ConwayRefinement.Standalone.InlineSurreal.IGame.numeric_def]
@@ -1140,10 +1156,10 @@ theorem Game.toSupport_singletonIntegerCut_numeric (x : Surreal.{u}) :
 theorem Surreal.toSupport_sub_one (x : Surreal.{u}) :
     @ConwayRefinement.Standalone.InlineSurreal.Surreal.mk
         (Game.toSupport (Game.add x.game (Game.neg Game.one))) (by
-          letI := x.numeric.toSupport
+          let := x.numeric.toSupport
           rw [Game.toSupport_add, Game.toSupport_neg, Game.toSupport_one]
           infer_instance) = x.toSupport - 1 := by
-  letI := x.numeric.toSupport
+  let := x.numeric.toSupport
   simp only [Game.toSupport_add, Game.toSupport_neg, Game.toSupport_one]
   simpa only [ConwayRefinement.Standalone.InlineSurreal.Surreal.mk_neg,
     ConwayRefinement.Standalone.InlineSurreal.Surreal.mk_one, Surreal.toSupport_eq,
@@ -1154,10 +1170,10 @@ theorem Surreal.toSupport_sub_one (x : Surreal.{u}) :
 theorem Surreal.toSupport_add_one (x : Surreal.{u}) :
     @ConwayRefinement.Standalone.InlineSurreal.Surreal.mk
         (Game.toSupport (Game.add x.game Game.one)) (by
-          letI := x.numeric.toSupport
+          let := x.numeric.toSupport
           rw [Game.toSupport_add, Game.toSupport_one]
           infer_instance) = x.toSupport + 1 := by
-  letI := x.numeric.toSupport
+  let := x.numeric.toSupport
   simp only [Game.toSupport_add, Game.toSupport_one]
   simpa only [ConwayRefinement.Standalone.InlineSurreal.Surreal.mk_one,
     Surreal.toSupport_eq] using
@@ -1195,8 +1211,8 @@ theorem Surreal.toSupport_singletonIntegerCut (x : Surreal.{u}) :
 theorem Surreal.isConwayOmnificInteger_iff_toSupport (x : Surreal.{u}) :
     IsConwayOmnificInteger x ↔
       ConwayRefinement.Standalone.InlineSurreal.Surreal.IsConwayOmnificInteger x.toSupport := by
-  letI := x.numeric.toSupport
-  letI := Game.toSupport_singletonIntegerCut_numeric x
+  let := x.numeric.toSupport
+  let := Game.toSupport_singletonIntegerCut_numeric x
   rw [Surreal.isConwayOmnificInteger_iff,
     ConwayRefinement.Standalone.InlineSurreal.Surreal.IsConwayOmnificInteger]
   constructor

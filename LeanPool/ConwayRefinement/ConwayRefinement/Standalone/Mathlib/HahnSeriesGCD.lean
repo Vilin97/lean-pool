@@ -6,7 +6,7 @@ Authors: Dan Abramov
 module
 
 public import Mathlib.Algebra.Divisibility.Basic
-public import Mathlib.Data.Real.Basic
+public import Mathlib.Basic.Real.Basic
 public import Mathlib.RingTheory.HahnSeries.Multiplication
 
 /-!

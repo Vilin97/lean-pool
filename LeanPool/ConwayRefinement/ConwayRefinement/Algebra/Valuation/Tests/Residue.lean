@@ -31,6 +31,7 @@ open scoped DirectSum
 
 namespace Tests
 
+/-- The trivial valuation pulled back along the first projection, used to test the residue map. -/
 def residueFirstProjectionValuation : MaxAddDegree (ℚ × ℚ) ℕ :=
   MaxAddDegree.ofValuation
     ((1 : Valuation ℚ (WithZero (Multiplicative ℕ))).comap (RingHom.fst ℚ ℚ))
@@ -38,24 +39,30 @@ def residueFirstProjectionValuation : MaxAddDegree (ℚ × ℚ) ℕ :=
 instance : residueFirstProjectionValuation.IsMultiplicative :=
   inferInstanceAs (MaxAddDegree.ofValuation _).IsMultiplicative
 
+/-- The element `(0, 1)` of the nonpositive subring, lying in the valuation support. -/
 def residueSupportElement : residueFirstProjectionValuation.nonpositiveSubring :=
   ⟨(0, 1), by
     rw [MaxAddDegree.mem_nonpositiveSubring_iff]
     simp [MaxAddDegree.ofValuation_apply, residueFirstProjectionValuation,
       Valuation.one_apply_def]⟩
 
+/-- The element `(1, 1)` of the nonpositive subring, whose degree is zero. -/
 def residueValueZeroElement : residueFirstProjectionValuation.nonpositiveSubring :=
   ⟨(1, 1), by
     rw [MaxAddDegree.mem_nonpositiveSubring_iff]
     simp [MaxAddDegree.ofValuation_apply, residueFirstProjectionValuation,
       Valuation.one_apply_def]⟩
 
+/-- The element `(1, 0)` of the nonpositive subring, used with its negative to test residue
+classes. -/
 def residuePositiveUnit : residueFirstProjectionValuation.nonpositiveSubring :=
   ⟨(1, 0), by
     rw [MaxAddDegree.mem_nonpositiveSubring_iff]
     simp [MaxAddDegree.ofValuation_apply, residueFirstProjectionValuation,
       Valuation.one_apply_def]⟩
 
+/-- The element `(-1, 0)` of the nonpositive subring, used with its negative to test residue
+classes. -/
 def residueNegativeUnit : residueFirstProjectionValuation.nonpositiveSubring :=
   ⟨(-1, 0), by
     rw [MaxAddDegree.mem_nonpositiveSubring_iff]
@@ -119,9 +126,11 @@ section Padic
 
 local instance : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
 
+/-- The two-adic valuation on the rationals in max-additive notation. -/
 abbrev residueTwoAdicValuation : MaxAddDegree ℚ ℤ :=
   MaxAddDegree.ofValuation (Rat.padicValuation 2)
 
+/-- The rational unit in the nonpositive subring of the two-adic valuation. -/
 def residueTwoAdicOne : residueTwoAdicValuation.nonpositiveSubring :=
   ⟨1, by simp⟩
 
@@ -135,6 +144,7 @@ theorem residueTwoAdic_value_two :
     (Rat.padicValuation_self 2)
   exact h.trans (by rfl)
 
+/-- The rational number two in the nonpositive subring of the two-adic valuation. -/
 def residueTwoAdicTwo : residueTwoAdicValuation.nonpositiveSubring :=
   ⟨2, by
     rw [MaxAddDegree.mem_nonpositiveSubring_iff, residueTwoAdic_value_two]

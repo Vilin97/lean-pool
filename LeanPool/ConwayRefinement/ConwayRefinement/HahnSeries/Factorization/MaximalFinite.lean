@@ -47,10 +47,7 @@ theorem principalComponentTensorEquiv_mulRightFactor
         (TensorProduct.mulRightFactor q z) =
       HahnSeries.Nonpositive.degreeFiniteSupportResidueEquiv K q •
         principalComponentTensorEquiv K α z := by
-  induction z using TensorProduct.induction_on with
-  | zero =>
-      rw [(TensorProduct.mulRightFactor (K := K) q).map_zero,
-        (principalComponentTensorEquiv K α).map_zero, smul_zero]
+  induction z using TensorProduct.inductionOn with
   | tmul x p =>
       rw [TensorProduct.mulRightFactor_tmul,
         principalComponentTensorEquiv_tmul,
@@ -73,21 +70,7 @@ theorem principalSubringTensorEquiv_mulRightFactor [CharZero K] (q : FiniteSuppo
         (TensorProduct.mulRightFactor q z) =
       finiteSupportGradedEmbedding K q *
         principalSubringTensorEquiv K z := by
-  induction z using TensorProduct.induction_on with
-  | zero =>
-      calc
-        principalSubringTensorEquiv K
-              (TensorProduct.mulRightFactor q 0) =
-            principalSubringTensorEquiv K 0 :=
-          congrArg (principalSubringTensorEquiv K)
-            ((TensorProduct.mulRightFactor (K := K) q).map_zero)
-        _ = 0 := map_zero (principalSubringTensorEquiv K)
-        _ = finiteSupportGradedEmbedding K q * 0 :=
-          (mul_zero _).symm
-        _ = finiteSupportGradedEmbedding K q *
-              principalSubringTensorEquiv K 0 :=
-          congrArg (finiteSupportGradedEmbedding K q * ·)
-            (map_zero (principalSubringTensorEquiv K)).symm
+  induction z using TensorProduct.inductionOn with
   | tmul x p =>
       rw [TensorProduct.mulRightFactor_tmul,
         principalSubringTensorEquiv_tmul,
@@ -303,7 +286,8 @@ theorem isContent_principalGradedTensorEquiv_symm_iff [CharZero K] (B : DegreeGr
 
 /-- A finite-support series, embedded in grade zero, is its own maximal finite-support
 divisor. -/
-theorem isGradedMaximalFiniteSupportDivisor_finiteSupport [CharZero K] (p : FiniteSupportRing (K := K)) :
+theorem isGradedMaximalFiniteSupportDivisor_finiteSupport [CharZero K] (p : FiniteSupportRing (K
+  := K)) :
     IsGradedMaximalFiniteSupportDivisor
       (finiteSupportGradedEmbedding K p) (Associates.mk p) := by
   apply (isContent_principalGradedTensorEquiv_symm_iff _ (Associates.mk p)).mp

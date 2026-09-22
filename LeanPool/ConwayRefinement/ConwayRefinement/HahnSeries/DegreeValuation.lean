@@ -8,7 +8,7 @@ module
 public import LeanPool.ConwayRefinement.ConwayRefinement.Algebra.Valuation.MaxAddDegree
 public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.Nonpositive
 public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.OrderType
-public import Mathlib.Data.Real.Basic
+public import Mathlib.Basic.Real.Basic
 
 /-!
 # The degree valuation on nonpositive real Hahn series

@@ -24,11 +24,15 @@ public noncomputable section
 
 open HahnSeries.Nonpositive
 
+/-- The full real exponent subgroup used to test normalized finite-support factors. -/
 abbrev HPartExponentSubgroup : AddSubgroup ℝ := ⊤
 
+/-- The ring of rational Hahn series with finite nonpositive real support. -/
 abbrev HPartFiniteSupportRing :=
   FiniteSupportRing (G := HPartExponentSubgroup) (K := ℚ)
 
+/-- Finite-support rational Hahn series with nonpositive real exponents and constant coefficient
+one. -/
 abbrev HPartNormalizedFiniteSupport :=
   ConstantTermOneFiniteSupport (G := HPartExponentSubgroup) (K := ℚ)
 

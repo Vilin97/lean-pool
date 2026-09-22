@@ -34,7 +34,7 @@ def IsMaximalDivisorAlong
 /-- The defining divisibility characterization of a maximal divisor along a map. -/
 theorem isMaximalDivisorAlong_iff
     {D : Type u} {R : Type v}
-    [CommMonoidWithZero D] [IsCancelMulZero D]
+    [CommMonoidWithZero D]
     [CommMonoidWithZero R]
     (f : D →* R) (x : R) (a : Associates D) :
     IsMaximalDivisorAlong f x a ↔
@@ -48,6 +48,7 @@ variable [CommMonoidWithZero D] [IsCancelMulZero D]
 variable [CommMonoidWithZero R]
 variable {f : D →* R} {x y : R} {a b c : Associates D}
 
+omit [IsCancelMulZero D] in
 /-- Zero has zero as its maximal divisor class along every multiplicative map. -/
 theorem zero (f : D →* R) : IsMaximalDivisorAlong f 0 0 := by
   rw [isMaximalDivisorAlong_iff]

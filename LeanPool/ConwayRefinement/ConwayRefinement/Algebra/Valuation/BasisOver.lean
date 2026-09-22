@@ -641,7 +641,7 @@ theorem prime_coe_of_degreeOverGradedRingEquiv
     Prime (a : R) := by
   classical
   have hψsep : (ν.degreeOver P).IsSeparated := ν.degreeOver_isSeparated P
-  haveI : IsDomain (ν.degreeOver P).AssociatedGraded := Θ.symm.toMulEquiv.isDomain _
+  have : IsDomain (ν.degreeOver P).AssociatedGraded := Θ.symm.toMulEquiv.isDomain _
   -- the quotient by the initial form is a domain
   have hmap : Ideal.span {(ν.degreeOver P).initialForm (a : R)} =
       (Ideal.span ({1 ⊗ₜ[L'] a} : Set (C ⊗[L'] P))).map
@@ -653,11 +653,11 @@ theorem prime_coe_of_degreeOverGradedRingEquiv
         Ideal.span ({1 ⊗ₜ[L'] a} : Set (C ⊗[L'] P)) := by
     rw [Ideal.map_span, Set.image_singleton]
     rfl
-  haveI : IsDomain ((C ⊗[L'] P) ⧸ Ideal.span ({1 ⊗ₜ[L'] a} : Set (C ⊗[L'] P))) := by
+  have : IsDomain ((C ⊗[L'] P) ⧸ Ideal.span ({1 ⊗ₜ[L'] a} : Set (C ⊗[L'] P))) := by
     have e := Algebra.TensorProduct.tensorQuotientEquiv (R := L') L' P C (Ideal.span {a})
     rw [hmap'] at e
     exact e.symm.toMulEquiv.isDomain _
-  haveI : IsDomain ((ν.degreeOver P).AssociatedGraded ⧸
+  have : IsDomain ((ν.degreeOver P).AssociatedGraded ⧸
       Ideal.span {(ν.degreeOver P).initialForm (a : R)}) :=
     (Ideal.quotientEquiv _ _ Θ hmap).symm.toMulEquiv.isDomain _
   exact (ν.degreeOver P).prime_of_quotient_span_initialForm_isDomain hψsep
@@ -672,13 +672,13 @@ theorem prime_coe_of_degreeOverGradedRingEquiv_of_algEquiv
     {a₀ : P₀} (ha₀ : a₀ ≠ 0) [IsDomain (C ⊗[L'] P₀)]
     [IsDomain (C ⊗[L'] (P₀ ⧸ Ideal.span {a₀}))] : Prime ((e a₀ : P) : R) := by
   have ha : e a₀ ≠ 0 := (map_ne_zero_iff e e.injective).mpr ha₀
-  haveI : IsDomain (C ⊗[L'] P) :=
+  have : IsDomain (C ⊗[L'] P) :=
     (Algebra.TensorProduct.congr (AlgEquiv.refl (R := L') (A₁ := C)) e).symm.toMulEquiv.isDomain _
   have hmap : Ideal.span {e a₀} = (Ideal.span {a₀}).map (e : P₀ →+* P) := by
     rw [Ideal.map_span, Set.image_singleton]
     rfl
   let eQ := Ideal.quotientEquivAlg (Ideal.span {a₀}) (Ideal.span {e a₀}) e hmap
-  haveI : IsDomain (C ⊗[L'] (P ⧸ Ideal.span {e a₀})) :=
+  have : IsDomain (C ⊗[L'] (P ⧸ Ideal.span {e a₀})) :=
     (Algebra.TensorProduct.congr (AlgEquiv.refl (R := L') (A₁ := C)) eQ).symm.toMulEquiv.isDomain _
   exact ν.prime_coe_of_degreeOverGradedRingEquiv P Θ hΘ ha
 

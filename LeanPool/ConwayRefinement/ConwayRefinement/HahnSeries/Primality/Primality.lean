@@ -39,7 +39,7 @@ variable {K : Type v} [Field K] [CharZero K]
 /-- `K((ℝ^{≤0}))` is pre-Schreier (Mathlib's `DecompositionMonoid`) because it is a GCD
 domain. -/
 instance decompositionMonoid : DecompositionMonoid (Series K) := by
-  letI : GCDMonoid (Series K) := Classical.choice nonemptyGCDMonoid
+  let : GCDMonoid (Series K) := Classical.choice nonemptyGCDMonoid
   infer_instance
 
 /-- Every series is primal in `K((ℝ^{≤0}))`. -/

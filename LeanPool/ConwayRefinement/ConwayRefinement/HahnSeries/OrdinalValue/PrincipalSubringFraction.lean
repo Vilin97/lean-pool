@@ -88,6 +88,7 @@ noncomputable abbrev principalSubringFractionSelfAlgebra :
       (algebraMap (PrincipalSubring K)
         (FractionRing (PrincipalSubring K))))
 
+/-- The principal graded subring acts canonically on its explicitly constructed fraction field. -/
 local instance principalSubringFractionSelfAlgebraInstance :
     Algebra (PrincipalSubring K)
       (PrincipalSubringFractionField K) :=
@@ -184,6 +185,8 @@ noncomputable abbrev principalSubringFractionAlgebra :
     ((principalSubringToFraction K).comp
       (algebraMap K (PrincipalSubring K)))
 
+/-- The coefficient-field algebra structure on the explicitly constructed principal-subring
+fraction field. -/
 local instance principalSubringFractionAlgebraInstance :
     Algebra K (PrincipalSubringFractionField K) :=
   principalSubringFractionAlgebra K

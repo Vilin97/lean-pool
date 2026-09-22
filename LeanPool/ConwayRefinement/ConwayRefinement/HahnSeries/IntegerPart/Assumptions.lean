@@ -8,7 +8,7 @@ module
 public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.CardinalTruncation
 public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.ArchimedeanSplitting
 public import Mathlib.Algebra.Order.Module.Archimedean
-public import Mathlib.Data.Real.Embedding
+public import Mathlib.Basic.Real.Embedding
 
 /-!
 # LM24 assumptions at an Archimedean class
@@ -111,7 +111,7 @@ theorem fracSubring_cardSuppLTTruncationIntegerPart_eq_top_of_assumptionA2AtFini
         (G := ↥(FiniteArchimedeanClass.ball K σ)) (R := R) (κ := κ) Z) = ⊤ := by
   rcases (assumptionA2AtFiniteClass_iff (K := K) κ Z σ).mp hA2 with hcof | ⟨hzero, hfrac⟩
   · exact HahnSeries.fracSubring_cardSuppLTTruncationIntegerPart_eq_top_of_le_cof Z hcof
-  · letI : Subsingleton ↥(FiniteArchimedeanClass.ball K σ) := hzero
+  · let : Subsingleton ↥(FiniteArchimedeanClass.ball K σ) := hzero
     exact HahnSeries.fracSubring_cardSuppLTTruncationIntegerPart_eq_top_of_subsingleton Z hfrac
 
 end LM24

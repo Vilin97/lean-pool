@@ -159,7 +159,7 @@ theorem pol_add {α : NatOrdinal.{u}}
   apply σ.pol_eq_of_degree_sub_aeval_eq_bot hx hinj huv (fun d hd ↦ by
     have hdne : (σ.pol hx α u + σ.pol hx α v).coeff d ≠ 0 :=
       mem_support_iff.mp hd
-    rw [MvPolynomial.coeff_add] at hdne
+    rw [AddMonoidAlgebra.coeff_add, Finsupp.add_apply] at hdne
     by_cases hdu : d ∈ (σ.pol hx α u).support
     · exact σ.pol_weight_lt hx α u d hdu
     · have hdu0 := notMem_support_iff.mp hdu

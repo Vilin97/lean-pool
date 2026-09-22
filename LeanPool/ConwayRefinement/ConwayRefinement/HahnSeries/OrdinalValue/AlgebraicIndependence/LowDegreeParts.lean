@@ -8,8 +8,7 @@ module
 
 import LeanPool.ConwayRefinement.ConwayRefinement.Blueprint
 public import LeanPool.ConwayRefinement.ConwayRefinement.Algebra.MvPolynomial.LimitOrdinalContradiction
-public import
-  LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.OrdinalValue.AlgebraicIndependence.LimitOrdinalRelationAtCutoff
+public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.OrdinalValue.AlgebraicIndependence.LimitOrdinalRelationAtCutoff
 
 /-!
 # Low-degree parts and algebraic order

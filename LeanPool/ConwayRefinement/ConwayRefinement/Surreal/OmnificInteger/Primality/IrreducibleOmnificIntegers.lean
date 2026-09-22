@@ -282,7 +282,7 @@ theorem prime_intCast [CharZero R] {z : ℤ} (hz : Prime z) :
     have := congrArg (intCoeffRingHom Z hZ) h
     rwa [map_intCast, Int.cast_id, map_zero] at this
   · intro h
-    apply hz.not_unit
+    apply hz.not_isUnit
     rcases eq_one_or_eq_neg_one_of_isUnit Z hZ h with h1 | h1
     · have := congrArg (intCoeffRingHom Z hZ) h1
       rw [map_intCast, Int.cast_id, map_one] at this

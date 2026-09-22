@@ -74,11 +74,11 @@ theorem signedSmallSupportIntegerPart_isPrimal
     rw [supportArchimedeanClasses_toNonpositiveRingHom]
     exact hy
   · intro T hTne hTlimit hTcard
-    letI : Small.{u} T := small_of_card_lt_smallSupportCardinal hTcard
-    letI : Nonempty T := Set.nonempty_coe_sort.mpr hTne
+    let : Small.{u} T := small_of_card_lt_smallSupportCardinal hTcard
+    let : Nonempty T := Set.nonempty_coe_sort.mpr hTne
     exact ⟨Surreal.completeSpace_rationalTailQuotient T hTlimit⟩
   · intro T _hTne hTlimit hTcard
-    letI : Small.{u} T := small_of_card_lt_smallSupportCardinal hTcard
+    let : Small.{u} T := small_of_card_lt_smallSupportCardinal hTcard
     exact Surreal.fracSubring_cardSuppLTTruncationIntegerPart_tailSubmodule_eq_top
       Surreal.realIntegerSubring T hTlimit
 
@@ -108,7 +108,7 @@ theorem signedSmallSupportIntegerPart_decompositionMonoid :
   -/)]
 theorem conwayRefinement : ConwayRefinementConjecture.{u} := by
   rw [conwayRefinementConjecture_def, ← hasFourFactorRefinement_def]
-  letI : DecompositionMonoid SignedSmallSupportIntegerPart.{u} :=
+  let : DecompositionMonoid SignedSmallSupportIntegerPart.{u} :=
     signedSmallSupportIntegerPart_decompositionMonoid
   exact signedSmallSupportIntegerPartRingEquiv.toMulEquiv.hasFourFactorRefinement_iff.mpr
     hasFourFactorRefinement_of_decompositionMonoid

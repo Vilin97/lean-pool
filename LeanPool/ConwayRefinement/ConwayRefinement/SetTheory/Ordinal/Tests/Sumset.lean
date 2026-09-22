@@ -35,10 +35,10 @@ open scoped Pointwise
 namespace Tests
 
 private instance : WellFoundedLT (ℕ ⊕ₗ Unit) :=
-  (Sum.Lex.toLexRelIsoLT (α := ℕ) (β := Unit)).symm.toRelEmbedding.isWellFounded
+  (Sum.Lex.toLexRelIsoLT (α := ℕ) (β := Unit)).symm.toRelEmbedding.wellFounded'
 
 private instance : WellFoundedLT ((ℕ ×ₗ ℕ) ⊕ₗ ℕ) :=
-  (Sum.Lex.toLexRelIsoLT (α := ℕ ×ₗ ℕ) (β := ℕ)).symm.toRelEmbedding.isWellFounded
+  (Sum.Lex.toLexRelIsoLT (α := ℕ ×ₗ ℕ) (β := ℕ)).symm.toRelEmbedding.wellFounded'
 
 private abbrev SumsetExponentGroup := ℤ ×ₗ (ℤ ×ₗ ℤ)
 
@@ -232,8 +232,8 @@ private theorem sum_orderType :
     _ = Ordinal.omega0 * Ordinal.omega0 + Ordinal.omega0 := by
       rw [Ordinal.type_nat_lt]
     _ = Ordinal.omega0 ^ (2 : Ordinal) + Ordinal.omega0 := by
-      have hsucc : Order.succ (1 : Ordinal) = 2 := one_add_one_eq_two
-      rw [← hsucc, Ordinal.opow_succ, Ordinal.opow_one]
+      have hsucc : (1 : Ordinal) + 1 = 2 := one_add_one_eq_two
+      rw [← hsucc, Ordinal.opow_add_one, Ordinal.opow_one]
 
 private theorem naturalProduct_value :
     (NatOrdinal.of (Ordinal.omega0 + 1) * NatOrdinal.of Ordinal.omega0).val =
@@ -271,8 +271,8 @@ theorem naturalSumsetBound_distinguishes_ordinaryMul :
         Ordinal.omega0 ^ (2 : Ordinal) := by
       rw [Ordinal.add_mul_of_isSuccLimit Ordinal.one_add_omega0
         Ordinal.isSuccLimit_omega0]
-      have hsucc : Order.succ (1 : Ordinal) = 2 := one_add_one_eq_two
-      rw [← hsucc, Ordinal.opow_succ, Ordinal.opow_one]
+      have hsucc : (1 : Ordinal) + 1 = 2 := one_add_one_eq_two
+      rw [← hsucc, Ordinal.opow_add_one, Ordinal.opow_one]
     rw [hordinary]
     exact not_le_of_gt (lt_add_of_pos_right _ Ordinal.omega0_pos)
 

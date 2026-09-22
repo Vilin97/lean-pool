@@ -85,9 +85,9 @@ theorem hasRefinement (G : Type u) (K : Type v)
     HasRefinement G K := by
   intro _ _ _ _ _ _ _ _ _
   obtain ⟨ι, ⟨equiv⟩⟩ := isPolynomialRing G K
-  letI : IsDomain (Germ G K) :=
+  let : IsDomain (Germ G K) :=
     Function.Injective.isDomain equiv.symm.toRingHom equiv.symm.injective
-  letI : DecompositionMonoid (Germ G K) :=
+  let : DecompositionMonoid (Germ G K) :=
     MulEquiv.decompositionMonoid equiv.symm.toMulEquiv
   intro a b c d habcd
   exact (hasFourFactorRefinement_of_decompositionMonoid (R := Germ G K)).refine habcd

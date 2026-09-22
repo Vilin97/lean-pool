@@ -6,7 +6,7 @@ Authors: Dan Abramov
 module
 
 public import Mathlib.Algebra.MvPolynomial.Equiv
-public import Mathlib.Data.Real.Basic
+public import Mathlib.Basic.Real.Basic
 public import Mathlib.RingTheory.HahnSeries.Multiplication
 public import Mathlib.RingTheory.Ideal.Quotient.Operations
 public import Mathlib.RingTheory.Ideal.Span

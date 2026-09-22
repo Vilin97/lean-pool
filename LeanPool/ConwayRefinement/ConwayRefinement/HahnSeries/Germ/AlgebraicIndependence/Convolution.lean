@@ -50,7 +50,7 @@ theorem coeff_truncLE_mul_truncLE (b d : HahnSeries G R) (a c z : G) :
       (Finset.antidiagonal b.isPWO_support d.isPWO_support z).filter
         (fun p ↦ p.1 ≤ a ∧ p.2 ≤ c) := by
     ext p
-    simp only [Finset.mem_antidiagonal, support_truncLE, mem_setOf_eq, Finset.mem_filter]
+    simp only [Finset.mem_antidiagonal, support_truncLE, Set.mem_ofPred_eq, Finset.mem_filter]
     tauto
   rw [he]
   apply Finset.sum_congr rfl
@@ -74,7 +74,7 @@ def closedSupportAddFiber (b d : HahnSeries G R) (γ : G) : Finset (G × G) :=
 theorem mem_closedSupportAddFiber (b d : HahnSeries G R) (γ : G) (p : G × G) :
     p ∈ b.closedSupportAddFiber d γ ↔
       p.1 ∈ b.closedSupport ∧ p.2 ∈ d.closedSupport ∧ p.1 + p.2 = γ := by
-  simp only [closedSupportAddFiber, Set.Finite.mem_toFinset, mem_setOf_eq, mem_prod]
+  simp only [closedSupportAddFiber, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, mem_prod]
   tauto
 
 end Zero

@@ -46,14 +46,14 @@ theorem birthday_ofSets_le_of_mem {s t : Set Surreal.{u}} {z : Surreal}
   apply IGame.Fits.birthday_le
   constructor
   · intro x hx
-    letI := IGame.Numeric.of_mem_moves hx
+    let := IGame.Numeric.of_mem_moves hx
     rw [IGame.Numeric.not_le]
     simp only [moves_ofSets, Player.cases] at hx
     obtain ⟨a, ha, rfl⟩ := hx
     rw [← Surreal.mk_lt_mk, out_eq, out_eq]
     exact hL a ha
   · intro y hy
-    letI := IGame.Numeric.of_mem_moves hy
+    let := IGame.Numeric.of_mem_moves hy
     rw [IGame.Numeric.not_le]
     simp only [moves_ofSets, Player.cases] at hy
     obtain ⟨a, ha, rfl⟩ := hy
@@ -70,14 +70,14 @@ theorem birthday_ofSets_lt_of_mem {s t : Set Surreal.{u}} {z : Surreal}
   apply IGame.Fits.birthday_lt
   · constructor
     · intro x hx
-      letI := IGame.Numeric.of_mem_moves hx
+      let := IGame.Numeric.of_mem_moves hx
       rw [IGame.Numeric.not_le]
       simp only [moves_ofSets, Player.cases] at hx
       obtain ⟨a, ha, rfl⟩ := hx
       rw [← Surreal.mk_lt_mk, out_eq, out_eq]
       exact hL a ha
     · intro y hy
-      letI := IGame.Numeric.of_mem_moves hy
+      let := IGame.Numeric.of_mem_moves hy
       rw [IGame.Numeric.not_le]
       simp only [moves_ofSets, Player.cases] at hy
       obtain ⟨a, ha, rfl⟩ := hy
@@ -117,8 +117,7 @@ theorem round_of_nonpos {x r : Surreal} (hr : r ≤ 0) : x.round r = x :=
   dite_eq_right hr.not_gt
 
 /-- The singleton rounding cut of a positive numeric game is numeric. -/
-@[implicit_reducible]
-def roundGameNumeric {x r : IGame} [x.Numeric] [r.Numeric] (hr : 0 < r) :
+theorem roundGameNumeric {x r : IGame} [x.Numeric] [r.Numeric] (hr : 0 < r) :
     IGame.Numeric !{{x - r} | {x + r}} :=
   .mk (by
     intro y hy z hz
@@ -188,7 +187,7 @@ theorem round_of_zero_mem {x r : Surreal} (h : 0 ∈ Ioo (x - r) (x + r)) : x.ro
   have hr' : (0 : IGame) < r := by
     rw [← Surreal.mk_lt_mk]
     simpa only [Surreal.mk_zero] using hr
-  letI : IGame.Numeric !{{x - r} | {x + r}} :=
+  let : IGame.Numeric !{{x - r} | {x + r}} :=
     roundGameNumeric (x := x) (r := r) hr'
   rw [← mk_zero, round_mk_of_pos hr, mk_eq_mk, ← fits_zero_iff_equiv]
   simpa [Fits]

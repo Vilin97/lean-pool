@@ -59,7 +59,7 @@ theorem zero_weakNormalForm :
   simp [List.sortedGE_iff_pairwise]
 
 private instance : WellFoundedLT (ℕ ⊕ₗ ℕ) :=
-  (Sum.Lex.toLexRelIsoLT (α := ℕ) (β := ℕ)).symm.toRelEmbedding.isWellFounded
+  (Sum.Lex.toLexRelIsoLT (α := ℕ) (β := ℕ)).symm.toRelEmbedding.wellFounded'
 
 /-- The coefficient-one Hahn series on the lexicographic sum of two copies of `ℕ`. -/
 def twoOmegaSeries : ℚ⟦ℕ ⊕ₗ ℕ⟧ where
@@ -113,7 +113,7 @@ private theorem twoOmegaLower_supportOrderType :
     twoOmegaLower.supportOrderType = Ordinal.omega0 := by
   rw [HahnSeries.supportOrderType_eq_setOrderType]
   have e : twoOmegaLower.support ≃o ℕ :=
-    (OrderIso.setCongr twoOmegaLower.support (Set.range Sum.inlₗ)
+    (Set.orderIsoOfEq twoOmegaLower.support (Set.range Sum.inlₗ)
       twoOmegaLower_support).trans
         (OrderEmbedding.ofStrictMono Sum.inlₗ Sum.Lex.inl_strictMono).orderIso.symm
   exact twoOmegaLower.isPWO_support.orderType_eq_typeLT_of_orderIso e |>.trans
@@ -123,7 +123,7 @@ private theorem twoOmegaUpper_supportOrderType :
     twoOmegaUpper.supportOrderType = Ordinal.omega0 := by
   rw [HahnSeries.supportOrderType_eq_setOrderType]
   have e : twoOmegaUpper.support ≃o ℕ :=
-    (OrderIso.setCongr twoOmegaUpper.support (Set.range Sum.inrₗ)
+    (Set.orderIsoOfEq twoOmegaUpper.support (Set.range Sum.inrₗ)
       twoOmegaUpper_support).trans
         (OrderEmbedding.ofStrictMono Sum.inrₗ Sum.Lex.inr_strictMono).orderIso.symm
   exact twoOmegaUpper.isPWO_support.orderType_eq_typeLT_of_orderIso e |>.trans

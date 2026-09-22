@@ -35,14 +35,14 @@ variable [PartialOrder G] [AddCommMonoid G] [IsOrderedCancelAddMonoid G] [Ring K
 
 /-- The subring of Hahn series with finite support. -/
 def finiteSupportSubring : Subring K⟦G⟧ :=
-  let _ : Fact (Cardinal.aleph0 ≤ Cardinal.aleph0) := ⟨le_rfl⟩
+  let _ : Fact (Cardinal.aleph0.{u} ≤ Cardinal.aleph0.{u}) := ⟨le_rfl⟩
   HahnSeries.cardSuppLTSubring G K Cardinal.aleph0
 
 /-- Membership in the finite-support subring is finiteness of the Hahn-series support. -/
 @[simp]
 theorem mem_finiteSupportSubring_iff (b : K⟦G⟧) :
     b ∈ (finiteSupportSubring : Subring K⟦G⟧) ↔ b.support.Finite := by
-  letI : Fact (Cardinal.aleph0 ≤ Cardinal.aleph0) := ⟨le_rfl⟩
+  let : Fact (Cardinal.aleph0.{u} ≤ Cardinal.aleph0.{u}) := ⟨le_rfl⟩
   rw [finiteSupportSubring, HahnSeries.mem_cardSuppLTSubring, HahnSeries.cardSupp]
   exact Cardinal.lt_aleph0_iff_set_finite
 

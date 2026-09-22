@@ -7,10 +7,10 @@ module
 
 import LeanPool.ConwayRefinement.ConwayRefinement.Algebra.MvPolynomial.FinitePartVars
 
-public import
-  LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.OrdinalValue.AlgebraicIndependence.PartialDerivativeIndices
+public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.OrdinalValue.AlgebraicIndependence.PartialDerivativeIndices
 public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.OrdinalValue.AlgebraicIndependence.IdealFromTruncations
 
+import LeanPool.ConwayRefinement.ConwayRefinement.Algebra.Finset.FilterCard
 import LeanPool.ConwayRefinement.ConwayRefinement.Blueprint
 
 /-!
@@ -234,15 +234,8 @@ theorem exists_finset_pderiv_eq_sum_of_lowDegreePartAlgebraicLE {v' : ι} (hv' :
           rw [ht]
           exact NatOrdinal.algebraicLE_zero _))
       · exact hL ((S.hasProperLowDegreePartNotAlgebraicLE_iff j).mpr ⟨hj, ht, htop, hnd⟩)
-    have hcard : (S.F.vars.filter fun v ↦ wt j < wt v).card < n := by
-      rw [← hn]
-      refine Finset.card_lt_card
-        (Finset.ssubset_iff_subset_ne.mpr ⟨fun v hv ↦ ?_, fun heq ↦ ?_⟩)
-      · obtain ⟨hv1, hv2⟩ := Finset.mem_filter.mp hv
-        exact Finset.mem_filter.mpr ⟨hv1, hlt.trans hv2⟩
-      · have : j ∈ S.F.vars.filter fun v ↦ wt v' < wt v := Finset.mem_filter.mpr ⟨hj, hlt⟩
-        rw [← heq, Finset.mem_filter] at this
-        exact lt_irrefl _ this.2
+    have hcard : (S.F.vars.filter fun v ↦ wt j < wt v).card < n :=
+      (ConwayRefinement.card_filter_above_lt wt S.F.vars hj hlt).trans_eq hn
     obtain ⟨s, U, hs, -, heq⟩ := ih _ hcard j hj rfl hdj
     rw [heq]
     refine Ideal.sum_mem _ fun v hv ↦
@@ -258,7 +251,7 @@ theorem exists_finset_pderiv_eq_sum_of_lowDegreePartAlgebraicLE {v' : ι} (hv' :
     rintro _ ⟨j, rfl⟩
     exact habove j.1 j.2.1 j.2.2
   -- the generator degrees `σ_v = α ⊖ deg v` and cofactor degrees `b_v = deg v ⊖ deg v'`
-  haveI : Finite {v // S.ContributesToPartialDerivativeAt v' v} :=
+  have : Finite {v // S.ContributesToPartialDerivativeAt v' v} :=
     S.finite_setOf_contributesToPartialDerivativeAt v'
   have hcd : ∀ v : {v // S.ContributesToPartialDerivativeAt v' v}, ∃ c, c + wt v.1 = α :=
     fun v ↦ exists_add_wt_eq_of_mem_vars S.hom v.2.1
@@ -270,7 +263,7 @@ theorem exists_finset_pderiv_eq_sum_of_lowDegreePartAlgebraicLE {v' : ι} (hv' :
   obtain ⟨A, hAdef⟩ : ∃ A : {v // S.ContributesToPartialDerivativeAt v' v} → Prop,
       A = fun v ↦ NatOrdinal.AlgebraicLE (wt v') (wt v.1) := ⟨_, rfl⟩
   have hAiff : ∀ v, A v ↔ NatOrdinal.AlgebraicLE (wt v') (wt v.1) := fun v ↦ by rw [hAdef]
-  haveI : Finite {v : {v // S.ContributesToPartialDerivativeAt v' v} // A v} :=
+  have : Finite {v : {v // S.ContributesToPartialDerivativeAt v' v} // A v} :=
     Finite.of_injective (fun v ↦ v.1) Subtype.val_injective
   have hbA : ∀ v : {v : {v // S.ContributesToPartialDerivativeAt v' v} // A v},
       ∃ b, b + wt v' = wt v.1.1 := fun v ↦ by
@@ -381,34 +374,20 @@ theorem exists_finset_pderiv_eq_sum_of_lowDegreePartAlgebraicLE {v' : ι} (hv' :
         rw [← hb v]; exact lt_add_of_pos_right _ (pos_iff_ne_zero.mpr (hx.ne_zero v'))
       exact h1.trans_le (S.max _ v.1.2.1)
     exact pderiv_eq_zero_of_degreeLT_le ((hUhom v).degreeLT hbg) le_rfl
-  -- re-index the sum by the variables themselves
-  have hinjv : Function.Injective
-      (fun v : {v : {v // S.ContributesToPartialDerivativeAt v' v} // A v} ↦ v.1.1) :=
-    fun v w hvw ↦ Subtype.ext (Subtype.ext hvw)
-  refine ⟨Finset.univ.image
-      (fun v : {v : {v // S.ContributesToPartialDerivativeAt v' v} // A v} ↦ v.1.1),
-    fun i ↦ if hi : ∃ v :
-        {v : {v // S.ContributesToPartialDerivativeAt v' v} // A v}, v.1.1 = i then
-      U (Classical.choose hi)
-      else 0, ?_, ?_, ?_⟩
+  -- Extend the cofactor family by zero, then reindex along the inclusion of contributing variables.
+  let index : {v : {v // S.ContributesToPartialDerivativeAt v' v} // A v} → ι :=
+    fun v ↦ v.1.1
+  have hinjv : Function.Injective index := fun v w hvw ↦ Subtype.ext (Subtype.ext hvw)
+  refine ⟨Finset.univ.image index, Function.extend index U (fun _ ↦ 0), ?_, ?_, ?_⟩
   · intro i hi
     obtain ⟨v, -, rfl⟩ := Finset.mem_image.mp hi
     exact v.1.2
   · intro i hi
     obtain ⟨v, -, rfl⟩ := Finset.mem_image.mp hi
-    beta_reduce
-    rw [dite_eq_left (⟨v, rfl⟩ :
-      ∃ w : {v : {v // S.ContributesToPartialDerivativeAt v' v} // A v}, w.1.1 = v.1.1)]
-    exact hUB₀ _
+    rw [hinjv.extend_apply]
+    exact hUB₀ v
   · rw [hΘeq, Finset.sum_image fun v _ w _ h ↦ hinjv h]
-    refine Finset.sum_congr rfl fun v _ ↦ ?_
-    beta_reduce
-    rw [dite_eq_left (⟨v, rfl⟩ :
-      ∃ w : {v : {v // S.ContributesToPartialDerivativeAt v' v} // A v}, w.1.1 = v.1.1)]
-    congr 2
-    exact (hinjv (Classical.choose_spec
-      (⟨v, rfl⟩ : ∃ w : {v : {v // S.ContributesToPartialDerivativeAt v' v} // A v},
-        w.1.1 = v.1.1))).symm
+    exact Finset.sum_congr rfl fun v _ ↦ by rw [hinjv.extend_apply]
 
 end Lifts.LimitOrdinalRelationAtCutoff
 

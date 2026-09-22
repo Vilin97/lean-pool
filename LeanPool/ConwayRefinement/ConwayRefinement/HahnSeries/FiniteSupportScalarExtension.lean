@@ -70,9 +70,6 @@ theorem finiteSupportMap_coeff (f : K →+* L)
           (G := G) (K := L) (finiteSupportMap f b))).symm
     _ = f (finiteSupportCoefficients b g) := by
       rw [finiteSupportAddMonoidAlgebraEquiv_map]
-      change
-        (AddMonoidAlgebra.mapRingHom (exponentMonoid G) f
-            (finiteSupportAddMonoidAlgebraEquiv b)).coeff g = _
       rw [AddMonoidAlgebra.coeff_mapRingHom]
       exact congrArg f (congrArg (fun q : exponentMonoid G →₀ K ↦ q g)
         (coeff_finiteSupportAddMonoidAlgebraEquiv (G := G) (K := K) b))
@@ -429,7 +426,7 @@ theorem finiteSupportMap_exists_factor_dvd_of_scalarRedistribution
     rcases eq_zero_or_eq_zero_of_mul_eq_zero hbc with hb | hc
     · exact ⟨0, 1, by simp [hpZero], by simp [hb], by simp⟩
     · exact ⟨1, 0, by simp [hpZero], by simp, by simp [hc]⟩
-  · letI : GCDMonoid (FiniteSupportRing (G := G) (K := L)) :=
+  · let : GCDMonoid (FiniteSupportRing (G := G) (K := L)) :=
       gcdMonoidOfExistsGCD hgcd
     obtain ⟨q₁, q₂, hq₁b, hq₂c, hpq⟩ :=
       exists_dvd_and_dvd_of_dvd_mul hp

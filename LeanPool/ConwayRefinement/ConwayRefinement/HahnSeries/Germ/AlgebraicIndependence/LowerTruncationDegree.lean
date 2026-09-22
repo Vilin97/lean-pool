@@ -949,7 +949,7 @@ theorem componentsGE_mul_mem_span_of_polynomialSyzygy
         rw [MvPolynomial.pderiv_eq_zero_of_isWeightedHomogeneous wt hF j.1 h]
         exact MvPolynomial.isWeightedHomogeneous_zero _ _ _⟩
   choose β hβ using hhom
-  haveI : Finite {j : ι // j ∈ t ∧ j ≠ v'} :=
+  have : Finite {j : ι // j ∈ t ∧ j ≠ v'} :=
     (t.finite_toSet.subset fun j (hj : j ∈ t ∧ j ≠ v') ↦ hj.1).to_subtype
   refine MvPolynomial.componentsGE_mem_span wt hβ ?_ τ
   refine Ideal.sum_mem _ fun i hi ↦ ?_

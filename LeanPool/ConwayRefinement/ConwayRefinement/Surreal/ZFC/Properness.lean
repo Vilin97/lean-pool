@@ -31,7 +31,7 @@ namespace Surreal.OmnificInteger
 /-- Omnific integers with option sets in universe `u` are not `u`-small. -/
 theorem not_small : ¬Small.{u} OmnificInteger.{u} := by
   intro h
-  letI : Small.{u} OmnificInteger.{u} := h
+  let : Small.{u} OmnificInteger.{u} := h
   let f : Ordinal.{u} → OmnificInteger.{u} := fun o ↦
     ⟨(NatOrdinal.of o).toSurreal, NatOrdinal.toSurreal_mem_omnificIntegers (NatOrdinal.of o)⟩
   apply not_injective_of_ordinal f
@@ -111,7 +111,7 @@ theorem mem_numericGameCodes (x : NumericGameCode.{u}) :
 /-- Numeric game codes are not small, because their values cover all surreal numbers. -/
 theorem not_small : ¬Small.{u} NumericGameCode.{u} := by
   intro h
-  letI : Small.{u} NumericGameCode.{u} := h
+  let : Small.{u} NumericGameCode.{u} := h
   exact _root_.Surreal.not_small (small_of_surjective toSurreal_surjective)
 
 end NumericGameCode
@@ -148,7 +148,7 @@ theorem mem_omnificGameCodes (x : OmnificCode.{u}) :
 /-- Omnific game codes are not small, because their values cover all omnific integers. -/
 theorem not_small : ¬Small.{u} OmnificCode.{u} := by
   intro h
-  letI : Small.{u} OmnificCode.{u} := h
+  let : Small.{u} OmnificCode.{u} := h
   exact _root_.Surreal.OmnificInteger.not_small (small_of_surjective value_surjective)
 
 end OmnificCode
@@ -200,7 +200,7 @@ namespace Surreal
 /-- Distinct Conway-equivalence classes of numeric ZFC game codes do not form a small type. -/
 theorem not_small : ¬Small.{u} Surreal.{u} := by
   intro h
-  letI : Small.{u} Surreal.{u} := h
+  let : Small.{u} Surreal.{u} := h
   exact _root_.Surreal.not_small (small_of_surjective toSurreal_surjective)
 
 namespace OmnificInteger
@@ -208,7 +208,7 @@ namespace OmnificInteger
 /-- Distinct omnific values in the class presentation do not form a small type. -/
 theorem not_small : ¬Small.{u} OmnificInteger.{u} := by
   intro h
-  letI : Small.{u} OmnificInteger.{u} := h
+  let : Small.{u} OmnificInteger.{u} := h
   exact _root_.Surreal.OmnificInteger.not_small (small_of_surjective ringEquiv.surjective)
 
 end OmnificInteger

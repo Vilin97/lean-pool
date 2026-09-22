@@ -31,7 +31,9 @@ namespace Multiset
 
 /-- Ordinal priorities and weights for selection in a finite multiset. -/
 structure SelectionWeights (α : Type v) where
+  /-- The ordinal priority to minimize when selecting a multiset member. -/
   priority : α → Ordinal.{u}
+  /-- The ordinal weight to maximize among members of equal least priority. -/
   weight : α → Ordinal.{u}
 
 namespace SelectionWeights

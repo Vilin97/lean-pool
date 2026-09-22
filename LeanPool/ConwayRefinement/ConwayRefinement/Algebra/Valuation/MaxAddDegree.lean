@@ -36,6 +36,7 @@ open scoped BigOperators
 multiplication. -/
 structure MaxAddDegree (R : Type u) (M : Type v) [CommRing R] [AddCommMonoid M]
     [LinearOrder M] where
+  /-- The underlying degree function, with bottom as the value of zero. -/
   toFun : R → WithBot M
   map_zero' : toFun 0 = ⊥
   map_one_le_zero' : toFun 1 ≤ 0
@@ -202,7 +203,7 @@ domain. -/
 theorem isDomain (ν : MaxAddDegree R M) [Nontrivial R] [ν.IsMultiplicative]
     (hν : ν.IsSeparated) :
     IsDomain R := by
-  letI : NoZeroDivisors R :=
+  let : NoZeroDivisors R :=
     ⟨fun hxy ↦ ν.eq_zero_or_eq_zero_of_mul_eq_zero hν hxy⟩
   exact NoZeroDivisors.to_isDomain R
 

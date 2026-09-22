@@ -145,8 +145,7 @@ theorem gradeZeroScalars_baseChange (h0 : GradeZeroScalars 𝒜) :
   rw [gradeZeroScalars_iff] at h0 ⊢
   intro x hx
   obtain ⟨x', rfl⟩ := hx
-  induction x' using TensorProduct.induction_on with
-  | zero => exact ⟨0, by rw [map_zero, map_zero]⟩
+  induction x' using TensorProduct.inductionOn with
   | tmul e a =>
     obtain ⟨k, hk⟩ := h0 a a.2
     refine ⟨k • e, ?_⟩
@@ -170,12 +169,9 @@ theorem baseChangeDerivation_mul (x y : E ⊗[K] R) :
         (x : FunAtZeroMinus _) * baseChangeDerivation E Δ y := by
   have hconst_add : ∀ u v : E ⊗[K] R, ((u + v : E ⊗[K] R) : FunAtZeroMinus (E ⊗[K] R)) =
     (u : FunAtZeroMinus (E ⊗[K] R)) + (v : FunAtZeroMinus (E ⊗[K] R)) := fun _ _ ↦ rfl
-  have hconst_zero : ((0 : E ⊗[K] R) : FunAtZeroMinus (E ⊗[K] R)) = 0 := rfl
-  induction x using TensorProduct.induction_on with
-  | zero => rw [zero_mul, map_zero, zero_mul, hconst_zero, zero_mul, add_zero]
+  induction x using TensorProduct.inductionOn with
   | tmul e a =>
-    induction y using TensorProduct.induction_on with
-    | zero => rw [mul_zero, map_zero, mul_zero, hconst_zero, mul_zero, add_zero]
+    induction y using TensorProduct.inductionOn with
     | tmul e' b =>
       rw [Algebra.TensorProduct.tmul_mul_tmul, baseChangeDerivation_tmul, baseChangeDerivation_tmul,
         baseChangeDerivation_tmul, hΔ.map_mul, map_add, tensorFunAtZeroMinusLeft_mul_const,
@@ -193,8 +189,7 @@ theorem baseChange_induction {α : NatOrdinal} (P : Submodule E (FunAtZeroMinus 
     (h : ∀ (e : E) (a : R), a ∈ 𝒜 α → baseChangeDerivation E Δ (e ⊗ₜ[K] a) ∈ P)
     {x : E ⊗[K] R} (hx : x ∈ (𝒜 α).baseChange E) : baseChangeDerivation E Δ x ∈ P := by
   obtain ⟨x', rfl⟩ := hx
-  induction x' using TensorProduct.induction_on with
-  | zero => rw [map_zero, map_zero]; exact P.zero_mem
+  induction x' using TensorProduct.inductionOn with
   | tmul e a =>
     rw [LinearMap.baseChange_tmul, Submodule.subtype_apply]
     exact h e a a.2
@@ -264,8 +259,7 @@ theorem baseChangeDerivation_baseChange {α : NatOrdinal} (hα : 0 < α.constant
     baseChangeDerivation E Δ ((𝒜 α).subtype.baseChange E (TensorProduct.comm K _ _ x)) =
       Filter.Germ.mapLinear (lowerGradeTensorEmbedding α)
         (funAtZeroMinusTensorId (hΔ.derivLinearAt hα) x) := by
-  induction x using TensorProduct.induction_on with
-  | zero => rw [map_zero, map_zero, map_zero, map_zero, map_zero]
+  induction x using TensorProduct.inductionOn with
   | tmul a e =>
     obtain ⟨f, hf⟩ : ∃ f : ℝ → 𝒜 (α.removeNat 1), hΔ.derivLinearAt hα a = (f : FunAtZeroMinus _) :=
       ⟨Quotient.out _, (Quotient.out_eq _).symm⟩
@@ -316,8 +310,7 @@ theorem fibreIdeal_baseChange :
   · intro x hx
     obtain ⟨e, hje, x', rfl⟩ := (mem_idealGEGenerators_iff _ 1 x).mp hx
     clear hx
-    induction x' using TensorProduct.induction_on with
-    | zero => rw [map_zero]; exact zero_mem _
+    induction x' using TensorProduct.inductionOn with
     | tmul c a =>
       rw [LinearMap.baseChange_tmul, Submodule.subtype_apply,
         show c ⊗ₜ[K] (a : R) = (c ⊗ₜ[K] (1 : R)) *

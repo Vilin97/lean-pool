@@ -234,8 +234,8 @@ The proof does not use `MaxAddDegree.quotient_isDomain_of_associatedGraded_isDom
 attached degree directly from the domain associated graded ring. -/
 theorem isDomain_of_associatedGraded_isDomain
     [IsDomain (hF.degree).AssociatedGraded] : IsDomain R := by
-  haveI : Nontrivial R := (hF.degree).nontrivial_of_associatedGraded_isDomain
-  haveI : (hF.degree).IsMultiplicative :=
+  have : Nontrivial R := (hF.degree).nontrivial_of_associatedGraded_isDomain
+  have : (hF.degree).IsMultiplicative :=
     (hF.degree).isMultiplicative_of_associatedGraded_isDomain hF.degree_isSeparated
   exact (hF.degree).isDomain hF.degree_isSeparated
 

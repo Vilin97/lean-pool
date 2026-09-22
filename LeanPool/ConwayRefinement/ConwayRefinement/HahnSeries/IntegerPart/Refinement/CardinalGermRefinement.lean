@@ -241,15 +241,15 @@ theorem exists_cardinal_germ_refinement
   have hSne : S.Nonempty := by
     obtain ⟨x, hxE, -⟩ := hEcoinitial |y| habsy
     exact ⟨x, Or.inr hxE⟩
-  letI : NoMaxOrder (FiniteArchimedeanClass C₀) :=
+  let : NoMaxOrder (FiniteArchimedeanClass C₀) :=
     AddSubgroup.finiteArchimedeanClass_noMax_of_pos_coinitial C₀.toAddSubgroup hcoinitial
-  letI : NoMinOrder C₀ := ⟨fun x ↦ by
+  let : NoMinOrder C₀ := ⟨fun x ↦ by
     obtain ⟨z, hz, -⟩ := hcoinitial |y| habsy
     exact ⟨x - z, sub_lt_self x hz⟩⟩
-  letI : NoMaxOrder C₀ := ⟨fun x ↦ by
+  let : NoMaxOrder C₀ := ⟨fun x ↦ by
     obtain ⟨z, hz, -⟩ := hcoinitial |y| habsy
     exact ⟨x + z, lt_add_of_pos_right x hz⟩⟩
-  letI : OrderTopology C₀ := by
+  let : OrderTopology C₀ := by
     apply induced_orderTopology' (fun z : C₀ ↦ (z : C)) (fun {_ _} ↦ Iff.rfl)
     · intro x y hyx
       obtain ⟨z, hzpos, hzle⟩ := hcoinitial ((x : C) - y) (sub_pos.mpr hyx)
@@ -261,12 +261,12 @@ theorem exists_cardinal_germ_refinement
       change (x : C) + (z : C) ≤ y
       rw [add_comm]
       exact le_sub_iff_add_le.mp hzle
-  letI : PosSMulMono ℚ C₀ := {
+  let : PosSMulMono ℚ C₀ := {
     smul_le_smul_of_nonneg_left := fun {q} hq {_ _} hxy ↦
       smul_le_smul_of_nonneg_left (α := ℚ) (β := C) hxy hq }
-  letI : PosSMulStrictMono ℚ C₀ :=
+  let : PosSMulStrictMono ℚ C₀ :=
     PosSMulMono.toPosSMulStrictMono (α := ℚ) (β := C₀)
-  letI : DenselyOrdered C₀ := by
+  let : DenselyOrdered C₀ := by
     constructor
     intro x y hxy
     refine ⟨(2 : ℚ)⁻¹ • (x + y), ?_, ?_⟩
@@ -279,8 +279,8 @@ theorem exists_cardinal_germ_refinement
           smul_lt_smul_of_pos_left
             (by simpa [add_comm] using add_lt_add_left hxy y) (by norm_num)
         _ = y := by rw [smul_add, ← add_smul]; norm_num
-  letI : IsUniformAddGroup C₀ := C₀.toAddSubgroup.isUniformAddGroup
-  letI : Nontrivial C₀ := by
+  let : IsUniformAddGroup C₀ := C₀.toAddSubgroup.isUniformAddGroup
+  let : Nontrivial C₀ := by
     obtain ⟨z, hz, -⟩ := hcoinitial |y| habsy
     exact ⟨⟨0, z, ne_of_lt hz⟩⟩
   have haRange : (a : HahnSeries C K).support ⊆ Set.range inc := by

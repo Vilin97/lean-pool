@@ -119,7 +119,7 @@ theorem IsClosedMap.cantorBendixson_image_subset [T1Space X] [T1Space Y]
       · exact inter_subset_inter_right _ (s.cantorBendixson_antitone (le_max_left i j))
       · exact inter_subset_inter_right _ (s.cantorBendixson_antitone (le_max_right i j))
     have htf (i : Iio o) : (t i).Finite := (hfin y).subset inter_subset_left
-    letI : Nonempty (Iio o) := ⟨⟨0, ho.bot_lt⟩⟩
+    let : Nonempty (Iio o) := ⟨⟨0, ho.bot_lt⟩⟩
     obtain ⟨x, hx⟩ := IsCompact.nonempty_iInter_of_directed_nonempty_isCompact_isClosed
       t htd htn (fun i ↦ (htf i).isCompact) (fun i ↦ (htf i).isClosed)
     have hxi := mem_iInter.mp hx

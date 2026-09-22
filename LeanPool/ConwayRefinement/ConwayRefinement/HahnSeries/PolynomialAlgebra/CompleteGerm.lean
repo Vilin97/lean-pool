@@ -132,7 +132,7 @@ theorem hasFourFactorRefinement_of_algebraicIndependent_generators
     (hgenerate : Function.Surjective
       (aeval xg : MvPolynomial ι K →ₐ[K] (ν).AssociatedGraded)) :
     HasFourFactorRefinement (Nonpositive G K ⧸ J) := by
-  letI : DecompositionMonoid (Nonpositive G K ⧸ J) :=
+  let : DecompositionMonoid (Nonpositive G K ⧸ J) :=
     MulEquiv.decompositionMonoid (germAlgEquiv σ hindependent hgenerate).symm.toMulEquiv
   exact hasFourFactorRefinement_of_decompositionMonoid
 

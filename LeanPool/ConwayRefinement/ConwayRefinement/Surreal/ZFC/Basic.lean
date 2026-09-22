@@ -28,6 +28,7 @@ namespace ZFSet
 
 /-- A set-coded game satisfying Conway's numeric condition. -/
 structure NumericGameCode where
+  /-- The underlying ZFC code for the numeric game. -/
   code : GameCode.{u}
   numeric : code.IsNumeric
 
@@ -60,7 +61,7 @@ theorem toSurreal_surjective : Function.Surjective (toSurreal.{u}) := by
     rw [GameCode.isNumeric_iff, GameCode.toIGame_ofIGame]
     infer_instance⟩
   refine ⟨c, ?_⟩
-  letI : IGame.Numeric (GameCode.ofIGame x.out).toIGame :=
+  let : IGame.Numeric (GameCode.ofIGame x.out).toIGame :=
     (GameCode.isNumeric_iff _).1 c.numeric
   change _root_.Surreal.mk (GameCode.ofIGame x.out).toIGame = x
   simp only [GameCode.toIGame_ofIGame, _root_.Surreal.out_eq]
@@ -183,31 +184,31 @@ theorem mk_one : mk (1 : GameCode.{u}) GameCode.isNumeric_one = 1 := by
 @[simp]
 theorem mk_neg (x : GameCode.{u}) (hx : x.IsNumeric) :
     mk (-x) hx.neg = -mk x hx := by
-  letI : IGame.Numeric x.toIGame := (GameCode.isNumeric_iff _).1 hx
+  let : IGame.Numeric x.toIGame := (GameCode.isNumeric_iff _).1 hx
   apply toSurreal_injective
   simp only [toSurreal_mk, GameCode.toIGame_neg, _root_.Surreal.mk_neg, toSurreal_neg]
 
 @[simp]
 theorem mk_add (x y : GameCode.{u}) (hx : x.IsNumeric) (hy : y.IsNumeric) :
     mk (x + y) (hx.add hy) = mk x hx + mk y hy := by
-  letI : IGame.Numeric x.toIGame := (GameCode.isNumeric_iff _).1 hx
-  letI : IGame.Numeric y.toIGame := (GameCode.isNumeric_iff _).1 hy
+  let : IGame.Numeric x.toIGame := (GameCode.isNumeric_iff _).1 hx
+  let : IGame.Numeric y.toIGame := (GameCode.isNumeric_iff _).1 hy
   apply toSurreal_injective
   simp only [toSurreal_mk, GameCode.toIGame_add, _root_.Surreal.mk_add, toSurreal_add]
 
 @[simp]
 theorem mk_sub (x y : GameCode.{u}) (hx : x.IsNumeric) (hy : y.IsNumeric) :
     mk (x - y) (hx.sub hy) = mk x hx - mk y hy := by
-  letI : IGame.Numeric x.toIGame := (GameCode.isNumeric_iff _).1 hx
-  letI : IGame.Numeric y.toIGame := (GameCode.isNumeric_iff _).1 hy
+  let : IGame.Numeric x.toIGame := (GameCode.isNumeric_iff _).1 hx
+  let : IGame.Numeric y.toIGame := (GameCode.isNumeric_iff _).1 hy
   apply toSurreal_injective
   simp only [toSurreal_mk, GameCode.toIGame_sub, _root_.Surreal.mk_sub, toSurreal_sub]
 
 @[simp]
 theorem mk_mul (x y : GameCode.{u}) (hx : x.IsNumeric) (hy : y.IsNumeric) :
     mk (x * y) (hx.mul hy) = mk x hx * mk y hy := by
-  letI : IGame.Numeric x.toIGame := (GameCode.isNumeric_iff _).1 hx
-  letI : IGame.Numeric y.toIGame := (GameCode.isNumeric_iff _).1 hy
+  let : IGame.Numeric x.toIGame := (GameCode.isNumeric_iff _).1 hx
+  let : IGame.Numeric y.toIGame := (GameCode.isNumeric_iff _).1 hy
   apply toSurreal_injective
   simp only [toSurreal_mk, GameCode.toIGame_mul, _root_.Surreal.mk_mul, toSurreal_mul]
 

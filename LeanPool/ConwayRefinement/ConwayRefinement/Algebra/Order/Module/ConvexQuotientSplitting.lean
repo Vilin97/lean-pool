@@ -114,6 +114,7 @@ theorem quotientProdLinearEquiv_zero_left (p : P) :
     Submodule.coe_prodEquivOfIsCompl']
   simp [quotientLinearEquivComplement]
 
+/-- The linear order on the quotient induced by convexity of the subspace. -/
 noncomputable local instance quotientLinearOrder [P.toAddSubgroup.IsConvex] :
     LinearOrder (G ⧸ P) :=
   ConvexQuotient.instLinearOrder (H := P.toAddSubgroup)

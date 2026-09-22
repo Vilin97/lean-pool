@@ -49,7 +49,7 @@ private theorem existsGCD_pullback (e : A ≃* B)
 theorem MulEquiv.nonemptyGCDMonoid (e : A ≃* B) [IsCancelMulZero A]
     [Nonempty (GCDMonoid B)] : Nonempty (GCDMonoid A) := by
   classical
-  letI : GCDMonoid B := Classical.choice inferInstance
+  let : GCDMonoid B := Classical.choice inferInstance
   exact ⟨gcdMonoidOfExistsGCD (existsGCD_pullback e fun a b ↦
     ⟨gcd a b, fun d ↦ (dvd_gcd_iff d a b).symm⟩)⟩
 
@@ -122,7 +122,7 @@ private theorem existsGCD [NormalizedGCDMonoid R] (a b : MvPolynomial σ R) :
     ∃ c : MvPolynomial σ R, ∀ d : MvPolynomial σ R, d ∣ a ∧ d ∣ b ↔ d ∣ c := by
   classical
   obtain ⟨s, p, q, rfl, rfl⟩ := exists_finset_rename₂ a b
-  letI : NormalizedGCDMonoid (MvPolynomial s R) := normalizedGCDMonoidOfFinite s
+  let : NormalizedGCDMonoid (MvPolynomial s R) := normalizedGCDMonoidOfFinite s
   let S : Set σ := s
   let E := adjoiningVariablesEquiv (R := R) S
   have hrename (f : MvPolynomial s R) : E (C f) = rename ((↑) : s → σ) f :=
@@ -184,7 +184,7 @@ greatest common divisors. -/
 theorem nonemptyGCDMonoid [Nonempty (NormalizedGCDMonoid R)] :
     Nonempty (GCDMonoid (MvPolynomial σ R)) := by
   classical
-  letI : NormalizedGCDMonoid R := Classical.choice inferInstance
+  let : NormalizedGCDMonoid R := Classical.choice inferInstance
   exact ⟨gcdMonoidOfExistsGCD existsGCD⟩
 
 end MvPolynomial

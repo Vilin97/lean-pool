@@ -109,6 +109,8 @@ end TwoGrades
 
 section ProperRange
 
+/-- The monomial `t⁻¹` used to separate the principal graded subring from the full degree-graded
+ring. -/
 def negativeMonomialForPrincipalGraded : Berarducci.Series K :=
   HahnSeries.Nonpositive.single (-1 : ℝ) 1 (by norm_num)
 

@@ -44,7 +44,7 @@ theorem componentsGE_mem_span_subtype {ι : Type w} [Finite ι]
     componentsGE wt τ P ∈ Ideal.span (Set.range fun j : {j // A j} ↦ q j.1) := by
   classical
   cases nonempty_fintype ι
-  letI := weightedGradedAlgebra K wt
+  let := weightedGradedAlgebra K wt
   have hdec : ∀ (R : MvPolynomial σ K) (e : NatOrdinal),
       (DirectSum.decompose (weightedHomogeneousSubmodule K wt) R e : MvPolynomial σ K) =
         weightedHomogeneousComponent wt e R := fun R e ↦ by

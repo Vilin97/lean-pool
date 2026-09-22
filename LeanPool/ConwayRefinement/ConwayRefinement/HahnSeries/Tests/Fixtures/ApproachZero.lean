@@ -143,7 +143,7 @@ theorem approachZero_supportOrderType :
     approachZero.supportOrderType = Ordinal.omega0 := by
   rw [HahnSeries.supportOrderType_eq_setOrderType]
   have e : approachZero.support ≃o ℕ :=
-    (OrderIso.setCongr approachZero.support (Set.range approachZeroEmbedding)
+    (Set.orderIsoOfEq approachZero.support (Set.range approachZeroEmbedding)
       approachZero_support).trans approachZeroEmbedding.orderIso.symm
   exact approachZero.isPWO_support.orderType_eq_typeLT_of_orderIso e |>.trans
     Ordinal.type_nat_lt

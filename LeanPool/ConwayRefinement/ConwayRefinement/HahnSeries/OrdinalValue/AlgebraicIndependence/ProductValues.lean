@@ -5,8 +5,7 @@ Authors: Dan Abramov
 -/
 module
 
-public import
-  LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.OrdinalValue.AlgebraicIndependence.PrincipalRepresentatives
+public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.OrdinalValue.AlgebraicIndependence.PrincipalRepresentatives
 
 /-!
 # Ordinal values of the translated truncations of a term `u · q(b_𝓑)`

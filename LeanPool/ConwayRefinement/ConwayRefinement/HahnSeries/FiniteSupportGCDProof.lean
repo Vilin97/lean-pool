@@ -73,7 +73,7 @@ theorem exists_lcm_subgroupAlgebra {H : AddSubgroup G}
     ∃ c : AddMonoidAlgebra K H, ∀ d, a ∣ d ∧ b ∣ d ↔ c ∣ d := by
   have := hufm
   obtain ⟨inst⟩ : Nonempty (NormalizedGCDMonoid (AddMonoidAlgebra K H)) := inferInstance
-  letI := inst
+  let := inst
   exact ⟨lcm a b, fun d ↦ ⟨fun h ↦ lcm_dvd h.1 h.2,
     fun h ↦ ⟨(dvd_lcm_left a b).trans h, (dvd_lcm_right a b).trans h⟩⟩⟩
 
@@ -136,7 +136,7 @@ open Classical in
 theorem exists_gcd_dvdFS (x z : K⟦G⟧) (hx : x.support.Finite) (hz : z.support.Finite) :
     ∃ d : K⟦G⟧, d.support.Finite ∧
       ∀ e : K⟦G⟧, e.support.Finite → (DvdFS e x ∧ DvdFS e z ↔ DvdFS e d) := by
-  letI : GCDMonoid (HahnSeries.finiteSupportSubring : Subring K⟦G⟧) := by
+  let : GCDMonoid (HahnSeries.finiteSupportSubring : Subring K⟦G⟧) := by
     refine gcdMonoidOfExistsLCM fun a b ↦ ?_
     obtain ⟨h, hhf, hh⟩ := exists_lcm_dvdFS (a : K⟦G⟧) (b : K⟦G⟧)
       ((HahnSeries.mem_finiteSupportSubring_iff _).mp a.2)

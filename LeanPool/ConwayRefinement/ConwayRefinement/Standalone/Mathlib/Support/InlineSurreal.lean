@@ -409,7 +409,8 @@ Most constructions within game theory, and as such, many proofs within it, are d
 induction. Structural induction on games is sometimes called "Conway induction".
 
 The most straightforward way to employ Conway induction is by using the termination checker, with
-the auxiliary `igame_wf` tactic. This uses `solve_by_elim` to search the context for proofs of the
+the auxiliary `inline_igame_wf` tactic. This uses `solve_by_elim` to search the context for
+  proofs of the
 form `y ∈ xᴸ` or `y ∈ xᴿ`, which prove termination. Alternatively, you can use
 the explicit recursion principles `IGame.ofSetsRecOn` or `IGame.moveRecOn`.
 
@@ -736,7 +737,7 @@ theorem ofSetsRecOn_ofSets {motive : IGame.{u_inline_4} → Sort*}
 
 /-- Discharges proof obligations of the form `⊢ Subposition ..` arising in termination proofs
 of definitions using well-founded recursion on `IGame`. -/
-macro "igame_wf" config:Lean.Parser.Tactic.optConfig : tactic =>
+macro (name := inlineIGameWf) "inline_igame_wf" config:Lean.Parser.Tactic.optConfig : tactic =>
   `(tactic| all_goals solve_by_elim $config
     [Prod.Lex.left, Prod.Lex.right, PSigma.Lex.left, PSigma.Lex.right,
     Subposition.of_mem_moves, Subposition.trans, Subtype.prop] )
@@ -840,7 +841,7 @@ private theorem le_rfl' {x : IGame} : x ≤ x := by
   constructor <;> intro y hy
   exacts [lf_of_le_left le_rfl' hy, lf_of_right_le le_rfl' hy]
 termination_by x
-decreasing_by igame_wf
+decreasing_by inline_igame_wf
 
 private theorem le_trans' {x y z : IGame} (h₁ : x ≤ y) (h₂ : y ≤ z) : x ≤ z := by
   rw [le_iff_forall_lf]
@@ -958,7 +959,7 @@ instance : ZeroLEOneClass IGame where
 private def neg' (x : IGame) : IGame :=
   !{range fun y : xᴿ ↦ neg' y.1 | range fun y : xᴸ ↦ neg' y.1}
 termination_by x
-decreasing_by igame_wf
+decreasing_by inline_igame_wf
 
 #adaptation_note /-- noncomputable is now needed -/ in
 /-- The negative of a game is defined by `-!{s | t} = !{-t | -s}`. -/
@@ -1075,7 +1076,7 @@ private def add' (x y : IGame) : IGame :=
   !{(range fun z : xᴸ ↦ add' z y) ∪ (range fun z : yᴸ ↦ add' x z) |
     (range fun z : xᴿ ↦ add' z y) ∪ (range fun z : yᴿ ↦ add' x z)}
 termination_by (x, y)
-decreasing_by igame_wf
+decreasing_by inline_igame_wf
 
 #adaptation_note /-- noncomputable is now needed -/ in
 /-- The sum of `x = !{s₁ | t₁}` and `y = !{s₂ | t₂}` is `!{s₁ + y, x + s₂ | t₁ + y, x + t₂}`. -/
@@ -1148,7 +1149,7 @@ private theorem add_comm' (x y : IGame) : x + y = y + x := by
   · refine and_congr_right_iff.2 fun h ↦ ?_
     rw [add_comm']
 termination_by (x, y)
-decreasing_by igame_wf
+decreasing_by inline_igame_wf
 
 private theorem add_assoc' (x y z : IGame) : x + y + z = x + (y + z) := by
   ext1
@@ -1158,7 +1159,7 @@ private theorem add_assoc' (x y z : IGame) : x + y + z = x + (y + z) := by
     congr! 2
     rw [add_assoc']
 termination_by (x, y, z)
-decreasing_by igame_wf
+decreasing_by inline_igame_wf
 
 instance : AddCommMonoid IGame where
   add_zero := private add_zero'
@@ -1195,7 +1196,7 @@ private theorem neg_add' (x y : IGame) : -(x + y) = -x + -y := by
   · refine and_congr_right_iff.2 fun _ ↦ ?_
     rw [← neg_inj, neg_add', neg_neg]
 termination_by (x, y)
-decreasing_by igame_wf
+decreasing_by inline_igame_wf
 
 instance : SubtractionCommMonoid IGame where
   neg_neg := neg_neg
@@ -1212,7 +1213,7 @@ private theorem sub_self_le (x : IGame) : x - x ≤ 0 := by
     rw [sub_neg_eq_add]
     exact add_right_mem_moves_add hy _
 termination_by x
-decreasing_by igame_wf
+decreasing_by inline_igame_wf
 
 /-- The sum of a game and its negative is equivalent, though not necessarily identical to zero. -/
 theorem sub_self_equiv (x : IGame) : x - x ≈ 0 := by
@@ -1235,7 +1236,7 @@ private theorem add_le_add_left' {x y : IGame} (h : x ≤ y) (z : IGame) : z + x
     · exact lf_of_le_left (add_le_add_left' hb' z) (add_left_mem_moves_add hb z)
     · exact lf_of_right_le (add_le_add_left' hb' z) (add_left_mem_moves_add hb z)
 termination_by (x, y, z)
-decreasing_by igame_wf (maxDepth := 8)
+decreasing_by inline_igame_wf (maxDepth := 8)
 
 private theorem add_le_add_right' {x y : IGame} (h : x ≤ y) (z : IGame) : x + z ≤ y + z := by
   simpa [add_comm] using add_le_add_left' h z
@@ -1491,7 +1492,7 @@ private theorem igameMulComm (x y : IGame) : x * y = y * x := by
     rintro (⟨_, _⟩ | ⟨_, _⟩) <;>
       rw [mulOption, mulOption, igameMulComm x, igameMulComm _ y, add_comm, igameMulComm a b]
 termination_by (x, y)
-decreasing_by igame_wf
+decreasing_by inline_igame_wf
 
 instance : CommMagma IGame where
   mul_comm := private igameMulComm
@@ -1520,7 +1521,7 @@ private theorem neg_mul' (x y : IGame) : -x * y = -(x * y) := by
     rw [← neg_inj, neg_mul', neg_mul', neg_mul']
     simp [sub_eq_add_neg, add_comm]
 termination_by (x, y)
-decreasing_by igame_wf
+decreasing_by inline_igame_wf
 
 instance : HasDistribNeg IGame where
   neg_mul := private neg_mul'
@@ -1565,6 +1566,8 @@ apply `Numeric.of_mem_moves` to all hypotheses, and thus build all possible `Num
 
 open Lean Meta Elab Tactic
 
+/-- Apply the supplied instance-producing declarations to local hypotheses and add the resulting
+instances to the goal. -/
 meta def instances (constants : Array Name) (goal : MVarId) : MetaM (Option MVarId) :=
   goal.withContext do
     let mut goal := goal
@@ -1648,8 +1651,8 @@ theorem left_lt_right [h : Numeric x] (hy : y ∈ xᴸ) (hz : z ∈ xᴿ) : y < 
 protected theorem of_mem_moves {p : Player} [h : Numeric x] (hy : y ∈ x.moves p) : Numeric y :=
   (numeric_def.1 h).2 p y hy
 
-/-- `numeric` eagerly adds all possible `Numeric` hypotheses. -/
-elab "numeric" : tactic =>
+/-- `inline_numeric` eagerly adds all possible `Numeric` hypotheses. -/
+elab (name := inlineNumeric) "inline_numeric" : tactic =>
   addInstances <| .mk [`ConwayRefinement.Standalone.InlineSurreal.IGame.Numeric.of_mem_moves]
 
 protected theorem subposition [Numeric x] (h : Subposition y x) : Numeric y := by
@@ -1674,14 +1677,14 @@ protected instance moves {x : IGame} [Numeric x] {p : Player} (y : x.moves p) : 
 protected theorem le_of_not_le {x y : IGame} [Numeric x] [Numeric y] : ¬ x ≤ y → y ≤ x := by
   rw [lf_iff_exists_le, le_iff_forall_lf]
   rintro (⟨z, hz, h⟩ | ⟨z, hz, h⟩) <;> constructor <;> intro a ha h'
-  · numeric
+  · inline_numeric
     exact left_lf_of_le h' hz (Numeric.le_of_not_le (left_lf_of_le h ha))
   · exact (left_lt_right hz ha).not_ge (h'.trans h)
   · exact (left_lt_right ha hz).not_ge (h.trans h')
-  · numeric
+  · inline_numeric
     exact lf_right_of_le h' hz (Numeric.le_of_not_le (lf_right_of_le h ha))
 termination_by x
-decreasing_by igame_wf
+decreasing_by inline_igame_wf
 
 protected theorem le_total (x y : IGame) [Numeric x] [Numeric y] : x ≤ y ∨ y ≤ x := by
   rw [or_iff_not_imp_left]
@@ -1721,17 +1724,17 @@ theorem mk_of_lf (h₁ : ∀ y ∈ xᴸ, ∀ z ∈ xᴿ, y ⧏ z) (h₂ : ∀ p,
 theorem le_iff_forall_lt [Numeric x] [Numeric y] :
     x ≤ y ↔ (∀ z ∈ xᴸ, z < y) ∧ (∀ z ∈ yᴿ, x < z) := by
   rw [le_iff_forall_lf]
-  congr! with z hz z hz <;> numeric <;> rw [Numeric.not_le]
+  congr! with z hz z hz <;> inline_numeric <;> rw [Numeric.not_le]
 
 theorem lt_iff_exists_le [Numeric x] [Numeric y] :
     x < y ↔ (∃ z ∈ yᴸ, x ≤ z) ∨ (∃ z ∈ xᴿ, z ≤ y) := by
   rw [← Numeric.not_le, lf_iff_exists_le]
 
 theorem left_lt [Numeric x] (h : y ∈ xᴸ) : y < x := by
-  numeric; simpa using left_lf h
+  inline_numeric; simpa using left_lf h
 
 theorem lt_right [Numeric x] (h : y ∈ xᴿ) : x < y := by
-  numeric; simpa using lf_right h
+  inline_numeric; simpa using lf_right h
 
 protected instance neg (x : IGame) [Numeric x] : Numeric (-x) := by
   refine mk (fun y hy z hz ↦ ?_) ?_
@@ -1739,10 +1742,10 @@ protected instance neg (x : IGame) [Numeric x] : Numeric (-x) := by
     apply @left_lt_right x <;> simp_all
   · simp_rw [forall_moves_neg]
     intro p y hy
-    numeric
+    inline_numeric
     simpa using Numeric.neg y
 termination_by x
-decreasing_by igame_wf
+decreasing_by inline_igame_wf
 
 @[simp]
 theorem neg_iff {x : IGame} : Numeric (-x) ↔ Numeric x :=
@@ -1757,9 +1760,9 @@ protected instance add (x y : IGame) [Numeric x] [Numeric y] : Numeric (x + y) :
       · simpa using left_lt ha
       · simpa using lt_right hb
   · rintro p _ (⟨z, hz, rfl⟩ | ⟨z, hz, rfl⟩)
-    all_goals numeric; exact Numeric.add ..
+    all_goals inline_numeric; exact Numeric.add ..
 termination_by (x, y)
-decreasing_by igame_wf
+decreasing_by inline_igame_wf
 
 protected instance sub (x y : IGame) [Numeric x] [Numeric y] : Numeric (x - y) :=
   inferInstanceAs (Numeric (x + -y))
@@ -1926,7 +1929,7 @@ theorem mk_mul_add (x y z : IGame) : mk (x * (y + z)) = mk (x * y) + mk (x * z) 
     rw [mk_mul_add, mk_mul_add, mk_mul_add]
     abel
 termination_by (x, y, z)
-decreasing_by igame_wf
+decreasing_by inline_igame_wf
 
 theorem mk_mul_sub (x y z : IGame) : mk (x * (y - z)) = mk (x * y) - mk (x * z) := by
   simpa [sub_eq_add_neg] using mk_mul_add x y (-z)
@@ -2638,7 +2641,7 @@ lemma mulOption_lt_of_lt [Numeric y] (ihxy : IH1 x y) (ihyx : IH1 y x) {a b c d}
 lemma mulOption_lt [Numeric x] [Numeric y] (ihxy : IH1 x y) (ihyx : IH1 y x) {a b c d}
     (ha : a ∈ xᴸ) (hb : b ∈ yᴸ) (hc : c ∈ xᴸ) (hd : d ∈ (-y)ᴸ) :
     Game.mk (mulOption x y a b) < -Game.mk (mulOption x (-y) c d) := by
-  numeric
+  inline_numeric
   obtain (h | h | h) := Numeric.lt_or_equiv_or_gt a c
   · exact mulOption_lt_of_lt ihxy ihyx h ha hb hc hd
   · exact mulOption_lt_iff_P1.2 (P1_of_equiv h (P24_of_IH1 ihxy ha hc).1
@@ -2837,7 +2840,7 @@ lemma P3_of_lt_of_lt {x₁ x₂ y₁ y₂} [Numeric x₁] [Numeric x₂] [Numeri
   refine P3_of_IH3 ?_ ?_ hx
   all_goals
     intro i hi
-    numeric
+    inline_numeric
     refine ⟨(main_P24 ..).1, (main_P24 ..).1, P3_comm.2 ?_, fun h ↦ ?_⟩
   · exact ((main_P24 y₁ y₂ x₂).2 hy).1 _ hi
   · exact P3_of_lt_of_lt h hy
@@ -2846,7 +2849,7 @@ lemma P3_of_lt_of_lt {x₁ x₂ y₁ y₂} [Numeric x₁] [Numeric x₂] [Numeri
     rw [← P3_neg, neg_neg]
     exact P3_of_lt_of_lt h hy
 termination_by (x₁, x₂)
-decreasing_by all_goals (try rw [moves_neg] at *); igame_wf
+decreasing_by all_goals (try rw [moves_neg] at *); inline_igame_wf
 
 /-! ### Instances and corollaries -/
 

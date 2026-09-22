@@ -23,6 +23,8 @@ namespace Tests
 
 open HahnSeries FiniteArchimedeanClass
 
+/-- The rational-coefficient monomial `5t⁻¹` used to compare class projection and closed-class
+truncation. -/
 def rationalBoundaryFieldSeries : Nonpositive ℚ ℚ :=
   Nonpositive.single (-1) 5 (by norm_num)
 

@@ -248,7 +248,7 @@ private theorem translatedTruncation_one_eq_zero_of_neg {u : ℝ} (hu : u < 0) :
   · rw [ite_eq_right hdelta]
     rfl
 
-private theorem ordinalValue_add_one_eq_of_one_lt [CharZero K]
+private theorem ordinalValue_add_one_eq_of_one_lt
     {a : Series K} (ha : 1 < ordinalValue a) : ordinalValue (a + 1) = ordinalValue a := by
   apply le_antisymm
   · simpa [ordinalValue_one, max_eq_left ha.le] using ordinalValue_add_le_max a 1

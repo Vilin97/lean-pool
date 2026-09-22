@@ -99,7 +99,6 @@ private theorem IsOmnificGame.neg {x : IGame.{u}} (hx : IsOmnificGame x) :
   exact IGame.neg_congr hx
 
 private theorem cutGame_add_cutGame_equiv {x y : IGame.{u}}
-    [IGame.Numeric x] [IGame.Numeric y]
     (hx : IsOmnificGame x) (hy : IsOmnificGame y) :
     cutGame x + cutGame y ≈ cutGame (x + y) := by
   have hx' : Game.mk !{{x - 1} | {x + 1}} = Game.mk x := (Game.mk_eq hx).symm
@@ -120,8 +119,8 @@ private theorem mulOption_cutGame_equiv {x y s t : IGame.{u}}
     (hx : IsOmnificGame x) (hy : IsOmnificGame y) :
     IGame.mulOption !{{x - 1} | {x + 1}} !{{y - 1} | {y + 1}}
       (x + s) (y + t) ≈ x * y - s * t := by
-  letI : IGame.Numeric !{{x - 1} | {x + 1}} := cutGameNumeric x
-  letI : IGame.Numeric !{{y - 1} | {y + 1}} := cutGameNumeric y
+  let : IGame.Numeric !{{x - 1} | {x + 1}} := cutGameNumeric x
+  let : IGame.Numeric !{{y - 1} | {y + 1}} := cutGameNumeric y
   have hx' : Surreal.mk !{{x - 1} | {x + 1}} = Surreal.mk x := (Surreal.mk_eq hx).symm
   have hy' : Surreal.mk !{{y - 1} | {y + 1}} = Surreal.mk y := (Surreal.mk_eq hy).symm
   apply Surreal.mk_eq_mk.mp
@@ -228,7 +227,7 @@ private theorem omnificIntegerCut_mk (x : IGame.{u}) [IGame.Numeric x] :
     omnificIntegerCut (Surreal.mk x) = Surreal.mk (cutGame x) := by
   rw [omnificIntegerCut]
   symm
-  letI : IGame.Numeric !{{x - 1} | {x + 1}} := cutGameNumeric x
+  let : IGame.Numeric !{{x - 1} | {x + 1}} := cutGameNumeric x
   change Surreal.mk !{{x - 1} | {x + 1}} = _
   rw [Surreal.mk_ofSets]
   congr! 2 <;> simp

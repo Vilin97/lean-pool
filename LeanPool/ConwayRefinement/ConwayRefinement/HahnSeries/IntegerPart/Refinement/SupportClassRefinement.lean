@@ -64,7 +64,7 @@ Archimedean class in a specified family. -/
 private def HasNonpositiveClosedClassRefinement
     {G : Type u} {K : Type v}
     [AddCommGroup G] [LinearOrder G] [IsOrderedAddMonoid G]
-    [Field K] {κ : Cardinal} [Fact (ℵ₀ < κ)] [Fact κ.IsRegular]
+    [Field K] {κ : Cardinal} [Fact (ℵ₀ < κ)]
     (S : Subring K) (U : Set (FiniteArchimedeanClass G))
     (a b c d : HahnSeries.cardSuppLTTruncationIntegerPart
       (G := G) (R := K) (κ := κ) S) : Prop :=
@@ -191,7 +191,7 @@ to normalize refinements over a specified family of classes. -/
 private def HasClosedClassNormalization
     {G : Type u} {K : Type v}
     [AddCommGroup G] [LinearOrder G] [IsOrderedAddMonoid G]
-    [Field K] {κ : Cardinal} [Fact (ℵ₀ < κ)] [Fact κ.IsRegular]
+    [Field K] {κ : Cardinal} [Fact (ℵ₀ < κ)]
     (S : Subring K) (U : Set (FiniteArchimedeanClass G))
     (a b c d : HahnSeries.cardSuppLTTruncationIntegerPart
       (G := G) (R := K) (κ := κ) S) : Prop :=
@@ -234,7 +234,7 @@ private theorem has_closed_class_normalization_at_support_classes
     {G : Type u} {R : Type v}
     [AddCommGroup G] [LinearOrder G] [IsOrderedAddMonoid G]
     [Module ℚ G] [PosSMulMono ℚ G]
-    [Field R] [CharZero R]
+    [Field R]
     {κ : Cardinal} [Fact (ℵ₀ < κ)] [Fact κ.IsRegular]
     (Z : Subring R)
     (hfinite : ∀ y : HahnSeries.cardSuppLTTruncationIntegerPart

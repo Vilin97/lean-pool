@@ -148,7 +148,7 @@ omit [CharZero K] in
 /-- Splitting one variable from a monomial. -/
 theorem monomial_add_single_one (d : ι →₀ ℕ) (i : ι) :
     monomial (d + Finsupp.single i 1) (1 : K) = monomial d 1 * X i := by
-  rw [X, monomial_mul, mul_one]
+  rw [X, MvPolynomial.monomial_mul_monomial, mul_one]
 
 omit [CharZero K] in
 /-- The first-order Leibniz sum after splitting one variable from a monomial. -/
@@ -619,7 +619,7 @@ theorem componentsGE_pol_translatedTruncLE_aeval_pderiv_mem
         rw [pderiv_eq_zero_of_isWeightedHomogeneous wt hF j.1 h]
         exact isWeightedHomogeneous_zero _ _ _⟩
   choose c hc using hgen
-  haveI : Finite {j : ι // j ∈ F.vars ∧ wt v' < wt j} :=
+  have : Finite {j : ι // j ∈ F.vars ∧ wt v' < wt j} :=
     (F.vars.finite_toSet.subset fun j (hj : j ∈ F.vars ∧ wt v' < wt j) ↦ hj.1).to_subtype
   refine componentsGE_mem_span wt hc ?_ τ
   refine Ideal.sum_mem _ fun j hj ↦ ?_

@@ -116,7 +116,7 @@ theorem quotientValue_mk_le (ν : MaxAddDegree R M) (I : Ideal R)
       exact (WithBot.coe_unbot (ν x) hνx).symm
     rw [ν.quotientValue_eq_coe_min I hν hq, ← WithBot.coe_unbot (ν x) hνx,
       WithBot.coe_le_coe]
-    exact wellFounded_lt.min_le hmem
+    exact WellFoundedLT.min_le hmem
 
 /-- The unit of the quotient has degree at most zero. -/
 theorem quotientValue_one_le_zero (ν : MaxAddDegree R M) (I : Ideal R)

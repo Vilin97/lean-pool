@@ -50,7 +50,7 @@ theorem finiteSupportSeries_exists_factor_dvd_of_maximalMultiplicative
   have hpMax : p ∣ seriesNormalizedMaximalFiniteSupportDivisor (b * c) :=
     (hmaxBC.1 p).mp hp
   rw [hmaxMul b c] at hpMax
-  letI : GCDMonoid (FiniteSupportRing (K := K)) :=
+  let : GCDMonoid (FiniteSupportRing (K := K)) :=
     gcdMonoidOfExistsGCD hgcd
   obtain ⟨p₁, p₂, hp₁, hp₂, hpFactor⟩ :=
     exists_dvd_and_dvd_of_dvd_mul hpMax

@@ -60,7 +60,7 @@ theorem weightedHomogeneousComponent_mem_span {ι : Type w} [Finite ι] {q : ι 
     weightedHomogeneousComponent wt e P ∈ Ideal.span (Set.range q) := by
   classical
   cases nonempty_fintype ι
-  letI := weightedGradedAlgebra K wt
+  let := weightedGradedAlgebra K wt
   obtain ⟨u, -, -, hsum⟩ := OrdinalGraded.exists_decompose_eq_sum_mul_of_mem_span
     (𝒜 := weightedHomogeneousSubmodule K wt)
     (fun j ↦ (mem_weightedHomogeneousSubmodule _ _ _ _).mpr (hq j)) hP e

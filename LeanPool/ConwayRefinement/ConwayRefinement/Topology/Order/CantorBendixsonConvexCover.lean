@@ -196,7 +196,7 @@ theorem exists_disjoint_convex_cover_with_rank_lt_center_within
       have hpv : p ∈ B v := hsub hpw
       have hmv : idx w ≤ idx v := by
         rw [hwidx]
-        exact wellFounded_lt.min_le (s := covIdx) (x := idx v) ⟨v, rfl, hpv⟩
+        exact WellFoundedLT.min_le (s := covIdx) (x := idx v) ⟨v, rfl, hpv⟩
       exact le_antisymm (hnest v w hmv p hpv hpw) hsub
     have hwX : (w : G) ∈ X := ⟨w.2, hwmax⟩
     exact Set.mem_iUnion.mpr ⟨⟨(w : G), hwX⟩, hpw⟩

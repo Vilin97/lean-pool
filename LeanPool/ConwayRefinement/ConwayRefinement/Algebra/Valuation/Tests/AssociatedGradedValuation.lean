@@ -32,11 +32,15 @@ open scoped DirectSum
 
 namespace Tests
 
+/-- The direct sum of integer components indexed by natural-number degrees, used to test leading
+grades. -/
 abbrev LeadingGradeFixture := DirectSum ℕ (fun _ ↦ ℤ)
 
+/-- The homogeneous element with coefficient two in degree one. -/
 def leadingGradeLow : LeadingGradeFixture :=
   DirectSum.of (fun _ : ℕ ↦ ℤ) 1 2
 
+/-- The homogeneous element with coefficient five in degree three. -/
 def leadingGradeHigh : LeadingGradeFixture :=
   DirectSum.of (fun _ : ℕ ↦ ℤ) 3 5
 
@@ -75,6 +79,8 @@ theorem leadingGrade_mul_fixture :
   rw [hlow, hhigh]
   norm_num
 
+/-- The trivial valuation pulled back along the first projection, used to test separation of the
+associated graded ring. -/
 def associatedFirstProjectionValuation : MaxAddDegree (ℚ × ℚ) ℕ :=
   MaxAddDegree.ofValuation
     ((1 : Valuation ℚ (WithZero (Multiplicative ℕ))).comap (RingHom.fst ℚ ℚ))
