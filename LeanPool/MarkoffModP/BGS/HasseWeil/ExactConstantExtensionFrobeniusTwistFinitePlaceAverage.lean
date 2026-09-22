@@ -138,6 +138,12 @@ noncomputable def ratFuncFinitePlaceEquivFiniteExtension :
   heightOneSpectrumEquivOfAlgEquiv
     (ratFuncFiniteBasePolynomialAlgEquivChart C)
 
+private theorem finrank_mul_finrank_of_fields
+    (K F E : Type*) [Field K] [Field F] [Field E]
+    [Algebra K F] [Algebra K E] [Algebra F E] [IsScalarTower K F E] :
+    Module.finrank K F * Module.finrank F E = Module.finrank K E :=
+  Module.finrank_mul_finrank K F E
+
 /-- A finite-place degree is the dimension of its residue field over the
 constant field. -/
 private theorem finiteExtensionPlaceDegree_inl_eq_finrank_residueField_ratFunc
@@ -148,11 +154,11 @@ private theorem finiteExtensionPlaceDegree_inl_eq_finrank_residueField_ratFunc
   letI : Q.asIdeal.LiesOver P.asIdeal := ⟨rfl⟩
   letI hLocalAlg :=
     Localization.AtPrime.algebraOfLiesOver P.asIdeal Q.asIdeal
-  letI : Localization.AtPrime.IsLiesOverAlgebra P.asIdeal Q.asIdeal :=
-    ⟨rfl⟩
+  let : IsScalarTower C[X] (Localization.AtPrime P.asIdeal)
+      (Localization.AtPrime Q.asIdeal) := inferInstance
   rw [finiteExtensionPlaceDegree, Ideal.inertiaDeg_eq P.asIdeal Q.asIdeal]
   rw [ratFuncFinitePlaceDegree_eq_finrank_residueField C P]
-  rw [mul_comm, Module.finrank_mul_finrank]
+  rw [mul_comm, finrank_mul_finrank_of_fields]
 
 /-- The chart-normalization equivalence preserves finite-place degree. -/
 @[simp]
