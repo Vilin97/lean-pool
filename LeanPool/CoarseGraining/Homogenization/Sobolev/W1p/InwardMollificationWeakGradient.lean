@@ -77,13 +77,12 @@ private theorem memLp_convolution_scaledConvexApproxKernel
       (k ⋆[ContinuousLinearMap.lsmul ℝ ℝ, volume] g) :=
     hk_compact.continuous_convolution_left (L := ContinuousLinearMap.lsmul ℝ ℝ)
       hk_cont (hg.locallyIntegrable hp)
-  refine ⟨hconv_cont.aestronglyMeasurable, ?_⟩
   exact (young_convolution_nonneg_integral_one_of_aemeasurable hp hp_top
     (scaledConvexApproxKernel_nonneg hρ ha)
     (integrable_scaledConvexApproxKernel hρ ha)
     (integral_scaledConvexApproxKernel hρ ha)
     (measurable_scaledConvexApproxKernel hρ.continuous a)
-    hg.aemeasurable).trans_lt hg.2
+    hg.aemeasurable).trans_lt hg.eLpNorm_lt_top
 
 private theorem convolution_sub_eq_sub_convolution
     {d : ℕ} {k f g : Vec d → ℝ}

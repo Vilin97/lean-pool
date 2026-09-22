@@ -249,7 +249,6 @@ private theorem tendsto_setIntegral_of_tendsto_eLpNorm_sub_of_one_lt
     (MeasureTheory.tendsto_integral_of_L1'
       (μ := μ)
       (f := f)
-      hf_int.aestronglyMeasurable
       (by
         filter_upwards [hF_int] with n hn
         exact hn)
@@ -500,7 +499,7 @@ theorem tendsto_convexApproxSmoothW1p_subAverageLpSeminorm_ofReal
               dsimp [A, B]
               ring
       _ ≤ MeasureTheory.eLpNorm A pE μ + MeasureTheory.eLpNorm B pE μ :=
-            MeasureTheory.eLpNorm_add_le hmeasA hmeasB hp1
+            MeasureTheory.eLpNorm_add_le hp1
       _ = MeasureTheory.eLpNorm (fun x => (ψ n).toFun x - u.toFun x) pE μ +
             MeasureTheory.eLpNorm
               (fun _ : Vec d => integralAverage U u.toFun - integralAverage U (ψ n).toFun)

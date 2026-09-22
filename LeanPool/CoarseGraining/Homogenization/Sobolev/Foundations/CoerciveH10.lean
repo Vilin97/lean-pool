@@ -61,7 +61,7 @@ theorem tendsto_approxH1_toScalarL2
     rw [MeasureTheory.Lp.dist_edist, hedist]
   rw [hdist]
   exact (ENNReal.tendsto_toReal_zero_iff
-    (fun n => (approx_memL2_sub_toH1_memL2 (hU := hU) (u := u) n).2.ne)).2 u.tendsto_approx
+    (fun n => (approx_memL2_sub_toH1_memL2 (hU := hU) (u := u) n).eLpNorm_lt_top.ne)).2 u.tendsto_approx
 
 theorem tendsto_approxH1_gradCoordToScalarL2
     (hU : IsOpen U) (u : H10Function U) (i : Fin d) :
@@ -101,7 +101,7 @@ theorem tendsto_approxH1_gradCoordToScalarL2
     rw [MeasureTheory.Lp.dist_edist, hedist]
   rw [hdist]
   exact (ENNReal.tendsto_toReal_zero_iff
-    (fun n => (approx_grad_memL2_sub_toH1_grad_memL2 (hU := hU) (u := u) n i).2.ne)).2
+    (fun n => (approx_grad_memL2_sub_toH1_grad_memL2 (hU := hU) (u := u) n i).eLpNorm_lt_top.ne)).2
       (u.tendsto_approx_grad i)
 
 theorem tendsto_approxH1_gradientCoordL2NormSum

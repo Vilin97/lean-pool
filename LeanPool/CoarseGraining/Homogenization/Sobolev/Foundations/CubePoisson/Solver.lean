@@ -142,7 +142,7 @@ theorem cubeLpNorm_two_le_volume_inv_add_one_mul_norm_toScalarL2_openCubeSet {d 
   have htop :
       ENNReal.ofReal (((cubeVolume Q)⁻¹) + 1) *
           MeasureTheory.eLpNorm f (2 : ℝ≥0∞) μ ≠ ∞ := by
-    exact ENNReal.mul_ne_top ENNReal.ofReal_ne_top hopen.2.ne
+    exact ENNReal.mul_ne_top ENNReal.ofReal_ne_top hopen.eLpNorm_lt_top.ne
   have hmain :
       MeasureTheory.eLpNorm f (2 : ℝ≥0∞) (normalizedCubeMeasure Q) ≤
         ENNReal.ofReal (((cubeVolume Q)⁻¹) + 1) *
@@ -154,7 +154,8 @@ theorem cubeLpNorm_two_le_volume_inv_add_one_mul_norm_toScalarL2_openCubeSet {d 
               rw [normalizedCubeMeasure]
               dsimp [c]
               rw [MeasureTheory.eLpNorm_smul_measure_of_ne_top
-                (by norm_num : (2 : ℝ≥0∞) ≠ ∞)]
+                (by norm_num : (2 : ℝ≥0∞) ≠ ∞) f _
+                  (by rw [hμ_eq]; exact hopen.aestronglyMeasurable)]
               simp [hμ_eq, μ]
       _ ≤ ENNReal.ofReal (((cubeVolume Q)⁻¹) + 1) *
           MeasureTheory.eLpNorm f (2 : ℝ≥0∞) μ := by
@@ -205,7 +206,8 @@ theorem cubeLpNorm_two_eq_volume_inv_rpow_half_mul_norm_toScalarL2_openCubeSet {
           MeasureTheory.eLpNorm f (2 : ℝ≥0∞) μ).toReal := by
     unfold cubeLpNorm normalizedCubeMeasure
     rw [MeasureTheory.eLpNorm_smul_measure_of_ne_top
-      (by norm_num : (2 : ℝ≥0∞) ≠ ∞)]
+      (by norm_num : (2 : ℝ≥0∞) ≠ ∞) f _
+                  (by rw [hμ_eq]; exact hopen.aestronglyMeasurable)]
     simp [c, hμ_eq, μ]
   have hopen_norm :
       ‖Homogenization.toScalarL2 hopen‖ =
@@ -248,7 +250,8 @@ theorem norm_toScalarL2_openCubeSet_le_volume_add_one_mul_cubeLpNorm_two {d : �
           MeasureTheory.eLpNorm f (2 : ℝ≥0∞) μ).toReal := by
     unfold cubeLpNorm normalizedCubeMeasure
     rw [MeasureTheory.eLpNorm_smul_measure_of_ne_top
-      (by norm_num : (2 : ℝ≥0∞) ≠ ∞)]
+      (by norm_num : (2 : ℝ≥0∞) ≠ ∞) f _
+                  (by rw [hμ_eq]; exact hopen.aestronglyMeasurable)]
     simp [c, hμ_eq, μ]
   have hopen_norm :
       ‖Homogenization.toScalarL2 hopen‖ =

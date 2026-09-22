@@ -624,7 +624,7 @@ theorem IsSolenoidalOn.of_test_of_contDiff_of_memVectorL2
       simpa [gi, diff] using
         (MeasureTheory.eLpNorm_le_eLpNorm_mul_eLpNorm_of_nnnorm
           (μ := μ) (p := (2 : ENNReal)) (q := (2 : ENNReal)) (r := (1 : ENNReal))
-          hgi_meas hdiff_meas (fun a b : ℝ => a * b) 1
+          (fun a b : ℝ => a * b) 1 (by fun_prop) hgi_meas hdiff_meas
           (Filter.Eventually.of_forall fun x => by simp))
     have hconst_ne_top : MeasureTheory.eLpNorm gi 2 μ ≠ ⊤ := hgi_mem.eLpNorm_lt_top.ne
     have hL1 :
@@ -660,7 +660,7 @@ theorem IsSolenoidalOn.of_test_of_contDiff_of_memVectorL2
       rw [hEq]
       exact hL1
     exact MeasureTheory.tendsto_integral_of_L1' (μ := μ) (f := f)
-      hf_int.aestronglyMeasurable hFn_int hL1_diff
+      hFn_int hL1_diff
   have hIntegral_tendsto :
       Filter.Tendsto (fun n => ∫ x in U, vecDot (g x) (D n x) ∂MeasureTheory.volume)
         Filter.atTop

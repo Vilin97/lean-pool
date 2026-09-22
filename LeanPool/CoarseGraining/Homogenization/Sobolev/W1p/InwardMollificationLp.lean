@@ -50,8 +50,7 @@ private theorem memLp_inwardMollification
       (measurable_scaledConvexApproxKernel hρ.continuous (ε * r))
       hg.aemeasurable
   have hmollified_mem : MemLp mollified p volume :=
-    ⟨hmollified_cont.aestronglyMeasurable,
-      hmollified_norm.trans_lt hg.eLpNorm_lt_top⟩
+    hmollified_norm.trans_lt hg.eLpNorm_lt_top
   have hcomp := MemLp.comp_globalAffineExpansion hmollified_mem x0 hε.le
   simpa only [inwardMollification, mollified, globalAffineExpansion] using! hcomp
 
@@ -110,8 +109,7 @@ theorem tendsto_eLpNorm_inwardMollification_sub_zero
         (measurable_scaledConvexApproxKernel hρ.continuous (ε n * r))
         hg.aemeasurable
     have hmollified_mem : MemLp (mollified n) p volume :=
-      ⟨hmollified_cont.aestronglyMeasurable,
-        hmollified_norm.trans_lt hg.eLpNorm_lt_top⟩
+      hmollified_norm.trans_lt hg.eLpNorm_lt_top
     have hdiff_mem : MemLp (mollified n - g) p volume :=
       hmollified_mem.sub hg
     have hdiff_comp_mem :
@@ -146,8 +144,7 @@ theorem tendsto_eLpNorm_inwardMollification_sub_zero
             (g ∘ globalAffineExpansion x0 (ε n) - g)) p volume ≤
           eLpNorm ((mollified n - g) ∘ globalAffineExpansion x0 (ε n)) p volume +
             eLpNorm (g ∘ globalAffineExpansion x0 (ε n) - g) p volume :=
-        eLpNorm_add_le hdiff_comp_mem.aestronglyMeasurable
-          (hg_comp_mem.sub hg).aestronglyMeasurable hp1
+        eLpNorm_add_le hp1
       _ ≤ eLpNorm (mollified n - g) p volume +
             eLpNorm (g ∘ globalAffineExpansion x0 (ε n) - g) p volume :=
         add_le_add hcomp_le (le_refl _)
@@ -224,7 +221,7 @@ theorem tendsto_eLpNorm_one_add_mul_inwardMollification_sub_zero
       simp only [c, Pi.add_apply, Pi.sub_apply, Pi.smul_apply, smul_eq_mul]
       ring
     rw [hdecomp]
-    exact eLpNorm_add_le hfirst_meas hsecond_meas hp1
+    exact eLpNorm_add_le hp1
   refine tendsto_of_tendsto_of_tendsto_of_le_of_le'
     tendsto_const_nhds hsum (Filter.Eventually.of_forall fun _ => zero_le) hupper
 
