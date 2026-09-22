@@ -68,10 +68,11 @@ local instance rationalCyclotomicPrimePowerIsAbelianGalois
 attribute [local instance] rationalCyclotomicPrimePowerIsAbelianGalois
 
 open scoped Classical in
-local instance localPrimesInstance1 (p : Nat.Primes) : Fact p.1.Prime :=
+/-- The prime subtype supplies the primality instance used at this local factor. -/
+local instance cyclotomicPrincipalIdelePrimeFact (p : Nat.Primes) : Fact p.1.Prime :=
   ⟨p.2⟩
 
-attribute [local instance] localPrimesInstance1
+attribute [local instance] cyclotomicPrincipalIdelePrimeFact
 
 open scoped Classical in
 noncomputable local instance

@@ -1040,6 +1040,28 @@ theorem finiteReciprocityNaturalityFrobeniusConjugationLift_coe
       D.finiteReciprocityNaturalityFrobeniusConjugationEquiv K.field L hLK s σ.1 := by
   rfl
 
+/-- Restricting a conjugated Frobenius lift conjugates its finite Galois restriction. -/
+private theorem frobeniusRestriction_conjugationLift
+    (D : DegreeData G) [IsTopologicalGroup G]
+    (K : FiniteResidueAbstractField D) (L : ClosedSubgroup G)
+    (hLK : L.toSubgroup ≤ K.field.toSubgroup) (s : G)
+    [hLnormal : (extensionSubgroup K.field L hLK).Normal]
+    (σ : D.FrobeniusElements K L hLK) :
+    D.frobeniusRestriction (K.conjugate s) (conjugateClosedSubgroup L s)
+        (conjugateClosedSubgroup_mono hLK s)
+        (D.finiteReciprocityNaturalityFrobeniusConjugationLift K L hLK s σ) =
+      finiteReciprocityNaturalityConjugation K.field L hLK s
+        (D.frobeniusRestriction K L hLK σ) := by
+  change D.extensionRestriction (K.conjugate s).field (conjugateClosedSubgroup L s)
+      (conjugateClosedSubgroup_mono hLK s)
+      (D.finiteReciprocityNaturalityFrobeniusConjugationLift K L hLK s σ).1 =
+    finiteReciprocityNaturalityConjugation K.field L hLK s
+      (D.extensionRestriction K.field L hLK σ.1)
+  rw [D.finiteReciprocityNaturalityFrobeniusConjugationLift_coe]
+  refine Quotient.inductionOn' σ.1 ?_
+  intro k
+  rfl
+
 /-- The Frobenius conjugation lift preserves the selected exponent. -/
 @[simp]
 theorem finiteReciprocityNaturalityFrobeniusConjugationLift_exponent
@@ -1376,12 +1398,6 @@ theorem finiteReciprocityNaturality_conjugation_commutes
   let Ks : FiniteAbstractField G := K.conjugate s
   let KRs : D.FiniteResidueAbstractField :=
     Ks.toFiniteResidueAbstractField D
-  have hKRs_conjugate : KR.conjugate s = KRs := by
-    dsimp [KRs, Ks, KR]
-    unfold FiniteAbstractField.toFiniteResidueAbstractField
-    unfold FiniteAbstractField.conjugate
-    unfold DegreeData.FiniteResidueAbstractField.conjugate
-    rfl
   let hLsfiniteKs : Finite
       (Ks.field.toSubgroup ⧸
         extensionSubgroup Ks.field (conjugateClosedSubgroup L s)
@@ -1419,10 +1435,8 @@ theorem finiteReciprocityNaturality_conjugation_commutes
   let σ := D.chosenFiniteReciprocityFrobeniusLift KR L hLK q.toMul
   let σs : D.FrobeniusElements KRs
       (conjugateClosedSubgroup L s)
-      (conjugateClosedSubgroup_mono hLK s) := by
-    subst KRs
-    exact D.finiteReciprocityNaturalityFrobeniusConjugationLift
-      KR L hLK s σ
+      (conjugateClosedSubgroup_mono hLK s) :=
+    D.finiteReciprocityNaturalityFrobeniusConjugationLift KR L hLK s σ
   have hσ : D.frobeniusRestriction KR L hLK σ = q.toMul :=
     D.frobeniusRestriction_chosenFiniteReciprocityFrobeniusLift
       KR L hLK q.toMul
@@ -1436,19 +1450,7 @@ theorem finiteReciprocityNaturality_conjugation_commutes
         (conjugateClosedSubgroup_mono hLK s) σs =
       finiteReciprocityNaturalityConjugation K.field L hLK s q.toMul
     rw [← hσ]
-    symm
-    change finiteReciprocityNaturalityConjugation K.field L hLK s
-        (D.extensionRestriction KR.field L hLK σ.1) =
-      D.extensionRestriction KRs.field
-        (conjugateClosedSubgroup L s)
-        (conjugateClosedSubgroup_mono hLK s) σs.1
-    unfold σs
-    cases hKRs_conjugate
-    dsimp only [id]
-    rw [D.finiteReciprocityNaturalityFrobeniusConjugationLift_coe]
-    refine Quotient.inductionOn' σ.1 ?_
-    intro k
-    rfl
+    exact D.frobeniusRestriction_conjugationLift KR L hLK s σ
   let S := D.frobeniusFixedField KR L hLK σ
   let Ss := D.frobeniusFixedField KRs
     (conjugateClosedSubgroup L s)

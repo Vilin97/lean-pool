@@ -24,10 +24,11 @@ namespace GlobalClassFieldTheory
 namespace Reciprocity
 
 open scoped Classical in
-local instance localPrimesInstance1 (p : Nat.Primes) : Fact p.1.Prime :=
+/-- The prime subtype supplies the primality instance used at this local factor. -/
+local instance rationalPrimeFactorizationPrimeFact (p : Nat.Primes) : Fact p.1.Prime :=
   ⟨p.2⟩
 
-attribute [local instance] localPrimesInstance1
+attribute [local instance] rationalPrimeFactorizationPrimeFact
 
 open scoped Classical in
 /-- A finite set containing every prime occurring in the numerator or

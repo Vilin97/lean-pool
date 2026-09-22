@@ -98,16 +98,18 @@ private theorem mappedAbelianLocalArtin_eq_frobenius_zpow
     map_zpow]
 
 open scoped Classical in
-local instance localPrimesInstance1 (q : Nat.Primes) : Fact q.1.Prime :=
+/-- The prime subtype supplies the primality instance used at this local factor. -/
+local instance rationalCyclotomicFinitePlaceArtinPrimeFact (q : Nat.Primes) : Fact q.1.Prime :=
   ⟨q.2⟩
 
-attribute [local instance] localPrimesInstance1
+attribute [local instance] rationalCyclotomicFinitePlaceArtinPrimeFact
 
 open scoped Classical in
-local instance localNeZeroInstance1 (m : ℕ+) : NeZero (m : ℕ) :=
+/-- The positive cyclotomic level has nonzero underlying natural number. -/
+local instance rationalCyclotomicFinitePlaceArtinPositiveLevelNeZero (m : ℕ+) : NeZero (m : ℕ) :=
   ⟨m.ne_zero⟩
 
-attribute [local instance] localNeZeroInstance1
+attribute [local instance] rationalCyclotomicFinitePlaceArtinPositiveLevelNeZero
 
 open scoped Classical in
 noncomputable local instance

@@ -1210,30 +1210,10 @@ theorem
     relativeIdeleLocalTensorDecompositionSupportedSubgroupAction
       (K := K) (L := L) S
   let classAction := ideleClassMulDistribMulAction K L
-  let hU0 :
-      Finite
-        (HerbrandH0 (L ≃ₐ[K] L)
-          (SUnitGroup (K := L)
-            (finitePlacesAbove (K := K) (L := L) S))) :=
-    hUnitDefined.1
-  let hUm :
-      Finite
-        (HerbrandHMinusOne (L ≃ₐ[K] L)
-          (SUnitGroup (K := L)
-            (finitePlacesAbove (K := K) (L := L) S)) σ) :=
-    hUnitDefined.2
-  let hS0 :
-      Finite
-        (HerbrandH0 (L ≃ₐ[K] L)
-          (relativeIdeleLocalTensorDecompositionSupportedSubgroup
-            (K := K) (L := L) S)) :=
-    hSupportedDefined.1
-  let hSm :
-      Finite
-        (HerbrandHMinusOne (L ≃ₐ[K] L)
-          (relativeIdeleLocalTensorDecompositionSupportedSubgroup
-            (K := K) (L := L) S) σ) :=
-    hSupportedDefined.2
+  let hU0 := hUnitDefined.1
+  let hUm := hUnitDefined.2
+  let hS0 := hSupportedDefined.1
+  let hSm := hSupportedDefined.2
   let i :
       SUnitGroup (K := L)
           (finitePlacesAbove (K := K) (L := L) S) →*

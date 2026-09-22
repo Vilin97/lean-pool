@@ -574,9 +574,7 @@ theorem
       σ.1 * (1 : F.fixingSubgroup).1 = σ.1 by
         exact congrArg Subtype.val (mul_one σ)]
     exact hσU₀
-  have hVnhds :
-      V ∈ 𝓝 ((1 : F.fixingSubgroup).1) :=
-    hVopen.mem_nhds hVone
+  have hVnhds := hVopen.mem_nhds hVone
   have hkrull :=
     InfiniteGalois.krullTopology_mem_nhds_one_iff_of_isGalois
       (k := ℚ) (K := rationalCyclotomicZHatField) V

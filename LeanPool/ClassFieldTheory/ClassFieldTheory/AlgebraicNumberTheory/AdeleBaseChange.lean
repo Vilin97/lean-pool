@@ -628,6 +628,146 @@ theorem adeleToRelativeAdele_finiteComponent
     relativeAdeleOfLocalData_finiteComponent]
   rfl
 
+/-- Scalar extension of relative adeles preserves addition componentwise. -/
+private theorem relativeAdeleToAdele_map_add (x y : RelativeAdeleRing K L) :
+    relativeAdeleToAdele (K := K) (L := L) (x + y) =
+      relativeAdeleToAdele (K := K) (L := L) x +
+        relativeAdeleToAdele (K := K) (L := L) y := by
+  apply Prod.ext
+  · funext W
+    change
+      relativeInfiniteTensorPiRingEquiv
+          (K := K) (L := L)
+          (fun w =>
+            relativeAdeleInfiniteComponent
+              (K := K) (L := L) w (x + y)) W =
+        relativeInfiniteTensorPiRingEquiv
+            (K := K) (L := L)
+            (fun w =>
+              relativeAdeleInfiniteComponent
+                (K := K) (L := L) w x) W +
+          relativeInfiniteTensorPiRingEquiv
+            (K := K) (L := L)
+            (fun w =>
+              relativeAdeleInfiniteComponent
+                (K := K) (L := L) w y) W
+    rw [show
+      (fun w =>
+        relativeAdeleInfiniteComponent
+          (K := K) (L := L) w (x + y)) =
+        (fun w =>
+          relativeAdeleInfiniteComponent
+            (K := K) (L := L) w x) +
+        (fun w =>
+          relativeAdeleInfiniteComponent
+            (K := K) (L := L) w y) by
+        funext w
+        exact map_add _ _ _,
+      map_add]
+    rfl
+  · apply Subtype.ext
+    funext W
+    change
+      relativeFiniteTensorPiRingEquiv
+          (K := K) (L := L)
+          (fun w =>
+            relativeAdeleFiniteComponent
+              (K := K) (L := L) w (x + y)) W =
+        relativeFiniteTensorPiRingEquiv
+            (K := K) (L := L)
+            (fun w =>
+              relativeAdeleFiniteComponent
+                (K := K) (L := L) w x) W +
+          relativeFiniteTensorPiRingEquiv
+            (K := K) (L := L)
+            (fun w =>
+              relativeAdeleFiniteComponent
+                (K := K) (L := L) w y) W
+    rw [show
+      (fun w =>
+        relativeAdeleFiniteComponent
+          (K := K) (L := L) w (x + y)) =
+        (fun w =>
+          relativeAdeleFiniteComponent
+            (K := K) (L := L) w x) +
+        (fun w =>
+          relativeAdeleFiniteComponent
+            (K := K) (L := L) w y) by
+        funext w
+        exact map_add _ _ _,
+      map_add]
+    rfl
+
+/-- Scalar extension of relative adeles preserves multiplication componentwise. -/
+private theorem relativeAdeleToAdele_map_mul (x y : RelativeAdeleRing K L) :
+    relativeAdeleToAdele (K := K) (L := L) (x * y) =
+      relativeAdeleToAdele (K := K) (L := L) x *
+        relativeAdeleToAdele (K := K) (L := L) y := by
+  apply Prod.ext
+  · funext W
+    change
+      relativeInfiniteTensorPiRingEquiv
+          (K := K) (L := L)
+          (fun w =>
+            relativeAdeleInfiniteComponent
+              (K := K) (L := L) w (x * y)) W =
+        relativeInfiniteTensorPiRingEquiv
+            (K := K) (L := L)
+            (fun w =>
+              relativeAdeleInfiniteComponent
+                (K := K) (L := L) w x) W *
+          relativeInfiniteTensorPiRingEquiv
+            (K := K) (L := L)
+            (fun w =>
+              relativeAdeleInfiniteComponent
+                (K := K) (L := L) w y) W
+    rw [show
+      (fun w =>
+        relativeAdeleInfiniteComponent
+          (K := K) (L := L) w (x * y)) =
+        (fun w =>
+          relativeAdeleInfiniteComponent
+            (K := K) (L := L) w x) *
+        (fun w =>
+          relativeAdeleInfiniteComponent
+            (K := K) (L := L) w y) by
+        funext w
+        exact map_mul _ _ _,
+      map_mul]
+    rfl
+  · apply Subtype.ext
+    funext W
+    change
+      relativeFiniteTensorPiRingEquiv
+          (K := K) (L := L)
+          (fun w =>
+            relativeAdeleFiniteComponent
+              (K := K) (L := L) w (x * y)) W =
+        relativeFiniteTensorPiRingEquiv
+            (K := K) (L := L)
+            (fun w =>
+              relativeAdeleFiniteComponent
+                (K := K) (L := L) w x) W *
+          relativeFiniteTensorPiRingEquiv
+            (K := K) (L := L)
+            (fun w =>
+              relativeAdeleFiniteComponent
+                (K := K) (L := L) w y) W
+    rw [show
+      (fun w =>
+        relativeAdeleFiniteComponent
+          (K := K) (L := L) w (x * y)) =
+        (fun w =>
+          relativeAdeleFiniteComponent
+            (K := K) (L := L) w x) *
+        (fun w =>
+          relativeAdeleFiniteComponent
+            (K := K) (L := L) w y) by
+        funext w
+        exact map_mul _ _ _,
+      map_mul]
+    rfl
+
 /-- Scalar extension identifies the relative adele ring over `K` with
 the ordinary adele ring of `L`. -/
 noncomputable def relativeAdeleBaseChangeRingEquiv :
@@ -706,136 +846,8 @@ noncomputable def relativeAdeleBaseChangeRingEquiv :
             (K := K) (L := L) y w]
       rw [(relativeFiniteTensorPiRingEquiv
         (K := K) (L := L)).apply_symm_apply]
-  map_add' x y := by
-    apply Prod.ext
-    · funext W
-      change
-        relativeInfiniteTensorPiRingEquiv
-            (K := K) (L := L)
-            (fun w =>
-              relativeAdeleInfiniteComponent
-                (K := K) (L := L) w (x + y)) W =
-          relativeInfiniteTensorPiRingEquiv
-              (K := K) (L := L)
-              (fun w =>
-                relativeAdeleInfiniteComponent
-                  (K := K) (L := L) w x) W +
-            relativeInfiniteTensorPiRingEquiv
-              (K := K) (L := L)
-              (fun w =>
-                relativeAdeleInfiniteComponent
-                  (K := K) (L := L) w y) W
-      rw [show
-        (fun w =>
-          relativeAdeleInfiniteComponent
-            (K := K) (L := L) w (x + y)) =
-          (fun w =>
-            relativeAdeleInfiniteComponent
-              (K := K) (L := L) w x) +
-          (fun w =>
-            relativeAdeleInfiniteComponent
-              (K := K) (L := L) w y) by
-          funext w
-          exact map_add _ _ _,
-        map_add]
-      rfl
-    · apply Subtype.ext
-      funext W
-      change
-        relativeFiniteTensorPiRingEquiv
-            (K := K) (L := L)
-            (fun w =>
-              relativeAdeleFiniteComponent
-                (K := K) (L := L) w (x + y)) W =
-          relativeFiniteTensorPiRingEquiv
-              (K := K) (L := L)
-              (fun w =>
-                relativeAdeleFiniteComponent
-                  (K := K) (L := L) w x) W +
-            relativeFiniteTensorPiRingEquiv
-              (K := K) (L := L)
-              (fun w =>
-                relativeAdeleFiniteComponent
-                  (K := K) (L := L) w y) W
-      rw [show
-        (fun w =>
-          relativeAdeleFiniteComponent
-            (K := K) (L := L) w (x + y)) =
-          (fun w =>
-            relativeAdeleFiniteComponent
-              (K := K) (L := L) w x) +
-          (fun w =>
-            relativeAdeleFiniteComponent
-              (K := K) (L := L) w y) by
-          funext w
-          exact map_add _ _ _,
-        map_add]
-      rfl
-  map_mul' x y := by
-    apply Prod.ext
-    · funext W
-      change
-        relativeInfiniteTensorPiRingEquiv
-            (K := K) (L := L)
-            (fun w =>
-              relativeAdeleInfiniteComponent
-                (K := K) (L := L) w (x * y)) W =
-          relativeInfiniteTensorPiRingEquiv
-              (K := K) (L := L)
-              (fun w =>
-                relativeAdeleInfiniteComponent
-                  (K := K) (L := L) w x) W *
-            relativeInfiniteTensorPiRingEquiv
-              (K := K) (L := L)
-              (fun w =>
-                relativeAdeleInfiniteComponent
-                  (K := K) (L := L) w y) W
-      rw [show
-        (fun w =>
-          relativeAdeleInfiniteComponent
-            (K := K) (L := L) w (x * y)) =
-          (fun w =>
-            relativeAdeleInfiniteComponent
-              (K := K) (L := L) w x) *
-          (fun w =>
-            relativeAdeleInfiniteComponent
-              (K := K) (L := L) w y) by
-          funext w
-          exact map_mul _ _ _,
-        map_mul]
-      rfl
-    · apply Subtype.ext
-      funext W
-      change
-        relativeFiniteTensorPiRingEquiv
-            (K := K) (L := L)
-            (fun w =>
-              relativeAdeleFiniteComponent
-                (K := K) (L := L) w (x * y)) W =
-          relativeFiniteTensorPiRingEquiv
-              (K := K) (L := L)
-              (fun w =>
-                relativeAdeleFiniteComponent
-                  (K := K) (L := L) w x) W *
-            relativeFiniteTensorPiRingEquiv
-              (K := K) (L := L)
-              (fun w =>
-                relativeAdeleFiniteComponent
-                  (K := K) (L := L) w y) W
-      rw [show
-        (fun w =>
-          relativeAdeleFiniteComponent
-            (K := K) (L := L) w (x * y)) =
-          (fun w =>
-            relativeAdeleFiniteComponent
-              (K := K) (L := L) w x) *
-          (fun w =>
-            relativeAdeleFiniteComponent
-              (K := K) (L := L) w y) by
-          funext w
-          exact map_mul _ _ _,
-        map_mul]
-      rfl
+  map_add' := relativeAdeleToAdele_map_add
+  map_mul' := relativeAdeleToAdele_map_mul
 
 /-- Finite-coordinate formula for scalar extension of a pure relative
 adele tensor. -/

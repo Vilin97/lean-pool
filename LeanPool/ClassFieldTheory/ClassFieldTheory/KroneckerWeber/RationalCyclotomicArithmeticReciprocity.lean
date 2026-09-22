@@ -69,20 +69,22 @@ section NonzeroOrder
 variable (m : ℕ) [NeZero m]
 
 open scoped Classical in
-local instance localNeZeroInstance1 : NeZero (m : ℚ) :=
+/-- A nonzero cyclotomic level remains nonzero after casting to the rational field. -/
+local instance rationalCyclotomicArithmeticReciprocityRationalLevelNeZero : NeZero (m : ℚ) :=
   ⟨by exact_mod_cast (NeZero.ne m)⟩
 
-attribute [local instance] localNeZeroInstance1
+attribute [local instance] rationalCyclotomicArithmeticReciprocityRationalLevelNeZero
 
 open scoped Classical in
-noncomputable local instance localNumberFieldInstance1 :
+noncomputable /-- The rational cyclotomic level is a number field. -/
+local instance rationalCyclotomicArithmeticReciprocityLevelNumberField :
     NumberField
       (KummerTheory.rationalCyclotomicLevel
         ⟨m, NeZero.pos m⟩) :=
   KummerTheory.rationalCyclotomicLevel_numberField
     ⟨m, NeZero.pos m⟩
 
-attribute [local instance] localNumberFieldInstance1
+attribute [local instance] rationalCyclotomicArithmeticReciprocityLevelNumberField
 
 open scoped Classical in
 noncomputable local instance

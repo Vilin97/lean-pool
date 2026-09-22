@@ -202,30 +202,33 @@ section NonzeroOrder
 variable (m : ℕ) [NeZero m]
 
 open scoped Classical in
-local instance localNeZeroInstance1 : NeZero (m : ℚ) :=
+/-- A nonzero cyclotomic level remains nonzero after casting to the rational field. -/
+local instance rationalRayClassFieldCyclotomicRationalLevelNeZero : NeZero (m : ℚ) :=
   ⟨by exact_mod_cast (NeZero.ne m)⟩
 
-attribute [local instance] localNeZeroInstance1
+attribute [local instance] rationalRayClassFieldCyclotomicRationalLevelNeZero
 
 open scoped Classical in
-noncomputable local instance localNumberFieldInstance1 :
+noncomputable /-- The rational cyclotomic level is a number field. -/
+local instance rationalRayClassFieldCyclotomicLevelNumberField :
     NumberField
       (KummerTheory.rationalCyclotomicLevel
         ⟨m, NeZero.pos m⟩) :=
   KummerTheory.rationalCyclotomicLevel_numberField
     ⟨m, NeZero.pos m⟩
 
-attribute [local instance] localNumberFieldInstance1
+attribute [local instance] rationalRayClassFieldCyclotomicLevelNumberField
 
 open scoped Classical in
-noncomputable local instance localIsAbelianGaloisInstance1 :
+noncomputable /-- The rational cyclotomic level is an abelian Galois extension of the rationals. -/
+local instance rationalRayClassFieldCyclotomicLevelAbelianGalois :
     IsAbelianGalois ℚ
       (KummerTheory.rationalCyclotomicLevel
         ⟨m, NeZero.pos m⟩) :=
   rationalCyclotomicLevelIsAbelianGalois
     ⟨m, NeZero.pos m⟩
 
-attribute [local instance] localIsAbelianGaloisInstance1
+attribute [local instance] rationalRayClassFieldCyclotomicLevelAbelianGalois
 
 open scoped Classical in
 noncomputable local instance rationalCyclotomicLevelIsCyclotomicExtensionAtOrder :

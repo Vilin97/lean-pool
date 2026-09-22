@@ -29,16 +29,19 @@ namespace Reciprocity
 open Function
 
 open scoped Classical in
-local instance localPrimesInstance1 (q : Nat.Primes) : Fact q.1.Prime :=
+/-- The prime subtype supplies the primality instance used at this local factor. -/
+local instance rationalCyclotomicPrincipalAwayProductPrimeFact (q : Nat.Primes) : Fact q.1.Prime :=
   ⟨q.2⟩
 
-attribute [local instance] localPrimesInstance1
+attribute [local instance] rationalCyclotomicPrincipalAwayProductPrimeFact
 
 open scoped Classical in
-local instance localNeZeroInstance1 (m : ℕ+) : NeZero (m : ℕ) :=
+/-- The positive cyclotomic level has nonzero underlying natural number. -/
+local instance rationalCyclotomicPrincipalAwayProductPositiveLevelNeZero
+    (m : ℕ+) : NeZero (m : ℕ) :=
   ⟨m.ne_zero⟩
 
-attribute [local instance] localNeZeroInstance1
+attribute [local instance] rationalCyclotomicPrincipalAwayProductPositiveLevelNeZero
 
 open scoped Classical in
 local instance rationalCyclotomicPrincipalPrimePowerNumberField

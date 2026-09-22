@@ -1220,20 +1220,8 @@ theorem fullLogLattice_herbrandQuotient_eq_stabilizerProduct_div_card
   obtain ⟨hExtended, hExtendedValue⟩ :=
     extendedFullLogLattice_herbrandQuotient_eq_stabilizerProduct
       K L hS σ hgen
-  let extendedH0Finite :
-      Finite
-        (HerbrandH0
-          (L ≃ₐ[K] L)
-          (Multiplicative
-            (extendedFullLogLattice L S))) :=
-    hExtended.1
-  let extendedHMinusOneFinite :
-      Finite
-        (HerbrandHMinusOne
-          (L ≃ₐ[K] L)
-          (Multiplicative
-            (extendedFullLogLattice L S)) σ) :=
-    hExtended.2
+  let extendedH0Finite := hExtended.1
+  let extendedHMinusOneFinite := hExtended.2
   let e :=
     extendedFullLogLatticeMulEquivProdInt L S
   have he :
@@ -1250,35 +1238,15 @@ theorem fullLogLattice_herbrandQuotient_eq_stabilizerProduct_div_card
     ⟨herbrandH0Finite_of_equivariantMulEquiv e he,
       herbrandHMinusOneFinite_of_equivariantMulEquiv
         e he σ⟩
-  let productH0Finite :
-      Finite
-        (HerbrandH0
-          (L ≃ₐ[K] L)
-          (Multiplicative
-            (SUnitGroup.fullLogLattice (K := L) S × ℤ))) :=
-    hProduct.1
-  let productHMinusOneFinite :
-      Finite
-        (HerbrandHMinusOne
-          (L ≃ₐ[K] L)
-          (Multiplicative
-            (SUnitGroup.fullLogLattice (K := L) S × ℤ)) σ) :=
-    hProduct.2
+  let productH0Finite := hProduct.1
+  let productHMinusOneFinite := hProduct.2
   let hInteger :
       HerbrandQuotientDefined
         (L ≃ₐ[K] L) (Multiplicative ℤ) σ :=
     ⟨trivialIntHerbrandH0Finite,
       trivialIntHerbrandHMinusOneFinite σ⟩
-  let integerH0Finite :
-      Finite
-        (HerbrandH0
-          (L ≃ₐ[K] L) (Multiplicative ℤ)) :=
-    hInteger.1
-  let integerHMinusOneFinite :
-      Finite
-        (HerbrandHMinusOne
-          (L ≃ₐ[K] L) (Multiplicative ℤ) σ) :=
-    hInteger.2
+  let integerH0Finite := hInteger.1
+  let integerHMinusOneFinite := hInteger.2
   let hLattice :=
     herbrandQuotientDefined_left_of_middle_right
       (fullLogLatticeProdIntIncl L S)
@@ -1289,32 +1257,9 @@ theorem fullLogLattice_herbrandQuotient_eq_stabilizerProduct_div_card
       (fullLogLatticeProdIntIncl_injective L S)
       (fullLogLatticeProdIntProj_surjective L S)
       σ hgen hProduct hInteger
-  let latticeH0Finite :
-      Finite
-        (HerbrandH0
-          (L ≃ₐ[K] L)
-          (Multiplicative
-            (SUnitGroup.fullLogLattice (K := L) S))) :=
-    hLattice.1
-  let latticeHMinusOneFinite :
-      Finite
-        (HerbrandHMinusOne
-          (L ≃ₐ[K] L)
-          (Multiplicative
-            (SUnitGroup.fullLogLattice (K := L) S)) σ) :=
-    hLattice.2
-  have hMultiplicative :
-      herbrandQuotient
-          (G := L ≃ₐ[K] L)
-          (A := Multiplicative
-            (SUnitGroup.fullLogLattice (K := L) S × ℤ)) σ =
-        herbrandQuotient
-            (G := L ≃ₐ[K] L)
-            (A := Multiplicative
-              (SUnitGroup.fullLogLattice (K := L) S)) σ *
-          herbrandQuotient
-            (G := L ≃ₐ[K] L)
-            (A := Multiplicative ℤ) σ :=
+  let latticeH0Finite := hLattice.1
+  let latticeHMinusOneFinite := hLattice.2
+  have hMultiplicative :=
     herbrandQuotient_multiplicative_of_shortExact
       (fullLogLatticeProdIntIncl L S)
       (fullLogLatticeProdIntProj L S)
@@ -1324,24 +1269,8 @@ theorem fullLogLattice_herbrandQuotient_eq_stabilizerProduct_div_card
       (fullLogLatticeProdIntIncl_injective L S)
       (fullLogLatticeProdIntProj_surjective L S)
       σ hgen
-  have hIntegerValue :
-      herbrandQuotient
-          (G := L ≃ₐ[K] L)
-          (A := Multiplicative ℤ) σ =
-        (Fintype.card (L ≃ₐ[K] L) : ℚ) :=
-    trivialInt_herbrandQuotient_eq_card σ
-  have hExtendedProduct :
-      herbrandQuotient
-          (G := L ≃ₐ[K] L)
-          (A := Multiplicative
-            (extendedFullLogLattice L S)) σ =
-        herbrandQuotient
-          (G := L ≃ₐ[K] L)
-          (A := Multiplicative
-            (SUnitGroup.fullLogLattice (K := L) S × ℤ)) σ := by
-    exact
-      herbrandQuotient_eq_of_equivariantMulEquiv
-        e he σ
+  have hIntegerValue := trivialInt_herbrandQuotient_eq_card (G := L ≃ₐ[K] L) σ
+  have hExtendedProduct := herbrandQuotient_eq_of_equivariantMulEquiv e he σ
   refine ⟨hLattice, ?_⟩
   have hcard :
       (Fintype.card (L ≃ₐ[K] L) : ℚ) ≠ 0 := by
@@ -1483,40 +1412,16 @@ theorem sUnit_herbrandQuotient_eq_stabilizerProduct_div_card
   obtain ⟨hLattice, hLatticeValue⟩ :=
     fullLogLattice_herbrandQuotient_eq_stabilizerProduct_div_card
       K L hS σ hgen
-  let latticeH0Finite :
-      Finite
-        (HerbrandH0
-          (L ≃ₐ[K] L)
-          (Multiplicative
-            (SUnitGroup.fullLogLattice (K := L) S))) :=
-    hLattice.1
-  let latticeHMinusOneFinite :
-      Finite
-        (HerbrandHMinusOne
-          (L ≃ₐ[K] L)
-          (Multiplicative
-            (SUnitGroup.fullLogLattice (K := L) S)) σ) :=
-    hLattice.2
+  let latticeH0Finite := hLattice.1
+  let latticeHMinusOneFinite := hLattice.2
   let hTorsion :
       HerbrandQuotientDefined
         (L ≃ₐ[K] L)
         (CommGroup.torsion
           (SUnitGroup (K := L) S)) σ :=
     ⟨inferInstance, inferInstance⟩
-  let torsionH0Finite :
-      Finite
-        (HerbrandH0
-          (L ≃ₐ[K] L)
-          (CommGroup.torsion
-            (SUnitGroup (K := L) S))) :=
-    hTorsion.1
-  let torsionHMinusOneFinite :
-      Finite
-        (HerbrandHMinusOne
-          (L ≃ₐ[K] L)
-          (CommGroup.torsion
-            (SUnitGroup (K := L) S)) σ) :=
-    hTorsion.2
+  let torsionH0Finite := hTorsion.1
+  let torsionHMinusOneFinite := hTorsion.2
   let hSUnit :=
     herbrandQuotientDefined_middle_of_left_right
       (CommGroup.torsion
@@ -1532,18 +1437,8 @@ theorem sUnit_herbrandQuotient_eq_stabilizerProduct_div_card
         (SUnitGroup (K := L) S)).subtype_injective
       (sUnitFullLogMulHom_surjective L S)
       σ hgen hTorsion hLattice
-  let sUnitH0Finite :
-      Finite
-        (HerbrandH0
-          (L ≃ₐ[K] L)
-          (SUnitGroup (K := L) S)) :=
-    hSUnit.1
-  let sUnitHMinusOneFinite :
-      Finite
-        (HerbrandHMinusOne
-          (L ≃ₐ[K] L)
-          (SUnitGroup (K := L) S) σ) :=
-    hSUnit.2
+  let sUnitH0Finite := hSUnit.1
+  let sUnitHMinusOneFinite := hSUnit.2
   have hMultiplicative :
       herbrandQuotient
           (G := L ≃ₐ[K] L)

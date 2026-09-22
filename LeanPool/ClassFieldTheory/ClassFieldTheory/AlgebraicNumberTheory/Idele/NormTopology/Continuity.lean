@@ -206,6 +206,29 @@ private noncomputable def integralInfiniteNormComponents
           v₀.Completion W.1.Completion
           (ContinuousMulEquiv.piUnits a.1 W.1)
 
+/-- Compatible changes of fields transport continuity of the norm on units. -/
+private theorem normUnits_continuous_of_ringEquivs
+    {F E F' E' : Type*} [Field F] [Field E] [Field F'] [Field E']
+    [TopologicalSpace F] [TopologicalSpace E] [TopologicalSpace F'] [TopologicalSpace E']
+    [Algebra F E] [Algebra F' E'] (eBase : F ≃+* F') (eExtension : E ≃+* E')
+    (hCompatible : (algebraMap F' E').comp eBase.toRingHom =
+      eExtension.toRingHom.comp (algebraMap F E))
+    (hBase : Continuous (Units.mapEquiv eBase.toMulEquiv).symm)
+    (hExtension : Continuous (Units.mapEquiv eExtension.toMulEquiv))
+    (hNorm : Continuous (LocalFieldTheory.normUnits F' E')) :
+    Continuous (LocalFieldTheory.normUnits F E) := by
+  let eBaseUnits := Units.mapEquiv eBase.toMulEquiv
+  let eExtensionUnits := Units.mapEquiv eExtension.toMulEquiv
+  have hNormEq : (fun x : Eˣ => LocalFieldTheory.normUnits F E x) =
+      fun x => eBaseUnits.symm (LocalFieldTheory.normUnits F' E' (eExtensionUnits x)) := by
+    funext x
+    apply eBaseUnits.injective
+    rw [eBaseUnits.apply_symm_apply]
+    exact LocalClassFieldTheory.normUnits_map_ringEquiv eBase eExtension hCompatible x
+  change Continuous (fun x : Eˣ => LocalFieldTheory.normUnits F E x)
+  rw [hNormEq]
+  exact hBase.comp (hNorm.comp hExtension)
+
 omit [NumberField L] in
 /-- A norm between completions at infinite places is continuous. -/
 private theorem infinitePlace_normUnits_continuous
@@ -267,30 +290,9 @@ private theorem infinitePlace_normUnits_continuous
         intro x
         apply Units.ext
         rfl
-      have hNormEq :
-          (fun x : W.1.Completionˣ =>
-            LocalFieldTheory.normUnits v₀.Completion W.1.Completion x) =
-            fun x =>
-              eBaseUnits.symm
-                (LocalFieldTheory.normUnits ℝ ℝ (eExtensionUnits x)) := by
-        funext x
-        apply eBaseUnits.injective
-        calc
-          eBaseUnits (LocalFieldTheory.normUnits v₀.Completion W.1.Completion x) =
-              LocalFieldTheory.normUnits ℝ ℝ (eExtensionUnits x) := by
-            simpa only [eBaseUnits, eExtensionUnits] using
-              (LocalClassFieldTheory.normUnits_map_ringEquiv
-                eBase eExtension hCompatible x)
-          _ = eBaseUnits
-              (eBaseUnits.symm
-                (LocalFieldTheory.normUnits ℝ ℝ (eExtensionUnits x))) := by
-            simp
-      change Continuous (fun x : W.1.Completionˣ =>
-        LocalFieldTheory.normUnits v₀.Completion W.1.Completion x)
-      rw [hNormEq]
-      exact hBaseUnitsContinuous.comp
-        ((LocalFieldTheory.normUnits_continuous_of_finiteDimensional ℝ ℝ).comp
-          hExtensionUnitsContinuous)
+      exact normUnits_continuous_of_ringEquivs eBase eExtension hCompatible
+        hBaseUnitsContinuous hExtensionUnitsContinuous
+        (LocalFieldTheory.normUnits_continuous_of_finiteDimensional ℝ ℝ)
     · let eBase :=
         InfinitePlace.Completion.ringEquivRealOfIsReal hvReal
       let eExtension :=
@@ -323,30 +325,9 @@ private theorem infinitePlace_normUnits_continuous
         intro x
         apply Units.ext
         rfl
-      have hNormEq :
-          (fun x : W.1.Completionˣ =>
-            LocalFieldTheory.normUnits v₀.Completion W.1.Completion x) =
-            fun x =>
-              eBaseUnits.symm
-                (LocalFieldTheory.normUnits ℝ ℂ (eExtensionUnits x)) := by
-        funext x
-        apply eBaseUnits.injective
-        calc
-          eBaseUnits (LocalFieldTheory.normUnits v₀.Completion W.1.Completion x) =
-              LocalFieldTheory.normUnits ℝ ℂ (eExtensionUnits x) := by
-            simpa only [eBaseUnits, eExtensionUnits] using
-              (LocalClassFieldTheory.normUnits_map_ringEquiv
-                eBase eExtension hCompatible x)
-          _ = eBaseUnits
-              (eBaseUnits.symm
-                (LocalFieldTheory.normUnits ℝ ℂ (eExtensionUnits x))) := by
-            simp
-      change Continuous (fun x : W.1.Completionˣ =>
-        LocalFieldTheory.normUnits v₀.Completion W.1.Completion x)
-      rw [hNormEq]
-      exact hBaseUnitsContinuous.comp
-        ((LocalFieldTheory.normUnits_continuous_of_finiteDimensional ℝ ℂ).comp
-          hExtensionUnitsContinuous)
+      exact normUnits_continuous_of_ringEquivs eBase eExtension hCompatible
+        hBaseUnitsContinuous hExtensionUnitsContinuous
+        (LocalFieldTheory.normUnits_continuous_of_finiteDimensional ℝ ℂ)
   · have hWComplex : W.1.IsComplex :=
       InfinitePlace.LiesOver.isComplex_of_isComplex_under W.1 hvComplex
     let eBase :=
@@ -393,30 +374,9 @@ private theorem infinitePlace_normUnits_continuous
         intro x
         apply Units.ext
         rfl
-      have hNormEq :
-          (fun x : W.1.Completionˣ =>
-            LocalFieldTheory.normUnits v₀.Completion W.1.Completion x) =
-            fun x =>
-              eBaseUnits.symm
-                (LocalFieldTheory.normUnits ℂ ℂ (eExtensionUnits x)) := by
-        funext x
-        apply eBaseUnits.injective
-        calc
-          eBaseUnits (LocalFieldTheory.normUnits v₀.Completion W.1.Completion x) =
-              LocalFieldTheory.normUnits ℂ ℂ (eExtensionUnits x) := by
-            simpa only [eBaseUnits, eExtensionUnits] using
-              (LocalClassFieldTheory.normUnits_map_ringEquiv
-                eBase eExtension hCompatible x)
-          _ = eBaseUnits
-              (eBaseUnits.symm
-                (LocalFieldTheory.normUnits ℂ ℂ (eExtensionUnits x))) := by
-            simp
-      change Continuous (fun x : W.1.Completionˣ =>
-        LocalFieldTheory.normUnits v₀.Completion W.1.Completion x)
-      rw [hNormEq]
-      exact hBaseUnitsContinuous.comp
-        ((LocalFieldTheory.normUnits_continuous_of_finiteDimensional ℂ ℂ).comp
-          hExtensionUnitsContinuous)
+      exact normUnits_continuous_of_ringEquivs eBase eExtension hCompatible
+        hBaseUnitsContinuous hExtensionUnitsContinuous
+        (LocalFieldTheory.normUnits_continuous_of_finiteDimensional ℂ ℂ)
     · let eExtension :=
         (InfinitePlace.Completion.ringEquivComplexOfIsComplex hWComplex).trans
           (starRingAut (R := ℂ))
@@ -449,30 +409,9 @@ private theorem infinitePlace_normUnits_continuous
       have hExtensionUnitsContinuous : Continuous eExtensionUnits := by
         change Continuous (Units.map eExtension.toMonoidHom)
         exact hExtensionContinuous.units_map _
-      have hNormEq :
-          (fun x : W.1.Completionˣ =>
-            LocalFieldTheory.normUnits v₀.Completion W.1.Completion x) =
-            fun x =>
-              eBaseUnits.symm
-                (LocalFieldTheory.normUnits ℂ ℂ (eExtensionUnits x)) := by
-        funext x
-        apply eBaseUnits.injective
-        calc
-          eBaseUnits (LocalFieldTheory.normUnits v₀.Completion W.1.Completion x) =
-              LocalFieldTheory.normUnits ℂ ℂ (eExtensionUnits x) := by
-            simpa only [eBaseUnits, eExtensionUnits] using
-              (LocalClassFieldTheory.normUnits_map_ringEquiv
-                eBase eExtension hCompatible x)
-          _ = eBaseUnits
-              (eBaseUnits.symm
-                (LocalFieldTheory.normUnits ℂ ℂ (eExtensionUnits x))) := by
-            simp
-      change Continuous (fun x : W.1.Completionˣ =>
-        LocalFieldTheory.normUnits v₀.Completion W.1.Completion x)
-      rw [hNormEq]
-      exact hBaseUnitsContinuous.comp
-        ((LocalFieldTheory.normUnits_continuous_of_finiteDimensional ℂ ℂ).comp
-          hExtensionUnitsContinuous)
+      exact normUnits_continuous_of_ringEquivs eBase eExtension hCompatible
+        hBaseUnitsContinuous hExtensionUnitsContinuous
+        (LocalFieldTheory.normUnits_continuous_of_finiteDimensional ℂ ℂ)
 
 /-- The archimedean local norm product is continuous on the
 integral-idele chart. -/

@@ -53,6 +53,27 @@ private theorem nnnormUnitHom_real_normUnits_complex
     abs_of_nonneg (Complex.normSq_nonneg _),
     Complex.normSq_eq_norm_sq]
 
+/-- Compatible isometric identifications with one field make the local norm preserve norm. -/
+private theorem nnnormUnitHom_normUnits_of_isometric_identifications
+    {F E B : Type*} [NormedField F] [NormedField E] [NormedField B] [Algebra F E]
+    (eBase : F ≃+* B) (eExtension : E ≃+* B)
+    (hBase : Isometry eBase) (hExtension : Isometry eExtension)
+    (hCompatible : (algebraMap B B).comp eBase.toRingHom =
+      eExtension.toRingHom.comp (algebraMap F E)) (x : Eˣ) :
+    nnnormUnitHom F (LocalFieldTheory.normUnits F E x) = nnnormUnitHom E x := by
+  have hNorm := LocalClassFieldTheory.normUnits_map_ringEquiv eBase eExtension hCompatible x
+  calc
+    nnnormUnitHom F (LocalFieldTheory.normUnits F E x) =
+        nnnormUnitHom B (Units.mapEquiv eBase.toMulEquiv
+          (LocalFieldTheory.normUnits F E x)) :=
+      (nnnormUnitHom_map_ringEquiv_of_isometry eBase hBase _).symm
+    _ = nnnormUnitHom B (LocalFieldTheory.normUnits B B
+          (Units.mapEquiv eExtension.toMulEquiv x)) := congrArg _ hNorm
+    _ = nnnormUnitHom B (Units.mapEquiv eExtension.toMulEquiv x) := by
+      simp [LocalFieldTheory.normUnits]
+    _ = nnnormUnitHom E x :=
+      nnnormUnitHom_map_ringEquiv_of_isometry eExtension hExtension x
+
 omit [NumberField K] [NumberField L] [FiniteDimensional K L] in
 /-- At an infinite place, the positive norm of a local field norm, with
 the base multiplicity, is the positive norm upstairs with the upstairs
@@ -95,41 +116,11 @@ private theorem nnnormUnitHom_normUnits_infinitePlace
           InfinitePlace.Completion.extensionEmbeddingOfIsReal_apply] using
           (InfinitePlace.Completion.liesOver_extensionEmbedding_apply
             W (v := v₀)).symm
-      have hNorm :=
-        LocalClassFieldTheory.normUnits_map_ringEquiv
-          eBase eExtension
-          hCompatible x
       rw [InfinitePlace.mult_isReal ⟨v₀, hvReal⟩,
-        InfinitePlace.mult_isReal ⟨W, hWReal⟩,
-        pow_one, pow_one]
-      calc
-        nnnormUnitHom v₀.Completion
-            (LocalFieldTheory.normUnits
-              v₀.Completion W.Completion x) =
-            nnnormUnitHom ℝ
-              (Units.mapEquiv eBase.toMulEquiv
-                (LocalFieldTheory.normUnits
-                  v₀.Completion W.Completion x)) := by
-          symm
-          exact
-            nnnormUnitHom_map_ringEquiv_of_isometry
-              eBase
-              (InfinitePlace.Completion.isometryEquivRealOfIsReal
-                hvReal).isometry _
-        _ =
-            nnnormUnitHom ℝ
-              (LocalFieldTheory.normUnits ℝ ℝ
-                (Units.mapEquiv eExtension.toMulEquiv x)) := by
-          rw [hNorm]
-        _ =
-            nnnormUnitHom ℝ
-              (Units.mapEquiv eExtension.toMulEquiv x) := by
-          simp [LocalFieldTheory.normUnits]
-        _ = nnnormUnitHom W.Completion x :=
-          nnnormUnitHom_map_ringEquiv_of_isometry
-            eExtension
-            (InfinitePlace.Completion.isometryEquivRealOfIsReal
-              hWReal).isometry x
+        InfinitePlace.mult_isReal ⟨W, hWReal⟩, pow_one, pow_one]
+      exact nnnormUnitHom_normUnits_of_isometric_identifications eBase eExtension
+        (InfinitePlace.Completion.isometryEquivRealOfIsReal hvReal).isometry
+        (InfinitePlace.Completion.isometryEquivRealOfIsReal hWReal).isometry hCompatible x
     · let eBase :=
         InfinitePlace.Completion.ringEquivRealOfIsReal hvReal
       let eExtension :=
@@ -190,45 +181,14 @@ private theorem nnnormUnitHom_normUnits_infinitePlace
       InfinitePlace.Completion.ringEquivComplexOfIsComplex hvComplex
     have hCore
         (eExtension : W.Completion ≃+* ℂ)
-        (hCompatible :
-          RingHom.comp (algebraMap ℂ ℂ) eBase.toRingHom =
-            RingHom.comp eExtension.toRingHom
-              (algebraMap v₀.Completion W.Completion))
+        (hCompatible : (algebraMap ℂ ℂ).comp eBase.toRingHom =
+          eExtension.toRingHom.comp (algebraMap v₀.Completion W.Completion))
         (hExtensionIsometry : Isometry eExtension) :
-        nnnormUnitHom v₀.Completion
-            (LocalFieldTheory.normUnits
-              v₀.Completion W.Completion x) =
-          nnnormUnitHom W.Completion x := by
-      have hNorm :=
-        LocalClassFieldTheory.normUnits_map_ringEquiv
-          eBase eExtension
-          hCompatible x
-      calc
-        nnnormUnitHom v₀.Completion
-            (LocalFieldTheory.normUnits
-              v₀.Completion W.Completion x) =
-            nnnormUnitHom ℂ
-              (Units.mapEquiv eBase.toMulEquiv
-                (LocalFieldTheory.normUnits
-                  v₀.Completion W.Completion x)) := by
-          symm
-          exact
-            nnnormUnitHom_map_ringEquiv_of_isometry
-              eBase
-              (InfinitePlace.Completion.isometryEquivComplexOfIsComplex
-                hvComplex).isometry _
-        _ =
-            nnnormUnitHom ℂ
-              (LocalFieldTheory.normUnits ℂ ℂ
-                (Units.mapEquiv eExtension.toMulEquiv x)) := by
-          rw [hNorm]
-        _ =
-            nnnormUnitHom ℂ
-              (Units.mapEquiv eExtension.toMulEquiv x) := by
-          simp [LocalFieldTheory.normUnits]
-        _ = nnnormUnitHom W.Completion x :=
-          nnnormUnitHom_map_ringEquiv_of_isometry
-            eExtension hExtensionIsometry x
+        nnnormUnitHom v₀.Completion (LocalFieldTheory.normUnits v₀.Completion W.Completion x) =
+          nnnormUnitHom W.Completion x :=
+      nnnormUnitHom_normUnits_of_isometric_identifications eBase eExtension
+        (InfinitePlace.Completion.isometryEquivComplexOfIsComplex hvComplex).isometry
+        hExtensionIsometry hCompatible x
     rw [InfinitePlace.mult_isComplex ⟨v₀, hvComplex⟩,
       InfinitePlace.mult_isComplex ⟨W, hWComplex⟩]
     congr 1

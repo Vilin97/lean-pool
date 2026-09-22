@@ -1092,6 +1092,62 @@ theorem localResidueDegree_eq_normalizedDegree_abstractFixedFieldEquiv
     residueAbsoluteDegreeIn_eq_normalizedDegree_abstractFixedFieldEquiv
       K H e sigma htop tau hTau
 
+/-- A finite field embedded in the separable closure has a fixing subgroup of finite index. -/
+private theorem finite_absoluteFixingQuotient_fieldRange
+    (K F : Type) [Field K] [Field F] [Algebra K F] [FiniteDimensional K F]
+    (i : F →ₐ[K] SeparableClosure K) :
+    Finite ((baseField (Gal(SeparableClosure K/K))).toSubgroup ⧸
+      extensionSubgroup (baseField (Gal(SeparableClosure K/K)))
+        (closedFixingSubgroup K (SeparableClosure K) (AlgHom.fieldRange i))
+        (le_baseField _)) := by
+  let H₀ := closedFixingSubgroup K (SeparableClosure K) (AlgHom.fieldRange i)
+  let : FiniteDimensional K (AlgHom.fieldRange i) :=
+    (AlgEquiv.ofInjectiveField i).toLinearEquiv.finiteDimensional
+  let G := Gal(SeparableClosure K / K)
+  let Bases := { B : ClosedSubgroup G //
+    H₀.toSubgroup ≤ B.toSubgroup }
+  let Bfix : Bases :=
+    ⟨closedFixingSubgroup K (SeparableClosure K)
+        (⊥ : IntermediateField K (SeparableClosure K)),
+      fixingSubgroupLeBase K (SeparableClosure K)
+        (AlgHom.fieldRange i)⟩
+  let Bbase : Bases :=
+    ⟨baseField G, le_baseField H₀⟩
+  let Q : Bases → Type := fun B =>
+    B.1.toSubgroup ⧸ extensionSubgroup B.1 H₀ B.2
+  have hBase : Bfix = Bbase := by
+    apply Subtype.ext
+    exact closedFixingSubgroup_bot_eq_baseField
+      K (SeparableClosure K)
+  let : Finite (Q Bfix) := by
+    change Finite
+      ((closedFixingSubgroup K (SeparableClosure K)
+          (⊥ : IntermediateField K (SeparableClosure K))).toSubgroup ⧸
+        extensionSubgroup
+          (closedFixingSubgroup K (SeparableClosure K)
+            (⊥ : IntermediateField K (SeparableClosure K)))
+          H₀
+          (fixingSubgroupLeBase K (SeparableClosure K)
+            (AlgHom.fieldRange i)))
+    infer_instance
+  change Finite (Q Bbase)
+  exact Finite.of_equiv (Q Bfix)
+    (Equiv.cast (congrArg Q hBase))
+
+/-- A semilinear equivalence transports automorphisms fixing the corresponding base fields. -/
+private def semilinearGaloisTransport
+    {k f Ω Ω' : Type} [Field k] [Field f] [Field Ω] [Field Ω']
+    [Algebra k Ω] [Algebra f Ω'] (phi : k ≃+* f) (c : Ω ≃+* Ω')
+    (hc : ∀ x : k, c (algebraMap k Ω x) = algebraMap f Ω' (phi x))
+    (sigma : Gal(Ω/k)) : Gal(Ω'/f) :=
+  { c.symm.trans (sigma.toRingEquiv.trans c) with
+    commutes' := fun x => by
+      change c (sigma (c.symm (algebraMap f Ω' x))) = algebraMap f Ω' x
+      have hc' : c.symm (algebraMap f Ω' x) = algebraMap k Ω (phi.symm x) := by
+        apply c.injective
+        rw [c.apply_symm_apply, hc, phi.apply_symm_apply]
+      rw [hc', sigma.commutes, hc, phi.apply_symm_apply] }
+
 /-- The intrinsic residue degree of an arbitrary finite separable local
 extension agrees with the normalized degree on the ambient fixing subgroup
 cut out by an embedding into the base separable closure.  Thus the
@@ -1120,39 +1176,8 @@ theorem
             (Gal(SeparableClosure K / K))).toSubgroup ⧸
             extensionSubgroup
               (baseField (Gal(SeparableClosure K / K)))
-              H₀ (le_baseField H₀)) := by
-        let : FiniteDimensional K (AlgHom.fieldRange i) :=
-          (AlgEquiv.ofInjectiveField i).toLinearEquiv.finiteDimensional
-        let G := Gal(SeparableClosure K / K)
-        let Bases := { B : ClosedSubgroup G //
-          H₀.toSubgroup ≤ B.toSubgroup }
-        let Bfix : Bases :=
-          ⟨closedFixingSubgroup K (SeparableClosure K)
-              (⊥ : IntermediateField K (SeparableClosure K)),
-            fixingSubgroupLeBase K (SeparableClosure K)
-              (AlgHom.fieldRange i)⟩
-        let Bbase : Bases :=
-          ⟨baseField G, le_baseField H₀⟩
-        let Q : Bases → Type := fun B =>
-          B.1.toSubgroup ⧸ extensionSubgroup B.1 H₀ B.2
-        have hBase : Bfix = Bbase := by
-          apply Subtype.ext
-          exact closedFixingSubgroup_bot_eq_baseField
-            K (SeparableClosure K)
-        let : Finite (Q Bfix) := by
-          change Finite
-            ((closedFixingSubgroup K (SeparableClosure K)
-                (⊥ : IntermediateField K (SeparableClosure K))).toSubgroup ⧸
-              extensionSubgroup
-                (closedFixingSubgroup K (SeparableClosure K)
-                  (⊥ : IntermediateField K (SeparableClosure K)))
-                H₀
-                (fixingSubgroupLeBase K (SeparableClosure K)
-                  (AlgHom.fieldRange i)))
-          infer_instance
-        change Finite (Q Bbase)
-        exact Finite.of_equiv (Q Bfix)
-          (Equiv.cast (congrArg Q hBase))
+              H₀ (le_baseField H₀)) :=
+        finite_absoluteFixingQuotient_fieldRange K F i
       let H : FiniteAbstractField
           (Gal(SeparableClosure K / K)) :=
         ⟨H₀, hHabsolute⟩
@@ -1165,33 +1190,12 @@ theorem
       let phi : F ≃+* F₀ :=
         ((i.equivFieldRange).trans
           (IntermediateField.equivOfEq hfixed.symm)).toRingEquiv
-      let rho : Gal(SeparableClosure K / F₀) :=
-        { e.symm.toRingEquiv.trans
-            (sigma.toRingEquiv.trans e.toRingEquiv) with
-          commutes' := fun x => by
-            change e (sigma (e.symm
-              (algebraMap F₀ (SeparableClosure K) x))) =
-                algebraMap F₀ (SeparableClosure K) x
-            have hpre :
-                e.symm
-                    (algebraMap F₀ (SeparableClosure K) x) =
-                  algebraMap F (SeparableClosure F) (phi.symm x) := by
-              apply e.injective
-              rw [e.apply_symm_apply, e.commutes]
-              change (x : SeparableClosure K) =
-                i (phi.symm x)
-              rw [← show
-                ((phi (phi.symm x) : F₀) :
-                    SeparableClosure K) =
-                  i (phi.symm x) by rfl,
-                phi.apply_symm_apply]
-            rw [hpre, sigma.commutes, e.commutes]
-            change i (phi.symm x) = (x : SeparableClosure K)
-            rw [← show
-              ((phi (phi.symm x) : F₀) :
-                  SeparableClosure K) =
-                i (phi.symm x) by rfl,
-              phi.apply_symm_apply] }
+      let rho : Gal(SeparableClosure K/F₀) :=
+        semilinearGaloisTransport phi e.toRingEquiv (fun x => by
+          change e (algebraMap F (SeparableClosure F) x) =
+            algebraMap F₀ (SeparableClosure K) (phi x)
+          rw [e.commutes]
+          rfl) sigma
       localResidueDegree F sigma =
         (localResidueDatum K).normalizedDegree
           (H.toFiniteResidueAbstractField
@@ -1211,39 +1215,8 @@ theorem
         (Gal(SeparableClosure K / K))).toSubgroup ⧸
         extensionSubgroup
           (baseField (Gal(SeparableClosure K / K)))
-          H₀ (le_baseField H₀)) := by
-    let : FiniteDimensional K (AlgHom.fieldRange i) :=
-      (AlgEquiv.ofInjectiveField i).toLinearEquiv.finiteDimensional
-    let G := Gal(SeparableClosure K / K)
-    let Bases := { B : ClosedSubgroup G //
-      H₀.toSubgroup ≤ B.toSubgroup }
-    let Bfix : Bases :=
-      ⟨closedFixingSubgroup K (SeparableClosure K)
-          (⊥ : IntermediateField K (SeparableClosure K)),
-        fixingSubgroupLeBase K (SeparableClosure K)
-          (AlgHom.fieldRange i)⟩
-    let Bbase : Bases :=
-      ⟨baseField G, le_baseField H₀⟩
-    let Q : Bases → Type := fun B =>
-      B.1.toSubgroup ⧸ extensionSubgroup B.1 H₀ B.2
-    have hBase : Bfix = Bbase := by
-      apply Subtype.ext
-      exact closedFixingSubgroup_bot_eq_baseField
-        K (SeparableClosure K)
-    let : Finite (Q Bfix) := by
-      change Finite
-        ((closedFixingSubgroup K (SeparableClosure K)
-            (⊥ : IntermediateField K (SeparableClosure K))).toSubgroup ⧸
-          extensionSubgroup
-            (closedFixingSubgroup K (SeparableClosure K)
-              (⊥ : IntermediateField K (SeparableClosure K)))
-            H₀
-            (fixingSubgroupLeBase K (SeparableClosure K)
-              (AlgHom.fieldRange i)))
-      infer_instance
-    change Finite (Q Bbase)
-    exact Finite.of_equiv (Q Bfix)
-      (Equiv.cast (congrArg Q hBase))
+          H₀ (le_baseField H₀)) :=
+    finite_absoluteFixingQuotient_fieldRange K F i
   let H : FiniteAbstractField
       (Gal(SeparableClosure K / K)) :=
     ⟨H₀, hHabsolute⟩
@@ -1306,46 +1279,14 @@ theorem
       e x ∈ localSeparableValuationSubring K ↔
         e₀ (e₀.symm (e x)) ∈ localSeparableValuationSubring K
     rw [e₀.apply_symm_apply]
-  let sigma₀ : Gal(SeparableClosure F₀ / F₀) :=
-    { c.symm.trans (sigma.toRingEquiv.trans c) with
-      commutes' := fun x => by
-        change c (sigma (c.symm
-          (algebraMap F₀ (SeparableClosure F₀) x))) =
-            algebraMap F₀ (SeparableClosure F₀) x
-        have hc' :
-            c.symm
-                (algebraMap F₀ (SeparableClosure F₀) x) =
-              algebraMap F (SeparableClosure F) (phi.symm x) := by
-          apply c.injective
-          rw [c.apply_symm_apply, hc, phi.apply_symm_apply]
-        rw [hc', sigma.commutes, hc, phi.apply_symm_apply] }
-  let rho : Gal(SeparableClosure K / F₀) :=
-    { e.symm.toRingEquiv.trans
-        (sigma.toRingEquiv.trans e.toRingEquiv) with
-      commutes' := fun x => by
-        change e (sigma (e.symm
-          (algebraMap F₀ (SeparableClosure K) x))) =
-            algebraMap F₀ (SeparableClosure K) x
-        have hpre :
-            e.symm
-                (algebraMap F₀ (SeparableClosure K) x) =
-              algebraMap F (SeparableClosure F) (phi.symm x) := by
-          apply e.injective
-          rw [e.apply_symm_apply, e.commutes]
-          change (x : SeparableClosure K) =
-            i (phi.symm x)
-          rw [← show
-            ((phi (phi.symm x) : F₀) :
-                SeparableClosure K) =
-              i (phi.symm x) by rfl,
-            phi.apply_symm_apply]
-        rw [hpre, sigma.commutes, e.commutes]
-        change i (phi.symm x) = (x : SeparableClosure K)
-        rw [← show
-          ((phi (phi.symm x) : F₀) :
-              SeparableClosure K) =
-            i (phi.symm x) by rfl,
-          phi.apply_symm_apply] }
+  let sigma₀ : Gal(SeparableClosure F₀/F₀) :=
+    semilinearGaloisTransport phi c hc sigma
+  let rho : Gal(SeparableClosure K/F₀) :=
+    semilinearGaloisTransport phi e.toRingEquiv (fun x => by
+      change e (algebraMap F (SeparableClosure F) x) =
+        algebraMap F₀ (SeparableClosure K) (phi x)
+      rw [e.commutes]
+      rfl) sigma
   have hrho :
       AlgEquiv.autCongr e₀ sigma₀ = rho := by
     apply AlgEquiv.ext
@@ -1366,7 +1307,7 @@ theorem
   have hdegree :
       localResidueDegree F₀ sigma₀ =
         localResidueDegree F sigma := by
-    simpa only [sigma₀] using
+    simpa only [sigma₀, semilinearGaloisTransport] using
       localResidueDegree_semilinear_conjugation
         F F₀ phi c hc hvaluation sigma
   have hfixedDegree :

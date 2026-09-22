@@ -45,10 +45,11 @@ open LocalFieldTheory.DiscreteValuationField.Examples.Qp
 open LubinTate
 
 open scoped Classical in
-local instance localPrimesInstance1 (q : Nat.Primes) : Fact q.1.Prime :=
+/-- The prime subtype supplies the primality instance used at this local factor. -/
+local instance rationalCyclotomicRayNormPrimeFact (q : Nat.Primes) : Fact q.1.Prime :=
   ⟨q.2⟩
 
-attribute [local instance] localPrimesInstance1
+attribute [local instance] rationalCyclotomicRayNormPrimeFact
 
 attribute [local instance]
   rationalCyclotomicPrincipalPrimeLevelFiniteDimensional

@@ -538,6 +538,23 @@ theorem infinitePlace_normUnits_real_real
     LocalClassFieldTheory.normUnits_map_ringEquiv
       eBase eExtension hCompatible x
 
+omit [NumberField K] [NumberField L] in
+/-- Complex conjugation restricts along a compatible tower of field embeddings. -/
+private theorem complexEmbedding_isConj_restriction
+    {K' L' : Type} [Field K'] [Field L']
+    [Algebra K K'] [Algebra K' L'] [Algebra K L'] [IsScalarTower K K' L']
+    [Algebra L L'] [IsScalarTower K L L']
+    (σ : L' ≃ₐ[K'] L') (φ : L' →+* ℂ)
+    (hφ : NumberField.ComplexEmbedding.IsConj φ σ) :
+    NumberField.ComplexEmbedding.IsConj (φ.comp (algebraMap L L'))
+      (((AlgEquiv.restrictNormalHom L).comp (AlgEquiv.restrictScalarsHom K)) σ) := by
+  apply RingHom.ext
+  intro x
+  change star (φ (algebraMap L L' x)) =
+    φ (algebraMap L L' ((AlgEquiv.restrictNormal (AlgEquiv.restrictScalars K σ) L) x))
+  rw [AlgEquiv.restrictNormal_commutes]
+  exact (hφ.eq (algebraMap L L' x)).symm
+
 omit [NumberField L] in
 open scoped Classical in
 /-- The archimedean Artin map attached to specified places carries a
@@ -658,29 +675,8 @@ theorem infinitePlaceArtinMonoidHomOfPlace_norm_restriction
     let phi : L →+* ℂ :=
       (InfinitePlace.embedding w').comp
         (algebraMap L L')
-    have hphi :
-        NumberField.ComplexEmbedding.IsConj
-          phi sigmaRestricted := by
-      apply RingHom.ext
-      intro x
-      change
-        star
-            (InfinitePlace.embedding w'
-              (algebraMap L L' x)) =
-          InfinitePlace.embedding w'
-            (algebraMap L L' (sigmaRestricted x))
-      rw [show
-        algebraMap L L' (sigmaRestricted x) =
-          sigmaUpper (algebraMap L L' x) by
-          dsimp [sigmaRestricted]
-          change
-            algebraMap L L'
-                ((AlgEquiv.restrictNormal
-                  (AlgEquiv.restrictScalars K sigmaUpper) L) x) =
-              sigmaUpper (algebraMap L L' x)
-          rw [AlgEquiv.restrictNormal_commutes]
-          rfl]
-      exact (hSigmaUpper.eq (algebraMap L L' x)).symm
+    have hphi : NumberField.ComplexEmbedding.IsConj phi sigmaRestricted :=
+      complexEmbedding_isConj_restriction sigmaUpper (InfinitePlace.embedding w') hSigmaUpper
     have hmk : InfinitePlace.mk phi = w := by
       change
         InfinitePlace.mk
@@ -1016,6 +1012,29 @@ theorem chosenInfinitePlaceArtinMonoidHom_eq_one_of_real_pos
     rw [hsign']
     simp
 
+universe uNorm vNorm
+
+/-- Compatible changes of both fields carry the local norm subgroup to the new norm subgroup. -/
+private theorem localNormSubgroup_map_ringEquivs
+    {F E : Type uNorm} {F' E' : Type vNorm}
+    [Field F] [Field E] [Field F'] [Field E']
+    [Algebra F E] [Algebra F' E'] (eBase : F ≃+* F') (eExtension : E ≃+* E')
+    (hCompatible : (algebraMap F' E').comp eBase.toRingHom =
+      eExtension.toRingHom.comp (algebraMap F E)) :
+    (localNormSubgroup F E).map (Units.mapEquiv eBase.toMulEquiv).toMonoidHom =
+      localNormSubgroup F' E' := by
+  let eExtensionUnits := Units.mapEquiv eExtension.toMulEquiv
+  ext x
+  constructor
+  · rintro ⟨_, ⟨y, rfl⟩, rfl⟩
+    exact ⟨eExtensionUnits y,
+      (LocalClassFieldTheory.normUnits_map_ringEquiv eBase eExtension hCompatible y).symm⟩
+  · rintro ⟨y, rfl⟩
+    refine ⟨normUnits F E (eExtensionUnits.symm y), ⟨_, rfl⟩, ?_⟩
+    change Units.mapEquiv eBase.toMulEquiv (normUnits F E (eExtensionUnits.symm y)) = _
+    rw [LocalClassFieldTheory.normUnits_map_ringEquiv eBase eExtension hCompatible]
+    exact congrArg (normUnits F' E') (eExtensionUnits.apply_symm_apply y)
+
 open scoped Classical in
 /-- The kernel of the actual Artin homomorphism at an infinite place
 is exactly the determinant-norm image on the corresponding tensor
@@ -1146,44 +1165,10 @@ theorem chosenInfinitePlaceArtinMonoidHom_ker
       LocalClassFieldTheory.ringEquiv_compat_symm
         eRealField eComplexField hCompletionCompatible
     have hRealComplexNormTransport :
-        (localNormSubgroup ℝ ℂ).map
-            completionUnitsEquivRealUnits.symm.toMonoidHom =
-          localNormSubgroup
-            v.Completion w.Completion := by
-      ext x
-      constructor
-      · rintro ⟨_, ⟨z, rfl⟩, rfl⟩
-        refine ⟨eComplexUnits.symm z, ?_⟩
-        simpa [completionUnitsEquivRealUnits,
-          eComplexUnits] using
-          (LocalClassFieldTheory.normUnits_map_ringEquiv
-            eRealField.symm eComplexField.symm
-            hCompletionCompatibleSymm z).symm
-      · rintro ⟨z, rfl⟩
-        refine
-          ⟨normUnits ℝ ℂ (eComplexUnits z),
-            ⟨eComplexUnits z, rfl⟩, ?_⟩
-        have hInverse :
-            Units.mapEquiv eComplexField.symm.toMulEquiv
-                (eComplexUnits z) = z := by
-          change
-            (Units.mapEquiv eComplexField.toMulEquiv).symm
-                (eComplexUnits z) = z
-          change eComplexUnits.symm (eComplexUnits z) = z
-          exact eComplexUnits.symm_apply_apply z
-        calc
-          completionUnitsEquivRealUnits.symm
-              (normUnits ℝ ℂ (eComplexUnits z)) =
-            normUnits v.Completion w.Completion
-              (Units.mapEquiv eComplexField.symm.toMulEquiv
-                (eComplexUnits z)) := by
-              simpa [completionUnitsEquivRealUnits] using
-                LocalClassFieldTheory.normUnits_map_ringEquiv
-                  eRealField.symm eComplexField.symm
-                  hCompletionCompatibleSymm
-                  (eComplexUnits z)
-          _ = normUnits v.Completion w.Completion z := by
-            rw [hInverse]
+        (localNormSubgroup ℝ ℂ).map completionUnitsEquivRealUnits.symm.toMonoidHom =
+          localNormSubgroup v.Completion w.Completion :=
+      localNormSubgroup_map_ringEquivs eRealField.symm eComplexField.symm
+        hCompletionCompatibleSymm
     simp only [chosenInfinitePlaceArtinMonoidHom,
       infinitePlaceArtinMonoidHomOfPlace,
       w, hUnramified]

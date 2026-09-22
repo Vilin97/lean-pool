@@ -174,6 +174,47 @@ private theorem classFieldAxiom_unramifiedUnits_hMinusOne
   exact Limits.IsZero.of_iso hzeroS
     (TateCohomology.isoFiniteCyclicNegOne U g hg)
 
+/-- In an unramified extension, the representation norm multiplies the upper valuation by degree. -/
+private theorem valuationAt_unramified_representation_norm
+    (v : ValuationData D A) (E : FiniteAbstractFieldExtension G)
+    (hnormal : (extensionSubgroup E.base.field E.field.field E.below).Normal)
+    (hUnramified : E.IsUnramified D) :
+    letI := Fintype.ofFinite
+      (E.base.field.toSubgroup ⧸ extensionSubgroup E.base.field E.field.field E.below)
+    ∀ y : (extensionFixedRepresentation A E.base.field E.field.field E.below hnormal).V,
+    v.valuationAt E.field
+        (extensionFixedRepresentationEquiv A E.base.field E.field.field E.below hnormal
+          ((extensionFixedRepresentation A E.base.field E.field.field E.below hnormal).norm.hom y)) =
+      (E.degree : ℕ) • v.valuationAt E.field
+        (extensionFixedRepresentationEquiv A E.base.field E.field.field E.below hnormal y) := by
+  let := Fintype.ofFinite
+    (E.base.field.toSubgroup ⧸ extensionSubgroup E.base.field E.field.field E.below)
+  intro y
+  let K := E.base.field
+  let L := E.field.field
+  let hLK := E.below
+  let := hnormal
+  let M := extensionFixedRepresentation A K L hLK hnormal
+  let yL : ambientFixedAddSubgroup A L :=
+    extensionFixedRepresentationEquiv A K L hLK hnormal y
+  let normK : ambientFixedAddSubgroup A K := relativeNorm A K L hLK yL
+  have hnormM :
+      extensionFixedRepresentationEquiv A K L hLK hnormal (M.norm.hom y) =
+        fixedFieldInclusion A K L hLK normK := by
+    apply Subtype.ext
+    exact extensionFixedRepresentation_norm_coe A K L hLK hnormal y
+  have htower := v.normalizedValuation_tower E yL
+  change (E.residueDegree D : ℕ) •
+      ((v.valuationAt E.field yL : v.valueGroup) : ZHat) =
+    ((v.valuationAt E.base normK : v.valueGroup) : ZHat) at htower
+  rw [E.residueDegree_eq_degree_of_isUnramified D hUnramified] at htower
+  change v.valuationAt E.field
+      (extensionFixedRepresentationEquiv A K L hLK hnormal (M.norm.hom y)) =
+    (E.degree : ℕ) • v.valuationAt E.field yL
+  rw [hnormM, v.valuationAt_fixedFieldInclusion_of_unramified E hUnramified normK]
+  apply Subtype.ext
+  exact htower.symm
+
 private theorem classFieldAxiom_unramifiedUnits_hZero
     (v : ValuationData D A) (hcf : SatisfiesClassFieldAxiom A)
     (E : FiniteAbstractFieldExtension G)
@@ -221,37 +262,13 @@ private theorem classFieldAxiom_unramifiedUnits_hZero
   have hcycleValNorm :
       LinearMap.range T.moduleCatToCycles ≤ LinearMap.ker cycleVal := by
     rintro x ⟨y, rfl⟩
-    let yL : ambientFixedAddSubgroup A L :=
-      extensionFixedRepresentationEquiv A K L hLK hnormal y
-    let normK : ambientFixedAddSubgroup A K :=
-      relativeNorm A K L hLK yL
-    have hnormM :
-        extensionFixedRepresentationEquiv A K L hLK hnormal (M.norm.hom y) =
-          fixedFieldInclusion A K L hLK normK := by
-      apply Subtype.ext
-      exact extensionFixedRepresentation_norm_coe A K L hLK hnormal y
-    have htower := v.normalizedValuation_tower E yL
-    change (E.residueDegree D : ℕ) •
-        ((v.valuationAt E.field yL : v.valueGroup) : ZHat) =
-      ((v.valuationAt E.base
-        (relativeNorm A E.base.field E.field.field E.below yL) :
-          v.valueGroup) : ZHat) at htower
-    rw [E.residueDegree_eq_degree_of_isUnramified D hUnramified] at htower
-    have hvalNorm :
-        v.valuationAt E.field
-            (extensionFixedRepresentationEquiv A K L hLK hnormal
-              (M.norm.hom y)) =
-          n • v.valuationAt E.field yL := by
-      rw [hnormM,
-        v.valuationAt_fixedFieldInclusion_of_unramified E hUnramified normK]
-      apply Subtype.ext
-      exact htower.symm
     change v.valueModulo n hn
         (v.valuationAt E.field
           (extensionFixedRepresentationEquiv A K L hLK hnormal
             (M.norm.hom y))) = 0
-    rw [hvalNorm]
-    exact v.valueModulo_nsmul n hn (v.valuationAt E.field yL)
+    rw [v.valuationAt_unramified_representation_norm E hnormal hUnramified y]
+    exact v.valueModulo_nsmul n hn
+      (v.valuationAt E.field (extensionFixedRepresentationEquiv A K L hLK hnormal y))
   let H := T.moduleCatLeftHomologyData.H
   let fieldVal : H →ₗ[ℤ] ZMod n :=
     (LinearMap.range T.moduleCatToCycles).liftQ cycleVal hcycleValNorm
@@ -283,8 +300,7 @@ private theorem classFieldAxiom_unramifiedUnits_hZero
       invFun := fun x => T.moduleCatLeftHomologyData.homologyIso.hom x
       left_inv := by intro x; simp
       right_inv := by intro x; simp }
-  let eHTate : H ≃ tateCohomology M 0 :=
-    homologyEquiv.trans
+  let eHTate : H ≃ tateCohomology M 0 := homologyEquiv.trans
       (TateCohomology.isoFiniteCyclicZero M g hg).symm.toLinearEquiv.toEquiv
   let Kcf : FiniteAbstractField G := E.base
   let Ecf : FiniteCyclicSubextension Kcf :=
@@ -355,16 +371,13 @@ private theorem classFieldAxiom_unramifiedUnits_hZero
         Submodule.mkQ (LinearMap.range T.moduleCatToCycles) uCycle = 0 := by
       apply hfieldValInjective
       exact huClassVal.trans (map_zero fieldVal).symm
-    have huCycleRange :
-        uCycle ∈ LinearMap.range T.moduleCatToCycles := by
-      exact (Submodule.Quotient.mk_eq_zero _).1 huClass
+    have huCycleRange : uCycle ∈ LinearMap.range T.moduleCatToCycles :=
+      (Submodule.Quotient.mk_eq_zero _).1 huClass
     obtain ⟨y, hy⟩ := huCycleRange
-    have hyNorm : M.norm.hom y = uM := by
-      exact congrArg Subtype.val hy
+    have hyNorm : M.norm.hom y = uM := congrArg Subtype.val hy
     let yL : ambientFixedAddSubgroup A L :=
       extensionFixedRepresentationEquiv A K L hLK hnormal y
-    let normK : ambientFixedAddSubgroup A K :=
-      relativeNorm A K L hLK yL
+    let normK : ambientFixedAddSubgroup A K := relativeNorm A K L hLK yL
     have hnormInclusion :
         fixedFieldInclusion A K L hLK normK = u.1 := by
       apply Subtype.ext
@@ -407,8 +420,7 @@ private theorem classFieldAxiom_unramifiedUnits_hZero
         (extensionFixedRepresentation_norm_coe A K L hLK hnormal y).symm
       _ = uM.1 := congrArg Subtype.val hyNorm
       _ = u.1.1 := rfl
-  have hzeroS : Limits.IsZero S.homology :=
-    (S.exact_iff_isZero_homology).1 hExact
+  have hzeroS : Limits.IsZero S.homology := (S.exact_iff_isZero_homology).1 hExact
   exact Limits.IsZero.of_iso hzeroS
     (TateCohomology.isoFiniteCyclicZero U g hg)
 

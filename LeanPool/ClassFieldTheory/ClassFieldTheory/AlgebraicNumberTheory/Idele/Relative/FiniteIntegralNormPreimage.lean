@@ -372,7 +372,7 @@ theorem prod_norm_finitePlaceLocalTensorDecompositionUnitsComponent_single_eq
     [∀ u :
         AbsoluteValueExtension
           (HeightOneSpectrum.adicAbv K v₀) L,
-      Module.Finite
+      Algebra
         (HeightOneSpectrum.adicAbv K v₀).Completion
         u.1.Completion]
     (hNorm :

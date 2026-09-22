@@ -37,10 +37,11 @@ namespace Reciprocity
 open LocalFieldTheory.DiscreteValuationField.Examples.Qp
 
 open scoped Classical in
-local instance localPrimesInstance1 (p : Nat.Primes) : Fact p.1.Prime :=
+/-- The prime subtype supplies the primality instance used at this local factor. -/
+local instance rationalPrincipalLocalUnitPrimeFact (p : Nat.Primes) : Fact p.1.Prime :=
   ⟨p.2⟩
 
-attribute [local instance] localPrimesInstance1
+attribute [local instance] rationalPrincipalLocalUnitPrimeFact
 
 open scoped Classical in
 /-- The rational `p`-unit has value one for the height-one valuation

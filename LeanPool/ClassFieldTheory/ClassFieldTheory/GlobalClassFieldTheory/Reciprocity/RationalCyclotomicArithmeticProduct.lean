@@ -26,16 +26,18 @@ namespace GlobalClassFieldTheory
 namespace Reciprocity
 
 open scoped Classical in
-local instance localPrimesInstance1 (q : Nat.Primes) : Fact q.1.Prime :=
+/-- The prime subtype supplies the primality instance used at this local factor. -/
+local instance rationalCyclotomicArithmeticProductPrimeFact (q : Nat.Primes) : Fact q.1.Prime :=
   ⟨q.2⟩
 
-attribute [local instance] localPrimesInstance1
+attribute [local instance] rationalCyclotomicArithmeticProductPrimeFact
 
 open scoped Classical in
-local instance localNeZeroInstance1 (m : ℕ+) : NeZero (m : ℕ) :=
+/-- The positive cyclotomic level has nonzero underlying natural number. -/
+local instance rationalCyclotomicArithmeticProductPositiveLevelNeZero (m : ℕ+) : NeZero (m : ℕ) :=
   ⟨m.ne_zero⟩
 
-attribute [local instance] localNeZeroInstance1
+attribute [local instance] rationalCyclotomicArithmeticProductPositiveLevelNeZero
 
 section ArbitraryCyclotomicLevel
 
@@ -240,34 +242,40 @@ theorem
     rationalCyclotomicPrincipalFinitePlaceCharacter_at_prime]
 
 open scoped Classical in
-local instance localPrimesInstance2 (p : Nat.Primes) (k : ℕ) :
+/-- The rational cyclotomic level is a number field. -/
+local instance rationalCyclotomicArithmeticProductPrimePowerLevelNumberField
+    (p : Nat.Primes) (k : ℕ) :
     NumberField
       (KummerTheory.rationalCyclotomicLevel
         ⟨p.1 ^ k, pow_pos p.2.pos k⟩) :=
   KummerTheory.rationalCyclotomicLevel_numberField
     ⟨p.1 ^ k, pow_pos p.2.pos k⟩
 
-attribute [local instance] localPrimesInstance2
+attribute [local instance] rationalCyclotomicArithmeticProductPrimePowerLevelNumberField
 
 open scoped Classical in
-local instance localPrimesInstance3 (p : Nat.Primes) (k : ℕ) :
+/-- A rational cyclotomic field of prime-power level is finite-dimensional over the rationals. -/
+local instance rationalCyclotomicArithmeticProductPrimePowerLevelFiniteDimensional
+    (p : Nat.Primes) (k : ℕ) :
     FiniteDimensional ℚ
       (KummerTheory.rationalCyclotomicLevel
         ⟨p.1 ^ k, pow_pos p.2.pos k⟩) :=
   rationalCyclotomicPrincipalPrimeLevelFiniteDimensional
     ⟨p.1 ^ k, pow_pos p.2.pos k⟩
 
-attribute [local instance] localPrimesInstance3
+attribute [local instance] rationalCyclotomicArithmeticProductPrimePowerLevelFiniteDimensional
 
 open scoped Classical in
-local instance localPrimesInstance4 (p : Nat.Primes) (k : ℕ) :
+/-- The rational cyclotomic level is an abelian Galois extension of the rationals. -/
+local instance rationalCyclotomicArithmeticProductPrimePowerLevelAbelianGalois
+    (p : Nat.Primes) (k : ℕ) :
     IsAbelianGalois ℚ
       (KummerTheory.rationalCyclotomicLevel
         ⟨p.1 ^ k, pow_pos p.2.pos k⟩) :=
   rationalCyclotomicLevelIsAbelianGalois
     ⟨p.1 ^ k, pow_pos p.2.pos k⟩
 
-attribute [local instance] localPrimesInstance4
+attribute [local instance] rationalCyclotomicArithmeticProductPrimePowerLevelAbelianGalois
 
 open scoped Classical in
 /-- Pointwise inversion of the chosen local characters, assembled before
