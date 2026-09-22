@@ -21,6 +21,8 @@ namespace RAM
 
 namespace TMConfig
 
+variable {n bound : ℕ}
+
 namespace Step
 
 
@@ -500,7 +502,7 @@ private theorem represents_of_named_tapes {tm : TM n} {bound : ℕ}
   · rcases state with ⟨state, hstateFin⟩
     have hzero : state = 0 := by omega
     subst state
-    simpa [fieldReg_state_internal, fieldValue] using hstate
+    simpa [fieldReg_state_internal, fieldValue] using! hstate
   · rcases headOrCell with head | cell
     · change store (headReg head) = (tapeAt cfg head).head
       by_cases hinputSlot : head = inputTape n
@@ -622,7 +624,7 @@ private theorem actionPrelude_workPrefix {tm : TM n} {bound : ℕ}
       Function.update_of_ne honeReg] using hone
   have hinputStore : RepresentsTape bound (inputTape n) cfg.input store := by
     have htape := Represents.tape hrepresents (inputTape n)
-    simpa [inputTape] using htape
+    simpa [inputTape] using! htape
   have hinputInitialized :
       RepresentsTape bound (inputTape n) cfg.input initialized :=
     hinputStore.stateUpdate bound (inputTape n) cfg.input store
@@ -718,7 +720,7 @@ private theorem workPrefix_list {tm : TM n} {bound : ℕ}
         (items.flatMap (fun i => writeMoveOps n bound (workTape i)
           (workWrites i) (workDirections i))) store) := by
   induction items generalizing processed store with
-  | nil => simpa using hprefix
+  | nil => simpa using! hprefix
   | cons i rest ih =>
       have hinot : i ∉ processed := hfresh i (by simp)
       have hnext := workPrefix_step hprefix i hinot (hheads i) (hstarts i)
@@ -988,7 +990,7 @@ private theorem writeOps_envelopeChain (tm : TM n) (bound : ℕ)
     apply hstored.execBasic
     · exact hbaseLt
     · simpa [Structured.Internal.Basic.writeValue] using hstartBound
-  simpa [writeOps, first, addressed, valued, stored, final] using
+  simpa [writeOps, first, addressed, valued, stored, final] using!
     And.intro henvelope (And.intro hfirst
       (And.intro haddressed (And.intro hvalued (And.intro hstored hfinal))))
 
@@ -1030,7 +1032,7 @@ private theorem workPrefix_list_envelope {tm : TM n} {bound : ℕ}
         (items.reverse ++ processed) (Structured.Basic.execList ops store) ∧
       StepEnvelopeChain tm bound ops store := by
   induction items generalizing processed store with
-  | nil => exact ⟨by simpa using hprefix, henvelope⟩
+  | nil => exact ⟨by simpa using! hprefix, henvelope⟩
   | cons i rest ih =>
       have hinot : i ∉ processed := hfresh i (by simp)
       have hselected : RepresentsTape bound (workTape i) (cfg.work i) store := by
@@ -1091,7 +1093,7 @@ private theorem actionOps_envelopeChain_internal {tm : TM n} {bound : ℕ}
       [.imm 0 (stateCode tm nextState)] store := ⟨henvelope, hinitialized⟩
   have hinputStore : RepresentsTape bound (inputTape n) cfg.input store := by
     have htape := Represents.tape hrepresents (inputTape n)
-    simpa [inputTape] using htape
+    simpa [inputTape] using! htape
   have hinputHead : initialized (headReg (inputTape n)) ≤ bound := by
     have hhead := hheads (inputTape n)
     rw [show tapeAt cfg (inputTape n) = cfg.input by

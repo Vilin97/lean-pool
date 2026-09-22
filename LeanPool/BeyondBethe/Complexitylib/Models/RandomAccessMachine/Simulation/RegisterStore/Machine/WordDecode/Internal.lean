@@ -1063,7 +1063,7 @@ private theorem payloadIterationRun
   simpa [body, wordPayloadTM, payloadIterationStartCfg,
     payloadIterationDoneCfg, TM.binaryForIterationTime,
     TM.binaryForIterationTM, TM.binaryForIterationWrap, TM.phase1Wrap,
-    TM.phase2Wrap, beforeWork, afterWork] using hlift
+    TM.phase2Wrap, beforeWork, afterWork] using! hlift
 
 private theorem payloadLoopbackStep
     (sourceIdx targetIdx counterIdx widthIdx : Fin n)
@@ -1195,7 +1195,7 @@ theorem wordPayloadTM_reachesIn_frame_internal {n : ℕ}
   refine ⟨payloadDoneCfg sourceIdx targetIdx counterIdx widthIdx payload width
       inp₀ work₀ out₀, ?_, rfl, rfl, ?_, ?_, ?_, ?_, ?_, rfl⟩
   · simpa [spec, payloadLoopSpec, wordPayloadTime, wordPayloadTM,
-      payloadScanCfg, hinitial] using hreach
+      payloadScanCfg, hinitial] using! hreach
   · change (payloadLoopWork sourceIdx targetIdx counterIdx widthIdx payload width
       work₀ width width sourceIdx).HasBinarySuffix rest
     rw [payloadLoopWork_source sourceIdx targetIdx counterIdx widthIdx]
@@ -1247,7 +1247,7 @@ theorem wordWidthTM_reachesIn_frame_internal {n : ℕ}
   have hreach := spec.reachesIn_internal width 0 (by omega)
   have hinit := initial_work sourceIdx widthIdx hindices work₀ hwidth
   refine ⟨doneCfg sourceIdx widthIdx width inp₀ work₀ out₀, ?_, rfl, rfl, ?_, ?_, ?_, rfl⟩
-  · simpa [spec, loopSpec, wordWidthTime, scanCfg, hinit] using hreach
+  · simpa [spec, loopSpec, wordWidthTime, scanCfg, hinit] using! hreach
   · change
       (wordWidthWork sourceIdx widthIdx work₀ width width sourceIdx).HasBinarySuffix
         (false :: payload)
@@ -1403,7 +1403,7 @@ theorem wordDecodeTM_reachesIn_frame_internal {n : ℕ}
         output := TM.transitionTape widthDone.output }
       (TM.phase2Wrap separatorTM payloadTM payloadDone) := by
     rw [hwidthTransitionInput, hwidthTransitionWork, hwidthTransitionOutput]
-    simpa [tailTM, separatorTM, payloadTM, TM.phase1Wrap] using htailReach
+    simpa [tailTM, separatorTM, payloadTM, TM.phase1Wrap] using! htailReach
   have hfull := TM.seqTM_reachesIn_of_reachesIn widthTM tailTM
     (by simpa [widthTM] using hwidthReach) hwidthHalt htailReach'
   let finalCfg := TM.phase2Wrap widthTM tailTM
@@ -1412,7 +1412,7 @@ theorem wordDecodeTM_reachesIn_frame_internal {n : ℕ}
     hpayloadSource, hpayloadTarget, hpayloadCounter, hpayloadWidth, ?_,
     hpayloadOutput.trans (hseparatorOutput.trans hwidthOutput)⟩
   · simpa [finalCfg, wordDecodeTM, wordDecodeTime, widthTM, tailTM,
-      separatorTM, payloadTM] using hfull
+      separatorTM, payloadTM] using! hfull
   · change finalCfg.state =
       (wordDecodeTM sourceIdx targetIdx counterIdx widthIdx).qhalt
     change Sum.inr (Sum.inr payloadDone.state) =

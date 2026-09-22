@@ -158,7 +158,7 @@ private theorem loadTapes_loadedPrefix {tm : TM n} {bound : ℕ}
     LoadedPrefix tm bound cfg (tapes.reverse ++ processed)
       (Structured.Basic.execList (tapes.flatMap (loadTapeOps n bound)) store) := by
   induction tapes generalizing processed store with
-  | nil => simpa using hloaded
+  | nil => simpa using! hloaded
   | cons tape rest ih =>
       have hnext := loadTape_loadedPrefix hloaded tape (hheads tape)
       have hfinal := ih (processed := tape :: processed) hnext
@@ -221,7 +221,7 @@ private theorem setupOps_envelopeChain {tm : TM n} {bound : ℕ}
     · simpa [Structured.Internal.Basic.writeValue] using honeValue
   have hstateStore : store 0 = stateCode tm cfg.state := by
     have hstate := hrepresents (stateField (n := n) (bound := bound))
-    simpa [fieldReg_state_internal, fieldValue] using hstate
+    simpa [fieldReg_state_internal, fieldValue] using! hstate
   have hsecondSource : second 0 = store 0 := by
     simp [second, first, Structured.Basic.exec, zeroReg, oneReg, scratchBase,
       registerCount, Function.update_of_ne]
@@ -238,7 +238,7 @@ private theorem setupOps_envelopeChain {tm : TM n} {bound : ℕ}
     · simp only [Structured.Internal.Basic.writeValue]
       rw [hsecondSource, hsecondZero, hstateStore, Nat.add_zero]
       exact hstateBound
-  simpa [setupOps, first, second, final] using
+  simpa [setupOps, first, second, final] using!
     And.intro henvelope (And.intro hfirst (And.intro hsecond hfinal))
 
 private theorem loadTapeOps_envelopeChain {tm : TM n} {bound : ℕ}
@@ -307,7 +307,7 @@ private theorem loadTapeOps_envelopeChain {tm : TM n} {bound : ℕ}
     apply haddressed.execBasic
     · exact hscratch.2.2.2.2.2 tape
     · exact haddressed.value_le (addressed (addressReg n bound))
-  simpa [loadTapeOps, first, addressed, final] using
+  simpa [loadTapeOps, first, addressed, final] using!
     And.intro henvelope (And.intro hfirst (And.intro haddressed hfinal))
 
 private theorem loadTapes_envelopeChain {tm : TM n} {bound : ℕ}

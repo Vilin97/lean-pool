@@ -99,7 +99,7 @@ private theorem binaryRippleAddScanTM_hoareTime_frame_internal {n : ℕ}
   · rw [hfinalRhs]
     exact hrhs.1
   · simpa [Nat.size_eq_bits_len] using hfinalRhsHead
-  · simpa [BinaryRippleAdd.ripple_natBits_internal] using hfinalResult.2
+  · simpa [BinaryRippleAdd.ripple_natBits_internal] using! hfinalResult.2
   · simpa [BinaryRippleAdd.ripple_natBits_internal,
       Nat.size_eq_bits_len] using hfinalResult.1
 

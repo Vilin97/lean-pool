@@ -92,7 +92,7 @@ theorem continueCheck_exec_internal {tm : TM n}
             ⟨stateCode tm cfg.state, stateCode_lt tm cfg.state⟩)
           cleared final 1 cost space := by
     refine ⟨branchCost, branchSpace, ?_⟩
-    simpa [hbranchState, final] using hbranchExec
+    simpa [hbranchState, final] using! hbranchExec
   obtain ⟨dispatchCost, dispatchSpace, hdispatch⟩ :=
     Structured.Switch.select_exec
       (fun code : Fin (Fintype.card tm.Q) => .basics

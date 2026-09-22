@@ -502,7 +502,7 @@ theorem retargetInput_hoareTime (M : TM k)
         ({ state := (retargetInput M).qstart, input := realInput, work := work, output := out } :
           Cfg (k + 1) (retargetInput M).Q) := by
     refine Cfg.mk.injEq _ _ _ _ _ _ _ _ |>.mpr ⟨rfl, rfl, ?_, rfl⟩
-    simpa [retargetInput] using hworkField
+    simpa [retargetInput] using! hworkField
   refine ⟨retargetWrap M finalReal c', t, ht, ?_, ?_, ?_⟩
   · rw [← hstart]
     exact hreachSim

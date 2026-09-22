@@ -80,7 +80,7 @@ private theorem readable_target_content
   · simpa [entryMissBits, EntryMatchTapes.address, EntryMatchTapes.value,
       EntryMatchTapes.addressCounter, EntryMatchTapes.addressWidth,
       EntryMatchTapes.valueCounter, EntryMatchTapes.valueWidth,
-      EntryMatchTapes.result, tapes.injective.eq_iff] using hmatch.value.2
+      EntryMatchTapes.result, tapes.injective.eq_iff] using! hmatch.value.2
   · dsimp only [EntryMatchTapes.cleanupIdx]
     change (matchedWork tapes.addressCounter).HasBinaryContent
       (entryMissBits tapes entry queryBits tapes.addressCounter)

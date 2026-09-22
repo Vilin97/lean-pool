@@ -233,7 +233,7 @@ theorem binaryAddConstTM_reachesIn_frame_internal
       have hseq := seqTM_reachesIn_of_reachesIn
         (binaryAddConstTM idx fixedValue) (binarySuccTM idx) hprev rfl hnext'
       simpa [binaryAddConstTM, binaryAddConstTime, binaryAddConstNatTape,
-        binaryAddConstWorkAt] using hseq
+        binaryAddConstWorkAt] using! hseq
 
 theorem binaryAddConstTM_hoareTime_frame_internal
     (idx : Fin n) (fixedValue dstValue : ℕ)
