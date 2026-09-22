@@ -16,7 +16,7 @@ on ideles is the product of its archimedean and finite-place local
 Artin factors.
 -/
 
-open scoped BigOperators Classical IsMulCommutative NumberField
+open scoped BigOperators IsMulCommutative NumberField
   NumberField.LiesOver
 open NumberField IsDedekindDomain
 open IdeleGroup RelativeIdeleGroup
@@ -31,6 +31,7 @@ variable {K L : Type}
     [Field L] [NumberField L] [Algebra K L]
     [IsAbelianGalois K L]
 
+open scoped Classical in
 /-- The preliminary global Artin homomorphism
 `[·, L / K] : I_K → Gal(L / K)`, defined as the product of all local
 Artin homomorphisms. -/
@@ -41,6 +42,7 @@ noncomputable def globalArtinMonoidHom :
     finitePlaceGlobalArtinMonoidHom
       (K := K) (L := L)
 
+open scoped Classical in
 /-- The preliminary global Artin homomorphism is continuous. -/
 theorem globalArtinMonoidHom_continuous :
     Continuous
@@ -51,6 +53,7 @@ theorem globalArtinMonoidHom_continuous :
       (finitePlaceGlobalArtinMonoidHom_continuous
         (K := K) (L := L))
 
+open scoped Classical in
 /-- The preliminary global Artin symbol is the product of its actual
 archimedean and finite local factors. -/
 theorem globalArtinMonoidHom_apply
@@ -73,6 +76,7 @@ theorem globalArtinMonoidHom_apply
   rw [MonoidHom.finsetProd_apply]
   rfl
 
+open scoped Classical in
 /-- The preliminary global Artin homomorphism of `L / K` kills every
 actual relative-idele norm from `L`.  At each finite and infinite place
 this is exactly the corresponding local reciprocity kernel theorem. -/
@@ -121,6 +125,7 @@ theorem globalArtinMonoidHom_relativeIdeleNorm_eq_one
           (K := K) (L := L) v z
   rw [hinfinite, hfinite, mul_one]
 
+open scoped Classical in
 /-- The preliminary global Artin homomorphism kills the ordinary idele
 norm `N_{L/K} : I_L → I_K`.  This is the relative-idele kernel theorem
 above, transported by the canonical scalar-extension equivalence used in
@@ -145,6 +150,7 @@ theorem globalArtinMonoidHom_ideleNorm_eq_one
       ((relativeIdeleBaseChangeMulEquiv
         (K := K) (L := L)).symm a)
 
+open scoped Classical in
 /-- The actual global Artin symbol after an ordinary idele norm, expanded
 simultaneously at all archimedean and finite places.  The factors are
 indexed by the genuine places upstairs, and use the ordinary LCFT field
@@ -214,6 +220,7 @@ theorem globalArtinMonoidHom_norm_eq_place_products
     finitePlaceGlobalArtinMonoidHom_norm_eq_finprod]
 
 omit [NumberField K] [NumberField L] in
+open scoped Classical in
 /-- In an actual field diamond `K ⊂ K'`, `L ⊂ L'`, the standard
 restriction map distributes over every local factor of the upper global
 Artin symbol.  The vertical Galois map is exactly the composite supplied
@@ -251,6 +258,7 @@ theorem restrict_globalArtinMonoidHom_apply
     (finitePlaceArtinFactors_hasFiniteMulSupport
       (K := K') (L := L') a)]
 
+open scoped Classical in
 /-- Norm--restriction for the actual global Artin homomorphism.  In a number-field
 diamond `K ⊂ K'`, `L ⊂ L'`, the ordinary idele norm and mathlib's standard
 restriction composite form a commuting square. -/
@@ -313,6 +321,7 @@ theorem globalArtinMonoidHom_norm_restriction
         a
   rw [hinfinite, hfinite]
 
+open scoped Classical in
 /-- For an abelian tower with fixed base field, the global Artin map
 commutes with the genuine restriction homomorphism. -/
 theorem globalArtinMonoidHom_restrict_tower
@@ -370,6 +379,7 @@ theorem globalArtinMonoidHom_restrict_tower
         (K := K) (L := L) (E := E) v)
       (IdeleGroup.finiteComponent v a)
 
+open scoped Classical in
 /-- The global Artin symbol of an archimedean one-place idele is its
 local infinite-place Artin symbol. -/
 @[simp]
@@ -419,6 +429,7 @@ theorem globalArtinMonoidHom_infinitePlaceIdele
     rw [infinitePlaceIdele_finiteComponent, map_one]
   rw [hinfinite, hfinite, mul_one]
 
+open scoped Classical in
 /-- The global Artin symbol of a finite one-place idele is its local
 finite-place Artin symbol. -/
 @[simp]
@@ -440,6 +451,7 @@ theorem globalArtinMonoidHom_finitePlaceIdele
   rw [infinitePlaceGlobalArtinMonoidHom_finitePlaceIdele,
     finitePlaceGlobalArtinMonoidHom_finitePlaceIdele, one_mul]
 
+open scoped Classical in
 /-- Every chosen finite-place decomposition group is contained in the
 image of the global Artin homomorphism. -/
 theorem finitePlaceDecompositionGroup_le_globalArtinMonoidHom_range
@@ -457,6 +469,7 @@ theorem finitePlaceDecompositionGroup_le_globalArtinMonoidHom_range
       globalArtinMonoidHom_finitePlaceIdele
         (K := K) (L := L) v x⟩
 
+open scoped Classical in
 /-- The actual global Artin homomorphism of a finite abelian extension
 of number fields is surjective. -/
 theorem globalArtinMonoidHom_surjective :

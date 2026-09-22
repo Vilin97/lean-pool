@@ -9,7 +9,8 @@ import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamificat
 /-!
 # quotient-depth identity over a general DVF
 
-The public endpoint has no generator argument.  The monogenic integral-generator theorem supplies the top
+The public endpoint has no generator argument.  The monogenic integral-generator theorem
+  supplies the top
 integral generator internally, while the fixed-field ramification number is
 the intrinsic value of its displacement ideal.
 -/

@@ -163,7 +163,8 @@ theorem map_extensionSubgroup_abstractSubgroupEquiv
     rw [InfiniteGalois.fixingSubgroup_fixedField L] at hσfix
     exact hσfix
 
-/-- Relative normality in the abstract class-formation framework is the actual normality of the subgroup
+/-- Relative normality in the abstract class-formation framework is the actual normality of the
+subgroup
 fixing the upper field inside the lower field's absolute Galois group. -/
 theorem abstractRelativeFixingSubgroup_normal
     (K L : ClosedSubgroup (Gal(Ω/k)))
@@ -363,11 +364,11 @@ theorem abstractRelativeFixedField_finiteDimensional
 /-- The abstract extension degree is the ordinary degree of the concrete
 finite Galois extension represented by the same pair of fixed fields. -/
 theorem finiteAbstractExtension_degree_eq_finrank
-    (K L : ClosedSubgroup (Gal(Ω / k)))
+    (K L : ClosedSubgroup (Gal(Ω/k)))
     (hLK : L.toSubgroup ≤ K.toSubgroup)
     (hnormal : (extensionSubgroup K L hLK).Normal)
     (hKfinite : Finite ((baseField (Gal(Ω/k))).toSubgroup ⧸
-      extensionSubgroup (baseField (Gal(Ω / k))) K (le_baseField K)))
+      extensionSubgroup (baseField (Gal(Ω/k))) K (le_baseField K)))
     (hLKfinite : Finite
       (K.toSubgroup ⧸ extensionSubgroup K L hLK)) :
     ((DegreeData.FiniteAbstractExtension.ofInclusion L K hLK).degree : ℕ) =
@@ -386,7 +387,8 @@ theorem finiteAbstractExtension_degree_eq_finrank
   calc
     ((DegreeData.FiniteAbstractExtension.ofInclusion L K hLK).degree : ℕ) =
         (extensionSubgroup K L hLK).index :=
-      (DegreeData.FiniteAbstractExtension.ofInclusion L K hLK).extensionSubgroup_index_eq_degree.symm
+      (DegreeData.FiniteAbstractExtension.ofInclusion L K
+        hLK).extensionSubgroup_index_eq_degree.symm
     _ = Nat.card
         (K.toSubgroup ⧸ extensionSubgroup K L hLK) :=
       Subgroup.index_eq_card (extensionSubgroup K L hLK)

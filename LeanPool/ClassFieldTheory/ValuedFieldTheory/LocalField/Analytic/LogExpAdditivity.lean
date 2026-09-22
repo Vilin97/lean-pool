@@ -267,7 +267,7 @@ theorem mvPowerSeriesMonomialValue_pair
 /-- If the `d`-coefficient of `(X + Y + XY)^q` is nonzero, then its total
 degree is at least `q`. -/
 theorem formalLogOnePlusProductArgument_pow_coeff_ne_zero_q_le_coord_sum
-    [Algebra ℚ K] (q : ℕ) (d : Fin 2 →₀ ℕ)
+    (q : ℕ) (d : Fin 2 →₀ ℕ)
     (hcoeff :
       MvPowerSeries.coeff d
           ((formalLogOnePlusProductArgument K) ^ q) ≠ 0) :
@@ -369,7 +369,8 @@ theorem valuation_formalLogOnePlusProductArgument_sigmaTerm_le_max
 summable.  No rearrangement hypothesis is exposed: nonzero terms in each
 fixed outer degree have finite polynomial support, while their values are
 bounded by the convergent one-variable logarithm terms. -/
-theorem summable_formalLogOnePlusProductArgument_logDegree_monomialValue_pair_ofWithZeroValuation_scaled
+theorem
+  summable_formalLogOnePlusProductArgument_logDegree_monomialValue_pair_ofWithZeroValuation_scaled
     [Algebra ℚ K]
     (v : _root_.Valuation K (WithZero (Multiplicative ℤ)))
     {p : ℕ} [Fact p.Prime] (e : ℕ) (x y : K)
@@ -483,7 +484,8 @@ theorem summable_formalLogOnePlusProductArgument_logDegree_monomialValue_pair_of
 
 /-- The expanded product-argument Sigma-family has sum equal to the scaled
 logarithm of `x + y + xy`. -/
-theorem hasSum_formalLogOnePlusProductArgument_logDegree_monomialValue_pair_sigma_ofWithZeroValuation_scaled
+theorem
+  hasSum_formalLogOnePlusProductArgument_logDegree_monomialValue_pair_sigma_ofWithZeroValuation_scaled
     [Algebra ℚ K]
     (v : _root_.Valuation K (WithZero (Multiplicative ℤ)))
     {p : ℕ} [Fact p.Prime] (e : ℕ) (x y : K)
@@ -541,7 +543,8 @@ theorem hasSum_formalLogOnePlusProductArgument_logDegree_monomialValue_pair_sigm
 /-- Regrouping the scaled Sigma-family by monomial exponent evaluates the
 substituted formal logarithm itself.  The inner sum is finite for every fixed
 monomial, by the degree bound in power-series substitution. -/
-theorem hasSum_formalLogOnePlusProductArgument_logSubst_monomialValue_pair_ofWithZeroValuation_scaled
+theorem
+  hasSum_formalLogOnePlusProductArgument_logSubst_monomialValue_pair_ofWithZeroValuation_scaled
     [Algebra ℚ K]
     (v : _root_.Valuation K (WithZero (Multiplicative ℤ)))
     {p : ℕ} [Fact p.Prime] (e : ℕ) (x y : K)
@@ -666,7 +669,8 @@ theorem principalUnitLogSeries_mul_eq_add_ofWithZeroValuation_scaled
     (v : _root_.Valuation K (WithZero (Multiplicative ℤ)))
     [ValuationTheory.DiscreteValuationField.Valuation.IsCompleteDiscrete v]
     {p : ℕ} [Fact p.Prime] (e : ℕ)
-    (u w : (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup (completeDVFOfWithZeroValuation v)) 1)
+    (u w : (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+      (completeDVFOfWithZeroValuation v)) 1)
     (hnK : ∀ n : ℕ, (((n + 1 : ℕ) : K) ≠ 0))
     (hnval : ∀ n : ℕ,
       v (((n + 1 : ℕ) : K)) =
@@ -703,7 +707,8 @@ noncomputable def principalUnitLogSeriesHomOfWithZeroValuationScaled
     (hcomplete :
       letI : Valued K (WithZero (Multiplicative ℤ)) := Valued.mk' v
       CompleteSpace K) :
-    (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup (completeDVFOfWithZeroValuation v)) 1 →*
+    (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+      (completeDVFOfWithZeroValuation v)) 1 →*
       Multiplicative K where
   toFun u := Multiplicative.ofAdd
     (principalUnitLogSeriesOfWithZeroValuation v u hnK)
@@ -734,7 +739,8 @@ Establishes the identity `Multiplicative.toAdd (principalUnitLogSeriesHomOfWithZ
     (hcomplete :
       letI : Valued K (WithZero (Multiplicative ℤ)) := Valued.mk' v
       CompleteSpace K)
-    (u : (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup (completeDVFOfWithZeroValuation v)) 1) :
+    (u : (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+      (completeDVFOfWithZeroValuation v)) 1) :
     Multiplicative.toAdd
         (principalUnitLogSeriesHomOfWithZeroValuationScaled
           (v := v) (p := p) e hnK hnval hcomplete u) =

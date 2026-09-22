@@ -26,7 +26,7 @@ universe u
 
 /-- A real infinite place of a number field. -/
 abbrev RayClassRealPlace
-    (K : Type u) [Field K] [NumberField K] :=
+    (K : Type u) [Field K] :=
   {v : InfinitePlace K // v.IsReal}
 
 /-- A ray modulus: finite prime exponents together with the real places at

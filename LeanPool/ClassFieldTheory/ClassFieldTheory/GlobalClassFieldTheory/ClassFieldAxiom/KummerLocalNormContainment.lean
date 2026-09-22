@@ -17,7 +17,7 @@ This module proves that local powers, and then the concrete simple-Kummer
 power subgroup, lie in the norm subgroup at a chosen finite place.
 -/
 
-open scoped NumberField Classical NNReal IsMulCommutative
+open scoped NumberField NNReal IsMulCommutative
 open NumberField IsDedekindDomain
 open AlgebraicNumberTheory.Valuations
 open HilbertRamification
@@ -31,6 +31,7 @@ namespace GlobalClassFieldTheory.ClassFieldAxiom
 variable {K : Type*} [Field K] [NumberField K]
 
 omit [NumberField K] in
+open scoped Classical in
 /-- Coordinates in `(Z/nZ)^r` show that every Galois automorphism has
 exponent dividing `n`. -/
 theorem galois_pow_eq_one_of_field_equiv_pi_zmod
@@ -48,6 +49,7 @@ theorem galois_pow_eq_one_of_field_equiv_pi_zmod
   change (n : ℕ) • Multiplicative.toAdd (eG sigma i) = 0
   simp
 
+open scoped Classical in
 /-- Local `n`-th powers are norms from the chosen finite-place
 completion when every global Galois automorphism has exponent dividing
 `n`.  This is the shared local-field core used by the coordinate and
@@ -89,7 +91,7 @@ private theorem
   let : IsGalois vK.Completion E :=
     HilbertRamification.algebraicLocalization_isGalois vK w
   let : NontriviallyNormedField vK.Completion :=
-    absoluteValueExtension_completionNontriviallyNormedField
+    absoluteValueExtensionCompletionNontriviallyNormedField
       vK hvK
   let : LocallyCompactSpace vK.Completion :=
     AbsoluteValue.Completion.locallyCompactSpace
@@ -167,6 +169,7 @@ private theorem
   · change e ((e.symm y) ^ (n : ℕ)) = y ^ (n : ℕ)
     rw [map_pow, e.apply_symm_apply]
 
+open scoped Classical in
 /-- Local `n`-th powers are norms from the chosen finite-place
 completion when the global Galois group has exponent dividing `n`. -/
 theorem nthPowerSubgroup_le_chosenFinitePlaceLocalNormSubgroup
@@ -189,6 +192,7 @@ theorem nthPowerSubgroup_le_chosenFinitePlaceLocalNormSubgroup
       (K := K) (L := L) n
       (galois_pow_eq_one_of_field_equiv_pi_zmod n r eG) v
 
+open scoped Classical in
 /-- For the actual simple Kummer extension `K(ⁿ√b)/K`, every local
 `n`-th power is a norm at every finite place.  The exponent input is
 produced by the concrete Kummer character, rather than supplied as a

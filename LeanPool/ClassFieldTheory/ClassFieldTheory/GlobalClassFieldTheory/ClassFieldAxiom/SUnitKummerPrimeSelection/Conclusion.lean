@@ -14,7 +14,7 @@ the finite Kummer radical and records the support-enlargement consequence
 used by the global reciprocity argument.
 -/
 
-open scoped NumberField Classical IsMulCommutative
+open scoped NumberField IsMulCommutative
 open NumberField IsDedekindDomain
 open KummerTheory
 
@@ -27,6 +27,7 @@ section FinitePlaces
 variable {K : Type} [Field K]
     [NumberField K]
 
+open scoped Classical in
 /-- The chosen primes cut out exactly the Kummer radical of `E / K`: an
 enlarged `S`-unit is a local `n`-th power at every chosen
 prime if and only if it has an `n`-th root in `E`. -/
@@ -394,6 +395,7 @@ theorem
     rw [← hwi]
     exact hlocal
 
+open scoped Classical in
 /-- Enlarging `S` by the radical supports preserves the idelic
 factorization `I_K = I_K^S Kˣ`. -/
 theorem supportedAt_sup_principalSubgroup_eq_top_of_enlargeByRadicalSupport

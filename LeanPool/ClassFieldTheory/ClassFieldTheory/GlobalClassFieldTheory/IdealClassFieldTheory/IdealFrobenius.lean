@@ -15,8 +15,7 @@ The general unramified Galois identity `r * f = n` belongs to
 `RamificationTheory.HilbertRamification.Dedekind.Basic`.
 -/
 
-open scoped NumberField Classical
-
+open scoped NumberField
 noncomputable section
 
 namespace GlobalClassFieldTheory
@@ -29,6 +28,7 @@ variable {K : Type} [Field K] [NumberField K]
 attribute [local instance]
   ideleClassSubgroupNormal idealArtinKernelNormal
 
+open scoped Classical in
 /-- The ideal-theoretic Frobenius class attached to a prime outside the
 defining modulus.  Under global reciprocity this is the usual Frobenius
 automorphism. -/
@@ -42,6 +42,7 @@ def idealFrobeniusClass
   idealArtinMap m N hm
     (RayClass.primeToModulusIdeal m v hv)
 
+open scoped Classical in
 /-- The order of the Artin image of `v` is the order of `v` modulo the
 ideal group `H_m`. -/
 theorem orderOf_idealFrobeniusClass
@@ -59,6 +60,7 @@ theorem orderOf_idealFrobeniusClass
       (QuotientGroup.mk' (idealArtinKernel m N hm)
         (RayClass.primeToModulusIdeal m v hv))
 
+open scoped Classical in
 /-- A power of a prime ideal lies in the defining ideal group exactly
 when the order of its class in `J_K^m / H_m` divides the exponent.
 

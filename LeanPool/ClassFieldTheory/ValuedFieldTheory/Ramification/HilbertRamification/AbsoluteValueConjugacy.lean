@@ -102,9 +102,9 @@ theorem absoluteValueConjugacy_exists_conjugatingAlgEquiv
     (vK : AbsoluteValue K ℝ) (hvK : vK.IsNontrivial)
     (w w' : AbsoluteValueExtension vK L) :
     ∃ σ : L ≃ₐ[K] L, w'.1 = absoluteValueConjugate w.1 σ := by
-  let A := absoluteValueExtension_algebraicCompletionClosure vK
-  let τ : L →ₐ[K] A := absoluteValueExtension_embeddingOfExtension vK w
-  let τ' : L →ₐ[K] A := absoluteValueExtension_embeddingOfExtension vK w'
+  let A := absoluteValueExtensionAlgebraicCompletionClosure vK
+  let τ : L →ₐ[K] A := absoluteValueExtensionEmbeddingOfExtension vK w
+  let τ' : L →ₐ[K] A := absoluteValueExtensionEmbeddingOfExtension vK w'
   let : Algebra L A := τ.toRingHom.toAlgebra
   let : IsScalarTower K L A :=
     IsScalarTower.of_algebraMap_eq' τ.comp_algebraMap.symm
@@ -114,8 +114,8 @@ theorem absoluteValueConjugacy_exists_conjugatingAlgEquiv
     absoluteValueExtension_extension_eq_pullback_embeddingOfExtension vK hvK w]
   ext x
   change
-    absoluteValueExtension_algebraicClosureAbsoluteValue vK hvK (τ' x) =
-      absoluteValueExtension_algebraicClosureAbsoluteValue vK hvK (τ (σ x))
+    absoluteValueExtensionAlgebraicClosureAbsoluteValue vK hvK (τ' x) =
+      absoluteValueExtensionAlgebraicClosureAbsoluteValue vK hvK (τ (σ x))
   congr 1
   simpa [σ, τ, AlgHom.restrictNormal', RingHom.algebraMap_toAlgebra] using
     (τ'.restrictNormal_commutes L x).symm

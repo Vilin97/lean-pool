@@ -23,7 +23,8 @@ namespace MultiplicativeIntegerValuation
 
 variable {K : Type u} [Field K]
 
-/-- The local-field structure theory, the deep exponential–logarithm equivalence.  If the normalized valuation has
+/-- The local-field structure theory, the deep exponential–logarithm equivalence.  If the
+normalized valuation has
 ramification index `e`, then for every `n > e/(p-1)` the exponential and
 logarithm series give mutually inverse topological group isomorphisms
 `m^n ≃ U^n` (with the additive source written multiplicatively).
@@ -43,8 +44,10 @@ noncomputable def chosenExpLogContinuousMulEquiv
     Multiplicative
       ((completeDVFOfWithZeroValuation v).maximalIdeal ^ n :
         Ideal (completeDVFOfWithZeroValuation v).valuationSubring) ≃ₜ*
-      LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup (completeDVFOfWithZeroValuation v) n := by
-  let F : ValuationTheory.DiscreteValuationField.CompleteDVF.{u, 0} K := completeDVFOfWithZeroValuation v
+      LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+        (completeDVFOfWithZeroValuation v) n := by
+  let F : ValuationTheory.DiscreteValuationField.CompleteDVF.{u, 0} K :=
+    completeDVFOfWithZeroValuation v
   let LF : LocalField.{u, 0} K := LocalField.ofWithZeroValuation v
   let hnormalized :=
     WithZeroValuation.exists_valuationSubring_valuation_eq_exp_neg_one_of_surjective
@@ -156,7 +159,7 @@ noncomputable def chosenExpLogContinuousMulEquiv
       principalUnitLogSeriesOfHigherPrincipalUnitGroupOfWithZeroValuationScaled,
       principalUnitExpSeriesOfMaximalIdealPowOfWithZeroValuationScaled, F] using hexact
   exact
-    principalUnitExpLogContinuousMulEquivOfExact_ofWithZeroValuationScaled
+    principalUnitExpLogContinuousMulEquivOfExactOfWithZeroValuationScaled
       (v := v) (p := p) e n (π := π) hπval hn hlevel'
       hnKexp hnvalExp hnKlog hnvalLog hcomplete hlog_exp hexp_log
 

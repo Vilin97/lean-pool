@@ -228,7 +228,6 @@ def smallHilbertClassFieldQuotientToIdeleClassNormQuotient
 
 /-- The small-Hilbert quotient transition sends an idele class to the
 same class modulo the actual norm subgroup. -/
-@[simp]
 theorem smallHilbertClassFieldQuotientToIdeleClassNormQuotient_mk
     [_root_.IsUnramifiedAtInfinitePlaces K L]
     (hunramifiedFinite :

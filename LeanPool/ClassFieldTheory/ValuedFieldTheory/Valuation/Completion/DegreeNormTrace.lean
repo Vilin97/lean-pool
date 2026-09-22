@@ -10,7 +10,8 @@ import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.TensorPr
 /-!
 # Compatibility of local degree, norm, and trace
 
-The canonical decomposition of the completion tensor-product decomposition gives the sum of the local
+The canonical decomposition of the completion tensor-product decomposition gives the sum of the
+  local
 degrees and the product/sum formulas for norm and trace.  Since the global
 norm and trace lie in `K`, their Lean statements are mapped into `K_v`.
 -/
@@ -41,7 +42,7 @@ theorem completionModuleFinite
     inferInstance
   let : Module.Finite vK.Completion
       (∀ w : AbsoluteValueExtension vK L, w.1.Completion) :=
-    Module.Finite.equiv (completionTensorDecomposition_left vK hvK).toLinearEquiv
+    Module.Finite.equiv (completionTensorDecompositionLeft vK hvK).toLinearEquiv
   exact moduleFiniteOfPi
     (fun w : AbsoluteValueExtension vK L ↦ w.1.Completion) w
 
@@ -50,7 +51,7 @@ theorem completionDegreeNormTrace_degree
     {K : Type u} {L : Type v} [Field K] [Field L] [Algebra K L]
     [FiniteDimensional K L] [Algebra.IsSeparable K L]
     (vK : AbsoluteValue K ℝ) (hvK : vK.IsNontrivial) :
-    letI := completionTensorDecomposition_extensionFintype (K := K) (L := L) vK hvK
+    letI := completionTensorDecompositionExtensionFintype (K := K) (L := L) vK hvK
     letI : ∀ w : AbsoluteValueExtension vK L,
         Algebra vK.Completion w.1.Completion :=
       fun w ↦ AbsoluteValue.completionAlgebra vK w.1 w.2
@@ -60,7 +61,7 @@ theorem completionDegreeNormTrace_degree
     Module.finrank K L =
       ∑ w : AbsoluteValueExtension vK L,
         Module.finrank vK.Completion w.1.Completion := by
-  let := completionTensorDecomposition_extensionFintype (K := K) (L := L) vK hvK
+  let := completionTensorDecompositionExtensionFintype (K := K) (L := L) vK hvK
   let : ∀ w : AbsoluteValueExtension vK L,
       Algebra vK.Completion w.1.Completion :=
     fun w ↦ AbsoluteValue.completionAlgebra vK w.1 w.2
@@ -69,14 +70,14 @@ theorem completionDegreeNormTrace_degree
     fun w ↦ completionModuleFinite vK hvK w
   exact baseChange_pi_finrank_eq_sum
     (fun w : AbsoluteValueExtension vK L ↦ w.1.Completion)
-    (completionTensorDecomposition_left vK hvK)
+    (completionTensorDecompositionLeft vK hvK)
 
 /-- the local degree, norm, and trace formulas, norm formula, written in `K_v`. -/
 theorem completionDegreeNormTrace_norm
     {K : Type u} {L : Type v} [Field K] [Field L] [Algebra K L]
     [FiniteDimensional K L] [Algebra.IsSeparable K L]
     (vK : AbsoluteValue K ℝ) (hvK : vK.IsNontrivial) (x : L) :
-    letI := completionTensorDecomposition_extensionFintype (K := K) (L := L) vK hvK
+    letI := completionTensorDecompositionExtensionFintype (K := K) (L := L) vK hvK
     letI : ∀ w : AbsoluteValueExtension vK L,
         Algebra vK.Completion w.1.Completion :=
       fun w ↦ AbsoluteValue.completionAlgebra vK w.1 w.2
@@ -87,7 +88,7 @@ theorem completionDegreeNormTrace_norm
       ∏ w : AbsoluteValueExtension vK L,
         Algebra.norm vK.Completion
           (AbsoluteValue.toCompletionAlgHom (K := K) w.1 x) := by
-  let := completionTensorDecomposition_extensionFintype (K := K) (L := L) vK hvK
+  let := completionTensorDecompositionExtensionFintype (K := K) (L := L) vK hvK
   let : ∀ w : AbsoluteValueExtension vK L,
       Algebra vK.Completion w.1.Completion :=
     fun w ↦ AbsoluteValue.completionAlgebra vK w.1 w.2
@@ -96,14 +97,14 @@ theorem completionDegreeNormTrace_norm
     fun w ↦ completionModuleFinite vK hvK w
   simpa using baseChange_pi_norm_eq_prod
     (fun w : AbsoluteValueExtension vK L ↦ w.1.Completion)
-    (completionTensorDecomposition_left vK hvK) x
+    (completionTensorDecompositionLeft vK hvK) x
 
 /-- the local degree, norm, and trace formulas, trace formula, written in `K_v`. -/
 theorem completionDegreeNormTrace_trace
     {K : Type u} {L : Type v} [Field K] [Field L] [Algebra K L]
     [FiniteDimensional K L] [Algebra.IsSeparable K L]
     (vK : AbsoluteValue K ℝ) (hvK : vK.IsNontrivial) (x : L) :
-    letI := completionTensorDecomposition_extensionFintype (K := K) (L := L) vK hvK
+    letI := completionTensorDecompositionExtensionFintype (K := K) (L := L) vK hvK
     letI : ∀ w : AbsoluteValueExtension vK L,
         Algebra vK.Completion w.1.Completion :=
       fun w ↦ AbsoluteValue.completionAlgebra vK w.1 w.2
@@ -114,7 +115,7 @@ theorem completionDegreeNormTrace_trace
       ∑ w : AbsoluteValueExtension vK L,
         Algebra.trace vK.Completion w.1.Completion
           (AbsoluteValue.toCompletionAlgHom (K := K) w.1 x) := by
-  let := completionTensorDecomposition_extensionFintype (K := K) (L := L) vK hvK
+  let := completionTensorDecompositionExtensionFintype (K := K) (L := L) vK hvK
   let : ∀ w : AbsoluteValueExtension vK L,
       Algebra vK.Completion w.1.Completion :=
     fun w ↦ AbsoluteValue.completionAlgebra vK w.1 w.2
@@ -123,7 +124,7 @@ theorem completionDegreeNormTrace_trace
     fun w ↦ completionModuleFinite vK hvK w
   simpa using baseChange_pi_trace_eq_sum
     (fun w : AbsoluteValueExtension vK L ↦ w.1.Completion)
-    (completionTensorDecomposition_left vK hvK) x
+    (completionTensorDecompositionLeft vK hvK) x
 
 /-- **the local degree, norm, and trace formulas.**  The degree, norm, and trace formulas obtained
 simultaneously from the canonical decomposition of the completion tensor-product decomposition. -/
@@ -131,7 +132,7 @@ theorem completionDegreeNormTrace
     {K : Type u} {L : Type v} [Field K] [Field L] [Algebra K L]
     [FiniteDimensional K L] [Algebra.IsSeparable K L]
     (vK : AbsoluteValue K ℝ) (hvK : vK.IsNontrivial) :
-    letI := completionTensorDecomposition_extensionFintype (K := K) (L := L) vK hvK
+    letI := completionTensorDecompositionExtensionFintype (K := K) (L := L) vK hvK
     letI : ∀ w : AbsoluteValueExtension vK L,
         Algebra vK.Completion w.1.Completion :=
       fun w ↦ AbsoluteValue.completionAlgebra vK w.1 w.2
@@ -151,7 +152,7 @@ theorem completionDegreeNormTrace
         ∑ w : AbsoluteValueExtension vK L,
           Algebra.trace vK.Completion w.1.Completion
             (AbsoluteValue.toCompletionAlgHom (K := K) w.1 x)) := by
-  let := completionTensorDecomposition_extensionFintype (K := K) (L := L) vK hvK
+  let := completionTensorDecompositionExtensionFintype (K := K) (L := L) vK hvK
   let : ∀ w : AbsoluteValueExtension vK L,
       Algebra vK.Completion w.1.Completion :=
     fun w ↦ AbsoluteValue.completionAlgebra vK w.1 w.2

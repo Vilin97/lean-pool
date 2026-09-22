@@ -36,7 +36,7 @@ that original field, and obtain the genuine reciprocity equivalence
 `Gal(K^m / K) ≃ C_K / C_K^m`.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 
 noncomputable section
 
@@ -51,6 +51,7 @@ open CyclicCohomology
 
 variable {K : Type} [Field K] [NumberField K]
 
+open scoped Classical in
 /-- The concrete finite Galois norm neighbourhood used to select the
 ray class field attached to `m`. -/
 noncomputable abbrev rayClassFieldNormAmbient
@@ -60,6 +61,7 @@ noncomputable abbrev rayClassFieldNormAmbient
     (K := K) (RayClass.Modulus.congruenceSubgroup m)
     (RayClass.isClosed_congruenceSubgroup m)
 
+open scoped Classical in
 /-- The compatible abstract base subgroup used by the selected ray
 class-field realization. -/
 noncomputable abbrev rayClassFieldBaseSubgroup
@@ -69,6 +71,7 @@ noncomputable abbrev rayClassFieldBaseSubgroup
     (K := K) (RayClass.Modulus.congruenceSubgroup m)
     (RayClass.isClosed_congruenceSubgroup m)
 
+open scoped Classical in
 /-- The finite abelian subextension selected by the ray congruence
 subgroup `C_K^m`. -/
 noncomputable abbrev rayClassFieldSubextension
@@ -80,6 +83,7 @@ noncomputable abbrev rayClassFieldSubextension
     (K := K) (RayClass.Modulus.congruenceSubgroup m)
     (RayClass.isClosed_congruenceSubgroup m)
 
+open scoped Classical in
 /-- The canonical fixed-field copy of the original number field in the
 selected ray class-field realization. -/
 noncomputable abbrev rayClassFieldBase
@@ -89,6 +93,7 @@ noncomputable abbrev rayClassFieldBase
     (K := K) (RayClass.Modulus.congruenceSubgroup m)
     (RayClass.isClosed_congruenceSubgroup m)
 
+open scoped Classical in
 /-- A chosen finite ray-class-field realization attached to `m`, selected
 inside the rational separable closure.  Its intrinsic realization in the
 fixed separable closure of `K` is `rayClassFieldSubfield`. -/
@@ -99,6 +104,7 @@ noncomputable abbrev rayClassField
     (K := K) (RayClass.Modulus.congruenceSubgroup m)
     (RayClass.isClosed_congruenceSubgroup m)
 
+open scoped Classical in
 /-- The canonical equivalence from `K` to the fixed-field base of its
 selected ray class field. -/
 noncomputable abbrev rayClassFieldBaseEquiv
@@ -108,6 +114,7 @@ noncomputable abbrev rayClassFieldBaseEquiv
     (K := K) (RayClass.Modulus.congruenceSubgroup m)
     (RayClass.isClosed_congruenceSubgroup m)
 
+open scoped Classical in
 /-- The ray congruence subgroup transported to the fixed-field base of
 the selected realization. -/
 def rayClassFieldTransportedCongruenceSubgroup
@@ -118,6 +125,7 @@ def rayClassFieldTransportedCongruenceSubgroup
     (ideleClassCongr
       (rayClassFieldBaseEquiv (K := K) m)).toMonoidHom
 
+open scoped Classical in
 /-- The determinant-norm range over the fixed-field base of the
 selected ray class field is the transported ray congruence subgroup. -/
 theorem rayClassField_ideleClassNorm_range
@@ -133,6 +141,7 @@ theorem rayClassField_ideleClassNorm_range
       (K := K) (RayClass.Modulus.congruenceSubgroup m)
       (RayClass.isClosed_congruenceSubgroup m))
 
+open scoped Classical in
 /-- The fixed-field base of the selected ray class field, regarded as
 an algebra over the original number field. -/
 noncomputable abbrev rayClassFieldBaseAlgebraOverOriginal
@@ -142,6 +151,7 @@ noncomputable abbrev rayClassFieldBaseAlgebraOverOriginal
     (K := K) (RayClass.Modulus.congruenceSubgroup m)
     (RayClass.isClosed_congruenceSubgroup m)
 
+open scoped Classical in
 /-- The canonical fixed-field identification as an equivalence over
 the original number field. -/
 noncomputable abbrev rayClassFieldBaseEquivOverOriginal
@@ -151,6 +161,7 @@ noncomputable abbrev rayClassFieldBaseEquivOverOriginal
     (K := K) (RayClass.Modulus.congruenceSubgroup m)
     (RayClass.isClosed_congruenceSubgroup m)
 
+open scoped Classical in
 /-- The selected ray class field as an algebra over the original
 number field. -/
 noncomputable abbrev rayClassFieldAlgebraOverOriginal
@@ -160,6 +171,7 @@ noncomputable abbrev rayClassFieldAlgebraOverOriginal
     (K := K) (RayClass.Modulus.congruenceSubgroup m)
     (RayClass.isClosed_congruenceSubgroup m)
 
+open scoped Classical in
 /-- The scalar map into the ray class field is the canonical base
 equivalence followed by fixed-field inclusion. -/
 @[simp]
@@ -176,6 +188,7 @@ theorem rayClassField_algebraMap_original
       (K := K) (RayClass.Modulus.congruenceSubgroup m)
       (RayClass.isClosed_congruenceSubgroup m) x)
 
+open scoped Classical in
 /-- A chosen embedding of the finite ray-class-field realization into the
 fixed separable closure of its original base field. -/
 noncomputable def rayClassFieldEmbedding
@@ -184,6 +197,7 @@ noncomputable def rayClassFieldEmbedding
     rayClassField K m →ₐ[K] SeparableClosure K :=
   IsSepClosed.lift
 
+open scoped Classical in
 /-- The intrinsic ray class field as an intermediate field of the fixed
 separable closure of `K`. -/
 noncomputable def rayClassFieldSubfield
@@ -192,6 +206,7 @@ noncomputable def rayClassFieldSubfield
     IntermediateField K (SeparableClosure K) :=
   (rayClassFieldEmbedding K m).fieldRange
 
+open scoped Classical in
 /-- Every embedding of the chosen finite ray-class-field realization into
 the fixed separable closure has the intrinsic ray-class-field range. -/
 theorem rayClassFieldSubfield_eq_fieldRange
@@ -201,6 +216,7 @@ theorem rayClassFieldSubfield_eq_fieldRange
   AlgHom.fieldRange_eq_of_normal
     (rayClassFieldEmbedding K m) f
 
+open scoped Classical in
 /-- Over the original number field, the determinant-norm range of the
 selected ray class field is exactly `C_K^m`. -/
 theorem rayClassField_ideleClassNorm_range_over_original
@@ -212,6 +228,7 @@ theorem rayClassField_ideleClassNorm_range_over_original
       (K := K) (RayClass.Modulus.congruenceSubgroup m)
       (RayClass.isClosed_congruenceSubgroup m))
 
+open scoped Classical in
 /-- A finite abelian extension is isomorphic over `K` to the selected
 ray class field of modulus `m` exactly when its genuine idèle-class
 norm range is `C_K^m`.  This is the actual-field uniqueness statement
@@ -229,6 +246,7 @@ theorem
     nonempty_algEquiv_iff_ideleClassNorm_range_eq,
     rayClassField_ideleClassNorm_range_over_original]
 
+open scoped Classical in
 /-- Increasing the modulus decreases the actual determinant-norm
 range of the selected ray class field.  This is the norm-subgroup
 form of the contravariant inclusion of ray class fields. -/
@@ -249,6 +267,7 @@ theorem rayClassField_ideleClassNorm_range_antitone
       (rayClassField_ideleClassNorm_range_over_original
         (K := K) m).symm
 
+open scoped Classical in
 /-- Divisibility of moduli produces an embedding between the selected
 ray-class-field types over the original number field.  Literal containment
 inside the fixed separable closure is instead stated by
@@ -266,6 +285,7 @@ theorem rayClassField_nonempty_algHom_of_le
     (rayClassField_ideleClassNorm_range_antitone
       (K := K) hmn)
 
+open scoped Classical in
 /-- Divisibility of moduli gives literal inclusion of the corresponding
 intrinsic ray class fields inside the fixed separable closure. -/
 theorem rayClassFieldSubfield_mono
@@ -286,6 +306,7 @@ theorem rayClassFieldSubfield_mono
       exact AlgHom.mem_fieldRange.mpr ⟨f y, rfl⟩
     _ = rayClassFieldSubfield K n := rfl
 
+open scoped Classical in
 /-- A finite abelian extension embeds in the selected ray class field
 of modulus `m` exactly when `m` is a defining modulus for its genuine
 idèle-class norm subgroup. -/
@@ -306,6 +327,7 @@ theorem
     nonempty_algHom_iff_ideleClassNorm_range_le,
     rayClassField_ideleClassNorm_range_over_original]
 
+open scoped Classical in
 /-- Actual containment in a narrow ray class field is equivalent to
 divisibility by the exact narrow finite conductor. -/
 theorem
@@ -333,6 +355,7 @@ theorem
           (K := K) (L := L))
         ⟨hn, Finset.subset_univ _⟩
 
+open scoped Classical in
 /-- The ray class field of the exact narrow finite conductor genuinely
 contains the given finite abelian extension. -/
 theorem
@@ -354,6 +377,7 @@ theorem
     (ideleClassNorm_narrowFiniteConductor_isDefiningModulus
       (K := K) (L := L))
 
+open scoped Classical in
 /-- Every finite abelian extension is genuinely contained in a ray
 class field over the original base. -/
 theorem finiteAbelianExtension_exists_rayClassFieldEmbedding
@@ -368,6 +392,7 @@ theorem finiteAbelianExtension_exists_rayClassFieldEmbedding
     finiteAbelianExtension_nonempty_algHom_to_conductorRayClassField
       (K := K) L⟩
 
+open scoped Classical in
 /-- The exact narrow finite conductor is the greatest common divisor
 of the finite parts of the moduli of the actual ray class fields
 containing a finite abelian extension. -/
@@ -402,6 +427,7 @@ theorem
           ((nonempty_algHom_to_rayClassField_iff_isDefiningModulus
             (K := K) L m).2 hm))
 
+open scoped Classical in
 /-- Global reciprocity for the selected ray class field as a
 homeomorphic multiplicative equivalence
 
@@ -424,6 +450,7 @@ noncomputable def
       continuous_toFun := continuous_of_discreteTopology
       continuous_invFun := continuous_of_discreteTopology }
 
+open scoped Classical in
 /-- The underlying map of topological ray-class reciprocity is the
 general closed-finite-index reciprocity equivalence. -/
 @[simp]
@@ -438,10 +465,10 @@ theorem
         (RayClass.isClosed_congruenceSubgroup m) σ := by
   rfl
 
+open scoped Classical in
 /-- On an idèle-class representative, topological ray-class
 reciprocity sends its genuine global norm-residue symbol to its ray
 class modulo `C_K^m`. -/
-@[simp]
 theorem
     rayClassFieldGaloisContinuousMulEquivRayClassGroup_globalNormResidue
     (m : RayClass.Modulus K)
@@ -458,6 +485,7 @@ theorem
       (K := K) (RayClass.Modulus.congruenceSubgroup m)
       (RayClass.isClosed_congruenceSubgroup m) c)
 
+open scoped Classical in
 /-- The degree of the selected ray class field is the order of the ray
 class group. -/
 theorem rayClassField_finrank_eq_rayClassGroup_card
@@ -482,6 +510,7 @@ theorem rayClassField_finrank_eq_rayClassGroup_card
         Nat.card (RayClass.RayClassGroup m) :=
       rfl
 
+open scoped Classical in
 /-- Global reciprocity identifies the genuine Galois group of the
 selected ray class field with the ray class group `C_K / C_K^m`. -/
 noncomputable abbrev rayClassFieldGaloisEquivRayClassGroup
@@ -492,6 +521,7 @@ noncomputable abbrev rayClassFieldGaloisEquivRayClassGroup
     (K := K) (RayClass.Modulus.congruenceSubgroup m)
     (RayClass.isClosed_congruenceSubgroup m)
 
+open scoped Classical in
 /-- The subfield of the ray class field fixed by a prescribed ray-class
 subgroup, transported through the genuine reciprocity equivalence. -/
 noncomputable def rayClassSubgroupFixedField
@@ -501,6 +531,7 @@ noncomputable def rayClassSubgroupFixedField
   IntermediateField.fixedField
     (H.map (rayClassFieldGaloisEquivRayClassGroup (K := K) m).symm.toMonoidHom)
 
+open scoped Classical in
 /-- The fixed field, embedded in the chosen separable closure of the original
 number field. -/
 noncomputable def rayClassSubgroupSubfield
@@ -510,6 +541,7 @@ noncomputable def rayClassSubgroupSubfield
   (rayClassSubgroupFixedField (K := K) m H).map
     (rayClassFieldEmbedding K m)
 
+open scoped Classical in
 /-- The fixed field is a finite abelian extension of the original field. -/
 noncomputable def rayClassSubgroupSubextension
     (m : RayClass.Modulus K)
@@ -525,6 +557,7 @@ noncomputable def rayClassSubgroupSubextension
       (IntermediateField.equivMap F j).symm.toAlgHom
   exact ⟨E, hfin, hab⟩
 
+open scoped Classical in
 /-- The ray class group acts on the subfield fixed by `H` by restricting
 the reciprocity action on the full ray class field. -/
 noncomputable def rayClassSubgroupFixedFieldArtin
@@ -537,6 +570,7 @@ noncomputable def rayClassSubgroupFixedFieldArtin
       (rayClassSubgroupFixedField (K := K) m H)).comp
     (rayClassFieldGaloisEquivRayClassGroup (K := K) m).symm.toMonoidHom
 
+open scoped Classical in
 /-- The restricted reciprocity action reaches every automorphism of
 the fixed field. -/
 theorem rayClassSubgroupFixedFieldArtin_surjective
@@ -549,6 +583,7 @@ theorem rayClassSubgroupFixedFieldArtin_surjective
   refine ⟨rayClassFieldGaloisEquivRayClassGroup (K := K) m σ, ?_⟩
   simpa [rayClassSubgroupFixedFieldArtin] using hσ
 
+open scoped Classical in
 /-- The exact kernel of the fixed-field reciprocity action is `H`. -/
 theorem rayClassSubgroupFixedFieldArtin_ker
     (m : RayClass.Modulus K)
@@ -568,6 +603,7 @@ theorem rayClassSubgroupFixedFieldArtin_ker
   · intro hx
     exact ⟨x, hx, rfl⟩
 
+open scoped Classical in
 private theorem rayClassGroup_mul_comm
     (m : RayClass.Modulus K)
     (x y : RayClass.RayClassGroup m) : x * y = y * x := by
@@ -579,6 +615,7 @@ private theorem rayClassGroup_mul_comm
     congrArg (QuotientGroup.mk' (RayClass.Modulus.congruenceSubgroup m))
       (mul_comm a b)
 
+open scoped Classical in
 /-- Inversion of ray classes is a homomorphism because idèle classes
 commute. This form does not require a commutative-group instance on the
 quotient presentation. -/
@@ -590,6 +627,7 @@ private def rayClassGroupInvHom (m : RayClass.Modulus K) :
     rw [mul_inv_rev]
     exact rayClassGroup_mul_comm (K := K) m y⁻¹ x⁻¹
 
+open scoped Classical in
 /-- Arithmetic reciprocity on the fixed field, transported to the chosen
 subextension of the separable closure of `K`. The ambient ray-class
 equivalence is geometrically normalized, so its input is inverted. -/
@@ -606,6 +644,7 @@ noncomputable def rayClassSubgroupArtin
     ((rayClassSubgroupFixedFieldArtin (K := K) m H).comp
       (rayClassGroupInvHom (K := K) m))
 
+open scoped Classical in
 /-- The transported reciprocity map is surjective. -/
 theorem rayClassSubgroupArtin_surjective
     (m : RayClass.Modulus K)
@@ -622,6 +661,7 @@ theorem rayClassSubgroupArtin_surjective
     (rayClassSubgroupFixedFieldArtin_surjective (K := K) m H)).comp
       (fun x => ⟨x⁻¹, inv_inv x⟩)
 
+open scoped Classical in
 /-- The transported reciprocity map has exactly the prescribed kernel. -/
 theorem rayClassSubgroupArtin_ker
     (m : RayClass.Modulus K)
@@ -643,6 +683,7 @@ theorem rayClassSubgroupArtin_ker
   · intro h
     simp only [hx.mpr (H.inv_mem_iff.mpr h), map_one]
 
+open scoped Classical in
 /-- The fixed subextension has a norm subgroup containing the ray
 congruence subgroup. This is the defining-modulus input for its
 unramifiedness away from the modulus. -/
@@ -670,9 +711,9 @@ theorem rayClassSubgroupSubextension_norm_range
     _ = (_root_.ideleClassNorm K
         (rayClassSubgroupSubextension (K := K) m H)).range := rfl
 
+open scoped Classical in
 /-- Under ray-class reciprocity, the actual global norm-residue symbol
 is the ray class of its idèle-class representative. -/
-@[simp]
 theorem rayClassFieldGaloisEquivRayClassGroup_globalNormResidue
     (m : RayClass.Modulus K)
     (c : IdeleClassGroup K) :

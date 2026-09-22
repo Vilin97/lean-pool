@@ -260,7 +260,7 @@ structure RationalFiniteNormTransferCanonicalFiniteNormRepresentativeMembershipD
     [hHLfinite : Finite
       (H.toSubgroup ⧸ extensionSubgroup H L hLH)]
     (c : rationalFiniteNormTransferBaseIdeleClass
-      (hKfinite := hKfinite) K) : Type where
+      (hKfinite := hKfinite) K) : Prop where
   /-- The packaged finite-norm-representative membership proof. -/
   membership :
     rationalFiniteNormTransferCanonicalFiniteNormRepresentativeAbsoluteNormMembership
@@ -325,7 +325,7 @@ structure RationalFiniteNormTransferCanonicalFiniteNormRepresentativeQuotientZer
     [hHLfinite : Finite
       (H.toSubgroup ⧸ extensionSubgroup H L hLH)]
     (c : rationalFiniteNormTransferBaseIdeleClass
-      (hKfinite := hKfinite) K) : Type where
+      (hKfinite := hKfinite) K) : Prop where
   /-- The packaged quotient-zero equality. -/
   equality :
     rationalFiniteNormTransferCanonicalFiniteNormRepresentativeQuotientZero
@@ -395,7 +395,7 @@ structure RationalFiniteNormTransferCanonicalFiniteNormRepresentativeTargetZeroD
     [hHLfinite : Finite
       (H.toSubgroup ⧸ extensionSubgroup H L hLH)]
     (c : rationalFiniteNormTransferBaseIdeleClass
-      (hKfinite := hKfinite) K) : Type where
+      (hKfinite := hKfinite) K) : Prop where
   /-- The packaged target-zero equality. -/
   equality :
     rationalFiniteNormTransferCanonicalFiniteNormRepresentativeTargetZero
@@ -422,7 +422,7 @@ structure RationalFiniteNormTransferCanonicalAbsoluteNormMembershipData
     [hHLfinite : Finite
       (H.toSubgroup ⧸ extensionSubgroup H L hLH)]
     (c : rationalFiniteNormTransferBaseIdeleClass
-      (hKfinite := hKfinite) K) : Type where
+      (hKfinite := hKfinite) K) : Prop where
   /-- The packaged absolute norm-membership proof. -/
   membership :
     rationalFiniteNormTransferCanonicalOrdinaryExtensionAbsoluteNormMembership
@@ -449,7 +449,7 @@ structure RationalFiniteNormTransferCanonicalNormMembershipData
     [hHLfinite : Finite
       (H.toSubgroup ⧸ extensionSubgroup H L hLH)]
     (c : rationalFiniteNormTransferBaseIdeleClass
-      (hKfinite := hKfinite) K) : Type where
+      (hKfinite := hKfinite) K) : Prop where
   /-- The packaged relative norm-membership proof. -/
   membership :
     rationalFiniteNormTransferCanonicalOrdinaryExtensionNormMembership

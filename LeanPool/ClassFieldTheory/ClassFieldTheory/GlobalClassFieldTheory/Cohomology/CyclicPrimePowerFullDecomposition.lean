@@ -23,8 +23,7 @@ finite places outside a finite set split completely, then the idele
 class norm is surjective.
 -/
 
-open scoped NumberField Classical
-open NumberField IsDedekindDomain
+open scoped NumberField open NumberField IsDedekindDomain
 
 noncomputable section
 
@@ -44,6 +43,7 @@ variable
     [IsCyclic (L ≃ₐ[K] L)]
 
 omit [NumberField L] in
+open scoped Classical in
 /-- A proper decomposition group in the original cyclic
 prime-power extension becomes trivial in the chosen degree-`p`
 subextension. -/
@@ -91,6 +91,7 @@ theorem
   exact Subgroup.map_bot _
 
 omit [NumberField L] in
+open scoped Classical in
 /-- Every place with proper decomposition group in `L / K` splits
 completely, in the standard chosen-extension sense, in the actual
 degree-`p` fixed subextension. -/
@@ -152,6 +153,7 @@ theorem
       (chosenFinitePlaceExtension (L := M) v)
       hwMbot
 
+open scoped Classical in
 /-- If every finite place outside a finite set splits completely, then
 idelic approximation shows that every idele class is a norm. -/
 theorem ideleClassNorm_range_eq_top_of_splitsCompletely_outside
@@ -229,6 +231,7 @@ theorem ideleClassNorm_range_eq_top_of_splitsCompletely_outside
       (QuotientGroup.mk'
         (IdeleGroup.principalSubgroup K) a)
 
+open scoped Classical in
 /-- The preceding surjectivity says that the idele-class norm index is
 one. -/
 theorem ideleClassNorm_index_eq_one_of_splitsCompletely_outside
@@ -246,6 +249,7 @@ theorem ideleClassNorm_index_eq_one_of_splitsCompletely_outside
       (K := K) (E := E) S hsplit,
     Subgroup.index_top]
 
+open scoped Classical in
 /-- Assuming the norm-index lower bound for the chosen prime-degree
 subextension, the set of finite places whose decomposition group is the
 whole Galois group is infinite. -/
@@ -298,6 +302,7 @@ theorem
     simpa [hindex] using hLower
   exact (Nat.not_lt_of_ge hp_le_one) hp.one_lt
 
+open scoped Classical in
 /-- In a cyclic extension of prime-power degree, infinitely many finite
 places have full decomposition group.  The norm-index input in the
 preceding theorem is supplied by the unconditional lower bound for the
@@ -342,6 +347,7 @@ theorem cyclic_prime_power_infinite_fullDecompositionPlaces
       hp hexponent hcard
   simpa [M, hDegree] using hLowerM
 
+open scoped Classical in
 /-- Finset-avoidance form of the conditional full-decomposition
 infinitude result, convenient for recursively choosing new places. -/
 theorem
@@ -373,6 +379,7 @@ theorem
   by_contra hvS
   exact (hexists v hvS) hv
 
+open scoped Classical in
 /-- Finset-avoidance form of the unconditional full-decomposition
 infinitude theorem. -/
 theorem exists_fullDecompositionPlace_outside_finset

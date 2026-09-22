@@ -274,7 +274,6 @@ noncomputable def leftCosetEquivOfMulEquiv
     rw [e.apply_symm_apply]
 
 /-- A multiplicative equivalence transports a left-coset representative as expected. -/
-@[simp]
 theorem leftCosetEquivOfMulEquiv_mk
     {Q : Type*} {R : Type*} [Group Q] [Group R]
     (e : Q ≃* R) (S : Subgroup Q) (x : Q) :

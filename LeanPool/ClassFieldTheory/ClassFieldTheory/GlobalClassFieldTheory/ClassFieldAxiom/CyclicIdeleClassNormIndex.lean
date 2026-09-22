@@ -77,7 +77,7 @@ idele class group. -/
 theorem ideleClassHerbrandH0_pow_finrank_eq_one
     (K L : Type)
     [Field K] [NumberField K]
-    [Field L] [NumberField L] [Algebra K L]
+    [Field L] [Algebra K L]
     [FiniteDimensional K L] [IsGalois K L]
     (q :
       letI :=
@@ -188,7 +188,7 @@ model, so no unproved identification `𝔸_K ⊗_K M ≃ 𝔸_M` is assumed. -/
 theorem pushoutNormQuotientMap_injective_of_coprime
     (K M L N : Type)
     [Field K] [NumberField K]
-    [Field M] [NumberField M]
+    [Field M]
     [Field L] [NumberField L]
     [Field N] [NumberField N]
     [Algebra K M] [Algebra K L]
@@ -224,15 +224,15 @@ noncomputable def actualPushoutNormQuotientMap
     (K M L N : Type)
     [Field K] [NumberField K]
     [Field M] [NumberField M]
-    [Field L] [NumberField L]
-    [Field N] [NumberField N]
+    [Field L]
+    [Field N]
     [Algebra K M] [Algebra K L]
     [Algebra M N] [Algebra L N] [Algebra K N]
     [IsScalarTower K M N] [IsScalarTower K L N]
     [Algebra.IsPushout K M L N]
     [FiniteDimensional K M] [FiniteDimensional K L]
-    [FiniteDimensional M N] [FiniteDimensional L N]
-    [IsGalois K M] :
+    [FiniteDimensional M N]
+    :
     RelativeIdeleGroup.Cohomology.IdeleClassNormQuotient K L →
       RelativeIdeleGroup.Cohomology.IdeleClassNormQuotient M N :=
   fun q =>
@@ -241,7 +241,6 @@ noncomputable def actualPushoutNormQuotientMap
 
 /-- The actual pushout norm-quotient map sends a quotient representative
 to the corresponding base-changed representative. -/
-@[simp]
 theorem actualPushoutNormQuotientMap_mk
     (K M L N : Type)
     [Field K] [NumberField K]
@@ -416,7 +415,7 @@ theorem ideleClassNormQuotient_card_le_actual_tower_mul
     [Algebra K M] [Algebra M L] [Algebra K L]
     [IsScalarTower K M L]
     [FiniteDimensional K M] [FiniteDimensional M L]
-    [IsGalois K M]
+
     [Finite (RelativeIdeleGroup.Cohomology.IdeleClassNormQuotient M L)]
     [Finite (RelativeIdeleGroup.Cohomology.IdeleClassNormQuotient K M)] :
     Nat.card (RelativeIdeleGroup.Cohomology.IdeleClassNormQuotient K L) ≤
@@ -639,7 +638,7 @@ theorem relativeIdeleClassNormQuotient_finite_of_actual_tower
     [Algebra K M] [Algebra M L] [Algebra K L]
     [IsScalarTower K M L]
     [FiniteDimensional K M] [FiniteDimensional M L]
-    [IsGalois K M]
+
     [Finite (RelativeIdeleGroup.Cohomology.IdeleClassNormQuotient M L)]
     [Finite (RelativeIdeleGroup.Cohomology.IdeleClassNormQuotient K M)] :
     Finite (RelativeIdeleGroup.Cohomology.IdeleClassNormQuotient K L) := by
@@ -1126,8 +1125,8 @@ principal relative ideles. -/
 theorem principalIdelesHerbrandHMinusOne_subsingleton
     (K L : Type)
     [Field K] [NumberField K]
-    [Field L] [NumberField L] [Algebra K L]
-    [FiniteDimensional K L] [IsGalois K L]
+    [Field L] [Algebra K L]
+    [FiniteDimensional K L]
     (σ : L ≃ₐ[K] L)
     (hσ : ∀ τ : L ≃ₐ[K] L, τ ∈ Subgroup.zpowers σ) :
     letI :=

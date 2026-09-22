@@ -95,7 +95,7 @@ omit [Group G] [Fintype G] [CommGroup A] [CommGroup B] [CommGroup C]
 the cardinality of the source of a group homomorphism is the product of the
 cardinalities of its kernel and range. -/
 theorem monoidHom_card_eq_card_ker_mul_card_range
-    {X : Type uA} {Y : Type uB} [Group X] [Group Y] [Finite X] (f : X →* Y) :
+    {X : Type uA} {Y : Type uB} [Group X] [Group Y] (f : X →* Y) :
     Nat.card X = Nat.card (MonoidHom.ker f) * Nat.card (MonoidHom.range f) := by
   rw [← (MonoidHom.ker f).card_mul_index,
     Subgroup.index_ker]
@@ -120,7 +120,7 @@ omit [Group G] [Fintype G] [CommGroup A] [CommGroup B] [CommGroup C]
 /-- If `H ≤ K`, viewing `H` as a subgroup of `K` does not change its
 cardinality. -/
 theorem card_subgroupOf_eq_card
-    {X : Type uA} [Group X] [Finite X] {H K : Subgroup X} (hHK : H ≤ K) :
+    {X : Type uA} [Group X] {H K : Subgroup X} (hHK : H ≤ K) :
     Nat.card (H.subgroupOf K) = Nat.card H :=
   Nat.card_congr (Subgroup.subgroupOfEquivOfLe hHK).toEquiv
 

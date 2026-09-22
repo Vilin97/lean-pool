@@ -24,7 +24,7 @@ namespace Valuations
 
 /-- the directed adic Cauchy estimate for a coefficient
 sequence: later differences from stage `M` lie in `I^(M+1)`. -/
-def henselFactorization_adicCoeffCauchy
+def henselFactorizationAdicCoeffCauchy
     {R : Type*} [CommRing R] (I : Ideal R) (x : ℕ → R) : Prop :=
   ∀ {M N : ℕ}, M ≤ N → x N - x M ∈ I ^ (M + 1)
 
@@ -36,15 +36,15 @@ theorem henselFactorization_coeff_adicCoeffCauchy_of_sub_coeff_mem
       ∀ {M N : ℕ}, M ≤ N → ∀ i : ℕ,
         (Pseq N - Pseq M).coeff i ∈ I ^ (M + 1))
     (i : ℕ) :
-    henselFactorization_adicCoeffCauchy I (fun N : ℕ => (Pseq N).coeff i) := by
+    henselFactorizationAdicCoeffCauchy I (fun N : ℕ => (Pseq N).coeff i) := by
   intro M N hMN
-  simpa [henselFactorization_adicCoeffCauchy, Polynomial.coeff_sub] using hsub hMN i
+  simpa [henselFactorizationAdicCoeffCauchy, Polynomial.coeff_sub] using hsub hMN i
 
 /-- the coefficientwise `I^(M+1)` estimate gives mathlib's
 `I`-adic Cauchy condition after weakening `I^(M+1) ≤ I^M`. -/
 theorem henselFactorization_adicCoeffCauchy_isAdicCauchy
     {R : Type*} [CommRing R] (I : Ideal R) {x : ℕ → R}
-    (hx : henselFactorization_adicCoeffCauchy I x) :
+    (hx : henselFactorizationAdicCoeffCauchy I x) :
     AdicCompletion.IsAdicCauchy I R x := by
   intro M N hMN
   apply SModEq.sub_mem.mpr
@@ -59,7 +59,7 @@ coefficient sequence satisfying the directed estimate. -/
 theorem henselFactorization_exists_adicCoeffLimit
     {R : Type*} [CommRing R] (I : Ideal R) [IsPrecomplete I R]
     {x : ℕ → R}
-    (hx : henselFactorization_adicCoeffCauchy I x) :
+    (hx : henselFactorizationAdicCoeffCauchy I x) :
     ∃ L : R, ∀ n : ℕ, x n - L ∈ I ^ n := by
   obtain ⟨L, hL⟩ :=
     IsPrecomplete.prec (show IsPrecomplete I R from inferInstance)
@@ -70,7 +70,7 @@ theorem henselFactorization_exists_adicCoeffLimit
 
 /-- assemble finitely many coefficient limits into the
 polynomial supported in degrees at most `N`. -/
-def henselFactorization_polyOfLimitCoeffs
+def henselFactorizationPolyOfLimitCoeffs
     {R : Type*} [Semiring R] (N : ℕ) (c : ℕ → R) : R[X] :=
   Finset.sum (Finset.range (N + 1)) fun i => Polynomial.monomial i (c i)
 
@@ -78,9 +78,9 @@ def henselFactorization_polyOfLimitCoeffs
 coefficient limits, inside the cutoff. -/
 theorem henselFactorization_polyOfLimitCoeffs_coeff_of_le
     {R : Type*} [Semiring R] {N n : ℕ} (c : ℕ → R) (hn : n ≤ N) :
-    (henselFactorization_polyOfLimitCoeffs N c).coeff n = c n := by
+    (henselFactorizationPolyOfLimitCoeffs N c).coeff n = c n := by
   classical
-  unfold henselFactorization_polyOfLimitCoeffs
+  unfold henselFactorizationPolyOfLimitCoeffs
   rw [Polynomial.finsetSum_coeff]
   rw [Finset.sum_eq_single n]
   · simp
@@ -93,9 +93,9 @@ theorem henselFactorization_polyOfLimitCoeffs_coeff_of_le
 coefficient limits vanish above the cutoff. -/
 theorem henselFactorization_polyOfLimitCoeffs_coeff_eq_zero_of_lt
     {R : Type*} [Semiring R] {N n : ℕ} (c : ℕ → R) (hn : N < n) :
-    (henselFactorization_polyOfLimitCoeffs N c).coeff n = 0 := by
+    (henselFactorizationPolyOfLimitCoeffs N c).coeff n = 0 := by
   classical
-  unfold henselFactorization_polyOfLimitCoeffs
+  unfold henselFactorizationPolyOfLimitCoeffs
   rw [Polynomial.finsetSum_coeff]
   refine Finset.sum_eq_zero ?_
   intro b hb
@@ -109,7 +109,7 @@ theorem henselFactorization_polyOfLimitCoeffs_coeff_eq_zero_of_lt
 limits has the stated degree bound. -/
 theorem henselFactorization_polyOfLimitCoeffs_natDegree_le
     {R : Type*} [Semiring R] (N : ℕ) (c : ℕ → R) :
-    (henselFactorization_polyOfLimitCoeffs N c).natDegree ≤ N := by
+    (henselFactorizationPolyOfLimitCoeffs N c).natDegree ≤ N := by
   rw [Polynomial.natDegree_le_iff_coeff_eq_zero]
   intro n hn
   exact henselFactorization_polyOfLimitCoeffs_coeff_eq_zero_of_lt (c := c) hn
@@ -121,7 +121,7 @@ theorem henselFactorization_exists_limitPolynomial_of_bounded_coeffLimits
     {N : ℕ} {Pseq : ℕ → R[X]}
     (hdeg : ∀ n : ℕ, (Pseq n).natDegree ≤ N)
     (hcauchy :
-      ∀ i : ℕ, henselFactorization_adicCoeffCauchy I
+      ∀ i : ℕ, henselFactorizationAdicCoeffCauchy I
         (fun n : ℕ => (Pseq n).coeff i)) :
     ∃ P : R[X], P.natDegree ≤ N ∧
       ∀ n i : ℕ, (Pseq n - P).coeff i ∈ I ^ n := by
@@ -130,7 +130,7 @@ theorem henselFactorization_exists_limitPolynomial_of_bounded_coeffLimits
     fun i =>
       Classical.choose
         (henselFactorization_exists_adicCoeffLimit (I := I) (hcauchy i))
-  let P : R[X] := henselFactorization_polyOfLimitCoeffs N L
+  let P : R[X] := henselFactorizationPolyOfLimitCoeffs N L
   refine ⟨P, henselFactorization_polyOfLimitCoeffs_natDegree_le N L, ?_⟩
   intro n i
   by_cases hi : i ≤ N

@@ -9,7 +9,8 @@ import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.L
 /-!
 # Embedded extension quotients
 
-This module identifies extension subgroups transported through an embedded finite Galois extension and constructs the resulting ambient quotient equivalence with the actual Galois group.
+This module identifies extension subgroups transported through an embedded finite Galois
+  extension and constructs the resulting ambient quotient equivalence with the actual Galois group.
 -/
 
 noncomputable section

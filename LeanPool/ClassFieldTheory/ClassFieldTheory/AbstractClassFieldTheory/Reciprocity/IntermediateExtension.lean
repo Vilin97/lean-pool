@@ -17,7 +17,8 @@ open CyclicCohomology
 /-!
 # Intermediate extensions from actual quotient subgroups
 
-For the three reductions in the proof of the abstract reciprocity theorem, this file supplies the finite Galois correspondence in the
+For the three reductions in the proof of the abstract reciprocity theorem, this file supplies
+  the finite Galois correspondence in the
 direction used by the construction.  If `L / K` is a packaged finite Galois extension
 and `S ≤ G(L/K)`, its inverse image in `G_K` is realized as an actual closed
 intermediate field `M`.
@@ -438,7 +439,6 @@ theorem lowerQuotientEquiv_mk (L : FiniteGaloisSubextension K)
 
 /-- The same representative formula after forgetting the subtype `S`; this
 is the form used when composing restriction maps in the reduction diagram. -/
-@[simp]
 theorem lowerQuotientEquiv_mk_coe (L : FiniteGaloisSubextension K)
     (S : Subgroup L.extensionQuotient)
     (m : (L.intermediateField S).toSubgroup) :
@@ -481,7 +481,7 @@ def upperQuotient (L : FiniteGaloisSubextension K)
   L.extensionQuotient ⧸ S
 
 /-- The upper quotient over an intermediate field carries its canonical group structure. -/
-instance upperQuotient_groupInstance (L : FiniteGaloisSubextension K)
+instance upperQuotientGroupInstance (L : FiniteGaloisSubextension K)
     (S : Subgroup L.extensionQuotient) [S.Normal] :
     Group (L.upperQuotient S) := by
   change Group (L.extensionQuotient ⧸ S)

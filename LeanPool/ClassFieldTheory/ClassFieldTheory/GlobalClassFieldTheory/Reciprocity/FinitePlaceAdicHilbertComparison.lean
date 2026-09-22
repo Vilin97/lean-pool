@@ -39,8 +39,8 @@ private theorem globalFinitePlaceHilbertSymbol_map_eq_local
           F n hnF v)
         (GlobalClassFieldTheory.Reciprocity.finitePlaceHilbert_primitiveRoots_nonempty
           F n hmu v)
-        (GlobalClassFieldTheory.Reciprocity.finitePlaceHilbert_completionUnit F v a)
-        (GlobalClassFieldTheory.Reciprocity.finitePlaceHilbert_completionUnit F v b) := by
+        (GlobalClassFieldTheory.Reciprocity.finitePlaceHilbertCompletionUnit F v a)
+        (GlobalClassFieldTheory.Reciprocity.finitePlaceHilbertCompletionUnit F v b) := by
   let C := (HeightOneSpectrum.adicAbv F v).Completion
   let : ValuativeRel C :=
     GlobalClassFieldTheory.Reciprocity.finitePlaceLocalArtinCompletionValuativeRel v
@@ -132,15 +132,15 @@ theorem finitePlaceAdicHilbertPairingFamily_finiteFactor
   let eCD : rootsOfUnity (n : ℕ) C ≃* rootsOfUnity (n : ℕ) D :=
     rootsOfUnityEquivOfRingEquiv e n hmuC
   let aC : Cˣ :=
-    GlobalClassFieldTheory.Reciprocity.finitePlaceHilbert_completionUnit F v a
+    GlobalClassFieldTheory.Reciprocity.finitePlaceHilbertCompletionUnit F v a
   let bC : Cˣ :=
-    GlobalClassFieldTheory.Reciprocity.finitePlaceHilbert_completionUnit F v b
+    GlobalClassFieldTheory.Reciprocity.finitePlaceHilbertCompletionUnit F v b
   let aD : Dˣ := Units.map (algebraMap F D).toMonoidHom a
   let bD : Dˣ := Units.map (algebraMap F D).toMonoidHom b
   have hunit (x : Fˣ) :
       (Units.mapEquiv e.toMulEquiv).symm
         (Units.map (algebraMap F D).toMonoidHom x) =
-      GlobalClassFieldTheory.Reciprocity.finitePlaceHilbert_completionUnit F v x := by
+      GlobalClassFieldTheory.Reciprocity.finitePlaceHilbertCompletionUnit F v x := by
     apply Units.ext
     apply e.injective
     change e (e.symm (algebraMap F D (x : F))) =

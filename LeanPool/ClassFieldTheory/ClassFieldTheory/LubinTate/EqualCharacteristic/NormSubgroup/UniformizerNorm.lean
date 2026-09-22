@@ -31,7 +31,7 @@ universe u
 
 private theorem inverse_mem_normSubgroup_of_normUnits_eq
     {B E : Type u} [Field B] [Field E] [Algebra B E]
-    [FiniteDimensional B E] (y : Eˣ) (pi : Bˣ)
+    (y : Eˣ) (pi : Bˣ)
     (hyNorm : LocalFieldTheory.normUnits B E y = pi) :
     pi⁻¹ ∈ LocalFieldTheory.localNormSubgroup B E := by
   have hyMem :

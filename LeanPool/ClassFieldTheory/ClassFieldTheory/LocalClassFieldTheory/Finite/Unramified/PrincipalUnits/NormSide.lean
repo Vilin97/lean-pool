@@ -6,7 +6,8 @@ Authors: n-yamaguchi-0729
 
 import Mathlib.FieldTheory.Galois.Basic
 import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.ResidueGalois
-/-! Provides the public declarations in the `LocalClassFieldTheory.Finite.Unramified.PrincipalUnits.NormSide` Lean module. -/
+/-! Provides the public declarations in the
+  `LocalClassFieldTheory.Finite.Unramified.PrincipalUnits.NormSide` Lean module. -/
 
 noncomputable section
 
@@ -35,8 +36,8 @@ on `𝒪[L]` is produced from integral closure, not from a valuation-invariance
 certificate. -/
 theorem integerUnitsMap_normIntegerUnits_eq_galoisGroup_prod_of_isIntegralClosure
     (K L : Type u)
-    [Field K] [ValuativeRel K] [TopologicalSpace K] [IsNonarchimedeanLocalField K]
-    [Field L] [ValuativeRel L] [TopologicalSpace L] [IsNonarchimedeanLocalField L]
+    [Field K] [ValuativeRel K] [TopologicalSpace K]
+    [Field L] [ValuativeRel L] [TopologicalSpace L]
     [Algebra K L] [FiniteDimensional K L] [IsGalois K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L] [LocalFieldTheory.ValuativeExtension K L]
@@ -62,8 +63,8 @@ theorem integerUnitsMap_normIntegerUnits_eq_galoisGroup_prod_of_isIntegralClosur
 /-- The product of actual integral-closure Galois conjugates preserves every
 principal-unit level. -/
 theorem galoisGroup_prod_mem_principalUnits_of_isIntegralClosure (K L : Type u)
-    [Field K] [ValuativeRel K] [TopologicalSpace K] [IsNonarchimedeanLocalField K]
-    [Field L] [ValuativeRel L] [TopologicalSpace L] [IsNonarchimedeanLocalField L]
+    [Field K] [ValuativeRel K] [TopologicalSpace K]
+    [Field L] [ValuativeRel L] [TopologicalSpace L]
     [Algebra K L] [FiniteDimensional K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L]
@@ -152,7 +153,8 @@ theorem principalUnitsNormExtensionSideOfIsIntegralClosure_eq_galoisGroup_prod
 
 /-- Actual integral-closure version of the first-order norm-product
 calculation before residue trace identification. -/
-theorem principalUnitsNormExtensionSideOfIsIntegralClosure_oneAdd_sub_one_sub_sum_mem_maximalIdeal_pow_succ
+theorem
+  principalUnitsNormExtensionSideOfIsIntegralClosure_oneAdd_sub_one_sub_sum_mem_maximalIdeal_pow_succ
     (K L : Type u) [Field K] [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K] [Field L] [ValuativeRel L] [TopologicalSpace L]
     [IsNonarchimedeanLocalField L] [Algebra K L] [FiniteDimensional K L]

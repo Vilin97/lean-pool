@@ -273,7 +273,6 @@ theorem count_extension
 omit [FiniteDimensional K L] [IsGalois K L] in
 /-- Extension of a prime fractional ideal commutes with passage to the
 ideal class group. -/
-@[simp]
 theorem classGroup_mk_extension_prime
     (w : HeightOneSpectrum (𝓞 K)) :
     ClassGroup.mk L (extension K L (prime w)) =
@@ -436,7 +435,6 @@ theorem extension_infiniteComponent
 omit [IsGalois K L] in
 /-- The finite component of an extended idele is the canonical local
 completion map applied to the component below it. -/
-@[simp]
 theorem extension_finiteComponent
     (a : IdeleGroup K)
     (W : HeightOneSpectrum (𝓞 L)) :
@@ -823,7 +821,6 @@ noncomputable def ideleClassExtension :
           (IdeleGroup.extension_principalIdele K L x).symm⟩)
 
 omit [IsGalois K L] in
-@[simp]
 theorem ideleClassExtension_mk (a : IdeleGroup K) :
     ideleClassExtension K L
         (QuotientGroup.mk'

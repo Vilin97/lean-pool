@@ -84,7 +84,6 @@ theorem equalCharacteristicLaurentRingEquiv_apply
   rfl
 
 /-- States the theorem `equalCharacteristicLaurentRingEquiv_algebraMap_C`. -/
-@[simp]
 theorem equalCharacteristicLaurentRingEquiv_algebraMap_C
     (F : LocalField.{u, v} K)
     [CharP K F.residueCharacteristic]
@@ -116,7 +115,6 @@ theorem equalCharacteristicLaurentRingEquiv_algebraMap_C
       pi hpi a
 
 /-- States the theorem `equalCharacteristicLaurentRingEquiv_algebraMap_X`. -/
-@[simp]
 theorem equalCharacteristicLaurentRingEquiv_algebraMap_X
     (F : LocalField.{u, v} K)
     [CharP K F.residueCharacteristic]

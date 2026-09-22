@@ -35,7 +35,6 @@ variable [CommGroup G] [CommGroup H] [CommGroup U]
 
 /-- The identity element is an `n`-th power and hence lies in the range of the power endomorphism.
 The identity element is an `n`-th power and hence lies in the range of the power endomorphism. -/
-@[simp]
 theorem powMonoidHom_range_one_mem (n : ℕ) :
     (1 : G) ∈ (powMonoidHom n : G →* G).range := by
   rw [MonoidHom.mem_range]
@@ -152,7 +151,6 @@ def nthPowerQuotientEquivOfMulEquiv (n : ℕ) (e : G ≃* H) :
 
 /-- The quotient equivalence induced by a multiplicative equivalence maps each power-class
 representative to its image. -/
-@[simp]
 theorem nthPowerQuotientEquivOfMulEquiv_mk (n : ℕ) (e : G ≃* H) (x : G) :
     nthPowerQuotientEquivOfMulEquiv G H n e
         (QuotientGroup.mk' ((powMonoidHom n : G →* G).range) x) =
@@ -417,7 +415,8 @@ theorem powMonoidHom_range_multiplicativeInt_eq_integerMultipleSubgroup
 /-- For nonzero `n`, multiplicative integers modulo `n`-th powers form a finite quotient. -/
 theorem finite_multiplicativeInt_nthPowerQuotient
     {n : ℕ} (hn : n ≠ 0) :
-    Finite (Multiplicative ℤ ⧸ (powMonoidHom n : (Multiplicative ℤ) →* (Multiplicative ℤ)).range) := by
+    Finite (Multiplicative ℤ ⧸ (powMonoidHom n : (Multiplicative ℤ) →* (Multiplicative
+      ℤ)).range) := by
   rw [powMonoidHom_range_multiplicativeInt_eq_integerMultipleSubgroup]
   have hnabs : (n : ℤ).natAbs ≠ 0 := by simpa using hn
   let : NeZero (n : ℤ).natAbs := ⟨hnabs⟩
@@ -455,9 +454,11 @@ theorem cardinal_mk_multiplicativeInt_nthPowerQuotient (n : ℕ) :
 /-- For nonzero `n`, the multiplicative-integer power quotient has cardinality `n`. -/
 theorem card_multiplicativeInt_nthPowerQuotient
     {n : ℕ} (hn : n ≠ 0)
-    [Finite (Multiplicative ℤ ⧸ (powMonoidHom n : (Multiplicative ℤ) →* (Multiplicative ℤ)).range)] :
+    [Finite (Multiplicative ℤ ⧸ (powMonoidHom n : (Multiplicative ℤ) →* (Multiplicative
+      ℤ)).range)] :
     Nat.card
-        (Multiplicative ℤ ⧸ (powMonoidHom n : (Multiplicative ℤ) →* (Multiplicative ℤ)).range) = n := by
+        (Multiplicative ℤ ⧸ (powMonoidHom n : (Multiplicative ℤ) →* (Multiplicative ℤ)).range) =
+          n := by
   rw [Nat.card_congr
     ((QuotientGroup.quotientMulEquivOfEq
       (powMonoidHom_range_multiplicativeInt_eq_integerMultipleSubgroup n)).trans
@@ -538,7 +539,8 @@ theorem cardinal_mk_nthPowerQuotient_eq_of_mulEquiv_units_prod_int
     Cardinal.lift.{uU, uG} (Cardinal.mk (G ⧸ (powMonoidHom n : G →* G).range)) =
       Cardinal.lift.{uG, uU} (Cardinal.mk
         ((U ⧸ (powMonoidHom n : U →* U).range) ×
-          (Multiplicative ℤ ⧸ (powMonoidHom n : (Multiplicative ℤ) →* (Multiplicative ℤ)).range))) :=
+          (Multiplicative ℤ ⧸ (powMonoidHom n : (Multiplicative ℤ) →* (Multiplicative
+            ℤ)).range))) :=
   Cardinal.mk_congr_lift
     ((nthPowerQuotientEquivOfMulEquiv G (U × Multiplicative ℤ) n e).trans
       (nthPowerProductQuotientEquiv U (Multiplicative ℤ) n)).toEquiv
@@ -590,13 +592,11 @@ abbrev nsmulAddKernel (n : ℕ) : AddSubgroup A :=
 
 /-- Membership in the image of multiplication by `n` is equivalent to being an `n`-fold additive
 multiple. -/
-@[simp]
 theorem mem_nsmulAddSubgroup_iff {n : ℕ} {x : A} :
     x ∈ nsmulAddSubgroup A n ↔ ∃ y : A, n • y = x := by
   simp [nsmulAddSubgroup, AddMonoidHom.mem_range]
 
 /-- Membership in the kernel of multiplication by `n` is equivalent to being annihilated by `n`. -/
-@[simp]
 theorem mem_nsmulAddKernel_iff {n : ℕ} {x : A} :
     x ∈ nsmulAddKernel A n ↔ n • x = 0 := by
   simp [nsmulAddKernel, AddMonoidHom.mem_ker]
@@ -654,8 +654,10 @@ noncomputable instance finite_multiplicative_nthPowerQuotient
 `powMonoidHom_range_multiplicative_eq_nsmulAddSubgroup_toSubgroup`. -/
 theorem card_multiplicative_nthPowerQuotient_eq_nsmulAddSubgroup_index
     (n : ℕ)
-    [Finite (Multiplicative A ⧸ (powMonoidHom n : (Multiplicative A) →* (Multiplicative A)).range)] :
-    Nat.card (Multiplicative A ⧸ (powMonoidHom n : (Multiplicative A) →* (Multiplicative A)).range) =
+    [Finite (Multiplicative A ⧸ (powMonoidHom n : (Multiplicative A) →* (Multiplicative
+      A)).range)] :
+    Nat.card (Multiplicative A ⧸ (powMonoidHom n : (Multiplicative A) →* (Multiplicative
+      A)).range) =
       (nsmulAddSubgroup A n).index := by
   rw [← Subgroup.index_eq_card
     (H := (powMonoidHom n : (Multiplicative A) →* (Multiplicative A)).range)]
@@ -668,7 +670,8 @@ theorem card_multiplicative_nthPowerQuotient_eq_additive_nsmulQuotient
     (n : ℕ)
     [Finite (Multiplicative A ⧸ (powMonoidHom n : (Multiplicative A) →* (Multiplicative A)).range)]
     [Finite (A ⧸ nsmulAddSubgroup A n)] :
-    Nat.card (Multiplicative A ⧸ (powMonoidHom n : (Multiplicative A) →* (Multiplicative A)).range) =
+    Nat.card (Multiplicative A ⧸ (powMonoidHom n : (Multiplicative A) →* (Multiplicative
+      A)).range) =
       Nat.card (A ⧸ nsmulAddSubgroup A n) := by
   rw [card_multiplicative_nthPowerQuotient_eq_nsmulAddSubgroup_index]
   rw [AddSubgroup.index_eq_card]
@@ -749,7 +752,8 @@ noncomputable instance finite_nsmulAddKernel_prod (n : ℕ)
   let : Finite
       ((powMonoidHom n : (Multiplicative (A × B)) →* (Multiplicative (A × B))).ker) :=
     Finite.of_equiv
-      ((powMonoidHom n : (Multiplicative A × Multiplicative B) →* (Multiplicative A × Multiplicative B)).ker)
+      ((powMonoidHom n : (Multiplicative A × Multiplicative B) →* (Multiplicative A ×
+        Multiplicative B)).ker)
       (nthPowerKernelEquivOfMulEquiv
         (Multiplicative (A × B))
         (Multiplicative A × Multiplicative B) n e).symm.toEquiv

@@ -227,7 +227,6 @@ Establishes the identity `finiteUnramifiedDegreeHom D K L hUnramified (L.extensi
 zHatReductionMul (L.toFiniteAbstractExtension.degree : ℕ)
 L.toFiniteAbstractExtension.degree.property (D.normalizedDegree K k)`.
 -/
-@[simp]
 theorem finiteUnramifiedDegreeHom_mk
     (D : DegreeData G) (K : FiniteResidueAbstractField D)
     (L : FiniteGaloisSubextension K.field)
@@ -326,7 +325,6 @@ theorem finiteUnramifiedDegreeEquiv_restriction
     D.maximalUnramifiedDegreeEquiv_mk]
 
 /-- The arithmetic Frobenius has finite normalized degree one. -/
-@[simp]
 theorem finiteUnramifiedDegreeEquiv_unramifiedFrobenius
     (D : DegreeData G) (K : FiniteResidueAbstractField D)
     (L : FiniteGaloisSubextension K.field)
@@ -379,7 +377,7 @@ isomorphisms.  This is the generator calculation in the unramified norm-quotient
 expressed in the normalization needed. -/
 theorem canonicalUnramifiedReciprocity_degree_of_generator
     (v : ValuationData D A)
-    [IsTopologicalGroup G] [CompactSpace G] [T2Space G]
+
     (K : FiniteAbstractField G) (L : FiniteGaloisSubextension K.field) :
     letI : Finite
         (K.field.toSubgroup ⧸
@@ -553,7 +551,8 @@ theorem maximalUnramifiedNormResidueSymbol_finiteReciprocity_of_generator
 /-- The finite restriction of the maximal-unramified symbol is the
 inverse of finite unramified reciprocity.  The map `r` is kept explicit
 here so this statement records the uniqueness argument of maximal-unramified reciprocity
-without anticipating the final name of the finite reciprocity equivalence: the unramified norm-quotient equivalence
+without anticipating the final name of the finite reciprocity equivalence: the unramified
+  norm-quotient equivalence
 promotes any reciprocity map with the Frobenius--prime value to an
 equivalence, and the preceding compatibility identifies its inverse. -/
 theorem maximalUnramifiedNormResidueSymbol_finiteRestriction_of_generator
@@ -570,7 +569,7 @@ theorem maximalUnramifiedNormResidueSymbol_finiteRestriction_of_generator
           (K.toFiniteResidueAbstractField D) L.field L.below)) =
         finiteNormClass A K.field L.field L.below (v.chosenPrimeElement K))
       (a : ambientFixedAddSubgroup A K.field),
-    (v.unramifiedReciprocity_equiv_of_generator hAxiom K L.field L.below
+    (v.unramifiedReciprocityEquivOfGenerator hAxiom K L.field L.below
         hUnramified r hr).symm
         (finiteNormClass A K.field L.field L.below a) =
       Additive.ofMul
@@ -581,7 +580,7 @@ theorem maximalUnramifiedNormResidueSymbol_finiteRestriction_of_generator
       (K.field.toSubgroup ⧸
         extensionSubgroup K.field L.field L.below) := L.finite
   intro hUnramified r hr a
-  apply (v.unramifiedReciprocity_equiv_of_generator hAxiom K L.field L.below
+  apply (v.unramifiedReciprocityEquivOfGenerator hAxiom K L.field L.below
     hUnramified r hr).injective
   rw [AddEquiv.apply_symm_apply]
   exact (maximalUnramifiedNormResidueSymbol_finiteReciprocity_of_generator v hAxiom

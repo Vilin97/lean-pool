@@ -97,7 +97,7 @@ noncomputable instance
     [hKfinite : Finite
       ((baseField Gal(Ω/k)).toSubgroup ⧸
         extensionSubgroup
-          (baseField Gal(Ω / k)) K (le_baseField K))]
+          (baseField Gal(Ω/k)) K (le_baseField K))]
     (L : FiniteAbelianSubextension K) :
     FiniteDimensional
       (abstractFixedField k Ω K)

@@ -8,7 +8,8 @@ import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.NormalBasisLat
 import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.HerbrandLowDegree.Basic
 import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.ClassFormation.Valuation
 import Mathlib.GroupTheory.GroupAction.Quotient
-/-! Provides the public declarations in the `LocalClassFieldTheory.ClassFormation.NormalBasisGaloisAction` Lean module. -/
+/-! Provides the public declarations in the
+  `LocalClassFieldTheory.ClassFormation.NormalBasisGaloisAction` Lean module. -/
 
 namespace LocalClassFieldTheory
 

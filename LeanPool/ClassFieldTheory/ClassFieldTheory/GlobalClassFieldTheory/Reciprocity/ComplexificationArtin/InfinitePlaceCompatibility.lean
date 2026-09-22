@@ -14,7 +14,7 @@ then transports the special overextension computation through global
 norm-residue naturality.
 -/
 
-open scoped Classical IsMulCommutative
+open scoped IsMulCommutative
 open NumberField
 open IdeleGroup
 
@@ -31,12 +31,16 @@ variable
     [Field L] [NumberField L] [Algebra K L]
     [FiniteDimensional K L] [IsAbelianGalois K L]
 
+open scoped Classical in
 local instance
     infinitePlaceCompatibilityIdeleClassGroupIsMulCommutative
     {F : Type} [Field F] [NumberField F] :
     IsMulCommutative (IdeleClassGroup F) :=
   ⟨⟨fun a b => mul_comm a b⟩⟩
 
+attribute [local instance] infinitePlaceCompatibilityIdeleClassGroupIsMulCommutative
+
+open scoped Classical in
 /-- The real infinite place of the conjugation fixed field obtained
 by restricting the concrete complex place of the overfield. -/
 noncomputable def ramifiedInfinitePlaceRealFixedPlace
@@ -55,6 +59,7 @@ noncomputable def ramifiedInfinitePlaceRealFixedPlace
         (K := K) (L := L) v))
 
 omit [NumberField K] [FiniteDimensional K L] in
+open scoped Classical in
 /-- The fixed-field place is genuinely real: every element of the
 fixed field is fixed by ambient complex conjugation. -/
 theorem ramifiedInfinitePlaceRealFixedPlace_isReal
@@ -111,6 +116,7 @@ theorem ramifiedInfinitePlaceRealFixedPlace_isReal
   · rfl
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 /-- Restricting the concrete real fixed-field place to the original
 base recovers the prescribed ramified place `v`. -/
 theorem infinitePlaceBelow_ramifiedInfinitePlaceRealFixedPlace
@@ -152,6 +158,7 @@ theorem infinitePlaceBelow_ramifiedInfinitePlaceRealFixedPlace
       (chosenInfinitePlaceAbove_comap (L := L) v)
 
 omit [NumberField K] [FiniteDimensional K L] in
+open scoped Classical in
 /-- The chosen place of the special overextension above its concrete
 fixed-field place is ramified. -/
 theorem
@@ -180,6 +187,7 @@ theorem
         (K := K) (L := L) v hRamified⟩
 
 omit [NumberField K] [FiniteDimensional K L] in
+open scoped Classical in
 /-- At the concrete real fixed-field place, the local Artin symbol of
 negative one is the distinguished ambient complex conjugation. -/
 theorem
@@ -233,6 +241,7 @@ theorem
     rw [hc, map_one]
 
 omit [NumberField K] [FiniteDimensional K L] in
+open scoped Classical in
 /-- The canonical global norm-residue value of the concrete
 fixed-field one-place negative-one class is ambient complex
 conjugation. -/
@@ -258,6 +267,7 @@ theorem
     globalNormResidueMonoidHom_ramifiedInfinitePlaceOverextension_infinitePlaceIdeleClass,
     ramifiedInfinitePlaceOverextension_localArtin_neg_one]
 
+open scoped Classical in
 /-- Restriction from the complex-conjugation overextension back to
 the original finite abelian extension. -/
 noncomputable def ramifiedInfinitePlaceOverextensionRestriction
@@ -274,6 +284,7 @@ noncomputable def ramifiedInfinitePlaceOverextensionRestriction
     (AlgEquiv.restrictScalarsHom K)
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 /-- Restricting ambient complex conjugation from `L(i)` to `L`
 recovers the actual chosen local Artin symbol of negative one at the
 original ramified place. -/
@@ -339,6 +350,7 @@ theorem ramifiedInfinitePlaceOverextensionRestriction_conjugation
     (chosenInfinitePlaceArtinMonoidHom_neg_one_isConj_of_ramified
       (K := K) (L := L) v hRamified).eq x |>.symm
 
+open scoped Classical in
 /-- A rational-separable-closure embedding of the complexification
 overfield extending the standard embedding of its original top field. -/
 noncomputable def
@@ -358,6 +370,7 @@ noncomputable def
       (AlgebraicNumberTheory.numberFieldSeparableClosureEmbedding L))
 
 omit [NumberField K] [FiniteDimensional K L] in
+open scoped Classical in
 /-- The separable-closure embedding of the complexification overfield
 restricts to the standard embedding of its original top field. -/
 theorem
@@ -377,6 +390,7 @@ theorem
       (AlgebraicNumberTheory.numberFieldSeparableClosureEmbedding L))
 
 omit [NumberField K] [FiniteDimensional K L] in
+open scoped Classical in
 /-- The explicitly embedded norm-residue map for the quadratic
 overextension has the genuine idele-class norm range as its kernel. -/
 theorem
@@ -474,6 +488,7 @@ theorem
       _ = 1 := map_one e
 
 omit [NumberField K] [FiniteDimensional K L] in
+open scoped Classical in
 /-- For every rational-separable-closure embedding, the norm-residue
 value of the concrete upper negative-one one-place class is ambient
 complex conjugation.  The point is independent of the embedding
@@ -563,6 +578,7 @@ theorem
     rw [hstandard, map_one]
   · exact hconjugation
 
+open scoped Classical in
 /-- The base global norm-residue value at the negative-one class of `v`. -/
 noncomputable def ramifiedInfinitePlaceGlobalNormResidueNegOneValue
     (v : InfinitePlace K) :
@@ -570,6 +586,7 @@ noncomputable def ramifiedInfinitePlaceGlobalNormResidueNegOneValue
   globalNormResidueMonoidHom K L
     (IdeleGroup.infinitePlaceIdeleClass v (-1 : v.Completionˣ))
 
+open scoped Classical in
 /-- The chosen local Artin value at negative one at `v`. -/
 noncomputable def ramifiedInfinitePlaceLocalArtinNegOneValue
     (v : InfinitePlace K) :
@@ -577,6 +594,7 @@ noncomputable def ramifiedInfinitePlaceLocalArtinNegOneValue
   chosenInfinitePlaceArtinMonoidHom
     (K := K) (L := L) v (-1 : v.Completionˣ)
 
+open scoped Classical in
 /-- The embedding of `L` induced by the chosen embedding of its
 complexification overfield. -/
 noncomputable def
@@ -590,6 +608,7 @@ noncomputable def
         (K := K) (L := L) v))
 
 omit [NumberField K] [FiniteDimensional K L] in
+open scoped Classical in
 /-- The induced lower embedding is the standard number-field embedding. -/
 theorem
     infinitePlaceComplexificationLowerSeparableClosureEmbedding_eq_standard
@@ -603,6 +622,7 @@ theorem
     infinitePlaceComplexificationOverfieldSeparableClosureEmbedding_restrictDomain
       (K := K) (L := L) v
 
+open scoped Classical in
 /-- The upper negative-one idele class used in the overextension diamond. -/
 noncomputable def ramifiedInfinitePlaceOverextensionNegOneIdeleClass
     (v : InfinitePlace K)
@@ -618,6 +638,7 @@ noncomputable def ramifiedInfinitePlaceOverextensionNegOneIdeleClass
       (ramifiedInfinitePlaceRealFixedPlace
         (K := K) (L := L) v hRamified).Completionˣ)
 
+open scoped Classical in
 /-- The upper global norm-residue value in the overextension diamond. -/
 noncomputable def
     ramifiedInfinitePlaceOverextensionGlobalNormResidueNegOneValue
@@ -639,6 +660,7 @@ noncomputable def
     (ramifiedInfinitePlaceOverextensionNegOneIdeleClass
       (K := K) (L := L) v hRamified)
 
+open scoped Classical in
 /-- The upper norm-residue value after actual Galois restriction. -/
 noncomputable def
     ramifiedInfinitePlaceRestrictedOverextensionNormResidueNegOneValue
@@ -651,6 +673,7 @@ noncomputable def
     (ramifiedInfinitePlaceOverextensionGlobalNormResidueNegOneValue
       (K := K) (L := L) v hRamified)
 
+open scoped Classical in
 /-- The lower norm-residue value of the normed upper negative-one class. -/
 noncomputable def
     ramifiedInfinitePlaceNormedOverextensionNormResidueNegOneValue
@@ -667,6 +690,7 @@ noncomputable def
       (ramifiedInfinitePlaceOverextensionNegOneIdeleClass
         (K := K) (L := L) v hRamified))
 
+open scoped Classical in
 private theorem ramifiedInfinitePlace_normResidueDiamond_neg_one
     (v : InfinitePlace K)
     (hRamified :
@@ -691,6 +715,7 @@ private theorem ramifiedInfinitePlace_normResidueDiamond_neg_one
         (K := K) (L := L) v hRamified)
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 private theorem
     ramifiedInfinitePlace_restrictedOverextensionNormResidue_neg_one
     (v : InfinitePlace K)
@@ -708,6 +733,7 @@ private theorem
     ramifiedInfinitePlaceOverextension_globalNormResidueOfEmbedding_neg_one,
     ramifiedInfinitePlaceOverextensionRestriction_conjugation]
 
+open scoped Classical in
 private theorem ramifiedInfinitePlace_normedNormResidue_neg_one
     (v : InfinitePlace K)
     (hRamified :
@@ -733,6 +759,7 @@ private theorem ramifiedInfinitePlace_normedNormResidue_neg_one
     infinitePlaceBelow_ramifiedInfinitePlaceRealFixedPlace,
     ramifiedInfinitePlaceGlobalNormResidueNegOneValue]
 
+open scoped Classical in
 /-- At every ramified real place of a finite abelian extension, the
 canonical global norm-residue symbol of the one-place negative-one
 idele class is the actual chosen local Artin symbol.
@@ -741,7 +768,6 @@ The proof is the concrete complex-conjugation overextension diamond:
 the upper equality is the rational fourth-root product formula, the
 vertical map on idele classes is the genuine one-place norm, and the
 vertical map on Galois groups is actual restriction. -/
-@[simp]
 theorem
     globalNormResidueMonoidHom_infinitePlaceIdeleClass_neg_one_of_ramified
     (v : InfinitePlace K)

@@ -185,7 +185,6 @@ noncomputable def
 
 /-- The big-to-small Hilbert quotient transition sends the class of an
 idele class to the same class modulo the larger norm subgroup. -/
-@[simp]
 theorem bigHilbertClassFieldQuotientToSmallHilbertClassFieldQuotient_mk
     (x : IdeleClassGroup K) :
     bigHilbertClassFieldQuotientToSmallHilbertClassFieldQuotient

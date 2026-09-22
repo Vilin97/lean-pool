@@ -251,7 +251,8 @@ theorem padicCompleteDVF_residueField_card
       Nat.card_congr eRes.toEquiv
     _ = p := Nat.card_zmod p
 
-/-- The local-field structure theory, the local-field structure classification, `p`-adic base-field direction:
+/-- The local-field structure theory, the local-field structure classification, `p`-adic
+base-field direction:
 `ℚ_[p]` is a local field in the chosen-complete-DVF sense used in this
 formalization. -/
 noncomputable def padicLocalField

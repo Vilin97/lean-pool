@@ -52,7 +52,8 @@ theorem valuedMk_uniformSpace_eq_mrangeRestrict
     (v : _root_.Valuation K (WithZero (Multiplicative ℤ)))
     [Valuation.IsCompleteDiscrete v] :
     (Valued.mk' v).toUniformSpace =
-      (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued (completeDVF v)).toUniformSpace := by
+      (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued
+        (completeDVF v)).toUniformSpace := by
   let w :=
     _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict
       (completeDVF v)
@@ -78,16 +79,17 @@ theorem completeSpace_ofWithZeroValuation
   let F : CompleteDVF.{u, 0} K := completeDVF v
   let direct : Valued K (WithZero (Multiplicative ℤ)) := Valued.mk' v
   let restrictedNormed : NontriviallyNormedField K :=
-    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_nontriviallyNormedField F
+    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F
   have : Finite F.residueField := by
     change Finite (IsLocalRing.ResidueField v.valuationSubring)
     infer_instance
   have hcomplete : @CompleteSpace K restrictedNormed.toUniformSpace := by
-    exact _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_completeSpace_of_residueField_finite F
+    exact
+      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_completeSpace_of_residueField_finite F
   have huniform : direct.toUniformSpace = restrictedNormed.toUniformSpace := by
     change
       (Valued.mk' v).toUniformSpace =
-        (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_nontriviallyNormedField
+        (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField
           (completeDVF v)).toUniformSpace
     calc
       (Valued.mk' v).toUniformSpace =
@@ -95,7 +97,7 @@ theorem completeSpace_ofWithZeroValuation
             (completeDVF v)).toUniformSpace :=
         valuedMk_uniformSpace_eq_mrangeRestrict v
       _ =
-          (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_nontriviallyNormedField
+          (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField
             (completeDVF v)).toUniformSpace := by
         rfl
   let : Valued K (WithZero (Multiplicative ℤ)) := direct

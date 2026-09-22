@@ -8,7 +8,8 @@ import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.ChangedUniform
 /-!
 # Changed-uniformizer scalar compatibility
 
-This module proves that the changed-uniformizer intertwiner commutes with every scalar endomorphism and identifies its coefficientwise Frobenius twist.
+This module proves that the changed-uniformizer intertwiner commutes with every scalar
+  endomorphism and identifies its coefficientwise Frobenius twist.
 -/
 
 noncomputable section

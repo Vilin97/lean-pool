@@ -14,7 +14,7 @@ ray class group.  This follows from factorization of prime-to-modulus
 fractional ideals and the idelic-to-ideal ray-class equivalence.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -23,6 +23,7 @@ namespace GlobalClassFieldTheory.GlobalClassFields
 
 universe u v
 
+open scoped Classical in
 /-- Two homomorphisms out of a ray class group agree if they agree on the
 normalized prime idèle classes away from its modulus. -/
 theorem rayClassGroup_hom_ext_finitePrime

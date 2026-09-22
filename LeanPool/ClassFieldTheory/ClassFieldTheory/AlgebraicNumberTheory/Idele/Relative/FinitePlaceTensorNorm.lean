@@ -282,7 +282,6 @@ theorem relativeIdeleNorm_finiteComponent_mem_chosenLocalNormSubgroup
 omit [NumberField L] in
 /-- Hence the local tensor-norm class of every finite component of a
 global relative-idele norm is trivial. -/
-@[simp]
 theorem finitePlaceTensorNormClass_relativeIdeleNorm
     (v : HeightOneSpectrum (𝓞 K))
     (a : RelativeIdeleGroup K L) :

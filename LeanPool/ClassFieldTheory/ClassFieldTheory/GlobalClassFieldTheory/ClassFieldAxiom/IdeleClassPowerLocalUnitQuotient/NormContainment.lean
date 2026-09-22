@@ -27,7 +27,7 @@ This file proves that the concrete local-condition subgroup lies in the global
 idele norm range, and descends that inclusion to idele classes.
 -/
 
-open scoped NumberField Classical NNReal ValuativeRel TensorProduct
+open scoped NumberField NNReal ValuativeRel TensorProduct
 open NumberField IsDedekindDomain
 open AlgebraicNumberTheory.Valuations
 open KummerTheory
@@ -41,6 +41,7 @@ namespace GlobalClassFieldTheory.ClassFieldAxiom
 variable {K L : Type} [Field K] [NumberField K] [Field L] [NumberField L]
     [Algebra K L] [FiniteDimensional K L] [IsGalois K L]
 
+open scoped Classical in
 /-- The idele norm inclusion `h(S,T) ⊆ N_{L/K} I_L`. -/
 theorem idelePowerLocalUnitSubgroup_le_relativeIdeleNorm_range
     (n : ℕ+) (r : ℕ)
@@ -83,6 +84,7 @@ theorem idelePowerLocalUnitSubgroup_le_relativeIdeleNorm_range
         (K := K) (L := L) n r eG S T hT hAway ha
     exact Subgroup.mem_iInf.mp hall v
 
+open scoped Classical in
 /-- The induced norm inclusion on idele class groups:
 `N_{L/K} C_L ⊇ C_K(S,T)`. -/
 theorem ideleClassPowerLocalUnitSubgroup_le_ideleClassNorm_range

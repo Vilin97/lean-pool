@@ -98,7 +98,8 @@ noncomputable def rationalIntermediateIdeleClassToNormalClosure
     [FiniteDimensional ℚ K] :
     IdeleClassGroup K →*
       RelativeIdeleGroup.ClassGroup ℚ (rationalNormalClosure K) :=
-  (RelativeIdeleGroup.classEmbedding (IntermediateField.inclusion (IntermediateField.le_normalClosure K))).comp
+  (RelativeIdeleGroup.classEmbedding (IntermediateField.inclusion
+    (IntermediateField.le_normalClosure K))).comp
     (_root_.relativeIdeleClassBaseChangeMulEquiv
       (K := ℚ) (L := K)).symm.toMonoidHom
 
@@ -132,7 +133,8 @@ theorem
           (K := ℚ) (L := K) c) =
       rationalRelativeIdeleClassToDirectLimit
         (rationalNormalClosure K)
-        (RelativeIdeleGroup.classEmbedding (IntermediateField.inclusion (IntermediateField.le_normalClosure K)) c) := by
+        (RelativeIdeleGroup.classEmbedding (IntermediateField.inclusion
+          (IntermediateField.le_normalClosure K)) c) := by
   exact monoidHom_comp_equiv_symm_apply
     (rationalRelativeIdeleClassToDirectLimit (rationalNormalClosure K))
     (RelativeIdeleGroup.classEmbedding

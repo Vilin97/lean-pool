@@ -18,7 +18,8 @@ import Mathlib.Tactic
 This file contains the pure natural-number cancellation steps used after local-field
 norm and value-group arguments have produced an lcm divisibility.
 
-It also contains the elementary `p`-adic valuation estimates used in the local-field structure development,
+It also contains the elementary `p`-adic valuation estimates used in the local-field structure
+  development,
 the logarithm and exponential estimates for the convergence and valuation behavior of the
 logarithm and exponential series.
 -/

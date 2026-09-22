@@ -401,16 +401,16 @@ theorem localArtinMonoidHom_eq_frobenius_zpow (x : Kˣ) :
 class of arithmetic Frobenius raised to its normalized valuation. -/
 theorem localArtinMap_eq_frobenius_zpow (x : Kˣ) :
     localArtinMap K L x =
-      (topologicalAbelianization_finite_equiv K L
+      (topologicalAbelianizationFiniteEquiv K L
         (Abelianization.of
           (arithmeticFrobeniusOfUnramifiedValuation K L))) ^
             LocalFieldTheory.IsNonarchimedeanLocalField.valuationMap K
               (Additive.ofMul x) := by
-  apply (topologicalAbelianization_finite_equiv K L).symm.injective
+  apply (topologicalAbelianizationFiniteEquiv K L).symm.injective
   rw [map_zpow,
-    (topologicalAbelianization_finite_equiv K L).symm_apply_apply]
+    (topologicalAbelianizationFiniteEquiv K L).symm_apply_apply]
   change
-    (((topologicalAbelianization_finite_equiv K L).symm.toMonoidHom.comp
+    (((topologicalAbelianizationFiniteEquiv K L).symm.toMonoidHom.comp
       (localArtinMap K L).toMonoidHom) x) =
         (Abelianization.of
           (arithmeticFrobeniusOfUnramifiedValuation K L)) ^
@@ -425,13 +425,13 @@ the topological abelianization. -/
 @[simp]
 theorem localArtinMap_localAbstractPrimeFieldUnit :
     localArtinMap K L (localAbstractPrimeFieldUnit K) =
-      topologicalAbelianization_finite_equiv K L
+      topologicalAbelianizationFiniteEquiv K L
         (Abelianization.of
           (arithmeticFrobeniusOfUnramifiedValuation K L)) := by
-  apply (topologicalAbelianization_finite_equiv K L).symm.injective
-  rw [(topologicalAbelianization_finite_equiv K L).symm_apply_apply]
+  apply (topologicalAbelianizationFiniteEquiv K L).symm.injective
+  rw [(topologicalAbelianizationFiniteEquiv K L).symm_apply_apply]
   change
-    (((topologicalAbelianization_finite_equiv K L).symm.toMonoidHom.comp
+    (((topologicalAbelianizationFiniteEquiv K L).symm.toMonoidHom.comp
       (localArtinMap K L).toMonoidHom) (localAbstractPrimeFieldUnit K)) =
         Abelianization.of
           (arithmeticFrobeniusOfUnramifiedValuation K L)
@@ -442,7 +442,7 @@ theorem localArtinMap_localAbstractPrimeFieldUnit :
 @[simp]
 theorem localArtinMap_uniformizer :
     localArtinMap K L (inverseIntegerRingUniformizerFieldUnit K) =
-      topologicalAbelianization_finite_equiv K L
+      topologicalAbelianizationFiniteEquiv K L
         (Abelianization.of
           (arithmeticFrobeniusOfUnramifiedValuation K L)) := by
   rw [localArtinMap_eq_frobenius_zpow,
@@ -461,7 +461,8 @@ theorem localArtinMap_eq_one_of_valuationMap_eq_zero
 /-- Every valuation-ring unit has trivial unramified Artin symbol. -/
 @[simp]
 theorem localArtinMap_units_unramified (u : 𝒪[K]ˣ) :
-    localArtinMap K L (LocalFieldTheory.IsNonarchimedeanLocalField.integerUnitsToFieldUnits K u) = 1 := by
+    localArtinMap K L (LocalFieldTheory.IsNonarchimedeanLocalField.integerUnitsToFieldUnits K u)
+      = 1 := by
   apply localArtinMap_eq_one_of_valuationMap_eq_zero K L
   rw [LocalFieldTheory.IsNonarchimedeanLocalField.valuationMap_apply,
     LocalFieldTheory.IsNonarchimedeanLocalField.v_integerUnitsToFieldUnits]

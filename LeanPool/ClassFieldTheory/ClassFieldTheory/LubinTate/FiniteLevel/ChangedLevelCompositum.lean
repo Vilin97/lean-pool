@@ -213,7 +213,8 @@ theorem
     {F : LocalField.{u, v} K} {π : F.valuationSubring}
     (hπ : F.toCompleteDVF.valuation.IsUniformizer (π : K))
     (u : F.valuationSubringˣ) (n : ℕ) :
-    ValuationTheory.DiscreteValuationField.ValuedExtension.HasUniqueValuationExtension.{u, v, u, 0, 0}
+    ValuationTheory.DiscreteValuationField.ValuedExtension.HasUniqueValuationExtension.{u, v, u,
+      0, 0}
       (base := F.toCompleteDVF)
       (target :=
         standardLubinTateChangedLevelCompositumCompleteDVF hπ u n) := by
@@ -292,7 +293,6 @@ theorem standardLubinTateChangedLevelToCompositum_coe
 
 /-- The original primitive generator has the same ambient value after
 inclusion in the compositum. -/
-@[simp]
 theorem
     standardLubinTateLevelToChangedLevelCompositum_levelGenerator_coe
     {F : LocalField.{u, v} K} {π : F.valuationSubring}
@@ -307,7 +307,6 @@ theorem
 
 /-- The changed primitive generator has the same ambient value after
 inclusion in the compositum. -/
-@[simp]
 theorem
     standardLubinTateChangedLevelToCompositum_levelGenerator_coe
     {F : LocalField.{u, v} K} {π : F.valuationSubring}

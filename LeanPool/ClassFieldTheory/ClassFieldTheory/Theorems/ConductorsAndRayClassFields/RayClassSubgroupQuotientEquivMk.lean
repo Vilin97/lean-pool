@@ -20,7 +20,6 @@ namespace ClassFieldTheory
 universe u
 
 /-- A ray class maps to its original Artin value under the induced quotient isomorphism. -/
-@[simp]
 theorem rayClassSubgroupQuotientEquiv_mk
     (K : Type u) [Field K] [NumberField K]
     (m : RayClassModulus K) (H : Subgroup (RayClassGroup m))

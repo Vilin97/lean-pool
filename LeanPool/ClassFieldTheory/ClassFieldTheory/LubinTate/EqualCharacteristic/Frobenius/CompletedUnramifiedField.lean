@@ -9,7 +9,8 @@ import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.
 import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.Existence.LaurentLocalField
 import Mathlib.RingTheory.PowerSeries.Evaluation
 /-!
-# The equal-characteristic completed-unramified construction: the completed maximal-unramified field in equal characteristic
+# The equal-characteristic completed-unramified construction: the completed maximal-unramified
+  field in equal characteristic
 
 For a finite field `k`, the equal-characteristic model of the completion of
 the maximal unramified extension of `k((T))` is
@@ -17,7 +18,8 @@ the maximal unramified extension of `k((T))` is
 coefficientwise arithmetic Frobenius over `k((T))`.
 
 This is the equal-characteristic specialization of the completed-unramified
-source in the equal-characteristic completed-unramified construction.  In particular, the Frobenius below is an actual algebra
+source in the equal-characteristic completed-unramified construction.  In particular, the
+  Frobenius below is an actual algebra
 equivalence; it is not a theorem-shaped replacement for later theta
 evaluation or norm-subgroup arguments.
 -/
@@ -103,6 +105,7 @@ noncomputable local instance valuedIntegerIsUniformAddGroupInstance
   valuedIntegerIsUniformAddGroup
 
 omit [Finite k] in
+/-- The algebraic closure of the coefficient field carries the discrete uniformity. -/
 noncomputable local instance equalCharacteristicCoefficientUniformSpace :
     UniformSpace (AlgebraicClosure k) := ⊥
 
@@ -146,13 +149,13 @@ def equalCharacteristicCompletedUnramifiedField :=
   (AlgebraicClosure k)⸨X⸩
 
 /-- The completed unramified Laurent-series model is a field. -/
-instance equalCharacteristicCompletedUnramifiedField_field :
+instance equalCharacteristicCompletedUnramifiedFieldField :
     Field (equalCharacteristicCompletedUnramifiedField k) := by
   change Field ((AlgebraicClosure k)⸨X⸩)
   infer_instance
 
 /-- The completed unramified field carries its Laurent-series valuation. -/
-noncomputable instance equalCharacteristicCompletedUnramifiedField_valued :
+noncomputable instance equalCharacteristicCompletedUnramifiedFieldValued :
     Valued (equalCharacteristicCompletedUnramifiedField k) ℤᵐ⁰ := by
   change Valued ((AlgebraicClosure k)⸨X⸩) ℤᵐ⁰
   infer_instance

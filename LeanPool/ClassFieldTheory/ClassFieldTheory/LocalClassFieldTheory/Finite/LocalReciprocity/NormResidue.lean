@@ -62,7 +62,7 @@ noncomputable def topologicalAbelianizationEquivSelf :
   letI : DiscreteTopology (TopologicalAbelianization Gal(L / K)) :=
     QuotientGroup.discreteTopology (isOpen_discrete _)
   let e : TopologicalAbelianization Gal(L / K) ≃* Gal(L / K) :=
-    (topologicalAbelianization_finite_equiv K L).symm.trans
+    (topologicalAbelianizationFiniteEquiv K L).symm.trans
       (Abelianization.equivOfComm (H := Gal(L / K))).symm
   exact
     { e with
@@ -84,7 +84,7 @@ theorem abelianLocalArtinMap_toMonoidHom :
       abelianLocalArtinMonoidHom K L := by
   change
     ((Abelianization.equivOfComm (H := Gal(L / K))).symm).toMonoidHom.comp
-        ((topologicalAbelianization_finite_equiv K L).symm.toMonoidHom.comp
+        ((topologicalAbelianizationFiniteEquiv K L).symm.toMonoidHom.comp
           (localArtinMap K L).toMonoidHom) =
       ((Abelianization.equivOfComm (H := Gal(L / K))).symm).toMonoidHom.comp
         (localArtinMonoidHom K L)

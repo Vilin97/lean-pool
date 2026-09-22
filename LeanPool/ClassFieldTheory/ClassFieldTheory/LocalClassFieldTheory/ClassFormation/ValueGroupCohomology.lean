@@ -8,7 +8,8 @@ import Mathlib.SetTheory.Cardinal.Finite
 import Mathlib.Data.ZMod.QuotientGroup
 import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.HerbrandLowDegree.Basic
 import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.ClassFormation.Valuation
-/-! Provides the public declarations in the `LocalClassFieldTheory.ClassFormation.ValueGroupCohomology` Lean module. -/
+/-! Provides the public declarations in the
+  `LocalClassFieldTheory.ClassFormation.ValueGroupCohomology` Lean module. -/
 
 namespace LocalClassFieldTheory
 

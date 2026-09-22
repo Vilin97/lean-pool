@@ -10,7 +10,8 @@ import Mathlib.RingTheory.DiscreteValuationRing.Basic
 import Mathlib.RingTheory.Henselian
 import Mathlib.RingTheory.Ideal.IsPrincipalPowQuotient
 import Mathlib.RingTheory.Valuation.ValuationSubring
-/-! Provides the public declarations in the `ValuationTheory.AbsoluteValue.Theory.ExponentialValuations` Lean module. -/
+/-! Provides the public declarations in the
+  `ValuationTheory.AbsoluteValue.Theory.ExponentialValuations` Lean module. -/
 
 noncomputable section
 
@@ -88,7 +89,6 @@ theorem exponentialValuation_one {K : Type*} [Field K]
   simp [hr, hr0]
 
 /-- The value of `-1` is `0` for a exponential valuation. -/
-@[simp]
 theorem exponentialValuation_neg_one {K : Type*} [Field K]
     (v : ExponentialValuation K) :
     v (-1 : K) = 0 := by
@@ -1236,7 +1236,8 @@ theorem ideal_exists_min_value_of_nat_indexed_values
   have hnm : n ≤ m := Nat.find_min' hP ⟨y, hyI, hy0, hm⟩
   exact (hweight hnm).trans_eq hm.symm
 
-/-- The ideal structure theorem for discrete valuation rings, value description of the ideals `π^n𝒪`: for a normalized
+/-- The ideal structure theorem for discrete valuation rings, value description of the ideals
+`π^n𝒪`: for a normalized
 prime element, membership in the principal power ideal is exactly the lower
 bound `v(x) ≥ n`. -/
 theorem uniformizerPowerIdeal_mem_iff_value_ge
@@ -1306,7 +1307,8 @@ theorem uniformizerPowerIdeal_le_ideal_of_mem_value_eq
         simpa [mul_one] using primeElementFor_pow_value v hπ n)
       hxI (by simpa [mul_one] using hxval)
 
-/-- The ideal structure theorem for discrete valuation rings, ideal classification part: every nonzero ideal of a
+/-- The ideal structure theorem for discrete valuation rings, ideal classification part: every
+nonzero ideal of a
 normalized exponential-valuation ring is one of the ideals `π^n𝒪`. -/
 theorem nonzero_ideal_eq_uniformizerPowerIdeal
     {K : Type*} [Field K] {v : ExponentialValuation K}
@@ -1343,7 +1345,8 @@ theorem nonzero_ideal_eq_uniformizerPowerIdeal
       exact hmin y hyI hy0
   · exact uniformizerPowerIdeal_le_ideal_of_mem_value_eq hπ hxI hxval
 
-/-- The ideal structure theorem for discrete valuation rings, PID part: the valuation ring of a normalized
+/-- The ideal structure theorem for discrete valuation rings, PID part: the valuation ring of a
+normalized
 exponential valuation is a principal ideal ring. -/
 theorem normalizedExponentialValuationSubring_isPrincipalIdealRing
     {K : Type*} [Field K] {v : ExponentialValuation K}
@@ -1360,7 +1363,8 @@ theorem normalizedExponentialValuationSubring_isPrincipalIdealRing
     refine ⟨(primeElementInValuationSubring v hπ) ^ n, ?_⟩
     rw [hIn, uniformizerPowerIdeal]
 
-/-- The ideal structure theorem for discrete valuation rings, DVR part: the valuation ring of a normalized
+/-- The ideal structure theorem for discrete valuation rings, DVR part: the valuation ring of a
+normalized
 exponential valuation is a discrete valuation ring. -/
 theorem normalizedExponentialValuationSubring_isDiscreteValuationRing
     {K : Type*} [Field K] {v : ExponentialValuation K}
@@ -1430,7 +1434,8 @@ theorem discreteExponentialValuation_subring_exists_nat_value
     ∃ n : ℕ, v (x : K) = (((n : ℝ) * s : ℝ) : WithTop ℝ) := by
   exact exists_nat_index_of_nonneg_int_multiple x.property hs (hvalues (x : K) hx)
 
-/-- The ideal structure theorem for discrete valuation rings, scaled value description for a non-normalized discrete
+/-- The ideal structure theorem for discrete valuation rings, scaled value description for a
+non-normalized discrete
 prime element: membership in `π^n𝒪` is the lower bound `n * s ≤ v(x)`. -/
 theorem discrete_uniformizerPowerIdeal_mem_iff_value_ge
     {K : Type*} [Field K] (v : ExponentialValuation K)
@@ -1464,7 +1469,8 @@ theorem discreteUniformizerPowerIdeal_le_ideal_of_mem_value_eq
       (πR := discretePrimeElementInValuationSubring v (le_of_lt hs) hπ)
       rfl (s := s) hπ0 (discretePrimeElement_pow_value v hπ) hxI hxval
 
-/-- The ideal structure theorem for discrete valuation rings, canonical PID part for an arbitrary discrete
+/-- The ideal structure theorem for discrete valuation rings, canonical PID part for an
+arbitrary discrete
 exponential valuation, before choosing the normalized representative. -/
 theorem discreteExponentialValuationSubring_isPrincipalIdealRing
     {K : Type*} [Field K] {v : ExponentialValuation K}
@@ -1508,7 +1514,8 @@ theorem discreteExponentialValuationSubring_isPrincipalIdealRing
     · change uniformizerPowerIdeal πR n ≤ I
       exact discreteUniformizerPowerIdeal_le_ideal_of_mem_value_eq hs hπ hxI hxval
 
-/-- The ideal structure theorem for discrete valuation rings, canonical DVR part for an arbitrary discrete
+/-- The ideal structure theorem for discrete valuation rings, canonical DVR part for an
+arbitrary discrete
 exponential valuation. -/
 theorem discreteExponentialValuationSubring_isDiscreteValuationRing
     {K : Type*} [Field K] {v : ExponentialValuation K}

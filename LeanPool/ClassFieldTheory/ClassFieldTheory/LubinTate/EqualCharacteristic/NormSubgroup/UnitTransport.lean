@@ -74,7 +74,8 @@ theorem equalCharacteristicChangedLaurentUniformizerUnit_eq_unit_mul
 
 /-- Multiplication by `T` does not change norm membership for a Lubin--Tate
 level, because both `T⁻¹` and `T` are already norms.  Thus the prime norm
-`uT` used in the completed theta-intertwining theorem detects exactly whether the unit `u` is a norm. -/
+`uT` used in the completed theta-intertwining theorem detects exactly whether the unit `u` is a
+  norm. -/
 theorem equalCharacteristicChangedLaurentUniformizerUnit_mem_normSubgroup_iff
     {K₀ : Type} [Field K₀]
     (F : LocalField K₀)

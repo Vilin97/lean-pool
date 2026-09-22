@@ -32,7 +32,8 @@ variable {K : Type*} {L : Type*} [Field K] [Field L] [Algebra K L]
 /-- Reducing a base valuation-ring polynomial after mapping it to the target
 valuation ring agrees with first reducing it over the base residue field. -/
 theorem unramifiedValuationRing_polynomial_target_reduction_eq
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     (P : Polynomial (LubinTate.Valuations.exponentialValuationSubring v)) :
     let V := LubinTate.Valuations.exponentialValuationSubring v
@@ -63,7 +64,8 @@ theorem unramifiedValuationRing_polynomial_target_reduction_eq
 /-- Evaluation of a valuation-ring polynomial commutes with passage to the
 actual residue fields. -/
 theorem unramifiedValuationRing_polynomial_aeval_residue_eq
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     (P : Polynomial (LubinTate.Valuations.exponentialValuationSubring v))
     (x : LubinTate.Valuations.exponentialValuationSubring w) :
@@ -102,6 +104,30 @@ theorem unramifiedValuationRing_polynomial_aeval_residue_eq
 
 end ResiduePolynomial
 
+/-- A monic reduction is its monic divisor when another coefficient model
+has the divisor's degree. -/
+private theorem monic_reduction_eq_of_model_degree
+    {R K k : Type*} [CommRing R] [Field K] [Field k]
+    (f : R →+* K) (g : R →+* k) (p : Polynomial R) (q : Polynomial k)
+    (hp : p.Monic) (hq : q.Monic) (hdvd : q ∣ p.map g)
+    (hdegree : (p.map f).natDegree = q.natDegree) : p.map g = q := by
+  apply Polynomial.eq_of_monic_of_dvd_of_natDegree_le hq (hp.map g) hdvd
+  exact le_of_eq ((hp.natDegree_map g).trans ((hp.natDegree_map f).symm.trans hdegree))
+
+/-- Separability of an irreducible reduction lifts through an injective map of coefficient rings. -/
+private theorem separable_map_of_separable_reduction
+    {R K k : Type*} [CommRing R] [Field K] [Field k]
+    (f : R →+* K) (hf : Function.Injective f) (g : R →+* k)
+    (p : Polynomial R) (hK : Irreducible (p.map f))
+    (hk : Irreducible (p.map g)) (hsep : (p.map g).Separable) :
+    (p.map f).Separable := by
+  apply (Polynomial.separable_iff_derivative_ne_zero hK).2
+  intro hzero
+  have hpzero : p.derivative = 0 := (Polynomial.map_eq_zero_iff hf).1 (by
+    rw [← Polynomial.derivative_map, hzero])
+  apply (Polynomial.separable_iff_derivative_ne_zero hk).1 hsep
+  simp only [Polynomial.derivative_map, hpzero, Polynomial.map_zero]
+
 section FiniteUnramifiedExtensionSeparability
 
 variable {K : Type*} {L : Type*} [Field K] [Field L] [Algebra K L]
@@ -115,7 +141,8 @@ element generates `L/K`; the polynomial becomes its field minimal polynomial
 over `K`, and its residue is the separable minimal polynomial of the residue
 class. -/
 theorem exists_primitive_lift_minpoly_of_finiteUnramifiedExtension
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     (hhens : ValuationTheory.DiscreteValuationField.HenselianValuationByFactorization
       (LubinTate.Valuations.exponentialValuationSubringAsValuationSubring v).valuation)
@@ -284,70 +311,43 @@ theorem exists_primitive_lift_minpoly_of_finiteUnramifiedExtension
     rw [Polynomial.aeval_def, Polynomial.eval₂_eq_eval_map]
     rw [← hares]
     exact hred.symm
-  have hqdvd : q ∣ pbar := by
-    exact minpoly.dvd k abar hpbarRoot
+  have hqdvd : q ∣ pbar := minpoly.dvd k abar hpbarRoot
   have hpVmonic : pV.Monic := minpoly.monic haIntegralV
-  have hpbarMonic : pbar.Monic := hpVmonic.map _
   have hqMonic : q.Monic := minpoly.monic habarIntegral
-  have hpKmap : pK = pV.map (algebraMap V K) := by
-    exact minpoly.isIntegrallyClosed_eq_field_fractions' K haIntegralV
-  have hdegree : pbar.natDegree ≤ q.natDegree := by
-    apply le_of_eq
-    calc
-      pbar.natDegree = pV.natDegree := hpVmonic.natDegree_map _
-      _ = pK.natDegree := by
-        rw [hpKmap, hpVmonic.natDegree_map]
-      _ = pbL.dim := pbL.natDegree_minpoly
-      _ = pb.dim := rfl
-      _ = q.natDegree := pb.natDegree_minpoly.symm
+  have hpKmap : pK = pV.map (algebraMap V K) :=
+    minpoly.isIntegrallyClosed_eq_field_fractions' K haIntegralV
   have hpbarEq : pbar = q := by
-    exact Polynomial.eq_of_monic_of_dvd_of_natDegree_le
-      hqMonic hpbarMonic hqdvd hdegree
+    apply monic_reduction_eq_of_model_degree (algebraMap V K)
+      (IsLocalRing.residue V) pV q hpVmonic hqMonic hqdvd
+    rw [← hpKmap]
+    exact pbL.natDegree_minpoly.trans pb.natDegree_minpoly.symm
   have hqSeparable : q.Separable :=
     Algebra.IsSeparable.isSeparable k abar
-  have hqDerivative : q.derivative ≠ 0 :=
-    (Polynomial.separable_iff_derivative_ne_zero
-      (minpoly.irreducible habarIntegral)).1 hqSeparable
-  have hpKDerivative : pK.derivative ≠ 0 := by
-    intro hpKzero
-    have hpVmapDerivative :
-        pV.derivative.map (algebraMap V K) = 0 := by
-      rw [← Polynomial.derivative_map, ← hpKmap, hpKzero]
-    have hVKinj : Function.Injective (algebraMap V K) := by
-      exact V.subtype_injective
-    have hpVDerivative : pV.derivative = 0 :=
-      (Polynomial.map_eq_zero_iff hVKinj).1 hpVmapDerivative
-    have hpbarDerivative : pbar.derivative = 0 := by
-      simp [pbar, Polynomial.derivative_map, hpVDerivative]
-    apply hqDerivative
-    rw [← hpbarEq]
-    exact hpbarDerivative
   have haSeparable : IsSeparable K (a : L) := by
     change pK.Separable
-    exact (Polynomial.separable_iff_derivative_ne_zero
-      (minpoly.irreducible (Algebra.IsIntegral.isIntegral (a : L)))).2
-        hpKDerivative
+    rw [hpKmap]
+    apply separable_map_of_separable_reduction (algebraMap V K)
+      V.subtype_injective (IsLocalRing.residue V) pV
+    · rw [← hpKmap]
+      exact minpoly.irreducible (Algebra.IsIntegral.isIntegral (a : L))
+    · change Irreducible pbar
+      rw [hpbarEq]
+      exact minpoly.irreducible habarIntegral
+    · change pbar.Separable
+      rwa [hpbarEq]
   have hprimitiveK :
-      IntermediateField.adjoin K ({(a : L)} : Set L) = ⊤ := by
-    apply IntermediateField.adjoin_eq_top_iff.2
-    exact pbL.adjoin_gen_eq_top
+      IntermediateField.adjoin K ({(a : L)} : Set L) = ⊤ :=
+    IntermediateField.adjoin_eq_top_iff.2 pbL.adjoin_gen_eq_top
   have hresidueMinpoly :
       pV.map (IsLocalRing.residue V) =
         minpoly k (IsLocalRing.residue W a) := by
-    change pbar = minpoly k (IsLocalRing.residue W a)
-    rw [hares]
-    exact hpbarEq
+    simpa only [hares] using hpbarEq
   have hpbarSeparable :
       (pV.map (IsLocalRing.residue V)).Separable := by
-    change pbar.Separable
-    rw [hpbarEq]
-    exact hqSeparable
+    simpa only [← hpbarEq] using hqSeparable
   refine ⟨a, pV, hprimitiveK, ?_, hresidueMinpoly,
     hpbarSeparable, haSeparable⟩
-  change pV.map V.subtype = pK
-  rw [hpKmap]
-  ext n
-  rfl
+  exact hpKmap.symm
 
 /-- Finite separability source for an unramified extension.
 
@@ -355,7 +355,8 @@ A finite extension satisfying the literal unramified condition is separable
 when the base valuation is Henselian.  No separability of
 `L/K` is assumed. -/
 theorem finiteUnramifiedExtension_isSeparable_of_henselian
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     (hhens : ValuationTheory.DiscreteValuationField.HenselianValuationByFactorization
       (LubinTate.Valuations.exponentialValuationSubringAsValuationSubring v).valuation)

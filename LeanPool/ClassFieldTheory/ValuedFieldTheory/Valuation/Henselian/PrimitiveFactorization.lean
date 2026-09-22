@@ -276,7 +276,8 @@ theorem partition_primitive_irreducible_factors_along_coprime_reduction
         · rw [Polynomial.map_mul, hHbar]
           exact hh'.symm
 
-/-- The common last step of the unique-extension criterion and the factor-lifting criterion: the construction's
+/-- The common last step of the unique-extension criterion and the factor-lifting criterion: the
+construction's
 primitive irreducible reduction property implies the exact degree-controlled
 factorization form of Hensel's lemma from the primitive factorization definition. -/
 theorem henselFactorization_of_primitiveIrreducibleReductionProperty

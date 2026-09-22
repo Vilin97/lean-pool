@@ -16,7 +16,7 @@ is completed here.  The real quadratic action is kept as the next arithmetic
 leaf rather than being introduced as an assumption.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 open NumberField
 
 noncomputable section
@@ -28,6 +28,7 @@ open KummerTheory
 
 variable (K : Type) [Field K] [NumberField K]
 
+open scoped Classical in
 /-- The Kummer root character of the actual Artin automorphism at an
 infinite place. -/
 noncomputable def infinitePlaceKummerRootCharacter
@@ -49,8 +50,9 @@ noncomputable def infinitePlaceKummerRootCharacter
         (chosenInfinitePlaceArtinMonoidHom (K := K) (L := L) v a_v))
 
 omit [NumberField K] in
+open scoped Classical in
 private theorem chosenInfinitePlaceArtinMonoidHom_eq_one_of_isComplex
-    {L : Type} [Field L] [NumberField L] [Algebra K L] [IsGalois K L]
+    {L : Type} [Field L] [Algebra K L] [IsGalois K L]
     (v : InfinitePlace K) (hv : v.IsComplex) (x : v.Completionˣ) :
     chosenInfinitePlaceArtinMonoidHom (K := K) (L := L) v x = 1 := by
   let w := chosenInfinitePlaceAbove (L := L) v
@@ -69,6 +71,7 @@ private theorem chosenInfinitePlaceArtinMonoidHom_eq_one_of_isComplex
   rw [dite_eq_left hwUnramified']
   rfl
 
+open scoped Classical in
 /-- At a complex place the infinite-place Kummer root character is
 trivial. -/
 @[simp]
@@ -96,6 +99,7 @@ theorem infinitePlaceKummerRootCharacter_eq_one_of_isComplex
             (K := K) (L := L) v a_v)) = 1
   rw [hArtin, map_one, map_one]
 
+open scoped Classical in
 /-- The Kummer root character and the explicit Hilbert factor agree at every
 complex infinite place. -/
 theorem infinitePlaceKummerRootCharacter_localGlobal_of_isComplex

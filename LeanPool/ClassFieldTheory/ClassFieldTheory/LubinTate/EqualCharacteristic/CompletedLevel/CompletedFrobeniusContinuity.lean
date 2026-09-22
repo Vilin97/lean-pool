@@ -30,6 +30,8 @@ open LocalFieldTheory.DiscreteValuationField
 
 variable {K : Type u} [Field K]
 
+/-- The Laurent-series algebra structure on the completed unramified base used in Frobenius
+continuity. -/
 noncomputable local instance equalCharacteristicFrobeniusContinuityBaseAlgebra
     (F : LocalField.{u, v} K) :
     Algebra F.residueField⸨X⸩
@@ -43,6 +45,7 @@ noncomputable local instance
       (equalCharacteristicCompletedUnramifiedField k) ℤᵐ⁰).IsNontrivial :=
   equalCharacteristicCompletedBaseValuationIsNontrivial k
 
+/-- The base valuation in the Frobenius continuity argument has rank one. -/
 noncomputable local instance
     equalCharacteristicFrobeniusContinuityBaseValuationRankOne
     (k : Type v) [Field k] :
@@ -50,6 +53,8 @@ noncomputable local instance
       (equalCharacteristicCompletedUnramifiedField k) ℤᵐ⁰).RankOne :=
   equalCharacteristicCompletedBaseValuationRankOne k
 
+/-- The completed unramified base carries the nontrivial norm used in the Frobenius continuity
+argument. -/
 @[reducible]
 noncomputable local instance equalCharacteristicFrobeniusContinuityBaseNormedField
     (k : Type v) [Field k] :
@@ -57,6 +62,8 @@ noncomputable local instance equalCharacteristicFrobeniusContinuityBaseNormedFie
       (equalCharacteristicCompletedUnramifiedField k) :=
   equalCharacteristicCompletedBaseNormedField k
 
+/-- The completed Lubin–Tate level carries its spectral norm for the Frobenius continuity
+argument. -/
 @[reducible]
 noncomputable local instance equalCharacteristicFrobeniusContinuityLevelNormedField
     (F : LocalField.{u, v} K) (n : ℕ) :
@@ -193,7 +200,8 @@ theorem equalCharacteristicCompletedFrobeniusLift_isometry
     Isometry (equalCharacteristicCompletedFrobeniusLiftEquiv F n u⁻¹) :=
   equalCharacteristicCompletedFrobeniusLiftEquiv_isometry F n u⁻¹
 
-/-- The completed theta-intertwining theorem specialization is continuous for the standard completed-level
+/-- The completed theta-intertwining theorem specialization is continuous for the standard
+completed-level
 spectral-norm topology. -/
 theorem equalCharacteristicCompletedFrobeniusLift_continuous
     (F : LocalField.{u, v} K)

@@ -26,7 +26,7 @@ universe u v
 open scoped TensorProduct
 
 /-- The product of the component maps `K_v ⊗_K L → L_w`. -/
-noncomputable def completionTensorMap_leftCanonicalHom
+noncomputable def completionTensorMapLeftCanonicalHom
     {K : Type u} {L : Type v} [Field K] [Field L] [Algebra K L]
     (vK : AbsoluteValue K ℝ) :
     letI : ∀ w : AbsoluteValueExtension vK L,
@@ -38,7 +38,7 @@ noncomputable def completionTensorMap_leftCanonicalHom
       Algebra vK.Completion w.1.Completion :=
     fun w ↦ AbsoluteValue.completionAlgebra vK w.1 w.2
   exact AlgHom.pi fun w ↦
-    absoluteValueExtension_localizationTensorHom vK w
+    absoluteValueExtensionLocalizationTensorHom vK w
 
 @[simp]
 theorem completionTensorMap_leftCanonicalHom_tmul_apply
@@ -48,7 +48,7 @@ theorem completionTensorMap_leftCanonicalHom_tmul_apply
     letI : ∀ w : AbsoluteValueExtension vK L,
         Algebra vK.Completion w.1.Completion :=
       fun w ↦ AbsoluteValue.completionAlgebra vK w.1 w.2
-    completionTensorMap_leftCanonicalHom vK (b ⊗ₜ[K] a) w =
+    completionTensorMapLeftCanonicalHom vK (b ⊗ₜ[K] a) w =
       algebraMap vK.Completion w.1.Completion b *
         AbsoluteValue.toCompletionAlgHom (K := K) w.1 a := by
   let : ∀ w : AbsoluteValueExtension vK L,
@@ -58,7 +58,7 @@ theorem completionTensorMap_leftCanonicalHom_tmul_apply
 
 /-- The canonical `K_v`-algebra map in the chosen tensor-factor order
 `L ⊗_K K_v`. -/
-noncomputable def completionTensorMap_canonicalHom
+noncomputable def completionTensorMapCanonicalHom
     {K : Type u} {L : Type v} [Field K] [Field L] [Algebra K L]
     (vK : AbsoluteValue K ℝ) :
     letI := Algebra.TensorProduct.rightAlgebra
@@ -76,7 +76,7 @@ noncomputable def completionTensorMap_canonicalHom
   let e := Algebra.TensorProduct.comm K L vK.Completion
   let h : vK.Completion ⊗[K] L →ₐ[vK.Completion]
       ∀ w : AbsoluteValueExtension vK L, w.1.Completion :=
-    completionTensorMap_leftCanonicalHom vK
+    completionTensorMapLeftCanonicalHom vK
   exact
     { toRingHom := h.toRingHom.comp e.toRingEquiv.toRingHom
       commutes' := fun b ↦ by
@@ -96,7 +96,7 @@ theorem completionTensorMap_canonicalHom_tmul_apply
     letI : ∀ w : AbsoluteValueExtension vK L,
         Algebra vK.Completion w.1.Completion :=
       fun w ↦ AbsoluteValue.completionAlgebra vK w.1 w.2
-    completionTensorMap_canonicalHom vK (a ⊗ₜ[K] b) w =
+    completionTensorMapCanonicalHom vK (a ⊗ₜ[K] b) w =
       AbsoluteValue.toCompletionAlgHom (K := K) w.1 a *
         algebraMap vK.Completion w.1.Completion b := by
   let := Algebra.TensorProduct.rightAlgebra
@@ -104,8 +104,8 @@ theorem completionTensorMap_canonicalHom_tmul_apply
   let : ∀ w : AbsoluteValueExtension vK L,
       Algebra vK.Completion w.1.Completion :=
     fun w ↦ AbsoluteValue.completionAlgebra vK w.1 w.2
-  simp only [completionTensorMap_canonicalHom]
-  change completionTensorMap_leftCanonicalHom (L := L) vK
+  simp only [completionTensorMapCanonicalHom]
+  change completionTensorMapLeftCanonicalHom (L := L) vK
       (Algebra.TensorProduct.comm K L vK.Completion (a ⊗ₜ[K] b)) w = _
   rw [Algebra.TensorProduct.comm_tmul,
     completionTensorMap_leftCanonicalHom_tmul_apply, mul_comm]

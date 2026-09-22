@@ -10,7 +10,8 @@ import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.
 /-!
 # The completed theta-intertwining theorem: primitive division points in the completed level
 
-The completed level used in the proof of the completed theta-intertwining theorem is the splitting field of the
+The completed level used in the proof of the completed theta-intertwining theorem is the
+  splitting field of the
 base-changed primitive division polynomial.  This file records that its chosen
 root is genuinely primitive of level `n + 1`: it is killed by the next
 Lubin--Tate iterate, but not by the preceding one.  These statements are the

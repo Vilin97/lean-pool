@@ -15,7 +15,7 @@ product identity.  The quotient map itself factors through idele classes
 and therefore kills principal ideles.
 -/
 
-open scoped NumberField Classical BigOperators
+open scoped NumberField BigOperators
 open NumberField IsDedekindDomain
 open IdeleGroup RelativeIdeleGroup
 
@@ -26,6 +26,7 @@ namespace Reciprocity
 
 variable {K : Type*} [Field K] [NumberField K]
 
+open scoped Classical in
 /-- A finite local family is the product of its one-place ideles. -/
 theorem prod_finitePlaceIdele_eq_ideleOfFiniteLocalFamily
     (S : Finset (HeightOneSpectrum (𝓞 K)))
@@ -98,6 +99,7 @@ theorem prod_finitePlaceIdele_eq_ideleOfFiniteLocalFamily
           (IdeleGroup.finiteIdeleOfFinset_apply_notMem
             S a w hw).symm
 
+open scoped Classical in
 /-- Applying any multiplicative global symbol to a finite local family
 gives the product of the one-place symbols. -/
 theorem map_ideleOfFiniteLocalFamily_eq_prod_local
@@ -116,16 +118,24 @@ variable
     (L : Type*) [Field L] [NumberField L] [Algebra K L]
     [FiniteDimensional K L]
 
+open scoped Classical in
 local instance finiteLocalFamilyIdeleClassGroupIsMulCommutative :
     IsMulCommutative (IdeleClassGroup K) :=
   ⟨⟨fun a b => mul_comm a b⟩⟩
 
+attribute [local instance] finiteLocalFamilyIdeleClassGroupIsMulCommutative
+
+open scoped Classical in
+/-- The idele class group carries its canonical commutative group structure. -/
 local instance finiteLocalFamilyIdeleClassGroupCommGroup :
     CommGroup (IdeleClassGroup K) :=
   open scoped IsMulCommutative in
   inferInstance
 
+attribute [local instance] finiteLocalFamilyIdeleClassGroupCommGroup
+
 omit [FiniteDimensional K L] in
+open scoped Classical in
 /-- The finite-support product formula for the global
 norm-quotient symbol. -/
 theorem globalNormClass_finiteLocalFamily

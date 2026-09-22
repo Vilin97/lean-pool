@@ -11,7 +11,8 @@ import Mathlib.FieldTheory.Galois.Profinite
 import Mathlib.LinearAlgebra.Basis.Basic
 import Mathlib.LinearAlgebra.Dimension.Free
 /-!
-# The equal-characteristic completed-unramified construction: finite unramified coefficient extensions in equal characteristic
+# The equal-characteristic completed-unramified construction: finite unramified coefficient
+  extensions in equal characteristic
 
 For a finite extension `l / k` of finite fields, coefficientwise extension
 makes `l((T))` a finite extension of `k((T))` of the same degree.  Every
@@ -21,7 +22,8 @@ on `l` gives the genuine Frobenius automorphism of this finite Laurent-series
 base change and fixes `T`.
 
 This is the finite unramified source used to model the completed maximal
-unramified field in the equal-characteristic completed-unramified construction.  The construction is coefficientwise and does not
+unramified field in the equal-characteristic completed-unramified construction.  The
+  construction is coefficientwise and does not
 postulate an abstract unramified extension.
 -/
 
@@ -66,7 +68,6 @@ theorem laurentSeriesCoefficientMap_coeff
   rfl
 
 /-- The coefficient map sends a constant series to the mapped constant series. -/
-@[simp]
 theorem laurentSeriesCoefficientMap_C
     [Field k] [Field l] (f : k →+* l) (a : k) :
     laurentSeriesCoefficientMap f (HahnSeries.C (Γ := ℤ) a) =
@@ -134,10 +135,13 @@ section FiniteBasis
 variable [Field k] [Field l] [Algebra k l]
   {ι : Type*} [Fintype ι]
 
-private theorem laurentSeriesCoefficientBasis_linearIndependent
+omit [Fintype ι] in
+private theorem laurentSeriesCoefficientBasis_linearIndependent [Finite ι]
     (b : Module.Basis ι k l) :
     LinearIndependent k⸨X⸩
       (fun i : ι ↦ (HahnSeries.C (Γ := ℤ) (b i) : l⸨X⸩)) := by
+  classical
+  let := Fintype.ofFinite ι
   let : Algebra k⸨X⸩ l⸨X⸩ := laurentSeriesCoefficientAlgebra
   classical
   rw [Fintype.linearIndependent_iff]
@@ -163,11 +167,14 @@ private theorem laurentSeriesCoefficientBasis_linearIndependent
     exact hb
   exact hrepr i
 
-private theorem laurentSeriesCoefficientBasis_span
+omit [Fintype ι] in
+private theorem laurentSeriesCoefficientBasis_span [Finite ι]
     (b : Module.Basis ι k l) :
     Submodule.span k⸨X⸩
         (Set.range (fun i : ι ↦
           (HahnSeries.C (Γ := ℤ) (b i) : l⸨X⸩))) = ⊤ := by
+  classical
+  let := Fintype.ofFinite ι
   let : Algebra k⸨X⸩ l⸨X⸩ := laurentSeriesCoefficientAlgebra
   classical
   rw [eq_top_iff]
@@ -440,7 +447,7 @@ def equalCharacteristicFiniteUnramifiedExtension :=
   (FiniteField.Extension k p n)⸨X⸩
 
 /-- The finite unramified Laurent-series extension is a field. -/
-instance equalCharacteristicFiniteUnramifiedExtension_field :
+instance equalCharacteristicFiniteUnramifiedExtensionField :
     Field (equalCharacteristicFiniteUnramifiedExtension k p n) := by
   change Field ((FiniteField.Extension k p n)⸨X⸩)
   infer_instance
@@ -452,6 +459,8 @@ noncomputable instance equalCharacteristicFiniteUnramifiedAlgebra :
 
 section
 
+/-- The finite unramified Laurent extension carries the module structure of its coefficient
+algebra. -/
 local instance equalCharacteristicFiniteUnramifiedModule :
     @Module k⸨X⸩ (equalCharacteristicFiniteUnramifiedExtension k p n)
       (inferInstance : DivisionRing k⸨X⸩).toRing.toSemiring

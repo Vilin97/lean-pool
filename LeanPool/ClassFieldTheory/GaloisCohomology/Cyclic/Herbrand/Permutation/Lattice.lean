@@ -666,10 +666,11 @@ theorem permutationSublatticeBasis_permuted
   simpa only [coe_permutationLatticeEquiv,
     permutationSublatticeBasis_apply_coe] using h
 
+omit [DecidableEq ι] [Fintype G] in
 /-- An invariant complete lattice in a real
 permutation representation contains a complete sublattice with a basis
 permuted in exactly the prescribed way. -/
-theorem exists_complete_permutationSublattice
+theorem exists_complete_permutationSublattice [Finite G]
     (ρ : G →* Equiv.Perm ι)
     (L : Submodule ℤ (ι → ℝ)) [DiscreteTopology L]
     [IsZLattice ℝ L]
@@ -684,6 +685,9 @@ theorem exists_complete_permutationSublattice
           permutationRepresentation ρ g
               (b i : ι → ℝ) =
             (b (ρ g i) : ι → ℝ) := by
+  classical
+  let : DecidableEq ι := Classical.decEq ι
+  let := Fintype.ofFinite G
   refine ⟨permutationSublattice ρ L hL,
     permutationSublattice_le ρ L hL,
     inferInstance,
@@ -699,7 +703,8 @@ variable [Fintype G] [Group G] [Fintype ι] [DecidableEq ι]
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 omit [Fintype G] in
-theorem basisEquivFunL_symm_coordinatePermutation
+omit [DecidableEq ι] [Fintype ι] in
+theorem basisEquivFunL_symm_coordinatePermutation [Finite ι]
     (b : Basis ι ℝ E)
     (ρ : G →* Equiv.Perm ι)
     (α : G →* (E ≃ₗ[ℝ] E))
@@ -709,6 +714,9 @@ theorem basisEquivFunL_symm_coordinatePermutation
     b.equivFunL.symm
         (coordinatePermutation (ρ g) x) =
       α g (b.equivFunL.symm x) := by
+  classical
+  let : DecidableEq ι := Classical.decEq ι
+  let := Fintype.ofFinite ι
   have hmaps :
       b.equivFunL.symm.toLinearMap.comp
           (coordinatePermutation (ρ g)).toLinearMap =
@@ -735,11 +743,12 @@ theorem basisEquivFunL_symm_coordinatePermutation
         rw [hsingle i]
   exact LinearMap.congr_fun hmaps x
 
+omit [DecidableEq ι] [Fintype G] [Fintype ι] in
 /-- Invariant formulation: if a finite group acts on a
 finite-dimensional real vector space by permuting a specified basis, every
 invariant complete lattice contains a complete sublattice with a basis
 permuted in the same way. -/
-theorem exists_complete_permutationSublattice_of_basis
+theorem exists_complete_permutationSublattice_of_basis [Finite G] [Finite ι]
     (b : Basis ι ℝ E)
     (ρ : G →* Equiv.Perm ι)
     (α : G →* (E ≃ₗ[ℝ] E))
@@ -757,6 +766,10 @@ theorem exists_complete_permutationSublattice_of_basis
         ∀ (g : G) (i : ι),
           α g (b' i : E) =
             (b' (ρ g i) : E) := by
+  classical
+  let : DecidableEq ι := Classical.decEq ι
+  let := Fintype.ofFinite G
+  let := Fintype.ofFinite ι
   let e : E ≃L[ℝ] (ι → ℝ) := b.equivFunL
   let Lc : Submodule ℤ (ι → ℝ) :=
     ZLattice.comap ℝ L e.symm.toLinearMap

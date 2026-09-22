@@ -10,7 +10,7 @@ import Mathlib.Analysis.Complex.Order
 # Complex conjugation on a negative quadratic Kummer root
 -/
 
-open scoped Classical ComplexConjugate ComplexOrder NumberField
+open scoped ComplexConjugate ComplexOrder NumberField
 open NumberField
 
 noncomputable section
@@ -22,6 +22,7 @@ open KummerTheory
 
 variable (K : Type) [Field K] [NumberField K]
 
+open scoped Classical in
 /-- At a real place where the quadratic radicand is negative, the actual
 infinite-place Artin value of `-1` sends the chosen Kummer root to its
 negative. -/

@@ -30,8 +30,7 @@ the `K`-conjugates of `L`, then `H` has trivial normal core.
 completely already in `M`.
 -/
 
-open scoped NumberField Classical
-open NumberField IsDedekindDomain
+open scoped NumberField open NumberField IsDedekindDomain
 
 noncomputable section
 
@@ -43,6 +42,7 @@ section AbsoluteValueExtensions
 variable {K M : Type}
     [Field K] [Field M] [Algebra K M]
 
+open scoped Classical in
 /-- Extend an actual extension of `v` from an intermediate field to the
 ambient finite Galois extension.  The source is the absolute-value
 extension theorem, applied to the algebraic extension `M / L`. -/
@@ -54,7 +54,7 @@ noncomputable def extendAbsoluteValueExtensionFromIntermediate
     (u : AbsoluteValueExtension vK L) :
     AbsoluteValueExtension vK M := by
   let : Module.IsTorsionFree L
-      (absoluteValueExtension_algebraicCompletionClosure u.1) :=
+      (absoluteValueExtensionAlgebraicCompletionClosure u.1) :=
     DivisionSemiring.to_moduleIsTorsionFree
   let hu : u.1.IsNontrivial :=
     u.isNontrivial hvK
@@ -68,6 +68,7 @@ noncomputable def extendAbsoluteValueExtensionFromIntermediate
         rw [IsScalarTower.algebraMap_apply K L M,
           wL.2, u.2] }
 
+open scoped Classical in
 @[simp]
 theorem extendAbsoluteValueExtensionFromIntermediate_apply
     [FiniteDimensional K M]
@@ -79,7 +80,7 @@ theorem extendAbsoluteValueExtensionFromIntermediate_apply
     (extendAbsoluteValueExtensionFromIntermediate
       vK hvK L u).1 x = u.1 x := by
   let : Module.IsTorsionFree L
-      (absoluteValueExtension_algebraicCompletionClosure u.1) :=
+      (absoluteValueExtensionAlgebraicCompletionClosure u.1) :=
     DivisionSemiring.to_moduleIsTorsionFree
   change
     (pullbackAbsoluteValueExtension
@@ -100,6 +101,7 @@ local notation "G" => M ≃ₐ[K] M
 local notation "H" => L.fixingSubgroup
 local notation "D" => absoluteValueDecompositionGroup K w.val
 
+open scoped Classical in
 /-- The extension of `v` to `L` attached to a representative of
 `H \ G / D`.  Inversion changes the natural `D \ G / H` convention for
 the right action `w ↦ w ∘ σ` into the convention used for the normal-closure reduction. -/
@@ -142,6 +144,7 @@ noncomputable def doubleCosetExtension :
           hdEq
       exact hvalue.symm)
 
+open scoped Classical in
 @[simp]
 theorem doubleCosetExtension_mk
     (g : G) :
@@ -154,6 +157,7 @@ theorem doubleCosetExtension_mk
         L :=
   rfl
 
+open scoped Classical in
 /-- Every extension of `v` to the intermediate field occurs by
 restricting a conjugate of `w`. -/
 theorem doubleCosetExtension_surjective
@@ -184,6 +188,7 @@ theorem doubleCosetExtension_surjective
     extendAbsoluteValueExtensionFromIntermediate_apply
       vK hvK L u x
 
+open scoped Classical in
 /-- Equality after restriction to `L` is precisely equality of the
 corresponding double cosets. The proof applies valuation-extension counting over
 `L` and then reads the resulting `L`-automorphism as an element of
@@ -288,6 +293,7 @@ theorem doubleCosetExtension_injective
       ?_⟩
   simp [d, g, s, mul_assoc]
 
+open scoped Classical in
 /-- The place-counting equivalence in the orientation needed for the
 normal-closure reduction. -/
 noncomputable def doubleCosetExtensionEquiv
@@ -309,6 +315,7 @@ variable {K E : Type}
     [Field K] [Field E] [Algebra K E]
     [FiniteDimensional K E]
 
+open scoped Classical in
 /-- Intrinsic complete splitting for an arbitrary finite extension:
 the number of actual extensions of the absolute value is the full
 degree.  Unlike a decomposition-group definition, this remains correct
@@ -320,6 +327,7 @@ def AbsoluteValueSplitsCompletelyInExtension
 
 variable [NumberField K]
 
+open scoped Classical in
 /-- Intrinsic complete splitting of a finite place in a possibly
 non-Galois finite extension. -/
 def FinitePlaceSplitsCompletelyInExtension
@@ -338,6 +346,7 @@ variable {K M : Type}
 
 local notation "G" => M ≃ₐ[K] M
 
+open scoped Classical in
 /-- The left-coset space `H \ G = H \ G / 1` has cardinality
 `[L : K]` for `H = Gal(M / L)`. -/
 theorem leftCosetDoubleCoset_card_eq_finrank
@@ -373,6 +382,7 @@ variable (vK : AbsoluteValue K ℝ)
     (w : AbsoluteValueExtension vK M)
     (L : IntermediateField K M)
 
+open scoped Classical in
 /-- Place counting plus the definition of complete
 splitting: `v` splits completely in `L` exactly when the double-coset
 count equals the left-coset count. -/
@@ -394,6 +404,7 @@ theorem absoluteValueSplitsCompletelyInExtension_iff_doubleCoset_card_eq
         vK hvK w L),
     leftCosetDoubleCoset_card_eq_finrank]
 
+open scoped Classical in
 /-- The actual decomposition group is trivial as soon as an
 intermediate field with core-free fixing subgroup is completely split.
 This is the reusable source-producing form of the normal-closure
@@ -415,6 +426,7 @@ theorem absoluteValueDecompositionGroup_eq_bot_of_splitsCompletelyInIntermediate
       (absoluteValueDecompositionGroup K w.1)
       hcore).mp hcard
 
+open scoped Classical in
 /-- Fixed-field spelling of the preceding source theorem.  This is the
 literal `L = M^H` formulation used in the normal-closure reduction. -/
 theorem absoluteValueDecompositionGroup_eq_bot_of_splitsCompletelyInFixedField
@@ -442,6 +454,7 @@ variable {K M : Type}
     [Field K] [Field M] [Algebra K M]
     [FiniteDimensional K M] [IsGalois K M]
 
+open scoped Classical in
 /-- If the conjugates of `L` generate the ambient Galois extension,
 then `Gal(M / L)` is core-free.  This derives the group-theoretic
 normal-closure condition from the actual field-theoretic normal
@@ -476,6 +489,7 @@ theorem fixingSubgroup_normalCore_eq_bot_of_normalClosure_eq_top
   rw [← IntermediateField.fixingSubgroup_fixedField N,
     htop, IntermediateField.fixingSubgroup_top]
 
+open scoped Classical in
 /-- Class-valued normal-closure form of the preceding theorem. -/
 theorem fixingSubgroup_normalCore_eq_bot_of_isNormalClosure
     (L : IntermediateField K M)
@@ -499,6 +513,7 @@ variable {K M : Type}
 
 local notation "G" => M ≃ₐ[K] M
 
+open scoped Classical in
 /-- The double-coset criterion for an actual finite place and
 the decomposition group attached to the standard chosen extension to
 `M`. -/
@@ -523,6 +538,7 @@ theorem finitePlaceSplitsCompletelyInExtension_iff_doubleCoset_card_eq
       L
       (RayClass.adicAbv_isNontrivial v)
 
+open scoped Classical in
 /-- Literal fixed-field form: if `H` is core-free and the finite place
 splits completely in `M^H`, then it splits completely in `M`. -/
 theorem finitePlaceSplitsCompletely_in_ambient_of_fixedField
@@ -542,6 +558,7 @@ theorem finitePlaceSplitsCompletely_in_ambient_of_fixedField
       (RayClass.adicAbv_isNontrivial v)
       H hcore hsplit
 
+open scoped Classical in
 /-- Source-producing normal-closure reduction for a finite place.
 
 The hypothesis says that `M` is generated by the `K`-conjugates of
@@ -569,6 +586,7 @@ theorem finitePlaceSplitsCompletely_in_normalClosure
         L hclosure)
   exact hsplit
 
+open scoped Classical in
 /-- Complete splitting ascends to an ambient field carrying the actual
 `IsNormalClosure` instance. -/
 theorem finitePlaceSplitsCompletely_in_isNormalClosure
@@ -589,6 +607,7 @@ theorem finitePlaceSplitsCompletely_in_isNormalClosure
       v
   exact hsplit
 
+open scoped Classical in
 /-- The same result displayed together with the intermediate
 double-coset equality that drives the proof. -/
 theorem finitePlace_normalClosure_doubleCoset_source
@@ -626,6 +645,7 @@ variable
     [Field E] [Algebra K E]
     [Field E'] [Algebra K E']
 
+open scoped Classical in
 /-- Transport extensions of an absolute value through an algebra
 equivalence of finite extensions. -/
 noncomputable def absoluteValueExtensionEquivOfAlgEquiv
@@ -666,6 +686,7 @@ variable [FiniteDimensional K E]
     [FiniteDimensional K E']
 
 omit [FiniteDimensional K E] [FiniteDimensional K E'] in
+open scoped Classical in
 /-- Intrinsic complete splitting is invariant under replacing the
 extension by an isomorphic `K`-algebra. -/
 theorem absoluteValueSplitsCompletelyInExtension_algEquiv
@@ -683,6 +704,7 @@ theorem absoluteValueSplitsCompletelyInExtension_algEquiv
 variable [NumberField K]
 
 omit [FiniteDimensional K E] [FiniteDimensional K E'] in
+open scoped Classical in
 /-- Finite-place complete splitting is invariant under a
 `K`-algebra equivalence. -/
 theorem finitePlaceSplitsCompletelyInExtension_algEquiv
@@ -706,6 +728,7 @@ variable
     [FiniteDimensional K E]
     [IsGalois K E]
 
+open scoped Classical in
 /-- For a finite Galois extension, complete splitting defined by the
 chosen decomposition group is equivalent to intrinsic complete
 splitting by the number of extensions of the place. -/
@@ -768,6 +791,7 @@ variable
     [FiniteDimensional K N] [IsGalois K N]
 
 omit [FiniteDimensional K N] in
+open scoped Classical in
 /-- If the decomposition group upstairs acts trivially on a normal
 subextension, then the finite place splits completely in that
 subextension. -/
@@ -874,6 +898,7 @@ variable
     [Field K] [NumberField K]
     [Field L] [NumberField L] [Algebra K L]
 
+open scoped Classical in
 /-- The fixing subgroup of the distinguished copy of `L` is
 core-free in the Galois group of its finite normal closure. -/
 theorem finiteNormalClosureOriginalField_fixingSubgroup_normalCore :
@@ -884,6 +909,7 @@ theorem finiteNormalClosureOriginalField_fixingSubgroup_normalCore :
       (finiteNormalClosureOriginalField K L)
       (finiteNormalClosureOriginalField_normalClosure_eq_top K L)
 
+open scoped Classical in
 /-- Complete splitting in the original extension forces complete
 splitting in its finite normal closure. -/
 theorem finitePlaceSplitsCompletely_in_finiteNormalClosure
@@ -900,6 +926,7 @@ theorem finitePlaceSplitsCompletely_in_finiteNormalClosure
       (finiteNormalClosureOriginalField_normalClosure_eq_top K L)
       v hsplit
 
+open scoped Classical in
 /-- If only finitely many finite places fail to split completely in
 `L`, the same is true in the finite normal closure. -/
 theorem finite_nonSplittingPlaces_finiteNormalClosure
@@ -917,6 +944,7 @@ theorem finite_nonSplittingPlaces_finiteNormalClosure
     (finitePlaceSplitsCompletely_in_finiteNormalClosure
       K L v hsplit)
 
+open scoped Classical in
 /-- Finiteness of the nonsplitting set in the original field
 transports to its distinguished copy in the finite normal closure. -/
 theorem finite_nonSplittingPlaces_originalField
@@ -932,6 +960,7 @@ theorem finite_nonSplittingPlaces_originalField
     finitePlaceSplitsCompletelyInExtension_algEquiv
       (finiteNormalClosureOriginalFieldEquiv K L)] using hfinite
 
+open scoped Classical in
 /-- Finiteness of the nonsplitting set in `L / K` implies finiteness
 of the nonsplitting set in its finite normal closure. -/
 theorem finite_nonSplittingPlaces_normalClosure_of_original

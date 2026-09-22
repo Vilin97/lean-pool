@@ -22,7 +22,7 @@ public bundle here is `MulEquiv`; the preceding Galois/norm-quotient
 factor remains a `ContinuousMulEquiv`.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 
 noncomputable section
 
@@ -34,6 +34,7 @@ open Reciprocity
 
 variable {K : Type} [Field K] [NumberField K]
 
+open scoped Classical in
 /-- Fix the commutative idèle-class instance path shared by the norm quotient
 and its transported literal quotient throughout this module. -/
 local instance
@@ -42,6 +43,9 @@ local instance
     IsMulCommutative (IdeleClassGroup F) :=
   ⟨⟨fun a b => mul_comm a b⟩⟩
 
+attribute [local instance] arithmeticHilbertClassFieldIdeleClassGroupIsMulCommutative
+
+open scoped Classical in
 /-- Arithmetic reciprocity followed by transport between equal norm
 quotients sends a norm-residue symbol to its represented quotient class. -/
 private theorem
@@ -80,6 +84,7 @@ private theorem
     _ = QuotientGroup.mk' H c :=
       QuotientGroup.quotientMulEquivOfEq_mk h c
 
+open scoped Classical in
 /-- Postcomposing transported arithmetic reciprocity with any quotient
 equivalence preserves the represented quotient class formula. -/
 private theorem
@@ -109,6 +114,7 @@ private theorem
         (arithmeticReciprocity_quotientTransport_globalNormResidue
           H h c)
 
+open scoped Classical in
 private noncomputable def arithmeticBigHilbertClassFieldReciprocityData
     (K : Type) [Field K] [NumberField K] :
     { e : Gal((bigHilbertClassField K) / K) ≃*
@@ -134,6 +140,7 @@ private noncomputable def arithmeticBigHilbertClassFieldReciprocityData
       (bigHilbertClassFieldQuotientEquivNarrowClassGroup
         (K := K))⟩
 
+open scoped Classical in
 private noncomputable def arithmeticSmallHilbertClassFieldReciprocityData
     (K : Type) [Field K] [NumberField K] :
     { e : Gal((smallHilbertClassField K) / K) ≃*
@@ -159,6 +166,7 @@ private noncomputable def arithmeticSmallHilbertClassFieldReciprocityData
       (smallHilbertClassFieldQuotientEquivClassGroup
         (K := K))⟩
 
+open scoped Classical in
 /-- Arithmetic global reciprocity for the selected big Hilbert class
 field over the original number field. -/
 noncomputable def
@@ -167,9 +175,9 @@ noncomputable def
       RayClass.NarrowClassGroup K :=
   (arithmeticBigHilbertClassFieldReciprocityData K).1
 
+open scoped Classical in
 /-- The arithmetic global norm-residue symbol maps to its genuine
 narrow ideal class. -/
-@[simp]
 theorem
     arithmeticBigHilbertClassFieldGaloisEquivNarrowClassGroupOverOriginal_globalNormResidue
     (c : IdeleClassGroup K) :
@@ -183,9 +191,9 @@ theorem
           (bigHilbertClassFieldNormSubgroup (K := K)) c) := by
   exact (arithmeticBigHilbertClassFieldReciprocityData K).2 c
 
+open scoped Classical in
 /-- On an actual idèle, arithmetic big-Hilbert reciprocity is its
 narrow ideal class. -/
-@[simp]
 theorem
     arithmeticBigHilbertClassFieldGaloisEquivNarrowClassGroupOverOriginal_idele
     (a : IdeleGroup K) :
@@ -201,6 +209,7 @@ theorem
     arithmeticBigHilbertClassFieldGaloisEquivNarrowClassGroupOverOriginal_globalNormResidue,
     bigHilbertClassFieldQuotientEquivNarrowClassGroup_mk]
 
+open scoped Classical in
 /-- Arithmetic global reciprocity for the selected small Hilbert class
 field over the original number field. -/
 noncomputable def
@@ -209,9 +218,9 @@ noncomputable def
       ClassGroup (𝓞 K) :=
   (arithmeticSmallHilbertClassFieldReciprocityData K).1
 
+open scoped Classical in
 /-- The arithmetic global norm-residue symbol maps to its genuine
 ordinary ideal class. -/
-@[simp]
 theorem
     arithmeticSmallHilbertClassFieldGaloisEquivClassGroupOverOriginal_globalNormResidue
     (c : IdeleClassGroup K) :
@@ -225,9 +234,9 @@ theorem
           (smallHilbertClassFieldNormSubgroup (K := K)) c) := by
   exact (arithmeticSmallHilbertClassFieldReciprocityData K).2 c
 
+open scoped Classical in
 /-- On an actual idèle, arithmetic small-Hilbert reciprocity is its
 ordinary ideal class. -/
-@[simp]
 theorem
     arithmeticSmallHilbertClassFieldGaloisEquivClassGroupOverOriginal_idele
     (a : IdeleGroup K) :

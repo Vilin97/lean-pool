@@ -300,7 +300,7 @@ theorem abstractProfiniteCompletionToTopological_map
 
 /-- Under the condition that all finite-index normal subgroups are open, the
 open-quotient completion is canonically the abstract profinite completion. -/
-def topologicalProfiniteCompletion_compare_abstract
+def topologicalProfiniteCompletionCompareAbstract
     (hOpen : ∀ H : Subgroup G, H.Normal → H.FiniteIndex → IsOpen (H : Set G)) :
     TopologicalProfiniteCompletion G ≃ₜ* AbstractProfiniteCompletion G := by
   let forward := topologicalProfiniteCompletionToAbstract G hOpen

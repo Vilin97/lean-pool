@@ -241,7 +241,6 @@ def pushoutTowerClassInclusion :
 omit [NumberField M] [NumberField L] [NumberField N]
     [FiniteDimensional K M] [FiniteDimensional K L]
     [FiniteDimensional M N] [FiniteDimensional L N] in
-@[simp]
 theorem pushoutTowerClassInclusion_mk
     (a : RelativeIdeleGroup K L) :
     pushoutTowerClassInclusion K M L N
@@ -295,7 +294,6 @@ def pushoutNormQuotientMap :
 
 omit [NumberField M] [NumberField L] [NumberField N]
     [FiniteDimensional K M] [FiniteDimensional L N] in
-@[simp]
 theorem pushoutNormQuotientMap_mk
     (c : IdeleClassGroup K) :
     pushoutNormQuotientMap K M L N
@@ -375,7 +373,6 @@ def pushoutNormQuotientNormBack :
           K M L N c)
 
 omit [NumberField M] [NumberField L] [Algebra.IsPushout K M L N] in
-@[simp]
 theorem pushoutNormQuotientNormBack_mk
     (c : RelativeIdeleGroup.ClassGroup K M) :
     pushoutNormQuotientNormBack K M L N

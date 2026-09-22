@@ -190,6 +190,7 @@ open LocalFieldTheory.DiscreteValuationField
 
 variable {K : Type u} [Field K]
 
+/-- The canonical nontrivial norm on the completed Lubin–Tate field at level `n`. -/
 noncomputable local instance equalCharacteristicThetaInverseLevelNormedField
     (F : LocalField.{u, v} K) (n : ℕ) :
     NontriviallyNormedField (equalCharacteristicCompletedLevelField F n) :=
@@ -205,6 +206,7 @@ noncomputable local instance equalCharacteristicThetaInverseLevelCompleteSpace
     CompleteSpace (equalCharacteristicCompletedLevelField F n) :=
   equalCharacteristicCompletedLevelCompleteSpace F n
 
+/-- The nonnegative-real-valued valuation on the completed Lubin–Tate field at level `n`. -/
 noncomputable local instance equalCharacteristicThetaInverseLevelValued
     (F : LocalField.{u, v} K) (n : ℕ) :
     Valued (equalCharacteristicCompletedLevelField F n) ℝ≥0 :=

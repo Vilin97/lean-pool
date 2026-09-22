@@ -190,7 +190,8 @@ noncomputable def profiniteLocalReciprocityHom :
   topologicalProfiniteCompletionLift
     (standardLocalAbsoluteAbelianProfinite K) (absoluteLocalArtinMap K)
 
-/-- The standard reciprocity lift agrees with the absolute Artin map on canonical completion points. -/
+/-- The standard reciprocity lift agrees with the absolute Artin map on canonical completion
+points. -/
 @[simp]
 theorem profiniteLocalReciprocityHom_map (a : Kˣ) :
     profiniteLocalReciprocityHom K
@@ -218,7 +219,6 @@ theorem profiniteLocalReciprocityHom_surjective :
 
 /-- Finite target projections agree with projection of the absolute Artin
 map on the dense copy of `K×`. -/
-@[simp]
 theorem profiniteLocalReciprocityHom_finiteProjection_map
     (N : OpenNormalSubgroup (standardLocalAbsoluteAbelianProfinite K))
     (a : Kˣ) :
@@ -289,7 +289,6 @@ theorem profiniteLocalReciprocity_apply
 
 /-- Profinite reciprocity restricts to the absolute local Artin map on the
 dense copy of the local multiplicative group. -/
-@[simp]
 theorem profiniteLocalReciprocity_completionMap (a : Kˣ) :
     profiniteLocalReciprocity K
         (topologicalProfiniteCompletionMap Kˣ a) =
@@ -385,7 +384,6 @@ noncomputable def standardAbsoluteGaloisAbelianizationLimitEquiv :
 /-- Every finite projection of the absolute Artin map is its corresponding
 finite local Artin coordinate after canonical transport to the separable
 closure model. -/
-@[simp]
 theorem absoluteLocalArtinMap_finiteProjection
     (N : OpenNormalSubgroup (localAbsoluteAbelianProfinite K))
     (a : Units K) :

@@ -19,7 +19,7 @@ namespace QuotientGroup
 topological group is totally disconnected. -/
 theorem totallyDisconnectedSpace_of_isClosed
     {G : Type*} [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
-    [CompactSpace G] [T2Space G] [TotallyDisconnectedSpace G]
+    [CompactSpace G] [TotallyDisconnectedSpace G]
     (N : Subgroup G) [N.Normal] (hN : IsClosed (N : Set G)) :
     TotallyDisconnectedSpace (G ⧸ N) := by
   let q : G →* G ⧸ N := QuotientGroup.mk' N
@@ -167,7 +167,7 @@ topological group vanishes on the identity component. -/
 theorem connectedComponentOfOne_le_ker
     {G H : Type*}
     [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
-    [Group H] [TopologicalSpace H] [IsTopologicalGroup H]
+    [Group H] [TopologicalSpace H]
     [TotallyDisconnectedSpace H]
     (f : G →ₜ* H) :
     Subgroup.connectedComponentOfOne G ≤ f.ker := by

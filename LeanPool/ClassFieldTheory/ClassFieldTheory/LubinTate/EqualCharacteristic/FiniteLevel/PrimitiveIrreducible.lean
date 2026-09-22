@@ -316,7 +316,8 @@ theorem equalCharacteristicLubinTatePrimitivePolynomial_irreducible
       Irreducible
         ((equalCharacteristicLubinTateIntegralPrimitivePolynomial F n).map
           (algebraMap F.residueField⟦X⟧ F.residueField⸨X⸩)) :=
-    (equalCharacteristicLubinTateIntegralPrimitivePolynomial_monic F n).irreducible_iff_irreducible_map_fraction_map.mp
+    (equalCharacteristicLubinTateIntegralPrimitivePolynomial_monic F
+      n).irreducible_iff_irreducible_map_fraction_map.mp
       (equalCharacteristicLubinTateIntegralPrimitivePolynomial_irreducible F n)
   simpa [equalCharacteristicLubinTateIntegralPrimitivePolynomial_map] using hmap
 

@@ -283,7 +283,6 @@ theorem algEquivOfAlgEquiv_apply_residue
 
 /-- The inverse induced residue equivalence sends residues back along the inverse
 algebra equivalence. -/
-@[simp]
 theorem algEquivOfAlgEquiv_symm_apply_residue
     (e : R ≃ₐ[T] S) (x : S) :
     (algEquivOfAlgEquiv e).symm (IsLocalRing.residue S x) =

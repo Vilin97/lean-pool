@@ -21,8 +21,7 @@ idele into its one-place component and the remaining defining-modulus
 component.
 -/
 
-open scoped NumberField Classical
-
+open scoped NumberField
 noncomputable section
 
 namespace GlobalClassFieldTheory
@@ -32,6 +31,7 @@ open NumberField IsDedekindDomain
 
 variable {K : Type*} [Field K] [NumberField K]
 
+open scoped Classical in
 /-- If a global defining modulus exists, then at every finite place some
 higher-unit class subgroup is already contained in the given subgroup. -/
 theorem exists_localDefiningExponent
@@ -48,12 +48,14 @@ theorem exists_localDefiningExponent
 
 namespace ConductorialSubgroup
 
+open scoped Classical in
 /-- The finite local conductor exponent seen by a conductorial subgroup. -/
 noncomputable def narrowFiniteLocalConductorExponent
     (H : ConductorialSubgroup K)
     (v : HeightOneSpectrum (𝓞 K)) : ℕ :=
   Nat.find (exists_localDefiningExponent H.1 H.2 v)
 
+open scoped Classical in
 /-- The finite local conductor exponent has its defining higher-unit
 inclusion. -/
 theorem narrowFiniteLocalConductorExponent_spec
@@ -63,6 +65,7 @@ theorem narrowFiniteLocalConductorExponent_spec
         (H.narrowFiniteLocalConductorExponent v) ≤ H.1 :=
   Nat.find_spec (exists_localDefiningExponent H.1 H.2 v)
 
+open scoped Classical in
 /-- Minimality of the finite local conductor exponent. -/
 theorem narrowFiniteLocalConductorExponent_le
     (H : ConductorialSubgroup K)
@@ -73,6 +76,7 @@ theorem narrowFiniteLocalConductorExponent_le
   exact Nat.find_min'
     (exists_localDefiningExponent H.1 H.2 v) hn
 
+open scoped Classical in
 /-- The finite local conductor exponent vanishes exactly when the full
 finite-place integral-unit class subgroup lies in the subgroup. -/
 theorem narrowFiniteLocalConductorExponent_eq_zero_iff
@@ -90,6 +94,7 @@ theorem narrowFiniteLocalConductorExponent_eq_zero_iff
 
 end ConductorialSubgroup
 
+open scoped Classical in
 /-- Replacing one finite exponent of a defining modulus, while retaining its
 selected real places, again gives a defining modulus. -/
 theorem replaceFiniteExponent_definingModulus
@@ -187,6 +192,7 @@ theorem replaceFiniteExponent_definingModulus
 
 namespace ConductorialSubgroup
 
+open scoped Classical in
 /-- The narrow finite conductor exponent equals the independently defined
 finite local conductor exponent at every finite place. -/
 theorem narrowFiniteConductorExponent_eq_narrowFiniteLocalConductorExponent
@@ -220,6 +226,7 @@ theorem narrowFiniteConductorExponent_eq_narrowFiniteLocalConductorExponent
         m v).trans hm
     exact (H.narrowFiniteLocalConductorExponent_le v hlocal).trans_eq hmv
 
+open scoped Classical in
 /-- The exponent of the narrow finite conductor at every finite place is
 its finite local conductor exponent. -/
 theorem narrowFiniteConductor_apply_eq_narrowFiniteLocalConductorExponent
@@ -230,6 +237,7 @@ theorem narrowFiniteConductor_apply_eq_narrowFiniteLocalConductorExponent
   rw [H.narrowFiniteConductor_apply,
     H.narrowFiniteConductorExponent_eq_narrowFiniteLocalConductorExponent v]
 
+open scoped Classical in
 /-- A defining modulus can be chosen to agree with the narrow finite
 conductor on any prescribed finite set of finite places and with the
 fixed bounding modulus away from that set. -/
@@ -282,6 +290,7 @@ theorem exists_definingModulus_finitePart_agrees_on_finset
           exact hw (Finset.mem_insert_of_mem hws)
         simpa [m', RayClass.Modulus.replaceFinitePart, hwv] using hmOff w hws
 
+open scoped Classical in
 /-- A defining full modulus can be chosen whose finite part is exactly the
 narrow finite conductor. -/
 theorem exists_definingModulus_finitePart_eq_narrowFiniteConductor
@@ -311,6 +320,7 @@ theorem exists_definingModulus_finitePart_eq_narrowFiniteConductor
       Nat.eq_zero_of_le_zero hfinite_le
     exact hmzero.trans hfinite_zero.symm
 
+open scoped Classical in
 /-- The narrow finite conductor reverses inclusions of conductorial
 subgroups. -/
 theorem narrowFiniteConductor_antitone

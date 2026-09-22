@@ -18,13 +18,14 @@ compares the given map and genuine global reciprocity at a common multiple
 of the given modulus and the extension's full conductor.
 -/
 
-open scoped Classical NumberField IsMulCommutative
+open scoped NumberField IsMulCommutative
 open NumberField IsDedekindDomain
 
 noncomputable section
 
 namespace GlobalClassFieldTheory.GlobalClassFields
 
+open scoped Classical in
 private theorem rayRigidity_ideleClassGroupIsMulCommutative
     {F : Type} [Field F] [NumberField F] :
     IsMulCommutative (IdeleClassGroup F) :=
@@ -32,6 +33,7 @@ private theorem rayRigidity_ideleClassGroupIsMulCommutative
 
 attribute [local instance] rayRigidity_ideleClassGroupIsMulCommutative
 
+open scoped Classical in
 /-- Frobenius normalization on all primes away from a modulus forces that
 modulus to define the genuine norm subgroup of a finite abelian extension. -/
 theorem rayModulus_isDefining_of_arithmeticPrimeArtinEquiv
@@ -105,6 +107,7 @@ theorem rayModulus_isDefining_of_arithmeticPrimeArtinEquiv
     Reciprocity.arithmeticGlobalNormResidueMonoidHom_ker] at hArtin
   exact hArtin
 
+open scoped Classical in
 /-- A Frobenius-normalized ray-class *isomorphism* also identifies the
 extension's genuine norm subgroup exactly with the ray congruence subgroup.
 The reverse inclusion follows because the induced quotient map is a
@@ -155,6 +158,7 @@ theorem rayModulus_normSubgroup_eq_of_arithmeticPrimeArtinEquiv
     exact hx'
   · exact hle
 
+open scoped Classical in
 /-- Frobenius normalization away from the modulus determines the value of
 the ray Artin map on every idèle class, including classes supported at a
 ramified place.  The normalization here is arithmetic Frobenius. -/
@@ -221,6 +225,7 @@ theorem rayArtin_comp_ideleClass_eq_arithmeticGlobalNormResidue
     artin (QuotientGroup.mk' m.congruenceSubgroup x) at hx
   exact hx.symm
 
+open scoped Classical in
 /-- A Frobenius-normalized ray Artin homomorphism has kernel precisely the
 image of the genuine idèle-class norm subgroup in the ray quotient.  Unlike
 the ray-class-field case, the homomorphism need not be injective. -/

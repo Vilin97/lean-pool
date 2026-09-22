@@ -13,7 +13,8 @@ namespace KummerTheory
 open CyclicCohomology
 
 /-!
-# finite abelian Kummer theory, the finite abelian Kummer decomposition: the cyclic abstract-operator step
+# finite abelian Kummer theory, the finite abelian Kummer decomposition: the cyclic
+  abstract-operator step
 
 This file isolates the finite cyclic step in the proof of the finite abelian Kummer decomposition.
 It does not claim the full Kummer correspondence.  In additive notation, we
@@ -148,7 +149,8 @@ theorem cyclic_single_radical_of_tateHMinusOne_isZero
     subst q
     exact Subgroup.one_mem _
 
-/-- Finite-cyclic, single-radical frontier of finite abelian Kummer theory, the finite abelian Kummer decomposition,
+/-- Finite-cyclic, single-radical frontier of finite abelian Kummer theory, the finite abelian
+Kummer decomposition,
 now obtained from `SatisfiesCyclicNormKernelVanishing` itself.
 
 Here `B` is the actual coefficient representation `A_L` attached to the

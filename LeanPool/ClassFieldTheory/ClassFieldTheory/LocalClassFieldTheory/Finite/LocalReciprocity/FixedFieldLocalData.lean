@@ -32,6 +32,7 @@ private abbrev finiteFixedField
     Type :=
   abstractFixedField K (SeparableClosure K) H.field
 
+/-- The separable closure of a finite fixed field is an algebra over that fixed field. -/
 local instance finiteFixedFieldSeparableClosureAlgebra
     (K : Type) [Field K]
     (H : FiniteAbstractField (Gal(SeparableClosure K/K))) :

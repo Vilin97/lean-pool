@@ -49,7 +49,8 @@ theorem continuous_principalUnitLogSeriesHomOfWithZeroValuationScaled
       (principalUnitLogSeriesHomOfWithZeroValuationScaled
         (v := v) (p := p) e hnK hnval hcomplete) := by
   let : Valued K (WithZero (Multiplicative ℤ)) := Valued.mk' v
-  let F : ValuationTheory.DiscreteValuationField.CompleteDVF.{u, 0} K := completeDVFOfWithZeroValuation v
+  let F : ValuationTheory.DiscreteValuationField.CompleteDVF.{u, 0} K :=
+    completeDVFOfWithZeroValuation v
   have hMulSubring :
       Continuous (fun z : F.valuationSubring × F.valuationSubring =>
         z.1 * z.2) := by
@@ -88,7 +89,8 @@ theorem continuous_principalUnitLogSeriesHomOfWithZeroValuationScaled
   let : ContinuousMul F.valuationSubringˣ := ⟨hMul⟩
   let : ContinuousInv F.valuationSubringˣ := ⟨hInv⟩
   have : IsTopologicalGroup F.valuationSubringˣ := by infer_instance
-  have : IsTopologicalGroup ((LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) 1) := by
+  have : IsTopologicalGroup
+    ((LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) 1) := by
     infer_instance
   let φ :=
     principalUnitLogSeriesHomOfWithZeroValuationScaled
@@ -98,7 +100,8 @@ theorem continuous_principalUnitLogSeriesHomOfWithZeroValuationScaled
   rw [ContinuousAt]
   suffices hlog :
     Tendsto
-      (fun u : (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup (completeDVFOfWithZeroValuation v)) 1 =>
+      (fun u : (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+        (completeDVFOfWithZeroValuation v)) 1 =>
         principalUnitLogSeriesOfWithZeroValuation v u hnK)
       (𝓝 1) (𝓝 0) by
     rw [principalUnitLogSeries_one_ofWithZeroValuation v hnK]
@@ -132,7 +135,8 @@ theorem continuous_principalUnitLogSeriesHomOfWithZeroValuationScaled
     lt_of_lt_of_le hN₁ (by exact_mod_cast Nat.le_max_right N₀ N₁)
   have hsubContinuous :
       Continuous
-        (fun u : (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup (completeDVFOfWithZeroValuation v)) 1 =>
+        (fun u : (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+          (completeDVFOfWithZeroValuation v)) 1 =>
           principalUnitSubOneOfWithZeroValuation v u) := by
     unfold principalUnitSubOneOfWithZeroValuation
     fun_prop
@@ -173,16 +177,19 @@ theorem continuous_principalUnitLogSeriesHomOfWithZeroValuationScaled
     have hx' : v x < v (z ^ m) := v.restrict_lt_iff.mp hx
     exact hx'.trans (by simpa [v.map_pow, hz] using hm)
   have hpre :
-      {u : (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup (completeDVFOfWithZeroValuation v)) 1 |
+      {u : (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+        (completeDVFOfWithZeroValuation v)) 1 |
         v (principalUnitSubOneOfWithZeroValuation v u) <
           WithZero.exp (-(N : ℤ))} ∈ 𝓝 1 := by
     have hballOne :
         {x : K | v x < WithZero.exp (-(N : ℤ))} ∈
           𝓝 (principalUnitSubOneOfWithZeroValuation v
-            (1 : (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup (completeDVFOfWithZeroValuation v)) 1)) := by
+            (1 : (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+              (completeDVFOfWithZeroValuation v)) 1)) := by
       simpa using hball
     have ht := (hsubContinuous.tendsto
-      (1 : (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup (completeDVFOfWithZeroValuation v)) 1)) hballOne
+      (1 : (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+        (completeDVFOfWithZeroValuation v)) 1)) hballOne
     exact ht
   refine Filter.mem_of_superset hpre ?_
   intro u hu
@@ -227,10 +234,12 @@ theorem uniformizerValueExponent_residueCharacteristic_ne_zero
     {π : (LocalField.ofWithZeroValuation v).valuationSubring}
     (hπ : (LocalField.ofWithZeroValuation v).toCompleteDVF.valuation.IsUniformizer
       (π : K)) :
-    (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent (LocalField.ofWithZeroValuation v).toCompleteDVF) hπ
+    (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent
+      (LocalField.ofWithZeroValuation v).toCompleteDVF) hπ
         (Units.mk0
           ((LocalField.ofWithZeroValuation v).residueCharacteristic : K)
-          (LocalField.ofWithZeroValuation v).natCast_residueCharacteristic_ne_zero_of_charZero) ≠ 0 := by
+          (LocalField.ofWithZeroValuation v).natCast_residueCharacteristic_ne_zero_of_charZero)
+            ≠ 0 := by
   let F : LocalField.{u, 0} K := LocalField.ofWithZeroValuation v
   let pUnit : Kˣ :=
     Units.mk0 (F.residueCharacteristic : K)
@@ -253,21 +262,24 @@ exponent determines the logarithm on all field units. -/
 theorem fieldUnitLogHomWithUniformizerValue_unique_of_killing
     (F : ValuationTheory.DiscreteValuationField.CompleteDVF K) [Finite F.residueField] [CharZero K]
     {π : F.valuationSubring} (hπ : F.valuation.IsUniformizer (π : K))
-    (φ : (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) 1 →* Multiplicative K) (a : Kˣ)
-    (ha : (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ a ≠ 0)
+    (φ : (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) 1 →*
+      Multiplicative K) (a : Kˣ)
+    (ha : (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent
+      F) hπ a ≠ 0)
     (ψ : Kˣ →* Multiplicative K)
-    (hψprincipal : ∀ u : (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) 1,
+    (hψprincipal : ∀ u :
+      (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) 1,
       ψ (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.valuationSubringUnitFieldUnitHom F
           (u : F.valuationSubringˣ)) = φ u)
     (hψa : ψ a = 1) :
     ψ = fieldUnitLogHomWithUniformizerValue F
-      (CompleteDVF.higherPrincipalUnitGroup.fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF
+      (CompleteDVF.higherPrincipalUnitGroup.fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
         F hπ) φ
       (uniformizerLogValueKilling F
-        (CompleteDVF.higherPrincipalUnitGroup.fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF
+        (CompleteDVF.higherPrincipalUnitGroup.fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
           F hπ) φ a) := by
   let d :=
-    CompleteDVF.higherPrincipalUnitGroup.fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF
+    CompleteDVF.higherPrincipalUnitGroup.fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
       F hπ
   let L := fieldUnitLogHomWithUniformizerValue F d φ
     (uniformizerLogValueKilling F d φ a)
@@ -324,10 +336,12 @@ theorem fieldUnitLogHomWithUniformizerValue_unique_of_killing
   · intro y
     exact
       LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.mem_zeroSubgroup_iff_exists_valuationSubringUnitFieldUnitHom_eq
-        (F := F) ((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.multiplicativeIntegerValuationOfUniformizer F) hπ)
+        (F := F)
+          ((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.multiplicativeIntegerValuationOfUniformizer F) hπ)
         ((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.multiplicativeIntegerValuationOfUniformizer_zeroSubgroup_eq_unitGroup F) hπ)
         y
-  · exact (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.multiplicativeIntegerValuationOfUniformizer_isUniformizer F) hπ
+  · exact
+      (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.multiplicativeIntegerValuationOfUniformizer_isUniformizer F) hπ
   · intro u
     rw [hψprincipal u]
     simpa [L, d] using
@@ -335,7 +349,8 @@ theorem fieldUnitLogHomWithUniformizerValue_unique_of_killing
         F hπ φ (uniformizerLogValueKilling F d φ a) u).symm
   · exact hϖ
 
-/-- The inverse of the uniformizer–residue–principal-unit decomposition field-unit decomposition is continuous
+/-- The inverse of the uniformizer–residue–principal-unit decomposition field-unit decomposition
+is continuous
 also for the topology defined directly by a standard `ℤᵐ⁰`-valued valuation.
 The proof transports the already established range-restricted result across
 the equality of uniform structures. -/
@@ -345,15 +360,17 @@ theorem continuous_fieldUnitsEquivRootsPrincipalUnitsUniformizer_symm_ofWithZero
     [Finite (IsLocalRing.ResidueField v.valuationSubring)]
     {π : (completeDVFOfWithZeroValuation v).valuationSubring}
     (hπ : v.IsUniformizer (π : K)) :
-    let F : ValuationTheory.DiscreteValuationField.CompleteDVF.{u, 0} K := completeDVFOfWithZeroValuation v
+    let F : ValuationTheory.DiscreteValuationField.CompleteDVF.{u, 0} K :=
+      completeDVFOfWithZeroValuation v
     letI : Finite F.residueField := by
       change Finite (IsLocalRing.ResidueField v.valuationSubring)
       infer_instance
     letI : Valued K (WithZero (Multiplicative ℤ)) := Valued.mk' v
     Continuous
-      (CompleteDVF.higherPrincipalUnitGroup.fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF
+      (CompleteDVF.higherPrincipalUnitGroup.fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
         F hπ).symm := by
-  let F : ValuationTheory.DiscreteValuationField.CompleteDVF.{u, 0} K := completeDVFOfWithZeroValuation v
+  let F : ValuationTheory.DiscreteValuationField.CompleteDVF.{u, 0} K :=
+    completeDVFOfWithZeroValuation v
   let direct : Valued K (WithZero (Multiplicative ℤ)) := Valued.mk' v
   let restricted : Valued K
       (MonoidHom.mrange v.toMonoidWithZeroHom) :=
@@ -397,12 +414,13 @@ theorem continuous_fieldUnitsEquivRootsPrincipalUnitsUniformizer_symm_ofWithZero
     (CompleteDVF.higherPrincipalUnitGroup.fieldUnitDecompositionFactors F)
     (unitsTopology direct.toTopologicalSpace)
     (factorsTopology direct.toTopologicalSpace)
-    (CompleteDVF.higherPrincipalUnitGroup.fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF
+    (CompleteDVF.higherPrincipalUnitGroup.fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
       F hπ).symm
   rw [hdom, hcod]
   exact hcontinuousRestricted
 
-/-- The local-field structure theory, the field-unit logarithm theorem.  For a mixed-characteristic local
+/-- The local-field structure theory, the field-unit logarithm theorem.  For a
+mixed-characteristic local
 field presented by a complete discrete `ℤᵐ⁰`-valued valuation, there is a
 unique continuous additive logarithm on `Kˣ` which kills the residue
 characteristic and restricts on `U¹` to the convergent logarithm series. -/
@@ -420,7 +438,8 @@ theorem existsUnique_continuous_log
     ∃! L : Kˣ →* Multiplicative K,
       Continuous L ∧
       L pUnit = 1 ∧
-      ∀ u : (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F.toCompleteDVF) 1,
+      ∀ u : (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+        F.toCompleteDVF) 1,
         Multiplicative.toAdd
             (L (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.valuationSubringUnitFieldUnitHom
               F.toCompleteDVF (u : F.toCompleteDVF.valuationSubringˣ))) =
@@ -447,7 +466,8 @@ theorem existsUnique_continuous_log
   let : Fact p.Prime := by
     dsimp [p, F]
     infer_instance
-  let φ : (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F.toCompleteDVF) 1 →* Multiplicative K :=
+  let φ : (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+    F.toCompleteDVF) 1 →* Multiplicative K :=
     principalUnitLogSeriesHomOfWithZeroValuationScaled
       (v := v) (p := p) e hnK hnval hcomplete
   have hφ :
@@ -459,13 +479,14 @@ theorem existsUnique_continuous_log
     all_goals rfl
   rcases F.exists_uniformizer with ⟨π, hπ⟩
   let d :=
-    CompleteDVF.higherPrincipalUnitGroup.fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF
+    CompleteDVF.higherPrincipalUnitGroup.fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
       F.toCompleteDVF hπ
   let c : K := uniformizerLogValueKilling F.toCompleteDVF d φ pUnit
   let L : Kˣ →* Multiplicative K :=
     fieldUnitLogHomWithUniformizerValue F.toCompleteDVF d φ c
   have hpExponent :
-      (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F.toCompleteDVF) hπ pUnit ≠ 0 := by
+      (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent
+        F.toCompleteDVF) hπ pUnit ≠ 0 := by
     simpa [F, pUnit] using
       uniformizerValueExponent_residueCharacteristic_ne_zero v hπ
   have hLp : L pUnit = 1 := by
@@ -482,7 +503,9 @@ theorem existsUnique_continuous_log
     exact
       (continuous_fieldUnitDecompositionLogHomWithUniformizerValue
         F.toCompleteDVF φ c hφ).comp hd
-  have hLprincipal : ∀ u : (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F.toCompleteDVF) 1,
+  have hLprincipal : ∀ u :
+    (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+    F.toCompleteDVF) 1,
       Multiplicative.toAdd
           (L (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.valuationSubringUnitFieldUnitHom
             F.toCompleteDVF (u : F.toCompleteDVF.valuationSubringˣ))) =
@@ -493,7 +516,7 @@ theorem existsUnique_continuous_log
         F.toCompleteDVF hπ φ c u
     rw [show L = fieldUnitLogHomWithUniformizerValue F.toCompleteDVF d φ c from rfl]
     rw [show d =
-      CompleteDVF.higherPrincipalUnitGroup.fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF
+      CompleteDVF.higherPrincipalUnitGroup.fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
         F.toCompleteDVF hπ from rfl]
     rw [hu]
     exact

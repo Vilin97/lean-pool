@@ -372,12 +372,6 @@ theorem prod_norm_finitePlaceLocalTensorDecompositionUnitsComponent_single_eq
     [∀ u :
         AbsoluteValueExtension
           (HeightOneSpectrum.adicAbv K v₀) L,
-      Algebra
-        (HeightOneSpectrum.adicAbv K v₀).Completion
-        u.1.Completion]
-    [∀ u :
-        AbsoluteValueExtension
-          (HeightOneSpectrum.adicAbv K v₀) L,
       Module.Finite
         (HeightOneSpectrum.adicAbv K v₀).Completion
         u.1.Completion]
@@ -507,7 +501,7 @@ theorem localTensorDetNorm_singleRelativeLocalTensorDecompositionIntegralUnit_eq
     AbsoluteValue.completionAlgebra vK w.1 w.2
   dsimp only at hNorm
   let :=
-    completionTensorDecomposition_extensionFintype
+    completionTensorDecompositionExtensionFintype
       (K := K) (L := L) vK hvK
   let : ∀ u : AbsoluteValueExtension vK L,
       Algebra vK.Completion u.1.Completion :=
@@ -545,7 +539,7 @@ theorem localTensorDetNorm_singleRelativeLocalTensorDecompositionIntegralUnit_eq
   rw [hNormProduct]
   have hComponentEq :
       ∀ u : AbsoluteValueExtension vK L,
-        completionTensorDecomposition_left
+        completionTensorDecompositionLeft
               (K := K) (L := L) vK hvK
               (zA : LocalTensorAlgebra (L := L) vK) u =
           (finitePlaceLocalTensorDecompositionUnitsComponent
@@ -594,7 +588,7 @@ private theorem exists_localizedCompletionNormPreimage_with_norm_bounds
   let : IsGalois vK.Completion E :=
     HilbertRamification.algebraicLocalization_isGalois vK w
   let : NontriviallyNormedField vK.Completion :=
-    absoluteValueExtension_completionNontriviallyNormedField vK hvK
+    absoluteValueExtensionCompletionNontriviallyNormedField vK hvK
   let : LocallyCompactSpace vK.Completion :=
     AbsoluteValue.Completion.locallyCompactSpace
       (finitePlaceCompletionBaseMap_isometry v₀)

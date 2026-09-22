@@ -224,7 +224,7 @@ theorem basis_coord_isIntegral_of_integral_traces
     [CommRing R] [Field A] [CommRing B]
     [Algebra R A] [Algebra A B]
     [Fintype ι] [DecidableEq ι]
-    [Module.Free A B] [Module.Finite A B]
+
     (b : Module.Basis ι A B)
     {x : B}
     (hM : ∀ j k, IsIntegral R
@@ -272,7 +272,7 @@ omit [NumberField L] in
 /-- The trace matrix of the tensor-product basis is obtained from the
 original trace matrix by scalar extension. -/
 theorem trace_tensorProduct_basis_mul
-    {ι : Type*} [Fintype ι]
+    {ι : Type*}
     (b : Module.Basis ι K L)
     (A : Type*) [Field A] [Algebra K A]
     (i j : ι) :
@@ -313,7 +313,7 @@ theorem isIntegral_trace_tensor_of_components
     (hvK0 : vK.IsNontrivial)
     (x : vK.Completion ⊗[K] L)
     (hx : ∀ w : AbsoluteValueExtension vK L,
-      completionTensorDecomposition_left
+      completionTensorDecompositionLeft
           (K := K) (L := L) vK hvK0 x w ∈
         absoluteValueCompletionIntegers w.1
           (absoluteValueExtension_isNonarchimedean vK hvK w)) :
@@ -322,7 +322,7 @@ theorem isIntegral_trace_tensor_of_components
         (vK.Completion ⊗[K] L) x) := by
   classical
   let : Fintype (AbsoluteValueExtension vK L) :=
-    completionTensorDecomposition_extensionFintype
+    completionTensorDecompositionExtensionFintype
       (K := K) (L := L) vK hvK0
   let : ∀ w : AbsoluteValueExtension vK L,
       Algebra vK.Completion w.1.Completion :=
@@ -336,7 +336,7 @@ theorem isIntegral_trace_tensor_of_components
       vK.Completion w.1.Completion
   let y :
       ∀ w : AbsoluteValueExtension vK L, w.1.Completion :=
-    completionTensorDecomposition_left
+    completionTensorDecompositionLeft
       (K := K) (L := L) vK hvK0 x
   have hy :
       ∀ w : AbsoluteValueExtension vK L,
@@ -354,6 +354,6 @@ theorem isIntegral_trace_tensor_of_components
   rw [← ValuationTheory.Completion.algebra_trace_pi_apply
     (fun w : AbsoluteValueExtension vK L => w.1.Completion) y] at hsum
   rw [Algebra.trace_eq_of_algEquiv
-    (completionTensorDecomposition_left
+    (completionTensorDecompositionLeft
       (K := K) (L := L) vK hvK0) x] at hsum
   exact hsum

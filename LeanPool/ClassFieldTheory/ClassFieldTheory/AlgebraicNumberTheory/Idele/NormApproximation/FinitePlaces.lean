@@ -32,7 +32,7 @@ All choices are made from the extension theorem for absolute values;
 none of the local conclusions is included as input data.
 -/
 
-open scoped NumberField Classical NNReal
+open scoped NumberField NNReal
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -49,6 +49,7 @@ variable {K L : Type}
     [Field L] [Algebra K L]
     [FiniteDimensional K L] [IsGalois K L]
 
+open scoped Classical in
 /-- The canonical dense embedding used to compare the absolute-value
 completion at `v` with the concrete adic completion. -/
 noncomputable def finitePlaceCompletionBaseMap
@@ -59,6 +60,7 @@ noncomputable def finitePlaceCompletionBaseMap
     (WithAbs.equiv
       (NumberField.HeightOneSpectrum.adicAbv K v)).toRingHom
 
+open scoped Classical in
 @[simp]
 theorem finitePlaceCompletionBaseMap_apply
     (v : HeightOneSpectrum (𝓞 K))
@@ -70,6 +72,7 @@ theorem finitePlaceCompletionBaseMap_apply
           (NumberField.HeightOneSpectrum.adicAbv K v) x) :=
   rfl
 
+open scoped Classical in
 theorem finitePlaceCompletionBaseMap_norm
     (v : HeightOneSpectrum (𝓞 K))
     (x : WithAbs
@@ -79,6 +82,7 @@ theorem finitePlaceCompletionBaseMap_norm
     FinitePlace.norm_embedding]
   rfl
 
+open scoped Classical in
 /-- The base embedding is an isometry. -/
 theorem finitePlaceCompletionBaseMap_isometry
     (v : HeightOneSpectrum (𝓞 K)) :
@@ -86,6 +90,7 @@ theorem finitePlaceCompletionBaseMap_isometry
   AddMonoidHomClass.isometry_of_norm _
     (finitePlaceCompletionBaseMap_norm v)
 
+open scoped Classical in
 /-- Extension of the base embedding to the absolute-value completion. -/
 noncomputable def finitePlaceCompletionRingHom
     (v : HeightOneSpectrum (𝓞 K)) :
@@ -95,6 +100,7 @@ noncomputable def finitePlaceCompletionRingHom
     (finitePlaceCompletionBaseMap v)
     (finitePlaceCompletionBaseMap_isometry v).continuous
 
+open scoped Classical in
 @[simp]
 theorem finitePlaceCompletionRingHom_coe
     (v : HeightOneSpectrum (𝓞 K))
@@ -108,11 +114,13 @@ theorem finitePlaceCompletionRingHom_coe
     (finitePlaceCompletionBaseMap v)
     (finitePlaceCompletionBaseMap_isometry v).continuous x
 
+open scoped Classical in
 theorem finitePlaceCompletionRingHom_isometry
     (v : HeightOneSpectrum (𝓞 K)) :
     Isometry (finitePlaceCompletionRingHom v) :=
   (finitePlaceCompletionBaseMap_isometry v).completion_extension
 
+open scoped Classical in
 /-- The completed comparison map is onto the concrete adic
 completion. -/
 theorem finitePlaceCompletionRingHom_surjective
@@ -146,6 +154,7 @@ theorem finitePlaceCompletionRingHom_surjective
     trivial
   exact closure_minimal hrange hrangeClosed hx
 
+open scoped Classical in
 /-- The two concrete models of `K_v` are canonically isomorphic. -/
 noncomputable def finitePlaceCompletionRingEquiv
     (v : HeightOneSpectrum (𝓞 K)) :
@@ -155,6 +164,7 @@ noncomputable def finitePlaceCompletionRingEquiv
     ⟨(finitePlaceCompletionRingHom_isometry v).injective,
       finitePlaceCompletionRingHom_surjective v⟩
 
+open scoped Classical in
 /-- The preceding ring equivalence, with its native topologies. -/
 noncomputable def finitePlaceCompletionContinuousMulEquiv
     (v : HeightOneSpectrum (𝓞 K)) :
@@ -167,6 +177,7 @@ noncomputable def finitePlaceCompletionContinuousMulEquiv
     ((finitePlaceCompletionRingHom_isometry v).right_inv
       (finitePlaceCompletionRingEquiv v).right_inv).continuous
 
+open scoped Classical in
 /-- The induced topological multiplicative equivalence on unit
 groups. -/
 noncomputable def finitePlaceCompletionUnitsContinuousMulEquiv
@@ -176,6 +187,7 @@ noncomputable def finitePlaceCompletionUnitsContinuousMulEquiv
   Units.mapContinuousMulEquiv
     (finitePlaceCompletionContinuousMulEquiv v)
 
+open scoped Classical in
 /-- The chosen extension of the `v`-adic absolute value to `L`.
 The embedding is supplied by algebraic closedness of the completion's
 algebraic closure. -/
@@ -188,6 +200,7 @@ noncomputable def chosenFinitePlaceExtension
     (RayClass.adicAbv_isNontrivial v)
     IsAlgClosed.lift
 
+open scoped Classical in
 /-- The chosen actual localization `L_w` above the finite place `v`. -/
 abbrev ChosenFinitePlaceLocalizedCompletion
     (v : HeightOneSpectrum (𝓞 K)) :=
@@ -195,6 +208,7 @@ abbrev ChosenFinitePlaceLocalizedCompletion
     (NumberField.HeightOneSpectrum.adicAbv K v)
     (chosenFinitePlaceExtension (L := L) v)
 
+open scoped Classical in
 /-- The concrete local norm subgroup at `v`.  It is first formed in the
 absolute-value completion model and then transported to the adic
 completion used by the idele library. -/
@@ -218,6 +232,7 @@ noncomputable def chosenFinitePlaceLocalNormSubgroup
     (localNormSubgroup vK.Completion E).map
       e.toMonoidHom
 
+open scoped Classical in
 /-- The local norm subgroup transported to the actual finite idele
 coordinate is open. -/
 theorem chosenFinitePlaceLocalNormSubgroup_isOpen
@@ -245,7 +260,7 @@ theorem chosenFinitePlaceLocalNormSubgroup_isOpen
   let : IsGalois vK.Completion E :=
     HilbertRamification.algebraicLocalization_isGalois vK w
   let : NontriviallyNormedField vK.Completion :=
-    absoluteValueExtension_completionNontriviallyNormedField
+    absoluteValueExtensionCompletionNontriviallyNormedField
       vK hvK
   let : LocallyCompactSpace vK.Completion :=
     AbsoluteValue.Completion.locallyCompactSpace
@@ -291,6 +306,7 @@ theorem chosenFinitePlaceLocalNormSubgroup_isOpen
       Set vK.Completionˣ))
   exact e.isOpenMap _ hN
 
+open scoped Classical in
 /-- The actual local norm quotient in the concrete finite-place
 completion used by ideles. -/
 abbrev ChosenFinitePlaceNormQuotient
@@ -299,6 +315,7 @@ abbrev ChosenFinitePlaceNormQuotient
     chosenFinitePlaceLocalNormSubgroup
       (K := K) (L := L) v
 
+open scoped Classical in
 /-- The same local quotient in the absolute-value completion and
 `LocalizedCompletion` model used by local class field theory. -/
 noncomputable def ChosenFinitePlaceIntrinsicNormQuotient
@@ -316,6 +333,7 @@ noncomputable def ChosenFinitePlaceIntrinsicNormQuotient
     NormQuotient vK.Completion
       (LocalizedCompletion vK w)
 
+open scoped Classical in
 noncomputable instance
     chosenFinitePlaceIntrinsicNormQuotientCommGroup
     (v : HeightOneSpectrum (𝓞 K)) :
@@ -325,6 +343,7 @@ noncomputable instance
   unfold ChosenFinitePlaceIntrinsicNormQuotient
   infer_instance
 
+open scoped Classical in
 /-- Comparison between the intrinsic local-class-field norm quotient
 and the concrete quotient occurring in the finite idele coordinate. -/
 noncomputable def chosenFinitePlaceNormQuotientEquiv
@@ -360,6 +379,7 @@ noncomputable def chosenFinitePlaceNormQuotientEquiv
         e heq)
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 @[simp]
 theorem chosenFinitePlaceNormQuotientEquiv_normClass
     (v : HeightOneSpectrum (𝓞 K))
@@ -393,6 +413,7 @@ theorem chosenFinitePlaceNormQuotientEquiv_normClass
     AbsoluteValue.completionAlgebra vK w.1 w.2
   rfl
 
+open scoped Classical in
 /-- Product comparison over a finite set of places. -/
 noncomputable def chosenFinitePlaceNormQuotientFamilyEquiv
     (S : Finset (HeightOneSpectrum (𝓞 K))) :
@@ -406,6 +427,7 @@ noncomputable def chosenFinitePlaceNormQuotientFamilyEquiv
     chosenFinitePlaceNormQuotientEquiv
       (K := K) (L := L) v.1
 
+open scoped Classical in
 /-- The diagonal map from global units to the chosen finite family of
 actual local norm quotients. -/
 noncomputable def principalLocalNormQuotientMap
@@ -419,6 +441,7 @@ noncomputable def principalLocalNormQuotientMap
       (K := K) (L := L) v.1)
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 @[simp]
 theorem principalLocalNormQuotientMap_apply
     (S : Finset (HeightOneSpectrum (𝓞 K)))
@@ -431,6 +454,7 @@ theorem principalLocalNormQuotientMap_apply
         ((IdeleGroup.principalIdele K x).2 v.1) :=
   rfl
 
+open scoped Classical in
 /-- Actual multiplicative local norm approximation: every prescribed
 finite family of classes modulo `N(L_wˣ)` is represented by one global
 element of `Kˣ`. -/
@@ -447,6 +471,7 @@ theorem principalLocalNormQuotientMap_surjective
       chosenFinitePlaceLocalNormSubgroup_isOpen
         (K := K) (L := L) v.1)
 
+open scoped Classical in
 /-- The same diagonal approximation map with target written directly as
 a product of `LocalFieldTheory.NormQuotient`s. -/
 noncomputable def principalIntrinsicLocalNormQuotientMap
@@ -460,6 +485,7 @@ noncomputable def principalIntrinsicLocalNormQuotientMap
       (principalLocalNormQuotientMap
         (K := K) (L := L) S)
 
+open scoped Classical in
 /-- Surjectivity in the intrinsic `NormQuotient` model. -/
 theorem principalIntrinsicLocalNormQuotientMap_surjective
     (S : Finset (HeightOneSpectrum (𝓞 K))) :
@@ -480,6 +506,7 @@ theorem principalIntrinsicLocalNormQuotientMap_surjective
   rw [hx, E.symm_apply_apply]
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 /-- Kernel membership has the expected simultaneous local-norm
 description. -/
 theorem mem_ker_principalLocalNormQuotientMap_iff
@@ -505,6 +532,7 @@ theorem mem_ker_principalLocalNormQuotientMap_iff
         (hx v)
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 /-- The kernel is the intersection of the pullbacks of the actual local
 norm subgroups. -/
 theorem principalLocalNormQuotientMap_ker

@@ -407,7 +407,6 @@ theorem
 /-- On an idele class of the original base field, the fixed-part
 realization followed by the abstract finite norm-class map is exactly
 the genuine quotient class modulo the ordinary idele-class norm. -/
-@[simp]
 theorem
     numberFieldTowerFiniteNormQuotientEquivIdeleClassNormQuotient_ideleClass
     (c : IdeleClassGroup K) :

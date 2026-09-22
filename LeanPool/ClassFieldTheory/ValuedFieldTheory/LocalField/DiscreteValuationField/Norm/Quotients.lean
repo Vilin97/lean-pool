@@ -42,7 +42,7 @@ vH.val x`.
 `valuation_apply` satisfies the division formula `vG.val (N.toHom (x / y)) = (N.residueDegree : ℤ)
 * (vH.val x - vH.val y)`.
 -/
-@[simp] theorem valuation_apply_div (x y : H) :
+theorem valuation_apply_div (x y : H) :
     vG.val (N.toHom (x / y)) =
       (N.residueDegree : ℤ) * (vH.val x - vH.val y) := by
   rw [N.valuation_apply, vH.val_div]
@@ -51,7 +51,7 @@ vH.val x`.
 `valuation_apply_uniformizer` satisfies the integer-power formula `vG.val (N.toHom (ϖH ^ n)) =
 (N.residueDegree : ℤ) * n`.
 -/
-@[simp] theorem valuation_apply_uniformizer_zpow {ϖH : H}
+theorem valuation_apply_uniformizer_zpow {ϖH : H}
     (hϖH : vH.IsUniformizer ϖH) (n : ℤ) :
     vG.val (N.toHom (ϖH ^ n)) = (N.residueDegree : ℤ) * n := by
   rw [N.valuation_apply, vH.val_uniformizer_zpow hϖH n]
@@ -60,7 +60,7 @@ vH.val x`.
 `valuation_apply_uniformizer` satisfies the natural-power formula `vG.val (N.toHom (ϖH ^ n)) =
 (N.residueDegree : ℤ) * (n : ℤ)`.
 -/
-@[simp] theorem valuation_apply_uniformizer_pow {ϖH : H}
+theorem valuation_apply_uniformizer_pow {ϖH : H}
     (hϖH : vH.IsUniformizer ϖH) (n : ℕ) :
     vG.val (N.toHom (ϖH ^ n)) = (N.residueDegree : ℤ) * (n : ℤ) := by
   rw [N.valuation_apply, vH.val_uniformizer_pow hϖH n]
@@ -69,7 +69,7 @@ vH.val x`.
 `valuation_apply_zeroSubgroup_mul_uniformizer` satisfies the integer-power formula `vG.val
 (N.toHom (u * ϖH ^ n)) = (N.residueDegree : ℤ) * n`.
 -/
-@[simp] theorem valuation_apply_zeroSubgroup_mul_uniformizer_zpow
+theorem valuation_apply_zeroSubgroup_mul_uniformizer_zpow
     {ϖH u : H} (hϖH : vH.IsUniformizer ϖH)
     (hu : u ∈ vH.zeroSubgroup) (n : ℤ) :
     vG.val (N.toHom (u * ϖH ^ n)) = (N.residueDegree : ℤ) * n := by
@@ -79,7 +79,7 @@ vH.val x`.
 `valuation_apply_zeroSubgroup_mul_uniformizer` satisfies the natural-power formula `vG.val
 (N.toHom (u * ϖH ^ n)) = (N.residueDegree : ℤ) * (n : ℤ)`.
 -/
-@[simp] theorem valuation_apply_zeroSubgroup_mul_uniformizer_pow
+theorem valuation_apply_zeroSubgroup_mul_uniformizer_pow
     {ϖH u : H} (hϖH : vH.IsUniformizer ϖH)
     (hu : u ∈ vH.zeroSubgroup) (n : ℕ) :
     vG.val (N.toHom (u * ϖH ^ n)) =
@@ -92,7 +92,7 @@ vH.val x`.
 Establishes the identity `vG.valuationHom (N.toHom x) = vH.valuationHom x ^ (N.residueDegree :
 ℤ)`.
 -/
-@[simp] theorem valuationHom_apply_norm (x : H) :
+theorem valuationHom_apply_norm (x : H) :
     vG.valuationHom (N.toHom x) =
       vH.valuationHom x ^ (N.residueDegree : ℤ) := by
   rw [MultiplicativeIntegerValuation.valuationHom_apply,
@@ -105,7 +105,7 @@ Establishes the identity `vG.valuationHom (N.toHom x) = vH.valuationHom x ^ (N.r
 Establishes the identity `Multiplicative.toAdd (vG.valuationHom (N.toHom x)) = (N.residueDegree :
 ℤ) * Multiplicative.toAdd (vH.valuationHom x)`.
 -/
-@[simp] theorem toAdd_valuationHom_apply_norm (x : H) :
+theorem toAdd_valuationHom_apply_norm (x : H) :
     Multiplicative.toAdd (vG.valuationHom (N.toHom x)) =
       (N.residueDegree : ℤ) *
         Multiplicative.toAdd (vH.valuationHom x) := by
@@ -117,7 +117,7 @@ Establishes the identity `Multiplicative.toAdd (vG.valuationHom (N.toHom x)) = (
 `valuationHom_apply_norm` satisfies the division formula `vG.valuationHom (N.toHom (x / y)) =
 vH.valuationHom (x / y) ^ (N.residueDegree : ℤ)`.
 -/
-@[simp] theorem valuationHom_apply_norm_div (x y : H) :
+theorem valuationHom_apply_norm_div (x y : H) :
     vG.valuationHom (N.toHom (x / y)) =
       vH.valuationHom (x / y) ^ (N.residueDegree : ℤ) :=
   N.valuationHom_apply_norm (x / y)
@@ -191,7 +191,7 @@ Establishes the identity `((vG.quotientZeroSubgroupEquivValueSubgroup (QuotientG
 vG.zeroSubgroup (N.toHom x)) : vG.valueSubgroup) : Multiplicative ℤ) = vH.valuationHom x ^
 (N.residueDegree : ℤ)`.
 -/
-@[simp] theorem coe_quotientZeroSubgroupEquivValueSubgroup_norm_mk
+theorem coe_quotientZeroSubgroupEquivValueSubgroup_norm_mk
     (x : H) :
     ((vG.quotientZeroSubgroupEquivValueSubgroup
         (QuotientGroup.mk' vG.zeroSubgroup (N.toHom x)) : vG.valueSubgroup) :
@@ -205,7 +205,7 @@ Establishes the identity `Multiplicative.toAdd (((vG.quotientZeroSubgroupEquivVa
 (QuotientGroup.mk' vG.zeroSubgroup (N.toHom x)) : vG.valueSubgroup) : Multiplicative ℤ)) =
 (N.residueDegree : ℤ) * vH.val x`.
 -/
-@[simp] theorem toAdd_quotientZeroSubgroupEquivValueSubgroup_norm_mk
+theorem toAdd_quotientZeroSubgroupEquivValueSubgroup_norm_mk
     (x : H) :
     Multiplicative.toAdd
       (((vG.quotientZeroSubgroupEquivValueSubgroup
@@ -467,7 +467,7 @@ Establishes the identity `N.zeroSubgroupQuotientToValueModResidueDegree (Quotien
 vG.zeroSubgroup x) = QuotientGroup.mk' (integerMultipleSubgroup (N.residueDegree : ℤ))
 (vG.valuationHom x)`.
 -/
-@[simp] theorem zeroSubgroupQuotientToValueModResidueDegree_mk (x : G) :
+theorem zeroSubgroupQuotientToValueModResidueDegree_mk (x : G) :
     N.zeroSubgroupQuotientToValueModResidueDegree
         (QuotientGroup.mk' vG.zeroSubgroup x) =
       QuotientGroup.mk' (integerMultipleSubgroup (N.residueDegree : ℤ))
@@ -688,7 +688,7 @@ Establishes the identity `N.zeroQuotientModuloResidueDegreeClassEquivValueModRes
 (QuotientGroup.mk' N.residueDegreeClassSubgroup q) = N.zeroSubgroupQuotientToValueModResidueDegree
 q`.
 -/
-@[simp] theorem zeroQuotientModuloResidueDegreeClassEquivValueModResidueDegree_mk
+theorem zeroQuotientModuloResidueDegreeClassEquivValueModResidueDegree_mk
     {ϖG : G} (hϖG : vG.IsUniformizer ϖG)
     (q : G ⧸ vG.zeroSubgroup) :
     N.zeroQuotientModuloResidueDegreeClassEquivValueModResidueDegree hϖG
@@ -707,7 +707,7 @@ Establishes the identity `N.zeroQuotientModuloResidueDegreeClassEquivValueModRes
 QuotientGroup.mk' (integerMultipleSubgroup (N.residueDegree : ℤ)) (Multiplicative.ofAdd (vG.val
 x))`.
 -/
-@[simp] theorem zeroQuotientModuloResidueDegreeClassEquivValueModResidueDegree_mk_mk
+theorem zeroQuotientModuloResidueDegreeClassEquivValueModResidueDegree_mk_mk
     {ϖG : G} (hϖG : vG.IsUniformizer ϖG) (x : G) :
     N.zeroQuotientModuloResidueDegreeClassEquivValueModResidueDegree hϖG
         (QuotientGroup.mk' N.residueDegreeClassSubgroup
@@ -723,7 +723,7 @@ hϖG).symm (QuotientGroup.mk' (integerMultipleSubgroup (N.residueDegree : ℤ)) 
 (vG.val x))) = QuotientGroup.mk' N.residueDegreeClassSubgroup (QuotientGroup.mk' vG.zeroSubgroup
 x)`.
 -/
-@[simp] theorem zeroQuotientModuloResidueDegreeClassEquivValueModResidueDegree_symm_mk_val
+theorem zeroQuotientModuloResidueDegreeClassEquivValueModResidueDegree_symm_mk_val
     {ϖG : G} (hϖG : vG.IsUniformizer ϖG) (x : G) :
     (N.zeroQuotientModuloResidueDegreeClassEquivValueModResidueDegree hϖG).symm
         (QuotientGroup.mk' (integerMultipleSubgroup (N.residueDegree : ℤ))
@@ -753,7 +753,7 @@ hϖG).symm (QuotientGroup.mk' (integerMultipleSubgroup (N.residueDegree : ℤ)) 
 n)) = QuotientGroup.mk' N.residueDegreeClassSubgroup (QuotientGroup.mk' vG.zeroSubgroup (ϖG ^
 n))`.
 -/
-@[simp] theorem zeroQuotientModuloResidueDegreeClassEquivValueModResidueDegree_symm_mk_ofAdd
+theorem zeroQuotientModuloResidueDegreeClassEquivValueModResidueDegree_symm_mk_ofAdd
     {ϖG : G} (hϖG : vG.IsUniformizer ϖG) (n : ℤ) :
     (N.zeroQuotientModuloResidueDegreeClassEquivValueModResidueDegree hϖG).symm
         (QuotientGroup.mk' (integerMultipleSubgroup (N.residueDegree : ℤ))
@@ -1073,7 +1073,7 @@ integer-power formula `N.zeroQuotientModuloResidueDegreeClassEquivValueModResidu
 ((QuotientGroup.mk' N.residueDegreeClassSubgroup (QuotientGroup.mk' vG.zeroSubgroup ϖG)) ^ n) =
 QuotientGroup.mk' (integerMultipleSubgroup (N.residueDegree : ℤ)) (Multiplicative.ofAdd n)`.
 -/
-@[simp] theorem zeroQuotientModuloResidueDegreeClassEquivValueModResidueDegree_uniformizerClass_zpow
+theorem zeroQuotientModuloResidueDegreeClassEquivValueModResidueDegree_uniformizerClass_zpow
     {ϖG : G} (hϖG : vG.IsUniformizer ϖG) (n : ℤ) :
     N.zeroQuotientModuloResidueDegreeClassEquivValueModResidueDegree hϖG
         ((QuotientGroup.mk' N.residueDegreeClassSubgroup
@@ -1094,7 +1094,6 @@ satisfies the integer-power formula
 (integerMultipleSubgroup (N.residueDegree : ℤ)) (Multiplicative.ofAdd n)) = (QuotientGroup.mk'
 N.residueDegreeClassSubgroup (QuotientGroup.mk' vG.zeroSubgroup ϖG)) ^ n`.
 -/
-@[simp]
 theorem
 zeroQuotientModuloResidueDegreeClassEquivValueModResidueDegree_symm_mk_ofAdd_uniformizerClass_zpow
     {ϖG : G} (hϖG : vG.IsUniformizer ϖG) (n : ℤ) :
@@ -1180,7 +1179,7 @@ Establishes the identity `N.zeroQuotientModuloResidueDegreeClassEquivNormClass h
 (QuotientGroup.mk' N.residueDegreeClassSubgroup q) = QuotientGroup.mk'
 N.normSubgroupClassInZeroQuotient q`.
 -/
-@[simp] theorem zeroQuotientModuloResidueDegreeClassEquivNormClass_mk
+theorem zeroQuotientModuloResidueDegreeClassEquivNormClass_mk
     [(N.normSubgroup).Normal]
     {ϖH : H} (hϖH : vH.IsUniformizer ϖH)
     (hzero : vG.zeroSubgroup ≤ N.normSubgroup)
@@ -1195,7 +1194,7 @@ Establishes the identity `N.zeroQuotientModuloResidueDegreeClassEquivNormClass h
 (QuotientGroup.mk' N.residueDegreeClassSubgroup (QuotientGroup.mk' vG.zeroSubgroup x)) =
 QuotientGroup.mk' N.normSubgroupClassInZeroQuotient (QuotientGroup.mk' vG.zeroSubgroup x)`.
 -/
-@[simp] theorem zeroQuotientModuloResidueDegreeClassEquivNormClass_mk_mk
+theorem zeroQuotientModuloResidueDegreeClassEquivNormClass_mk_mk
     [(N.normSubgroup).Normal]
     {ϖH : H} (hϖH : vH.IsUniformizer ϖH)
     (hzero : vG.zeroSubgroup ≤ N.normSubgroup) (x : G) :
@@ -1211,7 +1210,7 @@ Establishes the identity `(N.zeroQuotientModuloResidueDegreeClassEquivNormClass 
 (QuotientGroup.mk' N.normSubgroupClassInZeroQuotient q) = QuotientGroup.mk'
 N.residueDegreeClassSubgroup q`.
 -/
-@[simp] theorem zeroQuotientModuloResidueDegreeClassEquivNormClass_symm_mk
+theorem zeroQuotientModuloResidueDegreeClassEquivNormClass_symm_mk
     [(N.normSubgroup).Normal]
     {ϖH : H} (hϖH : vH.IsUniformizer ϖH)
     (hzero : vG.zeroSubgroup ≤ N.normSubgroup)
@@ -1237,7 +1236,7 @@ Establishes the identity `(N.zeroQuotientModuloResidueDegreeClassEquivNormClass 
 (QuotientGroup.mk' N.normSubgroupClassInZeroQuotient (QuotientGroup.mk' vG.zeroSubgroup x)) =
 QuotientGroup.mk' N.residueDegreeClassSubgroup (QuotientGroup.mk' vG.zeroSubgroup x)`.
 -/
-@[simp] theorem zeroQuotientModuloResidueDegreeClassEquivNormClass_symm_mk_mk
+theorem zeroQuotientModuloResidueDegreeClassEquivNormClass_symm_mk_mk
     [(N.normSubgroup).Normal]
     {ϖH : H} (hϖH : vH.IsUniformizer ϖH)
     (hzero : vG.zeroSubgroup ≤ N.normSubgroup) (x : G) :
@@ -1254,7 +1253,7 @@ formula `N.zeroQuotientModuloResidueDegreeClassEquivNormClass hϖH hzero ((Quoti
 N.residueDegreeClassSubgroup (QuotientGroup.mk' vG.zeroSubgroup ϖG)) ^ n) = (QuotientGroup.mk'
 N.normSubgroupClassInZeroQuotient (QuotientGroup.mk' vG.zeroSubgroup ϖG)) ^ n`.
 -/
-@[simp] theorem zeroQuotientModuloResidueDegreeClassEquivNormClass_uniformizerClass_zpow
+theorem zeroQuotientModuloResidueDegreeClassEquivNormClass_uniformizerClass_zpow
     [(N.normSubgroup).Normal]
     {ϖG : G} (hϖG : vG.IsUniformizer ϖG)
     {ϖH : H} (hϖH : vH.IsUniformizer ϖH)
@@ -1279,7 +1278,7 @@ integer-power formula `(N.zeroQuotientModuloResidueDegreeClassEquivNormClass hϖ
 ((QuotientGroup.mk' N.normSubgroupClassInZeroQuotient (QuotientGroup.mk' vG.zeroSubgroup ϖG)) ^ n)
 = (QuotientGroup.mk' N.residueDegreeClassSubgroup (QuotientGroup.mk' vG.zeroSubgroup ϖG)) ^ n`.
 -/
-@[simp] theorem zeroQuotientModuloResidueDegreeClassEquivNormClass_symm_uniformizerClass_zpow
+theorem zeroQuotientModuloResidueDegreeClassEquivNormClass_symm_uniformizerClass_zpow
     [(N.normSubgroup).Normal]
     {ϖG : G} (hϖG : vG.IsUniformizer ϖG)
     {ϖH : H} (hϖH : vH.IsUniformizer ϖH)
@@ -1311,7 +1310,7 @@ def zeroSubgroupQuotientToNormQuotient [(N.normSubgroup).Normal]
 Establishes the identity `N.zeroSubgroupQuotientToNormQuotient hzero (QuotientGroup.mk'
 vG.zeroSubgroup x) = QuotientGroup.mk' N.normSubgroup x`.
 -/
-@[simp] theorem zeroSubgroupQuotientToNormQuotient_mk
+theorem zeroSubgroupQuotientToNormQuotient_mk
     [(N.normSubgroup).Normal]
     (hzero : vG.zeroSubgroup ≤ N.normSubgroup) (x : G) :
     N.zeroSubgroupQuotientToNormQuotient hzero
@@ -1458,7 +1457,7 @@ noncomputable def zeroQuotientModuloNormClassEquivNormQuotient
 Establishes the identity `N.zeroQuotientModuloNormClassEquivNormQuotient hzero (QuotientGroup.mk'
 N.normSubgroupClassInZeroQuotient q) = N.zeroSubgroupQuotientToNormQuotient hzero q`.
 -/
-@[simp] theorem zeroQuotientModuloNormClassEquivNormQuotient_mk
+theorem zeroQuotientModuloNormClassEquivNormQuotient_mk
     [(N.normSubgroup).Normal]
     (hzero : vG.zeroSubgroup ≤ N.normSubgroup)
     (q : G ⧸ vG.zeroSubgroup) :
@@ -1478,7 +1477,7 @@ Establishes the identity `N.zeroQuotientModuloNormClassEquivNormQuotient hzero (
 N.normSubgroupClassInZeroQuotient (QuotientGroup.mk' vG.zeroSubgroup x)) = QuotientGroup.mk'
 N.normSubgroup x`.
 -/
-@[simp] theorem zeroQuotientModuloNormClassEquivNormQuotient_mk_mk
+theorem zeroQuotientModuloNormClassEquivNormQuotient_mk_mk
     [(N.normSubgroup).Normal]
     (hzero : vG.zeroSubgroup ≤ N.normSubgroup) (x : G) :
     N.zeroQuotientModuloNormClassEquivNormQuotient hzero
@@ -1504,7 +1503,7 @@ Establishes the identity `N.zeroQuotientModuloResidueDegreeClassEquivNormQuotien
 (QuotientGroup.mk' N.residueDegreeClassSubgroup q) = N.zeroSubgroupQuotientToNormQuotient hzero
 q`.
 -/
-@[simp] theorem zeroQuotientModuloResidueDegreeClassEquivNormQuotient_mk
+theorem zeroQuotientModuloResidueDegreeClassEquivNormQuotient_mk
     [(N.normSubgroup).Normal]
     {ϖH : H} (hϖH : vH.IsUniformizer ϖH)
     (hzero : vG.zeroSubgroup ≤ N.normSubgroup)
@@ -1527,7 +1526,7 @@ Establishes the identity `N.zeroQuotientModuloResidueDegreeClassEquivNormQuotien
 (QuotientGroup.mk' N.residueDegreeClassSubgroup (QuotientGroup.mk' vG.zeroSubgroup x)) =
 QuotientGroup.mk' N.normSubgroup x`.
 -/
-@[simp] theorem zeroQuotientModuloResidueDegreeClassEquivNormQuotient_mk_mk
+theorem zeroQuotientModuloResidueDegreeClassEquivNormQuotient_mk_mk
     [(N.normSubgroup).Normal]
     {ϖH : H} (hϖH : vH.IsUniformizer ϖH)
     (hzero : vG.zeroSubgroup ≤ N.normSubgroup) (x : G) :
@@ -1543,7 +1542,7 @@ Establishes the identity `(N.zeroQuotientModuloResidueDegreeClassEquivNormQuotie
 (QuotientGroup.mk' N.normSubgroup x) = QuotientGroup.mk' N.residueDegreeClassSubgroup
 (QuotientGroup.mk' vG.zeroSubgroup x)`.
 -/
-@[simp] theorem zeroQuotientModuloResidueDegreeClassEquivNormQuotient_symm_mk
+theorem zeroQuotientModuloResidueDegreeClassEquivNormQuotient_symm_mk
     [(N.normSubgroup).Normal]
     {ϖH : H} (hϖH : vH.IsUniformizer ϖH)
     (hzero : vG.zeroSubgroup ≤ N.normSubgroup) (x : G) :
@@ -1572,7 +1571,7 @@ integer-power formula `N.zeroQuotientModuloResidueDegreeClassEquivNormQuotient h
 ((QuotientGroup.mk' N.residueDegreeClassSubgroup (QuotientGroup.mk' vG.zeroSubgroup ϖG)) ^ n) =
 (QuotientGroup.mk' N.normSubgroup ϖG) ^ n`.
 -/
-@[simp] theorem zeroQuotientModuloResidueDegreeClassEquivNormQuotient_uniformizerClass_zpow
+theorem zeroQuotientModuloResidueDegreeClassEquivNormQuotient_uniformizerClass_zpow
     [(N.normSubgroup).Normal]
     {ϖG : G} (hϖG : vG.IsUniformizer ϖG)
     {ϖH : H} (hϖH : vH.IsUniformizer ϖH)
@@ -1595,7 +1594,7 @@ integer-power formula `(N.zeroQuotientModuloResidueDegreeClassEquivNormQuotient 
 ((QuotientGroup.mk' N.normSubgroup ϖG) ^ n) = (QuotientGroup.mk' N.residueDegreeClassSubgroup
 (QuotientGroup.mk' vG.zeroSubgroup ϖG)) ^ n`.
 -/
-@[simp] theorem zeroQuotientModuloResidueDegreeClassEquivNormQuotient_symm_uniformizerClass_zpow
+theorem zeroQuotientModuloResidueDegreeClassEquivNormQuotient_symm_uniformizerClass_zpow
     [(N.normSubgroup).Normal]
     {ϖG : G} (hϖG : vG.IsUniformizer ϖG)
     {ϖH : H} (hϖH : vH.IsUniformizer ϖH)
@@ -1770,7 +1769,7 @@ Establishes the identity `N.normQuotientEquivValueModResidueDegree hϖG hϖH hze
 (QuotientGroup.mk' N.normSubgroup x) = QuotientGroup.mk' (integerMultipleSubgroup (N.residueDegree
 : ℤ)) (vG.valuationHom x)`.
 -/
-@[simp] theorem normQuotientEquivValueModResidueDegree_mk
+theorem normQuotientEquivValueModResidueDegree_mk
     [(N.normSubgroup).Normal]
     {ϖG : G} (hϖG : vG.IsUniformizer ϖG)
     {ϖH : H} (hϖH : vH.IsUniformizer ϖH)
@@ -1808,7 +1807,7 @@ theorem normQuotientEquivValueModResidueDegree_mk_ofAdd
 `N.normQuotientEquivValueModResidueDegree hϖG hϖH hzero (QuotientGroup.mk' N.normSubgroup (ϖG ^
 n)) = QuotientGroup.mk' (integerMultipleSubgroup (N.residueDegree : ℤ)) (Multiplicative.ofAdd n)`.
 -/
-@[simp] theorem normQuotientEquivValueModResidueDegree_uniformizer_zpow
+theorem normQuotientEquivValueModResidueDegree_uniformizer_zpow
     [(N.normSubgroup).Normal]
     {ϖG : G} (hϖG : vG.IsUniformizer ϖG)
     {ϖH : H} (hϖH : vH.IsUniformizer ϖH)
@@ -1826,7 +1825,7 @@ Establishes the identity `(N.normQuotientEquivValueModResidueDegree hϖG hϖH hz
 (QuotientGroup.mk' (integerMultipleSubgroup (N.residueDegree : ℤ)) (Multiplicative.ofAdd (vG.val
 x))) = QuotientGroup.mk' N.normSubgroup x`.
 -/
-@[simp] theorem normQuotientEquivValueModResidueDegree_symm_mk_val
+theorem normQuotientEquivValueModResidueDegree_symm_mk_val
     [(N.normSubgroup).Normal]
     {ϖG : G} (hϖG : vG.IsUniformizer ϖG)
     {ϖH : H} (hϖH : vH.IsUniformizer ϖH)
@@ -1856,7 +1855,7 @@ Establishes the identity `(N.normQuotientEquivValueModResidueDegree hϖG hϖH hz
 (QuotientGroup.mk' (integerMultipleSubgroup (N.residueDegree : ℤ)) (Multiplicative.ofAdd n)) =
 QuotientGroup.mk' N.normSubgroup (ϖG ^ n)`.
 -/
-@[simp] theorem normQuotientEquivValueModResidueDegree_symm_mk_ofAdd
+theorem normQuotientEquivValueModResidueDegree_symm_mk_ofAdd
     [(N.normSubgroup).Normal]
     {ϖG : G} (hϖG : vG.IsUniformizer ϖG)
     {ϖH : H} (hϖH : vH.IsUniformizer ϖH)
@@ -1872,7 +1871,7 @@ QuotientGroup.mk' N.normSubgroup (ϖG ^ n)`.
 
 /-- Compatibility of the natural map `G/G⁰ → G/N` with the value-modulo
 residue-degree map. -/
-@[simp] theorem normQuotientEquivValueModResidueDegree_zeroSubgroupQuotientToNormQuotient_mk
+theorem normQuotientEquivValueModResidueDegree_zeroSubgroupQuotientToNormQuotient_mk
     [(N.normSubgroup).Normal]
     {ϖG : G} (hϖG : vG.IsUniformizer ϖG)
     {ϖH : H} (hϖH : vH.IsUniformizer ϖH)
@@ -1889,7 +1888,6 @@ residue-degree map. -/
 /-- The direct residue-degree-class quotient to the norm quotient, followed by
 the norm-quotient/value-group equivalence, agrees with the direct
 value-mod-residue-degree quotient map on representatives. -/
-@[simp]
 theorem
 normQuotientEquivValueModResidueDegree_zeroQuotientModuloResidueDegreeClassEquivNormQuotient_mk
     [(N.normSubgroup).Normal]
@@ -1922,7 +1920,6 @@ Establishes the identity `N.normQuotientEquivValueModResidueDegree hϖG hϖH hze
 N.residueDegreeClassSubgroup (QuotientGroup.mk' vG.zeroSubgroup x))) = QuotientGroup.mk'
 (integerMultipleSubgroup (N.residueDegree : ℤ)) (Multiplicative.ofAdd (vG.val x))`.
 -/
-@[simp]
 theorem
 normQuotientEquivValueModResidueDegree_zeroQuotientModuloResidueDegreeClassEquivNormQuotient_mk_mk
     [(N.normSubgroup).Normal]
@@ -2269,7 +2266,7 @@ theorem normQuotient_closure_uniformizerClass_eq_top
 
 /-- Under the value-group equivalence, the `n`th power of the target
 uniformizer class maps to the class of `n` modulo the residue-degree subgroup. -/
-@[simp] theorem normQuotientEquivValueModResidueDegree_uniformizerClass_zpow
+theorem normQuotientEquivValueModResidueDegree_uniformizerClass_zpow
     [(N.normSubgroup).Normal]
     {ϖG : G} (hϖG : vG.IsUniformizer ϖG)
     {ϖH : H} (hϖH : vH.IsUniformizer ϖH)
@@ -2288,7 +2285,7 @@ integer-power formula `(N.normQuotientEquivValueModResidueDegree hϖG hϖH hzero
 (QuotientGroup.mk' (integerMultipleSubgroup (N.residueDegree : ℤ)) (Multiplicative.ofAdd n)) =
 (QuotientGroup.mk' N.normSubgroup ϖG) ^ n`.
 -/
-@[simp] theorem normQuotientEquivValueModResidueDegree_symm_mk_ofAdd_uniformizerClass_zpow
+theorem normQuotientEquivValueModResidueDegree_symm_mk_ofAdd_uniformizerClass_zpow
     [(N.normSubgroup).Normal]
     {ϖG : G} (hϖG : vG.IsUniformizer ϖG)
     {ϖH : H} (hϖH : vH.IsUniformizer ϖH)
@@ -2317,7 +2314,7 @@ noncomputable def normQuotientEquivZMod
 Establishes the identity `N.normQuotientEquivZMod hϖG hϖH hzero (QuotientGroup.mk' N.normSubgroup
 x) = Multiplicative.ofAdd ((vG.val x : ℤ) : ZMod N.residueDegree)`.
 -/
-@[simp] theorem normQuotientEquivZMod_mk
+theorem normQuotientEquivZMod_mk
     [(N.normSubgroup).Normal]
     {ϖG : G} (hϖG : vG.IsUniformizer ϖG)
     {ϖH : H} (hϖH : vH.IsUniformizer ϖH)
@@ -2334,7 +2331,7 @@ x) = Multiplicative.ofAdd ((vG.val x : ℤ) : ZMod N.residueDegree)`.
 hϖG hϖH hzero (QuotientGroup.mk' N.normSubgroup (ϖG ^ n)) = Multiplicative.ofAdd ((n : ℤ) : ZMod
 N.residueDegree)`.
 -/
-@[simp] theorem normQuotientEquivZMod_uniformizer_zpow
+theorem normQuotientEquivZMod_uniformizer_zpow
     [(N.normSubgroup).Normal]
     {ϖG : G} (hϖG : vG.IsUniformizer ϖG)
     {ϖH : H} (hϖH : vH.IsUniformizer ϖH)
@@ -2350,7 +2347,7 @@ N.residueDegree)`.
 `N.normQuotientEquivZMod hϖG hϖH hzero ((QuotientGroup.mk' N.normSubgroup ϖG) ^ n) =
 Multiplicative.ofAdd ((n : ℤ) : ZMod N.residueDegree)`.
 -/
-@[simp] theorem normQuotientEquivZMod_uniformizerClass_zpow
+theorem normQuotientEquivZMod_uniformizerClass_zpow
     [(N.normSubgroup).Normal]
     {ϖG : G} (hϖG : vG.IsUniformizer ϖG)
     {ϖH : H} (hϖH : vH.IsUniformizer ϖH)
@@ -2384,8 +2381,8 @@ theorem card_normQuotient_eq_residueDegree
     {ϖG : G} (hϖG : vG.IsUniformizer ϖG)
     {ϖH : H} (hϖH : vH.IsUniformizer ϖH)
     (hzero : vG.zeroSubgroup ≤ N.normSubgroup)
-    [NeZero N.residueDegree]
-    [Finite (G ⧸ N.normSubgroup)] :
+
+    :
     Nat.card (G ⧸ N.normSubgroup) = N.residueDegree := by
   calc
     Nat.card (G ⧸ N.normSubgroup) =

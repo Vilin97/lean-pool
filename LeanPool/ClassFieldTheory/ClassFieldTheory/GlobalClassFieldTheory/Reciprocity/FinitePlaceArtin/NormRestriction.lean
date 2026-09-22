@@ -9,10 +9,11 @@ import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.L
 /-!
 # Norm--restriction for finite-place Artin homomorphisms
 
-This module proves norm--restriction naturality for finite-place Artin maps in an actual square of number fields and their chosen completed local extensions.
+This module proves norm--restriction naturality for finite-place Artin maps in an actual square
+of number fields and their chosen completed local extensions.
 -/
 
-open scoped Classical IsMulCommutative NNReal NumberField
+open scoped IsMulCommutative NNReal NumberField
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -30,6 +31,7 @@ variable {K L : Type}
     [Field L] [Algebra K L]
     [FiniteDimensional K L] [IsAbelianGalois K L]
 
+open scoped Classical in
 private theorem finitePlaceArtinNormUnits_map_ringEquiv
     {F M F' M' : Type}
     [Field F] [Field M] [Field F'] [Field M']
@@ -50,11 +52,13 @@ private theorem finitePlaceArtinNormUnits_map_ringEquiv
   rw [Algebra.norm_eq_of_equiv_equiv eF eM he]
   exact eF.apply_symm_apply _
 
+open scoped Classical in
 private abbrev finitePlaceNormCompletion
     (F : Type) [Field F] [NumberField F]
     (v : HeightOneSpectrum (𝓞 F)) :=
   (NumberField.HeightOneSpectrum.adicAbv F v).Completion
 
+open scoped Classical in
 private abbrev finitePlaceNormLocalizedCompletion
     (F M : Type) [Field F] [Field M] [Algebra F M]
     [NumberField F]
@@ -64,6 +68,7 @@ private abbrev finitePlaceNormLocalizedCompletion
   AlgebraicNumberTheory.Valuations.LocalizedCompletion
     (NumberField.HeightOneSpectrum.adicAbv F v) w
 
+open scoped Classical in
 private noncomputable def finitePlaceRelativeNormUnits
     {K' : Type}
     [Field K'] [NumberField K'] [Algebra K K']
@@ -81,6 +86,7 @@ private noncomputable def finitePlaceRelativeNormUnits
     (finitePlaceNormCompletion K v)
     (finitePlaceNormCompletion K' W)
 
+open scoped Classical in
 private noncomputable def finitePlaceConcreteNormUnits
     {K' : Type}
     [Field K'] [NumberField K'] [Algebra K K']
@@ -94,6 +100,7 @@ private noncomputable def finitePlaceConcreteNormUnits
   exact LocalFieldTheory.normUnits
     (v.adicCompletion K) (W.adicCompletion K')
 
+open scoped Classical in
 private theorem finitePlaceArtinConcreteNormUnits
     {K' : Type}
     [Field K'] [NumberField K'] [Algebra K K']
@@ -188,6 +195,7 @@ private theorem finitePlaceArtinConcreteNormUnits
             ((Units.mapEquiv eD.toMulEquiv).symm x) = x
       exact (Units.mapEquiv eD.toMulEquiv).apply_symm_apply x
 
+open scoped Classical in
 private theorem finitePlaceArtinHasExtension_of_norm
     {A B C D : Type}
     [NormedField A] [NormedField B]
@@ -240,6 +248,7 @@ private theorem finitePlaceArtinHasExtension_of_norm
   rw [hTargetNormNN, ← hSourceNormNN]
   exact_mod_cast hBaseNorm (eC x)
 
+open scoped Classical in
 private theorem finitePlaceArtinCompletionHasExtension
     {K' : Type}
     [Field K'] [NumberField K'] [Algebra K K']
@@ -332,6 +341,7 @@ private theorem finitePlaceArtinCompletionHasExtension
       (fun _ => rfl)
       (fun _ => rfl)
 
+open scoped Classical in
 private theorem finitePlaceLocalArtin_norm_restriction_apply
     {C D E E' : Type}
     [Field C] [ValuativeRel C] [TopologicalSpace C]
@@ -358,6 +368,7 @@ private theorem finitePlaceLocalArtin_norm_restriction_apply
     (LocalClassFieldTheory.abelianLocalArtinMonoidHom_norm_restriction
       C D E E') y
 
+open scoped Classical in
 private abbrev finitePlaceNormLocalizedAut
     (F M : Type) [Field F] [Field M] [Algebra F M]
     [NumberField F]
@@ -404,150 +415,257 @@ local notation "Eₙ" =>
 local notation "Eₙ'" =>
   finitePlaceNormLocalizedCompletion K' L' W w'
 
+open scoped Classical in
+/-- The lower extended completion is an algebra over the lower global base field. -/
 local instance finitePlaceNormLowerExtensionAlgebra :
     Algebra K w.1.Completion :=
   AbsoluteValue.extensionCompletionAlgebra
     (K := K) w.1
 
+attribute [local instance] finitePlaceNormLowerExtensionAlgebra
+
+open scoped Classical in
+/-- The lower global base field acts on the lower extended completion. -/
 local instance finitePlaceNormLowerExtensionSMul :
     SMul K w.1.Completion :=
   (finitePlaceNormLowerExtensionAlgebra v w).toSMul
 
+attribute [local instance] finitePlaceNormLowerExtensionSMul
+
+open scoped Classical in
+/-- The lower extended completion is an algebra over the lower base-place completion. -/
 local instance finitePlaceNormLowerCompletionAlgebra :
     Algebra Cₙ w.1.Completion :=
   AbsoluteValue.completionAlgebra vKₙ w.1 w.2
 
+attribute [local instance] finitePlaceNormLowerCompletionAlgebra
+
+open scoped Classical in
+/-- The lower localized completion is an algebra over the lower global base field. -/
 local instance finitePlaceNormLowerGlobalAlgebra :
     Algebra K Eₙ :=
   LocalClassFieldTheory.localizedCompletionGlobalAlgebra vKₙ w
 
+attribute [local instance] finitePlaceNormLowerGlobalAlgebra
+
+open scoped Classical in
+/-- The upper extended completion is an algebra over the upper global base field. -/
 local instance finitePlaceNormUpperExtensionAlgebra :
     Algebra K' w'.1.Completion :=
   AbsoluteValue.extensionCompletionAlgebra
     (K := K') w'.1
 
+attribute [local instance] finitePlaceNormUpperExtensionAlgebra
+
+open scoped Classical in
+/-- The upper global base field acts on the upper extended completion. -/
 local instance finitePlaceNormUpperExtensionSMul :
     SMul K' w'.1.Completion :=
   (finitePlaceNormUpperExtensionAlgebra W w').toSMul
 
+attribute [local instance] finitePlaceNormUpperExtensionSMul
+
+open scoped Classical in
+/-- The upper extended completion is an algebra over the upper base-place completion. -/
 local instance finitePlaceNormUpperCompletionAlgebra :
     Algebra Dₙ w'.1.Completion :=
   AbsoluteValue.completionAlgebra vKₙ' w'.1 w'.2
 
+attribute [local instance] finitePlaceNormUpperCompletionAlgebra
+
+open scoped Classical in
+/-- The upper localized completion is an algebra over the upper global base field. -/
 local instance finitePlaceNormUpperGlobalAlgebra :
     Algebra K' Eₙ' :=
   LocalClassFieldTheory.localizedCompletionGlobalAlgebra vKₙ' w'
 
+attribute [local instance] finitePlaceNormUpperGlobalAlgebra
+
+open scoped Classical in
+/-- The lower base-place completion carries a nontrivial normed field structure. -/
 local instance finitePlaceNormLowerNontriviallyNormedField :
     NontriviallyNormedField Cₙ :=
-  absoluteValueExtension_completionNontriviallyNormedField
+  absoluteValueExtensionCompletionNontriviallyNormedField
     vKₙ (RayClass.adicAbv_isNontrivial v)
 
+attribute [local instance] finitePlaceNormLowerNontriviallyNormedField
+
+open scoped Classical in
 local instance finitePlaceNormLowerLocallyCompactSpace :
     LocallyCompactSpace Cₙ :=
   AbsoluteValue.Completion.locallyCompactSpace
     (finitePlaceCompletionBaseMap_isometry v)
 
+attribute [local instance] finitePlaceNormLowerLocallyCompactSpace
+
+open scoped Classical in
+/-- The upper base-place completion carries a nontrivial normed field structure. -/
 local instance finitePlaceNormUpperNontriviallyNormedField :
     NontriviallyNormedField Dₙ :=
-  absoluteValueExtension_completionNontriviallyNormedField
+  absoluteValueExtensionCompletionNontriviallyNormedField
     vKₙ' (RayClass.adicAbv_isNontrivial W)
 
+attribute [local instance] finitePlaceNormUpperNontriviallyNormedField
+
+open scoped Classical in
 local instance finitePlaceNormUpperLocallyCompactSpace :
     LocallyCompactSpace Dₙ :=
   AbsoluteValue.Completion.locallyCompactSpace
     (finitePlaceCompletionBaseMap_isometry W)
 
+attribute [local instance] finitePlaceNormUpperLocallyCompactSpace
+
+open scoped Classical in
 local instance finitePlaceNormLowerLocalizedFiniteDimensional :
     FiniteDimensional Cₙ Eₙ :=
   AlgebraicNumberTheory.Valuations.localizedCompletionModuleFinite
     vKₙ (RayClass.adicAbv_isNontrivial v) w
 
+attribute [local instance] finitePlaceNormLowerLocalizedFiniteDimensional
+
+open scoped Classical in
 local instance finitePlaceNormLowerLocalizedAbelianGalois :
     IsAbelianGalois Cₙ Eₙ :=
   LocalClassFieldTheory.localizedCompletion_isAbelianGalois
     vKₙ (RayClass.adicAbv_isNontrivial v) w
 
+attribute [local instance] finitePlaceNormLowerLocalizedAbelianGalois
+
+open scoped Classical in
 local instance finitePlaceNormUpperLocalizedFiniteDimensional :
     FiniteDimensional Dₙ Eₙ' :=
   AlgebraicNumberTheory.Valuations.localizedCompletionModuleFinite
     vKₙ' (RayClass.adicAbv_isNontrivial W) w'
 
+attribute [local instance] finitePlaceNormUpperLocalizedFiniteDimensional
+
+open scoped Classical in
 local instance finitePlaceNormUpperLocalizedAbelianGalois :
     IsAbelianGalois Dₙ Eₙ' :=
   LocalClassFieldTheory.localizedCompletion_isAbelianGalois
     vKₙ' (RayClass.adicAbv_isNontrivial W) w'
 
+attribute [local instance] finitePlaceNormUpperLocalizedAbelianGalois
+
+open scoped Classical in
 local instance finitePlaceNormLowerUltrametric :
     IsUltrametricDist Cₙ :=
   finitePlaceArtinCompletionIsUltrametricDist vKₙ
     (NumberField.HeightOneSpectrum.isNonarchimedean_adicAbv K v)
 
+attribute [local instance] finitePlaceNormLowerUltrametric
+
+open scoped Classical in
+/-- The lower base-place completion carries the nonnegative-real valuation used in local
+reciprocity. -/
 local instance finitePlaceNormLowerValued :
     Valued Cₙ ℝ≥0 :=
   finitePlaceArtinCompletionValued vKₙ
     (NumberField.HeightOneSpectrum.isNonarchimedean_adicAbv K v)
 
+attribute [local instance] finitePlaceNormLowerValued
+
+open scoped Classical in
 local instance finitePlaceNormLowerValuationNontrivial :
     (Valued.v : Valuation Cₙ ℝ≥0).IsNontrivial :=
   (inferInstance :
     (NormedField.valuation (K := Cₙ)).IsNontrivial)
 
+attribute [local instance] finitePlaceNormLowerValuationNontrivial
+
+open scoped Classical in
+/-- The lower base-place completion carries the valuative relation used in local reciprocity. -/
 local instance finitePlaceNormLowerValuativeRel :
     ValuativeRel Cₙ :=
   finitePlaceArtinCompletionValuativeRel vKₙ
     (NumberField.HeightOneSpectrum.isNonarchimedean_adicAbv K v)
 
+attribute [local instance] finitePlaceNormLowerValuativeRel
+
+open scoped Classical in
 local instance finitePlaceNormLowerValuationCompatible :
     (Valued.v : Valuation Cₙ ℝ≥0).Compatible :=
   Valuation.Compatible.ofValuation
     (Valued.v : Valuation Cₙ ℝ≥0)
 
+attribute [local instance] finitePlaceNormLowerValuationCompatible
+
+open scoped Classical in
 local instance finitePlaceNormLowerValuativeRelNontrivial :
     ValuativeRel.IsNontrivial Cₙ :=
   (ValuativeRel.isNontrivial_iff_isNontrivial
     (Valued.v : Valuation Cₙ ℝ≥0)).2 inferInstance
 
+attribute [local instance] finitePlaceNormLowerValuativeRelNontrivial
+
+open scoped Classical in
 local instance finitePlaceNormLowerLocalField :
     IsNonarchimedeanLocalField Cₙ :=
   finitePlaceArtinCompletionIsNonarchimedeanLocalField vKₙ
     (NumberField.HeightOneSpectrum.isNonarchimedean_adicAbv K v)
 
+attribute [local instance] finitePlaceNormLowerLocalField
+
+open scoped Classical in
 local instance finitePlaceNormUpperUltrametric :
     IsUltrametricDist Dₙ :=
   finitePlaceArtinCompletionIsUltrametricDist vKₙ'
     (NumberField.HeightOneSpectrum.isNonarchimedean_adicAbv K' W)
 
+attribute [local instance] finitePlaceNormUpperUltrametric
+
+open scoped Classical in
+/-- The upper base-place completion carries the nonnegative-real valuation used in local
+reciprocity. -/
 local instance finitePlaceNormUpperValued :
     Valued Dₙ ℝ≥0 :=
   finitePlaceArtinCompletionValued vKₙ'
     (NumberField.HeightOneSpectrum.isNonarchimedean_adicAbv K' W)
 
+attribute [local instance] finitePlaceNormUpperValued
+
+open scoped Classical in
 local instance finitePlaceNormUpperValuationNontrivial :
     (Valued.v : Valuation Dₙ ℝ≥0).IsNontrivial :=
   (inferInstance :
     (NormedField.valuation (K := Dₙ)).IsNontrivial)
 
+attribute [local instance] finitePlaceNormUpperValuationNontrivial
+
+open scoped Classical in
+/-- The upper base-place completion carries the valuative relation used in local reciprocity. -/
 local instance finitePlaceNormUpperValuativeRel :
     ValuativeRel Dₙ :=
   finitePlaceArtinCompletionValuativeRel vKₙ'
     (NumberField.HeightOneSpectrum.isNonarchimedean_adicAbv K' W)
 
+attribute [local instance] finitePlaceNormUpperValuativeRel
+
+open scoped Classical in
 local instance finitePlaceNormUpperValuationCompatible :
     (Valued.v : Valuation Dₙ ℝ≥0).Compatible :=
   Valuation.Compatible.ofValuation
     (Valued.v : Valuation Dₙ ℝ≥0)
 
+attribute [local instance] finitePlaceNormUpperValuationCompatible
+
+open scoped Classical in
 local instance finitePlaceNormUpperValuativeRelNontrivial :
     ValuativeRel.IsNontrivial Dₙ :=
   (ValuativeRel.isNontrivial_iff_isNontrivial
     (Valued.v : Valuation Dₙ ℝ≥0)).2 inferInstance
 
+attribute [local instance] finitePlaceNormUpperValuativeRelNontrivial
+
+open scoped Classical in
 local instance finitePlaceNormUpperLocalField :
     IsNonarchimedeanLocalField Dₙ :=
   finitePlaceArtinCompletionIsNonarchimedeanLocalField vKₙ'
     (NumberField.HeightOneSpectrum.isNonarchimedean_adicAbv K' W)
 
+attribute [local instance] finitePlaceNormUpperLocalField
+
+open scoped Classical in
 private noncomputable def finitePlaceNormRestrictedArtin
     [NumberField L]
     (hW : finitePlaceBelow (K := K) W = v)
@@ -567,6 +685,7 @@ private noncomputable def finitePlaceNormRestrictedArtin
         (K := K') (L := L') W w'
         (finitePlaceCompletionUnitsContinuousMulEquiv W y))
 
+open scoped Classical in
 private noncomputable def finitePlaceNormLowerArtin
     (hW : finitePlaceBelow (K := K) W = v)
     (y : Dₙˣ) :
@@ -578,12 +697,14 @@ private noncomputable def finitePlaceNormLowerArtin
       (finitePlaceRelativeNormUnits
           (K := K) (K' := K') v W hW y))
 
+open scoped Classical in
 private noncomputable def finitePlaceNormUpperRawArtin
     (y : Dₙˣ) :
     finitePlaceNormLocalizedAut K' L' W w' :=
   LocalClassFieldTheory.abelianLocalArtinMonoidHom
     Dₙ Eₙ' y
 
+open scoped Classical in
 private noncomputable def finitePlaceNormLowerRawArtin
     (hW : finitePlaceBelow (K := K) W = v)
     (y : Dₙˣ) :
@@ -593,6 +714,7 @@ private noncomputable def finitePlaceNormLowerRawArtin
     (finitePlaceRelativeNormUnits
       (K := K) (K' := K') v W hW y)
 
+open scoped Classical in
 private theorem finitePlaceNormUpperArtin_eq_raw
     (y : Dₙˣ) :
     finitePlaceLocalArtinMonoidHom
@@ -613,6 +735,7 @@ private theorem finitePlaceNormUpperArtin_eq_raw
   rw [hy]
   rfl
 
+open scoped Classical in
 private theorem finitePlaceNormLowerArtin_eq_raw
     (hW : finitePlaceBelow (K := K) W = v)
     (y : Dₙˣ) :
@@ -641,6 +764,7 @@ private theorem finitePlaceNormLowerArtin_eq_raw
   rw [hy]
   rfl
 
+open scoped Classical in
 private theorem finitePlaceNormRawArtin_naturality
     [NumberField L]
     (hW : finitePlaceBelow (K := K) W = v)
@@ -714,6 +838,7 @@ private theorem finitePlaceNormRawArtin_naturality
         (LocalFieldTheory.normUnits C D y)
   exact finitePlaceLocalArtin_norm_restriction_apply y
 
+open scoped Classical in
 private theorem finitePlaceNormLocalizedArtin_naturality
     [NumberField L]
     (hW : finitePlaceBelow (K := K) W = v)
@@ -759,6 +884,7 @@ private theorem finitePlaceNormLocalizedArtin_naturality
         (K := K) (L := L) (K' := K')
         v W w hW y).symm
 
+open scoped Classical in
 private theorem
     finitePlaceLocalArtinMonoidHom_norm_restriction_localized
     {K' L' : Type}
@@ -810,6 +936,7 @@ private theorem
     _ = _ :=
       rfl
 
+open scoped Classical in
 /-- The local Artin maps attached to specified finite places commute
 with the norm between their concrete adic completions. -/
 theorem finitePlaceLocalArtinMonoidHom_norm_restriction
@@ -908,6 +1035,7 @@ theorem finitePlaceLocalArtinMonoidHom_norm_restriction
 
 end FinitePlaceNormRestrictionInstances
 
+open scoped Classical in
 /-- The local Artin map attached to specified finite places carries a
 local norm to the restriction of the upper Artin element. -/
 theorem
@@ -1029,6 +1157,7 @@ theorem
         (finitePlaceArtinMonoidHomOfExtension_factor
           (K := K) (L := L) v w).symm
 
+open scoped Classical in
 /-- Finite-place norm--restriction compatibility.  Restriction of the upper
 local Artin
 factor is the lower local Artin factor after the norm between the
@@ -1151,6 +1280,7 @@ theorem chosenFinitePlaceArtinMonoidHom_norm_restriction
           (chosenFinitePlaceExtension
             (L := L) v))
 
+open scoped Classical in
 /-- Finite-place norm--restriction with the lower place supplied
 explicitly.  This form keeps the equality proof in the completion
 algebra and avoids dependent elimination through adic-completion

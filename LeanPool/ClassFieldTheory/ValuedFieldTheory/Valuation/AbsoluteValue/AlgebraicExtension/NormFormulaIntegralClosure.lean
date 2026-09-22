@@ -24,7 +24,8 @@ namespace Valuations
 open scoped Polynomial
 
 /-- A closed unit for the finite norm-formula value is integral over the base
-valuation ring, using only the primitive factorization definition's primitive factorization property. -/
+valuation ring, using only the primitive factorization definition's primitive factorization
+  property. -/
 theorem normFormula_finiteExtensionNormFormulaValue_isIntegral_of_le_one_of_henselFactorization
     {K L : Type*} [Field K] [Field L] [Algebra K L]
     [FiniteDimensional K L]

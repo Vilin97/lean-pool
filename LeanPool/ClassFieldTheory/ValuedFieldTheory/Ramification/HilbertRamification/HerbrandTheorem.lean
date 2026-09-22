@@ -15,7 +15,8 @@ import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.LocalRingEquiv
 # Herbrand's theorem for general discrete valuation fields
 
 This leaf contains the completion-free endpoints of
-the Herbrand quotient theorem and the quotient and tower filtration theorems.  The private lemmas below isolate
+the Herbrand quotient theorem and the quotient and tower filtration theorems.  The private
+  lemmas below isolate
 the finite-group averaging argument used in the quotient-filtration comparison.
 -/
 
@@ -257,17 +258,19 @@ def fixedFieldUpperRamificationGroup
         (base := base) (target := target) huniq H s := by
   unfold fixedFieldUpperRamificationGroup
   rw [fixedFieldInverseHerbrandFunction_herbrandFunction]
+/-- Classical decidability of membership in each lower ramification subgroup. -/
 noncomputable local instance lowerMembershipDecidable
     {G : Type*} [Group G] (F : AntitoneNormalSubgroupFiltration G)
     (n : ℕ) (sigma : G) : Decidable (sigma ∈ F.lower n) :=
   Classical.propDecidable _
 
+/-- Every subgroup of a finite group is equipped with a finite enumeration. -/
 noncomputable local instance finiteSubgroupFintype
     {G : Type*} [Group G] [Finite G] (H : Subgroup G) : Fintype H :=
   Fintype.ofFinite H
 
 private theorem truncate_depth_eq_intrinsic_summand_of_mem
-    {G : Type*} [Group G] [Fintype G]
+    {G : Type*} [Group G]
     (F : AntitoneNormalSubgroupFiltration G) (depth : G → ℕ∞)
     (hmem : ∀ n sigma,
       sigma ∈ F.lower n ↔ (((n + 1 : ℕ) : ℕ∞) ≤ depth sigma))
@@ -340,7 +343,7 @@ private theorem truncate_depth_eq_intrinsic_summand_of_mem
     exact_mod_cast (by omega : k = 1 + (k - 1))
 
 private theorem truncate_depth_eq_zero_of_not_mem_lower_zero
-    {G : Type*} [Group G] [Fintype G]
+    {G : Type*} [Group G]
     (F : AntitoneNormalSubgroupFiltration G) (depth : G → ℕ∞)
     (hmem : ∀ n sigma,
       sigma ∈ F.lower n ↔ (((n + 1 : ℕ) : ℕ∞) ≤ depth sigma))
@@ -386,7 +389,7 @@ private theorem sum_truncate_depth_eq_sum_lower_zero_of_mem
           (p := fun sigma : G => sigma ∈ F.lower 0)).symm
 
 private theorem sum_lower_zero_truncate_depth_eq_intrinsic_of_mem
-    {G : Type*} [Group G] [Fintype G]
+    {G : Type*} [Group G] [Finite G]
     (F : AntitoneNormalSubgroupFiltration G) (depth : G → ℕ∞)
     (hmem : ∀ n sigma,
       sigma ∈ F.lower n ↔ (((n + 1 : ℕ) : ℕ∞) ≤ depth sigma))
@@ -396,6 +399,8 @@ private theorem sum_lower_zero_truncate_depth_eq_intrinsic_of_mem
       Nat.card (F.lower 0) +
         (∑ sigma : F.lower 0, (F.truncatedLowerDepth m sigma : ℝ)) +
         (s - m) * Nat.card (F.lower (m + 1)) := by
+  classical
+  let := Fintype.ofFinite G
   classical
   simp_rw [truncate_depth_eq_intrinsic_summand_of_mem
     F depth hmem m hms hsm]
@@ -418,7 +423,8 @@ private theorem herbrandFunction_eq_depth_sum_of_mem
     (hmem : ∀ n sigma,
       sigma ∈ F.lower n ↔ (((n + 1 : ℕ) : ℕ∞) ≤ depth sigma))
     {s : ℝ} (hs : -1 ≤ s) :
-    (RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction F) s =
+    (RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction
+      F) s =
       (1 / Nat.card (F.lower 0) : ℝ) *
         (∑ sigma : G, truncateENatAtDVF (depth sigma) (s + 1)) - 1 := by
   classical
@@ -477,14 +483,15 @@ private theorem fixedField_herbrandFunction_formula_dvf
 
 
 
+/-- A quotient fiber of a finite group is equipped with an enumeration for the depth average. -/
 noncomputable local instance finiteQuotientFiberFintype
     {G : Type*} [Group G] [Finite G] (H : Subgroup G) [H.Normal]
     (q : G ⧸ H) : Fintype (NonarchimedeanDepth.QuotientFiber H q) :=
   Fintype.ofFinite _
 
 private theorem truncate_depth_eq_intrinsic_summand
-    {G : Type*} [Group G] [Fintype G]
-    (D : NonarchimedeanDepth G) (H : Subgroup G) [H.Normal]
+    {G : Type*} [Group G]
+    (D : NonarchimedeanDepth G) (H : Subgroup G)
     (m : ℕ) {s : ℝ} (hms : (m : ℝ) ≤ s) (hsm : s ≤ m + 1)
     (tau : (D.depthLowerFiltration H).lower 0) :
     truncateENatAtDVF (D.depth ((tau : H) : G)) (s + 1) =
@@ -553,12 +560,14 @@ private theorem truncate_depth_eq_intrinsic_summand
     exact_mod_cast (by omega : k = 1 + (k - 1))
 
 private theorem sum_truncate_depth_eq_sum_lower_zero
-    {G : Type*} [Group G] [Fintype G]
-    (D : NonarchimedeanDepth G) (H : Subgroup G) [H.Normal]
+    {G : Type*} [Group G] [Finite G]
+    (D : NonarchimedeanDepth G) (H : Subgroup G)
     {s : ℝ} (hs : -1 ≤ s) :
     (∑ tau : H, truncateENatAtDVF (D.depth (tau : G)) (s + 1)) =
       ∑ tau : (D.depthLowerFiltration H).lower 0,
         truncateENatAtDVF (D.depth ((tau : H) : G)) (s + 1) := by
+  classical
+  let := Fintype.ofFinite G
   classical
   let F := D.depthLowerFiltration H
   let f : H → ℝ := fun tau => truncateENatAtDVF (D.depth (tau : G)) (s + 1)
@@ -586,7 +595,7 @@ private theorem sum_truncate_depth_eq_sum_lower_zero
           (p := fun tau : H => tau ∈ F.lower 0)).symm
 
 private theorem sum_lower_zero_truncate_depth_eq_intrinsic
-    {G : Type*} [Group G] [Fintype G]
+    {G : Type*} [Group G] [Finite G]
     (D : NonarchimedeanDepth G) (H : Subgroup G) [H.Normal]
     (m : ℕ) {s : ℝ} (hms : (m : ℝ) ≤ s) (hsm : s ≤ m + 1) :
     (∑ tau : (D.depthLowerFiltration H).lower 0,
@@ -595,6 +604,8 @@ private theorem sum_lower_zero_truncate_depth_eq_intrinsic
         (∑ tau : (D.depthLowerFiltration H).lower 0,
           ((D.depthLowerFiltration H).truncatedLowerDepth m tau : ℝ)) +
         (s - m) * Nat.card ((D.depthLowerFiltration H).lower (m + 1)) := by
+  classical
+  let := Fintype.ofFinite G
   classical
   let F := D.depthLowerFiltration H
   change (∑ tau : F.lower 0,
@@ -618,15 +629,19 @@ private theorem sum_lower_zero_truncate_depth_eq_intrinsic
 /-- The Herbrand-function sum formula for an abstract nonarchimedean depth, in the form used
 to compare the subgroup Herbrand parameter with a normalized depth sum. -/
 private theorem depth_herbrandFunction_add_one_eq_average
-    {G : Type*} [Group G] [Fintype G]
+    {G : Type*} [Group G] [Finite G]
     (D : NonarchimedeanDepth G) (H : Subgroup G) [H.Normal]
     {s : ℝ} (hs : -1 ≤ s) :
     (D.depthLowerFiltration H).herbrandFunction s + 1 =
       (1 / D.depthRamificationIndex H : ℝ) *
         ∑ tau : H, truncateENatAtDVF (D.depth (tau : G)) (s + 1) := by
   classical
+  let := Fintype.ofFinite G
+  classical
   let F := D.depthLowerFiltration H
-  change (RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction F) s + 1 =
+  change
+    (RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction
+    F) s + 1 =
     (1 / (Nat.card (F.lower 0) : ℝ)) *
       ∑ tau : H, truncateENatAtDVF (D.depth (tau : G)) (s + 1)
   have he : (Nat.card (F.lower 0) : ℝ) ≠ 0 := by
@@ -787,7 +802,7 @@ private theorem subgroupFiltration_lower_eq_depthLowerFiltration_dvf
     (huniq :
       RamificationTheory.DiscreteValuationField.DVF.HasUniqueValuationExtension.{u, v, w, x, x}
         base target)
-    (H : Subgroup Gal(L/K)) [H.Normal] (n : ℕ) :
+    (H : Subgroup Gal(L/K)) (n : ℕ) :
     ((lowerRamificationFiltrationOfUniqueExtension
       (base := base) (target := target) huniq).subgroupFiltration H).lower n =
       ((ramificationNumberDepthOfUniqueExtension
@@ -816,7 +831,8 @@ private theorem fixedFieldSubextension_herbrandFunction_eq_depth_dvf
   rw [fixedFieldSubextension_herbrandFunction]
   apply
     ((lowerRamificationFiltrationOfUniqueExtension
-      (base := base) (target := target) huniq).subgroupFiltration H).herbrandFunction_eq_of_card_lower_eq
+      (base := base) (target := target) huniq).subgroupFiltration
+        H).herbrandFunction_eq_of_card_lower_eq
       ((ramificationNumberDepthOfUniqueExtension
         (base := base) (target := target) huniq).depthLowerFiltration H)
   intro n
@@ -1266,7 +1282,8 @@ theorem herbrandFunction_trans
     let Q := fixedFieldLowerRamificationFiltration
       (base := base) (target := target) huniq H
     let S := fixedFieldSubextensionFiltration F H
-    change (RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction F) s = Q.herbrandFunction (S.herbrandFunction s)
+    change
+      (RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction F) s = Q.herbrandFunction (S.herbrandFunction s)
     rw [(RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction_of_nonpos F) hs0,
       S.herbrandFunction_of_nonpos hs0,
       Q.herbrandFunction_of_nonpos hs0]
@@ -1297,8 +1314,10 @@ theorem inverseHerbrandFunction_trans
     simpa [F, Q, S, fixedFieldHerbrandFunction] using
       herbrandFunction_trans
         (base := base) (target := target) huniq H s
-  change (RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.inverseHerbrandFunction F) t = S.inverseHerbrandFunction (Q.inverseHerbrandFunction t)
-  apply (RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction_strictMono F).injective
+  change
+    (RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.inverseHerbrandFunction F) t = S.inverseHerbrandFunction (Q.inverseHerbrandFunction t)
+  apply
+    (RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction_strictMono F).injective
   rw [(RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction_inverseHerbrandFunction F)]
   rw [heta]
   rw [S.herbrandFunction_inverseHerbrandFunction,

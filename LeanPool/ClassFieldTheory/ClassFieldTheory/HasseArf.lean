@@ -216,7 +216,8 @@ theorem chosenLocalExtension_decompositionSubgroup_eq_top
   change σ • target.valuation.valuationSubring = target.valuation.valuationSubring
   ext z
   rw [ValuationSubring.mem_pointwise_smul_iff_inv_smul_mem]
-  exact (RamificationTheory.DiscreteValuationField.DVF.mem_valuationSubring_algEquiv_iff_of_hasUniqueValuationExtension
+  exact
+    (RamificationTheory.DiscreteValuationField.DVF.mem_valuationSubring_algEquiv_iff_of_hasUniqueValuationExtension
     (base := base) (target := target) huniq σ⁻¹ z).symm
 
 /-- At integer indices the lower group defined using Mathlib's valuation
@@ -391,7 +392,8 @@ theorem chosenHerbrandFunctionAtLowerIndex_real_eq
       rw [herbrandFunctionAtLowerIndex_succ, Rat.cast_add, Rat.cast_div]
       rw [RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction_nat,
         RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandValueNat_succ]
-      rw [← RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction_nat
+      rw [←
+        RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction_nat
         F n, ih]
       congr 1
       rw [RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandSlope]
@@ -414,14 +416,15 @@ theorem chosenLocalExtension_valuationSubring_eq_canonical
     [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K]
     [ValuativeRel L] [TopologicalSpace L]
-    [IsNonarchimedeanLocalField L]
+
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)] :
     (chosenLocalExtensionCompleteDVF K L).valuation.valuationSubring =
       (ValuativeRel.valuation L).valuationSubring := by
   let : (localCompleteDVF K).valuation.HasExtension (ValuativeRel.valuation L) := by
     rw [localCompleteDVF_valuation_eq]
     exact ‹Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)›
-  exact ValuationTheory.DiscreteValuationField.ValuedExtension.valuationSubring_eq_of_finite_separable
+  exact
+    ValuationTheory.DiscreteValuationField.ValuedExtension.valuationSubring_eq_of_finite_separable
     (localCompleteDVF K) (chosenLocalExtensionCompleteDVF K L)
       (ValuativeRel.valuation L)
 
@@ -588,7 +591,8 @@ theorem mem_canonicalUpperRamificationGroup_iff_mem_localUpperRamificationGroup
         ClassFieldTheory.upperRamificationGroup K L t ↔
       σ ∈ localUpperRamificationGroup K L t := by
   have hσChosen : σ ∈
-      ((chosenLocalExtensionCompleteDVF K L).valuation.valuationSubring).decompositionSubgroup K := by
+      ((chosenLocalExtensionCompleteDVF K L).valuation.valuationSubring).decompositionSubgroup K
+        := by
     rw [chosenLocalExtension_valuationSubring_eq_canonical K L]
     exact hσ
   have hchosen :=
@@ -704,7 +708,8 @@ theorem chosenLowerRamificationGroup_eq_iff_localLowerRamificationGroup_eq
     apply Subgroup.ext
     intro σ
     have hσ : σ ∈
-        ((chosenLocalExtensionCompleteDVF K L).valuation.valuationSubring).decompositionSubgroup K := by
+        ((chosenLocalExtensionCompleteDVF K L).valuation.valuationSubring).decompositionSubgroup
+          K := by
       rw [chosenLocalExtension_decompositionSubgroup_eq_top K L]
       trivial
     rw [← mem_chosenLowerRamificationGroup_iff_mem_localLowerRamificationGroup K L m σ hσ,
@@ -915,7 +920,7 @@ noncomputable def shrinkGalEquiv
     letI : Algebra (Shrink.{0} K) (Shrink.{0} L) := shrinkAlgebra K L
     Gal(Shrink.{0} L / Shrink.{0} K) ≃ Gal(L/K) :=
   letI : Algebra (Shrink.{0} K) (Shrink.{0} L) := shrinkAlgebra K L
-  ClassFieldTheory.galEquiv_of_equiv_equiv
+  ClassFieldTheory.galEquivOfEquivEquiv
     (Shrink.ringEquiv K).symm (Shrink.ringEquiv L).symm
     (shrinkAlgebra_commutes K L)
 
@@ -930,7 +935,7 @@ theorem shrinkGalEquiv_apply
   letI : Algebra (Shrink.{0} K) (Shrink.{0} L) := shrinkAlgebra K L
   by
     intro σ x
-    simp [shrinkGalEquiv, ClassFieldTheory.galEquiv_of_equiv_equiv]
+    simp [shrinkGalEquiv, ClassFieldTheory.galEquivOfEquivEquiv]
 
 /-- The canonical valuation ring of a small local field is the pullback of
 the original canonical valuation ring. This does not depend on the choice of
@@ -1048,7 +1053,7 @@ theorem shrink_mem_decompositionSubgroup_iff
         _ ↔ x ∈ B := (hmem x).symm
 
 /-- The field equivalence restricts to the two canonical integer rings. -/
-noncomputable def shrink_valuationSubringRingEquiv
+noncomputable def shrinkValuationSubringRingEquiv
     (L : Type*) [Field L] [ValuativeRel L] [TopologicalSpace L]
     [IsNonarchimedeanLocalField L] [Small.{0} L] :
     letI : ValuativeRel (Shrink.{0} L) := shrinkLocalFieldValuativeRel L
@@ -1069,13 +1074,13 @@ theorem shrink_mem_maximalIdeal_pow_iff
     ∀ x : (ValuativeRel.valuation (Shrink.{0} L)).valuationSubring,
       x ∈ (IsLocalRing.maximalIdeal
         (ValuativeRel.valuation (Shrink.{0} L)).valuationSubring) ^ n ↔
-      shrink_valuationSubringRingEquiv L x ∈
+      shrinkValuationSubringRingEquiv L x ∈
         (IsLocalRing.maximalIdeal
           (ValuativeRel.valuation L).valuationSubring) ^ n :=
   letI : ValuativeRel (Shrink.{0} L) := shrinkLocalFieldValuativeRel L
   by
     intro x
-    let e := shrink_valuationSubringRingEquiv L
+    let e := shrinkValuationSubringRingEquiv L
     have hmap :
         (IsLocalRing.maximalIdeal
           (ValuativeRel.valuation (Shrink.{0} L)).valuationSubring ^ n).map e =
@@ -1114,7 +1119,7 @@ theorem shrink_mem_lowerRamificationGroup_iff
   by
     let B := (ValuativeRel.valuation (Shrink.{0} L)).valuationSubring
     let A := (ValuativeRel.valuation L).valuationSubring
-    let e := shrink_valuationSubringRingEquiv L
+    let e := shrinkValuationSubringRingEquiv L
     intro σ hσ
     let τ := shrinkGalEquiv K L σ
     have hτ : τ ∈ A.decompositionSubgroup K :=

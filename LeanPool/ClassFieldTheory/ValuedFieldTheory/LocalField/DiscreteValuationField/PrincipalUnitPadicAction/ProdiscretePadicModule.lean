@@ -64,7 +64,7 @@ The defining evaluation formula for `Internal.principalUnitInverseLimitCarrierPa
 (a • x))) = a • Additive.ofMul (Internal.principalUnitInverseLimitCarrierEval F.toCompleteDVF n
 (Additive.toMul x))`.
 -/
-@[simp] theorem Internal.principalUnitInverseLimitCarrierPadic_smul_apply
+theorem Internal.principalUnitInverseLimitCarrierPadic_smul_apply
     (F : LocalField.{u, v} K)
     (a : ℤ_[F.residueCharacteristic])
     (x : Additive (Internal.principalUnitInverseLimitCarrier F.toCompleteDVF))
@@ -168,7 +168,6 @@ noncomputable instance principalUnitProdiscreteLimitPadicModule
 Establishes the identity `PrincipalUnitProdiscreteLimit.addEquiv F.toCompleteDVF (a • x) = a •
 PrincipalUnitProdiscreteLimit.addEquiv F.toCompleteDVF x`.
 -/
-@[simp]
 theorem PrincipalUnitProdiscreteLimit.addEquiv_map_smul
     (F : LocalField.{u, v} K) (a : ℤ_[F.residueCharacteristic])
     (x : PrincipalUnitProdiscreteLimit F.toCompleteDVF) :
@@ -180,7 +179,7 @@ theorem PrincipalUnitProdiscreteLimit.addEquiv_map_smul
 Establishes the identity `PrincipalUnitProdiscreteLimit.coordinate F.toCompleteDVF n (a • x) = a •
 PrincipalUnitProdiscreteLimit.coordinate F.toCompleteDVF n x`.
 -/
-@[simp] theorem PrincipalUnitProdiscreteLimit.coordinate_smul
+theorem PrincipalUnitProdiscreteLimit.coordinate_smul
     (F : LocalField.{u, v} K) (n : ℕ)
     (a : ℤ_[F.residueCharacteristic])
     (x : PrincipalUnitProdiscreteLimit F.toCompleteDVF) :

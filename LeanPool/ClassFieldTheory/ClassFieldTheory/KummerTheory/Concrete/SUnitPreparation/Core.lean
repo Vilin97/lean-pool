@@ -13,10 +13,11 @@ import LeanPool.ClassFieldTheory.ClassFieldTheory.KummerTheory.Concrete.SUnitPre
 /-!
 # Rank and kernel coordinates for S-unit preparation
 
-The endpoint of the S-unit preparation construction: the rank bound, the exact restriction-kernel cardinality, and prime-power coordinates.
+The endpoint of the S-unit preparation construction: the rank bound, the exact
+  restriction-kernel cardinality, and prime-power coordinates.
 -/
 
-open scoped NumberField Classical IsMulCommutative NNReal ValuativeRel
+open scoped NumberField IsMulCommutative NNReal ValuativeRel
 open NumberField IsDedekindDomain
 open LocalFieldTheory
 
@@ -27,6 +28,7 @@ namespace KummerTheory
 variable {K : Type*} [Field K]
     [numberFieldK : NumberField K]
 
+open scoped Classical in
 /-- The cardinal comparison in the finite S-unit preparation argument: if
 `Gal(E/K) ≃ (Z/nZ)^r`, then `r ≤ s` for the source-produced enlarged
 set of places. -/
@@ -85,6 +87,7 @@ theorem galoisRank_le_totalPlaceCard_enlargedS
   rw [hcardE, hcardN] at hcardLe
   exact (Nat.pow_le_pow_iff_right hn).mp hcardLe
 
+open scoped Classical in
 /-- The restriction kernel in the finite S-unit preparation argument has the expected
 cardinality `n ^ (s - r)`.  Both fields and the restriction map are the
 concrete objects constructed above. -/
@@ -175,6 +178,7 @@ theorem card_enlargedSUnitKummerRestrictionHom_ker
   exact Nat.eq_of_mul_eq_mul_left
     (pow_pos n.pos r) hcancel
 
+open scoped Classical in
 /-- In the prime-power case, the actual relative Galois group
 `Gal(N/E)` is a free `ZMod n`-module of rank `s - r`.  This is the
 concrete basis source used to choose the fields `N_i` in the finite S-unit preparation argument. -/
@@ -271,6 +275,7 @@ theorem
       (totalPlaceCard (K := K) S' - r)
       hp hv hn hfreeG hfreeH f hf hcard
 
+open scoped Classical in
 /-- A chosen coordinate equivalence for the actual relative Galois
 group in the finite S-unit preparation argument. -/
 noncomputable def

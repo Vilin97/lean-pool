@@ -26,7 +26,7 @@ lattice.
 noncomputable section
 
 open IsDedekindDomain Module
-open scoped Classical NumberField nonZeroDivisors
+open scoped NumberField nonZeroDivisors
 
 
 variable {K : Type*} [Field K] [NumberField K]
@@ -35,12 +35,14 @@ namespace SUnitGroup
 
 variable (S : Finset (HeightOneSpectrum (𝓞 K)))
 
+open scoped Classical in
 /-- The reduced logarithmic space for `S`-units.  It consists of the
 Dirichlet logarithmic space and one real divisor coordinate for every
 finite place in `S`. -/
 abbrev ReducedLogSpace :=
   NumberField.Units.dirichletUnitTheorem.logSpace K × (S → ℝ)
 
+open scoped Classical in
 /-- The reduced logarithmic embedding.  At an infinite place it is the
 usual multiplicity-weighted logarithm.  At a finite place it is the
 integer exponent of the principal fractional ideal, regarded as a real
@@ -82,6 +84,7 @@ noncomputable def reducedLog :
         divisorCoordinate_mul (K := K) S
           (Additive.toMul x) (Additive.toMul y) v
 
+open scoped Classical in
 /-- The normalized finite absolute value is the norm of the prime
 raised to minus the corresponding principal-divisor exponent. -/
 theorem adicAbv_eq_zpow_neg_divisorCoordinate
@@ -97,6 +100,7 @@ theorem adicAbv_eq_zpow_neg_divisorCoordinate
   · norm_cast
   · simp
 
+open scoped Classical in
 /-- The logarithm of a normalized finite absolute value is the divisor
 coordinate times `-log Nv`. -/
 theorem log_adicAbv_eq_neg_divisorCoordinate_mul_log_absNorm
@@ -113,12 +117,14 @@ theorem log_adicAbv_eq_neg_divisorCoordinate_mul_log_absNorm
   push_cast
   ring
 
+open scoped Classical in
 /-- The `ℤ`-linear form of the reduced logarithmic embedding. -/
 noncomputable def reducedLogLinearMap :
     Additive (SUnitGroup (K := K) S) →ₗ[ℤ]
       ReducedLogSpace (K := K) S :=
   (reducedLog (K := K) S).toIntLinearMap
 
+open scoped Classical in
 @[simp]
 theorem reducedLog_fst_fromNumberFieldUnits
     (u : (𝓞 K)ˣ) :
@@ -129,6 +135,7 @@ theorem reducedLog_fst_fromNumberFieldUnits
   ext w
   rfl
 
+open scoped Classical in
 @[simp]
 theorem reducedLog_snd_fromNumberFieldUnits
     (u : (𝓞 K)ˣ) :
@@ -154,6 +161,7 @@ theorem reducedLog_snd_fromNumberFieldUnits
   simpa [divisorLinearMap, divisor,
     fromNumberFieldUnitsLinearMap] using hzero
 
+open scoped Classical in
 /-- The reduced logarithm vanishes precisely on the roots of unity. -/
 theorem reducedLog_eq_zero_iff
     (x : Additive (SUnitGroup (K := K) S)) :
@@ -217,6 +225,7 @@ theorem reducedLog_eq_zero_iff
       exact reducedLog_snd_fromNumberFieldUnits
         (K := K) S u
 
+open scoped Classical in
 /-- The kernel of the reduced logarithmic map is the additive torsion
 submodule. -/
 theorem reducedLogLinearMap_ker :
@@ -227,11 +236,13 @@ theorem reducedLogLinearMap_ker :
   rw [LinearMap.mem_ker]
   exact reducedLog_eq_zero_iff (K := K) S x
 
+open scoped Classical in
 /-- The reduced `S`-unit lattice. -/
 noncomputable def reducedLogLattice :
     Submodule ℤ (ReducedLogSpace (K := K) S) :=
   LinearMap.range (reducedLogLinearMap (K := K) S)
 
+open scoped Classical in
 /-- A reduced logarithmic vector in the lattice vanishes when all of its
 finite coordinates have norm less than one. -/
 theorem norm_reducedLog_finite_lt_one_implies_zero
@@ -255,6 +266,7 @@ theorem norm_reducedLog_finite_lt_one_implies_zero
   rw [← Int.cast_abs, ← Int.cast_one, Int.cast_lt] at hv
   exact_mod_cast Int.abs_lt_one_iff.mp hv
 
+open scoped Classical in
 /-- The reduced logarithmic image is discrete.  Near the origin the
 integral finite coordinates must vanish, reducing the assertion to the
 ordinary Dirichlet unit lattice. -/
@@ -354,6 +366,7 @@ instance instDiscreteTopology_reducedLogLattice :
     subst z
     simp [Metric.mem_ball, hδpos]
 
+open scoped Classical in
 /-- The integral rank of the reduced logarithmic lattice is the
 Dirichlet unit rank plus the number of finite places in `S`. -/
 theorem finrank_reducedLogLattice :
@@ -382,6 +395,7 @@ theorem finrank_reducedLogLattice :
     _ = NumberField.Units.rank K + S.card :=
       finrank (K := K) S
 
+open scoped Classical in
 /-- The reduced logarithmic space has dimension equal to the Dirichlet
 unit rank plus the number of finite places in `S`. -/
 theorem finrank_reducedLogSpace :
@@ -390,6 +404,7 @@ theorem finrank_reducedLogSpace :
   classical
   simp [NumberField.Units.rank]
 
+open scoped Classical in
 /-- The reduced logarithmic lattice spans its whole real ambient
 space. -/
 theorem reducedLogLattice_span_eq_top :
@@ -427,6 +442,7 @@ theorem reducedLogLattice_span_eq_top :
           (ReducedLogSpace (K := K) S) :=
       (finrank_reducedLogSpace (K := K) S).symm
 
+open scoped Classical in
 /-- The reduced logarithmic image of the `S`-units is a complete
 `ℤ`-lattice. -/
 instance instIsZLattice_reducedLogLattice :
@@ -435,16 +451,19 @@ instance instIsZLattice_reducedLogLattice :
 
 section FullLogarithmicSpace
 
+open scoped Classical in
 /-- The places occurring in the `S`-unit theorem: every infinite place
 and the finite places belonging to `S`. -/
 abbrev LogPlace :=
   NumberField.InfinitePlace K ⊕ S
 
+open scoped Classical in
 /-- The ambient real coordinate space indexed by all places occurring
 in the `S`-unit theorem. -/
 abbrev FullLogSpace :=
   LogPlace (K := K) S → ℝ
 
+open scoped Classical in
 /-- Sum of all logarithmic coordinates. -/
 noncomputable def coordinateSum :
     FullLogSpace (K := K) S →ₗ[ℝ] ℝ where
@@ -457,11 +476,13 @@ noncomputable def coordinateSum :
         c * ∑ p : LogPlace (K := K) S, x p
     rw [Finset.mul_sum]
 
+open scoped Classical in
 /-- The coordinate-sum-zero hyperplane in the full logarithmic
 space. -/
 abbrev LogHyperplane :=
   LinearMap.ker (coordinateSum (K := K) S)
 
+open scoped Classical in
 /-- The normalized logarithmic absolute-value map at all places in the
 `S`-unit theorem. -/
 noncomputable def fullLogAmbient :
@@ -488,6 +509,7 @@ noncomputable def fullLogAmbient :
     ext p
     cases p <;> simp [Real.log_mul, mul_add]
 
+open scoped Classical in
 @[simp]
 theorem fullLogAmbient_infinite
     (x : Additive (SUnitGroup (K := K) S))
@@ -500,6 +522,7 @@ theorem fullLogAmbient_infinite
               SUnitGroup (K := K) S) : Kˣ) : K)) :=
   rfl
 
+open scoped Classical in
 @[simp]
 theorem fullLogAmbient_finite
     (x : Additive (SUnitGroup (K := K) S)) (v : S) :
@@ -511,6 +534,7 @@ theorem fullLogAmbient_finite
             SUnitGroup (K := K) S) : Kˣ) : K)) :=
   rfl
 
+open scoped Classical in
 /-- An `S`-unit has normalized finite absolute value one outside `S`. -/
 theorem adicAbv_eq_one_of_not_mem
     (x : SUnitGroup (K := K) S)
@@ -521,6 +545,7 @@ theorem adicAbv_eq_one_of_not_mem
     x.property v hv]
   simp
 
+open scoped Classical in
 /-- For an `S`-unit the finite part of the global product formula is
 the product over the finite places in `S`. -/
 theorem finprod_finitePlace_eq_prod_adicAbv
@@ -550,6 +575,7 @@ theorem finprod_finitePlace_eq_prod_adicAbv
     apply hv
     simp [x.property v hnot]
 
+open scoped Classical in
 /-- Logarithmic form of the product formula, restricted to the places
 of the `S`-unit theorem. -/
 theorem sum_log_absoluteValues_eq_zero
@@ -610,6 +636,7 @@ theorem sum_log_absoluteValues_eq_zero
     _ = 0 := by
       rw [hprod, Real.log_one]
 
+open scoped Classical in
 theorem fullLogAmbient_mem_logHyperplane
     (x : Additive (SUnitGroup (K := K) S)) :
     fullLogAmbient (K := K) S x ∈
@@ -623,6 +650,7 @@ theorem fullLogAmbient_mem_logHyperplane
     sum_log_absoluteValues_eq_zero (K := K) S
       (Additive.toMul x)
 
+open scoped Classical in
 /-- The normalized all-place logarithmic map with codomain restricted
 to the coordinate-sum-zero hyperplane. -/
 noncomputable def fullLog :
@@ -632,6 +660,7 @@ noncomputable def fullLog :
     (LogHyperplane (K := K) S)
     (fullLogAmbient_mem_logHyperplane (K := K) S)
 
+open scoped Classical in
 /-- The nonzero scale converting an integral divisor coordinate into
 the logarithm of the corresponding normalized finite absolute value. -/
 noncomputable def finiteLogWeight (v : S) : ℝ :=
@@ -639,6 +668,7 @@ noncomputable def finiteLogWeight (v : S) : ℝ :=
     (Ideal.absNorm
       (v : HeightOneSpectrum (𝓞 K)).asIdeal : ℝ)
 
+open scoped Classical in
 theorem finiteLogWeight_ne_zero (v : S) :
     finiteLogWeight (K := K) S v ≠ 0 := by
   have hNv :
@@ -650,6 +680,7 @@ theorem finiteLogWeight_ne_zero (v : S) :
         (v : HeightOneSpectrum (𝓞 K))
   exact neg_ne_zero.mpr (ne_of_gt (Real.log_pos hNv))
 
+open scoped Classical in
 /-- Forget the distinguished infinite coordinate and divide the finite
 logarithmic coordinates by their nonzero normalizing weights. -/
 noncomputable def forgetDistinguishedLog :
@@ -680,6 +711,7 @@ noncomputable def forgetDistinguishedLog :
               finiteLogWeight (K := K) S v)
       ring
 
+open scoped Classical in
 /-- Forgetting the distinguished logarithmic coordinate is injective on
 the product-formula hyperplane. -/
 theorem forgetDistinguishedLog_injective :
@@ -783,6 +815,7 @@ theorem forgetDistinguishedLog_injective :
         linarith
       · exact hinf ⟨w, hw⟩
 
+open scoped Classical in
 /-- Every reduced logarithmic vector has a lift to the product-formula
 hyperplane. -/
 theorem forgetDistinguishedLog_surjective :
@@ -857,6 +890,7 @@ theorem forgetDistinguishedLog_surjective :
     simp [forgetDistinguishedLog, y, completed,
       finiteLogWeight_ne_zero (K := K) S v]
 
+open scoped Classical in
 /-- Removing the distinguished infinite coordinate and rescaling the
 finite coordinates is a real linear equivalence. -/
 noncomputable def logHyperplaneEquivReduced :
@@ -867,6 +901,7 @@ noncomputable def logHyperplaneEquivReduced :
     ⟨forgetDistinguishedLog_injective (K := K) S,
       forgetDistinguishedLog_surjective (K := K) S⟩
 
+open scoped Classical in
 /-- Under the coordinate equivalence, the normalized all-place
 logarithm is exactly the reduced logarithm. -/
 theorem logHyperplaneEquivReduced_fullLog
@@ -898,6 +933,7 @@ theorem logHyperplaneEquivReduced_fullLog
     dsimp [finiteLogWeight]
     field_simp [hlog]
 
+open scoped Classical in
 /-- The kernel of the normalized all-place logarithm is the group of
 roots of unity. -/
 theorem fullLog_eq_zero_iff
@@ -915,6 +951,7 @@ theorem fullLog_eq_zero_iff
     apply (logHyperplaneEquivReduced (K := K) S).injective
     rw [logHyperplaneEquivReduced_fullLog, hx, map_zero]
 
+open scoped Classical in
 /-- The coordinate equivalence as a continuous linear equivalence
 (both spaces are finite-dimensional). -/
 noncomputable def logHyperplaneContinuousEquivReduced :
@@ -922,6 +959,7 @@ noncomputable def logHyperplaneContinuousEquivReduced :
       ReducedLogSpace (K := K) S :=
   (logHyperplaneEquivReduced (K := K) S).toContinuousLinearEquiv
 
+open scoped Classical in
 /-- The complete lattice in the coordinate-sum-zero hyperplane. -/
 noncomputable def fullLogLattice :
     Submodule ℤ (LogHyperplane (K := K) S) :=
@@ -930,6 +968,7 @@ noncomputable def fullLogLattice :
     (logHyperplaneContinuousEquivReduced
       (K := K) S).toLinearMap
 
+open scoped Classical in
 /-- The complete lattice just defined is exactly the image of the
 normalized all-place logarithmic map. -/
 theorem fullLogLattice_eq_range :
@@ -959,6 +998,7 @@ theorem fullLogLattice_eq_range :
     rw [logHyperplaneEquivReduced_fullLog]
     exact LinearMap.mem_range_self _ x
 
+open scoped Classical in
 instance instDiscreteTopology_fullLogLattice :
     DiscreteTopology (fullLogLattice (K := K) S) :=
   by
@@ -970,6 +1010,7 @@ instance instDiscreteTopology_fullLogLattice :
             (K := K) S).toLinearMap)
     infer_instance
 
+open scoped Classical in
 /-- The image of the normalized all-place logarithmic embedding is a
 complete `ℤ`-lattice in the coordinate-sum-zero hyperplane. -/
 instance instIsZLattice_fullLogLattice :
@@ -987,20 +1028,24 @@ end FullLogarithmicSpace
 
 section Decomposition
 
+open scoped Classical in
 /-- The logarithmic rank: the number of places in the
 `S`-unit theorem minus one. -/
 def logRank : ℕ :=
   Fintype.card (NumberField.InfinitePlace K) + S.card - 1
 
+open scoped Classical in
 /-- The additive realization of the roots of unity of `K`. -/
 abbrev RootsOfUnityAdditive :=
   (NumberField.Units.torsion K).toAddSubgroup.toIntSubmodule
 
+open scoped Classical in
 /-- The additive torsion submodule of the `S`-unit group. -/
 abbrev TorsionAdditive :=
   Submodule.torsion ℤ
     (Additive (SUnitGroup (K := K) S))
 
+open scoped Classical in
 theorem torsionAdditive_eq :
     TorsionAdditive (K := K) S =
       (AddCommGroup.torsion
@@ -1010,29 +1055,45 @@ theorem torsionAdditive_eq :
   rw [Submodule.torsion_int,
     AddSubgroup.toIntSubmodule_toAddSubgroup]
 
+open scoped Classical in
 /-- The torsion-free quotient of the additive `S`-unit group. -/
 abbrev FreeQuotient :=
   Additive (SUnitGroup (K := K) S) ⧸
     TorsionAdditive (K := K) S
 
+open scoped Classical in
 local instance instModuleFinite_additiveSUnit :
     Module.Finite ℤ (Additive (SUnitGroup (K := K) S)) :=
   moduleFinite (K := K) S
 
-local instance instModule_freeQuotient :
+attribute [local instance] instModuleFinite_additiveSUnit
+
+open scoped Classical in
+/-- The quotient of the additive S-unit group by torsion carries its induced integer module
+structure. -/
+local instance instModuleFreeQuotient :
     Module ℤ (FreeQuotient (K := K) S) :=
   Submodule.Quotient.module
     (TorsionAdditive (K := K) S)
 
+attribute [local instance] instModuleFreeQuotient
+
+open scoped Classical in
 local instance instModuleFinite_freeQuotient :
     Module.Finite ℤ (FreeQuotient (K := K) S) :=
   Module.Finite.quotient ℤ
     (TorsionAdditive (K := K) S)
 
+attribute [local instance] instModuleFinite_freeQuotient
+
+open scoped Classical in
 local instance instModuleFree_freeQuotient :
     Module.Free ℤ (FreeQuotient (K := K) S) :=
   Module.free_of_finite_type_torsion_free'
 
+attribute [local instance] instModuleFree_freeQuotient
+
+open scoped Classical in
 /-- The free quotient has rank `#S - 1`, where `S` here includes all
 infinite places. -/
 theorem finrank_freeQuotient :
@@ -1055,6 +1116,7 @@ theorem finrank_freeQuotient :
         Fintype.card_pos
       omega
 
+open scoped Classical in
 /-- A basis of the free quotient, indexed by its logarithmic rank. -/
 noncomputable def basisFreeQuotient :
     Basis (Fin (logRank (K := K) S)) ℤ
@@ -1067,6 +1129,7 @@ noncomputable def basisFreeQuotient :
         finrank_freeQuotient (K := K) S,
         Fintype.card_fin])
 
+open scoped Classical in
 /-- The ordinary roots of unity map linearly and bijectively onto the
 torsion in the `S`-unit group. -/
 noncomputable def rootsOfUnityEquivTorsion :
@@ -1129,6 +1192,7 @@ noncomputable def rootsOfUnityEquivTorsion :
     apply Additive.toMul.injective
     exact huy
 
+open scoped Classical in
 /-- A linear section of the quotient by torsion.  It exists because
 the quotient is a free, hence projective, `ℤ`-module. -/
 private noncomputable def torsionQuotientSection :
@@ -1139,6 +1203,7 @@ private noncomputable def torsionQuotientSection :
     LinearMap.id
     (TorsionAdditive (K := K) S).mkQ_surjective).choose
 
+open scoped Classical in
 private theorem torsionQuotientSection_spec :
     (TorsionAdditive (K := K) S).mkQ.comp
         (torsionQuotientSection (K := K) S) =
@@ -1148,6 +1213,7 @@ private theorem torsionQuotientSection_spec :
     LinearMap.id
     (TorsionAdditive (K := K) S).mkQ_surjective).choose_spec
 
+open scoped Classical in
 /-- Splitting the exact sequence consisting of torsion, the `S`-unit
 group, and its torsion-free quotient. -/
 private noncomputable def torsionProdFreeQuotientEquiv :
@@ -1160,6 +1226,7 @@ private noncomputable def torsionProdFreeQuotientEquiv :
       rw [Submodule.range_subtype, Submodule.ker_mkQ])
     (torsionQuotientSection_spec (K := K) S)).symm
 
+open scoped Classical in
 /-- **`S`-unit theorem, decomposition form.**  Additively, the
 `S`-unit group is the product of the roots of unity and a free
 `ℤ`-module of rank `#S - 1`. -/
@@ -1171,6 +1238,7 @@ noncomputable def decompositionLinearEquiv :
     ((rootsOfUnityEquivTorsion (K := K) S).symm.prodCongr
       (basisFreeQuotient (K := K) S).repr)
 
+open scoped Classical in
 /-- The multiplicative realization of the additive roots-of-unity
 submodule is canonically the usual group `μ(K)`. -/
 noncomputable def multiplicativeRootsOfUnityEquiv :
@@ -1194,6 +1262,7 @@ noncomputable def multiplicativeRootsOfUnityEquiv :
   map_mul' x y := by
     rfl
 
+open scoped Classical in
 /-- **`S`-unit theorem, group form.**
 
 Writing `S` for all infinite places together with the supplied finite

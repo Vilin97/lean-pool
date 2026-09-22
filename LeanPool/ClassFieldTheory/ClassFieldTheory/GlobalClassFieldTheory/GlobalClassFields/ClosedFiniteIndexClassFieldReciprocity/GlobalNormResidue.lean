@@ -13,7 +13,7 @@ This leaf proves that the selected class-field reciprocity equivalence sends
 the global norm-residue symbol to the corresponding quotient class.
 -/
 
-open scoped Classical IsMulCommutative NumberField
+open scoped IsMulCommutative NumberField
 
 noncomputable section
 
@@ -22,6 +22,7 @@ namespace GlobalClassFields
 
 open Reciprocity
 
+open scoped Classical in
 /-- Canonical class-group commutativity supplies normality for quotient evaluation. -/
 private theorem closedFiniteIndexNormResidueClassGroupIsMulCommutative
     (F : Type) [Field F] [NumberField F] :
@@ -32,6 +33,7 @@ attribute [local instance] closedFiniteIndexNormResidueClassGroupIsMulCommutativ
 
 variable {K : Type} [Field K] [NumberField K]
 
+open scoped Classical in
 private theorem quotientTransport_inverse_apply
     {G A : Type*} [Group G] [Group A]
     (N H : Subgroup G) [N.Normal] [H.Normal]
@@ -53,10 +55,10 @@ private theorem quotientTransport_inverse_apply
     _ = QuotientGroup.mk' H c :=
       QuotientGroup.quotientMulEquivOfEq_mk h c
 
+open scoped Classical in
 /-- Under the direct class-field reciprocity equivalence, the global
 norm-residue symbol of an idèle class is its quotient class modulo
 `H`. -/
-@[simp]
 theorem
     closedFiniteIndexClassFieldGaloisEquivNormQuotient_globalNormResidue
     (H : Subgroup (IdeleClassGroup K))

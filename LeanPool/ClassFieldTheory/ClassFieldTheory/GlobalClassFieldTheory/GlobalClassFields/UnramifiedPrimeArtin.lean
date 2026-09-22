@@ -24,8 +24,7 @@ decomposition law: the prime Artin element is trivial exactly when the
 place splits completely.
 -/
 
-open scoped NumberField Classical
-
+open scoped NumberField
 noncomputable section
 
 namespace GlobalClassFieldTheory
@@ -39,6 +38,7 @@ variable
     [Field L] [NumberField L] [Algebra K L]
     [IsAbelianGalois K L]
 
+open scoped Classical in
 /-- The actual global Artin element of the normalized one-place prime
 idèle at a finite place. -/
 def finitePlacePrimeArtin
@@ -47,6 +47,7 @@ def finitePlacePrimeArtin
   Reciprocity.globalArtinMonoidHom
     (K := K) (L := L) (finitePrimeIdele v)
 
+open scoped Classical in
 /-- The global prime Artin element is the chosen local Artin image of
 the normalized order-one local element. -/
 @[simp]
@@ -59,6 +60,7 @@ theorem finitePlacePrimeArtin_eq_chosenFinitePlaceArtin
   rw [finitePlacePrimeArtin, finitePrimeIdele,
     Reciprocity.globalArtinMonoidHom_finitePlaceIdele]
 
+open scoped Classical in
 /-- At a chosen unramified finite place, two local elements of equal
 normalized order have the same local Artin symbol. -/
 theorem
@@ -99,6 +101,7 @@ theorem
         simpa only [map_mul, map_inv] using
           MonoidHom.mem_ker.mp hker)
 
+open scoped Classical in
 /-- At a chosen unramified finite place, every local Artin symbol is a
 power of the normalized prime Artin element, with exponent its
 normalized local order. -/
@@ -137,6 +140,7 @@ theorem
           (K := K) (L := L) v)
         (FiniteIdeleGroup.chosenLocalOrderSection v 1) n
 
+open scoped Classical in
 /-- At a chosen unramified finite place, the prime Artin element
 generates the actual decomposition group. -/
 theorem
@@ -172,6 +176,7 @@ theorem
       ← finitePlacePrimeArtin_eq_chosenFinitePlaceArtin
         (K := K) (L := L) v]
 
+open scoped Classical in
 /-- At a chosen unramified finite place, the order of the actual prime
 Artin element is the local extension degree. -/
 theorem
@@ -209,6 +214,7 @@ theorem
       _root_.finitePlaceDecompositionGroup_card_eq_localDegree
         (K := K) (L := L) v
 
+open scoped Classical in
 /-- At a chosen unramified finite place, the actual prime Artin element
 is trivial exactly when the place splits completely. -/
 theorem

@@ -9,10 +9,11 @@ import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.RayClass
 /-!
 # The local-power kernel of S-units
 
-The localization map on `S`-units, its kernel, its quotient by global powers, and the associated Kummer radical.
+The localization map on `S`-units, its kernel, its quotient by
+  global powers, and the associated Kummer radical.
 -/
 
-open scoped NumberField Classical IsMulCommutative NNReal ValuativeRel
+open scoped NumberField IsMulCommutative NNReal ValuativeRel
 open NumberField IsDedekindDomain
 open LocalFieldTheory
 
@@ -23,6 +24,7 @@ namespace KummerTheory
 variable {K : Type*} [Field K]
     [numberFieldK : NumberField K]
 
+open scoped Classical in
 /-- The diagonal localization map
 `Kˢ → ∏ v ∈ T, K_vˣ / K_vˣⁿ`. -/
 noncomputable def sUnitLocalPowerMap
@@ -42,6 +44,7 @@ noncomputable def sUnitLocalPowerMap
             (v.1.adicCompletion K)ˣ).range)).comp
     (SUnitGroup (K := K) S).subtype
 
+open scoped Classical in
 /-- The subgroup `Δ` of `S`-units which are local `n`-th powers at every
 place in `T`. -/
 def sUnitLocalPowerKernel
@@ -50,6 +53,7 @@ def sUnitLocalPowerKernel
     Subgroup (SUnitGroup (K := K) S) :=
   MonoidHom.ker (sUnitLocalPowerMap (K := K) n S T)
 
+open scoped Classical in
 /-- Elementwise description of the local-power kernel `Δ`. -/
 theorem mem_sUnitLocalPowerKernel_iff
     (n : ℕ+)
@@ -74,6 +78,7 @@ theorem mem_sUnitLocalPowerKernel_iff
     funext v
     exact (QuotientGroup.eq_one_iff _).mpr (hx v)
 
+open scoped Classical in
 /-- Global `n`-th powers are local `n`-th powers at every place. -/
 theorem nthPowerSubgroup_le_sUnitLocalPowerKernel
     (n : ℕ+)
@@ -97,6 +102,7 @@ theorem nthPowerSubgroup_le_sUnitLocalPowerKernel
         ((v : HeightOneSpectrum (𝓞 K)).adicCompletion K)ˣ)).mpr
       ⟨_, by rw [powMonoidHom_apply]⟩)
 
+open scoped Classical in
 /-- The copy of `Kˢⁿ` inside the local-power kernel `Δ`. -/
 def sUnitLocalPowerKernelNthPowers
     (n : ℕ+)
@@ -107,6 +113,7 @@ def sUnitLocalPowerKernelNthPowers
         SUnitGroup (K := K) S).range).comap
     (sUnitLocalPowerKernel (K := K) n S T).subtype
 
+open scoped Classical in
 /-- The canonical map `Δ / Kˢⁿ → Kˢ / Kˢⁿ`. -/
 def sUnitLocalPowerKernelQuotientMap
     (n : ℕ+)
@@ -127,6 +134,7 @@ def sUnitLocalPowerKernelQuotientMap
       intro x hx
       exact hx)
 
+open scoped Classical in
 /-- Inclusion of `Δ` induces an injection on quotients by `Kˢⁿ`. -/
 theorem sUnitLocalPowerKernelQuotientMap_injective
     (n : ℕ+)
@@ -147,6 +155,7 @@ theorem sUnitLocalPowerKernelQuotientMap_injective
           apply (QuotientGroup.eq_iff_div_mem).1
           exact hqr
 
+open scoped Classical in
 /-- The restricted radical quotient `Δ / Kˢⁿ` is finite. -/
 noncomputable instance finite_sUnitLocalPowerKernelQuotient
     (n : ℕ+)
@@ -159,6 +168,7 @@ noncomputable instance finite_sUnitLocalPowerKernelQuotient
     (sUnitLocalPowerKernelQuotientMap_injective
       (K := K) n S T)
 
+open scoped Classical in
 /-- The restricted radical quotient has cardinality at most `n ^ s`. -/
 theorem card_sUnitLocalPowerKernelQuotient_le
     (n : ℕ+)
@@ -174,6 +184,7 @@ theorem card_sUnitLocalPowerKernelQuotient_le
     (sUnitLocalPowerKernelQuotientMap_injective
       (K := K) n S T)
 
+open scoped Classical in
 /-- The local-power kernel, regarded as an actual subgroup of `Kˣ`. -/
 def sUnitLocalPowerRadical
     (n : ℕ+)
@@ -182,6 +193,7 @@ def sUnitLocalPowerRadical
   (sUnitLocalPowerKernel (K := K) n S T).map
     (SUnitGroup (K := K) S).subtype
 
+open scoped Classical in
 /-- Membership in the local-power radical is membership in the kernel
 through the canonical `S`-unit inclusion. -/
 theorem mem_sUnitLocalPowerRadical_iff

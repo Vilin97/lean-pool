@@ -147,14 +147,14 @@ def padicCompletedLevelField
   (padicCompletedPrimitivePolynomial p n).SplittingField
 
 @[reducible]
-instance padicCompletedLevelField_field
+instance padicCompletedLevelFieldField
     (p : ℕ) [Fact p.Prime] (n : ℕ) :
     Field (padicCompletedLevelField p n) := by
   change Field (padicCompletedPrimitivePolynomial p n).SplittingField
   infer_instance
 
 @[reducible]
-noncomputable instance padicCompletedLevelField_algebra
+noncomputable instance padicCompletedLevelFieldAlgebra
     (p : ℕ) [Fact p.Prime] (n : ℕ) :
     Algebra (padicCompletedUnramifiedField p)
       (padicCompletedLevelField p n) := by
@@ -164,13 +164,14 @@ noncomputable instance padicCompletedLevelField_algebra
 
 section
 
-local instance padicCompletedLevelField_module
+/-- The completed Lubin–Tate level field is a module over the completed unramified base. -/
+local instance padicCompletedLevelFieldModule
     (p : ℕ) [Fact p.Prime] (n : ℕ) :
     @Module (padicCompletedUnramifiedField p) (padicCompletedLevelField p n)
       (inferInstance : DivisionRing (padicCompletedUnramifiedField p)).toRing.toSemiring
       (inferInstance : AddCommGroup (padicCompletedLevelField p n)).toAddCommMonoid :=
   @Algebra.toModule (padicCompletedUnramifiedField p) (padicCompletedLevelField p n)
-    _ _ (padicCompletedLevelField_algebra p n)
+    _ _ (padicCompletedLevelFieldAlgebra p n)
 
 instance padicCompletedLevelField_finiteDimensional
     (p : ℕ) [Fact p.Prime] (n : ℕ) :

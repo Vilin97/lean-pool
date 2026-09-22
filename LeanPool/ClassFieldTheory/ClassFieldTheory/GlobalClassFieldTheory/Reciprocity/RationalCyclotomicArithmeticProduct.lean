@@ -17,7 +17,7 @@ Artin maps and proves the finite principal-idèle product formula in
 that normalization.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -25,14 +25,21 @@ noncomputable section
 namespace GlobalClassFieldTheory
 namespace Reciprocity
 
-local instance (q : Nat.Primes) : Fact q.1.Prime :=
+open scoped Classical in
+local instance localPrimesInstance1 (q : Nat.Primes) : Fact q.1.Prime :=
   ⟨q.2⟩
 
-local instance (m : ℕ+) : NeZero (m : ℕ) :=
+attribute [local instance] localPrimesInstance1
+
+open scoped Classical in
+local instance localNeZeroInstance1 (m : ℕ+) : NeZero (m : ℕ) :=
   ⟨m.ne_zero⟩
+
+attribute [local instance] localNeZeroInstance1
 
 section ArbitraryCyclotomicLevel
 
+open scoped Classical in
 noncomputable local instance
     rationalCyclotomicArithmeticLevelFiniteDimensional
     (m : ℕ+) :
@@ -41,6 +48,9 @@ noncomputable local instance
   IsCyclotomicExtension.finiteDimensional
     {(m : ℕ)} ℚ (KummerTheory.rationalCyclotomicLevel m)
 
+attribute [local instance] rationalCyclotomicArithmeticLevelFiniteDimensional
+
+open scoped Classical in
 noncomputable local instance
     rationalCyclotomicArithmeticLevelIsAbelianGalois
     (m : ℕ+) :
@@ -48,6 +58,9 @@ noncomputable local instance
       (KummerTheory.rationalCyclotomicLevel m) :=
   rationalCyclotomicLevelIsAbelianGalois m
 
+attribute [local instance] rationalCyclotomicArithmeticLevelIsAbelianGalois
+
+open scoped Classical in
 /-- Mapping an arithmetic chosen local symbol to a cyclotomic
 coordinate only inverts the corresponding geometric coordinate.  This
 small opaque boundary keeps the full chosen-Artin expressions out of
@@ -74,6 +87,7 @@ private theorem
           v x))⁻¹ := by
   rw [arithmeticChosenFinitePlaceArtinMonoidHom_apply, map_inv]
 
+open scoped Classical in
 /-- For an arbitrary chosen local input away from the conductor, the
 arithmetic cyclotomic character is `q` raised to the negative of the
 absolute-value logarithmic valuation.  Thus an ordinary DVR
@@ -104,6 +118,7 @@ theorem
       m q hq x,
     ← zpow_neg]
 
+open scoped Classical in
 /-- Away from the conductor, the arithmetic local Artin character of
 a rational principal component is the usual positive valuation power
 of arithmetic Frobenius. -/
@@ -131,6 +146,7 @@ theorem
 
 end ArbitraryCyclotomicLevel
 
+open scoped Classical in
 /-- The arithmetic chosen finite-place character of a rational
 principal idèle at the prime `q`. -/
 noncomputable def
@@ -139,6 +155,7 @@ noncomputable def
     (ZMod (p.1 ^ k))ˣ :=
   (rationalCyclotomicPrincipalFinitePlaceCharacter p k x q)⁻¹
 
+open scoped Classical in
 /-- Arithmetic and geometric finite-place characters differ exactly
 by inversion. -/
 @[simp]
@@ -151,9 +168,9 @@ theorem
         p k x q)⁻¹ := by
   rfl
 
+open scoped Classical in
 /-- Outside the ordinary rational prime-factorization support, the
 arithmetic local factor is trivial. -/
-@[simp]
 theorem
     rationalCyclotomicArithmeticPrincipalFinitePlaceCharacter_eq_one_of_not_mem_support
     (p : Nat.Primes) (k : ℕ) (x : ℚˣ) (q : Nat.Primes)
@@ -168,6 +185,7 @@ theorem
       p k x q hq,
     inv_one]
 
+open scoped Classical in
 /-- The arithmetic rational principal finite-place characters have
 finite multiplicative support. -/
 theorem
@@ -185,6 +203,7 @@ theorem
     (rationalCyclotomicArithmeticPrincipalFinitePlaceCharacter_eq_one_of_not_mem_support
       p k x q hqSupport)
 
+open scoped Classical in
 /-- At a prime away from `p`, the arithmetic character is the direct
 Frobenius power `q ^ v_q(x)`. -/
 theorem
@@ -203,6 +222,7 @@ theorem
     zpow_neg,
     inv_inv]
 
+open scoped Classical in
 /-- At the ramified prime `p`, the arithmetic character is the inverse
 of the actual reduced `p`-adic unit. -/
 theorem
@@ -219,27 +239,37 @@ theorem
     rationalCyclotomicArithmeticPrincipalFinitePlaceCharacter_eq_inv,
     rationalCyclotomicPrincipalFinitePlaceCharacter_at_prime]
 
-local instance (p : Nat.Primes) (k : ℕ) :
+open scoped Classical in
+local instance localPrimesInstance2 (p : Nat.Primes) (k : ℕ) :
     NumberField
       (KummerTheory.rationalCyclotomicLevel
         ⟨p.1 ^ k, pow_pos p.2.pos k⟩) :=
   KummerTheory.rationalCyclotomicLevel_numberField
     ⟨p.1 ^ k, pow_pos p.2.pos k⟩
 
-local instance (p : Nat.Primes) (k : ℕ) :
+attribute [local instance] localPrimesInstance2
+
+open scoped Classical in
+local instance localPrimesInstance3 (p : Nat.Primes) (k : ℕ) :
     FiniteDimensional ℚ
       (KummerTheory.rationalCyclotomicLevel
         ⟨p.1 ^ k, pow_pos p.2.pos k⟩) :=
   rationalCyclotomicPrincipalPrimeLevelFiniteDimensional
     ⟨p.1 ^ k, pow_pos p.2.pos k⟩
 
-local instance (p : Nat.Primes) (k : ℕ) :
+attribute [local instance] localPrimesInstance3
+
+open scoped Classical in
+local instance localPrimesInstance4 (p : Nat.Primes) (k : ℕ) :
     IsAbelianGalois ℚ
       (KummerTheory.rationalCyclotomicLevel
         ⟨p.1 ^ k, pow_pos p.2.pos k⟩) :=
   rationalCyclotomicLevelIsAbelianGalois
     ⟨p.1 ^ k, pow_pos p.2.pos k⟩
 
+attribute [local instance] localPrimesInstance4
+
+open scoped Classical in
 /-- Pointwise inversion of the chosen local characters, assembled before
 the public product formula so that its proof does not unfold the full
 finite-product expressions during definitional equality checking. -/
@@ -335,6 +365,7 @@ private theorem
                 (IdeleGroup.principalIdele ℚ x))))⁻¹ := by
       rw [finprod_inv_distrib]
 
+open scoped Classical in
 /-- The reduction of a rational sign is fixed by inversion. -/
 private theorem rationalSignPadicUnit_toZModPow_inv_eq_self
     (p : Nat.Primes) (k : ℕ) (x : ℚˣ) :
@@ -375,6 +406,7 @@ private theorem rationalSignPadicUnit_toZModPow_inv_eq_self
         (rationalSignPadicUnit x p) := by
       rw [inv_mul_cancel, one_mul]
 
+open scoped Classical in
 /-- At every prime-power cyclotomic level, the product of the actual
 arithmetic finite-place characters of a rational principal idèle is
 the reduction of its sign. -/

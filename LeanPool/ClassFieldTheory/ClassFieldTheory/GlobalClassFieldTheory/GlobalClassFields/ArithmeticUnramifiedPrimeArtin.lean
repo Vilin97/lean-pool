@@ -18,8 +18,7 @@ element used in the ideal-theoretic formulation: the ordinary normalized
 prime idèle maps to arithmetic Frobenius.
 -/
 
-open scoped NumberField Classical
-
+open scoped NumberField
 noncomputable section
 
 namespace GlobalClassFieldTheory
@@ -33,6 +32,7 @@ variable
     [Field L] [NumberField L] [Algebra K L]
     [IsAbelianGalois K L]
 
+open scoped Classical in
 /-- The arithmetic global Artin element of the ordinary normalized
 one-place prime idèle. -/
 noncomputable def arithmeticFinitePlacePrimeArtin
@@ -41,6 +41,7 @@ noncomputable def arithmeticFinitePlacePrimeArtin
   Reciprocity.arithmeticGlobalArtinMonoidHom K L
     (finitePrimeIdele v)
 
+open scoped Classical in
 /-- The arithmetic prime Artin element is the arithmetic chosen local
 Artin value of the normalized order-one element. -/
 @[simp]
@@ -52,9 +53,9 @@ theorem arithmeticFinitePlacePrimeArtin_eq_arithmeticChosenFinitePlaceArtin
   rw [arithmeticFinitePlacePrimeArtin, finitePrimeIdele,
     Reciprocity.arithmeticGlobalArtinMonoidHom_finitePlaceIdele]
 
+open scoped Classical in
 /-- Arithmetic and geometric prime Artin elements are inverse
 automorphisms. -/
-@[simp]
 theorem arithmeticFinitePlacePrimeArtin_eq_inv
     (v : HeightOneSpectrum (𝓞 K)) :
     arithmeticFinitePlacePrimeArtin (K := K) (L := L) v =
@@ -63,6 +64,7 @@ theorem arithmeticFinitePlacePrimeArtin_eq_inv
     Reciprocity.arithmeticGlobalArtinMonoidHom_apply,
     finitePlacePrimeArtin]
 
+open scoped Classical in
 /-- The arithmetic Frobenius of the actual chosen completed extension,
 transported through its decomposition group into the global Galois group.
 The unramifiedness hypothesis concerns this chosen extension, not an
@@ -79,6 +81,7 @@ noncomputable def chosenFinitePlaceArithmeticFrobenius
     (Reciprocity.chosenFinitePlaceLocalArithmeticFrobenius
       (K := K) (L := L) v hunram)
 
+open scoped Classical in
 /-- At an unramified chosen finite place, the arithmetic prime Artin
 element really is the global decomposition-group transport of local
 arithmetic Frobenius. The local input has valuation `-1` in the
@@ -114,6 +117,7 @@ theorem arithmeticFinitePlacePrimeArtin_eq_chosenFinitePlaceArithmeticFrobenius
     Reciprocity.arithmeticChosenFinitePlaceArtinMonoidHom_apply]
   rw [hgeometric, inv_inv]
 
+open scoped Classical in
 /-- At an unramified chosen place, the arithmetic prime Artin element
 has order equal to the local extension degree. -/
 theorem
@@ -133,6 +137,7 @@ theorem
     orderOf_finitePlacePrimeArtin_eq_finitePlaceLocalDegree_of_chosenUnramified
       (K := K) (L := L) v hunram
 
+open scoped Classical in
 /-- An unramified finite place splits completely exactly when its
 arithmetic Frobenius is trivial. -/
 theorem

@@ -13,7 +13,7 @@ enlarged S-unit Kummer extension to coordinate generators, their required
 number, and their cyclic fixed fields.
 -/
 
-open scoped NumberField Classical IsMulCommutative
+open scoped NumberField IsMulCommutative
 open NumberField IsDedekindDomain
 open KummerTheory
 
@@ -26,6 +26,7 @@ section GeneralKummer
 variable {K : Type*} [Field K]
     [NumberField K]
 
+open scoped Classical in
 /-- The number `s-r` of finite places required to detect the restriction
 kernel for the chosen source-produced enlargement of `S`. -/
 def sUnitKummerPrimeCount
@@ -40,6 +41,7 @@ def sUnitKummerPrimeCount
       (enlargeByFiniteKummerRadicalSupport
         (K := K) (L := E) n hmu S) - r
 
+open scoped Classical in
 /-- The `i`-th standard generator of the actual restriction kernel
 `Gal(N/E)`. -/
 noncomputable def sUnitKummerKernelGenerator
@@ -66,6 +68,7 @@ noncomputable def sUnitKummerKernelGenerator
       (Pi.mulSingle i
         (Multiplicative.ofAdd (1 : ZMod (n : ℕ))))
 
+open scoped Classical in
 /-- The standard coordinate generators span the actual restriction kernel
 `Gal(N / E)`. -/
 theorem iSup_zpowers_sUnitKummerKernelGenerator_eq_top
@@ -163,6 +166,7 @@ theorem iSup_zpowers_sUnitKummerKernelGenerator_eq_top
     e.injective htauSigma
   exact show sigma ∈ (P : Set _) from htauEq ▸ htau
 
+open scoped Classical in
 /-- Every standard restriction-kernel generator has exact order `n`. -/
 theorem orderOf_sUnitKummerKernelGenerator
     {Omega : Type*} [Field Omega] [Algebra K Omega]
@@ -207,6 +211,7 @@ theorem orderOf_sUnitKummerKernelGenerator
       j (Multiplicative.ofAdd (1 : ZMod (n : ℕ)))).trans hone
   exact (e.symm.orderOf_eq c).trans hc
 
+open scoped Classical in
 /-- The cyclic fixed field attached to the `i`-th coordinate of the
 actual relative Galois group `Gal(N/E)`. -/
 noncomputable def sUnitKummerCoordinateFixedField
@@ -235,6 +240,7 @@ noncomputable def sUnitKummerCoordinateFixedField
       (K := K) (Omega := Omega) E n hmu
       p v hp hv hn r eG S i)
 
+open scoped Classical in
 /-- Each coordinate fixed field has relative degree exactly `n` in
 the full `S`-unit Kummer field. -/
 theorem sUnitKummerCoordinateFixedField_finrank

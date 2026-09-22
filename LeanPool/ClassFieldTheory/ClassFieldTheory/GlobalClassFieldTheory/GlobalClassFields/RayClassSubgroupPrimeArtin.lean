@@ -14,7 +14,7 @@ Arithmetic reciprocity on a ray-class fixed field agrees, at each ordinary
 prime idèle, with the arithmetic global Artin symbol of that field.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 
 noncomputable section
 
@@ -23,6 +23,7 @@ namespace GlobalClassFields
 
 open NumberField IsDedekindDomain IdeleGroup Reciprocity
 
+open scoped Classical in
 private theorem arithmeticFinitePlacePrimeArtin_restrict_tower
     (K L E : Type) [Field K] [Field L] [Field E]
     [NumberField K] [NumberField L] [NumberField E]
@@ -41,6 +42,7 @@ private theorem arithmeticFinitePlacePrimeArtin_restrict_tower
           (K := K) (L := L) (E := E))
         (IdeleGroup.finitePrimeIdele v))
 
+open scoped Classical in
 private theorem rayClassFieldGaloisEquivRayClassGroup_symm_mk
     {K : Type} [Field K] [NumberField K]
     (m : RayClass.Modulus K) (c : IdeleClassGroup K) :
@@ -51,6 +53,7 @@ private theorem rayClassFieldGaloisEquivRayClassGroup_symm_mk
   exact (rayClassFieldGaloisEquivRayClassGroup_globalNormResidue
     (K := K) m c).symm
 
+open scoped Classical in
 private theorem rayClassField_arithmeticFinitePlacePrimeArtin
     {K : Type} [Field K] [NumberField K]
     (m : RayClass.Modulus K)
@@ -78,6 +81,7 @@ private theorem rayClassField_arithmeticFinitePlacePrimeArtin
   exact (Reciprocity.arithmeticGlobalNormResidueMonoidHom_apply
     K (rayClassField K m) c).symm.trans hnormprime
 
+open scoped Classical in
 private theorem rayClassSubgroup_restrict_transport
     {K : Type} [Field K] [NumberField K]
     (m : RayClass.Modulus K)
@@ -120,6 +124,7 @@ private theorem rayClassSubgroup_restrict_transport
     _ = f ((AlgEquiv.restrictNormalHom E σ) x) := by
       exact (AlgEquiv.restrictNormal_commutes σ E x).symm
 
+open scoped Classical in
 /-- The fixed-field ray-class Artin map sends the ray class of an ordinary
 prime idèle to the arithmetic global Artin element of the fixed field. -/
 theorem rayClassSubgroupArtin_finitePrimeIdele

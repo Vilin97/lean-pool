@@ -15,7 +15,7 @@ embeds.  The proof combines the ray-field embedding criterion with the
 minimality theorem for the full conductor.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 
 noncomputable section
 
@@ -26,6 +26,7 @@ open NumberField
 
 variable {K : Type} [Field K] [NumberField K]
 
+open scoped Classical in
 /-- A finite abelian extension embeds in the selected ray class field
 exactly when the modulus is at least its full conductor. -/
 theorem nonempty_algHom_to_rayClassField_iff_fullConductor_le

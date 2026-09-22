@@ -34,7 +34,9 @@ value on the Frobenius semigroup is first mapped to the finite norm quotient.
 We then compare two lifts by their positive Frobenius exponents, construct
 the degree-zero quotient between unequal lifts, and prove that this quotient
 has zero finite reciprocity value.  Finally reciprocity multiplicativity supplies
-additivity on the Frobenius semigroup, so the lift supplied by the finite degree-quotient decomposition descends to the additive reciprocity homomorphism of the finite reciprocity equivalence.
+additivity on the Frobenius semigroup, so the lift supplied by
+  the finite degree-quotient decomposition descends to the additive reciprocity homomorphism of
+    the finite reciprocity equivalence.
 -/
 
 noncomputable section
@@ -511,7 +513,6 @@ theorem finiteReciprocityCandidate_eq_primeNormClass
         (K.toFiniteResidueAbstractField D) L hLK q.toMul)
 
 /-- The finite reciprocity candidate sends the zero norm class to the identity. -/
-@[simp]
 theorem finiteReciprocityCandidate_zero (D : DegreeData G) (A : Rep ℤ G)
     (v : ValuationData D A)
     [IsTopologicalGroup G] [CompactSpace G] [T2Space G]
@@ -594,7 +595,8 @@ private theorem finiteReciprocityValue_eq_of_same_restriction_of_mul
   · rcases h with ⟨ι, hσ, _, hι⟩
     rw [hσ, hmul, hι, add_zero]
 
-/-- The finite degree-quotient decomposition candidate is additive as soon as reciprocity multiplicativity
+/-- The finite degree-quotient decomposition candidate is additive as soon as reciprocity
+multiplicativity
 is available.  Lift-independence is invoked for the chosen lift of a
 product and the product of the two chosen lifts. -/
 private theorem finiteReciprocityCandidate_add_of_mul
@@ -801,7 +803,8 @@ end finiteReciprocityHom
 /-!
 # The abstract reciprocity construction, the unramified norm-quotient equivalence
 
-This file proves the generator calculation in the unramified case: the finite reciprocity equivalence sends arithmetic Frobenius to the prime
+This file proves the generator calculation in the unramified case: the finite reciprocity
+  equivalence sends arithmetic Frobenius to the prime
 class.  That class generates the finite norm quotient, so the resulting
 reciprocity homomorphism is promoted to an additive equivalence.
 -/
@@ -818,7 +821,7 @@ namespace DegreeData
 Frobenius lift is itself unramified over `K`. -/
 theorem unramifiedFrobenius_fixedField_isUnramified
     (D : DegreeData G)
-    [IsTopologicalGroup G] [CompactSpace G] [T2Space G]
+    [IsTopologicalGroup G]
     (K : FiniteResidueAbstractField D) (L : ClosedSubgroup G)
     (hLK : L.toSubgroup ≤ K.field.toSubgroup)
     [hnormal : (extensionSubgroup K.field L hLK).Normal]
@@ -1016,7 +1019,7 @@ class is bijective: the prime class generates the norm quotient, and both
 finite groups have order `[L : K]`. -/
 theorem unramifiedReciprocity_bijective_of_generator
     (v : ValuationData D A) (hAxiom : SatisfiesUnramifiedUnitCohomology D v)
-    [IsTopologicalGroup G] [CompactSpace G] [T2Space G]
+
     (K : FiniteAbstractField G) (L : ClosedSubgroup G)
     (hLK : L.toSubgroup ≤ K.field.toSubgroup)
     [hnormal : (extensionSubgroup K.field L hLK).Normal]
@@ -1030,7 +1033,7 @@ theorem unramifiedReciprocity_bijective_of_generator
         (K.toFiniteResidueAbstractField D) L hLK)) =
       finiteNormClass A K.field L hLK (v.chosenPrimeElement K)) :
     Function.Bijective f := by
-  let e := v.unramifiedReciprocity_valuationEquiv
+  let e := v.unramifiedReciprocityValuationEquiv
     hAxiom K L hLK hUnramified
   let E : FiniteAbstractFieldExtension G :=
     FiniteAbstractFieldExtension.ofInclusion L K hLK
@@ -1062,10 +1065,11 @@ theorem unramifiedReciprocity_bijective_of_generator
     _ = Nat.card (FiniteNormQuotient A K.field L hLK) :=
       (Nat.card_congr e.toEquiv).symm
 
-/-- Additive-equivalence form of the generator criterion for the unramified norm-quotient equivalence.  This is useful independently of the particular construction of the
+/-- Additive-equivalence form of the generator criterion for the unramified norm-quotient
+equivalence.  This is useful independently of the particular construction of the
 reciprocity homomorphism: a homomorphism with the required Frobenius value
 is canonically promoted to an equivalence. -/
-noncomputable def unramifiedReciprocity_equiv_of_generator
+noncomputable def unramifiedReciprocityEquivOfGenerator
     (v : ValuationData D A) (hAxiom : SatisfiesUnramifiedUnitCohomology D v)
     [IsTopologicalGroup G] [CompactSpace G] [T2Space G]
     (K : FiniteAbstractField G) (L : ClosedSubgroup G)
@@ -1106,7 +1110,7 @@ theorem unramifiedReciprocity_equiv_of_generator_apply
       finiteNormClass A K.field L hLK (v.chosenPrimeElement K))
     (q : Additive
       (K.field.toSubgroup ⧸ extensionSubgroup K.field L hLK)) :
-    v.unramifiedReciprocity_equiv_of_generator hAxiom K L hLK
+    v.unramifiedReciprocityEquivOfGenerator hAxiom K L hLK
       hUnramified f hf q = f q :=
   rfl
 
@@ -1166,7 +1170,7 @@ noncomputable def unramifiedReciprocityEquiv
       (DegreeData.AbstractExtension.mk L K.field hLK).IsUnramified D) :
     Additive (K.field.toSubgroup ⧸ extensionSubgroup K.field L hLK) ≃+
       FiniteNormQuotient A K.field L hLK :=
-  v.unramifiedReciprocity_equiv_of_generator hAxiom K L hLK hUnramified
+  v.unramifiedReciprocityEquivOfGenerator hAxiom K L hLK hUnramified
     (D.finiteReciprocityHom A v hAxiom K L hLK)
     (v.unramifiedReciprocity_frobenius_image hAxiom
       K L hLK hUnramified)

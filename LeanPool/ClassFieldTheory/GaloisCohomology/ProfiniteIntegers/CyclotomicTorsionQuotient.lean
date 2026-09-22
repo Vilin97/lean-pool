@@ -46,7 +46,8 @@ theorem topologicalClosure_torsion_zHatMul_prod
   ext x
   simp [Subgroup.mem_prod]
 
-/-- Algebraic quotient form of the cyclotomic torsion decomposition: after a cyclotomic decomposition
+/-- Algebraic quotient form of the cyclotomic torsion decomposition: after a cyclotomic
+decomposition
 with dense torsion factor, quotienting by the closure of torsion leaves
 the `ℤ̂` factor. -/
 noncomputable def torsionQuotientZHatMulProdEquiv

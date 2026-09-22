@@ -35,7 +35,8 @@ variable [base.valuation.HasExtension target.valuation]
 `AntitoneNormalSubgroupFiltration`.  This is the general-DVF replacement for the
 complete-only `toLowerRamificationFiltration`. -/
 def lowerRamificationFiltrationOfUniqueExtension
-    (huniq : RamificationTheory.DiscreteValuationField.DVF.HasUniqueValuationExtension.{u, v, w, x, x}
+    (huniq : RamificationTheory.DiscreteValuationField.DVF.HasUniqueValuationExtension.{u, v, w,
+      x, x}
       base target) :
     RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration Gal(L/K) where
   lower n := lowerRamificationGroup
@@ -50,7 +51,8 @@ def lowerRamificationFiltrationOfUniqueExtension
 
 /-- States the theorem `lowerRamificationFiltrationOfUniqueExtension_lower`. -/
 @[simp] theorem lowerRamificationFiltrationOfUniqueExtension_lower
-    (huniq : RamificationTheory.DiscreteValuationField.DVF.HasUniqueValuationExtension.{u, v, w, x, x}
+    (huniq : RamificationTheory.DiscreteValuationField.DVF.HasUniqueValuationExtension.{u, v, w,
+      x, x}
       base target)
     (n : ℕ) :
     (lowerRamificationFiltrationOfUniqueExtension
@@ -61,13 +63,16 @@ def lowerRamificationFiltrationOfUniqueExtension
 
 variable [FiniteDimensional K L]
 
+/-- The finite Galois group is equipped with an enumeration for ramification-group sums. -/
 noncomputable local instance generalDVFGalFintype : Fintype Gal(L/K) :=
   Fintype.ofFinite Gal(L/K)
 
-/-- The Herbrand-function sum formula, defined under the stated unique-extension and separable-residue assumptions:
+/-- The Herbrand-function sum formula, defined under the stated unique-extension and
+separable-residue assumptions:
 the Herbrand function attached to the actual lower groups. -/
 noncomputable def herbrandFunctionOfUniqueExtension
-    (huniq : RamificationTheory.DiscreteValuationField.DVF.HasUniqueValuationExtension.{u, v, w, x, x}
+    (huniq : RamificationTheory.DiscreteValuationField.DVF.HasUniqueValuationExtension.{u, v, w,
+      x, x}
       base target) (s : ℝ) : ℝ :=
   RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction
     (lowerRamificationFiltrationOfUniqueExtension
@@ -75,7 +80,8 @@ noncomputable def herbrandFunctionOfUniqueExtension
 
 /-- The inverse Herbrand function in the general-DVF setting. -/
 noncomputable def inverseHerbrandFunctionOfUniqueExtension
-    (huniq : RamificationTheory.DiscreteValuationField.DVF.HasUniqueValuationExtension.{u, v, w, x, x}
+    (huniq : RamificationTheory.DiscreteValuationField.DVF.HasUniqueValuationExtension.{u, v, w,
+      x, x}
       base target) (t : ℝ) : ℝ :=
   RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.inverseHerbrandFunction
     (lowerRamificationFiltrationOfUniqueExtension
@@ -84,7 +90,8 @@ noncomputable def inverseHerbrandFunctionOfUniqueExtension
 omit [FiniteDimensional K L] in
 /-- States the theorem `herbrandFunctionOfUniqueExtension_apply`. -/
 @[simp] theorem herbrandFunctionOfUniqueExtension_apply
-    (huniq : RamificationTheory.DiscreteValuationField.DVF.HasUniqueValuationExtension.{u, v, w, x, x}
+    (huniq : RamificationTheory.DiscreteValuationField.DVF.HasUniqueValuationExtension.{u, v, w,
+      x, x}
       base target) (s : ℝ) :
     herbrandFunctionOfUniqueExtension
         (base := base) (target := target) huniq s =
@@ -96,7 +103,8 @@ omit [FiniteDimensional K L] in
 omit [FiniteDimensional K L] in
 /-- States the theorem `inverseHerbrandFunctionOfUniqueExtension_apply`. -/
 @[simp] theorem inverseHerbrandFunctionOfUniqueExtension_apply
-    (huniq : RamificationTheory.DiscreteValuationField.DVF.HasUniqueValuationExtension.{u, v, w, x, x}
+    (huniq : RamificationTheory.DiscreteValuationField.DVF.HasUniqueValuationExtension.{u, v, w,
+      x, x}
       base target) (t : ℝ) :
     inverseHerbrandFunctionOfUniqueExtension
         (base := base) (target := target) huniq t =
@@ -106,8 +114,9 @@ omit [FiniteDimensional K L] in
   rfl
 
 /-- States the theorem `herbrandFunctionOfUniqueExtension_psi`. -/
-@[simp] theorem herbrandFunctionOfUniqueExtension_psi
-    (huniq : RamificationTheory.DiscreteValuationField.DVF.HasUniqueValuationExtension.{u, v, w, x, x}
+theorem herbrandFunctionOfUniqueExtension_psi
+    (huniq : RamificationTheory.DiscreteValuationField.DVF.HasUniqueValuationExtension.{u, v, w,
+      x, x}
       base target) (t : ℝ) :
     herbrandFunctionOfUniqueExtension
         (base := base) (target := target) huniq
@@ -118,8 +127,9 @@ omit [FiniteDimensional K L] in
       (base := base) (target := target) huniq) t
 
 /-- States the theorem `inverseHerbrandFunctionOfUniqueExtension_eta`. -/
-@[simp] theorem inverseHerbrandFunctionOfUniqueExtension_eta
-    (huniq : RamificationTheory.DiscreteValuationField.DVF.HasUniqueValuationExtension.{u, v, w, x, x}
+theorem inverseHerbrandFunctionOfUniqueExtension_eta
+    (huniq : RamificationTheory.DiscreteValuationField.DVF.HasUniqueValuationExtension.{u, v, w,
+      x, x}
       base target) (s : ℝ) :
     inverseHerbrandFunctionOfUniqueExtension
         (base := base) (target := target) huniq
@@ -131,7 +141,8 @@ omit [FiniteDimensional K L] in
 
 /-- States the theorem `herbrandFunctionOfUniqueExtension_strictMono`. -/
 theorem herbrandFunctionOfUniqueExtension_strictMono
-    (huniq : RamificationTheory.DiscreteValuationField.DVF.HasUniqueValuationExtension.{u, v, w, x, x}
+    (huniq : RamificationTheory.DiscreteValuationField.DVF.HasUniqueValuationExtension.{u, v, w,
+      x, x}
       base target) :
     StrictMono (herbrandFunctionOfUniqueExtension
       (base := base) (target := target) huniq) :=
@@ -141,7 +152,8 @@ theorem herbrandFunctionOfUniqueExtension_strictMono
 
 /-- States the theorem `inverseHerbrandFunctionOfUniqueExtension_strictMono`. -/
 theorem inverseHerbrandFunctionOfUniqueExtension_strictMono
-    (huniq : RamificationTheory.DiscreteValuationField.DVF.HasUniqueValuationExtension.{u, v, w, x, x}
+    (huniq : RamificationTheory.DiscreteValuationField.DVF.HasUniqueValuationExtension.{u, v, w,
+      x, x}
       base target) :
     StrictMono (inverseHerbrandFunctionOfUniqueExtension
       (base := base) (target := target) huniq) :=
@@ -152,7 +164,8 @@ theorem inverseHerbrandFunctionOfUniqueExtension_strictMono
 /-- The upper ramification group defined through the inverse Herbrand function
 under the noncomplete standing assumptions: `G^t = G_{psi(t)}`. -/
 def upperRamificationGroupOfUniqueExtension
-    (huniq : RamificationTheory.DiscreteValuationField.DVF.HasUniqueValuationExtension.{u, v, w, x, x}
+    (huniq : RamificationTheory.DiscreteValuationField.DVF.HasUniqueValuationExtension.{u, v, w,
+      x, x}
       base target) (t : ℝ) : Subgroup Gal(L/K) :=
   lowerRamificationGroup
     (base := base) (target := target) huniq
@@ -160,8 +173,9 @@ def upperRamificationGroupOfUniqueExtension
       (base := base) (target := target) huniq t)
 
 /-- States the theorem `upperRamificationGroupOfUniqueExtension_herbrandFunction`. -/
-@[simp] theorem upperRamificationGroupOfUniqueExtension_herbrandFunction
-    (huniq : RamificationTheory.DiscreteValuationField.DVF.HasUniqueValuationExtension.{u, v, w, x, x}
+theorem upperRamificationGroupOfUniqueExtension_herbrandFunction
+    (huniq : RamificationTheory.DiscreteValuationField.DVF.HasUniqueValuationExtension.{u, v, w,
+      x, x}
       base target) (s : ℝ) :
     upperRamificationGroupOfUniqueExtension
         (base := base) (target := target) huniq
@@ -176,7 +190,8 @@ def upperRamificationGroupOfUniqueExtension
 
 /-- States the theorem `inverseHerbrandFunctionOfUniqueExtension_ge_neg_one_iff`. -/
 theorem inverseHerbrandFunctionOfUniqueExtension_ge_neg_one_iff
-    (huniq : RamificationTheory.DiscreteValuationField.DVF.HasUniqueValuationExtension.{u, v, w, x, x}
+    (huniq : RamificationTheory.DiscreteValuationField.DVF.HasUniqueValuationExtension.{u, v, w,
+      x, x}
       base target) {t : ℝ} :
     -1 ≤ inverseHerbrandFunctionOfUniqueExtension
         (base := base) (target := target) huniq t ↔ -1 ≤ t :=

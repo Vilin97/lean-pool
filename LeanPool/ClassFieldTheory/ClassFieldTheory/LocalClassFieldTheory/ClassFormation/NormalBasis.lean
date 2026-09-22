@@ -8,7 +8,8 @@ import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.NormalBasisLat
 import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.HerbrandLowDegree.Basic
 import Mathlib.FieldTheory.Galois.NormalBasis
 import Mathlib.LinearAlgebra.Quotient.Pi
-/-! Provides the public declarations in the `LocalClassFieldTheory.ClassFormation.NormalBasis` Lean module. -/
+/-! Provides the public declarations in the `LocalClassFieldTheory.ClassFormation.NormalBasis`
+  Lean module. -/
 
 namespace LocalClassFieldTheory
 
@@ -238,7 +239,8 @@ theorem mem_chosenNormalBasisCoordinateMaximalSubmodule_iff
       ∀ σ : Gal(L / K), f σ ∈ (𝓂[K] : Ideal 𝒪[K]) := by
   simp [chosenNormalBasisCoordinateMaximalSubmodule]
 
-/-- Normal-basis coordinates identify the uniformizer submodule with pointwise maximal-ideal values. -/
+/-- Normal-basis coordinates identify the uniformizer submodule with pointwise maximal-ideal
+values. -/
 theorem chosenNormalBasisIntegerLatticeUniformizerSubmodule_map_equivFun :
     (chosenNormalBasisIntegerLatticeUniformizerSubmodule K L).map
         ((chosenNormalBasisIntegerLatticeBasis K L).equivFun :

@@ -170,7 +170,6 @@ noncomputable def conjugateCompletionRingEquiv
     (conjugateWithAbsRingEquiv_symm_isometry w σ).continuous
 
 omit [FiniteDimensional K L] [IsGalois K L] in
-@[simp]
 theorem conjugateCompletionRingEquiv_toCompletion
     (w : AbsoluteValue L ℝ) (σ : L ≃ₐ[K] L) (x : L) :
     conjugateCompletionRingEquiv w σ
@@ -262,7 +261,6 @@ noncomputable def conjugateExtensionCompletionRingEquiv
   exact conjugateCompletionRingEquiv w.1 σ
 
 omit [FiniteDimensional K L] [IsGalois K L] in
-@[simp]
 theorem conjugateExtensionCompletionRingEquiv_toCompletion
     (vK : AbsoluteValue K ℝ)
     (w : AbsoluteValueExtension vK L)
@@ -326,7 +324,7 @@ noncomputable def localTensorEvaluation
   letI := AbsoluteValue.completionAlgebra vK w.1 w.2
   exact
     (localizedCompletionEquivCompletion vK hvK w).symm.toAlgHom.comp
-      (absoluteValueExtension_localizationTensorHom vK w)
+      (absoluteValueExtensionLocalizationTensorHom vK w)
 
 omit [IsGalois K L] in
 @[simp]
@@ -484,9 +482,9 @@ theorem conjugateExtensionCompletionRingEquiv_completionTensorDecomposition_left
         Algebra vK.Completion w'.1.Completion :=
       fun w' ↦ AbsoluteValue.completionAlgebra vK w'.1 w'.2
     conjugateExtensionCompletionRingEquiv vK w g
-        (completionTensorDecomposition_left (K := K) (L := L) vK hvK z
+        (completionTensorDecompositionLeft (K := K) (L := L) vK hvK z
           (absoluteValueExtensionConjugate vK w g)) =
-      absoluteValueExtension_localizationTensorHom vK w
+      absoluteValueExtensionLocalizationTensorHom vK w
         (localTensorConjugation vK g z) := by
   let _ : ∀ w' : AbsoluteValueExtension vK L,
       Algebra vK.Completion w'.1.Completion :=
@@ -504,7 +502,7 @@ theorem conjugateExtensionCompletionRingEquiv_completionTensorDecomposition_left
             conjugateExtensionCompletionRingEquiv vK w g
               (AbsoluteValue.toCompletion
                 (absoluteValueExtensionConjugate vK w g).1 x) =
-          absoluteValueExtension_localizationTensorHom vK w
+          absoluteValueExtensionLocalizationTensorHom vK w
             (localTensorConjugation vK g (b ⊗ₜ[K] x))
       rw [conjugateExtensionCompletionRingEquiv_toCompletion,
         localTensorConjugation_tmul,
@@ -779,7 +777,6 @@ noncomputable def rightCosetCompletionUnitsEquiv
       vK w (Quotient.out q)).toMulEquiv
 
 omit [FiniteDimensional K L] in
-@[simp]
 theorem rightCosetCompletionUnitsEquiv_apply_coe
     (q : InducedRightCosets
       (absoluteValueDecompositionGroup K w.1))
@@ -793,7 +790,8 @@ theorem rightCosetCompletionUnitsEquiv_apply_coe
           (rightCosetExtensionEquiv vK hvK w q).1.Completion) :=
   rfl
 
-/-- The product supplied by the completion tensor-product decomposition, rewritten as one copy of the
+/-- The product supplied by the completion tensor-product decomposition, rewritten as one copy
+of the
 chosen local multiplicative group for every right coset. -/
 noncomputable def completionProductUnitsEquivRightCosets :
     letI hK := AbsoluteValue.extensionCompletionAlgebra (K := K) w.1
@@ -948,7 +946,7 @@ theorem localTensorUnitsEquivLocalPlaceBlock_apply_out_coe
     (localizedCompletionEquivCompletion vK hvK w).symm
         (conjugateExtensionCompletionRingEquiv
           vK w (Quotient.out q)
-          (completionTensorDecomposition_left (K := K) (L := L) vK hvK
+          (completionTensorDecompositionLeft (K := K) (L := L) vK hvK
             (z : LocalTensorAlgebra (L := L) vK)
             (absoluteValueExtensionConjugate
               vK w (Quotient.out q)))) =

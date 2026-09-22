@@ -179,7 +179,8 @@ private theorem normConductorRayClassModulus_isDefining
         (rayClassModulusToOriginal K (normConductorRayClassModulus K L)) ≤
       (_root_.ideleClassNorm K L).range := by
   rw [normConductorRayClassModulus_original K L]
-  exact GlobalClassFieldTheory.GlobalClassFields.ideleClassNorm_narrowFiniteConductor_isDefiningModulus
+  exact
+    GlobalClassFieldTheory.GlobalClassFields.ideleClassNorm_narrowFiniteConductor_isDefiningModulus
     (K := K) (L := L)
 
 /-- Arithmetic global reciprocity, descended to the public ray class group
@@ -245,7 +246,8 @@ theorem normConductorArtin_prime
   change GlobalClassFieldTheory.IdealClassFieldTheory.arithmeticIdealArtinGaloisMap
       (K := K) (L := L) m' hm
       (RayClass.primeToModulusIdeal m' v hv') = _
-  exact GlobalClassFieldTheory.IdealClassFieldTheory.arithmeticIdealArtinGaloisMap_primeIdeal_eq_arithmeticFinitePlacePrimeArtin
+  exact
+    GlobalClassFieldTheory.IdealClassFieldTheory.arithmeticIdealArtinGaloisMap_primeIdeal_eq_arithmeticFinitePlacePrimeArtin
     (K := K) (L := L) m' hm v hv'
 
 /-- The class field selected from a closed finite-index idèle-class subgroup

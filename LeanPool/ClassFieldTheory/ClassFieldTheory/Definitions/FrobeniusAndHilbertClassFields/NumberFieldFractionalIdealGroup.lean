@@ -19,7 +19,7 @@ universe u
 
 /-- The group of nonzero fractional ideals of a number field. -/
 abbrev NumberFieldFractionalIdealGroup
-    (K : Type u) [Field K] [NumberField K] :=
+    (K : Type u) [Field K] :=
   (FractionalIdeal (nonZeroDivisors (𝓞 K)) K)ˣ
 
 end ClassFieldTheory

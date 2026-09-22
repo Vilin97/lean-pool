@@ -16,7 +16,7 @@ norm subgroup all of the completion units, so the actual infinite-place
 Artin automorphism and its Kummer root character are trivial.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 open NumberField
 
 noncomputable section
@@ -28,6 +28,7 @@ open KummerTheory
 
 variable (K : Type) [Field K] [NumberField K]
 
+open scoped Classical in
 /-- In the quadratic real case, a positive radicand makes the infinite-place
 Kummer root character trivial. -/
 theorem infinitePlaceKummerRootCharacter_eq_one_of_real_of_radical_pos
@@ -75,6 +76,7 @@ theorem infinitePlaceKummerRootCharacter_eq_one_of_real_of_radical_pos
             (K := K) (L := L) v a_v)) = 1
   rw [hArtin, map_one, map_one]
 
+open scoped Classical in
 /-- The explicit real Hilbert factor and the Kummer root character agree
 when the quadratic radicand is positive. -/
 theorem infinitePlaceKummerRootCharacter_localGlobal_of_real_of_radical_pos

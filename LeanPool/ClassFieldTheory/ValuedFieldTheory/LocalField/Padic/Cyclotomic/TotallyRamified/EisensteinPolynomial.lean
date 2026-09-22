@@ -144,6 +144,7 @@ section CyclotomicExtension
 variable {p k : ℕ} [Fact p.Prime]
 variable {L : Type u} [Field L] [Algebra ℚ_[p] L]
 
+/-- The `ℤ_[p]`-algebra on the cyclotomic extension is induced through `ℚ_[p]`. -/
 local instance padicCyclotomicTotallyRamifiedAlgebraPadicInt : Algebra ℤ_[p] L :=
   ((algebraMap ℚ_[p] L).comp (algebraMap ℤ_[p] ℚ_[p])).toAlgebra
 
@@ -190,7 +191,7 @@ theorem padicCyclotomic_finrank_eq_prime_sub_one_mul_pow
 
 /-- the totally ramified cyclotomic theorem(ii): the full Galois group is the unit group modulo
 `p ^ (k + 1)`. -/
-noncomputable def padicCyclotomicTotallyRamified_galoisGroupEquivUnits
+noncomputable def padicCyclotomicTotallyRamifiedGaloisGroupEquivUnits
     (ζ : L) (hζ : IsPrimitiveRoot ζ (p ^ (k + 1)))
     (hgen : Algebra.adjoin ℚ_[p] ({ζ} : Set L) = ⊤) :
     (L ≃ₐ[ℚ_[p]] L) ≃* (ZMod (p ^ (k + 1)))ˣ := by

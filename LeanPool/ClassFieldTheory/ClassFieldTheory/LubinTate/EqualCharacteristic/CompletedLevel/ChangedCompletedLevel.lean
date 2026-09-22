@@ -10,7 +10,8 @@ import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.
 /-!
 # The completed theta-intertwining theorem: the completed changed-uniformizer level
 
-For `u ∈ κ⟦T⟧ˣ`, the theta construction used in the completed theta-intertwining theorem intertwines the
+For `u ∈ κ⟦T⟧ˣ`, the theta construction used in the completed theta-intertwining theorem
+  intertwines the
 target parameter `T` with the source parameter `u⁻¹T`.  This file therefore
 base-changes the primitive polynomial for `u⁻¹T` to the completed maximal-
 unramified field, forms its genuine splitting field, and constructs the
@@ -35,6 +36,8 @@ open LocalFieldTheory.DiscreteValuationField
 
 variable {K : Type u} [Field K]
 
+/-- The completed unramified base is an algebra over residue-field Laurent series through
+coefficient extension. -/
 noncomputable local instance equalCharacteristicChangedCompletedBaseAlgebra
     (F : LocalField.{u, v} K) :
     Algebra F.residueField⸨X⸩
@@ -43,7 +46,7 @@ noncomputable local instance equalCharacteristicChangedCompletedBaseAlgebra
 
 private instance equalCharacteristicChangedCompletedBaseCharP
     (F : LocalField.{u, v} K)
-    [CharP K F.residueCharacteristic] :
+    :
     CharP (equalCharacteristicCompletedUnramifiedField F.residueField)
       F.residueCharacteristic :=
   charP_of_injective_algebraMap
@@ -57,12 +60,15 @@ noncomputable local instance equalCharacteristicChangedCompletedBaseValuationIsN
       (equalCharacteristicCompletedUnramifiedField k) ℤᵐ⁰).IsNontrivial :=
   equalCharacteristicCompletedBaseValuationIsNontrivial k
 
+/-- The Laurent-series valuation on the changed completed base has rank one. -/
 noncomputable local instance equalCharacteristicChangedCompletedBaseValuationRankOne
     (k : Type v) [Field k] :
     (Valued.v : Valuation
       (equalCharacteristicCompletedUnramifiedField k) ℤᵐ⁰).RankOne :=
   equalCharacteristicCompletedBaseValuationRankOne k
 
+/-- The changed completed base carries the nontrivial norm associated with its Laurent-series
+valuation. -/
 noncomputable local instance equalCharacteristicChangedCompletedBaseNormedField
     (k : Type v) [Field k] :
     NontriviallyNormedField
@@ -108,7 +114,7 @@ def equalCharacteristicChangedCompletedLevelField
   (equalCharacteristicChangedCompletedPrimitivePolynomial F u n).SplittingField
 
 /-- The splitting field of the completed changed primitive polynomial is a field. -/
-instance equalCharacteristicChangedCompletedLevelField_field
+instance equalCharacteristicChangedCompletedLevelFieldField
     (F : LocalField.{u, v} K) (u : F.residueField⟦X⟧ˣ) (n : ℕ) :
     Field (equalCharacteristicChangedCompletedLevelField F u n) := by
   change Field
@@ -116,7 +122,7 @@ instance equalCharacteristicChangedCompletedLevelField_field
   infer_instance
 
 /-- The changed completed level field is an algebra over the completed unramified field. -/
-noncomputable instance equalCharacteristicChangedCompletedLevelField_algebra
+noncomputable instance equalCharacteristicChangedCompletedLevelFieldAlgebra
     (F : LocalField.{u, v} K) (u : F.residueField⟦X⟧ˣ) (n : ℕ) :
     Algebra (equalCharacteristicCompletedUnramifiedField F.residueField)
       (equalCharacteristicChangedCompletedLevelField F u n) := by
@@ -126,7 +132,9 @@ noncomputable instance equalCharacteristicChangedCompletedLevelField_algebra
 
 section
 
-local instance equalCharacteristicChangedCompletedLevelField_module
+/-- The changed completed Lubin–Tate level is a module over its completed unramified base via the
+chosen algebra structure. -/
+local instance equalCharacteristicChangedCompletedLevelFieldModule
     (F : LocalField.{u, v} K) (u : F.residueField⟦X⟧ˣ) (n : ℕ) :
     @Module (equalCharacteristicCompletedUnramifiedField F.residueField)
       (equalCharacteristicChangedCompletedLevelField F u n)
@@ -137,7 +145,7 @@ local instance equalCharacteristicChangedCompletedLevelField_module
   @Algebra.toModule
     (equalCharacteristicCompletedUnramifiedField F.residueField)
     (equalCharacteristicChangedCompletedLevelField F u n) _ _
-    (equalCharacteristicChangedCompletedLevelField_algebra F u n)
+    (equalCharacteristicChangedCompletedLevelFieldAlgebra F u n)
 
 /-- The changed completed level field is finite-dimensional over its completed base. -/
 instance equalCharacteristicChangedCompletedLevelField_finiteDimensionalInstance
@@ -158,7 +166,7 @@ local instance equalCharacteristicChangedCompletedLevelField_isAlgebraic
   @Algebra.IsAlgebraic.of_finite
     (equalCharacteristicCompletedUnramifiedField F.residueField)
     (equalCharacteristicChangedCompletedLevelField F u n) _ _ _
-    (equalCharacteristicChangedCompletedLevelField_algebra F u n)
+    (equalCharacteristicChangedCompletedLevelFieldAlgebra F u n)
     (equalCharacteristicChangedCompletedLevelField_finiteDimensionalInstance F u n)
 
 /-- The changed completed level field has the residue characteristic. -/
@@ -274,6 +282,8 @@ noncomputable def equalCharacteristicChangedCompletedLevelNormedField
     (equalCharacteristicCompletedUnramifiedField F.residueField)
     (equalCharacteristicChangedCompletedLevelField F u n)
 
+/-- The changed completed Lubin–Tate level carries the spectral norm extending its completed
+base. -/
 noncomputable local instance equalCharacteristicChangedCompletedLevelNormedFieldInstance
     (F : LocalField.{u, v} K) (u : F.residueField⟦X⟧ˣ) (n : ℕ) :
     NontriviallyNormedField
@@ -317,6 +327,7 @@ noncomputable def equalCharacteristicChangedCompletedLevelValued
     Valued (equalCharacteristicChangedCompletedLevelField F u n) ℝ≥0 :=
   NormedField.toValued (K := equalCharacteristicChangedCompletedLevelField F u n)
 
+/-- The spectral norm gives the changed completed Lubin–Tate level its real-valued valuation. -/
 noncomputable local instance equalCharacteristicChangedCompletedLevelValuedInstance
     (F : LocalField.{u, v} K) (u : F.residueField⟦X⟧ˣ) (n : ℕ) :
     Valued (equalCharacteristicChangedCompletedLevelField F u n) ℝ≥0 :=
@@ -425,7 +436,7 @@ theorem equalCharacteristicChangedCompletedLevelUniformizer_norm_lt_one
 
 private theorem equalCharacteristicChangedPiPolynomial_eval₂
     (F : LocalField.{u, v} K)
-    [CharP K F.residueCharacteristic]
+
     (u : F.residueField⟦X⟧ˣ)
     {A : Type*} [Field A] [CharP A F.residueCharacteristic]
     (φ : F.residueField⸨X⸩ →+* A) (x : A) :

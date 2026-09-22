@@ -13,7 +13,7 @@ The original-base specialization is compiled separately from the realized-base
 specialization and reuses the shared reciprocity transport provider.
 -/
 
-open scoped Classical IsMulCommutative NumberField
+open scoped IsMulCommutative NumberField
 
 noncomputable section
 
@@ -25,12 +25,16 @@ open Reciprocity
 
 variable {K : Type} [Field K] [NumberField K]
 
+open scoped Classical in
 local instance
     bigHilbertClassFieldReciprocityOverOriginalIsMulCommutative
     {F : Type} [Field F] [NumberField F] :
     IsMulCommutative (IdeleClassGroup F) :=
   hilbertClassFieldReciprocityIdeleClassGroupIsMulCommutative
 
+attribute [local instance] bigHilbertClassFieldReciprocityOverOriginalIsMulCommutative
+
+open scoped Classical in
 /-- Over the original number field scalar structure, the actual norm
 range of the selected big Hilbert class field is exactly the intrinsic
 big-Hilbert norm subgroup. -/
@@ -67,6 +71,7 @@ theorem bigHilbertClassField_ideleClassNorm_range_over_original :
         (bigHilbertClassFieldNormSubgroup (K := K)).map g :=
       (bigHilbertClassFieldNormSubgroup_map_ideleClassCongr e).symm
 
+open scoped Classical in
 /-- Global reciprocity for the selected big Hilbert class field over
 the original number field gives the narrow ideal class group directly,
 without a residual fixed-field transport. -/
@@ -91,6 +96,7 @@ private noncomputable def
   intro c
   exact d.2 c
 
+open scoped Classical in
 /-- The direct reciprocity equivalence for the big Hilbert class field,
 using the original number field as the scalar base. -/
 noncomputable def
@@ -99,9 +105,9 @@ noncomputable def
       RayClass.NarrowClassGroup K :=
   (bigHilbertClassFieldReciprocityOverOriginalData (K := K)).1
 
+open scoped Classical in
 /-- The direct big-Hilbert reciprocity equivalence sends the genuine
 global norm-residue symbol to its narrow ideal class. -/
-@[simp]
 theorem
     bigHilbertClassFieldGaloisEquivNarrowClassGroupOverOriginal_globalNormResidue
     (c : IdeleClassGroup K) :
@@ -116,9 +122,9 @@ theorem
   exact
     (bigHilbertClassFieldReciprocityOverOriginalData (K := K)).2 c
 
+open scoped Classical in
 /-- On an actual idèle, direct big-Hilbert reciprocity is its narrow
 ideal class. -/
-@[simp]
 theorem bigHilbertClassFieldGaloisEquivNarrowClassGroupOverOriginal_idele
     (a : IdeleGroup K) :
     bigHilbertClassFieldGaloisEquivNarrowClassGroupOverOriginal

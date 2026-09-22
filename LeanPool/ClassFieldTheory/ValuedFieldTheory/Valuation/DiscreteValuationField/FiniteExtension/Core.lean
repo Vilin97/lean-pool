@@ -6,7 +6,8 @@ Authors: n-yamaguchi-0729
 
 import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.FiniteExtension.Degree
 import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.FiniteExtension.Uniqueness
-/-! Provides the public declarations in the `ValuationTheory.DiscreteValuationField.FiniteExtension` Lean module. -/
+/-! Provides the public declarations in the
+  `ValuationTheory.DiscreteValuationField.FiniteExtension` Lean module. -/
 
 namespace ValuationTheory
 
@@ -311,7 +312,8 @@ theorem hasUniqueValuationExtension_of_integralClosure_mem_or_inv
         z ∈ (integralClosure base.valuationSubring L).toSubring ∨
           z⁻¹ ∈ (integralClosure base.valuationSubring L).toSubring) :
     HenselianDVF.HasUniqueValuationExtension.{u, v, w, x, y} base target :=
-  (hasUniqueValuationExtension_of_integralClosure_mem_or_inv_of_unique_primes_over_base_maximal base target)
+  (hasUniqueValuationExtension_of_integralClosure_mem_or_inv_of_unique_primes_over_base_maximal
+    base target)
     hval
     (by
       let B :=
@@ -402,7 +404,8 @@ theorem IntegralClosureFiber.unique_of_includeRight_surjective_henselianRing_ker
 /-- Finite-separable Henselian-DVF uniqueness from the Henselian-kernel
 criterion for the residue-fiber `includeRight` map.  Surjectivity of
 `includeRight` is supplied by the local base valuation ring. -/
-theorem hasUniqueValuationExtension_of_integralClosure_base_maximal_fiber_includeRight_henselianRing_ker
+theorem
+  hasUniqueValuationExtension_of_integralClosure_base_maximal_fiber_includeRight_henselianRing_ker
 
     [Algebra.IsSeparable K L]
     [HenselianRing (integralClosureIntegers base target)
@@ -598,7 +601,7 @@ base valuation ring, any two such valuation subrings coincide.  This is the
 packaging either side as a target `HenselianDVF`. -/
 theorem valuationSubring_eq_of_finite_separable_of_forall_isIntegral
     (base : HenselianDVF.{u, v} K)
-    [FiniteDimensional K L] [Algebra.IsSeparable K L]
+
     (hintegral :
       ∀ (B : ValuationSubring L)
         [_root_.Valuation.HasExtension base.valuation B.valuation],

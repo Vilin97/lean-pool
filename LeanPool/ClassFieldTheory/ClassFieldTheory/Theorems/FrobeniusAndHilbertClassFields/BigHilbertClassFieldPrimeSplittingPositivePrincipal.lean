@@ -16,13 +16,14 @@ A finite prime splits completely in the big Hilbert class field exactly
 when its fractional ideal has a totally positive generator.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 open NumberField IsDedekindDomain
 
 noncomputable section
 
 namespace ClassFieldTheory
 
+open scoped Classical in
 /-- Equivalently, a prime splits completely in the big Hilbert class field
 exactly when it has a totally positive generator. -/
 theorem finitePrime_splitsCompletelyInBigHilbertClassField_iff_positivePrincipal

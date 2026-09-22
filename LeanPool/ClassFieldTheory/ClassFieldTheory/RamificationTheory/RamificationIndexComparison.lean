@@ -66,7 +66,7 @@ residue-field separability.
 -/
 theorem exponentialRamificationIndex_eq_ramificationIndex_of_valuationSubrings_eq
     {K : Type u} {L : Type w} [Field K] [Field L]
-    [Algebra K L] [FiniteDimensional K L]
+    [Algebra K L]
     {base : CompleteDVF.{u, v} K} {target : CompleteDVF.{w, x} L}
     [base.valuation.HasExtension target.valuation]
     (vK : LubinTate.Valuations.ExponentialValuation K)

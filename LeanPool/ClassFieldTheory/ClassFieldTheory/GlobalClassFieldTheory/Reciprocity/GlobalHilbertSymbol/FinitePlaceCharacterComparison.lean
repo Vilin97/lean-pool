@@ -16,7 +16,7 @@ localized completion and its instance tower occur only in the provider body
 which proves compatibility with the two Artin actions.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -31,6 +31,7 @@ open LocalClassFieldTheory
 
 variable (K : Type) [Field K] [NumberField K]
 
+open scoped Classical in
 private theorem nthRootsSubgroupMap_comp_eq_unitsMap
     {F C L S : Type} [Field F] [Field C] [Field L] [Field S]
     [Algebra F C] [Algebra F L] [Algebra C S]
@@ -44,6 +45,7 @@ private theorem nthRootsSubgroupMap_comp_eq_unitsMap
   apply Units.ext
   exact hmap (x.1 : F)
 
+open scoped Classical in
 private theorem rootQuotient_map_ringHom_of_action
     {F G L S : Type} [Field F] [Field G] [Field L] [Field S]
     [Algebra F L] [Algebra G S]
@@ -59,6 +61,7 @@ private theorem rootQuotient_map_ringHom_of_action
     sigmaS (f (u : L)) / f (u : L)
   rw [map_div₀, haction]
 
+open scoped Classical in
 /-- The normalized finite-place Artin action commutes with algebraic
 localization.  This generic boundary is compiled before the Kummer-specific
 comparison, so the latter never re-elaborates the localization tower. -/
@@ -117,6 +120,7 @@ private theorem finitePlaceArtin_apply_localized
   exact localizationRamificationGroups_decompositionGroupEquiv_toLocalization
     vK hvK w delta z
 
+open scoped Classical in
 private noncomputable def finitePlaceKummerGlobalArtinAutomorphism
     (n : ℕ+) (hnK : ((n : ℕ) : K) ≠ 0)
     (hmu : (primitiveRoots (n : ℕ) K).Nonempty)
@@ -135,6 +139,7 @@ private noncomputable def finitePlaceKummerGlobalArtinAutomorphism
   exact finitePlaceArtinMonoidHomOfExtension
     (K := K) (L := L) v w x
 
+open scoped Classical in
 private noncomputable def finitePlaceKummerLocalArtinAutomorphism
     (n : ℕ+) (hnK : ((n : ℕ) : K) ≠ 0)
     (hmu : (primitiveRoots (n : ℕ) K).Nonempty)
@@ -145,8 +150,8 @@ private noncomputable def finitePlaceKummerLocalArtinAutomorphism
   let C := finitePlaceKummerBaseCompletion K v
   let hnC := finitePlaceHilbert_natCast_ne_zero K n hnK v
   let hmuC := finitePlaceHilbert_primitiveRoots_nonempty K n hmu v
-  let aC := finitePlaceHilbert_completionUnit K v a
-  let bC := finitePlaceHilbert_completionUnit K v b
+  let aC := finitePlaceHilbertCompletionUnit K v a
+  let bC := finitePlaceHilbertCompletionUnit K v b
   letI : ValuativeRel C :=
     finitePlaceLocalArtinCompletionValuativeRel v
   letI : IsNonarchimedeanLocalField C :=
@@ -155,6 +160,7 @@ private noncomputable def finitePlaceKummerLocalArtinAutomorphism
     LocalClassFieldTheory.Kummer.chosenSimpleKummerNormResidueAutomorphism
       C n hnC hmuC bC aC
 
+open scoped Classical in
 /-- The canonical map from the chosen global Kummer extension to the
 intrinsic Kummer extension over the finite-place completion. -/
 private noncomputable def finitePlaceKummerGlobalToLocalRingHom
@@ -178,6 +184,7 @@ private noncomputable def finitePlaceKummerGlobalToLocalRingHom
     AbsoluteValue.toAlgebraicLocalization vK w.1 w.2
   exact e.symm.toRingHom.comp toE
 
+open scoped Classical in
 /-- The global-to-local Kummer map extends the canonical scalar map from
 the number field through its finite-place completion. -/
 private theorem finitePlaceKummerGlobalToLocalRingHom_commutes
@@ -216,6 +223,7 @@ private theorem finitePlaceKummerGlobalToLocalRingHom_commutes
     _ = e (e.symm (toE (algebraMap K L y))) :=
       (e.apply_symm_apply _).symm
 
+open scoped Classical in
 private noncomputable def
     finitePlaceKummerTransportedLocalizedArtinAutomorphism
     (n : ℕ+) (hnK : ((n : ℕ) : K) ≠ 0)
@@ -230,7 +238,7 @@ private noncomputable def
   let C := finitePlaceKummerBaseCompletion K v
   let S := finitePlaceKummerLocalExtension K n hnK v b
   let E := finitePlaceKummerLocalizedCompletion K n hnK v b w
-  let aC := finitePlaceHilbert_completionUnit K v a
+  let aC := finitePlaceHilbertCompletionUnit K v a
   letI : FiniteDimensional K
       (chosenSimpleKummerExtension K n hnK b) :=
     chosenSimpleKummerExtension_finiteDimensional K n hnK b
@@ -253,6 +261,7 @@ private noncomputable def
   let sigmaE : Gal(E/C) := abelianLocalArtinMonoidHom C E aC
   exact (AlgEquiv.autCongr e).symm sigmaE
 
+open scoped Classical in
 private theorem finitePlaceKummerLocalArtin_eq_transported
     (n : ℕ+) (hnK : ((n : ℕ) : K) ≠ 0)
     (hmu : (primitiveRoots (n : ℕ) K).Nonempty)
@@ -270,8 +279,8 @@ private theorem finitePlaceKummerLocalArtin_eq_transported
   let E := finitePlaceKummerLocalizedCompletion K n hnK v b w
   let hnC := finitePlaceHilbert_natCast_ne_zero K n hnK v
   let hmuC := finitePlaceHilbert_primitiveRoots_nonempty K n hmu v
-  let aC := finitePlaceHilbert_completionUnit K v a
-  let bC := finitePlaceHilbert_completionUnit K v b
+  let aC := finitePlaceHilbertCompletionUnit K v a
+  let bC := finitePlaceHilbertCompletionUnit K v b
   let : FiniteDimensional K L :=
     chosenSimpleKummerExtension_finiteDimensional K n hnK b
   let : IsAbelianGalois K L :=
@@ -311,6 +320,7 @@ private theorem finitePlaceKummerLocalArtin_eq_transported
   change sigmaS = tauS
   exact hsigma
 
+open scoped Classical in
 private noncomputable def localizedDirectActionValue
     {L : Type} [Field L] [Algebra K L]
     [hfin : FiniteDimensional K L] [hab : IsAbelianGalois K L]
@@ -334,6 +344,7 @@ private noncomputable def localizedDirectActionValue
     finitePlaceLocalArtinIsAbelianGalois v w hfin
   exact abelianLocalArtinMonoidHom C E y t
 
+open scoped Classical in
 private noncomputable def finitePlaceKummerCommonRootAction
     (n : ℕ+) (hnK : ((n : ℕ) : K) ≠ 0)
     (hmu : (primitiveRoots (n : ℕ) K).Nonempty)
@@ -347,7 +358,7 @@ private noncomputable def finitePlaceKummerCommonRootAction
   let L := chosenSimpleKummerExtension K n hnK b
   let S := finitePlaceKummerLocalExtension K n hnK v b
   let E := finitePlaceKummerLocalizedCompletion K n hnK v b w
-  let aC := finitePlaceHilbert_completionUnit K v a
+  let aC := finitePlaceHilbertCompletionUnit K v a
   letI : FiniteDimensional K L :=
     chosenSimpleKummerExtension_finiteDimensional K n hnK b
   letI : IsAbelianGalois K L :=
@@ -370,6 +381,7 @@ private noncomputable def finitePlaceKummerCommonRootAction
   let uL : Lˣ := chosenSimpleKummerRootUnit K n hnK b
   exact e.symm (localizedDirectActionValue K v w aC (toE (uL : L)))
 
+open scoped Classical in
 private theorem finitePlaceKummerTransportedArtinRoot_eq_common
     (n : ℕ+) (hnK : ((n : ℕ) : K) ≠ 0)
     (hmu : (primitiveRoots (n : ℕ) K).Nonempty)
@@ -389,7 +401,7 @@ private theorem finitePlaceKummerTransportedArtinRoot_eq_common
   let L := chosenSimpleKummerExtension K n hnK b
   let S := finitePlaceKummerLocalExtension K n hnK v b
   let E := finitePlaceKummerLocalizedCompletion K n hnK v b w
-  let aC := finitePlaceHilbert_completionUnit K v a
+  let aC := finitePlaceHilbertCompletionUnit K v a
   let : FiniteDimensional K L :=
     chosenSimpleKummerExtension_finiteDimensional K n hnK b
   let : IsAbelianGalois K L :=
@@ -442,6 +454,7 @@ private theorem finitePlaceKummerTransportedArtinRoot_eq_common
     _ = directE := hdirect.symm
     _ = e (e.symm directE) := (e.apply_symm_apply _).symm
 
+open scoped Classical in
 private noncomputable def localizedInputActionValue
     {L : Type} [Field L] [Algebra K L]
     [hfin : FiniteDimensional K L] [hab : IsAbelianGalois K L]
@@ -455,6 +468,7 @@ private noncomputable def localizedInputActionValue
     (AbsoluteValue.toAlgebraicLocalization
       (NumberField.HeightOneSpectrum.adicAbv K v) w.1 w.2 z)
 
+open scoped Classical in
 private noncomputable def localizedGlobalActionValue
     {L : Type} [Field L] [Algebra K L]
     [hfin : FiniteDimensional K L] [hab : IsAbelianGalois K L]
@@ -469,6 +483,7 @@ private noncomputable def localizedGlobalActionValue
     (finitePlaceArtinMonoidHomOfExtension
       (K := K) (L := L) v w x z)
 
+open scoped Classical in
 private theorem localizedActionValue_eq
     {L : Type} [Field L] [Algebra K L]
     [hfin : FiniteDimensional K L] [hab : IsAbelianGalois K L]
@@ -480,6 +495,7 @@ private theorem localizedActionValue_eq
       localizedGlobalActionValue K v w x z := by
   exact finitePlaceArtin_apply_localized (K := K) (L := L) v w x z
 
+open scoped Classical in
 private noncomputable def finitePlaceKummerLocalizedInputValue
     (n : ℕ+) (hnK : ((n : ℕ) : K) ≠ 0)
     (hmu : (primitiveRoots (n : ℕ) K).Nonempty)
@@ -496,6 +512,7 @@ private noncomputable def finitePlaceKummerLocalizedInputValue
     (chosenSimpleKummerRootUnit K n hnK b :
       chosenSimpleKummerExtension K n hnK b)
 
+open scoped Classical in
 private noncomputable def finitePlaceKummerLocalizedGlobalValue
     (n : ℕ+) (hnK : ((n : ℕ) : K) ≠ 0)
     (hmu : (primitiveRoots (n : ℕ) K).Nonempty)
@@ -512,6 +529,7 @@ private noncomputable def finitePlaceKummerLocalizedGlobalValue
     (chosenSimpleKummerRootUnit K n hnK b :
       chosenSimpleKummerExtension K n hnK b)
 
+open scoped Classical in
 private theorem finitePlaceKummerLocalizedValue_eq
     (n : ℕ+) (hnK : ((n : ℕ) : K) ≠ 0)
     (hmu : (primitiveRoots (n : ℕ) K).Nonempty)
@@ -530,6 +548,7 @@ private theorem finitePlaceKummerLocalizedValue_eq
     (chosenSimpleKummerRootUnit K n hnK b :
       chosenSimpleKummerExtension K n hnK b)
 
+open scoped Classical in
 private theorem finitePlaceKummerCommonImage_eq_localizedInputValue
     (n : ℕ+) (hnK : ((n : ℕ) : K) ≠ 0)
     (hmu : (primitiveRoots (n : ℕ) K).Nonempty)
@@ -560,7 +579,7 @@ private theorem finitePlaceKummerCommonImage_eq_localizedInputValue
   let vK := NumberField.HeightOneSpectrum.adicAbv K v
   let x : (v.adicCompletion K)ˣ :=
     Units.map (algebraMap K (v.adicCompletion K)).toMonoidHom a
-  let aC : Cˣ := finitePlaceHilbert_completionUnit K v a
+  let aC : Cˣ := finitePlaceHilbertCompletionUnit K v a
   let z : L := chosenSimpleKummerRootUnit K n hnK b
   let toE : L →+* E := AbsoluteValue.toAlgebraicLocalization vK w.1 w.2
   let e := finitePlaceKummerLocalGlobalAlgEquiv K n hnK hmu v b w
@@ -579,6 +598,7 @@ private theorem finitePlaceKummerCommonImage_eq_localizedInputValue
       unfold finitePlaceKummerLocalizedInputValue localizedInputActionValue
       rfl
 
+open scoped Classical in
 private theorem finitePlaceKummerGlobalArtin_localized_action
     (n : ℕ+) (hnK : ((n : ℕ) : K) ≠ 0)
     (hmu : (primitiveRoots (n : ℕ) K).Nonempty)
@@ -607,6 +627,7 @@ private theorem finitePlaceKummerGlobalArtin_localized_action
           K n hnK hmu v a b w
           (chosenSimpleKummerRootUnit K n hnK b)) := rfl
 
+open scoped Classical in
 private theorem finitePlaceKummerCommonRootAction_eq_global
     (n : ℕ+) (hnK : ((n : ℕ) : K) ≠ 0)
     (hmu : (primitiveRoots (n : ℕ) K).Nonempty)
@@ -626,7 +647,7 @@ private theorem finitePlaceKummerCommonRootAction_eq_global
   let L := chosenSimpleKummerExtension K n hnK b
   let S := finitePlaceKummerLocalExtension K n hnK v b
   let E := finitePlaceKummerLocalizedCompletion K n hnK v b w
-  let aC := finitePlaceHilbert_completionUnit K v a
+  let aC := finitePlaceHilbertCompletionUnit K v a
   let x : (v.adicCompletion K)ˣ :=
     Units.map (algebraMap K (v.adicCompletion K)).toMonoidHom a
   let hKLfinite : FiniteDimensional K L :=
@@ -664,6 +685,7 @@ private theorem finitePlaceKummerCommonRootAction_eq_global
         e (e.symm (toE (sigmaG (uL : L))))
       exact (e.apply_symm_apply _).symm
 
+open scoped Classical in
 private theorem finitePlaceKummerTransportedArtin_root_action
     (n : ℕ+) (hnK : ((n : ℕ) : K) ≠ 0)
     (hmu : (primitiveRoots (n : ℕ) K).Nonempty)
@@ -683,6 +705,7 @@ private theorem finitePlaceKummerTransportedArtin_root_action
       (finitePlaceKummerCommonRootAction_eq_global
         K n hnK hmu v a b w)
 
+open scoped Classical in
 /-- The global-to-local Kummer map intertwines the two Artin actions on the
 chosen Kummer root. -/
 private theorem finitePlaceKummerGlobalToLocalRingHom_artin_action
@@ -723,6 +746,7 @@ private theorem finitePlaceKummerGlobalToLocalRingHom_artin_action
       finitePlaceKummerTransportedArtin_root_action
         K n hnK hmu v a b w
 
+open scoped Classical in
 /-- The image of the chosen global Kummer root has the same prescribed
 power as the root chosen intrinsically over the completion. -/
 private theorem finitePlaceKummerGlobalToLocalRingHom_root_pow
@@ -737,7 +761,7 @@ private theorem finitePlaceKummerGlobalToLocalRingHom_root_pow
     let f := finitePlaceKummerGlobalToLocalRingHom
       K n hnK hmu v b w
     let uL := chosenSimpleKummerRootUnit K n hnK b
-    let bC := finitePlaceHilbert_completionUnit K v b
+    let bC := finitePlaceHilbertCompletionUnit K v b
     Units.map f.toMonoidHom uL ^ (n : ℕ) =
       Units.map (algebraMap C S).toMonoidHom bC := by
   let C := finitePlaceKummerBaseCompletion K v
@@ -746,7 +770,7 @@ private theorem finitePlaceKummerGlobalToLocalRingHom_root_pow
   let f := finitePlaceKummerGlobalToLocalRingHom
     K n hnK hmu v b w
   let uL : Lˣ := chosenSimpleKummerRootUnit K n hnK b
-  let bC := finitePlaceHilbert_completionUnit K v b
+  let bC := finitePlaceHilbertCompletionUnit K v b
   have huLpow :
       uL ^ (n : ℕ) = Units.map (algebraMap K L).toMonoidHom b :=
     chosenSimpleKummerRootUnit_pow K n hnK b
@@ -764,6 +788,7 @@ private theorem finitePlaceKummerGlobalToLocalRingHom_root_pow
         (finitePlaceKummerGlobalToLocalRingHom_commutes
           K n hnK hmu v b w (b : K)).symm
 
+open scoped Classical in
 private theorem finitePlaceKummerMappedGlobalCharacter_units
     (n : ℕ+) (hnK : ((n : ℕ) : K) ≠ 0)
     (hmu : (primitiveRoots (n : ℕ) K).Nonempty)
@@ -810,6 +835,7 @@ private theorem finitePlaceKummerMappedGlobalCharacter_units
     exact h
   exact congrArg (Units.map f.toMonoidHom) hglobalRoot
 
+open scoped Classical in
 private theorem finitePlaceKummerRootQuotient_eq_local
     (n : ℕ+) (hnK : ((n : ℕ) : K) ≠ 0)
     (hmu : (primitiveRoots (n : ℕ) K).Nonempty)
@@ -825,7 +851,7 @@ private theorem finitePlaceKummerRootQuotient_eq_local
     let uL := chosenSimpleKummerRootUnit K n hnK b
     let uS := chosenSimpleKummerRootUnit C
       n (finitePlaceHilbert_natCast_ne_zero K n hnK v)
-        (finitePlaceHilbert_completionUnit K v b)
+        (finitePlaceHilbertCompletionUnit K v b)
     let sigmaG := finitePlaceKummerGlobalArtinAutomorphism
       K n hnK hmu v a b w
     let sigmaS := finitePlaceKummerLocalArtinAutomorphism
@@ -838,7 +864,7 @@ private theorem finitePlaceKummerRootQuotient_eq_local
   let S := finitePlaceKummerLocalExtension K n hnK v b
   let hnC := finitePlaceHilbert_natCast_ne_zero K n hnK v
   let hmuC := finitePlaceHilbert_primitiveRoots_nonempty K n hmu v
-  let bC := finitePlaceHilbert_completionUnit K v b
+  let bC := finitePlaceHilbertCompletionUnit K v b
   let f : L →+* S :=
     finitePlaceKummerGlobalToLocalRingHom K n hnK hmu v b w
   let uL : Lˣ := chosenSimpleKummerRootUnit K n hnK b
@@ -877,6 +903,7 @@ private theorem finitePlaceKummerRootQuotient_eq_local
         huTpow huSpow sigmaS
   exact hrootMap.trans hchoice
 
+open scoped Classical in
 private theorem finitePlaceKummerLocalHilbert_units
     (n : ℕ+) (hnK : ((n : ℕ) : K) ≠ 0)
     (hmu : (primitiveRoots (n : ℕ) K).Nonempty)
@@ -885,7 +912,7 @@ private theorem finitePlaceKummerLocalHilbert_units
     let S := finitePlaceKummerLocalExtension K n hnK v b
     let uS := chosenSimpleKummerRootUnit C
       n (finitePlaceHilbert_natCast_ne_zero K n hnK v)
-        (finitePlaceHilbert_completionUnit K v b)
+        (finitePlaceHilbertCompletionUnit K v b)
     let sigmaS := finitePlaceKummerLocalArtinAutomorphism
       K n hnK hmu v a b
     Units.map (algebraMap C S).toMonoidHom
@@ -895,8 +922,8 @@ private theorem finitePlaceKummerLocalHilbert_units
   let S := finitePlaceKummerLocalExtension K n hnK v b
   let hnC := finitePlaceHilbert_natCast_ne_zero K n hnK v
   let hmuC := finitePlaceHilbert_primitiveRoots_nonempty K n hmu v
-  let aC := finitePlaceHilbert_completionUnit K v a
-  let bC := finitePlaceHilbert_completionUnit K v b
+  let aC := finitePlaceHilbertCompletionUnit K v a
+  let bC := finitePlaceHilbertCompletionUnit K v b
   let : ValuativeRel C :=
     finitePlaceLocalArtinCompletionValuativeRel v
   let : IsNonarchimedeanLocalField C :=
@@ -930,6 +957,7 @@ private theorem finitePlaceKummerLocalHilbert_units
   rw [hvalue]
   exact hroot
 
+open scoped Classical in
 /-- For every extension of a finite place, the global Kummer root character
 equals the finite-place Hilbert symbol. -/
 theorem finitePlaceKummerRootCharacterOfExtension_localGlobal
@@ -957,7 +985,7 @@ theorem finitePlaceKummerRootCharacterOfExtension_localGlobal
     finitePlaceLocalHilbertSymbol K n hnK hmu v a b
   let uS : Sˣ := chosenSimpleKummerRootUnit C
     n (finitePlaceHilbert_natCast_ne_zero K n hnK v)
-      (finitePlaceHilbert_completionUnit K v b)
+      (finitePlaceHilbertCompletionUnit K v b)
   let sigmaS : Gal(S/C) :=
     finitePlaceKummerLocalArtinAutomorphism
       K n hnK hmu v a b
@@ -990,6 +1018,7 @@ theorem finitePlaceKummerRootCharacterOfExtension_localGlobal
         K n hnK hmu v a b).symm
     _ = (nthRootsSubgroupMap C S (n : ℕ) localValue).1 := rfl
 
+open scoped Classical in
 /-- The canonical finite-place Kummer root character is the finite-place
 Hilbert symbol. -/
 theorem finitePlaceKummerRootCharacter_localGlobal

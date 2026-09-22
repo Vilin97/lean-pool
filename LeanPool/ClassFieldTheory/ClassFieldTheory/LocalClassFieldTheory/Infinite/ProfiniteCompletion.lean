@@ -72,7 +72,8 @@ instance : PartialOrder (OpenFiniteIndexNormalSubgroup G) :=
 instance : SmallCategory (OpenFiniteIndexNormalSubgroup G) :=
   Preorder.smallCategory _
 
-/-- A morphism of open finite-index normal subgroups induces inclusion of the underlying subgroups. -/
+/-- A morphism of open finite-index normal subgroups induces inclusion of the underlying
+subgroups. -/
 theorem le_of_hom {H K : OpenFiniteIndexNormalSubgroup G} (f : H ⟶ K) :
     H.toOpenNormalSubgroup.toSubgroup ≤ K.toOpenNormalSubgroup.toSubgroup := by
   have h : H ≤ K := CategoryTheory.leOfHom f
@@ -356,7 +357,6 @@ def topologicalProfiniteCompletionFiniteProjection
       (topologicalProfiniteCompletionPreimageIndex P f N))
 
 /-- The induced finite projection sends the completion image of `g` to the class of `f g`. -/
-@[simp]
 theorem topologicalProfiniteCompletionFiniteProjection_map
     (P : ProfiniteGrp.{v}) (f : G →ₜ* P) (N : OpenNormalSubgroup P) (g : G) :
     topologicalProfiniteCompletionFiniteProjection P f N

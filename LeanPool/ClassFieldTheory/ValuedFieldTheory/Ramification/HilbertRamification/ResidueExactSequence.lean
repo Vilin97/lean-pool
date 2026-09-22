@@ -445,7 +445,7 @@ def decompositionQuotientEquivResidueGalois
       (decompositionGroupResidueAction_surjective (K := K) A))
 
 /-- States the theorem `decompositionQuotientEquivResidueGalois_mk`. -/
-@[simp] theorem decompositionQuotientEquivResidueGalois_mk
+theorem decompositionQuotientEquivResidueGalois_mk
     (A : _root_.ValuationSubring L) (sigma : decompositionGroup K A) :
     decompositionQuotientEquivResidueGalois (K := K) A
         (QuotientGroup.mk' (inertiaGroup K A) sigma) =

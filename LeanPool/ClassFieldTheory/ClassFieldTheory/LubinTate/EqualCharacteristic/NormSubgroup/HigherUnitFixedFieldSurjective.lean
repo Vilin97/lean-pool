@@ -7,7 +7,8 @@ Authors: n-yamaguchi-0729
 import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.NormSubgroup.HigherUnitFixedFieldEmbedding
 import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.CompletedLevel.CompletedFrobeniusFixedFieldDegree
 /-!
-# LubinTate the explicit norm-subgroup computation: surjectivity of the higher-unit fixed-field embedding
+# LubinTate the explicit norm-subgroup computation: surjectivity of the higher-unit fixed-field
+  embedding
 
 The standard level and the fixed field have the same finite degree
 `(q - 1) q^n`; hence the canonical injective embedding is surjective.

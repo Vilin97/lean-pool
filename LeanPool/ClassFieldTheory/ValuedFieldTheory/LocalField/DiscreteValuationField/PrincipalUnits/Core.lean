@@ -324,7 +324,7 @@ noncomputable instance unitsModHigherPrincipalUnitGroupFinite
 finite residue field.  The finite instances are derived from the residue
 field before either natural cardinal is formed. -/
 theorem card_unitsModHigherPrincipalUnitGroup_eq_quotientUnits
-    [Finite F.residueField] (n : ℕ) (hn : 1 ≤ n) :
+    (n : ℕ) (hn : 1 ≤ n) :
     Nat.card (F.valuationSubringˣ ⧸ higherPrincipalUnitGroup F n) =
       Nat.card ((F.valuationSubring ⧸ F.maximalIdeal ^ n)ˣ) := by
   exact Nat.card_congr
@@ -1137,7 +1137,7 @@ noncomputable def principalUnitSuccQuotAddEquivResidueOfUniformizer
 /-- Cardinality form of the associated-graded identification
 `U^n/U^(n+1) ≃ k` for `n ≥ 1`. -/
 theorem card_principalUnitSuccQuot_eq_residue_of_uniformizer
-    [Finite F.residueField]
+
     {pi : F.valuationSubring} (hpi : F.valuation.IsUniformizer (pi : K))
     (n : ℕ) (hn : 1 ≤ n) :
     Nat.card (higherPrincipalUnitGroup.principalUnitSuccQuot F n) =
@@ -1231,7 +1231,7 @@ by the principal unit `1 + r * pi^n`. -/
 
 /-- The equivalence `U^n/U^(n+1) ≃ k` sends the coordinate class
 `[1 + r * pi^n]` to the residue of `r`. -/
-@[simp] theorem principalUnitSuccQuotAddEquivResidueOfUniformizer_coord
+theorem principalUnitSuccQuotAddEquivResidueOfUniformizer_coord
     {pi : F.valuationSubring} (hpi : F.valuation.IsUniformizer (pi : K))
     (n : ℕ) (hn : 1 ≤ n) (r : F.valuationSubring) :
     higherPrincipalUnitGroup.principalUnitSuccQuotAddEquivResidueOfUniformizer

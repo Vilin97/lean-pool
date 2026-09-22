@@ -98,7 +98,6 @@ theorem toCompletion_apply
   rfl
 
 /-- The canonical completion embedding agrees with the completion algebra map. -/
-@[simp]
 theorem toCompletion_eq_algebraMap
     {K : Type u} [Field K] (vK : AbsoluteValue K ℝ) (x : K) :
     toCompletion vK x = algebraMap K vK.Completion x :=
@@ -420,7 +419,6 @@ variable [Field K] [Field L] [Field D] [Algebra K L]
 
 /-- Dense-point compatibility for extending `L → D` and first embedding the
 completed base in the completion of `L`. -/
-@[simp]
 theorem completionMapToCompleteTarget_comp_completionMap_coe
     (vK : AbsoluteValue K ℝ) (wL : AbsoluteValue L ℝ)
     (hw : Extends vK wL) (vD : AbsoluteValue D ℝ)

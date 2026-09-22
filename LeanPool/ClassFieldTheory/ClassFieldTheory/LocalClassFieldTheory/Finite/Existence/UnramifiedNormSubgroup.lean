@@ -167,7 +167,8 @@ theorem unramifiedNormClass_eq_one_iff (K : Type u)
     [Field K] [ValuativeRel K] [TopologicalSpace K] [IsNonarchimedeanLocalField K]
     (n : Nat) (x : Kˣ) :
     unramifiedNormClass K n x = 1 ↔
-      (n : Int) ∣ LocalFieldTheory.IsNonarchimedeanLocalField.valuationMap K (Additive.ofMul x) := by
+      (n : Int) ∣ LocalFieldTheory.IsNonarchimedeanLocalField.valuationMap K (Additive.ofMul x)
+        := by
   exact (QuotientGroup.eq_one_iff (N := unramifiedNormSubgroup K n) x).trans
     (mem_unramifiedNormSubgroup_iff K n x)
 
@@ -239,7 +240,7 @@ noncomputable instance finiteUnramifiedNormQuotient (K : Type u)
 /-- For nonzero degree, the unramified norm quotient has cardinality equal to that degree. -/
 theorem unramifiedNormQuotient_card_eq_degree (K : Type u)
     [Field K] [ValuativeRel K] [TopologicalSpace K] [IsNonarchimedeanLocalField K]
-    (n : Nat) [NeZero n] :
+    (n : Nat) :
     Nat.card (Kˣ ⧸ unramifiedNormSubgroup K n) = n := by
   calc
     Nat.card (Kˣ ⧸ unramifiedNormSubgroup K n) =
@@ -248,7 +249,8 @@ theorem unramifiedNormQuotient_card_eq_degree (K : Type u)
     _ = Nat.card (ZMod n) := Nat.card_congr Multiplicative.toAdd
     _ = n := Nat.card_zmod n
 
-/-- Two units define the same norm class exactly when the degree divides their valuation difference. -/
+/-- Two units define the same norm class exactly when the degree divides their valuation
+difference. -/
 theorem unramifiedNormClass_eq_iff (K : Type u)
     [Field K] [ValuativeRel K] [TopologicalSpace K] [IsNonarchimedeanLocalField K]
     (n : Nat) (x y : Kˣ) :

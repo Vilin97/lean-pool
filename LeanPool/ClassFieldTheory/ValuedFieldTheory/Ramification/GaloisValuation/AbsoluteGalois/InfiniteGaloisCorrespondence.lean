@@ -6,7 +6,8 @@ Authors: n-yamaguchi-0729
 
 import Mathlib.SetTheory.Cardinal.Finite
 import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.GaloisValuation.AbsoluteGalois.AbsoluteRamification
-/-! Provides the public declarations in the `RamificationTheory.GaloisValuation.AbsoluteGalois.InfiniteGaloisCorrespondence` Lean module. -/
+/-! Provides the public declarations in the
+  `RamificationTheory.GaloisValuation.AbsoluteGalois.InfiniteGaloisCorrespondence` Lean module. -/
 
 namespace RamificationTheory
 
@@ -766,7 +767,7 @@ theorem finiteDimensional_extendScalars_sup
 `Gal(M/E) → Gal(M/K)` is continuous for the two Krull topologies. -/
 theorem ofIntermediateFieldInExtension_continuous
     {k : Type u} {M : Type v} [Field k] [Field M] [Algebra k M]
-    [IsGalois k M]
+
     (E : IntermediateField k M) [FiniteDimensional k E] :
     Continuous (ofIntermediateFieldInExtension E) := by
   refine continuous_of_continuousAt_one
@@ -1154,7 +1155,6 @@ def quotientEquivGalOfNormalIntermediateField
       (AlgEquiv.restrictNormalHom_surjective (AlgebraicClosure K)))
 
 /-- States the theorem `quotientEquivGalOfNormalIntermediateField_mk'`. -/
-@[simp]
 theorem quotientEquivGalOfNormalIntermediateField_mk'
     (E : IntermediateField K (AlgebraicClosure K)) [Normal K E]
     (σ : Gal(AlgebraicClosure K/K)) :
@@ -1176,7 +1176,6 @@ def quotientNormalClosureOpenSubgroupEquivGal
     (IntermediateField.normalClosure K E (AlgebraicClosure K))
 
 /-- States the theorem `quotientNormalClosureOpenSubgroupEquivGal_mk'`. -/
-@[simp]
 theorem quotientNormalClosureOpenSubgroupEquivGal_mk'
     (E : IntermediateField K (AlgebraicClosure K)) [FiniteDimensional K E]
     (σ : Gal(AlgebraicClosure K / K)) :
@@ -1304,7 +1303,6 @@ instance fixedFieldOfOpenSubgroup.instFiniteDimensional
 
 /-- The reverse construction sends the finite-subextension open subgroup back
 to the original finite intermediate field. -/
-@[simp]
 theorem fixedFieldOfOpenSubgroup_openSubgroupOfFiniteIntermediateField
     [IsGalois K (AlgebraicClosure K)]
     (E : IntermediateField K (AlgebraicClosure K)) [FiniteDimensional K E] :
@@ -1315,7 +1313,6 @@ theorem fixedFieldOfOpenSubgroup_openSubgroupOfFiniteIntermediateField
 
 /-- The finite-intermediate-field construction sends the fixed field of an
 open subgroup back to that open subgroup. -/
-@[simp]
 theorem openSubgroupOfFiniteIntermediateField_fixedFieldOfOpenSubgroup
     [IsGalois K (AlgebraicClosure K)]
     (H : OpenSubgroup (Gal(AlgebraicClosure K/K))) :
@@ -1469,7 +1466,6 @@ theorem mem_conjugateOpenSubgroupOfOpenSubgroup_iff
 
 /-- The fixed field of the conjugate open subgroup is the conjugate of the
 finite fixed field. -/
-@[simp]
 theorem fixedFieldOfConjugateOpenSubgroupOfOpenSubgroup
     [IsGalois K (AlgebraicClosure K)]
     (σ : Gal(AlgebraicClosure K/K))
@@ -1489,7 +1485,6 @@ theorem fixedFieldOfConjugateOpenSubgroupOfOpenSubgroup
 
 /-- Conjugation carries the fixed field of an intersection of open subgroups
 to the conjugate of the compositum of their fixed fields. -/
-@[simp]
 theorem fixedFieldOfConjugateOpenSubgroupOfOpenSubgroup_inf
     [IsGalois K (AlgebraicClosure K)]
     (σ : Gal(AlgebraicClosure K/K))
@@ -1503,7 +1498,6 @@ theorem fixedFieldOfConjugateOpenSubgroupOfOpenSubgroup_inf
 
 /-- Conjugation carries the fixed field of the generated open subgroup to the
 conjugate of the intersection of the fixed fields. -/
-@[simp]
 theorem fixedFieldOfConjugateOpenSubgroupOfOpenSubgroup_sup
     [IsGalois K (AlgebraicClosure K)]
     (σ : Gal(AlgebraicClosure K/K))
@@ -1651,7 +1645,6 @@ def quotientOpenNormalSubgroupEquivGalFixedField
   exact InfiniteGalois.normalAutEquivQuotient Hc
 
 /-- States the theorem `quotientOpenNormalSubgroupEquivGalFixedField_mk'`. -/
-@[simp]
 theorem quotientOpenNormalSubgroupEquivGalFixedField_mk'
     [IsGalois K (AlgebraicClosure K)]
     (H : OpenNormalSubgroup (Gal(AlgebraicClosure K/K)))
@@ -1734,7 +1727,6 @@ theorem fixedFieldOfOpenNormalCoreOfOpenSubgroup
 
 /-- Normal core is invariant under conjugating the original open subgroup,
 expressed on fixed fields. -/
-@[simp]
 theorem fixedFieldOfOpenNormalCoreOfConjugateOpenSubgroupOfOpenSubgroup
     [IsGalois K (AlgebraicClosure K)]
     (σ : Gal(AlgebraicClosure K/K))

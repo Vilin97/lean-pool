@@ -24,7 +24,7 @@ finite product of local unit power classes and proves its kernel and
 surjectivity properties for the Kummer prime set.
 -/
 
-open scoped NumberField Classical NNReal IsMulCommutative
+open scoped NumberField NNReal IsMulCommutative
 open NumberField IsDedekindDomain
 open AlgebraicNumberTheory.Valuations
 open HilbertRamification
@@ -37,6 +37,7 @@ namespace GlobalClassFieldTheory.ClassFieldAxiom
 
 variable {K : Type} [Field K] [NumberField K]
 
+open scoped Classical in
 /-- The unit-valued localization map
 `Kˢ → ∏ v ∈ T, U_v / U_vⁿ`.  Disjointness makes every `S`-unit an
 integral unit at the places in `T`. -/
@@ -86,6 +87,7 @@ def sUnitLocalUnitPowerMap
       ((v.1.adicCompletionIntegers K).toSubmonoid.unitsEquivUnitsType.toMonoidHom.comp
         localPrincipalUnit)
 
+open scoped Classical in
 /-- An integral unit in an adic completion is an `n`-th power among
 integral units exactly when it is an `n`-th power among field units. -/
 theorem mem_powMonoidHom_range_adicCompletionIntegers_iff
@@ -179,6 +181,7 @@ theorem mem_powMonoidHom_range_adicCompletionIntegers_iff
         (v.adicCompletion K))
     rw [map_pow, hzField, hy]
 
+open scoped Classical in
 /-- The unit-valued localization map and the field-valued localization map
 defining `Δ` have the same kernel. -/
 theorem sUnitLocalUnitPowerMap_ker
@@ -236,6 +239,7 @@ theorem sUnitLocalUnitPowerMap_ker
     rw [localUnit_toField v]
     exact hx v
 
+open scoped Classical in
 /-- For the Kummer-selected primes, localization from the enlarged `S`-unit
 group onto the product of integral-unit power quotients is
 surjective.  The proof compares the actual Kummer radical quotient with

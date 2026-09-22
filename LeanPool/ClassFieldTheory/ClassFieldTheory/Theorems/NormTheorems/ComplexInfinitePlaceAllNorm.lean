@@ -28,7 +28,7 @@ universe u v
 theorem isNormAtInfinitePlace_of_complex
     (K : Type u) (L : Type v)
     [Field K] [NumberField K]
-    [Field L] [NumberField L] [Algebra K L]
+    [Field L] [Algebra K L]
     [FiniteDimensional K L]
     (v : InfinitePlace K) (hv : v.IsComplex) (x : Kˣ) :
     IsNormAtInfinitePlace K L v x := by

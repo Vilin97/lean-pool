@@ -7,7 +7,8 @@ Authors: n-yamaguchi-0729
 import Mathlib.FieldTheory.Galois.Basic
 import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.FiniteUnramified
 import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.Unramified.PrincipalUnits.NormSide
-/-! Provides the public declarations in the `LocalClassFieldTheory.Finite.Unramified.PrincipalUnits.Basic` Lean module. -/
+/-! Provides the public declarations in the
+  `LocalClassFieldTheory.Finite.Unramified.PrincipalUnits.Basic` Lean module. -/
 
 noncomputable section
 

@@ -29,7 +29,7 @@ abbrev absoluteValueDecompositionField (w : AbsoluteValue L ℝ) :
     IntermediateField K L :=
   IntermediateField.fixedField (absoluteValueDecompositionGroup K w)
 
-@[simp] theorem mem_absoluteValueDecompositionField_iff
+theorem mem_absoluteValueDecompositionField_iff
     (w : AbsoluteValue L ℝ) (x : L) :
     x ∈ absoluteValueDecompositionField K w ↔
       ∀ σ ∈ absoluteValueDecompositionGroup K w, σ x = x :=

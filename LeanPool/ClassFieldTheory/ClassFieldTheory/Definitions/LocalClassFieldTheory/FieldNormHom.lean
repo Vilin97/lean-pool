@@ -18,7 +18,7 @@ universe u v
 /-- The field norm as a homomorphism on multiplicative groups. -/
 def fieldNormHom
     (K : Type u) (L : Type v)
-    [Field K] [Field L] [Algebra K L] [FiniteDimensional K L] :
+    [Field K] [Field L] [Algebra K L] :
     Lˣ →* Kˣ :=
   Units.map (Algebra.norm K)
 

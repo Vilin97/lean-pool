@@ -12,7 +12,7 @@ This module constructs the real fixed field of complex conjugation, the
 quadratic overextension above it, and the faithful cyclotomic restriction.
 -/
 
-open scoped Classical IsMulCommutative
+open scoped IsMulCommutative
 open NumberField
 
 noncomputable section
@@ -31,6 +31,7 @@ variable
     [Field L] [NumberField L] [Algebra K L]
     [FiniteDimensional K L] [IsAbelianGalois K L]
 
+open scoped Classical in
 /-- The base `K'` in the archimedean overextension: the fixed field
 of complex conjugation in `L(i)`. -/
 def ramifiedInfinitePlaceRealFixedField
@@ -46,6 +47,7 @@ def ramifiedInfinitePlaceRealFixedField
         (K := K) (L := L) v hRamified))
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 /-- Ambient complex conjugation on the overfield fixes the embedded base
 field at a ramified real place. -/
 theorem ramifiedInfinitePlaceOverfieldConjugation_fixes_base
@@ -92,6 +94,7 @@ theorem ramifiedInfinitePlaceOverfieldConjugation_fixes_base
         congrArg (InfinitePlace.embedding w)
           (σ.commutes x)
 
+open scoped Classical in
 /-- The compatible embedding `K → K'` into the real fixed field. -/
 noncomputable def ramifiedInfinitePlaceRealFixedFieldEmbedding
     (v : InfinitePlace K)
@@ -129,6 +132,7 @@ noncomputable def ramifiedInfinitePlaceRealFixedFieldEmbedding
           ((Subgroup.zpowers_le).2 hc hg))
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 /-- The fixed-field embedding agrees with the original base-field
 algebra map after coercion to the overfield. -/
 @[simp]
@@ -170,9 +174,10 @@ theorem ramifiedInfinitePlaceRealFixedFieldEmbedding_coe
         (infinitePlaceComplexificationOverfield
           (K := K) (L := L) v) x
 
+open scoped Classical in
 @[reducible]
 noncomputable instance
-    ramifiedInfinitePlaceRealFixedField_algebra
+    ramifiedInfinitePlaceRealFixedFieldAlgebra
     (v : InfinitePlace K)
     (hRamified :
       (chosenInfinitePlaceAbove (L := L) v).IsRamified K) :
@@ -182,6 +187,7 @@ noncomputable instance
   (ramifiedInfinitePlaceRealFixedFieldEmbedding
     (K := K) (L := L) v hRamified).toRingHom.toAlgebra
 
+open scoped Classical in
 instance ramifiedInfinitePlaceRealFixedField_ratScalarTower
     (v : InfinitePlace K)
     (hRamified :
@@ -193,6 +199,7 @@ instance ramifiedInfinitePlaceRealFixedField_ratScalarTower
     (ramifiedInfinitePlaceRealFixedFieldEmbedding
       (K := K) (L := L) v hRamified)
 
+open scoped Classical in
 instance ramifiedInfinitePlaceRealFixedField_scalarTower
     (v : InfinitePlace K)
     (hRamified :
@@ -210,6 +217,7 @@ instance ramifiedInfinitePlaceRealFixedField_scalarTower
           (K := K) (L := L) v hRamified x }
 
 omit [NumberField K] [FiniteDimensional K L] in
+open scoped Classical in
 theorem
     ramifiedInfinitePlaceRealFixedField_finiteDimensional
     (v : InfinitePlace K)
@@ -224,6 +232,7 @@ theorem
     (infinitePlaceComplexificationOverfield
       (K := K) (L := L) v)
 
+open scoped Classical in
 noncomputable instance ramifiedInfinitePlaceRealFixedField_numberField
     (v : InfinitePlace K)
     (hRamified :
@@ -243,6 +252,7 @@ noncomputable instance ramifiedInfinitePlaceRealFixedField_numberField
           (K := K) (L := L) v hRamified)
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 theorem
     ramifiedInfinitePlaceRealFixedField_finiteDimensional_over_base
     (v : InfinitePlace K)
@@ -255,6 +265,7 @@ theorem
     (ramifiedInfinitePlaceRealFixedField
       (K := K) (L := L) v hRamified)
 
+open scoped Classical in
 noncomputable instance
     ramifiedInfinitePlaceRealFixedField_isAbelianGalois_over_base
     (v : InfinitePlace K)
@@ -270,6 +281,7 @@ noncomputable instance
       (K := K) (L := L) v)
 
 omit [NumberField K] [FiniteDimensional K L] in
+open scoped Classical in
 theorem
     ramifiedInfinitePlaceOverfield_finiteDimensional_over_fixed
     (v : InfinitePlace K)
@@ -287,6 +299,7 @@ theorem
       (K := K) (L := L) v)
 
 omit [NumberField K] [FiniteDimensional K L] in
+open scoped Classical in
 theorem ramifiedInfinitePlaceOverextension_isGalois
     (v : InfinitePlace K)
     (hRamified :
@@ -305,6 +318,7 @@ theorem ramifiedInfinitePlaceOverextension_isGalois
         (ramifiedInfinitePlaceOverfieldConjugation
           (K := K) (L := L) v hRamified))
 
+open scoped Classical in
 noncomputable instance
     ramifiedInfinitePlaceOverextension_isAbelianGalois
     (v : InfinitePlace K)
@@ -341,6 +355,7 @@ noncomputable instance
           (K := K) (L := L) v hRamified))
   exact IsAbelianGalois.of_isCyclic _ _
 
+open scoped Classical in
 /-- The distinguished nontrivial automorphism of the quadratic
 overextension `L(i)/K'`, obtained from ambient complex conjugation. -/
 noncomputable def ramifiedInfinitePlaceOverextensionConjugation
@@ -363,6 +378,7 @@ noncomputable def ramifiedInfinitePlaceOverextensionConjugation
           (K := K) (L := L) v hRamified)⟩
 
 omit [NumberField K] [FiniteDimensional K L] in
+open scoped Classical in
 /-- The distinguished overextension automorphism is the restriction
 of ambient complex conjugation. -/
 @[simp]
@@ -380,6 +396,7 @@ theorem ramifiedInfinitePlaceOverextensionConjugation_apply
   rfl
 
 omit [NumberField K] [FiniteDimensional K L] in
+open scoped Classical in
 /-- Every automorphism of the overextension is either the identity or
 the distinguished complex conjugation. -/
 theorem ramifiedInfinitePlaceOverextension_eq_one_or_conjugation
@@ -447,6 +464,7 @@ theorem ramifiedInfinitePlaceOverextension_eq_one_or_conjugation
 attribute [local instance]
   rationalComplexificationCyclotomicField_isAbelianGalois
 
+open scoped Classical in
 /-- Restriction of the quadratic overextension Galois group to the
 rational fourth-root factor. -/
 noncomputable def
@@ -465,6 +483,7 @@ noncomputable def
       (AlgEquiv.restrictScalarsHom ℚ)
 
 omit [NumberField K] [FiniteDimensional K L] in
+open scoped Classical in
 /-- The mapped primitive fourth root in the overfield is not fixed by
 ambient complex conjugation. -/
 theorem ramifiedInfinitePlaceOverfieldConjugation_map_zeta_ne
@@ -521,6 +540,7 @@ theorem ramifiedInfinitePlaceOverfieldConjugation_map_zeta_ne
   nlinarith [hjIm, sq_nonneg (j : ℂ).re]
 
 omit [NumberField K] [FiniteDimensional K L] in
+open scoped Classical in
 /-- The distinguished overextension conjugation restricts
 nontrivially to the rational fourth-root factor. -/
 theorem
@@ -614,6 +634,7 @@ theorem
             4 ℚ rationalComplexificationCyclotomicField) := hz'
 
 omit [NumberField K] [FiniteDimensional K L] in
+open scoped Classical in
 /-- Restriction to the rational fourth-root factor is injective on the
 quadratic overextension. -/
 theorem

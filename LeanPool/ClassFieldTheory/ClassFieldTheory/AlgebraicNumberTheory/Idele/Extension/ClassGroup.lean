@@ -140,7 +140,6 @@ def classInclusion :
       rw [← comap_principalSubgroup K L])
 
 omit [NumberField L] [FiniteDimensional K L] in
-@[simp]
 theorem classInclusion_mk (a : IdeleGroup K) :
     classInclusion K L
         (QuotientGroup.mk' (IdeleGroup.principalSubgroup K) a) =
@@ -165,7 +164,6 @@ noncomputable def classNorm :
           K L x).symm)
 
 omit [NumberField L] in
-@[simp]
 theorem classNorm_mk
     (a : RelativeIdeleGroup K L) :
     classNorm K L

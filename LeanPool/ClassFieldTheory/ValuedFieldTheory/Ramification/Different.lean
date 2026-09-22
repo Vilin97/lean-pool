@@ -46,9 +46,10 @@ omit [FiniteDimensional K L] in
 /-- Trace-dual membership written directly as a trace integrality condition. -/
 theorem mem_codifferentSubmodule_iff_trace_mul_integral
     [IsScalarTower base.valuationSubring target.valuationSubring L]
-    [IsIntegralClosure target.valuationSubring base.valuationSubring L]
+
     {z : L} :
-    z ∈ (RamificationTheory.DiscreteValuationField.ValuedExtension.codifferentSubmodule base target) ↔
+    z ∈ (RamificationTheory.DiscreteValuationField.ValuedExtension.codifferentSubmodule base
+      target) ↔
       ∀ a ∈ (1 : Submodule target.valuationSubring L),
         IsIntegral base.valuationSubring (Algebra.trace K L (z * a)) := by
   change
@@ -77,7 +78,8 @@ omit [FiniteDimensional K L] in
 under the trace form. -/
 theorem trace_mul_mem_integer_range_of_mem_codifferent
     [IsScalarTower base.valuationSubring target.valuationSubring L]
-    {z a : L} (hz : z ∈ (RamificationTheory.DiscreteValuationField.ValuedExtension.codifferentSubmodule base target))
+    {z a : L} (hz : z ∈
+      (RamificationTheory.DiscreteValuationField.ValuedExtension.codifferentSubmodule base target))
     (ha : a ∈ (1 : Submodule target.valuationSubring L)) :
     Algebra.trace K L (z * a) ∈
       (algebraMap base.valuationSubring K).range := by
@@ -104,7 +106,8 @@ theorem differentIdealOfFiniteSeparable_eq_differentIdeal
     [Algebra.IsSeparable K L]
     [IsScalarTower base.valuationSubring target.valuationSubring L]
     [Module.IsTorsionFree base.valuationSubring target.valuationSubring] :
-    (RamificationTheory.DiscreteValuationField.ValuedExtension.differentIdealOfFiniteSeparable base target) =
+    (RamificationTheory.DiscreteValuationField.ValuedExtension.differentIdealOfFiniteSeparable
+      base target) =
       differentIdeal base.valuationSubring target.valuationSubring := by
   simp [differentIdealOfFiniteSeparable]
 
@@ -114,20 +117,25 @@ theorem mem_codifferentSubmodule_iff_trace_mul_integral_of_finite_separable
     [Algebra.IsSeparable K L]
     [IsScalarTower base.valuationSubring target.valuationSubring L]
     {z : L} :
-    z ∈ (RamificationTheory.DiscreteValuationField.ValuedExtension.codifferentSubmodule base target) ↔
+    z ∈ (RamificationTheory.DiscreteValuationField.ValuedExtension.codifferentSubmodule base
+      target) ↔
       ∀ a ∈ (1 : Submodule target.valuationSubring L),
         IsIntegral base.valuationSubring (Algebra.trace K L (z * a)) := by
   let : IsIntegralClosure target.valuationSubring base.valuationSubring L :=
     target_valuationSubring_isIntegralClosure_of_finite_separable base target
-  exact (RamificationTheory.DiscreteValuationField.ValuedExtension.mem_codifferentSubmodule_iff_trace_mul_integral base target)
+  exact
+    (RamificationTheory.DiscreteValuationField.ValuedExtension.mem_codifferentSubmodule_iff_trace_mul_integral base target)
 
 /-- The local different/codifferent relation in finite separable complete-DVF
 extensions, using the finite-separable different ideal. -/
 theorem coeSubmodule_differentIdealOfFiniteSeparable_eq_one_div_codifferent
     [Algebra.IsSeparable K L]
     [IsScalarTower base.valuationSubring target.valuationSubring L] :
-    IsLocalization.coeSubmodule L (RamificationTheory.DiscreteValuationField.ValuedExtension.differentIdealOfFiniteSeparable base target) =
-      1 / (RamificationTheory.DiscreteValuationField.ValuedExtension.codifferentSubmodule base target) := by
+    IsLocalization.coeSubmodule L
+      (RamificationTheory.DiscreteValuationField.ValuedExtension.differentIdealOfFiniteSeparable
+      base target) =
+      1 / (RamificationTheory.DiscreteValuationField.ValuedExtension.codifferentSubmodule base
+        target) := by
   unfold differentIdealOfFiniteSeparable
   let : IsIntegralClosure target.valuationSubring base.valuationSubring L :=
     target_valuationSubring_isIntegralClosure_of_finite_separable base target
@@ -161,7 +169,7 @@ trying the very general `FractionRing.liftAlgebra` instance globally. -/
 private theorem fractionRing_isSeparable_of_finite_separable
     [Algebra.IsSeparable K L]
     [IsScalarTower base.valuationSubring target.valuationSubring L]
-    [IsIntegralClosure target.valuationSubring base.valuationSubring L]
+
     [Module.IsTorsionFree base.valuationSubring target.valuationSubring] :
     letI : FaithfulSMul base.valuationSubring target.valuationSubring :=
       Module.IsTorsionFree.to_faithfulSMul
@@ -207,7 +215,8 @@ certificates. -/
 theorem differentIdealOfFiniteSeparable_ne_bot
     [Algebra.IsSeparable K L]
     [IsScalarTower base.valuationSubring target.valuationSubring L] :
-    (RamificationTheory.DiscreteValuationField.ValuedExtension.differentIdealOfFiniteSeparable base target) ≠ ⊥ := by
+    (RamificationTheory.DiscreteValuationField.ValuedExtension.differentIdealOfFiniteSeparable
+      base target) ≠ ⊥ := by
   unfold differentIdealOfFiniteSeparable
   let : IsIntegralClosure target.valuationSubring base.valuationSubring L :=
     target_valuationSubring_isIntegralClosure_of_finite_separable base target
@@ -220,7 +229,8 @@ theorem differentIdealOfFiniteSeparable_ne_bot
   let : Algebra.IsSeparable (FractionRing base.valuationSubring)
       (FractionRing target.valuationSubring) :=
     (RamificationTheory.DiscreteValuationField.ValuedExtension.fractionRing_isSeparable_of_finite_separable base target)
-  exact (RamificationTheory.DiscreteValuationField.ValuedExtension.differentIdeal_ne_bot base target)
+  exact (RamificationTheory.DiscreteValuationField.ValuedExtension.differentIdeal_ne_bot base
+    target)
 
 /-- The local different/codifferent relation specialized to the valuation
 rings. -/
@@ -231,7 +241,8 @@ theorem coeSubmodule_differentIdeal_eq_one_div_codifferent
     [Module.IsTorsionFree base.valuationSubring target.valuationSubring] :
     IsLocalization.coeSubmodule L
         (differentIdeal base.valuationSubring target.valuationSubring) =
-      1 / (RamificationTheory.DiscreteValuationField.ValuedExtension.codifferentSubmodule base target) := by
+      1 / (RamificationTheory.DiscreteValuationField.ValuedExtension.codifferentSubmodule base
+        target) := by
   change
     IsLocalization.coeSubmodule L
         (differentIdeal base.valuationSubring target.valuationSubring) =
@@ -251,7 +262,8 @@ theorem isIntegral_discriminant_mul_of_mem_codifferent
     {ι : Type*} [DecidableEq ι] [Fintype ι]
     {b : Module.Basis ι K L} (hb : ∀ i, IsIntegral base.valuationSubring (b i))
     {a z : L} (ha : a ∈ (1 : Submodule target.valuationSubring L))
-    (hz : z ∈ (RamificationTheory.DiscreteValuationField.ValuedExtension.codifferentSubmodule base target)) :
+    (hz : z ∈ (RamificationTheory.DiscreteValuationField.ValuedExtension.codifferentSubmodule
+      base target)) :
     IsIntegral base.valuationSubring
       (Algebra.discr K b • a * z) := by
   exact _root_.isIntegral_discr_mul_of_mem_traceDual
@@ -266,12 +278,14 @@ theorem isIntegral_discriminant_mul_of_mem_codifferent_of_finite_separable
     {ι : Type*} [DecidableEq ι] [Fintype ι]
     {b : Module.Basis ι K L} (hb : ∀ i, IsIntegral base.valuationSubring (b i))
     {a z : L} (ha : a ∈ (1 : Submodule target.valuationSubring L))
-    (hz : z ∈ (RamificationTheory.DiscreteValuationField.ValuedExtension.codifferentSubmodule base target)) :
+    (hz : z ∈ (RamificationTheory.DiscreteValuationField.ValuedExtension.codifferentSubmodule
+      base target)) :
     IsIntegral base.valuationSubring
       (Algebra.discr K b • a * z) := by
   let : IsIntegralClosure target.valuationSubring base.valuationSubring L :=
     target_valuationSubring_isIntegralClosure_of_finite_separable base target
-  exact (RamificationTheory.DiscreteValuationField.ValuedExtension.isIntegral_discriminant_mul_of_mem_codifferent base target) hb ha hz
+  exact
+    (RamificationTheory.DiscreteValuationField.ValuedExtension.isIntegral_discriminant_mul_of_mem_codifferent base target) hb ha hz
 
 /-- Finite-separable version of the different/unramified criterion, using
 `differentIdealOfFiniteSeparable` to avoid separate torsion-free and
@@ -279,7 +293,9 @@ fraction-field separability certificates. -/
 theorem maximalIdeal_not_dvd_differentIdealOfFiniteSeparable_iff_isUnramifiedAt
     [Algebra.IsSeparable K L]
     [IsScalarTower base.valuationSubring target.valuationSubring L] :
-    ¬ target.maximalIdeal ∣ (RamificationTheory.DiscreteValuationField.ValuedExtension.differentIdealOfFiniteSeparable base target) ↔
+    ¬ target.maximalIdeal ∣
+      (RamificationTheory.DiscreteValuationField.ValuedExtension.differentIdealOfFiniteSeparable
+      base target) ↔
       Algebra.IsUnramifiedAt base.valuationSubring target.maximalIdeal := by
   unfold differentIdealOfFiniteSeparable
   let : IsIntegralClosure target.valuationSubring base.valuationSubring L :=
@@ -300,7 +316,9 @@ using `differentIdealOfFiniteSeparable`. -/
 theorem maximalIdeal_dvd_differentIdealOfFiniteSeparable_iff_not_isUnramifiedAt
     [Algebra.IsSeparable K L]
     [IsScalarTower base.valuationSubring target.valuationSubring L] :
-    target.maximalIdeal ∣ (RamificationTheory.DiscreteValuationField.ValuedExtension.differentIdealOfFiniteSeparable base target) ↔
+    target.maximalIdeal ∣
+      (RamificationTheory.DiscreteValuationField.ValuedExtension.differentIdealOfFiniteSeparable
+      base target) ↔
       ¬ Algebra.IsUnramifiedAt base.valuationSubring target.maximalIdeal := by
   unfold differentIdealOfFiniteSeparable
   let : IsIntegralClosure target.valuationSubring base.valuationSubring L :=
@@ -362,7 +380,9 @@ theorem isUnit_differentIdeal_iff_isUnramifiedAt
 theorem isUnit_differentIdealOfFiniteSeparable_iff_isUnramifiedAt
     [Algebra.IsSeparable K L]
     [IsScalarTower base.valuationSubring target.valuationSubring L] :
-    IsUnit (RamificationTheory.DiscreteValuationField.ValuedExtension.differentIdealOfFiniteSeparable base target) ↔
+    IsUnit
+      (RamificationTheory.DiscreteValuationField.ValuedExtension.differentIdealOfFiniteSeparable
+      base target) ↔
       Algebra.IsUnramifiedAt base.valuationSubring target.maximalIdeal := by
   unfold differentIdealOfFiniteSeparable
   let : IsIntegralClosure target.valuationSubring base.valuationSubring L :=
@@ -376,7 +396,8 @@ theorem isUnit_differentIdealOfFiniteSeparable_iff_isUnramifiedAt
   let : Algebra.IsSeparable (FractionRing base.valuationSubring)
       (FractionRing target.valuationSubring) :=
     (RamificationTheory.DiscreteValuationField.ValuedExtension.fractionRing_isSeparable_of_finite_separable base target)
-  exact (RamificationTheory.DiscreteValuationField.ValuedExtension.isUnit_differentIdeal_iff_isUnramifiedAt base target)
+  exact
+    (RamificationTheory.DiscreteValuationField.ValuedExtension.isUnit_differentIdeal_iff_isUnramifiedAt base target)
 
 omit [FiniteDimensional K L] in
 /-- States the theorem `differentIdeal_eq_top_iff_isUnramifiedAt`. -/
@@ -389,14 +410,16 @@ theorem differentIdeal_eq_top_iff_isUnramifiedAt
     differentIdeal base.valuationSubring target.valuationSubring = ⊤ ↔
       Algebra.IsUnramifiedAt base.valuationSubring target.maximalIdeal := by
   rw [← Ideal.isUnit_iff]
-  exact (RamificationTheory.DiscreteValuationField.ValuedExtension.isUnit_differentIdeal_iff_isUnramifiedAt base target)
+  exact
+    (RamificationTheory.DiscreteValuationField.ValuedExtension.isUnit_differentIdeal_iff_isUnramifiedAt base target)
 
 /-- Finite-separable version of the top/different criterion for
 unramifiedness. -/
 theorem differentIdealOfFiniteSeparable_eq_top_iff_isUnramifiedAt
     [Algebra.IsSeparable K L]
     [IsScalarTower base.valuationSubring target.valuationSubring L] :
-    (RamificationTheory.DiscreteValuationField.ValuedExtension.differentIdealOfFiniteSeparable base target) = ⊤ ↔
+    (RamificationTheory.DiscreteValuationField.ValuedExtension.differentIdealOfFiniteSeparable
+      base target) = ⊤ ↔
       Algebra.IsUnramifiedAt base.valuationSubring target.maximalIdeal := by
   unfold differentIdealOfFiniteSeparable
   let : IsIntegralClosure target.valuationSubring base.valuationSubring L :=
@@ -410,7 +433,8 @@ theorem differentIdealOfFiniteSeparable_eq_top_iff_isUnramifiedAt
   let : Algebra.IsSeparable (FractionRing base.valuationSubring)
       (FractionRing target.valuationSubring) :=
     (RamificationTheory.DiscreteValuationField.ValuedExtension.fractionRing_isSeparable_of_finite_separable base target)
-  exact (RamificationTheory.DiscreteValuationField.ValuedExtension.differentIdeal_eq_top_iff_isUnramifiedAt base target)
+  exact
+    (RamificationTheory.DiscreteValuationField.ValuedExtension.differentIdeal_eq_top_iff_isUnramifiedAt base target)
 
 /-- The monogenic different formula: conductor times different is generated by
 the derivative of the minimal polynomial.  This is the Dedekind-domain formula
@@ -452,7 +476,9 @@ theorem conductor_mul_differentIdealOfFiniteSeparable_eq_span_derivative
     [IsScalarTower base.valuationSubring target.valuationSubring L]
     (z : target.valuationSubring)
     (hz : Algebra.adjoin K {(algebraMap target.valuationSubring L) z} = ⊤) :
-    conductor base.valuationSubring z * (RamificationTheory.DiscreteValuationField.ValuedExtension.differentIdealOfFiniteSeparable base target) =
+    conductor base.valuationSubring z *
+      (RamificationTheory.DiscreteValuationField.ValuedExtension.differentIdealOfFiniteSeparable
+      base target) =
       Ideal.span
         {Polynomial.aeval z
           (Polynomial.derivative (minpoly base.valuationSubring z))} := by
@@ -462,7 +488,8 @@ theorem conductor_mul_differentIdealOfFiniteSeparable_eq_span_derivative
   let : Module.IsTorsionFree base.valuationSubring target.valuationSubring :=
     moduleIsTorsionFree_target_valuationSubring_of_finite_separable
       (K := K) (L := L) (base := base) (target := target)
-  exact (RamificationTheory.DiscreteValuationField.ValuedExtension.conductor_mul_differentIdeal_eq_span_derivative base target) z hz
+  exact
+    (RamificationTheory.DiscreteValuationField.ValuedExtension.conductor_mul_differentIdeal_eq_span_derivative base target) z hz
 
 /-- In a monogenic finite separable complete-DVF extension, the derivative of
 the minimal polynomial belongs to the finite-separable different ideal. -/
@@ -473,14 +500,16 @@ theorem aeval_derivative_mem_differentIdealOfFiniteSeparable
     (hz : Algebra.adjoin K {(algebraMap target.valuationSubring L) z} = ⊤) :
     Polynomial.aeval z
         (Polynomial.derivative (minpoly base.valuationSubring z)) ∈
-      (RamificationTheory.DiscreteValuationField.ValuedExtension.differentIdealOfFiniteSeparable base target) := by
+      (RamificationTheory.DiscreteValuationField.ValuedExtension.differentIdealOfFiniteSeparable
+        base target) := by
   unfold differentIdealOfFiniteSeparable
   let : IsIntegralClosure target.valuationSubring base.valuationSubring L :=
     target_valuationSubring_isIntegralClosure_of_finite_separable base target
   let : Module.IsTorsionFree base.valuationSubring target.valuationSubring :=
     moduleIsTorsionFree_target_valuationSubring_of_finite_separable
       (K := K) (L := L) (base := base) (target := target)
-  exact (RamificationTheory.DiscreteValuationField.ValuedExtension.aeval_derivative_mem_differentIdeal base target) z hz
+  exact
+    (RamificationTheory.DiscreteValuationField.ValuedExtension.aeval_derivative_mem_differentIdeal base target) z hz
 
 /-- A monogenic finite separable complete-DVF extension is unramified when
 an integral equation for its generator has unit derivative.  The equation
@@ -565,7 +594,9 @@ theorem maximalIdeal_pow_sub_one_dvd_differentIdealOfFiniteSeparable
       target.maximalIdeal ^ e ∣
         Ideal.map (algebraMap base.valuationSubring target.valuationSubring)
           base.maximalIdeal) :
-    target.maximalIdeal ^ (e - 1) ∣ (RamificationTheory.DiscreteValuationField.ValuedExtension.differentIdealOfFiniteSeparable base target) := by
+    target.maximalIdeal ^ (e - 1) ∣
+      (RamificationTheory.DiscreteValuationField.ValuedExtension.differentIdealOfFiniteSeparable
+      base target) := by
   unfold differentIdealOfFiniteSeparable
   let : IsIntegralClosure target.valuationSubring base.valuationSubring L :=
     target_valuationSubring_isIntegralClosure_of_finite_separable base target
@@ -578,7 +609,8 @@ theorem maximalIdeal_pow_sub_one_dvd_differentIdealOfFiniteSeparable
   let : Algebra.IsSeparable (FractionRing base.valuationSubring)
       (FractionRing target.valuationSubring) :=
     (RamificationTheory.DiscreteValuationField.ValuedExtension.fractionRing_isSeparable_of_finite_separable base target)
-  exact (RamificationTheory.DiscreteValuationField.ValuedExtension.maximalIdeal_pow_sub_one_dvd_differentIdeal base target) e hpow
+  exact
+    (RamificationTheory.DiscreteValuationField.ValuedExtension.maximalIdeal_pow_sub_one_dvd_differentIdeal base target) e hpow
 
 /-- Finite-separable different lower bound at the canonical
 ramification index: `P^(e - 1)` divides the finite-separable different.  This
@@ -588,7 +620,8 @@ theorem maximalIdeal_pow_ramificationIndex_sub_one_dvd_differentIdealOfFiniteSep
     [Algebra.IsSeparable K L]
     [IsScalarTower base.valuationSubring target.valuationSubring L] :
     target.maximalIdeal ^ (ramificationIndex base.toDVF target.toDVF - 1) ∣
-      (RamificationTheory.DiscreteValuationField.ValuedExtension.differentIdealOfFiniteSeparable base target) := by
+      (RamificationTheory.DiscreteValuationField.ValuedExtension.differentIdealOfFiniteSeparable
+        base target) := by
   refine
     (RamificationTheory.DiscreteValuationField.ValuedExtension.maximalIdeal_pow_sub_one_dvd_differentIdealOfFiniteSeparable base target)
       (ramificationIndex base.toDVF target.toDVF) ?_
@@ -603,7 +636,9 @@ theorem maximalIdeal_dvd_differentIdealOfFiniteSeparable_of_one_lt_ramificationI
     [Algebra.IsSeparable K L]
     [IsScalarTower base.valuationSubring target.valuationSubring L]
     (he : 1 < ramificationIndex base.toDVF target.toDVF) :
-    target.maximalIdeal ∣ (RamificationTheory.DiscreteValuationField.ValuedExtension.differentIdealOfFiniteSeparable base target) := by
+    target.maximalIdeal ∣
+      (RamificationTheory.DiscreteValuationField.ValuedExtension.differentIdealOfFiniteSeparable
+      base target) := by
   have hlower :
       target.maximalIdeal ^ (ramificationIndex base.toDVF target.toDVF - 1) ∣
         (RamificationTheory.DiscreteValuationField.ValuedExtension.differentIdealOfFiniteSeparable base target) :=
@@ -662,15 +697,17 @@ theorem differentIdeal_tower
 /-- Finite-separable tower formula for the different, using the
 finite-separable different ideals on all three steps. -/
 theorem differentIdealOfFiniteSeparable_tower
-    [IsScalarTower K M L]
+
     [Algebra.IsSeparable K M] [Algebra.IsSeparable M L]
     [Algebra.IsSeparable K L]
     [IsScalarTower base.valuationSubring middle.valuationSubring target.valuationSubring]
     [IsScalarTower base.valuationSubring middle.valuationSubring M]
     [IsScalarTower middle.valuationSubring target.valuationSubring L]
     [IsScalarTower base.valuationSubring target.valuationSubring L] :
-    (RamificationTheory.DiscreteValuationField.ValuedExtension.differentIdealOfFiniteSeparable base target) =
-      (RamificationTheory.DiscreteValuationField.ValuedExtension.differentIdealOfFiniteSeparable middle target) *
+    (RamificationTheory.DiscreteValuationField.ValuedExtension.differentIdealOfFiniteSeparable
+      base target) =
+      (RamificationTheory.DiscreteValuationField.ValuedExtension.differentIdealOfFiniteSeparable
+        middle target) *
         Ideal.map (algebraMap middle.valuationSubring target.valuationSubring)
           (RamificationTheory.DiscreteValuationField.ValuedExtension.differentIdealOfFiniteSeparable base middle) := by
   unfold differentIdealOfFiniteSeparable

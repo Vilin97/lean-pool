@@ -321,7 +321,7 @@ theorem abstractReciprocity_relativeNorm_fixedFieldInclusion
 /-- Two auxiliary quotient elements commute when they have the same
 restriction and the auxiliary field contains the inertia subgroup. -/
 theorem commute_of_same_restriction_of_inertia_le
-    (D : DegreeData G) [IsTopologicalGroup G]
+    (D : DegreeData G)
     (E : DegreeData.AbstractExtension G)
     (M : FiniteGaloisSubextension E.base)
     (hME : M.field.toSubgroup ≤ E.field.toSubgroup)

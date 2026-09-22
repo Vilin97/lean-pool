@@ -29,7 +29,7 @@ open scoped TensorProduct
 
 /-- The nontriviality convention supplies the corresponding
 nontrivially normed field structure on `K_v`. -/
-@[reducible] noncomputable def absoluteValueExtension_completionNontriviallyNormedField
+@[reducible] noncomputable def absoluteValueExtensionCompletionNontriviallyNormedField
     {K : Type u} [Field K] (vK : AbsoluteValue K ℝ)
     (hvK : vK.IsNontrivial) :
     NontriviallyNormedField vK.Completion :=
@@ -40,7 +40,7 @@ nontrivially normed field structure on `K_v`. -/
 
 /-- The completion `L_w` is a normed algebra over `K_v`: its scalar map is
 the isometric completion map supplied by the valuation-extension theorem. -/
-@[reducible] noncomputable def absoluteValueExtension_completionNormedAlgebra
+@[reducible] noncomputable def absoluteValueExtensionCompletionNormedAlgebra
     {K : Type u} {L : Type v} [Field K] [Field L] [Algebra K L]
     (vK : AbsoluteValue K ℝ) (w : AbsoluteValueExtension vK L) :
     letI := AbsoluteValue.completionAlgebra vK w.1 w.2
@@ -55,7 +55,7 @@ the isometric completion map supplied by the valuation-extension theorem. -/
     (map_zero (AbsoluteValue.completionMap vK w.1 w.2))]
 
 /-- Multiplication gives the canonical map `K_v ⊗_K L → L_w`. -/
-noncomputable def absoluteValueExtension_localizationTensorHom
+noncomputable def absoluteValueExtensionLocalizationTensorHom
     {K : Type u} {L : Type v} [Field K] [Field L] [Algebra K L]
     (vK : AbsoluteValue K ℝ) (w : AbsoluteValueExtension vK L) :
     letI := AbsoluteValue.completionAlgebra vK w.1 w.2
@@ -76,7 +76,7 @@ theorem absoluteValueExtension_localizationTensorHom_tmul
     (vK : AbsoluteValue K ℝ) (w : AbsoluteValueExtension vK L)
     (b : vK.Completion) (a : L) :
     letI := AbsoluteValue.completionAlgebra vK w.1 w.2
-    absoluteValueExtension_localizationTensorHom vK w (b ⊗ₜ[K] a) =
+    absoluteValueExtensionLocalizationTensorHom vK w (b ⊗ₜ[K] a) =
       algebraMap vK.Completion w.1.Completion b *
         AbsoluteValue.toCompletionAlgHom (K := K) w.1 a := by
   let := AbsoluteValue.completionAlgebra vK w.1 w.2
@@ -90,17 +90,17 @@ theorem absoluteValueExtension_localizationTensorHom_surjective
     (vK : AbsoluteValue K ℝ) (hvK : vK.IsNontrivial)
     (w : AbsoluteValueExtension vK L) :
     letI := AbsoluteValue.completionAlgebra vK w.1 w.2
-    Function.Surjective (absoluteValueExtension_localizationTensorHom vK w) := by
+    Function.Surjective (absoluteValueExtensionLocalizationTensorHom vK w) := by
   let hK := AbsoluteValue.extensionCompletionAlgebra (K := K) w.1
   let : SMul K w.1.Completion := hK.toSMul
   let := AbsoluteValue.completionAlgebra vK w.1 w.2
   let : NontriviallyNormedField vK.Completion :=
-    absoluteValueExtension_completionNontriviallyNormedField vK hvK
+    absoluteValueExtensionCompletionNontriviallyNormedField vK hvK
   let : NormedAlgebra vK.Completion w.1.Completion :=
-    absoluteValueExtension_completionNormedAlgebra vK w
+    absoluteValueExtensionCompletionNormedAlgebra vK w
   let : Module.Finite vK.Completion (vK.Completion ⊗[K] L) :=
     inferInstance
-  let f := absoluteValueExtension_localizationTensorHom vK w
+  let f := absoluteValueExtensionLocalizationTensorHom vK w
   let : Module.Finite vK.Completion f.toLinearMap.range :=
     Module.Finite.range f.toLinearMap
   have hrangeClosed : IsClosed (f.toLinearMap.range : Set w.1.Completion) :=
@@ -197,7 +197,7 @@ theorem localizedCompletionModuleFinite
       (vK.Completion ⊗[K] L) :=
     inferInstance
   let f :=
-    absoluteValueExtension_localizationTensorHom vK w
+    absoluteValueExtensionLocalizationTensorHom vK w
   let : Module.Finite vK.Completion
       w.1.Completion :=
     Module.Finite.of_surjective f.toLinearMap

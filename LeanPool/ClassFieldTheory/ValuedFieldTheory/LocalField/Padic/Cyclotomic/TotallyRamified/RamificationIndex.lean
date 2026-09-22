@@ -9,7 +9,8 @@ import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationF
 /-!
 # The ramification index of the totally ramified cyclotomic extension
 
-This file maps the Eisenstein unit relation into the target valuation ring and proves `e = [L : ℚ_[p]]`, together with the uniformizer statement.
+This file maps the Eisenstein unit relation into the target valuation ring and proves `e = [L :
+  ℚ_[p]]`, together with the uniformizer statement.
 -/
 
 noncomputable section
@@ -29,6 +30,7 @@ section CyclotomicExtension
 variable {p k : ℕ} [Fact p.Prime]
 variable {L : Type u} [Field L] [Algebra ℚ_[p] L]
 
+/-- The `ℤ_[p]`-algebra on the cyclotomic extension is induced through `ℚ_[p]`. -/
 local instance padicCyclotomicTotallyRamifiedRamificationIndexAlgebraPadicInt : Algebra ℤ_[p] L :=
   ((algebraMap ℚ_[p] L).comp (algebraMap ℤ_[p] ℚ_[p])).toAlgebra
 

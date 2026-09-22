@@ -36,12 +36,14 @@ open KummerTheory
 cyclotomic fixed-field API.  Generic intermediate-field instances are
 propositionally equal here but not definitionally interchangeable. -/
 noncomputable local instance
-    cyclotomicAbstractFixedFieldArtin_separableClosureAlgebra :
+    cyclotomicAbstractFixedFieldArtinSeparableClosureAlgebra :
     Algebra ℚ (SeparableClosure ℚ) :=
   DivisionRing.toRatAlgebra
 
+/-- The rational cyclotomic field uses the canonical rational algebra structure of a division
+ring. -/
 noncomputable local instance
-    cyclotomicAbstractFixedFieldArtin_cyclotomicZHatFieldAlgebra :
+    cyclotomicAbstractFixedFieldArtinCyclotomicZHatFieldAlgebra :
     Algebra ℚ rationalCyclotomicZHatField :=
   DivisionRing.toRatAlgebra
 
@@ -309,7 +311,7 @@ noncomputable def
   exact IntermediateField.inclusion hTJ
 
 noncomputable instance
-    abstractFixedFieldCyclotomicCompositum_algebra
+    abstractFixedFieldCyclotomicCompositumAlgebra
     (H : FiniteAbstractField
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ)) :
     let hI :=
@@ -658,7 +660,7 @@ noncomputable def
     (IntermediateField.liftAlgEquiv E.toIntermediateField).toAlgHom
 
 noncomputable instance
-    abstractFixedFieldCyclotomicFiniteCompositum_baseAlgebra
+    abstractFixedFieldCyclotomicFiniteCompositumBaseAlgebra
     (H : FiniteAbstractField
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
     (E :
@@ -673,7 +675,7 @@ noncomputable instance
       (abstractFixedFieldCyclotomicFiniteCompositumBaseEmbedding H E))
 
 noncomputable instance
-    abstractFixedFieldCyclotomicFiniteCompositum_layerAlgebra
+    abstractFixedFieldCyclotomicFiniteCompositumLayerAlgebra
     (H : FiniteAbstractField
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
     (E :
@@ -688,7 +690,7 @@ noncomputable instance
 /-- The finite-layer action induced by its explicit embedding into the
 finite compositum. -/
 noncomputable instance
-    abstractFixedFieldCyclotomicFiniteCompositum_layerSMul
+    abstractFixedFieldCyclotomicFiniteCompositumLayerSMul
     (H : FiniteAbstractField
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
     (E :
@@ -698,7 +700,7 @@ noncomputable instance
       (abstractFixedFieldCyclotomicFiniteCompositum H E) :=
   Algebra.toSMul
     (self :=
-      abstractFixedFieldCyclotomicFiniteCompositum_layerAlgebra H E)
+      abstractFixedFieldCyclotomicFiniteCompositumLayerAlgebra H E)
 
 instance
     abstractFixedFieldCyclotomicFiniteCompositum_baseScalarTower
@@ -802,7 +804,7 @@ noncomputable def abstractFixedFieldCyclotomicFiniteLayer
 /-- The base algebra on the finite field range, obtained from the
 explicit base embedding followed by the field-range equivalence. -/
 noncomputable instance
-    abstractFixedFieldCyclotomicFiniteLayer_baseAlgebra
+    abstractFixedFieldCyclotomicFiniteLayerBaseAlgebra
     (H : FiniteAbstractField
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
     (E :
@@ -824,7 +826,7 @@ noncomputable instance
 /-- The scalar action belonging to the canonical base algebra on the
 finite field range. -/
 noncomputable instance
-    abstractFixedFieldCyclotomicFiniteLayer_baseSMul
+    abstractFixedFieldCyclotomicFiniteLayerBaseSMul
     (H : FiniteAbstractField
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
     (E :
@@ -835,12 +837,12 @@ noncomputable instance
         ℚ (SeparableClosure ℚ) H.field)
       (abstractFixedFieldCyclotomicFiniteLayer H E) :=
   Algebra.toSMul
-    (self := abstractFixedFieldCyclotomicFiniteLayer_baseAlgebra H E)
+    (self := abstractFixedFieldCyclotomicFiniteLayerBaseAlgebra H E)
 
 /-- The module structure belonging to the canonical base algebra on
 the finite field range. -/
 noncomputable instance
-    abstractFixedFieldCyclotomicFiniteLayer_baseModule
+    abstractFixedFieldCyclotomicFiniteLayerBaseModule
     (H : FiniteAbstractField
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
     (E :
@@ -855,7 +857,7 @@ noncomputable instance
       ℚ (SeparableClosure ℚ) H.field)
     (abstractFixedFieldCyclotomicFiniteLayer H E)
     _ _
-    (abstractFixedFieldCyclotomicFiniteLayer_baseAlgebra H E)
+    (abstractFixedFieldCyclotomicFiniteLayerBaseAlgebra H E)
 
 /-- The field-range equivalence rebuilt over the explicit base
 algebras.  Its underlying ring equivalence is the canonical one. -/
@@ -988,7 +990,7 @@ noncomputable def
       (abstractFixedFieldCyclotomicFiniteCompositumLayerEmbedding H E)
 
 noncomputable instance
-    abstractFixedFieldCyclotomicFiniteLayer_layerAlgebra
+    abstractFixedFieldCyclotomicFiniteLayerLayerAlgebra
     (H : FiniteAbstractField
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
     (E :
@@ -1003,7 +1005,7 @@ noncomputable instance
 /-- The finite-layer action on its actual image in the relative fixed
 field. -/
 noncomputable instance
-    abstractFixedFieldCyclotomicFiniteLayer_layerSMul
+    abstractFixedFieldCyclotomicFiniteLayerLayerSMul
     (H : FiniteAbstractField
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
     (E :
@@ -1012,7 +1014,7 @@ noncomputable instance
     SMul E
       (abstractFixedFieldCyclotomicFiniteLayer H E) :=
   Algebra.toSMul
-    (self := abstractFixedFieldCyclotomicFiniteLayer_layerAlgebra H E)
+    (self := abstractFixedFieldCyclotomicFiniteLayerLayerAlgebra H E)
 
 instance
     abstractFixedFieldCyclotomicFiniteLayer_layerScalarTower
@@ -1058,7 +1060,7 @@ theorem abstractFixedFieldCyclotomicFiniteLayer_baseAlgebra_eq_algebra'
     (E :
       FiniteGaloisIntermediateField
         ℚ rationalCyclotomicZHatField) :
-    abstractFixedFieldCyclotomicFiniteLayer_baseAlgebra H E =
+    abstractFixedFieldCyclotomicFiniteLayerBaseAlgebra H E =
       (abstractFixedFieldCyclotomicFiniteGaloisLayer H E).algebra' := by
   apply Algebra.algebra_ext
   intro x
@@ -1462,11 +1464,11 @@ theorem
   let P : IntermediateField F U :=
     abstractFixedFieldCyclotomicFiniteLayer H E
   let : Algebra T U :=
-    abstractFixedFieldCyclotomicCompositum_algebra H
+    abstractFixedFieldCyclotomicCompositumAlgebra H
   let : IsScalarTower ℚ T U :=
     abstractFixedFieldCyclotomicCompositum_scalarTower H
   let : Algebra E P :=
-    abstractFixedFieldCyclotomicFiniteLayer_layerAlgebra H E
+    abstractFixedFieldCyclotomicFiniteLayerLayerAlgebra H E
   let : IsScalarTower ℚ E P :=
     abstractFixedFieldCyclotomicFiniteLayer_layerScalarTower H E
   let : IsAbelianGalois F P := by
@@ -1515,6 +1517,8 @@ private abbrev cyclotomicAbstractFixedFieldArtinCoordinateLayer
       (cyclotomicAbstractFixedFieldArtinCoordinateRelative H) :=
   abstractFixedFieldCyclotomicFiniteLayer H E
 
+/-- The base field for an abstract fixed-field Artin coordinate carries its rational algebra
+structure. -/
 noncomputable local instance
     cyclotomicAbstractFixedFieldArtinCoordinateBaseAlgebra
     (H : FiniteAbstractField
@@ -1541,6 +1545,7 @@ noncomputable local instance
   NumberField.of_module_finite ℚ
     (cyclotomicAbstractFixedFieldArtinCoordinateBase H)
 
+/-- The rational separable closure is an algebra over the base field of an Artin coordinate. -/
 noncomputable local instance
     cyclotomicAbstractFixedFieldArtinCoordinateBaseSeparableAlgebra
     (H : FiniteAbstractField
@@ -1551,6 +1556,7 @@ noncomputable local instance
   IntermediateField.toAlgebra
     (cyclotomicAbstractFixedFieldArtinCoordinateBase H)
 
+/-- The relative cyclotomic field of an Artin coordinate is an algebra over its base field. -/
 noncomputable local instance
     cyclotomicAbstractFixedFieldArtinCoordinateRelativeAlgebra
     (H : FiniteAbstractField
@@ -1578,6 +1584,8 @@ noncomputable local instance
       (cyclotomicAbstractFixedFieldArtinCoordinateRelative H) :=
   abstractFixedFieldCyclotomic_isAbelianGalois H
 
+/-- A finite Galois cyclotomic coordinate carries its intermediate-field rational algebra
+structure. -/
 noncomputable local instance
     cyclotomicAbstractFixedFieldArtinCoordinateAlgebra
     (E :
@@ -1610,6 +1618,7 @@ local instance
     Normal ℚ E :=
   E.isGalois.to_normal
 
+/-- A finite cyclotomic coordinate layer is an algebra over the abstract fixed base field. -/
 noncomputable local instance
     cyclotomicAbstractFixedFieldArtinCoordinateLayerBaseAlgebra
     (H : FiniteAbstractField
@@ -1622,6 +1631,7 @@ noncomputable local instance
       (cyclotomicAbstractFixedFieldArtinCoordinateLayer H E) :=
   (abstractFixedFieldCyclotomicFiniteGaloisLayer H E).algebra'
 
+/-- A finite cyclotomic coordinate layer carries its rational algebra structure. -/
 noncomputable local instance
     cyclotomicAbstractFixedFieldArtinCoordinateLayerRatAlgebra
     (H : FiniteAbstractField
@@ -1678,6 +1688,7 @@ noncomputable local instance
       (abstractFixedFieldCyclotomicFiniteGaloisLayer H E) :=
   abstractFixedFieldCyclotomicFiniteLayer_numberField H E
 
+/-- A finite cyclotomic coordinate layer is an algebra over the chosen cyclotomic field. -/
 noncomputable local instance
     cyclotomicAbstractFixedFieldArtinCoordinateLayerAlgebra
     (H : FiniteAbstractField
@@ -1687,8 +1698,9 @@ noncomputable local instance
         ℚ rationalCyclotomicZHatField) :
     Algebra E
       (cyclotomicAbstractFixedFieldArtinCoordinateLayer H E) :=
-  abstractFixedFieldCyclotomicFiniteLayer_layerAlgebra H E
+  abstractFixedFieldCyclotomicFiniteLayerLayerAlgebra H E
 
+/-- The chosen cyclotomic field acts on its finite coordinate layer through the layer algebra. -/
 noncomputable local instance
     cyclotomicAbstractFixedFieldArtinCoordinateLayerSMul
     (H : FiniteAbstractField
@@ -1698,7 +1710,7 @@ noncomputable local instance
         ℚ rationalCyclotomicZHatField) :
     SMul E
       (cyclotomicAbstractFixedFieldArtinCoordinateLayer H E) :=
-  abstractFixedFieldCyclotomicFiniteLayer_layerSMul H E
+  abstractFixedFieldCyclotomicFiniteLayerLayerSMul H E
 
 local instance
     cyclotomicAbstractFixedFieldArtinCoordinateLayerScalarTower
@@ -1711,6 +1723,7 @@ local instance
       (cyclotomicAbstractFixedFieldArtinCoordinateLayer H E) :=
   abstractFixedFieldCyclotomicFiniteLayer_layerScalarTower H E
 
+/-- The relative cyclotomic field is an algebra over each finite coordinate layer. -/
 noncomputable local instance
     cyclotomicAbstractFixedFieldArtinCoordinateLayerRelativeAlgebra
     (H : FiniteAbstractField
@@ -2276,7 +2289,7 @@ theorem
           (QuotientGroup.mk'
             (IdeleGroup.principalSubgroup F) a)) := by
   have hSeparableClosureAlgebra :
-      cyclotomicAbstractFixedFieldArtin_separableClosureAlgebra =
+      cyclotomicAbstractFixedFieldArtinSeparableClosureAlgebra =
         rationalSeparableClosureAlgebra :=
     Subsingleton.elim _ _
   cases hSeparableClosureAlgebra
@@ -2309,7 +2322,6 @@ theorem
 /-- The genuine infinite global Artin symbol of the cyclotomic
 maximal-unramified extension kills every principal idele of the
 abstract fixed field. -/
-@[simp]
 theorem
     infiniteGlobalArtinMonoidHom_abstractFixedFieldCyclotomic_principalIdele
     (H : FiniteAbstractField
@@ -2404,7 +2416,6 @@ noncomputable def abstractFixedFieldCyclotomicIdeleClassArtinMonoidHom
 
 /-- Evaluation of the descended maximal-unramified Artin map on an
 idele representative. -/
-@[simp]
 theorem abstractFixedFieldCyclotomicIdeleClassArtinMonoidHom_mk
     (H : FiniteAbstractField
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
@@ -2465,7 +2476,7 @@ theorem
   let : NumberField F :=
     NumberField.of_module_finite ℚ F
   have hSeparableClosureAlgebra :
-      cyclotomicAbstractFixedFieldArtin_separableClosureAlgebra =
+      cyclotomicAbstractFixedFieldArtinSeparableClosureAlgebra =
         rationalSeparableClosureAlgebra :=
     Subsingleton.elim _ _
   cases hSeparableClosureAlgebra

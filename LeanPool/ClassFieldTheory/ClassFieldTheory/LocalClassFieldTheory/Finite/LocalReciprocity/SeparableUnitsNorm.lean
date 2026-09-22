@@ -21,7 +21,8 @@ open ClassFormation CyclicCohomology
 # Finite local reciprocity: the abstract norm on separable-closure units
 
 The coefficient module in local class field theory is the unit group of a
-separable closure.  This file compares the norm defined in the abstract class-formation framework by a
+separable closure.  This file compares the norm defined in the abstract class-formation framework by
+  a
 sum over abstract Galois cosets with the ordinary field norm.  The comparison
 is proved first for an arbitrary (possibly infinite) Galois ambient field, so
 it does not require the ground field to be perfect.

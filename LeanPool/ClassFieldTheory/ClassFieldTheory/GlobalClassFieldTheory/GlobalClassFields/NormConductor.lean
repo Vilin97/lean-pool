@@ -30,7 +30,7 @@ finite places.  The full conductor, including an archimedean component,
 is deliberately not defined here.
 -/
 
-open scoped NumberField Classical IsMulCommutative
+open scoped NumberField IsMulCommutative
 
 noncomputable section
 
@@ -45,6 +45,7 @@ variable
     [Field L] [NumberField L] [Algebra K L]
     [FiniteDimensional K L] [IsGalois K L]
 
+open scoped Classical in
 /-- Fix the canonical commutative idèle-class structure used by the norm
 quotients in this module. -/
 local instance normConductorIdeleClassGroupIsMulCommutative
@@ -52,7 +53,10 @@ local instance normConductorIdeleClassGroupIsMulCommutative
     IsMulCommutative (IdeleClassGroup F) :=
   ⟨⟨fun a b => mul_comm a b⟩⟩
 
+attribute [local instance] normConductorIdeleClassGroupIsMulCommutative
+
 omit [NumberField L] in
+open scoped Classical in
 /-- Every chosen finite-place norm subgroup contains a local
 higher-unit group.  This is the local source used to construct an
 actual defining modulus. -/
@@ -79,6 +83,7 @@ theorem exists_localHigherUnitGroup_le_chosenFinitePlaceLocalNormSubgroup
     RayClass.exists_localHigherUnitGroup_subset v hnormNhds
   exact ⟨n, fun _ hx => hn hx⟩
 
+open scoped Classical in
 /-- The least higher-unit exponent whose group lies in the chosen
 finite-place norm subgroup. -/
 noncomputable def ideleClassNormLocalHigherUnitExponent
@@ -88,6 +93,7 @@ noncomputable def ideleClassNormLocalHigherUnitExponent
       (K := K) (L := L) v)
 
 omit [NumberField L] in
+open scoped Classical in
 /-- The local higher-unit group at the selected exponent lies in the
 chosen local norm subgroup. -/
 theorem ideleClassNormLocalHigherUnitExponent_spec
@@ -102,6 +108,7 @@ theorem ideleClassNormLocalHigherUnitExponent_spec
       (K := K) (L := L) v)
 
 omit [NumberField L] in
+open scoped Classical in
 /-- The selected local higher-unit exponent is minimal among all
 exponents whose higher-unit group lies in the chosen local norm
 subgroup. -/
@@ -120,6 +127,7 @@ theorem ideleClassNormLocalHigherUnitExponent_min
     hn
 
 omit [NumberField L] in
+open scoped Classical in
 /-- The selected local exponent is zero exactly when every integral unit
 of the finite-place completion is a norm from the chosen localized
 extension. -/
@@ -143,6 +151,7 @@ theorem ideleClassNormLocalHigherUnitExponent_eq_zero_iff
     simpa only [RayClass.localHigherUnitGroup_zero] using hunits
 
 omit [NumberField L] in
+open scoped Classical in
 /-- At an unramified chosen completion, the selected local exponent is
 zero because the whole local integral-unit group consists of norms. -/
 theorem ideleClassNormLocalHigherUnitExponent_eq_zero_of_chosenUnramified
@@ -161,6 +170,7 @@ theorem ideleClassNormLocalHigherUnitExponent_eq_zero_of_chosenUnramified
     _root_.adicCompletionIntegerUnits_le_chosenFinitePlaceLocalNormSubgroup
       (K := K) (L := L) v hunram
 
+open scoped Classical in
 /-- Outside the finite set of ramified base places, the selected local
 higher-unit exponent is zero. -/
 theorem ideleClassNormLocalHigherUnitExponent_eq_zero_of_not_mem_ramified
@@ -188,6 +198,7 @@ theorem ideleClassNormLocalHigherUnitExponent_eq_zero_of_not_mem_ramified
         (_root_.chosenFinitePlaceExtension (L := L) v),
       hram⟩
 
+open scoped Classical in
 /-- A finite modulus built from the actual local norm subgroups.  Its
 support is contained in the finite set of ramified base places. -/
 noncomputable def ideleClassNormDefiningModulus :
@@ -203,6 +214,7 @@ noncomputable def ideleClassNormDefiningModulus :
           (ideleClassNormLocalHigherUnitExponent_eq_zero_of_not_mem_ramified
             (K := K) (L := L) v hvRamified))
 
+open scoped Classical in
 /-- Evaluation of the actual norm defining modulus is the selected local
 higher-unit exponent. -/
 @[simp]
@@ -213,6 +225,7 @@ theorem ideleClassNormDefiningModulus_apply
         (K := K) (L := L) v :=
   Finsupp.onFinset_apply
 
+open scoped Classical in
 /-- The local higher-unit group prescribed by the actual norm defining
 modulus lies in the chosen local norm subgroup at every finite place. -/
 theorem ideleClassNormDefiningModulus_local_spec
@@ -226,6 +239,7 @@ theorem ideleClassNormDefiningModulus_local_spec
     ideleClassNormLocalHigherUnitExponent_spec
       (K := K) (L := L) v
 
+open scoped Classical in
 /-- The norm defining modulus is pointwise minimal among all moduli whose
 prescribed local higher-unit groups consist of chosen local norms. -/
 theorem ideleClassNormDefiningModulus_le_of_localHigherUnitGroup_le
@@ -242,6 +256,7 @@ theorem ideleClassNormDefiningModulus_le_of_localHigherUnitGroup_le
     ideleClassNormLocalHigherUnitExponent_min
       (K := K) (L := L) v (hm v)
 
+open scoped Classical in
 /-- A finite place occurs in the constructed norm modulus exactly when
 some integral unit at that place is not a norm from the chosen localized
 extension. -/
@@ -260,6 +275,7 @@ theorem mem_ideleClassNormDefiningModulus_support_iff
       (ideleClassNormLocalHigherUnitExponent_eq_zero_iff
         (K := K) (L := L) v)
 
+open scoped Classical in
 /-- The constructed defining modulus is supported only at ramified
 finite places of the base field. -/
 theorem ideleClassNormDefiningModulus_support_subset_ramifiedBaseFinitePlaces :
@@ -278,6 +294,7 @@ theorem ideleClassNormDefiningModulus_support_subset_ramifiedBaseFinitePlaces :
       (K := K) (L := L) v hvRamified] at hne
   exact hne rfl
 
+open scoped Classical in
 /-- The raw idele congruence subgroup of the constructed modulus lies
 in the image of the actual relative-idele norm. -/
 theorem
@@ -310,6 +327,7 @@ theorem
           ha.2 v
     simpa only [IdeleGroup.finiteComponent_apply] using hv
 
+open scoped Classical in
 /-- The explicitly constructed modulus is a defining modulus for the
 actual idele-class norm subgroup. -/
 theorem ideleClassNormDefiningModulus_isDefiningModulus :
@@ -354,6 +372,7 @@ theorem ideleClassNormDefiningModulus_isDefiningModulus :
     rw [haOne]
     exact ((_root_.ideleClassNorm K L).range).one_mem
 
+open scoped Classical in
 /-- The conductorial subgroup supplied by the actual idèle-class norm
 range and its explicitly constructed defining modulus. -/
 noncomputable def ideleClassNormConductorialSubgroup :
@@ -364,12 +383,14 @@ noncomputable def ideleClassNormConductorialSubgroup :
       ideleClassNormDefiningModulus_isDefiningModulus
         (K := K) (L := L)⟩⟩
 
+open scoped Classical in
 /-- The narrow finite conductor of the actual idèle-class norm range. -/
 noncomputable def ideleClassNormNarrowFiniteConductor :
     RayClass.FiniteModulus K :=
   (ideleClassNormConductorialSubgroup
     (K := K) (L := L)).narrowFiniteConductor
 
+open scoped Classical in
 /-- The actual idele-class norm subgroup is open in the ordinary
 idele-class topology. -/
 theorem ideleClassNorm_range_isOpen :
@@ -381,6 +402,7 @@ theorem ideleClassNorm_range_isOpen :
     (ideleClassNormConductorialSubgroup
       (K := K) (L := L)).isOpen
 
+open scoped Classical in
 /-- The actual idele-class norm subgroup is closed. -/
 theorem ideleClassNorm_range_isClosed :
     IsClosed
@@ -390,12 +412,14 @@ theorem ideleClassNorm_range_isClosed :
   (ideleClassNormConductorialSubgroup
     (K := K) (L := L)).isClosed
 
+open scoped Classical in
 /-- The actual idele-class norm subgroup has finite index. -/
 instance ideleClassNorm_rangeFiniteIndex :
     ((_root_.ideleClassNorm K L).range).FiniteIndex :=
   ConductorialSubgroup.finiteIndex
     (ideleClassNormConductorialSubgroup (K := K) (L := L))
 
+open scoped Classical in
 /-- The narrow finite conductor itself is a defining modulus for the actual
 idele-class norm subgroup. -/
 theorem ideleClassNorm_narrowFiniteConductor_isDefiningModulus :
@@ -406,6 +430,7 @@ theorem ideleClassNorm_narrowFiniteConductor_isDefiningModulus :
   (ideleClassNormConductorialSubgroup
     (K := K) (L := L)).narrowFiniteConductor_isDefiningModulus
 
+open scoped Classical in
 /-- The canonical quotient map from the ray class group at the actual
 narrow finite norm conductor onto the actual idèle-class norm quotient. -/
 noncomputable def
@@ -425,9 +450,9 @@ noncomputable def
       ideleClassNorm_narrowFiniteConductor_isDefiningModulus
         (K := K) (L := L) hx)
 
+open scoped Classical in
 /-- The narrow finite conductor ray-class quotient map sends an idèle class to its
 class modulo the actual norm subgroup. -/
-@[simp]
 theorem narrowFiniteConductorRayClassGroupToIdeleClassNormQuotient_mk
     (x : IdeleClassGroup K) :
     narrowFiniteConductorRayClassGroupToIdeleClassNormQuotient
@@ -441,6 +466,7 @@ theorem narrowFiniteConductorRayClassGroupToIdeleClassNormQuotient_mk
         ((_root_.ideleClassNorm K L).range) x :=
   rfl
 
+open scoped Classical in
 /-- The canonical map from the conductor ray class group to the actual
 idele-class norm quotient is surjective. -/
 theorem
@@ -460,6 +486,7 @@ theorem
               (K := K) (L := L)))) x,
       rfl⟩
 
+open scoped Classical in
 /-- The kernel of the conductor ray-class quotient map is the image of
 the actual norm subgroup modulo the conductor congruence subgroup. -/
 theorem
@@ -491,6 +518,7 @@ theorem
           ideleClassNorm_narrowFiniteConductor_isDefiningModulus
             (K := K) (L := L) hx))
 
+open scoped Classical in
 /-- Quotienting the conductor ray class group by the image of the actual
 norm subgroup recovers the actual idele-class norm quotient. -/
 noncomputable def
@@ -517,6 +545,7 @@ noncomputable def
       (narrowFiniteConductorRayClassGroupToIdeleClassNormQuotient_surjective
         (K := K) (L := L)))
 
+open scoped Classical in
 /-- The conductor ray class number factors as the order of the norm
 subgroup modulo conductor congruence times the order of the actual
 idele-class norm quotient. -/
@@ -576,6 +605,7 @@ theorem
         narrowFiniteConductorRayClassGroupToIdeleClassNormQuotient_ker
           (K := K) (L := L)]
 
+open scoped Classical in
 /-- The order of the actual idèle-class norm quotient divides the order of
 the ray class group at its narrow finite conductor. -/
 theorem
@@ -593,6 +623,7 @@ theorem
       (ideleClassNorm_narrowFiniteConductor_isDefiningModulus
         (K := K) (L := L))
 
+open scoped Classical in
 /-- The narrow finite conductor of the actual norm subgroup is bounded by
 the modulus obtained from the chosen local norm subgroups. -/
 theorem ideleClassNorm_narrowFiniteConductor_le_normDefiningModulus :
@@ -603,6 +634,7 @@ theorem ideleClassNorm_narrowFiniteConductor_le_normDefiningModulus :
     (ideleClassNormDefiningModulus_isDefiningModulus
       (K := K) (L := L))
 
+open scoped Classical in
 /-- At every finite place, the exponent of the narrow finite conductor of
 the actual norm subgroup is bounded by the least higher-unit depth already
 contained in the chosen local norm subgroup. -/
@@ -620,6 +652,7 @@ theorem ideleClassNorm_narrowFiniteConductor_apply_le_localHigherUnitExponent
     RayClass.Modulus.finitePart_narrowOfFinite,
     ideleClassNormDefiningModulus_apply] using hle v
 
+open scoped Classical in
 /-- Every finite prime occurring in the narrow finite conductor of the
 actual norm subgroup already occurs in the modulus constructed from the
 chosen local norm subgroups. -/
@@ -641,6 +674,7 @@ theorem
     ((ideleClassNorm_narrowFiniteConductor_le_normDefiningModulus
       (K := K) (L := L) v).trans_eq hlocal_zero)
 
+open scoped Classical in
 /-- If the zeroth one-place higher-unit class subgroup lies in the
 actual idèle-class norm range, then that finite place is absent from
 the narrow finite conductor support. -/
@@ -664,6 +698,7 @@ theorem
       ((ideleClassNormConductorialSubgroup
         (K := K) (L := L)).narrowFiniteLocalConductorExponent_le v hlocal)
 
+open scoped Classical in
 /-- If the chosen prime of `L` above `v` is algebraically unramified,
 then `v` does not occur in the conductor of the actual idele-class norm
 subgroup. -/
@@ -685,6 +720,7 @@ theorem
     localHigherUnitClassSubgroup_zero_le_ideleClassNorm_range_of_isUnramifiedAt
       (K := K) (L := L) v hunram
 
+open scoped Classical in
 /-- A finite place which splits completely does not occur in the narrow
 finite conductor of the actual idèle-class norm subgroup. -/
 theorem
@@ -706,6 +742,7 @@ theorem
       (K := K) (L := L) v hsplit
   exact ⟨x, rfl⟩
 
+open scoped Classical in
 /-- The narrow finite conductor of an actual finite Galois idèle-class norm
 subgroup is supported only at ramified finite places of the base field. -/
 theorem ideleClassNorm_narrowFiniteConductor_support_subset_ramifiedBaseFinitePlaces :

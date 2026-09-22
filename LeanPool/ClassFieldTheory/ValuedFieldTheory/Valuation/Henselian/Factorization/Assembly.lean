@@ -51,7 +51,7 @@ theorem henselFactorization_exists_limit_factorization_of_coprime_lifts_valuatio
       (IsLocalRing.residue R) IsLocalRing.residue_surjective
       hcop hg0map hh0map with
     ⟨a, b, hbez⟩
-  let S := henselFactorization_twoPolynomialCoeffFinset
+  let S := henselFactorizationTwoPolynomialCoeffFinset
     (f - g0 * h0) (a * g0 + b * h0 - 1)
   by_cases hs : S.Nonempty
   · rcases henselFactorization_exists_pi_factor_initial_errors_of_residue_lifts_of_nonempty
@@ -69,7 +69,7 @@ theorem henselFactorization_exists_limit_factorization_of_coprime_lifts_valuatio
       hf hg0map hh0map hg0nat hgbar_nat hglead hh0deg
       hfactor0 hbezFactor hmd
   · have hSempty :
-        henselFactorization_twoPolynomialCoeffFinset
+        henselFactorizationTwoPolynomialCoeffFinset
           (f - g0 * h0) (a * g0 + b * h0 - 1) = ∅ := by
       apply Finset.eq_empty_iff_forall_notMem.mpr
       intro x hx
@@ -112,7 +112,7 @@ theorem henselFactorization_exists_limit_factorization_of_coprime_lifts_valuatio
       (IsLocalRing.residue R) IsLocalRing.residue_surjective
       hcop hg0map hh0map with
     ⟨a, b, hbez⟩
-  let S := henselFactorization_twoPolynomialCoeffFinset
+  let S := henselFactorizationTwoPolynomialCoeffFinset
     (f - g0 * h0) (a * g0 + b * h0 - 1)
   by_cases hs : S.Nonempty
   · rcases henselFactorization_exists_pi_factor_initial_errors_of_residue_lifts_of_nonempty
@@ -134,7 +134,7 @@ theorem henselFactorization_exists_limit_factorization_of_coprime_lifts_valuatio
       hf hg0map hh0map hg0nat hgbar_nat hglead hh0deg
       hfactor0 hbezFactor hmd
   · have hSempty :
-        henselFactorization_twoPolynomialCoeffFinset
+        henselFactorizationTwoPolynomialCoeffFinset
           (f - g0 * h0) (a * g0 + b * h0 - 1) = ∅ := by
       apply Finset.eq_empty_iff_forall_notMem.mpr
       intro x hx

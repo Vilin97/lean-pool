@@ -27,7 +27,8 @@ variable {K L : Type u} [Field K] [Field L] [Algebra K L]
 /-- the maximal-residue theorem, exact value-group equality for the maximal unramified
 subextension. -/
 theorem maximalUnramifiedSubextension_valueSubgroup_eq
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     (hhens : ValuationTheory.DiscreteValuationField.HenselianValuationByFactorization
       (LubinTate.Valuations.exponentialValuationSubringAsValuationSubring v).valuation) :
@@ -69,7 +70,8 @@ theorem maximalUnramifiedSubextension_valueSubgroup_eq
 /-- the maximal-residue theorem, the residue field of `T` embeds into the separable
 closure of the base residue field in the ambient residue field. -/
 theorem maximalUnramifiedSubextension_residue_fieldRange_le_separableClosure
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     (hhens : ValuationTheory.DiscreteValuationField.HenselianValuationByFactorization
       (LubinTate.Valuations.exponentialValuationSubringAsValuationSubring v).valuation) :

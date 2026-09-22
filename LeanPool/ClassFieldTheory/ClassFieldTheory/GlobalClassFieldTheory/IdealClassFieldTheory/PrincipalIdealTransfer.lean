@@ -29,7 +29,7 @@ small Hilbert tower and transport it to genuine idèle-class extension and
 norm maps.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 
 noncomputable section
 
@@ -44,18 +44,25 @@ open Reciprocity
 
 variable (K : Type) [Field K] [NumberField K]
 
+open scoped Classical in
 local instance
     principalIdealTransferIdeleClassGroupIsMulCommutative
     {F : Type} [Field F] [NumberField F] :
     IsMulCommutative (IdeleClassGroup F) :=
   ⟨⟨fun a b => mul_comm a b⟩⟩
 
+attribute [local instance] principalIdealTransferIdeleClassGroupIsMulCommutative
+
+open scoped Classical in
 local instance
     principalIdealTransferIdeleClassSubgroupNormal
     {F : Type} [Field F] [NumberField F]
     (N : Subgroup (IdeleClassGroup F)) : N.Normal :=
   N.normal_of_isMulCommutative
 
+attribute [local instance] principalIdealTransferIdeleClassSubgroupNormal
+
+open scoped Classical in
 /-- Extension-range containment descends along the lower leg of a finite
 Galois tower. -/
 private theorem ideleClassExtension_range_le_of_intermediate
@@ -79,6 +86,7 @@ private theorem ideleClassExtension_range_le_of_intermediate
   rw [← hcomp]
   exact hcontainment ⟨ideleClassExtension F E c, rfl⟩
 
+open scoped Classical in
 /-- Internal bridge from the opaque rational transfer endpoint to the
 explicit relative norm range used by the selected tower. -/
 private theorem
@@ -182,6 +190,7 @@ private theorem
     at hmembership
   exact hmembership
 
+open scoped Classical in
 /-- The commutator transfer supplies the canonical zero class used by the
 rational finite-norm bridge. -/
 private theorem
@@ -261,6 +270,7 @@ private theorem
   simpa only [a, S] using
     (transportInclude H T hmiddle htop hTH hHK)
 
+open scoped Classical in
 /-- The selected two-stage tower supplies a canonical zero finite-norm class
 for every idele class over its base fixed field. -/
 @[irreducible]
@@ -284,6 +294,7 @@ private noncomputable def
       (hKfinite := K₀.finite) (hHLfinite := hHMfinite)
       K₀.field H N.field hHK hMH c
 
+open scoped Classical in
 private theorem
     smallHilbertClassFieldCanonicalFiniteNormClassZeroStatement_proof :
     smallHilbertClassFieldCanonicalFiniteNormClassZeroStatement K := by
@@ -322,6 +333,7 @@ private theorem
       (hHTfinite := hHMfinite)
       K₀ M H N.field hMH hHK hmiddle htop c
 
+open scoped Classical in
 /-- The canonical zero classes of the selected tower satisfy the opaque
 rational relative norm-membership endpoint. -/
 @[irreducible]
@@ -356,6 +368,7 @@ private noncomputable def
       (hHLfinite := hHMfinite)
       K₀.field H N.field hHK hMH hHKnormal hMHnormal c
 
+open scoped Classical in
 private theorem
     smallHilbertClassFieldCanonicalNormMembershipStatement_proof :
     smallHilbertClassFieldCanonicalNormMembershipStatement K := by
@@ -406,6 +419,7 @@ private theorem
       K₀.field H N.field hHK hMH hHKnormal hMHnormal
       c hincludeCanonical
 
+open scoped Classical in
 /-- The selected rational transfer endpoint, exposed on the explicit
 relative fixed-field spine used by the tower containment. -/
 private noncomputable abbrev
@@ -505,10 +519,12 @@ private noncomputable abbrev
       (hKfinite := K₀.finite) K₀.field,
     ideleClassExtension F E c ∈ (_root_.ideleClassNorm E U).range
 
+open scoped Classical in
 private structure SmallHilbertClassFieldExplicitNormMembershipData
-    (K : Type) [Field K] [NumberField K] : Type where
+    (K : Type) [Field K] [NumberField K] : Prop where
   membership : smallHilbertClassFieldExplicitNormMembershipStatement K
 
+open scoped Classical in
 private noncomputable def
     smallHilbertClassFieldExplicitNormMembershipData_proof :
     SmallHilbertClassFieldExplicitNormMembershipData K where
@@ -564,6 +580,7 @@ private noncomputable def
         (hHfinite := hHfinite) (hHLfinite := hHMfinite)
         K₀.field H N.field hHK hMH hHKnormal hMHnormal c hmembership
 
+open scoped Classical in
 /-- The named proposition underlying the fixed-field-base form of the
 two-stage transfer containment.  Keeping the dependent idele maps behind one
 opaque boundary prevents every consumer from reconstructing their instance
@@ -576,6 +593,7 @@ noncomputable def smallHilbertClassFieldBaseSecondNormRangeContainment : Prop :=
       smallHilbertClassFieldNormSubgroup
         (K := smallHilbertClassField K)
 
+open scoped Classical in
 /-- Witt transfer for the genuine selected two-stage tower: every
 idele class extended from the selected base fixed field to the first
 small Hilbert class field is a norm from the actual second stage. -/
@@ -605,6 +623,7 @@ theorem
         (smallHilbertTowerSecondStage_ideleClassNorm_range K))
       (hrawMembershipAll c)
 
+open scoped Classical in
 /-- The named proposition underlying the original-base form of the two-stage
 transfer containment. -/
 @[irreducible]
@@ -613,10 +632,12 @@ noncomputable def smallHilbertClassFieldSecondNormRangeContainment : Prop :=
       smallHilbertClassFieldNormSubgroup
         (K := smallHilbertClassField K)
 
+open scoped Classical in
 private structure SmallHilbertClassFieldSecondNormRangeContainmentData
-    (K : Type) [Field K] [NumberField K] : Type where
+    (K : Type) [Field K] [NumberField K] : Prop where
   containment : smallHilbertClassFieldSecondNormRangeContainment K
 
+open scoped Classical in
 private noncomputable def
     smallHilbertClassFieldSecondNormRangeContainmentData_proof :
     SmallHilbertClassFieldSecondNormRangeContainmentData K where
@@ -634,6 +655,7 @@ private noncomputable def
         (smallHilbertClassFieldNormSubgroup
           (K := smallHilbertClassField K)) hbase
 
+open scoped Classical in
 /-- Every idele class extended from the original number field to its
 selected small Hilbert class field is a norm from the actual second
 stage.  This is the original-base form of the middle vertical arrow in

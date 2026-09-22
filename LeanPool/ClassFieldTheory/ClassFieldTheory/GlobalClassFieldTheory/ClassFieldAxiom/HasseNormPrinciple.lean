@@ -387,7 +387,7 @@ def allInfinitePlaceLocalNormCondition
     {K L : Type}
     [Field K] [NumberField K]
     [Field L] [Algebra K L]
-  [FiniteDimensional K L] :
+  :
     Subgroup (IdeleGroup K) :=
   ⨅ v : InfinitePlace K,
     (Units.map
@@ -479,7 +479,7 @@ theorem relativeIdeleNorm_range_eq_allPlaceLocalNormCondition
 def globalFieldNormSubgroup
     (K L : Type)
     [Field K] [Field L] [Algebra K L]
-    [FiniteDimensional K L] :
+    :
     Subgroup Kˣ :=
   (Units.map
     (Algebra.norm K : L →* K)).range
@@ -520,8 +520,8 @@ relative ideles. -/
 noncomputable def principalIdeleHerbrandH0Map
     (K L : Type)
     [Field K] [NumberField K]
-    [Field L] [NumberField L] [Algebra K L]
-    [FiniteDimensional K L] [IsGalois K L] :
+    [Field L] [Algebra K L]
+    [FiniteDimensional K L] :
     letI :=
       RelativeIdeleGroup.Cohomology.relativeIdeleMulDistribMulAction K L
     letI :=
@@ -710,8 +710,8 @@ attribute [local instance]
 noncomputable def ideleClassToPrincipalConnecting
     (K L : Type)
     [Field K] [NumberField K]
-    [Field L] [NumberField L] [Algebra K L]
-    [FiniteDimensional K L] [IsGalois K L] :
+    [Field L] [Algebra K L]
+    [FiniteDimensional K L] :
     letI :=
       RelativeIdeleGroup.Cohomology.relativeIdeleMulDistribMulAction K L
     letI :=
@@ -865,8 +865,8 @@ end IdeleClassConnecting
 concrete global norm quotient `Kˣ / N_{L/K}(Lˣ)`. -/
 noncomputable def fieldUnitsHerbrandH0EquivGlobalNormQuotient
     (K L : Type)
-    [Field K] [NumberField K]
-    [Field L] [NumberField L] [Algebra K L]
+    [Field K]
+    [Field L] [Algebra K L]
     [FiniteDimensional K L] [IsGalois K L] :
     letI :=
       LocalClassFieldTheory.galoisGroupFieldUnitsMulDistribMulAction K L
@@ -927,9 +927,9 @@ noncomputable def fieldUnitsToRelativeIdeleHerbrandH0
 field. -/
 noncomputable def baseFieldUnitAsFixedUnit
     (K L : Type)
-    [Field K] [NumberField K]
-    [Field L] [NumberField L] [Algebra K L]
-    [FiniteDimensional K L] [IsGalois K L]
+    [Field K]
+    [Field L] [Algebra K L]
+
     (x : Kˣ) :
     letI :=
       LocalClassFieldTheory.galoisGroupFieldUnitsMulDistribMulAction K L
@@ -1227,7 +1227,6 @@ noncomputable def hasseNormDiagonal
 
 /-- The Hasse norm diagonal sends the class of a field unit to the class
 of its principal idele. -/
-@[simp]
 theorem hasseNormDiagonal_mk
     {K L : Type}
     [Field K] [NumberField K]

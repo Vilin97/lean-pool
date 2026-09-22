@@ -17,7 +17,7 @@ ray quotient gives its genuine ideal-norm image.  This construction does not
 identify ideal norms with idèle-class norms.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -26,6 +26,7 @@ namespace ClassFieldTheory
 
 universe u v
 
+open scoped Classical in
 /-- Fractional ideals upstairs prime to the primes above a base ray modulus. -/
 def rayClassPrimeToIdealNormDomain
     (K : Type u) (L : Type v)
@@ -46,6 +47,7 @@ def rayClassPrimeToIdealNormDomain
     rw [Units.val_inv_eq_inv_val, FractionalIdeal.count_inv L W,
       hI W hW, neg_zero]
 
+open scoped Classical in
 /-- The exponent of a relative fractional-ideal norm at a finite prime is
 the inertia-degree-weighted sum of the exponents at the primes above it. -/
 theorem fractionalIdealNorm_count
@@ -86,6 +88,7 @@ theorem fractionalIdealNorm_count
   rw [he]
   simp [fractionalIdealNormExponentMap, Finsupp.single_apply, eq_comm]
 
+open scoped Classical in
 /-- The genuine fractional-ideal norm, restricted to ideals prime to the
 finite support of a base ray modulus. -/
 def rayClassPrimeToIdealNorm
@@ -122,6 +125,7 @@ def rayClassPrimeToIdealNorm
       (I : NumberFieldFractionalIdealGroup L)
       (J : NumberFieldFractionalIdealGroup L)
 
+open scoped Classical in
 /-- The relative ideal norm followed by the ideal-theoretic ray quotient. -/
 def rayClassIdealNorm
     (K : Type u) (L : Type v)
@@ -133,6 +137,7 @@ def rayClassIdealNorm
   (QuotientGroup.mk' (rayPrincipalIdealSubgroupInPrimeTo m)).comp
     (rayClassPrimeToIdealNorm K L m)
 
+open scoped Classical in
 /-- The actual ideal-norm subgroup of the ray class group.  Its equality
 with an Artin kernel is a separate reciprocity theorem. -/
 def rayClassIdealNormImage

@@ -455,7 +455,7 @@ noncomputable instance
 /-- The changed fixed field carries its canonical finite-extension spectral
 norm. -/
 noncomputable instance
-    padicCompletedChangedUniformizerFixedField_nontriviallyNormedField
+    padicCompletedChangedUniformizerFixedFieldNontriviallyNormedField
     (p : ℕ) [Fact p.Prime]
     (u : (padicLocalField p).valuationSubringˣ) (n : ℕ) :
     NontriviallyNormedField
@@ -466,7 +466,7 @@ noncomputable instance
 /-- The standard/changed compositum carries its canonical finite-extension
 spectral norm. -/
 noncomputable instance
-    padicCompletedStandardChangedCompositum_nontriviallyNormedField
+    padicCompletedStandardChangedCompositumNontriviallyNormedField
     (p : ℕ) [Fact p.Prime]
     (u : (padicLocalField p).valuationSubringˣ) (n : ℕ) :
     NontriviallyNormedField
@@ -477,7 +477,7 @@ noncomputable instance
 /-- The changed fixed field has the canonical valuative relation induced by
 its finite p-adic spectral norm. -/
 noncomputable instance
-    padicCompletedChangedUniformizerFixedField_valuativeRel
+    padicCompletedChangedUniformizerFixedFieldValuativeRel
     (p : ℕ) [Fact p.Prime]
     (u : (padicLocalField p).valuationSubringˣ) (n : ℕ) :
     ValuativeRel
@@ -488,7 +488,7 @@ noncomputable instance
 /-- The standard/changed compositum has the canonical valuative relation
 induced by its finite p-adic spectral norm. -/
 noncomputable instance
-    padicCompletedStandardChangedCompositum_valuativeRel
+    padicCompletedStandardChangedCompositumValuativeRel
     (p : ℕ) [Fact p.Prime]
     (u : (padicLocalField p).valuationSubringˣ) (n : ℕ) :
     ValuativeRel

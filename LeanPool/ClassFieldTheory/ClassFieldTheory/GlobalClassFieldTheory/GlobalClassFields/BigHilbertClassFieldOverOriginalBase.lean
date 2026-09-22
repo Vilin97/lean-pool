@@ -15,7 +15,7 @@ the selected field is a finite abelian Galois extension of the original
 number field, with degree equal to the narrow class number.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 
 noncomputable section
 
@@ -24,12 +24,14 @@ namespace GlobalClassFields
 
 variable (K : Type) [Field K] [NumberField K]
 
+open scoped Classical in
 /-- The canonical base fixed field of the big Hilbert realization,
 regarded as an algebra over the original number field. -/
 noncomputable instance bigHilbertClassFieldBaseAlgebraOverOriginal :
     Algebra K (bigHilbertClassFieldBase K) :=
   (bigHilbertClassFieldBaseEquiv (K := K)).toRingHom.toAlgebra
 
+open scoped Classical in
 /-- The canonical base-field identification as an equivalence of
 algebras over the original number field. -/
 noncomputable def bigHilbertClassFieldBaseEquivOverOriginal :
@@ -39,6 +41,7 @@ noncomputable def bigHilbertClassFieldBaseEquivOverOriginal :
       (bigHilbertClassFieldBaseEquiv (K := K)).toRingEquiv)
     (fun _ => rfl)
 
+open scoped Classical in
 /-- The selected big Hilbert class field as an algebra over the
 original number field. -/
 noncomputable instance bigHilbertClassFieldAlgebraOverOriginal :
@@ -49,6 +52,7 @@ noncomputable instance bigHilbertClassFieldAlgebraOverOriginal :
     (algebraMap K
       (bigHilbertClassFieldBase K))).toAlgebra
 
+open scoped Classical in
 /-- The scalar map into the selected big Hilbert class field is the
 canonical base equivalence followed by fixed-field inclusion. -/
 @[simp]
@@ -61,6 +65,7 @@ theorem bigHilbertClassField_algebraMap_original
         (bigHilbertClassFieldBaseEquiv (K := K) x) :=
   rfl
 
+open scoped Classical in
 /-- The canonical base fixed field has degree one over the original
 number field. -/
 noncomputable instance
@@ -69,6 +74,7 @@ noncomputable instance
   (bigHilbertClassFieldBaseEquivOverOriginal K)
     |>.toLinearEquiv.finiteDimensional
 
+open scoped Classical in
 /-- The original field, its fixed-field copy, and the selected big
 Hilbert class field form the literal scalar tower. -/
 noncomputable instance bigHilbertClassFieldScalarTowerOverOriginal :
@@ -77,6 +83,7 @@ noncomputable instance bigHilbertClassFieldScalarTowerOverOriginal :
       (bigHilbertClassField K) :=
   IsScalarTower.of_algebraMap_eq' rfl
 
+open scoped Classical in
 /-- The selected big Hilbert class field is finite-dimensional over
 the original number field. -/
 noncomputable instance
@@ -86,6 +93,7 @@ noncomputable instance
     (bigHilbertClassFieldBase K)
     (bigHilbertClassField K)
 
+open scoped Classical in
 /-- The canonical base fixed field has relative degree one. -/
 @[simp]
 theorem bigHilbertClassFieldBase_finrank_over_original :
@@ -94,6 +102,7 @@ theorem bigHilbertClassFieldBase_finrank_over_original :
     (LinearEquiv.finrank_eq
       (bigHilbertClassFieldBaseEquivOverOriginal K).toLinearEquiv).symm
 
+open scoped Classical in
 /-- The degree of the selected big Hilbert class field over the
 original number field is the order of the narrow class group. -/
 theorem bigHilbertClassField_finrank_over_original_eq_narrowClassGroup_card :
@@ -115,6 +124,7 @@ theorem bigHilbertClassField_finrank_over_original_eq_narrowClassGroup_card :
         (bigHilbertClassFieldQuotientEquivNarrowClassGroup
           (K := K)).toEquiv
 
+open scoped Classical in
 /-- The selected big Hilbert class field is Galois over the original
 number field. -/
 noncomputable instance bigHilbertClassFieldIsGaloisOverOriginal :
@@ -154,6 +164,7 @@ noncomputable instance bigHilbertClassFieldIsGaloisOverOriginal :
             (bigHilbertClassFieldBase K)
             (bigHilbertClassField K))) x := rfl
 
+open scoped Classical in
 /-- The selected big Hilbert class field is an abelian Galois
 extension of the original number field. -/
 noncomputable instance bigHilbertClassFieldIsAbelianGaloisOverOriginal :

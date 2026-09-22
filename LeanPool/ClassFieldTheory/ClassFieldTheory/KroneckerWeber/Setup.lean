@@ -89,11 +89,11 @@ noncomputable def kroneckerWeberPadicExtension
     @UniformSpace.Completion.algebra
       (WithAbs vK) _ _ _ _ ℚ _ hWith hUniform
   let hClosure : Algebra ℚ
-      (absoluteValueExtension_algebraicCompletionClosure vK) :=
+      (absoluteValueExtensionAlgebraicCompletionClosure vK) :=
     @AlgebraicClosure.instAlgebra vK.Completion _ ℚ _ hBase
   let : Algebra ℚ vK.Completion := hBase
   let : Algebra ℚ
-      (absoluteValueExtension_algebraicCompletionClosure vK) :=
+      (absoluteValueExtensionAlgebraicCompletionClosure vK) :=
     hClosure
   exact pullbackAbsoluteValueExtension
     vK

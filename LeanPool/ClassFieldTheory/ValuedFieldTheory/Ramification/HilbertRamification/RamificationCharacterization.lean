@@ -70,7 +70,7 @@ abbrev ramificationGroupInDecomposition
     Subgroup (decompositionGroup K A) :=
   Subgroup.map (inertiaGroup K A).subtype (ramificationGroup K A)
 /-- Membership in the transported ramification group is the intrinsic principal-unit condition. -/
-@[simp] theorem mem_ramificationGroupInDecomposition_iff
+theorem mem_ramificationGroupInDecomposition_iff
     (A : _root_.ValuationSubring L) (sigma : decompositionGroup K A) :
     sigma ∈ ramificationGroupInDecomposition K A ↔
       ∀ x : Lˣ,

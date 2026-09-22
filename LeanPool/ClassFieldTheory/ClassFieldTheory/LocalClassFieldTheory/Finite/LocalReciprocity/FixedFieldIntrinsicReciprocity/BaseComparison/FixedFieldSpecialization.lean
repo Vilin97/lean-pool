@@ -9,7 +9,8 @@ import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.L
 /-!
 # Intrinsic fixed-field specialization
 
-This module specializes the embedded subgroup and inertia comparisons to actual finite fixed fields and packages the intrinsic Frobenius quotient.
+This module specializes the embedded subgroup and inertia comparisons to actual finite fixed
+  fields and packages the intrinsic Frobenius quotient.
 -/
 
 noncomputable section

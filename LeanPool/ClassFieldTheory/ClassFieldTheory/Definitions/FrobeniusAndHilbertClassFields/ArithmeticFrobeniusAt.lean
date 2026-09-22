@@ -12,7 +12,7 @@ import Mathlib.RingTheory.Frobenius
 # Arithmetic Frobenius at a finite prime
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -21,6 +21,7 @@ namespace ClassFieldTheory
 
 universe u v
 
+open scoped Classical in
 /-- Mathlib's chosen arithmetic Frobenius lift at a finite prime of the
 extension field.  At a ramified prime such a lift need not be unique. -/
 def arithmeticFrobeniusAt

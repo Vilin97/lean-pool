@@ -282,7 +282,7 @@ theorem localTensorDetNorm_eq_prod_chosenCoordinates
             vK hvK w z q) := by
   classical
   let _ :=
-    completionTensorDecomposition_extensionFintype
+    completionTensorDecompositionExtensionFintype
       (K := K) (L := L) vK hvK
   let hK :=
     AbsoluteValue.extensionCompletionAlgebra (K := K) w.1
@@ -316,7 +316,7 @@ theorem localTensorDetNorm_eq_prod_chosenCoordinates
         (z : LocalTensorAlgebra (L := L) vK) =
       ∏ w' : AbsoluteValueExtension vK L,
         Algebra.norm vK.Completion
-          (completionTensorDecomposition_left
+          (completionTensorDecompositionLeft
             (K := K) (L := L) vK hvK
             (z : LocalTensorAlgebra (L := L) vK) w')
     at hnorm
@@ -324,7 +324,7 @@ theorem localTensorDetNorm_eq_prod_chosenCoordinates
   change
     (∏ w' : AbsoluteValueExtension vK L,
       Algebra.norm vK.Completion
-        (completionTensorDecomposition_left
+        (completionTensorDecompositionLeft
           (K := K) (L := L) vK hvK
           (z : LocalTensorAlgebra (L := L) vK) w')) =
       Units.coeHom vK.Completion
@@ -368,7 +368,7 @@ theorem localTensorNormSubgroup_eq_localNormSubgroup
         (LocalizedCompletion vK w) := by
   classical
   let _ :=
-    completionTensorDecomposition_extensionFintype
+    completionTensorDecompositionExtensionFintype
       (K := K) (L := L) vK hvK
   let hK :=
     AbsoluteValue.extensionCompletionAlgebra (K := K) w.1

@@ -104,7 +104,6 @@ theorem finiteAdeleComponentAlgHom_apply
     finiteAdeleComponentAlgHom v a = a.2 v :=
   rfl
 
-@[simp]
 theorem finiteAdeleComponentAlgHom_algebraMap
     (v : HeightOneSpectrum (𝓞 K)) (x : K) :
     finiteAdeleComponentAlgHom v
@@ -251,7 +250,6 @@ def localTensorNorm
 omit [NumberField L] in
 /-- The finite component of the global relative-idele norm is the
 determinant norm of the corresponding local tensor component. -/
-@[simp]
 theorem RelativeIdeleGroup.finiteComponent_norm
     (v : HeightOneSpectrum (𝓞 K))
     (a : RelativeIdeleGroup K L) :
@@ -278,7 +276,6 @@ theorem RelativeIdeleGroup.finiteComponent_norm
 omit [NumberField L] in
 /-- The infinite component of the global relative-idele norm is the
 determinant norm of the corresponding archimedean tensor component. -/
-@[simp]
 theorem RelativeIdeleGroup.infiniteComponent_norm
     (v : InfinitePlace K)
     (a : RelativeIdeleGroup K L) :

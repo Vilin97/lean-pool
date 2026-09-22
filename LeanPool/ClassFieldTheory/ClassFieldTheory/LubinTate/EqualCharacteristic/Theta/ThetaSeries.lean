@@ -11,7 +11,8 @@ import Mathlib.RingTheory.PowerSeries.Expand
 # LubinTate the equal-characteristic theta construction: the equal-characteristic theta series
 
 The coefficient recursion of the contracting Frobenius equation produces a sequence `b_j` in the
-completed maximal-unramified integer ring.  The series used in the completed theta-intertwining theorem is the
+completed maximal-unramified integer ring.  The series used in the completed theta-intertwining
+  theorem is the
 genuine sparse power series
 
 `theta(Y) = sum_j b_j Y^(q^j)`.
@@ -30,7 +31,8 @@ universe u v w
 namespace LubinTate
 namespace EqualCharacteristic
 
-local instance (p : Prop) : Decidable p := Classical.propDecidable p
+/-- Classical decidability for propositions used in the equal-characteristic theta series. -/
+local instance thetaSeriesPropDecidable (p : Prop) : Decidable p := Classical.propDecidable p
 
 variable (k : Type u) [Field k] [Finite k]
 

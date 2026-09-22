@@ -140,7 +140,7 @@ private theorem rationalTowerRelativeClass_norm
     [Algebra ℚ F] [Algebra F E] [Algebra ℚ E]
     [IsScalarTower ℚ F E]
     [FiniteDimensional ℚ F] [FiniteDimensional F E]
-    [IsGalois F E]
+
     (c : Additive (IdeleClassGroup E)) :
     let dF :=
       towerRelativeIdeleClassBaseChangeMulEquiv ℚ F E

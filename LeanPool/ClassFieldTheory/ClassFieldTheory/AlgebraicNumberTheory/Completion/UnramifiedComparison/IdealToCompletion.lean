@@ -15,7 +15,7 @@ actual chosen finite-place extension implies unramifiedness of its localized
 completion.
 -/
 
-open scoped NumberField Classical NNReal ValuativeRel
+open scoped NumberField NNReal ValuativeRel
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -31,6 +31,7 @@ variable
     [Field L] [NumberField L] [Algebra K L]
     [FiniteDimensional K L] [IsGalois K L]
 
+open scoped Classical in
 /-- A uniformizer of a finite-place completion induced by an element of the
 global integer ring, together with its valuation and comparison properties. -/
 structure FinitePlaceCompletionIntegralUniformizer
@@ -64,6 +65,7 @@ structure FinitePlaceCompletionIntegralUniformizer
         Ideal
           𝒪[ChosenFinitePlaceBaseCompletion (K := F) v])
 
+open scoped Classical in
 /-- A chosen global integral uniformizer and its image in a finite-place
 completion. -/
 noncomputable def chosenFinitePlaceCompletionIntegralUniformizer
@@ -183,6 +185,7 @@ noncomputable def chosenFinitePlaceCompletionIntegralUniformizer
       completionInteger_mem_maximalIdeal :=
         hπCompletionMaximal }
 
+open scoped Classical in
 /-- If the centre of the chosen finite-place extension has ramification
 index one, a global integral uniformizer remains a uniformizer after passing
 to the chosen localized completion. In particular it is not in the square of
@@ -308,6 +311,7 @@ theorem chosenFinitePlace_integral_uniformizer_not_mem_maximalIdeal_sq
     (targetDVF.uniformizer_not_mem_maximalIdeal_sq
       hπTargetUniformizer) hπTargetConcrete
 
+open scoped Classical in
 /-- Ramification index one at the global centre prevents the image of the
 completed base maximal ideal from lying in the square of the target maximal
 ideal. -/
@@ -349,6 +353,7 @@ theorem chosenFinitePlace_maximalIdeal_map_not_le_sq_of_centre_ramificationIdx_e
             (K := K) (L := L) v])
         πData.completionInteger_mem_maximalIdeal)
 
+open scoped Classical in
 /-- Ramification index one at the global centre gives ramification index one
 for the completed maximal ideals in the multiplicity formulation. -/
 theorem chosenFinitePlace_maximalIdeal_ramificationIdx'_eq_one_of_centre_ramificationIdx_eq_one
@@ -393,6 +398,7 @@ theorem chosenFinitePlace_maximalIdeal_ramificationIdx'_eq_one_of_centre_ramific
       (K := K) (L := L) v hglobal
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 /-- Ideal-theoretic unramifiedness gives ramification index one at the actual
 centre of the chosen finite-place extension. -/
 theorem finitePlaceExtensionCentre_ramificationIdx_eq_one_of_isUnramifiedAt
@@ -419,6 +425,7 @@ theorem finitePlaceExtensionCentre_ramificationIdx_eq_one_of_isUnramifiedAt
   let : Algebra.IsUnramifiedAt (𝓞 K) W.asIdeal := hunram
   exact Ideal.ramificationIdx_eq_one W.asIdeal (𝓞 K)
 
+open scoped Classical in
 /-- Ramification index one at the actual global centre gives ramification
 index one for the maximal ideals of the corresponding completed valued-field
 extension. -/
@@ -472,6 +479,7 @@ theorem chosenFinitePlace_maximalIdeal_ramificationIdx_eq_one_of_centre_ramifica
     chosenFinitePlace_maximalIdeal_ramificationIdx'_eq_one_of_centre_ramificationIdx_eq_one
       (K := K) (L := L) v hglobal
 
+open scoped Classical in
 /-- Ramification index one at the actual global centre implies
 unramifiedness of the corresponding completed valued-field extension. -/
 theorem chosenFinitePlaceIsUnramified_of_centre_ramificationIdx_eq_one
@@ -495,6 +503,7 @@ theorem chosenFinitePlaceIsUnramified_of_centre_ramificationIdx_eq_one
     chosenFinitePlace_maximalIdeal_ramificationIdx_eq_one_of_centre_ramificationIdx_eq_one
       (K := K) (L := L) v hglobal
 
+open scoped Classical in
 /-- Algebraic unramifiedness of the centre of the chosen extension
 implies unramifiedness of the corresponding completed valued-field
 extension. -/

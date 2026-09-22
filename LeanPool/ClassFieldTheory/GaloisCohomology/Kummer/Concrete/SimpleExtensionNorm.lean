@@ -23,6 +23,36 @@ namespace KummerTheory
 
 open scoped BigOperators
 
+/-- A group character's image and its quotient give coordinates on the target group. -/
+private noncomputable def quotientCharacterProductEquiv
+    {G M : Type*} [Group G] [CommGroup M]
+    (chi : G →* M) (hchi : Function.Injective chi) : (M ⧸ chi.range) × G ≃ M := by
+  classical
+  let indexMap : (M ⧸ chi.range) × G → M := fun p => Quotient.out p.1 * chi p.2
+  apply Equiv.ofBijective indexMap
+  constructor
+  · rintro ⟨q, sigma⟩ ⟨r, tau⟩ h
+    have hq : q = r := by
+      have hm := congrArg (fun z : M => (QuotientGroup.mk z : M ⧸ chi.range)) h
+      rw [QuotientGroup.mk_mul_of_mem _ (show chi sigma ∈ chi.range from ⟨sigma, rfl⟩),
+        QuotientGroup.mk_mul_of_mem _ (show chi tau ∈ chi.range from ⟨tau, rfl⟩)] at hm
+      simpa only [Quotient.out_eq'] using hm
+    subst r
+    have hsigma : sigma = tau := hchi (mul_left_cancel h)
+    subst tau
+    rfl
+  · intro z
+    let q : M ⧸ chi.range := QuotientGroup.mk z
+    have hrel : (Quotient.out q)⁻¹ * z ∈ chi.range := by
+      apply QuotientGroup.leftRel_apply.mp
+      exact @Quotient.exact' M (QuotientGroup.leftRel chi.range) _ _
+        (by simpa only [q] using Quotient.out_eq' q)
+    obtain ⟨sigma, hsigma⟩ := hrel
+    refine ⟨(q, sigma), ?_⟩
+    change Quotient.out q * chi sigma = z
+    rw [hsigma]
+    simp
+
 variable (K : Type) [Field K]
 
 /-- If both `a` and `1 - a` are nonzero, then `a` is a norm from the simple
@@ -55,39 +85,8 @@ theorem unit_mem_localNormSubgroup_chosenSimpleKummerExtension_one_sub
   have hchi : Function.Injective chi := by
     simpa only [chi, E] using
       chosenSimpleKummerRootCharacter_injective K n hnK hmu b
-  let indexMap : Q × Gal(E / K) → mu := fun p =>
-    Quotient.out p.1 * chi p.2
-  have indexMap_injective : Function.Injective indexMap := by
-    rintro ⟨q, sigma⟩ ⟨r, tau⟩ h
-    have hchi_sigma : chi sigma ∈ H := ⟨sigma, rfl⟩
-    have hchi_tau : chi tau ∈ H := ⟨tau, rfl⟩
-    have hq : q = r := by
-      have hm := congrArg
-        (fun z : mu => (QuotientGroup.mk z : Q)) h
-      rw [QuotientGroup.mk_mul_of_mem _ hchi_sigma,
-        QuotientGroup.mk_mul_of_mem _ hchi_tau] at hm
-      simpa only [Quotient.out_eq'] using hm
-    subst r
-    have hsigma : sigma = tau := by
-      apply hchi
-      exact mul_left_cancel h
-    subst tau
-    rfl
-  have indexMap_surjective : Function.Surjective indexMap := by
-    intro z
-    let q : Q := QuotientGroup.mk z
-    have hrel : (Quotient.out q) ⁻¹ * z ∈ H := by
-      apply QuotientGroup.leftRel_apply.mp
-      exact @Quotient.exact' mu (QuotientGroup.leftRel H) _ _
-        (by simpa only [q] using Quotient.out_eq' q)
-    change (Quotient.out q) ⁻¹ * z ∈ chi.range at hrel
-    rcases hrel with ⟨sigma, hsigma⟩
-    refine ⟨(q, sigma), ?_⟩
-    change Quotient.out q * chi sigma = z
-    rw [hsigma]
-    simp
   let indexEquiv : Q × Gal(E / K) ≃ mu :=
-    Equiv.ofBijective indexMap ⟨indexMap_injective, indexMap_surjective⟩
+    quotientCharacterProductEquiv chi hchi
   have indexEquiv_apply (q : Q) (sigma : Gal(E / K)) :
       indexEquiv (q, sigma) = Quotient.out q * chi sigma := by
     rfl

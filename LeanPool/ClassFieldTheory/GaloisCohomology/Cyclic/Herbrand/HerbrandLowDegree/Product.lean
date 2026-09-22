@@ -144,7 +144,9 @@ variable {ι : Type uι} (A : ι → Type uA)
 variable [∀ i, CommGroup (A i)]
 variable [∀ i, MulDistribMulAction G (A i)]
 
-local instance :
+/-- The componentwise multiplicative action on a dependent product distributes over
+multiplication. -/
+local instance fixedPiMulDistribMulAction :
     MulDistribMulAction G (∀ i, A i) :=
   piMulDistribMulAction G A
 

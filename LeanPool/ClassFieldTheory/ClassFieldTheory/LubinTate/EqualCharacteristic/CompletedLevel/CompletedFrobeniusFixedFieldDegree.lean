@@ -10,7 +10,8 @@ import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.
 # The completed theta-intertwining theorem: degree of the completed Frobenius fixed field
 
 The direct theta value has the changed primitive polynomial over `k((T))`.
-Together with the fixed-field generation theorem this gives the exact extension degree `(q - 1) q^n`.
+Together with the fixed-field generation theorem this gives the exact extension degree `(q - 1)
+  q^n`.
 -/
 
 noncomputable section
@@ -26,6 +27,8 @@ open LocalFieldTheory.DiscreteValuationField
 
 variable {K : Type u} [Field K]
 
+/-- The Laurent-series algebra structure on the completed base used to compute fixed-field
+degrees. -/
 noncomputable local instance
     equalCharacteristicCompletedFrobeniusFixedFieldDegreeBaseAlgebra
     (F : LocalField.{u, v} K) :
@@ -33,6 +36,8 @@ noncomputable local instance
       (equalCharacteristicCompletedUnramifiedField F.residueField) :=
   laurentSeriesCoefficientAlgebra
 
+/-- The Laurent-series algebra structure on the completed level used to compute fixed-field
+degrees. -/
 noncomputable local instance
     equalCharacteristicCompletedFrobeniusFixedFieldDegreeLevelAlgebra
     (F : LocalField.{u, v} K) (n : ℕ) :
@@ -52,6 +57,8 @@ local instance
       (equalCharacteristicCompletedLevelField F n) :=
   IsScalarTower.of_algebraMap_eq' rfl
 
+/-- The Frobenius fixed field inherits its Laurent-series algebra structure from its
+intermediate-field inclusion. -/
 noncomputable local instance
     equalCharacteristicCompletedFrobeniusFixedFieldDegreeAlgebra
     (F : LocalField.{u, v} K)
@@ -62,6 +69,8 @@ noncomputable local instance
   Subalgebra.algebra
     (equalCharacteristicCompletedFrobeniusFixedField F a n).toSubalgebra
 
+/-- Laurent-series scalar multiplication on the Frobenius fixed field agrees with its inherited
+algebra structure. -/
 noncomputable local instance
     equalCharacteristicCompletedFrobeniusFixedFieldDegreeSMul
     (F : LocalField.{u, v} K)
@@ -72,6 +81,8 @@ noncomputable local instance
   @Algebra.toSMul _ _ _ _
     (equalCharacteristicCompletedFrobeniusFixedFieldDegreeAlgebra F a n)
 
+/-- The Frobenius fixed field is a module over residue-field Laurent series through its inherited
+algebra structure. -/
 noncomputable local instance
     equalCharacteristicCompletedFrobeniusFixedFieldDegreeModule
     (F : LocalField.{u, v} K)

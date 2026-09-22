@@ -62,9 +62,10 @@ variable [Fintype G] [Group G] [Fintype ι] [DecidableEq ι]
 variable {M : Type*} [AddCommGroup M] [Module ℤ M]
 
 omit [Fintype G] in
+omit [DecidableEq ι] [Fintype ι] in
 /-- Coordinates in a basis permuted by `G` transform by the
 contragredient coordinate permutation. -/
-theorem basisEquivFun_symm_intCoordinatePermutation
+theorem basisEquivFun_symm_intCoordinatePermutation [Finite ι]
     (b : Basis ι ℤ M)
     (ρ : G →* Equiv.Perm ι)
     (α : G →* (M ≃ₗ[ℤ] M))
@@ -74,6 +75,9 @@ theorem basisEquivFun_symm_intCoordinatePermutation
     b.equivFun.symm
         (intCoordinatePermutation (ρ g) x) =
       α g (b.equivFun.symm x) := by
+  classical
+  let : DecidableEq ι := Classical.decEq ι
+  let := Fintype.ofFinite ι
   have hmaps :
       b.equivFun.symm.toLinearMap.comp
           (intCoordinatePermutation (ρ g)).toLinearMap =
@@ -276,7 +280,7 @@ permutation representation. -/
 def completePermutationLatticeDistribMulAction
     (ρ : G →* Equiv.Perm ι)
     (L : Submodule ℤ (ι → ℝ)) [DiscreteTopology L]
-    [IsZLattice ℝ L]
+
     (hL : ∀ (g : G) (x : ι → ℝ), x ∈ L →
       permutationRepresentation ρ g x ∈ L) :
     DistribMulAction G L where

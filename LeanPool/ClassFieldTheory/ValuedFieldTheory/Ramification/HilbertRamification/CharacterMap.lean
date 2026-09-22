@@ -143,7 +143,7 @@ abbrev inertiaUnitQuotientClass
     (automorphismUnitQuotient K A (σ : decompositionGroup K A) x)
 
 /-- States the theorem `inertiaUnitQuotientClass_eq_one_iff`. -/
-@[simp] theorem inertiaUnitQuotientClass_eq_one_iff
+theorem inertiaUnitQuotientClass_eq_one_iff
     (A : _root_.ValuationSubring L) (σ : inertiaGroup K A) (x : Lˣ) :
     inertiaUnitQuotientClass K A σ x = 1 ↔
       automorphismUnitQuotient K A (σ : decompositionGroup K A) x ∈
@@ -258,7 +258,7 @@ def principalUnitQuotientToValueClass
       exact A.principal_units_le_units hx)
 
 /-- States the theorem `principalUnitQuotientToValueClass_mk`. -/
-@[simp] theorem principalUnitQuotientToValueClass_mk
+theorem principalUnitQuotientToValueClass_mk
     (A : _root_.ValuationSubring L) (x : Lˣ) :
     principalUnitQuotientToValueClass A
         (QuotientGroup.mk' A.principalUnitGroup x) =
@@ -273,7 +273,7 @@ abbrev valueDisplacementClass
   QuotientGroup.mk' A.unitGroup (automorphismUnitQuotient K A σ x)
 
 /-- States the theorem `valueDisplacementClass_eq_one_iff`. -/
-@[simp] theorem valueDisplacementClass_eq_one_iff
+theorem valueDisplacementClass_eq_one_iff
     (A : _root_.ValuationSubring L) (σ : decompositionGroup K A) (x : Lˣ) :
     valueDisplacementClass K A σ x = 1 ↔
       automorphismUnitQuotient K A σ x ∈ A.unitGroup :=
@@ -589,7 +589,7 @@ def valueClassToResidueUnits
     (unitGroup_le_valueTrivialInertiaResidueUnitHom_ker (K := K) A σ)
 
 /-- States the theorem `valueClassToResidueUnits_mk`. -/
-@[simp] theorem valueClassToResidueUnits_mk
+theorem valueClassToResidueUnits_mk
     (A : _root_.ValuationSubring L)
     (σ : valueTrivialInertiaGroup K A) (x : Lˣ) :
     valueClassToResidueUnits K A σ
@@ -682,7 +682,7 @@ def valueClassToPrincipalUnitQuotient
     (unitGroup_le_inertiaUnitQuotientHom_ker (K := K) A σ)
 
 /-- States the theorem `valueClassToPrincipalUnitQuotient_mk`. -/
-@[simp] theorem valueClassToPrincipalUnitQuotient_mk
+theorem valueClassToPrincipalUnitQuotient_mk
     (A : _root_.ValuationSubring L) (σ : inertiaGroup K A) (x : Lˣ) :
     valueClassToPrincipalUnitQuotient K A σ
         (QuotientGroup.mk' A.unitGroup x) =
@@ -755,7 +755,7 @@ def valueModuloBaseToPrincipalUnitQuotient
       (K := K) A σ)
 
 /-- States the theorem `valueModuloBaseToPrincipalUnitQuotient_mk`. -/
-@[simp] theorem valueModuloBaseToPrincipalUnitQuotient_mk
+theorem valueModuloBaseToPrincipalUnitQuotient_mk
     (A : _root_.ValuationSubring L) (σ : inertiaGroup K A)
     (x : Lˣ ⧸ A.unitGroup) :
     valueModuloBaseToPrincipalUnitQuotient K A σ
@@ -764,7 +764,7 @@ def valueModuloBaseToPrincipalUnitQuotient
   rfl
 
 /-- States the theorem `valueModuloBaseToPrincipalUnitQuotient_mk_mk`. -/
-@[simp] theorem valueModuloBaseToPrincipalUnitQuotient_mk_mk
+theorem valueModuloBaseToPrincipalUnitQuotient_mk_mk
     (A : _root_.ValuationSubring L) (σ : inertiaGroup K A) (x : Lˣ) :
     valueModuloBaseToPrincipalUnitQuotient K A σ
         (QuotientGroup.mk' (baseUnitValueClassSubgroup K A)
@@ -797,7 +797,7 @@ def valueModuloBaseToResidueUnits
       (K := K) A σ)
 
 /-- States the theorem `valueModuloBaseToResidueUnits_mk`. -/
-@[simp] theorem valueModuloBaseToResidueUnits_mk
+theorem valueModuloBaseToResidueUnits_mk
     (A : _root_.ValuationSubring L)
     (σ : valueTrivialInertiaGroup K A) (x : Lˣ ⧸ A.unitGroup) :
     valueModuloBaseToResidueUnits K A σ
@@ -806,7 +806,7 @@ def valueModuloBaseToResidueUnits
   rfl
 
 /-- States the theorem `valueModuloBaseToResidueUnits_mk_mk`. -/
-@[simp] theorem valueModuloBaseToResidueUnits_mk_mk
+theorem valueModuloBaseToResidueUnits_mk_mk
     (A : _root_.ValuationSubring L)
     (σ : valueTrivialInertiaGroup K A) (x : Lˣ) :
     valueModuloBaseToResidueUnits K A σ

@@ -55,7 +55,6 @@ def rayClassToNormQuotient
 
 /-- The ray-class quotient map sends the class of an idele class to its
 class modulo the norm subgroup. -/
-@[simp]
 theorem rayClassToNormQuotient_mk
     (m : RayClass.Modulus K)
     (N : Subgroup (IdeleClassGroup K))

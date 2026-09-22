@@ -73,7 +73,8 @@ theorem finiteAbelianLocalArtinMap_inverseUniformizer_residue_pow_iff
     finiteAbelianLocalArtinMap_inverseUniformizer_residue_pow K L u hval x
   constructor
   · intro hσ
-    apply LocalFieldTheory.galoisGroupResidueAlgEquivHomOfIsIntegralClosure_injective_of_unramifiedValuation
+    apply
+      LocalFieldTheory.galoisGroupResidueAlgEquivHomOfIsIntegralClosure_injective_of_unramifiedValuation
       K L
     apply AlgEquiv.ext
     intro y

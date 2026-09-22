@@ -118,7 +118,7 @@ private noncomputable def integralFiniteNormComponents
       finitePlaceExtensionEquivAbove
         (K := K) (L := L) v₀
     letI :=
-      completionTensorDecomposition_extensionFintype
+      completionTensorDecompositionExtensionFintype
         (K := K) (L := L) vK hvK0
     letI : Fintype {W : HeightOneSpectrum (𝓞 L) //
         _root_.finitePlaceBelow (K := K) W = v₀} :=
@@ -161,7 +161,7 @@ private theorem integralFiniteNormComponents_continuous :
     finitePlaceExtensionEquivAbove
       (K := K) (L := L) v₀
   let :=
-    completionTensorDecomposition_extensionFintype
+    completionTensorDecompositionExtensionFintype
       (K := K) (L := L) vK hvK0
   let : Fintype {W : HeightOneSpectrum (𝓞 L) //
       _root_.finitePlaceBelow (K := K) W = v₀} :=
@@ -262,7 +262,8 @@ private theorem infinitePlace_normUnits_continuous
       have hExtensionUnitsContinuous : Continuous eExtensionUnits := by
         change Continuous (Units.map eExtension.toMonoidHom)
         refine
-          ((InfinitePlace.Completion.isometryEquivRealOfIsReal hWReal).continuous.units_map _).congr ?_
+          ((InfinitePlace.Completion.isometryEquivRealOfIsReal hWReal).continuous.units_map
+            _).congr ?_
         intro x
         apply Units.ext
         rfl
@@ -317,7 +318,8 @@ private theorem infinitePlace_normUnits_continuous
       have hExtensionUnitsContinuous : Continuous eExtensionUnits := by
         change Continuous (Units.map eExtension.toMonoidHom)
         refine
-          ((InfinitePlace.Completion.isometryEquivComplexOfIsComplex hWComplex).continuous.units_map _).congr ?_
+          ((InfinitePlace.Completion.isometryEquivComplexOfIsComplex
+            hWComplex).continuous.units_map _).congr ?_
         intro x
         apply Units.ext
         rfl
@@ -354,7 +356,8 @@ private theorem infinitePlace_normUnits_continuous
     have hBaseUnitsContinuous : Continuous eBaseUnits.symm := by
       change Continuous (Units.map eBase.symm.toMonoidHom)
       simpa only [eBase] using
-        (InfinitePlace.Completion.isometryEquivComplexOfIsComplex hvComplex).symm.continuous.units_map _
+        (InfinitePlace.Completion.isometryEquivComplexOfIsComplex
+          hvComplex).symm.continuous.units_map _
     rcases
         InfinitePlace.LiesOver.embedding_comp_eq_or_conjugate_embedding_comp_eq
           W.1 v₀ with hEmbedding | hConjugate
@@ -385,7 +388,8 @@ private theorem infinitePlace_normUnits_continuous
       have hExtensionUnitsContinuous : Continuous eExtensionUnits := by
         change Continuous (Units.map eExtension.toMonoidHom)
         refine
-          ((InfinitePlace.Completion.isometryEquivComplexOfIsComplex hWComplex).continuous.units_map _).congr ?_
+          ((InfinitePlace.Completion.isometryEquivComplexOfIsComplex
+            hWComplex).continuous.units_map _).congr ?_
         intro x
         apply Units.ext
         rfl
@@ -548,7 +552,7 @@ private theorem norm_integralIdeleEmbedding_finite
     finitePlaceExtensionEquivAbove
       (K := K) (L := L) v₀
   let :=
-    completionTensorDecomposition_extensionFintype
+    completionTensorDecompositionExtensionFintype
       (K := K) (L := L) vK hvK0
   let : Fintype {W : HeightOneSpectrum (𝓞 L) //
       _root_.finitePlaceBelow (K := K) W = v₀} :=
@@ -590,7 +594,7 @@ private theorem norm_integralIdeleEmbedding_infinite
   let vK := v₀.1
   let hvK : vK.IsNontrivial := v₀.isNontrivial
   let :=
-    completionTensorDecomposition_extensionFintype
+    completionTensorDecompositionExtensionFintype
       (K := K) (L := L) vK hvK
   change
     infiniteComponent v₀

@@ -31,7 +31,7 @@ theorem AmbientEmbeddedFixedFieldPresentation.quotientRestriction
     [Field L] [Field L']
     [Algebra K K'] [Algebra K L] [Algebra K L']
     [Algebra K' L'] [Algebra L L']
-    [IsScalarTower K K' L'] [IsScalarTower K L L']
+    [IsScalarTower K K' L']
     [FiniteDimensional K K'] [Algebra.IsSeparable K K']
     [Valuation.HasExtension
       (ValuativeRel.valuation K) (ValuativeRel.valuation K')]

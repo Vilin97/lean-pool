@@ -194,7 +194,7 @@ theorem quotient_principalUnitSubgroup_mk_eq_iff_inv_mul_mem
 /-- The natural map from a finer filtration quotient to a coarser filtration
 quotient.  If `m ≤ n`, then `U^n ≤ U^m`, so quotienting by `U^n` maps to
 quotienting by `U^m`. -/
-def quotient_principalUnitSubgroup_mapOfLe {m n : ℕ} (hmn : m ≤ n)
+def quotientPrincipalUnitSubgroupMapOfLe {m n : ℕ} (hmn : m ≤ n)
     [(U.principalUnitSubgroup n).Normal]
     [(U.principalUnitSubgroup m).Normal] :
     G ⧸ U.principalUnitSubgroup n →*
@@ -205,26 +205,26 @@ def quotient_principalUnitSubgroup_mapOfLe {m n : ℕ} (hmn : m ≤ n)
       exact U.mem_of_mem_of_le hmn hx)
 
 /--
-The defining evaluation formula for `quotient_principalUnitSubgroup_mapOfLe` is
-`U.quotient_principalUnitSubgroup_mapOfLe hmn (QuotientGroup.mk x) = QuotientGroup.mk x`.
+The defining evaluation formula for `quotientPrincipalUnitSubgroupMapOfLe` is
+`U.quotientPrincipalUnitSubgroupMapOfLe hmn (QuotientGroup.mk x) = QuotientGroup.mk x`.
 -/
 @[simp] theorem quotient_principalUnitSubgroup_mapOfLe_apply_mk
     {m n : ℕ} (hmn : m ≤ n)
     [(U.principalUnitSubgroup n).Normal]
     [(U.principalUnitSubgroup m).Normal] (x : G) :
-    U.quotient_principalUnitSubgroup_mapOfLe hmn (QuotientGroup.mk x) =
+    U.quotientPrincipalUnitSubgroupMapOfLe hmn (QuotientGroup.mk x) =
       QuotientGroup.mk x :=
   rfl
 
 /--
-Establishes the identity `U.quotient_principalUnitSubgroup_mapOfLe hmn (QuotientGroup.mk'
+Establishes the identity `U.quotientPrincipalUnitSubgroupMapOfLe hmn (QuotientGroup.mk'
 (U.principalUnitSubgroup n) x) = QuotientGroup.mk' (U.principalUnitSubgroup m) x`.
 -/
 @[simp] theorem quotient_principalUnitSubgroup_mapOfLe_apply_mk'
     {m n : ℕ} (hmn : m ≤ n)
     [(U.principalUnitSubgroup n).Normal]
     [(U.principalUnitSubgroup m).Normal] (x : G) :
-    U.quotient_principalUnitSubgroup_mapOfLe hmn
+    U.quotientPrincipalUnitSubgroupMapOfLe hmn
         (QuotientGroup.mk' (U.principalUnitSubgroup n) x) =
       QuotientGroup.mk' (U.principalUnitSubgroup m) x :=
   rfl
@@ -441,7 +441,7 @@ noncomputable instance principalUnitGradedPieceFinite
 piece wrapper. -/
 theorem card_principalUnitSubquotient_succ_eq_gradedPiece
     (n : ℕ) [(U.principalUnitSubgroup (n + 1)).Normal]
-    [Finite (U.principalUnitSubquotient n (n + 1))] :
+    :
     Nat.card (U.principalUnitSubquotient n (n + 1)) =
       Nat.card (U.principalUnitGradedPiece n) :=
   Nat.card_congr (U.principalUnitGradedPieceEquivSubquotient n).symm.toEquiv
@@ -596,7 +596,7 @@ theorem quotient_principalUnitSubgroup_mapOfLe_mk_eq_one_iff
     {m n : ℕ} (hmn : m ≤ n)
     [(U.principalUnitSubgroup n).Normal]
     [(U.principalUnitSubgroup m).Normal] (x : G) :
-    U.quotient_principalUnitSubgroup_mapOfLe hmn (QuotientGroup.mk x) = 1 ↔
+    U.quotientPrincipalUnitSubgroupMapOfLe hmn (QuotientGroup.mk x) = 1 ↔
       x ∈ U.principalUnitSubgroup m := by
   rw [U.quotient_principalUnitSubgroup_mapOfLe_apply_mk hmn x]
   exact QuotientGroup.eq_one_iff (N := U.principalUnitSubgroup m) x
@@ -607,8 +607,8 @@ theorem quotient_principalUnitSubgroup_mapOfLe_mk_eq_iff_div_mem
     {m n : ℕ} (hmn : m ≤ n)
     [(U.principalUnitSubgroup n).Normal]
     [(U.principalUnitSubgroup m).Normal] (x y : G) :
-    U.quotient_principalUnitSubgroup_mapOfLe hmn (QuotientGroup.mk x) =
-        U.quotient_principalUnitSubgroup_mapOfLe hmn (QuotientGroup.mk y) ↔
+    U.quotientPrincipalUnitSubgroupMapOfLe hmn (QuotientGroup.mk x) =
+        U.quotientPrincipalUnitSubgroupMapOfLe hmn (QuotientGroup.mk y) ↔
       x / y ∈ U.principalUnitSubgroup m := by
   rw [U.quotient_principalUnitSubgroup_mapOfLe_apply_mk hmn x,
     U.quotient_principalUnitSubgroup_mapOfLe_apply_mk hmn y]
@@ -622,8 +622,8 @@ theorem quotient_principalUnitSubgroup_mapOfLe_mk_eq_iff_inv_mul_mem
     {m n : ℕ} (hmn : m ≤ n)
     [(U.principalUnitSubgroup n).Normal]
     [(U.principalUnitSubgroup m).Normal] (x y : G) :
-    U.quotient_principalUnitSubgroup_mapOfLe hmn (QuotientGroup.mk x) =
-        U.quotient_principalUnitSubgroup_mapOfLe hmn (QuotientGroup.mk y) ↔
+    U.quotientPrincipalUnitSubgroupMapOfLe hmn (QuotientGroup.mk x) =
+        U.quotientPrincipalUnitSubgroupMapOfLe hmn (QuotientGroup.mk y) ↔
       y⁻¹ * x ∈ U.principalUnitSubgroup m := by
   rw [U.quotient_principalUnitSubgroup_mapOfLe_mk_eq_iff_div_mem hmn x y,
     U.principalUnitSubgroup_div_mem_iff_inv_mul_mem m x y]
@@ -633,7 +633,7 @@ theorem quotient_principalUnitSubgroup_mapOfLe_surjective
     {m n : ℕ} (hmn : m ≤ n)
     [(U.principalUnitSubgroup n).Normal]
     [(U.principalUnitSubgroup m).Normal] :
-    Function.Surjective (U.quotient_principalUnitSubgroup_mapOfLe hmn) := by
+    Function.Surjective (U.quotientPrincipalUnitSubgroupMapOfLe hmn) := by
   intro q
   refine QuotientGroup.induction_on q ?_
   intro x
@@ -645,7 +645,7 @@ theorem quotient_principalUnitSubgroup_mapOfLe_range_eq_top
     {m n : ℕ} (hmn : m ≤ n)
     [(U.principalUnitSubgroup n).Normal]
     [(U.principalUnitSubgroup m).Normal] :
-    (U.quotient_principalUnitSubgroup_mapOfLe hmn).range = ⊤ := by
+    (U.quotientPrincipalUnitSubgroupMapOfLe hmn).range = ⊤ := by
   rw [MonoidHom.range_eq_top]
   exact U.quotient_principalUnitSubgroup_mapOfLe_surjective hmn
 
@@ -655,7 +655,7 @@ theorem quotient_principalUnitSubgroup_mapOfLe_ker_eq_classInQuotient
     {m n : ℕ} (hmn : m ≤ n)
     [(U.principalUnitSubgroup n).Normal]
     [(U.principalUnitSubgroup m).Normal] :
-    (U.quotient_principalUnitSubgroup_mapOfLe hmn).ker =
+    (U.quotientPrincipalUnitSubgroupMapOfLe hmn).ker =
       U.principalUnitSubgroupClassInQuotient m n := by
   exact (QuotientGroup.ker_map (U.principalUnitSubgroup n)
     (U.principalUnitSubgroup m) (MonoidHom.id G) (by
@@ -672,7 +672,7 @@ theorem quotient_principalUnitSubgroup_mapOfLe_mem_classInQuotient
     [(U.principalUnitSubgroup m).Normal]
     {q : G ⧸ U.principalUnitSubgroup n}
     (hq : q ∈ U.principalUnitSubgroupClassInQuotient l n) :
-    U.quotient_principalUnitSubgroup_mapOfLe hmn q ∈
+    U.quotientPrincipalUnitSubgroupMapOfLe hmn q ∈
       U.principalUnitSubgroupClassInQuotient l m := by
   rcases (U.mem_principalUnitSubgroupClassInQuotient_iff l n q).1 hq with
     ⟨x, hx, hxq⟩
@@ -686,7 +686,7 @@ def principalUnitClassMapOfLe {l m n : ℕ} (hlm : l ≤ m) (hmn : m ≤ n)
     [(U.principalUnitSubgroup m).Normal] :
     U.principalUnitSubgroupClassInQuotient l n →*
       U.principalUnitSubgroupClassInQuotient l m :=
-  ((U.quotient_principalUnitSubgroup_mapOfLe hmn).domRestrict
+  ((U.quotientPrincipalUnitSubgroupMapOfLe hmn).domRestrict
       (U.principalUnitSubgroupClassInQuotient l n)).codRestrict
     (U.principalUnitSubgroupClassInQuotient l m)
     (by
@@ -697,7 +697,7 @@ def principalUnitClassMapOfLe {l m n : ℕ} (hlm : l ≤ m) (hmn : m ≤ n)
 /--
 The defining evaluation formula for `principalUnitClassMapOfLe` is `((U.principalUnitClassMapOfLe
 hlm hmn q : U.principalUnitSubgroupClassInQuotient l m) : G ⧸ U.principalUnitSubgroup m) =
-U.quotient_principalUnitSubgroup_mapOfLe hmn (q : G ⧸ U.principalUnitSubgroup n)`.
+U.quotientPrincipalUnitSubgroupMapOfLe hmn (q : G ⧸ U.principalUnitSubgroup n)`.
 -/
 @[simp] theorem principalUnitClassMapOfLe_apply {l m n : ℕ}
     (hlm : l ≤ m) (hmn : m ≤ n)
@@ -707,7 +707,7 @@ U.quotient_principalUnitSubgroup_mapOfLe hmn (q : G ⧸ U.principalUnitSubgroup 
     ((U.principalUnitClassMapOfLe hlm hmn q :
       U.principalUnitSubgroupClassInQuotient l m) :
       G ⧸ U.principalUnitSubgroup m) =
-      U.quotient_principalUnitSubgroup_mapOfLe hmn
+      U.quotientPrincipalUnitSubgroupMapOfLe hmn
         (q : G ⧸ U.principalUnitSubgroup n) :=
   rfl
 
@@ -725,7 +725,7 @@ theorem principalUnitClassMapOfLe_ker_eq {l m n : ℕ}
   · intro hq
     have hq' := congrArg Subtype.val hq
     change
-      U.quotient_principalUnitSubgroup_mapOfLe hmn
+      U.quotientPrincipalUnitSubgroupMapOfLe hmn
           (q : G ⧸ U.principalUnitSubgroup n) = 1 at hq'
     rw [← U.quotient_principalUnitSubgroup_mapOfLe_ker_eq_classInQuotient hmn,
       MonoidHom.mem_ker]
@@ -733,7 +733,7 @@ theorem principalUnitClassMapOfLe_ker_eq {l m n : ℕ}
   · intro hq
     apply Subtype.ext
     change
-      U.quotient_principalUnitSubgroup_mapOfLe hmn
+      U.quotientPrincipalUnitSubgroupMapOfLe hmn
           (q : G ⧸ U.principalUnitSubgroup n) = 1
     rw [← MonoidHom.mem_ker,
       U.quotient_principalUnitSubgroup_mapOfLe_ker_eq_classInQuotient hmn]
@@ -774,7 +774,7 @@ noncomputable def principalUnitClassQuotientKerEquivClassOfLe {l m n : ℕ}
 Establishes the identity `U.principalUnitClassQuotientKerEquivClassOfLe hlm hmn (QuotientGroup.mk'
 (U.principalUnitClassMapOfLe hlm hmn).ker q) = U.principalUnitClassMapOfLe hlm hmn q`.
 -/
-@[simp] theorem principalUnitClassQuotientKerEquivClassOfLe_mk'
+theorem principalUnitClassQuotientKerEquivClassOfLe_mk'
     {l m n : ℕ} (hlm : l ≤ m) (hmn : m ≤ n)
     [(U.principalUnitSubgroup n).Normal]
     [(U.principalUnitSubgroup m).Normal]
@@ -858,7 +858,7 @@ theorem card_principalUnitClassInQuotient_eq_mul_of_le {l m n : ℕ}
 /-- Cardinality form of the class/subquotient identification. -/
 theorem card_principalUnitSubquotient_eq_classInQuotient_of_le
     {m n : ℕ} (hmn : m ≤ n) [(U.principalUnitSubgroup n).Normal]
-    [Finite (U.principalUnitSubquotient m n)]
+
     [Finite (U.principalUnitSubgroupClassInQuotient m n)] :
     Nat.card (U.principalUnitSubquotient m n) =
       Nat.card (U.principalUnitSubgroupClassInQuotient m n) := by
@@ -867,8 +867,8 @@ theorem card_principalUnitSubquotient_eq_classInQuotient_of_le
 
 /-- The degenerate subquotient `U^n/U^n` has cardinality one. -/
 theorem card_principalUnitSubquotient_self
-    (n : ℕ) [(U.principalUnitSubgroup n).Normal]
-    [Finite (U.principalUnitSubquotient n n)] :
+    (n : ℕ)
+    :
     Nat.card (U.principalUnitSubquotient n n) = 1 := by
   have htop :
       (U.principalUnitSubgroup n).subgroupOf
@@ -952,7 +952,7 @@ theorem card_principalUnitSubquotient_eq_prod_gradedPiece
               rw [Nat.mul_comm]
 
 /--
-Characterizes `q ∈ (U.quotient_principalUnitSubgroup_mapOfLe hmn).ker` by the equivalent condition
+Characterizes `q ∈ (U.quotientPrincipalUnitSubgroupMapOfLe hmn).ker` by the equivalent condition
 `q ∈ U.principalUnitSubgroupClassInQuotient m n`.
 -/
 theorem mem_quotient_principalUnitSubgroup_mapOfLe_ker_iff
@@ -960,7 +960,7 @@ theorem mem_quotient_principalUnitSubgroup_mapOfLe_ker_iff
     [(U.principalUnitSubgroup n).Normal]
     [(U.principalUnitSubgroup m).Normal]
     (q : G ⧸ U.principalUnitSubgroup n) :
-    q ∈ (U.quotient_principalUnitSubgroup_mapOfLe hmn).ker ↔
+    q ∈ (U.quotientPrincipalUnitSubgroupMapOfLe hmn).ker ↔
       q ∈ U.principalUnitSubgroupClassInQuotient m n := by
   rw [U.quotient_principalUnitSubgroup_mapOfLe_ker_eq_classInQuotient hmn]
 
@@ -971,7 +971,7 @@ theorem quotient_principalUnitSubgroup_mapOfLe_eq_one_iff_mem_classInQuotient
     [(U.principalUnitSubgroup n).Normal]
     [(U.principalUnitSubgroup m).Normal]
     (q : G ⧸ U.principalUnitSubgroup n) :
-    U.quotient_principalUnitSubgroup_mapOfLe hmn q = 1 ↔
+    U.quotientPrincipalUnitSubgroupMapOfLe hmn q = 1 ↔
       q ∈ U.principalUnitSubgroupClassInQuotient m n := by
   rw [← MonoidHom.mem_ker,
     U.mem_quotient_principalUnitSubgroup_mapOfLe_ker_iff hmn q]
@@ -983,7 +983,7 @@ theorem quotient_principalUnitSubgroup_mapOfLe_eq_one_iff_exists_mem_repr
     [(U.principalUnitSubgroup n).Normal]
     [(U.principalUnitSubgroup m).Normal]
     (q : G ⧸ U.principalUnitSubgroup n) :
-    U.quotient_principalUnitSubgroup_mapOfLe hmn q = 1 ↔
+    U.quotientPrincipalUnitSubgroupMapOfLe hmn q = 1 ↔
       ∃ x : G, x ∈ U.principalUnitSubgroup m ∧
         QuotientGroup.mk' (U.principalUnitSubgroup n) x = q := by
   rw [U.quotient_principalUnitSubgroup_mapOfLe_eq_one_iff_mem_classInQuotient
@@ -997,8 +997,8 @@ theorem quotient_principalUnitSubgroup_mapOfLe_eq_iff_div_mem_classInQuotient
     [(U.principalUnitSubgroup n).Normal]
     [(U.principalUnitSubgroup m).Normal]
     (q r : G ⧸ U.principalUnitSubgroup n) :
-    U.quotient_principalUnitSubgroup_mapOfLe hmn q =
-        U.quotient_principalUnitSubgroup_mapOfLe hmn r ↔
+    U.quotientPrincipalUnitSubgroupMapOfLe hmn q =
+        U.quotientPrincipalUnitSubgroupMapOfLe hmn r ↔
       q / r ∈ U.principalUnitSubgroupClassInQuotient m n := by
   rw [← U.quotient_principalUnitSubgroup_mapOfLe_ker_eq_classInQuotient hmn,
     MonoidHom.mem_ker, MonoidHom.map_div, div_eq_one]
@@ -1011,8 +1011,8 @@ theorem quotient_principalUnitSubgroup_mapOfLe_eq_iff_exists_mem_div_repr
     [(U.principalUnitSubgroup n).Normal]
     [(U.principalUnitSubgroup m).Normal]
     (q r : G ⧸ U.principalUnitSubgroup n) :
-    U.quotient_principalUnitSubgroup_mapOfLe hmn q =
-        U.quotient_principalUnitSubgroup_mapOfLe hmn r ↔
+    U.quotientPrincipalUnitSubgroupMapOfLe hmn q =
+        U.quotientPrincipalUnitSubgroupMapOfLe hmn r ↔
       ∃ x : G, x ∈ U.principalUnitSubgroup m ∧
         QuotientGroup.mk' (U.principalUnitSubgroup n) x = q / r := by
   rw [U.quotient_principalUnitSubgroup_mapOfLe_eq_iff_div_mem_classInQuotient
@@ -1026,8 +1026,8 @@ theorem quotient_principalUnitSubgroup_mapOfLe_eq_iff_inv_mul_mem_classInQuotien
     [(U.principalUnitSubgroup n).Normal]
     [(U.principalUnitSubgroup m).Normal]
     (q r : G ⧸ U.principalUnitSubgroup n) :
-    U.quotient_principalUnitSubgroup_mapOfLe hmn q =
-        U.quotient_principalUnitSubgroup_mapOfLe hmn r ↔
+    U.quotientPrincipalUnitSubgroupMapOfLe hmn q =
+        U.quotientPrincipalUnitSubgroupMapOfLe hmn r ↔
       r⁻¹ * q ∈ U.principalUnitSubgroupClassInQuotient m n := by
   rw [U.quotient_principalUnitSubgroup_mapOfLe_eq_iff_div_mem_classInQuotient
     hmn q r]
@@ -1044,8 +1044,8 @@ theorem quotient_principalUnitSubgroup_mapOfLe_eq_iff_exists_mem_inv_mul_repr
     [(U.principalUnitSubgroup n).Normal]
     [(U.principalUnitSubgroup m).Normal]
     (q r : G ⧸ U.principalUnitSubgroup n) :
-    U.quotient_principalUnitSubgroup_mapOfLe hmn q =
-        U.quotient_principalUnitSubgroup_mapOfLe hmn r ↔
+    U.quotientPrincipalUnitSubgroupMapOfLe hmn q =
+        U.quotientPrincipalUnitSubgroupMapOfLe hmn r ↔
       ∃ x : G, x ∈ U.principalUnitSubgroup m ∧
         QuotientGroup.mk' (U.principalUnitSubgroup n) x = r⁻¹ * q := by
   rw [U.quotient_principalUnitSubgroup_mapOfLe_eq_iff_inv_mul_mem_classInQuotient
@@ -1066,7 +1066,7 @@ theorem quotient_principalUnitSubgroup_mk_mem_classInQuotient_iff
       x ∈ U.principalUnitSubgroup m := by
   rw [← U.quotient_principalUnitSubgroup_mapOfLe_ker_eq_classInQuotient hmn]
   change
-    U.quotient_principalUnitSubgroup_mapOfLe hmn
+    U.quotientPrincipalUnitSubgroupMapOfLe hmn
         (QuotientGroup.mk' (U.principalUnitSubgroup n) x) = 1 ↔
       x ∈ U.principalUnitSubgroup m
   rw [U.quotient_principalUnitSubgroup_mapOfLe_apply_mk' hmn x]
@@ -1088,9 +1088,9 @@ noncomputable def quotientModuloPrincipalUnitClassEquivQuotientOfLe
 /--
 Establishes the identity `U.quotientModuloPrincipalUnitClassEquivQuotientOfLe hmn
 (QuotientGroup.mk' (U.principalUnitSubgroupClassInQuotient m n) q) =
-U.quotient_principalUnitSubgroup_mapOfLe hmn q`.
+U.quotientPrincipalUnitSubgroupMapOfLe hmn q`.
 -/
-@[simp] theorem quotientModuloPrincipalUnitClassEquivQuotientOfLe_mk
+theorem quotientModuloPrincipalUnitClassEquivQuotientOfLe_mk
     {m n : ℕ} (hmn : m ≤ n)
     [(U.principalUnitSubgroup n).Normal]
     [(U.principalUnitSubgroup m).Normal]
@@ -1098,12 +1098,12 @@ U.quotient_principalUnitSubgroup_mapOfLe hmn q`.
     U.quotientModuloPrincipalUnitClassEquivQuotientOfLe hmn
         (QuotientGroup.mk'
           (U.principalUnitSubgroupClassInQuotient m n) q) =
-      U.quotient_principalUnitSubgroup_mapOfLe hmn q := by
+      U.quotientPrincipalUnitSubgroupMapOfLe hmn q := by
   change
     QuotientGroup.quotientQuotientEquivQuotientAux
         (U.principalUnitSubgroup n) (U.principalUnitSubgroup m)
         (U.principalUnitSubgroup_antitone hmn) q =
-      U.quotient_principalUnitSubgroup_mapOfLe hmn q
+      U.quotientPrincipalUnitSubgroupMapOfLe hmn q
   exact
     QuotientGroup.quotientQuotientEquivQuotientAux_mk
       (N := U.principalUnitSubgroup n)
@@ -1115,7 +1115,7 @@ Establishes the identity `U.quotientModuloPrincipalUnitClassEquivQuotientOfLe hm
 (QuotientGroup.mk' (U.principalUnitSubgroupClassInQuotient m n) (QuotientGroup.mk'
 (U.principalUnitSubgroup n) x)) = QuotientGroup.mk' (U.principalUnitSubgroup m) x`.
 -/
-@[simp] theorem quotientModuloPrincipalUnitClassEquivQuotientOfLe_mk_mk
+theorem quotientModuloPrincipalUnitClassEquivQuotientOfLe_mk_mk
     {m n : ℕ} (hmn : m ≤ n)
     [(U.principalUnitSubgroup n).Normal]
     [(U.principalUnitSubgroup m).Normal] (x : G) :
@@ -1132,7 +1132,7 @@ Establishes the identity `(U.quotientModuloPrincipalUnitClassEquivQuotientOfLe h
 (QuotientGroup.mk' (U.principalUnitSubgroup m) x) = QuotientGroup.mk'
 (U.principalUnitSubgroupClassInQuotient m n) (QuotientGroup.mk' (U.principalUnitSubgroup n) x)`.
 -/
-@[simp] theorem quotientModuloPrincipalUnitClassEquivQuotientOfLe_symm_mk
+theorem quotientModuloPrincipalUnitClassEquivQuotientOfLe_symm_mk
     {m n : ℕ} (hmn : m ≤ n)
     [(U.principalUnitSubgroup n).Normal]
     [(U.principalUnitSubgroup m).Normal] (x : G) :
@@ -1294,9 +1294,9 @@ theorem quotient_principalUnitSubgroup_mapOfLe_comp
     [(U.principalUnitSubgroup n).Normal]
     [(U.principalUnitSubgroup m).Normal]
     [(U.principalUnitSubgroup k).Normal] :
-    (U.quotient_principalUnitSubgroup_mapOfLe hkm).comp
-        (U.quotient_principalUnitSubgroup_mapOfLe hmn) =
-      U.quotient_principalUnitSubgroup_mapOfLe (le_trans hkm hmn) := by
+    (U.quotientPrincipalUnitSubgroupMapOfLe hkm).comp
+        (U.quotientPrincipalUnitSubgroupMapOfLe hmn) =
+      U.quotientPrincipalUnitSubgroupMapOfLe (le_trans hkm hmn) := by
   apply MonoidHom.ext
   intro q
   refine QuotientGroup.induction_on q ?_
@@ -1306,7 +1306,7 @@ theorem quotient_principalUnitSubgroup_mapOfLe_comp
 /-- The level-change map for `n ≤ n` is the identity. -/
 theorem quotient_principalUnitSubgroup_mapOfLe_refl
     (n : ℕ) [(U.principalUnitSubgroup n).Normal] :
-    U.quotient_principalUnitSubgroup_mapOfLe (le_rfl : n ≤ n) =
+    U.quotientPrincipalUnitSubgroupMapOfLe (le_rfl : n ≤ n) =
       MonoidHom.id (G ⧸ U.principalUnitSubgroup n) := by
   apply MonoidHom.ext
   intro q
@@ -1333,7 +1333,7 @@ theorem principalUnitClassMapOfLe_refl
   intro q
   apply Subtype.ext
   change
-    U.quotient_principalUnitSubgroup_mapOfLe (le_rfl : n ≤ n)
+    U.quotientPrincipalUnitSubgroupMapOfLe (le_rfl : n ≤ n)
         (q : G ⧸ U.principalUnitSubgroup n) =
       (q : G ⧸ U.principalUnitSubgroup n)
   rw [U.quotient_principalUnitSubgroup_mapOfLe_refl n]
@@ -1352,16 +1352,16 @@ theorem principalUnitClassMapOfLe_comp
   intro q
   apply Subtype.ext
   change
-    U.quotient_principalUnitSubgroup_mapOfLe hlm
-        (U.quotient_principalUnitSubgroup_mapOfLe hmn
+    U.quotientPrincipalUnitSubgroupMapOfLe hlm
+        (U.quotientPrincipalUnitSubgroupMapOfLe hmn
           (q : G ⧸ U.principalUnitSubgroup n)) =
-      U.quotient_principalUnitSubgroup_mapOfLe (le_trans hlm hmn)
+      U.quotientPrincipalUnitSubgroupMapOfLe (le_trans hlm hmn)
         (q : G ⧸ U.principalUnitSubgroup n)
   change
-    ((U.quotient_principalUnitSubgroup_mapOfLe hlm).comp
-        (U.quotient_principalUnitSubgroup_mapOfLe hmn))
+    ((U.quotientPrincipalUnitSubgroupMapOfLe hlm).comp
+        (U.quotientPrincipalUnitSubgroupMapOfLe hmn))
       (q : G ⧸ U.principalUnitSubgroup n) =
-      U.quotient_principalUnitSubgroup_mapOfLe (le_trans hlm hmn)
+      U.quotientPrincipalUnitSubgroupMapOfLe (le_trans hlm hmn)
         (q : G ⧸ U.principalUnitSubgroup n)
   rw [U.quotient_principalUnitSubgroup_mapOfLe_comp hlm hmn]
 

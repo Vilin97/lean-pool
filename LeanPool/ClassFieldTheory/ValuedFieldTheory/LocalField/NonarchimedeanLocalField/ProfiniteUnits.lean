@@ -63,7 +63,7 @@ theorem localFieldTotallyDisconnectedSpace
   infer_instance
 
 /-- The unit group of the valuation ring of a nonarchimedean local field, as a profinite group. -/
-noncomputable def localUnits_profinite
+noncomputable def localUnitsProfinite
     (K : Type u) [Field K] [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K] : ProfiniteGrp := by
   letI : T2Space K := localFieldT2Space K

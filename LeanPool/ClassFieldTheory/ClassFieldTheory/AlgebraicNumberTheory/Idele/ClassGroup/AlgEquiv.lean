@@ -144,7 +144,6 @@ noncomputable def relativeIdeleClassCongr
     (relativeIdelePrincipalSubgroup_map_congr
       (K := K) e)
 
-@[simp]
 theorem relativeIdeleClassCongr_mk
     (e : L ≃ₐ[K] M)
     (a : RelativeIdeleGroup K L) :
@@ -593,7 +592,6 @@ theorem relativeIdeleBaseChangeMulEquiv_smul_congr
 
 /-- On finite coordinates, canonical idelic transport is the completion
 map at the corresponding finite places. -/
-@[simp]
 theorem ideleCongr_finiteComponent
     (e : K ≃ₐ[ℚ] M)
     (a : IdeleGroup K)
@@ -809,7 +807,6 @@ noncomputable def ideleClassCongr
 
 /-- The ordinary idele-class transport is induced by `ideleCongr` on
 quotient representatives. -/
-@[simp]
 theorem ideleClassCongr_mk
     (e : K ≃ₐ[ℚ] M)
     (a : IdeleGroup K) :
@@ -856,6 +853,7 @@ section GaloisBaseChangeNaturality
 
 variable {E : Type} [Field E] [NumberField E] [Algebra ℚ E]
 
+/-- Rational Galois automorphisms act on relative idele classes. -/
 local instance :
     MulDistribMulAction (E ≃ₐ[ℚ] E)
       (RelativeIdeleGroup.ClassGroup ℚ E) :=
@@ -1351,7 +1349,6 @@ noncomputable def relativeIdeleClassCongrOfAlgEquiv
     (relativeIdelePrincipalSubgroup_map_congrOfAlgEquiv
       eK eL h)
 
-@[simp]
 theorem relativeIdeleClassCongrOfAlgEquiv_mk
     (eK : K ≃ₐ[ℚ] K')
     (eL : L ≃ₐ[ℚ] L')
@@ -1438,7 +1435,6 @@ variable [IsGalois K L] [IsGalois K' L']
 omit [IsGalois K L] [IsGalois K' L'] in
 /-- The descended relative idele-class norm commutes with compatible
 equivalences of number-field extensions. -/
-@[simp]
 theorem relativeIdeleClassCongrOfAlgEquiv_ideleClassNorm
     (eK : K ≃ₐ[ℚ] K')
     (eL : L ≃ₐ[ℚ] L')
@@ -1542,7 +1538,6 @@ omit [FiniteDimensional K L] [FiniteDimensional K' L']
   [IsGalois K L] [IsGalois K' L'] in
 /-- On an ordinary idele-class representative, transport of norm
 quotients is induced by the existing idele-class transport. -/
-@[simp]
 theorem ordinaryIdeleClassNormQuotientCongrOfAlgEquiv_mk
     (eK : K ≃ₐ[ℚ] K')
     (eL : L ≃ₐ[ℚ] L')

@@ -81,7 +81,6 @@ noncomputable def connectedComponentQuotientCongr (e : G ≃ₜ* H) :
       continuous_invFun := hinv }
 
 /-- On representatives, the quotient equivalence applies the original map. -/
-@[simp]
 theorem connectedComponentQuotientCongr_mk
     (e : G ≃ₜ* H) (g : G) :
     connectedComponentQuotientCongr e

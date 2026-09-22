@@ -31,6 +31,7 @@ namespace EqualCharacteristic
 variable (k : Type u) [Field k] [Finite k]
 
 omit [Finite k] in
+/-- The algebraic closure of the coefficient field carries the discrete uniformity. -/
 noncomputable local instance equalCharacteristicThetaEvaluationCoefficientUniformSpace :
     UniformSpace (AlgebraicClosure k) := ⊥
 

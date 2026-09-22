@@ -32,7 +32,7 @@ variable {K : Type u} [Field K]
 ambient field is the corresponding distinguished endomorphism. -/
 theorem equalCharacteristicChangedPiPolynomial_eval₂
     (F : LocalField.{u, v} K)
-    [CharP K F.residueCharacteristic]
+
     (a : F.residueField⟦X⟧ˣ)
     {A : Type*} [Field A] [CharP A F.residueCharacteristic]
     (φ : F.residueField⸨X⸩ →+* A) (x : A) :

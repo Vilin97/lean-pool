@@ -216,7 +216,6 @@ noncomputable def separableAbsoluteLocalArtinMap :
 
 /-- Projection of the absolute local Artin map to an open finite quotient is
 the corresponding finite local Artin coordinate. -/
-@[simp]
 theorem separableAbsoluteLocalArtinMap_finiteProjection
     (N : OpenNormalSubgroup (localAbsoluteAbelianProfinite K)) (a : Kˣ) :
     QuotientGroup.mk' N.toSubgroup

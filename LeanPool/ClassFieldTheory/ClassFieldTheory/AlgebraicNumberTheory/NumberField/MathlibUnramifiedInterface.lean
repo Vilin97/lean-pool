@@ -25,9 +25,9 @@ namespace ClassFieldTheory
 integer rings over the integer ring of `K`. -/
 noncomputable def ringOfIntegersEquivOfAlgEquiv
     (K L E : Type)
-    [Field K] [NumberField K]
-    [Field L] [NumberField L] [Algebra K L]
-    [Field E] [NumberField E] [Algebra K E]
+    [Field K]
+    [Field L] [Algebra K L]
+    [Field E] [Algebra K E]
     (e : L ≃ₐ[K] E) : 𝓞 L ≃ₐ[𝓞 K] 𝓞 E := by
   let eℤ : L ≃ₐ[ℤ] E := e.restrictScalars ℤ
   let e𝓞 : 𝓞 L ≃ₐ[ℤ] 𝓞 E := eℤ.mapIntegralClosure
@@ -97,9 +97,9 @@ theorem isUnramifiedAtFinitePlaces_iff_of_algEquiv
 number-field equivalence over the base. -/
 theorem isUnramifiedAtInfinitePlaces_iff_of_algEquiv
     (K L E : Type)
-    [Field K] [NumberField K]
-    [Field L] [NumberField L] [Algebra K L]
-    [Field E] [NumberField E] [Algebra K E]
+    [Field K]
+    [Field L] [Algebra K L]
+    [Field E] [Algebra K E]
     (e : L ≃ₐ[K] E) :
     IsUnramifiedAtInfinitePlaces K L ↔
       IsUnramifiedAtInfinitePlaces K E := by

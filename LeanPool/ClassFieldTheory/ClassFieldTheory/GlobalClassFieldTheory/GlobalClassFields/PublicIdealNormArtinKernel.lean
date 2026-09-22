@@ -17,18 +17,19 @@ prime by prime.  The reverse inclusion needs a separate approximation
 argument and is not asserted here.
 -/
 
-open scoped Classical NumberField IsMulCommutative
+open scoped NumberField IsMulCommutative
 open NumberField IsDedekindDomain
 
 noncomputable section
 
 namespace ClassFieldTheory.GlobalClassFieldComparison
 
+open scoped Classical in
 private theorem publicIdealNormDomain_eq_source
     (K L : Type)
     [Field K] [NumberField K]
     [Field L] [NumberField L] [Algebra K L]
-    [FiniteDimensional K L]
+
     (m : RayClassModulus K) :
     rayClassPrimeToIdealNormDomain K L m =
       RayClass.primeToModulusIdeals
@@ -60,6 +61,7 @@ private theorem publicIdealNormDomain_eq_source
     rw [RayClass.mem_idealNormLiftedModulus_support_iff, ← hbelow]
     exact hW
 
+open scoped Classical in
 private theorem fractionalIdealNorm_prime
     (K L : Type)
     [Field K] [NumberField K]
@@ -104,6 +106,7 @@ private theorem fractionalIdealNorm_prime
     · simp only [mul_zero]
   · split_ifs <;> simp only [mul_zero]
 
+open scoped Classical in
 /-- Every ideal norm prime to a modulus is killed by the Frobenius-normalized
 Artin map. This is the forward half of the ideal-theoretic norm-kernel
 formula, with no idèle norm substituted for an ideal norm. -/

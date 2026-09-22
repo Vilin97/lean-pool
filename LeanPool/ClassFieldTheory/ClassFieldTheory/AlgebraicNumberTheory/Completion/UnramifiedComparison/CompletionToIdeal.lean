@@ -16,7 +16,7 @@ localized completion and propagates it to every place above the base place in
 a finite Galois extension.
 -/
 
-open scoped NumberField Classical NNReal ValuativeRel
+open scoped NumberField NNReal ValuativeRel
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -32,6 +32,7 @@ variable
     [Field L] [NumberField L] [Algebra K L]
     [FiniteDimensional K L] [IsGalois K L]
 
+open scoped Classical in
 /-- The actual image of the chosen global integral uniformizer in the
 integer ring of the chosen localized completion. -/
 noncomputable def chosenFinitePlaceTargetIntegralUniformizer
@@ -45,6 +46,7 @@ noncomputable def chosenFinitePlaceTargetIntegralUniformizer
     (chosenFinitePlaceCompletionIntegralUniformizer v).completionInteger
 
 omit [NumberField L] in
+open scoped Classical in
 /-- In an unramified chosen localized completion, the canonical global
 integral uniformizer remains a uniformizer after scalar extension. -/
 theorem chosenFinitePlace_integralUniformizer_map_isUniformizer
@@ -120,6 +122,7 @@ theorem chosenFinitePlace_integralUniformizer_map_isUniformizer
     Valuation.isUniformizer_of_maximalIdeal_eq_span
       (v := targetDVF.valuation) hpiTargetMaximalIdeal
 
+open scoped Classical in
 /-- Completed unramifiedness forces ramification index one at the actual
 global centre of the chosen finite-place extension. -/
 theorem
@@ -297,6 +300,7 @@ theorem
     exact_mod_cast heInt.symm
   exact heGlobal
 
+open scoped Classical in
 /-- Unramifiedness of the actual chosen localized completion forces
 ideal-theoretic unramifiedness at its global centre. -/
 theorem isUnramifiedAt_of_chosenFinitePlaceIsUnramified
@@ -332,6 +336,7 @@ theorem isUnramifiedAt_of_chosenFinitePlaceIsUnramified
     finitePlaceExtensionCentre_ramificationIdx'_eq_one_of_chosenFinitePlaceIsUnramified
       (K := K) (L := L) v hunram
 
+open scoped Classical in
 /-- In a finite Galois number-field extension, completed unramifiedness at
 the chosen place implies ideal-theoretic unramifiedness at every finite place
 above the same base place. -/

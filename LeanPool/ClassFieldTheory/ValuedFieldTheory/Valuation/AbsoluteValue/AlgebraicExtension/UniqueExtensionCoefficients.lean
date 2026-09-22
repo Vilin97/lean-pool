@@ -7,7 +7,8 @@ Authors: n-yamaguchi-0729
 import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.AlgebraicExtension.Core
 import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.IrreduciblePolynomialBounds
 /-!
-# the nonarchimedean valuation construction, the irreducible coefficient estimate: the coefficient norm of an irreducible polynomial
+# the nonarchimedean valuation construction, the irreducible coefficient estimate: the
+  coefficient norm of an irreducible polynomial
 
 The unique nonarchimedean extension to a splitting field is invariant under
 all ground-field automorphisms.  Normality of a splitting field therefore

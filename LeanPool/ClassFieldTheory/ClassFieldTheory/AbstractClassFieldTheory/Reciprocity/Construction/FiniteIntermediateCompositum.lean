@@ -14,7 +14,8 @@ open CyclicCohomology
 /-!
 # Finite intermediate fields: composita and absolute finiteness
 
-These are the finite-stage closure facts used in the proof of the universal norm-descent lemma.  The compositum of two finite intermediate fields is their
+These are the finite-stage closure facts used in the proof of the universal norm-descent lemma.
+  The compositum of two finite intermediate fields is their
 intersection on the Galois-group side.
 -/
 

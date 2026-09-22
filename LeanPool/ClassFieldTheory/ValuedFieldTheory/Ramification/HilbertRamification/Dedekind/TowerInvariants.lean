@@ -39,8 +39,8 @@ theorem ramificationIdx_tower
 /-- The prime-decomposition tower identity:
 inertia degrees multiply in a tower. -/
 theorem dedekindTower_inertiaDeg_tower
-    (p : Ideal A) [p.IsMaximal]
-    (P : Ideal B) [P.IsMaximal] [P.LiesOver p]
+    (p : Ideal A)
+    (P : Ideal B)
     (Q : Ideal C) [Q.LiesOver P] :
     Q.inertiaDeg A =
       P.inertiaDeg A * Q.inertiaDeg B := by

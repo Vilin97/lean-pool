@@ -32,6 +32,8 @@ noncomputable def localAbsoluteAbelianProfinite : ProfiniteGrp :=
   ProfiniteGrp.of
     (TopologicalAbelianization (intrinsicAbsoluteGalois K))
 
+/-- The profinite absolute abelianization carries the commutative group structure of the
+topological abelianization. -/
 local instance localAbsoluteAbelianProfiniteCommGroup :
     CommGroup (localAbsoluteAbelianProfinite K) := by
   change CommGroup (TopologicalAbelianization (intrinsicAbsoluteGalois K))

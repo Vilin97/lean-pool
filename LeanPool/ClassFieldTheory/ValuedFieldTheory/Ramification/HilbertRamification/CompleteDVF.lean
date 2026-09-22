@@ -213,7 +213,6 @@ theorem decompositionResidueAction_apply
   rfl
 
 /-- States the theorem `decompositionResidueAction_algebraMap`. -/
-@[simp]
 theorem decompositionResidueAction_algebraMap
     (sigma : ValuationSubring.decompositionGroup K
       target.valuation.valuationSubring)
@@ -486,7 +485,6 @@ def galQuotientInertiaEquivResidueGalois
         (K := K) (base := base) (target := target)))
 
 /-- States the theorem `galQuotientInertiaEquivResidueGalois_mk`. -/
-@[simp]
 theorem galQuotientInertiaEquivResidueGalois_mk
     [IsGalois K L]
     (sigma : L ≃ₐ[K] L) :

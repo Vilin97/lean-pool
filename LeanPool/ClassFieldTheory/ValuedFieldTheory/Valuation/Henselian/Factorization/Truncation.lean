@@ -22,15 +22,15 @@ namespace AlgebraicNumberTheory
 namespace Valuations
 
 /-- low-degree part of a polynomial up to degree `N`. -/
-def henselFactorization_lowPart {R : Type*} [Semiring R] (N : ℕ) (P : R[X]) : R[X] :=
+def henselFactorizationLowPart {R : Type*} [Semiring R] (N : ℕ) (P : R[X]) : R[X] :=
   Finset.sum (Finset.range (N + 1)) fun i => Polynomial.monomial i (P.coeff i)
 
 /-- coefficients at degrees kept by `lowPart`. -/
 theorem henselFactorization_lowPart_coeff_of_le
     {R : Type*} [Semiring R] {N n : ℕ} (P : R[X]) (hn : n ≤ N) :
-    (henselFactorization_lowPart N P).coeff n = P.coeff n := by
+    (henselFactorizationLowPart N P).coeff n = P.coeff n := by
   classical
-  unfold henselFactorization_lowPart
+  unfold henselFactorizationLowPart
   rw [Polynomial.finsetSum_coeff]
   rw [Finset.sum_eq_single n]
   · simp
@@ -42,9 +42,9 @@ theorem henselFactorization_lowPart_coeff_of_le
 /-- coefficients above the cutoff vanish in `lowPart`. -/
 theorem henselFactorization_lowPart_coeff_eq_zero_of_lt
     {R : Type*} [Semiring R] {N n : ℕ} (P : R[X]) (hn : N < n) :
-    (henselFactorization_lowPart N P).coeff n = 0 := by
+    (henselFactorizationLowPart N P).coeff n = 0 := by
   classical
-  unfold henselFactorization_lowPart
+  unfold henselFactorizationLowPart
   rw [Polynomial.finsetSum_coeff]
   refine Finset.sum_eq_zero ?_
   intro b hb
@@ -57,7 +57,7 @@ theorem henselFactorization_lowPart_coeff_eq_zero_of_lt
 /-- `lowPart` has the intended degree bound. -/
 theorem henselFactorization_lowPart_natDegree_le
     {R : Type*} [Semiring R] (N : ℕ) (P : R[X]) :
-    (henselFactorization_lowPart N P).natDegree ≤ N := by
+    (henselFactorizationLowPart N P).natDegree ≤ N := by
   rw [Polynomial.natDegree_le_iff_coeff_eq_zero]
   intro n hn
   exact henselFactorization_lowPart_coeff_eq_zero_of_lt (P := P) hn
@@ -68,7 +68,7 @@ theorem henselFactorization_lowPart_map_eq_of_high_coeff_mem_ker
     {R k : Type*} [CommRing R] [CommRing k] (φ : R →+* k)
     (N : ℕ) (P : R[X])
     (hhigh : ∀ n : ℕ, N < n → P.coeff n ∈ RingHom.ker φ) :
-    (henselFactorization_lowPart N P).map φ = P.map φ := by
+    (henselFactorizationLowPart N P).map φ = P.map φ := by
   ext n
   by_cases hn : n ≤ N
   · rw [Polynomial.coeff_map, Polynomial.coeff_map,
@@ -84,7 +84,7 @@ theorem henselFactorization_lowPart_map_eq_of_high_coeff_mem_ker
 theorem henselFactorization_lowPart_residue_map_eq_of_high_coeff_mem_maximalIdeal
     {R : Type*} [CommRing R] [IsLocalRing R] (N : ℕ) (P : R[X])
     (hhigh : ∀ n : ℕ, N < n → P.coeff n ∈ IsLocalRing.maximalIdeal R) :
-    (henselFactorization_lowPart N P).map (IsLocalRing.residue R) =
+    (henselFactorizationLowPart N P).map (IsLocalRing.residue R) =
       P.map (IsLocalRing.residue R) := by
   apply henselFactorization_lowPart_map_eq_of_high_coeff_mem_ker
   intro n hn
@@ -100,9 +100,9 @@ theorem henselFactorization_correction_after_lowPart_ker
     (hcorr :
       ∀ n : ℕ, (g0 * Q + h0 * p - fn).coeff n ∈ RingHom.ker φ)
     (hhigh : ∀ n : ℕ, N < n → Q.coeff n ∈ RingHom.ker φ) :
-    (henselFactorization_lowPart N Q).natDegree ≤ N ∧
+    (henselFactorizationLowPart N Q).natDegree ≤ N ∧
       ∀ n : ℕ,
-        (g0 * henselFactorization_lowPart N Q + h0 * p - fn).coeff n ∈
+        (g0 * henselFactorizationLowPart N Q + h0 * p - fn).coeff n ∈
           RingHom.ker φ := by
   refine ⟨henselFactorization_lowPart_natDegree_le N Q, ?_⟩
   have hmapQ :=
@@ -112,13 +112,13 @@ theorem henselFactorization_correction_after_lowPart_ker
     exact (henselFactorization_map_eq_zero_iff_coeff_mem_ker
       φ (g0 * Q + h0 * p - fn)).2 hcorr
   have hmapNew :
-      (g0 * henselFactorization_lowPart N Q + h0 * p - fn).map φ = 0 := by
+      (g0 * henselFactorizationLowPart N Q + h0 * p - fn).map φ = 0 := by
     calc
-      (g0 * henselFactorization_lowPart N Q + h0 * p - fn).map φ =
-          g0.map φ * (henselFactorization_lowPart N Q).map φ +
+      (g0 * henselFactorizationLowPart N Q + h0 * p - fn).map φ =
+          g0.map φ * (henselFactorizationLowPart N Q).map φ +
             h0.map φ * p.map φ - fn.map φ := by
         exact henselFactorization_map_mul_add_mul_sub φ g0 h0
-          (henselFactorization_lowPart N Q) p fn
+          (henselFactorizationLowPart N Q) p fn
       _ = g0.map φ * Q.map φ + h0.map φ * p.map φ - fn.map φ := by
         rw [hmapQ]
       _ = (g0 * Q + h0 * p - fn).map φ := by
@@ -126,7 +126,7 @@ theorem henselFactorization_correction_after_lowPart_ker
       _ = 0 := hmapOld
   intro n
   exact (henselFactorization_map_eq_zero_iff_coeff_mem_ker
-    φ (g0 * henselFactorization_lowPart N Q + h0 * p - fn)).1 hmapNew n
+    φ (g0 * henselFactorizationLowPart N Q + h0 * p - fn)).1 hmapNew n
 
 /-- ideal-level truncation: the correction congruence survives
 replacing a provisional correction polynomial by its low-degree part when the
@@ -137,9 +137,9 @@ theorem henselFactorization_correction_after_lowPart_ideal
     (hcorr :
       ∀ n : ℕ, (g0 * Q + h0 * p - fn).coeff n ∈ I)
     (hhigh : ∀ n : ℕ, N < n → Q.coeff n ∈ I) :
-    (henselFactorization_lowPart N Q).natDegree ≤ N ∧
+    (henselFactorizationLowPart N Q).natDegree ≤ N ∧
       ∀ n : ℕ,
-        (g0 * henselFactorization_lowPart N Q + h0 * p - fn).coeff n ∈ I := by
+        (g0 * henselFactorizationLowPart N Q + h0 * p - fn).coeff n ∈ I := by
   let φ : R →+* R ⧸ I := Ideal.Quotient.mk I
   have hcorrKer :
       ∀ n : ℕ, (g0 * Q + h0 * p - fn).coeff n ∈ RingHom.ker φ := by
@@ -168,9 +168,9 @@ theorem henselFactorization_correction_after_lowPart_span_singleton
         Ideal.span ({π} : Set R))
     (hhigh : ∀ n : ℕ, N < n → Q.coeff n ∈
       Ideal.span ({π} : Set R)) :
-    (henselFactorization_lowPart N Q).natDegree ≤ N ∧
+    (henselFactorizationLowPart N Q).natDegree ≤ N ∧
       ∀ n : ℕ,
-        (g0 * henselFactorization_lowPart N Q + h0 * p - fn).coeff n ∈
+        (g0 * henselFactorizationLowPart N Q + h0 * p - fn).coeff n ∈
           Ideal.span ({π} : Set R) := by
   exact henselFactorization_correction_after_lowPart_ideal
     (I := Ideal.span ({π} : Set R)) N hcorr hhigh
@@ -527,9 +527,9 @@ theorem henselFactorization_correction_after_degree_truncation_span_singleton
     (hAdeg :
       ((fn - h0 * p).map
         (Ideal.Quotient.mk (Ideal.span ({π} : Set R)))).natDegree ≤ d) :
-    (henselFactorization_lowPart (d - m) Q).natDegree ≤ d - m ∧
+    (henselFactorizationLowPart (d - m) Q).natDegree ≤ d - m ∧
       ∀ n : ℕ,
-        (g0 * henselFactorization_lowPart (d - m) Q + h0 * p - fn).coeff n ∈
+        (g0 * henselFactorizationLowPart (d - m) Q + h0 * p - fn).coeff n ∈
           Ideal.span ({π} : Set R) := by
   exact henselFactorization_correction_after_lowPart_span_singleton
     (π := π) (N := d - m) hcorr
@@ -553,9 +553,9 @@ theorem henselFactorization_correction_after_division_degree_truncation_span_sin
     (hh0 : h0.natDegree ≤ d - m)
     (hp : p.natDegree ≤ m)
     (hmd : m ≤ d) :
-    (henselFactorization_lowPart (d - m) (a * fn + h0 * q)).natDegree ≤ d - m ∧
+    (henselFactorizationLowPart (d - m) (a * fn + h0 * q)).natDegree ≤ d - m ∧
       ∀ n : ℕ,
-        (g0 * henselFactorization_lowPart (d - m) (a * fn + h0 * q) +
+        (g0 * henselFactorizationLowPart (d - m) (a * fn + h0 * q) +
             h0 * p - fn).coeff n ∈ Ideal.span ({π} : Set R) := by
   rcases henselFactorization_span_singleton_quotient_unit_leadingCoeff_natDegree_eq
       (π := π) hπ hgunit hg0nat with
@@ -586,9 +586,9 @@ theorem henselFactorization_correction_after_lowPart
     (hcorr :
       ∀ n : ℕ, (g0 * Q + h0 * p - fn).coeff n ∈ IsLocalRing.maximalIdeal R)
     (hhigh : ∀ n : ℕ, N < n → Q.coeff n ∈ IsLocalRing.maximalIdeal R) :
-    (henselFactorization_lowPart N Q).natDegree ≤ N ∧
+    (henselFactorizationLowPart N Q).natDegree ≤ N ∧
       ∀ n : ℕ,
-        (g0 * henselFactorization_lowPart N Q + h0 * p - fn).coeff n ∈
+        (g0 * henselFactorizationLowPart N Q + h0 * p - fn).coeff n ∈
           IsLocalRing.maximalIdeal R := by
   refine ⟨henselFactorization_lowPart_natDegree_le N Q, ?_⟩
   have hmapQ :=
@@ -602,17 +602,17 @@ theorem henselFactorization_correction_after_lowPart
     have h := hcorr n
     rwa [IsLocalRing.ker_residue]
   have hmapNew :
-      (g0 * henselFactorization_lowPart N Q + h0 * p - fn).map
+      (g0 * henselFactorizationLowPart N Q + h0 * p - fn).map
         (IsLocalRing.residue R) = 0 := by
     calc
-      (g0 * henselFactorization_lowPart N Q + h0 * p - fn).map
+      (g0 * henselFactorizationLowPart N Q + h0 * p - fn).map
           (IsLocalRing.residue R) =
           g0.map (IsLocalRing.residue R) *
-            (henselFactorization_lowPart N Q).map (IsLocalRing.residue R) +
+            (henselFactorizationLowPart N Q).map (IsLocalRing.residue R) +
               h0.map (IsLocalRing.residue R) * p.map (IsLocalRing.residue R) -
                 fn.map (IsLocalRing.residue R) := by
         exact henselFactorization_map_mul_add_mul_sub (IsLocalRing.residue R) g0 h0
-          (henselFactorization_lowPart N Q) p fn
+          (henselFactorizationLowPart N Q) p fn
       _ = g0.map (IsLocalRing.residue R) * Q.map (IsLocalRing.residue R) +
             h0.map (IsLocalRing.residue R) * p.map (IsLocalRing.residue R) -
               fn.map (IsLocalRing.residue R) := by
@@ -624,7 +624,7 @@ theorem henselFactorization_correction_after_lowPart
   have hker :=
     (henselFactorization_map_eq_zero_iff_coeff_mem_ker
       (IsLocalRing.residue R)
-      (g0 * henselFactorization_lowPart N Q + h0 * p - fn)).1 hmapNew n
+      (g0 * henselFactorizationLowPart N Q + h0 * p - fn)).1 hmapNew n
   rwa [IsLocalRing.ker_residue] at hker
 
 /-- one-step degree truncation of the provisional correction:
@@ -640,9 +640,9 @@ theorem henselFactorization_correction_after_degree_truncation
       ∀ n : ℕ, (g0 * Q + h0 * p - fn).coeff n ∈
         IsLocalRing.maximalIdeal R)
     (hAdeg : ((fn - h0 * p).map (IsLocalRing.residue R)).natDegree ≤ d) :
-    (henselFactorization_lowPart (d - m) Q).natDegree ≤ d - m ∧
+    (henselFactorizationLowPart (d - m) Q).natDegree ≤ d - m ∧
       ∀ n : ℕ,
-        (g0 * henselFactorization_lowPart (d - m) Q + h0 * p - fn).coeff n ∈
+        (g0 * henselFactorizationLowPart (d - m) Q + h0 * p - fn).coeff n ∈
           IsLocalRing.maximalIdeal R := by
   exact henselFactorization_correction_after_lowPart
     (N := d - m) hcorr
@@ -665,9 +665,9 @@ theorem henselFactorization_correction_after_division_degree_truncation
     (hh0 : (h0.map (IsLocalRing.residue R)).natDegree ≤ d - m)
     (hp : (p.map (IsLocalRing.residue R)).natDegree ≤ m)
     (hmd : m ≤ d) :
-    (henselFactorization_lowPart (d - m) (a * fn + h0 * q)).natDegree ≤ d - m ∧
+    (henselFactorizationLowPart (d - m) (a * fn + h0 * q)).natDegree ≤ d - m ∧
       ∀ n : ℕ,
-        (g0 * henselFactorization_lowPart (d - m) (a * fn + h0 * q) +
+        (g0 * henselFactorizationLowPart (d - m) (a * fn + h0 * q) +
             h0 * p - fn).coeff n ∈ IsLocalRing.maximalIdeal R := by
   have hcorr :
       ∀ n : ℕ, (g0 * (a * fn + h0 * q) + h0 * p - fn).coeff n ∈

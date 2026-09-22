@@ -132,7 +132,6 @@ noncomputable def absoluteConjugateCosetEquiv
 Establishes the identity `absoluteConjugateCosetEquiv K σ (QuotientGroup.mk x) = QuotientGroup.mk
 (absoluteConjugationEquiv σ x)`.
 -/
-@[simp]
 theorem absoluteConjugateCosetEquiv_mk
     {G : Type*} [Group G] [TopologicalSpace G] [ContinuousMul G]
     (K : ClosedSubgroup G) (σ : G)

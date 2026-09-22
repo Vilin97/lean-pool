@@ -697,7 +697,7 @@ noncomputable def uniformizerGradedHom
 
 omit [FiniteDimensional K L] [IsGalois K L] in
 /-- States the theorem `uniformizerGradedHom_mk`. -/
-@[simp] theorem uniformizerGradedHom_mk
+theorem uniformizerGradedHom_mk
     (huniq :
       RamificationTheory.DiscreteValuationField.DVF.HasUniqueValuationExtension.{u, v, w, x, x}
         base target)

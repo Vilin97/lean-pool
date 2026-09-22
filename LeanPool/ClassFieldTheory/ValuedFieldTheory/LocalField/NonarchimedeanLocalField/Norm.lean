@@ -223,7 +223,8 @@ def normIntegerUnits
     ext
     simp [normIntegerUnitsValue]
 
-/-- Coercing the integer-unit norm to the base field yields the algebra norm of the original unit. -/
+/-- Coercing the integer-unit norm to the base field yields the algebra norm of the original
+unit. -/
 lemma normIntegerUnits_apply_coe [ValuativeRel K] [ValuativeRel L]
     [LocalFieldTheory.ValuativeExtension K L] (x : 𝒪[L]ˣ) :
     (((normIntegerUnits K L x : 𝒪[K]ˣ) : 𝒪[K]) : K) =

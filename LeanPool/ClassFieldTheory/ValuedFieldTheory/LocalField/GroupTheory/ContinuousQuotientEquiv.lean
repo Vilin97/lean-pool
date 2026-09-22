@@ -50,7 +50,7 @@ noncomputable def continuousCongr
 
 /-- The descended equivalence acts on quotient classes through the original
 equivalence. -/
-@[simp] theorem continuousCongr_mk
+theorem continuousCongr_mk
     (N : Subgroup G) (M : Subgroup H) [N.Normal] [M.Normal]
     (e : G ≃ₜ* H) (h : N.map e.toMulEquiv.toMonoidHom = M) (g : G) :
     continuousCongr N M e h (QuotientGroup.mk' N g) =

@@ -55,7 +55,7 @@ theorem eval_normPolynomial
 /-- The linear polynomial whose value at the coordinates of `x` is the
 `σ`-conjugate of `x`. -/
 def conjugatePolynomial
-    {ι : Type w} [Fintype ι] [DecidableEq ι]
+    {ι : Type w} [Fintype ι]
     (b : Module.Basis ι K L) (σ : L ≃ₐ[K] L) :
     MvPolynomial ι L :=
   ∑ i, MvPolynomial.X i * MvPolynomial.C (σ (b i))
@@ -63,12 +63,14 @@ def conjugatePolynomial
 omit [FiniteDimensional K L] in
 @[simp]
 theorem eval_conjugatePolynomial
-    {ι : Type w} [Fintype ι] [DecidableEq ι]
+    {ι : Type w} [Fintype ι]
     (b : Module.Basis ι K L) (σ : L ≃ₐ[K] L) (x : L) :
     MvPolynomial.eval
         (fun i ↦ algebraMap K L (b.repr x i))
         (conjugatePolynomial b σ) =
       σ x := by
+  classical
+  let : DecidableEq ι := Classical.decEq ι
   rw [conjugatePolynomial, map_sum]
   simp only [map_mul, MvPolynomial.eval_X, MvPolynomial.eval_C]
   calc
@@ -209,7 +211,7 @@ omit [FiniteDimensional K L] in
 base-changed element gives its actual scalar-extended conjugate. -/
 theorem eval₂_conjugatePolynomial_baseChange
     (A : Type*) [CommRing A] [Algebra K A]
-    {ι : Type w} [Fintype ι] [DecidableEq ι]
+    {ι : Type w} [Fintype ι]
     (b : Module.Basis ι K L) (σ : L ≃ₐ[K] L)
     (z : A ⊗[K] L) :
     MvPolynomial.eval₂
@@ -220,6 +222,8 @@ theorem eval₂_conjugatePolynomial_baseChange
           ((Algebra.TensorProduct.basis A b).repr z i))
         (conjugatePolynomial b σ) =
       scalarConjugation (K := K) (L := L) A σ z := by
+  classical
+  let : DecidableEq ι := Classical.decEq ι
   simp only [conjugatePolynomial, MvPolynomial.eval₂_sum,
     MvPolynomial.eval₂_mul, MvPolynomial.eval₂_X,
     MvPolynomial.eval₂_C]

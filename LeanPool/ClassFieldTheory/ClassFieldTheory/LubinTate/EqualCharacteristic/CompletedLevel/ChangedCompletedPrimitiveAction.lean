@@ -11,7 +11,8 @@ import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.
 /-!
 # The completed theta-intertwining theorem: primitive action for the changed completed level
 
-The theta relation in the completed theta-intertwining theorem uses the source parameter `u⁻¹T`.  We first
+The theta relation in the completed theta-intertwining theorem uses the source parameter `u⁻¹T`.
+  We first
 prove, genuinely by Eisenstein over `(AlgebraicClosure κ)[[T]]`, that its
 primitive polynomial stays irreducible over the completed maximal-unramified
 Laurent field.  We then enumerate its roots by source Lubin--Tate unit
@@ -36,6 +37,8 @@ open LocalFieldTheory.DiscreteValuationField
 
 variable {K : Type u} [Field K]
 
+/-- Coefficient extension makes the completed unramified base an algebra over residue-field
+Laurent series for the changed primitive action. -/
 noncomputable local instance equalCharacteristicChangedCompletedPrimitiveActionBaseAlgebra
     (F : LocalField.{u, v} K) :
     Algebra F.residueField⸨X⸩
@@ -284,7 +287,7 @@ noncomputable def equalCharacteristicChangedCompletedUnitRoot
 
 private theorem equalCharacteristicChangedActionPiPolynomial_eval₂
     (F : LocalField.{u, v} K)
-    [CharP K F.residueCharacteristic]
+
     (u : F.residueField⟦X⟧ˣ)
     {A : Type*} [Field A] [CharP A F.residueCharacteristic]
     (f : F.residueField⸨X⸩ →+* A) (x : A) :

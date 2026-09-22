@@ -51,7 +51,7 @@ noncomputable def finitePlaceTensorRingEquivAboveAdic
           u.1.Completion) :=
     (relativeFinitePlaceLocalTensorAlgEquiv
       (K := K) (L := L) w).symm.toRingEquiv.trans
-      (completionTensorDecomposition_left
+      (completionTensorDecompositionLeft
         (K := K) (L := L) vK hvK).toRingEquiv
   let e₂ :
       (∀ u : AbsoluteValueExtension vK L,
@@ -176,7 +176,7 @@ noncomputable def infinitePlaceTensorRingEquivAbove
   exact
     (infinitePlaceLocalTensorAlgEquiv
       (K := K) (L := L) w).toRingEquiv.trans
-    ((completionTensorDecomposition_left
+    ((completionTensorDecompositionLeft
         (K := K) (L := L) w.1
         w.isNontrivial).toRingEquiv.trans
       ((infiniteCompletionRingProductReindexAbove
@@ -195,7 +195,7 @@ theorem infinitePlaceTensorRingEquivAbove_apply
     infinitePlaceTensorRingEquivAbove
         (K := K) (L := L) w z W =
       (InfinitePlace.Completion.equiv W.1).symm
-        (completionTensorDecomposition_left
+        (completionTensorDecompositionLeft
           w.1 w.isNontrivial
           (infinitePlaceLocalTensorAlgEquiv
             (K := K) (L := L) w z)
@@ -225,7 +225,7 @@ theorem infinitePlaceTensorRingEquivAbove_tmul
   rw [infinitePlaceTensorRingEquivAbove_apply]
   change
     (InfinitePlace.Completion.equiv W.1).symm
-        (completionTensorDecomposition_left
+        (completionTensorDecompositionLeft
           w.1 w.isNontrivial
           ((infinitePlaceCompletionAlgEquiv w a) ⊗ₜ[K] x)
           (infinitePlaceAboveToExtension
@@ -924,7 +924,7 @@ theorem infinitePlaceTensorRingEquivAbove_tmul_one
   rw [infinitePlaceTensorRingEquivAbove_apply]
   change
     (InfinitePlace.Completion.equiv W.1).symm
-        (completionTensorDecomposition_left
+        (completionTensorDecompositionLeft
           w.1 w.isNontrivial
           ((1 : w.1.Completion) ⊗ₜ[K] x)
           (infinitePlaceAboveEquivExtension

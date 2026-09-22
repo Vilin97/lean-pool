@@ -26,7 +26,7 @@ universe u v
 /-- The chosen copy of a finite Galois extension in the separable closure. -/
 def finiteGaloisFieldRange
     (K L : Type) [Field K] [Field L] [Algebra K L]
-    [FiniteDimensional K L] [IsGalois K L] :
+    [IsGalois K L] :
     IntermediateField K (SeparableClosure K) :=
   AlgHom.fieldRange
     (AlgebraicNumberTheory.separableEmbeddingIntoSeparableClosure K L)

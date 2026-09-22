@@ -80,7 +80,6 @@ noncomputable def ideleClassNorm :
         ⟨Units.map (Algebra.norm K) x,
           (IdeleGroup.norm_principalIdele K L x).symm⟩)
 
-@[simp]
 theorem ideleClassNorm_mk
     (a : IdeleGroup L) :
     ideleClassNorm K L

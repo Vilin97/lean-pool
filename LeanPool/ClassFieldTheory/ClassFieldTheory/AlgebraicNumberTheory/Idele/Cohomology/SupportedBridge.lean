@@ -23,7 +23,7 @@ It also compares the concrete tensor-coordinate supported subgroup of
 relative ideles with the ordinary supported idele subgroup of `L`.
 -/
 
-open scoped Classical NumberField TensorProduct
+open scoped NumberField TensorProduct
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -35,6 +35,7 @@ variable
     [Field L] [NumberField L] [Algebra K L]
     [FiniteDimensional K L] [IsGalois K L]
 
+open scoped Classical in
 /-- The finite set of places of `L` lying above a finite set of places
 of `K`. -/
 noncomputable def finitePlacesAbove
@@ -44,6 +45,7 @@ noncomputable def finitePlacesAbove
     (K := K) (L := L) S.finite_toSet).toFinset
 
 omit [FiniteDimensional K L] [IsGalois K L] in
+open scoped Classical in
 @[simp]
 theorem mem_finitePlacesAbove_iff
     (S : Finset (HeightOneSpectrum (𝓞 K)))
@@ -53,6 +55,7 @@ theorem mem_finitePlacesAbove_iff
   simp [finitePlacesAbove]
 
 omit [FiniteDimensional K L] [IsGalois K L] in
+open scoped Classical in
 /-- Galois conjugation does not change the place lying below a finite
 place of the extension field. -/
 @[simp]
@@ -81,6 +84,7 @@ theorem finitePlaceBelow_finitePlaceEquiv
       (x := algebraMap (𝓞 K) (𝓞 L) x))
 
 omit [FiniteDimensional K L] [IsGalois K L] in
+open scoped Classical in
 /-- The full set of extension places above a base support is stable
 under the concrete Galois action. -/
 theorem finitePlacesAbove_isGaloisStable
@@ -96,6 +100,7 @@ theorem finitePlacesAbove_isGaloisStable
   rw [finitePlaceBelow_finitePlaceEquiv]
 
 omit [IsGalois K L] in
+open scoped Classical in
 /-- Scalar extension carries the concrete supported
 relative ideles exactly to the ordinary ideles supported at all places
 above the same base support. -/
@@ -151,6 +156,7 @@ theorem relativeIdeleBaseChange_mem_supportedAt_iff
     exact hlocal
 
 omit [IsGalois K L] in
+open scoped Classical in
 /-- Subgroup-level form of
 `relativeIdeleBaseChange_mem_supportedAt_iff`. -/
 theorem relativeIdeleLocalTensorDecompositionSupportedSubgroup_map_baseChange
@@ -179,6 +185,7 @@ theorem relativeIdeleLocalTensorDecompositionSupportedSubgroup_map_baseChange
           (K := K) (L := L)).apply_symm_apply y
 
 omit [IsGalois K L] in
+open scoped Classical in
 /-- If the supported ordinary ideles and principal ideles generate
 `I_L`, then their relative counterparts generate the full relative
 idele group. -/
@@ -209,6 +216,7 @@ theorem relativeIdeleSupported_sup_principal_eq_top
       (relativeIdeleBaseChangeMulEquiv
         (K := K) (L := L)).surjective]
 
+open scoped Classical in
 /-- A diagonal idele is supported at `T` exactly when its defining
 field unit is a `T`-unit. -/
 theorem principalIdele_mem_supportedAt_iff_sUnit
@@ -246,6 +254,7 @@ theorem principalIdele_mem_supportedAt_iff_sUnit
       HeightOneSpectrum.valuedAdicCompletion_eq_valuation']
     exact hx W (by simpa using hW)
 
+open scoped Classical in
 /-- The diagonal map from extension-field `S`-units into the
 intersection of the relative principal and supported subgroups. -/
 noncomputable def sUnitToRelativePrincipalSupportedIntersection
@@ -285,6 +294,7 @@ noncomputable def sUnitToRelativePrincipalSupportedIntersection
     apply Subtype.ext
     simp
 
+open scoped Classical in
 /-- The intersection of the relative principal ideles with the
 relative `S`-idele subgroup is precisely the ordinary group of
 `S`-units of `L`. -/
@@ -349,6 +359,7 @@ noncomputable def sUnitEquivRelativePrincipalSupportedIntersection
       apply Subtype.ext
       exact hx⟩
 
+open scoped Classical in
 /-- The restricted Galois action on the intersection of the relative
 principal and supported subgroups. -/
 @[reducible]
@@ -389,6 +400,7 @@ noncomputable def relativePrincipalSupportedIntersectionAction
             congrArg (fun a : RelativeIdeleGroup K L => σ • a) hx)
 
 omit [IsGalois K L] in
+open scoped Classical in
 /-- The `S`-unit description of the principal-supported intersection
 is equivariant for the genuine Galois actions. -/
 theorem
@@ -433,6 +445,7 @@ theorem
     (RelativeIdeleGroup.smul_principalIdele
       K L σ (x : Lˣ)).symm
 
+open scoped Classical in
 /-- The finite base places at which at least one extension prime is
 ramified. -/
 noncomputable def ramifiedBaseFinitePlaces :
@@ -441,6 +454,7 @@ noncomputable def ramifiedBaseFinitePlaces :
       (𝓞 K) (𝓞 L)).toFinset
 
 omit [FiniteDimensional K L] [IsGalois K L] in
+open scoped Classical in
 @[simp]
 theorem mem_ramifiedBaseFinitePlaces_iff
     (v : HeightOneSpectrum (𝓞 K)) :
@@ -450,6 +464,7 @@ theorem mem_ramifiedBaseFinitePlaces_iff
           ¬ Algebra.IsUnramifiedAt (𝓞 K) W.asIdeal := by
   simp [ramifiedBaseFinitePlaces]
 
+open scoped Classical in
 /-- The idele-class Herbrand support: contractions of a sufficiently large support
 for `I_L`, together with every ramified base finite place. -/
 noncomputable def ideleClassHerbrandSupport :
@@ -461,6 +476,7 @@ noncomputable def ideleClassHerbrandSupport :
       ramifiedBaseFinitePlaces (K := K) (L := L)
 
 omit [FiniteDimensional K L] [IsGalois K L] in
+open scoped Classical in
 /-- Every place in the sufficiently large support of `L` lies above
 the chosen base support. -/
 theorem sufficientlyLargeFiniteSet_subset_finitePlacesAbove_support :
@@ -480,6 +496,7 @@ theorem sufficientlyLargeFiniteSet_subset_finitePlacesAbove_support :
   exact Finset.mem_image.mpr ⟨W, hW, rfl⟩
 
 omit [FiniteDimensional K L] [IsGalois K L] in
+open scoped Classical in
 /-- The ordinary ideles supported above the chosen base support,
 together with principal ideles, generate all of `I_L`. -/
 theorem supportedAboveHerbrandSupport_sup_principal_eq_top :
@@ -498,6 +515,7 @@ theorem supportedAboveHerbrandSupport_sup_principal_eq_top :
     le_rfl
 
 omit [IsGalois K L] in
+open scoped Classical in
 /-- The relative ideles supported at the Herbrand support, together
 with the relative principal ideles, generate the full relative idele
 group. -/
@@ -514,6 +532,7 @@ theorem relativeSupportedAboveHerbrandSupport_sup_principal_eq_top :
       (K := K) (L := L))
 
 omit [FiniteDimensional K L] [IsGalois K L] in
+open scoped Classical in
 /-- Outside the chosen base support, every finite place of `L` is
 algebraically unramified over `K`. -/
 theorem isUnramifiedAt_of_notMem_ideleClassHerbrandSupport

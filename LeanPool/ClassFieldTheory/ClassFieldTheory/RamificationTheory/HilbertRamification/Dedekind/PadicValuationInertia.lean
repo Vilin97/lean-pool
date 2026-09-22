@@ -23,7 +23,9 @@ localization of `𝓞 M` at that prime.
 
 The final comparison sends ideal-theoretic inertia injectively to the
 valuation-subring inertia group.  Thus the local cardinality bound furnished
-by the localization and decomposition comparison applies to the chosen global prime without an extra compatibility
+by
+  the localization and decomposition comparison applies to the chosen global prime without an
+    extra compatibility
 hypothesis.
 -/
 
@@ -601,8 +603,10 @@ theorem globalPadicIdealInertiaToLocalizationInertia_injective
   exact h2
 
 omit [IsAbelianGalois ℚ M] in
-/-- The exact cardinal comparison needed in the global cyclotomic inertia argument: the ideal inertia group
-at the synchronized prime is no larger than the localization and decomposition comparison valuation inertia
+/-- The exact cardinal comparison needed in the global cyclotomic inertia argument: the ideal
+inertia group
+at the synchronized prime is no larger than the localization and decomposition comparison
+  valuation inertia
 group attached to `w`. -/
 theorem globalPadicPrimeIdeal_inertia_natCard_le_valuationInertia
     (w : AbsoluteValueExtension (Rat.AbsoluteValue.padic p) M) :

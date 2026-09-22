@@ -17,7 +17,7 @@ of the product of the corresponding local Artin factors.  Global reciprocity
 on a principal idele therefore makes this product equal to one.
 -/
 
-open scoped BigOperators Classical IsMulCommutative NumberField
+open scoped BigOperators IsMulCommutative NumberField
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -29,6 +29,7 @@ open KummerTheory
 
 variable (K : Type) [Field K] [NumberField K]
 
+open scoped Classical in
 private theorem map_product_mul_finprod
     {I J M N : Type} [Fintype I] [CommMonoid M] [CommMonoid N]
     (chi : M →* N) (f : I → M) (g : J → M)
@@ -37,6 +38,7 @@ private theorem map_product_mul_finprod
       chi ((∏ i, f i) * ∏ᶠ j, g j) := by
   rw [chi.map_mul, map_prod, MonoidHom.map_finprod chi hg]
 
+open scoped Classical in
 /-- The product of the Hilbert symbols of two global units over all places.
 The finite-place part is a genuine finite-support product. -/
 noncomputable def globalHilbertProduct
@@ -49,6 +51,7 @@ noncomputable def globalHilbertProduct
     ∏ᶠ v : HeightOneSpectrum (𝓞 K),
       finitePlaceHilbertSymbol K n hnK hmu v a b
 
+open scoped Classical in
 /-- The global Hilbert product of a principal pair is trivial.  The proof
 maps the chosen local Artin product through the global Kummer root character
 and then uses the finite- and infinite-place comparison theorems. -/
@@ -172,6 +175,7 @@ theorem globalHilbertProduct_principal
   rw [← hInfinite, ← hFinite]
   exact hMapped
 
+open scoped Classical in
 /-- The Hilbert symbols of two global units have product one over all finite
 and infinite places. -/
 theorem hilbertSymbol_allPlaces_product_eq_one

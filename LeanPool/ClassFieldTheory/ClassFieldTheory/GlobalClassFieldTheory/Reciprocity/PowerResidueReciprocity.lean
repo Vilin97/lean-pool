@@ -31,7 +31,7 @@ the exponent-place and infinite-place correction in the common field-valued
 group of roots of unity.
 -/
 
-open scoped BigOperators Classical NumberField NumberTheorySymbols ValuativeRel WithZero
+open scoped BigOperators NumberField NumberTheorySymbols ValuativeRel WithZero
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -47,6 +47,7 @@ open LocalFieldTheory.IsNonarchimedeanLocalField
 
 variable (K : Type) [Field K] [NumberField K]
 
+open scoped Classical in
 /-- Equality for the valuation used to define a valuative relation transports
 to equality in the relation's canonical value group. -/
 private theorem canonicalValuation_eq_of_valuation_eq
@@ -65,6 +66,7 @@ private theorem canonicalValuation_eq_of_valuation_eq
   · change v (y * (1 : R)) ≤ v (x * (1 : R))
     simpa only [mul_one] using hxy.ge
 
+open scoped Classical in
 /-- The bounded-natural-number form of nonarchimedeanness for a finite-place
 absolute value.  Naming this bridge keeps all completion residue constructions
 on one proof-irrelevant provider. -/
@@ -76,6 +78,7 @@ private theorem finitePlaceAdicAbv_nonarchimedeanAbsoluteValue
     (HeightOneSpectrum.adicAbv K v)).1
       (HeightOneSpectrum.isNonarchimedean_adicAbv K v)
 
+open scoped Classical in
 /-- Finite-field power-residue symbols commute with a field equivalence.
 The statement is made on underlying units so it can be reused with every
 roots-of-unity transport occurring below. -/
@@ -99,6 +102,7 @@ theorem finiteFieldPowerResidueSymbol_unitsMap_ringEquiv
     map_pow]
   rw [Fintype.card_congr e.toEquiv]
 
+open scoped Classical in
 /-- The residue field of a finite-place completion is canonically the
 prime-ideal residue field.  The construction passes through the localization
 at the prime and then through the residue equivalence induced by completion. -/
@@ -163,6 +167,7 @@ noncomputable def finitePlacePrimeResidueEquivLocalResidue
       (AlgebraicNumberTheory.Valuations.completionResidueEquiv a ha) |>.trans
       (IsLocalRing.ResidueField.mapEquiv eCompletionRing)
 
+open scoped Classical in
 /-- The image of an algebraic integer in the valuation ring of a finite-place
 completion. -/
 noncomputable def finitePlaceIntegralCompletionElement
@@ -191,9 +196,9 @@ noncomputable def finitePlaceIntegralCompletionElement
         v.adicAbv_coe_le_one
           (HeightOneSpectrum.one_lt_absNorm_nnreal v) x⟩
 
+open scoped Classical in
 /-- The finite-place integral element has the expected underlying completion
 value. -/
-@[simp]
 theorem finitePlaceIntegralCompletionElement_coe
     (v : HeightOneSpectrum (𝓞 K)) (x : 𝓞 K) :
     let C := (HeightOneSpectrum.adicAbv K v).Completion
@@ -205,6 +210,7 @@ theorem finitePlaceIntegralCompletionElement_coe
       algebraMap K C (x : K) :=
   rfl
 
+open scoped Classical in
 /-- The finite-place residue equivalence sends the class of an algebraic
 integer to the residue of its canonical image in the completion. -/
 @[simp]
@@ -245,6 +251,7 @@ theorem finitePlacePrimeResidueEquivLocalResidue_mk
     (NumberField.RingOfIntegers K) (v.valuationSubringAtPrime K)]
   rfl
 
+open scoped Classical in
 /-- A nonzero algebraic integer, regarded as a global field unit. -/
 def nonzeroIntegralFieldUnit (x : 𝓞 K) (hx : x ≠ 0) : Kˣ :=
   Units.mk0 (x : K) (by
@@ -254,11 +261,13 @@ def nonzeroIntegralFieldUnit (x : 𝓞 K) (hx : x ≠ 0) : Kˣ :=
     exact hxK)
 
 omit [NumberField K] in
+open scoped Classical in
 @[simp]
 theorem nonzeroIntegralFieldUnit_coe (x : 𝓞 K) (hx : x ≠ 0) :
     ((nonzeroIntegralFieldUnit K x hx : Kˣ) : K) = (x : K) :=
   rfl
 
+open scoped Classical in
 /-- An algebraic integer avoiding a prime ideal, regarded as a nonzero
 element of the global field. -/
 noncomputable def primeAvoidingIntegralFieldUnit
@@ -271,6 +280,7 @@ noncomputable def primeAvoidingIntegralFieldUnit
     exact Ideal.zero_mem _)
 
 omit [NumberField K] in
+open scoped Classical in
 @[simp]
 theorem primeAvoidingIntegralFieldUnit_coe
     (v : HeightOneSpectrum (𝓞 K))
@@ -278,6 +288,7 @@ theorem primeAvoidingIntegralFieldUnit_coe
     ((primeAvoidingIntegralFieldUnit K v x hx : Kˣ) : K) = (x : K) :=
   rfl
 
+open scoped Classical in
 /-- An algebraic integer nonzero modulo `v`, regarded as a unit of the
 valuation ring of the finite-place completion. -/
 noncomputable def finitePlaceIntegralCompletionUnit
@@ -326,9 +337,9 @@ noncomputable def finitePlaceIntegralCompletionUnit
       apply Subtype.ext
       exact inv_mul_cancel₀ hyNe }
 
+open scoped Classical in
 /-- Forgetting the integral-unit structure recovers the ordinary image of
 the algebraic integer in the finite-place completion. -/
-@[simp]
 theorem finitePlaceIntegralCompletionUnit_coe
     (v : HeightOneSpectrum (𝓞 K))
     (x : 𝓞 K) (hx : x ∉ v.asIdeal) :
@@ -341,6 +352,7 @@ theorem finitePlaceIntegralCompletionUnit_coe
       algebraMap K C (x : K) := by
   rfl
 
+open scoped Classical in
 /-- The completion image of a prime-avoiding algebraic integer is the field
 unit underlying its canonical valuation-ring unit. -/
 theorem finitePlaceHilbert_completionUnit_primeAvoidingIntegralFieldUnit
@@ -351,7 +363,7 @@ theorem finitePlaceHilbert_completionUnit_primeAvoidingIntegralFieldUnit
       finitePlaceLocalArtinCompletionValuativeRel v
     letI : IsNonarchimedeanLocalField C :=
       finitePlaceLocalArtinCompletionIsNonarchimedeanLocalField v
-    finitePlaceHilbert_completionUnit K v
+    finitePlaceHilbertCompletionUnit K v
         (primeAvoidingIntegralFieldUnit K v x hx) =
       integerUnitsToFieldUnits C
         (finitePlaceIntegralCompletionUnit K v x hx) := by
@@ -368,6 +380,7 @@ theorem finitePlaceHilbert_completionUnit_primeAvoidingIntegralFieldUnit
         𝒪[C]) : C)
   exact (finitePlaceIntegralCompletionUnit_coe K v x hx).symm
 
+open scoped Classical in
 /-- As an element of the completion valuation ring, the lifted unit is the
 canonical lifted algebraic integer. -/
 @[simp]
@@ -385,6 +398,7 @@ theorem finitePlaceIntegralCompletionUnit_val
   apply Subtype.ext
   exact finitePlaceIntegralCompletionUnit_coe K v x hx
 
+open scoped Classical in
 /-- Reduction of the canonical completion unit agrees with reduction modulo
 the corresponding global prime ideal. -/
 theorem finitePlace_integerUnitsToResidueUnits_integralUnit
@@ -412,6 +426,7 @@ theorem finitePlace_integerUnitsToResidueUnits_integralUnit
   simpa only [finitePlaceIntegralCompletionUnit_val] using
     (finitePlacePrimeResidueEquivLocalResidue_mk K v x).symm
 
+open scoped Classical in
 /-- The canonical inclusion from integral roots of unity into the common
 field-valued group used by the global Hilbert symbols. -/
 def integralRootsOfUnityToNthRoots
@@ -435,6 +450,7 @@ def integralRootsOfUnityToNthRoots
       (Units.map (algebraMap (𝓞 K) K).toMonoidHom) z.1 w.1
 
 omit [NumberField K] in
+open scoped Classical in
 /-- The integral-root inclusion is the underlying unit map. -/
 @[simp]
 theorem integralRootsOfUnityToNthRoots_apply
@@ -444,6 +460,7 @@ theorem integralRootsOfUnityToNthRoots_apply
   rfl
 
 omit [NumberField K] in
+open scoped Classical in
 /-- The integral-to-field inclusion is injective on roots of unity. -/
 theorem integralRootsOfUnityToNthRoots_injective
     (n : ℕ) :
@@ -456,6 +473,7 @@ theorem integralRootsOfUnityToNthRoots_injective
       RingOfIntegers.coe_injective)
   exact congrArg Subtype.val h
 
+open scoped Classical in
 /-- Reduction after embedding an integral global root of unity into a
 finite-place completion is the transport of reduction modulo the
 corresponding prime ideal. -/
@@ -489,10 +507,12 @@ theorem finitePlace_localNthRootsReduction_integralRoots
   rw [finitePlacePrimeResidueEquivLocalResidue_mk]
   congr 1
 
+open scoped Classical in
 /-- The integral principal ideal generated by the exponent. -/
 def powerResidueExponentIdeal (n : ℕ+) : Ideal (𝓞 K) :=
   Ideal.span {((n : ℕ) : 𝓞 K)}
 
+open scoped Classical in
 /-- The exponent ideal is nonzero in a number field. -/
 theorem powerResidueExponentIdeal_ne_zero (n : ℕ+) :
     powerResidueExponentIdeal K n ≠ 0 := by
@@ -501,10 +521,12 @@ theorem powerResidueExponentIdeal_ne_zero (n : ℕ+) :
     (Nat.cast_ne_zero.mpr n.ne_zero)
 
 omit [NumberField K] in
+open scoped Classical in
 private theorem ideal_span_singleton_ne_zero
     {x : 𝓞 K} (hx : x ≠ 0) : Ideal.span {x} ≠ 0 :=
   Submodule.span_singleton_eq_bot.mp.mt hx
 
+open scoped Classical in
 /-- The finite places dividing the exponent.  These, together with all
 infinite places, are precisely the correction places in the reciprocity
 formula once the two principal denominator supports are removed. -/
@@ -513,6 +535,7 @@ noncomputable def powerResidueExponentFinitePlaces
   (Ideal.finite_factors
     (powerResidueExponentIdeal_ne_zero K n)).toFinset
 
+open scoped Classical in
 /-- Membership in the exponent-place support is divisibility by the exponent
 ideal. -/
 @[simp]
@@ -524,6 +547,7 @@ theorem mem_powerResidueExponentFinitePlaces_iff
     (Ideal.finite_factors
       (powerResidueExponentIdeal_ne_zero K n))
 
+open scoped Classical in
 /-- At a finite place not dividing the exponent, the exponent is a unit in
 the canonical completion. -/
 theorem finitePlace_natCast_valuation_eq_one_of_not_mem_exponent
@@ -571,6 +595,7 @@ theorem finitePlace_natCast_valuation_eq_one_of_not_mem_exponent
     (ValuativeRel.isEquiv vCNorm (ValuativeRel.valuation C))
       |>.eq_one_iff_eq_one.mp hnCNorm
 
+open scoped Classical in
 private noncomputable def finitePlaceLocalTamePowerResidueSymbolValue
     (v : HeightOneSpectrum (𝓞 K)) (n : ℕ+)
     (hmu : (primitiveRoots (n : ℕ) K).Nonempty)
@@ -587,6 +612,7 @@ private noncomputable def finitePlaceLocalTamePowerResidueSymbolValue
     (finitePlaceHilbert_primitiveRoots_nonempty K n hmu v)
     (finitePlaceIntegralCompletionUnit K v a ha)
 
+open scoped Classical in
 private noncomputable def finitePlaceLocalTamePowerResidueSymbolFieldValue
     (v : HeightOneSpectrum (𝓞 K)) (n : ℕ+)
     (hmu : (primitiveRoots (n : ℕ) K).Nonempty)
@@ -603,6 +629,7 @@ private noncomputable def finitePlaceLocalTamePowerResidueSymbolFieldValue
       (finitePlaceHilbert_primitiveRoots_nonempty K n hmu v)
       (finitePlaceIntegralCompletionUnit K v a ha)).1 : C)
 
+open scoped Classical in
 private noncomputable def finitePlacePrimeIdealPowerResidueIntegralRoot
     (v : HeightOneSpectrum (𝓞 K)) (n : ℕ+)
     (hmu : (primitiveRoots (n : ℕ) K).Nonempty)
@@ -612,6 +639,7 @@ private noncomputable def finitePlacePrimeIdealPowerResidueIntegralRoot
   AlgebraicNumberTheory.PowerResidueSymbols.primeIdealPowerResidueSymbol
     K v n hmu hcoprime a ha
 
+open scoped Classical in
 private noncomputable def finitePlacePrimeIdealPowerResidueGlobalRoot
     (v : HeightOneSpectrum (𝓞 K)) (n : ℕ+)
     (hmu : (primitiveRoots (n : ℕ) K).Nonempty)
@@ -620,6 +648,7 @@ private noncomputable def finitePlacePrimeIdealPowerResidueGlobalRoot
   integralRootsOfUnityToNthRoots K (n : ℕ)
     (finitePlacePrimeIdealPowerResidueIntegralRoot K v n hmu hcoprime a ha)
 
+open scoped Classical in
 private noncomputable def finitePlacePrimeIdealPowerResidueFactorValue
     (v : HeightOneSpectrum (𝓞 K)) (n : ℕ+)
     (hmu : (primitiveRoots (n : ℕ) K).Nonempty)
@@ -629,6 +658,7 @@ private noncomputable def finitePlacePrimeIdealPowerResidueFactorValue
   nthRootsSubgroupMap K (HeightOneSpectrum.adicAbv K v).Completion (n : ℕ)
     (finitePlacePrimeIdealPowerResidueGlobalRoot K v n hmu hcoprime a ha)
 
+open scoped Classical in
 private noncomputable def finitePlacePrimeIdealPowerResidueFactorFieldValue
     (v : HeightOneSpectrum (𝓞 K)) (n : ℕ+)
     (hmu : (primitiveRoots (n : ℕ) K).Nonempty)
@@ -640,6 +670,7 @@ private noncomputable def finitePlacePrimeIdealPowerResidueFactorFieldValue
     (finitePlacePrimeIdealPowerResidueGlobalRoot K v n hmu hcoprime a ha)).1 :
       (HeightOneSpectrum.adicAbv K v).Completion)
 
+open scoped Classical in
 private noncomputable def finitePlaceLocalTamePowerResidueSymbolResidueValue
     (v : HeightOneSpectrum (𝓞 K)) (n : ℕ+)
     (hmu : (primitiveRoots (n : ℕ) K).Nonempty)
@@ -668,6 +699,7 @@ private noncomputable def finitePlaceLocalTamePowerResidueSymbolResidueValue
           (finitePlaceIntegralCompletionUnit K v a ha)) :
       rootsOfUnity (n : ℕ) 𝓀[C]).1 : 𝓀[C]ˣ) : 𝓀[C])
 
+open scoped Classical in
 private noncomputable def finitePlacePrimeIdealPowerResidueFactorResidueValue
     (v : HeightOneSpectrum (𝓞 K)) (n : ℕ+)
     (hmu : (primitiveRoots (n : ℕ) K).Nonempty)
@@ -690,6 +722,7 @@ private noncomputable def finitePlacePrimeIdealPowerResidueFactorResidueValue
             (AlgebraicNumberTheory.PowerResidueSymbols.primeIdealPowerResidueSymbol
               K v n hmu hcoprime a ha)))).1 : 𝓀[C]ˣ) : 𝓀[C])
 
+open scoped Classical in
 /-- The tame symbol in a finite-place completion is the image of the
 prime-ideal power-residue symbol.  All comparisons are canonical: the only
 place hypothesis says that the place does not divide the exponent. -/
@@ -736,6 +769,7 @@ private theorem finitePlaceLocalTamePowerResidueSymbol_residueValue_eq
       (AlgebraicNumberTheory.PowerResidueSymbols.primeIdealResidueUnit
         K v a ha)).symm
 
+open scoped Classical in
 private theorem finitePlaceLocalTamePowerResidueSymbolFieldValue_eq_primeIdealValue
     (v : HeightOneSpectrum (𝓞 K)) (n : ℕ+)
     (hmu : (primitiveRoots (n : ℕ) K).Nonempty)
@@ -777,6 +811,7 @@ private theorem finitePlaceLocalTamePowerResidueSymbolFieldValue_eq_primeIdealVa
     exact hResidue
   exact congrArg (fun q : nthRootsSubgroup C (n : ℕ) => (q.1 : C)) hRoots
 
+open scoped Classical in
 /-- The normalized additive valuation of a global field unit in the
 canonical completion at a finite place. -/
 noncomputable def finitePlaceNormalizedValuation
@@ -787,8 +822,9 @@ noncomputable def finitePlaceNormalizedValuation
   letI : IsNonarchimedeanLocalField C :=
     finitePlaceLocalArtinCompletionIsNonarchimedeanLocalField v
   exact valuationMap C
-    (Additive.ofMul (finitePlaceHilbert_completionUnit K v x))
+    (Additive.ofMul (finitePlaceHilbertCompletionUnit K v x))
 
+open scoped Classical in
 /-- Away from the exponent, a finite-place Hilbert factor with integral-unit
 first entry is the prime-ideal power-residue symbol raised to the negative
 normalized valuation of the second entry. -/
@@ -813,13 +849,13 @@ theorem finitePlaceHilbertSymbol_eq_primeIdealPowerResidueFactor_zpow
   let hnC :=
     finitePlace_natCast_valuation_eq_one_of_not_mem_exponent K n v hv
   let hmuC := finitePlaceHilbert_primitiveRoots_nonempty K n hmu v
-  let bC := finitePlaceHilbert_completionUnit K v b
+  let bC := finitePlaceHilbertCompletionUnit K v b
   apply nthRootsSubgroupMap_injective K C (n : ℕ)
   rw [finitePlaceHilbertSymbol_map_eq_localHilbertSymbol]
   change
     localHilbertSymbol C n
         (finitePlaceHilbert_natCast_ne_zero K n hnK v) hmuC
-        (finitePlaceHilbert_completionUnit K v
+        (finitePlaceHilbertCompletionUnit K v
           (primeAvoidingIntegralFieldUnit K v a ha)) bC =
       nthRootsSubgroupMap K C (n : ℕ)
         (integralRootsOfUnityToNthRoots K (n : ℕ)
@@ -849,6 +885,7 @@ theorem finitePlaceHilbertSymbol_eq_primeIdealPowerResidueFactor_zpow
   unfold finitePlacePrimeIdealPowerResidueIntegralRoot
   rw [map_zpow]
 
+open scoped Classical in
 /-- Endpoint form of the finite-place local/global power-residue comparison. -/
 theorem finitePlaceHilbertSymbol_eq_primeIdealPowerResidueFactor
     (n : ℕ+) (hnK : ((n : ℕ) : K) ≠ 0)
@@ -866,16 +903,19 @@ theorem finitePlaceHilbertSymbol_eq_primeIdealPowerResidueFactor
   finitePlaceHilbertSymbol_eq_primeIdealPowerResidueFactor_zpow
     K n hnK hmu v hv hcoprime a ha b
 
+open scoped Classical in
 /-- The Dedekind prime multiplicity is the exponent occurring in the
 integer-valued adic valuation. -/
 theorem intValuation_eq_exp_neg_idealPrimeMultiplicity
     (v : HeightOneSpectrum (𝓞 K)) (x : 𝓞 K) (hx : x ≠ 0) :
     v.intValuation x =
       WithZero.exp
-        (-(AlgebraicNumberTheory.PowerResidueSymbols.idealPrimeMultiplicity K v (Ideal.span {x}) : ℤ)) := by
+        (-(AlgebraicNumberTheory.PowerResidueSymbols.idealPrimeMultiplicity K v (Ideal.span {x})
+          : ℤ)) := by
   rw [v.intValuation_if_neg hx]
   rfl
 
+open scoped Classical in
 /-- For an integral element, the normalized valuation in the canonical
 finite-place completion is the negative multiplicity of the prime in its
 principal ideal. -/
@@ -884,7 +924,8 @@ theorem finitePlaceNormalizedValuation_nonzeroIntegralFieldUnit
     (x : 𝓞 K) (hx : x ≠ 0) :
     finitePlaceNormalizedValuation K v
         (nonzeroIntegralFieldUnit K x hx) =
-      -(AlgebraicNumberTheory.PowerResidueSymbols.idealPrimeMultiplicity K v (Ideal.span {x}) : ℤ) := by
+      -(AlgebraicNumberTheory.PowerResidueSymbols.idealPrimeMultiplicity K v (Ideal.span {x}) :
+        ℤ) := by
   let C := (HeightOneSpectrum.adicAbv K v).Completion
   let : ValuativeRel C :=
     finitePlaceLocalArtinCompletionValuativeRel v
@@ -909,7 +950,7 @@ theorem finitePlaceNormalizedValuation_nonzeroIntegralFieldUnit
     Units.mk0 (πData.completionInteger : C)
       πData.completionInteger_isUniformizer.ne_zero
   let xC : Cˣ :=
-    finitePlaceHilbert_completionUnit K v
+    finitePlaceHilbertCompletionUnit K v
       (nonzeroIntegralFieldUnit K x hx)
   have hIntX :
       v.intValuation x = WithZero.exp (-(m : ℤ)) := by
@@ -998,8 +1039,10 @@ theorem finitePlaceNormalizedValuation_nonzeroIntegralFieldUnit
     _ = (m : ℤ) * valuationMap C (Additive.ofMul πC) := by
       rw [valuationMap_ofMul_pow]
     _ = -(m : ℤ) := by rw [hπCValuation]; simp
-    _ = -(AlgebraicNumberTheory.PowerResidueSymbols.idealPrimeMultiplicity K v (Ideal.span {x}) : ℤ) := rfl
+    _ = -(AlgebraicNumberTheory.PowerResidueSymbols.idealPrimeMultiplicity K v (Ideal.span {x})
+      : ℤ) := rfl
 
+open scoped Classical in
 /-- Prime avoidance is the common special case of the integral valuation
 formula used for numerator units. -/
 theorem finitePlaceNormalizedValuation_primeAvoidingIntegralFieldUnit
@@ -1007,7 +1050,8 @@ theorem finitePlaceNormalizedValuation_primeAvoidingIntegralFieldUnit
     (x : 𝓞 K) (hx : x ∉ v.asIdeal) :
     finitePlaceNormalizedValuation K v
         (primeAvoidingIntegralFieldUnit K v x hx) =
-      -(AlgebraicNumberTheory.PowerResidueSymbols.idealPrimeMultiplicity K v (Ideal.span {x}) : ℤ) := by
+      -(AlgebraicNumberTheory.PowerResidueSymbols.idealPrimeMultiplicity K v (Ideal.span {x}) :
+        ℤ) := by
   let hx0 : x ≠ 0 := by
     intro hxzero
     apply hx
@@ -1017,6 +1061,7 @@ theorem finitePlaceNormalizedValuation_primeAvoidingIntegralFieldUnit
       (nonzeroIntegralFieldUnit K x hx0) = _
   exact finitePlaceNormalizedValuation_nonzeroIntegralFieldUnit K v x hx0
 
+open scoped Classical in
 /-- Integral form of the finite-place comparison: the exponent is the
 Dedekind multiplicity in the principal denominator ideal. -/
 theorem finitePlaceHilbertSymbol_integral_eq_primeIdealPowerResidueFactor
@@ -1046,6 +1091,7 @@ theorem finitePlaceHilbertSymbol_integral_eq_primeIdealPowerResidueFactor
     finitePlaceNormalizedValuation_nonzeroIntegralFieldUnit]
   simp only [neg_neg, zpow_natCast]
 
+open scoped Classical in
 /-- Finite-place Hilbert symbols inherit skew symmetry from the local
 Hilbert symbol in the canonical completion. -/
 theorem finitePlaceHilbertSymbol_skew
@@ -1067,9 +1113,10 @@ theorem finitePlaceHilbertSymbol_skew
     localHilbertSymbol_skew C n
       (finitePlaceHilbert_natCast_ne_zero K n hnK v)
       (finitePlaceHilbert_primitiveRoots_nonempty K n hmu v)
-      (finitePlaceHilbert_completionUnit K v a)
-      (finitePlaceHilbert_completionUnit K v b)
+      (finitePlaceHilbertCompletionUnit K v a)
+      (finitePlaceHilbertCompletionUnit K v b)
 
+open scoped Classical in
 /-- If two nonzero algebraic integers are both units at a finite place, the
 corresponding finite-place Hilbert symbol is trivial. -/
 theorem finitePlaceHilbertSymbol_integral_units_eq_one
@@ -1090,7 +1137,7 @@ theorem finitePlaceHilbertSymbol_integral_units_eq_one
   apply nthRootsSubgroupMap_injective K C (n : ℕ)
   rw [map_one, finitePlaceHilbertSymbol_map_eq_localHilbertSymbol]
   have haUnits :
-      finitePlaceHilbert_completionUnit K v
+      finitePlaceHilbertCompletionUnit K v
           (nonzeroIntegralFieldUnit K a ha0) =
         integerUnitsToFieldUnits C
           (finitePlaceIntegralCompletionUnit K v a ha) := by
@@ -1101,7 +1148,7 @@ theorem finitePlaceHilbertSymbol_integral_units_eq_one
           𝒪[C]) : C)
     exact (finitePlaceIntegralCompletionUnit_coe K v a ha).symm
   have hbUnits :
-      finitePlaceHilbert_completionUnit K v
+      finitePlaceHilbertCompletionUnit K v
           (nonzeroIntegralFieldUnit K b hb0) =
         integerUnitsToFieldUnits C
           (finitePlaceIntegralCompletionUnit K v b hb) := by
@@ -1120,6 +1167,7 @@ theorem finitePlaceHilbertSymbol_integral_units_eq_one
       (finitePlaceIntegralCompletionUnit K v a ha)
       (finitePlaceIntegralCompletionUnit K v b hb)
 
+open scoped Classical in
 /-- Primewise comparison between the tame finite-place Hilbert factor and
 the quotient of the two ideal power-residue factors. -/
 theorem powerResidueAwayFromExponentFiniteFactor_integral_eq_idealFactors
@@ -1206,6 +1254,7 @@ theorem powerResidueAwayFromExponentFiniteFactor_integral_eq_idealFactors
         simp only [idealPowerResidueFactor, dite_eq_right hPB, dite_eq_right hPA,
           map_one, inv_one, mul_one]
 
+open scoped Classical in
 /-- A concrete finite set containing every finite place where a local
 power-residue factor of `a` and `b` may be nontrivial.  Its exponent part is
 the exact set of prime divisors of `(n)`. -/
@@ -1216,6 +1265,7 @@ noncomputable def powerResidueBadFinitePlaces
       chosenUnitFiniteSupport (K := K) b) ∪
     powerResidueExponentFinitePlaces K n
 
+open scoped Classical in
 /-- The explicit bad-place correction in power-residue reciprocity.  Every
 factor already lies in the common group `nthRootsSubgroup K n`. -/
 noncomputable def powerResidueBadPlaceCorrection
@@ -1228,6 +1278,7 @@ noncomputable def powerResidueBadPlaceCorrection
     (∏ v ∈ powerResidueExponentFinitePlaces K n,
       finitePlaceHilbertSymbol K n hnK hmu v a b)
 
+open scoped Classical in
 private theorem valuation_eq_one_of_not_mem_chosenUnitFiniteSupport
     (x : Kˣ) (v : HeightOneSpectrum (𝓞 K))
     (hv : v ∉ chosenUnitFiniteSupport (K := K) x) :
@@ -1236,6 +1287,7 @@ private theorem valuation_eq_one_of_not_mem_chosenUnitFiniteSupport
       (chosenUnitFiniteSupport (K := K) x) x).mp
     (mem_sUnitGroup_chosenUnitFiniteSupport (K := K) x) v hv
 
+open scoped Classical in
 /-- The finite-place Hilbert symbol is trivial when the exponent and both
 global arguments are units at this place. -/
 theorem finitePlaceHilbertSymbol_eq_one_of_valuation_eq_one
@@ -1301,6 +1353,7 @@ theorem finitePlaceHilbertSymbol_eq_one_of_valuation_eq_one
   dsimp only at hArtin ⊢
   rw [hArtin, map_one, map_one]
 
+open scoped Classical in
 /-- Outside the concrete bad-place set, the finite-place Hilbert factor is
 trivial. -/
 theorem finitePlaceHilbertSymbol_eq_one_of_not_mem_powerResidueBadFinitePlaces
@@ -1341,6 +1394,7 @@ theorem finitePlaceHilbertSymbol_eq_one_of_not_mem_powerResidueBadFinitePlaces
   exact finitePlaceHilbertSymbol_eq_one_of_valuation_eq_one
     K n hnK hmu a b v hva hvb hvn
 
+open scoped Classical in
 /-- The multiplicative support of the finite-place Hilbert factors is
 contained in the explicit power-residue bad-place set. -/
 theorem finitePlaceHilbertSymbol_mulSupport_subset_powerResidueBadFinitePlaces
@@ -1360,6 +1414,7 @@ theorem finitePlaceHilbertSymbol_mulSupport_subset_powerResidueBadFinitePlaces
     (finitePlaceHilbertSymbol_eq_one_of_not_mem_powerResidueBadFinitePlaces
       K n hnK hmu a b v hvBad)
 
+open scoped Classical in
 /-- The finite-place Hilbert `finprod` is the ordinary product over the
 explicit bad-place set. -/
 theorem finitePlaceHilbertSymbol_finprod_eq_prod_powerResidueBadFinitePlaces
@@ -1374,6 +1429,7 @@ theorem finitePlaceHilbertSymbol_finprod_eq_prod_powerResidueBadFinitePlaces
     (finitePlaceHilbertSymbol_mulSupport_subset_powerResidueBadFinitePlaces
       K n hnK hmu a b)]
 
+open scoped Classical in
 /-- Finite-set form of the Hilbert product formula: the product over all
 explicitly bad finite places is the inverse of the infinite-place product. -/
 theorem powerResidueBadFinitePlaces_product_eq_infinitePlaceProduct_inv
@@ -1392,6 +1448,7 @@ theorem powerResidueBadFinitePlaces_product_eq_infinitePlaceProduct_inv
   exact (eq_inv_iff_mul_eq_one).2 (by
     simpa only [mul_comm] using hproduct)
 
+open scoped Classical in
 /-- The product of the finite-place Hilbert factors away from primes dividing
 the exponent.  C1 identifies this term with the quotient of the two ideal
 power-residue symbols; the remaining factors are exactly the correction. -/
@@ -1406,6 +1463,7 @@ noncomputable def powerResidueAwayFromExponentFiniteProduct
     else
       finitePlaceHilbertSymbol K n hnK hmu v a b
 
+open scoped Classical in
 /-- The complete tame finite-place product for two nonzero algebraic
 integers is the quotient of the two ideal power-residue symbols. -/
 theorem powerResidueAwayFromExponentFiniteProduct_integral_eq_idealSymbol_div
@@ -1532,6 +1590,7 @@ theorem powerResidueAwayFromExponentFiniteProduct_integral_eq_idealSymbol_div
             n hmu b hcoprimeA hbA))⁻¹ := by
       rfl
 
+open scoped Classical in
 /-- Split the full finite-place product into exponent-prime factors and the
 product away from the exponent. -/
 theorem finitePlaceHilbertSymbol_finprod_eq_exponent_product_mul_away
@@ -1613,6 +1672,7 @@ theorem finitePlaceHilbertSymbol_finprod_eq_exponent_product_mul_away
         powerResidueAwayFromExponentFiniteProduct K n hnK hmu a b := by
       rfl
 
+open scoped Classical in
 /-- General Hilbert-product core of power-residue reciprocity.  The complete
 finite product away from the exponent is the inverse of the explicit product
 of all infinite-place factors and all exponent-prime factors. -/
@@ -1630,6 +1690,7 @@ theorem powerResidueAwayFromExponentFiniteProduct_eq_badPlaceCorrection_inv
     unfold powerResidueBadPlaceCorrection
     simpa only [mul_assoc, mul_comm, mul_left_comm] using hproduct)
 
+open scoped Classical in
 /-- General ideal power-residue reciprocity with the explicit product of
 infinite and exponent-prime Hilbert factors as correction. -/
 theorem idealPowerResidueSymbol_reciprocity_with_bad_place_correction
@@ -1701,9 +1762,13 @@ theorem idealPowerResidueSymbol_reciprocity_with_bad_place_correction
 
 open AlgebraicNumberTheory.PowerResidueSymbols
 
+open scoped Classical in
 local instance rationalPrimeFact (p : Nat.Primes) : Fact p.1.Prime :=
   ⟨p.2⟩
 
+attribute [local instance] rationalPrimeFact
+
+open scoped Classical in
 /-- The rational field contains the primitive square root of unity `-1`.
 This is the canonical source of the primitive-root input in the quadratic
 specialization; no root is chosen downstream. -/
@@ -1712,6 +1777,7 @@ theorem rationalQuadraticPrimitiveRoots_nonempty :
   refine ⟨-1, (mem_primitiveRoots (by decide)).2 ?_⟩
   exact IsPrimitiveRoot.neg_one 0 (by decide)
 
+open scoped Classical in
 /-- The residue field at the rational prime over `p` is canonically `ZMod p`.
 The construction first transports the prime ideal through
 `Rat.ringOfIntegersEquiv` and then uses the standard integer quotient. -/
@@ -1737,6 +1803,7 @@ noncomputable def rationalPrimeResidueEquivZMod
       Rat.ringOfIntegersEquiv hmap).trans
         (Int.quotientSpanNatEquivZMod p.1)
 
+open scoped Classical in
 /-- The rational residue-field equivalence sends an integral residue class to
 the corresponding integer class modulo `p`. -/
 @[simp]
@@ -1776,6 +1843,7 @@ theorem rationalPrimeResidueEquivZMod_mk
     _ = _ := congrArg
       (fun f : ℤ →+* ZMod p.1 => f (Rat.ringOfIntegersEquiv a)) hquot
 
+open scoped Classical in
 /-- The absolute norm of the rational prime ideal attached to `p` is `p`.
 This follows from the explicit residue-field equivalence rather than from a
 cardinality assumption supplied by a consumer. -/
@@ -1788,6 +1856,7 @@ theorem absNorm_rationalPrime (p : Nat.Primes) :
       Nat.card_congr (rationalPrimeResidueEquivZMod p).toEquiv
     _ = p.1 := Nat.card_zmod p.1
 
+open scoped Classical in
 /-- An odd rational prime has residue characteristic coprime to the quadratic
 exponent. -/
 theorem absNorm_rationalPrime_coprime_two
@@ -1796,18 +1865,21 @@ theorem absNorm_rationalPrime_coprime_two
   rw [absNorm_rationalPrime]
   exact (p.2.odd_of_ne_two hp).coprime_two_right
 
+open scoped Classical in
 /-- Evaluate a quadratic integral root of unity as the corresponding integer
 sign. -/
 def rationalQuadraticRootValue
     (z : rootsOfUnity 2 (𝓞 ℚ)) : ℤ :=
   Rat.ringOfIntegersEquiv (z.1 : 𝓞 ℚ)
 
+open scoped Classical in
 /-- The identity quadratic root evaluates to the positive integer sign. -/
 @[simp]
 theorem rationalQuadraticRootValue_one :
     rationalQuadraticRootValue (1 : rootsOfUnity 2 (𝓞 ℚ)) = 1 := by
   simp [rationalQuadraticRootValue]
 
+open scoped Classical in
 /-- Integer evaluation of quadratic roots of unity is multiplicative. -/
 def rationalQuadraticRootValueMonoidHom :
     rootsOfUnity 2 (𝓞 ℚ) →* ℤ where
@@ -1817,6 +1889,7 @@ def rationalQuadraticRootValueMonoidHom :
     intro z w
     simp [rationalQuadraticRootValue]
 
+open scoped Classical in
 /-- The multiplicative sign evaluation has the expected underlying function. -/
 @[simp]
 theorem rationalQuadraticRootValueMonoidHom_apply
@@ -1825,6 +1898,7 @@ theorem rationalQuadraticRootValueMonoidHom_apply
       rationalQuadraticRootValue z :=
   rfl
 
+open scoped Classical in
 /-- The integer sign evaluation detects the identity root. -/
 theorem rationalQuadraticRootValue_eq_one_iff
     (z : rootsOfUnity 2 (𝓞 ℚ)) :
@@ -1841,6 +1915,7 @@ theorem rationalQuadraticRootValue_eq_one_iff
   · rintro rfl
     exact rationalQuadraticRootValue_one
 
+open scoped Classical in
 /-- A quadratic root evaluates to one of the two integer signs. -/
 theorem rationalQuadraticRootValue_eq_one_or_neg_one
     (z : rootsOfUnity 2 (𝓞 ℚ)) :
@@ -1854,6 +1929,7 @@ theorem rationalQuadraticRootValue_eq_one_or_neg_one
     simpa only [rationalQuadraticRootValue, map_pow, map_one] using hzSign
   exact (sq_eq_one_iff).mp hzSquare
 
+open scoped Classical in
 /-- The chosen integral numerator remains nonzero after passing to the
 standard residue field `ZMod p`. -/
 theorem rationalPrimeResidue_intCast_ne_zero
@@ -1866,6 +1942,7 @@ theorem rationalPrimeResidue_intCast_ne_zero
   apply (rationalPrimeResidueEquivZMod p).injective
   simpa only [rationalPrimeResidueEquivZMod_mk, map_zero] using haz
 
+open scoped Classical in
 /-- A square among residue units is exactly a square in the standard rational
 prime residue field.  The reverse implication constructs the unit from the
 nonzero square root. -/
@@ -1899,6 +1976,7 @@ theorem rationalPrimeResidueUnit_sq_iff_isSquare
     simpa [u, e, pow_two, primeIdealResidueUnit,
       rationalPrimeResidueEquivZMod_mk] using hx.symm
 
+open scoped Classical in
 /-- The quadratic prime-ideal power-residue symbol over `ℚ`, evaluated as an
 integer sign, is the classical Legendre symbol. -/
 theorem rationalPrimeIdealPowerResidueSymbol_two_eq_legendre
@@ -1946,11 +2024,13 @@ theorem rationalPrimeIdealPowerResidueSymbol_two_eq_legendre
 
 /-! ## Rational principal-ideal factorization -/
 
+open scoped Classical in
 /-- The principal ideal of `𝓞 ℚ` generated by a natural number, expressed
 through the canonical equivalence `𝓞 ℚ ≃+* ℤ`. -/
 noncomputable def rationalPrincipalIdeal (b : ℕ) : Ideal (𝓞 ℚ) :=
   Ideal.span {Rat.ringOfIntegersEquiv.symm (b : ℤ)}
 
+open scoped Classical in
 /-- A positive rational principal ideal is nonzero. -/
 theorem rationalPrincipalIdeal_ne_zero
     (b : ℕ) (hb : b ≠ 0) :
@@ -1961,6 +2041,7 @@ theorem rationalPrincipalIdeal_ne_zero
   have h := Rat.ringOfIntegersEquiv.symm.injective.ne hbInt
   simpa only [map_zero] using h
 
+open scoped Classical in
 /-- The height-one prime of `𝓞 ℚ` attached to `p` is generated by the
 corresponding rational integer. -/
 theorem rationalPrime_asIdeal_eq_span
@@ -1997,6 +2078,7 @@ theorem rationalPrime_asIdeal_eq_span
       rw [Ideal.map_span, Set.image_singleton,
         Rat.ringOfIntegersEquiv.apply_symm_apply]
 
+open scoped Classical in
 /-- Divisibility of a rational principal ideal by the prime over `p` is
 exactly natural-number divisibility by `p`. -/
 theorem rationalPrime_dvd_rationalPrincipalIdeal_iff
@@ -2008,6 +2090,7 @@ theorem rationalPrime_dvd_rationalPrincipalIdeal_iff
     map_dvd_iff Rat.ringOfIntegersEquiv.symm,
     Int.natCast_dvd_natCast]
 
+open scoped Classical in
 /-- Every prime divisor of an odd rational principal ideal has odd residue
 characteristic.  Thus its norm is coprime to the quadratic exponent. -/
 theorem rationalPrincipalIdeal_absNorm_coprime_two_of_odd
@@ -2036,6 +2119,7 @@ theorem rationalPrincipalIdeal_absNorm_coprime_two_of_odd
   rw [← hprimeEq]
   exact absNorm_rationalPrime_coprime_two p hpNeTwo
 
+open scoped Classical in
 /-- Coprimality of the integer numerator and the natural denominator excludes
 the numerator from every prime ideal dividing the denominator ideal. -/
 theorem rationalPrincipalIdeal_numerator_not_mem_of_coprime
@@ -2079,6 +2163,7 @@ theorem rationalPrincipalIdeal_numerator_not_mem_of_coprime
     simpa only [Rat.ringOfIntegersEquiv.symm_apply_apply] using haPrime
   exact Int.natCast_dvd.mp hpDvdInt
 
+open scoped Classical in
 /-- The multiplicity of the rational prime ideal over `p` in `(b)` is the
 usual `p`-adic exponent in the natural-number factorization of `b`. -/
 theorem idealPrimeMultiplicity_rationalPrincipalIdeal
@@ -2116,6 +2201,7 @@ theorem idealPrimeMultiplicity_rationalPrincipalIdeal
   simpa only [x, a] using
     (Ideal.count_associates_eq' hxPrime hpow hpowSucc)
 
+open scoped Classical in
 /-- Prime divisors of the rational principal ideal `(b)` are canonically the
 natural prime factors of `b`. -/
 noncomputable def rationalPrincipalIdealPrimeDivisorsEquiv
@@ -2160,6 +2246,7 @@ noncomputable def rationalPrincipalIdealPrimeDivisorsEquiv
       RayClass.natGenerator_rationalPrime
         ⟨p.1, Nat.prime_of_mem_primeFactors p.2⟩
 
+open scoped Classical in
 /-- Reindexing a natural prime factor back to a height-one prime gives the
 standard rational prime above it. -/
 @[simp]
@@ -2170,9 +2257,9 @@ theorem rationalPrincipalIdealPrimeDivisorsEquiv_symm_apply_val
         ⟨p.1, Nat.prime_of_mem_primeFactors p.2⟩ :=
   rfl
 
+open scoped Classical in
 /-- Under the prime-factor reindexing, ideal multiplicity becomes the
 corresponding entry of `Nat.factorization`. -/
-@[simp]
 theorem idealPrimeMultiplicity_rationalPrincipalIdeal_reindexed
     (b : ℕ) (hb : b ≠ 0) (p : b.primeFactors) :
     idealPrimeMultiplicity ℚ
@@ -2183,6 +2270,7 @@ theorem idealPrimeMultiplicity_rationalPrincipalIdeal_reindexed
   exact idealPrimeMultiplicity_rationalPrincipalIdeal
     ⟨p.1, Nat.prime_of_mem_primeFactors p.2⟩ b hb
 
+open scoped Classical in
 /-- Reindex a product over the prime divisors of `(b)` by the ordinary
 natural prime factors of `b`. -/
 theorem prod_rationalPrincipalIdealPrimeDivisors_eq_prod_primeFactors
@@ -2208,6 +2296,7 @@ theorem prod_rationalPrincipalIdealPrimeDivisors_eq_prod_primeFactors
       (fun P => by
         rw [(rationalPrincipalIdealPrimeDivisorsEquiv b hb).symm_apply_apply])
 
+open scoped Classical in
 /-- Reindex a product whose factor also depends on the divisibility witness.
 This is the subtype-valued form used by the defining product of the ideal
 power-residue symbol. -/
@@ -2235,6 +2324,7 @@ theorem prod_rationalPrincipalIdealPrimeDivisors_eq_prod_primeFactors_subtype
       (fun P => by
         rw [(rationalPrincipalIdealPrimeDivisorsEquiv b hb).symm_apply_apply])
 
+open scoped Classical in
 /-- The list-based Jacobi symbol is the product over distinct prime factors,
 with the usual natural factorization multiplicity as exponent. -/
 theorem jacobiSym_eq_prod_primeFactors_factorization
@@ -2281,16 +2371,19 @@ theorem jacobiSym_eq_prod_primeFactors_factorization
       (Finset.prod_coe_sort b.primeFactors
         (fun p => f p ^ b.factorization p)).symm
 
+open scoped Classical in
 private theorem rationalQuadraticPrimitiveRoots_nonempty_pnat :
     (primitiveRoots (((2 : ℕ+) : ℕ)) ℚ).Nonempty := by
   change (primitiveRoots 2 ℚ).Nonempty
   exact rationalQuadraticPrimitiveRoots_nonempty
 
+open scoped Classical in
 private def rationalQuadraticRootValuePNatMonoidHom :
     rootsOfUnity (((2 : ℕ+) : ℕ)) (𝓞 ℚ) →* ℤ := by
   change rootsOfUnity 2 (𝓞 ℚ) →* ℤ
   exact rationalQuadraticRootValueMonoidHom
 
+open scoped Classical in
 private noncomputable def rationalIdealQuadraticSourceFactor
     (a : 𝓞 ℚ) (b : ℕ) (hbOdd : Odd b)
     (hab : Nat.Coprime (Rat.ringOfIntegersEquiv a).natAbs b)
@@ -2310,11 +2403,13 @@ private noncomputable def rationalIdealQuadraticSourceFactor
             ((mem_idealPrimeDivisors ℚ (rationalPrincipalIdeal b) P.1).mp P.2))).1.1 ^
       idealPrimeMultiplicity ℚ P.1 (rationalPrincipalIdeal b))
 
+open scoped Classical in
 private def rationalJacobiPrimeFactor
     (a : 𝓞 ℚ) (b : ℕ) (p : b.primeFactors) : ℤ :=
   @legendreSym p.1 ⟨Nat.prime_of_mem_primeFactors p.2⟩
       (Rat.ringOfIntegersEquiv a) ^ b.factorization p.1
 
+open scoped Classical in
 private theorem rationalIdealQuadraticSourceFactor_reindexed
     (a : 𝓞 ℚ) (b : ℕ) (hb : b ≠ 0) (hbOdd : Odd b)
     (hab : Nat.Coprime (Rat.ringOfIntegersEquiv a).natAbs b)
@@ -2338,6 +2433,7 @@ private theorem rationalIdealQuadraticSourceFactor_reindexed
   rw [← hLegendre]
   rfl
 
+open scoped Classical in
 /-- The quadratic ideal power-residue symbol of a positive rational
 principal ideal is the classical Jacobi symbol.  Oddness supplies the
 residue-characteristic condition at every denominator prime, while ordinary

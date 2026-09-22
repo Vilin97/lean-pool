@@ -37,7 +37,8 @@ absolute value `v` on `K`, this file proves the exact degree formula
 The proof makes explicit the two facts used implicitly in the construction: metric
 completion preserves the value group and residue field, and every completed
 local extension `L_w / K_v` is finite separable.  The fundamental inequality then gives
-`[L_w : K_v] = e_w f_w`; summing and applying the local degree, norm, and trace formulas gives the result.
+`[L_w : K_v] = e_w f_w`; summing and applying the local degree, norm, and trace formulas gives
+  the result.
 -/
 
 noncomputable section
@@ -434,11 +435,11 @@ theorem completionExtension_isSeparable
     (w : AbsoluteValueExtension a L) :
     letI := AbsoluteValue.completionAlgebra a w.1 w.2
     Algebra.IsSeparable a.Completion w.1.Completion := by
-  let pb := completionTensorDecomposition_powerBasis K L
+  let pb := completionTensorDecompositionPowerBasis K L
   let α : L := pb.gen
   let hα : IsIntegral K α := pb.isIntegral_gen
   let hgen : Algebra.adjoin K ({α} : Set L) = ⊤ := pb.adjoin_gen_eq_top
-  let τ := absoluteValueExtension_embeddingOfExtension a w
+  let τ := absoluteValueExtensionEmbeddingOfExtension a w
   let hτ := absoluteValueExtension_extension_eq_pullback_embeddingOfExtension a ha w
   let hK := AbsoluteValue.extensionCompletionAlgebra (K := K) w.1
   let : SMul K w.1.Completion := hK.toSMul
@@ -451,26 +452,26 @@ theorem completionExtension_isSeparable
       (Algebra.IsSeparable.isSeparable K α)
   have hdvd : minpoly a.Completion (τ α) ∣
       (minpoly K α).map (algebraMap K a.Completion) := by
-    let g := completionExtensionFactor_extensionToFactor a
+    let g := completionExtensionFactorExtensionToFactor a
       (minpoly.irreducible hα) (minpoly.aeval K α) w
     have hgdvd := (completionExtensionFactor_factor_irreducible_monic_dvd_minpoly a
       (minpoly.irreducible hα) (minpoly.aeval K α) g).2.2
     rw [completionExtensionFactor_embeddingOfExtension_minpoly a α w]
-    simpa [g, completionExtensionFactor_extensionToFactor] using hgdvd
+    simpa [g, completionExtensionFactorExtensionToFactor] using hgdvd
   have hτα : IsSeparable a.Completion (τ α) :=
     hsepMapped.of_dvd hdvd
   let E := IntermediateField.adjoin a.Completion
-    ({τ α} : Set (absoluteValueExtension_algebraicCompletionClosure a))
+    ({τ α} : Set (absoluteValueExtensionAlgebraicCompletionClosure a))
   have hEsep : Algebra.IsSeparable a.Completion E :=
     Iff.mpr (IntermediateField.isSeparable_adjoin_iff_isSeparable
-      a.Completion (absoluteValueExtension_algebraicCompletionClosure a)) (by
+      a.Completion (absoluteValueExtensionAlgebraicCompletionClosure a)) (by
       intro x hx
       simp only [Set.mem_singleton_iff] at hx
       subst x
       exact hτα)
   let : Algebra.IsSeparable a.Completion E := hEsep
   exact AlgEquiv.Algebra.isSeparable
-    (completionExtensionFactor_completionEquivSimpleRoot
+    (completionExtensionFactorCompletionEquivSimpleRoot
       a ha α hα hgen w τ hτ).symm
 
 theorem completionExtensionInvariants_local_identity
@@ -558,7 +559,7 @@ theorem completionExtensionInvariants
     (hdisc : LubinTate.Valuations.DiscreteExponentialValuation
       (absoluteValueExponentialValuation a ha)) :
     let ha0 := absoluteValue_isNontrivial_of_discrete a ha hdisc
-    letI := completionTensorDecomposition_extensionFintype (K := K) (L := L) a ha0
+    letI := completionTensorDecompositionExtensionFintype (K := K) (L := L) a ha0
     (∑ w : AbsoluteValueExtension a L,
       let hw := absoluteValueExtension_nonarchimedean a w.1 ha w.2
       let va := absoluteValueExponentialValuation a ha
@@ -568,7 +569,7 @@ theorem completionExtensionInvariants
       exponentialRamificationIndex va vw * exponentialResidueDegree va vw hvw) =
         Module.finrank K L := by
   let ha0 := absoluteValue_isNontrivial_of_discrete a ha hdisc
-  let := completionTensorDecomposition_extensionFintype (K := K) (L := L) a ha0
+  let := completionTensorDecompositionExtensionFintype (K := K) (L := L) a ha0
   rw [completionDegreeNormTrace_degree (K := K) (L := L) a ha0]
   apply Finset.sum_congr rfl
   intro w _hw

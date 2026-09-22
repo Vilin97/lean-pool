@@ -13,12 +13,12 @@ The selected field of a larger ray-class subgroup is contained in that of
 a smaller subgroup, as actual subfields of the fixed separable closure.
 -/
 
-open scoped NumberField Classical
-
+open scoped NumberField
 noncomputable section
 
 namespace ClassFieldTheory
 
+open scoped Classical in
 /-- For one modulus, inclusion of ray-class subgroups reverses inclusion of
 their selected class fields inside the fixed separable closure. -/
 theorem chosenRayClassSubgroupSubfield_antitone

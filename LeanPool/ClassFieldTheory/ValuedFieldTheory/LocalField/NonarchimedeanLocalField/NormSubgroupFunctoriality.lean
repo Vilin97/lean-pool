@@ -24,7 +24,7 @@ subgroup in the base field. -/
 theorem normSubgroup_le_of_tower
     (K M L : Type) [Field K] [Field M] [Field L]
     [Algebra K M] [Algebra M L] [Algebra K L]
-    [IsScalarTower K M L] [FiniteDimensional M L] :
+    [IsScalarTower K M L] :
     localNormSubgroup K L ≤ localNormSubgroup K M := by
   rintro x ⟨y, rfl⟩
   refine ⟨normUnits M L y, ?_⟩
@@ -68,7 +68,7 @@ norm subgroups. -/
 theorem normSubgroup_le_of_algHom
     (K M D : Type) [Field K] [Field M] [Field D]
     [Algebra K M] [Algebra K D]
-    [FiniteDimensional K M] [FiniteDimensional K D]
+    [FiniteDimensional K D]
     (i : M →ₐ[K] D) :
     localNormSubgroup K D ≤ localNormSubgroup K M := by
   let : Algebra M D := i.toRingHom.toAlgebra

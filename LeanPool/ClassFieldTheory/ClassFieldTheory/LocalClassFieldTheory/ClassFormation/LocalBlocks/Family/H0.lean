@@ -26,7 +26,7 @@ variable {K : Type u} {L : Type v}
 
 /-- Degree-zero cohomology for a finite family of local blocks. -/
 noncomputable def localBlockFamilyHerbrandH0Equiv
-    {ι : Type w} [Fintype ι]
+    {ι : Type w}
     (d : ι → LocalPlaceDatum K L)
     (σ : L ≃ₐ[K] L)
     (hgen : ∀ τ : L ≃ₐ[K] L,

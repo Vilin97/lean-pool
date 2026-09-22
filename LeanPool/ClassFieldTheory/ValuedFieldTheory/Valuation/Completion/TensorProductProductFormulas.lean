@@ -30,7 +30,7 @@ dependent-product decomposition after scalar extension. -/
 theorem baseChange_pi_finrank_eq_sum
     {K : Type u} {A : Type v} {L : Type w}
     [Field K] [Field A] [Field L] [Algebra K A] [Algebra K L]
-    [FiniteDimensional K L]
+
     {I : Type*} [Fintype I]
     (B : I → Type*) [∀ i, Field (B i)] [∀ i, Algebra A (B i)]
     [∀ i, Module.Finite A (B i)]

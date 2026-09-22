@@ -30,6 +30,8 @@ open ClassFormation LocalClassFieldTheory
 variable (k Ω : Type) [Field k] [Field Ω] [Algebra k Ω]
   [IsGalois k Ω] [IsSepClosed Ω]
 
+/-- The embeddings of a finite separable extension into a field form a finite type, enumerated
+using a power basis. -/
 noncomputable local instance finiteSeparableAlgHomFintypeRelative
     {F E T : Type} [Field F] [Field E] [Field T]
     [Algebra F E] [Algebra F T]
@@ -193,7 +195,7 @@ theorem relativeNorm_abstractFixedFieldUnit_eq_normUnits
       (K.toSubgroup ⧸ extensionSubgroup K L hLK)]
     [hKabsolute : Finite
       ((baseField Gal(Ω/k)).toSubgroup ⧸
-        extensionSubgroup (baseField Gal(Ω / k)) K
+        extensionSubgroup (baseField Gal(Ω/k)) K
           (le_baseField K))]
     (x : (abstractRelativeFixedField k Ω hLK)ˣ) :
     relativeNorm (galoisAmbientUnitsRep k Ω) K L hLK

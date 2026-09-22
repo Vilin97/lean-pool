@@ -185,7 +185,7 @@ def FiniteSupportKummerQuotient
 
 /-- The commutative group structure on the named finite-support Kummer
 quotient. -/
-instance finiteSupportKummerQuotient_commGroupInstance
+instance finiteSupportKummerQuotientCommGroupInstance
     (n : ℕ+) (Delta : KummerSubgroup K n) (T : Finset Omega)
     (hT : (T : Set Omega) ⊆
       kummerRootSet (K := K) (Omega := Omega) n Delta.1) :

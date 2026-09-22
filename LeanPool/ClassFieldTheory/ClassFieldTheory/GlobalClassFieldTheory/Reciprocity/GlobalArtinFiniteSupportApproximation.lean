@@ -24,7 +24,7 @@ idele-class norm quotient may be evaluated on this finite-support
 approximation.
 -/
 
-open scoped NumberField TensorProduct Classical BigOperators
+open scoped NumberField TensorProduct BigOperators
 open NumberField IsDedekindDomain
 open IdeleGroup RelativeIdeleGroup
 
@@ -33,6 +33,7 @@ noncomputable section
 namespace GlobalClassFieldTheory
 namespace Reciprocity
 
+open scoped Classical in
 /-- Supply the canonical commutativity used by the finite-support norm quotient. -/
 private theorem artinFiniteSupportIdeleClassIsMulCommutative
     {F : Type} [Field F] [NumberField F] :
@@ -47,6 +48,7 @@ variable
     [Field L] [NumberField L] [Algebra K L]
     [IsAbelianGalois K L]
 
+open scoped Classical in
 /-- The finite places at which the local Artin factor of `a` is
 nontrivial. -/
 noncomputable def globalArtinFiniteSupport
@@ -55,6 +57,7 @@ noncomputable def globalArtinFiniteSupport
   (finitePlaceArtinFactors_hasFiniteMulSupport
     (K := K) (L := L) a).toFinset
 
+open scoped Classical in
 /-- Membership in the finite Artin support is equivalent to nontriviality of
 the corresponding chosen local Artin factor. -/
 @[simp]
@@ -70,6 +73,7 @@ theorem mem_globalArtinFiniteSupport_iff
     (finitePlaceArtinFactors_hasFiniteMulSupport
       (K := K) (L := L) a).mem_toFinset
 
+open scoped Classical in
 /-- The finite-support Artin approximation of an idele.  It is the
 product of the one-place ideles carrying all infinite components and the
 one-place ideles carrying exactly the finite components with nontrivial
@@ -85,9 +89,9 @@ noncomputable def artinFiniteSupportApproximation
     finitePlaceIdele v.1
       (IdeleGroup.finiteComponent v.1 a)
 
+open scoped Classical in
 /-- The finite-support Artin approximation retains every infinite
 component. -/
-@[simp]
 theorem artinFiniteSupportApproximation_infiniteComponent
     (a : IdeleGroup K)
     (w : InfinitePlace K) :
@@ -118,6 +122,7 @@ theorem artinFiniteSupportApproximation_infiniteComponent
   · intro hw
     exact (hw (Finset.mem_univ w)).elim
 
+open scoped Classical in
 /-- At a finite place, the approximation is the original component
 exactly on the finite Artin support and is one elsewhere. -/
 theorem artinFiniteSupportApproximation_finiteComponent
@@ -176,9 +181,9 @@ theorem artinFiniteSupportApproximation_finiteComponent
           IdeleGroup.finiteComponent w.1 a)
         v hv
 
+open scoped Classical in
 /-- At a place in the Artin support, the finite-support approximation keeps
 the original finite component. -/
-@[simp]
 theorem artinFiniteSupportApproximation_finiteComponent_of_mem
     (a : IdeleGroup K)
     (v : HeightOneSpectrum (𝓞 K))
@@ -192,9 +197,9 @@ theorem artinFiniteSupportApproximation_finiteComponent_of_mem
   rw [artinFiniteSupportApproximation_finiteComponent,
     ite_eq_left hv]
 
+open scoped Classical in
 /-- Away from the Artin support, the finite-support approximation has trivial
 finite component. -/
-@[simp]
 theorem artinFiniteSupportApproximation_finiteComponent_of_notMem
     (a : IdeleGroup K)
     (v : HeightOneSpectrum (𝓞 K))
@@ -208,6 +213,7 @@ theorem artinFiniteSupportApproximation_finiteComponent_of_notMem
   rw [artinFiniteSupportApproximation_finiteComponent,
     ite_eq_right hv]
 
+open scoped Classical in
 /-- The quotient of an idele by its finite-support Artin approximation
 is an actual relative-idele norm. -/
 theorem
@@ -272,6 +278,7 @@ theorem
     exact Subgroup.one_mem _
 
 omit [IsAbelianGalois K L] in
+open scoped Classical in
 /-- The canonical idele-class norm quotient kills every actual
 relative-idele norm. -/
 @[simp]
@@ -296,6 +303,7 @@ theorem globalNormClassFromIdele_relativeIdeleNorm_eq_one
   rw [_root_.ideleClassNorm_mk,
     IdeleGroup.norm_relativeIdeleBaseChangeMulEquiv]
 
+open scoped Classical in
 /-- The global Artin value of an idele is already determined by its
 finite-support Artin approximation. -/
 theorem globalArtinMonoidHom_eq_artinFiniteSupportApproximation
@@ -325,6 +333,7 @@ theorem globalArtinMonoidHom_eq_artinFiniteSupportApproximation
     simpa only [map_mul, map_inv] using hquotient
   exact mul_inv_eq_one.mp hmul
 
+open scoped Classical in
 /-- The norm class of an idele is already determined by its
 finite-support Artin approximation. -/
 theorem globalNormClassFromIdele_eq_artinFiniteSupportApproximation

@@ -11,10 +11,11 @@ import Mathlib.NumberTheory.NumberField.Cyclotomic.Basic
 /-!
 # Power quotients of S-unit groups
 
-The finite `n`-th-power quotient of an `S`-unit group, its cardinality, and explicit `ZMod n` coordinates.
+The finite `n`-th-power quotient of an `S`-unit group, its cardinality, and explicit `ZMod n`
+  coordinates.
 -/
 
-open scoped NumberField Classical IsMulCommutative NNReal ValuativeRel
+open scoped NumberField IsMulCommutative NNReal ValuativeRel
 open NumberField IsDedekindDomain
 open LocalFieldTheory
 
@@ -25,11 +26,13 @@ namespace KummerTheory
 variable {K : Type*} [Field K]
     [numberFieldK : NumberField K]
 
+open scoped Classical in
 /-- The total place-set cardinal `s = #S`, with all infinite places included. -/
 def totalPlaceCard
     (S : Finset (HeightOneSpectrum (𝓞 K))) : ℕ :=
   Fintype.card (InfinitePlace K) + S.card
 
+open scoped Classical in
 /-- The number of places in the `S`-unit theorem is one more than the
 free rank of the `S`-unit group.  The extra coordinate is the
 roots-of-unity coordinate. -/
@@ -43,6 +46,7 @@ theorem totalPlaceCard_eq_sUnitLogRank_add_one
     Fintype.card_pos
   omega
 
+open scoped Classical in
 /-- One roots-of-unity coordinate together with `r` free coordinates
 is the product of `r + 1` copies of `ZMod n`, in multiplicative
 notation. -/
@@ -78,6 +82,7 @@ noncomputable def multiplicativeZModProductEquivPiSucc
     · rfl
     · rfl
 
+open scoped Classical in
 /-- Coordinatewise reduction of a finite free `ℤ`-module modulo `n`. -/
 def finsuppModHom (d n : ℕ) :
     (Fin d →₀ ℤ) →+ (Fin d → ZMod n) where
@@ -89,6 +94,7 @@ def finsuppModHom (d n : ℕ) :
     ext i
     simp
 
+open scoped Classical in
 /-- Every vector over `ZMod n` has an integral lift. -/
 theorem finsuppModHom_surjective (d n : ℕ) :
     Function.Surjective (finsuppModHom d n) := by
@@ -100,6 +106,7 @@ theorem finsuppModHom_surjective (d n : ℕ) :
   ext i
   exact hx i
 
+open scoped Classical in
 /-- The kernel of coordinatewise reduction is exactly the subgroup of
 `n`-fold multiples. -/
 theorem finsuppModHom_ker (d n : ℕ) :
@@ -128,6 +135,7 @@ theorem finsuppModHom_ker (d n : ℕ) :
     ext i
     simp [finsuppModHom]
 
+open scoped Classical in
 /-- The finite-free quotient `(ℤ^d) / n(ℤ^d)` is `(ZMod n)^d`. -/
 noncomputable def finsuppNsmulQuotientEquivPiZMod
     (d n : ℕ) :
@@ -139,6 +147,7 @@ noncomputable def finsuppNsmulQuotientEquivPiZMod
     (finsuppModHom d n)
     (finsuppModHom_surjective d n)
 
+open scoped Classical in
 /-- In multiplicative notation, the free integral quotient by `n`-th
 powers is a product of copies of `ZMod n`. -/
 noncomputable def multiplicativeFinsuppNthPowerQuotientEquivPiZMod
@@ -152,6 +161,7 @@ noncomputable def multiplicativeFinsuppNthPowerQuotientEquivPiZMod
     LocalFieldTheory.powMonoidHom_range_multiplicative_eq_nsmulAddSubgroup_toSubgroup]
   exact (finsuppNsmulQuotientEquivPiZMod d n).toMultiplicative
 
+open scoped Classical in
 /-- The quotient of a finite free integral module by a positive multiple
 is finite. -/
 noncomputable instance finite_finsupp_nsmulQuotient
@@ -165,6 +175,7 @@ noncomputable instance finite_finsupp_nsmulQuotient
     (Fin d → ZMod (n : ℕ))
     (finsuppNsmulQuotientEquivPiZMod d n).symm
 
+open scoped Classical in
 /-- The cardinality of `(ℤ^d) / n(ℤ^d)` is `n ^ d`. -/
 theorem card_finsupp_nsmulQuotient
     (d : ℕ) (n : ℕ+) :
@@ -180,6 +191,7 @@ theorem card_finsupp_nsmulQuotient
   simp
 
 omit [NumberField K] in
+open scoped Classical in
 /-- A primitive `n`-th root in `K` embeds a cyclic subgroup of order `n`
 into the roots of unity of the integer ring. -/
 theorem n_dvd_numberField_torsionOrder
@@ -215,6 +227,7 @@ theorem n_dvd_numberField_torsionOrder
   exact orderOf_dvd_natCard ut
 
 include numberFieldK in
+open scoped Classical in
 /-- If `K` contains a primitive `n`-th root, the quotient of its roots of
 unity by `n`-th powers has cardinality `n`. -/
 theorem card_numberField_torsion_nthPowerQuotient
@@ -262,6 +275,7 @@ theorem card_numberField_torsion_nthPowerQuotient
   simpa [T, NumberField.Units.torsionOrder] using
     n_dvd_numberField_torsionOrder (K := K) n hmu
 
+open scoped Classical in
 /-- The roots-of-unity contribution to the `S`-unit quotient is one
 copy of `ZMod n`. -/
 noncomputable def numberFieldTorsionNthPowerQuotientEquivZMod
@@ -288,6 +302,7 @@ noncomputable def numberFieldTorsionNthPowerQuotientEquivZMod
     (K := K) n hmu]
   simp
 
+open scoped Classical in
 /-- The `n`-th-power quotient of an `S`-unit group is finite. -/
 noncomputable instance finite_sUnit_nthPowerQuotient
     (S : Finset (HeightOneSpectrum (𝓞 K))) (n : ℕ+) :
@@ -304,6 +319,7 @@ noncomputable instance finite_sUnit_nthPowerQuotient
     (n : ℕ)
     (SUnitGroup.decomposition (K := K) S)
 
+open scoped Classical in
 /-- The `S`-unit theorem in the form used in the finite S-unit preparation argument:
 
 `#(Kˢ / Kˢⁿ) = n ^ (#InfinitePlace K + #S)`.
@@ -381,6 +397,7 @@ theorem card_sUnit_nthPowerQuotient
     _ = (n : ℕ) ^ totalPlaceCard (K := K) S := by
       rw [hplace, pow_succ']
 
+open scoped Classical in
 /-- The full `S`-unit quotient has one torsion coordinate and one
 coordinate for every logarithmic free generator. -/
 noncomputable def sUnitNthPowerQuotientCoordinates
@@ -413,6 +430,7 @@ noncomputable def sUnitNthPowerQuotientCoordinates
         (multiplicativeFinsuppNthPowerQuotientEquivPiZMod
           (SUnitGroup.logRank (K := K) S) (n : ℕ))
 
+open scoped Classical in
 /-- If a positive power of a global unit is an `S`-unit, then the unit
 itself is an `S`-unit.  This is the valuation-theoretic saturation needed
 to compare the abstract Kummer quotient with `Kˢ / Kˢⁿ`. -/
@@ -432,6 +450,7 @@ theorem mem_sUnitGroup_of_pow_mem
     (pow_eq_one_iff_left
       (a := v.valuation K ((x : Kˣ) : K)) n.ne_zero).mp hpow
 
+open scoped Classical in
 /-- The admissible subgroup
 
 `Kˢ · Kˣⁿ ≤ Kˣ`
@@ -445,6 +464,7 @@ def fullSUnitKummerSubgroup
       KummerTheory.unitNthPowersSubgroup K n,
     le_sup_right⟩
 
+open scoped Classical in
 /-- Include an `S`-unit in the full `S`-unit Kummer subgroup. -/
 def sUnitToFullSUnitKummerSubgroup
     (n : ℕ+)
@@ -453,6 +473,7 @@ def sUnitToFullSUnitKummerSubgroup
       (fullSUnitKummerSubgroup (K := K) n S).1 :=
   Subgroup.inclusion le_sup_left
 
+open scoped Classical in
 /-- Map an `S`-unit to its class in
 `(Kˢ · Kˣⁿ) / Kˣⁿ`. -/
 def sUnitToFullSUnitRadicalQuotient
@@ -465,6 +486,7 @@ def sUnitToFullSUnitRadicalQuotient
       n (fullSUnitKummerSubgroup (K := K) n S)).comp
     (sUnitToFullSUnitKummerSubgroup (K := K) n S)
 
+open scoped Classical in
 /-- `S`-unit `n`-th powers vanish in the full radical quotient. -/
 theorem nthPowerSubgroup_le_ker_sUnitToFullSUnitRadicalQuotient
     (n : ℕ+)
@@ -489,6 +511,7 @@ theorem nthPowerSubgroup_le_ker_sUnitToFullSUnitRadicalQuotient
       n (fullSUnitKummerSubgroup (K := K) n S)).2
       ⟨(y : Kˣ), rfl⟩
 
+open scoped Classical in
 /-- The canonical comparison
 
 `Kˢ / Kˢⁿ → (Kˢ · Kˣⁿ) / Kˣⁿ`. -/
@@ -509,6 +532,7 @@ def sUnitNthPowerQuotientToFullSUnitRadicalQuotient
     (nthPowerSubgroup_le_ker_sUnitToFullSUnitRadicalQuotient
       (K := K) n S)
 
+open scoped Classical in
 /-- Every class in `(Kˢ · Kˣⁿ) / Kˣⁿ` has an `S`-unit representative. -/
 theorem sUnitNthPowerQuotientToFullSUnitRadicalQuotient_surjective
     (n : ℕ+)
@@ -542,6 +566,7 @@ theorem sUnitNthPowerQuotientToFullSUnitRadicalQuotient_surjective
   simpa using
     (KummerTheory.unitNthPowersSubgroup K n).inv_mem hz
 
+open scoped Classical in
 /-- The canonical comparison from `Kˢ / Kˢⁿ` is injective.  The only
 arithmetic point is saturation of the `S`-unit group under positive
 powers, proved above from valuations. -/
@@ -582,6 +607,7 @@ theorem sUnitNthPowerQuotientToFullSUnitRadicalQuotient_injective
           apply Subtype.ext
           exact hz
 
+open scoped Classical in
 /-- The exact quotient identification used to define
 `N = K(√[n]{Kˢ})`. -/
 noncomputable def sUnitNthPowerQuotientEquivFullSUnitRadicalQuotient
@@ -601,6 +627,7 @@ noncomputable def sUnitNthPowerQuotientEquivFullSUnitRadicalQuotient
       sUnitNthPowerQuotientToFullSUnitRadicalQuotient_surjective
         (K := K) n S⟩
 
+open scoped Classical in
 /-- The full `S`-unit radical quotient is finite. -/
 noncomputable instance finite_fullSUnitRadicalQuotient
     (n : ℕ+)
@@ -616,6 +643,7 @@ noncomputable instance finite_fullSUnitRadicalQuotient
     (sUnitNthPowerQuotientEquivFullSUnitRadicalQuotient
       (K := K) n S)
 
+open scoped Classical in
 /-- The radical quotient defining `N` has cardinality `n ^ s`. -/
 theorem card_fullSUnitRadicalQuotient
     (n : ℕ+)

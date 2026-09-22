@@ -80,7 +80,6 @@ instance frobeniusElementsSemigroup (D : DegreeData G)
 `D.extensionNormalizedDegree K L hLK (σ * τ).1 = D.extensionNormalizedDegree K L hLK σ.1 *
 D.extensionNormalizedDegree K L hLK τ.1`.
 -/
-@[simp]
 theorem extensionNormalizedDegree_frobenius_mul (D : DegreeData G)
     (K : FiniteResidueAbstractField D) (L : ClosedSubgroup G)
     (hLK : L.toSubgroup ≤ K.field.toSubgroup)

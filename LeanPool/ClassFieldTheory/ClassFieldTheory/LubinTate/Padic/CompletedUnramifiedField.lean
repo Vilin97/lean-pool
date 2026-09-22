@@ -229,7 +229,6 @@ noncomputable instance padicCompletedUnramifiedFieldAlgebra
 
 /-- The canonical field embedding agrees with the original Witt-ring map
 on p-adic integers. -/
-@[simp]
 theorem padicCompletedUnramifiedField_algebraMap_padicInt
     (p : ℕ) [Fact p.Prime] (z : ℤ_[p]) :
     algebraMap ℚ_[p] (padicCompletedUnramifiedField p)

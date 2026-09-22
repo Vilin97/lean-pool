@@ -31,6 +31,8 @@ open GlobalClassFields
 open KummerTheory
 open LocalClassFieldTheory
 
+/-- The rational separable closure uses the canonical rational algebra structure of a division
+ring. -/
 @[reducible]
 noncomputable local instance
     cyclotomicUnramifiedGeometricRationalSeparableClosureAlgebra :

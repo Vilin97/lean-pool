@@ -39,7 +39,7 @@ field of a `LocalField`; the argument compares the two standard bases at
 zero in both directions. -/
 private theorem isValuativeTopology_of_valued_ofValuation'
     (L : Type u) (Γ : Type w) [Field L]
-    [LinearOrderedCommGroupWithZero Γ] [MulArchimedean Γ]
+    [LinearOrderedCommGroupWithZero Γ]
     [Valued L Γ]
     [Valuation.IsNontrivial (Valued.v : Valuation L Γ)] :
     letI := ValuativeRel.ofValuation (Valued.v : Valuation L Γ)

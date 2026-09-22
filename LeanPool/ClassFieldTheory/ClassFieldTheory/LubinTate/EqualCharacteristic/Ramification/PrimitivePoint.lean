@@ -514,7 +514,7 @@ chosen Laurent uniformizer. -/
 theorem
     equalCharacteristicLubinTatePrimitivePolynomialInBaseValuationSubring_isEisensteinAt
     (F : LocalField.{0, v} K₀)
-    [CharP K₀ F.residueCharacteristic]
+
     (n : ℕ) :
     (equalCharacteristicLubinTatePrimitivePolynomialInBaseValuationSubring
       F n).IsEisensteinAt
@@ -613,7 +613,8 @@ theorem
     (F : LocalField.{0, v} K₀)
     [CharP K₀ F.residueCharacteristic]
     (n : ℕ) :
-    ValuationTheory.DiscreteValuationField.ValuedExtension.HasUniqueValuationExtension.{0, 0, 0, 0, y}
+    ValuationTheory.DiscreteValuationField.ValuedExtension.HasUniqueValuationExtension.{0, 0, 0,
+      0, y}
       (base := equalCharacteristicLubinTateBaseCompleteDVF F)
       (target := equalCharacteristicLubinTateLevelCompleteDVF F n) := by
   let : FiniteDimensional F.residueField⸨X⸩
@@ -626,7 +627,8 @@ theorem
     (ValuationTheory.DiscreteValuationField.ValuedExtension.hasUniqueValuationExtension_of_finite_separable
         (equalCharacteristicLubinTateBaseCompleteDVF F)
         (equalCharacteristicLubinTateLevelCompleteDVF F n) :
-      ValuationTheory.DiscreteValuationField.ValuedExtension.HasUniqueValuationExtension.{0, 0, 0, 0, y}
+      ValuationTheory.DiscreteValuationField.ValuedExtension.HasUniqueValuationExtension.{0, 0,
+        0, 0, y}
         (base := equalCharacteristicLubinTateBaseCompleteDVF F)
         (target := equalCharacteristicLubinTateLevelCompleteDVF F n))
 
@@ -644,7 +646,7 @@ theorem
 
 private theorem addVal_prod_valuationSubringAut
     {K₁ L₁ : Type} [Field K₁] [Field L₁] [Algebra K₁ L₁]
-    [FiniteDimensional K₁ L₁] [IsGalois K₁ L₁]
+    [FiniteDimensional K₁ L₁]
     (base : DVF.{0, 0} K₁) (target : DVF.{0, 0} L₁)
     [base.valuation.HasExtension target.valuation]
     (huniq :

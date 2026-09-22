@@ -19,7 +19,7 @@ norm subgroup as the selected big Hilbert class field.  Arithmetic global
 reciprocity therefore gives its narrow-class-group Artin isomorphism.
 -/
 
-open scoped Classical NumberField IsMulCommutative
+open scoped NumberField IsMulCommutative
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -28,10 +28,14 @@ namespace ClassFieldTheory.GlobalClassFieldComparison
 
 variable {K : Type} [Field K] [NumberField K]
 
+open scoped Classical in
 local instance bigHilbertArtinIdeleClassGroupIsMulCommutative :
     IsMulCommutative (IdeleClassGroup K) :=
   ⟨⟨fun a b => mul_comm a b⟩⟩
 
+attribute [local instance] bigHilbertArtinIdeleClassGroupIsMulCommutative
+
+open scoped Classical in
 /-- An intrinsic big Hilbert class field is equivalent over `K` to the
 selected realization. -/
 noncomputable def bigHilbertClassFieldEquivOfIsBig
@@ -42,13 +46,15 @@ noncomputable def bigHilbertClassFieldEquivOfIsBig
     (GlobalClassFieldTheory.GlobalClassFields.finiteUnramifiedAbelianExtension_nonempty_algHom_bigHilbertClassField
       K E ((isUnramifiedAtFinitePlaces_iff_original K E).mp hE.1))
   have hdim : Module.finrank K E = Module.finrank K H :=
-    (GlobalClassFieldComparison.bigHilbertClassField_degree_eq_narrowClassGroup_card_of_isBig K E hE).trans
+    (GlobalClassFieldComparison.bigHilbertClassField_degree_eq_narrowClassGroup_card_of_isBig K
+      E hE).trans
       (GlobalClassFieldComparison.bigHilbertClassField_degree_eq_narrowClassGroup_card K).symm
   have hsurj : Function.Surjective f :=
     (LinearMap.injective_iff_surjective_of_finrank_eq_finrank
       (f := f.toLinearMap) hdim).mp f.injective
   exact AlgEquiv.ofBijective f ⟨f.injective, hsurj⟩
 
+open scoped Classical in
 /-- Every intrinsic big Hilbert class field has the selected field's
 idèle-class norm subgroup. -/
 theorem bigHilbertClassField_ideleClassNorm_range_of_isBig
@@ -65,9 +71,10 @@ theorem bigHilbertClassField_ideleClassNorm_range_of_isBig
       GlobalClassFieldTheory.GlobalClassFields.bigHilbertClassField_ideleClassNorm_range_over_original
         (K := K)
 
+open scoped Classical in
 /-- The arithmetic Artin isomorphism for an intrinsic big Hilbert class
 field, with target the narrow ideal class group. -/
-noncomputable def arithmeticBigHilbertClassFieldGaloisEquivNarrowClassGroup_of_isBig
+noncomputable def arithmeticBigHilbertClassFieldGaloisEquivNarrowClassGroupOfIsBig
     (E : FiniteAbelianExtension K) (hE : IsBigHilbertClassField E) :
     (E ≃ₐ[K] E) ≃* RayClass.NarrowClassGroup K := by
   let reciprocity : (E ≃ₐ[K] E) ≃*
@@ -89,12 +96,13 @@ noncomputable def arithmeticBigHilbertClassFieldGaloisEquivNarrowClassGroup_of_i
       (K := K)
   exact (reciprocity.trans transport).trans narrow
 
+open scoped Classical in
 /-- The intrinsic arithmetic reciprocity equivalence sends a global
 norm-residue symbol to the represented big-Hilbert norm class. -/
 theorem arithmeticBigHilbertClassFieldGaloisEquivNarrowClassGroup_globalNormResidue
     (E : FiniteAbelianExtension K) (hE : IsBigHilbertClassField E)
     (c : IdeleClassGroup K) :
-    arithmeticBigHilbertClassFieldGaloisEquivNarrowClassGroup_of_isBig E hE
+    arithmeticBigHilbertClassFieldGaloisEquivNarrowClassGroupOfIsBig E hE
       (GlobalClassFieldTheory.Reciprocity.arithmeticGlobalNormResidueMonoidHom
         K E c) =
       GlobalClassFieldTheory.GlobalClassFields.bigHilbertClassFieldQuotientEquivNarrowClassGroup
@@ -129,12 +137,13 @@ theorem arithmeticBigHilbertClassFieldGaloisEquivNarrowClassGroup_globalNormResi
         hReciprocity
     _ = _ := rfl
 
+open scoped Classical in
 /-- The intrinsic arithmetic Artin symbol of a finite prime is represented
 by its one-place prime idèle in the narrow class group. -/
 theorem arithmeticBigHilbertClassFieldGaloisEquivNarrowClassGroup_prime
     (E : FiniteAbelianExtension K) (hE : IsBigHilbertClassField E)
     (v : HeightOneSpectrum (𝓞 K)) :
-    arithmeticBigHilbertClassFieldGaloisEquivNarrowClassGroup_of_isBig E hE
+    arithmeticBigHilbertClassFieldGaloisEquivNarrowClassGroupOfIsBig E hE
       (GlobalClassFieldTheory.GlobalClassFields.arithmeticFinitePlacePrimeArtin
         (K := K) (L := E) v) =
       QuotientGroup.mk' (RayClass.narrowDenominator (K := K))
@@ -154,9 +163,11 @@ theorem arithmeticBigHilbertClassFieldGaloisEquivNarrowClassGroup_prime
       (IdeleGroup.finitePrimeIdele v)).symm
   rw [hArtin]
   rw [arithmeticBigHilbertClassFieldGaloisEquivNarrowClassGroup_globalNormResidue]
-  exact GlobalClassFieldTheory.GlobalClassFields.bigHilbertClassFieldQuotientEquivNarrowClassGroup_mk
+  exact
+    GlobalClassFieldTheory.GlobalClassFields.bigHilbertClassFieldQuotientEquivNarrowClassGroup_mk
     (IdeleGroup.finitePrimeIdele v)
 
+open scoped Classical in
 /-- The public narrow ideal ray class of a finite prime is its normalized
 one-place prime idèle class. -/
 theorem narrowRayClassGroupEquivNarrowClassGroup_prime

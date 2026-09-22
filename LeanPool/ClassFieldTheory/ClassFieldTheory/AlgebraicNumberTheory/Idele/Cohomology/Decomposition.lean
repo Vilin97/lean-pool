@@ -417,7 +417,7 @@ noncomputable def unramifiedInducedIntegerUnitsHerbrandH0Equiv
     [FiniteDimensional k ell]
     [ValuativeRel ell]
     [MulDistribMulAction (Gal(ell/k)) 𝒪[ell]ˣ]
-    (e : H ≃* Gal(ell / k))
+    (e : H ≃* Gal(ell/k))
     (σ : G)
     (hσ : ∀ τ : G, τ ∈ Subgroup.zpowers σ) :
     letI : MulDistribMulAction H 𝒪[ell]ˣ :=
@@ -441,7 +441,7 @@ noncomputable def unramifiedInducedIntegerUnitsHerbrandHMinusOneEquiv
     [FiniteDimensional k ell]
     [ValuativeRel ell]
     [MulDistribMulAction (Gal(ell/k)) 𝒪[ell]ˣ]
-    (e : H ≃* Gal(ell / k))
+    (e : H ≃* Gal(ell/k))
     (σ : G)
     (hσ : ∀ τ : G, τ ∈ Subgroup.zpowers σ) :
     letI : MulDistribMulAction H 𝒪[ell]ˣ :=

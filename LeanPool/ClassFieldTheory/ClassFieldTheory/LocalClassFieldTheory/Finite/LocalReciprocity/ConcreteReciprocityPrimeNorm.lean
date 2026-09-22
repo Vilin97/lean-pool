@@ -42,7 +42,8 @@ theorem concreteNormResidueSymbolOfEmbedding_apply_primeNorm
     (sigma : D.FrobeniusElements
       ((intrinsicFiniteAbstractBase K).toFiniteResidueAbstractField D) (Eᵢ).field (Eᵢ).below)
     (hsigma : D.frobeniusRestriction
-      ((intrinsicFiniteAbstractBase K).toFiniteResidueAbstractField D) (Eᵢ).field (Eᵢ).below sigma = q)
+      ((intrinsicFiniteAbstractBase K).toFiniteResidueAbstractField D) (Eᵢ).field (Eᵢ).below
+        sigma = q)
     (pi : ambientFixedAddSubgroup (intrinsicAbsoluteUnits K)
       (D.frobeniusFixedField ((intrinsicFiniteAbstractBase K).toFiniteResidueAbstractField D)
         (Eᵢ).field (Eᵢ).below sigma))
@@ -99,9 +100,11 @@ theorem concreteNormResidueSymbolOfEmbedding_apply_primeNorm
   have hbase : e (Additive.ofMul x) = a := by
     simpa only [BK, KR, S, hSB, e, a] using hx
   have hprimeNorm :
-      D.finiteReciprocityHom (intrinsicAbsoluteUnits K) v (v.classFieldAxiom_implies_unramifiedUnitCohomology hcf)
+      D.finiteReciprocityHom (intrinsicAbsoluteUnits K) v
+        (v.classFieldAxiom_implies_unramifiedUnitCohomology hcf)
           BK (Eᵢ).field (Eᵢ).below (Additive.ofMul q) =
-        finiteNormClass (intrinsicAbsoluteUnits K) (intrinsicAbstractBase K) (Eᵢ).field (Eᵢ).below a := by
+        finiteNormClass (intrinsicAbsoluteUnits K) (intrinsicAbstractBase K) (Eᵢ).field
+          (Eᵢ).below a := by
     simpa only [BK, KR, S, hSB, a] using
       D.finiteReciprocityHom_apply_eq_primeNormClass
         (intrinsicAbsoluteUnits K) v (v.classFieldAxiom_implies_unramifiedUnitCohomology hcf)
@@ -110,13 +113,15 @@ theorem concreteNormResidueSymbolOfEmbedding_apply_primeNorm
   have hreciprocity :
       D.abstractReciprocityEquiv (intrinsicAbsoluteUnits K) v hcf BK Eᵢ
           (Additive.ofMul (Abelianization.of q)) =
-        finiteNormClass (intrinsicAbsoluteUnits K) (intrinsicAbstractBase K) (Eᵢ).field (Eᵢ).below a := by
+        finiteNormClass (intrinsicAbsoluteUnits K) (intrinsicAbstractBase K) (Eᵢ).field
+          (Eᵢ).below a := by
     rw [D.abstractReciprocityEquiv_apply_of (intrinsicAbsoluteUnits K) v hcf BK Eᵢ q]
     exact hprimeNorm
   have hnormTransport :
       finiteNormQuotientEquivEmbeddedNormQuotient
           K (SeparableClosure K) L i
-          (finiteNormClass (intrinsicAbsoluteUnits K) (intrinsicAbstractBase K) (Eᵢ).field (Eᵢ).below a) =
+          (finiteNormClass (intrinsicAbsoluteUnits K) (intrinsicAbstractBase K) (Eᵢ).field
+            (Eᵢ).below a) =
         Additive.ofMul (normClass K L x) := by
     rw [← hbase]
     convert

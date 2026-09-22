@@ -21,7 +21,7 @@ closed finite-index idele-class subgroup, whose selected finite class field
 supplies the detecting finite Galois coordinate.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 
 noncomputable section
 
@@ -32,6 +32,7 @@ open GlobalClassFields
 
 variable (K : Type) [Field K] [NumberField K]
 
+open scoped Classical in
 /-- A class outside the identity component is excluded by a closed
 finite-index subgroup which contains the identity component. -/
 theorem exists_closedFiniteIndexSubgroup_not_mem_of_not_mem_identityComponent
@@ -88,6 +89,7 @@ theorem exists_closedFiniteIndexSubgroup_not_mem_of_not_mem_identityComponent
     exact this (by simp)
   exact ⟨H, hHclosed, hHfinite, hCH, hcH⟩
 
+open scoped Classical in
 /-- Replacing a finite abelian extension by its selected finite layer in the
 maximal abelian extension preserves its idele-class norm range. -/
 theorem finiteAbelianExtensionInMaximalAbelianExtension_ideleClassNorm_range
@@ -122,9 +124,9 @@ theorem finiteAbelianExtensionInMaximalAbelianExtension_ideleClassNorm_range
       · intro hc
         exact ⟨c, hc, by simp⟩
 
+open scoped Classical in
 /-- The kernel of the maximal abelian global Artin map is exactly the
 identity component of the idele class group. -/
-@[simp]
 theorem maximalAbelianGlobalArtin_ker :
     (maximalAbelianGlobalArtin K).ker =
       ideleClassIdentityComponent K := by
@@ -184,6 +186,7 @@ theorem maximalAbelianGlobalArtin_ker :
       ideleClassIdentityComponent_le_ker K
         (maximalAbelianGlobalArtin K)
 
+open scoped Classical in
 /-- Maximal abelian reciprocity identifies the component quotient of the
 idele class group with the maximal abelian Galois group. -/
 noncomputable def ideleClassComponentQuotientEquivMaximalAbelianGalois :
@@ -213,9 +216,9 @@ noncomputable def ideleClassComponentQuotientEquivMaximalAbelianGalois :
       continuous_toFun := h.continuous
       continuous_invFun := h.symm.continuous }
 
+open scoped Classical in
 /-- Evaluation of component-quotient reciprocity on an idele class is the
 maximal abelian global Artin map. -/
-@[simp]
 theorem ideleClassComponentQuotientEquivMaximalAbelianGalois_mk
     (c : IdeleClassGroup K) :
     ideleClassComponentQuotientEquivMaximalAbelianGalois K

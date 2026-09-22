@@ -17,7 +17,8 @@ open KummerTheory
 open CyclicCohomology
 
 /-!
-# The abstract reciprocity construction, the unramified norm-quotient equivalence: the unramified norm quotient
+# The abstract reciprocity construction, the unramified norm-quotient equivalence: the
+  unramified norm quotient
 
 For a finite unramified Galois extension `L / K`, normalized valuation
 identifies the actual norm quotient `A_K / N_{L/K} A_L` with
@@ -163,7 +164,7 @@ private theorem valueModulo_eq_zero_iff
   · intro hz
     have hq :
         (QuotientAddGroup.mk' (nsmulWithin v.valueGroup n)) z = 0 := by
-      apply (v.cyclic_value_quotients n hn).injective
+      apply (v.cyclicValueQuotients n hn).injective
       change v.valueModulo n hn z = v.valueModulo n hn 0
       rw [hz, map_zero]
     obtain ⟨w, hw⟩ :=
@@ -174,7 +175,7 @@ private theorem valueModulo_eq_zero_iff
         (QuotientAddGroup.mk' (nsmulWithin v.valueGroup n)) (n • w) = 0 := by
       apply (QuotientAddGroup.eq_zero_iff _).2
       exact ⟨w, rfl⟩
-    change (v.cyclic_value_quotients n hn)
+    change (v.cyclicValueQuotients n hn)
         ((QuotientAddGroup.mk' (nsmulWithin v.valueGroup n)) (n • w)) = 0
     rw [hq, map_zero]
 
@@ -369,7 +370,7 @@ theorem unramifiedNormQuotientValuation_injective
 
 /-- **the unramified norm-quotient equivalence (valuation part).**  For finite unramified `L / K`,
 valuation induces `A_K / N_{L/K}A_L ≃ ℤ/[L:K]ℤ`. -/
-def unramifiedReciprocity_valuationEquiv
+def unramifiedReciprocityValuationEquiv
     (v : ValuationData D A) (hAxiom : SatisfiesUnramifiedUnitCohomology D v)
     (K : FiniteAbstractField G) (L : ClosedSubgroup G)
     (hLK : L.toSubgroup ≤ K.field.toSubgroup)
@@ -469,7 +470,7 @@ theorem primeClass_zmultiples_eq_top
     (π : ambientFixedAddSubgroup A K.field) (hπ : v.IsPrimeElement K π) :
     AddSubgroup.zmultiples
       (finiteNormClass A K.field L hLK π) = ⊤ := by
-  let e := v.unramifiedReciprocity_valuationEquiv hAxiom K L hLK hUnramified
+  let e := v.unramifiedReciprocityValuationEquiv hAxiom K L hLK hUnramified
   let E := FiniteAbstractFieldExtension.ofInclusion L K hLK
   let : NeZero (E.degree : ℕ) :=
     ⟨E.degree.property.ne'⟩

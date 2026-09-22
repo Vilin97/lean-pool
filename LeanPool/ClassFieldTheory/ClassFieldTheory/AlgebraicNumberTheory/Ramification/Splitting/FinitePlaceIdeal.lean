@@ -17,8 +17,7 @@ These are the place-theoretic ingredients used in the cyclic prime-power and
 normal-closure splitting reductions.
 -/
 
-open scoped NumberField Classical
-open NumberField IsDedekindDomain
+open scoped NumberField open NumberField IsDedekindDomain
 
 noncomputable section
 
@@ -32,6 +31,7 @@ variable
     [FiniteDimensional K L] [IsGalois K L]
 
 omit [FiniteDimensional K L] [IsGalois K L] in
+open scoped Classical in
 /-- The decomposition group of an exact finite-place extension is the
 stabilizer of its centre prime. -/
 theorem absoluteValueDecompositionGroup_eq_finitePlaceStabilizer
@@ -85,6 +85,7 @@ theorem absoluteValueDecompositionGroup_eq_finitePlaceStabilizer
         simp
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 /-- Complete splitting can be tested at the centre of any exact extension
 of the normalized absolute value. -/
 theorem finitePlaceSplitsCompletely_iff_centre_stabilizer_eq_bot
@@ -118,6 +119,7 @@ theorem finitePlaceSplitsCompletely_iff_centre_stabilizer_eq_bot
         (RayClass.adicAbv_isNontrivial v)
         w (chosenFinitePlaceExtension (L := L) v) hw
 
+open scoped Classical in
 /-- Complete splitting can equivalently be tested at any finite place
 above the base place. -/
 theorem finitePlaceSplitsCompletely_iff_stabilizer_eq_bot
@@ -143,6 +145,7 @@ theorem finitePlaceSplitsCompletely_iff_stabilizer_eq_bot
     (K := K) (L := L) v w, hw]
 
 omit [FiniteDimensional K L] [IsGalois K L] in
+open scoped Classical in
 /-- There are finitely many finite places of `L` above a fixed finite
 place of `K`. -/
 theorem finite_finitePlaceBelow_fibre
@@ -162,6 +165,7 @@ theorem finite_finitePlaceBelow_fibre
     exact h
 
 omit [FiniteDimensional K L] [IsGalois K L] in
+open scoped Classical in
 /-- The inverse image of a finite set of base finite places under
 contraction is finite. -/
 theorem Set.Finite.preimage_finitePlaceBelow
@@ -185,6 +189,7 @@ variable {M : Type}
 
 omit [NumberField K] [NumberField M] [NumberField L]
     [FiniteDimensional K L] [IsGalois K L] [IsGalois M L] in
+open scoped Classical in
 /-- Restricting the scalars of a Galois automorphism does not change
 its action on the finite primes of the top field. -/
 theorem finitePlaceEquiv_restrictAutomorphismScalars
@@ -198,6 +203,7 @@ theorem finitePlaceEquiv_restrictAutomorphismScalars
   ext x
   rfl
 
+open scoped Classical in
 /-- If a finite place splits completely in `L / K`, then every finite
 place of an intermediate field above it splits completely in `L / M`.
 The relation "above" is expressed canonically by ideal contraction,
@@ -257,6 +263,7 @@ theorem finitePlaceSplitsCompletely_over_intermediate_of_below
   change σ x = x at hx
   exact hx
 
+open scoped Classical in
 /-- Finiteness of the nonsplitting finite places ascends from `K` to
 an intermediate field `M`. -/
 theorem finite_nonsplittingPlaces_over_intermediate

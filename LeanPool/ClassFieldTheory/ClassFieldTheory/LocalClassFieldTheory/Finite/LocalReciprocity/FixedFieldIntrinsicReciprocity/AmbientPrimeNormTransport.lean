@@ -553,7 +553,7 @@ theorem
     (K F L : Type)
     [Field K] [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K]
-    [Field F] [Field L] [Algebra F L] [FiniteDimensional F L]
+    [Field F] [Field L] [Algebra F L]
     [ValuativeRel L] [TopologicalSpace L]
     [IsNonarchimedeanLocalField L]
     (H : FiniteAbstractField

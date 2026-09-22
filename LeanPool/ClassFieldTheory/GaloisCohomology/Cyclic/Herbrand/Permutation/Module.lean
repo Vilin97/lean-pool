@@ -858,9 +858,10 @@ theorem permutationFunctionOrbitEquiv_equivariant :
       f ((x * g)⁻¹ • ω.out)
   rw [mul_inv_rev, mul_smul]
 
+omit [Fintype ι] in
 /-- Degree-zero Tate cohomology of a finite integral permutation module
 is finite for a cyclic generator. -/
-theorem permutationFunctionHerbrandH0Finite
+theorem permutationFunctionHerbrandH0Finite [Finite ι]
     (σ : G)
     (hgen : ∀ g : G,
       g ∈ Subgroup.zpowers σ) :
@@ -869,6 +870,8 @@ theorem permutationFunctionHerbrandH0Finite
       permutationFunctionMulDistribMulAction
     Finite
       (HerbrandH0 G (ι → Multiplicative ℤ)) := by
+  classical
+  let := Fintype.ofFinite ι
   let functionAction :
       MulDistribMulAction G (ι → Multiplicative ℤ) :=
     permutationFunctionMulDistribMulAction
@@ -936,9 +939,10 @@ theorem permutationFunctionHerbrandH0Finite
     herbrandH0Finite_of_equivariantMulEquiv
       e.symm (mulEquiv_symm_commutes_smul e he)
 
+omit [Fintype ι] in
 /-- Degree-minus-one Tate cohomology of a finite integral permutation
 module is finite for a cyclic generator. -/
-theorem permutationFunctionHerbrandHMinusOneFinite
+theorem permutationFunctionHerbrandHMinusOneFinite [Finite ι]
     (σ : G)
     (hgen : ∀ g : G,
       g ∈ Subgroup.zpowers σ) :
@@ -948,6 +952,8 @@ theorem permutationFunctionHerbrandHMinusOneFinite
     Finite
       (HerbrandHMinusOne G
         (ι → Multiplicative ℤ) σ) := by
+  classical
+  let := Fintype.ofFinite ι
   let functionAction :
       MulDistribMulAction G (ι → Multiplicative ℤ) :=
     permutationFunctionMulDistribMulAction
@@ -1015,10 +1021,12 @@ theorem permutationFunctionHerbrandHMinusOneFinite
     herbrandHMinusOneFinite_of_equivariantMulEquiv
       e.symm (mulEquiv_symm_commutes_smul e he) σ
 
-/-- Canonical orbit form of the permutation-lattice Herbrand quotient formula: the Herbrand quotient of the
+omit [Fintype ι] in
+/-- Canonical orbit form of the permutation-lattice Herbrand quotient formula: the Herbrand
+quotient of the
 integer-valued functions on a finite `G`-set is the product of the
 orders of the stabilizers of its orbits. -/
-theorem permutationFunction_herbrandQuotient_eq_stabilizerProduct
+theorem permutationFunction_herbrandQuotient_eq_stabilizerProduct [Finite ι]
     (σ : G)
     (hgen : ∀ g : G,
       g ∈ Subgroup.zpowers σ) :
@@ -1047,6 +1055,8 @@ theorem permutationFunction_herbrandQuotient_eq_stabilizerProduct
       ∏ ω : MulAction.orbitRel.Quotient G ι,
         (Fintype.card
           (permutationOrbitStabilizer ω) : ℚ) := by
+  classical
+  let := Fintype.ofFinite ι
   let functionAction :
       MulDistribMulAction G (ι → Multiplicative ℤ) :=
     permutationFunctionMulDistribMulAction
@@ -1245,7 +1255,6 @@ def stableQuotientMulDistribMulAction
         (fun _ hx ↦ hstable g _ hx))
       q r
 
-@[simp]
 theorem stableQuotient_smul_mk
     (B : Subgroup A)
     (hstable : ∀ (g : G) (x : A),

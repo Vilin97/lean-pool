@@ -7,7 +7,8 @@ Authors: n-yamaguchi-0729
 import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.FiniteLevel.NormUniformizer
 import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.NormQuotient
 /-!
-# LubinTate the explicit norm-subgroup computation: canonical algebra and norm subgroup at a finite level
+# LubinTate the explicit norm-subgroup computation: canonical algebra and norm subgroup at a
+  finite level
 
 This light leaf names the canonical base algebra and its norm subgroup once,
 so the later inclusion and index arguments do not repeat expensive fallback
@@ -26,11 +27,14 @@ open LocalFieldTheory.DiscreteValuationField
 
 variable {K : Type} [Field K]
 
+/-- The Laurent-series field over the residue field, with its Hahn-series field structure. -/
 noncomputable local instance equalCharacteristicLaurentSeriesField
     (F : LocalField K) : Field F.residueField⸨X⸩ :=
   @HahnSeries.instField ℤ F.residueField Int.instAddCommGroup
     Int.instLinearOrder Int.instIsOrderedAddMonoid inferInstance
 
+/-- Multiplication on the Laurent-series field uses the same field structure as the level-field
+tower. -/
 noncomputable local instance equalCharacteristicLaurentSeriesMonoid
     (F : LocalField K) : Monoid F.residueField⸨X⸩ :=
   @CommMonoid.toMonoid F.residueField⸨X⸩

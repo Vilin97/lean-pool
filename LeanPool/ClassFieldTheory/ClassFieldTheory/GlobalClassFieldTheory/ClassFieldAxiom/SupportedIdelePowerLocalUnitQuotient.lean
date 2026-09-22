@@ -14,7 +14,7 @@ the prescribed finite places and identifies the resulting quotient with the
 product of its archimedean and finite local power-class groups.
 -/
 
-open scoped NumberField Classical NNReal IsMulCommutative
+open scoped NumberField NNReal IsMulCommutative
 open NumberField IsDedekindDomain
 open KummerTheory
 
@@ -24,6 +24,7 @@ namespace GlobalClassFieldTheory.ClassFieldAxiom
 
 variable {K : Type*} [Field K] [NumberField K]
 
+open scoped Classical in
 private noncomputable def quotientEquivOfSurjectiveWithKernel
     {G H : Type*} [Group G] [Group H]
     (f : G →* H)
@@ -34,6 +35,7 @@ private noncomputable def quotientEquivOfSurjectiveWithKernel
   (QuotientGroup.quotientMulEquivOfEq hker.symm).trans
     (QuotientGroup.quotientKerEquivOfSurjective f hf)
 
+open scoped Classical in
 /-- The power/local-unit subgroup `h(S,T)`, regarded inside
 `I_K^{S ∪ T}`. -/
 def supportedIdelePowerLocalUnitSubgroup
@@ -46,6 +48,7 @@ def supportedIdelePowerLocalUnitSubgroup
     (IdeleGroup.supportedAt
       (K := K) (S ∪ T : Set (HeightOneSpectrum (𝓞 K)))).subtype
 
+open scoped Classical in
 /-- Membership in `h(S,T)` automatically supplies the restricted-product
 condition defining `I_K^{S ∪ T}`. -/
 theorem idelePowerLocalUnitSubgroup_le_supportedAt
@@ -62,6 +65,7 @@ theorem idelePowerLocalUnitSubgroup_le_supportedAt
       (K := K) n S T a).mp ha).2.2 v
   simpa using hv
 
+open scoped Classical in
 /-- Reduction modulo local `n`-th powers at all infinite places and at the
 finite places in `S`.  The coordinates in `T` and the integral coordinates
 away from `S ∪ T` disappear in the supported-idele index calculation. -/
@@ -124,6 +128,7 @@ def supportedIdelePowerClassMap
     · funext v
       simp
 
+open scoped Classical in
 /-- The kernel of the local-power class map is precisely `h(S,T)` inside
 `I_K^{S ∪ T}`. -/
 theorem supportedIdelePowerClassMap_ker
@@ -168,6 +173,7 @@ theorem supportedIdelePowerClassMap_ker
       exact (QuotientGroup.eq_one_iff _).mpr
         (ha.2.1 v.1 v.2)
 
+open scoped Classical in
 /-- The local-power class map is onto: choose representatives independently
 at the finitely many constrained finite places and at all archimedean
 places, then extend the finite family by `1`. -/
@@ -235,6 +241,7 @@ theorem supportedIdelePowerClassMap_surjective
         exact IdeleGroup.finiteIdeleOfFinset_apply_mem S aS v
       _ = q.2 v := hS v
 
+open scoped Classical in
 /-- The algebraic supported-idele index decomposition:
 
 `I_K^{S ∪ T} / h(S,T)` is the product of the local `n`-power class
@@ -272,6 +279,7 @@ noncomputable def supportedIdeleQuotientEquivLocalPowerClasses
     (supportedIdelePowerClassMap_surjective (K := K) n S T)
     (supportedIdelePowerClassMap_ker (K := K) n S T)
 
+open scoped Classical in
 /-- Cardinal form of the supported-idele index decomposition.  The subsequent
 local power-index and product-formula calculation evaluates the right-hand
 side. -/

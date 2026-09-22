@@ -25,8 +25,7 @@ For a finite place `W` of `L`, `finitePlaceBelow W` is its contraction to
 closure shows that the centres are precisely the finite places above `v`.
 -/
 
-open scoped NumberField Classical
-open NumberField IsDedekindDomain
+open scoped NumberField open NumberField IsDedekindDomain
 
 noncomputable section
 
@@ -39,6 +38,7 @@ variable
     [Field K] [NumberField K]
     [Field L] [NumberField L] [Algebra K L]
 
+open scoped Classical in
 /-- Contraction of a finite place of `L` to a finite place of `K`. -/
 noncomputable def finitePlaceBelow
     (W : HeightOneSpectrum (𝓞 L)) :
@@ -49,6 +49,7 @@ noncomputable def finitePlaceBelow
     HilbertRamification.Dedekind.ringOfIntegers_under_ne_bot
       (E := K) (F := L) W.asIdeal
 
+open scoped Classical in
 @[simp]
 theorem finitePlaceBelow_asIdeal
     (W : HeightOneSpectrum (𝓞 L)) :
@@ -56,6 +57,7 @@ theorem finitePlaceBelow_asIdeal
       W.asIdeal.under (𝓞 K) :=
   rfl
 
+open scoped Classical in
 /-- Contracting a finite place along the identity extension fixes it. -/
 @[simp]
 theorem finitePlaceBelow_self
@@ -74,6 +76,7 @@ variable {M : Type w}
     [Algebra K M] [Algebra M L]
     [IsScalarTower K M L]
 
+open scoped Classical in
 /-- Contraction of finite places is transitive in a tower of number
 fields. -/
 @[simp]
@@ -94,6 +97,7 @@ section Centre
 variable [FiniteDimensional K L]
 
 omit [NumberField L] [FiniteDimensional K L] in
+open scoped Classical in
 /-- Nonarchimedeanness of an exact extension of a finite
 absolute value. -/
 theorem finitePlaceExtension_nonarchimedean
@@ -106,6 +110,7 @@ theorem finitePlaceExtension_nonarchimedean
       (HeightOneSpectrum.adicAbv K v)
       (HeightOneSpectrum.isNonarchimedean_adicAbv K v) w)
 
+open scoped Classical in
 /-- The valuation subring of `L` cut out by an exact extension of the
 normalized absolute value at `v`. -/
 noncomputable def finitePlaceExtensionValuationSubring
@@ -118,6 +123,7 @@ noncomputable def finitePlaceExtensionValuationSubring
       (K := K) (L := L) v w)
 
 omit [NumberField L] [FiniteDimensional K L] in
+open scoped Classical in
 /-- Every algebraic integer of `L` belongs to the valuation subring
 defined by a finite-place extension. -/
 theorem ringOfIntegers_mem_finitePlaceExtensionValuationSubring
@@ -137,6 +143,7 @@ theorem ringOfIntegers_mem_finitePlaceExtensionValuationSubring
         (HeightOneSpectrum.isNonarchimedean_adicAbv K v) w)
       x.property
 
+open scoped Classical in
 /-- The canonical map from algebraic integers to the valuation subring
 of an exact finite-place extension. -/
 noncomputable def ringOfIntegersToFinitePlaceExtensionValuationSubring
@@ -153,6 +160,7 @@ noncomputable def ringOfIntegersToFinitePlaceExtensionValuationSubring
       (K := K) (L := L) v w)
 
 omit [NumberField L] [FiniteDimensional K L] in
+open scoped Classical in
 @[simp]
 theorem ringOfIntegersToFinitePlaceExtensionValuationSubring_coe
     (v : HeightOneSpectrum (𝓞 K))
@@ -165,6 +173,7 @@ theorem ringOfIntegersToFinitePlaceExtensionValuationSubring_coe
         (K := K) (L := L) v w) : L) = (x : L) :=
   rfl
 
+open scoped Classical in
 /-- The centre in `𝓞 L` of an exact extension of the absolute value at
 `v`. -/
 noncomputable def finitePlaceExtensionCentreIdeal
@@ -179,6 +188,7 @@ noncomputable def finitePlaceExtensionCentreIdeal
       (K := K) (L := L) v w)
 
 omit [NumberField L] [FiniteDimensional K L] in
+open scoped Classical in
 /-- Membership in the centre is the strict-unit-ball condition. -/
 theorem mem_finitePlaceExtensionCentreIdeal_iff
     (v : HeightOneSpectrum (𝓞 K))
@@ -211,6 +221,7 @@ theorem mem_finitePlaceExtensionCentreIdeal_iff
       (f x)
 
 omit [NumberField L] [FiniteDimensional K L] in
+open scoped Classical in
 theorem finitePlaceExtensionCentreIdeal_isPrime
     (v : HeightOneSpectrum (𝓞 K))
     (w : AbsoluteValueExtension
@@ -221,6 +232,7 @@ theorem finitePlaceExtensionCentreIdeal_isPrime
   exact Ideal.comap_isPrime _ _
 
 omit [NumberField L] [FiniteDimensional K L] in
+open scoped Classical in
 /-- The centre contracts to the original finite place. -/
 theorem finitePlaceExtensionCentreIdeal_under
     (v : HeightOneSpectrum (𝓞 K))
@@ -245,6 +257,7 @@ theorem finitePlaceExtensionCentreIdeal_under
   exact FinitePlace.norm_lt_one_iff_mem (K := K) v x
 
 omit [NumberField L] [FiniteDimensional K L] in
+open scoped Classical in
 theorem finitePlaceExtensionCentreIdeal_ne_bot
     (v : HeightOneSpectrum (𝓞 K))
     (w : AbsoluteValueExtension
@@ -257,6 +270,7 @@ theorem finitePlaceExtensionCentreIdeal_ne_bot
     (K := K) (L := L) v w, hbot]
   simp
 
+open scoped Classical in
 /-- The finite place of `L` centred at an exact extension of the
 absolute value at `v`. -/
 noncomputable def finitePlaceExtensionCentre
@@ -275,6 +289,7 @@ noncomputable def finitePlaceExtensionCentre
       (K := K) (L := L) v w
 
 omit [NumberField L] [FiniteDimensional K L] in
+open scoped Classical in
 @[simp]
 theorem finitePlaceExtensionCentre_asIdeal
     (v : HeightOneSpectrum (𝓞 K))
@@ -287,6 +302,7 @@ theorem finitePlaceExtensionCentre_asIdeal
   rfl
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 @[simp]
 theorem finitePlaceBelow_finitePlaceExtensionCentre
     (v : HeightOneSpectrum (𝓞 K))
@@ -302,6 +318,7 @@ theorem finitePlaceBelow_finitePlaceExtensionCentre
       (K := K) (L := L) v w
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 /-- The centre of an exact extension of the normalized absolute value
 lies over the original finite place. -/
 theorem finitePlaceExtensionCentre_liesOver
@@ -316,6 +333,7 @@ theorem finitePlaceExtensionCentre_liesOver
       (K := K) (L := L) v w).symm
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 /-- The valuation subring defined by an exact extension is the
 localization of `𝓞 L` at its centre. -/
 theorem finitePlaceExtensionValuationSubring_eq_localization
@@ -418,6 +436,7 @@ variable {F M : Type*}
     [Algebra F L] [Algebra M L]
 
 omit [Algebra K L] [FiniteDimensional K L] in
+open scoped Classical in
 /-- Exact finite-place extensions, even over different intermediate
 base fields, define equivalent top-field valuations when their centres
 coincide. -/
@@ -476,6 +495,7 @@ theorem finitePlaceExtensions_isEquiv_of_centres_eq
 end CrossBaseEquivalence
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 /-- An exact extension of the normalized finite absolute value is
 determined by its centre in `𝓞 L`. -/
 theorem finitePlaceExtensionCentre_injective
@@ -495,6 +515,7 @@ theorem finitePlaceExtensionCentre_injective
         w.1 w'.1).2 hequiv)
 
 omit [NumberField L] [FiniteDimensional K L] in
+open scoped Classical in
 /-- Pulling an exact extension back by `σ` carries its centre by the
 inverse prime permutation. -/
 theorem finitePlaceExtensionCentre_conjugate
@@ -524,6 +545,7 @@ theorem finitePlaceExtensionCentre_conjugate
     mem_finitePlaceExtensionCentreIdeal_iff]
   rfl
 
+open scoped Classical in
 /-- An exact extension of the absolute value at `v`, regarded as a finite
 place of `L` lying above `v`. -/
 noncomputable def finitePlaceExtensionCentreInFibre
@@ -538,6 +560,7 @@ noncomputable def finitePlaceExtensionCentreInFibre
         (K := K) (L := L) v w⟩
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 @[simp]
 theorem finitePlaceExtensionCentreInFibre_coe
     (v : HeightOneSpectrum (𝓞 K))
@@ -550,6 +573,7 @@ theorem finitePlaceExtensionCentreInFibre_coe
   rfl
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 theorem finitePlaceExtensionCentreInFibre_injective
     (v : HeightOneSpectrum (𝓞 K)) :
     Function.Injective
@@ -560,6 +584,7 @@ theorem finitePlaceExtensionCentreInFibre_injective
     (K := K) (L := L) v
   exact congrArg Subtype.val h
 
+open scoped Classical in
 private theorem
     finitePlaceExtensionCentreInFibre_surjective_of_isGalois
     [IsGalois K L]
@@ -603,6 +628,7 @@ private theorem
     finitePlaceExtensionCentre_conjugate]
   simpa only [inv_inv] using hplace
 
+open scoped Classical in
 /-- Every finite place of `L` above `v` is the centre of an exact extension
 of the normalized absolute value at `v`. -/
 theorem finitePlaceExtensionCentreInFibre_surjective
@@ -700,6 +726,7 @@ theorem finitePlaceExtensionCentreInFibre_surjective
     hcentreIdealM, hQover.over]
   rfl
 
+open scoped Classical in
 /-- The exact normalized extensions of the finite absolute value at `v`
 are canonically indexed by the finite places of `L` above `v`. -/
 noncomputable def finitePlaceExtensionEquivAbove
@@ -716,6 +743,7 @@ noncomputable def finitePlaceExtensionEquivAbove
       finitePlaceExtensionCentreInFibre_surjective
         (K := K) (L := L) v⟩
 
+open scoped Classical in
 @[simp]
 theorem finitePlaceExtensionEquivAbove_coe
     (v : HeightOneSpectrum (𝓞 K))

@@ -47,7 +47,7 @@ noncomputable local instance equalCharacteristicCompletedLevelBaseAlgebra
 
 private instance equalCharacteristicCompletedLevelBaseCharP
     (F : LocalField.{u, v} K)
-    [CharP K F.residueCharacteristic] :
+    :
     CharP (equalCharacteristicCompletedUnramifiedField F.residueField)
       F.residueCharacteristic :=
   charP_of_injective_algebraMap
@@ -95,6 +95,7 @@ noncomputable def equalCharacteristicCompletedBaseValuationRankOne
     (Valued.v : Valuation
       (equalCharacteristicCompletedUnramifiedField k) ℤᵐ⁰)
 
+/-- The Laurent-series valuation on the completed unramified base has rank one. -/
 noncomputable local instance equalCharacteristicCompletedBaseValuationRankOneInstance
     (k : Type v) [Field k] :
     (Valued.v : Valuation
@@ -110,6 +111,8 @@ rank-one valuation. -/
   Valued.toNontriviallyNormedField
     (L := equalCharacteristicCompletedUnramifiedField k) (Γ₀ := ℤᵐ⁰)
 
+/-- The completed unramified base carries the nontrivial norm associated with its Laurent-series
+valuation. -/
 noncomputable local instance equalCharacteristicCompletedBaseNormedFieldInstance
     (k : Type v) [Field k] :
     NontriviallyNormedField
@@ -146,14 +149,14 @@ def equalCharacteristicCompletedLevelField
   (equalCharacteristicCompletedPrimitivePolynomial F n).SplittingField
 
 /-- The splitting field of the completed primitive polynomial is a field. -/
-instance equalCharacteristicCompletedLevelField_field
+instance equalCharacteristicCompletedLevelFieldField
     (F : LocalField.{u, v} K) (n : ℕ) :
     Field (equalCharacteristicCompletedLevelField F n) := by
   change Field (equalCharacteristicCompletedPrimitivePolynomial F n).SplittingField
   infer_instance
 
 /-- The completed level field is an algebra over the completed unramified field. -/
-noncomputable instance equalCharacteristicCompletedLevelField_algebra
+noncomputable instance equalCharacteristicCompletedLevelFieldAlgebra
     (F : LocalField.{u, v} K) (n : ℕ) :
     Algebra (equalCharacteristicCompletedUnramifiedField F.residueField)
       (equalCharacteristicCompletedLevelField F n) := by
@@ -161,6 +164,8 @@ noncomputable instance equalCharacteristicCompletedLevelField_algebra
     (equalCharacteristicCompletedPrimitivePolynomial F n).SplittingField
   infer_instance
 
+/-- The completed Lubin–Tate level is a Laurent-series algebra by composition through the
+completed unramified base. -/
 noncomputable local instance equalCharacteristicCompletedLevelLaurentAlgebra
     (F : LocalField.{u, v} K) (n : ℕ) :
     Algebra F.residueField⸨X⸩
@@ -189,7 +194,9 @@ private instance equalCharacteristicCompletedLevelCharP
 
 section
 
-local instance equalCharacteristicCompletedLevelField_module
+/-- The completed Lubin–Tate level is a module over its completed unramified base via the chosen
+algebra structure. -/
+local instance equalCharacteristicCompletedLevelFieldModule
     (F : LocalField.{u, v} K) (n : ℕ) :
     @Module (equalCharacteristicCompletedUnramifiedField F.residueField)
       (equalCharacteristicCompletedLevelField F n)
@@ -200,7 +207,7 @@ local instance equalCharacteristicCompletedLevelField_module
   @Algebra.toModule
     (equalCharacteristicCompletedUnramifiedField F.residueField)
     (equalCharacteristicCompletedLevelField F n) _ _
-    (equalCharacteristicCompletedLevelField_algebra F n)
+    (equalCharacteristicCompletedLevelFieldAlgebra F n)
 
 /-- The completed level field is finite-dimensional over its completed base. -/
 instance equalCharacteristicCompletedLevelField_finiteDimensionalInstance
@@ -222,7 +229,7 @@ instance equalCharacteristicCompletedLevelField_isAlgebraic
   @Algebra.IsAlgebraic.of_finite
     (equalCharacteristicCompletedUnramifiedField F.residueField)
     (equalCharacteristicCompletedLevelField F n) _ _ _
-    (equalCharacteristicCompletedLevelField_algebra F n)
+    (equalCharacteristicCompletedLevelFieldAlgebra F n)
     (equalCharacteristicCompletedLevelField_finiteDimensionalInstance F n)
 
 /-- Comparison with the library splitting-field model. -/
@@ -320,6 +327,8 @@ theorem equalCharacteristicCompletedPrimitiveRoot_isRoot
     (equalCharacteristicCompletedUnramifiedField F.residueField)
     (equalCharacteristicCompletedLevelField F n)
 
+/-- The completed Lubin–Tate level carries the spectral norm extending the norm on its completed
+base. -/
 noncomputable local instance equalCharacteristicCompletedLevelNormedFieldInstance
     (F : LocalField.{u, v} K) (n : ℕ) :
     NontriviallyNormedField (equalCharacteristicCompletedLevelField F n) :=
@@ -361,6 +370,8 @@ noncomputable local instance equalCharacteristicCompletedLevelCompleteSpaceInsta
     Valued (equalCharacteristicCompletedLevelField F n) ℝ≥0 :=
   NormedField.toValued (K := equalCharacteristicCompletedLevelField F n)
 
+/-- The completed Lubin–Tate level carries the real-valued valuation associated with its spectral
+norm. -/
 noncomputable local instance equalCharacteristicCompletedLevelValuedInstance
     (F : LocalField.{u, v} K) (n : ℕ) :
     Valued (equalCharacteristicCompletedLevelField F n) ℝ≥0 :=

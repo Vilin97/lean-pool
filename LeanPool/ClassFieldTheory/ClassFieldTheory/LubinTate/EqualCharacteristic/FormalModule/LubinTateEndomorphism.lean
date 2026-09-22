@@ -58,7 +58,7 @@ private theorem addMonoidEnd_sum_apply
 
 private instance equalCharacteristicLaurentCharP
     (F : LocalField.{u, v} K)
-    [CharP K F.residueCharacteristic] :
+    :
     CharP F.residueField⸨X⸩ F.residueCharacteristic :=
   charP_of_injective_algebraMap
     (algebraMap F.residueField F.residueField⸨X⸩).injective

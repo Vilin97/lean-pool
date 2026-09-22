@@ -30,7 +30,7 @@ open LocalFieldTheory.DiscreteValuationField
 `q`th power is the same as taking the `q`th power of the whole series. -/
 theorem mvPowerSeries_expand_natCard
     {k : Type u} [Field k] [Finite k]
-    {σ : Type w} [Finite σ] (f : MvPowerSeries σ k) :
+    {σ : Type w} (f : MvPowerSeries σ k) :
     MvPowerSeries.expand (Nat.card k) (Nat.ne_of_gt Nat.card_pos) f =
       f ^ Nat.card k := by
   let : Fintype k := Fintype.ofFinite k
@@ -88,9 +88,10 @@ theorem map_subst_lubinTateSeries
     e.map_residue_eq_frobenius, PowerSeries.subst_pow hmap,
     PowerSeries.subst_X hmap]
 
+omit [Fintype σ] in
 /-- The reduced right side `H(ebar(X_i))` is the expansion
 `Hbar(X_i ^ q)`. -/
-theorem map_subst_inVariables
+theorem map_subst_inVariables [Finite σ]
     (ebar : LubinTateSeries F π)
     (H : MvPowerSeries σ F.valuationSubring) :
     MvPowerSeries.map F.residueMap
@@ -99,6 +100,8 @@ theorem map_subst_inVariables
       MvPowerSeries.expand (Nat.card F.residueField)
         (Nat.ne_of_gt Nat.card_pos)
         (MvPowerSeries.map F.residueMap H) := by
+  classical
+  let := Fintype.ofFinite σ
   rw [MvPowerSeries.map_subst (inVariable_hasSubst ebar) H]
   simp_rw [map_inVariable]
   rw [MvPowerSeries.expand, MvPowerSeries.substAlgHom_apply]

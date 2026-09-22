@@ -31,7 +31,7 @@ it is the canonical surjective reciprocity homomorphism and has the
 genuine idele-class norm range as its kernel.
 -/
 
-open scoped NumberField Classical BigOperators IsMulCommutative
+open scoped NumberField BigOperators IsMulCommutative
 open NumberField IsDedekindDomain
 open IdeleGroup RelativeIdeleGroup
 
@@ -46,6 +46,7 @@ variable
     [Field L] [NumberField L] [Algebra K L]
     [FiniteDimensional K L] [IsAbelianGalois K L]
 
+open scoped Classical in
 /-- Pulling the canonical global norm-residue homomorphism back from
 idele classes to ideles gives exactly the product of the chosen local
 Artin homomorphisms. -/
@@ -141,6 +142,7 @@ theorem
       (globalArtinMonoidHom_eq_artinFiniteSupportApproximation
         (K := K) (L := L) a).symm
 
+open scoped Classical in
 /-- The chosen local Artin product is trivial on every principal
 idele.  This is the global Artin product formula with the arithmetic
 Frobenius normalization used by the local maps. -/
@@ -171,6 +173,7 @@ theorem globalArtinMonoidHom_principalIdele
       ⟨x, rfl⟩
   rw [hclass, map_one]
 
+open scoped Classical in
 /-- Expanded form of the global product formula: the product of all
 chosen infinite local symbols and the finite-support product of all
 chosen finite local symbols of a principal idele is one. -/
@@ -192,6 +195,7 @@ theorem chosenLocalArtin_product_principalIdele
     globalArtinMonoidHom_principalIdele
       (K := K) (L := L) x
 
+open scoped Classical in
 /-- The genuine idele-class Artin homomorphism obtained by descending
 the local-product global Artin map through the principal ideles. -/
 noncomputable def globalIdeleClassArtinMonoidHom :
@@ -208,9 +212,9 @@ noncomputable def globalIdeleClassArtinMonoidHom :
         globalArtinMonoidHom_principalIdele
           (K := K) (L := L) x)
 
+open scoped Classical in
 /-- Evaluation of the descended Artin homomorphism on an idele
 representative recovers the chosen-local-factor product. -/
-@[simp]
 theorem globalIdeleClassArtinMonoidHom_mk
     (a : IdeleGroup K) :
     globalIdeleClassArtinMonoidHom
@@ -221,6 +225,7 @@ theorem globalIdeleClassArtinMonoidHom_mk
   rw [globalIdeleClassArtinMonoidHom]
   exact QuotientGroup.lift_mk _ _ _
 
+open scoped Classical in
 /-- The descended global Artin homomorphism is continuous for the
 ordinary quotient topology on the idele class group. -/
 theorem globalIdeleClassArtinMonoidHom_continuous :
@@ -238,6 +243,7 @@ theorem globalIdeleClassArtinMonoidHom_continuous :
   exact globalIdeleClassArtinMonoidHom_mk
     (K := K) (L := L) a
 
+open scoped Classical in
 /-- The descended global Artin map, retaining its ordinary topological
 group structure. -/
 noncomputable def globalIdeleClassArtinContinuousMonoidHom :
@@ -249,6 +255,7 @@ noncomputable def globalIdeleClassArtinContinuousMonoidHom :
     globalIdeleClassArtinMonoidHom_continuous
       (K := K) (L := L)
 
+open scoped Classical in
 /-- The descended local-product Artin homomorphism is the canonical
 global norm-residue homomorphism. -/
 theorem
@@ -274,6 +281,7 @@ theorem
       (globalNormResidueMonoidHom_comp_ideleClassQuotient_eq_globalArtin
         (K := K) (L := L)) a).symm
 
+open scoped Classical in
 /-- The independently descended continuous local-product Artin map is
 the canonical topological global norm-residue map. -/
 theorem
@@ -292,6 +300,7 @@ theorem
       (globalIdeleClassArtinMonoidHom_eq_globalNormResidueMonoidHom
         (K := K) (L := L)) c
 
+open scoped Classical in
 /-- The descended global Artin homomorphism is surjective. -/
 theorem globalIdeleClassArtinMonoidHom_surjective :
     Function.Surjective
@@ -301,6 +310,7 @@ theorem globalIdeleClassArtinMonoidHom_surjective :
     globalIdeleClassArtinMonoidHom_eq_globalNormResidueMonoidHom]
   exact globalNormResidueMonoidHom_surjective K L
 
+open scoped Classical in
 /-- The kernel of the descended global Artin homomorphism is exactly
 the genuine idele-class norm range. -/
 @[simp]
@@ -312,6 +322,7 @@ theorem globalIdeleClassArtinMonoidHom_ker :
     globalIdeleClassArtinMonoidHom_eq_globalNormResidueMonoidHom,
     globalNormResidueMonoidHom_ker]
 
+open scoped Classical in
 /-- An idele class has trivial global Artin symbol exactly when it is
 the norm of an idele class from the extension. -/
 @[simp]

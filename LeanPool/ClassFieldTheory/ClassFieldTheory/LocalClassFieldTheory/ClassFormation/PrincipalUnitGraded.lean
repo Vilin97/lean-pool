@@ -6,7 +6,8 @@ Authors: n-yamaguchi-0729
 
 import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.NormalBasisLattice
 import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.PrincipalUnitQuotients
-/-! Provides the public declarations in the `LocalClassFieldTheory.ClassFormation.PrincipalUnitGraded` Lean module. -/
+/-! Provides the public declarations in the
+  `LocalClassFieldTheory.ClassFormation.PrincipalUnitGraded` Lean module. -/
 
 namespace LocalClassFieldTheory
 
@@ -231,7 +232,8 @@ theorem exists_chosenNormalBasisPrincipalUnitSuccQuotMulEquivLatticeSuccQuot
       (K := K) (L := L) with ⟨c₁, hc₁⟩
   rcases exists_chosenNormalBasisPrincipalUnitSet_mul_error_mem_succ
       (K := K) (L := L) with ⟨c₂, hc₂⟩
-  rcases exists_chosenBaseUniformizerPow_chosenNormalBasisIntegerLattice_le_maximalIdeal_and_mul_closed
+  rcases
+    exists_chosenBaseUniformizerPow_chosenNormalBasisIntegerLattice_le_maximalIdeal_and_mul_closed
       (K := K) (L := L) with ⟨c₃, hc₃⟩
   refine ⟨max c₁ (max c₂ c₃), ?_⟩
   intro n hn

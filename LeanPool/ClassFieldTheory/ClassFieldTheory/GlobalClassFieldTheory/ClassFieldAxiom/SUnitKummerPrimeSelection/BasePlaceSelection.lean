@@ -15,7 +15,7 @@ pairwise distinct base places outside the finite avoidance set. Distinctness
 is obtained from Mathlib's Hall marriage theorem.
 -/
 
-open scoped NumberField Classical IsMulCommutative
+open scoped NumberField IsMulCommutative
 open NumberField IsDedekindDomain
 open KummerTheory
 
@@ -28,6 +28,7 @@ section FinitePlaces
 variable {K : Type} [Field K]
     [NumberField K]
 
+open scoped Classical in
 /-- Base finite places lying below a full-decomposition place for the
 cyclic coordinate extension `N/N_i`. -/
 noncomputable def sUnitKummerCoordinateBasePlaceCandidates
@@ -84,6 +85,7 @@ noncomputable def sUnitKummerCoordinateBasePlaceCandidates
       _root_.finitePlaceDecompositionGroup
         (K := Ni) (L := N) q = ⊤}
 
+open scoped Classical in
 /-- Each cyclic coordinate extension supplies infinitely many base
 finite places below completely decomposed places. -/
 theorem sUnitKummerCoordinateBasePlaceCandidates_infinite
@@ -174,6 +176,7 @@ theorem sUnitKummerCoordinateBasePlaceCandidates_infinite
       (K := Ni) (L := N) q' = ⊤
   exact ⟨q, rfl, hq⟩
 
+open scoped Classical in
 /-- The finite set avoided in the prime choice: the enlarged support,
 all base primes ramified in the full Kummer extension, and the support of
 the exponent `n`. -/
@@ -209,6 +212,7 @@ noncomputable def sUnitKummerAvoidedBasePlaces
       chosenUnitFiniteSupport (K := K)
         (Units.mk0 ((n : ℕ) : K) hnK)
 
+open scoped Classical in
 /-- The enlarged support is contained in the finite avoidance set. -/
 theorem
     enlargeByFiniteKummerRadicalSupport_subset_sUnitKummerAvoidedBasePlaces
@@ -230,6 +234,7 @@ theorem
     Finset.mem_union_left _
       (Finset.mem_union_left _ hw)
 
+open scoped Classical in
 /-- Simultaneously choose distinct full-decomposition candidates outside
 the enlarged support, the ramified primes of `N/K`, and the support of `n`. -/
 theorem exists_sUnitKummerChosenBasePlaces
@@ -304,6 +309,7 @@ theorem exists_sUnitKummerChosenBasePlaces
   intro i
   exact hBsub i (hfB i)
 
+open scoped Classical in
 /-- The chosen ordered family of base primes. -/
 noncomputable def sUnitKummerChosenBasePlaces
     {Omega : Type} [Field Omega] [Algebra K Omega]
@@ -329,6 +335,7 @@ noncomputable def sUnitKummerChosenBasePlaces
       (K := K) (Omega := Omega) E n hmu
       p v hp hv hn r eG S)
 
+open scoped Classical in
 /-- The chosen base primes are pairwise distinct. -/
 theorem sUnitKummerChosenBasePlaces_injective
     {Omega : Type} [Field Omega] [Algebra K Omega]
@@ -354,6 +361,7 @@ theorem sUnitKummerChosenBasePlaces_injective
       (K := K) (Omega := Omega) E n hmu
       p v hp hv hn r eG S)).1
 
+open scoped Classical in
 /-- Each chosen base prime lies below a completely decomposed place in
 its coordinate fixed field. -/
 theorem
@@ -386,6 +394,7 @@ theorem
       (K := K) (Omega := Omega) E n hmu
       p v hp hv hn r eG S)).2 i).1
 
+open scoped Classical in
 /-- Every chosen base prime avoids the enlarged support, the ramified
 primes of the full Kummer extension, and the support of `n`. -/
 theorem sUnitKummerChosenBasePlaces_not_mem_avoided
@@ -416,6 +425,7 @@ theorem sUnitKummerChosenBasePlaces_not_mem_avoided
       (K := K) (Omega := Omega) E n hmu
       p v hp hv hn r eG S)).2 i).2
 
+open scoped Classical in
 /-- The exponent `n` is a unit at every chosen base prime. -/
 theorem sUnitKummerChosenBasePlaces_valuation_natCast_eq_one
     {Omega : Type} [Field Omega] [Algebra K Omega]

@@ -59,9 +59,9 @@ variable
 
 /-- Reuse the quotient topology chosen by topological global reciprocity. -/
 local instance
-    arithmeticGlobalNormResidueAbelianization_galoisAbelianizationTopology :
+    arithmeticGlobalNormResidueAbelianizationGaloisAbelianizationTopology :
     TopologicalSpace (Abelianization (Gal(L / K))) :=
-  topologicalGlobalNormResidueAbelianization_galoisAbelianizationTopology
+  topologicalGlobalNormResidueAbelianizationGaloisAbelianizationTopology
     K L
 
 /-- The quotient topology above carries the quotient topological-group
@@ -158,7 +158,6 @@ noncomputable def
 
 /-- The inverse of arithmetic reciprocity is literally the arithmetic
 global norm-residue symbol on every idèle class. -/
-@[simp]
 theorem
     arithmeticGlobalReciprocityAbelianizationContinuousMulEquiv_symm_mk
     (c : IdeleClassGroup K) :
@@ -270,7 +269,6 @@ noncomputable def arithmeticGlobalReciprocityContinuousMulEquiv :
 
 /-- Applying inverse arithmetic reciprocity to a quotient representative
 recovers the arithmetic norm-residue symbol. -/
-@[simp]
 theorem arithmeticGlobalReciprocityContinuousMulEquiv_symm_mk
     (c : IdeleClassGroup K) :
     (arithmeticGlobalReciprocityContinuousMulEquiv K L).symm
@@ -281,7 +279,6 @@ theorem arithmeticGlobalReciprocityContinuousMulEquiv_symm_mk
 
 /-- Arithmetic reciprocity sends the arithmetic norm-residue symbol of an
 idèle class to its literal representative in the norm quotient. -/
-@[simp]
 theorem arithmeticGlobalReciprocityContinuousMulEquiv_globalNormResidue
     (c : IdeleClassGroup K) :
     arithmeticGlobalReciprocityContinuousMulEquiv K L
@@ -405,7 +402,6 @@ theorem arithmeticGlobalArtinMonoidHom_apply
 
 /-- The arithmetic global Artin symbol of a finite one-place idèle is
 literally the arithmetic chosen local Artin symbol. -/
-@[simp]
 theorem arithmeticGlobalArtinMonoidHom_finitePlaceIdele
     (v : HeightOneSpectrum (𝓞 K))
     (x : (v.adicCompletion K)ˣ) :
@@ -419,7 +415,6 @@ theorem arithmeticGlobalArtinMonoidHom_finitePlaceIdele
 omit [FiniteDimensional K L] in
 /-- The arithmetic global Artin symbol of an infinite one-place idèle
 is literally the arithmetic chosen local Artin symbol. -/
-@[simp]
 theorem arithmeticGlobalArtinMonoidHom_infinitePlaceIdele
     (v : InfinitePlace K)
     (x : v.Completionˣ) :
@@ -431,7 +426,6 @@ theorem arithmeticGlobalArtinMonoidHom_infinitePlaceIdele
     arithmeticChosenInfinitePlaceArtinMonoidHom_apply]
 
 /-- Arithmetic global Artin kills every principal idèle. -/
-@[simp]
 theorem arithmeticGlobalArtinMonoidHom_principalIdele
     (x : Kˣ) :
     arithmeticGlobalArtinMonoidHom K L

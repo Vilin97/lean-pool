@@ -231,7 +231,8 @@ private theorem finiteComplexAlgEquivComplexUniqueRpowExtension
       finiteStandardComplexAbsoluteValue finiteStandardComplexAbsoluteValue
       (fun z => rfl) (e x)).symm
 
-/-- the finite-degree norm construction, archimedean standard branch over `ℝ | ℝ`: the construction's
+/-- the finite-degree norm construction, archimedean standard branch over `ℝ | ℝ`: the
+construction's
 finite norm formula in degree one is the usual real absolute value. -/
 private theorem finiteNormExtension_real_self_normFormulaValue_eq_standard
     (x : ℝ) :
@@ -241,7 +242,8 @@ private theorem finiteNormExtension_real_self_normFormulaValue_eq_standard
   rw [finiteExtensionNormFormulaValue, Module.finrank_self ℝ]
   simp
 
-/-- the finite-degree norm construction, archimedean standard branch over `ℂ | ℂ`: the construction's
+/-- the finite-degree norm construction, archimedean standard branch over `ℂ | ℂ`: the
+construction's
 finite norm formula in degree one is the usual complex absolute value. -/
 private theorem finiteNormExtension_complex_self_normFormulaValue_eq_standard
     (z : ℂ) :
@@ -251,7 +253,8 @@ private theorem finiteNormExtension_complex_self_normFormulaValue_eq_standard
   rw [finiteExtensionNormFormulaValue, Module.finrank_self ℂ]
   simp
 
-/-- the finite-degree norm construction, archimedean standard branch over `ℂ | ℝ`: the construction's
+/-- the finite-degree norm construction, archimedean standard branch over `ℂ | ℝ`: the
+construction's
 finite norm formula `|N_{ℂ/ℝ}(z)|^(1/2)` is the usual complex absolute value. -/
 private theorem finiteNormExtension_real_complex_normFormulaValue_eq_standard
     (z : ℂ) :
@@ -333,7 +336,8 @@ private theorem finiteNormExtension_real_complex_normFormulaValue_eq_rpow
   rw [finiteNormExtension_finite_normFormulaValue_rpow]
   rw [finiteNormExtension_real_complex_normFormulaValue_eq_standard]
 
-/-- The nontrivial-valuation convention excludes the trivial valuation in the nontrivial-valuation convention; for the
+/-- The nontrivial-valuation convention excludes the trivial valuation in the
+nontrivial-valuation convention; for the
 nonarchimedean spectral branch this supplies the corresponding mathlib
 `NontriviallyNormedField` instance on `WithAbs v`. -/
 @[reducible] private def finiteWithAbsNontriviallyNormedField
@@ -707,7 +711,7 @@ theorem finiteNormExtension_finite_normFormulaValue_strong_triangle
 
 /-- the finite-degree norm construction, finite nonarchimedean branch: the norm formula,
 bundled as an absolute value on the finite extension. -/
-noncomputable def finiteNormExtension_finite_normFormulaAbsoluteValue
+noncomputable def finiteNormExtensionFiniteNormFormulaAbsoluteValue
     {K L : Type*} [Field K] [Field L] [Algebra K L]
     [FiniteDimensional K L]
     (v : AbsoluteValue K ℝ)
@@ -752,7 +756,7 @@ theorem finiteNormExtension_finite_normFormulaAbsoluteValue_apply
     (hcomplete : IsCompleteForAbsoluteValue v)
     (hnonarch : LubinTate.Valuations.NonarchimedeanAbsoluteValue v)
     (hv : v.IsNontrivial) (x : L) :
-    finiteNormExtension_finite_normFormulaAbsoluteValue (K := K) (L := L)
+    finiteNormExtensionFiniteNormFormulaAbsoluteValue (K := K) (L := L)
       v hcomplete hnonarch hv x =
       finiteExtensionNormFormulaValue v x :=
   rfl
@@ -766,7 +770,7 @@ private theorem finiteNormExtension_finite_normFormulaAbsoluteValue_eq_spectralA
     (hcomplete : IsCompleteForAbsoluteValue v)
     (hnonarch : LubinTate.Valuations.NonarchimedeanAbsoluteValue v)
     (hv : v.IsNontrivial) :
-    finiteNormExtension_finite_normFormulaAbsoluteValue (K := K) (L := L)
+    finiteNormExtensionFiniteNormFormulaAbsoluteValue (K := K) (L := L)
       v hcomplete hnonarch hv =
       finiteSpectralExtension (K := K) (L := L)
         v hcomplete hnonarch hv := by
@@ -783,7 +787,7 @@ theorem finiteNormExtension_finite_normFormulaAbsoluteValue_extends_base
     (hcomplete : IsCompleteForAbsoluteValue v)
     (hnonarch : LubinTate.Valuations.NonarchimedeanAbsoluteValue v)
     (hv : v.IsNontrivial) (x : K) :
-    finiteNormExtension_finite_normFormulaAbsoluteValue (K := K) (L := L)
+    finiteNormExtensionFiniteNormFormulaAbsoluteValue (K := K) (L := L)
       v hcomplete hnonarch hv (algebraMap K L x) = v x := by
   rw [finiteNormExtension_finite_normFormulaAbsoluteValue_eq_spectralAbsoluteValue
     v hcomplete hnonarch hv]
@@ -800,7 +804,7 @@ theorem finiteNormExtension_finite_normFormulaAbsoluteValue_complete
     (hnonarch : LubinTate.Valuations.NonarchimedeanAbsoluteValue v)
     (hv : v.IsNontrivial) :
     IsCompleteForAbsoluteValue
-      (finiteNormExtension_finite_normFormulaAbsoluteValue (K := K) (L := L)
+      (finiteNormExtensionFiniteNormFormulaAbsoluteValue (K := K) (L := L)
         v hcomplete hnonarch hv) := by
   rw [finiteNormExtension_finite_normFormulaAbsoluteValue_eq_spectralAbsoluteValue
     v hcomplete hnonarch hv]
@@ -819,7 +823,7 @@ theorem finiteNormExtension_unique_extension_finite_normFormulaAbsoluteValue
     (hv : v.IsNontrivial)
     (w : AbsoluteValue L ℝ)
     (hw_ext : ∀ x : K, w (algebraMap K L x) = v x) :
-    w = finiteNormExtension_finite_normFormulaAbsoluteValue (K := K) (L := L)
+    w = finiteNormExtensionFiniteNormFormulaAbsoluteValue (K := K) (L := L)
       v hcomplete hnonarch hv := by
   rw [finiteNormExtension_finite_normFormulaAbsoluteValue_eq_spectralAbsoluteValue
     v hcomplete hnonarch hv]
@@ -1168,7 +1172,7 @@ private noncomputable def finiteNormExtension_finiteExtensionResult_base_ringEqu
 /-- the finite-degree norm construction, explicit finite nonarchimedean theorem: in finite degree,
 the unique extension is `|N_{L/K}(x)|^(1/[L:K])`, and the finite extension is
 complete. -/
-noncomputable def finiteNormExtension_nonarchimedean_finite_extension
+noncomputable def finiteNormExtensionNonarchimedeanFiniteExtension
     {K L : Type*} [Field K] [Field L] [Algebra K L]
     [FiniteDimensional K L]
     (v : AbsoluteValue K ℝ)
@@ -1177,7 +1181,7 @@ noncomputable def finiteNormExtension_nonarchimedean_finite_extension
     (hv : v.IsNontrivial) :
     FiniteNormExtensionFiniteExtensionResult (K := K) (L := L) v where
   extension :=
-    finiteNormExtension_finite_normFormulaAbsoluteValue (K := K) (L := L)
+    finiteNormExtensionFiniteNormFormulaAbsoluteValue (K := K) (L := L)
       v hcomplete hnonarch hv
   extends_base :=
     finiteNormExtension_finite_normFormulaAbsoluteValue_extends_base
@@ -1195,7 +1199,7 @@ noncomputable def finiteNormExtension_nonarchimedean_finite_extension
 /-- Explicit archimedean finite-extension theorem: after the archimedean
 classification, the finite norm formula and completeness reduce to the standard
 `ℝ`/`ℂ` cases. -/
-noncomputable def finiteNormExtension_archimedean_finite_extension
+noncomputable def finiteNormExtensionArchimedeanFiniteExtension
     {K L : Type*} [Field K] [Field L] [Algebra K L]
     [FiniteDimensional K L]
     (v : AbsoluteValue K ℝ)
@@ -1252,7 +1256,7 @@ noncomputable def finiteNormExtension_archimedean_finite_extension
 /-- the finite-degree norm construction, explicit finite theorem for the nontrivial
 valuations: in finite degree the unique extension is the norm formula, and the
 finite extension is complete. -/
-noncomputable def finiteNormExtension_finite_extension
+noncomputable def finiteNormExtensionFiniteExtension
     {K L : Type*} [Field K] [Field L] [Algebra K L]
     [FiniteDimensional K L]
     (v : AbsoluteValue K ℝ)
@@ -1260,9 +1264,9 @@ noncomputable def finiteNormExtension_finite_extension
     (hv : v.IsNontrivial) :
     FiniteNormExtensionFiniteExtensionResult (K := K) (L := L) v := by
   by_cases hnonarch : LubinTate.Valuations.NonarchimedeanAbsoluteValue v
-  · exact finiteNormExtension_nonarchimedean_finite_extension
+  · exact finiteNormExtensionNonarchimedeanFiniteExtension
       v hcomplete hnonarch hv
-  · exact finiteNormExtension_archimedean_finite_extension
+  · exact finiteNormExtensionArchimedeanFiniteExtension
       v hcomplete hnonarch
 
 end Valuations

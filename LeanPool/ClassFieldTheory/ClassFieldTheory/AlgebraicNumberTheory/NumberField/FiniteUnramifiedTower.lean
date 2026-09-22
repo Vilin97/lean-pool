@@ -28,8 +28,8 @@ height-one prime of the top ring of integers is unramified over the
 base ring of integers. -/
 def IsUnramifiedAtFinitePlaces
     (K : Type u) (L : Type v)
-    [Field K] [NumberField K]
-    [Field L] [NumberField L] [Algebra K L] : Prop :=
+    [Field K]
+    [Field L] [Algebra K L] : Prop :=
   ∀ P : HeightOneSpectrum (𝓞 L),
     Algebra.IsUnramifiedAt (𝓞 K) P.asIdeal
 

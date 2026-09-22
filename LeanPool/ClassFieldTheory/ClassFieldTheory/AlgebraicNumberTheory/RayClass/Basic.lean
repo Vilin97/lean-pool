@@ -26,7 +26,7 @@ namespace RayClass
 
 /-- A finite ray modulus. Its finite support records the prime powers
 dividing the modulus. -/
-abbrev FiniteModulus (K : Type*) [Field K] [NumberField K] :=
+abbrev FiniteModulus (K : Type*) [Field K] :=
   HeightOneSpectrum (𝓞 K) →₀ ℕ
 
 /-- Reduction of local integral units modulo the `n`-th power of the maximal

@@ -17,7 +17,7 @@ integer direction, and combines the resulting exact sequences with the
 permutation-lattice calculation.
 -/
 
-open scoped BigOperators Classical NumberField nonZeroDivisors Pointwise
+open scoped BigOperators NumberField nonZeroDivisors Pointwise
 open IsDedekindDomain Module
 
 noncomputable section
@@ -31,6 +31,7 @@ variable
 
 section LogarithmicQuotient
 
+open scoped Classical in
 /-- The additive Galois action restricted to the actual full
 logarithmic lattice. -/
 @[reducible]
@@ -71,6 +72,7 @@ noncomputable def fullLogLatticeDistribMulAction
           (z : SUnitGroup.LogHyperplane (K := L) S)
           (z' : SUnitGroup.LogHyperplane (K := L) S) }
 
+open scoped Classical in
 /-- The full logarithm as a surjective multiplicative homomorphism
 from `S`-units onto the multiplicative logarithmic lattice. -/
 noncomputable def sUnitFullLogMulHom
@@ -96,6 +98,7 @@ noncomputable def sUnitFullLogMulHom
       (SUnitGroup.fullLog (K := L) S)
       (Additive.ofMul x) (Additive.ofMul y)
 
+open scoped Classical in
 /-- The multiplicative full logarithm is onto its defining lattice. -/
 theorem sUnitFullLogMulHom_surjective
     (S : Finset (HeightOneSpectrum (𝓞 L))) :
@@ -121,6 +124,7 @@ theorem sUnitFullLogMulHom_surjective
         SUnitGroup.fullLogLattice (K := L) S).1
   exact hx
 
+open scoped Classical in
 /-- The kernel of the multiplicative full logarithm is exactly the
 torsion subgroup of the `S`-unit group. -/
 theorem sUnitFullLogMulHom_ker
@@ -162,6 +166,7 @@ theorem sUnitFullLogMulHom_ker
     exact isOfFinAddOrder_ofMul_iff.mpr hxt
 
 omit [NumberField K] in
+open scoped Classical in
 /-- The multiplicative full logarithm is equivariant for the actual
 Galois actions. -/
 theorem sUnitFullLogMulHom_equivariant
@@ -202,6 +207,7 @@ theorem sUnitFullLogMulHom_equivariant
   apply Subtype.ext
   exact fullLog_smul K L hS σ (Additive.ofMul x)
 
+open scoped Classical in
 /-- Ordinary roots of unity identify with the torsion subgroup of the
 `S`-unit group. -/
 noncomputable def rootsOfUnityEquivSUnitTorsion
@@ -217,6 +223,7 @@ noncomputable def rootsOfUnityEquivSUnitTorsion
       (SUnitGroup.torsion_eq_rootsOfUnity_range
         (K := L) S).symm)
 
+open scoped Classical in
 /-- Torsion in an `S`-unit group over a number field is finite. -/
 theorem sUnitTorsionFinite
     (S : Finset (HeightOneSpectrum (𝓞 L))) :
@@ -228,6 +235,7 @@ theorem sUnitTorsionFinite
     (rootsOfUnityEquivSUnitTorsion L S).toEquiv
 
 omit [NumberField K] in
+open scoped Classical in
 /-- The torsion subgroup is stable under Galois automorphisms. -/
 theorem sUnitTorsion_stable
     {S : Finset (HeightOneSpectrum (𝓞 L))}
@@ -248,6 +256,7 @@ theorem sUnitTorsion_stable
       (MulDistribMulAction.toMonoidHom
         (SUnitGroup (K := L) S) σ) hx
 
+open scoped Classical in
 /-- Exactness of torsion inclusion followed by the full logarithm. -/
 theorem sUnitTorsion_fullLog_exact
     (S : Finset (HeightOneSpectrum (𝓞 L))) :
@@ -282,6 +291,7 @@ end LogarithmicQuotient
 
 section DiagonalExtension
 
+open scoped Classical in
 /-- Membership in the product lattice is exactly integrality in the
 logarithmic lattice and in the diagonal coordinate. -/
 theorem mem_fullLogHyperplaneDiagonalLattice_iff
@@ -342,6 +352,7 @@ theorem mem_fullLogHyperplaneDiagonalLattice_iff
           Basis.prod_repr_inr, Basis.singleton_repr,
           RingHom.id_apply] using hn
 
+open scoped Classical in
 /-- The natural integral-linear map from the logarithmic lattice and
 one diagonal integer coordinate to the extended full logarithmic
 lattice. -/
@@ -431,6 +442,7 @@ noncomputable def fullLogLatticeProdIntToExtended
     congr 1
     ext <;> simp
 
+open scoped Classical in
 /-- The preceding map is bijective. -/
 theorem fullLogLatticeProdIntToExtended_bijective
     (S : Finset (HeightOneSpectrum (𝓞 L))) :
@@ -517,6 +529,7 @@ theorem fullLogLatticeProdIntToExtended_bijective
           SUnitGroup.FullLogSpace (K := L) S)
     exact Prod.ext rfl hn
 
+open scoped Classical in
 /-- Integral-linear decomposition of the extended lattice into the
 logarithmic lattice and one integer diagonal direction. -/
 noncomputable def extendedFullLogLatticeEquivProdInt
@@ -527,6 +540,7 @@ noncomputable def extendedFullLogLatticeEquivProdInt
     (fullLogLatticeProdIntToExtended L S)
     (fullLogLatticeProdIntToExtended_bijective L S)).symm
 
+open scoped Classical in
 /-- The componentwise action on the logarithmic lattice paired with
 the invariant integer diagonal. -/
 @[reducible]
@@ -561,6 +575,7 @@ noncomputable def fullLogLatticeProdIntDistribMulAction
         · rfl }
 
 omit [NumberField K] in
+open scoped Classical in
 /-- The map from logarithmic-plus-diagonal coordinates into the
 extended lattice is equivariant. -/
 theorem fullLogLatticeProdIntToExtended_equivariant
@@ -729,6 +744,7 @@ theorem fullLogLatticeProdIntToExtended_equivariant
         (fullLogSpaceEquivHyperplaneProd L S).apply_symm_apply _]
 
 omit [NumberField K] in
+open scoped Classical in
 /-- The integral decomposition of the extended lattice is equivariant. -/
 theorem extendedFullLogLatticeEquivProdInt_equivariant
     {S : Finset (HeightOneSpectrum (𝓞 L))}
@@ -807,6 +823,7 @@ end DiagonalExtension
 
 section LogLatticeHerbrand
 
+open scoped Classical in
 /-- Inclusion of the logarithmic lattice as the first factor of the
 logarithmic-plus-diagonal lattice, in multiplicative notation. -/
 def fullLogLatticeProdIntIncl
@@ -821,6 +838,7 @@ def fullLogLatticeProdIntIncl
   map_one' := rfl
   map_mul' _ _ := rfl
 
+open scoped Classical in
 /-- Projection from the logarithmic-plus-diagonal lattice to its
 integer diagonal coordinate, in multiplicative notation. -/
 def fullLogLatticeProdIntProj
@@ -834,6 +852,7 @@ def fullLogLatticeProdIntProj
   map_one' := rfl
   map_mul' _ _ := rfl
 
+open scoped Classical in
 /-- The multiplicative equivalence induced by the integral
 decomposition of the extended lattice. -/
 noncomputable def extendedFullLogLatticeMulEquivProdInt
@@ -844,6 +863,7 @@ noncomputable def extendedFullLogLatticeMulEquivProdInt
   (extendedFullLogLatticeEquivProdInt L S).toAddEquiv.toMultiplicative
 
 omit [NumberField K] in
+open scoped Classical in
 /-- The multiplicative form of the integral decomposition is
 Galois-equivariant. -/
 theorem extendedFullLogLatticeMulEquivProdInt_equivariant
@@ -938,6 +958,7 @@ theorem extendedFullLogLatticeMulEquivProdInt_equivariant
       K L hS σ (Multiplicative.toAdd x)
 
 omit [NumberField K] in
+open scoped Classical in
 /-- The first-factor inclusion is Galois-equivariant. -/
 theorem fullLogLatticeProdIntIncl_equivariant
     {S : Finset (HeightOneSpectrum (𝓞 L))}
@@ -986,6 +1007,7 @@ theorem fullLogLatticeProdIntIncl_equivariant
   rfl
 
 omit [NumberField K] in
+open scoped Classical in
 /-- The diagonal projection is Galois-equivariant for the trivial
 action on its integer target. -/
 theorem fullLogLatticeProdIntProj_equivariant
@@ -1032,6 +1054,7 @@ theorem fullLogLatticeProdIntProj_equivariant
   intro σ z
   rfl
 
+open scoped Classical in
 /-- Exactness of the first-factor inclusion followed by the diagonal
 projection. -/
 theorem fullLogLatticeProdInt_exact
@@ -1057,6 +1080,7 @@ theorem fullLogLatticeProdInt_exact
   · rintro ⟨x, rfl⟩
     rfl
 
+open scoped Classical in
 /-- The first-factor inclusion is injective. -/
 theorem fullLogLatticeProdIntIncl_injective
     (S : Finset (HeightOneSpectrum (𝓞 L))) :
@@ -1071,6 +1095,7 @@ theorem fullLogLatticeProdIntIncl_injective
             (SUnitGroup.fullLogLattice (K := L) S × ℤ) =>
         (Multiplicative.toAdd z).1) hxy
 
+open scoped Classical in
 /-- The diagonal projection is surjective. -/
 theorem fullLogLatticeProdIntProj_surjective
     (S : Finset (HeightOneSpectrum (𝓞 L))) :
@@ -1081,6 +1106,7 @@ theorem fullLogLatticeProdIntProj_surjective
     ⟨Multiplicative.ofAdd
         (0, Multiplicative.toAdd z), rfl⟩
 
+open scoped Classical in
 /-- For the genuine sum-zero logarithmic lattice, adjoining
 the invariant diagonal multiplies the Herbrand quotient by `|G|`. -/
 theorem fullLogLattice_herbrandQuotient_eq_stabilizerProduct_div_card
@@ -1357,6 +1383,7 @@ end LogLatticeHerbrand
 
 section ActualSUnitHerbrand
 
+open scoped Classical in
 /-- For the actual `S`-unit group, the finite
 roots-of-unity kernel has Herbrand quotient one, so the logarithmic
 lattice formula transfers unchanged. -/
@@ -1589,6 +1616,7 @@ end ActualSUnitHerbrand
 section LocalDegreeInterpretation
 
 omit [NumberField K] [NumberField L] in
+open scoped Classical in
 /-- Stabilizing a finite place is equivalent to stabilizing its
 underlying prime ideal. -/
 theorem finitePlace_stabilizer_eq_idealStabilizer
@@ -1625,6 +1653,7 @@ theorem finitePlace_stabilizer_eq_idealStabilizer
     rfl
   rw [hhom]
 
+open scoped Classical in
 /-- The finite local degree at the place `P`, in the standard
 ramification-index times inertia-degree form
 `[L_P : K_p] = e(P/p) f(P/p)`. -/
@@ -1634,6 +1663,7 @@ noncomputable def finiteLogPlaceLocalDegree
   p.ramificationIdxIn (𝓞 L) *
     p.inertiaDegIn (𝓞 L)
 
+open scoped Classical in
 /-- The stabilizer of a finite place has order equal to its local
 degree. -/
 theorem finitePlace_stabilizer_card_eq_localDegree
@@ -1660,6 +1690,7 @@ theorem finitePlace_stabilizer_card_eq_localDegree
   exact
     Ideal.card_stabilizer_eq p P.asIdeal
 
+open scoped Classical in
 /-- Passing to a stable finite set does not change the stabilizer or
 the finite local degree of one of its places. -/
 theorem stableFinitePlace_stabilizer_card_eq_localDegree
@@ -1691,6 +1722,7 @@ theorem stableFinitePlace_stabilizer_card_eq_localDegree
     finitePlace_stabilizer_card_eq_localDegree
       K L v
 
+open scoped Classical in
 /-- The local degree attached to a logarithmic place.  At an
 archimedean place it is `1` or `2`; at a finite place it is
 `e(P/p) f(P/p)`. -/
@@ -1704,6 +1736,7 @@ noncomputable def logPlaceLocalDegree
   | Sum.inr v =>
       finiteLogPlaceLocalDegree K L v
 
+open scoped Classical in
 /-- For every actual logarithmic place, the order of its Galois
 stabilizer is its local degree. -/
 theorem logPlace_stabilizer_card_eq_localDegree
@@ -1753,6 +1786,7 @@ theorem logPlace_stabilizer_card_eq_localDegree
         stableFinitePlace_stabilizer_card_eq_localDegree
           K L hS v
 
+open scoped Classical in
 /-- The canonical representative of every logarithmic-place orbit has
 stabilizer order equal to its local degree. -/
 theorem permutationOrbitStabilizer_card_eq_logPlaceLocalDegree
@@ -1777,6 +1811,7 @@ theorem permutationOrbitStabilizer_card_eq_logPlaceLocalDegree
     logPlace_stabilizer_card_eq_localDegree
       K L hS ω.out
 
+open scoped Classical in
 /-- The Herbrand quotient in local-degree form:
 `h(G, L^S) = |G|⁻¹ ∏_{p ∈ S} [L_P : K_p]`, with the
 archimedean places included in the logarithmic place set. -/

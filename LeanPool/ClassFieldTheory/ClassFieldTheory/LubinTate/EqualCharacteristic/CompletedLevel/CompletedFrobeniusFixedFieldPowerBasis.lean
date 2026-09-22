@@ -26,6 +26,8 @@ open LocalFieldTheory.DiscreteValuationField
 
 variable {K : Type u} [Field K]
 
+/-- The completed base is a Laurent-series algebra through coefficient extension for the
+fixed-field power-basis construction. -/
 noncomputable local instance
     equalCharacteristicCompletedFrobeniusFixedFieldCompletedPowerBasisBaseAlgebra
     (F : LocalField.{u, v} K) :

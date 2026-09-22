@@ -21,7 +21,7 @@ At an unramified infinite place the decomposition group, and hence the
 local homomorphism, is trivial.
 -/
 
-open scoped BigOperators Classical IsMulCommutative NumberField
+open scoped BigOperators IsMulCommutative NumberField
   NumberField.LiesOver
 open NumberField IsDedekindDomain
 open IdeleGroup RelativeIdeleGroup
@@ -42,6 +42,7 @@ section Galois
 
 variable [IsGalois K L]
 
+open scoped Classical in
 private noncomputable def ramifiedInfinitePlaceConjugation
     (w : InfinitePlace L) (hRamified : w.IsRamified K) :
     L ≃ₐ[K] L :=
@@ -51,6 +52,7 @@ private noncomputable def ramifiedInfinitePlaceConjugation
       ((InfinitePlace.mk_embedding w).symm ▸ hRamified))
 
 omit [NumberField K] [NumberField L] in
+open scoped Classical in
 private theorem ramifiedInfinitePlaceConjugation_isConj
     (w : InfinitePlace L) (hRamified : w.IsRamified K) :
     NumberField.ComplexEmbedding.IsConj
@@ -63,6 +65,7 @@ private theorem ramifiedInfinitePlaceConjugation_isConj
       ((InfinitePlace.mk_embedding w).symm ▸ hRamified))
 
 omit [NumberField K] [NumberField L] in
+open scoped Classical in
 private theorem ramifiedInfinitePlaceConjugation_sq
     (w : InfinitePlace L) (hRamified : w.IsRamified K) :
     ramifiedInfinitePlaceConjugation
@@ -76,6 +79,7 @@ private theorem ramifiedInfinitePlaceConjugation_sq
       (ramifiedInfinitePlaceConjugation_isConj
         (K := K) w hRamified) x
 
+open scoped Classical in
 /-- The archimedean Artin homomorphism associated with a specified
 infinite place above the base place. -/
 noncomputable def infinitePlaceArtinMonoidHomOfPlace
@@ -115,6 +119,7 @@ noncomputable def infinitePlaceArtinMonoidHomOfPlace
         (LocalClassFieldTheory.realUnitsSign.comp
           completionUnitsEquivRealUnits.toMonoidHom)
 
+open scoped Classical in
 /-- The actual local Artin homomorphism at an infinite place, using
 the infinite place of `L` already chosen by the local-block API. -/
 noncomputable def chosenInfinitePlaceArtinMonoidHom
@@ -128,6 +133,7 @@ noncomputable def chosenInfinitePlaceArtinMonoidHom
       (L := L) v)
 
 omit [NumberField K] [NumberField L] in
+open scoped Classical in
 /-- At a ramified real place, the actual chosen local Artin symbol of
 negative one is complex conjugation along the chosen infinite place
 upstairs.  The statement exposes the intrinsic property of the Artin
@@ -207,6 +213,7 @@ section AbelianTower
 variable [IsAbelianGalois K L]
 
 omit [NumberField K] [NumberField L] in
+open scoped Classical in
 /-- In an abelian extension, the archimedean Artin homomorphism is
 independent of the chosen infinite place above the base place. -/
 theorem infinitePlaceArtinMonoidHomOfPlace_eq
@@ -289,11 +296,12 @@ theorem infinitePlaceArtinMonoidHomOfPlace_eq
       sigma, sigma', hsigmaEq]
 
 omit [NumberField K] [NumberField L] in
+open scoped Classical in
 /-- Archimedean Artin homomorphisms attached to specified places commute
 with restriction through an abelian tower. -/
 theorem infinitePlaceArtinMonoidHomOfPlace_restrict_tower
     {E : Type}
-    [Field E] [NumberField E]
+    [Field E]
     [Algebra K E] [Algebra E L]
     [IsScalarTower K E L]
     [IsGalois K E]
@@ -413,6 +421,7 @@ theorem infinitePlaceArtinMonoidHomOfPlace_restrict_tower
       · simp
       · simpa [sigmaR, sigmaL, sigmaE] using hsigmaREq
 
+open scoped Classical in
 /-- The norm from a complex archimedean completion to a real completion
 is positive under the canonical real coordinate. -/
 theorem infinitePlace_normUnits_real_complex_pos
@@ -469,6 +478,7 @@ theorem infinitePlace_normUnits_real_complex_pos
   rw [Algebra.norm_complex_apply, Complex.normSq_pos]
   exact (map_ne_zero eComplex).2 (Units.ne_zero x)
 
+open scoped Classical in
 /-- The norm between real archimedean completions agrees with the
 transported local unit under their canonical real coordinates. -/
 theorem infinitePlace_normUnits_real_real
@@ -529,12 +539,13 @@ theorem infinitePlace_normUnits_real_real
       eBase eExtension hCompatible x
 
 omit [NumberField L] in
+open scoped Classical in
 /-- The archimedean Artin map attached to specified places carries a
 local norm to the restriction of the upper Artin element. -/
 theorem infinitePlaceArtinMonoidHomOfPlace_norm_restriction
     {K' L' : Type}
     [Field K'] [NumberField K']
-    [Field L'] [NumberField L']
+    [Field L']
     [Algebra K K'] [Algebra K' L'] [Algebra K L']
     [IsScalarTower K K' L']
     [Algebra L L'] [IsScalarTower K L L']
@@ -762,6 +773,7 @@ theorem infinitePlaceArtinMonoidHomOfPlace_norm_restriction
       · simpa [sigmaRestricted, sigmaUpper, sigmaLower] using hSigmaEq
 
 omit [NumberField K] [NumberField L] in
+open scoped Classical in
 /-- Archimedean local factors commute with restriction in an abelian
 number-field tower. -/
 theorem chosenInfinitePlaceArtinMonoidHom_restrict_tower
@@ -809,6 +821,7 @@ theorem chosenInfinitePlaceArtinMonoidHom_restrict_tower
           (L := E) v)
 
 omit [NumberField L] in
+open scoped Classical in
 /-- In an actual number-field diamond `K ⊂ K'`, `L ⊂ L'`, the
 archimedean local Artin factor commutes with the ordinary completion
 norm and with the standard restriction composite supplied by mathlib. -/
@@ -882,6 +895,7 @@ section Galois
 variable [IsGalois K L]
 
 omit [NumberField K] [NumberField L] in
+open scoped Classical in
 /-- The chosen archimedean Artin homomorphism is continuous. -/
 theorem chosenInfinitePlaceArtinMonoidHom_continuous
     (v : InfinitePlace K) :
@@ -941,6 +955,7 @@ theorem chosenInfinitePlaceArtinMonoidHom_continuous
       (LocalClassFieldTheory.realUnitsSign_continuous.comp hMap)
 
 omit [NumberField K] [NumberField L] in
+open scoped Classical in
 /-- A positive element at a real place has trivial archimedean Artin
 symbol. -/
 theorem chosenInfinitePlaceArtinMonoidHom_eq_one_of_real_pos
@@ -1001,6 +1016,7 @@ theorem chosenInfinitePlaceArtinMonoidHom_eq_one_of_real_pos
     rw [hsign']
     simp
 
+open scoped Classical in
 /-- The kernel of the actual Artin homomorphism at an infinite place
 is exactly the determinant-norm image on the corresponding tensor
 factor. -/
@@ -1204,6 +1220,7 @@ end Galois
 
 variable [IsAbelianGalois K L]
 
+open scoped Classical in
 /-- The product of the actual archimedean local Artin homomorphisms
 over the finite set of infinite places of `K`. -/
 noncomputable def infinitePlaceGlobalArtinMonoidHom :
@@ -1214,6 +1231,7 @@ noncomputable def infinitePlaceGlobalArtinMonoidHom :
       (IdeleGroup.infiniteComponent v)
 
 omit [NumberField L] in
+open scoped Classical in
 /-- The archimedean global Artin product is continuous. -/
 theorem infinitePlaceGlobalArtinMonoidHom_continuous :
     Continuous
@@ -1242,6 +1260,7 @@ theorem infinitePlaceGlobalArtinMonoidHom_continuous :
         (IdeleGroup.infiniteComponentContinuous v).continuous
 
 omit [NumberField L] in
+open scoped Classical in
 /-- The archimedean Artin product after an idele norm is the product,
 over all infinite places upstairs, of the base local Artin maps applied
 to the corresponding local field norms. -/
@@ -1307,7 +1326,7 @@ theorem infinitePlaceGlobalArtinMonoidHom_norm_eq_prod
         infinitePlaceAboveEquivExtension
           (K := K) (L := M) v
       let :=
-        AlgebraicNumberTheory.Valuations.completionTensorDecomposition_extensionFintype
+        AlgebraicNumberTheory.Valuations.completionTensorDecompositionExtensionFintype
           (K := K) (L := M) vK hvK
       let : Fintype {W : InfinitePlace M //
           infinitePlaceBelow (K := K) W = v} :=
@@ -1339,6 +1358,7 @@ theorem infinitePlaceGlobalArtinMonoidHom_norm_eq_prod
         factor
 
 omit [NumberField L] in
+open scoped Classical in
 /-- The archimedean part of the Artin norm--restriction field diamond.
 Restriction of the upper infinite Artin product is the lower infinite Artin
 product after the ordinary idele norm. -/
@@ -1385,6 +1405,7 @@ theorem infinitePlaceGlobalArtinMonoidHom_norm_restriction
       (IdeleGroup.infiniteComponent W a)
 
 omit [NumberField L] in
+open scoped Classical in
 /-- Every archimedean factor is trivial on a finite one-place idele. -/
 @[simp]
 theorem infinitePlaceGlobalArtinMonoidHom_finitePlaceIdele

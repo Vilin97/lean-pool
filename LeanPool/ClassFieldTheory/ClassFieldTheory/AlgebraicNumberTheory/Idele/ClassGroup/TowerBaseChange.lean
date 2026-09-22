@@ -554,7 +554,6 @@ noncomputable def towerRelativeIdeleClassBaseChangeMulEquiv :
 
 omit [NumberField L] [Algebra K L] [IsScalarTower K M L]
     [FiniteDimensional M L] in
-@[simp]
 theorem towerRelativeIdeleClassBaseChangeMulEquiv_mk
     (a : TowerRelativeIdeleGroup K M L) :
     towerRelativeIdeleClassBaseChangeMulEquiv K M L
@@ -932,7 +931,6 @@ noncomputable def intermediateClassNormQuotientBaseChangeMulEquiv :
     (towerClassNorm_range_map_baseChange K M L)
 
 omit [NumberField L] [Algebra K L] [IsScalarTower K M L] in
-@[simp]
 theorem intermediateClassNormQuotientBaseChangeMulEquiv_mk
     (c : RelativeIdeleGroup.ClassGroup K M) :
     intermediateClassNormQuotientBaseChangeMulEquiv K M L

@@ -137,7 +137,6 @@ theorem compAlgEquiv_apply
   rfl
 
 /-- Transporting an extending absolute value along an algebra equivalence preserves extension. -/
-@[simp]
 theorem compAlgEquiv_extends_apply
     {K L E : Type*} [Field K] [Field L] [Field E]
     [Algebra K L] [Algebra K E] (e : L ≃ₐ[K] E)
@@ -257,7 +256,8 @@ private theorem algebraicExtension_complex_algEquiv_complex_unique_rpow_extensio
   rw [hx, hw]
   exact congrArg (fun t : ℝ => t ^ s)
     (compAlgEquiv_extends_apply e
-      algebraicExtension_standardComplexAbsoluteValue algebraicExtension_standardComplexAbsoluteValue
+      algebraicExtension_standardComplexAbsoluteValue
+        algebraicExtension_standardComplexAbsoluteValue
       (fun z => rfl) (e x)).symm
 
 /-- A chosen absolute-value extension together with its uniqueness property. -/

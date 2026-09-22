@@ -18,9 +18,10 @@ noncomputable section
 
 namespace ClassFieldTheory
 
-open scoped BigOperators Classical NumberField
+open scoped BigOperators NumberField
 open NumberField IsDedekindDomain
 
+open scoped Classical in
 /-- The finite-place Hilbert factor, transported from the internal
 unit-root subgroup to Mathlib's `rootsOfUnity`. -/
 noncomputable def globalFinitePlaceHilbertSymbol
@@ -33,6 +34,7 @@ noncomputable def globalFinitePlaceHilbertSymbol
     (GlobalClassFieldTheory.Reciprocity.finitePlaceHilbertSymbol
       F n hnF hmu v a b)
 
+open scoped Classical in
 /-- **Hilbert product formula.**  The product of the local symbols of two
 global units over every finite and infinite place is one. -/
 theorem hilbertProductFormula

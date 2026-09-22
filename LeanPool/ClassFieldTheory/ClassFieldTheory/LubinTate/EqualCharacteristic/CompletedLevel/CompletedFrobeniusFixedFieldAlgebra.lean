@@ -25,12 +25,16 @@ open LocalFieldTheory.DiscreteValuationField
 
 variable {K : Type} [Field K]
 
+/-- The fixed-field algebra construction uses the same Laurent-series scalar extension on the
+completed base. -/
 noncomputable local instance equalCharacteristicFixedFieldAlgebraBaseAlgebra
     (F : LocalField K) :
     Algebra F.residueField⸨X⸩
       (equalCharacteristicCompletedUnramifiedField F.residueField) :=
   equalCharacteristicCompletedFrobeniusFixedBaseAlgebra F
 
+/-- The fixed-field algebra construction uses the Laurent-series scalar action induced through the
+completed level tower. -/
 noncomputable local instance equalCharacteristicFixedFieldAlgebraLevelAlgebra
     (F : LocalField K) (n : ℕ) :
     Algebra F.residueField⸨X⸩
@@ -54,7 +58,8 @@ noncomputable def equalCharacteristicCompletedFrobeniusFixedFieldSubring
     Subring (equalCharacteristicCompletedLevelField F n) :=
   (equalCharacteristicCompletedFrobeniusFixedField F a n).toSubring
 
-/-- The canonical `k((T))`-algebra structure on the completed theta-intertwining theorem fixed field. -/
+/-- The canonical `k((T))`-algebra structure on the completed theta-intertwining theorem fixed
+field. -/
 @[reducible]
 noncomputable def equalCharacteristicCompletedFrobeniusFixedFieldAlgebra
     (F : LocalField K)

@@ -988,7 +988,8 @@ This file applies abelianization to the Galois arrows and combines each pair
 of vertical arrows into one map between the products
 `Additive G(L/K)ᵃᵇ × A_K/N_{L/K}A_L`.  The formulas on quotient
 representatives are proved from the actual maps.  Finally, the abstract reciprocity theorem and
-norm--conjugation and transfer--norm naturality turn those reciprocity squares into the three printed
+norm--conjugation and transfer--norm naturality turn those reciprocity squares into the three
+printed
 commutative diagrams for the inverse norm-residue symbol.
 -/
 

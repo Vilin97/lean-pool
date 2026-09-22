@@ -69,7 +69,6 @@ noncomputable def smallHilbertClassFieldIdeleExtensionMap :
 omit [IsGalois K L] in
 /-- Evaluation of the small-Hilbert idele-extension map on a quotient
 representative. -/
-@[simp]
 theorem smallHilbertClassFieldIdeleExtensionMap_mk'
     (c : IdeleClassGroup K) :
     smallHilbertClassFieldIdeleExtensionMap K L

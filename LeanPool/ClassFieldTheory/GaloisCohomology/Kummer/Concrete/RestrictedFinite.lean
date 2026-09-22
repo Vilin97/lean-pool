@@ -51,7 +51,7 @@ def RestrictedRadicalQuotient
 
 /-- The commutative group structure on the named restricted radical
 quotient. -/
-instance restrictedRadicalQuotient_commGroupInstance
+instance restrictedRadicalQuotientCommGroupInstance
     (n : ℕ+) (Delta : KummerSubgroup K n) :
     CommGroup (RestrictedRadicalQuotient n Delta) := by
   change CommGroup (Delta.1 ⧸ restrictedNthPowersSubgroup n Delta)

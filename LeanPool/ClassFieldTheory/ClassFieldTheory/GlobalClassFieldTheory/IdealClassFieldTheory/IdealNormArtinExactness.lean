@@ -19,7 +19,7 @@ corresponding quotient, and states the unramified decomposition law
 entirely in terms of this norm-defined ideal group.
 -/
 
-open scoped NumberField Classical IsMulCommutative
+open scoped NumberField IsMulCommutative
 
 noncomputable section
 
@@ -37,6 +37,7 @@ variable
 attribute [local instance]
   ideleClassSubgroupNormal idealArtinKernelNormal
 
+open scoped Classical in
 /-- The kernel of the arithmetic, Galois-valued ideal Artin map is the
 genuine norm-defined ideal group `N_{L/K} J_L^m P_K^m`. -/
 theorem arithmeticIdealArtinGaloisMap_ker_eq_idealNormSubgroup
@@ -51,6 +52,7 @@ theorem arithmeticIdealArtinGaloisMap_ker_eq_idealNormSubgroup
   rw [arithmeticIdealArtinGaloisMap_ker,
     idealArtinKernel_eq_idealNormSubgroup]
 
+open scoped Classical in
 /-- An ideal prime to `m` has trivial arithmetic Artin symbol exactly
 when it belongs to `N_{L/K} J_L^m P_K^m`. -/
 theorem arithmeticIdealArtinGaloisMap_eq_one_iff_mem_idealNormSubgroup
@@ -72,6 +74,7 @@ theorem arithmeticIdealArtinGaloisMap_eq_one_iff_mem_idealNormSubgroup
         (K := K) (L := L) m
   rw [arithmeticIdealArtinGaloisMap_ker_eq_idealNormSubgroup]
 
+open scoped Classical in
 /-- Exactness of the arithmetic ideal Artin sequence with its kernel
 written as the actual norm-defined ideal group. -/
 theorem arithmeticIdealArtin_norm_exact
@@ -89,6 +92,7 @@ theorem arithmeticIdealArtin_norm_exact
   ⟨arithmeticIdealArtinGaloisMap_ker_eq_idealNormSubgroup m hm,
     arithmeticIdealArtinGaloisMap_surjective m hm⟩
 
+open scoped Classical in
 /-- The vertical isomorphism in the ideal/idèle Artin diagram:
 
 `J_K^m / (N_{L/K} J_L^{m_L} P_K^m) ≃ C_K / N_{L/K} C_L`.
@@ -113,9 +117,9 @@ noncomputable def idealNormQuotientEquivIdeleClassNormQuotient
       ((_root_.ideleClassNorm K L).range) hm)
 
 omit [IsAbelianGalois K L] in
+open scoped Classical in
 /-- The ideal-norm quotient comparison sends an ideal representative to its
 class in the idèle-class norm quotient. -/
-@[simp]
 theorem idealNormQuotientEquivIdeleClassNormQuotient_mk
     (m : RayClass.Modulus K)
     (hm :
@@ -156,6 +160,7 @@ theorem idealNormQuotientEquivIdeleClassNormQuotient_mk
       idealClassQuotientEquivNormQuotient_mk m
         ((_root_.ideleClassNorm K L).range) hm a
 
+open scoped Classical in
 /-- The arithmetic ideal Artin map descended through the concrete
 norm-defined ideal group. -/
 noncomputable def arithmeticIdealNormQuotientArtinMap
@@ -177,9 +182,9 @@ noncomputable def arithmeticIdealNormQuotientArtinMap
       rw [arithmeticIdealArtinGaloisMap_ker_eq_idealNormSubgroup]
       exact ha)
 
+open scoped Classical in
 /-- The descended arithmetic ideal Artin map evaluates on quotient
 representatives as the original arithmetic ideal Artin map. -/
-@[simp]
 theorem arithmeticIdealNormQuotientArtinMap_mk
     (m : RayClass.Modulus K)
     (hm :
@@ -195,6 +200,7 @@ theorem arithmeticIdealNormQuotientArtinMap_mk
         (K := K) (L := L) m hm a :=
   QuotientGroup.lift_mk _ _ _
 
+open scoped Classical in
 /-- The arithmetic ideal Artin map on the concrete norm quotient is
 injective. -/
 theorem arithmeticIdealNormQuotientArtinMap_injective
@@ -229,6 +235,7 @@ theorem arithmeticIdealNormQuotientArtinMap_injective
   rw [map_div, hxy]
   exact div_self' _
 
+open scoped Classical in
 /-- The arithmetic ideal Artin map on the concrete norm quotient is
 surjective. -/
 theorem arithmeticIdealNormQuotientArtinMap_surjective
@@ -250,6 +257,7 @@ theorem arithmeticIdealNormQuotientArtinMap_surjective
   rw [arithmeticIdealNormQuotientArtinMap_mk]
   exact ha
 
+open scoped Classical in
 /-- The descended ideal Artin map is the arithmetic global
 norm-residue map after the vertical ideal/idèle quotient
 isomorphism.  This is the commutative square in the ideal-theoretic
@@ -277,6 +285,7 @@ theorem arithmeticIdealNormQuotientArtinMap_eq_normResidue
     idealNormQuotientEquivIdeleClassNormQuotient_mk]
   rfl
 
+open scoped Classical in
 /-- The canonical arithmetic ideal class-field isomorphism
 
 `J_K^m / (N_{L/K} J_L^m P_K^m) ≃ Gal(L/K)`.
@@ -298,9 +307,9 @@ noncomputable def arithmeticIdealNormQuotientEquivGaloisGroup
     ⟨arithmeticIdealNormQuotientArtinMap_injective m hm,
       arithmeticIdealNormQuotientArtinMap_surjective m hm⟩
 
+open scoped Classical in
 /-- The arithmetic ideal norm-quotient equivalence sends a quotient
 representative to its arithmetic ideal Artin symbol. -/
-@[simp]
 theorem arithmeticIdealNormQuotientEquivGaloisGroup_mk
     (m : RayClass.Modulus K)
     (hm :
@@ -316,6 +325,7 @@ theorem arithmeticIdealNormQuotientEquivGaloisGroup_mk
         (K := K) (L := L) m hm a :=
   arithmeticIdealNormQuotientArtinMap_mk m hm a
 
+open scoped Classical in
 /-- The canonical quotient equivalence makes the full arithmetic
 ideal/idèle reciprocity diagram commute. -/
 theorem arithmeticIdealNormQuotientEquivGaloisGroup_eq_normResidue
@@ -336,6 +346,7 @@ theorem arithmeticIdealNormQuotientEquivGaloisGroup_eq_normResidue
   arithmeticIdealNormQuotientArtinMap_eq_normResidue
     (K := K) (L := L) m hm q
 
+open scoped Classical in
 /-- For an unramified prime outside `m`, the order of its class modulo
 the norm-defined ideal group is the common residue degree upstairs. -/
 theorem
@@ -361,6 +372,7 @@ theorem
     orderOf_idealPrimeClass_eq_inertiaDegree_of_chosenUnramified
       (K := K) (L := L) m hm v hv hunram
 
+open scoped Classical in
 /-- A power of an unramified prime lies in the norm-defined ideal
 group exactly when its common residue degree divides the exponent. -/
 theorem
@@ -385,6 +397,7 @@ theorem
     unramifiedPrime_pow_mem_idealArtinKernel_iff_inertiaDegree_dvd
       (K := K) (L := L) m hm v hv hunram n
 
+open scoped Classical in
 /-- The full unramified decomposition law, with `f` defined as the
 order of the prime class modulo the genuine norm-defined ideal group. -/
 theorem unramifiedPrime_idealNormDecompositionLaw
@@ -416,6 +429,7 @@ theorem unramifiedPrime_idealNormDecompositionLaw
     unramifiedPrime_idealDecompositionLaw
       (K := K) (L := L) m hm v hv hunram
 
+open scoped Classical in
 /-- An unramified prime outside `m` splits completely exactly when its
 ideal class belongs to `N_{L/K} J_L^m P_K^m`. -/
 theorem
@@ -469,6 +483,7 @@ variable
     [Field L] [NumberField L] [Algebra K L]
     [IsAbelianGalois K L]
 
+open scoped Classical in
 /-- The arithmetic ideal Artin kernel is the join of the genuine ideal-norm
 image with the ray-principal ideal subgroup. -/
 theorem arithmeticIdealArtin_ker_eq_norm_range_sup_ray_principal
@@ -485,6 +500,7 @@ theorem arithmeticIdealArtin_ker_eq_norm_range_sup_ray_principal
     (GlobalClassFieldTheory.IdealClassFieldTheory.arithmeticIdealArtinGaloisMap_ker_eq_idealNormSubgroup
       (K := K) (L := L) m hm)
 
+open scoped Classical in
 /-- An ideal has trivial arithmetic Artin symbol precisely when it lies in
 the group generated by ideal norms and ray-principal ideals. -/
 theorem arithmeticIdealArtin_eq_one_iff_norm_range_sup_ray_principal

@@ -272,7 +272,7 @@ noncomputable def quotientZeroSubgroupEquivValueSubgroup :
 Establishes the identity `V.quotientZeroSubgroupEquivValueSubgroup (QuotientGroup.mk'
 V.zeroSubgroup x) = V.valuationHom.rangeRestrict x`.
 -/
-@[simp] theorem quotientZeroSubgroupEquivValueSubgroup_mk (x : G) :
+theorem quotientZeroSubgroupEquivValueSubgroup_mk (x : G) :
     V.quotientZeroSubgroupEquivValueSubgroup
         (QuotientGroup.mk' V.zeroSubgroup x) =
       V.valuationHom.rangeRestrict x :=
@@ -282,7 +282,7 @@ V.zeroSubgroup x) = V.valuationHom.rangeRestrict x`.
 Establishes the identity `((V.quotientZeroSubgroupEquivValueSubgroup (QuotientGroup.mk'
 V.zeroSubgroup x) : V.valueSubgroup) : Multiplicative ℤ) = Multiplicative.ofAdd (V.val x)`.
 -/
-@[simp] theorem coe_quotientZeroSubgroupEquivValueSubgroup_mk (x : G) :
+theorem coe_quotientZeroSubgroupEquivValueSubgroup_mk (x : G) :
     ((V.quotientZeroSubgroupEquivValueSubgroup
         (QuotientGroup.mk' V.zeroSubgroup x) : V.valueSubgroup) :
       Multiplicative ℤ) =
@@ -294,7 +294,7 @@ V.zeroSubgroup x) : V.valueSubgroup) : Multiplicative ℤ) = Multiplicative.ofAd
 Establishes the identity `Multiplicative.toAdd (((V.quotientZeroSubgroupEquivValueSubgroup
 (QuotientGroup.mk' V.zeroSubgroup x) : V.valueSubgroup) : Multiplicative ℤ)) = V.val x`.
 -/
-@[simp] theorem toAdd_quotientZeroSubgroupEquivValueSubgroup_mk (x : G) :
+theorem toAdd_quotientZeroSubgroupEquivValueSubgroup_mk (x : G) :
     Multiplicative.toAdd
       (((V.quotientZeroSubgroupEquivValueSubgroup
           (QuotientGroup.mk' V.zeroSubgroup x) : V.valueSubgroup) :
@@ -306,7 +306,7 @@ Establishes the identity `Multiplicative.toAdd (((V.quotientZeroSubgroupEquivVal
 (QuotientGroup.mk' V.zeroSubgroup (x / y)) : V.valueSubgroup) : Multiplicative ℤ)) = V.val x -
 V.val y`.
 -/
-@[simp] theorem toAdd_quotientZeroSubgroupEquivValueSubgroup_div_mk
+theorem toAdd_quotientZeroSubgroupEquivValueSubgroup_div_mk
     (x y : G) :
     Multiplicative.toAdd
       (((V.quotientZeroSubgroupEquivValueSubgroup
@@ -414,13 +414,13 @@ theorem exists_uniformizer_of_surjective (hV : Function.Surjective V.val) :
   V.hasUniformizer_of_surjective hV
 
 /-- `val_uniformizer` satisfies the integer-power formula `V.val (ϖ ^ n) = n`. -/
-@[simp] theorem val_uniformizer_zpow {ϖ : G} (hϖ : V.IsUniformizer ϖ)
+theorem val_uniformizer_zpow {ϖ : G} (hϖ : V.IsUniformizer ϖ)
     (n : ℤ) :
     V.val (ϖ ^ n) = n := by
   rw [V.val_zpow, hϖ, mul_one]
 
 /-- `val_uniformizer` satisfies the natural-power formula `V.val (ϖ ^ n) = (n : ℤ)`. -/
-@[simp] theorem val_uniformizer_pow {ϖ : G} (hϖ : V.IsUniformizer ϖ)
+theorem val_uniformizer_pow {ϖ : G} (hϖ : V.IsUniformizer ϖ)
     (n : ℕ) :
     V.val (ϖ ^ n) = (n : ℤ) := by
   simpa using V.val_uniformizer_zpow hϖ (n : ℤ)
@@ -472,7 +472,7 @@ noncomputable def quotientZeroSubgroupEquivMultiplicativeIntOfUniformizer
 `((V.quotientZeroSubgroupEquivValueSubgroup (QuotientGroup.mk' V.zeroSubgroup (ϖ ^ n)) :
 V.valueSubgroup) : Multiplicative ℤ) = Multiplicative.ofAdd n`.
 -/
-@[simp] theorem coe_quotientZeroSubgroupEquivValueSubgroup_uniformizer_zpow
+theorem coe_quotientZeroSubgroupEquivValueSubgroup_uniformizer_zpow
     {ϖ : G} (hϖ : V.IsUniformizer ϖ) (n : ℤ) :
     ((V.quotientZeroSubgroupEquivValueSubgroup
         (QuotientGroup.mk' V.zeroSubgroup (ϖ ^ n)) : V.valueSubgroup) :
@@ -485,7 +485,7 @@ V.valueSubgroup) : Multiplicative ℤ) = Multiplicative.ofAdd n`.
 `Multiplicative.toAdd (((V.quotientZeroSubgroupEquivValueSubgroup (QuotientGroup.mk'
 V.zeroSubgroup (ϖ ^ n)) : V.valueSubgroup) : Multiplicative ℤ)) = n`.
 -/
-@[simp] theorem toAdd_quotientZeroSubgroupEquivValueSubgroup_uniformizer_zpow
+theorem toAdd_quotientZeroSubgroupEquivValueSubgroup_uniformizer_zpow
     {ϖ : G} (hϖ : V.IsUniformizer ϖ) (n : ℤ) :
     Multiplicative.toAdd
       (((V.quotientZeroSubgroupEquivValueSubgroup

@@ -26,7 +26,7 @@ These are the two concrete cardinal ingredients in the class-field existence
 argument.
 -/
 
-open scoped NumberField Classical BigOperators
+open scoped NumberField BigOperators
 
 noncomputable section
 
@@ -39,6 +39,7 @@ open KummerTheory
 
 variable {K : Type} [Field K] [NumberField K]
 
+open scoped Classical in
 /-- If `K` contains the `n`-th roots of unity and `n > 1`, then either
 `n` is even or `K` has no real infinite places.  This is exactly the
 archimedean condition needed to place all local `n`-th powers in the
@@ -73,6 +74,7 @@ theorem even_or_no_realInfinitePlace_of_primitiveRoots
       Fintype.card_pos_iff.mpr ⟨⟨w, hwReal⟩⟩
     omega
 
+open scoped Classical in
 /-- The chosen finite support used for the full `S`-unit Kummer
 construction: it contains the prescribed seed, a support large enough to
 represent every idele class, and the finite support of the exponent. -/
@@ -86,6 +88,7 @@ noncomputable def sUnitKummerNormSupport
   (S ∪ IdeleGroup.sufficientlyLargeFiniteSet (K := K)) ∪
     chosenUnitFiniteSupport (K := K) nUnit
 
+open scoped Classical in
 /-- The prescribed seed is contained in the chosen Kummer norm
 support. -/
 theorem subset_sUnitKummerNormSupport
@@ -96,6 +99,7 @@ theorem subset_sUnitKummerNormSupport
   exact Finset.mem_union_left _
     (Finset.mem_union_left _ hv)
 
+open scoped Classical in
 /-- Away from the chosen Kummer norm support, the exponent is a local
 unit.  This is the local input needed for the unramifiedness of the full
 `S`-unit Kummer extension. -/
@@ -124,6 +128,7 @@ theorem valuation_natCast_eq_one_of_not_mem_sUnitKummerNormSupport
   change w.valuation K ((n : ℕ) : K) = 1 at hnUnitVal
   exact hnUnitVal
 
+open scoped Classical in
 /-- Every finite place dividing the exponent belongs to the chosen
 Kummer norm support. -/
 theorem mem_sUnitKummerNormSupport_of_asIdeal_dvd_natCast
@@ -143,6 +148,7 @@ theorem mem_sUnitKummerNormSupport_of_asIdeal_dvd_natCast
       (valuation_natCast_eq_one_of_not_mem_sUnitKummerNormSupport
         (K := K) n S hwSupport)
 
+open scoped Classical in
 /-- The chosen Kummer norm support is large enough to represent every
 idele class by an idele supported on it. -/
 theorem supportedAt_sUnitKummerNormSupport_sup_principalSubgroup_eq_top
@@ -164,6 +170,7 @@ theorem supportedAt_sUnitKummerNormSupport_sup_principalSubgroup_eq_top
       (Finset.mem_union_right _ hv)
   · exact le_rfl
 
+open scoped Classical in
 /-- On the chosen Kummer norm support, the principal part of the
 local power subgroup consists exactly of powers of `S`-units. -/
 theorem
@@ -398,6 +405,7 @@ theorem
       sUnitNthPowersInField_le_principalIdelePowerLocalUnitSubgroup
         (K := K) n S' ∅
 
+open scoped Classical in
 /-- The idele-class power quotient attached to the chosen Kummer norm
 support has cardinality `n` to the number of supported places. -/
 theorem card_ideleClassPowerLocalUnitQuotient_on_kummerNormSupport
@@ -472,6 +480,7 @@ theorem card_ideleClassPowerLocalUnitQuotient_on_kummerNormSupport
       (pow_pos n.pos (totalPlaceCard (K := K) S'))
       (hProduct.trans hPower)
 
+open scoped Classical in
 /-- The power quotient on the chosen support has the same cardinality
 as the degree of the full `S`-unit Kummer extension. -/
 theorem

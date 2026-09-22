@@ -14,7 +14,7 @@ The local congruence condition makes the corresponding principal idèle
 integral-unit-valued at every finite prime in the modulus support.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 
 noncomputable section
 
@@ -24,6 +24,7 @@ open NumberField IsDedekindDomain
 
 universe u
 
+open scoped Classical in
 /-- A ray-principal fractional ideal has zero exponent at every finite
 prime in the modulus support. -/
 theorem rayPrincipalIdealSubgroup_le_primeToIdeals

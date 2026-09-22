@@ -24,7 +24,7 @@ The final normal-closure step turns the resulting finite extension of `K`
 into a genuine finite Galois extension without enlarging its norm subgroup.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 open NumberField IsDedekindDomain
 open KummerTheory
 
@@ -37,10 +37,14 @@ open GlobalClassFieldTheory.ClassFieldAxiom
 
 variable {K : Type} [Field K] [NumberField K]
 
+open scoped Classical in
 local instance cyclotomicKummerNormDescent_neZero
     (n : ℕ+) : NeZero (n : ℕ) :=
   ⟨n.ne_zero⟩
 
+attribute [local instance] cyclotomicKummerNormDescent_neZero
+
+open scoped Classical in
 noncomputable local instance
     cyclotomicKummerNormDescent_cyclotomicFiniteDimensional
     (n : ℕ+) :
@@ -48,6 +52,9 @@ noncomputable local instance
   IsCyclotomicExtension.finiteDimensional
     {(n : ℕ)} K (CyclotomicField (n : ℕ) K)
 
+attribute [local instance] cyclotomicKummerNormDescent_cyclotomicFiniteDimensional
+
+open scoped Classical in
 noncomputable local instance
     cyclotomicKummerNormDescent_cyclotomicIsGalois
     (n : ℕ+) :
@@ -55,6 +62,9 @@ noncomputable local instance
   IsCyclotomicExtension.isGalois
     {(n : ℕ)} K (CyclotomicField (n : ℕ) K)
 
+attribute [local instance] cyclotomicKummerNormDescent_cyclotomicIsGalois
+
+open scoped Classical in
 private theorem cyclotomicKummerNormDescent_primitiveRoots_nonempty
     (n : ℕ+) :
     (primitiveRoots (n : ℕ)
@@ -64,11 +74,13 @@ private theorem cyclotomicKummerNormDescent_primitiveRoots_nonempty
       (Set.mem_singleton (n : ℕ)) n.ne_zero
   exact ⟨ζ, (mem_primitiveRoots n.pos).2 hζ⟩
 
+open scoped Classical in
 private theorem cyclotomicKummerNormDescent_natCast_ne_zero
     (n : ℕ+) :
     ((n : ℕ) : CyclotomicField (n : ℕ) K) ≠ 0 := by
   exact Nat.cast_ne_zero.mpr n.ne_zero
 
+open scoped Classical in
 /-- A finite support on `K` whose full inverse image in
 `CyclotomicField n K` contains the chosen Kummer norm support upstairs.
 
@@ -89,6 +101,7 @@ noncomputable def cyclotomicKummerNormSupport
   exact seed ∪ canonicalAbove.image
     (fun W => finitePlaceBelow (K := K) W)
 
+open scoped Classical in
 /-- The prescribed finite seed is contained in its cyclotomic Kummer norm
 support. -/
 theorem subset_cyclotomicKummerNormSupport
@@ -100,6 +113,7 @@ theorem subset_cyclotomicKummerNormSupport
   simp only [cyclotomicKummerNormSupport]
   exact Finset.mem_union_left _ hv
 
+open scoped Classical in
 /-- All finite places of the cyclotomic field above the enlarged base
 support.  This is the fibre-saturated support used by norm descent. -/
 noncomputable def cyclotomicKummerNormSupportAbove
@@ -112,6 +126,7 @@ noncomputable def cyclotomicKummerNormSupportAbove
   exact finitePlacesAbove (K := K) (L := C)
     (cyclotomicKummerNormSupport (K := K) n seed)
 
+open scoped Classical in
 /-- Membership in the upstairs support is exactly membership of the place
 below in the enlarged base support. -/
 @[simp]
@@ -130,6 +145,7 @@ theorem mem_cyclotomicKummerNormSupportAbove_iff
       (K := K) (L := C)
       (cyclotomicKummerNormSupport (K := K) n seed) W)
 
+open scoped Classical in
 /-- The fibre-saturated support upstairs is already fixed by the chosen
 Kummer-support enlargement. -/
 theorem sUnitKummerNormSupport_cyclotomicKummerNormSupportAbove
@@ -185,6 +201,7 @@ theorem sUnitKummerNormSupport_cyclotomicKummerNormSupportAbove
   · exact subset_sUnitKummerNormSupport
       (K := C) n saturatedAbove
 
+open scoped Classical in
 /-- Enlarging a support by the cyclotomic Kummer requirements is
 idempotent.  In particular, downstream neighbourhood arguments may choose a
 support containing these requirements from the outset without a second
@@ -221,6 +238,7 @@ theorem cyclotomicKummerNormSupport_idem
           (K := K) n seed W).mp hW
   · exact subset_cyclotomicKummerNormSupport (K := K) n S
 
+open scoped Classical in
 /-- The actual full S-unit Kummer extension over the cyclotomic base,
 formed inside its fixed separable closure and using the chosen enlargement
 of the fibre-saturated support above `K`.  The preceding stability theorem
@@ -240,6 +258,7 @@ noncomputable abbrev cyclotomicFullSUnitKummerExtension
       (K := CyclotomicField (n : ℕ) K) n
       (cyclotomicKummerNormSupportAbove (K := K) n seed))
 
+open scoped Classical in
 /-- The cyclotomic full S-unit Kummer extension is Galois over the
 cyclotomic base. -/
 theorem cyclotomicFullSUnitKummerExtension_isGalois
@@ -256,6 +275,7 @@ theorem cyclotomicFullSUnitKummerExtension_isGalois
         (K := CyclotomicField (n : ℕ) K) n
         (cyclotomicKummerNormSupportAbove (K := K) n seed)))
 
+open scoped Classical in
 /-- The cyclotomic full S-unit Kummer extension is finite over the
 cyclotomic base. -/
 theorem cyclotomicFullSUnitKummerExtension_finiteDimensional
@@ -278,6 +298,7 @@ theorem cyclotomicFullSUnitKummerExtension_finiteDimensional
       (sUnitKummerNormSupport (K := C) n
         (cyclotomicKummerNormSupportAbove (K := K) n seed)))
 
+open scoped Classical in
 noncomputable local instance
     cyclotomicKummerNormDescent_kummerFiniteDimensional
     (n : ℕ+)
@@ -288,6 +309,9 @@ noncomputable local instance
   cyclotomicFullSUnitKummerExtension_finiteDimensional
     (K := K) n seed
 
+attribute [local instance] cyclotomicKummerNormDescent_kummerFiniteDimensional
+
+open scoped Classical in
 /-- The Kummer layer is a number field via its finite extension of the
 cyclotomic number field.  This is deliberately a named, non-instance boundary:
 downstream base-tower instances must not make every `NumberField` search unfold
@@ -301,6 +325,7 @@ private theorem cyclotomicKummerNormDescent_kummerNumberField
     (CyclotomicField (n : ℕ) K)
     (cyclotomicFullSUnitKummerExtension (K := K) n seed)
 
+open scoped Classical in
 /-- The expensive Kummer norm computation over the cyclotomic base, isolated
 before the `K`-to-Kummer-field instance tower is introduced. -/
 private theorem
@@ -343,9 +368,11 @@ private theorem
       (fun T => ideleClassPowerLocalUnitSubgroup (K := C) n T ∅)
       hstable)
 
+open scoped Classical in
+/-- The cyclotomic S-unit Kummer extension is an algebra over the original base field. -/
 @[reducible]
 noncomputable local instance
-    cyclotomicKummerNormDescent_kummerAlgebraOverBase
+    cyclotomicKummerNormDescentKummerAlgebraOverBase
     (n : ℕ+)
     (seed : Finset (HeightOneSpectrum (𝓞 K))) :
     Algebra K
@@ -355,6 +382,9 @@ noncomputable local instance
       (cyclotomicFullSUnitKummerExtension (K := K) n seed)).comp
     (algebraMap K (CyclotomicField (n : ℕ) K))).toAlgebra
 
+attribute [local instance] cyclotomicKummerNormDescentKummerAlgebraOverBase
+
+open scoped Classical in
 @[reducible]
 private noncomputable def
     cyclotomicKummerNormDescent_kummerSMulOverBase
@@ -363,9 +393,10 @@ private noncomputable def
     SMul K
       (cyclotomicFullSUnitKummerExtension (K := K) n seed) :=
   Algebra.toSMul
-    (self := cyclotomicKummerNormDescent_kummerAlgebraOverBase
+    (self := cyclotomicKummerNormDescentKummerAlgebraOverBase
       (K := K) n seed)
 
+open scoped Classical in
 @[reducible]
 private noncomputable def
     cyclotomicKummerNormDescent_kummerModuleOverBase
@@ -375,6 +406,7 @@ private noncomputable def
       (cyclotomicFullSUnitKummerExtension (K := K) n seed) :=
   Algebra.toModule
 
+open scoped Classical in
 private theorem
     cyclotomicKummerNormDescent_kummerScalarTower
     (n : ℕ+)
@@ -384,6 +416,7 @@ private theorem
       (cyclotomicFullSUnitKummerExtension (K := K) n seed) :=
   IsScalarTower.of_algebraMap_eq' rfl
 
+open scoped Classical in
 noncomputable local instance
     cyclotomicKummerNormDescent_kummerFiniteDimensionalOverBase
     (n : ℕ+)
@@ -399,6 +432,9 @@ noncomputable local instance
       (CyclotomicField (n : ℕ) K)
       (cyclotomicFullSUnitKummerExtension (K := K) n seed)
 
+attribute [local instance] cyclotomicKummerNormDescent_kummerFiniteDimensionalOverBase
+
+open scoped Classical in
 /-- The norm range of the actual cyclotomic full S-unit Kummer extension,
 viewed as a finite extension of `K`, lies in the power-local-unit subgroup
 on the enlarged base support.  This is the pointwise tower-norm step in the
@@ -447,6 +483,7 @@ theorem
   rw [← hNormC]
   exact ⟨c, rfl⟩
 
+open scoped Classical in
 /-- Passing to the finite normal closure produces an actual finite Galois
 extension of `K` whose norm range is still contained in the prescribed
 power-local-unit subgroup.  This is the finite Galois norm neighbourhood

@@ -586,7 +586,7 @@ theorem finiteAbelianNormSubgroupMap_surjective_of_charP
 /-- Positive-characteristic local existence as an order isomorphism: finite
 abelian subextensions correspond to ordinary open finite-index subgroups of
 Kˣ with the opposite inclusion order. -/
-noncomputable def finiteAbelianNormSubgroupOrderIso_of_charP
+noncomputable def finiteAbelianNormSubgroupOrderIsoOfCharP
     (p : ℕ) [Fact p.Prime] [CharP K p] :
     FiniteAbelianSubextension (intrinsicAbstractBase K) ≃o
       (OpenFiniteIndexSubgroup K)ᵒᵈ where
@@ -600,18 +600,18 @@ noncomputable def finiteAbelianNormSubgroupOrderIso_of_charP
     exact (finiteAbelianSubextension_le_iff_normSubgroup_le K L₁ L₂).symm
 
 /-- Underlying equivalence of positive-characteristic local existence. -/
-noncomputable def finiteAbelianNormSubgroupEquiv_of_charP
+noncomputable def finiteAbelianNormSubgroupEquivOfCharP
     (p : ℕ) [Fact p.Prime] [CharP K p] :
     FiniteAbelianSubextension (intrinsicAbstractBase K) ≃
       OpenFiniteIndexSubgroup K :=
-  (finiteAbelianNormSubgroupOrderIso_of_charP K p).toEquiv
+  (finiteAbelianNormSubgroupOrderIsoOfCharP K p).toEquiv
 
 /-- States the theorem `finiteAbelianNormSubgroupOrderIso_of_charP_apply`. -/
 @[simp]
 theorem finiteAbelianNormSubgroupOrderIso_of_charP_apply
     (p : ℕ) [Fact p.Prime] [CharP K p]
     (L : FiniteAbelianSubextension (intrinsicAbstractBase K)) :
-    finiteAbelianNormSubgroupOrderIso_of_charP K p L =
+    finiteAbelianNormSubgroupOrderIsoOfCharP K p L =
       finiteAbelianNormSubgroupMap K L := by
   rfl
 

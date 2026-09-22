@@ -151,7 +151,8 @@ def finiteKummerCharacterEquiv
   MulEquiv.ofBijective
     ((chosenFiniteKummerRadicalDatum (K := K) (L := L) n).quotientKummerCharacterWithoutSection
         (nthRootsOfUnity_fixed (K := K) (L := L) n hmu))
-    ⟨(chosenFiniteKummerRadicalDatum (K := K) (L := L) n).quotientKummerCharacterWithoutSection_injective
+    ⟨(chosenFiniteKummerRadicalDatum (K := K) (L := L)
+      n).quotientKummerCharacterWithoutSection_injective
           (nthRootsOfUnity_fixed (K := K) (L := L) n hmu),
       finiteKummerQuotientCharacter_surjective (K := K) (L := L) n hmu⟩
 

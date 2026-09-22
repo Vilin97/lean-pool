@@ -16,7 +16,7 @@ that embedding at finite places and the corresponding one-component
 relative idele.
 -/
 
-open scoped NumberField Classical TensorProduct
+open scoped NumberField TensorProduct
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -25,6 +25,7 @@ namespace IdeleGroup
 
 variable {K : Type*} [Field K] [NumberField K]
 
+open scoped Classical in
 /-- The dependent archimedean value which is `x` at `v` and `1`
 elsewhere. -/
 private def infinitePlaceValue
@@ -36,6 +37,7 @@ private def infinitePlaceValue
     v x
 
 omit [NumberField K] in
+open scoped Classical in
 @[simp]
 private theorem infinitePlaceValue_same
     (v : InfinitePlace K)
@@ -45,6 +47,7 @@ private theorem infinitePlaceValue_same
     (M := fun u : InfinitePlace K ↦ u.Completionˣ) v x
 
 omit [NumberField K] in
+open scoped Classical in
 @[simp]
 private theorem infinitePlaceValue_of_ne
     (v w : InfinitePlace K)
@@ -54,6 +57,7 @@ private theorem infinitePlaceValue_of_ne
   exact Pi.mulSingle_eq_of_ne
     (M := fun u : InfinitePlace K ↦ u.Completionˣ) h x
 
+open scoped Classical in
 /-- The idele whose `v`-component is prescribed and whose other
 components are `1`, for an archimedean place `v`. -/
 def infinitePlaceIdele
@@ -97,6 +101,7 @@ def infinitePlaceIdele
       rw [hvalue, map_mul]
     · simp
 
+open scoped Classical in
 /-- Inserting a unit at one archimedean place is continuous. -/
 theorem continuous_infinitePlaceIdele
     (v : InfinitePlace K) :
@@ -116,6 +121,7 @@ theorem continuous_infinitePlaceIdele
     (ContinuousMulEquiv.piUnits.symm.continuous.comp
       hvalue).prodMk continuous_const
 
+open scoped Classical in
 /-- The continuous homomorphism inserting a unit at one archimedean place. -/
 def infinitePlaceIdeleContinuous
     (v : InfinitePlace K) :
@@ -123,6 +129,7 @@ def infinitePlaceIdeleContinuous
   __ := infinitePlaceIdele v
   continuous_toFun := continuous_infinitePlaceIdele v
 
+open scoped Classical in
 @[simp]
 theorem infinitePlaceIdeleContinuous_apply
     (v : InfinitePlace K) (x : v.Completionˣ) :
@@ -130,9 +137,9 @@ theorem infinitePlaceIdeleContinuous_apply
       infinitePlaceIdele v x :=
   rfl
 
+open scoped Classical in
 /-- An archimedean one-place idele recovers its prescribed component
 at the supporting place. -/
-@[simp]
 theorem infinitePlaceIdele_infiniteComponent_same
     (v : InfinitePlace K)
     (x : v.Completionˣ) :
@@ -145,9 +152,9 @@ theorem infinitePlaceIdele_infiniteComponent_same
   rw [ContinuousMulEquiv.piUnits.apply_symm_apply]
   exact infinitePlaceValue_same v x
 
+open scoped Classical in
 /-- An archimedean one-place idele has component one at every other
 archimedean place. -/
-@[simp]
 theorem infinitePlaceIdele_infiniteComponent_of_ne
     (v w : InfinitePlace K)
     (x : v.Completionˣ)
@@ -161,9 +168,9 @@ theorem infinitePlaceIdele_infiniteComponent_of_ne
   rw [ContinuousMulEquiv.piUnits.apply_symm_apply]
   exact infinitePlaceValue_of_ne v w x h
 
+open scoped Classical in
 /-- An archimedean one-place idele has component one at every finite
 place. -/
-@[simp]
 theorem infinitePlaceIdele_finiteComponent
     (v : InfinitePlace K)
     (w : HeightOneSpectrum (𝓞 K))
@@ -172,6 +179,7 @@ theorem infinitePlaceIdele_finiteComponent
         (infinitePlaceIdele v x) = 1 := by
   rfl
 
+open scoped Classical in
 /-- Insert one archimedean-place element and then pass to the idele
 class group. -/
 def infinitePlaceIdeleClass
@@ -181,6 +189,7 @@ def infinitePlaceIdeleClass
     (IdeleGroup.principalSubgroup K)).comp
       (infinitePlaceIdele v)
 
+open scoped Classical in
 /-- The dependent local value which is `x` at `v` and `1` elsewhere. -/
 private def finitePlaceValue
     (v : HeightOneSpectrum (𝓞 K))
@@ -189,6 +198,7 @@ private def finitePlaceValue
     (w.adicCompletion K)ˣ :=
   if h : w = v then h.symm ▸ x else 1
 
+open scoped Classical in
 @[simp]
 private theorem finitePlaceValue_same
     (v : HeightOneSpectrum (𝓞 K))
@@ -196,6 +206,7 @@ private theorem finitePlaceValue_same
     finitePlaceValue v x v = x := by
   simp [finitePlaceValue]
 
+open scoped Classical in
 @[simp]
 private theorem finitePlaceValue_of_ne
     (v w : HeightOneSpectrum (𝓞 K))
@@ -204,6 +215,7 @@ private theorem finitePlaceValue_of_ne
     finitePlaceValue v x w = 1 := by
   simp [finitePlaceValue, h]
 
+open scoped Classical in
 /-- The idele whose `v`-component is prescribed and whose other
 components are `1`. -/
 def finitePlaceIdele
@@ -244,9 +256,9 @@ def finitePlaceIdele
           finitePlaceValue_of_ne v w y hw,
           finitePlaceValue_of_ne v w (x * y) hw]
 
+open scoped Classical in
 /-- A finite-place idele recovers its prescribed component at the
 supporting place. -/
-@[simp]
 theorem finitePlaceIdele_finiteComponent_same
     (v : HeightOneSpectrum (𝓞 K))
     (x : (v.adicCompletion K)ˣ) :
@@ -254,8 +266,8 @@ theorem finitePlaceIdele_finiteComponent_same
         (finitePlaceIdele v x) = x :=
   finitePlaceValue_same v x
 
+open scoped Classical in
 /-- A finite-place idele has component one at every other finite place. -/
-@[simp]
 theorem finitePlaceIdele_finiteComponent_of_ne
     (v w : HeightOneSpectrum (𝓞 K))
     (x : (v.adicCompletion K)ˣ)
@@ -264,8 +276,8 @@ theorem finitePlaceIdele_finiteComponent_of_ne
         (finitePlaceIdele v x) = 1 :=
   finitePlaceValue_of_ne v w x h
 
+open scoped Classical in
 /-- A finite-place idele has component one at every infinite place. -/
-@[simp]
 theorem finitePlaceIdele_infiniteComponent
     (v : HeightOneSpectrum (𝓞 K))
     (w : InfinitePlace K)
@@ -274,6 +286,7 @@ theorem finitePlaceIdele_infiniteComponent
         (finitePlaceIdele v x) = 1 := by
   rfl
 
+open scoped Classical in
 /-- Insert one finite-place element and then pass to the idele class
 group. -/
 def finitePlaceIdeleClass
@@ -294,6 +307,7 @@ variable
     {L : Type*} [Field L] [NumberField L] [Algebra K L]
     [FiniteDimensional K L]
 
+open scoped Classical in
 /-- The dependent archimedean tensor value which is `z` at `v` and
 `1` elsewhere. -/
 private def relativeInfinitePlaceValue
@@ -304,6 +318,7 @@ private def relativeInfinitePlaceValue
   if h : w = v then h.symm ▸ z else 1
 
 omit [NumberField K] [NumberField L] [FiniteDimensional K L] in
+open scoped Classical in
 @[simp]
 private theorem relativeInfinitePlaceValue_same
     (v : InfinitePlace K)
@@ -312,6 +327,7 @@ private theorem relativeInfinitePlaceValue_same
   simp [relativeInfinitePlaceValue]
 
 omit [NumberField K] [NumberField L] [FiniteDimensional K L] in
+open scoped Classical in
 @[simp]
 private theorem relativeInfinitePlaceValue_of_ne
     (v w : InfinitePlace K)
@@ -320,6 +336,7 @@ private theorem relativeInfinitePlaceValue_of_ne
     relativeInfinitePlaceValue (L := L) v z w = 1 := by
   simp [relativeInfinitePlaceValue, h]
 
+open scoped Classical in
 /-- Restricted local tensor data supported at one archimedean place. -/
 private noncomputable def relativeInfinitePlaceData
     (v : InfinitePlace K)
@@ -362,6 +379,7 @@ private noncomputable def relativeInfinitePlaceData
     rw [hOne] at hw
     exact hw
 
+open scoped Classical in
 /-- A relative idele supported at the single archimedean place `v`. -/
 def relativeInfinitePlaceIdele
     (v : InfinitePlace K)
@@ -372,6 +390,7 @@ def relativeInfinitePlaceIdele
     (relativeInfinitePlaceData (K := K) (L := L) v z)
 
 omit [NumberField L] in
+open scoped Classical in
 /-- A relative archimedean one-place idele recovers its prescribed
 tensor component at the supporting place. -/
 @[simp]
@@ -387,6 +406,7 @@ theorem relativeInfinitePlaceIdele_infiniteComponent_same
   exact relativeInfinitePlaceValue_same (L := L) v z
 
 omit [NumberField L] in
+open scoped Classical in
 /-- A relative archimedean one-place idele has component one at every
 other archimedean place. -/
 @[simp]
@@ -403,6 +423,7 @@ theorem relativeInfinitePlaceIdele_infiniteComponent_of_ne
   exact relativeInfinitePlaceValue_of_ne (L := L) v w z h
 
 omit [NumberField L] in
+open scoped Classical in
 /-- A relative archimedean one-place idele has component one at every
 finite place. -/
 @[simp]
@@ -418,6 +439,7 @@ theorem relativeInfinitePlaceIdele_finiteComponent
     relativeIdeleOfLocalData_finiteComponent]
   rfl
 
+open scoped Classical in
 /-- The dependent local tensor value which is `z` at `v` and `1`
 elsewhere. -/
 private def relativeFinitePlaceValue
@@ -428,6 +450,7 @@ private def relativeFinitePlaceValue
   if h : w = v then h.symm ▸ z else 1
 
 omit [NumberField L] [FiniteDimensional K L] in
+open scoped Classical in
 @[simp]
 private theorem relativeFinitePlaceValue_same
     (v : HeightOneSpectrum (𝓞 K))
@@ -436,6 +459,7 @@ private theorem relativeFinitePlaceValue_same
   simp [relativeFinitePlaceValue]
 
 omit [NumberField L] [FiniteDimensional K L] in
+open scoped Classical in
 @[simp]
 private theorem relativeFinitePlaceValue_of_ne
     (v w : HeightOneSpectrum (𝓞 K))
@@ -444,6 +468,7 @@ private theorem relativeFinitePlaceValue_of_ne
     relativeFinitePlaceValue (L := L) v z w = 1 := by
   simp [relativeFinitePlaceValue, h]
 
+open scoped Classical in
 /-- Restricted local data supported at one finite place. -/
 private noncomputable def relativeFinitePlaceData
     (v : HeightOneSpectrum (𝓞 K))
@@ -498,6 +523,7 @@ private noncomputable def relativeFinitePlaceData
     simpa [relativeFinitePlaceValue_of_ne
       (L := L) v w z hne] using hw
 
+open scoped Classical in
 /-- A relative idele supported at the single finite place `v`. -/
 def relativeFinitePlaceIdele
     (v : HeightOneSpectrum (𝓞 K))
@@ -508,6 +534,7 @@ def relativeFinitePlaceIdele
     (relativeFinitePlaceData (K := K) (L := L) v z)
 
 omit [NumberField L] in
+open scoped Classical in
 /-- A relative finite-place idele recovers its prescribed tensor component
 at the supporting place. -/
 @[simp]
@@ -523,6 +550,7 @@ theorem relativeFinitePlaceIdele_finiteComponent_same
   exact relativeFinitePlaceValue_same (L := L) v z
 
 omit [NumberField L] in
+open scoped Classical in
 /-- A relative finite-place idele has component one at every other finite
 place. -/
 @[simp]
@@ -539,6 +567,7 @@ theorem relativeFinitePlaceIdele_finiteComponent_of_ne
   exact relativeFinitePlaceValue_of_ne (L := L) v w z h
 
 omit [NumberField L] in
+open scoped Classical in
 /-- A relative finite-place idele has component one at every infinite
 place. -/
 @[simp]

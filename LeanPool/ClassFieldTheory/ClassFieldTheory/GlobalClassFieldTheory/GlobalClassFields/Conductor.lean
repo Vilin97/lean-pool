@@ -23,8 +23,7 @@ single defining modulus bounds the support, so these pointwise minima
 assemble into a genuine finitely supported modulus.
 -/
 
-open scoped NumberField Classical
-
+open scoped NumberField
 noncomputable section
 
 namespace GlobalClassFieldTheory
@@ -34,6 +33,7 @@ open NumberField IsDedekindDomain
 
 variable {K : Type*} [Field K] [NumberField K]
 
+open scoped Classical in
 /-- A modulus defines a ray class field containing the class field
 corresponding to `H` exactly when its congruence subgroup lies in `H`. -/
 def IsDefiningModulus
@@ -41,6 +41,7 @@ def IsDefiningModulus
     (m : RayClass.Modulus K) : Prop :=
   m.congruenceSubgroup ≤ H
 
+open scoped Classical in
 /-- An idèle-class subgroup for which a finite ray-class defining modulus
 exists.  This is precisely the domain on which the narrow finite conductor
 is defined. -/
@@ -49,6 +50,7 @@ abbrev ConductorialSubgroup
   {H : Subgroup (IdeleClassGroup K) //
     ∃ m : RayClass.Modulus K, IsDefiningModulus H m}
 
+open scoped Classical in
 /-- At every finite place, some defining full modulus supplies a finite
 defining exponent.  This is the nonemptiness input for the pointwise finite
 conductor minimum. -/
@@ -63,18 +65,21 @@ theorem exists_definingFiniteExponent
 
 namespace ConductorialSubgroup
 
+open scoped Classical in
 /-- A chosen full modulus defining a conductorial subgroup. -/
 noncomputable def chosenDefiningModulus
     (H : ConductorialSubgroup K) :
     RayClass.Modulus K :=
   Classical.choose H.2
 
+open scoped Classical in
 /-- The chosen full defining modulus has the advertised defining property. -/
 theorem chosenDefiningModulus_spec
     (H : ConductorialSubgroup K) :
     IsDefiningModulus H.1 H.chosenDefiningModulus :=
   Classical.choose_spec H.2
 
+open scoped Classical in
 /-- The finite part of one chosen defining modulus, used to bound the
 support of the narrow finite conductor. -/
 noncomputable def narrowFiniteConductorBoundingModulus
@@ -82,6 +87,7 @@ noncomputable def narrowFiniteConductorBoundingModulus
     RayClass.FiniteModulus K :=
   H.chosenDefiningModulus.finitePart
 
+open scoped Classical in
 /-- The finite bounding modulus comes from an actual defining full modulus. -/
 theorem narrowFiniteConductorBoundingModulus_spec
     (H : ConductorialSubgroup K) :
@@ -90,6 +96,7 @@ theorem narrowFiniteConductorBoundingModulus_spec
         m.finitePart = H.narrowFiniteConductorBoundingModulus :=
   ⟨H.chosenDefiningModulus, H.chosenDefiningModulus_spec, rfl⟩
 
+open scoped Classical in
 /-- The least narrow finite conductor exponent at `v` among all defining
 moduli. -/
 noncomputable def narrowFiniteConductorExponent
@@ -97,6 +104,7 @@ noncomputable def narrowFiniteConductorExponent
     (v : HeightOneSpectrum (𝓞 K)) : ℕ :=
   Nat.find (exists_definingFiniteExponent H.1 H.2 v)
 
+open scoped Classical in
 /-- The least narrow finite conductor exponent is attained by an actual
 defining modulus. -/
 theorem narrowFiniteConductorExponent_spec
@@ -107,6 +115,7 @@ theorem narrowFiniteConductorExponent_spec
         m.finitePart v = H.narrowFiniteConductorExponent v :=
   Nat.find_spec (exists_definingFiniteExponent H.1 H.2 v)
 
+open scoped Classical in
 /-- The narrow finite conductor exponent is no larger than the exponent in
 any defining modulus. -/
 theorem narrowFiniteConductorExponent_le
@@ -119,6 +128,7 @@ theorem narrowFiniteConductorExponent_le
     (exists_definingFiniteExponent H.1 H.2 v)
     ⟨m, hm, rfl⟩
 
+open scoped Classical in
 /-- The finite part of the conductor in the all-real-positive (narrow)
 convention. -/
 noncomputable def narrowFiniteConductor
@@ -145,6 +155,7 @@ noncomputable def narrowFiniteConductor
       rw [hbound] at hle
       exact hv (Nat.eq_zero_of_le_zero hle)
 
+open scoped Classical in
 /-- Evaluating the narrow finite conductor returns its finite local
 conductor exponent. -/
 @[simp]
@@ -154,6 +165,7 @@ theorem narrowFiniteConductor_apply
     H.narrowFiniteConductor v = H.narrowFiniteConductorExponent v :=
   rfl
 
+open scoped Classical in
 /-- The narrow finite conductor divides every defining modulus
 (equivalently, its exponents are pointwise no larger). -/
 theorem narrowFiniteConductor_le
@@ -164,6 +176,7 @@ theorem narrowFiniteConductor_le
   intro v
   exact H.narrowFiniteConductorExponent_le hm v
 
+open scoped Classical in
 /-- Universal gcd characterization of the narrow finite conductor. -/
 theorem le_narrowFiniteConductor_iff
     (H : ConductorialSubgroup K)
@@ -180,6 +193,7 @@ theorem le_narrowFiniteConductor_iff
     rw [← hmv]
     exact hd m hm v
 
+open scoped Classical in
 /-- A conductorial subgroup is open because it contains a ray congruence
 subgroup. -/
 theorem isOpen
@@ -188,12 +202,14 @@ theorem isOpen
   obtain ⟨m, hm⟩ := H.2
   exact Subgroup.isOpen_mono hm (RayClass.isOpen_congruenceSubgroup m)
 
+open scoped Classical in
 /-- A conductorial subgroup is closed. -/
 theorem isClosed
     (H : ConductorialSubgroup K) :
     IsClosed ((H.1 : Subgroup (IdeleClassGroup K)) : Set (IdeleClassGroup K)) :=
   H.1.isClosed_of_isOpen H.isOpen
 
+open scoped Classical in
 /-- A conductorial subgroup has finite index. -/
 instance finiteIndex
     (H : ConductorialSubgroup K) :
@@ -201,6 +217,7 @@ instance finiteIndex
   obtain ⟨m, hm⟩ := H.2
   exact Subgroup.finiteIndex_of_le hm
 
+open scoped Classical in
 /-- The narrow finite conductor is the gcd of the finite parts of the
 defining full moduli. -/
 theorem narrowFiniteConductor_is_gcd
@@ -216,6 +233,7 @@ theorem narrowFiniteConductor_is_gcd
 
 end ConductorialSubgroup
 
+open scoped Classical in
 /-- A closed finite-index subgroup always has at least one defining
 modulus. -/
 theorem exists_definingModulus_of_isClosed_finiteIndex
@@ -230,6 +248,7 @@ theorem exists_definingModulus_of_isClosed_finiteIndex
 
 namespace ConductorialSubgroup
 
+open scoped Classical in
 /-- The conductorial subgroup canonically associated to a closed
 finite-index idèle-class subgroup. -/
 noncomputable def ofClosedFiniteIndex

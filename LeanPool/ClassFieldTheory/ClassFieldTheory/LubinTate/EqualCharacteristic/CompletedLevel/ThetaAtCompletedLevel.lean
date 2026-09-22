@@ -37,18 +37,21 @@ noncomputable local instance equalCharacteristicThetaAtLevelBaseValuationIsNontr
       (equalCharacteristicCompletedUnramifiedField F.residueField) ℤᵐ⁰).IsNontrivial :=
   equalCharacteristicCompletedBaseValuationIsNontrivial F.residueField
 
+/-- The discrete valuation on the completed unramified coefficient field has rank one. -/
 noncomputable local instance equalCharacteristicThetaAtLevelBaseValuationRankOne
     (F : LocalField.{u, v} K) :
     (Valued.v : Valuation
       (equalCharacteristicCompletedUnramifiedField F.residueField) ℤᵐ⁰).RankOne :=
   equalCharacteristicCompletedBaseValuationRankOne F.residueField
 
+/-- The canonical nontrivial norm on the completed unramified coefficient field. -/
 noncomputable local instance equalCharacteristicThetaAtLevelBaseNormedField
     (F : LocalField.{u, v} K) :
     NontriviallyNormedField
       (equalCharacteristicCompletedUnramifiedField F.residueField) :=
   equalCharacteristicCompletedBaseNormedField F.residueField
 
+/-- The canonical nontrivial norm on the completed Lubin–Tate field at level `n`. -/
 noncomputable local instance equalCharacteristicThetaAtLevelNormedField
     (F : LocalField.{u, v} K) (n : ℕ) :
     NontriviallyNormedField (equalCharacteristicCompletedLevelField F n) :=
@@ -64,6 +67,7 @@ noncomputable local instance equalCharacteristicThetaAtLevelCompleteSpace
     CompleteSpace (equalCharacteristicCompletedLevelField F n) :=
   equalCharacteristicCompletedLevelCompleteSpace F n
 
+/-- The nonnegative-real-valued valuation on the completed Lubin–Tate field at level `n`. -/
 noncomputable local instance equalCharacteristicThetaAtLevelValued
     (F : LocalField.{u, v} K) (n : ℕ) :
     Valued (equalCharacteristicCompletedLevelField F n) ℝ≥0 :=

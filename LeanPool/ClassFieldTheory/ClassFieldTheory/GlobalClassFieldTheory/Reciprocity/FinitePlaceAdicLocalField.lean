@@ -70,10 +70,13 @@ open LocalClassFieldTheory
 variable (F : Type) [Field F] [NumberField F]
 variable (v : HeightOneSpectrum (𝓞 F))
 
+/-- The absolute-value completion uses the valuative relation chosen for finite-place local
+reciprocity. -/
 local instance finitePlaceCompletionComparisonSourceValuativeRel :
     ValuativeRel (HeightOneSpectrum.adicAbv F v).Completion :=
   GlobalClassFieldTheory.Reciprocity.finitePlaceLocalArtinCompletionValuativeRel v
 
+/-- The adic completion uses its finite-place valuative relation. -/
 local instance finitePlaceCompletionComparisonTargetValuativeRel :
     ValuativeRel (v.adicCompletion F) :=
   ClassFieldTheory.finitePlaceCompletionValuativeRel F v

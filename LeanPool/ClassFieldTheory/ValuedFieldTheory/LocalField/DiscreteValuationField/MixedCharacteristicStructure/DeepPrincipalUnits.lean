@@ -66,7 +66,8 @@ instance mixedWithZeroValuationContextIntegralAlgebra
     MixedIntegralAlgebraContext (ofWithZeroValuation v) :=
   ctx.integralAlgebra
 
-/-! ### Continuity for the normalized valuation used by the deep exponential–logarithm equivalence -/
+/-! ### Continuity for the normalized valuation used by
+  the deep exponential–logarithm equivalence -/
 
 /-- For a normalized `ℤᵐ⁰`-valued local field, the canonical embedding
 `Q_p → K` is continuous for the direct topology induced by `v`. -/
@@ -92,7 +93,7 @@ theorem continuous_qpadicNumbersAlgebra_ofWithZeroValuation
         (algebraMap ℚ_[p] K) := by
     let : Valued K F.mrangeValueGroup := restricted
     let : NontriviallyNormedField K :=
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_nontriviallyNormedField F.toCompleteDVF
+      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F.toCompleteDVF
     change Continuous
       (fun x : ℚ_[p] =>
         ((F.qpadicNumbersEquivQpadicClosureSubfield x :
@@ -193,13 +194,14 @@ direct normalized valuation topology. -/
 theorem continuousSMul_padicInt_firstPrincipalUnit_ofWithZeroValuation
     (v : _root_.Valuation K (WithZero (Multiplicative ℤ)))
     [ValuationTheory.DiscreteValuationField.Valuation.IsCompleteDiscrete v]
-    [Finite (IsLocalRing.ResidueField v.valuationSubring)] [CharZero K] :
+    [Finite (IsLocalRing.ResidueField v.valuationSubring)] :
     let F : LocalField.{u, 0} K := ofWithZeroValuation v
     letI : MixedWithZeroValuationContext v :=
       mixedWithZeroValuationContext v
     letI : Valued K (WithZero (Multiplicative ℤ)) := Valued.mk' v
     ContinuousSMul ℤ_[F.residueCharacteristic]
-      (Additive (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup (F.toCompleteDVF) 1)) := by
+      (Additive (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+        (F.toCompleteDVF) 1)) := by
   let F : LocalField.{u, 0} K := ofWithZeroValuation v
   let : MixedWithZeroValuationContext v :=
     mixedWithZeroValuationContext v
@@ -220,19 +222,23 @@ theorem continuousSMul_padicInt_higherPrincipalUnit_ofWithZeroValuation
       mixedWithZeroValuationContext v
     letI : Valued K (WithZero (Multiplicative ℤ)) := Valued.mk' v
     letI : Module ℤ_[F.residueCharacteristic]
-        (Additive (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup (F.toCompleteDVF) r)) :=
+        (Additive (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+          (F.toCompleteDVF) r)) :=
       F.higherPrincipalUnitPadicModule hr
     ContinuousSMul ℤ_[F.residueCharacteristic]
-      (Additive (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup (F.toCompleteDVF) r)) := by
+      (Additive (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+        (F.toCompleteDVF) r)) := by
   let F : LocalField.{u, 0} K := ofWithZeroValuation v
   let : MixedWithZeroValuationContext v :=
     mixedWithZeroValuationContext v
   let : Valued K (WithZero (Multiplicative ℤ)) := Valued.mk' v
   let : Module ℤ_[F.residueCharacteristic]
-      (Additive (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup (F.toCompleteDVF) r)) :=
+      (Additive (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+        (F.toCompleteDVF) r)) :=
     F.higherPrincipalUnitPadicModule hr
   let : ContinuousSMul ℤ_[F.residueCharacteristic]
-      (Additive (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup (F.toCompleteDVF) 1)) :=
+      (Additive (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+        (F.toCompleteDVF) 1)) :=
     continuousSMul_padicInt_firstPrincipalUnit_ofWithZeroValuation v
   have hinc : Continuous (F.higherPrincipalUnitAddToFirst hr) := by
     apply Continuous.subtype_mk
@@ -258,7 +264,7 @@ theorem continuousSMul_padicInt_higherPrincipalUnit_ofWithZeroValuation
 
 /-- The integral-basis coordinates on a maximal-ideal power are a
 homeomorphism for the direct normalized valuation topology. -/
-noncomputable def mixed_maximalIdealPowHomeomorphPi_ofWithZeroValuation
+noncomputable def mixedMaximalIdealPowHomeomorphPiOfWithZeroValuation
     (v : _root_.Valuation K (WithZero (Multiplicative ℤ)))
     [ValuationTheory.DiscreteValuationField.Valuation.IsCompleteDiscrete v]
     [Finite (IsLocalRing.ResidueField v.valuationSubring)] [CharZero K]
@@ -346,7 +352,7 @@ theorem mixed_one_le_of_log_level
 
 /-- The logarithm direction of the deep exponential–logarithm equivalence, written as a topological
 additive equivalence `U^n ≃ₜ+ m^n`. -/
-noncomputable def mixed_deepLogContinuousAddEquiv
+noncomputable def mixedDeepLogContinuousAddEquiv
     (v : _root_.Valuation K (WithZero (Multiplicative ℤ)))
     [ValuationTheory.DiscreteValuationField.Valuation.IsCompleteDiscrete v]
     [Finite (IsLocalRing.ResidueField v.valuationSubring)] [CharZero K]
@@ -360,7 +366,8 @@ noncomputable def mixed_deepLogContinuousAddEquiv
     letI : MixedWithZeroValuationContext v :=
       mixedWithZeroValuationContext v
     letI : Valued K (WithZero (Multiplicative ℤ)) := Valued.mk' v
-    Additive (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup (F.toCompleteDVF) n) ≃ₜ+
+    Additive (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+      (F.toCompleteDVF) n) ≃ₜ+
       ((F.toCompleteDVF.maximalIdeal ^ n :
         Ideal F.toCompleteDVF.valuationSubring)) := by
   let F : LocalField.{u, 0} K := ofWithZeroValuation v
@@ -385,20 +392,22 @@ theorem mixed_deepLog_map_natCast_smul
         (n : ℚ))
     (m : ℕ)
     (x : Additive
-      (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup ((ofWithZeroValuation v).toCompleteDVF) n)) :
+      (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+        ((ofWithZeroValuation v).toCompleteDVF) n)) :
     let F : LocalField.{u, 0} K := ofWithZeroValuation v
     let hn : 1 ≤ n := mixed_one_le_of_log_level v n hlevel
     letI : MixedWithZeroValuationContext v :=
       mixedWithZeroValuationContext v
     letI : Valued K (WithZero (Multiplicative ℤ)) := Valued.mk' v
     letI : Module ℤ_[F.residueCharacteristic]
-        (Additive (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup (F.toCompleteDVF) n)) :=
+        (Additive (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+          (F.toCompleteDVF) n)) :=
       F.higherPrincipalUnitPadicModule hn
-    mixed_deepLogContinuousAddEquiv
+    mixedDeepLogContinuousAddEquiv
         v hv n hlevel
         ((m : ℤ_[F.residueCharacteristic]) • x) =
       (m : ℤ_[F.residueCharacteristic]) •
-        mixed_deepLogContinuousAddEquiv
+        mixedDeepLogContinuousAddEquiv
           v hv n hlevel x := by
   let F : LocalField.{u, 0} K := ofWithZeroValuation v
   let hn : 1 ≤ n := mixed_one_le_of_log_level v n hlevel
@@ -406,22 +415,23 @@ theorem mixed_deepLog_map_natCast_smul
     mixedWithZeroValuationContext v
   let : Valued K (WithZero (Multiplicative ℤ)) := Valued.mk' v
   let : Module ℤ_[F.residueCharacteristic]
-      (Additive (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup (F.toCompleteDVF) n)) :=
+      (Additive (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+        (F.toCompleteDVF) n)) :=
     F.higherPrincipalUnitPadicModule hn
   dsimp only
   rw [Nat.cast_smul_eq_nsmul, Nat.cast_smul_eq_nsmul]
   change
-    (mixed_deepLogContinuousAddEquiv v hv n hlevel).toAddEquiv.toAddMonoidHom
+    (mixedDeepLogContinuousAddEquiv v hv n hlevel).toAddEquiv.toAddMonoidHom
         (m • x) =
       m •
-        (mixed_deepLogContinuousAddEquiv v hv n hlevel).toAddEquiv.toAddMonoidHom x
+        (mixedDeepLogContinuousAddEquiv v hv n hlevel).toAddEquiv.toAddMonoidHom x
   exact
-    (mixed_deepLogContinuousAddEquiv v hv n hlevel).toAddEquiv.toAddMonoidHom.map_nsmul
+    (mixedDeepLogContinuousAddEquiv v hv n hlevel).toAddEquiv.toAddMonoidHom.map_nsmul
       m x
 
 /-- At a depth allowed by the deep exponential–logarithm equivalence, logarithm is a `Z_p`-linear
 equivalence from `U^n` to the additive ideal `m^n`. -/
-noncomputable def mixed_deepLogLinearEquiv
+noncomputable def mixedDeepLogLinearEquiv
     (v : _root_.Valuation K (WithZero (Multiplicative ℤ)))
     [ValuationTheory.DiscreteValuationField.Valuation.IsCompleteDiscrete v]
     [Finite (IsLocalRing.ResidueField v.valuationSubring)] [CharZero K]
@@ -437,9 +447,11 @@ noncomputable def mixed_deepLogLinearEquiv
       mixedWithZeroValuationContext v
     letI : Valued K (WithZero (Multiplicative ℤ)) := Valued.mk' v
     letI : Module ℤ_[F.residueCharacteristic]
-        (Additive (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup (F.toCompleteDVF) n)) :=
+        (Additive (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+          (F.toCompleteDVF) n)) :=
       F.higherPrincipalUnitPadicModule hn
-    Additive (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup (F.toCompleteDVF) n) ≃ₗ[
+    Additive (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+      (F.toCompleteDVF) n) ≃ₗ[
         ℤ_[F.residueCharacteristic]]
       ((F.toCompleteDVF.maximalIdeal ^ n :
         Ideal F.toCompleteDVF.valuationSubring)) := by
@@ -449,16 +461,18 @@ noncomputable def mixed_deepLogLinearEquiv
     mixedWithZeroValuationContext v
   letI : Valued K (WithZero (Multiplicative ℤ)) := Valued.mk' v
   letI : Module ℤ_[F.residueCharacteristic]
-      (Additive (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup (F.toCompleteDVF) n)) :=
+      (Additive (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+        (F.toCompleteDVF) n)) :=
     F.higherPrincipalUnitPadicModule hn
   letI : ContinuousSMul ℤ_[F.residueCharacteristic]
-      (Additive (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup (F.toCompleteDVF) n)) :=
+      (Additive (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+        (F.toCompleteDVF) n)) :=
     continuousSMul_padicInt_higherPrincipalUnit_ofWithZeroValuation v hn
   letI : ContinuousSMul ℤ_[F.residueCharacteristic]
       ((F.toCompleteDVF.maximalIdeal ^ n :
         Ideal F.toCompleteDVF.valuationSubring)) :=
     continuousSMul_padicInt_maximalIdealPow_ofWithZeroValuation v n
-  let e := mixed_deepLogContinuousAddEquiv
+  let e := mixedDeepLogContinuousAddEquiv
     v hv n hlevel
   exact padicLinearEquivOfContinuousAddEquiv e.toAddEquiv e.continuous
 
@@ -480,28 +494,32 @@ theorem mixed_deepPrincipalUnit_moduleFinite
       mixedWithZeroValuationContext v
     letI : Valued K (WithZero (Multiplicative ℤ)) := Valued.mk' v
     letI : Module ℤ_[F.residueCharacteristic]
-        (Additive (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup (F.toCompleteDVF) n)) :=
+        (Additive (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+          (F.toCompleteDVF) n)) :=
       F.higherPrincipalUnitPadicModule hn
     Module.Finite ℤ_[F.residueCharacteristic]
-      (Additive (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup (F.toCompleteDVF) n)) := by
+      (Additive (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+        (F.toCompleteDVF) n)) := by
   let F : LocalField.{u, 0} K := ofWithZeroValuation v
   let hn : 1 ≤ n := mixed_one_le_of_log_level v n hlevel
   let : MixedWithZeroValuationContext v :=
     mixedWithZeroValuationContext v
   let : Valued K (WithZero (Multiplicative ℤ)) := Valued.mk' v
   let : Module ℤ_[F.residueCharacteristic]
-      (Additive (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup (F.toCompleteDVF) n)) :=
+      (Additive (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+        (F.toCompleteDVF) n)) :=
     F.higherPrincipalUnitPadicModule hn
   let : Module.Finite ℤ_[F.residueCharacteristic]
       ((F.toCompleteDVF.maximalIdeal ^ n :
         Ideal F.toCompleteDVF.valuationSubring)) :=
     F.mixed_maximalIdealPow_moduleFinite n
   exact Module.Finite.equiv
-    (mixed_deepLogLinearEquiv
+    (mixedDeepLogLinearEquiv
       v hv n hlevel).symm
 
-/-- Integral-basis coordinates after logarithm give the algebraic coordinate isomorphism `U^n ≃ Z_p^d`. -/
-noncomputable def mixed_deepPrincipalUnitLinearEquivPi
+/-- Integral-basis coordinates after logarithm give the algebraic coordinate isomorphism `U^n ≃
+Z_p^d`. -/
+noncomputable def mixedDeepPrincipalUnitLinearEquivPi
     (v : _root_.Valuation K (WithZero (Multiplicative ℤ)))
     [ValuationTheory.DiscreteValuationField.Valuation.IsCompleteDiscrete v]
     [Finite (IsLocalRing.ResidueField v.valuationSubring)] [CharZero K]
@@ -517,9 +535,11 @@ noncomputable def mixed_deepPrincipalUnitLinearEquivPi
       mixedWithZeroValuationContext v
     letI : Valued K (WithZero (Multiplicative ℤ)) := Valued.mk' v
     letI : Module ℤ_[F.residueCharacteristic]
-        (Additive (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup (F.toCompleteDVF) n)) :=
+        (Additive (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+          (F.toCompleteDVF) n)) :=
       F.higherPrincipalUnitPadicModule hn
-    Additive (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup (F.toCompleteDVF) n) ≃ₗ[
+    Additive (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+      (F.toCompleteDVF) n) ≃ₗ[
         ℤ_[F.residueCharacteristic]]
       (Fin (Module.finrank ℚ_[F.residueCharacteristic] K) →
         ℤ_[F.residueCharacteristic]) := by
@@ -529,16 +549,17 @@ noncomputable def mixed_deepPrincipalUnitLinearEquivPi
     mixedWithZeroValuationContext v
   letI : Valued K (WithZero (Multiplicative ℤ)) := Valued.mk' v
   letI : Module ℤ_[F.residueCharacteristic]
-      (Additive (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup (F.toCompleteDVF) n)) :=
+      (Additive (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+        (F.toCompleteDVF) n)) :=
     F.higherPrincipalUnitPadicModule hn
   exact
-    (mixed_deepLogLinearEquiv
+    (mixedDeepLogLinearEquiv
       v hv n hlevel).trans
-        (F.mixed_maximalIdealPowLinearEquivPi n)
+        (F.mixedMaximalIdealPowLinearEquivPi n)
 
 /-- The same coordinate identification is a homeomorphism, as asserted
 explicitly in the mixed-characteristic field-unit structure theorem. -/
-noncomputable def mixed_deepPrincipalUnitHomeomorphPi
+noncomputable def mixedDeepPrincipalUnitHomeomorphPi
     (v : _root_.Valuation K (WithZero (Multiplicative ℤ)))
     [ValuationTheory.DiscreteValuationField.Valuation.IsCompleteDiscrete v]
     [Finite (IsLocalRing.ResidueField v.valuationSubring)] [CharZero K]
@@ -552,7 +573,8 @@ noncomputable def mixed_deepPrincipalUnitHomeomorphPi
     letI : MixedWithZeroValuationContext v :=
       mixedWithZeroValuationContext v
     letI : Valued K (WithZero (Multiplicative ℤ)) := Valued.mk' v
-    Additive (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup (F.toCompleteDVF) n) ≃ₜ
+    Additive (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+      (F.toCompleteDVF) n) ≃ₜ
       (Fin (Module.finrank ℚ_[F.residueCharacteristic] K) →
         ℤ_[F.residueCharacteristic]) := by
   let F : LocalField.{u, 0} K := ofWithZeroValuation v
@@ -560,9 +582,9 @@ noncomputable def mixed_deepPrincipalUnitHomeomorphPi
     mixedWithZeroValuationContext v
   letI : Valued K (WithZero (Multiplicative ℤ)) := Valued.mk' v
   exact
-    (mixed_deepLogContinuousAddEquiv
+    (mixedDeepLogContinuousAddEquiv
       v hv n hlevel).toHomeomorph.trans
-        (mixed_maximalIdealPowHomeomorphPi_ofWithZeroValuation
+        (mixedMaximalIdealPowHomeomorphPiOfWithZeroValuation
           v n)
 
 end LocalField

@@ -8,7 +8,8 @@ import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.ChangedUniform
 /-!
 # Changed-uniformizer intertwiner construction
 
-This module builds compatible finite-degree approximations, assembles the changed-uniformizer intertwiner, proves its functional equation, and establishes uniqueness.
+This module builds compatible finite-degree approximations, assembles the changed-uniformizer
+  intertwiner, proves its functional equation, and establishes uniqueness.
 -/
 
 noncomputable section
@@ -151,7 +152,6 @@ theorem padicChangedUniformizerIntertwiner_constantCoeff
   simpa only [PowerSeries.coeff_zero_eq_constantCoeff_apply] using
     (padicChangedUniformizerApproximation p u 0).constantCoeff_eq_zero
 
-@[simp]
 theorem padicChangedUniformizerIntertwiner_coeff_one
     (p : ℕ) [Fact p.Prime]
     (u : (padicLocalField p).valuationSubringˣ) :
@@ -289,7 +289,8 @@ private theorem padicChangedUniformizerDefect_coeff_one
       PowerSeries.coeff 1
           (PowerSeries.subst P
             (padicCompletedChangedStandardSeries p u)) =
-        ((V : padicCompletedUnramifiedWittRing p) * (p : padicCompletedUnramifiedWittRing p)) * ε := by
+        ((V : padicCompletedUnramifiedWittRing p) * (p : padicCompletedUnramifiedWittRing p)) *
+          ε := by
     rw [padicCompletedChangedStandardSeries_eq,
       PowerSeries.subst_add hPsubst,
       PowerSeries.subst_mul hPsubst,

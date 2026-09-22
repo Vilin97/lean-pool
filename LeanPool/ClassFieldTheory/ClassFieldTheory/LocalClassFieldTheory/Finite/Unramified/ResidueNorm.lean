@@ -9,7 +9,8 @@ import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.U
 import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.Unramified.PrincipalUnits.Basic
 import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.Unramified.PrincipalUnits.Trace
 import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.Unramified.PrincipalUnits.Lift
-/-! Provides the public declarations in the `LocalClassFieldTheory.Finite.Unramified.ResidueNorm` Lean module. -/
+/-! Provides the public declarations in the
+  `LocalClassFieldTheory.Finite.Unramified.ResidueNorm` Lean module. -/
 
 noncomputable section
 
@@ -148,7 +149,8 @@ theorem integerUnitsModPrincipalUnitsNormOfGaloisOfIsIntegralClosure_residue_alg
 
 /-- In the unramified valuation case, the integral-closure quotient norm
 agrees after base extension with the quotient-level finite residue norm model. -/
-theorem integerUnitsModPrincipalUnitsNormOfGaloisOfIsIntegralClosure_residue_base_extend_eq_residueNorm
+theorem
+  integerUnitsModPrincipalUnitsNormOfGaloisOfIsIntegralClosure_residue_base_extend_eq_residueNorm
     (K L : Type u)
     [Field K] [ValuativeRel K] [TopologicalSpace K] [IsNonarchimedeanLocalField K]
     [Field L] [ValuativeRel L] [TopologicalSpace L] [IsNonarchimedeanLocalField L]
@@ -172,7 +174,8 @@ theorem integerUnitsModPrincipalUnitsNormOfGaloisOfIsIntegralClosure_residue_bas
 
 /-- In the unramified valuation case, the actual integral-closure quotient norm
 on `𝒪[L]ˣ/U_L¹` is the quotient-level finite-field residue norm model. -/
-theorem integerUnitsModPrincipalUnitsNormOfGaloisOfIsIntegralClosure_eq_residueNorm_of_unramifiedValuation
+theorem
+  integerUnitsModPrincipalUnitsNormOfGaloisOfIsIntegralClosure_eq_residueNorm_of_unramifiedValuation
     (K L : Type u)
     [Field K] [ValuativeRel K] [TopologicalSpace K] [IsNonarchimedeanLocalField K]
     [Field L] [ValuativeRel L] [TopologicalSpace L] [IsNonarchimedeanLocalField L]
@@ -193,7 +196,8 @@ theorem integerUnitsModPrincipalUnitsNormOfGaloisOfIsIntegralClosure_eq_residueN
 
 /-- The actual integral-closure quotient norm on `𝒪[L]ˣ/U_L¹` is surjective in
 the unramified valuation case. -/
-theorem integerUnitsModPrincipalUnitsNormOfGaloisOfIsIntegralClosure_surjective_of_unramifiedValuation
+theorem
+  integerUnitsModPrincipalUnitsNormOfGaloisOfIsIntegralClosure_surjective_of_unramifiedValuation
     (K L : Type u)
     [Field K] [ValuativeRel K] [TopologicalSpace K] [IsNonarchimedeanLocalField K]
     [Field L] [ValuativeRel L] [TopologicalSpace L] [IsNonarchimedeanLocalField L]

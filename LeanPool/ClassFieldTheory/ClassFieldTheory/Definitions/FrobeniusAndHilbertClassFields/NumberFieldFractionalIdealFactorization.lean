@@ -17,7 +17,7 @@ supported integer exponents of finite primes. This equivalence is formulated
 entirely in Mathlib and public Definitions vocabulary.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -30,6 +30,7 @@ namespace NumberFieldFractionalIdealGroup
 
 variable {K : Type u} [Field K] [NumberField K]
 
+open scoped Classical in
 /-- The integer exponent of one finite prime, viewed multiplicatively. -/
 def primePowerHom (v : HeightOneSpectrum (𝓞 K)) :
     Multiplicative ℤ →* NumberFieldFractionalIdealGroup K :=
@@ -37,6 +38,7 @@ def primePowerHom (v : HeightOneSpectrum (𝓞 K)) :
     (fun n => finitePrimeFractionalIdeal v ^ n.toAdd)
     (fun m n => by simp only [toAdd_mul, zpow_add])
 
+open scoped Classical in
 /-- Reconstruct a nonzero fractional ideal from finitely many prime
 exponents. -/
 def factorization :
@@ -48,6 +50,7 @@ def factorization :
     (fun a b => by
       exact Finsupp.prod_hom_add_index (fun v => primePowerHom v))
 
+open scoped Classical in
 @[simp]
 theorem factorization_val
     (exps : Multiplicative (HeightOneSpectrum (𝓞 K) →₀ ℤ)) :
@@ -58,6 +61,7 @@ theorem factorization_val
   classical
   simp [factorization, primePowerHom, finitePrimeFractionalIdeal, Finsupp.prod]
 
+open scoped Classical in
 /-- Only finitely many finite primes occur with nonzero exponent in a
 nonzero fractional ideal. -/
 theorem finite_count_support (I : NumberFieldFractionalIdealGroup K) :
@@ -68,6 +72,7 @@ theorem finite_count_support (I : NumberFieldFractionalIdealGroup K) :
     (FractionalIdeal.finite_factors
       (I : FractionalIdeal (nonZeroDivisors (𝓞 K)) K))
 
+open scoped Classical in
 /-- The finitely supported prime-exponent vector of a nonzero fractional
 ideal. -/
 def countVector (I : NumberFieldFractionalIdealGroup K) :
@@ -79,6 +84,7 @@ def countVector (I : NumberFieldFractionalIdealGroup K) :
       rw [Set.Finite.mem_toFinset]
       exact hv)
 
+open scoped Classical in
 @[simp]
 theorem countVector_apply (I : NumberFieldFractionalIdealGroup K)
     (v : HeightOneSpectrum (𝓞 K)) :
@@ -87,7 +93,7 @@ theorem countVector_apply (I : NumberFieldFractionalIdealGroup K)
         (I : FractionalIdeal (nonZeroDivisors (𝓞 K)) K) :=
   rfl
 
-@[simp]
+open scoped Classical in
 theorem count_factorization
     (exps : Multiplicative (HeightOneSpectrum (𝓞 K) →₀ ℤ))
     (v : HeightOneSpectrum (𝓞 K)) :
@@ -98,6 +104,7 @@ theorem count_factorization
   rw [factorization_val]
   exact FractionalIdeal.count_finsuppProd K v exps.toAdd
 
+open scoped Classical in
 theorem ext_count {I J : NumberFieldFractionalIdealGroup K}
     (h : ∀ v : HeightOneSpectrum (𝓞 K),
       FractionalIdeal.count K v
@@ -114,6 +121,7 @@ theorem ext_count {I J : NumberFieldFractionalIdealGroup K}
     (fun n : ℤ =>
       (v.asIdeal : FractionalIdeal (nonZeroDivisors (𝓞 K)) K) ^ n) (h v)
 
+open scoped Classical in
 theorem factorization_injective :
     Function.Injective (factorization (K := K)) := by
   intro a b hab
@@ -121,6 +129,7 @@ theorem factorization_injective :
   ext v
   rw [← count_factorization a v, ← count_factorization b v, hab]
 
+open scoped Classical in
 theorem factorization_surjective :
     Function.Surjective (factorization (K := K)) := by
   intro I
@@ -133,6 +142,7 @@ theorem factorization_surjective :
       (I : FractionalIdeal (nonZeroDivisors (𝓞 K)) K)
   exact countVector_apply I v
 
+open scoped Classical in
 /-- Multiplicative prime factorization of nonzero fractional ideals. -/
 def factorizationEquiv :
     Multiplicative (HeightOneSpectrum (𝓞 K) →₀ ℤ) ≃*

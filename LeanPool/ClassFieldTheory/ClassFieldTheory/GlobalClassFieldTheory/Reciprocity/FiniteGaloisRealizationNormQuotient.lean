@@ -84,7 +84,6 @@ noncomputable def numberFieldTowerAbstractTopFieldEquiv :
 omit [FiniteDimensional K L] [IsGalois K L] in
 /-- The equivalences from the original number-field tower to its two
 abstract fixed fields commute with the tower algebra maps. -/
-@[simp]
 theorem numberFieldTowerAbstractFieldEquiv_algebraMap
     (x : K) :
     numberFieldTowerAbstractTopFieldEquiv K L

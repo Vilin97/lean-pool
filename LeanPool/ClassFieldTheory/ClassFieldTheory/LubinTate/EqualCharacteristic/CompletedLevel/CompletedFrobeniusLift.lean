@@ -30,6 +30,7 @@ open LocalFieldTheory.DiscreteValuationField
 
 variable {K : Type u} [Field K]
 
+/-- The completed unramified base carries coefficient-extension scalars for lifting Frobenius. -/
 noncomputable local instance equalCharacteristicCompletedFrobeniusLiftBaseAlgebra
     (F : LocalField.{u, v} K) :
     Algebra F.residueField⸨X⸩

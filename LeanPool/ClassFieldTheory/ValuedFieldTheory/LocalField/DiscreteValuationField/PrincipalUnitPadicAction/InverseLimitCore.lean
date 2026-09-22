@@ -83,9 +83,11 @@ theorem higherUnitSubgroup_chosenPrincipalUnitPadicUniformizer
 /-- Transition on the intrinsic quotients `O^*/U^(n+1)`. -/
 def Internal.higherUnitQuotientTransition
     (F : CompleteDVF.{u, v} K) {m n : ℕ} (hmn : m ≤ n) :
-    F.valuationSubringˣ ⧸ (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) (n + 1) →*
-      F.valuationSubringˣ ⧸ (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) (m + 1) :=
-  (higherPrincipalUnitGroup.toPrincipalUnitFiltration F).quotient_principalUnitSubgroup_mapOfLe
+    F.valuationSubringˣ ⧸
+      (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) (n + 1) →*
+      F.valuationSubringˣ ⧸
+        (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) (m + 1) :=
+  (higherPrincipalUnitGroup.toPrincipalUnitFiltration F).quotientPrincipalUnitSubgroupMapOfLe
     (Nat.succ_le_succ hmn)
 
 /-- The intrinsic full unit inverse limit `lim O^*/U^(n+1)`. -/
@@ -93,7 +95,8 @@ abbrev Internal.higherUnitInverseLimitCarrier
     (F : CompleteDVF.{u, v} K) : Type u :=
   compatibleGroupFamilies
     (fun n : ℕ =>
-      F.valuationSubringˣ ⧸ (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) (n + 1))
+      F.valuationSubringˣ ⧸
+        (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) (n + 1))
     (fun {_ _} hmn => Internal.higherUnitQuotientTransition F hmn)
 
 open Internal
@@ -104,7 +107,8 @@ noncomputable def Internal.uniformizerHigherUnitQuotientEquiv
     (F : CompleteDVF.{u, v} K) (n : ℕ) :
     F.valuationSubringˣ ⧸
         higherUnitSubgroup (chosenPrincipalUnitPadicUniformizer F) (n + 1) ≃*
-      F.valuationSubringˣ ⧸ (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) (n + 1) :=
+      F.valuationSubringˣ ⧸
+        (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) (n + 1) :=
   QuotientGroup.quotientMulEquivOfEq
     (higherUnitSubgroup_chosenPrincipalUnitPadicUniformizer F (n + 1))
 
@@ -132,7 +136,8 @@ noncomputable def Internal.uniformizerHigherUnitInverseLimitEquiv
         F.valuationSubringˣ ⧸
           higherUnitSubgroup (chosenPrincipalUnitPadicUniformizer F) (n + 1))
       (fun n : ℕ =>
-        F.valuationSubringˣ ⧸ (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) (n + 1))
+        F.valuationSubringˣ ⧸
+          (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) (n + 1))
       (fun {_ _} hmn =>
         dvrHigherUnitQuotientTransition
           (chosenPrincipalUnitPadicUniformizer F) hmn)
@@ -183,7 +188,7 @@ theorem Internal.unitsEquivHigherUnitQuotientInverseLimit_apply
     exact ValuationTheory.DiscreteValuationField.Valuation.isAdicComplete F.valuation
   change
     uniformizerHigherUnitQuotientEquiv F n
-        (dvrHigherUnitQuotientInverseLimit_eval pi n
+        (dvrHigherUnitQuotientInverseLimitEval pi n
           (dvrUnitsEquivHigherUnitQuotientInverseLimit hpi x)) =
       QuotientGroup.mk x
   rw [dvrUnitsEquivHigherUnitQuotientInverseLimit_apply,
@@ -199,7 +204,9 @@ noncomputable def Internal.uniformizerHigherUnitInverseLimitHomeomorphIntrinsic
           higherUnitSubgroup (chosenPrincipalUnitPadicUniformizer F) (n + 1)) :=
       fun _ => ⊥
     letI : (n : ℕ) → TopologicalSpace
-        (F.valuationSubringˣ ⧸ (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) (n + 1)) :=
+        (F.valuationSubringˣ ⧸
+          (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) (n +
+          1)) :=
       fun _ => ⊥
     dvrHigherUnitQuotientInverseLimit
         (chosenPrincipalUnitPadicUniformizer F) ≃ₜ
@@ -209,14 +216,16 @@ noncomputable def Internal.uniformizerHigherUnitInverseLimitHomeomorphIntrinsic
         higherUnitSubgroup (chosenPrincipalUnitPadicUniformizer F) (n + 1)) :=
     fun _ => ⊥
   letI : (n : ℕ) → TopologicalSpace
-      (F.valuationSubringˣ ⧸ (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) (n + 1)) :=
+      (F.valuationSubringˣ ⧸
+        (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) (n + 1)) :=
     fun _ => ⊥
   letI : (n : ℕ) → DiscreteTopology
       (F.valuationSubringˣ ⧸
         higherUnitSubgroup (chosenPrincipalUnitPadicUniformizer F) (n + 1)) :=
     fun _ => ⟨rfl⟩
   letI : (n : ℕ) → DiscreteTopology
-      (F.valuationSubringˣ ⧸ (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) (n + 1)) :=
+      (F.valuationSubringˣ ⧸
+        (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) (n + 1)) :=
     fun _ => ⟨rfl⟩
   let e := uniformizerHigherUnitInverseLimitEquiv F
   refine
@@ -233,12 +242,12 @@ noncomputable def Internal.uniformizerHigherUnitInverseLimitHomeomorphIntrinsic
             dvrHigherUnitQuotientInverseLimit
               (chosenPrincipalUnitPadicUniformizer F) =>
           uniformizerHigherUnitQuotientEquiv F n
-            (dvrHigherUnitQuotientInverseLimit_eval
+            (dvrHigherUnitQuotientInverseLimitEval
               (chosenPrincipalUnitPadicUniformizer F) n x)
         have heval : Continuous fun x :
             dvrHigherUnitQuotientInverseLimit
               (chosenPrincipalUnitPadicUniformizer F) =>
-            dvrHigherUnitQuotientInverseLimit_eval
+            dvrHigherUnitQuotientInverseLimitEval
               (chosenPrincipalUnitPadicUniformizer F) n x :=
           (DiscreteHigherUnitQuotient.homeomorph
             (chosenPrincipalUnitPadicUniformizer F) (n + 1)).continuous.comp
@@ -250,10 +259,10 @@ noncomputable def Internal.uniformizerHigherUnitInverseLimitHomeomorphIntrinsic
         intro i j hij
         change higherUnitQuotientTransition F hij
             (uniformizerHigherUnitQuotientEquiv F j
-              (dvrHigherUnitQuotientInverseLimit_eval
+              (dvrHigherUnitQuotientInverseLimitEval
                 (chosenPrincipalUnitPadicUniformizer F) j x)) =
           uniformizerHigherUnitQuotientEquiv F i
-            (dvrHigherUnitQuotientInverseLimit_eval
+            (dvrHigherUnitQuotientInverseLimitEval
               (chosenPrincipalUnitPadicUniformizer F) i x)
         exact (e x).2 hij)
   · change Continuous fun x => e.symm x
@@ -276,14 +285,17 @@ noncomputable def Internal.unitsHomeomorphHigherUnitQuotientInverseLimit
     letI : TopologicalSpace F.valuationSubring :=
       (uniformizerPowerIdeal (chosenPrincipalUnitPadicUniformizer F) 1).adicTopology
     letI : (n : ℕ) → TopologicalSpace
-        (F.valuationSubringˣ ⧸ (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) (n + 1)) :=
+        (F.valuationSubringˣ ⧸
+          (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) (n +
+          1)) :=
       fun _ => ⊥
     F.valuationSubringˣ ≃ₜ Internal.higherUnitInverseLimitCarrier F := by
   let pi := chosenPrincipalUnitPadicUniformizer F
   letI : TopologicalSpace F.valuationSubring :=
     (uniformizerPowerIdeal pi 1).adicTopology
   letI : (n : ℕ) → TopologicalSpace
-      (F.valuationSubringˣ ⧸ (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) (n + 1)) :=
+      (F.valuationSubringˣ ⧸
+        (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) (n + 1)) :=
     fun _ => ⊥
   letI : (n : ℕ) → TopologicalSpace
       (F.valuationSubringˣ ⧸ higherUnitSubgroup pi (n + 1)) :=
@@ -312,7 +324,9 @@ theorem Internal.unitsHomeomorphHigherUnitQuotientInverseLimit_apply
     letI : TopologicalSpace F.valuationSubring :=
       (uniformizerPowerIdeal (chosenPrincipalUnitPadicUniformizer F) 1).adicTopology
     letI : (n : ℕ) → TopologicalSpace
-        (F.valuationSubringˣ ⧸ (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) (n + 1)) :=
+        (F.valuationSubringˣ ⧸
+          (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) (n +
+          1)) :=
       fun _ => ⊥
     (Internal.unitsHomeomorphHigherUnitQuotientInverseLimit F x).1 n =
       QuotientGroup.mk x := by
@@ -320,7 +334,8 @@ theorem Internal.unitsHomeomorphHigherUnitQuotientInverseLimit_apply
   let : TopologicalSpace F.valuationSubring :=
     (uniformizerPowerIdeal pi 1).adicTopology
   let : (n : ℕ) → TopologicalSpace
-      (F.valuationSubringˣ ⧸ (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) (n + 1)) :=
+      (F.valuationSubringˣ ⧸
+        (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) (n + 1)) :=
     fun _ => ⊥
   let : (n : ℕ) → TopologicalSpace
       (F.valuationSubringˣ ⧸ higherUnitSubgroup pi (n + 1)) :=
@@ -334,7 +349,7 @@ theorem Internal.unitsHomeomorphHigherUnitQuotientInverseLimit_apply
     rw [hmax]
     exact ValuationTheory.DiscreteValuationField.Valuation.isAdicComplete F.valuation
   change uniformizerHigherUnitQuotientEquiv F n
-      (dvrHigherUnitQuotientInverseLimit_eval pi n
+      (dvrHigherUnitQuotientInverseLimitEval pi n
         (unitsEquivHigherUnitQuotientInverseLimitHomeomorph
           hpi
           (WithTopology.toTopology (adicUnitsTopology (uniformizerPowerIdeal pi 1)) x))) =

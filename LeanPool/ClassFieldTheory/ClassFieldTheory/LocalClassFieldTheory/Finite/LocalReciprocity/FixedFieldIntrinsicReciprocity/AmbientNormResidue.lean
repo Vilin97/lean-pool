@@ -29,15 +29,15 @@ over `F` with its realization inside the ambient separable closure of `K`. -/
 abbrev ambientEmbeddedSeparableClosureEquiv
     (K F E : Type)
     [Field K] [ValuativeRel K] [TopologicalSpace K]
-    [IsNonarchimedeanLocalField K]
+
     [Field F] [ValuativeRel F] [TopologicalSpace F]
-    [IsNonarchimedeanLocalField F]
+
     [Field E] [Algebra K F] [Algebra F E] [Algebra K E]
     [IsScalarTower K F E]
-    [FiniteDimensional K F] [Algebra.IsSeparable K F]
+
     [Valuation.HasExtension
       (ValuativeRel.valuation K) (ValuativeRel.valuation F)]
-    [FiniteDimensional F E] [IsGalois F E]
+
     (j : E →ₐ[K] SeparableClosure K) :=
   @AlgEquiv F (SeparableClosure F) (SeparableClosure K)
     _ _ _

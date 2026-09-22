@@ -46,7 +46,7 @@ theorem finite_nthPowerQuotient_of_natCast_ne_zero
       LocalFieldTheory.DiscreteValuationField.LocalField.mixedWithZeroValuationContext v
     let d := Module.finrank ℚ_[F.residueCharacteristic] K
     obtain ⟨a, e⟩ :=
-      LocalFieldTheory.DiscreteValuationField.LocalField.chosenMixed_firstPrincipalUnitStructure_ofWithZeroValuation
+      LocalFieldTheory.DiscreteValuationField.LocalField.chosenMixedFirstPrincipalUnitStructureOfWithZeroValuation
         v (localIntegerValuation_surjective K)
     let U1 :=
       LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
@@ -86,7 +86,7 @@ theorem finite_nthPowerQuotient_of_natCast_ne_zero
       ⟨(F.residueCharacteristic_prime.coprime_iff_not_dvd.mpr hpn).symm⟩
     let valuedK : Valued K (WithZero (Multiplicative ℤ)) := Valued.mk' v
     let e :=
-      LocalFieldTheory.DiscreteValuationField.LocalField.chosenFirstPrincipalUnitStructure_equalCharacteristic
+      LocalFieldTheory.DiscreteValuationField.LocalField.chosenFirstPrincipalUnitStructureEqualCharacteristic
         v
     let U1 :=
       LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup

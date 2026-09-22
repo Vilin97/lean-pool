@@ -31,7 +31,7 @@ extension yields the intrinsic containment criterion over the original
 number field.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 
 noncomputable section
 
@@ -46,6 +46,7 @@ open Reciprocity
 
 variable {K : Type} [Field K] [NumberField K]
 
+open scoped Classical in
 private theorem subgroup_map_toAddSubgroup_mulEquiv_eq
     {G G₂ : Type*} [Group G] [Group G₂]
     (S : Subgroup G) (T : Subgroup G₂) (e : G ≃* G₂)
@@ -56,6 +57,7 @@ private theorem subgroup_map_toAddSubgroup_mulEquiv_eq
   rw [← hmap]
   exact (MonoidHom.coe_toAdditive_map e.toMonoidHom S).symm
 
+open scoped Classical in
 private theorem subgroup_toAddSubgroup_map_mono_mulEquiv
     {G G₂ : Type*} [Group G] [Group G₂]
     (S T : Subgroup G) (e : G ≃* G₂)
@@ -66,6 +68,7 @@ private theorem subgroup_toAddSubgroup_map_mono_mulEquiv
         (MulEquiv.toAdditive e).toAddMonoidHom :=
   AddSubgroup.map_mono h
 
+open scoped Classical in
 /-- The distinguished embedding of the original number field into the
 rational separable closure underlying the class field selected by
 `H`. -/
@@ -78,6 +81,7 @@ noncomputable def closedFiniteIndexClassFieldBaseEmbedding
     (closedFiniteIndexClassFieldNormAmbient
       (K := K) H hclosed)
 
+open scoped Classical in
 /-- The canonical fixed-field equivalence has the distinguished base
 embedding as its underlying map into the rational separable closure. -/
 @[simp]
@@ -95,6 +99,7 @@ theorem closedFiniteIndexClassFieldBaseEquiv_coe
         (K := K) H hclosed x := by
   rfl
 
+open scoped Classical in
 private noncomputable def
     finiteAbelianClassFieldContainmentIdeleClassEquiv
     (H : Subgroup (IdeleClassGroup K))
@@ -108,6 +113,7 @@ private noncomputable def
     (closedFiniteIndexClassFieldBaseEquiv
       (K := K) H hclosed)
 
+open scoped Classical in
 /-- An actual finite extension of `K`, embedded into the rational
 separable closure compatibly with the selected class-field copy of
 `K`. -/
@@ -125,6 +131,7 @@ noncomputable def closedFiniteIndexClassFieldCompatibleEmbedding
       (closedFiniteIndexClassFieldBaseEmbedding
         (K := K) H hclosed))
 
+open scoped Classical in
 /-- The compatible top embedding restricts to the distinguished
 embedding of the original base field. -/
 @[simp]
@@ -146,6 +153,7 @@ theorem
       (closedFiniteIndexClassFieldBaseEmbedding
         (K := K) H hclosed))
 
+open scoped Classical in
 /-- Evaluation on the original scalar map agrees with the
 distinguished base embedding. -/
 @[simp]
@@ -167,6 +175,7 @@ theorem closedFiniteIndexClassFieldCompatibleEmbedding_algebraMap
         (K := K) H hclosed E) x
   exact h
 
+open scoped Classical in
 /-- The fixing subgroup of the compatible embedded copy of `K` is the
 base subgroup used by the selected class field. -/
 @[simp]
@@ -192,6 +201,7 @@ theorem closedFiniteIndexClassFieldCompatibleEmbedding_baseSubgroup
     closedFiniteIndexClassFieldCompatibleEmbedding_restrictDomain
       (K := K) H hclosed E]
 
+open scoped Classical in
 /-- An actual finite abelian extension, represented inside the same
 rational absolute Galois group as the class field selected by `H`. -/
 noncomputable def
@@ -213,6 +223,7 @@ noncomputable def
     (closedFiniteIndexClassFieldCompatibleEmbedding_baseSubgroup
       (K := K) H hclosed E)
 
+open scoped Classical in
 /-- The top subgroup of the embedded abelian subextension is exactly
 the fixing subgroup of the compatible embedded copy of `E`. -/
 @[simp]
@@ -238,6 +249,7 @@ theorem
       (closedFiniteIndexClassFieldCompatibleEmbedding_baseSubgroup
         (K := K) H hclosed E)
 
+open scoped Classical in
 /-- The abstract norm subgroup of the compatibly embedded extension is
 the genuine idèle-class norm range of the original extension,
 transported through the selected base-field equivalence. -/
@@ -370,6 +382,7 @@ private theorem
         (finiteAbelianClassFieldContainmentIdeleClassEquiv
           (K := K) H hclosed) hRange
 
+open scoped Classical in
 /-- The abstract norm subgroup of the compatibly embedded extension is
 the genuine idèle-class norm range of the original extension, expressed at
 the concrete selected base-field endpoint. -/
@@ -407,6 +420,7 @@ theorem
     ordinaryIdeleClassNormSubgroup_embeddedAbelianSubextension_named
       (K := K) H hclosed E
 
+open scoped Classical in
 private theorem
     ordinaryIdeleClassNormSubgroup_closedFiniteIndexClassFieldSubextension_named
     (H : Subgroup (IdeleClassGroup K))
@@ -437,6 +451,7 @@ private theorem
     ordinaryIdeleClassNormSubgroup_closedFiniteIndexClassFieldSubextension
       (K := K) H hclosed
 
+open scoped Classical in
 /-- If `H` is contained in the genuine norm range of an actual finite
 abelian extension, its compatible embedded subextension lies below the
 finite abelian subextension selected by `H`. -/
@@ -496,6 +511,7 @@ theorem
       (ordinaryIdeleClassNormSubgroup_embeddedAbelianSubextension_named
         (K := K) H hclosed E).symm
 
+open scoped Classical in
 /-- The compatible ambient embedding agrees with the selected base
 equivalence on scalars from the original number field. -/
 private theorem
@@ -519,6 +535,7 @@ private theorem
     closedFiniteIndexClassFieldBaseEquiv_coe
       (K := K) H hclosed]
 
+open scoped Classical in
 /-- A point of a compatibly embedded subextension belongs to the
 selected class field whenever the corresponding finite abelian
 subextension lies below the selected one. -/
@@ -566,6 +583,7 @@ private theorem
     (abstractFixedField_le
       ℚ (SeparableClosure ℚ) hsubgroup) hxP
 
+open scoped Classical in
 /-- Every finite abelian extension whose genuine norm range contains
 `H` admits an actual `K`-algebra embedding into the class field selected
 by `H`. -/
@@ -609,6 +627,7 @@ noncomputable def
           (finiteAbelianExtensionEmbedding_ambient_algebraMap_eq_baseEquiv
             (K := K) H hclosed E x) }
 
+open scoped Classical in
 /-- Containment in a selected finite abelian class field, stated as
 existence of an actual algebra embedding over the original base. -/
 theorem
@@ -628,6 +647,7 @@ theorem
   ⟨finiteAbelianExtensionEmbeddingIntoClosedFiniteIndexClassField
     (K := K) H hclosed E hH⟩
 
+open scoped Classical in
 /-- A finite abelian extension is isomorphic over the original base to
 the class field selected by its own genuine idèle-class norm range. -/
 noncomputable def
@@ -676,6 +696,7 @@ noncomputable def
     AlgEquiv.ofBijective f
       ⟨f.injective, hsurjective⟩
 
+open scoped Classical in
 /-- An algebra embedding of finite extensions reverses inclusion of
 their genuine idèle-class norm ranges. -/
 theorem ideleClassNorm_range_le_of_algHom
@@ -684,7 +705,7 @@ theorem ideleClassNorm_range_le_of_algHom
     [Field L₂] [NumberField L₂]
     [Algebra K L₁] [Algebra K L₂]
     [FiniteDimensional K L₁] [FiniteDimensional K L₂]
-    [IsAbelianGalois K L₁] [IsAbelianGalois K L₂]
+
     (f : L₁ →ₐ[K] L₂) :
     (_root_.ideleClassNorm K L₂).range ≤
       (_root_.ideleClassNorm K L₁).range := by
@@ -699,6 +720,7 @@ theorem ideleClassNorm_range_le_of_algHom
     ideleClassNorm_range_le_of_tower
       (K := K) (M := L₁) (L := L₂)
 
+open scoped Classical in
 /-- Reverse inclusion of genuine idèle-class norm ranges constructs an
 actual algebra embedding of the corresponding finite abelian
 extensions over the original base field. -/
@@ -735,6 +757,7 @@ noncomputable def finiteAbelianExtensionEmbeddingOfNormRangeLE
   exact
     e₂.symm.toAlgHom.comp f₁
 
+open scoped Classical in
 /-- Reverse norm-range inclusion implies actual field containment over
 the original number field. -/
 theorem finiteAbelianExtension_nonempty_algHom_of_normRange_le
@@ -751,6 +774,7 @@ theorem finiteAbelianExtension_nonempty_algHom_of_normRange_le
   ⟨finiteAbelianExtensionEmbeddingOfNormRangeLE
     (K := K) L₁ L₂ h⟩
 
+open scoped Classical in
 /-- Actual containment of finite abelian extensions is equivalent to
 reverse inclusion of their genuine idèle-class norm ranges. -/
 theorem nonempty_algHom_iff_ideleClassNorm_range_le
@@ -772,6 +796,7 @@ theorem nonempty_algHom_iff_ideleClassNorm_range_le
       finiteAbelianExtension_nonempty_algHom_of_normRange_le
         (K := K) L₁ L₂
 
+open scoped Classical in
 /-- Equality of genuine norm ranges characterizes isomorphism of
 finite abelian extensions over the original number field. -/
 theorem nonempty_algEquiv_iff_ideleClassNorm_range_eq

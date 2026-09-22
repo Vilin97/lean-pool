@@ -38,7 +38,7 @@ open Reciprocity
 /-- Fix the rational algebra structure used by every occurrence of the
 absolute Galois group in this module. -/
 noncomputable local instance
-    finiteAbelianClassFieldCorrespondence_separableClosureAlgebra :
+    finiteAbelianClassFieldCorrespondenceSeparableClosureAlgebra :
     Algebra ℚ (SeparableClosure ℚ) :=
   rationalSeparableClosureAlgebra
 

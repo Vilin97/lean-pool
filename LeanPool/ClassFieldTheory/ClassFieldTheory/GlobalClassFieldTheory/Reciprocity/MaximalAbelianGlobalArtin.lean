@@ -15,7 +15,7 @@ maximal abelian subextension of the separable closure.  It also exposes the
 idele-representative evaluation and its finite Galois projections.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 
 noncomputable section
 
@@ -24,6 +24,7 @@ namespace Reciprocity
 
 variable (K : Type) [Field K] [NumberField K]
 
+open scoped Classical in
 /-- The continuous global Artin homomorphism from the idele class group to
 the Galois group of the maximal abelian extension. -/
 noncomputable def maximalAbelianGlobalArtin :
@@ -31,9 +32,9 @@ noncomputable def maximalAbelianGlobalArtin :
   infiniteGlobalIdeleClassArtinContinuousMonoidHom
     (K := K) (Ω := maximalAbelianExtension K)
 
+open scoped Classical in
 /-- Evaluation of the maximal abelian global Artin map on an idele
 representative recovers the infinite global Artin map. -/
-@[simp]
 theorem maximalAbelianGlobalArtin_mk (a : IdeleGroup K) :
     maximalAbelianGlobalArtin K
         (QuotientGroup.mk' (IdeleGroup.principalSubgroup K) a) =
@@ -41,10 +42,10 @@ theorem maximalAbelianGlobalArtin_mk (a : IdeleGroup K) :
   infiniteGlobalIdeleClassArtinMonoidHom_mk
     (K := K) (Ω := maximalAbelianExtension K) a
 
+open scoped Classical in
 /-- Projection of the maximal abelian global Artin map at an idele
 representative to a finite Galois intermediate field agrees with the finite
 global Artin map. -/
-@[simp]
 theorem maximalAbelianGlobalArtin_finiteProjection
     (a : IdeleGroup K)
     (E : FiniteGaloisIntermediateField K (maximalAbelianExtension K)) :
@@ -59,6 +60,7 @@ theorem maximalAbelianGlobalArtin_finiteProjection
     restrictNormalHom_infiniteGlobalArtinMonoidHom
       K (maximalAbelianExtension K) a E
 
+open scoped Classical in
 /-- The maximal abelian global Artin homomorphism is surjective. -/
 theorem maximalAbelianGlobalArtin_surjective :
     Function.Surjective (maximalAbelianGlobalArtin K) :=

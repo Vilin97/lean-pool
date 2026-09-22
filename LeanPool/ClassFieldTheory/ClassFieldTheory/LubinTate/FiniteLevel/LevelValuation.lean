@@ -32,7 +32,8 @@ unique extension of the base valuation. -/
 theorem standardLubinTateLevelCompleteDVF_hasUniqueValuationExtension
     {F : LocalField.{u, v} K} {π : F.valuationSubring}
     (hπ : F.toCompleteDVF.valuation.IsUniformizer (π : K)) (n : ℕ) :
-    ValuationTheory.DiscreteValuationField.ValuedExtension.HasUniqueValuationExtension.{u, v, u, 0, 0}
+    ValuationTheory.DiscreteValuationField.ValuedExtension.HasUniqueValuationExtension.{u, v, u,
+      0, 0}
       (base := F.toCompleteDVF)
       (target := standardLubinTateLevelCompleteDVF hπ n) := by
   let : FiniteDimensional K (standardLubinTateLevelField hπ n) :=

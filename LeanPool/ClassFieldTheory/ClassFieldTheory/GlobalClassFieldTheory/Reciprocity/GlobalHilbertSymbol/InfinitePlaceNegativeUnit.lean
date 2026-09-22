@@ -9,7 +9,7 @@ import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Recipro
 # Negative units and the real infinite-place Artin map
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 open NumberField
 
 noncomputable section
@@ -19,6 +19,7 @@ namespace Reciprocity
 
 variable (K : Type) [Field K] [NumberField K]
 
+open scoped Classical in
 private theorem ringEquiv_unit_div_neg_one
     {F : Type*} [Field F] (e : F ≃+* ℝ) (x : Fˣ) :
     e ((x / (-1 : Fˣ) : Fˣ) : F) = -e (x : F) := by
@@ -31,6 +32,7 @@ private theorem ringEquiv_unit_div_neg_one
     _ = -e (x : F) := by
       rw [map_neg, map_one, div_neg, div_one]
 
+open scoped Classical in
 private theorem monoidHom_eq_of_div_apply_eq_one
     {G H : Type*} [Group G] [Monoid H]
     (f : G →* H) (x y : G) (h : f (x / y) = 1) :
@@ -41,10 +43,11 @@ private theorem monoidHom_eq_of_div_apply_eq_one
     _ = f y := by rw [h, one_mul]
 
 omit [NumberField K] in
+open scoped Classical in
 /-- At a real infinite place, the Artin value of a negative global unit is
 the Artin value of `-1`. -/
 theorem chosenInfinitePlaceArtin_globalUnit_eq_neg_one_of_real_of_neg
-    {L : Type} [Field L] [NumberField L] [Algebra K L] [IsGalois K L]
+    {L : Type} [Field L] [Algebra K L] [IsGalois K L]
     (v : InfinitePlace K) (hv : v.IsReal) (a : Kˣ)
     (ha : InfinitePlace.embedding_of_isReal hv (a : K) < 0) :
     chosenInfinitePlaceArtinMonoidHom (K := K) (L := L) v

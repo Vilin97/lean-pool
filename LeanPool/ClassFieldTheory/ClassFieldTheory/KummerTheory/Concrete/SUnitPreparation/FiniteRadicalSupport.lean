@@ -8,10 +8,11 @@ import LeanPool.ClassFieldTheory.ClassFieldTheory.KummerTheory.Concrete.SUnitPre
 /-!
 # Finite support for Kummer radicals
 
-A chosen finite enlargement of places containing representatives of every class in a finite Kummer radical.
+A chosen finite enlargement of places containing representatives of every class in a finite
+  Kummer radical.
 -/
 
-open scoped NumberField Classical IsMulCommutative NNReal ValuativeRel
+open scoped NumberField IsMulCommutative NNReal ValuativeRel
 open NumberField IsDedekindDomain
 open LocalFieldTheory
 
@@ -22,6 +23,7 @@ namespace KummerTheory
 variable {K : Type*} [Field K]
     [numberFieldK : NumberField K]
 
+open scoped Classical in
 /-- The finite Kummer radical `D ∩ Kˢ`, where
 `D = Lˣⁿ ∩ Kˣ`. -/
 def sUnitFiniteKummerRadical
@@ -33,6 +35,7 @@ def sUnitFiniteKummerRadical
     KummerTheory.finiteKummerRadicalSubgroup
       (K := K) (L := L) n
 
+open scoped Classical in
 /-- An `S`-unit belongs to the finite Kummer radical exactly when it has
 an `n`-th root in `L`. -/
 @[simp]
@@ -48,6 +51,7 @@ theorem mem_sUnitFiniteKummerRadical_iff
             Units.map (algebraMap K L).toMonoidHom x :=
   Iff.rfl
 
+open scoped Classical in
 /-- Adjoin the ambient `n`-th powers to `D ∩ Kˢ`, producing an admissible
 object on the subgroup side of Kummer theory. -/
 def sUnitKummerSubgroup
@@ -59,6 +63,7 @@ def sUnitKummerSubgroup
       KummerTheory.unitNthPowersSubgroup K n,
     le_sup_right⟩
 
+open scoped Classical in
 /-- The `S`-unit Kummer subgroup lies in the actual radical of `L / K`. -/
 theorem sUnitKummerSubgroup_le_finiteKummerRadicalSubgroup
     {L : Type*} [Field L] [Algebra K L]
@@ -76,6 +81,7 @@ theorem sUnitKummerSubgroup_le_finiteKummerRadicalSubgroup
       (KummerTheory.mem_finiteKummerRadicalSubgroup_iff n).mpr
         ⟨Units.map (algebraMap K L).toMonoidHom y, by simp⟩
 
+open scoped Classical in
 /-- Enlarging the finite set of places enlarges the `S`-unit group. -/
 theorem sUnitGroup_mono
     {S T : Finset (HeightOneSpectrum (𝓞 K))}
@@ -86,6 +92,7 @@ theorem sUnitGroup_mono
   intro v hvT
   exact hx v (fun hvS => hvT (hST hvS))
 
+open scoped Classical in
 /-- A chosen finite set of places outside which a given global unit is
 an integral unit. -/
 noncomputable def chosenUnitFiniteSupport (x : Kˣ) :
@@ -94,6 +101,7 @@ noncomputable def chosenUnitFiniteSupport (x : Kˣ) :
     (IdeleGroup.exists_finset_supportedAt
       (IdeleGroup.principalIdele K x))
 
+open scoped Classical in
 /-- A global unit is an `S`-unit for its chosen finite support. -/
 theorem mem_sUnitGroup_chosenUnitFiniteSupport (x : Kˣ) :
     x ∈ SUnitGroup (K := K) (chosenUnitFiniteSupport (K := K) x) := by
@@ -123,6 +131,7 @@ theorem mem_sUnitGroup_chosenUnitFiniteSupport (x : Kˣ) :
   exact hunit
 
 omit numberFieldK in
+open scoped Classical in
 /-- The actual radical quotient of a finite Galois extension is finite.
 This is obtained from the concrete finite Kummer character equivalence,
 not supplied as a finiteness hypothesis. -/
@@ -155,6 +164,7 @@ theorem finite_chosenFiniteKummerRadicalQuotient
     KummerTheory.finiteKummerCharacterEquiv n hbase
   exact Finite.of_equiv H e.symm.toEquiv
 
+open scoped Classical in
 /-- A chosen representative of a class in the actual finite Kummer
 radical quotient. -/
 noncomputable def chosenFiniteKummerRadicalRepresentative
@@ -170,6 +180,7 @@ noncomputable def chosenFiniteKummerRadicalRepresentative
       (K := K) (L := L) n).radicalQuotientMk_surjective q)
 
 omit numberFieldK in
+open scoped Classical in
 /-- The chosen representative maps back to the prescribed radical class. -/
 @[simp]
 theorem chosenFiniteKummerRadicalRepresentative_spec
@@ -186,6 +197,7 @@ theorem chosenFiniteKummerRadicalRepresentative_spec
     ((KummerTheory.chosenFiniteKummerRadicalDatum
       (K := K) (L := L) n).radicalQuotientMk_surjective q)
 
+open scoped Classical in
 /-- The union of the supports of one representative of every actual
 Kummer radical class. -/
 noncomputable def finiteKummerRadicalSupport
@@ -208,6 +220,7 @@ noncomputable def finiteKummerRadicalSupport
         (chosenFiniteKummerRadicalRepresentative
           (K := K) (L := L) n q).1
 
+open scoped Classical in
 /-- Enlarge any prescribed finite set by the finite supports needed to
 represent all actual Kummer radical classes by `S`-units. -/
 noncomputable def enlargeByFiniteKummerRadicalSupport
@@ -220,6 +233,7 @@ noncomputable def enlargeByFiniteKummerRadicalSupport
   S ∪ finiteKummerRadicalSupport
     (K := K) (L := L) n hmu
 
+open scoped Classical in
 /-- The radical-support enlargement contains its starting set. -/
 theorem subset_enlargeByFiniteKummerRadicalSupport
     {L : Type*} [Field L] [Algebra K L]
@@ -231,6 +245,7 @@ theorem subset_enlargeByFiniteKummerRadicalSupport
       (K := K) (L := L) n hmu S :=
   Finset.subset_union_left
 
+open scoped Classical in
 /-- Each chosen radical representative is an `S`-unit after the chosen
 finite enlargement. -/
 theorem chosenFiniteKummerRadicalRepresentative_mem_enlargedSUnitGroup
@@ -271,6 +286,7 @@ theorem chosenFiniteKummerRadicalRepresentative_mem_enlargedSUnitGroup
       (chosenFiniteKummerRadicalRepresentative
         (K := K) (L := L) n q).1
 
+open scoped Classical in
 /-- After the chosen finite enlargement, the actual radical of `L/K`
 is generated by its `S`-unit part and the ambient `n`-th powers. -/
 theorem finiteKummerRadicalSubgroup_le_enlargedSUnitKummerSubgroup
@@ -317,6 +333,7 @@ theorem finiteKummerRadicalSubgroup_le_enlargedSUnitKummerSubgroup
   change bD.1 * (aD.1 / bD.1) = aD.1
   simp [div_eq_mul_inv, mul_comm, mul_left_comm]
 
+open scoped Classical in
 /-- Exact radical identification after the chosen finite enlargement. -/
 theorem enlargedSUnitKummerSubgroup_eq_finiteKummerRadicalSubgroup
     {L : Type*} [Field L] [Algebra K L]
@@ -338,6 +355,7 @@ theorem enlargedSUnitKummerSubgroup_eq_finiteKummerRadicalSubgroup
     (finiteKummerRadicalSubgroup_le_enlargedSUnitKummerSubgroup
       (K := K) (L := L) n hmu S)
 
+open scoped Classical in
 /-- The `S`-unit radical subgroup belonging to an extension is contained
 in the full `S`-unit Kummer subgroup. -/
 theorem sUnitKummerSubgroup_le_fullSUnitKummerSubgroup
@@ -351,6 +369,7 @@ theorem sUnitKummerSubgroup_le_fullSUnitKummerSubgroup
   · exact le_sup_right
 
 omit numberFieldK in
+open scoped Classical in
 /-- Monotonicity of the concrete radical-extension construction. -/
 theorem kummerRadicalExtension_mono
     {Omega : Type*} [Field Omega] [Algebra K Omega]
@@ -368,11 +387,12 @@ theorem kummerRadicalExtension_mono
       (K := K) (Omega := Omega) n Gamma)
   exact ⟨⟨a.1, h a.2⟩, ha⟩
 
+open scoped Classical in
 /-- Kummer generation of an abelian exponent-`n` extension from the
 `S`-unit radical supplied by the chosen finite enlargement. -/
 theorem kummerRadicalExtension_enlargedSUnitKummerSubgroup_eq
     {Omega : Type*} [Field Omega] [Algebra K Omega]
-    [IsSepClosure K Omega]
+
     (E : IntermediateField K Omega)
     [FiniteDimensional K E] [IsGalois K E]
     [IsMulCommutative Gal(E/K)]

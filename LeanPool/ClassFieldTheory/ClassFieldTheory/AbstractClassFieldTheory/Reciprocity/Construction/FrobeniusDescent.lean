@@ -16,7 +16,8 @@ open CyclicCohomology
 # The abstract reciprocity construction: descent from the Frobenius semigroup
 
 The two maps on `G(\widetilde L/K)`--restriction to `G(L/K)` and normalized
-degree--are jointly injective.  This is the group-theoretic fact used when two Frobenius lifts have the same
+degree--are jointly injective.  This is the group-theoretic fact used when two Frobenius lifts
+have the same
 restriction and degree.
 -/
 
@@ -38,7 +39,7 @@ def extensionImageInInertiaQuotient (D : DegreeData G)
 /-- The image of `G_L` in `G_K / I_L` is closed.  This is the compact-image
 step implicit in the Galois correspondence used. -/
 theorem extensionImageInInertiaQuotient_isClosed
-    (D : DegreeData G) [IsTopologicalGroup G] [CompactSpace G] [T2Space G]
+    (D : DegreeData G) [IsTopologicalGroup G]
     (K : FiniteResidueAbstractField D) (L : ClosedSubgroup G)
     (hLK : L.toSubgroup ≤ K.field.toSubgroup)
     [hLnormal : (extensionSubgroup K.field L hLK).Normal]
@@ -72,7 +73,7 @@ theorem extensionImageInInertiaQuotient_isClosed
 of a Frobenius lift is contained in the lift's Frobenius fixed field.  This
 is the closed-subgroup minimality argument used in finiteness of the Frobenius fixed field. -/
 theorem frobeniusFixedField_le_of_inertia_le_of_lift_mem
-    (D : DegreeData G) [IsTopologicalGroup G] [CompactSpace G] [T2Space G]
+    (D : DegreeData G) [IsTopologicalGroup G]
     (K : FiniteResidueAbstractField D) (L M : ClosedSubgroup G)
     (hLK : L.toSubgroup ≤ K.field.toSubgroup)
     (hMK : M.toSubgroup ≤ K.field.toSubgroup)

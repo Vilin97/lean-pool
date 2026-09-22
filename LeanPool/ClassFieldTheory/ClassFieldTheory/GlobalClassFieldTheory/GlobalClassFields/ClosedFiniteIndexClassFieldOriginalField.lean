@@ -12,7 +12,7 @@ This leaf installs the original-field algebra tower and transports the
 canonical norm-range computation back to the original idèle class group.
 -/
 
-open scoped Classical IsMulCommutative NumberField
+open scoped IsMulCommutative NumberField
 
 noncomputable section
 
@@ -23,6 +23,7 @@ open Reciprocity
 
 variable {K : Type} [Field K] [NumberField K]
 
+open scoped Classical in
 /-- The canonical fixed-field copy, regarded as an algebra over the
 original number field. -/
 noncomputable instance closedFiniteIndexClassFieldBaseAlgebraOverOriginal
@@ -35,6 +36,7 @@ noncomputable instance closedFiniteIndexClassFieldBaseAlgebraOverOriginal
   (closedFiniteIndexClassFieldBaseEquiv
     (K := K) H hclosed).toRingHom.toAlgebra
 
+open scoped Classical in
 /-- The base-field identification as an equivalence of algebras over
 the original number field. -/
 noncomputable def closedFiniteIndexClassFieldBaseEquivOverOriginal
@@ -49,6 +51,7 @@ noncomputable def closedFiniteIndexClassFieldBaseEquivOverOriginal
       (K := K) H hclosed).toRingEquiv)
     (fun _ => rfl)
 
+open scoped Classical in
 /-- The selected class field, regarded as an algebra over the original
 number field through its canonical fixed-field copy. -/
 noncomputable instance closedFiniteIndexClassFieldAlgebraOverOriginal
@@ -67,6 +70,7 @@ noncomputable instance closedFiniteIndexClassFieldAlgebraOverOriginal
       (closedFiniteIndexClassFieldBase
         (K := K) H hclosed))).toAlgebra
 
+open scoped Classical in
 /-- The scalar map into the selected class field is the canonical base
 equivalence followed by fixed-field inclusion. -/
 @[simp]
@@ -87,6 +91,7 @@ theorem closedFiniteIndexClassField_algebraMap_original
           (K := K) H hclosed x) :=
   rfl
 
+open scoped Classical in
 noncomputable instance
     closedFiniteIndexClassFieldBaseFiniteDimensionalOverOriginal
     (H : Subgroup (IdeleClassGroup K))
@@ -98,6 +103,7 @@ noncomputable instance
   (closedFiniteIndexClassFieldBaseEquivOverOriginal
     (K := K) H hclosed).toLinearEquiv.finiteDimensional
 
+open scoped Classical in
 noncomputable instance closedFiniteIndexClassFieldScalarTowerOverOriginal
     (H : Subgroup (IdeleClassGroup K))
     (hclosed : IsClosed (H : Set (IdeleClassGroup K)))
@@ -109,6 +115,7 @@ noncomputable instance closedFiniteIndexClassFieldScalarTowerOverOriginal
         (K := K) H hclosed) :=
   IsScalarTower.of_algebraMap_eq' rfl
 
+open scoped Classical in
 noncomputable instance
     closedFiniteIndexClassFieldFiniteDimensionalOverOriginal
     (H : Subgroup (IdeleClassGroup K))
@@ -123,6 +130,7 @@ noncomputable instance
     (closedFiniteIndexClassField
       (K := K) H hclosed)
 
+open scoped Classical in
 noncomputable instance closedFiniteIndexClassFieldIsGaloisOverOriginal
     (H : Subgroup (IdeleClassGroup K))
     (hclosed : IsClosed (H : Set (IdeleClassGroup K)))
@@ -183,6 +191,7 @@ noncomputable instance closedFiniteIndexClassFieldIsGaloisOverOriginal
           (closedFiniteIndexClassField
             (K := K) H hclosed))) x := rfl
 
+open scoped Classical in
 noncomputable instance
     closedFiniteIndexClassFieldIsAbelianGaloisOverOriginal
     (H : Subgroup (IdeleClassGroup K))
@@ -197,6 +206,7 @@ noncomputable instance
     (closedFiniteIndexClassField_algebraMap_original
       (K := K) H hclosed)
 
+open scoped Classical in
 /-- The selected class field has determinant-norm range exactly `H`
 in the idèle class group of the original number field. -/
 theorem closedFiniteIndexClassField_ideleClassNorm_range

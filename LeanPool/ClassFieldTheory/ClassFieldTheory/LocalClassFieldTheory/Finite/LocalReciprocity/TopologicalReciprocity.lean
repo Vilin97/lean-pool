@@ -30,6 +30,7 @@ open scoped NNReal ValuativeRel
 open LocalFieldTheory
 open LocalFieldTheory.IsNonarchimedeanLocalField
 
+/-- The norm quotient inherits its topology from the quotient of the base-field unit group. -/
 noncomputable local instance normQuotientTopologicalSpace
     (K L : Type) [Field K] [Field L] [Algebra K L]
     [TopologicalSpace K] :
@@ -363,7 +364,7 @@ private theorem commutator_topologicalClosure_eq
 
 /-- For a finite-dimensional Galois extension, algebraic and topological
 abelianization agree as multiplicative groups. -/
-noncomputable def topologicalAbelianization_finite_equiv :
+noncomputable def topologicalAbelianizationFiniteEquiv :
     Abelianization (Gal(L / K)) ≃* TopologicalAbelianization (Gal(L / K)) := by
   let h : Subgroup.topologicalClosure (commutator (Gal(L / K))) =
       commutator (Gal(L / K)) :=
@@ -379,7 +380,7 @@ noncomputable def localReciprocityEquiv :
     QuotientGroup.discreteTopology (isOpen_discrete _)
   let e : NormQuotient K L ≃* TopologicalAbelianization (Gal(L / K)) :=
     (abelianizationEquivNormQuotient K L).symm.trans
-      (topologicalAbelianization_finite_equiv K L)
+      (topologicalAbelianizationFiniteEquiv K L)
   exact
     { e with
       continuous_toFun := continuous_of_discreteTopology
@@ -390,7 +391,7 @@ isomorphism followed by the finite abelianization comparison. -/
 theorem localReciprocityEquiv_toMulEquiv :
     (localReciprocityEquiv K L).toMulEquiv =
       (abelianizationEquivNormQuotient K L).symm.trans
-        (topologicalAbelianization_finite_equiv K L) := by
+        (topologicalAbelianizationFiniteEquiv K L) := by
   rfl
 
 /-- The quotient map to the norm quotient, bundled as a continuous
@@ -409,31 +410,31 @@ noncomputable def localArtinMap :
 /-- Forgetting the topology and comparing finite abelianizations recovers the
 algebraic local Artin homomorphism. -/
 theorem localArtinMap_toMonoidHom :
-    (topologicalAbelianization_finite_equiv K L).symm.toMonoidHom.comp
+    (topologicalAbelianizationFiniteEquiv K L).symm.toMonoidHom.comp
         (localArtinMap K L).toMonoidHom =
       localArtinMonoidHom K L := by
   ext x
   change
-    (topologicalAbelianization_finite_equiv K L).symm
+    (topologicalAbelianizationFiniteEquiv K L).symm
         (localReciprocityEquiv K L (normClass K L x)) =
       (abelianizationEquivNormQuotient K L).symm
         (normClass K L x)
   rw [show localReciprocityEquiv K L (normClass K L x) =
-      topologicalAbelianization_finite_equiv K L
+      topologicalAbelianizationFiniteEquiv K L
         ((abelianizationEquivNormQuotient K L).symm
           (normClass K L x)) by
     change (localReciprocityEquiv K L).toMulEquiv
         (normClass K L x) = _
     rw [localReciprocityEquiv_toMulEquiv]
     rfl]
-  exact (topologicalAbelianization_finite_equiv K L).symm_apply_apply _
+  exact (topologicalAbelianizationFiniteEquiv K L).symm_apply_apply _
 
 /-- The continuous local Artin map is canonical: after forgetting topology,
 it agrees with the reciprocity symbol computed from any realization of the
 extension in the fixed separable closure. -/
 theorem localArtinMap_embedding_independent
     (i : L →ₐ[K] SeparableClosure K) :
-    (topologicalAbelianization_finite_equiv K L).symm.toMonoidHom.comp
+    (topologicalAbelianizationFiniteEquiv K L).symm.toMonoidHom.comp
         (localArtinMap K L).toMonoidHom =
       concreteNormResidueSymbolOfEmbedding K L i
         (localResidueDatum K)
@@ -463,7 +464,7 @@ theorem localArtinMap_ker :
 
 /-- The canonical first-isomorphism equivalence induced by the continuous
 local Artin map. -/
-noncomputable def localArtinMap_quotientKerEquiv :
+noncomputable def localArtinMapQuotientKerEquiv :
     Kˣ ⧸ (localArtinMap K L).toMonoidHom.ker ≃*
       TopologicalAbelianization (Gal(L / K)) :=
   QuotientGroup.quotientKerEquivOfSurjective
@@ -471,9 +472,8 @@ noncomputable def localArtinMap_quotientKerEquiv :
 
 /-- The first-isomorphism equivalence sends the class of a field unit to its
 image under the local Artin map. -/
-@[simp]
 theorem localArtinMap_quotientKerEquiv_mk (x : Kˣ) :
-    localArtinMap_quotientKerEquiv K L (QuotientGroup.mk x) =
+    localArtinMapQuotientKerEquiv K L (QuotientGroup.mk x) =
       localArtinMap K L x := by
   rfl
 

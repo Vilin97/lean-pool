@@ -60,7 +60,7 @@ Establishes the identity `higherPrincipalUnitGroup.unitsModOneEquivResidueFieldU
 (QuotientGroup.mk' (higherPrincipalUnitGroup F 1) u) = higherPrincipalUnitGroup.residueUnitHom F
 u`.
 -/
-@[simp] theorem unitsModOneEquivResidueFieldUnits_mk
+theorem unitsModOneEquivResidueFieldUnits_mk
     (u : F.valuationSubringˣ) :
     higherPrincipalUnitGroup.unitsModOneEquivResidueFieldUnits F
         (QuotientGroup.mk' (higherPrincipalUnitGroup F 1) u) =

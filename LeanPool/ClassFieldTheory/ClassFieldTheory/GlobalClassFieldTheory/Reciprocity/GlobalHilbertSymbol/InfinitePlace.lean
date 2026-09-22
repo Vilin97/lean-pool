@@ -15,7 +15,7 @@ the quadratic one: its value is `-1` exactly when both arguments are negative.
 The definition below records that evaluation directly in `μₙ(K)`.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 open NumberField
 
 noncomputable section
@@ -27,6 +27,7 @@ open KummerTheory
 
 variable (K : Type) [Field K] [NumberField K]
 
+open scoped Classical in
 /-- The Hilbert symbol of two global units at an infinite place.  Complex
 places and nonquadratic exponents contribute `1`; a real quadratic place
 contributes `-1` precisely when both real embeddings are negative. -/
@@ -47,6 +48,7 @@ noncomputable def infinitePlaceHilbertSymbol
   · exact 1
 
 omit [NumberField K] in
+open scoped Classical in
 /-- Every complex infinite place has trivial Hilbert symbol. -/
 @[simp]
 theorem infinitePlaceHilbertSymbol_eq_one_of_isComplex
@@ -58,6 +60,7 @@ theorem infinitePlaceHilbertSymbol_eq_one_of_isComplex
   simp [infinitePlaceHilbertSymbol, hvNotReal]
 
 omit [NumberField K] in
+open scoped Classical in
 /-- Away from the quadratic exponent, every infinite-place factor is
 trivial. -/
 @[simp]
@@ -68,6 +71,7 @@ theorem infinitePlaceHilbertSymbol_eq_one_of_ne_two
   simp [infinitePlaceHilbertSymbol, hn]
 
 omit [NumberField K] in
+open scoped Classical in
 /-- Explicit real-place evaluation of the quadratic Hilbert symbol. -/
 theorem infinitePlaceHilbertSymbol_real_apply
     (n : ℕ+) (v : InfinitePlace K) (a b : Kˣ)

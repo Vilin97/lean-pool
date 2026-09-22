@@ -12,7 +12,7 @@ This leaf assembles the local Herbrand calculations over the finite family of
 unrestricted places.
 -/
 
-open scoped NumberField BigOperators ValuativeRel Classical NNReal
+open scoped NumberField BigOperators ValuativeRel NNReal
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -30,6 +30,7 @@ variable {K L : Type}
     [FiniteDimensional K L] [IsGalois K L]
 
 omit [NumberField L] in
+open scoped Classical in
 /-- Degree-zero cohomology of the finite family of unrestricted local
 blocks is finite. -/
 theorem relativeUnrestrictedLocalBlockFamilyHerbrandH0Finite
@@ -98,6 +99,7 @@ theorem relativeUnrestrictedLocalBlockFamilyHerbrandH0Finite
         d σ hgen).symm.toEquiv
 
 omit [NumberField L] in
+open scoped Classical in
 /-- Degree-minus-one cohomology of the finite family of unrestricted
 local blocks is finite. -/
 theorem relativeUnrestrictedLocalBlockFamilyHerbrandHMinusOneFinite

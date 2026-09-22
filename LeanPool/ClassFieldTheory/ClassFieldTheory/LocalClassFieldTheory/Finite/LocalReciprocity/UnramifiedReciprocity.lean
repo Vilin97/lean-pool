@@ -28,7 +28,7 @@ internally from the preceding source lemmas, not passed as hypotheses. -/
 noncomputable def unramifiedLocalReciprocityIsoToGaloisGroup
     (K L : Type) [Field K] [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K] [Field L] [ValuativeRel L]
-    [UniformSpace L] [IsUniformAddGroup L] [IsNonarchimedeanLocalField L]
+    [UniformSpace L] [IsNonarchimedeanLocalField L]
     [Algebra K L] [FiniteDimensional K L] [IsGalois K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L]

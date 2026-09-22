@@ -262,11 +262,15 @@ private theorem linearInVariable_constantCoeff
     ← MvPowerSeries.coeff_zero_eq_constantCoeff_apply,
     MvPowerSeries.coeff_zero_X, mul_zero]
 
-private theorem linearInVariable_hasSubst
+omit [Fintype σ] in
+private theorem linearInVariable_hasSubst [Finite σ]
     (π : F.valuationSubring) :
-    MvPowerSeries.HasSubst (linearInVariable (σ := σ) π) :=
-  MvPowerSeries.hasSubst_of_constantCoeff_zero
-    (linearInVariable_constantCoeff π)
+    MvPowerSeries.HasSubst (linearInVariable (σ := σ) π) := by
+  classical
+  let := Fintype.ofFinite σ
+  exact
+    MvPowerSeries.hasSubst_of_constantCoeff_zero
+        (linearInVariable_constantCoeff π)
 
 omit [Fintype σ] in
 private theorem one_le_order_inVariable
@@ -319,7 +323,8 @@ private theorem two_le_order_inVariable_sub_linearInVariable
       PowerSeries.coeff_subst_single, hdi,
       MvPowerSeries.coeff_X, hsingle]
 
-private theorem degree_add_one_le_order_subst_monomial_sub_linear
+omit [Fintype σ] in
+private theorem degree_add_one_le_order_subst_monomial_sub_linear [Finite σ]
     (ebar : LubinTateSeries F π)
     (d : σ →₀ ℕ) (c : F.valuationSubring) :
     ((d.degree + 1 : ℕ) : ℕ∞) ≤
@@ -327,6 +332,8 @@ private theorem degree_add_one_le_order_subst_monomial_sub_linear
           (MvPowerSeries.monomial d c) -
         MvPowerSeries.subst (linearInVariable (σ := σ) π)
           (MvPowerSeries.monomial d c)).order := by
+  classical
+  let := Fintype.ofFinite σ
   have hprod :
       ((d.degree + 1 : ℕ) : ℕ∞) ≤
         (d.prod (fun i n => (inVariable ebar i) ^ n) -
@@ -380,13 +387,16 @@ private theorem coeff_subst_linearInVariable_monomial
   simp only [Finsupp.prod, Function.const_apply,
     Finset.prod_pow_eq_pow_sum, Finsupp.degree_apply]
 
-private theorem coeff_subst_inVariables_monomial
+omit [Fintype σ] in
+private theorem coeff_subst_inVariables_monomial [Finite σ]
     (ebar : LubinTateSeries F π)
     (d : σ →₀ ℕ) (c : F.valuationSubring) :
     MvPowerSeries.coeff d
         (MvPowerSeries.subst (fun i : σ => inVariable ebar i)
           (MvPowerSeries.monomial d c)) =
       π ^ d.degree * c := by
+  classical
+  let := Fintype.ofFinite σ
   have horder :=
     degree_add_one_le_order_subst_monomial_sub_linear ebar d c
   have hlt :
@@ -405,7 +415,8 @@ private theorem coeff_subst_inVariables_monomial
   rw [map_sub, sub_eq_zero] at hcoeff
   rw [hcoeff, coeff_subst_linearInVariable_monomial]
 
-private theorem coeff_subst_inVariables_add_monomial
+omit [Fintype σ] in
+private theorem coeff_subst_inVariables_add_monomial [Finite σ]
     (ebar : LubinTateSeries F π)
     (H : MvPowerSeries σ F.valuationSubring)
     (d : σ →₀ ℕ) (c : F.valuationSubring) :
@@ -415,6 +426,8 @@ private theorem coeff_subst_inVariables_add_monomial
       MvPowerSeries.coeff d
           (MvPowerSeries.subst (fun i : σ ↦ inVariable ebar i) H) +
         π ^ d.degree * c := by
+  classical
+  let := Fintype.ofFinite σ
   rw [
     MvPowerSeries.subst_add (inVariable_hasSubst ebar),
     map_add,

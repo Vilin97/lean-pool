@@ -60,7 +60,7 @@ characteristic `p`. -/
 def ramificationIndexOfWithZeroValuation
     (v : _root_.Valuation K (WithZero (Multiplicative ℤ)))
     [ValuationTheory.DiscreteValuationField.Valuation.IsCompleteDiscrete v]
-    [Finite (IsLocalRing.ResidueField v.valuationSubring)] [CharZero K] : ℕ :=
+    [Finite (IsLocalRing.ResidueField v.valuationSubring)] : ℕ :=
   Int.toNat
     (-WithZero.log
       (v ((ofWithZeroValuation v).residueCharacteristic : K)))

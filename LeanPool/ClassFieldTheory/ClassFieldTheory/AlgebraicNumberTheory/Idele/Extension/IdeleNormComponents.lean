@@ -49,7 +49,7 @@ private theorem finiteComponent_norm_eq_prod_extensions
       RelativeIdeleGroup.finiteComponent
         (K := K) (L := L) v z
     letI :=
-      completionTensorDecomposition_extensionFintype
+      completionTensorDecompositionExtensionFintype
         (K := K) (L := L) vK hvK
     letI : ∀ w : AbsoluteValueExtension vK L,
         Algebra vK.Completion w.1.Completion :=
@@ -79,7 +79,7 @@ private theorem finiteComponent_norm_eq_prod_extensions
     RelativeIdeleGroup.finiteComponent
       (K := K) (L := L) v z
   let :=
-    completionTensorDecomposition_extensionFintype
+    completionTensorDecompositionExtensionFintype
       (K := K) (L := L) vK hvK
   let : ∀ w : AbsoluteValueExtension vK L,
       Algebra vK.Completion w.1.Completion :=
@@ -132,7 +132,7 @@ private theorem finiteComponent_norm_eq_prod_extensions
           (x : v.adicCompletion K ⊗[K] L)
     _ = ∏ w : AbsoluteValueExtension vK L,
         Algebra.norm vK.Completion
-          (completionTensorDecomposition_left
+          (completionTensorDecompositionLeft
             (K := K) (L := L) vK hvK
             (x' : vK.Completion ⊗[K] L) w) := by
       exact
@@ -162,7 +162,7 @@ private theorem finiteComponent_norm_eq_prod_completion
     let hvK : vK.IsNontrivial :=
       RayClass.adicAbv_isNontrivial v
     letI :=
-      completionTensorDecomposition_extensionFintype
+      completionTensorDecompositionExtensionFintype
         (K := K) (L := L) vK hvK
     letI : ∀ w : AbsoluteValueExtension vK L,
         Algebra vK.Completion w.1.Completion :=
@@ -196,7 +196,7 @@ private theorem finiteComponent_norm_eq_prod_completion
     RelativeIdeleGroup.finiteComponent
       (K := K) (L := L) v z
   let :=
-    completionTensorDecomposition_extensionFintype
+    completionTensorDecompositionExtensionFintype
       (K := K) (L := L) vK hvK
   let : ∀ w : AbsoluteValueExtension vK L,
       Algebra vK.Completion w.1.Completion :=
@@ -315,7 +315,7 @@ private theorem finiteComponent_norm_eq_prod_exact_index
     let hvK : vK.IsNontrivial :=
       RayClass.adicAbv_isNontrivial v
     letI :=
-      completionTensorDecomposition_extensionFintype
+      completionTensorDecompositionExtensionFintype
         (K := K) (L := L) vK hvK
     letI : ∀ w : AbsoluteValueExtension vK L,
         Algebra (v.adicCompletion K)
@@ -342,7 +342,7 @@ private theorem finiteComponent_norm_eq_prod_exact_index
     _root_.relativeFinitePlaceCompletionAlgEquiv
       (K := K) v
   let :=
-    completionTensorDecomposition_extensionFintype
+    completionTensorDecompositionExtensionFintype
       (K := K) (L := L) vK hvK
   let : ∀ w : AbsoluteValueExtension vK L,
       Algebra vK.Completion w.1.Completion :=
@@ -490,7 +490,7 @@ theorem finiteComponent_norm_eq_prod
     let hvK : vK.IsNontrivial :=
       RayClass.adicAbv_isNontrivial v
     letI :=
-      completionTensorDecomposition_extensionFintype
+      completionTensorDecompositionExtensionFintype
         (K := K) (L := L) vK hvK
     let eAbove :=
       finitePlaceExtensionEquivAbove
@@ -518,7 +518,7 @@ theorem finiteComponent_norm_eq_prod
     finitePlaceExtensionEquivAbove
       (K := K) (L := L) v
   let :=
-    completionTensorDecomposition_extensionFintype
+    completionTensorDecompositionExtensionFintype
       (K := K) (L := L) vK hvK
   let : Fintype {W : HeightOneSpectrum (𝓞 L) //
       _root_.finitePlaceBelow (K := K) W = v} :=
@@ -585,7 +585,7 @@ private theorem infiniteComponent_norm_eq_prod_extensions
       _root_.infinitePlaceLocalTensorUnitsEquiv
         (K := K) (L := L) v x
     letI :=
-      completionTensorDecomposition_extensionFintype
+      completionTensorDecompositionExtensionFintype
         (K := K) (L := L) vK hvK
     letI : ∀ w : AbsoluteValueExtension vK L,
         Algebra vK.Completion w.1.Completion :=
@@ -617,7 +617,7 @@ private theorem infiniteComponent_norm_eq_prod_extensions
     _root_.infinitePlaceLocalTensorUnitsEquiv
       (K := K) (L := L) v x
   let :=
-    completionTensorDecomposition_extensionFintype
+    completionTensorDecompositionExtensionFintype
       (K := K) (L := L) vK hvK
   let : ∀ w : AbsoluteValueExtension vK L,
       Algebra vK.Completion w.1.Completion :=
@@ -666,7 +666,7 @@ private theorem infiniteComponent_norm_eq_prod_extensions
           (x : v.Completion ⊗[K] L)
     _ = ∏ w : AbsoluteValueExtension vK L,
         Algebra.norm vK.Completion
-          (completionTensorDecomposition_left
+          (completionTensorDecompositionLeft
             (K := K) (L := L) vK hvK
             (x' : vK.Completion ⊗[K] L) w) := by
       exact
@@ -695,7 +695,7 @@ private theorem infiniteComponent_norm_eq_prod_completion
       _root_.infinitePlaceAboveEquivExtension
         (K := K) (L := L) v
     letI :=
-      completionTensorDecomposition_extensionFintype
+      completionTensorDecompositionExtensionFintype
         (K := K) (L := L) vK hvK
     letI : ∀ w : AbsoluteValueExtension vK L,
         Algebra vK.Completion w.1.Completion :=
@@ -751,7 +751,7 @@ private theorem infiniteComponent_norm_eq_prod_completion
     _root_.infinitePlaceAboveEquivExtension
       (K := K) (L := L) v
   let :=
-    completionTensorDecomposition_extensionFintype
+    completionTensorDecompositionExtensionFintype
       (K := K) (L := L) vK hvK
   let : ∀ w : AbsoluteValueExtension vK L,
       Algebra vK.Completion w.1.Completion :=
@@ -881,7 +881,7 @@ theorem infiniteComponent_norm_eq_prod
       _root_.infinitePlaceAboveEquivExtension
         (K := K) (L := L) v
     letI :=
-      completionTensorDecomposition_extensionFintype
+      completionTensorDecompositionExtensionFintype
         (K := K) (L := L) vK hvK
     letI : Fintype {W : InfinitePlace L //
         _root_.infinitePlaceBelow (K := K) W = v} :=
@@ -908,7 +908,7 @@ theorem infiniteComponent_norm_eq_prod
     _root_.infinitePlaceAboveEquivExtension
       (K := K) (L := L) v
   let :=
-    completionTensorDecomposition_extensionFintype
+    completionTensorDecompositionExtensionFintype
       (K := K) (L := L) vK hvK
   let : Fintype {W : InfinitePlace L //
       _root_.infinitePlaceBelow (K := K) W = v} :=

@@ -23,7 +23,7 @@ compatibility theorem between the chosen finite-place Artin map and
 the explicit cyclotomic action; no such compatibility is assumed here.
 -/
 
-open scoped BigOperators Classical NumberField IsMulCommutative
+open scoped BigOperators NumberField IsMulCommutative
 open NumberField IsDedekindDomain ClassFormation
 
 noncomputable section
@@ -33,6 +33,7 @@ namespace Reciprocity
 
 -- Keep the prime-power presentation explicit for canonical instance synthesis.
 -- Both structures are the existing canonical cyclotomic-level instances.
+open scoped Classical in
 local instance rationalCyclotomicPrimePowerNumberField
     (p : Nat.Primes) (k : ℕ) :
     NumberField
@@ -41,6 +42,9 @@ local instance rationalCyclotomicPrimePowerNumberField
   KummerTheory.rationalCyclotomicLevel_numberField
     ⟨p.1 ^ k, pow_pos p.2.pos k⟩
 
+attribute [local instance] rationalCyclotomicPrimePowerNumberField
+
+open scoped Classical in
 local instance rationalCyclotomicPrimePowerIsGalois
     (p : Nat.Primes) (k : ℕ) :
     IsGalois ℚ
@@ -49,6 +53,9 @@ local instance rationalCyclotomicPrimePowerIsGalois
   KummerTheory.rationalCyclotomicLevel_isGalois
     ⟨p.1 ^ k, pow_pos p.2.pos k⟩
 
+attribute [local instance] rationalCyclotomicPrimePowerIsGalois
+
+open scoped Classical in
 local instance rationalCyclotomicPrimePowerIsAbelianGalois
     (p : Nat.Primes) (k : ℕ) :
   IsAbelianGalois ℚ
@@ -58,9 +65,15 @@ local instance rationalCyclotomicPrimePowerIsAbelianGalois
     (KummerTheory.rationalCyclotomicLevel
       ⟨p.1 ^ k, pow_pos p.2.pos k⟩).val
 
-local instance (p : Nat.Primes) : Fact p.1.Prime :=
+attribute [local instance] rationalCyclotomicPrimePowerIsAbelianGalois
+
+open scoped Classical in
+local instance localPrimesInstance1 (p : Nat.Primes) : Fact p.1.Prime :=
   ⟨p.2⟩
 
+attribute [local instance] localPrimesInstance1
+
+open scoped Classical in
 noncomputable local instance
     cyclotomicPrincipalLevelIsAbelianGalois
     (m : ℕ+) :
@@ -78,6 +91,9 @@ noncomputable local instance
         simp only [map_mul]
         exact mul_comm _ _ }
 
+attribute [local instance] cyclotomicPrincipalLevelIsAbelianGalois
+
+open scoped Classical in
 /-- Every finite subextension of the rational cyclotomic closure is
 contained in one of its internal finite cyclotomic levels.  The proof
 uses finite generation of the intermediate field together with the
@@ -158,6 +174,7 @@ theorem finiteSubfieldOfRationalCyclotomicField_le_level
     KummerTheory.rationalCyclotomicLevel_mono hdiv
       (hlevelIndex x)
 
+open scoped Classical in
 /-- Every finite Galois coordinate of the rational cyclotomic
 `ZHat`-extension has a canonical image inside a finite internal
 cyclotomic level.  The image field is retained explicitly so that
@@ -197,6 +214,7 @@ theorem finiteSubfieldOfRationalCyclotomicZHatField_mapsIntoLevel
     finiteSubfieldOfRationalCyclotomicField_le_level F
   exact ⟨n, F, e, hn⟩
 
+open scoped Classical in
 /-- Restriction to the lifted torsion-free cyclotomic field commutes with its
 canonical inclusion into the full rational cyclotomic field.  Keeping this
 pointwise compatibility separate prevents the finite-coordinate Artin
@@ -246,6 +264,7 @@ private theorem rationalCyclotomicFullRestrictionToZHat_commutes
     _ = σ ((IntermediateField.inclusion hTZ) x) :=
       congrArg σ hinv
 
+open scoped Classical in
 /-- Restriction along the two sides of a commuting tower square gives the
 same automorphism of the finite bottom field.  Keeping the field types
 abstract makes this a stable interface for concrete inverse-limit fields. -/
@@ -255,7 +274,7 @@ private theorem restrictNormalHom_eq_of_commuting_square
     [Algebra K E] [Algebra K Z] [Algebra K Ω]
     [Algebra E Z] [Algebra E Ω] [Algebra Z Ω]
     [IsScalarTower K E Z] [IsScalarTower K E Ω]
-    [IsScalarTower K Z Ω] [IsScalarTower E Z Ω]
+    [IsScalarTower E Z Ω]
     [Normal K E]
     (τ : Z ≃ₐ[K] Z) (σ : Ω ≃ₐ[K] Ω)
     (hcommutes : ∀ z : Z,
@@ -280,6 +299,7 @@ private theorem restrictNormalHom_eq_of_commuting_square
     _ = algebraMap E Ω ((AlgEquiv.restrictNormalHom E σ) x) :=
       (AlgEquiv.restrictNormal_commutes σ E x).symm
 
+open scoped Classical in
 /-- The infinite Artin automorphism of the actual rational
 `ZHat`-field is the restriction of the infinite Artin automorphism of
 the full rational cyclotomic field.  The statement uses the genuine
@@ -380,6 +400,7 @@ theorem rationalCyclotomicZHatGlobalArtin_eq_fullRestriction
           (rationalCyclotomicFullRestrictionToZHat σ) :=
       htransport.symm
 
+open scoped Classical in
 /-- The rational cyclotomic idele value is the genuine torsion-free
 factor of the full cyclotomic character of its infinite Artin symbol. -/
 theorem rationalCyclotomicZHatIdeleValue_eq_fullCharacterFreePart
@@ -393,6 +414,7 @@ theorem rationalCyclotomicZHatIdeleValue_eq_fullCharacterFreePart
     rationalCyclotomicZHatGlobalArtin_eq_fullRestriction,
     rationalCyclotomicZHatFieldGalEquivZHat_fullRestriction]
 
+open scoped Classical in
 /-- The archimedean part of a rational idele, with all finite
 components replaced by one. -/
 def rationalIdeleArchimedeanPart
@@ -400,6 +422,7 @@ def rationalIdeleArchimedeanPart
     IdeleGroup ℚ :=
   (a.1, 1)
 
+open scoped Classical in
 /-- The finite part of a rational idele, with its archimedean
 component replaced by one. -/
 def rationalIdeleFinitePart
@@ -407,8 +430,8 @@ def rationalIdeleFinitePart
     IdeleGroup ℚ :=
   (1, a.2)
 
+open scoped Classical in
 /-- The archimedean part preserves every infinite component. -/
-@[simp]
 theorem rationalIdeleArchimedeanPart_infiniteComponent
     (a : IdeleGroup ℚ)
     (v : InfinitePlace ℚ) :
@@ -417,8 +440,8 @@ theorem rationalIdeleArchimedeanPart_infiniteComponent
       IdeleGroup.infiniteComponent v a :=
   rfl
 
+open scoped Classical in
 /-- Every finite component of the archimedean part is one. -/
-@[simp]
 theorem rationalIdeleArchimedeanPart_finiteComponent
     (a : IdeleGroup ℚ)
     (v : HeightOneSpectrum (𝓞 ℚ)) :
@@ -427,8 +450,8 @@ theorem rationalIdeleArchimedeanPart_finiteComponent
       1 :=
   rfl
 
+open scoped Classical in
 /-- Every infinite component of the finite part is one. -/
-@[simp]
 theorem rationalIdeleFinitePart_infiniteComponent
     (a : IdeleGroup ℚ)
     (v : InfinitePlace ℚ) :
@@ -437,8 +460,8 @@ theorem rationalIdeleFinitePart_infiniteComponent
       1 :=
   rfl
 
+open scoped Classical in
 /-- The finite part preserves every finite component. -/
-@[simp]
 theorem rationalIdeleFinitePart_finiteComponent
     (a : IdeleGroup ℚ)
     (v : HeightOneSpectrum (𝓞 ℚ)) :
@@ -447,6 +470,7 @@ theorem rationalIdeleFinitePart_finiteComponent
       IdeleGroup.finiteComponent v a :=
   rfl
 
+open scoped Classical in
 private theorem globalArtinMonoidHom_rationalIdeleFinitePart
     {L : Type}
     [Field L] [NumberField L] [Algebra ℚ L]
@@ -481,6 +505,7 @@ private theorem globalArtinMonoidHom_rationalIdeleFinitePart
     rw [rationalIdeleFinitePart_finiteComponent]
   rw [harch, one_mul, hfinite]
 
+open scoped Classical in
 /-- The archimedean and finite parts multiply back to the original
 rational idele. -/
 theorem rationalIdeleArchimedeanPart_mul_finitePart
@@ -491,6 +516,7 @@ theorem rationalIdeleArchimedeanPart_mul_finitePart
   ext <;> simp [rationalIdeleArchimedeanPart,
     rationalIdeleFinitePart]
 
+open scoped Classical in
 /-- At a finite abelian layer, the global Artin image of the
 archimedean part of a rational idele has order at most two. -/
 theorem globalArtinMonoidHom_rationalIdeleArchimedeanPart_sq
@@ -542,6 +568,7 @@ theorem globalArtinMonoidHom_rationalIdeleArchimedeanPart_sq
   simpa only [Units.val_pow_eq_pow_val, map_pow] using
     sq_pos_of_ne_zero hne
 
+open scoped Classical in
 /-- The actual rational `ZHat` Artin homomorphism kills every idele
 supported at the archimedean place.  The finite-layer images have
 order at most two, while the inverse-limit Galois group is
@@ -597,9 +624,9 @@ theorem
       (n := 2) (by norm_num))
         (by simpa using hsq)
 
+open scoped Classical in
 /-- The rational cyclotomic value kills the archimedean part of every
 rational idele. -/
-@[simp]
 theorem
     rationalCyclotomicZHatIdeleValue_rationalIdeleArchimedeanPart
     (a : IdeleGroup ℚ) :
@@ -610,6 +637,7 @@ theorem
     rationalCyclotomicZHatGlobalArtin_rationalIdeleArchimedeanPart,
     map_one]
 
+open scoped Classical in
 /-- The rational cyclotomic value depends only on the finite part of
 an idele. -/
 theorem rationalCyclotomicZHatIdeleValue_eq_finitePart
@@ -635,6 +663,7 @@ theorem rationalCyclotomicZHatIdeleValue_eq_finitePart
         rationalCyclotomicZHatIdeleValue_rationalIdeleArchimedeanPart,
         one_mul]
 
+open scoped Classical in
 /-- Restriction of the infinite Artin symbol to a concrete prime-power
 cyclotomic level is its finite global Artin symbol. -/
 private theorem rationalCyclotomicGlobalArtin_restrict_primePowerLevel
@@ -655,6 +684,7 @@ private theorem rationalCyclotomicGlobalArtin_restrict_primePowerLevel
         (KummerTheory.rationalCyclotomicLevel
           ⟨p.1 ^ k, pow_pos p.2.pos k⟩)
 
+open scoped Classical in
 /-- Applying the prime-power cyclotomic character to a finite projection of
 the infinite Artin symbol gives the finite global Artin symbol.  This is kept
 separate from character evaluation so both dependent comparisons elaborate
@@ -695,6 +725,7 @@ private theorem rationalCyclotomicGlobalArtin_projection_toZModPow
             ⟨p.1 ^ k, pow_pos p.2.pos k⟩))
       (rationalCyclotomicGlobalArtin_restrict_primePowerLevel a p k)
 
+open scoped Classical in
 /-- Evaluating the actual infinite global Artin symbol in the full
 rational cyclotomic extension at the `p ^ k` cyclotomic character is
 exactly the finite global Artin symbol at the internal `p ^ k`-th
@@ -725,6 +756,7 @@ theorem rationalCyclotomicGlobalArtin_character_toZModPow
         ℚ KummerTheory.rationalCyclotomicField a) p k).trans
       (rationalCyclotomicGlobalArtin_projection_toZModPow a p k)
 
+open scoped Classical in
 /-- After removing the archimedean component, the `p ^ k` coordinate
 of the full rational cyclotomic Artin character is the genuine finite
 product of the chosen finite-place Artin maps. -/
@@ -754,6 +786,7 @@ theorem rationalCyclotomicGlobalArtin_character_toZModPow_finitePart
     rationalCyclotomicGlobalArtin_character_toZModPow,
     globalArtinMonoidHom_rationalIdeleFinitePart]
 
+open scoped Classical in
 /-- The finite-part cyclotomic character is the `finprod` of the
 actual chosen local Artin characters.  This is the pointwise form into
 which the p-adic unit formula and the unramified Frobenius formula
@@ -798,6 +831,7 @@ theorem
             ⟨p.1 ^ k, pow_pos p.2.pos k⟩)
         a)
 
+open scoped Classical in
 /-- Principal-idele evaluation reduced to its genuine finite local
 part. -/
 theorem
@@ -811,6 +845,7 @@ theorem
   rationalCyclotomicZHatIdeleValue_eq_finitePart
     (IdeleGroup.principalIdele ℚ x)
 
+open scoped Classical in
 /-- At a finite cyclotomic layer, the Artin image of the finite part
 of a rational idele is exactly the finite product of the chosen local
 Artin symbols. -/
@@ -843,6 +878,7 @@ theorem
       (globalArtinMonoidHom_rationalIdeleFinitePart
         (L := E) a)
 
+open scoped Classical in
 /-- The unnormalized value on a principal idele over a number field
 is the rational cyclotomic value of the finite part of its field-norm
 principal idele. -/
@@ -861,6 +897,7 @@ theorem cyclotomicZHatNormComposite_principalIdele_eq_finitePart
     IdeleGroup.norm_principalIdele,
     rationalCyclotomicZHatIdeleValue_principalIdele_eq_finitePart]
 
+open scoped Classical in
 /-- Normalized principal-idele vanishing is equivalent to the
 remaining rational finite-part product formula.  Thus the only missing
 input for descent to the idele class group is the finite local

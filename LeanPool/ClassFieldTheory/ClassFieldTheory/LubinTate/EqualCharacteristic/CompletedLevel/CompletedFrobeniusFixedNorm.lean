@@ -29,12 +29,16 @@ open LocalFieldTheory.DiscreteValuationField
 
 variable {K : Type u} [Field K]
 
+/-- The completed unramified base is a Laurent-series algebra in the Frobenius fixed-field norm
+comparison. -/
 noncomputable local instance equalCharacteristicCompletedFrobeniusFixedNormBaseAlgebra
     (F : LocalField.{u, v} K) :
     Algebra (LaurentSeries F.residueField)
       (equalCharacteristicCompletedUnramifiedField F.residueField) :=
   laurentSeriesCoefficientAlgebra
 
+/-- The completed level is a Laurent-series algebra through the completed base in the fixed-field
+norm comparison. -/
 noncomputable local instance equalCharacteristicCompletedFrobeniusFixedNormLevelAlgebra
     (F : LocalField.{u, v} K) (n : ℕ) :
     Algebra F.residueField⸨X⸩
@@ -52,6 +56,8 @@ local instance equalCharacteristicCompletedFrobeniusFixedNormScalarTower
       (equalCharacteristicCompletedLevelField F n) :=
   IsScalarTower.of_algebraMap_eq' rfl
 
+/-- The changed level field inherits its Laurent-series algebra structure from the selected
+separable closure. -/
 noncomputable local instance
     equalCharacteristicCompletedFrobeniusFixedNormChangedLevelAlgebra
     (F : LocalField.{u, v} K)
@@ -66,6 +72,8 @@ noncomputable local instance
   Subalgebra.algebra
     (equalCharacteristicChangedLevelField F a n).toSubalgebra
 
+/-- Laurent-series scalar multiplication on the changed level field uses its selected
+separable-closure algebra structure. -/
 noncomputable local instance
     equalCharacteristicCompletedFrobeniusFixedNormChangedLevelSMul
     (F : LocalField.{u, v} K)
@@ -77,6 +85,8 @@ noncomputable local instance
     (equalCharacteristicCompletedFrobeniusFixedNormChangedLevelAlgebra
       F a n)
 
+/-- The changed level field is a Laurent-series module through its selected separable-closure
+algebra structure. -/
 noncomputable local instance
     equalCharacteristicCompletedFrobeniusFixedNormChangedLevelModule
     (F : LocalField.{u, v} K)
@@ -177,7 +187,8 @@ theorem equalCharacteristicCompletedFrobeniusPrimeElement_minpoly
     (equalCharacteristicChangedPrimitivePolynomial_eq_minpoly F a n).symm
 
 /-- The genuine integral minimal polynomial is Eisenstein at `(T)`.  This is
-the prime-element (uniformizer) certificate used in the proof of the completed theta-intertwining theorem. -/
+the prime-element (uniformizer) certificate used in the proof of the completed
+  theta-intertwining theorem. -/
 theorem equalCharacteristicCompletedFrobeniusPrimeElement_eisenstein
     (F : LocalField.{u, v} K)
     [CharP K F.residueCharacteristic]

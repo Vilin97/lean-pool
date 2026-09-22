@@ -11,7 +11,8 @@ import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.Multiplicative
 /-!
 # Completed p-adic Lubin--Tate series
 
-This module extends the multiplicative and changed-standard Lubin--Tate series to the completed unramified Witt ring and records their coefficients and residue reductions.
+This module extends the multiplicative and changed-standard Lubin--Tate series to the completed
+unramified Witt ring and records their coefficients and residue reductions.
 -/
 
 noncomputable section

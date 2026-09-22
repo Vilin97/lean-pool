@@ -153,7 +153,6 @@ def chosenLocalUniformizer
   Classical.choose (valuationMap_uniformiser K)
 
 /-- The chosen local uniformizer has normalized valuation one. -/
-@[simp]
 theorem chosenLocalUniformizer_spec
     (K : Type u) [Field K] [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K] :

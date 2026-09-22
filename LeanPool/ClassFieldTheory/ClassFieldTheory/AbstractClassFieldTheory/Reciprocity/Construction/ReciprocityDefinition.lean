@@ -70,7 +70,8 @@ theorem frobeniusFixedField_absoluteFinite (D : DegreeData G)
         (le_baseField
           (D.frobeniusFixedField (K.toFiniteResidueAbstractField D) L hLK
             (hLnormal := by
-              simpa only [FiniteAbstractField.toFiniteResidueAbstractField] using hLnormal) σ))) := by
+              simpa only [FiniteAbstractField.toFiniteResidueAbstractField] using hLnormal) σ)))
+                := by
   let KR := K.toFiniteResidueAbstractField D
   let hLnormalKR : (extensionSubgroup KR.field L hLK).Normal := by
     simpa only [KR, FiniteAbstractField.toFiniteResidueAbstractField] using hLnormal

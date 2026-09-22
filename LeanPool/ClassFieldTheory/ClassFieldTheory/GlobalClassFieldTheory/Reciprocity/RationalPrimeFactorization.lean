@@ -17,16 +17,19 @@ The last declarations package rational `p`-adic units as units of `ℤ_[p]` and
 identify the reduction of a natural unit modulo `p ^ k`.
 -/
 
-open scoped BigOperators Classical
-
+open scoped BigOperators
 noncomputable section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity
 
-local instance (p : Nat.Primes) : Fact p.1.Prime :=
+open scoped Classical in
+local instance localPrimesInstance1 (p : Nat.Primes) : Fact p.1.Prime :=
   ⟨p.2⟩
 
+attribute [local instance] localPrimesInstance1
+
+open scoped Classical in
 /-- A finite set containing every prime occurring in the numerator or
 denominator of `x`, as well as the distinguished prime `p`. -/
 def rationalPrimeFactorizationSupport
@@ -35,6 +38,7 @@ def rationalPrimeFactorizationSupport
     (max (max (x : ℚ).num.natAbs (x : ℚ).den) p.1 + 1)).filter
       Nat.Prime
 
+open scoped Classical in
 theorem mem_rationalPrimeFactorizationSupport
     (x : ℚˣ) (p : Nat.Primes) :
     p.1 ∈ rationalPrimeFactorizationSupport x p := by
@@ -46,21 +50,23 @@ theorem mem_rationalPrimeFactorizationSupport
           (max (x : ℚ).num.natAbs (x : ℚ).den) p.1),
       p.2⟩
 
+open scoped Classical in
 /-- The rational `p`-adic unit part of `x`: multiply `x` by the inverse of
 its `p`-power. -/
 def rationalPrimeUnit (x : ℚˣ) (p : Nat.Primes) : ℚˣ :=
   (Units.mk0 (p.1 : ℚ) (by exact_mod_cast p.2.ne_zero)) ^
       (-padicValRat p.1 (x : ℚ)) * x
 
+open scoped Classical in
 @[simp]
 theorem rationalPrimeUnit_val (x : ℚˣ) (p : Nat.Primes) :
     (rationalPrimeUnit x p : ℚ) =
       (p.1 : ℚ) ^ (-padicValRat p.1 (x : ℚ)) * (x : ℚ) := by
   simp [rationalPrimeUnit]
 
+open scoped Classical in
 /-- Removing the `p`-power from a nonzero rational number leaves
 `p`-adic valuation zero. -/
-@[simp]
 theorem padicValRat_rationalPrimeUnit
     (x : ℚˣ) (p : Nat.Primes) :
     padicValRat p.1 (rationalPrimeUnit x p : ℚ) = 0 := by
@@ -75,6 +81,7 @@ theorem padicValRat_rationalPrimeUnit
     padicValRat.self p.2.one_lt]
   ring
 
+open scoped Classical in
 /-- The ordinary prime factorization of a nonzero rational number, over the
 finite support chosen by `rationalPrimeFactorizationSupport`. -/
 theorem rational_factorization_over_support
@@ -175,6 +182,7 @@ theorem rational_factorization_over_support
           ∏ q ∈ s, (q : ℚ) ^ padicValRat q (x : ℚ) := by
       rfl
 
+open scoped Classical in
 /-- The `p`-adic unit part of `x` is its sign times the finite product of
 `q ^ padicValRat q x` over the primes `q ≠ p`. -/
 theorem rationalPrimeUnit_factorization
@@ -233,6 +241,7 @@ theorem rationalPrimeUnit_factorization
             (q : ℚ) ^ padicValRat q (x : ℚ) := by
       rfl
 
+open scoped Classical in
 /-- A nonzero rational number of `p`-adic valuation zero, regarded as a
 unit of the `p`-adic integers. -/
 def padicIntUnitOfRat
@@ -244,6 +253,7 @@ def padicIntUnitOfRat
       padicNorm.eq_zpow_of_nonzero hy, hval]
     simp)
 
+open scoped Classical in
 /-- The underlying `p`-adic number of `padicIntUnitOfRat` is the original
 rational number. -/
 @[simp]
@@ -254,6 +264,7 @@ theorem padicIntUnitOfRat_coe
       (y : ℚ_[p.1]) := by
   exact PadicInt.mkUnits_eq _
 
+open scoped Classical in
 /-- The sign of a nonzero rational numerator is a unit at every finite
 prime. -/
 theorem padicValRat_rational_num_sign
@@ -273,6 +284,7 @@ theorem padicValRat_rational_num_sign
     rw [hsign]
     simp
 
+open scoped Classical in
 /-- The actual sign of `x`, regarded as a unit of the `p`-adic integers. -/
 def rationalSignPadicUnit
     (x : ℚˣ) (p : Nat.Primes) : ℤ_[p.1]ˣ :=
@@ -283,15 +295,16 @@ def rationalSignPadicUnit
           (Rat.num_ne_zero.mpr x.ne_zero)))
     (padicValRat_rational_num_sign x p)
 
+open scoped Classical in
 /-- The underlying `p`-adic number of `rationalSignPadicUnit` is the sign of
 the rational numerator. -/
-@[simp]
 theorem rationalSignPadicUnit_coe
     (x : ℚˣ) (p : Nat.Primes) :
     (((rationalSignPadicUnit x p : ℤ_[p.1]) : ℚ_[p.1])) =
       (((((x : ℚ).num.sign : ℤ) : ℚ) : ℚ_[p.1])) := by
   exact padicIntUnitOfRat_coe _ _ _ _
 
+open scoped Classical in
 /-- The value in `ℤ_[p]` of `rationalSignPadicUnit` is the integer sign. -/
 @[simp]
 theorem rationalSignPadicUnit_val
@@ -302,6 +315,7 @@ theorem rationalSignPadicUnit_val
   simp only [rationalSignPadicUnit_coe, PadicInt.coe_intCast,
     Rat.cast_intCast]
 
+open scoped Classical in
 /-- The rational sign unit has square one. -/
 @[simp]
 theorem rationalSignPadicUnit_sq
@@ -324,9 +338,9 @@ theorem rationalSignPadicUnit_sq
     rw [hsign]
     simp
 
+open scoped Classical in
 /-- Reduction of the rational sign unit modulo `p ^ k` has the expected
 integer value. -/
-@[simp]
 theorem rationalSignPadicUnit_toZModPow_val
     (x : ℚˣ) (p : Nat.Primes) (k : ℕ) :
     ((Units.map (PadicInt.toZModPow k).toMonoidHom
@@ -340,8 +354,8 @@ theorem rationalSignPadicUnit_toZModPow_val
   rw [rationalSignPadicUnit_val]
   simp
 
+open scoped Classical in
 /-- Reduction of the rational sign unit still has square one. -/
-@[simp]
 theorem rationalSignPadicUnit_toZModPow_sq
     (x : ℚˣ) (p : Nat.Primes) (k : ℕ) :
     Units.map (PadicInt.toZModPow k).toMonoidHom
@@ -349,6 +363,7 @@ theorem rationalSignPadicUnit_toZModPow_sq
       1 := by
   rw [← map_pow, rationalSignPadicUnit_sq, map_one]
 
+open scoped Classical in
 /-- A natural number prime to `p`, regarded as a unit of `ℤ_[p]`. -/
 def padicNatUnit
     (p : Nat.Primes) (q : ℕ) (h : p.1.Coprime q) :
@@ -359,6 +374,7 @@ def padicNatUnit
       simpa using
         (PadicInt.norm_natCast_eq_one_iff (p := p.1)).2 h)
 
+open scoped Classical in
 @[simp]
 theorem padicNatUnit_val
     (p : Nat.Primes) (q : ℕ) (h : p.1.Coprime q) :
@@ -366,9 +382,9 @@ theorem padicNatUnit_val
   apply Subtype.ext
   rfl
 
+open scoped Classical in
 /-- Reducing the canonical `p`-adic unit attached to `q` modulo `p ^ k`
 gives the canonical unit represented by `q` in `ZMod (p ^ k)`. -/
-@[simp]
 theorem padicNatUnit_toZModPow
     (p : Nat.Primes) (q k : ℕ) (h : p.1.Coprime q) :
     Units.map (PadicInt.toZModPow k).toMonoidHom
@@ -377,6 +393,7 @@ theorem padicNatUnit_toZModPow
   apply Units.ext
   simp
 
+open scoped Classical in
 /-- The successor of `p` is a `p`-adic unit. -/
 theorem padicValRat_rationalPrime_succ
     (p : Nat.Primes) :
@@ -390,6 +407,7 @@ theorem padicValRat_rationalPrime_succ
     padicValNat.eq_zero_of_not_dvd hnot]
   norm_num
 
+open scoped Classical in
 /-- A positive natural number greater than one, prime to `p`, gives a
 genuine non-torsion unit of `ℤ_[p]`. -/
 theorem padicNatUnit_not_isOfFinOrder_of_one_lt
@@ -414,6 +432,7 @@ theorem padicNatUnit_not_isOfFinOrder_of_one_lt
     (Nat.ne_of_gt
       (Nat.one_lt_pow hk.ne' hn)) hnat
 
+open scoped Classical in
 /-- Every member of the rational factorization support is prime. -/
 theorem prime_of_mem_rationalPrimeFactorizationSupport
     (x : ℚˣ) (p : Nat.Primes) {q : ℕ}
@@ -421,6 +440,7 @@ theorem prime_of_mem_rationalPrimeFactorizationSupport
     q.Prime :=
   (Finset.mem_filter.mp hq).2
 
+open scoped Classical in
 /-- The canonical embedding of the natural-number factorization support
 into the type of natural primes. -/
 def rationalPrimeFactorizationSupportEmbedding
@@ -435,12 +455,14 @@ def rationalPrimeFactorizationSupportEmbedding
     exact
       congrArg (fun z : Nat.Primes => (z : ℕ)) h
 
+open scoped Classical in
 /-- The factorization support as an actual finite set of `Nat.Primes`. -/
 def rationalPrimeFactorizationPrimeSupport
     (x : ℚˣ) (p : Nat.Primes) : Finset Nat.Primes :=
   Finset.univ.map
     (rationalPrimeFactorizationSupportEmbedding x p)
 
+open scoped Classical in
 /-- Membership in the prime-valued support is exactly membership of the
 underlying natural number in the original support. -/
 @[simp]
@@ -463,17 +485,17 @@ theorem mem_rationalPrimeFactorizationPrimeSupport_iff
     apply Subtype.ext
     rfl
 
+open scoped Classical in
 /-- The distinguished prime belongs to the prime-valued support. -/
-@[simp]
 theorem mem_rationalPrimeFactorizationPrimeSupport
     (x : ℚˣ) (p : Nat.Primes) :
     p ∈ rationalPrimeFactorizationPrimeSupport x p :=
   (mem_rationalPrimeFactorizationPrimeSupport_iff x p p).2
     (mem_rationalPrimeFactorizationSupport x p)
 
+open scoped Classical in
 /-- Erasing `p` commutes with passing from natural-number support to
 prime-valued support. -/
-@[simp]
 theorem mem_rationalPrimeFactorizationPrimeSupport_erase_iff
     (x : ℚˣ) (p q : Nat.Primes) :
     q ∈ (rationalPrimeFactorizationPrimeSupport x p).erase p ↔
@@ -491,6 +513,7 @@ theorem mem_rationalPrimeFactorizationPrimeSupport_erase_iff
         (mem_rationalPrimeFactorizationPrimeSupport_iff
           x p q).2 hq⟩
 
+open scoped Classical in
 /-- The canonical prime associated with an element of the erased natural
 support. -/
 def rationalPrimeOfMemFactorizationSupportErase
@@ -501,6 +524,7 @@ def rationalPrimeOfMemFactorizationSupportErase
     prime_of_mem_rationalPrimeFactorizationSupport
       x p (Finset.mem_of_mem_erase q.2)⟩
 
+open scoped Classical in
 /-- The erased natural support and the erased prime-valued support have
 canonically equivalent element types. -/
 def rationalPrimeFactorizationSupportEraseEquiv
@@ -523,6 +547,7 @@ def rationalPrimeFactorizationSupportEraseEquiv
     apply Subtype.ext
     rfl
 
+open scoped Classical in
 /-- A prime in the support with `p` erased is coprime to `p`. -/
 theorem coprime_of_mem_rationalPrimeFactorizationSupport_erase
     (x : ℚˣ) (p : Nat.Primes) {q : ℕ}
@@ -537,6 +562,7 @@ theorem coprime_of_mem_rationalPrimeFactorizationSupport_erase
     (Nat.coprime_primes p.2 hqprime).2
       (Finset.ne_of_mem_erase hq).symm
 
+open scoped Classical in
 /-- The rational prime-unit factorization, lifted from `ℚ` to an exact
 identity of units of `ℤ_[p]`. -/
 theorem padicIntUnitOfRat_rationalPrimeUnit_factorization
@@ -642,6 +668,7 @@ theorem padicIntUnitOfRat_rationalPrimeUnit_factorization
   simpa only [map_mul, map_prod, map_zpow₀,
     map_natCast] using hQ
 
+open scoped Classical in
 /-- The rational prime-unit factorization after reduction modulo `p ^ k`. -/
 theorem padicIntUnitOfRat_rationalPrimeUnit_toZModPow
     (x : ℚˣ) (p : Nat.Primes) (k : ℕ) :
@@ -664,6 +691,7 @@ theorem padicIntUnitOfRat_rationalPrimeUnit_toZModPow
   simpa only [map_mul, map_prod, map_zpow,
     padicNatUnit_toZModPow] using h
 
+open scoped Classical in
 /-- Multiplying the reduced rational prime-unit by the inverse powers of all
 prime factors away from `p` recovers the reduced sign. -/
 theorem padicIntUnitOfRat_rationalPrimeUnit_mul_inverseFactors_toZModPow
@@ -684,6 +712,7 @@ theorem padicIntUnitOfRat_rationalPrimeUnit_mul_inverseFactors_toZModPow
   rw [mul_assoc, ← Finset.prod_mul_distrib]
   simp
 
+open scoped Classical in
 /-- Prime-valued support form of the reduced rational product formula.
 The direct `p`-adic unit factor times all inverse away-from-`p` factors
 is the reduced rational sign. -/
@@ -730,6 +759,7 @@ theorem
     padicIntUnitOfRat_rationalPrimeUnit_mul_inverseFactors_toZModPow
       x p k
 
+open scoped Classical in
 /-- Multiplication by the reduced sign cancels the sign in the reduced
 prime-unit factorization. -/
 theorem rationalSignPadicUnit_mul_primeUnit_toZModPow
@@ -750,6 +780,7 @@ theorem rationalSignPadicUnit_mul_primeUnit_toZModPow
   rw [← mul_assoc, ← pow_two,
     rationalSignPadicUnit_toZModPow_sq, one_mul]
 
+open scoped Classical in
 /-- Inverse/cancellation form of the reduced prime-unit factorization. -/
 theorem padicIntUnitOfRat_rationalPrimeUnit_toZModPow_inv_mul
     (x : ℚˣ) (p : Nat.Primes) (k : ℕ) :

@@ -29,7 +29,8 @@ variable {K L : Type u} [Field K] [Field L] [Algebra K L]
 /-- The base field, viewed as the bottom intermediate field, is finite
 unramified.  This supplies the empty finite-compositum case. -/
 theorem finiteUnramifiedSubextension_bot
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     (hhens : ValuationTheory.DiscreteValuationField.HenselianValuationByFactorization
       (LubinTate.Valuations.exponentialValuationSubringAsValuationSubring v).valuation) :
@@ -67,7 +68,8 @@ theorem finiteUnramifiedSubextension_bot
 unramified. -/
 theorem finiteUnramifiedSubextension_finset_iSup
     {ι : Type*}
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     (hhens : ValuationTheory.DiscreteValuationField.HenselianValuationByFactorization
       (LubinTate.Valuations.exponentialValuationSubringAsValuationSubring v).valuation)
@@ -129,7 +131,8 @@ theorem finiteUnramifiedSubextension_finset_iSup
 /-- Every element of the maximal unramified subextension belongs to one
 finite unramified intermediate field. -/
 theorem exists_finiteUnramifiedSubextension_of_mem_maximal
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     (hhens : ValuationTheory.DiscreteValuationField.HenselianValuationByFactorization
       (LubinTate.Valuations.exponentialValuationSubringAsValuationSubring v).valuation)

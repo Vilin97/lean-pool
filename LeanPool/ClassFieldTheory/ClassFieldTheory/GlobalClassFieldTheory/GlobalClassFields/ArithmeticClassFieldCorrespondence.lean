@@ -24,7 +24,7 @@ canonical arithmetic reciprocity homeomorphism
 are fixed rather than merely asserted to exist.
 -/
 
-open scoped Classical IsMulCommutative NumberField
+open scoped IsMulCommutative NumberField
 
 noncomputable section
 
@@ -36,6 +36,7 @@ open Reciprocity
 
 variable {K : Type} [Field K] [NumberField K]
 
+open scoped Classical in
 /-- Fix the commutative idèle-class instance path used by every quotient in
 this module, so the norm quotient and the literal quotient share one normality
 construction during elaboration. -/
@@ -45,6 +46,9 @@ local instance
     IsMulCommutative (IdeleClassGroup F) :=
   ⟨⟨fun a b => mul_comm a b⟩⟩
 
+attribute [local instance] arithmeticClassFieldCorrespondenceIdeleClassGroupIsMulCommutative
+
+open scoped Classical in
 private noncomputable def
     arithmeticClosedFiniteIndexClassFieldReciprocityData
     (H : Subgroup (IdeleClassGroup K))
@@ -114,6 +118,7 @@ private noncomputable def
         (closedFiniteIndexClassField_ideleClassNorm_range
           (K := K) H hclosed) c
 
+open scoped Classical in
 /-- Arithmetic global reciprocity for the actual class field selected
 by a closed finite-index idèle-class subgroup. -/
 noncomputable def
@@ -127,9 +132,9 @@ noncomputable def
   (arithmeticClosedFiniteIndexClassFieldReciprocityData
     (K := K) H hclosed).1
 
+open scoped Classical in
 /-- The arithmetic norm-residue symbol of an idèle class maps to its
 literal class modulo the defining subgroup. -/
-@[simp]
 theorem
     arithmeticClosedFiniteIndexClassFieldGaloisContinuousMulEquivNormQuotient_globalNormResidue
     (H : Subgroup (IdeleClassGroup K))
@@ -146,9 +151,9 @@ theorem
     (arithmeticClosedFiniteIndexClassFieldReciprocityData
       (K := K) H hclosed).2 c
 
+open scoped Classical in
 /-- The inverse correspondence sends a represented class modulo `H`
 to its actual arithmetic global norm-residue automorphism. -/
-@[simp]
 theorem
     arithmeticClosedFiniteIndexClassFieldGaloisContinuousMulEquivNormQuotient_symm_mk
     (H : Subgroup (IdeleClassGroup K))

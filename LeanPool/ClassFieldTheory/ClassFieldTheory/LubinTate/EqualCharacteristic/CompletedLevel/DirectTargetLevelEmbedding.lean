@@ -8,7 +8,8 @@ import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.
 import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.CompletedLevel.CompletedPrimitiveAction
 import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.CompletedLevel.DirectThetaAtCompletedLevel
 /-!
-# The completed theta-intertwining theorem: the direct target level inside the completed source level
+# The completed theta-intertwining theorem: the direct target level inside the completed source
+  level
 
 The analytic value `theta(lambda)` is primitive torsion for the target
 parameter `uT`.  We identify `uT` with the changed Laurent uniformizer,
@@ -30,12 +31,15 @@ open LocalFieldTheory.DiscreteValuationField
 
 variable {K : Type u} [Field K]
 
+/-- The Laurent-series base acts on the completed unramified field through the coefficient
+embedding. -/
 noncomputable local instance equalCharacteristicDirectTargetBaseAlgebra
     (F : LocalField.{u, v} K) :
     Algebra F.residueField⸨X⸩
       (equalCharacteristicCompletedUnramifiedField F.residueField) :=
   laurentSeriesCoefficientAlgebra
 
+/-- The completed level field is a Laurent-series algebra through the completed unramified base. -/
 noncomputable local instance equalCharacteristicDirectTargetLevelAlgebra
     (F : LocalField.{u, v} K) (n : ℕ) :
     Algebra F.residueField⸨X⸩

@@ -11,7 +11,8 @@ import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.
 /-!
 # LubinTate the explicit norm-subgroup computation: higher units are norms from the standard level
 
-The fixed-field norm `N(-pi_delta) = aT` from the completed theta-intertwining theorem is transported through
+The fixed-field norm `N(-pi_delta) = aT` from the completed theta-intertwining theorem is
+  transported through
 the standard-level equivalence.  Cancelling the already known norm `T`
 then puts every level-`n+1` higher unit in the standard norm subgroup.
 -/

@@ -20,8 +20,8 @@ universe u v
 /-- A number-field extension is unramified at every finite prime of the base. -/
 def IsUnramifiedAtFinitePlaces
     (K : Type u) (L : Type v)
-    [Field K] [NumberField K]
-    [Field L] [NumberField L] [Algebra K L] : Prop :=
+    [Field K]
+    [Field L] [Algebra K L] : Prop :=
   ∀ v : HeightOneSpectrum (𝓞 K),
     Algebra.IsUnramifiedIn (𝓞 L) v.asIdeal
 

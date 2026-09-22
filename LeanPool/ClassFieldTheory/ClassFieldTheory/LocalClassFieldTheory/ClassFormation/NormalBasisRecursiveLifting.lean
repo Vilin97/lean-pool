@@ -64,7 +64,8 @@ theorem exists_chosenNormalBasisPrincipalUnit_fixed_is_tateNorm :
       (K := K) (L := L) with ⟨cStep, hStep⟩
   rcases exists_tendsto_chosenNormalBasisPrincipalUnitCorrectionProduct
       (K := K) (L := L) with ⟨cProd, hProd⟩
-  rcases exists_chosenBaseUniformizerPow_chosenNormalBasisIntegerLattice_le_integerRingFieldSubmodule
+  rcases
+    exists_chosenBaseUniformizerPow_chosenNormalBasisIntegerLattice_le_integerRingFieldSubmodule
       (K := K) (L := L) with ⟨b, hb⟩
   refine ⟨max cStep (max cProd (b + 1)), ?_⟩
   intro n hn a ha hfixed
@@ -161,7 +162,8 @@ theorem exists_chosenNormalBasisPrincipalUnit_normOne_is_sigmaMinusOne
       (K := K) (L := L) g hgen with ⟨cStep, hStep⟩
   rcases exists_tendsto_chosenNormalBasisPrincipalUnitCorrectionProduct
       (K := K) (L := L) with ⟨cProd, hProd⟩
-  rcases exists_chosenBaseUniformizerPow_chosenNormalBasisIntegerLattice_le_integerRingFieldSubmodule
+  rcases
+    exists_chosenBaseUniformizerPow_chosenNormalBasisIntegerLattice_le_integerRingFieldSubmodule
       (K := K) (L := L) with ⟨b, hb⟩
   refine ⟨max cStep (max cProd (b + 1)), ?_⟩
   intro n hn a ha hnorma

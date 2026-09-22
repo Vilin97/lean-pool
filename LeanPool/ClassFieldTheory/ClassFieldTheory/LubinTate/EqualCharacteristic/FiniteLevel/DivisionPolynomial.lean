@@ -35,7 +35,7 @@ variable {K : Type u} [Field K]
 
 private instance equalCharacteristicDivisionBaseCharP
     (F : LocalField.{u, v} K)
-    [CharP K F.residueCharacteristic] :
+    :
     CharP F.residueField⸨X⸩ F.residueCharacteristic :=
   charP_of_injective_algebraMap
     (algebraMap F.residueField F.residueField⸨X⸩).injective
@@ -140,7 +140,7 @@ theorem equalCharacteristicLubinTatePrimitivePolynomial_natDegree
 distinguished endomorphism. -/
 theorem equalCharacteristicLubinTatePiPolynomial_eval₂
     (F : LocalField.{u, v} K)
-    [CharP K F.residueCharacteristic]
+
     {A : Type*} [Field A] [CharP A F.residueCharacteristic]
     (φ : F.residueField⸨X⸩ →+* A) (x : A) :
     Polynomial.eval₂ φ x (equalCharacteristicLubinTatePiPolynomial F) =
@@ -329,7 +329,7 @@ closure.  Separability of this polynomial is established below before the
 root is used to define the level field. -/
 theorem exists_equalCharacteristicLubinTatePrimitivePolynomial_root
     (F : LocalField.{u, v} K)
-    [CharP K F.residueCharacteristic]
+
     (n : ℕ) :
     ∃ x : SeparableClosure F.residueField⸨X⸩,
       ((equalCharacteristicLubinTatePrimitivePolynomial F n).map

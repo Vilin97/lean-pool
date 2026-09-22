@@ -9,10 +9,11 @@ import LeanPool.ClassFieldTheory.ClassFieldTheory.KummerTheory.Concrete.SUnitPre
 /-!
 # Restriction from an enlarged S-unit Kummer extension
 
-The concrete embedding and Galois restriction map, its fixing subgroup, and the cyclic fixed fields attached to kernel elements.
+The concrete embedding and Galois restriction map, its fixing subgroup, and the cyclic fixed
+  fields attached to kernel elements.
 -/
 
-open scoped NumberField Classical IsMulCommutative NNReal ValuativeRel
+open scoped NumberField IsMulCommutative NNReal ValuativeRel
 open NumberField IsDedekindDomain
 open LocalFieldTheory
 
@@ -23,6 +24,7 @@ namespace KummerTheory
 variable {K : Type*} [Field K]
     [numberFieldK : NumberField K]
 
+open scoped Classical in
 /-- The actual field containment `L ≤ N` for finite S-unit preparation, after producing
 the required finite enlargement of `S`. -/
 theorem le_fullSUnitKummerExtension_of_enlargedS
@@ -54,6 +56,7 @@ theorem le_fullSUnitKummerExtension_of_enlargedS
   rw [hgenerate]
   exact hx
 
+open scoped Classical in
 /-- The actual inclusion algebra `E → N` supplied by the source-produced
 containment above. -/
 @[reducible]
@@ -76,6 +79,7 @@ noncomputable def enlargedSUnitKummerAlgebra
     (le_fullSUnitKummerExtension_of_enlargedS
       (K := K) (Omega := Omega) E n hmu hexponent S)).toAlgebra
 
+open scoped Classical in
 /-- Restriction from the full `S`-unit Kummer extension `N` to the actual
 extension `E ≤ N` produced above. -/
 noncomputable def enlargedSUnitKummerRestrictionHom
@@ -106,6 +110,7 @@ noncomputable def enlargedSUnitKummerRestrictionHom
     AlgEquiv.restrictNormalHom
       (F := K) (K₁ := N) (E := E)
 
+open scoped Classical in
 /-- The restriction map `Gal(N/K) → Gal(E/K)` is onto. -/
 theorem enlargedSUnitKummerRestrictionHom_surjective
     {Omega : Type*} [Field Omega] [Algebra K Omega]
@@ -138,6 +143,7 @@ theorem enlargedSUnitKummerRestrictionHom_surjective
     (AlgEquiv.restrictNormalHom_surjective
       (F := K) (K₁ := E) (E := N))
 
+open scoped Classical in
 /-- The actual embedded copy of `E` inside the full `S`-unit Kummer
 extension `N`. -/
 noncomputable def enlargedSUnitKummerEmbeddedExtension
@@ -166,6 +172,7 @@ noncomputable def enlargedSUnitKummerEmbeddedExtension
   let : IsScalarTower K E N := by infer_instance
   exact (IsScalarTower.toAlgHom K E N).fieldRange
 
+open scoped Classical in
 /-- The kernel of restriction is precisely the subgroup fixing the
 concrete embedded copy of `E` in `N`. -/
 theorem enlargedSUnitKummerRestrictionHom_ker_eq_fixingSubgroup
@@ -229,6 +236,7 @@ theorem enlargedSUnitKummerRestrictionHom_ker_eq_fixingSubgroup
       (AlgEquiv.restrictNormal_commutes sigma E x).trans
         (hsigma (algebraMap E N x) ⟨x, rfl⟩)
 
+open scoped Classical in
 /-- The field fixed by the concrete restriction kernel is exactly the
 embedded copy of `E`. -/
 theorem fixedField_enlargedSUnitKummerRestrictionHom_ker
@@ -272,6 +280,7 @@ theorem fixedField_enlargedSUnitKummerRestrictionHom_ker
         (K := K) (Omega := Omega) E n hmu
         hexponent S)
 
+open scoped Classical in
 /-- For an element `sigma` of the relative Galois subgroup
 `Gal(N/E)`, this is the actual cyclic fixed field
 `N_sigma = N ^ ⟨sigma⟩` used in the prime construction of the finite S-unit preparation argument. -/
@@ -302,6 +311,7 @@ noncomputable def enlargedSUnitKummerCyclicFixedField
           (enlargeByFiniteKummerRadicalSupport
             (K := K) (L := E) n hmu S)/K)))
 
+open scoped Classical in
 /-- The embedded extension `E` lies in every cyclic fixed field attached
 to an element of `Gal(N/E)`. -/
 theorem enlargedSUnitKummerEmbeddedExtension_le_cyclicFixedField
@@ -331,6 +341,7 @@ theorem enlargedSUnitKummerEmbeddedExtension_le_cyclicFixedField
       hexponent S]
   exact Subgroup.zpowers_le.mpr sigma.2
 
+open scoped Classical in
 /-- The top Kummer field is Galois over each cyclic fixed field. -/
 theorem enlargedSUnitKummerCyclicFixedField_isGalois
     {Omega : Type*} [Field Omega] [Algebra K Omega]
@@ -374,6 +385,7 @@ theorem enlargedSUnitKummerCyclicFixedField_isGalois
         (Subgroup.zpowers (sigma : Gal(N/K)))) N
   exact IsGalois.of_fixed_field N _
 
+open scoped Classical in
 /-- The relative degree of `N/N_sigma` is the order of `sigma`. -/
 theorem enlargedSUnitKummerCyclicFixedField_finrank
     {Omega : Type*} [Field Omega] [Algebra K Omega]
@@ -422,6 +434,7 @@ theorem enlargedSUnitKummerCyclicFixedField_finrank
   rw [IntermediateField.finrank_fixedField_eq_card,
     Nat.card_zpowers]
 
+open scoped Classical in
 /-- The relative Galois group `Gal(N/N_sigma)` is cyclic. -/
 theorem enlargedSUnitKummerCyclicFixedField_isCyclic
     {Omega : Type*} [Field Omega] [Algebra K Omega]
@@ -468,6 +481,7 @@ theorem enlargedSUnitKummerCyclicFixedField_isCyclic
     (IntermediateField.subgroupEquivAlgEquiv P).isCyclic.mp
       hP
 
+open scoped Classical in
 /-- The order of every relative automorphism divides the Kummer
 exponent `n`. -/
 theorem orderOf_enlargedSUnitKummerRestrictionKernel_dvd
@@ -502,6 +516,7 @@ theorem orderOf_enlargedSUnitKummerRestrictionKernel_dvd
           (enlargeByFiniteKummerRadicalSupport
             (K := K) (L := E) n hmu S)/K)))
 
+open scoped Classical in
 /-- If `n = p^v`, then the cyclic degree attached to every relative
 automorphism is a power of `p`. -/
 theorem exists_orderOf_enlargedSUnitKummerRestrictionKernel_eq_prime_pow
@@ -535,6 +550,7 @@ theorem exists_orderOf_enlargedSUnitKummerRestrictionKernel_eq_prime_pow
       (K := K) (Omega := Omega) E n hmu
       hexponent S sigma
 
+open scoped Classical in
 /-- A nonidentity relative automorphism gives a genuinely nontrivial
 cyclic subextension. -/
 theorem enlargedSUnitKummerCyclicFixedField_ne_top
@@ -568,6 +584,7 @@ theorem enlargedSUnitKummerCyclicFixedField_ne_top
   rw [htop, IntermediateField.finrank_top] at hdegree
   exact hsigma (orderOf_eq_one_iff.mp hdegree.symm)
 
+open scoped Classical in
 /-- In the prime-power case, a nonidentity relative automorphism has
 order `p^k` with positive exponent. -/
 theorem exists_pos_orderOf_enlargedSUnitKummerRestrictionKernel_eq_prime_pow

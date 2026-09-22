@@ -67,7 +67,8 @@ def finiteGaloisClosedFixingSubgroupOfEmbedding
   closedFixingSubgroup K (SeparableClosure K)
     (finiteGaloisFieldRangeOfEmbedding K L i)
 
-/-- The fixing subgroup of an embedded finite Galois extension is normal in the absolute subgroup. -/
+/-- The fixing subgroup of an embedded finite Galois extension is normal in the absolute
+subgroup. -/
 noncomputable instance finiteGaloisExtensionSubgroupOfEmbedding_normal
     (i : L →ₐ[K] SeparableClosure K) :
     (extensionSubgroup

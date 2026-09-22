@@ -834,7 +834,8 @@ theorem finiteGaloisAbstractQuotientEquivGaloisGroup_conjugation_additive
         (MulEquiv.toAdditive
           ((finiteGaloisConjugationOfEmbeddings K L i j).abelianizationCongr) z) =
       MulEquiv.toAdditive
-        ((finiteGaloisAbstractQuotientEquivGaloisGroupOfEmbedding K L i).abelianizationCongr) z := by
+        ((finiteGaloisAbstractQuotientEquivGaloisGroupOfEmbedding K L i).abelianizationCongr) z
+          := by
   apply Additive.toMul.injective
   exact finiteGaloisAbstractQuotientEquivGaloisGroup_conjugation
     K L i j z.toMul

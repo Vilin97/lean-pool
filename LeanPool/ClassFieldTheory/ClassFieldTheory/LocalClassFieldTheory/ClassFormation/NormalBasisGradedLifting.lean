@@ -8,7 +8,8 @@ import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.ClassFor
 import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.ClassFormation.PrincipalUnitGraded
 import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.ClassFormation.NormalBasisGaloisAction
 import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.HerbrandLowDegree.Basic
-/-! Provides the public declarations in the `LocalClassFieldTheory.ClassFormation.NormalBasisGradedLifting` Lean module. -/
+/-! Provides the public declarations in the
+  `LocalClassFieldTheory.ClassFormation.NormalBasisGradedLifting` Lean module. -/
 
 namespace LocalClassFieldTheory
 

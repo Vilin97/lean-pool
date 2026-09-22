@@ -91,7 +91,7 @@ def rootQuotient (β : Lˣ) (σ : Gal(L/K)) : Lˣ :=
   simp [rootQuotient]
 
 /-- Base-field units have trivial root-quotient. -/
-@[simp] theorem rootQuotient_algebraMap_unit (u : Kˣ) (σ : Gal(L/K)) :
+theorem rootQuotient_algebraMap_unit (u : Kˣ) (σ : Gal(L/K)) :
     rootQuotient (K := K) (L := L) (Units.map (algebraMap K L).toMonoidHom u) σ = 1 := by
   unfold rootQuotient
   ext
@@ -220,7 +220,7 @@ theorem isMulCocycle₁_rootCocycle (a : D.carrier) :
   exact isMulCocycle₁_rootQuotient (K := K) (L := L) (D.root a)
 
 /-- Galois automorphisms fix units coming from the base field. -/
-@[simp] theorem smul_algebraMap_unit (σ : Gal(L/K)) (u : Kˣ) :
+theorem smul_algebraMap_unit (σ : Gal(L/K)) (u : Kˣ) :
     σ • Units.map (algebraMap K L).toMonoidHom u =
       Units.map (algebraMap K L).toMonoidHom u := by
   ext

@@ -437,7 +437,6 @@ theorem globalNormResidueMonoidHom_comp_infinitePlaceIdeleClass
 /-- One-place archimedean norm membership is exactly membership in the
 local determinant-norm subgroup.  This is the norm-kernel form of
 archimedean local-global Artin compatibility. -/
-@[simp]
 theorem infinitePlaceIdeleClass_mem_ideleClassNorm_range_iff
     (v : InfinitePlace K)
     (x : v.Completionˣ) :

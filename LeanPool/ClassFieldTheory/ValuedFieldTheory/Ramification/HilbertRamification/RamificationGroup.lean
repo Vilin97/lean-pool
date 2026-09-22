@@ -124,7 +124,7 @@ abbrev ramificationGroupInInertiaAut
     (ramificationGroup K A)
 
 /-- States the theorem `mem_ramificationGroupInInertiaAut_iff`. -/
-@[simp] theorem mem_ramificationGroupInInertiaAut_iff
+theorem mem_ramificationGroupInInertiaAut_iff
     (A : _root_.ValuationSubring L) (σ : inertiaGroupInAut K A) :
     σ ∈ ramificationGroupInInertiaAut K A ↔
       ∃ τ : ramificationGroup K A,
@@ -158,7 +158,7 @@ def inertiaGroupQuotientRamificationEquivInertiaAutQuotient
     rfl
 
 /-- States the theorem `inertiaGroupQuotientRamificationEquivInertiaAutQuotient_mk`. -/
-@[simp] theorem inertiaGroupQuotientRamificationEquivInertiaAutQuotient_mk
+theorem inertiaGroupQuotientRamificationEquivInertiaAutQuotient_mk
     (A : _root_.ValuationSubring L) (σ : inertiaGroup K A) :
     inertiaGroupQuotientRamificationEquivInertiaAutQuotient
         (K := K) A (QuotientGroup.mk' (ramificationGroup K A) σ) =

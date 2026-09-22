@@ -77,7 +77,8 @@ theorem roots_principalUnit_uniformizer_zpow_eq_iff_of_completeDVF
     (F : ValuationTheory.DiscreteValuationField.CompleteDVF.{u, v} K) [Finite F.residueField]
     {π : F.valuationSubring} (hπ : F.valuation.IsUniformizer (π : K))
     (ζ η : residueRootsOfUnityGroup F)
-    (p q : (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) 1) (m n : ℤ) :
+    (p q : (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) 1)
+      (m n : ℤ) :
     valuationSubringUnitFieldUnitHom F
           (ζ : F.valuationSubringˣ) *
         valuationSubringUnitFieldUnitHom F
@@ -106,7 +107,7 @@ theorem roots_principalUnit_uniformizer_zpow_eq_iff_of_completeDVF
 /-- The uniformizer–residue–principal-unit decomposition, group-isomorphism form for a complete
 DVF with a fixed uniformizer:
 `K^* ≃ μ_{q-1} × U^1 × ℤ`. -/
-noncomputable def fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF
+noncomputable def fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
     (F : ValuationTheory.DiscreteValuationField.CompleteDVF.{u, v} K) [Finite F.residueField]
     {π : F.valuationSubring} (hπ : F.valuation.IsUniformizer (π : K)) :
     fieldUnitDecompositionFactors F ≃* Kˣ := by
@@ -121,12 +122,12 @@ noncomputable def fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF
     simpa [V] using
       (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.multiplicativeIntegerValuationOfUniformizer_isUniformizer F) hπ
   exact
-    fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_zeroSubgroup_eq_unitGroup
+    fieldUnitsEquivRootsPrincipalUnitsUniformizerOfZeroSubgroupEqUnitGroup
       (F := F) V hzero hπV
 
 /--
-The defining evaluation formula for `fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF`
-is `fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF F hπ z =
+The defining evaluation formula for `fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF`
+is `fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF F hπ z =
 valuationSubringUnitFieldUnitHom F (z.1.1 : F.valuationSubringˣ) *
 valuationSubringUnitFieldUnitHom F (z.1.2 : F.valuationSubringˣ) * (Units.mk0 (π : K) hπ.ne_zero)
 ^ Multiplicative.toAdd z.2`.
@@ -136,7 +137,7 @@ theorem fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF_apply
     (F : ValuationTheory.DiscreteValuationField.CompleteDVF.{u, v} K) [Finite F.residueField]
     {π : F.valuationSubring} (hπ : F.valuation.IsUniformizer (π : K))
     (z : fieldUnitDecompositionFactors F) :
-    fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF
+    fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
         F hπ z =
       valuationSubringUnitFieldUnitHom F
           (z.1.1 : F.valuationSubringˣ) *
@@ -160,20 +161,19 @@ theorem fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF_apply
         mem_zeroSubgroup_iff_exists_valuationSubringUnitFieldUnitHom_eq
           (F := F) V hzero y)
       hπV z
-  simp [fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF,
-    fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_zeroSubgroup_eq_unitGroup]
+  simp [fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF,
+    fieldUnitsEquivRootsPrincipalUnitsUniformizerOfZeroSubgroupEqUnitGroup]
 
 /--
 Establishes the identity `((CompleteDVF.multiplicativeIntegerValuationOfUniformizer F) hπ).val
-(fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF F hπ z) = Multiplicative.toAdd z.2`.
+(fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF F hπ z) = Multiplicative.toAdd z.2`.
 -/
-@[simp]
 theorem multiplicativeIntegerValuationOfUniformizer_fieldUnitsEquivRootsPrincipalUnitsUniformizer
     (F : ValuationTheory.DiscreteValuationField.CompleteDVF.{u, v} K) [Finite F.residueField]
     {π : F.valuationSubring} (hπ : F.valuation.IsUniformizer (π : K))
     (z : fieldUnitDecompositionFactors F) :
     ((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.multiplicativeIntegerValuationOfUniformizer F) hπ).val
-        (fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF
+        (fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
           F hπ z) =
       Multiplicative.toAdd z.2 := by
   let V : MultiplicativeIntegerValuation Kˣ :=
@@ -208,15 +208,14 @@ theorem multiplicativeIntegerValuationOfUniformizer_fieldUnitsEquivRootsPrincipa
 
 /--
 Establishes the identity `(CompleteDVF.uniformizerValueExponent F) hπ
-(fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF F hπ z) = Multiplicative.toAdd z.2`.
+(fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF F hπ z) = Multiplicative.toAdd z.2`.
 -/
-@[simp]
 theorem uniformizerValueExponent_fieldUnitsEquivRootsPrincipalUnitsUniformizer
     (F : ValuationTheory.DiscreteValuationField.CompleteDVF.{u, v} K) [Finite F.residueField]
     {π : F.valuationSubring} (hπ : F.valuation.IsUniformizer (π : K))
     (z : fieldUnitDecompositionFactors F) :
     (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ
-        (fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF
+        (fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
           F hπ z) =
       Multiplicative.toAdd z.2 :=
   multiplicativeIntegerValuationOfUniformizer_fieldUnitsEquivRootsPrincipalUnitsUniformizer
@@ -224,27 +223,27 @@ theorem uniformizerValueExponent_fieldUnitsEquivRootsPrincipalUnitsUniformizer
 
 /--
 Establishes the identity `Multiplicative.toAdd
-((fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF F hπ).symm x).2 =
+((fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF F hπ).symm x).2 =
 (CompleteDVF.uniformizerValueExponent F) hπ x`.
 -/
-@[simp]
 theorem uniformizerValueExponent_fieldUnitsEquivRootsPrincipalUnitsUniformizer_symm
     (F : ValuationTheory.DiscreteValuationField.CompleteDVF.{u, v} K) [Finite F.residueField]
     {π : F.valuationSubring} (hπ : F.valuation.IsUniformizer (π : K))
     (x : Kˣ) :
     Multiplicative.toAdd
-        ((fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF
+        ((fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
           F hπ).symm x).2 =
-      (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ x := by
+      (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ
+        x := by
   have h :=
     uniformizerValueExponent_fieldUnitsEquivRootsPrincipalUnitsUniformizer
       F hπ
-      ((fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF
+      ((fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
         F hπ).symm x)
   simpa using h.symm
 
 /--
-Establishes the identity `((fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF F
+Establishes the identity `((fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF F
 hπ).symm x).2 = Multiplicative.ofAdd ((CompleteDVF.uniformizerValueExponent F) hπ x)`.
 -/
 @[simp]
@@ -252,28 +251,33 @@ theorem fieldUnitsEquivRootsPrincipalUnitsUniformizer_symm_snd
     (F : ValuationTheory.DiscreteValuationField.CompleteDVF.{u, v} K) [Finite F.residueField]
     {π : F.valuationSubring} (hπ : F.valuation.IsUniformizer (π : K))
     (x : Kˣ) :
-    ((fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF
+    ((fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
       F hπ).symm x).2 =
-      Multiplicative.ofAdd ((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ x) := by
+      Multiplicative.ofAdd
+        ((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F)
+        hπ x) := by
   let E :=
-    fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF
+    fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
       F hπ
   have h :
       Multiplicative.toAdd ((E.symm x).2) =
-        (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ x := by
-    simp [E]
+        (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F)
+          hπ x := by
+    exact uniformizerValueExponent_fieldUnitsEquivRootsPrincipalUnitsUniformizer_symm F hπ x
   calc
     (E.symm x).2 = Multiplicative.ofAdd (Multiplicative.toAdd ((E.symm x).2)) := by
       simp
-    _ = Multiplicative.ofAdd ((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ x) := by
+    _ = Multiplicative.ofAdd
+      ((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F)
+      hπ x) := by
       rw [h]
 
 /--
 `fieldUnitsEquivRootsPrincipalUnitsUniformizer_symm_factors_mul_uniformizer` satisfies the
 integer-power formula `valuationSubringUnitFieldUnitHom F
-(((fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF F hπ).symm x).1.1 :
+(((fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF F hπ).symm x).1.1 :
 F.valuationSubringˣ) * valuationSubringUnitFieldUnitHom F
-(((fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF F hπ).symm x).1.2 :
+(((fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF F hπ).symm x).1.2 :
 F.valuationSubringˣ) * (Units.mk0 (π : K) hπ.ne_zero) ^ (CompleteDVF.uniformizerValueExponent F)
 hπ x = x`.
 -/
@@ -282,26 +286,31 @@ theorem fieldUnitsEquivRootsPrincipalUnitsUniformizer_symm_factors_mul_uniformiz
     {π : F.valuationSubring} (hπ : F.valuation.IsUniformizer (π : K))
     (x : Kˣ) :
     valuationSubringUnitFieldUnitHom F
-          (((fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF
+          (((fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
             F hπ).symm x).1.1 : F.valuationSubringˣ) *
         valuationSubringUnitFieldUnitHom F
-          (((fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF
+          (((fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
             F hπ).symm x).1.2 : F.valuationSubringˣ) *
-        (Units.mk0 (π : K) hπ.ne_zero) ^ (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ x =
+        (Units.mk0 (π : K) hπ.ne_zero) ^
+          (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent
+          F) hπ x =
       x := by
   let E :=
-    fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF
+    fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
       F hπ
   have hexp :
       Multiplicative.toAdd ((E.symm x).2) =
-        (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ x := by
+        (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F)
+          hπ x := by
     simp [E]
   calc
     valuationSubringUnitFieldUnitHom F
           (((E.symm x).1.1 : F.valuationSubringˣ)) *
         valuationSubringUnitFieldUnitHom F
           (((E.symm x).1.2 : F.valuationSubringˣ)) *
-        (Units.mk0 (π : K) hπ.ne_zero) ^ (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ x =
+        (Units.mk0 (π : K) hπ.ne_zero) ^
+          (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent
+          F) hπ x =
         valuationSubringUnitFieldUnitHom F
             (((E.symm x).1.1 : F.valuationSubringˣ)) *
           valuationSubringUnitFieldUnitHom F
@@ -315,9 +324,9 @@ theorem fieldUnitsEquivRootsPrincipalUnitsUniformizer_symm_factors_mul_uniformiz
 /--
 `fieldUnitsEquivRootsPrincipalUnitsUniformizer_symm_unitPart_eq_mul_uniformizer_zpow` satisfies
 the negation formula `valuationSubringUnitFieldUnitHom F
-(((fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF F hπ).symm x).1.1 :
+(((fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF F hπ).symm x).1.1 :
 F.valuationSubringˣ) * valuationSubringUnitFieldUnitHom F
-(((fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF F hπ).symm x).1.2 :
+(((fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF F hπ).symm x).1.2 :
 F.valuationSubringˣ) = x * (Units.mk0 (π : K) hπ.ne_zero) ^
 (-((CompleteDVF.uniformizerValueExponent F) hπ x))`.
 -/
@@ -326,32 +335,38 @@ theorem fieldUnitsEquivRootsPrincipalUnitsUniformizer_symm_unitPart_eq_mul_unifo
     {π : F.valuationSubring} (hπ : F.valuation.IsUniformizer (π : K))
     (x : Kˣ) :
     valuationSubringUnitFieldUnitHom F
-          (((fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF
+          (((fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
             F hπ).symm x).1.1 : F.valuationSubringˣ) *
         valuationSubringUnitFieldUnitHom F
-          (((fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF
+          (((fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
             F hπ).symm x).1.2 : F.valuationSubringˣ) =
       x * (Units.mk0 (π : K) hπ.ne_zero) ^
-        (-((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ x)) := by
+        (-((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent
+          F) hπ x)) := by
   let ϖ : Kˣ := Units.mk0 (π : K) hπ.ne_zero
   let u : Kˣ :=
     valuationSubringUnitFieldUnitHom F
-          (((fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF
+          (((fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
             F hπ).symm x).1.1 : F.valuationSubringˣ) *
         valuationSubringUnitFieldUnitHom F
-          (((fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF
+          (((fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
             F hπ).symm x).1.2 : F.valuationSubringˣ)
   have hux :
-      u * ϖ ^ (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ x = x := by
+      u * ϖ ^
+        (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F)
+        hπ x = x := by
     simpa [u, ϖ] using
       fieldUnitsEquivRootsPrincipalUnitsUniformizer_symm_factors_mul_uniformizer_zpow
         F hπ x
   calc
     u = u * 1 := by simp
-    _ = u * (ϖ ^ (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ x *
+    _ = u * (ϖ ^
+      (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ x *
         ϖ ^ (-((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ x))) := by
           rw [← zpow_add, add_neg_cancel, zpow_zero]
-    _ = x * ϖ ^ (-((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ x)) := by
+    _ = x * ϖ ^
+      (-((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F)
+      hπ x)) := by
           rw [← mul_assoc, hux]
 
 /--
@@ -363,7 +378,8 @@ theorem fieldUnitsEquivRootsPrincipalUnitsUniformizer_unitPart_mem_unitGroup
     {π : F.valuationSubring} (hπ : F.valuation.IsUniformizer (π : K))
     (x : Kˣ) :
     x * (Units.mk0 (π : K) hπ.ne_zero) ^
-        (-((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ x)) ∈
+        (-((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent
+          F) hπ x)) ∈
       F.valuation.valuationSubring.unitGroup := by
   let V : MultiplicativeIntegerValuation Kˣ :=
     (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.multiplicativeIntegerValuationOfUniformizer F) hπ
@@ -391,7 +407,8 @@ noncomputable def fieldUnitUniformizerUnitPart
     (x : Kˣ) : F.valuationSubringˣ :=
   F.valuation.valuationSubring.unitGroupMulEquiv
     ⟨x * (Units.mk0 (π : K) hπ.ne_zero) ^
-        (-((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ x)),
+        (-((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent
+          F) hπ x)),
       fieldUnitsEquivRootsPrincipalUnitsUniformizer_unitPart_mem_unitGroup
         F hπ x⟩
 
@@ -407,23 +424,24 @@ theorem valuationSubringUnitFieldUnitHom_fieldUnitUniformizerUnitPart
     valuationSubringUnitFieldUnitHom F
         (fieldUnitUniformizerUnitPart F hπ x) =
       x * (Units.mk0 (π : K) hπ.ne_zero) ^
-        (-((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ x)) := by
+        (-((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent
+          F) hπ x)) := by
   apply Units.ext
   simp [valuationSubringUnitFieldUnitHom, fieldUnitUniformizerUnitPart]
 
 /--
-Establishes the identity `(((fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF F
+Establishes the identity `(((fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF F
 hπ).symm x).1.1 : F.valuationSubringˣ) *
-(((fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF F hπ).symm x).1.2 :
+(((fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF F hπ).symm x).1.2 :
 F.valuationSubringˣ) = fieldUnitUniformizerUnitPart F hπ x`.
 -/
 theorem fieldUnitsEquivRootsPrincipalUnitsUniformizer_symm_unitSubringUnit_eq
     (F : ValuationTheory.DiscreteValuationField.CompleteDVF.{u, v} K) [Finite F.residueField]
     {π : F.valuationSubring} (hπ : F.valuation.IsUniformizer (π : K))
     (x : Kˣ) :
-    (((fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF
+    (((fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
       F hπ).symm x).1.1 : F.valuationSubringˣ) *
-        (((fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF
+        (((fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
           F hπ).symm x).1.2 : F.valuationSubringˣ) =
       fieldUnitUniformizerUnitPart F hπ x := by
   apply valuationSubringUnitFieldUnitHom_injective
@@ -432,7 +450,7 @@ theorem fieldUnitsEquivRootsPrincipalUnitsUniformizer_symm_unitSubringUnit_eq
   rw [valuationSubringUnitFieldUnitHom_fieldUnitUniformizerUnitPart]
 
 /--
-Establishes the identity `((fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF F
+Establishes the identity `((fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF F
 hπ).symm x).1 = (valuationSubringUnitsEquivRootsTimesPrincipalUnits F).symm
 (fieldUnitUniformizerUnitPart F hπ x)`.
 -/
@@ -440,7 +458,7 @@ theorem fieldUnitsEquivRootsPrincipalUnitsUniformizer_symm_fst_eq_unitPart
     (F : ValuationTheory.DiscreteValuationField.CompleteDVF.{u, v} K) [Finite F.residueField]
     {π : F.valuationSubring} (hπ : F.valuation.IsUniformizer (π : K))
     (x : Kˣ) :
-    ((fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF
+    ((fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
       F hπ).symm x).1 =
       (valuationSubringUnitsEquivRootsTimesPrincipalUnits
         F).symm
@@ -459,20 +477,27 @@ theorem uniformizerValueExponent_eq_of_mrangeRestrict_eq
     {π : F.valuationSubring} (hπ : F.valuation.IsUniformizer (π : K))
     {x y : Kˣ}
     (hxy :
-      (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F) (y : K) = (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F) (x : K)) :
+      (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F) (y : K) =
+        (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F) (x : K)) :
     (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ y =
-      (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ x := by
+      (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ
+        x := by
   have hval : F.valuation (y : K) = F.valuation (x : K) :=
     congrArg Subtype.val hxy
-  apply ((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueUnit_zpow_inj F) hπ).1
+  apply
+    ((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueUnit_zpow_inj
+    F) hπ).1
   calc
-    (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueUnit F) hπ ^ (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ y =
+    (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueUnit F) hπ ^
+      (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ y =
         (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.fieldUnitValueUnit F) y := by
       rw [(_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueUnit_zpow_uniformizerValueExponent_eq_fieldUnitValueUnit F)]
     _ = (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.fieldUnitValueUnit F) x := by
       ext
       simpa [CompleteDVF.fieldUnitValueUnit] using hval
-    _ = (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueUnit F) hπ ^ (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ x := by
+    _ = (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueUnit F) hπ ^
+      (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ
+      x := by
       rw [(_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueUnit_zpow_uniformizerValueExponent_eq_fieldUnitValueUnit F)]
 
 /-- The uniformizer exponent is locally constant for the range-restricted
@@ -486,10 +511,12 @@ theorem eventually_uniformizerValueExponent_eq_mrangeRestrict
       (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F)
     ∀ᶠ y : Kˣ in 𝓝 x,
       (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ y =
-        (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ x := by
+        (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F)
+          hπ x := by
   let Γ : Type v :=
     MonoidHom.mrange F.valuation.toMonoidWithZeroHom
-  let : Valued K Γ := (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F)
+  let : Valued K Γ :=
+    (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F)
   have hxne : ((Valued.v : _root_.Valuation K Γ) (x : K) : Γ) ≠ 0 :=
     ((_root_.Valuation.ne_zero_iff
       (Valued.v : _root_.Valuation K Γ)).2 x.ne_zero)
@@ -528,22 +555,29 @@ theorem continuous_uniformizerValueExponent_mrangeRestrict
     letI : Valued K
         (MonoidHom.mrange F.valuation.toMonoidWithZeroHom) :=
       (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F)
-    Continuous (fun x : Kˣ => (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ x) := by
+    Continuous (fun x : Kˣ =>
+      (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ
+      x) := by
   let Γ : Type v :=
     MonoidHom.mrange F.valuation.toMonoidWithZeroHom
-  let : Valued K Γ := (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F)
+  let : Valued K Γ :=
+    (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F)
   rw [continuous_iff_continuousAt]
   intro x
   rw [continuousAt_def]
   intro s hs
-  have hxmem : (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ x ∈ s :=
+  have hxmem :
+    (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ x
+    ∈ s :=
     mem_of_mem_nhds hs
   exact
     Filter.mem_of_superset
       (eventually_uniformizerValueExponent_eq_mrangeRestrict
         F hπ x)
       (fun y hy => by
-        change (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ y ∈ s
+        change
+          (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent
+          F) hπ y ∈ s
         rw [hy]
         exact hxmem)
 
@@ -555,13 +589,15 @@ theorem continuous_fieldUnitsEquivRootsPrincipalUnitsUniformizer_symm_snd_mrange
         (MonoidHom.mrange F.valuation.toMonoidWithZeroHom) :=
       (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F)
     Continuous (fun x : Kˣ =>
-      ((fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF
+      ((fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
         F hπ).symm x).2) := by
   let : Valued K
       (MonoidHom.mrange F.valuation.toMonoidWithZeroHom) :=
     (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F)
   have hval :
-      Continuous (fun x : Kˣ => (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ x) :=
+      Continuous (fun x : Kˣ =>
+        (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F)
+        hπ x) :=
     continuous_uniformizerValueExponent_mrangeRestrict
       F hπ
   have hofAdd :
@@ -586,7 +622,9 @@ theorem continuous_fieldUnitUniformizerUnitPart_mrangeRestrict
     (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F)
   let ϖ : Kˣ := Units.mk0 (π : K) hπ.ne_zero
   have hval :
-      Continuous (fun x : Kˣ => (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ x) :=
+      Continuous (fun x : Kˣ =>
+        (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F)
+        hπ x) :=
     continuous_uniformizerValueExponent_mrangeRestrict
       F hπ
   have hpow :
@@ -594,13 +632,15 @@ theorem continuous_fieldUnitUniformizerUnitPart_mrangeRestrict
     continuous_of_discreteTopology
   have hfield :
       Continuous (fun x : Kˣ =>
-        x * ϖ ^ (-((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ x))) :=
+        x * ϖ ^
+          (-((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ x))) :=
     continuous_id.mul (hpow.comp hval)
   rw [Units.continuous_iff]
   constructor
   · have hfieldK :
         Continuous (fun x : Kˣ =>
-          ((x * ϖ ^ (-((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ x)) : Kˣ) : K)) :=
+          ((x * ϖ ^
+            (-((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ x)) : Kˣ) : K)) :=
       Units.continuous_val.comp hfield
     have hcoerced :
         Continuous (fun x : Kˣ =>
@@ -622,7 +662,8 @@ theorem continuous_fieldUnitUniformizerUnitPart_mrangeRestrict
         F.valuationSubring).2
   · have hfieldInvK :
         Continuous (fun x : Kˣ =>
-          (((x * ϖ ^ (-((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ x)) : Kˣ)⁻¹ :
+          (((x * ϖ ^
+            (-((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ x)) : Kˣ)⁻¹ :
               Kˣ) : K)) :=
       Units.continuous_val.comp hfield.inv
     have hcoercedInv :
@@ -654,10 +695,12 @@ theorem isOpen_higherPrincipalUnitGroup_one_mrangeRestrict
     letI : Valued K
         (MonoidHom.mrange F.valuation.toMonoidWithZeroHom) :=
       (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F)
-    IsOpen (((LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) 1 : Set F.valuationSubringˣ)) := by
+    IsOpen (((LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) 1
+      : Set F.valuationSubringˣ)) := by
   let Γ : Type v :=
     MonoidHom.mrange F.valuation.toMonoidWithZeroHom
-  let : Valued K Γ := (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F)
+  let : Valued K Γ :=
+    (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F)
   rw [isOpen_iff_mem_nhds]
   intro u hu
   have hu_lt :
@@ -1133,7 +1176,7 @@ theorem continuous_fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF_
         (MonoidHom.mrange F.valuation.toMonoidWithZeroHom) :=
       (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F)
     Continuous (fun z : fieldUnitDecompositionFactors F =>
-      fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF
+      fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
         F hπ z) := by
   let : Valued K
       (MonoidHom.mrange F.valuation.toMonoidWithZeroHom) :=
@@ -1153,13 +1196,13 @@ theorem continuous_fieldUnitsEquivRootsPrincipalUnitsUniformizer_symm_mrangeRest
         (MonoidHom.mrange F.valuation.toMonoidWithZeroHom) :=
       (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F)
     Continuous (fun x : Kˣ =>
-      (fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF
+      (fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
         F hπ).symm x) := by
   let : Valued K
       (MonoidHom.mrange F.valuation.toMonoidWithZeroHom) :=
     (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F)
   let E :=
-    fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF
+    fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
       F hπ
   have hfstComp :
       Continuous (fun x : Kˣ =>
@@ -1206,7 +1249,8 @@ theorem continuous_fieldUnitsEquivRootsPrincipalUnitsUniformizer_symm_mrangeRest
 
 /-- The uniformizer–residue–principal-unit decomposition, topological group-isomorphism form for
 the range-restricted valuation topology. -/
-noncomputable def fieldUnitsContinuousMulEquivRootsPrincipalUnitsUniformizer_of_completeDVF_mrangeRestrict
+noncomputable def
+  fieldUnitsContinuousMulEquivRootsPrincipalUnitsUniformizerOfCompleteDVFMrangeRestrict
     (F : ValuationTheory.DiscreteValuationField.CompleteDVF.{u, v} K) [Finite F.residueField]
     {π : F.valuationSubring} (hπ : F.valuation.IsUniformizer (π : K)) :
     letI : Valued K
@@ -1217,7 +1261,7 @@ noncomputable def fieldUnitsContinuousMulEquivRootsPrincipalUnitsUniformizer_of_
       (MonoidHom.mrange F.valuation.toMonoidWithZeroHom) :=
     (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F)
   exact
-    { fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF
+    { fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
         F hπ with
       continuous_toFun :=
         continuous_fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF_mrangeRestrict
@@ -1286,7 +1330,8 @@ theorem roots_principalUnit_uniformizer_zpow_eq_iff_of_withZeroValuation
       change Finite (IsLocalRing.ResidueField v.valuationSubring)
       infer_instance
     ∀ (ζ η : residueRootsOfUnityGroup F)
-      (p q : (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) 1) (m n : ℤ),
+      (p q : (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) 1)
+        (m n : ℤ),
         valuationSubringUnitFieldUnitHom F
               (ζ : F.valuationSubringˣ) *
             valuationSubringUnitFieldUnitHom F

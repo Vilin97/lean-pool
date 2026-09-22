@@ -120,9 +120,9 @@ theorem
   let : NumberField P :=
     numberFieldCyclotomicZHatFiniteLayerInCompositum_numberField K E
   let : Algebra E P :=
-    rationalCyclotomicZHatFiniteLayerInCompositum_algebra K E
+    rationalCyclotomicZHatFiniteLayerInCompositumAlgebra K E
   let : SMul E P :=
-    rationalCyclotomicZHatFiniteLayerInCompositum_smul K E
+    rationalCyclotomicZHatFiniteLayerInCompositumSmul K E
   let : Module E P := Algebra.toModule
   let : IsScalarTower ℚ E P :=
     rationalCyclotomicZHatFiniteLayerInCompositum_scalarTower K E

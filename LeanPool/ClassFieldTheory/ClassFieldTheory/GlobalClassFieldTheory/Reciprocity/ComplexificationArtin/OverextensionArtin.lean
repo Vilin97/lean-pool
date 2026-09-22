@@ -13,7 +13,7 @@ This module proves principal-idele triviality, descends the chosen Artin
 product to the norm quotient, and identifies it with global reciprocity.
 -/
 
-open scoped Classical IsMulCommutative
+open scoped IsMulCommutative
 open NumberField
 open IdeleGroup
 
@@ -35,12 +35,16 @@ section
 attribute [-instance]
   ramifiedInfinitePlaceRealFixedField_ratScalarTower
 
+open scoped Classical in
 local instance
     ramifiedInfinitePlaceOverextensionIdeleClassGroupIsMulCommutative
     {F : Type} [Field F] [NumberField F] :
     IsMulCommutative (IdeleClassGroup F) :=
   ⟨⟨fun a b => mul_comm a b⟩⟩
 
+attribute [local instance] ramifiedInfinitePlaceOverextensionIdeleClassGroupIsMulCommutative
+
+open scoped Classical in
 private noncomputable def quotientLiftData
     {A B : Type} [CommGroup A] [Group B]
     (N : Subgroup A) (f : A →* B)
@@ -51,6 +55,7 @@ private noncomputable def quotientLiftData
   intro x
   exact QuotientGroup.lift_mk _ _ _
 
+open scoped Classical in
 private theorem globalNormResidueEquiv_mk_one
     (F E : Type)
     [Field F] [NumberField F]
@@ -71,6 +76,7 @@ private theorem globalNormResidueEquiv_mk_one
   simpa only [globalNormResidueMonoidHom_apply] using
     map_one (globalNormResidueMonoidHom F E)
 
+open scoped Classical in
 private theorem globalNormResidueEquiv_mk
     (F E : Type)
     [Field F] [NumberField F]
@@ -90,6 +96,7 @@ private theorem globalNormResidueEquiv_mk
       globalNormResidueMonoidHom F E c
   exact (globalNormResidueMonoidHom_apply F E c).symm
 
+open scoped Classical in
 private theorem globalNormResidueEquiv_ne_one_of_ne_mk_one
     (F E : Type)
     [Field F] [NumberField F]
@@ -112,9 +119,9 @@ private theorem globalNormResidueEquiv_ne_one_of_ne_mk_one
       (globalNormResidueEquiv_mk_one F E).symm
 
 omit [NumberField K] [FiniteDimensional K L] in
+open scoped Classical in
 /-- The chosen local-factor Artin product on the actual special
 overextension `L(i)/K'` is trivial on principal ideles. -/
-@[simp]
 theorem
     ramifiedInfinitePlaceOverextensionGlobalArtin_principalIdele
     (v : InfinitePlace K)
@@ -180,6 +187,7 @@ theorem
     rationalComplexificationGlobalArtin_principalIdele] at hdiamond
   simpa only [map_one] using hdiamond
 
+open scoped Classical in
 /-- The actual local-factor product for the special overextension,
 descended through principal ideles of its real fixed field. -/
 noncomputable def
@@ -213,10 +221,10 @@ noncomputable def
           (K := K) (L := L) v hRamified x)
 
 omit [NumberField K] [FiniteDimensional K L] in
+open scoped Classical in
 /-- Evaluation of the descended special-overextension Artin map on
 an idele representative is the genuine product of chosen local
 symbols. -/
-@[simp]
 theorem
     ramifiedInfinitePlaceOverextensionIdeleClassArtinMonoidHom_mk
     (v : InfinitePlace K)
@@ -245,6 +253,7 @@ theorem
   exact QuotientGroup.lift_mk _ _ _
 
 omit [NumberField K] [FiniteDimensional K L] in
+open scoped Classical in
 /-- The descended special-overextension Artin map kills every
 genuine idele-class norm from its top field. -/
 @[simp]
@@ -294,6 +303,7 @@ theorem
           (K := K) (L := L) v)
       a
 
+open scoped Classical in
 private noncomputable def
     ramifiedInfinitePlaceOverextensionNormQuotientArtinData
     (v : InfinitePlace K)
@@ -323,6 +333,7 @@ private noncomputable def
         ramifiedInfinitePlaceOverextensionIdeleClassArtinMonoidHom_ideleClassNorm
           (K := K) (L := L) v hRamified c)
 
+open scoped Classical in
 /-- The chosen-local-factor Artin map on the actual norm quotient of
 the special overextension. -/
 noncomputable def
@@ -334,6 +345,7 @@ noncomputable def
     (K := K) (L := L) v hRamified).1
 
 omit [NumberField K] [FiniteDimensional K L] in
+open scoped Classical in
 /-- Evaluation of the norm-quotient Artin map on an idele-class
 representative. -/
 @[simp]
@@ -355,6 +367,7 @@ theorem
     (K := K) (L := L) v hRamified).2
 
 omit [NumberField K] [FiniteDimensional K L] in
+open scoped Classical in
 /-- The norm-quotient Artin map for the special overextension is
 surjective onto its actual Galois group. -/
 theorem
@@ -391,6 +404,7 @@ theorem
   exact ha
 
 omit [NumberField K] [FiniteDimensional K L] in
+open scoped Classical in
 /-- The norm-quotient Artin map for the special overextension is
 bijective. -/
 theorem
@@ -421,6 +435,7 @@ theorem
         (Nat.card_congr e.toEquiv).le
 
 omit [NumberField K] [FiniteDimensional K L] in
+open scoped Classical in
 /-- Any two nonidentity automorphisms of the quadratic overextension agree. -/
 theorem
     ramifiedInfinitePlaceOverextension_galois_eq_of_ne_one
@@ -447,6 +462,7 @@ theorem
   exact hσc.trans hτc.symm
 
 omit [NumberField K] [FiniteDimensional K L] in
+open scoped Classical in
 private theorem
     ramifiedInfinitePlaceOverextensionGlobalNormResidue_ne_one_of_ne_mk_one
     (v : InfinitePlace K)
@@ -484,6 +500,7 @@ private theorem
       q hq
 
 omit [NumberField K] [FiniteDimensional K L] in
+open scoped Classical in
 private theorem
     ramifiedInfinitePlaceOverextensionGlobalNormResidue_mk
     (v : InfinitePlace K)
@@ -514,6 +531,7 @@ private theorem
       c
 
 omit [NumberField K] [FiniteDimensional K L] in
+open scoped Classical in
 /-- At each class in the genuine norm quotient of the special
 overextension, the chosen-local-factor product is the canonical
 global norm-residue equivalence. -/
@@ -619,6 +637,7 @@ theorem
         (K := K) (L := L) v hRamified hArtinNe hNormResidueNe
 
 omit [NumberField K] [FiniteDimensional K L] in
+open scoped Classical in
 private theorem
     ramifiedInfinitePlaceOverextensionIdeleClassArtin_eq_globalNormResidueEquiv_mk
     (v : InfinitePlace K)
@@ -645,6 +664,7 @@ private theorem
         (QuotientGroup.mk c))
 
 omit [NumberField K] [FiniteDimensional K L] in
+open scoped Classical in
 /-- On idele classes of the real fixed field, the actual product of
 chosen local symbols for the special overextension is the canonical
 global norm-residue map. -/
@@ -672,10 +692,10 @@ theorem
         (K := K) (L := L) v hRamified c)
 
 omit [NumberField K] [FiniteDimensional K L] in
+open scoped Classical in
 /-- On an actual idele representative of the real fixed field, the
 canonical global norm-residue map for the special overextension is
 the product of the chosen local Artin symbols. -/
-@[simp]
 theorem
     globalNormResidueMonoidHom_ramifiedInfinitePlaceOverextension_ideleClass_mk
     (v : InfinitePlace K)
@@ -715,10 +735,10 @@ theorem
         (K := K) (L := L) v hRamified a)
 
 omit [NumberField K] [FiniteDimensional K L] in
+open scoped Classical in
 /-- The canonical global norm-residue symbol of an archimedean
 one-place idele class in the special overextension is the chosen
 infinite local Artin symbol. -/
-@[simp]
 theorem
     globalNormResidueMonoidHom_ramifiedInfinitePlaceOverextension_infinitePlaceIdeleClass
     (v : InfinitePlace K)

@@ -15,7 +15,7 @@ real/complex norm calculation.  It treats the finite family consisting
 of all infinite places and the finite places in `S`.
 -/
 
-open scoped NumberField BigOperators ValuativeRel Classical NNReal
+open scoped NumberField BigOperators ValuativeRel NNReal
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -33,6 +33,7 @@ variable {K L : Type}
     [Field L] [NumberField L] [Algebra K L]
     [FiniteDimensional K L] [IsGalois K L]
 
+open scoped Classical in
 /-- The local degree attached to one unrestricted place.  At a finite
 place it is the degree of the chosen localization; at an infinite place
 it is one or two according as the place is unramified or ramified. -/
@@ -46,7 +47,9 @@ noncomputable def relativeUnrestrictedSPlaceLocalDegree
           (K := K) (L := L) S i).extension.1))
 
 omit [NumberField K] [NumberField L] in
-/-- The decomposition-group localization equivalence identifies the order of a decomposition group with
+open scoped Classical in
+/-- The decomposition-group localization equivalence identifies the order of a decomposition
+group with
 the degree of its localized completion. -/
 theorem absoluteValueDecompositionGroup_card_eq_localizedDegree
     (vK : AbsoluteValue K ℝ) (hvK : vK.IsNontrivial)
@@ -96,6 +99,7 @@ theorem absoluteValueDecompositionGroup_card_eq_localizedDegree
         vK.Completion (LocalizedCompletion vK w)
 
 omit [NumberField L] in
+open scoped Classical in
 /-- Every local degree-zero Herbrand group in the unrestricted family is
 finite. -/
 theorem relativeUnrestrictedLocalHerbrandH0Finite
@@ -140,6 +144,7 @@ theorem relativeUnrestrictedLocalHerbrandH0Finite
           σ hgen
 
 omit [NumberField L] in
+open scoped Classical in
 /-- Every local degree-minus-one Herbrand group in the unrestricted
 family is finite. -/
 theorem relativeUnrestrictedLocalHerbrandHMinusOneFinite
@@ -189,6 +194,7 @@ theorem relativeUnrestrictedLocalHerbrandHMinusOneFinite
           σ hgen
 
 omit [NumberField L] in
+open scoped Classical in
 /-- The cardinality of one local degree-zero term is its local degree. -/
 theorem relativeUnrestrictedLocalHerbrandH0_card_eq_localDegree
     (S : Finset (HeightOneSpectrum (𝓞 K)))
@@ -261,6 +267,7 @@ theorem relativeUnrestrictedLocalHerbrandH0_card_eq_localDegree
             (L := L) v.1)).symm
 
 omit [NumberField L] in
+open scoped Classical in
 /-- Every local degree-minus-one term has cardinality one. -/
 theorem relativeUnrestrictedLocalHerbrandHMinusOne_card_eq_one
     (S : Finset (HeightOneSpectrum (𝓞 K)))

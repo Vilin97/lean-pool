@@ -26,6 +26,7 @@ section CyclotomicExtension
 variable {p k : ℕ} [Fact p.Prime]
 variable {L : Type u} [Field L] [Algebra ℚ_[p] L]
 
+/-- The `ℤ_[p]`-algebra on the cyclotomic extension is induced through `ℚ_[p]`. -/
 local instance padicCyclotomicTotallyRamifiedEisensteinRelationAlgebraPadicInt : Algebra ℤ_[p] L :=
   ((algebraMap ℚ_[p] L).comp (algebraMap ℤ_[p] ℚ_[p])).toAlgebra
 

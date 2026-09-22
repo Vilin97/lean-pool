@@ -48,7 +48,7 @@ def subgroupFiltration (F : AntitoneNormalSubgroupFiltration G) (H : Subgroup G)
   rfl
 
 /-- States the theorem `mem_subgroupFiltration_lower_iff`. -/
-@[simp] theorem mem_subgroupFiltration_lower_iff
+theorem mem_subgroupFiltration_lower_iff
     (F : AntitoneNormalSubgroupFiltration G) (H : Subgroup G)
     (n : ℕ) (h : H) :
     h ∈ (subgroupFiltration F H).lower n ↔ (h : G) ∈ F.lower n :=
@@ -133,7 +133,7 @@ def lowerToQuotientImageKerEquiv (F : AntitoneNormalSubgroupFiltration G)
 /-- Exact level-cardinality factorization
 `|F_n| = |F_n ∩ H| * |image(F_n)|`. -/
 theorem card_subgroupFiltration_mul_card_quotientImageFiltration
-    [Finite G] (F : AntitoneNormalSubgroupFiltration G)
+    (F : AntitoneNormalSubgroupFiltration G)
     (H : Subgroup G) [H.Normal] (n : ℕ) :
     Nat.card ((subgroupFiltration F H).lower n) *
         Nat.card ((quotientImageFiltration F H).lower n) =
@@ -169,7 +169,7 @@ def transportEquiv (F : AntitoneNormalSubgroupFiltration G) (e : G ≃* G') :
   rfl
 
 /-- States the theorem `mem_transportEquiv_lower_iff`. -/
-@[simp] theorem mem_transportEquiv_lower_iff
+theorem mem_transportEquiv_lower_iff
     (F : AntitoneNormalSubgroupFiltration G) (e : G ≃* G')
     (n : ℕ) (sigma : G') :
     sigma ∈ (transportEquiv F e).lower n ↔ e.symm sigma ∈ F.lower n :=
@@ -190,7 +190,7 @@ def lowerEquivTransportEquiv
 
 /-- States the theorem `card_lower_transportEquiv`. -/
 theorem card_lower_transportEquiv
-    [Finite G] [Finite G']
+
     (F : AntitoneNormalSubgroupFiltration G) (e : G ≃* G') (n : ℕ) :
     Nat.card ((transportEquiv F e).lower n) = Nat.card (F.lower n) := by
   exact Nat.card_congr (lowerEquivTransportEquiv F e n).symm
@@ -200,8 +200,11 @@ equivalence. -/
 theorem herbrandFunction_transportEquiv
     [Finite G] [Finite G']
     (F : AntitoneNormalSubgroupFiltration G) (e : G ≃* G') (s : ℝ) :
-    (RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction (transportEquiv F e)) s = (RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction F) s := by
-  apply RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction_eq_of_card_lower_eq (transportEquiv F e) F
+    (RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction
+      (transportEquiv F e)) s =
+      (RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction F) s := by
+  apply
+    RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction_eq_of_card_lower_eq (transportEquiv F e) F
   intro n
   exact card_lower_transportEquiv F e n
 
@@ -211,7 +214,8 @@ theorem inverseHerbrandFunction_transportEquiv
     [Finite G] [Finite G']
     (F : AntitoneNormalSubgroupFiltration G) (e : G ≃* G') (t : ℝ) :
     (RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.inverseHerbrandFunction (transportEquiv F e)) t = (RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.inverseHerbrandFunction F) t := by
-  apply (RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction_strictMono (transportEquiv F e)).injective
+  apply
+    (RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction_strictMono (transportEquiv F e)).injective
   rw [RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction_inverseHerbrandFunction (transportEquiv F e)]
   rw [(RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction_transportEquiv F)]
   rw [(RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction_inverseHerbrandFunction F)]
@@ -297,7 +301,8 @@ theorem quotientImageTransport_herbrandFunction
     [Finite G] [Finite G']
     (F : AntitoneNormalSubgroupFiltration G) (H : Subgroup G) [H.Normal]
     (e : (G ⧸ H) ≃* G') (s : ℝ) :
-    (RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction (quotientImageTransport F H e)) s =
+    (RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction
+      (quotientImageTransport F H e)) s =
       (RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction (quotientImageFiltration F H)) s :=
   by
     exact herbrandFunction_transportEquiv (quotientImageFiltration F H) e s

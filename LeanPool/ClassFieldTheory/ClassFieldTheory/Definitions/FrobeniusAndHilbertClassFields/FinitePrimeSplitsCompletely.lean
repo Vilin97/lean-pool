@@ -21,8 +21,8 @@ universe u v
 ramification index and inertia degree equal to one. -/
 def FinitePrimeSplitsCompletely
     (K : Type u) (L : Type v)
-    [Field K] [NumberField K]
-    [Field L] [NumberField L] [Algebra K L]
+    [Field K]
+    [Field L] [Algebra K L]
     (v : HeightOneSpectrum (𝓞 K)) : Prop :=
   ∀ w : HeightOneSpectrum (𝓞 L),
     w.asIdeal.LiesOver v.asIdeal →

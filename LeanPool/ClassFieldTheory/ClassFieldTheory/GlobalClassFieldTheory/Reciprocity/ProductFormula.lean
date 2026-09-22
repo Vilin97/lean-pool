@@ -18,7 +18,7 @@ finite-support and
 principal-idèle product identities for every character of that target.
 -/
 
-open scoped NumberField Classical BigOperators
+open scoped NumberField BigOperators
 open NumberField IsDedekindDomain
 open IdeleGroup RelativeIdeleGroup
 
@@ -27,6 +27,7 @@ noncomputable section
 namespace GlobalClassFieldTheory
 namespace Reciprocity
 
+open scoped Classical in
 private theorem productFormulaIdeleClassGroupIsMulCommutative
     {F : Type} [Field F] [NumberField F] :
     IsMulCommutative (IdeleClassGroup F) :=
@@ -40,6 +41,7 @@ variable
     [Field L] [NumberField L] [Algebra K L]
     [FiniteDimensional K L] [IsGalois K L]
 
+open scoped Classical in
 /-- The one-place embedding, descended directly from the chosen local norm
 quotient to the ordinary idele-class norm quotient. -/
 noncomputable def finitePlaceNormQuotientToGlobalClass
@@ -77,6 +79,7 @@ noncomputable def finitePlaceNormQuotientToGlobalClass
         IdeleGroup.norm_relativeIdeleBaseChangeMulEquiv,
         hz])
 
+open scoped Classical in
 /-- Exact local--global compatibility on representatives. -/
 @[simp]
 theorem finitePlaceNormQuotientToGlobalClass_localClass
@@ -91,6 +94,7 @@ theorem finitePlaceNormQuotientToGlobalClass_localClass
   rfl
 
 omit [FiniteDimensional K L] [IsGalois K L] in
+open scoped Classical in
 /-- A character of the global class norm quotient, restricted to the
 one-place class at `v`. -/
 noncomputable def finitePlaceGlobalSymbol
@@ -104,6 +108,7 @@ noncomputable def finitePlaceGlobalSymbol
     ((globalNormClassFromIdele K L).comp
       (finitePlaceIdele v))
 
+open scoped Classical in
 /-- The one-place global symbol is the character of the transported local norm
 class. -/
 @[simp]
@@ -125,6 +130,7 @@ theorem finitePlaceGlobalSymbol_eq_localNormClass
     finitePlaceNormQuotientToGlobalClass_localClass]
 
 omit [FiniteDimensional K L] [IsGalois K L] in
+open scoped Classical in
 /-- Finite-support form of the product formula for a global norm-quotient
 character. -/
 theorem finitePlaceGlobalSymbol_finiteLocalFamily
@@ -146,6 +152,7 @@ theorem finitePlaceGlobalSymbol_finiteLocalFamily
   rfl
 
 omit [FiniteDimensional K L] [IsGalois K L] in
+open scoped Classical in
 /-- A global norm-quotient character is trivial on a principal idèle. -/
 theorem globalNormQuotientCharacter_principal
     {A : Type*} [CommGroup A]
@@ -159,6 +166,7 @@ theorem globalNormQuotientCharacter_principal
   rw [globalNormClassFromIdele_principalIdele, map_one]
 
 omit [FiniteDimensional K L] [IsGalois K L] in
+open scoped Classical in
 /-- Exact bridge from a finite local representative of a principal global
 norm class to the product-one identity.  The premise is a concrete equality
 in `C_K / N C_L`, not a product-formula assumption. -/

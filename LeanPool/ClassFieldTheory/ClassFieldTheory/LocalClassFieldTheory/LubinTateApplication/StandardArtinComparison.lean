@@ -46,7 +46,7 @@ open ValuationTheory.DiscreteValuationField
 open ValuationTheory.DiscreteValuationField.ValuedExtension
 
 private theorem natCard_ker_eq_pow_sub_of_surjective
-    {G H : Type*} [Group G] [Group H] [Finite G] [Finite H]
+    {G H : Type*} [Group G] [Group H]
     (ψ : G →* H) (hψ : Function.Surjective ψ)
     (q m n : ℕ) (hmn : m ≤ n) (hq : 1 < q)
     (hcardG : Nat.card G = (q - 1) * q ^ n)

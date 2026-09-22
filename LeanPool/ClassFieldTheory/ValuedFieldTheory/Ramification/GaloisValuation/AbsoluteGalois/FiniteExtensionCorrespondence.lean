@@ -6,7 +6,8 @@ Authors: n-yamaguchi-0729
 
 import Mathlib.SetTheory.Cardinal.Finite
 import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.GaloisValuation.AbsoluteGalois.InfiniteGaloisCorrespondence
-/-! Provides the public declarations in the `RamificationTheory.GaloisValuation.AbsoluteGalois.FiniteExtensionCorrespondence` Lean module. -/
+/-! Provides the public declarations in the
+  `RamificationTheory.GaloisValuation.AbsoluteGalois.FiniteExtensionCorrespondence` Lean module. -/
 
 namespace RamificationTheory
 
@@ -250,7 +251,6 @@ def quotientNormalClosureOpenSubgroupEquivGalOfFiniteExtension
   exact quotientNormalClosureOpenSubgroupEquivGal K (AlgHom.fieldRange i)
 
 /-- States the theorem `quotientNormalClosureOpenSubgroupEquivGalOfFiniteExtension_mk'`. -/
-@[simp]
 theorem quotientNormalClosureOpenSubgroupEquivGalOfFiniteExtension_mk'
     [FiniteDimensional K L]
     (i : L →ₐ[K] AlgebraicClosure K)
@@ -267,13 +267,10 @@ theorem quotientNormalClosureOpenSubgroupEquivGalOfFiniteExtension_mk'
     (AlgHom.fieldRange i) σ
 
 /-- The cardinality of the Galois group of the normal closure of an embedded
-finite extension.  The finite-dimensional structure on the field range is
-installed inside this definition, so the natural cardinal cannot silently use
-the infinite-type zero fallback. -/
+extension. The later index comparison supplies finite-dimensionality when
+this cardinal is used for a finite extension. -/
 noncomputable def normalClosureFiniteExtensionGaloisCard
-    [FiniteDimensional K L]
     (i : L →ₐ[K] AlgebraicClosure K) : ℕ := by
-  letI := finiteDimensional_fieldRange (K := K) i
   exact Nat.card (Gal(IntermediateField.normalClosure K (AlgHom.fieldRange i)
     (AlgebraicClosure K) / K))
 
@@ -664,14 +661,13 @@ instance openSubgroupOfFiniteExtension.instNormal_coe
 
 /-- For an embedded finite normal extension, `G_K/G_L` is the automorphism
 group of the embedded field range. -/
-def quotientEquivGalFieldRangeOfNormalFiniteExtension [FiniteDimensional K L]
+def quotientEquivGalFieldRangeOfNormalFiniteExtension
     (i : L →ₐ[K] AlgebraicClosure K) [Normal K (AlgHom.fieldRange i)] :
     Gal(AlgebraicClosure K / K) ⧸ (AlgHom.fieldRange i).fixingSubgroup ≃*
       Gal(AlgHom.fieldRange i / K) :=
   quotientEquivGalOfNormalIntermediateField K (AlgHom.fieldRange i)
 
 /-- States the theorem `quotientEquivGalFieldRangeOfNormalFiniteExtension_mk'`. -/
-@[simp]
 theorem quotientEquivGalFieldRangeOfNormalFiniteExtension_mk'
     [FiniteDimensional K L] (i : L →ₐ[K] AlgebraicClosure K)
     [Normal K (AlgHom.fieldRange i)] (σ : Gal(AlgebraicClosure K/K)) :
@@ -690,7 +686,6 @@ def quotientEquivGalOfNormalFiniteExtension [FiniteDimensional K L]
     (AlgEquiv.autCongr (AlgEquiv.ofInjectiveField i)).symm
 
 /-- States the theorem `quotientEquivGalOfNormalFiniteExtension_mk'`. -/
-@[simp]
 theorem quotientEquivGalOfNormalFiniteExtension_mk'
     [FiniteDimensional K L] (i : L →ₐ[K] AlgebraicClosure K)
     [Normal K (AlgHom.fieldRange i)] (σ : Gal(AlgebraicClosure K/K)) :
@@ -715,7 +710,6 @@ def quotientOpenSubgroupEquivGalFieldRangeOfNormalFiniteExtension
   quotientEquivGalFieldRangeOfNormalFiniteExtension K i
 
 /-- States the theorem `quotientOpenSubgroupEquivGalFieldRangeOfNormalFiniteExtension_mk'`. -/
-@[simp]
 theorem quotientOpenSubgroupEquivGalFieldRangeOfNormalFiniteExtension_mk'
     [FiniteDimensional K L] [Normal K L]
     (i : L →ₐ[K] AlgebraicClosure K)
@@ -741,7 +735,6 @@ def quotientOpenSubgroupEquivGalOfNormalFiniteExtension
     (AlgEquiv.autCongr (AlgEquiv.ofInjectiveField i)).symm
 
 /-- States the theorem `quotientOpenSubgroupEquivGalOfNormalFiniteExtension_mk'`. -/
-@[simp]
 theorem quotientOpenSubgroupEquivGalOfNormalFiniteExtension_mk'
     [FiniteDimensional K L] [Normal K L]
     (i : L →ₐ[K] AlgebraicClosure K)
@@ -970,7 +963,7 @@ private theorem automorphismsOverFieldRangeEquiv_symm_continuous
 /-- For a finite extension `L/K` embedded in `K^al`, the absolute Galois
 group `G_L` is canonically (up to the chosen algebraic-closure equivalence)
 identified with `Gal(K^al / i(L))`. -/
-def equivGalFieldRangeOfFiniteExtension [FiniteDimensional K L]
+def equivGalFieldRangeOfFiniteExtension
     (i : L →ₐ[K] AlgebraicClosure K) :
     Field.absoluteGaloisGroup L ≃*
       Gal(AlgebraicClosure K / AlgHom.fieldRange i) := by
@@ -978,7 +971,6 @@ def equivGalFieldRangeOfFiniteExtension [FiniteDimensional K L]
   have hmap : ∀ x, algebraMap L (AlgebraicClosure K) x = i x := fun _ => rfl
   haveI : IsScalarTower K L (AlgebraicClosure K) := .of_algebraMap_eq fun x => by
     simp [RingHom.algebraMap_toAlgebra]
-  haveI : Algebra.IsAlgebraic K L := Algebra.IsAlgebraic.of_finite K L
   haveI : Algebra.IsAlgebraic L (AlgebraicClosure K) :=
     Algebra.IsAlgebraic.tower_top (K := K) (L := L) (A := AlgebraicClosure K)
   haveI : IsAlgClosure L (AlgebraicClosure K) :=
@@ -1336,7 +1328,6 @@ def quotientRangeEquivGalFieldRangeOfNormalFiniteExtension
     (quotientOpenSubgroupEquivGalFieldRangeOfNormalFiniteExtension K i)
 
 /-- States the theorem `quotientRangeEquivGalFieldRangeOfNormalFiniteExtension_mk'`. -/
-@[simp]
 theorem quotientRangeEquivGalFieldRangeOfNormalFiniteExtension_mk'
     [FiniteDimensional K L] [Normal K L]
     (i : L →ₐ[K] AlgebraicClosure K)
@@ -1367,7 +1358,6 @@ def quotientRangeEquivGalOfNormalFiniteExtension
     (AlgEquiv.autCongr (AlgEquiv.ofInjectiveField i)).symm
 
 /-- States the theorem `quotientRangeEquivGalOfNormalFiniteExtension_mk'`. -/
-@[simp]
 theorem quotientRangeEquivGalOfNormalFiniteExtension_mk'
     [FiniteDimensional K L] [Normal K L]
     (i : L →ₐ[K] AlgebraicClosure K)
@@ -1448,7 +1438,6 @@ theorem mem_range_ofFiniteExtensionAbsolute_iff_forall_apply_eq
   rfl
 
 /-- States the theorem `ofFiniteExtensionAbsolute_apply_embedding`. -/
-@[simp]
 theorem ofFiniteExtensionAbsolute_apply_embedding
     [FiniteDimensional K L] (i : L →ₐ[K] AlgebraicClosure K)
     (σ : Field.absoluteGaloisGroup L) (x : L) :
@@ -1459,7 +1448,6 @@ theorem ofFiniteExtensionAbsolute_apply_embedding
       (ofFiniteExtensionAbsolute_mem_openSubgroup K i σ) x
 
 /-- States the theorem `coe_toOpenSubgroupOfFiniteExtension_apply_embedding`. -/
-@[simp]
 theorem coe_toOpenSubgroupOfFiniteExtension_apply_embedding
     [FiniteDimensional K L] (i : L →ₐ[K] AlgebraicClosure K)
     (σ : Field.absoluteGaloisGroup L) (x : L) :
@@ -1481,7 +1469,6 @@ theorem exists_ofFiniteExtensionAbsolute_eq_iff_mem_openSubgroup
   rfl
 
 /-- States the theorem `ofFiniteExtensionAbsolute_equivOpenSubgroupOfFiniteExtension_symm`. -/
-@[simp]
 theorem ofFiniteExtensionAbsolute_equivOpenSubgroupOfFiniteExtension_symm
     [FiniteDimensional K L] (i : L →ₐ[K] AlgebraicClosure K)
     (σ : openSubgroupOfFiniteExtension K i) :
@@ -1524,7 +1511,6 @@ def ofFiniteExtensionAbsoluteTower
 /-- The tower map is natural with respect to the concrete inclusions into
 `G_K`: the inclusion `G_L -> G_K` after `G_M -> G_L` is the inclusion
 `G_M -> G_K`. -/
-@[simp]
 theorem ofFiniteExtensionAbsoluteTower_naturality
     [FiniteDimensional K L] [FiniteDimensional K M]
     (i : M →ₐ[K] AlgebraicClosure K) (j : L →ₐ[K] M)
@@ -1634,9 +1620,11 @@ theorem mem_absoluteValuationSubring_iff_apply_mem_of_finite_separable_intermedi
     (E : IntermediateField K (AlgebraicClosure K))
     [FiniteDimensional K E] [Algebra.IsSeparable K E]
     (target : ValuationTheory.DiscreteValuationField.HenselianDVF.{u, w} E)
-    (hA : target.valuation.valuationSubring = (RamificationTheory.ValuationSubring.restrictIntermediateField A E))
+    (hA : target.valuation.valuationSubring =
+      (RamificationTheory.ValuationSubring.restrictIntermediateField A E))
     (huniq :
-      ValuationTheory.DiscreteValuationField.HenselianDVF.HasUniqueValuationExtension.{u, v, u, w, u}
+      ValuationTheory.DiscreteValuationField.HenselianDVF.HasUniqueValuationExtension.{u, v, u,
+        w, u}
         F target)
     (sigma : Field.absoluteGaloisGroup K) (x : E) :
     ((x : AlgebraicClosure K) ∈ A) ↔

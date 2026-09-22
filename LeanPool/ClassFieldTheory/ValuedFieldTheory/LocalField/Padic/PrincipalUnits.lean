@@ -70,14 +70,16 @@ definitions of the `n`-th principal-unit group. -/
 theorem unitsMapEquiv_mem_higherPrincipalUnitGroup_iff
     (n : ℕ) (u : 𝒪[ℚ_[p]]ˣ) :
     Units.mapEquiv (integerRingEquivPadicDVRValuationSubring p).toMulEquiv u ∈
-        LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup (LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicCompleteDVF p) n ↔
+        LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+          (LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicCompleteDVF p) n ↔
       u ∈ principalUnits ℚ_[p] n := by
   rw [LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.mem_iff,
     mem_principalUnits_iff]
   change integerRingEquivPadicDVRValuationSubring p
       ((u : 𝒪[ℚ_[p]]) - 1) ∈
         IsLocalRing.maximalIdeal
-          (LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicCompleteDVF p).valuationSubring ^ n ↔
+          (LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicCompleteDVF
+            p).valuationSubring ^ n ↔
     (u : 𝒪[ℚ_[p]]) - 1 ∈ IsLocalRing.maximalIdeal 𝒪[ℚ_[p]] ^ n
   exact ringEquiv_mem_maximalIdeal_pow_iff
     (integerRingEquivPadicDVRValuationSubring p) n ((u : 𝒪[ℚ_[p]]) - 1)
@@ -88,7 +90,8 @@ theorem principalUnits_map_eq_higherPrincipalUnitGroup (n : ℕ) :
     (principalUnits ℚ_[p] n).map
         (Units.mapEquiv
           (integerRingEquivPadicDVRValuationSubring p).toMulEquiv).toMonoidHom =
-      LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup (LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicCompleteDVF p) n := by
+      LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+        (LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicCompleteDVF p) n := by
   let E := Units.mapEquiv
     (integerRingEquivPadicDVRValuationSubring p).toMulEquiv
   ext u
@@ -107,7 +110,8 @@ the corresponding quotient in the bundled complete-DVF model. -/
 noncomputable def integerUnitsPrincipalQuotEquivPadicDVR (n : ℕ) :
     IntegerUnitsPrincipalQuot ℚ_[p] n ≃*
       (LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicCompleteDVF p).valuationSubringˣ ⧸
-        LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup (LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicCompleteDVF p) n :=
+        LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+          (LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicCompleteDVF p) n :=
   QuotientGroup.congr _ _
     (Units.mapEquiv
       (integerRingEquivPadicDVRValuationSubring p).toMulEquiv)
@@ -117,7 +121,8 @@ noncomputable def integerUnitsPrincipalQuotEquivPadicDVR (n : ℕ) :
 valuation ring is canonically `ZMod (p ^ n)`. -/
 noncomputable def padicDVRQuotientEquivZMod (n : ℕ) :
     (LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicCompleteDVF p).valuationSubring ⧸
-        (LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicCompleteDVF p).maximalIdeal ^ n ≃+*
+        (LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicCompleteDVF p).maximalIdeal ^
+          n ≃+*
       ZMod (p ^ n) := by
   let F := LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicCompleteDVF p
   let e : F.valuationSubring ≃+* ℤ_[p] :=
@@ -142,7 +147,8 @@ theorem nat_card_integerUnitsPrincipalQuot_padic_succ (k : ℕ) :
     LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicCompleteDVF_residueField_finite p
   calc
     Nat.card (IntegerUnitsPrincipalQuot ℚ_[p] (k + 1)) =
-        Nat.card (F.valuationSubringˣ ⧸ LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F (k + 1)) :=
+        Nat.card (F.valuationSubringˣ ⧸
+          LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F (k + 1)) :=
       Nat.card_congr (integerUnitsPrincipalQuotEquivPadicDVR p (k + 1)).toEquiv
     _ = Nat.card ((F.valuationSubring ⧸ F.maximalIdeal ^ (k + 1))ˣ) :=
       LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.card_unitsModHigherPrincipalUnitGroup_eq_quotientUnits
@@ -257,7 +263,8 @@ theorem padicInt_exists_degree_root_of_mem_maximalIdeal_pow_succ
 /-- The residue field of the canonical p-adic discrete valuation is finite. -/
 noncomputable instance padicDVR_residueField_finite :
     Finite (IsLocalRing.ResidueField
-      (LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicDVRValuation p).valuationSubring) := by
+      (LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicDVRValuation
+        p).valuationSubring) := by
   simpa [LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicCompleteDVF,
     ValuationTheory.DiscreteValuationField.CompleteDVF.residueField,
     ValuationTheory.DiscreteValuationField.CompleteDVF.valuationSubring,
@@ -268,7 +275,8 @@ noncomputable instance padicDVR_residueField_finite :
 is `p`. -/
 theorem padicDVR_residueCharacteristic :
     (LocalFieldTheory.DiscreteValuationField.LocalField.ofWithZeroValuation
-      (LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicDVRValuation p)).residueCharacteristic = p := by
+      (LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicDVRValuation
+        p)).residueCharacteristic = p := by
   let v := LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicDVRValuation p
   let eO : ℤ_[p] ≃+* v.valuationSubring :=
     LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicIntEquivValuationSubring p
@@ -306,7 +314,8 @@ theorem padicDVR_ramificationIndex_eq_one :
     LocalFieldTheory.DiscreteValuationField.LocalField.ramificationIndexOfWithZeroValuation
       (LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicDVRValuation p) = 1 := by
   let v := LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicDVRValuation p
-  have h := LocalFieldTheory.DiscreteValuationField.LocalField.ramificationIndexOfWithZeroValuation_intCast v
+  have h :=
+    LocalFieldTheory.DiscreteValuationField.LocalField.ramificationIndexOfWithZeroValuation_intCast v
   rw [padicDVR_residueCharacteristic p, padicDVR_valuation_p p] at h
   simp only [WithZero.log_exp, neg_neg] at h
   exact_mod_cast h
@@ -317,7 +326,8 @@ theorem padicDVR_logExp_level_one_of_odd (hp2 : p ≠ 2) :
     (LocalFieldTheory.DiscreteValuationField.LocalField.ramificationIndexOfWithZeroValuation
           (LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicDVRValuation p) : ℚ) /
         (((LocalFieldTheory.DiscreteValuationField.LocalField.ofWithZeroValuation
-          (LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicDVRValuation p)).residueCharacteristic : ℚ) - 1) <
+          (LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicDVRValuation
+            p)).residueCharacteristic : ℚ) - 1) <
       (1 : ℚ) := by
   rw [padicDVR_ramificationIndex_eq_one p,
     padicDVR_residueCharacteristic p]
@@ -341,7 +351,8 @@ theorem padicDVR_logExp_level_succ_of_odd
     (LocalFieldTheory.DiscreteValuationField.LocalField.ramificationIndexOfWithZeroValuation
           (LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicDVRValuation p) : ℚ) /
         (((LocalFieldTheory.DiscreteValuationField.LocalField.ofWithZeroValuation
-          (LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicDVRValuation p)).residueCharacteristic : ℚ) - 1) <
+          (LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicDVRValuation
+            p)).residueCharacteristic : ℚ) - 1) <
       (k + 1 : ℚ) := by
   apply lt_of_lt_of_le (padicDVR_logExp_level_one_of_odd p hp2)
   exact_mod_cast (Nat.succ_le_succ (Nat.zero_le k))
@@ -355,13 +366,17 @@ noncomputable def expLogMulEquivOfWithZeroValuation
     [Finite (IsLocalRing.ResidueField v.valuationSubring)] [CharZero K]
     (hv : Function.Surjective v) (n : ℕ)
     (hlevel :
-      (LocalFieldTheory.DiscreteValuationField.LocalField.ramificationIndexOfWithZeroValuation v : ℚ) /
-          (((LocalFieldTheory.DiscreteValuationField.LocalField.ofWithZeroValuation v).residueCharacteristic : ℚ) - 1) <
+      (LocalFieldTheory.DiscreteValuationField.LocalField.ramificationIndexOfWithZeroValuation v
+        : ℚ) /
+          (((LocalFieldTheory.DiscreteValuationField.LocalField.ofWithZeroValuation
+            v).residueCharacteristic : ℚ) - 1) <
         (n : ℚ)) :
     Multiplicative
         ((LocalFieldTheory.DiscreteValuationField.MultiplicativeIntegerValuation.completeDVFOfWithZeroValuation v).maximalIdeal ^ n :
-          Ideal (LocalFieldTheory.DiscreteValuationField.MultiplicativeIntegerValuation.completeDVFOfWithZeroValuation v).valuationSubring) ≃*
-      LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup (LocalFieldTheory.DiscreteValuationField.MultiplicativeIntegerValuation.completeDVFOfWithZeroValuation v) n := by
+          Ideal
+            (LocalFieldTheory.DiscreteValuationField.MultiplicativeIntegerValuation.completeDVFOfWithZeroValuation v).valuationSubring) ≃*
+      LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+        (LocalFieldTheory.DiscreteValuationField.MultiplicativeIntegerValuation.completeDVFOfWithZeroValuation v) n := by
   letI : Valued K (WithZero (Multiplicative ℤ)) := Valued.mk' v
   let P :=
     LocalFieldTheory.DiscreteValuationField.MultiplicativeIntegerValuation.chosenExpLogContinuousMulEquiv
@@ -385,16 +400,20 @@ theorem expLogMulEquivOfWithZeroValuation_fieldVal
     [Finite (IsLocalRing.ResidueField v.valuationSubring)] [CharZero K]
     (hv : Function.Surjective v) (n : ℕ)
     (hlevel :
-      (LocalFieldTheory.DiscreteValuationField.LocalField.ramificationIndexOfWithZeroValuation v : ℚ) /
-          (((LocalFieldTheory.DiscreteValuationField.LocalField.ofWithZeroValuation v).residueCharacteristic : ℚ) - 1) <
+      (LocalFieldTheory.DiscreteValuationField.LocalField.ramificationIndexOfWithZeroValuation v
+        : ℚ) /
+          (((LocalFieldTheory.DiscreteValuationField.LocalField.ofWithZeroValuation
+            v).residueCharacteristic : ℚ) - 1) <
         (n : ℚ))
     (a : Multiplicative
       ((LocalFieldTheory.DiscreteValuationField.MultiplicativeIntegerValuation.completeDVFOfWithZeroValuation v).maximalIdeal ^ n :
-        Ideal (LocalFieldTheory.DiscreteValuationField.MultiplicativeIntegerValuation.completeDVFOfWithZeroValuation v).valuationSubring)) :
+        Ideal
+          (LocalFieldTheory.DiscreteValuationField.MultiplicativeIntegerValuation.completeDVFOfWithZeroValuation v).valuationSubring)) :
     let F :=
       LocalFieldTheory.DiscreteValuationField.MultiplicativeIntegerValuation.completeDVFOfWithZeroValuation v
     let E := expLogMulEquivOfWithZeroValuation v hv n hlevel
-    ((((E a : LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F n) : F.valuationSubringˣ) :
+    ((((E a : LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F n)
+      : F.valuationSubringˣ) :
         F.valuationSubring) : K) =
       LocalFieldTheory.DiscreteValuationField.MultiplicativeIntegerValuation.expSeriesFieldOfWithZeroValuation
         v (((a.toAdd : F.valuationSubring) : K))
@@ -409,8 +428,8 @@ theorem expLogMulEquivOfWithZeroValuation_fieldVal
   simp only [expLogMulEquivOfWithZeroValuation]
   simp only [
     LocalFieldTheory.DiscreteValuationField.MultiplicativeIntegerValuation.chosenExpLogContinuousMulEquiv,
-    LocalFieldTheory.DiscreteValuationField.MultiplicativeIntegerValuation.principalUnitExpLogContinuousMulEquivOfExact_ofWithZeroValuationScaled,
-    LocalFieldTheory.DiscreteValuationField.MultiplicativeIntegerValuation.principalUnitExpLogMulEquivOfExact_ofWithZeroValuationScaled]
+    LocalFieldTheory.DiscreteValuationField.MultiplicativeIntegerValuation.principalUnitExpLogContinuousMulEquivOfExactOfWithZeroValuationScaled,
+    LocalFieldTheory.DiscreteValuationField.MultiplicativeIntegerValuation.principalUnitExpLogMulEquivOfExactOfWithZeroValuationScaled]
   apply
     LocalFieldTheory.DiscreteValuationField.MultiplicativeIntegerValuation.principalUnitExpSeries_maximalIdealPow_val_ofWithZeroValuationScaled
       (v := v) (p := p)
@@ -452,7 +471,8 @@ theorem padicDVR_higherPrincipalUnit_degree_is_power_odd
   let v := LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicDVRValuation p
   let F :=
     LocalFieldTheory.DiscreteValuationField.MultiplicativeIntegerValuation.completeDVFOfWithZeroValuation v
-  change ∀ u : LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F (k + 1),
+  change ∀ u : LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F (k
+    + 1),
     ∃ r : LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F 1,
       (r : F.valuationSubringˣ) ^ ((p - 1) * p ^ k) =
         (u : F.valuationSubringˣ)
@@ -482,7 +502,8 @@ theorem padicDVR_higherPrincipalUnit_degree_is_power_odd
   have hdbO : ((p - 1) * p ^ k) • (eO b) = (a.toAdd : F.valuationSubring) := by
     rw [← map_nsmul eO ((p - 1) * p ^ k) b, hdb]
     simp [z]
-  let r : LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F 1 := E1 (Multiplicative.ofAdd b1)
+  let r : LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F 1 := E1
+    (Multiplicative.ofAdd b1)
   refine ⟨r, ?_⟩
   have hua : En a = u := En.apply_symm_apply u
   have hrpow :
@@ -491,7 +512,8 @@ theorem padicDVR_higherPrincipalUnit_degree_is_power_odd
     change E1 (Multiplicative.ofAdd b1) ^ ((p - 1) * p ^ k) =
       E1 ((Multiplicative.ofAdd b1) ^ ((p - 1) * p ^ k))
     exact (map_pow E1 (Multiplicative.ofAdd b1) ((p - 1) * p ^ k)).symm
-  change ((r ^ ((p - 1) * p ^ k) : LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F 1) :
+  change ((r ^ ((p - 1) * p ^ k) :
+    LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F 1) :
       F.valuationSubringˣ) = (u : F.valuationSubringˣ)
   rw [hrpow, ← hua]
   apply Units.ext
@@ -505,7 +527,8 @@ theorem padicDVR_higherPrincipalUnit_degree_is_power_odd
         padicDVR_logExp_level_succ_of_odd p hp2 k) a
   have hleft' :
       ((((E1 ((Multiplicative.ofAdd b1) ^ ((p - 1) * p ^ k)) :
-          LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F 1) : F.valuationSubringˣ) :
+          LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F 1) :
+            F.valuationSubringˣ) :
           F.valuationSubring) : ℚ_[p]) =
         LocalFieldTheory.DiscreteValuationField.MultiplicativeIntegerValuation.expSeriesFieldOfWithZeroValuation
           v ((((Multiplicative.ofAdd b1) ^ ((p - 1) * p ^ k)).toAdd :
@@ -514,7 +537,8 @@ theorem padicDVR_higherPrincipalUnit_degree_is_power_odd
               Nat.cast_ne_zero.mpr (Nat.factorial_ne_zero m)) := by
     exact hleft
   have hright' :
-      ((((En a : LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F (k + 1)) : F.valuationSubringˣ) :
+      ((((En a : LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F
+        (k + 1)) : F.valuationSubringˣ) :
           F.valuationSubring) : ℚ_[p]) =
         LocalFieldTheory.DiscreteValuationField.MultiplicativeIntegerValuation.expSeriesFieldOfWithZeroValuation
           v ((a.toAdd : F.valuationSubring) : ℚ_[p])

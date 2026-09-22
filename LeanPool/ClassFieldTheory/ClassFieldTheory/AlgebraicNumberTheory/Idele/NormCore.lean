@@ -10,7 +10,8 @@ import Mathlib.NumberTheory.NumberField.ProductFormula
 /-!
 # The absolute norm of an idele
 
-This file constructs the homomorphism `𝓝 : I_K → ℝ₊ˣ`. At a finite place a uniformizer contributes the norm
+This file constructs the homomorphism `𝓝 : I_K → ℝ₊ˣ`. At a finite place a uniformizer
+  contributes the norm
 of its prime ideal; at infinity we divide by the normalized archimedean
 norm.  This is the convention for which principal ideles have norm one.
 -/

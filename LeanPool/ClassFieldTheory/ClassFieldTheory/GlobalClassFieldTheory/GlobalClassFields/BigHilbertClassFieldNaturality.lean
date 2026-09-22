@@ -17,7 +17,7 @@ transport on the big-Hilbert reciprocity quotient and on the narrow class
 group, with formulas on genuine idele representatives.
 -/
 
-open scoped NumberField NumberField.LiesOver Classical TensorProduct
+open scoped NumberField NumberField.LiesOver TensorProduct
 
 noncomputable section
 
@@ -31,6 +31,7 @@ variable
     [Field K] [NumberField K]
     [Field M] [NumberField M]
 
+open scoped Classical in
 private theorem bigHilbertClassFieldQuotientEquivNarrowClassGroup_mk
     (a : IdeleGroup K) :
     bigHilbertClassFieldQuotientEquivNarrowClassGroup
@@ -43,6 +44,7 @@ private theorem bigHilbertClassFieldQuotientEquivNarrowClassGroup_mk
         (RayClass.narrowDenominator (K := K)) a :=
   rfl
 
+open scoped Classical in
 private noncomputable def infinitePlaceCompletionCongrHom
     (e : K ≃ₐ[ℚ] M)
     (W : InfinitePlace M) :
@@ -58,6 +60,7 @@ private noncomputable def infinitePlaceCompletionCongrHom
     NumberField.LiesOver.completionMap
       (v := v) (w := W)
 
+open scoped Classical in
 private theorem infinitePlaceCompletionCongrHom_algebraMap
     (e : K ≃ₐ[ℚ] M)
     (W : InfinitePlace M)
@@ -93,6 +96,7 @@ private theorem infinitePlaceCompletionCongrHom_algebraMap
     WithAbs.algebraMap_right_apply,
     Algebra.algebraMap_self_apply]
 
+open scoped Classical in
 private theorem
     relativeAdeleBaseChangeRingEquiv_relativeAdeleCongr_infiniteComponent_tmul
     (e : K ≃ₐ[ℚ] M)
@@ -173,6 +177,7 @@ private theorem
     relativeAdeleBaseChangeRingEquiv_infiniteComponent_tmul]
   exact hcomponent qv hq
 
+open scoped Classical in
 private theorem adeleCongr_infiniteComponent
     (e : K ≃ₐ[ℚ] M)
     (a : NumberField.AdeleRing (𝓞 K) K)
@@ -218,6 +223,7 @@ private theorem adeleCongr_infiniteComponent
         relativeAdeleBaseChangeRingEquiv_relativeAdeleCongr_infiniteComponent_tmul
           e b x W
 
+open scoped Classical in
 private theorem ideleCongr_infiniteComponent
     (e : K ≃ₐ[ℚ] M)
     (a : IdeleGroup K)
@@ -235,6 +241,7 @@ private theorem ideleCongr_infiniteComponent
           (NumberField.AdeleRing (𝓞 K) K)ˣ) :
         NumberField.AdeleRing (𝓞 K) K)) W
 
+open scoped Classical in
 private theorem
     infinitePlaceCompletionCongrHom_extensionEmbeddingOfIsReal
     (e : K ≃ₐ[ℚ] M)
@@ -270,6 +277,7 @@ private theorem
     InfinitePlace.Completion.extensionEmbeddingOfIsReal_apply,
     infinitePlaceCompletionCongrHom] using hComplex
 
+open scoped Classical in
 private theorem
     infinitePlaceCompletionCongrHom_mem_infinitePositiveSubgroup_iff
     (e : K ≃ₐ[ℚ] M)
@@ -316,6 +324,7 @@ private theorem
         e W hW]
     simpa only using hpos
 
+open scoped Classical in
 private theorem ideleCongr_mem_infiniteCongruenceSubgroup_iff
     (e : K ≃ₐ[ℚ] M)
     (a : IdeleGroup K) :
@@ -364,6 +373,7 @@ private theorem ideleCongr_mem_infiniteCongruenceSubgroup_iff
         h (W.comap e.toRingHom)
     simpa only [IdeleGroup.infiniteComponent_apply] using hW
 
+open scoped Classical in
 private theorem ideleCongr_mem_ideleCongruenceSubgroup_zero_iff
     (e : K ≃ₐ[ℚ] M)
     (a : IdeleGroup K) :
@@ -396,6 +406,7 @@ private theorem ideleCongr_mem_ideleCongruenceSubgroup_zero_iff
       (ideleCongr_mem_infiniteCongruenceSubgroup_iff e a)
       hfiniteZero
 
+open scoped Classical in
 private theorem ideleCongruenceSubgroup_zero_map_ideleCongr
     (e : K ≃ₐ[ℚ] M) :
     ((RayClass.Modulus.narrowOfFinite
@@ -420,6 +431,7 @@ private theorem ideleCongruenceSubgroup_zero_map_ideleCongr
     · exact
         (ideleCongr e).apply_symm_apply b
 
+open scoped Classical in
 private theorem narrowDenominator_map_ideleCongr
     (e : K ≃ₐ[ℚ] M) :
     (RayClass.narrowDenominator (K := K)).map
@@ -439,6 +451,7 @@ private theorem narrowDenominator_map_ideleCongr
       IdeleGroup.principalSubgroup M
   exact idelePrincipalSubgroup_map_congr e
 
+open scoped Classical in
 /-- Transport of actual idele classes along a number-field equivalence
 carries the big-Hilbert norm subgroup exactly onto the big-Hilbert norm
 subgroup of the target field. -/
@@ -473,6 +486,7 @@ theorem bigHilbertClassFieldNormSubgroup_map_ideleClassCongr
     simpa only [RayClass.narrowDenominator] using
       narrowDenominator_map_ideleCongr e]
 
+open scoped Classical in
 /-- The canonical equivalence of big-Hilbert reciprocity quotients
 induced by an equivalence of number fields. -/
 noncomputable def bigHilbertClassFieldQuotientCongr
@@ -487,9 +501,9 @@ noncomputable def bigHilbertClassFieldQuotientCongr
     (ideleClassCongr e)
     (bigHilbertClassFieldNormSubgroup_map_ideleClassCongr e)
 
+open scoped Classical in
 /-- The big-Hilbert quotient equivalence is induced on representatives
 by the actual transport of idele classes. -/
-@[simp]
 theorem bigHilbertClassFieldQuotientCongr_mk
     (e : K ≃ₐ[ℚ] M)
     (c : IdeleClassGroup K) :
@@ -501,6 +515,7 @@ theorem bigHilbertClassFieldQuotientCongr_mk
         (ideleClassCongr e c) :=
   rfl
 
+open scoped Classical in
 /-- Canonical transport of narrow ideal classes determined by the
 big-Hilbert reciprocity quotient. -/
 noncomputable def bigHilbertNarrowClassGroupCongr
@@ -513,6 +528,7 @@ noncomputable def bigHilbertNarrowClassGroupCongr
       (bigHilbertClassFieldQuotientEquivNarrowClassGroup
         (K := M)))
 
+open scoped Classical in
 /-- Naturality of the canonical identification of the big-Hilbert
 reciprocity quotient with the narrow class group. -/
 @[simp]
@@ -529,6 +545,7 @@ theorem bigHilbertClassFieldQuotientEquivNarrowClassGroup_naturality
   simp only [bigHilbertNarrowClassGroupCongr,
     MulEquiv.trans_apply, MulEquiv.symm_apply_apply]
 
+open scoped Classical in
 /-- Homomorphism form of naturality for the big-Hilbert
 quotient--narrow-class-group identification. -/
 theorem
@@ -547,9 +564,9 @@ theorem
     bigHilbertClassFieldQuotientEquivNarrowClassGroup_naturality
       (K := K) (M := M) e q
 
+open scoped Classical in
 /-- On an idele representative, canonical transport of narrow ideal
 classes is represented by the transported idele itself. -/
-@[simp]
 theorem bigHilbertNarrowClassGroupCongr_mk
     (e : K ≃ₐ[ℚ] M)
     (a : IdeleGroup K) :
@@ -589,6 +606,7 @@ theorem bigHilbertNarrowClassGroupCongr_mk
         ideleClassCongr_mk,
         bigHilbertClassFieldQuotientEquivNarrowClassGroup_mk]
 
+open scoped Classical in
 /-- Homomorphism form of naturality for narrow ideal classes under the
 big-Hilbert narrow-class-group transport. -/
 theorem bigHilbertNarrowClassGroupCongr_naturality

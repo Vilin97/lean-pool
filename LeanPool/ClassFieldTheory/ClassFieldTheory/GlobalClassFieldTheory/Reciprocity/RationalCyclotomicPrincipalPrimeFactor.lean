@@ -13,16 +13,20 @@ character specification reduces the claim to the ramified chosen-Artin formula
 proved in `RationalCyclotomicFinitePlaceArtin`.
 -/
 
-open scoped Classical
+
 
 noncomputable section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity
 
-local instance (p : Nat.Primes) : Fact p.1.Prime :=
+open scoped Classical in
+local instance localPrimesInstance1 (p : Nat.Primes) : Fact p.1.Prime :=
   ⟨p.2⟩
 
+attribute [local instance] localPrimesInstance1
+
+open scoped Classical in
 /-- The chosen finite-place factor at the ramified prime `p` is the direct
 reduction of the rational `p`-adic unit. -/
 theorem rationalCyclotomicPrincipalFinitePlaceCharacter_at_prime

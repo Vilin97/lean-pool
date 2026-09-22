@@ -42,6 +42,7 @@ attribute [local instance]
   naturalityAbstractRelativeFixedFieldNumberField
   naturalityAbstractRelativeFixedFieldIsAbelianGalois
 
+/-- The finite ideles of an abstract fixed field carry the restricted-product group structure. -/
 @[reducible]
 noncomputable local instance
     abstractFixedFieldFiniteIdeleGroupGroup
@@ -59,6 +60,7 @@ noncomputable local instance
         (LocalClassFieldTheory.abstractFixedField
           ℚ (SeparableClosure ℚ) H.field))ˣ)
 
+/-- The ideles of an abstract fixed field carry the product group structure. -/
 @[reducible]
 noncomputable local instance
     abstractFixedFieldIdeleGroupGroup
@@ -70,6 +72,7 @@ noncomputable local instance
           ℚ (SeparableClosure ℚ) H.field)) :=
   Prod.instGroup
 
+/-- The idele classes of an abstract fixed field carry the quotient group structure. -/
 @[reducible]
 noncomputable local instance
     abstractFixedFieldIdeleClassGroupGroup

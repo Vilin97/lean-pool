@@ -47,7 +47,7 @@ noncomputable def finitePlaceLocalTensorDecompositionComponent
     fun u =>
       AbsoluteValue.completionAlgebra vK u.1 u.2
   exact
-    completionTensorDecomposition_left
+    completionTensorDecompositionLeft
       (K := K) (L := L) vK hvK
       ((relativeFinitePlaceLocalTensorAlgEquiv
         (K := K) (L := L) w).symm x) wL
@@ -382,7 +382,7 @@ theorem scaledRelativeTensorCoordinates_isIntegral_of_localTensorDecompositionIn
   let hvK0 : vK.IsNontrivial :=
     RayClass.adicAbv_isNontrivial w
   let : Fintype (AbsoluteValueExtension vK L) :=
-    completionTensorDecomposition_extensionFintype
+    completionTensorDecompositionExtensionFintype
       (K := K) (L := L) vK hvK0
   let : ∀ wL : AbsoluteValueExtension vK L,
       Algebra vK.Completion wL.1.Completion :=
@@ -402,7 +402,7 @@ theorem scaledRelativeTensorCoordinates_isIntegral_of_localTensorDecompositionIn
       (scaledRelativeExtensionBasis (K := K) (L := L))
   have hxA :
       ∀ wL : AbsoluteValueExtension vK L,
-        completionTensorDecomposition_left
+        completionTensorDecompositionLeft
             (K := K) (L := L) vK hvK0 xA wL ∈
           absoluteValueCompletionIntegers wL.1
             (absoluteValueExtension_isNonarchimedean vK hvK wL) := by
@@ -412,7 +412,7 @@ theorem scaledRelativeTensorCoordinates_isIntegral_of_localTensorDecompositionIn
   have hbA :
       ∀ (i : RelativeAdeleBasisIndex (K := K) (L := L))
         (wL : AbsoluteValueExtension vK L),
-        completionTensorDecomposition_left
+        completionTensorDecompositionLeft
             (K := K) (L := L) vK hvK0 (bA i) wL ∈
           absoluteValueCompletionIntegers wL.1
             (absoluteValueExtension_isNonarchimedean vK hvK wL) := by

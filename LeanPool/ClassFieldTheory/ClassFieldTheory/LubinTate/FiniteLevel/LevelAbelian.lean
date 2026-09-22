@@ -85,7 +85,6 @@ chosen primitive generator through the inverse Lubin--Tate unit action.
 This is the pointwise `[u⁻¹]` target needed for the later comparison with
 the actual local Artin map; it does not identify the two maps merely from
 their kernels. -/
-@[simp]
 theorem standardLubinTateUnitParameterEquivGal_inv_class_apply_gen
     (F : LocalField.{u, v} K) {π : F.valuationSubring}
     (hπ : F.toCompleteDVF.valuation.IsUniformizer (π : K))

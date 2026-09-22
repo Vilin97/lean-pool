@@ -8,11 +8,13 @@ import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.
 import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.CompletedLevel.DirectThetaAtCompletedLevel
 import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.CompletedLevel.CompletedPrimitiveAction
 /-!
-# The completed theta-intertwining theorem: the formal standard bracket at a completed division point
+# The completed theta-intertwining theorem: the formal standard bracket at a completed division
+  point
 
 The first theta identity uses the independently constructed formal bracket,
 whereas the completed Frobenius lift acts through the finite bracket from
-the finite Lubin–Tate bracket construction.  This file proves that the two actions agree on the chosen primitive
+the finite Lubin–Tate bracket construction.  This file proves that the two actions agree on the
+  chosen primitive
 division point.  The proof analytically evaluates the recursive identity
 
 `[a](x) = a₀x + [tail(a)](e_T(x))`
@@ -52,18 +54,22 @@ noncomputable local instance equalCharacteristicDirectBracketBaseValuationIsNont
       (equalCharacteristicCompletedUnramifiedField F.residueField) ℤᵐ⁰).IsNontrivial :=
   equalCharacteristicCompletedBaseValuationIsNontrivial F.residueField
 
+/-- The valuation on the completed unramified base of the direct-bracket construction has rank
+one. -/
 noncomputable local instance equalCharacteristicDirectBracketBaseValuationRankOne
     (F : LocalField.{u, v} K) :
     (Valued.v : Valuation
       (equalCharacteristicCompletedUnramifiedField F.residueField) ℤᵐ⁰).RankOne :=
   equalCharacteristicCompletedBaseValuationRankOne F.residueField
 
+/-- The canonical nontrivial norm on the completed unramified coefficient field. -/
 noncomputable local instance equalCharacteristicDirectBracketBaseNormedField
     (F : LocalField.{u, v} K) :
     NontriviallyNormedField
       (equalCharacteristicCompletedUnramifiedField F.residueField) :=
   equalCharacteristicCompletedBaseNormedField F.residueField
 
+/-- The canonical nontrivial norm on the completed Lubin–Tate field at level `n`. -/
 noncomputable local instance equalCharacteristicDirectBracketLevelNormedField
     (F : LocalField.{u, v} K) (n : ℕ) :
     NontriviallyNormedField (equalCharacteristicCompletedLevelField F n) :=
@@ -79,6 +85,7 @@ noncomputable local instance equalCharacteristicDirectBracketLevelCompleteSpace
     CompleteSpace (equalCharacteristicCompletedLevelField F n) :=
   equalCharacteristicCompletedLevelCompleteSpace F n
 
+/-- The nonnegative-real-valued valuation on the completed Lubin–Tate field at level `n`. -/
 noncomputable local instance equalCharacteristicDirectBracketLevelValued
     (F : LocalField.{u, v} K) (n : ℕ) :
     Valued (equalCharacteristicCompletedLevelField F n) ℝ≥0 :=

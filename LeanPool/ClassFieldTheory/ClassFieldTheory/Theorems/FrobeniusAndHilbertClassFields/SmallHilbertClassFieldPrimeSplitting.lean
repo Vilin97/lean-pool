@@ -34,7 +34,8 @@ theorem finitePrime_splitsCompletelyInSmallHilbertClassField_iff_principal
     FinitePrimeSplitsCompletely K E v ↔
       finitePrimeFractionalIdeal v ∈
         (toPrincipalIdeal (𝓞 K) K).range := by
-  exact GlobalClassFieldComparison.finitePrime_splitsCompletelyInSmallHilbertClassField_iff_principal_of_isSmall
+  exact
+    GlobalClassFieldComparison.finitePrime_splitsCompletelyInSmallHilbertClassField_iff_principal_of_isSmall
     K E hE v
 
 end ClassFieldTheory

@@ -36,7 +36,8 @@ The defining evaluation formula for `coe_valuationSubringUnitsToFieldUnits` is
 -/
 @[simp] theorem coe_valuationSubringUnitsToFieldUnits_apply
     (F : CompleteDVF.{u, v} K) (a : F.valuationSubringˣ) :
-    (((LocalFieldTheory.DiscreteValuationField.CompleteDVF.valuationSubringUnitsToFieldUnits F) a : Kˣ) : K) =
+    (((LocalFieldTheory.DiscreteValuationField.CompleteDVF.valuationSubringUnitsToFieldUnits F)
+      a : Kˣ) : K) =
       (a : F.valuationSubring) := by
   change
     ((F.valuation.valuationSubring.unitGroupMulEquiv.symm a : Kˣ) : K) =

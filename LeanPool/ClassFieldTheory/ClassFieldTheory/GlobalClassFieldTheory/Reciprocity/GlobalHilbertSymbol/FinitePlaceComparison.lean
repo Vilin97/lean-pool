@@ -14,7 +14,7 @@ and splitting-field data are named separately so downstream proofs do not
 rebuild the localized-completion instance tower.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -28,11 +28,13 @@ open LocalClassFieldTheory
 
 variable (K : Type) [Field K] [NumberField K]
 
+open scoped Classical in
 /-- The absolute-value completion used at the finite place `v`. -/
 abbrev finitePlaceKummerBaseCompletion
     (v : HeightOneSpectrum (𝓞 K)) :=
   (NumberField.HeightOneSpectrum.adicAbv K v).Completion
 
+open scoped Classical in
 /-- The localized completion of the chosen global simple Kummer extension. -/
 abbrev finitePlaceKummerLocalizedCompletion
     (n : ℕ+) (hnK : ((n : ℕ) : K) ≠ 0)
@@ -43,6 +45,7 @@ abbrev finitePlaceKummerLocalizedCompletion
   LocalizedCompletion
     (NumberField.HeightOneSpectrum.adicAbv K v) w
 
+open scoped Classical in
 /-- The canonical completion algebra for the localized global Kummer
 extension. -/
 @[reducible]
@@ -57,6 +60,7 @@ noncomputable def finitePlaceKummerLocalizedAlgebra
   finitePlaceLocalArtinLocalizedAlgebra
     (K := K) (L := chosenSimpleKummerExtension K n hnK b) v w
 
+open scoped Classical in
 /-- The named finite-dimensional certificate for the localized global
 Kummer extension. -/
 theorem finitePlaceKummerLocalizedFiniteDimensional
@@ -75,6 +79,7 @@ theorem finitePlaceKummerLocalizedFiniteDimensional
   exact finitePlaceLocalArtinFiniteDimensional
     (K := K) (L := chosenSimpleKummerExtension K n hnK b) v w
 
+open scoped Classical in
 /-- The image of the global chosen radical as a unit of the localized
 completion. -/
 noncomputable def finitePlaceKummerLocalizedRootUnit
@@ -89,6 +94,7 @@ noncomputable def finitePlaceKummerLocalizedRootUnit
       (NumberField.HeightOneSpectrum.adicAbv K v) w.1 w.2).toMonoidHom
     (chosenSimpleKummerRootUnit K n hnK b)
 
+open scoped Classical in
 /-- The localized global radical is an `n`-th root of the image of `b` in
 the finite-place completion. -/
 theorem finitePlaceKummerLocalizedRootUnit_pow
@@ -104,7 +110,7 @@ theorem finitePlaceKummerLocalizedRootUnit_pow
       Units.map
         (algebraMap (finitePlaceKummerBaseCompletion K v)
           (finitePlaceKummerLocalizedCompletion K n hnK v b w)).toMonoidHom
-        (finitePlaceHilbert_completionUnit K v b) := by
+        (finitePlaceHilbertCompletionUnit K v b) := by
   let vK := NumberField.HeightOneSpectrum.adicAbv K v
   have hroot_val :
       (((chosenSimpleKummerRootUnit K n hnK b :
@@ -123,7 +129,7 @@ theorem finitePlaceKummerLocalizedRootUnit_pow
     finitePlaceKummerLocalizedAlgebra K n hnK v b w
   apply Units.ext
   simp only [finitePlaceKummerLocalizedRootUnit,
-    finitePlaceHilbert_completionUnit, Units.val_pow_eq_pow_val, Units.coe_map]
+    finitePlaceHilbertCompletionUnit, Units.val_pow_eq_pow_val, Units.coe_map]
   calc
     AbsoluteValue.toAlgebraicLocalization vK w.1 w.2
           (((chosenSimpleKummerRootUnit K n hnK b : Lˣ) : L)) ^ (n : ℕ) =
@@ -139,6 +145,7 @@ theorem finitePlaceKummerLocalizedRootUnit_pow
       AbsoluteValue.toAlgebraicLocalization_algebraMap
         vK w.1 w.2 (b : K)
 
+open scoped Classical in
 /-- The localized image of the global chosen radical generates the whole
 localized extension over the base completion. -/
 theorem finitePlaceKummerLocalizedRoot_adjoin_eq_top
@@ -172,6 +179,7 @@ theorem finitePlaceKummerLocalizedRoot_adjoin_eq_top
     (((chosenSimpleKummerRootUnit K n hnK b : Lˣ) : L))
     (chosenSimpleKummerExtension_adjoin_root_eq_top K n hnK b)
 
+open scoped Classical in
 /-- The localized global simple Kummer extension is a splitting field for
 the local Kummer polynomial. -/
 theorem finitePlaceKummerLocalized_isSplittingField

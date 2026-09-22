@@ -5,7 +5,8 @@ Authors: n-yamaguchi-0729
 -/
 
 import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.Unramified.PrincipalUnits.Trace
-/-! Provides the public declarations in the `LocalClassFieldTheory.Finite.Unramified.PrincipalUnits.Lift` Lean module. -/
+/-! Provides the public declarations in the
+  `LocalClassFieldTheory.Finite.Unramified.PrincipalUnits.Lift` Lean module. -/
 
 noncomputable section
 
@@ -18,7 +19,8 @@ open LocalFieldTheory
 open LocalFieldTheory.IsNonarchimedeanLocalField
 open Filter
 
-/-- States the theorem `principalUnitsNormOfUnramifiedValuationOfIsIntegralClosure_lift_mod_succ`. -/
+/-- States the theorem
+`principalUnitsNormOfUnramifiedValuationOfIsIntegralClosure_lift_mod_succ`. -/
 theorem principalUnitsNormOfUnramifiedValuationOfIsIntegralClosure_lift_mod_succ
     (K L : Type u)
     [Field K] [ValuativeRel K] [TopologicalSpace K] [IsNonarchimedeanLocalField K]
@@ -281,7 +283,8 @@ theorem principalUnitsNormOfUnramifiedValuationOfIsIntegralClosureApproxState_su
 
 /-- The actual integral-closure correction sequence encoded by consecutive
 coherent approximation states. -/
-noncomputable def chosenPrincipalUnitsNormOfUnramifiedValuationOfIsIntegralClosureApproxCorrectionSeq
+noncomputable def
+  chosenPrincipalUnitsNormOfUnramifiedValuationOfIsIntegralClosureApproxCorrectionSeq
     (K L : Type u)
     [Field K] [ValuativeRel K] [TopologicalSpace K] [IsNonarchimedeanLocalField K]
     [Field L] [ValuativeRel L] [TopologicalSpace L] [IsNonarchimedeanLocalField L]
@@ -418,7 +421,8 @@ theorem eventually_normIntegerUnits_div_mem_principalUnits_of_tendsto_units_of_i
 
 /-- The limit of the actual integral-closure coherent approximation states
 preserves all finite-depth error bounds. -/
-theorem principalUnitsNormOfUnramifiedValuationOfIsIntegralClosureApproxState_limit_error_mem_add_all
+theorem
+  principalUnitsNormOfUnramifiedValuationOfIsIntegralClosureApproxState_limit_error_mem_add_all
     (K L : Type u)
     [Field K] [ValuativeRel K] [TopologicalSpace K] [IsNonarchimedeanLocalField K]
     [Field L] [ValuativeRel L] [UniformSpace L] [IsUniformAddGroup L]
@@ -487,11 +491,11 @@ theorem principalUnitsNormOfUnramifiedValuationOfIsIntegralClosure_eq_of_error_m
     (K L : Type u)
     [Field K] [ValuativeRel K] [TopologicalSpace K] [IsNonarchimedeanLocalField K]
     [Field L] [ValuativeRel L] [TopologicalSpace L] [IsNonarchimedeanLocalField L]
-    [Algebra K L] [FiniteDimensional K L] [IsGalois K L]
+    [Algebra K L] [FiniteDimensional K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [LocalFieldTheory.ValuativeExtension K L] [IsIntegralClosure 𝒪[L] 𝒪[K] L]
     [Module.Finite 𝒪[K] 𝒪[L]]
-    [LocalFieldTheory.IsNonarchimedeanLocalField.IsUnramifiedValuedExtension K L]
+
     (n : Nat) (y : principalUnits K n) (x : principalUnits L n)
     (h : ∀ d : Nat,
       ((y : 𝒪[K]ˣ) / normIntegerUnits K L (x : 𝒪[L]ˣ)) ∈

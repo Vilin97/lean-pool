@@ -14,13 +14,14 @@ class field contains `L`.  Since the public interface makes no global choice
 of ray class fields, the theorem asserts existence of this least modulus.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 open NumberField IsDedekindDomain
 
 noncomputable section
 
 namespace ClassFieldTheory
 
+open scoped Classical in
 /-- A finite abelian extension has a conductor characterized by containment
 in ray class fields. -/
 theorem embedsInRayClassField_iff_conductor_le

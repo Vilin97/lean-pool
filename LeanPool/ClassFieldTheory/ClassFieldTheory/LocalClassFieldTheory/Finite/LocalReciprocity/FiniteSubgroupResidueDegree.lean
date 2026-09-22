@@ -60,6 +60,8 @@ noncomputable local instance localAbstractFixedResidueIntermediateFieldAlgebra
       (localAbstractFixedResidueIntermediateField K H) :=
   (localAbstractFixedResidueIntermediateField K H).algebra
 
+/-- Scalar multiplication on the fixed residue intermediate field inherited from its residue-field
+algebra structure. -/
 noncomputable local instance localAbstractFixedResidueIntermediateFieldSMul
     (H : ClosedSubgroup (Gal(SeparableClosure K/K))) :
     SMul
@@ -68,6 +70,8 @@ noncomputable local instance localAbstractFixedResidueIntermediateFieldSMul
   @Algebra.toSMul _ _ _ _
     (localAbstractFixedResidueIntermediateFieldAlgebra K H)
 
+/-- The fixed residue intermediate field is a module over the decomposition residue field of the
+base. -/
 noncomputable local instance localAbstractFixedResidueIntermediateFieldModule
     (H : ClosedSubgroup (Gal(SeparableClosure K/K))) :
     Module

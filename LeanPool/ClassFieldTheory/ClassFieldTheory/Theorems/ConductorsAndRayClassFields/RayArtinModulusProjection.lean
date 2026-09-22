@@ -20,18 +20,22 @@ statement uses only Mathlib and public Definitions vocabulary; the idelic
 implementation appears only in the proof.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 open NumberField IsDedekindDomain
 
 noncomputable section
 
 namespace ClassFieldTheory
 
+open scoped Classical in
 private local instance rayClassGroupCommGroup
     {K : Type} [Field K] [NumberField K]
     (m : RayClassModulus K) : CommGroup (RayClassGroup m) :=
   { (inferInstance : Group (RayClassGroup m)) with mul_comm := mul_comm' }
 
+attribute [local instance] rayClassGroupCommGroup
+
+open scoped Classical in
 private theorem rayArtin_prime_eq_arithmeticPrimeArtin
     {K : Type} [Field K] [NumberField K]
     {m : RayClassModulus K} (R : RayClassFieldRealization K m)
@@ -55,6 +59,7 @@ private theorem rayArtin_prime_eq_arithmeticPrimeArtin
       (GlobalClassFieldComparison.arithmeticPrimeArtin_eq_arithmeticFrobeniusAt
         (K := K) (L := R.extension) v w hw hunram).symm
 
+open scoped Classical in
 private theorem arithmeticPrimeArtin_restrict_tower
     {K E L : Type}
     [Field K] [NumberField K]
@@ -79,6 +84,7 @@ private theorem arithmeticPrimeArtin_restrict_tower
           (K := K) (L := L) (E := E))
         (IdeleGroup.finitePrimeIdele v))
 
+open scoped Classical in
 private theorem rayClassGroup_hom_ext_of_prime
     {K : Type} [Field K] [NumberField K]
     {G : Type} [CommGroup G]
@@ -135,6 +141,7 @@ private theorem rayClassGroup_hom_ext_of_prime
   exact congrArg
     (fun h : RayClass.primeToModulusIdeals n' →* G => h I) hcomp
 
+open scoped Classical in
 /-- Artin reciprocity commutes with reduction of the modulus along any
 embedding of the corresponding ray class field realizations. -/
 theorem rayArtin_modulusProjection

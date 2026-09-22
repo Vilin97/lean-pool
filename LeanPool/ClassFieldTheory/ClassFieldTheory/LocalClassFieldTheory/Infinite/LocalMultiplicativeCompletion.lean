@@ -31,7 +31,7 @@ open LocalFieldTheory.IsNonarchimedeanLocalField
 open finite-index normal subgroup. -/
 def finiteTargetKernelOpenFiniteIndexNormalSubgroup
     {G : Type u} {F : Type v}
-    [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
+    [Group G] [TopologicalSpace G]
     [Group F] [Finite F] [TopologicalSpace F] [DiscreteTopology F]
     (f : G →ₜ* F) : OpenFiniteIndexNormalSubgroup G :=
   ⟨
@@ -51,7 +51,7 @@ def valuationModContinuousMonoidHom
     (K : Type u) [Field K] [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K] (n : ℕ)
     [TopologicalSpace (Multiplicative (ZMod n))]
-    [DiscreteTopology (Multiplicative (ZMod n))] :
+    :
     Kˣ →ₜ* Multiplicative (ZMod n) where
   toMonoidHom :=
     (Int.castAddHom (ZMod n)).toMultiplicative.comp (valuationUnitsMulHom K)
@@ -71,9 +71,9 @@ theorem exists_openFiniteIndexNormalSubgroup_not_mem_localMultiplicativeGroup
   by_cases hvaluation : valuationExponent = 0
   · have hvaluation' : valuationMap K (Additive.ofMul x) = 0 := by
       simpa [valuationExponent] using hvaluation
-    let unitFactor : Kˣ →ₜ* LocalFieldTheory.localUnits_profinite K :=
+    let unitFactor : Kˣ →ₜ* LocalFieldTheory.localUnitsProfinite K :=
       localUnitFactorContinuousMonoidHom K
-    let ux : LocalFieldTheory.localUnits_profinite K := unitFactor x
+    let ux : LocalFieldTheory.localUnitsProfinite K := unitFactor x
     have hux : ux ≠ 1 := by
       intro h
       apply hx
@@ -88,21 +88,21 @@ theorem exists_openFiniteIndexNormalSubgroup_not_mem_localMultiplicativeGroup
         _ = integerUnitsToFieldUnits K ux := rfl
         _ = integerUnitsToFieldUnits K 1 := congrArg _ h
         _ = 1 := map_one (integerUnitsToFieldUnits K)
-    have hone : (1 : LocalFieldTheory.localUnits_profinite K) ∈
-        ({ux}ᶜ : Set (LocalFieldTheory.localUnits_profinite K)) := by
+    have hone : (1 : LocalFieldTheory.localUnitsProfinite K) ∈
+        ({ux}ᶜ : Set (LocalFieldTheory.localUnitsProfinite K)) := by
       simpa using hux.symm
     obtain ⟨N, hN⟩ :=
       ProfiniteGrp.exist_openNormalSubgroup_sub_open_nhds_of_one
         (isOpen_compl_singleton : IsOpen
-          ({ux}ᶜ : Set (LocalFieldTheory.localUnits_profinite K))) hone
+          ({ux}ᶜ : Set (LocalFieldTheory.localUnitsProfinite K))) hone
     let H : OpenFiniteIndexNormalSubgroup Kˣ :=
       topologicalProfiniteCompletionPreimageIndex
-        (LocalFieldTheory.localUnits_profinite K) unitFactor N
+        (LocalFieldTheory.localUnitsProfinite K) unitFactor N
     refine ⟨H, ?_⟩
     intro hmem
     have hunit : unitFactor x ∈ N := hmem
     have hnot : unitFactor x ∈
-        ({ux}ᶜ : Set (LocalFieldTheory.localUnits_profinite K)) := hN hunit
+        ({ux}ᶜ : Set (LocalFieldTheory.localUnitsProfinite K)) := hN hunit
     exact hnot (by rfl)
   · let n : ℕ := valuationExponent.natAbs + 1
     let : TopologicalSpace (Multiplicative (ZMod n)) := ⊥

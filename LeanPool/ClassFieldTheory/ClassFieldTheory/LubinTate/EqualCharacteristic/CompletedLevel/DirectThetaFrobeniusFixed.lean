@@ -46,6 +46,8 @@ private instance equalCharacteristicDirectThetaFixedLevelCharP
       (equalCharacteristicCompletedLevelField F n)).injective
     F.residueCharacteristic
 
+/-- The Laurent-series base acts on the completed unramified field through the coefficient
+embedding. -/
 noncomputable local instance equalCharacteristicDirectThetaFixedBaseAlgebra
     (F : LocalField.{u, v} K) :
     Algebra F.residueField⸨X⸩
@@ -59,6 +61,7 @@ noncomputable local instance
       (equalCharacteristicCompletedUnramifiedField F.residueField) ℤᵐ⁰).IsNontrivial :=
   equalCharacteristicCompletedBaseValuationIsNontrivial F.residueField
 
+/-- The discrete valuation on the completed unramified coefficient field has rank one. -/
 noncomputable local instance
     equalCharacteristicDirectThetaFixedBaseValuationRankOne
     (F : LocalField.{u, v} K) :
@@ -66,12 +69,14 @@ noncomputable local instance
       (equalCharacteristicCompletedUnramifiedField F.residueField) ℤᵐ⁰).RankOne :=
   equalCharacteristicCompletedBaseValuationRankOne F.residueField
 
+/-- The canonical nontrivial norm on the completed unramified coefficient field. -/
 noncomputable local instance equalCharacteristicDirectThetaFixedBaseNormedField
     (F : LocalField.{u, v} K) :
     NontriviallyNormedField
       (equalCharacteristicCompletedUnramifiedField F.residueField) :=
   equalCharacteristicCompletedBaseNormedField F.residueField
 
+/-- The canonical nontrivial norm on the completed Lubin–Tate field at level `n`. -/
 noncomputable local instance equalCharacteristicDirectThetaFixedLevelNormedField
     (F : LocalField.{u, v} K) (n : ℕ) :
     NontriviallyNormedField (equalCharacteristicCompletedLevelField F n) :=
@@ -87,6 +92,7 @@ noncomputable local instance equalCharacteristicDirectThetaFixedLevelCompleteSpa
     CompleteSpace (equalCharacteristicCompletedLevelField F n) :=
   equalCharacteristicCompletedLevelCompleteSpace F n
 
+/-- The nonnegative-real-valued valuation on the completed Lubin–Tate field at level `n`. -/
 noncomputable local instance equalCharacteristicDirectThetaFixedLevelValued
     (F : LocalField.{u, v} K) (n : ℕ) :
     Valued (equalCharacteristicCompletedLevelField F n) ℝ≥0 :=
@@ -128,7 +134,8 @@ private noncomputable local instance
       (Valued.integer (equalCharacteristicCompletedLevelField F n)) :=
   (equalCharacteristicCompletedLevelCoefficientHom F n).toAlgebra
 
-/-- Restriction of the completed theta-intertwining theorem Frobenius lift to the spectral valuation ring. -/
+/-- Restriction of the completed theta-intertwining theorem Frobenius lift to the spectral
+valuation ring. -/
 private noncomputable def equalCharacteristicCompletedIntegerFrobeniusLift
     (F : LocalField.{u, v} K)
     [CharP K F.residueCharacteristic]
@@ -238,7 +245,8 @@ private theorem equalCharacteristicCompletedIntegerFrobeniusLift_hasEval
   rw [hpow]
   simpa only [map_zero] using h
 
-/-- Convergent evaluation is semilinear for the completed theta-intertwining theorem Frobenius lift. -/
+/-- Convergent evaluation is semilinear for the completed theta-intertwining theorem Frobenius
+lift. -/
 private theorem equalCharacteristicCompletedIntegerFrobeniusLift_evaluation
     (F : LocalField.{u, v} K)
     [CharP K F.residueCharacteristic]

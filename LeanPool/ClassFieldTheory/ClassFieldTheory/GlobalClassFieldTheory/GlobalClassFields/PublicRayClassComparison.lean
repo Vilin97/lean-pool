@@ -31,7 +31,7 @@ This module supplies the implementation proofs for the compact conductor and
 ray-class-field statements in the parent `Theorems` directory.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -40,6 +40,7 @@ namespace ClassFieldTheory.GlobalClassFieldComparison
 
 universe u
 
+open scoped Classical in
 /-- Interpret a public ray modulus in the existing idèle-theoretic ray-class
 library, preserving both its finite exponents and selected real places. -/
 def rayClassModulusToOriginal
@@ -48,6 +49,7 @@ def rayClassModulusToOriginal
   finitePart := m.finitePart
   infinitePart := m.infinitePart
 
+open scoped Classical in
 /-- At a real place, positivity of a principal idele component is exactly
 positivity of its field generator under the corresponding real embedding. -/
 private theorem principalIdele_mem_infinitePositiveSubgroup_iff
@@ -72,6 +74,7 @@ private theorem principalIdele_mem_infinitePositiveSubgroup_iff
   · intro h hv
     simpa only [hcoe] using h
 
+open scoped Classical in
 /-- A principal idèle satisfies the existing prime-to-modulus condition
 exactly when its generator satisfies the public ray congruence. -/
 theorem principalIdele_mem_primeTo_iff_isRayCongruent
@@ -120,6 +123,7 @@ theorem principalIdele_mem_primeTo_iff_isRayCongruent
   exact ⟨fun h => ⟨hfinite.mp h.2, hinfinite.mp h.1⟩,
     fun h => ⟨hinfinite.mpr h.2, hfinite.mpr h.1⟩⟩
 
+open scoped Classical in
 /-- At narrow modulus zero, the older idele-theoretic prime-to condition on
 a principal idele agrees with the public generator congruence. -/
 theorem principalIdele_mem_narrowPrimeTo_iff_isRayCongruent
@@ -135,6 +139,7 @@ theorem principalIdele_mem_narrowPrimeTo_iff_isRayCongruent
   exact principalIdele_mem_primeTo_iff_isRayCongruent K
     (narrowRayClassModulus K) x
 
+open scoped Classical in
 /-- The public ray-principal subgroup equals the existing ideal-theoretic
 ray-principal subgroup for every finite and infinite modulus. -/
 theorem rayPrincipalIdealSubgroup_eq
@@ -191,6 +196,7 @@ theorem rayPrincipalIdealSubgroup_eq
   · intro hI
     exact ⟨I, hI, rfl⟩
 
+open scoped Classical in
 /-- The zero-finite-part narrow case of the general principal-ideal
 comparison. -/
 theorem narrowRayPrincipalIdealSubgroup_eq
@@ -203,6 +209,7 @@ theorem narrowRayPrincipalIdealSubgroup_eq
       (rayClassModulusToOriginal K (narrowRayClassModulus K))
   exact rayPrincipalIdealSubgroup_eq K (narrowRayClassModulus K)
 
+open scoped Classical in
 /-- The public ideal-theoretic ray class group is the existing ideal ray
 class group for the same modulus. -/
 noncomputable def rayClassGroupEquivOriginal
@@ -221,6 +228,7 @@ noncomputable def rayClassGroupEquivOriginal
   have hN : N.Normal := @Subgroup.normal_of_isMulCommutative G _ hComm N
   exact @QuotientGroup.quotientMulEquivOfEq G _ M N hM hN hMN
 
+open scoped Classical in
 /-- The comparison preserves the class of each prime away from the
 modulus. -/
 theorem rayClassGroupEquivOriginal_prime
@@ -253,6 +261,7 @@ theorem rayClassGroupEquivOriginal_prime
           (rayClassModulusToOriginal K m) v hv)
   rfl
 
+open scoped Classical in
 /-- Compare the public ideal ray class group directly with the original
 idèle-class ray class group.  This is the composite of the ideal comparison
 above and the original idelic-to-ideal equivalence. -/
@@ -265,6 +274,7 @@ noncomputable def rayClassGroupEquivOriginalIdele
     (RayClass.rayClassGroupEquivIdealRayClassGroup
       (rayClassModulusToOriginal K m)).symm
 
+open scoped Classical in
 /-- A public prime ray class corresponds to the original normalized prime
 idèle class, with the same finite and infinite modulus. -/
 theorem rayClassGroupEquivOriginalIdele_prime
@@ -308,9 +318,11 @@ theorem rayClassGroupEquivOriginalIdele_prime
     _ = e (QuotientGroup.mk'
           (RayClass.Modulus.congruenceSubgroup m')
           (QuotientGroup.mk' (IdeleGroup.principalSubgroup K) (a : IdeleGroup K))) := by
-      exact (GlobalClassFieldTheory.GlobalClassFields.rayClassGroupEquivIdealRayClassGroup_mk_primeTo
+      exact
+        (GlobalClassFieldTheory.GlobalClassFields.rayClassGroupEquivIdealRayClassGroup_mk_primeTo
         m' a).symm
 
+open scoped Classical in
 /-- The public ideal-theoretic narrow ray class group agrees with the
 existing narrow class group used by global class field theory. -/
 noncomputable def narrowRayClassGroupEquivNarrowClassGroup
@@ -325,6 +337,7 @@ noncomputable def narrowRayClassGroupEquivNarrowClassGroup
     ((RayClass.rayClassGroupEquivIdealRayClassGroup m).symm.trans
       (RayClass.rayClassGroupNarrowZeroEquivNarrowClassGroup (K := K)))
 
+open scoped Classical in
 /-- The norm subgroup of the selected ray class field is the ray
 congruence subgroup. -/
 theorem rayClassField_normSubgroup
@@ -335,6 +348,7 @@ theorem rayClassField_normSubgroup
       RayClass.Modulus.congruenceSubgroup m :=
   GlobalClassFieldTheory.GlobalClassFields.rayClassField_ideleClassNorm_range_over_original m
 
+open scoped Classical in
 /-- Any finite abelian extension whose norm group contains the ray
 congruence subgroup is unramified outside that modulus. -/
 theorem unramifiedOutsideModulus_of_definingModulus
@@ -391,6 +405,7 @@ theorem unramifiedOutsideModulus_of_definingModulus
       exact Finset.mem_filter.mpr ⟨Finset.mem_univ _, hram⟩
     exact hnot (hinfinite hvcond)
 
+open scoped Classical in
 /-- The selected ray class field is unramified away from the finite and real
 places selected by the public modulus. -/
 theorem rayClassField_unramifiedOutsideModulus
@@ -405,6 +420,7 @@ theorem rayClassField_unramifiedOutsideModulus
     GlobalClassFieldTheory.GlobalClassFields.rayClassField_ideleClassNorm_range_over_original m'
   exact unramifiedOutsideModulus_of_definingModulus K E m (le_of_eq hnorm.symm)
 
+open scoped Classical in
 /-- Ray class reciprocity identifies the Galois group of the selected ray
 class field with the corresponding ray class group. -/
 theorem rayClassField_reciprocity
@@ -416,6 +432,7 @@ theorem rayClassField_reciprocity
         RayClass.RayClassGroup m) :=
   ⟨GlobalClassFieldTheory.GlobalClassFields.rayClassFieldGaloisEquivRayClassGroup m⟩
 
+open scoped Classical in
 /-- The selected ray class field has degree equal to the order of its ray
 class group. -/
 theorem rayClassField_degree
@@ -426,6 +443,7 @@ theorem rayClassField_degree
       Nat.card (RayClass.RayClassGroup m) :=
   GlobalClassFieldTheory.GlobalClassFields.rayClassField_finrank_eq_rayClassGroup_card m
 
+open scoped Classical in
 /-- The full conductor is the least modulus whose ray class field contains
 the given finite abelian extension. -/
 theorem embedsInRayClassField_iff_conductor_le
@@ -441,6 +459,7 @@ theorem embedsInRayClassField_iff_conductor_le
           (K := K) (L := L)).fullConductor ≤ m :=
   GlobalClassFieldTheory.GlobalClassFields.nonempty_algHom_to_rayClassField_iff_fullConductor_le L m
 
+open scoped Classical in
 /-- Build the public Frobenius-normalized realization attached to a ray-class subgroup. -/
 theorem rayClassSubgroup_existence
     (K : Type) [Field K] [NumberField K]
@@ -504,6 +523,7 @@ end ClassFieldTheory.GlobalClassFieldComparison
 
 namespace ClassFieldTheory
 
+open scoped Classical in
 /-- The concrete full norm conductor is the least public modulus whose ray
 class field contains the finite abelian extension. This implementation theorem
 uses the original idelic full conductor in its statement. -/
@@ -531,7 +551,8 @@ theorem normFullConductor_isAbelianConductor
     let r : RayClassGroup m ≃* (E ≃ₐ[K] E) := R.artinEquiv
     let e : RayClass.RayClassGroup m' ≃* (E ≃ₐ[K] E) :=
       (GlobalClassFieldComparison.rayClassGroupEquivOriginalIdele K m).symm.trans r
-    apply GlobalClassFieldTheory.GlobalClassFields.rayModulus_normSubgroup_eq_of_arithmeticPrimeArtinEquiv
+    apply
+      GlobalClassFieldTheory.GlobalClassFields.rayModulus_normSubgroup_eq_of_arithmeticPrimeArtinEquiv
       m' e
     intro v hv
     have hvm : v ∉ m.finitePart.support := hv

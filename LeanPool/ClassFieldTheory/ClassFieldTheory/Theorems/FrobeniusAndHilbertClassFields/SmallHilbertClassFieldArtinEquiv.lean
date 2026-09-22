@@ -40,7 +40,7 @@ theorem smallHilbertClassField_artinEquiv
           artin (ordinaryRayClassOfFinitePrime v) =
             arithmeticFrobeniusAt (K := K) w := by
   let g :=
-    SmallHilbertClassFieldComparison.arithmeticSmallHilbertClassFieldGaloisEquivClassGroup_of_isSmall E hE
+    SmallHilbertClassFieldComparison.arithmeticSmallHilbertClassFieldGaloisEquivClassGroupOfIsSmall E hE
   let artin : RayClassGroup (ordinaryRayClassModulus K) ≃* (E ≃ₐ[K] E) :=
     (ordinaryRayClassGroupEquivClassGroup (K := K)).trans g.symm
   refine ⟨artin, ?_⟩
@@ -59,7 +59,8 @@ theorem smallHilbertClassField_artinEquiv
     _ = g (arithmeticFrobeniusAt (K := K) w) := by
       rw [← GlobalClassFieldComparison.arithmeticPrimeArtin_eq_arithmeticFrobeniusAt
         (K := K) (L := E) v w hw hunram]
-      exact (SmallHilbertClassFieldComparison.arithmeticSmallHilbertClassFieldGaloisEquivClassGroup_prime
+      exact
+        (SmallHilbertClassFieldComparison.arithmeticSmallHilbertClassFieldGaloisEquivClassGroup_prime
         E hE v).symm
 
 end ClassFieldTheory

@@ -133,16 +133,16 @@ theorem normFormula_finite_normFormulaAbsoluteValue_eq_of_valuationSubring_eq_of
     (hsub :
       absoluteValueValuationSubring w hwnonarch =
         absoluteValueValuationSubring
-          (normFormula_finite_normFormulaAbsoluteValue_of_henselFactorization
+          (normFormulaFiniteNormFormulaAbsoluteValueOfHenselFactorization
             (K := K) (L := L) v hnonarch hv)
           (normFormula_finite_normFormulaAbsoluteValue_of_henselFactorization_nonarchimedean
             (K := K) (L := L) v hnonarch hv)) :
     w =
-      normFormula_finite_normFormulaAbsoluteValue_of_henselFactorization
+      normFormulaFiniteNormFormulaAbsoluteValueOfHenselFactorization
         (K := K) (L := L) v hnonarch hv := by
   ext x
   let rAbs :=
-    normFormula_finite_normFormulaAbsoluteValue_of_henselFactorization
+    normFormulaFiniteNormFormulaAbsoluteValueOfHenselFactorization
       (K := K) (L := L) v hnonarch hv
   let hrnonarch :=
     normFormula_finite_normFormulaAbsoluteValue_of_henselFactorization_nonarchimedean
@@ -238,7 +238,7 @@ theorem normFormula_finite_extension_norm_formula
         (absoluteValueValuationSubring v hnonarch) :=
       (henselianValuation_iff_henselFactorization v hnonarch).1 hhens
     let extended :=
-      normFormula_finite_normFormulaAbsoluteValue_of_henselFactorization
+      normFormulaFiniteNormFormulaAbsoluteValueOfHenselFactorization
         (K := K) (L := L) v hnonarch hv
     LubinTate.Valuations.NonarchimedeanAbsoluteValue extended ∧
       (∀ a : K, extended (algebraMap K L a) = v a) ∧
@@ -252,7 +252,7 @@ theorem normFormula_finite_extension_norm_formula
   let hv : ValuationTheory.DiscreteValuationField.HenselFactorizationProperty V :=
     (henselianValuation_iff_henselFactorization v hnonarch).1 hhens
   let extended :=
-    normFormula_finite_normFormulaAbsoluteValue_of_henselFactorization
+    normFormulaFiniteNormFormulaAbsoluteValueOfHenselFactorization
       (K := K) (L := L) v hnonarch hv
   let hextendedNonarch :=
     normFormula_finite_normFormulaAbsoluteValue_of_henselFactorization_nonarchimedean

@@ -10,7 +10,8 @@ import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.Algeb
 # Complete nonarchimedean absolute values are Henselian
 
 The localization reduction in the ramification-localization argument passes to the completion
-of a rank-one nonarchimedean absolute value.  the factorization form of Hensel's lemma already supplies the
+of a rank-one nonarchimedean absolute value.  the factorization form of Hensel's lemma already
+  supplies the
 degree-controlled factorization statement for every complete
 nonarchimedean absolute value.  This file records the direct the primitive factorization definition
 consequence used in the henselianity criterion.

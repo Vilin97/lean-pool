@@ -16,7 +16,7 @@ as separate declarations so the eventual root-character comparison does not
 rebuild their instance towers.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -29,6 +29,7 @@ open AlgebraicNumberTheory.Valuations
 
 variable (K : Type) [Field K] [NumberField K]
 
+open scoped Classical in
 /-- The Kummer polynomial obtained by mapping a global radicand into the
 finite-place completion. -/
 abbrev finitePlaceKummerPolynomial
@@ -37,6 +38,7 @@ abbrev finitePlaceKummerPolynomial
     Polynomial.C
       (algebraMap K (finitePlaceKummerBaseCompletion K v) (b : K))
 
+open scoped Classical in
 /-- The simple Kummer extension chosen intrinsically over the finite-place
 completion. -/
 noncomputable abbrev finitePlaceKummerLocalExtension
@@ -45,8 +47,9 @@ noncomputable abbrev finitePlaceKummerLocalExtension
   chosenSimpleKummerExtension
     (finitePlaceKummerBaseCompletion K v) n
     (finitePlaceHilbert_natCast_ne_zero K n hnK v)
-    (finitePlaceHilbert_completionUnit K v b)
+    (finitePlaceHilbertCompletionUnit K v b)
 
+open scoped Classical in
 /-- Mapping a global unit through the concrete adic-completion model and
 then back through the canonical completion equivalence gives its ordinary
 image in the absolute-value completion. -/
@@ -55,7 +58,7 @@ theorem finitePlaceLocalArtinInput_globalUnit
     finitePlaceLocalArtinInput v
         (Units.map
           (algebraMap K (v.adicCompletion K)).toMonoidHom a) =
-      finitePlaceHilbert_completionUnit K v a := by
+      finitePlaceHilbertCompletionUnit K v a := by
   apply Units.ext
   apply (finitePlaceCompletionRingEquiv v).injective
   let x : (v.adicCompletion K)ˣ :=
@@ -76,7 +79,7 @@ theorem finitePlaceLocalArtinInput_globalUnit
       (x : v.adicCompletion K) := hleft
     _ = algebraMap K (v.adicCompletion K) (a : K) := rfl
     _ = finitePlaceCompletionRingEquiv v
-        (finitePlaceHilbert_completionUnit K v a :
+        (finitePlaceHilbertCompletionUnit K v a :
           finitePlaceKummerBaseCompletion K v) := by
       change
         algebraMap K (v.adicCompletion K) (a : K) =
@@ -85,6 +88,7 @@ theorem finitePlaceLocalArtinInput_globalUnit
       rw [finitePlaceCompletionRingEquiv_eq_relative]
       exact (relativeFinitePlaceCompletionAlgEquiv v).commutes (a : K) |>.symm
 
+open scoped Classical in
 /-- The named finite-dimensional certificate for the Kummer extension
 chosen directly over the completion. -/
 theorem finitePlaceKummerLocalFiniteDimensional
@@ -95,8 +99,9 @@ theorem finitePlaceKummerLocalFiniteDimensional
   chosenSimpleKummerExtension_finiteDimensional
     (finitePlaceKummerBaseCompletion K v) n
     (finitePlaceHilbert_natCast_ne_zero K n hnK v)
-    (finitePlaceHilbert_completionUnit K v b)
+    (finitePlaceHilbertCompletionUnit K v b)
 
+open scoped Classical in
 /-- The simple Kummer extension chosen directly over the completion is a
 splitting field of the finite-place Kummer polynomial. -/
 theorem finitePlaceKummerLocal_isSplittingField
@@ -109,7 +114,7 @@ theorem finitePlaceKummerLocal_isSplittingField
       (finitePlaceKummerPolynomial K n v b) := by
   let C := finitePlaceKummerBaseCompletion K v
   let hnC := finitePlaceHilbert_natCast_ne_zero K n hnK v
-  let bC := finitePlaceHilbert_completionUnit K v b
+  let bC := finitePlaceHilbertCompletionUnit K v b
   let S := chosenSimpleKummerExtension C n hnC bC
   let : FiniteDimensional C S :=
     finitePlaceKummerLocalFiniteDimensional K n hnK v b
@@ -124,6 +129,7 @@ theorem finitePlaceKummerLocal_isSplittingField
     exact chosenSimpleKummerRoot_pow C n hnC bC
   · exact chosenSimpleKummerExtension_adjoin_root_eq_top C n hnC bC
 
+open scoped Classical in
 /-- A canonical algebra equivalence between the intrinsically local Kummer
 extension and the localization of the chosen global Kummer extension.  It is
 constructed solely from the fact that both fields split the same polynomial;

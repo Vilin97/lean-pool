@@ -323,7 +323,8 @@ theorem equalCharacteristicTargetLaurentUnitsEquiv_uniformizer_inv
 
 /-- A power-series higher unit remains a principal unit after evaluating the
 Laurent parameter at the prescribed target prime element.  This pointwise
-form is all that the equal-characteristic Laurent-series classification needs and avoids constructing a second, expensive
+form is all that the equal-characteristic Laurent-series classification needs and avoids
+  constructing a second, expensive
 integer-ring equivalence. -/
 theorem equalCharacteristicTargetLaurentUnitsEquiv_mem_fieldPrincipalUnits_of_mem_higherUnit
     (p : ℕ) [Fact p.Prime] [CharP K p]
@@ -749,7 +750,8 @@ private theorem equalCharacteristicTransported_normUnits
     (equalCharacteristicTargetLaurentRingEquiv K p ϖ hϖ).apply_symm_apply]
   rfl
 
-/-- Mapping the explicit norm-subgroup computation norm subgroup along the base-field equivalence gives
+/-- Mapping the explicit norm-subgroup computation norm subgroup along the base-field
+equivalence gives
 the actual norm subgroup for the transported algebra. -/
 theorem equalCharacteristicLubinTateNormSubgroup_map_eq_transported
     (p : ℕ) [Fact p.Prime] [hKp : CharP K p]

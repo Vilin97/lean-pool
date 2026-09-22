@@ -27,6 +27,8 @@ open LocalFieldTheory.DiscreteValuationField
 
 variable {K : Type u} [Field K]
 
+/-- The completed base is a Laurent-series algebra through coefficient extension in the
+fixed-field coefficient descent. -/
 noncomputable local instance
     equalCharacteristicCompletedFrobeniusFixedFieldCoefficientDescentBaseAlgebra
     (F : LocalField.{u, v} K) :
@@ -34,6 +36,8 @@ noncomputable local instance
       (equalCharacteristicCompletedUnramifiedField F.residueField) :=
   laurentSeriesCoefficientAlgebra
 
+/-- The completed level is a Laurent-series algebra through the base tower in the fixed-field
+coefficient descent. -/
 noncomputable local instance
     equalCharacteristicCompletedFrobeniusFixedFieldCoefficientDescentLevelAlgebra
     (F : LocalField.{u, v} K) (n : ℕ) :

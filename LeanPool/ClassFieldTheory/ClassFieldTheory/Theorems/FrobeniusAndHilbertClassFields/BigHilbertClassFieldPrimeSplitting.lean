@@ -17,13 +17,14 @@ when its narrow ideal class is trivial.  Real-place ramification does not
 affect this finite-prime criterion.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 open NumberField IsDedekindDomain
 
 noncomputable section
 
 namespace ClassFieldTheory
 
+open scoped Classical in
 /-- A finite prime splits completely in the big Hilbert class field exactly
 when its narrow ray class is trivial. -/
 theorem finitePrime_splitsCompletelyInBigHilbertClassField_iff

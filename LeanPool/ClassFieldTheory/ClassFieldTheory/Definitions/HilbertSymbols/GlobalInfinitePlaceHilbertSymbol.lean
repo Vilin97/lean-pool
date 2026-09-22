@@ -26,7 +26,7 @@ In the product-formula theorem the field contains a primitive `n`-th root of
 unity; under that hypothesis real places occur only in the cases covered by
 this formula. -/
 def globalInfinitePlaceHilbertSymbol
-    (F : Type u) [Field F] [NumberField F]
+    (F : Type u) [Field F]
     (n : ℕ+) (v : InfinitePlace F) (a b : Fˣ) :
     rootsOfUnity (n : ℕ) F := by
   by_cases hn : (n : ℕ) = 2

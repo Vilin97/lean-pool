@@ -12,7 +12,8 @@ namespace KummerTheory
 open CyclicCohomology
 
 /-!
-# finite abelian Kummer theory, the finite abelian Kummer decomposition: descending the global operator
+# finite abelian Kummer theory, the finite abelian Kummer decomposition: descending the global
+  operator
 
 This file constructs, rather than assumes, the endomorphism of `A_L` induced
 by a global equivariant endomorphism `wp : A ⟶ A`.  It also embeds a

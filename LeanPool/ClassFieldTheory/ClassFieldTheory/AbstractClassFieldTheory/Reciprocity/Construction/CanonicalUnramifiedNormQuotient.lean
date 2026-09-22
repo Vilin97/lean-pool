@@ -60,7 +60,6 @@ def canonicalValueQuotientHom
   v.canonicalQuotientMap n hn
 
 /-- The quotient homomorphism evaluates on a coset through canonical value reduction. -/
-@[simp]
 theorem canonicalValueQuotientHom_mk
     (v : ValuationData D A) (n : ℕ) (hn : 0 < n)
     (z : v.valueGroup) :
@@ -79,7 +78,7 @@ theorem canonicalValueQuotientHom_surjective
 def canonicalValueQuotientEquiv
     (v : ValuationData D A) (n : ℕ) (hn : 0 < n) :
     (v.valueGroup ⧸ nsmulWithin v.valueGroup n) ≃+ ZMod n :=
-  v.cyclic_value_quotients n hn
+  v.cyclicValueQuotients n hn
 
 /-- Canonical valuation modulo `[L : K]` on `A_K`. -/
 def canonicalUnramifiedValuationHom

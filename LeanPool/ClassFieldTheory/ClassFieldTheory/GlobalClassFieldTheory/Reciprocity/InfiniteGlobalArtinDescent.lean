@@ -15,7 +15,7 @@ This file descends that homomorphism to the idele class group and retains its
 ordinary quotient topology.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 
 noncomputable section
 
@@ -27,6 +27,7 @@ variable
     [Field K] [NumberField K]
     [Field Ω] [Algebra K Ω] [IsAbelianGalois K Ω]
 
+open scoped Classical in
 private theorem
     continuousMulEquivToLimit_infiniteGlobalArtinMonoidHom_apply
     (a : IdeleGroup K) :
@@ -36,6 +37,7 @@ private theorem
   exact
     (InfiniteGalois.continuousMulEquivToLimit K Ω).apply_symm_apply _
 
+open scoped Classical in
 /-- The infinite global Artin homomorphism is trivial on every principal
 idele. -/
 @[simp]
@@ -58,6 +60,7 @@ theorem infiniteGlobalArtinMonoidHom_principalIdele
     globalArtinMonoidHom_principalIdele
       (K := K) (L := E.unop) x
 
+open scoped Classical in
 /-- The infinite global Artin homomorphism descended through the subgroup of
 principal ideles. -/
 noncomputable def infiniteGlobalIdeleClassArtinMonoidHom :
@@ -73,9 +76,9 @@ noncomputable def infiniteGlobalIdeleClassArtinMonoidHom :
         infiniteGlobalArtinMonoidHom_principalIdele
           (K := K) (Ω := Ω) x)
 
+open scoped Classical in
 /-- Evaluation of the descended infinite global Artin homomorphism on an idele
 representative recovers the original infinite Artin homomorphism. -/
-@[simp]
 theorem infiniteGlobalIdeleClassArtinMonoidHom_mk
     (a : IdeleGroup K) :
     infiniteGlobalIdeleClassArtinMonoidHom
@@ -86,6 +89,7 @@ theorem infiniteGlobalIdeleClassArtinMonoidHom_mk
   rw [infiniteGlobalIdeleClassArtinMonoidHom]
   exact QuotientGroup.lift_mk _ _ _
 
+open scoped Classical in
 private theorem infiniteGlobalIdeleClassArtinMonoidHom_continuous :
     Continuous
       (infiniteGlobalIdeleClassArtinMonoidHom
@@ -101,6 +105,7 @@ private theorem infiniteGlobalIdeleClassArtinMonoidHom_continuous :
     infiniteGlobalIdeleClassArtinMonoidHom_mk
       (K := K) (Ω := Ω) a
 
+open scoped Classical in
 /-- The descended infinite global Artin homomorphism, retaining the ordinary
 quotient topology on the idele class group. -/
 noncomputable def infiniteGlobalIdeleClassArtinContinuousMonoidHom :
@@ -112,6 +117,7 @@ noncomputable def infiniteGlobalIdeleClassArtinContinuousMonoidHom :
     infiniteGlobalIdeleClassArtinMonoidHom_continuous
       (K := K) (Ω := Ω)
 
+open scoped Classical in
 /-- The descended infinite global Artin homomorphism has dense image in the
 Krull topology. -/
 theorem infiniteGlobalIdeleClassArtinContinuousMonoidHom_denseRange :

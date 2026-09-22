@@ -504,7 +504,7 @@ def quotientKernelQuotientKerEquivQuotientKernelOfLe {l m n : ℕ}
     (F.quotientKernelMapOfLe_surjective hlm hmn)
 
 /-- States the theorem `quotientKernelQuotientKerEquivQuotientKernelOfLe_mk'`. -/
-@[simp] theorem quotientKernelQuotientKerEquivQuotientKernelOfLe_mk'
+theorem quotientKernelQuotientKerEquivQuotientKernelOfLe_mk'
     {l m n : ℕ} (hlm : l ≤ m) (hmn : m ≤ n)
     (q : F.quotientKernelOfLe (le_trans hlm hmn)) :
     F.quotientKernelQuotientKerEquivQuotientKernelOfLe hlm hmn
@@ -526,7 +526,7 @@ def quotientKernelQuotientSubgroupOfEquivQuotientKernelOfLe {l m n : ℕ}
       (F.quotientKernelQuotientKerEquivQuotientKernelOfLe hlm hmn)
 
 /-- States the theorem `quotientKernelQuotientSubgroupOfEquivQuotientKernelOfLe_mk'`. -/
-@[simp] theorem quotientKernelQuotientSubgroupOfEquivQuotientKernelOfLe_mk'
+theorem quotientKernelQuotientSubgroupOfEquivQuotientKernelOfLe_mk'
     {l m n : ℕ} (hlm : l ≤ m) (hmn : m ≤ n)
     (q : F.quotientKernelOfLe (le_trans hlm hmn)) :
     F.quotientKernelQuotientSubgroupOfEquivQuotientKernelOfLe hlm hmn
@@ -610,7 +610,7 @@ def quotientKernelByNextKernelEquivGradedPiece {n N : ℕ} (hN : n + 1 ≤ N) :
       (Nat.le_succ n) hN).trans (F.gradedPieceEquivQuotientKernel n).symm
 
 /-- States the theorem `gradedPieceEquivQuotientKernel_quotientKernelByNextKernel_mk'`. -/
-@[simp] theorem gradedPieceEquivQuotientKernel_quotientKernelByNextKernel_mk'
+theorem gradedPieceEquivQuotientKernel_quotientKernelByNextKernel_mk'
     {n N : ℕ} (hN : n + 1 ≤ N)
     (q : F.quotientKernelOfLe (le_trans (Nat.le_succ n) hN)) :
     F.gradedPieceEquivQuotientKernel n
@@ -675,7 +675,7 @@ def quotientInertiaByWildKernelEquivTameQuotient {n : ℕ} (hn : 1 ≤ n) :
       (Nat.zero_le 1) hn).trans F.tameQuotientEquivQuotientKernel.symm
 
 /-- States the theorem `tameQuotientEquivQuotientKernel_quotientInertiaByWildKernel_mk'`. -/
-@[simp] theorem tameQuotientEquivQuotientKernel_quotientInertiaByWildKernel_mk'
+theorem tameQuotientEquivQuotientKernel_quotientInertiaByWildKernel_mk'
     {n : ℕ} (hn : 1 ≤ n)
     (q : F.quotientKernelOfLe (le_trans (Nat.zero_le 1) hn)) :
     F.tameQuotientEquivQuotientKernel
@@ -723,7 +723,7 @@ def quotientQuotientKernelOfLeEquivQuotient {m n : ℕ} (hmn : m ≤ n) :
       (F.quotientMapOfLe hmn) (F.quotientMapOfLe_surjective hmn))
 
 /-- States the theorem `quotientQuotientKernelOfLeEquivQuotient_mk'`. -/
-@[simp] theorem quotientQuotientKernelOfLeEquivQuotient_mk'
+theorem quotientQuotientKernelOfLeEquivQuotient_mk'
     {m n : ℕ} (hmn : m ≤ n) (q : F.quotient n) :
     F.quotientQuotientKernelOfLeEquivQuotient hmn
         (QuotientGroup.mk' (F.quotientKernelOfLe hmn) q) =
@@ -731,7 +731,7 @@ def quotientQuotientKernelOfLeEquivQuotient {m n : ℕ} (hmn : m ≤ n) :
   exact QuotientGroup.kerLift_mk (F.quotientMapOfLe hmn) q
 
 /-- States the theorem `quotientQuotientKernelOfLeEquivQuotient_mk'_mk'`. -/
-@[simp] theorem quotientQuotientKernelOfLeEquivQuotient_mk'_mk'
+theorem quotientQuotientKernelOfLeEquivQuotient_mk'_mk'
     {m n : ℕ} (hmn : m ≤ n) (σ : G) :
     F.quotientQuotientKernelOfLeEquivQuotient hmn
         (QuotientGroup.mk' (F.quotientKernelOfLe hmn)
@@ -1221,7 +1221,7 @@ def quotientInertiaByWildKernelEquivTameQuotient {n : ℕ} (hn : 1 ≤ n) :
       A.tameQuotientEquivLowerFiltration.symm
 
 /-- States the theorem `tameQuotientEquivQuotientKernel_quotientInertiaByWildKernel_mk'`. -/
-@[simp] theorem tameQuotientEquivQuotientKernel_quotientInertiaByWildKernel_mk'
+theorem tameQuotientEquivQuotientKernel_quotientInertiaByWildKernel_mk'
     {n : ℕ} (hn : 1 ≤ n)
     (q :
       A.toLowerRamificationFiltration.quotientKernelOfLe
@@ -1495,7 +1495,7 @@ def quotientKernelQuotientKerEquivQuotientKernelOfLe {l m n : ℕ}
     A.toLowerRamificationFiltration hlm hmn
 
 /-- States the theorem `quotientKernelQuotientKerEquivQuotientKernelOfLe_mk'`. -/
-@[simp] theorem quotientKernelQuotientKerEquivQuotientKernelOfLe_mk'
+theorem quotientKernelQuotientKerEquivQuotientKernelOfLe_mk'
     {l m n : ℕ} (hlm : l ≤ m) (hmn : m ≤ n)
     (q :
       A.toLowerRamificationFiltration.quotientKernelOfLe
@@ -1521,7 +1521,7 @@ def quotientKernelQuotientSubgroupOfEquivQuotientKernelOfLe {l m n : ℕ}
     A.toLowerRamificationFiltration hlm hmn
 
 /-- States the theorem `quotientKernelQuotientSubgroupOfEquivQuotientKernelOfLe_mk'`. -/
-@[simp] theorem quotientKernelQuotientSubgroupOfEquivQuotientKernelOfLe_mk'
+theorem quotientKernelQuotientSubgroupOfEquivQuotientKernelOfLe_mk'
     {l m n : ℕ} (hlm : l ≤ m) (hmn : m ≤ n)
     (q :
       A.toLowerRamificationFiltration.quotientKernelOfLe
@@ -1559,7 +1559,7 @@ def quotientQuotientKernelOfLeEquivQuotient
   A.toLowerRamificationFiltration.quotientQuotientKernelOfLeEquivQuotient hmn
 
 /-- States the theorem `quotientQuotientKernelOfLeEquivQuotient_mk'`. -/
-@[simp] theorem quotientQuotientKernelOfLeEquivQuotient_mk'
+theorem quotientQuotientKernelOfLeEquivQuotient_mk'
     {m n : ℕ} (hmn : m ≤ n)
     (q : A.toLowerRamificationFiltration.quotient n) :
     A.quotientQuotientKernelOfLeEquivQuotient hmn
@@ -1570,7 +1570,7 @@ def quotientQuotientKernelOfLeEquivQuotient
     hmn q
 
 /-- States the theorem `quotientQuotientKernelOfLeEquivQuotient_mk'_mk'`. -/
-@[simp] theorem quotientQuotientKernelOfLeEquivQuotient_mk'_mk'
+theorem quotientQuotientKernelOfLeEquivQuotient_mk'_mk'
     {m n : ℕ} (hmn : m ≤ n) (σ : G) :
     A.quotientQuotientKernelOfLeEquivQuotient hmn
         (QuotientGroup.mk'
@@ -1644,7 +1644,7 @@ def quotientKernelByNextKernelEquivGradedPiece {n N : ℕ} (hN : n + 1 ≤ N) :
   A.toLowerRamificationFiltration.quotientKernelByNextKernelEquivGradedPiece hN
 
 /-- States the theorem `gradedPieceEquivQuotientKernel_quotientKernelByNextKernel_mk'`. -/
-@[simp] theorem gradedPieceEquivQuotientKernel_quotientKernelByNextKernel_mk'
+theorem gradedPieceEquivQuotientKernel_quotientKernelByNextKernel_mk'
     {n N : ℕ} (hN : n + 1 ≤ N)
     (q :
       A.toLowerRamificationFiltration.quotientKernelOfLe

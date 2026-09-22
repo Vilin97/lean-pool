@@ -283,7 +283,6 @@ theorem smul_def
   rfl
 
 omit [NumberField L] [FiniteDimensional K L] in
-@[simp]
 theorem smul_inclusion
     (σ : L ≃ₐ[K] L) (a : IdeleGroup K) :
     σ • inclusion K L a = inclusion K L a := by
@@ -304,7 +303,6 @@ theorem smul_inclusion
   exact (conjugation K L σ).commutes _
 
 omit [NumberField L] [FiniteDimensional K L] in
-@[simp]
 theorem smul_principalIdele
     (σ : L ≃ₐ[K] L) (x : Lˣ) :
     σ • principalIdele K L x =
@@ -326,7 +324,7 @@ def galoisAverage
 
 omit [NumberField L] in
 theorem galoisAverage_eq_of_fixed
-    [IsGalois K L]
+
     (z : RelativeAdeleRing K L)
     (hz : ∀ σ : L ≃ₐ[K] L,
       conjugation K L σ z = z) :

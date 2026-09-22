@@ -14,7 +14,7 @@ At a prime away from the modulus, complete splitting is equivalent to
 membership of the prime's ray class in the defining subgroup.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 
 noncomputable section
 
@@ -24,6 +24,7 @@ open NumberField IsDedekindDomain
 
 universe u
 
+open scoped Classical in
 /-- A prime away from the modulus splits completely in the class field of
 `H` exactly when its ray class belongs to `H`. -/
 theorem finitePrime_splitsCompletelyInRayClassSubgroupField_iff

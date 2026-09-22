@@ -12,7 +12,8 @@ import Mathlib.RingTheory.PowerSeries.Trunc
 /-!
 # Changed-uniformizer defect correction
 
-This module computes how a degreewise correction changes the semilinear substitution defect and constructs the unique coefficient that kills that defect.
+This module computes how a degreewise correction changes the semilinear substitution defect and
+  constructs the unique coefficient that kills that defect.
 -/
 
 noncomputable section

@@ -45,7 +45,7 @@ cyclic quotient of the normalized value group by the residue degree.
 This value-group comparison uses the separable norm-valuation formula for its
 residue degree; no unramifiedness assumption is made here. -/
 noncomputable def
-    chosenNormQuotientEquivZModResidueFinrank_of_fieldPrincipalUnits_zero_le
+    chosenNormQuotientEquivZModResidueFinrankOfFieldPrincipalUnitsZeroLe
     (K L : Type)
     [Field K] [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K]
@@ -208,7 +208,7 @@ theorem isFiniteUnramifiedValuationExtension_of_localConductorIdeal_eq_one
   have hU : LocalFieldTheory.fieldPrincipalUnits K 0 ≤ localNormSubgroup K L :=
     (localConductorIdeal_eq_one_iff K L).1 hcond
   let hequiv :=
-    chosenNormQuotientEquivZModResidueFinrank_of_fieldPrincipalUnits_zero_le
+    chosenNormQuotientEquivZModResidueFinrankOfFieldPrincipalUnitsZeroLe
       K L hU
   let : Finite (NormQuotient K L) :=
     normQuotientFiniteOfIsAbelianGalois K L

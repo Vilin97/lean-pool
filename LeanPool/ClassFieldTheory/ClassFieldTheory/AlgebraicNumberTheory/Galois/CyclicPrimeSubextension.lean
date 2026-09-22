@@ -21,7 +21,7 @@ splitting descends to the prime-degree subextension, and nonsplitting
 there ascends to `L`.
 -/
 
-open scoped NumberField Classical IsMulCommutative
+open scoped NumberField IsMulCommutative
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -34,6 +34,7 @@ section ValuationRestriction
 variable {F E : Type}
     [Field F] [Field E] [Algebra F E]
 
+open scoped Classical in
 /-- Restrict an actual extension of an absolute value to an
 intermediate field. -/
 def restrictAbsoluteValueExtensionToIntermediate
@@ -48,6 +49,7 @@ def restrictAbsoluteValueExtensionToIntermediate
     change w.1 (algebraMap F E x) = vF x
     exact w.2 x
 
+open scoped Classical in
 @[simp]
 theorem restrictAbsoluteValueExtensionToIntermediate_apply
     (vF : AbsoluteValue F ℝ)
@@ -58,6 +60,7 @@ theorem restrictAbsoluteValueExtensionToIntermediate_apply
       vF w M).1 x = w.1 x :=
   rfl
 
+open scoped Classical in
 /-- Regard the original extension as an extension of its restriction
 to an intermediate field. -/
 def absoluteValueExtensionOverIntermediate
@@ -70,6 +73,7 @@ def absoluteValueExtensionOverIntermediate
   val := w.1
   property _ := rfl
 
+open scoped Classical in
 /-- Restriction of an extension of a nontrivial absolute value remains
 nontrivial. -/
 theorem restrictAbsoluteValueExtensionToIntermediate_isNontrivial
@@ -87,6 +91,7 @@ theorem restrictAbsoluteValueExtensionToIntermediate_isNontrivial
     [(restrictAbsoluteValueExtensionToIntermediate
       vF w M).2 a] using hva
 
+open scoped Classical in
 /-- For a normal subextension represented by a field type, its
 decomposition group is the restriction image of the decomposition
 group upstairs.
@@ -247,6 +252,7 @@ section DecompositionGroupChoice
 variable {F L : Type*}
     [Field F] [Field L] [Algebra F L]
 
+open scoped Classical in
 /-- Decomposition groups depend only on the valuation class. -/
 theorem absoluteValueDecompositionGroup_eq_of_absoluteValue_isEquiv
     (w w' : AbsoluteValue L ℝ)
@@ -267,6 +273,7 @@ theorem absoluteValueDecompositionGroup_eq_of_absoluteValue_isEquiv
       (hlt (σ x)).trans
         ((hσ x).trans (hlt x).symm)
 
+open scoped Classical in
 /-- In an abelian Galois extension, conjugating an exact extension does
 not change its decomposition subgroup. -/
 theorem absoluteValueDecompositionGroup_conjugate_eq_of_isMulCommutative
@@ -306,6 +313,7 @@ theorem absoluteValueDecompositionGroup_conjugate_eq_of_isMulCommutative
       rw [mul_comm]
     rwa [hcomm]
 
+open scoped Classical in
 /-- In an abelian Galois extension the decomposition subgroup is
 independent of the exact extension above the base place. -/
 theorem absoluteValueDecompositionGroup_eq_of_exactExtensions_of_isMulCommutative
@@ -329,6 +337,7 @@ section ValuationRestriction
 variable {F E : Type}
     [Field F] [Field E] [Algebra F E]
 
+open scoped Classical in
 /-- Triviality of a decomposition group is preserved when the chosen
 extension is conjugated. -/
 theorem absoluteValueDecompositionGroup_conjugate_eq_bot
@@ -365,6 +374,7 @@ theorem absoluteValueDecompositionGroup_conjugate_eq_bot
       ρ⁻¹ * z * ρ) hδOne
   simpa [δ, mul_assoc] using hconj
 
+open scoped Classical in
 /-- For a Galois extension, triviality of the decomposition group is
 independent of the chosen extension of the base absolute value. -/
 theorem absoluteValueDecompositionGroup_eq_bot_independent_extension
@@ -392,6 +402,7 @@ variable {K L : Type}
     [IsCyclic (L ≃ₐ[K] L)]
 
 omit [NumberField K] [NumberField L] [IsGalois K L] in
+open scoped Classical in
 /-- A cyclic group of nonzero prime-power order has an actual normal
 subgroup of index `p`. -/
 theorem exists_index_prime_normal_subgroup
@@ -423,6 +434,7 @@ theorem exists_index_prime_normal_subgroup
   exact
     ⟨P, hPindex, hPnormal, hPquotient⟩
 
+open scoped Classical in
 /-- The chosen index-`p` subgroup of the global cyclic Galois group. -/
 noncomputable def cyclicPrimeIndexSubgroup
     {p exponent : ℕ}
@@ -437,6 +449,7 @@ noncomputable def cyclicPrimeIndexSubgroup
     hp hexponent hcard).choose
 
 omit [NumberField K] [NumberField L] [IsGalois K L] in
+open scoped Classical in
 theorem cyclicPrimeIndexSubgroup_index
     {p exponent : ℕ}
     (hp : p.Prime)
@@ -452,6 +465,7 @@ theorem cyclicPrimeIndexSubgroup_index
     hp hexponent hcard).choose_spec.1
 
 omit [NumberField K] [NumberField L] [IsGalois K L] in
+open scoped Classical in
 theorem cyclicPrimeIndexSubgroup_normal
     {p exponent : ℕ}
     (hp : p.Prime)
@@ -467,6 +481,7 @@ theorem cyclicPrimeIndexSubgroup_normal
     hp hexponent hcard).choose_spec.2.1
 
 omit [NumberField K] [NumberField L] [IsGalois K L] in
+open scoped Classical in
 theorem cyclicPrimeIndexSubgroup_quotient_card
     {p exponent : ℕ}
     (hp : p.Prime)
@@ -484,6 +499,7 @@ theorem cyclicPrimeIndexSubgroup_quotient_card
     (K := K) (L := L)
     hp hexponent hcard).choose_spec.2.2
 
+open scoped Classical in
 /-- The actual degree-`p` intermediate field in the cyclic prime-power reduction. -/
 noncomputable def cyclicPrimeSubextension
     {p exponent : ℕ}
@@ -499,6 +515,7 @@ noncomputable def cyclicPrimeSubextension
       hp hexponent hcard)
 
 omit [NumberField K] [NumberField L] in
+open scoped Classical in
 /-- The constructed intermediate extension is Galois over `K`. -/
 noncomputable instance cyclicPrimeSubextension_isGalois
     {p exponent : ℕ}
@@ -523,6 +540,7 @@ noncomputable instance cyclicPrimeSubextension_isGalois
   infer_instance
 
 omit [NumberField K] [NumberField L] in
+open scoped Classical in
 /-- The constructed intermediate extension has degree exactly `p`. -/
 theorem cyclicPrimeSubextension_finrank
     {p exponent : ℕ}
@@ -565,6 +583,7 @@ theorem cyclicPrimeSubextension_finrank
         hp hexponent hcard
 
 omit [NumberField K] [NumberField L] in
+open scoped Classical in
 /-- The Galois group of the constructed degree-`p` extension is
 cyclic. -/
 theorem cyclicPrimeSubextension_isCyclic
@@ -598,6 +617,7 @@ theorem cyclicPrimeSubextension_isCyclic
     (IsGalois.normalAutEquivQuotient P).isCyclic.mp
       hquotient
 
+open scoped Classical in
 /-- The decomposition subgroup in the constructed subextension,
 obtained by restricting the decomposition subgroup in `L / K`. -/
 noncomputable def cyclicPrimeSubextensionDecompositionGroup
@@ -629,6 +649,7 @@ noncomputable def cyclicPrimeSubextensionDecompositionGroup
         (AlgEquiv.restrictNormalHom M)
 
 omit [NumberField L] in
+open scoped Classical in
 /-- The restricted decomposition group agrees with the quotient
 decomposition group transported by the fixed-field Galois
 correspondence. -/
@@ -680,6 +701,7 @@ theorem cyclicPrimeSubextensionDecompositionGroup_eq_quotient_image
   congr 1
 
 omit [NumberField L] in
+open scoped Classical in
 /-- Complete splitting in `L` implies complete splitting in the
 constructed prime-degree subextension. -/
 theorem finitePlaceSplitsCompletely_in_cyclicPrimeSubextension
@@ -705,6 +727,7 @@ theorem finitePlaceSplitsCompletely_in_cyclicPrimeSubextension
   exact Subgroup.map_bot _
 
 omit [NumberField L] in
+open scoped Classical in
 /-- Complete splitting in `L` implies complete splitting, in the
 standard chosen-extension sense, in the actual fixed intermediate
 field. -/
@@ -765,6 +788,7 @@ theorem finitePlaceSplitsCompletely_in_cyclicPrimeSubextension_actual
       hwMbot
 
 omit [NumberField L] in
+open scoped Classical in
 /-- Contrapositive in the standard chosen-extension sense: a place
 nonsplit in the constructed degree-`p` field is nonsplit in `L`. -/
 theorem finitePlace_not_splitsCompletely_of_not_in_cyclicPrimeSubextension_actual
@@ -791,6 +815,7 @@ theorem finitePlace_not_splitsCompletely_of_not_in_cyclicPrimeSubextension_actua
         hp hexponent hcard v hsplit)
 
 omit [NumberField L] in
+open scoped Classical in
 /-- Contrapositive form: a finite place nonsplit in the prime-degree
 subextension is already nonsplit in `L`. -/
 theorem finitePlace_not_splitsCompletely_of_not_in_cyclicPrimeSubextension

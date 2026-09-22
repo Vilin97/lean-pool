@@ -488,7 +488,9 @@ theorem exists_primitive_residue_lift_polynomial_uniformizer_dvf
     exact hauniform
   · exact hderivA
 
-/-- The full noncomplete generator data used by the monogenic integral-generator theorem and the first ramification-quotient homomorphism: a primitive residue lift, a lifted polynomial whose value is a
+/-- The full noncomplete generator data used by the monogenic integral-generator theorem and the
+first ramification-quotient homomorphism: a primitive residue lift, a lifted polynomial whose
+value is a
 uniformizer, its unit derivative, and generation of the entire target
 valuation ring. -/
 theorem exists_valuationSubring_generator_data_of_uniqueExtension

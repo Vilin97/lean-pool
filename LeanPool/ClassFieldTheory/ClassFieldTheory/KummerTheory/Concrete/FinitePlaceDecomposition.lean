@@ -21,8 +21,7 @@ the decomposition field.  The only Kummer input is the usual fact that
 two roots with the same `n`-th power differ by an `n`-th root of unity.
 -/
 
-open scoped NumberField Classical
-open NumberField IsDedekindDomain
+open scoped NumberField open NumberField IsDedekindDomain
 open AlgebraicNumberTheory.Valuations
 open HilbertRamification
 open LocalClassFieldTheory
@@ -37,6 +36,7 @@ variable {K L : Type}
     [FiniteDimensional K L] [IsGalois K L]
 
 omit [NumberField K] [FiniteDimensional K L] in
+open scoped Classical in
 /-- If a Kummer radicand is an `n`-th power in an absolute-value
 completion, its chosen root lies in the corresponding decomposition
 field.  This is the completion-level source behind both the finite and
@@ -165,6 +165,7 @@ theorem
   simpa [C, E, toE] using hcomap
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 /-- A Kummer radicand is an `n`-th power in the finite-place completion
 exactly when its chosen root belongs to the decomposition field at the
 chosen extension of that place. -/

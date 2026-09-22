@@ -49,7 +49,7 @@ private theorem intermediateNormalClosure_isSeparable_of_isSeparable
     (K : Type u) (L : Type v) (A : Type w)
     [Field K] [Field L] [Field A]
     [Algebra K L] [Algebra K A] [Algebra L A]
-    [IsScalarTower K L A] [Algebra.IsSeparable K L] :
+    [Algebra.IsSeparable K L] :
     Algebra.IsSeparable K (IntermediateField.normalClosure K L A) := by
   change Algebra.IsSeparable K ↥(⨆ f : L →ₐ[K] A, f.fieldRange)
   exact IntermediateField.isSeparable_iSup K A
@@ -61,7 +61,7 @@ private theorem intermediateNormalClosure_isGalois_of_isSeparable
     (K : Type u) (L : Type v) (A : Type w)
     [Field K] [Field L] [Field A]
     [Algebra K L] [Algebra K A] [Algebra L A]
-    [IsScalarTower K L A] [FiniteDimensional K L]
+    [IsScalarTower K L A]
     [Algebra.IsSeparable K L] [Normal K A] :
     IsGalois K (IntermediateField.normalClosure K L A) := by
   exact

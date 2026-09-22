@@ -30,7 +30,8 @@ parameter quotient at primitive level `n + 1`. -/
 def standardLubinTateUnitParameterSubgroup
     (F : LocalField.{u, v} K) (n k : ℕ) :
     Subgroup (standardLubinTateUnitParameter F n) :=
-  (higherPrincipalUnitGroup.toPrincipalUnitFiltration F.toCompleteDVF).principalUnitSubgroupClassInQuotient
+  (higherPrincipalUnitGroup.toPrincipalUnitFiltration
+    F.toCompleteDVF).principalUnitSubgroupClassInQuotient
     k (n + 1)
 
 /-- A represented finite parameter belongs to the `k`-th parameter subgroup
@@ -44,7 +45,8 @@ theorem standardLubinTateUnitParameterClass_mem_subgroup_iff
   change
     QuotientGroup.mk'
         (higherPrincipalUnitGroup F.toCompleteDVF (n + 1)) u ∈
-      (higherPrincipalUnitGroup.toPrincipalUnitFiltration F.toCompleteDVF).principalUnitSubgroupClassInQuotient
+      (higherPrincipalUnitGroup.toPrincipalUnitFiltration
+        F.toCompleteDVF).principalUnitSubgroupClassInQuotient
         k (n + 1) ↔
       u ∈ higherPrincipalUnitGroup F.toCompleteDVF k
   exact

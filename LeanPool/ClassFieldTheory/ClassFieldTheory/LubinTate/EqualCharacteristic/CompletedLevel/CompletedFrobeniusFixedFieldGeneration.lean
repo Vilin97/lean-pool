@@ -27,6 +27,8 @@ open LocalFieldTheory.DiscreteValuationField
 
 variable {K : Type u} [Field K]
 
+/-- The completed base carries the Laurent-series scalar extension used in the fixed-field
+generation argument. -/
 noncomputable local instance
     equalCharacteristicCompletedFrobeniusFixedFieldGenerationBaseAlgebra
     (F : LocalField.{u, v} K) :
@@ -34,6 +36,8 @@ noncomputable local instance
       (equalCharacteristicCompletedUnramifiedField F.residueField) :=
   laurentSeriesCoefficientAlgebra
 
+/-- The completed level carries the Laurent-series algebra structure induced by the tower in the
+generation argument. -/
 noncomputable local instance
     equalCharacteristicCompletedFrobeniusFixedFieldGenerationLevelAlgebra
     (F : LocalField.{u, v} K) (n : ℕ) :

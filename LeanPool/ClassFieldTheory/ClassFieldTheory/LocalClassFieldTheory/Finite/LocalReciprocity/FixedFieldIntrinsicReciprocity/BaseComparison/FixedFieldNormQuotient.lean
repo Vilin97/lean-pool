@@ -11,7 +11,8 @@ import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLoca
 /-!
 # Fixed-field norm quotients
 
-This module compares cohomological finite norm quotients with ordinary field-norm quotients and records their compatibility with fixed-field norm-residue symbols.
+This module compares cohomological finite norm quotients with ordinary field-norm quotients and
+  records their compatibility with fixed-field norm-residue symbols.
 -/
 
 noncomputable section
@@ -241,7 +242,7 @@ theorem fixedFieldFiniteNormQuotientEquivNormQuotient_finiteNormClass
 prime element is the prescribed Frobenius quotient class. -/
 theorem abstractFixedFieldNormResidueSymbol_apply_primeNorm
     (k Ω : Type) [Field k] [Field Ω] [Algebra k Ω]
-    [IsGalois k Ω] [IsSepClosed Ω]
+    [IsGalois k Ω]
     (D : DegreeData Gal(Ω/k))
     (v : ValuationData D (galoisAmbientUnitsRep k Ω))
     (hcf : SatisfiesClassFieldAxiom

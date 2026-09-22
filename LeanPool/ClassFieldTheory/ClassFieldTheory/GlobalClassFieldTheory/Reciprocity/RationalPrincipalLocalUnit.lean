@@ -27,8 +27,7 @@ reciprocity, in the standard field `ℚ_[p]`, and in the valuation subring
 used by the multiplicative Lubin--Tate construction.
 -/
 
-open scoped NumberField Classical
-open NumberField IsDedekindDomain
+open scoped NumberField open NumberField IsDedekindDomain
 
 noncomputable section
 
@@ -37,9 +36,13 @@ namespace Reciprocity
 
 open LocalFieldTheory.DiscreteValuationField.Examples.Qp
 
-local instance (p : Nat.Primes) : Fact p.1.Prime :=
+open scoped Classical in
+local instance localPrimesInstance1 (p : Nat.Primes) : Fact p.1.Prime :=
   ⟨p.2⟩
 
+attribute [local instance] localPrimesInstance1
+
+open scoped Classical in
 /-- The rational `p`-unit has value one for the height-one valuation
 corresponding to `p`. -/
 theorem rationalPrimeUnit_heightOneValuation_eq_one
@@ -64,6 +67,7 @@ theorem rationalPrimeUnit_heightOneValuation_eq_one
   rw [ite_eq_right (Units.ne_zero _), padicValRat_rationalPrimeUnit]
   rfl
 
+open scoped Classical in
 /-- The rational `p`-unit, expressed as a unit of the valuation subring of
 the standard local field `ℚ_[p]`. -/
 def rationalPrimeUnitValuationSubringUnit
@@ -77,6 +81,7 @@ def rationalPrimeUnitValuationSubringUnit
       (Units.ne_zero _)
       (padicValRat_rationalPrimeUnit x p))
 
+open scoped Classical in
 /-- Forgetting the integrality proof from the standard valuation-subring
 unit recovers the rational `p`-unit in `ℚ_[p]`. -/
 @[simp]
@@ -99,6 +104,7 @@ theorem rationalPrimeUnitValuationSubringUnit_coe
     padicIntEquivValuationSubring_coe,
     padicIntUnitOfRat_coe]
 
+open scoped Classical in
 /-- The Lubin--Tate field-unit inclusion of the rational `p`-unit is the
 ordinary embedding of that rational unit into `ℚ_[p]`. -/
 theorem standardLubinTateUnitFactorFieldUnit_rationalPrimeUnit
@@ -116,6 +122,7 @@ theorem standardLubinTateUnitFactorFieldUnit_rationalPrimeUnit
         algebraMap ℚ ℚ_[p.1] (rationalPrimeUnit x p : ℚ)
   exact rationalPrimeUnitValuationSubringUnit_coe x p
 
+open scoped Classical in
 /-- The standard multiplicative Lubin--Tate base uniformizer is exactly the
 image of the positive rational prime generator in `ℚ_[p]ˣ`. -/
 theorem standardLubinTateBaseUniformizerUnit_eq_rationalPrimeGenerator
@@ -136,6 +143,7 @@ theorem standardLubinTateBaseUniformizerUnit_eq_rationalPrimeGenerator
   rw [padicIntEquivValuationSubring_coe]
   simp
 
+open scoped Classical in
 /-- Restoring the removed `p`-power recovers the original rational field
 unit.  This is the multiplicative factorization used after completion. -/
 theorem rationalPrimeUnit_mul_primeGenerator_zpow
@@ -164,6 +172,7 @@ theorem rationalPrimeUnit_mul_primeGenerator_zpow
       rw [← zpow_add]
       simp
 
+open scoped Classical in
 /-- In `ℚ_[p]ˣ`, a rational field unit is its actual integral
 `rationalPrimeUnit` factor times the corresponding power of the standard
 multiplicative Lubin--Tate uniformizer. -/
@@ -184,6 +193,7 @@ theorem rationalPadicFieldUnit_eq_unitFactor_mul_baseUniformizer_zpow
     ← map_mul,
     rationalPrimeUnit_mul_primeGenerator_zpow]
 
+open scoped Classical in
 /-- The exponent selected by the complete-DVF uniformizer decomposition of a
 rational element is its ordinary `p`-adic valuation. -/
 theorem rationalPadicFieldUnit_uniformizerValueExponent
@@ -264,6 +274,7 @@ theorem rationalPadicFieldUnit_uniformizerValueExponent
     huZero,
     zero_add]
 
+open scoped Classical in
 /-- The actual unit part chosen by the standard multiplicative Lubin--Tate
 uniformizer decomposition of a rational `p`-adic field unit is precisely
 `rationalPrimeUnitValuationSubringUnit`. -/
@@ -312,6 +323,7 @@ theorem rationalPadicFieldUnit_uniformizerUnitPart
   rw [mul_assoc, ← zpow_add]
   simp
 
+open scoped Classical in
 /-- Under the canonical equivalence between `ℚ_[p]` and the height-one
 completion at `p`, the principal finite component of the rational `p`-unit
 is its ordinary image in `ℚ_[p]`. -/
@@ -340,6 +352,7 @@ theorem padicCompletionEquiv_principalFiniteComponent_rationalPrimeUnit
     (Padic.adicCompletionEquiv (𝓞 ℚ) p).symm.commutes
       (rationalPrimeUnit x p : ℚ)
 
+open scoped Classical in
 /-- Transporting an arbitrary rational principal finite component through
 the canonical `p`-adic completion equivalence gives its ordinary image in
 `ℚ_[p]ˣ`. -/
@@ -365,6 +378,7 @@ theorem padicCompletionEquiv_principalFiniteComponent
     (Padic.adicCompletionEquiv (𝓞 ℚ) p).symm.commutes
       (x : ℚ)
 
+open scoped Classical in
 /-- The transported rational principal finite component has the explicit
 standard Lubin--Tate uniformizer/unit factorization. -/
 theorem padicCompletionEquiv_principalFiniteComponent_factorization
@@ -385,6 +399,7 @@ theorem padicCompletionEquiv_principalFiniteComponent_factorization
     padicCompletionEquiv_principalFiniteComponent,
     rationalPadicFieldUnit_eq_unitFactor_mul_baseUniformizer_zpow]
 
+open scoped Classical in
 /-- Applying the actual complete-DVF unit-part operation to a transported
 rational principal finite component returns the integral
 `rationalPrimeUnit` factor. -/
@@ -404,6 +419,7 @@ theorem
   rw [padicCompletionEquiv_principalFiniteComponent]
   exact rationalPadicFieldUnit_uniformizerUnitPart x p
 
+open scoped Classical in
 /-- The rational prime generator at its own finite place transports to the
 actual standard multiplicative Lubin--Tate base uniformizer. -/
 theorem
@@ -423,6 +439,7 @@ theorem
     padicCompletionEquiv_principalFiniteComponent,
     standardLubinTateBaseUniformizerUnit_eq_rationalPrimeGenerator]
 
+open scoped Classical in
 /-- The principal finite component of the rational `p`-unit is transported
 to the exact field unit used by the multiplicative Lubin--Tate Artin map. -/
 theorem

@@ -463,7 +463,7 @@ omit [FiniteDimensional K L] in
 
 omit [FiniteDimensional K L] in
 /-- The residue-field equivalence sends a source residue to the corresponding target residue. -/
-@[simp] theorem residueFieldEquivOfSurjective_apply_residue
+theorem residueFieldEquivOfSurjective_apply_residue
     (hSurj : Function.Surjective (residueMap base target))
     (a : base.valuationSubring) :
     residueFieldEquivOfSurjective base target hSurj (base.residueMap a) =

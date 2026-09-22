@@ -93,7 +93,7 @@ structures used by `exponentialRamificationIndex_le_in_tower`. -/
 theorem exponentialRamificationIndex_le_of_algHom
     {K E D : Type} [Field K] [Field E] [Field D]
     [Algebra K E] [Algebra K D]
-    [FiniteDimensional K E] [FiniteDimensional K D]
+    [FiniteDimensional K D]
     (i : E →ₐ[K] D)
     (v : LubinTate.Valuations.ExponentialValuation K)
     (u : LubinTate.Valuations.ExponentialValuation E)

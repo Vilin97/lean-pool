@@ -123,7 +123,6 @@ private noncomputable instance :
         (RelativeIdeleGroup.ClassGroup ℚ E) :=
   fun E => (rationalAbsoluteGaloisIdeleClassAction E).toSMul
 
-@[simp]
 theorem rationalAbsoluteGaloisIdeleClass_smul_mk
     (E : FiniteGaloisIntermediateField ℚ (SeparableClosure ℚ))
     (σ : SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ)

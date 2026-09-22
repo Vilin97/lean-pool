@@ -19,7 +19,7 @@ This is the scalar structure used by the final extension-of-ideals map
 in the principal ideal theorem.
 -/
 
-open scoped Classical IsMulCommutative NumberField
+open scoped IsMulCommutative NumberField
 
 noncomputable section
 
@@ -28,6 +28,7 @@ namespace GlobalClassFields
 
 variable (K : Type) [Field K] [NumberField K]
 
+open scoped Classical in
 /-- The canonical fixed-field copy underlying the selected small
 Hilbert class field, regarded as an algebra over the original number
 field. -/
@@ -35,6 +36,7 @@ noncomputable instance smallHilbertClassFieldBaseAlgebraOverOriginal :
     Algebra K (smallHilbertClassFieldBase K) :=
   (smallHilbertClassFieldBaseEquiv (K := K)).toRingHom.toAlgebra
 
+open scoped Classical in
 /-- The canonical base-field identification, now regarded as an
 equivalence of algebras over the original field. -/
 noncomputable def smallHilbertClassFieldBaseEquivOverOriginal :
@@ -44,6 +46,7 @@ noncomputable def smallHilbertClassFieldBaseEquivOverOriginal :
       (smallHilbertClassFieldBaseEquiv (K := K)).toRingEquiv)
     (fun _ => rfl)
 
+open scoped Classical in
 /-- The selected small Hilbert class field, regarded as an algebra over
 the original number field through the canonical fixed-field copy. -/
 noncomputable instance smallHilbertClassFieldAlgebraOverOriginal :
@@ -54,6 +57,7 @@ noncomputable instance smallHilbertClassFieldAlgebraOverOriginal :
     (algebraMap K
       (smallHilbertClassFieldBase K))).toAlgebra
 
+open scoped Classical in
 /-- The scalar map from the original number field into the selected
 small Hilbert class field is literally the canonical base equivalence
 followed by the fixed-field inclusion. -/
@@ -67,6 +71,7 @@ theorem smallHilbertClassField_algebraMap_original
         (smallHilbertClassFieldBaseEquiv (K := K) x) :=
   rfl
 
+open scoped Classical in
 /-- The canonical fixed-field copy has degree one over the original
 number field. -/
 noncomputable instance
@@ -75,6 +80,7 @@ noncomputable instance
   (smallHilbertClassFieldBaseEquivOverOriginal K)
     |>.toLinearEquiv.finiteDimensional
 
+open scoped Classical in
 /-- The original field, its canonical fixed-field copy, and the
 selected small Hilbert class field form the literal scalar tower used
 by extension of ideals. -/
@@ -84,6 +90,7 @@ noncomputable instance smallHilbertClassFieldScalarTowerOverOriginal :
       (smallHilbertClassField K) :=
   IsScalarTower.of_algebraMap_eq' rfl
 
+open scoped Classical in
 /-- The selected small Hilbert class field is finite-dimensional over
 the original number field. -/
 noncomputable instance
@@ -93,6 +100,7 @@ noncomputable instance
     (smallHilbertClassFieldBase K)
     (smallHilbertClassField K)
 
+open scoped Classical in
 /-- The canonical fixed-field copy has relative degree one over the
 original number field. -/
 @[simp]
@@ -102,6 +110,7 @@ theorem smallHilbertClassFieldBase_finrank_over_original :
     (LinearEquiv.finrank_eq
       (smallHilbertClassFieldBaseEquivOverOriginal K).toLinearEquiv).symm
 
+open scoped Classical in
 /-- The degree of the selected small Hilbert class field over the
 original number field is its ordinary class number. -/
 theorem smallHilbertClassField_finrank_over_original_eq_classNumber :
@@ -122,6 +131,7 @@ theorem smallHilbertClassField_finrank_over_original_eq_classNumber :
       smallHilbertClassFieldQuotient_card_eq_classNumber
         (K := K)
 
+open scoped Classical in
 /-- The selected small Hilbert class field is Galois over the original
 number field, not only over its canonically equivalent fixed-field
 copy. -/
@@ -162,6 +172,7 @@ noncomputable instance smallHilbertClassFieldIsGaloisOverOriginal :
             (smallHilbertClassFieldBase K)
             (smallHilbertClassField K))) x := rfl
 
+open scoped Classical in
 /-- The selected small Hilbert class field is an abelian Galois
 extension of the original number field. -/
 noncomputable instance

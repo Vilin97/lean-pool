@@ -12,7 +12,8 @@ import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Recip
 
 The proof uses the neighbourhoods `f ℤ̂`.  We construct the
 required unramified extension of degree `f` as the fixed field of the kernel
-of reduction modulo `f` after the normalized degree map `d_K`.  The norm--valuation formula then sends its norm subgroup into the prescribed neighbourhood.
+of reduction modulo `f` after the normalized degree map `d_K`.  The norm--valuation formula then
+sends its norm subgroup into the prescribed neighbourhood.
 -/
 
 noncomputable section
@@ -66,7 +67,7 @@ theorem unramifiedDegreeKernelWithin_isClosed (D : DegreeData G)
     (unramifiedDegreeHom D K f hf).continuous_toFun
 
 /-- The actual fixed field of the reduction-modulo-`f` kernel of `d_K`. -/
-def unramifiedExtensionOfDegree (D : DegreeData G) [IsTopologicalGroup G]
+def unramifiedExtensionOfDegree (D : DegreeData G)
     (K : FiniteResidueAbstractField D)
     (f : ℕ) (hf : 0 < f) : ClosedSubgroup G where
   toSubgroup :=
@@ -262,7 +263,8 @@ theorem finiteUnramifiedExtension_degree (D : DegreeData G)
   let : NeZero f := ⟨hf.ne'⟩
   let : Fintype (ZMod f) := ZMod.fintype f
   let q := (unramifiedDegreeHom D K f hf).toMonoidHom
-  rw [← (finiteUnramifiedExtension D K f hf).toFiniteAbstractExtension.extensionSubgroup_index_eq_degree]
+  rw [← (finiteUnramifiedExtension D K f
+    hf).toFiniteAbstractExtension.extensionSubgroup_index_eq_degree]
   change (extensionSubgroup K.field
       (D.finiteUnramifiedExtension K f hf).field
       (D.finiteUnramifiedExtension K f hf).below).index = f

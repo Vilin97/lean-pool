@@ -87,18 +87,18 @@ theorem henselFactorization_one_step_update_from_division_data_of_mem_le
     (hh0 : (h0.map (IsLocalRing.residue R)).natDegree ≤ d - m)
     (hp : (p.map (IsLocalRing.residue R)).natDegree ≤ m)
     (hmd : m ≤ d) :
-    (henselFactorization_lowPart (d - m) (a * fn + h0 * qdiv)).natDegree ≤ d - m ∧
+    (henselFactorizationLowPart (d - m) (a * fn + h0 * qdiv)).natDegree ≤ d - m ∧
       (∀ i : ℕ,
         (g + Polynomial.C (π ^ n) * p - g0).coeff i ∈
           IsLocalRing.maximalIdeal R) ∧
         (∀ i : ℕ,
           (h + Polynomial.C (π ^ n) *
-              henselFactorization_lowPart (d - m) (a * fn + h0 * qdiv) - h0).coeff i ∈
+              henselFactorizationLowPart (d - m) (a * fn + h0 * qdiv) - h0).coeff i ∈
             IsLocalRing.maximalIdeal R) ∧
           ∃ fnNext : R[X],
             f - (g + Polynomial.C (π ^ n) * p) *
                 (h + Polynomial.C (π ^ n) *
-                  henselFactorization_lowPart (d - m) (a * fn + h0 * qdiv)) =
+                  henselFactorizationLowPart (d - m) (a * fn + h0 * qdiv)) =
               Polynomial.C (π ^ (n + 1)) * fnNext := by
   rcases henselFactorization_correction_after_division_degree_truncation
       (g0 := g0) (h0 := h0) (fn := fn)
@@ -108,12 +108,12 @@ theorem henselFactorization_one_step_update_from_division_data_of_mem_le
     ⟨hqdeg, hcorrInitial⟩
   have hcorrCurrent :
       ∀ i : ℕ,
-        (g * henselFactorization_lowPart (d - m) (a * fn + h0 * qdiv) +
+        (g * henselFactorizationLowPart (d - m) (a * fn + h0 * qdiv) +
             h * p - fn).coeff i ∈ IsLocalRing.maximalIdeal R :=
     henselFactorization_correction_congruence_replace_initial_factors
       (g0 := g0) (h0 := h0) (g := g) (h := h)
       (fn := fn) (p := p)
-      (q := henselFactorization_lowPart (d - m) (a * fn + h0 * qdiv))
+      (q := henselFactorizationLowPart (d - m) (a * fn + h0 * qdiv))
       hg hh hcorrInitial
   refine ⟨hqdeg, ?_, ?_, ?_⟩
   · exact henselFactorization_update_preserves_reduction_of_mem
@@ -142,37 +142,37 @@ theorem henselFactorization_one_step_update_from_division_data_of_mem_span
     (hh0 : h0.natDegree ≤ d - m)
     (hp : p.natDegree ≤ m)
     (hmd : m ≤ d) :
-    (henselFactorization_lowPart (d - m) (a * fn + h0 * qdiv)).natDegree ≤ d - m ∧
+    (henselFactorizationLowPart (d - m) (a * fn + h0 * qdiv)).natDegree ≤ d - m ∧
       (∀ i : ℕ,
         (g + Polynomial.C (π ^ n) * p - g0).coeff i ∈
           Ideal.span ({π} : Set R)) ∧
         (∀ i : ℕ,
           (h + Polynomial.C (π ^ n) *
-              henselFactorization_lowPart (d - m) (a * fn + h0 * qdiv) - h0).coeff i ∈
+              henselFactorizationLowPart (d - m) (a * fn + h0 * qdiv) - h0).coeff i ∈
             Ideal.span ({π} : Set R)) ∧
           (∀ i : ℕ,
             (g + Polynomial.C (π ^ n) * p - g0).coeff i ∈
               IsLocalRing.maximalIdeal R) ∧
             (∀ i : ℕ,
               (h + Polynomial.C (π ^ n) *
-                  henselFactorization_lowPart (d - m) (a * fn + h0 * qdiv) - h0).coeff i ∈
+                  henselFactorizationLowPart (d - m) (a * fn + h0 * qdiv) - h0).coeff i ∈
                 IsLocalRing.maximalIdeal R) ∧
               ∃ fnNext : R[X],
                 f - (g + Polynomial.C (π ^ n) * p) *
                     (h + Polynomial.C (π ^ n) *
-                      henselFactorization_lowPart (d - m) (a * fn + h0 * qdiv)) =
+                      henselFactorizationLowPart (d - m) (a * fn + h0 * qdiv)) =
                   Polynomial.C (π ^ (n + 1)) * fnNext := by
   rcases henselFactorization_correction_after_division_degree_truncation_span_singleton
       (π := π) hπmem hgunit hg0nat hbezFactor hdiv hfn hh0 hp hmd with
     ⟨hqdeg, hcorrInitial⟩
   have hcorrCurrent :
       ∀ i : ℕ,
-        (g * henselFactorization_lowPart (d - m) (a * fn + h0 * qdiv) +
+        (g * henselFactorizationLowPart (d - m) (a * fn + h0 * qdiv) +
             h * p - fn).coeff i ∈ Ideal.span ({π} : Set R) :=
     henselFactorization_correction_congruence_replace_initial_factors_span_singleton
       (π := π) (g0 := g0) (h0 := h0) (g := g) (h := h)
       (fn := fn) (p := p)
-      (q := henselFactorization_lowPart (d - m) (a * fn + h0 * qdiv))
+      (q := henselFactorizationLowPart (d - m) (a * fn + h0 * qdiv))
       hg hh hcorrInitial
   have hgNext :
       ∀ i : ℕ,
@@ -182,7 +182,7 @@ theorem henselFactorization_one_step_update_from_division_data_of_mem_span
   have hhNext :
       ∀ i : ℕ,
         (h + Polynomial.C (π ^ n) *
-            henselFactorization_lowPart (d - m) (a * fn + h0 * qdiv) - h0).coeff i ∈
+            henselFactorizationLowPart (d - m) (a * fn + h0 * qdiv) - h0).coeff i ∈
           Ideal.span ({π} : Set R) :=
     henselFactorization_update_preserves_span_singleton (π := π) hn hh
   have hspan_le :
@@ -216,18 +216,18 @@ theorem henselFactorization_one_step_update_from_division_degree_lt_of_mem_le
     (hfn : (fn.map (IsLocalRing.residue R)).natDegree ≤ d)
     (hh0 : (h0.map (IsLocalRing.residue R)).natDegree ≤ d - m)
     (hmd : m ≤ d) :
-    (henselFactorization_lowPart (d - m) (a * fn + h0 * qdiv)).natDegree ≤ d - m ∧
+    (henselFactorizationLowPart (d - m) (a * fn + h0 * qdiv)).natDegree ≤ d - m ∧
       (∀ i : ℕ,
         (g + Polynomial.C (π ^ n) * p - g0).coeff i ∈
           IsLocalRing.maximalIdeal R) ∧
         (∀ i : ℕ,
           (h + Polynomial.C (π ^ n) *
-              henselFactorization_lowPart (d - m) (a * fn + h0 * qdiv) - h0).coeff i ∈
+              henselFactorizationLowPart (d - m) (a * fn + h0 * qdiv) - h0).coeff i ∈
             IsLocalRing.maximalIdeal R) ∧
           ∃ fnNext : R[X],
             f - (g + Polynomial.C (π ^ n) * p) *
                 (h + Polynomial.C (π ^ n) *
-                  henselFactorization_lowPart (d - m) (a * fn + h0 * qdiv)) =
+                  henselFactorizationLowPart (d - m) (a * fn + h0 * qdiv)) =
               Polynomial.C (π ^ (n + 1)) * fnNext := by
   exact henselFactorization_one_step_update_from_division_data_of_mem_le
     (π := π) hn hπmem hπle hfactor hg hh hgdeg hgnonzero hbez hdiv hfn hh0
@@ -290,7 +290,7 @@ theorem henselFactorization_exists_one_step_update_of_mem_le
       hbez hdiv hpdeg hfn hh0 hmd with
     ⟨hqdeg, hgNext, hhNext, hnext⟩
   rcases hnext with ⟨fnNext, hfactorNext⟩
-  exact ⟨p, henselFactorization_lowPart (d - m) (a * fn + h0 * qdiv), fnNext,
+  exact ⟨p, henselFactorizationLowPart (d - m) (a * fn + h0 * qdiv), fnNext,
     hpNat, hqdeg, hgNext, hhNext, hfactorNext⟩
 
 /-- existence of one recursive Hensel step from the current
@@ -353,7 +353,7 @@ theorem henselFactorization_exists_one_step_update_of_mem_span
       hbezFactor hdiv hfn hh0 hpNat hmd with
     ⟨hqdeg, hgNext, hhNext, hgNextMax, hhNextMax, hnext⟩
   rcases hnext with ⟨fnNext, hfactorNext⟩
-  exact ⟨p, henselFactorization_lowPart (d - m) (a * fn + h0 * qdiv), fnNext,
+  exact ⟨p, henselFactorizationLowPart (d - m) (a * fn + h0 * qdiv), fnNext,
     hpNat, hqdeg, hgNext, hhNext, hgNextMax, hhNextMax, hfactorNext⟩
 
 /-- displayed-factor one-step existence with the degree

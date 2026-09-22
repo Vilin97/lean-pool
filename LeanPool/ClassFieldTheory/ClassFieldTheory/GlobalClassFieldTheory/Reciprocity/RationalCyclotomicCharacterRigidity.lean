@@ -14,16 +14,20 @@ prime-power reductions.  In particular, if every reduction of every
 automorphism of the full rational cyclotomic field has square one.
 -/
 
-open scoped Classical
+
 
 noncomputable section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity
 
-local instance (p : Nat.Primes) : Fact p.1.Prime :=
+open scoped Classical in
+local instance localPrimesInstance1 (p : Nat.Primes) : Fact p.1.Prime :=
   ⟨p.2⟩
 
+attribute [local instance] localPrimesInstance1
+
+open scoped Classical in
 /-- An automorphism of the full rational cyclotomic field has square one
 as soon as every prime-power reduction of its genuine cyclotomic
 character has square one. -/

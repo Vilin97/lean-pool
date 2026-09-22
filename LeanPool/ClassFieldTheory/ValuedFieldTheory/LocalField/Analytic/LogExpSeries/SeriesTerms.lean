@@ -838,7 +838,8 @@ theorem tendsto_zero_signed_log_term_ofWithZeroValuation_of_pos
   exact lt_of_le_of_lt hvsigned (by simpa [γ'] using hNγ)
 
 /-- In a complete nonarchimedean valuation topology, the logarithm-series terms
-are summable.  This is the convergence step of the field-unit logarithm theorem after the valuation estimate has been proved. -/
+are summable.  This is the convergence step of the field-unit logarithm theorem after the
+  valuation estimate has been proved. -/
 theorem summable_log_term_ofWithZeroValuation_of_pos
     (v : _root_.Valuation K (WithZero (Multiplicative ℤ)))
     {p : ℕ} [Fact p.Prime] (x : Kˣ)

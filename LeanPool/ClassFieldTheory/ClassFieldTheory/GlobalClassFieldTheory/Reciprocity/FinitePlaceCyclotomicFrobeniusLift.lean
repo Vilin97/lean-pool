@@ -291,11 +291,11 @@ theorem
     numberFieldCyclotomicZHatFiniteCompositum F E
   let : Algebra ℚ C := C.algebra'
   let : Algebra F C :=
-    numberFieldCyclotomicZHatFiniteCompositum_algebra F E
+    numberFieldCyclotomicZHatFiniteCompositumAlgebra F E
   let : IsScalarTower ℚ F C :=
     numberFieldCyclotomicZHatFiniteCompositum_scalarTower F E
   let : Algebra E C :=
-    rationalCyclotomicZHatFiniteLayerCompositum_algebra F E
+    rationalCyclotomicZHatFiniteLayerCompositumAlgebra F E
   let : IsScalarTower ℚ E C :=
     rationalCyclotomicZHatFiniteLayerCompositum_scalarTower F E
   let A : IntermediateField ℚ C :=
@@ -480,11 +480,11 @@ theorem numberFieldCyclotomicZHatCompositumRestriction_range
   let C := numberFieldCyclotomicZHatCompositum F
   let : Algebra ℚ C := C.algebra'
   let : Algebra F C :=
-    numberFieldCyclotomicZHatCompositum_algebra F
+    numberFieldCyclotomicZHatCompositumAlgebra F
   let : IsScalarTower ℚ F C :=
     numberFieldCyclotomicZHatCompositum_scalarTower F
   let : Algebra rationalCyclotomicZHatField C :=
-    rationalCyclotomicZHatCompositum_algebra F
+    rationalCyclotomicZHatCompositumAlgebra F
   let : IsScalarTower ℚ rationalCyclotomicZHatField C :=
     rationalCyclotomicZHatCompositum_scalarTower F
   let : Normal ℚ rationalCyclotomicZHatField :=

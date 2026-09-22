@@ -88,7 +88,8 @@ theorem galoisGroupIntegerRingEquivOfIsIntegralClosure_apply
       σ (x : L) :=
   rfl
 
-/-- The inverse restriction equivalence extends an integer-ring automorphism to the ambient field. -/
+/-- The inverse restriction equivalence extends an integer-ring automorphism to the ambient
+field. -/
 @[simp]
 theorem galoisGroupIntegerRingEquivOfIsIntegralClosure_symm_apply
     (K L : Type u) [Field K] [ValuativeRel K] [Field L] [ValuativeRel L]

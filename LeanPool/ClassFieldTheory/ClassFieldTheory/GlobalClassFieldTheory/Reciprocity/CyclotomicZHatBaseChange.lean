@@ -916,7 +916,7 @@ noncomputable def
     (IntermediateField.liftAlgEquiv E.toIntermediateField).toAlgHom
 
 noncomputable instance
-    numberFieldCyclotomicZHatFiniteCompositum_algebra
+    numberFieldCyclotomicZHatFiniteCompositumAlgebra
     (E :
       FiniteGaloisIntermediateField
         ℚ rationalCyclotomicZHatField) :
@@ -925,7 +925,7 @@ noncomputable instance
   (numberFieldCyclotomicZHatFiniteCompositumEmbedding K E).toRingHom.toAlgebra
 
 noncomputable instance
-    rationalCyclotomicZHatFiniteLayerCompositum_algebra
+    rationalCyclotomicZHatFiniteLayerCompositumAlgebra
     (E :
       FiniteGaloisIntermediateField
         ℚ rationalCyclotomicZHatField) :
@@ -937,13 +937,13 @@ noncomputable instance
 finite-layer embedding.  Declaring it directly avoids asking instance search
 to rediscover the action through an unrelated intermediate-field algebra. -/
 noncomputable instance
-    rationalCyclotomicZHatFiniteLayerCompositum_smul
+    rationalCyclotomicZHatFiniteLayerCompositumSmul
     (E :
       FiniteGaloisIntermediateField
         ℚ rationalCyclotomicZHatField) :
     SMul E
       (numberFieldCyclotomicZHatFiniteCompositum K E) :=
-  (rationalCyclotomicZHatFiniteLayerCompositum_algebra K E).toSMul
+  (rationalCyclotomicZHatFiniteLayerCompositumAlgebra K E).toSMul
 
 /-- The actual intersection `K ∩ E` inside the finite compositum,
 transported back to the finite cyclotomic layer `E`. -/
@@ -1211,11 +1211,11 @@ theorem
     numberFieldCyclotomicZHatFiniteCompositum K E
   let : Algebra ℚ C := C.algebra'
   let : Algebra K C :=
-    numberFieldCyclotomicZHatFiniteCompositum_algebra K E
+    numberFieldCyclotomicZHatFiniteCompositumAlgebra K E
   let : IsScalarTower ℚ K C :=
     numberFieldCyclotomicZHatFiniteCompositum_scalarTower K E
   let : Algebra E C :=
-    rationalCyclotomicZHatFiniteLayerCompositum_algebra K E
+    rationalCyclotomicZHatFiniteLayerCompositumAlgebra K E
   let : IsScalarTower ℚ E C :=
     rationalCyclotomicZHatFiniteLayerCompositum_scalarTower K E
   let eK : K →ₐ[ℚ] C :=
@@ -1313,11 +1313,11 @@ noncomputable def rationalCyclotomicZHatCompositumEmbedding :
       numberFieldCyclotomicZHatCompositum K :=
   IntermediateField.inclusion le_sup_right
 
-noncomputable instance numberFieldCyclotomicZHatCompositum_algebra :
+noncomputable instance numberFieldCyclotomicZHatCompositumAlgebra :
     Algebra K (numberFieldCyclotomicZHatCompositum K) :=
   ((numberFieldCyclotomicZHatCompositumEmbedding K).toRingHom).toAlgebra
 
-noncomputable instance rationalCyclotomicZHatCompositum_algebra :
+noncomputable instance rationalCyclotomicZHatCompositumAlgebra :
     Algebra rationalCyclotomicZHatField
       (numberFieldCyclotomicZHatCompositum K) :=
   ((rationalCyclotomicZHatCompositumEmbedding K).toRingHom).toAlgebra
@@ -1622,7 +1622,7 @@ noncomputable def
       (rationalCyclotomicZHatFiniteLayerCompositumEmbedding K E)
 
 noncomputable instance
-    rationalCyclotomicZHatFiniteLayerInCompositum_algebra
+    rationalCyclotomicZHatFiniteLayerInCompositumAlgebra
   (E :
       FiniteGaloisIntermediateField
         ℚ rationalCyclotomicZHatField) :
@@ -1635,14 +1635,14 @@ noncomputable instance
 /-- The finite-layer scalar action on its actual image in the full
 compositum. -/
 noncomputable instance
-    rationalCyclotomicZHatFiniteLayerInCompositum_smul
+    rationalCyclotomicZHatFiniteLayerInCompositumSmul
     (E :
       FiniteGaloisIntermediateField
         ℚ rationalCyclotomicZHatField) :
     SMul E
       (numberFieldCyclotomicZHatFiniteLayerInCompositum K E) :=
   Algebra.toSMul
-    (self := rationalCyclotomicZHatFiniteLayerInCompositum_algebra K E)
+    (self := rationalCyclotomicZHatFiniteLayerInCompositumAlgebra K E)
 
 instance
     rationalCyclotomicZHatFiniteLayerInCompositum_scalarTower
@@ -1684,11 +1684,11 @@ theorem numberFieldCyclotomicZHatCompositumRestriction_injective :
       (numberFieldCyclotomicZHatCompositumRestriction K) := by
   let C := numberFieldCyclotomicZHatCompositum K
   let : Algebra ℚ C := C.algebra'
-  let : Algebra K C := numberFieldCyclotomicZHatCompositum_algebra K
+  let : Algebra K C := numberFieldCyclotomicZHatCompositumAlgebra K
   let : IsScalarTower ℚ K C :=
     numberFieldCyclotomicZHatCompositum_scalarTower K
   let : Algebra rationalCyclotomicZHatField C :=
-    rationalCyclotomicZHatCompositum_algebra K
+    rationalCyclotomicZHatCompositumAlgebra K
   let : IsScalarTower ℚ rationalCyclotomicZHatField C :=
     rationalCyclotomicZHatCompositum_scalarTower K
   let A : IntermediateField ℚ C :=
@@ -1812,7 +1812,7 @@ theorem
     letI : Algebra ℚ (numberFieldCyclotomicZHatCompositum K) :=
       (numberFieldCyclotomicZHatCompositum K).algebra'
     letI : Algebra K (numberFieldCyclotomicZHatCompositum K) :=
-      numberFieldCyclotomicZHatCompositum_algebra K
+      numberFieldCyclotomicZHatCompositumAlgebra K
     letI : IsScalarTower ℚ K (numberFieldCyclotomicZHatCompositum K) :=
       numberFieldCyclotomicZHatCompositum_scalarTower K
     letI : Normal ℚ E := E.isGalois.to_normal
@@ -1839,7 +1839,7 @@ theorem
   let : Algebra ℚ (numberFieldCyclotomicZHatCompositum K) :=
     (numberFieldCyclotomicZHatCompositum K).algebra'
   let : Algebra K (numberFieldCyclotomicZHatCompositum K) :=
-    numberFieldCyclotomicZHatCompositum_algebra K
+    numberFieldCyclotomicZHatCompositumAlgebra K
   let : IsScalarTower ℚ K (numberFieldCyclotomicZHatCompositum K) :=
     numberFieldCyclotomicZHatCompositum_scalarTower K
   let : Normal K
@@ -1857,11 +1857,11 @@ theorem
   let T := rationalCyclotomicZHatField
   let P : IntermediateField K C :=
     numberFieldCyclotomicZHatFiniteLayerInCompositum K E
-  let : Algebra T C := rationalCyclotomicZHatCompositum_algebra K
+  let : Algebra T C := rationalCyclotomicZHatCompositumAlgebra K
   let : IsScalarTower ℚ T C :=
     rationalCyclotomicZHatCompositum_scalarTower K
   let : Algebra E P :=
-    rationalCyclotomicZHatFiniteLayerInCompositum_algebra K E
+    rationalCyclotomicZHatFiniteLayerInCompositumAlgebra K E
   let : IsScalarTower ℚ E P :=
     rationalCyclotomicZHatFiniteLayerInCompositum_scalarTower K E
   let : IsAbelianGalois K P := by

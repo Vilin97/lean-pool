@@ -20,8 +20,7 @@ from the independently computed quotient cardinal and the global
 norm-residue index formula.
 -/
 
-open scoped NumberField Classical
-
+open scoped NumberField
 noncomputable section
 
 namespace GlobalClassFieldTheory
@@ -33,6 +32,7 @@ open KummerTheory
 
 variable {K : Type} [Field K] [NumberField K]
 
+open scoped Classical in
 /-- The full S-unit Kummer extension has ordinary idele-class norm range
 equal to the canonical power-local-unit subgroup. -/
 theorem fullSUnitKummerExtension_ideleClassNormRange_eq_powerLocalUnit

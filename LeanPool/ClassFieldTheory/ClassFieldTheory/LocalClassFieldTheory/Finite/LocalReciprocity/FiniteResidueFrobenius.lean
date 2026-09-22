@@ -122,7 +122,6 @@ theorem finiteResidueFrobeniusExponentEquiv_apply (z) :
   rfl
 
 /-- The Frobenius exponent equivalence sends one to arithmetic Frobenius. -/
-@[simp]
 theorem finiteResidueFrobeniusExponentEquiv_one :
     finiteResidueFrobeniusExponentEquiv k L
         (Multiplicative.ofAdd (1 : ZMod (Module.finrank k L))) =
@@ -156,7 +155,6 @@ theorem finiteResidueFrobeniusFromZHat_apply (z : ZHatMul) :
   rfl
 
 /-- The distinguished profinite integer `1` acts as arithmetic Frobenius. -/
-@[simp]
 theorem finiteResidueFrobeniusFromZHat_one :
     finiteResidueFrobeniusFromZHat k L
         (Multiplicative.ofAdd (1 : ZHat)) =

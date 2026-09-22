@@ -10,7 +10,8 @@ import Mathlib.Topology.Algebra.Nonarchimedean.AdicTopology
 /-!
 # Coefficients for a complete DVR expansion
 
-This file formalizes the recursive coefficient construction in the recursive coefficient proof.  Given a section of the residue map and a uniformizer `π`, every element
+This file formalizes the recursive coefficient construction in the recursive coefficient proof.
+  Given a section of the residue map and a uniformizer `π`, every element
 of the valuation ring has uniquely determined successive representative
 coefficients and remainders satisfying
 

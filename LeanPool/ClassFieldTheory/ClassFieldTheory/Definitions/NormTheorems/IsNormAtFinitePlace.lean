@@ -23,7 +23,7 @@ determinant norm from `K_w ⊗_K L`. -/
 def IsNormAtFinitePlace
     (K : Type u) (L : Type v)
     [Field K] [NumberField K]
-    [Field L] [Algebra K L] [FiniteDimensional K L]
+    [Field L] [Algebra K L]
     (w : HeightOneSpectrum (𝓞 K)) (x : Kˣ) : Prop :=
   ∃ y : (w.adicCompletion K ⊗[K] L)ˣ,
     Algebra.norm (w.adicCompletion K)

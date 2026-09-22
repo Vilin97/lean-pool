@@ -150,7 +150,8 @@ theorem exists_finiteAbelianNormSubgroup_eq_of_normOpen
       S.map (baseUnitsEquivGaloisAmbientFixed K (SeparableClosure K)).symm.toAddMonoidHom) habs
   change (L.normSubgroup (intrinsicAbsoluteUnits K)).map
       (baseUnitsEquivGaloisAmbientFixed K (SeparableClosure K)).symm.toAddMonoidHom =
-    Habs.map (baseUnitsEquivGaloisAmbientFixed K (SeparableClosure K)).symm.toAddMonoidHom at hmapped
+    Habs.map
+      (baseUnitsEquivGaloisAmbientFixed K (SeparableClosure K)).symm.toAddMonoidHom at hmapped
   rw [map_finiteAbelianNormSubgroup_eq_additiveNormSubgroup] at hmapped
   have hcancel :
       Habs.map (baseUnitsEquivGaloisAmbientFixed K (SeparableClosure K)).symm.toAddMonoidHom =
@@ -193,7 +194,7 @@ omit [ValuativeRel K] [TopologicalSpace K]
 theorem finiteIndexSubgroup_isNormOpen_of_normSubgroup_le
     (E : Type) [Field E] [Algebra K E]
     [FiniteDimensional K E] [IsGalois K E]
-    (H : Subgroup Kˣ) [H.FiniteIndex]
+    (H : Subgroup Kˣ)
     (hnorm : localNormSubgroup K E ≤ H) :
     let A := intrinsicAbsoluteUnits K
     let B := intrinsicAbstractBase K

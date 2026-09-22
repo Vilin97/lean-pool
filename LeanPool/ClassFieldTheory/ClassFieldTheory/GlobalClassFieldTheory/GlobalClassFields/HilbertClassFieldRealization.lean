@@ -30,7 +30,7 @@ quotients: the narrow class number for the big Hilbert class field and
 the ordinary class number for the small Hilbert class field.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 
 noncomputable section
 
@@ -44,6 +44,7 @@ open Reciprocity
 
 variable {K : Type} [Field K] [NumberField K]
 
+open scoped Classical in
 /-- The big-Hilbert congruence subgroup has finite index, registered at
 the realization layer where the closed finite-index construction uses it. -/
 instance bigHilbertClassFieldNormSubgroupFiniteIndex :
@@ -51,6 +52,7 @@ instance bigHilbertClassFieldNormSubgroupFiniteIndex :
   unfold bigHilbertClassFieldNormSubgroup
   infer_instance
 
+open scoped Classical in
 /-- The concrete finite Galois norm neighbourhood used to realize the
 big Hilbert class field. -/
 noncomputable abbrev bigHilbertClassFieldNormAmbient (K : Type)
@@ -60,6 +62,7 @@ noncomputable abbrev bigHilbertClassFieldNormAmbient (K : Type)
     (bigHilbertClassFieldNormSubgroup (K := K))
     (bigHilbertClassFieldNormSubgroup_isClosed (K := K))
 
+open scoped Classical in
 /-- The concrete finite Galois norm neighbourhood used to realize the
 small Hilbert class field. -/
 noncomputable abbrev smallHilbertClassFieldNormAmbient (K : Type)
@@ -69,6 +72,7 @@ noncomputable abbrev smallHilbertClassFieldNormAmbient (K : Type)
     (smallHilbertClassFieldNormSubgroup (K := K))
     (smallHilbertClassFieldNormSubgroup_isClosed (K := K))
 
+open scoped Classical in
 /-- The compatible abstract base subgroup for the actual big Hilbert
 class-field realization. -/
 noncomputable abbrev bigHilbertClassFieldBaseSubgroup (K : Type)
@@ -77,6 +81,7 @@ noncomputable abbrev bigHilbertClassFieldBaseSubgroup (K : Type)
     (K := K) (bigHilbertClassFieldNormSubgroup (K := K))
     (bigHilbertClassFieldNormSubgroup_isClosed (K := K))
 
+open scoped Classical in
 /-- The finite abelian subextension selected by the big-Hilbert norm
 subgroup.  This is the actual class-field witness, rather than merely an
 existence proposition. -/
@@ -88,6 +93,7 @@ noncomputable abbrev bigHilbertClassFieldSubextension (K : Type)
     (K := K) (bigHilbertClassFieldNormSubgroup (K := K))
     (bigHilbertClassFieldNormSubgroup_isClosed (K := K))
 
+open scoped Classical in
 /-- The compatible actual copy of the original number field occurring
 as the base fixed field in the big-Hilbert realization. -/
 noncomputable abbrev bigHilbertClassFieldBase (K : Type)
@@ -96,6 +102,7 @@ noncomputable abbrev bigHilbertClassFieldBase (K : Type)
     (K := K) (bigHilbertClassFieldNormSubgroup (K := K))
     (bigHilbertClassFieldNormSubgroup_isClosed (K := K))
 
+open scoped Classical in
 /-- The actual big Hilbert class field selected inside the rational
 separable closure. -/
 noncomputable abbrev bigHilbertClassField (K : Type)
@@ -104,6 +111,7 @@ noncomputable abbrev bigHilbertClassField (K : Type)
     (K := K) (bigHilbertClassFieldNormSubgroup (K := K))
     (bigHilbertClassFieldNormSubgroup_isClosed (K := K))
 
+open scoped Classical in
 /-- The canonical equivalence from `K` to the actual base fixed field
 used by the selected big Hilbert class field. -/
 noncomputable abbrev bigHilbertClassFieldBaseEquiv :
@@ -112,6 +120,7 @@ noncomputable abbrev bigHilbertClassFieldBaseEquiv :
     (K := K) (bigHilbertClassFieldNormSubgroup (K := K))
     (bigHilbertClassFieldNormSubgroup_isClosed (K := K))
 
+open scoped Classical in
 /-- The big-Hilbert norm subgroup transported to the actual base fixed
 field of the selected realization. -/
 def bigHilbertClassFieldTransportedNormSubgroup :
@@ -120,6 +129,7 @@ def bigHilbertClassFieldTransportedNormSubgroup :
     (ideleClassCongr
       (bigHilbertClassFieldBaseEquiv (K := K))).toMonoidHom
 
+open scoped Classical in
 /-- The determinant-norm range of the actual big Hilbert class field is
 exactly the transported big-Hilbert norm subgroup. -/
 theorem bigHilbertClassField_ideleClassNorm_range :
@@ -134,6 +144,7 @@ theorem bigHilbertClassField_ideleClassNorm_range :
       (K := K) (bigHilbertClassFieldNormSubgroup (K := K))
       (bigHilbertClassFieldNormSubgroup_isClosed (K := K)))
 
+open scoped Classical in
 private theorem
     closedFiniteIndexClassField_finrank_over_base_eq_index
     (H : Subgroup (IdeleClassGroup K))
@@ -174,6 +185,7 @@ private theorem
           (closedFiniteIndexClassFieldBaseEquiv
             (K := K) H hclosed))
 
+open scoped Classical in
 /-- The degree of the actual big Hilbert class field is the narrow
 class number. -/
 theorem bigHilbertClassField_finrank_eq_narrowClassGroup_card :
@@ -200,6 +212,7 @@ theorem bigHilbertClassField_finrank_eq_narrowClassGroup_card :
         (bigHilbertClassFieldQuotientEquivNarrowClassGroup
           (K := K)).toEquiv
 
+open scoped Classical in
 /-- The compatible abstract base subgroup for the actual small Hilbert
 class-field realization. -/
 noncomputable abbrev smallHilbertClassFieldBaseSubgroup (K : Type)
@@ -208,6 +221,7 @@ noncomputable abbrev smallHilbertClassFieldBaseSubgroup (K : Type)
     (K := K) (smallHilbertClassFieldNormSubgroup (K := K))
     (smallHilbertClassFieldNormSubgroup_isClosed (K := K))
 
+open scoped Classical in
 /-- The finite abelian subextension selected by the small-Hilbert norm
 subgroup.  This named witness is the input used by principalization. -/
 noncomputable abbrev smallHilbertClassFieldSubextension (K : Type)
@@ -218,6 +232,7 @@ noncomputable abbrev smallHilbertClassFieldSubextension (K : Type)
     (K := K) (smallHilbertClassFieldNormSubgroup (K := K))
     (smallHilbertClassFieldNormSubgroup_isClosed (K := K))
 
+open scoped Classical in
 /-- The compatible actual copy of the original number field occurring
 as the base fixed field in the small-Hilbert realization. -/
 noncomputable abbrev smallHilbertClassFieldBase (K : Type)
@@ -226,6 +241,7 @@ noncomputable abbrev smallHilbertClassFieldBase (K : Type)
     (K := K) (smallHilbertClassFieldNormSubgroup (K := K))
     (smallHilbertClassFieldNormSubgroup_isClosed (K := K))
 
+open scoped Classical in
 /-- The actual small Hilbert class field selected inside the rational
 separable closure. -/
 noncomputable abbrev smallHilbertClassField (K : Type)
@@ -234,6 +250,7 @@ noncomputable abbrev smallHilbertClassField (K : Type)
     (K := K) (smallHilbertClassFieldNormSubgroup (K := K))
     (smallHilbertClassFieldNormSubgroup_isClosed (K := K))
 
+open scoped Classical in
 /-- The canonical equivalence from `K` to the actual base fixed field
 used by the selected small Hilbert class field. -/
 noncomputable abbrev smallHilbertClassFieldBaseEquiv :
@@ -242,6 +259,7 @@ noncomputable abbrev smallHilbertClassFieldBaseEquiv :
     (K := K) (smallHilbertClassFieldNormSubgroup (K := K))
     (smallHilbertClassFieldNormSubgroup_isClosed (K := K))
 
+open scoped Classical in
 /-- The small-Hilbert norm subgroup transported to the actual base fixed
 field of the selected realization. -/
 def smallHilbertClassFieldTransportedNormSubgroup :
@@ -250,6 +268,7 @@ def smallHilbertClassFieldTransportedNormSubgroup :
     (ideleClassCongr
       (smallHilbertClassFieldBaseEquiv (K := K))).toMonoidHom
 
+open scoped Classical in
 /-- The determinant-norm range of the actual small Hilbert class field
 is exactly the transported small-Hilbert norm subgroup. -/
 theorem smallHilbertClassField_ideleClassNorm_range :
@@ -264,6 +283,7 @@ theorem smallHilbertClassField_ideleClassNorm_range :
       (K := K) (smallHilbertClassFieldNormSubgroup (K := K))
       (smallHilbertClassFieldNormSubgroup_isClosed (K := K)))
 
+open scoped Classical in
 /-- The degree of the actual small Hilbert class field is the ordinary
 class number. -/
 theorem smallHilbertClassField_finrank_eq_classNumber :

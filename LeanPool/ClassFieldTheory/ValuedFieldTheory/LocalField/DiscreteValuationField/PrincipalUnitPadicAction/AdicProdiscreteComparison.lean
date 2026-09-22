@@ -118,7 +118,6 @@ Establishes the identity `PrincipalUnitProdiscreteLimit.addEquiv F
 (adicPrincipalUnitsHomeomorphProdiscreteLimit F x) = principalUnitAddEquivInverseLimitCarrier F
 (AdicPrincipalUnits.addEquiv F x)`.
 -/
-@[simp]
 theorem adicPrincipalUnitsHomeomorphProdiscreteLimit_to_addEquiv
     (F : CompleteDVF.{u, v} K) (x : AdicPrincipalUnits F) :
     PrincipalUnitProdiscreteLimit.addEquiv F

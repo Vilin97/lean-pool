@@ -101,7 +101,8 @@ theorem irreduciblePolynomial_polynomial_ne_zero_of_eq_X_pow_mul_of_coeff_zero_n
   exact mul_ne_zero (pow_ne_zero r Polynomial.X_ne_zero) hQne
 
 /-- Hensel obstruction: the normalized `X^r` residue factor
-input from the residue-polynomial coefficient bounds, together with the adic completeness and separatedness
+input from the residue-polynomial coefficient bounds, together with the adic completeness and
+  separatedness
 needed by the coefficientwise Hensel construction, contradicts irreducibility of the mapped field
 polynomial. -/
 theorem irreduciblePolynomial_hensel_reduction_factor_input_not_irreducible

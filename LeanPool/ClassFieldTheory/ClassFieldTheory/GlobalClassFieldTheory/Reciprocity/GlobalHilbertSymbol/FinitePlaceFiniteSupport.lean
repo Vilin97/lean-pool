@@ -16,7 +16,7 @@ theorem for those Artin factors; no second ramification-support construction
 is needed here.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -29,6 +29,7 @@ open Function
 
 variable (K : Type) [Field K] [NumberField K]
 
+open scoped Classical in
 /-- For fixed global units `a` and `b`, the finite-place Hilbert symbols are
 nontrivial at only finitely many finite places. -/
 theorem finitePlaceHilbertSymbol_hasFiniteMulSupport

@@ -75,7 +75,6 @@ noncomputable def padicValuationSubringToCompletedUnramifiedWittRing
 
 /-- The canonical map from the valuation ring of `ℚ_[p]` sends its standard
 uniformizer to the Witt-vector prime. -/
-@[simp]
 theorem padicValuationSubringToCompletedUnramifiedWittRing_uniformizer
     (p : ℕ) [Fact p.Prime] :
     padicValuationSubringToCompletedUnramifiedWittRing p

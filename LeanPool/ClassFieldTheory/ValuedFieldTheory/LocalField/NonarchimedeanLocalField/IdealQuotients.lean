@@ -599,7 +599,6 @@ theorem principalUnitsSuccQuotAddEquivResidueOfIrreducible_symm_apply
 
 /-- Applying the inverse principal-unit quotient equivalence to a residue representative recovers
 that residue. -/
-@[simp]
 theorem principalUnitsSuccQuotAddEquivResidueOfIrreducible_symm_residue
     (K : Type u) [Field K] [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K] (ϖ : 𝒪[K]) (hϖ : Irreducible ϖ)

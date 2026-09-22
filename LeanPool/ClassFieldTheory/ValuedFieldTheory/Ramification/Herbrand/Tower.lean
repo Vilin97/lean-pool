@@ -21,7 +21,8 @@ the identity
 `i(σ τ) = min (i(σ), i(τ))`
 
 for such a representative `σ` and every `τ` in the normal subgroup.  The
-remaining valued-field input for the Herbrand quotient theorem is the quotient-depth identity: the depth
+remaining valued-field input for the Herbrand quotient theorem is the quotient-depth identity:
+  the depth
 on the quotient is the normalized sum of the depths in this fibre.  That
 input is deliberately not packaged here as a hypothesis or data field.
 -/
@@ -69,16 +70,20 @@ variable (H : Subgroup G) [H.Normal]
 abbrev QuotientFiber (q : G ⧸ H) : Type u :=
   {σ : G // QuotientGroup.mk' H σ = q}
 
+/-- A subgroup of a finite group is equipped with its finite enumeration. -/
 noncomputable local instance subgroupFintype [Finite G] : Fintype H :=
   Fintype.ofFinite H
 
+/-- The finite ambient group is equipped with an enumeration for the depth sums. -/
 noncomputable local instance groupFintype [Finite G] : Fintype G :=
   Fintype.ofFinite G
 
+/-- Each fiber of the quotient map from a finite group has a finite enumeration. -/
 noncomputable local instance quotientFiberFintype [Finite G] (q : G ⧸ H) :
     Fintype (QuotientFiber H q) :=
   Fintype.ofFinite (QuotientFiber H q)
 
+/-- The quotient of the finite ambient group is equipped with a finite enumeration. -/
 noncomputable local instance quotientFintype [Finite G] : Fintype (G ⧸ H) :=
   Fintype.ofFinite (G ⧸ H)
 
@@ -207,7 +212,8 @@ theorem depth_mul_eq_min_of_maximal_representative
 
 /-- The fibre-sum form of the maximal-representative identity.  Composing
 `f` with a finite-depth cast gives exactly the sum appearing in
-the Herbrand quotient theorem, after the quotient-depth identity supplies the quotient-depth average. -/
+the Herbrand quotient theorem, after the quotient-depth identity supplies the quotient-depth
+  average. -/
 theorem sum_depth_quotientFiber_eq_sum_min_of_maximal_representative
     [Finite G] {M : Type*} [AddCommMonoid M]
     (f : WithTop ℕ → M) {σ : G}

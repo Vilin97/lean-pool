@@ -278,7 +278,7 @@ theorem numberFieldTowerFinitePadicAuxiliaryEmbedding_algebraMap
   rfl
 
 noncomputable instance
-    numberFieldTowerFinitePadicAuxiliary_baseAlgebra
+    numberFieldTowerFinitePadicAuxiliaryBaseAlgebra
     (p : Nat.Primes)
     (τ : (numberFieldTowerBaseSubgroup K L).toSubgroup) :
     Algebra K
@@ -305,7 +305,7 @@ instance
         (K := K) (L := L) p τ).comp_algebraMap.symm
 
 noncomputable instance
-    numberFieldTowerFinitePadicAuxiliary_topAlgebra
+    numberFieldTowerFinitePadicAuxiliaryTopAlgebra
     (p : Nat.Primes)
     (τ : (numberFieldTowerBaseSubgroup K L).toSubgroup) :
     Algebra L
@@ -332,7 +332,7 @@ instance
         (K := K) (L := L) p τ).comp_algebraMap.symm
 
 noncomputable instance
-    numberFieldTowerFinitePadicAuxiliary_originalBaseTopAlgebra
+    numberFieldTowerFinitePadicAuxiliaryOriginalBaseTopAlgebra
     (p : Nat.Primes)
     (τ : (numberFieldTowerBaseSubgroup K L).toSubgroup) :
     Algebra K
@@ -418,7 +418,7 @@ theorem numberFieldTowerFinitePadicAuxiliaryBase_isGalois
     @IsGalois.of_equiv_equiv
       B FB _ _ auxiliaryBaseAlgebra
       K F _ _
-      (numberFieldTowerFinitePadicAuxiliary_baseAlgebra
+      (numberFieldTowerFinitePadicAuxiliaryBaseAlgebra
         (K := K) (L := L) p τ)
       auxiliaryBaseGalois
       eK.symm.toRingEquiv (RingEquiv.refl F) ?_
@@ -670,7 +670,7 @@ theorem
     letI _ : NumberField E :=
       NumberField.of_module_finite ℚ E
     letI _ : Algebra K F :=
-      numberFieldTowerFinitePadicAuxiliary_baseAlgebra
+      numberFieldTowerFinitePadicAuxiliaryBaseAlgebra
         (K := K) (L := L) p τ
     finitePlaceBelow (K := F)
         (finitePlaceExtensionCentre
@@ -723,7 +723,7 @@ theorem
   let auxiliaryTopNumberField : NumberField E :=
     NumberField.of_module_finite ℚ E
   let auxiliaryOriginalBaseAlgebra : Algebra K F :=
-    numberFieldTowerFinitePadicAuxiliary_baseAlgebra
+    numberFieldTowerFinitePadicAuxiliaryBaseAlgebra
       (K := K) (L := L) p τ
   let wF :=
     numberFieldTowerFinitePadicAuxiliaryBasePlaceExtension
@@ -876,7 +876,7 @@ private theorem numberFieldTowerFinitePadicAuxiliaryTopDecompositionGroup_eq_cho
     letI : IsAbelianGalois F E :=
       GlobalClassFields.finiteAbelianSubextensionAbstractRelativeFixedFieldIsAbelianGalois P
     letI : Algebra K F :=
-      numberFieldTowerFinitePadicAuxiliary_baseAlgebra
+      numberFieldTowerFinitePadicAuxiliaryBaseAlgebra
         (K := K) (L := L) p τ
     let wF := numberFieldTowerFinitePadicAuxiliaryBasePlaceExtension
       (K := K) (L := L) v p τ
@@ -926,7 +926,7 @@ private theorem numberFieldTowerFinitePadicAuxiliaryTopDecompositionGroup_eq_cho
   let : IsAbelianGalois F E :=
     GlobalClassFields.finiteAbelianSubextensionAbstractRelativeFixedFieldIsAbelianGalois P
   let : Algebra K F :=
-    numberFieldTowerFinitePadicAuxiliary_baseAlgebra
+    numberFieldTowerFinitePadicAuxiliaryBaseAlgebra
       (K := K) (L := L) p τ
   let wF :=
     numberFieldTowerFinitePadicAuxiliaryBasePlaceExtension
@@ -1089,13 +1089,13 @@ private theorem numberFieldTowerFinitePadicAuxiliaryLocalGlobalRepresentative_no
   letI auxiliaryAbelianGalois : IsAbelianGalois F E :=
     GlobalClassFields.finiteAbelianSubextensionAbstractRelativeFixedFieldIsAbelianGalois P
   letI auxiliaryOriginalBaseAlgebra : Algebra K F :=
-    numberFieldTowerFinitePadicAuxiliary_baseAlgebra
+    numberFieldTowerFinitePadicAuxiliaryBaseAlgebra
       (K := K) (L := L) p τ
   letI auxiliaryOriginalTopAlgebra : Algebra L E :=
-    numberFieldTowerFinitePadicAuxiliary_topAlgebra
+    numberFieldTowerFinitePadicAuxiliaryTopAlgebra
       (K := K) (L := L) p τ
   letI auxiliaryOriginalBaseTopAlgebra : Algebra K E :=
-    numberFieldTowerFinitePadicAuxiliary_originalBaseTopAlgebra
+    numberFieldTowerFinitePadicAuxiliaryOriginalBaseTopAlgebra
       (K := K) (L := L) p τ
   letI auxiliaryOriginalTopScalarTower : IsScalarTower K L E :=
     numberFieldTowerFinitePadicAuxiliary_originalTopScalarTower
@@ -1261,6 +1261,8 @@ private theorem numberFieldTowerFinitePadicAuxiliaryLocalGlobalRepresentative_no
   exact ⟨z, hlocal, hglobal⟩
 
 
+/-- A chosen local unit represents the prescribed finite quotient class under both the local Artin
+map and the global norm-residue map. -/
 noncomputable def numberFieldTowerFinitePadicAuxiliaryLocalGlobalRepresentative
     (v : HeightOneSpectrum (𝓞 K))
     (p : Nat.Primes)

@@ -97,7 +97,6 @@ def residueFrobeniusToLimit :
 
 omit [IsGalois k Omega] in
 /-- States the theorem `residueFrobeniusToLimit_apply_component`. -/
-@[simp]
 theorem residueFrobeniusToLimit_apply_component (z : ZHatMul)
     (E : (FiniteGaloisIntermediateField k Omega)ᵒᵖ) :
     (residueFrobeniusToLimit k Omega z).val E =

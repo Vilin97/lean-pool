@@ -173,6 +173,11 @@ private def fixedCyclesAddEquiv :
     apply Subtype.ext
     rfl
 
+omit [Fintype G] in
+private theorem fixedCyclesAddEquiv_coe
+    (x : LinearMap.ker (groupCohomology.d₀₁ (Rep.ofMulDistribMulAction G A)).hom) :
+    (fixedCyclesAddEquiv (G := G) (A := A) x).toMul.val = x.val.toMul := rfl
+
 /-- Mathlib's degree-zero Tate cohomology is the arithmetic fixed-point
 quotient by the norm image used by `HerbrandH0`. -/
 noncomputable def tateH0IsoHerbrandH0 :
@@ -282,6 +287,10 @@ private def normKernelCyclesAddEquiv :
     apply Additive.ofMul.injective
     apply Subtype.ext
     rfl
+
+private theorem normKernelCyclesAddEquiv_coe
+    (x : LinearMap.ker (Rep.ofMulDistribMulAction G A).norm.toModuleCatHom.hom) :
+    (normKernelCyclesAddEquiv (G := G) (A := A) x).toMul.val = x.val.toMul := rfl
 
 private noncomputable def tateHMinusOneIsoHerbrandHMinusOne_of_commGroup
     {G A : Type} [CommGroup G] [Fintype G] [CommGroup A]

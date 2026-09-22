@@ -110,7 +110,6 @@ def cyclicNormQuotientEquivOfNarrowFiniteConductorsEqOfRayClassGroupCardsEqExten
 
 /-- The canonical equivalence between the two maximal cyclic norm quotients
 preserves every idèle-class representative. -/
-@[simp]
 theorem
     cyclicNormQuotientEquivOfNarrowFiniteConductorsEqOfRayClassGroupCardsEqExtensionDegrees_mk
     (hconductor :

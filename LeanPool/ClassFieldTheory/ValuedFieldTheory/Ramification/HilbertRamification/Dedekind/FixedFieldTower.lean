@@ -37,7 +37,6 @@ variable {G}
 
 /-- Elementwise membership in the inertia field viewed over the decomposition
 field. -/
-@[simp]
 theorem mem_inertiaFieldOverDecompositionField_iff
     {P : Ideal B} [MulSemiringAction G B] {x : L} :
     x ∈ inertiaFieldOverDecompositionField (K := K) (L := L) G P ↔
@@ -58,7 +57,7 @@ theorem inertiaFieldOverDecompositionField_restrictScalars
 
 /-- The prime-decomposition tower identity:
 identify the decomposition group with `Gal(L/Z_P)`. -/
-def dedekindTower_decompositionGroupEquivGalDecompositionField
+def dedekindTowerDecompositionGroupEquivGalDecompositionField
     (P : Ideal B) [MulSemiringAction G B]
     [Finite G] [IsGaloisGroup G K L] :
     decompositionGroup P G ≃*
@@ -75,7 +74,7 @@ theorem dedekindTower_decompositionGroupEquivGalDecompositionField_apply
     (P : Ideal B) [MulSemiringAction G B]
     [Finite G] [IsGaloisGroup G K L]
     (σ : decompositionGroup P G) (x : L) :
-    dedekindTower_decompositionGroupEquivGalDecompositionField
+    dedekindTowerDecompositionGroupEquivGalDecompositionField
         (K := K) (L := L) G P σ x =
       (σ : G) • x :=
   rfl
@@ -110,21 +109,20 @@ abbrev inertiaGroupOverDecompositionField
     [Finite G] [IsGaloisGroup G K L] :
     Subgroup (L ≃ₐ[decompositionField (K := K) (L := L) G P] L) :=
   Subgroup.map
-    (dedekindTower_decompositionGroupEquivGalDecompositionField
+    (dedekindTowerDecompositionGroupEquivGalDecompositionField
       (K := K) (L := L) G P).toMonoidHom
     ((inertiaGroup P G).subgroupOf (decompositionGroup P G))
 
 variable {G}
 
 /-- Membership in the transported inertia subgroup over the decomposition field. -/
-@[simp]
 theorem mem_inertiaGroupOverDecompositionField_iff
     {P : Ideal B} [MulSemiringAction G B]
     [Finite G] [IsGaloisGroup G K L]
     {σ : L ≃ₐ[decompositionField (K := K) (L := L) G P] L} :
     σ ∈ inertiaGroupOverDecompositionField (K := K) (L := L) G P ↔
       ∃ τ : (inertiaGroup P G).subgroupOf (decompositionGroup P G),
-        dedekindTower_decompositionGroupEquivGalDecompositionField
+        dedekindTowerDecompositionGroupEquivGalDecompositionField
           (K := K) (L := L) G P (τ : decompositionGroup P G) = σ := by
   constructor
   · rintro ⟨τ, hτ, rfl⟩
@@ -140,7 +138,7 @@ instance inertiaGroupOverDecompositionField_normal
     [Finite G] [IsGaloisGroup G K L] :
     (inertiaGroupOverDecompositionField (K := K) (L := L) G P).Normal := by
   let e :=
-    dedekindTower_decompositionGroupEquivGalDecompositionField
+    dedekindTowerDecompositionGroupEquivGalDecompositionField
       (K := K) (L := L) G P
   simpa [inertiaGroupOverDecompositionField, e] using
     (Subgroup.Normal.map
@@ -166,12 +164,12 @@ theorem dedekindRamification_inertiaFieldOverDecompositionField_fixedField_eq
         τ ∈ (inertiaGroup P G).subgroupOf (decompositionGroup P G) :=
       hσ
     have hτmap :
-        dedekindTower_decompositionGroupEquivGalDecompositionField
+        dedekindTowerDecompositionGroupEquivGalDecompositionField
             (K := K) (L := L) G P τ ∈
           inertiaGroupOverDecompositionField (K := K) (L := L) G P := by
       exact ⟨τ, hτ, rfl⟩
     simpa [τ] using hx
-      (dedekindTower_decompositionGroupEquivGalDecompositionField
+      (dedekindTowerDecompositionGroupEquivGalDecompositionField
         (K := K) (L := L) G P τ) hτmap
   · intro hx σ hσ
     rcases
@@ -210,7 +208,7 @@ instance inertiaFieldOverDecompositionField_isGalois
 
 /-- The localization and decomposition comparison gives:
 `G_P/I_P ≃ Gal(T_P/Z_P)`, the fixed-field quotient form. -/
-def dedekindRamification_decompositionQuotientInertiaEquivGalInertiaFieldOverDecomposition
+def dedekindRamificationDecompositionQuotientInertiaEquivGalInertiaFieldOverDecomposition
     (P : Ideal B) [MulSemiringAction G B]
     [Finite G] [IsGaloisGroup G K L] :
     decompositionGroup P G ⧸
@@ -224,7 +222,7 @@ def dedekindRamification_decompositionQuotientInertiaEquivGalInertiaFieldOverDec
     (QuotientGroup.congr
       ((inertiaGroup P G).subgroupOf (decompositionGroup P G))
       (inertiaGroupOverDecompositionField (K := K) (L := L) G P)
-      (dedekindTower_decompositionGroupEquivGalDecompositionField
+      (dedekindTowerDecompositionGroupEquivGalDecompositionField
         (K := K) (L := L) G P)
       rfl).trans
       (by
@@ -259,13 +257,13 @@ theorem dedekindRamification_inertiaFieldOverDecompositionField_finrank_eq_quoti
             (inertiaGroup P G).subgroupOf (decompositionGroup P G)) := by
       exact
         Nat.card_congr
-          (dedekindRamification_decompositionQuotientInertiaEquivGalInertiaFieldOverDecomposition
+          (dedekindRamificationDecompositionQuotientInertiaEquivGalInertiaFieldOverDecomposition
             (K := K) (L := L) G P).symm.toEquiv
 
 /-- The localization and decomposition comparison:
 `Gal(T_P/Z_P) ≃ Gal(kappa(P)/kappa(p))`, obtained by composing the
 fixed-field quotient identification with the residue exact sequence. -/
-def dedekindRamification_galInertiaFieldOverDecompositionEquivResidueGalois
+def dedekindRamificationGalInertiaFieldOverDecompositionEquivResidueGalois
     (p : Ideal A) (P : Ideal B) [P.IsPrime] [P.LiesOver p]
     [MulSemiringAction G B] [SMulCommClass G A B]
     [Finite G] [IsGaloisGroup G K L] [Algebra.IsInvariant A B G] :
@@ -273,9 +271,9 @@ def dedekindRamification_galInertiaFieldOverDecompositionEquivResidueGalois
         decompositionField (K := K) (L := L) G P]
         inertiaFieldOverDecompositionField (K := K) (L := L) G P) ≃*
       (B ⧸ P) ≃ₐ[A ⧸ p] B ⧸ P :=
-  (dedekindRamification_decompositionQuotientInertiaEquivGalInertiaFieldOverDecomposition
+  (dedekindRamificationDecompositionQuotientInertiaEquivGalInertiaFieldOverDecomposition
     (K := K) (L := L) G P).symm.trans
-    (dedekindRamification_decompositionQuotientInertiaEquivResidueGalois
+    (dedekindRamificationDecompositionQuotientInertiaEquivResidueGalois
       (A := A) (B := B) p P G)
 
 /-- The localization and decomposition comparison:
@@ -298,7 +296,7 @@ theorem dedekindInertiaField_inertiaField_properties
         inertiaGroup P G := by
   exact
     ⟨inferInstance,
-      ⟨dedekindRamification_galInertiaFieldOverDecompositionEquivResidueGalois
+      ⟨dedekindRamificationGalInertiaFieldOverDecompositionEquivResidueGalois
         (A := A) (B := B) (K := K) (L := L) G p P⟩,
       dedekindRamification_inertiaField_fixingSubgroup_eq (K := K) (L := L) G P⟩
 

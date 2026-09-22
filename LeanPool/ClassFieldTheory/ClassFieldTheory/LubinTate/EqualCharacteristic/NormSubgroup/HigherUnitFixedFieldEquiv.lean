@@ -6,7 +6,8 @@ Authors: n-yamaguchi-0729
 
 import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.NormSubgroup.HigherUnitFixedFieldSurjective
 /-!
-# LubinTate the explicit norm-subgroup computation: the standard level is the higher-unit fixed field
+# LubinTate the explicit norm-subgroup computation: the standard level is the higher-unit fixed
+  field
 
 The standard-level embedding is an equivalence because its source and target
 have the same degree `(q - 1) q^n`.

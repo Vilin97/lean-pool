@@ -341,7 +341,6 @@ end FiniteUnramifiedCyclicExtension
 namespace ValuationData
 
 /-- The quotient unit representation acts on a representative through the original unit action. -/
-@[simp]
 theorem unitRepresentation_quotient_mk_apply
     (v : ValuationData D A) (E : FiniteAbstractFieldExtension G)
     (hnormal : (extensionSubgroup E.base.field E.field.field E.below).Normal)

@@ -28,7 +28,8 @@ import Mathlib.LinearAlgebra.Dimension.Basic
 /-!
 # Equal-characteristic Laurent-series input for the local-field structure classification
 
-This file starts the equal-characteristic branch of the local-field structure classification, the local-field structure classification.  Given the Teichmuller coefficient-field section
+This file starts the equal-characteristic branch of the local-field structure classification,
+  the local-field structure classification.  Given the Teichmuller coefficient-field section
 `κ -> O_K -> K` and a uniformizer `π`, it constructs the induced evaluation
 map `κ((X)) -> K` by first evaluating `κ⟦X⟧` at `X = π`, then using the
 localization description `κ((X)) = κ⟦X⟧[X⁻¹]`.
@@ -126,7 +127,8 @@ theorem uniformizer_hasEval_mrangeRestrict
     PowerSeries.HasEval (π : K) := by
   let Γ : Type v :=
     MonoidHom.mrange F.valuation.toMonoidWithZeroHom
-  let : Valued K Γ := (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F)
+  let : Valued K Γ :=
+    (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F)
   have : IsCyclic Γˣ := by
     simpa [Γ] using
       _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_units_isCyclic F
@@ -134,9 +136,11 @@ theorem uniformizer_hasEval_mrangeRestrict
     _root_.LocalFieldTheory.DiscreteValuationField.WithZeroValuation.units_isCyclic_mulArchimedean Γ
   have hπ_lt :
       (Valued.v : _root_.Valuation K Γ) (π : K) < 1 := by
-    change _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F (π : K) < (1 : Γ)
+    change _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F (π : K) <
+      (1 : Γ)
     rw [← Subtype.coe_lt_coe]
-    simpa [Γ, _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict] using hπ.val_lt_one
+    simpa [Γ, _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict] using
+      hπ.val_lt_one
   exact Valued.tendsto_zero_pow_of_v_lt_one hπ_lt
 
 /-- The maximal-ideal adic topology on the valuation ring is linear. -/
@@ -405,7 +409,7 @@ theorem laurentSeriesEvalHom_comp_powerSeries [Finite F.residueField]
 Establishes the identity `laurentSeriesEvalHom (F := F) p hcard π hπ hcoeff hπeval (algebraMap
 F.residueField⟦X⟧ F.residueField⸨X⸩ (PowerSeries.C a)) = coeffHom (F := F) p hcard a`.
 -/
-@[simp] theorem laurentSeriesEvalHom_algebraMap_C
+theorem laurentSeriesEvalHom_algebraMap_C
     [Finite F.residueField]
     (p : ℕ) [Fact p.Prime] [CharP F.valuationSubring p]
     {n : ℕ+} (hcard : Nat.card F.residueField = p ^ (n : ℕ))
@@ -434,7 +438,7 @@ F.residueField⟦X⟧ F.residueField⸨X⸩ (PowerSeries.C a)) = coeffHom (F := 
 Establishes the identity `laurentSeriesEvalHom (F := F) p hcard π hπ hcoeff hπeval (algebraMap
 F.residueField⟦X⟧ F.residueField⸨X⸩ (PowerSeries.X : F.residueField⟦X⟧)) = (π : K)`.
 -/
-@[simp] theorem laurentSeriesEvalHom_algebraMap_X
+theorem laurentSeriesEvalHom_algebraMap_X
     [Finite F.residueField]
     (p : ℕ) [Fact p.Prime] [CharP F.valuationSubring p]
     {n : ℕ+} (hcard : Nat.card F.residueField = p ^ (n : ℕ))
@@ -642,7 +646,7 @@ noncomputable def adicLaurentSeriesEvalHom
 Establishes the identity `adicLaurentSeriesEvalHom (F := F) p hcard π hπ (algebraMap
 F.residueField⟦X⟧ F.residueField⸨X⸩ (PowerSeries.C a)) = coeffHom (F := F) p hcard a`.
 -/
-@[simp] theorem adicLaurentSeriesEvalHom_algebraMap_C
+theorem adicLaurentSeriesEvalHom_algebraMap_C
     [Finite F.residueField]
     (p : ℕ) [Fact p.Prime] [CharP F.valuationSubring p]
     {n : ℕ+} (hcard : Nat.card F.residueField = p ^ (n : ℕ))
@@ -673,7 +677,7 @@ F.residueField⟦X⟧ F.residueField⸨X⸩ (PowerSeries.C a)) = coeffHom (F := 
 Establishes the identity `adicLaurentSeriesEvalHom (F := F) p hcard π hπ (algebraMap
 F.residueField⟦X⟧ F.residueField⸨X⸩ (PowerSeries.X : F.residueField⟦X⟧)) = (π : K)`.
 -/
-@[simp] theorem adicLaurentSeriesEvalHom_algebraMap_X
+theorem adicLaurentSeriesEvalHom_algebraMap_X
     [Finite F.residueField]
     (p : ℕ) [Fact p.Prime] [CharP F.valuationSubring p]
     {n : ℕ+} (hcard : Nat.card F.residueField = p ^ (n : ℕ))
@@ -809,7 +813,8 @@ variable {K : Type u} [Field K]
 variable (F : LocalField.{u, v} K)
 
 /-- The image in `K` of the equal-characteristic Laurent-series evaluation.
-This is the candidate base field for the converse direction of the local-field structure classification. -/
+This is the candidate base field for the converse direction of the local-field structure
+  classification. -/
 noncomputable def laurentImageSubfield
     (p : ℕ) [Fact p.Prime] [CharP F.valuationSubring p]
     {n : ℕ+} (hcard : Nat.card F.residueField = p ^ (n : ℕ))
@@ -849,7 +854,8 @@ theorem laurentImageSubfield_eq_top
   · intro _hx
     trivial
   · intro _hx
-    rcases _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.EqualCharacteristicLaurent.adicLaurentSeriesEvalHom_surjective
+    rcases
+      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.EqualCharacteristicLaurent.adicLaurentSeriesEvalHom_surjective
         (F := F.toCompleteDVF) p hcard π hπ x with
       ⟨y, hy⟩
     exact (RingHom.mem_fieldRange).2 ⟨y, hy⟩
@@ -889,7 +895,7 @@ Establishes the identity `((F.laurentSeriesEquivLaurentImageSubfield p hcard π 
 F.residueField⟦X⟧ F.residueField⸨X⸩ (PowerSeries.C a)) : F.laurentImageSubfield p hcard π hπ) : K)
 = CompleteDVF.EqualCharacteristicLaurent.coeffHom (F := F.toCompleteDVF) p hcard a`.
 -/
-@[simp] theorem laurentSeriesEquivLaurentImageSubfield_algebraMap_C
+theorem laurentSeriesEquivLaurentImageSubfield_algebraMap_C
     (p : ℕ) [Fact p.Prime] [CharP F.valuationSubring p]
     {n : ℕ+} (hcard : Nat.card F.residueField = p ^ (n : ℕ))
     (π : F.valuationSubring)
@@ -910,7 +916,7 @@ Establishes the identity `((F.laurentSeriesEquivLaurentImageSubfield p hcard π 
 F.residueField⟦X⟧ F.residueField⸨X⸩ (PowerSeries.X : F.residueField⟦X⟧)) : F.laurentImageSubfield
 p hcard π hπ) : K) = (π : K)`.
 -/
-@[simp] theorem laurentSeriesEquivLaurentImageSubfield_algebraMap_X
+theorem laurentSeriesEquivLaurentImageSubfield_algebraMap_X
     (p : ℕ) [Fact p.Prime] [CharP F.valuationSubring p]
     {n : ℕ+} (hcard : Nat.card F.residueField = p ^ (n : ℕ))
     (π : F.valuationSubring)
@@ -927,30 +933,33 @@ p hcard π hπ) : K) = (π : K)`.
 /-- The image base field is nontrivially normed by the norm induced from the
 range-restricted valuation topology on `K`. -/
 @[implicit_reducible]
-noncomputable def laurentImageSubfield_nontriviallyNormedField
+noncomputable def laurentImageSubfieldNontriviallyNormedField
     (p : ℕ) [Fact p.Prime] [CharP F.valuationSubring p]
     {n : ℕ+} (hcard : Nat.card F.residueField = p ^ (n : ℕ))
     (π : F.valuationSubring)
     (hπ : F.toCompleteDVF.valuation.IsUniformizer (π : K)) :
     letI : Valued K
         (MonoidHom.mrange F.toCompleteDVF.valuation.toMonoidWithZeroHom) :=
-      ((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF))
+      ((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued
+        F.toCompleteDVF))
     letI : NontriviallyNormedField K :=
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_nontriviallyNormedField F.toCompleteDVF
+      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F.toCompleteDVF
     NontriviallyNormedField
       (F.laurentImageSubfield p hcard π hπ) := by
   let Γ : Type v :=
     MonoidHom.mrange F.toCompleteDVF.valuation.toMonoidWithZeroHom
-  letI : Valued K Γ := ((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF))
+  letI : Valued K Γ :=
+    ((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued
+    F.toCompleteDVF))
   haveI : (Valued.v : _root_.Valuation K Γ).RankOne := by
     change
       (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict
         F.toCompleteDVF).RankOne
     exact
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_rankOne
+      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictRankOne
         F.toCompleteDVF
   letI : NontriviallyNormedField K :=
-    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_nontriviallyNormedField F.toCompleteDVF
+    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F.toCompleteDVF
   let piSub : F.laurentImageSubfield p hcard π hπ :=
     F.laurentSeriesEquivLaurentImageSubfield p hcard π hπ
       (algebraMap F.residueField⟦X⟧ F.residueField⸨X⸩
@@ -967,9 +976,11 @@ noncomputable def laurentImageSubfield_nontriviallyNormedField
     rw [hpiSub_coe] at hzeroK
     exact hπ.ne_zero hzeroK
   · have hπ_lt_one :
-        _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F.toCompleteDVF (π : K) < 1 := by
+        _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict
+          F.toCompleteDVF (π : K) < 1 := by
       rw [← Subtype.coe_lt_coe]
-      simpa [Γ, _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_apply] using hπ.val_lt_one
+      simpa [Γ, _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_apply]
+        using hπ.val_lt_one
     have hπ_norm_lt_one_K : ‖(π : K)‖ < 1 := by
       simpa [_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued] using
         (Valued.toNormedField.norm_lt_one_iff
@@ -981,28 +992,31 @@ noncomputable def laurentImageSubfield_nontriviallyNormedField
 
 /-- The ambient local field is a normed algebra over the Laurent image base. -/
 @[implicit_reducible]
-noncomputable def laurentImageSubfield_normedAlgebra
+noncomputable def laurentImageSubfieldNormedAlgebra
     (p : ℕ) [Fact p.Prime] [CharP F.valuationSubring p]
     {n : ℕ+} (hcard : Nat.card F.residueField = p ^ (n : ℕ))
     (π : F.valuationSubring)
     (hπ : F.toCompleteDVF.valuation.IsUniformizer (π : K)) :
     letI : Valued K
         (MonoidHom.mrange F.toCompleteDVF.valuation.toMonoidWithZeroHom) :=
-      ((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF))
+      ((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued
+        F.toCompleteDVF))
     letI : NontriviallyNormedField K :=
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_nontriviallyNormedField F.toCompleteDVF
+      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F.toCompleteDVF
     letI : NontriviallyNormedField
         (F.laurentImageSubfield p hcard π hπ) :=
-      F.laurentImageSubfield_nontriviallyNormedField p hcard π hπ
+      F.laurentImageSubfieldNontriviallyNormedField p hcard π hπ
     NormedAlgebra (F.laurentImageSubfield p hcard π hπ) K := by
   let Γ : Type v :=
     MonoidHom.mrange F.toCompleteDVF.valuation.toMonoidWithZeroHom
-  letI : Valued K Γ := ((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF))
+  letI : Valued K Γ :=
+    ((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued
+    F.toCompleteDVF))
   letI : NontriviallyNormedField K :=
-    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_nontriviallyNormedField F.toCompleteDVF
+    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F.toCompleteDVF
   letI : NontriviallyNormedField
       (F.laurentImageSubfield p hcard π hπ) :=
-    F.laurentImageSubfield_nontriviallyNormedField p hcard π hπ
+    F.laurentImageSubfieldNontriviallyNormedField p hcard π hπ
   exact
     { (inferInstance :
         Algebra (F.laurentImageSubfield p hcard π hπ) K) with
@@ -1019,27 +1033,30 @@ theorem finiteDimensional_over_laurentImageSubfield
     (hπ : F.toCompleteDVF.valuation.IsUniformizer (π : K)) :
     letI : Valued K
         (MonoidHom.mrange F.toCompleteDVF.valuation.toMonoidWithZeroHom) :=
-      ((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF))
+      ((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued
+        F.toCompleteDVF))
     letI : NontriviallyNormedField K :=
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_nontriviallyNormedField F.toCompleteDVF
+      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F.toCompleteDVF
     letI : NontriviallyNormedField
         (F.laurentImageSubfield p hcard π hπ) :=
-      F.laurentImageSubfield_nontriviallyNormedField p hcard π hπ
+      F.laurentImageSubfieldNontriviallyNormedField p hcard π hπ
     letI : NormedAlgebra
         (F.laurentImageSubfield p hcard π hπ) K :=
-      F.laurentImageSubfield_normedAlgebra p hcard π hπ
+      F.laurentImageSubfieldNormedAlgebra p hcard π hπ
     FiniteDimensional (F.laurentImageSubfield p hcard π hπ) K := by
   let Γ : Type v :=
     MonoidHom.mrange F.toCompleteDVF.valuation.toMonoidWithZeroHom
-  let : Valued K Γ := ((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF))
+  let : Valued K Γ :=
+    ((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued
+    F.toCompleteDVF))
   let : NontriviallyNormedField K :=
-    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_nontriviallyNormedField F.toCompleteDVF
+    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F.toCompleteDVF
   let : NontriviallyNormedField
       (F.laurentImageSubfield p hcard π hπ) :=
-    F.laurentImageSubfield_nontriviallyNormedField p hcard π hπ
+    F.laurentImageSubfieldNontriviallyNormedField p hcard π hπ
   let : NormedAlgebra
       (F.laurentImageSubfield p hcard π hπ) K :=
-    F.laurentImageSubfield_normedAlgebra p hcard π hπ
+    F.laurentImageSubfieldNormedAlgebra p hcard π hπ
   have htop : F.laurentImageSubfield p hcard π hπ = ⊤ :=
     F.laurentImageSubfield_eq_top p hcard π hπ
   have hsurj :
@@ -1099,15 +1116,17 @@ theorem finiteDimensional_over_laurentSeries
     F.laurentSeriesAlgebra p hcard π hπ
   let Γ : Type v :=
     MonoidHom.mrange F.toCompleteDVF.valuation.toMonoidWithZeroHom
-  let : Valued K Γ := ((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF))
+  let : Valued K Γ :=
+    ((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued
+    F.toCompleteDVF))
   let : NontriviallyNormedField K :=
-    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_nontriviallyNormedField F.toCompleteDVF
+    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F.toCompleteDVF
   let : NontriviallyNormedField
       (F.laurentImageSubfield p hcard π hπ) :=
-    F.laurentImageSubfield_nontriviallyNormedField p hcard π hπ
+    F.laurentImageSubfieldNontriviallyNormedField p hcard π hπ
   let : NormedAlgebra
       (F.laurentImageSubfield p hcard π hπ) K :=
-    F.laurentImageSubfield_normedAlgebra p hcard π hπ
+    F.laurentImageSubfieldNormedAlgebra p hcard π hπ
   have : FiniteDimensional
       (F.laurentImageSubfield p hcard π hπ) K :=
     F.finiteDimensional_over_laurentImageSubfield p hcard π hπ

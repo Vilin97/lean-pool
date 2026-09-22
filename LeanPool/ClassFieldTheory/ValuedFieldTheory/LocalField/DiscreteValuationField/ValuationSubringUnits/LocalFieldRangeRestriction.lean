@@ -35,7 +35,8 @@ def mrangeRestrict (F : LocalField.{u, v} K) :
     simpa [G, CompleteDVF.mrangeRestrictCompleteDVF,
       CompleteDVF.residueField, CompleteDVF.valuationSubring,
       CompleteDVF.toDVF] using
-      (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_residueField_finite F.toCompleteDVF)
+      (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_residueField_finite
+        F.toCompleteDVF)
   exact { toCompleteDVF := G }
 
 /-- The range-restricted topology attached to a local-field package is proper. -/
@@ -46,7 +47,8 @@ theorem mrangeRestrict_properSpace
           F.toCompleteDVF.valuation.toMonoidWithZeroHom) :=
       (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF)
     letI : NontriviallyNormedField K :=
-      (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_nontriviallyNormedField F.toCompleteDVF)
+      (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField
+        F.toCompleteDVF)
     ProperSpace K := by
   exact
     (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_properSpace_of_residueField_finite F.toCompleteDVF)
@@ -59,7 +61,8 @@ theorem mrangeRestrict_completeSpace
           F.toCompleteDVF.valuation.toMonoidWithZeroHom) :=
       (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF)
     letI : NontriviallyNormedField K :=
-      (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_nontriviallyNormedField F.toCompleteDVF)
+      (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField
+        F.toCompleteDVF)
     CompleteSpace K := by
   exact
     (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_completeSpace_of_residueField_finite F.toCompleteDVF)

@@ -24,7 +24,7 @@ is used; this predicate does not bound conductor exponents. -/
 def IsUnramifiedOutsideModulus
     (K : Type u) (L : Type v)
     [Field K] [NumberField K]
-    [Field L] [NumberField L] [Algebra K L]
+    [Field L] [Algebra K L]
     (m : RayClassModulus K) : Prop :=
   (∀ v : HeightOneSpectrum (𝓞 K), v ∉ m.finitePart.support →
       Algebra.IsUnramifiedIn (𝓞 L) v.asIdeal) ∧

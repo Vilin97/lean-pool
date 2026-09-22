@@ -2290,7 +2290,7 @@ noncomputable local instance
 
 local instance
     numberFieldEmbeddedBaseChangeRelativeFixedFieldScalarTower
-    [FiniteDimensional K K'] [IsGalois K K']
+
     (j : L' →ₐ[ℚ] SeparableClosure ℚ) :
     IsScalarTower ℚ
       (abstractFixedField ℚ (SeparableClosure ℚ)

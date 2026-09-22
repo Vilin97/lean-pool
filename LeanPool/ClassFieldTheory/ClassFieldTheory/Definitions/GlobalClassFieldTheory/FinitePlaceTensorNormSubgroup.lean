@@ -30,7 +30,7 @@ tensor algebra `K_v ⊗[K] L` into `K_vˣ`. -/
 def finitePlaceTensorNormSubgroup
     (K : Type u) (L : Type v)
     [Field K] [NumberField K]
-    [Field L] [Algebra K L] [FiniteDimensional K L]
+    [Field L] [Algebra K L]
     (v : HeightOneSpectrum (𝓞 K)) :
     Subgroup (v.adicCompletion K)ˣ :=
   (Units.map (Algebra.norm (v.adicCompletion K) :

@@ -52,7 +52,7 @@ theorem embeddingToAlgebraicClosure_injective :
       (DFunLike.congr_fun h x)
 
 theorem embeddingToAlgebraicClosure_surjective
-    [FiniteDimensional K M] [Normal K M] :
+    [Normal K M] :
     Function.Surjective
       (embeddingToAlgebraicClosure
         (K := K) (L := L) (M := M)) := by
@@ -109,7 +109,7 @@ theorem restrict_liftSubextensionEmbedding
 /-- The canonical map from right cosets of the fixing subgroup to
 embeddings of the subextension. -/
 noncomputable def cosetToEmbedding
-    [Normal K M] :
+    :
     (M ≃ₐ[K] M) ⧸
         fixingSubextension (K := K) (L := L) (M := M) →
       (L →ₐ[K] M) :=
@@ -219,6 +219,7 @@ variable
     [FiniteDimensional K L] [FiniteDimensional K M]
     [IsGalois K M]
 
+/-- The quotient by automorphisms fixing the intermediate field has a finite enumeration. -/
 local instance :
     Fintype
       ((M ≃ₐ[K] M) ⧸
@@ -228,7 +229,7 @@ local instance :
 
 /-- The linear polynomial representing a chosen `K`-embedding `L → M`. -/
 def embeddingPolynomial
-    {ι : Type z} [Fintype ι] [DecidableEq ι]
+    {ι : Type z} [Fintype ι]
     (b : Module.Basis ι K L) (f : L →ₐ[K] M) :
     MvPolynomial ι M :=
   ∑ i, MvPolynomial.X i *
@@ -239,13 +240,15 @@ omit [Algebra L M] [IsScalarTower K L M]
     [IsGalois K M] in
 @[simp]
 theorem eval_embeddingPolynomial
-    {ι : Type z} [Fintype ι] [DecidableEq ι]
+    {ι : Type z} [Fintype ι]
     (b : Module.Basis ι K L) (f : L →ₐ[K] M)
     (x : L) :
     MvPolynomial.eval
         (fun i ↦ algebraMap K M (b.repr x i))
         (embeddingPolynomial b f) =
       f x := by
+  classical
+  let : DecidableEq ι := Classical.decEq ι
   rw [embeddingPolynomial, map_sum]
   simp only [map_mul, MvPolynomial.eval_X,
     MvPolynomial.eval_C]
@@ -346,7 +349,7 @@ omit [Algebra L M] [IsScalarTower K L M]
 is the corresponding tensor-algebra embedding. -/
 theorem eval₂_embeddingPolynomial_baseChange
     (A : Type*) [CommRing A] [Algebra K A]
-    {ι : Type z} [Fintype ι] [DecidableEq ι]
+    {ι : Type z} [Fintype ι]
     (b : Module.Basis ι K L) (f : L →ₐ[K] M)
     (x : A ⊗[K] L) :
     MvPolynomial.eval₂
@@ -358,6 +361,8 @@ theorem eval₂_embeddingPolynomial_baseChange
             ((Algebra.TensorProduct.basis A b).repr x i))
         (embeddingPolynomial b f) =
       scalarEmbedding A f x := by
+  classical
+  let : DecidableEq ι := Classical.decEq ι
   simp only [embeddingPolynomial,
     MvPolynomial.eval₂_sum,
     MvPolynomial.eval₂_mul,
@@ -491,6 +496,7 @@ variable
     [FiniteDimensional K L] [FiniteDimensional K M]
     [IsGalois K M]
 
+/-- The cosets used to index relative idele embeddings have a finite enumeration. -/
 local instance :
     Fintype
       ((M ≃ₐ[K] M) ⧸

@@ -17,7 +17,7 @@ The latter projection is directly surjective since both ray class groups are
 quotients of the same idèle class group.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -26,11 +26,15 @@ namespace ClassFieldTheory
 
 universe u
 
+open scoped Classical in
 private local instance rayClassGroupCommGroup
     (K : Type u) [Field K] [NumberField K]
     (m : RayClassModulus K) : CommGroup (RayClassGroup m) :=
   { (inferInstance : Group (RayClassGroup m)) with mul_comm := mul_comm' }
 
+attribute [local instance] rayClassGroupCommGroup
+
+open scoped Classical in
 private theorem rayClassGroup_hom_ext_of_prime
     (K : Type u) [Field K] [NumberField K]
     (n m : RayClassModulus K)
@@ -86,6 +90,7 @@ private theorem rayClassGroup_hom_ext_of_prime
   exact congrArg
     (fun h : RayClass.primeToModulusIdeals n' →* RayClassGroup m => h I) hcomp
 
+open scoped Classical in
 /-- Reducing a ray modulus gives a surjection of ideal-theoretic ray class
 groups. -/
 theorem rayClassIdealModulusProjection_surjective

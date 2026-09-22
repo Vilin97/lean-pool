@@ -17,13 +17,14 @@ continuous provider.  This avoids a second specialization of the full finite
 global reciprocity instance tower.
 -/
 
-open scoped Classical IsMulCommutative NumberField
+open scoped IsMulCommutative NumberField
 
 noncomputable section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields
 
+open scoped Classical in
 /-- Canonical class-group commutativity supplies normality of the defining subgroup. -/
 private theorem closedFiniteIndexAlgebraicClassGroupIsMulCommutative
     (F : Type) [Field F] [NumberField F] :
@@ -34,6 +35,7 @@ attribute [local instance] closedFiniteIndexAlgebraicClassGroupIsMulCommutative
 
 variable {K : Type} [Field K] [NumberField K]
 
+open scoped Classical in
 /-- Global reciprocity for the selected class field, stated over the original
 number field and directly modulo its defining subgroup. -/
 noncomputable abbrev closedFiniteIndexClassFieldGaloisEquivNormQuotient

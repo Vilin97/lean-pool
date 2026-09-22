@@ -62,7 +62,7 @@ noncomputable local instance
 
 /-- The completed Lubin--Tate level as an algebra over the original p-adic
 base field, through the completed unramified coefficient field. -/
-noncomputable instance padicCompletedLevelField_padicAlgebra
+noncomputable instance padicCompletedLevelFieldPadicAlgebra
     (p : ℕ) [Fact p.Prime] (n : ℕ) :
     Algebra ℚ_[p] (padicCompletedLevelField p n) :=
   ((algebraMap (padicCompletedUnramifiedField p)

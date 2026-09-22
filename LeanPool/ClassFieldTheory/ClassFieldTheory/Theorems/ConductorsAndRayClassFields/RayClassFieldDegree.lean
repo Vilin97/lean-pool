@@ -14,7 +14,7 @@ the ideal-theoretic ray class group.  The realization is explicit, so this
 module does not depend on an implementation-level choice of field.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 
 noncomputable section
 
@@ -22,6 +22,7 @@ namespace ClassFieldTheory
 
 universe u
 
+open scoped Classical in
 /-- The ray class field has degree equal to the ray class number. -/
 theorem rayClassField_degree
     (K : Type u) [Field K] [NumberField K]

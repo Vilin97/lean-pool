@@ -12,12 +12,13 @@ import Mathlib.NumberTheory.NumberField.InfinitePlace.Ramification
 
 noncomputable section
 
-open scoped Classical
+
 
 namespace ClassFieldTheory
 
 universe u
 
+open scoped Classical in
 /-- The modulus with no finite exponent and positivity at every real place.
 Its ray class group is the narrow ideal class group. -/
 def narrowRayClassModulus

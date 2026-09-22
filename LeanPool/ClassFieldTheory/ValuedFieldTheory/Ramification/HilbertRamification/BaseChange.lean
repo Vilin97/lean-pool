@@ -89,7 +89,7 @@ private theorem galoisPullbackElement_commutes
 include hsquare in
 /-- The conjugation and base-change law: conjugation along a commutative
 square restricts to a homomorphism on Galois groups. -/
-def galoisPullback_galoisPullback : (L' ≃ₐ[K'] L') →* (L ≃ₐ[K] L) where
+def galoisPullbackGaloisPullback : (L' ≃ₐ[K'] L') →* (L ≃ₐ[K] L) where
   toFun := galoisPullbackElement tauK tauL hsquare
   map_one' := by
     ext x
@@ -108,7 +108,7 @@ def galoisPullback_galoisPullback : (L' ≃ₐ[K'] L') →* (L ≃ₐ[K] L) wher
 /-- The defining equation `tauL (tau^* sigma x) = sigma (tauL x)`. -/
 @[simp] theorem galoisPullback_galoisPullback_commutes
     (sigma : L' ≃ₐ[K'] L') (x : L) :
-    tauL (galoisPullback_galoisPullback tauK tauL hsquare sigma x) =
+    tauL (galoisPullbackGaloisPullback tauK tauL hsquare sigma x) =
       sigma (tauL x) :=
   galoisPullbackElement_commutes tauK tauL hsquare sigma x
 
@@ -116,24 +116,24 @@ include hsquare in
 /-- The conjugation and base-change law, including the archimedean case: the pullback on Galois
 groups sends the decomposition group of `w'` to the decomposition group of
 the pulled-back absolute value. -/
-def galoisPullback_absoluteValueDecompositionGroupMap (w' : AbsoluteValue L' ℝ) :
+def galoisPullbackAbsoluteValueDecompositionGroupMap (w' : AbsoluteValue L' ℝ) :
     absoluteValueDecompositionGroup K' w' →*
       absoluteValueDecompositionGroup K (w'.comp (f := tauL) tauL.injective) where
   toFun sigma :=
-    ⟨galoisPullback_galoisPullback tauK tauL hsquare (sigma : L' ≃ₐ[K'] L'), by
+    ⟨galoisPullbackGaloisPullback tauK tauL hsquare (sigma : L' ≃ₐ[K'] L'), by
       intro x
       change w' (tauL
-          (galoisPullback_galoisPullback tauK tauL hsquare
+          (galoisPullbackGaloisPullback tauK tauL hsquare
             (sigma : L' ≃ₐ[K'] L') x)) < 1 ↔
         w' (tauL x) < 1
       rw [galoisPullback_galoisPullback_commutes]
       exact sigma.property (tauL x)⟩
   map_one' := by
     apply Subtype.ext
-    exact map_one (galoisPullback_galoisPullback tauK tauL hsquare)
+    exact map_one (galoisPullbackGaloisPullback tauK tauL hsquare)
   map_mul' sigma rho := by
     apply Subtype.ext
-    exact map_mul (galoisPullback_galoisPullback tauK tauL hsquare)
+    exact map_mul (galoisPullbackGaloisPullback tauK tauL hsquare)
       (sigma : L' ≃ₐ[K'] L') (rho : L' ≃ₐ[K'] L')
 
 namespace ValuationSubring
@@ -204,15 +204,15 @@ private theorem mem_inertiaGroup_iff_sub_mem_nonunits
 include hsquare in
 /-- The conjugation and base-change law in the valuation-subring model: decomposition groups map
 under pullback along the commutative square. -/
-def galoisPullback_decompositionGroupMap :
+def galoisPullbackDecompositionGroupMap :
     decompositionGroup K' A' →*
       decompositionGroup K (pulledValuationSubring tauL A') where
   toFun sigma :=
-    ⟨galoisPullback_galoisPullback tauK tauL hsquare (sigma : L' ≃ₐ[K'] L'), by
+    ⟨galoisPullbackGaloisPullback tauK tauL hsquare (sigma : L' ≃ₐ[K'] L'), by
       ext x
       rw [_root_.ValuationSubring.mem_pointwise_smul_iff_inv_smul_mem]
       change tauL
-          ((galoisPullback_galoisPullback tauK tauL hsquare
+          ((galoisPullbackGaloisPullback tauK tauL hsquare
             (sigma : L' ≃ₐ[K'] L'))⁻¹ x) ∈ A' ↔
         tauL x ∈ A'
       have hinv := galoisPullback_galoisPullback_commutes
@@ -226,15 +226,15 @@ def galoisPullback_decompositionGroupMap :
       exact ⟨fun h => hmem.mp h, fun h => hmem.symm.mp h⟩⟩
   map_one' := by
     apply Subtype.ext
-    exact map_one (galoisPullback_galoisPullback tauK tauL hsquare)
+    exact map_one (galoisPullbackGaloisPullback tauK tauL hsquare)
   map_mul' sigma rho := by
     apply Subtype.ext
-    exact map_mul (galoisPullback_galoisPullback tauK tauL hsquare)
+    exact map_mul (galoisPullbackGaloisPullback tauK tauL hsquare)
       (sigma : L' ≃ₐ[K'] L') (rho : L' ≃ₐ[K'] L')
 
 private theorem decompositionGroupMap_commutes
     (sigma : decompositionGroup K' A') (x : L) :
-    tauL ((((galoisPullback_decompositionGroupMap tauK tauL hsquare A' sigma :
+    tauL ((((galoisPullbackDecompositionGroupMap tauK tauL hsquare A' sigma :
       decompositionGroup K (pulledValuationSubring tauL A')) :
         L ≃ₐ[K] L) x)) =
       (sigma : L' ≃ₐ[K'] L') (tauL x) :=
@@ -244,11 +244,11 @@ private theorem decompositionGroupMap_commutes
 include hsquare in
 /-- The conjugation and base-change law in the valuation-subring model: inertia groups map under
 pullback along the commutative square. -/
-def galoisPullback_inertiaGroupMap :
+def galoisPullbackInertiaGroupMap :
     inertiaGroup K' A' →*
       inertiaGroup K (pulledValuationSubring tauL A') where
   toFun sigma := by
-    let delta := galoisPullback_decompositionGroupMap tauK tauL hsquare A'
+    let delta := galoisPullbackDecompositionGroupMap tauK tauL hsquare A'
       (sigma : decompositionGroup K' A')
     refine ⟨delta, ?_⟩
     rw [mem_inertiaGroup_iff_sub_mem_nonunits]
@@ -260,21 +260,21 @@ def galoisPullback_inertiaGroupMap :
       ⟨tauL (x : L), x.property⟩
   map_one' := by
     apply Subtype.ext
-    exact map_one (galoisPullback_decompositionGroupMap tauK tauL hsquare A')
+    exact map_one (galoisPullbackDecompositionGroupMap tauK tauL hsquare A')
   map_mul' sigma rho := by
     apply Subtype.ext
-    exact map_mul (galoisPullback_decompositionGroupMap tauK tauL hsquare A')
+    exact map_mul (galoisPullbackDecompositionGroupMap tauK tauL hsquare A')
       (sigma : decompositionGroup K' A') (rho : decompositionGroup K' A')
 
 private theorem inertiaGroupMap_commutes
     (sigma : inertiaGroup K' A') (x : L) :
-    tauL (((((galoisPullback_inertiaGroupMap tauK tauL hsquare A' sigma :
+    tauL (((((galoisPullbackInertiaGroupMap tauK tauL hsquare A' sigma :
       inertiaGroup K (pulledValuationSubring tauL A')) :
         decompositionGroup K (pulledValuationSubring tauL A')) :
           L ≃ₐ[K] L) x)) =
       (((sigma : inertiaGroup K' A') : decompositionGroup K' A') :
         L' ≃ₐ[K'] L') (tauL x) := by
-  simpa [galoisPullback_inertiaGroupMap] using
+  simpa [galoisPullbackInertiaGroupMap] using
     decompositionGroupMap_commutes tauK tauL hsquare A'
       (sigma : decompositionGroup K' A') x
 
@@ -282,7 +282,7 @@ private theorem automorphismUnitQuotient_map
     (sigma : inertiaGroup K' A') (x : Lˣ) :
     Units.map tauL
         (automorphismUnitQuotient K (pulledValuationSubring tauL A')
-          ((galoisPullback_inertiaGroupMap tauK tauL hsquare A' sigma :
+          ((galoisPullbackInertiaGroupMap tauK tauL hsquare A' sigma :
             inertiaGroup K (pulledValuationSubring tauL A')) :
               decompositionGroup K (pulledValuationSubring tauL A')) x) =
       automorphismUnitQuotient K' A'
@@ -297,7 +297,7 @@ private theorem ramificationPredicate_map
         A'.principalUnitGroup) :
     ∀ x : Lˣ,
     automorphismUnitQuotient K (pulledValuationSubring tauL A')
-        ((galoisPullback_inertiaGroupMap tauK tauL hsquare A' sigma :
+        ((galoisPullbackInertiaGroupMap tauK tauL hsquare A' sigma :
           inertiaGroup K (pulledValuationSubring tauL A')) :
             decompositionGroup K (pulledValuationSubring tauL A')) x ∈
       (pulledValuationSubring tauL A').principalUnitGroup := by
@@ -310,16 +310,16 @@ private theorem ramificationPredicate_map
 include hsquare in
 /-- The conjugation and base-change law in the valuation-subring model: ramification groups map
 under pullback along the commutative square. -/
-def galoisPullback_ramificationGroupMap :
+def galoisPullbackRamificationGroupMap :
     ramificationGroup K' A' →*
       ramificationGroup K (pulledValuationSubring tauL A') :=
-  ((galoisPullback_inertiaGroupMap tauK tauL hsquare A').domRestrict
+  ((galoisPullbackInertiaGroupMap tauK tauL hsquare A').domRestrict
       (ramificationGroup K' A')).codRestrict
     (ramificationGroup K (pulledValuationSubring tauL A'))
     (fun sigma => by
       change ∀ x : Lˣ,
         automorphismUnitQuotient K (pulledValuationSubring tauL A')
-            ((galoisPullback_inertiaGroupMap tauK tauL hsquare A'
+            ((galoisPullbackInertiaGroupMap tauK tauL hsquare A'
               (sigma : inertiaGroup K' A') :
                 inertiaGroup K (pulledValuationSubring tauL A')) :
                   decompositionGroup K (pulledValuationSubring tauL A')) x ∈

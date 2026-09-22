@@ -32,12 +32,15 @@ variable [FiniteDimensional K L] [base.valuation.HasExtension target.valuation]
 variable [IsGalois K L]
 variable [Algebra.IsSeparable base.residueField target.residueField]
 
+/-- The finite Galois group is equipped with an enumeration for ramification-group sums. -/
 local instance galoisFintype : Fintype Gal(L/K) :=
   Fintype.ofFinite Gal(L/K)
 
+/-- Each subgroup of the finite Galois group is equipped with a finite enumeration. -/
 local instance subgroupFintype (H : Subgroup Gal(L/K)) : Fintype H :=
   Fintype.ofFinite H
 
+/-- Classical decidability of membership in a subgroup of the Galois group. -/
 local instance subgroupMembershipDecidable
     (H : Subgroup Gal(L/K)) (sigma : Gal(L/K)) : Decidable (sigma ∈ H) :=
   Classical.propDecidable _
@@ -101,7 +104,8 @@ theorem truncate_intrinsicRamificationNumberOfUniqueExtension_eq_intrinsic_summa
       exact (mem_lowerRamificationGroup_nat_iff_intrinsicRamificationNumberOfUniqueExtension_ge
         (base := base) (target := target) huniq (m + 1)
           (sigma : Gal(L/K))).2 (by simpa [i, Nat.add_assoc] using hhigh)
-    have hdepth : (RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.truncatedLowerDepth F) m sigma = m := by
+    have hdepth :
+      (RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.truncatedLowerDepth F) m sigma = m := by
       rw [RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.truncatedLowerDepth]
       rw [Finset.filter_eq_self.2]
       · simp
@@ -136,7 +140,8 @@ theorem truncate_intrinsicRamificationNumberOfUniqueExtension_eq_intrinsic_summa
           (base := base) (target := target) huniq (m + 1)
             (sigma : Gal(L/K))).1 hmem
       exact hhigh (by simpa [i, Nat.add_assoc] using hge)
-    have hdepth : (RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.truncatedLowerDepth F) m sigma = k - 1 := by
+    have hdepth :
+      (RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.truncatedLowerDepth F) m sigma = k - 1 := by
       rw [RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.truncatedLowerDepth]
       have hfilter :
           (Finset.range m).filter
@@ -166,7 +171,8 @@ theorem truncate_intrinsicRamificationNumberOfUniqueExtension_eq_intrinsic_summa
     simp [hmem]
     exact_mod_cast (by omega : k = 1 + (k - 1))
 
-/-- States the theorem `truncate_intrinsicRamificationNumberOfUniqueExtension_eq_zero_of_not_mem_inertia`. -/
+/-- States the theorem
+`truncate_intrinsicRamificationNumberOfUniqueExtension_eq_zero_of_not_mem_inertia`. -/
 theorem truncate_intrinsicRamificationNumberOfUniqueExtension_eq_zero_of_not_mem_inertia
     (huniq :
       RamificationTheory.DiscreteValuationField.DVF.HasUniqueValuationExtension.{u, v, w, x, x}
@@ -191,7 +197,8 @@ theorem truncate_intrinsicRamificationNumberOfUniqueExtension_eq_zero_of_not_mem
   simp [truncateENatAtDVF,
     min_eq_left (show (0 : ℝ) ≤ s + 1 by linarith)]
 
-/-- States the theorem `sum_truncate_intrinsicRamificationNumberOfUniqueExtension_eq_sum_inertia`. -/
+/-- States the theorem
+`sum_truncate_intrinsicRamificationNumberOfUniqueExtension_eq_sum_inertia`. -/
 theorem sum_truncate_intrinsicRamificationNumberOfUniqueExtension_eq_sum_inertia
     (huniq :
       RamificationTheory.DiscreteValuationField.DVF.HasUniqueValuationExtension.{u, v, w, x, x}
@@ -228,7 +235,8 @@ theorem sum_truncate_intrinsicRamificationNumberOfUniqueExtension_eq_sum_inertia
             (s := (Finset.univ : Finset Gal(L/K))) q
             (p := fun sigma : Gal(L/K) => sigma ∈ H)).symm
 
-/-- States the theorem `sum_inertia_truncate_intrinsicRamificationNumberOfUniqueExtension_eq_intrinsic`. -/
+/-- States the theorem
+`sum_inertia_truncate_intrinsicRamificationNumberOfUniqueExtension_eq_intrinsic`. -/
 theorem sum_inertia_truncate_intrinsicRamificationNumberOfUniqueExtension_eq_intrinsic
     (huniq :
       RamificationTheory.DiscreteValuationField.DVF.HasUniqueValuationExtension.{u, v, w, x, x}
@@ -253,7 +261,8 @@ theorem sum_inertia_truncate_intrinsicRamificationNumberOfUniqueExtension_eq_int
       (intrinsicRamificationNumberOfUniqueExtension
         (base := base) (target := target) huniq (sigma : Gal(L/K))) (s + 1)) =
     (Nat.card (F.lower 0) : ℝ) +
-      (∑ sigma : F.lower 0, ((RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.truncatedLowerDepth F) m sigma : ℝ)) +
+      (∑ sigma : F.lower 0,
+        ((RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.truncatedLowerDepth F) m sigma : ℝ)) +
       (s - m) * Nat.card (F.lower (m + 1))
   simp_rw [truncate_intrinsicRamificationNumberOfUniqueExtension_eq_intrinsic_summand
     (base := base) (target := target) huniq m hms hsm]
@@ -261,9 +270,11 @@ theorem sum_inertia_truncate_intrinsicRamificationNumberOfUniqueExtension_eq_int
       (∑ sigma : F.lower 0,
         (if (sigma : Gal(L/K)) ∈ F.lower (m + 1) then (1 : ℝ) else 0)) =
         Nat.card (F.lower (m + 1)) := by
-    exact_mod_cast ((RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.card_lower_succ_eq_sum_indicator F) m).symm
+    exact_mod_cast
+      ((RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.card_lower_succ_eq_sum_indicator F) m).symm
   change Finset.sum Finset.univ (fun sigma : F.lower 0 =>
-      (1 : ℝ) + ((RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.truncatedLowerDepth F) m sigma : ℝ) +
+      (1 : ℝ) +
+        ((RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.truncatedLowerDepth F) m sigma : ℝ) +
         (s - m) *
           (if (sigma : Gal(L/K)) ∈ F.lower (m + 1) then 1 else 0)) = _
   rw [Finset.sum_add_distrib, Finset.sum_add_distrib]
@@ -272,7 +283,8 @@ theorem sum_inertia_truncate_intrinsicRamificationNumberOfUniqueExtension_eq_int
   simp
 
 /-- The Herbrand-function sum formula under the stated discretely valued field
-assumptions.  The generator from the monogenic integral-generator theorem is internal to the canonical
+assumptions.  The generator from the monogenic integral-generator theorem is internal to the
+  canonical
 ramification number, so this endpoint has no generator hypothesis. -/
 theorem herbrandFunctionOfUniqueExtension_eq_intrinsicRamificationNumber_sum
     (huniq :
@@ -289,7 +301,9 @@ theorem herbrandFunctionOfUniqueExtension_eq_intrinsicRamificationNumber_sum
   classical
   let F := lowerRamificationFiltrationOfUniqueExtension
     (base := base) (target := target) huniq
-  change (RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction F) s =
+  change
+    (RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction
+    F) s =
     (1 / Nat.card (F.lower 0) : ℝ) *
       (∑ sigma : Gal(L/K), truncateENatAtDVF
         (intrinsicRamificationNumberOfUniqueExtension

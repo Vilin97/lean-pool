@@ -153,7 +153,6 @@ private noncomputable def localHilbertRightPowerClassHom
       exact (KummerTheory.mem_nthRootsSubgroup_iff K).mp
         (maximalLocalKummerPairingRightHom K n hnK hmu a c).property)
 
-@[simp]
 private theorem localHilbertRightPowerClassHom_mk
     (n : ℕ+) (hnK : ((n : ℕ) : K) ≠ 0)
     (hmu : (primitiveRoots (n : ℕ) K).Nonempty) (a b : Kˣ) :
@@ -231,7 +230,6 @@ noncomputable def localHilbertPairing
 
 /-- Evaluation of the descended pairing agrees with the original local
 Hilbert symbol on representatives. -/
-@[simp]
 theorem localHilbertPairing_apply
     (n : ℕ+) (hnK : ((n : ℕ) : K) ≠ 0)
     (hmu : (primitiveRoots (n : ℕ) K).Nonempty) (a b : Kˣ) :

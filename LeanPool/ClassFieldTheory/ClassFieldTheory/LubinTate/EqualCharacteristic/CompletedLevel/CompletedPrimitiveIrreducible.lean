@@ -32,6 +32,8 @@ open LocalFieldTheory.DiscreteValuationField
 
 variable {K : Type u} [Field K]
 
+/-- The completed base carries the Laurent-series algebra structure used in the
+primitive-polynomial irreducibility argument. -/
 noncomputable local instance equalCharacteristicCompletedPrimitiveIrreducibleBaseAlgebra
     (F : LocalField.{u, v} K) :
     Algebra F.residueField⸨X⸩
@@ -195,7 +197,8 @@ theorem equalCharacteristicCompletedPrimitivePolynomial_irreducible
         ((equalCharacteristicCompletedIntegralPrimitivePolynomial F n).map
           (algebraMap (AlgebraicClosure F.residueField)⟦X⟧
             (equalCharacteristicCompletedUnramifiedField F.residueField))) :=
-    (equalCharacteristicCompletedIntegralPrimitivePolynomial_monic F n).irreducible_iff_irreducible_map_fraction_map.mp
+    (equalCharacteristicCompletedIntegralPrimitivePolynomial_monic F
+      n).irreducible_iff_irreducible_map_fraction_map.mp
       (equalCharacteristicCompletedIntegralPrimitivePolynomial_irreducible F n)
   rwa [equalCharacteristicCompletedIntegralPrimitivePolynomial_map] at hmap
 

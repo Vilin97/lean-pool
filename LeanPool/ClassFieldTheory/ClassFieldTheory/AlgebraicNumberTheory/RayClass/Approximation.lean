@@ -14,8 +14,7 @@ finite places one may prescribe an arbitrary open multiplicative coset and
 move a given idele into all of those cosets by a single principal idele.
 -/
 
-open scoped NumberField Classical
-open NumberField IsDedekindDomain
+open scoped NumberField open NumberField IsDedekindDomain
 
 noncomputable section
 
@@ -24,6 +23,7 @@ variable {K : Type*} [Field K] [NumberField K]
 
 namespace IdeleGroup
 
+open scoped Classical in
 /-- The full modulus whose finite part has exponent one exactly at the places
 of a finite set and whose infinite part is empty.  It lets the ray-class
 approximation space serve as an arbitrary finite-place approximation space. -/
@@ -38,6 +38,7 @@ noncomputable def modulusOfFinset
         intro v hv
         simpa using hv))
 
+open scoped Classical in
 @[simp]
 theorem modulusOfFinset_apply
     (S : Finset (HeightOneSpectrum (𝓞 K)))
@@ -46,6 +47,7 @@ theorem modulusOfFinset_apply
   classical
   rfl
 
+open scoped Classical in
 @[simp]
 theorem modulusOfFinset_support
     (S : Finset (HeightOneSpectrum (𝓞 K))) :
@@ -54,6 +56,7 @@ theorem modulusOfFinset_support
   ext v
   simp [modulusOfFinset, RayClass.Modulus.ofFinite]
 
+open scoped Classical in
 /-- The product of the prescribed finite local cosets and harmless
 nonzero cosets at the infinite places.  The latter ensure that the global
 approximating element is nonzero. -/
@@ -68,6 +71,7 @@ def openLocalCosetTarget
       RayClass.unitRatioSet
         (ContinuousMulEquiv.piUnits a.1 w) ⊤
 
+open scoped Classical in
 /-- Every coordinate of `openLocalCosetTarget` is open. -/
 theorem isOpen_openLocalCosetTarget
     (m : RayClass.Modulus K) (a : IdeleGroup K)
@@ -84,6 +88,7 @@ theorem isOpen_openLocalCosetTarget
           (ContinuousMulEquiv.piUnits a.1 w) ⊤)
       exact RayClass.isOpen_unitRatioSet _ _ isOpen_univ
 
+open scoped Classical in
 /-- The given idele supplies a point in the product of the prescribed
 local cosets. -/
 def openLocalCosetTargetPoint
@@ -94,6 +99,7 @@ def openLocalCosetTargetPoint
   | Sum.inr w =>
       (ContinuousMulEquiv.piUnits a.1 w : w.Completion)
 
+open scoped Classical in
 /-- The target product used for multiplicative weak approximation is
 nonempty. -/
 theorem openLocalCosetTargetPoint_mem
@@ -109,6 +115,7 @@ theorem openLocalCosetTargetPoint_mem
   | inr w =>
       exact RayClass.val_mem_unitRatioSet _ _
 
+open scoped Classical in
 /-- Multiplicative weak approximation at finitely many finite places.
 
 For arbitrary open subgroups `U_v ≤ K_vˣ` and an idele `a`, a single
@@ -172,6 +179,7 @@ theorem exists_principal_quotient_mem_openLocalSubgroups
   rw [hprincipal]
   exact hy
 
+open scoped Classical in
 /-- Finset-indexed form of multiplicative weak approximation. -/
 theorem exists_principal_quotient_mem_openLocalSubgroups_finset
     (S : Finset (HeightOneSpectrum (𝓞 K))) (a : IdeleGroup K)
@@ -197,6 +205,7 @@ theorem exists_principal_quotient_mem_openLocalSubgroups_finset
   have hv : v.1 ∈ m.finitePart.support := hm.symm ▸ v.2
   exact hx ⟨v.1, hv⟩
 
+open scoped Classical in
 /-- The product of prescribed open multiplicative cosets at every
 archimedean place and at the finite places in a modulus. -/
 def openAllLocalCosetTarget
@@ -212,6 +221,7 @@ def openAllLocalCosetTarget
       RayClass.unitRatioSet
         (IdeleGroup.infiniteComponent w a) (V w)
 
+open scoped Classical in
 /-- Every coordinate of the all-place multiplicative target is open. -/
 theorem isOpen_openAllLocalCosetTarget
     (m : RayClass.Modulus K) (a : IdeleGroup K)
@@ -235,6 +245,7 @@ theorem isOpen_openAllLocalCosetTarget
           (IdeleGroup.infiniteComponent w a) (V w))
       exact RayClass.isOpen_unitRatioSet _ _ (hV w)
 
+open scoped Classical in
 /-- The given idele supplies a point in the simultaneous all-place
 multiplicative target. -/
 theorem openLocalCosetTargetPoint_mem_all
@@ -253,6 +264,7 @@ theorem openLocalCosetTargetPoint_mem_all
   | inr w =>
       exact RayClass.val_mem_unitRatioSet _ _
 
+open scoped Classical in
 /-- Multiplicative weak approximation simultaneously at all
 archimedean places and at the finite support of a modulus.
 
@@ -351,6 +363,7 @@ theorem exists_principal_quotient_mem_openAllLocalSubgroups
     rw [hprincipal]
     exact hy
 
+open scoped Classical in
 /-- Finset-indexed simultaneous finite-and-infinite multiplicative weak
 approximation. -/
 theorem exists_principal_quotient_mem_openAllLocalSubgroups_finset
@@ -389,6 +402,7 @@ theorem exists_principal_quotient_mem_openAllLocalSubgroups_finset
   have hv : v.1 ∈ m.finitePart.support := hm.symm ▸ v.2
   exact hfinite ⟨v.1, hv⟩
 
+open scoped Classical in
 /-- A finite local family, extended by `1`, is a finite idele. -/
 def finiteIdeleOfFinset
     (S : Finset (HeightOneSpectrum (𝓞 K)))
@@ -409,6 +423,7 @@ def finiteIdeleOfFinset
   change f v ∈ (v.adicCompletionIntegers K).units
   simp [f, hv]
 
+open scoped Classical in
 @[simp]
 theorem finiteIdeleOfFinset_apply_mem
     (S : Finset (HeightOneSpectrum (𝓞 K)))
@@ -419,6 +434,7 @@ theorem finiteIdeleOfFinset_apply_mem
   change (if hv : v.1 ∈ S then a ⟨v.1, hv⟩ else 1) = a v
   exact dite_eq_left v.2
 
+open scoped Classical in
 @[simp]
 theorem finiteIdeleOfFinset_apply_notMem
     (S : Finset (HeightOneSpectrum (𝓞 K)))
@@ -430,6 +446,7 @@ theorem finiteIdeleOfFinset_apply_notMem
     (1 : (v.adicCompletion K)ˣ)
   exact dite_eq_right hv
 
+open scoped Classical in
 /-- The idele whose prescribed finite components are `a` and whose other
 finite and all infinite components are `1`. -/
 def ideleOfFiniteLocalFamily
@@ -438,6 +455,7 @@ def ideleOfFiniteLocalFamily
     IdeleGroup K :=
   (1, finiteIdeleOfFinset S a)
 
+open scoped Classical in
 @[simp]
 theorem ideleOfFiniteLocalFamily_finiteComponent
     (S : Finset (HeightOneSpectrum (𝓞 K)))
@@ -446,6 +464,7 @@ theorem ideleOfFiniteLocalFamily_finiteComponent
     (ideleOfFiniteLocalFamily S a).2 v.1 = a v :=
   finiteIdeleOfFinset_apply_mem S a v
 
+open scoped Classical in
 /-- The diagonal map from `Kˣ` to a finite product of local multiplicative
 quotients. -/
 def principalLocalQuotientMap
@@ -456,6 +475,7 @@ def principalLocalQuotientMap
     (QuotientGroup.mk' (U v)).comp
       ((finiteComponent v.1).comp (principalIdele K))
 
+open scoped Classical in
 @[simp]
 theorem principalLocalQuotientMap_apply
     (S : Finset (HeightOneSpectrum (𝓞 K)))
@@ -465,6 +485,7 @@ theorem principalLocalQuotientMap_apply
       QuotientGroup.mk' (U v) ((principalIdele K x).2 v.1) :=
   rfl
 
+open scoped Classical in
 /-- Multiplicative weak approximation is equivalently surjectivity of the
 diagonal map to every finite product of quotients by open local subgroups. -/
 theorem principalLocalQuotientMap_surjective

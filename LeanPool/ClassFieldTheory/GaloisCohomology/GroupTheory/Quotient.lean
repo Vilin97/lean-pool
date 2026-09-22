@@ -42,7 +42,6 @@ noncomputable def subgroupQuotientEquivQuotientOfSupEqTop
           rw [hSP]
           exact Subgroup.mem_top x)
 
-@[simp]
 theorem subgroupQuotientEquivQuotientOfSupEqTop_mk
     (S P : Subgroup G)
     (hSP : S ⊔ P = ⊤)
@@ -109,7 +108,6 @@ noncomputable def quotientSupCommutatorEquivMapAbelianization
     (QuotientGroup.quotientMulEquivOfEq hphiKer.symm).trans
       (QuotientGroup.quotientKerEquivOfSurjective phi hphiSurjective)
 
-@[simp]
 theorem quotientSupCommutatorEquivMapAbelianization_mk
     (H : Subgroup Gamma) (g : Gamma) :
     H.quotientSupCommutatorEquivMapAbelianization

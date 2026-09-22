@@ -125,7 +125,6 @@ theorem zHatReduction_surjective (n : ℕ) (hn : 0 < n) :
 Establishes the identity `zHatMulNat n ((Int.castRingHom ZHat) a) = (Int.castRingHom ZHat) ((n :
 ℤ) * a)`.
 -/
-@[simp]
 theorem zHatMulNat_int (n : ℕ) (a : ℤ) :
     zHatMulNat n ((Int.castRingHom ZHat) a) =
       (Int.castRingHom ZHat) ((n : ℤ) * a) := by
@@ -249,7 +248,6 @@ noncomputable def zHatDivide (n : ℕ) (hn : 0 < n) :
   (zHatMulNatRangeEquiv n hn).symm
 
 /-- Establishes the identity `zHatMulNat n (zHatDivide n hn y) = y.1`. -/
-@[simp]
 theorem zHatMulNat_zHatDivide (n : ℕ) (hn : 0 < n)
     (y : (zHatMulNat n).toAddMonoidHom.range) :
     zHatMulNat n (zHatDivide n hn y) = y.1 := by
@@ -258,7 +256,6 @@ theorem zHatMulNat_zHatDivide (n : ℕ) (hn : 0 < n)
   exact congrArg Subtype.val ((zHatMulNatRangeEquiv n hn).apply_symm_apply y)
 
 /-- Establishes the identity `zHatDivide n hn ⟨zHatMulNat n x, ⟨x, rfl⟩⟩ = x`. -/
-@[simp]
 theorem zHatDivide_zHatMulNat (n : ℕ) (hn : 0 < n) (x : ZHat) :
     zHatDivide n hn
       ⟨zHatMulNat n x, ⟨x, rfl⟩⟩ = x := by

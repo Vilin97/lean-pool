@@ -14,7 +14,7 @@ base-change realization is included as the endpoint used by cyclotomic
 reciprocity.
 -/
 
-open scoped BigOperators Classical NumberField NumberField.LiesOver
+open scoped BigOperators NumberField NumberField.LiesOver
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -30,6 +30,7 @@ variable
     [Algebra K L] [FiniteDimensional K L]
 
 omit [NumberField L] in
+open scoped Classical in
 private theorem infinitePlaceCompletionMap_isometry
     (v₀ : InfinitePlace K)
     (W : InfinitePlace L)
@@ -45,6 +46,7 @@ private theorem infinitePlaceCompletionMap_isometry
         (InfinitePlace.Completion.isometryEquivCompletion v₀).isometry)
 
 omit [NumberField L] in
+open scoped Classical in
 /-- Mapping a unit along an infinite-place completion map preserves its
 positive norm. -/
 private theorem nnnormUnitHom_infinitePlaceCompletionMap
@@ -71,6 +73,7 @@ private theorem nnnormUnitHom_infinitePlaceCompletionMap
           (v := v₀) (w := W)))
       (x : v₀.Completion)
 
+open scoped Classical in
 /-- The fiber of restriction of infinite places is the set of places
 lying over the chosen base place. -/
 private noncomputable def infinitePlaceFiberEquivPlacesOver
@@ -89,6 +92,7 @@ private noncomputable def infinitePlaceFiberEquivPlacesOver
   right_inv W := Subtype.ext rfl
 
 omit [NumberField K] [NumberField L] [FiniteDimensional K L] in
+open scoped Classical in
 /-- The archimedean multiplicity upstairs is the base multiplicity
 times the local inertia degree. -/
 private theorem infinitePlace_mult_eq_base_mult_mul_inertiaDeg
@@ -133,6 +137,7 @@ private theorem infinitePlace_mult_eq_base_mult_mul_inertiaDeg
         ⟨hW, hUnramified⟩]
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 /-- The inertia degrees in a restriction fiber sum to the global
 extension degree. -/
 private theorem infinitePlaceFiber_inertiaDeg_sum
@@ -168,6 +173,7 @@ private theorem infinitePlaceFiber_inertiaDeg_sum
           K L v₀
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 /-- The total archimedean multiplicity in a restriction fiber is the
 base multiplicity times the extension degree. -/
 private theorem infinitePlaceFiber_mult_sum
@@ -200,6 +206,7 @@ private theorem infinitePlaceFiber_mult_sum
       rw [infinitePlaceFiber_inertiaDeg_sum
         (K := K) (L := L) v₀]
 
+open scoped Classical in
 /-- Scalar extension raises the archimedean idele norm to the degree of
 the extension. -/
 theorem archimedeanNorm_extension
@@ -318,6 +325,7 @@ theorem archimedeanNorm_extension
             nnnormUnitHom v₀.Completion
               (infiniteComponent v₀ a) ^ v₀.mult)
 
+open scoped Classical in
 /-- Scalar extension raises the absolute idele norm to the degree of the
 number-field extension. -/
 theorem absoluteNorm_extension
@@ -341,6 +349,7 @@ theorem absoluteNorm_extension
             Module.finrank K L := by
       rw [mul_pow]
 
+open scoped Classical in
 /-- If the finite part of a rational idele is trivial, then its scalar
 extension has absolute norm equal to the extension degree power of the
 original absolute norm. -/

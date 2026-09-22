@@ -41,7 +41,6 @@ abbrev decompositionGroup
 
 /-- Membership in the decomposition group is exactly stabilization of the prime
 ideal. -/
-@[simp]
 theorem mem_decompositionGroup_iff
     {P : Ideal B} {G : Type*} [Group G] [MulSemiringAction G B] {σ : G} :
     σ ∈ decompositionGroup P G ↔ σ • P = P :=
@@ -55,7 +54,6 @@ abbrev inertiaGroup
   P.toAddSubgroup.inertia G
 
 /-- Membership in the inertia group is trivial action on the residue ring. -/
-@[simp]
 theorem mem_inertiaGroup_iff
     {P : Ideal B} {G : Type*} [Group G] [MulSemiringAction G B] {σ : G} :
     σ ∈ inertiaGroup P G ↔ ∀ x : B, σ • x - x ∈ P :=
@@ -119,7 +117,7 @@ theorem dedekindRamification_ramificationIdx_eq
 /-- prime-decomposition theory: in the Galois case the inertia degree is
 independent of the prime above `p`. -/
 theorem dedekindRamification_inertiaDeg_eq
-    (p : Ideal A) [p.IsMaximal] (P Q : Ideal B)
+    (p : Ideal A) (P Q : Ideal B)
     [P.IsPrime] [P.LiesOver p] [Q.IsPrime] [Q.LiesOver p]
     (G : Type*) [Group G] [Finite G] [MulSemiringAction G B]
     [IsGaloisGroup G A B] :
@@ -129,7 +127,7 @@ theorem dedekindRamification_inertiaDeg_eq
 
 /-- Decomposition and inertia groups satisfy:
 the primes above `p` are identified with the cosets `G/G_P`. -/
-noncomputable def dedekindDecomposition_primesOverEquivQuotientDecompositionGroup
+noncomputable def dedekindDecompositionPrimesOverEquivQuotientDecompositionGroup
     (p : Ideal A) (P : Ideal B) [P.IsPrime] [P.LiesOver p]
     (G : Type*) [Group G] [Finite G] [MulSemiringAction G B]
     [IsGaloisGroup G A B] :
@@ -265,7 +263,7 @@ theorem dedekindRamification_residueAction_shortExact
 /-- The localization and decomposition comparison gives:
 the quotient of the decomposition group by inertia is the residue Galois group.
 -/
-def dedekindRamification_decompositionQuotientInertiaEquivResidueGalois
+def dedekindRamificationDecompositionQuotientInertiaEquivResidueGalois
     (p : Ideal A) (P : Ideal B) [P.IsPrime] [P.LiesOver p]
     (G : Type*) [Group G] [Finite G] [MulSemiringAction G B] [SMulCommClass G A B]
     [Algebra.IsInvariant A B G] :
@@ -301,7 +299,7 @@ theorem dedekindRamification_residueAction_bijective_of_inertiaGroup_eq_bot
 
 /-- A trivial-inertia special case:
 when `I_P = 1`, the residue Galois group is isomorphic to `G_P`. -/
-noncomputable def dedekindRamification_decompositionGroupEquivResidueGalois_of_inertiaGroup_eq_bot
+noncomputable def dedekindRamificationDecompositionGroupEquivResidueGaloisOfInertiaGroupEqBot
     (p : Ideal A) (P : Ideal B) [P.IsPrime] [P.LiesOver p]
     (G : Type*) [Group G] [Finite G] [MulSemiringAction G B] [SMulCommClass G A B]
     [Algebra.IsInvariant A B G] (hI : inertiaGroup P G = ⊥) :
@@ -313,13 +311,13 @@ noncomputable def dedekindRamification_decompositionGroupEquivResidueGalois_of_i
 /-- A trivial-inertia special case:
 when `I_P = 1`, the residue Galois group embeds into `G` through the
 decomposition group. -/
-noncomputable def dedekindRamification_residueGaloisEmbeddingIntoG_of_inertiaGroup_eq_bot
+noncomputable def dedekindRamificationResidueGaloisEmbeddingIntoGOfInertiaGroupEqBot
     (p : Ideal A) (P : Ideal B) [P.IsPrime] [P.LiesOver p]
     (G : Type*) [Group G] [Finite G] [MulSemiringAction G B] [SMulCommClass G A B]
     [Algebra.IsInvariant A B G] (hI : inertiaGroup P G = ⊥) :
     ((B ⧸ P) ≃ₐ[A ⧸ p] B ⧸ P) →* G :=
   (decompositionGroup P G).subtype.comp
-    (dedekindRamification_decompositionGroupEquivResidueGalois_of_inertiaGroup_eq_bot
+    (dedekindRamificationDecompositionGroupEquivResidueGaloisOfInertiaGroupEqBot
       p P G hI).symm.toMonoidHom
 
 /-- The residue-Galois embedding into `G` from the preceding declaration is
@@ -329,12 +327,12 @@ theorem dedekindRamification_residueGaloisEmbeddingIntoG_of_inertiaGroup_eq_bot_
     (G : Type*) [Group G] [Finite G] [MulSemiringAction G B] [SMulCommClass G A B]
     [Algebra.IsInvariant A B G] (hI : inertiaGroup P G = ⊥) :
     Function.Injective
-      (dedekindRamification_residueGaloisEmbeddingIntoG_of_inertiaGroup_eq_bot p P G hI) := by
+      (dedekindRamificationResidueGaloisEmbeddingIntoGOfInertiaGroupEqBot p P G hI) := by
   intro σ τ hστ
-  apply (dedekindRamification_decompositionGroupEquivResidueGalois_of_inertiaGroup_eq_bot
+  apply (dedekindRamificationDecompositionGroupEquivResidueGaloisOfInertiaGroupEqBot
     p P G hI).symm.injective
   exact Subtype.ext <| by
-    simpa [dedekindRamification_residueGaloisEmbeddingIntoG_of_inertiaGroup_eq_bot] using hστ
+    simpa [dedekindRamificationResidueGaloisEmbeddingIntoGOfInertiaGroupEqBot] using hστ
 
 
 
@@ -476,7 +474,7 @@ theorem dedekindRamification_decompositionQuotientInertia_card_eq_inertiaDeg
         Nat.card ((B ⧸ P) ≃ₐ[A ⧸ p] B ⧸ P) := by
       exact
         Nat.card_congr
-          (dedekindRamification_decompositionQuotientInertiaEquivResidueGalois
+          (dedekindRamificationDecompositionQuotientInertiaEquivResidueGalois
             (A := A) (B := B) p P G).toEquiv
     _ = Module.finrank (A ⧸ p) (B ⧸ P) := by
       simpa using (IsGalois.card_aut_eq_finrank (F := A ⧸ p) (E := B ⧸ P))

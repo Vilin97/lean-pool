@@ -101,7 +101,8 @@ theorem decompositionGroupRestriction_restrictAutomorphismScalars_injective :
 does not change the action on the chosen valuation of `L`. -/
 theorem decompositionGroupRestriction_mem_absoluteValueDecompositionGroup_restrictScalars_iff
     (w : AbsoluteValue L ℝ) (σ : L ≃ₐ[M] L) :
-    RamificationTheory.HilbertRamification.ValuationSubring.restrictAutomorphismScalars (K := K) (M := M) σ ∈
+    RamificationTheory.HilbertRamification.ValuationSubring.restrictAutomorphismScalars (K := K)
+      (M := M) σ ∈
         absoluteValueDecompositionGroup K w ↔
       σ ∈ absoluteValueDecompositionGroup M w :=
   Iff.rfl
@@ -112,7 +113,8 @@ inside `G(L/K)`, the decomposition group over `M` is
 theorem decompositionGroupRestriction_absoluteValueDecompositionGroup_range_eq_inf
     (w : AbsoluteValue L ℝ) :
     Subgroup.map
-        (RamificationTheory.HilbertRamification.ValuationSubring.restrictAutomorphismScalars (K := K) (M := M))
+        (RamificationTheory.HilbertRamification.ValuationSubring.restrictAutomorphismScalars (K
+          := K) (M := M))
         (absoluteValueDecompositionGroup M w) =
       absoluteValueDecompositionGroup K w ⊓
         (RamificationTheory.HilbertRamification.ValuationSubring.restrictAutomorphismScalars

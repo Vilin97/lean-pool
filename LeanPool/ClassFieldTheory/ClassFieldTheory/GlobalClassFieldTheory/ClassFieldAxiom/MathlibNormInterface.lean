@@ -35,7 +35,7 @@ private theorem isFieldNorm_iff_mem_globalFieldNormSubgroup
 private theorem isNormAtFinitePlace_iff
     (K L : Type)
     [Field K] [NumberField K]
-    [Field L] [NumberField L] [Algebra K L]
+    [Field L] [Algebra K L]
     [FiniteDimensional K L] [IsGalois K L]
     (w : HeightOneSpectrum (𝓞 K)) (x : Kˣ) :
     ClassFieldTheory.IsNormAtFinitePlace K L w x ↔
@@ -68,7 +68,7 @@ private theorem isNormAtFinitePlace_iff
 private theorem isNormAtInfinitePlace_iff
     (K L : Type)
     [Field K] [NumberField K]
-    [Field L] [NumberField L] [Algebra K L]
+    [Field L] [Algebra K L]
     [FiniteDimensional K L]
     (w : InfinitePlace K) (x : Kˣ) :
     ClassFieldTheory.IsNormAtInfinitePlace K L w x ↔
@@ -139,7 +139,7 @@ private theorem isEverywhereLocalNorm_iff_mem_everywhereLocalFieldNormSubgroup
 private theorem norm_includeRight
     (K L A : Type)
     [Field K] [Field L] [Algebra K L] [FiniteDimensional K L]
-    [CommRing A] [Algebra K A] [Nontrivial A]
+    [CommRing A] [Algebra K A]
     (y : L) :
     Algebra.norm A
         (Algebra.TensorProduct.includeRight (R := K) (A := A) (B := L) y) =
@@ -160,7 +160,7 @@ extension to any completion.  No Galois hypothesis is needed. -/
 theorem globalNorm_isEverywhereLocalNorm
     (K L : Type)
     [Field K] [NumberField K]
-    [Field L] [NumberField L] [Algebra K L]
+    [Field L] [Algebra K L]
     [FiniteDimensional K L]
     (x : Kˣ) :
     ClassFieldTheory.IsFieldNorm K L x →

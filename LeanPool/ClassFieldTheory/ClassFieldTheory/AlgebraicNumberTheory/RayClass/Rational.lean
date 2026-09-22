@@ -21,25 +21,31 @@ positive generator of an ideal prime to this modulus gives the explicit
 isomorphism with `(ZMod m)ˣ`.
 -/
 
-open scoped NumberField Classical
-open NumberField IsDedekindDomain
+open scoped NumberField open NumberField IsDedekindDomain
 
 noncomputable section
 
 
 namespace RayClass
 
+open scoped Classical in
 local instance rationalRingOfIntegersIsPrincipalIdealRing :
     IsPrincipalIdealRing (𝓞 ℚ) :=
   IsPrincipalIdealRing.of_surjective
     Rat.ringOfIntegersEquiv.symm
     Rat.ringOfIntegersEquiv.symm.surjective
 
+attribute [local instance] rationalRingOfIntegersIsPrincipalIdealRing
+
+open scoped Classical in
 local instance rationalNatGeneratorPrimeFact
     (v : HeightOneSpectrum (𝓞 ℚ)) :
     Fact (Nat.Prime (Rat.HeightOneSpectrum.natGenerator v)) :=
   ⟨Rat.HeightOneSpectrum.prime_natGenerator v⟩
 
+attribute [local instance] rationalNatGeneratorPrimeFact
+
+open scoped Classical in
 local instance rationalPrimesEquivPrimeFact
     (v : HeightOneSpectrum (𝓞 ℚ)) :
     Fact
@@ -49,17 +55,22 @@ local instance rationalPrimesEquivPrimeFact
   ⟨(Rat.HeightOneSpectrum.primesEquiv
     (R := 𝓞 ℚ) v).property⟩
 
+attribute [local instance] rationalPrimesEquivPrimeFact
+
+open scoped Classical in
 /-- The height-one prime of `𝓞 ℚ` associated with a natural prime. -/
 noncomputable abbrev rationalPrime (p : Nat.Primes) :
     HeightOneSpectrum (𝓞 ℚ) :=
   (Rat.HeightOneSpectrum.primesEquiv (R := 𝓞 ℚ)).symm p
 
+open scoped Classical in
 @[simp]
 theorem natGenerator_rationalPrime (p : Nat.Primes) :
     Rat.HeightOneSpectrum.natGenerator (rationalPrime p) = p := by
   exact congrArg Subtype.val
     ((Rat.HeightOneSpectrum.primesEquiv (R := 𝓞 ℚ)).apply_symm_apply p)
 
+open scoped Classical in
 theorem rational_natGenerator_injective :
     Function.Injective
       (Rat.HeightOneSpectrum.natGenerator :
@@ -68,6 +79,7 @@ theorem rational_natGenerator_injective :
   apply (Rat.HeightOneSpectrum.primesEquiv (R := 𝓞 ℚ)).injective
   exact Subtype.ext hvw
 
+open scoped Classical in
 /-- The finite part of the modulus `(m)` of `ℚ`.  At the prime over `p` it has
 exponent `m.factorization p`. The later equivalences use the hypothesis
 `0 < m`; the definition itself is harmless at `m = 0`.
@@ -78,6 +90,7 @@ noncomputable def rationalFiniteModulus (m : ℕ) : FiniteModulus ℚ :=
     m.factorization
     rational_natGenerator_injective.injOn
 
+open scoped Classical in
 @[simp]
 theorem rationalFiniteModulus_apply
     (m : ℕ) (v : HeightOneSpectrum (𝓞 ℚ)) :
@@ -85,11 +98,13 @@ theorem rationalFiniteModulus_apply
       m.factorization (Rat.HeightOneSpectrum.natGenerator v) := by
   rw [rationalFiniteModulus, Finsupp.comapDomain_apply]
 
+open scoped Classical in
 /-- The full rational ray modulus has the finite part `(m)` and positivity
 at the unique real place. -/
 noncomputable def rationalModulus (m : ℕ) : Modulus ℚ :=
   Modulus.narrowOfFinite (rationalFiniteModulus m)
 
+open scoped Classical in
 @[simp]
 theorem rationalModulus_finitePart_apply
     (m : ℕ) (v : HeightOneSpectrum (𝓞 ℚ)) :
@@ -98,6 +113,7 @@ theorem rationalModulus_finitePart_apply
   rw [rationalModulus, Modulus.finitePart_narrowOfFinite,
     rationalFiniteModulus_apply]
 
+open scoped Classical in
 theorem mem_rationalFiniteModulus_support_iff
     {m : ℕ} (hm : m ≠ 0) (v : HeightOneSpectrum (𝓞 ℚ)) :
     v ∈ (rationalFiniteModulus m).support ↔
@@ -108,11 +124,13 @@ theorem mem_rationalFiniteModulus_support_iff
   · intro hdiv
     exact (Rat.HeightOneSpectrum.prime_natGenerator v).factorization_pos_of_dvd hm hdiv |>.ne'
 
+open scoped Classical in
 /-- The fractional ideal underlying a rational fractional-ideal unit. -/
 abbrev rationalFractionalIdeal (I : FractionalIdealGroup ℚ) :
     FractionalIdeal (nonZeroDivisors (𝓞 ℚ)) ℚ :=
   I
 
+open scoped Classical in
 /-- An arbitrary principal generator of a nonzero rational fractional
 ideal, before choosing its sign. -/
 private noncomputable def rawRationalIdealGenerator
@@ -121,6 +139,7 @@ private noncomputable def rawRationalIdealGenerator
     ((rationalFractionalIdeal I : FractionalIdeal
       (nonZeroDivisors (𝓞 ℚ)) ℚ) : Submodule (𝓞 ℚ) ℚ)
 
+open scoped Classical in
 private theorem rawRationalIdealGenerator_ne_zero
     (I : FractionalIdealGroup ℚ) :
     rawRationalIdealGenerator I ≠ 0 := by
@@ -130,6 +149,7 @@ private theorem rawRationalIdealGenerator_ne_zero
         (nonZeroDivisors (𝓞 ℚ)) ℚ) : Submodule (𝓞 ℚ) ℚ)).2
   exact FractionalIdeal.coeToSubmodule_ne_bot.mpr (Units.ne_zero I)
 
+open scoped Classical in
 /-- The unique positive generator of a nonzero rational fractional ideal. -/
 noncomputable def positiveRationalIdealGenerator
     (I : FractionalIdealGroup ℚ) : ℚ :=
@@ -138,6 +158,7 @@ noncomputable def positiveRationalIdealGenerator
   else
     -rawRationalIdealGenerator I
 
+open scoped Classical in
 theorem positiveRationalIdealGenerator_pos
     (I : FractionalIdealGroup ℚ) :
     0 < positiveRationalIdealGenerator I := by
@@ -148,6 +169,7 @@ theorem positiveRationalIdealGenerator_pos
       (lt_of_le_of_ne (not_lt.mp h)
         (rawRationalIdealGenerator_ne_zero I))
 
+open scoped Classical in
 theorem rationalFractionalIdeal_eq_span_positiveGenerator
     (I : FractionalIdealGroup ℚ) :
     rationalFractionalIdeal I =
@@ -169,6 +191,7 @@ theorem rationalFractionalIdeal_eq_span_positiveGenerator
         refine ⟨-1, ?_⟩
         simp
 
+open scoped Classical in
 /-- Positive rational generators of the same principal fractional ideal
 are equal. -/
 theorem eq_of_spanSingleton_eq_of_pos
@@ -186,6 +209,7 @@ theorem eq_of_spanSingleton_eq_of_pos
       simpa [Units.smul_def, Algebra.smul_def, hu1] using hu
     linarith
 
+open scoped Classical in
 @[simp]
 theorem positiveRationalIdealGenerator_one :
     positiveRationalIdealGenerator (1 : FractionalIdealGroup ℚ) = 1 := by
@@ -194,6 +218,7 @@ theorem positiveRationalIdealGenerator_one :
   rw [← rationalFractionalIdeal_eq_span_positiveGenerator]
   exact FractionalIdeal.spanSingleton_one.symm
 
+open scoped Classical in
 theorem positiveRationalIdealGenerator_mul
     (I J : FractionalIdealGroup ℚ) :
     positiveRationalIdealGenerator (I * J) =
@@ -209,12 +234,14 @@ theorem positiveRationalIdealGenerator_mul
     ← rationalFractionalIdeal_eq_span_positiveGenerator]
   rfl
 
+open scoped Classical in
 /-- The positive generator, regarded as a nonzero rational number. -/
 noncomputable def positiveRationalIdealGeneratorUnit
     (I : FractionalIdealGroup ℚ) : ℚˣ :=
   Units.mk0 (positiveRationalIdealGenerator I)
     (ne_of_gt (positiveRationalIdealGenerator_pos I))
 
+open scoped Classical in
 @[simp]
 theorem positiveRationalIdealGeneratorUnit_val
     (I : FractionalIdealGroup ℚ) :
@@ -222,6 +249,7 @@ theorem positiveRationalIdealGeneratorUnit_val
       positiveRationalIdealGenerator I :=
   rfl
 
+open scoped Classical in
 theorem toPrincipalIdeal_positiveRationalIdealGeneratorUnit
     (I : FractionalIdealGroup ℚ) :
     toPrincipalIdeal (𝓞 ℚ) ℚ
@@ -234,6 +262,7 @@ theorem toPrincipalIdeal_positiveRationalIdealGeneratorUnit
       rationalFractionalIdeal I
   exact (rationalFractionalIdeal_eq_span_positiveGenerator I).symm
 
+open scoped Classical in
 @[simp]
 theorem positiveRationalIdealGeneratorUnit_one :
     positiveRationalIdealGeneratorUnit
@@ -241,6 +270,7 @@ theorem positiveRationalIdealGeneratorUnit_one :
   apply Units.ext
   exact positiveRationalIdealGenerator_one
 
+open scoped Classical in
 theorem positiveRationalIdealGeneratorUnit_mul
     (I J : FractionalIdealGroup ℚ) :
     positiveRationalIdealGeneratorUnit (I * J) =
@@ -249,6 +279,7 @@ theorem positiveRationalIdealGeneratorUnit_mul
   apply Units.ext
   exact positiveRationalIdealGenerator_mul I J
 
+open scoped Classical in
 /-- An element of `WithZero (Multiplicative ℤ)` with logarithm zero is
 one. -/
 theorem withZero_eq_one_of_log_eq_zero
@@ -261,6 +292,7 @@ theorem withZero_eq_one_of_log_eq_zero
     _ = WithZero.exp 0 := congrArg WithZero.exp hlog
     _ = 1 := rfl
 
+open scoped Classical in
 /-- Zero principal-ideal exponent at a rational finite place forces
 valuation one. -/
 theorem valuation_eq_one_of_principal_count_eq_zero
@@ -278,6 +310,7 @@ theorem valuation_eq_one_of_principal_count_eq_zero
     (v.valuation ℚ).ne_zero_of_unit x
   exact withZero_eq_one_of_log_eq_zero hvne hlog
 
+open scoped Classical in
 /-- A rational prime with zero principal-ideal exponent does not divide
 the denominator. -/
 theorem not_dvd_den_of_principal_count_eq_zero
@@ -298,6 +331,7 @@ theorem not_dvd_den_of_principal_count_eq_zero
   apply Rat.padicValuation_le_one_iff.mp
   exact le_of_eq hpval
 
+open scoped Classical in
 /-- A rational prime with zero principal-ideal exponent does not divide
 the numerator. -/
 theorem not_dvd_num_of_principal_count_eq_zero
@@ -327,6 +361,7 @@ theorem not_dvd_num_of_principal_count_eq_zero
     (Int.padicValuation_eq_one_iff.mp hpval)
       (Int.natCast_dvd.mpr hpdiv)
 
+open scoped Classical in
 theorem positiveGenerator_den_coprime
     {m : ℕ} (hm : m ≠ 0)
     (I : primeToModulusIdeals (rationalModulus m)) :
@@ -355,6 +390,7 @@ theorem positiveGenerator_den_coprime
         rw [hvgen]
         exact hpden)
 
+open scoped Classical in
 theorem positiveGenerator_num_coprime
     {m : ℕ} (hm : m ≠ 0)
     (I : primeToModulusIdeals (rationalModulus m)) :
@@ -384,6 +420,7 @@ theorem positiveGenerator_num_coprime
         rw [hvgen]
         exact hpnum)
 
+open scoped Classical in
 /-- The numerator of a rational number as a residue-class unit. -/
 def rationalNumeratorResidueUnit
     (m : ℕ) (q : ℚ) (hq : Nat.Coprime q.num.natAbs m) :
@@ -391,6 +428,7 @@ def rationalNumeratorResidueUnit
   ZMod.unitOfIsCoprime q.num <| by
     simpa [Int.isCoprime_iff_nat_coprime] using hq
 
+open scoped Classical in
 /-- The denominator of a rational number as a residue-class unit. -/
 def rationalDenominatorResidueUnit
     (m : ℕ) (q : ℚ) (hq : Nat.Coprime q.den m) :
@@ -398,6 +436,7 @@ def rationalDenominatorResidueUnit
   ZMod.unitOfIsCoprime (q.den : ℤ) <| by
     simpa [Int.isCoprime_iff_nat_coprime] using hq
 
+open scoped Classical in
 /-- Reduction of a rational number whose numerator and denominator are
 both prime to `m`. -/
 def rationalResidueUnit
@@ -408,6 +447,7 @@ def rationalResidueUnit
   rationalNumeratorResidueUnit m q hnum *
     (rationalDenominatorResidueUnit m q hden)⁻¹
 
+open scoped Classical in
 /-- Rational residue units are independent of the chosen equality proof. -/
 theorem rationalResidueUnit_congr
     (m : ℕ) {q r : ℚ} (hqr : q = r)
@@ -420,6 +460,7 @@ theorem rationalResidueUnit_congr
   subst r
   rfl
 
+open scoped Classical in
 /-- Reduction of rational numbers prime to a modulus is multiplicative. -/
 theorem rationalResidueUnit_mul
     (m : ℕ) (q r : ℚ)
@@ -455,6 +496,7 @@ theorem rationalResidueUnit_mul
     _ = (Nq * Dq⁻¹) * (Nr * Dr⁻¹) := by
       simp [mul_comm, mul_left_comm, mul_assoc]
 
+open scoped Classical in
 /-- The rational residue unit of one is one. -/
 theorem rationalResidueUnit_one (m : ℕ) :
     rationalResidueUnit m 1 (by simp) (by simp) = 1 := by
@@ -462,6 +504,7 @@ theorem rationalResidueUnit_one (m : ℕ) :
   simp [rationalResidueUnit, rationalNumeratorResidueUnit,
     rationalDenominatorResidueUnit]
 
+open scoped Classical in
 /-- A rational residue unit is one exactly when its numerator and
 denominator are congruent modulo the modulus. -/
 theorem rationalResidueUnit_eq_one_iff_modEq
@@ -491,6 +534,7 @@ theorem rationalResidueUnit_eq_one_iff_modEq
     rw [hND']
     exact mul_inv_cancel D
 
+open scoped Classical in
 /-- Send an ideal prime to `(m)` to the residue class of its positive
 generator. -/
 noncomputable def primeToIdealResidueHom
@@ -550,6 +594,7 @@ noncomputable def primeToIdealResidueHom
           (positiveGenerator_den_coprime hm J)
           hprodnum hprodden
 
+open scoped Classical in
 @[simp]
 theorem primeToIdealResidueHom_apply
     (m : ℕ) (hm : m ≠ 0)
@@ -562,6 +607,7 @@ theorem primeToIdealResidueHom_apply
         (positiveGenerator_den_coprime hm I) :=
   rfl
 
+open scoped Classical in
 /-- A positive integer prime to the modulus defines a principal ideal in
 the prime-to-modulus ideal group. -/
 theorem principalNat_mem_primeToModulusIdeals
@@ -595,6 +641,7 @@ theorem principalNat_mem_primeToModulusIdeals
   rw [hvval]
   rfl
 
+open scoped Classical in
 /-- The positive generator of the principal ideal of a positive integer is
 that integer. -/
 theorem positiveGenerator_toPrincipalIdeal_nat
@@ -619,6 +666,7 @@ theorem positiveGenerator_toPrincipalIdeal_nat
     _ = FractionalIdeal.spanSingleton
         (nonZeroDivisors (𝓞 ℚ)) (a : ℚ) := rfl
 
+open scoped Classical in
 /-- The numerator residue unit of a positive natural cast is its residue
 unit. -/
 theorem rationalNumeratorResidueUnit_natCast
@@ -628,6 +676,7 @@ theorem rationalNumeratorResidueUnit_natCast
       (a : ZMod m) := by
   simp [rationalNumeratorResidueUnit]
 
+open scoped Classical in
 /-- The denominator residue unit of a positive natural cast is one. -/
 theorem rationalDenominatorResidueUnit_natCast
     (m a : ℕ) (hden : Nat.Coprime ((a : ℚ).den) m) :
@@ -635,6 +684,7 @@ theorem rationalDenominatorResidueUnit_natCast
   apply Units.ext
   simp [rationalDenominatorResidueUnit]
 
+open scoped Classical in
 /-- Rational reduction of a positive natural cast agrees with ordinary
 residue reduction. -/
 theorem rationalResidueUnit_natCast
@@ -653,6 +703,7 @@ theorem rationalResidueUnit_natCast
   rw [hden, inv_one, mul_one]
   exact rationalNumeratorResidueUnit_natCast m a hcop
 
+open scoped Classical in
 theorem primeToIdealResidueHom_surjective
     (m : ℕ) (hm : m ≠ 0) :
     Function.Surjective (primeToIdealResidueHom m hm) := by
@@ -702,6 +753,7 @@ theorem primeToIdealResidueHom_surjective
 
 /-! ### The local congruence condition over `ℚ` -/
 
+open scoped Classical in
 /-- The integral local unit attached to a rational principal idele
 component. -/
 def principalLocalIntegralUnit
@@ -716,6 +768,7 @@ def principalLocalIntegralUnit
     rw [hcomp]
     rw [HeightOneSpectrum.valuedAdicCompletion_eq_valuation', hx]⟩
 
+open scoped Classical in
 /-- The integral value underlying a rational principal local unit. -/
 def rationalLocalIntegralValue
     (v : HeightOneSpectrum (𝓞 ℚ))
@@ -724,6 +777,7 @@ def rationalLocalIntegralValue
   ((v.adicCompletionIntegers ℚ).toSubmonoid.unitsEquivUnitsType y :
     (v.adicCompletionIntegers ℚ)ˣ).1
 
+open scoped Classical in
 /-- The residue criterion for a rational principal local unit to lie in a
 higher-unit group. -/
 theorem rationalLocalHigherUnitMap_eq_one_iff
@@ -747,6 +801,7 @@ theorem rationalLocalHigherUnitMap_eq_one_iff
   exact Ideal.Quotient.mk_eq_mk_iff_sub_mem
     (I := M) (rationalLocalIntegralValue v y) 1
 
+open scoped Classical in
 /-- Coercing the integral local value recovers the principal finite
 component. -/
 theorem principalLocalIntegralValue_coe
@@ -765,6 +820,7 @@ theorem principalLocalIntegralValue_coe
   rw [IdeleGroup.finiteComponent_apply] at hcomp
   exact hcomp
 
+open scoped Classical in
 /-- The rational adic-completion equivalence maps powers of maximal
 ideals to the corresponding powers in the padic integers. -/
 theorem map_maximalIdeal_pow_padicIntEquiv
@@ -780,6 +836,7 @@ theorem map_maximalIdeal_pow_padicIntEquiv
   rw [Ideal.map_pow, IsLocalRing.map_ringEquiv_maximalIdeal,
     PadicInt.maximalIdeal_eq_span_p, Ideal.span_singleton_pow]
 
+open scoped Classical in
 /-- Membership of the local integral difference in a maximal-ideal power
 is equivalent to the corresponding padic divisibility condition. -/
 theorem rationalLocalIntegralValue_sub_mem_iff
@@ -820,6 +877,7 @@ theorem rationalLocalIntegralValue_sub_mem_iff
       (Ideal.apply_mem_of_equiv_iff
         (I := M) (f := e.toRingEquiv) (x := z - 1)).1 hez
 
+open scoped Classical in
 /-- The rational-prime equivalence identifies the local prime value with
 the natural prime generator. -/
 @[simp]
@@ -830,6 +888,7 @@ theorem primesEquiv_val_eq_natGenerator
       Rat.HeightOneSpectrum.natGenerator v :=
   rfl
 
+open scoped Classical in
 /-- A rational principal finite component lies in a higher-unit group
 exactly when its numerator and denominator satisfy the local congruence. -/
 theorem principalFiniteComponent_mem_localHigherUnitGroup_iff
@@ -850,6 +909,7 @@ theorem principalFiniteComponent_mem_localHigherUnitGroup_iff
   · intro hmap
     exact ⟨principalLocalIntegralUnit v x hx, rfl, hmap⟩
 
+open scoped Classical in
 /-- Multiplying a rational number by its denominator gives its numerator. -/
 theorem rational_den_mul_self_eq_num (q : ℚ) :
     (q.den : ℚ) * q = q.num := by
@@ -858,6 +918,7 @@ theorem rational_den_mul_self_eq_num (q : ℚ) :
   have h := (div_eq_iff hden).mp q.num_div_den
   simpa only [mul_comm] using h.symm
 
+open scoped Classical in
 /-- Multiplying the principal local integral value by the denominator
 gives the numerator in the completion. -/
 theorem principalLocalIntegralValue_den_mul
@@ -876,12 +937,14 @@ theorem principalLocalIntegralValue_den_mul
     congrArg (NumberField.FinitePlace.embedding v)
       (rational_den_mul_self_eq_num (x : ℚ))
 
+open scoped Classical in
 /-- The positive rational prime attached to a finite place. -/
 abbrev rationalPadicPrime
     (v : HeightOneSpectrum (𝓞 ℚ)) : ℕ :=
   ((Rat.HeightOneSpectrum.primesEquiv
     (R := 𝓞 ℚ) v : Nat.Primes) : ℕ)
 
+open scoped Classical in
 /-- In the local residue ring, the denominator times the principal value
 equals the numerator. -/
 theorem principalLocalResidue_den_mul
@@ -935,6 +998,7 @@ theorem principalLocalResidue_den_mul
   simpa only [algebraMap_int_eq, map_mul, map_natCast, map_intCast,
     Int.cast_natCast] using hz
 
+open scoped Classical in
 /-- Valuation one at a rational finite place implies that its prime does
 not divide the denominator. -/
 theorem not_dvd_den_of_valuation_eq_one
@@ -948,6 +1012,7 @@ theorem not_dvd_den_of_valuation_eq_one
     (Rat.HeightOneSpectrum.valuation_equiv_padicValuation v).eq_one_iff_eq_one.mp hx
   exact Rat.padicValuation_le_one_iff.mp (le_of_eq hpval)
 
+open scoped Classical in
 /-- Rational principal higher-unit membership is equivalent to a
 prime-power congruence of numerator and denominator. -/
 theorem principalLocalHigherUnit_iff_modEq
@@ -996,10 +1061,11 @@ theorem principalLocalHigherUnit_iff_modEq
     rw [hrel, mul_one]
     simpa only [Int.cast_natCast] using hnd
 
+open scoped Classical in
 /-- Congruences modulo pairwise coprime moduli combine to a congruence
 modulo their finite product. -/
 theorem intModEq_finset_prod_of_pairwise_coprime
-    {ι : Type*} [DecidableEq ι]
+    {ι : Type*}
     (s : Finset ι) (f : ι → ℕ)
     (hpair :
       ∀ i ∈ s, ∀ j ∈ s, i ≠ j →
@@ -1007,6 +1073,8 @@ theorem intModEq_finset_prod_of_pairwise_coprime
     {a b : ℤ}
     (hmod : ∀ i ∈ s, a ≡ b [ZMOD f i]) :
     a ≡ b [ZMOD ∏ i ∈ s, f i] := by
+  classical
+  let : DecidableEq ι := Classical.decEq ι
   induction s using Finset.induction_on with
   | empty =>
       exact Int.modEq_of_dvd (one_dvd (b - a))
@@ -1036,6 +1104,7 @@ theorem intModEq_finset_prod_of_pairwise_coprime
         · intro j hj
           exact hmod j (Finset.mem_insert_of_mem hj)
 
+open scoped Classical in
 /-- Congruences modulo every prime-power factor of a natural number
 combine to a congruence modulo that number. -/
 theorem intModEq_of_primePower_modEq
@@ -1062,6 +1131,7 @@ theorem intModEq_of_primePower_modEq
   rw [hmprod]
   exact hprod
 
+open scoped Classical in
 /-- Every prime-power factor determined by a factorization divides the
 original natural number. -/
 theorem primePower_factorization_dvd
@@ -1069,6 +1139,7 @@ theorem primePower_factorization_dvd
     p ^ m.factorization p ∣ m :=
   (hp.pow_dvd_iff_le_factorization hm).2 le_rfl
 
+open scoped Classical in
 /-- The infinite component of a rational principal idele is positive
 exactly when the rational number is positive. -/
 theorem principalIdele_infinite_mem_iff_pos
@@ -1114,6 +1185,7 @@ theorem principalIdele_infinite_mem_iff_pos
       eq_ratCast] using (show
       (0 : ℝ) < ((x : ℚ) : ℝ) by exact_mod_cast hx)
 
+open scoped Classical in
 /-- The principal idele of the positive generator satisfies the
 prime-to-modulus congruence condition exactly when its rational residue is
 one. -/
@@ -1190,6 +1262,7 @@ theorem principalIdele_positiveGenerator_mem_primeTo_iff_modEq
         Int.natCast_pow] using
         hmod.of_dvd (Int.natCast_dvd_natCast.mpr hpow)
 
+open scoped Classical in
 /-- Over `ℚ`, the ideal-theoretic ray subgroup consists precisely of the
 positive principal generators congruent to one modulo `m`. -/
 theorem mem_principalRayIdealSubgroup_iff_modEq
@@ -1263,6 +1336,7 @@ theorem mem_principalRayIdealSubgroup_iff_modEq
         toPrincipalIdeal_positiveRationalIdealGeneratorUnit
           (I : FractionalIdealGroup ℚ)⟩
 
+open scoped Classical in
 /-- The residue map on ideals prime to `(m)` has exactly the ray-principal
 ideals as its kernel. -/
 theorem primeToIdealResidueHom_ker
@@ -1280,6 +1354,7 @@ theorem primeToIdealResidueHom_ker
       (positiveGenerator_num_coprime hm I)
       (positiveGenerator_den_coprime hm I)
 
+open scoped Classical in
 /-- In ideal-theoretic form,
 the ray ideal class group of `ℚ` modulo `(m)` is `(ℤ/mℤ)ˣ`. -/
 noncomputable def idealRayClassGroupEquivZModUnits
@@ -1293,6 +1368,7 @@ noncomputable def idealRayClassGroupEquivZModUnits
         (primeToIdealResidueHom m hm)
         (primeToIdealResidueHom_surjective m hm))
 
+open scoped Classical in
 /-- In idelic form,
 the idelic ray class group of `ℚ` modulo `(m)` is `(ℤ/mℤ)ˣ`. -/
 noncomputable def rationalRayClassGroupEquivZModUnits

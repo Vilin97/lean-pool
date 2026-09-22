@@ -190,7 +190,7 @@ augmentation of each coefficient is the corresponding exponent sum.
 
 This is the source-producing form needed for Witt's relation matrix. -/
 theorem exists_rightFoxExpansion
-    {X : Type*} [Fintype X] [DecidableEq X]
+    {X : Type*} [Fintype X]
     (φ : FreeGroup X →* G) (w : FreeGroup X) :
     ∃ μ : X → IntegralGroupRing G,
       groupRingDelta (φ w) =
@@ -199,6 +199,8 @@ theorem exists_rightFoxExpansion
       ∀ i : X,
         augmentation G (μ i) =
           wordExponent w i := by
+  classical
+  let : DecidableEq X := Classical.decEq X
   induction w using FreeGroup.induction_on with
   | one =>
       refine ⟨0, ?_, ?_⟩
@@ -309,11 +311,13 @@ theorem presentationLinearMap_apply
 /-- Finite abelianization makes the relation lattice of a finite free
 presentation have full rank. -/
 theorem presentationKernel_finrank_eq
-    {X : Type*} [Fintype X]
+    {X : Type*} [Finite X]
     (φ : FreeGroup X →* G)
     [FiniteIndex (commutator G)] :
     Module.finrank ℤ (presentationLinearMap φ).ker =
       Module.finrank ℤ (FreeAbelianGroup X) := by
+  classical
+  let := Fintype.ofFinite X
   let : Fintype (Abelianization G) :=
     (commutator G).fintypeQuotientOfFiniteIndex
   let f := presentationLinearMap φ
@@ -992,7 +996,7 @@ end Presentation
 
 /-- The norm element of a finite group. -/
 def groupNormElement
-    (Q : Type*) [Group Q] [Finite Q] :
+    (Q : Type*) [Finite Q] :
     IntegralGroupRing Q :=
   letI := Fintype.ofFinite Q
   ∑ q : Q, MonoidAlgebra.single q 1
@@ -1025,11 +1029,13 @@ theorem abelianizationRingMap_transversalNormElement
 /-- A left-translation invariant element of a finite group ring is a
 scalar multiple of the norm element. -/
 theorem eq_coeff_one_smul_groupNormElement
-    {Q : Type*} [Group Q] [Fintype Q]
+    {Q : Type*} [Group Q] [Finite Q]
     (z : IntegralGroupRing Q)
     (hz : ∀ q : Q,
       MonoidAlgebra.single q 1 * z = z) :
     z = z.coeff 1 • groupNormElement Q := by
+  classical
+  let := Fintype.ofFinite Q
   classical
   ext q
   have hq :=
@@ -1121,12 +1127,16 @@ theorem exists_unit_foxDeterminantLift_eq_smul_section_norm :
   rw [hu, map_zsmul]
 
 include hφ in
-theorem generator_mul_section_norm_mem_mixed
+omit [DecidableEq X] [Fintype X] in
+theorem generator_mul_section_norm_mem_mixed [Finite X]
     (k : X) :
     groupRingDelta (φ (FreeGroup.of k)) *
         abelianizationRingSection
           (groupNormElement (Abelianization G)) ∈
       mixedAugmentationProduct (commutator G) := by
+  classical
+  let : DecidableEq X := Classical.decEq X
+  let := Fintype.ofFinite X
   obtain ⟨u, hu⟩ :=
     exists_unit_foxDeterminantLift_eq_smul_section_norm
       φ hφ
@@ -1171,12 +1181,16 @@ theorem generator_mul_section_norm_mem_mixed
   exact hmTwice
 
 include hφ in
-theorem word_mul_section_norm_mem_mixed
+omit [DecidableEq X] [Fintype X] in
+theorem word_mul_section_norm_mem_mixed [Finite X]
     (w : FreeGroup X) :
     groupRingDelta (φ w) *
         abelianizationRingSection
           (groupNormElement (Abelianization G)) ∈
       mixedAugmentationProduct (commutator G) := by
+  classical
+  let : DecidableEq X := Classical.decEq X
+  let := Fintype.ofFinite X
   let S : IntegralGroupRing G :=
     abelianizationRingSection
       (groupNormElement (Abelianization G))
@@ -1208,21 +1222,29 @@ theorem word_mul_section_norm_mem_mixed
             hu
 
 include hφ in
-theorem delta_mul_section_norm_mem_mixed
+omit [DecidableEq X] [Fintype X] in
+theorem delta_mul_section_norm_mem_mixed [Finite X]
     (g : G) :
     groupRingDelta g *
         abelianizationRingSection
           (groupNormElement (Abelianization G)) ∈
       mixedAugmentationProduct (commutator G) := by
+  classical
+  let : DecidableEq X := Classical.decEq X
+  let := Fintype.ofFinite X
   obtain ⟨w, rfl⟩ := hφ g
   exact word_mul_section_norm_mem_mixed φ hφ w
 
 include hφ in
-theorem delta_mul_transversalNormElement_mem_mixed
+omit [DecidableEq X] [Fintype X] in
+theorem delta_mul_transversalNormElement_mem_mixed [Finite X]
     (T : (commutator G).LeftTransversal) (g : G) :
     groupRingDelta g *
         transversalNormElement (commutator G) T ∈
       mixedAugmentationProduct (commutator G) := by
+  classical
+  let : DecidableEq X := Classical.decEq X
+  let := Fintype.ofFinite X
   let S : IntegralGroupRing G :=
     abelianizationRingSection
       (groupNormElement (Abelianization G))

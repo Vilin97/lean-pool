@@ -15,8 +15,7 @@ ramification locus, while the minimal narrow finite conductor has support
 contained in that locus.
 -/
 
-open scoped NumberField Classical
-
+open scoped NumberField
 noncomputable section
 
 namespace GlobalClassFieldTheory
@@ -30,6 +29,7 @@ variable
     [Field L] [NumberField L] [Algebra K L]
     [FiniteDimensional K L] [IsAbelianGalois K L]
 
+open scoped Classical in
 /-- The locally constructed norm modulus vanishes exactly when every
 chosen completed extension is unramified. -/
 theorem
@@ -54,6 +54,7 @@ theorem
           (hunramified v)]
     rfl
 
+open scoped Classical in
 /-- The locally constructed norm modulus is nonzero exactly when some
 chosen completed extension is ramified. -/
 theorem
@@ -67,6 +68,7 @@ theorem
   push Not
   rfl
 
+open scoped Classical in
 /-- Every prime in the minimal narrow finite norm conductor is ramified
 in the chosen completed extension above that prime. -/
 theorem
@@ -86,6 +88,7 @@ theorem
     (mem_ideleClassNormDefiningModulus_support_iff_not_chosenFinitePlaceIsUnramified
       (K := K) (L := L) v).1 hvLocal
 
+open scoped Classical in
 /-- If every chosen finite completion is unramified, then the minimal
 narrow finite conductor of the actual idèle-class norm subgroup is zero. -/
 theorem

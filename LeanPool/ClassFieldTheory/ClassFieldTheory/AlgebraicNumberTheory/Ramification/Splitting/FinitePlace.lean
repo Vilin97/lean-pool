@@ -23,8 +23,7 @@ complete splitting is equivalent both to cardinality one and to local
 degree one.
 -/
 
-open scoped NumberField Classical
-open NumberField IsDedekindDomain
+open scoped NumberField open NumberField IsDedekindDomain
 
 noncomputable section
 
@@ -37,6 +36,7 @@ variable {K L : Type}
     [Field L] [Algebra K L]
     [FiniteDimensional K L] [IsGalois K L]
 
+open scoped Classical in
 /-- The actual decomposition subgroup at the chosen extension of the
 finite place `v`. -/
 noncomputable def finitePlaceDecompositionGroup
@@ -45,6 +45,7 @@ noncomputable def finitePlaceDecompositionGroup
   absoluteValueDecompositionGroup K
     (chosenFinitePlaceExtension (L := L) v).1
 
+open scoped Classical in
 /-- A finite place splits completely when its chosen decomposition
 subgroup is trivial.  Conjugacy of extensions makes this independent
 of the chosen extension, but the chosen representative gives a
@@ -55,6 +56,7 @@ def FinitePlaceSplitsCompletely
     (K := K) (L := L) v = ⊥
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 /-- Membership in the finite-place decomposition group is exactly
 stabilization of the chosen extension of the absolute value. -/
 @[simp]
@@ -73,6 +75,7 @@ theorem mem_finitePlaceDecompositionGroup_iff
       (RayClass.adicAbv_isNontrivial v)
       (chosenFinitePlaceExtension (L := L) v) σ
 
+open scoped Classical in
 /-- The local degree at `v`, defined using the actual algebraic
 localization selected above. -/
 noncomputable def finitePlaceLocalDegree
@@ -91,6 +94,7 @@ noncomputable def finitePlaceLocalDegree
     Module.finrank vK.Completion
       (LocalizedCompletion vK w)
 
+open scoped Classical in
 /-- The decomposition-group localization equivalence together with the finite-localization theorem
 the finite-localization theorem: the order of the decomposition group equals the local
 degree. -/
@@ -139,6 +143,7 @@ theorem finitePlaceDecompositionGroup_card_eq_localDegree
         (K := K) (L := L) v := rfl
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 /-- A finite place splits completely exactly when its decomposition
 group has one element. -/
 theorem finitePlaceSplitsCompletely_iff_card_eq_one
@@ -153,6 +158,7 @@ theorem finitePlaceSplitsCompletely_iff_card_eq_one
     (finitePlaceDecompositionGroup
       (K := K) (L := L) v).eq_bot_iff_card
 
+open scoped Classical in
 /-- Complete splitting is equivalent to local degree one. -/
 theorem finitePlaceSplitsCompletely_iff_localDegree_eq_one
     (v : HeightOneSpectrum (𝓞 K)) :
@@ -164,6 +170,7 @@ theorem finitePlaceSplitsCompletely_iff_localDegree_eq_one
     finitePlaceDecompositionGroup_card_eq_localDegree]
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 /-- A finite place fails to split completely exactly when its
 decomposition group contains a nonidentity automorphism. -/
 theorem finitePlace_not_splitsCompletely_iff_exists_nontrivial_stabilizer
@@ -205,6 +212,7 @@ theorem finitePlace_not_splitsCompletely_iff_exists_nontrivial_stabilizer
       exact hmem
     exact hσOne (Subgroup.mem_bot.mp hbot)
 
+open scoped Classical in
 /-- Nonsplitting is equivalently strict positivity above one of the
 decomposition-group order. -/
 theorem finitePlace_not_splitsCompletely_iff_one_lt_card
@@ -219,6 +227,7 @@ theorem finitePlace_not_splitsCompletely_iff_one_lt_card
     (finitePlaceDecompositionGroup
       (K := K) (L := L) v).one_lt_card_iff_ne_bot.symm
 
+open scoped Classical in
 /-- Nonsplitting is equivalently local degree greater than one. -/
 theorem finitePlace_not_splitsCompletely_iff_one_lt_localDegree
     (v : HeightOneSpectrum (𝓞 K)) :
@@ -229,6 +238,7 @@ theorem finitePlace_not_splitsCompletely_iff_one_lt_localDegree
   rw [finitePlace_not_splitsCompletely_iff_one_lt_card,
     finitePlaceDecompositionGroup_card_eq_localDegree]
 
+open scoped Classical in
 /-- In a nontrivial finite Galois extension, a place whose
 decomposition group is the whole Galois group cannot split
 completely. This bridges the cyclic prime-power criterion, where
@@ -262,6 +272,7 @@ variable {M : Type}
     [IsScalarTower K M L]
 
 omit [NumberField K] [FiniteDimensional K L] [IsGalois K L] in
+open scoped Classical in
 /-- Complete splitting of a valuation over `K` remains complete
 after enlarging the base to an intermediate field `M`.
 
@@ -284,6 +295,7 @@ end IntermediateField
 
 section Quotient
 
+open scoped Classical in
 /-- The image of the finite-place decomposition subgroup in a group
 quotient.  In the Galois correspondence this is the decomposition
 group in the corresponding intermediate extension. -/
@@ -297,6 +309,7 @@ noncomputable def finitePlaceDecompositionGroupInQuotient
       (QuotientGroup.mk' P)
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 /-- The quotient decomposition group is trivial exactly when the
 original decomposition group is contained in the quotient kernel. -/
 theorem finitePlaceDecompositionGroupInQuotient_eq_bot_iff
@@ -311,6 +324,7 @@ theorem finitePlaceDecompositionGroupInQuotient_eq_bot_iff
     Subgroup.map_eq_bot_iff,
     QuotientGroup.ker_mk']
 
+open scoped Classical in
 /-- In a cyclic extension of prime-power degree, every proper
 finite-place decomposition group is contained in a normal subgroup
 of index `p`; the resulting order-`p` quotient has trivial

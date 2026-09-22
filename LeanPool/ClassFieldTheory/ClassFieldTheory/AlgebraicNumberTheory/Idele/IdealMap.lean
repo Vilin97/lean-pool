@@ -44,7 +44,6 @@ theorem localOrder_apply (v : HeightOneSpectrum (𝓞 K))
       -WithZero.log (Valued.v (x : v.adicCompletion K)) :=
   rfl
 
-@[simp]
 theorem localOrder_eq_zero_iff (v : HeightOneSpectrum (𝓞 K))
     (x : (v.adicCompletion K)ˣ) :
     (localOrder v x).toAdd = 0 ↔
@@ -127,7 +126,6 @@ def chosenLocalOrderSection (v : HeightOneSpectrum (𝓞 K)) (n : ℤ) :
     rw [hx, map_zero] at hval
     exact WithZero.exp_ne_zero hval.symm)
 
-@[simp]
 theorem localOrder_chosenLocalOrderSection
     (v : HeightOneSpectrum (𝓞 K)) (n : ℤ) :
     (localOrder v (chosenLocalOrderSection v n)).toAdd = n := by
@@ -170,7 +168,7 @@ theorem valuationVector_surjective :
 end FiniteIdeleGroup
 
 /-- The group of nonzero fractional ideals of a number field. -/
-abbrev FractionalIdealGroup (K : Type*) [Field K] [NumberField K] :=
+abbrev FractionalIdealGroup (K : Type*) [Field K] :=
   (FractionalIdeal (nonZeroDivisors (𝓞 K)) K)ˣ
 
 namespace FractionalIdealGroup
@@ -235,7 +233,6 @@ theorem countVector_apply (I : FractionalIdealGroup K)
         (I : FractionalIdeal (nonZeroDivisors (𝓞 K)) K) :=
   rfl
 
-@[simp]
 theorem count_factorization (exps :
     Multiplicative (HeightOneSpectrum (𝓞 K) →₀ ℤ))
     (v : HeightOneSpectrum (𝓞 K)) :

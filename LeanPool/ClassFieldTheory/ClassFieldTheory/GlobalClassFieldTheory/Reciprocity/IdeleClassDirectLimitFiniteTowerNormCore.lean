@@ -70,11 +70,11 @@ def algHomOfCompatibleRingHom
 private theorem relativeAdeleEmbedding_toAlgHom_unflatten
     {K M L : Type u}
     [Field K] [NumberField K]
-    [Field M] [NumberField M]
-    [Field L] [NumberField L]
+    [Field M]
+    [Field L]
     [Algebra K M] [Algebra M L] [Algebra K L]
     [IsScalarTower K M L]
-    [FiniteDimensional K M] [FiniteDimensional M L]
+
     (a : RelativeAdeleRing K M) :
     towerRelativeAdeleUnflatten K M L
         (RelativeIdeleGroup.adeleEmbedding
@@ -215,7 +215,7 @@ theorem classEmbedding_smul_eq_classEmbedding_comp
     [Field K] [NumberField K]
     [Field E] [Field U]
     [Algebra K E] [Algebra K U]
-    [FiniteDimensional K E] [FiniteDimensional K U]
+
     (j : E →ₐ[K] U) (σ : U ≃ₐ[K] U)
     (c : RelativeIdeleGroup.ClassGroup K E) :
     σ • RelativeIdeleGroup.classEmbedding j c =
@@ -388,8 +388,8 @@ private theorem classEmbedding_comp
     [Field K] [NumberField K]
     [Field E] [Field N] [Field U]
     [Algebra K E] [Algebra K N] [Algebra K U]
-    [FiniteDimensional K E] [FiniteDimensional K N]
-    [FiniteDimensional K U]
+
+
     (f : E →ₐ[K] N) (g : N →ₐ[K] U)
     (c : RelativeIdeleGroup.ClassGroup K E) :
     RelativeIdeleGroup.classEmbedding g

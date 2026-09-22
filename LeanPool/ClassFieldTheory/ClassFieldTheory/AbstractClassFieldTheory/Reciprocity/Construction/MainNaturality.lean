@@ -79,7 +79,7 @@ namespace DegreeData
 /-- Restriction on the infinite Frobenius quotients underlying the first
 diagram of norm--conjugation naturality. -/
 def finiteReciprocityNaturalityFrobeniusTowerMap
-    (D : DegreeData G) [IsTopologicalGroup G]
+    (D : DegreeData G)
     (K K' L L' : ClosedSubgroup G)
     (hLK : L.toSubgroup ≤ K.toSubgroup)
     (hL'K' : L'.toSubgroup ≤ K'.toSubgroup)

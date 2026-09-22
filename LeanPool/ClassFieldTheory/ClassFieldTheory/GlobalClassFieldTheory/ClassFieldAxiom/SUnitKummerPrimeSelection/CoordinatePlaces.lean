@@ -14,7 +14,7 @@ Kummer extension and proves the required decomposition and unramifiedness
 properties.
 -/
 
-open scoped NumberField Classical IsMulCommutative
+open scoped NumberField IsMulCommutative
 open NumberField IsDedekindDomain
 open KummerTheory
 
@@ -27,6 +27,7 @@ section FinitePlaces
 variable {K : Type} [Field K]
     [NumberField K]
 
+open scoped Classical in
 /-- A completely decomposed coordinate place above the `i`-th chosen
 base prime. -/
 theorem exists_sUnitKummerCoordinatePlace
@@ -128,6 +129,7 @@ theorem exists_sUnitKummerCoordinatePlace
         ⊤ at h
   exact h
 
+open scoped Classical in
 /-- The selected coordinate place above the `i`-th chosen base prime. -/
 noncomputable def sUnitKummerCoordinatePlace
     {Omega : Type} [Field Omega] [Algebra K Omega]
@@ -152,6 +154,7 @@ noncomputable def sUnitKummerCoordinatePlace
       (K := K) (Omega := Omega) E n hmu
       p v hp hv hn r eG S i)
 
+open scoped Classical in
 /-- The selected coordinate place lies over the corresponding chosen
 base prime. -/
 @[simp]
@@ -206,6 +209,7 @@ theorem sUnitKummerCoordinatePlace_below
       (K := K) (Omega := Omega) E n hmu
       p v hp hv hn r eG S i)).1
 
+open scoped Classical in
 /-- The selected coordinate place is completely decomposed in the full
 Kummer extension over its coordinate fixed field. -/
 @[simp]
@@ -267,6 +271,7 @@ theorem sUnitKummerCoordinatePlace_decompositionGroup
       (K := K) (Omega := Omega) E n hmu
       p v hp hv hn r eG S i)).2
 
+open scoped Classical in
 /-- The `i`-th selected base prime is unramified in the full Kummer
 extension. -/
 theorem sUnitKummerChosenBasePlace_not_mem_ramified
@@ -320,6 +325,7 @@ theorem sUnitKummerChosenBasePlace_not_mem_ramified
     Finset.mem_union_left _
       (Finset.mem_union_right _ hram)
 
+open scoped Classical in
 /-- The chosen completed place at `p_i` is unramified in `N/K`. -/
 theorem sUnitKummerChosenBasePlace_isUnramified
     {Omega : Type} [Field Omega] [Algebra K Omega]

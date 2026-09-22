@@ -104,7 +104,7 @@ def withAbsNontriviallyNormedField
 /-- The finite-degree norm-formula candidate:
 `x ↦ |N_{L/K}(x)|^{1/[L:K]}`. -/
 def finiteExtensionNormFormulaValue
-    {K L : Type*} [Field K] [Field L] [Algebra K L] [FiniteDimensional K L]
+    {K L : Type*} [Field K] [Field L] [Algebra K L]
     (v : AbsoluteValue K ℝ) (x : L) : ℝ :=
   Real.rpow (v (Algebra.norm K x)) (1 / (Module.finrank K L : ℝ))
 

@@ -408,7 +408,6 @@ theorem relativeIdeleClassBaseChangeMulEquiv_congrOfAlgEquiv
 
 /-- Ordinary idele-class norms are natural under compatible
 equivalences of finite number-field extensions. -/
-@[simp]
 theorem ideleClassCongr_ideleClassNorm
     (eK : K ≃ₐ[ℚ] K')
     (eL : L ≃ₐ[ℚ] L')

@@ -57,7 +57,6 @@ noncomputable def narrowFiniteConductorRayClassGroupToQuotient
 
 /-- The exact narrow finite conductor quotient map preserves every
 idèle-class representative. -/
-@[simp]
 theorem narrowFiniteConductorRayClassGroupToQuotient_mk
     (H : ConductorialSubgroup K)
     (c : IdeleClassGroup K) :
@@ -215,7 +214,6 @@ noncomputable def narrowFiniteConductorRayClassGroupEquivQuotientOfCardEq
 
 /-- The maximal exact narrow finite conductor equivalence preserves every
 idèle-class representative. -/
-@[simp]
 theorem narrowFiniteConductorRayClassGroupEquivQuotientOfCardEq_mk
     (H : ConductorialSubgroup K)
     (hcard :
@@ -330,7 +328,6 @@ def ideleClassQuotientEquivOfNarrowFiniteConductorsEqOfRayClassGroupCardsEqQuoti
 
 /-- The canonical equivalence between maximal exact narrow finite
 conductor quotients preserves every idèle-class representative. -/
-@[simp]
 theorem
     ideleClassQuotientEquivOfNarrowFiniteConductorsEqOfRayClassGroupCardsEqQuotientCards_mk
     (H J : ConductorialSubgroup K)

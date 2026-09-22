@@ -412,7 +412,7 @@ theorem infinitePlaceTensorUnitsEquivAbove_localFieldIdeleInclusion
   simp only [Units.coe_map]
   change
     (InfinitePlace.Completion.equiv W.1).symm
-        (completionTensorDecomposition_left
+        (completionTensorDecompositionLeft
           w.1 w.isNontrivial
           (1 ⊗ₜ[K] (x : L))
           (infinitePlaceAboveEquivExtension

@@ -8,7 +8,8 @@ import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.NormalBasisLat
 import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.PrincipalUnitQuotients
 import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.HerbrandLowDegree.Basic
 import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.ClassFormation.Valuation
-/-! Provides the public declarations in the `LocalClassFieldTheory.ClassFormation.NormalBasisInfiniteProduct` Lean module. -/
+/-! Provides the public declarations in the
+  `LocalClassFieldTheory.ClassFormation.NormalBasisInfiniteProduct` Lean module. -/
 
 namespace LocalClassFieldTheory
 open CyclicCohomology
@@ -90,7 +91,7 @@ theorem chosenNormalBasisPrincipalUnitSet_mem_principalUnits_succ_of_lattice_bou
 /-- Once the normal-basis lattice has entered `𝒪_L`, a sequence whose
 `i`-th term lies in `V^(n+i)` converges to `1` in `𝒪_L`. -/
 theorem tendsto_chosenNormalBasisPrincipalUnitSequence_one_of_lattice_bound
-    [UniformSpace L] [IsUniformAddGroup L] [IsNonarchimedeanLocalField L]
+    [UniformSpace L] [IsNonarchimedeanLocalField L]
     {b n : Nat}
     (hb : chosenBaseUniformizerPowSubmodule K L b
         (chosenNormalBasisIntegerLattice K L) ≤
@@ -117,7 +118,7 @@ theorem tendsto_chosenNormalBasisPrincipalUnitSequence_one_of_lattice_bound
 proof uses the maximal-ideal powers as a neighborhood basis and the fact that
 a ring equivalence preserves each such power. -/
 theorem continuous_integerRingEquiv_of_isNonarchimedeanLocalField
-    [UniformSpace L] [IsUniformAddGroup L] [IsNonarchimedeanLocalField L]
+    [UniformSpace L] [IsNonarchimedeanLocalField L]
     (e : 𝒪[L] ≃+* 𝒪[L]) : Continuous e := by
   apply continuous_of_continuousAt_zero e.toAddMonoidHom
   rw [ContinuousAt, map_zero, tendsto_def]
@@ -387,7 +388,7 @@ omit [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation 
 /-- A unit-valued limit of partial products remains in the initial
 normal-basis filtration level whenever that lattice is closed. -/
 theorem chosenNormalBasisPrincipalUnitCorrectionProduct_limit_mem
-    [UniformSpace L] [IsUniformAddGroup L] [IsNonarchimedeanLocalField L]
+    [UniformSpace L] [IsNonarchimedeanLocalField L]
     {n : Nat}
     (hclosed : IsClosed
       ((chosenBaseUniformizerPowSubmodule K L n
@@ -438,7 +439,8 @@ theorem exists_tendsto_chosenNormalBasisPrincipalUnitCorrectionProduct
                     𝒪[L]ˣ) : 𝒪[L]))
                 atTop (nhds ((x : 𝒪[L]ˣ) : 𝒪[L])) ∧
               x ∈ chosenNormalBasisPrincipalUnitSet K L n := by
-  rcases exists_chosenBaseUniformizerPow_chosenNormalBasisIntegerLattice_le_integerRingFieldSubmodule
+  rcases
+    exists_chosenBaseUniformizerPow_chosenNormalBasisIntegerLattice_le_integerRingFieldSubmodule
       (K := K) (L := L) with ⟨b, hb⟩
   rcases exists_chosenBaseUniformizerPow_chosenNormalBasisIntegerLattice_mul_mul_mem_self
       (K := K) (L := L) with ⟨cMul, hcMul⟩

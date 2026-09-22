@@ -104,7 +104,6 @@ theorem valuationMap_uniformizerFieldUnit
 
 
 /-- The additive valuation map sends the zero element of the additive unit group to zero. -/
-@[simp]
 theorem valuationMap_zero (K : Type u) [Field K] [ValuativeRel K]
     [TopologicalSpace K] [IsNonarchimedeanLocalField K] :
     valuationMap K (0 : Additive Kˣ) = 0 :=
@@ -148,7 +147,6 @@ theorem valuationMap_mem_ker_iff (K : Type u) [Field K] [ValuativeRel K]
   rw [AddMonoidHom.mem_ker, valuationMap_apply]
 
 /-- The multiplicative identity, viewed additively, has valuation zero. -/
-@[simp]
 theorem valuationMap_ofMul_one (K : Type u) [Field K] [ValuativeRel K]
     [TopologicalSpace K] [IsNonarchimedeanLocalField K] :
     valuationMap K (Additive.ofMul (1 : Kˣ)) = 0 := by
@@ -181,14 +179,16 @@ theorem valuation_eq_one_of_valuationMap_eq_zero (K : Type u)
   dsimp [v] at hx
   have hunzero :
       WithZero.unzero
-        (x := (_root_.IsNonarchimedeanLocalField.valueGroupWithZeroIsoInt K) (ValuativeRel.valuation K (x : K)))
+        (x := (_root_.IsNonarchimedeanLocalField.valueGroupWithZeroIsoInt K)
+          (ValuativeRel.valuation K (x : K)))
         (by simp) = (1 : Multiplicative Int) := by
     have h := congrArg Multiplicative.ofAdd hx
     simpa using h
   apply (_root_.IsNonarchimedeanLocalField.valueGroupWithZeroIsoInt K).injective
   have hcoe :
       ((WithZero.unzero
-        (x := (_root_.IsNonarchimedeanLocalField.valueGroupWithZeroIsoInt K) (ValuativeRel.valuation K (x : K)))
+        (x := (_root_.IsNonarchimedeanLocalField.valueGroupWithZeroIsoInt K)
+          (ValuativeRel.valuation K (x : K)))
         (by simp) : Multiplicative Int) : WithZero (Multiplicative Int)) =
         (1 : WithZero (Multiplicative Int)) := by
     simpa using congrArg
@@ -465,7 +465,6 @@ noncomputable def chosenValuationMapSection (K : Type u) [Field K] [ValuativeRel
   fun n => Classical.choose (valuationMap_surjective_apply K n)
 
 /-- The chosen section of the additive valuation map is a right inverse. -/
-@[simp]
 theorem chosenValuationMapSection_spec (K : Type u) [Field K] [ValuativeRel K]
     [TopologicalSpace K] [IsNonarchimedeanLocalField K] (n : Int) :
     valuationMap K (chosenValuationMapSection K n) = n :=

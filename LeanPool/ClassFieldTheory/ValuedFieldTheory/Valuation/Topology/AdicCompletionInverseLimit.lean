@@ -175,8 +175,8 @@ def adicUnitInverseLimitRepresentation
           Units.map (Ideal.Quotient.factorPow I hmn).toMonoidHom) :=
   (adicUnitInverseLimitCompatibleFamiliesEquiv I).mulEquiv
 
-/-- Defines `adicUnitInverseLimit_mk`. -/
-def adicUnitInverseLimit_mk
+/-- Defines `adicUnitInverseLimitMk`. -/
+def adicUnitInverseLimitMk
     {R : Type*} [CommRing R] (I : Ideal R)
     (x : ∀ n : ℕ, (R ⧸ I ^ n)ˣ)
     (compatible : ∀ {m n : ℕ} (hmn : m ≤ n),
@@ -184,8 +184,8 @@ def adicUnitInverseLimit_mk
     adicUnitInverseLimit I :=
   (adicUnitInverseLimitCompatibleFamiliesEquiv I).symm ⟨x, compatible⟩
 
-/-- Defines `adicUnitInverseLimit_eval`. -/
-def adicUnitInverseLimit_eval
+/-- Defines `adicUnitInverseLimitEval`. -/
+def adicUnitInverseLimitEval
     {R : Type*} [CommRing R] (I : Ideal R) (n : ℕ) :
     adicUnitInverseLimit I →* (R ⧸ I ^ n)ˣ where
   toFun x := (adicUnitInverseLimitCompatibleFamiliesEquiv I x).1 n
@@ -200,7 +200,7 @@ theorem adicUnitInverseLimit_eval_mk
     (compatible : ∀ {m n : ℕ} (hmn : m ≤ n),
       Units.map (Ideal.Quotient.factorPow I hmn).toMonoidHom (x n) = x m)
     (n : ℕ) :
-    adicUnitInverseLimit_eval I n (adicUnitInverseLimit_mk I x compatible) =
+    adicUnitInverseLimitEval I n (adicUnitInverseLimitMk I x compatible) =
       x n := by
   rfl
 
@@ -209,8 +209,8 @@ theorem adicUnitInverseLimit_eval_mk
 theorem adicUnitInverseLimit_ext
     {R : Type*} [CommRing R] (I : Ideal R)
     {x y : adicUnitInverseLimit I}
-    (h : ∀ n : ℕ, adicUnitInverseLimit_eval I n x =
-      adicUnitInverseLimit_eval I n y) :
+    (h : ∀ n : ℕ, adicUnitInverseLimitEval I n x =
+      adicUnitInverseLimitEval I n y) :
     x = y := by
   apply (adicUnitInverseLimitCompatibleFamiliesEquiv I).injective
   apply Subtype.ext
@@ -222,8 +222,8 @@ theorem adicUnitInverseLimit_eval_transition
     {R : Type*} [CommRing R] (I : Ideal R)
     {m n : ℕ} (hmn : m ≤ n) (x : adicUnitInverseLimit I) :
     Units.map (Ideal.Quotient.factorPow I hmn).toMonoidHom
-        (adicUnitInverseLimit_eval I n x) =
-      adicUnitInverseLimit_eval I m x :=
+        (adicUnitInverseLimitEval I n x) =
+      adicUnitInverseLimitEval I m x :=
   (adicUnitInverseLimitCompatibleFamiliesEquiv I x).2 hmn
 
 /-- Units of the explicit projective-limit ring are the same as compatible
@@ -232,20 +232,20 @@ def adicQuotientInverseLimitUnitsEquiv
     {R : Type*} [CommRing R] (I : Ideal R) :
     (adicQuotientInverseLimit I)ˣ ≃*
       adicUnitInverseLimit I where
-  toFun u := adicUnitInverseLimit_mk I
-    (fun n => Units.map (adicQuotientInverseLimit_eval I n).toMonoidHom u)
+  toFun u := adicUnitInverseLimitMk I
+    (fun n => Units.map (adicQuotientInverseLimitEval I n).toMonoidHom u)
     (fun hmn => by
       ext
       exact adicQuotientInverseLimit_eval_factorPow I hmn
         (u : adicQuotientInverseLimit I))
   invFun u :=
-    { val := adicQuotientInverseLimit_mk I
-        (fun n => (adicUnitInverseLimit_eval I n u : R ⧸ I ^ n))
+    { val := adicQuotientInverseLimitMk I
+        (fun n => (adicUnitInverseLimitEval I n u : R ⧸ I ^ n))
         (fun hmn => congrArg Units.val
           (adicUnitInverseLimit_eval_transition I hmn u))
-      inv := adicQuotientInverseLimit_mk I
+      inv := adicQuotientInverseLimitMk I
         (fun n =>
-          (((adicUnitInverseLimit_eval I n u)⁻¹ : (R ⧸ I ^ n)ˣ) :
+          (((adicUnitInverseLimitEval I n u)⁻¹ : (R ⧸ I ^ n)ˣ) :
             R ⧸ I ^ n))
         (fun hmn => by
           have h := congrArg Units.val
@@ -254,10 +254,10 @@ def adicQuotientInverseLimitUnitsEquiv
           simpa using h)
       val_inv := by
         ext n
-        exact Units.mul_inv (adicUnitInverseLimit_eval I n u)
+        exact Units.mul_inv (adicUnitInverseLimitEval I n u)
       inv_val := by
         ext n
-        exact Units.inv_mul (adicUnitInverseLimit_eval I n u) }
+        exact Units.inv_mul (adicUnitInverseLimitEval I n u) }
   left_inv u := by
     ext n
     rfl
@@ -274,7 +274,7 @@ def adicCompletionUnitsEquivUnitInverseLimit
     {R : Type*} [CommRing R] (I : Ideal R) :
     (AdicCompletion I R)ˣ ≃* adicUnitInverseLimit I :=
   (Units.mapEquiv
-      (adicCompletion_equiv_quotientInverseLimit I).toMulEquiv).trans
+      (adicCompletionEquivQuotientInverseLimit I).toMulEquiv).trans
     (adicQuotientInverseLimitUnitsEquiv I)
 
 /-- The adic inverse-limit equivalence, unit projective-limit form for a complete ring. -/
@@ -289,7 +289,7 @@ reduction in each coordinate. -/
 theorem unitsEquivUnitInverseLimit_apply
     {R : Type*} [CommRing R] (I : Ideal R) [IsAdicComplete I R]
     (u : Rˣ) (n : ℕ) :
-    adicUnitInverseLimit_eval I n (unitsEquivUnitInverseLimit I u) =
+    adicUnitInverseLimitEval I n (unitsEquivUnitInverseLimit I u) =
       unitReduction (I ^ n) u := by
   ext
   rfl
@@ -332,8 +332,8 @@ def adicPositiveUnitInverseLimitRepresentation
               (Nat.succ_le_succ hmn)).toMonoidHom) :=
   (adicPositiveUnitInverseLimitCompatibleFamiliesEquiv I).mulEquiv
 
-/-- Defines `adicPositiveUnitInverseLimit_mk`. -/
-def adicPositiveUnitInverseLimit_mk
+/-- Defines `adicPositiveUnitInverseLimitMk`. -/
+def adicPositiveUnitInverseLimitMk
     {R : Type*} [CommRing R] (I : Ideal R)
     (x : ∀ n : ℕ, (R ⧸ I ^ (n + 1))ˣ)
     (compatible : ∀ {m n : ℕ} (hmn : m ≤ n),
@@ -344,8 +344,8 @@ def adicPositiveUnitInverseLimit_mk
   (adicPositiveUnitInverseLimitCompatibleFamiliesEquiv I).symm
     ⟨x, compatible⟩
 
-/-- Defines `adicPositiveUnitInverseLimit_eval`. -/
-def adicPositiveUnitInverseLimit_eval
+/-- Defines `adicPositiveUnitInverseLimitEval`. -/
+def adicPositiveUnitInverseLimitEval
     {R : Type*} [CommRing R] (I : Ideal R) (n : ℕ) :
     adicPositiveUnitInverseLimit I →* (R ⧸ I ^ (n + 1))ˣ where
   toFun x :=
@@ -363,8 +363,8 @@ theorem adicPositiveUnitInverseLimit_eval_mk
           (Ideal.Quotient.factorPow I
             (Nat.succ_le_succ hmn)).toMonoidHom (x n) = x m)
     (n : ℕ) :
-    adicPositiveUnitInverseLimit_eval I n
-        (adicPositiveUnitInverseLimit_mk I x compatible) = x n := by
+    adicPositiveUnitInverseLimitEval I n
+        (adicPositiveUnitInverseLimitMk I x compatible) = x n := by
   rfl
 
 /-- Positive adic unit families are determined by all of their components. -/
@@ -372,8 +372,8 @@ theorem adicPositiveUnitInverseLimit_eval_mk
 theorem adicPositiveUnitInverseLimit_ext
     {R : Type*} [CommRing R] (I : Ideal R)
     {x y : adicPositiveUnitInverseLimit I}
-    (h : ∀ n : ℕ, adicPositiveUnitInverseLimit_eval I n x =
-      adicPositiveUnitInverseLimit_eval I n y) :
+    (h : ∀ n : ℕ, adicPositiveUnitInverseLimitEval I n x =
+      adicPositiveUnitInverseLimitEval I n y) :
     x = y := by
   apply (adicPositiveUnitInverseLimitCompatibleFamiliesEquiv I).injective
   apply Subtype.ext
@@ -387,30 +387,30 @@ theorem adicPositiveUnitInverseLimit_eval_transition
     Units.map
         (Ideal.Quotient.factorPow I
           (Nat.succ_le_succ hmn)).toMonoidHom
-        (adicPositiveUnitInverseLimit_eval I n x) =
-      adicPositiveUnitInverseLimit_eval I m x :=
+        (adicPositiveUnitInverseLimitEval I n x) =
+      adicPositiveUnitInverseLimitEval I m x :=
   (adicPositiveUnitInverseLimitCompatibleFamiliesEquiv I x).2 hmn
 
-/-- Defines `adicUnitInverseLimit_toPositive`. -/
-def adicUnitInverseLimit_toPositive
+/-- Defines `adicUnitInverseLimitToPositive`. -/
+def adicUnitInverseLimitToPositive
     {R : Type*} [CommRing R] (I : Ideal R) :
     adicUnitInverseLimit I →
       adicPositiveUnitInverseLimit I :=
   fun u =>
-    adicPositiveUnitInverseLimit_mk I
-      (fun n => adicUnitInverseLimit_eval I (n + 1) u)
+    adicPositiveUnitInverseLimitMk I
+      (fun n => adicUnitInverseLimitEval I (n + 1) u)
       (fun hmn => adicUnitInverseLimit_eval_transition I
         (Nat.succ_le_succ hmn) u)
 
-/-- Defines `adicPositiveUnitInverseLimit_toAll`. -/
-def adicPositiveUnitInverseLimit_toAll
+/-- Defines `adicPositiveUnitInverseLimitToAll`. -/
+def adicPositiveUnitInverseLimitToAll
     {R : Type*} [CommRing R] (I : Ideal R) :
     adicPositiveUnitInverseLimit I →
       adicUnitInverseLimit I :=
   fun u =>
-    adicUnitInverseLimit_mk I (fun n => match n with
+    adicUnitInverseLimitMk I (fun n => match n with
       | 0 => 1
-      | k + 1 => adicPositiveUnitInverseLimit_eval I k u)
+      | k + 1 => adicPositiveUnitInverseLimitEval I k u)
     (by
       intro m n hmn
       cases m with
@@ -431,8 +431,8 @@ def adicPositiveUnitInverseLimit_toAll
 theorem adicPositiveUnitInverseLimit_toPositive_toAll
     {R : Type*} [CommRing R] (I : Ideal R)
     (u : adicPositiveUnitInverseLimit I) :
-    adicUnitInverseLimit_toPositive I
-        (adicPositiveUnitInverseLimit_toAll I u) = u := by
+    adicUnitInverseLimitToPositive I
+        (adicPositiveUnitInverseLimitToAll I u) = u := by
   ext n
   rfl
 
@@ -440,8 +440,8 @@ theorem adicPositiveUnitInverseLimit_toPositive_toAll
 theorem adicUnitInverseLimit_toAll_toPositive
     {R : Type*} [CommRing R] (I : Ideal R)
     (u : adicUnitInverseLimit I) :
-    adicPositiveUnitInverseLimit_toAll I
-        (adicUnitInverseLimit_toPositive I u) = u := by
+    adicPositiveUnitInverseLimitToAll I
+        (adicUnitInverseLimitToPositive I u) = u := by
   ext n
   cases n with
   | zero =>
@@ -459,8 +459,8 @@ def adicUnitInverseLimitEquivPositive
     {R : Type*} [CommRing R] (I : Ideal R) :
     adicUnitInverseLimit I ≃*
       adicPositiveUnitInverseLimit I where
-  toFun := adicUnitInverseLimit_toPositive I
-  invFun := adicPositiveUnitInverseLimit_toAll I
+  toFun := adicUnitInverseLimitToPositive I
+  invFun := adicPositiveUnitInverseLimitToAll I
   left_inv := adicUnitInverseLimit_toAll_toPositive I
   right_inv := adicPositiveUnitInverseLimit_toPositive_toAll I
   map_mul' u v := by
@@ -479,7 +479,7 @@ coordinatewise reduction modulo `I^(n+1)`. -/
 theorem unitsEquivPositiveUnitInverseLimit_apply
     {R : Type*} [CommRing R] (I : Ideal R) [IsAdicComplete I R]
     (u : Rˣ) (n : ℕ) :
-    adicPositiveUnitInverseLimit_eval I n
+    adicPositiveUnitInverseLimitEval I n
         (unitsEquivPositiveUnitInverseLimit I u) =
       unitReduction (I ^ (n + 1)) u := by
   exact unitsEquivUnitInverseLimit_apply I u (n + 1)
@@ -545,8 +545,8 @@ def dvrPowerIdealUnitInverseLimitRepresentation
             (dvrPowerIdealUnitTransition π hmn).toMonoidHom) :=
   (dvrPowerIdealUnitInverseLimitCompatibleFamiliesEquiv π).mulEquiv
 
-/-- Defines `dvrPowerIdealUnitInverseLimit_mk`. -/
-def dvrPowerIdealUnitInverseLimit_mk
+/-- Defines `dvrPowerIdealUnitInverseLimitMk`. -/
+def dvrPowerIdealUnitInverseLimitMk
     {O : Type*} [CommRing O] (π : O)
     (x : ∀ n : ℕ, (O ⧸ uniformizerPowerIdeal π (n + 1))ˣ)
     (compatible : ∀ {m n : ℕ} (hmn : m ≤ n),
@@ -555,8 +555,8 @@ def dvrPowerIdealUnitInverseLimit_mk
   (dvrPowerIdealUnitInverseLimitCompatibleFamiliesEquiv π).symm
     ⟨x, compatible⟩
 
-/-- Defines `dvrPowerIdealUnitInverseLimit_eval`. -/
-def dvrPowerIdealUnitInverseLimit_eval
+/-- Defines `dvrPowerIdealUnitInverseLimitEval`. -/
+def dvrPowerIdealUnitInverseLimitEval
     {O : Type*} [CommRing O] (π : O) (n : ℕ) :
     dvrPowerIdealUnitInverseLimit π →*
       (O ⧸ uniformizerPowerIdeal π (n + 1))ˣ where
@@ -570,8 +570,8 @@ def dvrPowerIdealUnitInverseLimit_eval
 theorem dvrPowerIdealUnitInverseLimit_ext
     {O : Type*} [CommRing O] (π : O)
     {x y : dvrPowerIdealUnitInverseLimit π}
-    (h : ∀ n : ℕ, dvrPowerIdealUnitInverseLimit_eval π n x =
-      dvrPowerIdealUnitInverseLimit_eval π n y) :
+    (h : ∀ n : ℕ, dvrPowerIdealUnitInverseLimitEval π n x =
+      dvrPowerIdealUnitInverseLimitEval π n y) :
     x = y := by
   apply (dvrPowerIdealUnitInverseLimitCompatibleFamiliesEquiv π).injective
   apply Subtype.ext
@@ -778,8 +778,8 @@ def dvrHigherUnitQuotientInverseLimitRepresentation
         (fun {_ _} hmn => dvrHigherUnitQuotientTransition π hmn) :=
   (dvrHigherUnitQuotientInverseLimitCompatibleFamiliesEquiv π).mulEquiv
 
-/-- Defines `dvrHigherUnitQuotientInverseLimit_mk`. -/
-def dvrHigherUnitQuotientInverseLimit_mk
+/-- Defines `dvrHigherUnitQuotientInverseLimitMk`. -/
+def dvrHigherUnitQuotientInverseLimitMk
     {O : Type*} [CommRing O] (π : O)
     (x : ∀ n : ℕ, Oˣ ⧸ higherUnitSubgroup π (n + 1))
     (compatible : ∀ {m n : ℕ} (hmn : m ≤ n),
@@ -788,8 +788,8 @@ def dvrHigherUnitQuotientInverseLimit_mk
   (dvrHigherUnitQuotientInverseLimitCompatibleFamiliesEquiv π).symm
     ⟨x, compatible⟩
 
-/-- Defines `dvrHigherUnitQuotientInverseLimit_eval`. -/
-def dvrHigherUnitQuotientInverseLimit_eval
+/-- Defines `dvrHigherUnitQuotientInverseLimitEval`. -/
+def dvrHigherUnitQuotientInverseLimitEval
     {O : Type*} [CommRing O] (π : O) (n : ℕ) :
     dvrHigherUnitQuotientInverseLimit π →*
       Oˣ ⧸ higherUnitSubgroup π (n + 1) where
@@ -806,8 +806,8 @@ theorem dvrHigherUnitQuotientInverseLimit_eval_mk
     (compatible : ∀ {m n : ℕ} (hmn : m ≤ n),
       dvrHigherUnitQuotientTransition π hmn (x n) = x m)
     (n : ℕ) :
-    dvrHigherUnitQuotientInverseLimit_eval π n
-        (dvrHigherUnitQuotientInverseLimit_mk π x compatible) = x n := by
+    dvrHigherUnitQuotientInverseLimitEval π n
+        (dvrHigherUnitQuotientInverseLimitMk π x compatible) = x n := by
   rfl
 
 /-- Higher-unit inverse-limit elements are determined by their evaluations at every level. -/
@@ -815,8 +815,8 @@ theorem dvrHigherUnitQuotientInverseLimit_eval_mk
 theorem dvrHigherUnitQuotientInverseLimit_ext
     {O : Type*} [CommRing O] (π : O)
     {x y : dvrHigherUnitQuotientInverseLimit π}
-    (h : ∀ n : ℕ, dvrHigherUnitQuotientInverseLimit_eval π n x =
-      dvrHigherUnitQuotientInverseLimit_eval π n y) :
+    (h : ∀ n : ℕ, dvrHigherUnitQuotientInverseLimitEval π n x =
+      dvrHigherUnitQuotientInverseLimitEval π n y) :
     x = y := by
   apply (dvrHigherUnitQuotientInverseLimitCompatibleFamiliesEquiv π).injective
   apply Subtype.ext
@@ -829,8 +829,8 @@ theorem dvrHigherUnitQuotientInverseLimit_eval_transition
     {m n : ℕ} (hmn : m ≤ n)
     (x : dvrHigherUnitQuotientInverseLimit π) :
     dvrHigherUnitQuotientTransition π hmn
-        (dvrHigherUnitQuotientInverseLimit_eval π n x) =
-      dvrHigherUnitQuotientInverseLimit_eval π m x :=
+        (dvrHigherUnitQuotientInverseLimitEval π n x) =
+      dvrHigherUnitQuotientInverseLimitEval π m x :=
   (dvrHigherUnitQuotientInverseLimitCompatibleFamiliesEquiv π x).2 hmn
 
 /-- The higher-unit inverse limit carries the topology induced by its discrete coordinates. -/
@@ -856,19 +856,19 @@ private noncomputable def
   exact
     (dvrHigherUnitQuotientInverseLimitCompatibleFamiliesEquiv π).homeomorph
 
-/-- Defines `dvrHigherUnitQuotientInverseLimit_discreteEval`. -/
-def dvrHigherUnitQuotientInverseLimit_discreteEval
+/-- Defines `dvrHigherUnitQuotientInverseLimitDiscreteEval`. -/
+def dvrHigherUnitQuotientInverseLimitDiscreteEval
     {O : Type*} [CommRing O] (π : O) (n : ℕ) :
     dvrHigherUnitQuotientInverseLimit π →
       DiscreteHigherUnitQuotient π (n + 1) :=
   fun x => DiscreteHigherUnitQuotient.of π (n + 1)
-    (dvrHigherUnitQuotientInverseLimit_eval π n x)
+    (dvrHigherUnitQuotientInverseLimitEval π n x)
 
 /-- Every coordinate evaluation from the higher-unit inverse limit to its
 discrete quotient is continuous. -/
 theorem dvrHigherUnitQuotientInverseLimit_discreteEval_continuous
     {O : Type*} [CommRing O] (π : O) (n : ℕ) :
-    Continuous (dvrHigherUnitQuotientInverseLimit_discreteEval π n) := by
+    Continuous (dvrHigherUnitQuotientInverseLimitDiscreteEval π n) := by
   let : (n : ℕ) → TopologicalSpace
       (Oˣ ⧸ higherUnitSubgroup π (n + 1)) := fun _ => ⊥
   let representation :=
@@ -897,7 +897,7 @@ theorem dvrHigherUnitQuotientInverseLimit_continuous_iff
     (π : O) (f : α → dvrHigherUnitQuotientInverseLimit π) :
     Continuous f ↔
       ∀ n : ℕ, Continuous fun x =>
-        dvrHigherUnitQuotientInverseLimit_discreteEval π n (f x) := by
+        dvrHigherUnitQuotientInverseLimitDiscreteEval π n (f x) := by
   constructor
   · intro hf n
     exact
@@ -916,7 +916,7 @@ theorem dvrHigherUnitQuotientInverseLimit_continuous_iff
             (DiscreteHigherUnitQuotient.homeomorph π (n + 1)).continuous.comp
               (h n)
           change Continuous fun x =>
-            dvrHigherUnitQuotientInverseLimit_eval π n (f x)
+            dvrHigherUnitQuotientInverseLimitEval π n (f x)
           exact hraw)
         (fun x => by
           change ∀ {i j : ℕ} (hij : i ≤ j),
@@ -936,7 +936,7 @@ theorem dvrHigherUnitQuotientInverseLimit_continuous_iff
 def unitsToHigherUnitQuotientInverseLimit
     {O : Type*} [CommRing O] (π : O) :
     Oˣ →* dvrHigherUnitQuotientInverseLimit π where
-  toFun u := dvrHigherUnitQuotientInverseLimit_mk π
+  toFun u := dvrHigherUnitQuotientInverseLimitMk π
     (fun _ => QuotientGroup.mk u)
     (fun {m n} hmn =>
       dvrHigherUnitQuotientTransition_mk π (m := m) (n := n) hmn u)
@@ -949,11 +949,11 @@ theorem higherUnitQuotient_finiteStage_compat
     {O : Type*} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
     {π : O} (hπ : Irreducible π) {m n : ℕ} (hmn : m ≤ n)
     (q : Oˣ ⧸ higherUnitSubgroup π (n + 1)) :
-    units_quotient_equiv hπ
+    unitsQuotientEquiv hπ
         (Nat.succ_pos m)
         (dvrHigherUnitQuotientTransition π hmn q) =
       Units.map (dvrPowerIdealUnitTransition π hmn).toMonoidHom
-        (units_quotient_equiv hπ
+        (unitsQuotientEquiv hπ
           (Nat.succ_pos n) q) := by
   refine QuotientGroup.induction_on q ?_
   intro u
@@ -977,7 +977,7 @@ def higherUnitQuotientInverseLimitEquivPowerIdealUnitInverseLimit
       (fun {_ _} hmn =>
         Units.map
           (dvrPowerIdealUnitTransition π hmn).toMonoidHom)
-      (fun n => units_quotient_equiv hπ
+      (fun n => unitsQuotientEquiv hπ
         (Nat.succ_pos n))
       (by
         intro m n hmn q
@@ -1002,19 +1002,19 @@ theorem dvrUnitsEquivHigherUnitQuotientInverseLimit_apply
     {O : Type*} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
     {π : O} (hπ : Irreducible π) [IsAdicComplete (uniformizerPowerIdeal π 1) O]
     (u : Oˣ) (n : ℕ) :
-    dvrHigherUnitQuotientInverseLimit_eval π n
+    dvrHigherUnitQuotientInverseLimitEval π n
         (dvrUnitsEquivHigherUnitQuotientInverseLimit hπ u) =
       QuotientGroup.mk u := by
   apply
-    (units_quotient_equiv hπ
+    (unitsQuotientEquiv hπ
       (Nat.succ_pos n)).injective
-  change units_quotient_equiv hπ (Nat.succ_pos n)
-      (dvrHigherUnitQuotientInverseLimit_eval π n
+  change unitsQuotientEquiv hπ (Nat.succ_pos n)
+      (dvrHigherUnitQuotientInverseLimitEval π n
         (dvrUnitsEquivHigherUnitQuotientInverseLimit hπ u)) =
-    units_quotient_equiv hπ (Nat.succ_pos n)
+    unitsQuotientEquiv hπ (Nat.succ_pos n)
       (QuotientGroup.mk u)
   rw [units_quotient_equiv_mk]
-  change dvrPowerIdealUnitInverseLimit_eval π n
+  change dvrPowerIdealUnitInverseLimitEval π n
       ((higherUnitQuotientInverseLimitEquivPowerIdealUnitInverseLimit hπ)
         (dvrUnitsEquivHigherUnitQuotientInverseLimit hπ u)) =
     unitReduction (uniformizerPowerIdeal π (n + 1)) u
@@ -1157,6 +1157,15 @@ theorem higherUnitQuotient_mk_continuous_adic
       (QuotientGroup.mk u.ofTopology : Oˣ ⧸ higherUnitSubgroup π n)) at hmodel
   simpa only [DiscreteHigherUnitQuotient.equiv_symm_apply] using hmodel
 
+private theorem continuous_unitHom_of_continuous_val
+    {A O : Type*} [Group A] [TopologicalSpace A]
+    [CommRing O] [TopologicalSpace O]
+    (f : A →* Oˣ) (hval : Continuous fun a => (f a : O))
+    (hinv : Continuous (fun a : A => a⁻¹)) : Continuous f := by
+  apply Units.continuous_iff.mpr
+  refine ⟨hval, ?_⟩
+  simpa only [Function.comp_def, map_inv] using hval.comp hinv
+
 private noncomputable def unitsCompatibleFamiliesHomeomorph
     {O : Type*} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
     {π : O} (hπ : Irreducible π) [IsAdicComplete (uniformizerPowerIdeal π 1) O] :
@@ -1210,9 +1219,8 @@ private noncomputable def unitsCompatibleFamiliesHomeomorph
       (by
         intro u m n hmn
         exact dvrHigherUnitQuotientTransition_mk π hmn u)
-  · apply Units.continuous_iff.mpr
-    constructor
-    · rw [continuous_iff_continuousAt]
+  · have hval : Continuous (fun q => ((e.symm q : Oˣ) : O)) := by
+      rw [continuous_iff_continuousAt]
       intro q
       rw [ContinuousAt, Filter.tendsto_def]
       intro s hs
@@ -1269,71 +1277,14 @@ private noncomputable def unitsCompatibleFamiliesHomeomorph
             (((e.symm q' : Oˣ) : O) - ((e.symm q : Oˣ) : O)) =
           ((e.symm q' : Oˣ) : O)
         ring)
-    · rw [continuous_iff_continuousAt]
-      intro q
-      rw [ContinuousAt, Filter.tendsto_def]
-      intro s hs
-      rcases (Ideal.hasBasis_nhds_adic (uniformizerPowerIdeal π 1)
-          (((e.symm q)⁻¹ : Oˣ) : O)).mem_iff.mp hs with
-        ⟨n, _hn, hns⟩
-      let cylinder : Set (compatibleGroupFamilies
-          (fun n : ℕ => Oˣ ⧸ higherUnitSubgroup π (n + 1))
-          (fun {_ _} hmn => dvrHigherUnitQuotientTransition π hmn)) :=
-        {q' | q'.1 n = q.1 n}
-      have hcont_coord :
-          Continuous fun q' : compatibleGroupFamilies
-              (fun n : ℕ => Oˣ ⧸ higherUnitSubgroup π (n + 1))
-              (fun {_ _} hmn => dvrHigherUnitQuotientTransition π hmn) =>
-            q'.1 n := by
-        exact (continuous_apply n).comp continuous_subtype_val
-      have hcyl_open : IsOpen cylinder := by
-        exact
-          (isOpen_discrete
-            ({q.1 n} : Set (Oˣ ⧸ higherUnitSubgroup π (n + 1)))).preimage
-              hcont_coord
-      have hqmem : q ∈ cylinder := rfl
-      exact mem_of_superset (hcyl_open.mem_nhds hqmem) (by
-        intro q' hq'
-        apply hns
-        have hmk :
-            (QuotientGroup.mk (e.symm q') :
-                Oˣ ⧸ higherUnitSubgroup π (n + 1)) =
-              QuotientGroup.mk (e.symm q) := by
-          calc
-            (QuotientGroup.mk (e.symm q') :
-                Oˣ ⧸ higherUnitSubgroup π (n + 1)) =
-                (e (e.symm q')).1 n :=
-              (dvrUnitsEquivHigherUnitQuotientInverseLimit_apply
-                hπ (e.symm q') n).symm
-            _ = q'.1 n := by simp [e.apply_symm_apply q']
-            _ = q.1 n := hq'
-            _ = (e (e.symm q)).1 n := by simp [e.apply_symm_apply q]
-            _ = QuotientGroup.mk (e.symm q) :=
-              dvrUnitsEquivHigherUnitQuotientInverseLimit_apply
-                hπ (e.symm q) n
-        have hinv_mk :
-            (QuotientGroup.mk ((e.symm q')⁻¹ : Oˣ) :
-                Oˣ ⧸ higherUnitSubgroup π (n + 1)) =
-              QuotientGroup.mk ((e.symm q)⁻¹ : Oˣ) := by
-          simpa using congrArg Inv.inv hmk
-        have hinv_sub_succ :
-            (((e.symm q')⁻¹ : Oˣ) : O) - (((e.symm q)⁻¹ : Oˣ) : O) ∈
-              uniformizerPowerIdeal π (n + 1) :=
-          (higherUnitQuotient_mk_eq_mk_iff_sub_mem
-            π (n + 1) ((e.symm q)⁻¹ : Oˣ) ((e.symm q')⁻¹ : Oˣ)).1 hinv_mk
-        have hinv_sub :
-            (((e.symm q')⁻¹ : Oˣ) : O) - (((e.symm q)⁻¹ : Oˣ) : O) ∈
-              (uniformizerPowerIdeal π 1) ^ n := by
-          rw [dvrPowerIdeal_one_pow π n]
-          exact dvrPowerIdeal_le_of_le π (Nat.le_succ n)
-            hinv_sub_succ
-        refine
-          ⟨(((e.symm q')⁻¹ : Oˣ) : O) - (((e.symm q)⁻¹ : Oˣ) : O),
-            hinv_sub, ?_⟩
-        change (((e.symm q)⁻¹ : Oˣ) : O) +
-            ((((e.symm q')⁻¹ : Oˣ) : O) - (((e.symm q)⁻¹ : Oˣ) : O)) =
-          (((e.symm q')⁻¹ : Oˣ) : O)
-        ring)
+    have hinv : Continuous (fun q : compatibleGroupFamilies
+        (fun n : ℕ => Oˣ ⧸ higherUnitSubgroup π (n + 1))
+        (fun {_ _} hmn => dvrHigherUnitQuotientTransition π hmn) => q⁻¹) := by
+      apply Continuous.subtype_mk
+      apply continuous_pi
+      intro n
+      exact ((continuous_apply n).comp continuous_subtype_val).inv
+    exact continuous_unitHom_of_continuous_val e.symm.toMonoidHom hval hinv
 
 /-- The unit-group inverse-limit homeomorphism with the adic source and
 prodiscrete target fixed at the type level. -/
@@ -1354,18 +1305,20 @@ noncomputable def unitsEquivHigherUnitQuotientInverseLimitHomeomorph
   let target := dvrHigherUnitQuotientInverseLimitRepresentationHomeomorph π
   exact source.trans (algebraic.trans target.symm)
 
-/-- Complete-DVF specialization of the adic inverse-limit equivalence: the valuation ring is canonically
+/-- Complete-DVF specialization of the adic inverse-limit equivalence: the valuation ring is
+canonically
 isomorphic to its maximal-ideal adic completion. -/
-def completeDVF_valuationSubring_adicCompletionAlgEquiv
+def completeDVFValuationSubringAdicCompletionAlgEquiv
     {K : Type u} [Field K]
     (F : ValuationTheory.DiscreteValuationField.CompleteDVF.{u, v} K) :
     F.valuationSubring ≃ₐ[F.valuationSubring]
       AdicCompletion F.maximalIdeal F.valuationSubring :=
   adicCompletionAlgEquiv F.maximalIdeal
 
-/-- Complete-DVF specialization of the adic inverse-limit equivalence: the valuation ring is the explicit
+/-- Complete-DVF specialization of the adic inverse-limit equivalence: the valuation ring is the
+explicit
 projective limit of its finite quotients by powers of the maximal ideal. -/
-def completeDVF_valuationSubring_quotientInverseLimitEquiv
+def completeDVFValuationSubringQuotientInverseLimitEquiv
     {K : Type u} [Field K]
     (F : ValuationTheory.DiscreteValuationField.CompleteDVF.{u, v} K) :
     F.valuationSubring ≃+*
@@ -1378,14 +1331,15 @@ theorem completeDVF_valuationSubring_quotientInverseLimitEquiv_apply
     {K : Type u} [Field K]
     (F : ValuationTheory.DiscreteValuationField.CompleteDVF.{u, v} K)
     (x : F.valuationSubring) (n : ℕ) :
-    adicQuotientInverseLimit_eval F.maximalIdeal n
-        (completeDVF_valuationSubring_quotientInverseLimitEquiv F x) =
+    adicQuotientInverseLimitEval F.maximalIdeal n
+        (completeDVFValuationSubringQuotientInverseLimitEquiv F x) =
       Ideal.Quotient.mk (F.maximalIdeal ^ n) x := by
   exact adicQuotientInverseLimitEquiv_apply F.maximalIdeal x n
 
-/-- Complete-DVF specialization of the adic inverse-limit equivalence, units of the valuation ring agree
+/-- Complete-DVF specialization of the adic inverse-limit equivalence, units of the valuation
+ring agree
 with units of its maximal-ideal adic completion. -/
-def completeDVF_units_adicCompletionUnitsEquiv
+def completeDVFUnitsAdicCompletionUnitsEquiv
     {K : Type u} [Field K]
     (F : ValuationTheory.DiscreteValuationField.CompleteDVF.{u, v} K) :
     F.valuationSubringˣ ≃*
@@ -1398,13 +1352,14 @@ theorem completeDVF_units_adicCompletionUnitsEquiv_apply
     {K : Type u} [Field K]
     (F : ValuationTheory.DiscreteValuationField.CompleteDVF.{u, v} K)
     (u : F.valuationSubringˣ) :
-    (completeDVF_units_adicCompletionUnitsEquiv F u :
+    (completeDVFUnitsAdicCompletionUnitsEquiv F u :
       AdicCompletion F.maximalIdeal F.valuationSubring) =
-      completeDVF_valuationSubring_adicCompletionAlgEquiv F
+      completeDVFValuationSubringAdicCompletionAlgEquiv F
         (u : F.valuationSubring) := by
   rfl
 
-/-- Complete-DVF specialization of the adic inverse-limit equivalence, unit-coordinate injectivity. -/
+/-- Complete-DVF specialization of the adic inverse-limit equivalence, unit-coordinate
+injectivity. -/
 theorem completeDVF_units_coordinates_injective
     {K : Type u} [Field K]
     (F : ValuationTheory.DiscreteValuationField.CompleteDVF.{u, v} K)
@@ -1417,22 +1372,24 @@ theorem completeDVF_units_coordinates_injective
   exact adicCompletion_units_coordinates_injective
     F.maximalIdeal h
 
-/-- Complete-DVF specialization of the adic inverse-limit equivalence, unit-coordinate surjectivity against
+/-- Complete-DVF specialization of the adic inverse-limit equivalence, unit-coordinate
+surjectivity against
 the adic completion. -/
 theorem completeDVF_units_coordinates_surjective
     {K : Type u} [Field K]
     (F : ValuationTheory.DiscreteValuationField.CompleteDVF.{u, v} K)
     (z : (AdicCompletion F.maximalIdeal F.valuationSubring)ˣ) :
     ∃ u : F.valuationSubringˣ,
-      completeDVF_units_adicCompletionUnitsEquiv F u = z ∧
+      completeDVFUnitsAdicCompletionUnitsEquiv F u = z ∧
         ∀ n : ℕ,
           unitReduction (F.maximalIdeal ^ n) u =
             Units.map (AdicCompletion.evalₐ F.maximalIdeal n).toMonoidHom z := by
   exact adicCompletion_units_coordinates_surjective F.maximalIdeal z
 
-/-- Complete-DVF specialization of the adic inverse-limit equivalence: units of the valuation ring are the
+/-- Complete-DVF specialization of the adic inverse-limit equivalence: units of the valuation
+ring are the
 projective limit of the units of the finite quotient rings. -/
-def completeDVF_unitsEquivUnitInverseLimit
+def completeDVFUnitsEquivUnitInverseLimit
     {K : Type u} [Field K]
     (F : ValuationTheory.DiscreteValuationField.CompleteDVF.{u, v} K) :
     F.valuationSubringˣ ≃*
@@ -1445,14 +1402,14 @@ theorem completeDVF_unitsEquivUnitInverseLimit_apply
     {K : Type u} [Field K]
     (F : ValuationTheory.DiscreteValuationField.CompleteDVF.{u, v} K)
     (u : F.valuationSubringˣ) (n : ℕ) :
-    adicUnitInverseLimit_eval F.maximalIdeal n
-        (completeDVF_unitsEquivUnitInverseLimit F u) =
+    adicUnitInverseLimitEval F.maximalIdeal n
+        (completeDVFUnitsEquivUnitInverseLimit F u) =
       unitReduction (F.maximalIdeal ^ n) u := by
   exact unitsEquivUnitInverseLimit_apply F.maximalIdeal u n
 
 /-- Complete-DVF specialization of the adic inverse-limit equivalence, finite unit quotient form:
 `𝒪ˣ / ker(𝒪ˣ → (𝒪/𝔭ⁿ)ˣ) ≃ (𝒪/𝔭ⁿ)ˣ` for `n ≥ 1`. -/
-noncomputable def completeDVF_unitsModMaximalIdealPowEquiv
+noncomputable def completeDVFUnitsModMaximalIdealPowEquiv
     {K : Type u} [Field K]
     (F : ValuationTheory.DiscreteValuationField.CompleteDVF.{u, v} K)
     {n : ℕ} (hn : 1 ≤ n) :
@@ -1468,7 +1425,7 @@ theorem completeDVF_unitsModMaximalIdealPowEquiv_mk
     {K : Type u} [Field K]
     (F : ValuationTheory.DiscreteValuationField.CompleteDVF.{u, v} K)
     {n : ℕ} (hn : 1 ≤ n) (u : F.valuationSubringˣ) :
-    completeDVF_unitsModMaximalIdealPowEquiv F hn
+    completeDVFUnitsModMaximalIdealPowEquiv F hn
         (QuotientGroup.mk u) =
       unitReduction (F.maximalIdeal ^ n) u := by
   exact unitsModMaximalIdealPowEquiv_mk
@@ -1512,7 +1469,7 @@ theorem completeDVF_units_quotient_coordinates_injective
 /-- The adic inverse-limit equivalence, direct algebraic endpoint from valued-field completeness:
 the canonical map from the valuation ring to the positive-indexed inverse
 limit of its maximal-ideal quotients is a ring equivalence. -/
-def completeValuedField_valuationSubringEquivPositiveQuotientInverseLimit
+def completeValuedFieldValuationSubringEquivPositiveQuotientInverseLimit
     {K : Type u} [Field K] {Gamma : Type v}
     [LinearOrderedCommGroupWithZero Gamma] [MulArchimedean Gamma]
     [Valued K Gamma]
@@ -1526,7 +1483,7 @@ def completeValuedField_valuationSubringEquivPositiveQuotientInverseLimit
   let F : ValuationTheory.DiscreteValuationField.CompleteDVF.{u, v} K :=
     completeDVFOfCompleteValuedField (K := K) (Gamma := Gamma)
   exact
-    (completeDVF_valuationSubring_quotientInverseLimitEquiv F).trans
+    (completeDVFValuationSubringQuotientInverseLimitEquiv F).trans
       (adicQuotientInverseLimitEquivPositive F.maximalIdeal)
 
 /-- The direct valuation-ring equivalence is the canonical map,
@@ -1538,10 +1495,10 @@ theorem completeValuedField_valuationSubringEquivPositiveQuotientInverseLimit_ap
     [(Valued.v : Valuation K Gamma).IsRankOneDiscrete]
     [CompleteSpace K]
     (x : (Valued.v : Valuation K Gamma).valuationSubring) (n : ℕ) :
-    adicPositiveQuotientInverseLimit_eval
+    adicPositiveQuotientInverseLimitEval
         (IsLocalRing.maximalIdeal
           (Valued.v : Valuation K Gamma).valuationSubring) n
-        (completeValuedField_valuationSubringEquivPositiveQuotientInverseLimit
+        (completeValuedFieldValuationSubringEquivPositiveQuotientInverseLimit
           (K := K) (Gamma := Gamma) x) =
       Ideal.Quotient.mk
         ((IsLocalRing.maximalIdeal
@@ -1553,7 +1510,7 @@ theorem completeValuedField_valuationSubringEquivPositiveQuotientInverseLimit_ap
     rankOneDiscreteValuationSubring_isAdicComplete
       (K := K) (Gamma := Gamma)
   change
-    adicPositiveQuotientInverseLimit_eval m n
+    adicPositiveQuotientInverseLimitEval m n
         (adicPositiveQuotientInverseLimitEquiv m x) =
       Ideal.Quotient.mk (m ^ (n + 1)) x
   exact adicPositiveQuotientInverseLimitEquiv_apply m x n
@@ -1561,7 +1518,7 @@ theorem completeValuedField_valuationSubringEquivPositiveQuotientInverseLimit_ap
 /-- The adic inverse-limit equivalence, direct topological endpoint: with the native valued
 topology on the valuation ring and discrete topology at every finite stage,
 the canonical ring equivalence is a homeomorphism. -/
-def completeValuedField_valuationSubringPositiveQuotientInverseLimitHomeomorph
+def completeValuedFieldValuationSubringPositiveQuotientInverseLimitHomeomorph
     {K : Type u} [Field K] {Gamma : Type v}
     [LinearOrderedCommGroupWithZero Gamma] [MulArchimedean Gamma]
     [Valued K Gamma]
@@ -1592,10 +1549,10 @@ def completeValuedField_valuationSubringPositiveQuotientInverseLimitHomeomorph
 in its valuation ring. -/
 theorem completeValuedField_uniformizer_irreducible
     {K : Type u} [Field K] {Gamma : Type v}
-    [LinearOrderedCommGroupWithZero Gamma] [MulArchimedean Gamma]
+    [LinearOrderedCommGroupWithZero Gamma]
     [Valued K Gamma]
     [(Valued.v : Valuation K Gamma).IsRankOneDiscrete]
-    [CompleteSpace K]
+
     {pi : (Valued.v : Valuation K Gamma).valuationSubring}
     (hpi : (Valued.v : Valuation K Gamma).IsUniformizer (pi : K)) :
     Irreducible pi := by
@@ -1613,10 +1570,10 @@ theorem completeValuedField_uniformizer_irreducible
 ideal of the valuation ring. -/
 theorem completeValuedField_uniformizerPowerIdeal_one_eq_maximalIdeal
     {K : Type u} [Field K] {Gamma : Type v}
-    [LinearOrderedCommGroupWithZero Gamma] [MulArchimedean Gamma]
+    [LinearOrderedCommGroupWithZero Gamma]
     [Valued K Gamma]
     [(Valued.v : Valuation K Gamma).IsRankOneDiscrete]
-    [CompleteSpace K]
+
     {pi : (Valued.v : Valuation K Gamma).valuationSubring}
     (hpi : (Valued.v : Valuation K Gamma).IsUniformizer (pi : K)) :
     uniformizerPowerIdeal pi 1 =
@@ -1670,7 +1627,7 @@ theorem completeValuedField_uniformizerIdeal_isAdic
 /-- The adic inverse-limit equivalence, direct unit-group endpoint from valued-field
 completeness: the canonical map `𝒪ˣ → lim 𝒪ˣ/U⁽ⁿ⁾` is a
 multiplicative equivalence. -/
-def completeValuedField_unitsEquivHigherUnitQuotientInverseLimit
+def completeValuedFieldUnitsEquivHigherUnitQuotientInverseLimit
     {K : Type u} [Field K] {Gamma : Type v}
     [LinearOrderedCommGroupWithZero Gamma] [MulArchimedean Gamma]
     [Valued K Gamma]
@@ -1700,8 +1657,8 @@ theorem completeValuedField_unitsEquivHigherUnitQuotientInverseLimit_apply
     {pi : (Valued.v : Valuation K Gamma).valuationSubring}
     (hpi : (Valued.v : Valuation K Gamma).IsUniformizer (pi : K))
     (u : (Valued.v : Valuation K Gamma).valuationSubringˣ) (n : ℕ) :
-    dvrHigherUnitQuotientInverseLimit_eval pi n
-      (completeValuedField_unitsEquivHigherUnitQuotientInverseLimit
+    dvrHigherUnitQuotientInverseLimitEval pi n
+      (completeValuedFieldUnitsEquivHigherUnitQuotientInverseLimit
         hpi u) = QuotientGroup.mk u := by
   let O := (Valued.v : Valuation K Gamma).valuationSubring
   let : IsDiscreteValuationRing O :=
@@ -1715,7 +1672,7 @@ theorem completeValuedField_unitsEquivHigherUnitQuotientInverseLimit_apply
 /-- The adic inverse-limit equivalence, direct topological unit endpoint: for the native topology
 on `𝒪ˣ` and discrete topology on all finite quotients, the canonical
 unit map is a homeomorphism. -/
-def completeValuedField_unitsHigherUnitQuotientInverseLimitHomeomorph
+def completeValuedFieldUnitsHigherUnitQuotientInverseLimitHomeomorph
     {K : Type u} [Field K] {Gamma : Type v}
     [LinearOrderedCommGroupWithZero Gamma] [MulArchimedean Gamma]
     [Valued K Gamma]

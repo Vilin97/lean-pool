@@ -72,7 +72,8 @@ theorem residueExtensionArithmeticFrobeniusOfValuationExtension_preserves_base
   let : Algebra.IsAlgebraic 𝓀[K] 𝓀[L] := inferInstance
   simp [residueExtensionArithmeticFrobeniusOfValuationExtension]
 
-/-- The order of residue arithmetic Frobenius is the degree of the finite residue-field extension. -/
+/-- The order of residue arithmetic Frobenius is the degree of the finite residue-field
+extension. -/
 theorem orderOf_residueExtensionArithmeticFrobeniusOfValuationExtension
     (K L : Type u) [Field K] [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K] [Field L] [ValuativeRel L]
@@ -137,7 +138,6 @@ noncomputable def arithmeticFrobeniusOfUnramifiedValuation
 
 /-- The unramified Galois-residue equivalence lifts residue arithmetic Frobenius to field arithmetic
 Frobenius. -/
-@[simp]
 theorem galoisGroupEquivResidueAlgEquivOfUnramifiedValuationOfIsIntegralClosure_arithmeticFrobenius
     (K L : Type u) [Field K] [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K] [Field L] [ValuativeRel L]
@@ -340,7 +340,8 @@ theorem arithmeticFrobeniusOfUnramifiedValuation_apply_primitiveRoot
     _ = (a : L) ^ Nat.card 𝓀[K] := hval'
     _ = ζ ^ Nat.card 𝓀[K] := by rw [ha]
 
-/-- Arithmetic Frobenius in an unramified Galois extension has order equal to the extension degree. -/
+/-- Arithmetic Frobenius in an unramified Galois extension has order equal to the extension
+degree. -/
 theorem orderOf_arithmeticFrobeniusOfUnramifiedValuation
     (K L : Type u) [Field K] [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K] [Field L] [ValuativeRel L]
@@ -520,7 +521,8 @@ private theorem zmodCyclicMulEquivOfGenerator_apply_one {G : Type*} [Group G]
 
 /-- The generator-normalized ZMod model of the actual unramified Galois group.
 Unlike `galoisGroupEquivZModOfUnramifiedValuation`, this quotient construction uses
-the specified arithmetic Frobenius as the generator, following the normalized Frobenius construction before the uniformizer/Frobenius calculation. -/
+the specified arithmetic Frobenius as the generator, following the normalized Frobenius
+  construction before the uniformizer/Frobenius calculation. -/
 noncomputable def galoisGroupEquivZModOfUnramifiedValuationNormalized
     (K L : Type u) [Field K] [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K] [Field L] [ValuativeRel L]

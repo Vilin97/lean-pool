@@ -8,7 +8,8 @@ import Mathlib.NumberTheory.LegendreSymbol.JacobiSymbol
 /-!
 # Gauss reciprocity and its supplementary laws
 
-This file proves Gauss reciprocity and its supplementary laws. Mathlib's Jacobi symbol has a natural-number
+This file proves Gauss reciprocity and its supplementary laws. Mathlib's Jacobi symbol has a
+  natural-number
 denominator, so an integer denominator `b` is written canonically as
 `jacobiSym a b.natAbs`, as is forced by the principal ideal `(b)`.
 -/

@@ -9,10 +9,11 @@ import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Completi
 /-!
 # Cross-base restriction of finite-place Artin homomorphisms
 
-This module compares localized completions in a square of number fields with different base fields and transports restriction through the corresponding decomposition groups.
+This module compares localized completions in a square of number fields with different base
+  fields and transports restriction through the corresponding decomposition groups.
 -/
 
-open scoped Classical IsMulCommutative NNReal NumberField
+open scoped IsMulCommutative NNReal NumberField
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -30,6 +31,7 @@ variable {K L : Type}
     [Field L] [Algebra K L]
     [FiniteDimensional K L] [IsAbelianGalois K L]
 
+open scoped Classical in
 private theorem finitePlaceArtinLocalizedCompletion_algebraMap
     {F M : Type}
     [Field F] [NumberField F]
@@ -111,7 +113,9 @@ private theorem finitePlaceArtinLocalizedCompletion_algebraMap
     (relativeFinitePlaceCompletionAlgEquiv v).symm_apply_apply,
     AbsoluteValue.completionAlgebra_algebraMap]
 
-/-- The continuous ring homomorphism between base completions attached to a finite place lying above another. -/
+open scoped Classical in
+/-- The continuous ring homomorphism between base completions attached to a finite place lying
+above another. -/
 noncomputable def finitePlaceArtinRelativeCompletionRingHom
     {K' : Type} [Field K'] [NumberField K']
     [Algebra K K']
@@ -128,6 +132,7 @@ noncomputable def finitePlaceArtinRelativeCompletionRingHom
     ((finitePlaceAdicCompletionMap
       K K' v ⟨W, hW⟩).comp eC.toRingHom)
 
+open scoped Classical in
 /-- The finite-place map between the relative base completions is continuous. -/
 theorem finitePlaceArtinRelativeCompletionRingHom_continuous
     {K' : Type} [Field K'] [NumberField K']
@@ -149,11 +154,12 @@ theorem finitePlaceArtinRelativeCompletionRingHom_continuous
         K K' v ⟨W, hW⟩).comp
         (relativeFinitePlaceCompletionRingHom_isometry v).continuous)
 
+open scoped Classical in
 /-- The localized completion at a finite place, with its completion-algebra
 tower hidden behind one named type. -/
 noncomputable abbrev finitePlaceArtinLocalizedCompletion
     (F M : Type) [Field F] [NumberField F]
-    [Field M] [NumberField M] [Algebra F M]
+    [Field M] [Algebra F M]
     (v : HeightOneSpectrum (𝓞 F))
     (w : AbsoluteValueExtension
       (NumberField.HeightOneSpectrum.adicAbv F v) M) : Type :=
@@ -163,6 +169,7 @@ noncomputable abbrev finitePlaceArtinLocalizedCompletion
     finitePlaceLocalArtinLocalizedAlgebra (K := F) (L := M) v w
   E
 
+open scoped Classical in
 /-- The canonical map from the base completion into the localized completion,
 with its construction tower confined to the definition body. -/
 noncomputable def finitePlaceArtinLocalizedCompletionBaseRingHom
@@ -183,6 +190,7 @@ noncomputable def finitePlaceArtinLocalizedCompletionBaseRingHom
   exact algebraMap vF.Completion
     (AlgebraicNumberTheory.Valuations.LocalizedCompletion vF w)
 
+open scoped Classical in
 /-- The ring homomorphism between localized completions in a finite-place scalar tower. -/
 noncomputable def finitePlaceArtinLocalizedCompletionRingHom
     {K' L' : Type}
@@ -190,8 +198,8 @@ noncomputable def finitePlaceArtinLocalizedCompletionRingHom
     [Field L'] [NumberField L']
     [NumberField L]
     [Algebra K K'] [Algebra K' L'] [Algebra K L']
-    [IsScalarTower K K' L']
-    [Algebra L L'] [IsScalarTower K L L']
+
+    [Algebra L L']
     (v : HeightOneSpectrum (𝓞 K))
     (W : HeightOneSpectrum (𝓞 K'))
     (w : AbsoluteValueExtension
@@ -255,6 +263,7 @@ noncomputable def finitePlaceArtinLocalizedCompletionRingHom
         L L' U.1 ⟨U'.1, hU'L⟩).comp eE.toRingHom)
 
 omit [IsAbelianGalois K L] in
+open scoped Classical in
 /-- The localized-completion map agrees with the scalar-tower embedding on global elements. -/
 theorem finitePlaceArtinLocalizedCompletion_towerPoint
     {K' L' : Type}
@@ -418,6 +427,7 @@ theorem finitePlaceArtinLocalizedCompletion_towerPoint
       rw [eE'.apply_symm_apply, hLowerBase]
 
 omit [IsAbelianGalois K L] in
+open scoped Classical in
 private theorem finitePlaceArtinLocalizedCompletion_globalEmbedding
     {K' L' : Type}
     [Field K'] [NumberField K']
@@ -584,6 +594,7 @@ private theorem finitePlaceArtinLocalizedCompletion_globalEmbedding
     finitePlaceAdicCompletionMap_coe
       L L' U.1 ⟨U'.1, hU'L⟩ x
 
+open scoped Classical in
 /-- Localized automorphisms with the completion tower hidden behind one named
 type. -/
 noncomputable abbrev finitePlaceArtinLocalizedAutomorphism
@@ -598,6 +609,7 @@ noncomputable abbrev finitePlaceArtinLocalizedAutomorphism
     finitePlaceLocalArtinLocalizedAlgebra (K := F) (L := M) v w
   E ≃ₐ[vF.Completion] E
 
+open scoped Classical in
 /-- Restriction of localized automorphisms across a finite-place square with
 different base fields. -/
 noncomputable def finitePlaceCrossLocalRestrictionMonoidHom
@@ -608,7 +620,7 @@ noncomputable def finitePlaceCrossLocalRestrictionMonoidHom
     [Algebra K K'] [Algebra K' L'] [Algebra K L']
     [IsScalarTower K K' L']
     [Algebra L L'] [IsScalarTower K L L']
-    [IsAbelianGalois K' L']
+
     (v : HeightOneSpectrum (𝓞 K))
     (W : HeightOneSpectrum (𝓞 K'))
     (hW : finitePlaceBelow (K := K) W = v)
@@ -677,6 +689,7 @@ noncomputable def finitePlaceCrossLocalRestrictionMonoidHom
     (AlgEquiv.restrictNormalHom E).comp
       (AlgEquiv.restrictScalarsHom C)
 
+open scoped Classical in
 private theorem finitePlaceDecompositionEquiv_symm_action
     {F M : Type}
     [Field F] [Field M] [Algebra F M] [IsGalois F M]
@@ -734,6 +747,7 @@ private theorem finitePlaceDecompositionEquiv_symm_action
     _ = tau (embedding z) := by
       rw [e.apply_symm_apply]
 
+open scoped Classical in
 private theorem finitePlaceCrossDecompositionTransport_core
     {K K' L L' C D E E' : Type}
     [Field K] [Field K'] [Field L] [Field L']
@@ -803,6 +817,7 @@ private theorem finitePlaceCrossDecompositionTransport_core
         (algebraMap L L' (phiLower tauLower z)) := by
       rw [hEmbedding]
 
+open scoped Classical in
 /-- Restriction through the completed local square agrees with restriction of
 the corresponding global decomposition-group automorphisms. -/
 theorem finitePlaceCrossDecompositionTransport

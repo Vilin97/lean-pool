@@ -291,7 +291,8 @@ theorem normTopology_hausdorff
 
 /-- General norm-topology lemma: once every defining norm quotient is
 finite, openness is equivalent to closedness together with finite index.
-the norm-subgroup basis characterization supplies the finiteness premise from the abstract reciprocity theorem. -/
+the norm-subgroup basis characterization supplies the finiteness premise from the abstract
+  reciprocity theorem. -/
 theorem normTopology_open_iff_closed_finiteIndex_of_finite_normQuotients
     (A : Rep ℤ G) (K : ClosedSubgroup G)
     (hfinite : ∀ L : FiniteGaloisSubextension K,

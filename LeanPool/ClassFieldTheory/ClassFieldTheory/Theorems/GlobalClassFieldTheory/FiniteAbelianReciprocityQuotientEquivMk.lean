@@ -20,7 +20,6 @@ namespace ClassFieldTheory
 universe u v
 
 /-- The quotient isomorphism evaluates to the original Artin map. -/
-@[simp]
 theorem finiteAbelianReciprocityQuotientEquiv_mk
     (K : Type u) (L : Type v)
     [Field K] [NumberField K]

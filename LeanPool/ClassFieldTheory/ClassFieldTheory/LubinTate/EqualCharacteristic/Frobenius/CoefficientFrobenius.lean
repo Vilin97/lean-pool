@@ -8,15 +8,19 @@ import Mathlib.SetTheory.Cardinal.Finite
 import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.Frobenius.LaurentSeriesFrobenius
 import Mathlib.RingTheory.PowerSeries.Basic
 /-!
-# The equal-characteristic completed-unramified construction: equal-characteristic Frobenius on the completed unramified ring
+# The equal-characteristic completed-unramified construction: equal-characteristic Frobenius on
+  the completed unramified ring
 
 For a finite field `k`, arithmetic Frobenius acts on `AlgebraicClosure k`
 by the `#k`-power map and hence coefficientwise on
 `(AlgebraicClosure k)[[T]]`.  These definitions belong to the completed
-maximal-unramified source used in the equal-characteristic completed-unramified construction; the theta construction of the equal-characteristic theta construction
+maximal-unramified source used in the equal-characteristic completed-unramified construction;
+  the theta construction of the equal-characteristic theta construction
 depends on them, not conversely.
 
-This is an equal-characteristic specialization of the general local-field construction, not a claim that Lemma the equal-characteristic completed-unramified construction is complete in general.
+This is an equal-characteristic specialization of the general local-field construction, not a
+  claim that Lemma the equal-characteristic completed-unramified construction is complete in
+  general.
 -/
 
 noncomputable section

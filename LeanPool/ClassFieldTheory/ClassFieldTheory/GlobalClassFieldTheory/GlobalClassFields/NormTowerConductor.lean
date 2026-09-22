@@ -123,7 +123,6 @@ def ideleClassNormQuotientTowerMap :
 omit [IsGalois K M] [IsGalois K L] in
 /-- The tower norm-quotient transition sends an idele class to the same
 class modulo the intermediate norm subgroup. -/
-@[simp]
 theorem ideleClassNormQuotientTowerMap_mk
     (x : IdeleClassGroup K) :
     ideleClassNormQuotientTowerMap
@@ -166,7 +165,6 @@ omit [IsGalois K M] in
 /-- The narrow-finite-conductor ray-class map to the intermediate norm quotient sends
 an idele class to the same class modulo the intermediate norm
 subgroup. -/
-@[simp]
 theorem
     narrowFiniteConductorRayClassGroupToIntermediateIdeleClassNormQuotient_mk
     (x : IdeleClassGroup K) :

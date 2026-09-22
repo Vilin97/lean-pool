@@ -61,7 +61,7 @@ noncomputable def finitePlaceLocalTensorDecompositionComponentRingHom
     (Pi.evalRingHom
       (fun u : AbsoluteValueExtension vK L =>
         u.1.Completion) wL).comp
-      ((completionTensorDecomposition_left
+      ((completionTensorDecompositionLeft
         (K := K) (L := L) vK hvK).toRingEquiv.toRingHom.comp
         (relativeFinitePlaceLocalTensorAlgEquiv
           (K := K) (L := L) w).symm.toRingEquiv.toRingHom)
@@ -142,7 +142,7 @@ noncomputable def finitePlaceLocalTensorDecompositionUnitsEquiv
     (Units.mapEquiv
       (((relativeFinitePlaceLocalTensorAlgEquiv
             (K := K) (L := L) w).symm.toRingEquiv.trans
-          (completionTensorDecomposition_left
+          (completionTensorDecompositionLeft
             (K := K) (L := L) vK hvK).toRingEquiv).toMulEquiv)).trans
       MulEquiv.piUnits
 

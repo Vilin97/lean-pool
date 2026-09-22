@@ -281,7 +281,7 @@ private theorem depthLowerFiltration_zero_eq_fixedFieldInertiaSubgroupDVF
     (huniq :
       RamificationTheory.DiscreteValuationField.DVF.HasUniqueValuationExtension.{u, v, w, x, x}
         base target)
-    (H : Subgroup Gal(L/K)) [H.Normal] :
+    (H : Subgroup Gal(L/K)) :
     ((ramificationNumberDepthOfUniqueExtension
         (base := base) (target := target) huniq).depthLowerFiltration H).lower 0 =
       fixedFieldInertiaSubgroupDVF

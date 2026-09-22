@@ -16,8 +16,7 @@ reciprocity map, while the image of an ordinary prime ideal is the
 genuine arithmetic Frobenius automorphism.
 -/
 
-open scoped NumberField Classical
-
+open scoped NumberField
 noncomputable section
 
 namespace GlobalClassFieldTheory
@@ -31,6 +30,7 @@ variable
     [Field L] [NumberField L] [Algebra K L]
     [IsAbelianGalois K L]
 
+open scoped Classical in
 /-- At an unramified prime outside a defining modulus, the arithmetic
 ideal Artin symbol has order equal to the common inertia degree of the
 primes above it. -/
@@ -58,6 +58,7 @@ theorem
     finitePlaceLocalDegree_eq_inertiaDegree_of_chosenUnramified
       (K := K) (L := L) v hunram
 
+open scoped Classical in
 /-- The arithmetic Artin symbol of a power of an unramified prime is
 trivial exactly when the common inertia degree divides the exponent. -/
 theorem
@@ -83,6 +84,7 @@ theorem
     orderOf_arithmeticIdealArtin_prime_eq_inertiaDegree_of_chosenUnramified
       (K := K) (L := L) m hm v hv hunram]
 
+open scoped Classical in
 /-- Full unramified decomposition law expressed through the genuine
 arithmetic ideal Artin symbol.  The prime factors are distinct, every
 factor has degree equal to the order of arithmetic Frobenius, and the

@@ -154,7 +154,6 @@ noncomputable def rationalCyclotomicLocalizedPrimitiveRoot
 
 /-- The selected localized root is the actual global-to-local image of
 the selected global primitive root. -/
-@[simp]
 theorem rationalCyclotomicGlobalToLocalizedAlgHom_primitiveRoot
     (m : ℕ+) (v : HeightOneSpectrum (𝓞 ℚ)) :
     rationalCyclotomicGlobalToLocalizedAlgHom m v

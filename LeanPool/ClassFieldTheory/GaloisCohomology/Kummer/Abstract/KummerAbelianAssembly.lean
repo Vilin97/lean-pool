@@ -38,7 +38,6 @@ theorem mem_extensionSubgroup_iff
 
 /-- The quotient action on an invariant subtype is the original ambient
 action after choosing a representative in `G_K`. -/
-@[simp]
 theorem extensionFixedRepresentation_quotient_mk_apply_val
     (A : Rep ℤ G) (K M : ClosedSubgroup G)
     (hMK : M.toSubgroup ≤ K.toSubgroup)
@@ -103,7 +102,7 @@ theorem extensionFixedEndomorphism_fixed_val
 subgroups intersect in `G_L`.  The generation conclusion is derived from
 the radicals' stabilizers; it is not an input. -/
 theorem closedSetFixingSubgroup_range_extensionFixed_eq
-    [IsTopologicalGroup G]
+
     (A : Rep ℤ G) (hcontinuous : IsContinuousDiscreteRepresentation A)
     (K L : ClosedSubgroup G) (hLK : L.toSubgroup ≤ K.toSubgroup)
     {iota : Type*}

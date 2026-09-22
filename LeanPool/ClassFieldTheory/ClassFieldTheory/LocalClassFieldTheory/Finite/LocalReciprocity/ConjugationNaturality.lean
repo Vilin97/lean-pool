@@ -45,7 +45,8 @@ theorem abelianizedGaloisConjugationOfEmbeddings_eq_refl
   change
     (finiteGaloisAbstractQuotientEquivGaloisGroupOfEmbedding K L j).abelianizationCongr
         ((finiteGaloisConjugationOfEmbeddings K L i j).abelianizationCongr
-          ((finiteGaloisAbstractQuotientEquivGaloisGroupOfEmbedding K L i).abelianizationCongr.symm z)) =
+          ((finiteGaloisAbstractQuotientEquivGaloisGroupOfEmbedding K L
+            i).abelianizationCongr.symm z)) =
       z
   exact
     (finiteGaloisAbstractQuotientEquivGaloisGroup_conjugation
@@ -105,9 +106,9 @@ noncomputable def topologicalAbelianizationConjugationOfEmbeddings
     QuotientGroup.discreteTopology (isOpen_discrete _)
   let e : TopologicalAbelianization (Gal(L / K)) ≃*
       TopologicalAbelianization (Gal(L / K)) :=
-    (topologicalAbelianization_finite_equiv K L).symm.trans
+    (topologicalAbelianizationFiniteEquiv K L).symm.trans
       ((abelianizedGaloisConjugationOfEmbeddings K L i j).trans
-        (topologicalAbelianization_finite_equiv K L))
+        (topologicalAbelianizationFiniteEquiv K L))
   exact
     { e with
       continuous_toFun := continuous_of_discreteTopology
@@ -117,10 +118,10 @@ noncomputable def topologicalAbelianizationConjugationOfEmbeddings
 algebraic conjugation through the finite abelianization comparison. -/
 theorem topologicalAbelianizationConjugationOfEmbeddings_toMonoidHom
     (i j : L →ₐ[K] SeparableClosure K) :
-    (topologicalAbelianization_finite_equiv K L).symm.toMonoidHom.comp
+    (topologicalAbelianizationFiniteEquiv K L).symm.toMonoidHom.comp
         (topologicalAbelianizationConjugationOfEmbeddings K L i j).toMonoidHom =
       (abelianizedGaloisConjugationOfEmbeddings K L i j).toMonoidHom.comp
-        (topologicalAbelianization_finite_equiv K L).symm.toMonoidHom := by
+        (topologicalAbelianizationFiniteEquiv K L).symm.toMonoidHom := by
   ext x
   rfl
 
@@ -140,13 +141,13 @@ theorem localArtinMap_conjugation
   apply ContinuousMonoidHom.ext
   intro x
   change
-    (topologicalAbelianization_finite_equiv K L)
+    (topologicalAbelianizationFiniteEquiv K L)
         ((abelianizedGaloisConjugationOfEmbeddings K L i j)
-          ((topologicalAbelianization_finite_equiv K L).symm
+          ((topologicalAbelianizationFiniteEquiv K L).symm
             (localArtinMap K L x))) =
       localArtinMap K L x
   rw [abelianizedGaloisConjugationOfEmbeddings_eq_refl]
-  exact (topologicalAbelianization_finite_equiv K L).apply_symm_apply _
+  exact (topologicalAbelianizationFiniteEquiv K L).apply_symm_apply _
 
 end LocalContinuous
 

@@ -77,7 +77,7 @@ noncomputable def fieldNormUnitsQuotientKerEquivFieldNormSubgroup :
 Establishes the identity `fieldNormUnitsQuotientKerEquivFieldNormSubgroup K L (QuotientGroup.mk'
 (MonoidHom.ker (normUnits K L)) z) = (normUnits K L).rangeRestrict z`.
 -/
-@[simp] theorem fieldNormUnitsQuotientKerEquivFieldNormSubgroup_mk
+theorem fieldNormUnitsQuotientKerEquivFieldNormSubgroup_mk
     (z : Lˣ) :
     fieldNormUnitsQuotientKerEquivFieldNormSubgroup K L
         (QuotientGroup.mk'
@@ -89,7 +89,7 @@ Establishes the identity `fieldNormUnitsQuotientKerEquivFieldNormSubgroup K L (Q
 Establishes the identity `((fieldNormUnitsQuotientKerEquivFieldNormSubgroup K L (QuotientGroup.mk'
 (MonoidHom.ker (normUnits K L)) z) : fieldNormSubgroup K L) : Kˣ) = normUnits K L z`.
 -/
-@[simp] theorem coe_fieldNormUnitsQuotientKerEquivFieldNormSubgroup_mk
+theorem coe_fieldNormUnitsQuotientKerEquivFieldNormSubgroup_mk
     (z : Lˣ) :
     ((fieldNormUnitsQuotientKerEquivFieldNormSubgroup K L
         (QuotientGroup.mk'
@@ -465,7 +465,7 @@ theorem fieldNormQuotient_norm_mul_mk_eq_mk (z : Lˣ) (x : Kˣ) :
     fieldNormQuotient_norm_mul_mk_eq K L z x]
 
 /-- Norm of an element coming from the base field. -/
-@[simp] theorem fieldNormUnits_algebraMap (u : Kˣ) :
+theorem fieldNormUnits_algebraMap (u : Kˣ) :
     normUnits K L (Units.map (algebraMap K L).toMonoidHom u) =
       u ^ Module.finrank K L := by
   ext
@@ -624,7 +624,7 @@ Establishes the identity `fieldNormQuotientEquivZMod K L vK vL residueDegree hfo
 hzero (QuotientGroup.mk' (fieldNormSubgroup K L) x) = Multiplicative.ofAdd ((vK.val x : ℤ) : ZMod
 residueDegree)`.
 -/
-@[simp] theorem fieldNormQuotientEquivZMod_mk
+theorem fieldNormQuotientEquivZMod_mk
     (vK : MultiplicativeIntegerValuation Kˣ)
     (vL : MultiplicativeIntegerValuation Lˣ)
     (residueDegree : ℕ)
@@ -658,7 +658,7 @@ residueDegree)`.
 `fieldNormQuotientEquivZMod K L vK vL residueDegree hformula hϖK hϖL hzero (QuotientGroup.mk'
 (fieldNormSubgroup K L) (ϖK ^ n)) = Multiplicative.ofAdd ((n : ℤ) : ZMod residueDegree)`.
 -/
-@[simp] theorem fieldNormQuotientEquivZMod_uniformizer_zpow
+theorem fieldNormQuotientEquivZMod_uniformizer_zpow
     (vK : MultiplicativeIntegerValuation Kˣ)
     (vL : MultiplicativeIntegerValuation Lˣ)
     (residueDegree : ℕ)
@@ -682,7 +682,7 @@ residueDegree)`.
 `fieldNormQuotientEquivZMod K L vK vL residueDegree hformula hϖK hϖL hzero ((QuotientGroup.mk'
 (fieldNormSubgroup K L) ϖK) ^ n) = Multiplicative.ofAdd ((n : ℤ) : ZMod residueDegree)`.
 -/
-@[simp] theorem fieldNormQuotientEquivZMod_uniformizerClass_zpow
+theorem fieldNormQuotientEquivZMod_uniformizerClass_zpow
     (vK : MultiplicativeIntegerValuation Kˣ)
     (vL : MultiplicativeIntegerValuation Lˣ)
     (residueDegree : ℕ)
@@ -1836,7 +1836,7 @@ Establishes the identity `fieldNormFiltrationQuotientModuloPreimageClassEquivRan
 targetLevel hN n (QuotientGroup.mk' (fieldNormFiltrationPreimageClassInQuotient K L UK UL
 targetLevel n) q) = (fieldNormFiltrationQuotientMap K L UK UL targetLevel hN n).rangeRestrict q`.
 -/
-@[simp] theorem fieldNormFiltrationQuotientModuloPreimageClassEquivRange_mk
+theorem fieldNormFiltrationQuotientModuloPreimageClassEquivRange_mk
     (UK : AntitoneSubgroupFiltration Kˣ) (UL : AntitoneSubgroupFiltration Lˣ)
     (targetLevel : ℕ → ℕ)
     (hN : fieldNormMapsFiltrationLevels K L UK UL targetLevel) (n : ℕ)
@@ -1859,7 +1859,7 @@ targetLevel n) q) : (fieldNormFiltrationQuotientMap K L UK UL targetLevel hN n).
 UK.principalUnitSubgroup (targetLevel n)) = fieldNormFiltrationQuotientMap K L UK UL targetLevel
 hN n q`.
 -/
-@[simp] theorem coe_fieldNormFiltrationQuotientModuloPreimageClassEquivRange_mk
+theorem coe_fieldNormFiltrationQuotientModuloPreimageClassEquivRange_mk
     (UK : AntitoneSubgroupFiltration Kˣ) (UL : AntitoneSubgroupFiltration Lˣ)
     (targetLevel : ℕ → ℕ)
     (hN : fieldNormMapsFiltrationLevels K L UK UL targetLevel) (n : ℕ)
@@ -1904,7 +1904,7 @@ Establishes the identity `fieldNormFiltrationQuotientModuloPreimageClassEquivTar
 targetLevel hN n hSurj (QuotientGroup.mk' (fieldNormFiltrationPreimageClassInQuotient K L UK UL
 targetLevel n) q) = fieldNormFiltrationQuotientMap K L UK UL targetLevel hN n q`.
 -/
-@[simp] theorem fieldNormFiltrationQuotientModuloPreimageClassEquivTarget_mk
+theorem fieldNormFiltrationQuotientModuloPreimageClassEquivTarget_mk
     (UK : AntitoneSubgroupFiltration Kˣ) (UL : AntitoneSubgroupFiltration Lˣ)
     (targetLevel : ℕ → ℕ)
     (hN : fieldNormMapsFiltrationLevels K L UK UL targetLevel) (n : ℕ)

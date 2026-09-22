@@ -112,7 +112,8 @@ theorem FiniteAbstractField.residueDegree_conjugate
 
 namespace ValuationData
 
-/-- **conjugation compatibility of normalized valuations.** The normalized valuations are compatible with
+/-- **conjugation compatibility of normalized valuations.** The normalized valuations are
+compatible with
 conjugation: `v_{K^σ}(a^σ) = v_K(a)` (the right-action notation). -/
 theorem normalizedValuation_conjugate [ContinuousMul G]
     (v : ValuationData D A) (K : FiniteAbstractField G) (σ : G)

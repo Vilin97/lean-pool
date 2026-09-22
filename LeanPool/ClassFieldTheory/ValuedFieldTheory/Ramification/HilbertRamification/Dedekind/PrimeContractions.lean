@@ -38,7 +38,7 @@ theorem ringOfIntegers_moduleFinite :
 /-- The contraction of a maximal finite prime of a number-field ring of
 integers to a subfield ring of integers is nonzero. -/
 theorem ringOfIntegers_under_ne_bot
-    {E F : Type*} [Field E] [Field F] [NumberField E] [NumberField F]
+    {E F : Type*} [Field E] [Field F] [NumberField E]
     [Algebra E F] (P : Ideal (𝓞 F)) [P.IsMaximal] :
     P.under (𝓞 E) ≠ ⊥ := by
   exact
@@ -65,6 +65,7 @@ instance basePrime_liesOver
     P.LiesOver (basePrime (K := K) P) where
   over := rfl
 
+omit [NumberField L] in
 /-- Prime-decomposition statement:
 for a finite prime `P` of `O_L`, its contraction to `O_K` is nonzero. -/
 theorem basePrime_ne_bot
@@ -132,7 +133,7 @@ instance inertiaFieldPrime_liesOver
 /-- The inertia field has the same underlying field whether viewed over `K`
 or over the decomposition field; this instance keeps ring-of-integers
 extensions in the tower explicit. -/
-instance inertiaField_algebra_decompositionField
+instance inertiaFieldAlgebraDecompositionField
     (P : Ideal (𝓞 L)) :
     Algebra (decompositionField (K := K) (L := L) G P)
       (inertiaField (K := K) (L := L) G P) := by

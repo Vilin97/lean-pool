@@ -9,7 +9,7 @@ import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Recipro
 # Ramification of a negative quadratic Kummer radical at a real place
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 open NumberField
 
 noncomputable section
@@ -22,6 +22,7 @@ open KummerTheory
 variable (K : Type) [Field K] [NumberField K]
 
 omit [NumberField K] in
+open scoped Classical in
 /-- In the quadratic Kummer extension of a radicand that is negative at a
 real place, the chosen infinite place upstairs is ramified. -/
 theorem chosenSimpleKummerExtension_chosenInfinitePlace_isRamified_of_real_of_radical_neg

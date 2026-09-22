@@ -393,7 +393,7 @@ noncomputable def padicPrincipalDataDirect
     LocalField.mixedWithZeroValuationContext v
   letI : Valued ℚ_[p] (WithZero (Multiplicative ℤ)) :=
     Valued.mk' v
-  exact LocalField.chosenMixed_firstPrincipalUnitStructure_ofWithZeroValuation
+  exact LocalField.chosenMixedFirstPrincipalUnitStructureOfWithZeroValuation
     v (padicDVRValuation_surjective p)
 
 /-- The multiplicative equivalence underlying the first-principal-unit
@@ -419,6 +419,10 @@ noncomputable def padicPrincipalMulData
   exact ⟨(padicPrincipalDataDirect p).1,
     (padicPrincipalDataDirect p).2.toMulEquiv⟩
 
+/-- Forgetting topology preserves the finite cyclic exponent in the principal-unit data. -/
+theorem padicPrincipalMulData_fst (p : ℕ) [Fact p.Prime] :
+    (padicPrincipalMulData p).1 = (padicPrincipalDataDirect p).1 := rfl
+
 /-- The first-principal-unit structure data transported to the standard
 `p`-adic topology. -/
 noncomputable def padicPrincipalData
@@ -443,7 +447,7 @@ noncomputable def padicPrincipalData
     Valued.mk' v
   letI : Valued ℚ_[p] (WithZero (Multiplicative ℤ)) := direct
   let raw :=
-    LocalField.chosenMixed_firstPrincipalUnitStructure_ofWithZeroValuation
+    LocalField.chosenMixedFirstPrincipalUnitStructureOfWithZeroValuation
       v (padicDVRValuation_surjective p)
   let directTopology : TopologicalSpace U := inferInstance
   let standardTopology : TopologicalSpace U :=

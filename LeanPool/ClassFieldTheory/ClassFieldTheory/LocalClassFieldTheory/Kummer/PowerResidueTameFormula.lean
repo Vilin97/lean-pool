@@ -21,7 +21,7 @@ identifies the arithmetic-Frobenius root quotient with the finite-field power
 residue symbol, and derives the tame formula for the local Hilbert symbol.
 -/
 
-open scoped Classical ValuativeRel
+open scoped ValuativeRel
 
 noncomputable section
 
@@ -35,6 +35,7 @@ open LocalFieldTheory.IsNonarchimedeanLocalField
 variable (K : Type) [Field K] [ValuativeRel K] [TopologicalSpace K]
   [IsNonarchimedeanLocalField K]
 
+open scoped Classical in
 /-- Every field-valued `n`-th root of unity has normalized valuation zero. -/
 theorem nthRootsSubgroup_valuationMap_eq_zero
     (n : ℕ+) (z : nthRootsSubgroup K (n : ℕ)) :
@@ -46,6 +47,7 @@ theorem nthRootsSubgroup_valuationMap_eq_zero
     exact hpow.symm
   exact (mul_eq_zero.mp hzero).resolve_left (by exact_mod_cast n.ne_zero)
 
+open scoped Classical in
 /-- The canonical valuation-ring unit underlying a local `n`-th root of
 unity. -/
 noncomputable def nthRootIntegerUnit
@@ -53,6 +55,7 @@ noncomputable def nthRootIntegerUnit
   integerUnitOfValuationMapZero K z.1
     (nthRootsSubgroup_valuationMap_eq_zero K n z)
 
+open scoped Classical in
 @[simp]
 theorem integerUnitsToFieldUnits_nthRootIntegerUnit
     (n : ℕ+) (z : nthRootsSubgroup K (n : ℕ)) :
@@ -60,12 +63,14 @@ theorem integerUnitsToFieldUnits_nthRootIntegerUnit
   integerUnitOfValuationMapZero_spec K z.1
     (nthRootsSubgroup_valuationMap_eq_zero K n z)
 
+open scoped Classical in
 theorem nthRootIntegerUnit_pow
     (n : ℕ+) (z : nthRootsSubgroup K (n : ℕ)) :
     nthRootIntegerUnit K n z ^ (n : ℕ) = 1 := by
   apply integerUnitsToFieldUnits_injective K
   rw [map_pow, integerUnitsToFieldUnits_nthRootIntegerUnit, z.2, map_one]
 
+open scoped Classical in
 /-- Reduction of roots of unity from a nonarchimedean local field to its
 residue field. -/
 noncomputable def localNthRootsReduction
@@ -87,6 +92,7 @@ noncomputable def localNthRootsReduction
     apply Units.ext
     rfl
 
+open scoped Classical in
 @[simp]
 theorem localNthRootsReduction_apply
     (n : ℕ+) (z : nthRootsSubgroup K (n : ℕ)) :
@@ -94,6 +100,7 @@ theorem localNthRootsReduction_apply
       integerUnitsToResidueUnits K (nthRootIntegerUnit K n z) :=
   rfl
 
+open scoped Classical in
 /-- Reduction of roots of unity commutes with extension of valued fields. -/
 theorem localNthRootsReduction_nthRootsSubgroupMap
     (L : Type) [Field L] [ValuativeRel L] [TopologicalSpace L]
@@ -124,6 +131,7 @@ theorem localNthRootsReduction_nthRootsSubgroupMap
   rfl
 
 omit [TopologicalSpace K] [IsNonarchimedeanLocalField K] in
+open scoped Classical in
 /-- An `n`-th root of the image of a valuation-ring unit again has normalized
 valuation zero. -/
 theorem valuationMap_eq_zero_of_pow_eq_map_integerUnit
@@ -156,6 +164,7 @@ theorem valuationMap_eq_zero_of_pow_eq_map_integerUnit
     exact_mod_cast n.ne_zero)
 
 omit [TopologicalSpace K] [IsNonarchimedeanLocalField K] in
+open scoped Classical in
 /-- The canonical valuation-ring lift of such a root has the prescribed
 `n`-th power. -/
 theorem integerUnitOfValuationMapZero_pow_eq_integerUnitsMap
@@ -187,6 +196,7 @@ theorem integerUnitOfValuationMapZero_pow_eq_integerUnitsMap
       apply Units.ext
       rfl
 
+open scoped Classical in
 /-- Arithmetic Frobenius divided by the original integer unit reduces to its
 `q - 1` power, where `q` is the base residue-field cardinality. -/
 theorem residue_arithmeticFrobenius_integerUnitQuotient
@@ -262,6 +272,7 @@ theorem residue_arithmeticFrobenius_integerUnitQuotient
       rw [hcard, pow_succ]
       simp
 
+open scoped Classical in
 /-- If `n` is a valuation-ring unit, reduction is injective on the local
 `n`-th roots of unity. -/
 theorem localNthRootsReduction_injective
@@ -338,6 +349,7 @@ theorem localNthRootsReduction_injective
       simpa only [wO] using
         integerUnitsToFieldUnits_nthRootIntegerUnit K n w
 
+open scoped Classical in
 /-- Away from the residue characteristic, reduction identifies the local
 and residue-field `n`-th roots of unity. -/
 noncomputable def localNthRootsReductionEquiv
@@ -380,6 +392,7 @@ noncomputable def localNthRootsReductionEquiv
   exact ⟨localNthRootsReduction_injective K n hn,
     hsource.trans htarget.symm⟩
 
+open scoped Classical in
 /-- If `K` contains the `n`-th roots of unity and `n` is a local unit, then
 `n` divides the order of the residue-field unit group. -/
 theorem dvd_residueCard_sub_one_of_primitiveRoots
@@ -407,6 +420,7 @@ theorem dvd_residueCard_sub_one_of_primitiveRoots
   rw [hroots, Nat.card_units] at hdvd
   exact hdvd
 
+open scoped Classical in
 /-- For an `n`-th root of a base integer unit, the residue of its arithmetic
 Frobenius quotient is the base residue unit raised to `(q - 1) / n`. -/
 theorem residue_arithmeticFrobenius_kummerRootQuotient
@@ -493,6 +507,7 @@ theorem residue_arithmeticFrobenius_kummerRootQuotient
     _ = (betaBar ^ (n : ℕ)) ^ m := by rw [pow_mul]
     _ = uBar ^ m := by rw [hbetaBarPow]
 
+open scoped Classical in
 /-- The finite-field tame power-residue symbol, lifted canonically to the
 local `n`-th roots of unity. -/
 noncomputable def localTamePowerResidueSymbol
@@ -511,6 +526,7 @@ noncomputable def localTamePowerResidueSymbol
           exact dvd_residueCard_sub_one_of_primitiveRoots K n hn hmu)
         (integerUnitsToResidueUnits K u))
 
+open scoped Classical in
 /-- Reduction of the lifted tame symbol is the literal finite-field
 power-residue symbol. -/
 theorem localNthRootsReductionEquiv_localTamePowerResidueSymbol
@@ -530,6 +546,7 @@ theorem localNthRootsReductionEquiv_localTamePowerResidueSymbol
   let : Fintype 𝓀[K] := Fintype.ofFinite _
   exact (localNthRootsReductionEquiv K n hn hmu).apply_symm_apply _
 
+open scoped Classical in
 /-- The tame power-residue symbol embedded in an unramified extension is the
 root quotient of an `n`-th root by arithmetic Frobenius. -/
 theorem nthRootsSubgroupMap_localTamePowerResidueSymbol_eq_arithmeticFrobenius_rootQuotient
@@ -690,6 +707,7 @@ theorem nthRootsSubgroupMap_localTamePowerResidueSymbol_eq_arithmeticFrobenius_r
     congrArg Subtype.val hroot
 
 omit [TopologicalSpace K] [IsNonarchimedeanLocalField K] in
+open scoped Classical in
 /-- If `n` is a valuation-ring unit, then its image in the local field is
 nonzero.  This supplies the characteristic hypothesis required by the chosen
 simple Kummer extension without adding a redundant assumption to the tame
@@ -704,6 +722,7 @@ theorem natCast_ne_zero_of_valuation_eq_one
     simpa only [hn0] using hn
   exact zero_ne_one ((ValuativeRel.valuation K).map_zero.symm.trans hzero)
 
+open scoped Classical in
 /-- For a valuation-ring unit `u`, the Hilbert symbol with the chosen inverse
 prime element in the first slot is the tame residue symbol of `u`.  The proof
 constructs the unramified certificate for the chosen simple Kummer extension
@@ -800,6 +819,7 @@ theorem
     _ = (nthRootsSubgroupMap K E (n : ℕ)
         (localTamePowerResidueSymbol K n hn hmu u)).1 := hTameVal.symm
 
+open scoped Classical in
 /-- Tame local Hilbert-symbol formula in the unit-first convention.  It is the
 skew-symmetric form of the preceding arithmetic-Frobenius calculation. -/
 theorem
@@ -831,6 +851,7 @@ theorem
         (localHilbertSymbol_inverseIntegerRingUniformizerFieldUnit_integerUnit_eq_tame
           K n hn hmu u)
 
+open scoped Classical in
 /-- The local Hilbert symbol is compatible with arbitrary integral powers in
 its second argument. -/
 theorem localHilbertSymbol_zpow_right
@@ -851,6 +872,7 @@ theorem localHilbertSymbol_zpow_right
       rw [maximalLocalKummerPairingRightHom_eq_localHilbertSymbolHom,
         localHilbertSymbolHom_apply]
 
+open scoped Classical in
 /-- In the tame case, the local Hilbert symbol of two valuation-ring units is
 trivial.  The chosen simple Kummer extension generated by the second unit is
 unramified, so the first unit has trivial local Artin symbol. -/
@@ -940,6 +962,7 @@ theorem localHilbertSymbol_integerUnit_integerUnit_eq_one
     _ = (nthRootsSubgroupMap K E (n : ℕ)
         (1 : nthRootsSubgroup K (n : ℕ))).1 := by simp
 
+open scoped Classical in
 /-- General tame local Hilbert-symbol formula with a valuation-ring unit in
 the first slot.  Decomposing the second argument into its unit factor and the
 chosen valuation-one prime power reduces the calculation to the unit-unit

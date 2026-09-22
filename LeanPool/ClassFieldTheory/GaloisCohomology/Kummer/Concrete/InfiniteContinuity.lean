@@ -178,7 +178,7 @@ def infiniteKummerContinuousQuotientCharacter
 
 /-- Forgetting continuity recovers the previously constructed algebraic
 Kummer character on the same ambient-power quotient. -/
-@[simp] theorem infiniteKummerContinuousQuotientCharacter_toMonoidHom
+theorem infiniteKummerContinuousQuotientCharacter_toMonoidHom
     (n : ℕ+) (hmu : NthRootsOfUnityInBase (K := K) (L := Ω) n)
     (q : (chosenFiniteKummerRadicalDatum (K := K) (L := Ω) n).RadicalQuotient) :
     (infiniteKummerContinuousQuotientCharacter n hmu q).toMonoidHom =

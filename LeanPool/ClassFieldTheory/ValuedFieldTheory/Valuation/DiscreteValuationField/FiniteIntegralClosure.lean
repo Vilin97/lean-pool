@@ -293,7 +293,7 @@ omit [FiniteDimensional K L] in
 /-- In a finite separable extension, the image of the base maximal ideal is nonzero. -/
 theorem integralClosure_base_maximal_map_ne_bot_of_finite_separable
     (base : CompleteDVF.{u, v} K)
-    [Algebra.IsSeparable K L] :
+    :
     base.maximalIdeal.map
       (algebraMap base.valuationSubring
         (integralClosure base.valuationSubring L)) ≠ ⊥ := by
@@ -309,7 +309,7 @@ omit [FiniteDimensional K L] in
 /-- The integral closure in a nontrivial finite separable extension is not a field. -/
 theorem integralClosure_not_isField_of_finite_separable
     (base : CompleteDVF.{u, v} K)
-    [Algebra.IsSeparable K L] :
+    :
     ¬ IsField (integralClosure base.valuationSubring L) := by
   let B := integralClosure base.valuationSubring L
   let : Algebra.IsIntegral base.valuationSubring B := by

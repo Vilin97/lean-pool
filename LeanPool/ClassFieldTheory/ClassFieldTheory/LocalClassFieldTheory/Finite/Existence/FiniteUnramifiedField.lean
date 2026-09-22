@@ -59,7 +59,7 @@ noncomputable instance localFiniteUnramifiedField_isAbelianGalois
     (localFiniteUnramifiedAbelianSubextension K d hd)
 
 /-- The canonical spectral norm on the standard unramified fixed field. -/
-noncomputable instance localFiniteUnramifiedField_nontriviallyNormedField
+noncomputable instance localFiniteUnramifiedFieldNontriviallyNormedField
     (K : Type) [Field K] [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K]
     (d : ℕ) (hd : 0 < d) :
@@ -68,7 +68,7 @@ noncomputable instance localFiniteUnramifiedField_nontriviallyNormedField
     (localFiniteUnramifiedField K d hd)
 
 /-- The valuation relation induced by the canonical spectral norm. -/
-noncomputable instance localFiniteUnramifiedField_valuativeRel
+noncomputable instance localFiniteUnramifiedFieldValuativeRel
     (K : Type) [Field K] [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K]
     (d : ℕ) (hd : 0 < d) :

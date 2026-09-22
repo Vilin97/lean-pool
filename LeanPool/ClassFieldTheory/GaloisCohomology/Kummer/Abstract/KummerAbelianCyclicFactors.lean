@@ -13,7 +13,8 @@ namespace KummerTheory
 open CyclicCohomology
 
 /-!
-# finite abelian Kummer theory, the finite abelian Kummer decomposition: cyclic factors of a finite abelian extension
+# finite abelian Kummer theory, the finite abelian Kummer decomposition: cyclic factors of a
+  finite abelian extension
 
 The proof of the finite abelian Kummer decomposition reduces a finite abelian extension to cyclic
 subextensions.  This file supplies the group-theoretic source for that step.

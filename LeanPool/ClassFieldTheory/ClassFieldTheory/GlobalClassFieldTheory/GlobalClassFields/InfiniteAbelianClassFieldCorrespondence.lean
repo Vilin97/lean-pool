@@ -14,7 +14,7 @@ Composing this transport with the infinite Galois correspondence gives the
 order-reversing infinite abelian class-field correspondence.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 
 noncomputable section
 
@@ -24,6 +24,7 @@ variable {G H : Type*}
   [Group G] [TopologicalSpace G]
   [Group H] [TopologicalSpace H]
 
+open scoped Classical in
 /-- Transport a closed subgroup along a continuous multiplicative
 equivalence. -/
 noncomputable def mapContinuousMulEquiv
@@ -33,6 +34,7 @@ noncomputable def mapContinuousMulEquiv
     change IsClosed (e '' (S : Set G))
     exact e.toHomeomorph.isClosedMap (S : Set G) S.isClosed'
 
+open scoped Classical in
 /-- A continuous multiplicative equivalence induces an order equivalence on
 closed subgroups. -/
 noncomputable def orderIsoMapContinuousMulEquiv
@@ -60,6 +62,7 @@ noncomputable def orderIsoMapContinuousMulEquiv
         S.toSubgroup ≤ T.toSubgroup
     exact e.toMulEquiv.mapSubgroup.le_iff_le
 
+open scoped Classical in
 /-- The order-dual form of closed-subgroup transport. -/
 noncomputable def orderDualIsoMapContinuousMulEquiv
     (e : G ≃ₜ* H) :
@@ -81,6 +84,7 @@ noncomputable def orderDualIsoMapContinuousMulEquiv
         OrderDual.ofDual T ≤ OrderDual.ofDual S
     exact (orderIsoMapContinuousMulEquiv e).le_iff_le
 
+open scoped Classical in
 @[simp]
 theorem coe_mapContinuousMulEquiv
     (e : G ≃ₜ* H) (S : ClosedSubgroup G) :
@@ -99,6 +103,7 @@ open Reciprocity
 
 variable (K : Type) [Field K] [NumberField K]
 
+open scoped Classical in
 /-- The infinite abelian class-field correspondence.  The order dual in the
 domain records that larger closed idele-class subgroups correspond to smaller
 intermediate fields. -/
@@ -110,6 +115,7 @@ noncomputable def infiniteAbelianClassFieldCorrespondence :
     (InfiniteGalois.IntermediateFieldEquivClosedSubgroup
       (k := K) (K := maximalAbelianExtension K)).symm
 
+open scoped Classical in
 /-- Forward evaluation is the fixed field of the transported closed
 idele-class subgroup. -/
 @[simp]
@@ -121,6 +127,7 @@ theorem infiniteAbelianClassFieldCorrespondence_apply
           (ideleClassComponentQuotientEquivMaximalAbelianGalois K) H) :=
   rfl
 
+open scoped Classical in
 /-- The inverse correspondence is the fixing subgroup transported back to
 the idele-class component quotient. -/
 @[simp]
@@ -134,6 +141,7 @@ theorem infiniteAbelianClassFieldCorrespondence_symm_apply
             isClosed' := InfiniteGalois.fixingSubgroup_isClosed L }) :=
   rfl
 
+open scoped Classical in
 /-- The fixing subgroup of the field corresponding to `H` is exactly the
 transport of `H` by maximal abelian reciprocity. -/
 theorem infiniteAbelianClassFieldCorrespondence_fixingSubgroup
@@ -145,6 +153,7 @@ theorem infiniteAbelianClassFieldCorrespondence_fixingSubgroup
   rw [infiniteAbelianClassFieldCorrespondence_apply]
   exact InfiniteGalois.fixingSubgroup_fixedField _
 
+open scoped Classical in
 /-- A field in the infinite abelian correspondence is finite over the base
 exactly when the corresponding closed idele-class subgroup is open. -/
 theorem infiniteAbelianClassFieldCorrespondence_finite_iff_open

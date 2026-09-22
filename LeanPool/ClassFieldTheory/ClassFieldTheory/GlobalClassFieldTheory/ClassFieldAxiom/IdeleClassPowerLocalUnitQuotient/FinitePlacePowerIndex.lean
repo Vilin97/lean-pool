@@ -15,7 +15,7 @@ This file supplies the completion instances and local cardinality formulas used
 to evaluate finite-place factors in idele power quotients.
 -/
 
-open scoped NumberField Classical NNReal ValuativeRel TensorProduct
+open scoped NumberField NNReal ValuativeRel TensorProduct
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -24,6 +24,7 @@ namespace GlobalClassFieldTheory.ClassFieldAxiom
 
 variable {K : Type} [Field K] [NumberField K]
 
+open scoped Classical in
 /-- The finite-place local power index in the integral form used before
 applying the global product formula.  The two copies of `n` are
 respectively the uniformizer direction and the `n`-th roots of unity
@@ -80,7 +81,7 @@ theorem card_finitePlace_nthPowerQuotient
     Module.finrank ℚ_[F.residueCharacteristic]
       (v₀.adicCompletion K)
   obtain ⟨a, e⟩ :=
-    LocalFieldTheory.DiscreteValuationField.LocalField.chosenMixed_firstPrincipalUnitStructure_ofWithZeroValuation
+    LocalFieldTheory.DiscreteValuationField.LocalField.chosenMixedFirstPrincipalUnitStructureOfWithZeroValuation
       ν hν
   let U :=
     LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
@@ -136,6 +137,7 @@ theorem card_finitePlace_nthPowerQuotient
         (algebraMap K (v₀.adicCompletion K)).injective).card_rootsOfUnity
   simpa only [hroots] using hindex
 
+open scoped Classical in
 /-- The residue-characteristic contribution in the finite local
 power-index formula.  Keeping this contribution as a named natural
 number makes the subsequent product-formula calculation visible. -/
@@ -162,6 +164,7 @@ noncomputable def finitePlaceNthPowerDefect
   F.residueCharacteristic ^
     (d * padicValNat F.residueCharacteristic (n : ℕ))
 
+open scoped Classical in
 /-- The local defect is the norm of the exact prime-power factor of
 the principal ideal `(n)` at `v`. -/
 theorem finitePlaceNthPowerDefect_eq_absNorm_maxPowDividing
@@ -288,6 +291,7 @@ theorem finitePlaceNthPowerDefect_eq_absNorm_maxPowDividing
           hI,
         hmult]
 
+open scoped Classical in
 /-- The finite local power-index formula with the
 residue-characteristic contribution packaged as
 `finitePlaceNthPowerDefect`. -/

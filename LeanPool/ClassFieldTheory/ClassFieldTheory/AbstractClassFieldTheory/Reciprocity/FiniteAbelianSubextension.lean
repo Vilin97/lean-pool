@@ -76,7 +76,7 @@ def extensionQuotient (L : FiniteAbelianSubextension K) : Type u :=
 
 /-- The quotient attached to a finite abelian subextension is a commutative group. -/
 @[implicit_reducible]
-instance extensionQuotient_commGroup (L : FiniteAbelianSubextension K) :
+instance extensionQuotientCommGroup (L : FiniteAbelianSubextension K) :
     CommGroup L.extensionQuotient := by
   unfold extensionQuotient
   letI : IsMulCommutative

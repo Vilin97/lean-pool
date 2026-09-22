@@ -6,7 +6,8 @@ Authors: n-yamaguchi-0729
 
 import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.ClassFormation.NormalBasisGaloisAction
 import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.PrincipalUnits.QuotientTower
-/-! Provides the public declarations in the `LocalClassFieldTheory.ClassFormation.NormalBasisFiniteQuotient` Lean module. -/
+/-! Provides the public declarations in the
+  `LocalClassFieldTheory.ClassFormation.NormalBasisFiniteQuotient` Lean module. -/
 
 namespace LocalClassFieldTheory
 open LocalFieldTheory

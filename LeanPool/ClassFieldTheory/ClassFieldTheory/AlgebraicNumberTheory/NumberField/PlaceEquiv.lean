@@ -26,7 +26,7 @@ universe u v
 /-- Finite places correspond via the induced equivalence of rings of integers. -/
 def finitePlaceEquivOfRingEquiv
     {F : Type u} {G : Type v} [Field F] [Field G]
-    [NumberField F] [NumberField G] (e : F ≃+* G) :
+    (e : F ≃+* G) :
     HeightOneSpectrum (𝓞 F) ≃ HeightOneSpectrum (𝓞 G) :=
   IsDedekindDomain.HeightOneSpectrum.equivOfRingEquiv
     (NumberField.RingOfIntegers.mapRingEquiv e)

@@ -46,7 +46,7 @@ private theorem valueModulo_nsmul
       (QuotientAddGroup.mk' (nsmulWithin v.valueGroup n)) (n • z) = 0 := by
     apply (QuotientAddGroup.eq_zero_iff _).2
     exact ⟨z, rfl⟩
-  change (v.cyclic_value_quotients n hn)
+  change (v.cyclicValueQuotients n hn)
       ((QuotientAddGroup.mk' (nsmulWithin v.valueGroup n)) (n • z)) = 0
   rw [hq, map_zero]
 
@@ -412,7 +412,8 @@ private theorem classFieldAxiom_unramifiedUnits_hZero
   exact Limits.IsZero.of_iso hzeroS
     (TateCohomology.isoFiniteCyclicZero U g hg)
 
-/-- **the unramified cohomology consequence.**  The class field axiom implies the unit-cohomology axiom: for every
+/-- **the unramified cohomology consequence.**  The class field axiom implies the
+unit-cohomology axiom: for every
 finite unramified Galois extension `L / K`, both
 `H⁰(G(L/K), U_L)` and `H⁻¹(G(L/K), U_L)` vanish. -/
 theorem classFieldAxiom_implies_unramifiedUnitCohomology
@@ -893,7 +894,8 @@ theorem abstractReciprocity_normQuotient_exact
 
 /-- An additive homomorphism from a (possibly noncommutative) Galois group
 to an additive commutative group factors canonically through its
-abelianization.  This is the factor map used in the first reduction once the finite reciprocity equivalence supplies the reciprocity homomorphism. -/
+abelianization.  This is the factor map used in the first reduction once the finite reciprocity
+  equivalence supplies the reciprocity homomorphism. -/
 def abstractReciprocityAbelianizationFactor
     {Q : Type*} {B : Type*} [Group Q] [AddCommGroup B]
     (f : Additive Q →+ B) : Additive (Abelianization Q) →+ B := by
@@ -1243,7 +1245,8 @@ theorem abstractReciprocity_valuationAt_fixedFieldInclusion_of_totallyRamified
       congrArg Subtype.val
         (map_nsmul (v.valuationAt E.base) (E.degree : ℕ) x)
 
-/-- The exact `k = 0` valuation endpoint of the totally ramified argument.  Here `K = M⁰`, `L = M`, and `x` is the element constructed in
+/-- The exact `k = 0` valuation endpoint of the totally ramified argument.  Here `K = M⁰`, `L =
+M`, and `x` is the element constructed in
 the fixed subgroup. -/
 theorem abstractReciprocity_totallyRamified_valuation_forces_exponent_zero
     {D : DegreeData G} {A : Rep ℤ G} (v : ValuationData D A)

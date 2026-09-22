@@ -8,10 +8,11 @@ import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Recipro
 /-!
 # Restriction in a finite-place Artin tower
 
-This module restricts finite-place extensions through an intermediate field and proves restriction naturality for the corresponding global Artin homomorphisms.
+This module restricts finite-place extensions through an intermediate field and proves
+  restriction naturality for the corresponding global Artin homomorphisms.
 -/
 
-open scoped Classical IsMulCommutative NNReal NumberField
+open scoped IsMulCommutative NNReal NumberField
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -29,6 +30,7 @@ variable {K L : Type}
     [Field L] [Algebra K L]
     [FiniteDimensional K L] [IsAbelianGalois K L]
 
+open scoped Classical in
 /-- Restrict an extension of a finite place through an intermediate
 field in a scalar tower. -/
 def restrictFinitePlaceExtension
@@ -52,6 +54,7 @@ def restrictFinitePlaceExtension
 
 omit [NumberField K] [FiniteDimensional K L]
     [IsAbelianGalois K L] in
+open scoped Classical in
 /-- Completion maps compose along a scalar tower when the three
 absolute values extend one another. -/
 theorem absoluteValueCompletionMap_comp_of_isScalarTower
@@ -104,13 +107,14 @@ theorem absoluteValueCompletionMap_comp_of_isScalarTower
       AbsoluteValue.completionMap_coe,
       IsScalarTower.algebraMap_apply K E L]
 
+open scoped Classical in
 /-- The completion map in a number-field tower restricts to the
 corresponding algebraic localizations. -/
 noncomputable def finitePlaceRestrictedLocalizedCompletionAlgHom
     {E : Type}
     [Field E] [Algebra K E] [Algebra E L]
     [IsScalarTower K E L]
-    [FiniteDimensional K E] [IsGalois K E]
+    [FiniteDimensional K E]
     (v : HeightOneSpectrum (𝓞 K))
     (wL : AbsoluteValueExtension
       (NumberField.HeightOneSpectrum.adicAbv K v) L) :
@@ -186,6 +190,7 @@ noncomputable def finitePlaceRestrictedLocalizedCompletionAlgHom
   exact localizationAlgHom
 
 omit [IsAbelianGalois K L] in
+open scoped Classical in
 /-- The restricted-localization map agrees with the original
 number-field embedding on the intermediate field. -/
 theorem finitePlaceRestrictedLocalizedCompletionAlgHom_toAlgebraicLocalization
@@ -251,6 +256,7 @@ theorem finitePlaceRestrictedLocalizedCompletionAlgHom_toAlgebraicLocalization
     AbsoluteValue.completionMap_coe]
 
 omit [NumberField K] [FiniteDimensional K L] in
+open scoped Classical in
 /-- A compatible embedding of algebraic localizations carries
 restriction of decomposition-group elements to restriction of the
 corresponding local automorphisms. -/
@@ -443,6 +449,7 @@ theorem decompositionGroupEquivAlgebraicLocalizationAut_restrict_of_commutes
           ((rhoE.1 : E ≃ₐ[K] E) z)) := by
             rw [hlocalization]
 
+open scoped Classical in
 private noncomputable def finitePlaceLocalRestrictionMonoidHom
     {E : Type}
     [Field E] [Algebra K E] [Algebra E L]
@@ -496,6 +503,7 @@ private noncomputable def finitePlaceLocalRestrictionMonoidHom
     hGaloisEL.to_normal
   exact AlgEquiv.restrictNormalHom EL
 
+open scoped Classical in
 /-- Restriction of global decomposition-group elements agrees with
 restriction of the corresponding automorphisms of algebraic
 localizations, pointwise on local automorphisms. -/
@@ -564,6 +572,7 @@ theorem finitePlaceDecompositionTransport_restrict_tower_apply
         finitePlaceRestrictedLocalizedCompletionAlgHom_toAlgebraicLocalization
           (K := K) (L := L) (E := E) v wL z)
 
+open scoped Classical in
 /-- Restriction of global decomposition-group elements agrees with
 restriction of the corresponding automorphisms of algebraic
 localizations. -/
@@ -625,6 +634,7 @@ theorem finitePlaceDecompositionTransport_restrict_tower
     finitePlaceDecompositionTransport_restrict_tower_apply
       (K := K) (L := L) (E := E) v wL tauL
 
+open scoped Classical in
 /-- Local Artin maps on localized completions commute with restriction
 through an abelian intermediate field. -/
 theorem finitePlaceLocalArtinMonoidHom_restrict_tower
@@ -701,6 +711,7 @@ theorem finitePlaceLocalArtinMonoidHom_restrict_tower
       (eK.symm x)
 
 
+open scoped Classical in
 /-- Finite-place Artin homomorphisms attached to specified place
 extensions commute with restriction through an abelian tower. -/
 theorem finitePlaceArtinMonoidHomOfExtension_restrict_tower
@@ -778,6 +789,7 @@ theorem finitePlaceArtinMonoidHomOfExtension_restrict_tower
       (finitePlaceArtinMonoidHomOfExtension_factor
         (K := K) (L := E) v wE).symm
 
+open scoped Classical in
 /-- Finite local factors commute with restriction in an abelian
 number-field tower. -/
 theorem chosenFinitePlaceArtinMonoidHom_restrict_tower

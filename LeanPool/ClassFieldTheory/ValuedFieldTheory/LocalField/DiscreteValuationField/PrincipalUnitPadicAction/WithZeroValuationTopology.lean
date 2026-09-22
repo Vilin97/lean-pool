@@ -44,7 +44,8 @@ noncomputable def adicPrincipalUnitsContinuousAddEquivUnderlyingOfWithZeroValuat
     letI : Valued K (WithZero (Multiplicative ℤ)) := Valued.mk' v
     AdicPrincipalUnits F.toCompleteDVF ≃ₜ+
       Additive
-        ((LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F.toCompleteDVF) 1) := by
+        ((LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+          F.toCompleteDVF) 1) := by
   let F : LocalField.{u, 0} K := LocalField.ofWithZeroValuation v
   letI : Valued K (WithZero (Multiplicative ℤ)) := Valued.mk' v
   letI : ValuationTheory.DiscreteValuationField.Valuation.IsCompleteDiscrete
@@ -180,7 +181,8 @@ theorem principalUnitPadicContinuousSMulOfWithZeroValuation
     let F : LocalField.{u, 0} K := LocalField.ofWithZeroValuation v
     letI : Valued K (WithZero (Multiplicative ℤ)) := Valued.mk' v
     ContinuousSMul ℤ_[F.residueCharacteristic]
-      (Additive ((LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F.toCompleteDVF) 1)) := by
+      (Additive ((LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+        F.toCompleteDVF) 1)) := by
   let F : LocalField.{u, 0} K := LocalField.ofWithZeroValuation v
   let : Valued K (WithZero (Multiplicative ℤ)) := Valued.mk' v
   let e :=
@@ -188,7 +190,8 @@ theorem principalUnitPadicContinuousSMulOfWithZeroValuation
   refine ⟨?_⟩
   have hpair : Continuous fun z : ℤ_[F.residueCharacteristic] ×
       Additive
-        ((LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F.toCompleteDVF) 1) =>
+        ((LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+          F.toCompleteDVF) 1) =>
       (z.1, e.symm z.2) :=
     continuous_fst.prodMk (e.continuous_symm.comp continuous_snd)
   have htransport := e.continuous.comp (continuous_smul.comp hpair)
@@ -203,7 +206,8 @@ theorem principalUnitPadicContinuousAddOfWithZeroValuation
     let F : LocalField.{u, 0} K := LocalField.ofWithZeroValuation v
     letI : Valued K (WithZero (Multiplicative ℤ)) := Valued.mk' v
     ContinuousAdd (Additive
-      ((LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F.toCompleteDVF) 1)) := by
+      ((LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+        F.toCompleteDVF) 1)) := by
   let F : LocalField.{u, 0} K := LocalField.ofWithZeroValuation v
   let : Valued K (WithZero (Multiplicative ℤ)) := Valued.mk' v
   let e :=
@@ -211,9 +215,11 @@ theorem principalUnitPadicContinuousAddOfWithZeroValuation
   refine ⟨?_⟩
   have hpair : Continuous fun z :
       Additive
-          ((LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F.toCompleteDVF) 1) ×
+          ((LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+            F.toCompleteDVF) 1) ×
         Additive
-          ((LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F.toCompleteDVF) 1) =>
+          ((LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+            F.toCompleteDVF) 1) =>
       (e.symm z.1, e.symm z.2) :=
     (e.continuous_symm.comp continuous_fst).prodMk
       (e.continuous_symm.comp continuous_snd)

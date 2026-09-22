@@ -58,7 +58,8 @@ theorem baseUnitGroup_map_le_target_unitGroup
 theorem baseUnitsMap_valuationSubringUnitsToFieldUnits
     (a : base.valuationSubringˣ) :
     baseUnitsMap (K := K) (L := L)
-        ((LocalFieldTheory.DiscreteValuationField.CompleteDVF.valuationSubringUnitsToFieldUnits base) a) =
+        ((LocalFieldTheory.DiscreteValuationField.CompleteDVF.valuationSubringUnitsToFieldUnits
+          base) a) =
       (LocalFieldTheory.DiscreteValuationField.CompleteDVF.valuationSubringUnitsToFieldUnits target)
         (Units.map (integerMap base.toDVF target.toDVF).toMonoidHom a) := by
   ext
@@ -75,7 +76,8 @@ theorem base_uniformizer_image_val_eq_ramificationIndex
     (vL : MultiplicativeIntegerValuation Lˣ)
     (hunit :
       ∀ u : target.valuationSubringˣ,
-        (LocalFieldTheory.DiscreteValuationField.CompleteDVF.valuationSubringUnitsToFieldUnits target) u ∈ vL.zeroSubgroup)
+        (LocalFieldTheory.DiscreteValuationField.CompleteDVF.valuationSubringUnitsToFieldUnits
+          target) u ∈ vL.zeroSubgroup)
     {ϖ : base.valuationSubring} {π : target.valuationSubring}
     (hϖ : base.valuation.IsUniformizer (ϖ : K))
     (hπ : target.valuation.IsUniformizer (π : L))
@@ -108,7 +110,8 @@ theorem base_uniformizer_image_val_eq_ramificationIndex
         simp
   have hbase :
       baseUnitsMap (K := K) (L := L) ϖK =
-        (LocalFieldTheory.DiscreteValuationField.CompleteDVF.valuationSubringUnitsToFieldUnits target) u *
+        (LocalFieldTheory.DiscreteValuationField.CompleteDVF.valuationSubringUnitsToFieldUnits
+          target) u *
           πL ^ ramificationIndex base.toDVF target.toDVF := by
     ext
     simpa [ϖK, πL,

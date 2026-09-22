@@ -44,7 +44,7 @@ def standardLubinTateUnitParameter
 
 /-- The finite unit parameter quotient carries its canonical commutative
 group structure. -/
-instance standardLubinTateUnitParameter_commGroup
+instance standardLubinTateUnitParameterCommGroup
     (F : LocalField.{u, v} K) (n : ℕ) :
     CommGroup (standardLubinTateUnitParameter F n) := by
   change CommGroup

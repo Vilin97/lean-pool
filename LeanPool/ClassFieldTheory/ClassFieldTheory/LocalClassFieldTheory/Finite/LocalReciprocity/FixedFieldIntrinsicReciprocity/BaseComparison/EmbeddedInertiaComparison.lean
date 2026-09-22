@@ -9,7 +9,8 @@ import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.L
 /-!
 # Embedded inertia comparison
 
-This module transports extension inertia between an intrinsic finite extension and its realization inside an ambient separable closure.
+This module transports extension inertia between an intrinsic finite extension and its
+  realization inside an ambient separable closure.
 -/
 
 noncomputable section

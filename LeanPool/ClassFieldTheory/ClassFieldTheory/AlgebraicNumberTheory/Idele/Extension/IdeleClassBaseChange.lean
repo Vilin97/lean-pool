@@ -65,7 +65,6 @@ noncomputable def relativeIdeleClassBaseChangeMulEquiv :
     (relativeIdelePrincipalSubgroup_map_baseChange
       (K := K) (L := L))
 
-@[simp]
 theorem relativeIdeleClassBaseChangeMulEquiv_mk
     (z : RelativeIdeleGroup K L) :
     relativeIdeleClassBaseChangeMulEquiv

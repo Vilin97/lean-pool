@@ -43,7 +43,8 @@ noncomputable def abelianizationEquivNormQuotient :
     (localHenselianValuation K)
     (separableClosureUnits_isClassFormation K)
 
-/-- The isomorphism in the finite local reciprocity construction is independent of the embedding used to
+/-- The isomorphism in the finite local reciprocity construction is independent of the embedding
+used to
 realize `L/K` inside the fixed separable closure. -/
 private theorem abelianizationEquivNormQuotient_eq_of_embedding
     (i : L →ₐ[K] SeparableClosure K) :

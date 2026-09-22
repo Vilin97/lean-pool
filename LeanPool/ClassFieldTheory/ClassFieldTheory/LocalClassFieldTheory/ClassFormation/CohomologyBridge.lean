@@ -151,7 +151,7 @@ def fixedUnitToInvariantsNormQuotientMonoidHom
 /-- A fixed unit maps to its canonical invariant-unit class modulo norms. -/
 @[simp]
 theorem fixedUnitToInvariantsNormQuotientMonoidHom_apply
-    [Fintype (Gal(L/K))] (x : fixedSubgroup (Gal(L / K)) Lˣ) :
+    [Fintype (Gal(L/K))] (x : fixedSubgroup (Gal(L/K)) Lˣ) :
     Multiplicative.toAdd
         (fixedUnitToInvariantsNormQuotientMonoidHom K L x) =
       (unitsTateH0NormSubmodule K L).mkQ
@@ -291,7 +291,7 @@ def additiveNormKernelEquivUnitsNormKer [Fintype (Gal(L/K))] :
 /-- The actual additive differential `ρ(g)-1`, with codomain restricted to
 the kernel of the norm. -/
 def unitsRhoSubToNormKerLinearMap [Fintype (Gal(L/K))]
-    (g : Gal(L / K)) :
+    (g : Gal(L/K)) :
     Additive Lˣ →ₗ[ℤ] LinearMap.ker (unitsNormLinearMap K L) :=
   ((Rep.ofAlgebraAutOnUnits K L).ρ g - LinearMap.id).codRestrict
     (LinearMap.ker (unitsNormLinearMap K L)) (by
@@ -388,7 +388,7 @@ theorem normKernelToUnitsBoundaryQuotientMonoidHom_ker
 /-- Every class of the standard boundary quotient has a representative in
 the multiplicative norm kernel. -/
 theorem normKernelToUnitsBoundaryQuotientMonoidHom_surjective
-    [Fintype (Gal(L/K))] (g : Gal(L / K)) :
+    [Fintype (Gal(L/K))] (g : Gal(L/K)) :
     Function.Surjective
       (normKernelToUnitsBoundaryQuotientMonoidHom K L g) := by
   intro q

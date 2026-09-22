@@ -19,7 +19,8 @@ open CyclicCohomology
 /-!
 # The abstract reciprocity construction: independence of the prime element
 
-This file supplies the finite-Galois cofinality and compositum argument used to prove that the reciprocity construction is independent of its prime element.
+This file supplies the finite-Galois cofinality and compositum argument used to prove that the
+  reciprocity construction is independent of its prime element.
 -/
 
 noncomputable section

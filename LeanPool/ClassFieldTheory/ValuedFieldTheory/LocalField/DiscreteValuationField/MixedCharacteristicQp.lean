@@ -25,7 +25,8 @@ import Mathlib.Topology.Algebra.UniformRing
 /-!
 # Mixed-characteristic input for the `Qp` branch of the local-field structure classification
 
-This file keeps the converse direction of the local-field structure theory, the local-field structure classification focused on the mixed-characteristic case.  The key point proved here is
+This file keeps the converse direction of the local-field structure theory, the local-field
+  structure classification focused on the mixed-characteristic case.  The key point proved here is
 that the actual range-restricted local-field valuation still restricts on
 `ℚ` to the usual `p`-adic valuation, where `p` is the residue characteristic.
 -/
@@ -80,7 +81,8 @@ subfield.
 theorem qpadicClosureSubfield_coe
     (F : LocalField.{u, v} K) [CharZero K] :
     letI : Valued K F.mrangeValueGroup :=
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF
+      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued
+        F.toCompleteDVF
     (F.qpadicClosureSubfield : Set K) =
       closure (F.ratSubfield : Set K) := by
   let : Valued K F.mrangeValueGroup :=
@@ -106,7 +108,8 @@ theorem ratCast_mem_qpadicClosureSubfield
 theorem qpadicClosureSubfield_isClosed
     (F : LocalField.{u, v} K) [CharZero K] :
     letI : Valued K F.mrangeValueGroup :=
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF
+      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued
+        F.toCompleteDVF
     IsClosed (F.qpadicClosureSubfield : Set K) := by
   let : Valued K F.mrangeValueGroup :=
     _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF
@@ -117,7 +120,8 @@ theorem qpadicClosureSubfield_isClosed
 theorem ratSubfield_denseRange_in_qpadicClosureSubfield
     (F : LocalField.{u, v} K) [CharZero K] :
     letI : Valued K F.mrangeValueGroup :=
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF
+      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued
+        F.toCompleteDVF
     DenseRange
       (Set.inclusion
         (show (F.ratSubfield : Set K) ⊆
@@ -137,7 +141,8 @@ theorem qpadicClosureSubfield_le_of_ratSubfield_le
     (F : LocalField.{u, v} K) [CharZero K] {E : Subfield K}
     (hEclosed :
       letI : Valued K F.mrangeValueGroup :=
-        _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF
+        _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued
+          F.toCompleteDVF
       IsClosed (E : Set K))
     (hRat : F.ratSubfield ≤ E) :
     F.qpadicClosureSubfield ≤ E := by
@@ -150,14 +155,15 @@ theorem qpadicClosureSubfield_le_of_ratSubfield_le
 theorem qpadicClosureSubfield_completeSpace
     (F : LocalField.{u, v} K) [CharZero K] :
     letI : Valued K F.mrangeValueGroup :=
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF
+      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued
+        F.toCompleteDVF
     letI : NontriviallyNormedField K :=
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_nontriviallyNormedField F.toCompleteDVF
+      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F.toCompleteDVF
     CompleteSpace F.qpadicClosureSubfield := by
   let : Valued K F.mrangeValueGroup :=
     _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF
   let : NontriviallyNormedField K :=
-    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_nontriviallyNormedField F.toCompleteDVF
+    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F.toCompleteDVF
   have : CompleteSpace K :=
     F.mrangeRestrict_completeSpace
   exact
@@ -211,7 +217,8 @@ theorem ratCastWithValToQpadicClosureSubfield_apply
 elements of value at most one as the `p`-adic valuation. -/
 theorem mrangeRestrict_valuation_ratCast_le_one_iff_padicValuation_le_one
     (F : LocalField.{u, v} K) [CharZero K] (q : ℚ) :
-    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F.toCompleteDVF (q : K) ≤ 1 ↔
+    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F.toCompleteDVF (q
+      : K) ≤ 1 ↔
       Rat.padicValuation F.residueCharacteristic q ≤ 1 := by
   rw [← Subtype.coe_le_coe]
   simpa [_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_apply] using
@@ -221,11 +228,13 @@ theorem mrangeRestrict_valuation_ratCast_le_one_iff_padicValuation_le_one
 the usual `p`-adic valuation subring of `ℚ`. -/
 theorem ratCast_preimage_mrangeRestrict_valuationSubring_eq_padicValuationSubring
     (F : LocalField.{u, v} K) [CharZero K] :
-    (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F.toCompleteDVF).valuationSubring.comap (Rat.castHom K) =
+    (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict
+      F.toCompleteDVF).valuationSubring.comap (Rat.castHom K) =
       (Rat.padicValuation F.residueCharacteristic).valuationSubring := by
   ext q
   rw [ValuationSubring.mem_comap]
-  change _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F.toCompleteDVF ((Rat.castHom K) q) ≤ 1 ↔
+  change _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict
+    F.toCompleteDVF ((Rat.castHom K) q) ≤ 1 ↔
     Rat.padicValuation F.residueCharacteristic q ≤ 1
   simpa using
     F.mrangeRestrict_valuation_ratCast_le_one_iff_padicValuation_le_one q
@@ -234,13 +243,16 @@ theorem ratCast_preimage_mrangeRestrict_valuationSubring_eq_padicValuationSubrin
 equivalent to the usual `p`-adic valuation. -/
 theorem ratCast_mrangeRestrict_valuation_isEquiv_padicValuation
     (F : LocalField.{u, v} K) [CharZero K] :
-    ((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F.toCompleteDVF).comap (Rat.castHom K)).IsEquiv
+    ((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict
+      F.toCompleteDVF).comap (Rat.castHom K)).IsEquiv
       (Rat.padicValuation F.residueCharacteristic) := by
   refine (Valuation.isEquiv_iff_valuationSubring
-    (v₁ := (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F.toCompleteDVF).comap (Rat.castHom K))
+    (v₁ := (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict
+      F.toCompleteDVF).comap (Rat.castHom K))
     (v₂ := Rat.padicValuation F.residueCharacteristic)).2 ?_
   ext q
-  change _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F.toCompleteDVF ((Rat.castHom K) q) ≤ 1 ↔
+  change _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict
+    F.toCompleteDVF ((Rat.castHom K) q) ≤ 1 ↔
     Rat.padicValuation F.residueCharacteristic q ≤ 1
   simpa using
     F.mrangeRestrict_valuation_ratCast_le_one_iff_padicValuation_le_one q
@@ -254,25 +266,29 @@ theorem mrangeRestrict_exists_residueCharacteristic_pow_lt_unit
       _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F.toCompleteDVF
         (((F.residueCharacteristic ^ N : ℕ) : K)) < gamma := by
   have hp_pos :
-      0 < _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F.toCompleteDVF (F.residueCharacteristic : K) := by
+      0 < _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict
+        F.toCompleteDVF (F.residueCharacteristic : K) := by
     rw [← Subtype.coe_lt_coe]
     simpa [_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_apply] using
       (F.toCompleteDVF.valuation.pos_iff).2
         F.natCast_residueCharacteristic_ne_zero_of_charZero
   let delta : F.mrangeValueGroupˣ :=
     Units.mk0
-      (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F.toCompleteDVF (F.residueCharacteristic : K))
+      (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F.toCompleteDVF
+        (F.residueCharacteristic : K))
       hp_pos.ne'
   have hdelta_lt_one : delta < (1 : F.mrangeValueGroupˣ) := by
     rw [← Units.val_lt_val]
     change
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F.toCompleteDVF (F.residueCharacteristic : K) <
+      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F.toCompleteDVF
+        (F.residueCharacteristic : K) <
         (1 : F.mrangeValueGroup)
     rw [← Subtype.coe_lt_coe]
     simpa [_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_apply] using
       F.valuation_natCast_residueCharacteristic_lt_one
   have : IsCyclic F.mrangeValueGroupˣ :=
-    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_units_isCyclic F.toCompleteDVF
+    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_units_isCyclic
+      F.toCompleteDVF
   have : MulArchimedean F.mrangeValueGroupˣ :=
     WithZeroValuation.isCyclic_mulArchimedean F.mrangeValueGroupˣ
   have hdelta_inv : (1 : F.mrangeValueGroupˣ) < delta⁻¹ :=
@@ -294,7 +310,8 @@ theorem mrangeRestrict_exists_residueCharacteristic_pow_lt_unit
 theorem ratCastWithValToK_uniformContinuous
     (F : LocalField.{u, v} K) [CharZero K] :
     letI : Valued K F.mrangeValueGroup :=
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF
+      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued
+        F.toCompleteDVF
     UniformContinuous
       ((Rat.castHom K).comp
         (WithVal.equiv
@@ -354,8 +371,10 @@ theorem ratCastWithValToK_uniformContinuous
     change vq (yq - xq) < vq pNQ at hvWith
     exact hvWith
   have hcomap :
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F.toCompleteDVF ((yq - xq : ℚ) : K) <
-        _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F.toCompleteDVF ((pNQ : ℚ) : K) := by
+      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F.toCompleteDVF
+        ((yq - xq : ℚ) : K) <
+        _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict
+          F.toCompleteDVF ((pNQ : ℚ) : K) := by
     have hEquiv :=
       F.ratCast_mrangeRestrict_valuation_isEquiv_padicValuation
     have hlt :=
@@ -381,7 +400,8 @@ local-field topology is exactly the usual `p`-adic topology. -/
 theorem ratCastWithValToK_isUniformInducing
     (F : LocalField.{u, v} K) [CharZero K] :
     letI : Valued K F.mrangeValueGroup :=
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF
+      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued
+        F.toCompleteDVF
     IsUniformInducing
       ((Rat.castHom K).comp
         (WithVal.equiv
@@ -429,7 +449,8 @@ theorem ratCastWithValToK_isUniformInducing
     have hqK_ne : ((q : ℚ) : K) ≠ 0 := by
       exact Rat.cast_ne_zero.mpr hq_ne
     have hvalue_ne :
-        _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F.toCompleteDVF ((q : ℚ) : K) ≠ 0 := by
+        _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict
+          F.toCompleteDVF ((q : ℚ) : K) ≠ 0 := by
       rw [← Subtype.coe_ne_coe]
       simpa [_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_apply] using
         ((F.toCompleteDVF.valuation.pos_iff).2 hqK_ne).ne'
@@ -448,8 +469,10 @@ theorem ratCastWithValToK_isUniformInducing
         f y - f x = ((yq - xq : ℚ) : K) := by
       simp [f, xq, yq]
     have hcomap :
-        _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F.toCompleteDVF ((yq - xq : ℚ) : K) <
-          _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F.toCompleteDVF ((q : ℚ) : K) := by
+        _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict
+          F.toCompleteDVF ((yq - xq : ℚ) : K) <
+          _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict
+            F.toCompleteDVF ((q : ℚ) : K) := by
       change w.restrict (f y - f x) < w.restrict ((q : ℚ) : K) at hxy
       rw [hfsub] at hxy
       exact (_root_.Valuation.restrict_lt_iff w).1 hxy
@@ -473,7 +496,8 @@ candidate is uniformly continuous. -/
 theorem ratCastWithValToQpadicClosureSubfield_uniformContinuous
     (F : LocalField.{u, v} K) [CharZero K] :
     letI : Valued K F.mrangeValueGroup :=
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF
+      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued
+        F.toCompleteDVF
     UniformContinuous F.ratCastWithValToQpadicClosureSubfield := by
   let : Valued K F.mrangeValueGroup :=
     _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF
@@ -488,7 +512,8 @@ from the p-adic topology on the rational prime field. -/
 theorem ratCastWithValToQpadicClosureSubfield_isUniformInducing
     (F : LocalField.{u, v} K) [CharZero K] :
     letI : Valued K F.mrangeValueGroup :=
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF
+      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued
+        F.toCompleteDVF
     IsUniformInducing F.ratCastWithValToQpadicClosureSubfield := by
   let : Valued K F.mrangeValueGroup :=
     _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF
@@ -508,7 +533,8 @@ theorem ratCastWithValToQpadicClosureSubfield_isUniformInducing
 theorem ratCastWithValToQpadicClosureSubfield_denseRange
     (F : LocalField.{u, v} K) [CharZero K] :
     letI : Valued K F.mrangeValueGroup :=
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF
+      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued
+        F.toCompleteDVF
     DenseRange F.ratCastWithValToQpadicClosureSubfield := by
   let : Valued K F.mrangeValueGroup :=
     _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF
@@ -549,7 +575,8 @@ candidate. -/
 theorem ratCastToQpadicClosureSubfield_denseRange
     (F : LocalField.{u, v} K) [CharZero K] :
     letI : Valued K F.mrangeValueGroup :=
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF
+      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued
+        F.toCompleteDVF
     DenseRange F.ratCastToQpadicClosureSubfield := by
   let : Valued K F.mrangeValueGroup :=
     _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF
@@ -568,7 +595,7 @@ noncomputable def qpadicCompletionToQpadicClosureSubfield
   letI : Valued K F.mrangeValueGroup :=
     _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF
   letI : NontriviallyNormedField K :=
-    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_nontriviallyNormedField F.toCompleteDVF
+    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F.toCompleteDVF
   haveI : CompleteSpace F.qpadicClosureSubfield :=
     F.qpadicClosureSubfield_completeSpace
   exact
@@ -588,7 +615,7 @@ theorem qpadicCompletionToQpadicClosureSubfield_coe
   let : Valued K F.mrangeValueGroup :=
     _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF
   let : NontriviallyNormedField K :=
-    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_nontriviallyNormedField F.toCompleteDVF
+    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F.toCompleteDVF
   have : CompleteSpace F.qpadicClosureSubfield :=
     F.qpadicClosureSubfield_completeSpace
   exact
@@ -601,14 +628,15 @@ theorem qpadicCompletionToQpadicClosureSubfield_coe
 theorem qpadicCompletionToQpadicClosureSubfield_isUniformInducing
     (F : LocalField.{u, v} K) [CharZero K] :
     letI : Valued K F.mrangeValueGroup :=
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF
+      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued
+        F.toCompleteDVF
     letI : NontriviallyNormedField K :=
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_nontriviallyNormedField F.toCompleteDVF
+      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F.toCompleteDVF
     IsUniformInducing F.qpadicCompletionToQpadicClosureSubfield := by
   let : Valued K F.mrangeValueGroup :=
     _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF
   let : NontriviallyNormedField K :=
-    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_nontriviallyNormedField F.toCompleteDVF
+    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F.toCompleteDVF
   have : CompleteSpace F.qpadicClosureSubfield :=
     F.qpadicClosureSubfield_completeSpace
   simpa [qpadicCompletionToQpadicClosureSubfield,
@@ -622,14 +650,15 @@ candidate. -/
 theorem qpadicCompletionToQpadicClosureSubfield_denseRange
     (F : LocalField.{u, v} K) [CharZero K] :
     letI : Valued K F.mrangeValueGroup :=
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF
+      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued
+        F.toCompleteDVF
     letI : NontriviallyNormedField K :=
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_nontriviallyNormedField F.toCompleteDVF
+      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F.toCompleteDVF
     DenseRange F.qpadicCompletionToQpadicClosureSubfield := by
   let : Valued K F.mrangeValueGroup :=
     _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF
   let : NontriviallyNormedField K :=
-    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_nontriviallyNormedField F.toCompleteDVF
+    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F.toCompleteDVF
   apply DenseRange.of_comp
     (g := fun q : WithVal (Rat.padicValuation F.residueCharacteristic) =>
       (q : (Rat.padicValuation F.residueCharacteristic).Completion))
@@ -701,14 +730,15 @@ map. -/
 theorem qpadicNumbersToQpadicClosureSubfield_isUniformInducing
     (F : LocalField.{u, v} K) [CharZero K] :
     letI : Valued K F.mrangeValueGroup :=
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF
+      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued
+        F.toCompleteDVF
     letI : NontriviallyNormedField K :=
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_nontriviallyNormedField F.toCompleteDVF
+      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F.toCompleteDVF
     IsUniformInducing F.qpadicNumbersToQpadicClosureSubfield := by
   let : Valued K F.mrangeValueGroup :=
     _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF
   let : NontriviallyNormedField K :=
-    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_nontriviallyNormedField F.toCompleteDVF
+    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F.toCompleteDVF
   have hcomp :
       IsUniformInducing
         (F.qpadicCompletionToQpadicClosureSubfield ∘
@@ -740,14 +770,15 @@ theorem qpadicNumbersToQpadicClosureSubfield_isUniformInducing
 theorem qpadicNumbersToQpadicClosureSubfield_isClosed_range
     (F : LocalField.{u, v} K) [CharZero K] :
     letI : Valued K F.mrangeValueGroup :=
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF
+      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued
+        F.toCompleteDVF
     letI : NontriviallyNormedField K :=
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_nontriviallyNormedField F.toCompleteDVF
+      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F.toCompleteDVF
     IsClosed (Set.range F.qpadicNumbersToQpadicClosureSubfield) := by
   let : Valued K F.mrangeValueGroup :=
     _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF
   let : NontriviallyNormedField K :=
-    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_nontriviallyNormedField F.toCompleteDVF
+    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F.toCompleteDVF
   have hEmbedding :
       IsUniformEmbedding F.qpadicNumbersToQpadicClosureSubfield :=
     ⟨F.qpadicNumbersToQpadicClosureSubfield_isUniformInducing,
@@ -758,14 +789,15 @@ theorem qpadicNumbersToQpadicClosureSubfield_isClosed_range
 theorem qpadicNumbersToQpadicClosureSubfield_denseRange
     (F : LocalField.{u, v} K) [CharZero K] :
     letI : Valued K F.mrangeValueGroup :=
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF
+      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued
+        F.toCompleteDVF
     letI : NontriviallyNormedField K :=
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_nontriviallyNormedField F.toCompleteDVF
+      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F.toCompleteDVF
     DenseRange F.qpadicNumbersToQpadicClosureSubfield := by
   let : Valued K F.mrangeValueGroup :=
     _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF
   let : NontriviallyNormedField K :=
-    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_nontriviallyNormedField F.toCompleteDVF
+    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F.toCompleteDVF
   apply DenseRange.of_comp
     (g := ((↑) : ℚ → ℚ_[F.residueCharacteristic]))
   have hfun :
@@ -782,14 +814,15 @@ surjective. -/
 theorem qpadicNumbersToQpadicClosureSubfield_surjective
     (F : LocalField.{u, v} K) [CharZero K] :
     letI : Valued K F.mrangeValueGroup :=
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF
+      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued
+        F.toCompleteDVF
     letI : NontriviallyNormedField K :=
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_nontriviallyNormedField F.toCompleteDVF
+      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F.toCompleteDVF
     Function.Surjective F.qpadicNumbersToQpadicClosureSubfield := by
   let : Valued K F.mrangeValueGroup :=
     _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF
   let : NontriviallyNormedField K :=
-    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_nontriviallyNormedField F.toCompleteDVF
+    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F.toCompleteDVF
   rw [← Set.range_eq_univ]
   have hdense := F.qpadicNumbersToQpadicClosureSubfield_denseRange
   have hclosed := F.qpadicNumbersToQpadicClosureSubfield_isClosed_range
@@ -829,12 +862,13 @@ theorem qpadicNumbersEquivQpadicClosureSubfield_ratCast
 /-- The closed `Qp` candidate has the induced nontrivial normed-field
 structure.  The residue characteristic itself has norm different from one. -/
 @[implicit_reducible]
-noncomputable def qpadicClosureSubfield_nontriviallyNormedField
+noncomputable def qpadicClosureSubfieldNontriviallyNormedField
     (F : LocalField.{u, v} K) [CharZero K] :
     letI : Valued K F.mrangeValueGroup :=
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF
+      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued
+        F.toCompleteDVF
     letI : NontriviallyNormedField K :=
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_nontriviallyNormedField F.toCompleteDVF
+      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F.toCompleteDVF
     NontriviallyNormedField F.qpadicClosureSubfield := by
   letI : Valued K F.mrangeValueGroup :=
     _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF
@@ -844,10 +878,10 @@ noncomputable def qpadicClosureSubfield_nontriviallyNormedField
       (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict
         F.toCompleteDVF).RankOne
     exact
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_rankOne
+      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictRankOne
         F.toCompleteDVF
   letI : NontriviallyNormedField K :=
-    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_nontriviallyNormedField F.toCompleteDVF
+    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F.toCompleteDVF
   let pSub : F.qpadicClosureSubfield :=
     F.ratCastToQpadicClosureSubfield (F.residueCharacteristic : ℚ)
   have hpSub_coe :
@@ -879,21 +913,22 @@ noncomputable def qpadicClosureSubfield_nontriviallyNormedField
 /-- The ambient local field is a normed algebra over the closed `Qp`
 candidate, using the induced subfield norm. -/
 @[implicit_reducible]
-noncomputable def qpadicClosureSubfield_normedAlgebra
+noncomputable def qpadicClosureSubfieldNormedAlgebra
     (F : LocalField.{u, v} K) [CharZero K] :
     letI : Valued K F.mrangeValueGroup :=
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF
+      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued
+        F.toCompleteDVF
     letI : NontriviallyNormedField K :=
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_nontriviallyNormedField F.toCompleteDVF
+      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F.toCompleteDVF
     letI : NontriviallyNormedField F.qpadicClosureSubfield :=
-      F.qpadicClosureSubfield_nontriviallyNormedField
+      F.qpadicClosureSubfieldNontriviallyNormedField
     NormedAlgebra F.qpadicClosureSubfield K := by
   letI : Valued K F.mrangeValueGroup :=
     _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF
   letI : NontriviallyNormedField K :=
-    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_nontriviallyNormedField F.toCompleteDVF
+    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F.toCompleteDVF
   letI : NontriviallyNormedField F.qpadicClosureSubfield :=
-    F.qpadicClosureSubfield_nontriviallyNormedField
+    F.qpadicClosureSubfieldNontriviallyNormedField
   exact
     { (inferInstance : Algebra F.qpadicClosureSubfield K) with
       norm_smul_le := fun a x => by
@@ -905,22 +940,23 @@ subfield generated by its rational prime field. -/
 theorem finiteDimensional_over_qpadicClosureSubfield
     (F : LocalField.{u, v} K) [CharZero K] :
     letI : Valued K F.mrangeValueGroup :=
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF
+      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued
+        F.toCompleteDVF
     letI : NontriviallyNormedField K :=
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_nontriviallyNormedField F.toCompleteDVF
+      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F.toCompleteDVF
     letI : NontriviallyNormedField F.qpadicClosureSubfield :=
-      F.qpadicClosureSubfield_nontriviallyNormedField
+      F.qpadicClosureSubfieldNontriviallyNormedField
     letI : NormedAlgebra F.qpadicClosureSubfield K :=
-      F.qpadicClosureSubfield_normedAlgebra
+      F.qpadicClosureSubfieldNormedAlgebra
     FiniteDimensional F.qpadicClosureSubfield K := by
   let : Valued K F.mrangeValueGroup :=
     _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF
   let : NontriviallyNormedField K :=
-    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_nontriviallyNormedField F.toCompleteDVF
+    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F.toCompleteDVF
   let : NontriviallyNormedField F.qpadicClosureSubfield :=
-    F.qpadicClosureSubfield_nontriviallyNormedField
+    F.qpadicClosureSubfieldNontriviallyNormedField
   let : NormedAlgebra F.qpadicClosureSubfield K :=
-    F.qpadicClosureSubfield_normedAlgebra
+    F.qpadicClosureSubfieldNormedAlgebra
   have : ProperSpace K :=
     F.mrangeRestrict_properSpace
   have : CompleteSpace F.qpadicClosureSubfield :=
@@ -980,11 +1016,11 @@ theorem finiteDimensional_over_qpadicNumbers
   let : Valued K F.mrangeValueGroup :=
     _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF
   let : NontriviallyNormedField K :=
-    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_nontriviallyNormedField F.toCompleteDVF
+    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F.toCompleteDVF
   let : NontriviallyNormedField F.qpadicClosureSubfield :=
-    F.qpadicClosureSubfield_nontriviallyNormedField
+    F.qpadicClosureSubfieldNontriviallyNormedField
   let : NormedAlgebra F.qpadicClosureSubfield K :=
-    F.qpadicClosureSubfield_normedAlgebra
+    F.qpadicClosureSubfieldNormedAlgebra
   have : FiniteDimensional F.qpadicClosureSubfield K :=
     F.finiteDimensional_over_qpadicClosureSubfield
   have hcompat :

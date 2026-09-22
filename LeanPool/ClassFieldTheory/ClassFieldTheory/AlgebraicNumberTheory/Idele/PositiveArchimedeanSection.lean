@@ -16,7 +16,7 @@ norm is a prescribed inverse.  Its finite components are trivial and all of
 its infinite components lie in the standard positive subgroups.
 -/
 
-open scoped Classical IsMulCommutative NNReal NumberField Topology
+open scoped IsMulCommutative NNReal NumberField Topology
 open NumberField IsDedekindDomain
 open NumberField.Units.dirichletUnitTheorem
 
@@ -28,6 +28,7 @@ namespace IdeleGroup
 
 variable {K : Type u} [Field K] [NumberField K]
 
+open scoped Classical in
 /-- A positive real unit placed in an archimedean completion.  At a complex
 place it is first regarded as a complex unit. -/
 private noncomputable def positiveArchimedeanLocalComponent
@@ -48,6 +49,7 @@ private noncomputable def positiveArchimedeanLocalComponent
         ((Units.map Complex.ofRealHom.toMonoidHom).comp
           (Units.map NNReal.toRealHom.toMonoidHom))
 
+open scoped Classical in
 /-- The positive local archimedean component, with its natural continuity. -/
 private noncomputable def positiveArchimedeanLocalComponentContinuous
     (v : InfinitePlace K) :
@@ -95,6 +97,7 @@ private noncomputable def positiveArchimedeanLocalComponentContinuous
       congr 2
 
 omit [NumberField K] in
+open scoped Classical in
 @[simp]
 private theorem positiveArchimedeanLocalComponentContinuous_apply
     (v : InfinitePlace K) (r : ℝ≥0ˣ) :
@@ -103,6 +106,7 @@ private theorem positiveArchimedeanLocalComponentContinuous_apply
   rfl
 
 omit [NumberField K] in
+open scoped Classical in
 private theorem positiveArchimedeanLocalComponent_nnnorm
     (v : InfinitePlace K) (r : ℝ≥0ˣ) :
     ‖((positiveArchimedeanLocalComponent v r :
@@ -190,6 +194,7 @@ private theorem positiveArchimedeanLocalComponent_nnnorm
         Real.norm_of_nonneg (r : ℝ≥0).coe_nonneg
 
 omit [NumberField K] in
+open scoped Classical in
 private theorem positiveArchimedeanLocalComponent_mem_positive
     (v : InfinitePlace K) (r : ℝ≥0ˣ) :
     positiveArchimedeanLocalComponent v r ∈
@@ -226,6 +231,7 @@ private theorem positiveArchimedeanLocalComponent_mem_positive
   exact NNReal.coe_pos.mpr
     (pos_iff_ne_zero.mpr r.ne_zero)
 
+open scoped Classical in
 /-- The positive root needed to compensate for the multiplicity of the
 chosen infinite place. -/
 private noncomputable def positiveArchimedeanRoot :
@@ -234,6 +240,7 @@ private noncomputable def positiveArchimedeanRoot :
     (NNReal.rpowMonoidHom
       (((w₀ (K := K)).mult : ℝ)⁻¹))
 
+open scoped Classical in
 /-- The positive root map used in the archimedean section is continuous. -/
 private noncomputable def positiveArchimedeanRootContinuous :
     ℝ≥0ˣ →ₜ* ℝ≥0ˣ where
@@ -244,6 +251,7 @@ private noncomputable def positiveArchimedeanRootContinuous :
         (NNReal.rpowMonoidHom
           (((w₀ (K := K)).mult : ℝ)⁻¹))
 
+open scoped Classical in
 /-- The positive archimedean idele over a number field.  Its finite part is
 one, and its sole nontrivial infinite component has been normalized so that
 the total archimedean norm is the input. -/
@@ -256,6 +264,7 @@ noncomputable def positiveArchimedeanSection
         (w₀ (K := K))).comp
       (positiveArchimedeanRoot (K := K)))
 
+open scoped Classical in
 /-- The positive archimedean section as a continuous homomorphism. -/
 noncomputable def positiveArchimedeanSectionContinuous
     (K : Type u) [Field K] [NumberField K] :
@@ -266,6 +275,7 @@ noncomputable def positiveArchimedeanSectionContinuous
         (w₀ (K := K))).comp
       (positiveArchimedeanRootContinuous (K := K)))
 
+open scoped Classical in
 @[simp]
 theorem positiveArchimedeanSectionContinuous_apply
     (r : ℝ≥0ˣ) :
@@ -273,12 +283,13 @@ theorem positiveArchimedeanSectionContinuous_apply
       positiveArchimedeanSection K r :=
   rfl
 
+open scoped Classical in
 /-- The positive archimedean section is continuous. -/
 theorem continuous_positiveArchimedeanSection :
     Continuous (positiveArchimedeanSection K) :=
   (positiveArchimedeanSectionContinuous K).continuous_toFun
 
-@[simp]
+open scoped Classical in
 private theorem positiveArchimedeanSection_infiniteComponent_same
     (r : ℝ≥0ˣ) :
     IdeleGroup.infiniteComponent (w₀ (K := K))
@@ -295,7 +306,7 @@ private theorem positiveArchimedeanSection_infiniteComponent_same
             (positiveArchimedeanRoot (K := K) r))) = _
   rw [IdeleGroup.infinitePlaceIdele_infiniteComponent_same]
 
-@[simp]
+open scoped Classical in
 private theorem positiveArchimedeanSection_infiniteComponent_of_ne
     (r : ℝ≥0ˣ) (v : InfinitePlace K)
     (hv : v ≠ w₀ (K := K)) :
@@ -313,8 +324,8 @@ private theorem positiveArchimedeanSection_infiniteComponent_of_ne
     IdeleGroup.infinitePlaceIdele_infiniteComponent_of_ne
       (w₀ (K := K)) v _ hv
 
+open scoped Classical in
 /-- Every finite component of the positive archimedean idele is one. -/
-@[simp]
 theorem positiveArchimedeanSection_finiteComponent
     (r : ℝ≥0ˣ)
     (v : HeightOneSpectrum (𝓞 K)) :
@@ -330,6 +341,7 @@ theorem positiveArchimedeanSection_finiteComponent
             (positiveArchimedeanRoot (K := K) r))) = 1
   rw [IdeleGroup.infinitePlaceIdele_finiteComponent]
 
+open scoped Classical in
 /-- Every infinite component of the positive archimedean idele lies in the
 standard positive subgroup. -/
 theorem positiveArchimedeanSection_infiniteComponent_mem_positive
@@ -348,8 +360,8 @@ theorem positiveArchimedeanSection_infiniteComponent_mem_positive
       r v hv]
     exact Subgroup.one_mem _
 
+open scoped Classical in
 /-- The positive archimedean idele has absolute idele norm `r⁻¹`. -/
-@[simp]
 theorem positiveArchimedeanSection_absoluteNorm
     (r : ℝ≥0ˣ) :
     IdeleGroup.absoluteNorm
@@ -410,6 +422,7 @@ theorem positiveArchimedeanSection_absoluteNorm
       r⁻¹
   rw [map_one, hinfinite, one_mul]
 
+open scoped Classical in
 /-- Multiplying an idele by its positive archimedean correction produces an
 idele of absolute norm one. -/
 noncomputable def positiveArchimedeanNormOneCorrection
@@ -425,6 +438,7 @@ noncomputable def positiveArchimedeanNormOneCorrection
     rw [map_mul, positiveArchimedeanSection_absoluteNorm]
     exact mul_inv_cancel (IdeleGroup.absoluteNorm a)⟩
 
+open scoped Classical in
 /-- The underlying idele of the norm-one correction is its defining product. -/
 @[simp]
 theorem positiveArchimedeanNormOneCorrection_coe
@@ -433,6 +447,7 @@ theorem positiveArchimedeanNormOneCorrection_coe
       a * positiveArchimedeanSection K (IdeleGroup.absoluteNorm a) :=
   rfl
 
+open scoped Classical in
 /-- Every idele is its norm-one correction multiplied by the inverse of the
 positive archimedean section. -/
 theorem eq_positiveArchimedeanNormOneCorrection_mul_section_inv

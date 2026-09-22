@@ -95,7 +95,6 @@ def bigHilbertClassFieldQuotientToIdeleClassNormQuotient
 
 /-- The big-Hilbert quotient transition sends an idele class to the
 same class modulo the actual norm subgroup. -/
-@[simp]
 theorem bigHilbertClassFieldQuotientToIdeleClassNormQuotient_mk
     (hunramified :
       _root_.ramifiedBaseFinitePlaces

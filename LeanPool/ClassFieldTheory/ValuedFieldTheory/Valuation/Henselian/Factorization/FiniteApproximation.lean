@@ -42,59 +42,59 @@ theorem henselFactorization_extend_finite_prefix_one_step_of_mem_span
     (hprefix :
       ∀ r : ℕ, r ≤ n →
         ∃ fr : R[X],
-          f - henselFactorization_henselIterate π g0 pCorr r *
-              henselFactorization_henselIterate π h0 qCorr r =
+          f - henselFactorizationHenselIterate π g0 pCorr r *
+              henselFactorizationHenselIterate π h0 qCorr r =
             Polynomial.C (π ^ (r + 1)) * fr)
     {fn : R[X]}
     (hfactor :
-      f - henselFactorization_henselIterate π g0 pCorr n *
-          henselFactorization_henselIterate π h0 qCorr n =
+      f - henselFactorizationHenselIterate π g0 pCorr n *
+          henselFactorizationHenselIterate π h0 qCorr n =
         Polynomial.C (π ^ (n + 1)) * fn)
-    (hgDeg : (henselFactorization_henselIterate π g0 pCorr n).natDegree ≤ m)
-    (hhDeg : (henselFactorization_henselIterate π h0 qCorr n).natDegree ≤ d - m) :
+    (hgDeg : (henselFactorizationHenselIterate π g0 pCorr n).natDegree ≤ m)
+    (hhDeg : (henselFactorizationHenselIterate π h0 qCorr n).natDegree ≤ d - m) :
     ∃ p q fnNext : R[X],
       p.natDegree ≤ m ∧ q.natDegree ≤ d - m ∧
         (∀ r : ℕ, r ≤ n →
           ∃ fr : R[X],
-            f - henselFactorization_henselIterate π g0
+            f - henselFactorizationHenselIterate π g0
                   (Function.update pCorr (n + 1) p) r *
-                henselFactorization_henselIterate π h0
+                henselFactorizationHenselIterate π h0
                   (Function.update qCorr (n + 1) q) r =
               Polynomial.C (π ^ (r + 1)) * fr) ∧
-          f - henselFactorization_henselIterate π g0
+          f - henselFactorizationHenselIterate π g0
                 (Function.update pCorr (n + 1) p) (n + 1) *
-              henselFactorization_henselIterate π h0
+              henselFactorizationHenselIterate π h0
                 (Function.update qCorr (n + 1) q) (n + 1) =
             Polynomial.C (π ^ (n + 2)) * fnNext ∧
-            (henselFactorization_henselIterate π g0
+            (henselFactorizationHenselIterate π g0
                 (Function.update pCorr (n + 1) p) (n + 1)).natDegree ≤ m ∧
-              (henselFactorization_henselIterate π h0
+              (henselFactorizationHenselIterate π h0
                   (Function.update qCorr (n + 1) q) (n + 1)).natDegree ≤
                 d - m ∧
                 (∀ i : ℕ,
-                  (henselFactorization_henselIterate π g0
+                  (henselFactorizationHenselIterate π g0
                       (Function.update pCorr (n + 1) p) (n + 1) -
                     g0).coeff i ∈ IsLocalRing.maximalIdeal R) ∧
                   (∀ i : ℕ,
-                    (henselFactorization_henselIterate π h0
+                    (henselFactorizationHenselIterate π h0
                         (Function.update qCorr (n + 1) q) (n + 1) -
                       h0).coeff i ∈ IsLocalRing.maximalIdeal R) := by
   have hπpow : π ^ (n + 1) ≠ 0 := pow_ne_zero (n + 1) hπne
   have hgSpan :
       ∀ i : ℕ,
-        (henselFactorization_henselIterate π g0 pCorr n - g0).coeff i ∈
+        (henselFactorizationHenselIterate π g0 pCorr n - g0).coeff i ∈
           Ideal.span ({π} : Set R) :=
     henselFactorization_henselIterate_span_singleton (π := π) g0 pCorr n
   have hhSpan :
       ∀ i : ℕ,
-        (henselFactorization_henselIterate π h0 qCorr n - h0).coeff i ∈
+        (henselFactorizationHenselIterate π h0 qCorr n - h0).coeff i ∈
           Ideal.span ({π} : Set R) :=
     henselFactorization_henselIterate_span_singleton (π := π) h0 qCorr n
   rcases henselFactorization_exists_one_step_update_with_degree_bounds_of_mem_span
       (π := π) (n := n + 1) (Nat.succ_pos n) hπpow hπmem
       (f := f) (g0 := g0) (h0 := h0)
-      (g := henselFactorization_henselIterate π g0 pCorr n)
-      (h := henselFactorization_henselIterate π h0 qCorr n)
+      (g := henselFactorizationHenselIterate π g0 pCorr n)
+      (h := henselFactorizationHenselIterate π h0 qCorr n)
       (fn := fn) (a := a) (b := b) (e := e)
       (gbar := gbar) (m := m) (d := d)
       hf hgSpan hhSpan hgDeg hhDeg hg0map hg0nat hgbar_nat hglead
@@ -102,9 +102,9 @@ theorem henselFactorization_extend_finite_prefix_one_step_of_mem_span
     ⟨p, q, fnNext, hpDeg, hqDeg, hgNextDeg, hhNextDeg,
       _hgNextSpan, _hhNextSpan, hgNextRed, hhNextRed, hfactorNextRaw⟩
   have hfactorNext :
-      f - (henselFactorization_henselIterate π g0 pCorr n +
+      f - (henselFactorizationHenselIterate π g0 pCorr n +
             Polynomial.C (π ^ (n + 1)) * p) *
-          (henselFactorization_henselIterate π h0 qCorr n +
+          (henselFactorizationHenselIterate π h0 qCorr n +
             Polynomial.C (π ^ (n + 1)) * q) =
         Polynomial.C (π ^ (n + 2)) * fnNext := by
     simpa [Nat.add_assoc] using hfactorNextRaw

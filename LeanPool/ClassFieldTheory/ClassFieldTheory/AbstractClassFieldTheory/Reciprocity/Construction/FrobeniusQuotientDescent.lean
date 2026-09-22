@@ -387,7 +387,7 @@ theorem maximalUnramifiedNorm_fixed_of_hstar (D : DegreeData G)
 the finite-quotient argument implicit: the finite degree-quotient decomposition writes
 each element of `Gal(P/K)` as a positive Frobenius power up to inertia. -/
 theorem descend_maximalUnramified_fixed_of_finiteSupport (D : DegreeData G)
-    (A : Rep ℤ G) [IsTopologicalGroup G]
+    (A : Rep ℤ G)
     (K : FiniteResidueAbstractField D) (L : ClosedSubgroup G)
     (hLK : L.toSubgroup ≤ K.field.toSubgroup)
     [hLnormal : (extensionSubgroup K.field L hLK).Normal]

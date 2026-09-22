@@ -17,7 +17,8 @@ open CyclicCohomology
 /-!
 # Conjugation and relative norms
 
-These are the field-conjugation and norm identities used in the abstract reciprocity construction and theorem.  They belong before the reciprocity construction: their proofs
+These are the field-conjugation and norm identities used in the abstract reciprocity
+  construction and theorem.  They belong before the reciprocity construction: their proofs
 use only the actual relative norm and the conjugation action.
 -/
 

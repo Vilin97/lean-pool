@@ -119,12 +119,16 @@ section Localization
 variable (vK : AbsoluteValue K ℝ)
 variable (w : AbsoluteValueExtension vK L)
 
+/-- The completion at the extended absolute value is a `K`-algebra through the original
+extension. -/
 local instance completionBaseAlgebra : Algebra K w.1.Completion :=
   AbsoluteValue.extensionCompletionAlgebra (K := K) w.1
 
+/-- The action of `K` on the extended completion is induced by its completion algebra. -/
 local instance completionBaseSMul : SMul K w.1.Completion :=
   (AbsoluteValue.extensionCompletionAlgebra (K := K) w.1).toSMul
 
+/-- The completion at the extended absolute value is an algebra over the completed base field. -/
 local instance completionAlgebra : Algebra vK.Completion w.1.Completion :=
   AbsoluteValue.completionAlgebra vK w.1 w.2
 
@@ -437,7 +441,8 @@ theorem algebraicLocalizationDensity_localization_principalUnit_map
       AbsoluteValue.algebraicLocalizationAbsoluteValue_toAlgebraicLocalization vK w.1 w.2 _
     _ < 1 := hxAbs
 
-/-- The difficult direction of ramification transport in the localization and decomposition comparison.
+/-- The difficult direction of ramification transport in the localization and decomposition
+comparison.
 Once the restrictions commute, an automorphism ramified-trivially on every
 global multiplicative class is ramified-trivially on every local class.
 Surjectivity modulo principal units is the essential density input. -/
@@ -450,7 +455,8 @@ theorem algebraicLocalizationDensity_localization_mem_ramification_of_commutes
     (sigma : RamificationTheory.HilbertRamification.ValuationSubring.inertiaGroup K
       (extensionValuationSubring vK w hw))
     (hcomm : ∀ x : L,
-      (((tau : RamificationTheory.HilbertRamification.ValuationSubring.decompositionGroup vK.Completion
+      (((tau : RamificationTheory.HilbertRamification.ValuationSubring.decompositionGroup
+        vK.Completion
           (localizationValuationSubring vK w hw)) :
             localization vK w ≃ₐ[vK.Completion] localization vK w)
           (toLocalization vK w x)) =
@@ -466,8 +472,10 @@ theorem algebraicLocalizationDensity_localization_mem_ramification_of_commutes
   let AE := localizationValuationSubring vK w hw
   let AL := extensionValuationSubring vK w hw
   let j := toLocalization vK w
-  let tauD : RamificationTheory.HilbertRamification.ValuationSubring.decompositionGroup vK.Completion AE := tau
-  let sigmaD : RamificationTheory.HilbertRamification.ValuationSubring.decompositionGroup K AL := sigma
+  let tauD : RamificationTheory.HilbertRamification.ValuationSubring.decompositionGroup
+    vK.Completion AE := tau
+  let sigmaD : RamificationTheory.HilbertRamification.ValuationSubring.decompositionGroup K AL
+    := sigma
   let tauE : localization vK w ≃ₐ[vK.Completion] localization vK w := tauD
   let sigmaL : L ≃ₐ[K] L := sigmaD
   obtain ⟨x, hu⟩ :=
@@ -496,25 +504,32 @@ theorem algebraicLocalizationDensity_localization_mem_ramification_of_commutes
         algebraicLocalizationDensity_localizationAbsoluteValue_algEquiv vK w hvK tauE _
       _ < 1 := huAbs
   have hquotU :
-      RamificationTheory.HilbertRamification.ValuationSubring.automorphismUnitQuotient vK.Completion AE tauD u ∈
+      RamificationTheory.HilbertRamification.ValuationSubring.automorphismUnitQuotient
+        vK.Completion AE tauD u ∈
         AE.principalUnitGroup := by
     change Units.mapEquiv tauE.toMulEquiv u / u ∈ AE.principalUnitGroup
     exact AE.principalUnitGroup.div_mem htauU hu'
   have hxGlobal :
-      RamificationTheory.HilbertRamification.ValuationSubring.automorphismUnitQuotient K AL sigmaD x ∈
+      RamificationTheory.HilbertRamification.ValuationSubring.automorphismUnitQuotient K AL
+        sigmaD x ∈
         AL.principalUnitGroup :=
-    (RamificationTheory.HilbertRamification.ValuationSubring.mem_ramificationGroup_iff K AL sigma).mp hsigma x
+    (RamificationTheory.HilbertRamification.ValuationSubring.mem_ramificationGroup_iff K AL
+      sigma).mp hsigma x
   have hxMapped : Units.map j
-      (RamificationTheory.HilbertRamification.ValuationSubring.automorphismUnitQuotient K AL sigmaD x) ∈
+      (RamificationTheory.HilbertRamification.ValuationSubring.automorphismUnitQuotient K AL
+        sigmaD x) ∈
         AE.principalUnitGroup :=
     algebraicLocalizationDensity_localization_principalUnit_map vK w hw _ hxGlobal
   have hquotX :
-      RamificationTheory.HilbertRamification.ValuationSubring.automorphismUnitQuotient vK.Completion AE tauD xE ∈
+      RamificationTheory.HilbertRamification.ValuationSubring.automorphismUnitQuotient
+        vK.Completion AE tauD xE ∈
         AE.principalUnitGroup := by
     have heq :
-        RamificationTheory.HilbertRamification.ValuationSubring.automorphismUnitQuotient vK.Completion AE tauD xE =
+        RamificationTheory.HilbertRamification.ValuationSubring.automorphismUnitQuotient
+          vK.Completion AE tauD xE =
           Units.map j
-            (RamificationTheory.HilbertRamification.ValuationSubring.automorphismUnitQuotient K AL sigmaD x) := by
+            (RamificationTheory.HilbertRamification.ValuationSubring.automorphismUnitQuotient K
+              AL sigmaD x) := by
       ext
       simp [RamificationTheory.HilbertRamification.ValuationSubring.automorphismUnitQuotient, xE,
         tauD, sigmaD, j, hcomm]
@@ -524,11 +539,15 @@ theorem algebraicLocalizationDensity_localization_mem_ramification_of_commutes
     exact div_mul_cancel z xE
   rw [← hzFactor]
   have hquotMul :
-      RamificationTheory.HilbertRamification.ValuationSubring.automorphismUnitQuotient vK.Completion AE tauD (u * xE) =
-        RamificationTheory.HilbertRamification.ValuationSubring.automorphismUnitQuotient vK.Completion AE tauD u *
-          RamificationTheory.HilbertRamification.ValuationSubring.automorphismUnitQuotient vK.Completion AE tauD xE := by
+      RamificationTheory.HilbertRamification.ValuationSubring.automorphismUnitQuotient
+        vK.Completion AE tauD (u * xE) =
+        RamificationTheory.HilbertRamification.ValuationSubring.automorphismUnitQuotient
+          vK.Completion AE tauD u *
+          RamificationTheory.HilbertRamification.ValuationSubring.automorphismUnitQuotient
+            vK.Completion AE tauD xE := by
     ext
-    simp [RamificationTheory.HilbertRamification.ValuationSubring.automorphismUnitQuotient, div_eq_mul_inv]
+    simp [RamificationTheory.HilbertRamification.ValuationSubring.automorphismUnitQuotient,
+      div_eq_mul_inv]
     ac_rfl
   rw [hquotMul]
   exact AE.principalUnitGroup.mul_mem hquotU hquotX

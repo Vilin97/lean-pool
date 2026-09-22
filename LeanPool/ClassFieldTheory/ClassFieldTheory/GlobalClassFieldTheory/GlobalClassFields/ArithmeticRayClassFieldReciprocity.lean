@@ -16,7 +16,7 @@ idèle norm range, the finite Krull topology, and the native ray-class
 quotient topology.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 
 noncomputable section
 
@@ -26,6 +26,7 @@ namespace GlobalClassFields
 open NumberField
 open Reciprocity
 
+open scoped Classical in
 private theorem arithmeticRayClassIdeleClassGroupIsMulCommutative
     {F : Type} [Field F] [NumberField F] :
     IsMulCommutative (IdeleClassGroup F) :=
@@ -35,6 +36,7 @@ attribute [local instance] arithmeticRayClassIdeleClassGroupIsMulCommutative
 
 variable {K : Type} [Field K] [NumberField K]
 
+open scoped Classical in
 /-- Arithmetic reciprocity followed by transport between equal norm
 quotients sends a norm-residue symbol to its represented quotient class. -/
 private theorem
@@ -72,6 +74,7 @@ private theorem
     _ = QuotientGroup.mk' H c :=
       QuotientGroup.quotientMulEquivOfEq_mk h c
 
+open scoped Classical in
 /-- Arithmetic global reciprocity for the actual selected ray class
 field, bundled with both native topologies. -/
 noncomputable def
@@ -104,6 +107,7 @@ noncomputable def
       K (rayClassField K m)).trans
         quotientTransport
 
+open scoped Classical in
 /-- Pointwise evaluation of arithmetic ray-class reciprocity separates
 global reciprocity from the transport between the equal norm quotients. -/
 private theorem
@@ -119,9 +123,9 @@ private theorem
           K (rayClassField K m) σ) := by
   rfl
 
+open scoped Classical in
 /-- Arithmetic ray-class reciprocity sends the arithmetic global
 norm-residue symbol of an idèle class to its literal ray class. -/
-@[simp]
 theorem
     arithmeticRayClassFieldGaloisContinuousMulEquivRayClassGroup_globalNormResidue
     (m : RayClass.Modulus K)
@@ -153,9 +157,9 @@ theorem
         (rayClassField_ideleClassNorm_range_over_original
           (K := K) m) c
 
+open scoped Classical in
 /-- Inverse arithmetic ray reciprocity sends a represented ray class
 back to the arithmetic global norm-residue symbol. -/
-@[simp]
 theorem
     arithmeticRayClassFieldGaloisContinuousMulEquivRayClassGroup_symm_mk
     (m : RayClass.Modulus K)

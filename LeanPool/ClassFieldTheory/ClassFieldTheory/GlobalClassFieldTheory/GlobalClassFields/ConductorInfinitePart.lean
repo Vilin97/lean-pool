@@ -14,8 +14,7 @@ property exactly when the whole one-place idèle-class image is already
 contained in the target subgroup.
 -/
 
-open scoped NumberField Classical
-
+open scoped NumberField
 noncomputable section
 
 namespace GlobalClassFieldTheory
@@ -25,12 +24,14 @@ open NumberField IsDedekindDomain
 
 variable {K : Type*} [Field K] [NumberField K]
 
+open scoped Classical in
 /-- Erasing a selected real place can only decrease a full modulus. -/
 theorem eraseRealPlace_le
     (m : RayClass.Modulus K) (v : RayClass.RealPlace K) :
     m.eraseRealPlace v ≤ m :=
   ⟨le_rfl, Finset.erase_subset v m.infinitePart⟩
 
+open scoped Classical in
 /-- If a real place is not selected by a modulus, its whole one-place
 idèle-class image lies in the corresponding ray congruence subgroup. -/
 theorem infinitePlaceIdeleClass_range_le_congruenceSubgroup_of_not_mem
@@ -69,6 +70,7 @@ theorem infinitePlaceIdeleClass_range_le_congruenceSubgroup_of_not_mem
     rw [IdeleGroup.infinitePlaceIdele_finiteComponent]
     exact Subgroup.one_mem _
 
+open scoped Classical in
 private theorem eraseRealPlace_isDefiningModulus_of_range_le
     (H : Subgroup (IdeleClassGroup K))
     (m : RayClass.Modulus K)
@@ -162,6 +164,7 @@ private theorem eraseRealPlace_isDefiningModulus_of_range_le
     rw [hqa]
     exact H.one_mem
 
+open scoped Classical in
 /-- Removing the positivity condition at one real place preserves the
 defining-modulus property exactly when the whole one-place idèle-class
 image is already contained in the target subgroup. -/
@@ -184,6 +187,7 @@ theorem eraseRealPlace_isDefiningModulus_iff
   · rintro ⟨hm, hvH⟩
     exact eraseRealPlace_isDefiningModulus_of_range_le H m hm v hvH
 
+open scoped Classical in
 /-- Erasing finitely many real places preserves the defining-modulus
 property when every corresponding one-place idèle-class image is contained
 in the target subgroup. -/
@@ -212,6 +216,7 @@ theorem eraseRealPlaces_isDefiningModulus_of_ranges_le
 
 namespace ConductorialSubgroup
 
+open scoped Classical in
 /-- The real places whose one-place idèle-class image is not contained in
 the target subgroup. -/
 noncomputable def fullConductorInfinitePart
@@ -219,6 +224,7 @@ noncomputable def fullConductorInfinitePart
   (Finset.univ : Finset (RayClass.RealPlace K)).filter fun v =>
     ¬ (IdeleGroup.infinitePlaceIdeleClass v.1).range ≤ H.1
 
+open scoped Classical in
 /-- Membership in the infinite part of the full conductor is the failure of
 the corresponding one-place idèle-class image to lie in the target subgroup. -/
 @[simp]
@@ -229,6 +235,7 @@ theorem mem_fullConductorInfinitePart_iff
   simp only [fullConductorInfinitePart, Finset.mem_filter,
     Finset.mem_univ, true_and]
 
+open scoped Classical in
 /-- Every defining modulus contains the infinite part of the full conductor. -/
 theorem fullConductorInfinitePart_subset_of_isDefiningModulus
     (H : ConductorialSubgroup K) {m : RayClass.Modulus K}
@@ -241,6 +248,7 @@ theorem fullConductorInfinitePart_subset_of_isDefiningModulus
     ((infinitePlaceIdeleClass_range_le_congruenceSubgroup_of_not_mem
       m v hvm).trans hm)
 
+open scoped Classical in
 /-- The full conductor, with the narrow finite conductor as finite part and
 exactly the required real places as infinite part. -/
 noncomputable def fullConductor
@@ -248,6 +256,7 @@ noncomputable def fullConductor
   finitePart := H.narrowFiniteConductor
   infinitePart := H.fullConductorInfinitePart
 
+open scoped Classical in
 /-- The full conductor is itself a defining modulus. -/
 theorem fullConductor_isDefiningModulus
     (H : ConductorialSubgroup K) :
@@ -278,6 +287,7 @@ theorem fullConductor_isDefiningModulus
   rw [← hmod]
   exact hmErase
 
+open scoped Classical in
 /-- A modulus is defining exactly when it is at least the full conductor. -/
 theorem isDefiningModulus_iff_fullConductor_le
     (H : ConductorialSubgroup K) (m : RayClass.Modulus K) :

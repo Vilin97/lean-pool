@@ -14,7 +14,7 @@ elimination preserves the native quotient topology, so no discrete topology
 instances are reconstructed here.
 -/
 
-open scoped Classical IsMulCommutative NumberField
+open scoped IsMulCommutative NumberField
 
 noncomputable section
 
@@ -23,6 +23,7 @@ namespace GlobalClassFields
 
 open Reciprocity
 
+open scoped Classical in
 /-- Canonical class-group commutativity supplies normality for the two quotients. -/
 private theorem closedFiniteIndexTopologicalClassGroupIsMulCommutative
     (F : Type) [Field F] [NumberField F] :
@@ -33,6 +34,7 @@ attribute [local instance] closedFiniteIndexTopologicalClassGroupIsMulCommutativ
 
 variable {K : Type} [Field K] [NumberField K]
 
+open scoped Classical in
 /-- Global reciprocity for the selected class field as a homeomorphic
 multiplicative equivalence `Gal(L / K) ≃ₜ* C_K / H`. -/
 noncomputable def

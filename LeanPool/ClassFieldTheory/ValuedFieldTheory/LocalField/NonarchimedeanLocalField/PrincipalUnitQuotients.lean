@@ -266,7 +266,7 @@ theorem tendsto_neg_pow_succ_of_mem_maximalIdeal
 /-- If a sequence of valuation integers converges, then its difference from
 the limit is eventually in any fixed power of the maximal ideal. -/
 theorem eventually_sub_mem_maximalIdeal_pow_of_tendsto
-    (K : Type u) [Field K] [ValuativeRel K] [UniformSpace K] [IsUniformAddGroup K]
+    (K : Type u) [Field K] [ValuativeRel K] [UniformSpace K]
     [IsNonarchimedeanLocalField K] {f : Nat → 𝒪[K]} {x : 𝒪[K]} (n : Nat)
     (hf : Tendsto f atTop (nhds x)) :
     ∀ᶠ d in atTop, f d - x ∈ (𝓂[K] ^ n : Ideal 𝒪[K]) := by
@@ -453,7 +453,7 @@ theorem principalUnitsCorrectionProduct_sub_mem_of_le
 /-- The finite correction products form a Cauchy sequence in the valuation
 integer ring. This is the first complete-side output of the tail estimates. -/
 theorem principalUnitsCorrectionProduct_cauchySeq
-    (K : Type u) [Field K] [ValuativeRel K] [UniformSpace K] [IsUniformAddGroup K]
+    (K : Type u) [Field K] [ValuativeRel K] [UniformSpace K]
     [IsNonarchimedeanLocalField K] (n : Nat)
     (z : ∀ d : Nat, principalUnits K (n + d)) :
     CauchySeq fun d : Nat =>
@@ -487,7 +487,7 @@ theorem exists_tendsto_principalUnitsCorrectionProduct
 /-- Any limit of the correction-product sequence still satisfies the defining
 congruence of `U^n`, viewed inside the valuation integer ring. -/
 theorem principalUnitsCorrectionProduct_limit_sub_one_mem
-    (K : Type u) [Field K] [ValuativeRel K] [UniformSpace K] [IsUniformAddGroup K]
+    (K : Type u) [Field K] [ValuativeRel K] [UniformSpace K]
     [IsNonarchimedeanLocalField K] (n : Nat)
     (z : ∀ d : Nat, principalUnits K (n + d)) (x : 𝒪[K])
     (hx : Tendsto
@@ -538,7 +538,8 @@ def principalUnitsSuccIncl (K : Type u) [Field K] [ValuativeRel K] (n : Nat) :
     intro a b
     rfl
 
-/-- The inclusion `U^(n+1) → U^n` retains the underlying unit and its stronger filtration witness. -/
+/-- The inclusion `U^(n+1) → U^n` retains the underlying unit and its stronger filtration
+witness. -/
 theorem principalUnitsSuccIncl_apply
     (K : Type u) [Field K] [ValuativeRel K] (n : Nat)
     (u : principalUnits K (n + 1)) :
@@ -1241,7 +1242,6 @@ theorem finset_prod_one_add_sub_one_sub_sum_mem_maximalIdeal_pow_succ
     exact (𝓂[K] ^ (n + 1) : Ideal 𝒪[K]).add_mem hind hmul
 
 /-- The zero element of `𝓂^n` maps to the identity class in `U^n/U^(n+1)`. -/
-@[simp]
 theorem principalUnitsSuccQuotOfIdealPow_zero
     (K : Type u) [Field K] [ValuativeRel K] (n : Nat) (hn : 1 ≤ n) :
     principalUnitsSuccQuotOfIdealPow K n hn (0 : (𝓂[K] ^ n : Ideal 𝒪[K])) = 1 := by

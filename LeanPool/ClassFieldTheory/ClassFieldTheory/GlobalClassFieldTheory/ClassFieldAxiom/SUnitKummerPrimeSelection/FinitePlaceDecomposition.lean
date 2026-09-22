@@ -16,13 +16,14 @@ proves cyclicity for the decomposition group at a chosen unramified place.
 The results are independent of the S-unit Kummer construction.
 -/
 
-open scoped NumberField Classical IsMulCommutative
+open scoped NumberField IsMulCommutative
 open NumberField IsDedekindDomain
 
 noncomputable section
 
 namespace GlobalClassFieldTheory.ClassFieldAxiom
 
+open scoped Classical in
 /-- Full relative decomposition above `q` puts every
 `M`-automorphism inside the global chosen decomposition group below
 `q`. -/
@@ -35,7 +36,7 @@ theorem
     [Algebra F M] [Algebra M L] [Algebra F L]
     [IsScalarTower F M L]
     [FiniteDimensional F L]
-    [FiniteDimensional M L]
+
     [IsGalois F L] [IsGalois M L]
     [IsMulCommutative (L ≃ₐ[F] L)]
     (p : HeightOneSpectrum (𝓞 F))
@@ -143,11 +144,12 @@ theorem
   rw [← hDchosen, ← hDvalue]
   exact hrho
 
+open scoped Classical in
 /-- An unramified chosen finite-place decomposition group is cyclic. -/
 theorem finitePlaceDecompositionGroup_isCyclic_of_chosenUnramified
     {F L : Type}
     [Field F] [NumberField F]
-    [Field L] [NumberField L] [Algebra F L]
+    [Field L] [Algebra F L]
     [FiniteDimensional F L] [IsGalois F L]
     (v : HeightOneSpectrum (𝓞 F))
     (hunram :

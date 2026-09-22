@@ -66,7 +66,9 @@ local notation "qH" =>
   abstractExtensionQuotientEquivGaloisGroup
     K (SeparableClosure K) H.field J hJH hJnormal
 
-local instance intrinsicPrimeComparison_separableClosureAlgebra :
+/-- The separable closure of the comparison fixed field carries its canonical algebra structure
+over that field. -/
+local instance intrinsicPrimeComparisonSeparableClosureAlgebra :
     Algebra F (SeparableClosure F) :=
   (separableClosure F (AlgebraicClosure F)).algebra
 
@@ -84,11 +86,13 @@ local instance intrinsicPrimeComparison_fixedFieldFiniteDimensional :
   abstractFixedField_finiteDimensional
     K (SeparableClosure K) H.field H.finite
 
-local instance intrinsicPrimeComparison_fixedFieldNormed :
+/-- The comparison fixed field carries the spectral norm extending the local base-field norm. -/
+local instance intrinsicPrimeComparisonFixedFieldNormed :
     NontriviallyNormedField F :=
   finiteExtensionSpectralNormedField K F
 
-local instance intrinsicPrimeComparison_fixedFieldValuative :
+/-- The valuation relation on the comparison fixed field induced by its spectral norm. -/
+local instance intrinsicPrimeComparisonFixedFieldValuative :
     ValuativeRel F :=
   finiteExtensionSpectralValuativeRel K F
 
@@ -244,7 +248,9 @@ abbrev intrinsicFixedFieldFrobeniusAmbientField
     (intrinsicFixedFieldFrobeniusAmbientBelow
       K H J hJH e σ)
 
-local instance intrinsicPrimeComparison_frobeniusSourceAlgebra
+/-- The Frobenius source field is an algebra over the comparison fixed field through its
+intermediate-field inclusion. -/
+local instance intrinsicPrimeComparisonFrobeniusSourceAlgebra
     (σ : intrinsicFixedFieldFrobeniusElements K H J hJH e) :
     Algebra F
       (intrinsicFixedFieldFrobeniusSourceField
@@ -262,12 +268,12 @@ local instance intrinsicPrimeComparison_frobeniusSourceFiniteDimensional
         (intrinsicFixedFieldFrobeniusSourceField
           K H J hJH e σ)
         _ _
-        (intrinsicPrimeComparison_frobeniusSourceAlgebra
+        (intrinsicPrimeComparisonFrobeniusSourceAlgebra
           K H J hJH e σ)) := by
   let : Algebra F
       (intrinsicFixedFieldFrobeniusSourceField
         K H J hJH e σ) :=
-    intrinsicPrimeComparison_frobeniusSourceAlgebra
+    intrinsicPrimeComparisonFrobeniusSourceAlgebra
       K H J hJH e σ
   let _hRFFinite :
       Finite
@@ -283,7 +289,9 @@ local instance intrinsicPrimeComparison_frobeniusSourceFiniteDimensional
       ((localResidueDatum F).frobeniusFixedField_absoluteFinite
         (intrinsicFiniteAbstractBase F) (EI).field (EI).below σ)
 
-local instance intrinsicPrimeComparison_frobeniusSourceNormed
+/-- The Frobenius source field carries the spectral norm of its finite extension over the
+comparison fixed field. -/
+local instance intrinsicPrimeComparisonFrobeniusSourceNormed
     (σ : intrinsicFixedFieldFrobeniusElements K H J hJH e) :
     NontriviallyNormedField
       (intrinsicFixedFieldFrobeniusSourceField
@@ -292,7 +300,9 @@ local instance intrinsicPrimeComparison_frobeniusSourceNormed
     (intrinsicFixedFieldFrobeniusSourceField
       K H J hJH e σ)
 
-local instance intrinsicPrimeComparison_frobeniusSourceValuative
+/-- The spectral valuation relation on the Frobenius source field over the comparison fixed
+field. -/
+local instance intrinsicPrimeComparisonFrobeniusSourceValuative
     (σ : intrinsicFixedFieldFrobeniusElements K H J hJH e) :
     ValuativeRel
       (intrinsicFixedFieldFrobeniusSourceField
@@ -321,7 +331,9 @@ local instance intrinsicPrimeComparison_frobeniusSourceValuationExtension
     (intrinsicFixedFieldFrobeniusSourceField
       K H J hJH e σ)
 
-local instance intrinsicPrimeComparison_frobeniusAmbientAlgebraK
+/-- The Frobenius ambient field is an algebra over the original local field through its
+fixed-field inclusion. -/
+local instance intrinsicPrimeComparisonFrobeniusAmbientAlgebraK
     (σ : intrinsicFixedFieldFrobeniusElements K H J hJH e) :
     Algebra K
       (intrinsicFixedFieldFrobeniusAmbientField
@@ -330,7 +342,9 @@ local instance intrinsicPrimeComparison_frobeniusAmbientAlgebraK
     (intrinsicFixedFieldFrobeniusAmbientClosedField
       K H J hJH e σ)).algebra
 
-local instance intrinsicPrimeComparison_frobeniusAmbientAlgebraF
+/-- The Frobenius ambient field is an algebra over the comparison fixed field through the
+intermediate-field tower. -/
+local instance intrinsicPrimeComparisonFrobeniusAmbientAlgebraF
     (σ : intrinsicFixedFieldFrobeniusElements K H J hJH e) :
     Algebra F
       (intrinsicFixedFieldFrobeniusAmbientField
@@ -348,12 +362,12 @@ local instance intrinsicPrimeComparison_frobeniusAmbientFiniteDimensionalK
         (intrinsicFixedFieldFrobeniusAmbientField
           K H J hJH e σ)
         _ _
-        (intrinsicPrimeComparison_frobeniusAmbientAlgebraK
+        (intrinsicPrimeComparisonFrobeniusAmbientAlgebraK
           K H J hJH e σ)) := by
   let : Algebra K
       (intrinsicFixedFieldFrobeniusAmbientField
         K H J hJH e σ) :=
-    intrinsicPrimeComparison_frobeniusAmbientAlgebraK
+    intrinsicPrimeComparisonFrobeniusAmbientAlgebraK
       K H J hJH e σ
   change FiniteDimensional K
     (abstractFixedField K (SeparableClosure K)
@@ -369,7 +383,9 @@ local instance intrinsicPrimeComparison_frobeniusAmbientFiniteDimensionalK
         (intrinsicFrobeniusElementToAmbientFixedField
           K H J hJH e σ))
 
-local instance intrinsicPrimeComparison_frobeniusAmbientNormed
+/-- The Frobenius ambient field carries the spectral norm extending the original local-field
+norm. -/
+local instance intrinsicPrimeComparisonFrobeniusAmbientNormed
     (σ : intrinsicFixedFieldFrobeniusElements K H J hJH e) :
     NontriviallyNormedField
       (intrinsicFixedFieldFrobeniusAmbientField
@@ -378,7 +394,9 @@ local instance intrinsicPrimeComparison_frobeniusAmbientNormed
     (intrinsicFixedFieldFrobeniusAmbientField
       K H J hJH e σ)
 
-local instance intrinsicPrimeComparison_frobeniusAmbientValuative
+/-- The valuation relation on the Frobenius ambient field induced by the spectral extension from
+the original base. -/
+local instance intrinsicPrimeComparisonFrobeniusAmbientValuative
     (σ : intrinsicFixedFieldFrobeniusElements K H J hJH e) :
     ValuativeRel
       (intrinsicFixedFieldFrobeniusAmbientField
@@ -417,12 +435,12 @@ local instance intrinsicPrimeComparison_frobeniusAmbientFiniteDimensionalF
         (intrinsicFixedFieldFrobeniusAmbientField
           K H J hJH e σ)
         _ _
-        (intrinsicPrimeComparison_frobeniusAmbientAlgebraF
+        (intrinsicPrimeComparisonFrobeniusAmbientAlgebraF
           K H J hJH e σ)) := by
   let : Algebra F
       (intrinsicFixedFieldFrobeniusAmbientField
         K H J hJH e σ) :=
-    intrinsicPrimeComparison_frobeniusAmbientAlgebraF
+    intrinsicPrimeComparisonFrobeniusAmbientAlgebraF
       K H J hJH e σ
   exact
     abstractRelativeFixedField_finiteDimensional
@@ -816,10 +834,10 @@ private theorem intrinsicFixedFieldFrobeniusPrimeNorm_ambient
       (intrinsicFrobeniusElementToAmbientFixedField
         K H J hJH e σ)
       (_hLHNorm :=
-        intrinsicPrimeComparison_frobeniusAmbientNormed
+        intrinsicPrimeComparisonFrobeniusAmbientNormed
           K H J hJH e σ)
       (_hLHVal :=
-        intrinsicPrimeComparison_frobeniusAmbientValuative
+        intrinsicPrimeComparisonFrobeniusAmbientValuative
           K H J hJH e σ)
       (_hLHLocal :=
         intrinsicPrimeComparison_frobeniusAmbientLocal

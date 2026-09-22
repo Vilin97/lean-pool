@@ -6,7 +6,8 @@ Authors: n-yamaguchi-0729
 
 import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.NormSubgroup.HigherUnitLevelMapFixed
 /-!
-# LubinTate the explicit norm-subgroup computation: the standard level lies in the higher-unit fixed field
+# LubinTate the explicit norm-subgroup computation: the standard level lies in the higher-unit
+  fixed field
 -/
 
 noncomputable section
@@ -21,12 +22,15 @@ open LocalFieldTheory.DiscreteValuationField
 
 variable {K : Type} [Field K]
 
+/-- The Laurent-series base acts on the completed unramified field through the coefficient
+embedding. -/
 noncomputable local instance equalCharacteristicHigherUnitMembershipBaseAlgebra
     (F : LocalField K) :
     Algebra F.residueField⸨X⸩
       (equalCharacteristicCompletedUnramifiedField F.residueField) :=
   equalCharacteristicCompletedFrobeniusFixedBaseAlgebra F
 
+/-- The completed level field is a Laurent-series algebra through the completed unramified base. -/
 noncomputable local instance equalCharacteristicHigherUnitMembershipLevelAlgebra
     (F : LocalField K) (n : ℕ) :
     Algebra F.residueField⸨X⸩
@@ -40,7 +44,8 @@ local instance equalCharacteristicHigherUnitMembershipScalarTower
       (equalCharacteristicCompletedLevelField F n) :=
   IsScalarTower.of_algebraMap_eq' rfl
 
-/-- States the theorem `equalCharacteristicLubinTateLevelFieldToCompleted_mem_fixedField_of_mem_higherUnit`. -/
+/-- States the theorem
+`equalCharacteristicLubinTateLevelFieldToCompleted_mem_fixedField_of_mem_higherUnit`. -/
 theorem
     equalCharacteristicLubinTateLevelFieldToCompleted_mem_fixedField_of_mem_higherUnit
     (F : LocalField K)

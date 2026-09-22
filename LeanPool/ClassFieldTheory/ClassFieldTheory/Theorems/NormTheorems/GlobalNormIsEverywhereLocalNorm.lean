@@ -27,7 +27,7 @@ universe u v
 theorem globalNorm_isEverywhereLocalNorm
     (K : Type u) (L : Type v)
     [Field K] [NumberField K]
-    [Field L] [NumberField L] [Algebra K L]
+    [Field L] [Algebra K L]
     [FiniteDimensional K L]
     (x : Kˣ) :
     IsFieldNorm K L x → IsEverywhereLocalNorm K L x := by

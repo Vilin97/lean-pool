@@ -17,7 +17,7 @@ its valuation in the completed target is the global ramification index, and
 its image generates the completed base maximal ideal.
 -/
 
-open scoped NumberField Classical NNReal ValuativeRel
+open scoped NumberField NNReal ValuativeRel
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -33,6 +33,7 @@ variable
     [Field L] [NumberField L] [Algebra K L]
     [FiniteDimensional K L] [IsGalois K L]
 
+open scoped Classical in
 /-- The ramification index of the maximal ideals in the explicit localized
 completions is the ramification index of the corresponding global ideals. -/
 theorem chosenFinitePlace_completed_ramificationIdx'_eq_centre
@@ -194,6 +195,7 @@ theorem chosenFinitePlace_completed_ramificationIdx'_eq_centre
     exact (Nat.not_succ_le_self eGlobal)
       ((hπTargetMem (eGlobal + 1)).1 hπDeep)
 
+open scoped Classical in
 /-- The ramification index computed using the integral-closure valuation
 chosen for the finite local extension equals the ideal-theoretic index at
 the corresponding global centre. -/

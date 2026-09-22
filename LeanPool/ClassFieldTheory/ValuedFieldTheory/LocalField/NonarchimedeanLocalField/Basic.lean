@@ -74,7 +74,6 @@ theorem v_mul (K : Type u) [Field K] [ValuativeRel K] [TopologicalSpace K]
   simp [v, Valuation.map_mul, WithZero.unzero_mul, toAdd_mul]
 
 /-- The normalized valuation of the multiplicative identity is zero. -/
-@[simp]
 theorem v_one (K : Type u) [Field K] [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K] :
     v K (Additive.ofMul (1 : Kˣ)) = 0 := by
@@ -199,7 +198,6 @@ theorem integerUnitsToFieldUnits_injective
   simpa [integerUnitsToFieldUnits] using congrArg Units.val hxy
 
 /-- A valuation-integer unit has normalized valuation zero as a field unit. -/
-@[simp]
 theorem v_integerUnitsToFieldUnits (K : Type u) [Field K] [ValuativeRel K]
     [TopologicalSpace K] [IsNonarchimedeanLocalField K] (x : 𝒪[K]ˣ) :
     v K (Additive.ofMul (integerUnitsToFieldUnits K x)) = 0 := by

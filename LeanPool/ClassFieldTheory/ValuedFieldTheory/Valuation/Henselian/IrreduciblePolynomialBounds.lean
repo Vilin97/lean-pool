@@ -10,7 +10,8 @@ import Mathlib.Algebra.Polynomial.Div
 # reduction input for the coefficient estimate
 
 This file isolates the residue-polynomial input used in the
-irreducible-polynomial coefficient estimate.  For the closed-unit-ball valuation ring attached to a nonarchimedean
+irreducible-polynomial coefficient estimate.  For the closed-unit-ball valuation ring attached
+  to a nonarchimedean
 absolute value, coefficients of value `< 1` reduce to zero and coefficients of
 value `1` reduce to nonzero elements.  Hence the first coefficient of value
 `1` gives the exact initial `X`-power dividing the reduced polynomial.

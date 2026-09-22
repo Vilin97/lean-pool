@@ -16,8 +16,7 @@ identifies the concrete local norm quotient with the decomposition
 group.
 -/
 
-open scoped NumberField Classical
-
+open scoped NumberField
 noncomputable section
 
 namespace GlobalClassFieldTheory
@@ -31,6 +30,7 @@ variable
     [Field L] [NumberField L] [Algebra K L]
     [IsAbelianGalois K L]
 
+open scoped Classical in
 /-- The chosen finite-place Artin homomorphism with codomain restricted
 to the actual decomposition group at the chosen place above `v`. -/
 noncomputable def chosenFinitePlaceArtinToDecompositionGroup
@@ -48,6 +48,7 @@ noncomputable def chosenFinitePlaceArtinToDecompositionGroup
           (K := K) (L := L) v]
       exact ⟨x, rfl⟩)
 
+open scoped Classical in
 /-- The decomposition-group-valued finite-place Artin homomorphism is
 surjective. -/
 theorem chosenFinitePlaceArtinToDecompositionGroup_surjective
@@ -68,6 +69,7 @@ theorem chosenFinitePlaceArtinToDecompositionGroup_surjective
   refine ⟨x, ?_⟩
   exact Subtype.ext hx
 
+open scoped Classical in
 /-- The kernel of the decomposition-group-valued finite-place Artin
 homomorphism is exactly the chosen local norm subgroup. -/
 theorem chosenFinitePlaceArtinToDecompositionGroup_ker
@@ -81,6 +83,7 @@ theorem chosenFinitePlaceArtinToDecompositionGroup_ker
     MonoidHom.ker_codRestrict,
     Reciprocity.chosenFinitePlaceArtinMonoidHom_ker]
 
+open scoped Classical in
 /-- The first-isomorphism identification of the chosen local norm
 quotient with the actual finite-place decomposition group. -/
 noncomputable def chosenFinitePlaceNormQuotientEquivDecompositionGroup
@@ -97,6 +100,7 @@ noncomputable def chosenFinitePlaceNormQuotientEquivDecompositionGroup
     (chosenFinitePlaceArtinToDecompositionGroup_ker
       (K := K) (L := L) v).symm
 
+open scoped Classical in
 /-- On a quotient representative, the finite-place first-isomorphism
 equivalence is the decomposition-group-valued Artin map. -/
 @[simp]
@@ -110,6 +114,7 @@ theorem chosenFinitePlaceNormQuotientEquivDecompositionGroup_mk
         (K := K) (L := L) v x := by
   rfl
 
+open scoped Classical in
 /-- The order of the chosen finite-place norm quotient is the actual
 local extension degree. -/
 theorem chosenFinitePlaceNormQuotient_card_eq_finitePlaceLocalDegree

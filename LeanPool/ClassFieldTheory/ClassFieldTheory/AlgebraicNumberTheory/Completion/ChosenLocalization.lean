@@ -14,7 +14,7 @@ extension with its canonical valued local-field structures. It also defines
 unramifiedness for that actual completed extension.
 -/
 
-open scoped NumberField Classical ValuativeRel NNReal
+open scoped NumberField ValuativeRel NNReal
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -29,11 +29,13 @@ variable
     [Field L] [Algebra K L]
     [FiniteDimensional K L] [IsGalois K L]
 
+open scoped Classical in
 /-- The completion of the base field at the chosen finite place. -/
 abbrev ChosenFinitePlaceBaseCompletion
     (w₀ : HeightOneSpectrum (𝓞 K)) :=
   (HeightOneSpectrum.adicAbv K w₀).Completion
 
+open scoped Classical in
 noncomputable instance chosenFinitePlaceExtensionCompletionAlgebra
     (w₀ : HeightOneSpectrum (𝓞 K)) :
     Algebra K
@@ -41,6 +43,7 @@ noncomputable instance chosenFinitePlaceExtensionCompletionAlgebra
   AbsoluteValue.extensionCompletionAlgebra
     (K := K) (chosenFinitePlaceExtension (L := L) w₀).1
 
+open scoped Classical in
 noncomputable instance chosenFinitePlaceExtensionCompletionSMul
     (w₀ : HeightOneSpectrum (𝓞 K)) :
     SMul K
@@ -48,6 +51,7 @@ noncomputable instance chosenFinitePlaceExtensionCompletionSMul
   (chosenFinitePlaceExtensionCompletionAlgebra
     (K := K) (L := L) w₀).toSMul
 
+open scoped Classical in
 noncomputable instance chosenFinitePlaceCompletionAlgebra
     (w₀ : HeightOneSpectrum (𝓞 K)) :
     Algebra
@@ -58,6 +62,7 @@ noncomputable instance chosenFinitePlaceCompletionAlgebra
     (chosenFinitePlaceExtension (L := L) w₀).1
     (chosenFinitePlaceExtension (L := L) w₀).2
 
+open scoped Classical in
 noncomputable instance chosenFinitePlaceBaseValued
     (w₀ : HeightOneSpectrum (𝓞 K)) :
     Valued
@@ -66,6 +71,7 @@ noncomputable instance chosenFinitePlaceBaseValued
     (HeightOneSpectrum.adicAbv K w₀)
     (HeightOneSpectrum.isNonarchimedean_adicAbv K w₀)
 
+open scoped Classical in
 noncomputable instance chosenFinitePlaceBaseValuativeRel
     (w₀ : HeightOneSpectrum (𝓞 K)) :
     ValuativeRel
@@ -74,6 +80,7 @@ noncomputable instance chosenFinitePlaceBaseValuativeRel
     (HeightOneSpectrum.adicAbv K w₀)
     (HeightOneSpectrum.isNonarchimedean_adicAbv K w₀)
 
+open scoped Classical in
 noncomputable instance chosenFinitePlaceLocalizedValued
     (w₀ : HeightOneSpectrum (𝓞 K)) :
     Valued
@@ -84,6 +91,7 @@ noncomputable instance chosenFinitePlaceLocalizedValued
     (chosenFinitePlaceExtension (L := L) w₀)
     (HeightOneSpectrum.isNonarchimedean_adicAbv K w₀)
 
+open scoped Classical in
 noncomputable instance chosenFinitePlaceLocalizedValuativeRel
     (w₀ : HeightOneSpectrum (𝓞 K)) :
     ValuativeRel
@@ -94,6 +102,7 @@ noncomputable instance chosenFinitePlaceLocalizedValuativeRel
     (chosenFinitePlaceExtension (L := L) w₀)
     (HeightOneSpectrum.isNonarchimedean_adicAbv K w₀)
 
+open scoped Classical in
 noncomputable instance
     chosenFinitePlaceLocalizedValuationHasExtension
     (w₀ : HeightOneSpectrum (𝓞 K)) :
@@ -108,6 +117,7 @@ noncomputable instance
     (chosenFinitePlaceExtension (L := L) w₀)
     (HeightOneSpectrum.isNonarchimedean_adicAbv K w₀)
 
+open scoped Classical in
 noncomputable instance chosenFinitePlaceLocalizedIntegerAlgebra
     (w₀ : HeightOneSpectrum (𝓞 K)) :
     Algebra
@@ -117,6 +127,7 @@ noncomputable instance chosenFinitePlaceLocalizedIntegerAlgebra
   Algebra.ofSubsemiring
     𝒪[ChosenFinitePlaceBaseCompletion (K := K) w₀]
 
+open scoped Classical in
 noncomputable instance chosenFinitePlaceLocalizedIsIntegralClosure
     (w₀ : HeightOneSpectrum (𝓞 K)) :
     IsIntegralClosure
@@ -131,15 +142,17 @@ noncomputable instance chosenFinitePlaceLocalizedIsIntegralClosure
     (RayClass.adicAbv_isNontrivial w₀)
     (HeightOneSpectrum.isNonarchimedean_adicAbv K w₀)
 
+open scoped Classical in
 noncomputable instance
     chosenFinitePlaceBaseNontriviallyNormedField
     (w₀ : HeightOneSpectrum (𝓞 K)) :
     NontriviallyNormedField
       (ChosenFinitePlaceBaseCompletion (K := K) w₀) :=
-  absoluteValueExtension_completionNontriviallyNormedField
+  absoluteValueExtensionCompletionNontriviallyNormedField
     (HeightOneSpectrum.adicAbv K w₀)
     (RayClass.adicAbv_isNontrivial w₀)
 
+open scoped Classical in
 noncomputable instance chosenFinitePlaceBaseLocallyCompactSpace
     (w₀ : HeightOneSpectrum (𝓞 K)) :
     LocallyCompactSpace
@@ -147,6 +160,7 @@ noncomputable instance chosenFinitePlaceBaseLocallyCompactSpace
   AbsoluteValue.Completion.locallyCompactSpace
     (finitePlaceCompletionBaseMap_isometry w₀)
 
+open scoped Classical in
 noncomputable instance chosenFinitePlaceBaseIsUltrametricDist
     (w₀ : HeightOneSpectrum (𝓞 K)) :
     IsUltrametricDist
@@ -155,6 +169,7 @@ noncomputable instance chosenFinitePlaceBaseIsUltrametricDist
     (HeightOneSpectrum.adicAbv K w₀)
     (HeightOneSpectrum.isNonarchimedean_adicAbv K w₀)
 
+open scoped Classical in
 noncomputable instance
     chosenFinitePlaceBaseValuationIsNontrivial
     (w₀ : HeightOneSpectrum (𝓞 K)) :
@@ -166,6 +181,7 @@ noncomputable instance
     (NormedField.valuation
       (K := ChosenFinitePlaceBaseCompletion (K := K) w₀)).IsNontrivial)
 
+open scoped Classical in
 noncomputable instance chosenFinitePlaceBaseValuationCompatible
     (w₀ : HeightOneSpectrum (𝓞 K)) :
     (Valued.v :
@@ -174,6 +190,7 @@ noncomputable instance chosenFinitePlaceBaseValuationCompatible
         ℝ≥0).Compatible :=
   Valuation.Compatible.ofValuation _
 
+open scoped Classical in
 noncomputable instance
     chosenFinitePlaceBaseValuativeRelIsNontrivial
     (w₀ : HeightOneSpectrum (𝓞 K)) :
@@ -185,6 +202,7 @@ noncomputable instance
         (ChosenFinitePlaceBaseCompletion (K := K) w₀)
         ℝ≥0)).2 inferInstance
 
+open scoped Classical in
 noncomputable instance chosenFinitePlaceBaseIsValuativeTopology
     (w₀ : HeightOneSpectrum (𝓞 K)) :
     IsValuativeTopology
@@ -192,6 +210,7 @@ noncomputable instance chosenFinitePlaceBaseIsValuativeTopology
   isValuativeTopology_of_valued_ofValuation
     (ChosenFinitePlaceBaseCompletion (K := K) w₀) ℝ≥0
 
+open scoped Classical in
 noncomputable instance
     chosenFinitePlaceBaseIsNonarchimedeanLocalField
     (w₀ : HeightOneSpectrum (𝓞 K)) :
@@ -201,6 +220,7 @@ noncomputable instance
     toLocallyCompactSpace := inferInstance
     toIsNontrivial := inferInstance }
 
+open scoped Classical in
 noncomputable instance chosenFinitePlaceCompletionFiniteDimensional
     (w₀ : HeightOneSpectrum (𝓞 K)) :
     FiniteDimensional
@@ -211,6 +231,7 @@ noncomputable instance chosenFinitePlaceCompletionFiniteDimensional
     (RayClass.adicAbv_isNontrivial w₀)
     (chosenFinitePlaceExtension (L := L) w₀)
 
+open scoped Classical in
 noncomputable instance chosenFinitePlaceCompletionContinuousSMul
     (w₀ : HeightOneSpectrum (𝓞 K)) :
     ContinuousSMul
@@ -222,6 +243,7 @@ noncomputable instance chosenFinitePlaceCompletionContinuousSMul
       (chosenFinitePlaceExtension (L := L) w₀).1
       (chosenFinitePlaceExtension (L := L) w₀).2).continuous
 
+open scoped Classical in
 noncomputable instance chosenFinitePlaceCompletionLocallyCompactSpace
     (w₀ : HeightOneSpectrum (𝓞 K)) :
     LocallyCompactSpace
@@ -230,6 +252,7 @@ noncomputable instance chosenFinitePlaceCompletionLocallyCompactSpace
     (ChosenFinitePlaceBaseCompletion (K := K) w₀)
     (chosenFinitePlaceExtension (L := L) w₀).1.Completion
 
+open scoped Classical in
 noncomputable instance chosenFinitePlaceLocalizedFiniteDimensional
     (w₀ : HeightOneSpectrum (𝓞 K)) :
     FiniteDimensional
@@ -241,6 +264,7 @@ noncomputable instance chosenFinitePlaceLocalizedFiniteDimensional
     (RayClass.adicAbv_isNontrivial w₀)
     (chosenFinitePlaceExtension (L := L) w₀)
 
+open scoped Classical in
 noncomputable instance chosenFinitePlaceLocalizedIsGalois
     (w₀ : HeightOneSpectrum (𝓞 K)) :
     IsGalois
@@ -251,6 +275,7 @@ noncomputable instance chosenFinitePlaceLocalizedIsGalois
     (HeightOneSpectrum.adicAbv K w₀)
     (chosenFinitePlaceExtension (L := L) w₀)
 
+open scoped Classical in
 noncomputable instance
     chosenFinitePlaceLocalizedLocallyCompactSpace
     (w₀ : HeightOneSpectrum (𝓞 K)) :
@@ -269,6 +294,7 @@ noncomputable instance
       isometry_toFun := Isometry.of_dist_eq fun _ _ => rfl }
   exact (e.toHomeomorph.locallyCompactSpace_iff).2 inferInstance
 
+open scoped Classical in
 noncomputable instance chosenFinitePlaceLocalizedIsUltrametricDist
     (w₀ : HeightOneSpectrum (𝓞 K)) :
     IsUltrametricDist
@@ -279,6 +305,7 @@ noncomputable instance chosenFinitePlaceLocalizedIsUltrametricDist
     (chosenFinitePlaceExtension (L := L) w₀)
     (HeightOneSpectrum.isNonarchimedean_adicAbv K w₀)
 
+open scoped Classical in
 noncomputable instance chosenFinitePlaceLocalizedValuationCompatible
     (w₀ : HeightOneSpectrum (𝓞 K)) :
     (Valued.v :
@@ -288,6 +315,7 @@ noncomputable instance chosenFinitePlaceLocalizedValuationCompatible
         ℝ≥0).Compatible :=
   Valuation.Compatible.ofValuation _
 
+open scoped Classical in
 noncomputable instance
     chosenFinitePlaceLocalizedValuationIsNontrivial
     (w₀ : HeightOneSpectrum (𝓞 K)) :
@@ -301,6 +329,7 @@ noncomputable instance
       (ChosenFinitePlaceLocalizedCompletion
         (K := K) (L := L) w₀))
 
+open scoped Classical in
 noncomputable instance
     chosenFinitePlaceLocalizedValuativeRelIsNontrivial
     (w₀ : HeightOneSpectrum (𝓞 K)) :
@@ -312,6 +341,7 @@ noncomputable instance
       (ChosenFinitePlaceLocalizedCompletion
         (K := K) (L := L) w₀))).2 inferInstance
 
+open scoped Classical in
 noncomputable instance chosenFinitePlaceLocalizedIsValuativeTopology
     (w₀ : HeightOneSpectrum (𝓞 K)) :
     IsValuativeTopology
@@ -321,6 +351,7 @@ noncomputable instance chosenFinitePlaceLocalizedIsValuativeTopology
     (ChosenFinitePlaceLocalizedCompletion
       (K := K) (L := L) w₀) ℝ≥0
 
+open scoped Classical in
 noncomputable instance
     chosenFinitePlaceLocalizedIsNonarchimedeanLocalField
     (w₀ : HeightOneSpectrum (𝓞 K)) :
@@ -331,6 +362,7 @@ noncomputable instance
     toLocallyCompactSpace := inferInstance
     toIsNontrivial := inferInstance }
 
+open scoped Classical in
 noncomputable instance chosenFinitePlaceLocalizedIntegerModuleFinite
     (w₀ : HeightOneSpectrum (𝓞 K)) :
     Module.Finite
@@ -346,8 +378,10 @@ noncomputable instance chosenFinitePlaceLocalizedIntegerModuleFinite
     (ChosenFinitePlaceLocalizedCompletion
       (K := K) (L := L) w₀)
 
+open scoped Classical in
 /-- The chosen extension of the completed field is unramified, expressed
-using the intrinsic valuation on the algebraic localization.  The canonical local-field instances for the chosen completion are exported
+using the intrinsic valuation on the algebraic localization.  The canonical local-field
+  instances for the chosen completion are exported
 from this module, so clients only supply the mathematical unramifiedness
 hypothesis. -/
 noncomputable def ChosenFinitePlaceIsUnramified

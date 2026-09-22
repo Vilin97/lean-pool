@@ -17,7 +17,7 @@ the local exponent occurring in the idèle-class norm conductor with the
 conductor exponent of the chosen localized extension.
 -/
 
-open scoped NumberField Classical NNReal ValuativeRel
+open scoped NumberField NNReal ValuativeRel
 
 noncomputable section
 
@@ -30,6 +30,7 @@ open LocalFieldTheory.IsNonarchimedeanLocalField
 
 variable {K : Type} [Field K] [NumberField K]
 
+open scoped Classical in
 /-- The canonical comparison between the two finite-place completion models
 identifies the field principal-unit filtration with the ray-class higher-unit
 filtration. -/
@@ -119,6 +120,7 @@ theorem finitePlaceFieldPrincipalUnits_map_eq_localHigherUnitGroup
         _ = y := congrArg Subtype.val huy
         _ = x := hyx
 
+open scoped Classical in
 /-- A ray-class higher unit has valuation zero after transport to the
 absolute-value completion used by the finite-place Artin map.  This is the
 pointwise endpoint of
@@ -176,6 +178,7 @@ section Galois
 
 variable [IsGalois K L]
 
+open scoped Classical in
 /-- At a chosen finite place, containment of the ray-class higher-unit group
 in the transported local norm subgroup is equivalent to containment of the
 corresponding field principal-unit group in the local norm subgroup. -/
@@ -269,6 +272,7 @@ section Abelian
 
 variable [IsAbelianGalois K L]
 
+open scoped Classical in
 /-- The conductor exponent of the chosen localized extension at `v`, with the
 completion and valuation instance tower confined to this definition body. -/
 noncomputable def ideleClassNormChosenFinitePlaceLocalConductorExponent
@@ -296,7 +300,7 @@ noncomputable def ideleClassNormChosenFinitePlaceLocalConductorExponent
     LocalClassFieldTheory.localizedCompletion_isAbelianGalois
       vK hvK w
   letI : NontriviallyNormedField vK.Completion :=
-    _root_.AlgebraicNumberTheory.Valuations.absoluteValueExtension_completionNontriviallyNormedField
+    _root_.AlgebraicNumberTheory.Valuations.absoluteValueExtensionCompletionNontriviallyNormedField
       vK hvK
   letI : LocallyCompactSpace vK.Completion :=
     AbsoluteValue.Completion.locallyCompactSpace
@@ -327,6 +331,7 @@ noncomputable def ideleClassNormChosenFinitePlaceLocalConductorExponent
   exact LocalClassFieldTheory.localConductorExponent
     vK.Completion E
 
+open scoped Classical in
 /-- For a finite abelian extension, the local exponent selected by the
 idèle-class norm conductor equals the local conductor exponent of the chosen
 localized extension. -/
@@ -359,7 +364,7 @@ theorem ideleClassNormLocalHigherUnitExponent_eq_localConductorExponent
     LocalClassFieldTheory.localizedCompletion_isAbelianGalois
       vK hvK w
   let : NontriviallyNormedField vK.Completion :=
-    _root_.AlgebraicNumberTheory.Valuations.absoluteValueExtension_completionNontriviallyNormedField
+    _root_.AlgebraicNumberTheory.Valuations.absoluteValueExtensionCompletionNontriviallyNormedField
       vK hvK
   let : LocallyCompactSpace vK.Completion :=
     AbsoluteValue.Completion.locallyCompactSpace

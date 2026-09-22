@@ -213,7 +213,7 @@ theorem fixedFieldValuationSubringDVF_moduleFinite
     (huniq :
       HasUniqueValuationExtension.{u, v, w, x, x}
         base target)
-    (H : Subgroup Gal(L/K)) [H.Normal] :
+    (H : Subgroup Gal(L/K)) :
     Module.Finite base.valuationSubring
       (fixedFieldValuationSubringDVF (K := K) (target := target) H) := by
   let : IsNoetherianRing base.valuationSubring :=

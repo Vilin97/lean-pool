@@ -69,7 +69,8 @@ theorem restrictedValuationRingMapToAmbient_isLocalHom
 the ambient residue field, as an algebra homomorphism over the base residue
 field. -/
 def restrictedResidueAlgHomToAmbient
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     (E : IntermediateField K L) :
     let vE := exponentialValuationRestrict w E
@@ -122,10 +123,12 @@ def restrictedResidueAlgHomToAmbient
 
 /-- Value-group source for the finite unramified embedding.
 
-Every finite unramified subextension occurring in the maximal-unramified-subextension definition has exactly
+Every finite unramified subextension occurring in the maximal-unramified-subextension definition
+  has exactly
 the value subgroup of the base field. -/
 theorem finiteUnramifiedSubextension_valueSubgroup_eq
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     {E : IntermediateField K L}
     (hE : FiniteUnramifiedSubextension v w hExt E) :
@@ -144,7 +147,8 @@ The image in the ambient residue field of every residue class from a finite
 unramified subextension lies in the separable closure of the base residue
 field. -/
 theorem finiteUnramifiedSubextension_residue_image_mem_separableClosure
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     {E : IntermediateField K L}
     (hE : FiniteUnramifiedSubextension v w hExt E)
@@ -194,7 +198,8 @@ theorem finiteUnramifiedSubextension_residue_image_mem_separableClosure
 /-- Field-range form of the finite residue-field inclusion for an unramified
 subextension. -/
 theorem finiteUnramifiedSubextension_residue_fieldRange_le_separableClosure
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     {E : IntermediateField K L}
     (hE : FiniteUnramifiedSubextension v w hExt E) :

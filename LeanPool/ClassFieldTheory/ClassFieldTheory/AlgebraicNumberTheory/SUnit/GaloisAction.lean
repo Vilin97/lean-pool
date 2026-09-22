@@ -17,7 +17,7 @@ usual way.  For a stable finite set of finite places these actions restrict
 to the actual `S`-unit group.
 -/
 
-open scoped BigOperators Classical NumberField nonZeroDivisors
+open scoped BigOperators NumberField nonZeroDivisors
 open IsDedekindDomain Module
 open CyclicCohomology.ProfiniteCohomology.Herbrand
 open CyclicCohomology
@@ -28,6 +28,7 @@ variable
     (K L : Type*) [Field K] [NumberField K]
     [Field L] [NumberField L] [Algebra K L]
 
+open scoped Classical in
 /-- The permutation of finite places induced by a Galois automorphism. -/
 noncomputable def finitePlaceEquiv
     (σ : L ≃ₐ[K] L) :
@@ -36,6 +37,7 @@ noncomputable def finitePlaceEquiv
   HeightOneSpectrum.equivOfRingEquiv
     (NumberField.RingOfIntegers.mapAlgEquiv σ).toRingEquiv
 
+open scoped Classical in
 /-- Transport of ideals along a ring automorphism, as a multiplicative
 equivalence. -/
 noncomputable def idealMapMulEquiv
@@ -47,6 +49,7 @@ noncomputable def idealMapMulEquiv
   right_inv _ := Ideal.map_of_equiv e.symm
   map_mul' I J := Ideal.map_mul e I J
 
+open scoped Classical in
 @[simp]
 theorem idealMapMulEquiv_apply
     {R : Type*} [CommRing R]
@@ -55,6 +58,7 @@ theorem idealMapMulEquiv_apply
   rfl
 
 omit [NumberField K] [NumberField L] in
+open scoped Classical in
 @[simp]
 theorem finitePlaceEquiv_asIdeal
     (σ : L ≃ₐ[K] L)
@@ -66,6 +70,7 @@ theorem finitePlaceEquiv_asIdeal
   exact Ideal.symm_apply_mem_of_equiv_iff
 
 omit [NumberField K] [NumberField L] in
+open scoped Classical in
 @[simp]
 theorem finitePlaceEquiv_one
     (v : HeightOneSpectrum (𝓞 L)) :
@@ -84,6 +89,7 @@ theorem finitePlaceEquiv_one
   rw [hx]
 
 omit [NumberField K] [NumberField L] in
+open scoped Classical in
 @[simp]
 theorem finitePlaceEquiv_mul
     (σ τ : L ≃ₐ[K] L)
@@ -108,6 +114,7 @@ theorem finitePlaceEquiv_mul
   rw [hx]
 
 omit [NumberField K] [NumberField L] in
+open scoped Classical in
 @[simp]
 theorem finitePlaceEquiv_inv_apply
     (σ : L ≃ₐ[K] L)
@@ -117,6 +124,7 @@ theorem finitePlaceEquiv_inv_apply
   rw [← finitePlaceEquiv_mul]
   simp
 
+open scoped Classical in
 /-- The actual Galois action on finite places of `L`. -/
 @[reducible]
 noncomputable def finitePlaceMulAction :
@@ -127,6 +135,7 @@ noncomputable def finitePlaceMulAction :
   mul_smul := finitePlaceEquiv_mul K L
 
 omit [NumberField K] in
+open scoped Classical in
 /-- The integral adic valuation is invariant under simultaneous transport
 of the finite place and the integer. -/
 theorem intValuation_finitePlaceEquiv
@@ -159,6 +168,7 @@ theorem intValuation_finitePlaceEquiv
     (a := v.asIdeal) (b := Ideal.span ({r} : Set (𝓞 L)))
 
 omit [NumberField K] in
+open scoped Classical in
 /-- The field-valued adic valuation is invariant under simultaneous
 transport of the finite place and the field element. -/
 theorem valuation_finitePlaceEquiv
@@ -185,10 +195,11 @@ theorem valuation_finitePlaceEquiv
   simp only [HeightOneSpectrum.valuation_of_algebraMap]
   rw [intValuation_finitePlaceEquiv, intValuation_finitePlaceEquiv]
 
+open scoped Classical in
 /-- Absolute ideal norms are invariant under a ring automorphism. -/
 theorem absNorm_map_ringEquiv
     {R : Type*} [CommRing R] [IsDedekindDomain R]
-    [Module.Free ℤ R] [Infinite R]
+    [Infinite R]
     (e : R ≃+* R) (I : Ideal R) :
     Ideal.absNorm (I.map e) = Ideal.absNorm I := by
   rw [Ideal.absNorm_apply, Ideal.absNorm_apply,
@@ -196,6 +207,7 @@ theorem absNorm_map_ringEquiv
   exact Nat.card_congr
     (Ideal.quotientEquiv I (I.map e) e rfl).toEquiv.symm
 
+open scoped Classical in
 private theorem toNNReal_apply_congr
     {e f : NNReal} (he : e ≠ 0) (hf : f ≠ 0)
     (hef : e = f) (q : WithZero (Multiplicative ℤ)) :
@@ -205,6 +217,7 @@ private theorem toNNReal_apply_congr
   rfl
 
 omit [NumberField K] in
+open scoped Classical in
 /-- The normalized finite absolute value is invariant under simultaneous
 transport of its finite place and its field element. -/
 theorem adicAbv_finitePlaceEquiv
@@ -233,6 +246,7 @@ theorem adicAbv_finitePlaceEquiv
     hnorm_nnreal (v.valuation L x)
 
 omit [NumberField K] [NumberField L] in
+open scoped Classical in
 /-- Archimedean multiplicities are constant on Galois orbits. -/
 @[simp]
 theorem infinitePlace_mult_smul
@@ -242,6 +256,7 @@ theorem infinitePlace_mult_smul
   unfold NumberField.InfinitePlace.mult
   rw [NumberField.InfinitePlace.isReal_smul_iff]
 
+open scoped Classical in
 /-- The usual action of the relative Galois group on field units. -/
 @[reducible]
 noncomputable def fieldUnitsMulDistribMulAction :
@@ -258,16 +273,25 @@ noncomputable def fieldUnitsMulDistribMulAction :
 
 section FinitePlaceAction
 
-local instance :
+open scoped Classical in
+/-- Galois automorphisms permute the finite places of the extension field. -/
+local instance sUnitPlaceGaloisMulAction :
     MulAction (L ≃ₐ[K] L)
       (HeightOneSpectrum (𝓞 L)) :=
   finitePlaceMulAction K L
 
-local instance :
+attribute [local instance] sUnitPlaceGaloisMulAction
+
+open scoped Classical in
+/-- Galois automorphisms act multiplicatively on units of the extension field. -/
+local instance sUnitGaloisMulDistribMulAction :
     MulDistribMulAction (L ≃ₐ[K] L) Lˣ :=
   fieldUnitsMulDistribMulAction K L
 
+attribute [local instance] sUnitGaloisMulDistribMulAction
+
 omit [NumberField K] [NumberField L] in
+open scoped Classical in
 @[simp]
 theorem finitePlace_smul_def
     (σ : L ≃ₐ[K] L)
@@ -275,6 +299,7 @@ theorem finitePlace_smul_def
     σ • v = finitePlaceEquiv K L σ v :=
   rfl
 
+open scoped Classical in
 /-- A finite set of finite places is Galois-stable when it is invariant
 under the concrete place permutation. -/
 def IsGaloisStableFinitePlaces
@@ -284,6 +309,7 @@ def IsGaloisStableFinitePlaces
       v ∈ S ↔ σ • v ∈ S
 
 omit [NumberField K] [NumberField L] in
+open scoped Classical in
 theorem IsGaloisStableFinitePlaces.smul_mem
     {S : Finset (HeightOneSpectrum (𝓞 L))}
     (hS : IsGaloisStableFinitePlaces K L S)
@@ -293,6 +319,7 @@ theorem IsGaloisStableFinitePlaces.smul_mem
   (hS σ v).mp hv
 
 omit [NumberField K] [NumberField L] in
+open scoped Classical in
 theorem IsGaloisStableFinitePlaces.smul_not_mem
     {S : Finset (HeightOneSpectrum (𝓞 L))}
     (hS : IsGaloisStableFinitePlaces K L S)
@@ -303,6 +330,7 @@ theorem IsGaloisStableFinitePlaces.smul_not_mem
   exact hv ((hS σ v).mpr hmem)
 
 omit [NumberField K] in
+open scoped Classical in
 /-- Galois automorphisms preserve the concrete `S`-unit subgroup when
 the finite-place set is stable. -/
 theorem sUnit_smul_mem
@@ -330,6 +358,7 @@ theorem sUnit_smul_mem
   change v.valuation L (σ (x : L)) = 1
   exact htransport.trans hxw
 
+open scoped Classical in
 /-- The actual Galois action on the `S`-unit group. -/
 @[reducible]
 noncomputable def sUnitMulDistribMulAction
@@ -342,7 +371,7 @@ noncomputable def sUnitMulDistribMulAction
     (sUnit_smul_mem K L hS)
 
 omit [NumberField K] in
-@[simp]
+open scoped Classical in
 theorem sUnit_smul_coe
     {S : Finset (HeightOneSpectrum (𝓞 L))}
     (hS : IsGaloisStableFinitePlaces K L S)
@@ -353,6 +382,7 @@ theorem sUnit_smul_coe
       Units.mapEquiv σ.toMulEquiv (x : Lˣ) :=
   rfl
 
+open scoped Classical in
 /-- The action on the finite set `S` obtained by restricting the
 finite-place permutation. -/
 @[reducible]
@@ -371,6 +401,7 @@ noncomputable def stableFinitePlaceMulAction
     apply Subtype.ext
     exact mul_smul σ τ (v : HeightOneSpectrum (𝓞 L))
 
+open scoped Classical in
 /-- The permutation action on all logarithmic places
 `InfinitePlace L ⊕ S`. -/
 @[reducible]
@@ -409,6 +440,7 @@ noncomputable def logPlaceMulAction
               Sum.inr (σ • (τ • v))
             rw [mul_smul] }
 
+open scoped Classical in
 /-- The additive action on the additive form of the `S`-unit group. -/
 @[reducible]
 noncomputable def additiveSUnitDistribMulAction
@@ -444,6 +476,7 @@ noncomputable def additiveSUnitDistribMulAction
           (Additive.toMul x : SUnitGroup (K := L) S)
           (Additive.toMul y : SUnitGroup (K := L) S) }
 
+open scoped Classical in
 /-- The contragredient coordinate-permutation action on the full
 logarithmic coordinate space. -/
 @[reducible]
@@ -474,6 +507,7 @@ noncomputable def fullLogSpaceDistribMulAction
         rfl }
 
 omit [NumberField K] [NumberField L] in
+open scoped Classical in
 @[simp]
 theorem fullLogSpace_smul_apply
     {S : Finset (HeightOneSpectrum (𝓞 L))}
@@ -486,6 +520,7 @@ theorem fullLogSpace_smul_apply
     (σ • z) p = z (σ⁻¹ • p) :=
   rfl
 
+open scoped Classical in
 /-- The permutation representation on the set of logarithmic places. -/
 noncomputable def logPlacePermutationHom
     (S : Finset (HeightOneSpectrum (𝓞 L)))
@@ -497,6 +532,7 @@ noncomputable def logPlacePermutationHom
     (L ≃ₐ[K] L) (SUnitGroup.LogPlace (K := L) S)
 
 omit [NumberField K] [NumberField L] in
+open scoped Classical in
 @[simp]
 theorem logPlacePermutationHom_apply
     {S : Finset (HeightOneSpectrum (𝓞 L))}
@@ -508,6 +544,7 @@ theorem logPlacePermutationHom_apply
   rfl
 
 omit [NumberField K] [NumberField L] in
+open scoped Classical in
 /-- The concrete contragredient action is the coordinate permutation
 representation associated to the action on logarithmic places. -/
 theorem permutationRepresentation_logPlace
@@ -526,6 +563,7 @@ theorem permutationRepresentation_logPlace
   rfl
 
 omit [NumberField K] in
+open scoped Classical in
 /-- Coordinate sum is invariant under the place permutation. -/
 theorem coordinateSum_smul
     {S : Finset (HeightOneSpectrum (𝓞 L))}
@@ -547,6 +585,7 @@ theorem coordinateSum_smul
         z (σ⁻¹ • p))
       z (fun _ => rfl)
 
+open scoped Classical in
 /-- The constant vector whose coordinate sum is one. -/
 noncomputable def normalizedLogDiagonal
     (S : Finset (HeightOneSpectrum (𝓞 L))) :
@@ -555,6 +594,7 @@ noncomputable def normalizedLogDiagonal
     (Fintype.card
       (SUnitGroup.LogPlace (K := L) S) : ℝ)⁻¹
 
+open scoped Classical in
 @[simp]
 theorem coordinateSum_normalizedLogDiagonal
     (S : Finset (HeightOneSpectrum (𝓞 L))) :
@@ -570,6 +610,7 @@ theorem coordinateSum_normalizedLogDiagonal
       (Fintype.card_ne_zero :
         Fintype.card (SUnitGroup.LogPlace (K := L) S) ≠ 0))
 
+open scoped Classical in
 /-- Splitting of the full coordinate space into the sum-zero
 hyperplane and its coordinate sum. -/
 noncomputable def fullLogSpaceSplit
@@ -602,6 +643,7 @@ noncomputable def fullLogSpaceSplit
     · exact map_smul
         (SUnitGroup.coordinateSum (K := L) S) c z
 
+open scoped Classical in
 theorem fullLogSpaceSplit_injective
     (S : Finset (HeightOneSpectrum (𝓞 L))) :
     Function.Injective (fullLogSpaceSplit L S) := by
@@ -640,6 +682,7 @@ theorem fullLogSpaceSplit_injective
               rw [hfirst, hsecond]
     _ = z' := sub_add_cancel _ _
 
+open scoped Classical in
 theorem fullLogSpaceSplit_surjective
     (S : Finset (HeightOneSpectrum (𝓞 L))) :
     Function.Surjective (fullLogSpaceSplit L S) := by
@@ -668,6 +711,7 @@ theorem fullLogSpaceSplit_surjective
       LinearMap.mem_ker.mp q.1.property
     simp [z, hq, coordinateSum_normalizedLogDiagonal]
 
+open scoped Classical in
 /-- Linear coordinate splitting used to adjoin one invariant diagonal
 direction to the logarithmic lattice. -/
 noncomputable def fullLogSpaceEquivHyperplaneProd
@@ -679,6 +723,7 @@ noncomputable def fullLogSpaceEquivHyperplaneProd
     ⟨fullLogSpaceSplit_injective L S,
       fullLogSpaceSplit_surjective L S⟩
 
+open scoped Classical in
 /-- The coordinate splitting as a continuous linear equivalence. -/
 noncomputable def fullLogSpaceContinuousEquivHyperplaneProd
     (S : Finset (HeightOneSpectrum (𝓞 L))) :
@@ -686,6 +731,7 @@ noncomputable def fullLogSpaceContinuousEquivHyperplaneProd
       (SUnitGroup.LogHyperplane (K := L) S × ℝ) :=
   (fullLogSpaceEquivHyperplaneProd L S).toContinuousLinearEquiv
 
+open scoped Classical in
 /-- A real basis of the logarithmic hyperplane obtained from an
 integral basis of the complete logarithmic lattice. -/
 noncomputable def fullLogLatticeRealBasis
@@ -698,6 +744,7 @@ noncomputable def fullLogLatticeRealBasis
       (SUnitGroup.fullLogLattice (K := L) S)).ofZLatticeBasis
         ℝ (SUnitGroup.fullLogLattice (K := L) S)
 
+open scoped Classical in
 /-- A basis of the product of the logarithmic hyperplane with the
 one-dimensional diagonal direction. -/
 noncomputable def fullLogHyperplaneDiagonalBasis
@@ -708,6 +755,7 @@ noncomputable def fullLogHyperplaneDiagonalBasis
       ℝ (SUnitGroup.LogHyperplane (K := L) S × ℝ) :=
   (fullLogLatticeRealBasis L S).prod (Basis.singleton Unit ℝ)
 
+open scoped Classical in
 /-- The product lattice formed from the logarithmic lattice and one
 integral diagonal direction. -/
 noncomputable def fullLogHyperplaneDiagonalLattice
@@ -717,6 +765,7 @@ noncomputable def fullLogHyperplaneDiagonalLattice
   Submodule.span ℤ
     (Set.range (fullLogHyperplaneDiagonalBasis L S))
 
+open scoped Classical in
 /-- The complete lattice in the full logarithmic coordinate space
 obtained by adjoining an integral invariant diagonal direction. -/
 noncomputable def extendedFullLogLattice
@@ -726,6 +775,7 @@ noncomputable def extendedFullLogLattice
     (fullLogHyperplaneDiagonalLattice L S)
     (fullLogSpaceContinuousEquivHyperplaneProd L S).toLinearMap
 
+open scoped Classical in
 instance instDiscreteTopology_extendedFullLogLattice
     (S : Finset (HeightOneSpectrum (𝓞 L))) :
     DiscreteTopology (extendedFullLogLattice L S) := by
@@ -753,6 +803,7 @@ instance instDiscreteTopology_extendedFullLogLattice
       (fullLogHyperplaneDiagonalLattice L S)
       e.continuous e.injective
 
+open scoped Classical in
 instance instIsZLattice_extendedFullLogLattice
     (S : Finset (HeightOneSpectrum (𝓞 L))) :
     IsZLattice ℝ (extendedFullLogLattice L S) := by
@@ -783,6 +834,7 @@ instance instIsZLattice_extendedFullLogLattice
   exact inferInstance
 
 omit [NumberField K] in
+open scoped Classical in
 /-- The normalized all-place logarithm is equivariant for the actual
 `S`-unit and place-permutation actions. -/
 theorem fullLogAmbient_smul
@@ -832,6 +884,7 @@ theorem fullLogAmbient_smul
           y
       simpa using h
 
+open scoped Classical in
 /-- The coordinate-permutation action restricted to the
 coordinate-sum-zero hyperplane. -/
 @[reducible]
@@ -871,6 +924,7 @@ noncomputable def logHyperplaneDistribMulAction
           (z' : SUnitGroup.FullLogSpace (K := L) S) }
 
 omit [NumberField K] in
+open scoped Classical in
 /-- Equivariance of the logarithmic map after restricting its codomain
 to the coordinate-sum-zero hyperplane. -/
 theorem fullLog_smul
@@ -893,6 +947,7 @@ theorem fullLog_smul
   apply Subtype.ext
   exact fullLogAmbient_smul K L hS σ x
 
+open scoped Classical in
 /-- The kernel of `fullLog`, stated as an equality of additive
 subgroups. -/
 theorem fullLog_ker_eq_torsion
@@ -907,6 +962,7 @@ theorem fullLog_ker_eq_torsion
         (Additive (SUnitGroup (K := L) S))
   exact SUnitGroup.fullLog_eq_zero_iff (K := L) S x
 
+open scoped Classical in
 /-- The first-isomorphism identification of `S`-units modulo torsion
 with the actual logarithmic lattice. -/
 noncomputable def
@@ -940,6 +996,7 @@ noncomputable def
         (AddEquiv.addSubgroupCongr hrange))
 
 omit [NumberField K] in
+open scoped Classical in
 /-- The complete logarithmic lattice is stable under the concrete
 Galois action. -/
 theorem fullLogLattice_smul_mem
@@ -968,6 +1025,7 @@ theorem fullLogLattice_smul_mem
   rw [fullLog_smul K L hS, hx]
 
 omit [NumberField K] in
+open scoped Classical in
 /-- Under the coordinate splitting, the hyperplane component transforms
 by the restricted Galois action. -/
 theorem fullLogSpaceSplit_fst_smul
@@ -997,6 +1055,7 @@ theorem fullLogSpaceSplit_fst_smul
   rfl
 
 omit [NumberField K] in
+open scoped Classical in
 /-- Under the coordinate splitting, the diagonal coordinate is
 Galois-invariant. -/
 theorem fullLogSpaceSplit_snd_smul
@@ -1013,6 +1072,7 @@ theorem fullLogSpaceSplit_snd_smul
   exact coordinateSum_smul K L hS σ z
 
 omit [NumberField K] in
+open scoped Classical in
 /-- The full logarithmic lattice with its adjoined diagonal direction is
 stable under the place-permutation representation. -/
 theorem extendedFullLogLattice_permutation_stable
@@ -1084,6 +1144,7 @@ theorem extendedFullLogLattice_permutation_stable
         fullLogSpaceSplit_snd_smul K L hS] using
         hzrepr (Sum.inr j)
 
+open scoped Classical in
 /-- The canonical complete permutation sublattice of the extended
 logarithmic lattice has finite index. -/
 theorem extendedFullLogPermutationSublattice_finite_quotient
@@ -1101,6 +1162,7 @@ theorem extendedFullLogPermutationSublattice_finite_quotient
     (extendedFullLogLattice L S)
     (extendedFullLogLattice_permutation_stable K L hS)
 
+open scoped Classical in
 /-- For the actual full logarithmic `S`-unit
 lattice.  The Herbrand quotient is the product of the orders of the
 stabilizers of the Galois orbits of logarithmic places. -/

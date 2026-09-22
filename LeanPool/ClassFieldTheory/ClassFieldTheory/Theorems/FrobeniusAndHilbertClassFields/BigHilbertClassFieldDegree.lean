@@ -32,7 +32,8 @@ theorem bigHilbertClassField_degree_eq_narrowClassGroup_card
       Nat.card (RayClassGroup (narrowRayClassModulus K)) := by
   calc
     Module.finrank K E = Nat.card (RayClass.NarrowClassGroup K) :=
-      GlobalClassFieldComparison.bigHilbertClassField_degree_eq_narrowClassGroup_card_of_isBig K E hE
+      GlobalClassFieldComparison.bigHilbertClassField_degree_eq_narrowClassGroup_card_of_isBig K
+        E hE
     _ = Nat.card (RayClassGroup (narrowRayClassModulus K)) :=
       (Nat.card_congr
         (GlobalClassFieldComparison.narrowRayClassGroupEquivNarrowClassGroup K).toEquiv).symm

@@ -1128,7 +1128,8 @@ theorem logOnePlusSeries_expSeries_sub_self_mem_maximalIdeal_pow_succ_of_mem_max
 
 /-- If `a ∈ m^n` lies above the ramified threshold, then the second composite
 `exp(log(1+a)) - 1` is congruent to `a` modulo `m^(n+1)`. -/
-theorem expSeries_logOnePlusSeries_sub_one_sub_self_mem_maximalIdeal_pow_succ_of_mem_maximalIdeal_pow
+theorem
+  expSeries_logOnePlusSeries_sub_one_sub_self_mem_maximalIdeal_pow_succ_of_mem_maximalIdeal_pow
     (v : _root_.Valuation K (WithZero (Multiplicative ℤ)))
     [ValuationTheory.DiscreteValuationField.Valuation.IsCompleteDiscrete v]
     {p : ℕ} [Fact p.Prime] (e n : ℕ)

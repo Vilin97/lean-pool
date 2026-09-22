@@ -16,7 +16,7 @@ isomorphism identifies complete splitting with triviality of the
 corresponding ray class.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 
 noncomputable section
 
@@ -26,6 +26,7 @@ open NumberField IsDedekindDomain
 
 universe u
 
+open scoped Classical in
 /-- A prime away from the modulus splits completely in its ray class field
 exactly when its ray class is trivial. -/
 theorem finitePrime_splitsCompletelyInRayClassField_iff

@@ -230,7 +230,7 @@ Establishes the identity `unitsModPrincipalUnitEquivOfPreserves F e hmem n (Quot
 (higherPrincipalUnitGroup F n) u) = QuotientGroup.mk' (higherPrincipalUnitGroup F n)
 (valuationSubringUnitEquivOfPreserves F e hmem u)`.
 -/
-@[simp] theorem unitsModPrincipalUnitEquivOfPreserves_mk
+theorem unitsModPrincipalUnitEquivOfPreserves_mk
     (e : K ≃+* K)
     (hmem :
       ∀ x : K,

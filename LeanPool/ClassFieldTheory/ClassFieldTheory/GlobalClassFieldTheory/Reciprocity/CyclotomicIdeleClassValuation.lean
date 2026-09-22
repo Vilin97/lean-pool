@@ -72,7 +72,6 @@ private noncomputable def ideleClassContinuousQuotientLift
         (QuotientGroup.isQuotientMap_mk
           (G := A) (N := N)).continuous_iff.2 hcomp }
 
-@[simp]
 private theorem ideleClassContinuousQuotientLift_mk
     {A B : Type*} [Group A] [TopologicalSpace A]
     [Group B] [TopologicalSpace B]
@@ -103,7 +102,6 @@ noncomputable def rationalCyclotomicZHatIdeleClassValueContinuousMul :
 
 /-- Evaluation of the descended rational value on an idele class
 represented by an idele. -/
-@[simp]
 theorem rationalCyclotomicZHatIdeleClassValueContinuousMul_mk
     (a : IdeleGroup ℚ) :
     rationalCyclotomicZHatIdeleClassValueContinuousMul
@@ -126,7 +124,6 @@ noncomputable def rationalCyclotomicZHatIdeleClassValueContinuous :
       continuous_toMul)
 
 /-- Evaluation of the additive rational class value on a representative. -/
-@[simp]
 theorem rationalCyclotomicZHatIdeleClassValueContinuous_mk
     (a : IdeleGroup ℚ) :
     rationalCyclotomicZHatIdeleClassValueContinuous
@@ -168,7 +165,6 @@ noncomputable def normalizedCyclotomicZHatIdeleClassValueContinuousMul :
     (normalizedCyclotomicZHatIdeleValue_principalSubgroup_le_ker K)
 
 /-- Evaluation of the normalized class value on an idele representative. -/
-@[simp]
 theorem normalizedCyclotomicZHatIdeleClassValueContinuousMul_mk
     (a : IdeleGroup K) :
     normalizedCyclotomicZHatIdeleClassValueContinuousMul K
@@ -194,7 +190,6 @@ noncomputable def normalizedCyclotomicZHatIdeleClassValueContinuous :
       continuous_toMul)
 
 /-- Evaluation of the normalized additive class value on a representative. -/
-@[simp]
 theorem normalizedCyclotomicZHatIdeleClassValueContinuous_mk
     (a : IdeleGroup K) :
     normalizedCyclotomicZHatIdeleClassValueContinuous K
@@ -220,7 +215,6 @@ to the rational
 cyclotomic factor, norm--restriction turns the assertion into the
 rational principal-idele product formula, and that restriction is
 injective. -/
-@[simp]
 theorem
     infiniteGlobalArtinMonoidHom_numberFieldCyclotomicZHatCompositum_principalIdele
     (x : Kˣ) :
@@ -257,7 +251,6 @@ noncomputable def
 
 /-- Evaluation of the descended compositum Artin map on an idele
 representative. -/
-@[simp]
 theorem
     numberFieldCyclotomicZHatCompositumIdeleClassArtinMonoidHom_mk
     (a : IdeleGroup K) :
@@ -343,7 +336,7 @@ theorem
 API throughout this block.  Fixing it before the first finite-layer binder
 keeps the parameter and every restriction target definitionally aligned. -/
 noncomputable local instance
-    cyclotomicIdeleClassValuation_rationalCyclotomicZHatFieldAlgebra :
+    cyclotomicIdeleClassValuationRationalCyclotomicZHatFieldAlgebra :
     Algebra ℚ rationalCyclotomicZHatField :=
   DivisionRing.toRatAlgebra
 
@@ -518,7 +511,6 @@ noncomputable def
 
 /-- Evaluation of the descended finite-layer Artin map on an idele
 representative. -/
-@[simp]
 theorem
     numberFieldCyclotomicZHatFiniteLayerIdeleClassArtinMonoidHom_mk
     (E :
@@ -687,7 +679,6 @@ theorem normalizedCyclotomicZHatIdeleClassValue_surjective :
   exact ⟨Additive.ofMul (c : IdeleClassGroup K), hc⟩
 
 /-- The normalized cyclotomic class value has full value group. -/
-@[simp]
 theorem normalizedCyclotomicZHatIdeleClassValue_range :
     (normalizedCyclotomicZHatIdeleClassValueContinuous K).toAddMonoidHom.range =
       (⊤ : AddSubgroup ZHat) :=
@@ -696,7 +687,6 @@ theorem normalizedCyclotomicZHatIdeleClassValue_range :
     (normalizedCyclotomicZHatIdeleClassValue_surjective K)
 
 /-- The rational cyclotomic class value has full value group. -/
-@[simp]
 theorem rationalCyclotomicZHatIdeleClassValue_range :
     rationalCyclotomicZHatIdeleClassValueContinuous.toAddMonoidHom.range =
       (⊤ : AddSubgroup ZHat) :=
@@ -1117,7 +1107,6 @@ theorem rationalCyclotomicZHatValuation_normToBase_fixed_apply
 /-- Under the genuine fixed-field idele-class comparison, the
 valuation used by abstract reciprocity is exactly the normalized
 cyclotomic idele-class value of that fixed field. -/
-@[simp]
 theorem
     rationalCyclotomicIdeleClassValuationData_valuationAt_fixed_apply
     (H : FiniteAbstractField

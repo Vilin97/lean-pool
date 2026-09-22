@@ -27,7 +27,7 @@ cyclotomic character then detects that the full local Artin symbol is
 trivial.
 -/
 
-open scoped Classical NNReal NumberField ValuativeRel
+open scoped NNReal NumberField ValuativeRel
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -44,8 +44,11 @@ open LocalFieldTheory.DiscreteValuationField.CompleteDVF
 open LocalFieldTheory.DiscreteValuationField.Examples.Qp
 open LubinTate
 
-local instance (q : Nat.Primes) : Fact q.1.Prime :=
+open scoped Classical in
+local instance localPrimesInstance1 (q : Nat.Primes) : Fact q.1.Prime :=
   ⟨q.2⟩
+
+attribute [local instance] localPrimesInstance1
 
 attribute [local instance]
   rationalCyclotomicPrincipalPrimeLevelFiniteDimensional
@@ -65,6 +68,7 @@ attribute [local instance]
   rationalFinitePlaceBaseIsValuativeTopology
   rationalFinitePlaceBaseIsNonarchimedeanLocalField
 
+open scoped Classical in
 private theorem
     rationalRayNorm_integerUnitsMap_mem_higherPrincipalUnits_iff
     (q : Nat.Primes) (n : ℕ)
@@ -90,6 +94,7 @@ private theorem
     (ValuationTheory.ringEquiv_mem_maximalIdeal_pow_iff
       eO n ((u : 𝒪[F]) - 1))
 
+open scoped Classical in
 private theorem rationalRayNorm_fieldUnitsMap_integerUnits
     (q : Nat.Primes)
     (u : 𝒪[RationalCyclotomicPrincipalPrimeCompletion q]ˣ) :
@@ -143,6 +148,7 @@ private theorem rationalRayNorm_fieldUnitsMap_integerUnits
         (eO ((u : 𝒪[F]ˣ) : 𝒪[F])) :=
       rfl
 
+open scoped Classical in
 /-- The canonical rational-completion equivalence transports the
 topology-first principal-unit subgroup to the packaged higher-principal-unit
 subgroup in the standard `q`-adic field. -/
@@ -210,6 +216,7 @@ section PrimePowerCalculation
 attribute [local instance]
   rationalCyclotomicPrincipalPrimePadicLevelFiniteDimensional
 
+open scoped Classical in
 noncomputable local instance
     rationalCyclotomicRayNormPadicLevelIsAbelianGalois
     (q : Nat.Primes) (n : ℕ) :
@@ -219,6 +226,9 @@ noncomputable local instance
     (padicLocalField q.1)
     (padicMultiplicativeLubinTateSeries_isUniformizer q.1) n
 
+attribute [local instance] rationalCyclotomicRayNormPadicLevelIsAbelianGalois
+
+open scoped Classical in
 /-- A rational higher unit has trivial local Artin image in the standard
 multiplicative Lubin--Tate level.  This is the purely `q`-adic part of the
 prime-power argument; the semilinear transport to the localized global
@@ -282,6 +292,7 @@ private theorem rationalPrimePowerPadicAbelianLocalArtin_eq_one
         q.1 n u hu)
   simpa only [T, eK, localInput, eC, vQ, v] using hPadic
 
+open scoped Classical in
 /-- The chosen ramified finite-place Artin value, with the cyclotomic level
 and its instance arguments frozen behind a named boundary. -/
 private noncomputable def rationalPrimePowerChosenFinitePlaceArtinValue
@@ -299,6 +310,7 @@ private noncomputable def rationalPrimePowerChosenFinitePlaceArtinValue
         (rationalCyclotomicPrincipalPrimeModulus q n))
     (RayClass.rationalPrime q) x
 
+open scoped Classical in
 /-- The standard `q`-adic calculation evaluated on the canonical input used
 by the finite-place Artin construction. -/
 private theorem rationalPrimePowerFinitePlaceLocalInputPadicArtin_eq_one
@@ -322,6 +334,7 @@ private theorem rationalPrimePowerFinitePlaceLocalInputPadicArtin_eq_one
             (RayClass.rationalPrime q)).symm x)) = 1
   exact rationalPrimePowerPadicAbelianLocalArtin_eq_one q n x hx
 
+open scoped Classical in
 /-- The normalized local calculation, transported through the decomposition
 group inclusion.  This bridge contains no semilinear instance search. -/
 private theorem rationalPrimePowerFinitePlaceArtinOfExtension_eq_one
@@ -344,6 +357,7 @@ private theorem rationalPrimePowerFinitePlaceArtinOfExtension_eq_one
       q n x
       (rationalPrimePowerFinitePlaceLocalInputPadicArtin_eq_one q n x hx)
 
+open scoped Classical in
 /-- The local semilinear calculation for a ramified prime-power level.  Its
 statement only exposes the named global Artin value. -/
 private theorem
@@ -360,6 +374,7 @@ private theorem
     rationalCyclotomicChosenFinitePlaceExtension] using
     rationalPrimePowerFinitePlaceArtinOfExtension_eq_one q n x hx
 
+open scoped Classical in
 /-- A principal unit of depth `n + 1` has trivial chosen finite-place
 Artin symbol in the genuine `q ^ (n + 1)`-st rational cyclotomic level. -/
 theorem
@@ -381,6 +396,7 @@ theorem
     rationalPrimePowerChosenFinitePlaceArtinValue_eq_one_of_mem_localHigherUnitGroup
       q n x hx
 
+open scoped Classical in
 /-- The positive-depth form of the prime-power calculation.  Eliminating
 the successor before introducing a cyclotomic level avoids transporting its
 dependent field and instance data later in the full-level coordinate proof. -/
@@ -406,6 +422,7 @@ private theorem
     rationalPrimePowerChosenFinitePlaceArtin_eq_one_of_mem_localHigherUnitGroup
       q n x hx
 
+open scoped Classical in
 /-- A valuation-zero input away from a named cyclotomic level has trivial
 chosen Artin value.  Keeping the level as a positive-natural variable makes
 the instance owner identical on both sides of the imported calculation. -/
@@ -424,6 +441,7 @@ private theorem rationalCyclotomicRayNormAwayChosenFinitePlaceArtin_eq_one
 
 end PrimePowerCalculation
 
+open scoped Classical in
 /-- Membership in a rational local higher-unit group forces the normalized
 cyclotomic Artin exponent to vanish.  This boundary keeps the completion and
 valuation expansion out of the full cyclotomic-coordinate calculation. -/
@@ -447,6 +465,7 @@ private theorem
     _root_.GlobalClassFieldTheory.GlobalClassFields.finitePlaceCompletion_valuationMap_eq_zero_of_mem_localHigherUnitGroup
       (K := ℚ) (RayClass.rationalPrime q) n x hx
 
+open scoped Classical in
 /-- The rational ray-class higher-unit group at `q` consists of actual
 local norms from the chosen completion of the genuine cyclotomic level. -/
 theorem
@@ -648,6 +667,7 @@ theorem
 
 end FinitePlaceLocalCalculation
 
+open scoped Classical in
 /-- At every finite rational place, the local higher-unit group prescribed
 by `(m)` lies in the chosen local norm subgroup of `ℚ(μ_m)`. -/
 theorem rationalCyclotomicLevel_rationalModulus_localNorm
@@ -676,6 +696,7 @@ theorem rationalCyclotomicLevel_rationalModulus_localNorm
   exact
     rationalCyclotomicLevel_localHigherUnitGroup_le_chosenLocalNorm m q
 
+open scoped Classical in
 /-- The rational ray congruence subgroup modulo `(m)` is contained in the
 genuine idèle-class norm range from the actual cyclotomic level `ℚ(μ_m)`. -/
 theorem
@@ -726,6 +747,7 @@ theorem
       (GlobalClassFields.ideleClassNormDefiningModulus_isDefiningModulus
           (K := ℚ) (L := L))
 
+open scoped Classical in
 /-- The genuine idèle-class norm range from the actual finite cyclotomic
 level is exactly the rational ray congruence subgroup modulo `(m)`. -/
 theorem
@@ -783,6 +805,7 @@ theorem
     exact (Nat.lt_irrefl _ hindexStrict)
   · exact hHN
 
+open scoped Classical in
 /-- The standard cyclotomic field `CyclotomicField m ℚ` has the same
 actual idèle-class norm range, namely the rational ray congruence subgroup
 modulo `(m)`. -/

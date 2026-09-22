@@ -9,7 +9,8 @@ import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 /-!
 # Value-group invariants of finite unramified extensions
 
-The first finite step in the unramified base-change theorem is forced already by the finite unramified-extension definition
+The first finite step in the unramified base-change theorem is forced already by
+  the finite unramified-extension definition
 and the fundamental inequality of the fundamental inequality.  The actual quotient of
 value groups is finite; degree equality then forces its cardinality to be one,
 and hence the source and target value subgroups coincide.
@@ -31,7 +32,8 @@ omit [Algebra K L] in
 `Lˣ`.  This is the public representative source needed to apply the arbitrary
 linear-independence theorem from the fundamental inequality. -/
 theorem exponentialValueCoset_units_surjective
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L) :
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L) :
     Function.Surjective
       (fun x : Lˣ ↦ exponentialValueCoset v w (x : L) x.ne_zero) := by
   intro q
@@ -53,7 +55,8 @@ over `K`, so their indexing type is finite in the finite-dimensional space
 `L`. -/
 theorem exponentialValueGroupQuotient_finite_of_finiteDimensional
     [FiniteDimensional K L]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a) :
     Finite (ExponentialValueGroupQuotient v w) := by
   classical
@@ -103,7 +106,8 @@ theorem exponentialValueGroupQuotient_finite_of_finiteDimensional
 extension is positive. -/
 theorem exponentialRamificationIndex_pos_of_finiteDimensional
     [FiniteDimensional K L]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a) :
     0 < exponentialRamificationIndex v w := by
   let : Finite (ExponentialValueGroupQuotient v w) :=
@@ -121,7 +125,8 @@ linear-independence theorem in the fundamental inequality.  No finiteness or
 separability hypothesis on `L/K` is used. -/
 theorem residueBasisLifts_linearIndependent
     {J : Type*}
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     (beta :
       let V := LubinTate.Valuations.exponentialValuationSubring v
@@ -173,7 +178,8 @@ extension is finite-dimensional.  Its finiteness is produced by lifting a
 chosen residue basis and applying the preceding linear-independence theorem. -/
 theorem residueExtension_finiteDimensional_of_finiteDimensional
     [FiniteDimensional K L]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a) :
     let V := LubinTate.Valuations.exponentialValuationSubring v
     let W := LubinTate.Valuations.exponentialValuationSubring w
@@ -213,7 +219,8 @@ theorem residueExtension_finiteDimensional_of_finiteDimensional
 positive. -/
 theorem exponentialResidueDegree_pos_of_finiteDimensional
     [FiniteDimensional K L]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a) :
     0 < exponentialResidueDegree v w hExt := by
   let V := LubinTate.Valuations.exponentialValuationSubring v
@@ -236,19 +243,22 @@ theorem exponentialResidueDegree_pos_of_finiteDimensional
 extension is at most its field degree. -/
 theorem exponentialRamificationIndex_le_finrank
     [FiniteDimensional K L]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a) :
     exponentialRamificationIndex v w ≤ Module.finrank K L := by
   exact (Nat.le_mul_of_pos_right _
     (exponentialResidueDegree_pos_of_finiteDimensional v w hExt)).trans
       (ramificationInvariants_fundamental_inequality v w hExt)
 
-/-- Under the finite unramified-extension definition, every residue basis has the same cardinality as the
+/-- Under the finite unramified-extension definition, every residue basis has the same
+cardinality as the
 field degree.  The statement uses `Nat.card`, so no finiteness assumption on
 the chosen index type is added to the theorem boundary. -/
 theorem finiteUnramifiedExtension_residueBasis_card_eq_finrank
     [FiniteDimensional K L] {J : Type*}
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     (hUnramified : FiniteUnramifiedExtension v w hExt)
     (beta :
@@ -299,7 +309,8 @@ for a finite unramified extension.  Finiteness and nonemptiness of the index
 type are derived internally rather than assumed. -/
 theorem exists_basis_eq_residueBasisLifts_of_finiteUnramifiedExtension
     [FiniteDimensional K L] {J : Type*}
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     (hUnramified : FiniteUnramifiedExtension v w hExt)
     (beta :
@@ -341,11 +352,13 @@ theorem exists_basis_eq_residueBasisLifts_of_finiteUnramifiedExtension
   exact congrFun
     (coe_basisOfLinearIndependentOfCardEqFinrank hli hcard) j
 
-/-- the finite unramified-extension definition and the fundamental inequality force the actual ramification index of
+/-- the finite unramified-extension definition and the fundamental inequality force the actual
+ramification index of
 a finite unramified extension to be one. -/
 theorem exponentialRamificationIndex_eq_one_of_finiteUnramifiedExtension
     [FiniteDimensional K L]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     (hUnramified : FiniteUnramifiedExtension v w hExt) :
     exponentialRamificationIndex v w = 1 := by
@@ -376,7 +389,8 @@ theorem exponentialRamificationIndex_eq_one_of_finiteUnramifiedExtension
 /-- The value subgroup does not change in a finite unramified extension. -/
 theorem exponentialValueSubgroup_eq_of_finiteUnramifiedExtension
     [FiniteDimensional K L]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     (hUnramified : FiniteUnramifiedExtension v w hExt) :
     exponentialValueSubgroup w = exponentialValueSubgroup v := by

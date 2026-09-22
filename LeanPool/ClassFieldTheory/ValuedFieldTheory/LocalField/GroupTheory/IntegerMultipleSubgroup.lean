@@ -49,7 +49,7 @@ def integerMultipleSubgroup (d : ℤ) : Subgroup (Multiplicative ℤ) where
 
 /-- Membership of a multiplicative integer in the multiple subgroup is equivalent to divisibility of
 its additive value. -/
-@[simp] theorem ofAdd_mem_integerMultipleSubgroup_iff (d n : ℤ) :
+theorem ofAdd_mem_integerMultipleSubgroup_iff (d n : ℤ) :
     Multiplicative.ofAdd n ∈ integerMultipleSubgroup d ↔ d ∣ n := by
   rw [mem_integerMultipleSubgroup_iff, toAdd_ofAdd]
 
@@ -124,7 +124,7 @@ noncomputable def valueModIntegerMultipleSubgroupEquivZMod (d : ℤ) :
 
 /-- The quotient-to-`ZMod` equivalence sends a quotient class to reduction of its representative
 modulo `n`. -/
-@[simp] theorem valueModIntegerMultipleSubgroupEquivZMod_mk
+theorem valueModIntegerMultipleSubgroupEquivZMod_mk
     (d n : ℤ) :
     valueModIntegerMultipleSubgroupEquivZMod d
         (QuotientGroup.mk' (integerMultipleSubgroup d)

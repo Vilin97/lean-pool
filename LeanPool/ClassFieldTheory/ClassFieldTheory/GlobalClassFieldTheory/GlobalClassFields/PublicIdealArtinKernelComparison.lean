@@ -17,18 +17,19 @@ idèle-class norm kernel.  We then compare that kernel with the established
 ideal-theoretic Artin map on the same ray modulus.
 -/
 
-open scoped Classical NumberField IsMulCommutative
+open scoped NumberField IsMulCommutative
 open NumberField IsDedekindDomain
 
 noncomputable section
 
 namespace ClassFieldTheory.GlobalClassFieldComparison
 
+open scoped Classical in
 private theorem finiteAbelianReciprocity_primeArtin_eq_original
     (K L : Type)
     [Field K] [NumberField K]
     [Field L] [NumberField L] [Algebra K L]
-    [FiniteDimensional K L] [IsAbelianGalois K L]
+    [IsAbelianGalois K L]
     (D : FiniteAbelianReciprocityData K L)
     (v : HeightOneSpectrum (𝓞 K))
     (hv : v ∉ D.modulus.finitePart.support) :
@@ -51,6 +52,7 @@ private theorem finiteAbelianReciprocity_primeArtin_eq_original
       (arithmeticPrimeArtin_eq_arithmeticFrobeniusAt
         (K := K) (L := L) v w hw hunram).symm
 
+open scoped Classical in
 private theorem finiteAbelianReciprocity_originalPrimeNormalization
     (K L : Type)
     [Field K] [NumberField K]
@@ -77,6 +79,7 @@ private theorem finiteAbelianReciprocity_originalPrimeNormalization
   simpa only [e, MulEquiv.symm_apply_apply] using
     finiteAbelianReciprocity_primeArtin_eq_original K L D v hvm
 
+open scoped Classical in
 /-- The modulus of public finite abelian reciprocity data defines the
 extension's genuine idèle-class norm subgroup.  This follows from prime
 normalization, rather than being an additional field of the data. -/
@@ -104,6 +107,7 @@ theorem finiteAbelianReciprocity_modulus_isDefining
     exact hx
   rw [hmk, map_one]
 
+open scoped Classical in
 /-- On a fractional ideal prime to the modulus, the public Artin map is
 trivial exactly when the original ideal Artin map is trivial. -/
 theorem publicArtinKer_iff_idealArtinKernel

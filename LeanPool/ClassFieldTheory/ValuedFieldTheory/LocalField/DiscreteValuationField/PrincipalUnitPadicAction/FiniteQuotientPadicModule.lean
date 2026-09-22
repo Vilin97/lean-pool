@@ -84,7 +84,8 @@ instance Internal.principalUnitQuotientCarrier_finite
     Finite (Internal.principalUnitQuotientCarrier F.toCompleteDVF n) := by
   have : Finite
       (F.valuationSubringˣ ⧸
-        (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F.toCompleteDVF) (n + 1)) :=
+        (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
+          F.toCompleteDVF) (n + 1)) :=
     higherPrincipalUnitGroup.finite_unitsModHigherPrincipalUnitGroup_of_finite_residue
       F.toCompleteDVF (n + 1)
   exact Finite.of_injective
@@ -250,7 +251,6 @@ noncomputable instance discretePrincipalUnitQuotientPadicModule
 Establishes the identity `DiscretePrincipalUnitQuotient.addEquiv F.toCompleteDVF n (a • x) = a •
 DiscretePrincipalUnitQuotient.addEquiv F.toCompleteDVF n x`.
 -/
-@[simp]
 theorem DiscretePrincipalUnitQuotient.addEquiv_map_smul
     (F : LocalField.{u, v} K) (n : ℕ)
     (a : ℤ_[F.residueCharacteristic])

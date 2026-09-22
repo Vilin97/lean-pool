@@ -333,7 +333,7 @@ theorem eventually_finitePlace_iff_eventually_all_above
       let : Fintype
           (AbsoluteValueExtension
             (HeightOneSpectrum.adicAbv K w) L) :=
-        completionTensorDecomposition_extensionFintype
+        completionTensorDecompositionExtensionFintype
           (HeightOneSpectrum.adicAbv K w)
           (RayClass.adicAbv_isNontrivial w)
       exact

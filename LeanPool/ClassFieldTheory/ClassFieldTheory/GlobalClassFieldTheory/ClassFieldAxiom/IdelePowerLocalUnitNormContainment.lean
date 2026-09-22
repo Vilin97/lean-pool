@@ -18,7 +18,7 @@ global norm containment and principal-intersection identity used in the
 idele-class norm-index argument.
 -/
 
-open scoped NumberField Classical NNReal IsMulCommutative
+open scoped NumberField NNReal IsMulCommutative
 open NumberField IsDedekindDomain
 open AlgebraicNumberTheory.Valuations
 open HilbertRamification
@@ -31,13 +31,14 @@ namespace GlobalClassFieldTheory.ClassFieldAxiom
 
 variable {K : Type*} [Field K] [NumberField K]
 
+open scoped Classical in
 /-- Ideles whose components at the finite places of `S` are local norms
 from the chosen localizations of `L / K`. -/
 def finitePlaceLocalNormCondition
     {K L : Type}
     [Field K] [NumberField K]
     [Field L] [Algebra K L]
-    [FiniteDimensional K L] [IsGalois K L]
+    [IsGalois K L]
     (S : Finset (HeightOneSpectrum (𝓞 K))) :
     Subgroup (IdeleGroup K) :=
   ⨅ v : ↥S,
@@ -45,6 +46,7 @@ def finitePlaceLocalNormCondition
       (K := K) (L := L) v.1).comap
         (IdeleGroup.finiteComponent v.1)
 
+open scoped Classical in
 /-- Elementwise form of the finite family of local norm conditions. -/
 theorem mem_finitePlaceLocalNormCondition_iff
     {K L : Type}
@@ -61,6 +63,7 @@ theorem mem_finitePlaceLocalNormCondition_iff
             (K := K) (L := L) v.1 := by
   simp [finitePlaceLocalNormCondition]
 
+open scoped Classical in
 /-- At every finite place in `S`, the `n`-power condition defining
 `h(S,T)` implies the actual local norm condition for an exponent-`n`
 Kummer extension. -/
@@ -87,6 +90,7 @@ theorem idelePowerLocalUnitSubgroup_le_finitePlaceLocalNormCondition
     ((mem_idelePowerLocalUnitSubgroup_iff
       (K := K) n S T a).mp ha).2.1 v.1 v.2
 
+open scoped Classical in
 /-- The finite components of `h(S,T)` at `S ∪ T` are actual local norms:
 at `S` this follows from the exponent-`n` Galois structure, while at `T`
 it follows from complete splitting. -/
@@ -122,24 +126,26 @@ theorem idelePowerLocalUnitSubgroup_le_unionLocalNormCondition
         (K := K) (L := L) v.1 (hT v.1 hvT)]
     exact Subgroup.mem_top _
 
+open scoped Classical in
 /-- The simultaneous local norm condition at every finite place. -/
 def allFinitePlaceLocalNormCondition
     {K L : Type}
     [Field K] [NumberField K]
     [Field L] [Algebra K L]
-    [FiniteDimensional K L] [IsGalois K L] :
+    [IsGalois K L] :
     Subgroup (IdeleGroup K) :=
   ⨅ v : HeightOneSpectrum (𝓞 K),
     (_root_.chosenFinitePlaceLocalNormSubgroup
       (K := K) (L := L) v).comap
         (IdeleGroup.finiteComponent v)
 
+open scoped Classical in
 /-- Under the concrete splitting and unramifiedness conditions, every finite
 component of `h(S,T)` is an actual local norm. -/
 theorem idelePowerLocalUnitSubgroup_le_allFinitePlaceLocalNormCondition
     {K L : Type}
     [Field K] [NumberField K]
-    [Field L] [NumberField L] [Algebra K L]
+    [Field L] [Algebra K L]
     [FiniteDimensional K L] [IsGalois K L]
     (n : ℕ+) (r : ℕ)
     (eG :
@@ -180,12 +186,13 @@ theorem idelePowerLocalUnitSubgroup_le_allFinitePlaceLocalNormCondition
       ((mem_idelePowerLocalUnitSubgroup_iff
         (K := K) n S T a).mp ha).2.2 v hv
 
+open scoped Classical in
 /-- Every global relative-idele norm satisfies all of the actual
 finite-place local norm conditions. -/
 theorem relativeIdeleNorm_range_le_allFinitePlaceLocalNormCondition
     {K L : Type}
     [Field K] [NumberField K]
-    [Field L] [NumberField L] [Algebra K L]
+    [Field L] [Algebra K L]
     [FiniteDimensional K L] [IsGalois K L] :
     (RelativeIdeleGroup.norm K L).range ≤
       allFinitePlaceLocalNormCondition
@@ -198,6 +205,7 @@ theorem relativeIdeleNorm_range_le_allFinitePlaceLocalNormCondition
     _root_.relativeIdeleNorm_finiteComponent_mem_chosenLocalNormSubgroup
       (K := K) (L := L) v b
 
+open scoped Classical in
 /-- Equality between the power/local-unit subgroup and the everywhere-local
 norm condition for the Kummer-selected prime set.  Starting from an arbitrary
 prescribed finite set `S`, the construction first adjoins a sufficiently large

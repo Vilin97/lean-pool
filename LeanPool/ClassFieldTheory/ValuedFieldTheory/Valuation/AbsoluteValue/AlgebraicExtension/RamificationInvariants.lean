@@ -100,7 +100,8 @@ private theorem exponentialValuation_finset_sum_ne_zero_of_value_ne
 exponential valuations. -/
 def exponentialValuationRingMap
     {K L : Type*} [Field K] [Field L] [Algebra K L]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a) :
     LubinTate.Valuations.exponentialValuationSubring v →+*
       LubinTate.Valuations.exponentialValuationSubring w :=
@@ -112,7 +113,8 @@ def exponentialValuationRingMap
 @[simp]
 theorem exponentialValuationRingMap_apply
     {K L : Type*} [Field K] [Field L] [Algebra K L]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     (a : LubinTate.Valuations.exponentialValuationSubring v) :
     ((exponentialValuationRingMap v w hExt a :
@@ -123,7 +125,8 @@ theorem exponentialValuationRingMap_apply
 /-- Exact extension makes the induced map of valuation rings local. -/
 theorem exponentialValuationRingMap_isLocalHom
     {K L : Type*} [Field K] [Field L] [Algebra K L]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a) :
     IsLocalHom (exponentialValuationRingMap v w hExt) := by
   constructor
@@ -143,7 +146,8 @@ fundamental inequality. -/
 private theorem exponentialValuation_residueCombination_value_zero
     {K L J : Type*} [Field K] [Field L] [Algebra K L]
     [Fintype J]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     (omega : J → LubinTate.Valuations.exponentialValuationSubring w)
     (homega :
@@ -227,7 +231,8 @@ of its nonzero base coefficients. -/
 private theorem exponentialValuation_residueCombination_value_in_base
     {K L J : Type*} [Field K] [Field L] [Algebra K L]
     [Fintype J]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     (omega : J → LubinTate.Valuations.exponentialValuationSubring w)
     (homega :
@@ -459,7 +464,8 @@ private theorem maximalIdeal_eq_span_discretePrimeElement
 between the least positive generators of the two discrete value groups. -/
 private theorem exists_valueGroup_generators_scaled_by_ramificationIdx
     {K L : Type*} [Field K] [Field L] [Algebra K L]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     (hv : LubinTate.Valuations.DiscreteExponentialValuation v)
     (hw : LubinTate.Valuations.DiscreteExponentialValuation w)
@@ -529,7 +535,8 @@ private theorem exists_valueGroup_generators_scaled_by_ramificationIdx
 /-- Exact extension embeds the base value group in the target value group. -/
 theorem exponentialValueSubgroup_le_of_extends
     {K L : Type*} [Field K] [Field L] [Algebra K L]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a) :
     exponentialValueSubgroup v ≤ exponentialValueSubgroup w := by
   rintro r ⟨a, ha, hval⟩
@@ -540,7 +547,8 @@ theorem exponentialValueSubgroup_le_of_extends
 is the base subgroup viewed inside the target subgroup. -/
 def ExponentialValueGroupQuotient
     {K L : Type*} [Field K] [Field L]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L) :=
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L) :=
   exponentialValueSubgroup w ⧸
     (exponentialValueSubgroup v).comap
       (exponentialValueSubgroup w).subtype
@@ -548,14 +556,16 @@ def ExponentialValueGroupQuotient
 /-- The ramification index as the actual value-group quotient cardinality. -/
 def exponentialRamificationIndex
     {K L : Type*} [Field K] [Field L]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L) : ℕ :=
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L) : ℕ :=
   Nat.card (ExponentialValueGroupQuotient v w)
 
 /-- If the target value group is `tℤ` and the base value group is
 `(e t)ℤ`, their actual quotient has cardinality `e`. -/
 private theorem exponentialRamificationIndex_eq_of_cyclic_valueSubgroups
     {K L : Type*} [Field K] [Field L]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     {s t : ℝ} (ht : t ≠ 0) (e : ℕ)
     (hvgroup :
       exponentialValueSubgroup v = AddSubgroup.zmultiples s)
@@ -625,7 +635,8 @@ private theorem exponentialRamificationIndex_eq_of_cyclic_valueSubgroups
 ramification index agrees with mathlib's local Dedekind ramification index. -/
 theorem exponentialRamificationIndex_eq_ideal_ramificationIdx
     {K L : Type*} [Field K] [Field L] [Algebra K L]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     (hv : LubinTate.Valuations.DiscreteExponentialValuation v)
     [IsDiscreteValuationRing (LubinTate.Valuations.exponentialValuationSubring v)]
@@ -656,7 +667,8 @@ theorem exponentialRamificationIndex_eq_ideal_ramificationIdx
 /-- The actual residue degree of an exact valued extension. -/
 def exponentialResidueDegree
     {K L : Type*} [Field K] [Field L] [Algebra K L]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a) : ℕ := by
   let V := LubinTate.Valuations.exponentialValuationSubring v
   let W := LubinTate.Valuations.exponentialValuationSubring w
@@ -673,7 +685,8 @@ def exponentialResidueDegree
 /-- The residue finrank is exactly mathlib's local inertia degree. -/
 theorem exponentialResidueDegree_eq_ideal_inertiaDeg
     {K L : Type*} [Field K] [Field L] [Algebra K L]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a) :
     let V := LubinTate.Valuations.exponentialValuationSubring v
     let W := LubinTate.Valuations.exponentialValuationSubring w
@@ -878,7 +891,8 @@ theorem associatedAbsoluteValue_valuationSubring_eq
 extension of the associated absolute values. -/
 theorem associatedAbsoluteValue_extends
     {K L : Type*} [Field K] [Field L] [Algebra K L]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     (q : ℝ) (av : AbsoluteValue K ℝ) (aw : AbsoluteValue L ℝ)
     (hav : LubinTate.Valuations.AssociatedAbsoluteValue v q av)
@@ -900,7 +914,7 @@ theorem associatedAbsoluteValue_extends
 /-- A literal equality with the integral-closure subring produces the
 corresponding `IsIntegralClosure` instance. -/
 private theorem isIntegralClosure_of_subring_eq
-    {K L : Type*} [Field K] [Field L] [Algebra K L]
+    {K L : Type*} [Field K] [Field L]
     (V : Subring K) (W : Subring L)
     [Algebra V L]
     (h : W = (integralClosure V L).toSubring) :
@@ -928,7 +942,8 @@ internally. -/
 theorem exponentialValuationSubring_eq_integralClosure_of_henselian
     {K L : Type*} [Field K] [Field L] [Algebra K L]
     [Algebra.IsAlgebraic K L]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     (hhens : ValuationTheory.DiscreteValuationField.HenselianValuationByFactorization
       (LubinTate.Valuations.exponentialValuationSubringAsValuationSubring v).valuation) :
@@ -955,7 +970,8 @@ theorem exponentialValuationSubring_eq_integralClosure_of_henselian
   have hW : Wv = Wa :=
     associatedAbsoluteValue_valuationSubring_eq
       w (Real.exp 1) aw hawNonarch haw
-  have hhensA : ValuationTheory.DiscreteValuationField.HenselianValuationByFactorization Va.valuation := by
+  have hhensA : ValuationTheory.DiscreteValuationField.HenselianValuationByFactorization
+    Va.valuation := by
     rw [← hV]
     exact hhens
   have habsExt : ∀ a : K, aw (algebraMap K L a) = av a :=
@@ -983,7 +999,8 @@ theorem exponentialValuationSubring_eq_integralClosure_of_henselian
 /-- The value-coset class of a nonzero target-field element. -/
 def exponentialValueCoset
     {K L : Type*} [Field K] [Field L]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (x : L) (hx : x ≠ 0) : ExponentialValueGroupQuotient v w :=
   QuotientAddGroup.mk ⟨(w x).untop₀, ⟨x, hx,
     (WithTop.coe_untop₀_of_ne_top
@@ -993,7 +1010,8 @@ def exponentialValueCoset
 value of a nonzero element of the target field. -/
 private theorem exponentialValueCoset_units_surjective
     {K L : Type*} [Field K] [Field L]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L) :
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L) :
     Function.Surjective
       (fun x : Lˣ ↦ exponentialValueCoset v w (x : L) x.ne_zero) := by
   intro q
@@ -1010,7 +1028,8 @@ private theorem exponentialValueCoset_units_surjective
 of the corresponding value-group quotient classes. -/
 theorem exponentialValueCoset_eq_of_cross_value_eq
     {K L : Type*} [Field K] [Field L] [Algebra K L]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     {x y : L} (hx : x ≠ 0) (hy : y ≠ 0)
     {a b : K} (ha : a ≠ 0) (hb : b ≠ 0)
@@ -1069,7 +1088,8 @@ def DistinctExponentialValueCosetRepresentatives
 distinctness condition used by the constructive proof. -/
 theorem distinctExponentialValueCosetRepresentatives_of_injective
     {K L I : Type*} [Field K] [Field L] [Algebra K L]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     (pi : I → L) (hpi0 : ∀ i, pi i ≠ 0)
     (hinj : Function.Injective
@@ -1089,8 +1109,9 @@ formula are not built into the statement: this is the actual
 linear-independence argument. -/
 theorem ramificationInvariants_valueCosets_mul_residueLifts_linearIndependent
     {K L I J : Type*} [Field K] [Field L] [Algebra K L]
-    [Fintype I] [Fintype J]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    [Finite I] [Finite J]
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     (pi : I → L) (hpi : DistinctExponentialValueCosetRepresentatives v w pi)
     (omega : J → LubinTate.Valuations.exponentialValuationSubring w)
@@ -1108,6 +1129,9 @@ theorem ramificationInvariants_valueCosets_mul_residueLifts_linearIndependent
         (fun j ↦ IsLocalRing.residue W (omega j))) :
     LinearIndependent K
       (fun p : I × J ↦ (omega p.2 : L) * pi p.1) := by
+  classical
+  let := Fintype.ofFinite I
+  let := Fintype.ofFinite J
   classical
   rw [Fintype.linearIndependent_iff]
   intro a hsum p
@@ -1169,7 +1193,8 @@ contained in a product of finite parts, to which the preceding constructive
 argument applies. -/
 theorem ramificationInvariants_valueCosets_mul_residueLifts_linearIndependent_arbitrary
     {K L I J : Type*} [Field K] [Field L] [Algebra K L]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     (pi : I → L) (hpi : DistinctExponentialValueCosetRepresentatives v w pi)
     (omega : J → LubinTate.Valuations.exponentialValuationSubring w)
@@ -1236,7 +1261,8 @@ formula is used. -/
 theorem ramificationInvariants_valueCosets_mul_residueLifts_card_le_finrank
     {K L I J : Type*} [Field K] [Field L] [Algebra K L]
     [FiniteDimensional K L] [Fintype I] [Fintype J]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     (pi : I → L) (hpi : DistinctExponentialValueCosetRepresentatives v w pi)
     (omega : J → LubinTate.Valuations.exponentialValuationSubring w)
@@ -1262,8 +1288,9 @@ theorem ramificationInvariants_valueCosets_mul_residueLifts_card_le_finrank
 cardinality of the actual quotient `w(Lˣ)/v(Kˣ)`. -/
 theorem ramificationInvariants_actual_valueGroup_card_mul_residueLifts_card_le_finrank
     {K L I J : Type*} [Field K] [Field L] [Algebra K L]
-    [FiniteDimensional K L] [Fintype I] [Fintype J]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    [FiniteDimensional K L] [Finite I] [Fintype J]
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     (pi : I → L) (hpi0 : ∀ i, pi i ≠ 0)
     (hpi : Function.Bijective
@@ -1282,6 +1309,8 @@ theorem ramificationInvariants_actual_valueGroup_card_mul_residueLifts_card_le_f
       LinearIndependent (IsLocalRing.ResidueField V)
         (fun j ↦ IsLocalRing.residue W (omega j))) :
     exponentialRamificationIndex v w * Fintype.card J ≤ Module.finrank K L := by
+  classical
+  let := Fintype.ofFinite I
   have hdistinct :=
     distinctExponentialValueCosetRepresentatives_of_injective
       v w hExt pi hpi0 hpi.1
@@ -1303,8 +1332,9 @@ the residue-field finrank.  The supplied `pi` and `omega` are genuine complete
 systems of value-coset representatives and residue-basis lifts. -/
 theorem ramificationInvariants_fundamental_inequality_of_representatives
     {K L I J : Type*} [Field K] [Field L] [Algebra K L]
-    [FiniteDimensional K L] [Fintype I] [Fintype J]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    [FiniteDimensional K L] [Finite I] [Finite J]
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     (pi : I → L) (hpi0 : ∀ i, pi i ≠ 0)
     (hpi : Function.Bijective
@@ -1327,6 +1357,9 @@ theorem ramificationInvariants_fundamental_inequality_of_representatives
       ∀ j, IsLocalRing.residue W (omega j) = beta j) :
     exponentialRamificationIndex v w * exponentialResidueDegree v w hExt ≤
       Module.finrank K L := by
+  classical
+  let := Fintype.ofFinite I
+  let := Fintype.ofFinite J
   let V := LubinTate.Valuations.exponentialValuationSubring v
   let W := LubinTate.Valuations.exponentialValuationSubring w
   let i := exponentialValuationRingMap v w hExt
@@ -1357,7 +1390,8 @@ independence, rather than assumed finite at the theorem boundary. -/
 theorem ramificationInvariants_fundamental_inequality
     {K L : Type*} [Field K] [Field L] [Algebra K L]
     [FiniteDimensional K L]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a) :
     exponentialRamificationIndex v w * exponentialResidueDegree v w hExt ≤
       Module.finrank K L := by
@@ -1447,7 +1481,8 @@ invariants.  No completeness hypothesis is used. -/
 theorem ramificationInvariants_fundamental_identity_of_discrete_of_separable
     {K L : Type*} [Field K] [Field L] [Algebra K L]
     [FiniteDimensional K L] [Algebra.IsSeparable K L]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     (hvdisc : LubinTate.Valuations.DiscreteExponentialValuation v)
     (hhens : ValuationTheory.DiscreteValuationField.HenselianValuationByFactorization

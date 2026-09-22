@@ -27,7 +27,7 @@ then gives the class-group, integral-ideal, and fractional-ideal forms
 of principalization over the original number field.
 -/
 
-open scoped Classical IsMulCommutative NumberField
+open scoped IsMulCommutative NumberField
 
 noncomputable section
 
@@ -40,20 +40,29 @@ open KummerTheory
 open LocalClassFieldTheory
 open Reciprocity
 
+open scoped Classical in
 local instance
     smallHilbertPrincipalization_ideleClassGroupIsMulCommutative
     {F : Type} [Field F] [NumberField F] :
     IsMulCommutative (IdeleClassGroup F) :=
   ⟨⟨fun a b => mul_comm a b⟩⟩
 
+attribute [local instance] smallHilbertPrincipalization_ideleClassGroupIsMulCommutative
+
+open scoped Classical in
 local instance
     smallHilbertPrincipalization_ideleClassSubgroupNormal
     {F : Type} [Field F] [NumberField F]
     (N : Subgroup (IdeleClassGroup F)) : N.Normal :=
   N.normal_of_isMulCommutative
 
+attribute [local instance] smallHilbertPrincipalization_ideleClassSubgroupNormal
+
+open scoped Classical in
+/-- The idele class quotient by the small Hilbert norm subgroup carries its quotient group
+structure. -/
 local instance
-    smallHilbertPrincipalization_smallHilbertQuotientGroup
+    smallHilbertPrincipalizationSmallHilbertQuotientGroup
     {F : Type} [Field F] [NumberField F] :
     Group
       (IdeleClassGroup F ⧸
@@ -61,17 +70,25 @@ local instance
   QuotientGroup.Quotient.group
     (smallHilbertClassFieldNormSubgroup (K := F))
 
+attribute [local instance] smallHilbertPrincipalizationSmallHilbertQuotientGroup
+
+open scoped Classical in
+/-- The identity in the small Hilbert norm quotient is inherited from its chosen quotient group
+structure. -/
 local instance
-    smallHilbertPrincipalization_smallHilbertQuotientOne
+    smallHilbertPrincipalizationSmallHilbertQuotientOne
     {F : Type} [Field F] [NumberField F] :
     One
       (IdeleClassGroup F ⧸
         smallHilbertClassFieldNormSubgroup (K := F)) :=
-  ⟨(smallHilbertPrincipalization_smallHilbertQuotientGroup
+  ⟨(smallHilbertPrincipalizationSmallHilbertQuotientGroup
     (F := F)).one⟩
+
+attribute [local instance] smallHilbertPrincipalizationSmallHilbertQuotientOne
 
 variable (K : Type) [Field K] [NumberField K]
 
+open scoped Classical in
 private theorem smallHilbertClassFieldIdeleExtensionMap_apply_eq_one
     (q : IdeleClassGroup K ⧸
       smallHilbertClassFieldNormSubgroup (K := K)) :
@@ -112,6 +129,7 @@ private theorem smallHilbertClassFieldIdeleExtensionMap_apply_eq_one
             (ideleClassExtension K (smallHilbertClassField K) c)).2
               hmembership
 
+open scoped Classical in
 /-- The map induced by genuine idele extension from the original
 number field on the two small-Hilbert reciprocity quotients is
 trivial. -/
@@ -135,6 +153,7 @@ theorem smallHilbertClassFieldIdeleExtensionMap_eq_one :
   simpa only [MonoidHom.one_apply] using
     smallHilbertClassFieldIdeleExtensionMap_apply_eq_one K q
 
+open scoped Classical in
 private theorem smallHilbertClassFieldClassGroupExtension_apply_eq_one
     (c : ClassGroup (𝓞 K)) :
     ClassGroup.extendedHom
@@ -166,6 +185,7 @@ private theorem smallHilbertClassFieldClassGroupExtension_apply_eq_one
       (smallHilbertClassFieldQuotientEquivClassGroup
         (K := smallHilbertClassField K)).map_one
 
+open scoped Classical in
 /-- Extension of ideal classes from a number field to its selected
 small Hilbert class field is the trivial homomorphism.  This follows
 directly from the naturality equality identifying actual idele
@@ -183,6 +203,7 @@ theorem smallHilbertClassFieldClassGroupExtension_eq_one :
   simpa only [MonoidHom.one_apply] using
     smallHilbertClassFieldClassGroupExtension_apply_eq_one K c
 
+open scoped Classical in
 /-- Every ideal of a number field becomes principal after extension
 to the selected small Hilbert class field. -/
 theorem allIdealsBecomePrincipalInSmallHilbertClassField :
@@ -195,6 +216,7 @@ theorem allIdealsBecomePrincipalInSmallHilbertClassField :
     (𝓞 K) (𝓞 (smallHilbertClassField K))).1
     (smallHilbertClassFieldClassGroupExtension_eq_one K)
 
+open scoped Classical in
 /-- Every nonzero fractional ideal of a number field becomes a
 principal fractional ideal after extension to the selected small
 Hilbert class field. -/

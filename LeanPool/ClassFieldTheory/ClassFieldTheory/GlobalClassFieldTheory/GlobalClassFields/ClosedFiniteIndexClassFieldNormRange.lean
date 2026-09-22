@@ -12,7 +12,7 @@ This leaf compares the selected abstract norm subgroup with the actual
 idèle-class norm range over the canonical fixed-field base.
 -/
 
-open scoped Classical IsMulCommutative NumberField
+open scoped IsMulCommutative NumberField
 
 noncomputable section
 
@@ -23,6 +23,7 @@ open Reciprocity
 
 variable {K : Type} [Field K] [NumberField K]
 
+open scoped Classical in
 /-- Opaque bridge from multiplicative subgroup transport to its additive
 presentation.  Keeping this generic prevents concrete fixed-field endpoints
 from being unfolded by `rw` while comparing the two presentations. -/
@@ -34,6 +35,7 @@ private theorem subgroup_map_toAddSubgroup_mulEquiv
         (MulEquiv.toAdditive e).toAddMonoidHom := by
   exact (MonoidHom.coe_toAdditive_map e.toMonoidHom S).symm
 
+open scoped Classical in
 /-- The idèle-class transport attached to the selected base equivalence.
 Naming this endpoint once keeps the fixed-field instance tower out of
 downstream definitional-equality checks. -/
@@ -49,6 +51,7 @@ private noncomputable def closedFiniteIndexClassFieldIdeleClassEquiv
     (closedFiniteIndexClassFieldBaseEquiv
       (K := K) H hclosed)
 
+open scoped Classical in
 /-- Additive form of the selected class-field norm-range computation, with
 the concrete idèle-class endpoint hidden behind one typed definition. -/
 private theorem closedFiniteIndexClassField_ideleClassNorm_range_toAddSubgroup
@@ -74,6 +77,7 @@ private theorem closedFiniteIndexClassField_ideleClassNorm_range_toAddSubgroup
       (closedFiniteIndexClassFieldNormAmbient_normRange_le
         (K := K) H hclosed))
 
+open scoped Classical in
 /-- The represented abstract norm subgroup as the same named actual norm
 range.  This wrapper uses the lightweight named-field API, avoiding the
 dependent `letI` tower in the raw fixed-field comparison theorem. -/
@@ -101,6 +105,7 @@ private theorem
       (closedFiniteIndexClassFieldSubextension
         (K := K) H hclosed))
 
+open scoped Classical in
 /-- Over the canonical fixed-field base, the determinant-norm range of
 the selected class field is the transport of `H`. -/
 theorem closedFiniteIndexClassField_ideleClassNorm_range_over_base
@@ -156,6 +161,7 @@ theorem closedFiniteIndexClassField_ideleClassNorm_range_over_base
         (closedFiniteIndexClassFieldIdeleClassEquiv
           (K := K) H hclosed)).symm
 
+open scoped Classical in
 /-- The selected subextension is a literal preimage of the transported
 closed finite-index subgroup under the ordinary norm-subgroup
 correspondence. -/

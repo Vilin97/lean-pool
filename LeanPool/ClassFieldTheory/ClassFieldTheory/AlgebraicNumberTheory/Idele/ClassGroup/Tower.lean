@@ -360,7 +360,6 @@ def classGroupEquiv :
 
 omit [NumberField M] [NumberField L]
     [FiniteDimensional K M] [FiniteDimensional M L] in
-@[simp]
 theorem classGroupEquiv_mk
     (a : TowerRelativeIdeleGroup K M L) :
     classGroupEquiv K M L
@@ -456,7 +455,6 @@ def classNorm :
 
 omit [NumberField M] [NumberField L] [Algebra K L] [IsScalarTower K M L]
     [FiniteDimensional K M] in
-@[simp]
 theorem classNorm_mk
     (a : TowerRelativeIdeleGroup K M L) :
     classNorm K M L
@@ -572,7 +570,6 @@ def compositeToBaseNormQuotient :
         ⟨TowerRelativeIdeleGroup.classNorm K M L c, rfl⟩)
 
 omit [NumberField M] [NumberField L] [Algebra K L] [IsScalarTower K M L] in
-@[simp]
 theorem intermediateToCompositeNormQuotient_mk
     (c : RelativeIdeleGroup.ClassGroup K M) :
     intermediateToCompositeNormQuotient K M L
@@ -584,7 +581,6 @@ theorem intermediateToCompositeNormQuotient_mk
   rfl
 
 omit [NumberField M] [NumberField L] [Algebra K L] [IsScalarTower K M L] in
-@[simp]
 theorem compositeToBaseNormQuotient_mk
     (c : IdeleClassGroup K) :
     compositeToBaseNormQuotient K M L

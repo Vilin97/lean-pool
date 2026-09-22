@@ -53,7 +53,8 @@ theorem fieldIndex_eq_mul_unitIndex
       ((MultiplicativeIntegerValuation.completeDVFOfWithZeroValuation v).valuationSubringˣ ⧸
         (powMonoidHom n :
           (MultiplicativeIntegerValuation.completeDVFOfWithZeroValuation v).valuationSubringˣ →*
-          (MultiplicativeIntegerValuation.completeDVFOfWithZeroValuation v).valuationSubringˣ).range)] :
+          (MultiplicativeIntegerValuation.completeDVFOfWithZeroValuation
+            v).valuationSubringˣ).range)] :
     let F : ValuationTheory.DiscreteValuationField.CompleteDVF.{u, 0} K :=
       MultiplicativeIntegerValuation.completeDVFOfWithZeroValuation v
     Nat.card (Kˣ ⧸ (powMonoidHom n : Kˣ →* Kˣ).range) =
@@ -109,7 +110,7 @@ theorem mixed_fieldIndex
     WithZeroValuation.isUniformizer_of_valuation_eq_exp_neg_one
       v (π : K) hπval
   obtain ⟨a, e⟩ :=
-    chosenMixed_firstPrincipalUnitStructure_ofWithZeroValuation
+    chosenMixedFirstPrincipalUnitStructureOfWithZeroValuation
       v hv
   exact
     card_fieldUnits_nthPowerQuotient_of_mixedPrincipalUnitStructure
@@ -156,7 +157,7 @@ theorem mixed_unitIndex
     WithZeroValuation.isUniformizer_of_valuation_eq_exp_neg_one
       v (π : K) hπval
   obtain ⟨a, e⟩ :=
-    chosenMixed_firstPrincipalUnitStructure_ofWithZeroValuation
+    chosenMixedFirstPrincipalUnitStructureOfWithZeroValuation
       v hv
   exact
     card_units_nthPowerQuotient_of_mixedPrincipalUnitStructure_fieldKernel
@@ -187,7 +188,7 @@ theorem mixed_unitIndex_of_coprime
   let : Valued K (WithZero (Multiplicative ℤ)) := Valued.mk' v
   let d := Module.finrank ℚ_[F.residueCharacteristic] K
   obtain ⟨a, e⟩ :=
-    chosenMixed_firstPrincipalUnitStructure_ofWithZeroValuation
+    chosenMixedFirstPrincipalUnitStructureOfWithZeroValuation
       v hv
   let U :=
     CompleteDVF.higherPrincipalUnitGroup F.toCompleteDVF 1
@@ -250,7 +251,7 @@ theorem mixed_fieldIndex_rationalFormula
     WithZeroValuation.isUniformizer_of_valuation_eq_exp_neg_one
       v (π : K) hπval
   obtain ⟨a, e⟩ :=
-    chosenMixed_firstPrincipalUnitStructure_ofWithZeroValuation
+    chosenMixedFirstPrincipalUnitStructureOfWithZeroValuation
       v hv
   exact
     card_fieldUnits_nthPowerQuotient_of_mixedPrincipalUnitStructure_rationalFormula
@@ -295,7 +296,7 @@ theorem mixed_unitIndex_rationalFormula
     WithZeroValuation.isUniformizer_of_valuation_eq_exp_neg_one
       v (π : K) hπval
   obtain ⟨a, e⟩ :=
-    chosenMixed_firstPrincipalUnitStructure_ofWithZeroValuation
+    chosenMixedFirstPrincipalUnitStructureOfWithZeroValuation
       v hv
   exact
     card_units_nthPowerQuotient_of_mixedPrincipalUnitStructure_rationalFormula
@@ -326,7 +327,7 @@ theorem equal_fieldIndex
   let π := Classical.choose hex
   have hπ : v.IsUniformizer (π : K) := Classical.choose_spec hex
   let : Valued K (WithZero (Multiplicative ℤ)) := Valued.mk' v
-  let e := chosenFirstPrincipalUnitStructure_equalCharacteristic v
+  let e := chosenFirstPrincipalUnitStructureEqualCharacteristic v
   exact
     card_fieldUnits_nthPowerQuotient_of_equalPrincipalUnitProduct
       (p := F.residueCharacteristic) (F := F.toCompleteDVF)
@@ -358,7 +359,7 @@ theorem equal_unitIndex
   let π := Classical.choose hex
   have hπ : v.IsUniformizer (π : K) := Classical.choose_spec hex
   let : Valued K (WithZero (Multiplicative ℤ)) := Valued.mk' v
-  let e := chosenFirstPrincipalUnitStructure_equalCharacteristic v
+  let e := chosenFirstPrincipalUnitStructureEqualCharacteristic v
   exact
     card_units_nthPowerQuotient_of_equalPrincipalUnitProduct
       (p := F.residueCharacteristic) (F := F.toCompleteDVF)
@@ -391,7 +392,7 @@ theorem equal_fieldIndex_rationalFormula
   let π := Classical.choose hex
   have hπ : v.IsUniformizer (π : K) := Classical.choose_spec hex
   let : Valued K (WithZero (Multiplicative ℤ)) := Valued.mk' v
-  let e := chosenFirstPrincipalUnitStructure_equalCharacteristic v
+  let e := chosenFirstPrincipalUnitStructureEqualCharacteristic v
   exact
     card_fieldUnits_nthPowerQuotient_of_equalPrincipalUnitProduct_rationalFormula
       (p := F.residueCharacteristic) (F := F.toCompleteDVF)
@@ -423,7 +424,7 @@ theorem equal_unitIndex_rationalFormula
   let π := Classical.choose hex
   have hπ : v.IsUniformizer (π : K) := Classical.choose_spec hex
   let : Valued K (WithZero (Multiplicative ℤ)) := Valued.mk' v
-  let e := chosenFirstPrincipalUnitStructure_equalCharacteristic v
+  let e := chosenFirstPrincipalUnitStructureEqualCharacteristic v
   exact
     card_units_nthPowerQuotient_of_equalPrincipalUnitProduct_rationalFormula
       (p := F.residueCharacteristic) (F := F.toCompleteDVF)

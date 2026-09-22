@@ -13,7 +13,7 @@ upstairs exponents, each weighted by its inertia degree.  This is the
 calculation needed when passing from ideals to norm-defined ray subgroups.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -22,6 +22,7 @@ namespace ClassFieldTheory
 
 universe u v
 
+open scoped Classical in
 /-- The exponent at `v` of an ideal norm is the inertia-degree-weighted sum
 of the exponents at the primes lying above `v`. -/
 theorem fractionalIdealNorm_primeExponent

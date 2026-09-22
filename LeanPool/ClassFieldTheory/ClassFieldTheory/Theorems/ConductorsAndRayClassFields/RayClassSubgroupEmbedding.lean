@@ -19,13 +19,14 @@ their finite abelian class fields.  The embedding between arbitrary
 Frobenius-normalized realizations intertwines both Artin actions.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 open NumberField IsDedekindDomain
 
 noncomputable section
 
 namespace ClassFieldTheory
 
+open scoped Classical in
 private theorem subgroupArtin_prime_eq_arithmeticPrimeArtin
     {K : Type} [Field K] [NumberField K]
     {m : RayClassModulus K} {H : Subgroup (RayClassGroup m)}
@@ -50,6 +51,7 @@ private theorem subgroupArtin_prime_eq_arithmeticPrimeArtin
       (GlobalClassFieldComparison.arithmeticPrimeArtin_eq_arithmeticFrobeniusAt
         (K := K) (L := R.extension) v w hw hunram).symm
 
+open scoped Classical in
 private theorem subgroupRealization_mem_norm_range_iff
     {K : Type} [Field K] [NumberField K]
     {m : RayClassModulus K} {H : Subgroup (RayClassGroup m)}
@@ -88,6 +90,7 @@ private theorem subgroupRealization_mem_norm_range_iff
   change R.artin (e.symm (QuotientGroup.mk' m'.congruenceSubgroup x)) = 1 ↔ _
   rw [← MonoidHom.mem_ker, R.artin_ker]
 
+open scoped Classical in
 private theorem arithmeticPrimeArtin_restrict_tower
     {K E L : Type}
     [Field K] [NumberField K]
@@ -112,6 +115,7 @@ private theorem arithmeticPrimeArtin_restrict_tower
           (K := K) (L := L) (E := E))
         (IdeleGroup.finitePrimeIdele v))
 
+open scoped Classical in
 /-- If `H ≤ J`, every Frobenius-normalized realization of the class field
 of `J` embeds into every such realization for `H`; the embedding commutes
 with their Artin actions. -/

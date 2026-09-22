@@ -10,7 +10,8 @@ import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.L
 /-!
 # Intrinsic-to-ambient base equivalences
 
-This module compares the intrinsic absolute Galois base of a finite extension with its realization as a fixing subgroup in an ambient separable closure.
+This module compares the intrinsic absolute Galois base of a finite extension with its
+  realization as a fixing subgroup in an ambient separable closure.
 -/
 
 noncomputable section
@@ -192,7 +193,7 @@ ambient subgroup fixing the embedding's field range. -/
 noncomputable def
     intrinsicBaseEquivAmbientEmbeddedField
     (K F : Type) [Field K] [Field F]
-    [Algebra K F] [FiniteDimensional K F] [Algebra.IsSeparable K F]
+    [Algebra K F] [FiniteDimensional K F]
     (i : F →ₐ[K] SeparableClosure K) :
     letI : Algebra F (SeparableClosure F) :=
       (separableClosure F (AlgebraicClosure F)).algebra

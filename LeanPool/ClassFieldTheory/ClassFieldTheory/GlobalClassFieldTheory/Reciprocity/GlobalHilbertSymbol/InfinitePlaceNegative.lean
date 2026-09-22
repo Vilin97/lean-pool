@@ -9,7 +9,7 @@ import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Recipro
 # The negative-negative real infinite-place Hilbert factor
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 open NumberField
 
 noncomputable section
@@ -21,6 +21,7 @@ open KummerTheory
 
 variable (K : Type) [Field K] [NumberField K]
 
+open scoped Classical in
 /-- In the quadratic real case with both arguments negative, the actual
 infinite-place Kummer root character is `-1`. -/
 theorem infinitePlaceKummerRootCharacter_eq_neg_one_of_real_of_neg_neg
@@ -90,6 +91,7 @@ theorem infinitePlaceKummerRootCharacter_eq_neg_one_of_real_of_neg_neg
       rw [chosenSimpleKummerRootCharacter_apply]
       exact hroot
 
+open scoped Classical in
 /-- The explicit Hilbert factor and the Kummer root character agree in the
 negative-negative quadratic real branch. -/
 theorem infinitePlaceKummerRootCharacter_localGlobal_of_real_of_neg_neg

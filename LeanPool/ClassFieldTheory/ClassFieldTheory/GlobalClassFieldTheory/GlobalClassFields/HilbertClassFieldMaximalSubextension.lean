@@ -588,7 +588,6 @@ noncomputable def bigHilbertClassFieldBaseEmbedding
 
 /-- The canonical fixed-field equivalence has the distinguished base
 embedding as its underlying map into the rational separable closure. -/
-@[simp]
 theorem bigHilbertClassFieldBaseEquiv_coe
     (K : Type) [Field K] [NumberField K]
     (x : K) :

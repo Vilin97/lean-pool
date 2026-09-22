@@ -23,8 +23,7 @@ corresponding prime class in the global idèle-class norm quotient, so
 the order of the global class divides the local degree.
 -/
 
-open scoped NumberField Classical
-
+open scoped NumberField
 noncomputable section
 
 namespace GlobalClassFieldTheory
@@ -32,6 +31,7 @@ namespace GlobalClassFields
 
 open NumberField IsDedekindDomain
 
+open scoped Classical in
 private theorem unramifiedPrimeNormClassGroupIsMulCommutative
     (F : Type) [Field F] [NumberField F] :
     IsMulCommutative (IdeleClassGroup F) :=
@@ -48,6 +48,7 @@ section FiniteGalois
 
 variable [IsGalois K L]
 
+open scoped Classical in
 /-- The class of the normalized order-one local element in the chosen
 finite-place norm quotient. -/
 def finitePlacePrimeNormClass
@@ -58,6 +59,7 @@ def finitePlacePrimeNormClass
     (K := K) (L := L) v
     (FiniteIdeleGroup.chosenLocalOrderSection v 1)
 
+open scoped Classical in
 /-- The one-place local-to-global norm map sends the local prime norm
 class to the corresponding prime class in the global idèle-class norm
 quotient. -/
@@ -87,6 +89,7 @@ end FiniteGalois
 
 variable [IsAbelianGalois K L]
 
+open scoped Classical in
 /-- The local prime norm class corresponds to the actual prime Artin
 element under the finite-place reciprocity equivalence. -/
 @[simp]
@@ -122,6 +125,7 @@ theorem
     (finitePlacePrimeArtin_eq_chosenFinitePlaceArtin
       (K := K) (L := L) v).symm
 
+open scoped Classical in
 /-- The order of the local prime norm class always divides the local
 extension degree. -/
 theorem orderOf_finitePlacePrimeNormClass_dvd_finitePlaceLocalDegree
@@ -140,6 +144,7 @@ theorem orderOf_finitePlacePrimeNormClass_dvd_finitePlaceLocalDegree
       (finitePlacePrimeNormClass
         (K := K) (L := L) v)
 
+open scoped Classical in
 /-- At a chosen unramified finite place, the order of the local prime
 norm class is the local extension degree. -/
 theorem
@@ -199,6 +204,7 @@ theorem
       (orderOf_finitePlacePrimeArtin_eq_finitePlaceLocalDegree_of_chosenUnramified
         (K := K) (L := L) v hunram)
 
+open scoped Classical in
 /-- At a chosen unramified finite place, the local prime norm class is
 trivial exactly when the place splits completely. -/
 theorem
@@ -219,6 +225,7 @@ theorem
         (K := K) (L := L) v hunram]
   exact orderOf_eq_one_iff.symm
 
+open scoped Classical in
 /-- The order of the global idèle-class norm prime class always
 divides the local extension degree. -/
 theorem orderOf_ideleClassNormFrobeniusClass_dvd_finitePlaceLocalDegree

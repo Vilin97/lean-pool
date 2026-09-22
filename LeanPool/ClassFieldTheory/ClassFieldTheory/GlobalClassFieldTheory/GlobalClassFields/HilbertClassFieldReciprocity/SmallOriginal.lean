@@ -13,7 +13,7 @@ The original-base specialization is compiled separately from the realized-base
 specialization and reuses the shared reciprocity transport provider.
 -/
 
-open scoped Classical IsMulCommutative NumberField
+open scoped IsMulCommutative NumberField
 
 noncomputable section
 
@@ -25,12 +25,16 @@ open Reciprocity
 
 variable {K : Type} [Field K] [NumberField K]
 
+open scoped Classical in
 local instance
     smallHilbertClassFieldReciprocityOverOriginalIsMulCommutative
     {F : Type} [Field F] [NumberField F] :
     IsMulCommutative (IdeleClassGroup F) :=
   hilbertClassFieldReciprocityIdeleClassGroupIsMulCommutative
 
+attribute [local instance] smallHilbertClassFieldReciprocityOverOriginalIsMulCommutative
+
+open scoped Classical in
 /-- Over the original number field scalar structure, the actual norm
 range of the selected small Hilbert class field is exactly the
 intrinsic small-Hilbert norm subgroup. -/
@@ -67,6 +71,7 @@ theorem smallHilbertClassField_ideleClassNorm_range_over_original :
         (smallHilbertClassFieldNormSubgroup (K := K)).map g :=
       (smallHilbertClassFieldNormSubgroup_map_ideleClassCongr e).symm
 
+open scoped Classical in
 /-- Global reciprocity for the selected small Hilbert class field over
 the original number field gives the ordinary ideal class group
 directly. -/
@@ -91,6 +96,7 @@ private noncomputable def
   intro c
   exact d.2 c
 
+open scoped Classical in
 /-- The direct reciprocity equivalence for the small Hilbert class field,
 using the original number field as the scalar base. -/
 noncomputable def smallHilbertClassFieldGaloisEquivClassGroupOverOriginal :
@@ -98,9 +104,9 @@ noncomputable def smallHilbertClassFieldGaloisEquivClassGroupOverOriginal :
       ClassGroup (𝓞 K) :=
   (smallHilbertClassFieldReciprocityOverOriginalData (K := K)).1
 
+open scoped Classical in
 /-- The direct small-Hilbert reciprocity equivalence sends the genuine
 global norm-residue symbol to its ordinary ideal class. -/
-@[simp]
 theorem
     smallHilbertClassFieldGaloisEquivClassGroupOverOriginal_globalNormResidue
     (c : IdeleClassGroup K) :
@@ -115,9 +121,9 @@ theorem
   exact
     (smallHilbertClassFieldReciprocityOverOriginalData (K := K)).2 c
 
+open scoped Classical in
 /-- On an actual idèle, direct small-Hilbert reciprocity is its
 ordinary ideal class. -/
-@[simp]
 theorem smallHilbertClassFieldGaloisEquivClassGroupOverOriginal_idele
     (a : IdeleGroup K) :
     smallHilbertClassFieldGaloisEquivClassGroupOverOriginal

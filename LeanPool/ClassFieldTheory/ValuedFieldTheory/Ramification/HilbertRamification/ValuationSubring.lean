@@ -157,7 +157,7 @@ abbrev decompositionField (A : _root_.ValuationSubring L) :
   IntermediateField.fixedField (decompositionGroup K A)
 
 /-- States the theorem `mem_decompositionField_iff`. -/
-@[simp] theorem mem_decompositionField_iff
+theorem mem_decompositionField_iff
     (A : _root_.ValuationSubring L) (x : L) :
     x ∈ decompositionField K A ↔
       ∀ σ ∈ decompositionGroup K A, σ x = x := by
@@ -189,7 +189,7 @@ abbrev inertiaField (A : _root_.ValuationSubring L) :
   IntermediateField.fixedField (inertiaGroupInAut K A)
 
 /-- States the theorem `mem_inertiaField_iff`. -/
-@[simp] theorem mem_inertiaField_iff
+theorem mem_inertiaField_iff
     (A : _root_.ValuationSubring L) (x : L) :
     x ∈ inertiaField K A ↔
       ∀ σ : inertiaGroup K A, ((σ : decompositionGroup K A) : L ≃ₐ[K] L) x = x := by
@@ -222,7 +222,7 @@ abbrev ramificationField (A : _root_.ValuationSubring L) :
   IntermediateField.fixedField (ramificationGroupInAut K A)
 
 /-- States the theorem `mem_ramificationField_iff`. -/
-@[simp] theorem mem_ramificationField_iff
+theorem mem_ramificationField_iff
     (A : _root_.ValuationSubring L) (x : L) :
     x ∈ ramificationField K A ↔
       ∀ σ : ramificationGroup K A,
@@ -290,7 +290,7 @@ theorem ramificationField_fixingSubgroup_eq_of_finiteDimensional
 
 /-- The ramification-field definition source:
 the ramification group is the Galois group over its fixed field. -/
-def ramificationGroupEquivGalRamificationField_of_finiteDimensional
+def ramificationGroupEquivGalRamificationFieldOfFiniteDimensional
     [FiniteDimensional K L] (A : _root_.ValuationSubring L) :
     ramificationGroup K A ≃* (L ≃ₐ[ramificationField K A] L) :=
   (ramificationGroupEquivInAut (K := K) A).trans
@@ -338,7 +338,7 @@ abbrev inertiaFieldOverDecompositionField
     (decompositionField_le_inertiaField (K := K) A)
 
 /-- States the theorem `mem_inertiaFieldOverDecompositionField_iff`. -/
-@[simp] theorem mem_inertiaFieldOverDecompositionField_iff
+theorem mem_inertiaFieldOverDecompositionField_iff
     (A : _root_.ValuationSubring L) (x : L) :
     x ∈ inertiaFieldOverDecompositionField K A ↔
       ∀ σ : inertiaGroup K A, ((σ : decompositionGroup K A) : L ≃ₐ[K] L) x = x := by
@@ -361,7 +361,7 @@ theorem decompositionField_fixingSubgroup_eq_of_finiteDimensional
 
 /-- The fixed-field description of decomposition source:
 the decomposition group is the Galois group over its fixed field. -/
-def decompositionGroupEquivGalDecompositionField_of_finiteDimensional
+def decompositionGroupEquivGalDecompositionFieldOfFiniteDimensional
     [FiniteDimensional K L] (A : _root_.ValuationSubring L) :
     decompositionGroup K A ≃* (L ≃ₐ[decompositionField K A] L) :=
   IntermediateField.subgroupEquivAlgEquiv (decompositionGroup K A)
@@ -380,7 +380,7 @@ States the theorem `decompositionGroupEquivGalDecompositionField_of_finiteDimens
 @[simp] theorem decompositionGroupEquivGalDecompositionField_of_finiteDimensional_apply
     [FiniteDimensional K L] (A : _root_.ValuationSubring L)
     (σ : decompositionGroup K A) (x : L) :
-    decompositionGroupEquivGalDecompositionField_of_finiteDimensional (K := K) A σ x =
+    decompositionGroupEquivGalDecompositionFieldOfFiniteDimensional (K := K) A σ x =
       ((σ : L ≃ₐ[K] L) x) :=
   rfl
 
@@ -391,17 +391,17 @@ abbrev inertiaGroupOverDecompositionField
     [FiniteDimensional K L] (A : _root_.ValuationSubring L) :
     Subgroup (L ≃ₐ[decompositionField K A] L) :=
   Subgroup.map
-    (decompositionGroupEquivGalDecompositionField_of_finiteDimensional
+    (decompositionGroupEquivGalDecompositionFieldOfFiniteDimensional
       (K := K) A).toMonoidHom
     (inertiaGroup K A)
 
 /-- States the theorem `mem_inertiaGroupOverDecompositionField_iff`. -/
-@[simp] theorem mem_inertiaGroupOverDecompositionField_iff
+theorem mem_inertiaGroupOverDecompositionField_iff
     [FiniteDimensional K L] (A : _root_.ValuationSubring L)
     (σ : L ≃ₐ[decompositionField K A] L) :
     σ ∈ inertiaGroupOverDecompositionField (K := K) A ↔
       ∃ τ : inertiaGroup K A,
-        decompositionGroupEquivGalDecompositionField_of_finiteDimensional
+        decompositionGroupEquivGalDecompositionFieldOfFiniteDimensional
           (K := K) A (τ : decompositionGroup K A) = σ := by
   constructor
   · rintro ⟨τ, hτ, rfl⟩
@@ -414,7 +414,7 @@ instance inertiaGroupOverDecompositionField_normal
     [FiniteDimensional K L] (A : _root_.ValuationSubring L) :
     (inertiaGroupOverDecompositionField (K := K) A).Normal := by
   let e :=
-    decompositionGroupEquivGalDecompositionField_of_finiteDimensional
+    decompositionGroupEquivGalDecompositionFieldOfFiniteDimensional
       (K := K) A
   simpa [inertiaGroupOverDecompositionField, e] using
     (Subgroup.Normal.map (inertiaGroup_normal (K := K) A)
@@ -433,12 +433,12 @@ theorem inertiaFieldOverDecompositionField_fixedField_eq_of_finiteDimensional
   constructor
   · intro hx τ
     have hτ :
-        decompositionGroupEquivGalDecompositionField_of_finiteDimensional
+        decompositionGroupEquivGalDecompositionFieldOfFiniteDimensional
             (K := K) A (τ : decompositionGroup K A) ∈
           inertiaGroupOverDecompositionField (K := K) A := by
       exact ⟨(τ : decompositionGroup K A), τ.property, rfl⟩
     simpa using hx
-      (decompositionGroupEquivGalDecompositionField_of_finiteDimensional
+      (decompositionGroupEquivGalDecompositionFieldOfFiniteDimensional
         (K := K) A (τ : decompositionGroup K A)) hτ
   · intro hx σ hσ
     rcases
@@ -463,7 +463,7 @@ theorem inertiaFieldOverDecompositionField_fixingSubgroup_eq_of_finiteDimensiona
 the transported inertia group is the Galois group `G(L/T_w)` in the tower
 `Z_w ⊆ T_w ⊆ L`. -/
 def
-inertiaGroupOverDecompositionFieldEquivGalInertiaFieldOverDecompositionField_of_finiteDimensional
+inertiaGroupOverDecompositionFieldEquivGalInertiaFieldOverDecompositionFieldOfFiniteDimensional
     [FiniteDimensional K L] (A : _root_.ValuationSubring L) :
     inertiaGroupOverDecompositionField (K := K) A ≃*
       (L ≃ₐ[inertiaFieldOverDecompositionField K A] L) :=
@@ -476,7 +476,7 @@ inertiaGroupOverDecompositionFieldEquivGalInertiaFieldOverDecompositionField_of_
 /-- The inertia-field definition:
 the Galois correspondence gives
 `G(L/Z_w)/I_w ≃ G(T_w/Z_w)`. -/
-def decompositionQuotientInertiaEquivGalInertiaFieldOverDecomposition_of_finiteDimensional
+def decompositionQuotientInertiaEquivGalInertiaFieldOverDecompositionOfFiniteDimensional
     [FiniteDimensional K L] (A : _root_.ValuationSubring L) :
     (L ≃ₐ[decompositionField K A] L) ⧸
         inertiaGroupOverDecompositionField (K := K) A ≃*
@@ -490,7 +490,7 @@ def decompositionQuotientInertiaEquivGalInertiaFieldOverDecomposition_of_finiteD
 
 /-- The inertia-field definition source:
 transport the quotient `G_w/I_w` along `G_w = G(L/Z_w)`. -/
-def decompositionGroupQuotientInertiaEquivGalDecompositionQuotient_of_finiteDimensional
+def decompositionGroupQuotientInertiaEquivGalDecompositionQuotientOfFiniteDimensional
     [FiniteDimensional K L] (A : _root_.ValuationSubring L) :
     decompositionGroup K A ⧸ inertiaGroup K A ≃*
       (L ≃ₐ[decompositionField K A] L) ⧸
@@ -498,21 +498,21 @@ def decompositionGroupQuotientInertiaEquivGalDecompositionQuotient_of_finiteDime
   QuotientGroup.congr
     (inertiaGroup K A)
     (inertiaGroupOverDecompositionField (K := K) A)
-    (decompositionGroupEquivGalDecompositionField_of_finiteDimensional
+    (decompositionGroupEquivGalDecompositionFieldOfFiniteDimensional
       (K := K) A)
     rfl
 
 /-- The inertia-field definition:
 `G_w/I_w ≃ G(T_w/Z_w)`, the group-theoretic part of the isomorphism
 obtained from the residue-action exact sequence. -/
-def decompositionGroupQuotientInertiaEquivGalInertiaFieldOverDecomposition_of_finiteDimensional
+def decompositionGroupQuotientInertiaEquivGalInertiaFieldOverDecompositionOfFiniteDimensional
     [FiniteDimensional K L] (A : _root_.ValuationSubring L) :
     decompositionGroup K A ⧸ inertiaGroup K A ≃*
       (inertiaFieldOverDecompositionField K A ≃ₐ[decompositionField K A]
         inertiaFieldOverDecompositionField K A) :=
-  (decompositionGroupQuotientInertiaEquivGalDecompositionQuotient_of_finiteDimensional
+  (decompositionGroupQuotientInertiaEquivGalDecompositionQuotientOfFiniteDimensional
     (K := K) A).trans
-    (decompositionQuotientInertiaEquivGalInertiaFieldOverDecomposition_of_finiteDimensional
+    (decompositionQuotientInertiaEquivGalInertiaFieldOverDecompositionOfFiniteDimensional
       (K := K) A)
 
 /-- The inertia-field definition source:
@@ -524,7 +524,7 @@ theorem inertiaField_fixingSubgroup_eq_of_finiteDimensional
 
 /-- The inertia-field definition source:
 the inertia group is the Galois group over its fixed field. -/
-def inertiaGroupInAutEquivGalInertiaField_of_finiteDimensional
+def inertiaGroupInAutEquivGalInertiaFieldOfFiniteDimensional
     [FiniteDimensional K L] (A : _root_.ValuationSubring L) :
     inertiaGroupInAut K A ≃* (L ≃ₐ[inertiaField K A] L) :=
   IntermediateField.subgroupEquivAlgEquiv (inertiaGroupInAut K A)
@@ -726,7 +726,7 @@ def quotientInertiaEquivResidueActionRange
     (QuotientGroup.quotientKerEquivRange (residueAction K A))
 
 /-- States the theorem `quotientInertiaEquivResidueActionRange_mk`. -/
-@[simp] theorem quotientInertiaEquivResidueActionRange_mk
+theorem quotientInertiaEquivResidueActionRange_mk
     (A : _root_.ValuationSubring L) (σ : decompositionGroup K A) :
     quotientInertiaEquivResidueActionRange (K := K) A
         (QuotientGroup.mk' (inertiaGroup K A) σ) =
@@ -737,12 +737,12 @@ def quotientInertiaEquivResidueActionRange
 without surjectivity onto the whole residue automorphism group, the canonical
 residue-field comparison is
 `G(T_w/Z_w) ≃ range(G_w -> Aut(lambda))`. -/
-def galInertiaFieldOverDecompositionEquivResidueActionRange_of_finiteDimensional
+def galInertiaFieldOverDecompositionEquivResidueActionRangeOfFiniteDimensional
     [FiniteDimensional K L] (A : _root_.ValuationSubring L) :
     (inertiaFieldOverDecompositionField K A ≃ₐ[decompositionField K A]
         inertiaFieldOverDecompositionField K A) ≃*
       (residueAction K A).range :=
-  (decompositionGroupQuotientInertiaEquivGalInertiaFieldOverDecomposition_of_finiteDimensional
+  (decompositionGroupQuotientInertiaEquivGalInertiaFieldOverDecompositionOfFiniteDimensional
     (K := K) A).symm.trans
     (quotientInertiaEquivResidueActionRange (K := K) A)
 

@@ -47,7 +47,7 @@ private theorem isCyclic_of_forall_mem_zpowers {G : Type} [Group G] (g : G)
 /-- Low-degree Tate periodicity in degree one:
 for a finite cyclic group, `H¹(G,A)` is canonically isomorphic to mathlib's
 degree-minus-one Tate cohomology. -/
-noncomputable def cyclic_H1_iso_HminusOne {k G : Type} [CommRing k] [Group G]
+noncomputable def cyclicH1IsoHminusOne {k G : Type} [CommRing k] [Group G]
     [Fintype G] (A : Rep k G) (g : G)
     (hg : ∀ x : G, x ∈ Subgroup.zpowers g) :
     groupCohomology A 1 ≅ tateCohomology A (-1) := by
@@ -62,7 +62,7 @@ noncomputable def unitsH1IsoTateHminusOne (K L : Type) [Field K] [Field L]
     (hg : ∀ x : Gal(L / K), x ∈ Subgroup.zpowers g) :
     groupCohomology.H1 (Rep.ofAlgebraAutOnUnits K L) ≅
       tateCohomology (Rep.ofAlgebraAutOnUnits K L) (-1) :=
-  cyclic_H1_iso_HminusOne (Rep.ofAlgebraAutOnUnits K L) g hg
+  cyclicH1IsoHminusOne (Rep.ofAlgebraAutOnUnits K L) g hg
 
 /-- Hilbert 90 transported through the cyclic `H¹ ≅ H^{-1}` comparison.
 This is low-degree cyclic Tate cohomology for the coefficient group `Lˣ`: the vanishing of

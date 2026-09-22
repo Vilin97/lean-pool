@@ -112,7 +112,8 @@ theorem standardLubinTatePrimitivePolynomialOverField_irreducible
   let : IsIntegrallyClosed F.valuationSubring :=
     F.toCompleteDVF.toDVF.valuationSubring_isIntegrallyClosed
   exact
-    (standardLubinTatePrimitivePolynomial_monic F π n).irreducible_iff_irreducible_map_fraction_map.mp
+    (standardLubinTatePrimitivePolynomial_monic F π
+      n).irreducible_iff_irreducible_map_fraction_map.mp
       (standardLubinTatePrimitivePolynomial_irreducible hπ n)
 
 /-- The natural number `q - 1` is nonzero in the local field. -/

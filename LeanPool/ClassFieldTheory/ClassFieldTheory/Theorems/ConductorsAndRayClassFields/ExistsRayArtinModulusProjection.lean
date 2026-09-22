@@ -19,13 +19,14 @@ Reducing the modulus yields an embedding of ray class field realizations
 that intertwines their Artin maps.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 open NumberField IsDedekindDomain
 
 noncomputable section
 
 namespace ClassFieldTheory
 
+open scoped Classical in
 private theorem rayArtin_prime_eq_arithmeticPrimeArtin
     {K : Type} [Field K] [NumberField K]
     {m : RayClassModulus K} (R : RayClassFieldRealization K m)
@@ -49,6 +50,7 @@ private theorem rayArtin_prime_eq_arithmeticPrimeArtin
       (GlobalClassFieldComparison.arithmeticPrimeArtin_eq_arithmeticFrobeniusAt
         (K := K) (L := R.extension) v w hw hunram).symm
 
+open scoped Classical in
 private theorem rayClassFieldRealization_norm_range
     {K : Type} [Field K] [NumberField K]
     {m : RayClassModulus K} (R : RayClassFieldRealization K m) :
@@ -59,7 +61,8 @@ private theorem rayClassFieldRealization_norm_range
       (R.extension ≃ₐ[K] R.extension) :=
     (GlobalClassFieldComparison.rayClassGroupEquivOriginalIdele K m).symm.trans
       R.artinEquiv
-  apply GlobalClassFieldTheory.GlobalClassFields.rayModulus_normSubgroup_eq_of_arithmeticPrimeArtinEquiv
+  apply
+    GlobalClassFieldTheory.GlobalClassFields.rayModulus_normSubgroup_eq_of_arithmeticPrimeArtinEquiv
     m' e
   intro v hv
   have hvm : v ∉ m.finitePart.support := hv
@@ -80,6 +83,7 @@ private theorem rayClassFieldRealization_norm_range
           (K := K) (L := R.extension) v :=
       rayArtin_prime_eq_arithmeticPrimeArtin R v hvm
 
+open scoped Classical in
 /-- A reduction of the modulus yields an embedding of any two ray-class-field
 realizations, and this embedding intertwines their Artin maps. -/
 theorem exists_rayArtin_modulusProjection

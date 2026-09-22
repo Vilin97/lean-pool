@@ -125,7 +125,7 @@ noncomputable instance
     (padicCompletedChangedUniformizerFixedField p u n)
 
 noncomputable instance
-    padicCompletedStandardChangedCompositum_changedFieldAlgebra
+    padicCompletedStandardChangedCompositumChangedFieldAlgebra
     (p : ℕ) [Fact p.Prime]
     (u : (padicLocalField p).valuationSubringˣ) (n : ℕ) :
     Algebra (padicCompletedChangedUniformizerFixedField p u n)

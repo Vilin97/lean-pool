@@ -36,7 +36,7 @@ of any ray-class Artin map. -/
 theorem exists_finitePlaceCompletionLocalArtin
     (K L : Type)
     [Field K] [NumberField K]
-    [Field L] [NumberField L] [Algebra K L]
+    [Field L] [Algebra K L]
     [FiniteDimensional K L] [IsAbelianGalois K L]
     (v : HeightOneSpectrum (𝓞 K)) :
     let vK := NumberField.HeightOneSpectrum.adicAbv K v

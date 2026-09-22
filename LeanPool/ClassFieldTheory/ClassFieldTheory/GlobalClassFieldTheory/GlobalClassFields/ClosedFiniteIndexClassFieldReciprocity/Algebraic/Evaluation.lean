@@ -13,7 +13,7 @@ multiplicative equivalence of the continuous provider, its evaluation theorem
 is inherited without reconstructing the selected class-field instance tower.
 -/
 
-open scoped Classical IsMulCommutative NumberField
+open scoped IsMulCommutative NumberField
 
 noncomputable section
 
@@ -22,8 +22,8 @@ namespace GlobalClassFields
 
 variable {K : Type} [Field K] [NumberField K]
 
+open scoped Classical in
 /-- Evaluation of the direct non-topological reciprocity equivalence. -/
-@[simp]
 theorem closedFiniteIndexClassFieldGaloisEquivNormQuotient_apply
     (H : Subgroup (IdeleClassGroup K))
     (hclosed : IsClosed (H : Set (IdeleClassGroup K)))

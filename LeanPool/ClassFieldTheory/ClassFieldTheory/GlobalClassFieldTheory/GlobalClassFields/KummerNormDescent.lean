@@ -92,7 +92,7 @@ theorem ideleNorm_mem_powerLocalUnitSubgroup_of_supports_above
       finitePlaceExtensionEquivAbove
         (K := K) (L := L) v₀
     let :=
-      completionTensorDecomposition_extensionFintype
+      completionTensorDecompositionExtensionFintype
         (K := K) (L := L) vK hvK
     let : Fintype {W : HeightOneSpectrum (𝓞 L) //
         _root_.finitePlaceBelow (K := K) W = v₀} :=
@@ -128,7 +128,7 @@ theorem ideleNorm_mem_powerLocalUnitSubgroup_of_supports_above
       finitePlaceExtensionEquivAbove
         (K := K) (L := L) v₀
     let :=
-      completionTensorDecomposition_extensionFintype
+      completionTensorDecompositionExtensionFintype
         (K := K) (L := L) vK hvK
     let : Fintype {W : HeightOneSpectrum (𝓞 L) //
         _root_.finitePlaceBelow (K := K) W = v₀} :=

@@ -31,11 +31,11 @@ open CyclicCohomology
 private noncomputable instance
     rationalAbstractTowerClassGroupCommGroup
     (F E : Type)
-    [Field F] [NumberField F]
-    [Field E] [NumberField E]
+    [Field F]
+    [Field E]
     [Algebra ℚ F] [Algebra F E] [Algebra ℚ E]
-    [IsScalarTower ℚ F E]
-    [FiniteDimensional ℚ F] [FiniteDimensional F E] :
+
+    :
     CommGroup (TowerRelativeIdeleGroup.ClassGroup ℚ F E) := by
   letI : CommGroup (TowerRelativeIdeleGroup ℚ F E) :=
     inferInstance
@@ -69,8 +69,8 @@ private noncomputable instance
     rationalAbstractRelativeClassGroupCommGroup
     (F E : Type)
     [Field F] [NumberField F]
-    [Field E] [NumberField E]
-    [Algebra F E] [FiniteDimensional F E] :
+    [Field E]
+    [Algebra F E] :
     CommGroup (RelativeIdeleGroup.ClassGroup F E) := by
   letI : CommGroup (RelativeIdeleGroup F E) :=
     inferInstance

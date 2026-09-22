@@ -22,8 +22,8 @@ universe u v
 completion `K_w` is a determinant norm from `K_w ⊗_K L`. -/
 def IsNormAtInfinitePlace
     (K : Type u) (L : Type v)
-    [Field K] [NumberField K]
-    [Field L] [Algebra K L] [FiniteDimensional K L]
+    [Field K]
+    [Field L] [Algebra K L]
     (w : InfinitePlace K) (x : Kˣ) : Prop :=
   ∃ y : (w.Completion ⊗[K] L)ˣ,
     Algebra.norm w.Completion (y : w.Completion ⊗[K] L) =

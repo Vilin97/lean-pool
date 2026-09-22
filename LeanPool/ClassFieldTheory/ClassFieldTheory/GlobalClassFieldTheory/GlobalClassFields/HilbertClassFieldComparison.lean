@@ -42,7 +42,6 @@ local instance
 
 /-- On an idele representative, the big-Hilbert quotient equivalence is
 the canonical representative in the narrow class group. -/
-@[simp]
 theorem bigHilbertClassFieldQuotientEquivNarrowClassGroup_mk
     (a : IdeleGroup K) :
     bigHilbertClassFieldQuotientEquivNarrowClassGroup
@@ -57,7 +56,6 @@ theorem bigHilbertClassFieldQuotientEquivNarrowClassGroup_mk
 
 /-- On an idele representative, the small-Hilbert quotient equivalence is
 the ordinary ideal-class map. -/
-@[simp]
 theorem smallHilbertClassFieldQuotientEquivClassGroup_mk
     (a : IdeleGroup K) :
     smallHilbertClassFieldQuotientEquivClassGroup

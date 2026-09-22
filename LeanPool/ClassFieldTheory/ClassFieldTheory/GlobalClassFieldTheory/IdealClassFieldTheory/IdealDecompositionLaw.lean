@@ -25,7 +25,7 @@ to give the complete decomposition law:
 are related by the global ideal decomposition law.
 -/
 
-open scoped NumberField Classical BigOperators
+open scoped NumberField BigOperators
 
 noncomputable section
 
@@ -43,6 +43,7 @@ variable
 
 attribute [local instance] idealArtinKernelNormal
 
+open scoped Classical in
 /-- The actual idèlic and ideal-theoretic Artin maps form the
 commutative square of the ideal formulation of global reciprocity.
 
@@ -74,6 +75,7 @@ theorem idealArtinGaloisMap_primeToIdealMap_eq_globalArtin
           (K := K) (L := L))
       (a : IdeleGroup K)
 
+open scoped Classical in
 /-- The Galois-valued ideal Artin map sends a prime ideal outside a
 defining modulus to the actual global prime Artin element.  The latter
 is, by finite-place local-global compatibility, the genuine chosen
@@ -97,6 +99,7 @@ theorem idealArtinGaloisMap_primeIdeal_eq_finitePlacePrimeArtin
         GlobalClassFields.finitePrimeIdele_mem_idelePrimeToModulusSubgroup
             m v hv⟩
 
+open scoped Classical in
 /-- Direct local form of the prime-ideal Artin identification: the
 ideal Artin symbol is the chosen finite-place Artin value of the
 normalized order-one local element. -/
@@ -116,6 +119,7 @@ theorem idealArtinGaloisMap_primeIdeal_eq_chosenFinitePlaceArtin
     idealArtinGaloisMap_primeIdeal_eq_finitePlacePrimeArtin,
     GlobalClassFields.finitePlacePrimeArtin_eq_chosenFinitePlaceArtin]
 
+open scoped Classical in
 /-- The actual ideal class-field equivalence sends the class of a prime
 ideal to the genuine finite-place Frobenius automorphism. -/
 theorem idealClassQuotientEquivGaloisGroup_primeIdeal
@@ -137,6 +141,7 @@ theorem idealClassQuotientEquivGaloisGroup_primeIdeal
     idealClassQuotientEquivGaloisGroup_mk,
     idealArtinGaloisMap_primeIdeal_eq_finitePlacePrimeArtin]
 
+open scoped Classical in
 /-- Completed unramifiedness at the chosen place gives ramification
 index one in the integral Dedekind extension. -/
 theorem ramificationIndex_eq_one_of_chosenFinitePlaceUnramified
@@ -171,6 +176,7 @@ theorem ramificationIndex_eq_one_of_chosenFinitePlaceUnramified
       v.asIdeal W.asIdeal (L ≃ₐ[K] L)]
   exact Ideal.ramificationIdx_eq_one W.asIdeal (𝓞 K)
 
+open scoped Classical in
 /-- At an unramified finite place, the chosen completion degree equals
 the common ideal-theoretic inertia degree of the primes above it. -/
 theorem finitePlaceLocalDegree_eq_inertiaDegree_of_chosenUnramified
@@ -238,6 +244,7 @@ theorem finitePlaceLocalDegree_eq_inertiaDegree_of_chosenUnramified
     _ = Ideal.inertiaDegIn v.asIdeal (𝓞 L) := by
       rw [hRamification, one_mul]
 
+open scoped Classical in
 /-- For an unramified prime, the order of its class modulo the ideal
 Artin kernel is the common inertia degree.  Equivalently, it is the
 order of the genuine global/local Frobenius automorphism. -/
@@ -287,6 +294,7 @@ theorem orderOf_idealPrimeClass_eq_inertiaDegree_of_chosenUnramified
       finitePlaceLocalDegree_eq_inertiaDegree_of_chosenUnramified
         (K := K) (L := L) v hunram
 
+open scoped Classical in
 /-- The ideal Artin kernel detects precisely the multiples of the
 unramified inertia degree among powers of the prime ideal. -/
 theorem unramifiedPrime_pow_mem_idealArtinKernel_iff_inertiaDegree_dvd
@@ -309,6 +317,7 @@ theorem unramifiedPrime_pow_mem_idealArtinKernel_iff_inertiaDegree_dvd
     orderOf_idealPrimeClass_eq_inertiaDegree_of_chosenUnramified
       (K := K) (L := L) m hm v hv hunram]
 
+open scoped Classical in
 /-- In an unramified Galois extension, the number of primes above `v`
 is the extension degree divided by their common inertia degree. -/
 theorem unramifiedPrime_numberOfPrimes_eq_extensionDegree_div_inertiaDegree
@@ -335,6 +344,7 @@ theorem unramifiedPrime_numberOfPrimes_eq_extensionDegree_div_inertiaDegree
         (A := 𝓞 K) (B := 𝓞 L)
         v.asIdeal v.ne_bot (L ≃ₐ[K] L) hRamification)
 
+open scoped Classical in
 /-- In an unramified Galois extension, the extended base prime is the
 product of the distinct primes above it: every exponent is one. -/
 theorem unramifiedPrime_idealMap_eq_product_primesOver
@@ -360,6 +370,7 @@ theorem unramifiedPrime_idealMap_eq_product_primesOver
       (A := 𝓞 K) (B := 𝓞 L)
       v.asIdeal v.ne_bot (L ≃ₐ[K] L))
 
+open scoped Classical in
 /-- Every prime above an unramified base prime has the common inertia
 degree `inertiaDegIn v (𝓞 L)`. -/
 theorem primeAbove_inertiaDegree_eq_common
@@ -381,6 +392,7 @@ theorem primeAbove_inertiaDegree_eq_common
     (Ideal.inertiaDegIn_eq_inertiaDeg
       v.asIdeal P (L ≃ₐ[K] L)).symm
 
+open scoped Classical in
 /-- The number of prime factors above an unramified prime is the
 extension degree divided by the order of its ideal class modulo the
 defining ideal group. -/
@@ -408,6 +420,7 @@ theorem unramifiedPrime_numberOfPrimes_eq_extensionDegree_div_idealClassOrder
     unramifiedPrime_numberOfPrimes_eq_extensionDegree_div_inertiaDegree
       (K := K) (L := L) v hunram
 
+open scoped Classical in
 /-- Full ideal-theoretic decomposition law for an unramified prime.
 
 The prime factors are distinct, all have inertia degree equal to the
@@ -455,6 +468,7 @@ section SmallHilbertPrimeSplitting
 
 variable {K : Type} [Field K] [NumberField K]
 
+open scoped Classical in
 /-- Under actual reciprocity for the selected small Hilbert class
 field, its genuine prime Frobenius automorphism is the ordinary ideal
 class of the corresponding prime. -/
@@ -479,6 +493,7 @@ theorem
     GlobalClassFields.smallHilbertClassFieldGaloisEquivClassGroupOverOriginal_idele,
     IdeleGroup.idealClass_finitePrimeIdele]
 
+open scoped Classical in
 /-- Every finite place is unramified in the selected small Hilbert
 class field, in the completed chosen-place formulation used by the
 local Artin map. -/
@@ -502,6 +517,7 @@ theorem smallHilbertClassField_chosenFinitePlaceIsUnramified
     GlobalClassFields.smallHilbertClassField_isUnramifiedAtFinitePlaces
       K W
 
+open scoped Classical in
 /-- A prime of the original number field actually splits completely
 in the selected small Hilbert class field exactly when its prime ideal
 is principal. -/

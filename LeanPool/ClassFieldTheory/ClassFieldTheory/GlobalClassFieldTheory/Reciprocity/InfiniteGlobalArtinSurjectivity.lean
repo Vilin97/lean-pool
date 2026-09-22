@@ -17,7 +17,7 @@ it.  Multiplication by this section therefore replaces any idele by a
 norm-one idele without changing its Artin symbol.
 -/
 
-open scoped Classical IsMulCommutative NNReal NumberField Topology
+open scoped IsMulCommutative NNReal NumberField Topology
 open NumberField IsDedekindDomain
 open NumberField.Units.dirichletUnitTheorem
 
@@ -28,15 +28,16 @@ namespace Reciprocity
 
 variable {K : Type} [Field K] [NumberField K]
 
+open scoped Classical in
 /-- Compatibility name for the positive archimedean section. -/
 noncomputable def numberFieldPositiveArchimedeanIdele
     (K : Type) [Field K] [NumberField K] :
     ℝ≥0ˣ →* IdeleGroup K :=
   IdeleGroup.positiveArchimedeanSection K
 
+open scoped Classical in
 /-- Compatibility evaluation of the finite components of the positive
 archimedean section. -/
-@[simp]
 theorem numberFieldPositiveArchimedeanIdele_finiteComponent
     (r : ℝ≥0ˣ)
     (v : HeightOneSpectrum (𝓞 K)) :
@@ -45,6 +46,7 @@ theorem numberFieldPositiveArchimedeanIdele_finiteComponent
       1 :=
   IdeleGroup.positiveArchimedeanSection_finiteComponent r v
 
+open scoped Classical in
 /-- Compatibility form of positivity at every infinite component. -/
 theorem numberFieldPositiveArchimedeanIdele_infiniteComponent_mem_positive
     (r : ℝ≥0ˣ) (v : InfinitePlace K) :
@@ -53,8 +55,8 @@ theorem numberFieldPositiveArchimedeanIdele_infiniteComponent_mem_positive
       RayClass.infinitePositiveSubgroup v :=
   IdeleGroup.positiveArchimedeanSection_infiniteComponent_mem_positive r v
 
+open scoped Classical in
 /-- Compatibility form of the absolute-norm evaluation. -/
-@[simp]
 theorem numberFieldPositiveArchimedeanIdele_absoluteNorm
     (r : ℝ≥0ˣ) :
     IdeleGroup.absoluteNorm
@@ -62,6 +64,7 @@ theorem numberFieldPositiveArchimedeanIdele_absoluteNorm
       r⁻¹ :=
   IdeleGroup.positiveArchimedeanSection_absoluteNorm r
 
+open scoped Classical in
 private theorem globalArtinMonoidHom_positiveArchimedeanSection
     {L : Type}
     [Field L] [NumberField L] [Algebra K L]
@@ -102,6 +105,7 @@ private theorem globalArtinMonoidHom_positiveArchimedeanSection
       map_one]
   rw [hinfinite, hfinite, mul_one]
 
+open scoped Classical in
 private theorem continuousMulEquivToLimit_infiniteGlobalArtinMonoidHom_apply'
     {K Ω : Type}
     [Field K] [NumberField K]
@@ -113,6 +117,7 @@ private theorem continuousMulEquivToLimit_infiniteGlobalArtinMonoidHom_apply'
   exact
     (InfiniteGalois.continuousMulEquivToLimit K Ω).apply_symm_apply _
 
+open scoped Classical in
 /-- The infinite global Artin homomorphism kills the positive archimedean
 section over every number field. -/
 @[simp]
@@ -143,6 +148,7 @@ theorem infiniteGlobalArtinMonoidHom_positiveArchimedeanSection
     globalArtinMonoidHom_positiveArchimedeanSection
       (K := K) (L := E.unop) r
 
+open scoped Classical in
 /-- Compatibility form of the Artin evaluation on the positive archimedean
 section. -/
 @[simp]
@@ -156,6 +162,7 @@ theorem infiniteGlobalArtinMonoidHom_numberFieldPositiveArchimedeanIdele
       1 :=
   infiniteGlobalArtinMonoidHom_positiveArchimedeanSection K Ω r
 
+open scoped Classical in
 /-- Every idele has the same infinite global Artin symbol as a norm-one
 idele. -/
 theorem exists_normOneIdele_same_infiniteGlobalArtin
@@ -173,6 +180,7 @@ theorem exists_normOneIdele_same_infiniteGlobalArtin
     infiniteGlobalArtinMonoidHom_positiveArchimedeanSection,
     mul_one]
 
+open scoped Classical in
 private theorem
     infiniteGlobalIdeleClassArtinContinuousMonoidHom_normOne_denseRange
     (K Ω : Type)
@@ -212,6 +220,7 @@ private theorem
     infiniteGlobalIdeleClassArtinMonoidHom_mk]
   exact hb
 
+open scoped Classical in
 private theorem
     infiniteGlobalIdeleClassArtinContinuousMonoidHom_normOne_surjective
     (K Ω : Type)
@@ -242,6 +251,7 @@ private theorem
     trivial
   rwa [hclosed.closure_eq] at hσ
 
+open scoped Classical in
 /-- The infinite global Artin homomorphism on idele classes is surjective. -/
 theorem infiniteGlobalIdeleClassArtinContinuousMonoidHom_surjective
     (K Ω : Type)
@@ -256,6 +266,7 @@ theorem infiniteGlobalIdeleClassArtinContinuousMonoidHom_surjective
       K Ω σ
   exact ⟨(c : IdeleClassGroup K), hc⟩
 
+open scoped Classical in
 /-- The infinite global Artin homomorphism is surjective. -/
 theorem infiniteGlobalArtinMonoidHom_surjective
     (K Ω : Type)

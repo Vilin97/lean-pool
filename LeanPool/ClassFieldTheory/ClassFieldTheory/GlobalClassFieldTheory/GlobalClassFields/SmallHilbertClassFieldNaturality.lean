@@ -66,7 +66,6 @@ noncomputable def smallHilbertClassFieldQuotientCongr
 
 /-- On representatives, the small-Hilbert quotient transport is induced by
 the existing transport of ordinary idele classes. -/
-@[simp]
 theorem smallHilbertClassFieldQuotientCongr_mk
     (e : K ≃ₐ[ℚ] M)
     (c : IdeleClassGroup K) :

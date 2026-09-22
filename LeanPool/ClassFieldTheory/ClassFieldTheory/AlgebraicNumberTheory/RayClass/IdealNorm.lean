@@ -27,7 +27,7 @@ principal ray ideals, is the norm-defined ideal group
 `N_{L/K} J_L^m P_K^m`.
 -/
 
-open scoped BigOperators Classical NumberField Topology
+open scoped BigOperators NumberField Topology
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -41,6 +41,7 @@ variable
     [FiniteDimensional K L]
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 /-- At a prime `W` above `v`, a sufficiently deep higher-unit group
 has norm contained in the higher-unit group prescribed by `m` at `v`.
 This is the source of the lifted modulus used for ideal norms. -/
@@ -111,6 +112,7 @@ theorem exists_localHigherUnitGroup_le_norm_preimage
   exact hn hx
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 /-- The positive local depth used at `W` in the lifted modulus.  It is
 zero precisely away from the inverse image of the support of `m`. -/
 noncomputable def idealNormLiftedModulusExponent
@@ -125,6 +127,7 @@ noncomputable def idealNormLiftedModulusExponent
     0
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 theorem idealNormLiftedModulusExponent_pos
     (m : Modulus K)
     (W : HeightOneSpectrum (𝓞 L))
@@ -136,6 +139,7 @@ theorem idealNormLiftedModulusExponent_pos
   exact Nat.zero_lt_succ _
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 /-- The chosen positive depth still has the required local norm
 property. -/
 theorem localHigherUnitGroup_idealNormLiftedModulusExponent_le
@@ -164,6 +168,7 @@ theorem localHigherUnitGroup_idealNormLiftedModulusExponent_le
           (K := K) (L := L) m W))
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 /-- At a prime above the support, the selected positive depth is at most the
 successor of every depth having the required local norm property. -/
 theorem idealNormLiftedModulusExponent_min
@@ -192,6 +197,7 @@ theorem idealNormLiftedModulusExponent_min
         (K := K) (L := L) m W) hr) 1
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 /-- Away from the pulled-back support, the lifted exponent is zero. -/
 @[simp]
 theorem idealNormLiftedModulusExponent_eq_zero_of_not_mem
@@ -203,6 +209,7 @@ theorem idealNormLiftedModulusExponent_eq_zero_of_not_mem
   rw [idealNormLiftedModulusExponent, dite_eq_right hW]
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 /-- The finite set of primes upstairs lying over the support of `m`. -/
 def idealNormLiftedSupport (m : Modulus K) :
     Set (HeightOneSpectrum (𝓞 L)) :=
@@ -210,6 +217,7 @@ def idealNormLiftedSupport (m : Modulus K) :
     _root_.finitePlaceBelow (K := K) W ∈ m.finitePart.support}
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 /-- The inverse image of the finite support of a modulus is finite. -/
 theorem idealNormLiftedSupport_finite (m : Modulus K) :
     (idealNormLiftedSupport (K := K) (L := L) m).Finite := by
@@ -217,6 +225,7 @@ theorem idealNormLiftedSupport_finite (m : Modulus K) :
     _root_.Set.Finite.preimage_finitePlaceBelow
       (K := K) (L := L) m.finitePart.support.finite_toSet
 
+open scoped Classical in
 /-- A modulus upstairs whose local higher-unit conditions are carried
 by the field norm into the conditions of `m`. -/
 noncomputable def idealNormLiftedModulus
@@ -236,6 +245,7 @@ noncomputable def idealNormLiftedModulus
         exact hbelow)
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 @[simp]
 theorem idealNormLiftedModulus_apply
     (m : Modulus K)
@@ -246,7 +256,7 @@ theorem idealNormLiftedModulus_apply
   rfl
 
 omit [FiniteDimensional K L] in
-@[simp]
+open scoped Classical in
 theorem mem_idealNormLiftedModulus_support_iff
     (m : Modulus K)
     (W : HeightOneSpectrum (𝓞 L)) :
@@ -260,6 +270,7 @@ theorem mem_idealNormLiftedModulus_support_iff
     exact ⟨fun _ => hW, fun _ => Nat.succ_ne_zero _⟩
   · simp [idealNormLiftedModulusExponent, hW]
 
+open scoped Classical in
 /-- Pushforward of the prime-exponent vector under ideal norm.  A
 prime `W` contributes its exponent multiplied by the inertia degree
 to the prime below it. -/
@@ -273,6 +284,7 @@ noncomputable def idealNormExponentMap :
           (W.asIdeal.inertiaDeg (𝓞 K) : ℤ))
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 @[simp]
 theorem idealNormExponentMap_apply
     (e : HeightOneSpectrum (𝓞 L) →₀ ℤ)
@@ -287,6 +299,7 @@ theorem idealNormExponentMap_apply
   simp [idealNormExponentMap, Finsupp.single_apply, eq_comm]
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 /-- The exponent pushforward can equivalently be written as the finite
 sum over the primes above one fixed base prime. -/
 theorem idealNormExponentMap_apply_eq_sum_above
@@ -340,6 +353,7 @@ theorem idealNormExponentMap_apply_eq_sum_above
       · intro W
         simp
 
+open scoped Classical in
 private theorem factorizationEquiv_symm_toAdd
     (I : FractionalIdealGroup L) :
     ((FractionalIdealGroup.factorizationEquiv
@@ -359,6 +373,7 @@ private theorem factorizationEquiv_symm_toAdd
   rw [hfac] at h
   exact h.symm.trans (FractionalIdealGroup.countVector_apply I W).symm
 
+open scoped Classical in
 /-- The genuine relative norm on nonzero fractional ideals. -/
 noncomputable def fractionalIdealNorm :
     FractionalIdealGroup L →* FractionalIdealGroup K :=
@@ -370,6 +385,7 @@ noncomputable def fractionalIdealNorm :
         (K := L)).symm.toMonoidHom)
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 /-- The exponent of the norm at `v` is the inertia-degree weighted
 pushforward of the upstairs prime exponents. -/
 theorem count_fractionalIdealNorm
@@ -398,6 +414,7 @@ theorem count_fractionalIdealNorm
   rw [factorizationEquiv_symm_toAdd]
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 private theorem fractionalIdealNormPrimeBelow_eq_finitePlaceBelow
     (W : HeightOneSpectrum (𝓞 L)) :
     ClassFieldTheory.fractionalIdealNormPrimeBelow K L W =
@@ -405,12 +422,14 @@ private theorem fractionalIdealNormPrimeBelow_eq_finitePlaceBelow
   ext
   rfl
 
+open scoped Classical in
 private theorem idealNormExponentMap_eq_public :
     idealNormExponentMap (K := K) (L := L) =
       ClassFieldTheory.fractionalIdealNormExponentMap K L := by
   unfold idealNormExponentMap ClassFieldTheory.fractionalIdealNormExponentMap
   simp only [fractionalIdealNormPrimeBelow_eq_finitePlaceBelow]
 
+open scoped Classical in
 private theorem factorizationEquiv_eq_public
     (F : Type) [Field F] [NumberField F] :
     FractionalIdealGroup.factorizationEquiv (K := F) =
@@ -430,6 +449,7 @@ private theorem factorizationEquiv_eq_public
   rw [FractionalIdealGroup.count_factorization,
     ClassFieldTheory.NumberFieldFractionalIdealGroup.count_factorization]
 
+open scoped Classical in
 /-- The Mathlib-level public fractional-ideal norm agrees with the norm used
 by the idelic and ray-class constructions. -/
 theorem fractionalIdealNorm_eq_public :
@@ -440,6 +460,7 @@ theorem fractionalIdealNorm_eq_public :
     factorizationEquiv_eq_public L,
     idealNormExponentMap_eq_public]
 
+open scoped Classical in
 /-- The exponent of the fractional ideal attached to an idèle is its
 finite local order. -/
 @[simp]
@@ -461,6 +482,7 @@ theorem _root_.IdeleGroup.count_fractionalIdeal
   rw [FractionalIdealGroup.count_factorization]
   rfl
 
+open scoped Classical in
 /-- The genuine ideal norm is the fractional-ideal image of the
 ordinary idèle norm. -/
 theorem _root_.IdeleGroup.fractionalIdeal_ideleNorm
@@ -478,7 +500,7 @@ theorem _root_.IdeleGroup.fractionalIdeal_ideleNorm
     finitePlaceExtensionEquivAbove
       (K := K) (L := L) v
   let :=
-    AlgebraicNumberTheory.Valuations.completionTensorDecomposition_extensionFintype
+    AlgebraicNumberTheory.Valuations.completionTensorDecompositionExtensionFintype
       (K := K) (L := L) vK hvK
   let : Fintype {W : HeightOneSpectrum (𝓞 L) //
       _root_.finitePlaceBelow (K := K) W = v} :=
@@ -509,6 +531,7 @@ theorem _root_.IdeleGroup.fractionalIdeal_ideleNorm
     IdeleGroup.count_fractionalIdeal]
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 /-- The fractional ideal norm preserves coprimality with a modulus
 after passing to the lifted modulus upstairs. -/
 theorem fractionalIdealNorm_mem_primeToModulusIdeals
@@ -537,6 +560,7 @@ theorem fractionalIdealNorm_mem_primeToModulusIdeals
     simp
   · rw [ite_eq_right hbelow]
 
+open scoped Classical in
 /-- The ideal norm restricted to fractional ideals prime to the
 corresponding moduli. -/
 noncomputable def primeToModulusIdealNorm
@@ -557,6 +581,7 @@ noncomputable def primeToModulusIdealNorm
     exact map_mul _ _ _
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 @[simp]
 theorem primeToModulusIdealNorm_coe
     (m : Modulus K)
@@ -569,6 +594,7 @@ theorem primeToModulusIdealNorm_coe
           (I : FractionalIdealGroup L) :=
   rfl
 
+open scoped Classical in
 /-- The finite component of an idèle prime to the lifted modulus has
 norm satisfying the finite prime-to conditions of the base modulus. -/
 theorem finite_norm_mem_finitePrimeToModulusSubgroup
@@ -586,7 +612,7 @@ theorem finite_norm_mem_finitePrimeToModulusSubgroup
     finitePlaceExtensionEquivAbove
       (K := K) (L := L) v
   let :=
-    AlgebraicNumberTheory.Valuations.completionTensorDecomposition_extensionFintype
+    AlgebraicNumberTheory.Valuations.completionTensorDecompositionExtensionFintype
       (K := K) (L := L) vK hvK
   let : Fintype {W : HeightOneSpectrum (𝓞 L) //
       _root_.finitePlaceBelow (K := K) W = v} :=
@@ -625,6 +651,7 @@ theorem finite_norm_mem_finitePrimeToModulusSubgroup
           (m.finitePart (_root_.finitePlaceBelow (K := K) W)) at hmem
   exact hmem
 
+open scoped Classical in
 /-- The genuine norm-defined subgroup
 `N_{L/K} J_L^m P_K^m` of ideals prime to `m`. -/
 noncomputable def idealNormSubgroup

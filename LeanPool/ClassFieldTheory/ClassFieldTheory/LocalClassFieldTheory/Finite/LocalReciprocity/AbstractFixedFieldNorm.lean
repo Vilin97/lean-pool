@@ -17,7 +17,8 @@ open LocalFieldTheory
 /-!
 # Finite local reciprocity: the norm of an arbitrary finite abstract field
 
-The abstract class-formation framework indexes finite fields by closed subgroups, whereas the local norm
+The abstract class-formation framework indexes finite fields by
+  closed subgroups, whereas the local norm
 calculation is stated for their concrete fixed intermediate fields.  This file
 identifies the two presentations.  In particular, it does not assume that the
 finite fixed field is normal over the local ground field.

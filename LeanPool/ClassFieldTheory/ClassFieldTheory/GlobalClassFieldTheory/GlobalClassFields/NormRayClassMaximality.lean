@@ -240,7 +240,6 @@ def normQuotientEquivOfNarrowFiniteConductorsEqOfRayClassGroupCardsEqNormQuotien
 
 /-- The canonical equivalence between maximal narrow finite conductor
 ray-class norm quotients preserves every idèle-class representative. -/
-@[simp]
 theorem
     normQuotientEquivOfNarrowFiniteConductorsEqOfRayClassGroupCardsEqNormQuotientCards_mk
     {M : Type}

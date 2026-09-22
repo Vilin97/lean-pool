@@ -8,7 +8,8 @@ import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.
 import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.NormSubgroup.UniformizerNorm
 import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.FiniteLevel.LevelAutomorphisms
 /-!
-# LubinTate the explicit norm-subgroup computation: higher-unit Frobenius fixes the standard level map
+# LubinTate the explicit norm-subgroup computation: higher-unit Frobenius fixes the standard
+  level map
 -/
 
 noncomputable section
@@ -42,12 +43,15 @@ private theorem ringHom_apply_eq_of_powerBasis
   have h : phiAlg = fAlg := pb.algHom_ext hgen
   exact DFunLike.congr_fun h x
 
+/-- The Laurent-series base acts on the completed unramified field through the coefficient
+embedding. -/
 @[reducible] noncomputable local instance equalCharacteristicHigherUnitMapBaseAlgebra
     (F : LocalField K) :
     Algebra F.residueField⸨X⸩
       (equalCharacteristicCompletedUnramifiedField F.residueField) :=
   equalCharacteristicCompletedLevelBaseAlgebra F
 
+/-- The completed level field is a Laurent-series algebra through the completed unramified base. -/
 @[reducible] noncomputable local instance equalCharacteristicHigherUnitMapLevelAlgebra
     (F : LocalField K) (n : ℕ) :
     Algebra F.residueField⸨X⸩
@@ -157,7 +161,8 @@ private theorem higherUnitLevelMap_fixed_core
         F a n ha
   · exact higherUnitFrobeniusRingHom_levelMap_algebraMap F a n
 
-/-- States the theorem `equalCharacteristicCompletedFrobeniusAlgEquiv_comp_levelFieldToCompleted_of_mem_higherUnit`. -/
+/-- States the theorem
+`equalCharacteristicCompletedFrobeniusAlgEquiv_comp_levelFieldToCompleted_of_mem_higherUnit`. -/
 theorem
     equalCharacteristicCompletedFrobeniusAlgEquiv_comp_levelFieldToCompleted_of_mem_higherUnit
     (F : LocalField K)

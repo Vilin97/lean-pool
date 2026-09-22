@@ -14,7 +14,7 @@ This file expresses the supported idele quotient as the product of its local
 archimedean and finite-place power indices and evaluates its cardinality.
 -/
 
-open scoped NumberField Classical NNReal ValuativeRel TensorProduct
+open scoped NumberField NNReal ValuativeRel TensorProduct
 open NumberField IsDedekindDomain
 open AlgebraicNumberTheory.Valuations
 open KummerTheory
@@ -27,6 +27,7 @@ namespace GlobalClassFieldTheory.ClassFieldAxiom
 
 variable {K : Type} [Field K] [NumberField K]
 
+open scoped Classical in
 /-- The middle term in the supported exact sequence, evaluated as the
 product of its actual local power indices.  The archimedean factors are
 the sign indices, while each finite factor is the finite local
@@ -64,6 +65,7 @@ theorem card_supportedIdeleQuotient_eq_localPowerIndexProduct
       card_finitePlace_nthPowerQuotient_eq_defect
         (K := K) n hmu v.1
 
+open scoped Classical in
 /-- The finite-place product-formula calculation, stated directly for
 the prime-ideal factors of the principal ideal `(n)`.
 The hypothesis says exactly that `S` contains every finite place
@@ -131,6 +133,7 @@ theorem prod_absNorm_maxPowDividing_natCast
       rw [Ideal.absNorm_span_natCast,
         NumberField.RingOfIntegers.rank]
 
+open scoped Classical in
 /-- Product of the actual finite-place power defects. -/
 theorem prod_finitePlaceNthPowerDefect
     (n : ℕ+)
@@ -162,6 +165,7 @@ theorem prod_finitePlaceNthPowerDefect
       prod_absNorm_maxPowDividing_natCast
         (K := K) n S hS
 
+open scoped Classical in
 /-- The product of the archimedean local power indices.  Only real
 places and an even exponent contribute a factor `2`. -/
 theorem prod_infinitePlace_nthPowerIndex
@@ -195,6 +199,7 @@ theorem prod_infinitePlace_nthPowerIndex
     simp [InfinitePlace.nrRealPlaces]
   · simp [hn]
 
+open scoped Classical in
 /-- The archimedean signature calculation used together with the finite
 product formula.  If `K` contains a primitive `n`-th root with `n > 2`,
 it has no real places; the remaining cases are `n = 1, 2`. -/
@@ -252,6 +257,7 @@ theorem prod_infinitePlace_nthPowerIndex_mul_natDegree
       congr 1
       omega
 
+open scoped Classical in
 /-- The middle term of the supported exact sequence has cardinality
 `n^(2s)`, where `s` is the number of infinite places plus the number of
 finite places in `S`. -/

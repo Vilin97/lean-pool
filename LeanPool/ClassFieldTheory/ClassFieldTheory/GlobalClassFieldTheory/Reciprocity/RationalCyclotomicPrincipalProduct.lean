@@ -17,7 +17,7 @@ torsion-free rational `ZHat`-extension removes this final sign ambiguity
 and proves that every rational principal idele has trivial value.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -25,9 +25,13 @@ noncomputable section
 namespace GlobalClassFieldTheory
 namespace Reciprocity
 
-local instance (p : Nat.Primes) : Fact p.1.Prime :=
+open scoped Classical in
+local instance localPrimesInstance1 (p : Nat.Primes) : Fact p.1.Prime :=
   ⟨p.2⟩
 
+attribute [local instance] localPrimesInstance1
+
+open scoped Classical in
 local instance rationalCyclotomicPrincipalProductPrimePowerNumberField
     (p : Nat.Primes) (k : ℕ) :
     NumberField (KummerTheory.rationalCyclotomicLevel
@@ -35,6 +39,9 @@ local instance rationalCyclotomicPrincipalProductPrimePowerNumberField
   KummerTheory.rationalCyclotomicLevel_numberField
     ⟨p.1 ^ k, pow_pos p.2.pos k⟩
 
+attribute [local instance] rationalCyclotomicPrincipalProductPrimePowerNumberField
+
+open scoped Classical in
 local instance rationalCyclotomicPrincipalProductPrimePowerFiniteDimensional
     (p : Nat.Primes) (k : ℕ) :
     FiniteDimensional ℚ (KummerTheory.rationalCyclotomicLevel
@@ -42,6 +49,9 @@ local instance rationalCyclotomicPrincipalProductPrimePowerFiniteDimensional
   rationalCyclotomicPrincipalPrimeLevelFiniteDimensional
     ⟨p.1 ^ k, pow_pos p.2.pos k⟩
 
+attribute [local instance] rationalCyclotomicPrincipalProductPrimePowerFiniteDimensional
+
+open scoped Classical in
 local instance rationalCyclotomicPrincipalProductPrimePowerIsAbelianGalois
     (p : Nat.Primes) (k : ℕ) :
     IsAbelianGalois ℚ (KummerTheory.rationalCyclotomicLevel
@@ -49,6 +59,9 @@ local instance rationalCyclotomicPrincipalProductPrimePowerIsAbelianGalois
   rationalCyclotomicLevelIsAbelianGalois
     ⟨p.1 ^ k, pow_pos p.2.pos k⟩
 
+attribute [local instance] rationalCyclotomicPrincipalProductPrimePowerIsAbelianGalois
+
+open scoped Classical in
 noncomputable local instance
     rationalCyclotomicPrincipalProductLevelFiniteDimensional
     (m : ℕ+) :
@@ -56,6 +69,9 @@ noncomputable local instance
       (KummerTheory.rationalCyclotomicLevel m) :=
   rationalCyclotomicPrincipalPrimeLevelFiniteDimensional m
 
+attribute [local instance] rationalCyclotomicPrincipalProductLevelFiniteDimensional
+
+open scoped Classical in
 noncomputable local instance
     rationalCyclotomicPrincipalProductLevelIsAbelianGalois
     (m : ℕ+) :
@@ -63,6 +79,9 @@ noncomputable local instance
       (KummerTheory.rationalCyclotomicLevel m) :=
   rationalCyclotomicPrincipalPrimeLevelIsAbelianGalois m
 
+attribute [local instance] rationalCyclotomicPrincipalProductLevelIsAbelianGalois
+
+open scoped Classical in
 /-- The finite product of the genuine chosen local Artin characters of a
 rational principal idele is the reduction of its rational sign. -/
 theorem rationalCyclotomicPrincipalFinitePlaceProduct_eq_sign
@@ -94,6 +113,7 @@ theorem rationalCyclotomicPrincipalFinitePlaceProduct_eq_sign
         (rationalPrimeUnitCharacter_mul_principalAwayFactorizationProduct_eq_sign
           p k x))
 
+open scoped Classical in
 /-- At every prime-power cyclotomic coordinate, the global Artin
 character of the finite part of a rational principal idele is exactly the
 reduced rational sign. -/
@@ -113,6 +133,7 @@ theorem
       (IdeleGroup.principalIdele ℚ x) p k).trans
       (rationalCyclotomicPrincipalFinitePlaceProduct_eq_sign p k x)
 
+open scoped Classical in
 /-- Every prime-power reduction of the finite principal cyclotomic
 character has square one. -/
 theorem
@@ -131,6 +152,7 @@ theorem
         p k x)).trans
       (rationalSignPadicUnit_toZModPow_sq x p k)
 
+open scoped Classical in
 /-- The finite part of every rational principal idele has trivial value
 in the actual rational cyclotomic `ZHat`-extension. -/
 theorem rationalCyclotomicZHatIdeleValue_principalFinitePart_eq_one
@@ -146,8 +168,8 @@ theorem rationalCyclotomicZHatIdeleValue_principalFinitePart_eq_one
     rationalCyclotomicGlobalArtin_character_toZModPow_principalFinitePart_sq
       p k x
 
+open scoped Classical in
 /-- The rational cyclotomic value kills every rational principal idele. -/
-@[simp]
 theorem rationalCyclotomicZHatIdeleValue_principalIdele_eq_one
     (x : ℚˣ) :
     rationalCyclotomicZHatIdeleValue
@@ -157,6 +179,7 @@ theorem rationalCyclotomicZHatIdeleValue_principalIdele_eq_one
     (rationalCyclotomicZHatIdeleValue_principalIdele_eq_finitePart x).trans
       (rationalCyclotomicZHatIdeleValue_principalFinitePart_eq_one x)
 
+open scoped Classical in
 /-- The normalized cyclotomic `ZHat`-valuation kills principal ideles over
 every number field.  This is the unconditional principal-idele endpoint
 needed for descent to the idele class group. -/

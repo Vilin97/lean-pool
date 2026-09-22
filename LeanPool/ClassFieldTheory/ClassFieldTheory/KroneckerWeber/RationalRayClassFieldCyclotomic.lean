@@ -23,7 +23,7 @@ Thus the result is an equality of actual class fields and not merely an
 equality of degrees or an abstract comparison of finite groups.
 -/
 
-open scoped Classical IsMulCommutative NumberField Cyclotomic
+open scoped IsMulCommutative NumberField Cyclotomic
 
 noncomputable section
 
@@ -34,12 +34,16 @@ open GlobalClassFieldTheory.GlobalClassFields
 open GlobalClassFieldTheory.Reciprocity
 open NumberField IsDedekindDomain
 
+open scoped Classical in
 noncomputable local instance rationalCyclotomicLevelIsAbelianGalois
     (n : ℕ+) :
     IsAbelianGalois ℚ (KummerTheory.rationalCyclotomicLevel n) :=
   IsCyclotomicExtension.isAbelianGalois {(n : ℕ)} ℚ
     (KummerTheory.rationalCyclotomicLevel n)
 
+attribute [local instance] rationalCyclotomicLevelIsAbelianGalois
+
+open scoped Classical in
 private noncomputable def
     galoisContinuousMulEquivRayClassGroupOfNormRangeEq
     (L : Type) [Field L] [NumberField L] [Algebra ℚ L]
@@ -64,6 +68,7 @@ private noncomputable def
       continuous_toFun := continuous_of_discreteTopology
       continuous_invFun := continuous_of_discreteTopology }
 
+open scoped Classical in
 private theorem quotientMulEquivOfNormRangeEq_globalNormResidue
     (L : Type) [Field L] [NumberField L] [Algebra ℚ L]
     [FiniteDimensional ℚ L] [IsAbelianGalois ℚ L]
@@ -103,6 +108,7 @@ private theorem quotientMulEquivOfNormRangeEq_globalNormResidue
       rw [AddEquiv.symm_apply_apply]
       exact QuotientGroup.quotientMulEquivOfEq_mk h c
 
+open scoped Classical in
 private theorem
     galoisContinuousMulEquivRayClassGroupOfNormRangeEq_globalNormResidue
     (L : Type) [Field L] [NumberField L] [Algebra ℚ L]
@@ -129,6 +135,7 @@ private theorem
     quotientMulEquivOfNormRangeEq_globalNormResidue
       L (RayClass.Modulus.congruenceSubgroup r) h c
 
+open scoped Classical in
 /-- Conjugating an automorphism between two actual singleton
 cyclotomic extensions preserves its exponent on primitive roots. -/
 theorem galEquivZMod_autCongr
@@ -194,23 +201,33 @@ section NonzeroOrder
 
 variable (m : ℕ) [NeZero m]
 
-local instance : NeZero (m : ℚ) :=
+open scoped Classical in
+local instance localNeZeroInstance1 : NeZero (m : ℚ) :=
   ⟨by exact_mod_cast (NeZero.ne m)⟩
 
-noncomputable local instance :
+attribute [local instance] localNeZeroInstance1
+
+open scoped Classical in
+noncomputable local instance localNumberFieldInstance1 :
     NumberField
       (KummerTheory.rationalCyclotomicLevel
         ⟨m, NeZero.pos m⟩) :=
   KummerTheory.rationalCyclotomicLevel_numberField
     ⟨m, NeZero.pos m⟩
 
-noncomputable local instance :
+attribute [local instance] localNumberFieldInstance1
+
+open scoped Classical in
+noncomputable local instance localIsAbelianGaloisInstance1 :
     IsAbelianGalois ℚ
       (KummerTheory.rationalCyclotomicLevel
         ⟨m, NeZero.pos m⟩) :=
   rationalCyclotomicLevelIsAbelianGalois
     ⟨m, NeZero.pos m⟩
 
+attribute [local instance] localIsAbelianGaloisInstance1
+
+open scoped Classical in
 noncomputable local instance rationalCyclotomicLevelIsCyclotomicExtensionAtOrder :
     IsCyclotomicExtension {m} ℚ
       (KummerTheory.rationalCyclotomicLevel
@@ -224,15 +241,24 @@ noncomputable local instance rationalCyclotomicLevelIsCyclotomicExtensionAtOrder
     KummerTheory.rationalCyclotomicLevel_isCyclotomicExtension
       ⟨m, NeZero.pos m⟩
 
+attribute [local instance] rationalCyclotomicLevelIsCyclotomicExtensionAtOrder
+
+open scoped Classical in
 noncomputable local instance rationalCyclotomicFieldIsCyclotomicExtension :
     IsCyclotomicExtension {m} ℚ (CyclotomicField m ℚ) :=
   CyclotomicField.isCyclotomicExtension m ℚ
 
+attribute [local instance] rationalCyclotomicFieldIsCyclotomicExtension
+
+open scoped Classical in
 noncomputable local instance rationalCyclotomicFieldIsAbelianGalois :
     IsAbelianGalois ℚ (CyclotomicField m ℚ) :=
   IsCyclotomicExtension.isAbelianGalois {m} ℚ
     (CyclotomicField m ℚ)
 
+attribute [local instance] rationalCyclotomicFieldIsAbelianGalois
+
+open scoped Classical in
 noncomputable local instance rationalCyclotomicLevelIdeleClassNormRangeNormal :
     (_root_.ideleClassNorm ℚ
       (KummerTheory.rationalCyclotomicLevel
@@ -242,6 +268,9 @@ noncomputable local instance rationalCyclotomicLevelIdeleClassNormRangeNormal :
       m (NeZero.ne m)]
   infer_instance
 
+attribute [local instance] rationalCyclotomicLevelIdeleClassNormRangeNormal
+
+open scoped Classical in
 noncomputable local instance rationalCyclotomicFieldIdeleClassNormRangeNormal :
     (_root_.ideleClassNorm ℚ (CyclotomicField m ℚ)).range.Normal := by
   rw [
@@ -249,6 +278,9 @@ noncomputable local instance rationalCyclotomicFieldIdeleClassNormRangeNormal :
       m (NeZero.ne m)]
   infer_instance
 
+attribute [local instance] rationalCyclotomicFieldIdeleClassNormRangeNormal
+
+open scoped Classical in
 /-- The internal finite level of the rational cyclotomic closure is
 isomorphic over `ℚ` to mathlib's concrete cyclotomic field of the same
 order. -/
@@ -263,6 +295,7 @@ noncomputable def rationalCyclotomicLevelAlgEquivCyclotomicField
         ⟨m, NeZero.pos m⟩)
       (CyclotomicField m ℚ)
 
+open scoped Classical in
 /-- A normalized local element of order one at the rational prime `q`.
 It is the inverse of the rational uniformizer in the absolute-value
 completion, transported to the adic-completion model used by idèles. -/
@@ -273,6 +306,7 @@ noncomputable def rationalPrimeArithmeticFrobeniusLocalInput
       (RayClass.rationalPrime q)
     ((rationalPrimeFinitePlaceFieldUnit q)⁻¹)
 
+open scoped Classical in
 /-- The normalized local input for prime-ideal Artin reciprocity has
 inverse-standard valuation exponent one. -/
 theorem rationalPrimeArithmeticFrobeniusLocalInput_valuationMap
@@ -293,6 +327,7 @@ theorem rationalPrimeArithmeticFrobeniusLocalInput_valuationMap
     rationalPrimeFinitePlaceFieldUnit_valuationMap]
   norm_num
 
+open scoped Classical in
 private theorem
     rationalCyclotomicLevel_chosenFinitePlaceArtin_at_unramifiedPrime
     (m : ℕ) [NeZero m]
@@ -339,6 +374,7 @@ private theorem
         rationalPrimeArithmeticFrobeniusLocalInput_valuationMap,
         zpow_one]
 
+open scoped Classical in
 /-- At an unramified rational prime `q ∤ m`, the actual global
 norm-residue symbol on the normalized one-place prime idèle acts on the
 internal `m`-th cyclotomic level by the direct exponent `q`. -/
@@ -400,6 +436,7 @@ theorem
       rationalCyclotomicLevel_chosenFinitePlaceArtin_at_unramifiedPrime
         m q hq
 
+open scoped Classical in
 /-- Topological global reciprocity for the actual finite level inside the
 rational cyclotomic closure.  The target is the idelic rational ray class
 group modulo `(m)`, transported along the exact norm-range equality. -/
@@ -417,6 +454,7 @@ noncomputable def
       (rationalCyclotomicLevel_ideleClassNorm_range_eq_rationalCongruenceSubgroup
         m (NeZero.ne m))
 
+open scoped Classical in
 /-- Evaluation of finite-level rational cyclotomic reciprocity is inverse
 global norm-residue reciprocity followed by the exact ray norm-range
 transport. -/
@@ -440,6 +478,7 @@ theorem
             (Additive.ofMul σ))) := by
   rfl
 
+open scoped Classical in
 /-- On an idèle-class representative, finite-level cyclotomic reciprocity
 is the actual global norm-residue symbol followed by its rational ray
 class modulo `(m)`. -/
@@ -460,6 +499,7 @@ theorem
   apply
     quotientMulEquivOfNormRangeEq_globalNormResidue
 
+open scoped Classical in
 /-- Inverse finite-level cyclotomic reciprocity sends the ray class of an
 idèle class back to its genuine global norm-residue symbol. -/
 theorem
@@ -482,6 +522,7 @@ theorem
       m).apply_symm_apply,
     rationalCyclotomicLevelGaloisContinuousMulEquivRayClassGroup_globalNormResidue]
 
+open scoped Classical in
 /-- The inverse ray reciprocity image of the normalized one-place class at
 an unramified rational prime has direct cyclotomic exponent `q`.  This
 places the actual global map, its ray quotient, and the Frobenius
@@ -508,6 +549,7 @@ theorem
     rationalCyclotomicLevel_globalNormResidue_at_unramifiedPrime
       m q hq]
 
+open scoped Classical in
 /-- The actual arithmetic Frobenius at `q` on the concrete cyclotomic
 field, obtained by transporting the genuine global one-place Artin
 symbol from the internal cyclotomic level. -/
@@ -531,6 +573,7 @@ noncomputable def rationalCyclotomicPrimeArithmeticFrobenius
           (RayClass.rationalPrime q)
           (rationalPrimeArithmeticFrobeniusLocalInput q)))
 
+open scoped Classical in
 /-- For `q ∤ m`, the actual arithmetic Frobenius on
 `CyclotomicField m ℚ` is the direct-`q` automorphism
 `ζ ↦ ζ ^ q`; no inverse appears. -/
@@ -572,6 +615,7 @@ theorem rationalCyclotomicPrimeArithmeticFrobenius_galEquivZMod
     rationalCyclotomicLevel_globalNormResidue_at_unramifiedPrime
       m q hq]
 
+open scoped Classical in
 /-- The selected rational ray class field is the actual cyclotomic field
 of the same modulus, as an equivalence of fields over `ℚ`. -/
 private noncomputable def rationalRayClassFieldCyclotomicRingEquiv
@@ -590,6 +634,7 @@ private noncomputable def rationalRayClassFieldCyclotomicRingEquiv
         (rationalCyclotomicField_ideleClassNorm_range_eq_rationalCongruenceSubgroup
           m (NeZero.ne m)))).symm.toRingEquiv
 
+open scoped Classical in
 /-- A chosen `ℚ`-algebra equivalence from the selected rational ray class
 field to the cyclotomic field of the same modulus. -/
 noncomputable def rationalRayClassFieldCyclotomicAlgEquiv
@@ -601,18 +646,25 @@ noncomputable def rationalRayClassFieldCyclotomicAlgEquiv
   intro q
   exact map_ratCast e q
 
+open scoped Classical in
 noncomputable local instance rationalRayClassFieldIsCyclotomicExtension :
     IsCyclotomicExtension {m} ℚ
       (rayClassField ℚ (RayClass.rationalModulus m)) :=
   IsCyclotomicExtension.equiv {m} ℚ (CyclotomicField m ℚ)
     (rationalRayClassFieldCyclotomicAlgEquiv m).symm
 
+attribute [local instance] rationalRayClassFieldIsCyclotomicExtension
+
+open scoped Classical in
 noncomputable local instance rationalRayClassFieldIsAbelianGalois :
     IsAbelianGalois ℚ
       (rayClassField ℚ (RayClass.rationalModulus m)) :=
   IsCyclotomicExtension.isAbelianGalois {m} ℚ
     (rayClassField ℚ (RayClass.rationalModulus m))
 
+attribute [local instance] rationalRayClassFieldIsAbelianGalois
+
+open scoped Classical in
 /-- Transporting the actual norm-residue symbol of the selected rational
 ray class field to the concrete cyclotomic realization preserves its
 cyclotomic character.  The left side uses the literal conjugation map on
@@ -637,6 +689,7 @@ theorem
     (globalNormResidueMonoidHom
       ℚ (rayClassField ℚ (RayClass.rationalModulus m)) c)
 
+open scoped Classical in
 /-- Monoid-hom form of cyclotomic-character invariance under the selected
 ray-class-field/cyclotomic-field realization. -/
 theorem
@@ -658,6 +711,7 @@ theorem
     rationalRayClassFieldCyclotomicAlgEquiv_autCongr_globalNormResidue_character
       m c
 
+open scoped Classical in
 /-- Topological global reciprocity for the actual rational cyclotomic
 field, with target the rational ray class group modulo `(m)`. -/
 noncomputable def
@@ -670,6 +724,7 @@ noncomputable def
       (rationalCyclotomicField_ideleClassNorm_range_eq_rationalCongruenceSubgroup
         m (NeZero.ne m))
 
+open scoped Classical in
 /-- The ordinary cyclotomic character, retaining the finite Krull
 topology on the actual Galois group and the discrete topology on
 `(ℤ/mℤ)ˣ`. -/
@@ -684,6 +739,7 @@ noncomputable def
       continuous_toFun := continuous_of_discreteTopology
       continuous_invFun := continuous_of_discreteTopology }
 
+open scoped Classical in
 /-- Forgetting topology from the cyclotomic character recovers the
 standard `galEquivZMod` map literally. -/
 @[simp]
@@ -696,6 +752,7 @@ theorem
         m (CyclotomicField m ℚ) σ := by
   rfl
 
+open scoped Classical in
 /-- Evaluation of rational cyclotomic reciprocity is inverse global
 norm-residue reciprocity followed by transport along the exact
 cyclotomic norm-range equality. -/
@@ -714,6 +771,7 @@ theorem
             (Additive.ofMul σ))) := by
   rfl
 
+open scoped Classical in
 /-- On an idèle-class representative, rational cyclotomic reciprocity
 sends the actual global norm-residue symbol to its ray class modulo
 `(m)`. -/

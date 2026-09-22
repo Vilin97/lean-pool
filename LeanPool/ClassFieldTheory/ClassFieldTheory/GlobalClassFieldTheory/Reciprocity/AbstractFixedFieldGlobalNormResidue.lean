@@ -440,9 +440,11 @@ noncomputable local instance
         (numberFieldEmbeddedTopSubgroup_le_baseSubgroup K L j)).restrictScalars ℚ) :=
   NumberField.of_module_finite ℚ _
 
+/-- Inclusion of abstract fixed fields gives the scalar-restricted relative fixed field an algebra
+structure over the base fixed field. -/
 noncomputable local instance
     numberFieldEmbeddedAbstractRelativeFixedFieldRestrictScalarsAlgebra
-    [FiniteDimensional K L] [IsGalois K L]
+
     (j : L →ₐ[ℚ] SeparableClosure ℚ) :
     Algebra
       (abstractFixedField ℚ (SeparableClosure ℚ)
@@ -527,7 +529,6 @@ noncomputable def numberFieldEmbeddedAbstractTopFieldEquiv
 
 /-- The two explicit fixed-field equivalences commute with the tower
 algebra maps. -/
-@[simp]
 theorem numberFieldEmbeddedAbstractFieldEquiv_algebraMap
     (j : L →ₐ[ℚ] SeparableClosure ℚ)
     (x : K) :
@@ -630,7 +631,7 @@ private noncomputable def numberFieldEmbeddedFiniteNormClassPublicValue
           a)
 
 private noncomputable def numberFieldEmbeddedFiniteNormClassExpectedValue
-    [FiniteDimensional K L] [IsGalois K L]
+
     (j : L →ₐ[ℚ] SeparableClosure ℚ)
     (a : ambientFixedAddSubgroup rationalIdeleClassRepresentation
       (numberFieldEmbeddedBaseSubgroup K L j)) :
@@ -805,7 +806,6 @@ theorem
 /-- On an ordinary idele class, the explicit fixed-part realization
 followed by the abstract finite norm-class map is the genuine quotient
 class modulo the ordinary idele-class norm. -/
-@[simp]
 theorem
     numberFieldEmbeddedFiniteNormQuotientEquivIdeleClassNormQuotient_ideleClass
     [FiniteDimensional K L] [IsGalois K L]

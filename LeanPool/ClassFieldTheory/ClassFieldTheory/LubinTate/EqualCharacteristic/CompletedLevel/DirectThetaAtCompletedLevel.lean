@@ -38,7 +38,7 @@ variable {K : Type u} [Field K]
 
 private instance equalCharacteristicDirectThetaCompletedBaseCharP
     (F : LocalField.{u, v} K)
-    [CharP K F.residueCharacteristic] :
+    :
     CharP (equalCharacteristicCompletedUnramifiedField F.residueField)
       F.residueCharacteristic :=
   charP_of_injective_algebraMap
@@ -63,18 +63,21 @@ noncomputable local instance
       (equalCharacteristicCompletedUnramifiedField F.residueField) ℤᵐ⁰).IsNontrivial :=
   equalCharacteristicCompletedBaseValuationIsNontrivial F.residueField
 
+/-- The discrete valuation on the completed unramified coefficient field has rank one. -/
 noncomputable local instance equalCharacteristicDirectThetaBaseValuationRankOne
     (F : LocalField.{u, v} K) :
     (Valued.v : Valuation
       (equalCharacteristicCompletedUnramifiedField F.residueField) ℤᵐ⁰).RankOne :=
   equalCharacteristicCompletedBaseValuationRankOne F.residueField
 
+/-- The canonical nontrivial norm on the completed unramified coefficient field. -/
 noncomputable local instance equalCharacteristicDirectThetaBaseNormedField
     (F : LocalField.{u, v} K) :
     NontriviallyNormedField
       (equalCharacteristicCompletedUnramifiedField F.residueField) :=
   equalCharacteristicCompletedBaseNormedField F.residueField
 
+/-- The canonical nontrivial norm on the completed Lubin–Tate field at level `n`. -/
 noncomputable local instance equalCharacteristicDirectThetaLevelNormedField
     (F : LocalField.{u, v} K) (n : ℕ) :
     NontriviallyNormedField (equalCharacteristicCompletedLevelField F n) :=
@@ -90,6 +93,7 @@ noncomputable local instance equalCharacteristicDirectThetaLevelCompleteSpace
     CompleteSpace (equalCharacteristicCompletedLevelField F n) :=
   equalCharacteristicCompletedLevelCompleteSpace F n
 
+/-- The nonnegative-real-valued valuation on the completed Lubin–Tate field at level `n`. -/
 noncomputable local instance equalCharacteristicDirectThetaLevelValued
     (F : LocalField.{u, v} K) (n : ℕ) :
     Valued (equalCharacteristicCompletedLevelField F n) ℝ≥0 :=

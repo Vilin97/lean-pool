@@ -68,7 +68,7 @@ theorem map_maximalIdeal_eq_pow_ramificationIdx
     {R S : Type*} [CommRing R] [IsDomain R]
     [CommRing S] [IsDomain S]
     [IsDiscreteValuationRing R] [IsDiscreteValuationRing S]
-    [Algebra R S] [IsLocalHom (algebraMap R S)]
+    [Algebra R S]
     (hi : Function.Injective (algebraMap R S)) :
     Ideal.map (algebraMap R S) (IsLocalRing.maximalIdeal R) =
       IsLocalRing.maximalIdeal S ^

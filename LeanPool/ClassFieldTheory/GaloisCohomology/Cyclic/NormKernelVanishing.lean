@@ -15,8 +15,10 @@ namespace CyclicCohomology
 /-!
 # The cyclic-cohomology vanishing condition
 
-This file formalizes the cyclic norm-kernel vanishing condition as a property, not as a new Lean axiom, and
-the finite-cyclic cohomology calculation using the actual finite-cyclic group-cohomology computation.
+This file formalizes the cyclic norm-kernel vanishing condition as a property, not as a new Lean
+  axiom, and
+the finite-cyclic cohomology calculation using the actual finite-cyclic group-cohomology
+  computation.
 
 The construction writes multiplicative modules with a right action.  Here an abelian
 group is represented additively as a `ℤ`-linear left representation; passing
@@ -75,12 +77,14 @@ def IsContinuousDiscreteRepresentation {G : Type} [Group G] [TopologicalSpace G]
   letI : TopologicalSpace A.V := ⊥
   Continuous fun p : G × A.V => A.ρ p.1 p.2
 
-/-- **the cyclic norm-kernel vanishing condition.**  The condition on a continuous `G`-module used by the
+/-- **the cyclic norm-kernel vanishing condition.**  The condition on a continuous `G`-module
+used by the
 construction: `H⁻¹(G(L | K), A_L)` is trivial for every finite cyclic abstract
 extension `L | K`.
 
 Profinite-ness of `G` and continuity of `A` are ambient hypotheses in the
-construction, not parts of the cyclic norm-kernel vanishing condition itself.  This predicate therefore records only
+construction, not parts of the cyclic norm-kernel vanishing condition itself.  This predicate
+  therefore records only
 the numbered vanishing condition.  `hLK` expresses `G_L ≤ G_K`, `hnormal`
 that the extension is Galois, `hfinite` that it is finite, and `g, hg` that
 its Galois group is cyclic. -/
@@ -115,7 +119,8 @@ noncomputable def finiteCyclicH1IsoTateHMinusOne {G : Type} [Group G] [Fintype G
       (Rep.FiniteCyclicGroup.groupCohomologyIsoOdd A g hg 1 (by simp))
   exact e ≪≫ (TateCohomology.isoFiniteCyclicNegOne A g hg).symm
 
-/-- Elementwise content of the vanishing condition in the cyclic norm-kernel vanishing condition: every
+/-- Elementwise content of the vanishing condition in the cyclic norm-kernel vanishing
+condition: every
 norm-zero element is in the image of `ρ(g) - 1`.  This is the source used in
 the cyclic step of abstract Kummer theory; the conclusion is extracted from
 the actual homology object rather than assumed separately. -/

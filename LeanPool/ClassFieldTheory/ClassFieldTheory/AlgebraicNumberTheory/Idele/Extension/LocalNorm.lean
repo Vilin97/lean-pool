@@ -42,7 +42,7 @@ theorem localNorm_eq_prod
     (vK : AbsoluteValue K ℝ) (hvK : vK.IsNontrivial)
     (z : vK.Completion ⊗[K] L) :
     letI :=
-      completionTensorDecomposition_extensionFintype
+      completionTensorDecompositionExtensionFintype
         (K := K) (L := L) vK hvK
     letI : ∀ w : AbsoluteValueExtension vK L,
         Algebra vK.Completion w.1.Completion :=
@@ -53,11 +53,11 @@ theorem localNorm_eq_prod
     _root_.Algebra.norm vK.Completion z =
       ∏ w : AbsoluteValueExtension vK L,
         _root_.Algebra.norm vK.Completion
-          (completionTensorDecomposition_left
+          (completionTensorDecompositionLeft
             (K := K) (L := L) vK hvK z w) := by
   classical
   let :=
-    completionTensorDecomposition_extensionFintype
+    completionTensorDecompositionExtensionFintype
       (K := K) (L := L) vK hvK
   let : ∀ w : AbsoluteValueExtension vK L,
       Algebra vK.Completion w.1.Completion :=
@@ -70,7 +70,7 @@ theorem localNorm_eq_prod
       Module.Finite vK.Completion w.1.Completion :=
     fun w ↦ completionModuleFinite vK hvK w
   let e :=
-    completionTensorDecomposition_left
+    completionTensorDecompositionLeft
       (K := K) (L := L) vK hvK
   calc
     _root_.Algebra.norm vK.Completion z =
@@ -92,7 +92,7 @@ theorem localNorm_units_eq_prod
     (vK : AbsoluteValue K ℝ) (hvK : vK.IsNontrivial)
     (z : (vK.Completion ⊗[K] L)ˣ) :
     letI :=
-      completionTensorDecomposition_extensionFintype
+      completionTensorDecompositionExtensionFintype
         (K := K) (L := L) vK hvK
     letI : ∀ w : AbsoluteValueExtension vK L,
         Algebra vK.Completion w.1.Completion :=
@@ -104,7 +104,7 @@ theorem localNorm_units_eq_prod
         vK.Completionˣ) : vK.Completion) =
       ∏ w : AbsoluteValueExtension vK L,
         _root_.Algebra.norm vK.Completion
-          (completionTensorDecomposition_left
+          (completionTensorDecompositionLeft
             (K := K) (L := L) vK hvK (z : _) w) := by
   exact localNorm_eq_prod vK hvK (z : vK.Completion ⊗[K] L)
 

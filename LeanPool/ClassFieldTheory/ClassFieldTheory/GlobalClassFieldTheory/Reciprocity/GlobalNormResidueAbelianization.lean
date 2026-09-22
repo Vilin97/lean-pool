@@ -381,7 +381,6 @@ theorem globalNormResidueAbelianizationMonoidHom_finiteNormClass
 
 /-- An idele class has trivial finite-Galois norm-residue symbol exactly when
 it is an actual idele-class norm from `L`. -/
-@[simp]
 theorem globalNormResidueAbelianizationMonoidHom_eq_one_iff
     (c : IdeleClassGroup K) :
     globalNormResidueAbelianizationMonoidHom K L c = 1 ↔
@@ -466,7 +465,6 @@ theorem globalNormResidueAbelianizationIdeleMonoidHom_apply
 
 /-- The finite-Galois norm-residue symbol on ideles is trivial on every
 principal idele. -/
-@[simp]
 theorem globalNormResidueAbelianizationIdeleMonoidHom_principalIdele
     (x : Kˣ) :
     globalNormResidueAbelianizationIdeleMonoidHom K L
@@ -505,7 +503,6 @@ theorem globalNormResidueAbelianizationIdeleMonoidHom_surjective :
 
 /-- An idele has trivial finite-Galois norm-residue symbol exactly when
 its idele class is an actual norm from `L`. -/
-@[simp]
 theorem globalNormResidueAbelianizationIdeleMonoidHom_eq_one_iff
     (a : IdeleGroup K) :
     globalNormResidueAbelianizationIdeleMonoidHom K L a = 1 ↔

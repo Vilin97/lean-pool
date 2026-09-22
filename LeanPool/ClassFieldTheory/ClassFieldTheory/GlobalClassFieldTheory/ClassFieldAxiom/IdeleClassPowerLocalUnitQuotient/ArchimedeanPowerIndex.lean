@@ -16,7 +16,7 @@ This file defines the concrete idele-class subgroup attached to local power
 conditions and computes its archimedean local indices.
 -/
 
-open scoped NumberField Classical NNReal ValuativeRel TensorProduct
+open scoped NumberField NNReal ValuativeRel TensorProduct
 open NumberField IsDedekindDomain
 open KummerTheory
 
@@ -26,6 +26,7 @@ namespace GlobalClassFieldTheory.ClassFieldAxiom
 
 variable {K : Type} [Field K] [NumberField K]
 
+open scoped Classical in
 /-- The subgroup `C_K(S,T) = h(S,T)Kˣ/Kˣ` inside the idele class
 group. -/
 def ideleClassPowerLocalUnitSubgroup
@@ -35,6 +36,7 @@ def ideleClassPowerLocalUnitSubgroup
   (idelePowerLocalUnitSubgroup (K := K) n S T).map
     (QuotientGroup.mk' (IdeleGroup.principalSubgroup K))
 
+open scoped Classical in
 /-- Elementwise form of `C_K(S,T)=h(S,T)Kˣ/Kˣ`. -/
 theorem mem_ideleClassPowerLocalUnitSubgroup_iff
     (n : ℕ+)
@@ -46,6 +48,7 @@ theorem mem_ideleClassPowerLocalUnitSubgroup_iff
           QuotientGroup.mk' (IdeleGroup.principalSubgroup K) a = c := by
   rfl
 
+open scoped Classical in
 /-- The quotient whose cardinality is the index
 `[C_K : C_K(S,T)]`. -/
 abbrev IdeleClassPowerLocalUnitQuotient
@@ -55,6 +58,7 @@ abbrev IdeleClassPowerLocalUnitQuotient
     ideleClassPowerLocalUnitSubgroup (K := K) n S T
 
 omit [NumberField K] in
+open scoped Classical in
 /-- If the exponent is even, or the place is complex, every local
 `n`-th power is positive in the archimedean sense. -/
 theorem nthPowerSubgroup_le_infinitePositiveSubgroup
@@ -86,6 +90,7 @@ theorem nthPowerSubgroup_le_infinitePositiveSubgroup
     exact sq_pos_of_ne_zero (pow_ne_zero m hyne)
   · exact False.elim (hwNotReal hw)
 
+open scoped Classical in
 /-- The sign of a unit at a real infinite place. -/
 def realInfinitePlaceSignHom
     (w : InfinitePlace K)
@@ -98,6 +103,7 @@ def realInfinitePlaceSignHom
         hw).toMulEquiv).toMonoidHom
 
 omit [NumberField K] in
+open scoped Classical in
 /-- The positive subgroup at a real infinite place is exactly the kernel
 of the sign homomorphism. -/
 theorem realInfinitePlaceSignHom_ker
@@ -133,6 +139,7 @@ theorem realInfinitePlaceSignHom_ker
     simpa [realInfinitePlaceSignHom] using hxsign
 
 omit [NumberField K] in
+open scoped Classical in
 /-- Both signs occur at a real infinite place. -/
 theorem realInfinitePlaceSignHom_surjective
     (w : InfinitePlace K)
@@ -155,6 +162,7 @@ theorem realInfinitePlaceSignHom_surjective
       apply Units.ext
       simp [realInfinitePlaceSignHom, eu, hs]
 
+open scoped Classical in
 /-- The quotient by positive units at a real place is its two-element
 sign group. -/
 noncomputable def realInfinitePositiveQuotientEquivSign
@@ -169,6 +177,7 @@ noncomputable def realInfinitePositiveQuotientEquivSign
       (realInfinitePlaceSignHom_surjective w hw)
 
 omit [NumberField K] in
+open scoped Classical in
 /-- The positive-unit quotient at a real place has order two. -/
 theorem card_realInfinitePositiveQuotient
     (w : InfinitePlace K)
@@ -189,6 +198,7 @@ theorem card_realInfinitePositiveQuotient
       decide
 
 omit [NumberField K] in
+open scoped Classical in
 /-- In the even-real or complex cases, the local power subgroup is
 exactly the usual archimedean positive subgroup. -/
 theorem nthPowerSubgroup_eq_infinitePositiveSubgroup
@@ -213,6 +223,7 @@ theorem nthPowerSubgroup_eq_infinitePositiveSubgroup
           exact hy⟩
 
 omit [NumberField K] in
+open scoped Classical in
 /-- At a real place an odd power map on local units is surjective. -/
 theorem nthPowerSubgroup_eq_top_of_real_odd
     (n : ℕ+)
@@ -265,6 +276,7 @@ theorem nthPowerSubgroup_eq_top_of_real_odd
     simp
 
 omit [NumberField K] in
+open scoped Classical in
 /-- The archimedean factor in the local power-index product: it is `2`
 exactly for an even exponent at a real place, and `1` otherwise. -/
 theorem card_infinitePlace_nthPowerQuotient

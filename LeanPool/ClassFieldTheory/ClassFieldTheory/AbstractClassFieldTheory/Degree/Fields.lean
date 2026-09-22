@@ -148,7 +148,7 @@ def residueQuotient (D : DegreeData G) (K : ClosedSubgroup G) : Type :=
 
 /-- The distinguished base field has absolute residue degree one, without
 passing through a natural-valued subgroup index. -/
-@[simp] theorem residueDegreeCardinal_baseField (D : DegreeData G) :
+theorem residueDegreeCardinal_baseField (D : DegreeData G) :
     D.residueDegreeCardinal (baseField G) = 1 := by
   change
     intersectionIndexCardinal (D.fieldImage (baseField G))
@@ -202,7 +202,7 @@ noncomputable def residueDegree (K : FiniteResidueAbstractField D) : ℕ+ := by
   rfl
 
 /-- Cardinal-to-positive-natural specialization at the finite boundary. -/
-@[simp] theorem residueDegreeCardinal_eq_coe
+theorem residueDegreeCardinal_eq_coe
     (K : FiniteResidueAbstractField D) :
     D.residueDegreeCardinal K.field = ((K.residueDegree : ℕ) : Cardinal) := by
   change Cardinal.mk (D.residueQuotient K.field) =
@@ -493,7 +493,7 @@ instance extensionSubgroup_normalInstance (L : GaloisSubextension K) :
   L.normal
 
 /-- The group structure transported across the named quotient boundary. -/
-instance extensionQuotient_groupInstance (L : GaloisSubextension K) :
+instance extensionQuotientGroupInstance (L : GaloisSubextension K) :
     Group L.extensionQuotient := by
   change Group
     (K.toSubgroup ⧸ extensionSubgroup K L.field L.below)
@@ -680,7 +680,8 @@ private theorem relativeDegreeCardinals_lt_aleph0 (D : DegreeData G) :
     exact Cardinal.mk_ne_zero _
   apply (Cardinal.mul_lt_aleph0_iff_of_ne_zero
     hresidue hramification).mp
-  rw [← E.toAbstractExtension.degreeCardinal_eq_relativeResidueDegreeCardinal_mul_relativeRamificationIndexCardinal D]
+  rw [←
+    E.toAbstractExtension.degreeCardinal_eq_relativeResidueDegreeCardinal_mul_relativeRamificationIndexCardinal D]
   exact E.degreeCardinal_lt_aleph0
 
 private theorem relativeResidueDegreeCardinal_lt_aleph0
@@ -783,7 +784,7 @@ degree. -/
 
 /-- The relative index of the mapped field subgroups is the positive residue
 degree of a finite extension. -/
-@[simp] theorem mapped_relIndex_eq_residueDegree (D : DegreeData G) :
+theorem mapped_relIndex_eq_residueDegree (D : DegreeData G) :
     (E.field.toSubgroup.map D.degree.toMonoidHom).relIndex
         (E.base.toSubgroup.map D.degree.toMonoidHom) =
       (E.residueDegree D : ℕ) := by
@@ -791,7 +792,7 @@ degree of a finite extension. -/
 
 /-- The relative index inside the degree kernel is the positive ramification
 index of a finite extension. -/
-@[simp] theorem inertia_relIndex_eq_ramificationIndex (D : DegreeData G) :
+theorem inertia_relIndex_eq_ramificationIndex (D : DegreeData G) :
     (E.field.toSubgroup ⊓ D.degree.toMonoidHom.ker).relIndex
         (E.base.toSubgroup ⊓ D.degree.toMonoidHom.ker) =
       (E.ramificationIndex D : ℕ) := by
@@ -861,7 +862,7 @@ theorem ramificationIndex_eq_degree_of_isTotallyRamified (D : DegreeData G)
 
 /-- For a finite extension, its cardinal-valued degree is the cardinal cast
 of its positive natural degree. -/
-@[simp] theorem degreeCardinal_eq_coe :
+theorem degreeCardinal_eq_coe :
     E.toAbstractExtension.degreeCardinal =
       ((E.degree : ℕ) : Cardinal) := by
   change Cardinal.mk

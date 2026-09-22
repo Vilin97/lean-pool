@@ -12,7 +12,7 @@ This file packages the chosen base places as a finite set and proves its
 cardinality and disjointness properties.
 -/
 
-open scoped NumberField Classical IsMulCommutative
+open scoped NumberField IsMulCommutative
 open NumberField IsDedekindDomain
 open KummerTheory
 
@@ -25,6 +25,7 @@ section FinitePlaces
 variable {K : Type} [Field K]
     [NumberField K]
 
+open scoped Classical in
 /-- The finite set `T` of primes chosen for the coordinate cyclic extensions
 that detect the enlarged `S`-unit Kummer radical. -/
 noncomputable def sUnitKummerPrimeSet
@@ -48,6 +49,7 @@ noncomputable def sUnitKummerPrimeSet
       (K := K) (Omega := Omega) E n hmu
       p v hp hv hn r eG S)
 
+open scoped Classical in
 /-- The chosen prime set has the required cardinality `s-r`. -/
 @[simp]
 theorem sUnitKummerPrimeSet_card
@@ -77,6 +79,7 @@ theorem sUnitKummerPrimeSet_card
         p v hp hv hn r eG S),
     Finset.card_univ, Fintype.card_fin]
 
+open scoped Classical in
 /-- The chosen prime set is disjoint from the enlarged finite Kummer-radical support. -/
 theorem sUnitKummerPrimeSet_disjoint_enlargeByFiniteKummerRadicalSupport
     {Omega : Type} [Field Omega] [Algebra K Omega]

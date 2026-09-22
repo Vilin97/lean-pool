@@ -22,7 +22,7 @@ subgroup, together with its norm-range and degree-index theorems, is provided
 by `ClosedFiniteIndexClassField`.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 
 noncomputable section
 
@@ -33,19 +33,24 @@ open ClassFormation
 open LocalClassFieldTheory
 open Reciprocity
 
+open scoped Classical in
 /-- Use the same rational algebra structure as the ordinary correspondence
 when constructing all named fixed-field carriers below. -/
 noncomputable local instance
-    finiteAbelianClassFieldCorrespondenceTopology_separableClosureAlgebra :
+    finiteAbelianClassFieldCorrespondenceTopologySeparableClosureAlgebra :
     Algebra ℚ (SeparableClosure ℚ) :=
   rationalSeparableClosureAlgebra
 
+attribute [local instance] finiteAbelianClassFieldCorrespondenceTopologySeparableClosureAlgebra
+
+open scoped Classical in
 /-- The actual fixed-field base represented by a finite abstract field. -/
 abbrev ordinaryIdeleClassNormBase
     (K : FiniteAbstractField
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ)) : Type :=
   abstractFixedField ℚ (SeparableClosure ℚ) K.field
 
+open scoped Classical in
 /-- The actual relative fixed field represented by a finite abelian
 subextension. -/
 abbrev ordinaryIdeleClassNormExtension
@@ -54,6 +59,7 @@ abbrev ordinaryIdeleClassNormExtension
     (L : FiniteAbelianSubextension K.field) : Type :=
   abstractRelativeFixedField ℚ (SeparableClosure ℚ) L.below
 
+open scoped Classical in
 noncomputable instance ordinaryIdeleClassNormBaseFiniteDimensional
     (K : FiniteAbstractField
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ)) :
@@ -61,6 +67,7 @@ noncomputable instance ordinaryIdeleClassNormBaseFiniteDimensional
   abstractFixedField_finiteDimensional
     ℚ (SeparableClosure ℚ) K.field K.finite
 
+open scoped Classical in
 noncomputable instance ordinaryIdeleClassNormExtensionFiniteDimensional
     (K : FiniteAbstractField
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
@@ -72,6 +79,7 @@ noncomputable instance ordinaryIdeleClassNormExtensionFiniteDimensional
     ℚ (SeparableClosure ℚ)
     K.field L.field L.below K.finite L.finite
 
+open scoped Classical in
 noncomputable instance ordinaryIdeleClassNormScalarTower
     (K : FiniteAbstractField
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
@@ -81,6 +89,7 @@ noncomputable instance ordinaryIdeleClassNormScalarTower
       (ordinaryIdeleClassNormExtension K L) :=
   IsScalarTower.of_algebraMap_eq' rfl
 
+open scoped Classical in
 noncomputable instance ordinaryIdeleClassNormExtensionAbsoluteFiniteDimensional
     (K : FiniteAbstractField
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
@@ -91,12 +100,14 @@ noncomputable instance ordinaryIdeleClassNormExtensionAbsoluteFiniteDimensional
     (ordinaryIdeleClassNormBase K)
     (ordinaryIdeleClassNormExtension K L)
 
+open scoped Classical in
 noncomputable instance ordinaryIdeleClassNormBaseNumberField
     (K : FiniteAbstractField
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ)) :
     NumberField (ordinaryIdeleClassNormBase K) :=
   NumberField.of_module_finite ℚ (ordinaryIdeleClassNormBase K)
 
+open scoped Classical in
 noncomputable instance ordinaryIdeleClassNormExtensionNumberField
     (K : FiniteAbstractField
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
@@ -105,6 +116,7 @@ noncomputable instance ordinaryIdeleClassNormExtensionNumberField
   NumberField.of_module_finite ℚ
     (ordinaryIdeleClassNormExtension K L)
 
+open scoped Classical in
 noncomputable instance ordinaryIdeleClassNormExtensionIsAbelianGalois
     (K : FiniteAbstractField
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
@@ -114,6 +126,7 @@ noncomputable instance ordinaryIdeleClassNormExtensionIsAbelianGalois
       (ordinaryIdeleClassNormExtension K L) :=
   finiteAbelianSubextensionAbstractRelativeFixedFieldIsAbelianGalois L
 
+open scoped Classical in
 /-- The represented ordinary norm subgroup is the determinant-norm range on
 the named actual fixed fields. -/
 theorem ordinaryIdeleClassNormSubgroup_eq_namedNormRange
@@ -128,6 +141,7 @@ theorem ordinaryIdeleClassNormSubgroup_eq_namedNormRange
     ordinaryIdeleClassNormExtension] using
     (ordinaryIdeleClassNormSubgroup_eq_actualNormRange K L)
 
+open scoped Classical in
 /-- The ordinary norm subgroup represented by a finite abelian
 subextension is open in the natural topology of the idele class group of
 the canonical actual fixed field. -/
@@ -146,6 +160,7 @@ theorem ordinaryIdeleClassNormSubgroup_isOpen
     (K := ordinaryIdeleClassNormBase K)
     (L := ordinaryIdeleClassNormExtension K L)
 
+open scoped Classical in
 /-- The ordinary norm subgroup represented by a finite abelian
 subextension is closed in the natural idele-class topology. -/
 theorem ordinaryIdeleClassNormSubgroup_isClosed
@@ -163,6 +178,7 @@ theorem ordinaryIdeleClassNormSubgroup_isClosed
     (K := ordinaryIdeleClassNormBase K)
     (L := ordinaryIdeleClassNormExtension K L)
 
+open scoped Classical in
 /-- The ordinary norm subgroup represented by a finite abelian
 subextension has finite index. -/
 theorem ordinaryIdeleClassNormSubgroup_finiteIndex
@@ -180,6 +196,7 @@ theorem ordinaryIdeleClassNormSubgroup_finiteIndex
         (K := ordinaryIdeleClassNormBase K)
         (L := ordinaryIdeleClassNormExtension K L))
 
+open scoped Classical in
 /-- The index of the ordinary norm subgroup represented by a finite
 abelian subextension is the degree of its actual relative fixed-field
 extension. -/

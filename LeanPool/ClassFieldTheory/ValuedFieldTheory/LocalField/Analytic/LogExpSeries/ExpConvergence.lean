@@ -684,7 +684,8 @@ theorem summable_expSeriesTermField_mul_prod_ofWithZeroValuation_of_lt_exp_neg_o
 
 /-- The antidiagonal Cauchy product of two local exponential series sums to
 the product of their values. -/
-theorem hasSum_expSeriesTermField_cauchyProduct_expSeriesField_mul_ofWithZeroValuation_of_lt_exp_neg_one
+theorem
+  hasSum_expSeriesTermField_cauchyProduct_expSeriesField_mul_ofWithZeroValuation_of_lt_exp_neg_one
     (v : _root_.Valuation K (WithZero (Multiplicative ℤ)))
     {p : ℕ} [Fact p.Prime] (x y : K)
     (hnK : ∀ n : ℕ, (((n.factorial : ℕ) : K) ≠ 0))
@@ -814,7 +815,8 @@ theorem summable_expSeriesTermField_mul_prod_ofWithZeroValuation_scaled_of_thres
 
 /-- The antidiagonal Cauchy product of two local exponential series sums to
 the product of their values under the sharp ramified threshold. -/
-theorem hasSum_expSeriesTermField_cauchyProduct_expSeriesField_mul_ofWithZeroValuation_scaled_of_threshold
+theorem
+  hasSum_expSeriesTermField_cauchyProduct_expSeriesField_mul_ofWithZeroValuation_scaled_of_threshold
     (v : _root_.Valuation K (WithZero (Multiplicative ℤ)))
     {p : ℕ} [Fact p.Prime] (e : ℕ) (x y : K)
     (hnK : ∀ n : ℕ, (((n.factorial : ℕ) : K) ≠ 0))

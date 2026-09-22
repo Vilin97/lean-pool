@@ -16,13 +16,14 @@ The ideal norms are norms of fractional ideals prime to the modulus; the
 principal ray ideals are absorbed by the ray quotient.
 -/
 
-open scoped Classical NumberField IsMulCommutative
+open scoped NumberField IsMulCommutative
 open NumberField IsDedekindDomain
 
 noncomputable section
 
 namespace ClassFieldTheory
 
+open scoped Classical in
 /-- For finite abelian reciprocity data, the image of genuine ideal norms
 in the ideal ray class group equals the normalized Artin kernel. -/
 theorem rayClassIdealNormImage_eq_artinKer

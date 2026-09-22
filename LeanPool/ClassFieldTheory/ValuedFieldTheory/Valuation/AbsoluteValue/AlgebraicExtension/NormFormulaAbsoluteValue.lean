@@ -119,7 +119,7 @@ theorem normFormula_finiteExtensionNormFormulaValue_strong_triangle_of_henselFac
 /-- the finite norm-formula theorem finite norm formula bundled as an absolute value, assuming
 only the primitive factorization form of Hensel's lemma on the base valuation
 ring. -/
-noncomputable def normFormula_finite_normFormulaAbsoluteValue_of_henselFactorization
+noncomputable def normFormulaFiniteNormFormulaAbsoluteValueOfHenselFactorization
     {K L : Type*} [Field K] [Field L] [Algebra K L]
     [FiniteDimensional K L]
     (v : AbsoluteValue K ℝ) (hnonarch : LubinTate.Valuations.NonarchimedeanAbsoluteValue v)
@@ -152,7 +152,7 @@ theorem normFormula_finite_normFormulaAbsoluteValue_of_henselFactorization_apply
     (hv : ValuationTheory.DiscreteValuationField.HenselFactorizationProperty
       (absoluteValueValuationSubring v hnonarch))
     (x : L) :
-    normFormula_finite_normFormulaAbsoluteValue_of_henselFactorization
+    normFormulaFiniteNormFormulaAbsoluteValueOfHenselFactorization
         (K := K) (L := L) v hnonarch hv x =
       finiteExtensionNormFormulaValue v x :=
   rfl
@@ -166,7 +166,7 @@ theorem normFormula_finite_normFormulaAbsoluteValue_of_henselFactorization_exten
     (hv : ValuationTheory.DiscreteValuationField.HenselFactorizationProperty
       (absoluteValueValuationSubring v hnonarch))
     (x : K) :
-    normFormula_finite_normFormulaAbsoluteValue_of_henselFactorization
+    normFormulaFiniteNormFormulaAbsoluteValueOfHenselFactorization
         (K := K) (L := L) v hnonarch hv (algebraMap K L x) = v x :=
   normFormula_finiteExtensionNormFormulaValue_algebraMap v x
 
@@ -178,10 +178,10 @@ theorem normFormula_finite_normFormulaAbsoluteValue_of_henselFactorization_nonar
     (hv : ValuationTheory.DiscreteValuationField.HenselFactorizationProperty
       (absoluteValueValuationSubring v hnonarch)) :
     LubinTate.Valuations.NonarchimedeanAbsoluteValue
-      (normFormula_finite_normFormulaAbsoluteValue_of_henselFactorization
+      (normFormulaFiniteNormFormulaAbsoluteValueOfHenselFactorization
         (K := K) (L := L) v hnonarch hv) := by
   refine LubinTate.Valuations.nonarchimedean_of_strong_triangle
-    (normFormula_finite_normFormulaAbsoluteValue_of_henselFactorization
+    (normFormulaFiniteNormFormulaAbsoluteValueOfHenselFactorization
       (K := K) (L := L) v hnonarch hv) ?_
   intro x y
   exact
@@ -190,7 +190,8 @@ theorem normFormula_finite_normFormulaAbsoluteValue_of_henselFactorization_nonar
 
 /-- The closed unit ball of the bundled norm formula consists exactly of the
 elements integral over the base valuation ring. -/
-theorem normFormula_finite_normFormulaAbsoluteValue_of_henselFactorization_mem_valuationSubring_iff_isIntegral
+theorem
+  normFormula_finite_normFormulaAbsoluteValue_of_henselFactorization_mem_valuationSubring_iff_isIntegral
     {K L : Type*} [Field K] [Field L] [Algebra K L]
     [FiniteDimensional K L]
     (v : AbsoluteValue K ℝ) (hnonarch : LubinTate.Valuations.NonarchimedeanAbsoluteValue v)
@@ -198,7 +199,7 @@ theorem normFormula_finite_normFormulaAbsoluteValue_of_henselFactorization_mem_v
       (absoluteValueValuationSubring v hnonarch))
     (x : L) :
     x ∈ absoluteValueValuationSubring
-        (normFormula_finite_normFormulaAbsoluteValue_of_henselFactorization
+        (normFormulaFiniteNormFormulaAbsoluteValueOfHenselFactorization
           (K := K) (L := L) v hnonarch hv)
         (normFormula_finite_normFormulaAbsoluteValue_of_henselFactorization_nonarchimedean
           (K := K) (L := L) v hnonarch hv) ↔
@@ -215,14 +216,15 @@ theorem normFormula_finite_normFormulaAbsoluteValue_of_henselFactorization_mem_v
 
 /-- The valuation ring of the bundled finite norm formula is the actual
 integral closure of the base valuation ring in `L`. -/
-theorem normFormula_finite_normFormulaAbsoluteValue_of_henselFactorization_valuationSubring_eq_integralClosure
+theorem
+  normFormula_finite_normFormulaAbsoluteValue_of_henselFactorization_valuationSubring_eq_integralClosure
     {K L : Type*} [Field K] [Field L] [Algebra K L]
     [FiniteDimensional K L]
     (v : AbsoluteValue K ℝ) (hnonarch : LubinTate.Valuations.NonarchimedeanAbsoluteValue v)
     (hv : ValuationTheory.DiscreteValuationField.HenselFactorizationProperty
       (absoluteValueValuationSubring v hnonarch)) :
     (absoluteValueValuationSubring
-        (normFormula_finite_normFormulaAbsoluteValue_of_henselFactorization
+        (normFormulaFiniteNormFormulaAbsoluteValueOfHenselFactorization
           (K := K) (L := L) v hnonarch hv)
         (normFormula_finite_normFormulaAbsoluteValue_of_henselFactorization_nonarchimedean
           (K := K) (L := L) v hnonarch hv)).toSubring =

@@ -54,7 +54,8 @@ theorem localLowerRamificationGroup_one_eq_hilbertRamificationGroup
     Algebra.IsAlgebraic.of_finite _ _
   let : Algebra.IsSeparable base.residueField target.residueField :=
     inferInstance
-  exact RamificationTheory.HilbertRamification.lowerRamificationGroup_one_eq_hilbertRamificationGroup
+  exact
+    RamificationTheory.HilbertRamification.lowerRamificationGroup_one_eq_hilbertRamificationGroup
     base target (chosenLocalExtensionCompleteDVF_hasUniqueDVFValuationExtension K L)
 
 /-- Triviality of the first lower group is exactly triviality of Hilbert's

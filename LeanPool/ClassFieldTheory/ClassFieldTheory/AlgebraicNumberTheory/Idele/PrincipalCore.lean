@@ -31,7 +31,6 @@ variable {K}
 
 /-- The finite component of a principal idele is the image of the
 underlying field element in the corresponding completion. -/
-@[simp]
 theorem finiteComponent_principalIdele
     (x : Kˣ) (v : HeightOneSpectrum (𝓞 K)) :
     ((finiteComponent v (principalIdele K x) :
@@ -40,7 +39,6 @@ theorem finiteComponent_principalIdele
 
 /-- The infinite component of a principal idele is the image of the
 underlying field element in the corresponding completion. -/
-@[simp]
 theorem infiniteComponent_principalIdele
     (x : Kˣ) (w : InfinitePlace K) :
     ((infiniteComponent w (principalIdele K x) :

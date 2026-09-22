@@ -29,7 +29,8 @@ by the supplied generator's residue. -/
 private theorem primitive_separable_integral_model_core
     {K L : Type*} [Field K] [Field L] [Algebra K L]
     [FiniteDimensional K L]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     (hhens : ValuationTheory.DiscreteValuationField.HenselianValuationByFactorization
       (LubinTate.Valuations.exponentialValuationSubringAsValuationSubring v).valuation)
@@ -114,11 +115,8 @@ private theorem primitive_separable_integral_model_core
     change
       (F.map ((algebraMap K L).comp V.subtype)).eval (a : L) = 0
     exact hFroot
-  have hqSep : qbar.Separable := by
-    apply hFreduction.of_dvd
-    rcases hGdvdF with ⟨H, hH⟩
-    refine ⟨H.map (IsLocalRing.residue V), ?_⟩
-    rw [hH, Polynomial.map_mul]
+  have hqSep : qbar.Separable :=
+    hFreduction.of_dvd (Polynomial.map_dvd (IsLocalRing.residue V) hGdvdF)
   have hhensV : ValuationTheory.DiscreteValuationField.HenselFactorizationProperty Vv := by
     change ValuationTheory.DiscreteValuationField.HenselFactorizationProperty
       Vv.valuation.valuationSubring at hhens
@@ -204,21 +202,11 @@ private theorem primitive_separable_integral_model_core
     rw [IntermediateField.adjoin.finrank halphaIntegral, ← hqMinpoly]
     exact hqDegree
   have hsuble :
-      Module.finrank K L ≤
-        @Module.finrank k ell _ _ residueModule := by
-    calc
-      Module.finrank K L =
-          Module.finrank k
-            (IntermediateField.adjoin k ({alpha} : Set ell)) :=
-        hresidueSubDegree.symm
-      _ ≤ @Module.finrank k ell _ _ algebraModule := by
-        simpa using
-          (@IntermediateField.finrank_le_of_le_right
-            k ell _ _ _
-            (IntermediateField.adjoin k ({alpha} : Set ell))
-            (⊤ : IntermediateField k ell) hfinTopAlgebra le_top)
-      _ = @Module.finrank k ell _ _ residueModule := by
-        rw [hresidueModule]
+      Module.finrank K L ≤ @Module.finrank k ell _ _ residueModule := by
+    rw [← hresidueSubDegree, hresidueModule]
+    simpa using (@IntermediateField.finrank_le_of_le_right k ell _ _ _
+      (IntermediateField.adjoin k ({alpha} : Set ell))
+      (⊤ : IntermediateField k ell) hfinTopAlgebra le_top)
   let : Finite (ExponentialValueGroupQuotient v w) :=
     exponentialValueGroupQuotient_finite_of_finiteDimensional v w hExt
   have hepos : 0 < exponentialRamificationIndex v w := by
@@ -236,42 +224,20 @@ private theorem primitive_separable_integral_model_core
         @Module.finrank k ell _ _ residueModule :=
     Nat.le_antisymm hsuble hresle
   have hdegreeEqAlgebra :
-      Module.finrank K L =
-        @Module.finrank k ell _ _ algebraModule := by
-    calc
-      Module.finrank K L =
-          @Module.finrank k ell _ _ residueModule := hdegreeEq
-      _ = @Module.finrank k ell _ _ algebraModule := by
-        rw [hresidueModule]
+      Module.finrank K L = @Module.finrank k ell _ _ algebraModule := by
+    rwa [hresidueModule] at hdegreeEq
   have hAdjoinResidue :
-      IntermediateField.adjoin k ({alpha} : Set ell) =
-        (⊤ : IntermediateField k ell) := by
-    refine @IntermediateField.eq_of_le_of_finrank_eq
-      k ell _ _ _
-      (IntermediateField.adjoin k ({alpha} : Set ell))
-      (⊤ : IntermediateField k ell) hfinTopAlgebra le_top ?_
-    calc
-      Module.finrank k
-          (IntermediateField.adjoin k ({alpha} : Set ell)) =
-          Module.finrank K L := hresidueSubDegree
-      _ = @Module.finrank k ell _ _ algebraModule := hdegreeEqAlgebra
-      _ = Module.finrank k (⊤ : IntermediateField k ell) := by
-        simp
-  have hsepAdjoin : Algebra.IsSeparable k
-      (IntermediateField.adjoin k ({alpha} : Set ell)) :=
-    (IntermediateField.isSeparable_adjoin_iff_isSeparable k ell).2 (by
-      intro x hx
-      have hxalpha : x = alpha := by simpa using hx
-      subst x
-      exact halphaSep)
-  let eTop : IntermediateField.adjoin k ({alpha} : Set ell) ≃ₐ[k] ell :=
-    (IntermediateField.equivOfEq hAdjoinResidue).trans
-      (IntermediateField.topEquiv :
-        (⊤ : IntermediateField k ell) ≃ₐ[k] ell)
+      IntermediateField.adjoin k ({alpha} : Set ell) = ⊤ := by
+    apply (@Field.primitive_element_iff_minpoly_natDegree_eq
+      k ell _ _ _ hresfinAlgebra alpha).2
+    rw [← hqMinpoly, hqDegree]
+    exact hdegreeEqAlgebra
   have hsepEll : Algebra.IsSeparable k ell := by
-    let : Algebra.IsSeparable k
-        (IntermediateField.adjoin k ({alpha} : Set ell)) := hsepAdjoin
-    exact AlgEquiv.Algebra.isSeparable eTop
+    rw [← IntermediateField.isSeparable_top, ← hAdjoinResidue,
+      IntermediateField.isSeparable_adjoin_iff_isSeparable]
+    intro x hx
+    obtain rfl := Set.mem_singleton_iff.mp hx
+    exact halphaSep
   refine ⟨⟨?_, ?_⟩, hAdjoinResidue⟩
   · exact hsepEll
   · change Module.finrank K L =
@@ -288,7 +254,8 @@ No unramified conclusion or degree comparison is assumed. -/
 theorem finiteUnramifiedExtension_of_primitive_separable_integral_model
     {K L : Type*} [Field K] [Field L] [Algebra K L]
     [FiniteDimensional K L]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     (hhens : ValuationTheory.DiscreteValuationField.HenselianValuationByFactorization
       (LubinTate.Valuations.exponentialValuationSubringAsValuationSubring v).valuation)
@@ -315,7 +282,8 @@ residue field over the base residue field. -/
 theorem unramifiedBaseChange_residue_adjoin_eq_top_of_primitive_separable_integral_model
     {K L : Type*} [Field K] [Field L] [Algebra K L]
     [FiniteDimensional K L]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     (hhens : ValuationTheory.DiscreteValuationField.HenselianValuationByFactorization
       (LubinTate.Valuations.exponentialValuationSubringAsValuationSubring v).valuation)

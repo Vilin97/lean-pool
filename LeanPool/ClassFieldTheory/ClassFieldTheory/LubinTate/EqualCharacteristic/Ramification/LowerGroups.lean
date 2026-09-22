@@ -634,7 +634,8 @@ theorem equalCharacteristicLubinTateRealLowerRamificationGroup_natCard_pow_sub_o
 
 /-- On the whole interval `q^(k-1) ≤ r < q^k`, lower-group membership is
 controlled by the same first-`k` coefficient condition. -/
-theorem mem_equalCharacteristicLubinTateRealLowerRamificationGroup_nat_iff_coeff_zero_of_pow_interval
+theorem
+  mem_equalCharacteristicLubinTateRealLowerRamificationGroup_nat_iff_coeff_zero_of_pow_interval
     (F : LocalField.{0, v} K₀)
     [CharP K₀ F.residueCharacteristic]
     (n k r : ℕ) (hk : 1 ≤ k)

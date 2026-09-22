@@ -19,7 +19,8 @@ open ClassFormation CyclicCohomology
 /-!
 # Finite local reciprocity: norms from arbitrary finite separable fixed fields
 
-The henselian condition in the abstract class-formation framework quantifies over every finite abstract
+The henselian condition in the abstract class-formation framework quantifies over every finite
+  abstract
 field, not only over normal ones.  For an intermediate finite separable field
 `E` in a separably closed Galois ambient field, the left cosets of
 `Gal(Ω / E)` are canonically the `K`-embeddings `E → Ω`.  This file uses that
@@ -163,6 +164,7 @@ end CosetsAndEmbeddings
 
 section NormAsProduct
 
+/-- A power basis enumerates the algebra embeddings of a finite separable field extension. -/
 noncomputable local instance finiteSeparableAlgHomFintype
     {k F T : Type} [Field k] [Field F] [Field T]
     [Algebra k F] [Algebra k T]

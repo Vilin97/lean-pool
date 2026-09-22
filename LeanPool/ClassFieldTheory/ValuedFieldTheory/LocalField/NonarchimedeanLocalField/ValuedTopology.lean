@@ -26,7 +26,7 @@ valuative relation induced by its distinguished valuation. -/
 theorem isValuativeTopology_of_valued_ofValuation
     (F : Type u) (Γ : Type v)
     [Field F] [LinearOrderedCommGroupWithZero Γ]
-    [MulArchimedean Γ] [Valued F Γ]
+    [Valued F Γ]
     [Valuation.IsNontrivial (Valued.v : Valuation F Γ)] :
     letI := ValuativeRel.ofValuation (Valued.v : Valuation F Γ)
     IsValuativeTopology F := by

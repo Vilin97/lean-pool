@@ -224,27 +224,35 @@ variable
     (hw : w.1.IsNontrivial)
     (u : AbsoluteValueExtension w.1 L)
 
+/-- The completion at the extended infinite absolute value is an algebra over the base field. -/
 local instance infinitePlaceExtensionCompletionAlgebra :
     Algebra K u.1.Completion :=
   AbsoluteValue.extensionCompletionAlgebra (K := K) u.1
 
+/-- The base field acts on the extended infinite-place completion through its chosen algebra
+structure. -/
 local instance infinitePlaceExtensionCompletionSMul :
     SMul K u.1.Completion :=
   infinitePlaceExtensionCompletionAlgebra w u |>.toSMul
 
+/-- The completion at the extended infinite place is an algebra over the base-place completion. -/
 local instance infinitePlaceLocalizedCompletionAlgebra :
     Algebra w.1.Completion u.1.Completion :=
   AbsoluteValue.completionAlgebra w.1 u.1 u.2
 
+/-- Every extension of the infinite absolute value gives a completion over the base-place
+completion. -/
 local instance infinitePlaceAllCompletionAlgebra
     (u' : AbsoluteValueExtension w.1 L) :
     Algebra w.1.Completion u'.1.Completion :=
   AbsoluteValue.completionAlgebra w.1 u'.1 u'.2
 
+/-- Global Galois automorphisms act on units of the infinite-place scalar tensor algebra. -/
 local instance infinitePlaceScalarTensorUnitsAction :
     MulDistribMulAction (L ≃ₐ[K] L) (w.Completion ⊗[K] L)ˣ :=
   scalarTensorUnitsAction (K := K) (L := L) (A := w.Completion)
 
+/-- Global Galois automorphisms act on units of the infinite-place local tensor algebra. -/
 local instance infinitePlaceLocalTensorUnitsAction :
     MulDistribMulAction
       (L ≃ₐ[K] L)

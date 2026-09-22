@@ -18,7 +18,8 @@ repeats the mechanical part of the Lubin--Tate construction with
 The primitive level polynomial is monic and Eisenstein at `(T)`, hence
 irreducible over `κ((T))`; its simple root extension has degree
 `(q - 1)q^n`, and the norm of the negative generator is exactly `uT`.
-This is the changed-uniformizer algebra used in the proof of the completed theta-intertwining theorem.
+This is the changed-uniformizer algebra used in the proof of the completed theta-intertwining
+  theorem.
 -/
 
 noncomputable section
@@ -264,7 +265,8 @@ theorem equalCharacteristicChangedIntegralPrimitivePolynomial_map_constantCoeff
     equalCharacteristicChangedIntegralPiPolynomialIterate_map_constantCoeff,
     equalCharacteristicChangedIntegralUniformizer, ← pow_mul, Nat.mul_comm]
 
-/-- The constant coefficient of the changed integral primitive polynomial is the changed uniformizer. -/
+/-- The constant coefficient of the changed integral primitive polynomial is the changed
+uniformizer. -/
 theorem equalCharacteristicChangedIntegralPrimitivePolynomial_coeff_zero
     (F : LocalField.{u, v} K) (a : F.residueField⟦X⟧ˣ) (n : ℕ) :
     (equalCharacteristicChangedIntegralPrimitivePolynomial F a n).coeff 0 =
@@ -436,7 +438,8 @@ theorem equalCharacteristicChangedPrimitivePolynomial_irreducible
     (F : LocalField.{u, v} K) (a : F.residueField⟦X⟧ˣ) (n : ℕ) :
     Irreducible (equalCharacteristicChangedPrimitivePolynomial F a n) := by
   exact
-    (equalCharacteristicChangedIntegralPrimitivePolynomial_monic F a n).irreducible_iff_irreducible_map_fraction_map.mp
+    (equalCharacteristicChangedIntegralPrimitivePolynomial_monic F a
+      n).irreducible_iff_irreducible_map_fraction_map.mp
       (equalCharacteristicChangedIntegralPrimitivePolynomial_irreducible F a n)
 
 /-- The changed Laurent uniformizer is the primitive polynomial's constant coefficient. -/
@@ -512,7 +515,7 @@ theorem equalCharacteristicChangedPrimitivePolynomial_separable
 /-- The changed primitive polynomial has a root in the separable closure. -/
 theorem exists_equalCharacteristicChangedPrimitivePolynomial_root
     (F : LocalField.{u, v} K) (a : F.residueField⟦X⟧ˣ)
-    [CharP K F.residueCharacteristic] (n : ℕ) :
+    (n : ℕ) :
     ∃ x : SeparableClosure F.residueField⸨X⸩,
       ((equalCharacteristicChangedPrimitivePolynomial F a n).map
         (equalCharacteristicSeparableBaseHom F)).IsRoot x := by

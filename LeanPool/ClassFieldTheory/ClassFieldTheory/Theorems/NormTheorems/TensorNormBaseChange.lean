@@ -27,7 +27,7 @@ of a factor of the tensor algebra is required. -/
 theorem tensorNorm_includeRight
     (K : Type u) (L : Type v) (A : Type w)
     [Field K] [Field L] [Algebra K L] [FiniteDimensional K L]
-    [CommRing A] [Algebra K A] [Nontrivial A]
+    [CommRing A] [Algebra K A]
     (y : L) :
     Algebra.norm A
         (Algebra.TensorProduct.includeRight (R := K) (A := A) (B := L) y) =

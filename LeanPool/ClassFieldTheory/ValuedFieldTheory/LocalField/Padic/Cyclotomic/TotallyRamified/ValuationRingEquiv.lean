@@ -26,6 +26,7 @@ section CyclotomicExtension
 variable {p k : ℕ} [Fact p.Prime]
 variable {L : Type u} [Field L] [Algebra ℚ_[p] L]
 
+/-- The `ℤ_[p]`-algebra on the cyclotomic extension is induced through `ℚ_[p]`. -/
 local instance padicCyclotomicTotallyRamifiedValuationRingEquivAlgebraPadicInt : Algebra ℤ_[p] L :=
   ((algebraMap ℚ_[p] L).comp (algebraMap ℤ_[p] ℚ_[p])).toAlgebra
 
@@ -39,9 +40,10 @@ equivalence preserves the represented element of `L`. -/
 theorem padicCyclotomicTotallyRamified_exists_adjoin_sub_one_equiv_valuationSubring
     (ζ : L) (hζ : IsPrimitiveRoot ζ (p ^ (k + 1)))
     (hgen : Algebra.adjoin ℚ_[p] ({ζ} : Set L) = ⊤)
-    [FiniteDimensional ℚ_[p] L] [Algebra.IsSeparable ℚ_[p] L]
+
     (target : ValuationTheory.DiscreteValuationField.CompleteDVF.{u, 0} L)
-    [hExt : (LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicCompleteDVF p).valuation.HasExtension
+    [hExt : (LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicCompleteDVF
+      p).valuation.HasExtension
       target.valuation]
     [hTarget : IsIntegralClosure target.valuationSubring
       (LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicCompleteDVF p).valuationSubring L] :

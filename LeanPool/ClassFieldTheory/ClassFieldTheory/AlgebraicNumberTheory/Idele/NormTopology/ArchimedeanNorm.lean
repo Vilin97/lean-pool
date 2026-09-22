@@ -342,7 +342,7 @@ theorem archimedeanNorm_norm
       let vK := v₀.1
       let hvK : vK.IsNontrivial := v₀.isNontrivial
       let :=
-        AlgebraicNumberTheory.Valuations.completionTensorDecomposition_extensionFintype
+        AlgebraicNumberTheory.Valuations.completionTensorDecompositionExtensionFintype
           (K := K) (L := L) vK hvK
       let eAbove :=
         infinitePlaceAboveEquivExtension (K := K) (L := L) v₀

@@ -715,7 +715,8 @@ private theorem transferNormNaturality_extensionAction_product
   rw [transferNormNaturalityRightCosetProductEquiv_apply, map_mul]
   rfl
 
-/-- The norm identity underlying the right vertical arrow of transfer--norm naturality.  It is the additive form of the product calculation. -/
+/-- The norm identity underlying the right vertical arrow of transfer--norm naturality.  It is
+the additive form of the product calculation. -/
 theorem transferNormNaturality_norm_doubleCoset_formula
     (A : Rep ℤ G) (K K' L : ClosedSubgroup G)
     (hLK' : L.toSubgroup ≤ K'.toSubgroup)
@@ -928,7 +929,8 @@ theorem transferNormNaturality_normQuotientInclusion_finiteNormClass
 
 namespace DegreeData
 
-/-- transfer--norm naturality on one Frobenius generator.  The proof follows: transfer is expanded over double cosets, the finite reciprocity equivalence
+/-- transfer--norm naturality on one Frobenius generator.  The proof follows: transfer is
+expanded over double cosets, the finite reciprocity equivalence
 evaluates every positive Frobenius factor, and the resulting prime norms
 are identified by `transferNormNaturalityNorm_eq_sum_transferNorms`. -/
 theorem transferNormNaturality_generator_square

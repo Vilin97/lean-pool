@@ -19,7 +19,7 @@ For a nonzero integral ideal `I`, `(a/I)` is the finite product of
 `(a/P)` raised to the multiplicity of `P` in `I`.
 -/
 
-open scoped NumberField Classical BigOperators
+open scoped NumberField BigOperators
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -31,11 +31,16 @@ attribute [local instance] Ideal.Quotient.field
 
 variable (K : Type*) [Field K] [NumberField K]
 
+open scoped Classical in
+/-- The residue field at a nonzero prime ideal of a number field has a finite enumeration. -/
 noncomputable local instance primeIdealResidueFintype
     (P : HeightOneSpectrum (𝓞 K)) :
     Fintype (𝓞 K ⧸ P.asIdeal) :=
   Fintype.ofFinite _
 
+attribute [local instance] primeIdealResidueFintype
+
+open scoped Classical in
 /-- Reduction of `n`-th roots of unity modulo an integral prime ideal. -/
 def rootsOfUnityReduction
     (P : HeightOneSpectrum (𝓞 K)) (n : ℕ) :
@@ -52,6 +57,7 @@ def rootsOfUnityReduction
     apply Subtype.ext
     exact map_mul (Ideal.rootsOfUnityMapQuot P.asIdeal n) z w
 
+open scoped Classical in
 /-- Reduction on `μₙ` is injective away from `n`. -/
 theorem rootsOfUnityReduction_injective
     (P : HeightOneSpectrum (𝓞 K)) (n : ℕ+)
@@ -66,6 +72,7 @@ theorem rootsOfUnityReduction_injective
       hcoprime
       (congrArg Subtype.val hzw)
 
+open scoped Classical in
 /-- If `K` contains `μₙ`, then `n` divides `N(P)-1` at every prime
 `P ∤ n`. -/
 theorem dvd_absNorm_sub_one_of_primitiveRoots
@@ -94,6 +101,7 @@ theorem dvd_absNorm_sub_one_of_primitiveRoots
   rw [Ideal.absNorm_apply, Submodule.cardQuot_apply]
   exact hdvd
 
+open scoped Classical in
 /-- Away from `n`, reduction identifies the global integral `n`-th roots
 of unity with the residue-field `n`-th roots of unity. -/
 noncomputable def rootsOfUnityReductionEquiv
@@ -133,6 +141,7 @@ noncomputable def rootsOfUnityReductionEquiv
     ((Fintype.bijective_iff_injective_and_card f).2
       ⟨hinjective, hsource.trans htarget.symm⟩)
 
+open scoped Classical in
 /-- The reduction equivalence acts by the canonical reduction homomorphism. -/
 @[simp]
 theorem rootsOfUnityReductionEquiv_apply
@@ -144,6 +153,7 @@ theorem rootsOfUnityReductionEquiv_apply
       rootsOfUnityReduction K P (n : ℕ) zeta :=
   rfl
 
+open scoped Classical in
 /-- The cardinality of the residue field is the absolute norm of the
 prime ideal. -/
 theorem card_primeIdealResidueField
@@ -152,6 +162,7 @@ theorem card_primeIdealResidueField
   rw [← Nat.card_eq_fintype_card, Ideal.absNorm_apply,
     Submodule.cardQuot_apply]
 
+open scoped Classical in
 /-- An algebraic integer prime to `P`, regarded as a unit of the residue
 field. -/
 def primeIdealResidueUnit
@@ -163,6 +174,7 @@ def primeIdealResidueUnit
       rw [ne_eq, Ideal.Quotient.eq_zero_iff_mem]
       exact ha)
 
+open scoped Classical in
 @[simp]
 theorem primeIdealResidueUnit_mul
     (P : HeightOneSpectrum (𝓞 K))
@@ -174,6 +186,7 @@ theorem primeIdealResidueUnit_mul
   apply Units.ext
   rfl
 
+open scoped Classical in
 /-- The `n`-th power-residue symbol `(a/P)`, valued in the common group
 `μₙ(𝓞 K)`. -/
 noncomputable def primeIdealPowerResidueSymbol
@@ -190,6 +203,7 @@ noncomputable def primeIdealPowerResidueSymbol
       (𝓞 K ⧸ P.asIdeal) n hn
       (primeIdealResidueUnit K P a ha))
 
+open scoped Classical in
 /-- Reduction sends `(a/P)` to the finite-field formula
 `a^((N(P)-1)/n)`. -/
 theorem rootsOfUnityReductionEquiv_primeIdealPowerResidueSymbol
@@ -208,6 +222,7 @@ theorem rootsOfUnityReductionEquiv_primeIdealPowerResidueSymbol
   dsimp only [primeIdealPowerResidueSymbol]
   exact (rootsOfUnityReductionEquiv K P n hmu hcoprime).apply_symm_apply _
 
+open scoped Classical in
 /-- The prime-ideal symbol is one exactly when `a` is an `n`-th power
 modulo `P`. -/
 theorem primeIdealPowerResidueSymbol_eq_one_iff
@@ -239,6 +254,7 @@ theorem primeIdealPowerResidueSymbol_eq_one_iff
         (𝓞 K ⧸ P.asIdeal) n hn
         (primeIdealResidueUnit K P a ha)).2 h
 
+open scoped Classical in
 /-- Multiplicativity of `(a/P)` in the numerator. -/
 theorem primeIdealPowerResidueSymbol_mul
     (P : HeightOneSpectrum (𝓞 K)) (n : ℕ+)
@@ -264,12 +280,14 @@ theorem primeIdealPowerResidueSymbol_mul
     rootsOfUnityReductionEquiv_primeIdealPowerResidueSymbol]
   rw [primeIdealResidueUnit_mul K P a b ha hb hab, map_mul]
 
+open scoped Classical in
 /-- Multiplicity of `P` in the prime factorization of a nonzero integral
 ideal. -/
 def idealPrimeMultiplicity
     (P : HeightOneSpectrum (𝓞 K)) (I : Ideal (𝓞 K)) : ℕ :=
   (Associates.mk P.asIdeal).count (Associates.mk I).factors
 
+open scoped Classical in
 /-- Prime-ideal multiplicities add under multiplication of nonzero
 integral ideals. -/
 theorem idealPrimeMultiplicity_mul
@@ -286,6 +304,7 @@ theorem idealPrimeMultiplicity_mul
       (Associates.mk_ne_zero.mpr hJ)
       P.associates_irreducible
 
+open scoped Classical in
 /-- A prime not dividing a nonzero ideal has multiplicity zero in its
 factorization. -/
 theorem idealPrimeMultiplicity_eq_zero_of_not_dvd
@@ -297,6 +316,7 @@ theorem idealPrimeMultiplicity_eq_zero_of_not_dvd
   exact hP
     ((Associates.count_ne_zero_iff_dvd hI P.irreducible).mp hne)
 
+open scoped Classical in
 /-- The finite set of height-one primes dividing a nonzero denominator ideal.
 
 Naming this set keeps every finite-product presentation on the same subtype,
@@ -307,6 +327,7 @@ def idealPrimeDivisors (I : Ideal (𝓞 K)) :
   {P | P.asIdeal ∣ I}
 
 omit [NumberField K] in
+open scoped Classical in
 /-- Membership in the named prime-divisor set is ordinary ideal divisibility. -/
 @[simp]
 theorem mem_idealPrimeDivisors
@@ -314,12 +335,14 @@ theorem mem_idealPrimeDivisors
     P ∈ idealPrimeDivisors K I ↔ P.asIdeal ∣ I :=
   Iff.rfl
 
+open scoped Classical in
 /-- The prime divisors of a nonzero ideal form a finite set. -/
 theorem idealPrimeDivisors_finite
     (I : Ideal (𝓞 K)) (hI : I ≠ 0) :
     (idealPrimeDivisors K I).Finite :=
   Ideal.finite_factors hI
 
+open scoped Classical in
 /-- **Ideal power residue symbol.**  For `I = ∏ P ^ v_P(I)`, define
 
 `(a/I) = ∏ (a/P) ^ v_P(I)`.
@@ -347,6 +370,7 @@ noncomputable def idealPowerResidueSymbol
           (ha P.1 ((mem_idealPrimeDivisors K I P.1).mp P.2)) ^
         idealPrimeMultiplicity K P.1 I
 
+open scoped Classical in
 /-- The prime-by-prime factor of the ideal power-residue symbol, extended
 by `1` away from the prime divisors of the denominator. -/
 noncomputable def idealPowerResidueFactor
@@ -369,6 +393,7 @@ noncomputable def idealPowerResidueFactor
   else
     1
 
+open scoped Classical in
 /-- Only prime divisors of the denominator can contribute a nontrivial
 factor. -/
 theorem idealPowerResidueFactor_hasFiniteMulSupport
@@ -391,6 +416,7 @@ theorem idealPowerResidueFactor_hasFiniteMulSupport
     simpa using hdiv
   exact hP (by simp [idealPowerResidueFactor, hnot])
 
+open scoped Classical in
 /-- Prime-by-prime multiplicativity in the denominator. -/
 theorem idealPowerResidueFactor_mul
     (I J : Ideal (𝓞 K)) (hI : I ≠ 0) (hJ : J ≠ 0)
@@ -460,6 +486,7 @@ theorem idealPowerResidueFactor_mul
         idealPowerResidueFactor, dite_eq_right hPI,
         idealPowerResidueFactor, dite_eq_right hPJ, one_mul]
 
+open scoped Classical in
 /-- The subtype product defining the ideal symbol is equivalently the finite product
 over all finite primes, with factor `1` away from the denominator. -/
 theorem idealPowerResidueSymbol_eq_finprod
@@ -504,6 +531,7 @@ theorem idealPowerResidueSymbol_eq_finprod
       · simp [hP]
       · simp [idealPowerResidueFactor, hP]
 
+open scoped Classical in
 /-- Multiplicativity of the ideal power residue symbol in the denominator ideal. -/
 theorem idealPowerResidueSymbol_mul_denominator
     (I J : Ideal (𝓞 K)) (hI : I ≠ 0) (hJ : J ≠ 0)
@@ -546,6 +574,7 @@ theorem idealPowerResidueSymbol_mul_denominator
   exact idealPowerResidueFactor_mul
     K I J hI hJ n hmu a hcoprime ha P
 
+open scoped Classical in
 /-- Unfolded finite-product form of the ideal power residue symbol. -/
 theorem idealPowerResidueSymbol_eq_prod
     (I : Ideal (𝓞 K)) (hI : I ≠ 0)
@@ -569,6 +598,7 @@ theorem idealPowerResidueSymbol_eq_prod
           idealPrimeMultiplicity K P.1 I :=
   rfl
 
+open scoped Classical in
 /-- Multiplicativity of the ideal power residue symbol in the numerator. -/
 theorem idealPowerResidueSymbol_mul
     (I : Ideal (𝓞 K)) (hI : I ≠ 0)

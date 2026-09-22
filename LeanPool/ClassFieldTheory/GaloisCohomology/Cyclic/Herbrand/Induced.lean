@@ -318,10 +318,13 @@ theorem cyclic_pow_index_mem (H : Subgroup G) (σ : G) :
     σ ^ H.index ∈ H :=
   H.pow_index_mem σ
 
+omit [Fintype G] in
 /-- In a cyclic group, `σ^[G:H]` generates `H`. -/
-theorem zpowers_pow_index_eq (H : Subgroup G) (σ : G)
+theorem zpowers_pow_index_eq [Finite G] (H : Subgroup G) (σ : G)
     (hgen : ∀ x : G, x ∈ Subgroup.zpowers σ) :
     Subgroup.zpowers (σ ^ H.index) = H := by
+  classical
+  let := Fintype.ofFinite G
   have hn0 : H.index ≠ 0 := by
     rw [H.index_eq_card]
     exact Nat.card_pos.ne'
@@ -356,10 +359,13 @@ theorem subgroupGenerator_coe (H : Subgroup G) (σ : G) :
     (subgroupGenerator H σ : G) = σ ^ H.index :=
   rfl
 
+omit [Fintype G] in
 /-- The canonical element `σ^[G:H]` generates `H`. -/
-theorem subgroupGenerator_generates (H : Subgroup G) (σ : G)
+theorem subgroupGenerator_generates [Finite G] (H : Subgroup G) (σ : G)
     (hgen : ∀ x : G, x ∈ Subgroup.zpowers σ) :
     ∀ h : H, h ∈ Subgroup.zpowers (subgroupGenerator H σ) := by
+  classical
+  let := Fintype.ofFinite G
   intro h
   have hh : h.1 ∈
       Subgroup.zpowers (σ ^ H.index) := by
@@ -507,7 +513,6 @@ theorem inducedCoordinateProduct_apply (σ : G)
 
 /-- The first-coordinate section is a right inverse to the transversal
 product. -/
-@[simp]
 theorem inducedCoordinateProduct_section (σ : G)
     (hgen : ∀ x : G, x ∈ Subgroup.zpowers σ) (b : B) :
     inducedCoordinateProduct H σ hgen
@@ -540,7 +545,8 @@ section InducedHerbrandH0
 variable [CommGroup G] [Fintype G] [CommGroup B]
 variable (H : Subgroup G) [MulDistribMulAction H B]
 
-local instance : Fintype H := Fintype.ofFinite H
+/-- A subgroup of a finite group is equipped with its finite enumeration. -/
+local instance inducedEvaluationSubgroupFintype : Fintype H := Fintype.ofFinite H
 
 /-- Norm compatibility under evaluation:
 `ev₁(N_G f) = N_H(∏_{G/H} f)`. -/
@@ -704,7 +710,8 @@ section InducedHerbrandHMinusOne
 variable [CommGroup G] [Fintype G] [CommGroup B]
 variable (H : Subgroup G) [MulDistribMulAction H B]
 
-local instance : Fintype H := Fintype.ofFinite H
+/-- A subgroup of a finite group is equipped with its finite enumeration. -/
+local instance inducedCoordinatesSubgroupFintype : Fintype H := Fintype.ofFinite H
 
 local instance : NeZero H.index := ⟨by
   rw [H.index_eq_card]
@@ -1126,12 +1133,15 @@ theorem subgroupGeneratorOfGenerator_coe (σ : G)
       σ ^ H.index :=
   rfl
 
+omit [Fintype G] in
 /-- The derived element `σ^[G:H]` generates `H`. -/
-theorem subgroupGeneratorOfGenerator_generates (σ : G)
+theorem subgroupGeneratorOfGenerator_generates [Finite G] (σ : G)
     (hgen : ∀ x : G, x ∈ Subgroup.zpowers σ) :
     ∀ h : H,
       h ∈ Subgroup.zpowers
         (subgroupGeneratorOfGenerator H σ hgen) := by
+  classical
+  let := Fintype.ofFinite G
   let : IsCyclic G := ⟨⟨σ, hgen⟩⟩
   let : CommGroup G := IsCyclic.commGroup
   have hτ :

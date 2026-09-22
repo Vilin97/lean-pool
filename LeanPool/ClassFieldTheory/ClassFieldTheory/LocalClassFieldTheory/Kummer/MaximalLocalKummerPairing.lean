@@ -143,7 +143,6 @@ theorem maximalLocalKummerPairingRightHom_map_eq_rootQuotient_of_pow
     rootQuotient (K := K) (L := E) beta sigma
   exact (D.rootCharacter_eq_of_same_pow hfixed delta hbeta' sigma).symm
 
-@[simp]
 theorem maximalLocalKummerPairing_mul_right
     (n : ℕ+) (hnK : ((n : ℕ) : K) ≠ 0)
     (hmu : (primitiveRoots (n : ℕ) K).Nonempty) (a b c : Kˣ) :

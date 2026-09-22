@@ -26,7 +26,7 @@ places.  This file forms their `finprod` directly in the actual global
 Galois group.
 -/
 
-open scoped Classical IsMulCommutative NumberField NNReal ValuativeRel
+open scoped IsMulCommutative NumberField NNReal ValuativeRel
 open NumberField IsDedekindDomain
 open IdeleGroup RelativeIdeleGroup
 
@@ -43,6 +43,7 @@ variable {K L : Type}
     [Field L] [NumberField L] [Algebra K L]
     [IsAbelianGalois K L]
 
+open scoped Classical in
 /-- A finitely supported product may be regrouped over the fibers of an
 arbitrary indexing map. -/
 theorem finprod_fibers_eq_sigma
@@ -81,6 +82,7 @@ theorem finprod_fibers_eq_sigma
     _ = ∏ᶠ x : α, f x :=
       (finprod_eq_prod f hf).symm
 
+open scoped Classical in
 /-- A local norm of an integral unit at a finite place is again an
 integral unit at the place below. -/
 theorem normUnits_mem_finitePlaceIntegerUnits
@@ -122,6 +124,7 @@ theorem normUnits_mem_finitePlaceIntegerUnits
     IdeleGroup.finitePlace_normUnits_mem_integerUnits
       (K := K) (L := M) v W z
 
+open scoped Classical in
 /-- The finite local Artin factors of an idele have finite multiplicative
 support.  This is the support input for applying homomorphisms to the
 finite-place global Artin product. -/
@@ -186,6 +189,7 @@ theorem finitePlaceArtinFactors_hasFiniteMulSupport
     (K := K) (L := L) v] at hNorm
   exact MonoidHom.mem_ker.mp hNorm
 
+open scoped Classical in
 /-- At an unramified finite place, the chosen local Artin map kills
 integral idele components. -/
 theorem chosenFinitePlaceArtinMonoidHom_eq_one_of_integral_of_unramifiedAt
@@ -217,6 +221,7 @@ theorem chosenFinitePlaceArtinMonoidHom_eq_one_of_integral_of_unramifiedAt
     (K := K) (L := L) v] at hNorm
   exact MonoidHom.mem_ker.mp hNorm
 
+open scoped Classical in
 private theorem chosenFinitePlaceArtinMonoidHom_eq_one_of_mem_localNorm
     (v : HeightOneSpectrum (𝓞 K))
     (x : (v.adicCompletion K)ˣ)
@@ -227,6 +232,7 @@ private theorem chosenFinitePlaceArtinMonoidHom_eq_one_of_mem_localNorm
     (K := K) (L := L) v] at hx
   exact MonoidHom.mem_ker.mp hx
 
+open scoped Classical in
 /-- The product over all finite places of the actual local Artin
 homomorphisms.  Its value on an idele is a finite product because the
 idele is locally integral almost everywhere and the extension is
@@ -250,6 +256,7 @@ noncomputable def finitePlaceGlobalArtinMonoidHom :
         (finitePlaceArtinFactors_hasFiniteMulSupport
           (K := K) (L := L) b)
 
+open scoped Classical in
 /-- The finite-place global Artin homomorphism is continuous for the
 restricted-product topology on ideles and the finite Krull topology on
 the Galois group. -/
@@ -354,6 +361,7 @@ theorem finitePlaceGlobalArtinMonoidHom_continuous :
       (K := K) (L := L) a ∈ V
   simpa only [hmap] using mem_of_mem_nhds hV
 
+open scoped Classical in
 /-- The finite Artin product after an idele norm is the `finprod`, over
 base finite places, of the products of the corresponding local norm
 factors at all finite places upstairs. -/
@@ -369,7 +377,7 @@ theorem finitePlaceGlobalArtinMonoidHom_norm_eq_finprod_fibers
         let hvK : vK.IsNontrivial :=
           RayClass.adicAbv_isNontrivial v
         letI :=
-          completionTensorDecomposition_extensionFintype
+          completionTensorDecompositionExtensionFintype
             (K := K) (L := M) vK hvK
         exact
           Fintype.ofEquiv (AbsoluteValueExtension vK M)
@@ -404,7 +412,7 @@ theorem finitePlaceGlobalArtinMonoidHom_norm_eq_finprod_fibers
       let hvK : vK.IsNontrivial :=
         RayClass.adicAbv_isNontrivial v
       letI :=
-        completionTensorDecomposition_extensionFintype
+        completionTensorDecompositionExtensionFintype
           (K := K) (L := M) vK hvK
       exact
         Fintype.ofEquiv (AbsoluteValueExtension vK M)
@@ -424,6 +432,7 @@ theorem finitePlaceGlobalArtinMonoidHom_norm_eq_finprod_fibers
   rw [IdeleGroup.finiteComponent_norm_eq_prod]
   rw [map_prod]
 
+open scoped Classical in
 private theorem finitePlaceNormArtinFactor_eq_one_of_component_unit_of_unramified
     {M : Type}
     [Field M] [NumberField M] [Algebra K M]
@@ -469,6 +478,7 @@ private theorem finitePlaceNormArtinFactor_eq_one_of_component_unit_of_unramifie
       (K := K) (L := L) v hunram
   exact hNormUnit
 
+open scoped Classical in
 /-- The local Artin factors obtained after an idele norm have finite
 multiplicative support. -/
 theorem finitePlaceNormArtinFactors_hasFiniteMulSupport
@@ -544,6 +554,7 @@ theorem finitePlaceNormArtinFactors_hasFiniteMulSupport
         (chosenFinitePlaceExtension (L := L) v),
       hram⟩
 
+open scoped Classical in
 /-- The finite Artin product after an idele norm, indexed directly by
 the actual finite places upstairs.  This is the flattened finite-place
 form of the local norm--restriction identity used in the global square. -/
@@ -592,7 +603,7 @@ theorem finitePlaceGlobalArtinMonoidHom_norm_eq_finprod
       let hvK : vK.IsNontrivial :=
         RayClass.adicAbv_isNontrivial v
       letI :=
-        completionTensorDecomposition_extensionFintype
+        completionTensorDecompositionExtensionFintype
           (K := K) (L := M) vK hvK
       exact
         Fintype.ofEquiv (AbsoluteValueExtension vK M)
@@ -666,6 +677,7 @@ theorem finitePlaceGlobalArtinMonoidHom_norm_eq_finprod
       intro W
       simp only [f, g]
 
+open scoped Classical in
 /-- The finite part of the Artin norm--restriction field diamond.
 Restriction of the upper finite Artin product is the lower finite Artin product
 after the ordinary idele norm. -/
@@ -720,6 +732,7 @@ theorem finitePlaceGlobalArtinMonoidHom_norm_restriction
         (K := K) (L := L) W)
       (IdeleGroup.finiteComponent W a)
 
+open scoped Classical in
 /-- On an idele supported at one finite place, the finite global product
 is exactly that local Artin factor. -/
 @[simp]

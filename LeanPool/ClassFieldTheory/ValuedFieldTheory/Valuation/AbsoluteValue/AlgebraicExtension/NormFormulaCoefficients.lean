@@ -11,7 +11,8 @@ import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Core
 
 This file reuses the algebraic normalization and irreducibility obstruction
 from the irreducible-polynomial coefficient bounds.  The factor lift is supplied directly by the
-factorization form of Hensel's lemma in the primitive factorization definition, so no completeness or
+factorization form of Hensel's lemma in the primitive factorization definition, so no
+  completeness or
 separatedness hypothesis is needed.
 -/
 
@@ -22,7 +23,8 @@ open scoped Polynomial
 namespace AlgebraicNumberTheory
 namespace Valuations
 
-/-- The normalized residual factor input from the irreducible-polynomial coefficient bounds contradicts
+/-- The normalized residual factor input from the irreducible-polynomial coefficient bounds
+contradicts
 irreducibility as soon as the valuation ring satisfies the construction's
 factorization form of Hensel's lemma. -/
 theorem normFormula_hensel_reduction_factor_input_not_irreducible_of_henselFactorization

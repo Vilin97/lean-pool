@@ -31,9 +31,11 @@ namespace AntitoneNormalSubgroupFiltration
 variable {G : Type u} [Group G] [Finite G]
 variable (F : AntitoneNormalSubgroupFiltration G)
 
+/-- Each subgroup in the finite ambient group has a finite enumeration. -/
 local instance subgroupFintype (H : Subgroup G) : Fintype H :=
   Fintype.ofFinite H
 
+/-- Classical decidability of subgroup membership for the Herbrand filtration formulas. -/
 local instance subgroupMembershipDecidable (H : Subgroup G) (x : G) :
     Decidable (x ∈ H) :=
   Classical.propDecidable _

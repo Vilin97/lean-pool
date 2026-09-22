@@ -159,20 +159,7 @@ theorem localUpperRamificationGroup_map_autCongr
           (r : pulled.valuationSubring →+* targetM.valuationSubring)
           (IsLocalRing.maximalIdeal pulled.valuationSubring) =
         IsLocalRing.maximalIdeal targetM.valuationSubring := by
-    apply le_antisymm
-    · rw [Ideal.map_le_iff_le_comap]
-      intro x hx
-      change r x ∈ IsLocalRing.maximalIdeal targetM.valuationSubring
-      rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff] at hx ⊢
-      intro h
-      have h' := h.map r.symm.toRingHom
-      exact hx (by simpa using h')
-    · intro y hy
-      obtain ⟨x, rfl⟩ := r.surjective y
-      apply Ideal.mem_map_of_mem
-      rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff] at hy ⊢
-      intro h
-      exact hy (h.map r.toRingHom)
+    exact IsLocalRing.map_ringEquiv_maximalIdeal r
   have hmapIdeal (s : ℝ) :
       Ideal.map (r : pulled.valuationSubring →+* targetM.valuationSubring)
           (realRamificationIdeal pulled.toDVF s) =
@@ -182,22 +169,8 @@ theorem localUpperRamificationGroup_map_autCongr
   have hideal (s : ℝ) (x : pulled.valuationSubring) :
       x ∈ realRamificationIdeal pulled.toDVF s ↔
         r x ∈ realRamificationIdeal targetM.toDVF s := by
-    constructor
-    · intro hx
-      have hrx :
-          r x ∈ Ideal.map
-            (r : pulled.valuationSubring →+* targetM.valuationSubring)
-            (realRamificationIdeal pulled.toDVF s) :=
-        Ideal.mem_map_of_mem
-          (r : pulled.valuationSubring →+* targetM.valuationSubring) hx
-      simpa only [hmapIdeal s] using hrx
-    · intro hrx
-      have hrx' :
-          r x ∈ Ideal.map
-            (r : pulled.valuationSubring →+* targetM.valuationSubring)
-            (realRamificationIdeal pulled.toDVF s) := by
-        simpa only [hmapIdeal s] using hrx
-      exact Ideal.apply_mem_of_equiv_iff.mp hrx'
+    rw [← hmapIdeal s]
+    exact Ideal.apply_mem_of_equiv_iff.symm
   have hdisplacement (σ : Gal(L/K)) (a : pulled.valuationSubring) :
       r (valuationSubringAutOfUniqueExtension
             (base := base.toDVF) (target := pulled.toDVF)
@@ -429,20 +402,7 @@ private theorem fixedFieldUpperRamificationGroup_map_autCongr
       Ideal.map (r : B →+* targetM.valuationSubring)
           (IsLocalRing.maximalIdeal B) =
         IsLocalRing.maximalIdeal targetM.valuationSubring := by
-    apply le_antisymm
-    · rw [Ideal.map_le_iff_le_comap]
-      intro x hx
-      change r x ∈ IsLocalRing.maximalIdeal targetM.valuationSubring
-      rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff] at hx ⊢
-      intro h
-      have h' := h.map r.symm.toRingHom
-      exact hx (by simpa using h')
-    · intro y hy
-      obtain ⟨x, rfl⟩ := r.surjective y
-      apply Ideal.mem_map_of_mem
-      rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff] at hy ⊢
-      intro h
-      exact hy (h.map r.toRingHom)
+    exact IsLocalRing.map_ringEquiv_maximalIdeal r
   have hmapIdeal (s : ℝ) :
       Ideal.map (r : B →+* targetM.valuationSubring)
           (fixedFieldRamificationIdealDVF
@@ -454,21 +414,8 @@ private theorem fixedFieldUpperRamificationGroup_map_autCongr
       x ∈ fixedFieldRamificationIdealDVF
             (K := K) (target := targetL.toDVF) H s ↔
         r x ∈ realRamificationIdeal targetM.toDVF s := by
-    constructor
-    · intro hx
-      have hrx :
-          r x ∈ Ideal.map (r : B →+* targetM.valuationSubring)
-            (fixedFieldRamificationIdealDVF
-              (K := K) (target := targetL.toDVF) H s) :=
-        Ideal.mem_map_of_mem (r : B →+* targetM.valuationSubring) hx
-      simpa only [hmapIdeal s] using hrx
-    · intro hrx
-      have hrx' :
-          r x ∈ Ideal.map (r : B →+* targetM.valuationSubring)
-            (fixedFieldRamificationIdealDVF
-              (K := K) (target := targetL.toDVF) H s) := by
-        simpa only [hmapIdeal s] using hrx
-      exact Ideal.apply_mem_of_equiv_iff.mp hrx'
+    rw [← hmapIdeal s]
+    exact Ideal.apply_mem_of_equiv_iff.symm
   let φ :
       Gal(IntermediateField.fixedField H / K) ≃*
         Gal(M / K) :=

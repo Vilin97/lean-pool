@@ -82,3 +82,5 @@ theorem intrinsicFiniteAbstractBase_eq_base
   change intrinsicAbstractBase F =
     baseField (intrinsicAbsoluteGalois F) at h
   exact FiniteAbstractField.eq_of_field_eq _ _ h
+
+end LocalClassFieldTheory

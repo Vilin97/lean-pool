@@ -921,7 +921,8 @@ Establishes the identity `MvPowerSeries.coeff e (formalLogOnePlusProductFormulaD
 PowerSeries.coeff q (PowerSeries.log A) • MvPowerSeries.coeff e
 ((formalLogOnePlusProductArgument A) ^ q)`.
 -/
-theorem formalLogOnePlusProductFormulaDefect_coeff_of_pos_coords_eq_sum_range_degree_succ_filter_coord_le
+theorem
+  formalLogOnePlusProductFormulaDefect_coeff_of_pos_coords_eq_sum_range_degree_succ_filter_coord_le
     (A : Type*) [CommRing A] [Algebra ℚ A] (e : Fin 2 →₀ ℕ)
     (hleft : 0 < e (0 : Fin 2)) (hright : 0 < e (1 : Fin 2)) :
     MvPowerSeries.coeff e

@@ -1039,7 +1039,7 @@ theorem
   let T :=
     rationalCyclotomicZHatField
   let : Algebra T C :=
-    rationalCyclotomicZHatCompositum_algebra L
+    rationalCyclotomicZHatCompositumAlgebra L
   let : IsScalarTower ℚ T C :=
     rationalCyclotomicZHatCompositum_scalarTower L
   let : Normal ℚ T :=

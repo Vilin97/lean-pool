@@ -5,7 +5,8 @@ Authors: n-yamaguchi-0729
 -/
 
 import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.FiniteExtension.Degree
-/-! Provides the public declarations in the `ValuationTheory.DiscreteValuationField.FiniteExtension.Uniqueness` Lean module. -/
+/-! Provides the public declarations in the
+  `ValuationTheory.DiscreteValuationField.FiniteExtension.Uniqueness` Lean module. -/
 
 namespace ValuationTheory
 
@@ -363,7 +364,8 @@ theorem hasUniqueValuationExtension_of_integralClosure_mem_or_inv
         z ∈ (integralClosure base.valuationSubring L).toSubring ∨
           z⁻¹ ∈ (integralClosure base.valuationSubring L).toSubring) :
     HasUniqueValuationExtension.{u, v, w, x, y} (base := base) (target := target) :=
-  (hasUniqueValuationExtension_of_integralClosure_mem_or_inv_of_unique_primes_over_base_maximal base target)
+  (hasUniqueValuationExtension_of_integralClosure_mem_or_inv_of_unique_primes_over_base_maximal
+    base target)
     hval
     (by
       let B :=
@@ -554,7 +556,8 @@ the residue-fiber `includeRight` map.
 Surjectivity of `includeRight` is automatic over the local base valuation ring;
 the only remaining Henselian-pair input in this criterion is that its kernel is
 Henselian in the actual integral closure. -/
-theorem hasUniqueValuationExtension_of_integralClosure_base_maximal_fiber_includeRight_henselianRing_ker
+theorem
+  hasUniqueValuationExtension_of_integralClosure_base_maximal_fiber_includeRight_henselianRing_ker
 
     [Algebra.IsSeparable K L]
     [HenselianRing (integralClosureIntegers base target)
@@ -634,7 +637,7 @@ theorem henselian_hasUniqueValuationExtension_of_finite_separable
 closure of the base valuation ring is itself a valuation ring. -/
 theorem integralClosure_mem_or_inv_of_finite_separable
     (target : CompleteDVF.{w, x} L)
-    [base.valuation.HasExtension target.valuation]
+
     [Algebra.IsSeparable K L] :
     ∀ z : L,
       z ∈ (integralClosure base.valuationSubring L).toSubring ∨
@@ -684,7 +687,8 @@ theorem hasUniqueValuationExtension_of_integralClosure_mem_or_inv_of_forall_inte
           (B.inclusion v'.valuationSubring hv_le).IsIntegral) :
     HasUniqueValuationExtension.{u, v, w, x, y} (base := base) (target := target) := by
   refine
-    (hasUniqueValuationExtension_of_integralClosure_mem_or_inv_of_forall_center_eq_maximalIdeal base target)
+    (hasUniqueValuationExtension_of_integralClosure_mem_or_inv_of_forall_center_eq_maximalIdeal
+      base target)
       hval ?_ ?_
   · let B :=
       ValuationTheory.DiscreteValuationField.Valuation.integralClosureValuationSubringOfMemOrInv
@@ -736,7 +740,8 @@ theorem hasUniqueValuationExtension_of_integralClosure_mem_or_inv_of_forall_fini
           (B.inclusion v'.valuationSubring hv_le).Finite) :
     HasUniqueValuationExtension.{u, v, w, x, y} (base := base) (target := target) := by
   refine
-    (hasUniqueValuationExtension_of_integralClosure_mem_or_inv_of_forall_integral_inclusion base target)
+    (hasUniqueValuationExtension_of_integralClosure_mem_or_inv_of_forall_integral_inclusion base
+      target)
       hval ?_ ?_
   · let B :=
       ValuationTheory.DiscreteValuationField.Valuation.integralClosureValuationSubringOfMemOrInv
@@ -1129,7 +1134,7 @@ actual integral closure of the base valuation ring in `L`. -/
 theorem target_valuationSubring_isIntegralClosure_of_finite_separable
 
     [Algebra.IsSeparable K L]
-    [IsScalarTower base.valuationSubring target.valuationSubring L] :
+    :
     IsIntegralClosure target.valuationSubring base.valuationSubring L := by
   let hval := (integralClosure_mem_or_inv_of_finite_separable base target)
   let B :=
@@ -1218,7 +1223,8 @@ theorem ramificationIndex_mul_residueDegree_eq_degree_of_finite_separable
 
     [Algebra.IsSeparable K L]
     [IsScalarTower base.valuationSubring target.valuationSubring L] :
-    (ValuedExtension.ramificationIndex base.toDVF target.toDVF) * (ValuedExtension.residueDegree base.toDVF target.toDVF) = (ValuedExtension.degree base.toDVF target.toDVF) := by
+    (ValuedExtension.ramificationIndex base.toDVF target.toDVF) * (ValuedExtension.residueDegree
+      base.toDVF target.toDVF) = (ValuedExtension.degree base.toDVF target.toDVF) := by
   let : IsIntegralClosure target.valuationSubring base.valuationSubring L :=
     (target_valuationSubring_isIntegralClosure_of_finite_separable base target)
   exact (ramificationIndex_mul_residueDegree_eq_degree_of_isIntegralClosure base target)

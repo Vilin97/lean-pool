@@ -34,7 +34,8 @@ variable (vK : AbsoluteValue K ℝ) (hvK : vK.IsNontrivial)
     (hvKna : IsNonarchimedean (vK : K → ℝ))
     (w : AbsoluteValueExtension vK L)
 
-/-- The product of all local integer-unit groups from the canonical local tensor decomposition, rewritten
+/-- The product of all local integer-unit groups from the canonical local tensor decomposition,
+rewritten
 as the induced integer-unit module at a chosen extension. -/
 noncomputable def completionProductIntegerUnitsEquivInducedModule :
     letI := LocalInductionInternal.extensionCompletionAlgebra vK w

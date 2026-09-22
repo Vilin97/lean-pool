@@ -9,7 +9,8 @@ import Mathlib.Algebra.Ring.Pi
 /-!
 # Compatible families in inverse systems
 
-The elementary inverse limits used in the local-field structure development are subobjects of dependent
+The elementary inverse limits used in the local-field structure development are subobjects of
+  dependent
 products: their elements are precisely the families preserved by every
 transition map.  Keeping this construction at the level of `Subring` and
 `Subgroup` lets Lean inherit the ambient algebraic structure instead of

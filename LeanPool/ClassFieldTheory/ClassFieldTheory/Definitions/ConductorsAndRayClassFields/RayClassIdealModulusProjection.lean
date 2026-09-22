@@ -16,7 +16,7 @@ conditions. The induced inclusions of prime-to-modulus ideals and ray-principal
 ideals give the canonical quotient map from the larger modulus to the smaller.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -25,6 +25,7 @@ namespace ClassFieldTheory
 
 universe u
 
+open scoped Classical in
 private def rayLocalIntegralValue
     {K : Type u} [Field K] [NumberField K]
     (v : HeightOneSpectrum (𝓞 K))
@@ -33,6 +34,7 @@ private def rayLocalIntegralValue
   ((v.adicCompletionIntegers K).toSubmonoid.unitsEquivUnitsType y :
     (v.adicCompletionIntegers K)ˣ).1
 
+open scoped Classical in
 private theorem rayLocalHigherUnitMap_eq_one_iff
     {K : Type u} [Field K] [NumberField K]
     (v : HeightOneSpectrum (𝓞 K)) (n : ℕ)
@@ -51,6 +53,7 @@ private theorem rayLocalHigherUnitMap_eq_one_iff
     (I := I) (rayLocalIntegralValue v y)
       (1 : v.adicCompletionIntegers K)
 
+open scoped Classical in
 private theorem rayLocalHigherUnitGroup_antitone
     {K : Type u} [Field K] [NumberField K]
     (v : HeightOneSpectrum (𝓞 K))
@@ -71,6 +74,7 @@ private theorem rayLocalHigherUnitGroup_antitone
   rw [rayLocalHigherUnitMap_eq_one_iff] at hy ⊢
   exact Ideal.pow_le_pow_right hmn hy
 
+open scoped Classical in
 private theorem rayCongruent_of_le
     {K : Type u} [Field K] [NumberField K]
     {m n : RayClassModulus K} (hmn : m ≤ n)
@@ -87,6 +91,7 @@ private theorem rayCongruent_of_le
   · intro v hv
     exact hx.2 v (hmn.2 hv)
 
+open scoped Classical in
 private theorem rayPrimeToIdeals_antitone
     {K : Type u} [Field K] [NumberField K]
     {m n : RayClassModulus K} (hmn : m ≤ n) :
@@ -94,6 +99,7 @@ private theorem rayPrimeToIdeals_antitone
   intro I hI v hv
   exact hI v (Finsupp.support_mono hmn.1 hv)
 
+open scoped Classical in
 private theorem rayPrincipalIdeals_antitone
     {K : Type u} [Field K] [NumberField K]
     {m n : RayClassModulus K} (hmn : m ≤ n) :
@@ -102,6 +108,7 @@ private theorem rayPrincipalIdeals_antitone
   rintro I ⟨x, hx, hIx⟩
   exact ⟨x, rayCongruent_of_le hmn hx, hIx⟩
 
+open scoped Classical in
 /-- The ideal-theoretic ray class group modulo a larger modulus projects to
 the ray class group modulo a smaller modulus. -/
 def rayClassIdealModulusProjection

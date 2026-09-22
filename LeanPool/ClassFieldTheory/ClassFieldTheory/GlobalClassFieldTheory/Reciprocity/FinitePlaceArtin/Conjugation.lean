@@ -10,10 +10,11 @@ import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.L
 /-!
 # Conjugation of finite-place Artin homomorphisms
 
-This module identifies localized completions associated with conjugate extensions and proves conjugation invariance of the resulting finite-place Artin map.
+This module identifies localized completions associated with conjugate extensions and proves
+  conjugation invariance of the resulting finite-place Artin map.
 -/
 
-open scoped Classical IsMulCommutative NNReal NumberField
+open scoped IsMulCommutative NNReal NumberField
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -31,6 +32,7 @@ variable {K L : Type}
     [Field L] [Algebra K L]
     [FiniteDimensional K L] [IsAbelianGalois K L]
 
+open scoped Classical in
 /-- The algebraic localizations belonging to conjugate extensions of a
 finite place are identified by the induced equivalence of completions. -/
 noncomputable def finitePlaceConjugateLocalizedCompletionAlgEquiv
@@ -81,6 +83,7 @@ noncomputable def finitePlaceConjugateLocalizedCompletionAlgEquiv
   exact e
 
 omit [IsAbelianGalois K L] in
+open scoped Classical in
 /-- The conjugate-localization equivalence carries the canonical
 embedding of `L` to the conjugate of that embedding. -/
 theorem finitePlaceConjugateLocalizedCompletionAlgEquiv_toAlgebraicLocalization
@@ -131,6 +134,7 @@ theorem finitePlaceConjugateLocalizedCompletionAlgEquiv_toAlgebraicLocalization
       vK w g x
 
 omit [IsAbelianGalois K L] in
+open scoped Classical in
 /-- The inverse conjugate-localization equivalence carries the
 canonical embedding back along the inverse global automorphism. -/
 theorem
@@ -175,6 +179,7 @@ theorem
     finitePlaceConjugateLocalizedCompletionAlgEquiv_toAlgebraicLocalization,
     g.apply_symm_apply]
 
+open scoped Classical in
 /-- Conjugation of a place intertwines the two localization
 decomposition-group identifications on each local automorphism. -/
 theorem finitePlaceDecompositionTransport_conjugate_apply
@@ -324,6 +329,7 @@ theorem finitePlaceDecompositionTransport_conjugate_apply
         ((rho.1 : L ≃ₐ[K] L) z) := by
           rw [localizationRamificationGroups_decompositionGroupEquiv_toLocalization]
 
+open scoped Classical in
 /-- Conjugation of a place intertwines the two localization
 decomposition-group identifications after inclusion in the global
 Galois group. -/
@@ -366,6 +372,7 @@ theorem finitePlaceDecompositionTransport_conjugate
     finitePlaceDecompositionTransport_conjugate_apply
       (K := K) (L := L) v w g tauC
 
+open scoped Classical in
 /-- Local Artin maps are natural under the localized-completion
 equivalence induced by conjugating a finite-place extension. -/
 theorem finitePlaceLocalArtinMonoidHom_conjugate
@@ -428,6 +435,7 @@ theorem finitePlaceLocalArtinMonoidHom_conjugate
       (LocalClassFieldTheory.abelianLocalArtinMonoidHom_autCongr
         vK.Completion Ewc Ew e)
 
+open scoped Classical in
 /-- Conjugating the chosen extension of a finite place does not change
 its Artin homomorphism when the global extension is abelian. -/
 theorem finitePlaceArtinMonoidHomOfExtension_conjugate
@@ -508,6 +516,7 @@ theorem finitePlaceArtinMonoidHomOfExtension_conjugate
       rfl
     _ = _ := by rw [hlocal]
 
+open scoped Classical in
 /-- The finite-place Artin homomorphism is independent of the chosen
 extension of the base place in an abelian extension. -/
 theorem finitePlaceArtinMonoidHomOfExtension_eq

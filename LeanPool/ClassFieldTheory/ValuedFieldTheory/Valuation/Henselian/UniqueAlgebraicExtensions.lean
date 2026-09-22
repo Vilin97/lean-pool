@@ -63,7 +63,8 @@ theorem monicResidualCoprimeFactorLifting_of_unique_algebraic_extensions
       V hunique factors hfactors gbar hbar hgbar hhbar hredprod hcoprime
   exact ⟨G, H, hG, hH, hprod.symm.trans hGH, hGbar, hHbar⟩
 
-/-- the unique-extension criterion, forward direction.  the primitive factorization definition, in its exact
+/-- the unique-extension criterion, forward direction.  the primitive factorization definition,
+in its exact
 factorization form, gives a unique extension valuation ring on every
 algebraic extension. -/
 theorem henselianUniqueExtension_unique_algebraic_valuationSubring_extension_of_henselian
@@ -131,7 +132,8 @@ theorem henselianUniqueExtension_unique_algebraic_valuationSubring_extensions_of
     henselianUniqueExtension_unique_algebraic_valuationSubring_extension_of_henselian
       (L := L) v hnonarch hhens
 
-/-- the unique-extension criterion, converse in the exact factorization form of the primitive factorization definition.
+/-- the unique-extension criterion, converse in the exact factorization form of the primitive
+factorization definition.
 The Galois argument gives the primitive-irreducible reduction property, and
 the primitive-factor partition turns it into the required degree-controlled
 factorization. -/

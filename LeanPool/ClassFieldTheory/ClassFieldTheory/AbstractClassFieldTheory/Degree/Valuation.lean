@@ -94,7 +94,6 @@ def canonicalValueQuotientMap (Z : AddSubgroup ZHat)
     simp [nsmul_eq_mul])
 
 /-- The canonical value map evaluates on a quotient representative by reduction modulo `n`. -/
-@[simp]
 theorem canonicalValueQuotientMap_mk (Z : AddSubgroup ZHat)
     (n : ℕ) (hn : 0 < n) (z : Z) :
     canonicalValueQuotientMap Z n hn
@@ -189,7 +188,7 @@ def canonicalQuotientMap (v : ValuationData D A)
 
 /-- The former equivalence API, now derived from the bijectivity of the
 canonical inclusion-and-reduction map in the valuation-quotient axiom. -/
-def cyclic_value_quotients (v : ValuationData D A)
+def cyclicValueQuotients (v : ValuationData D A)
     (n : ℕ) (hn : 0 < n) :
     (v.valueGroup ⧸ nsmulWithin v.valueGroup n) ≃+ ZMod n :=
   AddEquiv.ofBijective (v.canonicalQuotientMap n hn)
@@ -198,7 +197,7 @@ def cyclic_value_quotients (v : ValuationData D A)
 /-- Canonical reduction of the value group modulo `n`. -/
 def valueModulo (v : ValuationData D A) (n : ℕ) (hn : 0 < n) :
     v.valueGroup →+ ZMod n :=
-  (v.cyclic_value_quotients n hn).toAddMonoidHom.comp
+  (v.cyclicValueQuotients n hn).toAddMonoidHom.comp
     (QuotientAddGroup.mk' (nsmulWithin v.valueGroup n))
 
 /-- Value modulo `n` is profinite-integer reduction of the underlying value. -/
@@ -213,7 +212,7 @@ theorem valueModulo_surjective (v : ValuationData D A)
     (n : ℕ) (hn : 0 < n) :
     Function.Surjective (v.valueModulo n hn) := by
   intro z
-  obtain ⟨q, rfl⟩ := (v.cyclic_value_quotients n hn).surjective z
+  obtain ⟨q, rfl⟩ := (v.cyclicValueQuotients n hn).surjective z
   refine Quotient.inductionOn' q ?_
   intro a
   exact ⟨a, rfl⟩

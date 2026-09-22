@@ -20,7 +20,7 @@ the congruence subgroups are cofinal among the closed finite-index subgroups
 of the idele class group.
 -/
 
-open scoped Classical NumberField RestrictedProduct WithZero
+open scoped NumberField RestrictedProduct WithZero
 open NumberField IsDedekindDomain
 open Topology
 
@@ -31,6 +31,7 @@ variable {K : Type*} [Field K] [NumberField K]
 
 namespace RayClass
 
+open scoped Classical in
 /-- The integral representative of a unit in a finite completion. -/
 def localIntegralValue
     (v : HeightOneSpectrum (𝓞 K))
@@ -39,6 +40,7 @@ def localIntegralValue
   ((v.adicCompletionIntegers K).toSubmonoid.unitsEquivUnitsType y :
     (v.adicCompletionIntegers K)ˣ).1
 
+open scoped Classical in
 /-- A local integral unit maps to one modulo the `n`-th maximal-ideal
 power exactly when its difference from one belongs to that power. -/
 theorem localHigherUnitMap_eq_one_iff
@@ -62,6 +64,7 @@ theorem localHigherUnitMap_eq_one_iff
     (I := I) (localIntegralValue v y)
       (1 : v.adicCompletionIntegers K)
 
+open scoped Classical in
 /-- Local higher-unit groups are contravariant in their depth. -/
 theorem localHigherUnitGroup_antitone
     (v : HeightOneSpectrum (𝓞 K))
@@ -74,6 +77,7 @@ theorem localHigherUnitGroup_antitone
   rw [localHigherUnitMap_eq_one_iff] at hy ⊢
   exact Ideal.pow_le_pow_right hmn hy
 
+open scoped Classical in
 /-- Every local higher-unit group is open in the multiplicative group of the
 finite completion. -/
 theorem isOpen_localHigherUnitGroup
@@ -124,6 +128,7 @@ theorem isOpen_localHigherUnitGroup
   rw [heq]
   exact himageOpen
 
+open scoped Classical in
 /-- The local higher-unit group lies in the local integral-unit group. -/
 theorem localHigherUnitGroup_le_finiteLocalUnits
     (v : HeightOneSpectrum (𝓞 K)) (n : ℕ) :
@@ -134,6 +139,7 @@ theorem localHigherUnitGroup_le_finiteLocalUnits
   obtain ⟨y, rfl, _⟩ := hx
   exact y.property
 
+open scoped Classical in
 /-- The finite idele congruence subgroup is open. -/
 theorem isOpen_finiteCongruenceSubgroup (m : FiniteModulus K) :
     IsOpen
@@ -193,6 +199,7 @@ theorem isOpen_finiteCongruenceSubgroup (m : FiniteModulus K) :
   exact hUOpen
 
 omit [NumberField K] in
+open scoped Classical in
 /-- At a real place the positivity subgroup is open; at a complex place it
 is the whole local multiplicative group. -/
 theorem isOpen_infinitePositiveSubgroup (v : InfinitePlace K) :
@@ -223,6 +230,7 @@ theorem isOpen_infinitePositiveSubgroup (v : InfinitePlace K) :
     rw [htop]
     exact isOpen_univ
 
+open scoped Classical in
 /-- The positivity subgroup in the product of all infinite local groups is
 open. -/
 theorem isOpen_infinitePositivePiSubgroup :
@@ -237,6 +245,7 @@ theorem isOpen_infinitePositivePiSubgroup :
   exact isOpen_set_pi Set.finite_univ fun v _ ↦
     isOpen_infinitePositiveSubgroup v
 
+open scoped Classical in
 /-- The narrow archimedean congruence subgroup is open. -/
 theorem isOpen_narrowInfiniteCongruenceSubgroup :
     IsOpen
@@ -246,6 +255,7 @@ theorem isOpen_narrowInfiniteCongruenceSubgroup :
   isOpen_infinitePositivePiSubgroup.preimage
     ContinuousMulEquiv.piUnits.continuous
 
+open scoped Classical in
 /-- The archimedean congruence subgroup selected by a full modulus is open. -/
 theorem isOpen_infiniteCongruenceSubgroup (m : Modulus K) :
     IsOpen
@@ -280,6 +290,7 @@ theorem isOpen_infiniteCongruenceSubgroup (m : Modulus K) :
   rw [hU]
   exact hUOpen
 
+open scoped Classical in
 /-- The idele congruence subgroup `I_K^m` is open. -/
 theorem isOpen_ideleCongruenceSubgroup (m : Modulus K) :
     IsOpen
@@ -289,6 +300,7 @@ theorem isOpen_ideleCongruenceSubgroup (m : Modulus K) :
   (isOpen_infiniteCongruenceSubgroup m).prod
     (isOpen_finiteCongruenceSubgroup m.finitePart)
 
+open scoped Classical in
 /-- Membership in the `n`-th local higher-unit group bounds the norm of
 the difference from one by the `n`-th power of a uniformizer norm. -/
 theorem localHigherUnit_norm_sub_one_le
@@ -356,6 +368,7 @@ theorem localHigherUnit_norm_sub_one_le
       simp_all
   exact withZeroPreorder_le _ _ hyVal'
 
+open scoped Classical in
 /-- An irreducible element of the valuation ring of a finite completion
 has norm strictly less than one. -/
 theorem local_irreducible_norm_lt_one
@@ -370,6 +383,7 @@ theorem local_irreducible_norm_lt_one
     ((IsDedekindDomain.HeightOneSpectrum.adicCompletionIntegers.integers
       K v).valuation_irreducible_lt_one hϖ)
 
+open scoped Classical in
 /-- The higher-unit groups form a neighborhood basis of `1` in a finite
 local multiplicative group. -/
 theorem exists_localHigherUnitGroup_subset
@@ -416,6 +430,7 @@ theorem exists_localHigherUnitGroup_subset
   rw [dist_eq_norm]
   exact (localHigherUnit_norm_sub_one_le v ϖ hϖ n hx).trans_lt hn
 
+open scoped Classical in
 /-- Every identity neighborhood in the finite ideles contains a finite
 congruence subgroup. -/
 theorem exists_finiteCongruenceSubgroup_subset
@@ -499,6 +514,7 @@ theorem exists_finiteCongruenceSubgroup_subset
   change s d ∈ U at hdV
   rwa [hsd] at hdV
 
+open scoped Classical in
 /-- The multiplicative topological equivalence between a real infinite
 completion and `ℝ`. -/
 def realCompletionContinuousMulEquiv
@@ -511,6 +527,7 @@ def realCompletionContinuousMulEquiv
   continuous_invFun :=
     (InfinitePlace.Completion.isometryEquivRealOfIsReal hv).symm.continuous
 
+open scoped Classical in
 /-- The multiplicative topological equivalence between a complex infinite
 completion and `ℂ`. -/
 def complexCompletionContinuousMulEquiv
@@ -523,10 +540,12 @@ def complexCompletionContinuousMulEquiv
   continuous_invFun :=
     (InfinitePlace.Completion.isometryEquivComplexOfIsComplex hv).symm.continuous
 
+open scoped Classical in
 /-- A positive real number regarded as a unit. -/
 def positiveRealUnit (x : Set.Ioi (0 : ℝ)) : ℝˣ :=
   Units.mk0 x.1 x.2.ne'
 
+open scoped Classical in
 /-- The map from positive real numbers to real units is continuous. -/
 theorem continuous_positiveRealUnit :
     Continuous positiveRealUnit := by
@@ -541,6 +560,7 @@ theorem continuous_positiveRealUnit :
       (fun x : Set.Ioi (0 : ℝ) ↦ x.2.ne')
 
 omit [NumberField K] in
+open scoped Classical in
 /-- The positive local multiplicative group at an infinite place is
 connected. -/
 theorem isConnected_infinitePositiveSubgroup
@@ -605,6 +625,7 @@ theorem isConnected_infinitePositiveSubgroup
       exact e.symm.continuous
 
 omit [NumberField K] in
+open scoped Classical in
 /-- The narrow archimedean positivity subgroup is connected. -/
 theorem isConnected_narrowInfiniteCongruenceSubgroup :
     IsConnected
@@ -642,6 +663,7 @@ theorem isConnected_narrowInfiniteCongruenceSubgroup :
     exact continuous_pi fun v ↦
       continuous_subtype_val.comp (continuous_apply v)
 
+open scoped Classical in
 /-- The sign of a unit at a real infinite place. -/
 def realPlaceSign
     (v : {w : InfinitePlace K // w.IsReal}) :
@@ -651,6 +673,7 @@ def realPlaceSign
       (InfinitePlace.Completion.extensionEmbeddingOfIsReal
         v.2).toMonoidHom)
 
+open scoped Classical in
 /-- The tuple of signs of an infinite idele at all real places. -/
 def infiniteSign :
     InfiniteIdeleGroup K →*
@@ -659,6 +682,7 @@ def infiniteSign :
     (realPlaceSign v).comp (InfiniteIdeleGroup.component v.1)
 
 omit [NumberField K] in
+open scoped Classical in
 /-- Positivity at all real places is exactly the kernel of the infinite sign
 map. -/
 theorem infiniteSign_ker_eq_narrowInfiniteCongruenceSubgroup :
@@ -697,6 +721,7 @@ theorem infiniteSign_ker_eq_narrowInfiniteCongruenceSubgroup :
     exact
       ((mem_narrowInfiniteCongruenceSubgroup_iff a).1 ha v.1) v.2
 
+open scoped Classical in
 /-- The infinite positivity subgroup has finite index (its quotient is
 detected by the finitely many real signs). -/
 instance narrowInfiniteCongruenceSubgroupFiniteIndex :
@@ -704,6 +729,7 @@ instance narrowInfiniteCongruenceSubgroupFiniteIndex :
   rw [← infiniteSign_ker_eq_narrowInfiniteCongruenceSubgroup (K := K)]
   exact Subgroup.finiteIndex_ker (infiniteSign (K := K))
 
+open scoped Classical in
 /-- Every selected-real-place congruence subgroup has finite index, because
 it contains the narrow positivity subgroup. -/
 instance Modulus.infiniteCongruenceSubgroupFiniteIndex
@@ -717,6 +743,7 @@ instance Modulus.infiniteCongruenceSubgroupFiniteIndex
   intro v _
   exact (mem_narrowInfiniteCongruenceSubgroup_iff a).1 ha v.1
 
+open scoped Classical in
 /-- The finite idele congruence subgroup lies in the everywhere-integral
 finite ideles. -/
 theorem finiteCongruenceSubgroup_le_integralSubgroup
@@ -726,6 +753,7 @@ theorem finiteCongruenceSubgroup_le_integralSubgroup
   intro a ha v
   exact localHigherUnitGroup_le_finiteLocalUnits v (m v) (ha v)
 
+open scoped Classical in
 /-- Within the compact group of everywhere-integral finite ideles, every
 finite congruence subgroup has finite index. -/
 instance finiteCongruenceSubgroupFiniteRelIndex
@@ -748,6 +776,7 @@ instance finiteCongruenceSubgroupFiniteRelIndex
     J'.quotient_finite_of_isOpen hJOpen
   exact Subgroup.finiteIndex_of_finite_quotient
 
+open scoped Classical in
 /-- Finite congruence subgroups are contravariant in the finite modulus. -/
 theorem finiteCongruenceSubgroup_antitone
     {m n : FiniteModulus K} (hmn : m ≤ n) :
@@ -757,6 +786,7 @@ theorem finiteCongruenceSubgroup_antitone
   intro v
   exact localHigherUnitGroup_antitone v (hmn v) (ha v)
 
+open scoped Classical in
 /-- Infinite congruence subgroups are contravariant in the selected real
 places of a full modulus. -/
 theorem Modulus.infiniteCongruenceSubgroup_antitone
@@ -767,6 +797,7 @@ theorem Modulus.infiniteCongruenceSubgroup_antitone
   intro v hv
   exact ha v (hmn.2 hv)
 
+open scoped Classical in
 /-- Idèle congruence subgroups are contravariant in a full modulus. -/
 theorem Modulus.ideleCongruenceSubgroup_antitone
     {m n : Modulus K} (hmn : m ≤ n) :
@@ -776,6 +807,7 @@ theorem Modulus.ideleCongruenceSubgroup_antitone
   exact ⟨Modulus.infiniteCongruenceSubgroup_antitone hmn ha.1,
     finiteCongruenceSubgroup_antitone hmn.1 ha.2⟩
 
+open scoped Classical in
 /-- Ray congruence subgroups are contravariant in a full modulus. -/
 theorem Modulus.congruenceSubgroup_antitone
     {m n : Modulus K} (hmn : m ≤ n) :
@@ -786,6 +818,7 @@ theorem Modulus.congruenceSubgroup_antitone
     ((Modulus.ideleCongruenceSubgroup_antitone hmn).trans le_sup_left)
     le_sup_right
 
+open scoped Classical in
 /-- Ideles integral at all finite places split as the infinite ideles times
 the compact group of integral finite ideles. -/
 def integralIdeleEquiv :
@@ -800,6 +833,7 @@ def integralIdeleEquiv :
   right_inv a := rfl
   map_mul' a b := rfl
 
+open scoped Classical in
 /-- Under `integralIdeleEquiv`, the idele congruence subgroup maps to the
 product of its infinite and finite congruence factors. -/
 theorem map_ideleCongruenceSubgroup_subgroupOf_integral (m : Modulus K) :
@@ -816,6 +850,7 @@ theorem map_ideleCongruenceSubgroup_subgroupOf_integral (m : Modulus K) :
   · rintro ⟨ha, hb⟩
     refine ⟨⟨(a.1, a.2.1), a.2.2⟩, ⟨ha, hb⟩, rfl⟩
 
+open scoped Classical in
 /-- The idele congruence subgroup has finite relative index in the ideles
 which are integral at every finite place. -/
 instance ideleCongruenceSubgroupFiniteRelIndex
@@ -845,6 +880,7 @@ instance ideleCongruenceSubgroupFiniteRelIndex
       ((finiteCongruenceSubgroup m.finitePart).subgroupOf
         (FiniteIdeleGroup.integralSubgroup (K := K))).index ≠ 0)
 
+open scoped Classical in
 /-- The subgroup defining the ordinary ideal class group has finite index. -/
 instance ordinaryIdealClassSubgroupFiniteIndex :
     (IdeleGroup.integralAtFinitePlaces (K := K) ⊔
@@ -858,6 +894,7 @@ instance ordinaryIdealClassSubgroupFiniteIndex :
       (K := K)).symm.toEquiv
   exact Subgroup.finiteIndex_of_finite_quotient
 
+open scoped Classical in
 /-- The subgroup `I_K^m Kˣ` has finite index in the idele group. -/
 instance ideleCongruenceSupPrincipalFiniteIndex
     (m : Modulus K) :
@@ -892,6 +929,7 @@ instance ideleCongruenceSupPrincipalFiniteIndex
     ← Subgroup.relIndex_mul_index hHV]
   exact mul_ne_zero hrel hVindex
 
+open scoped Classical in
 /-- The ray congruence subgroup in the idele class group is open. -/
 theorem isOpen_congruenceSubgroup (m : Modulus K) :
     IsOpen
@@ -907,6 +945,7 @@ theorem isOpen_congruenceSubgroup (m : Modulus K) :
   rw [Modulus.congruenceSubgroup, Subgroup.coe_map]
   exact QuotientGroup.isOpenMap_coe _ hsupOpen
 
+open scoped Classical in
 /-- Every ray congruence subgroup is closed. -/
 theorem isClosed_congruenceSubgroup (m : Modulus K) :
     IsClosed
@@ -916,6 +955,7 @@ theorem isClosed_congruenceSubgroup (m : Modulus K) :
   (m.congruenceSubgroup).isClosed_of_isOpen
     (isOpen_congruenceSubgroup m)
 
+open scoped Classical in
 /-- Every ray congruence subgroup has finite index. -/
 instance congruenceSubgroupFiniteIndex (m : Modulus K) :
     m.congruenceSubgroup.FiniteIndex := by
@@ -927,6 +967,7 @@ instance congruenceSubgroupFiniteIndex (m : Modulus K) :
     (rayClassGroupEquivIdeleQuotient m).symm.toEquiv
   exact Subgroup.finiteIndex_of_finite_quotient
 
+open scoped Classical in
 /-- The image of the connected narrow archimedean positivity subgroup lies in
 every open subgroup of the idele class group. -/
 theorem narrowInfiniteCongruenceSubgroup_mapsTo_openSubgroup
@@ -965,6 +1006,7 @@ theorem narrowInfiniteCongruenceSubgroup_mapsTo_openSubgroup
       ⟨H.isClosed_of_isOpen hH, hH⟩ hinter
   exact hsubset ⟨⟨a, ha⟩, rfl⟩
 
+open scoped Classical in
 /-- Congruence subgroups are cofinal among the open subgroups of the idele
 class group. -/
 theorem exists_congruenceSubgroup_le_of_isOpen
@@ -1034,6 +1076,7 @@ theorem exists_congruenceSubgroup_le_of_isOpen
     rw [hxone]
     exact H.one_mem
 
+open scoped Classical in
 /-- A modulus whose ray congruence subgroup lies in the given open
 subgroup. -/
 noncomputable def chosenModulusInside
@@ -1043,6 +1086,7 @@ noncomputable def chosenModulusInside
   Classical.choose
     (exists_congruenceSubgroup_le_of_isOpen H hH)
 
+open scoped Classical in
 /-- The chosen modulus has the required subgroup
 inclusion. -/
 theorem chosenModulusInside_spec
@@ -1052,6 +1096,7 @@ theorem chosenModulusInside_spec
   Classical.choose_spec
     (exists_congruenceSubgroup_le_of_isOpen H hH)
 
+open scoped Classical in
 /-- Closed finite-index subgroups are open, hence also contain a chosen ray
 congruence subgroup. -/
 noncomputable def modulusInsideClosedFiniteIndex
@@ -1062,6 +1107,7 @@ noncomputable def modulusInsideClosedFiniteIndex
   chosenModulusInside H
     (H.isOpen_of_isClosed_of_finiteIndex hclosed)
 
+open scoped Classical in
 /-- Specification of the modulus selected for a closed finite-index
 subgroup. -/
 theorem modulusInsideClosedFiniteIndex_spec
@@ -1072,6 +1118,7 @@ theorem modulusInsideClosedFiniteIndex_spec
   chosenModulusInside_spec H
     (H.isOpen_of_isClosed_of_finiteIndex hclosed)
 
+open scoped Classical in
 /-- A subgroup of the idele class group is closed of
 finite index exactly when it contains a ray congruence subgroup. -/
 theorem isClosed_and_finiteIndex_iff_exists_congruenceSubgroup_le

@@ -29,6 +29,8 @@ variable (K : Type) [Field K] [ValuativeRel K] [TopologicalSpace K]
 private abbrev AbsoluteFiniteIndex :=
   OpenNormalSubgroup (localAbsoluteAbelianProfinite K)
 
+/-- Norm quotients in the finite reciprocity diagram carry their quotient topologies from
+base-field units. -/
 noncomputable local instance finiteDiagramNormQuotientTopologicalSpace
     (E L : Type) [Field E] [Field L] [Algebra E L]
     [TopologicalSpace E] :

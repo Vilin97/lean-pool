@@ -22,7 +22,7 @@ class field theory, and the local conductor-zero criterion then detects
 unramifiedness.
 -/
 
-open scoped NumberField Classical NNReal ValuativeRel
+open scoped NumberField NNReal ValuativeRel
 
 noncomputable section
 
@@ -41,6 +41,7 @@ variable
     [FiniteDimensional K L] [IsAbelianGalois K L]
 
 omit [NumberField L] in
+open scoped Classical in
 /-- For a finite abelian extension, the chosen finite-place norm
 conductor has exponent zero exactly when the chosen completed extension
 is unramified. -/
@@ -82,7 +83,7 @@ theorem
       LocalClassFieldTheory.localizedCompletion_isAbelianGalois
         vK hvK w
     let : NontriviallyNormedField vK.Completion :=
-      absoluteValueExtension_completionNontriviallyNormedField
+      absoluteValueExtensionCompletionNontriviallyNormedField
         vK hvK
     let : LocallyCompactSpace vK.Completion :=
       AbsoluteValue.Completion.locallyCompactSpace
@@ -246,6 +247,7 @@ theorem
       ideleClassNormLocalHigherUnitExponent_eq_zero_of_chosenUnramified
         (K := K) (L := L) v hunramified
 
+open scoped Classical in
 /-- For a finite abelian extension, the constructed norm modulus is
 supported at exactly the finite places where the chosen completed
 extension is ramified. -/

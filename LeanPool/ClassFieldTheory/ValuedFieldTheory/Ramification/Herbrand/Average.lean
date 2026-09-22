@@ -49,9 +49,11 @@ theorem depth_inv (σ : G) : D.depth σ⁻¹ = D.depth σ := by
 
 variable (H : Subgroup G) [H.Normal]
 
+/-- A subgroup of a finite group is equipped with its finite enumeration. -/
 noncomputable local instance averageSubgroupFintype [Finite G] : Fintype H :=
   Fintype.ofFinite H
 
+/-- Each fiber of the quotient map from a finite group has a finite enumeration. -/
 noncomputable local instance averageQuotientFiberFintype [Finite G] (q : G ⧸ H) :
     Fintype (QuotientFiber H q) :=
   Fintype.ofFinite (QuotientFiber H q)
@@ -100,7 +102,7 @@ omit [H.Normal] in
 
 /-- The ramification index in the purely group-theoretic calculation,
 namely `|H_0|`. -/
-def depthRamificationIndex [Finite G] : ℕ :=
+def depthRamificationIndex : ℕ :=
   Nat.card ((D.depthLowerFiltration H).lower 0)
 
 /-- The actual normalized average of the finite depths in a nontrivial
@@ -179,13 +181,15 @@ theorem depth_eq_zero_of_not_mem_lower_zero (τ : H)
 omit [H.Normal] in
 /-- The truncation sum over all of `H` is the inertia-cardinality constant
 plus the Herbrand depth sum over `H_0`. -/
-theorem sum_min_depth_eq_card_add_truncated (n : ℕ) [Fintype G] :
+theorem sum_min_depth_eq_card_add_truncated (n : ℕ) [Finite G] :
     (∑ τ : H,
         (WithTop.untopD (α := ℕ) 0
           (min (D.depth (τ : G)) (WithTop.some (n + 1))) : ℝ)) =
       D.depthRamificationIndex H +
         ∑ τ : (D.depthLowerFiltration H).lower 0,
           ((RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.truncatedLowerDepth (D.depthLowerFiltration H)) n τ : ℝ) := by
+  classical
+  let := Fintype.ofFinite G
   classical
   let F := D.depthLowerFiltration H
   let p : H → Prop := fun τ => τ ∈ F.lower 0
@@ -210,14 +214,16 @@ theorem sum_min_depth_eq_card_add_truncated (n : ℕ) [Fintype G] :
       intro τ
       simp [p]
     _ = ∑ τ : F.lower 0,
-        ((1 : ℝ) + ((RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.truncatedLowerDepth F) n τ : ℝ)) := by
+        ((1 : ℝ) +
+          ((RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.truncatedLowerDepth F) n τ : ℝ)) := by
       apply Finset.sum_congr rfl
       intro τ _
       dsimp [f, F]
       exact_mod_cast (by
         simpa [add_comm] using (D.truncatedLowerDepth_add_one H n τ).symm)
     _ = D.depthRamificationIndex H +
-        ∑ τ : F.lower 0, ((RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.truncatedLowerDepth F) n τ : ℝ) := by
+        ∑ τ : F.lower 0,
+          ((RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.truncatedLowerDepth F) n τ : ℝ) := by
       rw [Finset.sum_add_distrib]
       congr 1
       calc
@@ -273,7 +279,9 @@ theorem quotientFiberAverage_sub_one_eq_herbrandValueNat_of_depth_eq_succ
   have hdecomp := D.sum_min_depth_eq_card_add_truncated H n
   rw [← hsum] at hdecomp
   rw [quotientFiberAverage, hdecomp]
-  rw [show (RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandValueNat (D.depthLowerFiltration H)) n =
+  rw [show
+    (RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandValueNat
+    (D.depthLowerFiltration H)) n =
       (∑ τ : (D.depthLowerFiltration H).lower 0,
           ((RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.truncatedLowerDepth (D.depthLowerFiltration H)) n τ : ℝ)) /
         D.depthRamificationIndex H by
@@ -391,12 +399,17 @@ theorem quotientFiberAverage_ge_herbrandFunction_add_one_iff_exists
     rw [hdepth]
     exact WithTop.coe_le_coe
   rw [hfiber, hwithTopNat, ← hrealNat]
-  change D.quotientFiberAverage H hq ≥ (RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction F) s + 1 ↔ _
-  rw [show D.quotientFiberAverage H hq ≥ (RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction F) s + 1 ↔
+  change D.quotientFiberAverage H hq ≥
+    (RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction
+    F) s + 1 ↔ _
+  rw [show D.quotientFiberAverage H hq ≥
+    (RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction
+    F) s + 1 ↔
       (RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction F) s ≤ D.quotientFiberAverage H hq - 1 by
     constructor <;> intro h <;> linarith]
   rw [havg]
-  exact (RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction_strictMono F).le_iff_le
+  exact
+    (RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction_strictMono F).le_iff_le
 
 /-- Every nontrivial quotient fibre admits a maximal representative for
 which the Herbrand fibre-average identity holds. -/

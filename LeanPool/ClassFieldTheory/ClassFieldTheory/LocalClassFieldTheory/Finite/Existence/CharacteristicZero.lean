@@ -52,7 +52,7 @@ theorem finiteAbelianNormSubgroupMap_surjective_of_charZero :
 /-- Characteristic-zero local existence as an order isomorphism: finite
 abelian subextensions, ordered by inclusion, correspond to native open
 finite-index subgroups of `Kˣ` with the opposite inclusion order. -/
-noncomputable def finiteAbelianNormSubgroupOrderIso_of_charZero :
+noncomputable def finiteAbelianNormSubgroupOrderIsoOfCharZero :
     FiniteAbelianSubextension (intrinsicAbstractBase K) ≃o
       (OpenFiniteIndexSubgroup K)ᵒᵈ where
   toEquiv := Equiv.ofBijective (finiteAbelianNormSubgroupMap K)
@@ -66,16 +66,16 @@ noncomputable def finiteAbelianNormSubgroupOrderIso_of_charZero :
 
 /-- Underlying equivalence of the characteristic-zero local existence
 order isomorphism. -/
-noncomputable def finiteAbelianNormSubgroupEquiv_of_charZero :
+noncomputable def finiteAbelianNormSubgroupEquivOfCharZero :
     FiniteAbelianSubextension (intrinsicAbstractBase K) ≃
       OpenFiniteIndexSubgroup K :=
-  (finiteAbelianNormSubgroupOrderIso_of_charZero K).toEquiv
+  (finiteAbelianNormSubgroupOrderIsoOfCharZero K).toEquiv
 
 /-- States the theorem `finiteAbelianNormSubgroupOrderIso_of_charZero_apply`. -/
 @[simp]
 theorem finiteAbelianNormSubgroupOrderIso_of_charZero_apply
     (L : FiniteAbelianSubextension (intrinsicAbstractBase K)) :
-    finiteAbelianNormSubgroupOrderIso_of_charZero K L =
+    finiteAbelianNormSubgroupOrderIsoOfCharZero K L =
       finiteAbelianNormSubgroupMap K L := by
   rfl
 

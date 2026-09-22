@@ -31,7 +31,7 @@ The equivalence evaluates to the specified map on every quotient class. -/
 theorem finiteAbelianLocalReciprocity_quotientEquiv_of_artin
     (K : Type u) (L : Type v)
     [Field K] [Field L] [Algebra K L]
-    [FiniteDimensional K L] [IsAbelianGalois K L]
+    [FiniteDimensional K L]
     [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K]
     (artin : Kˣ →ₜ* (L ≃ₐ[K] L))

@@ -34,7 +34,6 @@ abbrev fixedFieldOfSubgroup (H : Subgroup G) : IntermediateField K L :=
 variable {G}
 
 /-- Elementwise membership in the fixed field of a subgroup. -/
-@[simp]
 theorem mem_fixedFieldOfSubgroup_iff
     {H : Subgroup G} {x : L} :
     x ∈ fixedFieldOfSubgroup (K := K) (L := L) G H ↔
@@ -117,7 +116,6 @@ abbrev decompositionField
 variable {G}
 
 /-- Elementwise membership in the decomposition field. -/
-@[simp]
 theorem mem_decompositionField_iff
     {P : Ideal B} [MulSemiringAction G B] {x : L} :
     x ∈ decompositionField (K := K) (L := L) G P ↔
@@ -219,7 +217,6 @@ abbrev inertiaField
 variable {G}
 
 /-- Elementwise membership in the inertia field. -/
-@[simp]
 theorem mem_inertiaField_iff
     {P : Ideal B} [MulSemiringAction G B] {x : L} :
     x ∈ inertiaField (K := K) (L := L) G P ↔
@@ -235,7 +232,8 @@ theorem decompositionField_le_inertiaField
     decompositionField (K := K) (L := L) G P ≤
       inertiaField (K := K) (L := L) G P :=
   by
-    simpa [decompositionField, inertiaField, fixedFieldOfSubgroup, inertiaGroup, decompositionGroup] using
+    simpa [decompositionField, inertiaField, fixedFieldOfSubgroup, inertiaGroup,
+      decompositionGroup] using
       (IsGaloisGroup.fixedPoints_le_of_le
         (G := G) (K := K) (L := L)
         (H := inertiaGroup P G) (H' := decompositionGroup P G)

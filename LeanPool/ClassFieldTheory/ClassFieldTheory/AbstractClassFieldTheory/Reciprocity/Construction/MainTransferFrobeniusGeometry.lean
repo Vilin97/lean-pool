@@ -321,7 +321,7 @@ theorem transferNormNaturalityFrobeniusIntermediateFiniteIndex
 /-- The copy of `G(\widetilde L/K')` is closed in
 `G(\widetilde L/K)`. -/
 theorem transferNormNaturalityFrobeniusIntermediate_isClosed
-    (D : DegreeData G) [IsTopologicalGroup G] [CompactSpace G] [T2Space G]
+    (D : DegreeData G) [IsTopologicalGroup G] [CompactSpace G]
     (E : FiniteResidueAbstractExtension D) (L : ClosedSubgroup G)
     (hL : L.toSubgroup ≤ E.field.field.toSubgroup)
     [hLnormal :

@@ -304,7 +304,6 @@ theorem transversalLinearization_single
 
 /-- On the embedded subgroup ideal, transversal linearization is the
 ordinary abelianization linearization. -/
-@[simp]
 theorem transversalLinearization_embeddedDelta
     (H : Subgroup G) (T : H.LeftTransversal) (h : H) :
     transversalLinearization H T (embeddedDelta H h) =
@@ -589,7 +588,8 @@ theorem relativeDeltaAbelianizationEquiv_of
       Multiplicative.ofAdd (relativeDeltaClass H h) :=
   rfl
 
-/-- The lower horizontal map in the relative augmentation construction, obtained from transfer through
+/-- The lower horizontal map in the relative augmentation construction, obtained from transfer
+through
 the two canonical augmentation isomorphisms. -/
 noncomputable def augmentationTransfer
     (H : Subgroup G) [H.FiniteIndex] :
@@ -622,7 +622,6 @@ theorem augmentationTransfer_deltaAbelianization
     ← deltaAbelianizationEquiv_apply G a,
     MulEquiv.symm_apply_apply]
 
-@[simp]
 theorem augmentationTransfer_deltaClass
     (H : Subgroup G) [H.FiniteIndex] (g : G) :
     augmentationTransfer H

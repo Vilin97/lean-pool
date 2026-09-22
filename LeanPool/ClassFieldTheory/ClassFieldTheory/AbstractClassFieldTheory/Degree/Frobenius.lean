@@ -115,7 +115,8 @@ theorem residueDegree_nsmul_normalizedDegree (D : DegreeData G)
   exact zHatMulNat_zHatDivide (K.residueDegree : ℕ) K.residueDegree.property
     (D.restrictedDegreeInMulNatRange K k)
 
-/-- The normalized map is surjective, exactly as asserted before the normalized Frobenius definition. -/
+/-- The normalized map is surjective, exactly as asserted before the normalized Frobenius
+definition. -/
 theorem normalizedDegree_surjective (D : DegreeData G)
     (K : FiniteResidueAbstractField D) :
     Function.Surjective (D.normalizedDegree K) := by

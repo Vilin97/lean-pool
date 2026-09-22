@@ -13,7 +13,8 @@ import Mathlib.NumberTheory.Padics.ProperSpace
 # Topological structure of a finite p-adic module
 
 This file packages the PID step in the mixed-characteristic proof of
-the local-field structure theory, the field-unit structure theorem.  Once the torsion submodule is known to
+the local-field structure theory, the field-unit structure theorem.  Once the torsion submodule
+  is known to
 be a finite cyclic group of order `p^a`, and the torsion-free quotient has
 rank `d`, the module is topologically the product of that cyclic factor and
 `d` copies of `Z_p`.
@@ -39,7 +40,7 @@ noncomputable def chosenPadicModuleContinuousAddEquivZModProdFinPi
     (p : ℕ) [Fact p.Prime]
     (M : Type u) [TopologicalSpace M] [AddCommGroup M] [Module ℤ_[p] M]
     [ContinuousAdd M] [ContinuousSMul ℤ_[p] M]
-    [CompactSpace M] [T2Space M] [Module.Finite ℤ_[p] M]
+    [T2Space M] [Module.Finite ℤ_[p] M]
     (a d : ℕ)
     [Finite (Submodule.torsion ℤ_[p] M)]
     (hcyclic : IsAddCyclic (Submodule.torsion ℤ_[p] M))

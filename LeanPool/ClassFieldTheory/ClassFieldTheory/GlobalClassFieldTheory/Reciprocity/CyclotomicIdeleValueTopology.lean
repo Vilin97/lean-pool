@@ -213,7 +213,6 @@ noncomputable def cyclotomicZHatNormCompositeInMulNatRangeContinuous :
 
 /-- Coercing the continuous range-restricted norm composite recovers the
 underlying cyclotomic norm composite. -/
-@[simp]
 theorem cyclotomicZHatNormCompositeInMulNatRangeContinuous_apply
     (a : Additive (IdeleGroup K)) :
     (cyclotomicZHatNormCompositeInMulNatRangeContinuous K a :

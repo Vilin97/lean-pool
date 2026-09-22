@@ -12,7 +12,7 @@ This leaf computes the two finite-family Herbrand cardinalities from the
 finiteness results and the canonical family instance providers.
 -/
 
-open scoped NumberField BigOperators ValuativeRel Classical NNReal
+open scoped NumberField BigOperators ValuativeRel NNReal
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -31,6 +31,7 @@ variable {K L : Type}
     [FiniteDimensional K L] [IsGalois K L]
 
 omit [NumberField L] in
+open scoped Classical in
 /-- The degree-zero cardinality of the unrestricted local-block family
 is the product of its local degrees. -/
 theorem
@@ -132,6 +133,7 @@ theorem
           S i σ hgen
 
 omit [NumberField L] in
+open scoped Classical in
 /-- The degree-minus-one cardinality of the unrestricted local-block
 family is one. -/
 theorem

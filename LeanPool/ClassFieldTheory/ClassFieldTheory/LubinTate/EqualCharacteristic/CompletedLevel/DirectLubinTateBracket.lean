@@ -16,7 +16,8 @@ In the proof of the completed theta-intertwining theorem the standard Lubin--Tat
 For a unit `u`, this file constructs the endomorphism `[u]` of this standard
 Lubin--Tate group.  Its linear coefficient is `u`; the higher additive
 coefficients are the unique contracting solutions forced by commutation with
-`e_T`.  This is the orientation used in the completed theta-intertwining theorem itself, as opposed to the
+`e_T`.  This is the orientation used in the completed theta-intertwining theorem itself, as
+  opposed to the
 normalization `u⁻¹T -> T` used in Corollary the Lubin–Tate endomorphism commutation law.
 -/
 

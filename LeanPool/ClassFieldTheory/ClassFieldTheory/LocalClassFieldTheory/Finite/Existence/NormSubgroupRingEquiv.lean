@@ -25,6 +25,7 @@ variable {F : Type u} {M : Type v} {F' : Type w} {M' : Type x}
   [Algebra F M] [Algebra F' M']
   [FiniteDimensional F M] [FiniteDimensional F' M']
 
+omit [FiniteDimensional F M] [FiniteDimensional F' M'] in
 /-- The field-norm homomorphisms commute with compatible field equivalences. -/
 theorem fieldNormHom_map_ringEquiv
     (eF : F ≃+* F') (eM : M ≃+* M')

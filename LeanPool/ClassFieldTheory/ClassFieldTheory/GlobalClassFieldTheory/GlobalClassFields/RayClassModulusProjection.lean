@@ -16,8 +16,7 @@ to a smaller one. The public ray-class groups use the comparison equivalence
 to transport this map.
 -/
 
-open scoped NumberField Classical
-
+open scoped NumberField
 noncomputable section
 
 namespace ClassFieldTheory
@@ -26,14 +25,21 @@ open NumberField IsDedekindDomain
 
 variable (K : Type) [Field K] [NumberField K]
 
+open scoped Classical in
 local instance ideleClassIsMulCommutative :
     IsMulCommutative (IdeleClassGroup K) :=
   ⟨⟨fun a b => mul_comm a b⟩⟩
 
+attribute [local instance] ideleClassIsMulCommutative
+
+open scoped Classical in
 local instance rayCongruenceNormal (m : RayClass.Modulus K) :
     (RayClass.Modulus.congruenceSubgroup m).Normal :=
   Subgroup.normal_of_isMulCommutative _
 
+attribute [local instance] rayCongruenceNormal
+
+open scoped Classical in
 /-- The quotient projection between the original idèle-class ray groups. -/
 def originalRayClassModulusProjection
     {m n : RayClass.Modulus K} (hmn : m ≤ n) :
@@ -44,6 +50,7 @@ def originalRayClassModulusProjection
     (MonoidHom.id (IdeleClassGroup K))
     (RayClass.Modulus.congruenceSubgroup_antitone hmn)
 
+open scoped Classical in
 /-- The projection of the original idèle-class ray groups is onto. -/
 theorem originalRayClassModulusProjection_surjective
     {m n : RayClass.Modulus K} (hmn : m ≤ n) :
@@ -54,6 +61,7 @@ theorem originalRayClassModulusProjection_surjective
   exact
     ⟨QuotientGroup.mk' (RayClass.Modulus.congruenceSubgroup n) c, rfl⟩
 
+open scoped Classical in
 /-- For `m ≤ n`, the natural quotient map from the ray class group modulo
 `n` onto the ray class group modulo `m`. -/
 noncomputable def rayClassModulusProjection
@@ -67,6 +75,7 @@ noncomputable def rayClassModulusProjection
       ((originalRayClassModulusProjection K hmn').comp
         (GlobalClassFieldComparison.rayClassGroupEquivOriginalIdele K n).toMonoidHom)
 
+open scoped Classical in
 /-- Evaluate the public projection through the original idèle-class quotient. -/
 theorem rayClassModulusProjection_apply
     {m n : RayClassModulus K} (hmn : m ≤ n)
@@ -79,6 +88,7 @@ theorem rayClassModulusProjection_apply
           (GlobalClassFieldComparison.rayClassGroupEquivOriginalIdele K n a)) :=
   rfl
 
+open scoped Classical in
 /-- The modulus-change projection is onto. -/
 theorem rayClassModulusProjection_surjective
     {m n : RayClassModulus K} (hmn : m ≤ n) :
@@ -111,6 +121,7 @@ theorem rayClassModulusProjection_surjective
     _ = y :=
       (GlobalClassFieldComparison.rayClassGroupEquivOriginalIdele K m).symm_apply_apply y
 
+open scoped Classical in
 /-- The image of a prime ray class under modulus change is the same prime
 ray class, provided the prime is outside the larger modulus. -/
 theorem rayClassModulusProjection_prime
@@ -143,6 +154,7 @@ theorem rayClassModulusProjection_prime
   rw [GlobalClassFieldComparison.rayClassGroupEquivOriginalIdele_prime K m v hvm]
   rfl
 
+open scoped Classical in
 /-- Enlarging the public modulus gives literal containment of the selected
 ray class fields inside the fixed separable closure. -/
 theorem chosenRayClassFieldSubfield_mono

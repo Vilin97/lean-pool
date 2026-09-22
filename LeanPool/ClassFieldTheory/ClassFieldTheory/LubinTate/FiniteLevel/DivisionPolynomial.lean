@@ -83,7 +83,6 @@ theorem standardLubinTatePolynomial_toPowerSeries
 
 /-- For a uniformizer, coercing the standard polynomial gives the underlying
 series of the bundled standard Lubin--Tate input. -/
-@[simp]
 theorem standardLubinTatePolynomial_toPowerSeries_eq_series
     {F : LocalField.{u, v} K} {π : F.valuationSubring}
     (hπ : F.toCompleteDVF.valuation.IsUniformizer (π : K)) :

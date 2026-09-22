@@ -244,7 +244,6 @@ theorem finite_absoluteNorm_eq_archimedeanNorm_principalIdele
 
 /-- The number-field product formula in idelic form: every principal idele
 has global absolute norm one. -/
-@[simp]
 theorem absoluteNorm_principalIdele (x : Kˣ) :
     absoluteNorm (principalIdele K x) = 1 := by
   rw [absoluteNorm_apply,
@@ -268,7 +267,6 @@ def absoluteNorm :
     (IdeleGroup.absoluteNorm (K := K))
     (IdeleGroup.principalSubgroup_le_normOneSubgroup (K := K))
 
-@[simp]
 theorem absoluteNorm_mk (a : IdeleGroup K) :
     absoluteNorm
       (QuotientGroup.mk' (IdeleGroup.principalSubgroup K) a) =
@@ -292,7 +290,6 @@ theorem comap_normOneSubgroup :
     IdeleGroup.absoluteNorm a = 1
   rw [absoluteNorm_mk]
 
-@[simp]
 theorem mk_mem_normOneSubgroup_iff (a : IdeleGroup K) :
     QuotientGroup.mk' (IdeleGroup.principalSubgroup K) a ∈
         normOneSubgroup (K := K) ↔

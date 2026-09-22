@@ -23,7 +23,7 @@ universe u
 /-- A finite abelian extension of a number field inside Mathlib's chosen
 separable closure.  The inherited order is inclusion of intermediate fields. -/
 abbrev FiniteAbelianExtension
-    (K : Type u) [Field K] [NumberField K] :=
+    (K : Type u) [Field K] :=
   { E : IntermediateField K (SeparableClosure K) //
       FiniteDimensional K E ∧ IsAbelianGalois K E }
 

@@ -14,12 +14,13 @@ is the ideal-theoretic ray class group modulo `m`, compatibly with finite
 global reciprocity.  No global choice of ray class field is exposed.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 
 noncomputable section
 
 namespace ClassFieldTheory
 
+open scoped Classical in
 /-- A ray class field realization exists for every modulus. -/
 theorem rayClassField_reciprocity
     (K : Type) [Field K] [NumberField K]

@@ -12,7 +12,7 @@ This module realizes the embedded field `L(i)` inside `ℂ`, constructs its
 complex place, and identifies ambient complex conjugation on that field.
 -/
 
-open scoped Classical IsMulCommutative
+open scoped IsMulCommutative
 open NumberField
 
 noncomputable section
@@ -27,6 +27,7 @@ variable
     [Field K]
     [Field L] [NumberField L] [Algebra K L]
 
+open scoped Classical in
 /-- The field range of a complex embedding is preserved by complex
 conjugation when a relative automorphism realizes that conjugation. -/
 theorem complexEmbeddingFieldRange_map_complexConjugation
@@ -56,6 +57,7 @@ variable
     [NumberField K]
     [FiniteDimensional K L] [IsAbelianGalois K L]
 
+open scoped Classical in
 /-- The concrete field `L(i)` inside `ℂ`, formed using the complex
 embedding belonging to the chosen place above `v`. -/
 def infinitePlaceComplexificationOverfield
@@ -65,6 +67,9 @@ def infinitePlaceComplexificationOverfield
       (chosenInfinitePlaceAbove (L := L) v)).toRatAlgHom.fieldRange ⊔
     complexFourthRootField
 
+open scoped Classical in
+/-- The complex overfield attached to an infinite place carries its intermediate-field rational
+algebra structure. -/
 @[reducible]
 noncomputable local instance
     infinitePlaceComplexificationOverfieldRationalAlgebra
@@ -75,6 +80,9 @@ noncomputable local instance
   (infinitePlaceComplexificationOverfield
     (K := K) (L := L) v).algebra'
 
+attribute [local instance] infinitePlaceComplexificationOverfieldRationalAlgebra
+
+open scoped Classical in
 noncomputable instance
     infinitePlaceComplexificationOverfield_finiteDimensional
     (v : InfinitePlace K) :
@@ -90,6 +98,7 @@ noncomputable instance
     IntermediateField.finiteDimensional_sup
       φ.fieldRange complexFourthRootField
 
+open scoped Classical in
 noncomputable instance
     infinitePlaceComplexificationOverfield_numberField
     (v : InfinitePlace K) :
@@ -100,6 +109,7 @@ noncomputable instance
     (infinitePlaceComplexificationOverfield
       (K := K) (L := L) v)
 
+open scoped Classical in
 /-- The chosen top-field embedding `L → L(i)`. -/
 noncomputable def infinitePlaceComplexificationOverfieldEmbedding
     (v : InfinitePlace K) :
@@ -122,6 +132,7 @@ noncomputable def infinitePlaceComplexificationOverfieldEmbedding
           (AlgHom.mem_fieldRange).mpr ⟨x, rfl⟩))
 
 omit [NumberField K] [FiniteDimensional K L] in
+open scoped Classical in
 /-- The chosen embedding into the complexification overfield agrees
 with the original complex embedding after coercion to `ℂ`. -/
 @[simp]
@@ -140,8 +151,9 @@ theorem infinitePlaceComplexificationOverfieldEmbedding_coe
         (chosenInfinitePlaceAbove (L := L) v) x
   rfl
 
+open scoped Classical in
 noncomputable instance
-    infinitePlaceComplexificationOverfield_algebra
+    infinitePlaceComplexificationOverfieldAlgebra
     (v : InfinitePlace K) :
     Algebra L
       (infinitePlaceComplexificationOverfield
@@ -149,16 +161,18 @@ noncomputable instance
   (infinitePlaceComplexificationOverfieldEmbedding
     (K := K) (L := L) v).toRingHom.toAlgebra
 
+open scoped Classical in
 /-- The scalar action belonging to the chosen top-field embedding. -/
 noncomputable instance
-    infinitePlaceComplexificationOverfield_smul
+    infinitePlaceComplexificationOverfieldSmul
     (v : InfinitePlace K) :
     SMul L
       (infinitePlaceComplexificationOverfield
         (K := K) (L := L) v) :=
-  (infinitePlaceComplexificationOverfield_algebra
+  (infinitePlaceComplexificationOverfieldAlgebra
     (K := K) (L := L) v).toSMul
 
+open scoped Classical in
 instance
     infinitePlaceComplexificationOverfield_ratScalarTower
     (v : InfinitePlace K) :
@@ -169,8 +183,9 @@ instance
     (infinitePlaceComplexificationOverfieldEmbedding
       (K := K) (L := L) v).comp_algebraMap.symm
 
+open scoped Classical in
 noncomputable instance
-    infinitePlaceComplexificationOverfield_baseAlgebra
+    infinitePlaceComplexificationOverfieldBaseAlgebra
     (v : InfinitePlace K) :
     Algebra K
       (infinitePlaceComplexificationOverfield
@@ -179,16 +194,18 @@ noncomputable instance
       (K := K) (L := L) v).comp
     (IsScalarTower.toAlgHom ℚ K L)).toRingHom.toAlgebra
 
+open scoped Classical in
 /-- The scalar action induced from the original base-field embedding. -/
 noncomputable instance
-    infinitePlaceComplexificationOverfield_baseSmul
+    infinitePlaceComplexificationOverfieldBaseSmul
     (v : InfinitePlace K) :
     SMul K
       (infinitePlaceComplexificationOverfield
         (K := K) (L := L) v) :=
-  (infinitePlaceComplexificationOverfield_baseAlgebra
+  (infinitePlaceComplexificationOverfieldBaseAlgebra
     (K := K) (L := L) v).toSMul
 
+open scoped Classical in
 instance
     infinitePlaceComplexificationOverfield_baseRatScalarTower
     (v : InfinitePlace K) :
@@ -200,6 +217,7 @@ instance
         (K := K) (L := L) v).comp
       (IsScalarTower.toAlgHom ℚ K L)).comp_algebraMap).symm
 
+open scoped Classical in
 instance
     infinitePlaceComplexificationOverfield_scalarTower
     (v : InfinitePlace K) :
@@ -208,6 +226,7 @@ instance
         (K := K) (L := L) v) :=
   IsScalarTower.of_algebraMap_eq' rfl
 
+open scoped Classical in
 noncomputable instance
     infinitePlaceComplexificationOverfield_finiteDimensional_over_extension
     (v : InfinitePlace K) :
@@ -218,6 +237,7 @@ noncomputable instance
     (infinitePlaceComplexificationOverfield
       (K := K) (L := L) v)
 
+open scoped Classical in
 /-- The cyclotomic fourth-root field embeds into the concrete
 overfield through its copy in `ℂ`. -/
 noncomputable def
@@ -234,8 +254,9 @@ noncomputable def
         le_sup_right)).comp
     (rationalComplexificationComplexEquiv.toAlgHom)
 
+open scoped Classical in
 noncomputable instance
-    rationalComplexification_infinitePlaceOverfield_algebra
+    rationalComplexificationInfinitePlaceOverfieldAlgebra
     (v : InfinitePlace K) :
     Algebra rationalComplexificationCyclotomicField
       (infinitePlaceComplexificationOverfield
@@ -243,18 +264,20 @@ noncomputable instance
   (rationalComplexificationEmbeddingInInfinitePlaceOverfield
     (K := K) (L := L) v).toRingHom.toAlgebra
 
+open scoped Classical in
 /-- The scalar action induced by the concrete fourth-root-field
 embedding.  Declaring it directly keeps instance search away from
 unrelated intermediate-field algebra structures. -/
 noncomputable instance
-    rationalComplexification_infinitePlaceOverfield_smul
+    rationalComplexificationInfinitePlaceOverfieldSmul
     (v : InfinitePlace K) :
     SMul rationalComplexificationCyclotomicField
       (infinitePlaceComplexificationOverfield
         (K := K) (L := L) v) :=
-  (rationalComplexification_infinitePlaceOverfield_algebra
+  (rationalComplexificationInfinitePlaceOverfieldAlgebra
     (K := K) (L := L) v).toSMul
 
+open scoped Classical in
 instance
     rationalComplexification_infinitePlaceOverfield_scalarTower
     (v : InfinitePlace K) :
@@ -265,6 +288,7 @@ instance
     (rationalComplexificationEmbeddingInInfinitePlaceOverfield
       (K := K) (L := L) v).comp_algebraMap.symm
 
+open scoped Classical in
 /-- The copy of the given abelian extension inside the concrete
 complexification overfield, viewed over the original base field. -/
 noncomputable def infinitePlaceEmbeddedExtensionField
@@ -276,6 +300,7 @@ noncomputable def infinitePlaceEmbeddedExtensionField
     (infinitePlaceComplexificationOverfield
       (K := K) (L := L) v)).fieldRange
 
+open scoped Classical in
 noncomputable instance
     infinitePlaceEmbeddedExtensionField_isAbelianGalois
     (v : InfinitePlace K) :
@@ -287,6 +312,7 @@ noncomputable instance
       (infinitePlaceComplexificationOverfield
         (K := K) (L := L) v)).equivFieldRange.symm.toAlgHom
 
+open scoped Classical in
 /-- The fourth-root cyclotomic factor over the original base field,
 inside the concrete complexification overfield. -/
 noncomputable def infinitePlaceBaseFourthRootField
@@ -300,6 +326,7 @@ noncomputable def infinitePlaceBaseFourthRootField
           (K := K) (L := L) v |
       ∃ n ∈ ({4} : Set ℕ), n ≠ 0 ∧ z ^ n = 1}
 
+open scoped Classical in
 noncomputable instance
     infinitePlaceBaseFourthRootField_isCyclotomic
     (v : InfinitePlace K) :
@@ -337,6 +364,7 @@ noncomputable instance
     exact complexI_isPrimitiveRoot_four
   · exact C.val.injective
 
+open scoped Classical in
 noncomputable instance
     infinitePlaceBaseFourthRootField_isAbelianGalois
     (v : InfinitePlace K) :
@@ -349,6 +377,7 @@ noncomputable instance
       (K := K) (L := L) v)
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 private noncomputable def infinitePlaceRatEmbeddedExtensionField
     (v : InfinitePlace K) :
     IntermediateField ℚ
@@ -365,6 +394,7 @@ private noncomputable def infinitePlaceRatEmbeddedExtensionField
       le_sup_left)
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 private noncomputable def infinitePlaceRatFourthRootField
     (v : InfinitePlace K) :
     IntermediateField ℚ
@@ -378,6 +408,7 @@ private noncomputable def infinitePlaceRatFourthRootField
       le_sup_right)
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 private noncomputable def infinitePlaceRatComplexificationFactors
     (v : InfinitePlace K) :
     IntermediateField ℚ
@@ -389,6 +420,7 @@ private noncomputable def infinitePlaceRatComplexificationFactors
       (K := K) (L := L) v).restrictScalars ℚ
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 private theorem infinitePlaceRatEmbeddedExtensionField_le_factors
     (v : InfinitePlace K) :
     infinitePlaceRatEmbeddedExtensionField
@@ -433,6 +465,7 @@ private theorem infinitePlaceRatEmbeddedExtensionField_le_factors
     _ = (x : C).1 := hy
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 private theorem infinitePlaceRatFourthRootField_le_factors
     (v : InfinitePlace K) :
     infinitePlaceRatFourthRootField
@@ -495,6 +528,7 @@ private theorem infinitePlaceRatFourthRootField_le_factors
   exact hiy
 
 omit [NumberField K] [FiniteDimensional K L] in
+open scoped Classical in
 private theorem infinitePlaceRatComplexificationFactors_sup
     (v : InfinitePlace K) :
     infinitePlaceRatEmbeddedExtensionField
@@ -514,6 +548,7 @@ private theorem infinitePlaceRatComplexificationFactors_sup
   rfl
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 /-- The embedded abelian extension and the base-changed fourth-root
 factor generate the whole concrete complexification overfield. -/
 theorem infinitePlaceComplexificationFactors_sup
@@ -539,6 +574,7 @@ theorem infinitePlaceComplexificationFactors_sup
     (infinitePlaceRatFourthRootField_le_factors
       (K := K) (L := L) v)
 
+open scoped Classical in
 noncomputable instance
     infinitePlaceComplexificationOverfield_isAbelianGalois_over_base
     (v : InfinitePlace K) :
@@ -572,6 +608,7 @@ noncomputable instance
       (IntermediateField.topEquiv.symm.toAlgHom :
         C →ₐ[K] (⊤ : IntermediateField K C))
 
+open scoped Classical in
 noncomputable instance
     infinitePlaceComplexificationOverfield_isTotallyComplex
     (v : InfinitePlace K) :
@@ -583,6 +620,7 @@ noncomputable instance
     (infinitePlaceComplexificationOverfield
       (K := K) (L := L) v)
 
+open scoped Classical in
 /-- The infinite place on the concrete overfield induced by its
 inclusion into `ℂ`. -/
 noncomputable def infinitePlaceComplexificationOverfieldComplexPlace
@@ -595,6 +633,7 @@ noncomputable def infinitePlaceComplexificationOverfieldComplexPlace
       (K := K) (L := L) v).val.toRingHom
 
 omit [NumberField K] [FiniteDimensional K L] in
+open scoped Classical in
 /-- Complex conjugation preserves the concrete overfield `L(i)` at a
 ramified chosen place.  Preservation of the `L`-factor is the actual
 local Artin value being a conjugation; preservation of the fourth-root
@@ -625,6 +664,7 @@ theorem infinitePlaceComplexificationOverfield_map_complexConjugation
           (K := K) (L := L) v hRamified),
     complexFourthRootField_map_complexConjugation]
 
+open scoped Classical in
 /-- Complex conjugation restricted to the actual overfield `L(i)`. -/
 noncomputable def ramifiedInfinitePlaceOverfieldConjugation
     (v : InfinitePlace K)
@@ -643,6 +683,7 @@ noncomputable def ramifiedInfinitePlaceOverfieldConjugation
         (K := K) (L := L) v hRamified))
 
 omit [NumberField K] [FiniteDimensional K L] in
+open scoped Classical in
 /-- The restricted overfield automorphism acts by ambient complex
 conjugation. -/
 @[simp]
@@ -659,6 +700,7 @@ theorem ramifiedInfinitePlaceOverfieldConjugation_apply
   rfl
 
 omit [NumberField K] [FiniteDimensional K L] in
+open scoped Classical in
 /-- The restricted overfield complex conjugation is an involution. -/
 @[simp]
 theorem ramifiedInfinitePlaceOverfieldConjugation_sq

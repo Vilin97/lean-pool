@@ -10,7 +10,8 @@ import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.
 # The completed theta-intertwining theorem: recursion for the standard Lubin--Tate bracket
 
 The standard bracket constructed from its contracting coefficient equations
-agrees with the recursive `T`-adic bracket used in the finite Lubin–Tate bracket construction.  At the formal
+agrees with the recursive `T`-adic bracket used in the finite Lubin–Tate bracket construction.
+  At the formal
 series level the required identity is
 
 `[a](Y) = a₀ Y + [tail(a)](e_T(Y))`.

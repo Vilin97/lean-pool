@@ -18,7 +18,7 @@ The final theorem separates the genuine `p`-factor from the explicit
 away-from-`p` finite product.  The construction also applies to `k = 0`.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -28,12 +28,19 @@ namespace Reciprocity
 
 open Function
 
-local instance (q : Nat.Primes) : Fact q.1.Prime :=
+open scoped Classical in
+local instance localPrimesInstance1 (q : Nat.Primes) : Fact q.1.Prime :=
   ⟨q.2⟩
 
-local instance (m : ℕ+) : NeZero (m : ℕ) :=
+attribute [local instance] localPrimesInstance1
+
+open scoped Classical in
+local instance localNeZeroInstance1 (m : ℕ+) : NeZero (m : ℕ) :=
   ⟨m.ne_zero⟩
 
+attribute [local instance] localNeZeroInstance1
+
+open scoped Classical in
 local instance rationalCyclotomicPrincipalPrimePowerNumberField
     (p : Nat.Primes) (k : ℕ) :
     NumberField (KummerTheory.rationalCyclotomicLevel
@@ -41,6 +48,9 @@ local instance rationalCyclotomicPrincipalPrimePowerNumberField
   KummerTheory.rationalCyclotomicLevel_numberField
     ⟨p.1 ^ k, pow_pos p.2.pos k⟩
 
+attribute [local instance] rationalCyclotomicPrincipalPrimePowerNumberField
+
+open scoped Classical in
 local instance rationalCyclotomicPrincipalPrimePowerFiniteDimensional
     (p : Nat.Primes) (k : ℕ) :
     FiniteDimensional ℚ (KummerTheory.rationalCyclotomicLevel
@@ -48,6 +58,9 @@ local instance rationalCyclotomicPrincipalPrimePowerFiniteDimensional
   rationalCyclotomicPrincipalPrimeLevelFiniteDimensional
     ⟨p.1 ^ k, pow_pos p.2.pos k⟩
 
+attribute [local instance] rationalCyclotomicPrincipalPrimePowerFiniteDimensional
+
+open scoped Classical in
 local instance rationalCyclotomicPrincipalPrimePowerIsGalois
     (p : Nat.Primes) (k : ℕ) :
     IsGalois ℚ (KummerTheory.rationalCyclotomicLevel
@@ -55,6 +68,9 @@ local instance rationalCyclotomicPrincipalPrimePowerIsGalois
   KummerTheory.rationalCyclotomicLevel_isGalois
     ⟨p.1 ^ k, pow_pos p.2.pos k⟩
 
+attribute [local instance] rationalCyclotomicPrincipalPrimePowerIsGalois
+
+open scoped Classical in
 local instance rationalCyclotomicPrincipalPrimePowerIsAbelianGalois
     (p : Nat.Primes) (k : ℕ) :
     IsAbelianGalois ℚ (KummerTheory.rationalCyclotomicLevel
@@ -63,6 +79,9 @@ local instance rationalCyclotomicPrincipalPrimePowerIsAbelianGalois
     (KummerTheory.rationalCyclotomicLevel
       ⟨p.1 ^ k, pow_pos p.2.pos k⟩).val
 
+attribute [local instance] rationalCyclotomicPrincipalPrimePowerIsAbelianGalois
+
+open scoped Classical in
 noncomputable local instance
     rationalCyclotomicPrincipalLevelFiniteDimensional
     (m : ℕ+) :
@@ -70,6 +89,9 @@ noncomputable local instance
       (KummerTheory.rationalCyclotomicLevel m) :=
   rationalCyclotomicPrincipalPrimeLevelFiniteDimensional m
 
+attribute [local instance] rationalCyclotomicPrincipalLevelFiniteDimensional
+
+open scoped Classical in
 noncomputable local instance
     rationalCyclotomicPrincipalLevelIsAbelianGalois
     (m : ℕ+) :
@@ -77,6 +99,9 @@ noncomputable local instance
       (KummerTheory.rationalCyclotomicLevel m) :=
   rationalCyclotomicPrincipalPrimeLevelIsAbelianGalois m
 
+attribute [local instance] rationalCyclotomicPrincipalLevelIsAbelianGalois
+
+open scoped Classical in
 private noncomputable def rationalCyclotomicPrincipalHeightOneArtinInput
     (p : Nat.Primes) (k : ℕ) (x : ℚˣ)
     (v : HeightOneSpectrum (𝓞 ℚ)) :
@@ -93,6 +118,7 @@ private noncomputable def rationalCyclotomicPrincipalHeightOneArtinInput
     (IdeleGroup.finiteComponent v
       (IdeleGroup.principalIdele ℚ x))
 
+open scoped Classical in
 private theorem rationalCyclotomicPrincipalHeightOneArtinInput_spec
     (p : Nat.Primes) (k : ℕ) (x : ℚˣ)
     (v : HeightOneSpectrum (𝓞 ℚ)) :
@@ -107,6 +133,7 @@ private theorem rationalCyclotomicPrincipalHeightOneArtinInput_spec
           (IdeleGroup.principalIdele ℚ x)) := by
   rfl
 
+open scoped Classical in
 private noncomputable def rationalCyclotomicPrincipalHeightOneCharacter
     (p : Nat.Primes) (k : ℕ) (x : ℚˣ)
     (v : HeightOneSpectrum (𝓞 ℚ)) :
@@ -120,6 +147,7 @@ private noncomputable def rationalCyclotomicPrincipalHeightOneCharacter
         ⟨p.1 ^ k, pow_pos p.2.pos k⟩)
     (rationalCyclotomicPrincipalHeightOneArtinInput p k x v)
 
+open scoped Classical in
 /-- The named height-one character is the cyclotomic coordinate of the
 chosen finite-place Artin symbol. -/
 theorem rationalCyclotomicPrincipalHeightOneCharacter_spec
@@ -144,6 +172,7 @@ theorem rationalCyclotomicPrincipalHeightOneCharacter_spec
   rw [rationalCyclotomicPrincipalHeightOneCharacter,
     rationalCyclotomicPrincipalHeightOneArtinInput_spec]
 
+open scoped Classical in
 /-- The genuine chosen finite-place Artin character of the rational
 principal idele at the prime `q`, evaluated in the `p ^ k` cyclotomic
 coordinate. -/
@@ -154,6 +183,7 @@ noncomputable def rationalCyclotomicPrincipalFinitePlaceCharacter
     ((Rat.HeightOneSpectrum.primesEquiv
       (R := 𝓞 ℚ)).symm q)
 
+open scoped Classical in
 private theorem rationalCyclotomicPrincipalFinitePlaceCharacter_spec
     (p : Nat.Primes) (k : ℕ) (x : ℚˣ) (q : Nat.Primes) :
     rationalCyclotomicPrincipalFinitePlaceCharacter p k x q =
@@ -162,6 +192,7 @@ private theorem rationalCyclotomicPrincipalFinitePlaceCharacter_spec
           (R := 𝓞 ℚ)).symm q) := by
   rfl
 
+open scoped Classical in
 /-- The named rational-prime character is exactly the cyclotomic
 coordinate of the chosen finite-place Artin symbol. -/
 theorem
@@ -192,6 +223,7 @@ theorem
       ((Rat.HeightOneSpectrum.primesEquiv
         (R := 𝓞 ℚ)).symm q)
 
+open scoped Classical in
 /-- At every positive `p`-power level, the finite-place character at `p`
 is the direct reduction of the rational `p`-adic unit. -/
 theorem rationalCyclotomicPrincipalFinitePlaceCharacter_at_prime_succ_formula
@@ -301,6 +333,7 @@ theorem rationalCyclotomicPrincipalFinitePlaceCharacter_at_prime_succ_formula
           (padicValRat_rationalPrimeUnit x p)) :=
       galEquivZMod_chosenFinitePlaceArtinMonoidHom_principal_at_prime p n x
 
+open scoped Classical in
 /-- A rational prime distinct from `p` does not divide any power
 `p ^ k`.  This includes the level-one case `k = 0`. -/
 theorem rationalPrime_not_dvd_pow_of_ne
@@ -311,6 +344,7 @@ theorem rationalPrime_not_dvd_pow_of_ne
   apply Subtype.ext
   exact Nat.prime_eq_prime_of_dvd_pow q.2 p.2 hdiv
 
+open scoped Classical in
 /-- Away from `p`, the chosen finite-place character is the inverse
 Frobenius power determined by the rational `q`-adic valuation. -/
 theorem rationalCyclotomicPrincipalFinitePlaceCharacter_of_ne
@@ -338,6 +372,7 @@ theorem rationalCyclotomicPrincipalFinitePlaceCharacter_of_ne
       ⟨p.1 ^ k, pow_pos p.2.pos k⟩ q
       (rationalPrime_not_dvd_pow_of_ne q p hqp k) x
 
+open scoped Classical in
 /-- Outside the finite rational prime-factorization support, the
 `q`-adic valuation of the nonzero rational number is zero. -/
 theorem
@@ -401,6 +436,7 @@ theorem
     padicValNat.eq_zero_of_not_dvd hqDen]
   norm_num
 
+open scoped Classical in
 /-- A chosen finite-place Artin character outside the rational
 prime-factorization support is genuinely trivial. -/
 @[simp]
@@ -421,6 +457,7 @@ theorem
       x p q hq]
   simp only [neg_zero, zpow_zero]
 
+open scoped Classical in
 /-- The actual rational principal finite-place characters have finite
 multiplicative support, contained in the ordinary rational prime
 factorization support. -/
@@ -438,6 +475,7 @@ theorem
     (rationalCyclotomicPrincipalFinitePlaceCharacter_eq_one_of_not_mem_support
       p k x q hqSupport)
 
+open scoped Classical in
 /-- The off-`p` finprod of the genuine chosen Artin characters is the
 explicit finite product over the erased rational prime-factorization
 support. -/
@@ -500,6 +538,7 @@ theorem
       exact rationalCyclotomicPrincipalFinitePlaceCharacter_of_ne
         p q.1 (Finset.ne_of_mem_erase q.2) k x
 
+open scoped Classical in
 /-- The direct rational `p`-unit character times the explicit inverse
 away-from-`p` factorization product is the reduced rational sign. -/
 theorem
@@ -522,12 +561,14 @@ theorem
     padicIntUnitOfRat_rationalPrimeUnit_mul_primeSupportInverseFactors_toZModPow
       x p k
 
+open scoped Classical in
 private noncomputable def rationalCyclotomicPrincipalHeightOneCharacterFinprod
     (p : Nat.Primes) (k : ℕ) (x : ℚˣ) :
     (ZMod (p.1 ^ k))ˣ :=
   ∏ᶠ v : HeightOneSpectrum (𝓞 ℚ),
     rationalCyclotomicPrincipalHeightOneCharacter p k x v
 
+open scoped Classical in
 private theorem
     rationalCyclotomicPrincipalHeightOneCharacterFinprod_eq_finprod
     (p : Nat.Primes) (k : ℕ) (x : ℚˣ) :
@@ -536,6 +577,7 @@ private theorem
         rationalCyclotomicPrincipalHeightOneCharacter p k x v := by
   rfl
 
+open scoped Classical in
 private theorem rationalCyclotomicPrincipalHeightOneCharacterFinprod_spec
     (p : Nat.Primes) (k : ℕ) (x : ℚˣ) :
     rationalCyclotomicPrincipalHeightOneCharacterFinprod p k x =
@@ -565,6 +607,7 @@ private theorem rationalCyclotomicPrincipalHeightOneCharacterFinprod_spec
       intro v
       exact rationalCyclotomicPrincipalHeightOneCharacter_spec p k x v
 
+open scoped Classical in
 private theorem
     rationalCyclotomicPrincipalFinitePlaceCharacter_prime_mul_away_eq_namedFinprod
     (p : Nat.Primes) (k : ℕ) (x : ℚˣ) :
@@ -594,6 +637,7 @@ private theorem
       (rationalCyclotomicPrincipalHeightOneCharacterFinprod_eq_finprod
         p k x).symm
 
+open scoped Classical in
 /-- Reindexing by `Rat.HeightOneSpectrum.primesEquiv` and separating the
 distinguished prime identifies the height-one finprod with its genuine
 `p`-factor times the off-`p` prime finprod. -/
@@ -624,6 +668,7 @@ theorem
       p k x).trans
       (rationalCyclotomicPrincipalHeightOneCharacterFinprod_spec p k x)
 
+open scoped Classical in
 /-- Exact source for the final principal-product calculation: the
 height-one chosen Artin finprod is the genuine `p`-factor times the
 explicit away-from-`p` rational factorization product. -/

@@ -13,15 +13,17 @@ import Mathlib.RingTheory.LocalRing.Module
 /-!
 # Prime-power kernel coordinates
 
-Linear-algebraic coordinates for kernels of surjections between finite free modules over `ZMod (p ^ v)`.
+Linear-algebraic coordinates for kernels of surjections between finite free modules over `ZMod
+  (p ^ v)`.
 -/
 
-open scoped Classical IsMulCommutative
+open scoped IsMulCommutative
 
 noncomputable section
 
 namespace KummerTheory
 
+open scoped Classical in
 /-- A prime-power residue ring is local.  This instance is the algebraic
 input needed to turn the projective kernel in the finite S-unit preparation argument into a free
 `ZMod (p ^ v)`-module. -/
@@ -72,6 +74,7 @@ theorem zmodPrimePower_isLocalRing
   rw [ZMod.val_add]
   exact hrem
 
+open scoped Classical in
 /-- Over a local ring, the kernel of a surjection between finite free
 modules is free.  The proof constructs the splitting explicitly and then
 uses finite projective modules over local rings. -/
@@ -114,6 +117,7 @@ theorem free_ker_of_surjective_linearMap_of_isLocalRing
     Module.Finite.of_finite
   exact Module.free_of_flat_of_isLocalRing
 
+open scoped Classical in
 /-- The cardinality of a finite free module is the cardinality of the
 coefficient ring raised to the size of a chosen basis. -/
 theorem card_eq_card_pow_card_chooseBasisIndex
@@ -134,6 +138,7 @@ theorem card_eq_card_pow_card_chooseBasisIndex
   simp only [Nat.card_eq_fintype_card,
     Fintype.card_finsupp]
 
+open scoped Classical in
 /-- Multiplicative product coordinates, interpreted as a `ZMod n`-linear
 equivalence on the additive presentations. -/
 noncomputable def additiveCoordinatesLinearEquiv
@@ -150,6 +155,7 @@ noncomputable def additiveCoordinatesLinearEquiv
     map_smul' := by
       simpa using ZMod.map_smul eAdd }
 
+open scoped Classical in
 /-- The canonical `ZMod n`-module on the additive presentation of a
 commutative group of exponent dividing `n`. -/
 @[reducible]
@@ -162,6 +168,7 @@ noncomputable def additiveZModModuleOfPowEqOne
     apply Additive.toMul.injective
     simpa using h (Additive.toMul x)
 
+open scoped Classical in
 /-- Multiplicative function coordinates, interpreted as a `ZMod n`-linear
 equivalence on the additive presentations. -/
 noncomputable def additivePiLinearEquiv
@@ -178,6 +185,7 @@ noncomputable def additivePiLinearEquiv
     map_smul' := by
       simpa using ZMod.map_smul eAdd }
 
+open scoped Classical in
 /-- The multiplicative kernel of a homomorphism is the multiplicative
 presentation of the kernel of its induced `ZMod n`-linear map. -/
 noncomputable def monoidKerEquivMultiplicativeLinearKer
@@ -214,6 +222,7 @@ noncomputable def monoidKerEquivMultiplicativeLinearKer
     apply Subtype.ext
     rfl
 
+open scoped Classical in
 /-- A surjection between finite free `ZMod (p ^ v)`-modules has a
 kernel with genuine coordinates.  Its number of coordinates is read off
 from the cardinality of the kernel. -/
@@ -301,6 +310,7 @@ theorem exists_kernelMulEquiv_pi_zmod_of_primePower
         (Finsupp.addEquivFunOnFinite).toMultiplicative |>.trans
           (MulEquiv.refl _)⟩
 
+open scoped Classical in
 /-- The exponent-`n` statement read directly from coordinates
 `Gal(E/K) ≃ (Z/nZ)^r`. -/
 theorem galois_pow_eq_one_of_equiv_pi_zmod

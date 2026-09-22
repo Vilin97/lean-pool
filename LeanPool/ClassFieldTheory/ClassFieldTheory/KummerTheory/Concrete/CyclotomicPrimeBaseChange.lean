@@ -96,13 +96,13 @@ abbrev PrimeCyclotomicPushout (p : ℕ) :=
   PrimeCyclotomicBase K p ⊗[K] L
 
 noncomputable instance primeCyclotomicBaseFiniteDimensional
-    (p : ℕ) [NeZero p] :
+    (p : ℕ) :
     FiniteDimensional K (PrimeCyclotomicBase K p) :=
   IsCyclotomicExtension.finiteDimensional
     {p} K (PrimeCyclotomicBase K p)
 
 noncomputable instance primeCyclotomicBaseIsGalois
-    (p : ℕ) [NeZero p] :
+    (p : ℕ) :
     IsGalois K (PrimeCyclotomicBase K p) :=
   IsCyclotomicExtension.isGalois
     {p} K (PrimeCyclotomicBase K p)

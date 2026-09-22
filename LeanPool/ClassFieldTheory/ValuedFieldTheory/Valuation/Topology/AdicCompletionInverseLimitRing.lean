@@ -192,7 +192,7 @@ def adicQuotientInverseLimitRepresentation
   (adicQuotientInverseLimitCompatibleFamiliesEquiv I).ringEquiv
 
 /-- Build an all-level adic inverse-limit point from a compatible family. -/
-def adicQuotientInverseLimit_mk
+def adicQuotientInverseLimitMk
     {R : Type*} [CommRing R] (I : Ideal R)
     (x : ∀ n : ℕ, R ⧸ I ^ n)
     (compatible : ∀ {m n : ℕ} (hmn : m ≤ n),
@@ -202,7 +202,7 @@ def adicQuotientInverseLimit_mk
     ⟨x, compatible⟩
 
 /-- Coordinate evaluation from the explicit projective limit. -/
-def adicQuotientInverseLimit_eval
+def adicQuotientInverseLimitEval
     {R : Type*} [CommRing R] (I : Ideal R) (n : ℕ) :
     adicQuotientInverseLimit I →+* R ⧸ I ^ n where
   toFun x := (adicQuotientInverseLimitCompatibleFamiliesEquiv I x).1 n
@@ -219,8 +219,8 @@ theorem adicQuotientInverseLimit_eval_mk
     (compatible : ∀ {m n : ℕ} (hmn : m ≤ n),
       Ideal.Quotient.factorPow I hmn (x n) = x m)
     (n : ℕ) :
-    adicQuotientInverseLimit_eval I n
-        (adicQuotientInverseLimit_mk I x compatible) = x n := by
+    adicQuotientInverseLimitEval I n
+        (adicQuotientInverseLimitMk I x compatible) = x n := by
   rfl
 
 /-- Adic inverse-limit elements are equal when all coordinate evaluations agree. -/
@@ -228,8 +228,8 @@ theorem adicQuotientInverseLimit_eval_mk
 theorem adicQuotientInverseLimit_ext
     {R : Type*} [CommRing R] (I : Ideal R)
     {x y : adicQuotientInverseLimit I}
-    (h : ∀ n : ℕ, adicQuotientInverseLimit_eval I n x =
-      adicQuotientInverseLimit_eval I n y) :
+    (h : ∀ n : ℕ, adicQuotientInverseLimitEval I n x =
+      adicQuotientInverseLimitEval I n y) :
     x = y := by
   apply (adicQuotientInverseLimitCompatibleFamiliesEquiv I).injective
   apply Subtype.ext
@@ -243,8 +243,8 @@ theorem adicQuotientInverseLimit_eval_factorPow
     {m n : ℕ} (hmn : m ≤ n)
     (x : adicQuotientInverseLimit I) :
     Ideal.Quotient.factorPow I hmn
-        (adicQuotientInverseLimit_eval I n x) =
-      adicQuotientInverseLimit_eval I m x :=
+        (adicQuotientInverseLimitEval I n x) =
+      adicQuotientInverseLimitEval I m x :=
   (adicQuotientInverseLimitCompatibleFamiliesEquiv I x).2 hmn
 
 /-- The canonical prodiscrete topology on the all-level inverse limit.  The
@@ -267,16 +267,16 @@ private noncomputable def adicQuotientInverseLimitRepresentationHomeomorph
 
 /-- Coordinate evaluation into a type whose discreteness is recorded in the
 type itself. -/
-def adicQuotientInverseLimit_discreteEval
+def adicQuotientInverseLimitDiscreteEval
     {R : Type*} [CommRing R] (I : Ideal R) (n : ℕ) :
     adicQuotientInverseLimit I → DiscreteAdicQuotient I n :=
   fun x => DiscreteAdicQuotient.of I n
-    (adicQuotientInverseLimit_eval I n x)
+    (adicQuotientInverseLimitEval I n x)
 
 /-- Evaluation from the adic inverse limit to each discrete quotient is continuous. -/
 theorem adicQuotientInverseLimit_discreteEval_continuous
     {R : Type*} [CommRing R] (I : Ideal R) (n : ℕ) :
-    Continuous (adicQuotientInverseLimit_discreteEval I n) := by
+    Continuous (adicQuotientInverseLimitDiscreteEval I n) := by
   let : (n : ℕ) → TopologicalSpace (R ⧸ I ^ n) := fun _ => ⊥
   let representation := adicQuotientInverseLimitRepresentationHomeomorph I
   have hraw : Continuous fun x : adicQuotientInverseLimit I =>
@@ -343,24 +343,24 @@ theorem adicCompletion_eval_factorPow
 
 /-- The map from the adic completion to the explicit projective limit
 `lim_n R/I^n`. -/
-def adicCompletion_toQuotientInverseLimit
+def adicCompletionToQuotientInverseLimit
     {R : Type*} [CommRing R] (I : Ideal R) :
     AdicCompletion I R → adicQuotientInverseLimit I :=
   fun z =>
-    adicQuotientInverseLimit_mk I
+    adicQuotientInverseLimitMk I
       (fun n => AdicCompletion.evalₐ I n z)
       (fun hmn => adicCompletion_eval_factorPow I hmn z)
 
 /-- The inverse map from the explicit projective limit `lim_n R/I^n` to the
 adic completion. -/
-def adicQuotientInverseLimit_toCompletion
+def adicQuotientInverseLimitToCompletion
     {R : Type*} [CommRing R] (I : Ideal R) :
     adicQuotientInverseLimit I → AdicCompletion I R :=
   fun x =>
     ⟨fun n =>
       let h : (I ^ n • ⊤ : Ideal R) = I ^ n := by ext r; simp
       (Ideal.quotientEquivAlgOfEq R h).symm
-        (adicQuotientInverseLimit_eval I n x),
+        (adicQuotientInverseLimitEval I n x),
     by
       intro m n hmn
       let hm : (I ^ m • ⊤ : Ideal R) = I ^ m := by ext r; simp
@@ -376,19 +376,19 @@ theorem adicQuotientInverseLimit_toCompletion_eval
     {R : Type*} [CommRing R] (I : Ideal R)
     (x : adicQuotientInverseLimit I) (n : ℕ) :
     AdicCompletion.evalₐ I n
-        (adicQuotientInverseLimit_toCompletion I x) =
-      adicQuotientInverseLimit_eval I n x := by
+        (adicQuotientInverseLimitToCompletion I x) =
+      adicQuotientInverseLimitEval I n x := by
   change (Ideal.quotientEquivAlgOfEq R (by ext r; simp))
-      ((adicQuotientInverseLimit_toCompletion I x).val n) =
-    adicQuotientInverseLimit_eval I n x
-  dsimp [adicQuotientInverseLimit_toCompletion]
+      ((adicQuotientInverseLimitToCompletion I x).val n) =
+    adicQuotientInverseLimitEval I n x
+  dsimp [adicQuotientInverseLimitToCompletion]
   rw [quotientEquivAlgOfEq_apply_symm]
 
 /-- Mapping an inverse-limit family to the completion and back recovers the family. -/
 theorem adicQuotientInverseLimit_left_inverse
     {R : Type*} [CommRing R] (I : Ideal R) (z : AdicCompletion I R) :
-    adicQuotientInverseLimit_toCompletion I
-        (adicCompletion_toQuotientInverseLimit I z) = z := by
+    adicQuotientInverseLimitToCompletion I
+        (adicCompletionToQuotientInverseLimit I z) = z := by
   apply AdicCompletion.ext_evalₐ
   intro n
   rw [adicQuotientInverseLimit_toCompletion_eval]
@@ -398,21 +398,21 @@ theorem adicQuotientInverseLimit_left_inverse
 theorem adicQuotientInverseLimit_right_inverse
     {R : Type*} [CommRing R] (I : Ideal R)
     (x : adicQuotientInverseLimit I) :
-    adicCompletion_toQuotientInverseLimit I
-        (adicQuotientInverseLimit_toCompletion I x) = x := by
+    adicCompletionToQuotientInverseLimit I
+        (adicQuotientInverseLimitToCompletion I x) = x := by
   ext n
   change AdicCompletion.evalₐ I n
-      (adicQuotientInverseLimit_toCompletion I x) =
-    adicQuotientInverseLimit_eval I n x
+      (adicQuotientInverseLimitToCompletion I x) =
+    adicQuotientInverseLimitEval I n x
   rw [adicQuotientInverseLimit_toCompletion_eval]
 
 /-- The adic inverse-limit equivalence, algebraic projective-limit form:
 the adic completion is canonically isomorphic to `lim_n R/I^n`. -/
-def adicCompletion_equiv_quotientInverseLimit
+def adicCompletionEquivQuotientInverseLimit
     {R : Type*} [CommRing R] (I : Ideal R) :
     AdicCompletion I R ≃+* adicQuotientInverseLimit I where
-  toFun := adicCompletion_toQuotientInverseLimit I
-  invFun := adicQuotientInverseLimit_toCompletion I
+  toFun := adicCompletionToQuotientInverseLimit I
+  invFun := adicQuotientInverseLimitToCompletion I
   left_inv := adicQuotientInverseLimit_left_inverse I
   right_inv := adicQuotientInverseLimit_right_inverse I
   map_mul' x y := by
@@ -428,10 +428,10 @@ def adicCompletion_equiv_quotientInverseLimit
 
 /-- The adic inverse-limit equivalence, canonical map from a ring to the explicit projective
 limit of its quotients. -/
-def adicQuotientInverseLimit_canonicalMap
+def adicQuotientInverseLimitCanonicalMap
     {R : Type*} [CommRing R] (I : Ideal R) :
     R →+* adicQuotientInverseLimit I where
-  toFun x := adicQuotientInverseLimit_mk I
+  toFun x := adicQuotientInverseLimitMk I
     (fun n => Ideal.Quotient.mk (I ^ n) x)
     (fun _ => rfl)
   map_one' := by ext n; rfl
@@ -445,14 +445,14 @@ def adicQuotientInverseLimitEquiv
     {R : Type*} [CommRing R] (I : Ideal R) [IsAdicComplete I R] :
     R ≃+* adicQuotientInverseLimit I :=
   (adicCompletionAlgEquiv I).toRingEquiv.trans
-    (adicCompletion_equiv_quotientInverseLimit I)
+    (adicCompletionEquivQuotientInverseLimit I)
 
 /-- The complete-ring projective-limit isomorphism is induced by reduction
 modulo `I^n` in each coordinate. -/
 theorem adicQuotientInverseLimitEquiv_apply
     {R : Type*} [CommRing R] (I : Ideal R) [IsAdicComplete I R]
     (x : R) (n : ℕ) :
-    adicQuotientInverseLimit_eval I n
+    adicQuotientInverseLimitEval I n
         (adicQuotientInverseLimitEquiv I x) =
       Ideal.Quotient.mk (I ^ n) x := by
   change AdicCompletion.evalₐ I n
@@ -627,8 +627,8 @@ def adicPositiveQuotientInverseLimitRepresentation
           Ideal.Quotient.factorPow I (Nat.succ_le_succ hmn)) :=
   (adicPositiveQuotientInverseLimitCompatibleFamiliesEquiv I).ringEquiv
 
-/-- Defines `adicPositiveQuotientInverseLimit_mk`. -/
-def adicPositiveQuotientInverseLimit_mk
+/-- Defines `adicPositiveQuotientInverseLimitMk`. -/
+def adicPositiveQuotientInverseLimitMk
     {R : Type*} [CommRing R] (I : Ideal R)
     (x : ∀ n : ℕ, R ⧸ I ^ (n + 1))
     (compatible : ∀ {m n : ℕ} (hmn : m ≤ n),
@@ -637,8 +637,8 @@ def adicPositiveQuotientInverseLimit_mk
   (adicPositiveQuotientInverseLimitCompatibleFamiliesEquiv I).symm
     ⟨x, compatible⟩
 
-/-- Defines `adicPositiveQuotientInverseLimit_eval`. -/
-def adicPositiveQuotientInverseLimit_eval
+/-- Defines `adicPositiveQuotientInverseLimitEval`. -/
+def adicPositiveQuotientInverseLimitEval
     {R : Type*} [CommRing R] (I : Ideal R) (n : ℕ) :
     adicPositiveQuotientInverseLimit I →+* R ⧸ I ^ (n + 1) where
   toFun x :=
@@ -656,8 +656,8 @@ theorem adicPositiveQuotientInverseLimit_eval_mk
     (compatible : ∀ {m n : ℕ} (hmn : m ≤ n),
       Ideal.Quotient.factorPow I (Nat.succ_le_succ hmn) (x n) = x m)
     (n : ℕ) :
-    adicPositiveQuotientInverseLimit_eval I n
-        (adicPositiveQuotientInverseLimit_mk I x compatible) = x n := by
+    adicPositiveQuotientInverseLimitEval I n
+        (adicPositiveQuotientInverseLimitMk I x compatible) = x n := by
   rfl
 
 /-- Positive adic inverse-limit elements are determined by all of their components. -/
@@ -665,8 +665,8 @@ theorem adicPositiveQuotientInverseLimit_eval_mk
 theorem adicPositiveQuotientInverseLimit_ext
     {R : Type*} [CommRing R] (I : Ideal R)
     {x y : adicPositiveQuotientInverseLimit I}
-    (h : ∀ n : ℕ, adicPositiveQuotientInverseLimit_eval I n x =
-      adicPositiveQuotientInverseLimit_eval I n y) :
+    (h : ∀ n : ℕ, adicPositiveQuotientInverseLimitEval I n x =
+      adicPositiveQuotientInverseLimitEval I n y) :
     x = y := by
   apply (adicPositiveQuotientInverseLimitCompatibleFamiliesEquiv I).injective
   apply Subtype.ext
@@ -679,8 +679,8 @@ theorem adicPositiveQuotientInverseLimit_eval_factorPow
     {m n : ℕ} (hmn : m ≤ n)
     (x : adicPositiveQuotientInverseLimit I) :
     Ideal.Quotient.factorPow I (Nat.succ_le_succ hmn)
-        (adicPositiveQuotientInverseLimit_eval I n x) =
-      adicPositiveQuotientInverseLimit_eval I m x :=
+        (adicPositiveQuotientInverseLimitEval I n x) =
+      adicPositiveQuotientInverseLimitEval I m x :=
   (adicPositiveQuotientInverseLimitCompatibleFamiliesEquiv I x).2 hmn
 
 /-- The positive adic inverse limit carries the topology induced by its discrete coordinates. -/
@@ -703,17 +703,17 @@ private noncomputable def
   exact
     (adicPositiveQuotientInverseLimitCompatibleFamiliesEquiv I).homeomorph
 
-/-- Defines `adicPositiveQuotientInverseLimit_discreteEval`. -/
-def adicPositiveQuotientInverseLimit_discreteEval
+/-- Defines `adicPositiveQuotientInverseLimitDiscreteEval`. -/
+def adicPositiveQuotientInverseLimitDiscreteEval
     {R : Type*} [CommRing R] (I : Ideal R) (n : ℕ) :
     adicPositiveQuotientInverseLimit I → DiscreteAdicQuotient I (n + 1) :=
   fun x => DiscreteAdicQuotient.of I (n + 1)
-    (adicPositiveQuotientInverseLimit_eval I n x)
+    (adicPositiveQuotientInverseLimitEval I n x)
 
 /-- Every positive-level coordinate evaluation into a discrete adic quotient is continuous. -/
 theorem adicPositiveQuotientInverseLimit_discreteEval_continuous
     {R : Type*} [CommRing R] (I : Ideal R) (n : ℕ) :
-    Continuous (adicPositiveQuotientInverseLimit_discreteEval I n) := by
+    Continuous (adicPositiveQuotientInverseLimitDiscreteEval I n) := by
   let : (n : ℕ) → TopologicalSpace (R ⧸ I ^ (n + 1)) := fun _ => ⊥
   let representation :=
     adicPositiveQuotientInverseLimitRepresentationHomeomorph I
@@ -728,27 +728,27 @@ theorem adicPositiveQuotientInverseLimit_discreteEval_continuous
       ((adicPositiveQuotientInverseLimitCompatibleFamiliesEquiv I x).1 n))
   exact hmodel
 
-/-- Defines `adicQuotientInverseLimit_toPositive`. -/
-def adicQuotientInverseLimit_toPositive
+/-- Defines `adicQuotientInverseLimitToPositive`. -/
+def adicQuotientInverseLimitToPositive
     {R : Type*} [CommRing R] (I : Ideal R) :
     adicQuotientInverseLimit I →
       adicPositiveQuotientInverseLimit I :=
   fun x =>
-    adicPositiveQuotientInverseLimit_mk I
-      (fun n => adicQuotientInverseLimit_eval I (n + 1) x)
+    adicPositiveQuotientInverseLimitMk I
+      (fun n => adicQuotientInverseLimitEval I (n + 1) x)
       (fun hmn =>
         adicQuotientInverseLimit_eval_factorPow I
           (Nat.succ_le_succ hmn) x)
 
-/-- Defines `adicPositiveQuotientInverseLimit_toAll`. -/
-def adicPositiveQuotientInverseLimit_toAll
+/-- Defines `adicPositiveQuotientInverseLimitToAll`. -/
+def adicPositiveQuotientInverseLimitToAll
     {R : Type*} [CommRing R] (I : Ideal R) :
     adicPositiveQuotientInverseLimit I →
       adicQuotientInverseLimit I :=
   fun x =>
-    adicQuotientInverseLimit_mk I (fun n => match n with
+    adicQuotientInverseLimitMk I (fun n => match n with
       | 0 => 0
-      | k + 1 => adicPositiveQuotientInverseLimit_eval I k x)
+      | k + 1 => adicPositiveQuotientInverseLimitEval I k x)
     (by
       intro m n hmn
       cases m with
@@ -768,8 +768,8 @@ def adicPositiveQuotientInverseLimit_toAll
 theorem adicPositiveQuotientInverseLimit_toPositive_toAll
     {R : Type*} [CommRing R] (I : Ideal R)
     (x : adicPositiveQuotientInverseLimit I) :
-    adicQuotientInverseLimit_toPositive I
-        (adicPositiveQuotientInverseLimit_toAll I x) = x := by
+    adicQuotientInverseLimitToPositive I
+        (adicPositiveQuotientInverseLimitToAll I x) = x := by
   ext n
   rfl
 
@@ -777,8 +777,8 @@ theorem adicPositiveQuotientInverseLimit_toPositive_toAll
 theorem adicQuotientInverseLimit_toAll_toPositive
     {R : Type*} [CommRing R] (I : Ideal R)
     (x : adicQuotientInverseLimit I) :
-    adicPositiveQuotientInverseLimit_toAll I
-        (adicQuotientInverseLimit_toPositive I x) = x := by
+    adicPositiveQuotientInverseLimitToAll I
+        (adicQuotientInverseLimitToPositive I x) = x := by
   ext n
   cases n with
   | zero =>
@@ -795,8 +795,8 @@ def adicQuotientInverseLimitEquivPositive
     {R : Type*} [CommRing R] (I : Ideal R) :
     adicQuotientInverseLimit I ≃+*
       adicPositiveQuotientInverseLimit I where
-  toFun := adicQuotientInverseLimit_toPositive I
-  invFun := adicPositiveQuotientInverseLimit_toAll I
+  toFun := adicQuotientInverseLimitToPositive I
+  invFun := adicPositiveQuotientInverseLimitToAll I
   left_inv := adicQuotientInverseLimit_toAll_toPositive I
   right_inv := adicPositiveQuotientInverseLimit_toPositive_toAll I
   map_mul' x y := by
@@ -808,10 +808,10 @@ def adicQuotientInverseLimitEquivPositive
 
 /-- The adic inverse-limit equivalence, canonical map from a ring to the positive-indexed
 projective limit of its quotients. -/
-def adicPositiveQuotientInverseLimit_canonicalMap
+def adicPositiveQuotientInverseLimitCanonicalMap
     {R : Type*} [CommRing R] (I : Ideal R) :
     R →+* adicPositiveQuotientInverseLimit I where
-  toFun x := adicPositiveQuotientInverseLimit_mk I
+  toFun x := adicPositiveQuotientInverseLimitMk I
     (fun n => Ideal.Quotient.mk (I ^ (n + 1)) x)
     (fun _ => rfl)
   map_one' := by ext n; rfl
@@ -832,7 +832,7 @@ modulo `I^(n+1)` in each coordinate. -/
 theorem adicPositiveQuotientInverseLimitEquiv_apply
     {R : Type*} [CommRing R] (I : Ideal R) [IsAdicComplete I R]
     (x : R) (n : ℕ) :
-    adicPositiveQuotientInverseLimit_eval I n
+    adicPositiveQuotientInverseLimitEval I n
         (adicPositiveQuotientInverseLimitEquiv I x) =
       Ideal.Quotient.mk (I ^ (n + 1)) x :=
   adicQuotientInverseLimitEquiv_apply I x (n + 1)
@@ -850,7 +850,7 @@ private noncomputable def adicPositiveQuotientCompatibleFamiliesHomeomorph
   let e := (adicPositiveQuotientInverseLimitEquiv I).trans
     (adicPositiveQuotientInverseLimitRepresentation I)
   let c := (adicPositiveQuotientInverseLimitRepresentation I).toRingHom.comp
-    (adicPositiveQuotientInverseLimit_canonicalMap I)
+    (adicPositiveQuotientInverseLimitCanonicalMap I)
   refine
     { toFun := fun x => c x
       invFun := fun q => e.symm q
@@ -875,7 +875,7 @@ private noncomputable def adicPositiveQuotientCompatibleFamiliesHomeomorph
   · change Continuous fun x : R => c x
     exact Continuous.subtype_mk
       (continuous_pi fun n => by
-        simpa [c, adicPositiveQuotientInverseLimit_canonicalMap] using
+        simpa [c, adicPositiveQuotientInverseLimitCanonicalMap] using
           (quotient_mk_continuous_adic_raw I (n + 1)))
       (by
         intro x m n hmn

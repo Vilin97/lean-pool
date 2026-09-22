@@ -378,6 +378,8 @@ theorem padicChangedUniformizerThetaValue_minpoly_padicBase
     inv_one, Polynomial.C_1, mul_one] at hmin
   exact hmin.symm
 
+/-- The completed changed-uniformizer fixed field inherits its `ℚ_[p]`-algebra from the ambient
+field. -/
 noncomputable local instance
     padicCompletedChangedUniformizerFixedFieldAlgebra
     (p : ℕ) [Fact p.Prime]
@@ -387,6 +389,7 @@ noncomputable local instance
   Subalgebra.algebra
     (padicCompletedChangedUniformizerFixedField p u n).toSubalgebra
 
+/-- Scalar multiplication on the changed-uniformizer fixed field comes from its `ℚ_[p]`-algebra. -/
 noncomputable local instance
     padicCompletedChangedUniformizerFixedFieldSMul
     (p : ℕ) [Fact p.Prime]
@@ -396,6 +399,7 @@ noncomputable local instance
   @Algebra.toSMul _ _ _ _
     (padicCompletedChangedUniformizerFixedFieldAlgebra p u n)
 
+/-- The changed-uniformizer fixed field is a `ℚ_[p]`-module via its inherited algebra structure. -/
 noncomputable local instance
     padicCompletedChangedUniformizerFixedFieldModule
     (p : ℕ) [Fact p.Prime]

@@ -331,7 +331,6 @@ theorem equalCharacteristicLubinTateAmbientBracket_succ_apply
       equalCharacteristicLubinTateAmbientPiIterate_succ]
 
 /-- The first ambient `π`-iterate is the ambient `π`-endomorphism. -/
-@[simp]
 theorem equalCharacteristicLubinTateAmbientPiIterate_one
     (F : LocalField.{u, v} K)
     {A : Type w} [Field A] [CharP A F.residueCharacteristic]

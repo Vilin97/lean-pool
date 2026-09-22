@@ -275,7 +275,8 @@ theorem residue_ne_zero_of_isPrimitive_valuationSubring
   have hp0 : p ≠ 0 := hp.ne_zero
   obtain ⟨n, hn⟩ := Polynomial.support_nonempty.mpr hp0
   have hs :
-      (AlgebraicNumberTheory.Valuations.henselFactorization_twoPolynomialCoeffFinset p 0).Nonempty := by
+      (AlgebraicNumberTheory.Valuations.henselFactorizationTwoPolynomialCoeffFinset p
+        0).Nonempty := by
     refine ⟨p.coeff n, ?_⟩
     exact
       AlgebraicNumberTheory.Valuations.henselFactorization_mem_twoPolynomialCoeffFinset_left hn
@@ -422,6 +423,118 @@ theorem residue_root_of_integral_root
   rw [← Polynomial.eval₂_map]
   rw [Polynomial.eval₂_at_apply]
   rw [← Polynomial.eval₂_eq_eval_map, hrootB, map_zero]
+
+/-- A split monic polynomial with integral roots, including a unit root and a
+strictly small root, lifts to a polynomial whose reduction has both zero and nonzero roots. -/
+private theorem exists_monic_residue_polynomial_of_mixed_roots
+    {K L : Type*} [Field K] [Field L] [Algebra K L]
+    (V : ValuationSubring K) (B : ValuationSubring L)
+    [V.valuation.HasExtension B.valuation]
+    (q : Polynomial K) (hqmonic : q.Monic) (hqirr : Irreducible q)
+    (hqsplit : (q.map (algebraMap K L)).Splits)
+    (z zγ : L) (hzval : B.valuation z = 1) (hzγval : B.valuation zγ < 1)
+    (hqz : (q.map (algebraMap K L)).IsRoot z)
+    (hqzγ : (q.map (algebraMap K L)).IsRoot zγ)
+    (hqrootsBound : ∀ δ ∈ (q.map (algebraMap K L)).roots, B.valuation δ ≤ 1) :
+    ∃ Q : Polynomial V,
+      Q.Monic ∧ Irreducible (Q.map V.subtype) ∧
+        (Q.map (IsLocalRing.residue V)).coeff 0 = 0 ∧
+          ∃ (ρ : IsLocalRing.ResidueField V →+*
+              IsLocalRing.ResidueField B)
+            (b : IsLocalRing.ResidueField B),
+            b ≠ 0 ∧ ((Q.map (IsLocalRing.residue V)).map ρ).IsRoot b := by
+  classical
+  let qroots : Multiset L := (q.map (algebraMap K L)).roots
+  have hqmap0 : q.map (algebraMap K L) ≠ 0 :=
+    (Polynomial.map_ne_zero_iff (algebraMap K L).injective).2 hqirr.ne_zero
+  have hqprod : q.map (algebraMap K L) =
+      (qroots.map (fun x => Polynomial.X - Polynomial.C x)).prod := by
+    calc
+      q.map (algebraMap K L) =
+          Polynomial.C (q.map (algebraMap K L)).leadingCoeff *
+            (qroots.map (fun x => Polynomial.X - Polynomial.C x)).prod :=
+        hqsplit.eq_prod_roots
+      _ = (qroots.map (fun x => Polynomial.X - Polynomial.C x)).prod := by
+        rw [(hqmonic.map (algebraMap K L))]
+        simp
+  have hqcoeffTarget : ∀ i : ℕ,
+      B.valuation (algebraMap K L (q.coeff i)) ≤ 1 := by
+    intro i
+    have hbound := valuation_coeff_prod_X_sub_C_le_pow_card
+      B.valuation 1 le_rfl qroots hqrootsBound i
+    rw [one_pow] at hbound
+    calc
+      B.valuation (algebraMap K L (q.coeff i)) =
+          B.valuation ((q.map (algebraMap K L)).coeff i) := by
+        rw [Polynomial.coeff_map]
+      _ = B.valuation
+          ((qroots.map (fun x => Polynomial.X - Polynomial.C x)).prod.coeff i) := by
+        rw [hqprod]
+      _ ≤ 1 := hbound
+  have hqcoeffBase : ∀ i : ℕ, V.valuation (q.coeff i) ≤ 1 := by
+    intro i
+    exact (Valuation.HasExtension.val_map_le_one_iff
+      V.valuation B.valuation (q.coeff i)).mp (hqcoeffTarget i)
+  have hqlifts : q ∈ Polynomial.lifts V.subtype := by
+    rw [Polynomial.lifts_iff_coeff_lifts]
+    intro i
+    exact ⟨⟨q.coeff i,
+      (V.valuation_le_one_iff (q.coeff i)).1 (hqcoeffBase i)⟩, rfl⟩
+  rcases Polynomial.lifts_and_natDegree_eq_and_monic
+      (f := V.subtype) hqlifts hqmonic with
+    ⟨Q, hQmap, _hQdegree, hQmonic⟩
+  have hQirr : Irreducible (Q.map V.subtype) := by
+    rw [hQmap]
+    exact hqirr
+  have hzmem : z ∈ qroots := (Polynomial.mem_roots hqmap0).2 hqz
+  have hzγmem : zγ ∈ qroots := (Polynomial.mem_roots hqmap0).2 hqzγ
+  have hqconstTarget : B.valuation (algebraMap K L (q.coeff 0)) < 1 := by
+    have hprodlt := valuation_multiset_prod_lt_one_of_mem_lt_one
+      B.valuation qroots hzγmem hzγval hqrootsBound
+    have hconst := hqsplit.coeff_zero_eq_leadingCoeff_mul_prod_roots
+    have hlead : (q.map (algebraMap K L)).leadingCoeff = 1 :=
+      hqmonic.map (algebraMap K L)
+    calc
+      B.valuation (algebraMap K L (q.coeff 0)) =
+          B.valuation ((q.map (algebraMap K L)).coeff 0) := by
+        rw [Polynomial.coeff_map]
+      _ = B.valuation
+          (((-1) ^ (q.map (algebraMap K L)).natDegree) *
+            (q.map (algebraMap K L)).leadingCoeff * qroots.prod) := by
+        rw [hconst]
+      _ = B.valuation qroots.prod := by
+        rw [hlead]
+        simp
+      _ < 1 := hprodlt
+  have hqconstBase : V.valuation (q.coeff 0) < 1 :=
+    (Valuation.HasExtension.val_map_lt_one_iff
+      V.valuation B.valuation (q.coeff 0)).mp hqconstTarget
+  have hQconstMax : Q.coeff 0 ∈ IsLocalRing.maximalIdeal V := by
+    apply (V.valuation_lt_one_iff (Q.coeff 0)).mpr
+    have hcoeff := congrArg (fun f : Polynomial K => f.coeff 0) hQmap
+    change (Q.map V.subtype).coeff 0 = q.coeff 0 at hcoeff
+    rw [Polynomial.coeff_map] at hcoeff
+    change (Q.coeff 0 : K) = q.coeff 0 at hcoeff
+    rw [hcoeff]
+    exact hqconstBase
+  have hQbarConst : (Q.map (IsLocalRing.residue V)).coeff 0 = 0 := by
+    rw [Polynomial.coeff_map]
+    exact (IsLocalRing.residue_eq_zero_iff (Q.coeff 0)).2 hQconstMax
+  have hzle : B.valuation z ≤ 1 := hzval.le
+  have hrootQ : ((Q.map V.subtype).map (algebraMap K L)).IsRoot z := by
+    rw [hQmap]
+    exact hqz
+  obtain ⟨ρ, hrootBar⟩ := residue_root_of_integral_root
+    V B hzle hrootQ
+  let zB : B := ⟨z, (B.valuation_le_one_iff z).1 hzle⟩
+  let zbar : IsLocalRing.ResidueField B := IsLocalRing.residue B zB
+  have hzBunit : IsUnit zB := by
+    apply (B.valuation_eq_one_iff zB).mpr
+    exact hzval
+  have hzbar0 : zbar ≠ 0 :=
+    (IsLocalRing.residue_ne_zero_iff_isUnit zB).2 hzBunit
+  refine ⟨Q, hQmonic, hQirr, hQbarConst, ρ, zbar, hzbar0, ?_⟩
+  simpa [zbar, zB] using hrootBar
 
 theorem exists_mixed_residual_minpoly_of_irreducible_roots_unequal
     {K L : Type*} [Field K] [Field L] [Algebra K L] [Normal K L]
@@ -595,94 +708,8 @@ theorem exists_mixed_residual_minpoly_of_irreducible_roots_unequal
       B.valuation.map_pow, hmapaVal]
     apply (div_le_one₀ ((zero_lt_iff).2 (pow_ne_zero r ht0))).2
     exact pow_le_pow_left₀ zero_le hτle r
-  have hqprod : q.map (algebraMap K L) =
-      (qroots.map (fun x => Polynomial.X - Polynomial.C x)).prod := by
-    calc
-      q.map (algebraMap K L) =
-          Polynomial.C (q.map (algebraMap K L)).leadingCoeff *
-            (qroots.map (fun x => Polynomial.X - Polynomial.C x)).prod :=
-        hqsplit.eq_prod_roots
-      _ = (qroots.map (fun x => Polynomial.X - Polynomial.C x)).prod := by
-        rw [(hqmonic.map (algebraMap K L))]
-        simp
-  have hqcoeffTarget : ∀ i : ℕ,
-      B.valuation (algebraMap K L (q.coeff i)) ≤ 1 := by
-    intro i
-    have hbound := valuation_coeff_prod_X_sub_C_le_pow_card
-      B.valuation 1 le_rfl qroots hqrootsBound i
-    rw [one_pow] at hbound
-    calc
-      B.valuation (algebraMap K L (q.coeff i)) =
-          B.valuation ((q.map (algebraMap K L)).coeff i) := by
-        rw [Polynomial.coeff_map]
-      _ = B.valuation
-          ((qroots.map (fun x => Polynomial.X - Polynomial.C x)).prod.coeff i) := by
-        rw [hqprod]
-      _ ≤ 1 := hbound
-  have hqcoeffBase : ∀ i : ℕ, V.valuation (q.coeff i) ≤ 1 := by
-    intro i
-    exact (Valuation.HasExtension.val_map_le_one_iff
-      V.valuation B.valuation (q.coeff i)).mp (hqcoeffTarget i)
-  have hqlifts : q ∈ Polynomial.lifts V.subtype := by
-    rw [Polynomial.lifts_iff_coeff_lifts]
-    intro i
-    exact ⟨⟨q.coeff i,
-      (V.valuation_le_one_iff (q.coeff i)).1 (hqcoeffBase i)⟩, rfl⟩
-  rcases Polynomial.lifts_and_natDegree_eq_and_monic
-      (f := V.subtype) hqlifts hqmonic with
-    ⟨Q, hQmap, _hQdegree, hQmonic⟩
-  have hQirr : Irreducible (Q.map V.subtype) := by
-    rw [hQmap]
-    exact hqirr
-  have hzmem : z ∈ qroots := (Polynomial.mem_roots hqmap0).2 hqz
-  have hzγmem : zγ ∈ qroots := (Polynomial.mem_roots hqmap0).2 hqzγ
-  have hqconstTarget : B.valuation (algebraMap K L (q.coeff 0)) < 1 := by
-    have hprodlt := valuation_multiset_prod_lt_one_of_mem_lt_one
-      B.valuation qroots hzγmem hzγval hqrootsBound
-    have hconst := hqsplit.coeff_zero_eq_leadingCoeff_mul_prod_roots
-    have hlead : (q.map (algebraMap K L)).leadingCoeff = 1 :=
-      hqmonic.map (algebraMap K L)
-    calc
-      B.valuation (algebraMap K L (q.coeff 0)) =
-          B.valuation ((q.map (algebraMap K L)).coeff 0) := by
-        rw [Polynomial.coeff_map]
-      _ = B.valuation
-          (((-1) ^ (q.map (algebraMap K L)).natDegree) *
-            (q.map (algebraMap K L)).leadingCoeff * qroots.prod) := by
-        rw [hconst]
-      _ = B.valuation qroots.prod := by
-        rw [hlead]
-        simp
-      _ < 1 := hprodlt
-  have hqconstBase : V.valuation (q.coeff 0) < 1 :=
-    (Valuation.HasExtension.val_map_lt_one_iff
-      V.valuation B.valuation (q.coeff 0)).mp hqconstTarget
-  have hQconstMax : Q.coeff 0 ∈ IsLocalRing.maximalIdeal V := by
-    apply (V.valuation_lt_one_iff (Q.coeff 0)).mpr
-    have hcoeff := congrArg (fun f : Polynomial K => f.coeff 0) hQmap
-    change (Q.map V.subtype).coeff 0 = q.coeff 0 at hcoeff
-    rw [Polynomial.coeff_map] at hcoeff
-    change (Q.coeff 0 : K) = q.coeff 0 at hcoeff
-    rw [hcoeff]
-    exact hqconstBase
-  have hQbarConst : (Q.map (IsLocalRing.residue V)).coeff 0 = 0 := by
-    rw [Polynomial.coeff_map]
-    exact (IsLocalRing.residue_eq_zero_iff (Q.coeff 0)).2 hQconstMax
-  have hzle : B.valuation z ≤ 1 := hzval.le
-  have hrootQ : ((Q.map V.subtype).map (algebraMap K L)).IsRoot z := by
-    rw [hQmap]
-    exact hqz
-  obtain ⟨ρ, hrootBar⟩ := residue_root_of_integral_root
-    V B hzle hrootQ
-  let zB : B := ⟨z, (B.valuation_le_one_iff z).1 hzle⟩
-  let zbar : IsLocalRing.ResidueField B := IsLocalRing.residue B zB
-  have hzBunit : IsUnit zB := by
-    apply (B.valuation_eq_one_iff zB).mpr
-    exact hzval
-  have hzbar0 : zbar ≠ 0 :=
-    (IsLocalRing.residue_ne_zero_iff_isUnit zB).2 hzBunit
-  refine ⟨Q, hQmonic, hQirr, hQbarConst, ρ, zbar, hzbar0, ?_⟩
-  simpa [zbar, zB] using hrootBar
+  exact exists_monic_residue_polynomial_of_mixed_roots V B q hqmonic hqirr hqsplit
+    z zγ hzval hzγval hqz hqzγ hqrootsBound
 
 
 

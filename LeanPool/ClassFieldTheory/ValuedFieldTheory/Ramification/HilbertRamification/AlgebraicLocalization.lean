@@ -82,7 +82,7 @@ def valuationPreservingCompletionRingEquiv
     (valuationPreservingWithAbsRingEquiv_isometry vK w σ hσ).continuous
     (valuationPreservingWithAbsRingEquiv_symm_isometry vK w σ hσ).continuous
 
-@[simp] theorem valuationPreservingCompletionRingEquiv_toCompletion
+theorem valuationPreservingCompletionRingEquiv_toCompletion
     (σ : L ≃ₐ[K] L) (hσ : ∀ x : L, w.1 (σ x) = w.1 x) (x : L) :
     valuationPreservingCompletionRingEquiv vK w σ hσ
         (AbsoluteValue.toCompletion w.1 x) =
@@ -430,7 +430,8 @@ def localizationToDecompositionGroup
     calc
       w.1 (σ x) = AbsoluteValue.algebraicLocalizationAbsoluteValue vK w.1 w.2
           (AbsoluteValue.toAlgebraicLocalization vK w.1 w.2 (σ x)) :=
-        (AbsoluteValue.algebraicLocalizationAbsoluteValue_toAlgebraicLocalization vK w.1 w.2 (σ x)).symm
+        (AbsoluteValue.algebraicLocalizationAbsoluteValue_toAlgebraicLocalization vK w.1 w.2 (σ
+          x)).symm
       _ = AbsoluteValue.algebraicLocalizationAbsoluteValue vK w.1 w.2
           (τ (AbsoluteValue.toAlgebraicLocalization vK w.1 w.2 x)) := by
         rw [localizationAlgEquivRestrict_toLocalization]
@@ -572,7 +573,8 @@ omit hvK
 
 include hvK
 
-/-- The localization and decomposition comparison (decomposition groups): for a possibly infinite Galois
+/-- The localization and decomposition comparison (decomposition groups): for a possibly
+infinite Galois
 extension, the decomposition group at `w` is canonically isomorphic to the
 Galois group of the algebraic localization over `K_v`. -/
 def decompositionGroupEquivAlgebraicLocalizationAut :
@@ -607,7 +609,7 @@ def decompositionGroupEquivAlgebraicLocalizationAut :
       localizationToDecompositionGroup vK hvK w τ :=
   rfl
 
-@[simp] theorem localizationRamificationGroups_decompositionGroupEquiv_toLocalization
+theorem localizationRamificationGroups_decompositionGroupEquiv_toLocalization
     (σ : absoluteValueDecompositionGroup K w.1) (x : L) :
     letI hK := AbsoluteValue.extensionCompletionAlgebra (K := K) w.1
     letI : SMul K w.1.Completion := hK.toSMul

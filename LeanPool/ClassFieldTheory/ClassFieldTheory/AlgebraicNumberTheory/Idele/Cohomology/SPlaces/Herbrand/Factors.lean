@@ -13,7 +13,7 @@ This leaf transports the finite-family Herbrand calculation to the actual
 unrestricted relative S-idele factors.
 -/
 
-open scoped NumberField BigOperators ValuativeRel Classical NNReal
+open scoped NumberField BigOperators ValuativeRel NNReal
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -36,6 +36,7 @@ variable {K L : Type}
 -/
 
 omit [NumberField L] in
+open scoped Classical in
 @[reducible]
 private noncomputable def
     relativeUnrestrictedSPlaceFactorsActionProvider
@@ -47,6 +48,7 @@ private noncomputable def
     (K := K) (L := L) S
 
 omit [NumberField L] in
+open scoped Classical in
 @[reducible]
 private noncomputable def
     relativeUnrestrictedSPlaceLocalBlockFamilyActionProvider
@@ -60,6 +62,7 @@ private noncomputable def
       (K := K) (L := L) S)
 
 omit [NumberField L] in
+open scoped Classical in
 /-- The equivariant realization by local blocks identifies degree-zero
 Herbrand cohomology of the actual unrestricted factors with that of the
 local-block family. -/
@@ -97,6 +100,7 @@ noncomputable def
         (K := K) (L := L) S)
 
 omit [NumberField L] in
+open scoped Classical in
 /-- The equivariant realization by local blocks identifies degree-minus-one
 Herbrand cohomology of the actual unrestricted factors with that of the
 local-block family. -/
@@ -135,6 +139,7 @@ noncomputable def
         (K := K) (L := L) S) σ
 
 omit [NumberField L] in
+open scoped Classical in
 /-- Degree-zero cohomology of the actual unrestricted tensor factors is
 finite. -/
 theorem relativeUnrestrictedSPlaceFactorsHerbrandH0Finite
@@ -171,6 +176,7 @@ theorem relativeUnrestrictedSPlaceFactorsHerbrandH0Finite
         (K := K) (L := L) S).symm.toEquiv
 
 omit [NumberField L] in
+open scoped Classical in
 /-- Degree-minus-one cohomology of the actual unrestricted tensor
 factors is finite. -/
 theorem relativeUnrestrictedSPlaceFactorsHerbrandHMinusOneFinite
@@ -207,6 +213,7 @@ theorem relativeUnrestrictedSPlaceFactorsHerbrandHMinusOneFinite
         (K := K) (L := L) S σ).symm.toEquiv
 
 omit [NumberField L] in
+open scoped Classical in
 /-- Degree zero for the actual unrestricted factors: its
 cardinality is the product of the local degrees. -/
 theorem
@@ -269,6 +276,7 @@ theorem
         S σ hgen
 
 omit [NumberField L] in
+open scoped Classical in
 /-- Degree minus one for the actual unrestricted factors:
 the group has one element. -/
 theorem
@@ -326,6 +334,7 @@ theorem
         S σ hgen
 
 omit [NumberField L] in
+open scoped Classical in
 /-- The Herbrand quotient formula for the actual unrestricted tensor factors. -/
 theorem relativeUnrestrictedSPlaceFactors_herbrandQuotient
     (S : Finset (HeightOneSpectrum (𝓞 K)))

@@ -34,7 +34,7 @@ def frobeniusMultiplicativityCorrectionTerm
 /-- The corresponding left-action elements are `τ₄,τ₁,τ₄`.
 The last action is `τ₄` because the product in the actual `(*)`
 identity is `τ₄τ₁`. -/
-def frobeniusMultiplicativityCorrectionAction {R : Type*} [Group R]
+def frobeniusMultiplicativityCorrectionAction {R : Type*}
     (τ₁ τ₄ : R) : Fin 3 → R :=
   ![τ₄, τ₁, τ₄]
 

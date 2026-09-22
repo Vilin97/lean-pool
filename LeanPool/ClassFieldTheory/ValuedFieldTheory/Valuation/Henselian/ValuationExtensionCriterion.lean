@@ -195,7 +195,8 @@ theorem primitiveIrreducibleReductionProperty_of_monicResidualCoprimeFactorLifti
     exact Or.inl (Nat.eq_zero_of_add_eq_zero_right hsum)
 
 /-- the factor-lifting criterion: monic coprime-factor lifting is sufficient for
-Hensel's lemma in the exact primitive factorization form of the primitive factorization definition. -/
+Hensel's lemma in the exact primitive factorization form of the primitive factorization
+  definition. -/
 theorem henselianValuationExtension
     {K : Type u} [Field K] (V : ValuationSubring K)
     (hlift : MonicResidualCoprimeFactorLifting V) :

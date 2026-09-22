@@ -16,7 +16,8 @@ namespace ValuationTheory
 /-!
 # Adic completeness of complete rank-one discrete valued fields
 
-This file supplies the common source used in the valuation-topology and adic-completeness arguments: on a
+This file supplies the common source used in the valuation-topology and adic-completeness
+  arguments: on a
 rank-one discrete valued field with archimedean ambient value group, the
 native topology of the valuation ring is its maximal-ideal adic topology.
 Consequently a complete valued field has an adically complete valuation ring.

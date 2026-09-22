@@ -56,7 +56,8 @@ theorem uniformizerUnitFactor_mul
         LocalFieldTheory.IsNonarchimedeanLocalField.uniformizerUnitFactor K pi hpi y := by
   apply integerUnitsToFieldUnits_injective K
   rw [map_mul]
-  simp only [LocalFieldTheory.IsNonarchimedeanLocalField.integerUnitsToFieldUnits_uniformizerUnitFactor]
+  simp only
+    [LocalFieldTheory.IsNonarchimedeanLocalField.integerUnitsToFieldUnits_uniformizerUnitFactor]
   rw [LocalFieldTheory.IsNonarchimedeanLocalField.valuationMap_ofMul_mul, zpow_add]
   simp only [div_eq_mul_inv, mul_inv_rev]
   ac_rfl
@@ -148,7 +149,8 @@ theorem fieldUnitsToIntegerUnitsPrincipalQuotientHom_ker
       rw [pow_one]
       change integerUnitsPrincipalQuotMk K n
         (LocalFieldTheory.IsNonarchimedeanLocalField.uniformizerUnitFactor K pi hpi pi) = 1
-      have hfactor : LocalFieldTheory.IsNonarchimedeanLocalField.uniformizerUnitFactor K pi hpi pi = 1 := by
+      have hfactor : LocalFieldTheory.IsNonarchimedeanLocalField.uniformizerUnitFactor K pi hpi
+        pi = 1 := by
         apply integerUnitsToFieldUnits_injective K
         rw [LocalFieldTheory.IsNonarchimedeanLocalField.integerUnitsToFieldUnits_uniformizerUnitFactor,
           hpi]

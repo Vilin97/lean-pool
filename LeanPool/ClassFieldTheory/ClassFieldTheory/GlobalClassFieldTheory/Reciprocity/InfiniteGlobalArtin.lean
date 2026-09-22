@@ -20,7 +20,7 @@ multiplying an idele by the section of its absolute
 norm produces a norm-one idele without changing its Artin symbol.
 -/
 
-open scoped Classical IsMulCommutative NNReal NumberField Topology
+open scoped IsMulCommutative NNReal NumberField Topology
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -31,6 +31,7 @@ namespace Reciprocity
 open CategoryTheory Opposite
 open FiniteGaloisIntermediateField ProfiniteGrp
 
+open scoped Classical in
 /-- Every infinite place of `ℚ` is the canonical real place. -/
 theorem rationalInfinitePlace_isReal
     (v : InfinitePlace ℚ) :
@@ -38,6 +39,7 @@ theorem rationalInfinitePlace_isReal
   rw [Subsingleton.elim v Rat.infinitePlace]
   exact Rat.isReal_infinitePlace
 
+open scoped Classical in
 private noncomputable def rationalPositiveArchimedeanLocalComponent
     (v : InfinitePlace ℚ) :
     ℝ≥0ˣ →* v.Completionˣ :=
@@ -46,11 +48,13 @@ private noncomputable def rationalPositiveArchimedeanLocalComponent
         (rationalInfinitePlace_isReal v)).symm.toMulEquiv).toMonoidHom.comp
     (Units.map NNReal.toRealHom.toMonoidHom)
 
+open scoped Classical in
 private noncomputable def rationalPositiveArchimedeanInfinitePart :
     ℝ≥0ˣ →* InfiniteIdeleGroup ℚ :=
   ContinuousMulEquiv.piUnits.symm.toMonoidHom.comp
     (MonoidHom.pi rationalPositiveArchimedeanLocalComponent)
 
+open scoped Classical in
 private theorem rationalPositiveArchimedeanInfinitePart_component
     (r : ℝ≥0ˣ) (v : InfinitePlace ℚ) :
     ContinuousMulEquiv.piUnits
@@ -65,6 +69,7 @@ private theorem rationalPositiveArchimedeanInfinitePart_component
     (ContinuousMulEquiv.piUnits.apply_symm_apply
       ((MonoidHom.pi rationalPositiveArchimedeanLocalComponent) r)) v
 
+open scoped Classical in
 /-- The positive archimedean section
 `ℝ₊ˣ → I_ℚ`.  Its finite component is one, and at the unique infinite
 place it is the positive real unit supplied by the input. -/
@@ -76,9 +81,9 @@ noncomputable def rationalPositiveArchimedeanIdele :
       map_one' := by simp
       map_mul' := by simp }
 
+open scoped Classical in
 /-- The positive archimedean section has trivial finite component at
 every finite place of `ℚ`. -/
-@[simp]
 theorem rationalPositiveArchimedeanIdele_finiteComponent
     (r : ℝ≥0ˣ)
     (v : HeightOneSpectrum (𝓞 ℚ)) :
@@ -87,6 +92,7 @@ theorem rationalPositiveArchimedeanIdele_finiteComponent
       1 :=
   rfl
 
+open scoped Classical in
 /-- At the unique rational infinite place, the positive section becomes
 the original positive real unit under mathlib's canonical completion
 equivalence. -/
@@ -120,6 +126,7 @@ theorem rationalPositiveArchimedeanIdele_infiniteComponent
     (Units.mapEquiv e).apply_symm_apply
       (Units.map NNReal.toRealHom.toMonoidHom r)
 
+open scoped Classical in
 /-- The positive archimedean section has absolute idele norm `r⁻¹`.
 This is the normalization dictated by the convention in
 `IdeleGroup.absoluteNorm`. -/
@@ -191,6 +198,7 @@ theorem rationalPositiveArchimedeanIdele_absoluteNorm
       r⁻¹
   rw [map_one, hinfinite, one_mul]
 
+open scoped Classical in
 /-- Every finite abelian global Artin homomorphism kills the positive
 archimedean section over `ℚ`. -/
 theorem globalArtinMonoidHom_rationalPositiveArchimedeanIdele
@@ -264,6 +272,7 @@ Artin homomorphisms, and compatibility is restriction in a finite
 abelian tower.
 -/
 
+open scoped Classical in
 /-- The compatible family of finite global Artin symbols attached to
 an idele, regarded as a point of the finite-Galois inverse limit. -/
 noncomputable def infiniteGlobalArtinLimitPoint
@@ -298,6 +307,7 @@ noncomputable def infiniteGlobalArtinLimitPoint
             (globalArtinMonoidHom_restrict_tower
               (K := K) (E := F.unop) (L := E.unop)) a }
 
+open scoped Classical in
 /-- The continuous global Artin homomorphism into the finite-Galois
 inverse limit, before transport to the Krull-topological Galois group. -/
 noncomputable def infiniteGlobalArtinToLimit
@@ -369,6 +379,7 @@ noncomputable def infiniteGlobalArtinToLimit
                 inferInstance).symm]
           exact hcontinuous E }
 
+open scoped Classical in
 /-- The continuous global Artin homomorphism of an arbitrary abelian
 Galois extension of a number field.  Its finite coordinates are the
 finite global Artin homomorphisms. -/
@@ -381,6 +392,7 @@ noncomputable def infiniteGlobalArtinMonoidHom
       K Ω).symm).comp
     (infiniteGlobalArtinToLimit K Ω)
 
+open scoped Classical in
 /-- Projection of the infinite global Artin homomorphism to a finite
 Galois intermediate field is exactly that field's finite global Artin
 homomorphism, using a caller-supplied number-field witness. -/
@@ -406,6 +418,7 @@ theorem restrictNormalHom_infiniteGlobalArtinMonoidHom_of_numberField
           (infiniteGlobalArtinToLimit K Ω a))
   exact hcomponent
 
+open scoped Classical in
 /-- Finite projection with both finite-layer structures supplied explicitly.
 This is useful when a concrete tower already has named canonical witnesses
 and must not resynthesize them while checking the projected Artin endpoint. -/
@@ -428,6 +441,7 @@ theorem restrictNormalHom_infiniteGlobalArtinMonoidHom_of_structures
     restrictNormalHom_infiniteGlobalArtinMonoidHom_of_numberField
       K Ω a E hE
 
+open scoped Classical in
 /-- Finite projection stated for a plain intermediate field with its finite
 Galois structures supplied separately.  This avoids packaging a concrete
 dependent field into `FiniteGaloisIntermediateField` at every call site. -/
@@ -453,6 +467,7 @@ theorem restrictNormalHom_infiniteGlobalArtinMonoidHom_of_intermediateField
     restrictNormalHom_infiniteGlobalArtinMonoidHom_of_structures
       K Ω a G hE hAbelian
 
+open scoped Classical in
 /-- Finite projection for a plain intermediate field when its structures are
 already installed as ambient instances. -/
 theorem restrictNormalHom_infiniteGlobalArtinMonoidHom_intermediateField
@@ -468,6 +483,7 @@ theorem restrictNormalHom_infiniteGlobalArtinMonoidHom_intermediateField
       K Ω a E (inferInstance : NumberField E)
         (inferInstance : IsAbelianGalois K E)
 
+open scoped Classical in
 /-- Pointwise form of finite projection of the infinite global Artin map.
 This is the stable interface when a concrete finite layer carries algebra
 instances propositionally, but not definitionally, equal to the canonical
@@ -489,6 +505,7 @@ theorem restrictNormalHom_infiniteGlobalArtinMonoidHom_of_numberField_apply
     (restrictNormalHom_infiniteGlobalArtinMonoidHom_of_numberField
       K Ω a E hE) x
 
+open scoped Classical in
 /-- Postcomposition of a finite projection of the infinite global Artin map.
 Keeping `congrArg` at this generic level prevents large concrete towers from
 being normalized merely to infer the endpoints of the mapped equality. -/
@@ -509,6 +526,7 @@ theorem map_restrictNormalHom_infiniteGlobalArtinMonoidHom_of_numberField
     (restrictNormalHom_infiniteGlobalArtinMonoidHom_of_numberField
       K Ω a E hE)
 
+open scoped Classical in
 /-- Postcomposition of a finite projection with both finite-layer structures
 supplied explicitly.  This avoids resynthesizing proposition-valued instances
 when the finite field is a concrete dependent intermediate field. -/
@@ -532,6 +550,7 @@ theorem map_restrictNormalHom_infiniteGlobalArtinMonoidHom_of_structures
     (restrictNormalHom_infiniteGlobalArtinMonoidHom_of_structures
       K Ω a E hE hAbelian)
 
+open scoped Classical in
 /-- Postcomposition of the finite projection for a plain intermediate field.
 The explicit structures keep concrete cyclotomic levels out of instance
 normalization at the consumer. -/
@@ -555,6 +574,7 @@ theorem
     (restrictNormalHom_infiniteGlobalArtinMonoidHom_of_intermediateField
       K Ω a E hE hAbelian)
 
+open scoped Classical in
 /-- The finite global Artin homomorphism with its number-field witness fixed
 as an explicit argument.  Concrete intermediate-field towers can share this
 opaque hom without repeatedly comparing independently synthesized witnesses. -/
@@ -566,6 +586,7 @@ noncomputable def globalArtinMonoidHomOfNumberField
   letI : NumberField L := hL
   exact globalArtinMonoidHom (K := K) (L := L)
 
+open scoped Classical in
 /-- Norm-restriction naturality with the upper finite global Artin homomorphism
 expressed through an explicit number-field witness. -/
 theorem globalArtinMonoidHomOfNumberField_norm_restriction
@@ -587,6 +608,7 @@ theorem globalArtinMonoidHomOfNumberField_norm_restriction
   let : NumberField L' := hL'
   exact globalArtinMonoidHom_norm_restriction
 
+open scoped Classical in
 /-- Monoid-hom postcomposition of a finite projection, stated at the hom
 application level.  This keeps concrete consumers from unfolding
 `MonoidHom.comp` merely to join the projection and finite Artin endpoints. -/
@@ -607,6 +629,7 @@ theorem comp_restrictNormalHom_infiniteGlobalArtinMonoidHom_of_numberField
     (map_restrictNormalHom_infiniteGlobalArtinMonoidHom_of_numberField
       K Ω a E hE f).trans rfl
 
+open scoped Classical in
 /-- The mapped finite projection and its finite Artin specification, with
 both endpoints fixed while the ambient field instances are still generic.
 Concrete towers can reuse the package without asking the elaborator to
@@ -631,6 +654,7 @@ noncomputable def
       comp_restrictNormalHom_infiniteGlobalArtinMonoidHom_of_numberField
         K Ω a E hE f⟩
 
+open scoped Classical in
 /-- The mapped infinite projection transported through a supplied naturality
 square.  The intermediate finite Artin hom is the explicit-witness version,
 so the equality is composed once in this generic provider rather than by a
@@ -658,6 +682,7 @@ noncomputable def
         (infiniteGlobalArtinMonoidHom K Ω a)),
       hprojection.trans (DFunLike.congr_fun hnat a)⟩
 
+open scoped Classical in
 /-- Postcomposition of a finite projection when the finite layer's number
 field structure is already installed as the ambient instance. -/
 theorem map_restrictNormalHom_infiniteGlobalArtinMonoidHom
@@ -675,6 +700,7 @@ theorem map_restrictNormalHom_infiniteGlobalArtinMonoidHom
     (restrictNormalHom_infiniteGlobalArtinMonoidHom_of_numberField
       K Ω a E (inferInstance : NumberField E))
 
+open scoped Classical in
 /-- Projection of the infinite global Artin homomorphism to a finite
 Galois intermediate field, with its canonical module-finite number-field
 structure. -/
@@ -694,6 +720,7 @@ theorem restrictNormalHom_infiniteGlobalArtinMonoidHom
     restrictNormalHom_infiniteGlobalArtinMonoidHom_of_numberField
       K Ω a E (NumberField.of_module_finite K E)
 
+open scoped Classical in
 /-- Restriction of the infinite global Artin map along an abstract finite
 abelian scalar tower.  Unlike the intermediate-field projection theorem, this
 form allows the finite extension to be supplied through any chosen embedding
@@ -749,6 +776,7 @@ theorem restrictNormalHom_infiniteGlobalArtinMonoidHom_of_scalarTower
         (globalArtinMonoidHom_restrict_tower
           (K := K) (L := G) (E := E)) a
 
+open scoped Classical in
 /-- Finite global reciprocity at every coordinate makes the infinite
 global Artin homomorphism dense in the Krull topology. -/
 theorem infiniteGlobalArtinMonoidHom_denseRange
@@ -793,6 +821,7 @@ theorem infiniteGlobalArtinMonoidHom_denseRange
       ⟨a, rfl⟩⟩
   simpa [V, mul_assoc] using hmemV
 
+open scoped Classical in
 /-- The actual continuous global Artin homomorphism from rational ideles
 to the Galois group of the `ZHat`-extension of `ℚ`. -/
 noncomputable def rationalCyclotomicZHatGlobalArtin :
@@ -801,6 +830,7 @@ noncomputable def rationalCyclotomicZHatGlobalArtin :
         rationalCyclotomicZHatField) :=
   infiniteGlobalArtinMonoidHom ℚ rationalCyclotomicZHatField
 
+open scoped Classical in
 private theorem
     continuousMulEquivToLimit_rationalCyclotomicZHatGlobalArtin_apply
     (a : IdeleGroup ℚ) :
@@ -813,6 +843,7 @@ private theorem
     (InfiniteGalois.continuousMulEquivToLimit
       ℚ rationalCyclotomicZHatField).apply_symm_apply _
 
+open scoped Classical in
 /-- Projection of the rational `ZHat` Artin homomorphism is the finite
 global Artin homomorphism. -/
 @[simp]
@@ -832,6 +863,7 @@ theorem restrictNormalHom_rationalCyclotomicZHatGlobalArtin
   restrictNormalHom_infiniteGlobalArtinMonoidHom
     ℚ rationalCyclotomicZHatField a E
 
+open scoped Classical in
 /-- Rational cyclotomic projection with caller-supplied finite-layer
 structures. -/
 theorem restrictNormalHom_rationalCyclotomicZHatGlobalArtin_of_structures
@@ -853,6 +885,7 @@ theorem restrictNormalHom_rationalCyclotomicZHatGlobalArtin_of_structures
     restrictNormalHom_infiniteGlobalArtinMonoidHom_of_structures
       ℚ rationalCyclotomicZHatField a E hE hAbelian
 
+open scoped Classical in
 /-- A mapped relative infinite Artin projection, the corresponding rational
 finite Artin value, and the rational infinite projection, packaged with both
 comparison steps.  The common finite value is generated only once in this
@@ -910,12 +943,14 @@ noncomputable def
         (restrictNormalHom_rationalCyclotomicZHatGlobalArtin_of_structures
           (IdeleGroup.norm ℚ K a) E hE hAbelian).symm⟩
 
+open scoped Classical in
 /-- The rational `ZHat` specialization has dense Artin image. -/
 theorem rationalCyclotomicZHatGlobalArtin_denseRange :
     DenseRange rationalCyclotomicZHatGlobalArtin :=
   infiniteGlobalArtinMonoidHom_denseRange
     ℚ rationalCyclotomicZHatField
 
+open scoped Classical in
 /-- The infinite global Artin homomorphism, like each of its finite
 coordinates, kills the positive archimedean section. -/
 @[simp]
@@ -949,6 +984,7 @@ theorem
     globalArtinMonoidHom_rationalPositiveArchimedeanIdele
       (L := E.unop) r
 
+open scoped Classical in
 /-- Every rational idele has the same infinite Artin symbol as a
 norm-one idele. -/
 theorem
@@ -976,6 +1012,7 @@ theorem
       rationalCyclotomicZHatGlobalArtin_rationalPositiveArchimedeanIdele,
       mul_one]
 
+open scoped Classical in
 /-- The norm-one rational ideles already have dense Artin image. -/
 theorem rationalCyclotomicZHatGlobalArtin_normOne_denseRange :
     DenseRange

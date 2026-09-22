@@ -109,7 +109,6 @@ noncomputable def ideleClassNorm :
           K L x).symm)
 
 omit [NumberField L] [IsGalois K L] in
-@[simp]
 theorem ideleClassNorm_mk
     (a : RelativeIdeleGroup K L) :
     ideleClassNorm K L
@@ -126,16 +125,19 @@ abbrev IdeleClassNormQuotient :=
 
 section Actions
 
+/-- Galois automorphisms act on relative ideles by conjugation. -/
 local instance :
     MulDistribMulAction (L ≃ₐ[K] L)
       (RelativeIdeleGroup K L) :=
   relativeIdeleMulDistribMulAction K L
 
+/-- The Galois action on relative ideles descends to their class group. -/
 local instance :
     MulDistribMulAction (L ≃ₐ[K] L)
       (RelativeIdeleGroup.ClassGroup K L) :=
   ideleClassMulDistribMulAction K L
 
+/-- The Galois action on relative ideles restricts to the principal subgroup. -/
 local instance :
     MulDistribMulAction (L ≃ₐ[K] L)
       (RelativeIdeleGroup.principalSubgroup K L) :=

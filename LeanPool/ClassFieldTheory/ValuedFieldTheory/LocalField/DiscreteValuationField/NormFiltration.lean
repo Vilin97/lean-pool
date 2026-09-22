@@ -560,7 +560,7 @@ Establishes the identity `N.quotientModuloFiltrationPreimageClassEquivRange UG U
 (QuotientGroup.mk' (N.filtrationPreimageClassInQuotient UG UH targetLevel n) q) =
 (quotientMapOfMapsFiltrationLevels N UG UH targetLevel hN n).rangeRestrict q`.
 -/
-@[simp] theorem quotientModuloFiltrationPreimageClassEquivRange_mk
+theorem quotientModuloFiltrationPreimageClassEquivRange_mk
     (hN : MapsFiltrationLevels N UG UH targetLevel) (n : ℕ)
     [(UH.principalUnitSubgroup n).Normal]
     [(UG.principalUnitSubgroup (targetLevel n)).Normal]
@@ -578,7 +578,7 @@ Establishes the identity `N.quotientModuloFiltrationPreimageClassEquivRange UG U
 (UH.principalUnitSubgroup n) x)) = (quotientMapOfMapsFiltrationLevels N UG UH targetLevel hN
 n).rangeRestrict (QuotientGroup.mk' (UH.principalUnitSubgroup n) x)`.
 -/
-@[simp] theorem quotientModuloFiltrationPreimageClassEquivRange_mk_mk
+theorem quotientModuloFiltrationPreimageClassEquivRange_mk_mk
     (hN : MapsFiltrationLevels N UG UH targetLevel) (n : ℕ)
     [(UH.principalUnitSubgroup n).Normal]
     [(UG.principalUnitSubgroup (targetLevel n)).Normal] (x : H) :
@@ -597,7 +597,7 @@ n (QuotientGroup.mk' (N.filtrationPreimageClassInQuotient UG UH targetLevel n) q
 (quotientMapOfMapsFiltrationLevels N UG UH targetLevel hN n).range) : G ⧸ UG.principalUnitSubgroup
 (targetLevel n)) = quotientMapOfMapsFiltrationLevels N UG UH targetLevel hN n q`.
 -/
-@[simp] theorem coe_quotientModuloFiltrationPreimageClassEquivRange_mk
+theorem coe_quotientModuloFiltrationPreimageClassEquivRange_mk
     (hN : MapsFiltrationLevels N UG UH targetLevel) (n : ℕ)
     [(UH.principalUnitSubgroup n).Normal]
     [(UG.principalUnitSubgroup (targetLevel n)).Normal]
@@ -620,7 +620,7 @@ n (QuotientGroup.mk' (N.filtrationPreimageClassInQuotient UG UH targetLevel n) (
 n).range) : G ⧸ UG.principalUnitSubgroup (targetLevel n)) = QuotientGroup.mk'
 (UG.principalUnitSubgroup (targetLevel n)) (N.toHom x)`.
 -/
-@[simp] theorem coe_quotientModuloFiltrationPreimageClassEquivRange_mk_mk
+theorem coe_quotientModuloFiltrationPreimageClassEquivRange_mk_mk
     (hN : MapsFiltrationLevels N UG UH targetLevel) (n : ℕ)
     [(UH.principalUnitSubgroup n).Normal]
     [(UG.principalUnitSubgroup (targetLevel n)).Normal] (x : H) :
@@ -680,7 +680,7 @@ n).symm ((quotientMapOfMapsFiltrationLevels N UG UH targetLevel hN n).rangeRestr
 (N.filtrationPreimageClassInQuotient UG UH targetLevel n) (QuotientGroup.mk'
 (UH.principalUnitSubgroup n) x)`.
 -/
-@[simp] theorem quotientModuloFiltrationPreimageClassEquivRange_symm_rangeRestrict_mk
+theorem quotientModuloFiltrationPreimageClassEquivRange_symm_rangeRestrict_mk
     (hN : MapsFiltrationLevels N UG UH targetLevel) (n : ℕ)
     [(UH.principalUnitSubgroup n).Normal]
     [(UG.principalUnitSubgroup (targetLevel n)).Normal] (x : H) :
@@ -715,7 +715,7 @@ Establishes the identity `N.quotientModuloFiltrationPreimageClassEquivTargetOfSu
 targetLevel hN n hSurj (QuotientGroup.mk' (N.filtrationPreimageClassInQuotient UG UH targetLevel
 n) q) = quotientMapOfMapsFiltrationLevels N UG UH targetLevel hN n q`.
 -/
-@[simp] theorem quotientModuloFiltrationPreimageClassEquivTargetOfSurjective_mk
+theorem quotientModuloFiltrationPreimageClassEquivTargetOfSurjective_mk
     (hN : MapsFiltrationLevels N UG UH targetLevel) (n : ℕ)
     [(UH.principalUnitSubgroup n).Normal]
     [(UG.principalUnitSubgroup (targetLevel n)).Normal]
@@ -743,7 +743,7 @@ targetLevel hN n hSurj (QuotientGroup.mk' (N.filtrationPreimageClassInQuotient U
 n) (QuotientGroup.mk' (UH.principalUnitSubgroup n) x)) = QuotientGroup.mk'
 (UG.principalUnitSubgroup (targetLevel n)) (N.toHom x)`.
 -/
-@[simp] theorem quotientModuloFiltrationPreimageClassEquivTargetOfSurjective_mk_mk
+theorem quotientModuloFiltrationPreimageClassEquivTargetOfSurjective_mk_mk
     (hN : MapsFiltrationLevels N UG UH targetLevel) (n : ℕ)
     [(UH.principalUnitSubgroup n).Normal]
     [(UG.principalUnitSubgroup (targetLevel n)).Normal]
@@ -837,7 +837,7 @@ targetLevel hN n hSurj).symm (QuotientGroup.mk' (UG.principalUnitSubgroup (targe
 (N.toHom x)) = QuotientGroup.mk' (N.filtrationPreimageClassInQuotient UG UH targetLevel n)
 (QuotientGroup.mk' (UH.principalUnitSubgroup n) x)`.
 -/
-@[simp] theorem quotientModuloFiltrationPreimageClassEquivTargetOfSurjective_symm_mk
+theorem quotientModuloFiltrationPreimageClassEquivTargetOfSurjective_symm_mk
     (hN : MapsFiltrationLevels N UG UH targetLevel) (n : ℕ)
     [(UH.principalUnitSubgroup n).Normal]
     [(UG.principalUnitSubgroup (targetLevel n)).Normal]
@@ -1004,7 +1004,7 @@ theorem quotientMapOfMapsFiltrationLevels_comp_targetLevelChange
     [(UH.principalUnitSubgroup n).Normal]
     [(UG.principalUnitSubgroup (targetLevel n)).Normal]
     [(UG.principalUnitSubgroup (targetLevel' n)).Normal] :
-    (UG.quotient_principalUnitSubgroup_mapOfLe (hle n)).comp
+    (UG.quotientPrincipalUnitSubgroupMapOfLe (hle n)).comp
         (quotientMapOfMapsFiltrationLevels N UG UH targetLevel hN n) =
       quotientMapOfMapsFiltrationLevels N UG UH targetLevel'
         (N.mapsFiltrationLevels_of_le UG UH targetLevel hN hle) n := by
@@ -1024,8 +1024,8 @@ theorem quotientMapOfMapsFiltrationLevels_sourceLevelChange
     [(UG.principalUnitSubgroup (targetLevel n)).Normal]
     [(UG.principalUnitSubgroup (targetLevel m)).Normal] :
     (quotientMapOfMapsFiltrationLevels N UG UH targetLevel hN m).comp
-        (UH.quotient_principalUnitSubgroup_mapOfLe hmn) =
-      (UG.quotient_principalUnitSubgroup_mapOfLe htarget).comp
+        (UH.quotientPrincipalUnitSubgroupMapOfLe hmn) =
+      (UG.quotientPrincipalUnitSubgroupMapOfLe htarget).comp
         (quotientMapOfMapsFiltrationLevels N UG UH targetLevel hN n) := by
   apply MonoidHom.ext
   intro q
@@ -1092,10 +1092,10 @@ theorem quotientMapOfMapsFiltrationLevels_surjective_of_sourceLevelChange
   rcases UG.quotient_principalUnitSubgroup_mapOfLe_surjective htarget z with
     ⟨y, hy⟩
   rcases hSurj y with ⟨x, hx⟩
-  refine ⟨UH.quotient_principalUnitSubgroup_mapOfLe hmn x, ?_⟩
+  refine ⟨UH.quotientPrincipalUnitSubgroupMapOfLe hmn x, ?_⟩
   change
     ((quotientMapOfMapsFiltrationLevels N UG UH targetLevel hN m).comp
-        (UH.quotient_principalUnitSubgroup_mapOfLe hmn)) x = z
+        (UH.quotientPrincipalUnitSubgroupMapOfLe hmn)) x = z
   rw [N.quotientMapOfMapsFiltrationLevels_sourceLevelChange
     UG UH targetLevel hN hmn htarget]
   simp [MonoidHom.comp_apply, hx, hy]

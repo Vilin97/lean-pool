@@ -44,6 +44,8 @@ open Field.absoluteGaloisGroup
 variable (K : Type) [Field K] [ValuativeRel K] [TopologicalSpace K]
   [IsNonarchimedeanLocalField K]
 
+/-- The algebraic closure is an algebra over the selected separable closure through its
+inclusion. -/
 local instance localSeparableClosureAlgebra :
     Algebra (SeparableClosure K) (AlgebraicClosure K) :=
   (separableClosure K (AlgebraicClosure K)).val.toRingHom.toAlgebra

@@ -179,7 +179,7 @@ def RadicalQuotient : Type _ :=
 
 /-- The commutative group structure transported to the named ambient
 radical quotient. -/
-instance radicalQuotient_commGroupInstance : CommGroup D.RadicalQuotient := by
+instance radicalQuotientCommGroupInstance : CommGroup D.RadicalQuotient := by
   change CommGroup (D.carrier ⧸ D.ambientNthPowersSubgroup)
   infer_instance
 

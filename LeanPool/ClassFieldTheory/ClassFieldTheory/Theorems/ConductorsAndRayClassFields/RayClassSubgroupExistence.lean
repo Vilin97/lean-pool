@@ -16,12 +16,13 @@ uses ideal classes; the proof transports the existing idelic reciprocity
 construction to that interface.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 
 noncomputable section
 
 namespace ClassFieldTheory
 
+open scoped Classical in
 /-- Every ray-class subgroup has a finite abelian class-field realization. -/
 theorem rayClassSubgroup_existence
     (K : Type) [Field K] [NumberField K]

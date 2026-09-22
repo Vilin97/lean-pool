@@ -82,7 +82,7 @@ instance extensionSubgroup_normalInstance (L : FiniteGaloisSubextension K) :
 
 /-- The group structure transported across the named finite quotient
 boundary. -/
-instance extensionQuotient_groupInstance (L : FiniteGaloisSubextension K) :
+instance extensionQuotientGroupInstance (L : FiniteGaloisSubextension K) :
     Group L.extensionQuotient := by
   change Group
     (K.toSubgroup ⧸ extensionSubgroup K L.field L.below)

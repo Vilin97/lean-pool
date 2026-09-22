@@ -535,7 +535,7 @@ noncomputable def lowerNormResidueMap
     T.lowerBase T.lowerTop T.lowerTop_le_lowerBase
 
 /-- Forgetting continuity recovers the lower algebraic norm-residue map. -/
-@[simp] theorem lowerNormResidueMap_toMonoidHom
+theorem lowerNormResidueMap_toMonoidHom
     (T : LocalFixedFieldNormRestrictionSquare k) :
     letI : FiniteDimensional k
         (abstractFixedField k (SeparableClosure k) T.lowerBase) :=
@@ -574,7 +574,7 @@ noncomputable def upperNormResidueMap
     T.upperBase T.upperTop T.upperTop_le_upperBase
 
 /-- Forgetting continuity recovers the upper algebraic norm-residue map. -/
-@[simp] theorem upperNormResidueMap_toMonoidHom
+theorem upperNormResidueMap_toMonoidHom
     (T : LocalFixedFieldNormRestrictionSquare k) :
     letI : FiniteDimensional k
         (abstractFixedField k (SeparableClosure k) T.upperBase) :=
@@ -620,7 +620,7 @@ noncomputable def normUnitsMap
     T.lowerBase T.upperBase T.upperBase_le_lowerBase
 
 /-- Forgetting continuity recovers the algebraic norm on units. -/
-@[simp] theorem normUnitsMap_toMonoidHom
+theorem normUnitsMap_toMonoidHom
     (T : LocalFixedFieldNormRestrictionSquare k) :
     letI : FiniteDimensional k
         (abstractFixedField k (SeparableClosure k) T.lowerBase) :=
@@ -659,7 +659,7 @@ noncomputable def abelianizedRestrictionMap
     T.upperBase_le_lowerBase T.upperTop_le_lowerTop
 
 /-- Forgetting continuity recovers algebraic abelianized restriction. -/
-@[simp] theorem abelianizedRestrictionMap_toMonoidHom
+theorem abelianizedRestrictionMap_toMonoidHom
     (T : LocalFixedFieldNormRestrictionSquare k) :
     (abelianizedRestrictionMap T).toMonoidHom =
       MonoidHom.toAdditive.symm (abelianizedRestriction T) := rfl
@@ -772,7 +772,7 @@ noncomputable def baseNormResidueMap
     (T.top_le_intermediate.trans T.intermediate_le_base)
 
 /-- Forgetting continuity recovers the total algebraic norm-residue map. -/
-@[simp] theorem baseNormResidueMap_toMonoidHom
+theorem baseNormResidueMap_toMonoidHom
     (T : LocalFixedFieldTransferTower k) :
     letI : FiniteDimensional k
         (abstractFixedField k (SeparableClosure k) T.base) :=
@@ -813,7 +813,7 @@ noncomputable def intermediateNormResidueMap
     T.intermediate T.top T.top_le_intermediate
 
 /-- Forgetting continuity recovers the intermediate norm-residue map. -/
-@[simp] theorem intermediateNormResidueMap_toMonoidHom
+theorem intermediateNormResidueMap_toMonoidHom
     (T : LocalFixedFieldTransferTower k) :
     letI : FiniteDimensional k
         (abstractFixedField k (SeparableClosure k) T.intermediate) :=
@@ -857,7 +857,7 @@ noncomputable def unitsInclusionMap
     T.base T.intermediate T.intermediate_le_base
 
 /-- Forgetting continuity recovers algebraic inclusion of fixed-field units. -/
-@[simp] theorem unitsInclusionMap_toMonoidHom
+theorem unitsInclusionMap_toMonoidHom
     (T : LocalFixedFieldTransferTower k) :
     letI : FiniteDimensional k
         (abstractFixedField k (SeparableClosure k) T.base) :=
@@ -891,7 +891,7 @@ noncomputable def abelianizedTransferMap
     T.top_le_intermediate T.intermediate_le_base
 
 /-- Forgetting continuity recovers algebraic abelianized transfer. -/
-@[simp] theorem abelianizedTransferMap_toMonoidHom
+theorem abelianizedTransferMap_toMonoidHom
     (T : LocalFixedFieldTransferTower k) :
     (abelianizedTransferMap T).toMonoidHom =
       MonoidHom.toAdditive.symm (abelianizedTransfer T) := rfl

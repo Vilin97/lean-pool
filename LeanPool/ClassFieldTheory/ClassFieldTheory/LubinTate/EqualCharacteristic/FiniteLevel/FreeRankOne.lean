@@ -11,7 +11,8 @@ import Mathlib.Algebra.Module.RingHom
 import Mathlib.Data.Fintype.EquivFin
 import Mathlib.LinearAlgebra.FreeModule.Basic
 /-!
-# The primitive-division-module equivalence: equal-characteristic division points are free of rank one
+# The primitive-division-module equivalence: equal-characteristic division points are free of
+  rank one
 
 For the standard equal-characteristic Lubin--Tate series, the points killed by
 the `(n + 1)`-st iterate form a free rank-one module over
@@ -43,7 +44,7 @@ structure equalCharacteristicLubinTateParameter
   coeff : Fin (n + 1) → F.residueField
 
 /-- A Lubin–Tate parameter evaluates to its finite coefficient function. -/
-instance equalCharacteristicLubinTateParameter_coeFun
+instance equalCharacteristicLubinTateParameterCoeFun
     (F : LocalField.{u, v} K) (n : ℕ) :
     CoeFun (equalCharacteristicLubinTateParameter F n)
       (fun _ => Fin (n + 1) → F.residueField) :=
@@ -253,7 +254,7 @@ def equalCharacteristicLubinTateTruncatedRing
 
 /-- The commutative ring structure on the named truncated coefficient
 ring. -/
-instance equalCharacteristicLubinTateTruncatedRing_commRing
+instance equalCharacteristicLubinTateTruncatedRingCommRing
     (F : LocalField.{u, v} K) (n : ℕ) :
     CommRing (equalCharacteristicLubinTateTruncatedRing F n) := by
   change CommRing
@@ -352,6 +353,7 @@ noncomputable local instance equalCharacteristicLubinTateTruncatedSelfSMul
       (equalCharacteristicLubinTateTruncatedRing F n) where
   smul := (· * ·)
 
+/-- The truncated Lubin–Tate coefficient ring acts on itself by multiplication. -/
 noncomputable local instance equalCharacteristicLubinTateTruncatedSelfModule
     (F : LocalField.{u, v} K) (n : ℕ) :
     Module (equalCharacteristicLubinTateTruncatedRing F n)
@@ -576,7 +578,8 @@ theorem equalCharacteristicLubinTatePrimitiveEvaluation_surjective
         rfl
     _ = x := ha
 
-/-- The public the primitive-division-module equivalence equivalence: at positive division level `n + 1`,
+/-- The public the primitive-division-module equivalence equivalence: at positive division level
+`n + 1`,
 evaluation at a primitive division point identifies `κ⟦T⟧/(T^(n+1))`
 with the entire division module. -/
 noncomputable def equalCharacteristicLubinTateFreeRankOneEquiv
@@ -605,7 +608,8 @@ theorem equalCharacteristicLubinTateFreeRankOneEquiv_apply_one
     equalCharacteristicLubinTatePrimitiveTorsionPoint F n
   exact one_smul _ _
 
-/-- In particular the division module of the primitive-division-module equivalence is genuinely free.  The
+/-- In particular the division module of the primitive-division-module equivalence is genuinely
+free.  The
 displayed linear equivalence above supplies its one-element basis. -/
 noncomputable instance equalCharacteristicLubinTateDivisionModuleFree
     (F : LocalField.{u, v} K)

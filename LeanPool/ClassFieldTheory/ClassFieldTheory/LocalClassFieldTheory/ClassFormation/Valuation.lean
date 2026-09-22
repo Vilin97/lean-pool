@@ -8,7 +8,8 @@ import Mathlib.FieldTheory.Galois.Basic
 import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.ValuationExactSequence
 import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.IdealQuotients
 import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.GaloisIntegerRing
-/-! Provides the public declarations in the `LocalClassFieldTheory.ClassFormation.Valuation` Lean module. -/
+/-! Provides the public declarations in the `LocalClassFieldTheory.ClassFormation.Valuation`
+  Lean module. -/
 
 namespace LocalClassFieldTheory
 

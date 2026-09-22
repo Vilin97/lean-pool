@@ -107,7 +107,7 @@ private theorem
 omit [NumberField K] [NumberField M] [NumberField N] in
 private theorem
     commonTopIntermediateTopIsGalois
-    [FiniteDimensional K N] [IsGalois K N] : IsGalois M N :=
+    [IsGalois K N] : IsGalois M N :=
   IsGalois.tower_top_of_isGalois K M N
 
 /-- The two base fixing subgroups obtained from one embedding of the common

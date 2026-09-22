@@ -14,13 +14,14 @@ The kernel in prime-to-modulus ideals is the product of the genuine ideal
 norm image and the principal ray-ideal subgroup.
 -/
 
-open scoped Classical NumberField IsMulCommutative
+open scoped NumberField IsMulCommutative
 open NumberField IsDedekindDomain
 
 noncomputable section
 
 namespace ClassFieldTheory
 
+open scoped Classical in
 /-- Before passing to ray classes, the Artin kernel is the product of the
 genuine ideal-norm subgroup and the principal ray-ideal subgroup. -/
 theorem rayClassIdealArtinKer_eq_normRange_sup_principal

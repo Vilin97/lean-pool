@@ -40,7 +40,7 @@ variable (F : ValuationTheory.DiscreteValuationField.CompleteDVF.{u, v} K)
 
 /-- The `(q - 1)`-st roots of unity in the valuation ring, where
 `q = #κ`. -/
-abbrev residueRootsOfUnityGroup [Finite F.residueField] :
+abbrev residueRootsOfUnityGroup :
     Subgroup F.valuationSubringˣ :=
   rootsOfUnity (Nat.card F.residueField - 1) F.valuationSubring
 

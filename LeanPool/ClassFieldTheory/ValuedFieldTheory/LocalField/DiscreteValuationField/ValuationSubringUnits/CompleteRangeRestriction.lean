@@ -43,14 +43,16 @@ F.ValueGroup) = F.valuation x`.
 -/
 @[simp]
 theorem mrangeRestrict_apply (F : CompleteDVF.{u, v} K) (x : K) :
-    ((LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F) x : F.ValueGroup) = F.valuation x :=
+    ((LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F) x : F.ValueGroup) =
+      F.valuation x :=
   rfl
 
 /-- The residue field remains finite after restricting the value group to the
 actual multiplicative range. -/
 theorem mrangeRestrict_residueField_finite
     (F : CompleteDVF.{u, v} K) [Finite F.residueField] :
-    Finite (IsLocalRing.ResidueField (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F).valuationSubring) :=
+    Finite (IsLocalRing.ResidueField
+      (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F).valuationSubring) :=
   Finite.of_equiv F.residueField
     (WithZeroValuation.residueFieldEquivMrangeRestrict
       F.valuation).toEquiv
@@ -61,12 +63,15 @@ is preserved by that identification. -/
 theorem mrangeRestrict_isAdicComplete
     (F : CompleteDVF.{u, v} K) :
     IsAdicComplete
-      (IsLocalRing.maximalIdeal (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F).valuationSubring)
+      (IsLocalRing.maximalIdeal
+        (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F).valuationSubring)
       (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F).valuationSubring := by
-  let e : F.valuationSubring ≃+* (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F).valuationSubring :=
+  let e : F.valuationSubring ≃+*
+    (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F).valuationSubring :=
     WithZeroValuation.valuationSubringEquivMrangeRestrict
       F.valuation
-  let : Algebra F.valuationSubring (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F).valuationSubring :=
+  let : Algebra F.valuationSubring
+    (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F).valuationSubring :=
     e.toRingHom.toAlgebra
   let eLin :
       F.valuationSubring ≃ₗ[F.valuationSubring]
@@ -80,13 +85,15 @@ theorem mrangeRestrict_isAdicComplete
         intro a x
         change e (a * x) =
           (algebraMap F.valuationSubring
-            (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F).valuationSubring a) * e x
+            (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict
+              F).valuationSubring a) * e x
         simp [RingHom.algebraMap_toAlgebra] }
   have hcompleteBase : IsAdicComplete F.maximalIdeal F.valuationSubring :=
     F.isAdicComplete
   let : IsAdicComplete F.maximalIdeal F.valuationSubring := hcompleteBase
   have hcompleteAsBase :
-      IsAdicComplete F.maximalIdeal (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F).valuationSubring :=
+      IsAdicComplete F.maximalIdeal
+        (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F).valuationSubring :=
     isAdicComplete_of_linearEquiv
       (M := F.valuationSubring)
       (N := (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F).valuationSubring)
@@ -94,19 +101,27 @@ theorem mrangeRestrict_isAdicComplete
   have hcompleteMap :
       IsAdicComplete
         (F.maximalIdeal.map
-          (algebraMap F.valuationSubring (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F).valuationSubring))
+          (algebraMap F.valuationSubring
+            (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict
+            F).valuationSubring))
         (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F).valuationSubring :=
     (isAdicComplete_map_algebraMap_iff
       (I := F.maximalIdeal)
-      (S := (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F).valuationSubring)).2 hcompleteAsBase
+      (S := (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict
+        F).valuationSubring)).2 hcompleteAsBase
   have hmap :
       F.maximalIdeal.map
-          (algebraMap F.valuationSubring (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F).valuationSubring) =
-        IsLocalRing.maximalIdeal (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F).valuationSubring := by
+          (algebraMap F.valuationSubring
+            (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict
+            F).valuationSubring) =
+        IsLocalRing.maximalIdeal
+          (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict
+          F).valuationSubring := by
     change
       F.maximalIdeal.map
           (e : F.valuationSubring →+*
-            (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F).valuationSubring) =
+            (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict
+              F).valuationSubring) =
         IsLocalRing.maximalIdeal
           (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F).valuationSubring
     exact IsLocalRing.map_ringEquiv_maximalIdeal e
@@ -238,7 +253,7 @@ theorem mrangeRestrict_isRankOneDiscrete
 /-- The range-restricted valuation is rank one as a valuation into its actual
 value group. -/
 @[implicit_reducible]
-noncomputable def mrangeRestrict_rankOne
+noncomputable def mrangeRestrictRankOne
     (F : CompleteDVF.{u, v} K) :
     (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F).RankOne := by
   haveI : (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F).IsNontrivial :=
@@ -247,7 +262,8 @@ noncomputable def mrangeRestrict_rankOne
       IsCyclic
         (MonoidHom.mrange F.valuation.toMonoidWithZeroHom)ˣ :=
     (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_units_isCyclic F)
-  exact WithZeroValuation.rankOneOfUnitsIsCyclic (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F)
+  exact WithZeroValuation.rankOneOfUnitsIsCyclic
+    (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F)
 
 end CompleteDVF
 end LocalFieldTheory.DiscreteValuationField

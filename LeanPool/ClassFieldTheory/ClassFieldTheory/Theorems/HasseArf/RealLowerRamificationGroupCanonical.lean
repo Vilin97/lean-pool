@@ -26,11 +26,11 @@ universe u v
 decreasing filtration of its canonical decomposition group. -/
 theorem realLowerRamificationGroup_canonical_antitone
     (K : Type u) (L : Type v) [Field K] [Field L] [Algebra K L]
-    [FiniteDimensional K L] [IsAbelianGalois K L]
+
     [ValuativeRel K] [TopologicalSpace K]
-    [IsNonarchimedeanLocalField K]
+
     [ValuativeRel L] [TopologicalSpace L]
-    [IsNonarchimedeanLocalField L]
+
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)] :
     Antitone (ClassFieldTheory.realLowerRamificationGroup K
       (ValuativeRel.valuation L).valuationSubring) := by

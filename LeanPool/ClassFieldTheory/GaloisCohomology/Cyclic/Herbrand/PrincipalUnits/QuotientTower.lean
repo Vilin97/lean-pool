@@ -8,7 +8,8 @@ import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.HerbrandLowDeg
 import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.PrincipalUnits.QuotientReps
 import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.GaloisIntegerRing
 import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.IdealQuotients
-/-! Provides the public declarations in the `CyclicCohomology.Herbrand.PrincipalUnits.QuotientTower` Lean module. -/
+/-! Provides the public declarations in the
+  `CyclicCohomology.Herbrand.PrincipalUnits.QuotientTower` Lean module. -/
 
 namespace CyclicCohomology
 
@@ -550,7 +551,7 @@ theorem integerUnitsModPrincipalUnitsAtLevel_herbrandQuotient_eq_one_of_isNonarc
     [TopologicalSpace L] [IsNonarchimedeanLocalField L] [Algebra K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L]
-    [Fintype (Gal(L/K))] (n : Nat) (σ : Gal(L / K))
+    [Fintype (Gal(L/K))] (n : Nat) (σ : Gal(L/K))
     (hgen : ∀ g : Gal(L / K), g ∈ Subgroup.zpowers σ) :
     letI := galoisGroupIntegerUnitsModPrincipalUnitsMulDistribMulActionOfIsIntegralClosure K L n
     letI : Finite (IntegerUnitsModPrincipalUnitsAtLevel L n) :=

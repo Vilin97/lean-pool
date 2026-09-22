@@ -46,7 +46,7 @@ local instance
 /-- `Abelianization` is an opaque quotient alias, so install its native
 quotient topology explicitly before asking for topological properties. -/
 local instance
-    topologicalGlobalNormResidueAbelianization_galoisAbelianizationTopology :
+    topologicalGlobalNormResidueAbelianizationGaloisAbelianizationTopology :
     TopologicalSpace (Abelianization (Gal(L / K))) := by
   change
     TopologicalSpace

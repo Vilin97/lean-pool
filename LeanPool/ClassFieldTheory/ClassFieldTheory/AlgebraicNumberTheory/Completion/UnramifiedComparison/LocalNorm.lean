@@ -13,7 +13,7 @@ This file proves that the concrete adic integer units lie in the actual local
 norm subgroup of the chosen localized completion.
 -/
 
-open scoped NumberField Classical NNReal ValuativeRel
+open scoped NumberField NNReal ValuativeRel
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -29,6 +29,7 @@ variable
     [Field L] [Algebra K L]
     [FiniteDimensional K L] [IsGalois K L]
 
+open scoped Classical in
 /-- At a chosen finite place which is unramified in `L`, every concrete
 adic integer unit is an actual norm from the chosen localization. -/
 theorem adicCompletionIntegerUnits_le_chosenFinitePlaceLocalNormSubgroup

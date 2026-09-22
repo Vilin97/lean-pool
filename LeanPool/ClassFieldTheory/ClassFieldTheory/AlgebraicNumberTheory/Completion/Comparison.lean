@@ -20,8 +20,7 @@ absolute-value completion and mathlib's concrete adic completion gives the
 local factor comparison used in the adelic restricted-product bridge.
 -/
 
-open scoped NumberField Classical
-open NumberField IsDedekindDomain
+open scoped NumberField open NumberField IsDedekindDomain
 
 noncomputable section
 
@@ -36,6 +35,7 @@ variable
     [FiniteDimensional K L]
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 /-- The standard absolute value at the centre of an exact extension has
 the same valuation subring as that exact extension. -/
 theorem finitePlaceExtension_adicAbv_valuationSubring
@@ -75,6 +75,7 @@ theorem finitePlaceExtension_adicAbv_valuationSubring
           (K := K) (L := L) v w))
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 /-- The exact extension and the standard absolute value at its centre are
 equivalent absolute values. -/
 theorem finitePlaceExtension_isEquiv_adicAbv
@@ -150,6 +151,7 @@ theorem finitePlaceExtension_isEquiv_adicAbv
           (finitePlaceExtensionCentre
             (K := K) (L := L) v w)).pos hx)
 
+open scoped Classical in
 /-- The positive exponent relating an exact extension to the standard
 absolute value at its centre. -/
 noncomputable def finitePlaceExtensionExponent
@@ -161,6 +163,7 @@ noncomputable def finitePlaceExtensionExponent
       (K := K) (L := L) v w)).choose
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 theorem finitePlaceExtensionExponent_pos
     (v : HeightOneSpectrum (𝓞 K))
     (w : AbsoluteValueExtension
@@ -172,6 +175,7 @@ theorem finitePlaceExtensionExponent_pos
       (K := K) (L := L) v w)).choose_spec.1
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 theorem finitePlaceExtension_adicAbv_eq_rpow
     (v : HeightOneSpectrum (𝓞 K))
     (w : AbsoluteValueExtension
@@ -187,6 +191,7 @@ theorem finitePlaceExtension_adicAbv_eq_rpow
       (finitePlaceExtension_isEquiv_adicAbv
         (K := K) (L := L) v w)).choose_spec.2 x).symm
 
+open scoped Classical in
 /-- The identity on `L`, regarded as a ring equivalence between the two
 normed copies determined by the equivalent absolute values. -/
 noncomputable def finitePlaceExtensionWithAbsRingEquiv
@@ -205,6 +210,7 @@ noncomputable def finitePlaceExtensionWithAbsRingEquiv
     (RingEquiv.refl L)
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 theorem finitePlaceExtensionWithAbsRingEquiv_continuous
     (v : HeightOneSpectrum (𝓞 K))
     (w : AbsoluteValueExtension
@@ -217,6 +223,7 @@ theorem finitePlaceExtensionWithAbsRingEquiv_continuous
       (K := K) (L := L) v w) |>.continuous
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 theorem finitePlaceExtensionWithAbsRingEquiv_symm_continuous
     (v : HeightOneSpectrum (𝓞 K))
     (w : AbsoluteValueExtension
@@ -231,6 +238,7 @@ theorem finitePlaceExtensionWithAbsRingEquiv_symm_continuous
       (finitePlaceExtension_isEquiv_adicAbv
         (K := K) (L := L) v w).symm).continuous
 
+open scoped Classical in
 /-- The completion comparison induced by the identity on `L`. -/
 noncomputable def finitePlaceExtensionCompletionRingEquiv
     (v : HeightOneSpectrum (𝓞 K))
@@ -249,7 +257,7 @@ noncomputable def finitePlaceExtensionCompletionRingEquiv
       (K := K) (L := L) v w)
 
 omit [FiniteDimensional K L] in
-@[simp]
+open scoped Classical in
 theorem finitePlaceExtensionCompletionRingEquiv_toCompletion
     (v : HeightOneSpectrum (𝓞 K))
     (w : AbsoluteValueExtension
@@ -280,6 +288,7 @@ theorem finitePlaceExtensionCompletionRingEquiv_toCompletion
   rfl
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 /-- The completion comparison is continuous. -/
 theorem finitePlaceExtensionCompletionRingEquiv_continuous
     (v : HeightOneSpectrum (𝓞 K))
@@ -291,6 +300,7 @@ theorem finitePlaceExtensionCompletionRingEquiv_continuous
   UniformSpace.Completion.continuous_map
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 /-- The norm on the standard completion is the positive power of the
 norm on the exact-extension completion. -/
 theorem finitePlaceExtensionCompletionRingEquiv_norm
@@ -332,6 +342,7 @@ theorem finitePlaceExtensionCompletionRingEquiv_norm
     exact finitePlaceExtension_adicAbv_eq_rpow
       (K := K) (L := L) v w (WithAbs.equiv w.1 a)
 
+open scoped Classical in
 /-- The existing comparison from the standard absolute-value completion
 to the concrete adic completion is an isometry. -/
 theorem relativeFinitePlaceCompletionRingEquiv_norm
@@ -343,6 +354,7 @@ theorem relativeFinitePlaceCompletionRingEquiv_norm
     (relativeFinitePlaceCompletionRingHom_isometry W).norm_map_of_map_zero
       (map_zero (relativeFinitePlaceCompletionRingHom W)) x
 
+open scoped Classical in
 /-- The local factor comparison from an exact-extension completion to
 the concrete completion at its centre. -/
 noncomputable def finitePlaceExtensionAdicCompletionRingEquiv
@@ -359,6 +371,7 @@ noncomputable def finitePlaceExtensionAdicCompletionRingEquiv
         (K := K) (L := L) v w))
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 theorem finitePlaceExtensionAdicCompletionRingEquiv_norm
     (v : HeightOneSpectrum (𝓞 K))
     (w : AbsoluteValueExtension
@@ -374,7 +387,7 @@ theorem finitePlaceExtensionAdicCompletionRingEquiv_norm
     finitePlaceExtensionCompletionRingEquiv_norm]
 
 omit [FiniteDimensional K L] in
-@[simp]
+open scoped Classical in
 theorem finitePlaceExtensionAdicCompletionRingEquiv_toCompletion
     (v : HeightOneSpectrum (𝓞 K))
     (w : AbsoluteValueExtension
@@ -408,6 +421,7 @@ theorem finitePlaceExtensionAdicCompletionRingEquiv_toCompletion
   rfl
 
 omit [FiniteDimensional K L] in
+open scoped Classical in
 /-- The local factor comparison identifies the valuation ring in the
 exact-extension completion with the concrete adic integers. -/
 theorem finitePlaceExtensionAdicCompletionRingEquiv_mem_integers_iff

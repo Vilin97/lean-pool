@@ -19,7 +19,7 @@ This file combines the supported local index, principal-ideles exact sequence,
 and norm containment to prove the prime-power Kummer norm-index theorem.
 -/
 
-open scoped NumberField Classical NNReal ValuativeRel TensorProduct
+open scoped NumberField NNReal ValuativeRel TensorProduct
 open NumberField IsDedekindDomain
 open AlgebraicNumberTheory.Valuations
 open KummerTheory
@@ -32,6 +32,7 @@ namespace GlobalClassFieldTheory.ClassFieldAxiom
 
 variable {K : Type} [Field K] [NumberField K]
 
+open scoped Classical in
 /-- The actual exact-sequence product after evaluating the middle local
 power quotient as `n^(2s)`. -/
 theorem card_sUnitPrincipalQuotient_mul_card_ideleClassQuotient_eq_power_two_totalPlaceCard
@@ -65,6 +66,7 @@ theorem card_sUnitPrincipalQuotient_mul_card_ideleClassQuotient_eq_power_two_tot
     card_supportedIdeleQuotient_eq_power_two_totalPlaceCard
       (K := K) n hmu S T hS]
 
+open scoped Classical in
 /-- The class-quotient calculation for the Kummer-selected prime set.
 The localization equality identifies the left term of the exact sequence
 with the canonical `n`-th-power quotient of the `(S' ∪ T)`-unit group;
@@ -311,6 +313,7 @@ theorem
     _ = Module.finrank K E :=
       IsGalois.card_aut_eq_finrank K E
 
+open scoped Classical in
 /-- Separable-closure realization of the norm-index calculation for a
 prime-power Kummer extension presented as an intermediate field.  This
 form is useful when the extension is already constructed inside a fixed
@@ -470,6 +473,7 @@ theorem
       (K := K) (L := E) sigma hsigma
   exact le_antisymm hUpper hLower
 
+open scoped Classical in
 /-- The norm subgroup has index `[E : K]` for an arbitrary prime-power
 Kummer extension.  The proof realizes `E` as its field range in a fixed
 separable closure, applies the intermediate-field calculation there,

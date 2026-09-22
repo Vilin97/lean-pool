@@ -14,7 +14,7 @@ reuse the named data provider without rebuilding the generic reciprocity
 composite.
 -/
 
-open scoped Classical IsMulCommutative NumberField
+open scoped IsMulCommutative NumberField
 
 noncomputable section
 
@@ -23,18 +23,23 @@ namespace GlobalClassFields
 
 open Reciprocity
 
+open scoped Classical in
 /-- The shared commutativity provider used by the Hilbert reciprocity leaves. -/
 theorem hilbertClassFieldReciprocityIdeleClassGroupIsMulCommutative
     {F : Type} [Field F] [NumberField F] :
     IsMulCommutative (IdeleClassGroup F) :=
   ⟨⟨fun a b => mul_comm a b⟩⟩
 
+open scoped Classical in
 local instance
     hilbertClassFieldReciprocityIdeleClassGroupIsMulCommutativeLocal
     {F : Type} [Field F] [NumberField F] :
     IsMulCommutative (IdeleClassGroup F) :=
   hilbertClassFieldReciprocityIdeleClassGroupIsMulCommutative
 
+attribute [local instance] hilbertClassFieldReciprocityIdeleClassGroupIsMulCommutativeLocal
+
+open scoped Classical in
 /-- Inverse norm-residue evaluation transported through a subgroup equality
 and then through an arbitrary multiplicative equivalence. -/
 theorem hilbertClassFieldQuotientTransport_inverse_apply_with
@@ -59,6 +64,7 @@ theorem hilbertClassFieldQuotientTransport_inverse_apply_with
     _ = QuotientGroup.mk' H c :=
       QuotientGroup.quotientMulEquivOfEq_mk h c
 
+open scoped Classical in
 /-- Global reciprocity followed by subgroup-equality transport and a chosen
 quotient equivalence. -/
 noncomputable def hilbertClassFieldGlobalReciprocityTransportEquiv
@@ -75,6 +81,7 @@ noncomputable def hilbertClassFieldGlobalReciprocityTransportEquiv
       (globalReciprocityEquiv F E)).trans
     ((QuotientGroup.quotientMulEquivOfEq h).trans f)
 
+open scoped Classical in
 /-- Evaluation of the shared transported reciprocity equivalence on the
 global norm-residue symbol. -/
 theorem hilbertClassFieldGlobalReciprocityTransport_globalNormResidue
@@ -122,6 +129,7 @@ theorem hilbertClassFieldGlobalReciprocityTransport_globalNormResidue
         ((_root_.ideleClassNorm F E).range) H
         (globalNormResidueEquiv F E) h f c
 
+open scoped Classical in
 /-- The transported equivalence and its evaluation theorem, packaged once for
 all four Hilbert class-field specializations. -/
 noncomputable def hilbertClassFieldGlobalReciprocityTransportData

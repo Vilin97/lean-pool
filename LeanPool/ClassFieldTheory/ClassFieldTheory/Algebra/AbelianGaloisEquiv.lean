@@ -66,7 +66,7 @@ theorem isAbelianGalois_of_equiv_equiv
 
 /-- Compatible equivalences of field extensions identify their Galois
 automorphisms by conjugation. -/
-noncomputable def galEquiv_of_equiv_equiv
+noncomputable def galEquivOfEquivEquiv
     {K L M N : Type*}
     [Field K] [Field L] [Algebra K L]
     [Field M] [Field N] [Algebra M N]

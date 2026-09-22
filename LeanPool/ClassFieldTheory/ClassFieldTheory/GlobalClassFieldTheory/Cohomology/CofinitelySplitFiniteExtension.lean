@@ -19,8 +19,7 @@ modules; this file contains only the global class-field-theoretic
 conclusion.
 -/
 
-open scoped NumberField Classical
-open NumberField IsDedekindDomain
+open scoped NumberField open NumberField IsDedekindDomain
 
 noncomputable section
 
@@ -32,6 +31,7 @@ variable
     [Field K] [NumberField K]
     [Field L] [NumberField L] [Algebra K L]
 
+open scoped Classical in
 /-- If all but finitely many finite places of `K` split completely in
 the finite extension `L / K`, then the extension has degree one.
 
@@ -120,6 +120,7 @@ theorem finrank_eq_one_of_finite_nonSplittingPlaces
     Module.finrank_pos
   omega
 
+open scoped Classical in
 /-- Algebra-equivalence form of the degree-one conclusion, expressing
 that `L` is the base field without identifying the two Lean types
 definitionally. -/

@@ -16,7 +16,7 @@ idèle-class subgroup. Norm-range and reciprocity statements live in later
 leaves so their elaboration environments do not remain resident here.
 -/
 
-open scoped Classical IsMulCommutative NumberField
+open scoped IsMulCommutative NumberField
 
 noncomputable section
 
@@ -27,6 +27,7 @@ open Reciprocity
 
 variable {K : Type} [Field K] [NumberField K]
 
+open scoped Classical in
 /-- The concrete finite Galois norm neighbourhood used to construct
 the class field of `H`. -/
 noncomputable abbrev closedFiniteIndexClassFieldNormAmbient
@@ -35,6 +36,7 @@ noncomputable abbrev closedFiniteIndexClassFieldNormAmbient
     [H.FiniteIndex] : Type :=
   closedFiniteIndexNormAmbient (K := K) H hclosed
 
+open scoped Classical in
 /-- The named norm-neighbourhood containment used by the selected
 ordinary class-field construction. -/
 theorem closedFiniteIndexClassFieldNormAmbient_normRange_le
@@ -48,6 +50,7 @@ theorem closedFiniteIndexClassFieldNormAmbient_normRange_le
     (closedFiniteIndexSubgroup_has_finiteGaloisNormNeighborhood
       (K := K) H hclosed)
 
+open scoped Classical in
 /-- The compatible abstract base subgroup used by the selected class
 field of `H`. -/
 noncomputable abbrev closedFiniteIndexClassFieldBaseSubgroup
@@ -58,6 +61,7 @@ noncomputable abbrev closedFiniteIndexClassFieldBaseSubgroup
     (closedFiniteIndexClassFieldNormAmbient
       (K := K) H hclosed)
 
+open scoped Classical in
 /-- A reducible finite-abstract-field package whose field projection is
 definitionally the selected base subgroup.  Keeping this presentation
 transparent avoids dependent quotient transports through the opaque tower
@@ -73,6 +77,7 @@ noncomputable abbrev
     (closedFiniteIndexClassFieldNormAmbient
       (K := K) H hclosed)
 
+open scoped Classical in
 /-- The finite abelian subextension selected by a closed finite-index
 idèle-class subgroup. -/
 noncomputable abbrev closedFiniteIndexClassFieldSubextension
@@ -88,6 +93,7 @@ noncomputable abbrev closedFiniteIndexClassFieldSubextension
     (closedFiniteIndexClassFieldNormAmbient_normRange_le
       (K := K) H hclosed)
 
+open scoped Classical in
 /-- The canonical fixed-field copy of the original number field used
 by the selected class field of `H`. -/
 noncomputable abbrev closedFiniteIndexClassFieldBase
@@ -98,6 +104,7 @@ noncomputable abbrev closedFiniteIndexClassFieldBase
     (closedFiniteIndexClassFieldNormAmbient
       (K := K) H hclosed)
 
+open scoped Classical in
 /-- The actual finite abelian class field selected by `H`. -/
 noncomputable abbrev closedFiniteIndexClassField
     (H : Subgroup (IdeleClassGroup K))
@@ -109,6 +116,7 @@ noncomputable abbrev closedFiniteIndexClassField
     (closedFiniteIndexClassFieldNormAmbient_normRange_le
       (K := K) H hclosed)
 
+open scoped Classical in
 /-- The canonical equivalence from the original number field to the
 fixed-field base of its selected class field. -/
 noncomputable abbrev closedFiniteIndexClassFieldBaseEquiv

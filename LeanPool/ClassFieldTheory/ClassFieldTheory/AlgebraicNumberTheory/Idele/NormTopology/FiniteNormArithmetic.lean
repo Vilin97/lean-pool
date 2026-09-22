@@ -166,7 +166,7 @@ theorem finiteComponentOrder_norm
     let hvK : vK.IsNontrivial :=
       RayClass.adicAbv_isNontrivial v₀
     letI :=
-      completionTensorDecomposition_extensionFintype
+      completionTensorDecompositionExtensionFintype
         (K := K) (L := L) vK hvK
     let eAbove :=
       finitePlaceExtensionEquivAbove
@@ -193,7 +193,7 @@ theorem finiteComponentOrder_norm
   let hvK : vK.IsNontrivial :=
     RayClass.adicAbv_isNontrivial v₀
   let :=
-    completionTensorDecomposition_extensionFintype
+    completionTensorDecompositionExtensionFintype
       (K := K) (L := L) vK hvK
   let eAbove :=
     finitePlaceExtensionEquivAbove
@@ -284,7 +284,7 @@ theorem finiteAbsoluteNorm_norm
       let hvK : vK.IsNontrivial :=
         RayClass.adicAbv_isNontrivial v₀
       let :=
-        completionTensorDecomposition_extensionFintype
+        completionTensorDecompositionExtensionFintype
           (K := K) (L := L) vK hvK
       let eAbove :=
         finitePlaceExtensionEquivAbove

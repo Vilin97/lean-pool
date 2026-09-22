@@ -54,11 +54,11 @@ theorem completionTensorNormDecomposition_canonical
                   Algebra.norm vK.Completion (e z w) := by
   classical
   refine ⟨
-    AlgebraicNumberTheory.Valuations.completionTensorDecomposition_extensionFintype
+    AlgebraicNumberTheory.Valuations.completionTensorDecompositionExtensionFintype
       (K := K) (L := L) vK hvK,
     (fun w => AbsoluteValue.completionAlgebra vK w.1 w.2),
     (fun w => AlgebraicNumberTheory.Valuations.completionModuleFinite vK hvK w),
-    AlgebraicNumberTheory.Valuations.completionTensorDecomposition_left
+    AlgebraicNumberTheory.Valuations.completionTensorDecompositionLeft
       (K := K) (L := L) vK hvK,
     ?_, ?_⟩
   · intro b a w

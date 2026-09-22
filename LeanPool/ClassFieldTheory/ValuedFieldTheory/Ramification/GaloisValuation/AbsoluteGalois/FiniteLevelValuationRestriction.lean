@@ -123,7 +123,7 @@ def restrictIntermediateField
   rfl
 
 /-- States the theorem `mem_restrictIntermediateField_iff`. -/
-@[simp] theorem mem_restrictIntermediateField_iff
+theorem mem_restrictIntermediateField_iff
     (A : ValuationSubring Ω) (E : IntermediateField K Ω) (x : E) :
     x ∈ (restrictIntermediateField A E) ↔ (x : Ω) ∈ A :=
   Iff.rfl

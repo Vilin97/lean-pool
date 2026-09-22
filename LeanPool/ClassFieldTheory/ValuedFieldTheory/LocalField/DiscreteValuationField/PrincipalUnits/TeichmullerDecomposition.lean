@@ -558,7 +558,7 @@ Multiplicative.toAdd z.2`.
 
 /-- Group-isomorphism form under the standard subgroup equality hypothesis
 `V.zeroSubgroup = O^*`. -/
-noncomputable def fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_zeroSubgroup_eq_unitGroup
+noncomputable def fieldUnitsEquivRootsPrincipalUnitsUniformizerOfZeroSubgroupEqUnitGroup
     [Finite F.residueField]
     (V : MultiplicativeIntegerValuation Kˣ)
     (hzero : V.zeroSubgroup = F.valuation.valuationSubring.unitGroup)

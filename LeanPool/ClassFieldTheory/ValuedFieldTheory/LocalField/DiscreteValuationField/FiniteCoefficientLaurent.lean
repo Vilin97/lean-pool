@@ -16,7 +16,8 @@ import Mathlib.RingTheory.RingHom.Finite
 /-!
 # Coefficient-field descent for Laurent series
 
-This file starts the remaining equal-characteristic descent in the local-field structure classification: a finite coefficient field `k` of characteristic `p` gives a canonical
+This file starts the remaining equal-characteristic descent in the local-field structure
+  classification: a finite coefficient field `k` of characteristic `p` gives a canonical
 coefficientwise map from `F_p((X))` to `k((X))`.
 -/
 
@@ -197,7 +198,6 @@ theorem zmodLaurentCoeffMap_coeff (f : (ZMod p)⸨X⸩) (n : ℤ) :
 Establishes the identity `zmodLaurentCoeffMap p k (HahnSeries.C (Γ := ℤ) a : (ZMod p)⸨X⸩) =
 (HahnSeries.C (Γ := ℤ) ((ZMod.castHom (m := p) dvd_rfl k) a) : k⸨X⸩)`.
 -/
-@[simp]
 theorem zmodLaurentCoeffMap_C (a : ZMod p) :
     zmodLaurentCoeffMap p k (HahnSeries.C (Γ := ℤ) a : (ZMod p)⸨X⸩) =
       (HahnSeries.C (Γ := ℤ) ((ZMod.castHom (m := p) dvd_rfl k) a) :
@@ -237,7 +237,6 @@ theorem zmodLaurentCoeffMap_comp_powerSeries :
 Establishes the identity `zmodLaurentCoeffMap p k ((algebraMap (ZMod p)⟦X⟧ (ZMod p)⸨X⸩)
 (PowerSeries.X : (ZMod p)⟦X⟧)) = (algebraMap k⟦X⟧ k⸨X⸩) (PowerSeries.X : k⟦X⟧)`.
 -/
-@[simp]
 theorem zmodLaurentCoeffMap_powerSeries_X :
     zmodLaurentCoeffMap p k
         ((algebraMap (ZMod p)⟦X⟧ (ZMod p)⸨X⸩)

@@ -58,7 +58,6 @@ noncomputable def idealClassQuotientEquivNormQuotient
 
 /-- The ideal class-field equivalence sends a quotient representative to
 its ideal Artin image. -/
-@[simp]
 theorem idealClassQuotientEquivNormQuotient_mk
     (m : RayClass.Modulus K)
     (N : Subgroup (IdeleClassGroup K))
@@ -109,7 +108,6 @@ noncomputable def idealClassQuotientEquivGaloisGroup
 
 /-- On a representative ideal, the actual ideal class-field
 isomorphism evaluates to the genuine Galois-valued ideal Artin map. -/
-@[simp]
 theorem idealClassQuotientEquivGaloisGroup_mk
     (m : RayClass.Modulus K)
     (hm :

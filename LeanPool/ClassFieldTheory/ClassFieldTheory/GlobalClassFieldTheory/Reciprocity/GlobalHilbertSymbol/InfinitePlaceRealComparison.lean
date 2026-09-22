@@ -9,7 +9,7 @@ import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Recipro
 # Complete infinite-place Kummer root-character comparison
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 open NumberField
 
 noncomputable section
@@ -22,6 +22,7 @@ open KummerTheory
 variable (K : Type) [Field K] [NumberField K]
 
 omit [NumberField K] in
+open scoped Classical in
 /-- A global unit positive at a real place has trivial infinite-place Kummer
 root character. -/
 theorem infinitePlaceKummerRootCharacter_eq_one_of_real_of_left_pos
@@ -55,6 +56,7 @@ theorem infinitePlaceKummerRootCharacter_eq_one_of_real_of_left_pos
   rw [hArtin, map_one, map_one]
 
 omit [NumberField K] in
+open scoped Classical in
 /-- In the quadratic real case, positivity of the first argument gives the
 explicit local--global comparison. -/
 theorem infinitePlaceKummerRootCharacter_localGlobal_of_real_of_left_pos
@@ -74,6 +76,7 @@ theorem infinitePlaceKummerRootCharacter_localGlobal_of_real_of_left_pos
   apply Subtype.ext
   simp [infinitePlaceHilbertSymbol, hn, hv, haNotNeg]
 
+open scoped Classical in
 /-- Complete quadratic comparison at a real infinite place. -/
 theorem infinitePlaceKummerRootCharacter_localGlobal_of_real_of_two
     (n : ℕ+) (hnK : ((n : ℕ) : K) ≠ 0)
@@ -110,6 +113,7 @@ theorem infinitePlaceKummerRootCharacter_localGlobal_of_real_of_two
       infinitePlaceKummerRootCharacter_localGlobal_of_real_of_left_pos
         K n hnK hmu v a b hn hv haPos
 
+open scoped Classical in
 /-- At every infinite place, the actual infinite-place Artin root character
 equals the explicit Hilbert factor. -/
 theorem infinitePlaceKummerRootCharacter_localGlobal

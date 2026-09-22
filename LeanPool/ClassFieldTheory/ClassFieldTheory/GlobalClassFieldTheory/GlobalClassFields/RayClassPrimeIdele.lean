@@ -105,7 +105,6 @@ theorem idealRayProjection_finitePrimeIdele
 /-- The idèle-class/full-idèle ray-class equivalence evaluates on a
 double quotient representative by forgetting the intermediate
 principal-idèle quotient. -/
-@[simp]
 theorem rayClassGroupEquivIdeleQuotient_mk_mk
     (m : RayClass.Modulus K)
     (a : IdeleGroup K) :
@@ -127,7 +126,6 @@ theorem rayClassGroupEquivIdeleQuotient_mk_mk
 /-- The canonical idelic-to-ideal ray-class equivalence sends a
 prime-to-modulus idèle class to the ideal ray class of its fractional
 ideal. -/
-@[simp]
 theorem rayClassGroupEquivIdealRayClassGroup_mk_primeTo
     (m : RayClass.Modulus K)
     (a : RayClass.idelePrimeToModulusSubgroup m) :
@@ -166,7 +164,6 @@ variable {K : Type} [Field K] [NumberField K]
 prime-to-modulus idèle is its direct class in the idèle-class
 quotient.  This is the commuting square between the idelic and
 ideal-theoretic ray-class constructions. -/
-@[simp]
 theorem idealArtinMap_primeToIdealMap
     (m : RayClass.Modulus K)
     (N : Subgroup (IdeleClassGroup K))

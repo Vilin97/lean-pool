@@ -119,7 +119,6 @@ theorem padicCompletedLevelResidueFieldEquiv_apply
 
 /-- On integral representatives, the completed-level residue equivalence is
 the residue of the canonical valuation-ring inclusion. -/
-@[simp]
 theorem padicCompletedLevelResidueFieldEquiv_apply_residue
     (p : ℕ) [Fact p.Prime] (n : ℕ)
     (a : (padicCompletedUnramifiedCompleteDVF p).valuationSubring) :

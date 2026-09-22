@@ -26,8 +26,7 @@ This is the concrete power-congruence core used in the existence proof for
 global class fields.
 -/
 
-open scoped NumberField Classical
-
+open scoped NumberField
 noncomputable section
 
 namespace GlobalClassFieldTheory
@@ -38,6 +37,7 @@ open GlobalClassFieldTheory.ClassFieldAxiom
 
 variable {K : Type} [Field K] [NumberField K]
 
+open scoped Classical in
 /-- Let `n = [C_K : H]`.  If `S` contains the support of the canonical
 congruence subgroup lying in a closed finite-index subgroup `H`, then the
 idele-class power-congruence subgroup `C_K(n, S, ∅)` is contained in `H`.

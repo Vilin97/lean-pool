@@ -38,10 +38,10 @@ theorem henselFactorization_infiniteG_coeff_spanAdicCoeffCauchy_of_mem_span
     (hfactor0 : f - g0 * h0 = Polynomial.C π * f1)
     (hbezFactor : a * g0 + b * h0 - 1 = Polynomial.C π * e)
     (hmd : m ≤ d) (i : ℕ) :
-    henselFactorization_adicCoeffCauchy (Ideal.span ({π} : Set R))
+    henselFactorizationAdicCoeffCauchy (Ideal.span ({π} : Set R))
       (fun N : ℕ =>
-        (henselFactorization_henselIterate π g0
-          (henselFactorization_infinitePCorr_of_mem_span
+        (henselFactorizationHenselIterate π g0
+          (henselFactorizationInfinitePCorrOfMemSpan
             (π := π) hπne hπmem
             (f := f) (g0 := g0) (h0 := h0)
             (a := a) (b := b) (f1 := f1) (e := e)
@@ -52,8 +52,8 @@ theorem henselFactorization_infiniteG_coeff_spanAdicCoeffCauchy_of_mem_span
   exact henselFactorization_coeff_adicCoeffCauchy_of_sub_coeff_mem
     (Ideal.span ({π} : Set R))
     (Pseq := fun N : ℕ =>
-      henselFactorization_henselIterate π g0
-        (henselFactorization_infinitePCorr_of_mem_span
+      henselFactorizationHenselIterate π g0
+        (henselFactorizationInfinitePCorrOfMemSpan
           (π := π) hπne hπmem
           (f := f) (g0 := g0) (h0 := h0)
           (a := a) (b := b) (f1 := f1) (e := e)
@@ -65,7 +65,7 @@ theorem henselFactorization_infiniteG_coeff_spanAdicCoeffCauchy_of_mem_span
       intro M N hMN i
       exact henselFactorization_henselIterate_sub_coeff_mem_span_pow_of_le
         (π := π) g0
-        (henselFactorization_infinitePCorr_of_mem_span
+        (henselFactorizationInfinitePCorrOfMemSpan
           (π := π) hπne hπmem
           (f := f) (g0 := g0) (h0 := h0)
           (a := a) (b := b) (f1 := f1) (e := e)
@@ -95,8 +95,8 @@ theorem henselFactorization_exists_infiniteG_spanLimitPolynomial_of_mem_span
     (hmd : m ≤ d) :
     ∃ G : R[X], G.natDegree ≤ m ∧
       ∀ n i : ℕ,
-        (henselFactorization_henselIterate π g0
-            (henselFactorization_infinitePCorr_of_mem_span
+        (henselFactorizationHenselIterate π g0
+            (henselFactorizationInfinitePCorrOfMemSpan
               (π := π) hπne hπmem
               (f := f) (g0 := g0) (h0 := h0)
               (a := a) (b := b) (f1 := f1) (e := e)
@@ -109,8 +109,8 @@ theorem henselFactorization_exists_infiniteG_spanLimitPolynomial_of_mem_span
       (Ideal.span ({π} : Set R))
       (N := m)
       (Pseq := fun n : ℕ =>
-        henselFactorization_henselIterate π g0
-          (henselFactorization_infinitePCorr_of_mem_span
+        henselFactorizationHenselIterate π g0
+          (henselFactorizationInfinitePCorrOfMemSpan
             (π := π) hπne hπmem
             (f := f) (g0 := g0) (h0 := h0)
             (a := a) (b := b) (f1 := f1) (e := e)
@@ -151,10 +151,10 @@ theorem henselFactorization_infiniteH_coeff_spanAdicCoeffCauchy_of_mem_span
     (hfactor0 : f - g0 * h0 = Polynomial.C π * f1)
     (hbezFactor : a * g0 + b * h0 - 1 = Polynomial.C π * e)
     (hmd : m ≤ d) (i : ℕ) :
-    henselFactorization_adicCoeffCauchy (Ideal.span ({π} : Set R))
+    henselFactorizationAdicCoeffCauchy (Ideal.span ({π} : Set R))
       (fun N : ℕ =>
-        (henselFactorization_henselIterate π h0
-          (henselFactorization_infiniteQCorr_of_mem_span
+        (henselFactorizationHenselIterate π h0
+          (henselFactorizationInfiniteQCorrOfMemSpan
             (π := π) hπne hπmem
             (f := f) (g0 := g0) (h0 := h0)
             (a := a) (b := b) (f1 := f1) (e := e)
@@ -165,8 +165,8 @@ theorem henselFactorization_infiniteH_coeff_spanAdicCoeffCauchy_of_mem_span
   exact henselFactorization_coeff_adicCoeffCauchy_of_sub_coeff_mem
     (Ideal.span ({π} : Set R))
     (Pseq := fun N : ℕ =>
-      henselFactorization_henselIterate π h0
-        (henselFactorization_infiniteQCorr_of_mem_span
+      henselFactorizationHenselIterate π h0
+        (henselFactorizationInfiniteQCorrOfMemSpan
           (π := π) hπne hπmem
           (f := f) (g0 := g0) (h0 := h0)
           (a := a) (b := b) (f1 := f1) (e := e)
@@ -178,7 +178,7 @@ theorem henselFactorization_infiniteH_coeff_spanAdicCoeffCauchy_of_mem_span
       intro M N hMN i
       exact henselFactorization_henselIterate_sub_coeff_mem_span_pow_of_le
         (π := π) h0
-        (henselFactorization_infiniteQCorr_of_mem_span
+        (henselFactorizationInfiniteQCorrOfMemSpan
           (π := π) hπne hπmem
           (f := f) (g0 := g0) (h0 := h0)
           (a := a) (b := b) (f1 := f1) (e := e)
@@ -208,8 +208,8 @@ theorem henselFactorization_exists_infiniteH_spanLimitPolynomial_of_mem_span
     (hmd : m ≤ d) :
     ∃ H : R[X], H.natDegree ≤ d - m ∧
       ∀ n i : ℕ,
-        (henselFactorization_henselIterate π h0
-            (henselFactorization_infiniteQCorr_of_mem_span
+        (henselFactorizationHenselIterate π h0
+            (henselFactorizationInfiniteQCorrOfMemSpan
               (π := π) hπne hπmem
               (f := f) (g0 := g0) (h0 := h0)
               (a := a) (b := b) (f1 := f1) (e := e)
@@ -222,8 +222,8 @@ theorem henselFactorization_exists_infiniteH_spanLimitPolynomial_of_mem_span
       (Ideal.span ({π} : Set R))
       (N := d - m)
       (Pseq := fun n : ℕ =>
-        henselFactorization_henselIterate π h0
-          (henselFactorization_infiniteQCorr_of_mem_span
+        henselFactorizationHenselIterate π h0
+          (henselFactorizationInfiniteQCorrOfMemSpan
             (π := π) hπne hπmem
             (f := f) (g0 := g0) (h0 := h0)
             (a := a) (b := b) (f1 := f1) (e := e)
@@ -265,16 +265,16 @@ theorem henselFactorization_infiniteCorr_error_coeff_mem_span_pow_of_mem_span
     (hbezFactor : a * g0 + b * h0 - 1 = Polynomial.C π * e)
     (hmd : m ≤ d) :
     ∀ N i : ℕ,
-      (f - henselFactorization_henselIterate π g0
-            (henselFactorization_infinitePCorr_of_mem_span
+      (f - henselFactorizationHenselIterate π g0
+            (henselFactorizationInfinitePCorrOfMemSpan
               (π := π) hπne hπmem
               (f := f) (g0 := g0) (h0 := h0)
               (a := a) (b := b) (f1 := f1) (e := e)
               (gbar := gbar) (m := m) (d := d)
               hf hg0map hg0nat hgbar_nat hglead hh0deg
               hfactor0 hbezFactor hmd) N *
-          henselFactorization_henselIterate π h0
-            (henselFactorization_infiniteQCorr_of_mem_span
+          henselFactorizationHenselIterate π h0
+            (henselFactorizationInfiniteQCorrOfMemSpan
               (π := π) hπne hπmem
               (f := f) (g0 := g0) (h0 := h0)
               (a := a) (b := b) (f1 := f1) (e := e)
@@ -339,8 +339,8 @@ theorem henselFactorization_exists_limit_factorization_of_mem_span_principal
     apply henselFactorization_limit_factor_eq_of_approximants
       (I := I)
       (Gseq := fun n : ℕ =>
-        henselFactorization_henselIterate π g0
-          (henselFactorization_infinitePCorr_of_mem_span
+        henselFactorizationHenselIterate π g0
+          (henselFactorizationInfinitePCorrOfMemSpan
             (π := π) hπne hπmem
             (f := f) (g0 := g0) (h0 := h0)
             (a := a) (b := b) (f1 := f1) (e := e)
@@ -349,8 +349,8 @@ theorem henselFactorization_exists_limit_factorization_of_mem_span_principal
             hfactor0 hbezFactor hmd)
           n)
       (Hseq := fun n : ℕ =>
-        henselFactorization_henselIterate π h0
-          (henselFactorization_infiniteQCorr_of_mem_span
+        henselFactorizationHenselIterate π h0
+          (henselFactorizationInfiniteQCorrOfMemSpan
             (π := π) hπne hπmem
             (f := f) (g0 := g0) (h0 := h0)
             (a := a) (b := b) (f1 := f1) (e := e)
@@ -375,8 +375,8 @@ theorem henselFactorization_exists_limit_factorization_of_mem_span_principal
     henselFactorization_limit_reduction_of_approx_reduction
       (I := Ideal.span ({π} : Set R))
       (Pseq := fun n : ℕ =>
-        henselFactorization_henselIterate π g0
-          (henselFactorization_infinitePCorr_of_mem_span
+        henselFactorizationHenselIterate π g0
+          (henselFactorizationInfinitePCorrOfMemSpan
             (π := π) hπne hπmem
             (f := f) (g0 := g0) (h0 := h0)
             (a := a) (b := b) (f1 := f1) (e := e)
@@ -386,7 +386,7 @@ theorem henselFactorization_exists_limit_factorization_of_mem_span_principal
           n)
       (P := G) (P0 := g0) hGlim
       (henselFactorization_henselIterate_span_singleton g0
-        (henselFactorization_infinitePCorr_of_mem_span
+        (henselFactorizationInfinitePCorrOfMemSpan
           (π := π) hπne hπmem
           (f := f) (g0 := g0) (h0 := h0)
           (a := a) (b := b) (f1 := f1) (e := e)
@@ -397,8 +397,8 @@ theorem henselFactorization_exists_limit_factorization_of_mem_span_principal
     henselFactorization_limit_reduction_of_approx_reduction
       (I := Ideal.span ({π} : Set R))
       (Pseq := fun n : ℕ =>
-        henselFactorization_henselIterate π h0
-          (henselFactorization_infiniteQCorr_of_mem_span
+        henselFactorizationHenselIterate π h0
+          (henselFactorizationInfiniteQCorrOfMemSpan
             (π := π) hπne hπmem
             (f := f) (g0 := g0) (h0 := h0)
             (a := a) (b := b) (f1 := f1) (e := e)
@@ -408,7 +408,7 @@ theorem henselFactorization_exists_limit_factorization_of_mem_span_principal
           n)
       (P := H) (P0 := h0) hHlim
       (henselFactorization_henselIterate_span_singleton h0
-        (henselFactorization_infiniteQCorr_of_mem_span
+        (henselFactorizationInfiniteQCorrOfMemSpan
           (π := π) hπne hπmem
           (f := f) (g0 := g0) (h0 := h0)
           (a := a) (b := b) (f1 := f1) (e := e)

@@ -15,7 +15,7 @@ through actual finite cyclotomic levels then detects every finite
 coordinate of the rational cyclotomic `ZHat`-extension.
 -/
 
-open scoped Classical NumberField IsMulCommutative
+open scoped NumberField IsMulCommutative
 open NumberField ClassFormation
 
 noncomputable section
@@ -23,9 +23,13 @@ noncomputable section
 namespace GlobalClassFieldTheory
 namespace Reciprocity
 
-local instance (p : Nat.Primes) : Fact p.1.Prime :=
+open scoped Classical in
+local instance localPrimesInstance1 (p : Nat.Primes) : Fact p.1.Prime :=
   ⟨p.2⟩
 
+attribute [local instance] localPrimesInstance1
+
+open scoped Classical in
 /-- If all prime-power character reductions of the full cyclotomic
 global Artin symbol have square one, then the corresponding Artin symbol
 in the actual rational `ZHat`-extension has square one. -/
@@ -51,6 +55,7 @@ theorem
   rw [rationalCyclotomicZHatGlobalArtin_eq_fullRestriction]
   change (rationalCyclotomicFullRestrictionToZHat σ) ^ 2 = 1
   rw [← map_pow, hσ, map_one]
+open scoped Classical in
 /-- Prime-power square-one identities force the rational cyclotomic
 idele value itself to be trivial.  Torsion-freeness of `ZHat` removes
 the residual order-two ambiguity. -/

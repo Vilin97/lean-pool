@@ -422,7 +422,6 @@ theorem globalNormResidueMonoidHom_eq_maximalUnramifiedRestriction
 
 /-- An idele class has trivial global norm-residue symbol exactly when
 it is an actual idele-class norm from `L`. -/
-@[simp]
 theorem globalNormResidueMonoidHom_eq_one_iff
     (c : IdeleClassGroup K) :
     globalNormResidueMonoidHom K L c = 1 ↔

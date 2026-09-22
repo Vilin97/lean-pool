@@ -146,16 +146,22 @@ private theorem rationalFiniteTower_upper_le_rationalNormalClosure :
   (rationalFiniteTower_upper_le_normal K L hLK).trans
     (rationalFiniteTower_normal_le_rationalNormalClosure K L hLK)
 
+/-- The rational normal closure is an algebra over the lower field through the specified
+inclusion. -/
 local instance rationalFiniteTowerRationalNormalClosureLowerAlgebra :
     Algebra F₀ U₀ :=
   (IntermediateField.inclusion
     (rationalFiniteTower_lower_le_rationalNormalClosure K L hLK)).toRingHom.toAlgebra
 
+/-- The rational normal closure is an algebra over the upper field through the specified
+inclusion. -/
 local instance rationalFiniteTowerRationalNormalClosureUpperAlgebra :
     Algebra E₀ U₀ :=
   (IntermediateField.inclusion
     (rationalFiniteTower_upper_le_rationalNormalClosure K L hLK)).toRingHom.toAlgebra
 
+/-- The rational normal closure is an algebra over the intermediate normal closure through
+inclusion. -/
 local instance rationalFiniteTowerRationalNormalClosureNormalAlgebra :
     Algebra N₀ U₀ :=
   (IntermediateField.inclusion
@@ -216,6 +222,7 @@ local instance rationalFiniteTowerClosureOverLowerGalois : IsGalois F₀ U₀ :=
 local instance rationalFiniteTowerClosureOverNormalGalois : IsGalois N₀ U₀ :=
   IsGalois.tower_top_of_isGalois ℚ N₀ U₀
 
+/-- The quotient indexing embeddings in the rational finite tower has a finite enumeration. -/
 noncomputable local instance rationalFiniteTowerQuotientFintype : Fintype Q₀ :=
   Fintype.ofFinite Q₀
 

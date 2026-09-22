@@ -13,7 +13,7 @@ This leaf derives the degree of the selected class field from its exact
 idèle-class norm range.
 -/
 
-open scoped Classical IsMulCommutative NumberField
+open scoped IsMulCommutative NumberField
 
 noncomputable section
 
@@ -24,6 +24,7 @@ open Reciprocity
 
 variable {K : Type} [Field K] [NumberField K]
 
+open scoped Classical in
 /-- The degree of the selected class field over the original number
 field is the index of its defining idèle-class subgroup. -/
 theorem closedFiniteIndexClassField_finrank_eq_index

@@ -28,7 +28,8 @@ variable [Algebra.IsAlgebraic K L]
 /-- A separable ambient residue element is the residue of an actual root of
 a monic lift of its base minimal polynomial. -/
 theorem exists_integral_root_lifting_separable_residue_element
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     (hhens : ValuationTheory.DiscreteValuationField.HenselianValuationByFactorization
       (LubinTate.Valuations.exponentialValuationSubringAsValuationSubring v).valuation) :
@@ -185,7 +186,8 @@ theorem exists_integral_root_lifting_separable_residue_element
 /-- The lifted root generates a concrete finite unramified subextension whose
 residue image is the prescribed separable ambient residue element. -/
 theorem exists_finiteUnramifiedSubextension_residue_image_eq
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     (hhens : ValuationTheory.DiscreteValuationField.HenselianValuationByFactorization
       (LubinTate.Valuations.exponentialValuationSubringAsValuationSubring v).valuation) :
@@ -295,7 +297,8 @@ theorem exists_finiteUnramifiedSubextension_residue_image_eq
 element separable over the base occurs already in the residue field of the
 maximal unramified subextension. -/
 theorem separableClosure_le_maximalUnramifiedSubextension_residue_fieldRange
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     (hhens : ValuationTheory.DiscreteValuationField.HenselianValuationByFactorization
       (LubinTate.Valuations.exponentialValuationSubringAsValuationSubring v).valuation) :
@@ -354,7 +357,8 @@ theorem separableClosure_le_maximalUnramifiedSubextension_residue_fieldRange
 
 /-- Exact residue-field identity for the lifted unramified extension. -/
 theorem maximalUnramifiedSubextension_residue_fieldRange_eq_separableClosure
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     (hhens : ValuationTheory.DiscreteValuationField.HenselianValuationByFactorization
       (LubinTate.Valuations.exponentialValuationSubringAsValuationSubring v).valuation) :

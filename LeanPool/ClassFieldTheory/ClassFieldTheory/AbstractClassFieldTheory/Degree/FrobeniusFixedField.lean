@@ -71,7 +71,7 @@ private noncomputable def continuousMulEquivOfBijectiveCompactToT2
 subgroup. -/
 private theorem exists_openNormalSubgroup_not_mem
     {A : Type*} [Group A] [TopologicalSpace A] [IsTopologicalGroup A]
-    [CompactSpace A] [T2Space A] [TotallyDisconnectedSpace A]
+    [CompactSpace A] [TotallyDisconnectedSpace A]
     {x : A} (hx : x ≠ 1) :
     ∃ U : OpenNormalSubgroup A, x ∉ (U : Subgroup A) := by
   let W : Set A := ({x} : Set A)ᶜ
@@ -305,7 +305,8 @@ def frobeniusExponent (D : DegreeData G) (K : FiniteResidueAbstractField D) (L :
   Exists.choose σ.2
 
 /-- The Frobenius exponent attached to a finite extension is strictly positive. -/
-theorem frobeniusExponent_pos (D : DegreeData G) (K : FiniteResidueAbstractField D) (L : ClosedSubgroup G)
+theorem frobeniusExponent_pos (D : DegreeData G) (K : FiniteResidueAbstractField D) (L :
+  ClosedSubgroup G)
     (hLK : L.toSubgroup ≤ K.field.toSubgroup)
     [hLnormal : (extensionSubgroup K.field L hLK).Normal]
     (σ : D.FrobeniusElements K L hLK) :
@@ -365,7 +366,6 @@ theorem extensionNormalizedDegreeContinuous_apply (D : DegreeData G)
   rfl
 
 /-- Forgetting continuity recovers the underlying normalized-degree monoid homomorphism. -/
-@[simp]
 theorem extensionNormalizedDegreeContinuous_toMonoidHom (D : DegreeData G)
     (K : FiniteResidueAbstractField D) (L : ClosedSubgroup G)
     (hLK : L.toSubgroup ≤ K.field.toSubgroup)
@@ -442,7 +442,7 @@ theorem extensionDegreeKernelRestriction_injective (D : DegreeData G)
 
 /-- The extension's inertia subgroup is closed inside its base subgroup. -/
 theorem extensionInertiaWithin_isClosed (D : DegreeData G)
-    [IsTopologicalGroup G]
+
     (K : FiniteResidueAbstractField D) (L : ClosedSubgroup G)
     (hLK : L.toSubgroup ≤ K.field.toSubgroup) :
     IsClosed (D.extensionInertiaWithin K.field L hLK : Set K.field.toSubgroup) := by
@@ -495,7 +495,7 @@ instance frobeniusClosure_isTopologicalGroup
 
 /-- Defines `frobeniusClosureCommGroup`. -/
 @[reducible] def frobeniusClosureCommGroup
-    (D : DegreeData G) [IsTopologicalGroup G] [T2Space G]
+    (D : DegreeData G) [IsTopologicalGroup G]
     (K : FiniteResidueAbstractField D) (L : ClosedSubgroup G)
     (hLK : L.toSubgroup ≤ K.field.toSubgroup)
     [hLnormal : (extensionSubgroup K.field L hLK).Normal]
@@ -595,7 +595,7 @@ theorem frobeniusClosureDegree_generator (D : DegreeData G)
 `n = d_K(σ)`.  This is the group-dual residue-degree calculation in
 the Frobenius fixed-field residue-degree formula. -/
 theorem frobeniusClosureDegree_range (D : DegreeData G)
-    [IsTopologicalGroup G] [CompactSpace G] [T2Space G]
+    [IsTopologicalGroup G] [CompactSpace G]
     (K : FiniteResidueAbstractField D) (L : ClosedSubgroup G)
     (hLK : L.toSubgroup ≤ K.field.toSubgroup)
     [hLnormal : (extensionSubgroup K.field L hLK).Normal]
@@ -690,7 +690,8 @@ theorem frobeniusClosureDegree_range (D : DegreeData G)
       exact hz
     exact hzy ▸ hzmap
 
-/-- The Frobenius fixed-field residue-degree formula, stated as the index of the normalized degree image:
+/-- The Frobenius fixed-field residue-degree formula, stated as the index of the normalized
+degree image:
 the relative residue degree of the fixed field `Σ` over `K` is `d_K(σ)`. -/
 theorem frobeniusClosureDegree_range_index (D : DegreeData G)
     [IsTopologicalGroup G] [CompactSpace G] [T2Space G]
@@ -1053,7 +1054,7 @@ theorem frobeniusClosure_index_le_extensionIndex_of_exponent_eq_one
 /-- The procyclic degree isomorphism: `d_Σ` identifies `Γ` continuously with `ℤ̂`.
 On the field side its trivial kernel says exactly
 `\widetilde Σ = \widetilde L`. -/
-def frobeniusFixedField_normalizedDegreeEquiv (D : DegreeData G)
+def frobeniusFixedFieldNormalizedDegreeEquiv (D : DegreeData G)
     [IsTopologicalGroup G] [CompactSpace G] [T2Space G]
     [TotallyDisconnectedSpace G]
     (K : FiniteResidueAbstractField D) (L : ClosedSubgroup G)
@@ -1086,7 +1087,7 @@ theorem frobeniusFixedField_normalizedDegreeEquiv_apply (D : DegreeData G)
     [hLnormal : (extensionSubgroup K.field L hLK).Normal]
     (σ : D.FrobeniusElements K L hLK)
     (a : D.frobeniusClosure K L hLK σ) :
-    D.frobeniusFixedField_normalizedDegreeEquiv K L hLK σ a =
+    D.frobeniusFixedFieldNormalizedDegreeEquiv K L hLK σ a =
       D.fixedFieldNormalizedDegree K L hLK σ a :=
   rfl
 
@@ -1111,7 +1112,7 @@ def fixedFieldFrobenius (D : DegreeData G)
     [hLnormal : (extensionSubgroup K.field L hLK).Normal]
     (σ : D.FrobeniusElements K L hLK) :
     D.frobeniusClosure K L hLK σ :=
-  (D.frobeniusFixedField_normalizedDegreeEquiv K L hLK σ).symm
+  (D.frobeniusFixedFieldNormalizedDegreeEquiv K L hLK σ).symm
     (Multiplicative.ofAdd (1 : ZHat))
 
 /-- The Frobenius characterization of the chosen lift: the original lift `σ` is the Frobenius of its
@@ -1125,11 +1126,11 @@ theorem frobeniusFixedField_frobenius (D : DegreeData G)
     (σ : D.FrobeniusElements K L hLK) :
     D.frobeniusInClosure K L hLK σ =
       D.fixedFieldFrobenius K L hLK σ := by
-  apply (D.frobeniusFixedField_normalizedDegreeEquiv K L hLK σ).injective
+  apply (D.frobeniusFixedFieldNormalizedDegreeEquiv K L hLK σ).injective
   rw [D.frobeniusFixedField_normalizedDegreeEquiv_apply]
   rw [D.fixedFieldNormalizedDegree_generator]
   exact
-    ((D.frobeniusFixedField_normalizedDegreeEquiv K L hLK σ).apply_symm_apply _).symm
+    ((D.frobeniusFixedFieldNormalizedDegreeEquiv K L hLK σ).apply_symm_apply _).symm
 
 end DegreeData
 

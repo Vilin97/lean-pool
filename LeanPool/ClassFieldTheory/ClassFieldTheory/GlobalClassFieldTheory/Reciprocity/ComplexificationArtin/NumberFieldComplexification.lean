@@ -14,7 +14,7 @@ This module forms the actual compositum with the rational fourth-root field
 and proves that restriction to the rational cyclotomic factor is faithful.
 -/
 
-open scoped Classical IsMulCommutative
+open scoped IsMulCommutative
 open AlgebraicNumberTheory NumberField
 
 noncomputable section
@@ -25,12 +25,14 @@ namespace Reciprocity
 attribute [local instance]
   rationalComplexificationCyclotomicField_isAbelianGalois
 
+open scoped Classical in
 private def rationalComplexificationAmbientField :
     IntermediateField ℚ (SeparableClosure ℚ) := by
   letI : Algebra ℚ KummerTheory.rationalCyclotomicField :=
     DivisionRing.toRatAlgebra
   exact IntermediateField.lift rationalComplexificationCyclotomicField
 
+open scoped Classical in
 private noncomputable def rationalComplexificationAmbientEquiv :
     rationalComplexificationCyclotomicField ≃ₐ[ℚ]
       rationalComplexificationAmbientField := by
@@ -41,6 +43,7 @@ private noncomputable def rationalComplexificationAmbientEquiv :
 
 variable (F : Type*) [Field F] [NumberField F]
 
+open scoped Classical in
 /-- The actual compositum of the chosen copy of `F` with the rational
 complexification field inside `SeparableClosure ℚ`. -/
 def numberFieldComplexification :
@@ -48,12 +51,18 @@ def numberFieldComplexification :
   numberFieldInRationalSeparableClosure F ⊔
     rationalComplexificationAmbientField
 
+open scoped Classical in
+/-- The complexification inside the rational separable closure carries its rational algebra
+structure. -/
 @[reducible]
 noncomputable local instance
     numberFieldComplexificationRationalAlgebra :
     Algebra ℚ (numberFieldComplexification F) :=
   (numberFieldComplexification F).algebra'
 
+attribute [local instance] numberFieldComplexificationRationalAlgebra
+
+open scoped Classical in
 noncomputable instance numberFieldComplexification_finiteDimensional :
     FiniteDimensional ℚ (numberFieldComplexification F) := by
   let :
@@ -65,10 +74,12 @@ noncomputable instance numberFieldComplexification_finiteDimensional :
       (numberFieldInRationalSeparableClosure F)
       rationalComplexificationAmbientField
 
+open scoped Classical in
 noncomputable instance numberFieldComplexification_numberField :
     NumberField (numberFieldComplexification F) :=
   NumberField.of_module_finite ℚ (numberFieldComplexification F)
 
+open scoped Classical in
 /-- The chosen embedding of `F` into its actual complexification. -/
 noncomputable def numberFieldComplexificationEmbedding :
     F →ₐ[ℚ] numberFieldComplexification F :=
@@ -81,6 +92,7 @@ noncomputable def numberFieldComplexificationEmbedding :
             numberFieldInRationalSeparableClosure F from
           (AlgHom.mem_fieldRange).mpr ⟨x, rfl⟩))
 
+open scoped Classical in
 /-- The rational fourth-root cyclotomic field embedded into the
 complexification of `F`. -/
 noncomputable def rationalComplexificationCompositumEmbedding :
@@ -89,46 +101,54 @@ noncomputable def rationalComplexificationCompositumEmbedding :
   (IntermediateField.inclusion le_sup_right).comp
     rationalComplexificationAmbientEquiv.toAlgHom
 
-noncomputable instance numberFieldComplexification_algebra :
+open scoped Classical in
+noncomputable instance numberFieldComplexificationAlgebra :
     Algebra F (numberFieldComplexification F) :=
   (numberFieldComplexificationEmbedding F).toRingHom.toAlgebra
 
+open scoped Classical in
 /-- The scalar action belonging to the chosen embedding of `F` into its
 complexification.  Naming it prevents typeclass search from finding a
 definitionally different action through the ambient intermediate field. -/
-noncomputable instance numberFieldComplexification_smul :
+noncomputable instance numberFieldComplexificationSmul :
     SMul F (numberFieldComplexification F) :=
-  (numberFieldComplexification_algebra F).toSMul
+  (numberFieldComplexificationAlgebra F).toSMul
 
-noncomputable instance rationalComplexificationCompositum_algebra :
+open scoped Classical in
+noncomputable instance rationalComplexificationCompositumAlgebra :
     Algebra rationalComplexificationCyclotomicField
       (numberFieldComplexification F) :=
   (rationalComplexificationCompositumEmbedding F).toRingHom.toAlgebra
 
+open scoped Classical in
 /-- The scalar action induced by the actual fourth-root-field embedding.
 Declaring it directly prevents instance search from exploring unrelated
 intermediate-field algebra structures. -/
-noncomputable instance rationalComplexificationCompositum_smul :
+noncomputable instance rationalComplexificationCompositumSmul :
     SMul rationalComplexificationCyclotomicField
       (numberFieldComplexification F) :=
-  (rationalComplexificationCompositum_algebra F).toSMul
+  (rationalComplexificationCompositumAlgebra F).toSMul
 
+open scoped Classical in
 instance numberFieldComplexification_scalarTower :
     IsScalarTower ℚ F (numberFieldComplexification F) :=
   IsScalarTower.of_algebraMap_eq'
     (numberFieldComplexificationEmbedding F).comp_algebraMap.symm
 
+open scoped Classical in
 instance rationalComplexificationCompositum_scalarTower :
     IsScalarTower ℚ rationalComplexificationCyclotomicField
       (numberFieldComplexification F) :=
   IsScalarTower.of_algebraMap_eq'
     (rationalComplexificationCompositumEmbedding F).comp_algebraMap.symm
 
+open scoped Classical in
 noncomputable instance
     numberFieldComplexification_finiteDimensional_over_base :
     FiniteDimensional F (numberFieldComplexification F) :=
   FiniteDimensional.right ℚ F (numberFieldComplexification F)
 
+open scoped Classical in
 /-- Restriction from `F(μ₄)/F` to the rational fourth-root
 cyclotomic factor. -/
 noncomputable def numberFieldComplexificationRestriction :
@@ -138,6 +158,7 @@ noncomputable def numberFieldComplexificationRestriction :
     ℚ rationalComplexificationCyclotomicField F
       (numberFieldComplexification F)
 
+open scoped Classical in
 private def numberFieldComplexificationBaseLayer :
     IntermediateField ℚ (numberFieldComplexification F) :=
   (numberFieldInRationalSeparableClosure F).restrict
@@ -145,6 +166,7 @@ private def numberFieldComplexificationBaseLayer :
         numberFieldComplexification F from
       le_sup_left)
 
+open scoped Classical in
 private def numberFieldComplexificationCyclotomicLayer :
     IntermediateField ℚ (numberFieldComplexification F) :=
   rationalComplexificationAmbientField.restrict
@@ -153,29 +175,40 @@ private def numberFieldComplexificationCyclotomicLayer :
           numberFieldComplexification F from
       le_sup_right)
 
+open scoped Classical in
+/-- The base layer inside the complexification carries its rational algebra structure. -/
 @[reducible]
 noncomputable local instance
     numberFieldComplexificationBaseLayerRationalAlgebra :
     Algebra ℚ (numberFieldComplexificationBaseLayer F) :=
   (numberFieldComplexificationBaseLayer F).algebra'
 
+attribute [local instance] numberFieldComplexificationBaseLayerRationalAlgebra
+
+open scoped Classical in
+/-- The cyclotomic layer inside the complexification carries its rational algebra structure. -/
 @[reducible]
 noncomputable local instance
     numberFieldComplexificationCyclotomicLayerRationalAlgebra :
     Algebra ℚ (numberFieldComplexificationCyclotomicLayer F) :=
   (numberFieldComplexificationCyclotomicLayer F).algebra'
 
+attribute [local instance] numberFieldComplexificationCyclotomicLayerRationalAlgebra
+
+open scoped Classical in
 private noncomputable def numberFieldComplexificationBaseEquiv :
     F ≃ₐ[ℚ] numberFieldComplexificationBaseLayer F :=
   (numberFieldSeparableClosureEmbedding F).equivFieldRange.trans
     (IntermediateField.restrictAlgEquiv le_sup_left)
 
+open scoped Classical in
 private noncomputable def numberFieldComplexificationCyclotomicEquiv :
     rationalComplexificationCyclotomicField ≃ₐ[ℚ]
       numberFieldComplexificationCyclotomicLayer F :=
   rationalComplexificationAmbientEquiv.trans
     (IntermediateField.restrictAlgEquiv le_sup_right)
 
+open scoped Classical in
 private noncomputable local instance
     numberFieldComplexificationCyclotomicLayer_isAbelianGalois :
     IsAbelianGalois ℚ
@@ -183,18 +216,27 @@ private noncomputable local instance
   IsAbelianGalois.of_algHom
     (numberFieldComplexificationCyclotomicEquiv F).symm.toAlgHom
 
+attribute [local instance] numberFieldComplexificationCyclotomicLayer_isAbelianGalois
+
+open scoped Classical in
 private noncomputable local instance
     numberFieldComplexificationCyclotomicLayer_isGalois :
     IsGalois ℚ (numberFieldComplexificationCyclotomicLayer F) :=
   (numberFieldComplexificationCyclotomicLayer_isAbelianGalois
     F).toIsGalois
 
+attribute [local instance] numberFieldComplexificationCyclotomicLayer_isGalois
+
+open scoped Classical in
 private noncomputable local instance
     numberFieldComplexificationCyclotomicLayer_normal :
     Normal ℚ (numberFieldComplexificationCyclotomicLayer F) :=
   (numberFieldComplexificationCyclotomicLayer_isGalois
     F).to_normal
 
+attribute [local instance] numberFieldComplexificationCyclotomicLayer_normal
+
+open scoped Classical in
 private theorem numberFieldComplexificationLayers_sup :
     numberFieldComplexificationCyclotomicLayer F ⊔
         numberFieldComplexificationBaseLayer F =
@@ -209,6 +251,7 @@ private theorem numberFieldComplexificationLayers_sup :
     IntermediateField.lift_top]
   exact sup_comm _ _
 
+open scoped Classical in
 private theorem numberFieldComplexificationBaseEquiv_algebraMap
     (x : F) :
     algebraMap F (numberFieldComplexification F) x =
@@ -218,6 +261,7 @@ private theorem numberFieldComplexificationBaseEquiv_algebraMap
   apply Subtype.ext
   rfl
 
+open scoped Classical in
 private noncomputable def numberFieldComplexificationChangeBase :
     Gal(numberFieldComplexification F / F) →*
       Gal(numberFieldComplexification F /
@@ -247,6 +291,7 @@ private noncomputable def numberFieldComplexificationChangeBase :
   map_one' := rfl
   map_mul' _ _ := rfl
 
+open scoped Classical in
 private theorem numberFieldComplexificationChangeBase_injective :
     Function.Injective (numberFieldComplexificationChangeBase F) := by
   intro σ τ hστ
@@ -258,6 +303,7 @@ private theorem numberFieldComplexificationChangeBase_injective :
         numberFieldComplexificationBaseLayer F) => f x)
     hστ
 
+open scoped Classical in
 private noncomputable def numberFieldComplexificationLayerRestriction :
     Gal(numberFieldComplexification F /
         numberFieldComplexificationBaseLayer F) →*
@@ -272,6 +318,7 @@ private noncomputable def numberFieldComplexificationLayerRestriction :
         (numberFieldComplexificationBaseLayer F)
         (numberFieldComplexification F)
 
+open scoped Classical in
 private theorem numberFieldComplexificationLayerRestriction_injective :
     Function.Injective
       (numberFieldComplexificationLayerRestriction F) := by
@@ -285,12 +332,14 @@ private theorem numberFieldComplexificationLayerRestriction_injective :
       (numberFieldComplexificationBaseLayer F)
       (numberFieldComplexificationLayers_sup F)
 
+open scoped Classical in
 private noncomputable def numberFieldComplexificationTransportCyclotomic :
     Gal(rationalComplexificationCyclotomicField / ℚ) →*
       Gal(numberFieldComplexificationCyclotomicLayer F / ℚ) :=
   (AlgEquiv.autCongr
     (numberFieldComplexificationCyclotomicEquiv F)).toMonoidHom
 
+open scoped Classical in
 private theorem numberFieldComplexificationRestriction_commutes
     (σ : Gal(numberFieldComplexification F/F)) :
     numberFieldComplexificationTransportCyclotomic F
@@ -372,6 +421,7 @@ private theorem numberFieldComplexificationRestriction_commutes
         (numberFieldComplexificationCyclotomicEquiv F y) :
           numberFieldComplexification F) := hrestrict.symm
 
+open scoped Classical in
 /-- The rational cyclotomic factor generates the complexification
 together with `F`, hence restriction to that factor is injective. -/
 theorem numberFieldComplexificationRestriction_injective :
@@ -382,6 +432,7 @@ theorem numberFieldComplexificationRestriction_injective :
   rw [← numberFieldComplexificationRestriction_commutes F σ,
     ← numberFieldComplexificationRestriction_commutes F τ, hστ]
 
+open scoped Classical in
 noncomputable instance numberFieldComplexification_isAbelianGalois :
     IsAbelianGalois F (numberFieldComplexification F) := by
   let : IsGalois ℚ (numberFieldComplexificationCyclotomicLayer F) :=

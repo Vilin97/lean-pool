@@ -51,7 +51,6 @@ noncomputable def classEmbedding
       rfl)
 
 omit [FiniteDimensional K L] [FiniteDimensional K M] in
-@[simp]
 theorem classEmbedding_mk
     (f : L →ₐ[K] M)
     (a : RelativeIdeleGroup K L) :
@@ -105,6 +104,7 @@ theorem classInclusion_ideleClassNorm_eq_prod_conjugates
 
 variable [Algebra L M] [IsScalarTower K L M] [IsGalois K M]
 
+/-- The cosets of the subgroup fixing the intermediate extension form a finite type. -/
 local instance fixingSubextensionQuotientFintype :
     Fintype
       ((M ≃ₐ[K] M) ⧸

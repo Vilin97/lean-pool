@@ -13,7 +13,7 @@ This is the arithmetic input for the positive-radicand branch of the real
 infinite-place Hilbert-symbol comparison.
 -/
 
-open scoped Classical NumberField
+open scoped NumberField
 open NumberField
 
 noncomputable section
@@ -24,6 +24,7 @@ namespace Reciprocity
 variable (K : Type) [Field K] [NumberField K]
 
 omit [NumberField K] in
+open scoped Classical in
 /-- The canonical real coordinate of a global unit in a real completion is
 its real infinite-place embedding. -/
 theorem realInfinitePlace_globalUnit_realCoordinate
@@ -42,6 +43,7 @@ theorem realInfinitePlace_globalUnit_realCoordinate
   simp only [WithAbs.equiv_apply]
 
 omit [NumberField K] in
+open scoped Classical in
 /-- A global unit whose image at a real infinite place is positive becomes a
 square in the unit group of the completion. -/
 theorem realInfinitePlace_globalUnit_mem_squareSubgroup_of_pos

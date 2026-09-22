@@ -435,7 +435,7 @@ private theorem equalCharacteristicLubinTateBracketInteger_addVal_eq_order
 at an index at most `n`. -/
 theorem equalCharacteristicLubinTateUnitParameterSeries_sub_one_order_toNat_le
     (F : LocalField.{0, v} K₀)
-    [CharP K₀ F.residueCharacteristic]
+
     (n : ℕ) (a : equalCharacteristicLubinTateUnitParameter F n)
     (hu : equalCharacteristicLubinTateUnitParameterSeries F n a - 1 ≠ 0) :
     (equalCharacteristicLubinTateUnitParameterSeries F n a - 1).order.toNat ≤

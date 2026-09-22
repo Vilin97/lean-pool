@@ -36,7 +36,7 @@ the unramified integral factors outside the support, and the exact
 sequence from `S`-units to supported ideles and idele classes.
 -/
 
-open scoped Classical NumberField TensorProduct
+open scoped NumberField TensorProduct
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -58,6 +58,7 @@ variable
     [Field L] [NumberField L] [Algebra K L]
     [FiniteDimensional K L] [IsGalois K L]
 
+open scoped Classical in
 /-- Outside the canonical Herbrand support, the chosen completed local
 extension is unramified. -/
 theorem
@@ -77,6 +78,7 @@ theorem
       (chosenFinitePlaceExtension (L := L) v)
 
 omit [NumberField L] in
+open scoped Classical in
 /-- If every chosen finite extension outside `S` is unramified, both
 low-degree Tate cohomology groups of the product of its integral
 factors are singletons. -/
@@ -165,6 +167,7 @@ theorem
     exact Subsingleton.elim _ _
 
 omit [NumberField L] in
+open scoped Classical in
 /-- The product of integral factors outside an unramified support has
 Herbrand quotient one. -/
 theorem
@@ -232,6 +235,7 @@ theorem
     Nat.card_unique]
   norm_num
 
+open scoped Classical in
 /-- After the unramified outside factors have been removed, the supported
 relative ideles have Herbrand quotient equal to the product of the local
 degrees at the unrestricted factors. -/
@@ -375,6 +379,7 @@ theorem
           (relativeUnrestrictedSPlaceLocalDegree
             (K := K) (L := L) S i : ℚ) := mul_one _
 
+open scoped Classical in
 /-- The diagonal map from extension-field `S`-units directly into the
 supported relative ideles. -/
 noncomputable def sUnitToRelativeIdeleSupported
@@ -389,6 +394,7 @@ noncomputable def sUnitToRelativeIdeleSupported
     (sUnitToRelativePrincipalSupportedIntersection
       (K := K) (L := L) S)
 
+open scoped Classical in
 /-- The restriction of the idele-class quotient map to the supported
 relative ideles. -/
 noncomputable def relativeIdeleSupportedToClass
@@ -402,6 +408,7 @@ noncomputable def relativeIdeleSupportedToClass
       (K := K) (L := L) S).subtype
 
 omit [IsGalois K L] in
+open scoped Classical in
 /-- Equivariance of the diagonal `S`-unit map into supported relative
 ideles. -/
 theorem sUnitToRelativeIdeleSupported_equivariant
@@ -446,6 +453,7 @@ theorem sUnitToRelativeIdeleSupported_equivariant
       K L σ (x : Lˣ)).symm
 
 omit [NumberField L] [IsGalois K L] in
+open scoped Classical in
 /-- Equivariance of the supported-idele quotient map. -/
 theorem relativeIdeleSupportedToClass_equivariant
     (S : Finset (HeightOneSpectrum (𝓞 K))) :
@@ -483,6 +491,7 @@ theorem relativeIdeleSupportedToClass_equivariant
   exact ideleClassQuotientMap_equivariant K L σ z
 
 omit [IsGalois K L] in
+open scoped Classical in
 /-- The diagonal `S`-unit map into supported relative ideles is
 injective. -/
 theorem sUnitToRelativeIdeleSupported_injective
@@ -501,6 +510,7 @@ theorem sUnitToRelativeIdeleSupported_injective
   exact hxy
 
 omit [NumberField L] [IsGalois K L] in
+open scoped Classical in
 /-- If the supported and principal relative ideles generate all
 relative ideles, the restricted map to idele classes is surjective. -/
 theorem relativeIdeleSupportedToClass_surjective
@@ -546,6 +556,7 @@ theorem relativeIdeleSupportedToClass_surjective
         (RelativeIdeleGroup.principalSubgroup K L) s)).symm
 
 omit [IsGalois K L] in
+open scoped Classical in
 /-- Exactness at the supported relative ideles of
 `S`-units → supported ideles → idele classes. -/
 theorem sUnit_supportedIdele_ideleClass_exact
@@ -605,6 +616,7 @@ theorem sUnit_supportedIdele_ideleClass_exact
           RelativeIdeleGroup.principalIdele K L (x : Lˣ))).2
         ⟨(x : Lˣ), rfl⟩
 
+open scoped Classical in
 /-- Finiteness of the low Tate groups of the `S`-unit module for the
 support pulled back from `K`. -/
 def AboveSUnitHerbrandQuotientDefined
@@ -620,6 +632,7 @@ def AboveSUnitHerbrandQuotientDefined
     (SUnitGroup (K := L)
       (finitePlacesAbove (K := K) (L := L) S)) σ
 
+open scoped Classical in
 /-- Finiteness of the low Tate groups of the supported relative-idele
 module. -/
 def RelativeIdeleSupportedHerbrandQuotientDefined
@@ -633,6 +646,7 @@ def RelativeIdeleSupportedHerbrandQuotientDefined
     (relativeIdeleLocalTensorDecompositionSupportedSubgroup
       (K := K) (L := L) S) σ
 
+open scoped Classical in
 /-- The permutation-representation presentation of the action on
 logarithmic places above a base support.  This is the presentation used
 by the `S`-unit Herbrand theorem. -/
@@ -649,6 +663,7 @@ noncomputable def aboveSLogPlaceMulAction
       (finitePlacesAbove_isGaloisStable
         (K := K) (L := L) S))
 
+open scoped Classical in
 /-- Send a logarithmic place of `L` lying over the pulled-back support
 to its underlying unrestricted place of `K`. -/
 noncomputable def logPlaceBelowRelativeUnrestrictedIndex
@@ -666,6 +681,7 @@ noncomputable def logPlaceBelowRelativeUnrestrictedIndex
             (K := K) (L := L) S W.1).1 W.2⟩
 
 omit [FiniteDimensional K L] [IsGalois K L] in
+open scoped Classical in
 /-- The place-below map is constant on Galois orbits of logarithmic
 places. -/
 theorem logPlaceBelowRelativeUnrestrictedIndex_smul
@@ -730,6 +746,7 @@ theorem logPlaceBelowRelativeUnrestrictedIndex_smul
         finitePlaceBelow_finitePlaceEquiv
           (K := K) (L := L) σ W.1
 
+open scoped Classical in
 /-- The map on Galois orbits induced by taking the place below. -/
 noncomputable def logPlaceOrbitBelowRelativeUnrestrictedIndex
     (S : Finset (HeightOneSpectrum (𝓞 K))) :
@@ -758,6 +775,7 @@ noncomputable def logPlaceOrbitBelowRelativeUnrestrictedIndex
             (K := K) (L := L) S σ b)
 
 omit [FiniteDimensional K L] [IsGalois K L] in
+open scoped Classical in
 /-- Evaluating the orbit-descended log-place map on a quotient class gives
 the original map on any representative. -/
 @[simp]
@@ -776,6 +794,7 @@ theorem logPlaceOrbitBelowRelativeUnrestrictedIndex_mk
         (K := K) (L := L) S q :=
   rfl
 
+open scoped Classical in
 /-- Galois orbits of logarithmic places of `L` above `S` are
 canonically indexed by all infinite places of `K` and the finite
 places in `S`. -/
@@ -934,6 +953,7 @@ noncomputable def
         apply Subtype.ext
         exact hWbelow
 
+open scoped Classical in
 /-- The local degree attached to a logarithmic place agrees with the
 local degree attached to its place below. -/
 theorem
@@ -1021,6 +1041,7 @@ theorem
           (finitePlace_stabilizer_card_eq_localDegree
             K L W.1)
 
+open scoped Classical in
 /-- The local-degree product occurring in the supported-idele
 calculation is exactly the orbit-indexed local-degree product occurring
 in the `S`-unit calculation. -/
@@ -1107,6 +1128,7 @@ theorem
           (K := K) (L := L) S ω.out
 
 omit [IsGalois K L] in
+open scoped Classical in
 /-- Cancellation on the supported short exact sequence: if supported
 ideles and `S`-units have quotients `q` and `q / |G|`, respectively,
 then the idele-class quotient is `|G|`. -/
@@ -1325,6 +1347,7 @@ theorem
           (Fintype.card (L ≃ₐ[K] L) : ℚ) := by
       rw [div_mul_cancel₀ q hcard]
 
+open scoped Classical in
 /-- The norm-index lower bound obtained from the supported short exact
 sequence. -/
 theorem
@@ -1403,6 +1426,7 @@ theorem
       σ (Fintype.card (L ≃ₐ[K] L))
   simpa using hCvalue
 
+open scoped Classical in
 /-- With all local and `S`-unit calculations substituted, an unramified
 sufficiently large support gives an idele-class Herbrand quotient equal
 to the order of the Galois group. -/
@@ -1515,6 +1539,7 @@ theorem
       hUnit hSupported q hq
       hSupportedValue' hUnitValue'
 
+open scoped Classical in
 /-- The corresponding norm-index lower bound with all supported local
 calculations substituted. -/
 theorem
@@ -1548,6 +1573,7 @@ theorem
       σ (Fintype.card (L ≃ₐ[K] L))
   simpa using hCvalue
 
+open scoped Classical in
 /-- Unconditional norm-index lower bound for a cyclic extension, in
 Galois-group-order form. -/
 theorem card_le_ideleClassNorm_index
@@ -1565,6 +1591,7 @@ theorem card_le_ideleClassNorm_index
     (chosenFinitePlaceIsUnramified_of_notMem_ideleClassHerbrandSupport
       (K := K) (L := L))
 
+open scoped Classical in
 /-- Unconditional norm-index lower bound in extension-degree form. -/
 theorem finrank_le_ideleClassNorm_index
     (σ : L ≃ₐ[K] L)

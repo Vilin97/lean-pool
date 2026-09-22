@@ -20,7 +20,7 @@ adic completion models to their valuation rings.  It also identifies the
 residue field of a rational finite-place completion.
 -/
 
-open scoped NumberField Classical NNReal ValuativeRel
+open scoped NumberField NNReal ValuativeRel
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -29,6 +29,7 @@ open AlgebraicNumberTheory.Valuations
 open LocalFieldTheory
 open LocalFieldTheory.IsNonarchimedeanLocalField
 
+open scoped Classical in
 /-- Embed global integers into the valuation ring of their finite-place
 completion. -/
 noncomputable def finitePlaceIntegerToCompletion
@@ -51,6 +52,7 @@ noncomputable def finitePlaceIntegerToCompletion
       rw [HeightOneSpectrum.valuation_of_algebraMap]
       exact v.intValuation_le_one x)
 
+open scoped Classical in
 @[simp]
 theorem finitePlaceIntegerToCompletion_coe
     {K : Type} [Field K] [NumberField K]
@@ -61,6 +63,7 @@ theorem finitePlaceIntegerToCompletion_coe
       algebraMap K (ChosenFinitePlaceBaseCompletion (K := K) v) (x : K) :=
   rfl
 
+open scoped Classical in
 /-- The comparison with the adic model takes a global element to its
 standard finite-place embedding. -/
 @[simp]
@@ -78,6 +81,7 @@ theorem finitePlaceCompletionRingEquiv_toCompletion
     finitePlaceCompletionBaseMap_apply]
   rfl
 
+open scoped Classical in
 /-- Localizing the ring of integers at a finite prime preserves its residue
 field.  This is the ideal-theoretic end of the finite-completion residue
 comparison. -/
@@ -89,6 +93,7 @@ noncomputable def finitePlaceIdealResidueEquivLocalization
   IsLocalization.AtPrime.equivQuotMaximalIdeal
     v.asIdeal (v.valuationSubringAtPrime K)
 
+open scoped Classical in
 /-- The residue field at a finite prime is canonically the residue field of
 its normalized absolute-value completion. -/
 noncomputable def finitePlaceIdealResidueEquivCompletion
@@ -139,6 +144,7 @@ noncomputable def finitePlaceIdealResidueEquivCompletion
       ((completionResidueEquiv a ha).trans
         (IsLocalRing.ResidueField.mapEquiv eCompletion)))
 
+open scoped Classical in
 @[simp]
 theorem finitePlaceIdealResidueEquivCompletion_apply_mk
     {K : Type} [Field K] [NumberField K]
@@ -152,6 +158,7 @@ theorem finitePlaceIdealResidueEquivCompletion_apply_mk
     finitePlaceIdealResidueEquivLocalization
   rfl
 
+open scoped Classical in
 /-- The finite completion and its defining prime ideal have residue fields
 of the same cardinality. -/
 theorem finitePlaceCompletion_residueField_card
@@ -161,6 +168,7 @@ theorem finitePlaceCompletion_residueField_card
       Nat.card (𝓞 K ⧸ v.asIdeal) :=
   Nat.card_congr (finitePlaceIdealResidueEquivCompletion v).symm.toEquiv
 
+open scoped Classical in
 /-- The canonical equivalence of completion fields identifies their two
 valuation rings. -/
 theorem finitePlaceCompletionRingEquiv_mem_integers_iff
@@ -187,6 +195,7 @@ theorem finitePlaceCompletionRingEquiv_mem_integers_iff
       norm_le_one_of_mem_adicCompletionIntegers v hx
     simpa only [hnorm] using hxnorm
 
+open scoped Classical in
 /-- The canonical equivalence between the valuation ring of the
 absolute-value completion and mathlib's adic completion integers. -/
 noncomputable def finitePlaceCompletionIntegerRingEquiv
@@ -201,6 +210,7 @@ noncomputable def finitePlaceCompletionIntegerRingEquiv
       (fun x =>
         (finitePlaceCompletionRingEquiv_mem_integers_iff v x).symm)
 
+open scoped Classical in
 /-- The canonical equivalence between the valuation ring of the chosen
 localized completion and the concrete adic completion integers at its
 centre. -/
@@ -253,6 +263,7 @@ noncomputable def chosenFinitePlaceLocalizedIntegerRingEquiv
             (HeightOneSpectrum.isNonarchimedean_adicAbv K v) x]
         rfl)
 
+open scoped Classical in
 /-- The integer rings of the standard completion at the centre and of the
 chosen localized completion are canonically equivalent. -/
 noncomputable def standardToChosenLocalizedIntegerRingEquiv
@@ -270,6 +281,7 @@ noncomputable def standardToChosenLocalizedIntegerRingEquiv
   exact (finitePlaceCompletionIntegerRingEquiv W).trans
     (chosenFinitePlaceLocalizedIntegerRingEquiv (K := K) (L := L) v).symm
 
+open scoped Classical in
 /-- Embed global integers into the integer ring of the chosen localized
 completion, through the canonical comparison of completion models. -/
 noncomputable def chosenFinitePlaceIntegerToLocalizedCompletion
@@ -286,6 +298,7 @@ noncomputable def chosenFinitePlaceIntegerToLocalizedCompletion
     (K := K) (L := L) v).toRingHom.comp
       (finitePlaceIntegerToCompletion W)
 
+open scoped Classical in
 /-- On global integers the chosen localized integer-ring map is the
 standard field embedding into the algebraic localization. -/
 @[simp]
@@ -358,6 +371,7 @@ theorem chosenFinitePlaceIntegerToLocalizedCompletion_coe
     _ = eField (AbsoluteValue.toAlgebraicLocalization vK w.1 w.2 (x : L)) :=
       hRight.symm
 
+open scoped Classical in
 /-- Restriction of a decomposition-group automorphism to global integers
 commutes with their embedding in the chosen algebraic localization. -/
 theorem chosenFinitePlaceIntegerToLocalizedCompletion_equivariant
@@ -399,6 +413,7 @@ theorem chosenFinitePlaceIntegerToLocalizedCompletion_equivariant
     HilbertRamification.localizationRamificationGroups_decompositionGroupEquiv_toLocalization
       vK (RayClass.adicAbv_isNontrivial v) w σ (x : L)
 
+open scoped Classical in
 /-- The centre ideal and the chosen localized completion have canonically
 equivalent residue fields.  This transfers ideal-theoretic Frobenius
 conditions to the local field on which the chosen Artin map acts. -/
@@ -418,7 +433,7 @@ noncomputable def chosenFinitePlaceLocalizedResidueEquiv
     (IsLocalRing.ResidueField.mapEquiv
       (standardToChosenLocalizedIntegerRingEquiv (K := K) (L := L) v))
 
-@[simp]
+open scoped Classical in
 theorem chosenFinitePlaceLocalizedResidueEquiv_apply_mk
     {K L : Type}
     [Field K] [NumberField K]
@@ -469,6 +484,7 @@ theorem chosenFinitePlaceLocalizedResidueEquiv_apply_mk
         (IsLocalRing.residue
           𝒪[ChosenFinitePlaceLocalizedCompletion (K := K) (L := L) v]) hMap
 
+open scoped Classical in
 /-- The chosen comparison from the prime-ideal residue field to the localized
 completion residue field respects the decomposition-group action. -/
 theorem chosenFinitePlaceLocalizedResidueEquiv_equivariant
@@ -537,6 +553,7 @@ theorem chosenFinitePlaceLocalizedResidueEquiv_equivariant
         (chosenFinitePlaceLocalizedResidueEquiv_apply_mk
           (K := K) (L := L) v x).symm
 
+open scoped Classical in
 /-- The residue cardinality of the chosen localized extension is the norm
 of its centre ideal. -/
 theorem chosenFinitePlaceLocalized_residueField_card
@@ -552,6 +569,7 @@ theorem chosenFinitePlaceLocalized_residueField_card
   exact Nat.card_congr (chosenFinitePlaceLocalizedResidueEquiv
     (K := K) (L := L) v).symm.toEquiv
 
+open scoped Classical in
 /-- The residue field of the absolute-value completion at a rational finite
 place has cardinality equal to the natural prime represented by that place. -/
 theorem rationalFinitePlaceCompletion_residueField_card

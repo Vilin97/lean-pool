@@ -12,7 +12,7 @@ The public theorem uses the named reducible value provider and specializes
 the generic transported-reciprocity calculation.
 -/
 
-open scoped Classical IsMulCommutative NumberField
+open scoped IsMulCommutative NumberField
 
 noncomputable section
 
@@ -21,6 +21,7 @@ namespace GlobalClassFields
 
 variable {K : Type} [Field K] [NumberField K]
 
+open scoped Classical in
 /-- Evaluation of the selected class-field equivalence is the named inverse
 global norm-residue value in the quotient by the defining subgroup. -/
 @[simp]

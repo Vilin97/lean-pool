@@ -15,7 +15,7 @@ geometric finite-place construction. Its local Artin image is therefore
 inverse arithmetic Frobenius in the actual chosen completion.
 -/
 
-open scoped Classical NumberField ValuativeRel
+open scoped NumberField ValuativeRel
 open NumberField IsDedekindDomain
 open AlgebraicNumberTheory.Valuations LocalFieldTheory
 
@@ -29,6 +29,7 @@ variable {K L : Type}
     [Field L] [Algebra K L]
     [hKLfinite : FiniteDimensional K L] [IsAbelianGalois K L]
 
+open scoped Classical in
 /-- Arithmetic Frobenius of the actual chosen unramified local extension. -/
 noncomputable def chosenFinitePlaceLocalArithmeticFrobenius
     (v : HeightOneSpectrum (𝓞 K))
@@ -51,6 +52,7 @@ noncomputable def chosenFinitePlaceLocalArithmeticFrobenius
       C E := hunram
   exact arithmeticFrobeniusOfUnramifiedValuation C E
 
+open scoped Classical in
 /-- At an unramified chosen finite place, the chosen geometric local Artin
 symbol of the order-one section is inverse arithmetic Frobenius. -/
 theorem chosenFinitePlaceLocalArtin_eq_arithmeticFrobenius_inv_of_unramified

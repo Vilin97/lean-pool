@@ -19,8 +19,7 @@ ordinary prime ideal to arithmetic Frobenius, has the genuine idèle
 norm kernel, and induces the canonical ideal class-field isomorphism.
 -/
 
-open scoped NumberField Classical
-
+open scoped NumberField
 noncomputable section
 
 namespace GlobalClassFieldTheory
@@ -37,6 +36,7 @@ variable
 attribute [local instance]
   ideleClassSubgroupNormal idealArtinKernelNormal
 
+open scoped Classical in
 /-- The genuine Galois-valued ideal Artin map in arithmetic Frobenius
 normalization. -/
 noncomputable def arithmeticIdealArtinGaloisMap
@@ -51,6 +51,7 @@ noncomputable def arithmeticIdealArtinGaloisMap
     (idealArtinMap m
       ((_root_.ideleClassNorm K L).range) hm)
 
+open scoped Classical in
 /-- Evaluating the arithmetic ideal Artin map is evaluation of the ideal
 class map followed by arithmetic global reciprocity. -/
 @[simp]
@@ -68,9 +69,9 @@ theorem arithmeticIdealArtinGaloisMap_apply
           ((_root_.ideleClassNorm K L).range) hm a) :=
   rfl
 
+open scoped Classical in
 /-- The arithmetic ideal Artin map is exactly the inverse of the
 geometrically normalized map on every ideal. -/
-@[simp]
 theorem arithmeticIdealArtinGaloisMap_eq_inv_idealArtinGaloisMap
     (m : RayClass.Modulus K)
     (hm :
@@ -86,6 +87,7 @@ theorem arithmeticIdealArtinGaloisMap_eq_inv_idealArtinGaloisMap
     Reciprocity.globalNormResidueContinuousMulEquiv_apply,
     idealArtinGaloisMap_apply]
 
+open scoped Classical in
 /-- The arithmetic ideal Artin map is surjective. -/
 theorem arithmeticIdealArtinGaloisMap_surjective
     (m : RayClass.Modulus K)
@@ -100,6 +102,7 @@ theorem arithmeticIdealArtinGaloisMap_surjective
     (idealArtinMap_surjective m
       ((_root_.ideleClassNorm K L).range) hm)
 
+open scoped Classical in
 /-- Arithmetic normalization leaves the defining ideal group
 unchanged. -/
 @[simp]
@@ -128,6 +131,7 @@ theorem arithmeticIdealArtinGaloisMap_ker
   · intro h
     exact (congrArg e h).trans hOne
 
+open scoped Classical in
 /-- The canonical ideal class-field isomorphism in arithmetic
 Frobenius normalization. -/
 noncomputable def arithmeticIdealClassQuotientEquivGaloisGroup
@@ -144,9 +148,9 @@ noncomputable def arithmeticIdealClassQuotientEquivGaloisGroup
     (Reciprocity.arithmeticGlobalNormResidueContinuousMulEquiv
       K L).toMulEquiv
 
+open scoped Classical in
 /-- The arithmetic ideal class-field equivalence sends a quotient
 representative to its arithmetic ideal Artin symbol. -/
-@[simp]
 theorem arithmeticIdealClassQuotientEquivGaloisGroup_mk
     (m : RayClass.Modulus K)
     (hm :
@@ -162,6 +166,7 @@ theorem arithmeticIdealClassQuotientEquivGaloisGroup_mk
         (K := K) (L := L) m hm a :=
   rfl
 
+open scoped Classical in
 /-- The arithmetic ideal Artin map and the arithmetic idèlic Artin
 map form the genuine ideal/idèle compatibility square. -/
 theorem
@@ -191,6 +196,7 @@ theorem
           (K := K) (L := L))
       (a : IdeleGroup K)
 
+open scoped Classical in
 /-- A prime ideal outside the defining modulus maps to its genuine
 arithmetic prime Artin element. -/
 theorem
@@ -214,6 +220,7 @@ theorem
         GlobalClassFields.finitePrimeIdele_mem_idelePrimeToModulusSubgroup
             m v hv⟩
 
+open scoped Classical in
 /-- Direct local form: a prime ideal outside the modulus maps to the
 arithmetic chosen local Artin value of normalized order one. -/
 theorem
@@ -233,6 +240,7 @@ theorem
     arithmeticIdealArtinGaloisMap_primeIdeal_eq_arithmeticFinitePlacePrimeArtin,
     GlobalClassFields.arithmeticFinitePlacePrimeArtin_eq_arithmeticChosenFinitePlaceArtin]
 
+open scoped Classical in
 /-- The arithmetic ideal class-field equivalence sends the class of a
 prime ideal to its arithmetic Frobenius automorphism. -/
 theorem

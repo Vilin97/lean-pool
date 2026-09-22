@@ -30,7 +30,7 @@ universe u v w z
 open AlgebraicNumberTheory.Valuations
 open HilbertRamification
 open NumberField
-open scoped Classical NumberField.LiesOver
+open scoped NumberField.LiesOver
 
 variable
     {K L : Type}
@@ -38,6 +38,7 @@ variable
     [Field L] [NumberField L] [Algebra K L]
     [FiniteDimensional K L] [IsGalois K L]
 
+open scoped Classical in
 /-- An infinite place above another one, written in the absolute-value
 extension format used by the algebraic-localization API. -/
 def infinitePlaceAbsoluteValueExtension
@@ -48,6 +49,7 @@ def infinitePlaceAbsoluteValueExtension
     congrArg
       (fun q : InfinitePlace K => q.1 x) hw⟩
 
+open scoped Classical in
 /-- The underlying absolute-value completion of a real infinite place
 is the real numbers. -/
 def absoluteCompletionRingEquivReal
@@ -56,6 +58,7 @@ def absoluteCompletionRingEquivReal
   (InfinitePlace.Completion.equiv v).symm.trans
     (InfinitePlace.Completion.ringEquivRealOfIsReal hv)
 
+open scoped Classical in
 /-- The underlying absolute-value completion of a complex infinite
 place is the complex numbers. -/
 def absoluteCompletionRingEquivComplex
@@ -66,6 +69,7 @@ def absoluteCompletionRingEquivComplex
 
 omit [NumberField K] [NumberField L] [FiniteDimensional K L]
     [IsGalois K L] in
+open scoped Classical in
 /-- For an infinite place, the absolute-value decomposition
 group is the ordinary Galois stabilizer of that place. -/
 theorem absoluteValueDecompositionGroup_eq_infinitePlaceStabilizer
@@ -97,6 +101,7 @@ theorem absoluteValueDecompositionGroup_eq_infinitePlaceStabilizer
     simpa using
       (absoluteValueDecompositionGroup K w.1).inv_mem hσi
 
+open scoped Classical in
 /-- Field norms commute with compatible changes of both the base and
 extension fields. -/
 theorem normUnits_map_ringEquiv
@@ -118,6 +123,7 @@ theorem normUnits_map_ringEquiv
   rw [Algebra.norm_eq_of_equiv_equiv eK eL he]
   exact eK.apply_symm_apply _
 
+open scoped Classical in
 /-- Compatibility of a square of ring equivalences is symmetric. -/
 theorem ringEquiv_compat_symm
     {K : Type u} {L : Type v} {K' : Type w} {L' : Type z}
@@ -134,6 +140,7 @@ theorem ringEquiv_compat_symm
   have hx := DFunLike.congr_fun he (eK.symm x)
   simpa using hx.symm
 
+open scoped Classical in
 /-- A compatible pair of field equivalences induces a map of norm
 quotients. -/
 def normQuotientMapOfRingEquiv
@@ -159,6 +166,7 @@ def normQuotientMapOfRingEquiv
       exact mk_normUnits_eq_one K' L'
         (Units.mapEquiv eL.toMulEquiv y))
 
+open scoped Classical in
 /-- Transporting a norm class through compatible field equivalences agrees
 with transporting its representative unit. -/
 @[simp]
@@ -177,6 +185,7 @@ theorem normQuotientMapOfRingEquiv_normClass
         (Units.mapEquiv eK.toMulEquiv x) :=
   normQuotientLift_normClass _ _ x
 
+open scoped Classical in
 /-- Norm quotients are invariant under compatible equivalences of the
 base and extension fields. -/
 def normQuotientEquivOfRingEquiv
@@ -221,6 +230,7 @@ def normQuotientEquivOfRingEquiv
   map_mul' := fun x y =>
     map_mul (normQuotientMapOfRingEquiv eK eL he) x y
 
+open scoped Classical in
 /-- A one-element acting group has trivial degree-zero Herbrand
 cohomology. -/
 theorem herbrandH0_card_eq_one_of_group_card_eq_one
@@ -246,6 +256,7 @@ theorem herbrandH0_card_eq_one_of_group_card_eq_one
         simp)
   exact Nat.card_unique
 
+open scoped Classical in
 /-- At a complex place above a real place, the completion norm quotient
 is the concrete quotient for `ℂ/ℝ`. -/
 def infiniteCompletionNormQuotientEquivRealComplex
@@ -270,6 +281,7 @@ def infiniteCompletionNormQuotientEquivRealComplex
       (InfinitePlace.Completion.ringEquivComplexOfIsComplex hwc)
       (by ext; simp)
 
+open scoped Classical in
 /-- The algebraic localization used in the local cohomology block is
 canonically the whole absolute-value completion, also at an infinite
 place. -/
@@ -315,6 +327,7 @@ def localizedCompletionNormQuotientEquivAbsoluteCompletions
         ext x
         exact eLAlg.commutes x)
 
+open scoped Classical in
 /-- Written using the underlying absolute-value completions, the norm
 quotient at a complex place above a real place is again the concrete
 quotient for `ℂ/ℝ`. -/
@@ -429,12 +442,14 @@ def absoluteCompletionNormQuotientEquivRealComplex
             ((InfinitePlace.Completion.equiv v).symm x)).trans
             (hCompletionEmbedding x).symm)
 
+open scoped Classical in
 /-- The sign of a nonzero real number, regarded as an integral unit. -/
 def realUnitsSign : ℝˣ →* ℤˣ :=
   Units.map
     ((SignType.castHom (α := ℤ)).comp
       (signHom (α := ℝ)))
 
+open scoped Classical in
 /-- Coercing `realUnitsSign x` to an integer recovers the usual sign of
 the underlying nonzero real number. -/
 @[simp]
@@ -443,6 +458,7 @@ theorem realUnitsSign_coe (x : ℝˣ) :
       (SignType.sign (x : ℝ) : ℤ) :=
   rfl
 
+open scoped Classical in
 /-- Both integral signs occur. -/
 theorem realUnitsSign_surjective :
     Function.Surjective realUnitsSign := by
@@ -453,8 +469,8 @@ theorem realUnitsSign_surjective :
       apply Units.ext
       simp [realUnitsSign]⟩
 
+open scoped Classical in
 /-- A nonzero real unit has trivial sign precisely when it is positive. -/
-@[simp]
 theorem mem_realUnitsSign_ker_iff (x : ℝˣ) :
     x ∈ realUnitsSign.ker ↔ 0 < (x : ℝ) := by
   rw [MonoidHom.mem_ker]
@@ -469,6 +485,7 @@ theorem mem_realUnitsSign_ker_iff (x : ℝˣ) :
     apply Units.ext
     simp [realUnitsSign, sign_pos hx]
 
+open scoped Classical in
 /-- The sign homomorphism is continuous for the native topology on
 real units and the discrete topology on `ℤˣ`. -/
 @[fun_prop]
@@ -492,6 +509,7 @@ theorem realUnitsSign_continuous :
   rw [hsign]
   exact mem_of_mem_nhds hV
 
+open scoped Classical in
 /-- The norms from `ℂˣ` are precisely the positive real units. -/
 theorem realUnitsSign_ker_eq_complexNormSubgroup :
     realUnitsSign.ker = localNormSubgroup ℝ ℂ := by
@@ -518,6 +536,7 @@ theorem realUnitsSign_ker_eq_complexNormSubgroup :
     rw [Algebra.norm_complex_apply, Complex.normSq_pos]
     exact Units.ne_zero u
 
+open scoped Classical in
 /-- The norm quotient for `ℂ/ℝ` is the two-element sign group. -/
 def realComplexNormQuotientEquivSign :
     NormQuotient ℝ ℂ ≃* ℤˣ :=
@@ -526,6 +545,7 @@ def realComplexNormQuotientEquivSign :
     realUnitsSign_surjective
     realUnitsSign_ker_eq_complexNormSubgroup
 
+open scoped Classical in
 /-- The real/complex norm quotient is finite via its equivalence with
 the integral sign group. -/
 noncomputable instance realComplexNormQuotientFinite :
@@ -533,6 +553,7 @@ noncomputable instance realComplexNormQuotientFinite :
   Finite.of_equiv ℤˣ
     realComplexNormQuotientEquivSign.symm.toEquiv
 
+open scoped Classical in
 /-- The real/complex local norm quotient has order two. -/
 theorem realComplexNormQuotient_card_eq_two :
     Nat.card (NormQuotient ℝ ℂ) = 2 := by
@@ -541,6 +562,7 @@ theorem realComplexNormQuotient_card_eq_two :
 
 omit [NumberField L] in
 omit [NumberField L] in
+open scoped Classical in
 /-- The degree-zero local Herbrand group at an infinite place has
 cardinality equal to the archimedean local degree: one at an
 unramified place and two at a ramified real-to-complex place. -/
@@ -631,6 +653,7 @@ theorem infinitePlaceLocalHerbrandH0_card_eq_localDegree
       _ = 2 := realComplexNormQuotient_card_eq_two
 
 omit [NumberField L] in
+open scoped Classical in
 /-- Complete archimedean local class-field axiom, in the exact form
 used in the relative-idele Herbrand quotient: Hilbert 90 gives
 `#H⁻¹ = 1`, while the norm quotient gives the local degree in `H⁰`. -/
@@ -705,6 +728,7 @@ theorem infinitePlaceLocalClassAxiom_cards
         v w hw⟩
 
 omit [NumberField L] in
+open scoped Classical in
 /-- Finiteness of the archimedean degree-zero local Herbrand group,
 deduced from its explicit nonzero cardinality. -/
 theorem infinitePlaceLocalHerbrandH0Finite
@@ -808,6 +832,7 @@ theorem infinitePlaceLocalHerbrandH0Finite
           (eCompletion.trans eRealComplex)).symm.toEquiv
 
 omit [NumberField K] [NumberField L] in
+open scoped Classical in
 /-- Finiteness of the archimedean degree-minus-one local Herbrand
 group. -/
 theorem infinitePlaceLocalHerbrandHMinusOneFinite

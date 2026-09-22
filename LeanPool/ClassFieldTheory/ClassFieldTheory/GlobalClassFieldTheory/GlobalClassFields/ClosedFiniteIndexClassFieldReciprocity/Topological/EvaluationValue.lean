@@ -14,7 +14,7 @@ selected class-field instance tower once while remaining definitionally
 equivalent to the historical formula.
 -/
 
-open scoped Classical IsMulCommutative NumberField
+open scoped IsMulCommutative NumberField
 
 noncomputable section
 
@@ -23,6 +23,7 @@ namespace GlobalClassFields
 
 open Reciprocity
 
+open scoped Classical in
 /-- Canonical class-group commutativity supplies normality for norm-range transport. -/
 private theorem closedFiniteIndexEvaluationValueClassGroupIsMulCommutative
     (F : Type) [Field F] [NumberField F] :
@@ -33,6 +34,7 @@ attribute [local instance] closedFiniteIndexEvaluationValueClassGroupIsMulCommut
 
 variable {K : Type} [Field K] [NumberField K]
 
+open scoped Classical in
 /-- The quotient value prescribed by inverse global norm-residue reciprocity
 for a Galois element of the selected closed finite-index class field. -/
 noncomputable abbrev closedFiniteIndexClassFieldReciprocityValue

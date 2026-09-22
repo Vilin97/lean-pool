@@ -328,7 +328,8 @@ theorem equalCharacteristicCompletedSourceBracketCoefficient_succ_comparison
     map_sub, map_mul, map_pow,
     equalCharacteristicSourceUniformizer_map] using h
 
-/-- The Lubin–Tate endomorphism commutation law: the independently constructed `[u]` commutes with the
+/-- The Lubin–Tate endomorphism commutation law: the independently constructed `[u]` commutes
+with the
 source Lubin--Tate series `Y^q + (u⁻¹T)Y`. -/
 theorem equalCharacteristicCompletedSourceBracket_commutes
     (u : k⟦X⟧ˣ) :

@@ -168,6 +168,8 @@ variable
     (w : AbsoluteValueExtension
       (HeightOneSpectrum.adicAbv K v) L)
 
+/-- The decomposition group acts on the units of the localized completion at the chosen finite
+place. -/
 local instance finitePlaceDecompositionGroupAction :
     MulDistribMulAction
       (absoluteValueDecompositionGroup K w.1)
@@ -177,14 +179,18 @@ local instance finitePlaceDecompositionGroupAction :
     (HeightOneSpectrum.adicAbv K v)
     (RayClass.adicAbv_isNontrivial v) w
 
+/-- The completion at the extended finite absolute value is an algebra over the base field. -/
 local instance finitePlaceExtensionCompletionAlgebra :
     Algebra K w.1.Completion :=
   AbsoluteValue.extensionCompletionAlgebra (K := K) w.1
 
+/-- The base field acts on the extended finite-place completion through its chosen algebra
+structure. -/
 local instance finitePlaceExtensionCompletionSMul :
     SMul K w.1.Completion :=
   (finitePlaceExtensionCompletionAlgebra v w).toSMul
 
+/-- The completion at the extended finite place is an algebra over the base-place completion. -/
 local instance finitePlaceLocalizedCompletionAlgebra :
     Algebra
       (HeightOneSpectrum.adicAbv K v).Completion
@@ -192,6 +198,8 @@ local instance finitePlaceLocalizedCompletionAlgebra :
   AbsoluteValue.completionAlgebra
     (HeightOneSpectrum.adicAbv K v) w.1 w.2
 
+/-- Every extension of the finite absolute value gives a completion over the base-place
+completion. -/
 local instance finitePlaceAllCompletionAlgebra
     (w' : AbsoluteValueExtension
       (HeightOneSpectrum.adicAbv K v) L) :
@@ -201,6 +209,7 @@ local instance finitePlaceAllCompletionAlgebra
   AbsoluteValue.completionAlgebra
     (HeightOneSpectrum.adicAbv K v) w'.1 w'.2
 
+/-- Global Galois automorphisms act on units of the finite-place scalar tensor algebra. -/
 local instance finitePlaceScalarTensorUnitsAction :
     MulDistribMulAction
       (L ≃ₐ[K] L)
@@ -208,6 +217,7 @@ local instance finitePlaceScalarTensorUnitsAction :
   scalarTensorUnitsAction
     (K := K) (L := L) (A := v.adicCompletion K)
 
+/-- Global Galois automorphisms act on units of the finite-place local tensor algebra. -/
 local instance finitePlaceLocalTensorUnitsAction :
     MulDistribMulAction
       (L ≃ₐ[K] L)

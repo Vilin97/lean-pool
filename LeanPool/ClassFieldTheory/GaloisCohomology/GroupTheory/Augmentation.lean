@@ -326,7 +326,6 @@ theorem linearization_single (g : G) (n : ℤ) :
       n • Additive.ofMul (Abelianization.of g) := by
   simp [linearization, coefficientToAbelianization]
 
-@[simp]
 theorem linearization_deltaElement (g : G) :
     linearization G (deltaElement G g) =
       Additive.ofMul (Abelianization.of g) := by

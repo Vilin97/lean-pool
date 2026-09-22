@@ -77,7 +77,8 @@ def concreteReciprocityAddEquivOfEmbedding
     Additive (Abelianization Gal(L / K)) ≃+
       Additive (NormQuotient K L) :=
   (MulEquiv.toAdditive
-      ((finiteGaloisAbstractQuotientEquivGaloisGroupOfEmbedding K L i).abelianizationCongr.symm)).trans
+      ((finiteGaloisAbstractQuotientEquivGaloisGroupOfEmbedding K L
+        i).abelianizationCongr.symm)).trans
     ((D.abstractReciprocityEquiv (A K) v hcf (intrinsicFiniteAbstractBase K)
       (finiteGaloisAbstractExtensionOfEmbedding K L i)).trans
         (finiteNormQuotientEquivEmbeddedNormQuotient

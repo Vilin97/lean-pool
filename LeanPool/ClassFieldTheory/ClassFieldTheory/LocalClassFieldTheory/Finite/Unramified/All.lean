@@ -9,4 +9,5 @@ import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.U
 import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.Unramified.PrincipalUnits.All
 import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.Unramified.ResidueNorm
 import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.Unramified.Uniformizer
-/-! Provides the public declarations in the `LocalClassFieldTheory.Finite.Unramified` Lean module. -/
+/-! Provides the public declarations in the `LocalClassFieldTheory.Finite.Unramified` Lean
+  module. -/

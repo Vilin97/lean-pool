@@ -13,10 +13,11 @@ import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Recipro
 /-!
 # Image and kernel of finite-place Artin homomorphisms
 
-This module identifies the image with the chosen decomposition group and the kernel with the chosen local norm subgroup.
+This module identifies the image with the chosen decomposition group and the kernel with the
+  chosen local norm subgroup.
 -/
 
-open scoped Classical IsMulCommutative NNReal NumberField
+open scoped IsMulCommutative NNReal NumberField
 open NumberField IsDedekindDomain
 
 noncomputable section
@@ -34,6 +35,7 @@ variable {K L : Type}
     [Field L] [Algebra K L]
     [FiniteDimensional K L] [IsAbelianGalois K L]
 
+open scoped Classical in
 /-- The image of the chosen finite-place Artin homomorphism is exactly
 the chosen decomposition group. -/
 theorem chosenFinitePlaceArtinMonoidHom_range
@@ -66,7 +68,7 @@ theorem chosenFinitePlaceArtinMonoidHom_range
     LocalClassFieldTheory.localizedCompletion_isAbelianGalois
       vK hvK w
   let : NontriviallyNormedField vK.Completion :=
-    absoluteValueExtension_completionNontriviallyNormedField
+    absoluteValueExtensionCompletionNontriviallyNormedField
       vK hvK
   let : LocallyCompactSpace vK.Completion :=
     AbsoluteValue.Completion.locallyCompactSpace
@@ -131,6 +133,7 @@ theorem chosenFinitePlaceArtinMonoidHom_range
     ← MonoidHom.range_eq_map,
     Subgroup.range_subtype]
 
+open scoped Classical in
 /-- The kernel of the concrete finite-place Artin homomorphism is
 exactly the chosen local norm subgroup. -/
 theorem chosenFinitePlaceArtinMonoidHom_ker
@@ -164,7 +167,7 @@ theorem chosenFinitePlaceArtinMonoidHom_ker
     LocalClassFieldTheory.localizedCompletion_isAbelianGalois
       vK hvK w
   let : NontriviallyNormedField vK.Completion :=
-    absoluteValueExtension_completionNontriviallyNormedField
+    absoluteValueExtensionCompletionNontriviallyNormedField
       vK hvK
   let : LocallyCompactSpace vK.Completion :=
     AbsoluteValue.Completion.locallyCompactSpace

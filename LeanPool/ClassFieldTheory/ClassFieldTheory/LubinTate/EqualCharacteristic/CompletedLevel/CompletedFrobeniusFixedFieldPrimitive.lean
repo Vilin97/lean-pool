@@ -29,6 +29,8 @@ open LocalFieldTheory.DiscreteValuationField
 
 variable {K : Type u} [Field K]
 
+/-- The completed base carries the Laurent-series algebra structure used for the completed
+primitive element. -/
 noncomputable local instance
     equalCharacteristicCompletedFrobeniusFixedFieldCompletedPrimitiveBaseAlgebra
     (F : LocalField.{u, v} K) :
@@ -72,7 +74,8 @@ private theorem
   simpa [equalCharacteristicCompletedLevelBaseHom] using
     equalCharacteristicDirectThetaAtCompletedPrimitiveRoot_isRoot_target F a n
 
-/-- States the theorem `equalCharacteristicDirectThetaAtCompletedPrimitiveRoot_isIntegral_completedBase`. -/
+/-- States the theorem
+`equalCharacteristicDirectThetaAtCompletedPrimitiveRoot_isIntegral_completedBase`. -/
 theorem
     equalCharacteristicDirectThetaAtCompletedPrimitiveRoot_isIntegral_completedBase
     (F : LocalField.{u, v} K)

@@ -204,7 +204,6 @@ theorem equalCharacteristicLubinTateBracket_succ_apply
       equalCharacteristicLubinTatePiIterate_succ]
 
 /-- States the theorem `equalCharacteristicLubinTatePiIterate_one`. -/
-@[simp]
 theorem equalCharacteristicLubinTatePiIterate_one
     (F : LocalField.{u, v} K)
     [CharP K F.residueCharacteristic]

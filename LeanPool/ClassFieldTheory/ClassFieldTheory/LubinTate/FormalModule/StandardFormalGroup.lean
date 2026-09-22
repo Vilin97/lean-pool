@@ -270,7 +270,7 @@ theorem subst
 
 /-- Reindexing variables preserves the intertwining equation. -/
 theorem reindex
-    [Fintype σ] [Fintype τ]
+    [Finite σ] [Finite τ]
     {e ebar : LubinTateSeries F π}
     {H : MvPowerSeries σ F.valuationSubring}
     (hH : Intertwines e ebar H)
@@ -279,6 +279,9 @@ theorem reindex
     Intertwines e ebar
       (MvPowerSeries.subst
         (fun i => MvPowerSeries.X (f i)) H) := by
+  classical
+  let := Fintype.ofFinite σ
+  let := Fintype.ofFinite τ
   apply hH.subst hHsubst
     (MvPowerSeries.hasSubst_of_constantCoeff_zero
       (fun _ => by simp))
@@ -288,7 +291,7 @@ theorem reindex
 /-- One-variable power-series composition is a special case of
 substitution by an intertwining family. -/
 theorem powerSeries_subst
-    [Fintype τ]
+    [Finite τ]
     {e ebar ehat : LubinTateSeries F π}
     {H : PowerSeries F.valuationSubring}
     (hH : Intertwines e ebar H)
@@ -297,16 +300,20 @@ theorem powerSeries_subst
     (hG : Intertwines ebar ehat G)
     (hGsubst : PowerSeries.HasSubst G) :
     Intertwines e ehat (PowerSeries.subst G H) := by
+  classical
+  let := Fintype.ofFinite τ
   exact hH.subst hHsubst hGsubst.const (fun _ => hG)
 
 end Intertwines
 
 /-- Zero intertwines any two series with zero constant coefficient. -/
 theorem intertwines_zero
-    [Fintype σ]
+    [Finite σ]
     (e ebar : LubinTateSeries F π) :
     Intertwines e ebar
       (0 : MvPowerSeries σ F.valuationSubring) := by
+  classical
+  let := Fintype.ofFinite σ
   rw [Intertwines]
   change
     MvPowerSeries.subst
@@ -889,10 +896,12 @@ theorem standardLubinTateEndomorphismInVariable_hasLinearTerm
 
 /-- The reindexed series `[a](X_i)` remains an intertwiner. -/
 theorem standardLubinTateEndomorphismInVariable_intertwines
-    {σ : Type w} [Fintype σ]
+    {σ : Type w} [Finite σ]
     (a : F.valuationSubring) (i : σ) :
     Intertwines (standardSeries' hπ) (standardSeries' hπ)
       (standardLubinTateEndomorphismInVariable hπ a i) := by
+  classical
+  let := Fintype.ofFinite σ
   simpa [standardLubinTateEndomorphismInVariable,
     PowerSeries.subst_def] using
     (standardLubinTateEndomorphism_intertwines

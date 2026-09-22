@@ -65,8 +65,8 @@ private theorem eq_of_common_ofMul_image
 private noncomputable def relativeIdeleClassNormAdditiveValue
     (F E : Type)
     [Field F] [NumberField F]
-    [Field E] [NumberField E]
-    [Algebra F E] [FiniteDimensional F E] [IsGalois F E]
+    [Field E]
+    [Algebra F E] [FiniteDimensional F E]
     (c : Additive (RelativeIdeleGroup.ClassGroup F E)) :
     Additive (IdeleClassGroup F) :=
   Additive.ofMul
@@ -76,8 +76,8 @@ private noncomputable def relativeIdeleClassNormAdditiveValue
 private noncomputable def includedRelativeIdeleClassNormAdditiveValue
     (F E : Type)
     [Field F] [NumberField F]
-    [Field E] [NumberField E]
-    [Algebra F E] [FiniteDimensional F E] [IsGalois F E]
+    [Field E]
+    [Algebra F E] [FiniteDimensional F E]
     (c : Additive (RelativeIdeleGroup.ClassGroup F E)) :
     Additive (RelativeIdeleGroup.ClassGroup F E) :=
   Additive.ofMul

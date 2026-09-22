@@ -26,12 +26,16 @@ open LocalFieldTheory.DiscreteValuationField
 
 variable {K : Type u} [Field K]
 
+/-- The Laurent-series algebra structure on the completed unramified base used to construct
+Frobenius. -/
 noncomputable local instance equalCharacteristicCompletedFrobeniusBaseAlgebra
     (F : LocalField.{u, v} K) :
     Algebra F.residueField⸨X⸩
       (equalCharacteristicCompletedUnramifiedField F.residueField) :=
   laurentSeriesCoefficientAlgebra
 
+/-- The completed Lubin–Tate level is an algebra over residue-field Laurent series through its
+completed base. -/
 noncomputable local instance equalCharacteristicCompletedFrobeniusLevelAlgebra
     (F : LocalField.{u, v} K) (n : ℕ) :
     Algebra F.residueField⸨X⸩
@@ -49,7 +53,8 @@ local instance equalCharacteristicCompletedFrobeniusScalarTower
       (equalCharacteristicCompletedLevelField F n) :=
   IsScalarTower.of_algebraMap_eq' rfl
 
-/-- The completed theta-intertwining theorem completed lift fixes every element of the embedded Laurent
+/-- The completed theta-intertwining theorem completed lift fixes every element of the embedded
+Laurent
 base `k((T))`. -/
 @[simp]
 theorem equalCharacteristicCompletedFrobeniusLiftEquiv_fixesLaurentBase
@@ -71,7 +76,8 @@ theorem equalCharacteristicCompletedFrobeniusLiftEquiv_fixesLaurentBase
     (equalCharacteristicCompletedUnramifiedFrobenius F.residueField).commutes]
   rfl
 
-/-- The prescribed the completed theta-intertwining theorem lift, regarded as an automorphism over the original
+/-- The prescribed the completed theta-intertwining theorem lift, regarded as an automorphism
+over the original
 Laurent field `k((T))`. -/
 noncomputable def equalCharacteristicCompletedFrobeniusAlgEquiv
     (F : LocalField.{u, v} K)

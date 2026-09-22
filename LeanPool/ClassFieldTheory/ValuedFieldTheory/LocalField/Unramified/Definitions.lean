@@ -118,7 +118,8 @@ theorem exponentialValuationRestrict_apply
 /-- Exact extension is preserved when the target valuation is restricted to
 an intermediate field. -/
 theorem exponentialValuationRestrict_extends
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     (E : IntermediateField K L) (a : K) :
     exponentialValuationRestrict w E (algebraMap K E a) = v a := by
@@ -127,10 +128,12 @@ theorem exponentialValuationRestrict_extends
 
 /-- The valuation-ring map associated with an exact extension of exponential
 exponential valuations.  the fundamental inequality uses the same map internally; it is
-exposed here because the finite unramified-extension definition also asks for separability of the actual
+exposed here because the finite unramified-extension definition also asks for separability of
+  the actual
 residue-field extension. -/
 def unramifiedValuationRingValuationRingMap
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a) :
     LubinTate.Valuations.exponentialValuationSubring v →+*
       LubinTate.Valuations.exponentialValuationSubring w :=
@@ -141,7 +144,8 @@ def unramifiedValuationRingValuationRingMap
 
 @[simp]
 theorem unramifiedValuationRingValuationRingMap_apply
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     (a : LubinTate.Valuations.exponentialValuationSubring v) :
     ((unramifiedValuationRingValuationRingMap v w hExt a :
@@ -152,7 +156,8 @@ theorem unramifiedValuationRingValuationRingMap_apply
 /-- Exact extension makes the finite unramified-extension valuation-ring map local, hence
 it induces the actual map of residue fields used below. -/
 theorem unramifiedValuationRingValuationRingMap_isLocalHom
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a) :
     IsLocalHom (unramifiedValuationRingValuationRingMap v w hExt) := by
   constructor
@@ -169,7 +174,8 @@ theorem unramifiedValuationRingValuationRingMap_isLocalHom
 /-- Separability of the actual residue-field extension induced by an exact
 extension of exponential valuations. -/
 def ResidueExtensionIsSeparable
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a) : Prop :=
   let V := LubinTate.Valuations.exponentialValuationSubring v
   let W := LubinTate.Valuations.exponentialValuationSubring w
@@ -191,27 +197,32 @@ The second is exactly `[L : K] = [lambda : kappa]`, with the right-hand side
 given by the actual residue finrank from the fundamental inequality.  In particular no
 separability assumption on the field extension `L/K` is inserted. -/
 def FiniteUnramifiedExtension
-    [FiniteDimensional K L]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a) : Prop :=
   ResidueExtensionIsSeparable v w hExt ∧
     Module.finrank K L = exponentialResidueDegree v w hExt
 
-/-- Projection of residue separability in the literal finite the finite unramified-extension definition
+/-- Projection of residue separability in the literal finite the finite unramified-extension
+definition
 predicate. -/
 theorem finiteUnramifiedExtension_residue_isSeparable
     [FiniteDimensional K L]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     (h : FiniteUnramifiedExtension v w hExt) :
     ResidueExtensionIsSeparable v w hExt :=
   h.1
 
-/-- Projection of the degree equality in the literal finite the finite unramified-extension definition
+/-- Projection of the degree equality in the literal finite the finite unramified-extension
+definition
 predicate. -/
 theorem finiteUnramifiedExtension_degree_eq_residueDegree
     [FiniteDimensional K L]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     (h : FiniteUnramifiedExtension v w hExt) :
     Module.finrank K L = exponentialResidueDegree v w hExt := by
@@ -220,7 +231,8 @@ theorem finiteUnramifiedExtension_degree_eq_residueDegree
 /-- A finite intermediate extension is unramified when its restricted
 valuation satisfies the literal finite condition of the finite unramified-extension definition. -/
 def FiniteUnramifiedSubextension
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     (E : IntermediateField K L) : Prop :=
   ∃ hfin : FiniteDimensional K E,
@@ -230,9 +242,11 @@ def FiniteUnramifiedSubextension
       (exponentialValuationRestrict_extends v w hExt E)
 
 /-- A finite unramified intermediate extension is finite-dimensional over the
-base field; this extracts the genuine finiteness datum from the finite unramified-extension definition. -/
+base field; this extracts the genuine finiteness datum from the finite unramified-extension
+  definition. -/
 theorem finiteDimensional_of_finiteUnramifiedSubextension
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     {E : IntermediateField K L}
     (h : FiniteUnramifiedSubextension v w hExt E) :
@@ -243,7 +257,8 @@ theorem finiteDimensional_of_finiteUnramifiedSubextension
 /-- The literal set-theoretic union of all finite unramified intermediate
 extensions. -/
 def finiteUnramifiedSubextensionUnion
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a) : Set L :=
   {x | ∃ E : IntermediateField K L,
     x ∈ E ∧ FiniteUnramifiedSubextension v w hExt E}
@@ -251,15 +266,17 @@ def finiteUnramifiedSubextensionUnion
 /-- Arbitrary algebraic-extension form:
 the ambient field is the union of its finite unramified subextensions. -/
 def AlgebraicUnramifiedExtension
-    [Algebra.IsAlgebraic K L]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a) : Prop :=
   finiteUnramifiedSubextensionUnion v w hExt = Set.univ
 
 /-- Elementwise form of the finite-subextension union clause. -/
 theorem algebraicUnramifiedExtension_iff
     [Algebra.IsAlgebraic K L]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a) :
     AlgebraicUnramifiedExtension v w hExt ↔
       ∀ x : L, ∃ E : IntermediateField K L,
@@ -268,21 +285,25 @@ theorem algebraicUnramifiedExtension_iff
   rfl
 
 /-- Finite-support form used by the later base-change proof.  It is kept
-separate from the literal union definition, so the finite unramified-extension definition itself does not
+separate from the literal union definition, so the finite unramified-extension definition itself
+  does not
 silently assume closure of finite unramified extensions under compositum. -/
 def AlgebraicUnramifiedExtensionFiniteSupport
-    [Algebra.IsAlgebraic K L]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a) : Prop :=
   ∀ S : Finset L, ∃ E : IntermediateField K L,
     (∀ x ∈ S, x ∈ E) ∧ FiniteUnramifiedSubextension v w hExt E
 
 /-- A finite-support presentation is, in particular, the literal union from
-the finite unramified-extension definition.  The converse belongs after the compositum theorem rather than
+the finite unramified-extension definition.  The converse belongs after the compositum theorem
+  rather than
 being built into the definition. -/
 theorem algebraicUnramifiedExtension_of_finiteSupport
     [Algebra.IsAlgebraic K L]
-    (v : LubinTate.Valuations.ExponentialValuation K) (w : LubinTate.Valuations.ExponentialValuation L)
+    (v : LubinTate.Valuations.ExponentialValuation K) (w :
+      LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a)
     (h : AlgebraicUnramifiedExtensionFiniteSupport v w hExt) :
     AlgebraicUnramifiedExtension v w hExt := by

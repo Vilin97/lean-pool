@@ -17,7 +17,7 @@ This file relates global ideal norms to the residue fields and ramification
 invariants of the corresponding finite completions.
 -/
 
-open scoped NumberField Classical NNReal ValuativeRel
+open scoped NumberField NNReal ValuativeRel
 open NumberField IsDedekindDomain
 open LocalFieldTheory
 
@@ -28,6 +28,7 @@ namespace GlobalClassFieldTheory.ClassFieldAxiom
 variable {K : Type} [Field K] [NumberField K]
 
 
+open scoped Classical in
 /-- The ideal norm is the cardinality of the residue field of the
 corresponding adic completion. -/
 theorem absNorm_eq_card_adicResidueField
@@ -41,6 +42,7 @@ theorem absNorm_eq_card_adicResidueField
       (ringOfIntegersQuotientEquivAdicResidueField
         v).toEquiv
 
+open scoped Classical in
 /-- The valuation-theoretic ramification index used by the local field
 formula agrees with the extension ramification index. -/
 theorem ramificationIndexOfWithZeroValuation_eq_extensionRamificationIndex
@@ -81,7 +83,8 @@ theorem ramificationIndexOfWithZeroValuation_eq_extensionRamificationIndex
   let target := F.toCompleteDVF
   let :
       (LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicDVRValuation p).IsRankOneDiscrete :=
-    (LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicCompleteDVF p).instCompleteDiscrete.isRankOneDiscrete
+    (LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicCompleteDVF
+      p).instCompleteDiscrete.isRankOneDiscrete
   let ϖ : base.valuationSubring :=
     LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicIntEquivValuationSubring
       p (p : ℤ_[p])
@@ -184,6 +187,7 @@ theorem ramificationIndexOfWithZeroValuation_eq_extensionRamificationIndex
     WithZero.exp_injective hexp
   exact_mod_cast neg_injective hint
 
+open scoped Classical in
 /-- The cardinality of a mixed-characteristic local residue field is
 `p` to the residue degree. -/
 theorem card_localField_residueField_eq_pow_residueDegree
@@ -245,6 +249,7 @@ theorem card_localField_residueField_eq_pow_residueDegree
       rw [hfinrank,
         LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicCompleteDVF_residueField_card]
 
+open scoped Classical in
 /-- Degree over `ℚ_p` is ramification index times residue degree. -/
 theorem finrank_qp_eq_ramificationIndex_mul_residueDegree
     {E : Type*} [Field E]
@@ -288,6 +293,7 @@ theorem finrank_qp_eq_ramificationIndex_mul_residueDegree
     LocalFieldTheory.DiscreteValuationField.ValuedExtension.degree_eq_ramificationIndex_mul_residueDegree_of_finite_separable
       base target
 
+open scoped Classical in
 /-- The absolute norm of `v` is `p^f`, with `p` the residue
 characteristic and `f` the local residue degree. -/
 theorem absNorm_eq_residueCharacteristic_pow_residueDegree

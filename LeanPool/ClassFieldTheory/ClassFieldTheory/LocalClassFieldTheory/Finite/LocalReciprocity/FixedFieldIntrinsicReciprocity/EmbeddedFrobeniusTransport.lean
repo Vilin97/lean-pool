@@ -14,7 +14,8 @@ import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.GroupTheory.Contin
 /-!
 # Embedded Frobenius transport
 
-This module transports inertia, Frobenius elements, and fixed fields across an explicit equivalence of separable closures.
+This module transports inertia, Frobenius elements, and fixed fields across an explicit
+  equivalence of separable closures.
 -/
 
 noncomputable section
@@ -1732,7 +1733,6 @@ noncomputable def
 
 /-- After coercion to `SeparableClosure K`, the Frobenius fixed-field
 equivalence acts as the original separable-closure equivalence. -/
-@[simp]
 theorem
     intrinsicFrobeniusFixedFieldEquivAmbientEmbeddedField_apply_val
     (j : E →ₐ[K] SeparableClosure K) :

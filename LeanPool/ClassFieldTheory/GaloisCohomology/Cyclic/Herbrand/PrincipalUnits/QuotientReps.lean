@@ -5,7 +5,8 @@ Authors: n-yamaguchi-0729
 -/
 
 import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.PrincipalUnitQuotients
-/-! Provides the public declarations in the `CyclicCohomology.Herbrand.PrincipalUnits.QuotientReps` Lean module. -/
+/-! Provides the public declarations in the
+  `CyclicCohomology.Herbrand.PrincipalUnits.QuotientReps` Lean module. -/
 
 namespace CyclicCohomology
 

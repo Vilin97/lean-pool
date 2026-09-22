@@ -15,18 +15,19 @@ The public ideal-norm image is its image in the ideal ray class group.  This
 file records the exact comparison, including the principal-ray kernel.
 -/
 
-open scoped Classical NumberField IsMulCommutative
+open scoped NumberField IsMulCommutative
 open NumberField IsDedekindDomain
 
 noncomputable section
 
 namespace ClassFieldTheory.GlobalClassFieldComparison
 
+open scoped Classical in
 private theorem publicIdealNormDomain_eq_source'
     (K L : Type)
     [Field K] [NumberField K]
     [Field L] [NumberField L] [Algebra K L]
-    [FiniteDimensional K L]
+
     (m : RayClassModulus K) :
     rayClassPrimeToIdealNormDomain K L m =
       RayClass.primeToModulusIdeals
@@ -58,6 +59,7 @@ private theorem publicIdealNormDomain_eq_source'
     rw [RayClass.mem_idealNormLiftedModulus_support_iff, ← hbelow]
     exact hW
 
+open scoped Classical in
 /-- The preimage of the public ideal-norm image under the ray quotient is
 exactly the original norm subgroup, including principal ray ideals. -/
 theorem publicIdealNormImage_comap_rayQuotient

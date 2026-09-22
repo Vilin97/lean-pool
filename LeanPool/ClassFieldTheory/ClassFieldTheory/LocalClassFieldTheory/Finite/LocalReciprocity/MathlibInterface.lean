@@ -27,6 +27,8 @@ namespace ClassFieldTheory.LocalCFT
 
 open ClassFormation
 
+/-- The local norm quotient has the quotient topology inherited from the multiplicative group of
+the base field. -/
 noncomputable local instance localNormQuotientTopologicalSpace
     (K L : Type) [Field K] [Field L] [Algebra K L]
     [TopologicalSpace K] :
@@ -34,6 +36,8 @@ noncomputable local instance localNormQuotientTopologicalSpace
   change TopologicalSpace (Kˣ ⧸ LocalFieldTheory.localNormSubgroup K L)
   infer_instance
 
+/-- The field-norm quotient has the quotient topology of base-field units modulo the norm
+subgroup. -/
 noncomputable local instance fieldNormQuotientTopologicalSpace
     (K L : Type) [Field K] [Field L] [Algebra K L]
     [FiniteDimensional K L] [TopologicalSpace K] :
