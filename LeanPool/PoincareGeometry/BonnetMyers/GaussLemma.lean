@@ -129,6 +129,7 @@ lemma mlieBracket_localFrame_eq_zero
     rw [← VectorField.mlieBracketWithin_univ,
       VectorField.mlieBracketWithin_eq_lieBracketWithin]
     simp [VectorField.lieBracketWithin, Cj, Ck]
+    rfl
   rw [VectorField.mpullback_apply, hCbr, map_zero] at hbr
   exact hbr.symm
 

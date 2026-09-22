@@ -74,12 +74,13 @@ theorem jointMetricPairing_contMDiff_of_jointMetricTensor
     change ContMDiff (𝓘(ℝ).prod I) (I.prod 𝓘(ℝ, E)) 2
       ((T% V) ∘ Prod.snd)
     exact hV.comp contMDiff_snd
-  exact PoincareCurvature.ParametrizedInner.contMDiff_paramBilin_apply₂
-    (B := M) (F := E) (E := TM) (b := Prod.snd)
-    (ψ := fun p : ℝ × M => (g p.1).inner p.2)
-    (v := fun p : ℝ × M => U p.2)
-    (w := fun p : ℝ × M => V p.2)
-    hmetric hUjoint hVjoint
+  have hres : ContMDiff (𝓘(ℝ).prod I) (I.prod 𝓘(ℝ, ℝ)) 2
+      (fun p : ℝ × M => TotalSpace.mk' ℝ (E := Bundle.Trivial M ℝ) p.2
+        ((g p.1).inner p.2 (U p.2) (V p.2))) :=
+    hmetric.clm_bundle_apply₂ (F₁ := E) (F₂ := E) hUjoint hVjoint
+  intro p
+  exact (contMDiffAt_totalSpace.mp (hres p)).2
+
 theorem hasDerivAt_metricPairing_mvfderiv_of_jointContMDiff
     (g : TimeDependentRiemannianMetric (I := I) (M := M))
     (hdot : ∀ x : M, TM x →ₗ[ℝ] TM x →ₗ[ℝ] ℝ)
