@@ -59,26 +59,26 @@ private theorem found_reset_content
   · change (finalWork tapes.scan.entry.value).HasBinaryContent
       (entryLookupFoundBits tapes matched (rest.length + 1) address
         tapes.scan.entry.value)
-    simpa only [entryLookupFoundBits_one] using hreadable.value.2
+    simpa only [entryLookupFoundBits_one] using! hreadable.value.2
   · change (finalWork tapes.scan.entry.addressCounter).HasBinaryContent
       (entryLookupFoundBits tapes matched (rest.length + 1) address
         tapes.scan.entry.addressCounter)
-    simpa only [entryLookupFoundBits_two] using
+    simpa only [entryLookupFoundBits_two] using!
       hreadable.addressCounter.2
   · change (finalWork tapes.scan.entry.addressWidth).HasBinaryContent
       (entryLookupFoundBits tapes matched (rest.length + 1) address
         tapes.scan.entry.addressWidth)
-    simpa only [entryLookupFoundBits_three] using
+    simpa only [entryLookupFoundBits_three] using!
       hreadable.addressWidth.2.hasBinaryContent
   · change (finalWork tapes.scan.entry.valueCounter).HasBinaryContent
       (entryLookupFoundBits tapes matched (rest.length + 1) address
         tapes.scan.entry.valueCounter)
-    simpa only [entryLookupFoundBits_four] using
+    simpa only [entryLookupFoundBits_four] using!
       hreadable.valueCounter.2
   · change (finalWork tapes.scan.entry.valueWidth).HasBinaryContent
       (entryLookupFoundBits tapes matched (rest.length + 1) address
         tapes.scan.entry.valueWidth)
-    simpa only [entryLookupFoundBits_five] using
+    simpa only [entryLookupFoundBits_five] using!
       hreadable.valueWidth.2.hasBinaryContent
   · change (finalWork tapes.scan.entry.result).HasBinaryContent
       (entryLookupFoundBits tapes matched (rest.length + 1) address
@@ -224,7 +224,7 @@ private theorem miss_reset_content
   · change (finalWork tapes.scan.count).HasBinaryContent
       (entryLookupMissBits tapes address tapes.scan.count)
     simpa only [EntryLookupRestoreTapes.scan_count,
-      entryLookupMissBits_eight] using hmiss.count.2.hasBinaryContent
+      entryLookupMissBits_eight] using! hmiss.count.2.hasBinaryContent
 
 private theorem miss_reset_start
     (tapes : EntryLookupRestoreTapes n) (store : Store) (address : ℕ)

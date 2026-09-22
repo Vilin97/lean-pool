@@ -638,7 +638,7 @@ private theorem workPrefix_step {tm : TM n}
   · have hother := writeMoveOps_otherTape_internal
       (tm := tm) (cfg := current) (Ne.symm (inputTape_ne_workTape n i))
       (workWrites i) (workDirections i) store hcurrent hprefix.tapeCount
-    simpa [current, inputTape] using hother
+    simpa [current, inputTape] using! hother
   · intro j
     by_cases hji : j = i
     · subst j
@@ -679,7 +679,7 @@ private theorem workPrefix_list {tm : TM n}
         (items.flatMap (fun i => writeMoveOps n (workTape i)
           (workWrites i) (workDirections i))) store) := by
   induction items generalizing processed store with
-  | nil => simpa using hprefix
+  | nil => simpa using! hprefix
   | cons i rest ih =>
       have hinot : i ∉ processed := hfresh i (by simp)
       have hnext := workPrefix_step hprefix i hinot (hstarts i)
@@ -994,7 +994,7 @@ private theorem writeOps_envelopeChain {tm : TM n} {bound : ℕ}
         (position := 0) (by omega)
     · simpa [Structured.Internal.Basic.writeValue] using hstartBound
   simpa [writeOps, addressOps, first, multiplied, addressed, valued, stored,
-    final] using And.intro henvelope (And.intro hfirst
+    final] using! And.intro henvelope (And.intro hfirst
       (And.intro hmultiplied (And.intro haddressed
         (And.intro hvalued (And.intro hstored hfinal)))))
 
@@ -1047,7 +1047,7 @@ private theorem workPrefix_list_envelope {tm : TM n} {bound : ℕ}
         (items.reverse ++ processed) (Structured.Basic.execList ops store) ∧
       ResourceEnvelopeChain tm bound ops store := by
   induction items generalizing processed store with
-  | nil => exact ⟨by simpa using hprefix, henvelope⟩
+  | nil => exact ⟨by simpa using! hprefix, henvelope⟩
   | cons i rest ih =>
       have hinot : i ∉ processed := hfresh i (by simp)
       let current : Complexity.Cfg n tm.Q :=

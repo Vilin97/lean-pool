@@ -71,7 +71,7 @@ theorem liftedSource_ne_buffer {n : ℕ}
     tapes.liftedSource ≠ tapes.buffer := by
   intro h
   have hval : tapes.data.update.entry.source.val = n := by
-    simpa [liftedSource, buffer, lifted] using congrArg Fin.val h
+    simpa [liftedSource, buffer, lifted] using! congrArg Fin.val h
   have hlt := tapes.data.update.entry.source.isLt
   omega
 

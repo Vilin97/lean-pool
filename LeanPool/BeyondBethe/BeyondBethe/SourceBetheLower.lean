@@ -58,8 +58,9 @@ theorem paperClusterFactor_singletonRowClustering
     paperClusterFactor A X (singletonRowClustering n)
         (singletonRowClustering_singletonPairs n) i =
       singletonFactor A X i := by
-  rw [paperClusterFactor]
-  simp
+  unfold paperClusterFactor
+  rw [dif_pos (show (singletonRowClustering n).size i = 1 from rfl)]
+  rfl
 
 /-- Gurvits's pointwise Bethe lower certificate, obtained from the
 stable-coefficient theorem with singleton clusters. -/

@@ -216,7 +216,7 @@ theorem cleanCycleWeightedCost_eq_support_sum
         encodedCoreRowTransferCost f g P U i := by
   let e := (c.1 : Equiv.Perm (Fin n)).support.orderIsoOfFin
     (cleanCycleFactor_property c).1
-  rw [cleanCycleWeightedCost]
+  unfold cleanCycleWeightedCost
   calc
     (∑ k : Fin 2, encodedCoreRowTransferCost f g P U (cleanCycleRow c k)) =
         ∑ i : (c.1 : Equiv.Perm (Fin n)).support,
@@ -238,7 +238,7 @@ theorem encodedCoreRowTransferCost_nonneg
     (f g : Equiv.Perm (Fin n)) (i : Fin n) :
     0 ≤ encodedCoreRowTransferCost f g P
       (fun a b ↦ transferU τ (X a) b) i := by
-  rw [encodedCoreRowTransferCost, transferCostOn]
+  unfold encodedCoreRowTransferCost transferCostOn
   apply Finset.sum_nonneg
   intro j _
   exact mul_nonneg (hP.nonnegative i j)
@@ -278,8 +278,10 @@ theorem sum_cleanCycleWeightedCost_le_coreTransferCost
           ∑ c ∈ S, ∑ i ∈ t c, w i := by
         simpa using Finset.sum_coe_sort S (fun c ↦ ∑ i ∈ t c, w i)
       _ = ∑ i ∈ S.biUnion t, w i := (Finset.sum_biUnion hpair).symm
-  rw [coreTransferCost]
-  simp_rw [cleanCycleWeightedCost_eq_support_sum]
+  change (∑ c : S, cleanCycleWeightedCost
+    (fun a b => transferU τ (X a) b) c) ≤ ∑ i, w i
+  simp_rw [cleanCycleWeightedCost_eq_support_sum
+    (fun a b => transferU τ (X a) b)]
   change (∑ c : S, ∑ i ∈ t c.1, w i) ≤ ∑ i, w i
   rw [hunion]
   exact Finset.sum_le_sum_of_subset_of_nonneg (Finset.subset_univ _)
@@ -328,11 +330,11 @@ theorem cleanCycle_minCost_mul_fourCore
       (transferU_le_one hτ (hXint i) j)
   have hsaCore : coreOutside (f s) (g s) = coreOutside a b := by
     rw [hcols.2.2.2.symm, hcols.2.2.1.symm, coreOutside_comm]
-  rw [cleanCycleWeightedCost]
+  unfold cleanCycleWeightedCost
   simp only [Fin.sum_univ_two]
   rw [show cleanCycleRow c 0 = r by rfl, show cleanCycleRow c 1 = s by rfl]
-  rw [encodedCoreRowTransferCost, encodedCoreRowTransferCost, hsaCore,
-    univ_sdiff_coreOutside_of_ne hcols.2.1]
+  unfold encodedCoreRowTransferCost
+  rw [hsaCore, univ_sdiff_coreOutside_of_ne hcols.2.1]
   simp only [transferCostOn, Finset.sum_insert,
     Finset.sum_singleton, Finset.mem_singleton, hcols.2.1, not_false_eq_true]
   rw [fourCoreTransferCost]
@@ -368,7 +370,7 @@ theorem cleanCycleWeightedCost_nonneg
     (c : cleanCycleFactors η P (alternatingRowPerm f g)) :
     0 ≤ cleanCycleWeightedCost
       (fun i j ↦ transferU τ (X i) j) c := by
-  rw [cleanCycleWeightedCost]
+  unfold cleanCycleWeightedCost
   exact Finset.sum_nonneg fun k _ ↦
     encodedCoreRowTransferCost_nonneg hτ hP hXint f g (cleanCycleRow c k)
 
@@ -1249,7 +1251,10 @@ theorem paperClusterFactor_rowClusteringOfMatching
       (rowPairRow q.1 0) (rowPairRow q.1 1) (rowPairRow_ne q.1)
       (hpositive q.1 q.2)]
     rw [matchingClusterLogGain]
-    simp only [rowClusteringOfMatching_rows_pair]
+    change Real.exp (Real.log (pairGain A X (rowPairRow q.1 0) (rowPairRow q.1 1))) *
+      (singletonFactor A X (rowPairRow q.1 0) * singletonFactor A X (rowPairRow q.1 1)) =
+      Real.exp (Real.log (pairGain A X (rowPairRow q.1 0) (rowPairRow q.1 1))) *
+        ∏ k : Fin 2, singletonFactor A X (rowPairRow q.1 k)
     have hprod := Fin.prod_univ_two (fun k : Fin 2 ↦
       singletonFactor A X (rowPairRow q.1 k))
     exact congrArg (Real.exp

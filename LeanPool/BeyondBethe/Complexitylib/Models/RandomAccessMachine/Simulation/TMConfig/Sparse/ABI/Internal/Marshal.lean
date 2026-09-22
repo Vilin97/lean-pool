@@ -327,7 +327,7 @@ theorem marshalLoop_invariant_exec_internal (n : ℕ) (x : List Bool)
         bitlen (store stateReg) + 1 + bodyCost + 1 + loopCost,
         max bodySpace loopSpace, ?_, hfinalInvariant⟩
       have hexec := Structured.Exec.whileNonzero hstoreNonzero hbody hloop
-      convert hexec using 1
+      convert! hexec using 1
       simp [marshalLoopSteps, Nat.succ_mul]
       omega
 

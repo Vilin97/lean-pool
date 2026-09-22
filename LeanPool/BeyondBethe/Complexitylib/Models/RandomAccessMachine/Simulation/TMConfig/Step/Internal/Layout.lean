@@ -21,6 +21,8 @@ namespace RAM
 
 namespace TMConfig
 
+variable {n bound : ℕ} {tape : Fin (n + 2)}
+
 namespace Step
 
 

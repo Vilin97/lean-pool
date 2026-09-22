@@ -107,10 +107,10 @@ theorem pairValidateTM_lift_hoareTime_internal (workTapes : ℕ) (bits : List Bo
       | succ j => simp [Tape.init])
   have hwf : AllTapesWF C.input C.work C.output := by
     refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
-    · rw [liftCfg_input, hinputCells]
+    · rw [show C.input = c'.input from rfl, hinputCells]
       rfl
     · intro j hj
-      rw [liftCfg_input, hinputCells]
+      rw [show C.input = c'.input from rfl, hinputCells]
       exact Tape.init_ofBool_cells_ne_start bits j hj
     · intro i
       rw [hwork i]
@@ -120,8 +120,8 @@ theorem pairValidateTM_lift_hoareTime_internal (workTapes : ℕ) (bits : List Bo
       cases j with
       | zero => omega
       | succ j => simp [Tape.move, Tape.init]
-    · simpa only [liftCfg_output] using houtput0
-    · simpa only [liftCfg_output] using houtputNoStart
+    · simpa only [liftCfg_output] using! houtput0
+    · simpa only [liftCfg_output] using! houtputNoStart
   have hyes : bits ∈ validPairEncoding → C.output.cells 1 = Γ.one := by
     intro hmem
     rw [show C.output = c'.output from rfl, hout]

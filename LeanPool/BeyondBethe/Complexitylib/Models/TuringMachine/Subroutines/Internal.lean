@@ -764,7 +764,7 @@ private theorem blankWorkTM_loop {n : ℕ} (idx : Fin n) (x : List Bool) :
             (∀ i, x.length ≤ i → (c1.work idx).cells (i + 1) = Γ.blank) := by
         cases hbit : x[k]'hk_lt with
         | false =>
-            have hread0 : (c.work idx).read = Γ.zero := by simpa [hbit] using hread
+            have hread0 : (c.work idx).read = Γ.zero := by simpa [hbit] using! hread
             let c1 : Cfg n (blankWorkTM idx).Q :=
               { state := ScanPhase.scanning
                 input := c.input.move (TM.idleDir c.input.read)
@@ -801,7 +801,7 @@ private theorem blankWorkTM_loop {n : ℕ} (idx : Fin n) (x : List Bool) :
               rw [Function.update_of_ne hne]
               exact hcell
         | true =>
-            have hread1 : (c.work idx).read = Γ.one := by simpa [hbit] using hread
+            have hread1 : (c.work idx).read = Γ.one := by simpa [hbit] using! hread
             let c1 : Cfg n (blankWorkTM idx).Q :=
               { state := ScanPhase.scanning
                 input := c.input.move (TM.idleDir c.input.read)
@@ -1040,7 +1040,7 @@ theorem blankWorkTM_hoareTime_frame_of_binaryString {n : ℕ}
         simp [Tape.read, hhead, hdata k le_rfl hk_lt]
       cases hbit : x[k]'hk_lt with
       | false =>
-          have hread0 : (c.work idx).read = Γ.zero := by simpa [hbit] using hread
+          have hread0 : (c.work idx).read = Γ.zero := by simpa [hbit] using! hread
           let c1 : Cfg n (blankWorkTM idx).Q :=
             { state := ScanPhase.scanning
               input := c.input.move (TM.idleDir c.input.read)
@@ -1096,7 +1096,7 @@ theorem blankWorkTM_hoareTime_frame_of_binaryString {n : ℕ}
               hblank_tail1 hinput_keep houtput_keep hwork_keep
           exact ⟨c', .step hstep1 hreach, hhalt, hhead', hcell0', hblank', hinp', hout', hwork'⟩
       | true =>
-          have hread1 : (c.work idx).read = Γ.one := by simpa [hbit] using hread
+          have hread1 : (c.work idx).read = Γ.one := by simpa [hbit] using! hread
           let c1 : Cfg n (blankWorkTM idx).Q :=
             { state := ScanPhase.scanning
               input := c.input.move (TM.idleDir c.input.read)
@@ -1387,7 +1387,7 @@ private theorem copyInputToWorkTM_loop {n : ℕ} (idx : Fin n) (x : List Bool) :
           simp [TM.idleDir, hread, Tape.move]
         have hwork_keep :
             (c.work idx).writeAndMove Γ.blank (TM.idleDir ((c.work idx).read)) = c.work idx := by
-          simpa [transitionTape, hwork_blank] using
+          simpa [transitionTape, hwork_blank] using!
             (transitionTape_eq_self (t := c.work idx) (by simp [hwork_blank]))
         refine ⟨c1, ?_, rfl, ?_, ?_, ?_⟩
         · simp [TM.step, hstate, copyInputToWorkTM, hread, c1, allIdle]
@@ -1421,7 +1421,7 @@ private theorem copyInputToWorkTM_loop {n : ℕ} (idx : Fin n) (x : List Bool) :
         cases hbit : x[k]'hk_lt with
         | false =>
             have hread0 : c.input.read = Γ.zero := by
-              simpa [hbit] using hread
+              simpa [hbit] using! hread
             let c1 : Cfg n (copyInputToWorkTM idx).Q :=
               { state := CopyPhase.copying
                 input := c.input.move Dir3.right
@@ -1438,10 +1438,10 @@ private theorem copyInputToWorkTM_loop {n : ℕ} (idx : Fin n) (x : List Bool) :
                   c1.work idx = (c.work idx).writeAndMove Γ.zero Dir3.right := by
                 simp [c1]
               rw [hwidx]
-              simpa [hbit] using hprefix_next
+              simpa [hbit] using! hprefix_next
         | true =>
             have hread1 : c.input.read = Γ.one := by
-              simpa [hbit] using hread
+              simpa [hbit] using! hread
             let c1 : Cfg n (copyInputToWorkTM idx).Q :=
               { state := CopyPhase.copying
                 input := c.input.move Dir3.right
@@ -1458,7 +1458,7 @@ private theorem copyInputToWorkTM_loop {n : ℕ} (idx : Fin n) (x : List Bool) :
                   c1.work idx = (c.work idx).writeAndMove Γ.one Dir3.right := by
                 simp [c1]
               rw [hwidx]
-              simpa [hbit] using hprefix_next
+              simpa [hbit] using! hprefix_next
       obtain ⟨c1, hstep1, hstate1, hcells1, hhead1, hprefix1⟩ := hstep
       have hrem1 : rem = x.length - (k + 1) := by
         omega
@@ -1582,7 +1582,7 @@ private theorem copyWorkToWorkTM_loop {n : ℕ}
         cases hbit : x[k]'hk_lt with
         | false =>
             have hread0 : (c.work src).read = Γ.zero := by
-              simpa [hbit] using hsrc_read
+              simpa [hbit] using! hsrc_read
             let c1 : Cfg n (copyWorkToWorkTM src dst).Q :=
               { state := CopyPhase.copying
                 input := c.input.move (TM.idleDir c.input.read)
@@ -1609,10 +1609,10 @@ private theorem copyWorkToWorkTM_loop {n : ℕ}
                   c1.work dst = (c.work dst).writeAndMove Γ.zero Dir3.right := by
                 simp [c1]
               rw [hdst]
-              simpa [hbit] using hprefix_next
+              simpa [hbit] using! hprefix_next
         | true =>
             have hread1 : (c.work src).read = Γ.one := by
-              simpa [hbit] using hsrc_read
+              simpa [hbit] using! hsrc_read
             let c1 : Cfg n (copyWorkToWorkTM src dst).Q :=
               { state := CopyPhase.copying
                 input := c.input.move (TM.idleDir c.input.read)
@@ -1639,7 +1639,7 @@ private theorem copyWorkToWorkTM_loop {n : ℕ}
                   c1.work dst = (c.work dst).writeAndMove Γ.one Dir3.right := by
                 simp [c1]
               rw [hdst]
-              simpa [hbit] using hprefix_next
+              simpa [hbit] using! hprefix_next
       obtain ⟨c1, hstep1, hstate1, hsrc_cells1, hsrc_head1, hprefix1⟩ := hstep
       have hrem1 : rem = x.length - (k + 1) := by
         omega
@@ -1853,7 +1853,7 @@ theorem copyWorkToWorkTM_hoareTime_frame_of_binaryString {n : ℕ}
       cases hbit : x[k]'hk_lt with
       | false =>
           have hread0 : (c.work src).read = Γ.zero := by
-            simpa [hbit] using hsrc_read
+            simpa [hbit] using! hsrc_read
           let c1 : Cfg n (copyWorkToWorkTM src dst).Q :=
             { state := CopyPhase.copying
               input := c.input.move (TM.idleDir c.input.read)
@@ -1892,7 +1892,7 @@ theorem copyWorkToWorkTM_hoareTime_frame_of_binaryString {n : ℕ}
                 c1.work dst = (c.work dst).writeAndMove Γ.zero Dir3.right := by
               simp [c1]
             rw [hdst]
-            simpa [hbit] using hprefix_next
+            simpa [hbit] using! hprefix_next
           have hdst_cell01 : (c1.work dst).cells 0 = Γ.start := by
             have hdst :
                 c1.work dst = (c.work dst).writeAndMove Γ.zero Dir3.right := by
@@ -1909,7 +1909,7 @@ theorem copyWorkToWorkTM_hoareTime_frame_of_binaryString {n : ℕ}
             hinp', hout', hwork'⟩
       | true =>
           have hread1 : (c.work src).read = Γ.one := by
-            simpa [hbit] using hsrc_read
+            simpa [hbit] using! hsrc_read
           let c1 : Cfg n (copyWorkToWorkTM src dst).Q :=
             { state := CopyPhase.copying
               input := c.input.move (TM.idleDir c.input.read)
@@ -1948,7 +1948,7 @@ theorem copyWorkToWorkTM_hoareTime_frame_of_binaryString {n : ℕ}
                 c1.work dst = (c.work dst).writeAndMove Γ.one Dir3.right := by
               simp [c1]
             rw [hdst]
-            simpa [hbit] using hprefix_next
+            simpa [hbit] using! hprefix_next
           have hdst_cell01 : (c1.work dst).cells 0 = Γ.start := by
             have hdst :
                 c1.work dst = (c.work dst).writeAndMove Γ.one Dir3.right := by

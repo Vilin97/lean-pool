@@ -99,7 +99,7 @@ private theorem setup_loadedPrefix {tm : TM n} {cfg : Complexity.Cfg n tm.Q}
       simp [third, second, first, Structured.Basic.exec, zeroReg, oneReg,
         tapeCountReg, Function.update_of_ne]
     rw [hthirdState, hthirdZero, hstateStore, Nat.add_zero]
-  simpa [setupOps, first, second, third, final] using
+  simpa [setupOps, first, second, third, final] using!
     LoadedPrefix.mk hfinalRep hzero hone hcount hstate (by simp)
 
 private theorem loadTape_loadedPrefix {tm : TM n}
@@ -161,7 +161,7 @@ private theorem loadTapes_loadedPrefix {tm : TM n}
     LoadedPrefix tm cfg (tapes.reverse ++ processed)
       (Structured.Basic.execList (tapes.flatMap (loadTapeOps n)) store) := by
   induction tapes generalizing processed store with
-  | nil => simpa using hloaded
+  | nil => simpa using! hloaded
   | cons tape rest ih =>
       have hnext := loadTape_loadedPrefix hloaded tape
       have hfinal := ih (processed := tape :: processed) hnext

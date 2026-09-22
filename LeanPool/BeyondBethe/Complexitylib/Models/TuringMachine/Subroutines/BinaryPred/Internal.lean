@@ -173,7 +173,7 @@ private theorem binaryPredTM_step_zero (c : Cfg n (binaryPredTM idx).Q)
       simp only [↓reduceIte, Function.update_self]
       rfl
     · rw [Function.update_of_ne hi]
-      simpa only [ite_eq_right hi] using transitionTape_eq_self (hother i hi)
+      simpa only [ite_eq_right hi] using! transitionTape_eq_self (hother i hi)
   · exact transitionTape_eq_self houtput
 
 /-- Resolve borrow at the first one and advance to lookahead. -/
@@ -198,7 +198,7 @@ private theorem binaryPredTM_step_one (c : Cfg n (binaryPredTM idx).Q)
       simp only [↓reduceIte, Function.update_self]
       rfl
     · rw [Function.update_of_ne hi]
-      simpa only [ite_eq_right hi] using transitionTape_eq_self (hother i hi)
+      simpa only [ite_eq_right hi] using! transitionTape_eq_self (hother i hi)
   · exact transitionTape_eq_self houtput
 
 /-- Define zero underflow by turning left from the terminating blank. -/
@@ -300,7 +300,7 @@ private theorem binaryPredTM_step_erase (c : Cfg n (binaryPredTM idx).Q)
       simp only [↓reduceIte, Function.update_self]
       rfl
     · rw [Function.update_of_ne hi]
-      simpa only [ite_eq_right hi] using transitionTape_eq_self (hother i hi)
+      simpa only [ite_eq_right hi] using! transitionTape_eq_self (hother i hi)
   · exact transitionTape_eq_self houtput
 
 /-- Rewind one ordinary target cell to the left. -/
@@ -533,7 +533,7 @@ private theorem binaryPredTM_borrow_run
               (List.replicate (done + 1) true ++ rest) := by
             have hwrite := hcontent.write_set true hhead (by simp)
             rw [BinaryPred.set_false_to_true] at hwrite
-            simpa only [target, Tape.HasBinaryContent, Tape.move_cells] using
+            simpa only [target, Tape.HasBinaryContent, Tape.move_cells] using!
               hwrite
           have htargetCell0 : target.cells 0 = Γ.start := by
             exact Tape.write_move_cell0 Γ.one Dir3.right hcell0
@@ -565,7 +565,7 @@ private theorem binaryPredTM_borrow_run
                 exact htargetHead)
               houtput
           refine ⟨c', ?_, hhalt, hinput', hwork', ?_, hcell0', houtput'⟩
-          · convert TM.reachesIn.step hstep hreach using 1
+          · convert! TM.reachesIn.step hstep hreach using 1
             all_goals simp [BinaryPred.steps, Nat.add_assoc]
             all_goals omega
           · simpa [BinaryPred.ripple, List.replicate_add,
@@ -587,7 +587,7 @@ private theorem binaryPredTM_borrow_run
                 have hwrite := hcontent.write_set false hhead (by simp)
                 rw [BinaryPred.set_true_to_false] at hwrite
                 simpa only [target₁, Tape.HasBinaryContent, Tape.move_cells]
-                  using hwrite
+                  using! hwrite
               have htarget₁Cell0 : target₁.cells 0 = Γ.start := by
                 exact Tape.write_move_cell0 Γ.zero Dir3.right hcell0
               have htarget₁Head : target₁.head = done + 2 := by
@@ -680,7 +680,7 @@ private theorem binaryPredTM_borrow_run
                 exact .step hstep (.step hcheck' (.step herase' .zero))
               refine ⟨c', ?_, hhalt, hinput', hwork', ?_, hcell0', houtput'⟩
               · have hrun := reachesIn_trans (binaryPredTM idx) hprefix hreach
-                convert hrun using 1
+                convert! hrun using 1
                 all_goals simp [BinaryPred.steps]
                 all_goals omega
               · simpa [BinaryPred.ripple] using hstring
@@ -699,7 +699,7 @@ private theorem binaryPredTM_borrow_run
                 have hwrite := hcontent.write_set false hhead (by simp)
                 rw [BinaryPred.set_true_to_false] at hwrite
                 simpa only [target₁, Tape.HasBinaryContent, Tape.move_cells]
-                  using hwrite
+                  using! hwrite
               have htarget₁Cell0 : target₁.cells 0 = Γ.start := by
                 exact Tape.write_move_cell0 Γ.zero Dir3.right hcell0
               have htarget₁Head : target₁.head = done + 2 := by
@@ -763,7 +763,7 @@ private theorem binaryPredTM_borrow_run
                 exact .step hstep (.step hcheck' .zero)
               refine ⟨c', ?_, hhalt, hinput', hwork', ?_, hcell0', houtput'⟩
               · have hrun := reachesIn_trans (binaryPredTM idx) hprefix hreach
-                convert hrun using 1
+                convert! hrun using 1
                 all_goals simp [BinaryPred.steps]
                 all_goals omega
               · simpa [BinaryPred.ripple] using hstring
