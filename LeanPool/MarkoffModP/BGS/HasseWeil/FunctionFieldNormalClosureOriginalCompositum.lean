@@ -111,7 +111,7 @@ theorem functionFieldNormalClosureConstant_mem_originalCompositum
     (hExact : algebraicClosure K F = (⊥ : IntermediateField K F))
     (c : FunctionFieldNormalClosureConstantField K F) :
     c.1 ∈ FunctionFieldNormalClosureOriginalCompositum K F hExact := by
-  letI : Field (ExactConstantExtension K F
+  let : Field (ExactConstantExtension K F
       (FunctionFieldNormalClosureConstantField K F)) :=
     exactConstantExtensionField K F
       (FunctionFieldNormalClosureConstantField K F) hExact
@@ -123,7 +123,7 @@ theorem functionFieldNormalClosureRatFunc_mem_originalCompositum
     (r : RatFunc K) :
     algebraMap (RatFunc K) (FunctionFieldNormalClosure K F) r ∈
       FunctionFieldNormalClosureOriginalCompositum K F hExact := by
-  letI : Field (ExactConstantExtension K F
+  let : Field (ExactConstantExtension K F
       (FunctionFieldNormalClosureConstantField K F)) :=
     exactConstantExtensionField K F
       (FunctionFieldNormalClosureConstantField K F) hExact
@@ -333,7 +333,7 @@ noncomputable instance
     FiniteDimensional
       (FunctionFieldNormalClosureOriginalCompositum K F hExact)
       (FunctionFieldNormalClosure K F) := by
-  letI : Module.Finite
+  let : Module.Finite
       (FunctionFieldNormalClosureOriginalCompositum K F hExact)
       (FunctionFieldNormalClosure K F) :=
     Module.Finite.of_restrictScalars_finite (RatFunc K)
@@ -411,7 +411,7 @@ private theorem originalMultiplicationCanonicalRatFunc_X :
         algebraMap (RatFunc K) (FunctionFieldNormalClosure K F) RatFunc.X := by
   intro model1 model2 hExact
   let C := FunctionFieldNormalClosureConstantField K F
-  letI : Algebra K[X] F :=
+  let : Algebra K[X] F :=
     RingHom.toAlgebra
       ((algebraMap (RatFunc K) F).comp (algebraMap K[X] (RatFunc K)))
   rw [ratFuncToExactConstantExtension_X]

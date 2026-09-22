@@ -16,7 +16,7 @@ theorem exists_common_primitiveRoot_powers (n : ℕ) [NeZero n]
     ∃ ζ : K, ∃ a₁ a₂ a₃ : ℕ,
       IsPrimitiveRoot ζ n ∧ a₁ < n ∧ a₂ < n ∧ a₃ < n ∧
       ζ ^ a₁ = w₁ ∧ ζ ^ a₂ = w₂ ∧ ζ ^ a₃ = w₃ := by
-  haveI : NeZero (n : K) := ⟨by exact_mod_cast (NeZero.ne n)⟩
+  have : NeZero (n : K) := ⟨by exact_mod_cast (NeZero.ne n)⟩
   obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot K n
   obtain ⟨a₁, ha₁n, ha₁⟩ := hζ.eq_pow_of_pow_eq_one hw₁
   obtain ⟨a₂, ha₂n, ha₂⟩ := hζ.eq_pow_of_pow_eq_one hw₂

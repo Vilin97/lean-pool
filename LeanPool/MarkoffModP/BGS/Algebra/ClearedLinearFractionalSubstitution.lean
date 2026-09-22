@@ -113,9 +113,9 @@ theorem irreducible_clearedLinearFractionalSubstitution
     {f : K[X]} (hf : Irreducible f) (hfDegree : 2 ≤ f.natDegree)
     {a b c d : K} (hdet : a * d - b * c ≠ 0) :
     Irreducible (clearedLinearFractionalSubstitution f a b c d) := by
-  letI : Fact (Irreducible f) := ⟨hf⟩
+  let : Fact (Irreducible f) := ⟨hf⟩
   let E := AdjoinRoot f
-  letI : FiniteDimensional K E := by
+  let : FiniteDimensional K E := by
     change FiniteDimensional K (AdjoinRoot f)
     exact (AdjoinRoot.powerBasis hf.ne_zero).finite
   let α : E := AdjoinRoot.root f

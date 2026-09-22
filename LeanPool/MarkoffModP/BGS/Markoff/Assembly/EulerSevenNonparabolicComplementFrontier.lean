@@ -70,7 +70,7 @@ theorem
     PuncturedMarkoffTransitiveAt p Fact.out := by
   classical
   have hpTwo : p ≠ 2 := by omega
-  letI : Fintype (quadraticFiniteField p) := Fintype.ofFinite _
+  let : Fintype (quadraticFiniteField p) := Fintype.ofFinite _
   have hAll : ∀ x : PuncturedMarkoffSurface (ZMod p),
       SamePuncturedComponent c x := by
     intro x

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
 
-import Mathlib
+import Mathlib.Data.Fintype.Sigma
+import Mathlib.Tactic
+import Mathlib.Tactic.Ring.Basic
 
 /-!
 # The elementary Markoff surface

@@ -159,18 +159,18 @@ theorem localPrincipalPartSpace_finite
       infer_instance
   | succ n ih =>
       let f := localPrincipalPartLayerMap (K := K) (L := L) π n
-      letI : Module.Finite K (localPrincipalPartLayer (K := K) (L := L) π n) :=
+      let : Module.Finite K (localPrincipalPartLayer (K := K) (L := L) π n) :=
         Module.Finite.equiv
           (localPoleQuotientEquivResidueField
             (K := K) (L := L) π hπ hπIdeal n).symm
-      letI : Module.Finite K f.ker := by
+      let : Module.Finite K f.ker := by
         rw [show f.ker = LinearMap.range
           (localPrincipalPartInclusion (K := K) (L := L) π n) by
             exact (range_localPrincipalPartInclusion_eq_ker_layerMap
               (K := K) (L := L) π n).symm]
         infer_instance
-      letI : Module.Finite K f.range := inferInstance
-      letI : Module.Finite K
+      let : Module.Finite K f.range := inferInstance
+      let : Module.Finite K
           (localPrincipalPartSpace (K := K) (L := L) π (n + 1) ⧸ f.ker) :=
         Module.Finite.equiv f.quotKerEquivRange.symm
       exact Module.Finite.of_submodule_quotient f.ker
@@ -204,9 +204,9 @@ theorem localPrincipalPartSpace_finrank
           (⊤ : Submodule K
             (localPoleSpace (K := K) (L := L) π 0))))
   | succ n ih =>
-      letI := localPrincipalPartSpace_finite
+      let := localPrincipalPartSpace_finite
         (K := K) (L := L) π hπ hπIdeal n
-      letI := localPrincipalPartSpace_finite
+      let := localPrincipalPartSpace_finite
         (K := K) (L := L) π hπ hπIdeal (n + 1)
       let f := localPrincipalPartLayerMap (K := K) (L := L) π n
       have hsurj : Function.Surjective f := by
@@ -296,18 +296,18 @@ theorem finitePrincipalPartsSpace_finrank
     [∀ i, Module.Finite K (IsLocalRing.ResidueField (R i))] :
     Module.finrank K (finitePrincipalPartsSpace (K := K) (L := L) π n) =
       finitePrincipalPartsDegree (K := K) (R := R) n := by
-  letI localPrincipalPartModule (i : I) : Module K
+  let localPrincipalPartModule (i : I) : Module K
       (localPrincipalPartSpace (K := K) (L := L) (π i) (n i)) :=
     inferInstance
-  letI finitePrincipalPartsModule : Module K
+  let finitePrincipalPartsModule : Module K
       (finitePrincipalPartsSpace (K := K) (L := L) π n) :=
     Pi.module I
       (fun i => localPrincipalPartSpace (K := K) (L := L) (π i) (n i)) K
-  letI (i : I) : Module.Finite K
+  let (i : I) : Module.Finite K
       (localPrincipalPartSpace (K := K) (L := L) (π i) (n i)) :=
     localPrincipalPartSpace_finite
       (K := K) (L := L) (π i) (hπ i) (hπIdeal i) (n i)
-  letI (i : I) : Module.Free K
+  let (i : I) : Module.Free K
       (localPrincipalPartSpace (K := K) (L := L) (π i) (n i)) :=
     Module.Free.of_divisionRing K
       (localPrincipalPartSpace (K := K) (L := L) (π i) (n i))
@@ -380,18 +380,18 @@ theorem finrank_quotient_regularAtFiniteFamily_le_degree
     Module.finrank K
         (S ⧸ regularAtFiniteFamily (K := K) (L := L) π S) ≤
       finitePrincipalPartsDegree (K := K) (R := R) n := by
-  letI localPrincipalPartModule (i : I) : Module K
+  let localPrincipalPartModule (i : I) : Module K
       (localPrincipalPartSpace (K := K) (L := L) (π i) (n i)) :=
     inferInstance
-  letI finitePrincipalPartsModule : Module K
+  let finitePrincipalPartsModule : Module K
       (finitePrincipalPartsSpace (K := K) (L := L) π n) :=
     Pi.module I
       (fun i => localPrincipalPartSpace (K := K) (L := L) (π i) (n i)) K
-  letI (i : I) : Module.Finite K
+  let (i : I) : Module.Finite K
       (localPrincipalPartSpace (K := K) (L := L) (π i) (n i)) :=
     localPrincipalPartSpace_finite
       (K := K) (L := L) (π i) (hπ i) (hπIdeal i) (n i)
-  letI : Module.Finite K
+  let : Module.Finite K
       (finitePrincipalPartsSpace (K := K) (L := L) π n) := inferInstance
   let f : S →ₗ[K] finitePrincipalPartsSpace (K := K) (L := L) π n :=
     finitePrincipalPartsDiagonalMap (K := K) (L := L) π n S hS

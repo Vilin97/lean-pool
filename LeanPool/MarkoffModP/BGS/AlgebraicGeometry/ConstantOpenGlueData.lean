@@ -81,7 +81,7 @@ def constantOpenGlueData
       refine @AlgebraicGeometry.IsOpenImmersion.comp _ (V i) (U i)
         (eqToHom _) (f i) ?_ hf
       refine @AlgebraicGeometry.IsOpenImmersion.of_isIso _ _ (eqToHom _) ?_
-      exact (eqToIso (if_neg hij)).isIso_hom
+      exact (eqToIso (ite_eq_right hij)).isIso_hom
 
 /-- Glue schemes whose overlap in each chart is identified with one common scheme.  The transition
 from chart `i` to chart `j` is induced by passing through the common target, so identity and
@@ -120,7 +120,7 @@ def constantOpenGlueDataOfCommonTargetMap
     dsimp only [E, constantOpenGlueDataOfCommonTarget, constantOpenGlueData,
       CategoryTheory.GlueData.ofGlueData', CategoryTheory.GlueData'.f',
       constantOpenGlueDataAux] at hc
-    simp only [dif_neg hij, dif_neg (Ne.symm hij)] at hc
+    simp only [dite_eq_right hij, dite_eq_right (Ne.symm hij)] at hc
     simp at hc
     exact (cancel_epi _).mp hc
   fapply Multicoequalizer.desc
@@ -137,7 +137,7 @@ def constantOpenGlueDataOfCommonTargetMap
     · dsimp only [D, constantOpenGlueDataOfCommonTarget, constantOpenGlueData,
         CategoryTheory.GlueData.ofGlueData', CategoryTheory.GlueData'.f',
         constantOpenGlueDataAux]
-      simp only [dif_neg hij, dif_neg (Ne.symm hij)]
+      simp only [dite_eq_right hij, dite_eq_right (Ne.symm hij)]
       simp
       congr 1
       simp only [← Category.assoc]

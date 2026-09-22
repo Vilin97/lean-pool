@@ -51,10 +51,10 @@ theorem exists_frobeniusSubfield_regular_unit_sub_mul_mem_of_perfect_residue
       algebraMap (frobeniusSubfield L p) L c = algebraMap R L b ∧
       (u : R) - b * (w : R) ∈ v.asIdeal := by
   let κ := v.asIdeal.ResidueField
-  letI : CharP κ p :=
+  let : CharP κ p :=
     CharP.of_ringHom_of_ne_zero (algebraMap R κ) p
       (Fact.out : p.Prime).ne_zero
-  letI : ExpChar κ p := inferInstance
+  let : ExpChar κ p := inferInstance
   let ratio : κ := algebraMap R κ (((u * w⁻¹ : Rˣ) : R))
   obtain ⟨z, hz⟩ := surjective_frobenius κ p ratio
   obtain ⟨a, ha⟩ := v.asIdeal.algebraMap_residueField_surjective z
@@ -199,7 +199,7 @@ theorem exists_frobeniusSubfield_dedekindPoleDepth_sub_mul_lt_of_perfect_residue
       · rw [hz, finitePlaceOrderTop_eq_coe v x hx]
         simp
     · refine ⟨c, ?_, ?_⟩
-      · simp only [dedekindPoleDepth, hx, hz, if_false]
+      · simp only [dedekindPoleDepth, hx, hz, ite_false]
         have hxorderneg : finitePlaceOrder v x < 0 := by
           rw [finitePlaceOrderTop_eq_coe v x hx] at hxneg
           exact_mod_cast hxneg

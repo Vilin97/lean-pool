@@ -155,15 +155,15 @@ theorem normalized_mul_finrank (A B : Submodule k K)
         have hAdim : 1 < Module.finrank k A := hn.symm ▸ hngt
         obtain ⟨A', B', hA'1, hB'1, hA'lt, hA'fg, hB'fg, hdim, hprod⟩ :=
           dyson_step k K A B hA1 hB1 hAdim
-        letI : FiniteDimensional k A' := Module.Finite.of_fg hA'fg
-        letI : FiniteDimensional k B' := Module.Finite.of_fg hB'fg
+        let : FiniteDimensional k A' := Module.Finite.of_fg hA'fg
+        let : FiniteDimensional k B' := Module.Finite.of_fg hB'fg
         have hsmall : Module.finrank k A' < n := by
           rw [← hn]
           exact Submodule.finrank_lt_finrank_of_lt hA'lt
         have hih := ih (Module.finrank k A') hsmall A' B' hA'1 hB'1 rfl
         have hAfg : A.FG := (Submodule.fg_top A).mp Module.Finite.fg_top
         have hBfg : B.FG := (Submodule.fg_top B).mp Module.Finite.fg_top
-        letI : FiniteDimensional k (A * B) := Module.Finite.of_fg (hAfg.mul hBfg)
+        let : FiniteDimensional k (A * B) := Module.Finite.of_fg (hAfg.mul hBfg)
         have hmono : Module.finrank k (A' * B') ≤ Module.finrank k (A * B) :=
           Submodule.finrank_mono hprod
         omega
@@ -200,8 +200,8 @@ theorem mul_finrank (A B : Submodule k K)
   have hBfin : B'.FG := by
     have hBfg : B.FG := (Submodule.fg_top B).mp Module.Finite.fg_top
     exact hBfg.map (εb : K →ₗ[k] K)
-  letI : FiniteDimensional k A' := Module.Finite.of_fg hAfin
-  letI : FiniteDimensional k B' := Module.Finite.of_fg hBfin
+  let : FiniteDimensional k A' := Module.Finite.of_fg hAfin
+  let : FiniteDimensional k B' := Module.Finite.of_fg hBfin
   have hnorm := normalized_mul_finrank k K A' B' hA'1 hB'1
   have hprod : A' * B' ≤ Submodule.comap (εab : K →ₗ[k] K) (A * B) := by
     apply Submodule.mul_le.mpr
@@ -216,7 +216,7 @@ theorem mul_finrank (A B : Submodule k K)
     (Submodule.map_le_iff_le_comap).mpr hprod
   have hAfg : A.FG := (Submodule.fg_top A).mp Module.Finite.fg_top
   have hBfg : B.FG := (Submodule.fg_top B).mp Module.Finite.fg_top
-  letI : FiniteDimensional k (A * B) := Module.Finite.of_fg (hAfg.mul hBfg)
+  let : FiniteDimensional k (A * B) := Module.Finite.of_fg (hAfg.mul hBfg)
   have hmono : Module.finrank k (A' * B') ≤ Module.finrank k (A * B) := by
     rw [← LinearEquiv.finrank_map_eq εab (A' * B')]
     exact Submodule.finrank_mono hmap

@@ -67,7 +67,7 @@ def weightedTraceTorusClosureOrigin
     AffinePlaneCurvePoint
       (weightedTraceTorusClosurePolynomial alpha beta) :=
   ⟨(0, 0), by
-    rw [weightedTraceTorusClosurePolynomial, if_neg hbeta]
+    rw [weightedTraceTorusClosurePolynomial, ite_eq_right hbeta]
     exact splitTraceCoverPolynomial_origin_zero
       alpha beta 1 1 (by norm_num) (by norm_num)⟩
 
@@ -122,17 +122,17 @@ theorem weightedTraceTorusClosure_canonicalExceptionalDegree_le_seven
       MvPolynomial.pderiv 1 f ≠ 0 :=
     weightedTraceTorusClosurePolynomial_pderiv_second_ne_zero
       alpha beta hbeta
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
-  letI : DecidableEq (RatFunc K) := Classical.decEq _
-  letI : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : DecidableEq (RatFunc K) := Classical.decEq _
+  let : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc
       hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
     separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
   have hdegreeFirst :
       MvPolynomial.degreeOf 0 f = 2 :=

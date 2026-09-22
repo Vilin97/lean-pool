@@ -122,7 +122,7 @@ theorem finTwoToIteratedPolynomial_weightedTraceTorusClosurePolynomial
     finTwoToIteratedPolynomial (K := K)
         (weightedTraceTorusClosurePolynomial alpha beta) =
       weightedTraceIteratedPolynomial alpha beta := by
-  rw [weightedTraceTorusClosurePolynomial, if_neg hbeta]
+  rw [weightedTraceTorusClosurePolynomial, ite_eq_right hbeta]
   simp [splitTraceCoverPolynomial, weightedTraceIteratedPolynomial,
     ← Polynomial.C_mul_X_pow_eq_monomial]
   ring
@@ -291,8 +291,8 @@ theorem map_weightedTraceTorusClosurePolynomial_of_beta_ne_zero
     MvPolynomial.map phi (weightedTraceTorusClosurePolynomial alpha beta) =
       weightedTraceTorusClosurePolynomial (phi alpha) (phi beta) := by
   have hMapBeta : phi beta ≠ 0 := (map_ne_zero_iff phi phi.injective).mpr hbeta
-  rw [weightedTraceTorusClosurePolynomial, if_neg hbeta,
-    weightedTraceTorusClosurePolynomial, if_neg hMapBeta]
+  rw [weightedTraceTorusClosurePolynomial, ite_eq_right hbeta,
+    weightedTraceTorusClosurePolynomial, ite_eq_right hMapBeta]
   simp [splitTraceCoverPolynomial]
 
 /-- Irreducibility over the ground field, obtained from the iterated-polynomial proof by

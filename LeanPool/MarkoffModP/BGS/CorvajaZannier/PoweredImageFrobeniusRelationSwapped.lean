@@ -71,16 +71,16 @@ theorem poweredCoordinateFrobeniusImage_auxiliaryFamily_linearIndependent_swappe
       (frobeniusSubfield (PlaneCurveFunctionField f) p)
       (auxiliaryFamily ((planeCurveFunction f 1) ^ n)
         ((planeCurveFunction f 0) ^ m) h k) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let L := PlaneCurveFunctionField f
-  letI : CharP L p := charP_of_injective_algebraMap
+  let : CharP L p := charP_of_injective_algebraMap
     (algebraMap K L).injective p
   let F := frobeniusSubfield L p
   let ι : K →+* F :=
     perfectConstantsToFrobeniusSubfield (K := K) (L := L) (p := p)
-  letI : Algebra K F := ι.toAlgebra
-  letI : IsScalarTower K F L := by
+  let : Algebra K F := ι.toAlgebra
+  let : IsScalarTower K F L := by
     apply IsScalarTower.of_algebraMap_eq'
     ext c
     exact (coe_perfectConstantsToFrobeniusSubfield

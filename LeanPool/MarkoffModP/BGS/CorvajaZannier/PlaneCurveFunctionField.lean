@@ -148,7 +148,7 @@ theorem adjoin_planeCurveFunctions_eq_top_of_irreducible
     {f : MvPolynomial (Fin 2) K} (hf : Irreducible f) :
     letI := planeCurveCoordinateRing_isDomain hf
     IntermediateField.adjoin K (Set.range (planeCurveFunction f)) = ⊤ := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) := planeCurveCoordinateRing_isDomain hf
+  let : IsDomain (PlaneCurveCoordinateRing f) := planeCurveCoordinateRing_isDomain hf
   exact adjoin_planeCurveFunctions_eq_top
 
 /-- Embed a univariate polynomial in the first coordinate of the affine plane. -/
@@ -218,7 +218,7 @@ theorem firstCoordinate_transcendental
     (hsecond : 0 < MvPolynomial.degreeOf 1 f) :
     letI := planeCurveCoordinateRing_isDomain hf
     Transcendental K (planeCurveFunction f 0) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) := planeCurveCoordinateRing_isDomain hf
+  let : IsDomain (PlaneCurveCoordinateRing f) := planeCurveCoordinateRing_isDomain hf
   rw [transcendental_iff]
   intro P hPzero
   by_contra hP
@@ -308,11 +308,11 @@ theorem firstCoordinateCoefficientEval_injective
     (hsecond : 0 < MvPolynomial.degreeOf 1 f) :
     letI := planeCurveCoordinateRing_isDomain hf
     Function.Injective (firstCoordinateCoefficientEval f) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) := planeCurveCoordinateRing_isDomain hf
+  let : IsDomain (PlaneCurveCoordinateRing f) := planeCurveCoordinateRing_isDomain hf
   let remaining := {i : Fin 2 // i ≠ 1}
   have remaining_value_zero (i : remaining) : i.1 = 0 := by
     omega
-  letI : Subsingleton remaining :=
+  let : Subsingleton remaining :=
     ⟨fun i j ↦ Subtype.ext ((remaining_value_zero i).trans (remaining_value_zero j).symm)⟩
   let i0 : remaining := ⟨0, by decide⟩
   have hIndependent : AlgebraicIndependent K
@@ -367,7 +367,7 @@ theorem polynomialOverFirstCoordinate_ne_zero_of_irreducible
     (hsecond : 0 < MvPolynomial.degreeOf 1 f) :
     letI := planeCurveCoordinateRing_isDomain hf
     polynomialOverFirstCoordinate f ≠ 0 := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) := planeCurveCoordinateRing_isDomain hf
+  let : IsDomain (PlaneCurveCoordinateRing f) := planeCurveCoordinateRing_isDomain hf
   rw [polynomialOverFirstCoordinate_eq_map_polynomialInSecondCoordinate]
   exact (Polynomial.map_ne_zero_iff
       (firstCoordinateCoefficientEval_injective hf hsecond)).mpr
@@ -465,10 +465,10 @@ theorem finiteDimensional_over_firstCoordinate
     (hpoly : polynomialOverFirstCoordinate f ≠ 0) :
     FiniteDimensional (FirstCoordinateSubfield f) (PlaneCurveFunctionField f) := by
   have halg := secondCoordinate_isAlgebraic_over_first f hpoly
-  letI : FiniteDimensional (FirstCoordinateSubfield f)
+  let : FiniteDimensional (FirstCoordinateSubfield f)
       (IntermediateField.adjoin (FirstCoordinateSubfield f) {planeCurveFunction f 1}) :=
     IntermediateField.adjoin.finiteDimensional halg.isIntegral
-  letI : FiniteDimensional (FirstCoordinateSubfield f)
+  let : FiniteDimensional (FirstCoordinateSubfield f)
       (⊤ : IntermediateField (FirstCoordinateSubfield f) (PlaneCurveFunctionField f)) := by
     rw [← adjoin_secondCoordinate_over_first_eq_top f]
     infer_instance
@@ -481,7 +481,7 @@ theorem finrank_over_firstCoordinate_le_degreeOf_second
     (hpoly : polynomialOverFirstCoordinate f ≠ 0) :
     Module.finrank (FirstCoordinateSubfield f) (PlaneCurveFunctionField f) ≤
       MvPolynomial.degreeOf 1 f := by
-  letI : FiniteDimensional (FirstCoordinateSubfield f) (PlaneCurveFunctionField f) :=
+  let : FiniteDimensional (FirstCoordinateSubfield f) (PlaneCurveFunctionField f) :=
     finiteDimensional_over_firstCoordinate f hpoly
   have halg := secondCoordinate_isAlgebraic_over_first f hpoly
   have hroot : Polynomial.aeval (planeCurveFunction f 1)
@@ -522,7 +522,7 @@ theorem finiteDimensional_over_firstCoordinate_of_irreducible
     (hderiv : MvPolynomial.pderiv 1 f ≠ 0) :
     letI := planeCurveCoordinateRing_isDomain hf
     FiniteDimensional (FirstCoordinateSubfield f) (PlaneCurveFunctionField f) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) := planeCurveCoordinateRing_isDomain hf
+  let : IsDomain (PlaneCurveCoordinateRing f) := planeCurveCoordinateRing_isDomain hf
   exact finiteDimensional_over_firstCoordinate f
     (polynomialOverFirstCoordinate_ne_zero_of_irreducible hf
       (degreeOf_second_pos_of_pderiv_ne_zero hderiv))
@@ -535,7 +535,7 @@ theorem finrank_over_firstCoordinate_le_degreeOf_second_of_irreducible
     letI := planeCurveCoordinateRing_isDomain hf
     Module.finrank (FirstCoordinateSubfield f) (PlaneCurveFunctionField f) ≤
       MvPolynomial.degreeOf 1 f := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) := planeCurveCoordinateRing_isDomain hf
+  let : IsDomain (PlaneCurveCoordinateRing f) := planeCurveCoordinateRing_isDomain hf
   exact finrank_over_firstCoordinate_le_degreeOf_second f
     (polynomialOverFirstCoordinate_ne_zero_of_irreducible hf
       (degreeOf_second_pos_of_pderiv_ne_zero hderiv))

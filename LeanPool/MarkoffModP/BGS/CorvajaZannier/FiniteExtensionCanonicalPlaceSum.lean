@@ -60,6 +60,28 @@ theorem finiteExtensionOutsideHeight_negativeSum
   rw [Nat.cast_mul, Int.natCast_natAbs, abs_of_nonpos (le_of_lt hneg)]
   ring
 
+private theorem sum_negative_outside_subtype
+    {X : Type*} [DecidableEq X] (D : X →₀ ℤ) (S T : Finset X)
+    (hDT : D.support ⊆ T) (weight : X → ℤ)
+    (S' : Finset {x // x ∈ T})
+    (hS' : ∀ x : {x // x ∈ T}, x ∈ S' ↔ x.1 ∈ S) :
+    ∑ x ∈ Finset.univ.filter (fun x : {x // x ∈ T} => x ∉ S' ∧ D x.1 < 0),
+      D x.1 * weight x.1 =
+    ∑ x ∈ D.support.filter (fun x => x ∉ S ∧ D x < 0), D x * weight x := by
+  classical
+  rw [Finset.sum_filter]
+  simp_rw [hS']
+  calc
+    _ = ∑ x ∈ T, if x ∉ S ∧ D x < 0 then D x * weight x else 0 :=
+      (Finset.sum_subtype T (fun x => by simp)
+        (fun x => if x ∉ S ∧ D x < 0 then D x * weight x else 0)).symm
+    _ = ∑ x ∈ D.support, if x ∉ S ∧ D x < 0 then D x * weight x else 0 := by
+      symm
+      apply Finset.sum_subset hDT
+      intro x hx hnot
+      simp [Finsupp.notMem_support_iff.mp hnot]
+    _ = _ := by rw [Finset.sum_filter]
+
 /-- Exhaustive residue-degree-weighted summation with a genuine canonical
 divisor and a nonzero global Wronskian. -/
 theorem globalWronskianInequality_of_finiteExtensionCanonicalPlacewiseBounds
@@ -209,53 +231,17 @@ theorem globalWronskianInequality_of_finiteExtensionCanonicalPlacewiseBounds
       ∑ P ∈ Finset.univ.filter (fun P : I => P ∉ S' ∧ ord rho P < 0),
         ord rho P * (finiteExtensionPlaceDegree K L P.1 : ℤ) =
       -(finiteExtensionOutsideHeight K L rho S : ℤ) := by
-    let R := (finiteExtensionPrincipalDivisor K L rho).support.filter
-      (fun P => P ∉ S ∧ finiteExtensionPrincipalDivisor K L rho P < 0)
-    have hRT : R ⊆ T := by
+    have hsupport : (finiteExtensionPrincipalDivisor K L rho).support ⊆ T := by
       intro P hP
-      have hsupport : P ∈ (finiteExtensionPrincipalDivisor K L rho).support :=
-        (Finset.mem_filter.mp hP).1
-      simp [T, finiteExtensionCanonicalSummationSupport, hsupport]
-    let eR : {P // P ∈ R} ↪ I :=
-      ⟨fun P => ⟨P.1, hRT P.2⟩,
-        fun P Q hPQ => Subtype.ext
-          (congrArg (fun R : I => R.1) hPQ)⟩
-    have hfilter : Finset.univ.filter (fun P : I => P ∉ S' ∧ ord rho P < 0) =
-        R.attach.map eR := by
-      ext P
-      simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_map,
-        ]
-      constructor
-      · intro hP
-        have hne : finiteExtensionPrincipalDivisor K L rho P.1 ≠ 0 :=
-          ne_of_lt hP.2
-        have hmemR : P.1 ∈ R := by
-          apply Finset.mem_filter.mpr
-          refine ⟨Finsupp.mem_support_iff.mpr hne, ?_, hP.2⟩
-          intro hPS
-          exact hP.1 ((hS'_iff P).mpr hPS)
-        let Q : {P // P ∈ R} := ⟨P.1, hmemR⟩
-        refine ⟨Q, by simp, ?_⟩
-        apply Subtype.ext
-        rfl
-      · rintro ⟨Q, hQattach, hQP⟩
-        have hval : Q.1 = P.1 := congrArg (fun R : I => R.1) hQP
-        have hQR := (Finset.mem_filter.mp Q.2).2
-        constructor
-        · rw [hS'_iff]
-          simpa [hval] using hQR.1
-        · simpa [ord, hval] using hQR.2
-    rw [hfilter, Finset.sum_map]
-    change ∑ Q ∈ R.attach,
-        finiteExtensionPrincipalDivisor K L rho Q.1 *
-          (finiteExtensionPlaceDegree K L Q.1 : ℤ) = _
+      simp [T, finiteExtensionCanonicalSummationSupport, hP]
     calc
-      _ = ∑ P ∈ R, finiteExtensionPrincipalDivisor K L rho P *
-          (finiteExtensionPlaceDegree K L P : ℤ) :=
-        Finset.sum_attach R (fun P => finiteExtensionPrincipalDivisor K L rho P *
-          (finiteExtensionPlaceDegree K L P : ℤ))
-      _ = _ := by
-        simpa [R] using finiteExtensionOutsideHeight_negativeSum K L rho S
+      _ = ∑ P ∈ (finiteExtensionPrincipalDivisor K L rho).support.filter
+          (fun P => P ∉ S ∧ finiteExtensionPrincipalDivisor K L rho P < 0),
+          finiteExtensionPrincipalDivisor K L rho P *
+            (finiteExtensionPlaceDegree K L P : ℤ) :=
+        sum_negative_outside_subtype (finiteExtensionPrincipalDivisor K L rho) S T
+          hsupport (fun P => (finiteExtensionPlaceDegree K L P : ℤ)) S' hS'_iff
+      _ = _ := finiteExtensionOutsideHeight_negativeSum K L rho S
   apply globalWronskianInequality_of_weightedPlacewiseBounds
     (fun P : I => finiteExtensionPlaceDegree K L P.1) S'
     (ord u) (ord v) (ord rho) (ord grid) ordW

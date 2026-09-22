@@ -295,11 +295,11 @@ theorem aeval_planeCurvePolynomialInSecondCoordinate_ratFunc_eq_zero
     Polynomial.aeval (planeCurveFunction f 1)
       ((planeCurvePolynomialInSecondCoordinate f).map
         (algebraMap (Polynomial K) (RatFunc K))) = 0 := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
-  letI : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
   have hcoeff :
       (algebraMap (RatFunc K) (PlaneCurveFunctionField f)).comp
@@ -364,13 +364,13 @@ theorem adjoin_secondCoordinate_over_firstRatFunc_eq_top
       (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
     letI := planeCurveFirstCoordinateRatFuncAlgebra f hx
     Algebra.adjoin (RatFunc K) {planeCurveFunction f 1} = ⊤ := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
-  letI : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
   let F : Polynomial (RatFunc K) :=
     (planeCurvePolynomialInSecondCoordinate f).map
@@ -437,11 +437,11 @@ theorem planeCurve_local_reciprocal_certificate_of_degreeOf_second_lt_card
       Algebra.adjoin (RatFunc K) {planeCurveFunction f 1} = ⊤ ∧
       G.natDegree = Module.finrank (RatFunc K)
         (PlaneCurveFunctionField f) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
-  letI : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
   let A := Localization.AtPrime p.asIdeal
   let ι := localizationAtPrimeToRatFunc p
@@ -556,13 +556,13 @@ theorem planeCurve_minpoly_reciprocal_local_normalization_of_degreeOf_second_lt_
           ((planeCurveFunction f 1 -
             algebraMap (RatFunc K) (PlaneCurveFunctionField f) (ι c))⁻¹) =
         (unitNormalizedReciprocalTranslate G c u).map ι := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
   let algRL : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : Algebra (RatFunc K) (PlaneCurveFunctionField f) := algRL
+  let : Algebra (RatFunc K) (PlaneCurveFunctionField f) := algRL
   let A := Localization.AtPrime p.asIdeal
   let ι := localizationAtPrimeToRatFunc p
   obtain ⟨a, u, hu, hroot, hvc, hprimitive, hdegree⟩ :=
@@ -575,27 +575,27 @@ theorem planeCurve_minpoly_reciprocal_local_normalization_of_degreeOf_second_lt_
   let algRA : Algebra (Polynomial K) A := inferInstance
   let algRR : Algebra (Polynomial K) (RatFunc K) := inferInstance
   let algAR : Algebra A (RatFunc K) := ι.toAlgebra
-  letI : Algebra (Polynomial K) A := algRA
-  letI : Algebra (Polynomial K) (RatFunc K) := algRR
-  letI : Algebra A (RatFunc K) := algAR
-  letI : SMul (Polynomial K) A := algRA.toSMul
-  letI : SMul (Polynomial K) (RatFunc K) := algRR.toSMul
-  letI : SMul A (RatFunc K) := algAR.toSMul
-  letI : IsScalarTower (Polynomial K) A (RatFunc K) := by
+  let : Algebra (Polynomial K) A := algRA
+  let : Algebra (Polynomial K) (RatFunc K) := algRR
+  let : Algebra A (RatFunc K) := algAR
+  let : SMul (Polynomial K) A := algRA.toSMul
+  let : SMul (Polynomial K) (RatFunc K) := algRR.toSMul
+  let : SMul A (RatFunc K) := algAR.toSMul
+  let : IsScalarTower (Polynomial K) A (RatFunc K) := by
     apply IsScalarTower.of_algebraMap_eq'
     exact (localizationAtPrimeToRatFunc_comp_algebraMap p).symm
-  letI : IsFractionRing A (RatFunc K) :=
+  let : IsFractionRing A (RatFunc K) :=
     IsFractionRing.isFractionRing_of_isDomain_of_isLocalization
       p.asIdeal.primeCompl A (RatFunc K)
   let algAL : Algebra A (PlaneCurveFunctionField f) :=
     ((algebraMap (RatFunc K) (PlaneCurveFunctionField f)).comp ι).toAlgebra
-  letI : SMul (RatFunc K) (PlaneCurveFunctionField f) := algRL.toSMul
-  letI : Algebra A (PlaneCurveFunctionField f) := algAL
-  letI : SMul A (PlaneCurveFunctionField f) := algAL.toSMul
-  letI : IsScalarTower A (RatFunc K) (PlaneCurveFunctionField f) := by
+  let : SMul (RatFunc K) (PlaneCurveFunctionField f) := algRL.toSMul
+  let : Algebra A (PlaneCurveFunctionField f) := algAL
+  let : SMul A (PlaneCurveFunctionField f) := algAL.toSMul
+  let : IsScalarTower A (RatFunc K) (PlaneCurveFunctionField f) := by
     apply IsScalarTower.of_algebraMap_eq'
     rfl
-  letI : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
   have hroot' : Polynomial.aeval (planeCurveFunction f 1) G = 0 := by
     simpa [Polynomial.aeval_def, algAL, RingHom.algebraMap_toAlgebra,

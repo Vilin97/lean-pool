@@ -180,7 +180,7 @@ lemma norm_splitTraceBaseRoot
       (AdjoinRoot.root (splitTraceBaseKummerPolynomial sigma)) =
         -splitTraceRadicand sigma := by
   let hIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hIrred⟩
   let pb := AdjoinRoot.powerBasis hIrred.ne_zero
   have hdim : pb.dim = 2 := by
     change (splitTraceBaseKummerPolynomial sigma).natDegree = 2
@@ -198,7 +198,7 @@ theorem splitTraceBaseRoot_not_primePower
     (z : AdjoinRoot (splitTraceBaseKummerPolynomial sigma)) :
     z ^ q ≠ AdjoinRoot.root (splitTraceBaseKummerPolynomial sigma) := by
   let hIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hIrred⟩
   intro hpow
   have hnorm := congrArg (Algebra.norm (RatFunc K)) hpow
   rw [map_pow, norm_splitTraceBaseRoot sigma hsigma] at hnorm
@@ -222,7 +222,7 @@ theorem splitTraceEtaKummerPolynomial_irreducible
     Irreducible
       (X ^ e - C (AdjoinRoot.root (splitTraceBaseKummerPolynomial sigma))) := by
   let hBaseIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
   apply X_pow_sub_C_irreducible_of_odd heOdd
   intro q hq _ z
   exact splitTraceBaseRoot_not_primePower sigma hsigma q hq z
@@ -247,7 +247,7 @@ lemma splitTraceBaseU_V_equation
       algebraMap (RatFunc K) (AdjoinRoot (splitTraceBaseKummerPolynomial sigma))
         (RatFunc.C sigma) * splitTraceBaseU sigma - 1 = 0 := by
   let hBaseIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
   have hRootSquare : splitTraceBaseV sigma ^ 2 =
       algebraMap (RatFunc K) (AdjoinRoot (splitTraceBaseKummerPolynomial sigma))
         (splitTraceRadicand sigma) := by
@@ -272,7 +272,7 @@ lemma splitTraceBaseFunctionField_finrank
     Module.finrank (RatFunc K)
       (AdjoinRoot (splitTraceBaseKummerPolynomial sigma)) = 2 := by
   let hIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hIrred⟩
   rw [PowerBasis.finrank (AdjoinRoot.powerBasis hIrred.ne_zero)]
   change (splitTraceBaseKummerPolynomial sigma).natDegree = 2
   simp [splitTraceBaseKummerPolynomial]
@@ -285,7 +285,7 @@ lemma norm_splitTraceBaseU_mul_V_intDegree
       ⟨splitTraceBaseKummerPolynomial_irreducible sigma hsigma⟩
     (Algebra.norm (RatFunc K) (splitTraceBaseU sigma * splitTraceBaseV sigma)).intDegree = 1 := by
   let hIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hIrred⟩
   have hNorm : Algebra.norm (RatFunc K) (splitTraceBaseU sigma * splitTraceBaseV sigma) =
       RatFunc.X ^ 2 * (-splitTraceRadicand sigma) := by
     rw [map_mul]
@@ -322,9 +322,9 @@ lemma splitTraceEtaFunctionField_finrank
     Module.finrank (AdjoinRoot (splitTraceBaseKummerPolynomial sigma))
       (AdjoinRoot (splitTraceEtaKummerPolynomial sigma e)) = e := by
   let hBaseIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
   let hEtaIrred := splitTraceEtaKummerPolynomial_irreducible' sigma hsigma e heOdd
-  letI : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
+  let : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
   rw [PowerBasis.finrank (AdjoinRoot.powerBasis hEtaIrred.ne_zero)]
   change (splitTraceEtaKummerPolynomial sigma e).natDegree = e
   simp [splitTraceEtaKummerPolynomial]
@@ -344,16 +344,16 @@ theorem splitTraceXiRadicand_not_primePower
     (z : AdjoinRoot (splitTraceEtaKummerPolynomial sigma e)) :
     z ^ q ≠ splitTraceXiRadicand sigma e := by
   let hBaseIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
   let hEtaIrred := splitTraceEtaKummerPolynomial_irreducible' sigma hsigma e heOdd
-  letI : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
-  letI : Module.Finite (RatFunc K)
+  let : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
+  let : Module.Finite (RatFunc K)
       (AdjoinRoot (splitTraceBaseKummerPolynomial sigma)) :=
     (monic_X_pow_sub_C _ (by norm_num : (2 : ℕ) ≠ 0)).finite_adjoinRoot
   have he : e ≠ 0 := by
     rintro rfl
     simp at heOdd
-  letI : Module.Finite (AdjoinRoot (splitTraceBaseKummerPolynomial sigma))
+  let : Module.Finite (AdjoinRoot (splitTraceBaseKummerPolynomial sigma))
       (AdjoinRoot (splitTraceEtaKummerPolynomial sigma e)) :=
     (monic_X_pow_sub_C _ he).finite_adjoinRoot
   have hBaseV : splitTraceBaseV sigma ≠ 0 := by
@@ -444,9 +444,9 @@ theorem splitTraceXiKummerPolynomial_irreducible
       ⟨splitTraceEtaKummerPolynomial_irreducible' sigma hsigma e heOdd⟩
     Irreducible (splitTraceXiKummerPolynomial sigma e d) := by
   let hBaseIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
   let hEtaIrred := splitTraceEtaKummerPolynomial_irreducible' sigma hsigma e heOdd
-  letI : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
+  let : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
   rw [splitTraceXiKummerPolynomial]
   apply X_pow_sub_C_irreducible_of_odd hdOdd
   intro q hq hqd z
@@ -472,12 +472,12 @@ theorem splitTraceKummerTower_roots_on_cover
           (algebraMap (RatFunc K) (SplitTraceBaseFunctionField K sigma) (RatFunc.C sigma)))
         d e) = 0 := by
   let hBaseIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
   let hEtaIrred := splitTraceEtaKummerPolynomial_irreducible' sigma hsigma e heOdd
-  letI : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
+  let : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
   let hXiIrred :=
     splitTraceXiKummerPolynomial_irreducible sigma hsigma e d heOdd hdOdd hde
-  letI : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
+  let : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
   let baseToXi : SplitTraceBaseFunctionField K sigma →+*
       SplitTraceXiFunctionField K sigma e d :=
     (algebraMap (SplitTraceEtaFunctionField K sigma e)
@@ -536,12 +536,12 @@ lemma splitTraceXiFunctionField_finrank
     Module.finrank (AdjoinRoot (splitTraceEtaKummerPolynomial sigma e))
       (AdjoinRoot (splitTraceXiKummerPolynomial sigma e d)) = d := by
   let hBaseIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
   let hEtaIrred := splitTraceEtaKummerPolynomial_irreducible' sigma hsigma e heOdd
-  letI : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
+  let : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
   let hXiIrred :=
     splitTraceXiKummerPolynomial_irreducible sigma hsigma e d heOdd hdOdd hde
-  letI : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
+  let : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
   rw [PowerBasis.finrank (AdjoinRoot.powerBasis hXiIrred.ne_zero)]
   change (splitTraceXiKummerPolynomial sigma e d).natDegree = d
   simp [splitTraceXiKummerPolynomial]
@@ -559,12 +559,12 @@ theorem splitTraceOddCoprimeKummerTower_isDomain
       ⟨splitTraceEtaKummerPolynomial_irreducible' sigma hsigma e heOdd⟩
     IsDomain (AdjoinRoot (splitTraceXiKummerPolynomial sigma e d)) := by
   let hBaseIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
   let hEtaIrred := splitTraceEtaKummerPolynomial_irreducible' sigma hsigma e heOdd
-  letI : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
+  let : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
   let hXiIrred :=
     splitTraceXiKummerPolynomial_irreducible sigma hsigma e d heOdd hdOdd hde
-  letI : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
+  let : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
   exact AdjoinRoot.isDomain_of_prime hXiIrred.prime
 
 /-- Reconstructing the same explicit Kummer tower after an arbitrary extension of the constant

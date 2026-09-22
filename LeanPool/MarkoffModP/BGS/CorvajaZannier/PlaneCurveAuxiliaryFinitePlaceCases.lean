@@ -65,9 +65,9 @@ theorem finiteExtensionFinitePlace_exists_local_lift_of_orderTop_nonnegative
     ∃ x₀ : FiniteExtensionFinitePlaceLocalRing K L q,
       x = finiteExtensionFinitePlaceLocalizationToField
         (K := K) (L := L) q x₀ := by
-  letI := finiteExtensionFinitePlaceLocalAlgebra (K := K) (L := L) q
-  letI := finiteExtensionFinitePlaceLocalIsFractionRing (K := K) (L := L) q
-  letI : IsDiscreteValuationRing
+  let := finiteExtensionFinitePlaceLocalAlgebra (K := K) (L := L) q
+  let := finiteExtensionFinitePlaceLocalIsFractionRing (K := K) (L := L) q
+  let : IsDiscreteValuationRing
       (FiniteExtensionFinitePlaceLocalRing K L q) :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain
       (FunctionField.ringOfIntegers K L) q.ne_bot
@@ -106,11 +106,11 @@ theorem ratFuncFinitePlace_residueField_finite [Fintype K]
       p.asIdeal = (normalizedPrimeFinitePlace (K := K) r).asIdeal := by
         rw [normalizedPrimeFinitePlace_finitePlaceNormalizedPrime]
       _ = Ideal.span ({(r : K[X])} : Set K[X]) := rfl
-  letI : Module.Finite K
+  let : Module.Finite K
       (HasQuotient.Quotient K[X] p.asIdeal) := by
     rw [hp]
     exact hrmonic.finite_quotient
-  letI : Finite (HasQuotient.Quotient K[X] p.asIdeal) :=
+  let : Finite (HasQuotient.Quotient K[X] p.asIdeal) :=
     Module.finite_of_finite K
   infer_instance
 
@@ -119,15 +119,15 @@ theorem finiteExtensionFinitePlace_residueField_finite [Fintype K]
     (q : PlaneCurveExtensionFinitePlace K L) :
     Finite q.asIdeal.ResidueField := by
   let p := HeightOneSpectrum.under K[X] q
-  letI : Finite p.asIdeal.ResidueField :=
+  let : Finite p.asIdeal.ResidueField :=
     ratFuncFinitePlace_residueField_finite p
-  letI : q.asIdeal.LiesOver p.asIdeal := ⟨rfl⟩
-  letI hLocalAlg :=
+  let : q.asIdeal.LiesOver p.asIdeal := ⟨rfl⟩
+  let hLocalAlg :=
     Localization.AtPrime.algebraOfLiesOver p.asIdeal q.asIdeal
   have : IsScalarTower K[X] (Localization.AtPrime p.asIdeal)
       (Localization.AtPrime q.asIdeal) := inferInstance
-  letI : Algebra.QuasiFiniteAt K[X] q.asIdeal := inferInstance
-  letI : Module.Finite p.asIdeal.ResidueField q.asIdeal.ResidueField :=
+  let : Algebra.QuasiFiniteAt K[X] q.asIdeal := inferInstance
+  let : Module.Finite p.asIdeal.ResidueField q.asIdeal.ResidueField :=
     inferInstance
   exact Module.finite_of_finite p.asIdeal.ResidueField
 
@@ -142,23 +142,23 @@ theorem finiteExtensionFinitePlaceLocal_residueField_perfect [Fintype K]
     PerfectField
       (IsDiscreteValuationRing.maximalIdeal
         (FiniteExtensionFinitePlaceLocalRing K L q)).asIdeal.ResidueField := by
-  letI : Finite q.asIdeal.ResidueField :=
+  let : Finite q.asIdeal.ResidueField :=
     finiteExtensionFinitePlace_residueField_finite q
-  letI : Finite (HasQuotient.Quotient
+  let : Finite (HasQuotient.Quotient
       (FunctionField.ringOfIntegers K L) q.asIdeal) :=
     Finite.of_injective
       (algebraMap
         (HasQuotient.Quotient (FunctionField.ringOfIntegers K L) q.asIdeal)
         q.asIdeal.ResidueField)
       q.asIdeal.injective_algebraMap_quotient_residueField
-  letI : IsDiscreteValuationRing
+  let : IsDiscreteValuationRing
       (FiniteExtensionFinitePlaceLocalRing K L q) :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain
       (FunctionField.ringOfIntegers K L) q.ne_bot
       (FiniteExtensionFinitePlaceLocalRing K L q)
   let e := IsLocalization.AtPrime.equivQuotMaximalIdeal q.asIdeal
     (FiniteExtensionFinitePlaceLocalRing K L q)
-  letI : Finite (HasQuotient.Quotient
+  let : Finite (HasQuotient.Quotient
       (FiniteExtensionFinitePlaceLocalRing K L q)
       (IsDiscreteValuationRing.maximalIdeal
         (FiniteExtensionFinitePlaceLocalRing K L q)).asIdeal) :=
@@ -167,7 +167,7 @@ theorem finiteExtensionFinitePlaceLocal_residueField_perfect [Fintype K]
     (FiniteExtensionFinitePlaceLocalRing K L q)
     (IsDiscreteValuationRing.maximalIdeal
       (FiniteExtensionFinitePlaceLocalRing K L q)).asIdeal
-  letI : Finite
+  let : Finite
       (IsDiscreteValuationRing.maximalIdeal
         (FiniteExtensionFinitePlaceLocalRing K L q)).asIdeal.ResidueField :=
     IsLocalization.finite Rq (nonZeroDivisors Rq)
@@ -196,9 +196,9 @@ theorem finiteExtensionFinitePlace_auxiliaryFamily_caseII_nonnegative_of_preserv
       finiteExtensionFinitePlaceLocalOrderTop (K := K) (L := L) q
         (indexedDedekindLocalWronskian D epsilon
           (auxiliaryFamily u v h k)).det := by
-  letI := finiteExtensionFinitePlaceLocalAlgebra (K := K) (L := L) q
-  letI := finiteExtensionFinitePlaceLocalIsFractionRing (K := K) (L := L) q
-  letI : IsDiscreteValuationRing
+  let := finiteExtensionFinitePlaceLocalAlgebra (K := K) (L := L) q
+  let := finiteExtensionFinitePlaceLocalIsFractionRing (K := K) (L := L) q
+  let : IsDiscreteValuationRing
       (FiniteExtensionFinitePlaceLocalRing K L q) :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain
       (FunctionField.ringOfIntegers K L) q.ne_bot
@@ -296,14 +296,14 @@ theorem finiteExtensionFinitePlace_auxiliaryFamily_caseI_q_wronskian_bound_of_sc
         finiteExtensionFinitePlaceLocalOrderTop (K := K) (L := L) q
           (indexedDedekindLocalWronskian D epsilonOrder
             (auxiliaryFamily u v h k)).det := by
-  letI := finiteExtensionFinitePlaceLocalAlgebra (K := K) (L := L) q
-  letI := finiteExtensionFinitePlaceLocalIsFractionRing (K := K) (L := L) q
-  letI : IsDiscreteValuationRing
+  let := finiteExtensionFinitePlaceLocalAlgebra (K := K) (L := L) q
+  let := finiteExtensionFinitePlaceLocalIsFractionRing (K := K) (L := L) q
+  let : IsDiscreteValuationRing
       (FiniteExtensionFinitePlaceLocalRing K L q) :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain
       (FunctionField.ringOfIntegers K L) q.ne_bot
       (FiniteExtensionFinitePlaceLocalRing K L q)
-  letI : CharP (FiniteExtensionFinitePlaceLocalRing K L q) p := ⟨by
+  let : CharP (FiniteExtensionFinitePlaceLocalRing K L q) p := ⟨by
     intro n
     rw [← map_eq_zero_iff
       (finiteExtensionFinitePlaceLocalizationToField
@@ -314,7 +314,7 @@ theorem finiteExtensionFinitePlace_auxiliaryFamily_caseI_q_wronskian_bound_of_sc
         exact IsFractionRing.injective
           (FiniteExtensionFinitePlaceLocalRing K L q) L),
       map_natCast, CharP.cast_eq_zero_iff L p]⟩
-  letI : PerfectField
+  let : PerfectField
       (IsDiscreteValuationRing.maximalIdeal
         (FiniteExtensionFinitePlaceLocalRing K L q)).asIdeal.ResidueField :=
     finiteExtensionFinitePlaceLocal_residueField_perfect q

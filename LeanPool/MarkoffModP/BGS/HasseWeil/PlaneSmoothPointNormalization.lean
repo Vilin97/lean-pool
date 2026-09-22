@@ -170,7 +170,7 @@ theorem squareExtensionClosedPoint_residue_squareFrobenius
   let wf : SquareExtensionClosedPointFiber K p f m :=
     ⟨w, Subtype.ext hw⟩
   let ι := squareExtensionFiberResidueAlgHom K p f m wf
-  letI : Fintype (SquareExtension K p) := Fintype.ofFinite _
+  let : Fintype (SquareExtension K p) := Fintype.ofFinite _
   have hcard : Fintype.card (SquareExtension K p) =
       (Fintype.card K) ^ 2 := by
     rw [Fintype.card_eq_nat_card, FiniteField.natCard_extension K p 2,
@@ -208,7 +208,7 @@ theorem squareExtensionClosedPoint_asIdeal_ne_bot_of_partialY
     (hsmooth : planeCurvePartialY f ∉ m.1.asIdeal) :
     letI := planeCurveCoordinateRing_isDomain hf
     m.1.asIdeal ≠ ⊥ := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let A := PlaneCurveCoordinateRing f
   obtain ⟨z, hz⟩ := m.2
@@ -250,7 +250,7 @@ theorem planeCurveClosedPoint_localization_isDiscreteValuationRing
     (hsmooth : planeCurvePartialY f ∉ m.asIdeal) :
     letI := planeCurveCoordinateRing_isDomain hf
     IsDiscreteValuationRing (Localization.AtPrime m.asIdeal) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let A := PlaneCurveCoordinateRing f
   let d : A := planeCurvePartialY f
@@ -261,44 +261,44 @@ theorem planeCurveClosedPoint_localization_isDiscreteValuationRing
     change d ∈ m.asIdeal
     rw [hd]
     exact m.asIdeal.zero_mem
-  letI : IsDomain Ad := IsLocalization.Away.isDomain Ad hd0
+  let : IsDomain Ad := IsLocalization.Away.isDomain Ad hd0
   have hdisj : Disjoint ((Submonoid.powers d : Submonoid A) : Set A)
       (m.asIdeal : Set A) := by
     rw [Ideal.disjoint_powers_iff_notMem_of_isPrime]
     exact hsmooth
   let q : Ideal Ad := Ideal.map (algebraMap A Ad) m.asIdeal
-  letI hqPrime : q.IsPrime :=
+  let hqPrime : q.IsPrime :=
     IsLocalization.isPrime_of_isPrime_disjoint
       (Submonoid.powers d) Ad m.asIdeal m.isMaximal.isPrime hdisj
   have hunder : q.comap (algebraMap A Ad) = m.asIdeal := by
     exact IsLocalization.under_map_of_isPrime_disjoint
       (Submonoid.powers d) Ad m.isMaximal.isPrime hdisj
-  letI hunderMax : (q.comap (algebraMap A Ad)).IsMaximal := by
+  let hunderMax : (q.comap (algebraMap A Ad)).IsMaximal := by
     rw [hunder]
     exact m.isMaximal
-  letI hqMax : q.IsMaximal := by
-    exact Ideal.IsMaximal.of_isLocalization_of_disjoint (Submonoid.powers d) Ad q
+  let hqMax : q.IsMaximal := by
+    exact IsLocalization.isMaximal_of_isMaximal_under (Submonoid.powers d) Ad q
   let S := Localization.AtPrime q
-  letI : IsLocalRing S := IsLocalization.AtPrime.isLocalRing S q
-  letI : IsDomain S := IsLocalization.isDomain_of_atPrime S q
-  letI : Algebra A S := inferInstance
-  letI : IsScalarTower A Ad S := inferInstance
-  letI hSatPrime : IsLocalization.AtPrime S m.asIdeal := by
+  let : IsLocalRing S := IsLocalization.AtPrime.isLocalRing S q
+  let : IsDomain S := IsLocalization.isDomain_of_atPrime S q
+  let : Algebra A S := inferInstance
+  let : IsScalarTower A Ad S := inferInstance
+  let hSatPrime : IsLocalization.AtPrime S m.asIdeal := by
     have hlocal : IsLocalization.AtPrime S
         (q.comap (algebraMap A Ad)) :=
       IsLocalization.isLocalization_isLocalization_atPrime_isLocalization
       (Submonoid.powers d) S q
     refine ⟨?_⟩
     simpa only [hunder] using hlocal.toIsLocalizationMap
-  letI : Algebra K S := inferInstance
-  letI : IsScalarTower K A S := inferInstance
-  letI : IsScalarTower K Ad S := inferInstance
-  letI : Algebra.IsStandardSmooth K Ad :=
+  let : Algebra K S := inferInstance
+  let : IsScalarTower K A S := inferInstance
+  let : IsScalarTower K Ad S := inferInstance
+  let : Algebra.IsStandardSmooth K Ad :=
     planeCurvePartialYLocalization_isStandardSmooth f
-  letI : Algebra.FormallySmooth K Ad := inferInstance
-  letI : Algebra.FormallySmooth Ad S :=
+  let : Algebra.FormallySmooth K Ad := inferInstance
+  let : Algebra.FormallySmooth Ad S :=
     Algebra.FormallySmooth.of_isLocalization q.primeCompl
-  letI : Algebra.FormallySmooth K S :=
+  let : Algebra.FormallySmooth K S :=
     Algebra.FormallySmooth.comp K Ad S
 
   let P := planeCurvePartialYSubmersivePresentation f
@@ -319,9 +319,9 @@ theorem planeCurveClosedPoint_localization_isDiscreteValuationRing
     exact planeCurvePartialYSubmersivePresentation_dimension f
 
   let eResidue := atPrimeResidueAlgEquiv K A S m.asIdeal
-  letI : Finite k := Finite.of_injective eResidue.symm eResidue.symm.injective
-  letI : Algebra.IsSeparable K k := inferInstance
-  letI : Algebra.FormallyEtale K k :=
+  let : Finite k := Finite.of_injective eResidue.symm eResidue.symm.injective
+  let : Algebra.IsSeparable K k := inferInstance
+  let : Algebra.FormallyEtale K k :=
     Algebra.FormallyEtale.of_isSeparable K k
   have hraw : Function.Injective
       (KaehlerDifferential.kerCotangentToTensor K S k) := by
@@ -356,7 +356,7 @@ theorem planeCurveClosedPoint_localization_isDiscreteValuationRing
     IsLocalRing.finrank_cotangentSpace_le_one_iff.mp hcotangent
   have hSDvr : IsDiscreteValuationRing S :=
     ((IsDiscreteValuationRing.TFAE S hnotField).out 5 1).mp hprincipal
-  letI : IsDiscreteValuationRing S := hSDvr
+  let : IsDiscreteValuationRing S := hSDvr
   exact IsDiscreteValuationRing.RingEquivClass.isDiscreteValuationRing
     (IsLocalization.algEquiv m.asIdeal.primeCompl S
       (Localization.AtPrime m.asIdeal)).toRingEquiv
@@ -372,7 +372,7 @@ theorem squareExtensionClosedPoint_localization_isDiscreteValuationRing
     (hsmooth : planeCurvePartialY f ∉ m.1.asIdeal) :
     letI := planeCurveCoordinateRing_isDomain hf
     IsDiscreteValuationRing (Localization.AtPrime m.1.asIdeal) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let A := PlaneCurveCoordinateRing f
   let d : A := planeCurvePartialY f
@@ -383,44 +383,44 @@ theorem squareExtensionClosedPoint_localization_isDiscreteValuationRing
     change d ∈ m.1.asIdeal
     rw [hd]
     exact m.1.asIdeal.zero_mem
-  letI : IsDomain Ad := IsLocalization.Away.isDomain Ad hd0
+  let : IsDomain Ad := IsLocalization.Away.isDomain Ad hd0
   have hdisj : Disjoint ((Submonoid.powers d : Submonoid A) : Set A)
       (m.1.asIdeal : Set A) := by
     rw [Ideal.disjoint_powers_iff_notMem_of_isPrime]
     exact hsmooth
   let q : Ideal Ad := Ideal.map (algebraMap A Ad) m.1.asIdeal
-  letI hqPrime : q.IsPrime :=
+  let hqPrime : q.IsPrime :=
     IsLocalization.isPrime_of_isPrime_disjoint
       (Submonoid.powers d) Ad m.1.asIdeal m.1.isMaximal.isPrime hdisj
   have hunder : q.comap (algebraMap A Ad) = m.1.asIdeal := by
     exact IsLocalization.under_map_of_isPrime_disjoint
       (Submonoid.powers d) Ad m.1.isMaximal.isPrime hdisj
-  letI hunderMax : (q.comap (algebraMap A Ad)).IsMaximal := by
+  let hunderMax : (q.comap (algebraMap A Ad)).IsMaximal := by
     rw [hunder]
     exact m.1.isMaximal
-  letI hqMax : q.IsMaximal := by
-    exact Ideal.IsMaximal.of_isLocalization_of_disjoint (Submonoid.powers d) Ad q
+  let hqMax : q.IsMaximal := by
+    exact IsLocalization.isMaximal_of_isMaximal_under (Submonoid.powers d) Ad q
   let S := Localization.AtPrime q
-  letI : IsLocalRing S := IsLocalization.AtPrime.isLocalRing S q
-  letI : IsDomain S := IsLocalization.isDomain_of_atPrime S q
-  letI : Algebra A S := inferInstance
-  letI : IsScalarTower A Ad S := inferInstance
-  letI hSatPrime : IsLocalization.AtPrime S m.1.asIdeal := by
+  let : IsLocalRing S := IsLocalization.AtPrime.isLocalRing S q
+  let : IsDomain S := IsLocalization.isDomain_of_atPrime S q
+  let : Algebra A S := inferInstance
+  let : IsScalarTower A Ad S := inferInstance
+  let hSatPrime : IsLocalization.AtPrime S m.1.asIdeal := by
     have hlocal : IsLocalization.AtPrime S
         (q.comap (algebraMap A Ad)) :=
       IsLocalization.isLocalization_isLocalization_atPrime_isLocalization
       (Submonoid.powers d) S q
     refine ⟨?_⟩
     simpa only [hunder] using hlocal.toIsLocalizationMap
-  letI : Algebra K S := inferInstance
-  letI : IsScalarTower K A S := inferInstance
-  letI : IsScalarTower K Ad S := inferInstance
-  letI : Algebra.IsStandardSmooth K Ad :=
+  let : Algebra K S := inferInstance
+  let : IsScalarTower K A S := inferInstance
+  let : IsScalarTower K Ad S := inferInstance
+  let : Algebra.IsStandardSmooth K Ad :=
     planeCurvePartialYLocalization_isStandardSmooth f
-  letI : Algebra.FormallySmooth K Ad := inferInstance
-  letI : Algebra.FormallySmooth Ad S :=
+  let : Algebra.FormallySmooth K Ad := inferInstance
+  let : Algebra.FormallySmooth Ad S :=
     Algebra.FormallySmooth.of_isLocalization q.primeCompl
-  letI : Algebra.FormallySmooth K S :=
+  let : Algebra.FormallySmooth K S :=
     Algebra.FormallySmooth.comp K Ad S
 
   let P := planeCurvePartialYSubmersivePresentation f
@@ -444,11 +444,11 @@ theorem squareExtensionClosedPoint_localization_isDiscreteValuationRing
   let zf : SquareExtensionClosedPointFiber K p f m :=
     ⟨z, Subtype.ext hz⟩
   let ι := squareExtensionFiberResidueAlgHom K p f m zf
-  letI : Finite m.1.asIdeal.ResidueField := Finite.of_injective ι ι.injective
+  let : Finite m.1.asIdeal.ResidueField := Finite.of_injective ι ι.injective
   let eResidue := atPrimeResidueAlgEquiv K A S m.1.asIdeal
-  letI : Finite k := Finite.of_injective eResidue.symm eResidue.symm.injective
-  letI : Algebra.IsSeparable K k := inferInstance
-  letI : Algebra.FormallyEtale K k :=
+  let : Finite k := Finite.of_injective eResidue.symm eResidue.symm.injective
+  let : Algebra.IsSeparable K k := inferInstance
+  let : Algebra.FormallyEtale K k :=
     Algebra.FormallyEtale.of_isSeparable K k
   have hraw : Function.Injective
       (KaehlerDifferential.kerCotangentToTensor K S k) := by
@@ -486,7 +486,7 @@ theorem squareExtensionClosedPoint_localization_isDiscreteValuationRing
     IsLocalRing.finrank_cotangentSpace_le_one_iff.mp hcotangent
   have hSDvr : IsDiscreteValuationRing S :=
     ((IsDiscreteValuationRing.TFAE S hnotField).out 5 1).mp hprincipal
-  letI : IsDiscreteValuationRing S := hSDvr
+  let : IsDiscreteValuationRing S := hSDvr
   exact IsDiscreteValuationRing.RingEquivClass.isDiscreteValuationRing
     (IsLocalization.algEquiv m.1.asIdeal.primeCompl S
       (Localization.AtPrime m.1.asIdeal)).toRingEquiv
@@ -771,10 +771,10 @@ theorem finiteExtensionFinitePlace_residue_squareFrobenius_of_degree_le_two
   have hdegree' : Module.finrank K q.asIdeal.ResidueField ≤ 2 := by
     rw [finiteExtensionFinitePlace_degree_eq_finrank_residueField K L q] at hdegree
     exact hdegree
-  letI : Finite q.asIdeal.ResidueField :=
+  let : Finite q.asIdeal.ResidueField :=
     finiteExtensionFinitePlace_residueField_finite (K := K) (L := L) q
-  letI : Fintype q.asIdeal.ResidueField := Fintype.ofFinite _
-  letI : Module.Finite K q.asIdeal.ResidueField := by
+  let : Fintype q.asIdeal.ResidueField := Fintype.ofFinite _
+  let : Module.Finite K q.asIdeal.ResidueField := by
     rw [Module.finite_def]
     exact ⟨Finset.univ, by simp⟩
   have hpositive : 0 < Module.finrank K q.asIdeal.ResidueField := Module.finrank_pos
@@ -818,24 +818,24 @@ theorem squareExtensionClosedPointExhaustiveFinitePlace_placeDegree_le_two_of_pa
     finiteExtensionPlaceDegree K (PlaneCurveFunctionField f)
         (.inl (squareExtensionClosedPointExhaustiveFinitePlace
           K p hf hpartialSecond m)) ≤ 2 := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
-  letI : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : Algebra (Polynomial K) (PlaneCurveFunctionField f) :=
+  let : Algebra (Polynomial K) (PlaneCurveFunctionField f) :=
     RingHom.toAlgebra
       ((algebraMap (RatFunc K) (PlaneCurveFunctionField f)).comp
         (algebraMap (Polynomial K) (RatFunc K)))
-  letI : IsScalarTower (Polynomial K) (RatFunc K)
+  let : IsScalarTower (Polynomial K) (RatFunc K)
       (PlaneCurveFunctionField f) :=
     IsScalarTower.of_algebraMap_eq' rfl
-  letI : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
     separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : DecidableEq (RatFunc K) := Classical.decEq _
+  let : DecidableEq (RatFunc K) := Classical.decEq _
   rw [squareExtensionClosedPointExhaustiveFinitePlace_placeDegree_eq_residueDegree_of_partialY
     K p hf hpartialSecond m hsmooth]
   exact squareExtensionClosedPoint_residueDegree_le_two K p f m
@@ -867,24 +867,24 @@ theorem squareExtensionClosedPointExhaustiveFinitePlace_residue_squareFrobenius_
     ∀ z : (squareExtensionClosedPointExhaustiveFinitePlace
         K p hf hpartialSecond m).asIdeal.ResidueField,
       z ^ (Fintype.card K) ^ 2 = z := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
-  letI : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : Algebra (Polynomial K) (PlaneCurveFunctionField f) :=
+  let : Algebra (Polynomial K) (PlaneCurveFunctionField f) :=
     RingHom.toAlgebra
       ((algebraMap (RatFunc K) (PlaneCurveFunctionField f)).comp
         (algebraMap (Polynomial K) (RatFunc K)))
-  letI : IsScalarTower (Polynomial K) (RatFunc K)
+  let : IsScalarTower (Polynomial K) (RatFunc K)
       (PlaneCurveFunctionField f) :=
     IsScalarTower.of_algebraMap_eq' rfl
-  letI : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
     separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : DecidableEq (RatFunc K) := Classical.decEq _
+  let : DecidableEq (RatFunc K) := Classical.decEq _
   let q := squareExtensionClosedPointExhaustiveFinitePlace
     K p hf hpartialSecond m
   apply finiteExtensionFinitePlace_residue_squareFrobenius_of_degree_le_two

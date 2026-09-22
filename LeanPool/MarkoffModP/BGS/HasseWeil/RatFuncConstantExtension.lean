@@ -131,7 +131,7 @@ private noncomputable def polynomialModuleEquivPolynomial :
 
 local instance polynomialCoefficientModuleFinite [FiniteDimensional K S] :
     Module.Finite K[X] S[X] := by
-  letI : Module.Finite K[X] (TensorProduct K K[X] S) :=
+  let : Module.Finite K[X] (TensorProduct K K[X] S) :=
     Module.Finite.base_change K K[X] S
   exact Module.Finite.equiv
     ((PolynomialModule.polynomialTensorProductLEquivPolynomialModule K S).trans

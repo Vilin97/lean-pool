@@ -50,7 +50,7 @@ local instance constantAlgebra : Algebra C N :=
 private theorem canonicalRatFuncFractionRing :
     letI := canonicalRatFuncPolynomialAlgebra C
     IsFractionRing C[X] (RatFunc C) := by
-  letI := canonicalRatFuncPolynomialAlgebra C
+  let := canonicalRatFuncPolynomialAlgebra C
   infer_instance
 
 local instance polynomialAlgebra : Algebra C[X] N :=
@@ -64,7 +64,7 @@ local instance coefficientPolynomialModule : Module C[X] S[X] :=
   Algebra.toModule
 
 local instance coefficientPolynomialFlat : Module.Flat C[X] S[X] := by
-  letI : Module.Flat C[X] (TensorProduct C C[X] S) := inferInstance
+  let : Module.Flat C[X] (TensorProduct C C[X] S) := inferInstance
   exact Module.Flat.of_linearEquiv
     (Algebra.IsPushout.equiv C C[X] S S[X]).symm.toLinearEquiv
 
@@ -149,7 +149,7 @@ noncomputable def ratFuncToExactConstantExtension :
 theorem ratFuncToExactConstantExtension_injective :
     Function.Injective
       (ratFuncToExactConstantExtension C S N hExact) := by
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
   let hpoly := targetPolynomialAlgebraMap_injective C S N
   exact RatFunc.liftAlgHom_injective
@@ -161,7 +161,7 @@ theorem ratFuncToExactConstantExtension_algebraMap (p : S[X]) :
         (algebraMap S[X] (RatFunc S) p) =
       Polynomial.aeval
         (polynomialTensorCancelEvaluationPoint C S N) p := by
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
   change RatFunc.liftAlgHom _ _ (algebraMap S[X] (RatFunc S) p) = _
   exact RatFunc.liftRingHom_algebraMap _ _ p
@@ -169,7 +169,7 @@ theorem ratFuncToExactConstantExtension_algebraMap (p : S[X]) :
 theorem ratFuncToExactConstantExtension_X :
     ratFuncToExactConstantExtension C S N hExact RatFunc.X =
       polynomialTensorCancelEvaluationPoint C S N := by
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
   calc
     ratFuncToExactConstantExtension C S N hExact RatFunc.X =
@@ -202,15 +202,15 @@ theorem rationalBase_algebraMap_eq :
     algebraMap (RatFunc C) (ExactConstantExtension C N S) =
       (algebraMap (RatFunc S) (ExactConstantExtension C N S)).comp
         (algebraMap (RatFunc C) (RatFunc S)) := by
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
-  letI : Algebra C[X] (RatFunc C) := canonicalRatFuncPolynomialAlgebra C
-  letI : IsFractionRing C[X] (RatFunc C) := canonicalRatFuncFractionRing C
-  letI : Algebra (RatFunc C) (RatFunc S) :=
+  let : Algebra C[X] (RatFunc C) := canonicalRatFuncPolynomialAlgebra C
+  let : IsFractionRing C[X] (RatFunc C) := canonicalRatFuncFractionRing C
+  let : Algebra (RatFunc C) (RatFunc S) :=
     ratFuncCoefficientAlgebra C S
-  letI : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-  letI : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
     ratFuncExactConstantExtensionAlgebra C S N hExact
   apply IsFractionRing.ringHom_ext (A := C[X])
   intro p
@@ -257,20 +257,20 @@ theorem rationalBase_scalarTower :
       Algebra.toModule
     IsScalarTower (RatFunc C) (RatFunc S)
       (ExactConstantExtension C N S) := by
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc C) (RatFunc S) :=
+  let : Algebra (RatFunc C) (RatFunc S) :=
     ratFuncCoefficientAlgebra C S
-  letI : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-  letI : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
     ratFuncExactConstantExtensionAlgebra C S N hExact
-  letI : SMul (RatFunc C) (RatFunc S) := Algebra.toSMul
-  letI : SMul (RatFunc C) (ExactConstantExtension C N S) := Algebra.toSMul
-  letI : SMul (RatFunc S) (ExactConstantExtension C N S) := Algebra.toSMul
-  letI : Module (RatFunc C) (ExactConstantExtension C N S) :=
+  let : SMul (RatFunc C) (RatFunc S) := Algebra.toSMul
+  let : SMul (RatFunc C) (ExactConstantExtension C N S) := Algebra.toSMul
+  let : SMul (RatFunc S) (ExactConstantExtension C N S) := Algebra.toSMul
+  let : Module (RatFunc C) (ExactConstantExtension C N S) :=
     Algebra.toModule
-  letI : Module (RatFunc S) (ExactConstantExtension C N S) :=
+  let : Module (RatFunc S) (ExactConstantExtension C N S) :=
     Algebra.toModule
   exact IsScalarTower.of_algebraMap_eq'
     (rationalBase_algebraMap_eq C S N hExact)
@@ -296,36 +296,36 @@ theorem finiteDimensional_over_extendedRatFunc :
     letI : Module (RatFunc S) (ExactConstantExtension C N S) :=
       Algebra.toModule
     FiniteDimensional (RatFunc S) (ExactConstantExtension C N S) := by
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc C) (RatFunc S) :=
+  let : Algebra (RatFunc C) (RatFunc S) :=
     ratFuncCoefficientAlgebra C S
-  letI : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-  letI : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
     ratFuncExactConstantExtensionAlgebra C S N hExact
-  letI : SMul (RatFunc C) (RatFunc S) := Algebra.toSMul
-  letI : SMul (RatFunc C) (ExactConstantExtension C N S) := Algebra.toSMul
-  letI : SMul (RatFunc S) (ExactConstantExtension C N S) := Algebra.toSMul
-  letI : Module (RatFunc C) (ExactConstantExtension C N S) :=
+  let : SMul (RatFunc C) (RatFunc S) := Algebra.toSMul
+  let : SMul (RatFunc C) (ExactConstantExtension C N S) := Algebra.toSMul
+  let : SMul (RatFunc S) (ExactConstantExtension C N S) := Algebra.toSMul
+  let : Module (RatFunc C) (ExactConstantExtension C N S) :=
     Algebra.toModule
-  letI : Module (RatFunc S) (ExactConstantExtension C N S) :=
+  let : Module (RatFunc S) (ExactConstantExtension C N S) :=
     Algebra.toModule
-  letI : IsScalarTower (RatFunc C) (RatFunc S)
+  let : IsScalarTower (RatFunc C) (RatFunc S)
       (ExactConstantExtension C N S) :=
     rationalBase_scalarTower C S N hExact
-  letI : Algebra N (ExactConstantExtension C N S) :=
+  let : Algebra N (ExactConstantExtension C N S) :=
     exactConstantExtensionAlgebra C N S
-  letI : SMul N (ExactConstantExtension C N S) := Algebra.toSMul
-  letI : Module N (ExactConstantExtension C N S) := Algebra.toModule
-  letI : IsScalarTower (RatFunc C) N (ExactConstantExtension C N S) :=
+  let : SMul N (ExactConstantExtension C N S) := Algebra.toSMul
+  let : Module N (ExactConstantExtension C N S) := Algebra.toModule
+  let : IsScalarTower (RatFunc C) N (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseTower C (RatFunc C) N S
   let e := exactConstantExtensionLinearEquiv C N S
-  letI : Module.Finite N (N ⊗[C] S) :=
+  let : Module.Finite N (N ⊗[C] S) :=
     Module.Finite.base_change C N S
-  letI : Module.Finite N (ExactConstantExtension C N S) :=
+  let : Module.Finite N (ExactConstantExtension C N S) :=
     Module.Finite.equiv e
-  letI : Module.Finite (RatFunc C) (ExactConstantExtension C N S) :=
+  let : Module.Finite (RatFunc C) (ExactConstantExtension C N S) :=
     Module.Finite.trans N (ExactConstantExtension C N S)
   exact Module.Finite.of_restrictScalars_finite
     (RatFunc C) (RatFunc S) (ExactConstantExtension C N S)
@@ -344,24 +344,24 @@ theorem isSeparable_exactConstantExtension_over_baseRatFunc :
     letI : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
       exactConstantExtensionBaseAlgebra C (RatFunc C) N S
     Algebra.IsSeparable (RatFunc C) (ExactConstantExtension C N S) := by
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
-  letI : IsScalarTower C (RatFunc C) N :=
+  let : IsScalarTower C (RatFunc C) N :=
     IsScalarTower.of_algebraMap_eq' rfl
-  letI : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-  letI : SMul (RatFunc C) (ExactConstantExtension C N S) :=
+  let : SMul (RatFunc C) (ExactConstantExtension C N S) :=
     Algebra.toSMul
-  letI : Module (RatFunc C) (ExactConstantExtension C N S) :=
+  let : Module (RatFunc C) (ExactConstantExtension C N S) :=
     Algebra.toModule
-  letI : Algebra N (ExactConstantExtension C N S) :=
+  let : Algebra N (ExactConstantExtension C N S) :=
     exactConstantExtensionAlgebra C N S
-  letI : SMul N (ExactConstantExtension C N S) := Algebra.toSMul
-  letI : Module N (ExactConstantExtension C N S) := Algebra.toModule
-  letI : IsScalarTower (RatFunc C) N
+  let : SMul N (ExactConstantExtension C N S) := Algebra.toSMul
+  let : Module N (ExactConstantExtension C N S) := Algebra.toModule
+  let : IsScalarTower (RatFunc C) N
       (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseTower C (RatFunc C) N S
-  letI : IsGalois N (ExactConstantExtension C N S) :=
+  let : IsGalois N (ExactConstantExtension C N S) :=
     exactConstantExtension_isGalois C N N S hExact
   exact Algebra.IsSeparable.trans
     (RatFunc C) N (ExactConstantExtension C N S)
@@ -381,32 +381,32 @@ theorem isSeparable_over_extendedRatFunc :
     letI : SMul (RatFunc C) (ExactConstantExtension C N S) := Algebra.toSMul
     letI : SMul (RatFunc S) (ExactConstantExtension C N S) := Algebra.toSMul
     Algebra.IsSeparable (RatFunc S) (ExactConstantExtension C N S) := by
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
-  letI : IsScalarTower C (RatFunc C) N :=
+  let : IsScalarTower C (RatFunc C) N :=
     IsScalarTower.of_algebraMap_eq' rfl
-  letI : Algebra (RatFunc C) (RatFunc S) :=
+  let : Algebra (RatFunc C) (RatFunc S) :=
     ratFuncCoefficientAlgebra C S
-  letI : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-  letI : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
     ratFuncExactConstantExtensionAlgebra C S N hExact
-  letI : SMul (RatFunc C) (RatFunc S) := Algebra.toSMul
-  letI : SMul (RatFunc C) (ExactConstantExtension C N S) := Algebra.toSMul
-  letI : SMul (RatFunc S) (ExactConstantExtension C N S) := Algebra.toSMul
-  letI : IsScalarTower (RatFunc C) (RatFunc S)
+  let : SMul (RatFunc C) (RatFunc S) := Algebra.toSMul
+  let : SMul (RatFunc C) (ExactConstantExtension C N S) := Algebra.toSMul
+  let : SMul (RatFunc S) (ExactConstantExtension C N S) := Algebra.toSMul
+  let : IsScalarTower (RatFunc C) (RatFunc S)
       (ExactConstantExtension C N S) :=
     rationalBase_scalarTower C S N hExact
-  letI : Algebra N (ExactConstantExtension C N S) :=
+  let : Algebra N (ExactConstantExtension C N S) :=
     exactConstantExtensionAlgebra C N S
-  letI : SMul N (ExactConstantExtension C N S) := Algebra.toSMul
-  letI : Module N (ExactConstantExtension C N S) := Algebra.toModule
-  letI : IsScalarTower (RatFunc C) N
+  let : SMul N (ExactConstantExtension C N S) := Algebra.toSMul
+  let : Module N (ExactConstantExtension C N S) := Algebra.toModule
+  let : IsScalarTower (RatFunc C) N
       (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseTower C (RatFunc C) N S
-  letI : IsGalois N (ExactConstantExtension C N S) :=
+  let : IsGalois N (ExactConstantExtension C N S) :=
     exactConstantExtension_isGalois C N N S hExact
-  letI : Algebra.IsSeparable (RatFunc C) (ExactConstantExtension C N S) :=
+  let : Algebra.IsSeparable (RatFunc C) (ExactConstantExtension C N S) :=
     isSeparable_exactConstantExtension_over_baseRatFunc C S N hExact
   exact Algebra.isSeparable_tower_top_of_isSeparable
     (RatFunc C) (RatFunc S) (ExactConstantExtension C N S)
@@ -425,11 +425,11 @@ theorem scalarTower_constant_ratFunc_exactConstantExtension :
     letI : SMul (RatFunc S) (ExactConstantExtension C N S) :=
       Algebra.toSMul
     IsScalarTower S (RatFunc S) (ExactConstantExtension C N S) := by
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
     ratFuncExactConstantExtensionAlgebra C S N hExact
-  letI : SMul (RatFunc S) (ExactConstantExtension C N S) :=
+  let : SMul (RatFunc S) (ExactConstantExtension C N S) :=
     Algebra.toSMul
   apply IsScalarTower.of_algebraMap_eq'
   ext s

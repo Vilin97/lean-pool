@@ -222,7 +222,7 @@ local instance branchFiniteFractionRingSeparable :
     Algebra.IsSeparable
       (FractionRing (RatFuncFiniteIntegralClosure K M))
       (FractionRing (RatFuncFiniteIntegralClosure K L)) := by
-  letI : Algebra.IsSeparable M L :=
+  let : Algebra.IsSeparable M L :=
     Algebra.isSeparable_tower_top_of_isSeparable (RatFunc K) M L
   refine Algebra.IsSeparable.of_equiv_equiv
     (FractionRing.algEquiv (RatFuncFiniteIntegralClosure K M) M).symm.toRingEquiv

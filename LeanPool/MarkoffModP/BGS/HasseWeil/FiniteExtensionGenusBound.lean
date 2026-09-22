@@ -60,7 +60,7 @@ theorem genus_le_budget_of_uniformRiemann_onePoint
     rw [finiteExtensionDivisorDegree_single]
     norm_num
   have hdata := hRiemann.2 D (threshold * d) hthreshold hdegree
-  letI : Module.Finite K (finiteExtensionRiemannSpace K L D) := hdata.1
+  let : Module.Finite K (finiteExtensionRiemannSpace K L D) := hdata.1
   have hspace : finiteExtensionRiemannSpace K L D =
       finiteExtensionOnePointRiemannSpace K L P threshold := by
     rfl

@@ -138,17 +138,17 @@ theorem finiteExtensionDivisorDegreeIndex_eq_one_of_exactConstantExtension_close
     finiteExtensionDivisorDegreeIndex C N = 1 := by
   let E := ExactConstantExtension C N S
   let d := finiteExtensionDivisorDegreeIndex C N
-  letI : Field E := exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc S) E :=
+  let : Field E := exactConstantExtensionField C N S hExact
+  let : Algebra (RatFunc S) E :=
     ratFuncExactConstantExtensionAlgebra C S N hExact
-  letI : SMul (RatFunc S) E := Algebra.toSMul
-  letI : Module (RatFunc S) E := Algebra.toModule
-  letI : FiniteDimensional (RatFunc S) E :=
+  let : SMul (RatFunc S) E := Algebra.toSMul
+  let : Module (RatFunc S) E := Algebra.toModule
+  let : FiniteDimensional (RatFunc S) E :=
     finiteDimensional_over_extendedRatFunc C S N hExact
-  letI : Algebra.IsSeparable (RatFunc S) E :=
+  let : Algebra.IsSeparable (RatFunc S) E :=
     isSeparable_over_extendedRatFunc C S N hExact
-  letI : DecidableEq S := infinityBridgeDecidableEqConstants S
-  letI : DecidableEq (RatFunc S) :=
+  let : DecidableEq S := infinityBridgeDecidableEqConstants S
+  let : DecidableEq (RatFunc S) :=
     closedPlaceRatFuncConstantsDecidableEq S
   let extendedConstantAlgebra : Algebra S E :=
     RingHom.toAlgebra ((algebraMap (RatFunc S) E).comp
@@ -178,7 +178,7 @@ theorem finiteExtensionDivisorDegreeIndex_eq_one_of_exactConstantExtension_close
   have hTensorRange (z : E)
       (hz : @IsAlgebraic S E _ _ tensorConstantAlgebra z) :
       z ∈ Set.range (@algebraMap S E _ _ tensorConstantAlgebra) := by
-    letI : Algebra S E := tensorConstantAlgebra
+    let : Algebra S E := tensorConstantAlgebra
     have hTensorExact : algebraicClosure S E =
         (⊥ : IntermediateField S E) :=
       exactConstantExtension_algebraicClosure_eq_bot C N S hExact
@@ -188,7 +188,7 @@ theorem finiteExtensionDivisorDegreeIndex_eq_one_of_exactConstantExtension_close
       rw [← hTensorExact]
       exact hzClosure
     exact hzBot
-  letI : Algebra S E := extendedConstantAlgebra
+  let : Algebra S E := extendedConstantAlgebra
   have hExtendedExact : algebraicClosure S E =
       (⊥ : IntermediateField S E) := by
     apply eq_bot_iff.mpr

@@ -99,7 +99,7 @@ theorem sum_residueScalar_smul_parameter_pow {q : ℕ} (hq : 0 < q)
   simp only [HahnSeries.coeff_sum,
     coeff_subfield_smul_parameter_pow K hq]
   rw [Finset.sum_ite_eq Finset.univ i₀]
-  simp only [Finset.mem_univ, if_true]
+  simp only [Finset.mem_univ, ite_true]
   rw [laurentUndilate_residueScalar, coeff_laurentResidueComponent, hm]
 
 /-- The powers `1,z,...,z^(q-1)` span `K((z))` over `K((z^q))`. -/

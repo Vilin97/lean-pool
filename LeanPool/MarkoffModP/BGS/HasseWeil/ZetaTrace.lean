@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
 
-import Mathlib
+import Mathlib.Analysis.CStarAlgebra.Classes
+import Mathlib.Tactic
 
 /-!
 # From zeta-function spectral data to the Hasse--Weil estimate

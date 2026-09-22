@@ -300,7 +300,7 @@ theorem exists_onePointStepanovAuxiliary_of_target_finrank_upper
       c ≠ 0 ∧
       onePointStepanovSecondCodRestrictionMap K L P f g ell m s hf hg c = 0 ∧
       onePointStepanovFirstRestrictionMap K L f g s c ≠ 0 := by
-  letI : Module.Finite K
+  let : Module.Finite K
       (finiteExtensionOnePointRiemannSpace K L P (s * ell + m)) :=
     finiteExtensionOnePointRiemannSpace_moduleFinite K L P _
   apply exists_auxiliary_of_finrank_lt

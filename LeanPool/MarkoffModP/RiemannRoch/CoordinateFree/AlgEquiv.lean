@@ -118,8 +118,8 @@ theorem mapAlgEquiv_valuation_eq_comap (e : K ≃ₐ[k] L) (v : Place k K) :
     refine ⟨e x, ?_, ?_⟩
     · simpa [q] using hx0
     · simpa [q] using hx1
-  letI : q.IsNontrivial := hqnontrivial
-  letI : q.IsRankOneDiscrete := Valuation.IsRankOneDiscrete.mk' q
+  let : q.IsNontrivial := hqnontrivial
+  let : q.IsRankOneDiscrete := Valuation.IsRankOneDiscrete.mk' q
   let V := q.valuationSubring
   let h := Valuation.isEquiv_valuation_valuationSubring q
   let ε : ValueGroup₀ (.ofClass V.valuation) ≃*o

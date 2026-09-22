@@ -66,7 +66,7 @@ noncomputable def Place.ofChart (w : PlaceA k K) : Place k K := by
         rw [Valuation.mem_valuationSubring_iff]
         exact placeValuation_algebraMap_le_one k K w c
       isDiscrete := ?_ }
-  letI : q.IsRankOneDiscrete := hqdisc
+  let : q.IsRankOneDiscrete := hqdisc
   let h := Valuation.isEquiv_valuation_valuationSubring q
   exact ⟨h.orderMonoidIso.symm.trans
     (Valuation.IsRankOneDiscrete.valueGroup₀_equiv_withZeroMulInt q)⟩
@@ -90,7 +90,7 @@ theorem Place.ofChart_valuation_eq (w : PlaceA k K) :
   let V := q.valuationSubring
   have hqdisc : q.IsRankOneDiscrete := by
     rcases w with w | w <;> dsimp [q, placeValuation] <;> infer_instance
-  letI : q.IsRankOneDiscrete := hqdisc
+  let : q.IsRankOneDiscrete := hqdisc
   let h := Valuation.isEquiv_valuation_valuationSubring q
   let e : ValueGroup₀ (.ofClass V.valuation) ≃*o ℤᵐ⁰ :=
     h.orderMonoidIso.symm.trans
@@ -228,7 +228,7 @@ theorem restrict_isNontrivial (v : Place k K) :
     (restrict k K v).IsNontrivial := by
   let q := restrict k K v
   by_contra hq
-  letI : v.valuation.IsTrivialOn k⟮X⟯ :=
+  let : v.valuation.IsTrivialOn k⟮X⟯ :=
     { eq_one := fun a ha => by
         change q a = 1
         by_contra hne
@@ -247,8 +247,8 @@ theorem restrict_classification (v : Place k K) :
       (∃! u : IsDedekindDomain.HeightOneSpectrum k[X],
         (restrict k K v).IsEquiv (u.valuation k⟮X⟯)) := by
   let q := restrict k K v
-  letI : q.IsNontrivial := restrict_isNontrivial k K v
-  letI : q.IsRankOneDiscrete := Valuation.IsRankOneDiscrete.mk' q
+  let : q.IsNontrivial := restrict_isNontrivial k K v
+  let : q.IsRankOneDiscrete := Valuation.IsRankOneDiscrete.mk' q
   exact RatFunc.valuation_isEquiv_infty_or_adic (v := q)
 
 omit [IsScalarTower k k[X] K] [FunctionField k K] [Algebra.IsSeparable k⟮X⟯ K] in
@@ -262,7 +262,7 @@ theorem finiteRing_le (v : Place k K)
     rw [← v.valuationSubring_valuation, Valuation.mem_valuationSubring_iff]
     rw [IsScalarTower.algebraMap_apply k[X] k⟮X⟯ K]
     exact h.le_one_iff_le_one.mpr (u.valuation_le_one p)
-  letI : IsIntegrallyClosedIn v.toValuationSubring.toSubring K :=
+  let : IsIntegrallyClosedIn v.toValuationSubring.toSubring K :=
     Subring.isIntegrallyClosedIn_iff.mpr fun {_x} hx =>
       LocalSubring.mem_of_isMax_of_isIntegral
         v.toValuationSubring.isMax_toLocalSubring hx
@@ -313,7 +313,7 @@ theorem infiniteRing_le (v : Place k K)
     rw [← v.valuationSubring_valuation, Valuation.mem_valuationSubring_iff]
     rw [IsScalarTower.algebraMap_apply (inftyValuationSubring k) k⟮X⟯ K]
     exact h.le_one_iff_le_one.mpr a.property
-  letI : IsIntegrallyClosedIn v.toValuationSubring.toSubring K :=
+  let : IsIntegrallyClosedIn v.toValuationSubring.toSubring K :=
     Subring.isIntegrallyClosedIn_iff.mpr fun {_x} hx =>
       LocalSubring.mem_of_isMax_of_isIntegral
         v.toValuationSubring.isMax_toLocalSubring hx
@@ -362,7 +362,7 @@ theorem infinite_X_gt_one
   let u := IsDiscreteValuationRing.maximalIdeal A
   have hund : w.asIdeal.under A = u.asIdeal := by
     exact IsLocalRing.eq_maximalIdeal inferInstance
-  letI : w.asIdeal.LiesOver u.asIdeal := ⟨hund.symm⟩
+  let : w.asIdeal.LiesOver u.asIdeal := ⟨hund.symm⟩
   have hbase : (u.valuation k⟮X⟯).IsEquiv (RatFunc.inftyValuation k) := by
     rw [Valuation.isEquiv_iff_valuationSubring]
     apply ValuationSubring.toSubring_injective

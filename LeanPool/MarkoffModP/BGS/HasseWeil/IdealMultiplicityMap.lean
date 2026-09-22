@@ -48,7 +48,7 @@ theorem multiplicity_map_eq_ramificationIdx_mul_under
     multiplicity w.asIdeal (I.map (algebraMap R S)) =
       w.asIdeal.ramificationIdx R *
         multiplicity (w.under R).asIdeal I := by
-  letI : w.asIdeal.LiesOver (w.under R).asIdeal := ⟨rfl⟩
+  let : w.asIdeal.LiesOver (w.under R).asIdeal := ⟨rfl⟩
   simpa using
     multiplicity_map_eq_ramificationIdx_mul
       (R := R) (S := S) (w.under R) w I hI

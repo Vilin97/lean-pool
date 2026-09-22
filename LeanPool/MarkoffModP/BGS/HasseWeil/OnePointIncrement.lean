@@ -67,7 +67,7 @@ theorem finiteExtensionOnePointRiemannSpace_increment
       change Module.Finite K
         (finiteExtensionOnePointRiemannSpace K L (.inl q) n)
       infer_instance
-    letI := hbase
+    let := hbase
     have h := finiteExtensionRiemannSpace_finitePlace_increment
       K L (Finsupp.single (.inl q) (n : ℤ)) hD q
     have hdivisor :
@@ -87,7 +87,7 @@ theorem finiteExtensionOnePointRiemannSpace_increment
       change Module.Finite K
         (finiteExtensionOnePointRiemannSpace K L (.inr q) n)
       infer_instance
-    letI := hbase
+    let := hbase
     have h := finiteExtensionRiemannSpace_infinityPlace_increment
       K L (Finsupp.single (.inr q) (n : ℤ)) hD q
     have hdivisor :
@@ -112,7 +112,7 @@ theorem finiteExtensionOnePointRiemannSpace_moduleFinite
   | zero =>
       exact finiteExtensionOnePointRiemannSpace_zero_moduleFinite K L P
   | succ n ih =>
-      letI : Module.Finite K
+      let : Module.Finite K
           (finiteExtensionOnePointRiemannSpace K L P n) := ih
       exact (finiteExtensionOnePointRiemannSpace_increment K L P n).1
 
@@ -124,7 +124,7 @@ theorem finiteExtensionOnePointRiemannSpace_finrank_succ_le
       Module.finrank K
           (finiteExtensionOnePointRiemannSpace K L P n) +
         finiteExtensionPlaceDegree K L P := by
-  letI : Module.Finite K
+  let : Module.Finite K
       (finiteExtensionOnePointRiemannSpace K L P n) :=
     finiteExtensionOnePointRiemannSpace_moduleFinite K L P n
   exact (finiteExtensionOnePointRiemannSpace_increment K L P n).2

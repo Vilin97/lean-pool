@@ -54,7 +54,7 @@ theorem X_pow_sub_C_irreducible_of_sqrt_neg_one
     intro E _ _ x hx
     have hxIntegral : IsIntegral K x := not_not.mp fun h => by
       simpa only [degree_zero, degree_X_pow_sub_C hp.pos,
-        WithBot.natCast_ne_bot] using congr_arg degree (hx.symm.trans (dif_neg h))
+        WithBot.natCast_ne_bot] using congr_arg degree (hx.symm.trans (dite_eq_right h))
     let iE : ↥(IntermediateField.adjoin K {x}) :=
       algebraMap K (↥(IntermediateField.adjoin K {x})) i
     have hiE : iE ^ 2 = -1 := by
@@ -85,7 +85,7 @@ theorem splitTraceEtaKummerPolynomial_irreducible_of_sqrt_neg_one
       ⟨splitTraceBaseKummerPolynomial_irreducible sigma hsigma⟩
     Irreducible (splitTraceEtaKummerPolynomial sigma e) := by
   let hBaseIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
   apply X_pow_sub_C_irreducible_of_sqrt_neg_one
     (algebraMap K (SplitTraceBaseFunctionField K sigma) i)
   · rw [← map_pow, hi, map_neg, map_one]
@@ -104,10 +104,10 @@ lemma splitTraceEtaFunctionField_finrank_of_sqrt_neg_one
     Module.finrank (SplitTraceBaseFunctionField K sigma)
       (SplitTraceEtaFunctionField K sigma e) = e := by
   let hBaseIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
   let hEtaIrred := splitTraceEtaKummerPolynomial_irreducible_of_sqrt_neg_one
     sigma hsigma i hi e he
-  letI : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
+  let : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
   rw [PowerBasis.finrank (AdjoinRoot.powerBasis hEtaIrred.ne_zero)]
   change (splitTraceEtaKummerPolynomial sigma e).natDegree = e
   simp [splitTraceEtaKummerPolynomial]
@@ -130,13 +130,13 @@ theorem splitTraceXiRadicand_not_primePower_of_sqrt_neg_one
         sigma hsigma i hi e he⟩
     z ^ q ≠ splitTraceXiRadicand sigma e := by
   let hBaseIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
   let hEtaIrred := splitTraceEtaKummerPolynomial_irreducible_of_sqrt_neg_one
     sigma hsigma i hi e he
-  letI : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
-  letI : Module.Finite (RatFunc K) (SplitTraceBaseFunctionField K sigma) :=
+  let : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
+  let : Module.Finite (RatFunc K) (SplitTraceBaseFunctionField K sigma) :=
     (monic_X_pow_sub_C _ (by norm_num : (2 : ℕ) ≠ 0)).finite_adjoinRoot
-  letI : Module.Finite (SplitTraceBaseFunctionField K sigma)
+  let : Module.Finite (SplitTraceBaseFunctionField K sigma)
       (SplitTraceEtaFunctionField K sigma e) :=
     (monic_X_pow_sub_C _ he.ne').finite_adjoinRoot
   have hBaseV : splitTraceBaseV sigma ≠ 0 := by
@@ -194,10 +194,10 @@ theorem splitTraceXiKummerPolynomial_irreducible_of_sqrt_neg_one_coprime
         sigma hsigma i hi e he⟩
     Irreducible (splitTraceXiKummerPolynomial sigma e d) := by
   let hBaseIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
   let hEtaIrred := splitTraceEtaKummerPolynomial_irreducible_of_sqrt_neg_one
     sigma hsigma i hi e he
-  letI : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
+  let : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
   rw [splitTraceXiKummerPolynomial]
   apply X_pow_sub_C_irreducible_of_sqrt_neg_one
     (algebraMap K (SplitTraceEtaFunctionField K sigma e) i)
@@ -219,7 +219,7 @@ private theorem generalSplitTraceEtaKummerPolynomial_natDegree
       ⟨splitTraceBaseKummerPolynomial_irreducible sigma hsigma⟩
     (splitTraceEtaKummerPolynomial sigma e).natDegree = e := by
   let hBaseIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
   change (X ^ e - C (splitTraceBaseV sigma)).natDegree = e
   exact natDegree_X_pow_sub_C
 
@@ -233,10 +233,10 @@ private theorem generalSplitTraceXiKummerPolynomial_natDegree
         sigma hsigma i hi e he⟩
     (splitTraceXiKummerPolynomial sigma e d).natDegree = d := by
   let hBaseIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
   let hEtaIrred := splitTraceEtaKummerPolynomial_irreducible_of_sqrt_neg_one
     sigma hsigma i hi e he
-  letI : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
+  let : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
   change (X ^ d - C (splitTraceXiRadicand sigma e)).natDegree = d
   exact natDegree_X_pow_sub_C
 
@@ -328,9 +328,9 @@ theorem generalSplitTracePolynomialSyntacticNormalForm_evaluation
   | monomial ex c =>
       rw [generalSplitTracePolynomialSyntacticNormalForm_monomial,
         splitTraceExplicitNormalFormEvaluation]
-      letI : CommRing (SplitTraceBaseFunctionField K sigma) := AdjoinRoot.instCommRing _
-      letI : CommRing (SplitTraceEtaFunctionField K sigma e) := AdjoinRoot.instCommRing _
-      letI : CommRing (SplitTraceXiFunctionField K sigma e d) := AdjoinRoot.instCommRing _
+      let : CommRing (SplitTraceBaseFunctionField K sigma) := AdjoinRoot.instCommRing _
+      let : CommRing (SplitTraceEtaFunctionField K sigma e) := AdjoinRoot.instCommRing _
+      let : CommRing (SplitTraceXiFunctionField K sigma e d) := AdjoinRoot.instCommRing _
       rw [Finsupp.linearCombination_single]
       simp only [Algebra.smul_def, generalSplitTraceMonomialNormalIndex_fst_val,
         generalSplitTraceMonomialNormalIndex_snd_val, map_mul]
@@ -388,9 +388,9 @@ theorem generalSplitTracePolynomialSyntacticNormalForm_eq_zero_iff
       generalSplitTracePolynomialToKummerTop sigma e d p = 0 := by
   rw [← generalSplitTracePolynomialSyntacticNormalForm_evaluation
     sigma hsigma i hi e d he hd p]
-  letI : CommRing (SplitTraceBaseFunctionField K sigma) := AdjoinRoot.instCommRing _
-  letI : CommRing (SplitTraceEtaFunctionField K sigma e) := AdjoinRoot.instCommRing _
-  letI : CommRing (SplitTraceXiFunctionField K sigma e d) := AdjoinRoot.instCommRing _
+  let : CommRing (SplitTraceBaseFunctionField K sigma) := AdjoinRoot.instCommRing _
+  let : CommRing (SplitTraceEtaFunctionField K sigma e) := AdjoinRoot.instCommRing _
+  let : CommRing (SplitTraceXiFunctionField K sigma e d) := AdjoinRoot.instCommRing _
   change generalSplitTracePolynomialSyntacticNormalForm
       sigma hsigma i hi e d he hd p = 0 ↔
     Finsupp.linearCombination (SplitTraceBaseFunctionField K sigma)
@@ -546,13 +546,13 @@ theorem generalSplitTraceKummerTower_cover_maps_to_zero :
     generalSplitTracePolynomialToKummerTop sigma e d
       (splitTraceCoverPolynomial (1 : K) sigma d e) = 0 := by
   let hBaseIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
   let hEtaIrred := splitTraceEtaKummerPolynomial_irreducible_of_sqrt_neg_one
     sigma hsigma i hi e he
-  letI : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
+  let : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
   let hXiIrred := splitTraceXiKummerPolynomial_irreducible_of_sqrt_neg_one_coprime
     sigma hsigma i hi e d he hd hde
-  letI : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
+  let : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
   let baseToXi : SplitTraceBaseFunctionField K sigma →+*
       SplitTraceXiFunctionField K sigma e d :=
     (algebraMap (SplitTraceEtaFunctionField K sigma e)
@@ -636,14 +636,14 @@ theorem splitTraceCoverPolynomial_irreducible_of_sqrt_neg_one_coprime
     (hnondegenerate : sigma ≠ 1) :
     Irreducible (splitTraceCoverPolynomial (1 : K) sigma d e) := by
   let hBaseIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
   let hEtaIrred := splitTraceEtaKummerPolynomial_irreducible_of_sqrt_neg_one
     sigma hsigma i hi e he
-  letI : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
+  let : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
   let hXiIrred := splitTraceXiKummerPolynomial_irreducible_of_sqrt_neg_one_coprime
     sigma hsigma i hi e d he hd hde
-  letI : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
-  letI : IsDomain (SplitTraceXiFunctionField K sigma e d) :=
+  let : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
+  let : IsDomain (SplitTraceXiFunctionField K sigma e d) :=
     AdjoinRoot.isDomain_of_prime hXiIrred.prime
   let f : MvPolynomial (Fin 2) K →+* SplitTraceXiFunctionField K sigma e d :=
     (generalSplitTracePolynomialToKummerTop sigma e d).toRingHom
@@ -673,7 +673,7 @@ theorem splitTraceCoverPolynomial_irreducible_of_sqrt_neg_one_coprime
     Ideal.Quotient.lift I f hI_le
   have hInjective : Function.Injective quotientToTop :=
     RingHom.lift_injective_of_ker_le_ideal I hI_le hker_le
-  letI : IsDomain (MvPolynomial (Fin 2) K ⧸ I) :=
+  let : IsDomain (MvPolynomial (Fin 2) K ⧸ I) :=
     hInjective.isDomain quotientToTop
   have hprimeIdeal : I.IsPrime :=
     (Ideal.Quotient.isDomain_iff_prime I).mp inferInstance

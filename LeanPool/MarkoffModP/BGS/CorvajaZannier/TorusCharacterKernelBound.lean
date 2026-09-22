@@ -62,10 +62,10 @@ theorem natCard_unitPowerFiber_le {F : Type*} [Field F]
       have hval := congrArg (fun u : rootsOfUnity g F => (u.1 : Fˣ)) hzw
       dsimp only [e] at hval
       exact mul_right_cancel hval
-    haveI : NeZero g := ⟨hg.ne'⟩
+    have : NeZero g := ⟨hg.ne'⟩
     exact (Nat.card_le_card_of_injective e he).trans
       (card_rootsOfUnity F g)
-  · letI : IsEmpty (unitPowerFiber g c) := ⟨fun z => h ⟨z⟩⟩
+  · let : IsEmpty (unitPowerFiber g c) := ⟨fun z => h ⟨z⟩⟩
     simp
 
 /-- The common kernel of two integer characters of a two-dimensional
@@ -133,7 +133,7 @@ theorem finite_torusCharacterKernel_of_det_ne_zero
       _ = (z.1.1 ^ a * z.1.2 ^ b) ^ (-c) *
           (z.1.1 ^ c * z.1.2 ^ d) ^ a := hprod.symm
       _ = 1 := by rw [h₁, h₂]; simp
-  haveI : NeZero D.natAbs := ⟨hDpos.ne'⟩
+  have : NeZero D.natAbs := ⟨hDpos.ne'⟩
   let e : torusCharacterKernel F a b c d →
       rootsOfUnity D.natAbs F × rootsOfUnity D.natAbs F := fun z =>
     ⟨⟨z.1.1, by
@@ -245,10 +245,10 @@ theorem natCard_torusCharacterKernel_le_det
     apply Prod.ext
     · exact congrArg (fun s : Sigma fiber => s.2.1) hzw
     · exact congrArg (fun s : Sigma fiber => s.1.1) hzw
-  haveI : NeZero q.natAbs := ⟨hqpos.ne'⟩
-  haveI : NeZero g := ⟨hg.ne'⟩
-  letI : Fintype base := Fintype.ofFinite base
-  letI (η : base) : Finite (fiber η) := unitPowerFiber_finite g _
+  have : NeZero q.natAbs := ⟨hqpos.ne'⟩
+  have : NeZero g := ⟨hg.ne'⟩
+  let : Fintype base := Fintype.ofFinite base
+  let (η : base) : Finite (fiber η) := unitPowerFiber_finite g _
   have hbase : Nat.card base ≤ q.natAbs := card_rootsOfUnity F q.natAbs
   have hfiber : ∀ η : base, Nat.card (fiber η) ≤ g := by
     intro η
@@ -289,7 +289,7 @@ theorem natCard_planeCurveSupportCharacterStabilizer_le_supportDet
   let d : ℤ := (t 1 : ℤ) - (r 1 : ℤ)
   have hdet' : a * d - b * c ≠ 0 := by
     simpa [a, b, c, d, planeCurveSupportDifferenceDet] using hdet
-  letI : Finite (torusCharacterKernel F a b c d) :=
+  let : Finite (torusCharacterKernel F a b c d) :=
     finite_torusCharacterKernel_of_det_ne_zero a b c d hdet'
   let e : planeCurveSupportCharacterStabilizer F f →
       torusCharacterKernel F a b c d := fun z =>

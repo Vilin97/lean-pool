@@ -88,7 +88,7 @@ private theorem count_relNorm_heightOne_of_liesOver (p : HeightOneSpectrum R)
     Ring.DimensionLEOne.maximalOfPrime p.ne_bot p.isPrime
   have hQmax : Q.asIdeal.IsMaximal :=
     Ring.DimensionLEOne.maximalOfPrime Q.ne_bot Q.isPrime
-  letI : Q.asIdeal.LiesOver p.asIdeal := hQp
+  let : Q.asIdeal.LiesOver p.asIdeal := hQp
   rw [relNorm_eq_pow_of_isMaximal_of_isSeparable Q.asIdeal p.asIdeal]
   rw [FractionalIdeal.coeIdeal_pow]
   simp [FractionalIdeal.count_pow, FractionalIdeal.count_self]
@@ -113,7 +113,7 @@ private theorem count_relNorm_heightOne_of_not_liesOver
     apply hQp
     rw [← heq]
     exact hQq
-  letI : Q.asIdeal.LiesOver q.asIdeal := hQq
+  let : Q.asIdeal.LiesOver q.asIdeal := hQq
   rw [relNorm_eq_pow_of_isMaximal_of_isSeparable Q.asIdeal q.asIdeal]
   rw [FractionalIdeal.coeIdeal_pow]
   rw [FractionalIdeal.count_pow,

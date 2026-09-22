@@ -75,7 +75,7 @@ theorem traceSeparabilityElement_central (b : Basis ι K L) (x : L) :
   simp only [Finset.sum_apply']
   simp_rw [TensorProduct.equivFinsuppOfBasisLeft_apply_tmul_apply]
   simp only [Basis.repr_self, Finsupp.single_apply, ite_smul, one_smul, zero_smul,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   rw [← traceDual_mul_eq_sum_repr b x j]
 
 /-- Multiplication sends the trace-dual separability element to one. -/
@@ -184,7 +184,7 @@ private lemma exists_integral_traceDual_mul
     rw [← Submodule.restrictScalars_mem A,
       Submodule.traceDual_span_of_basis A (1 : Submodule B L) bK hbspan]
     exact Submodule.subset_span (Set.mem_range_self i)
-  letI : IsFractionRing B L :=
+  let : IsFractionRing B L :=
     IsIntegralClosure.isFractionRing_of_finite_extension A K L B
   have hd' : algebraMap B L d ∈
       (FractionalIdeal.dual A K (1 : FractionalIdeal B⁰ L))⁻¹ := by
@@ -222,14 +222,14 @@ variable {A B κ : Type*}
 private theorem mem_kaehlerAnnihilator_of_mem_differentIdeal_of_basis
     (bA : Basis κ A B) (d : B) (hd : d ∈ differentIdeal A B) :
     d ∈ Module.annihilator B Ω[B⁄A] := by
-  letI : IsIntegralClosure B A (FractionRing B) :=
+  let : IsIntegralClosure B A (FractionRing B) :=
     IsIntegralClosure.of_isIntegrallyClosed B A (FractionRing B)
-  letI : Algebra.IsAlgebraic (FractionRing A) (FractionRing B) :=
+  let : Algebra.IsAlgebraic (FractionRing A) (FractionRing B) :=
     isAlgebraic_of_isFractionRing A B ..
-  letI : IsLocalization
+  let : IsLocalization
       (Algebra.algebraMapSubmonoid B A⁰) (FractionRing B) :=
     IsIntegralClosure.isLocalization A (FractionRing A) (FractionRing B) B
-  letI : FiniteDimensional (FractionRing A) (FractionRing B) :=
+  let : FiniteDimensional (FractionRing A) (FractionRing B) :=
     .of_isLocalization A B A⁰
   let bK := bA.localizationLocalization (FractionRing A) A⁰ (FractionRing B)
   let c : κ → B := fun i ↦
@@ -248,7 +248,7 @@ private theorem mem_kaehlerAnnihilator_of_mem_differentIdeal_of_basis
       one_mul, map_sum, Finset.sum_apply']
     simp_rw [TensorProduct.equivFinsuppOfBasisLeft_apply_tmul_apply]
     simp only [Basis.repr_self, Finsupp.single_apply, ite_smul, one_smul,
-      zero_smul, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      zero_smul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     apply FaithfulSMul.algebraMap_injective B (FractionRing B)
     rw [map_sum]
     have htrace := traceDual_mul_eq_sum_repr bK
@@ -308,7 +308,7 @@ theorem differentIdeal_le_kaehlerDifferentialAnnihilator
     differentIdeal A B ≤ Module.annihilator B Ω[B⁄A] := by
   intro d hd
   let bA := Module.Free.chooseBasis A B
-  letI := Classical.decEq (Module.Free.ChooseBasisIndex A B)
+  let := Classical.decEq (Module.Free.ChooseBasisIndex A B)
   exact mem_kaehlerAnnihilator_of_mem_differentIdeal_of_basis bA d hd
 
 /-- In a principal target, a generator of the trace different is also a

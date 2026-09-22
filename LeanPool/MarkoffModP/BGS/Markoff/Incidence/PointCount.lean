@@ -28,7 +28,7 @@ def squareRootCount (t : F) : ℤ :=
 theorem squareRootCount_eq_quadraticChar_add_one
     (hF : ringChar F ≠ 2) (t : F) :
     squareRootCount t = quadraticChar F t + 1 := by
-  simpa [squareRootCount, Set.toFinset_setOf] using quadraticChar_card_sqrts hF t
+  simpa [squareRootCount, Set.toFinset_ofPred] using quadraticChar_card_sqrts hF t
 
 /-- The generic quadratic branch value occurring in each auxiliary equation. -/
 def branchValue (A C y : F) : F :=

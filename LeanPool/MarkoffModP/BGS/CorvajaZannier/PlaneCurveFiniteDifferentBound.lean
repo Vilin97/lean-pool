@@ -182,15 +182,15 @@ theorem planeCurvePolynomialInSecondCoordinate_discr_ne_zero
     (hf : Irreducible f)
     (hpartialSecond : MvPolynomial.pderiv 1 f ≠ 0) :
     (planeCurvePolynomialInSecondCoordinate f).discr ≠ 0 := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
-  letI : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
     separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
   let F : (RatFunc K)[X] :=
     (planeCurvePolynomialInSecondCoordinate f).map
@@ -332,7 +332,7 @@ theorem finiteExtensionFiniteDifferentDivisorBelow_apply
             (differentIdeal K[X] (RatFuncFiniteIntegralClosure K L)) := by
   classical
   let e := finitePlaceFiberEquivPrimesOver K L p
-  letI : Fintype {q : FiniteExtensionFinitePlace K L //
+  let : Fintype {q : FiniteExtensionFinitePlace K L //
       HeightOneSpectrum.under K[X] q = p} :=
     Fintype.ofEquiv (p.asIdeal.primesOver (RatFuncFiniteIntegralClosure K L)) e.symm
   let P₀ : p.asIdeal.primesOver (RatFuncFiniteIntegralClosure K L) :=
@@ -641,17 +641,17 @@ theorem planeCurve_finiteDifferentDivisorBelow_apply_le_discrOrder
           (PlaneCurveFunctionField f)) p : ℤ) ≤
       ratFuncFiniteOrder p (algebraMap K[X] (RatFunc K)
         (planeCurvePolynomialInSecondCoordinate f).discr) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
   let L := PlaneCurveFunctionField f
   let algRL : Algebra (RatFunc K) L :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : Algebra (RatFunc K) L := algRL
-  letI : FiniteDimensional (RatFunc K) L :=
+  let : Algebra (RatFunc K) L := algRL
+  let : FiniteDimensional (RatFunc K) L :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K) L :=
+  let : Algebra.IsSeparable (RatFunc K) L :=
     separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
   let A := Localization.AtPrime p.asIdeal
   let ι := localizationAtPrimeToRatFunc p
@@ -666,29 +666,29 @@ theorem planeCurve_finiteDifferentDivisorBelow_apply_le_discrOrder
   let algAR : Algebra A (RatFunc K) := ι.toAlgebra
   let algPL : Algebra K[X] L := RingHom.toAlgebra
     ((algebraMap (RatFunc K) L).comp (algebraMap K[X] (RatFunc K)))
-  letI : Algebra K[X] A := algRA
-  letI : Algebra K[X] (RatFunc K) := algRR
-  letI : Algebra A (RatFunc K) := algAR
-  letI : Algebra K[X] L := algPL
-  letI : SMul K[X] A := algRA.toSMul
-  letI : SMul K[X] (RatFunc K) := algRR.toSMul
-  letI : SMul A (RatFunc K) := algAR.toSMul
-  letI : SMul K[X] L := algPL.toSMul
-  letI : IsScalarTower K[X] A (RatFunc K) := by
+  let : Algebra K[X] A := algRA
+  let : Algebra K[X] (RatFunc K) := algRR
+  let : Algebra A (RatFunc K) := algAR
+  let : Algebra K[X] L := algPL
+  let : SMul K[X] A := algRA.toSMul
+  let : SMul K[X] (RatFunc K) := algRR.toSMul
+  let : SMul A (RatFunc K) := algAR.toSMul
+  let : SMul K[X] L := algPL.toSMul
+  let : IsScalarTower K[X] A (RatFunc K) := by
     apply IsScalarTower.of_algebraMap_eq'
     exact (localizationAtPrimeToRatFunc_comp_algebraMap p).symm
-  letI : IsFractionRing A (RatFunc K) :=
+  let : IsFractionRing A (RatFunc K) :=
     IsFractionRing.isFractionRing_of_isDomain_of_isLocalization
       p.asIdeal.primeCompl A (RatFunc K)
   let algAL : Algebra A L :=
     ((algebraMap (RatFunc K) L).comp ι).toAlgebra
-  letI : SMul (RatFunc K) L := algRL.toSMul
-  letI : Algebra A L := algAL
-  letI : SMul A L := algAL.toSMul
-  letI : IsScalarTower A (RatFunc K) L := by
+  let : SMul (RatFunc K) L := algRL.toSMul
+  let : Algebra A L := algAL
+  let : SMul A L := algAL.toSMul
+  let : IsScalarTower A (RatFunc K) L := by
     apply IsScalarTower.of_algebraMap_eq'
     rfl
-  letI : IsScalarTower K[X] A L := by
+  let : IsScalarTower K[X] A L := by
     apply IsScalarTower.of_algebraMap_eq'
     apply DFunLike.ext _ _
     intro r
@@ -697,7 +697,7 @@ theorem planeCurve_finiteDifferentDivisorBelow_apply_le_discrOrder
     exact (congrArg (algebraMap (RatFunc K) L)
       (DFunLike.congr_fun
         (localizationAtPrimeToRatFunc_comp_algebraMap p) r)).symm
-  letI : IsDiscreteValuationRing A :=
+  let : IsDiscreteValuationRing A :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain
       K[X] p.ne_bot A
   let v : L := planeCurveFunction f 1
@@ -786,15 +786,15 @@ theorem planeCurve_finiteDifferentDegree_le_discrNatDegree
         (finiteExtensionFiniteDifferentIdeal_ne_bot K
           (PlaneCurveFunctionField f)) ≤
       (planeCurvePolynomialInSecondCoordinate f).discr.natDegree := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
-  letI : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
     separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
   apply finiteExtensionFiniteDifferentDegree_le_polynomialDegree_of_localBounds
     K (PlaneCurveFunctionField f)

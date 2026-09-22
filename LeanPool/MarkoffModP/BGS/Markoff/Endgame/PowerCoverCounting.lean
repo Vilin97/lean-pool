@@ -79,13 +79,13 @@ theorem natCard_powerTraceCoverSolutions
       Nat.card (powMonoidHom d : G →* G).ker *
       Nat.card (powMonoidHom e : H →* H).ker *
           Nat.card (powerTraceRangeSolutions leftTrace rightTrace d e) := by
-  letI : Finite (powMonoidHom d : G →* G).range :=
+  let : Finite (powMonoidHom d : G →* G).range :=
     Finite.of_injective Subtype.val Subtype.val_injective
-  letI : Finite (powMonoidHom e : H →* H).range :=
+  let : Finite (powMonoidHom e : H →* H).range :=
     Finite.of_injective Subtype.val Subtype.val_injective
-  letI : Finite (powerTraceRangeSolutions leftTrace rightTrace d e) :=
+  let : Finite (powerTraceRangeSolutions leftTrace rightTrace d e) :=
     Finite.of_injective Subtype.val Subtype.val_injective
-  letI := Fintype.ofFinite (powerTraceRangeSolutions leftTrace rightTrace d e)
+  let := Fintype.ofFinite (powerTraceRangeSolutions leftTrace rightTrace d e)
   rw [Nat.card_congr (powerTraceCoverEquivSigmaFibers leftTrace rightTrace d e),
     Nat.card_sigma]
   simp_rw [Nat.card_prod, natCard_powerMapFiber_eq_ker]

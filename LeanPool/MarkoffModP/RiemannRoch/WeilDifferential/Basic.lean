@@ -64,7 +64,7 @@ theorem finite_adeleFilt_sub_quotient {D D' : DivisorA k K} (hle : D ≤ D') :
         (adeleFilt k K D + diagonalSubmodule k K)) := by
   have hE : IsEffective k K (D' - D) := (le_iff_sub_effective k K).mp hle
   have hdiv : D + (D' - D) = D' := by abel
-  haveI : Module.Finite k ((adeleFilt k K D') ⧸
+  have : Module.Finite k ((adeleFilt k K D') ⧸
       Submodule.comap (adeleFilt k K D').subtype (adeleFilt k K D)) :=
     finiteAdeleFiltDiff_quotient_add_eq k K (M := D) hdiv.symm hE
   exact Module.Finite.equiv (Submodule.quotientQuotientEquivQuotient
@@ -85,7 +85,7 @@ instance finiteDimensional_adeleQuotient (D : DivisorA k K) :
       adeleFilt k K (D ⊔ D₁) + diagonalSubmodule k K :=
     adeleSubmodule_top_eq_adeleFilt_add_diagonal (k := k) (K := K)
       (defect_eq_genus_of_ge (k := k) (K := K) le_sup_right hD₁)
-  haveI := finite_adeleFilt_sub_quotient (k := k) (K := K) hle
+  have := finite_adeleFilt_sub_quotient (k := k) (K := K) hle
   have hker : Submodule.comap (adeleFilt k K (D ⊔ D₁)).subtype
       (adeleFilt k K D + diagonalSubmodule k K) ≤
       LinearMap.ker (((adeleFilt k K D + diagonalSubmodule k K).mkQ).comp
@@ -104,7 +104,7 @@ instance finiteDimensional_adeleQuotient (D : DivisorA k K) :
   rcases Submodule.mem_sup.mp hx with ⟨a, ha, b, hb, rfl⟩
   refine ⟨Submodule.Quotient.mk ⟨a, ha⟩, ?_⟩
   rw [Submodule.liftQ_apply]
-  show (adeleFilt k K D + diagonalSubmodule k K).mkQ a =
+  change (adeleFilt k K D + diagonalSubmodule k K).mkQ a =
     (adeleFilt k K D + diagonalSubmodule k K).mkQ (a + b)
   have hb0 : (adeleFilt k K D + diagonalSubmodule k K).mkQ b = 0 := by
     rw [Submodule.mkQ_apply]
@@ -162,7 +162,7 @@ theorem finrank_differentialSpace (D : DivisorA k K) :
 
 theorem exists_nontrivial_omega :
     ∃ D : DivisorA k K, differentialSpace D ≠ ⊥ := by
-  letI : IsScalarTower k k⟮X⟯ K :=
+  let : IsScalarTower k k⟮X⟯ K :=
     IsScalarTower.of_algebraMap_eq fun c => by
       rw [IsScalarTower.algebraMap_apply k k[X] K,
         IsScalarTower.algebraMap_apply k[X] k⟮X⟯ K,
@@ -343,7 +343,7 @@ theorem smulWeil_eq_zero_iff (x : K) (hx : x ≠ 0) (ω : WeilDifferential k K) 
       _ = 0 := smul_zero x⁻¹
   · intro hω
     subst hω
-    show x • (0 : WeilDifferential k K) = 0
+    change x • (0 : WeilDifferential k K) = 0
     exact smul_zero x
 
 omit [IsFullConstantField k K] in
@@ -391,7 +391,7 @@ theorem smulWeil_toFun_mem_differentialSpace (ω : WeilDifferential k K) {D₀ :
     (h : D₀ ∈ vanishingDivisors ω) {E : DivisorA k K} (f : RRspace k K E) :
     (smulWeil (f : K) ω).toFun ∈ differentialSpace (k := k) (K := K) (D₀ - E) := by
   have hvan : ∀ α ∈ adeleFilt k K D₀ + diagonalSubmodule k K, ω.toFun α = 0 := h
-  show ∀ a ∈ adeleFilt k K (D₀ - E) + diagonalSubmodule k K,
+  change ∀ a ∈ adeleFilt k K (D₀ - E) + diagonalSubmodule k K,
     (smulWeil (f : K) ω).toFun a = 0
   intro a ha
   rw [smulWeil_toFun_apply]
@@ -835,7 +835,7 @@ theorem duality {W : DivisorA k K} (hW : IsCanonical k K W) (D : DivisorA k K) :
   have hfr : Module.finrank k (RRspace k K (W - D)) =
       Module.finrank k (differentialSpace (k := k) (K := K) (W - (W - D))) :=
     (LinearEquiv.ofBijective μ ⟨hμinj, hμsurj⟩).finrank_eq
-  show Module.finrank k (RRspace k K (W - D)) = indexOfSpecialty k K D
+  change Module.finrank k (RRspace k K (W - D)) = indexOfSpecialty k K D
   rw [hfr, hWD, finrank_differentialSpace]
 
 theorem indexOfSpecialty_eq_ell_sub {W : DivisorA k K} (hW : IsCanonical k K W) (D : DivisorA k K) :

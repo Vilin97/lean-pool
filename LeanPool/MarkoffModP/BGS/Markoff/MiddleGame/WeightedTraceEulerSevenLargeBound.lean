@@ -44,7 +44,7 @@ theorem weightedTraceTorsionIntersection_card_cast_le_eulerSeven_of_largeChar
   let hpartialSecond : MvPolynomial.pderiv 1 f ≠ 0 :=
     weightedTraceTorusClosurePolynomial_pderiv_second_ne_zero
       alpha beta hadmissible.2.1
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let card : ℕ :=
     (BGS.External.torusCurveTorsionIntersection K f m n).card

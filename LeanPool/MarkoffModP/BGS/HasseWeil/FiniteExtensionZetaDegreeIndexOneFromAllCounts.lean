@@ -53,9 +53,9 @@ theorem finiteExtensionDivisorDegreeIndex_eq_one_of_all_exactConstantExtension_c
   let d := finiteExtensionDivisorDegreeIndex C N
   have hd : 0 < d := finiteExtensionDivisorDegreeIndex_pos C N
   let p := ringChar C
-  letI : Fact p.Prime := ⟨CharP.char_is_prime C p⟩
-  letI : NeZero d := ⟨hd.ne'⟩
-  letI : Fintype (FiniteField.Extension C p d) :=
+  let : Fact p.Prime := ⟨CharP.char_is_prime C p⟩
+  let : NeZero d := ⟨hd.ne'⟩
+  let : Fintype (FiniteField.Extension C p d) :=
     Fintype.ofFinite (FiniteField.Extension C p d)
   apply finiteExtensionDivisorDegreeIndex_eq_one_of_exactConstantExtension_closedPlaceCount
     C (FiniteField.Extension C p d) N hExact

@@ -61,13 +61,13 @@ theorem rationalInfinityPlace_card_frobeniusTwistField_le_original_finrank
       C (RatFunc C) N S hExact g
     Nat.card (FiniteExtensionRationalInfinityPlace C F) ≤
       Module.finrank (RatFunc C) N := by
-  letI := exactConstantExtensionField C N S hExact
-  letI := exactConstantExtensionBaseAlgebra C (RatFunc C) N S
+  let := exactConstantExtensionField C N S hExact
+  let := exactConstantExtensionBaseAlgebra C (RatFunc C) N S
   let F := exactConstantExtensionFrobeniusTwistField
     C (RatFunc C) N S hExact g
-  letI : FiniteDimensional (RatFunc C) F :=
+  let : FiniteDimensional (RatFunc C) F :=
     finiteDimensional_frobeniusTwistField_over_ratFunc C N S hExact g
-  letI : Algebra.IsSeparable (RatFunc C) F :=
+  let : Algebra.IsSeparable (RatFunc C) F :=
     isSeparable_frobeniusTwistField_over_ratFunc C N S hExact g
   calc
     Nat.card (FiniteExtensionRationalInfinityPlace C F) ≤

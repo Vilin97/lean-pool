@@ -168,7 +168,7 @@ private lemma changeParameterMatrix_lowerTriangular
 private lemma changeParameterMatrix_det
     (E : Derivation C L L) (a : L) (n : ℕ) :
     (changeParameterMatrix E a n).det = a ^ n.choose 2 := by
-  rw [Matrix.det_of_lowerTriangular _ (changeParameterMatrix_lowerTriangular E a n)]
+  rw [Matrix.det_of_isLowerTriangular _ (changeParameterMatrix_lowerTriangular E a n)]
   simp only [changeParameterMatrix, changeParameterCoeff_diag]
   calc
     ∏ i : Fin n, a ^ (i : ℕ) = a ^ ∑ i : Fin n, (i : ℕ) := by

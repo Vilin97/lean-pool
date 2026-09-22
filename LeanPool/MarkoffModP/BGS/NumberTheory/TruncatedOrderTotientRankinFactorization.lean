@@ -129,7 +129,7 @@ private theorem weightedTotientRatio_primePowerSum
   intro index hindex
   simp only [weightedTotientRatio_apply_ne_zero _
       (pow_ne_zero _ hprime.ne_zero), factorizationWeight,
-      pow_ne_zero _ hprime.ne_zero, if_false, hprime.factorization_pow]
+      pow_ne_zero _ hprime.ne_zero, ite_false, hprime.factorization_pow]
   rw [Finsupp.prod_single_index]
   rw [Nat.totient_prime_pow_succ hprime]
   push_cast

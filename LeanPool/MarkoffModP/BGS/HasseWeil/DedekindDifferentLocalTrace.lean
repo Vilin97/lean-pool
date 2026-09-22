@@ -184,13 +184,13 @@ theorem finite_badDifferentCount_set (hdiff : differentIdeal A B ≠ ⊥) (y : L
       ((differentIdeal A B : Ideal B) : FractionalIdeal B⁰ L) = 0 := by
     by_contra hne
     exact hq (by
-      rw [Set.mem_union, Set.mem_setOf_eq, Set.mem_setOf_eq]
+      rw [Set.mem_union, Set.mem_ofPred_eq, Set.mem_ofPred_eq]
       exact Or.inl hne)
   have hqy : FractionalIdeal.count L q
       (FractionalIdeal.spanSingleton B⁰ y) = 0 := by
     by_contra hne
     exact hq (by
-      rw [Set.mem_union, Set.mem_setOf_eq, Set.mem_setOf_eq]
+      rw [Set.mem_union, Set.mem_ofPred_eq, Set.mem_ofPred_eq]
       exact Or.inr hne)
   apply hbad
   rw [← FractionalIdeal.count_coeIdeal_eq_multiplicity

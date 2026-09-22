@@ -124,7 +124,7 @@ theorem moduleFinite_range_tensorProductMap
     [Module.Finite K R] [Module.Finite K S]
     (f : R ⊗[K] S →ₗ[K] U) :
     Module.Finite K (LinearMap.range f) := by
-  letI : Module.Finite K (R ⊗[K] S) :=
+  let : Module.Finite K (R ⊗[K] S) :=
     moduleFinite_tensorProduct
   exact Module.Finite.range f
 
@@ -136,7 +136,7 @@ theorem finrank_range_tensorProductMap_le
     (f : R ⊗[K] S →ₗ[K] U) :
     Module.finrank K (LinearMap.range f) ≤
       Module.finrank K R * Module.finrank K S := by
-  letI : Module.Finite K (R ⊗[K] S) :=
+  let : Module.Finite K (R ⊗[K] S) :=
     moduleFinite_tensorProduct
   calc
     Module.finrank K (LinearMap.range f) ≤
@@ -151,7 +151,7 @@ theorem moduleFinite_of_surjective_tensorProductMap
     [Module.Finite K R] [Module.Finite K S]
     (f : R ⊗[K] S →ₗ[K] U) (hf : Function.Surjective f) :
     Module.Finite K U := by
-  letI : Module.Finite K (R ⊗[K] S) :=
+  let : Module.Finite K (R ⊗[K] S) :=
     moduleFinite_tensorProduct
   exact Module.Finite.of_surjective f hf
 
@@ -162,7 +162,7 @@ theorem finrank_le_mul_of_surjective_tensorProductMap
     [Module.Finite K R] [Module.Finite K S]
     (f : R ⊗[K] S →ₗ[K] U) (hf : Function.Surjective f) :
     Module.finrank K U ≤ Module.finrank K R * Module.finrank K S := by
-  letI : Module.Finite K (R ⊗[K] S) :=
+  let : Module.Finite K (R ⊗[K] S) :=
     moduleFinite_tensorProduct
   calc
     Module.finrank K U ≤ Module.finrank K (R ⊗[K] S) :=

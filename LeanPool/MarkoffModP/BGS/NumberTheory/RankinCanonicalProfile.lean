@@ -80,12 +80,12 @@ theorem actualNeighborExponent_pos
     · exact Nat.prime_of_mem_primeFactors hminus
     · exact Nat.prime_of_mem_primeFactors hplus
   by_cases hminus : prime ∈ (p - 1).primeFactors
-  · simp only [actualNeighborExponent, if_pos hminus]
+  · simp only [actualNeighborExponent, ite_eq_left hminus]
     exact hprimePrime.factorization_pos_of_dvd (by omega)
       (Nat.dvd_of_mem_primeFactors hminus)
   · have hplus : prime ∈ (p + 1).primeFactors :=
       hdata.2.resolve_left hminus
-    simp only [actualNeighborExponent, if_neg hminus]
+    simp only [actualNeighborExponent, ite_eq_right hminus]
     exact hprimePrime.factorization_pos_of_dvd (by omega)
       (Nat.dvd_of_mem_primeFactors hplus)
 

@@ -40,7 +40,7 @@ theorem moduleFinite_and_finrank_le_of_finite_linearIndependent_card_le
   have hιFinite : Finite ι := by
     rw [← not_infinite_iff_finite]
     intro hιInfinite
-    letI : Infinite ι := hιInfinite
+    let : Infinite ι := hιInfinite
     obtain ⟨s, hs⟩ := Infinite.exists_subset_card_eq ι (g + 1)
     let v : s → V := fun i ↦ b i.1
     have hv : LinearIndependent K v :=
@@ -49,10 +49,10 @@ theorem moduleFinite_and_finrank_le_of_finite_linearIndependent_card_le
     have hcard : Fintype.card s = g + 1 := by
       simpa only [Fintype.card_coe] using hs
     omega
-  letI : Finite ι := hιFinite
-  letI : Fintype ι := Fintype.ofFinite ι
+  let : Finite ι := hιFinite
+  let : Fintype ι := Fintype.ofFinite ι
   let hfinite : Module.Finite K V := Module.Finite.of_basis b
-  letI : Module.Finite K V := hfinite
+  let : Module.Finite K V := hfinite
   refine ⟨hfinite, ?_⟩
   rw [Module.finrank_eq_card_basis b]
   exact hbound ι b b.linearIndependent

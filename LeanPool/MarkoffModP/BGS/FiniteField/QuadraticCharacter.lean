@@ -23,7 +23,7 @@ theorem sum_comp_sq_eq_sum_quadraticChar_add_one
   intro x _
   have hcard :
       ((#{y ∈ (univ : Finset F) | y ^ 2 = x} : ℕ) : ℤ) = quadraticChar F x + 1 := by
-    simpa [Set.toFinset_setOf] using quadraticChar_card_sqrts hF x
+    simpa [Set.toFinset_ofPred] using quadraticChar_card_sqrts hF x
   calc
     ∑ y ∈ (univ : Finset F) with y ^ 2 = x, f (y ^ 2) =
         ∑ _y ∈ (univ : Finset F) with _y ^ 2 = x, f x := by
@@ -131,7 +131,7 @@ theorem exists_quadratic_conic_point_away_from_three
   have hrootCount (y : F) :
       rootCount y = quadraticChar F (A * y ^ 2 - C) + 1 := by
     dsimp [rootCount, roots]
-    simpa [Set.toFinset_setOf] using
+    simpa [Set.toFinset_ofPred] using
       quadraticChar_card_sqrts hF (A * y ^ 2 - C)
   have hsum :
       ∑ y : F, rootCount y = (Fintype.card F : ℤ) - quadraticChar F A := by

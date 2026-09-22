@@ -45,7 +45,7 @@ theorem strictFiltrationLevels_succ_card_of_lt
       (strictFiltrationLevels R n).card + 1 := by
   classical
   simp only [strictFiltrationLevels, Finset.range_add_one, Finset.filter_insert]
-  rw [if_pos h, Finset.card_insert_of_notMem]
+  rw [ite_eq_left h, Finset.card_insert_of_notMem]
   simp
 
 theorem strictFiltrationLevels_succ_card_of_not_lt
@@ -54,7 +54,7 @@ theorem strictFiltrationLevels_succ_card_of_not_lt
       (strictFiltrationLevels R n).card := by
   classical
   simp only [strictFiltrationLevels, Finset.range_add_one, Finset.filter_insert]
-  rw [if_neg h]
+  rw [ite_eq_right h]
 
 /-- If every nontrivial step of a nested filtration has dimension increase at
 most `d`, then the total dimension is bounded by `d` times the number of

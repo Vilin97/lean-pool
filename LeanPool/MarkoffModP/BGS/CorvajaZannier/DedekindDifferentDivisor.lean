@@ -46,7 +46,7 @@ def idealMultiplicityDivisor (I : Ideal R) (hI : I ≠ ⊥) :
     HeightOneSpectrum R →₀ Nat :=
   let h := Ideal.finite_factors hI
   Finsupp.mk h.toFinset (fun v => multiplicity v.asIdeal I) (fun v => by
-    rw [h.mem_toFinset, Set.mem_setOf_eq]
+    rw [h.mem_toFinset, Set.mem_ofPred_eq]
     simpa [Nat.pos_iff_ne_zero] using
       (dvd_iff_multiplicity_pos (FiniteMultiplicity.of_prime_left v.prime hI)).symm)
 

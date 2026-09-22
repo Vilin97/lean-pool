@@ -90,7 +90,7 @@ theorem primitiveClearedMinpolyRelation_dvd_of_evalBivariate_eq_zero
     (P : Polynomial (Polynomial K))
     (hP : evalBivariate u v P = 0) :
     primitiveClearedMinpolyRelation u hu v ∣ P := by
-  letI := Classical.arbitrary (NormalizedGCDMonoid K)
+  let := Classical.arbitrary (NormalizedGCDMonoid K)
   let e := RatFunc.algEquivOfTranscendental u hu
   let P_rat : Polynomial (RatFunc K) :=
     P.map (algebraMap (Polynomial K) (RatFunc K))
@@ -166,7 +166,7 @@ theorem poweredCoordinateImageRelation_quotient_embeds_source
     ∃ F : (Polynomial (Polynomial K) ⧸ Ideal.span {g}) →ₐ[K]
         PlaneCurveCoordinateRing f,
       Function.Injective F := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let L := PlaneCurveFunctionField f
   let A := PlaneCurveCoordinateRing f
@@ -182,7 +182,7 @@ theorem poweredCoordinateImageRelation_quotient_embeds_source
   have hcomp : ι.comp φA = φL := by
     simpa [φA, φL, xA, xL, yA, yL, ι, planeCurveFunction] using
       (bivariateEvalAlgHom_comp (K := K) ι xA yA)
-  letI : FiniteDimensional (FirstPoweredCoordinateSubfield f m) L :=
+  let : FiniteDimensional (FirstPoweredCoordinateSubfield f m) L :=
     finiteDimensional_over_firstPoweredCoordinate hf hpartialSecond m hm
   have hv : IsIntegral (FirstPoweredCoordinateSubfield f m) yL :=
     IsIntegral.of_finite _ _
@@ -293,7 +293,7 @@ theorem tensorProduct_isDomain_of_embedding
   let Φ := Algebra.TensorProduct.map (AlgHom.id E E) F
   have hΦ : Function.Injective Φ :=
     tensorProduct_map_id_injective E F hF
-  letI : IsDomain (E ⊗[K] B) := hdom
+  let : IsDomain (E ⊗[K] B) := hdom
   apply (isDomain_iff_noZeroDivisors_and_nontrivial _).mpr
   constructor
   · exact hΦ.noZeroDivisors Φ (map_zero Φ) (map_mul Φ)
@@ -333,7 +333,7 @@ theorem planeCurveCoordinateRingBaseChange_isDomain
     (f : MvPolynomial (Fin 2) K)
     (hfE : Irreducible (MvPolynomial.map (algebraMap K E) f)) :
     IsDomain (E ⊗[K] PlaneCurveCoordinateRing f) := by
-  letI : IsDomain (PlaneCurveCoordinateRing
+  let : IsDomain (PlaneCurveCoordinateRing
       (MvPolynomial.map (algebraMap K E) f)) :=
     planeCurveCoordinateRing_isDomain hfE
   exact (planeCurveCoordinateRingBaseChangeEquiv E f).toMulEquiv.isDomain_iff.mpr
@@ -345,14 +345,14 @@ theorem irreducible_mvPolynomial_map_of_tensorQuotient_isDomain
     (hdom : IsDomain
       (E ⊗[K] PlaneCurveCoordinateRing G)) :
     Irreducible (MvPolynomial.map (algebraMap K E) G) := by
-  letI : IsDomain (E ⊗[K] PlaneCurveCoordinateRing G) := hdom
+  let : IsDomain (E ⊗[K] PlaneCurveCoordinateRing G) := hdom
   let e := planeCurveCoordinateRingBaseChangeEquiv E G
-  letI : IsDomain (PlaneCurveCoordinateRing
+  let : IsDomain (PlaneCurveCoordinateRing
       (MvPolynomial.map (algebraMap K E) G)) := by
     have hsource := (isDomain_iff_noZeroDivisors_and_nontrivial
       (E ⊗[K] PlaneCurveCoordinateRing G)).mp hdom
-    letI : NoZeroDivisors (E ⊗[K] PlaneCurveCoordinateRing G) := hsource.1
-    letI : Nontrivial (E ⊗[K] PlaneCurveCoordinateRing G) := hsource.2
+    let : NoZeroDivisors (E ⊗[K] PlaneCurveCoordinateRing G) := hsource.1
+    let : Nontrivial (E ⊗[K] PlaneCurveCoordinateRing G) := hsource.2
     apply (isDomain_iff_noZeroDivisors_and_nontrivial _).mpr
     constructor
     · exact e.symm.injective.noZeroDivisors e.symm
@@ -380,7 +380,7 @@ theorem poweredCoordinateImageRelation_irreducible_map
     Irreducible
       ((poweredCoordinateImageRelation hf hpartialSecond m hm n).map
         (Polynomial.mapRingHom (algebraMap K E))) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let g := poweredCoordinateImageRelation hf hpartialSecond m hm n
   let G := Polynomial.Bivariate.equivMvPolynomial K g
@@ -486,10 +486,10 @@ theorem poweredCoordinateFrobeniusImageRelation_natDegree
         (p := p) hf hpartialSecond m hm n).natDegree =
       (transposeBivariate
         (poweredCoordinateImageRelation hf hpartialSecond m hm n)).natDegree := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let L := PlaneCurveFunctionField f
-  letI : CharP L p := charP_of_injective_algebraMap
+  let : CharP L p := charP_of_injective_algebraMap
     (algebraMap K L).injective p
   let F := frobeniusSubfield L p
   let ι : K →+* F :=
@@ -517,10 +517,10 @@ theorem transposeBivariate_poweredCoordinateFrobeniusImageRelation_natDegree
       (poweredCoordinateFrobeniusImageRelation
         (p := p) hf hpartialSecond m hm n)).natDegree =
       (poweredCoordinateImageRelation hf hpartialSecond m hm n).natDegree := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let L := PlaneCurveFunctionField f
-  letI : CharP L p := charP_of_injective_algebraMap
+  let : CharP L p := charP_of_injective_algebraMap
     (algebraMap K L).injective p
   let F := frobeniusSubfield L p
   let ι : K →+* F :=
@@ -549,16 +549,16 @@ theorem evalBivariate_poweredCoordinateFrobeniusImageRelation_eq_zero
       ((planeCurveFunction f 0) ^ m)
       (poweredCoordinateFrobeniusImageRelation
         (p := p) hf hpartialSecond m hm n) = 0 := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let L := PlaneCurveFunctionField f
-  letI : CharP L p := charP_of_injective_algebraMap
+  let : CharP L p := charP_of_injective_algebraMap
     (algebraMap K L).injective p
   let F := frobeniusSubfield L p
   let ι : K →+* F :=
     perfectConstantsToFrobeniusSubfield (K := K) (L := L) (p := p)
-  letI : Algebra K F := ι.toAlgebra
-  letI : IsScalarTower K F L := by
+  let : Algebra K F := ι.toAlgebra
+  let : IsScalarTower K F L := by
     apply IsScalarTower.of_algebraMap_eq'
     ext c
     exact (coe_perfectConstantsToFrobeniusSubfield
@@ -586,10 +586,10 @@ theorem poweredCoordinateFrobeniusImageRelation_irreducible
     Irreducible
       (poweredCoordinateFrobeniusImageRelation
         (p := p) hf hpartialSecond m hm n) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let L := PlaneCurveFunctionField f
-  letI : CharP L p := charP_of_injective_algebraMap
+  let : CharP L p := charP_of_injective_algebraMap
     (algebraMap K L).injective p
   let F := frobeniusSubfield L p
   let ι : K →+* F :=
@@ -597,7 +597,7 @@ theorem poweredCoordinateFrobeniusImageRelation_irreducible
   have hbase : Irreducible
       ((poweredCoordinateImageRelation hf hpartialSecond m hm n).map
         (Polynomial.mapRingHom ι)) := by
-    letI : Algebra K F := ι.toAlgebra
+    let : Algebra K F := ι.toAlgebra
     exact poweredCoordinateImageRelation_irreducible_map
       (E := F) habsolute hf hpartialSecond m hm n
   exact irreducible_transposeBivariate hbase
@@ -635,16 +635,16 @@ theorem poweredCoordinateFrobeniusImage_auxiliaryFamily_linearIndependent
       (frobeniusSubfield (PlaneCurveFunctionField f) p)
       (auxiliaryFamily ((planeCurveFunction f 0) ^ m)
         ((planeCurveFunction f 1) ^ n) h k) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let L := PlaneCurveFunctionField f
-  letI : CharP L p := charP_of_injective_algebraMap
+  let : CharP L p := charP_of_injective_algebraMap
     (algebraMap K L).injective p
   let F := frobeniusSubfield L p
   let ι : K →+* F :=
     perfectConstantsToFrobeniusSubfield (K := K) (L := L) (p := p)
-  letI : Algebra K F := ι.toAlgebra
-  letI : IsScalarTower K F L := by
+  let : Algebra K F := ι.toAlgebra
+  let : IsScalarTower K F L := by
     apply IsScalarTower.of_algebraMap_eq'
     ext c
     exact (coe_perfectConstantsToFrobeniusSubfield

@@ -66,24 +66,24 @@ theorem planeCurve_affinePoint_card_le_squareField
         (2 * planeCurveBidegreeGenusBudget f + 1) * Fintype.card K +
         (affineSecondCoordinateCriticalPoints S f).card := by
   classical
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
   let E := PlaneCurveFunctionField f
-  letI : Algebra (RatFunc S) E :=
+  let : Algebra (RatFunc S) E :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : FiniteDimensional (RatFunc S) E :=
+  let : FiniteDimensional (RatFunc S) E :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc S) E :=
+  let : Algebra.IsSeparable (RatFunc S) E :=
     separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
   let constantAlg : Algebra S E :=
     RingHom.toAlgebra ((algebraMap (RatFunc S) E).comp
       (algebraMap S (RatFunc S)))
-  letI : Algebra S E := constantAlg
-  letI : SMul S E := constantAlg.toSMul
-  letI : Module S E := constantAlg.toModule
-  letI : IsScalarTower S (RatFunc S) E :=
+  let : Algebra S E := constantAlg
+  let : SMul S E := constantAlg.toSMul
+  let : Module S E := constantAlg.toModule
+  let : IsScalarTower S (RatFunc S) E :=
     IsScalarTower.of_algebraMap_eq' rfl
   dsimp only
   intro hconstants
@@ -129,24 +129,24 @@ theorem planeCurve_affinePoint_card_le_squareField_bidegree
         (2 * planeCurveBidegreeGenusBudget f + 1) * Fintype.card K +
         ((2 * secondDegree - 1) * firstDegree) * secondDegree := by
   classical
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
   let E := PlaneCurveFunctionField f
-  letI : Algebra (RatFunc S) E :=
+  let : Algebra (RatFunc S) E :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : FiniteDimensional (RatFunc S) E :=
+  let : FiniteDimensional (RatFunc S) E :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc S) E :=
+  let : Algebra.IsSeparable (RatFunc S) E :=
     separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
   let constantAlg : Algebra S E :=
     RingHom.toAlgebra ((algebraMap (RatFunc S) E).comp
       (algebraMap S (RatFunc S)))
-  letI : Algebra S E := constantAlg
-  letI : SMul S E := constantAlg.toSMul
-  letI : Module S E := constantAlg.toModule
-  letI : IsScalarTower S (RatFunc S) E :=
+  let : Algebra S E := constantAlg
+  let : SMul S E := constantAlg.toSMul
+  let : Module S E := constantAlg.toModule
+  let : IsScalarTower S (RatFunc S) E :=
     IsScalarTower.of_algebraMap_eq' rfl
   dsimp only
   intro hconstants

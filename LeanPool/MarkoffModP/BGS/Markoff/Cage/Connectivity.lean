@@ -189,7 +189,7 @@ theorem exists_threshold_splitCage_connected
     exists_threshold_splitMaximalFiberBridge coefficient hHasse
   refine ⟨max bridgeThreshold 7, ?_⟩
   intro p hp _ hpThree
-  letI : Invertible (3 : ZMod p) :=
+  let : Invertible (3 : ZMod p) :=
     invertibleOfNonzero (three_ne_zero_zmod_of_prime_ne_three p hpThree)
   intro x y hxCage hyCage
   rcases hxCage with ⟨axis, hxi⟩
@@ -245,7 +245,7 @@ theorem exists_threshold_largeOrder_to_splitCage
       splitCoefficient hSplitWeil nonsplitCoefficient hNonsplitWeil hδ
   refine ⟨threshold, ?_⟩
   intro p hp _ hpThree
-  letI : Invertible (3 : ZMod p) :=
+  let : Invertible (3 : ZMod p) :=
     invertibleOfNonzero (three_ne_zero_zmod_of_prime_ne_three p hpThree)
   intro x hlarge
   obtain ⟨y, hxy, hyOrder⟩ := hendgame p hp hpThree x hlarge

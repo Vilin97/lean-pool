@@ -58,7 +58,7 @@ theorem linearIndependent_fin_pow_of_transcendental {x : L} (hx : Transcendental
       classical
       dsimp only [p]
       rw [finsetSum_coeff, Finset.sum_eq_single j]
-      · rw [coeff_C_mul_X_pow, if_pos rfl]
+      · rw [coeff_C_mul_X_pow, ite_eq_left rfl]
       · intro b _ ne
         rw [coeff_C_mul_X_pow]
         split_ifs with h
@@ -117,7 +117,7 @@ theorem polarDivisor_eq_zero_of_algebraic {x : K} (hx : IsAlgebraic k x) :
       rw [hmap, principalDivisorA_algebraMap k K (Units.mk0 c hc0)]
     ext v
     unfold polarDivisor
-    simp only [dif_neg hx0, hdiv, neg_zero, Finsupp.sup_apply, max_self]
+    simp only [dite_eq_right hx0, hdiv, neg_zero, Finsupp.sup_apply, max_self]
 
 omit [IsFullConstantField k K] in
 theorem exists_placeValuation_gt_one_of_not_algebraic {x : K} (_hx : x ≠ 0)
@@ -157,9 +157,9 @@ theorem polarDivisor_pos {x : K} (hx : x ≠ 0) (hnt : ¬IsAlgebraic k x) :
     intro w
     by_cases hw : w = v
     · subst hw
-      simp only [Finsupp.single_apply, if_pos]
+      simp only [Finsupp.single_apply, ite_eq_left]
       exact le_rfl
-    · rw [Finsupp.single_apply, if_neg (Ne.symm hw)]
+    · rw [Finsupp.single_apply, ite_eq_right (Ne.symm hw)]
       exact polarDivisor_nonneg k K x w
   have hle : (placeDegree k K v : ℤ) * (polarDivisor k K x v) ≤
       deg k K (polarDivisor k K x) := by
@@ -236,7 +236,7 @@ omit [Algebra k K] [IsScalarTower k k[X] K] [IsScalarTower k[X] k⟮X⟯ K]
 theorem nsmul_le_nsmul_polar {D : DivisorA k K} (hD : 0 ≤ D) {j r : ℕ} (hjr : j ≤ r) :
     j • D ≤ r • D := by
   intro v
-  show (j : ℤ) * D v ≤ (r : ℤ) * D v
+  change (j : ℤ) * D v ≤ (r : ℤ) * D v
   exact mul_le_mul_of_nonneg_right (Nat.cast_le.mpr hjr) (hD v)
 
 /-- A uniform pole bound for a finite family of functions. -/
@@ -523,7 +523,7 @@ theorem finrank_eq_finrank_rationalSubfield_XK :
     (RatFunc.algEquivOfTranscendental (XK k K) (transcendental_XK k K)).toRingEquiv
     (RingEquiv.refl K) ?_
   ext c
-  show algebraMap (IntermediateField.adjoin k {XK k K}) K
+  change algebraMap (IntermediateField.adjoin k {XK k K}) K
       (RatFunc.algEquivOfTranscendental (XK k K) (transcendental_XK k K) c)
     = algebraMap k⟮X⟯ K c
   rw [IntermediateField.algebraMap_apply]
@@ -585,7 +585,7 @@ theorem finiteDimensional_rationalSubfield {x : K} (hx : Transcendental k x) :
   set F := rationalSubfield k K x with hF
   set t := XK k K with ht
   have htF : IsIntegral F t := (isAlgebraic_rationalSubfield_XK k K hx).isIntegral
-  haveI hFN : FiniteDimensional F (IntermediateField.adjoin F {t}) :=
+  have hFN : FiniteDimensional F (IntermediateField.adjoin F {t}) :=
     IntermediateField.adjoin.finiteDimensional htF
   set N := IntermediateField.adjoin F {t} with hN
   -- every polynomial evaluation at t lies in N
@@ -646,12 +646,12 @@ theorem finiteDimensional_rationalSubfield {x : K} (hx : Transcendental k x) :
     have := IntermediateField.algebraMap_mem (IntermediateField.adjoin N (Set.range ⇑b))
       (⟨algebraMap k⟮X⟯ K (b.repr z i), hmem⟩ : N)
     rwa [IntermediateField.algebraMap_apply] at this
-  haveI hfin : Finite (Set.range ⇑b) := (Set.finite_range ⇑b).to_subtype
-  haveI hNtop : FiniteDimensional N (IntermediateField.adjoin N (Set.range ⇑b)) :=
+  have hfin : Finite (Set.range ⇑b) := (Set.finite_range ⇑b).to_subtype
+  have hNtop : FiniteDimensional N (IntermediateField.adjoin N (Set.range ⇑b)) :=
     IntermediateField.finiteDimensional_adjoin fun z hz => by
       obtain ⟨i, rfl⟩ := hz
       exact hbN i
-  haveI hNK : FiniteDimensional N K := by
+  have hNK : FiniteDimensional N K := by
     rw [htop] at hNtop
     exact (IntermediateField.topEquiv (F := N) (E := K)).toLinearEquiv.finiteDimensional
   exact Module.Finite.trans N K
@@ -664,7 +664,7 @@ theorem finrankAdjoin_le_deg_polar {x : K} (hx : ¬IsAlgebraic k x) :
   by_cases hx0 : x = 0
   · subst hx0
     exact absurd isAlgebraic_zero hx
-  haveI := finiteDimensional_rationalSubfield (k := k) (K := K) hxT
+  have := finiteDimensional_rationalSubfield (k := k) (K := K) hxT
   let F := rationalSubfield k K x
   let n := Module.finrank F K
   let b := Module.finBasis F K

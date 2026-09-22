@@ -64,7 +64,7 @@ theorem finiteExtensionOnePointRiemannSurplus_antitone_of_lower
     · subst v
       simp [D]
     · simp [D, Finsupp.single_eq_of_ne hv]
-  letI : Module.Finite K (finiteExtensionRiemannSpace K L D) :=
+  let : Module.Finite K (finiteExtensionRiemannSpace K L D) :=
     finiteExtensionRiemannSpace_effective_moduleFinite K L D hD
   have hinc := finiteExtensionRiemannSpace_place_increment K L D hD P
   have hdivisor : D + Finsupp.single P 1 =

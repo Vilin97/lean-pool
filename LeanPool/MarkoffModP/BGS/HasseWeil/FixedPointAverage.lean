@@ -25,9 +25,9 @@ theorem sum_card_fixedBy_eq_card_group_of_isPretransitive
     (G X : Type*) [Group G] [Fintype G] [MulAction G X] [Fintype X]
     [MulAction.IsPretransitive G X] [Nonempty X] :
     (∑ g : G, Nat.card (MulAction.fixedBy X g)) = Nat.card G := by
-  letI (g : G) : Fintype (MulAction.fixedBy X g) := Fintype.ofFinite _
+  let (g : G) : Fintype (MulAction.fixedBy X g) := Fintype.ofFinite _
   let Ω := MulAction.orbitRel.Quotient G X
-  letI : Fintype Ω := Fintype.ofFinite Ω
+  let : Fintype Ω := Fintype.ofFinite Ω
   have hΩ : Fintype.card Ω = 1 :=
     Fintype.card_eq_one_iff_nonempty_unique.mpr
       ((MulAction.pretransitive_iff_unique_quotient_of_nonempty G X).mp inferInstance)
@@ -137,15 +137,15 @@ theorem sum_card_fixedBy_quotientFiber_eq_card_ker
     letI : Fintype (π ⁻¹' ({c} : Set C)) := Fintype.ofFinite _
     (∑ g : π ⁻¹' ({c} : Set C),
       Nat.card (MulAction.fixedBy X g.1)) = Nat.card π.ker := by
-  letI : Fintype (π ⁻¹' ({c} : Set C)) := Fintype.ofFinite _
-  letI (x : X) : Fintype
+  let : Fintype (π ⁻¹' ({c} : Set C)) := Fintype.ofFinite _
+  let (x : X) : Fintype
       ((π.comp (MulAction.stabilizer G x).subtype) ⁻¹' ({c} : Set C)) :=
     Fintype.ofFinite _
-  letI : MulAction.IsPretransitive π.ker X :=
+  let : MulAction.IsPretransitive π.ker X :=
     MonoidHom.ker_isPretransitive_of_stabilizer_surjective π hstab
-  letI (g : π ⁻¹' ({c} : Set C)) :
+  let (g : π ⁻¹' ({c} : Set C)) :
       Fintype (MulAction.fixedBy X g.1) := Fintype.ofFinite _
-  letI (g : π.ker) : Fintype (MulAction.fixedBy X g) := Fintype.ofFinite _
+  let (g : π.ker) : Fintype (MulAction.fixedBy X g) := Fintype.ofFinite _
   let e₁ :=
     MonoidHom.sigmaFiberFixedByEquivSigmaStabilizerFiber (X := X) π c
   let e₂ :
@@ -190,7 +190,7 @@ theorem sum_card_fixedBy_quotientFiber_fibers_eq_card_mul_card_ker
         ∑ i : ι, Nat.card (MulAction.fixedBy (X i) g.1)) =
       Nat.card ι * Nat.card π.ker := by
   classical
-  letI : Fintype (π ⁻¹' ({c} : Set C)) := Fintype.ofFinite _
+  let : Fintype (π ⁻¹' ({c} : Set C)) := Fintype.ofFinite _
   rw [Finset.sum_comm]
   calc
     (∑ i : ι, ∑ g : π ⁻¹' ({c} : Set C),

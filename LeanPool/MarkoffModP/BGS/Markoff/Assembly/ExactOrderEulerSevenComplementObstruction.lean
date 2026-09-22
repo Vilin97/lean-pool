@@ -66,7 +66,7 @@ theorem
       d ≤ 189 * (middleGameMaximalOrders p d).card ^ 3 := by
   classical
   have hpTwo : p ≠ 2 := by omega
-  letI : Fintype (quadraticFiniteField p) := Fintype.ofFinite _
+  let : Fintype (quadraticFiniteField p) := Fintype.ofFinite _
   let bad := puncturedComponentComplementFinset p c
   have hxBad : x ∈ bad := by
     simpa [bad] using hcx

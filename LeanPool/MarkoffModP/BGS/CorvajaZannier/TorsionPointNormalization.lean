@@ -216,9 +216,9 @@ theorem planeCurveNormalizationBranch_injective
     Function.Injective (planeCurveNormalizationBranch f) := by
   intro m n hmn
   apply MaximalSpectrum.ext
-  letI hm : (planeCurveNormalizationBranch f m).asIdeal.LiesOver m.asIdeal :=
+  let hm : (planeCurveNormalizationBranch f m).asIdeal.LiesOver m.asIdeal :=
     planeCurveNormalizationBranch_liesOver f m
-  letI hn : (planeCurveNormalizationBranch f n).asIdeal.LiesOver n.asIdeal :=
+  let hn : (planeCurveNormalizationBranch f n).asIdeal.LiesOver n.asIdeal :=
     planeCurveNormalizationBranch_liesOver f n
   calc
     m.asIdeal = (planeCurveNormalizationBranch f m).asIdeal.under
@@ -259,7 +259,7 @@ theorem first_torsionFunction_mem_normalizationBranch
     algebraMap (PlaneCurveCoordinateRing f) (PlaneCurveNormalization f)
         (planeCurveCoordinate f 0 ^ firstOrder - 1) ∈
       (torsionPointNormalizationBranch f firstOrder secondOrder z).asIdeal := by
-  letI :
+  let :
       (torsionPointNormalizationBranch f firstOrder secondOrder z).asIdeal.LiesOver
         (torsionPointMaximalIdeal f firstOrder secondOrder z).asIdeal :=
     planeCurveNormalizationBranch_liesOver f
@@ -279,7 +279,7 @@ theorem second_torsionFunction_mem_normalizationBranch
     algebraMap (PlaneCurveCoordinateRing f) (PlaneCurveNormalization f)
         (planeCurveCoordinate f 1 ^ secondOrder - 1) ∈
       (torsionPointNormalizationBranch f firstOrder secondOrder z).asIdeal := by
-  letI :
+  let :
       (torsionPointNormalizationBranch f firstOrder secondOrder z).asIdeal.LiesOver
         (torsionPointMaximalIdeal f firstOrder secondOrder z).asIdeal :=
     planeCurveNormalizationBranch_liesOver f
@@ -299,7 +299,7 @@ private noncomputable instance planeCurveIntegralClosureIsFractionRing
     [IsScalarTower (PlaneCurveCoordinateRing f) B (PlaneCurveFunctionField f)]
     [IsIntegralClosure B (PlaneCurveCoordinateRing f) (PlaneCurveFunctionField f)] :
     IsFractionRing B (PlaneCurveFunctionField f) := by
-  letI : Algebra.IsAlgebraic (PlaneCurveCoordinateRing f)
+  let : Algebra.IsAlgebraic (PlaneCurveCoordinateRing f)
       (PlaneCurveFunctionField f) :=
     (IsFractionRing.comap_isAlgebraic_iff
       (A := PlaneCurveCoordinateRing f)
@@ -382,7 +382,7 @@ theorem liftedNormalizationBranch_torsion_orders_positive
     intro hzero
     apply hsecondNonzero
     rw [← hsecondMap, hzero, map_zero]
-  letI : branch.asIdeal.LiesOver
+  let : branch.asIdeal.LiesOver
       (torsionPointMaximalIdeal f firstOrder secondOrder z).asIdeal := hbranch
   have hfirstMem : firstRegular ∈ branch.asIdeal := by
     exact (Ideal.mem_of_liesOver

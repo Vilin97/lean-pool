@@ -64,11 +64,11 @@ theorem middleGameRightSubgroup_natCard
     (hd : d ∈ middleGameCandidateOrders p currentOrder) :
     Nat.card (middleGameRightSubgroup p d) = d := by
   let E := quadraticFiniteField p
-  letI : Fintype E := Fintype.ofFinite E
+  let : Fintype E := Fintype.ofFinite E
   have hdvd : d ∣ Nat.card Eˣ :=
     middleGameCandidateOrder_dvd_quadraticUnitsCard p currentOrder d hd
   have hdpos : 0 < d := Nat.pos_of_dvd_of_pos hdvd Nat.card_pos
-  letI : NeZero d := ⟨hdpos.ne'⟩
+  let : NeZero d := ⟨hdpos.ne'⟩
   obtain ⟨g, hg⟩ := IsCyclic.exists_ofOrder_eq_natCard (α := Eˣ)
   let zeta : Eˣ := g ^ (orderOf g / d)
   have horder : orderOf zeta = d := by

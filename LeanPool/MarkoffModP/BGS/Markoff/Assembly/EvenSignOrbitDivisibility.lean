@@ -136,7 +136,7 @@ theorem evenSignOrbitFinset_card_eq_four
     (x : PuncturedMarkoffSurface F) :
     (evenSignOrbitFinset x).card = 4 := by
   classical
-  letI : IsCancelSMul EvenSign (PuncturedMarkoffSurface F) :=
+  let : IsCancelSMul EvenSign (PuncturedMarkoffSurface F) :=
     evenSign_isCancelSMul_punctured htwo
   have hinjective :
       Function.Injective (fun s : EvenSign => s • x) := by

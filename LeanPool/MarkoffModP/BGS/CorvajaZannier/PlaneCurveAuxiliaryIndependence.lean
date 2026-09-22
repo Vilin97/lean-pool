@@ -135,7 +135,7 @@ theorem bivariateEquiv_symm_natDegree_eq_degreeOf_one
       MvPolynomial.degreeOf 1 f := by
   let remaining := {i : Fin 2 // i ≠ 1}
   let i0 : remaining := ⟨0, by decide⟩
-  letI : Unique remaining :=
+  let : Unique remaining :=
     { default := i0
       uniq := by
         intro i
@@ -271,10 +271,10 @@ theorem isSeparable_over_frobeniusAdjoin_of_isSeparable_over_constantAdjoin
     Algebra.IsSeparable
       (IntermediateField.adjoin (frobeniusSubfield L p) {z}) L := by
   let F := frobeniusSubfield L p
-  letI : Algebra K F :=
+  let : Algebra K F :=
     (perfectConstantsToFrobeniusSubfield
       (K := K) (L := L) (p := p)).toAlgebra
-  letI : IsScalarTower K F L := by
+  let : IsScalarTower K F L := by
     apply IsScalarTower.of_algebraMap_eq'
     ext c
     exact (coe_perfectConstantsToFrobeniusSubfield
@@ -287,8 +287,8 @@ theorem isSeparable_over_frobeniusAdjoin_of_isSeparable_over_constantAdjoin
     rw [Set.mem_singleton_iff] at hx
     subst x
     exact IntermediateField.subset_adjoin F {z} (Set.mem_singleton z)
-  letI : Algebra A E := (IntermediateField.inclusion hAE).toAlgebra
-  letI : IsScalarTower A E L := IsScalarTower.of_algebraMap_eq' rfl
+  let : Algebra A E := (IntermediateField.inclusion hAE).toAlgebra
+  let : IsScalarTower A E L := IsScalarTower.of_algebraMap_eq' rfl
   exact Algebra.isSeparable_tower_top_of_isSeparable A E L
 
 /-- A separating element has minimal polynomial of exact degree `p` over the
@@ -299,7 +299,7 @@ theorem minpoly_natDegree_over_frobeniusSubfield_eq_char
       (IntermediateField.adjoin (frobeniusSubfield L p) {z}) L] :
     (minpoly (frobeniusSubfield L p) z).natDegree = p := by
   let F := frobeniusSubfield L p
-  letI : IsPurelyInseparable F L := frobeniusSubfield_isPurelyInseparable p
+  let : IsPurelyInseparable F L := frobeniusSubfield_isPurelyInseparable p
   have hzIntegral : IsIntegral F z := IsPurelyInseparable.isIntegral' F z
   calc
     (minpoly F z).natDegree =
@@ -356,9 +356,9 @@ theorem planeCurve_auxiliaryFamily_linearIndependent
       LinearIndependent (frobeniusSubfield (PlaneCurveFunctionField f) p)
         (auxiliaryFamily
           (planeCurveFunction f 0) (planeCurveFunction f 1) h k) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : CharP (PlaneCurveFunctionField f) p :=
+  let : CharP (PlaneCurveFunctionField f) p :=
     charP_of_injective_algebraMap
       (algebraMap K (PlaneCurveFunctionField f)).injective p
   intro a b h k ha hh hk hbaseChange hdegreeFirst hdegreeSecond
@@ -371,9 +371,9 @@ theorem planeCurve_auxiliaryFamily_linearIndependent
     planeCurveFrobeniusRelation (K := K) (L := L) (p := p) f
   have hseparableOverSecond :=
     finiteSeparable_over_secondCoordinate_of_irreducible hf hpartialFirst
-  letI : Algebra.IsSeparable (SecondCoordinateSubfield f) L :=
+  let : Algebra.IsSeparable (SecondCoordinateSubfield f) L :=
     hseparableOverSecond.2
-  letI : Algebra.IsSeparable (IntermediateField.adjoin F {y}) L := by
+  let : Algebra.IsSeparable (IntermediateField.adjoin F {y}) L := by
     exact isSeparable_over_frobeniusAdjoin_of_isSeparable_over_constantAdjoin
       (K := K) (L := L) (p := p) y
   have hminpoly : (minpoly F y).natDegree = p :=
@@ -432,9 +432,9 @@ theorem planeCurve_auxiliaryFamily_linearIndependent_of_nonzero_partials
       LinearIndependent (frobeniusSubfield (PlaneCurveFunctionField f) p)
         (auxiliaryFamily
           (planeCurveFunction f 0) (planeCurveFunction f 1) h k) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : CharP (PlaneCurveFunctionField f) p :=
+  let : CharP (PlaneCurveFunctionField f) p :=
     charP_of_injective_algebraMap
       (algebraMap K (PlaneCurveFunctionField f)).injective p
   intro a b h k ha hh hk hbaseChange hdegreeFirst hdegreeSecond
@@ -480,9 +480,9 @@ theorem planeCurve_auxiliaryFamily_linearIndependent_of_absoluteIrreducible
     simpa only [MvPolynomial.map_id] using
       irreducible_map_of_irreducible_map_algebraicClosure
       (RingHom.id K) f habsolute
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : CharP (PlaneCurveFunctionField f) p :=
+  let : CharP (PlaneCurveFunctionField f) p :=
     charP_of_injective_algebraMap
       (algebraMap K (PlaneCurveFunctionField f)).injective p
   dsimp only
@@ -528,9 +528,9 @@ theorem planeCurve_auxiliaryFamily_linearIndependent_of_absoluteIrreducible_coor
     simpa only [MvPolynomial.map_id] using
       irreducible_map_of_irreducible_map_algebraicClosure
       (RingHom.id K) f habsolute
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : CharP (PlaneCurveFunctionField f) p :=
+  let : CharP (PlaneCurveFunctionField f) p :=
     charP_of_injective_algebraMap
       (algebraMap K (PlaneCurveFunctionField f)).injective p
   dsimp only

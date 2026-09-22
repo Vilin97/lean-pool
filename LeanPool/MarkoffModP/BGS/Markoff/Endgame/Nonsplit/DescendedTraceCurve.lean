@@ -46,13 +46,13 @@ theorem quadraticCoefficientTracePolynomial_coeff (P : Polynomial (E p)) (n : �
   · rw [Finset.sum_eq_single n]
     · simp
     · intro b hb hbn
-      rw [Polynomial.coeff_monomial, if_neg hbn]
+      rw [Polynomial.coeff_monomial, ite_eq_right hbn]
     · exact fun h => (h hn).elim
   · rw [Finset.sum_eq_zero]
     · rw [Polynomial.notMem_support_iff.mp hn, map_zero]
     · intro b hb
       rw [Polynomial.coeff_monomial]
-      exact if_neg (fun h : b = n => hn (h ▸ hb))
+      exact ite_eq_right (fun h : b = n => hn (h ▸ hb))
 
 /-- After scalar extension, coefficientwise trace is `P + Frobenius(P)`. -/
 theorem quadraticCoefficientTracePolynomial_map (P : Polynomial (E p)) :

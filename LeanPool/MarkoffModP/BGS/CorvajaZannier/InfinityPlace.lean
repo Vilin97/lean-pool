@@ -58,7 +58,7 @@ def ratFuncInfinityPlace : HeightOneSpectrum (RatFuncInfinityIntegers K) :=
 /-- `X⁻¹` as an element of the infinity valuation ring. -/
 def ratFuncInfinityUniformizer : RatFuncInfinityIntegers K :=
   ⟨1 / RatFunc.X, by
-    show RatFunc.inftyValuation K (1 / RatFunc.X) ≤ 1
+    change RatFunc.inftyValuation K (1 / RatFunc.X) ≤ 1
     rw [RatFunc.inftyValuation.X_inv]
     rw [← WithZero.exp_zero, WithZero.exp_le_exp]
     omega⟩

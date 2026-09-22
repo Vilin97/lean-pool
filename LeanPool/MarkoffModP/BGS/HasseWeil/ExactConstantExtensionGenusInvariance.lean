@@ -141,25 +141,25 @@ theorem exactConstantExtension_chart_genus_eq_of_presentedMultiplicity
       FunctionField.Chart.genus S E = FunctionField.Chart.genus C N := by
   dsimp only
   let E := ExactConstantExtension C N S
-  letI : Field E := exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc C) (RatFunc S) :=
+  let : Field E := exactConstantExtensionField C N S hExact
+  let : Algebra (RatFunc C) (RatFunc S) :=
     ratFuncCoefficientAlgebra C S
-  letI : Algebra (RatFunc C) E :=
+  let : Algebra (RatFunc C) E :=
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-  letI : SMul (RatFunc C) E := Algebra.toSMul
-  letI : Module (RatFunc C) E := Algebra.toModule
-  letI : FiniteDimensional (RatFunc C) E :=
+  let : SMul (RatFunc C) E := Algebra.toSMul
+  let : Module (RatFunc C) E := Algebra.toModule
+  let : FiniteDimensional (RatFunc C) E :=
     finiteDimensional_exactConstantExtension_over_baseRatFunc
       C S N hExact
-  letI : Algebra.IsSeparable (RatFunc C) E :=
+  let : Algebra.IsSeparable (RatFunc C) E :=
     isSeparable_exactConstantExtension_over_baseRatFunc C S N hExact
-  letI : Algebra (RatFunc S) E :=
+  let : Algebra (RatFunc S) E :=
     ratFuncExactConstantExtensionAlgebra C S N hExact
-  letI : SMul (RatFunc S) E := Algebra.toSMul
-  letI : Module (RatFunc S) E := Algebra.toModule
-  letI : FiniteDimensional (RatFunc S) E :=
+  let : SMul (RatFunc S) E := Algebra.toSMul
+  let : Module (RatFunc S) E := Algebra.toModule
+  let : FiniteDimensional (RatFunc S) E :=
     finiteDimensional_over_extendedRatFunc C S N hExact
-  letI : Algebra.IsSeparable (RatFunc S) E :=
+  let : Algebra.IsSeparable (RatFunc S) E :=
     isSeparable_over_extendedRatFunc C S N hExact
   let extendedConstantAlgebra : Algebra S E :=
     RingHom.toAlgebra ((algebraMap (RatFunc S) E).comp
@@ -180,12 +180,12 @@ theorem exactConstantExtension_chart_genus_eq_of_presentedMultiplicity
         (polynomialTensorCancelEvaluationPoint C S N)
         (Polynomial.C s)
     simp
-  letI : Algebra S E := extendedConstantAlgebra
-  letI : SMul S E := Algebra.toSMul
-  letI : Algebra S[X] E :=
+  let : Algebra S E := extendedConstantAlgebra
+  let : SMul S E := Algebra.toSMul
+  let : Algebra S[X] E :=
     constantExtensionTensorPolynomialAlgebra C S N
-  letI : SMul S[X] E := Algebra.toSMul
-  letI : IsScalarTower S[X] (RatFunc S) E :=
+  let : SMul S[X] E := Algebra.toSMul
+  let : IsScalarTower S[X] (RatFunc S) E :=
     IsScalarTower.of_algebraMap_eq' (by
       apply DFunLike.ext _ _
       intro p
@@ -194,19 +194,19 @@ theorem exactConstantExtension_chart_genus_eq_of_presentedMultiplicity
           (algebraMap S[X] (RatFunc S) p)
       exact
         (ratFuncToExactConstantExtension_algebraMap C S N hExact p).symm)
-  letI : IsScalarTower S S[X] E :=
+  let : IsScalarTower S S[X] E :=
     IsScalarTower.of_algebraMap_eq' (by
       apply DFunLike.ext _ _
       intro s
       exact (hconstantMap s).trans (htensorPolynomialMap s))
   intro hPresentedMultiplicity
-  letI : FunctionField.IsFullConstantField C N :=
+  let : FunctionField.IsFullConstantField C N :=
     (FunctionField.isFullConstantField_iff_algebraicClosure_eq_bot C N).2
       hExact
   have hExtendedExact : algebraicClosure S E =
       (⊥ : IntermediateField S E) :=
     exactConstantExtension_extended_algebraicClosure_eq_bot C S N hExact
-  letI : FunctionField.IsFullConstantField S E :=
+  let : FunctionField.IsFullConstantField S E :=
     (FunctionField.isFullConstantField_iff_algebraicClosure_eq_bot S E).2
       hExtendedExact
   have hTotalNat :=

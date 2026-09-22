@@ -57,7 +57,7 @@ private theorem polynomial_X_pow_sub_C_X_irreducible
         exact P.neg_mem (Ideal.subset_span (Set.mem_singleton _))
       · have him : i ≠ m := ne_of_lt hi
         simp only [q, Polynomial.coeff_sub, Polynomial.coeff_X_pow,
-          Polynomial.coeff_C, if_neg him, if_neg hi0, sub_zero]
+          Polynomial.coeff_C, ite_eq_right him, ite_eq_right hi0, sub_zero]
         exact P.zero_mem
     · have hcoeff : q.coeff 0 = -(Polynomial.X : R) := by
         simp [q, Ne.symm hm.ne']
@@ -163,9 +163,9 @@ theorem finrank_over_adjoin_pow_eq_mul
     Polynomial.monic_X_pow_sub_C c hm.ne'
   have hqRoot : Polynomial.aeval z q = 0 := by simp [q, c]
   have hzIntegral : IsIntegral E0 z := ⟨q, hqMonic, hqRoot⟩
-  letI : FiniteDimensional E0 A :=
+  let : FiniteDimensional E0 A :=
     IntermediateField.adjoin.finiteDimensional hzIntegral
-  letI : FiniteDimensional A L := by
+  let : FiniteDimensional A L := by
     change FiniteDimensional AK L
     rw [hAK]
     infer_instance
@@ -190,13 +190,13 @@ theorem finrank_over_firstPoweredCoordinate_eq
     Module.finrank (FirstPoweredCoordinateSubfield f m)
         (PlaneCurveFunctionField f) =
       m * MvPolynomial.degreeOf 1 f := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let x := planeCurveFunction f 0
   have hx : Transcendental K x :=
     firstCoordinate_transcendental hf
       (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
-  letI : FiniteDimensional (FirstCoordinateSubfield f)
+  let : FiniteDimensional (FirstCoordinateSubfield f)
       (PlaneCurveFunctionField f) :=
     finiteDimensional_over_firstCoordinate_of_irreducible hf hpartialSecond
   rw [finrank_over_adjoin_pow_eq_mul x hx m hm,
@@ -212,13 +212,13 @@ theorem finrank_over_secondPoweredCoordinate_eq
     Module.finrank (SecondPoweredCoordinateSubfield f n)
         (PlaneCurveFunctionField f) =
       n * MvPolynomial.degreeOf 0 f := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let y := planeCurveFunction f 1
   have hy : Transcendental K y :=
     secondCoordinate_transcendental hf
       (degreeOf_first_pos_of_pderiv_ne_zero hpartialFirst)
-  letI : FiniteDimensional (SecondCoordinateSubfield f)
+  let : FiniteDimensional (SecondCoordinateSubfield f)
       (PlaneCurveFunctionField f) :=
     (finiteSeparable_over_secondCoordinate_of_irreducible
       hf hpartialFirst).1

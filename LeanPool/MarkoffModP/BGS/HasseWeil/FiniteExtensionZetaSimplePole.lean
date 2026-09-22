@@ -83,10 +83,10 @@ theorem finiteExtensionEffectiveDivisorCount_pow_mul_lt_add_index_of_uniformRiem
   have hd : 0 < d := finiteExtensionDivisorDegreeIndex_pos K L
   have hn1 : threshold ≤ n + d := by omega
   have hgenus : genus ≤ n := hRiemann.1.trans hn
-  letI : Finite (FiniteExtensionDivisorClassOfDegree K L (n : ℤ)) :=
+  let : Finite (FiniteExtensionDivisorClassOfDegree K L (n : ℤ)) :=
     finiteExtensionDivisorClassOfDegree_finite_of_uniformRiemann
       K L genus threshold n hRiemann hn
-  letI : Nonempty (FiniteExtensionDivisorClassOfDegree K L (n : ℤ)) :=
+  let : Nonempty (FiniteExtensionDivisorClassOfDegree K L (n : ℤ)) :=
     hclass
   have hh : 0 < h := by
     exact Nat.card_pos

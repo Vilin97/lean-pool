@@ -72,10 +72,10 @@ theorem primewisePuncturedFirstCoordinateZeroExactlyOn_card_eq_of_mod_four_eq_on
   apply Finset.prod_congr rfl
   intro i _
   by_cases hi : i ∈ R
-  · simp only [hi, if_true]
+  · simp only [hi, ite_true]
     exact puncturedMarkoffFirstCoordinateZero_zmod_card_eq_of_mod_four_eq_one
       (a i) (hmod i)
-  · simp only [hi, if_false]
+  · simp only [hi, ite_false]
     exact puncturedMarkoffFirstCoordinateNonzero_zmod_card_eq_of_mod_four_eq_one
       (a i) (hmod i)
 

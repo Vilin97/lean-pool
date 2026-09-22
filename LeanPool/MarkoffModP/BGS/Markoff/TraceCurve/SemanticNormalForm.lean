@@ -205,12 +205,12 @@ theorem splitTraceLaurentSemanticNormalForm_evaluation
         (splitTraceLaurentSemanticNormalForm sigma hsigma e d heOdd hdOdd hde a) =
       splitTraceLaurentToKummerTop sigma hsigma e d heOdd hdOdd hde a := by
   let hBaseIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
   let hEtaIrred := splitTraceEtaKummerPolynomial_irreducible' sigma hsigma e heOdd
-  letI : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
+  let : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
   let hXiIrred :=
     splitTraceXiKummerPolynomial_irreducible sigma hsigma e d heOdd hdOdd hde
-  letI : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
+  let : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
   exact adjoinRootTowerSemanticNormalForm_evaluation _ _ _ _ _
 
 /-- Laurent comparison-map injectivity is equivalent to injectivity of its semantic coefficient
@@ -228,12 +228,12 @@ theorem splitTraceLaurentSemanticNormalForm_injective_iff :
       Function.Injective
         (splitTraceLaurentToKummerTop sigma hsigma e d heOdd hdOdd hde) := by
   let hBaseIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
   let hEtaIrred := splitTraceEtaKummerPolynomial_irreducible' sigma hsigma e heOdd
-  letI : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
+  let : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
   let hXiIrred :=
     splitTraceXiKummerPolynomial_irreducible sigma hsigma e d heOdd hdOdd hde
-  letI : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
+  let : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
   let f := splitTraceEtaKummerPolynomial sigma e
   let hf := splitTraceEtaKummerPolynomial_monic sigma e (etaExponent_ne_zero e heOdd)
   let g := splitTraceXiKummerPolynomial sigma e d

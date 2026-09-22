@@ -221,108 +221,108 @@ private theorem factorization_succ_pow_ten_le
       2 ^ preliminaryPrimePenalty p * p ^ a := by
   have hpTwo : 2 ≤ p := hpPrime.two_le
   by_cases hp3 : p < 3
-  · simp only [preliminaryPrimePenalty, if_pos hp3]
+  · simp only [preliminaryPrimePenalty, ite_eq_left hp3]
     exact (pow_ten_le_base_two a).trans <|
       Nat.mul_le_mul_left _ (Nat.pow_le_pow_left hpTwo a)
   · by_cases hp5 : p < 5
     · have hpLower : 3 ≤ p := by omega
-      simp only [preliminaryPrimePenalty, if_neg hp3, if_pos hp5]
+      simp only [preliminaryPrimePenalty, ite_eq_right hp3, ite_eq_left hp5]
       exact (pow_ten_le_base_three a).trans <|
         Nat.mul_le_mul_left _ (Nat.pow_le_pow_left hpLower a)
     · by_cases hp7 : p < 7
       · have hpLower : 5 ≤ p := by omega
-        simp only [preliminaryPrimePenalty, if_neg hp3, if_neg hp5, if_pos hp7]
+        simp only [preliminaryPrimePenalty, ite_eq_right hp3, ite_eq_right hp5, ite_eq_left hp7]
         exact (pow_ten_le_base_five a).trans <|
           Nat.mul_le_mul_left _ (Nat.pow_le_pow_left hpLower a)
       · by_cases hp11 : p < 11
         · have hpLower : 7 ≤ p := by omega
-          simp only [preliminaryPrimePenalty, if_neg hp3, if_neg hp5,
-            if_neg hp7, if_pos hp11]
+          simp only [preliminaryPrimePenalty, ite_eq_right hp3, ite_eq_right hp5,
+            ite_eq_right hp7, ite_eq_left hp11]
           exact (pow_ten_le_base_seven a).trans <|
             Nat.mul_le_mul_left _ (Nat.pow_le_pow_left hpLower a)
         · by_cases hp13 : p < 13
           · have hpLower : 11 ≤ p := by omega
-            simp only [preliminaryPrimePenalty, if_neg hp3, if_neg hp5,
-              if_neg hp7, if_neg hp11, if_pos hp13]
+            simp only [preliminaryPrimePenalty, ite_eq_right hp3, ite_eq_right hp5,
+              ite_eq_right hp7, ite_eq_right hp11, ite_eq_left hp13]
             exact (pow_ten_le_base_eleven a).trans <|
               Nat.mul_le_mul_left _ (Nat.pow_le_pow_left hpLower a)
           · by_cases hp17 : p < 17
             · have hpLower : 13 ≤ p := by omega
-              simp only [preliminaryPrimePenalty, if_neg hp3, if_neg hp5,
-                if_neg hp7, if_neg hp11, if_neg hp13, if_pos hp17]
+              simp only [preliminaryPrimePenalty, ite_eq_right hp3, ite_eq_right hp5,
+                ite_eq_right hp7, ite_eq_right hp11, ite_eq_right hp13, ite_eq_left hp17]
               exact (pow_ten_le_base_thirteen a).trans <|
                 Nat.mul_le_mul_left _ (Nat.pow_le_pow_left hpLower a)
             · by_cases hp23 : p < 23
               · have hpLower : 17 ≤ p := by omega
-                simp only [preliminaryPrimePenalty, if_neg hp3, if_neg hp5,
-                  if_neg hp7, if_neg hp11, if_neg hp13, if_neg hp17,
-                  if_pos hp23]
+                simp only [preliminaryPrimePenalty, ite_eq_right hp3, ite_eq_right hp5,
+                  ite_eq_right hp7, ite_eq_right hp11, ite_eq_right hp13, ite_eq_right hp17,
+                  ite_eq_left hp23]
                 exact (pow_ten_le_base_seventeen a).trans <|
                   Nat.mul_le_mul_left _ (Nat.pow_le_pow_left hpLower a)
               · by_cases hp31 : p < 31
                 · have hpLower : 23 ≤ p := by omega
-                  simp only [preliminaryPrimePenalty, if_neg hp3, if_neg hp5,
-                    if_neg hp7, if_neg hp11, if_neg hp13, if_neg hp17,
-                    if_neg hp23, if_pos hp31]
+                  simp only [preliminaryPrimePenalty, ite_eq_right hp3, ite_eq_right hp5,
+                    ite_eq_right hp7, ite_eq_right hp11, ite_eq_right hp13, ite_eq_right hp17,
+                    ite_eq_right hp23, ite_eq_left hp31]
                   exact (pow_ten_le_base_twentyThree a).trans <|
                     Nat.mul_le_mul_left _ (Nat.pow_le_pow_left hpLower a)
                 · by_cases hp43 : p < 43
                   · have hpLower : 31 ≤ p := by omega
-                    simp only [preliminaryPrimePenalty, if_neg hp3, if_neg hp5,
-                      if_neg hp7, if_neg hp11, if_neg hp13, if_neg hp17,
-                      if_neg hp23, if_neg hp31, if_pos hp43]
+                    simp only [preliminaryPrimePenalty, ite_eq_right hp3, ite_eq_right hp5,
+                      ite_eq_right hp7, ite_eq_right hp11, ite_eq_right hp13, ite_eq_right hp17,
+                      ite_eq_right hp23, ite_eq_right hp31, ite_eq_left hp43]
                     exact (pow_ten_le_base_thirtyOne a).trans <|
                       Nat.mul_le_mul_left _ (Nat.pow_le_pow_left hpLower a)
                   · by_cases hp67 : p < 67
                     · have hpLower : 43 ≤ p := by omega
-                      simp only [preliminaryPrimePenalty, if_neg hp3, if_neg hp5,
-                        if_neg hp7, if_neg hp11, if_neg hp13, if_neg hp17,
-                        if_neg hp23, if_neg hp31, if_neg hp43, if_pos hp67]
+                      simp only [preliminaryPrimePenalty, ite_eq_right hp3, ite_eq_right hp5,
+                        ite_eq_right hp7, ite_eq_right hp11, ite_eq_right hp13, ite_eq_right hp17,
+                        ite_eq_right hp23, ite_eq_right hp31, ite_eq_right hp43, ite_eq_left hp67]
                       exact (pow_ten_le_base_fortyThree a).trans <|
                         Nat.mul_le_mul_left _ (Nat.pow_le_pow_left hpLower a)
                     · by_cases hp131 : p < 131
                       · have hpLower : 67 ≤ p := by omega
-                        simp only [preliminaryPrimePenalty, if_neg hp3,
-                          if_neg hp5, if_neg hp7, if_neg hp11, if_neg hp13,
-                          if_neg hp17, if_neg hp23, if_neg hp31, if_neg hp43,
-                          if_neg hp67, if_pos hp131]
+                        simp only [preliminaryPrimePenalty, ite_eq_right hp3,
+                          ite_eq_right hp5, ite_eq_right hp7, ite_eq_right hp11, ite_eq_right hp13,
+                          ite_eq_right hp17, ite_eq_right hp23, ite_eq_right hp31, ite_eq_right hp43,
+                          ite_eq_right hp67, ite_eq_left hp131]
                         exact (pow_ten_le_base_sixtySeven a).trans <|
                           Nat.mul_le_mul_left _ (Nat.pow_le_pow_left hpLower a)
                       · by_cases hp257 : p < 257
                         · have hpLower : 131 ≤ p := by omega
-                          simp only [preliminaryPrimePenalty, if_neg hp3,
-                            if_neg hp5, if_neg hp7, if_neg hp11, if_neg hp13,
-                            if_neg hp17, if_neg hp23, if_neg hp31, if_neg hp43,
-                            if_neg hp67, if_neg hp131, if_pos hp257]
+                          simp only [preliminaryPrimePenalty, ite_eq_right hp3,
+                            ite_eq_right hp5, ite_eq_right hp7, ite_eq_right hp11, ite_eq_right hp13,
+                            ite_eq_right hp17, ite_eq_right hp23, ite_eq_right hp31, ite_eq_right hp43,
+                            ite_eq_right hp67, ite_eq_right hp131, ite_eq_left hp257]
                           exact (pow_ten_le_base_oneHundredThirtyOne a).trans <|
                             Nat.mul_le_mul_left _
                               (Nat.pow_le_pow_left hpLower a)
                         · by_cases hp521 : p < 521
                           · have hpLower : 257 ≤ p := by omega
-                            simp only [preliminaryPrimePenalty, if_neg hp3,
-                              if_neg hp5, if_neg hp7, if_neg hp11, if_neg hp13,
-                              if_neg hp17, if_neg hp23, if_neg hp31, if_neg hp43,
-                              if_neg hp67, if_neg hp131, if_neg hp257,
-                              if_pos hp521]
+                            simp only [preliminaryPrimePenalty, ite_eq_right hp3,
+                              ite_eq_right hp5, ite_eq_right hp7, ite_eq_right hp11, ite_eq_right hp13,
+                              ite_eq_right hp17, ite_eq_right hp23, ite_eq_right hp31, ite_eq_right hp43,
+                              ite_eq_right hp67, ite_eq_right hp131, ite_eq_right hp257,
+                              ite_eq_left hp521]
                             exact (pow_ten_le_base_twoHundredFiftySeven a).trans <|
                               Nat.mul_le_mul_left _
                                 (Nat.pow_le_pow_left hpLower a)
                           · by_cases hp1024 : p < 1024
                             · have hpLower : 521 ≤ p := by omega
-                              simp only [preliminaryPrimePenalty, if_neg hp3,
-                                if_neg hp5, if_neg hp7, if_neg hp11, if_neg hp13,
-                                if_neg hp17, if_neg hp23, if_neg hp31, if_neg hp43,
-                                if_neg hp67, if_neg hp131, if_neg hp257,
-                                if_neg hp521, if_pos hp1024]
+                              simp only [preliminaryPrimePenalty, ite_eq_right hp3,
+                                ite_eq_right hp5, ite_eq_right hp7, ite_eq_right hp11, ite_eq_right hp13,
+                                ite_eq_right hp17, ite_eq_right hp23, ite_eq_right hp31, ite_eq_right hp43,
+                                ite_eq_right hp67, ite_eq_right hp131, ite_eq_right hp257,
+                                ite_eq_right hp521, ite_eq_left hp1024]
                               exact (pow_ten_le_base_fiveHundredTwentyOne a).trans <|
                                 Nat.mul_le_mul_left _
                                   (Nat.pow_le_pow_left hpLower a)
                             · have hpLower : 1024 ≤ p := by omega
-                              simp only [preliminaryPrimePenalty, if_neg hp3,
-                                if_neg hp5, if_neg hp7, if_neg hp11, if_neg hp13,
-                                if_neg hp17, if_neg hp23, if_neg hp31, if_neg hp43,
-                                if_neg hp67, if_neg hp131, if_neg hp257,
-                                if_neg hp521, if_neg hp1024, pow_zero, one_mul]
+                              simp only [preliminaryPrimePenalty, ite_eq_right hp3,
+                                ite_eq_right hp5, ite_eq_right hp7, ite_eq_right hp11, ite_eq_right hp13,
+                                ite_eq_right hp17, ite_eq_right hp23, ite_eq_right hp31, ite_eq_right hp43,
+                                ite_eq_right hp67, ite_eq_right hp131, ite_eq_right hp257,
+                                ite_eq_right hp521, ite_eq_right hp1024, pow_zero, one_mul]
                               exact
                                 (pow_ten_le_base_oneThousandTwentyFour a).trans <|
                                   Nat.pow_le_pow_left hpLower a

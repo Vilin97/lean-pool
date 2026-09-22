@@ -80,11 +80,11 @@ theorem finrank_evenExtension_over_halfExtension :
   let E := FiniteField.Extension K p n
   let S := FiniteField.Extension K p (2 * n)
   let ι : E →ₐ[K] S := halfExtensionToEvenExtensionAlgHom K p n
-  letI : Algebra E S := ι.toAlgebra
-  letI : IsScalarTower K E S := IsScalarTower.of_algebraMap_eq' (by
+  let : Algebra E S := ι.toAlgebra
+  let : IsScalarTower K E S := IsScalarTower.of_algebraMap_eq' (by
     ext c
     exact (ι.commutes c).symm)
-  letI : Module.Finite E S := Module.Finite.of_finite
+  let : Module.Finite E S := Module.Finite.of_finite
   have hmul : Module.finrank K E * Module.finrank E S =
       Module.finrank K S := Module.finrank_mul_finrank K E S
   rw [FiniteField.finrank_extension K p n,
@@ -123,13 +123,13 @@ theorem extensionAffinePointCount_two_mul_le_stepanov
   let E := FiniteField.Extension K p n
   let S := FiniteField.Extension K p (2 * n)
   let ι : E →ₐ[K] S := halfExtensionToEvenExtensionAlgHom K p n
-  letI : Algebra E S := ι.toAlgebra
-  letI : IsScalarTower K E S := IsScalarTower.of_algebraMap_eq' (by
+  let : Algebra E S := ι.toAlgebra
+  let : IsScalarTower K E S := IsScalarTower.of_algebraMap_eq' (by
     ext c
     exact (ι.commutes c).symm)
-  letI : Module.Finite E S := Module.Finite.of_finite
-  letI : Fintype E := Fintype.ofFinite E
-  letI : Fintype S := Fintype.ofFinite S
+  let : Module.Finite E S := Module.Finite.of_finite
+  let : Fintype E := Fintype.ofFinite E
+  let : Fintype S := Fintype.ofFinite S
   let fS : MvPolynomial (Fin 2) S :=
     extensionPlaneCurvePolynomial K p (2 * n) f
   have hfinrank : Module.finrank E S = 2 :=
@@ -167,12 +167,12 @@ theorem extensionAffinePointCount_two_mul_le_stepanov
       (MvPolynomial.map (algebraMap S (AlgebraicClosure S)) fS) := by
     exact extensionPlaneCurvePolynomial_absolutelyIrreducible
       K p (2 * n) f habsolute
-  letI : IsDomain (PlaneCurveCoordinateRing fS) :=
+  let : IsDomain (PlaneCurveCoordinateRing fS) :=
     planeCurveCoordinateRing_isDomain hfS
   let hx := firstCoordinate_transcendental hfS
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecondS)
   let L := PlaneCurveFunctionField fS
-  letI : Algebra (RatFunc S) L :=
+  let : Algebra (RatFunc S) L :=
     planeCurveFirstCoordinateRatFuncAlgebra fS hx
   let canonicalAlg : Algebra S L := inferInstance
   let constantAlg : Algebra S L :=

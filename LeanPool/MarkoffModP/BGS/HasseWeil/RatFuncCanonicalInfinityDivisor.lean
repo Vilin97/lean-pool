@@ -73,16 +73,16 @@ theorem ratFuncIdentityInfinityPlace_degree_eq_one :
   change P.1.inertiaDeg (RatFuncInfinityIntegers K) = 1
   have hpos : 0 < P.1.inertiaDeg (RatFuncInfinityIntegers K) :=
     Ideal.inertiaDeg_pos P.1 (RatFuncInfinityIntegers K)
-  letI : P.1.IsPrime := P.2.1
-  letI : P.1.LiesOver (ratFuncInfinityPlace K).asIdeal := P.2.2
-  letI : (ratFuncInfinityPlace K).asIdeal.IsMaximal :=
+  let : P.1.IsPrime := P.2.1
+  let : P.1.LiesOver (ratFuncInfinityPlace K).asIdeal := P.2.2
+  let : (ratFuncInfinityPlace K).asIdeal.IsMaximal :=
     (ratFuncInfinityPlace K).isPrime.isMaximal (ratFuncInfinityPlace K).ne_bot
   have hle : (ratFuncInfinityPlace K).asIdeal.inertiaDeg' P.1 ≤
       Module.finrank (RatFunc K) (RatFunc K) := by
     exact Ideal.inertiaDeg_le_finrank
       (RatFuncInfinityIntegralClosure K (RatFunc K))
       (RatFunc K) (RatFunc K) P.1 (ratFuncInfinityPlace K).ne_bot
-  rw [Ideal.inertiaDeg'_eq_inertiaDeg, Module.finrank_self] at hle
+  rw [inertiaDeg_eq_of_isMaximal, Module.finrank_self] at hle
   omega
 
 /-- The chosen infinity place in the Riemann--Roch two-chart place model. -/

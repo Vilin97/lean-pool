@@ -18,7 +18,7 @@ theorem discr_powerBasis_eq_minpoly_discr
     (pb : PowerBasis K L) :
     Algebra.discr K pb.basis = (minpoly K pb.gen).discr := by
   let E := AlgebraicClosure L
-  letI := fun a b : E => Classical.propDecidable (Eq a b)
+  let := fun a b : E => Classical.propDecidable (Eq a b)
   let f := minpoly K pb.gen
   have hfmonic : f.Monic := minpoly.monic pb.isIntegral_gen
   have hfne : f ≠ 0 := hfmonic.ne_zero

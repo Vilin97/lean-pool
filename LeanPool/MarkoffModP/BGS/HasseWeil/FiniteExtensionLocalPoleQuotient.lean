@@ -97,14 +97,14 @@ theorem finiteExtensionLocalPoleSpace_inl_step_finrank
       finiteExtensionPlaceDegree K L (.inl q) := by
   let A := RatFuncFiniteIntegralClosure K L
   let R := FiniteExtensionFinitePlaceLocalRing K L q
-  letI : Algebra A A := Algebra.id A
+  let : Algebra A A := Algebra.id A
   let localA : Algebra A R := OreLocalization.instAlgebra
-  letI := localA
-  letI : SMul A R := localA.toSMul
-  letI : Algebra K R := OreLocalization.instAlgebra
-  letI := finiteExtensionFinitePlaceLocalAlgebra (K := K) (L := L) q
-  letI := finiteExtensionFinitePlaceLocalIsFractionRing (K := K) (L := L) q
-  letI : IsScalarTower K R L := by
+  let := localA
+  let : SMul A R := localA.toSMul
+  let : Algebra K R := OreLocalization.instAlgebra
+  let := finiteExtensionFinitePlaceLocalAlgebra (K := K) (L := L) q
+  let := finiteExtensionFinitePlaceLocalIsFractionRing (K := K) (L := L) q
+  let : IsScalarTower K R L := by
     apply IsScalarTower.of_algebraMap_eq'
     ext c
     symm
@@ -118,7 +118,7 @@ theorem finiteExtensionLocalPoleSpace_inl_step_finrank
           (finiteExtensionFinitePlaceLocalizationToField_comp_algebraMap
             (K := K) (L := L) q) (algebraMap K A c)]
     rfl
-  letI : IsDiscreteValuationRing R :=
+  let : IsDiscreteValuationRing R :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain
       A q.ne_bot R
   obtain ⟨π, hπ⟩ := IsDiscreteValuationRing.exists_irreducible R
@@ -138,10 +138,10 @@ theorem finiteExtensionLocalPoleSpace_inl_step_finrank
           (K := K) (L := L) q x))
     rw [finiteExtensionFinitePlaceLocalOrder_eq_globalOrder,
       ← finiteExtensionPrincipalDivisor_inl_eq_finitePlaceOrder]
-  letI : Finite (IsLocalRing.ResidueField R) := by
+  let : Finite (IsLocalRing.ResidueField R) := by
     simpa [R] using
       finiteExtensionFinitePlace_residueField_finite (K := K) (L := L) q
-  letI : Module.Finite K (IsLocalRing.ResidueField R) := Module.Finite.of_finite
+  let : Module.Finite K (IsLocalRing.ResidueField R) := Module.Finite.of_finite
   rw [hspace (n + 1), hspace n]
   calc
     Module.finrank K
@@ -167,14 +167,14 @@ theorem finiteExtensionLocalPoleSpace_inl_cumulative_finrank
       n * finiteExtensionPlaceDegree K L (.inl q) := by
   let A := RatFuncFiniteIntegralClosure K L
   let R := FiniteExtensionFinitePlaceLocalRing K L q
-  letI : Algebra A A := Algebra.id A
+  let : Algebra A A := Algebra.id A
   let localA : Algebra A R := OreLocalization.instAlgebra
-  letI := localA
-  letI : SMul A R := localA.toSMul
-  letI : Algebra K R := OreLocalization.instAlgebra
-  letI := finiteExtensionFinitePlaceLocalAlgebra (K := K) (L := L) q
-  letI := finiteExtensionFinitePlaceLocalIsFractionRing (K := K) (L := L) q
-  letI : IsScalarTower K R L := by
+  let := localA
+  let : SMul A R := localA.toSMul
+  let : Algebra K R := OreLocalization.instAlgebra
+  let := finiteExtensionFinitePlaceLocalAlgebra (K := K) (L := L) q
+  let := finiteExtensionFinitePlaceLocalIsFractionRing (K := K) (L := L) q
+  let : IsScalarTower K R L := by
     apply IsScalarTower.of_algebraMap_eq'
     ext c
     symm
@@ -188,7 +188,7 @@ theorem finiteExtensionLocalPoleSpace_inl_cumulative_finrank
           (finiteExtensionFinitePlaceLocalizationToField_comp_algebraMap
             (K := K) (L := L) q) (algebraMap K A c)]
     rfl
-  letI : IsDiscreteValuationRing R :=
+  let : IsDiscreteValuationRing R :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain
       A q.ne_bot R
   obtain ⟨π, hπ⟩ := IsDiscreteValuationRing.exists_irreducible R
@@ -208,7 +208,7 @@ theorem finiteExtensionLocalPoleSpace_inl_cumulative_finrank
           (K := K) (L := L) q x))
     rw [finiteExtensionFinitePlaceLocalOrder_eq_globalOrder,
       ← finiteExtensionPrincipalDivisor_inl_eq_finitePlaceOrder]
-  letI : Finite (IsLocalRing.ResidueField R) := by
+  let : Finite (IsLocalRing.ResidueField R) := by
     simpa [R] using
       finiteExtensionFinitePlace_residueField_finite (K := K) (L := L) q
   rw [hspace n, hspace 0]
@@ -312,14 +312,14 @@ theorem finiteExtensionLocalPoleSpace_inr_step_finrank
       finiteExtensionPlaceDegree K L (.inr P) := by
   let A := RatFuncInfinityIntegralClosure K L
   let R := FiniteExtensionInfinityPlaceLocalRing K L P
-  letI : Algebra A A := Algebra.id A
+  let : Algebra A A := Algebra.id A
   let localA : Algebra A R := OreLocalization.instAlgebra
-  letI := localA
-  letI : SMul A R := localA.toSMul
-  letI : Algebra K R := OreLocalization.instAlgebra
-  letI := finiteExtensionInfinityPlaceLocalAlgebra (K := K) (L := L) P
-  letI := finiteExtensionInfinityPlaceLocalIsFractionRing (K := K) (L := L) P
-  letI : IsScalarTower K R L := by
+  let := localA
+  let : SMul A R := localA.toSMul
+  let : Algebra K R := OreLocalization.instAlgebra
+  let := finiteExtensionInfinityPlaceLocalAlgebra (K := K) (L := L) P
+  let := finiteExtensionInfinityPlaceLocalIsFractionRing (K := K) (L := L) P
+  let : IsScalarTower K R L := by
     apply IsScalarTower.of_algebraMap_eq'
     ext c
     symm
@@ -333,7 +333,7 @@ theorem finiteExtensionLocalPoleSpace_inr_step_finrank
           (finiteExtensionInfinityPlaceLocalizationToField_comp_algebraMap
             (K := K) (L := L) P) (algebraMap K A c)]
     exact (IsScalarTower.algebraMap_apply K A L c).symm
-  letI : IsDiscreteValuationRing R :=
+  let : IsDiscreteValuationRing R :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain
       A (primeOverHeightOne (ratFuncInfinityPlace K) P).ne_bot R
   obtain ⟨π, hπ⟩ := IsDiscreteValuationRing.exists_irreducible R
@@ -353,15 +353,15 @@ theorem finiteExtensionLocalPoleSpace_inr_step_finrank
           (K := K) (L := L) P x))
     rw [finiteExtensionInfinityPlaceLocalOrder_eq_globalOrder,
       ← finiteExtensionPrincipalDivisor_inr_eq_infinityPlaceOrder]
-  letI : Finite (IsLocalRing.ResidueField R) := by
-    letI : Finite P.1.ResidueField :=
+  let : Finite (IsLocalRing.ResidueField R) := by
+    let : Finite P.1.ResidueField :=
       finiteExtensionInfinityPlace_residueField_finite (K := K) (L := L) P
     change Finite
       (primeOverHeightOne (ratFuncInfinityPlace K) P).asIdeal.ResidueField
     exact Finite.of_injective
       (localQuotientInfinityResidueFieldAlgEquiv K L P)
       (localQuotientInfinityResidueFieldAlgEquiv K L P).injective
-  letI : Module.Finite K (IsLocalRing.ResidueField R) := Module.Finite.of_finite
+  let : Module.Finite K (IsLocalRing.ResidueField R) := Module.Finite.of_finite
   rw [hspace (n + 1), hspace n]
   calc
     Module.finrank K
@@ -394,14 +394,14 @@ theorem finiteExtensionLocalPoleSpace_inr_cumulative_finrank
       n * finiteExtensionPlaceDegree K L (.inr P) := by
   let A := RatFuncInfinityIntegralClosure K L
   let R := FiniteExtensionInfinityPlaceLocalRing K L P
-  letI : Algebra A A := Algebra.id A
+  let : Algebra A A := Algebra.id A
   let localA : Algebra A R := OreLocalization.instAlgebra
-  letI := localA
-  letI : SMul A R := localA.toSMul
-  letI : Algebra K R := OreLocalization.instAlgebra
-  letI := finiteExtensionInfinityPlaceLocalAlgebra (K := K) (L := L) P
-  letI := finiteExtensionInfinityPlaceLocalIsFractionRing (K := K) (L := L) P
-  letI : IsScalarTower K R L := by
+  let := localA
+  let : SMul A R := localA.toSMul
+  let : Algebra K R := OreLocalization.instAlgebra
+  let := finiteExtensionInfinityPlaceLocalAlgebra (K := K) (L := L) P
+  let := finiteExtensionInfinityPlaceLocalIsFractionRing (K := K) (L := L) P
+  let : IsScalarTower K R L := by
     apply IsScalarTower.of_algebraMap_eq'
     ext c
     symm
@@ -415,7 +415,7 @@ theorem finiteExtensionLocalPoleSpace_inr_cumulative_finrank
           (finiteExtensionInfinityPlaceLocalizationToField_comp_algebraMap
             (K := K) (L := L) P) (algebraMap K A c)]
     exact (IsScalarTower.algebraMap_apply K A L c).symm
-  letI : IsDiscreteValuationRing R :=
+  let : IsDiscreteValuationRing R :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain
       A (primeOverHeightOne (ratFuncInfinityPlace K) P).ne_bot R
   obtain ⟨π, hπ⟩ := IsDiscreteValuationRing.exists_irreducible R
@@ -435,8 +435,8 @@ theorem finiteExtensionLocalPoleSpace_inr_cumulative_finrank
           (K := K) (L := L) P x))
     rw [finiteExtensionInfinityPlaceLocalOrder_eq_globalOrder,
       ← finiteExtensionPrincipalDivisor_inr_eq_infinityPlaceOrder]
-  letI : Finite (IsLocalRing.ResidueField R) := by
-    letI : Finite P.1.ResidueField :=
+  let : Finite (IsLocalRing.ResidueField R) := by
+    let : Finite P.1.ResidueField :=
       finiteExtensionInfinityPlace_residueField_finite (K := K) (L := L) P
     change Finite
       (primeOverHeightOne (ratFuncInfinityPlace K) P).asIdeal.ResidueField

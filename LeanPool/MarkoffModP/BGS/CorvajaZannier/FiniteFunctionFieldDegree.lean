@@ -144,7 +144,7 @@ theorem finiteFunctionField_finrank_frobeniusFieldRange_eq_card :
     apply congrArg (· * x)
     simp only [e, F0]
     exact Algebra.algHom_apply k k⟮X⟯ L c)
-  letI : FiniteDimensional F0 L := b0.finiteDimensional_of_finite
+  let : FiniteDimensional F0 L := b0.finiteDimensional_of_finite
   have hF0TopPos : 0 < IntermediateField.relfinrank F0
       (⊤ : IntermediateField k L) := by
     rw [IntermediateField.relfinrank_top_right]

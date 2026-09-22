@@ -197,52 +197,52 @@ theorem onePointStepanovFirstRestrictionMap_eq_zero_or_principalDivisor_pos_at_f
           (Fintype.card K) c) (.inl q) := by
   let A := RatFuncFiniteIntegralClosure K L
   let R := FiniteExtensionFinitePlaceLocalRing K L q
-  letI : Algebra K L :=
+  let : Algebra K L :=
     RingHom.toAlgebra ((algebraMap (RatFunc K) L).comp
       (algebraMap K (RatFunc K)))
-  letI : IsScalarTower K (RatFunc K) L :=
+  let : IsScalarTower K (RatFunc K) L :=
     IsScalarTower.of_algebraMap_eq' rfl
-  letI : Algebra K[X] L :=
+  let : Algebra K[X] L :=
     RingHom.toAlgebra ((algebraMap (RatFunc K) L).comp
       (algebraMap K[X] (RatFunc K)))
-  letI : IsScalarTower K[X] (RatFunc K) L :=
+  let : IsScalarTower K[X] (RatFunc K) L :=
     IsScalarTower.of_algebraMap_eq' rfl
-  letI : Algebra K (RatFuncFiniteIntegralClosure K L) :=
+  let : Algebra K (RatFuncFiniteIntegralClosure K L) :=
     RingHom.toAlgebra
       ((algebraMap K[X] (RatFuncFiniteIntegralClosure K L)).comp
         (algebraMap K K[X]))
-  letI : IsScalarTower K K[X] (RatFuncFiniteIntegralClosure K L) :=
+  let : IsScalarTower K K[X] (RatFuncFiniteIntegralClosure K L) :=
     IsScalarTower.of_algebraMap_eq' rfl
-  letI : Algebra.IsIntegral K[X] (RatFuncFiniteIntegralClosure K L) :=
+  let : Algebra.IsIntegral K[X] (RatFuncFiniteIntegralClosure K L) :=
     IsIntegralClosure.isIntegral_algebra K[X] L
-  letI : Module.Finite K[X] (RatFuncFiniteIntegralClosure K L) :=
+  let : Module.Finite K[X] (RatFuncFiniteIntegralClosure K L) :=
     Module.IsNoetherian.finite K[X] (RatFuncFiniteIntegralClosure K L)
-  letI : Module.IsTorsionFree K[X] L :=
+  let : Module.IsTorsionFree K[X] L :=
     Module.IsTorsionFree.trans_faithfulSMul K[X] (RatFunc K) L
-  letI : Module.IsTorsionFree K[X]
+  let : Module.IsTorsionFree K[X]
       (RatFuncFiniteIntegralClosure K L) :=
     IsIntegralClosure.isTorsionFree K[X] L
-  letI : IsDedekindDomain (RatFuncFiniteIntegralClosure K L) :=
+  let : IsDedekindDomain (RatFuncFiniteIntegralClosure K L) :=
     IsIntegralClosure.isDedekindDomain K[X] (RatFunc K) L
       (RatFuncFiniteIntegralClosure K L)
-  letI : IsFractionRing (RatFuncFiniteIntegralClosure K L) L :=
+  let : IsFractionRing (RatFuncFiniteIntegralClosure K L) L :=
     IsIntegralClosure.isFractionRing_of_finite_extension
       K[X] (RatFunc K) L (RatFuncFiniteIntegralClosure K L)
-  letI : Algebra (RatFuncFiniteIntegralClosure K L)
+  let : Algebra (RatFuncFiniteIntegralClosure K L)
       (RatFuncFiniteIntegralClosure K L) :=
     Algebra.id (RatFuncFiniteIntegralClosure K L)
   let localAlgebra : Algebra (RatFuncFiniteIntegralClosure K L)
       (FiniteExtensionFinitePlaceLocalRing K L q) :=
     OreLocalization.instAlgebra
-  letI := localAlgebra
-  letI : SMul (RatFuncFiniteIntegralClosure K L)
+  let := localAlgebra
+  let : SMul (RatFuncFiniteIntegralClosure K L)
       (FiniteExtensionFinitePlaceLocalRing K L q) :=
     localAlgebra.toSMul
-  letI : Algebra K (FiniteExtensionFinitePlaceLocalRing K L q) :=
+  let : Algebra K (FiniteExtensionFinitePlaceLocalRing K L q) :=
     OreLocalization.instAlgebra
-  letI := finiteExtensionFinitePlaceLocalAlgebra (K := K) (L := L) q
-  letI := finiteExtensionFinitePlaceLocalIsFractionRing (K := K) (L := L) q
-  letI : IsScalarTower K R L := by
+  let := finiteExtensionFinitePlaceLocalAlgebra (K := K) (L := L) q
+  let := finiteExtensionFinitePlaceLocalIsFractionRing (K := K) (L := L) q
+  let : IsScalarTower K R L := by
     apply IsScalarTower.of_algebraMap_eq'
     ext x
     symm
@@ -257,7 +257,7 @@ theorem onePointStepanovFirstRestrictionMap_eq_zero_or_principalDivisor_pos_at_f
           (finiteExtensionFinitePlaceLocalizationToField_comp_algebraMap
             (K := K) (L := L) q) (algebraMap K A x)]
     rfl
-  letI : IsDiscreteValuationRing R :=
+  let : IsDiscreteValuationRing R :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain
       A q.ne_bot R
   let eResidue :

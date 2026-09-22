@@ -37,7 +37,7 @@ theorem MonoidHom.stabilizer_surjective_of_isPretransitive_of_isCyclic
       (pi.comp (MulAction.stabilizer G x₀).subtype)) :
     ∀ x : X, Function.Surjective
       (pi.comp (MulAction.stabilizer G x).subtype) := by
-  letI : CommGroup A := IsCyclic.commGroup
+  let : CommGroup A := IsCyclic.commGroup
   intro x c
   obtain ⟨g, hg⟩ := MulAction.exists_smul_eq G x₀ x
   obtain ⟨h, hh⟩ := h₀ c
@@ -107,18 +107,18 @@ private theorem exactConstantExtensionFrobeniusAverage_ratFuncBaseTower :
     letI : SMul L (ExactConstantExtension C N S) := Algebra.toSMul
     letI : Module L (ExactConstantExtension C N S) := Algebra.toModule
     IsScalarTower (RatFunc C) L (ExactConstantExtension C N S) := by
-  letI : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-  letI : Algebra L (ExactConstantExtension C N S) :=
+  let : Algebra L (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseAlgebra C L N S
-  letI : Algebra N (ExactConstantExtension C N S) :=
+  let : Algebra N (ExactConstantExtension C N S) :=
     exactConstantExtensionAlgebra C N S
-  letI : SMul (RatFunc C) (ExactConstantExtension C N S) :=
+  let : SMul (RatFunc C) (ExactConstantExtension C N S) :=
     Algebra.toSMul
-  letI : Module (RatFunc C) (ExactConstantExtension C N S) :=
+  let : Module (RatFunc C) (ExactConstantExtension C N S) :=
     Algebra.toModule
-  letI : SMul L (ExactConstantExtension C N S) := Algebra.toSMul
-  letI : Module L (ExactConstantExtension C N S) := Algebra.toModule
+  let : SMul L (ExactConstantExtension C N S) := Algebra.toSMul
+  let : Module L (ExactConstantExtension C N S) := Algebra.toModule
   apply IsScalarTower.of_algebraMap_eq'
   ext x
   change (1 : S) ⊗ₜ[C] algebraMap (RatFunc C) N x =
@@ -137,23 +137,23 @@ private theorem finiteDimensional_exactConstantExtension_over_intermediate
     letI : SMul L (ExactConstantExtension C N S) := Algebra.toSMul
     letI : Module L (ExactConstantExtension C N S) := Algebra.toModule
     FiniteDimensional L (ExactConstantExtension C N S) := by
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
-  letI : Algebra L (ExactConstantExtension C N S) :=
+  let : Algebra L (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseAlgebra C L N S
-  letI : SMul L (ExactConstantExtension C N S) := Algebra.toSMul
-  letI : Module L (ExactConstantExtension C N S) := Algebra.toModule
-  letI : Algebra N (ExactConstantExtension C N S) :=
+  let : SMul L (ExactConstantExtension C N S) := Algebra.toSMul
+  let : Module L (ExactConstantExtension C N S) := Algebra.toModule
+  let : Algebra N (ExactConstantExtension C N S) :=
     exactConstantExtensionAlgebra C N S
-  letI : SMul N (ExactConstantExtension C N S) := Algebra.toSMul
-  letI : Module N (ExactConstantExtension C N S) := Algebra.toModule
-  letI : IsScalarTower L N (ExactConstantExtension C N S) :=
+  let : SMul N (ExactConstantExtension C N S) := Algebra.toSMul
+  let : Module N (ExactConstantExtension C N S) := Algebra.toModule
+  let : IsScalarTower L N (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseTower C L N S
   let e := exactConstantExtensionLinearEquiv C N S
-  letI : Module.Finite N (N ⊗[C] S) := Module.Finite.base_change C N S
-  letI : Module.Finite N (ExactConstantExtension C N S) :=
+  let : Module.Finite N (N ⊗[C] S) := Module.Finite.base_change C N S
+  let : Module.Finite N (ExactConstantExtension C N S) :=
     Module.Finite.equiv e
-  letI : Module.Finite L (ExactConstantExtension C N S) :=
+  let : Module.Finite L (ExactConstantExtension C N S) :=
     Module.Finite.trans N (ExactConstantExtension C N S)
   infer_instance
 
@@ -217,64 +217,64 @@ theorem exactConstantExtensionFinitePlace_frobeniusFiber_fixedPoint_sum
       Nat.card (MulAction.fixedBy
         (FinitePlaceUnderFiber C L (ExactConstantExtension C N S) P) g.1)) =
       Nat.card (N ≃ₐ[L] N) := by
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-  letI : Algebra L (ExactConstantExtension C N S) :=
+  let : Algebra L (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseAlgebra C L N S
-  letI : Algebra N (ExactConstantExtension C N S) :=
+  let : Algebra N (ExactConstantExtension C N S) :=
     exactConstantExtensionAlgebra C N S
-  letI : SMul (RatFunc C) (ExactConstantExtension C N S) :=
+  let : SMul (RatFunc C) (ExactConstantExtension C N S) :=
     Algebra.toSMul
-  letI : Module (RatFunc C) (ExactConstantExtension C N S) :=
+  let : Module (RatFunc C) (ExactConstantExtension C N S) :=
     Algebra.toModule
-  letI : SMul L (ExactConstantExtension C N S) := Algebra.toSMul
-  letI : Module L (ExactConstantExtension C N S) := Algebra.toModule
-  letI : SMul N (ExactConstantExtension C N S) := Algebra.toSMul
-  letI : Module N (ExactConstantExtension C N S) := Algebra.toModule
-  letI : IsScalarTower (RatFunc C) L
+  let : SMul L (ExactConstantExtension C N S) := Algebra.toSMul
+  let : Module L (ExactConstantExtension C N S) := Algebra.toModule
+  let : SMul N (ExactConstantExtension C N S) := Algebra.toSMul
+  let : Module N (ExactConstantExtension C N S) := Algebra.toModule
+  let : IsScalarTower (RatFunc C) L
       (ExactConstantExtension C N S) :=
     exactConstantExtensionFrobeniusAverage_ratFuncBaseTower C S N L
-  letI : IsScalarTower (RatFunc C) N
+  let : IsScalarTower (RatFunc C) N
       (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseTower C (RatFunc C) N S
-  letI : IsScalarTower L N (ExactConstantExtension C N S) :=
+  let : IsScalarTower L N (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseTower C L N S
-  letI : IsGalois L (ExactConstantExtension C N S) :=
+  let : IsGalois L (ExactConstantExtension C N S) :=
     exactConstantExtension_isGalois C L N S hExact
-  letI : FiniteDimensional L (ExactConstantExtension C N S) :=
+  let : FiniteDimensional L (ExactConstantExtension C N S) :=
     finiteDimensional_exactConstantExtension_over_intermediate
       (C := C) (S := S) (N := N) (L := L) hExact
-  letI : FiniteDimensional (RatFunc C)
+  let : FiniteDimensional (RatFunc C)
       (ExactConstantExtension C N S) :=
     finiteDimensional_exactConstantExtension_over_baseRatFunc C S N hExact
-  letI : Algebra.IsSeparable (RatFunc C)
+  let : Algebra.IsSeparable (RatFunc C)
       (ExactConstantExtension C N S) :=
     isSeparable_exactConstantExtension_over_baseRatFunc C S N hExact
   let Q := exactConstantExtensionCompatibleBaseFinitePlace C S N hExact q
   let P := finitePlaceUnder C L (ExactConstantExtension C N S) Q
   let pi := exactConstantExtensionConstantQuotient C L N S hExact
-  letI : DecidableEq (S ≃ₐ[C] S) := Classical.decEq _
-  letI : Fintype
+  let : DecidableEq (S ≃ₐ[C] S) := Classical.decEq _
+  let : Fintype
       (ExactConstantExtension C N S ≃ₐ[L]
         ExactConstantExtension C N S) := Fintype.ofFinite _
-  letI : Fintype (S ≃ₐ[C] S) := Fintype.ofFinite _
-  letI : Fintype
+  let : Fintype (S ≃ₐ[C] S) := Fintype.ofFinite _
+  let : Fintype
       (pi ⁻¹' ({FiniteField.frobeniusAlgEquivOfAlgebraic C S} :
         Set (S ≃ₐ[C] S))) := Fintype.ofFinite _
-  letI := finiteIntegralClosureGalAction C L
+  let := finiteIntegralClosureGalAction C L
     (ExactConstantExtension C N S)
-  letI := finitePlaceUnderFiberGalAction C L
+  let := finitePlaceUnderFiberGalAction C L
     (ExactConstantExtension C N S) P
-  letI : MulAction.IsPretransitive
+  let : MulAction.IsPretransitive
       (ExactConstantExtension C N S ≃ₐ[L] ExactConstantExtension C N S)
       (FinitePlaceUnderFiber C L (ExactConstantExtension C N S) P) :=
     finitePlaceUnderFiberGalAction_isPretransitive C L
       (ExactConstantExtension C N S) P
   let Q₀ : FinitePlaceUnderFiber C L
       (ExactConstantExtension C N S) P := ⟨Q, rfl⟩
-  letI : Nonempty (FinitePlaceUnderFiber C L
+  let : Nonempty (FinitePlaceUnderFiber C L
       (ExactConstantExtension C N S) P) := ⟨Q₀⟩
   have hdecomp :=
     exactConstantExtensionFinitePlace_decompositionGroup_card_of_rational_base

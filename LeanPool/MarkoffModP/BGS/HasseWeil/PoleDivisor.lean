@@ -104,7 +104,7 @@ theorem finiteExtensionDivisorDegree_poleDivisor
             rw [← Finset.sum_neg_distrib]
             apply Finset.sum_congr rfl
             intro a ha
-            rw [if_pos (Finset.mem_filter.mp ha).2]
+            rw [ite_eq_left (Finset.mem_filter.mp ha).2]
             ring
     _ = (finiteExtensionHeight K L x : ℤ) := by omega
 

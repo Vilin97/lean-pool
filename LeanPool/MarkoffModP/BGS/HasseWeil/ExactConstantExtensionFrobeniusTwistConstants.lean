@@ -52,16 +52,16 @@ theorem exactConstantExtensionFrobeniusTwistField_algebraicClosure_eq_bot
     letI : Algebra C F := Algebra.restrictScalars C L F
     algebraicClosure C F = (⊥ : IntermediateField C F) := by
   let T := ExactConstantExtension C N S
-  letI : Field T := exactConstantExtensionField C N S hExact
-  letI : Algebra L T := exactConstantExtensionBaseAlgebra C L N S
-  letI : Algebra C T := Algebra.restrictScalars C L T
-  letI : SMul C T := Algebra.toSMul
-  letI : IsScalarTower C L T := IsScalarTower.of_algebraMap_eq' rfl
+  let : Field T := exactConstantExtensionField C N S hExact
+  let : Algebra L T := exactConstantExtensionBaseAlgebra C L N S
+  let : Algebra C T := Algebra.restrictScalars C L T
+  let : SMul C T := Algebra.toSMul
+  let : IsScalarTower C L T := IsScalarTower.of_algebraMap_eq' rfl
   let F := exactConstantExtensionFrobeniusTwistField C L N S hExact g
-  letI : Algebra C F := Algebra.restrictScalars C L F
-  letI : IsScalarTower C L F := IsScalarTower.of_algebraMap_eq' rfl
-  letI : Algebra S T := Algebra.TensorProduct.leftAlgebra
-  letI : SMul S T := Algebra.toSMul
+  let : Algebra C F := Algebra.restrictScalars C L F
+  let : IsScalarTower C L F := IsScalarTower.of_algebraMap_eq' rfl
+  let : Algebra S T := Algebra.TensorProduct.leftAlgebra
+  let : SMul S T := Algebra.toSMul
   have hCS : algebraMap C T =
       (algebraMap S T).comp (algebraMap C S) := by
     ext c
@@ -69,7 +69,7 @@ theorem exactConstantExtensionFrobeniusTwistField_algebraicClosure_eq_bot
       algebraMap C S c ⊗ₜ (1 : N)
     rw [← IsScalarTower.algebraMap_apply C L N]
     exact (Algebra.TensorProduct.tmul_one_eq_one_tmul c).symm
-  letI : IsScalarTower C S T := IsScalarTower.of_algebraMap_eq' hCS
+  let : IsScalarTower C S T := IsScalarTower.of_algebraMap_eq' hCS
   have hTopExact : algebraicClosure S T =
       (⊥ : IntermediateField S T) :=
     exactConstantExtension_algebraicClosure_eq_bot C N S hExact

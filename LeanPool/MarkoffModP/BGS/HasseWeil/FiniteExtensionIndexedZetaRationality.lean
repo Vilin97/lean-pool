@@ -47,7 +47,7 @@ theorem finiteExtensionEffectiveDivisorCount_zero :
   refine ⟨⟨0, by simp [finiteExtensionEffectiveDivisorDegree]⟩, ?_⟩
   intro D
   apply Subtype.ext
-  letI : Finsupp.NonTorsionWeight ℕ
+  let : Finsupp.NonTorsionWeight ℕ
       (fun P : FiniteExtensionPlace K L =>
         finiteExtensionPlaceDegree K L P) :=
     Finsupp.nonTorsionWeight_of ℕ

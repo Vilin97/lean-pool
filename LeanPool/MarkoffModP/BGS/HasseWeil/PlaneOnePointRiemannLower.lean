@@ -95,7 +95,7 @@ theorem planeCurveSecondCoordinate_height_le_degreeOf_first
     letI := separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
     finiteExtensionHeight K (PlaneCurveFunctionField f)
         (planeCurveFunction f 1) ≤ MvPolynomial.degreeOf 0 f := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
@@ -109,11 +109,11 @@ theorem planeCurveSecondCoordinate_height_le_degreeOf_first
     apply hyTrans
     rw [hy]
     exact isAlgebraic_zero
-  letI : Algebra (RatFunc K) L :=
+  let : Algebra (RatFunc K) L :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : FiniteDimensional (RatFunc K) L :=
+  let : FiniteDimensional (RatFunc K) L :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K) L :=
+  let : Algebra.IsSeparable (RatFunc K) L :=
     separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
   change finiteExtensionHeight K L y ≤ MvPolynomial.degreeOf 0 f
   rw [← finiteExtensionPositiveDegree_eq_height K L y hy0]
@@ -142,25 +142,25 @@ private theorem planeCurve_monomialGrid_linearIndependent_firstRatFunc
     LinearIndependent K
       (planeMonomialGrid (planeCurveFunction f 0)
         (planeCurveFunction f 1) a b) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
   let L := PlaneCurveFunctionField f
   let y : L := planeCurveFunction f 1
-  letI : Algebra (RatFunc K) L :=
+  let : Algebra (RatFunc K) L :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : FiniteDimensional (RatFunc K) L :=
+  let : FiniteDimensional (RatFunc K) L :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K) L :=
+  let : Algebra.IsSeparable (RatFunc K) L :=
     separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
   let constantAlg : Algebra K L :=
     RingHom.toAlgebra ((algebraMap (RatFunc K) L).comp
       (algebraMap K (RatFunc K)))
-  letI : Algebra K L := constantAlg
-  letI : SMul K L := constantAlg.toSMul
-  letI : Module K L := constantAlg.toModule
-  letI : IsScalarTower K (RatFunc K) L :=
+  let : Algebra K L := constantAlg
+  let : SMul K L := constantAlg.toSMul
+  let : Module K L := constantAlg.toModule
+  let : IsScalarTower K (RatFunc K) L :=
     IsScalarTower.of_algebraMap_eq' rfl
   let F : Polynomial (RatFunc K) :=
     (planeCurvePolynomialInSecondCoordinate f).map
@@ -214,7 +214,7 @@ theorem planeCurveMonomialPoleBudget_finrank_lower
         (planeMonomialPoleBudget K (PlaneCurveFunctionField f)
           (planeCurveFunction f 0) (planeCurveFunction f 1) n
           (MvPolynomial.degreeOf 1 f))) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
@@ -236,19 +236,19 @@ theorem planeCurveMonomialPoleBudget_finrank_lower
     apply hyTrans
     rw [h]
     exact isAlgebraic_zero
-  letI : Algebra (RatFunc K) L :=
+  let : Algebra (RatFunc K) L :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : FiniteDimensional (RatFunc K) L :=
+  let : FiniteDimensional (RatFunc K) L :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K) L :=
+  let : Algebra.IsSeparable (RatFunc K) L :=
     separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
   let constantAlg : Algebra K L :=
     RingHom.toAlgebra ((algebraMap (RatFunc K) L).comp
       (algebraMap K (RatFunc K)))
-  letI : Algebra K L := constantAlg
-  letI : SMul K L := constantAlg.toSMul
-  letI : Module K L := constantAlg.toModule
-  letI : IsScalarTower K (RatFunc K) L :=
+  let : Algebra K L := constantAlg
+  let : SMul K L := constantAlg.toSMul
+  let : Module K L := constantAlg.toModule
+  let : IsScalarTower K (RatFunc K) L :=
     IsScalarTower.of_algebraMap_eq' rfl
   have hD : ∀ v, 0 ≤
       (n • finiteExtensionPoleDivisor K L x +
@@ -308,7 +308,7 @@ private theorem exists_planeCurve_onePointRiemannSpace_progression_lower_bound_i
               Module.finrank K (finiteExtensionOnePointRiemannSpace K
                 (PlaneCurveFunctionField f) Q m) +
                 planeCurveBidegreeGenusBudget f := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
@@ -318,19 +318,19 @@ private theorem exists_planeCurve_onePointRiemannSpace_progression_lower_bound_i
   let a := MvPolynomial.degreeOf 0 f
   let b := MvPolynomial.degreeOf 1 f
   let g := planeCurveBidegreeGenusBudget f
-  letI : Algebra (RatFunc K) L :=
+  let : Algebra (RatFunc K) L :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : FiniteDimensional (RatFunc K) L :=
+  let : FiniteDimensional (RatFunc K) L :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K) L :=
+  let : Algebra.IsSeparable (RatFunc K) L :=
     separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
   let constantAlg : Algebra K L :=
     RingHom.toAlgebra ((algebraMap (RatFunc K) L).comp
       (algebraMap K (RatFunc K)))
-  letI : Algebra K L := constantAlg
-  letI : SMul K L := constantAlg.toSMul
-  letI : Module K L := constantAlg.toModule
-  letI : IsScalarTower K (RatFunc K) L :=
+  let : Algebra K L := constantAlg
+  let : SMul K L := constantAlg.toSMul
+  let : Module K L := constantAlg.toModule
+  let : IsScalarTower K (RatFunc K) L :=
     IsScalarTower.of_algebraMap_eq' rfl
   obtain ⟨P, hPpole, hPdegreePositive, hPdegreeBound⟩ :=
     exists_planeCurveFirstCoordinate_infinityPolePlace hf hpartialSecond
@@ -364,7 +364,7 @@ private theorem exists_planeCurve_onePointRiemannSpace_progression_lower_bound_i
     · subst v
       simp
     · simp [Finsupp.single_eq_of_ne hv]
-  letI : Module.Finite K
+  let : Module.Finite K
       (finiteExtensionOnePointRiemannSpace K L Q m) := hfiniteOne
   have hfullLower : (n + 1) * b ≤
       Module.finrank K (finiteExtensionRiemannSpace K L D) := by
@@ -535,7 +535,7 @@ theorem exists_planeCurve_onePointRiemannSpace_progression_strictLevels_lower_bo
                   (PlaneCurveFunctionField f) Q k) m).card := by
   let hf : Irreducible f :=
     irreducible_of_irreducible_map_algebraicClosure habsolute
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
@@ -544,11 +544,11 @@ theorem exists_planeCurve_onePointRiemannSpace_progression_strictLevels_lower_bo
   let y : L := planeCurveFunction f 1
   let b := MvPolynomial.degreeOf 1 f
   let g := planeCurveBidegreeGenusBudget f
-  letI : Algebra (RatFunc K) L :=
+  let : Algebra (RatFunc K) L :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : FiniteDimensional (RatFunc K) L :=
+  let : FiniteDimensional (RatFunc K) L :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K) L :=
+  let : Algebra.IsSeparable (RatFunc K) L :=
     separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
   let canonicalAlg : Algebra K L := inferInstance
   let constantAlg : Algebra K L :=
@@ -564,10 +564,10 @@ theorem exists_planeCurve_onePointRiemannSpace_progression_strictLevels_lower_bo
         K L _ _ canonicalAlg x hx)
       (Polynomial.C c)
     simpa using h
-  letI : Algebra K L := constantAlg
-  letI : SMul K L := constantAlg.toSMul
-  letI : Module K L := constantAlg.toModule
-  letI : IsScalarTower K (RatFunc K) L :=
+  let : Algebra K L := constantAlg
+  let : SMul K L := constantAlg.toSMul
+  let : Module K L := constantAlg.toModule
+  let : IsScalarTower K (RatFunc K) L :=
     IsScalarTower.of_algebraMap_eq' rfl
   obtain ⟨P, hPpole, hPdegreePositive, hPdegreeBound, hprogress⟩ :=
     exists_planeCurve_onePointRiemannSpace_progression_lower_bound
@@ -613,7 +613,7 @@ theorem exists_planeCurve_onePointRiemannSpace_progression_strictLevels_lower_bo
     have hfiniteK : Module.Finite K
         (finiteExtensionRiemannSpace K L Dk) :=
       finiteExtensionRiemannSpace_effective_moduleFinite K L Dk hDk
-    letI : Module.Finite K
+    let : Module.Finite K
         (finiteExtensionRiemannSpace K L Dk) := hfiniteK
     have hstep := finiteExtensionRiemannSpace_place_increment K L Dk hDk Q
     have hdivisor : Dk + Finsupp.single Q 1 =

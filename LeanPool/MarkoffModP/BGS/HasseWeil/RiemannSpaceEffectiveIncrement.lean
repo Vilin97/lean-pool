@@ -91,7 +91,7 @@ theorem finiteExtensionRiemannSpace_natPlace_increment
           simp only [Finsupp.add_apply, Finsupp.single_eq_same]
           exact add_nonneg (hD P) (by positivity)
         · simpa [E, Finsupp.single_eq_of_ne hv] using hD v
-      letI : Module.Finite K (finiteExtensionRiemannSpace K L E) := ih.1
+      let : Module.Finite K (finiteExtensionRiemannSpace K L E) := ih.1
       have hstep := finiteExtensionRiemannSpace_place_increment K L E hE P
       have hdivisor :
           D + Finsupp.single P ((n + 1 : ℕ) : ℤ) =
@@ -159,7 +159,7 @@ theorem finiteExtensionRiemannSpace_add_effective
       · have h := hsingleAdd v
         simpa [Finsupp.single_eq_of_ne hv] using h
     have hih := ih hEeffective
-    letI : Module.Finite K
+    let : Module.Finite K
         (finiteExtensionRiemannSpace K L (D + E)) := hih.1
     have hDEeffective : ∀ v, 0 ≤ (D + E) v := by
       intro v
@@ -210,7 +210,7 @@ theorem finiteExtensionRiemannSpace_effective_moduleFinite
     (D : FiniteExtensionDivisor K L)
     (hD : ∀ v, 0 ≤ D v) :
     Module.Finite K (finiteExtensionRiemannSpace K L D) := by
-  letI : Module.Finite K
+  let : Module.Finite K
       (finiteExtensionRiemannSpace K L (0 : FiniteExtensionDivisor K L)) :=
     finiteExtensionRiemannSpace_zero_moduleFinite K L
   have h := finiteExtensionRiemannSpace_add_effective K L
@@ -239,7 +239,7 @@ theorem finiteExtensionRiemannSpace_finrank_le_onePoint_add_degreeAway
     · simp [A, Finsupp.single_eq_of_ne hv]
   have hB : ∀ v, 0 ≤ B v := by
     exact finiteExtensionDivisorAway_effective K L D P hD
-  letI : Module.Finite K (finiteExtensionRiemannSpace K L A) :=
+  let : Module.Finite K (finiteExtensionRiemannSpace K L A) :=
     finiteExtensionRiemannSpace_effective_moduleFinite K L A hA
   have hbound := finiteExtensionRiemannSpace_add_effective K L A B hA hB
   have hsplit : A + B = D := by

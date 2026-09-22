@@ -344,8 +344,8 @@ theorem exists_splitTraceCornerInitialPolynomial_gcd_factorization
         (MvPolynomial.C a * MvPolynomial.X 0 ^ (d / q) -
           MvPolynomial.C (zeta ^ i) * MvPolynomial.X 1 ^ (e / q))
   have hq : 0 < q := Nat.gcd_pos_of_pos_left e hd
-  letI : NeZero q := ⟨hq.ne'⟩
-  letI : NeZero (q : K) := ⟨by simpa [q] using hgChar⟩
+  let : NeZero q := ⟨hq.ne'⟩
+  let : NeZero (q : K) := ⟨by simpa [q] using hgChar⟩
   obtain ⟨a, ha⟩ := IsAlgClosed.exists_pow_nat_eq gamma hq
   obtain ⟨zeta, hzeta⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot K q
   have hqd : q ∣ d := Nat.gcd_dvd_left d e

@@ -104,20 +104,20 @@ theorem finiteExtensionFinitePlace_constantResidue_surjective
     (q : FiniteExtensionFinitePlace K L) :
     Function.Surjective (algebraMap K q.asIdeal.ResidueField) := by
   let p := HeightOneSpectrum.under K[X] q
-  letI : q.asIdeal.LiesOver p.asIdeal := ⟨rfl⟩
-  letI hLocalAlg :=
+  let : q.asIdeal.LiesOver p.asIdeal := ⟨rfl⟩
+  let hLocalAlg :=
     Localization.AtPrime.algebraOfLiesOver p.asIdeal q.asIdeal
   have : IsScalarTower K[X] (Localization.AtPrime p.asIdeal)
       (Localization.AtPrime q.asIdeal) := inferInstance
-  letI : Algebra.QuasiFiniteAt K[X] q.asIdeal := inferInstance
-  letI : Module.Finite p.asIdeal.ResidueField q.asIdeal.ResidueField :=
+  let : Algebra.QuasiFiniteAt K[X] q.asIdeal := inferInstance
+  let : Module.Finite p.asIdeal.ResidueField q.asIdeal.ResidueField :=
     inferInstance
-  letI : Algebra.IsIntegral p.asIdeal.ResidueField q.asIdeal.ResidueField :=
+  let : Algebra.IsIntegral p.asIdeal.ResidueField q.asIdeal.ResidueField :=
     Algebra.IsIntegral.of_finite _ _
   let e := ratFuncFinitePlaceResidueEquiv K p
-  letI : IsAlgClosed p.asIdeal.ResidueField :=
+  let : IsAlgClosed p.asIdeal.ResidueField :=
     IsAlgClosed.of_ringEquiv K p.asIdeal.ResidueField e.symm.toRingEquiv
-  letI : IsScalarTower K p.asIdeal.ResidueField q.asIdeal.ResidueField :=
+  let : IsScalarTower K p.asIdeal.ResidueField q.asIdeal.ResidueField :=
     inferInstance
   intro z
   obtain ⟨a, ha⟩ :=
@@ -135,19 +135,19 @@ theorem finiteExtensionInfinityPlace_constantResidue_surjective
     (P : FiniteExtensionInfinityPlace K L) :
     Function.Surjective (algebraMap K P.1.ResidueField) := by
   let p := (ratFuncInfinityPlace K).asIdeal
-  letI hLocalAlg :=
+  let hLocalAlg :=
     Localization.AtPrime.algebraOfLiesOver p P.1
   have : IsScalarTower (RatFuncInfinityIntegers K) (Localization.AtPrime p)
       (Localization.AtPrime P.1) := inferInstance
-  letI : Algebra.QuasiFiniteAt (RatFuncInfinityIntegers K) P.1 :=
+  let : Algebra.QuasiFiniteAt (RatFuncInfinityIntegers K) P.1 :=
     inferInstance
-  letI : Module.Finite p.ResidueField P.1.ResidueField := inferInstance
-  letI : Algebra.IsIntegral p.ResidueField P.1.ResidueField :=
+  let : Module.Finite p.ResidueField P.1.ResidueField := inferInstance
+  let : Algebra.IsIntegral p.ResidueField P.1.ResidueField :=
     Algebra.IsIntegral.of_finite _ _
   let e := ratFuncInfinityPlaceResidueEquiv K
-  letI : IsAlgClosed p.ResidueField :=
+  let : IsAlgClosed p.ResidueField :=
     IsAlgClosed.of_ringEquiv K p.ResidueField e.symm.toRingEquiv
-  letI : IsScalarTower K p.ResidueField P.1.ResidueField := inferInstance
+  let : IsScalarTower K p.ResidueField P.1.ResidueField := inferInstance
   intro z
   obtain ⟨a, ha⟩ :=
     (IsAlgClosed.algebraMap_bijective_of_isIntegral

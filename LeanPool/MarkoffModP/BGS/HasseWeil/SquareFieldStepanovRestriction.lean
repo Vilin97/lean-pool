@@ -284,52 +284,52 @@ theorem squareFieldStepanovFirstRestriction_eq_zero_or_principalDivisor_pos_at_f
         (squareFieldStepanovFirstRestriction K S L f g c) (.inl q) := by
   let A := RatFuncFiniteIntegralClosure S L
   let R := FiniteExtensionFinitePlaceLocalRing S L q
-  letI : Algebra S L :=
+  let : Algebra S L :=
     RingHom.toAlgebra ((algebraMap (RatFunc S) L).comp
       (algebraMap S (RatFunc S)))
-  letI : IsScalarTower S (RatFunc S) L :=
+  let : IsScalarTower S (RatFunc S) L :=
     IsScalarTower.of_algebraMap_eq' rfl
-  letI : Algebra S[X] L :=
+  let : Algebra S[X] L :=
     RingHom.toAlgebra ((algebraMap (RatFunc S) L).comp
       (algebraMap S[X] (RatFunc S)))
-  letI : IsScalarTower S[X] (RatFunc S) L :=
+  let : IsScalarTower S[X] (RatFunc S) L :=
     IsScalarTower.of_algebraMap_eq' rfl
-  letI : Algebra S (RatFuncFiniteIntegralClosure S L) :=
+  let : Algebra S (RatFuncFiniteIntegralClosure S L) :=
     RingHom.toAlgebra
       ((algebraMap S[X] (RatFuncFiniteIntegralClosure S L)).comp
         (algebraMap S S[X]))
-  letI : IsScalarTower S S[X] (RatFuncFiniteIntegralClosure S L) :=
+  let : IsScalarTower S S[X] (RatFuncFiniteIntegralClosure S L) :=
     IsScalarTower.of_algebraMap_eq' rfl
-  letI : Algebra.IsIntegral S[X] (RatFuncFiniteIntegralClosure S L) :=
+  let : Algebra.IsIntegral S[X] (RatFuncFiniteIntegralClosure S L) :=
     IsIntegralClosure.isIntegral_algebra S[X] L
-  letI : Module.Finite S[X] (RatFuncFiniteIntegralClosure S L) :=
+  let : Module.Finite S[X] (RatFuncFiniteIntegralClosure S L) :=
     Module.IsNoetherian.finite S[X] (RatFuncFiniteIntegralClosure S L)
-  letI : Module.IsTorsionFree S[X] L :=
+  let : Module.IsTorsionFree S[X] L :=
     Module.IsTorsionFree.trans_faithfulSMul S[X] (RatFunc S) L
-  letI : Module.IsTorsionFree S[X]
+  let : Module.IsTorsionFree S[X]
       (RatFuncFiniteIntegralClosure S L) :=
     IsIntegralClosure.isTorsionFree S[X] L
-  letI : IsDedekindDomain (RatFuncFiniteIntegralClosure S L) :=
+  let : IsDedekindDomain (RatFuncFiniteIntegralClosure S L) :=
     IsIntegralClosure.isDedekindDomain S[X] (RatFunc S) L
       (RatFuncFiniteIntegralClosure S L)
-  letI : IsFractionRing (RatFuncFiniteIntegralClosure S L) L :=
+  let : IsFractionRing (RatFuncFiniteIntegralClosure S L) L :=
     IsIntegralClosure.isFractionRing_of_finite_extension
       S[X] (RatFunc S) L (RatFuncFiniteIntegralClosure S L)
-  letI : Algebra (RatFuncFiniteIntegralClosure S L)
+  let : Algebra (RatFuncFiniteIntegralClosure S L)
       (RatFuncFiniteIntegralClosure S L) :=
     Algebra.id (RatFuncFiniteIntegralClosure S L)
   let localAlgebra : Algebra (RatFuncFiniteIntegralClosure S L)
       (FiniteExtensionFinitePlaceLocalRing S L q) :=
     OreLocalization.instAlgebra
-  letI := localAlgebra
-  letI : SMul (RatFuncFiniteIntegralClosure S L)
+  let := localAlgebra
+  let : SMul (RatFuncFiniteIntegralClosure S L)
       (FiniteExtensionFinitePlaceLocalRing S L q) :=
     localAlgebra.toSMul
-  letI : Algebra S (FiniteExtensionFinitePlaceLocalRing S L q) :=
+  let : Algebra S (FiniteExtensionFinitePlaceLocalRing S L q) :=
     OreLocalization.instAlgebra
-  letI := finiteExtensionFinitePlaceLocalAlgebra (K := S) (L := L) q
-  letI := finiteExtensionFinitePlaceLocalIsFractionRing (K := S) (L := L) q
-  letI : IsScalarTower S R L := by
+  let := finiteExtensionFinitePlaceLocalAlgebra (K := S) (L := L) q
+  let := finiteExtensionFinitePlaceLocalIsFractionRing (K := S) (L := L) q
+  let : IsScalarTower S R L := by
     apply IsScalarTower.of_algebraMap_eq'
     ext x
     symm
@@ -344,10 +344,10 @@ theorem squareFieldStepanovFirstRestriction_eq_zero_or_principalDivisor_pos_at_f
           (finiteExtensionFinitePlaceLocalizationToField_comp_algebraMap
             (K := S) (L := L) q) (algebraMap S A x)]
     rfl
-  letI : IsDiscreteValuationRing R :=
+  let : IsDiscreteValuationRing R :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain
       A q.ne_bot R
-  letI : Algebra K R := RingHom.toAlgebra
+  let : Algebra K R := RingHom.toAlgebra
     ((algebraMap S R).comp (algebraMap K S))
   let eResidue :
       (RatFuncFiniteIntegralClosure S L ⧸ q.asIdeal) ≃+*

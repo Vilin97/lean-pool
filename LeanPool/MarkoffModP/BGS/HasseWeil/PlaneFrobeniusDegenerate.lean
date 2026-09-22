@@ -79,7 +79,7 @@ theorem degreeOf_one_eq_natDegree_secondPolynomialOfFirstDegreeZero
       by_contra hmzero
       have hz : (MvPolynomial.finSuccEquiv R 1 f).coeff (m 0) = 0 := by
         rw [hC]
-        rw [Polynomial.coeff_C, if_neg hmzero]
+        rw [Polynomial.coeff_C, ite_eq_right hmzero]
       rw [hz] at htail
       simpa using htail
     have htailq : m.tail ∈ q.support := by
@@ -124,7 +124,7 @@ theorem degreeOf_one_eq_one_of_absolutelyIrreducible_degreeOf_zero
   have hCIrr : Irreducible (Polynomial.C qF) := by
     rw [← hC]
     exact hfinIrr
-  letI : IsLocalHom
+  let : IsLocalHom
       (Polynomial.C : MvPolynomial (Fin 1) F →+*
         Polynomial (MvPolynomial (Fin 1) F)) :=
     ⟨fun _ hunit => Polynomial.isUnit_C.mp hunit⟩

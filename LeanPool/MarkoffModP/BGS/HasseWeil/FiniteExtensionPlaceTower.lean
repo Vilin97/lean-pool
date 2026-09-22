@@ -330,10 +330,10 @@ def infinityPlaceUnder
   refine ⟨wM.asIdeal, wM.isPrime, ?_⟩
   have hwM : wM.asIdeal =
       wL.asIdeal.under (RatFuncInfinityIntegralClosure K M) := rfl
-  letI : wL.asIdeal.LiesOver wM.asIdeal := by
+  let : wL.asIdeal.LiesOver wM.asIdeal := by
     rw [hwM]
     infer_instance
-  letI : wL.asIdeal.LiesOver (ratFuncInfinityPlace K).asIdeal := by
+  let : wL.asIdeal.LiesOver (ratFuncInfinityPlace K).asIdeal := by
     change P.1.LiesOver (ratFuncInfinityPlace K).asIdeal
     infer_instance
   exact Ideal.LiesOver.tower_bot wL.asIdeal wM.asIdeal
@@ -368,7 +368,7 @@ theorem finitePlaceUnder_surjective :
   intro P
   let Q : P.asIdeal.primesOver (RatFuncFiniteIntegralClosure K L) :=
     Classical.choice inferInstance
-  letI : Q.1.LiesOver P.asIdeal := Q.2.2
+  let : Q.1.LiesOver P.asIdeal := Q.2.2
   have hQ0 : Q.1 ≠ ⊥ :=
     Ideal.ne_bot_of_mem_primesOver P.ne_bot Q.2
   let q : FiniteExtensionFinitePlace K L := ⟨Q.1, Q.2.1, hQ0⟩
@@ -383,9 +383,9 @@ theorem infinityPlaceUnder_surjective :
   intro P
   let Q : P.1.primesOver (RatFuncInfinityIntegralClosure K L) :=
     Classical.choice inferInstance
-  letI : Q.1.LiesOver P.1 := Q.2.2
-  letI : P.1.LiesOver (ratFuncInfinityPlace K).asIdeal := P.2.2
-  letI : Q.1.LiesOver (ratFuncInfinityPlace K).asIdeal :=
+  let : Q.1.LiesOver P.1 := Q.2.2
+  let : P.1.LiesOver (ratFuncInfinityPlace K).asIdeal := P.2.2
+  let : Q.1.LiesOver (ratFuncInfinityPlace K).asIdeal :=
     Ideal.LiesOver.trans Q.1 P.1 (ratFuncInfinityPlace K).asIdeal
   let q : FiniteExtensionInfinityPlace K L :=
     ⟨Q.1, Q.2.1, inferInstance⟩
@@ -482,7 +482,7 @@ theorem finiteIntegralClosure_relative_finrank_eq_field_finrank :
     Module.finrank (RatFuncFiniteIntegralClosure K M)
         (RatFuncFiniteIntegralClosure K L) =
       Module.finrank M L := by
-  exact (Algebra.IsAlgebraic.finrank_of_isFractionRing
+  exact (IsFractionRing.finrank_eq
     (RatFuncFiniteIntegralClosure K M) M
     (RatFuncFiniteIntegralClosure K L) L).symm
 
@@ -492,7 +492,7 @@ theorem infinityIntegralClosure_relative_finrank_eq_field_finrank :
     Module.finrank (RatFuncInfinityIntegralClosure K M)
         (RatFuncInfinityIntegralClosure K L) =
       Module.finrank M L := by
-  exact (Algebra.IsAlgebraic.finrank_of_isFractionRing
+  exact (IsFractionRing.finrank_eq
     (RatFuncInfinityIntegralClosure K M) M
     (RatFuncInfinityIntegralClosure K L) L).symm
 
@@ -559,7 +559,7 @@ theorem sum_infinityPlaceUnderFiber_ramification_inertia_eq_finrank
       Module.finrank (RatFuncInfinityIntegralClosure K M)
         (RatFuncInfinityIntegralClosure K L) := by
   classical
-  letI : P.1.IsPrime := P.2.1
+  let : P.1.IsPrime := P.2.1
   let e := infinityPlaceUnderFiberEquivPrimesOver K M L P
   calc
     _ = ∑ Q : P.1.primesOver (RatFuncInfinityIntegralClosure K L),
@@ -591,7 +591,7 @@ theorem finiteExtensionPlaceDegree_inl_eq_mul_relativeInertiaDeg
           (.inl (finitePlaceUnder K M L Q)) *
         finitePlaceRelativeInertiaDeg K M L Q := by
   let P := finitePlaceUnder K M L Q
-  letI : Q.asIdeal.LiesOver P.asIdeal :=
+  let : Q.asIdeal.LiesOver P.asIdeal :=
     ⟨finitePlaceUnder_asIdeal K M L Q⟩
   rw [finiteExtensionPlaceDegree, finiteExtensionPlaceDegree,
     finitePlaceRelativeInertiaDeg]
@@ -607,7 +607,7 @@ theorem finiteExtensionPlaceDegree_inr_eq_mul_relativeInertiaDeg
           (.inr (infinityPlaceUnder K M L Q)) *
         infinityPlaceRelativeInertiaDeg K M L Q := by
   let P := infinityPlaceUnder K M L Q
-  letI : Q.1.LiesOver P.1 :=
+  let : Q.1.LiesOver P.1 :=
     ⟨infinityPlaceUnder_asIdeal K M L Q⟩
   rw [finiteExtensionPlaceDegree, finiteExtensionPlaceDegree,
     infinityPlaceRelativeInertiaDeg]
@@ -647,7 +647,7 @@ theorem finiteIntegralClosureGalSmulComm :
     letI := finiteIntegralClosureGalAction K M L
     SMulCommClass Gal(L/M) (RatFuncFiniteIntegralClosure K M)
       (RatFuncFiniteIntegralClosure K L) := by
-  letI := finiteIntegralClosureGalAction K M L
+  let := finiteIntegralClosureGalAction K M L
   constructor
   intro g r s
   change galRestrict (RatFuncFiniteIntegralClosure K M) M L
@@ -696,8 +696,8 @@ theorem finitePlaceUnder_finitePlaceGalSmul
     (g : Gal(L/M)) (P : FiniteExtensionFinitePlace K L) :
     finitePlaceUnder K M L (finitePlaceGalSmul K M L g P) =
       finitePlaceUnder K M L P := by
-  letI := finiteIntegralClosureGalAction K M L
-  letI := finiteIntegralClosureGalSmulComm K M L
+  let := finiteIntegralClosureGalAction K M L
+  let := finiteIntegralClosureGalSmulComm K M L
   apply HeightOneSpectrum.ext
   change (g • P.asIdeal).under (RatFuncFiniteIntegralClosure K M) =
     P.asIdeal.under (RatFuncFiniteIntegralClosure K M)
@@ -735,18 +735,18 @@ theorem exists_gal_smul_finitePlace_asIdeal_of_same_under
     (P Q : FiniteExtensionFinitePlace K L)
     (hPQ : finitePlaceUnder K M L P = finitePlaceUnder K M L Q) :
     FinitePlacesGaloisConjugate K M L P Q := by
-  letI : Module.Finite M L :=
+  let : Module.Finite M L :=
     Module.Finite.of_restrictScalars_finite (RatFunc K) M L
-  letI := finiteIntegralClosureGalAction K M L
+  let := finiteIntegralClosureGalAction K M L
   change ∃ g : Gal(L/M), Q.asIdeal = g • P.asIdeal
-  letI := finiteIntegralClosureGalSmulComm K M L
-  letI : Algebra.IsInvariant (RatFuncFiniteIntegralClosure K M)
+  let := finiteIntegralClosureGalSmulComm K M L
+  let : Algebra.IsInvariant (RatFuncFiniteIntegralClosure K M)
       (RatFuncFiniteIntegralClosure K L) Gal(L/M) :=
     Algebra.isInvariant_of_isGalois
       (RatFuncFiniteIntegralClosure K M) M L
       (RatFuncFiniteIntegralClosure K L)
-  letI : P.asIdeal.IsPrime := P.isPrime
-  letI : Q.asIdeal.IsPrime := Q.isPrime
+  let : P.asIdeal.IsPrime := P.isPrime
+  let : Q.asIdeal.IsPrime := Q.isPrime
   apply Algebra.IsInvariant.exists_smul_of_under_eq
     (RatFuncFiniteIntegralClosure K M)
     (RatFuncFiniteIntegralClosure K L) Gal(L/M)
@@ -759,8 +759,8 @@ theorem finitePlaceUnderFiberGalAction_isPretransitive
     (P : FiniteExtensionFinitePlace K M) :
     letI := finitePlaceUnderFiberGalAction K M L P
     MulAction.IsPretransitive Gal(L/M) (FinitePlaceUnderFiber K M L P) := by
-  letI := finiteIntegralClosureGalAction K M L
-  letI := finitePlaceUnderFiberGalAction K M L P
+  let := finiteIntegralClosureGalAction K M L
+  let := finitePlaceUnderFiberGalAction K M L P
   constructor
   intro Q R
   obtain ⟨g, hg⟩ :=
@@ -787,13 +787,13 @@ theorem sum_card_finitePlaceUnderFiberFixedBy_eq_card_galoisGroup
       Module.Finite.of_restrictScalars_finite (RatFunc K) M L
     (∑ g : Gal(L/M), Nat.card (finitePlaceUnderFiberFixedBy K M L P g)) =
       Nat.card Gal(L/M) := by
-  letI : Module.Finite M L :=
+  let : Module.Finite M L :=
     Module.Finite.of_restrictScalars_finite (RatFunc K) M L
-  letI := finitePlaceUnderFiberGalAction K M L P
-  letI : MulAction.IsPretransitive Gal(L/M)
+  let := finitePlaceUnderFiberGalAction K M L P
+  let : MulAction.IsPretransitive Gal(L/M)
       (FinitePlaceUnderFiber K M L P) :=
     finitePlaceUnderFiberGalAction_isPretransitive K M L P
-  letI : Nonempty (FinitePlaceUnderFiber K M L P) := by
+  let : Nonempty (FinitePlaceUnderFiber K M L P) := by
     obtain ⟨Q, hQ⟩ := finitePlaceUnder_surjective K M L P
     exact ⟨⟨Q, hQ⟩⟩
   change (∑ g : Gal(L/M),
@@ -816,7 +816,7 @@ theorem infinityIntegralClosureGalSmulComm :
     letI := infinityIntegralClosureGalAction K M L
     SMulCommClass Gal(L/M) (RatFuncInfinityIntegralClosure K M)
       (RatFuncInfinityIntegralClosure K L) := by
-  letI := infinityIntegralClosureGalAction K M L
+  let := infinityIntegralClosureGalAction K M L
   constructor
   intro g r s
   change galRestrict (RatFuncInfinityIntegralClosure K M) M L
@@ -835,8 +835,8 @@ theorem ratFuncInfinityIntegersGalSmulComm :
     letI := infinityIntegralClosureGalAction K M L
     SMulCommClass Gal(L/M) (RatFuncInfinityIntegers K)
       (RatFuncInfinityIntegralClosure K L) := by
-  letI := infinityIntegralClosureGalAction K M L
-  letI := infinityIntegralClosureGalSmulComm K M L
+  let := infinityIntegralClosureGalAction K M L
+  let := infinityIntegralClosureGalSmulComm K M L
   constructor
   intro g r s
   calc
@@ -892,8 +892,8 @@ theorem infinityPlaceUnder_infinityPlaceGalSmul
     (g : Gal(L/M)) (P : FiniteExtensionInfinityPlace K L) :
     infinityPlaceUnder K M L (infinityPlaceGalSmul K M L g P) =
       infinityPlaceUnder K M L P := by
-  letI := infinityIntegralClosureGalAction K M L
-  letI := infinityIntegralClosureGalSmulComm K M L
+  let := infinityIntegralClosureGalAction K M L
+  let := infinityIntegralClosureGalSmulComm K M L
   apply Subtype.ext
   change (g • P.1).under (RatFuncInfinityIntegralClosure K M) =
     P.1.under (RatFuncInfinityIntegralClosure K M)
@@ -932,18 +932,18 @@ theorem exists_gal_smul_infinityPlace_asIdeal_of_same_under
     (P Q : FiniteExtensionInfinityPlace K L)
     (hPQ : infinityPlaceUnder K M L P = infinityPlaceUnder K M L Q) :
     InfinityPlacesGaloisConjugate K M L P Q := by
-  letI : Module.Finite M L :=
+  let : Module.Finite M L :=
     Module.Finite.of_restrictScalars_finite (RatFunc K) M L
-  letI := infinityIntegralClosureGalAction K M L
+  let := infinityIntegralClosureGalAction K M L
   change ∃ g : Gal(L/M), Q.1 = g • P.1
-  letI := infinityIntegralClosureGalSmulComm K M L
-  letI : Algebra.IsInvariant (RatFuncInfinityIntegralClosure K M)
+  let := infinityIntegralClosureGalSmulComm K M L
+  let : Algebra.IsInvariant (RatFuncInfinityIntegralClosure K M)
       (RatFuncInfinityIntegralClosure K L) Gal(L/M) :=
     Algebra.isInvariant_of_isGalois
       (RatFuncInfinityIntegralClosure K M) M L
       (RatFuncInfinityIntegralClosure K L)
-  letI : P.1.IsPrime := P.2.1
-  letI : Q.1.IsPrime := Q.2.1
+  let : P.1.IsPrime := P.2.1
+  let : Q.1.IsPrime := Q.2.1
   apply Algebra.IsInvariant.exists_smul_of_under_eq
     (RatFuncInfinityIntegralClosure K M)
     (RatFuncInfinityIntegralClosure K L) Gal(L/M)
@@ -956,8 +956,8 @@ theorem infinityPlaceUnderFiberGalAction_isPretransitive
     (P : FiniteExtensionInfinityPlace K M) :
     letI := infinityPlaceUnderFiberGalAction K M L P
     MulAction.IsPretransitive Gal(L/M) (InfinityPlaceUnderFiber K M L P) := by
-  letI := infinityIntegralClosureGalAction K M L
-  letI := infinityPlaceUnderFiberGalAction K M L P
+  let := infinityIntegralClosureGalAction K M L
+  let := infinityPlaceUnderFiberGalAction K M L P
   constructor
   intro Q R
   obtain ⟨g, hg⟩ :=
@@ -984,13 +984,13 @@ theorem sum_card_infinityPlaceUnderFiberFixedBy_eq_card_galoisGroup
       Module.Finite.of_restrictScalars_finite (RatFunc K) M L
     (∑ g : Gal(L/M), Nat.card (infinityPlaceUnderFiberFixedBy K M L P g)) =
       Nat.card Gal(L/M) := by
-  letI : Module.Finite M L :=
+  let : Module.Finite M L :=
     Module.Finite.of_restrictScalars_finite (RatFunc K) M L
-  letI := infinityPlaceUnderFiberGalAction K M L P
-  letI : MulAction.IsPretransitive Gal(L/M)
+  let := infinityPlaceUnderFiberGalAction K M L P
+  let : MulAction.IsPretransitive Gal(L/M)
       (InfinityPlaceUnderFiber K M L P) :=
     infinityPlaceUnderFiberGalAction_isPretransitive K M L P
-  letI : Nonempty (InfinityPlaceUnderFiber K M L P) := by
+  let : Nonempty (InfinityPlaceUnderFiber K M L P) := by
     obtain ⟨Q, hQ⟩ := infinityPlaceUnder_surjective K M L P
     exact ⟨⟨Q, hQ⟩⟩
   change (∑ g : Gal(L/M),
@@ -1007,10 +1007,10 @@ theorem finitePlaceRelative_ramificationIdx_inertiaDeg_eq_of_same_under
         finitePlaceRelativeRamificationIdx K M L Q ∧
       finitePlaceRelativeInertiaDeg K M L P =
         finitePlaceRelativeInertiaDeg K M L Q := by
-  letI : Module.Finite M L :=
+  let : Module.Finite M L :=
     Module.Finite.of_restrictScalars_finite (RatFunc K) M L
-  letI := finiteIntegralClosureGalAction K M L
-  letI := finiteIntegralClosureGalSmulComm K M L
+  let := finiteIntegralClosureGalAction K M L
+  let := finiteIntegralClosureGalSmulComm K M L
   obtain ⟨g, hg⟩ :=
     exists_gal_smul_finitePlace_asIdeal_of_same_under K M L P Q hPQ
   constructor
@@ -1028,10 +1028,10 @@ theorem infinityPlaceRelative_ramificationIdx_inertiaDeg_eq_of_same_under
         infinityPlaceRelativeRamificationIdx K M L Q ∧
       infinityPlaceRelativeInertiaDeg K M L P =
         infinityPlaceRelativeInertiaDeg K M L Q := by
-  letI : Module.Finite M L :=
+  let : Module.Finite M L :=
     Module.Finite.of_restrictScalars_finite (RatFunc K) M L
-  letI := infinityIntegralClosureGalAction K M L
-  letI := infinityIntegralClosureGalSmulComm K M L
+  let := infinityIntegralClosureGalAction K M L
+  let := infinityIntegralClosureGalSmulComm K M L
   obtain ⟨g, hg⟩ :=
     exists_gal_smul_infinityPlace_asIdeal_of_same_under K M L P Q hPQ
   constructor
@@ -1133,44 +1133,44 @@ private theorem ratFuncFinitePlaceResidueField_finite
       p.asIdeal = (normalizedPrimeFinitePlace (K := K) r).asIdeal := by
         rw [normalizedPrimeFinitePlace_finitePlaceNormalizedPrime]
       _ = Ideal.span ({(r : K[X])} : Set K[X]) := rfl
-  letI : Module.Finite K (K[X] ⧸ p.asIdeal) := by
+  let : Module.Finite K (K[X] ⧸ p.asIdeal) := by
     rw [hp]
     exact hrmonic.finite_quotient
-  letI : Finite (K[X] ⧸ p.asIdeal) := Module.finite_of_finite K
+  let : Finite (K[X] ⧸ p.asIdeal) := Module.finite_of_finite K
   infer_instance
 
 private theorem finitePlaceResidueField_finite
     (P : FiniteExtensionFinitePlace K M) : Finite P.asIdeal.ResidueField := by
   let p := HeightOneSpectrum.under K[X] P
-  letI : Finite p.asIdeal.ResidueField :=
+  let : Finite p.asIdeal.ResidueField :=
     ratFuncFinitePlaceResidueField_finite K p
-  letI : P.asIdeal.LiesOver p.asIdeal := ⟨rfl⟩
-  letI := Localization.AtPrime.algebraOfLiesOver p.asIdeal P.asIdeal
+  let : P.asIdeal.LiesOver p.asIdeal := ⟨rfl⟩
+  let := Localization.AtPrime.algebraOfLiesOver p.asIdeal P.asIdeal
   have : IsScalarTower K[X] (Localization.AtPrime p.asIdeal)
       (Localization.AtPrime P.asIdeal) := inferInstance
-  letI : Algebra.QuasiFiniteAt K[X] P.asIdeal := inferInstance
-  letI : Module.Finite p.asIdeal.ResidueField P.asIdeal.ResidueField :=
+  let : Algebra.QuasiFiniteAt K[X] P.asIdeal := inferInstance
+  let : Module.Finite p.asIdeal.ResidueField P.asIdeal.ResidueField :=
     inferInstance
   exact Module.finite_of_finite p.asIdeal.ResidueField
 
 private theorem infinityPlaceResidueField_finite
     (P : FiniteExtensionInfinityPlace K M) : Finite P.1.ResidueField := by
-  letI : Algebra K (RatFuncInfinityIntegers K) :=
+  let : Algebra K (RatFuncInfinityIntegers K) :=
     (ratFuncInfinityConstantRingHom K).toAlgebra
-  letI : IsScalarTower K (RatFuncInfinityIntegers K) (RatFunc K) :=
+  let : IsScalarTower K (RatFuncInfinityIntegers K) (RatFunc K) :=
     .of_algebraMap_eq' rfl
   let p := (ratFuncInfinityPlace K).asIdeal
-  letI : Finite p.ResidueField :=
+  let : Finite p.ResidueField :=
     Finite.of_injective (ratFuncInfinityPlaceResidueEquiv K)
       (ratFuncInfinityPlaceResidueEquiv K).injective
-  letI : P.1.LiesOver p := by
+  let : P.1.LiesOver p := by
     simpa [p] using Ideal.primesOver.liesOver
       (ratFuncInfinityPlace K).asIdeal P
-  letI := Localization.AtPrime.algebraOfLiesOver p P.1
+  let := Localization.AtPrime.algebraOfLiesOver p P.1
   have : IsScalarTower (RatFuncInfinityIntegers K) (Localization.AtPrime p)
       (Localization.AtPrime P.1) := inferInstance
-  letI : Algebra.QuasiFiniteAt (RatFuncInfinityIntegers K) P.1 := inferInstance
-  letI : Module.Finite p.ResidueField P.1.ResidueField := inferInstance
+  let : Algebra.QuasiFiniteAt (RatFuncInfinityIntegers K) P.1 := inferInstance
+  let : Module.Finite p.ResidueField P.1.ResidueField := inferInstance
   exact Module.finite_of_finite p.ResidueField
 
 /-- The inertia-group cardinality is the ramification index at a finite
@@ -1179,18 +1179,18 @@ theorem finitePlaceInertiaGroup_card_eq_ramificationIdx
     (P : FiniteExtensionFinitePlace K L) :
     Nat.card (finitePlaceInertiaGroup K M L P) =
       finitePlaceRelativeRamificationIdx K M L P := by
-  letI : Module.Finite M L :=
+  let : Module.Finite M L :=
     Module.Finite.of_restrictScalars_finite (RatFunc K) M L
-  letI := finiteIntegralClosureGalAction K M L
-  letI := finiteIntegralClosureGalSmulComm K M L
-  letI : IsGaloisGroup Gal(L/M) (RatFuncFiniteIntegralClosure K M)
+  let := finiteIntegralClosureGalAction K M L
+  let := finiteIntegralClosureGalSmulComm K M L
+  let : IsGaloisGroup Gal(L/M) (RatFuncFiniteIntegralClosure K M)
       (RatFuncFiniteIntegralClosure K L) :=
     IsGaloisGroup.of_isFractionRing _ _ _ M L
   let p := finitePlaceUnder K M L P
-  letI : P.asIdeal.LiesOver p.asIdeal := ⟨finitePlaceUnder_asIdeal K M L P⟩
-  letI : Finite p.asIdeal.ResidueField :=
+  let : P.asIdeal.LiesOver p.asIdeal := ⟨finitePlaceUnder_asIdeal K M L P⟩
+  let : Finite p.asIdeal.ResidueField :=
     finitePlaceResidueField_finite K M p
-  letI : PerfectField p.asIdeal.ResidueField := inferInstance
+  let : PerfectField p.asIdeal.ResidueField := inferInstance
   change Nat.card (P.asIdeal.inertia Gal(L/M)) =
     P.asIdeal.ramificationIdx (RatFuncFiniteIntegralClosure K M)
   rw [Ideal.card_inertia_eq_ramificationIdxIn p.asIdeal P.asIdeal]
@@ -1203,18 +1203,18 @@ theorem finitePlaceDecompositionGroup_card_eq_ramificationIdx_mul_inertiaDeg
     Nat.card (finitePlaceDecompositionGroup K M L P) =
       finitePlaceRelativeRamificationIdx K M L P *
         finitePlaceRelativeInertiaDeg K M L P := by
-  letI : Module.Finite M L :=
+  let : Module.Finite M L :=
     Module.Finite.of_restrictScalars_finite (RatFunc K) M L
-  letI := finiteIntegralClosureGalAction K M L
-  letI := finiteIntegralClosureGalSmulComm K M L
-  letI : IsGaloisGroup Gal(L/M) (RatFuncFiniteIntegralClosure K M)
+  let := finiteIntegralClosureGalAction K M L
+  let := finiteIntegralClosureGalSmulComm K M L
+  let : IsGaloisGroup Gal(L/M) (RatFuncFiniteIntegralClosure K M)
       (RatFuncFiniteIntegralClosure K L) :=
     IsGaloisGroup.of_isFractionRing _ _ _ M L
   let p := finitePlaceUnder K M L P
-  letI : P.asIdeal.LiesOver p.asIdeal := ⟨finitePlaceUnder_asIdeal K M L P⟩
-  letI : Finite p.asIdeal.ResidueField :=
+  let : P.asIdeal.LiesOver p.asIdeal := ⟨finitePlaceUnder_asIdeal K M L P⟩
+  let : Finite p.asIdeal.ResidueField :=
     finitePlaceResidueField_finite K M p
-  letI : PerfectField p.asIdeal.ResidueField := inferInstance
+  let : PerfectField p.asIdeal.ResidueField := inferInstance
   change Nat.card (MulAction.stabilizer Gal(L/M) P.asIdeal) =
     P.asIdeal.ramificationIdx (RatFuncFiniteIntegralClosure K M) *
       P.asIdeal.inertiaDeg (RatFuncFiniteIntegralClosure K M)
@@ -1227,18 +1227,18 @@ theorem infinityPlaceInertiaGroup_card_eq_ramificationIdx
     (P : FiniteExtensionInfinityPlace K L) :
     Nat.card (infinityPlaceInertiaGroup K M L P) =
       infinityPlaceRelativeRamificationIdx K M L P := by
-  letI : Module.Finite M L :=
+  let : Module.Finite M L :=
     Module.Finite.of_restrictScalars_finite (RatFunc K) M L
-  letI := infinityIntegralClosureGalAction K M L
-  letI := infinityIntegralClosureGalSmulComm K M L
-  letI : IsGaloisGroup Gal(L/M) (RatFuncInfinityIntegralClosure K M)
+  let := infinityIntegralClosureGalAction K M L
+  let := infinityIntegralClosureGalSmulComm K M L
+  let : IsGaloisGroup Gal(L/M) (RatFuncInfinityIntegralClosure K M)
       (RatFuncInfinityIntegralClosure K L) :=
     IsGaloisGroup.of_isFractionRing _ _ _ M L
   let p := infinityPlaceUnder K M L P
-  letI : P.1.LiesOver p.1 := ⟨infinityPlaceUnder_asIdeal K M L P⟩
-  letI : Finite p.1.ResidueField :=
+  let : P.1.LiesOver p.1 := ⟨infinityPlaceUnder_asIdeal K M L P⟩
+  let : Finite p.1.ResidueField :=
     infinityPlaceResidueField_finite K M p
-  letI : PerfectField p.1.ResidueField := inferInstance
+  let : PerfectField p.1.ResidueField := inferInstance
   change Nat.card (P.1.inertia Gal(L/M)) =
     P.1.ramificationIdx (RatFuncInfinityIntegralClosure K M)
   rw [Ideal.card_inertia_eq_ramificationIdxIn p.1 P.1]
@@ -1251,18 +1251,18 @@ theorem infinityPlaceDecompositionGroup_card_eq_ramificationIdx_mul_inertiaDeg
     Nat.card (infinityPlaceDecompositionGroup K M L P) =
       infinityPlaceRelativeRamificationIdx K M L P *
         infinityPlaceRelativeInertiaDeg K M L P := by
-  letI : Module.Finite M L :=
+  let : Module.Finite M L :=
     Module.Finite.of_restrictScalars_finite (RatFunc K) M L
-  letI := infinityIntegralClosureGalAction K M L
-  letI := infinityIntegralClosureGalSmulComm K M L
-  letI : IsGaloisGroup Gal(L/M) (RatFuncInfinityIntegralClosure K M)
+  let := infinityIntegralClosureGalAction K M L
+  let := infinityIntegralClosureGalSmulComm K M L
+  let : IsGaloisGroup Gal(L/M) (RatFuncInfinityIntegralClosure K M)
       (RatFuncInfinityIntegralClosure K L) :=
     IsGaloisGroup.of_isFractionRing _ _ _ M L
   let p := infinityPlaceUnder K M L P
-  letI : P.1.LiesOver p.1 := ⟨infinityPlaceUnder_asIdeal K M L P⟩
-  letI : Finite p.1.ResidueField :=
+  let : P.1.LiesOver p.1 := ⟨infinityPlaceUnder_asIdeal K M L P⟩
+  let : Finite p.1.ResidueField :=
     infinityPlaceResidueField_finite K M p
-  letI : PerfectField p.1.ResidueField := inferInstance
+  let : PerfectField p.1.ResidueField := inferInstance
   change Nat.card (MulAction.stabilizer Gal(L/M) P.1) =
     P.1.ramificationIdx (RatFuncInfinityIntegralClosure K M) *
       P.1.inertiaDeg (RatFuncInfinityIntegralClosure K M)

@@ -72,26 +72,26 @@ theorem finiteExtensionFinitePlace_degree_le_finite
     (n : ℕ) :
     Finite {q : FiniteExtensionFinitePlace K L //
       finiteExtensionPlaceDegree K L (.inl q) ≤ n} := by
-  letI : Algebra K[X] L :=
+  let : Algebra K[X] L :=
     RingHom.toAlgebra ((algebraMap (RatFunc K) L).comp
       (algebraMap K[X] (RatFunc K)))
-  letI : IsScalarTower K[X] (RatFunc K) L :=
+  let : IsScalarTower K[X] (RatFunc K) L :=
     IsScalarTower.of_algebraMap_eq' rfl
-  letI : Module.Finite K[X] (RatFuncFiniteIntegralClosure K L) :=
+  let : Module.Finite K[X] (RatFuncFiniteIntegralClosure K L) :=
     Module.IsNoetherian.finite K[X] (RatFuncFiniteIntegralClosure K L)
-  letI : Algebra.IsIntegral K[X] (RatFuncFiniteIntegralClosure K L) :=
+  let : Algebra.IsIntegral K[X] (RatFuncFiniteIntegralClosure K L) :=
     IsIntegralClosure.isIntegral_algebra K[X] L
-  letI : Module.IsTorsionFree K[X] L :=
+  let : Module.IsTorsionFree K[X] L :=
     Module.IsTorsionFree.trans_faithfulSMul K[X] (RatFunc K) L
-  letI : Module.IsTorsionFree K[X] (RatFuncFiniteIntegralClosure K L) :=
+  let : Module.IsTorsionFree K[X] (RatFuncFiniteIntegralClosure K L) :=
     IsIntegralClosure.isTorsionFree K[X] L
   let Base := {p : IsDedekindDomain.HeightOneSpectrum K[X] //
     ratFuncFinitePlaceDegree p ≤ n}
   let Fiber : Base → Type _ := fun p =>
     p.1.asIdeal.primesOver (RatFuncFiniteIntegralClosure K L)
-  letI : Finite Base := ratFuncFinitePlace_degree_le_finite K n
-  letI : Fintype Base := Fintype.ofFinite Base
-  letI (p : Base) : Fintype (Fiber p) := by
+  let : Finite Base := ratFuncFinitePlace_degree_le_finite K n
+  let : Fintype Base := Fintype.ofFinite Base
+  let (p : Base) : Fintype (Fiber p) := by
     dsimp only [Fiber]
     exact Set.Finite.fintype
       (IsDedekindDomain.primesOver_finite p.1.asIdeal
@@ -124,22 +124,22 @@ theorem finiteExtensionPlace_degree_le_finite
       finiteExtensionPlaceDegree K L P ≤ n} := by
   let FinitePart := {q : FiniteExtensionFinitePlace K L //
     finiteExtensionPlaceDegree K L (.inl q) ≤ n}
-  letI : Finite FinitePart :=
+  let : Finite FinitePart :=
     finiteExtensionFinitePlace_degree_le_finite K L n
-  letI : Module.Finite (RatFuncInfinityIntegers K)
+  let : Module.Finite (RatFuncInfinityIntegers K)
       (RatFuncInfinityIntegralClosure K L) :=
     IsIntegralClosure.finite (RatFuncInfinityIntegers K) (RatFunc K) L
       (RatFuncInfinityIntegralClosure K L)
-  letI : Algebra.IsIntegral (RatFuncInfinityIntegers K)
+  let : Algebra.IsIntegral (RatFuncInfinityIntegers K)
       (RatFuncInfinityIntegralClosure K L) :=
     IsIntegralClosure.isIntegral_algebra (RatFuncInfinityIntegers K) L
-  letI : Module.IsTorsionFree (RatFuncInfinityIntegers K)
+  let : Module.IsTorsionFree (RatFuncInfinityIntegers K)
       (RatFuncInfinityIntegralClosure K L) :=
     IsIntegralClosure.isTorsionFree (RatFuncInfinityIntegers K) L
-  letI : IsDedekindDomain (RatFuncInfinityIntegralClosure K L) :=
+  let : IsDedekindDomain (RatFuncInfinityIntegralClosure K L) :=
     IsIntegralClosure.isDedekindDomain (RatFuncInfinityIntegers K)
       (RatFunc K) L (RatFuncInfinityIntegralClosure K L)
-  letI : Fintype (FiniteExtensionInfinityPlace K L) :=
+  let : Fintype (FiniteExtensionInfinityPlace K L) :=
     Set.Finite.fintype
       (IsDedekindDomain.primesOver_finite
         (ratFuncInfinityPlace K).asIdeal

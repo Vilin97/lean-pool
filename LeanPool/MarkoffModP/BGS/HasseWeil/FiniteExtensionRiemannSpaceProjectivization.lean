@@ -288,9 +288,9 @@ theorem effectiveRiemannSpace_nonzeroScalarOrbitQuotient_finite
       (Quotient
         (MulAction.orbitRel Kˣ
           {x : finiteExtensionRiemannSpace K L D // x ≠ 0})) := by
-  letI : Module.Finite K (finiteExtensionRiemannSpace K L D) :=
+  let : Module.Finite K (finiteExtensionRiemannSpace K L D) :=
     finiteExtensionRiemannSpace_effective_moduleFinite K L D hD
-  letI : Finite (finiteExtensionRiemannSpace K L D) :=
+  let : Finite (finiteExtensionRiemannSpace K L D) :=
     Module.finite_of_finite K
   exact Finite.of_equiv
     (Projectivization K (finiteExtensionRiemannSpace K L D))
@@ -307,7 +307,7 @@ theorem effectiveRiemannSpace_nonzeroScalarOrbitQuotient_card_eq_div
       (Nat.card K ^
             Module.finrank K (finiteExtensionRiemannSpace K L D) - 1) /
         (Nat.card K - 1) := by
-  letI : Module.Finite K (finiteExtensionRiemannSpace K L D) :=
+  let : Module.Finite K (finiteExtensionRiemannSpace K L D) :=
     finiteExtensionRiemannSpace_effective_moduleFinite K L D hD
   exact finiteVectorSpace_nonzeroScalarOrbitQuotient_card_eq_div
     K (finiteExtensionRiemannSpace K L D)
@@ -318,9 +318,9 @@ theorem effectiveDivisorInPrincipalClass_finite
     (D : FiniteExtensionDivisor K L) (hD : ∀ v, 0 ≤ D v)
     (hconstants : algebraicClosure K L = ⊥) :
     Finite (EffectiveDivisorInPrincipalClass K L D) := by
-  letI : Module.Finite K (finiteExtensionRiemannSpace K L D) :=
+  let : Module.Finite K (finiteExtensionRiemannSpace K L D) :=
     finiteExtensionRiemannSpace_effective_moduleFinite K L D hD
-  letI : Finite (finiteExtensionRiemannSpace K L D) :=
+  let : Finite (finiteExtensionRiemannSpace K L D) :=
     Module.finite_of_finite K
   exact Finite.of_equiv
     (Projectivization K (finiteExtensionRiemannSpace K L D))
@@ -350,7 +350,7 @@ theorem effectiveDivisorInPrincipalClass_card_eq_div
       (Nat.card K ^
             Module.finrank K (finiteExtensionRiemannSpace K L D) - 1) /
         (Nat.card K - 1) := by
-  letI : Module.Finite K (finiteExtensionRiemannSpace K L D) :=
+  let : Module.Finite K (finiteExtensionRiemannSpace K L D) :=
     finiteExtensionRiemannSpace_effective_moduleFinite K L D hD
   rw [Nat.card_congr
       (projectiveRiemannSectionEquivEffectiveDivisorInPrincipalClass

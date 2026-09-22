@@ -47,32 +47,32 @@ theorem exactConstantExtension_algebraicClosure_eq_bot
       Algebra.TensorProduct.leftAlgebra
     algebraicClosure S (ExactConstantExtension C N S) =
       (⊥ : IntermediateField S (ExactConstantExtension C N S)) := by
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
-  letI : Algebra C (ExactConstantExtension C N S) :=
+  let : Algebra C (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseAlgebra C C N S
-  letI : SMul C (ExactConstantExtension C N S) := Algebra.toSMul
-  letI : Algebra N (ExactConstantExtension C N S) :=
+  let : SMul C (ExactConstantExtension C N S) := Algebra.toSMul
+  let : Algebra N (ExactConstantExtension C N S) :=
     exactConstantExtensionAlgebra C N S
-  letI : SMul N (ExactConstantExtension C N S) := Algebra.toSMul
-  haveI : IsScalarTower C N (ExactConstantExtension C N S) := by
+  let : SMul N (ExactConstantExtension C N S) := Algebra.toSMul
+  have : IsScalarTower C N (ExactConstantExtension C N S) := by
     exact exactConstantExtensionBaseTower C C N S
-  letI : Algebra S (ExactConstantExtension C N S) :=
+  let : Algebra S (ExactConstantExtension C N S) :=
     Algebra.TensorProduct.leftAlgebra
-  letI : SMul S (ExactConstantExtension C N S) := Algebra.toSMul
+  let : SMul S (ExactConstantExtension C N S) := Algebra.toSMul
   have hSN : algebraMap C (ExactConstantExtension C N S) =
       (algebraMap S (ExactConstantExtension C N S)).comp (algebraMap C S) := by
     ext c
     change (1 : S) ⊗ₜ algebraMap C N c =
       algebraMap C S c ⊗ₜ (1 : N)
     exact (Algebra.TensorProduct.tmul_one_eq_one_tmul c).symm
-  letI : IsScalarTower C S (ExactConstantExtension C N S) :=
+  let : IsScalarTower C S (ExactConstantExtension C N S) :=
     IsScalarTower.of_algebraMap_eq' hSN
   let e := exactConstantExtensionLinearEquiv C N S
-  letI : Module.Finite N (N ⊗[C] S) := Module.Finite.base_change C N S
-  letI : Module.Finite N (ExactConstantExtension C N S) :=
+  let : Module.Finite N (N ⊗[C] S) := Module.Finite.base_change C N S
+  let : Module.Finite N (ExactConstantExtension C N S) :=
     Module.Finite.equiv e
-  haveI : IsGalois N (ExactConstantExtension C N S) := by
+  have : IsGalois N (ExactConstantExtension C N S) := by
     exact exactConstantExtension_isGalois C N N S hExact
   apply eq_bot_iff.mpr
   intro z hz
@@ -80,13 +80,13 @@ theorem exactConstantExtension_algebraicClosure_eq_bot
   have hzInt : IsIntegral C z := isIntegral_trans z hzS.isIntegral
   let K : IntermediateField C (ExactConstantExtension C N S) :=
     IntermediateField.adjoin C {z}
-  letI : FiniteDimensional C K := by
+  let : FiniteDimensional C K := by
     dsimp [K]
     exact IntermediateField.adjoin.finiteDimensional hzInt
-  letI : Finite K := Module.finite_of_finite C
-  letI : Fintype K := Fintype.ofFinite K
-  letI : Algebra.IsAlgebraic C K := Algebra.IsAlgebraic.of_finite C K
-  haveI : IsGalois C K := inferInstance
+  let : Finite K := Module.finite_of_finite C
+  let : Fintype K := Fintype.ofFinite K
+  let : Algebra.IsAlgebraic C K := Algebra.IsAlgebraic.of_finite C K
+  have : IsGalois C K := inferInstance
   let iN : N →ₐ[C] ExactConstantExtension C N S :=
     IsScalarTower.toAlgHom C N (ExactConstantExtension C N S)
   let N' : IntermediateField C (ExactConstantExtension C N S) :=

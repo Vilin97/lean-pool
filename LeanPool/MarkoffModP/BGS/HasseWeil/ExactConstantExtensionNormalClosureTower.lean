@@ -113,7 +113,7 @@ theorem functionFieldNormalClosure_isGalois_over_constantRatFunc :
   let N := FunctionFieldNormalClosure K F
   let e : RatFunc C ≃ₐ[RatFunc C] B :=
     functionFieldNormalClosureConstantBaseRatFuncSelfAlgEquiv K F
-  letI : IsGalois B N :=
+  let : IsGalois B N :=
     functionFieldNormalClosure_isGalois_over_constantBase K F
   refine IsGalois.of_equiv_equiv (F := B) (E := N)
     (f := e.symm.toRingEquiv) (g := RingEquiv.refl N) ?_
@@ -141,7 +141,7 @@ theorem functionFieldNormalClosureConstantField_isExact_for_constantRatFunc :
   have hfresh : fresh = old := by
     apply Algebra.algebra_ext
     intro c
-    letI : Algebra C N := old
+    let : Algebra C N := old
     change algebraMap B N
         (functionFieldNormalClosureConstantBaseRatFuncAlgEquiv K F
           (algebraMap C (RatFunc C) c)) = algebraMap C N c
@@ -154,7 +154,7 @@ theorem functionFieldNormalClosureConstantField_isExact_for_constantRatFunc :
     functionFieldNormalClosureConstantField_isExact K F
   have hFresh : exactFor fresh :=
     Eq.mp (congrArg exactFor hfresh).symm hOld
-  letI : Algebra C N := fresh
+  let : Algebra C N := fresh
   exact hFresh
 
 section OriginalCompositum
@@ -255,7 +255,7 @@ theorem
   let C := FunctionFieldNormalClosureConstantField K F
   let B := FunctionFieldNormalClosureConstantBase K F
   let M := FunctionFieldNormalClosureOriginalCompositum K F hExact
-  letI : Algebra (RatFunc C) M :=
+  let : Algebra (RatFunc C) M :=
     functionFieldNormalClosureOriginalCompositumConstantRatFuncAlgebra
       K F hExact
   let old : Algebra C M :=
@@ -265,8 +265,8 @@ theorem
   have hfresh : fresh = old := by
     apply Algebra.algebra_ext
     intro c
-    letI : Algebra C M := old
-    letI : Algebra B M :=
+    let : Algebra C M := old
+    let : Algebra B M :=
       functionFieldNormalClosureConstantBaseOriginalCompositumAlgebra
         K F hExact
     change algebraMap B M
@@ -282,7 +282,7 @@ theorem
       K F hExact
   have hFresh : exactFor fresh :=
     Eq.mp (congrArg exactFor hfresh).symm hOld
-  letI : Algebra C M := fresh
+  let : Algebra C M := fresh
   exact hFresh
 
 /-- The original compositum remains separable over the canonical rational
@@ -295,16 +295,16 @@ noncomputable instance
       (RatFunc (FunctionFieldNormalClosureConstantField K F))
       (FunctionFieldNormalClosureOriginalCompositum K F hExact) := by
   let N := FunctionFieldNormalClosure K F
-  letI : Algebra K N := functionFieldNormalClosureConstantAlgebra K F
+  let : Algebra K N := functionFieldNormalClosureConstantAlgebra K F
   let C := FunctionFieldNormalClosureConstantField K F
-  letI : Algebra K C :=
+  let : Algebra K C :=
     SubalgebraClass.toAlgebra (algebraicClosure K N)
   let E := ExactConstantExtension K F C
   let M := FunctionFieldNormalClosureOriginalCompositum K F hExact
-  letI : Field E := exactConstantExtensionField K F C hExact
-  letI : Algebra (RatFunc C) E :=
+  let : Field E := exactConstantExtensionField K F C hExact
+  let : Algebra (RatFunc C) E :=
     ratFuncExactConstantExtensionAlgebra K C F hExact
-  letI : Algebra.IsSeparable (RatFunc C) E :=
+  let : Algebra.IsSeparable (RatFunc C) E :=
     isSeparable_over_extendedRatFunc K C F hExact
   let e : E ≃ₐ[RatFunc C] M :=
     exactConstantExtensionOriginalCompositumCanonicalRatFuncAlgEquiv
@@ -515,35 +515,35 @@ theorem functionFieldNormalClosureConstantExtension_ratFuncScalarTower
   let C := FunctionFieldNormalClosureConstantField K F
   let M := FunctionFieldNormalClosureOriginalCompositum K F hExact
   let N := FunctionFieldNormalClosure K F
-  letI : Algebra (RatFunc C) M :=
+  let : Algebra (RatFunc C) M :=
     functionFieldNormalClosureOriginalCompositumConstantRatFuncAlgebra
       K F hExact
-  letI : Algebra (RatFunc C) N :=
+  let : Algebra (RatFunc C) N :=
     functionFieldNormalClosureConstantRatFuncAlgebra K F
-  letI : IsScalarTower (RatFunc C) M N :=
+  let : IsScalarTower (RatFunc C) M N :=
     functionFieldNormalClosureOriginalCompositumConstantRatFuncTower
       K F hExact
-  letI : Algebra C M :=
+  let : Algebra C M :=
     exactConstantExtensionTowerCanonicalConstantAlgebra C M
-  letI : Algebra C N :=
+  let : Algebra C N :=
     exactConstantExtensionTowerCanonicalConstantAlgebra C N
   let E_M := ExactConstantExtension C M S
   let E_N := ExactConstantExtension C N S
-  letI : Field E_M :=
+  let : Field E_M :=
     functionFieldNormalClosureOriginalCompositumConstantExtensionField
       K F S hExact
-  letI : Field E_N :=
+  let : Field E_N :=
     functionFieldNormalClosureConstantExtensionFieldForTower K F S
-  letI : Algebra (RatFunc S) E_M :=
+  let : Algebra (RatFunc S) E_M :=
     functionFieldNormalClosureOriginalCompositumConstantExtensionRatFuncAlgebra
       K F S hExact
-  letI : Algebra (RatFunc S) E_N :=
+  let : Algebra (RatFunc S) E_N :=
     functionFieldNormalClosureConstantExtensionRatFuncAlgebraForTower K F S
-  letI : Algebra E_M E_N :=
+  let : Algebra E_M E_N :=
     functionFieldNormalClosureConstantExtensionTowerAlgebra K F S hExact
-  letI : SMul (RatFunc S) E_M := Algebra.toSMul
-  letI : SMul (RatFunc S) E_N := Algebra.toSMul
-  letI : SMul E_M E_N := Algebra.toSMul
+  let : SMul (RatFunc S) E_M := Algebra.toSMul
+  let : SMul (RatFunc S) E_N := Algebra.toSMul
+  let : SMul E_M E_N := Algebra.toSMul
   exact exactConstantExtensionTower_ratFuncScalarTower C M N S
     (functionFieldNormalClosureConstantField_isExact_for_constantRatFunc K F)
 
@@ -573,37 +573,37 @@ theorem
   let C := FunctionFieldNormalClosureConstantField K F
   let M := FunctionFieldNormalClosureOriginalCompositum K F hExact
   let N := FunctionFieldNormalClosure K F
-  letI : Algebra (RatFunc C) M :=
+  let : Algebra (RatFunc C) M :=
     functionFieldNormalClosureOriginalCompositumConstantRatFuncAlgebra
       K F hExact
-  letI : Algebra (RatFunc C) N :=
+  let : Algebra (RatFunc C) N :=
     functionFieldNormalClosureConstantRatFuncAlgebra K F
-  letI : IsScalarTower (RatFunc C) M N :=
+  let : IsScalarTower (RatFunc C) M N :=
     functionFieldNormalClosureOriginalCompositumConstantRatFuncTower
       K F hExact
-  letI : Algebra C M :=
+  let : Algebra C M :=
     exactConstantExtensionTowerCanonicalConstantAlgebra C M
-  letI : Algebra C N :=
+  let : Algebra C N :=
     exactConstantExtensionTowerCanonicalConstantAlgebra C N
-  letI : SMul C M := Algebra.toSMul
-  letI : SMul C N := Algebra.toSMul
-  letI : SMul M N := Algebra.toSMul
-  letI : IsScalarTower C M N :=
+  let : SMul C M := Algebra.toSMul
+  let : SMul C N := Algebra.toSMul
+  let : SMul M N := Algebra.toSMul
+  let : IsScalarTower C M N :=
     exactConstantExtensionTowerCanonicalConstantScalarTower C M N
   let E_M := ExactConstantExtension C M S
   let E_N := ExactConstantExtension C N S
-  letI : Field E_M :=
+  let : Field E_M :=
     functionFieldNormalClosureOriginalCompositumConstantExtensionField
       K F S hExact
-  letI : Field E_N :=
+  let : Field E_N :=
     functionFieldNormalClosureConstantExtensionFieldForTower K F S
-  letI : Algebra E_M E_N :=
+  let : Algebra E_M E_N :=
     functionFieldNormalClosureConstantExtensionTowerAlgebra K F S hExact
-  letI : Module E_M E_N := Algebra.toModule
-  letI : FiniteDimensional M N :=
+  let : Module E_M E_N := Algebra.toModule
+  let : FiniteDimensional M N :=
     functionFieldNormalClosure_finiteDimensional_over_originalCompositum
       K F hExact
-  letI : IsGalois M N :=
+  let : IsGalois M N :=
     functionFieldNormalClosure_isGalois_over_originalCompositum K F hExact
   exact exactConstantExtensionTower_finiteDimensional C M N S
     (functionFieldNormalClosureConstantField_isExact_for_constantRatFunc K F)
@@ -632,36 +632,36 @@ theorem functionFieldNormalClosureConstantExtension_isGalois
   let C := FunctionFieldNormalClosureConstantField K F
   let M := FunctionFieldNormalClosureOriginalCompositum K F hExact
   let N := FunctionFieldNormalClosure K F
-  letI : Algebra (RatFunc C) M :=
+  let : Algebra (RatFunc C) M :=
     functionFieldNormalClosureOriginalCompositumConstantRatFuncAlgebra
       K F hExact
-  letI : Algebra (RatFunc C) N :=
+  let : Algebra (RatFunc C) N :=
     functionFieldNormalClosureConstantRatFuncAlgebra K F
-  letI : IsScalarTower (RatFunc C) M N :=
+  let : IsScalarTower (RatFunc C) M N :=
     functionFieldNormalClosureOriginalCompositumConstantRatFuncTower
       K F hExact
-  letI : Algebra C M :=
+  let : Algebra C M :=
     exactConstantExtensionTowerCanonicalConstantAlgebra C M
-  letI : Algebra C N :=
+  let : Algebra C N :=
     exactConstantExtensionTowerCanonicalConstantAlgebra C N
-  letI : SMul C M := Algebra.toSMul
-  letI : SMul C N := Algebra.toSMul
-  letI : SMul M N := Algebra.toSMul
-  letI : IsScalarTower C M N :=
+  let : SMul C M := Algebra.toSMul
+  let : SMul C N := Algebra.toSMul
+  let : SMul M N := Algebra.toSMul
+  let : IsScalarTower C M N :=
     exactConstantExtensionTowerCanonicalConstantScalarTower C M N
   let E_M := ExactConstantExtension C M S
   let E_N := ExactConstantExtension C N S
-  letI : Field E_M :=
+  let : Field E_M :=
     functionFieldNormalClosureOriginalCompositumConstantExtensionField
       K F S hExact
-  letI : Field E_N :=
+  let : Field E_N :=
     functionFieldNormalClosureConstantExtensionFieldForTower K F S
-  letI : Algebra E_M E_N :=
+  let : Algebra E_M E_N :=
     functionFieldNormalClosureConstantExtensionTowerAlgebra K F S hExact
-  letI : FiniteDimensional M N :=
+  let : FiniteDimensional M N :=
     functionFieldNormalClosure_finiteDimensional_over_originalCompositum
       K F hExact
-  letI : IsGalois M N :=
+  let : IsGalois M N :=
     functionFieldNormalClosure_isGalois_over_originalCompositum K F hExact
   exact exactConstantExtensionTower_isGalois C M N S
     (functionFieldNormalClosureConstantField_isExact_for_constantRatFunc K F)
@@ -694,40 +694,40 @@ theorem functionFieldNormalClosureConstantExtension_finrank
   let C := FunctionFieldNormalClosureConstantField K F
   let M := FunctionFieldNormalClosureOriginalCompositum K F hExact
   let N := FunctionFieldNormalClosure K F
-  letI : Algebra (RatFunc C) M :=
+  let : Algebra (RatFunc C) M :=
     functionFieldNormalClosureOriginalCompositumConstantRatFuncAlgebra
       K F hExact
-  letI : Algebra (RatFunc C) N :=
+  let : Algebra (RatFunc C) N :=
     functionFieldNormalClosureConstantRatFuncAlgebra K F
-  letI : IsScalarTower (RatFunc C) M N :=
+  let : IsScalarTower (RatFunc C) M N :=
     functionFieldNormalClosureOriginalCompositumConstantRatFuncTower
       K F hExact
-  letI : Algebra C M :=
+  let : Algebra C M :=
     exactConstantExtensionTowerCanonicalConstantAlgebra C M
-  letI : Algebra C N :=
+  let : Algebra C N :=
     exactConstantExtensionTowerCanonicalConstantAlgebra C N
-  letI : SMul C M := Algebra.toSMul
-  letI : SMul C N := Algebra.toSMul
-  letI : SMul M N := Algebra.toSMul
-  letI : IsScalarTower C M N :=
+  let : SMul C M := Algebra.toSMul
+  let : SMul C N := Algebra.toSMul
+  let : SMul M N := Algebra.toSMul
+  let : IsScalarTower C M N :=
     exactConstantExtensionTowerCanonicalConstantScalarTower C M N
   let E_M := ExactConstantExtension C M S
   let E_N := ExactConstantExtension C N S
-  letI : Field E_M :=
+  let : Field E_M :=
     functionFieldNormalClosureOriginalCompositumConstantExtensionField
       K F S hExact
-  letI : Field E_N :=
+  let : Field E_N :=
     functionFieldNormalClosureConstantExtensionFieldForTower K F S
-  letI : Algebra E_M E_N :=
+  let : Algebra E_M E_N :=
     functionFieldNormalClosureConstantExtensionTowerAlgebra K F S hExact
-  letI : Module E_M E_N := Algebra.toModule
-  letI : Module.Finite E_M E_N :=
+  let : Module E_M E_N := Algebra.toModule
+  let : Module.Finite E_M E_N :=
     functionFieldNormalClosureConstantExtension_finiteDimensional
       K F S hExact
-  letI : FiniteDimensional M N :=
+  let : FiniteDimensional M N :=
     functionFieldNormalClosure_finiteDimensional_over_originalCompositum
       K F hExact
-  letI : IsGalois M N :=
+  let : IsGalois M N :=
     functionFieldNormalClosure_isGalois_over_originalCompositum K F hExact
   exact exactConstantExtensionTower_finrank C M N S
     (functionFieldNormalClosureConstantField_isExact_for_constantRatFunc K F)
@@ -762,42 +762,42 @@ theorem functionFieldNormalClosureConstantExtension_card_aut_eq
   let C := FunctionFieldNormalClosureConstantField K F
   let M := FunctionFieldNormalClosureOriginalCompositum K F hExact
   let N := FunctionFieldNormalClosure K F
-  letI : Algebra (RatFunc C) M :=
+  let : Algebra (RatFunc C) M :=
     functionFieldNormalClosureOriginalCompositumConstantRatFuncAlgebra
       K F hExact
-  letI : Algebra (RatFunc C) N :=
+  let : Algebra (RatFunc C) N :=
     functionFieldNormalClosureConstantRatFuncAlgebra K F
-  letI : IsScalarTower (RatFunc C) M N :=
+  let : IsScalarTower (RatFunc C) M N :=
     functionFieldNormalClosureOriginalCompositumConstantRatFuncTower
       K F hExact
-  letI : Algebra C M :=
+  let : Algebra C M :=
     exactConstantExtensionTowerCanonicalConstantAlgebra C M
-  letI : Algebra C N :=
+  let : Algebra C N :=
     exactConstantExtensionTowerCanonicalConstantAlgebra C N
-  letI : SMul C M := Algebra.toSMul
-  letI : SMul C N := Algebra.toSMul
-  letI : SMul M N := Algebra.toSMul
-  letI : IsScalarTower C M N :=
+  let : SMul C M := Algebra.toSMul
+  let : SMul C N := Algebra.toSMul
+  let : SMul M N := Algebra.toSMul
+  let : IsScalarTower C M N :=
     exactConstantExtensionTowerCanonicalConstantScalarTower C M N
   let E_M := ExactConstantExtension C M S
   let E_N := ExactConstantExtension C N S
-  letI : Field E_M :=
+  let : Field E_M :=
     functionFieldNormalClosureOriginalCompositumConstantExtensionField
       K F S hExact
-  letI : Field E_N :=
+  let : Field E_N :=
     functionFieldNormalClosureConstantExtensionFieldForTower K F S
-  letI : Algebra E_M E_N :=
+  let : Algebra E_M E_N :=
     functionFieldNormalClosureConstantExtensionTowerAlgebra K F S hExact
-  letI : Module E_M E_N := Algebra.toModule
-  letI : Module.Finite E_M E_N :=
+  let : Module E_M E_N := Algebra.toModule
+  let : Module.Finite E_M E_N :=
     functionFieldNormalClosureConstantExtension_finiteDimensional
       K F S hExact
-  letI : IsGalois E_M E_N :=
+  let : IsGalois E_M E_N :=
     functionFieldNormalClosureConstantExtension_isGalois K F S hExact
-  letI : FiniteDimensional M N :=
+  let : FiniteDimensional M N :=
     functionFieldNormalClosure_finiteDimensional_over_originalCompositum
       K F hExact
-  letI : IsGalois M N :=
+  let : IsGalois M N :=
     functionFieldNormalClosure_isGalois_over_originalCompositum K F hExact
   exact exactConstantExtensionTower_card_aut_eq C M N S
     (functionFieldNormalClosureConstantField_isExact_for_constantRatFunc K F)
@@ -841,34 +841,34 @@ theorem
       exactConstantExtensionClosedPlaceExtensionCount C S M hExactM 1 := by
   let C := FunctionFieldNormalClosureConstantField K F
   let M := FunctionFieldNormalClosureOriginalCompositum K F hExact
-  letI : Algebra (RatFunc C) M :=
+  let : Algebra (RatFunc C) M :=
     functionFieldNormalClosureOriginalCompositumConstantRatFuncAlgebra
       K F hExact
-  letI : Algebra C M :=
+  let : Algebra C M :=
     exactConstantExtensionTowerCanonicalConstantAlgebra C M
   let hExactM :=
     functionFieldNormalClosureOriginalCompositumConstantField_isExact_for_constantRatFunc
       K F hExact
   let E_M := ExactConstantExtension C M S
-  letI : Field E_M :=
+  let : Field E_M :=
     functionFieldNormalClosureOriginalCompositumConstantExtensionField
       K F S hExact
-  letI : Algebra (RatFunc S) E_M :=
+  let : Algebra (RatFunc S) E_M :=
     functionFieldNormalClosureOriginalCompositumConstantExtensionRatFuncAlgebra
       K F S hExact
-  letI : Module (RatFunc S) E_M := Algebra.toModule
-  letI : Module.Finite (RatFunc S) E_M :=
+  let : Module (RatFunc S) E_M := Algebra.toModule
+  let : Module.Finite (RatFunc S) E_M :=
     finiteDimensional_over_extendedRatFunc C S M hExactM
-  letI : Algebra.IsSeparable (RatFunc S) E_M :=
+  let : Algebra.IsSeparable (RatFunc S) E_M :=
     isSeparable_over_extendedRatFunc C S M hExactM
-  letI : Fintype C := Fintype.ofFinite C
-  letI : Finite S := Module.finite_of_finite C
-  letI : Fintype S :=
+  let : Fintype C := Fintype.ofFinite C
+  let : Finite S := Module.finite_of_finite C
+  let : Fintype S :=
     Fintype.ofFinite S
-  letI : DecidableEq C := Classical.decEq C
-  letI : DecidableEq (RatFunc C) := Classical.decEq (RatFunc C)
-  letI : DecidableEq S := Classical.decEq S
-  letI : DecidableEq (RatFunc S) := Classical.decEq (RatFunc S)
+  let : DecidableEq C := Classical.decEq C
+  let : DecidableEq (RatFunc C) := Classical.decEq (RatFunc C)
+  let : DecidableEq S := Classical.decEq S
+  let : DecidableEq (RatFunc S) := Classical.decEq (RatFunc S)
   exact
     (exactConstantExtensionClosedPlaceExtensionCount_one_eq_rationalPlaceCount
       C S M hExactM).symm
@@ -922,24 +922,24 @@ theorem
         K C F hExact (Module.finrank C S) := by
   classical
   let N := FunctionFieldNormalClosure K F
-  letI : Algebra K N := functionFieldNormalClosureConstantAlgebra K F
+  let : Algebra K N := functionFieldNormalClosureConstantAlgebra K F
   let C := FunctionFieldNormalClosureConstantField K F
-  letI : Algebra K C :=
+  let : Algebra K C :=
     SubalgebraClass.toAlgebra (algebraicClosure K N)
-  letI : Module.Finite K C :=
+  let : Module.Finite K C :=
     functionFieldConstantField_finiteDimensional K N
-  letI : IsGalois K C := functionFieldConstantField_isGalois K N
+  let : IsGalois K C := functionFieldConstantField_isGalois K N
   let M := FunctionFieldNormalClosureOriginalCompositum K F hExact
-  letI : Algebra (RatFunc C) M :=
+  let : Algebra (RatFunc C) M :=
     functionFieldNormalClosureOriginalCompositumConstantRatFuncAlgebra
       K F hExact
-  letI : Algebra C M :=
+  let : Algebra C M :=
     exactConstantExtensionTowerCanonicalConstantAlgebra C M
   let hExactM :=
     functionFieldNormalClosureOriginalCompositumConstantField_isExact_for_constantRatFunc
       K F hExact
   let E_M := ExactConstantExtension C M S
-  letI : Field E_M :=
+  let : Field E_M :=
     functionFieldNormalClosureOriginalCompositumConstantExtensionField
       K F S hExact
   letI : Algebra (RatFunc S) E_M :=

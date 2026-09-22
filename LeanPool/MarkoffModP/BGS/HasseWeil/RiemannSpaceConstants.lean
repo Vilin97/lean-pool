@@ -104,7 +104,7 @@ theorem finiteExtensionRiemannSpace_zero_moduleFinite :
 /-- The everywhere-regular subalgebra is finite-dimensional. -/
 theorem finiteExtensionRegularSubalgebra_moduleFinite :
     Module.Finite K (finiteExtensionRegularSubalgebra K L) := by
-  letI : Module.Finite K (finiteExtensionRiemannSpace K L 0) :=
+  let : Module.Finite K (finiteExtensionRiemannSpace K L 0) :=
     finiteExtensionRiemannSpace_zero_moduleFinite K L
   exact Module.Finite.equiv (finiteExtensionRegularSubalgebraEquiv K L).symm
 
@@ -115,7 +115,7 @@ theorem finiteExtensionRiemannSpace_zero_eq_range
       LinearMap.range (Algebra.linearMap K L) := by
   apply le_antisymm
   · intro x hx
-    letI : Module.Finite K (finiteExtensionRegularSubalgebra K L) :=
+    let : Module.Finite K (finiteExtensionRegularSubalgebra K L) :=
       finiteExtensionRegularSubalgebra_moduleFinite K L
     let x' : finiteExtensionRegularSubalgebra K L := ⟨x, hx⟩
     have hxAlg' : IsAlgebraic K x' := IsAlgebraic.of_finite K x'

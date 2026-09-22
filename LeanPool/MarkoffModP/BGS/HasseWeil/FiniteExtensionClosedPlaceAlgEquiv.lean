@@ -66,8 +66,8 @@ theorem finiteExtensionClosedPlaceExtensionCount_eq_of_algEquiv
     (e : L ≃ₐ[RatFunc K] M) (r : ℕ) :
     finiteExtensionClosedPlaceExtensionCount K L r =
       finiteExtensionClosedPlaceExtensionCount K M r := by
-  letI := finiteExtensionPlaceDegreeLEFintype K L r
-  letI := finiteExtensionPlaceDegreeLEFintype K M r
+  let := finiteExtensionPlaceDegreeLEFintype K L r
+  let := finiteExtensionPlaceDegreeLEFintype K M r
   rw [finiteExtensionClosedPlaceExtensionCount_eq_sum_degree_dvd,
     finiteExtensionClosedPlaceExtensionCount_eq_sum_degree_dvd]
   apply Fintype.sum_equiv

@@ -149,7 +149,7 @@ theorem exists_primitive_cageMiddleUnit_of_explicitInequality
     divisorsError_lt_primitiveTraceMoebiusMainTerm_of_explicitInequality
       (Nat.card (ZMod p)ˣ) p 1 coefficient Nat.card_pos (by norm_num) (by
         simpa using hexplicit)
-  letI : Finite (CageMiddleWitnessPair p axis other xi eta) :=
+  let : Finite (CageMiddleWitnessPair p axis other xi eta) :=
     Finite.of_injective Subtype.val Subtype.val_injective
   obtain ⟨z, hz⟩ :=
     BGS.rightTraceExactOrderSolutions_nonempty_of_divisorsError_lt_moebiusMain

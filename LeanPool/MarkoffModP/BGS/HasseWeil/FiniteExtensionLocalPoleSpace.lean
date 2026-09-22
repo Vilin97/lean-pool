@@ -95,12 +95,12 @@ def finiteExtensionAwayRegularSpace
     rintro x y (hx0 | ⟨hx0, hx⟩) (hy0 | ⟨hy0, hy⟩)
     · exact Or.inl (by simp [hx0, hy0])
     · subst x
-      simpa only [zero_add, Set.mem_setOf_eq] using
+      simpa only [zero_add, Set.mem_ofPred_eq] using
         (Or.inr ⟨hy0, hy⟩ : y = 0 ∨
           (y ≠ 0 ∧ ∀ v, v ≠ P →
             0 ≤ finiteExtensionPrincipalDivisor K L y v))
     · subst y
-      simpa only [add_zero, Set.mem_setOf_eq] using
+      simpa only [add_zero, Set.mem_ofPred_eq] using
         (Or.inr ⟨hx0, hx⟩ : x = 0 ∨
           (x ≠ 0 ∧ ∀ v, v ≠ P →
             0 ≤ finiteExtensionPrincipalDivisor K L x v))

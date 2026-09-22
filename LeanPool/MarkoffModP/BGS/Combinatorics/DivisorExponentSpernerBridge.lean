@@ -24,8 +24,8 @@ theorem divisorExponentAntichain_card_le_centralDivisorRankCoefficient
     (hantichain :
       IsAntichain (· ≤ ·) (antichain : Set (DivisorExponentBox factors))) :
     antichain.card ≤ centralDivisorRankCoefficient factors := by
-  letI := divisorExponentBoxFintype factors
-  letI := divisorExponentBoxPartialOrder factors
+  let := divisorExponentBoxFintype factors
+  let := divisorExponentBoxPartialOrder factors
   have hcentral :=
     (divisorExponentBoxDecomposition factors).antichain_card_le_central_rank
       antichain hantichain

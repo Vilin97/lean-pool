@@ -230,7 +230,7 @@ theorem surfaceRoot_ne_surfaceOrigin (R : Type*) [CommRing R] [Nontrivial R] :
 theorem markoffReduction_surjective_of_puncturedMarkoffTransitiveAt
     (p : ℕ) (hp : p.Prime) (htransitive : PuncturedMarkoffTransitiveAt p hp) :
     Function.Surjective (markoffReduction p) := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   change ∀ x y : PuncturedMarkoffSurface (ZMod p),
     ∃ g : Gamma (ZMod p), g • x = y at htransitive
   intro y
@@ -260,7 +260,7 @@ connectivity of nonzero natural Markoff solutions is the essential input in this
 theorem puncturedMarkoffTransitiveAt_of_markoffReduction_surjective
     (p : ℕ) (hp : p.Prime) (hsurjective : Function.Surjective (markoffReduction p)) :
     PuncturedMarkoffTransitiveAt p hp := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   change ∀ x y : PuncturedMarkoffSurface (ZMod p),
     ∃ g : Gamma (ZMod p), g • x = y
   intro x y

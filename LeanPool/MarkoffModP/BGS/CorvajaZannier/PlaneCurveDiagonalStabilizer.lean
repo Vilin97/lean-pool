@@ -143,7 +143,7 @@ theorem planeCurveSupportCharacterStabilizer_of_diagonalScale_eval_zero
     ∀ r ∈ f.support, ∀ s ∈ f.support,
       z.1 ^ ((s 0 : ℤ) - (r 0 : ℤ)) *
         z.2 ^ ((s 1 : ℤ) - (r 1 : ℤ)) = 1 := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   have hquotient : planeCurveQuotientMap f (diagonalScale z f) = 0 := by
     apply IsFractionRing.injective

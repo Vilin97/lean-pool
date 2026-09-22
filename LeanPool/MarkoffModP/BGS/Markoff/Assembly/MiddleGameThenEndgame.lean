@@ -281,10 +281,10 @@ theorem exists_threshold_middleGame_reaches_endgame
   obtain ⟨fourThreshold, hfourThreshold⟩ := eventually_atTop.mp hfourEventually
   refine ⟨max (max sizeThreshold fourThreshold) 7, ?_⟩
   intro p hp _ hpThree
-  letI : Invertible (3 : ZMod p) :=
+  let : Invertible (3 : ZMod p) :=
     invertibleOfNonzero
       (three_ne_zero_zmod_of_prime_ne_three p hpThree)
-  letI : Fintype (quadraticFiniteField p) := Fintype.ofFinite _
+  let : Fintype (quadraticFiniteField p) := Fintype.ofFinite _
   intro x hxLower
   have hpSize : sizeThreshold ≤ p :=
     (le_max_left sizeThreshold fourThreshold).trans
@@ -350,7 +350,7 @@ theorem exists_threshold_middleGame_to_splitCage
       nonsplitCoefficient hNonsplitWeil hδ
   refine ⟨max middleThreshold endgameThreshold, ?_⟩
   intro p hp _ hpThree
-  letI : Invertible (3 : ZMod p) :=
+  let : Invertible (3 : ZMod p) :=
     invertibleOfNonzero (three_ne_zero_zmod_of_prime_ne_three p hpThree)
   intro x hxLarge
   have hpMiddle : middleThreshold ≤ p := (le_max_left _ _).trans hp

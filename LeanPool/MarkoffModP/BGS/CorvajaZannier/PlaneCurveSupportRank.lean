@@ -37,13 +37,13 @@ private def integerVectorLine (d : Fin 2 → ℤ) : AddSubgroup (Fin 2 → ℤ) 
   zero_mem' := by simp [integerVectorDet]
   add_mem' := by
     intro u v hu hv
-    simp only [Set.mem_setOf_eq] at hu hv ⊢
+    simp only [Set.mem_ofPred_eq] at hu hv ⊢
     simp only [integerVectorDet] at hu hv
     simp only [integerVectorDet, Pi.add_apply]
     linear_combination hu + hv
   neg_mem' := by
     intro u hu
-    simp only [Set.mem_setOf_eq] at hu ⊢
+    simp only [Set.mem_ofPred_eq] at hu ⊢
     simp only [integerVectorDet] at hu
     simp only [integerVectorDet, Pi.neg_apply]
     linear_combination -hu
@@ -249,7 +249,7 @@ private theorem directionalHomogenization_monomial
   rw [directionalHomogenization, Polynomial.homogenize_monomial hkn]
   rw [MvPolynomial.eval₂Hom_monomial]
   simp [Finsupp.prod_fintype, Fin.prod_univ_two,
-    MvPolynomial.monomial_pow, MvPolynomial.monomial_mul,
+    MvPolynomial.monomial_pow, MvPolynomial.monomial_mul_monomial,
     MvPolynomial.C_mul_monomial]
 
 private theorem directionalHomogenization_mul
@@ -408,7 +408,7 @@ private theorem exists_directionalPolynomial_representation
   have parameter_spec : ∀ s ∈ F.support,
       planeExponentDifference r s = parameter s • v := by
     intro s hs
-    simp only [parameter, dif_pos hs]
+    simp only [parameter, dite_eq_left hs]
     exact Classical.choose_spec (hparam s hs)
   have parameter_inj : ∀ {s t}, s ∈ F.support → t ∈ F.support →
       parameter s = parameter t → s = t := by
@@ -492,7 +492,7 @@ private theorem exists_directionalPolynomial_representation
       simpa [q] using coeff_finset_sum (index s) F.support
         (fun t => Polynomial.monomial (index t) (F.coeff t))]
     rw [Finset.sum_eq_single s]
-    · rw [Polynomial.coeff_monomial, if_pos rfl]
+    · rw [Polynomial.coeff_monomial, ite_eq_left rfl]
     · intro t ht hts
       rw [Polynomial.coeff_monomial]
       simp only [ite_eq_right_iff]
@@ -606,7 +606,7 @@ private theorem exists_directionalPolynomial_representation
   apply Finset.sum_congr rfl
   intro s hs
   rw [directionalHomogenization_monomial v (index_le s hs)]
-  rw [MvPolynomial.monomial_mul]
+  rw [MvPolynomial.monomial_mul_monomial]
   simp only [one_mul]
   apply congrArg (fun e => MvPolynomial.monomial e (F.coeff s))
   simpa [add_assoc] using exponent_eq s hs

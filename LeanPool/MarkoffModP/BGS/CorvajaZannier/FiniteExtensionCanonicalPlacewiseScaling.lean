@@ -104,17 +104,17 @@ theorem exists_finiteExtensionFinitePlace_canonicalDifferent_scaling_certificate
               (K := K) (L := L) q r) =
             finiteExtensionFinitePlaceLocalizationToField
               (K := K) (L := L) q s := by
-  letI : Algebra K L :=
+  let : Algebra K L :=
     RingHom.toAlgebra ((algebraMap (RatFunc K) L).comp
       (algebraMap K (RatFunc K)))
-  letI : IsScalarTower K (RatFunc K) L :=
+  let : IsScalarTower K (RatFunc K) L :=
     IsScalarTower.of_algebraMap_eq' rfl
-  letI : IsScalarTower K K[X] L :=
+  let : IsScalarTower K K[X] L :=
     IsScalarTower.of_algebraMap_eq' rfl
   let F := frobeniusSubfield L p
-  letI : Algebra K F :=
+  let : Algebra K F :=
     (perfectConstantsToFrobeniusSubfield (K := K) (L := L) (p := p)).toAlgebra
-  letI : IsScalarTower K F L := IsScalarTower.of_algebraMap_eq' rfl
+  let : IsScalarTower K F L := IsScalarTower.of_algebraMap_eq' rfl
   let Ds : Derivation K K[X] K[X] := Polynomial.mkDerivation K 1
   let E : Derivation K L L := D.restrictScalars K
   have hE : ∀ s : K[X],
@@ -143,8 +143,8 @@ theorem exists_finiteExtensionFinitePlace_canonicalDifferent_scaling_certificate
     exact (IsFractionRing.injective (RatFuncFiniteIntegralClosure K L) L).ne hδ
   refine ⟨c, hc, ?_, ?_⟩
   · simpa only [c, finiteExtensionCanonicalDifferentDivisor_inl] using hδorder
-  · letI := finiteExtensionFinitePlaceLocalAlgebra (K := K) (L := L) q
-    letI : IsScalarTower (RatFuncFiniteIntegralClosure K L)
+  · let := finiteExtensionFinitePlaceLocalAlgebra (K := K) (L := L) q
+    let : IsScalarTower (RatFuncFiniteIntegralClosure K L)
         (FiniteExtensionFinitePlaceLocalRing K L q) L := by
       apply IsScalarTower.of_algebraMap_eq'
       exact (finiteExtensionFinitePlaceLocalizationToField_comp_algebraMap

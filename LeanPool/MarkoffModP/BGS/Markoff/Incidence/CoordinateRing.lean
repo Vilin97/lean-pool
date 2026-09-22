@@ -121,7 +121,7 @@ lemma not_isSquare_algebraMap_adjoinSquare_of_independent
   let q : Polynomial F := adjoinSquarePolynomial f
   have hqIrreducible : Irreducible q :=
     adjoinSquarePolynomial_irreducible_of_not_isSquare hf
-  letI : Fact (Irreducible q) := ⟨hqIrreducible⟩
+  let : Fact (Irreducible q) := ⟨hqIrreducible⟩
   change ¬ IsSquare (algebraMap F (AdjoinRoot q) g)
   have hqMonic : q.Monic := by simpa [q] using adjoinSquarePolynomial_monic f
   have hqNatDegree : q.natDegree = 2 := by
@@ -341,7 +341,7 @@ theorem incidenceBiquadraticRatFuncRing_isDomain
     apply h2
     apply FaithfulSMul.algebraMap_injective L (RatFunc L)
     simpa only [map_ofNat, map_zero] using hzero
-  letI : Fact
+  let : Fact
       (Irreducible
         (adjoinSquarePolynomial
           (algebraMap (Polynomial L) (RatFunc L) (incidenceBranchPolynomial a)))) :=
@@ -354,9 +354,9 @@ theorem incidenceBiquadraticRatFuncRing_isDomain
     rw [incidenceFirstQuadraticToRatFunc_algebraMap]
     apply not_isSquare_algebraMap_adjoinSquare_of_independent h2RatFunc hf hg
     simpa only [map_mul] using hfg
-  letI : Fact (Irreducible (incidenceSecondQuadraticRatFuncPolynomial L a b)) :=
+  let : Fact (Irreducible (incidenceSecondQuadraticRatFuncPolynomial L a b)) :=
     ⟨adjoinSquarePolynomial_irreducible_of_not_isSquare hsecondNotSquare⟩
-  letI : Field (IncidenceBiquadraticRatFuncRing L a b) := AdjoinRoot.instField
+  let : Field (IncidenceBiquadraticRatFuncRing L a b) := AdjoinRoot.instField
   infer_instance
 
 /-- The rank-four algebra over `L[y]` is a domain because it injects into the preceding
@@ -367,7 +367,7 @@ theorem incidenceBiquadraticRing_isDomain
     (hA : 9 * a ^ 2 - 4 ≠ 0) (hB : 9 * b ^ 2 - 4 ≠ 0)
     (hab : a ^ 2 ≠ b ^ 2) :
     IsDomain (IncidenceBiquadraticRing L a b) := by
-  letI : IsDomain (IncidenceBiquadraticRatFuncRing L a b) :=
+  let : IsDomain (IncidenceBiquadraticRatFuncRing L a b) :=
     incidenceBiquadraticRatFuncRing_isDomain L h2 ha hb hA hB hab
   exact (incidenceBiquadraticToRatFunc_injective L a b).isDomain
     (incidenceBiquadraticToRatFunc L a b)
@@ -791,7 +791,7 @@ theorem incidenceAuxCoordinateRing_isDomain
     (hA : 9 * a ^ 2 - 4 ≠ 0) (hB : 9 * b ^ 2 - 4 ≠ 0)
     (hab : a ^ 2 ≠ b ^ 2) :
     IsDomain (IncidenceAuxCoordinateRing L a b) := by
-  letI : IsDomain (IncidenceBiquadraticRing L a b) :=
+  let : IsDomain (IncidenceBiquadraticRing L a b) :=
     incidenceBiquadraticRing_isDomain L h2 ha hb hA hB hab
   exact (incidenceAuxCoordinateRingEquivBiquadratic L a b).injective.isDomain
     (incidenceAuxCoordinateRingEquivBiquadratic L a b).toRingEquiv.toRingHom
@@ -823,7 +823,7 @@ theorem incidenceAuxGeometricallyIntegral_of_nondegenerate
     apply hab
     apply FaithfulSMul.algebraMap_injective K L
     simpa only [map_pow] using heq
-  letI : IsDomain
+  let : IsDomain
       (IncidenceAuxCoordinateRing L (algebraMap K L a) (algebraMap K L b)) :=
     incidenceAuxCoordinateRing_isDomain L h2L haL hbL hAL hBL habL
   exact (incidenceAuxCoordinateRingBaseChangeExplicitEquiv K L a b).injective.isDomain
@@ -836,7 +836,7 @@ theorem incidenceAux_offDiagonal_geometricallyIntegral :
       IncidenceAuxOffDiagonalGeometryAt p hp := by
   refine ⟨3, ?_⟩
   intro p hp hpLarge
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   intro a b ha hb hab
   apply incidenceAuxGeometricallyIntegral_of_nondegenerate
   · exact two_ne_zero_zmod (by omega)

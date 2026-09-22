@@ -264,13 +264,13 @@ theorem finiteExtensionEffectiveDivisorClassOfDegree_surjective_of_uniformRieman
   have hRdegree : finiteExtensionDivisorDegree K L R = (n : ℤ) :=
     finiteExtensionDivisorClassRepresentative_degree K L c
   have hdata := hRiemann.2 R n hn hRdegree
-  letI : Module.Finite K (finiteExtensionRiemannSpace K L R) := hdata.1
+  let : Module.Finite K (finiteExtensionRiemannSpace K L R) := hdata.1
   have hpositive :
       0 < Module.finrank K (finiteExtensionRiemannSpace K L R) := by
     rw [hdata.2]
     have hg := hRiemann.1
     omega
-  letI : Nontrivial (finiteExtensionRiemannSpace K L R) :=
+  let : Nontrivial (finiteExtensionRiemannSpace K L R) :=
     Module.finrank_pos_iff.mp hpositive
   obtain ⟨x, hx⟩ := exists_ne (0 : finiteExtensionRiemannSpace K L R)
   let E : EffectiveDivisorInPrincipalClass K L R :=
@@ -305,8 +305,8 @@ theorem finiteExtensionEffectiveDivisorClassFiber_finite_of_uniformRiemann
   have hRdegree : finiteExtensionDivisorDegree K L R = (n : ℤ) :=
     finiteExtensionDivisorClassRepresentative_degree K L c
   have hdata := hRiemann.2 R n hn hRdegree
-  letI : Module.Finite K (finiteExtensionRiemannSpace K L R) := hdata.1
-  letI : Finite (finiteExtensionRiemannSpace K L R) :=
+  let : Module.Finite K (finiteExtensionRiemannSpace K L R) := hdata.1
+  let : Finite (finiteExtensionRiemannSpace K L R) :=
     Module.finite_of_finite K
   exact Finite.of_equiv
     (Projectivization K (finiteExtensionRiemannSpace K L R))
@@ -344,12 +344,12 @@ theorem finiteExtensionEffectiveDivisorCount_eq_classCount_mul_geomSum_of_unifor
     finiteExtensionEffectiveDivisorCount K L n =
       Nat.card (FiniteExtensionDivisorClassOfDegree K L (n : ℤ)) *
         ∑ i ∈ Finset.range (n + 1 - genus), Nat.card K ^ i := by
-  letI : Finite (FiniteExtensionDivisorClassOfDegree K L (n : ℤ)) :=
+  let : Finite (FiniteExtensionDivisorClassOfDegree K L (n : ℤ)) :=
     finiteExtensionDivisorClassOfDegree_finite_of_uniformRiemann
       K L genus threshold n hRiemann hn
-  letI : Fintype (FiniteExtensionDivisorClassOfDegree K L (n : ℤ)) :=
+  let : Fintype (FiniteExtensionDivisorClassOfDegree K L (n : ℤ)) :=
     Fintype.ofFinite _
-  letI (c : FiniteExtensionDivisorClassOfDegree K L (n : ℤ)) :
+  let (c : FiniteExtensionDivisorClassOfDegree K L (n : ℤ)) :
       Finite (FiniteExtensionEffectiveDivisorClassFiber K L n c) :=
     finiteExtensionEffectiveDivisorClassFiber_finite_of_uniformRiemann
       K L genus threshold n hconstants hRiemann hn c

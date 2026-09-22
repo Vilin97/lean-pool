@@ -103,7 +103,7 @@ private theorem one_add_card_positive_members_eq_card_members
   | zero =>
       change 1 = ((Finset.range 1).filter (fun i => i ∈ H)).card
       simp only [Finset.range_one, Finset.filter_singleton]
-      rw [if_pos H.zero_mem]
+      rw [ite_eq_left H.zero_mem]
       simp
   | succ n ih =>
       by_cases hn : n + 1 ∈ H
@@ -111,7 +111,7 @@ private theorem one_add_card_positive_members_eq_card_members
             (addSubmonoidPositiveMembersBelow H (n + 1)).card =
               (addSubmonoidPositiveMembersBelow H n).card + 1 := by
           rw [addSubmonoidPositiveMembersBelow, Finset.range_add_one,
-            Finset.filter_insert, if_pos hn, Finset.card_insert_of_notMem]
+            Finset.filter_insert, ite_eq_left hn, Finset.card_insert_of_notMem]
           · rfl
           · simp
         have hmembers :
@@ -119,7 +119,7 @@ private theorem one_add_card_positive_members_eq_card_members
               (addSubmonoidMembersBelowOrAt H n).card + 1 := by
           rw [addSubmonoidMembersBelowOrAt]
           rw [show n + 1 + 1 = (n + 1) + 1 by omega,
-            Finset.range_add_one, Finset.filter_insert, if_pos hn,
+            Finset.range_add_one, Finset.filter_insert, ite_eq_left hn,
             Finset.card_insert_of_notMem]
           · rfl
           · simp
@@ -129,14 +129,14 @@ private theorem one_add_card_positive_members_eq_card_members
             (addSubmonoidPositiveMembersBelow H (n + 1)).card =
               (addSubmonoidPositiveMembersBelow H n).card := by
           rw [addSubmonoidPositiveMembersBelow, Finset.range_add_one,
-            Finset.filter_insert, if_neg hn,
+            Finset.filter_insert, ite_eq_right hn,
             addSubmonoidPositiveMembersBelow]
         have hmembers :
             (addSubmonoidMembersBelowOrAt H (n + 1)).card =
               (addSubmonoidMembersBelowOrAt H n).card := by
           rw [addSubmonoidMembersBelowOrAt]
           rw [show n + 1 + 1 = (n + 1) + 1 by omega,
-            Finset.range_add_one, Finset.filter_insert, if_neg hn,
+            Finset.range_add_one, Finset.filter_insert, ite_eq_right hn,
             addSubmonoidMembersBelowOrAt]
         rw [hpositive, hmembers]
         exact ih

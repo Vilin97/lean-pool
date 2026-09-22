@@ -41,7 +41,7 @@ omit [DecidableEq K] [DecidableEq (RatFunc K)] in
 private theorem canonicalRatFuncPolynomialFractionRing :
     letI := canonicalRatFuncPolynomialAlgebra K
     IsFractionRing K[X] (RatFunc K) := by
-  letI := canonicalRatFuncPolynomialAlgebra K
+  let := canonicalRatFuncPolynomialAlgebra K
   infer_instance
 
 omit [DecidableEq K] [DecidableEq (RatFunc K)] in
@@ -49,7 +49,7 @@ private theorem canonicalRatFuncPolynomialAlgebraMap_injective :
     Function.Injective
       (@algebraMap K[X] (RatFunc K) _ _
         (canonicalRatFuncPolynomialAlgebra K)) := by
-  letI := canonicalRatFuncPolynomialAlgebra K
+  let := canonicalRatFuncPolynomialAlgebra K
   exact RatFunc.algebraMap_injective K
 
 omit [DecidableEq K] [DecidableEq (RatFunc K)] in
@@ -59,8 +59,8 @@ private theorem canonicalRatFunc_div_surjective (z : RatFunc K) :
           (canonicalRatFuncPolynomialAlgebra K) p /
         @algebraMap K[X] (RatFunc K) _ _
           (canonicalRatFuncPolynomialAlgebra K) q := by
-  letI := canonicalRatFuncPolynomialAlgebra K
-  letI : IsFractionRing K[X] (RatFunc K) :=
+  let := canonicalRatFuncPolynomialAlgebra K
+  let : IsFractionRing K[X] (RatFunc K) :=
     canonicalRatFuncPolynomialFractionRing K
   obtain ⟨p, q, hq, h⟩ := IsFractionRing.div_surjective K[X] z
   exact ⟨p, q, nonZeroDivisors.ne_zero hq, h.symm⟩
@@ -234,8 +234,8 @@ private theorem finrank_eq_of_finite_ringEquiv
     [Field E] [Field F] [Algebra K E] [Algebra K F]
     [Finite E] [Finite F] (e : E ≃+* F) :
     Module.finrank K E = Module.finrank K F := by
-  letI : Fintype E := Fintype.ofFinite E
-  letI : Fintype F := Fintype.ofFinite F
+  let : Fintype E := Fintype.ofFinite E
+  let : Fintype F := Fintype.ofFinite F
   have hcard : Fintype.card E = Fintype.card F :=
     Fintype.card_congr e.toEquiv
   rw [Module.card_eq_pow_finrank (K := K) (V := E),
@@ -251,27 +251,27 @@ private theorem actualInfinityPlaceResidueField_finite
     [Algebra.IsSeparable (RatFunc K) L]
     (P : FiniteExtensionInfinityPlace K L) :
     Finite P.1.ResidueField := by
-  letI : Algebra K (RatFuncInfinityIntegers K) :=
+  let : Algebra K (RatFuncInfinityIntegers K) :=
     (ratFuncInfinityConstantRingHom K).toAlgebra
-  letI : IsScalarTower K (RatFuncInfinityIntegers K) (RatFunc K) :=
+  let : IsScalarTower K (RatFuncInfinityIntegers K) (RatFunc K) :=
     IsScalarTower.of_algebraMap_eq' rfl
-  letI : Module.Finite (RatFuncInfinityIntegers K)
+  let : Module.Finite (RatFuncInfinityIntegers K)
       (RatFuncInfinityIntegralClosure K L) :=
     IsIntegralClosure.finite (RatFuncInfinityIntegers K) (RatFunc K) L
       (RatFuncInfinityIntegralClosure K L)
   let p := (ratFuncInfinityPlace K).asIdeal
-  letI : Finite p.ResidueField :=
+  let : Finite p.ResidueField :=
     Finite.of_injective (ratFuncInfinityPlaceResidueEquiv K)
       (ratFuncInfinityPlaceResidueEquiv K).injective
-  letI : P.1.LiesOver p := by
+  let : P.1.LiesOver p := by
     simpa [p] using Ideal.primesOver.liesOver
       (ratFuncInfinityPlace K).asIdeal P
-  letI := Localization.AtPrime.algebraOfLiesOver p P.1
+  let := Localization.AtPrime.algebraOfLiesOver p P.1
   let _ : IsScalarTower (RatFuncInfinityIntegers K) (Localization.AtPrime p)
       (Localization.AtPrime P.1) := inferInstance
-  letI : Algebra.QuasiFiniteAt (RatFuncInfinityIntegers K) P.1 :=
+  let : Algebra.QuasiFiniteAt (RatFuncInfinityIntegers K) P.1 :=
     inferInstance
-  letI : Module.Finite p.ResidueField P.1.ResidueField := inferInstance
+  let : Module.Finite p.ResidueField P.1.ResidueField := inferInstance
   exact Module.finite_of_finite p.ResidueField
 
 end LocalizationHelpers
@@ -285,7 +285,7 @@ theorem coefficientPolynomial_under_span_X
     letI : Algebra C[X] S[X] := Polynomial.algebra C S
     (Ideal.span ({Polynomial.X} : Set S[X])).under C[X] =
       Ideal.span ({Polynomial.X} : Set C[X]) := by
-  letI : Algebra C[X] S[X] := Polynomial.algebra C S
+  let : Algebra C[X] S[X] := Polynomial.algebra C S
   ext p
   change algebraMap C[X] S[X] p ∈
       Ideal.span ({Polynomial.X} : Set S[X]) ↔
@@ -306,8 +306,8 @@ theorem polynomialTensorCancel_algebraMap_coefficient
       polynomialTensorCancelTargetPolynomialExtensionAlgebra C S A
     algebraMap S[X] (S ⊗[C] A) (algebraMap C[X] S[X] p) =
       (1 : S) ⊗ₜ[C] algebraMap C[X] A p := by
-  letI : Algebra C[X] S[X] := Polynomial.algebra C S
-  letI : Algebra S[X] (S ⊗[C] A) :=
+  let : Algebra C[X] S[X] := Polynomial.algebra C S
+  let : Algebra S[X] (S ⊗[C] A) :=
     polynomialTensorCancelTargetPolynomialExtensionAlgebra C S A
   let e := polynomialTensorCancelOverCoefficientPolynomial C S A
   have hsource :
@@ -415,7 +415,7 @@ theorem exactConstantExtensionInfinityDownstairsIdeal_under
   let p := exactConstantExtensionInfinityDownstairsIdeal C S N q
   let oS := Ideal.span ({Polynomial.X} : Set S[X])
   let oC := Ideal.span ({Polynomial.X} : Set C[X])
-  letI : Algebra C[X] S[X] := Polynomial.algebra C S
+  let : Algebra C[X] S[X] := Polynomial.algebra C S
   ext r
   change
     (1 : S) ⊗ₜ[C]
@@ -518,7 +518,7 @@ noncomputable def exactConstantExtensionDownstairsInfinityPlace
   have hpUnder : p.under C[X] = o :=
     exactConstantExtensionInfinityDownstairsIdeal_under C S N q hqOrigin
   have hdisj : Disjoint (M : Set A) (p : Set A) := by
-    letI : o.IsPrime := infinityBridgeBaseOriginPrime C
+    let : o.IsPrime := infinityBridgeBaseOriginPrime C
     exact mappedPrimeCompl_disjoint_of_under_eq C[X] A o p hpUnder
   let P := Ideal.map (algebraMap A B) p
   letI : p.IsPrime := hpPrime
@@ -731,19 +731,19 @@ theorem exactConstantExtensionUpstairsInfinityResidueField_finite
       ratFuncExactConstantExtensionAlgebra C S N hExact
     Finite (exactConstantExtensionUpstairsInfinityPlace
       C S N hExact q hqOrigin).1.ResidueField := by
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
     ratFuncExactConstantExtensionAlgebra C S N hExact
-  letI : SMul (RatFunc S) (ExactConstantExtension C N S) :=
+  let : SMul (RatFunc S) (ExactConstantExtension C N S) :=
     Algebra.toSMul
-  letI : Module (RatFunc S) (ExactConstantExtension C N S) :=
+  let : Module (RatFunc S) (ExactConstantExtension C N S) :=
     Algebra.toModule
-  letI : FiniteDimensional (RatFunc S) (ExactConstantExtension C N S) :=
+  let : FiniteDimensional (RatFunc S) (ExactConstantExtension C N S) :=
     finiteDimensional_over_extendedRatFunc C S N hExact
-  letI : Algebra.IsSeparable (RatFunc S) (ExactConstantExtension C N S) :=
+  let : Algebra.IsSeparable (RatFunc S) (ExactConstantExtension C N S) :=
     isSeparable_over_extendedRatFunc C S N hExact
-  letI : Fintype S := Fintype.ofFinite S
+  let : Fintype S := Fintype.ofFinite S
   exact actualInfinityPlaceResidueField_finite S
     (ExactConstantExtension C N S)
     (exactConstantExtensionUpstairsInfinityPlace
@@ -757,11 +757,11 @@ theorem exactConstantExtensionInfinityTensorResidueField_finite
     (hqOrigin : q.asIdeal.under S[X] =
       Ideal.span ({Polynomial.X} : Set S[X])) :
     Finite q.asIdeal.ResidueField := by
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
     ratFuncExactConstantExtensionAlgebra C S N hExact
-  letI : Finite
+  let : Finite
       (exactConstantExtensionUpstairsInfinityPlace
         C S N hExact q hqOrigin).1.ResidueField :=
     exactConstantExtensionUpstairsInfinityResidueField_finite
@@ -777,10 +777,10 @@ theorem exactConstantExtensionInfinityTensorIdeal_isMaximal
     (hqOrigin : q.asIdeal.under S[X] =
       Ideal.span ({Polynomial.X} : Set S[X])) :
     q.asIdeal.IsMaximal := by
-  letI : Finite q.asIdeal.ResidueField :=
+  let : Finite q.asIdeal.ResidueField :=
     exactConstantExtensionInfinityTensorResidueField_finite
       C S N hExact q hqOrigin
-  letI : Finite
+  let : Finite
       (HasQuotient.Quotient
         (S ⊗[C] integralClosure C[X] N) q.asIdeal) :=
     Finite.of_injective
@@ -808,9 +808,9 @@ theorem exactConstantExtensionInfinityDownstairsResidueField_finite
   let p := exactConstantExtensionInfinityDownstairsIdeal C S N q
   let i := (Algebra.TensorProduct.includeRight
     (R := C) (A := S) (B := integralClosure C[X] N)).toRingHom
-  letI : p.IsPrime := Ideal.comap_isPrime (f := i) (K := q.asIdeal)
+  let : p.IsPrime := Ideal.comap_isPrime (f := i) (K := q.asIdeal)
   let P := exactConstantExtensionDownstairsInfinityPlace C S N q hqOrigin
-  letI : Finite P.1.ResidueField :=
+  let : Finite P.1.ResidueField :=
     actualInfinityPlaceResidueField_finite C N P
   let e := exactConstantExtensionDownstairsResidueFieldAlgEquiv
     C S N q hqOrigin
@@ -879,45 +879,45 @@ theorem exactConstantExtensionInfinityPlace_degree_eq_div_gcd
           (finiteExtensionPlaceDegree C N
             (.inr (exactConstantExtensionDownstairsInfinityPlace
               C S N q hqOrigin))) := by
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
     ratFuncExactConstantExtensionAlgebra C S N hExact
-  letI : SMul (RatFunc S) (ExactConstantExtension C N S) :=
+  let : SMul (RatFunc S) (ExactConstantExtension C N S) :=
     Algebra.toSMul
-  letI : Module (RatFunc S) (ExactConstantExtension C N S) :=
+  let : Module (RatFunc S) (ExactConstantExtension C N S) :=
     Algebra.toModule
-  letI : FiniteDimensional (RatFunc S) (ExactConstantExtension C N S) :=
+  let : FiniteDimensional (RatFunc S) (ExactConstantExtension C N S) :=
     finiteDimensional_over_extendedRatFunc C S N hExact
-  letI : Algebra.IsSeparable (RatFunc S) (ExactConstantExtension C N S) :=
+  let : Algebra.IsSeparable (RatFunc S) (ExactConstantExtension C N S) :=
     isSeparable_over_extendedRatFunc C S N hExact
-  letI : Fintype S := Fintype.ofFinite S
+  let : Fintype S := Fintype.ofFinite S
   let p := exactConstantExtensionInfinityDownstairsIdeal C S N q
   let i := (Algebra.TensorProduct.includeRight
     (R := C) (A := S) (B := integralClosure C[X] N)).toRingHom
-  letI : p.IsPrime := Ideal.comap_isPrime (f := i) (K := q.asIdeal)
-  letI : Finite p.ResidueField :=
+  let : p.IsPrime := Ideal.comap_isPrime (f := i) (K := q.asIdeal)
+  let : Finite p.ResidueField :=
     exactConstantExtensionInfinityDownstairsResidueField_finite
       C S N q hqOrigin
-  letI : Finite
+  let : Finite
       (q.asIdeal.comap (Algebra.TensorProduct.includeRight
         (R := C) (A := S) (B := integralClosure C[X] N)).toRingHom).ResidueField := by
     change Finite p.ResidueField
     infer_instance
-  letI : Finite q.asIdeal.ResidueField :=
+  let : Finite q.asIdeal.ResidueField :=
     exactConstantExtensionInfinityTensorResidueField_finite
       C S N hExact q hqOrigin
-  letI : q.asIdeal.IsMaximal :=
+  let : q.asIdeal.IsMaximal :=
     exactConstantExtensionInfinityTensorIdeal_isMaximal
       C S N hExact q hqOrigin
   let Q := exactConstantExtensionUpstairsInfinityPlace
     C S N hExact q hqOrigin
   let P := exactConstantExtensionDownstairsInfinityPlace
     C S N q hqOrigin
-  letI : Finite Q.1.ResidueField :=
+  let : Finite Q.1.ResidueField :=
     exactConstantExtensionUpstairsInfinityResidueField_finite
       C S N hExact q hqOrigin
-  letI : Finite P.1.ResidueField :=
+  let : Finite P.1.ResidueField :=
     actualInfinityPlaceResidueField_finite C N P
   have hUp : Module.finrank S q.asIdeal.ResidueField =
       Module.finrank S Q.1.ResidueField :=
@@ -960,16 +960,16 @@ theorem exactConstantExtensionInfinityPlace_degree_eq_one_of_dvd
     finiteExtensionPlaceDegree S (ExactConstantExtension C N S)
       (.inr (exactConstantExtensionUpstairsInfinityPlace
         C S N hExact q hqOrigin)) = 1 := by
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
     ratFuncExactConstantExtensionAlgebra C S N hExact
   rw [exactConstantExtensionInfinityPlace_degree_eq_div_gcd
     C S N hExact q hqOrigin]
   rw [Nat.gcd_eq_right_iff_dvd.mpr hdiv]
   let P := exactConstantExtensionDownstairsInfinityPlace
     C S N q hqOrigin
-  letI : Finite P.1.ResidueField :=
+  let : Finite P.1.ResidueField :=
     actualInfinityPlaceResidueField_finite C N P
   let _ : DistribMulAction (RatFuncInfinityIntegralClosure C N)
       (RatFuncInfinityIntegralClosure C N) :=

@@ -71,21 +71,21 @@ theorem finiteExtensionGcdBound_planeCurvePowers_of_auxiliaryFamily_linearIndepe
           (k : ℝ) / ((h * k + h + k : ℕ) : ℝ) *
             ((m * MvPolynomial.degreeOf 1 f : ℕ) : ℝ) +
           ((((h * k + h + k : ℕ) : ℝ) - 1) / 2) * (chi : ℝ) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
-  letI : DecidableEq (RatFunc K) := Classical.decEq _
+  let : DecidableEq (RatFunc K) := Classical.decEq _
   let L := PlaneCurveFunctionField f
   let x : L := planeCurveFunction f 0
   let y : L := planeCurveFunction f 1
-  letI : Algebra (RatFunc K) L :=
+  let : Algebra (RatFunc K) L :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : FiniteDimensional (RatFunc K) L :=
+  let : FiniteDimensional (RatFunc K) L :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K) L :=
+  let : Algebra.IsSeparable (RatFunc K) L :=
     separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : CharP L p := charP_of_injective_algebraMap
+  let : CharP L p := charP_of_injective_algebraMap
     (algebraMap K L).injective p
   dsimp only
   intro hLI hEuler
@@ -119,8 +119,8 @@ theorem finiteExtensionGcdBound_planeCurvePowers_of_auxiliaryFamily_linearIndepe
   have hsepX :=
     (finiteSeparable_over_firstCoordinate_of_irreducible
       hf hpartialSecond).2
-  letI : Algebra.IsSeparable (FirstCoordinateSubfield f) L := hsepX
-  letI : Algebra.IsSeparable (IntermediateField.adjoin F {x}) L :=
+  let : Algebra.IsSeparable (FirstCoordinateSubfield f) L := hsepX
+  let : Algebra.IsSeparable (IntermediateField.adjoin F {x}) L :=
     isSeparable_over_frobeniusAdjoin_of_isSeparable_over_constantAdjoin
       (K := K) (L := L) (p := p) x
   have hxNot : x ∉ F :=
@@ -220,21 +220,21 @@ theorem finiteExtensionGcdBound_planeCurvePowers_swapped_of_auxiliaryFamily_line
           (k : ℝ) / ((h * k + h + k : ℕ) : ℝ) *
             ((n * MvPolynomial.degreeOf 0 f : ℕ) : ℝ) +
           ((((h * k + h + k : ℕ) : ℝ) - 1) / 2) * (chi : ℝ) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
-  letI : DecidableEq (RatFunc K) := Classical.decEq _
+  let : DecidableEq (RatFunc K) := Classical.decEq _
   let L := PlaneCurveFunctionField f
   let x : L := planeCurveFunction f 0
   let y : L := planeCurveFunction f 1
-  letI : Algebra (RatFunc K) L :=
+  let : Algebra (RatFunc K) L :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : FiniteDimensional (RatFunc K) L :=
+  let : FiniteDimensional (RatFunc K) L :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K) L :=
+  let : Algebra.IsSeparable (RatFunc K) L :=
     separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : CharP L p := charP_of_injective_algebraMap
+  let : CharP L p := charP_of_injective_algebraMap
     (algebraMap K L).injective p
   dsimp only
   intro hLI hEuler
@@ -268,8 +268,8 @@ theorem finiteExtensionGcdBound_planeCurvePowers_swapped_of_auxiliaryFamily_line
   have hsepX :=
     (finiteSeparable_over_firstCoordinate_of_irreducible
       hf hpartialSecond).2
-  letI : Algebra.IsSeparable (FirstCoordinateSubfield f) L := hsepX
-  letI : Algebra.IsSeparable (IntermediateField.adjoin F {x}) L :=
+  let : Algebra.IsSeparable (FirstCoordinateSubfield f) L := hsepX
+  let : Algebra.IsSeparable (IntermediateField.adjoin F {x}) L :=
     isSeparable_over_frobeniusAdjoin_of_isSeparable_over_constantAdjoin
       (K := K) (L := L) (p := p) x
   have hxNot : x ∉ F :=

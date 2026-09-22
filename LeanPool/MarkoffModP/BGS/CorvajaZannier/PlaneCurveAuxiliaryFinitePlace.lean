@@ -161,8 +161,8 @@ theorem finiteExtensionFinitePlaceLocalIsFractionRing
     (q : PlaneCurveExtensionFinitePlace K L) :
     letI := finiteExtensionFinitePlaceLocalAlgebra (K := K) (L := L) q
     IsFractionRing (FiniteExtensionFinitePlaceLocalRing K L q) L := by
-  letI := finiteExtensionFinitePlaceLocalAlgebra (K := K) (L := L) q
-  letI : IsScalarTower (FunctionField.ringOfIntegers K L)
+  let := finiteExtensionFinitePlaceLocalAlgebra (K := K) (L := L) q
+  let : IsScalarTower (FunctionField.ringOfIntegers K L)
       (FiniteExtensionFinitePlaceLocalRing K L q) L := by
     apply IsScalarTower.of_algebraMap_eq'
     exact (finiteExtensionFinitePlaceLocalizationToField_comp_algebraMap
@@ -209,14 +209,14 @@ theorem finiteExtensionFinitePlaceLocalOrder_eq_globalOrder
     (q : PlaneCurveExtensionFinitePlace K L) (x : L) :
     finiteExtensionFinitePlaceLocalOrder (K := K) (L := L) q x =
       finitePlaceOrder q x := by
-  letI := finiteExtensionFinitePlaceLocalAlgebra (K := K) (L := L) q
-  letI := finiteExtensionFinitePlaceLocalIsFractionRing (K := K) (L := L) q
-  letI : IsDiscreteValuationRing
+  let := finiteExtensionFinitePlaceLocalAlgebra (K := K) (L := L) q
+  let := finiteExtensionFinitePlaceLocalIsFractionRing (K := K) (L := L) q
+  let : IsDiscreteValuationRing
       (FiniteExtensionFinitePlaceLocalRing K L q) :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain
       (FunctionField.ringOfIntegers K L) q.ne_bot
       (FiniteExtensionFinitePlaceLocalRing K L q)
-  letI : IsScalarTower (FunctionField.ringOfIntegers K L)
+  let : IsScalarTower (FunctionField.ringOfIntegers K L)
       (FiniteExtensionFinitePlaceLocalRing K L q) L := by
     apply IsScalarTower.of_algebraMap_eq'
     exact (finiteExtensionFinitePlaceLocalizationToField_comp_algebraMap
@@ -233,9 +233,9 @@ theorem finiteExtensionFinitePlaceLocalOrderTop_eq_globalOrder
     (q : PlaneCurveExtensionFinitePlace K L) (x : L) (hx : x ≠ 0) :
     finiteExtensionFinitePlaceLocalOrderTop (K := K) (L := L) q x =
       (finitePlaceOrder q x : WithTop ℤ) := by
-  letI := finiteExtensionFinitePlaceLocalAlgebra (K := K) (L := L) q
-  letI := finiteExtensionFinitePlaceLocalIsFractionRing (K := K) (L := L) q
-  letI : IsDiscreteValuationRing
+  let := finiteExtensionFinitePlaceLocalAlgebra (K := K) (L := L) q
+  let := finiteExtensionFinitePlaceLocalIsFractionRing (K := K) (L := L) q
+  let : IsDiscreteValuationRing
       (FiniteExtensionFinitePlaceLocalRing K L q) :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain
       (FunctionField.ringOfIntegers K L) q.ne_bot
@@ -293,9 +293,9 @@ theorem finiteExtensionFinitePlace_auxiliaryFamily_caseIII_source_lower_bound_of
       finiteExtensionFinitePlaceLocalOrderTop (K := K) (L := L) q
         (indexedDedekindLocalWronskian D epsilon
           (auxiliaryFamily u v h k)).det := by
-  letI := finiteExtensionFinitePlaceLocalAlgebra (K := K) (L := L) q
-  letI := finiteExtensionFinitePlaceLocalIsFractionRing (K := K) (L := L) q
-  letI : IsDiscreteValuationRing
+  let := finiteExtensionFinitePlaceLocalAlgebra (K := K) (L := L) q
+  let := finiteExtensionFinitePlaceLocalIsFractionRing (K := K) (L := L) q
+  let : IsDiscreteValuationRing
       (FiniteExtensionFinitePlaceLocalRing K L q) :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain
       (FunctionField.ringOfIntegers K L) q.ne_bot
@@ -338,9 +338,9 @@ theorem finiteExtensionFinitePlace_auxiliaryFamily_caseIV_source_lower_bound_of_
       finiteExtensionFinitePlaceLocalOrderTop (K := K) (L := L) q
         (indexedDedekindLocalWronskian D epsilon
           (auxiliaryFamily u v h k)).det := by
-  letI := finiteExtensionFinitePlaceLocalAlgebra (K := K) (L := L) q
-  letI := finiteExtensionFinitePlaceLocalIsFractionRing (K := K) (L := L) q
-  letI : IsDiscreteValuationRing
+  let := finiteExtensionFinitePlaceLocalAlgebra (K := K) (L := L) q
+  let := finiteExtensionFinitePlaceLocalIsFractionRing (K := K) (L := L) q
+  let : IsDiscreteValuationRing
       (FiniteExtensionFinitePlaceLocalRing K L q) :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain
       (FunctionField.ringOfIntegers K L) q.ne_bot
@@ -570,15 +570,15 @@ theorem planeCurve_minpoly_reciprocal_local_normalization_at_finiteExtensionPlac
             ((planeCurveFunction f 1 -
               algebraMap (RatFunc K) (PlaneCurveFunctionField f) (ι c))⁻¹) =
           (unitNormalizedReciprocalTranslate G c u).map ι := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
-  letI : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
     separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
   exact fun q =>
     planeCurve_minpoly_reciprocal_local_normalization_of_degreeOf_second_lt_fintypeCard

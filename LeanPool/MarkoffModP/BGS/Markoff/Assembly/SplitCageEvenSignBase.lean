@@ -74,7 +74,7 @@ theorem half_card_sub_one_le_orderOf_neg_of_fullOrder
     (p - 1) / 2 ≤ orderOf (-u) := by
   have hnegOneOrder : orderOf (-1 : (ZMod p)ˣ) = 2 := by
     rw [← orderOf_units, Units.coe_neg_one, orderOf_neg_one,
-      ringChar.eq (ZMod p) p, if_neg hpTwo]
+      ringChar.eq (ZMod p) p, ite_eq_right hpTwo]
   have huEq : u = (-1 : (ZMod p)ˣ) * (-u) := by simp
   have hdvd :
       p - 1 ∣ 2 * orderOf (-u) := by

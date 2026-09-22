@@ -66,7 +66,7 @@ theorem firstCoordinateInSubfield_not_pow
     letI := planeCurveCoordinateRing_isDomain hf
     ¬ ∃ z : FirstCoordinateSubfield f,
       z ^ p = firstCoordinateInSubfield f := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let remaining := {i : Fin 2 // i ≠ 1}
   let i0 : remaining := ⟨0, by decide⟩
@@ -92,7 +92,7 @@ theorem secondCoordinateInSubfield_not_pow
     letI := planeCurveCoordinateRing_isDomain hf
     ¬ ∃ z : SecondCoordinateSubfield f,
       z ^ p = secondCoordinateInSubfield f := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let remaining := {i : Fin 2 // i ≠ 0}
   let i1 : remaining := ⟨1, by decide⟩
@@ -122,28 +122,28 @@ theorem firstCoordinate_not_mem_frobeniusSubfield
         (algebraMap K (PlaneCurveFunctionField f)).injective p
     planeCurveFunction f 0 ∉
       frobeniusSubfield (PlaneCurveFunctionField f) p := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let L := PlaneCurveFunctionField f
-  letI : CharP L p := charP_of_injective_algebraMap
+  let : CharP L p := charP_of_injective_algebraMap
     (algebraMap K L).injective p
   let F := FirstCoordinateSubfield f
   have hseparable :=
     (finiteSeparable_over_firstCoordinate_of_irreducible hf hpartialSecond).2
-  letI : Algebra.IsSeparable F L := hseparable
+  let : Algebra.IsSeparable F L := hseparable
   intro hx
   rcases hx with ⟨y, hy⟩
   have hypow : y ^ p = planeCurveFunction f 0 := by
     simpa [frobenius_def] using hy
   let E : IntermediateField F L := IntermediateField.adjoin F {y}
-  letI : IsPurelyInseparable F E :=
+  let : IsPurelyInseparable F E :=
     (IntermediateField.isPurelyInseparable_adjoin_simple_iff_pow_mem F L p).2 (by
       refine ⟨1, ?_⟩
       rw [pow_one]
       refine ⟨firstCoordinateInSubfield f, ?_⟩
       change planeCurveFunction f 0 = y ^ p
       exact hypow.symm)
-  letI : Algebra.IsSeparable F E :=
+  let : Algebra.IsSeparable F E :=
     (IntermediateField.isSeparable_adjoin_simple_iff_isSeparable F L).2
       (Algebra.IsSeparable.isSeparable F y)
   have hE : E = ⊥ :=
@@ -175,28 +175,28 @@ theorem secondCoordinate_not_mem_frobeniusSubfield
         (algebraMap K (PlaneCurveFunctionField f)).injective p
     planeCurveFunction f 1 ∉
       frobeniusSubfield (PlaneCurveFunctionField f) p := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let L := PlaneCurveFunctionField f
-  letI : CharP L p := charP_of_injective_algebraMap
+  let : CharP L p := charP_of_injective_algebraMap
     (algebraMap K L).injective p
   let F := SecondCoordinateSubfield f
   have hseparable :=
     (finiteSeparable_over_secondCoordinate_of_irreducible hf hpartialFirst).2
-  letI : Algebra.IsSeparable F L := hseparable
+  let : Algebra.IsSeparable F L := hseparable
   intro hx
   rcases hx with ⟨y, hy⟩
   have hypow : y ^ p = planeCurveFunction f 1 := by
     simpa [frobenius_def] using hy
   let E : IntermediateField F L := IntermediateField.adjoin F {y}
-  letI : IsPurelyInseparable F E :=
+  let : IsPurelyInseparable F E :=
     (IntermediateField.isPurelyInseparable_adjoin_simple_iff_pow_mem F L p).2 (by
       refine ⟨1, ?_⟩
       rw [pow_one]
       refine ⟨secondCoordinateInSubfield f, ?_⟩
       change planeCurveFunction f 1 = y ^ p
       exact hypow.symm)
-  letI : Algebra.IsSeparable F E :=
+  let : Algebra.IsSeparable F E :=
     (IntermediateField.isSeparable_adjoin_simple_iff_isSeparable F L).2
       (Algebra.IsSeparable.isSeparable F y)
   have hE : E = ⊥ :=

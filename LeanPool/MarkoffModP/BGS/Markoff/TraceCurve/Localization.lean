@@ -63,12 +63,12 @@ lemma splitTracePolynomialToKummerTop_relation :
     splitTracePolynomialToKummerTop sigma hsigma e d heOdd hdOdd hde
       (splitTraceCoverPolynomial 1 sigma d e) = 0 := by
   let hBaseIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
   let hEtaIrred := splitTraceEtaKummerPolynomial_irreducible' sigma hsigma e heOdd
-  letI : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
+  let : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
   let hXiIrred :=
     splitTraceXiKummerPolynomial_irreducible sigma hsigma e d heOdd hdOdd hde
-  letI : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
+  let : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
   have hCover := splitTraceKummerTower_roots_on_cover
     sigma hsigma e d heOdd hdOdd hde
   have hsigmaMap :
@@ -117,12 +117,12 @@ lemma splitTraceAffineToKummerTop_coordinate (i : Fin 2) :
         (Ideal.Quotient.mk _ (MvPolynomial.X i)) =
       ![splitTraceXiRoot sigma e d, splitTraceEtaRootInXiField sigma e d] i := by
   let hBaseIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
   let hEtaIrred := splitTraceEtaKummerPolynomial_irreducible' sigma hsigma e heOdd
-  letI : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
+  let : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
   let hXiIrred :=
     splitTraceXiKummerPolynomial_irreducible sigma hsigma e d heOdd hdOdd hde
-  letI : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
+  let : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
   change MvPolynomial.aeval
     ![splitTraceXiRoot sigma e d, splitTraceEtaRootInXiField sigma e d] (MvPolynomial.X i) = _
   simp
@@ -165,14 +165,14 @@ lemma splitTraceXiRoot_pow :
 
 lemma splitTraceBaseV_ne_zero (hsigma : sigma ≠ 0) : splitTraceBaseV sigma ≠ 0 := by
   let hBaseIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
   change AdjoinRoot.root (splitTraceBaseKummerPolynomial sigma) ≠ 0
   exact (root_X_pow_sub_C_ne_zero_iff hBaseIrred).mpr
     (splitTraceRadicand_ne_zero sigma hsigma)
 
 lemma splitTraceBaseU_ne_zero (hsigma : sigma ≠ 0) : splitTraceBaseU sigma ≠ 0 := by
   let hBaseIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
   exact (map_ne_zero_iff _
     (algebraMap (RatFunc K) (SplitTraceBaseFunctionField K sigma)).injective).mpr
       RatFunc.X_ne_zero
@@ -181,12 +181,12 @@ lemma splitTraceEtaRootInXiField_ne_zero
     (hsigma : sigma ≠ 0) (heOdd : Odd e) (hdOdd : Odd d) (hde : d.Coprime e) :
     splitTraceEtaRootInXiField sigma e d ≠ 0 := by
   let hBaseIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
   let hEtaIrred := splitTraceEtaKummerPolynomial_irreducible' sigma hsigma e heOdd
-  letI : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
+  let : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
   let hXiIrred :=
     splitTraceXiKummerPolynomial_irreducible sigma hsigma e d heOdd hdOdd hde
-  letI : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
+  let : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
   apply (map_ne_zero_iff _
     (algebraMap (SplitTraceEtaFunctionField K sigma e)
       (SplitTraceXiFunctionField K sigma e d)).injective).mpr
@@ -199,12 +199,12 @@ lemma splitTraceXiRoot_ne_zero
     (hsigma : sigma ≠ 0) (heOdd : Odd e) (hdOdd : Odd d) (hde : d.Coprime e) :
     splitTraceXiRoot sigma e d ≠ 0 := by
   let hBaseIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
   let hEtaIrred := splitTraceEtaKummerPolynomial_irreducible' sigma hsigma e heOdd
-  letI : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
+  let : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
   let hXiIrred :=
     splitTraceXiKummerPolynomial_irreducible sigma hsigma e d heOdd hdOdd hde
-  letI : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
+  let : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
   have hRadicand : splitTraceXiRadicand sigma e ≠ 0 := by
     apply (map_ne_zero_iff _
       (algebraMap (SplitTraceBaseFunctionField K sigma)
@@ -225,12 +225,12 @@ lemma splitTraceAffineCoordinateProduct_maps_to_nonzero :
     splitTraceAffineToKummerTop sigma hsigma e d heOdd hdOdd hde
       (splitTraceAffineCoordinateProduct sigma d e) ≠ 0 := by
   let hBaseIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
   let hEtaIrred := splitTraceEtaKummerPolynomial_irreducible' sigma hsigma e heOdd
-  letI : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
+  let : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
   let hXiIrred :=
     splitTraceXiKummerPolynomial_irreducible sigma hsigma e d heOdd hdOdd hde
-  letI : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
+  let : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
   change splitTraceAffineToKummerTop sigma hsigma e d heOdd hdOdd hde
       (Ideal.Quotient.mk _ (MvPolynomial.X 0 * MvPolynomial.X 1)) ≠ 0
   simp only [map_mul]
@@ -248,12 +248,12 @@ lemma splitTraceAffineCoordinateProduct_maps_to_isUnit :
     IsUnit (splitTraceAffineToKummerTop sigma hsigma e d heOdd hdOdd hde
       (splitTraceAffineCoordinateProduct sigma d e)) := by
   let hBaseIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
   let hEtaIrred := splitTraceEtaKummerPolynomial_irreducible' sigma hsigma e heOdd
-  letI : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
+  let : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
   let hXiIrred :=
     splitTraceXiKummerPolynomial_irreducible sigma hsigma e d heOdd hdOdd hde
-  letI : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
+  let : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
   have hBaseUUnit : IsUnit (splitTraceBaseU sigma) :=
     (isUnit_iff_ne_zero.mpr RatFunc.X_ne_zero).map
       (algebraMap (RatFunc K) (SplitTraceBaseFunctionField K sigma))
@@ -335,12 +335,12 @@ theorem splitTraceLaurentToKummerTop_algebraMap_apply
           (SplitTraceLaurentCoordinateRing K sigma d e) a) =
       splitTraceAffineToKummerTop sigma hsigma e d heOdd hdOdd hde a := by
   let hBaseIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
   let hEtaIrred := splitTraceEtaKummerPolynomial_irreducible' sigma hsigma e heOdd
-  letI : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
+  let : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
   let hXiIrred :=
     splitTraceXiKummerPolynomial_irreducible sigma hsigma e d heOdd hdOdd hde
-  letI : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
+  let : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
   simp only [splitTraceLaurentToKummerTop, IsLocalization.Away.liftAlgHom_apply]
   apply IsLocalization.Away.lift_eq
 
@@ -359,12 +359,12 @@ theorem splitTraceLaurentToKummerTop_injective_of_affine_injective
     Function.Injective
       (splitTraceLaurentToKummerTop sigma hsigma e d heOdd hdOdd hde) := by
   let hBaseIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
   let hEtaIrred := splitTraceEtaKummerPolynomial_irreducible' sigma hsigma e heOdd
-  letI : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
+  let : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
   let hXiIrred :=
     splitTraceXiKummerPolynomial_irreducible sigma hsigma e d heOdd hdOdd hde
-  letI : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
+  let : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
   apply (IsLocalization.injective_iff_map_algebraMap_eq
     (Submonoid.powers (splitTraceAffineCoordinateProduct sigma d e))
     (splitTraceLaurentToKummerTop sigma hsigma e d heOdd hdOdd hde).toRingHom).2

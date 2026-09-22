@@ -81,11 +81,11 @@ theorem exactConstantExtensionTower_leftScalarTower :
       exactConstantExtensionTowerAlgebra C M N S
     IsScalarTower S (ExactConstantExtension C M S)
       (ExactConstantExtension C N S) := by
-  letI : Algebra S (ExactConstantExtension C M S) :=
+  let : Algebra S (ExactConstantExtension C M S) :=
     Algebra.TensorProduct.leftAlgebra
-  letI : Algebra S (ExactConstantExtension C N S) :=
+  let : Algebra S (ExactConstantExtension C N S) :=
     Algebra.TensorProduct.leftAlgebra
-  letI : Algebra (ExactConstantExtension C M S)
+  let : Algebra (ExactConstantExtension C M S)
       (ExactConstantExtension C N S) :=
     exactConstantExtensionTowerAlgebra C M N S
   apply IsScalarTower.of_algebraMap_eq'
@@ -112,15 +112,15 @@ theorem exactConstantExtensionTower_rightScalarTower
     IsScalarTower M (ExactConstantExtension C M S)
       (ExactConstantExtension C N S) := by
   let hExactM := algebraicClosure_eq_bot_of_tower C M N hExactN
-  letI : Field (ExactConstantExtension C M S) :=
+  let : Field (ExactConstantExtension C M S) :=
     exactConstantExtensionField C M S hExactM
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExactN
-  letI : Algebra M (ExactConstantExtension C M S) :=
+  let : Algebra M (ExactConstantExtension C M S) :=
     exactConstantExtensionAlgebra C M S
-  letI : Algebra M (ExactConstantExtension C N S) :=
+  let : Algebra M (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseAlgebra C M N S
-  letI : Algebra (ExactConstantExtension C M S)
+  let : Algebra (ExactConstantExtension C M S)
       (ExactConstantExtension C N S) :=
     exactConstantExtensionTowerAlgebra C M N S
   apply IsScalarTower.of_algebraMap_eq'
@@ -152,30 +152,30 @@ theorem exactConstantExtensionTower_finiteDimensional
     FiniteDimensional (ExactConstantExtension C M S)
       (ExactConstantExtension C N S) := by
   let hExactM := algebraicClosure_eq_bot_of_tower C M N hExactN
-  letI : Field (ExactConstantExtension C M S) :=
+  let : Field (ExactConstantExtension C M S) :=
     exactConstantExtensionField C M S hExactM
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExactN
-  letI : Algebra M (ExactConstantExtension C M S) :=
+  let : Algebra M (ExactConstantExtension C M S) :=
     exactConstantExtensionAlgebra C M S
-  letI : Algebra M (ExactConstantExtension C N S) :=
+  let : Algebra M (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseAlgebra C M N S
-  letI : Algebra (ExactConstantExtension C M S)
+  let : Algebra (ExactConstantExtension C M S)
       (ExactConstantExtension C N S) :=
     exactConstantExtensionTowerAlgebra C M N S
-  letI : IsScalarTower M (ExactConstantExtension C M S)
+  let : IsScalarTower M (ExactConstantExtension C M S)
       (ExactConstantExtension C N S) :=
     exactConstantExtensionTower_rightScalarTower C M N S hExactN
-  letI : Algebra N (ExactConstantExtension C N S) :=
+  let : Algebra N (ExactConstantExtension C N S) :=
     exactConstantExtensionAlgebra C N S
-  letI : IsScalarTower M N (ExactConstantExtension C N S) :=
+  let : IsScalarTower M N (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseTower C M N S
   let e := exactConstantExtensionLinearEquiv C N S
-  letI : Module.Finite N (N ⊗[C] S) :=
+  let : Module.Finite N (N ⊗[C] S) :=
     Module.Finite.base_change C N S
-  letI : Module.Finite N (ExactConstantExtension C N S) :=
+  let : Module.Finite N (ExactConstantExtension C N S) :=
     Module.Finite.equiv e
-  letI : Module.Finite M (ExactConstantExtension C N S) :=
+  let : Module.Finite M (ExactConstantExtension C N S) :=
     Module.Finite.trans N (ExactConstantExtension C N S)
   exact Module.Finite.of_restrictScalars_finite M
     (ExactConstantExtension C M S) (ExactConstantExtension C N S)
@@ -198,21 +198,21 @@ theorem exactConstantExtensionTower_isGalois
     IsGalois (ExactConstantExtension C M S)
       (ExactConstantExtension C N S) := by
   let hExactM := algebraicClosure_eq_bot_of_tower C M N hExactN
-  letI : Field (ExactConstantExtension C M S) :=
+  let : Field (ExactConstantExtension C M S) :=
     exactConstantExtensionField C M S hExactM
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExactN
-  letI : Algebra M (ExactConstantExtension C M S) :=
+  let : Algebra M (ExactConstantExtension C M S) :=
     exactConstantExtensionAlgebra C M S
-  letI : Algebra M (ExactConstantExtension C N S) :=
+  let : Algebra M (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseAlgebra C M N S
-  letI : Algebra (ExactConstantExtension C M S)
+  let : Algebra (ExactConstantExtension C M S)
       (ExactConstantExtension C N S) :=
     exactConstantExtensionTowerAlgebra C M N S
-  letI : IsScalarTower M (ExactConstantExtension C M S)
+  let : IsScalarTower M (ExactConstantExtension C M S)
       (ExactConstantExtension C N S) :=
     exactConstantExtensionTower_rightScalarTower C M N S hExactN
-  letI : IsGalois M (ExactConstantExtension C N S) :=
+  let : IsGalois M (ExactConstantExtension C N S) :=
     exactConstantExtension_isGalois C M N S hExactN
   exact IsGalois.tower_top_of_isGalois M
     (ExactConstantExtension C M S) (ExactConstantExtension C N S)
@@ -238,21 +238,21 @@ theorem exactConstantExtensionTower_finrank
     Module.finrank (ExactConstantExtension C M S)
         (ExactConstantExtension C N S) = Module.finrank M N := by
   let hExactM := algebraicClosure_eq_bot_of_tower C M N hExactN
-  letI : Field (ExactConstantExtension C M S) :=
+  let : Field (ExactConstantExtension C M S) :=
     exactConstantExtensionField C M S hExactM
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExactN
-  letI : Algebra M (ExactConstantExtension C M S) :=
+  let : Algebra M (ExactConstantExtension C M S) :=
     exactConstantExtensionAlgebra C M S
-  letI : Algebra M (ExactConstantExtension C N S) :=
+  let : Algebra M (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseAlgebra C M N S
-  letI : Algebra (ExactConstantExtension C M S)
+  let : Algebra (ExactConstantExtension C M S)
       (ExactConstantExtension C N S) :=
     exactConstantExtensionTowerAlgebra C M N S
-  letI : IsScalarTower M (ExactConstantExtension C M S)
+  let : IsScalarTower M (ExactConstantExtension C M S)
       (ExactConstantExtension C N S) :=
     exactConstantExtensionTower_rightScalarTower C M N S hExactN
-  letI : FiniteDimensional (ExactConstantExtension C M S)
+  let : FiniteDimensional (ExactConstantExtension C M S)
       (ExactConstantExtension C N S) :=
     exactConstantExtensionTower_finiteDimensional C M N S hExactN
   apply Nat.eq_of_mul_eq_mul_left (Module.finrank_pos (R := C) (M := S))
@@ -296,21 +296,21 @@ theorem exactConstantExtensionTower_card_aut_eq
         ExactConstantExtension C M S] ExactConstantExtension C N S) =
       Nat.card (N ≃ₐ[M] N) := by
   let hExactM := algebraicClosure_eq_bot_of_tower C M N hExactN
-  letI : Field (ExactConstantExtension C M S) :=
+  let : Field (ExactConstantExtension C M S) :=
     exactConstantExtensionField C M S hExactM
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExactN
-  letI : Algebra M (ExactConstantExtension C M S) :=
+  let : Algebra M (ExactConstantExtension C M S) :=
     exactConstantExtensionAlgebra C M S
-  letI : Algebra M (ExactConstantExtension C N S) :=
+  let : Algebra M (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseAlgebra C M N S
-  letI : Algebra (ExactConstantExtension C M S)
+  let : Algebra (ExactConstantExtension C M S)
       (ExactConstantExtension C N S) :=
     exactConstantExtensionTowerAlgebra C M N S
-  letI : FiniteDimensional (ExactConstantExtension C M S)
+  let : FiniteDimensional (ExactConstantExtension C M S)
       (ExactConstantExtension C N S) :=
     exactConstantExtensionTower_finiteDimensional C M N S hExactN
-  letI : IsGalois (ExactConstantExtension C M S)
+  let : IsGalois (ExactConstantExtension C M S)
       (ExactConstantExtension C N S) :=
     exactConstantExtensionTower_isGalois C M N S hExactN
   rw [IsGalois.card_aut_eq_finrank, IsGalois.card_aut_eq_finrank,
@@ -348,9 +348,9 @@ theorem exactConstantExtensionTowerCanonicalConstantScalarTower :
     letI : Algebra C N :=
       exactConstantExtensionTowerCanonicalConstantAlgebra C N
     IsScalarTower C M N := by
-  letI : Algebra C M :=
+  let : Algebra C M :=
     exactConstantExtensionTowerCanonicalConstantAlgebra C M
-  letI : Algebra C N :=
+  let : Algebra C N :=
     exactConstantExtensionTowerCanonicalConstantAlgebra C N
   apply IsScalarTower.of_algebraMap_eq'
   ext c
@@ -508,24 +508,24 @@ theorem exactConstantExtensionTower_ratFuncScalarTower
     letI : Algebra E_M E_N :=
       exactConstantExtensionTowerRatFuncAlgebra C M N S
     IsScalarTower (RatFunc S) E_M E_N := by
-  letI : Algebra C M :=
+  let : Algebra C M :=
     exactConstantExtensionTowerCanonicalConstantAlgebra C M
-  letI : Algebra C N :=
+  let : Algebra C N :=
     exactConstantExtensionTowerCanonicalConstantAlgebra C N
-  letI : IsScalarTower C M N := IsScalarTower.of_algebraMap_eq' (by
+  let : IsScalarTower C M N := IsScalarTower.of_algebraMap_eq' (by
     ext c
     exact IsScalarTower.algebraMap_apply (RatFunc C) M N
       (algebraMap C (RatFunc C) c))
   let hExactM := algebraicClosure_eq_bot_of_tower C M N hExactN
   let E_M := ExactConstantExtension C M S
   let E_N := ExactConstantExtension C N S
-  letI : Field E_M := exactConstantExtensionField C M S hExactM
-  letI : Field E_N := exactConstantExtensionField C N S hExactN
-  letI : Algebra (RatFunc S) E_M :=
+  let : Field E_M := exactConstantExtensionField C M S hExactM
+  let : Field E_N := exactConstantExtensionField C N S hExactN
+  let : Algebra (RatFunc S) E_M :=
     ratFuncExactConstantExtensionAlgebra C S M hExactM
-  letI : Algebra (RatFunc S) E_N :=
+  let : Algebra (RatFunc S) E_N :=
     ratFuncExactConstantExtensionAlgebra C S N hExactN
-  letI : Algebra E_M E_N :=
+  let : Algebra E_M E_N :=
     exactConstantExtensionTowerRatFuncAlgebra C M N S
   apply IsScalarTower.of_algebraMap_eq'
   ext r

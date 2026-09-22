@@ -47,8 +47,8 @@ theorem exactConstantExtensionConstantQuotient_combined
     letI := exactConstantExtensionBaseAlgebra C L N S
     exactConstantExtensionConstantQuotient C L N S hExact
         (exactConstantExtensionCombinedAutHom C L N S (σ, g)) = σ := by
-  letI := exactConstantExtensionField C N S hExact
-  letI := exactConstantExtensionBaseAlgebra C L N S
+  let := exactConstantExtensionField C N S hExact
+  let := exactConstantExtensionBaseAlgebra C L N S
   let e := exactConstantExtensionAutMulEquiv C L N S hExact
   change (e.symm (e (σ, g))).1 = σ
   rw [e.symm_apply_apply]
@@ -68,8 +68,8 @@ theorem exactConstantExtensionConstantQuotient_action_on_constants
       Algebra.TensorProduct.includeLeft
         (R := C) (S := C) (A := S) (B := N)
         (exactConstantExtensionConstantQuotient C L N S hExact g s) := by
-  letI := exactConstantExtensionField C N S hExact
-  letI := exactConstantExtensionBaseAlgebra C L N S
+  let := exactConstantExtensionField C N S hExact
+  let := exactConstantExtensionBaseAlgebra C L N S
   let e := exactConstantExtensionAutMulEquiv C L N S hExact
   let p := e.symm g
   have hgp : e p = g := e.apply_symm_apply g
@@ -98,8 +98,8 @@ theorem exactConstantExtensionConstantQuotient_surjective
     letI := exactConstantExtensionBaseAlgebra C L N S
     Function.Surjective
       (exactConstantExtensionConstantQuotient C L N S hExact) := by
-  letI := exactConstantExtensionField C N S hExact
-  letI := exactConstantExtensionBaseAlgebra C L N S
+  let := exactConstantExtensionField C N S hExact
+  let := exactConstantExtensionBaseAlgebra C L N S
   intro σ
   refine ⟨exactConstantExtensionCombinedAutHom C L N S
     (σ, (1 : N ≃ₐ[L] N)), ?_⟩
@@ -115,8 +115,8 @@ theorem exactConstantExtensionConstantQuotient_ker :
     (exactConstantExtensionConstantQuotient C L N S hExact).ker =
       (exactConstantExtensionFunctionAutHom C L N S).range := by
   intro hExact
-  letI := exactConstantExtensionField C N S hExact
-  letI := exactConstantExtensionBaseAlgebra C L N S
+  let := exactConstantExtensionField C N S hExact
+  let := exactConstantExtensionBaseAlgebra C L N S
   ext x
   constructor
   · intro hx
@@ -151,7 +151,7 @@ omit [FiniteDimensional C S] [IsGalois C S]
 theorem exactConstantExtensionConstantAutHom_injective :
     letI := exactConstantExtensionBaseAlgebra C L N S
     Function.Injective (exactConstantExtensionConstantAutHom C L N S) := by
-  letI := exactConstantExtensionBaseAlgebra C L N S
+  let := exactConstantExtensionBaseAlgebra C L N S
   intro σ τ h
   have hpair := exactConstantExtensionCombinedAutHom_injective C L N S
     (show exactConstantExtensionCombinedAutHom C L N S
@@ -179,7 +179,7 @@ theorem orderOf_exactConstantExtensionFrobenius :
     letI := exactConstantExtensionBaseAlgebra C L N S
     orderOf (exactConstantExtensionFrobenius C L N S) =
       Module.finrank C S := by
-  letI := exactConstantExtensionBaseAlgebra C L N S
+  let := exactConstantExtensionBaseAlgebra C L N S
   change orderOf ((exactConstantExtensionConstantAutHom C L N S)
     (FiniteField.frobeniusAlgEquivOfAlgebraic C S)) = _
   rw [orderOf_injective (exactConstantExtensionConstantAutHom C L N S)
@@ -196,8 +196,8 @@ theorem exactConstantExtensionConstantQuotient_frobenius
     exactConstantExtensionConstantQuotient C L N S hExact
         (exactConstantExtensionFrobenius C L N S) =
       FiniteField.frobeniusAlgEquivOfAlgebraic C S := by
-  letI := exactConstantExtensionField C N S hExact
-  letI := exactConstantExtensionBaseAlgebra C L N S
+  let := exactConstantExtensionField C N S hExact
+  let := exactConstantExtensionBaseAlgebra C L N S
   have h := exactConstantExtensionConstantQuotient_combined
     C L N S hExact (FiniteField.frobeniusAlgEquivOfAlgebraic C S)
       (1 : N ≃ₐ[L] N)
@@ -247,8 +247,8 @@ theorem natCard_exactConstantExtensionFrobeniusFiber
           ({FiniteField.frobeniusAlgEquivOfAlgebraic C S} :
             Set (S ≃ₐ[C] S))) =
       Nat.card (N ≃ₐ[L] N) := by
-  letI := exactConstantExtensionField C N S hExact
-  letI := exactConstantExtensionBaseAlgebra C L N S
+  let := exactConstantExtensionField C N S hExact
+  let := exactConstantExtensionBaseAlgebra C L N S
   exact Nat.card_congr
     (exactConstantExtensionFrobeniusFiberEquiv C L N S hExact).symm
 

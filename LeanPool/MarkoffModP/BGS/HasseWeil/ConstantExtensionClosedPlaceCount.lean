@@ -98,7 +98,7 @@ theorem sum_degree_eq_sum_degree_of_div_gcd_and_fiber_card
       Nat.gcd extensionDegree (baseDegree P)) :
     (∑ Q, upDegree Q) = ∑ P, baseDegree P := by
   classical
-  letI : DecidableEq Base := Classical.decEq Base
+  let : DecidableEq Base := Classical.decEq Base
   calc
     (∑ Q, upDegree Q) =
         ∑ z : Σ P, {Q : Up // down Q = P}, upDegree z.2.1 := by
@@ -306,9 +306,9 @@ theorem exactConstantExtensionPresentedPlace_degree_eq_div_gcd
           (finiteExtensionPlaceDegree C N
             (exactConstantExtensionPresentedDownstairsPlace
               C S N hExact q)) := by
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
     ratFuncExactConstantExtensionAlgebra C S N hExact
   cases q with
   | inl q =>
@@ -331,9 +331,9 @@ theorem exactConstantExtensionPresentedPlace_degree_eq_one_iff_dvd
       finiteExtensionPlaceDegree C N
           (exactConstantExtensionPresentedDownstairsPlace C S N hExact q) ∣
         Module.finrank C S := by
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
     ratFuncExactConstantExtensionAlgebra C S N hExact
   rw [exactConstantExtensionPresentedPlace_degree_eq_div_gcd]
   exact div_gcd_eq_one_iff_dvd
@@ -384,9 +384,9 @@ theorem exactConstantExtensionPresentedPlace_closedContribution_eq
       then finiteExtensionPlaceDegree C N
         (exactConstantExtensionPresentedDownstairsPlace C S N hExact q)
       else 0) := by
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
     ratFuncExactConstantExtensionAlgebra C S N hExact
   by_cases hrat : finiteExtensionPlaceDegree S
       (ExactConstantExtension C N S)

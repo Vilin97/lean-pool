@@ -61,7 +61,7 @@ theorem exists_finiteExtensionClosedPlaceZeta_indexed_rational_of_constants
           (formalPointCountZeta
             (finiteExtensionClosedPlaceExtensionCount K L))
           (Nat.card K) (finiteExtensionDivisorDegreeIndex K L) P := by
-  letI : FunctionField.IsFullConstantField K L :=
+  let : FunctionField.IsFullConstantField K L :=
     (FunctionField.isFullConstantField_iff_algebraicClosure_eq_bot K L).2
       hconstants
   exact exists_finiteExtensionClosedPlaceZeta_indexed_rational

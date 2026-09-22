@@ -164,10 +164,10 @@ theorem localPoleCumulativeQuotient_finrank
             (localPoleSpace (K := K) (L := L) π 0)) =
       n * Module.finrank K (IsLocalRing.ResidueField R) := by
   let I := IsLocalRing.maximalIdeal R ^ n
-  letI : Finite (R ⧸ I) :=
+  let : Finite (R ⧸ I) :=
     IsLocalRing.finite_quotient_iff.mpr ⟨n, le_rfl⟩
-  letI : Module.Finite K (R ⧸ I) := Module.Finite.of_finite
-  letI : Module.Finite K (IsLocalRing.ResidueField R) :=
+  let : Module.Finite K (R ⧸ I) := Module.Finite.of_finite
+  let : Module.Finite K (IsLocalRing.ResidueField R) :=
     Module.Finite.of_finite
   have hlocalLength : Module.length R (R ⧸ I) = n := by
     exact IsDiscreteValuationRing.length_quotient_pow_maximalIdeal R n

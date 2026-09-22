@@ -44,7 +44,7 @@ theorem splitTraceRadicand_not_constant (sigma : K) (hsigma : sigma ≠ 0) :
 theorem splitTraceBaseV_transcendental (sigma : K) (hsigma : sigma ≠ 0) :
     Transcendental K (splitTraceBaseV sigma) := by
   let hBaseIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
   have hradicand : Transcendental K (splitTraceRadicand sigma) :=
     RatFunc.transcendental_of_ne_C _
       (splitTraceRadicand_not_constant sigma hsigma)
@@ -66,12 +66,12 @@ theorem splitTraceEtaRootInXiField_transcendental
     (heOdd : Odd e) (hdOdd : Odd d) (hde : d.Coprime e) :
     Transcendental K (splitTraceEtaRootInXiField sigma e d) := by
   let hBaseIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
   let hEtaIrred := splitTraceEtaKummerPolynomial_irreducible' sigma hsigma e heOdd
-  letI : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
+  let : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
   let hXiIrred :=
     splitTraceXiKummerPolynomial_irreducible sigma hsigma e d heOdd hdOdd hde
-  letI : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
+  let : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
   have hBaseV : Transcendental K (splitTraceBaseV sigma) :=
     splitTraceBaseV_transcendental sigma hsigma
   have hBaseVTop : Transcendental K
@@ -194,12 +194,12 @@ private theorem splitTraceEtaRatFuncEvaluation_algebraMap
         (algebraMap K[X] (RatFunc K) q) =
       splitTraceEtaPolynomialEvaluation sigma e d q := by
   let hBaseIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
   let hEtaIrred := splitTraceEtaKummerPolynomial_irreducible' sigma hsigma e heOdd
-  letI : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
+  let : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
   let hXiIrred :=
     splitTraceXiKummerPolynomial_irreducible sigma hsigma e d heOdd hdOdd hde
-  letI : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
+  let : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
   exact RatFunc.liftRingHom_algebraMap _ _ q
 
 /-- Mapping an iterated polynomial to `K(y)[x]` and then specializing the transcendental
@@ -216,12 +216,12 @@ theorem splitTraceIteratedFractionEvaluation
       MvPolynomial.aeval
         ![splitTraceXiRoot sigma e d, splitTraceEtaRootInXiField sigma e d] p := by
   let hBaseIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
   let hEtaIrred := splitTraceEtaKummerPolynomial_irreducible' sigma hsigma e heOdd
-  letI : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
+  let : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
   let hXiIrred :=
     splitTraceXiKummerPolynomial_irreducible sigma hsigma e d heOdd hdOdd hde
-  letI : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
+  let : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
   rw [Polynomial.eval₂_map]
   have hcomp :
       (splitTraceEtaRatFuncEvaluation sigma hsigma e d heOdd hdOdd hde).toRingHom.comp
@@ -248,13 +248,13 @@ theorem splitTracePolynomial_mem_span_of_cover_irreducible_and_maps_to_zero
       sigma hsigma e d heOdd hdOdd hde p = 0) :
     p ∈ Ideal.span {splitTraceCoverPolynomial (1 : K) sigma d e} := by
   let hBaseIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
   let hEtaIrred := splitTraceEtaKummerPolynomial_irreducible' sigma hsigma e heOdd
-  letI : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
+  let : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
   let hXiIrred :=
     splitTraceXiKummerPolynomial_irreducible sigma hsigma e d heOdd hdOdd hde
-  letI : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
-  letI : IsDomain (SplitTraceXiFunctionField K sigma e d) :=
+  let : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
+  let : IsDomain (SplitTraceXiFunctionField K sigma e d) :=
     AdjoinRoot.isDomain_of_prime hXiIrred.prime
   have hd : d ≠ 0 := by
     rintro rfl
@@ -281,7 +281,7 @@ theorem splitTracePolynomial_mem_span_of_cover_irreducible_and_maps_to_zero
     simpa [splitTracePolynomialToKummerTop, MvPolynomial.aeval_def] using hp
   let phi : RatFunc K →ₐ[K] SplitTraceXiFunctionField K sigma e d :=
     splitTraceEtaRatFuncEvaluation sigma hsigma e d heOdd hdOdd hde
-  letI : Algebra (RatFunc K) (SplitTraceXiFunctionField K sigma e d) :=
+  let : Algebra (RatFunc K) (SplitTraceXiFunctionField K sigma e d) :=
     phi.toRingHom.toAlgebra
   have hqRoot : Polynomial.aeval (splitTraceXiRoot sigma e d)
       (q.map (algebraMap K[X] (RatFunc K))) = 0 := by

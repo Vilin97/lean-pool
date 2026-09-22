@@ -85,9 +85,9 @@ extension of the reciprocal coordinate on `N`. -/
 theorem ratFuncToExactConstantExtension_reciprocal_X :
     ratFuncToExactConstantExtension C S N hExact (1 / RatFunc.X) =
       polynomialTensorCancelEvaluationPoint C S N := by
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
     ratFuncExactConstantExtensionAlgebra C S N hExact
   rw [one_div]
   have hrecip : polynomialTensorCancelEvaluationPoint C S N =
@@ -117,9 +117,9 @@ theorem exactConstantExtensionReciprocalPolynomialAlgebra_eq :
     polynomialTensorCancelTargetPolynomialExtensionAlgebra C S N =
       ratFuncExtensionReciprocalPolynomialAlgebra S
         (ExactConstantExtension C N S) := by
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
     ratFuncExactConstantExtensionAlgebra C S N hExact
   apply Algebra.algebra_ext
   intro p
@@ -226,15 +226,15 @@ theorem exactConstantExtensionInfinityAffineNormalization_map_primeCompl :
       Algebra.algebraMapSubmonoid
         (integralClosure S[X] (ExactConstantExtension C N S))
         (Ideal.span ({Polynomial.X} : Set S[X])).primeCompl := by
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
     ratFuncExactConstantExtensionAlgebra C S N hExact
-  letI : Algebra S[X]
+  let : Algebra S[X]
       (S ⊗[C] integralClosure C[X] N) :=
     polynomialTensorCancelTargetPolynomialExtensionAlgebra C S
       (integralClosure C[X] N)
-  letI : Algebra S[X] (ExactConstantExtension C N S) :=
+  let : Algebra S[X] (ExactConstantExtension C N S) :=
     ratFuncExtensionReciprocalPolynomialAlgebra S
       (ExactConstantExtension C N S)
   let e := exactConstantExtensionInfinityAffineNormalizationAlgEquiv

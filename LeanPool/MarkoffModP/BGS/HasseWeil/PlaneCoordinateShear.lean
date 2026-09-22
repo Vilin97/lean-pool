@@ -398,7 +398,7 @@ theorem pderiv_zero_ne_zero_or_pderiv_one_ne_zero_of_absolutelyIrreducible
       (map (algebraMap K (AlgebraicClosure K)) f)) :
     pderiv 0 f ≠ 0 ∨ pderiv 1 f ≠ 0 := by
   let p := ringChar K
-  letI : Fact p.Prime := ⟨CharP.char_is_prime K p⟩
+  let : Fact p.Prime := ⟨CharP.char_is_prime K p⟩
   by_contra h
   rw [not_or] at h
   have hzero : pderiv 0 f = 0 := not_ne_iff.mp h.1

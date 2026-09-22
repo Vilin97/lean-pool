@@ -211,7 +211,7 @@ theorem exists_naivePunctured_not_primewisePunctured {ι : Type*} [Fintype ι]
     ∃ x : PuncturedMarkoffSurface (ZMod (∏ k, a k)),
       ¬ IsPrimewisePunctured a coprime x.1 := by
   classical
-  haveI : Nontrivial (ZMod (a j)) := ZMod.nontrivial_iff.mpr hj
+  have : Nontrivial (ZMod (a j)) := ZMod.nontrivial_iff.mpr hj
   let localPoints : ∀ k, MarkoffSurface (ZMod (a k)) :=
     fun k => if k = i then surfaceOrigin (ZMod (a k)) else unitMarkoffPoint (ZMod (a k))
   let globalPoint := (markoffSurfaceCRTEquiv a coprime).symm localPoints
@@ -220,7 +220,7 @@ theorem exists_naivePunctured_not_primewisePunctured {ι : Type*} [Fintype ι]
     refine ⟨j, ?_⟩
     rw [show markoffSurfaceCRTEquiv a coprime globalPoint j = localPoints j by
       exact congrFun ((markoffSurfaceCRTEquiv a coprime).apply_symm_apply localPoints) j]
-    simp only [localPoints, if_neg hij.symm]
+    simp only [localPoints, ite_eq_right hij.symm]
     exact unitMarkoffPoint_ne_surfaceOrigin
   refine ⟨⟨globalPoint, hglobal⟩, ?_⟩
   intro hprimewise

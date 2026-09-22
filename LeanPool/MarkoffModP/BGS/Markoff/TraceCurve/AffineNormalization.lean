@@ -85,7 +85,7 @@ instance weightedSplitTraceAffineNormalization_isIntegral
     (alpha beta : K) (d e : ℕ)
     (h : Irreducible (splitTraceCoverPolynomial alpha beta d e)) :
     IsIntegral (weightedSplitTraceAffineNormalization alpha beta d e h) := by
-  letI : IsDomain (WeightedSplitTraceAffineCoordinateRing alpha beta d e) :=
+  let : IsDomain (WeightedSplitTraceAffineCoordinateRing alpha beta d e) :=
     weightedSplitTraceAffineCoordinateRing_isDomain alpha beta d e h
   dsimp [weightedSplitTraceAffineNormalization]
   infer_instance
@@ -94,7 +94,7 @@ instance weightedSplitTraceAffineNormalization_isReduced
     (alpha beta : K) (d e : ℕ)
     (h : Irreducible (splitTraceCoverPolynomial alpha beta d e)) :
     IsReduced (weightedSplitTraceAffineNormalization alpha beta d e h) := by
-  letI : IsDomain (WeightedSplitTraceAffineCoordinateRing alpha beta d e) :=
+  let : IsDomain (WeightedSplitTraceAffineCoordinateRing alpha beta d e) :=
     weightedSplitTraceAffineCoordinateRing_isDomain alpha beta d e h
   dsimp [weightedSplitTraceAffineNormalization]
   infer_instance

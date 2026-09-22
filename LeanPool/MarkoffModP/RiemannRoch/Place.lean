@@ -120,7 +120,7 @@ theorem exists_sub_C_intDegree_neg (z : k⟮X⟯) (hzdeg : z.intDegree ≤ 0) :
     dsimp only [c]
     field_simp
   have hpdeg : p.degree < z.num.degree := by
-    simpa only [p] using Polynomial.degree_sub_lt hdegree hnum0 hlc
+    simpa only [p] using Polynomial.degree_sub_lt_left hdegree hnum0 hlc
   have hpnat : p.natDegree < z.denom.natDegree := by
     rw [Polynomial.natDegree_lt_iff_degree_lt hp]
     rw [← hnumdeg]
@@ -425,7 +425,7 @@ namespace ringOfIntegers
 
 instance isTorsionFreeOverPolynomial :
     Module.IsTorsionFree k[X] (ringOfIntegers k K) := by
-  letI : FaithfulSMul k[X] K :=
+  let : FaithfulSMul k[X] K :=
     (faithfulSMul_iff_algebraMap_injective k[X] K).2
       (FunctionField.algebraMap_injective k K)
   exact IsIntegralClosure.isTorsionFree k[X] K
@@ -464,7 +464,7 @@ field. -/
 instance finiteDimensionalResidueFieldFinite
     (v : IsDedekindDomain.HeightOneSpectrum (ringOfIntegers k K)) :
     FiniteDimensional k (ringOfIntegers k K ⧸ v.asIdeal) := by
-  letI : Field (ringOfIntegers k K ⧸ v.asIdeal) := Ideal.Quotient.field v.asIdeal
+  let : Field (ringOfIntegers k K ⧸ v.asIdeal) := Ideal.Quotient.field v.asIdeal
   exact finite_of_finite_type_of_isJacobsonRing k _
 
 /-- The residue field at an infinite coordinate place is finite-dimensional over the constant
@@ -475,19 +475,19 @@ instance finiteDimensionalResidueFieldInfinite
   let A := inftyValuationSubring k
   let S := infiniteIntegers k K
   let p : Ideal A := v.asIdeal.under A
-  letI : v.asIdeal.IsMaximal := v.isPrime.isMaximal v.ne_bot
-  letI : p.IsMaximal := Ideal.IsMaximal.under A v.asIdeal
-  letI : v.asIdeal.LiesOver p := ⟨rfl⟩
-  letI : Field (A ⧸ p) := Ideal.Quotient.field p
-  letI : Field (S ⧸ v.asIdeal) := Ideal.Quotient.field v.asIdeal
-  letI : Algebra (A ⧸ p) (S ⧸ v.asIdeal) :=
+  let : v.asIdeal.IsMaximal := v.isPrime.isMaximal v.ne_bot
+  let : p.IsMaximal := Ideal.IsMaximal.under A v.asIdeal
+  let : v.asIdeal.LiesOver p := ⟨rfl⟩
+  let : Field (A ⧸ p) := Ideal.Quotient.field p
+  let : Field (S ⧸ v.asIdeal) := Ideal.Quotient.field v.asIdeal
+  let : Algebra (A ⧸ p) (S ⧸ v.asIdeal) :=
     Ideal.Quotient.algebraQuotientOfLEComap (Ideal.over_def v.asIdeal p).ge
   have hp : p = IsLocalRing.maximalIdeal A := IsLocalRing.eq_maximalIdeal inferInstance
-  letI : FiniteDimensional k (A ⧸ p) := by
+  let : FiniteDimensional k (A ⧸ p) := by
     rw [hp]
     exact inftyValuationSubring.finiteDimensionalResidueField k
-  letI : FiniteDimensional (A ⧸ p) (S ⧸ v.asIdeal) := inferInstance
-  letI : IsScalarTower k (A ⧸ p) (S ⧸ v.asIdeal) :=
+  let : FiniteDimensional (A ⧸ p) (S ⧸ v.asIdeal) := inferInstance
+  let : IsScalarTower k (A ⧸ p) (S ⧸ v.asIdeal) :=
     IsScalarTower.of_algebraMap_eq fun _ => rfl
   exact FiniteDimensional.trans k (A ⧸ p) (S ⧸ v.asIdeal)
 
@@ -518,7 +518,7 @@ theorem principalDivisorA_apply_finite (x : Additive Kˣ)
       (FractionalIdeal.principalDivisor (R := infiniteIntegers k K) (K := K) x)
         (Sum.inl v) = _
   rw [Finsupp.mapDomain_apply_of_injective Sum.inl_injective]
-  rw [Finsupp.mapDomain_notin_range]
+  rw [Finsupp.mapDomain_of_notMem_range]
   · simp
   · rintro ⟨w, h⟩
     cases h
@@ -536,7 +536,7 @@ theorem principalDivisorA_apply_infinite (x : Additive Kˣ)
       (FractionalIdeal.principalDivisor (R := infiniteIntegers k K) (K := K) x)
         (Sum.inr v) = _
   rw [Finsupp.mapDomain_apply_of_injective Sum.inr_injective]
-  rw [Finsupp.mapDomain_notin_range]
+  rw [Finsupp.mapDomain_of_notMem_range]
   · simp
   · rintro ⟨w, h⟩
     cases h
@@ -580,10 +580,10 @@ instance infiniteIntegers.isScalarTowerConstantsFractions :
 theorem placeValuation_algebraMap_le_one (v : PlaceA k K) (c : k) :
     placeValuation k K v (algebraMap k K c) ≤ 1 := by
   obtain w | w := v
-  · show w.valuation K (algebraMap k K c) ≤ 1
+  · change w.valuation K (algebraMap k K c) ≤ 1
     rw [IsScalarTower.algebraMap_apply k (ringOfIntegers k K) K]
     exact w.valuation_le_one _
-  · show w.valuation K (algebraMap k K c) ≤ 1
+  · change w.valuation K (algebraMap k K c) ≤ 1
     rw [IsScalarTower.algebraMap_apply k (infiniteIntegers k K) K]
     exact w.valuation_le_one _
 

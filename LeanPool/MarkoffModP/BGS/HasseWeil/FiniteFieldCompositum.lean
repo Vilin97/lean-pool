@@ -41,10 +41,10 @@ theorem finiteField_finrank_eq_lcm_of_tensorLift_surjective
     (hsurj : Function.Surjective (Algebra.TensorProduct.lift f g hfg)) :
     Module.finrank C T =
       Nat.lcm (Module.finrank C S) (Module.finrank C K) := by
-  letI : Fintype C := Fintype.ofFinite C
-  letI : Fintype S := Fintype.ofFinite S
-  letI : Fintype K := Fintype.ofFinite K
-  letI : Fintype T := Fintype.ofFinite T
+  let : Fintype C := Fintype.ofFinite C
+  let : Fintype S := Fintype.ofFinite S
+  let : Fintype K := Fintype.ofFinite K
+  let : Fintype T := Fintype.ofFinite T
   let m := Module.finrank C S
   let n := Module.finrank C K
   let l := Nat.lcm m n

@@ -94,7 +94,7 @@ theorem weightedSplitTraceAffineNormalizationRingSquare
           alpha beta d e hd he hbeta h).comp
         ((weightedSplitTraceLaurentNormalizationRingHom alpha beta d e).comp
           (weightedSplitTraceAffineLaurentRingHom alpha beta d e)) := by
-  letI : IsDomain (WeightedSplitTraceAffineCoordinateRing alpha beta d e) :=
+  let : IsDomain (WeightedSplitTraceAffineCoordinateRing alpha beta d e) :=
     weightedSplitTraceAffineCoordinateRing_isDomain alpha beta d e h
   let E := weightedSplitTraceAffineNormalizationLaurentOpenEquiv_of_irreducible
     alpha beta d e hd he hbeta h
@@ -263,9 +263,9 @@ theorem weightedSplitTraceFirstInvertedNormalizationSquare
         weightedSplitTraceLaurentNormalizationToCurve alpha beta d e ≫
         (weightedSplitTraceLeftInversionLaurentCurveSchemeIso alpha beta d e).inv ≫
         weightedSplitTraceLaurentCurveOpenImmersion alpha beta d e := by
-  letI : IsDomain (WeightedSplitTraceLaurentCoordinateRing alpha beta d e) :=
+  let : IsDomain (WeightedSplitTraceLaurentCoordinateRing alpha beta d e) :=
     weightedSplitTraceLaurentCoordinateRing_isDomain alpha beta d e hd he hbeta h
-  letI : IsDomain (WeightedSplitTraceLaurentCoordinateRing beta alpha d e) :=
+  let : IsDomain (WeightedSplitTraceLaurentCoordinateRing beta alpha d e) :=
     weightedSplitTraceLaurentCoordinateRing_isDomain beta alpha d e hd he halpha hswap
   calc
     _ = (weightedSplitTraceAffineNormalizationLaurentOpenSchemeIso_of_irreducible
@@ -292,9 +292,9 @@ theorem weightedSplitTraceSecondInvertedNormalizationSquare
         weightedSplitTraceLaurentNormalizationToCurve alpha beta d e ≫
         (weightedSplitTraceRightInversionLaurentCurveSchemeIso alpha beta d e).hom ≫
         weightedSplitTraceLaurentCurveOpenImmersion beta alpha d e := by
-  letI : IsDomain (WeightedSplitTraceLaurentCoordinateRing alpha beta d e) :=
+  let : IsDomain (WeightedSplitTraceLaurentCoordinateRing alpha beta d e) :=
     weightedSplitTraceLaurentCoordinateRing_isDomain alpha beta d e hd he hbeta h
-  letI : IsDomain (WeightedSplitTraceLaurentCoordinateRing beta alpha d e) :=
+  let : IsDomain (WeightedSplitTraceLaurentCoordinateRing beta alpha d e) :=
     weightedSplitTraceLaurentCoordinateRing_isDomain beta alpha d e hd he halpha hswap
   calc
     _ = (weightedSplitTraceAffineNormalizationLaurentOpenSchemeIso_of_irreducible
@@ -322,9 +322,9 @@ theorem weightedSplitTraceBothInvertedNormalizationSquare
         ((weightedSplitTraceRightInversionLaurentCurveSchemeIso alpha beta d e).symm.trans
           (weightedSplitTraceLeftInversionLaurentCurveSchemeIso alpha beta d e)).inv ≫
         weightedSplitTraceLaurentCurveOpenImmersion beta alpha d e := by
-  letI : IsDomain (WeightedSplitTraceLaurentCoordinateRing alpha beta d e) :=
+  let : IsDomain (WeightedSplitTraceLaurentCoordinateRing alpha beta d e) :=
     weightedSplitTraceLaurentCoordinateRing_isDomain alpha beta d e hd he hbeta h
-  letI : IsDomain (WeightedSplitTraceLaurentCoordinateRing beta alpha d e) :=
+  let : IsDomain (WeightedSplitTraceLaurentCoordinateRing beta alpha d e) :=
     weightedSplitTraceLaurentCoordinateRing_isDomain beta alpha d e hd he halpha hswap
   calc
     _ = (weightedSplitTraceAffineNormalizationLaurentOpenSchemeIso_of_irreducible

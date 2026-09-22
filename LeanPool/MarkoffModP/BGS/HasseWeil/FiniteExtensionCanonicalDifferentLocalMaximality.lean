@@ -572,7 +572,7 @@ theorem finiteExtensionFiberCotrace_detects_infinity_excess
       have hqHUnder : qH.under (RatFuncInfinityIntegers K) = pInf := by
         apply HeightOneSpectrum.ext
         exact (Ideal.over_def P.1 pInf.asIdeal).symm
-      letI : qH.asIdeal.LiesOver pInf.asIdeal := ⟨by
+      let : qH.asIdeal.LiesOver pInf.asIdeal := ⟨by
         have hideal := congrArg HeightOneSpectrum.asIdeal hqHUnder
         exact hideal.symm⟩
       have hqCount := hz₀Count qH hqHUnder

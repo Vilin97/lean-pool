@@ -269,7 +269,7 @@ theorem prime_le_twenty_pow_normalizedGammaOrbit_ncard_cube
     p ≤ 20 ^ (letI : Invertible (3 : ZMod p) :=
       invertibleOfNonzero (three_ne_zero_zmod_of_prime_ne_three p hpThree)
       normalizedGammaOrbit x).ncard ^ 3 := by
-  letI : Invertible (3 : ZMod p) :=
+  let : Invertible (3 : ZMod p) :=
     invertibleOfNonzero (three_ne_zero_zmod_of_prime_ne_three p hpThree)
   obtain ⟨W₁, W₂, W₃, htrace₁, htrace₂, htrace₃, _hfin₁, _hfin₂, _hfin₃,
       _hcoprime₁, _hcoprime₂, _hcoprime₃, hpBound⟩ :=
@@ -351,7 +351,7 @@ theorem prime_le_twenty_pow_gammaOrbit_ncard_cube
     (p : ℕ) [Fact p.Prime] (hpTwo : p ≠ 2) (hpThree : p ≠ 3)
     (x : MarkoffSurface (ZMod p)) (hxne : x.1 ≠ origin) :
     p ≤ 20 ^ (gammaOrbit x).ncard ^ 3 := by
-  letI : Invertible (3 : ZMod p) :=
+  let : Invertible (3 : ZMod p) :=
     invertibleOfNonzero (three_ne_zero_zmod_of_prime_ne_three p hpThree)
   let xn := normalizationSurfaceEquiv (ZMod p) x
   have hxnNe : xn.1 ≠ normalizedOrigin := by

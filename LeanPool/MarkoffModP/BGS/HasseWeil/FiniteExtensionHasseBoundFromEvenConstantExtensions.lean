@@ -120,9 +120,9 @@ theorem finiteExtensionClosedPlaceEvenError_isBigO_of_exactConstantExtension_bou
       fun n : ℕ ↦ (Nat.card C : ℝ) ^ n := by
   apply evenExtensionError_isBigO_of_pointwise_bound
   intro n hn
-  letI : NeZero (2 * n) := ⟨by omega⟩
+  let : NeZero (2 * n) := ⟨by omega⟩
   let S := FiniteField.Extension C p (2 * n)
-  letI : Fintype S := Fintype.ofFinite S
+  let : Fintype S := Fintype.ofFinite S
   have hcount :
       exactConstantExtensionClosedPlaceExtensionCount C S N hExact 1 =
         finiteExtensionClosedPlaceExtensionCount C N (2 * n) := by

@@ -89,11 +89,11 @@ theorem natCard_rightPowerTraceCoverSolutions
     Nat.card (rightPowerTraceCoverSolutions leftTrace rightTrace exponent) =
       Nat.card (powMonoidHom exponent : H →* H).ker *
         Nat.card (rightPowerTraceRangeSolutions leftTrace rightTrace exponent) := by
-  letI : Finite (powMonoidHom exponent : H →* H).range :=
+  let : Finite (powMonoidHom exponent : H →* H).range :=
     Finite.of_injective Subtype.val Subtype.val_injective
-  letI : Finite (rightPowerTraceRangeSolutions leftTrace rightTrace exponent) :=
+  let : Finite (rightPowerTraceRangeSolutions leftTrace rightTrace exponent) :=
     Finite.of_injective Subtype.val Subtype.val_injective
-  letI := Fintype.ofFinite
+  let := Fintype.ofFinite
     (rightPowerTraceRangeSolutions leftTrace rightTrace exponent)
   rw [Nat.card_congr
     (rightPowerTraceCoverEquivSigmaFiber leftTrace rightTrace exponent),

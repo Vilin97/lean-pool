@@ -95,11 +95,11 @@ theorem exactConstantExtensionPresentedUpstairsFinitePlaceEquiv_apply
     exactConstantExtensionPresentedUpstairsFinitePlaceEquiv
         C S N hExact q =
       exactConstantExtensionUpstairsFinitePlace C S N hExact q := by
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-  letI : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
     ratFuncExactConstantExtensionAlgebra C S N hExact
   change IsDedekindDomain.HeightOneSpectrum.equivOfRingEquiv
       (ratFuncFiniteIntegralClosureRingEquiv C S
@@ -123,22 +123,22 @@ theorem exactConstantExtensionPresentedFinitePlaceFiber_natCard_eq_gcd_of_downst
       Nat.gcd (Module.finrank C S)
         (finiteExtensionPlaceDegree C N (.inl P)) := by
   let E := ExactConstantExtension C N S
-  letI : Field E := exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc C) E :=
+  let : Field E := exactConstantExtensionField C N S hExact
+  let : Algebra (RatFunc C) E :=
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-  letI : SMul (RatFunc C) E := Algebra.toSMul
-  letI : Module (RatFunc C) E := Algebra.toModule
-  letI : FiniteDimensional (RatFunc C) E :=
+  let : SMul (RatFunc C) E := Algebra.toSMul
+  let : Module (RatFunc C) E := Algebra.toModule
+  let : FiniteDimensional (RatFunc C) E :=
     finiteDimensional_exactConstantExtension_over_baseRatFunc
       C S N hExact
-  letI : Algebra.IsSeparable (RatFunc C) E :=
+  let : Algebra.IsSeparable (RatFunc C) E :=
     isSeparable_exactConstantExtension_over_baseRatFunc C S N hExact
-  letI : Algebra (RatFunc S) E :=
+  let : Algebra (RatFunc S) E :=
     ratFuncExactConstantExtensionAlgebra C S N hExact
-  letI : Algebra N E := exactConstantExtensionAlgebra C N S
-  letI : SMul N E := Algebra.toSMul
-  letI : Module N E := Algebra.toModule
-  letI : IsScalarTower (RatFunc C) N E :=
+  let : Algebra N E := exactConstantExtensionAlgebra C N S
+  let : SMul N E := Algebra.toSMul
+  let : Module N E := Algebra.toModule
+  let : IsScalarTower (RatFunc C) N E :=
     exactConstantExtensionBaseTower C (RatFunc C) N S
   obtain ⟨Q, hQ⟩ := finitePlaceUnder_surjective C N E P
   let Q₀ : FinitePlaceUnderFiber C N E P := ⟨Q, hQ⟩
@@ -164,7 +164,7 @@ private theorem splittingFormulaReciprocalPolynomialAlgebra_map
     algebraMap K[X] L p = algebraMap (RatFunc K) L
       (((reciprocalPolynomialRingHom K p :
         RatFuncInfinityIntegers K) : RatFunc K)) := by
-  letI : Algebra K[X] L :=
+  let : Algebra K[X] L :=
     ratFuncExtensionReciprocalPolynomialAlgebra K L
   change algebraMap (RatFuncInfinityIntegers K) L
       (reciprocalPolynomialRingHom K p) = _
@@ -357,8 +357,8 @@ theorem exactConstantExtensionPresentedUpstairsInfinityPlaceEquiv_apply
       exactConstantExtensionUpstairsInfinityPlace
         C S N hExact q.1 q.2 := by
   let E := ExactConstantExtension C N S
-  letI : Field E := exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc S) E :=
+  let : Field E := exactConstantExtensionField C N S hExact
+  let : Algebra (RatFunc S) E :=
     ratFuncExactConstantExtensionAlgebra C S N hExact
   apply Subtype.ext
   rfl
@@ -383,30 +383,30 @@ theorem exactConstantExtensionPresentedInfinityPlaceFiber_natCard_eq_gcd_of_down
           C S N q.1 q.2 = P} =
         Nat.gcd (Module.finrank C S)
           (finiteExtensionPlaceDegree C N (.inr P)) := by
-  letI : DecidableEq C := infinityBridgeDecidableEqConstants C
-  letI : DecidableEq (RatFunc C) :=
+  let : DecidableEq C := infinityBridgeDecidableEqConstants C
+  let : DecidableEq (RatFunc C) :=
     infinityBridgeDecidableEqRatFuncConstants C
-  letI : DecidableEq S := infinityBridgeDecidableEqConstants S
-  letI : DecidableEq (RatFunc S) :=
+  let : DecidableEq S := infinityBridgeDecidableEqConstants S
+  let : DecidableEq (RatFunc S) :=
     infinityBridgeDecidableEqRatFuncConstants S
   intro P
   let E := ExactConstantExtension C N S
-  letI : Field E := exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc C) E :=
+  let : Field E := exactConstantExtensionField C N S hExact
+  let : Algebra (RatFunc C) E :=
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-  letI : SMul (RatFunc C) E := Algebra.toSMul
-  letI : Module (RatFunc C) E := Algebra.toModule
-  letI : FiniteDimensional (RatFunc C) E :=
+  let : SMul (RatFunc C) E := Algebra.toSMul
+  let : Module (RatFunc C) E := Algebra.toModule
+  let : FiniteDimensional (RatFunc C) E :=
     finiteDimensional_exactConstantExtension_over_baseRatFunc
       C S N hExact
-  letI : Algebra.IsSeparable (RatFunc C) E :=
+  let : Algebra.IsSeparable (RatFunc C) E :=
     isSeparable_exactConstantExtension_over_baseRatFunc C S N hExact
-  letI : Algebra (RatFunc S) E :=
+  let : Algebra (RatFunc S) E :=
     ratFuncExactConstantExtensionAlgebra C S N hExact
-  letI : Algebra N E := exactConstantExtensionAlgebra C N S
-  letI : SMul N E := Algebra.toSMul
-  letI : Module N E := Algebra.toModule
-  letI : IsScalarTower (RatFunc C) N E :=
+  let : Algebra N E := exactConstantExtensionAlgebra C N S
+  let : SMul N E := Algebra.toSMul
+  let : Module N E := Algebra.toModule
+  let : IsScalarTower (RatFunc C) N E :=
     exactConstantExtensionBaseTower C (RatFunc C) N S
   obtain ⟨Q, hQ⟩ := infinityPlaceUnder_surjective C N E P
   let Q₀ : InfinityPlaceUnderFiber C N E P := ⟨Q, hQ⟩
@@ -484,11 +484,11 @@ theorem exactConstantExtensionPresentedUpstairsPlaceEquiv_apply
       ratFuncExactConstantExtensionAlgebra C S N hExact
     exactConstantExtensionPresentedUpstairsPlaceEquiv C S N hExact q =
       exactConstantExtensionPresentedUpstairsPlace C S N hExact q := by
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-  letI : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
     ratFuncExactConstantExtensionAlgebra C S N hExact
   cases q with
   | inl q =>
@@ -531,11 +531,11 @@ theorem exactConstantExtensionPresentedPlaceFiber_natCard_eq_gcd_of_downstairs :
           C S N hExact q = P} =
         Nat.gcd (Module.finrank C S)
           (finiteExtensionPlaceDegree C N P) := by
-  letI : DecidableEq C := infinityBridgeDecidableEqConstants C
-  letI : DecidableEq (RatFunc C) :=
+  let : DecidableEq C := infinityBridgeDecidableEqConstants C
+  let : DecidableEq (RatFunc C) :=
     infinityBridgeDecidableEqRatFuncConstants C
-  letI : DecidableEq S := infinityBridgeDecidableEqConstants S
-  letI : DecidableEq (RatFunc S) :=
+  let : DecidableEq S := infinityBridgeDecidableEqConstants S
+  let : DecidableEq (RatFunc S) :=
     infinityBridgeDecidableEqRatFuncConstants S
   intro P
   cases P with
@@ -659,31 +659,31 @@ theorem exactConstantExtensionClosedPlaceExtensionCount_eq
         (ExactConstantExtension C N S) level =
       finiteExtensionClosedPlaceExtensionCount C N
         (Module.finrank C S * level) := by
-  letI : DecidableEq C := infinityBridgeDecidableEqConstants C
-  letI : DecidableEq (RatFunc C) :=
+  let : DecidableEq C := infinityBridgeDecidableEqConstants C
+  let : DecidableEq (RatFunc C) :=
     infinityBridgeDecidableEqRatFuncConstants C
-  letI : DecidableEq S := infinityBridgeDecidableEqConstants S
-  letI : DecidableEq (RatFunc S) :=
+  let : DecidableEq S := infinityBridgeDecidableEqConstants S
+  let : DecidableEq (RatFunc S) :=
     infinityBridgeDecidableEqRatFuncConstants S
-  letI : Fintype S := Fintype.ofFinite S
+  let : Fintype S := Fintype.ofFinite S
   let E := ExactConstantExtension C N S
-  letI : Field E := exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc C) E :=
+  let : Field E := exactConstantExtensionField C N S hExact
+  let : Algebra (RatFunc C) E :=
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-  letI : SMul (RatFunc C) E := Algebra.toSMul
-  letI : Module (RatFunc C) E := Algebra.toModule
-  letI : FiniteDimensional (RatFunc C) E :=
+  let : SMul (RatFunc C) E := Algebra.toSMul
+  let : Module (RatFunc C) E := Algebra.toModule
+  let : FiniteDimensional (RatFunc C) E :=
     finiteDimensional_exactConstantExtension_over_baseRatFunc
       C S N hExact
-  letI : Algebra.IsSeparable (RatFunc C) E :=
+  let : Algebra.IsSeparable (RatFunc C) E :=
     isSeparable_exactConstantExtension_over_baseRatFunc C S N hExact
-  letI : Algebra (RatFunc S) E :=
+  let : Algebra (RatFunc S) E :=
     ratFuncExactConstantExtensionAlgebra C S N hExact
-  letI : SMul (RatFunc S) E := Algebra.toSMul
-  letI : Module (RatFunc S) E := Algebra.toModule
-  letI : FiniteDimensional (RatFunc S) E :=
+  let : SMul (RatFunc S) E := Algebra.toSMul
+  let : Module (RatFunc S) E := Algebra.toModule
+  let : FiniteDimensional (RatFunc S) E :=
     finiteDimensional_over_extendedRatFunc C S N hExact
-  letI : Algebra.IsSeparable (RatFunc S) E :=
+  let : Algebra.IsSeparable (RatFunc S) E :=
     isSeparable_over_extendedRatFunc C S N hExact
   by_cases hlevel : level = 0
   · subst level
@@ -704,14 +704,14 @@ theorem exactConstantExtensionClosedPlaceExtensionCount_eq
   let UpLE := {q : Up // upDegree q ≤ level}
   let ActualLE := {Q : Actual //
     finiteExtensionPlaceDegree S E Q ≤ level}
-  letI : Fintype BaseLE :=
+  let : Fintype BaseLE :=
     finiteExtensionPlaceDegreeLEFintype C N
       (Module.finrank C S * level)
-  letI : Fintype ActualLE :=
+  let : Fintype ActualLE :=
     finiteExtensionPlaceDegreeLEFintype S E level
   let eLE : UpLE ≃ ActualLE :=
     Equiv.subtypeEquiv e (fun _ => Iff.rfl)
-  letI : Fintype UpLE := Fintype.ofEquiv ActualLE eLE.symm
+  let : Fintype UpLE := Fintype.ofEquiv ActualLE eLE.symm
   let UpDvd := {q : UpLE // upDegree q.1 ∣ level}
   let ActualDvd := {Q : ActualLE //
     finiteExtensionPlaceDegree S E Q.1 ∣ level}

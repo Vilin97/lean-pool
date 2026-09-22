@@ -51,9 +51,9 @@ theorem ratFuncPolynomial_hasFiniteQuotients :
   have hspan : Ideal.span ({g} : Set K[X]) ≤ I := by
     rw [Ideal.span_le, Set.singleton_subset_iff]
     exact hgI
-  letI : Module.Finite K (K[X] ⧸ Ideal.span ({g} : Set K[X])) :=
+  let : Module.Finite K (K[X] ⧸ Ideal.span ({g} : Set K[X])) :=
     hgmonic.finite_quotient
-  letI : Finite (K[X] ⧸ Ideal.span ({g} : Set K[X])) :=
+  let : Finite (K[X] ⧸ Ideal.span ({g} : Set K[X])) :=
     Module.finite_of_finite K
   exact Finite.of_surjective (Ideal.Quotient.factor hspan)
     (Ideal.Quotient.factor_surjective hspan)
@@ -88,7 +88,7 @@ local instance affineIdealClosureConstantTower :
 finite quotients. -/
 theorem ratFuncFiniteIntegralClosure_hasFiniteQuotients :
     Ring.HasFiniteQuotients (RatFuncFiniteIntegralClosure K L) := by
-  letI : Ring.HasFiniteQuotients K[X] :=
+  let : Ring.HasFiniteQuotients K[X] :=
     ratFuncPolynomial_hasFiniteQuotients K
   exact Ring.HasFiniteQuotients.of_module_finite K[X]
     (RatFuncFiniteIntegralClosure K L)
@@ -97,7 +97,7 @@ theorem ratFuncFiniteIntegralClosure_hasFiniteQuotients :
 number theorem from Mathlib, stated at the normalization used by BGS. -/
 theorem finiteExtensionAffineClassGroup_finite :
     Finite (ClassGroup (RatFuncFiniteIntegralClosure K L)) := by
-  letI : Fintype (ClassGroup (RatFuncFiniteIntegralClosure K L)) :=
+  let : Fintype (ClassGroup (RatFuncFiniteIntegralClosure K L)) :=
     inferInstance
   exact Fintype.finite inferInstance
 
@@ -128,15 +128,15 @@ theorem finiteExtensionAffineIdeal_cardQuot_eq_card_pow_degree
     (I : FiniteExtensionAffineIdeal K L) :
     (I : Ideal (RatFuncFiniteIntegralClosure K L)).cardQuot =
       Fintype.card K ^ finiteExtensionAffineIdealDegree K L I := by
-  letI : Ring.HasFiniteQuotients (RatFuncFiniteIntegralClosure K L) :=
+  let : Ring.HasFiniteQuotients (RatFuncFiniteIntegralClosure K L) :=
     ratFuncFiniteIntegralClosure_hasFiniteQuotients K L
   have hI : (I : Ideal (RatFuncFiniteIntegralClosure K L)) ≠ ⊥ := by
     rw [← Ideal.zero_eq_bot]
     exact mem_nonZeroDivisors_iff_ne_zero.mp I.property
-  letI : Finite (RatFuncFiniteIntegralClosure K L ⧸
+  let : Finite (RatFuncFiniteIntegralClosure K L ⧸
       (I : Ideal (RatFuncFiniteIntegralClosure K L))) :=
     Ring.HasFiniteQuotients.finiteQuotient hI
-  letI : Module.Finite K (RatFuncFiniteIntegralClosure K L ⧸
+  let : Module.Finite K (RatFuncFiniteIntegralClosure K L ⧸
       (I : Ideal (RatFuncFiniteIntegralClosure K L))) :=
     Module.Finite.of_finite
   rw [Submodule.cardQuot_apply, finiteExtensionAffineIdealDegree,
@@ -154,15 +154,15 @@ theorem finiteExtensionAffineIdealDegree_eq_zero_iff
     rw [finiteExtensionAffineIdeal_cardQuot_eq_card_pow_degree K L I,
       hdegree, pow_zero]
   · intro hI
-    letI : Ring.HasFiniteQuotients (RatFuncFiniteIntegralClosure K L) :=
+    let : Ring.HasFiniteQuotients (RatFuncFiniteIntegralClosure K L) :=
       ratFuncFiniteIntegralClosure_hasFiniteQuotients K L
     have hne : (I : Ideal (RatFuncFiniteIntegralClosure K L)) ≠ ⊥ := by
       rw [← Ideal.zero_eq_bot]
       exact mem_nonZeroDivisors_iff_ne_zero.mp I.property
-    letI : Finite (RatFuncFiniteIntegralClosure K L ⧸
+    let : Finite (RatFuncFiniteIntegralClosure K L ⧸
         (I : Ideal (RatFuncFiniteIntegralClosure K L))) :=
       Ring.HasFiniteQuotients.finiteQuotient hne
-    letI : Module.Finite K (RatFuncFiniteIntegralClosure K L ⧸
+    let : Module.Finite K (RatFuncFiniteIntegralClosure K L ⧸
         (I : Ideal (RatFuncFiniteIntegralClosure K L))) :=
       Module.Finite.of_finite
     rw [finiteExtensionAffineIdealDegree, hI]
@@ -173,7 +173,7 @@ degree. -/
 theorem finite_setOf_finiteExtensionAffineIdealDegree_eq (n : ℕ) :
     {I : FiniteExtensionAffineIdeal K L |
       finiteExtensionAffineIdealDegree K L I = n}.Finite := by
-  letI : Ring.HasFiniteQuotients (RatFuncFiniteIntegralClosure K L) :=
+  let : Ring.HasFiniteQuotients (RatFuncFiniteIntegralClosure K L) :=
     ratFuncFiniteIntegralClosure_hasFiniteQuotients K L
   apply Set.Finite.of_injOn
     (f := fun I : FiniteExtensionAffineIdeal K L =>
@@ -181,7 +181,7 @@ theorem finite_setOf_finiteExtensionAffineIdealDegree_eq (n : ℕ) :
     (t := {J : Ideal (RatFuncFiniteIntegralClosure K L) |
       J.cardQuot ≤ Fintype.card K ^ n})
   · intro I hI
-    simp only [Set.mem_setOf_eq] at hI ⊢
+    simp only [Set.mem_ofPred_eq] at hI ⊢
     rw [finiteExtensionAffineIdeal_cardQuot_eq_card_pow_degree K L I, hI]
   · intro I _ J _ hIJ
     exact Subtype.ext hIJ

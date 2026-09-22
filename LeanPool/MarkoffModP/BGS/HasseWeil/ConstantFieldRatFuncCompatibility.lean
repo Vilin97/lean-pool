@@ -71,14 +71,14 @@ theorem planeCurveFunctionFieldBaseChangeAlgHom_function
     planeCurveFunctionFieldBaseChangeAlgHom K E f hf hfE
         (planeCurveFunction f i) =
       planeCurveFunction (MvPolynomial.map (algebraMap K E) f) i := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : IsDomain (E ⊗[K] PlaneCurveCoordinateRing f) :=
+  let : IsDomain (E ⊗[K] PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRingBaseChange_isDomain K E f hfE
-  letI : IsDomain (PlaneCurveCoordinateRing
+  let : IsDomain (PlaneCurveCoordinateRing
       (MvPolynomial.map (algebraMap K E) f)) :=
     planeCurveCoordinateRing_isDomain hfE
-  letI : IsFractionRing
+  let : IsFractionRing
       (E ⊗[K] PlaneCurveCoordinateRing f)
       (E ⊗[K] PlaneCurveFunctionField f) :=
     tensorFraction_isFractionRing K E (PlaneCurveCoordinateRing f)
@@ -135,17 +135,17 @@ theorem planeCurveFunctionFieldBaseChange_ratFunc_commutes
     apply MvPolynomial.map_injective (algebraMap K E)
       (algebraMap K E).injective
     simpa using hz
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : IsDomain (PlaneCurveCoordinateRing fE) :=
+  let : IsDomain (PlaneCurveCoordinateRing fE) :=
     planeCurveCoordinateRing_isDomain hfE
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
   let hxE := firstCoordinate_transcendental hfE
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecondE)
-  letI := planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI := planeCurveFirstCoordinateRatFuncAlgebra fE hxE
-  letI : Algebra K[X] E[X] :=
+  let := planeCurveFirstCoordinateRatFuncAlgebra f hx
+  let := planeCurveFirstCoordinateRatFuncAlgebra fE hxE
+  let : Algebra K[X] E[X] :=
     (Polynomial.mapRingHom (algebraMap K E)).toAlgebra
   change ∀ z : RatFunc K,
     planeCurveFunctionFieldBaseChangeAlgHom K E f hf hfE
@@ -253,16 +253,16 @@ theorem planeCurveFunctionFieldBaseChangeRatFunc_isScalarTower
     IsScalarTower (RatFunc K) (PlaneCurveFunctionField f)
       (PlaneCurveFunctionField
         (MvPolynomial.map (algebraMap K E) f)) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : IsDomain (PlaneCurveCoordinateRing
+  let : IsDomain (PlaneCurveCoordinateRing
       (MvPolynomial.map (algebraMap K E) f)) :=
     planeCurveCoordinateRing_isDomain hfE
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
-  letI := planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI := planeCurveFunctionFieldBaseChangeAlgebra K E f hf hfE
-  letI := planeCurveFunctionFieldBaseChangeRatFuncAlgebra K E f hf hfE hx
+  let := planeCurveFirstCoordinateRatFuncAlgebra f hx
+  let := planeCurveFunctionFieldBaseChangeAlgebra K E f hf hfE
+  let := planeCurveFunctionFieldBaseChangeRatFuncAlgebra K E f hf hfE hx
   exact IsScalarTower.of_algebraMap_eq' rfl
 
 theorem planeCurveFunctionFieldBaseChangeCoefficientRatFunc_isScalarTower
@@ -299,18 +299,18 @@ theorem planeCurveFunctionFieldBaseChangeCoefficientRatFunc_isScalarTower
     apply MvPolynomial.map_injective (algebraMap K E)
       (algebraMap K E).injective
     simpa using hz
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : IsDomain (PlaneCurveCoordinateRing fE) :=
+  let : IsDomain (PlaneCurveCoordinateRing fE) :=
     planeCurveCoordinateRing_isDomain hfE
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
   let hxE := firstCoordinate_transcendental hfE
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecondE)
-  letI := ratFuncCoefficientAlgebra K E
-  letI := planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI := planeCurveFirstCoordinateRatFuncAlgebra fE hxE
-  letI := planeCurveFunctionFieldBaseChangeRatFuncAlgebra K E f hf hfE hx
+  let := ratFuncCoefficientAlgebra K E
+  let := planeCurveFirstCoordinateRatFuncAlgebra f hx
+  let := planeCurveFirstCoordinateRatFuncAlgebra fE hxE
+  let := planeCurveFunctionFieldBaseChangeRatFuncAlgebra K E f hf hfE hx
   apply IsScalarTower.of_algebraMap_eq'
   ext z
   exact (planeCurveFunctionFieldBaseChange_ratFunc_commutes
@@ -332,28 +332,28 @@ theorem finiteDimensional_planeCurveFunctionFieldBaseChange_over_ratFunc
     FiniteDimensional (RatFunc K)
       (PlaneCurveFunctionField
         (MvPolynomial.map (algebraMap K E) f)) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : IsDomain (PlaneCurveCoordinateRing
+  let : IsDomain (PlaneCurveCoordinateRing
       (MvPolynomial.map (algebraMap K E) f)) :=
     planeCurveCoordinateRing_isDomain hfE
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
-  letI := planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI := planeCurveFunctionFieldBaseChangeAlgebra K E f hf hfE
-  letI := planeCurveFunctionFieldBaseChangeRatFuncAlgebra K E f hf hfE hx
-  letI : IsScalarTower (RatFunc K) (PlaneCurveFunctionField f)
+  let := planeCurveFirstCoordinateRatFuncAlgebra f hx
+  let := planeCurveFunctionFieldBaseChangeAlgebra K E f hf hfE
+  let := planeCurveFunctionFieldBaseChangeRatFuncAlgebra K E f hf hfE hx
+  let : IsScalarTower (RatFunc K) (PlaneCurveFunctionField f)
       (PlaneCurveFunctionField
         (MvPolynomial.map (algebraMap K E) f)) :=
     planeCurveFunctionFieldBaseChangeRatFunc_isScalarTower
       K E f hf hfE hpartialSecond
-  letI : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
   let e := planeCurveFunctionFieldBaseChangeLinearEquiv K E f hf hfE
-  letI : Module.Finite (PlaneCurveFunctionField f)
+  let : Module.Finite (PlaneCurveFunctionField f)
       ((PlaneCurveFunctionField f) ⊗[K] E) :=
     Module.Finite.base_change K (PlaneCurveFunctionField f) E
-  letI : Module.Finite (PlaneCurveFunctionField f)
+  let : Module.Finite (PlaneCurveFunctionField f)
       (PlaneCurveFunctionField (MvPolynomial.map (algebraMap K E) f)) :=
     Module.Finite.equiv e
   exact FiniteDimensional.trans (RatFunc K) (PlaneCurveFunctionField f)
@@ -375,33 +375,33 @@ theorem separable_planeCurveFunctionFieldBaseChange_over_ratFunc
     Algebra.IsSeparable (RatFunc K)
       (PlaneCurveFunctionField
         (MvPolynomial.map (algebraMap K E) f)) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : IsDomain (PlaneCurveCoordinateRing
+  let : IsDomain (PlaneCurveCoordinateRing
       (MvPolynomial.map (algebraMap K E) f)) :=
     planeCurveCoordinateRing_isDomain hfE
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
-  letI := planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI := planeCurveFunctionFieldBaseChangeAlgebra K E f hf hfE
-  letI := planeCurveFunctionFieldBaseChangeRatFuncAlgebra K E f hf hfE hx
-  letI : IsScalarTower (RatFunc K) (PlaneCurveFunctionField f)
+  let := planeCurveFirstCoordinateRatFuncAlgebra f hx
+  let := planeCurveFunctionFieldBaseChangeAlgebra K E f hf hfE
+  let := planeCurveFunctionFieldBaseChangeRatFuncAlgebra K E f hf hfE hx
+  let : IsScalarTower (RatFunc K) (PlaneCurveFunctionField f)
       (PlaneCurveFunctionField
         (MvPolynomial.map (algebraMap K E) f)) :=
     planeCurveFunctionFieldBaseChangeRatFunc_isScalarTower
       K E f hf hfE hpartialSecond
-  letI : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
     separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
   let e := planeCurveFunctionFieldBaseChangeLinearEquiv K E f hf hfE
-  letI : Module.Finite (PlaneCurveFunctionField f)
+  let : Module.Finite (PlaneCurveFunctionField f)
       ((PlaneCurveFunctionField f) ⊗[K] E) :=
     Module.Finite.base_change K (PlaneCurveFunctionField f) E
-  letI : Module.Finite (PlaneCurveFunctionField f)
+  let : Module.Finite (PlaneCurveFunctionField f)
       (PlaneCurveFunctionField (MvPolynomial.map (algebraMap K E) f)) :=
     Module.Finite.equiv e
-  letI : IsGalois (PlaneCurveFunctionField f)
+  let : IsGalois (PlaneCurveFunctionField f)
       (PlaneCurveFunctionField (MvPolynomial.map (algebraMap K E) f)) :=
     planeCurveFunctionFieldBaseChange_isGalois K E f hf hfE
   exact Algebra.IsSeparable.trans (RatFunc K) (PlaneCurveFunctionField f)

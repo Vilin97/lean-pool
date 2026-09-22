@@ -28,7 +28,7 @@ namespace BGS
 def Markoff : CommSemiRingCat ⥤ Type where
   obj R := {⟨x, y, z⟩ : R × R × R | x ^ 2 + y ^ 2 + z ^ 2 = 3 * x * y * z}
   map f := ↾fun ⟨⟨x, y, z⟩, h⟩ ↦ ⟨⟨f.hom x, f.hom y, f.hom z⟩, by
-    simpa only [Set.mem_setOf_eq, map_add, map_pow, map_mul, map_ofNat] using congrArg f.hom h⟩
+    simpa only [Set.mem_ofPred_eq, map_add, map_pow, map_mul, map_ofNat] using congrArg f.hom h⟩
 
 end BGS
 

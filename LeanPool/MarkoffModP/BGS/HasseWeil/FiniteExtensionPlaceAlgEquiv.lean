@@ -278,8 +278,8 @@ theorem finiteExtensionFinitePlace_degree_eq_residue_finrank
     finiteExtensionPlaceDegree K L (.inl Q) =
       Module.finrank K Q.asIdeal.ResidueField := by
   let P := HeightOneSpectrum.under K[X] Q
-  letI : Q.asIdeal.LiesOver P.asIdeal := ⟨rfl⟩
-  letI hLocalAlg :=
+  let : Q.asIdeal.LiesOver P.asIdeal := ⟨rfl⟩
+  let hLocalAlg :=
     Localization.AtPrime.algebraOfLiesOver P.asIdeal Q.asIdeal
   let _ : IsScalarTower K[X] (Localization.AtPrime P.asIdeal)
       (Localization.AtPrime Q.asIdeal) := inferInstance
@@ -296,14 +296,14 @@ theorem finiteExtensionInfinityPlace_degree_eq_residue_finrank
     finiteExtensionPlaceDegree K L (.inr P) =
       Module.finrank K P.1.ResidueField := by
   let p := (ratFuncInfinityPlace K).asIdeal
-  letI hLocalAlg := Localization.AtPrime.algebraOfLiesOver p P.1
+  let hLocalAlg := Localization.AtPrime.algebraOfLiesOver p P.1
   let _ : IsScalarTower (RatFuncInfinityIntegers K) (Localization.AtPrime p)
       (Localization.AtPrime P.1) := inferInstance
   let _ : Module.Free p.ResidueField P.1.ResidueField :=
     Module.Free.of_divisionRing p.ResidueField P.1.ResidueField
-  letI : Algebra p.ResidueField P.1.ResidueField :=
+  let : Algebra p.ResidueField P.1.ResidueField :=
     IsLocalRing.ResidueField.instAlgebra
-  letI : IsScalarTower K p.ResidueField P.1.ResidueField := inferInstance
+  let : IsScalarTower K p.ResidueField P.1.ResidueField := inferInstance
   rw [finiteExtensionPlaceDegree, Ideal.inertiaDeg_eq p P.1]
   have hbase : Module.finrank K p.ResidueField = 1 :=
     by simpa [p] using

@@ -38,15 +38,15 @@ theorem linearPowerSeriesFactor_inv (a : ℂ) :
 
 theorem derivative_linearPowerSeriesFactor (a : ℂ) :
     PowerSeries.derivative (R := ℂ) (linearPowerSeriesFactor a) = -PowerSeries.C a := by
-  change PowerSeries.derivativeFun (linearPowerSeriesFactor a) = -PowerSeries.C a
+  change PowerSeries.derivative (linearPowerSeriesFactor a) = -PowerSeries.C a
   rw [linearPowerSeriesFactor, sub_eq_add_neg]
   rw [show -(PowerSeries.C a * PowerSeries.X) =
       (-1 : ℂ) • (PowerSeries.C a * PowerSeries.X) by simp]
   rw [PowerSeries.derivativeFun_add, PowerSeries.derivativeFun_one,
     PowerSeries.derivativeFun_smul, PowerSeries.derivativeFun_mul]
-  have hX : PowerSeries.derivativeFun (PowerSeries.X : PowerSeries ℂ) = 1 :=
+  have hX : PowerSeries.derivative (PowerSeries.X : PowerSeries ℂ) = 1 :=
     PowerSeries.derivative_X
-  have hC : PowerSeries.derivativeFun (PowerSeries.C a) = 0 :=
+  have hC : PowerSeries.derivative (PowerSeries.C a) = 0 :=
     PowerSeries.derivative_C
   rw [hX, hC]
   simp
@@ -80,19 +80,19 @@ theorem negativeXLogDerivative_mul
     negativeXLogDerivative (f * g) =
       negativeXLogDerivative f + negativeXLogDerivative g := by
   unfold negativeXLogDerivative
-  change -PowerSeries.X * PowerSeries.derivativeFun (f * g) * (f * g)⁻¹ =
-    -PowerSeries.X * PowerSeries.derivativeFun f * f⁻¹ +
-      -PowerSeries.X * PowerSeries.derivativeFun g * g⁻¹
+  change -PowerSeries.X * PowerSeries.derivative (f * g) * (f * g)⁻¹ =
+    -PowerSeries.X * PowerSeries.derivative f * f⁻¹ +
+      -PowerSeries.X * PowerSeries.derivative g * g⁻¹
   rw [PowerSeries.derivativeFun_mul,
     inverse_mul_of_constantCoeff_ne_zero f g hf hg]
   simp only [smul_eq_mul]
   calc
-    -PowerSeries.X * (f * PowerSeries.derivativeFun g +
-        g * PowerSeries.derivativeFun f) * (f⁻¹ * g⁻¹) =
-      (-PowerSeries.X * PowerSeries.derivativeFun g * g⁻¹) * (f * f⁻¹) +
-        (-PowerSeries.X * PowerSeries.derivativeFun f * f⁻¹) * (g * g⁻¹) := by ring
-    _ = -PowerSeries.X * PowerSeries.derivativeFun f * f⁻¹ +
-        -PowerSeries.X * PowerSeries.derivativeFun g * g⁻¹ := by
+    -PowerSeries.X * (f * PowerSeries.derivative g +
+        g * PowerSeries.derivative f) * (f⁻¹ * g⁻¹) =
+      (-PowerSeries.X * PowerSeries.derivative g * g⁻¹) * (f * f⁻¹) +
+        (-PowerSeries.X * PowerSeries.derivative f * f⁻¹) * (g * g⁻¹) := by ring
+    _ = -PowerSeries.X * PowerSeries.derivative f * f⁻¹ +
+        -PowerSeries.X * PowerSeries.derivative g * g⁻¹ := by
       rw [PowerSeries.mul_inv_cancel f hf, PowerSeries.mul_inv_cancel g hg]
       ring
 

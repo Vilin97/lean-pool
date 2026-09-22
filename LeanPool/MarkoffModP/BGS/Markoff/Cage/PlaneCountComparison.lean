@@ -35,7 +35,7 @@ private lemma natCard_eval_eq_zero_le_natDegree
         intro x y h
         apply Subtype.ext
         exact congrArg (fun z : f.roots.toFinset => (z : K)) h }
-  letI : Fintype {x : K // f.eval x = 0} := Fintype.ofFinite _
+  let : Fintype {x : K // f.eval x = 0} := Fintype.ofFinite _
   calc
     Nat.card {x : K // f.eval x = 0} <= f.roots.toFinset.card := by
       simpa only [Nat.card_eq_fintype_card, Fintype.card_coe] using
@@ -183,7 +183,7 @@ def badDiagonalTaggedPointEmbedding
       intro x y hxy
       by_cases hx : x.1.1.1.2 = 0
       · by_cases hy : y.1.1.1.2 = 0
-        · simp only [hx, hy, if_pos] at hxy
+        · simp only [hx, hy, ite_eq_left] at hxy
           have hpayload := Sum.inl.inj hxy
           apply Subtype.ext
           apply Prod.ext
@@ -197,7 +197,7 @@ def badDiagonalTaggedPointEmbedding
         · simp [hx, hy] at hxy
       · by_cases hy : y.1.1.1.2 = 0
         · simp [hx, hy] at hxy
-        · simp only [hx, hy, if_neg] at hxy
+        · simp only [hx, hy, ite_eq_right] at hxy
           have hpayload := Sum.inr.inj hxy
           have hparameter : x.1.1.1.2 = y.1.1.1.2 :=
             congrArg Subtype.val hpayload
@@ -342,7 +342,7 @@ theorem cagePulledRootPair_diagonal_card_comparison
           2 * (BGS.External.affinePlaneCurveZeros (ZMod p)
             (cageDiagonalPlanePolynomial xi d)).card =
         -(Nat.card bad : Int))
-  rw [hid, abs_neg, abs_of_nonneg (Int.ofNat_nonneg _)]
+  rw [hid, abs_neg, abs_of_nonneg (Int.natCast_nonneg _)]
   exact_mod_cast hbad
 
 abbrev CageOffDiagonalPlanePoint (p : Nat) [Fact p.Prime]
@@ -460,7 +460,7 @@ private lemma rootCount_le_natDegree
         intro x y h
         apply Subtype.ext
         exact congrArg (fun z : f.roots.toFinset => (z : K)) h }
-  letI : Fintype {x : K // f.eval x = 0} := Fintype.ofFinite _
+  let : Fintype {x : K // f.eval x = 0} := Fintype.ofFinite _
   calc
     Nat.card {x : K // f.eval x = 0} ≤ f.roots.toFinset.card := by
       simpa only [Nat.card_eq_fintype_card, Fintype.card_coe] using
@@ -650,7 +650,7 @@ def badOffDiagonalPlaneEmbedding
       intro x y hxy
       by_cases hx : x.1.1.2 = 0
       · by_cases hy : y.1.1.2 = 0
-        · simp only [hx, hy, if_pos] at hxy
+        · simp only [hx, hy, ite_eq_left] at hxy
           have hpayload := Sum.inl.inj hxy
           apply Subtype.ext
           apply Subtype.ext
@@ -658,7 +658,7 @@ def badOffDiagonalPlaneEmbedding
         · simp [hx, hy] at hxy
       · by_cases hy : y.1.1.2 = 0
         · simp [hx, hy] at hxy
-        · simp only [hx, hy, if_neg] at hxy
+        · simp only [hx, hy, ite_eq_right] at hxy
           have hpayload := Sum.inr.inj hxy
           have hparameter : x.1.1.2 = y.1.1.2 := congrArg Subtype.val hpayload
           have hxsum : x.1.1.1 = 0 := by
@@ -697,7 +697,7 @@ theorem cagePulledRootPair_offDiagonal_card_comparison
         (BGS.External.affinePlaneCurveZeros (ZMod p)
           (cageOffDiagonalPlanePolynomial xi eta d)).card| ≤ 6 * d + 4 := by
   classical
-  letI : Finite (CagePulledRootPair p xi eta d) :=
+  let : Finite (CagePulledRootPair p xi eta d) :=
     Finite.of_injective
       (fun z => (z.parameter, z.firstRoot, z.secondRoot)) (by
         intro x y h

@@ -65,7 +65,7 @@ theorem finitePlaceDecompositionGroup_card_eq_restrictedKernel_mul_card_constant
       Nat.card
           (π.comp (finitePlaceDecompositionGroup C M L Q).subtype).ker *
         Nat.card (S ≃ₐ[C] S) := by
-  letI := finiteIntegralClosureGalAction C M L
+  let := finiteIntegralClosureGalAction C M L
   have hrelative :
       finitePlaceRelativeInertiaDeg C M L Q = Module.finrank C S := by
     have hdegree :=
@@ -109,7 +109,7 @@ theorem infinityPlaceDecompositionGroup_card_eq_restrictedKernel_mul_card_consta
       Nat.card
           (π.comp (infinityPlaceDecompositionGroup C M L Q).subtype).ker *
         Nat.card (S ≃ₐ[C] S) := by
-  letI := infinityIntegralClosureGalAction C M L
+  let := infinityIntegralClosureGalAction C M L
   have hrelative :
       infinityPlaceRelativeInertiaDeg C M L Q = Module.finrank C S := by
     have hdegree :=
@@ -157,8 +157,8 @@ theorem finitePlaceUnderFiber_stabilizer_card_eq_restrictedKernel_mul_card_const
       Nat.card
           (π.comp (MulAction.stabilizer Gal(L/M) Q).subtype).ker *
         Nat.card (S ≃ₐ[C] S) := by
-  letI := finiteIntegralClosureGalAction C M L
-  letI := finitePlaceUnderFiberGalAction C M L P
+  let := finiteIntegralClosureGalAction C M L
+  let := finitePlaceUnderFiberGalAction C M L P
   have hBase' : finiteExtensionPlaceDegree C M
       (.inl (finitePlaceUnder C M L Q.1)) = 1 := by
     rw [Q.2]
@@ -187,8 +187,8 @@ theorem infinityPlaceUnderFiber_stabilizer_card_eq_restrictedKernel_mul_card_con
       Nat.card
           (π.comp (MulAction.stabilizer Gal(L/M) Q).subtype).ker *
         Nat.card (S ≃ₐ[C] S) := by
-  letI := infinityIntegralClosureGalAction C M L
-  letI := infinityPlaceUnderFiberGalAction C M L P
+  let := infinityIntegralClosureGalAction C M L
+  let := infinityPlaceUnderFiberGalAction C M L P
   have hBase' : finiteExtensionPlaceDegree C M
       (.inr (infinityPlaceUnder C M L Q.1)) = 1 := by
     rw [Q.2]

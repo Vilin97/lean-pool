@@ -52,16 +52,16 @@ theorem finiteDimensional_frobeniusTwistField_over_ratFunc
       C (RatFunc C) N S hExact g
     FiniteDimensional (RatFunc C) F := by
   let T := ExactConstantExtension C N S
-  letI : Field T := exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc C) T :=
+  let : Field T := exactConstantExtensionField C N S hExact
+  let : Algebra (RatFunc C) T :=
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-  letI : Algebra N T := exactConstantExtensionAlgebra C N S
-  letI : IsScalarTower (RatFunc C) N T :=
+  let : Algebra N T := exactConstantExtensionAlgebra C N S
+  let : IsScalarTower (RatFunc C) N T :=
     exactConstantExtensionBaseTower C (RatFunc C) N S
   let tensorEquiv := exactConstantExtensionLinearEquiv C N S
-  letI : Module.Finite N (N ⊗[C] S) := Module.Finite.base_change C N S
-  letI : Module.Finite N T := Module.Finite.equiv tensorEquiv
-  letI : Module.Finite (RatFunc C) T := Module.Finite.trans N T
+  let : Module.Finite N (N ⊗[C] S) := Module.Finite.base_change C N S
+  let : Module.Finite N T := Module.Finite.equiv tensorEquiv
+  let : Module.Finite (RatFunc C) T := Module.Finite.trans N T
   let F := exactConstantExtensionFrobeniusTwistField
     C (RatFunc C) N S hExact g
   exact Module.Finite.left (RatFunc C) F T
@@ -80,21 +80,21 @@ theorem isSeparable_frobeniusTwistField_over_ratFunc
       C (RatFunc C) N S hExact g
     Algebra.IsSeparable (RatFunc C) F := by
   let T := ExactConstantExtension C N S
-  letI : Field T := exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc C) T :=
+  let : Field T := exactConstantExtensionField C N S hExact
+  let : Algebra (RatFunc C) T :=
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
   let F := exactConstantExtensionFrobeniusTwistField
     C (RatFunc C) N S hExact g
-  letI : SMul (RatFunc C) T := Algebra.toSMul
-  letI : Module (RatFunc C) T := Algebra.toModule
-  letI : Algebra N T := exactConstantExtensionAlgebra C N S
-  letI : SMul N T := Algebra.toSMul
-  letI : Module N T := Algebra.toModule
-  letI : IsScalarTower (RatFunc C) N T :=
+  let : SMul (RatFunc C) T := Algebra.toSMul
+  let : Module (RatFunc C) T := Algebra.toModule
+  let : Algebra N T := exactConstantExtensionAlgebra C N S
+  let : SMul N T := Algebra.toSMul
+  let : Module N T := Algebra.toModule
+  let : IsScalarTower (RatFunc C) N T :=
     exactConstantExtensionBaseTower C (RatFunc C) N S
-  letI : IsGalois N T :=
+  let : IsGalois N T :=
     exactConstantExtension_isGalois C N N S hExact
-  letI : Algebra.IsSeparable (RatFunc C) T :=
+  let : Algebra.IsSeparable (RatFunc C) T :=
     Algebra.IsSeparable.trans (RatFunc C) N T
   exact Algebra.isSeparable_tower_bot_of_isSeparable (RatFunc C) F T
 
@@ -119,13 +119,13 @@ private theorem exists_frobeniusTwistField_finitePlace_riemann_lower_budget
           Module.finrank C
               (finiteExtensionOnePointRiemannSpace C F (.inl q) poleOrder) +
             budget := by
-  letI := exactConstantExtensionField C N S hExact
-  letI := exactConstantExtensionBaseAlgebra C (RatFunc C) N S
+  let := exactConstantExtensionField C N S hExact
+  let := exactConstantExtensionBaseAlgebra C (RatFunc C) N S
   let F := exactConstantExtensionFrobeniusTwistField
     C (RatFunc C) N S hExact g
-  letI : FiniteDimensional (RatFunc C) F :=
+  let : FiniteDimensional (RatFunc C) F :=
     finiteDimensional_frobeniusTwistField_over_ratFunc C N S hExact g
-  letI : Algebra.IsSeparable (RatFunc C) F :=
+  let : Algebra.IsSeparable (RatFunc C) F :=
     isSeparable_frobeniusTwistField_over_ratFunc C N S hExact g
   exact exists_finitePlace_riemann_lower_budget C F
 
@@ -151,8 +151,8 @@ theorem exists_common_frobeniusTwistField_finitePlace_riemann_lower_budget
             Module.finrank C
                 (finiteExtensionOnePointRiemannSpace C F (.inl q) poleOrder) +
               budget := by
-  letI := exactConstantExtensionField C N S hExact
-  letI := exactConstantExtensionBaseAlgebra C (RatFunc C) N S
+  let := exactConstantExtensionField C N S hExact
+  let := exactConstantExtensionBaseAlgebra C (RatFunc C) N S
   choose twistBudget htwistBudget using fun g : N ≃ₐ[RatFunc C] N =>
     exists_frobeniusTwistField_finitePlace_riemann_lower_budget
       C N S hExact g
@@ -189,8 +189,8 @@ theorem exists_common_frobeniusTwistField_exactConstants_and_riemann_budget
               Module.finrank C
                   (finiteExtensionOnePointRiemannSpace C F (.inl q) poleOrder) +
                 budget := by
-  letI := exactConstantExtensionField C N S hExact
-  letI := exactConstantExtensionBaseAlgebra C (RatFunc C) N S
+  let := exactConstantExtensionField C N S hExact
+  let := exactConstantExtensionBaseAlgebra C (RatFunc C) N S
   obtain ⟨budget, hbudget⟩ :=
     exists_common_frobeniusTwistField_finitePlace_riemann_lower_budget
       C N S hExact

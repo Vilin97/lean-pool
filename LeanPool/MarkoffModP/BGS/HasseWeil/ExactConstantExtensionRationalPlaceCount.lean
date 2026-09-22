@@ -57,14 +57,14 @@ theorem exactConstantExtensionClosedPlaceExtensionCount_one_eq_rationalPlaceCoun
         exact finiteExtensionRationalPlaceCount S E) := by
   classical
   let E := ExactConstantExtension C N S
-  letI : Field E := exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc S) E :=
+  let : Field E := exactConstantExtensionField C N S hExact
+  let : Algebra (RatFunc S) E :=
     ratFuncExactConstantExtensionAlgebra C S N hExact
-  letI : SMul (RatFunc S) E := Algebra.toSMul
-  letI : Module (RatFunc S) E := Algebra.toModule
-  letI : FiniteDimensional (RatFunc S) E :=
+  let : SMul (RatFunc S) E := Algebra.toSMul
+  let : Module (RatFunc S) E := Algebra.toModule
+  let : FiniteDimensional (RatFunc S) E :=
     finiteDimensional_over_extendedRatFunc C S N hExact
-  letI : Algebra.IsSeparable (RatFunc S) E :=
+  let : Algebra.IsSeparable (RatFunc S) E :=
     isSeparable_over_extendedRatFunc C S N hExact
   change exactConstantExtensionClosedPlaceExtensionCount
       C S N hExact 1 = finiteExtensionRationalPlaceCount S E

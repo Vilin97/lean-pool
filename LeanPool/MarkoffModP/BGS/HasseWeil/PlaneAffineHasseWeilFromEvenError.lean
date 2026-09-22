@@ -70,7 +70,7 @@ theorem abs_affinePlaneCurveZeros_card_sub_card_le_eight_mul_bidegree_of_evenErr
   classical
   let hf : Irreducible f :=
     irreducible_of_irreducible_map_algebraicClosure habsolute
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
@@ -78,14 +78,14 @@ theorem abs_affinePlaneCurveZeros_card_sub_card_le_eight_mul_bidegree_of_evenErr
   let canonicalAlg : Algebra K L := inferInstance
   let ratAlg : Algebra (RatFunc K) L :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : Algebra (RatFunc K) L := ratAlg
-  letI : SMul (RatFunc K) L := ratAlg.toSMul
-  letI : Module (RatFunc K) L := ratAlg.toModule
-  letI : FiniteDimensional (RatFunc K) L :=
+  let : Algebra (RatFunc K) L := ratAlg
+  let : SMul (RatFunc K) L := ratAlg.toSMul
+  let : Module (RatFunc K) L := ratAlg.toModule
+  let : FiniteDimensional (RatFunc K) L :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K) L :=
+  let : Algebra.IsSeparable (RatFunc K) L :=
     separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : DecidableEq (RatFunc K) := Classical.decEq _
+  let : DecidableEq (RatFunc K) := Classical.decEq _
   let inducedAlg : Algebra K L := bridgeBaseConstantAlgebra K L
   have hinducedAlg : inducedAlg = canonicalAlg := by
     apply Algebra.algebra_ext
@@ -98,7 +98,7 @@ theorem abs_affinePlaneCurveZeros_card_sub_card_le_eight_mul_bidegree_of_evenErr
         K L _ _ canonicalAlg (planeCurveFunction f 0) hx)
       (Polynomial.C c)
     simpa using h
-  letI : Algebra K L := inducedAlg
+  let : Algebra K L := inducedAlg
   dsimp only
   intro herror
   let budget := (firstDegree - 1) * (secondDegree - 1)
@@ -205,7 +205,7 @@ theorem
   classical
   let hf : Irreducible f :=
     irreducible_of_irreducible_map_algebraicClosure habsolute
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
@@ -213,14 +213,14 @@ theorem
   let canonicalAlg : Algebra K L := inferInstance
   let ratAlg : Algebra (RatFunc K) L :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : Algebra (RatFunc K) L := ratAlg
-  letI : SMul (RatFunc K) L := ratAlg.toSMul
-  letI : Module (RatFunc K) L := ratAlg.toModule
-  letI : FiniteDimensional (RatFunc K) L :=
+  let : Algebra (RatFunc K) L := ratAlg
+  let : SMul (RatFunc K) L := ratAlg.toSMul
+  let : Module (RatFunc K) L := ratAlg.toModule
+  let : FiniteDimensional (RatFunc K) L :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K) L :=
+  let : Algebra.IsSeparable (RatFunc K) L :=
     separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : DecidableEq (RatFunc K) := Classical.decEq _
+  let : DecidableEq (RatFunc K) := Classical.decEq _
   let inducedAlg : Algebra K L := bridgeBaseConstantAlgebra K L
   have hinducedAlg : inducedAlg = canonicalAlg := by
     apply Algebra.algebra_ext
@@ -233,7 +233,7 @@ theorem
         K L _ _ canonicalAlg (planeCurveFunction f 0) hx)
       (Polynomial.C c)
     simpa using h
-  letI : Algebra K L := inducedAlg
+  let : Algebra K L := inducedAlg
   dsimp only
   intro herror
   let budget := (firstDegree - 1) * (secondDegree - 1)

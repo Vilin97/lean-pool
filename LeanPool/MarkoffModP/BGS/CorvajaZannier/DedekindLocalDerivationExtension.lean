@@ -159,9 +159,9 @@ theorem dedekindLocal_formallyEtale_of_isUnramifiedAt
     [Algebra.IsUnramifiedAt A Q] :
     Algebra.FormallyEtale (Localization.AtPrime p)
       (Localization.AtPrime Q) := by
-  letI : Algebra.FinitePresentation A B :=
+  let : Algebra.FinitePresentation A B :=
     Algebra.FinitePresentation.of_finiteType.mp inferInstance
-  letI : Algebra.FormallyEtale A (Localization.AtPrime Q) :=
+  let : Algebra.FormallyEtale A (Localization.AtPrime Q) :=
     Algebra.IsEtaleAt.of_isUnramifiedAt_of_flat Q
   exact Algebra.FormallyEtale.of_restrictScalars
     (R := A) (A := Localization.AtPrime p) (B := Localization.AtPrime Q)
@@ -179,7 +179,7 @@ theorem dedekindLocal_formallyEtale_of_not_dvd_different
     (hQ : ¬ Q ∣ differentIdeal A B) :
     Algebra.FormallyEtale (Localization.AtPrime p)
       (Localization.AtPrime Q) := by
-  letI : Algebra.IsUnramifiedAt A Q :=
+  let : Algebra.IsUnramifiedAt A Q :=
     not_dvd_differentIdeal_iff.mp hQ
   exact dedekindLocal_formallyEtale_of_isUnramifiedAt p Q
 
@@ -215,7 +215,7 @@ theorem dedekindLocal_derivation_preserves_of_isUnramifiedAt
       ∀ t : Localization.AtPrime Q,
         E (algebraMap (Localization.AtPrime Q) U t) =
           algebraMap (Localization.AtPrime Q) U (D' t) := by
-  letI : Algebra.FormallyEtale (Localization.AtPrime p)
+  let : Algebra.FormallyEtale (Localization.AtPrime p)
       (Localization.AtPrime Q) :=
     dedekindLocal_formallyEtale_of_isUnramifiedAt p Q
   exact formallyEtale_derivation_preserves D E hE
@@ -254,7 +254,7 @@ theorem dedekindLocal_derivation_preserves_of_not_dvd_different
       ∀ t : Localization.AtPrime Q,
         E (algebraMap (Localization.AtPrime Q) U t) =
           algebraMap (Localization.AtPrime Q) U (D' t) := by
-  letI : Algebra.FormallyEtale (Localization.AtPrime p)
+  let : Algebra.FormallyEtale (Localization.AtPrime p)
       (Localization.AtPrime Q) :=
     dedekindLocal_formallyEtale_of_not_dvd_different p Q hQ
   exact formallyEtale_derivation_preserves D E hE

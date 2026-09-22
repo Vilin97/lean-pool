@@ -261,7 +261,7 @@ private theorem ratFuncExtensionReciprocalPolynomialAlgebra_map
     algebraMap K[X] L p = algebraMap (RatFunc K) L
       (((reciprocalPolynomialRingHom K p :
         RatFuncInfinityIntegers K) : RatFunc K)) := by
-  letI : Algebra K[X] L :=
+  let : Algebra K[X] L :=
     ratFuncExtensionReciprocalPolynomialAlgebra K L
   change algebraMap (RatFuncInfinityIntegers K) L
       (reciprocalPolynomialRingHom K p) = _
@@ -278,9 +278,9 @@ private theorem exactConstantExtensionSReciprocalPolynomialAlgebra_eq :
     polynomialTensorCancelTargetPolynomialExtensionAlgebra C S N =
       ratFuncExtensionReciprocalPolynomialAlgebra S
         (ExactConstantExtension C N S) := by
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
     ratFuncExactConstantExtensionAlgebra C S N hExact
   apply Algebra.algebra_ext
   intro p
@@ -316,27 +316,27 @@ private theorem exactConstantExtensionCReciprocalPolynomialAlgebra_eq :
     exactConstantExtensionCReciprocalPolynomialAlgebra C S N =
       ratFuncExtensionReciprocalPolynomialAlgebra C
         (ExactConstantExtension C N S) := by
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-  letI : SMul (RatFunc C) (ExactConstantExtension C N S) :=
+  let : SMul (RatFunc C) (ExactConstantExtension C N S) :=
     Algebra.toSMul
-  letI : Module (RatFunc C) (ExactConstantExtension C N S) :=
+  let : Module (RatFunc C) (ExactConstantExtension C N S) :=
     Algebra.toModule
-  letI : Algebra (RatFunc C) (RatFunc S) :=
+  let : Algebra (RatFunc C) (RatFunc S) :=
     ratFuncCoefficientAlgebra C S
-  letI : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
     ratFuncExactConstantExtensionAlgebra C S N hExact
-  letI : Algebra C[X] (ExactConstantExtension C N S) :=
+  let : Algebra C[X] (ExactConstantExtension C N S) :=
     exactConstantExtensionCReciprocalPolynomialAlgebra C S N
-  letI : Algebra S[X] (ExactConstantExtension C N S) :=
+  let : Algebra S[X] (ExactConstantExtension C N S) :=
     infinitySplittingExactSPolynomialAlgebra C S N
-  letI : SMul C[X] (ExactConstantExtension C N S) :=
+  let : SMul C[X] (ExactConstantExtension C N S) :=
     infinitySplittingExactCPolynomialSMul C S N
-  letI : SMul S[X] (ExactConstantExtension C N S) :=
+  let : SMul S[X] (ExactConstantExtension C N S) :=
     infinitySplittingExactSPolynomialSMul C S N
-  letI : IsScalarTower C[X] S[X] (ExactConstantExtension C N S) :=
+  let : IsScalarTower C[X] S[X] (ExactConstantExtension C N S) :=
     exactConstantExtensionReciprocalPolynomialTower C S N
   apply Algebra.algebra_ext
   intro p
@@ -587,7 +587,7 @@ private theorem
         (algebraMap C[X] (S ⊗[C] integralClosure C[X] N) p) =
       algebraMap C[X]
         (integralClosure C[X] (ExactConstantExtension C N S)) p := by
-  letI : IsScalarTower C[X] S[X] (ExactConstantExtension C N S) :=
+  let : IsScalarTower C[X] S[X] (ExactConstantExtension C N S) :=
     exactConstantExtensionReciprocalPolynomialTower C S N
   let eS := finiteFieldReciprocalNormalizationAlgEquiv C S N
   let eC := exactConstantExtensionReciprocalIntegralClosureTowerEquiv C S N
@@ -670,8 +670,8 @@ private noncomputable def
           C S N q]
       exact hq
     let p := q.asIdeal.under S[X]
-    letI : q.asIdeal.IsPrime := q.isPrime
-    letI : p.IsPrime := inferInstance
+    let : q.asIdeal.IsPrime := q.isPrime
+    let : p.IsPrime := inferInstance
     apply primeUnderReciprocalOrigin_eq_origin C S p
     calc
       p.under C[X] = q.asIdeal.under C[X] := Ideal.under_under q.asIdeal
@@ -692,8 +692,8 @@ private noncomputable def
       invFun := fun P => by
         let oC := Ideal.span ({Polynomial.X} : Set C[X])
         have hNX : algebraMap C[X] N (Polynomial.X : C[X]) ≠ 0 := by
-          letI : DecidableEq C := infinityBridgeDecidableEqConstants C
-          letI : DecidableEq (RatFunc C) :=
+          let : DecidableEq C := infinityBridgeDecidableEqConstants C
+          let : DecidableEq (RatFunc C) :=
             infinityBridgeDecidableEqRatFuncConstants C
           have hNX' : @algebraMap C[X] N _ _
               (ratFuncExtensionReciprocalPolynomialAlgebra C N)
@@ -784,7 +784,7 @@ private theorem
   let e := exactConstantExtensionPresentedToCReciprocalNormalizationRingEquiv
     C S N
   let f := exactConstantExtensionOldToCReciprocalNormalizationMap C S N
-  letI : Algebra (integralClosure C[X] N)
+  let : Algebra (integralClosure C[X] N)
       (integralClosure C[X] (ExactConstantExtension C N S)) :=
     f.toAlgebra
   ext x
@@ -901,36 +901,36 @@ theorem exactConstantExtensionPresentedInfinityPlaceEquiv_under
         (exactConstantExtensionPresentedInfinityPlaceEquiv
           C S N hExact q) =
       exactConstantExtensionDownstairsInfinityPlace C S N q.1 q.2 := by
-  letI : DecidableEq C := infinityBridgeDecidableEqConstants C
-  letI : DecidableEq (RatFunc C) :=
+  let : DecidableEq C := infinityBridgeDecidableEqConstants C
+  let : DecidableEq (RatFunc C) :=
     infinityBridgeDecidableEqRatFuncConstants C
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-  letI : SMul (RatFunc C) (ExactConstantExtension C N S) :=
+  let : SMul (RatFunc C) (ExactConstantExtension C N S) :=
     Algebra.toSMul
-  letI : Module (RatFunc C) (ExactConstantExtension C N S) :=
+  let : Module (RatFunc C) (ExactConstantExtension C N S) :=
     Algebra.toModule
-  letI : FiniteDimensional (RatFunc C)
+  let : FiniteDimensional (RatFunc C)
       (ExactConstantExtension C N S) :=
     finiteDimensional_exactConstantExtension_over_baseRatFunc
       C S N hExact
-  letI : Algebra.IsSeparable (RatFunc C)
+  let : Algebra.IsSeparable (RatFunc C)
       (ExactConstantExtension C N S) :=
     isSeparable_exactConstantExtension_over_baseRatFunc C S N hExact
-  letI : Algebra N (ExactConstantExtension C N S) :=
+  let : Algebra N (ExactConstantExtension C N S) :=
     exactConstantExtensionAlgebra C N S
-  letI : SMul N (ExactConstantExtension C N S) := Algebra.toSMul
-  letI : Module N (ExactConstantExtension C N S) := Algebra.toModule
-  letI : IsScalarTower (RatFunc C) N
+  let : SMul N (ExactConstantExtension C N S) := Algebra.toSMul
+  let : Module N (ExactConstantExtension C N S) := Algebra.toModule
+  let : IsScalarTower (RatFunc C) N
       (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseTower C (RatFunc C) N S
   apply Subtype.ext
   rw [infinityPlaceUnder_asIdeal,
     exactConstantExtensionDownstairsInfinityPlace_asIdeal]
   let E := ExactConstantExtension C N S
-  letI : Algebra C[X] E :=
+  let : Algebra C[X] E :=
     ratFuncExtensionReciprocalPolynomialAlgebra C E
   let A₀ := integralClosure C[X] N
   let B₀ := RatFuncInfinityIntegralClosure C N
@@ -946,18 +946,18 @@ theorem exactConstantExtensionPresentedInfinityPlaceEquiv_under
     exactConstantExtensionCReciprocalPolynomialAlgebra_eq C S N hExact
   let f₀ := exactConstantExtensionOldToCReciprocalNormalizationMap C S N
   let g := integralClosureAlgHomOfAlgebraEq C[X] E A₀ a b h f₀
-  letI : Algebra A B :=
+  let : Algebra A B :=
     ratFuncInfinityReciprocalIntegralClosureAlgebra C E
-  letI : SMul A B := Algebra.toSMul
-  letI : Algebra A₀ B₀ :=
+  let : SMul A B := Algebra.toSMul
+  let : Algebra A₀ B₀ :=
     ratFuncInfinityReciprocalIntegralClosureAlgebra C N
-  letI : SMul A₀ B₀ := Algebra.toSMul
-  letI : Algebra A₀ A :=
+  let : SMul A₀ B₀ := Algebra.toSMul
+  let : Algebra A₀ A :=
     g.toAlgebra
-  letI : SMul A₀ A := Algebra.toSMul
-  letI : Algebra B₀ B :=
+  let : SMul A₀ A := Algebra.toSMul
+  let : Algebra B₀ B :=
     (infinityIntegralClosureMap C N E).toAlgebra
-  letI : SMul B₀ B := Algebra.toSMul
+  let : SMul B₀ B := Algebra.toSMul
   change (Ideal.map (algebraMap A B) P.1).under
       B₀ =
     Ideal.map
@@ -976,13 +976,13 @@ theorem exactConstantExtensionPresentedInfinityPlaceEquiv_under
       exactConstantExtensionPresentedInfinityPlaceEquivCReciprocalPrimes_under_old
         C S N q
     exact hTransport.trans hOld
-  letI : Algebra A₀ B :=
+  let : Algebra A₀ B :=
     RingHom.toAlgebra
       ((algebraMap B₀ B).comp (algebraMap A₀ B₀))
-  letI : SMul A₀ B := Algebra.toSMul
-  letI : IsScalarTower A₀ B₀ B :=
+  let : SMul A₀ B := Algebra.toSMul
+  let : IsScalarTower A₀ B₀ B :=
     IsScalarTower.of_algebraMap_eq' rfl
-  letI : IsScalarTower A₀ A B :=
+  let : IsScalarTower A₀ A B :=
     IsScalarTower.of_algebraMap_eq fun x => by
       apply Subtype.ext
       rfl
@@ -1109,9 +1109,9 @@ private theorem
     letI : Algebra N (ExactConstantExtension C N S) :=
       exactConstantExtensionBaseAlgebra C N N S
     g = 1 := by
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
-  letI : Algebra N (ExactConstantExtension C N S) :=
+  let : Algebra N (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseAlgebra C N N S
   have hker : g ∈
       (exactConstantExtensionConstantQuotient C N N S hExact).ker :=
@@ -1201,40 +1201,40 @@ theorem exactConstantExtensionConstantQuotient_action_on_infinityNormalization :
       algebraMap S (RatFuncInfinityIntegralClosure C
         (ExactConstantExtension C N S))
         (exactConstantExtensionConstantQuotient C N N S hExact g s) := by
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-  letI : SMul (RatFunc C) (ExactConstantExtension C N S) :=
+  let : SMul (RatFunc C) (ExactConstantExtension C N S) :=
     Algebra.toSMul
-  letI : Module (RatFunc C) (ExactConstantExtension C N S) :=
+  let : Module (RatFunc C) (ExactConstantExtension C N S) :=
     Algebra.toModule
-  letI : Algebra N (ExactConstantExtension C N S) :=
+  let : Algebra N (ExactConstantExtension C N S) :=
     exactConstantExtensionAlgebra C N S
-  letI : SMul N (ExactConstantExtension C N S) := Algebra.toSMul
-  letI : Module N (ExactConstantExtension C N S) := Algebra.toModule
-  letI : IsScalarTower (RatFunc C) N
+  let : SMul N (ExactConstantExtension C N S) := Algebra.toSMul
+  let : Module N (ExactConstantExtension C N S) := Algebra.toModule
+  let : IsScalarTower (RatFunc C) N
       (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseTower C (RatFunc C) N S
-  letI : IsGalois N (ExactConstantExtension C N S) :=
+  let : IsGalois N (ExactConstantExtension C N S) :=
     exactConstantExtension_isGalois C N N S hExact
-  letI : Algebra (RatFuncInfinityIntegers C)
+  let : Algebra (RatFuncInfinityIntegers C)
       (ExactConstantExtension C N S) :=
     RingHom.toAlgebra
       ((algebraMap (RatFunc C) (ExactConstantExtension C N S)).comp
         (algebraMap (RatFuncInfinityIntegers C) (RatFunc C)))
-  letI : SMul (RatFuncInfinityIntegers C)
+  let : SMul (RatFuncInfinityIntegers C)
       (ExactConstantExtension C N S) := Algebra.toSMul
-  letI : Module (RatFuncInfinityIntegers C)
+  let : Module (RatFuncInfinityIntegers C)
       (ExactConstantExtension C N S) := Algebra.toModule
-  letI : IsScalarTower (RatFuncInfinityIntegers C) (RatFunc C)
+  let : IsScalarTower (RatFuncInfinityIntegers C) (RatFunc C)
       (ExactConstantExtension C N S) :=
     IsScalarTower.of_algebraMap_eq' rfl
-  letI : Algebra S (RatFuncInfinityIntegralClosure C
+  let : Algebra S (RatFuncInfinityIntegralClosure C
       (ExactConstantExtension C N S)) :=
     exactConstantExtensionInfinityIntegralClosureConstantAlgebra
       C S N hExact
-  letI : MulSemiringAction
+  let : MulSemiringAction
       (ExactConstantExtension C N S ≃ₐ[N]
         ExactConstantExtension C N S)
       (RatFuncInfinityIntegralClosure C
@@ -1298,46 +1298,46 @@ theorem exactConstantExtensionInfinityPlace_ramificationIdx_eq_one
       exactConstantExtensionBaseTower C (RatFunc C) N S
     infinityPlaceRelativeRamificationIdx C N
       (ExactConstantExtension C N S) Q = 1 := by
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-  letI : SMul (RatFunc C) (ExactConstantExtension C N S) :=
+  let : SMul (RatFunc C) (ExactConstantExtension C N S) :=
     Algebra.toSMul
-  letI : Module (RatFunc C) (ExactConstantExtension C N S) :=
+  let : Module (RatFunc C) (ExactConstantExtension C N S) :=
     Algebra.toModule
-  letI : FiniteDimensional (RatFunc C)
+  let : FiniteDimensional (RatFunc C)
       (ExactConstantExtension C N S) :=
     finiteDimensional_exactConstantExtension_over_baseRatFunc C S N hExact
-  letI : Algebra.IsSeparable (RatFunc C)
+  let : Algebra.IsSeparable (RatFunc C)
       (ExactConstantExtension C N S) :=
     isSeparable_exactConstantExtension_over_baseRatFunc C S N hExact
-  letI : Algebra N (ExactConstantExtension C N S) :=
+  let : Algebra N (ExactConstantExtension C N S) :=
     exactConstantExtensionAlgebra C N S
-  letI : SMul N (ExactConstantExtension C N S) := Algebra.toSMul
-  letI : Module N (ExactConstantExtension C N S) := Algebra.toModule
-  letI : IsScalarTower (RatFunc C) N
+  let : SMul N (ExactConstantExtension C N S) := Algebra.toSMul
+  let : Module N (ExactConstantExtension C N S) := Algebra.toModule
+  let : IsScalarTower (RatFunc C) N
       (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseTower C (RatFunc C) N S
-  letI : IsGalois N (ExactConstantExtension C N S) :=
+  let : IsGalois N (ExactConstantExtension C N S) :=
     exactConstantExtension_isGalois C N N S hExact
-  letI : Algebra (RatFuncInfinityIntegers C)
+  let : Algebra (RatFuncInfinityIntegers C)
       (ExactConstantExtension C N S) :=
     RingHom.toAlgebra
       ((algebraMap (RatFunc C) (ExactConstantExtension C N S)).comp
         (algebraMap (RatFuncInfinityIntegers C) (RatFunc C)))
-  letI : SMul (RatFuncInfinityIntegers C)
+  let : SMul (RatFuncInfinityIntegers C)
       (ExactConstantExtension C N S) := Algebra.toSMul
-  letI : Module (RatFuncInfinityIntegers C)
+  let : Module (RatFuncInfinityIntegers C)
       (ExactConstantExtension C N S) := Algebra.toModule
-  letI : IsScalarTower (RatFuncInfinityIntegers C) (RatFunc C)
+  let : IsScalarTower (RatFuncInfinityIntegers C) (RatFunc C)
       (ExactConstantExtension C N S) :=
     IsScalarTower.of_algebraMap_eq' rfl
-  letI : Algebra S (RatFuncInfinityIntegralClosure C
+  let : Algebra S (RatFuncInfinityIntegralClosure C
       (ExactConstantExtension C N S)) :=
     exactConstantExtensionInfinityIntegralClosureConstantAlgebra
       C S N hExact
-  letI : MulSemiringAction
+  let : MulSemiringAction
       (ExactConstantExtension C N S ≃ₐ[N]
         ExactConstantExtension C N S)
       (RatFuncInfinityIntegralClosure C
@@ -1363,7 +1363,7 @@ theorem exactConstantExtensionInfinityPlace_ramificationIdx_eq_one
             (ExactConstantExtension C N S)) s)
         rw [exactConstantExtensionConstantQuotient_action_on_infinityNormalization
           C S N hExact] at hinertia
-        letI : Q.1.IsPrime := Q.2.1
+        let : Q.1.IsPrime := Q.2.1
         exact infinitySplitting_eq_of_algebraMap_sub_mem_prime S
           (RatFuncInfinityIntegralClosure C
             (ExactConstantExtension C N S)) Q.1 _ _ hinertia
@@ -1372,7 +1372,7 @@ theorem exactConstantExtensionInfinityPlace_ramificationIdx_eq_one
     have hgOne := inertiaElement_eq_one g
     have hhOne := inertiaElement_eq_one h
     exact hgOne.trans hhOne.symm
-  letI := hsubsingleton
+  let := hsubsingleton
   exact Nat.card_unique
 
 end InfinityRamification

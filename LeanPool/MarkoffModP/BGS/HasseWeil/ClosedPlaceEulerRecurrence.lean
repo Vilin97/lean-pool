@@ -222,8 +222,8 @@ private theorem weightedMarkedEffectiveDivisor_card
     @Fintype.card (WeightedMarkedEffectiveDivisor w n)
         (weightedMarkedEffectiveDivisorFintype w hw n) =
       weightedEffectiveDivisorCount w hw n * n := by
-  letI := weightedEffectiveDivisorFintype w hw n
-  letI := weightedMarkedEffectiveDivisorFintype w hw n
+  let := weightedEffectiveDivisorFintype w hw n
+  let := weightedMarkedEffectiveDivisorFintype w hw n
   rw [Fintype.card_congr (weightedMarkedEffectiveDivisorEquivSigma w n)]
   rw [Fintype.card_sigma]
   simp only [Fintype.card_sigma, Fintype.card_prod, Fintype.card_fin]
@@ -282,8 +282,8 @@ private theorem weightedEulerDecomposition_card
       ∑ ij ∈ Finset.HasAntidiagonal.antidiagonal n,
         weightedEffectiveDivisorCount w hw ij.1 *
           weightedClosedPlaceExtensionCount w (ij.2 + 1) := by
-  letI (m : ℕ) := weightedEffectiveDivisorFintype w hw m
-  letI := weightedEulerDecompositionFintype w hw n
+  let (m : ℕ) := weightedEffectiveDivisorFintype w hw m
+  let := weightedEulerDecompositionFintype w hw n
   rw [Fintype.card_congr (weightedEulerDecompositionEquivSigma w n)]
   rw [Fintype.card_sigma]
   simp only [Fintype.card_prod, Fintype.card_sigma, Fintype.card_fin]
@@ -317,9 +317,9 @@ theorem weightedEffectiveDivisorPointCountRecurrence
       (weightedEffectiveDivisorCount w (fun i => (hw i).ne'))
       (weightedClosedPlaceExtensionCount w) := by
   intro n
-  letI := weightedMarkedEffectiveDivisorFintype w
+  let := weightedMarkedEffectiveDivisorFintype w
     (fun i => (hw i).ne') (n + 1)
-  letI := weightedEulerDecompositionFintype w
+  let := weightedEulerDecompositionFintype w
     (fun i => (hw i).ne') n
   calc
     weightedEffectiveDivisorCount w (fun i => (hw i).ne') (n + 1) *
@@ -458,8 +458,8 @@ private theorem weightedEffectiveDivisorCount_degreeLE_eq_finiteExtensionCount
           finiteExtensionPlaceDegree K L P.1)
         (fun P => (finiteExtensionPlaceDegree_pos K L P.1).ne') n =
       finiteExtensionEffectiveDivisorCount K L n := by
-  letI := finiteExtensionPlaceDegreeLEFintype K L bound
-  letI := weightedEffectiveDivisorFintype
+  let := finiteExtensionPlaceDegreeLEFintype K L bound
+  let := weightedEffectiveDivisorFintype
     (fun P : {P : FiniteExtensionPlace K L //
         finiteExtensionPlaceDegree K L P ≤ bound} =>
       finiteExtensionPlaceDegree K L P.1)
@@ -486,7 +486,7 @@ theorem finiteExtensionClosedPlaceExtensionCount_eq_sum_degree_dvd
           finiteExtensionPlaceDegree K L P ≤ r} //
         finiteExtensionPlaceDegree K L P.1 ∣ r},
         finiteExtensionPlaceDegree K L P.1.1 := by
-  letI := finiteExtensionPlaceDegreeLEFintype K L r
+  let := finiteExtensionPlaceDegreeLEFintype K L r
   let PlaceLE := {P : FiniteExtensionPlace K L //
     finiteExtensionPlaceDegree K L P ≤ r}
   let PlaceDvd := {P : PlaceLE //
@@ -522,8 +522,8 @@ private theorem weightedClosedPlaceExtensionCount_degreeLE_eq_finiteExtensionCou
             finiteExtensionPlaceDegree K L P ≤ bound} =>
           finiteExtensionPlaceDegree K L P.1) r =
       finiteExtensionClosedPlaceExtensionCount K L r := by
-  letI := finiteExtensionPlaceDegreeLEFintype K L bound
-  letI := finiteExtensionPlaceDegreeLEFintype K L r
+  let := finiteExtensionPlaceDegreeLEFintype K L bound
+  let := finiteExtensionPlaceDegreeLEFintype K L r
   let Big := {P : FiniteExtensionPlace K L //
     finiteExtensionPlaceDegree K L P ≤ bound}
   let Small := {P : FiniteExtensionPlace K L //
@@ -576,7 +576,7 @@ theorem finiteExtensionEffectiveDivisorPointCountRecurrence :
   let PlaceLE := {P : FiniteExtensionPlace K L //
     finiteExtensionPlaceDegree K L P ≤ n + 1}
   let w : PlaceLE → ℕ := fun P => finiteExtensionPlaceDegree K L P.1
-  letI := finiteExtensionPlaceDegreeLEFintype K L (n + 1)
+  let := finiteExtensionPlaceDegreeLEFintype K L (n + 1)
   have hw : ∀ P : PlaceLE, 0 < w P := fun P =>
     finiteExtensionPlaceDegree_pos K L P.1
   have hlocal := weightedEffectiveDivisorPointCountRecurrence w hw n

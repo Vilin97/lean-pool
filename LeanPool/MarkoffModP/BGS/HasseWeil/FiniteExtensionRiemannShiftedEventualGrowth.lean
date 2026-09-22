@@ -79,7 +79,7 @@ theorem finiteExtensionShiftedRiemannSurplus_antitone_of_lower
         add_nonneg (hD P) hn
     · simpa [E, finiteExtensionRiemannShiftDivisor,
           Finsupp.single_eq_of_ne hv] using hD v
-  letI : Module.Finite K (finiteExtensionRiemannSpace K L E) :=
+  let : Module.Finite K (finiteExtensionRiemannSpace K L E) :=
     finiteExtensionRiemannSpace_effective_moduleFinite K L E hE
   have hinc := finiteExtensionRiemannSpace_place_increment K L E hE P
   have hdivisor : E + Finsupp.single P 1 =
@@ -256,11 +256,11 @@ theorem finiteExtensionRiemannSpace_shift_eventually_cardinality_formula
         add_nonneg (hD P) hNmnonneg
     · simpa [finiteExtensionRiemannShiftDivisor,
           Finsupp.single_eq_of_ne hv] using hD v
-  letI : Module.Finite K
+  let : Module.Finite K
       (finiteExtensionRiemannSpace K L
         (finiteExtensionRiemannShiftDivisor K L D P N)) :=
     finiteExtensionRiemannSpace_effective_moduleFinite K L _ hDN
-  letI : Module.Finite K
+  let : Module.Finite K
       (finiteExtensionRiemannSpace K L
         (finiteExtensionRiemannShiftDivisor K L D P (N + m))) :=
     finiteExtensionRiemannSpace_effective_moduleFinite K L _ hDNm

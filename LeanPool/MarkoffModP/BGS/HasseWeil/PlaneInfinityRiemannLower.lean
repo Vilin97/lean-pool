@@ -94,7 +94,7 @@ theorem planeCurve_infinitySupported_riemann_lower
         Module.finrank K
             (finiteExtensionRiemannSpace K (PlaneCurveFunctionField f) E) +
           planeCurveBidegreeGenusBudget f := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
@@ -104,19 +104,19 @@ theorem planeCurve_infinitySupported_riemann_lower
   let a := MvPolynomial.degreeOf 0 f
   let b := MvPolynomial.degreeOf 1 f
   let g := planeCurveBidegreeGenusBudget f
-  letI : Algebra (RatFunc K) L :=
+  let : Algebra (RatFunc K) L :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : FiniteDimensional (RatFunc K) L :=
+  let : FiniteDimensional (RatFunc K) L :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K) L :=
+  let : Algebra.IsSeparable (RatFunc K) L :=
     separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
   let constantAlg : Algebra K L :=
     RingHom.toAlgebra ((algebraMap (RatFunc K) L).comp
       (algebraMap K (RatFunc K)))
-  letI : Algebra K L := constantAlg
-  letI : SMul K L := constantAlg.toSMul
-  letI : Module K L := constantAlg.toModule
-  letI : IsScalarTower K (RatFunc K) L :=
+  let : Algebra K L := constantAlg
+  let : SMul K L := constantAlg.toSMul
+  let : Module K L := constantAlg.toModule
+  let : IsScalarTower K (RatFunc K) L :=
     IsScalarTower.of_algebraMap_eq' rfl
   dsimp only
   intro E hE hEfinite
@@ -155,7 +155,7 @@ theorem planeCurve_infinitySupported_riemann_lower
   have hsplit : E + A = D := by
     dsimp only [A]
     abel
-  letI : Module.Finite K (finiteExtensionRiemannSpace K L E) :=
+  let : Module.Finite K (finiteExtensionRiemannSpace K L E) :=
     finiteExtensionRiemannSpace_effective_moduleFinite K L E hE
   have hstrip :=
     finiteExtensionRiemannSpace_add_effective K L E A hE hA

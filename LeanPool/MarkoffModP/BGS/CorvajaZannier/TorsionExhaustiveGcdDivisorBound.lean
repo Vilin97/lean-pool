@@ -167,7 +167,7 @@ theorem integralClosure_le_dominatingValuationSubring
     (integralClosure P L).toSubring ≤
       (dominatingValuationSubring (A := A) (L := L) m).toSubring := by
   let V := dominatingValuationSubring (A := A) (L := L) m
-  letI : IsIntegrallyClosedIn V.toSubring L :=
+  let : IsIntegrallyClosedIn V.toSubring L :=
     inferInstanceAs (IsIntegrallyClosedIn V L)
   rw [Subring.integralClosure_le_iff]
   intro p
@@ -456,13 +456,13 @@ theorem polynomial_algebraMap_mem_planeCurveCoordinateRing_range
     algebraMap (Polynomial K) (PlaneCurveFunctionField f) P ∈
       (algebraMap (PlaneCurveCoordinateRing f)
         (PlaneCurveFunctionField f)).range := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
-  letI : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : Algebra (Polynomial K) (PlaneCurveFunctionField f) :=
+  let : Algebra (Polynomial K) (PlaneCurveFunctionField f) :=
     RingHom.toAlgebra
       ((algebraMap (RatFunc K) (PlaneCurveFunctionField f)).comp
         (algebraMap (Polynomial K) (RatFunc K)))
@@ -692,22 +692,22 @@ theorem torsionPointExhaustiveFinitePlace_injective
     Function.Injective
       (torsionPointExhaustiveFinitePlace hf hpartialSecond
         firstOrder secondOrder hfirstNonzero hsecondNonzero) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
-  letI : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : Algebra (Polynomial K) (PlaneCurveFunctionField f) :=
+  let : Algebra (Polynomial K) (PlaneCurveFunctionField f) :=
     RingHom.toAlgebra
       ((algebraMap (RatFunc K) (PlaneCurveFunctionField f)).comp
         (algebraMap (Polynomial K) (RatFunc K)))
-  letI : IsScalarTower (Polynomial K) (RatFunc K)
+  let : IsScalarTower (Polynomial K) (RatFunc K)
       (PlaneCurveFunctionField f) :=
     IsScalarTower.of_algebraMap_eq' rfl
-  letI : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
     separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
   change Function.Injective
     (torsionPointExhaustiveFinitePlace hf hpartialSecond
@@ -772,25 +772,25 @@ theorem torsionPoint_card_le_planeCurveExhaustiveTorsionGcdWeightedDegree
       planeCurveExhaustiveTorsionGcdWeightedDegree
         hf hpartialSecond firstOrder secondOrder := by
   classical
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : DecidableEq (RatFunc K) := Classical.decEq (RatFunc K)
+  let : DecidableEq (RatFunc K) := Classical.decEq (RatFunc K)
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
-  letI : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : Algebra (Polynomial K) (PlaneCurveFunctionField f) :=
+  let : Algebra (Polynomial K) (PlaneCurveFunctionField f) :=
     RingHom.toAlgebra
       ((algebraMap (RatFunc K) (PlaneCurveFunctionField f)).comp
         (algebraMap (Polynomial K) (RatFunc K)))
-  letI : IsScalarTower (Polynomial K) (RatFunc K)
+  let : IsScalarTower (Polynomial K) (RatFunc K)
       (PlaneCurveFunctionField f) :=
     IsScalarTower.of_algebraMap_eq' rfl
-  letI : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
     separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : DecidableEq (FiniteExtensionPlace K (PlaneCurveFunctionField f)) :=
+  let : DecidableEq (FiniteExtensionPlace K (PlaneCurveFunctionField f)) :=
     Classical.decEq _
   let x : PlaneCurveFunctionField f :=
     planeCurveFunction f 0 ^ firstOrder - 1

@@ -40,7 +40,7 @@ private theorem linearDisjoint_of_inf_eq_bot_of_sup_eq_top
     (hsup : A ⊔ B = ⊤) (hinf : A ⊓ B = ⊥) : A.LinearDisjoint B := by
   let ι := Module.Free.ChooseBasisIndex F A
   let a : Module.Basis ι F A := Module.Free.chooseBasis F A
-  letI : Fintype ι := Fintype.ofFinite ι
+  let : Fintype ι := Fintype.ofFinite ι
   have hAspan : A.toSubalgebra.toSubmodule =
       Submodule.span F (Set.range (A.val ∘ a)) := by
     calc
@@ -68,13 +68,13 @@ private theorem linearDisjoint_of_inf_eq_bot_of_sup_eq_top
       simpa only [IntermediateField.coe_toSubalgebra] using hAdjoin
     rw [← A.toSubalgebra.adjoin_eq_span_of_eq_span B hAspan, hAdjoin']
     rfl
-  letI : FiniteDimensional B E := by
+  let : FiniteDimensional B E := by
     have hfinite : Module.Finite B
         (Submodule.span B (Set.range (A.val ∘ a))) :=
       Module.Finite.span_of_finite B (Set.toFinite _)
     rw [hspan] at hfinite
     exact Module.Finite.equiv (Submodule.topEquiv (R := B) (M := E))
-  letI : IsGalois B E := IsGalois.sup_right A B hsup
+  let : IsGalois B E := IsGalois.sup_right A B hsup
   have hfinrank : Module.finrank B E = Module.finrank F A := by
     rw [← IsGalois.card_aut_eq_finrank, ← IsGalois.card_aut_eq_finrank]
     exact Nat.card_congr <| Equiv.ofBijective
@@ -112,9 +112,9 @@ theorem linearDisjoint_of_inf_eq_bot_of_finite_galois_left
     rw [← IntermediateField.lift_inj, IntermediateField.lift_bot,
       IntermediateField.lift_inf, IntermediateField.lift_restrict le_sup_left,
       IntermediateField.lift_restrict le_sup_right, hinf]
-  let eA : A ≃ₐ[F] A' := IntermediateField.restrict_algEquiv ..
-  letI : FiniteDimensional F A' := Module.Finite.equiv eA.toLinearEquiv
-  haveI : IsGalois F A' := IsGalois.of_algEquiv eA
+  let eA : A ≃ₐ[F] A' := IntermediateField.restrictAlgEquiv ..
+  let : FiniteDimensional F A' := Module.Finite.equiv eA.toLinearEquiv
+  have : IsGalois F A' := IsGalois.of_algEquiv eA
   exact linearDisjoint_of_inf_eq_bot_of_sup_eq_top A' B' hsup hinf'
 
 end LinearDisjoint
@@ -136,8 +136,8 @@ theorem exactConstantExtensionImages_linearDisjoint
       (IsScalarTower.toAlgHom C N Ω).fieldRange := by
   let Ω := AlgebraicClosure N
   let fS : S →ₐ[C] Ω := IsAlgClosed.lift
-  letI : Algebra S Ω := fS.toAlgebra
-  letI : IsScalarTower C S Ω := IsScalarTower.of_algebraMap_eq' (by
+  let : Algebra S Ω := fS.toAlgebra
+  let : IsScalarTower C S Ω := IsScalarTower.of_algebraMap_eq' (by
     ext c
     exact (fS.commutes c).symm)
   let A := fS.fieldRange
@@ -166,8 +166,8 @@ theorem exactConstantExtensionImages_linearDisjoint
     rw [← hn, ← hc]
     rfl
   let eA : S ≃ₐ[C] A := AlgEquiv.ofInjectiveField fS
-  letI : FiniteDimensional C A := Module.Finite.equiv eA.toLinearEquiv
-  haveI : IsGalois C A := IsGalois.of_algEquiv eA
+  let : FiniteDimensional C A := Module.Finite.equiv eA.toLinearEquiv
+  have : IsGalois C A := IsGalois.of_algEquiv eA
   exact linearDisjoint_of_inf_eq_bot_of_finite_galois_left A B hInf
 
 /-- If `C` is the exact constant field of `N`, adjoining any finite Galois
@@ -217,7 +217,7 @@ field. -/
 theorem exactConstantExtension_finrank :
     letI := exactConstantExtensionAlgebra C N S
     Module.finrank N (S ⊗[C] N) = Module.finrank C S := by
-  letI := exactConstantExtensionAlgebra C N S
+  let := exactConstantExtensionAlgebra C N S
   calc
     Module.finrank N (S ⊗[C] N) = Module.finrank N (N ⊗[C] S) :=
       (exactConstantExtensionLinearEquiv C N S).finrank_eq.symm

@@ -105,7 +105,7 @@ theorem tensorFractionLocalizationEquiv_algebraMap (z : TensorBase K E A) :
   | add x y hx hy => simp only [map_add, hx, hy]
 
 local instance tensorFractionIsDomain : IsDomain (TensorFraction K E A) := by
-  letI : IsDomain (TensorBaseLocalization K E A) :=
+  let : IsDomain (TensorBaseLocalization K E A) :=
     IsLocalization.isDomain_localization (tensorBase_nonZero_map K E A)
   exact (tensorFractionLocalizationEquiv K E A).toMulEquiv.isDomain_iff.mpr
     inferInstance
@@ -202,7 +202,7 @@ coordinate ring is a domain. -/
 theorem planeCurveCoordinateRingBaseChange_isDomain
     (hfE : Irreducible (MvPolynomial.map (algebraMap K E) f)) :
     IsDomain (E ⊗[K] PlaneCurveCoordinateRing f) := by
-  letI : IsDomain (PlaneCurveCoordinateRing
+  let : IsDomain (PlaneCurveCoordinateRing
       (MvPolynomial.map (algebraMap K E) f)) :=
     planeCurveCoordinateRing_isDomain hfE
   exact (planeCurveCoordinateRingBaseChangeAlgEquiv K E f).toMulEquiv.isDomain_iff.mpr
@@ -241,11 +241,11 @@ theorem planeCurveFunctionFieldBaseChangeAlgEquiv_tmul_one (e : E) :
       algebraMap E
         (PlaneCurveFunctionField
           (MvPolynomial.map (algebraMap K E) f)) e := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : IsDomain (E ⊗[K] PlaneCurveCoordinateRing f) :=
+  let : IsDomain (E ⊗[K] PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRingBaseChange_isDomain K E f hfE
-  letI : IsFractionRing
+  let : IsFractionRing
       (E ⊗[K] PlaneCurveCoordinateRing f)
       (E ⊗[K] PlaneCurveFunctionField f) :=
     tensorFraction_isFractionRing K E (PlaneCurveCoordinateRing f)

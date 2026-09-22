@@ -4,7 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
 
-import Mathlib
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Algebra.Polynomial.Eval.Defs
+import Mathlib.Analysis.CStarAlgebra.Classes
+import Mathlib.Analysis.SpecificLimits.Normed
+import Mathlib.Tactic
 
 /-!
 # Growth of finite weighted power sums

@@ -84,27 +84,27 @@ lemma maximalIdeal_eq_sup_of_etale_quotient
       q ⊔ Ideal.map (algebraMap R S) (IsLocalRing.maximalIdeal R) := by
   set p := q.comap (algebraMap R S)
   set φ₀ : R ⧸ p →+* S ⧸ q := Ideal.quotientMap q (algebraMap R S) le_rfl
-  letI : Algebra (R ⧸ p) (S ⧸ q) := φ₀.toAlgebra
+  let : Algebra (R ⧸ p) (S ⧸ q) := φ₀.toAlgebra
   have hφ₀_eq : algebraMap (R ⧸ p) (S ⧸ q) = φ₀ := RingHom.algebraMap_toAlgebra φ₀
-  haveI hp : p.IsPrime := Ideal.IsPrime.comap (algebraMap R S)
-  haveI : IsLocalRing (R ⧸ p) := .of_surjective' _ Ideal.Quotient.mk_surjective
-  haveI : IsLocalRing (S ⧸ q) := .of_surjective' _ Ideal.Quotient.mk_surjective
-  haveI : Algebra.FormallyUnramified (R ⧸ p) (S ⧸ q) := by
+  have hp : p.IsPrime := Ideal.IsPrime.comap (algebraMap R S)
+  have : IsLocalRing (R ⧸ p) := .of_surjective' _ Ideal.Quotient.mk_surjective
+  have : IsLocalRing (S ⧸ q) := .of_surjective' _ Ideal.Quotient.mk_surjective
+  have : Algebra.FormallyUnramified (R ⧸ p) (S ⧸ q) := by
     have := ((RingHom.etale_iff_formallyUnramified_and_smooth φ₀).mp hétale).1
     rwa [← hφ₀_eq] at this
-  haveI : IsScalarTower R (R ⧸ p) (S ⧸ q) := .of_algebraMap_eq' rfl
-  haveI : Module.Finite (R ⧸ p) (S ⧸ q) := Module.Finite.of_restrictScalars_finite R _ _
-  haveI : IsLocalHom (algebraMap (R ⧸ p) (S ⧸ q)) := by
+  have : IsScalarTower R (R ⧸ p) (S ⧸ q) := .of_algebraMap_eq' rfl
+  have : Module.Finite (R ⧸ p) (S ⧸ q) := Module.Finite.of_restrictScalars_finite R _ _
+  have : IsLocalHom (algebraMap (R ⧸ p) (S ⧸ q)) := by
     rw [hφ₀_eq]; exact RingHom.IsIntegral.isLocalHom (.of_finite
       (RingHom.finite_algebraMap.mpr ‹_›)) Ideal.quotientMap_injective
   have mk_max_R : (IsLocalRing.maximalIdeal R).map (Ideal.Quotient.mk p) =
       IsLocalRing.maximalIdeal (R ⧸ p) := by
-    haveI := IsLocalHom.of_surjective (Ideal.Quotient.mk p) Ideal.Quotient.mk_surjective
+    have := IsLocalHom.of_surjective (Ideal.Quotient.mk p) Ideal.Quotient.mk_surjective
     ext x; obtain ⟨x, rfl⟩ := Ideal.Quotient.mk_surjective x
     simp [sup_eq_left.mpr (IsLocalRing.le_maximalIdeal hp.ne_top)]
   have mk_max_S : (IsLocalRing.maximalIdeal S).map (Ideal.Quotient.mk q) =
       IsLocalRing.maximalIdeal (S ⧸ q) := by
-    haveI := IsLocalHom.of_surjective (Ideal.Quotient.mk q) Ideal.Quotient.mk_surjective
+    have := IsLocalHom.of_surjective (Ideal.Quotient.mk q) Ideal.Quotient.mk_surjective
     ext x; obtain ⟨x, rfl⟩ := Ideal.Quotient.mk_surjective x
     simp [sup_eq_left.mpr (IsLocalRing.le_maximalIdeal hq_prime.ne_top)]
   have key : (IsLocalRing.maximalIdeal S).map (Ideal.Quotient.mk q) =
@@ -227,9 +227,9 @@ lemma adjoin_eq_top_of_quotient [Algebra R S] [IsLocalRing R] [IsLocalRing S]
   set mR := IsLocalRing.maximalIdeal R
   set mS := IsLocalRing.maximalIdeal S
   set mR_S := Ideal.map (algebraMap R S) mR
-  haveI : IsArtinianRing (S ⧸ mR_S) := by
-    letI := Ideal.Quotient.field mR
-    haveI := Module.Finite.of_restrictScalars_finite R (R ⧸ mR) (S ⧸ mR_S)
+  have : IsArtinianRing (S ⧸ mR_S) := by
+    let := Ideal.Quotient.field mR
+    have := Module.Finite.of_restrictScalars_finite R (R ⧸ mR) (S ⧸ mR_S)
     exact IsArtinianRing.of_finite (R ⧸ mR) (S ⧸ mR_S)
   obtain ⟨n, hn⟩ := IsLocalRing.exists_maximalIdeal_pow_le_of_isArtinianRing_quotient mR_S
   have h_lift := exists_adjoin_sub_mem β q h_gen
@@ -314,14 +314,14 @@ theorem exists_isAdjoinRootMonic_of_quotientMap_etale
     ∃ f : R[X], Nonempty (IsAdjoinRootMonic S f) := by
   by_cases hφ_etale : Algebra.Etale R S
   · obtain ⟨β, adj⟩ := exists_adjoin_eq_top (R := R) (S := S)
-    haveI : Module.Free R S := Module.free_of_flat_of_isLocalRing
+    have : Module.Free R S := Module.free_of_flat_of_isLocalRing
     exact ⟨minpoly R β, ⟨IsAdjoinRootMonic.mkOfAdjoinEqTop' adj⟩⟩
   set p := q.comap (algebraMap R S)
   set φ₀ := Ideal.quotientMap q (algebraMap R S) (le_refl p)
-  haveI : IsLocalRing (R ⧸ p) := .of_surjective' _ Ideal.Quotient.mk_surjective
-  haveI : IsLocalRing (S ⧸ q) := .of_surjective' _ Ideal.Quotient.mk_surjective
-  haveI : Module.Finite (R ⧸ p) (S ⧸ q) := Module.Finite.of_restrictScalars_finite R _ _
-  haveI : Algebra.Etale (R ⧸ p) (S ⧸ q) := RingHom.etale_algebraMap.mp hétale
+  have : IsLocalRing (R ⧸ p) := .of_surjective' _ Ideal.Quotient.mk_surjective
+  have : IsLocalRing (S ⧸ q) := .of_surjective' _ Ideal.Quotient.mk_surjective
+  have : Module.Finite (R ⧸ p) (S ⧸ q) := Module.Finite.of_restrictScalars_finite R _ _
+  have : Algebra.Etale (R ⧸ p) (S ⧸ q) := RingHom.etale_algebraMap.mp hétale
   obtain ⟨B₀, adj⟩ := exists_adjoin_eq_top (R := R ⧸ p) (S := S ⧸ q)
   obtain ⟨B, hB⟩ := Ideal.Quotient.mk_surjective B₀
   obtain ⟨f₁, hf₁_map, hf₁_monic⟩ :
@@ -356,7 +356,7 @@ theorem exists_isAdjoinRootMonic_of_quotientMap_etale
       rw [hq₀] at h_f₁B_in_q; exact Ideal.mem_span_singleton.mp h_f₁B_in_q
     have h_deriv_not_in_ms : f₁.derivative.aeval B ∉ ms := by
       intro h_in_ms
-      haveI : IsLocalHom (Ideal.Quotient.mk q) :=
+      have : IsLocalHom (Ideal.Quotient.mk q) :=
         IsLocalHom.of_surjective _ Ideal.Quotient.mk_surjective
       refine (IsLocalRing.mem_maximalIdeal _).mp h_in_ms
         (isUnit_of_map_unit (Ideal.Quotient.mk q) _ ?_)

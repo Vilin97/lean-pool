@@ -138,7 +138,7 @@ theorem exists_exact_eigenvalue_orders_with_cyclotomic_bound
   have hl₂ : 0 < l₂ := hfin₂.orderOf_pos
   have hl₃ : 0 < l₃ := hfin₃.orderOf_pos
   have hn : 0 < n := Nat.lcm_pos hl₁ (Nat.lcm_pos hl₂ hl₃)
-  letI : NeZero n := ⟨hn.ne'⟩
+  let : NeZero n := ⟨hn.ne'⟩
   have hcoprimeN : Nat.Coprime p n := by
     apply (Fact.out : p.Prime).coprime_iff_not_dvd.2
     exact (Fact.out : p.Prime).not_dvd_lcm

@@ -100,7 +100,7 @@ theorem capTable_oddPrimeFloors_prod_le_jointOddPrimeList_prod
         exact (List.getElem_take' hactualIndex hfloorIndex).symm
       rw [htakeEq]
       exact hcapEq.le.trans hbound
-  have hprefix := hpointwise.prod_le_prod'
+  have hprefix := hpointwise.List.Forall₂.prod_le_prod
   have htakeSublist : List.Sublist
       (actual.take table.oddPrimeFloors.length) actual :=
     List.take_sublist _ _
@@ -109,7 +109,7 @@ theorem capTable_oddPrimeFloors_prod_le_jointOddPrimeList_prod
     rcases (mem_jointOddPrimeList.mp hprime).2 with hminus | hplus
     · exact (Nat.prime_of_mem_primeFactors hminus).one_le
     · exact (Nat.prime_of_mem_primeFactors hplus).one_le
-  exact hprefix.trans (htakeSublist.prod_le_prod' hactualOne)
+  exact hprefix.trans (htakeSublist.List.Sublist.prod_le_prod hactualOne)
 
 theorem jointOddPrimeList_length_lt_of_capTable_prod_gt
     {p : ℕ} {table : RankinPositionalCapTable}

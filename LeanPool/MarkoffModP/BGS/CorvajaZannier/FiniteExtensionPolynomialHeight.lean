@@ -232,7 +232,7 @@ theorem finiteExtensionPositiveDegree_polynomial_cast
       rw [finiteExtensionFinitePrincipalDivisor_apply]
       change 0 < finiteExtensionPrincipalDivisor K L x (.inl q)
       exact lt_of_le_of_ne hnonneg (Ne.symm hne)
-    rw [if_pos hpos]
+    rw [ite_eq_left hpos]
     simp only [finiteExtensionPlaceDegree, Nat.cast_mul]
     ring
   have hinfinity :
@@ -247,7 +247,7 @@ theorem finiteExtensionPositiveDegree_polynomial_cast
       rw [finiteExtensionInfinityPrincipalDivisor_apply]
       change ¬ 0 < finiteExtensionPrincipalDivisor K L x (.inr q)
       exact not_lt_of_ge hnonpos
-    rw [if_neg hnotpos]
+    rw [ite_eq_right hnotpos]
   change
     (finiteExtensionFinitePrincipalDivisor K L x).sum
         (fun q n => if 0 < n then

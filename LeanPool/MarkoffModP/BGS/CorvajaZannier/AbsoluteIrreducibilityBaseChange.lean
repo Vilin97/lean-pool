@@ -163,7 +163,7 @@ theorem irreducible_map_of_irreducible_map_isAlgClosed
     let P : Ideal (MvPolynomial V K) := RingHom.ker ψ
     have hPprime : P.IsPrime := RingHom.ker_isPrime ψ
     obtain ⟨M, hMmax, hPM⟩ := Ideal.exists_le_maximal P hPprime.ne_top
-    letI : Finite V := by infer_instance
+    let : Finite V := by infer_instance
     obtain ⟨x, hx⟩ :=
       MvPolynomial.eq_vanishingIdeal_singleton_of_isMaximal E hMmax
     let θ : MvPolynomial V K →+* E :=

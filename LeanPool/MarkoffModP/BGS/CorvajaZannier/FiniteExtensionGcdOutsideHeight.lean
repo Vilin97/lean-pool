@@ -43,7 +43,7 @@ theorem gcdMultiplicity_add_outsidePole_le_secondPositivePart
   · obtain ⟨hDu, hDv⟩ := hOutside hPS
     rw [hRho]
     by_cases hneg : Du P - Dv P < 0
-    · simp only [hPS, not_false_eq_true, hneg, and_self, if_pos]
+    · simp only [hPS, not_false_eq_true, hneg, and_self, ite_eq_left]
       have hmin : min (Du P) (Dv P) = Du P :=
         min_eq_left (sub_nonpos.mp (le_of_lt hneg))
       have hcast :
@@ -56,7 +56,7 @@ theorem gcdMultiplicity_add_outsidePole_le_secondPositivePart
         omega
       exact_mod_cast hcast
     · have hnonneg : 0 ≤ Du P - Dv P := le_of_not_gt hneg
-      simp only [hPS, not_false_eq_true, hneg, and_false, if_false, add_zero]
+      simp only [hPS, not_false_eq_true, hneg, and_false, ite_false, add_zero]
       exact Int.toNat_le_toNat (min_le_right _ _)
 
 /-- If the local order of `rho` is the difference of the two one-minus

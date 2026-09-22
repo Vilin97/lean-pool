@@ -213,7 +213,7 @@ theorem incidenceBiquadraticTraceBranch_not_isSquare
     apply h2
     apply FaithfulSMul.algebraMap_injective K (RatFunc K)
     simpa only [map_ofNat, map_zero] using hzero
-  letI : Fact
+  let : Fact
       (Irreducible
         (adjoinSquarePolynomial
           (algebraMap K[X] (RatFunc K) (incidenceBranchPolynomial a)))) :=
@@ -301,7 +301,7 @@ theorem incidenceBiquadraticTraceRootPolynomial_irreducible
     (hA : 9 * a ^ 2 - 4 ≠ 0) (hB : 9 * b ^ 2 - 4 ≠ 0)
     (hab : a ^ 2 ≠ b ^ 2) :
     Irreducible (incidenceBiquadraticTraceRootPolynomial a b) := by
-  letI : IsDomain (IncidenceBiquadraticRatFuncRing K a b) :=
+  let : IsDomain (IncidenceBiquadraticRatFuncRing K a b) :=
     incidenceBiquadraticRatFuncRing_isDomain K h2 ha hb hA hB hab
   change Irreducible (traceRootPolynomial (incidenceBiquadraticNormalizedTrace a b))
   apply traceRootPolynomial_irreducible_of_discriminant_not_isSquare

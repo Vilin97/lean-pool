@@ -58,7 +58,7 @@ theorem splitTraceEtaKummerPolynomial_natDegree
       ⟨splitTraceBaseKummerPolynomial_irreducible sigma hsigma⟩
     (splitTraceEtaKummerPolynomial sigma e).natDegree = e := by
   let hBaseIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
   change (X ^ e - C (splitTraceBaseV sigma)).natDegree = e
   exact natDegree_X_pow_sub_C
 
@@ -70,9 +70,9 @@ theorem splitTraceXiKummerPolynomial_natDegree
       ⟨splitTraceEtaKummerPolynomial_irreducible' sigma hsigma e heOdd⟩
     (splitTraceXiKummerPolynomial sigma e d).natDegree = d := by
   let hBaseIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
   let hEtaIrred := splitTraceEtaKummerPolynomial_irreducible' sigma hsigma e heOdd
-  letI : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
+  let : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
   change (X ^ d - C (splitTraceXiRadicand sigma e)).natDegree = d
   exact natDegree_X_pow_sub_C
 
@@ -201,11 +201,11 @@ theorem splitTraceExplicitNormalFormEvaluation_single_monomial (i j : ℕ) :
           (splitTraceMonomialNormalIndex sigma hsigma e d heOdd hdOdd i j)
           (splitTraceMonomialNormalCoefficient sigma e d i j)) =
       splitTraceXiRoot sigma e d ^ i * splitTraceEtaRootInXiField sigma e d ^ j := by
-  letI : CommRing (AdjoinRoot (splitTraceBaseKummerPolynomial sigma)) :=
+  let : CommRing (AdjoinRoot (splitTraceBaseKummerPolynomial sigma)) :=
     AdjoinRoot.instCommRing _
-  letI : CommRing (AdjoinRoot (splitTraceEtaKummerPolynomial sigma e)) :=
+  let : CommRing (AdjoinRoot (splitTraceEtaKummerPolynomial sigma e)) :=
     AdjoinRoot.instCommRing _
-  letI : CommRing (AdjoinRoot (splitTraceXiKummerPolynomial sigma e d)) :=
+  let : CommRing (AdjoinRoot (splitTraceXiKummerPolynomial sigma e d)) :=
     AdjoinRoot.instCommRing _
   rw [splitTraceExplicitNormalFormEvaluation, Finsupp.linearCombination_single]
   simp only [Algebra.smul_def, splitTraceMonomialNormalIndex_fst_val,
@@ -228,11 +228,11 @@ theorem splitTraceExplicitNormalFormEvaluation_single_scaled_monomial
             splitTraceMonomialNormalCoefficient sigma e d i j)) =
       algebraMap K (SplitTraceXiFunctionField K sigma e d) c *
         (splitTraceXiRoot sigma e d ^ i * splitTraceEtaRootInXiField sigma e d ^ j) := by
-  letI : CommRing (AdjoinRoot (splitTraceBaseKummerPolynomial sigma)) :=
+  let : CommRing (AdjoinRoot (splitTraceBaseKummerPolynomial sigma)) :=
     AdjoinRoot.instCommRing _
-  letI : CommRing (AdjoinRoot (splitTraceEtaKummerPolynomial sigma e)) :=
+  let : CommRing (AdjoinRoot (splitTraceEtaKummerPolynomial sigma e)) :=
     AdjoinRoot.instCommRing _
-  letI : CommRing (AdjoinRoot (splitTraceXiKummerPolynomial sigma e d)) :=
+  let : CommRing (AdjoinRoot (splitTraceXiKummerPolynomial sigma e d)) :=
     AdjoinRoot.instCommRing _
   rw [splitTraceExplicitNormalFormEvaluation, Finsupp.linearCombination_single]
   simp only [Algebra.smul_def, splitTraceMonomialNormalIndex_fst_val,
@@ -306,11 +306,11 @@ theorem splitTraceExplicitNormalFormEvaluation_eq_zero_iff
     letI : CommRing (AdjoinRoot (splitTraceXiKummerPolynomial sigma e d)) :=
       AdjoinRoot.instCommRing _
     splitTraceExplicitNormalFormEvaluation sigma e d c = 0 ↔ c = 0 := by
-  letI : CommRing (AdjoinRoot (splitTraceBaseKummerPolynomial sigma)) :=
+  let : CommRing (AdjoinRoot (splitTraceBaseKummerPolynomial sigma)) :=
     AdjoinRoot.instCommRing _
-  letI : CommRing (AdjoinRoot (splitTraceEtaKummerPolynomial sigma e)) :=
+  let : CommRing (AdjoinRoot (splitTraceEtaKummerPolynomial sigma e)) :=
     AdjoinRoot.instCommRing _
-  letI : CommRing (AdjoinRoot (splitTraceXiKummerPolynomial sigma e d)) :=
+  let : CommRing (AdjoinRoot (splitTraceXiKummerPolynomial sigma e d)) :=
     AdjoinRoot.instCommRing _
   change Finsupp.linearCombination (AdjoinRoot (splitTraceBaseKummerPolynomial sigma))
       (fun ji ↦ splitTraceEtaRootInXiField sigma e d ^ (ji.1 : ℕ) *
@@ -344,12 +344,12 @@ theorem splitTraceAffineToKummerTop_injective_of_syntacticNormalForm_division
     Function.Injective
       (splitTraceAffineToKummerTop sigma hsigma e d heOdd hdOdd hde) := by
   let hBaseIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
   let hEtaIrred := splitTraceEtaKummerPolynomial_irreducible' sigma hsigma e heOdd
-  letI : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
+  let : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
   let hXiIrred :=
     splitTraceXiKummerPolynomial_irreducible sigma hsigma e d heOdd hdOdd hde
-  letI : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
+  let : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
   let I : Ideal (MvPolynomial (Fin 2) K) :=
     Ideal.span {splitTraceCoverPolynomial (1 : K) sigma d e}
   let f : MvPolynomial (Fin 2) K →+*

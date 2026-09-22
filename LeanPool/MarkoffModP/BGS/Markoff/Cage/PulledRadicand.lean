@@ -155,8 +155,8 @@ lemma cagePulledRadicand_coeff_four_mul
   rw [cagePulledRadicand_expanded]
   rw [coeff_add, coeff_sub, coeff_C_mul_X_pow,
     coeff_C_mul_X_pow, coeff_C]
-  simp only [if_true, if_neg (show 4 * d ≠ 2 * d by omega),
-    if_neg (show 4 * d ≠ 0 by omega), sub_zero, add_zero]
+  simp only [ite_true, ite_eq_right (show 4 * d ≠ 2 * d by omega),
+    ite_eq_right (show 4 * d ≠ 0 by omega), sub_zero, add_zero]
 
 /-- A nonparabolic pulled radicand is not a polynomial unit. -/
 lemma cagePulledRadicand_not_isUnit

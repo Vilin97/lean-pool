@@ -223,7 +223,7 @@ theorem weightedSplitTracePartialXLocalization_isStandardSmooth
 theorem weightedSplitTracePartialXLocalization_smooth
     (alpha beta : K) (d e : ℕ) :
     Algebra.Smooth K (WeightedSplitTracePartialXLocalization alpha beta d e) := by
-  letI : Algebra.IsStandardSmooth K
+  let : Algebra.IsStandardSmooth K
       (WeightedSplitTracePartialXLocalization alpha beta d e) :=
     weightedSplitTracePartialXLocalization_isStandardSmooth alpha beta d e
   infer_instance
@@ -361,7 +361,7 @@ theorem weightedSplitTracePartialYLocalization_isStandardSmooth
 theorem weightedSplitTracePartialYLocalization_smooth
     (alpha beta : K) (d e : ℕ) :
     Algebra.Smooth K (WeightedSplitTracePartialYLocalization alpha beta d e) := by
-  letI : Algebra.IsStandardSmooth K
+  let : Algebra.IsStandardSmooth K
       (WeightedSplitTracePartialYLocalization alpha beta d e) :=
     weightedSplitTracePartialYLocalization_isStandardSmooth alpha beta d e
   infer_instance

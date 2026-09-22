@@ -134,7 +134,7 @@ theorem assignedPrimeWeight_power
       (assignedPrimeWeight p profile assignment prime) ^ 12 := by
   by_cases htwo : prime = 2
   · subst prime
-    simp only [assignedPrimeWeight, if_pos]
+    simp only [assignedPrimeWeight, ite_eq_left]
     apply profile.twoWeightCap.one_le_prime_mul_weight_pow_twelve
       hprofile.2.1
     rw [hprofile.2.2.1]
@@ -367,7 +367,7 @@ private theorem oddLowerNeighborProduct_map_assignment_le
         List.prod_cons]
       rw [hhead.1, hhead.2.1]
       by_cases hside : actualNeighborSide p prime = side
-      · simp only [hside, if_pos]
+      · simp only [hside, ite_eq_left]
         exact Nat.mul_le_mul
           (Nat.pow_le_pow_left hhead.2.2 _)
           (ih htail)
@@ -706,7 +706,7 @@ theorem RankinNeighborProfile.factorizationCoarse_eq_coarseEulerProduct
       (fun prime => coarseRankinPrimePowerFactor
         ((p - 1).factorization prime)
         (assignedPrimeWeight p profile assignment prime)) htwoMinus]
-    simp only [assignedPrimeWeight, if_pos,
+    simp only [assignedPrimeWeight, ite_eq_left,
       RankinNeighborProfile.coarseEulerProduct,
       RankinNeighborProfile.twoExponent, hminusTwo, hlist]
     rw [oddCoarseEulerProduct_map_assignment p .minus
@@ -721,7 +721,7 @@ theorem RankinNeighborProfile.factorizationCoarse_eq_coarseEulerProduct
       (fun prime => coarseRankinPrimePowerFactor
         ((p + 1).factorization prime)
         (assignedPrimeWeight p profile assignment prime)) htwoPlus]
-    simp only [assignedPrimeWeight, if_pos,
+    simp only [assignedPrimeWeight, ite_eq_left,
       RankinNeighborProfile.coarseEulerProduct,
       RankinNeighborProfile.twoExponent, hplusTwo, hlist]
     rw [oddCoarseEulerProduct_map_assignment p .plus

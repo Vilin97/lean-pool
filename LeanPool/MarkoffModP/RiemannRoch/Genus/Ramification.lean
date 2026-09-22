@@ -156,7 +156,7 @@ theorem polarDivisor_XK_zero_at_finite
     simpa [ha] using
       principalDivisorA_nonneg_at_finite_of_mem_ringOfIntegers (k := k) (K := K) ha0 w
   unfold polarDivisor
-  simp only [dif_neg hx0, Finsupp.sup_apply]
+  simp only [dite_eq_right hx0, Finsupp.sup_apply]
   exact max_eq_right (neg_nonpos.mpr hprincipal)
 
 omit [Algebra k K] [Algebra k[X] K] [IsScalarTower k k[X] K] [IsScalarTower k[X] k⟮X⟯ K]
@@ -277,7 +277,7 @@ theorem polarDivisor_XK_at_infinite
         (ramIdxInfty k K v.asIdeal : ℤ) := by
     simpa using congrArg Neg.neg hprincipal
   unfold polarDivisor
-  simp only [dif_neg hx0, Finsupp.sup_apply, hneg]
+  simp only [dite_eq_right hx0, Finsupp.sup_apply, hneg]
   exact max_eq_left (le_of_lt hpos)
 
 /-- The height-one ideal above `∞` corresponding to an infinite place. -/
@@ -353,11 +353,11 @@ theorem deg_polarDivisor_XK_eq_primesOverFinset_sum :
     · simp at hv
     · have hpw : v.asIdeal.under A = p :=
         IsLocalRing.eq_maximalIdeal (Ideal.IsMaximal.under A v.asIdeal)
-      letI : v.asIdeal.IsMaximal := v.isPrime.isMaximal v.ne_bot
-      letI : p.IsMaximal := by
+      let : v.asIdeal.IsMaximal := v.isPrime.isMaximal v.ne_bot
+      let : p.IsMaximal := by
         rw [← hpw]
         exact Ideal.IsMaximal.under A v.asIdeal
-      letI : v.asIdeal.LiesOver p := ⟨hpw.symm⟩
+      let : v.asIdeal.LiesOver p := ⟨hpw.symm⟩
       have hinertia :
           Ideal.inertiaDeg' p v.asIdeal = v.asIdeal.inertiaDeg A :=
         Ideal.inertiaDeg'_eq_inertiaDeg (p := p) (P := v.asIdeal)
@@ -375,7 +375,7 @@ theorem deg_polarX_le_finrank :
   have hp : p ≠ ⊥ :=
     Ring.ne_bot_of_isMaximal_of_not_isField (IsLocalRing.maximalIdeal.isMaximal A)
       (IsDiscreteValuationRing.not_isField A)
-  letI : p.IsMaximal := IsLocalRing.maximalIdeal.isMaximal A
+  let : p.IsMaximal := IsLocalRing.maximalIdeal.isMaximal A
   have hsum := Ideal.sum_ramification_inertia (R := A) (S := S) (K := k⟮X⟯) (L := K) hp
   have heq :
       (∑ P ∈ IsDedekindDomain.primesOverFinset p S,

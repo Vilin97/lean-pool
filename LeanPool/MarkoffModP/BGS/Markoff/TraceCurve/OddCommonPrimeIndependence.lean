@@ -227,7 +227,7 @@ theorem splitTraceBaseCoordinates_mixedPower_ne_oddPrimePower
       (splitTraceBaseU sigma * splitTraceBaseV sigma) ^ a *
         splitTraceBaseV sigma ^ b := by
   let hBaseIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
   let baseField := SplitTraceBaseFunctionField K sigma
   let U : baseField := splitTraceBaseU sigma
   let V : baseField := splitTraceBaseV sigma
@@ -247,7 +247,7 @@ theorem splitTraceBaseCoordinates_mixedPower_ne_oddPrimePower
     intro hz
     apply hrightNonzero
     simpa [hz, hq.ne_zero] using hpow.symm
-  letI : Module.Finite (RatFunc K) baseField :=
+  let : Module.Finite (RatFunc K) baseField :=
     (monic_X_pow_sub_C _ (by norm_num : (2 : ℕ) ≠ 0)).finite_adjoinRoot
   have hnorm := congrArg (Algebra.norm (RatFunc K)) hpow
   rw [map_pow, map_mul, map_pow, map_pow] at hnorm

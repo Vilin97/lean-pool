@@ -67,7 +67,7 @@ theorem globalWronskianInequality_of_placewiseBounds
     by_cases hiS : i ∈ S
     · by_cases hvi : 0 < ordV i
       · have hLocal := hCaseIII i hiS hvi
-        simp only [lower, hiS, if_pos, hvi]
+        simp only [lower, hiS, ite_eq_left, hvi]
         dsimp [base]
         norm_num at hLocal ⊢
         linarith
@@ -153,11 +153,11 @@ theorem globalWronskianInequality_of_placewiseBounds
               congr 1
               · apply Finset.sum_congr rfl
                 intro i hi
-                simp only [lower, hi, if_pos]
+                simp only [lower, hi, ite_eq_left]
               · apply Finset.sum_congr rfl
                 intro i hi
                 have hiS : i ∉ S := (Finset.mem_filter.1 hi).2
-                simp only [lower, hiS, if_false]
+                simp only [lower, hiS, ite_false]
       _ = (∑ i ∈ S, base i) +
           (∑ i ∈ S,
             (if 0 < ordV i then ((h * k : ℕ) : ℤ) * ordV i else 0)) +

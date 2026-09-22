@@ -69,22 +69,22 @@ theorem placeDegree_infinite_eq_inertiaDeg
   let A := inftyValuationSubring k
   let S := infiniteIntegers k K
   let p : Ideal A := v.asIdeal.under A
-  letI : v.asIdeal.IsMaximal := v.isPrime.isMaximal v.ne_bot
-  letI : p.IsMaximal := Ideal.IsMaximal.under A v.asIdeal
-  letI : v.asIdeal.LiesOver p := ⟨rfl⟩
-  letI : Field (A ⧸ p) := Ideal.Quotient.field p
-  letI : Field (S ⧸ v.asIdeal) := Ideal.Quotient.field v.asIdeal
-  letI : Algebra (A ⧸ p) (S ⧸ v.asIdeal) :=
+  let : v.asIdeal.IsMaximal := v.isPrime.isMaximal v.ne_bot
+  let : p.IsMaximal := Ideal.IsMaximal.under A v.asIdeal
+  let : v.asIdeal.LiesOver p := ⟨rfl⟩
+  let : Field (A ⧸ p) := Ideal.Quotient.field p
+  let : Field (S ⧸ v.asIdeal) := Ideal.Quotient.field v.asIdeal
+  let : Algebra (A ⧸ p) (S ⧸ v.asIdeal) :=
     Ideal.Quotient.algebraQuotientOfLEComap (Ideal.over_def v.asIdeal p).ge
   have hp : p = IsLocalRing.maximalIdeal A := IsLocalRing.eq_maximalIdeal inferInstance
-  letI : FiniteDimensional k (A ⧸ p) := by
+  let : FiniteDimensional k (A ⧸ p) := by
     rw [hp]
     exact inftyValuationSubring.finiteDimensionalResidueField k
-  letI : FiniteDimensional (A ⧸ p) (S ⧸ v.asIdeal) := by
+  let : FiniteDimensional (A ⧸ p) (S ⧸ v.asIdeal) := by
     have hfin := Ideal.inertiaDeg_pos v.asIdeal A
     rw [Ideal.inertiaDeg_eq_of_isMaximal p v.asIdeal] at hfin
     exact FiniteDimensional.of_finrank_pos hfin
-  letI : IsScalarTower k (A ⧸ p) (S ⧸ v.asIdeal) :=
+  let : IsScalarTower k (A ⧸ p) (S ⧸ v.asIdeal) :=
     IsScalarTower.of_algebraMap_eq fun _ => rfl
   change Module.finrank k (S ⧸ v.asIdeal) = v.asIdeal.inertiaDeg A
   rw [Ideal.inertiaDeg_eq_of_isMaximal p v.asIdeal]
@@ -104,20 +104,20 @@ theorem placeDegree_finite_eq_base_mul_inertiaDeg
         v.asIdeal.inertiaDeg k[X] := by
   let S := ringOfIntegers k K
   let p : Ideal k[X] := v.asIdeal.under k[X]
-  letI : v.asIdeal.IsMaximal := v.isPrime.isMaximal v.ne_bot
-  letI : p.IsMaximal := Ideal.IsMaximal.under k[X] v.asIdeal
-  letI : v.asIdeal.LiesOver p := ⟨rfl⟩
-  letI : Field (k[X] ⧸ p) := Ideal.Quotient.field p
-  letI : Field (S ⧸ v.asIdeal) := Ideal.Quotient.field v.asIdeal
-  letI : Algebra (k[X] ⧸ p) (S ⧸ v.asIdeal) :=
+  let : v.asIdeal.IsMaximal := v.isPrime.isMaximal v.ne_bot
+  let : p.IsMaximal := Ideal.IsMaximal.under k[X] v.asIdeal
+  let : v.asIdeal.LiesOver p := ⟨rfl⟩
+  let : Field (k[X] ⧸ p) := Ideal.Quotient.field p
+  let : Field (S ⧸ v.asIdeal) := Ideal.Quotient.field v.asIdeal
+  let : Algebra (k[X] ⧸ p) (S ⧸ v.asIdeal) :=
     Ideal.Quotient.algebraQuotientOfLEComap (Ideal.over_def v.asIdeal p).ge
-  letI : FiniteDimensional k (k[X] ⧸ p) :=
+  let : FiniteDimensional k (k[X] ⧸ p) :=
     finite_of_finite_type_of_isJacobsonRing k _
-  letI : FiniteDimensional (k[X] ⧸ p) (S ⧸ v.asIdeal) := by
+  let : FiniteDimensional (k[X] ⧸ p) (S ⧸ v.asIdeal) := by
     have hfin := Ideal.inertiaDeg_pos v.asIdeal k[X]
     rw [Ideal.inertiaDeg_eq_of_isMaximal p v.asIdeal] at hfin
     exact FiniteDimensional.of_finrank_pos hfin
-  letI : IsScalarTower k (k[X] ⧸ p) (S ⧸ v.asIdeal) :=
+  let : IsScalarTower k (k[X] ⧸ p) (S ⧸ v.asIdeal) :=
     IsScalarTower.of_algebraMap_eq fun _ => rfl
   change Module.finrank k (S ⧸ v.asIdeal) =
     Module.finrank k (k[X] ⧸ p) * v.asIdeal.inertiaDeg k[X]
@@ -132,13 +132,13 @@ theorem relNorm_asIdeal_finite
     Ideal.relNorm k[X] v.asIdeal =
       (v.asIdeal.under k[X]) ^ v.asIdeal.inertiaDeg k[X] := by
   let S := ringOfIntegers k K
-  letI : Algebra k[X] (FractionRing S) := inferInstance
-  letI : FaithfulSMul k[X] (FractionRing S) := inferInstance
-  letI : Algebra (FractionRing k[X]) (FractionRing S) :=
+  let : Algebra k[X] (FractionRing S) := inferInstance
+  let : FaithfulSMul k[X] (FractionRing S) := inferInstance
+  let : Algebra (FractionRing k[X]) (FractionRing S) :=
     FractionRing.liftAlgebra k[X] (FractionRing S)
-  letI : IsScalarTower k[X] (FractionRing k[X]) (FractionRing S) :=
+  let : IsScalarTower k[X] (FractionRing k[X]) (FractionRing S) :=
     FractionRing.isScalarTower_liftAlgebra k[X] (FractionRing S)
-  letI : Algebra.IsSeparable (FractionRing k[X]) (FractionRing S) := by
+  let : Algebra.IsSeparable (FractionRing k[X]) (FractionRing S) := by
     refine Algebra.IsSeparable.of_equiv_equiv
       (FractionRing.algEquiv k[X] k⟮X⟯).symm.toRingEquiv
       (FractionRing.algEquiv S K).symm.toRingEquiv ?_
@@ -146,8 +146,8 @@ theorem relNorm_asIdeal_finite
     exact IsFractionRing.algEquiv_commutes
       (FractionRing.algEquiv k[X] k⟮X⟯).symm
       (FractionRing.algEquiv S K).symm x
-  letI : v.asIdeal.IsMaximal := v.isPrime.isMaximal v.ne_bot
-  letI : (v.asIdeal.under k[X]).IsMaximal := Ideal.IsMaximal.under k[X] v.asIdeal
+  let : v.asIdeal.IsMaximal := v.isPrime.isMaximal v.ne_bot
+  let : (v.asIdeal.under k[X]).IsMaximal := Ideal.IsMaximal.under k[X] v.asIdeal
   exact Ideal.relNorm_eq_pow_of_isMaximal_of_isSeparable
     v.asIdeal (v.asIdeal.under k[X])
 
@@ -160,13 +160,13 @@ theorem relNorm_asIdeal_infinite
         v.asIdeal.inertiaDeg (inftyValuationSubring k) := by
   let A := inftyValuationSubring k
   let S := infiniteIntegers k K
-  letI : Algebra A (FractionRing S) := inferInstance
-  letI : FaithfulSMul A (FractionRing S) := inferInstance
-  letI : Algebra (FractionRing A) (FractionRing S) :=
+  let : Algebra A (FractionRing S) := inferInstance
+  let : FaithfulSMul A (FractionRing S) := inferInstance
+  let : Algebra (FractionRing A) (FractionRing S) :=
     FractionRing.liftAlgebra A (FractionRing S)
-  letI : IsScalarTower A (FractionRing A) (FractionRing S) :=
+  let : IsScalarTower A (FractionRing A) (FractionRing S) :=
     FractionRing.isScalarTower_liftAlgebra A (FractionRing S)
-  letI : Algebra.IsSeparable (FractionRing A) (FractionRing S) := by
+  let : Algebra.IsSeparable (FractionRing A) (FractionRing S) := by
     refine Algebra.IsSeparable.of_equiv_equiv
       (FractionRing.algEquiv A k⟮X⟯).symm.toRingEquiv
       (FractionRing.algEquiv S K).symm.toRingEquiv ?_
@@ -174,8 +174,8 @@ theorem relNorm_asIdeal_infinite
     exact IsFractionRing.algEquiv_commutes
       (FractionRing.algEquiv A k⟮X⟯).symm
       (FractionRing.algEquiv S K).symm x
-  letI : v.asIdeal.IsMaximal := v.isPrime.isMaximal v.ne_bot
-  letI : (v.asIdeal.under A).IsMaximal := Ideal.IsMaximal.under A v.asIdeal
+  let : v.asIdeal.IsMaximal := v.isPrime.isMaximal v.ne_bot
+  let : (v.asIdeal.under A).IsMaximal := Ideal.IsMaximal.under A v.asIdeal
   exact Ideal.relNorm_eq_pow_of_isMaximal_of_isSeparable
     v.asIdeal (v.asIdeal.under A)
 
@@ -186,13 +186,13 @@ theorem finite_factorDegree_eq_relNorm (I : Ideal (ringOfIntegers k K)) (hI : I 
     ((UniqueFactorizationMonoid.normalizedFactors (Ideal.relNorm k[X] I)).map fun p =>
       Module.finrank k (k[X] ⧸ p)).sum := by
   let S := ringOfIntegers k K
-  letI : Algebra k[X] (FractionRing S) := inferInstance
-  letI : FaithfulSMul k[X] (FractionRing S) := inferInstance
-  letI : Algebra (FractionRing k[X]) (FractionRing S) :=
+  let : Algebra k[X] (FractionRing S) := inferInstance
+  let : FaithfulSMul k[X] (FractionRing S) := inferInstance
+  let : Algebra (FractionRing k[X]) (FractionRing S) :=
     FractionRing.liftAlgebra k[X] (FractionRing S)
-  letI : IsScalarTower k[X] (FractionRing k[X]) (FractionRing S) :=
+  let : IsScalarTower k[X] (FractionRing k[X]) (FractionRing S) :=
     FractionRing.isScalarTower_liftAlgebra k[X] (FractionRing S)
-  letI : Algebra.IsSeparable (FractionRing k[X]) (FractionRing S) := by
+  let : Algebra.IsSeparable (FractionRing k[X]) (FractionRing S) := by
     refine Algebra.IsSeparable.of_equiv_equiv
       (FractionRing.algEquiv k[X] k⟮X⟯).symm.toRingEquiv
       (FractionRing.algEquiv S K).symm.toRingEquiv ?_
@@ -215,13 +215,13 @@ theorem infinite_factorDegree_eq_relNorm
       (Ideal.relNorm (inftyValuationSubring k) I)).map fun _ => 1).sum := by
   let A := inftyValuationSubring k
   let S := infiniteIntegers k K
-  letI : Algebra A (FractionRing S) := inferInstance
-  letI : FaithfulSMul A (FractionRing S) := inferInstance
-  letI : Algebra (FractionRing A) (FractionRing S) :=
+  let : Algebra A (FractionRing S) := inferInstance
+  let : FaithfulSMul A (FractionRing S) := inferInstance
+  let : Algebra (FractionRing A) (FractionRing S) :=
     FractionRing.liftAlgebra A (FractionRing S)
-  letI : IsScalarTower A (FractionRing A) (FractionRing S) :=
+  let : IsScalarTower A (FractionRing A) (FractionRing S) :=
     FractionRing.isScalarTower_liftAlgebra A (FractionRing S)
-  letI : Algebra.IsSeparable (FractionRing A) (FractionRing S) := by
+  let : Algebra.IsSeparable (FractionRing A) (FractionRing S) := by
     refine Algebra.IsSeparable.of_equiv_equiv
       (FractionRing.algEquiv A k⟮X⟯).symm.toRingEquiv
       (FractionRing.algEquiv S K).symm.toRingEquiv ?_

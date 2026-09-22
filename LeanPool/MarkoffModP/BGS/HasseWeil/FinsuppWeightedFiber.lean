@@ -57,7 +57,7 @@ theorem sum_mul_degree_eq_of_div_gcd_fibers
     change Q ∈ upMultiplicity.support
     rw [Finsupp.mem_support_iff, hmultiplicity Q, hQP]
     exact Finsupp.mem_support_iff.mp hP
-  letI : Fintype {Q : Up // down Q = P} :=
+  let : Fintype {Q : Up // down Q = P} :=
     (upMultiplicity.support.finite_toSet.subset hfiber_subset).fintype
   let fiberSupport := upMultiplicity.support.filter (fun Q ↦ down Q = P)
   let fiberEquiv : {Q : Up // Q ∈ fiberSupport} ≃

@@ -30,10 +30,10 @@ theorem torusCurveTorsionIntersection_card_le_orders
     (torusCurveTorsionIntersection K f firstOrder secondOrder).card ≤
       firstOrder * secondOrder := by
   let S := torusCurveTorsionIntersection K f firstOrder secondOrder
-  letI : NeZero firstOrder := ⟨hfirst.ne'⟩
-  letI : NeZero secondOrder := ⟨hsecond.ne'⟩
-  letI : Fintype (rootsOfUnity firstOrder K) := Fintype.ofFinite _
-  letI : Fintype (rootsOfUnity secondOrder K) := Fintype.ofFinite _
+  let : NeZero firstOrder := ⟨hfirst.ne'⟩
+  let : NeZero secondOrder := ⟨hsecond.ne'⟩
+  let : Fintype (rootsOfUnity firstOrder K) := Fintype.ofFinite _
+  let : Fintype (rootsOfUnity secondOrder K) := Fintype.ofFinite _
   let toRoots : {z // z ∈ S} →
       rootsOfUnity firstOrder K × rootsOfUnity secondOrder K := fun z ↦
     (⟨z.1.1, (mem_rootsOfUnity firstOrder z.1.1).2

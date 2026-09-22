@@ -98,21 +98,21 @@ theorem planeCurve_genus_le_bidegreeGenusBudget
       planeCurveBidegreeGenusBudget f := by
   let hf : Irreducible f :=
     irreducible_of_irreducible_map_algebraicClosure habsolute
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
   let L := PlaneCurveFunctionField f
   let canonicalAlg : Algebra K L := inferInstance
-  letI : Algebra K L := canonicalAlg
+  let : Algebra K L := canonicalAlg
   let ratAlg : Algebra (RatFunc K) L :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : Algebra (RatFunc K) L := ratAlg
-  letI : SMul (RatFunc K) L := ratAlg.toSMul
-  letI : Module (RatFunc K) L := ratAlg.toModule
-  letI : FiniteDimensional (RatFunc K) L :=
+  let : Algebra (RatFunc K) L := ratAlg
+  let : SMul (RatFunc K) L := ratAlg.toSMul
+  let : Module (RatFunc K) L := ratAlg.toModule
+  let : FiniteDimensional (RatFunc K) L :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K) L :=
+  let : Algebra.IsSeparable (RatFunc K) L :=
     separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
   let inducedAlg : Algebra K L :=
     RingHom.toAlgebra ((algebraMap (RatFunc K) L).comp
@@ -128,12 +128,12 @@ theorem planeCurve_genus_le_bidegreeGenusBudget
         K L _ _ canonicalAlg (planeCurveFunction f 0) hx)
       (Polynomial.C c)
     simpa using h
-  letI : Algebra K L := inducedAlg
-  letI : SMul K L := inducedAlg.toSMul
-  letI : Module K L := inducedAlg.toModule
-  letI : IsScalarTower K (RatFunc K) L :=
+  let : Algebra K L := inducedAlg
+  let : SMul K L := inducedAlg.toSMul
+  let : Module K L := inducedAlg.toModule
+  let : IsScalarTower K (RatFunc K) L :=
     IsScalarTower.of_algebraMap_eq' rfl
-  letI : IsScalarTower K K[X] L :=
+  let : IsScalarTower K K[X] L :=
     IsScalarTower.of_algebraMap_eq' rfl
   have hconstantsCanonical :
       @algebraicClosure K L _ _ canonicalAlg = ⊥ := by
@@ -144,7 +144,7 @@ theorem planeCurve_genus_le_bidegreeGenusBudget
     change @algebraicClosure K L _ _ inducedAlg = ⊥
     rw [hinducedAlg]
     exact hconstantsCanonical
-  letI : FunctionField.IsFullConstantField K L :=
+  let : FunctionField.IsFullConstantField K L :=
     (FunctionField.isFullConstantField_iff_algebraicClosure_eq_bot K L).2
       hconstants
   let q : FiniteExtensionFinitePlace K L :=

@@ -46,7 +46,7 @@ def rankinCutoff1248CapTable : RankinPositionalCapTable where
 
 theorem rankinCutoff1248CapTable_check :
     rankinCutoff1248CapTable.check = true := by
-  native_decide
+  decide +kernel
 
 theorem rankinCutoff1248CapTable_valid :
     rankinCutoff1248CapTable.Valid :=
@@ -56,11 +56,11 @@ theorem rankinCutoff1248CapTable_valid :
 
 theorem rankinCutoff1248CapTable_product :
     2 ^ (2 * 1248) < rankinCutoff1248CapTable.oddPrimeFloors.prod := by
-  native_decide
+  decide +kernel
 
 theorem rankinCutoff1248CapTable_length :
     rankinCutoff1248CapTable.oddPrimeFloors.length = 275 := by
-  native_decide
+  decide +kernel
 
 /-- Uniform support-size coverage for the proposed new cutoff. -/
 theorem jointOddPrimeList_length_lt_275_of_lt_two_pow_1248

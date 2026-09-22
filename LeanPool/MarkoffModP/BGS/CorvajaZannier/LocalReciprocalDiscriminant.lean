@@ -77,7 +77,7 @@ theorem sylvester_reflect (f g : R[X]) (m n : ℕ) :
       split_ifs <;> simp_all [revAt] <;> try omega
       congr 1
       change revAtFun n ((i : ℕ) - j) = _
-      rw [revAtFun, if_pos (by omega)]
+      rw [revAtFun, ite_eq_left (by omega)]
       exact (reflected_row_sub_reflected_shift m n i j i.isLt j.isLt
         (by omega) (by omega)).symm
   | right j =>
@@ -89,7 +89,7 @@ theorem sylvester_reflect (f g : R[X]) (m n : ℕ) :
       split_ifs <;> simp_all [revAt] <;> try omega
       congr 1
       change revAtFun m ((i : ℕ) - j) = _
-      rw [revAtFun, if_pos (by omega)]
+      rw [revAtFun, ite_eq_left (by omega)]
       simpa [Nat.add_comm] using
         (reflected_row_sub_reflected_shift n m i j (by omega) j.isLt
           (by omega) (by omega)).symm
@@ -515,7 +515,7 @@ theorem aeval_reciprocalTranslate_inv_sub_eq_zero
     aeval ((v - algebraMap A L c)⁻¹) (reciprocalTranslate f c) = 0 := by
   let x : L := v - algebraMap A L c
   have hx : x ≠ 0 := sub_ne_zero.mpr hvc
-  letI : Invertible x := invertibleOfNonzero hx
+  let : Invertible x := invertibleOfNonzero hx
   have htaylor : eval₂ (algebraMap A L) x (f.taylor c) = 0 := by
     rw [taylor_apply, eval₂_comp]
     simpa [x, aeval_def] using hv

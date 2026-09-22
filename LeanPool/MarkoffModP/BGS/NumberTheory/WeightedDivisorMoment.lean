@@ -325,221 +325,244 @@ private theorem pow_twenty_le_of_base_le
   h.trans (Nat.mul_le_mul_left _ (Nat.pow_le_pow_left hbase _))
 
 /-- Factorwise twentieth-moment estimate for the doubled number weight. -/
+private theorem factorization_succ_pow_twenty_le_large
+    {p a : ℕ} (hp257 : ¬p < 257) :
+    (a + 1) ^ 20 ≤
+      2 ^ weightedPrimePenaltyTwenty p * p ^ (2 * a) := by
+  have hp3 : ¬p < 3 := by omega
+  have hp5 : ¬p < 5 := by omega
+  have hp7 : ¬p < 7 := by omega
+  have hp11 : ¬p < 11 := by omega
+  have hp13 : ¬p < 13 := by omega
+  have hp17 : ¬p < 17 := by omega
+  have hp19 : ¬p < 19 := by omega
+  have hp23 : ¬p < 23 := by omega
+  have hp29 : ¬p < 29 := by omega
+  have hp31 : ¬p < 31 := by omega
+  have hp37 : ¬p < 37 := by omega
+  have hp43 : ¬p < 43 := by omega
+  have hp53 : ¬p < 53 := by omega
+  have hp67 : ¬p < 67 := by omega
+  have hp97 : ¬p < 97 := by omega
+  have hp131 : ¬p < 131 := by omega
+  have hp191 : ¬p < 191 := by omega
+  by_cases hp367 : p < 367
+  · have hpLower : 257 ≤ p := by omega
+    simp only [weightedPrimePenaltyTwenty,
+      ite_eq_right hp3, ite_eq_right hp5, ite_eq_right hp7,
+      ite_eq_right hp11, ite_eq_right hp13, ite_eq_right hp17,
+      ite_eq_right hp19, ite_eq_right hp23, ite_eq_right hp29,
+      ite_eq_right hp31, ite_eq_right hp37, ite_eq_right hp43,
+      ite_eq_right hp53, ite_eq_right hp67, ite_eq_right hp97,
+      ite_eq_right hp131, ite_eq_right hp191,
+      ite_eq_right hp257, ite_eq_left hp367]
+    exact pow_twenty_le_of_base_le
+      (pow_twenty_le_base_twoHundredFiftySeven a)
+      hpLower
+  · by_cases hp521 : p < 521
+    · have hpLower : 367 ≤ p := by omega
+      simp only [weightedPrimePenaltyTwenty,
+        ite_eq_right hp3, ite_eq_right hp5, ite_eq_right hp7,
+        ite_eq_right hp11, ite_eq_right hp13, ite_eq_right hp17,
+        ite_eq_right hp19, ite_eq_right hp23, ite_eq_right hp29,
+        ite_eq_right hp31, ite_eq_right hp37, ite_eq_right hp43,
+        ite_eq_right hp53, ite_eq_right hp67, ite_eq_right hp97,
+        ite_eq_right hp131, ite_eq_right hp191,
+        ite_eq_right hp257, ite_eq_right hp367,
+        ite_eq_left hp521]
+      exact pow_twenty_le_of_base_le
+        (pow_twenty_le_base_threeHundredSixtySeven a)
+        hpLower
+    · by_cases hp727 : p < 727
+      · have hpLower : 521 ≤ p := by omega
+        simp only [weightedPrimePenaltyTwenty,
+          ite_eq_right hp3, ite_eq_right hp5, ite_eq_right hp7,
+          ite_eq_right hp11, ite_eq_right hp13,
+          ite_eq_right hp17, ite_eq_right hp19,
+          ite_eq_right hp23, ite_eq_right hp29,
+          ite_eq_right hp31, ite_eq_right hp37,
+          ite_eq_right hp43, ite_eq_right hp53,
+          ite_eq_right hp67, ite_eq_right hp97,
+          ite_eq_right hp131, ite_eq_right hp191,
+          ite_eq_right hp257, ite_eq_right hp367,
+          ite_eq_right hp521, ite_eq_left hp727]
+        exact pow_twenty_le_of_base_le
+          (pow_twenty_le_base_fiveHundredTwentyOne a)
+          hpLower
+      · by_cases hp1024 : p < 1024
+        · have hpLower : 727 ≤ p := by omega
+          simp only [weightedPrimePenaltyTwenty,
+            ite_eq_right hp3, ite_eq_right hp5,
+            ite_eq_right hp7, ite_eq_right hp11,
+            ite_eq_right hp13, ite_eq_right hp17,
+            ite_eq_right hp19, ite_eq_right hp23,
+            ite_eq_right hp29, ite_eq_right hp31,
+            ite_eq_right hp37, ite_eq_right hp43,
+            ite_eq_right hp53, ite_eq_right hp67,
+            ite_eq_right hp97, ite_eq_right hp131,
+            ite_eq_right hp191, ite_eq_right hp257,
+            ite_eq_right hp367, ite_eq_right hp521,
+            ite_eq_right hp727, ite_eq_left hp1024]
+          exact pow_twenty_le_of_base_le
+            (pow_twenty_le_base_sevenHundredTwentySeven a)
+            hpLower
+        · have hpLower : 1024 ≤ p := by omega
+          simp only [weightedPrimePenaltyTwenty,
+            ite_eq_right hp3, ite_eq_right hp5,
+            ite_eq_right hp7, ite_eq_right hp11,
+            ite_eq_right hp13, ite_eq_right hp17,
+            ite_eq_right hp19, ite_eq_right hp23,
+            ite_eq_right hp29, ite_eq_right hp31,
+            ite_eq_right hp37, ite_eq_right hp43,
+            ite_eq_right hp53, ite_eq_right hp67,
+            ite_eq_right hp97, ite_eq_right hp131,
+            ite_eq_right hp191, ite_eq_right hp257,
+            ite_eq_right hp367, ite_eq_right hp521,
+            ite_eq_right hp727, ite_eq_right hp1024,
+            pow_zero, one_mul]
+          simpa only [pow_zero, one_mul] using
+            (pow_twenty_le_of_base_le (c := 0)
+              (by simpa only [pow_zero, one_mul] using
+                pow_twenty_le_base_oneThousandTwentyFour a)
+              hpLower)
+
 private theorem factorization_succ_pow_twenty_le
     {p a : ℕ} (hpPrime : p.Prime) :
     (a + 1) ^ 20 ≤
       2 ^ weightedPrimePenaltyTwenty p * p ^ (2 * a) := by
   have hpTwo : 2 ≤ p := hpPrime.two_le
   by_cases hp3 : p < 3
-  · simp only [weightedPrimePenaltyTwenty, if_pos hp3]
+  · simp only [weightedPrimePenaltyTwenty, ite_eq_left hp3]
     exact pow_twenty_le_of_base_le (pow_twenty_le_base_two a) hpTwo
   · by_cases hp5 : p < 5
     · have hpLower : 3 ≤ p := by omega
-      simp only [weightedPrimePenaltyTwenty, if_neg hp3, if_pos hp5]
+      simp only [weightedPrimePenaltyTwenty, ite_eq_right hp3, ite_eq_left hp5]
       exact pow_twenty_le_of_base_le (pow_twenty_le_base_three a) hpLower
     · by_cases hp7 : p < 7
       · have hpLower : 5 ≤ p := by omega
-        simp only [weightedPrimePenaltyTwenty, if_neg hp3, if_neg hp5, if_pos hp7]
+        simp only [weightedPrimePenaltyTwenty, ite_eq_right hp3, ite_eq_right hp5, ite_eq_left hp7]
         exact pow_twenty_le_of_base_le (pow_twenty_le_base_five a) hpLower
       · by_cases hp11 : p < 11
         · have hpLower : 7 ≤ p := by omega
-          simp only [weightedPrimePenaltyTwenty, if_neg hp3, if_neg hp5,
-            if_neg hp7, if_pos hp11]
+          simp only [weightedPrimePenaltyTwenty, ite_eq_right hp3, ite_eq_right hp5,
+            ite_eq_right hp7, ite_eq_left hp11]
           exact pow_twenty_le_of_base_le (pow_twenty_le_base_seven a) hpLower
         · by_cases hp13 : p < 13
           · have hpLower : 11 ≤ p := by omega
-            simp only [weightedPrimePenaltyTwenty, if_neg hp3, if_neg hp5,
-              if_neg hp7, if_neg hp11, if_pos hp13]
+            simp only [weightedPrimePenaltyTwenty, ite_eq_right hp3, ite_eq_right hp5,
+              ite_eq_right hp7, ite_eq_right hp11, ite_eq_left hp13]
             exact pow_twenty_le_of_base_le (pow_twenty_le_base_eleven a) hpLower
           · by_cases hp17 : p < 17
             · have hpLower : 13 ≤ p := by omega
-              simp only [weightedPrimePenaltyTwenty, if_neg hp3, if_neg hp5,
-                if_neg hp7, if_neg hp11, if_neg hp13, if_pos hp17]
+              simp only [weightedPrimePenaltyTwenty, ite_eq_right hp3, ite_eq_right hp5,
+                ite_eq_right hp7, ite_eq_right hp11, ite_eq_right hp13, ite_eq_left hp17]
               exact pow_twenty_le_of_base_le (pow_twenty_le_base_thirteen a) hpLower
             · by_cases hp19 : p < 19
               · have hpLower : 17 ≤ p := by omega
-                simp only [weightedPrimePenaltyTwenty, if_neg hp3, if_neg hp5,
-                  if_neg hp7, if_neg hp11, if_neg hp13, if_neg hp17, if_pos hp19]
+                simp only [weightedPrimePenaltyTwenty, ite_eq_right hp3, ite_eq_right hp5,
+                  ite_eq_right hp7, ite_eq_right hp11, ite_eq_right hp13, ite_eq_right hp17, ite_eq_left hp19]
                 exact pow_twenty_le_of_base_le
                   (pow_twenty_le_base_seventeen a) hpLower
               · by_cases hp23 : p < 23
                 · have hpLower : 19 ≤ p := by omega
-                  simp only [weightedPrimePenaltyTwenty, if_neg hp3, if_neg hp5,
-                    if_neg hp7, if_neg hp11, if_neg hp13, if_neg hp17,
-                    if_neg hp19, if_pos hp23]
+                  simp only [weightedPrimePenaltyTwenty, ite_eq_right hp3, ite_eq_right hp5,
+                    ite_eq_right hp7, ite_eq_right hp11, ite_eq_right hp13, ite_eq_right hp17,
+                    ite_eq_right hp19, ite_eq_left hp23]
                   exact pow_twenty_le_of_base_le
                     (pow_twenty_le_base_nineteen a) hpLower
                 · by_cases hp29 : p < 29
                   · have hpLower : 23 ≤ p := by omega
-                    simp only [weightedPrimePenaltyTwenty, if_neg hp3, if_neg hp5,
-                      if_neg hp7, if_neg hp11, if_neg hp13, if_neg hp17,
-                      if_neg hp19, if_neg hp23, if_pos hp29]
+                    simp only [weightedPrimePenaltyTwenty, ite_eq_right hp3, ite_eq_right hp5,
+                      ite_eq_right hp7, ite_eq_right hp11, ite_eq_right hp13, ite_eq_right hp17,
+                      ite_eq_right hp19, ite_eq_right hp23, ite_eq_left hp29]
                     exact pow_twenty_le_of_base_le
                       (pow_twenty_le_base_twentyThree a) hpLower
                   · by_cases hp31 : p < 31
                     · have hpLower : 29 ≤ p := by omega
-                      simp only [weightedPrimePenaltyTwenty, if_neg hp3, if_neg hp5,
-                        if_neg hp7, if_neg hp11, if_neg hp13, if_neg hp17,
-                        if_neg hp19, if_neg hp23, if_neg hp29, if_pos hp31]
+                      simp only [weightedPrimePenaltyTwenty, ite_eq_right hp3, ite_eq_right hp5,
+                        ite_eq_right hp7, ite_eq_right hp11, ite_eq_right hp13, ite_eq_right hp17,
+                        ite_eq_right hp19, ite_eq_right hp23, ite_eq_right hp29, ite_eq_left hp31]
                       exact pow_twenty_le_of_base_le
                         (pow_twenty_le_base_twentyNine a) hpLower
                     · by_cases hp37 : p < 37
                       · have hpLower : 31 ≤ p := by omega
-                        simp only [weightedPrimePenaltyTwenty, if_neg hp3,
-                          if_neg hp5, if_neg hp7, if_neg hp11, if_neg hp13,
-                          if_neg hp17, if_neg hp19, if_neg hp23, if_neg hp29,
-                          if_neg hp31, if_pos hp37]
+                        simp only [weightedPrimePenaltyTwenty, ite_eq_right hp3,
+                          ite_eq_right hp5, ite_eq_right hp7, ite_eq_right hp11, ite_eq_right hp13,
+                          ite_eq_right hp17, ite_eq_right hp19, ite_eq_right hp23, ite_eq_right hp29,
+                          ite_eq_right hp31, ite_eq_left hp37]
                         exact pow_twenty_le_of_base_le
                           (pow_twenty_le_base_thirtyOne a) hpLower
                       · by_cases hp43 : p < 43
                         · have hpLower : 37 ≤ p := by omega
-                          simp only [weightedPrimePenaltyTwenty, if_neg hp3,
-                            if_neg hp5, if_neg hp7, if_neg hp11, if_neg hp13,
-                            if_neg hp17, if_neg hp19, if_neg hp23, if_neg hp29,
-                            if_neg hp31, if_neg hp37, if_pos hp43]
+                          simp only [weightedPrimePenaltyTwenty, ite_eq_right hp3,
+                            ite_eq_right hp5, ite_eq_right hp7, ite_eq_right hp11, ite_eq_right hp13,
+                            ite_eq_right hp17, ite_eq_right hp19, ite_eq_right hp23, ite_eq_right hp29,
+                            ite_eq_right hp31, ite_eq_right hp37, ite_eq_left hp43]
                           exact pow_twenty_le_of_base_le
                             (pow_twenty_le_base_thirtySeven a) hpLower
                         · by_cases hp53 : p < 53
                           · have hpLower : 43 ≤ p := by omega
-                            simp only [weightedPrimePenaltyTwenty, if_neg hp3,
-                              if_neg hp5, if_neg hp7, if_neg hp11, if_neg hp13,
-                              if_neg hp17, if_neg hp19, if_neg hp23, if_neg hp29,
-                              if_neg hp31, if_neg hp37, if_neg hp43, if_pos hp53]
+                            simp only [weightedPrimePenaltyTwenty, ite_eq_right hp3,
+                              ite_eq_right hp5, ite_eq_right hp7, ite_eq_right hp11, ite_eq_right hp13,
+                              ite_eq_right hp17, ite_eq_right hp19, ite_eq_right hp23, ite_eq_right hp29,
+                              ite_eq_right hp31, ite_eq_right hp37, ite_eq_right hp43, ite_eq_left hp53]
                             exact pow_twenty_le_of_base_le
                               (pow_twenty_le_base_fortyThree a) hpLower
                           · by_cases hp67 : p < 67
                             · have hpLower : 53 ≤ p := by omega
-                              simp only [weightedPrimePenaltyTwenty, if_neg hp3,
-                                if_neg hp5, if_neg hp7, if_neg hp11, if_neg hp13,
-                                if_neg hp17, if_neg hp19, if_neg hp23, if_neg hp29,
-                                if_neg hp31, if_neg hp37, if_neg hp43, if_neg hp53,
-                                if_pos hp67]
+                              simp only [weightedPrimePenaltyTwenty, ite_eq_right hp3,
+                                ite_eq_right hp5, ite_eq_right hp7, ite_eq_right hp11, ite_eq_right hp13,
+                                ite_eq_right hp17, ite_eq_right hp19, ite_eq_right hp23, ite_eq_right hp29,
+                                ite_eq_right hp31, ite_eq_right hp37, ite_eq_right hp43, ite_eq_right hp53,
+                                ite_eq_left hp67]
                               exact pow_twenty_le_of_base_le
                                 (pow_twenty_le_base_fiftyThree a) hpLower
                             · by_cases hp97 : p < 97
                               · have hpLower : 67 ≤ p := by omega
-                                simp only [weightedPrimePenaltyTwenty, if_neg hp3,
-                                  if_neg hp5, if_neg hp7, if_neg hp11,
-                                  if_neg hp13, if_neg hp17, if_neg hp19,
-                                  if_neg hp23, if_neg hp29, if_neg hp31,
-                                  if_neg hp37, if_neg hp43, if_neg hp53,
-                                  if_neg hp67, if_pos hp97]
+                                simp only [weightedPrimePenaltyTwenty, ite_eq_right hp3,
+                                  ite_eq_right hp5, ite_eq_right hp7, ite_eq_right hp11,
+                                  ite_eq_right hp13, ite_eq_right hp17, ite_eq_right hp19,
+                                  ite_eq_right hp23, ite_eq_right hp29, ite_eq_right hp31,
+                                  ite_eq_right hp37, ite_eq_right hp43, ite_eq_right hp53,
+                                  ite_eq_right hp67, ite_eq_left hp97]
                                 exact pow_twenty_le_of_base_le
                                   (pow_twenty_le_base_sixtySeven a) hpLower
                               · by_cases hp131 : p < 131
                                 · have hpLower : 97 ≤ p := by omega
                                   simp only [weightedPrimePenaltyTwenty,
-                                    if_neg hp3, if_neg hp5, if_neg hp7,
-                                    if_neg hp11, if_neg hp13, if_neg hp17,
-                                    if_neg hp19, if_neg hp23, if_neg hp29,
-                                    if_neg hp31, if_neg hp37, if_neg hp43,
-                                    if_neg hp53, if_neg hp67, if_neg hp97,
-                                    if_pos hp131]
+                                    ite_eq_right hp3, ite_eq_right hp5, ite_eq_right hp7,
+                                    ite_eq_right hp11, ite_eq_right hp13, ite_eq_right hp17,
+                                    ite_eq_right hp19, ite_eq_right hp23, ite_eq_right hp29,
+                                    ite_eq_right hp31, ite_eq_right hp37, ite_eq_right hp43,
+                                    ite_eq_right hp53, ite_eq_right hp67, ite_eq_right hp97,
+                                    ite_eq_left hp131]
                                   exact pow_twenty_le_of_base_le
                                     (pow_twenty_le_base_ninetySeven a) hpLower
                                 · by_cases hp191 : p < 191
                                   · have hpLower : 131 ≤ p := by omega
                                     simp only [weightedPrimePenaltyTwenty,
-                                      if_neg hp3, if_neg hp5, if_neg hp7,
-                                      if_neg hp11, if_neg hp13, if_neg hp17,
-                                      if_neg hp19, if_neg hp23, if_neg hp29,
-                                      if_neg hp31, if_neg hp37, if_neg hp43,
-                                      if_neg hp53, if_neg hp67, if_neg hp97,
-                                      if_neg hp131, if_pos hp191]
+                                      ite_eq_right hp3, ite_eq_right hp5, ite_eq_right hp7,
+                                      ite_eq_right hp11, ite_eq_right hp13, ite_eq_right hp17,
+                                      ite_eq_right hp19, ite_eq_right hp23, ite_eq_right hp29,
+                                      ite_eq_right hp31, ite_eq_right hp37, ite_eq_right hp43,
+                                      ite_eq_right hp53, ite_eq_right hp67, ite_eq_right hp97,
+                                      ite_eq_right hp131, ite_eq_left hp191]
                                     exact pow_twenty_le_of_base_le
                                       (pow_twenty_le_base_oneHundredThirtyOne a)
                                       hpLower
                                   · by_cases hp257 : p < 257
                                     · have hpLower : 191 ≤ p := by omega
                                       simp only [weightedPrimePenaltyTwenty,
-                                        if_neg hp3, if_neg hp5, if_neg hp7,
-                                        if_neg hp11, if_neg hp13, if_neg hp17,
-                                        if_neg hp19, if_neg hp23, if_neg hp29,
-                                        if_neg hp31, if_neg hp37, if_neg hp43,
-                                        if_neg hp53, if_neg hp67, if_neg hp97,
-                                        if_neg hp131, if_neg hp191, if_pos hp257]
+                                        ite_eq_right hp3, ite_eq_right hp5, ite_eq_right hp7,
+                                        ite_eq_right hp11, ite_eq_right hp13, ite_eq_right hp17,
+                                        ite_eq_right hp19, ite_eq_right hp23, ite_eq_right hp29,
+                                        ite_eq_right hp31, ite_eq_right hp37, ite_eq_right hp43,
+                                        ite_eq_right hp53, ite_eq_right hp67, ite_eq_right hp97,
+                                        ite_eq_right hp131, ite_eq_right hp191, ite_eq_left hp257]
                                       exact pow_twenty_le_of_base_le
                                         (pow_twenty_le_base_oneHundredNinetyOne a)
                                         hpLower
-                                    · by_cases hp367 : p < 367
-                                      · have hpLower : 257 ≤ p := by omega
-                                        simp only [weightedPrimePenaltyTwenty,
-                                          if_neg hp3, if_neg hp5, if_neg hp7,
-                                          if_neg hp11, if_neg hp13, if_neg hp17,
-                                          if_neg hp19, if_neg hp23, if_neg hp29,
-                                          if_neg hp31, if_neg hp37, if_neg hp43,
-                                          if_neg hp53, if_neg hp67, if_neg hp97,
-                                          if_neg hp131, if_neg hp191,
-                                          if_neg hp257, if_pos hp367]
-                                        exact pow_twenty_le_of_base_le
-                                          (pow_twenty_le_base_twoHundredFiftySeven a)
-                                          hpLower
-                                      · by_cases hp521 : p < 521
-                                        · have hpLower : 367 ≤ p := by omega
-                                          simp only [weightedPrimePenaltyTwenty,
-                                            if_neg hp3, if_neg hp5, if_neg hp7,
-                                            if_neg hp11, if_neg hp13, if_neg hp17,
-                                            if_neg hp19, if_neg hp23, if_neg hp29,
-                                            if_neg hp31, if_neg hp37, if_neg hp43,
-                                            if_neg hp53, if_neg hp67, if_neg hp97,
-                                            if_neg hp131, if_neg hp191,
-                                            if_neg hp257, if_neg hp367,
-                                            if_pos hp521]
-                                          exact pow_twenty_le_of_base_le
-                                            (pow_twenty_le_base_threeHundredSixtySeven a)
-                                            hpLower
-                                        · by_cases hp727 : p < 727
-                                          · have hpLower : 521 ≤ p := by omega
-                                            simp only [weightedPrimePenaltyTwenty,
-                                              if_neg hp3, if_neg hp5, if_neg hp7,
-                                              if_neg hp11, if_neg hp13,
-                                              if_neg hp17, if_neg hp19,
-                                              if_neg hp23, if_neg hp29,
-                                              if_neg hp31, if_neg hp37,
-                                              if_neg hp43, if_neg hp53,
-                                              if_neg hp67, if_neg hp97,
-                                              if_neg hp131, if_neg hp191,
-                                              if_neg hp257, if_neg hp367,
-                                              if_neg hp521, if_pos hp727]
-                                            exact pow_twenty_le_of_base_le
-                                              (pow_twenty_le_base_fiveHundredTwentyOne a)
-                                              hpLower
-                                          · by_cases hp1024 : p < 1024
-                                            · have hpLower : 727 ≤ p := by omega
-                                              simp only [weightedPrimePenaltyTwenty,
-                                                if_neg hp3, if_neg hp5,
-                                                if_neg hp7, if_neg hp11,
-                                                if_neg hp13, if_neg hp17,
-                                                if_neg hp19, if_neg hp23,
-                                                if_neg hp29, if_neg hp31,
-                                                if_neg hp37, if_neg hp43,
-                                                if_neg hp53, if_neg hp67,
-                                                if_neg hp97, if_neg hp131,
-                                                if_neg hp191, if_neg hp257,
-                                                if_neg hp367, if_neg hp521,
-                                                if_neg hp727, if_pos hp1024]
-                                              exact pow_twenty_le_of_base_le
-                                                (pow_twenty_le_base_sevenHundredTwentySeven a)
-                                                hpLower
-                                            · have hpLower : 1024 ≤ p := by omega
-                                              simp only [weightedPrimePenaltyTwenty,
-                                                if_neg hp3, if_neg hp5,
-                                                if_neg hp7, if_neg hp11,
-                                                if_neg hp13, if_neg hp17,
-                                                if_neg hp19, if_neg hp23,
-                                                if_neg hp29, if_neg hp31,
-                                                if_neg hp37, if_neg hp43,
-                                                if_neg hp53, if_neg hp67,
-                                                if_neg hp97, if_neg hp131,
-                                                if_neg hp191, if_neg hp257,
-                                                if_neg hp367, if_neg hp521,
-                                                if_neg hp727, if_neg hp1024,
-                                                pow_zero, one_mul]
-                                              simpa only [pow_zero, one_mul] using
-                                                (pow_twenty_le_of_base_le (c := 0)
-                                                  (by simpa only [pow_zero, one_mul] using
-                                                    pow_twenty_le_base_oneThousandTwentyFour a)
-                                                  hpLower)
+                                    · exact factorization_succ_pow_twenty_le_large hp257
 
 -- Separate closed computations keep each kernel check within the default limit.
 private def weightedPrimePenaltyTwentyBlock (k : ℕ) : ℕ :=

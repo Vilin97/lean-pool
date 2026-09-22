@@ -226,8 +226,8 @@ theorem modulus_le_twenty_pow_totient_of_compatible_residue_traces
     (h₃ : x.u3 = cyclotomicTrace (ω ^ a₃))
     (hxne : x ≠ normalizedOrigin) :
     p ≤ 20 ^ n.totient := by
-  letI : NeZero (n : ℚ) := ⟨by exact_mod_cast (NeZero.ne n)⟩
-  letI : IsCyclotomicExtension {n} ℚ (OpeningCyclotomicField n) :=
+  let : NeZero (n : ℚ) := ⟨by exact_mod_cast (NeZero.ne n)⟩
+  let : IsCyclotomicExtension {n} ℚ (OpeningCyclotomicField n) :=
     CyclotomicField.isCyclotomicExtension n ℚ
   let z₁ := openingCyclotomicRoot n ^ a₁
   let z₂ := openingCyclotomicRoot n ^ a₂

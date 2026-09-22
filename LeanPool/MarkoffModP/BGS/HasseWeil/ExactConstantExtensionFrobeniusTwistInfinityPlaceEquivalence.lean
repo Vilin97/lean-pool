@@ -112,46 +112,46 @@ theorem frobeniusTwistField_fixed_infinityPlace_under_degree_eq_one
           finiteExtensionPlaceDegree C F
             (.inr (infinityPlaceUnder C F
               (ExactConstantExtension C N S) Q)) = 1 := by
-  letI : DecidableEq C := infinityBridgeDecidableEqConstants C
-  letI : DecidableEq (RatFunc C) :=
+  let : DecidableEq C := infinityBridgeDecidableEqConstants C
+  let : DecidableEq (RatFunc C) :=
     infinityBridgeDecidableEqRatFuncConstants C
-  letI : DecidableEq S := infinityBridgeDecidableEqConstants S
-  letI : DecidableEq (RatFunc S) :=
+  let : DecidableEq S := infinityBridgeDecidableEqConstants S
+  let : DecidableEq (RatFunc S) :=
     infinityBridgeDecidableEqRatFuncConstants S
   let T := ExactConstantExtension C N S
-  letI : Field T := exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc C) T :=
+  let : Field T := exactConstantExtensionField C N S hExact
+  let : Algebra (RatFunc C) T :=
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-  letI : SMul (RatFunc C) T := Algebra.toSMul
-  letI : Module (RatFunc C) T := Algebra.toModule
-  letI : DistribMulAction (RatFunc C) T := Module.toDistribMulAction
-  letI : MulAction (RatFunc C) T := DistribMulAction.toMulAction
-  letI : FiniteDimensional (RatFunc C) T :=
+  let : SMul (RatFunc C) T := Algebra.toSMul
+  let : Module (RatFunc C) T := Algebra.toModule
+  let : DistribMulAction (RatFunc C) T := Module.toDistribMulAction
+  let : MulAction (RatFunc C) T := DistribMulAction.toMulAction
+  let : FiniteDimensional (RatFunc C) T :=
     finiteDimensional_exactConstantExtension_over_baseRatFunc C S N hExact
-  letI : Algebra.IsSeparable (RatFunc C) T :=
+  let : Algebra.IsSeparable (RatFunc C) T :=
     isSeparable_exactConstantExtension_over_baseRatFunc C S N hExact
   let F := exactConstantExtensionFrobeniusTwistField
     C (RatFunc C) N S hExact g
-  letI : Algebra (RatFunc C) F :=
+  let : Algebra (RatFunc C) F :=
     SubalgebraClass.toAlgebra F.toSubalgebra
-  letI : SMul (RatFunc C) F := Algebra.toSMul
-  letI : Module (RatFunc C) F := Algebra.toModule
-  letI : DistribMulAction (RatFunc C) F := Module.toDistribMulAction
-  letI : MulAction (RatFunc C) F := DistribMulAction.toMulAction
-  letI : FiniteDimensional (RatFunc C) F :=
+  let : SMul (RatFunc C) F := Algebra.toSMul
+  let : Module (RatFunc C) F := Algebra.toModule
+  let : DistribMulAction (RatFunc C) F := Module.toDistribMulAction
+  let : MulAction (RatFunc C) F := DistribMulAction.toMulAction
+  let : FiniteDimensional (RatFunc C) F :=
     finiteDimensional_frobeniusTwistField_over_ratFunc C N S hExact g
-  letI : Algebra.IsSeparable (RatFunc C) F :=
+  let : Algebra.IsSeparable (RatFunc C) F :=
     isSeparable_frobeniusTwistField_over_ratFunc C N S hExact g
-  letI : Algebra F T := F.toAlgebra
-  letI : SMul F T := Algebra.toSMul
-  letI : Module F T := Algebra.toModule
-  letI : DistribMulAction F T := Module.toDistribMulAction
-  letI : MulAction F T := DistribMulAction.toMulAction
-  letI : IsScalarTower (RatFunc C) F T := inferInstance
-  letI : FiniteDimensional F T :=
+  let : Algebra F T := F.toAlgebra
+  let : SMul F T := Algebra.toSMul
+  let : Module F T := Algebra.toModule
+  let : DistribMulAction F T := Module.toDistribMulAction
+  let : MulAction F T := DistribMulAction.toMulAction
+  let : IsScalarTower (RatFunc C) F T := inferInstance
+  let : FiniteDimensional F T :=
     finiteDimensional_exactConstantExtension_over_frobeniusTwistField
       C (RatFunc C) N S hExact g
-  letI : IsGalois F T :=
+  let : IsGalois F T :=
     isGalois_exactConstantExtension_over_frobeniusTwistField
       C (RatFunc C) N S hExact g
   dsimp only
@@ -237,48 +237,48 @@ theorem exactConstantExtensionFrobeniusTwist_infinityPlaceGalSmul_eq_overFixedFi
         infinityPlaceGalSmul C (RatFunc C) (ExactConstantExtension C N S)
           (exactConstantExtensionFrobeniusTwist
             C (RatFunc C) N S hExact g) Q := by
-  letI : DecidableEq C := infinityBridgeDecidableEqConstants C
-  letI : DecidableEq (RatFunc C) :=
+  let : DecidableEq C := infinityBridgeDecidableEqConstants C
+  let : DecidableEq (RatFunc C) :=
     infinityBridgeDecidableEqRatFuncConstants C
-  letI : DecidableEq S := infinityBridgeDecidableEqConstants S
-  letI : DecidableEq (RatFunc S) :=
+  let : DecidableEq S := infinityBridgeDecidableEqConstants S
+  let : DecidableEq (RatFunc S) :=
     infinityBridgeDecidableEqRatFuncConstants S
   let T := ExactConstantExtension C N S
-  letI : Field T := exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc C) T :=
+  let : Field T := exactConstantExtensionField C N S hExact
+  let : Algebra (RatFunc C) T :=
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-  letI : SMul (RatFunc C) T := Algebra.toSMul
-  letI : Module (RatFunc C) T := Algebra.toModule
-  letI : DistribMulAction (RatFunc C) T := Module.toDistribMulAction
-  letI : MulAction (RatFunc C) T := DistribMulAction.toMulAction
-  letI : FiniteDimensional (RatFunc C) T :=
+  let : SMul (RatFunc C) T := Algebra.toSMul
+  let : Module (RatFunc C) T := Algebra.toModule
+  let : DistribMulAction (RatFunc C) T := Module.toDistribMulAction
+  let : MulAction (RatFunc C) T := DistribMulAction.toMulAction
+  let : FiniteDimensional (RatFunc C) T :=
     finiteDimensional_exactConstantExtension_over_baseRatFunc C S N hExact
-  letI : Algebra.IsSeparable (RatFunc C) T :=
+  let : Algebra.IsSeparable (RatFunc C) T :=
     isSeparable_exactConstantExtension_over_baseRatFunc C S N hExact
-  letI : IsGalois (RatFunc C) T :=
+  let : IsGalois (RatFunc C) T :=
     exactConstantExtension_isGalois C (RatFunc C) N S hExact
   let F := exactConstantExtensionFrobeniusTwistField
     C (RatFunc C) N S hExact g
-  letI : Algebra (RatFunc C) F :=
+  let : Algebra (RatFunc C) F :=
     SubalgebraClass.toAlgebra F.toSubalgebra
-  letI : SMul (RatFunc C) F := Algebra.toSMul
-  letI : Module (RatFunc C) F := Algebra.toModule
-  letI : DistribMulAction (RatFunc C) F := Module.toDistribMulAction
-  letI : MulAction (RatFunc C) F := DistribMulAction.toMulAction
-  letI : FiniteDimensional (RatFunc C) F :=
+  let : SMul (RatFunc C) F := Algebra.toSMul
+  let : Module (RatFunc C) F := Algebra.toModule
+  let : DistribMulAction (RatFunc C) F := Module.toDistribMulAction
+  let : MulAction (RatFunc C) F := DistribMulAction.toMulAction
+  let : FiniteDimensional (RatFunc C) F :=
     finiteDimensional_frobeniusTwistField_over_ratFunc C N S hExact g
-  letI : Algebra.IsSeparable (RatFunc C) F :=
+  let : Algebra.IsSeparable (RatFunc C) F :=
     isSeparable_frobeniusTwistField_over_ratFunc C N S hExact g
-  letI : Algebra F T := F.toAlgebra
-  letI : SMul F T := Algebra.toSMul
-  letI : Module F T := Algebra.toModule
-  letI : DistribMulAction F T := Module.toDistribMulAction
-  letI : MulAction F T := DistribMulAction.toMulAction
-  letI : IsScalarTower (RatFunc C) F T := inferInstance
-  letI : FiniteDimensional F T :=
+  let : Algebra F T := F.toAlgebra
+  let : SMul F T := Algebra.toSMul
+  let : Module F T := Algebra.toModule
+  let : DistribMulAction F T := Module.toDistribMulAction
+  let : MulAction F T := DistribMulAction.toMulAction
+  let : IsScalarTower (RatFunc C) F T := inferInstance
+  let : FiniteDimensional F T :=
     finiteDimensional_exactConstantExtension_over_frobeniusTwistField
       C (RatFunc C) N S hExact g
-  letI : IsGalois F T :=
+  let : IsGalois F T :=
     isGalois_exactConstantExtension_over_frobeniusTwistField
       C (RatFunc C) N S hExact g
   dsimp only
@@ -358,48 +358,48 @@ theorem frobeniusTwistField_ambientFixed_infinityPlace_under_degree_eq_one
           finiteExtensionPlaceDegree C F
             (.inr (infinityPlaceUnder C F
               (ExactConstantExtension C N S) Q)) = 1 := by
-  letI : DecidableEq C := infinityBridgeDecidableEqConstants C
-  letI : DecidableEq (RatFunc C) :=
+  let : DecidableEq C := infinityBridgeDecidableEqConstants C
+  let : DecidableEq (RatFunc C) :=
     infinityBridgeDecidableEqRatFuncConstants C
-  letI : DecidableEq S := infinityBridgeDecidableEqConstants S
-  letI : DecidableEq (RatFunc S) :=
+  let : DecidableEq S := infinityBridgeDecidableEqConstants S
+  let : DecidableEq (RatFunc S) :=
     infinityBridgeDecidableEqRatFuncConstants S
   let T := ExactConstantExtension C N S
-  letI : Field T := exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc C) T :=
+  let : Field T := exactConstantExtensionField C N S hExact
+  let : Algebra (RatFunc C) T :=
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-  letI : SMul (RatFunc C) T := Algebra.toSMul
-  letI : Module (RatFunc C) T := Algebra.toModule
-  letI : DistribMulAction (RatFunc C) T := Module.toDistribMulAction
-  letI : MulAction (RatFunc C) T := DistribMulAction.toMulAction
-  letI : FiniteDimensional (RatFunc C) T :=
+  let : SMul (RatFunc C) T := Algebra.toSMul
+  let : Module (RatFunc C) T := Algebra.toModule
+  let : DistribMulAction (RatFunc C) T := Module.toDistribMulAction
+  let : MulAction (RatFunc C) T := DistribMulAction.toMulAction
+  let : FiniteDimensional (RatFunc C) T :=
     finiteDimensional_exactConstantExtension_over_baseRatFunc C S N hExact
-  letI : Algebra.IsSeparable (RatFunc C) T :=
+  let : Algebra.IsSeparable (RatFunc C) T :=
     isSeparable_exactConstantExtension_over_baseRatFunc C S N hExact
-  letI : IsGalois (RatFunc C) T :=
+  let : IsGalois (RatFunc C) T :=
     exactConstantExtension_isGalois C (RatFunc C) N S hExact
   let F := exactConstantExtensionFrobeniusTwistField
     C (RatFunc C) N S hExact g
-  letI : Algebra (RatFunc C) F :=
+  let : Algebra (RatFunc C) F :=
     SubalgebraClass.toAlgebra F.toSubalgebra
-  letI : SMul (RatFunc C) F := Algebra.toSMul
-  letI : Module (RatFunc C) F := Algebra.toModule
-  letI : DistribMulAction (RatFunc C) F := Module.toDistribMulAction
-  letI : MulAction (RatFunc C) F := DistribMulAction.toMulAction
-  letI : FiniteDimensional (RatFunc C) F :=
+  let : SMul (RatFunc C) F := Algebra.toSMul
+  let : Module (RatFunc C) F := Algebra.toModule
+  let : DistribMulAction (RatFunc C) F := Module.toDistribMulAction
+  let : MulAction (RatFunc C) F := DistribMulAction.toMulAction
+  let : FiniteDimensional (RatFunc C) F :=
     finiteDimensional_frobeniusTwistField_over_ratFunc C N S hExact g
-  letI : Algebra.IsSeparable (RatFunc C) F :=
+  let : Algebra.IsSeparable (RatFunc C) F :=
     isSeparable_frobeniusTwistField_over_ratFunc C N S hExact g
-  letI : Algebra F T := F.toAlgebra
-  letI : SMul F T := Algebra.toSMul
-  letI : Module F T := Algebra.toModule
-  letI : DistribMulAction F T := Module.toDistribMulAction
-  letI : MulAction F T := DistribMulAction.toMulAction
-  letI : IsScalarTower (RatFunc C) F T := inferInstance
-  letI : FiniteDimensional F T :=
+  let : Algebra F T := F.toAlgebra
+  let : SMul F T := Algebra.toSMul
+  let : Module F T := Algebra.toModule
+  let : DistribMulAction F T := Module.toDistribMulAction
+  let : MulAction F T := DistribMulAction.toMulAction
+  let : IsScalarTower (RatFunc C) F T := inferInstance
+  let : FiniteDimensional F T :=
     finiteDimensional_exactConstantExtension_over_frobeniusTwistField
       C (RatFunc C) N S hExact g
-  letI : IsGalois F T :=
+  let : IsGalois F T :=
     isGalois_exactConstantExtension_over_frobeniusTwistField
       C (RatFunc C) N S hExact g
   dsimp only

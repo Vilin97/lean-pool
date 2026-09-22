@@ -50,16 +50,16 @@ local instance differentConstantPolynomialTower : IsScalarTower C S S[X] :=
 attribute [local instance] FractionRing.liftAlgebra
 
 local instance differentCoefficientPolynomialModuleFinite : Module.Finite C[X] S[X] := by
-  letI : Module.Finite C[X] (C[X] ⊗[C] S) :=
+  let : Module.Finite C[X] (C[X] ⊗[C] S) :=
     Module.Finite.base_change C C[X] S
   exact Module.Finite.equiv
     (Algebra.IsPushout.equiv C C[X] S S[X]).toLinearEquiv
 
 local instance differentCoefficientPolynomialFormallyUnramified :
     Algebra.FormallyUnramified C[X] S[X] := by
-  letI : Algebra.FormallyUnramified C S :=
+  let : Algebra.FormallyUnramified C S :=
     Algebra.FormallyUnramified.of_isSeparable C S
-  letI : Algebra.FormallyUnramified C[X] (C[X] ⊗[C] S) :=
+  let : Algebra.FormallyUnramified C[X] (C[X] ⊗[C] S) :=
     Algebra.FormallyUnramified.base_change C[X]
   exact Algebra.FormallyUnramified.of_equiv
     (Algebra.IsPushout.equiv C C[X] S S[X])
@@ -86,7 +86,7 @@ local instance differentCoefficientRationalFunctionFiniteDimensional :
 local instance differentCoefficientRationalFunctionFormallyUnramified :
     Algebra.FormallyUnramified
       (FractionRing C[X]) (FractionRing S[X]) := by
-  letI : Algebra.FormallyUnramified C[X] (FractionRing S[X]) := inferInstance
+  let : Algebra.FormallyUnramified C[X] (FractionRing S[X]) := inferInstance
   exact Algebra.FormallyUnramified.localization_base (nonZeroDivisors C[X])
 
 local instance differentCoefficientRationalFunctionSeparable :
@@ -114,7 +114,7 @@ theorem coefficientPolynomial_differentIdeal_eq_top :
   by_contra htop
   obtain ⟨P, hPmax, hdiffP⟩ :=
     Ideal.exists_le_maximal (differentIdeal C[X] S[X]) htop
-  letI : P.IsPrime := hPmax.isPrime
+  let : P.IsPrime := hPmax.isPrime
   have hunram : Algebra.IsUnramifiedAt C[X] P := by
     exact
       Algebra.formallyUnramified_iff_forall.mp

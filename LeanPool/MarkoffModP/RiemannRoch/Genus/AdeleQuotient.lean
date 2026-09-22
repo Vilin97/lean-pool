@@ -79,8 +79,8 @@ theorem mem_adeleFilt_divisorOfAdele (α : AdeleSpace k K) :
     WithZero.exp (if 1 < placeValuation k K v (α.val v) then
       WithZero.log (placeValuation k K v (α.val v)) else 0)
   by_cases hlt : 1 < placeValuation k K v (α.val v)
-  · rw [if_pos hlt, WithZero.exp_log (ne_of_gt (zero_lt_one.trans hlt))]
-  · simpa only [if_neg hlt, WithZero.exp_zero] using le_of_not_gt hlt
+  · rw [ite_eq_left hlt, WithZero.exp_log (ne_of_gt (zero_lt_one.trans hlt))]
+  · simpa only [ite_eq_right hlt, WithZero.exp_zero] using le_of_not_gt hlt
 
 omit [IsFullConstantField k K] in
 theorem exists_adeleFilt_mem (α : AdeleSpace k K) :
@@ -134,8 +134,8 @@ theorem finrankAdeleQuotient_eq_sandwichRank {D D' : DivisorA k K} (hle : D ≤ 
   classical
   let ssum := adeleFilt k K D + diagonalSubmodule k K
   let topMod := topAdeleSubmodule k K
-  letI : AddCommGroup ↥topMod := Submodule.addCommGroup _
-  letI : Module k ↥topMod := Submodule.module _
+  let : AddCommGroup ↥topMod := Submodule.addCommGroup _
+  let : Module k ↥topMod := Submodule.module _
   let p := Submodule.comap topMod.subtype ssum
   let e : ↥topMod ≃ₗ[k] AdeleSpace k K :=
     Submodule.topEquiv (R := k) (M := AdeleSpace k K)

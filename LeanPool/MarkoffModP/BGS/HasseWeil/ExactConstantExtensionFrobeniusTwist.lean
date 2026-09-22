@@ -107,14 +107,14 @@ private theorem finiteDimensional_exactConstantExtension_over_base
     letI := exactConstantExtensionField C N S hExact
     letI := exactConstantExtensionBaseAlgebra C L N S
     FiniteDimensional L (ExactConstantExtension C N S) := by
-  letI := exactConstantExtensionField C N S hExact
-  letI := exactConstantExtensionBaseAlgebra C L N S
-  letI := exactConstantExtensionAlgebra C N S
-  letI := exactConstantExtensionBaseTower C L N S
+  let := exactConstantExtensionField C N S hExact
+  let := exactConstantExtensionBaseAlgebra C L N S
+  let := exactConstantExtensionAlgebra C N S
+  let := exactConstantExtensionBaseTower C L N S
   let e := exactConstantExtensionLinearEquiv C N S
-  letI : Module.Finite N (N ⊗[C] S) := Module.Finite.base_change C N S
-  letI : Module.Finite N (ExactConstantExtension C N S) := Module.Finite.equiv e
-  letI : Module.Finite L (ExactConstantExtension C N S) :=
+  let : Module.Finite N (N ⊗[C] S) := Module.Finite.base_change C N S
+  let : Module.Finite N (ExactConstantExtension C N S) := Module.Finite.equiv e
+  let : Module.Finite L (ExactConstantExtension C N S) :=
     Module.Finite.trans N (ExactConstantExtension C N S)
   infer_instance
 
@@ -129,8 +129,8 @@ theorem orderOf_exactConstantExtensionFrobeniusTwist
     letI := exactConstantExtensionBaseAlgebra C L N S
     orderOf (exactConstantExtensionFrobeniusTwist C L N S hExact g) =
       Module.finrank C S := by
-  letI := exactConstantExtensionField C N S hExact
-  letI := exactConstantExtensionBaseAlgebra C L N S
+  let := exactConstantExtensionField C N S hExact
+  let := exactConstantExtensionBaseAlgebra C L N S
   change orderOf (exactConstantExtensionCombinedAutHom C L N S
     (FiniteField.frobeniusAlgEquivOfAlgebraic C S, g)) = _
   rw [orderOf_injective (exactConstantExtensionCombinedAutHom C L N S)
@@ -151,8 +151,8 @@ theorem natCard_exactConstantExtensionFrobeniusTwistSubgroup
     Nat.card
         (exactConstantExtensionFrobeniusTwistSubgroup C L N S hExact g) =
       Module.finrank C S := by
-  letI := exactConstantExtensionField C N S hExact
-  letI := exactConstantExtensionBaseAlgebra C L N S
+  let := exactConstantExtensionField C N S hExact
+  let := exactConstantExtensionBaseAlgebra C L N S
   rw [show exactConstantExtensionFrobeniusTwistSubgroup C L N S hExact g =
       Subgroup.zpowers
         (exactConstantExtensionFrobeniusTwist C L N S hExact g) by rfl,
@@ -169,8 +169,8 @@ theorem exactConstantExtensionFrobeniusTwistSubgroup_inf_quotientKer
     letI := exactConstantExtensionBaseAlgebra C L N S
     exactConstantExtensionFrobeniusTwistSubgroup C L N S hExact g ⊓
         (exactConstantExtensionConstantQuotient C L N S hExact).ker = ⊥ := by
-  letI := exactConstantExtensionField C N S hExact
-  letI := exactConstantExtensionBaseAlgebra C L N S
+  let := exactConstantExtensionField C N S hExact
+  let := exactConstantExtensionBaseAlgebra C L N S
   apply le_antisymm
   · intro x hx
     rw [Subgroup.mem_bot]
@@ -203,8 +203,8 @@ theorem exactConstantExtensionFrobeniusTwistSubgroup_inf_functionRange
     letI := exactConstantExtensionBaseAlgebra C L N S
     exactConstantExtensionFrobeniusTwistSubgroup C L N S hExact g ⊓
         (exactConstantExtensionFunctionAutHom C L N S).range = ⊥ := by
-  letI := exactConstantExtensionField C N S hExact
-  letI := exactConstantExtensionBaseAlgebra C L N S
+  let := exactConstantExtensionField C N S hExact
+  let := exactConstantExtensionBaseAlgebra C L N S
   rw [← exactConstantExtensionConstantQuotient_ker C L N S hExact]
   exact exactConstantExtensionFrobeniusTwistSubgroup_inf_quotientKer
     C L N S hExact g hdiv
@@ -220,11 +220,11 @@ theorem frobeniusTwistField_sup_extendedBaseField_eq_top
     letI := exactConstantExtensionBaseAlgebra C L N S
     exactConstantExtensionFrobeniusTwistField C L N S hExact g ⊔
         exactConstantExtensionExtendedBaseField C L N S hExact = ⊤ := by
-  letI := exactConstantExtensionField C N S hExact
-  letI := exactConstantExtensionBaseAlgebra C L N S
-  letI : FiniteDimensional L (ExactConstantExtension C N S) :=
+  let := exactConstantExtensionField C N S hExact
+  let := exactConstantExtensionBaseAlgebra C L N S
+  let : FiniteDimensional L (ExactConstantExtension C N S) :=
     finiteDimensional_exactConstantExtension_over_base C L N S hExact
-  letI : IsGalois L (ExactConstantExtension C N S) :=
+  let : IsGalois L (ExactConstantExtension C N S) :=
     exactConstantExtension_isGalois C L N S hExact
   let F := exactConstantExtensionFrobeniusTwistField C L N S hExact g
   let B := exactConstantExtensionExtendedBaseField C L N S hExact
@@ -261,9 +261,9 @@ theorem finrank_exactConstantExtension_over_frobeniusTwistField
     Module.finrank
         (exactConstantExtensionFrobeniusTwistField C L N S hExact g)
         (ExactConstantExtension C N S) = Module.finrank C S := by
-  letI := exactConstantExtensionField C N S hExact
-  letI := exactConstantExtensionBaseAlgebra C L N S
-  letI : FiniteDimensional L (ExactConstantExtension C N S) :=
+  let := exactConstantExtensionField C N S hExact
+  let := exactConstantExtensionBaseAlgebra C L N S
+  let : FiniteDimensional L (ExactConstantExtension C N S) :=
     finiteDimensional_exactConstantExtension_over_base C L N S hExact
   rw [show exactConstantExtensionFrobeniusTwistField C L N S hExact g =
       IntermediateField.fixedField
@@ -284,9 +284,9 @@ theorem finiteDimensional_exactConstantExtension_over_frobeniusTwistField
     FiniteDimensional
       (exactConstantExtensionFrobeniusTwistField C L N S hExact g)
       (ExactConstantExtension C N S) := by
-  letI := exactConstantExtensionField C N S hExact
-  letI := exactConstantExtensionBaseAlgebra C L N S
-  letI : FiniteDimensional L (ExactConstantExtension C N S) :=
+  let := exactConstantExtensionField C N S hExact
+  let := exactConstantExtensionBaseAlgebra C L N S
+  let : FiniteDimensional L (ExactConstantExtension C N S) :=
     finiteDimensional_exactConstantExtension_over_base C L N S hExact
   infer_instance
 
@@ -302,9 +302,9 @@ theorem isGalois_exactConstantExtension_over_frobeniusTwistField
     IsGalois
       (exactConstantExtensionFrobeniusTwistField C L N S hExact g)
       (ExactConstantExtension C N S) := by
-  letI := exactConstantExtensionField C N S hExact
-  letI := exactConstantExtensionBaseAlgebra C L N S
-  letI : FiniteDimensional L (ExactConstantExtension C N S) :=
+  let := exactConstantExtensionField C N S hExact
+  let := exactConstantExtensionBaseAlgebra C L N S
+  let : FiniteDimensional L (ExactConstantExtension C N S) :=
     finiteDimensional_exactConstantExtension_over_base C L N S hExact
   let H := exactConstantExtensionFrobeniusTwistSubgroup C L N S hExact g
   change IsGalois (IntermediateField.fixedField H)
@@ -323,9 +323,9 @@ theorem finrank_frobeniusTwistField_over_base
     Module.finrank L
         (exactConstantExtensionFrobeniusTwistField C L N S hExact g) =
       Module.finrank L N := by
-  letI := exactConstantExtensionField C N S hExact
-  letI := exactConstantExtensionBaseAlgebra C L N S
-  letI : FiniteDimensional L (ExactConstantExtension C N S) :=
+  let := exactConstantExtensionField C N S hExact
+  let := exactConstantExtensionBaseAlgebra C L N S
+  let : FiniteDimensional L (ExactConstantExtension C N S) :=
     finiteDimensional_exactConstantExtension_over_base C L N S hExact
   let F := exactConstantExtensionFrobeniusTwistField C L N S hExact g
   have hmul := Module.finrank_mul_finrank L F
@@ -347,11 +347,11 @@ theorem natCard_aut_exactConstantExtension_over_frobeniusTwistField
         (ExactConstantExtension C N S ≃ₐ[
           exactConstantExtensionFrobeniusTwistField C L N S hExact g]
           ExactConstantExtension C N S) = Module.finrank C S := by
-  letI := exactConstantExtensionField C N S hExact
-  letI := exactConstantExtensionBaseAlgebra C L N S
-  letI : FiniteDimensional L (ExactConstantExtension C N S) :=
+  let := exactConstantExtensionField C N S hExact
+  let := exactConstantExtensionBaseAlgebra C L N S
+  let : FiniteDimensional L (ExactConstantExtension C N S) :=
     finiteDimensional_exactConstantExtension_over_base C L N S hExact
-  letI : IsGalois
+  let : IsGalois
       (exactConstantExtensionFrobeniusTwistField C L N S hExact g)
       (ExactConstantExtension C N S) :=
     isGalois_exactConstantExtension_over_frobeniusTwistField

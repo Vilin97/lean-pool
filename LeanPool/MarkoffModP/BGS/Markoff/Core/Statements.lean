@@ -50,7 +50,7 @@ theorem hasGiantOrbitAt_of_complement_subset_finset
     (hbad : Set.univ \ puncturedGammaOrbit x ⊆ (bad : Set _))
     (hcard : (bad.card : ℝ) ≤ Real.rpow p epsilon) :
     HasGiantOrbitAt p hp epsilon := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   refine ⟨x, ?_⟩
   have hnat := orbitComplementCard_le_finset_of_subset x bad hbad
   have hreal : (orbitComplementCard x : ℝ) ≤ bad.card := by

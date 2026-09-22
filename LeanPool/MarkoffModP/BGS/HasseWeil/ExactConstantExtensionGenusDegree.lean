@@ -147,8 +147,8 @@ theorem exactConstantExtension_extended_algebraicClosure_eq_bot
         (algebraMap S (RatFunc S)))
     algebraicClosure S L = (⊥ : IntermediateField S L) := by
   let L := ExactConstantExtension C N S
-  letI : Field L := exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc S) L :=
+  let : Field L := exactConstantExtensionField C N S hExact
+  let : Algebra (RatFunc S) L :=
     ratFuncExactConstantExtensionAlgebra C S N hExact
   let extendedConstantAlgebra : Algebra S L :=
     RingHom.toAlgebra ((algebraMap (RatFunc S) L).comp
@@ -178,7 +178,7 @@ theorem exactConstantExtension_extended_algebraicClosure_eq_bot
   have hTensorRange (z : L)
       (hz : @IsAlgebraic S L _ _ tensorConstantAlgebra z) :
       z ∈ Set.range (@algebraMap S L _ _ tensorConstantAlgebra) := by
-    letI : Algebra S L := tensorConstantAlgebra
+    let : Algebra S L := tensorConstantAlgebra
     have hTensorExact : algebraicClosure S L =
         (⊥ : IntermediateField S L) :=
       exactConstantExtension_algebraicClosure_eq_bot C N S hExact
@@ -188,7 +188,7 @@ theorem exactConstantExtension_extended_algebraicClosure_eq_bot
       rw [← hTensorExact]
       exact hzClosure
     exact hzBot
-  letI : Algebra S L := extendedConstantAlgebra
+  let : Algebra S L := extendedConstantAlgebra
   apply eq_bot_iff.mpr
   intro z hz
   have hzExtended : @IsAlgebraic S L _ _ extendedConstantAlgebra z :=
@@ -226,22 +226,22 @@ theorem exactConstantExtension_finrank_over_extendedRatFunc_eq
     letI : Module (RatFunc S) L := Algebra.toModule
     Module.finrank (RatFunc S) L = Module.finrank (RatFunc C) N := by
   let L := ExactConstantExtension C N S
-  letI : Field L := exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc C) (RatFunc S) :=
+  let : Field L := exactConstantExtensionField C N S hExact
+  let : Algebra (RatFunc C) (RatFunc S) :=
     ratFuncCoefficientAlgebra C S
-  letI : Algebra (RatFunc C) L :=
+  let : Algebra (RatFunc C) L :=
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-  letI : Algebra (RatFunc S) L :=
+  let : Algebra (RatFunc S) L :=
     ratFuncExactConstantExtensionAlgebra C S N hExact
-  letI : SMul (RatFunc C) (RatFunc S) := Algebra.toSMul
-  letI : SMul (RatFunc C) L := Algebra.toSMul
-  letI : SMul (RatFunc S) L := Algebra.toSMul
-  letI : Module (RatFunc C) (RatFunc S) := Algebra.toModule
-  letI : Module (RatFunc C) L := Algebra.toModule
-  letI : Module (RatFunc S) L := Algebra.toModule
-  letI : IsScalarTower (RatFunc C) (RatFunc S) L :=
+  let : SMul (RatFunc C) (RatFunc S) := Algebra.toSMul
+  let : SMul (RatFunc C) L := Algebra.toSMul
+  let : SMul (RatFunc S) L := Algebra.toSMul
+  let : Module (RatFunc C) (RatFunc S) := Algebra.toModule
+  let : Module (RatFunc C) L := Algebra.toModule
+  let : Module (RatFunc S) L := Algebra.toModule
+  let : IsScalarTower (RatFunc C) (RatFunc S) L :=
     rationalBase_scalarTower C S N hExact
-  letI : FiniteDimensional (RatFunc S) L :=
+  let : FiniteDimensional (RatFunc S) L :=
     finiteDimensional_over_extendedRatFunc C S N hExact
   have hdegree :
       Module.finrank (RatFunc C) (RatFunc S) *

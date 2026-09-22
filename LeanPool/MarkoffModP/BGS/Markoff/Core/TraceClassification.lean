@@ -31,7 +31,7 @@ private theorem quadraticFiniteField_natCard :
 theorem isSquare_algebraMap_quadraticFiniteField (hpTwo : p ≠ 2) (a : ZMod p) :
     IsSquare (algebraMap (ZMod p) (quadraticFiniteField p) a) := by
   let E := quadraticFiniteField p
-  letI : Fintype E := Fintype.ofFinite _
+  let : Fintype E := Fintype.ofFinite _
   change IsSquare (algebraMap (ZMod p) E a)
   by_cases ha : a = 0
   · subst a
@@ -143,7 +143,7 @@ theorem exists_split_or_quadraticNormOneTrace
       ring
     exact Or.inl ⟨w, htrace, nonparabolic_split_eigenvalue p t ht w htrace⟩
   · let E := quadraticFiniteField p
-    letI : Fintype E := Fintype.ofFinite _
+    let : Fintype E := Fintype.ofFinite _
     obtain ⟨s, hs⟩ := isSquare_algebraMap_quadraticFiniteField p hpTwo d
     have hsDiscBase : s ^ 2 = algebraMap (ZMod p) E d := by
       simpa [pow_two] using hs.symm

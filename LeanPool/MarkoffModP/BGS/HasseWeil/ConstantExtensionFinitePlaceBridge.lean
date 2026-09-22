@@ -124,27 +124,27 @@ theorem exactConstantExtensionUpstairsResidueField_finite
     (q : IsDedekindDomain.HeightOneSpectrum
       (integralClosure S[X] (ExactConstantExtension C N S))) :
     Finite q.asIdeal.ResidueField := by
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
     ratFuncExactConstantExtensionAlgebra C S N hExact
-  letI : SMul (RatFunc S) (ExactConstantExtension C N S) :=
+  let : SMul (RatFunc S) (ExactConstantExtension C N S) :=
     Algebra.toSMul
-  letI : Module (RatFunc S) (ExactConstantExtension C N S) :=
+  let : Module (RatFunc S) (ExactConstantExtension C N S) :=
     Algebra.toModule
-  letI : FiniteDimensional (RatFunc S)
+  let : FiniteDimensional (RatFunc S)
       (ExactConstantExtension C N S) :=
     finiteDimensional_over_extendedRatFunc C S N hExact
-  letI : Algebra.IsSeparable (RatFunc S)
+  let : Algebra.IsSeparable (RatFunc S)
       (ExactConstantExtension C N S) :=
     isSeparable_over_extendedRatFunc C S N hExact
-  letI : Fintype S := Fintype.ofFinite S
+  let : Fintype S := Fintype.ofFinite S
   let qTensor := exactConstantExtensionTensorNormalizationHeightOne C S N q
   let e₂ := exactConstantExtensionNormalizationAlgEquiv C S N hExact
   let Q : FiniteExtensionFinitePlace S (ExactConstantExtension C N S) :=
     IsDedekindDomain.HeightOneSpectrum.equivOfRingEquiv
       e₂.toRingEquiv qTensor
-  letI : Finite Q.asIdeal.ResidueField :=
+  let : Finite Q.asIdeal.ResidueField :=
     finiteExtensionFinitePlaceResidueField_finite S
       (ExactConstantExtension C N S) Q
   let e₁ := finiteFieldConstantExtensionIntegralClosureAlgEquiv C S N
@@ -159,9 +159,9 @@ theorem exactConstantExtensionUpstairsIdeal_isMaximal
     (q : IsDedekindDomain.HeightOneSpectrum
       (integralClosure S[X] (ExactConstantExtension C N S))) :
     q.asIdeal.IsMaximal := by
-  letI : Finite q.asIdeal.ResidueField :=
+  let : Finite q.asIdeal.ResidueField :=
     exactConstantExtensionUpstairsResidueField_finite C S N hExact q
-  letI : Finite
+  let : Finite
       (integralClosure S[X] (ExactConstantExtension C N S) ⧸ q.asIdeal) :=
     Finite.of_injective
       (algebraMap
@@ -228,49 +228,49 @@ theorem exactConstantExtensionFinitePlace_degree_eq_div_gcd
         Nat.gcd (Module.finrank C S)
           (finiteExtensionPlaceDegree C N
             (.inl (exactConstantExtensionDownstairsFinitePlace C S N hExact q))) := by
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
     ratFuncExactConstantExtensionAlgebra C S N hExact
-  letI : SMul (RatFunc S) (ExactConstantExtension C N S) :=
+  let : SMul (RatFunc S) (ExactConstantExtension C N S) :=
     Algebra.toSMul
-  letI : Module (RatFunc S) (ExactConstantExtension C N S) :=
+  let : Module (RatFunc S) (ExactConstantExtension C N S) :=
     Algebra.toModule
-  letI : FiniteDimensional (RatFunc S)
+  let : FiniteDimensional (RatFunc S)
       (ExactConstantExtension C N S) :=
     finiteDimensional_over_extendedRatFunc C S N hExact
-  letI : Algebra.IsSeparable (RatFunc S)
+  let : Algebra.IsSeparable (RatFunc S)
       (ExactConstantExtension C N S) :=
     isSeparable_over_extendedRatFunc C S N hExact
-  letI : Finite q.asIdeal.ResidueField :=
+  let : Finite q.asIdeal.ResidueField :=
     exactConstantExtensionUpstairsResidueField_finite C S N hExact q
-  letI : q.asIdeal.IsMaximal :=
+  let : q.asIdeal.IsMaximal :=
     exactConstantExtensionUpstairsIdeal_isMaximal C S N hExact q
   let A := S ⊗[C] integralClosure C[X] N
   let T := ExactConstantExtension C N S
-  letI : Algebra S[X] A :=
+  let : Algebra S[X] A :=
     bridgeTensorNormalizationPolynomialAlgebra C S N
-  letI : Algebra S A := Algebra.TensorProduct.leftAlgebra
-  letI : Algebra S (RatFuncFiniteIntegralClosure S T) :=
+  let : Algebra S A := Algebra.TensorProduct.leftAlgebra
+  let : Algebra S (RatFuncFiniteIntegralClosure S T) :=
     RingHom.toAlgebra
       ((algebraMap S[X] (RatFuncFiniteIntegralClosure S T)).comp
         (algebraMap S S[X]))
-  letI : SMul S A := Algebra.toSMul
-  letI : SMul S (RatFuncFiniteIntegralClosure S T) := Algebra.toSMul
-  letI : SMul S[X] (RatFuncFiniteIntegralClosure S T) := Algebra.toSMul
-  letI : IsScalarTower S S[X] (RatFuncFiniteIntegralClosure S T) :=
+  let : SMul S A := Algebra.toSMul
+  let : SMul S (RatFuncFiniteIntegralClosure S T) := Algebra.toSMul
+  let : SMul S[X] (RatFuncFiniteIntegralClosure S T) := Algebra.toSMul
+  let : IsScalarTower S S[X] (RatFuncFiniteIntegralClosure S T) :=
     IsScalarTower.of_algebraMap_eq' rfl
   let qTensor := exactConstantExtensionTensorNormalizationHeightOne C S N q
   let Q := exactConstantExtensionUpstairsFinitePlace C S N hExact q
   let P := exactConstantExtensionDownstairsFinitePlace C S N hExact q
-  letI : (finiteFieldConstantExtensionTensorIdeal
+  let : (finiteFieldConstantExtensionTensorIdeal
       C S N q.asIdeal).IsPrime := by
     change qTensor.asIdeal.IsPrime
     exact qTensor.isPrime
   let p := finiteFieldConstantExtensionDownstairsIdeal C S N q.asIdeal
-  letI : p.IsMaximal :=
+  let : p.IsMaximal :=
     finiteFieldConstantExtensionDownstairsIdeal_isMaximal C S N q.asIdeal
-  letI : p.IsPrime := Ideal.IsMaximal.isPrime
+  let : p.IsPrime := Ideal.IsMaximal.isPrime
     (show p.IsMaximal from inferInstance)
   let e₂ := exactConstantExtensionNormalizationAlgEquiv C S N hExact
   let e₂S : A ≃ₐ[S] RatFuncFiniteIntegralClosure S T :=

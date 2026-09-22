@@ -36,7 +36,7 @@ theorem poweredCoordinateImageRelation_transpose_natDegree_mul_commonIndex
         Module.finrank (PoweredImageOverFirst f m n)
           (PlaneCurveFunctionField f) =
       n * MvPolynomial.degreeOf 0 f := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let a := (transposeBivariate
     (poweredCoordinateImageRelation hf hpartialSecond m hm n)).natDegree
@@ -65,7 +65,7 @@ theorem poweredCoordinateImageRelation_natDegree_mul_commonIndex
         Module.finrank (PoweredImageOverFirst f m n)
           (PlaneCurveFunctionField f) =
       m * MvPolynomial.degreeOf 1 f := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   calc
     (poweredCoordinateImageRelation hf hpartialSecond m hm n).natDegree *

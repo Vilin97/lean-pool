@@ -474,9 +474,9 @@ private theorem probe_ratFuncFinitePlaceDegree_eq_finrank_residue
     rw [← show (normalizedPrimeFinitePlace (K := K) r).asIdeal = p.asIdeal by
       exact congrArg HeightOneSpectrum.asIdeal hp]
     rfl
-  letI : (Ideal.span {(r : K[X])}).IsPrime :=
+  let : (Ideal.span {(r : K[X])}).IsPrime :=
     (normalizedPrimeFinitePlace (K := K) r).isPrime
-  letI : (Ideal.span {(r : K[X])}).IsMaximal :=
+  let : (Ideal.span {(r : K[X])}).IsMaximal :=
     (inferInstance : (Ideal.span {(r : K[X])}).IsPrime).isMaximal (by
       simpa only [ne_eq, Ideal.span_singleton_eq_bot] using r.property.1.ne_zero)
   let ep := residueFieldAlgEquivOfIdealEq (K := K) hpIdeal
@@ -503,8 +503,8 @@ private theorem probe_finiteExtensionPlaceDegree_inl_eq_finrank_residue
     finiteExtensionPlaceDegree K L (.inl q) =
       Module.finrank K q.asIdeal.ResidueField := by
   let p := HeightOneSpectrum.under K[X] q
-  letI : q.asIdeal.LiesOver p.asIdeal := ⟨rfl⟩
-  letI hLocalAlg :=
+  let : q.asIdeal.LiesOver p.asIdeal := ⟨rfl⟩
+  let hLocalAlg :=
     Localization.AtPrime.algebraOfLiesOver p.asIdeal q.asIdeal
   have : IsScalarTower K[X] (Localization.AtPrime p.asIdeal)
       (Localization.AtPrime q.asIdeal) := inferInstance
@@ -517,12 +517,12 @@ private theorem probe_finiteExtensionPlaceDegree_inr_eq_finrank_residue
     finiteExtensionPlaceDegree K L (.inr P) =
       Module.finrank K P.1.ResidueField := by
   let p := (ratFuncInfinityPlace K).asIdeal
-  letI hLocalAlg := Localization.AtPrime.algebraOfLiesOver p P.1
+  let hLocalAlg := Localization.AtPrime.algebraOfLiesOver p P.1
   have : IsScalarTower (RatFuncInfinityIntegers K) (Localization.AtPrime p)
       (Localization.AtPrime P.1) := inferInstance
-  letI : Algebra p.ResidueField P.1.ResidueField :=
+  let : Algebra p.ResidueField P.1.ResidueField :=
     IsLocalRing.ResidueField.instAlgebra
-  letI : IsScalarTower K p.ResidueField P.1.ResidueField := inferInstance
+  let : IsScalarTower K p.ResidueField P.1.ResidueField := inferInstance
   rw [finiteExtensionPlaceDegree, Ideal.inertiaDeg_eq p P.1]
   have hbase : Module.finrank K p.ResidueField = 1 :=
     by simpa [p] using

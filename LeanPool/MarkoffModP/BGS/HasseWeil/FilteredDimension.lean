@@ -79,11 +79,11 @@ theorem onePointFiltration_moduleFinite_and_finrank_le
   | zero =>
       exact ⟨inferInstance, by simp⟩
   | succ n ih =>
-      letI : Module.Finite K (R n) := ih.1
+      let : Module.Finite K (R n) := ih.1
       have hfinite : Module.Finite K (R (n + 1)) :=
         moduleFinite_of_exists_sub_smul_mem
           (hnested n) (hpivot n) (hmod n)
-      letI : Module.Finite K (R (n + 1)) := hfinite
+      let : Module.Finite K (R (n + 1)) := hfinite
       refine ⟨hfinite, ?_⟩
       calc
         Module.finrank K (R (n + 1)) ≤ Module.finrank K (R n) + 1 :=

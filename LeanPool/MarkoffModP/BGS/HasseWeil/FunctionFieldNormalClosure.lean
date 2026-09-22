@@ -61,7 +61,7 @@ variable [FiniteDimensional (RatFunc K) L]
 /-- The chosen normal closure remains finite over `K(t)`. -/
 noncomputable instance functionFieldNormalClosure_finiteDimensional :
     FiniteDimensional (RatFunc K) (FunctionFieldNormalClosure K L) := by
-  letI : FiniteDimensional (RatFunc K)
+  let : FiniteDimensional (RatFunc K)
       (functionFieldSeparableClosureEmbedding K L).fieldRange :=
     (functionFieldSeparableClosureEmbedding K L).toLinearMap.finiteDimensional_range
   change FiniteDimensional (RatFunc K)

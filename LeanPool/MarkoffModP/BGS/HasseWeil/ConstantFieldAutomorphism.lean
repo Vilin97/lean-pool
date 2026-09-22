@@ -168,7 +168,7 @@ noncomputable def planeCurveConstantAutHom :
 
 theorem planeCurveConstantAutHom_injective :
     Function.Injective (planeCurveConstantAutHom K E f hf hfE) := by
-  letI : IsDomain (PlaneCurveCoordinateRing
+  let : IsDomain (PlaneCurveCoordinateRing
       (MvPolynomial.map (algebraMap K E) f)) :=
     planeCurveCoordinateRing_isDomain hfE
   intro σ τ h
@@ -229,12 +229,12 @@ theorem planeCurveFunctionFieldBaseChange_finrank :
     Module.finrank (PlaneCurveFunctionField f)
         (PlaneCurveFunctionField (MvPolynomial.map (algebraMap K E) f)) =
       Module.finrank K E := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : IsDomain (PlaneCurveCoordinateRing
+  let : IsDomain (PlaneCurveCoordinateRing
       (MvPolynomial.map (algebraMap K E) f)) :=
     planeCurveCoordinateRing_isDomain hfE
-  letI := planeCurveFunctionFieldBaseChangeAlgebra K E f hf hfE
+  let := planeCurveFunctionFieldBaseChangeAlgebra K E f hf hfE
   calc
     Module.finrank (PlaneCurveFunctionField f)
         (PlaneCurveFunctionField (MvPolynomial.map (algebraMap K E) f)) =
@@ -283,7 +283,7 @@ noncomputable def planeCurveConstantAutOverBaseHom :
 theorem planeCurveConstantAutOverBaseHom_injective :
     letI := planeCurveFunctionFieldBaseChangeAlgebra K E f hf hfE
     Function.Injective (planeCurveConstantAutOverBaseHom K E f hf hfE) := by
-  letI := planeCurveFunctionFieldBaseChangeAlgebra K E f hf hfE
+  let := planeCurveFunctionFieldBaseChangeAlgebra K E f hf hfE
   intro σ τ h
   apply planeCurveConstantAutHom_injective K E f hf hfE
   apply AlgEquiv.ext
@@ -300,17 +300,17 @@ theorem planeCurveFunctionFieldBaseChange_isGalois
     letI := planeCurveFunctionFieldBaseChangeAlgebra K E f hf hfE
     IsGalois (PlaneCurveFunctionField f)
       (PlaneCurveFunctionField (MvPolynomial.map (algebraMap K E) f)) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : IsDomain (PlaneCurveCoordinateRing
+  let : IsDomain (PlaneCurveCoordinateRing
       (MvPolynomial.map (algebraMap K E) f)) :=
     planeCurveCoordinateRing_isDomain hfE
-  letI := planeCurveFunctionFieldBaseChangeAlgebra K E f hf hfE
+  let := planeCurveFunctionFieldBaseChangeAlgebra K E f hf hfE
   let e := planeCurveFunctionFieldBaseChangeLinearEquiv K E f hf hfE
-  letI : Module.Finite (PlaneCurveFunctionField f)
+  let : Module.Finite (PlaneCurveFunctionField f)
       ((PlaneCurveFunctionField f) ⊗[K] E) :=
     Module.Finite.base_change K (PlaneCurveFunctionField f) E
-  letI : Module.Finite (PlaneCurveFunctionField f)
+  let : Module.Finite (PlaneCurveFunctionField f)
       (PlaneCurveFunctionField (MvPolynomial.map (algebraMap K E) f)) :=
     Module.Finite.equiv e
   apply IsGalois.of_card_aut_eq_finrank

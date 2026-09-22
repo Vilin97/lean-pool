@@ -86,7 +86,7 @@ theorem planeCurve_propositionTwoExceptionalPlaces_weightedDegree_add_one_le
         finiteExtensionPlaceDegree K (PlaneCurveFunctionField f) w) + 1 ≤
       2 * (MvPolynomial.degreeOf 0 f + MvPolynomial.degreeOf 1 f) := by
   classical
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let L := PlaneCurveFunctionField f
   let x : L := planeCurveFunction f 0
@@ -107,18 +107,18 @@ theorem planeCurve_propositionTwoExceptionalPlaces_weightedDegree_add_one_le
     apply hyTrans
     rw [h]
     exact isAlgebraic_zero
-  letI : Algebra (RatFunc K) L :=
+  let : Algebra (RatFunc K) L :=
     planeCurveFirstCoordinateRatFuncAlgebra f hxTrans
-  letI : FiniteDimensional (RatFunc K) L :=
+  let : FiniteDimensional (RatFunc K) L :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc
       hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K) L :=
+  let : Algebra.IsSeparable (RatFunc K) L :=
     separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : Algebra (Polynomial K) L :=
+  let : Algebra (Polynomial K) L :=
     RingHom.toAlgebra
       ((algebraMap (RatFunc K) L).comp
         (algebraMap (Polynomial K) (RatFunc K)))
-  letI : IsScalarTower (Polynomial K) (RatFunc K) L :=
+  let : IsScalarTower (Polynomial K) (RatFunc K) L :=
     IsScalarTower.of_algebraMap_eq' rfl
   let q : FiniteExtensionFinitePlace K L :=
     BGS.HasseWeil.affinePointExhaustiveFinitePlace
@@ -232,16 +232,16 @@ theorem planeCurve_canonicalDifferent_add_propositionTwoExceptional_add_one_le
           finiteExtensionPlaceDegree K (PlaneCurveFunctionField f) w : ℤ) +
         1 ≤
       (2 * MvPolynomial.degreeOf 0 f * MvPolynomial.degreeOf 1 f : ℕ) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
-  letI : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc
       hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
     separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
   have hcanonical :=
     planeCurve_canonicalDifferentDivisor_degree_le

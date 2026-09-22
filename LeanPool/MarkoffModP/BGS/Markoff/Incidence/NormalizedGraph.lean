@@ -203,7 +203,7 @@ equivalence. -/
 theorem normalizedAdmissibleBridgeAt_of_incidenceBridgeAt
     (p : ℕ) (hp : p.Prime) [Invertible (3 : ZMod p)]
     (hbridge : IncidenceBridgeAt p hp) : NormalizedAdmissibleBridgeAt p hp := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   intro u v hu hv
   let a := unscaleNormalizedCoordinate u
   let b := unscaleNormalizedCoordinate v
@@ -227,14 +227,14 @@ theorem normalizedAdmissibleBridge_mod_one
   obtain ⟨p0, hbridge⟩ := incidenceBridge_mod_one_admissible hHasse
   refine ⟨p0, ?_⟩
   intro p hp hpLarge hmod
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hpThree : 3 < p := by
     by_contra h
     have hpLe : p ≤ 3 := by omega
     have hpTwo : 2 ≤ p := hp.two_le
     have hpCases : p = 2 ∨ p = 3 := by omega
     rcases hpCases with rfl | rfl <;> norm_num at hmod
-  letI : Invertible (3 : ZMod p) :=
+  let : Invertible (3 : ZMod p) :=
     invertibleOfNonzero (natCast_ne_zero_zmod_of_pos_of_lt (by norm_num) hpThree)
   exact normalizedAdmissibleBridgeAt_of_incidenceBridgeAt p hp
     (hbridge p hp hpLarge hmod)
@@ -256,7 +256,7 @@ theorem normalizedAdmissibleGraphBridgeAt_of_fixedAxes
     {p : ℕ} {hp : p.Prime}
     (hbridge : NormalizedAdmissibleBridgeAt p hp) :
     NormalizedAdmissibleGraphBridgeAt p hp := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   intro axis other u v hu hv
   rcases axis with _ | _ | _ <;> rcases other with _ | _ | _
   · obtain ⟨w, hw, h13, h23⟩ := hbridge u v hu hv
@@ -681,7 +681,7 @@ theorem normalizedFullSurfaceFiberBridge_mod_one
   obtain ⟨p0, hadmissible⟩ := normalizedAdmissibleGraphBridge_mod_one hHasse
   refine ⟨p0, ?_⟩
   intro p hp hpLarge hmod
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   obtain ⟨i, hi, _, _⟩ := exists_parabolic_line_decomposition_of_mod_four_eq_one p hmod
   have hgood := hadmissible p hp hpLarge hmod
   intro axis other u v huNonempty hvNonempty

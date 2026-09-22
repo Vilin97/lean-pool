@@ -75,11 +75,11 @@ theorem splitTraceEtaXiNormalMonomials_linearIndependent
           Fin (splitTraceXiKummerPolynomial sigma e d).natDegree ↦
         splitTraceEtaRootInXiField sigma e d ^ (ji.1 : ℕ) *
           splitTraceXiRoot sigma e d ^ (ji.2 : ℕ)) := by
-  letI : CommRing (AdjoinRoot (splitTraceBaseKummerPolynomial sigma)) :=
+  let : CommRing (AdjoinRoot (splitTraceBaseKummerPolynomial sigma)) :=
     AdjoinRoot.instCommRing _
-  letI : CommRing (AdjoinRoot (splitTraceEtaKummerPolynomial sigma e)) :=
+  let : CommRing (AdjoinRoot (splitTraceEtaKummerPolynomial sigma e)) :=
     AdjoinRoot.instCommRing _
-  letI : CommRing (AdjoinRoot (splitTraceXiKummerPolynomial sigma e d)) :=
+  let : CommRing (AdjoinRoot (splitTraceXiKummerPolynomial sigma e d)) :=
     AdjoinRoot.instCommRing _
   simpa [splitTraceEtaRootInXiField, splitTraceXiRoot] using
     adjoinRootTower_normalMonomials_linearIndependent
@@ -103,11 +103,11 @@ theorem splitTraceEtaXiNormalMonomials_linearIndependent_of_oddCoprime
           Fin (splitTraceXiKummerPolynomial sigma e d).natDegree ↦
         splitTraceEtaRootInXiField sigma e d ^ (ji.1 : ℕ) *
           splitTraceXiRoot sigma e d ^ (ji.2 : ℕ)) := by
-  letI : CommRing (AdjoinRoot (splitTraceBaseKummerPolynomial sigma)) :=
+  let : CommRing (AdjoinRoot (splitTraceBaseKummerPolynomial sigma)) :=
     AdjoinRoot.instCommRing _
-  letI : CommRing (AdjoinRoot (splitTraceEtaKummerPolynomial sigma e)) :=
+  let : CommRing (AdjoinRoot (splitTraceEtaKummerPolynomial sigma e)) :=
     AdjoinRoot.instCommRing _
-  letI : CommRing (AdjoinRoot (splitTraceXiKummerPolynomial sigma e d)) :=
+  let : CommRing (AdjoinRoot (splitTraceXiKummerPolynomial sigma e d)) :=
     AdjoinRoot.instCommRing _
   have he : e ≠ 0 := by
     rintro rfl
@@ -137,11 +137,11 @@ theorem splitTraceEtaXiNormalForm_evaluation_eq_zero_iff
           splitTraceEtaRootInXiField sigma e d ^ (ji.1 : ℕ) *
             splitTraceXiRoot sigma e d ^ (ji.2 : ℕ)) c = 0 ↔
       c = 0 := by
-  letI : CommRing (AdjoinRoot (splitTraceBaseKummerPolynomial sigma)) :=
+  let : CommRing (AdjoinRoot (splitTraceBaseKummerPolynomial sigma)) :=
     AdjoinRoot.instCommRing _
-  letI : CommRing (AdjoinRoot (splitTraceEtaKummerPolynomial sigma e)) :=
+  let : CommRing (AdjoinRoot (splitTraceEtaKummerPolynomial sigma e)) :=
     AdjoinRoot.instCommRing _
-  letI : CommRing (AdjoinRoot (splitTraceXiKummerPolynomial sigma e d)) :=
+  let : CommRing (AdjoinRoot (splitTraceXiKummerPolynomial sigma e d)) :=
     AdjoinRoot.instCommRing _
   constructor
   · intro hc

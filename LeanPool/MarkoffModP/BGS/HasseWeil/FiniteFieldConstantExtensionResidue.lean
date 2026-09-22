@@ -189,11 +189,11 @@ theorem finiteFieldConstantExtensionDownstairsIdeal_isMaximal
     [Finite q.ResidueField] :
     (finiteFieldConstantExtensionDownstairsIdeal C S N q).IsMaximal := by
   let p := finiteFieldConstantExtensionDownstairsIdeal C S N q
-  letI : Finite p.ResidueField := by
+  let : Finite p.ResidueField := by
     change Finite
       (finiteFieldConstantExtensionDownstairsIdeal C S N q).ResidueField
     infer_instance
-  letI : Finite (integralClosure C[X] N ⧸ p) :=
+  let : Finite (integralClosure C[X] N ⧸ p) :=
     Finite.of_injective
       (algebraMap (integralClosure C[X] N ⧸ p) p.ResidueField)
       p.injective_algebraMap_quotient_residueField
@@ -210,12 +210,12 @@ theorem finiteFieldConstantExtensionResidue_finrank_eq_lcm
         (Module.finrank C
           (finiteFieldConstantExtensionDownstairsIdeal C S N q).ResidueField) := by
   let q₀ := finiteFieldConstantExtensionTensorIdeal C S N q
-  letI : q₀.IsMaximal :=
+  let : q₀.IsMaximal :=
     finiteFieldConstantExtensionTensorIdeal_isMaximal C S N q
   let eS := finiteFieldConstantExtensionResidueFieldAlgEquiv C S N q
   let p := q₀.comap (Algebra.TensorProduct.includeRight
     (R := C) (A := S) (B := integralClosure C[X] N)).toRingHom
-  letI : Finite p.ResidueField := by
+  let : Finite p.ResidueField := by
     change Finite
       (finiteFieldConstantExtensionDownstairsIdeal C S N q).ResidueField
     infer_instance

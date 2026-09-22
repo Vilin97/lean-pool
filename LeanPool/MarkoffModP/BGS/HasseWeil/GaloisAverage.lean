@@ -5,7 +5,10 @@ Authors: Yuma Mizuno
 -/
 
 import LeanPool.MarkoffModP.BGS.HasseWeil.FixedPointAverage
-import Mathlib
+import Mathlib.Algebra.CharP.Defs
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Asymptotics.Defs
+import Mathlib.Tactic
 
 /-!
 # The finite averaging step in the Corvaja--Zannier Hasse--Weil argument

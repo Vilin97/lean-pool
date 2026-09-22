@@ -112,7 +112,7 @@ theorem legendreWeierstrassCurve_point_card_eq_card_add_one_add_characterSum
     (Nat.card (legendreWeierstrassCurve u v).toAffine.Point : ℤ) =
       Fintype.card F + 1 + ellipticCubicCharacterSum u v := by
   let W := legendreWeierstrassCurve u v
-  letI : W.IsElliptic := legendreWeierstrassCurveIsElliptic hF hu hv huv
+  let : W.IsElliptic := legendreWeierstrassCurveIsElliptic hF hu hv huv
   calc
     (Nat.card W.toAffine.Point : ℤ) =
         Nat.card (WithZero {xy : F × F // W.toAffine.Equation xy.1 xy.2}) := by

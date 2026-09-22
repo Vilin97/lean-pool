@@ -221,7 +221,7 @@ theorem finiteExtensionInfinity_sum_ramification_inertia_eq_finrank :
         (ratFuncInfinityPlace K).asIdeal
           (RatFuncInfinityIntegralClosure K L)
     _ = Module.finrank (RatFunc K) L :=
-      (Algebra.IsAlgebraic.finrank_of_isFractionRing
+      (IsFractionRing.finrank_eq
         (RatFuncInfinityIntegers K) (RatFunc K)
           (RatFuncInfinityIntegralClosure K L) L).symm
 

@@ -78,12 +78,12 @@ theorem liftedTorsionPointNormalizationBranch_injective
   intro z w hzw
   apply torsionPointMaximalIdeal_injective f firstOrder secondOrder
   apply MaximalSpectrum.ext
-  letI hz :
+  let hz :
       (liftedTorsionPointNormalizationBranch (f := f) (B := B)
         firstOrder secondOrder z).asIdeal.LiesOver
         (torsionPointMaximalIdeal f firstOrder secondOrder z).asIdeal :=
     liftedTorsionPointNormalizationBranch_liesOver (f := f) firstOrder secondOrder z
-  letI hw :
+  let hw :
       (liftedTorsionPointNormalizationBranch (f := f) (B := B)
         firstOrder secondOrder w).asIdeal.LiesOver
         (torsionPointMaximalIdeal f firstOrder secondOrder w).asIdeal :=

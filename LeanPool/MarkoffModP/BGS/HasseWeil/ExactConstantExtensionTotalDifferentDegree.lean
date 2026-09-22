@@ -117,25 +117,25 @@ theorem exactConstantExtension_totalDifferentDegree_eq_of_presentedMultiplicity
           infinityDifferentDegree C N := by
   dsimp only
   let E := ExactConstantExtension C N S
-  letI : Field E := exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc C) E :=
+  let : Field E := exactConstantExtensionField C N S hExact
+  let : Algebra (RatFunc C) E :=
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-  letI : SMul (RatFunc C) E := Algebra.toSMul
-  letI : Module (RatFunc C) E := Algebra.toModule
-  letI : FiniteDimensional (RatFunc C) E :=
+  let : SMul (RatFunc C) E := Algebra.toSMul
+  let : Module (RatFunc C) E := Algebra.toModule
+  let : FiniteDimensional (RatFunc C) E :=
     finiteDimensional_exactConstantExtension_over_baseRatFunc
       C S N hExact
-  letI : Algebra.IsSeparable (RatFunc C) E :=
+  let : Algebra.IsSeparable (RatFunc C) E :=
     isSeparable_exactConstantExtension_over_baseRatFunc C S N hExact
-  letI : Algebra (RatFunc S) E :=
+  let : Algebra (RatFunc S) E :=
     ratFuncExactConstantExtensionAlgebra C S N hExact
-  letI : SMul (RatFunc S) E := Algebra.toSMul
-  letI : Module (RatFunc S) E := Algebra.toModule
-  letI : Algebra S[X] E :=
+  let : SMul (RatFunc S) E := Algebra.toSMul
+  let : Module (RatFunc S) E := Algebra.toModule
+  let : Algebra S[X] E :=
     constantExtensionTensorPolynomialAlgebra C S N
-  letI : SMul S[X] E := Algebra.toSMul
-  letI : Module S[X] E := Algebra.toModule
-  letI : IsScalarTower S[X] (RatFunc S) E :=
+  let : SMul S[X] E := Algebra.toSMul
+  let : Module S[X] E := Algebra.toModule
+  let : IsScalarTower S[X] (RatFunc S) E :=
     IsScalarTower.of_algebraMap_eq' (by
       apply DFunLike.ext _ _
       intro p
@@ -144,9 +144,9 @@ theorem exactConstantExtension_totalDifferentDegree_eq_of_presentedMultiplicity
           (algebraMap S[X] (RatFunc S) p)
       exact
         (ratFuncToExactConstantExtension_algebraMap C S N hExact p).symm)
-  letI : FiniteDimensional (RatFunc S) E :=
+  let : FiniteDimensional (RatFunc S) E :=
     finiteDimensional_over_extendedRatFunc C S N hExact
-  letI : Algebra.IsSeparable (RatFunc S) E :=
+  let : Algebra.IsSeparable (RatFunc S) E :=
     isSeparable_over_extendedRatFunc C S N hExact
   intro hPresentedMultiplicity
   let Base := FiniteExtensionPlace C N

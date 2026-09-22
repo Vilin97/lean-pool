@@ -33,7 +33,7 @@ noncomputable def ratFuncInfinityConstantRingHom :
   (RatFunc.C : K →+* RatFunc K).codRestrict (RatFuncInfinityIntegers K) (fun c => by
     by_cases hc : c = 0
     · simp [hc]
-    · show RatFunc.inftyValuation K (RatFunc.C c) ≤ 1
+    · change RatFunc.inftyValuation K (RatFunc.C c) ≤ 1
       rw [RatFunc.inftyValuation.C (F := K) hc])
 
 local instance ratFuncInfinityConstantAlgebra :
@@ -103,7 +103,7 @@ theorem ratFuncInfinityIntegers_exists_constant_mod_maximalIdeal
       rw [Polynomial.leadingCoeff_mul, Polynomial.leadingCoeff_C]
       exact (div_mul_cancel₀ f.num.leadingCoeff hlcdenom).symm
     have hdegreeP : P.degree < f.num.degree := by
-      exact Polynomial.degree_sub_lt hdegreeEq hnum hleadingCoeff
+      exact Polynomial.degree_sub_lt_left hdegreeEq hnum hleadingCoeff
     have hrepr : f - RatFunc.C c =
         algebraMap K[X] (RatFunc K) P /
           algebraMap K[X] (RatFunc K) f.denom := by
@@ -206,24 +206,24 @@ theorem finiteExtensionInfinityPlace_inertiaDeg_eq_one
     (P : (ratFuncInfinityPlace K).asIdeal.primesOver
       (RatFuncInfinityIntegralClosure K L)) :
     P.1.inertiaDeg (RatFuncInfinityIntegers K) = 1 := by
-  letI hLocalAlg :=
+  let hLocalAlg :=
     Localization.AtPrime.algebraOfLiesOver
       (ratFuncInfinityPlace K).asIdeal P.1
   let : IsScalarTower (RatFuncInfinityIntegers K)
       (Localization.AtPrime (ratFuncInfinityPlace K).asIdeal) (Localization.AtPrime P.1) :=
     inferInstance
-  letI : IsAlgClosed (ratFuncInfinityPlace K).asIdeal.ResidueField :=
+  let : IsAlgClosed (ratFuncInfinityPlace K).asIdeal.ResidueField :=
     IsAlgClosed.of_ringEquiv K
       (ratFuncInfinityPlace K).asIdeal.ResidueField
       (ratFuncInfinityPlaceResidueEquiv K).symm.toRingEquiv
-  letI : Algebra (ratFuncInfinityPlace K).asIdeal.ResidueField
+  let : Algebra (ratFuncInfinityPlace K).asIdeal.ResidueField
       P.1.ResidueField := IsLocalRing.ResidueField.instAlgebra
-  letI : Algebra.QuasiFiniteAt (RatFuncInfinityIntegers K) P.1 :=
+  let : Algebra.QuasiFiniteAt (RatFuncInfinityIntegers K) P.1 :=
     inferInstance
-  letI : Module.Finite
+  let : Module.Finite
       (ratFuncInfinityPlace K).asIdeal.ResidueField
       P.1.ResidueField := inferInstance
-  letI : Algebra.IsIntegral
+  let : Algebra.IsIntegral
       (ratFuncInfinityPlace K).asIdeal.ResidueField
       P.1.ResidueField := Algebra.IsIntegral.of_finite _ _
   rw [Ideal.inertiaDeg_eq (ratFuncInfinityPlace K).asIdeal P.1,

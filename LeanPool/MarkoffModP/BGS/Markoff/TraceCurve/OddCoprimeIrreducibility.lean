@@ -265,13 +265,13 @@ theorem splitTracePolynomialToKummerTop_one_one_eq_baseResidueEvaluation
         (SplitTraceXiFunctionField K sigma 1 1)
           (splitTraceBaseResidueEvaluation sigma q) := by
   let hBaseIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
   let hEtaIrred := splitTraceEtaKummerPolynomial_irreducible' sigma hsigma 1 (by decide)
-  letI : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma 1)) := ⟨hEtaIrred⟩
+  let : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma 1)) := ⟨hEtaIrred⟩
   let hXiIrred :=
     splitTraceXiKummerPolynomial_irreducible sigma hsigma 1 1
       (by decide) (by decide) (by decide)
-  letI : Fact (Irreducible (splitTraceXiKummerPolynomial sigma 1 1)) := ⟨hXiIrred⟩
+  let : Fact (Irreducible (splitTraceXiKummerPolynomial sigma 1 1)) := ⟨hXiIrred⟩
   let lhs : MvPolynomial (Fin 2) K →ₐ[K]
       SplitTraceXiFunctionField K sigma 1 1 :=
     splitTracePolynomialToKummerTop sigma hsigma 1 1

@@ -51,7 +51,7 @@ local instance instDecidableEqRatFuncRRspace : DecidableEq k⟮X⟯ := Classical
 omit [Algebra k K] [IsScalarTower k k[X] K] in
 theorem nonempty_placeA : Nonempty (PlaceA k K) := by
   let P : Ideal k[X] := Ideal.span {Polynomial.X}
-  letI : P.IsMaximal :=
+  let : P.IsMaximal :=
     PrincipalIdealRing.isMaximal_of_irreducible Polynomial.irreducible_X
   obtain ⟨Q, hQprime, hQunder⟩ :=
     P.exists_ideal_over_prime_of_isIntegral_of_isDomain
@@ -95,7 +95,7 @@ theorem smul_mem (c : k) {f : K} (hf : memRRspace k K D f) :
 omit [Algebra k K] [IsScalarTower k k[X] K] in
 theorem one_mem : memRRspace k K 0 1 := fun v => by
   rw [Valuation.map_one (placeValuation k K v)]
-  show (1 : WithZero (Multiplicative ℤ)) ≤ WithZero.exp ((0 : DivisorA k K) v)
+  change (1 : WithZero (Multiplicative ℤ)) ≤ WithZero.exp ((0 : DivisorA k K) v)
   rw [Finsupp.zero_apply, ← WithZero.exp_zero]
 
 omit [Algebra k K] [IsScalarTower k k[X] K] in
@@ -327,7 +327,7 @@ theorem finrankRRspaceDiff_single_finite_le (D : DivisorA k K)
       ((Algebra.linearMap (ringOfIntegers k K ⧸ v.asIdeal)
         v.asIdeal.ResidueField).restrictScalars k)
       (Ideal.bijective_algebraMap_quotient_residueField v.asIdeal)
-  letI : FiniteDimensional k v.asIdeal.ResidueField := e.finiteDimensional
+  let : FiniteDimensional k v.asIdeal.ResidueField := e.finiteDimensional
   have hker := finiteLocalResidueMap_ker k K D v
   rw [finrankRRspaceDiff, ← hker, f.quotKerEquivRange.finrank_eq]
   calc
@@ -445,7 +445,7 @@ theorem finrankRRspaceDiff_single_infinite_le (D : DivisorA k K)
       ((Algebra.linearMap (infiniteIntegers k K ⧸ v.asIdeal)
         v.asIdeal.ResidueField).restrictScalars k)
       (Ideal.bijective_algebraMap_quotient_residueField v.asIdeal)
-  letI : FiniteDimensional k v.asIdeal.ResidueField := e.finiteDimensional
+  let : FiniteDimensional k v.asIdeal.ResidueField := e.finiteDimensional
   have hker := infiniteLocalResidueMap_ker k K D v
   rw [finrankRRspaceDiff, ← hker, f.quotKerEquivRange.finrank_eq]
   calc
@@ -468,7 +468,7 @@ theorem finiteDimensional_add_single_one (D : DivisorA k K) (v : PlaceA k K)
       split <;> omega)
   let p := Submodule.comap (RRspace k K (D + Finsupp.single v 1)).subtype
     (RRspace k K D)
-  letI : Module.Finite k p :=
+  let : Module.Finite k p :=
     Module.Finite.equiv (Submodule.comapSubtypeEquivOfLe hle).symm
   rcases v with v | v
   · let f := finiteLocalResidueMap k K D v
@@ -477,12 +477,12 @@ theorem finiteDimensional_add_single_one (D : DivisorA k K) (v : PlaceA k K)
         ((Algebra.linearMap (ringOfIntegers k K ⧸ v.asIdeal)
           v.asIdeal.ResidueField).restrictScalars k)
         (Ideal.bijective_algebraMap_quotient_residueField v.asIdeal)
-    letI : FiniteDimensional k v.asIdeal.ResidueField := e.finiteDimensional
-    letI : Module.Finite k f.range := inferInstance
-    haveI hqker : Module.Finite k
+    let : FiniteDimensional k v.asIdeal.ResidueField := e.finiteDimensional
+    let : Module.Finite k f.range := inferInstance
+    have hqker : Module.Finite k
         (RRspace k K (D + Finsupp.single (Sum.inl v) 1) ⧸ f.ker) :=
       Module.Finite.equiv f.quotKerEquivRange.symm
-    haveI hqp : Module.Finite k
+    have hqp : Module.Finite k
         (RRspace k K (D + Finsupp.single (Sum.inl v) 1) ⧸ p) := by
       exact Module.Finite.equiv (Submodule.quotEquivOfEq f.ker p
         (finiteLocalResidueMap_ker k K D v))
@@ -493,12 +493,12 @@ theorem finiteDimensional_add_single_one (D : DivisorA k K) (v : PlaceA k K)
         ((Algebra.linearMap (infiniteIntegers k K ⧸ v.asIdeal)
           v.asIdeal.ResidueField).restrictScalars k)
         (Ideal.bijective_algebraMap_quotient_residueField v.asIdeal)
-    letI : FiniteDimensional k v.asIdeal.ResidueField := e.finiteDimensional
-    letI : Module.Finite k f.range := inferInstance
-    haveI hqker : Module.Finite k
+    let : FiniteDimensional k v.asIdeal.ResidueField := e.finiteDimensional
+    let : Module.Finite k f.range := inferInstance
+    have hqker : Module.Finite k
         (RRspace k K (D + Finsupp.single (Sum.inr v) 1) ⧸ f.ker) :=
       Module.Finite.equiv f.quotKerEquivRange.symm
-    haveI hqp : Module.Finite k
+    have hqp : Module.Finite k
         (RRspace k K (D + Finsupp.single (Sum.inr v) 1) ⧸ p) := by
       exact Module.Finite.equiv (Submodule.quotEquivOfEq f.ker p
         (infiniteLocalResidueMap_ker k K D v))
@@ -513,7 +513,7 @@ theorem finiteDimensional_add_single_nat (D : DivisorA k K) (v : PlaceA k K)
       rw [heq]
       infer_instance
   | succ n ih =>
-      letI : FiniteDimensional k
+      let : FiniteDimensional k
           (RRspace k K (D + Finsupp.single v (n : ℤ))) := ih
       have hfin := finiteDimensional_add_single_one k K
         (D + Finsupp.single v (n : ℤ)) v
@@ -530,8 +530,8 @@ theorem finrankRRspaceDiff_add_finrank_of_finite {D D' : DivisorA k K}
     (h : D ≤ D') [FiniteDimensional k (RRspace k K D')] :
     finrankRRspaceDiff k K D D' + Module.finrank k (RRspace k K D) =
       Module.finrank k (RRspace k K D') := by
-  letI : AddCommGroup (RRspace k K D') := Submodule.addCommGroup _
-  letI : Module k (RRspace k K D') := Submodule.module _
+  let : AddCommGroup (RRspace k K D') := Submodule.addCommGroup _
+  let : Module k (RRspace k K D') := Submodule.module _
   rw [finrankRRspaceDiff,
     ← (Submodule.comapSubtypeEquivOfLe (RRspace_mono k K h)).finrank_eq]
   exact Submodule.finrank_quotient_add_finrank _
@@ -561,9 +561,9 @@ theorem finrankRRspaceDiff_single_nat_le (D : DivisorA k K) (v : PlaceA k K)
   | succ n ih =>
       let M := D + Finsupp.single v (n : ℤ)
       let N := M + Finsupp.single v 1
-      letI : FiniteDimensional k (RRspace k K M) :=
+      let : FiniteDimensional k (RRspace k K M) :=
         finiteDimensional_add_single_nat k K D v n
-      letI : FiniteDimensional k (RRspace k K N) :=
+      let : FiniteDimensional k (RRspace k K N) :=
         finiteDimensional_add_single_one k K M v
       have hDM : D ≤ M := by
         intro w
@@ -618,7 +618,7 @@ theorem finiteDimensional_add_effective (D E : DivisorA k K)
       have hb0 : 0 ≤ b := by
         have haE := hE a
         simpa [Finsupp.single_apply, hfa] using haE
-      letI : FiniteDimensional k (RRspace k K (D + f)) := ih D hff
+      let : FiniteDimensional k (RRspace k K (D + f)) := ih D hff
       have hsingle := finiteDimensional_add_single_nat k K (D + f) a b.toNat
       have hbcast : (b.toNat : ℤ) = b := Int.toNat_of_nonneg hb0
       have heq : D + (Finsupp.single a b + f) =
@@ -657,9 +657,9 @@ theorem finrankRRspaceDiff_add_effective_le (D E : DivisorA k K)
         simpa [Finsupp.single_apply, hfa] using haE
       let M := D + f
       let N := M + Finsupp.single a (b.toNat : ℤ)
-      letI : FiniteDimensional k (RRspace k K M) :=
+      let : FiniteDimensional k (RRspace k K M) :=
         finiteDimensional_add_effective k K D f hff
-      letI : FiniteDimensional k (RRspace k K N) :=
+      let : FiniteDimensional k (RRspace k K N) :=
         finiteDimensional_add_single_nat k K M a b.toNat
       have hDM : D ≤ M := by
         intro w
@@ -737,7 +737,7 @@ theorem RRspace_neg_deg {D : DivisorA k K} (h : deg k K D < 0) :
   · exact bot_le
 
 theorem RRspace_neg_deg_ell {D : DivisorA k K} (h : deg k K D < 0) : ell k K D = 0 := by
-  show Module.finrank k (RRspace k K D) = 0
+  change Module.finrank k (RRspace k K D) = 0
   rw [RRspace_neg_deg k K h]
   exact finrank_bot k K
 
@@ -775,7 +775,7 @@ theorem finiteDimensional_RRspace_aux (D : DivisorA k K) :
     rw [deg_sub, hdegSingle]
     omega
   have hbot := RRspace_neg_deg k K hD₀neg
-  letI : FiniteDimensional k (RRspace k K D₀) := by
+  let : FiniteDimensional k (RRspace k K D₀) := by
     rw [hbot]
     infer_instance
   have hfin := finiteDimensional_add_single_nat k K D₀ v n
@@ -788,7 +788,7 @@ theorem finiteDimensional_RRspace_aux (D : DivisorA k K) :
 /-- The local residue-field estimate for an increment of Riemann–Roch spaces. -/
 theorem finrank_RRspace_quotient_le {D D' : DivisorA k K} (h : D ≤ D') :
     finrankRRspaceDiff k K D D' ≤ (deg k K (D' - D)).toNat := by
-  letI : FiniteDimensional k (RRspace k K D) := finiteDimensional_RRspace_aux k K D
+  let : FiniteDimensional k (RRspace k K D) := finiteDimensional_RRspace_aux k K D
   have hE : IsEffective k K (D' - D) := (le_iff_sub_effective k K).mp h
   have hrank := finrankRRspaceDiff_add_effective_le k K D (D' - D) hE
   have heq : D + (D' - D) = D' := by abel
@@ -895,8 +895,8 @@ instance finiteDimensional_RRspace (D : DivisorA k K) :
 /-- Rank-nullity for an inclusion of Riemann–Roch spaces. -/
 theorem finrankRRspaceDiff_add_ell {D D' : DivisorA k K} (h : D ≤ D') :
     finrankRRspaceDiff k K D D' + ell k K D = ell k K D' := by
-  letI : AddCommGroup (RRspace k K D') := Submodule.addCommGroup _
-  letI : Module k (RRspace k K D') := Submodule.module _
+  let : AddCommGroup (RRspace k K D') := Submodule.addCommGroup _
+  let : Module k (RRspace k K D') := Submodule.module _
   rw [finrankRRspaceDiff, ell, ell,
     ← (Submodule.comapSubtypeEquivOfLe (RRspace_mono k K h)).finrank_eq]
   exact Submodule.finrank_quotient_add_finrank _

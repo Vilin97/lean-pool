@@ -32,7 +32,7 @@ theorem powMonoidHom_range_eq_ker_complementaryExponent
     [Finite H] [IsCyclic H] (d : ℕ) (hdvd : d ∣ Nat.card H) :
     (powMonoidHom d : H →* H).range =
       (powMonoidHom (Nat.card H / d) : H →* H).ker := by
-  letI := Fintype.ofFinite H
+  let := Fintype.ofFinite H
   apply Subgroup.eq_of_le_of_card_ge
   · rintro y ⟨x, rfl⟩
     change (x ^ d) ^ (Nat.card H / d) = 1

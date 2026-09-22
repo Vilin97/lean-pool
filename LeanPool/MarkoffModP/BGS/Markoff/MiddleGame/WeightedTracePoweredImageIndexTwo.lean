@@ -63,7 +63,7 @@ private theorem weightedTraceSupportRightConstant_mem
     (alpha beta : K) (hbeta : beta ≠ 0) :
     weightedTraceSupportRightConstant ∈
       (weightedTraceTorusClosurePolynomial alpha beta).support := by
-  rw [weightedTraceTorusClosurePolynomial, if_neg hbeta]
+  rw [weightedTraceTorusClosurePolynomial, ite_eq_right hbeta]
   rw [splitTraceCoverPolynomial_one_one_eq_monomials]
   rw [MvPolynomial.mem_support_iff]
   simp [weightedTraceSupportAlpha, weightedTraceSupportRightConstant,
@@ -74,7 +74,7 @@ private theorem weightedTraceSupportMixed_mem
     (alpha beta : K) (hbeta : beta ≠ 0) :
     weightedTraceSupportMixed ∈
       (weightedTraceTorusClosurePolynomial alpha beta).support := by
-  rw [weightedTraceTorusClosurePolynomial, if_neg hbeta]
+  rw [weightedTraceTorusClosurePolynomial, ite_eq_right hbeta]
   rw [splitTraceCoverPolynomial_one_one_eq_monomials]
   rw [MvPolynomial.mem_support_iff]
   simp [weightedTraceSupportAlpha, weightedTraceSupportRightConstant,
@@ -85,7 +85,7 @@ private theorem weightedTraceSupportLeftConstant_mem
     (alpha beta : K) (hbeta : beta ≠ 0) :
     weightedTraceSupportLeftConstant ∈
       (weightedTraceTorusClosurePolynomial alpha beta).support := by
-  rw [weightedTraceTorusClosurePolynomial, if_neg hbeta]
+  rw [weightedTraceTorusClosurePolynomial, ite_eq_right hbeta]
   rw [splitTraceCoverPolynomial_one_one_eq_monomials]
   rw [MvPolynomial.mem_support_iff]
   simp [weightedTraceSupportAlpha, weightedTraceSupportRightConstant,
@@ -120,7 +120,7 @@ theorem weightedTraceTorusClosure_poweredImageIndex_le_two
   let hf : Irreducible f :=
     irreducible_of_irreducible_map_algebraicClosure
       hadmissible.2.2.2.1
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   have hindex :=
     finrank_poweredImageOverFirst_le_supportDet

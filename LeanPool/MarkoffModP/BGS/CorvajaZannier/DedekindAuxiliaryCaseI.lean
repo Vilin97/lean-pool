@@ -124,7 +124,7 @@ theorem exists_constant_dedekindPoleDepth_sub_mul_lt
       rw [hz, finitePlaceOrderTop_eq_coe v x hx]
       simp
     · refine ⟨c, ?_, ?_⟩
-      simp only [dedekindPoleDepth, hx, hz, if_false]
+      simp only [dedekindPoleDepth, hx, hz, ite_false]
       have hxorderneg : finitePlaceOrder v x < 0 := by
         rw [finitePlaceOrderTop_eq_coe v x hx] at hxneg
         exact_mod_cast hxneg
@@ -390,7 +390,7 @@ theorem finitePlaceOrderTop_indexedDedekindLocalWronskian_det_lower_bound_of_pol
         (((D : L → L)^[epsilonOrder (σ i)]) (g i)) := by
       gcongr with i
       by_cases hi : i ∈ poles
-      · simp only [hi, if_true]
+      · simp only [hi, ite_true]
         have hgi : g i ≠ 0 := by
           intro hz
           have hneg := hpole i hi
@@ -401,7 +401,7 @@ theorem finitePlaceOrderTop_indexedDedekindLocalWronskian_det_lower_bound_of_pol
             v π hπ hπIdeal D hDIntegral (epsilonOrder (σ i)) (g i)
         rw [finitePlaceOrderTop_eq_coe v (g i) hgi] at hbound
         simpa only [← WithTop.coe_add, sub_eq_add_neg] using hbound
-      · simp only [hi, if_false]
+      · simp only [hi, ite_false]
         exact finitePlaceOrderTop_derivation_iterate_nonnegative_of_nonnegative
           v D hDIntegral (epsilonOrder (σ i)) (g i) (hregular i hi)
     _ = finitePlaceOrderTop v

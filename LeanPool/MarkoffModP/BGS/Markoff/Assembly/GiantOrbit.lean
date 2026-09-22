@@ -196,7 +196,7 @@ theorem eventually_hasGiantOrbit_of_specializedEstimates
   refine ⟨max (max (max middleThreshold cageThreshold) boundThreshold)
     (max countThreshold 7), ?_⟩
   intro p hpPrime hp
-  letI : Fact p.Prime := ⟨hpPrime⟩
+  let : Fact p.Prime := ⟨hpPrime⟩
   have hpMiddle : middleThreshold ≤ p := by omega
   have hpCage : cageThreshold ≤ p := by omega
   have hpBound : boundThreshold ≤ p := by omega
@@ -204,9 +204,9 @@ theorem eventually_hasGiantOrbit_of_specializedEstimates
   have hpSeven : 7 ≤ p := by omega
   have hpTwo : p ≠ 2 := by omega
   have hpThree : p ≠ 3 := by omega
-  letI : Invertible (3 : ZMod p) :=
+  let : Invertible (3 : ZMod p) :=
     invertibleOfNonzero (three_ne_zero_zmod_of_prime_ne_three p hpThree)
-  letI : Fintype (quadraticFiniteField p) := Fintype.ofFinite _
+  let : Fintype (quadraticFiniteField p) := Fintype.ofFinite _
   obtain ⟨cNormalized, hcNormalizedCage⟩ :=
     exists_normalizedPunctured_splitCagePoint p hpSeven
   let c : PuncturedMarkoffSurface (ZMod p) :=

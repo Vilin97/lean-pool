@@ -147,7 +147,7 @@ theorem finiteExtensionPrincipalDivisor_ratFuncX_inr_eq_neg_ramificationIdx
       -(P.1.ramificationIdx (RatFuncInfinityIntegers K) : ℤ) := by
   let q := primeOverHeightOne (ratFuncInfinityPlace K) P
   let pi := ratFuncInfinityUniformizer K
-  letI : q.asIdeal.LiesOver (ratFuncInfinityPlace K).asIdeal := by
+  let : q.asIdeal.LiesOver (ratFuncInfinityPlace K).asIdeal := by
     simpa [q] using
       (Ideal.primesOver.liesOver (ratFuncInfinityPlace K).asIdeal P)
   have hpi0 : pi ≠ 0 := by
@@ -187,7 +187,7 @@ theorem finiteExtensionPoleDivisor_ratFuncX_inl_eq_zero
       (algebraMap (RatFunc K) L RatFunc.X) (.inl q) = 0 := by
   simp only [finiteExtensionPoleDivisor, Finsupp.neg_apply,
     Finsupp.filter_apply]
-  rw [if_neg (not_lt_of_ge
+  rw [ite_eq_right (not_lt_of_ge
     (finiteExtensionPrincipalDivisor_ratFuncX_inl_nonnegative K L q))]
   simp
 
@@ -204,7 +204,7 @@ theorem finiteExtensionPoleDivisor_ratFuncX_inr_eq_ramificationIdx
     Finsupp.filter_apply,
     finiteExtensionPrincipalDivisor_ratFuncX_inr_eq_neg_ramificationIdx,
     neg_lt_zero]
-  rw [if_pos (by exact_mod_cast he)]
+  rw [ite_eq_left (by exact_mod_cast he)]
   simp
 
 /-- Pointwise description of the complete pole divisor of the rational

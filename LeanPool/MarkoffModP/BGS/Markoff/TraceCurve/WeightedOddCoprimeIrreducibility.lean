@@ -109,8 +109,8 @@ theorem splitTraceCoverPolynomial_absolutelyIrreducible_of_positiveExponents
   have heCharL : (e : AlgebraicClosure K) ≠ 0 := by
     change phi (e : K) ≠ 0
     exact (map_ne_zero_iff phi phi.injective).mpr heChar
-  letI : NeZero e := ⟨he.ne'⟩
-  letI : NeZero (e : AlgebraicClosure K) := ⟨heCharL⟩
+  let : NeZero e := ⟨he.ne'⟩
+  let : NeZero (e : AlgebraicClosure K) := ⟨heCharL⟩
   obtain ⟨zeta, hzeta⟩ :=
     HasEnoughRootsOfUnity.exists_primitiveRoot (AlgebraicClosure K) e
   obtain ⟨sqrtNegOne, hsqrtNegOne⟩ :=

@@ -25,7 +25,7 @@ theorem weightedTraceTorusClosurePolynomial_pderiv_first_ne_zero
     (alpha beta : K) (hbeta : beta ≠ 0) :
     MvPolynomial.pderiv 0
       (weightedTraceTorusClosurePolynomial alpha beta) ≠ 0 := by
-  rw [weightedTraceTorusClosurePolynomial, if_neg hbeta]
+  rw [weightedTraceTorusClosurePolynomial, ite_eq_right hbeta]
   intro hzero
   have heval := congrArg
     (MvPolynomial.eval ![(0 : K), (0 : K)]) hzero
@@ -36,7 +36,7 @@ theorem weightedTraceTorusClosurePolynomial_pderiv_second_ne_zero
     (alpha beta : K) (hbeta : beta ≠ 0) :
     MvPolynomial.pderiv 1
       (weightedTraceTorusClosurePolynomial alpha beta) ≠ 0 := by
-  rw [weightedTraceTorusClosurePolynomial, if_neg hbeta]
+  rw [weightedTraceTorusClosurePolynomial, ite_eq_right hbeta]
   intro hzero
   have heval := congrArg
     (MvPolynomial.eval ![(0 : K), (0 : K)]) hzero
@@ -60,7 +60,7 @@ theorem weightedTraceTorusClosurePolynomial_hasBidegreeAtMost
     (alpha beta : K) (hbeta : beta ≠ 0) :
     BGS.External.HasBidegreeAtMost
       (weightedTraceTorusClosurePolynomial alpha beta) 2 2 := by
-  rw [weightedTraceTorusClosurePolynomial, if_neg hbeta]
+  rw [weightedTraceTorusClosurePolynomial, ite_eq_right hbeta]
   simpa using splitTraceCoverPolynomial_hasBidegreeAtMost alpha beta 1 1
 
 theorem weightedTraceCurve_isGeneralCorvajaZannierPlaneCurve

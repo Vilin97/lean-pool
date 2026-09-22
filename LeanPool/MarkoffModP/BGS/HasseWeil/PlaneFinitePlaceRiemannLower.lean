@@ -124,7 +124,7 @@ theorem exists_global_finitePrincipalPart_representative
       finiteExtensionLocalPoleSpace K L (.inl q) 0 := by
     apply mem_finiteExtensionLocalPoleSpace_zero_of_valuation_le_one K L
     have h := happrox q (by simp [selected])
-    simpa only [target, if_pos rfl, CharP.cast_eq_zero, neg_zero,
+    simpa only [target, ite_eq_left rfl, CharP.cast_eq_zero, neg_zero,
       WithZero.exp_zero] using h
   have hzMem : z ∈ finiteExtensionLocalPoleSpace K L (.inl q) N := by
     have hxMem : (x : L) ∈ finiteExtensionLocalPoleSpace K L (.inl q) N := x.2
@@ -192,7 +192,7 @@ theorem exists_infinityDivisor_finitePlacePrincipalParts_rank
       N * finiteExtensionPlaceDegree K L (.inl q) := by
     simpa only [A, A0, PP] using
       finiteExtensionLocalPoleSpace_inl_cumulative_finrank K L q N
-  letI : Module.Finite K PP := by
+  let : Module.Finite K PP := by
     apply Module.finite_of_finrank_pos
     rw [hPPfinrank]
     exact Nat.mul_pos hN (finiteExtensionPlaceDegree_pos K L (.inl q))
@@ -270,11 +270,11 @@ theorem exists_infinityDivisor_finitePlacePrincipalParts_rank
         rw [finiteExtensionPoleDivisor_apply]
         by_cases hneg :
             finiteExtensionPrincipalDivisor K L (z i : L) (.inl q) < 0
-        · rw [if_pos hneg]
+        · rw [ite_eq_left hneg]
           simp only [D, Finsupp.add_apply, Finsupp.single_eq_same,
             hEfinite q, add_zero]
           omega
-        · rw [if_neg hneg]
+        · rw [ite_eq_right hneg]
           exact hD (.inl q)
       · have hzreg := hzregular i q' hq'
         rw [mem_finiteExtensionLocalPoleSpace_iff] at hzreg
@@ -283,7 +283,7 @@ theorem exists_infinityDivisor_finitePlacePrincipalParts_rank
           rcases hzreg with hzero | ⟨_, horder⟩
           · exact (hzNe i hzero).elim
           · simpa using horder
-        rw [finiteExtensionPoleDivisor_apply, if_neg (not_lt_of_ge hzOrder)]
+        rw [finiteExtensionPoleDivisor_apply, ite_eq_right (not_lt_of_ge hzOrder)]
         exact hD (.inl q')
     · simp only [D, Finsupp.add_apply,
         Finsupp.single_eq_of_ne (by simp :
@@ -342,7 +342,7 @@ theorem exists_infinityDivisor_finitePlacePrincipalParts_rank
     intro x y hxy
     apply Subtype.ext
     exact congrArg (fun w : φ.ker => ((w : finiteExtensionRiemannSpace K L D) : L)) hxy
-  letI : Module.Finite K (finiteExtensionRiemannSpace K L D) :=
+  let : Module.Finite K (finiteExtensionRiemannSpace K L D) :=
     finiteExtensionRiemannSpace_effective_moduleFinite K L D hD
   have hkerLower : Module.finrank K (finiteExtensionRiemannSpace K L E) ≤
       Module.finrank K φ.ker :=
@@ -385,25 +385,25 @@ theorem planeCurve_finitePlace_riemann_lower
         Module.finrank K (finiteExtensionOnePointRiemannSpace K
           (PlaneCurveFunctionField f) (.inl q) N) +
             planeCurveBidegreeGenusBudget f := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
   let L := PlaneCurveFunctionField f
   let g := planeCurveBidegreeGenusBudget f
-  letI : Algebra (RatFunc K) L :=
+  let : Algebra (RatFunc K) L :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : FiniteDimensional (RatFunc K) L :=
+  let : FiniteDimensional (RatFunc K) L :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K) L :=
+  let : Algebra.IsSeparable (RatFunc K) L :=
     separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
   let constantAlg : Algebra K L :=
     RingHom.toAlgebra ((algebraMap (RatFunc K) L).comp
       (algebraMap K (RatFunc K)))
-  letI : Algebra K L := constantAlg
-  letI : SMul K L := constantAlg.toSMul
-  letI : Module K L := constantAlg.toModule
-  letI : IsScalarTower K (RatFunc K) L :=
+  let : Algebra K L := constantAlg
+  let : SMul K L := constantAlg.toSMul
+  let : Module K L := constantAlg.toModule
+  let : IsScalarTower K (RatFunc K) L :=
     IsScalarTower.of_algebraMap_eq' rfl
   dsimp only
   intro q N
@@ -439,7 +439,7 @@ theorem planeCurve_finitePlace_riemann_lower
       · subst v
         simp [Dq]
       · simp [Dq, Finsupp.single_eq_of_ne hv]
-    letI : Module.Finite K (finiteExtensionRiemannSpace K L Dq) :=
+    let : Module.Finite K (finiteExtensionRiemannSpace K L Dq) :=
       finiteExtensionRiemannSpace_effective_moduleFinite K L Dq hDq
     have hstrip := finiteExtensionRiemannSpace_add_effective
       K L Dq E hDq hE

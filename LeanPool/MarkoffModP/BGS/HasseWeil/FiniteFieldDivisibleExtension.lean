@@ -49,7 +49,7 @@ theorem finiteFieldExtension_isScalarTower_of_dvd (h : a ∣ b) :
       finiteFieldExtensionAlgebraOfDvd K p a b h
     IsScalarTower K (FiniteField.Extension K p a)
       (FiniteField.Extension K p b) := by
-  letI : Algebra (FiniteField.Extension K p a)
+  let : Algebra (FiniteField.Extension K p a)
       (FiniteField.Extension K p b) :=
     finiteFieldExtensionAlgebraOfDvd K p a b h
   apply IsScalarTower.of_algebraMap_eq'
@@ -66,10 +66,10 @@ theorem finrank_finiteFieldExtension_of_dvd (h : a ∣ b) :
         (FiniteField.Extension K p b) = b / a := by
   let E := FiniteField.Extension K p a
   let L := FiniteField.Extension K p b
-  letI : Algebra E L := finiteFieldExtensionAlgebraOfDvd K p a b h
-  letI : IsScalarTower K E L :=
+  let : Algebra E L := finiteFieldExtensionAlgebraOfDvd K p a b h
+  let : IsScalarTower K E L :=
     finiteFieldExtension_isScalarTower_of_dvd K p a b h
-  letI : Module.Finite E L := Module.Finite.of_finite
+  let : Module.Finite E L := Module.Finite.of_finite
   have hmul : Module.finrank K E * Module.finrank E L =
       Module.finrank K L := Module.finrank_mul_finrank K E L
   rw [FiniteField.finrank_extension K p a,

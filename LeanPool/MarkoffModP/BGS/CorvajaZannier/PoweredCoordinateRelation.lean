@@ -187,10 +187,10 @@ theorem secondPoweredCoordinateFrobeniusPowerBasis_dim
       charP_of_injective_algebraMap
         (algebraMap K (PlaneCurveFunctionField f)).injective p
     (secondPoweredCoordinateFrobeniusPowerBasis hf hpartialFirst n hn).dim = p := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let L := PlaneCurveFunctionField f
-  letI : CharP L p := charP_of_injective_algebraMap
+  let : CharP L p := charP_of_injective_algebraMap
     (algebraMap K L).injective p
   rw [secondPoweredCoordinateFrobeniusPowerBasis,
     PowerBasis.ofAdjoinEqTop_dim]
@@ -230,9 +230,9 @@ theorem poweredCoordinateExpansionPolynomial_natDegree_lt_char
       charP_of_injective_algebraMap
         (algebraMap K (PlaneCurveFunctionField f)).injective p
     (poweredCoordinateExpansionPolynomial hf hpartialFirst m n hn).natDegree < p := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : CharP (PlaneCurveFunctionField f) p :=
+  let : CharP (PlaneCurveFunctionField f) p :=
     charP_of_injective_algebraMap
       (algebraMap K (PlaneCurveFunctionField f)).injective p
   calc
@@ -255,9 +255,9 @@ theorem poweredCoordinateExpansionPolynomial_aeval
     (planeCurveFunction f 0) ^ m =
       Polynomial.aeval ((planeCurveFunction f 1) ^ n)
         (poweredCoordinateExpansionPolynomial hf hpartialFirst m n hn) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : CharP (PlaneCurveFunctionField f) p :=
+  let : CharP (PlaneCurveFunctionField f) p :=
     charP_of_injective_algebraMap
       (algebraMap K (PlaneCurveFunctionField f)).injective p
   rw [← secondPoweredCoordinateFrobeniusPowerBasis_gen
@@ -299,9 +299,9 @@ theorem poweredCoordinateEliminationRelation_irreducible
         (algebraMap K (PlaneCurveFunctionField f)).injective p
     Irreducible
       (poweredCoordinateEliminationRelation hf hpartialFirst m n hn) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : CharP (PlaneCurveFunctionField f) p :=
+  let : CharP (PlaneCurveFunctionField f) p :=
     charP_of_injective_algebraMap
       (algebraMap K (PlaneCurveFunctionField f)).injective p
   exact powerBasisEliminationRelation_irreducible _ _
@@ -317,9 +317,9 @@ theorem poweredCoordinateEliminationRelation_natDegree
       charP_of_injective_algebraMap
         (algebraMap K (PlaneCurveFunctionField f)).injective p
     (poweredCoordinateEliminationRelation hf hpartialFirst m n hn).natDegree = 1 := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : CharP (PlaneCurveFunctionField f) p :=
+  let : CharP (PlaneCurveFunctionField f) p :=
     charP_of_injective_algebraMap
       (algebraMap K (PlaneCurveFunctionField f)).injective p
   exact powerBasisEliminationRelation_natDegree _ _
@@ -337,9 +337,9 @@ theorem transpose_poweredCoordinateEliminationRelation_natDegree
     (transposeBivariate
       (poweredCoordinateEliminationRelation hf hpartialFirst m n hn)).natDegree =
         (poweredCoordinateExpansionPolynomial hf hpartialFirst m n hn).natDegree := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : CharP (PlaneCurveFunctionField f) p :=
+  let : CharP (PlaneCurveFunctionField f) p :=
     charP_of_injective_algebraMap
       (algebraMap K (PlaneCurveFunctionField f)).injective p
   exact transpose_powerBasisEliminationRelation_natDegree _ _
@@ -356,9 +356,9 @@ theorem poweredCoordinateEliminationRelation_coeff_natDegree_le
         (algebraMap K (PlaneCurveFunctionField f)).injective p
     ((poweredCoordinateEliminationRelation hf hpartialFirst m n hn).coeff i).natDegree ≤
       (poweredCoordinateExpansionPolynomial hf hpartialFirst m n hn).natDegree := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : CharP (PlaneCurveFunctionField f) p :=
+  let : CharP (PlaneCurveFunctionField f) p :=
     charP_of_injective_algebraMap
       (algebraMap K (PlaneCurveFunctionField f)).injective p
   exact powerBasisEliminationRelation_coeff_natDegree_le _ _ i
@@ -376,9 +376,9 @@ theorem evalBivariate_poweredCoordinateEliminationRelation
     evalBivariate ((planeCurveFunction f 1) ^ n)
       ((planeCurveFunction f 0) ^ m)
       (poweredCoordinateEliminationRelation hf hpartialFirst m n hn) = 0 := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : CharP (PlaneCurveFunctionField f) p :=
+  let : CharP (PlaneCurveFunctionField f) p :=
     charP_of_injective_algebraMap
       (algebraMap K (PlaneCurveFunctionField f)).injective p
   rw [← secondPoweredCoordinateFrobeniusPowerBasis_gen
@@ -400,17 +400,17 @@ theorem poweredCoordinateExpansionPolynomial_natDegree_pos
         (algebraMap K (PlaneCurveFunctionField f)).injective p
     0 < (poweredCoordinateExpansionPolynomial
       hf hpartialFirst m n hn).natDegree := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let L := PlaneCurveFunctionField f
-  letI : CharP L p := charP_of_injective_algebraMap
+  let : CharP L p := charP_of_injective_algebraMap
     (algebraMap K L).injective p
   let F := frobeniusSubfield L p
   let x : L := planeCurveFunction f 0
   have hsep := (finiteSeparable_over_firstCoordinate_of_irreducible
     hf hpartialSecond).2
-  letI : Algebra.IsSeparable (FirstCoordinateSubfield f) L := hsep
-  letI : Algebra.IsSeparable (IntermediateField.adjoin F {x}) L :=
+  let : Algebra.IsSeparable (FirstCoordinateSubfield f) L := hsep
+  let : Algebra.IsSeparable (IntermediateField.adjoin F {x}) L :=
     isSeparable_over_frobeniusAdjoin_of_isSeparable_over_constantAdjoin
       (K := K) (L := L) (p := p) x
   have hxTrans : Transcendental K x := firstCoordinate_transcendental hf
@@ -455,9 +455,9 @@ theorem poweredCoordinates_auxiliaryFamily_linearIndependent_of_elimination
       (frobeniusSubfield (PlaneCurveFunctionField f) p)
       (auxiliaryFamily ((planeCurveFunction f 0) ^ m)
         ((planeCurveFunction f 1) ^ n) h k) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : CharP (PlaneCurveFunctionField f) p :=
+  let : CharP (PlaneCurveFunctionField f) p :=
     charP_of_injective_algebraMap
       (algebraMap K (PlaneCurveFunctionField f)).injective p
   exact poweredCoordinates_auxiliaryFamily_linearIndependent_of_relation

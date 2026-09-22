@@ -39,7 +39,7 @@ theorem coeff_planeCurveLogarithmicPDeriv
   induction f using MvPolynomial.induction_on' with
   | add p q hp hq =>
       simp only [planeCurveLogarithmicPDeriv, map_add, mul_add,
-        MvPolynomial.coeff_add]
+        AddMonoidAlgebra.coeff_add, Finsupp.add_apply]
       change (planeCurveLogarithmicPDeriv i p).coeff m +
           (planeCurveLogarithmicPDeriv i q).coeff m = _
       rw [hp, hq]
@@ -63,7 +63,7 @@ theorem coeff_planeCurveLogarithmicDirection
     (f : MvPolynomial (Fin 2) K) (m : Fin 2 →₀ ℕ) :
     (planeCurveLogarithmicDirection a b f).coeff m =
       (a * (m 0 : K) + b * (m 1 : K)) * f.coeff m := by
-  simp only [planeCurveLogarithmicDirection, MvPolynomial.coeff_add,
+  simp only [planeCurveLogarithmicDirection, AddMonoidAlgebra.coeff_add, Finsupp.add_apply,
     MvPolynomial.coeff_C_mul, coeff_planeCurveLogarithmicPDeriv]
   ring
 
@@ -164,7 +164,7 @@ private theorem logWeights_eq_of_logarithmicPDeriv_eq
       (m 0 : K) - c * (m 1 : K) = d := by
   intro m hm
   have hcoeff := congrArg (fun p ↦ p.coeff m) hrelation
-  simp only [MvPolynomial.coeff_add, MvPolynomial.coeff_C_mul,
+  simp only [AddMonoidAlgebra.coeff_add, Finsupp.add_apply, MvPolynomial.coeff_C_mul,
     coeff_planeCurveLogarithmicPDeriv] at hcoeff
   have hm0 : f.coeff m ≠ 0 :=
     MvPolynomial.mem_support_iff.mp hm
@@ -228,7 +228,7 @@ theorem eval_planeCurveLogarithmicDirection_ne_zero_of_supportRankTwo
     MvPolynomial.eval₂ (algebraMap K (PlaneCurveFunctionField f))
       (planeCurveFunction f)
       (planeCurveLogarithmicDirection 1 (-c) f) ≠ 0 := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let Q := planeCurveLogarithmicDirection 1 (-c) f
   have hno := no_logarithmicPDeriv_scalar_relation_of_supportRankTwo

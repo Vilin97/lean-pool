@@ -82,7 +82,7 @@ private lemma markoffDiscriminant_inner_sum
     rw [sum_quadraticChar_neg_four_mul_sq hF hneg]
     have hzeroFour : (0 : F) ^ 2 ≠ 4 := by
       simpa using hfour.symm
-    simp only [if_true, if_neg hzeroFour]
+    simp only [ite_true, ite_eq_right hzeroFour]
     rw [show quadraticChar F ((0 : F) ^ 2 - 4) = 1 by
       simpa using quadraticChar_neg_four_eq_one hF hneg]
     ring
@@ -91,12 +91,12 @@ private lemma markoffDiscriminant_inner_sum
         rw [hspecial]
         ring
       simp_rw [hconstant, quadraticChar_neg_sixteen_eq_one hF hneg]
-      rw [if_neg hy, if_pos hspecial]
+      rw [ite_eq_right hy, ite_eq_left hspecial]
       simp [hspecial]
     · have hA : y ^ 2 - 4 ≠ 0 := sub_ne_zero.mpr hspecial
       have hC : (4 : F) * y ^ 2 ≠ 0 := mul_ne_zero hfour (pow_ne_zero 2 hy)
       rw [BGS.FiniteField.sum_quadraticChar_mul_sq_sub hF hA hC]
-      rw [if_neg hy, if_neg hspecial]
+      rw [ite_eq_right hy, ite_eq_right hspecial]
       ring
 
 private lemma markoffDiscriminant_double_sum
@@ -121,7 +121,7 @@ private lemma markoffDiscriminant_double_sum
   have hrootCard : (univ.filter fun y : F ↦ y ^ 2 = 4).card = 2 := by
     have hroots := quadraticChar_card_sqrts hF (4 : F)
     rw [hchiFour] at hroots
-    norm_num [Set.toFinset_setOf] at hroots
+    norm_num [Set.toFinset_ofPred] at hroots
     exact_mod_cast hroots
   have hspecialIndicator :
       ∑ y : F, (if y ^ 2 = 4 then (Fintype.card F : ℤ) else 0) =
@@ -204,7 +204,7 @@ theorem normalizedSurface_card_eq_of_quadraticChar_neg_one_eq_one
     Nat.card ↑(normalizedSurface F) =
       Fintype.card F ^ 2 + 3 * Fintype.card F + 1 := by
   classical
-  letI := Fintype.ofFinite ↑(normalizedSurface F)
+  let := Fintype.ofFinite ↑(normalizedSurface F)
   rw [Nat.card_eq_fintype_card]
   rw [Fintype.card_congr (normalizedSurfaceEquivDiscriminantRoots hF)]
   rw [Fintype.card_sigma]
@@ -247,7 +247,7 @@ theorem normalizedPuncturedSurface_zmod_card_eq_of_mod_four_eq_one
   have hchar : ringChar (ZMod p) ≠ 2 := (ZMod.ringChar_zmod_n p).substr hpTwo
   have hneg : quadraticChar (ZMod p) (-1) = 1 := by
     rw [quadraticChar_neg_one hchar, ZMod.χ₄_nat_eq_if_mod_four, ZMod.card p, hpModFour]
-    simp only [if_true]
+    simp only [ite_true]
     have hpOdd : p % 2 = 1 := by omega
     rw [hpOdd]
     norm_num
@@ -283,7 +283,7 @@ theorem normalizedFiber1_zero_card_eq_of_quadraticChar_neg_one_eq_one
     (hF : ringChar F ≠ 2) (hneg : quadraticChar F (-1) = 1) :
     Nat.card ↑(normalizedFiber1 (0 : F)) = 2 * Fintype.card F - 1 := by
   classical
-  letI := Fintype.ofFinite ↑(normalizedFiber1 (0 : F))
+  let := Fintype.ofFinite ↑(normalizedFiber1 (0 : F))
   rw [Nat.card_eq_fintype_card]
   rw [Fintype.card_congr normalizedFiber1ZeroEquivSquareRoots]
   rw [Fintype.card_sigma]
@@ -331,7 +331,7 @@ theorem normalizedPuncturedFiber1_zero_zmod_card_eq_of_mod_four_eq_one
   have hchar : ringChar (ZMod p) ≠ 2 := (ZMod.ringChar_zmod_n p).substr hpTwo
   have hneg : quadraticChar (ZMod p) (-1) = 1 := by
     rw [quadraticChar_neg_one hchar, ZMod.χ₄_nat_eq_if_mod_four, ZMod.card p, hpModFour]
-    simp only [if_true]
+    simp only [ite_true]
     have hpOdd : p % 2 = 1 := by omega
     rw [hpOdd]
     norm_num
@@ -435,7 +435,7 @@ theorem puncturedMarkoffSurface_zmod_card_eq_of_mod_four_eq_one
     have hpTwo : 2 ≤ p := hp.two_le
     have hpCases : p = 2 ∨ p = 3 := by omega
     rcases hpCases with rfl | rfl <;> norm_num at hpModFour
-  letI : Invertible (3 : ZMod p) :=
+  let : Invertible (3 : ZMod p) :=
     invertibleOfNonzero (by
       intro hzero
       have hdvd : p ∣ 3 := (ZMod.natCast_eq_zero_iff 3 p).mp hzero
@@ -475,7 +475,7 @@ theorem puncturedMarkoffFirstCoordinateZero_zmod_card_eq_of_mod_four_eq_one
     have hpTwo : 2 ≤ p := hp.two_le
     have hpCases : p = 2 ∨ p = 3 := by omega
     rcases hpCases with rfl | rfl <;> norm_num at hpModFour
-  letI : Invertible (3 : ZMod p) :=
+  let : Invertible (3 : ZMod p) :=
     invertibleOfNonzero (by
       intro hzero
       have hdvd : p ∣ 3 := (ZMod.natCast_eq_zero_iff 3 p).mp hzero
@@ -484,7 +484,7 @@ theorem puncturedMarkoffFirstCoordinateZero_zmod_card_eq_of_mod_four_eq_one
   have hchar : ringChar (ZMod p) ≠ 2 := (ZMod.ringChar_zmod_n p).substr hpTwo
   have hneg : quadraticChar (ZMod p) (-1) = 1 := by
     rw [quadraticChar_neg_one hchar, ZMod.χ₄_nat_eq_if_mod_four, ZMod.card p, hpModFour]
-    simp only [if_true]
+    simp only [ite_true]
     have hpOdd : p % 2 = 1 := by omega
     rw [hpOdd]
     norm_num

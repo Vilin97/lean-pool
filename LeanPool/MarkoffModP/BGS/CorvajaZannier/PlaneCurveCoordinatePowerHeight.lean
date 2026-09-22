@@ -40,15 +40,15 @@ theorem finiteExtensionPositiveDegree_planeCurveFirstCoordinate_pow_sub_one
     finiteExtensionPositiveDegree K (PlaneCurveFunctionField f)
         ((planeCurveFunction f 0) ^ m - 1) =
       MvPolynomial.degreeOf 1 f * m := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
-  letI : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
     separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
   classical
   let P : Polynomial K := Polynomial.X ^ m - 1
@@ -91,16 +91,16 @@ theorem finiteExtensionPositiveDegree_planeCurveSecondCoordinate_pow_sub_one
     finiteExtensionPositiveDegree K (PlaneCurveFunctionField f)
         ((planeCurveFunction f 1) ^ n - 1) =
       MvPolynomial.degreeOf 0 f * n := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hy := secondCoordinate_transcendental hf
     (degreeOf_first_pos_of_pderiv_ne_zero hpartialFirst)
-  letI : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
     planeCurveSecondCoordinateRatFuncAlgebra f hy
-  letI : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
     finiteDimensional_planeCurveFunctionField_over_secondRatFunc
       hf hpartialFirst
-  letI : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
     separable_planeCurveFunctionField_over_secondRatFunc hf hpartialFirst
   classical
   let P : Polynomial K := Polynomial.X ^ n - 1

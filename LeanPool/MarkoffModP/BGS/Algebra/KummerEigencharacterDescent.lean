@@ -106,8 +106,8 @@ theorem exists_rootMonomial_of_primePower_mem_base
     ∃ k < e, e ∣ q * k ∧ ∃ c : F,
       z = algebraMap F (AdjoinRoot (X ^ e - C v)) c *
         AdjoinRoot.root (X ^ e - C v) ^ k := by
-  letI : Fact (Irreducible (X ^ e - C v)) := ⟨hirr⟩
-  letI : NeZero e := ⟨he.ne'⟩
+  let : Fact (Irreducible (X ^ e - C v)) := ⟨hirr⟩
+  let : NeZero e := ⟨he.ne'⟩
   let ζe : rootsOfUnity e F := rootsOfUnity.mkOfPowEq ζ hζ.pow_eq_one
   let T : AdjoinRoot (X ^ e - C v) →ₐ[F] AdjoinRoot (X ^ e - C v) :=
     autAdjoinRootXPowSubCHom e v ζe
@@ -136,7 +136,7 @@ theorem exists_rootMonomial_of_primePower_mem_base
       _ = z ^ q := hzq.symm
   have hratioPow : (T z / z) ^ q = 1 := by
     rw [div_pow, hTpow, div_self (pow_ne_zero q hz)]
-  letI : NeZero q := ⟨hq.ne_zero⟩
+  let : NeZero q := ⟨hq.ne_zero⟩
   obtain ⟨m, hm, hmratio⟩ := hζqL.eq_pow_of_pow_eq_one hratioPow
   have hTz : T z =
       algebraMap F (AdjoinRoot (X ^ e - C v)) (ζ ^ (s * m)) * z := by

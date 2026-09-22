@@ -341,9 +341,9 @@ theorem orderTop_indexedWronskian_det_lower_bound_of_poles
         ((((LaurentSeries.derivative K)^[epsilonOrder (σ i)]) (g i)).orderTop) := by
       gcongr with i
       by_cases hi : i ∈ poles
-      · simp only [hi, if_true]
+      · simp only [hi, ite_true]
         exact order_sub_le_orderTop_derivative_iterate (epsilonOrder (σ i)) (g i)
-      · simp only [hi, if_false]
+      · simp only [hi, ite_false]
         exact orderTop_derivative_iterate_nonnegative_of_order_nonnegative
           (epsilonOrder (σ i)) (g i) (hregular i hi)
     _ = (∏ i,

@@ -127,8 +127,8 @@ theorem coeff_mul_indexedCurveZetaDenominator
             (Z * PowerSeries.X ^ (2 * d)) by ring]
   rw [map_add, map_sub, map_sub]
   simp only [PowerSeries.coeff_C_mul, PowerSeries.coeff_mul_X_pow']
-  rw [if_pos (by omega : d ≤ n + 2 * d),
-    if_pos (by omega : 2 * d ≤ n + 2 * d)]
+  rw [ite_eq_left (by omega : d ≤ n + 2 * d),
+    ite_eq_left (by omega : 2 * d ≤ n + 2 * d)]
   simp only [show n + 2 * d - d = n + d by omega,
     show n + 2 * d - 2 * d = n by omega]
   ring

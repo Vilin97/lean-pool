@@ -75,7 +75,7 @@ theorem nthPrime_succ_idxOf_le_of_pairwise
   calc
     Nat.nth Nat.Prime (values.idxOf q + 1) ≤
         Nat.nth Nat.Prime q.primeCounting' :=
-      Nat.nth_monotone Nat.infinite_setOf_prime hindexCard
+      Nat.nth_monotone Nat.infinite_setOfPred_prime hindexCard
     _ = q := by
       simpa [Nat.primeCounting'] using Nat.nth_count hqPrime
 
@@ -257,7 +257,7 @@ theorem jointOddPrimeList_pairwise_positionalCapFloor_lt
     (List.idxOf_lt_length_of_mem hright).trans_le hlength
   rw [table.oddCapAt_lowerPrime_eq_nthPrime hvalid hleftIndex,
     table.oddCapAt_lowerPrime_eq_nthPrime hvalid hrightIndex]
-  apply Nat.nth_strictMono Nat.infinite_setOf_prime
+  apply Nat.nth_strictMono Nat.infinite_setOfPred_prime
   exact Nat.add_lt_add_right
     (idxOf_lt_idxOf_of_pairwise_lt (jointOddPrimeList p)
       (jointOddPrimeList_pairwise_lt p) hleft hright hlr) 1

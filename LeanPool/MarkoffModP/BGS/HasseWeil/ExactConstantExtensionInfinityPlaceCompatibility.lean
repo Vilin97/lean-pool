@@ -114,14 +114,14 @@ private theorem
         (R := C) (A := S) (B := integralClosure C[X] N) x) : E) =
       Algebra.TensorProduct.includeRight (R := C) (A := S) (B := N) x.1 := by
   let E := ExactConstantExtension C N S
-  letI : Field E := exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc S) E :=
+  let : Field E := exactConstantExtensionField C N S hExact
+  let : Algebra (RatFunc S) E :=
     ratFuncExactConstantExtensionAlgebra C S N hExact
-  letI : Algebra S[X]
+  let : Algebra S[X]
       (S ⊗[C] integralClosure C[X] N) :=
     polynomialTensorCancelTargetPolynomialExtensionAlgebra C S
       (integralClosure C[X] N)
-  letI : Algebra S[X] E :=
+  let : Algebra S[X] E :=
     ratFuncExtensionReciprocalPolynomialAlgebra S E
   let a := polynomialTensorCancelTargetPolynomialExtensionAlgebra C S N
   let b := ratFuncExtensionReciprocalPolynomialAlgebra S E
@@ -199,25 +199,25 @@ private theorem exactConstantExtensionInfinityAffineLocalizationSquare_coe
   let E := ExactConstantExtension C N S
   let R0 := integralClosure C[X] N
   let R2 := RatFuncInfinityIntegralClosure C N
-  letI : Field E := exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc C) E :=
+  let : Field E := exactConstantExtensionField C N S hExact
+  let : Algebra (RatFunc C) E :=
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-  letI : Algebra N E := exactConstantExtensionAlgebra C N S
-  letI : Algebra (RatFunc S) E :=
+  let : Algebra N E := exactConstantExtensionAlgebra C N S
+  let : Algebra (RatFunc S) E :=
     ratFuncExactConstantExtensionAlgebra C S N hExact
-  letI : Algebra S[X] E :=
+  let : Algebra S[X] E :=
     ratFuncExtensionReciprocalPolynomialAlgebra S E
   let AS := integralClosure S[X] E
-  letI : Algebra S[X] (S ⊗[C] R0) :=
+  let : Algebra S[X] (S ⊗[C] R0) :=
     polynomialTensorCancelTargetPolynomialExtensionAlgebra C S R0
   let B := RatFuncInfinityIntegralClosure S E
   let eAff := exactConstantExtensionInfinityAffineNormalizationAlgEquiv
     C S N hExact
-  letI : Algebra R0 R2 :=
+  let : Algebra R0 R2 :=
     ratFuncInfinityReciprocalIntegralClosureAlgebra C N
-  letI : Algebra AS B :=
+  let : Algebra AS B :=
     ratFuncInfinityReciprocalIntegralClosureAlgebra S E
-  letI : Algebra R2 B :=
+  let : Algebra R2 B :=
     exactConstantExtensionInfinityNormalizationAlgebra C S N hExact
   calc
     (((algebraMap R2 B) ((algebraMap R0 R2) x) : B) : E) =
@@ -268,13 +268,13 @@ private theorem exactConstantExtensionInfinityAffinePrime_under
   dsimp only
   let E := ExactConstantExtension C N S
   let R0 := integralClosure C[X] N
-  letI : Field E := exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc S) E :=
+  let : Field E := exactConstantExtensionField C N S hExact
+  let : Algebra (RatFunc S) E :=
     ratFuncExactConstantExtensionAlgebra C S N hExact
-  letI : Algebra S[X] E :=
+  let : Algebra S[X] E :=
     ratFuncExtensionReciprocalPolynomialAlgebra S E
   let AS := integralClosure S[X] E
-  letI : Algebra S[X] (S ⊗[C] R0) :=
+  let : Algebra S[X] (S ⊗[C] R0) :=
     polynomialTensorCancelTargetPolynomialExtensionAlgebra C S R0
   let eAff := exactConstantExtensionInfinityAffineNormalizationAlgEquiv
     C S N hExact
@@ -284,7 +284,7 @@ private theorem exactConstantExtensionInfinityAffinePrime_under
     eAff.toRingEquiv.toRingHom.comp
       (Algebra.TensorProduct.includeRight
         (R := C) (A := S) (B := R0)).toRingHom
-  letI : Algebra R0 AS := oldToAffine.toAlgebra
+  let : Algebra R0 AS := oldToAffine.toAlgebra
   ext x
   change eAff
       (Algebra.TensorProduct.includeRight
@@ -337,32 +337,32 @@ theorem exactConstantExtensionUpstairsInfinityPlace_under
   let E := ExactConstantExtension C N S
   let R0 := integralClosure C[X] N
   let R2 := RatFuncInfinityIntegralClosure C N
-  letI : Field E := exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc C) E :=
+  let : Field E := exactConstantExtensionField C N S hExact
+  let : Algebra (RatFunc C) E :=
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-  letI : SMul (RatFunc C) E := Algebra.toSMul
-  letI : Module (RatFunc C) E := Algebra.toModule
-  letI : FiniteDimensional (RatFunc C) E :=
+  let : SMul (RatFunc C) E := Algebra.toSMul
+  let : Module (RatFunc C) E := Algebra.toModule
+  let : FiniteDimensional (RatFunc C) E :=
     finiteDimensional_exactConstantExtension_over_baseRatFunc C S N hExact
-  letI : Algebra.IsSeparable (RatFunc C) E :=
+  let : Algebra.IsSeparable (RatFunc C) E :=
     isSeparable_exactConstantExtension_over_baseRatFunc C S N hExact
-  letI : Algebra N E := exactConstantExtensionAlgebra C N S
-  letI : SMul N E := Algebra.toSMul
-  letI : Module N E := Algebra.toModule
-  letI : IsScalarTower (RatFunc C) N E :=
+  let : Algebra N E := exactConstantExtensionAlgebra C N S
+  let : SMul N E := Algebra.toSMul
+  let : Module N E := Algebra.toModule
+  let : IsScalarTower (RatFunc C) N E :=
     exactConstantExtensionBaseTower C (RatFunc C) N S
-  letI : Algebra (RatFunc S) E :=
+  let : Algebra (RatFunc S) E :=
     ratFuncExactConstantExtensionAlgebra C S N hExact
-  letI : SMul (RatFunc S) E := Algebra.toSMul
-  letI : Module (RatFunc S) E := Algebra.toModule
-  letI : Algebra S[X] E :=
+  let : SMul (RatFunc S) E := Algebra.toSMul
+  let : Module (RatFunc S) E := Algebra.toModule
+  let : Algebra S[X] E :=
     ratFuncExtensionReciprocalPolynomialAlgebra S E
-  letI : SMul S[X] E := Algebra.toSMul
-  letI : Module S[X] E := Algebra.toModule
+  let : SMul S[X] E := Algebra.toSMul
+  let : Module S[X] E := Algebra.toModule
   let AS := integralClosure S[X] E
-  letI : Algebra S[X] (S ⊗[C] R0) :=
+  let : Algebra S[X] (S ⊗[C] R0) :=
     polynomialTensorCancelTargetPolynomialExtensionAlgebra C S R0
-  letI : SMul S[X] (S ⊗[C] R0) := Algebra.toSMul
+  let : SMul S[X] (S ⊗[C] R0) := Algebra.toSMul
   let B := RatFuncInfinityIntegralClosure S E
   let eAff := exactConstantExtensionInfinityAffineNormalizationAlgEquiv
     C S N hExact
@@ -373,25 +373,25 @@ theorem exactConstantExtensionUpstairsInfinityPlace_under
     eAff.toRingEquiv.toRingHom.comp
       (Algebra.TensorProduct.includeRight
         (R := C) (A := S) (B := R0)).toRingHom
-  letI : Algebra R0 AS := oldToAffine.toAlgebra
-  letI : SMul R0 AS := Algebra.toSMul
-  letI : Algebra R0 R2 :=
+  let : Algebra R0 AS := oldToAffine.toAlgebra
+  let : SMul R0 AS := Algebra.toSMul
+  let : Algebra R0 R2 :=
     ratFuncInfinityReciprocalIntegralClosureAlgebra C N
-  letI : SMul R0 R2 := Algebra.toSMul
-  letI : Algebra AS B :=
+  let : SMul R0 R2 := Algebra.toSMul
+  let : Algebra AS B :=
     ratFuncInfinityReciprocalIntegralClosureAlgebra S E
-  letI : SMul AS B := Algebra.toSMul
-  letI : Algebra R2 B :=
+  let : SMul AS B := Algebra.toSMul
+  let : Algebra R2 B :=
     exactConstantExtensionInfinityNormalizationAlgebra C S N hExact
-  letI : SMul R2 B := Algebra.toSMul
-  letI : Module R2 B := Algebra.toModule
-  letI : Algebra R0 B :=
+  let : SMul R2 B := Algebra.toSMul
+  let : Module R2 B := Algebra.toModule
+  let : Algebra R0 B :=
     RingHom.toAlgebra
       ((algebraMap R2 B).comp (algebraMap R0 R2))
-  letI : SMul R0 B := Algebra.toSMul
-  letI : IsScalarTower R0 R2 B :=
+  let : SMul R0 B := Algebra.toSMul
+  let : IsScalarTower R0 R2 B :=
     IsScalarTower.of_algebraMap_eq' rfl
-  letI : IsScalarTower R0 AS B :=
+  let : IsScalarTower R0 AS B :=
     IsScalarTower.of_algebraMap_eq' (by
       ext x
       change

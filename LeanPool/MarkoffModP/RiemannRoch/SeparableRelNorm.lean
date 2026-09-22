@@ -41,71 +41,71 @@ theorem relNorm_eq_pow_of_isMaximal_of_isSeparable
     relNorm R P = p ^ P.inertiaDeg R := by
   let K := FractionRing R
   let L := FractionRing S
-  letI : Algebra K L := FractionRing.liftAlgebra R L
+  let : Algebra K L := FractionRing.liftAlgebra R L
   let E := IntermediateField.normalClosure K L (AlgebraicClosure L)
-  letI : Algebra S E := ((algebraMap L E).comp (algebraMap S L)).toAlgebra
-  letI : IsScalarTower S L E := IsScalarTower.of_algebraMap_eq' rfl
+  let : Algebra S E := ((algebraMap L E).comp (algebraMap S L)).toAlgebra
+  let : IsScalarTower S L E := IsScalarTower.of_algebraMap_eq' rfl
   let T : Type _ := integralClosure S E
-  letI : Algebra S T := inferInstance
-  letI : Algebra T E := inferInstance
-  letI : IsScalarTower S T E := inferInstance
-  letI : Algebra R T := ((algebraMap S T).comp (algebraMap R S)).toAlgebra
-  letI : IsScalarTower R S T := IsScalarTower.of_algebraMap_eq' rfl
-  letI : Algebra R E := ((algebraMap S E).comp (algebraMap R S)).toAlgebra
-  letI : IsScalarTower R S E := IsScalarTower.of_algebraMap_eq' rfl
-  letI : IsScalarTower R T E := IsScalarTower.to₁₃₄ R S T E
-  letI : FaithfulSMul R E := (faithfulSMul_iff_algebraMap_injective R E).2 <| by
+  let : Algebra S T := inferInstance
+  let : Algebra T E := inferInstance
+  let : IsScalarTower S T E := inferInstance
+  let : Algebra R T := ((algebraMap S T).comp (algebraMap R S)).toAlgebra
+  let : IsScalarTower R S T := IsScalarTower.of_algebraMap_eq' rfl
+  let : Algebra R E := ((algebraMap S E).comp (algebraMap R S)).toAlgebra
+  let : IsScalarTower R S E := IsScalarTower.of_algebraMap_eq' rfl
+  let : IsScalarTower R T E := IsScalarTower.to₁₃₄ R S T E
+  let : FaithfulSMul R E := (faithfulSMul_iff_algebraMap_injective R E).2 <| by
     rw [IsScalarTower.algebraMap_eq R S E]
     exact (algebraMap L E).injective.comp (IsFractionRing.injective S L) |>.comp
       (FaithfulSMul.algebraMap_injective R S)
-  letI : IsScalarTower R S L := inferInstance
-  letI : FaithfulSMul R L := inferInstance
-  letI : IsScalarTower R L E := IsScalarTower.to₁₃₄ R S L E
-  letI : IsScalarTower R K L := FractionRing.isScalarTower_liftAlgebra R L
-  letI : IsScalarTower R K E := IsScalarTower.to₁₂₄ R K L E
-  letI : IsIntegralClosure T S E := integralClosure.isIntegralClosure S E
-  letI : FaithfulSMul S T := (faithfulSMul_iff_algebraMap_injective S T).2 <| by
+  let : IsScalarTower R S L := inferInstance
+  let : FaithfulSMul R L := inferInstance
+  let : IsScalarTower R L E := IsScalarTower.to₁₃₄ R S L E
+  let : IsScalarTower R K L := FractionRing.isScalarTower_liftAlgebra R L
+  let : IsScalarTower R K E := IsScalarTower.to₁₂₄ R K L E
+  let : IsIntegralClosure T S E := integralClosure.isIntegralClosure S E
+  let : FaithfulSMul S T := (faithfulSMul_iff_algebraMap_injective S T).2 <| by
     intro x y hxy
     apply (algebraMap L E).injective.comp (IsFractionRing.injective S L)
     exact congrArg (fun z : T => (algebraMap T E) z) hxy
-  letI : FaithfulSMul R T := (faithfulSMul_iff_algebraMap_injective R T).2 <| by
+  let : FaithfulSMul R T := (faithfulSMul_iff_algebraMap_injective R T).2 <| by
     rw [IsScalarTower.algebraMap_eq R S T]
     exact (FaithfulSMul.algebraMap_injective S T).comp
       (FaithfulSMul.algebraMap_injective R S)
-  letI : FiniteDimensional K E :=
+  let : FiniteDimensional K E :=
     normalClosure.is_finiteDimensional K L (AlgebraicClosure L)
-  letI : Algebra.IsSeparable K E := by
+  let : Algebra.IsSeparable K E := by
     rw [← le_separableClosure_iff]
     apply normalClosure_le_iff.mpr
     intro i
-    haveI : Algebra.IsSeparable K i.fieldRange :=
+    have : Algebra.IsSeparable K i.fieldRange :=
       AlgEquiv.Algebra.isSeparable (AlgEquiv.ofInjectiveField i)
     exact le_separableClosure K (AlgebraicClosure L) i.fieldRange
-  letI : Algebra.IsSeparable L E :=
+  let : Algebra.IsSeparable L E :=
     Algebra.isSeparable_tower_top_of_isSeparable K L E
-  letI : FiniteDimensional L E := Module.Finite.right K L E
-  letI : IsFractionRing T E :=
+  let : FiniteDimensional L E := Module.Finite.right K L E
+  let : IsFractionRing T E :=
     IsIntegralClosure.isFractionRing_of_finite_extension S L E T
-  letI : Module.Finite S T := IsIntegralClosure.finite S L E T
-  letI : Module.Finite R T := Module.Finite.trans S T
-  letI : IsDedekindDomain T := integralClosure.isDedekindDomain S L E
+  let : Module.Finite S T := IsIntegralClosure.finite S L E T
+  let : Module.Finite R T := Module.Finite.trans S T
+  let : IsDedekindDomain T := integralClosure.isDedekindDomain S L E
   have : IsTorsionFree S T := FaithfulSMul.to_isTorsionFree S T
-  letI : IsGalois K E := {
+  let : IsGalois K E := {
     to_isSeparable := inferInstance
     to_normal := normalClosure.normal K L (AlgebraicClosure L) }
   let algT : Algebra T (FractionRing T) := inferInstance
-  letI : Algebra T (FractionRing T) := algT
-  letI : Algebra R (FractionRing T) := inferInstance
-  letI : Algebra S (FractionRing T) := inferInstance
-  letI : FaithfulSMul R (FractionRing T) := inferInstance
-  letI : FaithfulSMul S (FractionRing T) := inferInstance
-  letI : Algebra K (FractionRing T) := FractionRing.liftAlgebra R (FractionRing T)
-  letI : Algebra L (FractionRing T) := FractionRing.liftAlgebra S (FractionRing T)
-  letI : IsScalarTower R K (FractionRing T) :=
+  let : Algebra T (FractionRing T) := algT
+  let : Algebra R (FractionRing T) := inferInstance
+  let : Algebra S (FractionRing T) := inferInstance
+  let : FaithfulSMul R (FractionRing T) := inferInstance
+  let : FaithfulSMul S (FractionRing T) := inferInstance
+  let : Algebra K (FractionRing T) := FractionRing.liftAlgebra R (FractionRing T)
+  let : Algebra L (FractionRing T) := FractionRing.liftAlgebra S (FractionRing T)
+  let : IsScalarTower R K (FractionRing T) :=
     FractionRing.isScalarTower_liftAlgebra R (FractionRing T)
-  letI : IsScalarTower S L (FractionRing T) :=
+  let : IsScalarTower S L (FractionRing T) :=
     FractionRing.isScalarTower_liftAlgebra S (FractionRing T)
-  letI : IsGalois K (FractionRing T) := by
+  let : IsGalois K (FractionRing T) := by
     refine IsGalois.of_equiv_equiv (F := K) (E := E)
       (f := (FractionRing.algEquiv R K).symm.toRingEquiv)
       (g := (FractionRing.algEquiv T E).symm.toRingEquiv) ?_
@@ -114,11 +114,11 @@ theorem relNorm_eq_pow_of_isMaximal_of_isSeparable
       (FractionRing.algEquiv T E).symm _
   obtain ⟨Q, hQ₁, hQ₂⟩ : ∃ Q : Ideal T, Q.IsMaximal ∧ Q.LiesOver P :=
     exists_maximal_ideal_liesOver_of_isIntegral P
-  letI : Q.IsMaximal := hQ₁
-  letI : Q.LiesOver P := hQ₂
-  letI : Q.LiesOver p := LiesOver.trans Q P p
+  let : Q.IsMaximal := hQ₁
+  let : Q.LiesOver P := hQ₂
+  let : Q.LiesOver p := LiesOver.trans Q P p
   have h := relNorm_eq_pow_of_isPrime_isGalois Q p
-  letI : IsGalois (FractionRing S) (FractionRing T) :=
+  let : IsGalois (FractionRing S) (FractionRing T) :=
     IsGalois.tower_top_of_isGalois (FractionRing R) (FractionRing S) (FractionRing T)
   rwa [← relNorm_relNorm R S, relNorm_eq_pow_of_isPrime_isGalois Q P, map_pow,
     inertiaDeg_tower (R := R) P Q, pow_mul,
@@ -134,7 +134,7 @@ theorem sum_normalizedFactors_relNorm_of_isSeparable
       ((normalizedFactors I).map fun P =>
         P.inertiaDeg R * w (P.under R)).sum := by
   classical
-  letI : Algebra (FractionRing R) (FractionRing S) :=
+  let : Algebra (FractionRing R) (FractionRing S) :=
     FractionRing.liftAlgebra R (FractionRing S)
   have aux : ∀ s : Multiset (Ideal S), (∀ P ∈ s, Prime P) →
       ((normalizedFactors (relNorm R s.prod)).map w).sum =
@@ -151,12 +151,12 @@ theorem sum_normalizedFactors_relNorm_of_isSeparable
         have hs0 : s.prod ≠ ⊥ := Multiset.prod_ne_zero fun h =>
           (hs' ⊥ h).ne_zero rfl
         let p : Ideal R := P.under R
-        letI : P.IsMaximal := (Ideal.isPrime_of_prime hP).isMaximal hP0
-        letI : p.IsMaximal := Ideal.IsMaximal.under R P
-        letI : P.LiesOver p := ⟨rfl⟩
+        let : P.IsMaximal := (Ideal.isPrime_of_prime hP).isMaximal hP0
+        let : p.IsMaximal := Ideal.IsMaximal.under R P
+        let : P.LiesOver p := ⟨rfl⟩
         have hp0 : p ≠ ⊥ := by
           intro hp
-          haveI : P.LiesOver (⊥ : Ideal R) := hp ▸ (inferInstance : P.LiesOver p)
+          have : P.LiesOver (⊥ : Ideal R) := hp ▸ (inferInstance : P.LiesOver p)
           exact hP0 (Ideal.eq_bot_of_liesOver_bot R P)
         have hnorm : relNorm R P = p ^ P.inertiaDeg R :=
           relNorm_eq_pow_of_isMaximal_of_isSeparable P p

@@ -58,13 +58,13 @@ theorem two_mul_card_image_le_card_add_two_of_inv_invariant
     intro y hy
     obtain ⟨x, hx, hxy⟩ := Finset.mem_image.mp hy
     by_cases hyfixed : y ∈ fixed.image f
-    · rw [if_pos hyfixed]
+    · rw [ite_eq_left hyfixed]
       have hxFiber : x ∈ s.filter fun z => f z = y :=
         Finset.mem_filter.mpr ⟨hx, hxy⟩
       have hpositive : 1 ≤ (s.filter fun z => f z = y).card :=
         Finset.one_le_card.mpr ⟨x, hxFiber⟩
       omega
-    · rw [if_neg hyfixed]
+    · rw [ite_eq_right hyfixed]
       have hfix : x⁻¹ ≠ x := by
         intro h
         apply hyfixed

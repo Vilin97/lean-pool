@@ -96,10 +96,10 @@ theorem evalBivariate_poweredCoordinateImageRelation_map_eq_zero
         ((planeCurveFunction fE 0) ^ m)
         ((planeCurveFunction fE 1) ^ n)
         (g.map (Polynomial.mapRingHom (algebraMap K E))) = 0 := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let fE := MvPolynomial.map (algebraMap K E) f
-  letI : IsDomain (PlaneCurveCoordinateRing fE) :=
+  let : IsDomain (PlaneCurveCoordinateRing fE) :=
     planeCurveCoordinateRing_isDomain hfE
   let g := poweredCoordinateImageRelation hf hpartialSecond m hm n
   let A := PlaneCurveCoordinateRing f
@@ -179,13 +179,13 @@ theorem poweredCoordinateImageRelation_map_associated_baseChange
       (poweredCoordinateImageRelation hfE hpartialSecondE m hm n)
       ((poweredCoordinateImageRelation hf hpartialSecond m hm n).map
         (Polynomial.mapRingHom (algebraMap K E))) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let fE := MvPolynomial.map (algebraMap K E) f
-  letI : IsDomain (PlaneCurveCoordinateRing fE) :=
+  let : IsDomain (PlaneCurveCoordinateRing fE) :=
     planeCurveCoordinateRing_isDomain hfE
   let LE := PlaneCurveFunctionField fE
-  letI : FiniteDimensional (FirstPoweredCoordinateSubfield fE m) LE :=
+  let : FiniteDimensional (FirstPoweredCoordinateSubfield fE m) LE :=
     finiteDimensional_over_firstPoweredCoordinate hfE hpartialSecondE m hm
   have hv : IsIntegral (FirstPoweredCoordinateSubfield fE m)
       ((planeCurveFunction fE 1) ^ n) := IsIntegral.of_finite _ _
@@ -267,9 +267,9 @@ theorem finrank_poweredCoordinateImageField_eq_baseChange
   let hfE : Irreducible fE :=
     irreducible_map_of_irreducible_map_algebraicClosure
       (algebraMap K E) f habsolute
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : IsDomain (PlaneCurveCoordinateRing fE) :=
+  let : IsDomain (PlaneCurveCoordinateRing fE) :=
     planeCurveCoordinateRing_isDomain hfE
   have hpartialSecondE : MvPolynomial.pderiv 1 fE ≠ 0 := by
     rw [MvPolynomial.pderiv_map]

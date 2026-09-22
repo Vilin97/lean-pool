@@ -114,7 +114,7 @@ the absolute constant `1 / 3`. -/
 theorem everyOrbitLargeAt_one_third
     (p : ℕ) (hp : p.Prime) (hpFive : 5 ≤ p) :
     EveryOrbitLargeAt p hp (1 / 3 : ℝ) := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   intro x
   exact one_third_mul_log_rpow_le_of_prime_le_twenty_pow_cube
     p (puncturedGammaOrbit x).ncard hp

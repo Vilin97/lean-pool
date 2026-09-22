@@ -42,7 +42,7 @@ theorem finiteExtensionPositiveDegree_planeCurveFirstCoordinate_pow
     finiteExtensionPositiveDegree K (PlaneCurveFunctionField f)
         ((planeCurveFunction f 0) ^ m) =
       m * MvPolynomial.degreeOf 1 f := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
@@ -54,11 +54,11 @@ theorem finiteExtensionPositiveDegree_planeCurveFirstCoordinate_pow
     apply hx
     rw [h]
     exact isAlgebraic_zero
-  letI : Algebra (RatFunc K) L :=
+  let : Algebra (RatFunc K) L :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : FiniteDimensional (RatFunc K) L :=
+  let : FiniteDimensional (RatFunc K) L :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K) L :=
+  let : Algebra.IsSeparable (RatFunc K) L :=
     separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
   change finiteExtensionPositiveDegree K L (x ^ m) =
     m * MvPolynomial.degreeOf 1 f
@@ -93,7 +93,7 @@ theorem finiteExtensionPositiveDegree_planeCurveSecondCoordinate_pow_le
     finiteExtensionPositiveDegree K (PlaneCurveFunctionField f)
         ((planeCurveFunction f 1) ^ n) ≤
       n * MvPolynomial.degreeOf 0 f := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
@@ -107,11 +107,11 @@ theorem finiteExtensionPositiveDegree_planeCurveSecondCoordinate_pow_le
     apply hyTrans
     rw [h]
     exact isAlgebraic_zero
-  letI : Algebra (RatFunc K) L :=
+  let : Algebra (RatFunc K) L :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : FiniteDimensional (RatFunc K) L :=
+  let : FiniteDimensional (RatFunc K) L :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K) L :=
+  let : Algebra.IsSeparable (RatFunc K) L :=
     separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
   change finiteExtensionPositiveDegree K L (y ^ n) ≤
     n * MvPolynomial.degreeOf 0 f
@@ -138,7 +138,7 @@ theorem finiteExtensionGcdWeightedDegree_one_sub_planeCurvePowers_le
         (1 - (planeCurveFunction f 0) ^ m)
         (1 - (planeCurveFunction f 1) ^ n) ≤
       n * MvPolynomial.degreeOf 0 f := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
@@ -169,11 +169,11 @@ theorem finiteExtensionGcdWeightedDegree_one_sub_planeCurvePowers_le
     apply hyTrans.pow hn
     rw [h]
     exact isAlgebraic_one
-  letI : Algebra (RatFunc K) L :=
+  let : Algebra (RatFunc K) L :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : FiniteDimensional (RatFunc K) L :=
+  let : FiniteDimensional (RatFunc K) L :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K) L :=
+  let : Algebra.IsSeparable (RatFunc K) L :=
     separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
   change finiteExtensionGcdWeightedDegree K L (1 - x ^ m) (1 - y ^ n) ≤
     n * MvPolynomial.degreeOf 0 f
@@ -243,9 +243,9 @@ theorem planeCurveExhaustiveTorsionGcdWeightedDegree_eq_one_sub
       finiteExtensionGcdWeightedDegree K (PlaneCurveFunctionField f)
         (1 - (planeCurveFunction f 0) ^ m)
         (1 - (planeCurveFunction f 1) ^ n) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : DecidableEq (RatFunc K) := Classical.decEq _
+  let : DecidableEq (RatFunc K) := Classical.decEq _
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
   let L := PlaneCurveFunctionField f
@@ -267,11 +267,11 @@ theorem planeCurveExhaustiveTorsionGcdWeightedDegree_eq_one_sub
     apply hyTrans.pow hn
     rw [← h]
     exact isAlgebraic_one
-  letI : Algebra (RatFunc K) L :=
+  let : Algebra (RatFunc K) L :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : FiniteDimensional (RatFunc K) L :=
+  let : FiniteDimensional (RatFunc K) L :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K) L :=
+  let : Algebra.IsSeparable (RatFunc K) L :=
     separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
   dsimp only [planeCurveExhaustiveTorsionGcdWeightedDegree]
   change finiteExtensionGcdWeightedDegree K L (x ^ m - 1) (y ^ n - 1) =
@@ -299,7 +299,7 @@ theorem finiteExtensionGcdWeightedDegree_one_sub_planeCurvePowers_swapped_le
         (1 - (planeCurveFunction f 1) ^ n)
         (1 - (planeCurveFunction f 0) ^ m) ≤
       m * MvPolynomial.degreeOf 1 f := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
@@ -330,11 +330,11 @@ theorem finiteExtensionGcdWeightedDegree_one_sub_planeCurvePowers_swapped_le
     apply hyTrans.pow hn
     rw [h]
     exact isAlgebraic_one
-  letI : Algebra (RatFunc K) L :=
+  let : Algebra (RatFunc K) L :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : FiniteDimensional (RatFunc K) L :=
+  let : FiniteDimensional (RatFunc K) L :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K) L :=
+  let : Algebra.IsSeparable (RatFunc K) L :=
     separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
   change finiteExtensionGcdWeightedDegree K L (1 - y ^ n) (1 - x ^ m) ≤
     m * MvPolynomial.degreeOf 1 f

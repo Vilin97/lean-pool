@@ -201,23 +201,23 @@ theorem adeleFilt_sup_eq_add {D₁ D₂ : DivisorA k K} :
     let a₁ : AdeleSpace k K := ⟨fun v => if D₂ v ≤ D₁ v then a.val v else 0, by
       simpa [adeleSubmodule] using haevent.mono fun v hv => by
         by_cases h : D₂ v ≤ D₁ v
-        · rw [if_pos h]
+        · rw [ite_eq_left h]
           exact hv
-        · rw [if_neg h]
+        · rw [ite_eq_right h]
           exact zero_mem _⟩
     let a₂ : AdeleSpace k K := ⟨fun v => if D₂ v ≤ D₁ v then 0 else a.val v, by
       simpa [adeleSubmodule] using haevent.mono fun v hv => by
         by_cases h : D₂ v ≤ D₁ v
-        · rw [if_pos h]
+        · rw [ite_eq_left h]
           exact zero_mem _
-        · rw [if_neg h]
+        · rw [ite_eq_right h]
           exact hv⟩
     have ha₁ : a₁ ∈ adeleFilt k K D₁ := by
       change memAdeleFilt k K D₁ a₁
       intro v
       by_cases h : D₂ v ≤ D₁ v
       · change placeValuation k K v (if D₂ v ≤ D₁ v then a.val v else 0) ≤ _
-        rw [if_pos h]
+        rw [ite_eq_left h]
         simpa [Finsupp.sup_apply, sup_eq_left.mpr h] using ha v
       · simp [a₁, h]
     have ha₂ : a₂ ∈ adeleFilt k K D₂ := by
@@ -227,7 +227,7 @@ theorem adeleFilt_sup_eq_add {D₁ D₂ : DivisorA k K} :
       · simp [a₂, h]
       · have hv : D₁ v ≤ D₂ v := le_of_not_ge h
         change placeValuation k K v (if D₂ v ≤ D₁ v then 0 else a.val v) ≤ _
-        rw [if_neg h]
+        rw [ite_eq_right h]
         simpa [Finsupp.sup_apply, sup_eq_right.mpr hv] using ha v
     refine Submodule.mem_sup.mpr ⟨a₁, ha₁, a₂, ha₂, ?_⟩
     ext v

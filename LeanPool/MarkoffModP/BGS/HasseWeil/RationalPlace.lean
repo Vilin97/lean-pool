@@ -60,8 +60,8 @@ theorem ratFuncRationalFinitePlaceToDegreeLT_injective :
 finite. -/
 noncomputable instance ratFuncRationalFinitePlace_finite [Finite K] :
     Finite (RatFuncRationalFinitePlace K) := by
-  letI : Finite (Fin 2 → K) := Pi.finite
-  letI : Finite (Polynomial.degreeLT K 2) :=
+  let : Finite (Fin 2 → K) := Pi.finite
+  let : Finite (Polynomial.degreeLT K 2) :=
     Finite.of_equiv (Fin 2 → K) (Polynomial.degreeLTEquiv K 2).toEquiv.symm
   exact Finite.of_injective (ratFuncRationalFinitePlaceToDegreeLT K)
     (ratFuncRationalFinitePlaceToDegreeLT_injective K)
@@ -196,8 +196,8 @@ theorem rationalFinitePlaceToBaseFiber_injective :
 finite constant field. -/
 noncomputable instance finiteExtensionRationalFinitePlace_finite [Finite K] :
     Finite (FiniteExtensionRationalFinitePlace K L) := by
-  letI : Fintype (RatFuncRationalFinitePlace K) := Fintype.ofFinite _
-  letI (P : RatFuncRationalFinitePlace K) :
+  let : Fintype (RatFuncRationalFinitePlace K) := Fintype.ofFinite _
+  let (P : RatFuncRationalFinitePlace K) :
       Fintype (P.1.asIdeal.primesOver (RatFuncFiniteIntegralClosure K L)) :=
     Set.Finite.fintype (IsDedekindDomain.primesOver_finite P.1.asIdeal
       (RatFuncFiniteIntegralClosure K L))
@@ -207,7 +207,7 @@ noncomputable instance finiteExtensionRationalFinitePlace_finite [Finite K] :
 /-- The degree-one places above infinity are finite. -/
 noncomputable instance finiteExtensionRationalInfinityPlace_finite :
     Finite (FiniteExtensionRationalInfinityPlace K L) := by
-  letI : Fintype (FiniteExtensionInfinityPlace K L) :=
+  let : Fintype (FiniteExtensionInfinityPlace K L) :=
     Set.Finite.fintype (IsDedekindDomain.primesOver_finite
       (ratFuncInfinityPlace K).asIdeal
       (RatFuncInfinityIntegralClosure K L))

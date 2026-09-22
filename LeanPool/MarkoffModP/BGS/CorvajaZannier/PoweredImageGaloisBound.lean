@@ -66,7 +66,7 @@ theorem poweredCoordinateImageField_adjoin_coordinates_eq_top_and_ne_zero
     IntermediateField.adjoin B
         ({planeCurveFunction f 0, planeCurveFunction f 1} : Set L) = ⊤ ∧
       planeCurveFunction f 0 ≠ 0 ∧ planeCurveFunction f 1 ≠ 0 := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let L := PlaneCurveFunctionField f
   let B := PoweredCoordinateImageField f m n
@@ -133,7 +133,7 @@ theorem firstCoordinate_isSeparable_over_poweredCoordinateImageField
     letI := planeCurveCoordinateRing_isDomain hf
     IsSeparable (PoweredCoordinateImageField f m n)
       (planeCurveFunction f 0) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let L := PlaneCurveFunctionField f
   let B := PoweredCoordinateImageField f m n
@@ -180,7 +180,7 @@ theorem firstCoordinate_minpoly_splits_over_poweredCoordinateImageField
         (PlaneCurveFunctionField f))
       (minpoly (PoweredCoordinateImageField f m n)
         (planeCurveFunction f 0))).Splits := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let L := PlaneCurveFunctionField f
   let B := PoweredCoordinateImageField f m n
@@ -195,8 +195,8 @@ theorem firstCoordinate_minpoly_splits_over_poweredCoordinateImageField
     rw [IntermediateField.algebraMap_apply]
     simp [bx]
   have hdvd : minpoly B x ∣ P := minpoly.dvd B x hP
-  letI : NeZero m := ⟨Nat.ne_of_gt hm⟩
-  letI : NeZero (m : F) := ⟨hmF⟩
+  let : NeZero m := ⟨Nat.ne_of_gt hm⟩
+  let : NeZero (m : F) := ⟨hmF⟩
   obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot F m
   have hζL : IsPrimitiveRoot (algebraMap F L ζ) m :=
     hζ.map_of_injective (algebraMap F L).injective
@@ -220,7 +220,7 @@ theorem secondCoordinate_isSeparable_over_poweredCoordinateImageField
     letI := planeCurveCoordinateRing_isDomain hf
     IsSeparable (PoweredCoordinateImageField f m n)
       (planeCurveFunction f 1) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let L := PlaneCurveFunctionField f
   let B := PoweredCoordinateImageField f m n
@@ -267,7 +267,7 @@ theorem secondCoordinate_minpoly_splits_over_poweredCoordinateImageField
         (PlaneCurveFunctionField f))
       (minpoly (PoweredCoordinateImageField f m n)
         (planeCurveFunction f 1))).Splits := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let L := PlaneCurveFunctionField f
   let B := PoweredCoordinateImageField f m n
@@ -282,8 +282,8 @@ theorem secondCoordinate_minpoly_splits_over_poweredCoordinateImageField
     rw [IntermediateField.algebraMap_apply]
     simp [by']
   have hdvd : minpoly B y ∣ P := minpoly.dvd B y hP
-  letI : NeZero n := ⟨Nat.ne_of_gt hn⟩
-  letI : NeZero (n : F) := ⟨hnF⟩
+  let : NeZero n := ⟨Nat.ne_of_gt hn⟩
+  let : NeZero (n : F) := ⟨hnF⟩
   obtain ⟨η, hη⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot F n
   have hηL : IsPrimitiveRoot (algebraMap F L η) n :=
     hη.map_of_injective (algebraMap F L).injective
@@ -310,12 +310,12 @@ theorem isGalois_over_poweredCoordinateImageField
     letI := planeCurveCoordinateRing_isDomain hf
     IsGalois (PoweredCoordinateImageField f m n)
       (PlaneCurveFunctionField f) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let L := PlaneCurveFunctionField f
   let B := PoweredCoordinateImageField f m n
   let E0 := FirstPoweredCoordinateSubfield f m
-  letI : FiniteDimensional E0 L :=
+  let : FiniteDimensional E0 L :=
     finiteDimensional_over_firstPoweredCoordinate hf hpartialSecond m hm
   have hE0B : E0 ≤ B := by
     apply IntermediateField.adjoin.mono F
@@ -323,13 +323,13 @@ theorem isGalois_over_poweredCoordinateImageField
     simp only [Set.mem_singleton_iff] at hz
     simp only [Set.mem_insert_iff, Set.mem_singleton_iff]
     exact Or.inl hz
-  letI : Algebra E0 B :=
+  let : Algebra E0 B :=
     (IntermediateField.inclusion hE0B).toRingHom.toAlgebra
-  letI : IsScalarTower E0 B L := by
+  let : IsScalarTower E0 B L := by
     apply IsScalarTower.of_algebraMap_eq'
     ext z
     rfl
-  letI : FiniteDimensional B L :=
+  let : FiniteDimensional B L :=
     Module.Finite.of_restrictScalars_finite E0 B L
   let x : L := planeCurveFunction f 0
   let y : L := planeCurveFunction f 1
@@ -340,8 +340,8 @@ theorem isGalois_over_poweredCoordinateImageField
     firstCoordinate_isSeparable_over_poweredCoordinateImageField hf hpartialSecond m n hmF
   have hysep : IsSeparable B y :=
     secondCoordinate_isSeparable_over_poweredCoordinateImageField hf hpartialFirst m n hnF
-  letI : Algebra.IsSeparable B L := ⟨fun z => by
-    letI : Algebra.IsSeparable B (IntermediateField.adjoin B ({x, y} : Set L)) :=
+  let : Algebra.IsSeparable B L := ⟨fun z => by
+    let : Algebra.IsSeparable B (IntermediateField.adjoin B ({x, y} : Set L)) :=
       IntermediateField.isSeparable_adjoin_pair_of_isSeparable B L hxsep hysep
     have hz : z ∈ IntermediateField.adjoin B ({x, y} : Set L) := by
       rw [hgen]
@@ -353,7 +353,7 @@ theorem isGalois_over_poweredCoordinateImageField
   have hysplits :
       (Polynomial.map (algebraMap B L) (minpoly B y)).Splits :=
     secondCoordinate_minpoly_splits_over_poweredCoordinateImageField hf m n hn hnF
-  letI : Normal B L := normal_iff.mpr fun z => by
+  let : Normal B L := normal_iff.mpr fun z => by
     refine ⟨Algebra.IsIntegral.isIntegral z, ?_⟩
     have hz : z ∈ IntermediateField.adjoin B ({x, y} : Set L) := by
       rw [hgen]
@@ -387,7 +387,7 @@ theorem exists_support_stabilizer_scaling_of_poweredImage_aut
       (∀ r ∈ f.support, ∀ s ∈ f.support,
         z.1 ^ ((s 0 : ℤ) - (r 0 : ℤ)) *
           z.2 ^ ((s 1 : ℤ) - (r 1 : ℤ)) = 1) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let L := PlaneCurveFunctionField f
   let B := PoweredCoordinateImageField f m n
@@ -415,10 +415,10 @@ theorem exists_support_stabilizer_scaling_of_poweredImage_aut
     autUnitRatio_pow_eq_one σ x hx0 m hfixx
   have huy : autUnitRatio σ y hy0 ^ n = 1 :=
     autUnitRatio_pow_eq_one σ y hy0 n hfixy
-  letI : NeZero m := ⟨Nat.ne_of_gt hm⟩
-  letI : NeZero n := ⟨Nat.ne_of_gt hn⟩
-  letI : NeZero (m : F) := ⟨hmF⟩
-  letI : NeZero (n : F) := ⟨hnF⟩
+  let : NeZero m := ⟨Nat.ne_of_gt hm⟩
+  let : NeZero n := ⟨Nat.ne_of_gt hn⟩
+  let : NeZero (m : F) := ⟨hmF⟩
+  let : NeZero (n : F) := ⟨hnF⟩
   obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot F m
   obtain ⟨η, hη⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot F n
   have hμm : (primitiveRoots m F).Nonempty :=
@@ -481,15 +481,15 @@ theorem finrank_poweredCoordinateImageField_le_twice_bidegree_isAlgClosed
     Module.finrank (PoweredCoordinateImageField f m n)
         (PlaneCurveFunctionField f) ≤
       2 * MvPolynomial.degreeOf 0 f * MvPolynomial.degreeOf 1 f := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let L := PlaneCurveFunctionField f
   let B := PoweredCoordinateImageField f m n
   let x : L := planeCurveFunction f 0
   let y : L := planeCurveFunction f 1
-  letI : FiniteDimensional B L :=
+  let : FiniteDimensional B L :=
     finiteDimensional_poweredCoordinateImageField hf hpartialSecond m n hm
-  letI : IsGalois B L :=
+  let : IsGalois B L :=
     isGalois_over_poweredCoordinateImageField hf hpartialFirst hpartialSecond m n hm hn hmF hnF
   have hbasic := poweredCoordinateImageField_adjoin_coordinates_eq_top_and_ne_zero hf hpartialFirst
     hpartialSecond m n
@@ -506,7 +506,7 @@ theorem finrank_poweredCoordinateImageField_le_twice_bidegree_isAlgClosed
   let d : ℤ := (t₀ 1 : ℤ) - (r₀ 1 : ℤ)
   have hdet' : a * d - b * c ≠ 0 := by
     simpa [a, b, c, d, planeCurveSupportDifferenceDet] using hdet₀
-  letI : Finite (torusCharacterKernel F a b c d) :=
+  let : Finite (torusCharacterKernel F a b c d) :=
     finite_torusCharacterKernel_of_det_ne_zero a b c d hdet'
   let supportToKernel : planeCurveSupportCharacterStabilizer F f →
       torusCharacterKernel F a b c d := fun z =>
@@ -515,7 +515,7 @@ theorem finrank_poweredCoordinateImageField_le_twice_bidegree_isAlgClosed
     intro z w hzw
     apply Subtype.ext
     exact congrArg (fun u : torusCharacterKernel F a b c d => u.1) hzw
-  letI : Finite (planeCurveSupportCharacterStabilizer F f) :=
+  let : Finite (planeCurveSupportCharacterStabilizer F f) :=
     Finite.of_injective supportToKernel supportToKernel_injective
   have hscale (σ : L ≃ₐ[B] L) :=
     exists_support_stabilizer_scaling_of_poweredImage_aut hf hpartialFirst hpartialSecond
@@ -571,7 +571,7 @@ theorem finrank_poweredImageOverFirst_le_twice_bidegree_isAlgClosed
     Module.finrank (PoweredImageOverFirst f m n)
         (PlaneCurveFunctionField f) ≤
       2 * MvPolynomial.degreeOf 0 f * MvPolynomial.degreeOf 1 f := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   rw [finrank_poweredImageOverFirst_eq_imageField]
   exact finrank_poweredCoordinateImageField_le_twice_bidegree_isAlgClosed

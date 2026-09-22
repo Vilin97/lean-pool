@@ -257,7 +257,7 @@ theorem incidenceAux_diagonal_point :
             (9 * a ^ 2 - 4) * y ^ 2 - lambda ^ 2 = 4 * a ^ 2 := by
   refine ⟨11, ?_⟩
   intro p hp hpLarge a ha
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have h3lt : 3 < p := by omega
   have h4lt : 4 < p := by omega
   have h3 : (3 : ZMod p) ≠ 0 :=
@@ -322,7 +322,7 @@ theorem incidenceAux_offDiagonal_point
       IncidenceAuxOffDiagonalPointAt p _hp := by
   refine ⟨29, ?_⟩
   intro p hp hpLarge a b ha hb hab
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have h3lt : 3 < p := by omega
   have h4lt : 4 < p := by omega
   have h16lt : 16 < p := by omega
@@ -383,7 +383,7 @@ theorem incidenceAuxPoint_eventually
   obtain ⟨pOff, hOff⟩ := incidenceAux_offDiagonal_point hHasse
   refine ⟨pDiag + pOff, ?_⟩
   intro p hp hpLarge
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   exact auxPointExists_of_diagonal_offDiagonal
     (hDiag p hp (by omega)) (hOff p hp (by omega))
 
@@ -395,7 +395,7 @@ theorem two_ne_zero_zmod {p : ℕ} (hp : 2 < p) : (2 : ZMod p) ≠ 0 := by
 theorem incidenceBridgeAt_of_auxPoint
     (p : ℕ) (hp : p.Prime) (h2 : (2 : ZMod p) ≠ 0)
     (haux : IncidenceAuxPointAt p hp) : IncidenceBridgeAt p hp := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   intro a b ha hb
   exact incidenceAux_exists_implies_common_fiber_with h2 (haux a b ha hb)
 

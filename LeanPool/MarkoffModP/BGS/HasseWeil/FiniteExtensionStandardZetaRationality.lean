@@ -121,7 +121,7 @@ theorem exists_finiteExtensionClosedPlaceZeta_rational_with_genus_degree_bound
           (formalPointCountZeta
             (finiteExtensionClosedPlaceExtensionCount K L))
           (Nat.card K) P := by
-  letI : FunctionField.IsFullConstantField K L :=
+  let : FunctionField.IsFullConstantField K L :=
     (FunctionField.isFullConstantField_iff_algebraicClosure_eq_bot K L).2
       hconstants
   simpa only [FunctionField.genus_eq_genusChart K L] using

@@ -85,9 +85,9 @@ theorem finiteDimensional_over_adjoin_pow
   have hqMonic : q.Monic := Polynomial.monic_X_pow_sub_C c hm.ne'
   have hqRoot : Polynomial.aeval z q = 0 := by simp [q, c]
   have hzIntegral : IsIntegral E0 z := ⟨q, hqMonic, hqRoot⟩
-  letI : FiniteDimensional E0 A :=
+  let : FiniteDimensional E0 A :=
     IntermediateField.adjoin.finiteDimensional hzIntegral
-  letI : FiniteDimensional A L := by
+  let : FiniteDimensional A L := by
     change FiniteDimensional AK L
     rw [hA]
     infer_instance
@@ -110,9 +110,9 @@ theorem finrank_over_adjoin_pow_le_mul
   have hqMonic : q.Monic := Polynomial.monic_X_pow_sub_C c hm.ne'
   have hqRoot : Polynomial.aeval z q = 0 := by simp [q, c]
   have hzIntegral : IsIntegral E0 z := ⟨q, hqMonic, hqRoot⟩
-  letI : FiniteDimensional E0 A :=
+  let : FiniteDimensional E0 A :=
     IntermediateField.adjoin.finiteDimensional hzIntegral
-  letI : FiniteDimensional A L := by
+  let : FiniteDimensional A L := by
     change FiniteDimensional AK L
     rw [hA]
     infer_instance
@@ -178,7 +178,7 @@ theorem integerClearedMinpoly_ne_zero
 theorem primitiveClearedMinpolyRelation_ne_zero
     (u : L) (hu : Transcendental K u) (v : L) :
     primitiveClearedMinpolyRelation u hu v ≠ 0 := by
-  letI := Classical.arbitrary (NormalizedGCDMonoid K)
+  let := Classical.arbitrary (NormalizedGCDMonoid K)
   exact (integerClearedMinpoly u hu v).primPart_ne_zero
 
 theorem primitiveClearedMinpolyRelation_natDegree
@@ -186,7 +186,7 @@ theorem primitiveClearedMinpolyRelation_natDegree
     (hv : IsIntegral (IntermediateField.adjoin K {u}) v) :
     (primitiveClearedMinpolyRelation u hu v).natDegree =
       (minpoly (IntermediateField.adjoin K {u}) v).natDegree := by
-  letI := Classical.arbitrary (NormalizedGCDMonoid K)
+  let := Classical.arbitrary (NormalizedGCDMonoid K)
   let q := ratFuncMinpoly u hu v
   let N := integerClearedMinpoly u hu v
   obtain ⟨b, hb, hmap⟩ :=
@@ -225,7 +225,7 @@ theorem map_primitiveClearedMinpolyRelation_eq_C_mul
       (primitiveClearedMinpolyRelation u hu v).map
           (algebraMap (Polynomial K) (RatFunc K)) =
         Polynomial.C c * ratFuncMinpoly u hu v := by
-  letI := Classical.arbitrary (NormalizedGCDMonoid K)
+  let := Classical.arbitrary (NormalizedGCDMonoid K)
   let q := ratFuncMinpoly u hu v
   let N := integerClearedMinpoly u hu v
   let g := primitiveClearedMinpolyRelation u hu v
@@ -279,7 +279,7 @@ theorem primitiveClearedMinpolyRelation_irreducible
     (u : L) (hu : Transcendental K u) (v : L)
     (hv : IsIntegral (IntermediateField.adjoin K {u}) v) :
     Irreducible (primitiveClearedMinpolyRelation u hu v) := by
-  letI := Classical.arbitrary (NormalizedGCDMonoid K)
+  let := Classical.arbitrary (NormalizedGCDMonoid K)
   let q := ratFuncMinpoly u hu v
   let g := primitiveClearedMinpolyRelation u hu v
   obtain ⟨c, hc0, hmap⟩ :=
@@ -418,7 +418,7 @@ theorem transposeBivariate_natDegree_eq_minpoly
     (hzero : evalBivariate u v P = 0) :
     (transposeBivariate P).natDegree =
       (minpoly (IntermediateField.adjoin K {v}) u).natDegree := by
-  letI := Classical.arbitrary (NormalizedGCDMonoid K)
+  let := Classical.arbitrary (NormalizedGCDMonoid K)
   let Q := transposeBivariate P
   let e := RatFunc.algEquivOfTranscendental v hvTrans
   let qRat : Polynomial (RatFunc K) :=
@@ -507,7 +507,7 @@ theorem firstPoweredCoordinate_transcendental
     (m : ℕ) (hm : 0 < m) :
     letI := planeCurveCoordinateRing_isDomain hf
     Transcendental K ((planeCurveFunction f 0) ^ m) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   exact (firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)).pow hm
@@ -519,7 +519,7 @@ theorem secondPoweredCoordinate_transcendental
     (n : ℕ) (hn : 0 < n) :
     letI := planeCurveCoordinateRing_isDomain hf
     Transcendental K ((planeCurveFunction f 1) ^ n) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   exact (secondCoordinate_transcendental hf
     (degreeOf_first_pos_of_pderiv_ne_zero hpartialFirst)).pow hn
@@ -547,9 +547,9 @@ theorem finiteDimensional_over_firstPoweredCoordinate
     letI := planeCurveCoordinateRing_isDomain hf
     FiniteDimensional (FirstPoweredCoordinateSubfield f m)
       (PlaneCurveFunctionField f) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : FiniteDimensional (FirstCoordinateSubfield f)
+  let : FiniteDimensional (FirstCoordinateSubfield f)
       (PlaneCurveFunctionField f) :=
     finiteDimensional_over_firstCoordinate_of_irreducible hf hpartialSecond
   exact finiteDimensional_over_adjoin_pow
@@ -564,9 +564,9 @@ theorem finrank_over_firstPoweredCoordinate_le
     letI := planeCurveCoordinateRing_isDomain hf
     Module.finrank (FirstPoweredCoordinateSubfield f m)
       (PlaneCurveFunctionField f) ≤ m * MvPolynomial.degreeOf 1 f := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : FiniteDimensional (FirstCoordinateSubfield f)
+  let : FiniteDimensional (FirstCoordinateSubfield f)
       (PlaneCurveFunctionField f) :=
     finiteDimensional_over_firstCoordinate_of_irreducible hf hpartialSecond
   exact finrank_over_adjoin_pow_le_mul
@@ -583,9 +583,9 @@ theorem finiteDimensional_over_secondPoweredCoordinate
     letI := planeCurveCoordinateRing_isDomain hf
     FiniteDimensional (SecondPoweredCoordinateSubfield f n)
       (PlaneCurveFunctionField f) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : FiniteDimensional (SecondCoordinateSubfield f)
+  let : FiniteDimensional (SecondCoordinateSubfield f)
       (PlaneCurveFunctionField f) :=
     (finiteSeparable_over_secondCoordinate_of_irreducible
       hf hpartialFirst).1
@@ -601,9 +601,9 @@ theorem finrank_over_secondPoweredCoordinate_le
     letI := planeCurveCoordinateRing_isDomain hf
     Module.finrank (SecondPoweredCoordinateSubfield f n)
       (PlaneCurveFunctionField f) ≤ n * MvPolynomial.degreeOf 0 f := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : FiniteDimensional (SecondCoordinateSubfield f)
+  let : FiniteDimensional (SecondCoordinateSubfield f)
       (PlaneCurveFunctionField f) :=
     (finiteSeparable_over_secondCoordinate_of_irreducible
       hf hpartialFirst).1
@@ -662,9 +662,9 @@ theorem finrank_poweredImageOverFirst_le
     Module.finrank (FirstPoweredCoordinateSubfield f m)
         (PoweredImageOverFirst f m n) ≤
       m * MvPolynomial.degreeOf 1 f := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : FiniteDimensional (FirstPoweredCoordinateSubfield f m)
+  let : FiniteDimensional (FirstPoweredCoordinateSubfield f m)
       (PlaneCurveFunctionField f) :=
     finiteDimensional_over_firstPoweredCoordinate hf hpartialSecond m hm
   exact (PoweredImageOverFirst f m n).toSubalgebra.toSubmodule.finrank_le.trans
@@ -680,9 +680,9 @@ theorem finrank_poweredImageOverSecond_le
     Module.finrank (SecondPoweredCoordinateSubfield f n)
         (PoweredImageOverSecond f m n) ≤
       n * MvPolynomial.degreeOf 0 f := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : FiniteDimensional (SecondPoweredCoordinateSubfield f n)
+  let : FiniteDimensional (SecondPoweredCoordinateSubfield f n)
       (PlaneCurveFunctionField f) :=
     finiteDimensional_over_secondPoweredCoordinate hf hpartialFirst n hn
   exact (PoweredImageOverSecond f m n).toSubalgebra.toSubmodule.finrank_le.trans
@@ -694,9 +694,9 @@ theorem poweredCoordinateImageRelation_irreducible
     (hf : Irreducible f) (hpartialSecond : MvPolynomial.pderiv 1 f ≠ 0)
     (m : ℕ) (hm : 0 < m) (n : ℕ) :
     Irreducible (poweredCoordinateImageRelation hf hpartialSecond m hm n) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : FiniteDimensional (FirstPoweredCoordinateSubfield f m)
+  let : FiniteDimensional (FirstPoweredCoordinateSubfield f m)
       (PlaneCurveFunctionField f) :=
     finiteDimensional_over_firstPoweredCoordinate hf hpartialSecond m hm
   have hv : IsIntegral (FirstPoweredCoordinateSubfield f m)
@@ -716,9 +716,9 @@ theorem evalBivariate_poweredCoordinateImageRelation_eq_zero
     evalBivariate ((planeCurveFunction f 0) ^ m)
       ((planeCurveFunction f 1) ^ n)
       (poweredCoordinateImageRelation hf hpartialSecond m hm n) = 0 := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : FiniteDimensional (FirstPoweredCoordinateSubfield f m)
+  let : FiniteDimensional (FirstPoweredCoordinateSubfield f m)
       (PlaneCurveFunctionField f) :=
     finiteDimensional_over_firstPoweredCoordinate hf hpartialSecond m hm
   have hv : IsIntegral (FirstPoweredCoordinateSubfield f m)
@@ -741,9 +741,9 @@ theorem poweredCoordinateImageRelation_natDegree_eq_finrank
     (poweredCoordinateImageRelation hf hpartialSecond m hm n).natDegree =
       Module.finrank (FirstPoweredCoordinateSubfield f m)
         (PoweredImageOverFirst f m n) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : FiniteDimensional (FirstPoweredCoordinateSubfield f m)
+  let : FiniteDimensional (FirstPoweredCoordinateSubfield f m)
       (PlaneCurveFunctionField f) :=
     finiteDimensional_over_firstPoweredCoordinate hf hpartialSecond m hm
   have hv : IsIntegral (FirstPoweredCoordinateSubfield f m)
@@ -774,9 +774,9 @@ theorem poweredCoordinateImageRelation_transpose_natDegree_eq_finrank
       (poweredCoordinateImageRelation hf hpartialSecond m hm n)).natDegree =
       Module.finrank (SecondPoweredCoordinateSubfield f n)
         (PoweredImageOverSecond f m n) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : FiniteDimensional (SecondPoweredCoordinateSubfield f n)
+  let : FiniteDimensional (SecondPoweredCoordinateSubfield f n)
       (PlaneCurveFunctionField f) :=
     finiteDimensional_over_secondPoweredCoordinate hf hpartialFirst n hn
   have hu : IsIntegral (SecondPoweredCoordinateSubfield f n)
@@ -811,7 +811,7 @@ theorem poweredCoordinateImageRelation_bidegree_le
       (transposeBivariate
         (poweredCoordinateImageRelation hf hpartialSecond m hm n)).natDegree ≤
         n * MvPolynomial.degreeOf 0 f := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   constructor
   · rw [poweredCoordinateImageRelation_natDegree_eq_finrank
@@ -847,9 +847,9 @@ theorem poweredCoordinateImageRelation_natDegree_pos
     (hf : Irreducible f) (hpartialSecond : MvPolynomial.pderiv 1 f ≠ 0)
     (m : ℕ) (hm : 0 < m) (n : ℕ) :
     0 < (poweredCoordinateImageRelation hf hpartialSecond m hm n).natDegree := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : FiniteDimensional (FirstPoweredCoordinateSubfield f m)
+  let : FiniteDimensional (FirstPoweredCoordinateSubfield f m)
       (PlaneCurveFunctionField f) :=
     finiteDimensional_over_firstPoweredCoordinate hf hpartialSecond m hm
   have hv : IsIntegral (FirstPoweredCoordinateSubfield f m)
@@ -868,7 +868,7 @@ theorem poweredCoordinateImageRelation_transpose_natDegree_pos
     (m : ℕ) (hm : 0 < m) (n : ℕ) (hn : 0 < n) :
     0 < (transposeBivariate
       (poweredCoordinateImageRelation hf hpartialSecond m hm n)).natDegree := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   apply Nat.pos_of_ne_zero
   exact transposeBivariate_natDegree_ne_zero_of_eval_eq_zero
@@ -898,7 +898,7 @@ theorem poweredCoordinateImageRelation_spec
       g.natDegree ≤ m * MvPolynomial.degreeOf 1 f ∧
       (transposeBivariate g).natDegree ≤ n * MvPolynomial.degreeOf 0 f ∧
       ∀ i, (g.coeff i).natDegree ≤ n * MvPolynomial.degreeOf 0 f := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let g := poweredCoordinateImageRelation hf hpartialSecond m hm n
   have hbidegree := poweredCoordinateImageRelation_bidegree_le

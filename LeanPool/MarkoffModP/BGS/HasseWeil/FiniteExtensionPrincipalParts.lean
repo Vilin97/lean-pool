@@ -94,7 +94,7 @@ theorem finiteExtensionPrincipalPartAt_moduleFinite
 theorem finiteExtensionPrincipalPartsSpace_moduleFinite
     (D : FiniteExtensionDivisor K L) (hD : ∀ P, 0 ≤ D P) :
     Module.Finite K (finiteExtensionPrincipalPartsSpace K L D) := by
-  letI (P : ↥D.support) : Module.Finite K
+  let (P : ↥D.support) : Module.Finite K
       (finiteExtensionPrincipalPartAt K L D P) :=
     finiteExtensionPrincipalPartAt_moduleFinite K L D hD P
   exact Module.Finite.pi
@@ -105,10 +105,10 @@ theorem finiteExtensionPrincipalPartsSpace_finrank
     (D : FiniteExtensionDivisor K L) (hD : ∀ P, 0 ≤ D P) :
     Module.finrank K (finiteExtensionPrincipalPartsSpace K L D) =
       finiteExtensionEffectiveDivisorNatDegree K L D := by
-  letI (P : ↥D.support) : Module.Finite K
+  let (P : ↥D.support) : Module.Finite K
       (finiteExtensionPrincipalPartAt K L D P) :=
     finiteExtensionPrincipalPartAt_moduleFinite K L D hD P
-  letI (P : ↥D.support) : Module.Free K
+  let (P : ↥D.support) : Module.Free K
       (finiteExtensionPrincipalPartAt K L D P) :=
     Module.Free.of_divisionRing K (finiteExtensionPrincipalPartAt K L D P)
   rw [Module.finrank_pi_fintype]
@@ -262,9 +262,9 @@ theorem finiteExtensionRiemannPrincipalPartsQuotientMap_injective
     (D : FiniteExtensionDivisor K L) (hD : ∀ P, 0 ≤ D P) :
     Function.Injective
       (finiteExtensionRiemannPrincipalPartsQuotientMap K L D hD) := by
-  letI localPrincipalPartModule (P : ↥D.support) : Module K
+  let localPrincipalPartModule (P : ↥D.support) : Module K
       (finiteExtensionPrincipalPartAt K L D P) := inferInstance
-  letI finitePrincipalPartsModule : Module K
+  let finitePrincipalPartsModule : Module K
       (finiteExtensionPrincipalPartsSpace K L D) :=
     Pi.module ↥D.support
       (fun P => finiteExtensionPrincipalPartAt K L D P) K
@@ -293,16 +293,16 @@ theorem finiteExtensionRiemannSpace_quotient_zero_moduleFinite
         relativeSubmodule
           (finiteExtensionRiemannSpace K L 0)
           (finiteExtensionRiemannSpace K L D)) := by
-  letI localPrincipalPartModule (P : ↥D.support) : Module K
+  let localPrincipalPartModule (P : ↥D.support) : Module K
       (finiteExtensionPrincipalPartAt K L D P) := inferInstance
-  letI finitePrincipalPartsModule : Module K
+  let finitePrincipalPartsModule : Module K
       (finiteExtensionPrincipalPartsSpace K L D) :=
     Pi.module ↥D.support
       (fun P => finiteExtensionPrincipalPartAt K L D P) K
-  letI (P : ↥D.support) : Module.Finite K
+  let (P : ↥D.support) : Module.Finite K
       (finiteExtensionPrincipalPartAt K L D P) :=
     finiteExtensionPrincipalPartAt_moduleFinite K L D hD P
-  letI : Module.Finite K (finiteExtensionPrincipalPartsSpace K L D) :=
+  let : Module.Finite K (finiteExtensionPrincipalPartsSpace K L D) :=
     Module.Finite.pi
   let f : finiteExtensionRiemannSpace K L D →ₗ[K]
       finiteExtensionPrincipalPartsSpace K L D :=
@@ -340,16 +340,16 @@ theorem finiteExtensionRiemannSpace_quotient_zero_finrank_le
             (finiteExtensionRiemannSpace K L 0)
             (finiteExtensionRiemannSpace K L D)) ≤
       finiteExtensionEffectiveDivisorNatDegree K L D := by
-  letI localPrincipalPartModule (P : ↥D.support) : Module K
+  let localPrincipalPartModule (P : ↥D.support) : Module K
       (finiteExtensionPrincipalPartAt K L D P) := inferInstance
-  letI finitePrincipalPartsModule : Module K
+  let finitePrincipalPartsModule : Module K
       (finiteExtensionPrincipalPartsSpace K L D) :=
     Pi.module ↥D.support
       (fun P => finiteExtensionPrincipalPartAt K L D P) K
-  letI (P : ↥D.support) : Module.Finite K
+  let (P : ↥D.support) : Module.Finite K
       (finiteExtensionPrincipalPartAt K L D P) :=
     finiteExtensionPrincipalPartAt_moduleFinite K L D hD P
-  letI : Module.Finite K (finiteExtensionPrincipalPartsSpace K L D) :=
+  let : Module.Finite K (finiteExtensionPrincipalPartsSpace K L D) :=
     Module.Finite.pi
   let f : finiteExtensionRiemannSpace K L D →ₗ[K]
       finiteExtensionPrincipalPartsSpace K L D :=

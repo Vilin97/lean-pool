@@ -40,9 +40,9 @@ noncomputable def probeRatFuncDerivation :
 @[simp] theorem probeRatFuncDerivation_algebraMap (f : K[X]) :
     probeRatFuncDerivation K (algebraMap K[X] (RatFunc K) f) =
       algebraMap K[X] (RatFunc K) f.derivative := by
-  letI : IsScalarTower K K[X] (RatFunc K) :=
+  let : IsScalarTower K K[X] (RatFunc K) :=
     IsScalarTower.of_algebraMap_eq' rfl
-  letI : Algebra.FormallyEtale K[X] (RatFunc K) :=
+  let : Algebra.FormallyEtale K[X] (RatFunc K) :=
     Algebra.FormallyEtale.of_isLocalization K[X]⁰
   simpa only [probeRatFuncDerivation,
     Polynomial.mkDerivation_apply, smul_eq_mul, mul_one] using
@@ -376,10 +376,10 @@ theorem probe_normalizedDerivation_comp_ratFunc
     (D.restrictScalars K).compAlgebraMap (RatFunc K) =
       (Algebra.linearMap (RatFunc K) L).compDer
         (probeRatFuncDerivation K) := by
-  letI : IsScalarTower K K[X] (RatFunc K) :=
+  let : IsScalarTower K K[X] (RatFunc K) :=
     IsScalarTower.of_algebraMap_eq'
       (R := K) (S := K[X]) (A := RatFunc K) rfl
-  letI : Algebra.FormallyEtale K[X] (RatFunc K) :=
+  let : Algebra.FormallyEtale K[X] (RatFunc K) :=
     Algebra.FormallyEtale.of_isLocalization K[X]⁰
   apply derivation_ext_of_formallyUnramified (S := K[X])
   intro f
@@ -494,7 +494,7 @@ theorem probe_exists_normalizedInfinityScaling
               (K := K) (L := L) P r) =
             finiteExtensionInfinityPlaceLocalizationToField
               (K := K) (L := L) P s := by
-  letI : IsScalarTower K (RatFuncInfinityIntegers K) L :=
+  let : IsScalarTower K (RatFuncInfinityIntegers K) L :=
     probeInfinityConstantLTower K L
   exact exists_finiteExtensionInfinityPlace_canonicalDifferent_scaling_certificate
     (K := K) (L := L) D (probeInfinityRingDerivation K)

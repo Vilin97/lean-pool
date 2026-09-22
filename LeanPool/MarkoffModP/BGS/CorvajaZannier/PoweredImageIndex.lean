@@ -102,9 +102,9 @@ theorem finrank_poweredImageOverFirst_le_firstProjectionPowerDegree
     Module.finrank (PoweredImageOverFirst f m n)
         (PlaneCurveFunctionField f) ≤
       m * MvPolynomial.degreeOf 1 f := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : FiniteDimensional (FirstPoweredCoordinateSubfield f m)
+  let : FiniteDimensional (FirstPoweredCoordinateSubfield f m)
       (PlaneCurveFunctionField f) :=
     finiteDimensional_over_firstPoweredCoordinate hf hpartialSecond m hm
   have : Module.Free (FirstPoweredCoordinateSubfield f m)
@@ -144,9 +144,9 @@ theorem finrank_poweredImageOverSecond_le_secondProjectionPowerDegree
     Module.finrank (PoweredImageOverSecond f m n)
         (PlaneCurveFunctionField f) ≤
       n * MvPolynomial.degreeOf 0 f := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : FiniteDimensional (SecondPoweredCoordinateSubfield f n)
+  let : FiniteDimensional (SecondPoweredCoordinateSubfield f n)
       (PlaneCurveFunctionField f) :=
     finiteDimensional_over_secondPoweredCoordinate hf hpartialFirst n hn
   have : Module.Free (SecondPoweredCoordinateSubfield f n)

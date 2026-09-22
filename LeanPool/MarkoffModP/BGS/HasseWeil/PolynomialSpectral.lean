@@ -5,7 +5,7 @@ Authors: Yuma Mizuno
 -/
 
 import LeanPool.MarkoffModP.BGS.HasseWeil.ZetaExtensionTrace
-import Mathlib.FieldTheory.IsAlgClosed.Basic
+import Mathlib.Analysis.Complex.Polynomial.Basic
 
 /-!
 # Spectral parameters from a zeta numerator

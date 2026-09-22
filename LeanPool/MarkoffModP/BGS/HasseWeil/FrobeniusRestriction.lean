@@ -173,13 +173,13 @@ theorem finiteExtensionPoleDivisor_powCardLinearMap
         ((Fintype.card K ^ n : ℕ) : ℤ) *
             finiteExtensionPrincipalDivisor K L x v < 0 :=
       mul_neg_of_pos_of_neg hs hv
-    rw [if_pos hscaled, if_pos hv]
+    rw [ite_eq_left hscaled, ite_eq_left hv]
     ring
   · have hscaled : ¬
         ((Fintype.card K ^ n : ℕ) : ℤ) *
             finiteExtensionPrincipalDivisor K L x v < 0 :=
       not_lt_of_ge (mul_nonneg hs.le (le_of_not_gt hv))
-    rw [if_neg hscaled, if_neg hv, mul_zero]
+    rw [ite_eq_right hscaled, ite_eq_right hv, mul_zero]
 
 /-- Iterated Frobenius sends `L(D)` into `L((#K)^n D)`. -/
 theorem powCardLinearMap_mem_scaledRiemannSpace

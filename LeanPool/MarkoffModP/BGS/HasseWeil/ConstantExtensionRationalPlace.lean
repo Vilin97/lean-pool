@@ -94,9 +94,9 @@ theorem exactConstantExtensionUpstairsFinitePlace_degree_eq_one_of_under_degree_
       ratFuncExactConstantExtensionAlgebra C S N hExact
     finiteExtensionPlaceDegree S (ExactConstantExtension C N S)
       (.inl (exactConstantExtensionUpstairsFinitePlace C S N hExact q)) = 1 := by
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
     ratFuncExactConstantExtensionAlgebra C S N hExact
   let P := exactConstantExtensionDownstairsFinitePlace C S N hExact q
   have hPdiv : finiteExtensionPlaceDegree C N (.inl P) ∣

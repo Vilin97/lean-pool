@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
 
+import Mathlib.Algebra.Polynomial.Degree.IsMonicOfDegree
 import LeanPool.MarkoffModP.BGS.Markoff.Incidence.CoordinateRing
 
 /-!
@@ -97,7 +98,7 @@ theorem biquadraticPrimitiveQuartic_irreducible
   let qf : F[X] := adjoinSquarePolynomial f
   have hqfIrreducible : Irreducible qf := by
     simpa [qf] using adjoinSquarePolynomial_irreducible_of_not_isSquare hf
-  letI : Fact (Irreducible qf) := ⟨hqfIrreducible⟩
+  let : Fact (Irreducible qf) := ⟨hqfIrreducible⟩
   let E := AdjoinRoot qf
   let gE : E := algebraMap F E g
   have hgE : ¬ IsSquare gE := by
@@ -105,7 +106,7 @@ theorem biquadraticPrimitiveQuartic_irreducible
   let qg : E[X] := adjoinSquarePolynomial gE
   have hqgIrreducible : Irreducible qg := by
     simpa [qg] using adjoinSquarePolynomial_irreducible_of_not_isSquare hgE
-  letI : Fact (Irreducible qg) := ⟨hqgIrreducible⟩
+  let : Fact (Irreducible qg) := ⟨hqgIrreducible⟩
   let L := AdjoinRoot qg
   let a : L := algebraMap E L (AdjoinRoot.root qf)
   let b : L := AdjoinRoot.root qg

@@ -304,7 +304,7 @@ theorem weightedSplitTraceLaurentCoordinateRing_isDomain
     (alpha beta : K) (d e : ℕ) (hd : 0 < d) (he : 0 < e) (hbeta : beta ≠ 0)
     (h : Irreducible (splitTraceCoverPolynomial alpha beta d e)) :
     IsDomain (WeightedSplitTraceLaurentCoordinateRing alpha beta d e) := by
-  letI : IsDomain (WeightedSplitTraceAffineCoordinateRing alpha beta d e) :=
+  let : IsDomain (WeightedSplitTraceAffineCoordinateRing alpha beta d e) :=
     weightedSplitTraceAffineCoordinateRing_isDomain alpha beta d e h
   exact IsLocalization.Away.isDomain
     (S := WeightedSplitTraceLaurentCoordinateRing alpha beta d e)
@@ -401,9 +401,9 @@ theorem weightedSplitTraceLaurentNormalizationInversions_commute_of_irreducible
         (weightedSplitTraceLeftInversionLaurentNormalizationEquiv alpha beta d e) =
       (weightedSplitTraceLeftInversionLaurentNormalizationEquiv beta alpha d e).trans
         (weightedSplitTraceRightInversionLaurentNormalizationEquiv alpha beta d e) := by
-  letI : IsDomain (WeightedSplitTraceLaurentCoordinateRing alpha beta d e) :=
+  let : IsDomain (WeightedSplitTraceLaurentCoordinateRing alpha beta d e) :=
     weightedSplitTraceLaurentCoordinateRing_isDomain alpha beta d e hd he hbeta h
-  letI : IsDomain (WeightedSplitTraceLaurentCoordinateRing beta alpha d e) :=
+  let : IsDomain (WeightedSplitTraceLaurentCoordinateRing beta alpha d e) :=
     weightedSplitTraceLaurentCoordinateRing_isDomain beta alpha d e hd he halpha hswap
   exact weightedSplitTraceLaurentNormalizationInversions_commute alpha beta d e
 

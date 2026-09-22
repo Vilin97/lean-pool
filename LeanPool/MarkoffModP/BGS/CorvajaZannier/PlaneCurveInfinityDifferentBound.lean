@@ -222,7 +222,7 @@ theorem infinityNormalizedIntegralPolynomial_map
   simp [Polynomial.sum]
   by_cases hzero : F.coeff i = 0
   · simp [hzero, infinityNormalizedPolynomial, coeff_C_mul]
-  · rw [if_neg hzero]
+  · rw [ite_eq_right hzero]
     have hrhs : (infinityNormalizedPolynomial K a F).coeff i =
         (RatFunc.X⁻¹) ^ a *
           algebraMap K[X] (RatFunc K) (F.coeff i) := by

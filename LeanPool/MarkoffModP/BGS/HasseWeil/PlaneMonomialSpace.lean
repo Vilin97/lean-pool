@@ -147,7 +147,7 @@ theorem planeCurve_monomialGrid_linearIndependent
     LinearIndependent K
       (planeMonomialGrid (planeCurveFunction f 0)
         (planeCurveFunction f 1) a b) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let xF : FirstCoordinateSubfield f := firstCoordinateInSubfield f
   have hxL : Transcendental K (planeCurveFunction f 0) :=
@@ -188,7 +188,7 @@ theorem finrank_planeCurve_monomialSpace_eq_mul
     Module.finrank K
       (planeMonomialSpace K (planeCurveFunction f 0)
         (planeCurveFunction f 1) a b) = a * b := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   exact finrank_planeMonomialSpace_eq_mul
     (planeCurveFunction f 0) (planeCurveFunction f 1) a b
@@ -287,7 +287,7 @@ theorem planeCurve_twistedMonomialGrid_linearIndependent
     LinearIndependent K
       (twistedPlaneMonomialGrid (planeCurveFunction f 0)
         (planeCurveFunction f 1) s a b a' b') := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   have hgrid := planeCurve_monomialGrid_linearIndependent
     hf hpartialSecond (a + s * a') (b + s * b') hdegree
@@ -315,7 +315,7 @@ theorem planeCurve_twistedMonomialGrid_injective
     Function.Injective
       (twistedPlaneMonomialGrid (planeCurveFunction f 0)
         (planeCurveFunction f 1) s a b a' b') := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   exact (planeCurve_twistedMonomialGrid_linearIndependent
     hf hpartialSecond s a b a' b' ha hb hdegree).injective
@@ -363,13 +363,13 @@ theorem planeCurve_poweredMonomialGrid_linearIndependent
     LinearIndependent K
       (planeMonomialGrid ((planeCurveFunction f 0) ^ m)
         ((planeCurveFunction f 1) ^ n) a b) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let xm : FirstPoweredCoordinateSubfield f m :=
     ⟨(planeCurveFunction f 0) ^ m,
       IntermediateField.mem_adjoin_simple_self K
         ((planeCurveFunction f 0) ^ m)⟩
-  letI : FiniteDimensional (FirstPoweredCoordinateSubfield f m)
+  let : FiniteDimensional (FirstPoweredCoordinateSubfield f m)
       (PlaneCurveFunctionField f) :=
     finiteDimensional_over_firstPoweredCoordinate hf hpartialSecond m hm
   have hxmL : Transcendental K ((planeCurveFunction f 0) ^ m) :=
@@ -473,7 +473,7 @@ theorem add_one_mul_le_finrank_poleDivisorBudget
       (finiteExtensionRiemannSpace K L
         (n • finiteExtensionPoleDivisor K L x +
           (b - 1) • finiteExtensionPoleDivisor K L y)) := by
-  letI : Module.Finite K
+  let : Module.Finite K
       (finiteExtensionRiemannSpace K L
         (n • finiteExtensionPoleDivisor K L x +
           (b - 1) • finiteExtensionPoleDivisor K L y)) := hfinite

@@ -330,7 +330,7 @@ theorem exists_planeFirstFrobeniusDeflationStep
       (BGS.External.affinePlaneCurveZeros K g).card =
         (BGS.External.affinePlaneCurveZeros K f).card := by
   let p := ringChar K
-  letI : Fact p.Prime := ⟨CharP.char_is_prime K p⟩
+  let : Fact p.Prime := ⟨CharP.char_is_prime K p⟩
   let g := planeFirstDeflate K p f
   have hfg : planeFirstInflateHom K p g = f :=
     planeFirstInflateHom_planeFirstDeflate p

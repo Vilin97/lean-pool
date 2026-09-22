@@ -69,7 +69,7 @@ theorem finrank_over_firstCoordinate_le_of_hasBidegreeAtMost
     Module.finrank (FirstCoordinateSubfield f) (PlaneCurveFunctionField f) ≤
       secondDegree := by
   let hf := irreducible_of_irreducible_map_algebraicClosure habsolute
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   exact (finrank_over_firstCoordinate_eq_degreeOf_second_of_irreducible
     hf hpartialSecond).le.trans
@@ -88,7 +88,7 @@ theorem finrank_over_secondCoordinate_le_of_hasBidegreeAtMost
     Module.finrank (SecondCoordinateSubfield f) (PlaneCurveFunctionField f) ≤
       firstDegree := by
   let hf := irreducible_of_irreducible_map_algebraicClosure habsolute
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   exact (finrank_over_secondCoordinate_eq_degreeOf_first_of_irreducible
     hf hpartialFirst).le.trans

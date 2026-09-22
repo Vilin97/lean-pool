@@ -75,7 +75,7 @@ degree. -/
 theorem rationalInfinityPlace_card_le_finrank :
     Nat.card (FiniteExtensionRationalInfinityPlace S L) ≤
       Module.finrank (RatFunc S) L := by
-  letI : Fintype (FiniteExtensionInfinityPlace S L) :=
+  let : Fintype (FiniteExtensionInfinityPlace S L) :=
     Set.Finite.fintype (IsDedekindDomain.primesOver_finite
       (ratFuncInfinityPlace S).asIdeal
       (RatFuncInfinityIntegralClosure S L))
@@ -141,7 +141,7 @@ theorem finiteExtensionRationalPlaceCount_le_squareFieldStepanov_of_finitePlaceR
     let p : FiniteExtensionRationalFinitePlace S L → Prop := fun Q =>
       (Sum.inl Q.1 : FiniteExtensionPlace S L) = P
     let Away := {Q : FiniteExtensionRationalFinitePlace S L // ¬ p Q}
-    letI : Fintype Away := Fintype.ofFinite _
+    let : Fintype Away := Fintype.ofFinite _
     let place : Away → FiniteExtensionFinitePlace S L := fun Q => Q.1.1
     have hplaceInjective : Function.Injective place := by
       intro Q R hQR
@@ -171,7 +171,7 @@ theorem finiteExtensionRationalPlaceCount_le_squareFieldStepanov_of_finitePlaceR
       exact Sum.inl.inj (Q.2.trans R.2.symm)
     have hpCard : Nat.card
         {Q : FiniteExtensionRationalFinitePlace S L // p Q} ≤ 1 := by
-      letI := hpSubsingleton
+      let := hpSubsingleton
       simpa using Nat.card_le_card_of_injective
         (fun _ : {Q : FiniteExtensionRationalFinitePlace S L // p Q} =>
           (Unit.unit : Unit))
@@ -196,7 +196,7 @@ theorem finiteExtensionRationalPlaceCount_le_squareFieldStepanov_of_finitePlaceR
         Nat.add_le_add hfinite (rationalInfinityPlace_card_le_finrank S L)
       _ = Fintype.card S + (2 * g + 1) * Fintype.card K +
           Module.finrank (RatFunc S) L := by rw [hbudget]
-  · letI : IsEmpty (FiniteExtensionRationalFinitePlace S L) :=
+  · let : IsEmpty (FiniteExtensionRationalFinitePlace S L) :=
       ⟨fun Q => hnonempty ⟨Q⟩⟩
     rw [finiteExtensionRationalPlaceCount, Nat.card_sum]
     simp only [Nat.card_of_isEmpty, zero_add]

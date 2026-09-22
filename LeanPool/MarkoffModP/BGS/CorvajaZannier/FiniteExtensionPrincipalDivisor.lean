@@ -213,7 +213,7 @@ theorem finiteExtensionFiniteDivisorBelow_apply
             ((ratFuncFiniteIntegralClosureFractionRingEquiv K L).symm x) := by
   classical
   let e := finitePlaceFiberEquivPrimesOver K L p
-  letI : Fintype {q : FiniteExtensionFinitePlace K L //
+  let : Fintype {q : FiniteExtensionFinitePlace K L //
       HeightOneSpectrum.under K[X] q = p} :=
     Fintype.ofEquiv (p.asIdeal.primesOver (RatFuncFiniteIntegralClosure K L)) e.symm
   let P₀ : p.asIdeal.primesOver (RatFuncFiniteIntegralClosure K L) :=
@@ -847,18 +847,18 @@ theorem finiteExtensionFinitePlace_inertiaDeg_eq_one
     (q : FiniteExtensionFinitePlace K L) :
     q.asIdeal.inertiaDeg K[X] = 1 := by
   let p := HeightOneSpectrum.under K[X] q
-  letI : q.asIdeal.LiesOver p.asIdeal := ⟨rfl⟩
-  letI hLocalAlg :=
+  let : q.asIdeal.LiesOver p.asIdeal := ⟨rfl⟩
+  let hLocalAlg :=
     Localization.AtPrime.algebraOfLiesOver p.asIdeal q.asIdeal
   have : IsScalarTower K[X] (Localization.AtPrime p.asIdeal)
       (Localization.AtPrime q.asIdeal) := inferInstance
-  letI : IsAlgClosed p.asIdeal.ResidueField :=
+  let : IsAlgClosed p.asIdeal.ResidueField :=
     IsAlgClosed.of_ringEquiv K p.asIdeal.ResidueField
       (ratFuncFinitePlaceResidueEquiv K p).symm.toRingEquiv
-  letI : Algebra.QuasiFiniteAt K[X] q.asIdeal := inferInstance
-  letI : Module.Finite p.asIdeal.ResidueField q.asIdeal.ResidueField :=
+  let : Algebra.QuasiFiniteAt K[X] q.asIdeal := inferInstance
+  let : Module.Finite p.asIdeal.ResidueField q.asIdeal.ResidueField :=
     inferInstance
-  letI : Algebra.IsIntegral p.asIdeal.ResidueField q.asIdeal.ResidueField :=
+  let : Algebra.IsIntegral p.asIdeal.ResidueField q.asIdeal.ResidueField :=
     Algebra.IsIntegral.of_finite _ _
   rw [Ideal.inertiaDeg_eq p.asIdeal q.asIdeal,
     Algebra.finrank_eq_one_iff_bijective_algebraMap]

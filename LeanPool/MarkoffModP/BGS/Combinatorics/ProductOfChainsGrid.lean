@@ -44,11 +44,11 @@ theorem gridKey_le_min
     {m n x y : ℕ} (hx : x ≤ m) (hy : y ≤ n) :
     gridKey m n x y ≤ min m n := by
   by_cases hmn : m ≤ n
-  · rw [gridKey, if_pos hmn]
+  · rw [gridKey, ite_eq_left hmn]
     apply le_min
     · exact (min_le_right _ _).trans (Nat.sub_le _ _)
     · exact (min_le_left _ _).trans hy
-  · rw [gridKey, if_neg hmn]
+  · rw [gridKey, ite_eq_right hmn]
     apply le_min
     · exact (min_le_left _ _).trans hx
     · exact (min_le_right _ _).trans (Nat.sub_le _ _)

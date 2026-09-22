@@ -157,7 +157,7 @@ theorem eval_reciprocal_reverse_mul_X_pow (p : K[X]) :
     Polynomial.eval₂ RatFunc.C (1 / RatFunc.X) p.reverse *
         RatFunc.X ^ p.natDegree =
       algebraMap K[X] (RatFunc K) p := by
-  letI : Invertible (RatFunc.X : RatFunc K) :=
+  let : Invertible (RatFunc.X : RatFunc K) :=
     invertibleOfNonzero RatFunc.X_ne_zero
   simpa [invOf_eq_inv, one_div] using
     (Polynomial.eval₂_reverse_mul_pow RatFunc.C
@@ -429,7 +429,7 @@ theorem ratFuncInfinityIntegralClosure_isLocalization_reciprocal :
       (Algebra.algebraMapSubmonoid (integralClosure K[X] N)
         (Ideal.span ({Polynomial.X} : Set K[X])).primeCompl)
       (RatFuncInfinityIntegralClosure K N) := by
-  letI : IsScalarTower K[X] (integralClosure K[X] N)
+  let : IsScalarTower K[X] (integralClosure K[X] N)
       (RatFuncInfinityIntegralClosure K N) :=
     reciprocalPolynomialIntegralClosuresTower K N
   exact @IsLocalization.integralClosure

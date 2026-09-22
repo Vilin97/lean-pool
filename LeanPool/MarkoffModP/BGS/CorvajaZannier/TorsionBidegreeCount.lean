@@ -162,8 +162,8 @@ theorem torusCurveTorsionIntersection_card_le_firstOrder_mul_of_degreeOf_second_
   classical
   let S := BGS.External.torusCurveTorsionIntersection
     K f firstOrder secondOrder
-  letI : NeZero firstOrder := ⟨hfirstOrder.ne'⟩
-  letI : Fintype (rootsOfUnity firstOrder K) := Fintype.ofFinite _
+  let : NeZero firstOrder := ⟨hfirstOrder.ne'⟩
+  let : Fintype (rootsOfUnity firstOrder K) := Fintype.ofFinite _
   let T := fun x : rootsOfUnity firstOrder K =>
     {y : K // (secondCoordinateSpecialization f (x.1 : K)).eval y = 0}
   let embedding : {z // z ∈ S} ↪ Sigma T :=

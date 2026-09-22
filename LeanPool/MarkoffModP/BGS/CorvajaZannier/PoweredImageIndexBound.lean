@@ -46,9 +46,9 @@ theorem finrank_poweredImageOverFirst_le_twice_bidegree_of_nonzero_natCast
   let hf : Irreducible f :=
     irreducible_of_irreducible_map_algebraicClosure habsolute
   have hfA : Irreducible fA := habsolute
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : IsDomain (PlaneCurveCoordinateRing fA) :=
+  let : IsDomain (PlaneCurveCoordinateRing fA) :=
     planeCurveCoordinateRing_isDomain hfA
   have hpartialFirstA : MvPolynomial.pderiv 0 fA ≠ 0 := by
     rw [MvPolynomial.pderiv_map]

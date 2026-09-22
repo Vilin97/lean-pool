@@ -188,7 +188,7 @@ theorem finiteAdeleLocalResidueMap_surjective (D : DivisorA k K)
           (v.valuation K) (a₀.val (Sum.inl v)) ≤ WithZero.exp (D (Sum.inl v) + 1) := by
         have hmul' : (v.valuation K) (a₀.val (Sum.inl v)) =
             (v.valuation K) (π ^ (-n)) * (v.valuation K) (z : K) := by
-          show (v.valuation K)
+          change (v.valuation K)
               (Function.update (0 : PlaceA k K → K) (Sum.inl v) xK (Sum.inl v)) = _
           simp only [Function.update_self, xK]
           exact Valuation.map_mul (v.valuation K) _ _
@@ -241,7 +241,7 @@ theorem finrankAdeleFiltDiff_single_finite (D : DivisorA k K)
       ((Algebra.linearMap (ringOfIntegers k K ⧸ v.asIdeal)
         v.asIdeal.ResidueField).restrictScalars k)
       (Ideal.bijective_algebraMap_quotient_residueField v.asIdeal)
-  letI : FiniteDimensional k v.asIdeal.ResidueField := e.finiteDimensional
+  let : FiniteDimensional k v.asIdeal.ResidueField := e.finiteDimensional
   have hker := finiteAdeleLocalResidueMap_ker k K D v
   have hsurj := finiteAdeleLocalResidueMap_surjective k K D v
   rw [finrankAdeleFiltDiff, ← hker, f.quotKerEquivRange.finrank_eq]
@@ -390,7 +390,7 @@ theorem infiniteAdeleLocalResidueMap_surjective (D : DivisorA k K)
           (v.valuation K) (a₀.val (Sum.inr v)) ≤ WithZero.exp (D (Sum.inr v) + 1) := by
         have hmul' : (v.valuation K) (a₀.val (Sum.inr v)) =
             (v.valuation K) (π ^ (-n)) * (v.valuation K) (z : K) := by
-          show (v.valuation K)
+          change (v.valuation K)
               (Function.update (0 : PlaceA k K → K) (Sum.inr v) xK (Sum.inr v)) = _
           simp only [Function.update_self, xK]
           exact Valuation.map_mul (v.valuation K) _ _
@@ -443,7 +443,7 @@ theorem finrankAdeleFiltDiff_single_infinite (D : DivisorA k K)
       ((Algebra.linearMap (infiniteIntegers k K ⧸ v.asIdeal)
         v.asIdeal.ResidueField).restrictScalars k)
       (Ideal.bijective_algebraMap_quotient_residueField v.asIdeal)
-  letI : FiniteDimensional k v.asIdeal.ResidueField := e.finiteDimensional
+  let : FiniteDimensional k v.asIdeal.ResidueField := e.finiteDimensional
   have hker := infiniteAdeleLocalResidueMap_ker k K D v
   have hsurj := infiniteAdeleLocalResidueMap_surjective k K D v
   rw [finrankAdeleFiltDiff, ← hker, f.quotKerEquivRange.finrank_eq]
@@ -465,38 +465,38 @@ theorem finiteAdeleFiltDiff_quotient_single (D : DivisorA k K) (v : PlaceA k K) 
       Submodule.comap (adeleFilt k K (D + Finsupp.single v 1)).subtype (adeleFilt k K D)) := by
   classical
   rcases v with v | v
-  · letI : AddCommGroup (adeleFilt k K (D + Finsupp.single (Sum.inl v) 1)) :=
+  · let : AddCommGroup (adeleFilt k K (D + Finsupp.single (Sum.inl v) 1)) :=
       Submodule.addCommGroup _
-    letI : Module k (adeleFilt k K (D + Finsupp.single (Sum.inl v) 1)) := Submodule.module _
+    let : Module k (adeleFilt k K (D + Finsupp.single (Sum.inl v) 1)) := Submodule.module _
     let f := finiteAdeleLocalResidueMap k K D v
     let e : (ringOfIntegers k K ⧸ v.asIdeal) ≃ₗ[k] v.asIdeal.ResidueField :=
       LinearEquiv.ofBijective
         ((Algebra.linearMap (ringOfIntegers k K ⧸ v.asIdeal)
           v.asIdeal.ResidueField).restrictScalars k)
         (Ideal.bijective_algebraMap_quotient_residueField v.asIdeal)
-    letI : FiniteDimensional k v.asIdeal.ResidueField := e.finiteDimensional
+    let : FiniteDimensional k v.asIdeal.ResidueField := e.finiteDimensional
     let p := Submodule.comap (adeleFilt k K (D + Finsupp.single (Sum.inl v) 1)).subtype
       (adeleFilt k K D)
-    haveI : Module.Finite k f.range := inferInstance
-    haveI : Module.Finite k
+    have : Module.Finite k f.range := inferInstance
+    have : Module.Finite k
         (adeleFilt k K (D + Finsupp.single (Sum.inl v) 1) ⧸ f.ker) :=
       Module.Finite.equiv f.quotKerEquivRange.symm
     exact Module.Finite.equiv (Submodule.quotEquivOfEq f.ker p
       (finiteAdeleLocalResidueMap_ker k K D v))
-  · letI : AddCommGroup (adeleFilt k K (D + Finsupp.single (Sum.inr v) 1)) :=
+  · let : AddCommGroup (adeleFilt k K (D + Finsupp.single (Sum.inr v) 1)) :=
       Submodule.addCommGroup _
-    letI : Module k (adeleFilt k K (D + Finsupp.single (Sum.inr v) 1)) := Submodule.module _
+    let : Module k (adeleFilt k K (D + Finsupp.single (Sum.inr v) 1)) := Submodule.module _
     let f := infiniteAdeleLocalResidueMap k K D v
     let e : (infiniteIntegers k K ⧸ v.asIdeal) ≃ₗ[k] v.asIdeal.ResidueField :=
       LinearEquiv.ofBijective
         ((Algebra.linearMap (infiniteIntegers k K ⧸ v.asIdeal)
           v.asIdeal.ResidueField).restrictScalars k)
         (Ideal.bijective_algebraMap_quotient_residueField v.asIdeal)
-    letI : FiniteDimensional k v.asIdeal.ResidueField := e.finiteDimensional
+    let : FiniteDimensional k v.asIdeal.ResidueField := e.finiteDimensional
     let p := Submodule.comap (adeleFilt k K (D + Finsupp.single (Sum.inr v) 1)).subtype
       (adeleFilt k K D)
-    haveI : Module.Finite k f.range := inferInstance
-    haveI : Module.Finite k
+    have : Module.Finite k f.range := inferInstance
+    have : Module.Finite k
         (adeleFilt k K (D + Finsupp.single (Sum.inr v) 1) ⧸ f.ker) :=
       Module.Finite.equiv f.quotKerEquivRange.symm
     exact Module.Finite.equiv (Submodule.quotEquivOfEq f.ker p
@@ -530,7 +530,7 @@ theorem finiteAdeleFiltDiff_quotient_mono_add {D M N : DivisorA k K}
     rw [Submodule.map_equiv_eq_comap_symm eR.symm qM]
     rfl
   have eMq : (pM ⧸ qM) ≃ₗ[k] (r ⧸ qInR) := Submodule.Quotient.equiv qM qInR eR.symm hqmap
-  haveI : Module.Finite k (r ⧸ qInR) := Module.Finite.equiv eMq
+  have : Module.Finite k (r ⧸ qInR) := Module.Finite.equiv eMq
   have hker : (q.mkQ.comp (r.subtype : r →ₗ[k] p)).ker = qInR := by
     rw [LinearMap.ker_comp, Submodule.ker_mkQ]
   have hrange : (q.mkQ.comp (r.subtype : r →ₗ[k] p)).range = r.map q.mkQ := by
@@ -538,10 +538,10 @@ theorem finiteAdeleFiltDiff_quotient_mono_add {D M N : DivisorA k K}
   have eQuot : (r ⧸ qInR) ≃ₗ[k] r.map q.mkQ := by
     rw [← hker, ← hrange]
     exact LinearMap.quotKerEquivRange (q.mkQ.comp (r.subtype : r →ₗ[k] p))
-  haveI : Module.Finite k (r.map q.mkQ) := Module.Finite.equiv eQuot
+  have : Module.Finite k (r.map q.mkQ) := Module.Finite.equiv eQuot
   have eThird := Submodule.quotientQuotientEquivQuotient q r hqr
-  haveI : Module.Finite k (p ⧸ r) := by dsimp only [p, r]; infer_instance
-  haveI : Module.Finite k ((p ⧸ q) ⧸ Submodule.map q.mkQ r) := Module.Finite.equiv eThird.symm
+  have : Module.Finite k (p ⧸ r) := by dsimp only [p, r]; infer_instance
+  have : Module.Finite k ((p ⧸ q) ⧸ Submodule.map q.mkQ r) := Module.Finite.equiv eThird.symm
   exact Module.Finite.of_submodule_quotient (Submodule.map q.mkQ r)
 
 theorem finiteAdeleFiltDiff_quotient_single_nat (D : DivisorA k K) (v : PlaceA k K) (n : ℕ) :
@@ -572,8 +572,8 @@ theorem finiteAdeleFiltDiff_quotient_single_nat (D : DivisorA k K) (v : PlaceA k
         exact le_add_of_nonneg_right (by
           simp only [Finsupp.single_apply]
           split <;> omega)
-      letI := ih
-      haveI := finiteAdeleFiltDiff_quotient_single k K (D + Finsupp.single v (n : ℤ)) v
+      let := ih
+      have := finiteAdeleFiltDiff_quotient_single k K (D + Finsupp.single v (n : ℤ)) v
       rw [heq]
       exact finiteAdeleFiltDiff_quotient_mono_add k K hDM hMN
 
@@ -596,8 +596,8 @@ theorem finiteAdeleFiltDiff_quotient_add_effective (D E : DivisorA k K)
         · simpa [Finsupp.single_apply, hw] using hE w
       have hb0 : 0 ≤ b := by
         simpa [Finsupp.single_apply, hfa] using hE a
-      letI := ih D hff
-      haveI := finiteAdeleFiltDiff_quotient_single_nat k K (D + f) a b.toNat
+      let := ih D hff
+      have := finiteAdeleFiltDiff_quotient_single_nat k K (D + f) a b.toNat
       have hbcast : (b.toNat : ℤ) = b := Int.toNat_of_nonneg hb0
       have heq : D + (Finsupp.single a b + f) =
           (D + f) + Finsupp.single a (b.toNat : ℤ) := by
@@ -635,9 +635,9 @@ theorem finrankAdeleFiltDiff_mono_add {D M N : DivisorA k K}
   have hEN := (le_iff_sub_effective k K).mp hMN
   have hND : D + (N - D) = N := by ext w; simp [sub_eq_add_neg]
   have hNM : M + (N - M) = N := by ext w; simp [sub_eq_add_neg]
-  haveI : Module.Finite k (p ⧸ q) :=
+  have : Module.Finite k (p ⧸ q) :=
     finiteAdeleFiltDiff_quotient_add_eq k K (M := D) hND.symm hE
-  haveI : Module.Finite k (p ⧸ r) :=
+  have : Module.Finite k (p ⧸ r) :=
     finiteAdeleFiltDiff_quotient_add_eq k K (M := M) hNM.symm hEN
   dsimp only [finrankAdeleFiltDiff]
   have e := Submodule.quotientQuotientEquivQuotient q r hqr
@@ -811,10 +811,10 @@ theorem finrank_map_comap_mkQ_eq_quotient {D' : DivisorA k K}
   let qt := Submodule.comap p.subtype t
   let st := Submodule.comap t.subtype s
   let qpInQt := Submodule.comap qt.subtype qp
-  letI : AddCommGroup ↥t := Submodule.addCommGroup _
-  letI : Module k ↥t := Submodule.module _
-  letI : AddCommGroup ↥qt := Submodule.addCommGroup _
-  letI : Module k ↥qt := Submodule.module _
+  let : AddCommGroup ↥t := Submodule.addCommGroup _
+  let : Module k ↥t := Submodule.module _
+  let : AddCommGroup ↥qt := Submodule.addCommGroup _
+  let : Module k ↥qt := Submodule.module _
   let eT := Submodule.comapSubtypeEquivOfLe ht
   have hmap : st.map (eT.symm : ↥t →ₗ[k] ↥qt) = qpInQt := by
     ext x
@@ -863,10 +863,10 @@ theorem sandwich {D D' : DivisorA k K} (h : D ≤ D') :
     calc p ⊓ (s + r) = s + (p ⊓ r) := hmod
       _ = s + l := by rw [hpr]
       _ = t := by simp [t, Submodule.add_eq_sup, sup_comm]
-  letI : AddCommGroup ↥p := Submodule.addCommGroup _
-  letI : Module k ↥p := Submodule.module _
-  letI : AddCommGroup ↥(p + r) := Submodule.addCommGroup _
-  letI : Module k ↥(p + r) := Submodule.module _
+  let : AddCommGroup ↥p := Submodule.addCommGroup _
+  let : Module k ↥p := Submodule.module _
+  let : AddCommGroup ↥(p + r) := Submodule.addCommGroup _
+  let : Module k ↥(p + r) := Submodule.module _
   let qp := Submodule.comap p.subtype s
   let qt := Submodule.comap p.subtype t
   have hqp : qp ≤ qt := Submodule.comap_mono hst
@@ -878,8 +878,8 @@ theorem sandwich {D D' : DivisorA k K} (h : D ≤ D') :
       rcases Submodule.mem_sup.mp hx with ⟨a, ha, b, hb, rfl⟩
       have hb' : b ∈ s + r := Submodule.mem_sup_right hb
       exact Submodule.add_mem _ (Submodule.mem_sup_left ha) (Submodule.mem_sup_right hb')
-  haveI : AddCommGroup ↥(p ⊔ (s + r)) := Submodule.addCommGroup _
-  haveI : Module k ↥(p ⊔ (s + r)) := Submodule.module _
+  have : AddCommGroup ↥(p ⊔ (s + r)) := Submodule.addCommGroup _
+  have : Module k ↥(p ⊔ (s + r)) := Submodule.module _
   have e1 := LinearMap.quotientInfEquivSupQuotient p (s + r)
   have hsand :
       Module.finrank k (↥(p + r) ⧸ Submodule.comap (p + r).subtype (s + r)) =
@@ -893,7 +893,7 @@ theorem sandwich {D D' : DivisorA k K} (h : D ≤ D') :
   have hE : IsEffective k K (D' - D) := (le_iff_sub_effective k K).mp h
   have e2 := Submodule.quotientQuotientEquivQuotient qp qt hqp
   have hdiv : D + (D' - D) = D' := by ext w; simp [sub_eq_add_neg]
-  haveI : Module.Finite k (↥p ⧸ qp) :=
+  have : Module.Finite k (↥p ⧸ qp) :=
     finiteAdeleFiltDiff_quotient_add_eq k K (M := D) hdiv.symm hE
   have hsecond : Module.finrank k (Submodule.map qp.mkQ qt) = finrankRRspaceDiff k K D D' := by
     have hld : l ⊓ s = Submodule.map (diagonal k K) (RRspace k K D) := by
@@ -909,8 +909,8 @@ theorem sandwich {D D' : DivisorA k K} (h : D ≤ D') :
     have hfin_map := finrank_map_comap_mkQ_eq_quotient k K hs_le_p htp hst
     let st := Submodule.comap t.subtype s
     let qpInQt := Submodule.comap qt.subtype qp
-    letI : AddCommGroup ↥t := Submodule.addCommGroup _
-    letI : Module k ↥t := Submodule.module _
+    let : AddCommGroup ↥t := Submodule.addCommGroup _
+    let : Module k ↥t := Submodule.module _
     let eT := Submodule.comapSubtypeEquivOfLe htp
     have hmap : st.map (eT.symm : ↥t →ₗ[k] ↥qt) = qpInQt := by
       ext x
@@ -918,10 +918,10 @@ theorem sandwich {D D' : DivisorA k K} (h : D ≤ D') :
     have eTS : ((↥t) ⧸ st) ≃ₗ[k] ((↥qt) ⧸ qpInQt) :=
       Submodule.Quotient.equiv st qpInQt eT.symm hmap
     have e3 := LinearMap.quotientInfEquivSupQuotient l s
-    letI : AddCommGroup ↥(l ⊔ s) := Submodule.addCommGroup _
-    letI : Module k ↥(l ⊔ s) := Submodule.module _
-    letI : AddCommGroup ↥l := Submodule.addCommGroup _
-    letI : Module k ↥l := Submodule.module _
+    let : AddCommGroup ↥(l ⊔ s) := Submodule.addCommGroup _
+    let : Module k ↥(l ⊔ s) := Submodule.module _
+    let : AddCommGroup ↥l := Submodule.addCommGroup _
+    let : Module k ↥l := Submodule.module _
     dsimp [finrankRRspaceDiff]
     calc
       Module.finrank k (Submodule.map qp.mkQ qt)
@@ -1050,7 +1050,7 @@ theorem sandwichDiagonalSubmodule_eq_of_rank_zero {D D' : DivisorA k K} (hle : D
   have hqp_le : qp ≤ qt := Submodule.comap_mono le_sup_right
   have hE : IsEffective k K (D' - D) := (le_iff_sub_effective k K).mp hle
   have hdiv : D + (D' - D) = D' := by abel
-  haveI : Module.Finite k (↥p ⧸ qp) :=
+  have : Module.Finite k (↥p ⧸ qp) :=
     finiteAdeleFiltDiff_quotient_add_eq k K (M := D) hdiv.symm hE
   have htp : t ≤ p := by
     rintro x hx
@@ -1059,12 +1059,12 @@ theorem sandwichDiagonalSubmodule_eq_of_rank_zero {D D' : DivisorA k K} (hle : D
     exact Submodule.add_mem p
       (by simpa [adeleFilt, memAdeleFilt, memRRspace, RRspace, diagonal, p] using hf)
       (adeleFilt_mono k K hle hz)
-  letI : AddCommGroup ↥p := Submodule.addCommGroup _
-  letI : Module k ↥p := Submodule.module _
-  letI : AddCommGroup ↥(p + r) := Submodule.addCommGroup _
-  letI : Module k ↥(p + r) := Submodule.module _
-  letI : AddCommGroup ↥(adeleFilt k K D' + diagonalSubmodule k K) := Submodule.addCommGroup _
-  letI : Module k ↥(adeleFilt k K D' + diagonalSubmodule k K) := Submodule.module _
+  let : AddCommGroup ↥p := Submodule.addCommGroup _
+  let : Module k ↥p := Submodule.module _
+  let : AddCommGroup ↥(p + r) := Submodule.addCommGroup _
+  let : Module k ↥(p + r) := Submodule.module _
+  let : AddCommGroup ↥(adeleFilt k K D' + diagonalSubmodule k K) := Submodule.addCommGroup _
+  let : Module k ↥(adeleFilt k K D' + diagonalSubmodule k K) := Submodule.module _
   have hfin_qt : Module.finrank k (↥p ⧸ qt) = 0 := by
     have hfin_sandwich :
         Module.finrank k
@@ -1087,7 +1087,7 @@ theorem sandwichDiagonalSubmodule_eq_of_rank_zero {D D' : DivisorA k K} (hle : D
       (LinearMap.quotientInfEquivSupQuotient p (s + r)).symm.finrank_eq
     rw [hpsum, hinfl] at hsand
     exact hsand.symm.trans hfin_sandwich
-  haveI : Module.Finite k (↥p ⧸ qt) :=
+  have : Module.Finite k (↥p ⧸ qt) :=
     Module.Finite.equiv (Submodule.quotientQuotientEquivQuotient qp qt hqp_le)
   have hrk : Module.rank k (↥p ⧸ qt) = 0 := by
     rw [← Module.finrank_eq_rank, hfin_qt, Nat.cast_zero]

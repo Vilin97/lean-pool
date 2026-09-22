@@ -88,8 +88,8 @@ theorem adjoin_frobeniusSubfield_eq_top
     IntermediateField.adjoin (frobeniusSubfield L p) {z} = ⊤ := by
   let F : Subfield L := frobeniusSubfield L p
   let E : IntermediateField F L := IntermediateField.adjoin F {z}
-  letI : IsPurelyInseparable F L := frobeniusSubfield_isPurelyInseparable p
-  letI : IsPurelyInseparable E L := IsPurelyInseparable.tower_top F E L
+  let : IsPurelyInseparable F L := frobeniusSubfield_isPurelyInseparable p
+  let : IsPurelyInseparable E L := IsPurelyInseparable.tower_top F E L
   have hbij : Function.Bijective (algebraMap E L) :=
     IsPurelyInseparable.bijective_algebraMap_of_isSeparable E L
   change E = ⊤
@@ -137,8 +137,8 @@ theorem finrank_frobeniusSubfield_eq_char
   have hfinE : Module.finrank F E = p := by
     rw [IntermediateField.adjoin.finrank hzint, hminpoly,
       Polynomial.natDegree_X_pow_sub_C]
-  letI : IsPurelyInseparable F L := frobeniusSubfield_isPurelyInseparable p
-  letI : IsPurelyInseparable E L := IsPurelyInseparable.tower_top F E L
+  let : IsPurelyInseparable F L := frobeniusSubfield_isPurelyInseparable p
+  let : IsPurelyInseparable E L := IsPurelyInseparable.tower_top F E L
   have hbij : Function.Bijective (algebraMap E L) :=
     IsPurelyInseparable.bijective_algebraMap_of_isSeparable E L
   let e : E ≃ₐ[F] L :=
@@ -185,8 +185,8 @@ theorem exists_derivation_with_exact_frobenius_constants
   have hzint : IsIntegral F z := ⟨_, hmonic, hroot⟩
   have hminpoly : minpoly F z = Polynomial.X ^ p - Polynomial.C zp :=
     (minpoly.eq_of_irreducible_of_monic hirr hroot hmonic).symm
-  letI : IsPurelyInseparable F L := frobeniusSubfield_isPurelyInseparable p
-  letI : IsPurelyInseparable E L := IsPurelyInseparable.tower_top F E L
+  let : IsPurelyInseparable F L := frobeniusSubfield_isPurelyInseparable p
+  let : IsPurelyInseparable E L := IsPurelyInseparable.tower_top F E L
   have hbij : Function.Bijective (algebraMap E L) :=
     IsPurelyInseparable.bijective_algebraMap_of_isSeparable E L
   have hEtop : E = ⊤ := by

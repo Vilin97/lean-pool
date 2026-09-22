@@ -45,9 +45,9 @@ private theorem exactConstantExtension_polynomialTower :
         ((algebraMap (RatFunc C) (ExactConstantExtension C N S)).comp
           (algebraMap C[X] (RatFunc C)))
     IsScalarTower C C[X] (ExactConstantExtension C N S) := by
-  letI : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-  letI : Algebra C[X] (ExactConstantExtension C N S) :=
+  let : Algebra C[X] (ExactConstantExtension C N S) :=
     RingHom.toAlgebra
       ((algebraMap (RatFunc C) (ExactConstantExtension C N S)).comp
         (algebraMap C[X] (RatFunc C)))
@@ -141,9 +141,9 @@ private theorem exactConstantExtension_ratFuncBaseTower :
     letI : Algebra L (ExactConstantExtension C N S) :=
       exactConstantExtensionBaseAlgebra C L N S
     IsScalarTower (RatFunc C) L (ExactConstantExtension C N S) := by
-  letI : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-  letI : Algebra L (ExactConstantExtension C N S) :=
+  let : Algebra L (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseAlgebra C L N S
   apply IsScalarTower.of_algebraMap_eq'
   ext x
@@ -180,43 +180,43 @@ theorem exactConstantExtensionConstantQuotient_action_on_finiteNormalization
         algebraMap S (RatFuncFiniteIntegralClosure C
           (ExactConstantExtension C N S))
           (exactConstantExtensionConstantQuotient C L N S hExact g s) := by
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-  letI : Algebra L (ExactConstantExtension C N S) :=
+  let : Algebra L (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseAlgebra C L N S
-  letI : IsScalarTower (RatFunc C) L (ExactConstantExtension C N S) :=
+  let : IsScalarTower (RatFunc C) L (ExactConstantExtension C N S) :=
     exactConstantExtension_ratFuncBaseTower C N S L
-  letI : Algebra C[X] L :=
+  let : Algebra C[X] L :=
     RingHom.toAlgebra
       ((algebraMap (RatFunc C) L).comp (algebraMap C[X] (RatFunc C)))
-  letI : IsScalarTower C[X] (RatFunc C) L :=
+  let : IsScalarTower C[X] (RatFunc C) L :=
     IsScalarTower.of_algebraMap_eq' rfl
-  letI : Algebra C[X] (ExactConstantExtension C N S) :=
+  let : Algebra C[X] (ExactConstantExtension C N S) :=
     RingHom.toAlgebra
       ((algebraMap (RatFunc C) (ExactConstantExtension C N S)).comp
         (algebraMap C[X] (RatFunc C)))
-  letI : IsScalarTower C[X] (RatFunc C)
+  let : IsScalarTower C[X] (RatFunc C)
       (ExactConstantExtension C N S) :=
     IsScalarTower.of_algebraMap_eq' rfl
-  letI : IsGalois L (ExactConstantExtension C N S) :=
+  let : IsGalois L (ExactConstantExtension C N S) :=
     exactConstantExtension_isGalois C L N S hExact
-  letI : Algebra S (RatFuncFiniteIntegralClosure C
+  let : Algebra S (RatFuncFiniteIntegralClosure C
       (ExactConstantExtension C N S)) :=
     exactConstantExtensionFiniteIntegralClosureConstantAlgebra C N S hExact
-  letI : MulSemiringAction
+  let : MulSemiringAction
       (ExactConstantExtension C N S ≃ₐ[L] ExactConstantExtension C N S)
       (RatFuncFiniteIntegralClosure C (ExactConstantExtension C N S)) :=
     finiteIntegralClosureGalAction C L (ExactConstantExtension C N S)
-  letI : Algebra (RatFuncFiniteIntegralClosure C L)
+  let : Algebra (RatFuncFiniteIntegralClosure C L)
       (RatFuncFiniteIntegralClosure C (ExactConstantExtension C N S)) :=
     (finiteIntegralClosureMap C L (ExactConstantExtension C N S)).toAlgebra
-  letI : IsScalarTower (RatFuncFiniteIntegralClosure C L) L
+  let : IsScalarTower (RatFuncFiniteIntegralClosure C L) L
       (ExactConstantExtension C N S) := inferInstance
-  letI : Algebra.IsIntegral C[X] (RatFuncFiniteIntegralClosure C L) :=
+  let : Algebra.IsIntegral C[X] (RatFuncFiniteIntegralClosure C L) :=
     IsIntegralClosure.isIntegral_algebra C[X] L
-  letI : IsScalarTower C[X] (RatFuncFiniteIntegralClosure C L)
+  let : IsScalarTower C[X] (RatFuncFiniteIntegralClosure C L)
       (ExactConstantExtension C N S) := by
     apply IsScalarTower.of_algebraMap_eq
     intro x
@@ -226,7 +226,7 @@ theorem exactConstantExtensionConstantQuotient_action_on_finiteNormalization
         (algebraMap (RatFunc C) L (algebraMap C[X] (RatFunc C) x))
     exact IsScalarTower.algebraMap_apply (RatFunc C) L
       (ExactConstantExtension C N S) _
-  letI : IsScalarTower (RatFuncFiniteIntegralClosure C L)
+  let : IsScalarTower (RatFuncFiniteIntegralClosure C L)
       (RatFuncFiniteIntegralClosure C (ExactConstantExtension C N S))
       (ExactConstantExtension C N S) :=
     ⟨fun r t x => by
@@ -240,7 +240,7 @@ theorem exactConstantExtensionConstantQuotient_action_on_finiteNormalization
           algebraMap (RatFuncFiniteIntegralClosure C L)
             (ExactConstantExtension C N S) r by rfl]
       ring⟩
-  letI : IsIntegralClosure
+  let : IsIntegralClosure
       (RatFuncFiniteIntegralClosure C (ExactConstantExtension C N S))
       (RatFuncFiniteIntegralClosure C L)
       (ExactConstantExtension C N S) :=
@@ -306,52 +306,52 @@ theorem exactConstantExtensionFinitePlace_stabilizerRestriction_ker_eq_inertia
             (MulAction.stabilizer
               (ExactConstantExtension C N S ≃ₐ[L]
                 ExactConstantExtension C N S) Q.asIdeal) := by
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-  letI : Algebra L (ExactConstantExtension C N S) :=
+  let : Algebra L (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseAlgebra C L N S
-  letI : IsScalarTower (RatFunc C) L (ExactConstantExtension C N S) :=
+  let : IsScalarTower (RatFunc C) L (ExactConstantExtension C N S) :=
     exactConstantExtension_ratFuncBaseTower C N S L
-  letI : IsGalois L (ExactConstantExtension C N S) :=
+  let : IsGalois L (ExactConstantExtension C N S) :=
     exactConstantExtension_isGalois C L N S hExact
-  letI : Algebra S (RatFuncFiniteIntegralClosure C
+  let : Algebra S (RatFuncFiniteIntegralClosure C
       (ExactConstantExtension C N S)) :=
     exactConstantExtensionFiniteIntegralClosureConstantAlgebra C N S hExact
-  letI : MulSemiringAction
+  let : MulSemiringAction
       (ExactConstantExtension C N S ≃ₐ[L] ExactConstantExtension C N S)
       (RatFuncFiniteIntegralClosure C (ExactConstantExtension C N S)) :=
     finiteIntegralClosureGalAction C L (ExactConstantExtension C N S)
-  letI : Algebra N (ExactConstantExtension C N S) :=
+  let : Algebra N (ExactConstantExtension C N S) :=
     exactConstantExtensionAlgebra C N S
-  letI : IsScalarTower (RatFunc C) N (ExactConstantExtension C N S) :=
+  let : IsScalarTower (RatFunc C) N (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseTower C (RatFunc C) N S
-  letI : Module.Finite (RatFunc C) N := Module.Finite.trans L N
+  let : Module.Finite (RatFunc C) N := Module.Finite.trans L N
   let e := exactConstantExtensionLinearEquiv C N S
-  letI : Module.Finite N (N ⊗[C] S) :=
+  let : Module.Finite N (N ⊗[C] S) :=
     Module.Finite.base_change C N S
-  letI : Module.Finite N (ExactConstantExtension C N S) :=
+  let : Module.Finite N (ExactConstantExtension C N S) :=
     Module.Finite.equiv e
-  letI : Module.Finite (RatFunc C) (ExactConstantExtension C N S) :=
+  let : Module.Finite (RatFunc C) (ExactConstantExtension C N S) :=
     Module.Finite.trans N (ExactConstantExtension C N S)
-  letI : Algebra C[X] (ExactConstantExtension C N S) :=
+  let : Algebra C[X] (ExactConstantExtension C N S) :=
     RingHom.toAlgebra
       ((algebraMap (RatFunc C) (ExactConstantExtension C N S)).comp
         (algebraMap C[X] (RatFunc C)))
-  letI : IsScalarTower C[X] (RatFunc C)
+  let : IsScalarTower C[X] (RatFunc C)
       (ExactConstantExtension C N S) :=
     IsScalarTower.of_algebraMap_eq' rfl
   intro Q hdegree
-  letI : Algebra.IsSeparable L (ExactConstantExtension C N S) :=
+  let : Algebra.IsSeparable L (ExactConstantExtension C N S) :=
     IsGalois.to_isSeparable
-  letI : Algebra.IsSeparable (RatFunc C)
+  let : Algebra.IsSeparable (RatFunc C)
       (ExactConstantExtension C N S) :=
     Algebra.IsSeparable.trans (RatFunc C) L
       (ExactConstantExtension C N S)
-  letI : IsDedekindDomain (RatFuncFiniteIntegralClosure C
+  let : IsDedekindDomain (RatFuncFiniteIntegralClosure C
       (ExactConstantExtension C N S)) := inferInstance
-  letI : Q.asIdeal.IsMaximal := Q.isMaximal
+  let : Q.asIdeal.IsMaximal := Q.isMaximal
   exact stabilizerRestriction_ker_eq_inertia_of_residue_finrank_one
     Q.asIdeal (exactConstantExtensionConstantQuotient C L N S hExact)
       (exactConstantExtensionConstantQuotient_action_on_finiteNormalization
@@ -396,38 +396,38 @@ theorem exactConstantExtensionFinitePlace_decompositionGroup_card
               (finitePlaceDecompositionGroup C L
                 (ExactConstantExtension C N S) Q).subtype).ker *
           Nat.card (S ≃ₐ[C] S) := by
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-  letI : Algebra L (ExactConstantExtension C N S) :=
+  let : Algebra L (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseAlgebra C L N S
-  letI : IsScalarTower (RatFunc C) L (ExactConstantExtension C N S) :=
+  let : IsScalarTower (RatFunc C) L (ExactConstantExtension C N S) :=
     exactConstantExtension_ratFuncBaseTower C N S L
-  letI : IsGalois L (ExactConstantExtension C N S) :=
+  let : IsGalois L (ExactConstantExtension C N S) :=
     exactConstantExtension_isGalois C L N S hExact
-  letI : Algebra S (RatFuncFiniteIntegralClosure C
+  let : Algebra S (RatFuncFiniteIntegralClosure C
       (ExactConstantExtension C N S)) :=
     exactConstantExtensionFiniteIntegralClosureConstantAlgebra C N S hExact
-  letI : MulSemiringAction
+  let : MulSemiringAction
       (ExactConstantExtension C N S ≃ₐ[L] ExactConstantExtension C N S)
       (RatFuncFiniteIntegralClosure C (ExactConstantExtension C N S)) :=
     finiteIntegralClosureGalAction C L (ExactConstantExtension C N S)
-  letI : Algebra N (ExactConstantExtension C N S) :=
+  let : Algebra N (ExactConstantExtension C N S) :=
     exactConstantExtensionAlgebra C N S
-  letI : IsScalarTower (RatFunc C) N (ExactConstantExtension C N S) :=
+  let : IsScalarTower (RatFunc C) N (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseTower C (RatFunc C) N S
-  letI : Module.Finite (RatFunc C) N := Module.Finite.trans L N
+  let : Module.Finite (RatFunc C) N := Module.Finite.trans L N
   let e := exactConstantExtensionLinearEquiv C N S
-  letI : Module.Finite N (N ⊗[C] S) :=
+  let : Module.Finite N (N ⊗[C] S) :=
     Module.Finite.base_change C N S
-  letI : Module.Finite N (ExactConstantExtension C N S) :=
+  let : Module.Finite N (ExactConstantExtension C N S) :=
     Module.Finite.equiv e
-  letI : Module.Finite (RatFunc C) (ExactConstantExtension C N S) :=
+  let : Module.Finite (RatFunc C) (ExactConstantExtension C N S) :=
     Module.Finite.trans N (ExactConstantExtension C N S)
-  letI : Algebra.IsSeparable L (ExactConstantExtension C N S) :=
+  let : Algebra.IsSeparable L (ExactConstantExtension C N S) :=
     IsGalois.to_isSeparable
-  letI : Algebra.IsSeparable (RatFunc C)
+  let : Algebra.IsSeparable (RatFunc C)
       (ExactConstantExtension C N S) :=
     Algebra.IsSeparable.trans (RatFunc C) L
       (ExactConstantExtension C N S)

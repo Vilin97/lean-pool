@@ -178,7 +178,7 @@ theorem frobeniusPower_minpoly_natDegree_eq_char
   have htop : IntermediateField.adjoin F ({z ^ m} : Set L) = ⊤ :=
     adjoin_frobeniusSubfield_pow_eq_top z hz m hm
   let E : IntermediateField F L := IntermediateField.adjoin F {z ^ m}
-  letI : Algebra.IsSeparable E L := by
+  let : Algebra.IsSeparable E L := by
     change Algebra.IsSeparable
       (IntermediateField.adjoin F ({z ^ m} : Set L)) L
     rw [htop]
@@ -200,7 +200,7 @@ theorem firstCoordinatePow_transcendental
     {m : ℕ} (hm : 0 < m) :
     letI := planeCurveCoordinateRing_isDomain hf
     Transcendental K ((planeCurveFunction f 0) ^ m) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   exact (firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)).pow hm
@@ -214,7 +214,7 @@ theorem secondCoordinatePow_transcendental
     {n : ℕ} (hn : 0 < n) :
     letI := planeCurveCoordinateRing_isDomain hf
     Transcendental K ((planeCurveFunction f 1) ^ n) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   exact (secondCoordinate_transcendental hf
     (degreeOf_first_pos_of_pderiv_ne_zero hpartialFirst)).pow hn
@@ -234,17 +234,17 @@ theorem adjoin_frobeniusSubfield_firstCoordinatePow_eq_top
     IntermediateField.adjoin
         (frobeniusSubfield (PlaneCurveFunctionField f) p)
         ({(planeCurveFunction f 0) ^ m} : Set (PlaneCurveFunctionField f)) = ⊤ := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let L := PlaneCurveFunctionField f
-  letI : CharP L p := charP_of_injective_algebraMap
+  let : CharP L p := charP_of_injective_algebraMap
     (algebraMap K L).injective p
   let F := frobeniusSubfield L p
   let x : L := planeCurveFunction f 0
   have hsep := (finiteSeparable_over_firstCoordinate_of_irreducible
     hf hpartialSecond).2
-  letI : Algebra.IsSeparable (FirstCoordinateSubfield f) L := hsep
-  letI : Algebra.IsSeparable (IntermediateField.adjoin F {x}) L :=
+  let : Algebra.IsSeparable (FirstCoordinateSubfield f) L := hsep
+  let : Algebra.IsSeparable (IntermediateField.adjoin F {x}) L :=
     isSeparable_over_frobeniusAdjoin_of_isSeparable_over_constantAdjoin
       (K := K) (L := L) (p := p) x
   have hxTrans : Transcendental K x := firstCoordinate_transcendental hf
@@ -271,17 +271,17 @@ theorem adjoin_frobeniusSubfield_secondCoordinatePow_eq_top
     IntermediateField.adjoin
         (frobeniusSubfield (PlaneCurveFunctionField f) p)
         ({(planeCurveFunction f 1) ^ n} : Set (PlaneCurveFunctionField f)) = ⊤ := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let L := PlaneCurveFunctionField f
-  letI : CharP L p := charP_of_injective_algebraMap
+  let : CharP L p := charP_of_injective_algebraMap
     (algebraMap K L).injective p
   let F := frobeniusSubfield L p
   let y : L := planeCurveFunction f 1
   have hsep := (finiteSeparable_over_secondCoordinate_of_irreducible
     hf hpartialFirst).2
-  letI : Algebra.IsSeparable (SecondCoordinateSubfield f) L := hsep
-  letI : Algebra.IsSeparable (IntermediateField.adjoin F {y}) L :=
+  let : Algebra.IsSeparable (SecondCoordinateSubfield f) L := hsep
+  let : Algebra.IsSeparable (IntermediateField.adjoin F {y}) L :=
     isSeparable_over_frobeniusAdjoin_of_isSeparable_over_constantAdjoin
       (K := K) (L := L) (p := p) y
   have hyTrans : Transcendental K y := secondCoordinate_transcendental hf
@@ -306,17 +306,17 @@ theorem minpoly_firstCoordinatePow_natDegree_eq_char
         (algebraMap K (PlaneCurveFunctionField f)).injective p
     (minpoly (frobeniusSubfield (PlaneCurveFunctionField f) p)
       ((planeCurveFunction f 0) ^ m)).natDegree = p := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let L := PlaneCurveFunctionField f
-  letI : CharP L p := charP_of_injective_algebraMap
+  let : CharP L p := charP_of_injective_algebraMap
     (algebraMap K L).injective p
   let F := frobeniusSubfield L p
   let x : L := planeCurveFunction f 0
   have hsep := (finiteSeparable_over_firstCoordinate_of_irreducible
     hf hpartialSecond).2
-  letI : Algebra.IsSeparable (FirstCoordinateSubfield f) L := hsep
-  letI : Algebra.IsSeparable (IntermediateField.adjoin F {x}) L :=
+  let : Algebra.IsSeparable (FirstCoordinateSubfield f) L := hsep
+  let : Algebra.IsSeparable (IntermediateField.adjoin F {x}) L :=
     isSeparable_over_frobeniusAdjoin_of_isSeparable_over_constantAdjoin
       (K := K) (L := L) (p := p) x
   have hxTrans : Transcendental K x := firstCoordinate_transcendental hf
@@ -343,17 +343,17 @@ theorem minpoly_secondCoordinatePow_natDegree_eq_char
         (algebraMap K (PlaneCurveFunctionField f)).injective p
     (minpoly (frobeniusSubfield (PlaneCurveFunctionField f) p)
       ((planeCurveFunction f 1) ^ n)).natDegree = p := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let L := PlaneCurveFunctionField f
-  letI : CharP L p := charP_of_injective_algebraMap
+  let : CharP L p := charP_of_injective_algebraMap
     (algebraMap K L).injective p
   let F := frobeniusSubfield L p
   let y : L := planeCurveFunction f 1
   have hsep := (finiteSeparable_over_secondCoordinate_of_irreducible
     hf hpartialFirst).2
-  letI : Algebra.IsSeparable (SecondCoordinateSubfield f) L := hsep
-  letI : Algebra.IsSeparable (IntermediateField.adjoin F {y}) L :=
+  let : Algebra.IsSeparable (SecondCoordinateSubfield f) L := hsep
+  let : Algebra.IsSeparable (IntermediateField.adjoin F {y}) L :=
     isSeparable_over_frobeniusAdjoin_of_isSeparable_over_constantAdjoin
       (K := K) (L := L) (p := p) y
   have hyTrans : Transcendental K y := secondCoordinate_transcendental hf
@@ -390,24 +390,24 @@ theorem exists_derivation_coordinatePowers_ne_zero
         ∃ c : frobeniusSubfield (PlaneCurveFunctionField f) p,
           algebraMap (frobeniusSubfield (PlaneCurveFunctionField f) p)
             (PlaneCurveFunctionField f) c = z := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let L := PlaneCurveFunctionField f
-  letI : CharP L p := charP_of_injective_algebraMap
+  let : CharP L p := charP_of_injective_algebraMap
     (algebraMap K L).injective p
   let F := frobeniusSubfield L p
   let x : L := planeCurveFunction f 0
   let y : L := planeCurveFunction f 1
   have hsepX := (finiteSeparable_over_firstCoordinate_of_irreducible
     hf hpartialSecond).2
-  letI : Algebra.IsSeparable (FirstCoordinateSubfield f) L := hsepX
-  letI : Algebra.IsSeparable (IntermediateField.adjoin F {x}) L :=
+  let : Algebra.IsSeparable (FirstCoordinateSubfield f) L := hsepX
+  let : Algebra.IsSeparable (IntermediateField.adjoin F {x}) L :=
     isSeparable_over_frobeniusAdjoin_of_isSeparable_over_constantAdjoin
       (K := K) (L := L) (p := p) x
   have hsepY := (finiteSeparable_over_secondCoordinate_of_irreducible
     hf hpartialFirst).2
-  letI : Algebra.IsSeparable (SecondCoordinateSubfield f) L := hsepY
-  letI : Algebra.IsSeparable (IntermediateField.adjoin F {y}) L :=
+  let : Algebra.IsSeparable (SecondCoordinateSubfield f) L := hsepY
+  let : Algebra.IsSeparable (IntermediateField.adjoin F {y}) L :=
     isSeparable_over_frobeniusAdjoin_of_isSeparable_over_constantAdjoin
       (K := K) (L := L) (p := p) y
   have hxTrans : Transcendental K x := firstCoordinate_transcendental hf
@@ -470,10 +470,10 @@ theorem poweredCoordinates_auxiliaryFamily_linearIndependent_of_relation
         (frobeniusSubfield (PlaneCurveFunctionField f) p)
         (auxiliaryFamily ((planeCurveFunction f 0) ^ m)
           ((planeCurveFunction f 1) ^ n) h k) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let L := PlaneCurveFunctionField f
-  letI : CharP L p := charP_of_injective_algebraMap
+  let : CharP L p := charP_of_injective_algebraMap
     (algebraMap K L).injective p
   let F := frobeniusSubfield L p
   let x : L := planeCurveFunction f 0

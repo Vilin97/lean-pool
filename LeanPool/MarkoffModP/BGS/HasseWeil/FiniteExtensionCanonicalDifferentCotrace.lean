@@ -402,7 +402,7 @@ theorem finiteExtensionUnderPlace_finite_preimage_singleton
   · have hfiber : Set.Finite {q : FiniteExtensionFinitePlace K L |
         q.under K[X] = p} := by
       rw [← Set.finite_coe_iff]
-      letI : Finite
+      let : Finite
           (p.asIdeal.primesOver (RatFuncFiniteIntegralClosure K L)) :=
         Set.finite_coe_iff.mpr
           (IsDedekindDomain.primesOver_finite p.asIdeal
@@ -420,7 +420,7 @@ theorem finiteExtensionUnderPlace_finite_preimage_singleton
         finiteExtensionUnderPlace, Sum.inl.injEq] using hq
     · simp only [Set.mem_preimage, Set.mem_singleton_iff,
         finiteExtensionUnderPlace, Sum.inr.injEq, reduceCtorEq] at hq
-  · letI : Finite (FiniteExtensionInfinityPlace K L) :=
+  · let : Finite (FiniteExtensionInfinityPlace K L) :=
       Set.finite_coe_iff.mpr
         (IsDedekindDomain.primesOver_finite
           (ratFuncInfinityPlace K).asIdeal
@@ -463,7 +463,7 @@ theorem finiteExtensionUnderPlaceChart_surjective :
 properties. -/
 theorem finiteExtensionUnderPlaceChart_tendstoCofinite :
     Filter.TendstoCofinite (finiteExtensionUnderPlaceChart K L) := by
-  letI : Filter.TendstoCofinite (finiteExtensionUnderPlace K L) :=
+  let : Filter.TendstoCofinite (finiteExtensionUnderPlace K L) :=
     finiteExtensionUnderPlace_tendstoCofinite K L
   change Filter.TendstoCofinite
     ((ratFuncExhaustivePlaceEquivChart K) ∘
@@ -1009,7 +1009,7 @@ theorem finiteExtensionFiberTrace_infinite_valuation_le_exp_neg_two
             (FractionalIdeal.spanSingleton
               (RatFuncInfinityIntegralClosure K L)⁰ z) := by
     intro q hqUnder
-    letI : q.asIdeal.LiesOver pInf.asIdeal := ⟨by
+    let : q.asIdeal.LiesOver pInf.asIdeal := ⟨by
       have hideal := congrArg HeightOneSpectrum.asIdeal hqUnder
       exact hideal.symm⟩
     let P : FiniteExtensionInfinityPlace K L :=

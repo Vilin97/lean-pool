@@ -61,7 +61,7 @@ theorem exists_orbitComplementCard_lt_prime_of_hasGiantOrbitAt
     (hgiant : HasGiantOrbitAt p hp epsilon) :
     letI : Fact p.Prime := ⟨hp⟩
     ∃ x : PuncturedMarkoffSurface (ZMod p), orbitComplementCard x < p := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   obtain ⟨x, hx⟩ := hgiant
   refine ⟨x, ?_⟩
   have hpReal : (1 : ℝ) < (p : ℝ) := by exact_mod_cast hp.one_lt
@@ -80,7 +80,7 @@ theorem puncturedMarkoffTransitiveAt_of_hasGiantOrbitAt_and_orbitCard_dvd
       ∀ y : PuncturedMarkoffSurface (ZMod p),
         p ∣ (puncturedGammaOrbit y).ncard) :
     PuncturedMarkoffTransitiveAt p hp := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   obtain ⟨x, hx⟩ :=
     exists_orbitComplementCard_lt_prime_of_hasGiantOrbitAt
       p hp epsilon hepsilon hgiant
@@ -116,7 +116,7 @@ theorem eventually_puncturedMarkoffTransitiveAt_of_giantOrbit
   apply eventually_puncturedMarkoffTransitiveAt_of_giantOrbit_and_orbitCard_dvd
     epsilon hepsilon hgiant
   intro p hp hpThree
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   intro y
   exact prime_dvd_puncturedGammaOrbit_ncard p hpThree y
 

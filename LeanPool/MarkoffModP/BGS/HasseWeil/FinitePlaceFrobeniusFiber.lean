@@ -189,8 +189,8 @@ theorem finitePlaceUnderFiber_stabilizer_eq_decompositionGroup
     letI := finitePlaceUnderFiberGalAction K M L P
     MulAction.stabilizer Gal(L/M) Q =
       finitePlaceDecompositionGroup K M L Q.1 := by
-  letI := finiteIntegralClosureGalAction K M L
-  letI := finitePlaceUnderFiberGalAction K M L P
+  let := finiteIntegralClosureGalAction K M L
+  let := finitePlaceUnderFiberGalAction K M L P
   ext g
   change (g • Q = Q) ↔ g • Q.1.asIdeal = Q.1.asIdeal
   constructor
@@ -211,8 +211,8 @@ theorem infinityPlaceUnderFiber_stabilizer_eq_decompositionGroup
     letI := infinityPlaceUnderFiberGalAction K M L P
     MulAction.stabilizer Gal(L/M) Q =
       infinityPlaceDecompositionGroup K M L Q.1 := by
-  letI := infinityIntegralClosureGalAction K M L
-  letI := infinityPlaceUnderFiberGalAction K M L P
+  let := infinityIntegralClosureGalAction K M L
+  let := infinityPlaceUnderFiberGalAction K M L P
   ext g
   change (g • Q = Q) ↔ g • Q.1.1 = Q.1.1
   constructor

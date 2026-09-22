@@ -57,10 +57,10 @@ theorem finiteExtensionFinitePlace_residue_squareFrobenius_of_degree_one
     (hdegree : finiteExtensionPlaceDegree S L (.inl q) = 1) :
     ∀ z : q.asIdeal.ResidueField,
       z ^ (Fintype.card K) ^ 2 = z := by
-  letI : Finite q.asIdeal.ResidueField :=
+  let : Finite q.asIdeal.ResidueField :=
     finiteExtensionFinitePlace_residueField_finite (K := S) (L := L) q
-  letI : Fintype q.asIdeal.ResidueField := Fintype.ofFinite _
-  letI : Module.Finite S q.asIdeal.ResidueField := by
+  let : Fintype q.asIdeal.ResidueField := Fintype.ofFinite _
+  let : Module.Finite S q.asIdeal.ResidueField := by
     rw [Module.finite_def]
     exact ⟨Finset.univ, by simp⟩
   have hfinrank : Module.finrank S q.asIdeal.ResidueField = 1 := by

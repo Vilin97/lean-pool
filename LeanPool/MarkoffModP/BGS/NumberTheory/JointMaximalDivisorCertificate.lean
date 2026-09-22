@@ -46,14 +46,14 @@ The slightly looser `(n + 1)^2` form avoids any hidden square-root rounding. -/
 theorem publishedTerminalJointProductEnvelope_certificate :
     2 ^ 457 * (publishedTerminalReducedInteger + 1) ^ 2 ≤
       publishedTerminalJointProductEnvelope ^ 10 := by
-  native_decide
+  decide +kernel
 
 /-- The new envelope makes the paper's first-interval obstruction empty at
 the exact reduced integer that caused the published algorithm to stop. -/
 theorem publishedTerminalJointSquareEnvelope_succeeds :
     3 ^ 8 * publishedTerminalJointSquareEnvelope ^ 4 ≤
       32 * (publishedTerminalReducedInteger + 2) := by
-  native_decide
+  decide +kernel
 
 /-- In contrast, the paper's independent envelope `4C^2` fails at this same
 integer. This records that the improvement is structural, not a re-rounding
@@ -61,6 +61,6 @@ of the published computation. -/
 theorem publishedTerminalIndependentSquareEnvelope_fails :
     32 * (publishedTerminalReducedInteger + 2) <
       3 ^ 8 * (4 * publishedTerminalCentralCoefficient ^ 2) ^ 4 := by
-  native_decide
+  decide +kernel
 
 end BGS.NumberTheory

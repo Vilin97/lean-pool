@@ -90,7 +90,7 @@ private theorem finiteExtensionOnePointRiemannSpace_finrank_le_add_gap
     · subst v
       simp [D]
     · simp [D, Finsupp.single_eq_of_ne hv]
-  letI : Module.Finite K (finiteExtensionRiemannSpace K L D) :=
+  let : Module.Finite K (finiteExtensionRiemannSpace K L D) :=
     finiteExtensionRiemannSpace_effective_moduleFinite K L D hD
   have hinc := finiteExtensionRiemannSpace_natPlace_increment
     K L D hD P (M - N)
@@ -184,7 +184,7 @@ theorem exists_planeCurve_onePointStepanovAuxiliary_of_degree_one
                 u v s c) := by
   let hF : Irreducible F :=
     irreducible_of_irreducible_map_algebraicClosure habsolute
-  letI : IsDomain (PlaneCurveCoordinateRing F) :=
+  let : IsDomain (PlaneCurveCoordinateRing F) :=
     planeCurveCoordinateRing_isDomain hF
   let hx := firstCoordinate_transcendental hF
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
@@ -197,15 +197,15 @@ theorem exists_planeCurve_onePointStepanovAuxiliary_of_degree_one
   let ell := stepanovEll s
   let m := stepanovM genusBudget s
   let canonicalAlg : Algebra K L := inferInstance
-  letI : Algebra K L := canonicalAlg
+  let : Algebra K L := canonicalAlg
   let ratAlg : Algebra (RatFunc K) L :=
     planeCurveFirstCoordinateRatFuncAlgebra F hx
-  letI : Algebra (RatFunc K) L := ratAlg
-  letI : SMul (RatFunc K) L := ratAlg.toSMul
-  letI : Module (RatFunc K) L := ratAlg.toModule
-  letI : FiniteDimensional (RatFunc K) L :=
+  let : Algebra (RatFunc K) L := ratAlg
+  let : SMul (RatFunc K) L := ratAlg.toSMul
+  let : Module (RatFunc K) L := ratAlg.toModule
+  let : FiniteDimensional (RatFunc K) L :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc hF hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K) L :=
+  let : Algebra.IsSeparable (RatFunc K) L :=
     separable_planeCurveFunctionField_over_ratFunc hF hpartialSecond
   let inducedAlg : Algebra K L := planeStepanovConstantAlgebra K L
   have hinducedAlg : inducedAlg = canonicalAlg := by
@@ -218,10 +218,10 @@ theorem exists_planeCurve_onePointStepanovAuxiliary_of_degree_one
         K L _ _ canonicalAlg x hx)
       (Polynomial.C c)
     simpa using h
-  letI : Algebra K L := inducedAlg
-  letI : SMul K L := inducedAlg.toSMul
-  letI : Module K L := inducedAlg.toModule
-  letI : IsScalarTower K (RatFunc K) L :=
+  let : Algebra K L := inducedAlg
+  let : SMul K L := inducedAlg.toSMul
+  let : Module K L := inducedAlg.toModule
+  let : IsScalarTower K (RatFunc K) L :=
     IsScalarTower.of_algebraMap_eq' rfl
   have hconstantsCanonical :
       @algebraicClosure K L _ _ canonicalAlg = ⊥ := by

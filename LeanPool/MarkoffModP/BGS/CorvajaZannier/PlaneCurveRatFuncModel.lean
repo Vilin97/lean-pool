@@ -49,7 +49,7 @@ first coordinate of the plane curve. -/
     letI := planeCurveFirstCoordinateRatFuncAlgebra f hx
     algebraMap (RatFunc K) (PlaneCurveFunctionField f) RatFunc.X =
       planeCurveFunction f 0 := by
-  letI := planeCurveFirstCoordinateRatFuncAlgebra f hx
+  let := planeCurveFirstCoordinateRatFuncAlgebra f hx
   change ratFuncSpecialization (planeCurveFunction f 0) hx RatFunc.X = _
   simp [ratFuncSpecialization, RatFunc.algEquivOfTranscendental_X]
 
@@ -63,7 +63,7 @@ private theorem planeCurve_firstCoordinate_changeBase_commutes
       (RingEquiv.refl (PlaneCurveFunctionField f)).toRingHom.comp
         (algebraMap (FirstCoordinateSubfield f)
           (PlaneCurveFunctionField f)) := by
-  letI := planeCurveFirstCoordinateRatFuncAlgebra f hx
+  let := planeCurveFirstCoordinateRatFuncAlgebra f hx
   ext z
   simp [ratFuncSpecialization]
 
@@ -77,13 +77,13 @@ theorem finiteDimensional_planeCurveFunctionField_over_ratFunc
       (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
     letI := planeCurveFirstCoordinateRatFuncAlgebra f hx
     FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
-  letI : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : FiniteDimensional (FirstCoordinateSubfield f)
+  let : FiniteDimensional (FirstCoordinateSubfield f)
       (PlaneCurveFunctionField f) :=
     (finiteSeparable_over_firstCoordinate_of_irreducible
       hf hpartialSecond).1
@@ -102,13 +102,13 @@ theorem separable_planeCurveFunctionField_over_ratFunc
       (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
     letI := planeCurveFirstCoordinateRatFuncAlgebra f hx
     Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
-  letI : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : Algebra.IsSeparable (FirstCoordinateSubfield f)
+  let : Algebra.IsSeparable (FirstCoordinateSubfield f)
       (PlaneCurveFunctionField f) :=
     (finiteSeparable_over_firstCoordinate_of_irreducible
       hf hpartialSecond).2
@@ -129,11 +129,11 @@ theorem finrank_planeCurveFunctionField_over_ratFunc_eq_degreeOf_second
     letI := planeCurveFirstCoordinateRatFuncAlgebra f hx
     Module.finrank (RatFunc K) (PlaneCurveFunctionField f) =
       MvPolynomial.degreeOf 1 f := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
-  letI : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
   calc
     Module.finrank (RatFunc K) (PlaneCurveFunctionField f) =
@@ -164,7 +164,7 @@ second coordinate of the plane curve. -/
     letI := planeCurveSecondCoordinateRatFuncAlgebra f hy
     algebraMap (RatFunc K) (PlaneCurveFunctionField f) RatFunc.X =
       planeCurveFunction f 1 := by
-  letI := planeCurveSecondCoordinateRatFuncAlgebra f hy
+  let := planeCurveSecondCoordinateRatFuncAlgebra f hy
   change ratFuncSpecialization (planeCurveFunction f 1) hy RatFunc.X = _
   simp [ratFuncSpecialization, RatFunc.algEquivOfTranscendental_X]
 
@@ -178,7 +178,7 @@ private theorem planeCurve_secondCoordinate_changeBase_commutes
       (RingEquiv.refl (PlaneCurveFunctionField f)).toRingHom.comp
         (algebraMap (SecondCoordinateSubfield f)
           (PlaneCurveFunctionField f)) := by
-  letI := planeCurveSecondCoordinateRatFuncAlgebra f hy
+  let := planeCurveSecondCoordinateRatFuncAlgebra f hy
   ext z
   change ratFuncSpecialization (planeCurveFunction f 1) hy
       ((RatFunc.algEquivOfTranscendental
@@ -198,13 +198,13 @@ theorem finiteDimensional_planeCurveFunctionField_over_secondRatFunc
       (degreeOf_first_pos_of_pderiv_ne_zero hpartialFirst)
     letI := planeCurveSecondCoordinateRatFuncAlgebra f hy
     FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hy := secondCoordinate_transcendental hf
     (degreeOf_first_pos_of_pderiv_ne_zero hpartialFirst)
-  letI : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
     planeCurveSecondCoordinateRatFuncAlgebra f hy
-  letI : FiniteDimensional (SecondCoordinateSubfield f)
+  let : FiniteDimensional (SecondCoordinateSubfield f)
       (PlaneCurveFunctionField f) :=
     (finiteSeparable_over_secondCoordinate_of_irreducible
       hf hpartialFirst).1
@@ -223,13 +223,13 @@ theorem separable_planeCurveFunctionField_over_secondRatFunc
       (degreeOf_first_pos_of_pderiv_ne_zero hpartialFirst)
     letI := planeCurveSecondCoordinateRatFuncAlgebra f hy
     Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hy := secondCoordinate_transcendental hf
     (degreeOf_first_pos_of_pderiv_ne_zero hpartialFirst)
-  letI : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
     planeCurveSecondCoordinateRatFuncAlgebra f hy
-  letI : Algebra.IsSeparable (SecondCoordinateSubfield f)
+  let : Algebra.IsSeparable (SecondCoordinateSubfield f)
       (PlaneCurveFunctionField f) :=
     (finiteSeparable_over_secondCoordinate_of_irreducible
       hf hpartialFirst).2
@@ -250,11 +250,11 @@ theorem finrank_planeCurveFunctionField_over_secondRatFunc_eq_degreeOf_first
     letI := planeCurveSecondCoordinateRatFuncAlgebra f hy
     Module.finrank (RatFunc K) (PlaneCurveFunctionField f) =
       MvPolynomial.degreeOf 0 f := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hy := secondCoordinate_transcendental hf
     (degreeOf_first_pos_of_pderiv_ne_zero hpartialFirst)
-  letI : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
+  let : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
     planeCurveSecondCoordinateRatFuncAlgebra f hy
   calc
     Module.finrank (RatFunc K) (PlaneCurveFunctionField f) =

@@ -37,16 +37,16 @@ theorem finrank_poweredCoordinateImageField_le_supportDet_isAlgClosed
     Module.finrank (PoweredCoordinateImageField f m n)
         (PlaneCurveFunctionField f) ≤
       (planeCurveSupportDifferenceDet r s t).natAbs := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let L := PlaneCurveFunctionField f
   let B := PoweredCoordinateImageField f m n
   let x : L := planeCurveFunction f 0
   let y : L := planeCurveFunction f 1
-  letI : FiniteDimensional B L :=
+  let : FiniteDimensional B L :=
     finiteDimensional_poweredCoordinateImageField
       hf hpartialSecond m n hm
-  letI : IsGalois B L :=
+  let : IsGalois B L :=
     isGalois_over_poweredCoordinateImageField
       hf hpartialFirst hpartialSecond m n hm hn hmF hnF
   have hbasic :=
@@ -64,7 +64,7 @@ theorem finrank_poweredCoordinateImageField_le_supportDet_isAlgClosed
   let d : ℤ := (t 1 : ℤ) - (r 1 : ℤ)
   have hdet' : a * d - b * c ≠ 0 := by
     simpa [a, b, c, d, planeCurveSupportDifferenceDet] using hdet
-  letI : Finite (torusCharacterKernel F a b c d) :=
+  let : Finite (torusCharacterKernel F a b c d) :=
     finite_torusCharacterKernel_of_det_ne_zero a b c d hdet'
   let supportToKernel : planeCurveSupportCharacterStabilizer F f →
       torusCharacterKernel F a b c d := fun z =>
@@ -75,7 +75,7 @@ theorem finrank_poweredCoordinateImageField_le_supportDet_isAlgClosed
     apply Subtype.ext
     exact congrArg
       (fun u : torusCharacterKernel F a b c d => u.1) hzw
-  letI : Finite (planeCurveSupportCharacterStabilizer F f) :=
+  let : Finite (planeCurveSupportCharacterStabilizer F f) :=
     Finite.of_injective supportToKernel supportToKernel_injective
   have hscale (σ : L ≃ₐ[B] L) :=
     exists_support_stabilizer_scaling_of_poweredImage_aut
@@ -134,7 +134,7 @@ theorem finrank_poweredImageOverFirst_le_supportDet_isAlgClosed
     Module.finrank (PoweredImageOverFirst f m n)
         (PlaneCurveFunctionField f) ≤
       (planeCurveSupportDifferenceDet r s t).natAbs := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   rw [finrank_poweredImageOverFirst_eq_imageField]
   exact finrank_poweredCoordinateImageField_le_supportDet_isAlgClosed
@@ -166,9 +166,9 @@ theorem finrank_poweredImageOverFirst_le_supportDet_of_nonzero_natCast
   let hf : Irreducible f :=
     irreducible_of_irreducible_map_algebraicClosure habsolute
   have hfA : Irreducible fA := habsolute
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : IsDomain (PlaneCurveCoordinateRing fA) :=
+  let : IsDomain (PlaneCurveCoordinateRing fA) :=
     planeCurveCoordinateRing_isDomain hfA
   have hpartialFirstA : MvPolynomial.pderiv 0 fA ≠ 0 := by
     rw [MvPolynomial.pderiv_map]

@@ -32,9 +32,9 @@ theorem poweredCoordinateImageRelation_natDegree_mul_imageIndex
           (PlaneCurveFunctionField f) =
       Module.finrank (FirstPoweredCoordinateSubfield f m)
         (PlaneCurveFunctionField f) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : FiniteDimensional (FirstPoweredCoordinateSubfield f m)
+  let : FiniteDimensional (FirstPoweredCoordinateSubfield f m)
       (PlaneCurveFunctionField f) :=
     finiteDimensional_over_firstPoweredCoordinate hf hpartialSecond m hm
   rw [poweredCoordinateImageRelation_natDegree_eq_finrank
@@ -64,9 +64,9 @@ theorem poweredCoordinateImageRelation_transpose_natDegree_mul_imageIndex
           (PlaneCurveFunctionField f) =
       Module.finrank (SecondPoweredCoordinateSubfield f n)
         (PlaneCurveFunctionField f) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : FiniteDimensional (SecondPoweredCoordinateSubfield f n)
+  let : FiniteDimensional (SecondPoweredCoordinateSubfield f n)
       (PlaneCurveFunctionField f) :=
     finiteDimensional_over_secondPoweredCoordinate hf hpartialFirst n hn
   rw [poweredCoordinateImageRelation_transpose_natDegree_eq_finrank

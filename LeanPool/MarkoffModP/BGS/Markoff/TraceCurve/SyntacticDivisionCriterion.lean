@@ -171,19 +171,19 @@ theorem splitTraceCoverPolynomial_irreducible_of_laurentInjective
       (splitTraceLaurentToKummerTop sigma hsigma e d heOdd hdOdd hde)) :
     Irreducible (splitTraceCoverPolynomial (1 : K) sigma d e) := by
   let hBaseIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
   let hEtaIrred := splitTraceEtaKummerPolynomial_irreducible' sigma hsigma e heOdd
-  letI : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
+  let : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
   let hXiIrred :=
     splitTraceXiKummerPolynomial_irreducible sigma hsigma e d heOdd hdOdd hde
-  letI : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
-  letI : IsDomain (SplitTraceXiFunctionField K sigma e d) :=
+  let : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
+  let : IsDomain (SplitTraceXiFunctionField K sigma e d) :=
     AdjoinRoot.isDomain_of_prime hXiIrred.prime
   let I : Ideal (MvPolynomial (Fin 2) K) :=
     Ideal.span {splitTraceCoverPolynomial (1 : K) sigma d e}
   have hAffine := splitTraceAffineToKummerTop_injective_of_laurentInjective
     sigma hsigma e d heOdd hdOdd hde hLaurent
-  letI : IsDomain (SplitTraceAffineCoordinateRing K sigma d e) :=
+  let : IsDomain (SplitTraceAffineCoordinateRing K sigma d e) :=
     hAffine.isDomain
       (splitTraceAffineToKummerTop sigma hsigma e d heOdd hdOdd hde).toRingHom
   have hprimeIdeal : I.IsPrime := by
@@ -205,13 +205,13 @@ theorem splitTracePolynomialSyntacticNormalForm_division_iff_laurentInjective
       Function.Injective
         (splitTraceLaurentToKummerTop sigma hsigma e d heOdd hdOdd hde) := by
   let hBaseIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
-  letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
+  let : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hBaseIrred⟩
   let hEtaIrred := splitTraceEtaKummerPolynomial_irreducible' sigma hsigma e heOdd
-  letI : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
+  let : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
   let hXiIrred :=
     splitTraceXiKummerPolynomial_irreducible sigma hsigma e d heOdd hdOdd hde
-  letI : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
-  letI : IsDomain (SplitTraceXiFunctionField K sigma e d) :=
+  let : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
+  let : IsDomain (SplitTraceXiFunctionField K sigma e d) :=
     AdjoinRoot.isDomain_of_prime hXiIrred.prime
   constructor
   · intro hdivision

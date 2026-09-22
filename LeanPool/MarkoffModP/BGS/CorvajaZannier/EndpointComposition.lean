@@ -70,7 +70,7 @@ theorem poweredTorsionFunctions_ne_zero_of_isCorvajaZannierPlaneCurve
       planeCurveFunction f 1 ^ secondOrder - 1 ≠ 0 := by
   let hf : Irreducible f :=
     irreducible_of_irreducible_map_algebraicClosure hcurve.1
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   have hxTrans : Transcendental K (planeCurveFunction f 0) :=
     firstCoordinate_transcendental hf
@@ -107,7 +107,7 @@ theorem poweredCoordinateImageRelation_spec_of_isCorvajaZannierPlaneCurve
       ∀ i, (g.coeff i).natDegree ≤ secondOrder * firstDegree := by
   let hf : Irreducible f :=
     irreducible_of_irreducible_map_algebraicClosure hcurve.1
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let g := poweredCoordinateImageRelation hf hcurve.2.2.2
     firstOrder hfirstOrder secondOrder

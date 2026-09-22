@@ -68,9 +68,9 @@ private theorem exactConstantExtensionConstantQuotient_eq_one_imp_eq_one
     letI : Algebra N (ExactConstantExtension C N S) :=
       exactConstantExtensionBaseAlgebra C N N S
     g = 1 := by
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
-  letI : Algebra N (ExactConstantExtension C N S) :=
+  let : Algebra N (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseAlgebra C N N S
   have hker : g ∈
       (exactConstantExtensionConstantQuotient C N N S hExact).ker :=
@@ -168,37 +168,37 @@ theorem exactConstantExtensionFinitePlace_ramificationIdx_eq_one
       exactConstantExtensionBaseTower C (RatFunc C) N S
     finitePlaceRelativeRamificationIdx C N
       (ExactConstantExtension C N S) Q = 1 := by
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-  letI : SMul (RatFunc C) (ExactConstantExtension C N S) :=
+  let : SMul (RatFunc C) (ExactConstantExtension C N S) :=
     Algebra.toSMul
-  letI : Module (RatFunc C) (ExactConstantExtension C N S) :=
+  let : Module (RatFunc C) (ExactConstantExtension C N S) :=
     Algebra.toModule
-  letI : FiniteDimensional (RatFunc C)
+  let : FiniteDimensional (RatFunc C)
       (ExactConstantExtension C N S) :=
     finiteDimensional_exactConstantExtension_over_baseRatFunc
       C S N hExact
-  letI : Algebra.IsSeparable (RatFunc C)
+  let : Algebra.IsSeparable (RatFunc C)
       (ExactConstantExtension C N S) :=
     isSeparable_exactConstantExtension_over_baseRatFunc C S N hExact
-  letI : Algebra N (ExactConstantExtension C N S) :=
+  let : Algebra N (ExactConstantExtension C N S) :=
     exactConstantExtensionAlgebra C N S
-  letI : SMul N (ExactConstantExtension C N S) :=
+  let : SMul N (ExactConstantExtension C N S) :=
     Algebra.toSMul
-  letI : Module N (ExactConstantExtension C N S) :=
+  let : Module N (ExactConstantExtension C N S) :=
     Algebra.toModule
-  letI : IsScalarTower (RatFunc C) N
+  let : IsScalarTower (RatFunc C) N
       (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseTower C (RatFunc C) N S
-  letI : IsGalois N (ExactConstantExtension C N S) :=
+  let : IsGalois N (ExactConstantExtension C N S) :=
     exactConstantExtension_isGalois C N N S hExact
-  letI : Algebra S (RatFuncFiniteIntegralClosure C
+  let : Algebra S (RatFuncFiniteIntegralClosure C
       (ExactConstantExtension C N S)) :=
     exactConstantExtensionFiniteIntegralClosureConstantAlgebra
       C N S hExact
-  letI : MulSemiringAction
+  let : MulSemiringAction
       (ExactConstantExtension C N S ≃ₐ[N]
         ExactConstantExtension C N S)
       (RatFuncFiniteIntegralClosure C
@@ -234,7 +234,7 @@ theorem exactConstantExtensionFinitePlace_ramificationIdx_eq_one
     have hgOne := inertiaElement_eq_one g
     have hhOne := inertiaElement_eq_one h
     exact hgOne.trans hhOne.symm
-  letI := hsubsingleton
+  let := hsubsingleton
   exact Nat.card_unique
 
 /-- A downstairs finite place of degree `d` has exactly
@@ -292,43 +292,43 @@ theorem exactConstantExtensionFinitePlace_fiber_card_eq_gcd
         (finiteExtensionPlaceDegree C N
           (.inl (exactConstantExtensionDownstairsFinitePlace
             C S N hExact q))) := by
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-  letI : SMul (RatFunc C) (ExactConstantExtension C N S) :=
+  let : SMul (RatFunc C) (ExactConstantExtension C N S) :=
     Algebra.toSMul
-  letI : Module (RatFunc C) (ExactConstantExtension C N S) :=
+  let : Module (RatFunc C) (ExactConstantExtension C N S) :=
     Algebra.toModule
-  letI : FiniteDimensional (RatFunc C)
+  let : FiniteDimensional (RatFunc C)
       (ExactConstantExtension C N S) :=
     finiteDimensional_exactConstantExtension_over_baseRatFunc
       C S N hExact
-  letI : Algebra.IsSeparable (RatFunc C)
+  let : Algebra.IsSeparable (RatFunc C)
       (ExactConstantExtension C N S) :=
     isSeparable_exactConstantExtension_over_baseRatFunc C S N hExact
-  letI : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
     ratFuncExactConstantExtensionAlgebra C S N hExact
-  letI : SMul (RatFunc S) (ExactConstantExtension C N S) :=
+  let : SMul (RatFunc S) (ExactConstantExtension C N S) :=
     Algebra.toSMul
-  letI : Module (RatFunc S) (ExactConstantExtension C N S) :=
+  let : Module (RatFunc S) (ExactConstantExtension C N S) :=
     Algebra.toModule
-  letI : FiniteDimensional (RatFunc S)
+  let : FiniteDimensional (RatFunc S)
       (ExactConstantExtension C N S) :=
     finiteDimensional_over_extendedRatFunc C S N hExact
-  letI : Algebra.IsSeparable (RatFunc S)
+  let : Algebra.IsSeparable (RatFunc S)
       (ExactConstantExtension C N S) :=
     isSeparable_over_extendedRatFunc C S N hExact
-  letI : Algebra N (ExactConstantExtension C N S) :=
+  let : Algebra N (ExactConstantExtension C N S) :=
     exactConstantExtensionAlgebra C N S
-  letI : SMul N (ExactConstantExtension C N S) :=
+  let : SMul N (ExactConstantExtension C N S) :=
     Algebra.toSMul
-  letI : Module N (ExactConstantExtension C N S) :=
+  let : Module N (ExactConstantExtension C N S) :=
     Algebra.toModule
-  letI : IsScalarTower (RatFunc C) N
+  let : IsScalarTower (RatFunc C) N
       (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseTower C (RatFunc C) N S
-  letI : IsGalois N (ExactConstantExtension C N S) :=
+  let : IsGalois N (ExactConstantExtension C N S) :=
     exactConstantExtension_isGalois C N N S hExact
   let P := exactConstantExtensionDownstairsFinitePlace C S N hExact q
   let Q := exactConstantExtensionCompatibleBaseFinitePlace C S N hExact q
@@ -541,30 +541,30 @@ theorem exactConstantExtensionPresentedFinitePlaceFiber_natCard_eq_gcd
         (finiteExtensionPlaceDegree C N
           (.inl (exactConstantExtensionDownstairsFinitePlace
             C S N hExact q))) := by
-  letI : Field (ExactConstantExtension C N S) :=
+  let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-  letI : SMul (RatFunc C) (ExactConstantExtension C N S) :=
+  let : SMul (RatFunc C) (ExactConstantExtension C N S) :=
     Algebra.toSMul
-  letI : Module (RatFunc C) (ExactConstantExtension C N S) :=
+  let : Module (RatFunc C) (ExactConstantExtension C N S) :=
     Algebra.toModule
-  letI : FiniteDimensional (RatFunc C)
+  let : FiniteDimensional (RatFunc C)
       (ExactConstantExtension C N S) :=
     finiteDimensional_exactConstantExtension_over_baseRatFunc
       C S N hExact
-  letI : Algebra.IsSeparable (RatFunc C)
+  let : Algebra.IsSeparable (RatFunc C)
       (ExactConstantExtension C N S) :=
     isSeparable_exactConstantExtension_over_baseRatFunc C S N hExact
-  letI : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
+  let : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
     ratFuncExactConstantExtensionAlgebra C S N hExact
-  letI : Algebra N (ExactConstantExtension C N S) :=
+  let : Algebra N (ExactConstantExtension C N S) :=
     exactConstantExtensionAlgebra C N S
-  letI : SMul N (ExactConstantExtension C N S) :=
+  let : SMul N (ExactConstantExtension C N S) :=
     Algebra.toSMul
-  letI : Module N (ExactConstantExtension C N S) :=
+  let : Module N (ExactConstantExtension C N S) :=
     Algebra.toModule
-  letI : IsScalarTower (RatFunc C) N
+  let : IsScalarTower (RatFunc C) N
       (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseTower C (RatFunc C) N S
   let P := exactConstantExtensionDownstairsFinitePlace C S N hExact q

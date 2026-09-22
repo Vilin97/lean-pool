@@ -60,7 +60,7 @@ theorem exists_residue_common_primitiveRoot_powers
     ∃ ω : OpeningResidueClosure p, ∃ a₁ a₂ a₃ : ℕ,
       IsPrimitiveRoot ω n ∧ a₁ < n ∧ a₂ < n ∧ a₃ < n ∧
       ω ^ a₁ = w₁ ∧ ω ^ a₂ = w₂ ∧ ω ^ a₃ = w₃ := by
-  letI : NeZero (n : OpeningResidueClosure p) :=
+  let : NeZero (n : OpeningResidueClosure p) :=
     ⟨residueClosure_natCast_ne_zero_of_coprime p n hcoprime⟩
   obtain ⟨ω, hω⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (OpeningResidueClosure p) n
   obtain ⟨a₁, ha₁lt, ha₁⟩ := hω.eq_pow_of_pow_eq_one hw₁
@@ -78,8 +78,8 @@ noncomputable def openingCyclotomicRoot (n : ℕ) [NeZero n] : OpeningCyclotomic
 /-- The canonical characteristic-zero root has exact order `n`. -/
 theorem openingCyclotomicRoot_isPrimitive (n : ℕ) [NeZero n] :
     IsPrimitiveRoot (openingCyclotomicRoot n) n := by
-  letI : NeZero (n : ℚ) := ⟨neZero_ratCast n⟩
-  letI : IsCyclotomicExtension {n} ℚ (OpeningCyclotomicField n) :=
+  let : NeZero (n : ℚ) := ⟨neZero_ratCast n⟩
+  let : IsCyclotomicExtension {n} ℚ (OpeningCyclotomicField n) :=
     CyclotomicField.isCyclotomicExtension n ℚ
   exact IsCyclotomicExtension.zeta_spec n ℚ (OpeningCyclotomicField n)
 
@@ -99,8 +99,8 @@ noncomputable def openingCyclotomicIntegralPowerBasis (n : ℕ) [NeZero n] :
 @[simp]
 theorem openingCyclotomicIntegralPowerBasis_gen (n : ℕ) [NeZero n] :
     (openingCyclotomicIntegralPowerBasis n).gen = openingCyclotomicIntegerRoot n := by
-  letI : NeZero (n : ℚ) := ⟨neZero_ratCast n⟩
-  letI : IsCyclotomicExtension {n} ℚ (OpeningCyclotomicField n) :=
+  let : NeZero (n : ℚ) := ⟨neZero_ratCast n⟩
+  let : IsCyclotomicExtension {n} ℚ (OpeningCyclotomicField n) :=
     CyclotomicField.isCyclotomicExtension n ℚ
   exact (openingCyclotomicRoot_isPrimitive n).integralPowerBasis_gen
 
@@ -108,13 +108,13 @@ private theorem primitiveRoot_isRoot_integralPowerBasis_minpoly
     (p n : ℕ) [Fact p.Prime] [NeZero n] (_hcoprime : Nat.Coprime p n)
     (ω : OpeningResidueClosure p) (hω : IsPrimitiveRoot ω n) :
     aeval ω (minpoly ℤ (openingCyclotomicIntegralPowerBasis n).gen) = 0 := by
-  letI : NeZero (n : OpeningResidueClosure p) :=
+  let : NeZero (n : OpeningResidueClosure p) :=
     ⟨residueClosure_natCast_ne_zero_of_coprime p n _hcoprime⟩
   have hrootCyclotomic : aeval ω (cyclotomic n ℤ) = 0 := by
     rw [aeval_def, ← eval_map, map_cyclotomic]
     exact hω.isRoot_cyclotomic (NeZero.pos n)
-  letI : NeZero (n : ℚ) := ⟨neZero_ratCast n⟩
-  letI : IsCyclotomicExtension {n} ℚ (OpeningCyclotomicField n) :=
+  let : NeZero (n : ℚ) := ⟨neZero_ratCast n⟩
+  let : IsCyclotomicExtension {n} ℚ (OpeningCyclotomicField n) :=
     CyclotomicField.isCyclotomicExtension n ℚ
   rw [openingCyclotomicIntegralPowerBasis_gen]
   rw [← NumberField.RingOfIntegers.minpoly_coe]

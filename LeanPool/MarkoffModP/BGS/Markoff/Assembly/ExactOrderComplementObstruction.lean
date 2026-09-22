@@ -47,7 +47,7 @@ theorem exists_exactOrderRootSum_obstruction_of_not_samePuncturedComponent
       8 * p ≤ (combinedTruncatedOrderTotientSum p d) ^ 2 := by
   classical
   have hpTwo : p ≠ 2 := by omega
-  letI : Fintype (quadraticFiniteField p) := Fintype.ofFinite _
+  let : Fintype (quadraticFiniteField p) := Fintype.ofFinite _
   let bad := puncturedComponentComplementFinset p c
   have hxBad : x ∈ bad := by
     simpa [bad] using hcx

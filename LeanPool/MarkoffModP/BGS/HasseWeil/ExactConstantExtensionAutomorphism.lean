@@ -62,8 +62,8 @@ theorem exactConstantExtensionBaseTower :
     letI := exactConstantExtensionBaseAlgebra C L N S
     letI := exactConstantExtensionAlgebra C N S
     IsScalarTower L N (ExactConstantExtension C N S) := by
-  letI := exactConstantExtensionBaseAlgebra C L N S
-  letI := exactConstantExtensionAlgebra C N S
+  let := exactConstantExtensionBaseAlgebra C L N S
+  let := exactConstantExtensionAlgebra C N S
   exact IsScalarTower.of_algebraMap_eq' rfl
 
 end Algebra
@@ -165,7 +165,7 @@ theorem exactConstantExtension_constant_function_commute
     Commute
       (exactConstantExtensionConstantAutHom C L N S σ)
       (exactConstantExtensionFunctionAutHom C L N S g) := by
-  letI := exactConstantExtensionBaseAlgebra C L N S
+  let := exactConstantExtensionBaseAlgebra C L N S
   rw [Commute]
   apply AlgEquiv.ext
   intro z
@@ -194,7 +194,7 @@ noncomputable def exactConstantExtensionCombinedAutHom :
 theorem exactConstantExtensionCombinedAutHom_injective :
     letI := exactConstantExtensionBaseAlgebra C L N S
     Function.Injective (exactConstantExtensionCombinedAutHom C L N S) := by
-  letI := exactConstantExtensionBaseAlgebra C L N S
+  let := exactConstantExtensionBaseAlgebra C L N S
   intro p q hpq
   apply Prod.ext
   · ext s
@@ -245,9 +245,9 @@ theorem exactConstantExtension_finrank_over_base :
     letI := exactConstantExtensionBaseAlgebra C L N S
     Module.finrank L (ExactConstantExtension C N S) =
       Module.finrank L N * Module.finrank C S := by
-  letI := exactConstantExtensionBaseAlgebra C L N S
-  letI := exactConstantExtensionAlgebra C N S
-  letI := exactConstantExtensionBaseTower C L N S
+  let := exactConstantExtensionBaseAlgebra C L N S
+  let := exactConstantExtensionAlgebra C N S
+  let := exactConstantExtensionBaseTower C L N S
   change Module.finrank L (S ⊗[C] N) =
     Module.finrank L N * Module.finrank C S
   rw [← Module.finrank_mul_finrank L N (ExactConstantExtension C N S),
@@ -259,14 +259,14 @@ theorem exactConstantExtension_isGalois
     letI := exactConstantExtensionField C N S hExact
     letI := exactConstantExtensionBaseAlgebra C L N S
     IsGalois L (ExactConstantExtension C N S) := by
-  letI := exactConstantExtensionField C N S hExact
-  letI := exactConstantExtensionBaseAlgebra C L N S
-  letI := exactConstantExtensionAlgebra C N S
-  letI := exactConstantExtensionBaseTower C L N S
+  let := exactConstantExtensionField C N S hExact
+  let := exactConstantExtensionBaseAlgebra C L N S
+  let := exactConstantExtensionAlgebra C N S
+  let := exactConstantExtensionBaseTower C L N S
   let e := exactConstantExtensionLinearEquiv C N S
-  letI : Module.Finite N (N ⊗[C] S) := Module.Finite.base_change C N S
-  letI : Module.Finite N (ExactConstantExtension C N S) := Module.Finite.equiv e
-  letI : Module.Finite L (ExactConstantExtension C N S) :=
+  let : Module.Finite N (N ⊗[C] S) := Module.Finite.base_change C N S
+  let : Module.Finite N (ExactConstantExtension C N S) := Module.Finite.equiv e
+  let : Module.Finite L (ExactConstantExtension C N S) :=
     Module.Finite.trans N (ExactConstantExtension C N S)
   apply IsGalois.of_card_aut_eq_finrank
   apply Nat.le_antisymm

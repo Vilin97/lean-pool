@@ -237,7 +237,7 @@ local instance finiteFieldInfinityDifferentBasePolynomialCoefficientTower :
 
 local instance finiteFieldInfinityDifferentCoefficientPolynomialModuleFinite :
     Module.Finite C[X] S[X] := by
-  letI : Module.Finite C[X] (C[X] ⊗[C] S) :=
+  let : Module.Finite C[X] (C[X] ⊗[C] S) :=
     Module.Finite.base_change C C[X] S
   exact Module.Finite.equiv
     (Algebra.IsPushout.equiv C C[X] S S[X]).toLinearEquiv
@@ -246,11 +246,11 @@ local instance finiteFieldInfinityDifferentCoefficientPolynomialModuleFinite :
 theorem ratFuncInfinityIntegers_coefficient_moduleFinite :
     Module.Finite (RatFuncInfinityIntegers C)
       (RatFuncInfinityIntegers S) := by
-  letI : IsLocalization
+  let : IsLocalization
       (Ideal.span ({Polynomial.X} : Set C[X])).primeCompl
       (RatFuncInfinityIntegers C) :=
     ratFuncInfinityIntegers_isLocalization_reciprocal C
-  letI : IsLocalization
+  let : IsLocalization
       (Algebra.algebraMapSubmonoid S[X]
         (Ideal.span ({Polynomial.X} : Set C[X])).primeCompl)
       (RatFuncInfinityIntegers S) :=
@@ -274,22 +274,22 @@ unramified. -/
 theorem ratFuncInfinityIntegers_coefficient_formallyUnramified :
     Algebra.FormallyUnramified (RatFuncInfinityIntegers C)
       (RatFuncInfinityIntegers S) := by
-  letI : IsLocalization
+  let : IsLocalization
       (Ideal.span ({Polynomial.X} : Set C[X])).primeCompl
       (RatFuncInfinityIntegers C) :=
     ratFuncInfinityIntegers_isLocalization_reciprocal C
-  letI : IsLocalization
+  let : IsLocalization
       (Algebra.algebraMapSubmonoid S[X]
         (Ideal.span ({Polynomial.X} : Set C[X])).primeCompl)
       (RatFuncInfinityIntegers S) :=
     ratFuncInfinityIntegers_isLocalization_coefficientPrimeCompl C S
-  letI : IsLocalization
+  let : IsLocalization
       (Submonoid.map (algebraMap C[X] S[X])
         (Ideal.span ({Polynomial.X} : Set C[X])).primeCompl)
       (RatFuncInfinityIntegers S) := by
     simpa only [Algebra.algebraMapSubmonoid] using
       ratFuncInfinityIntegers_isLocalization_coefficientPrimeCompl C S
-  letI : Algebra.FormallyUnramified C[X] S[X] :=
+  let : Algebra.FormallyUnramified C[X] S[X] :=
     coefficientPolynomial_formallyUnramified C S
   exact Algebra.FormallyUnramified.localization_map
     (R := C[X]) (S := S[X])
@@ -304,31 +304,31 @@ theorem ratFuncInfinityIntegers_coefficient_differentIdeal_eq_top :
       (RatFuncInfinityIntegers S) = ⊤ := by
   let A := RatFuncInfinityIntegers C
   let B := RatFuncInfinityIntegers S
-  letI : Algebra.FormallyUnramified A B :=
+  let : Algebra.FormallyUnramified A B :=
     ratFuncInfinityIntegers_coefficient_formallyUnramified C S
-  letI : IsIntegralClosure B A (FractionRing B) :=
+  let : IsIntegralClosure B A (FractionRing B) :=
     IsIntegralClosure.of_isIntegrallyClosed B A (FractionRing B)
-  letI : Algebra.IsAlgebraic (FractionRing A) (FractionRing B) :=
+  let : Algebra.IsAlgebraic (FractionRing A) (FractionRing B) :=
     isAlgebraic_of_isFractionRing A B ..
-  letI : IsLocalization
+  let : IsLocalization
       (Algebra.algebraMapSubmonoid B A⁰) (FractionRing B) :=
     IsIntegralClosure.isLocalization A (FractionRing A)
       (FractionRing B) B
-  letI : FiniteDimensional (FractionRing A) (FractionRing B) :=
+  let : FiniteDimensional (FractionRing A) (FractionRing B) :=
     Module.Finite.of_isLocalization A B A⁰
-  letI : Algebra.FormallyUnramified B (FractionRing B) :=
+  let : Algebra.FormallyUnramified B (FractionRing B) :=
     Algebra.FormallyUnramified.of_isLocalization B⁰
-  letI : Algebra.FormallyUnramified A (FractionRing B) :=
+  let : Algebra.FormallyUnramified A (FractionRing B) :=
     Algebra.FormallyUnramified.comp A B (FractionRing B)
-  letI : Algebra.FormallyUnramified (FractionRing A) (FractionRing B) :=
+  let : Algebra.FormallyUnramified (FractionRing A) (FractionRing B) :=
     Algebra.FormallyUnramified.localization_base A⁰
-  letI : Algebra.IsSeparable (FractionRing A) (FractionRing B) :=
+  let : Algebra.IsSeparable (FractionRing A) (FractionRing B) :=
     Algebra.FormallyUnramified.isSeparable
       (FractionRing A) (FractionRing B)
   by_contra htop
   obtain ⟨P, hPmax, hdiffP⟩ :=
     Ideal.exists_le_maximal (differentIdeal A B) htop
-  letI : P.IsPrime := hPmax.isPrime
+  let : P.IsPrime := hPmax.isPrime
   have hunram : Algebra.IsUnramifiedAt A P := by
     exact Algebra.formallyUnramified_iff_forall.mp
       (show Algebra.FormallyUnramified A B from inferInstance)

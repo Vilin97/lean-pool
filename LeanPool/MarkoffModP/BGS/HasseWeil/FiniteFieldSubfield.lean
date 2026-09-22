@@ -37,10 +37,10 @@ theorem finiteField_fieldRange_le_of_finrank_dvd
     (f : A →ₐ[C] Ω) (g : B →ₐ[C] Ω)
     (hdiv : Module.finrank C A ∣ Module.finrank C B) :
     f.fieldRange ≤ g.fieldRange := by
-  letI : Fintype C := Fintype.ofFinite C
-  letI : Fintype A := Fintype.ofFinite A
-  letI : Fintype B := Fintype.ofFinite B
-  letI : Fintype Ω := Fintype.ofFinite Ω
+  let : Fintype C := Fintype.ofFinite C
+  let : Fintype A := Fintype.ofFinite A
+  let : Fintype B := Fintype.ofFinite B
+  let : Fintype Ω := Fintype.ofFinite Ω
   classical
   let p : Ω[X] := X ^ Fintype.card B - X
   have hcardB : 1 < Fintype.card B := Fintype.one_lt_card

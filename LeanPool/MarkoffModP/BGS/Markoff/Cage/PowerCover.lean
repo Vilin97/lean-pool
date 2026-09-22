@@ -253,7 +253,7 @@ theorem natCard_cagePulledRootPair_eq_mul_canonicalPowerRange
   have hdCard : d ∣ Nat.card (ZMod p)ˣ := by
     rw [hcard]
     exact hd
-  letI : Finite (CageMiddleWitnessPair p .first .second xi eta) :=
+  let : Finite (CageMiddleWitnessPair p .first .second xi eta) :=
     Finite.of_injective Subtype.val Subtype.val_injective
   calc
     Nat.card (CagePulledRootPair p xi eta d) =

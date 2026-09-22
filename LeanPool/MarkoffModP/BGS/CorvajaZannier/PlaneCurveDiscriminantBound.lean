@@ -64,7 +64,7 @@ theorem natDegree_sylvesterDeriv_apply_bottom
     (F : Polynomial (Polynomial K)) (hF : 0 < F.natDegree)
     (j : Fin (F.natDegree - 1 + F.natDegree)) :
     (F.sylvesterDeriv ⟨2 * F.natDegree - 2, by omega⟩ j).natDegree = 0 := by
-  rw [Polynomial.sylvesterDeriv, dif_neg hF.ne']
+  rw [Polynomial.sylvesterDeriv, dite_eq_right hF.ne']
   rw [Matrix.updateRow_self]
   split_ifs <;> simp
 

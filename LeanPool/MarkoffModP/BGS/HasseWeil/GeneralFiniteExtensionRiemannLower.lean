@@ -98,7 +98,7 @@ theorem infinitySupported_riemann_lower_of_monomial
   have hsplit : E + A = D := by
     dsimp only [A]
     abel
-  letI : Module.Finite K (finiteExtensionRiemannSpace K L E) :=
+  let : Module.Finite K (finiteExtensionRiemannSpace K L E) :=
     finiteExtensionRiemannSpace_effective_moduleFinite K L E hE
   have hstrip :=
     finiteExtensionRiemannSpace_add_effective K L E A hE hA
@@ -269,7 +269,7 @@ theorem finitePlace_riemann_lower_of_primitive
       · subst v
         simp [Dq]
       · simp [Dq, Finsupp.single_eq_of_ne hv]
-    letI : Module.Finite K (finiteExtensionRiemannSpace K L Dq) :=
+    let : Module.Finite K (finiteExtensionRiemannSpace K L Dq) :=
       finiteExtensionRiemannSpace_effective_moduleFinite K L Dq hDq
     have hstrip := finiteExtensionRiemannSpace_add_effective
       K L Dq E hDq hE

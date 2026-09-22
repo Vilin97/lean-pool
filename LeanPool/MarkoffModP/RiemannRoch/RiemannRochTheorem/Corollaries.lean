@@ -86,7 +86,7 @@ theorem exists_effective_add_principal_of_ell_pos (D : DivisorA k K)
     (hD : 0 < ell k K D) :
     ∃ x : Kˣ, IsEffective k K
       (D + principalDivisorA k K (Additive.ofMul x)) := by
-  letI : FiniteDimensional k (RRspace k K D) := finiteDimensional_RRspace_aux k K D
+  let : FiniteDimensional k (RRspace k K D) := finiteDimensional_RRspace_aux k K D
   obtain ⟨f, hf⟩ := (Module.finrank_pos_iff_exists_ne_zero (R := k)
     (M := RRspace k K D)).mp hD
   have hfval : (f : K) ≠ 0 := by
@@ -133,8 +133,8 @@ omit [IsFullConstantField k K] in
 /-- Riemann–Roch dimension is submodular on the divisor lattice. -/
 theorem ell_submodular (D E : DivisorA k K) :
     ell k K D + ell k K E ≤ ell k K (D ⊔ E) + ell k K (D ⊓ E) := by
-  letI : FiniteDimensional k (RRspace k K D) := finiteDimensional_RRspace_aux k K D
-  letI : FiniteDimensional k (RRspace k K E) := finiteDimensional_RRspace_aux k K E
+  let : FiniteDimensional k (RRspace k K D) := finiteDimensional_RRspace_aux k K D
+  let : FiniteDimensional k (RRspace k K E) := finiteDimensional_RRspace_aux k K E
   have hsup : Module.finrank k ↑(RRspace k K D ⊔ RRspace k K E) ≤
       Module.finrank k (RRspace k K (D ⊔ E)) :=
     Submodule.finrank_mono (RRspace_sup_le k K D E)
@@ -171,7 +171,7 @@ theorem exists_minimal_RRspace (A : DivisorA k K) (hA : 0 < ell k K A) :
   rw [lt_iff_le_and_ne]
   refine ⟨hell_le, ?_⟩
   intro hell_eq
-  haveI : FiniteDimensional k (RRspace k K D₀) := finiteDimensional_RRspace_aux k K D₀
+  have : FiniteDimensional k (RRspace k K D₀) := finiteDimensional_RRspace_aux k K D₀
   have hspace_sub : RRspace k K (D₀ - Finsupp.single v 1) = RRspace k K D₀ :=
     Submodule.eq_of_le_of_finrank_eq (RRspace_mono k K hle) hell_eq
   have hdegsub_nonneg : 0 ≤ deg k K (D₀ - Finsupp.single v 1) := by
@@ -386,8 +386,8 @@ theorem ell_add_ell_le_of_effective_minimal [Infinite k]
   have hfinP : Module.finrank k P = ell k K D₀ := by
     rw [← Submodule.finrank_map_subtype_eq T P, hmapP]
     rfl
-  letI : FiniteDimensional k (RRspace k K B) := finiteDimensional_RRspace_aux k K B
-  letI : FiniteDimensional k T := finiteDimensional_RRspace_aux k K (D₀ + B)
+  let : FiniteDimensional k (RRspace k K B) := finiteDimensional_RRspace_aux k K B
+  let : FiniteDimensional k T := finiteDimensional_RRspace_aux k K (D₀ + B)
   have hranknull := φ.finrank_range_add_finrank_ker
   have hrange : Module.finrank k φ.range ≤ Module.finrank k (T ⧸ P) := by
     simpa only [finrank_top] using
@@ -446,8 +446,8 @@ Riemann–Roch-space specialization of `mul_finrank`. -/
 theorem ell_add_ell_le (A B : DivisorA k K) (hA : 0 < ell k K A)
     (hB : 0 < ell k K B) :
     ell k K A + ell k K B ≤ 1 + ell k K (A + B) := by
-  letI : FiniteDimensional k (RRspace k K A) := finiteDimensional_RRspace_aux k K A
-  letI : FiniteDimensional k (RRspace k K B) := finiteDimensional_RRspace_aux k K B
+  let : FiniteDimensional k (RRspace k K A) := finiteDimensional_RRspace_aux k K A
+  let : FiniteDimensional k (RRspace k K B) := finiteDimensional_RRspace_aux k K B
   have hAne : RRspace k K A ≠ ⊥ := by
     intro hzero
     dsimp only [ell] at hA
@@ -462,7 +462,7 @@ theorem ell_add_ell_le (A B : DivisorA k K) (hA : 0 < ell k K A)
     (Submodule.fg_top (RRspace k K A)).mp Module.Finite.fg_top
   have hBfg : (RRspace k K B).FG :=
     (Submodule.fg_top (RRspace k K B)).mp Module.Finite.fg_top
-  letI : FiniteDimensional k (RRspace k K A * RRspace k K B) :=
+  let : FiniteDimensional k (RRspace k K A * RRspace k K B) :=
     Module.Finite.of_fg (hAfg.mul hBfg)
   have hproduct := mul_finrank k K (RRspace k K A) (RRspace k K B) hAne hBne
   have hmul : RRspace k K A * RRspace k K B ≤ RRspace k K (A + B) := by

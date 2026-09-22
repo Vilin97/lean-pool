@@ -305,10 +305,10 @@ theorem finiteExtensionFinitePlace_cardQuot_eq_card_pow_degree
     (v : FiniteExtensionFinitePlace K L) :
     v.asIdeal.cardQuot = Fintype.card K ^
       Module.finrank K v.asIdeal.ResidueField := by
-  letI : DecidableEq K := Classical.decEq K
-  letI : Finite v.asIdeal.ResidueField :=
+  let : DecidableEq K := Classical.decEq K
+  let : Finite v.asIdeal.ResidueField :=
     finiteExtensionFinitePlaceResidueField_finite K L v
-  letI : Module.Finite K v.asIdeal.ResidueField :=
+  let : Module.Finite K v.asIdeal.ResidueField :=
     Module.Finite.of_finite
   calc
     v.asIdeal.cardQuot =

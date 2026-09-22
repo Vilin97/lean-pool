@@ -57,14 +57,14 @@ theorem eval_weightedTraceTorusClosurePolynomial_eq_zero_iff
       weightedSplitTorusTrace alpha beta h = splitTorusTrace k := by
   by_cases hbeta : beta = 0
   · subst beta
-    simp only [weightedTraceTorusClosurePolynomial, if_pos, map_sub, map_mul,
+    simp only [weightedTraceTorusClosurePolynomial, ite_eq_left, map_sub, map_mul,
       MvPolynomial.eval_C, MvPolynomial.eval_X, Matrix.cons_val_zero,
       Matrix.cons_val_one, map_pow, map_one, weightedSplitTorusTrace,
       splitTorusTrace, zero_mul, add_zero, Units.val_inv_eq_inv_val]
     have hk : (k : K) ≠ 0 := Units.ne_zero k
     field_simp [hk]
     constructor <;> intro heq <;> linear_combination heq
-  · rw [weightedTraceTorusClosurePolynomial, if_neg hbeta]
+  · rw [weightedTraceTorusClosurePolynomial, ite_eq_right hbeta]
     simpa [SplitTraceCurveEquation] using
       eval_splitTraceCoverPolynomial_eq_zero_iff alpha beta 1 1 k h
 
@@ -158,8 +158,8 @@ theorem weightedTraceSubgroupSolutionToCurvePoint_mem_torsionIntersection
     (hz : z ∈ weightedTraceEquationSolutions alpha beta H₁ H₂) :
     weightedTraceSubgroupSolutionToCurvePoint H₁ H₂ z ∈
       weightedTraceCurveTorsionIntersection alpha beta (Nat.card H₁) (Nat.card H₂) := by
-  letI := Fintype.ofFinite H₁
-  letI := Fintype.ofFinite H₂
+  let := Fintype.ofFinite H₁
+  let := Fintype.ofFinite H₂
   rw [mem_weightedTraceCurveTorsionIntersection_iff]
   refine ⟨mem_weightedTraceEquationSolutions_iff.mp hz, ?_, ?_⟩
   · have hpow : z.1 ^ Fintype.card H₁ = 1 := pow_card_eq_one

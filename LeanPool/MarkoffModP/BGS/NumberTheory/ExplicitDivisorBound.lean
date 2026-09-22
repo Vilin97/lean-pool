@@ -53,10 +53,10 @@ theorem card_divisors_pow_le_explicit_constant_mul
     have haPos : 0 < n.factorization p :=
       hpPrime.factorization_pos_of_dvd hn (Nat.dvd_of_mem_primeFactors hp)
     by_cases hpSmall : p < 2 ^ k
-    · rw [if_pos hpSmall]
+    · rw [ite_eq_left hpSmall]
       exact (pow_succ_le_self_pow_mul_two_pow k hk (n.factorization p)).trans <|
         Nat.mul_le_mul_left D (Nat.pow_le_pow_left hpTwo _)
-    · rw [if_neg hpSmall, one_mul]
+    · rw [ite_eq_right hpSmall, one_mul]
       have hsucc : n.factorization p + 1 ≤ 2 ^ n.factorization p :=
         Nat.succ_le_of_lt (n.factorization p).lt_two_pow_self
       calc

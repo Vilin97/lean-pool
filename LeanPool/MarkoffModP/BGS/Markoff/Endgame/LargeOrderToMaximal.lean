@@ -46,7 +46,7 @@ theorem exists_threshold_sameComponent_maximalRotation_of_large_firstCoordinate
       splitCoefficient hSplitWeil nonsplitCoefficient hNonsplitWeil hδ
   refine ⟨max threshold 5, ?_⟩
   intro p hp _ hpThree
-  letI : Invertible (3 : ZMod p) :=
+  let : Invertible (3 : ZMod p) :=
     invertibleOfNonzero (three_ne_zero_zmod_of_prime_ne_three p hpThree)
   intro x hlarge
   have hpThreshold : threshold ≤ p := (le_max_left threshold 5).trans hp
@@ -80,7 +80,7 @@ theorem exists_threshold_sameComponent_maximalRotation_of_some_largeCoordinate
       splitCoefficient hSplitWeil nonsplitCoefficient hNonsplitWeil hδ
   refine ⟨threshold, ?_⟩
   intro p hp _ hpThree
-  letI : Invertible (3 : ZMod p) :=
+  let : Invertible (3 : ZMod p) :=
     invertibleOfNonzero (three_ne_zero_zmod_of_prime_ne_three p hpThree)
   intro x hlarge
   rcases hlarge with hfirstLarge | hsecondLarge | hthirdLarge

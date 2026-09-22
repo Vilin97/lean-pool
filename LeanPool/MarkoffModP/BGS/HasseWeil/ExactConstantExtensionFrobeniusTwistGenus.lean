@@ -55,31 +55,31 @@ theorem genus_frobeniusTwistField_eq_original
     letI : Algebra (RatFunc C) F := SubalgebraClass.toAlgebra F.toSubalgebra
     FunctionField.genus C F = FunctionField.genus C N := by
   let T := ExactConstantExtension C N S
-  letI : Field T := exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc C) T :=
+  let : Field T := exactConstantExtensionField C N S hExact
+  let : Algebra (RatFunc C) T :=
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-  letI : SMul (RatFunc C) T := Algebra.toSMul
-  letI : Module (RatFunc C) T := Algebra.toModule
+  let : SMul (RatFunc C) T := Algebra.toSMul
+  let : Module (RatFunc C) T := Algebra.toModule
   let F := exactConstantExtensionFrobeniusTwistField
     C (RatFunc C) N S hExact g
-  letI : Algebra (RatFunc C) F := SubalgebraClass.toAlgebra F.toSubalgebra
-  letI : SMul (RatFunc C) F := Algebra.toSMul
-  letI : Module (RatFunc C) F := Algebra.toModule
-  letI : FiniteDimensional (RatFunc C) F :=
+  let : Algebra (RatFunc C) F := SubalgebraClass.toAlgebra F.toSubalgebra
+  let : SMul (RatFunc C) F := Algebra.toSMul
+  let : Module (RatFunc C) F := Algebra.toModule
+  let : FiniteDimensional (RatFunc C) F :=
     finiteDimensional_frobeniusTwistField_over_ratFunc C N S hExact g
-  letI : Algebra.IsSeparable (RatFunc C) F :=
+  let : Algebra.IsSeparable (RatFunc C) F :=
     isSeparable_frobeniusTwistField_over_ratFunc C N S hExact g
-  letI : Algebra C F := Algebra.restrictScalars C (RatFunc C) F
-  letI : IsScalarTower C (RatFunc C) F :=
+  let : Algebra C F := Algebra.restrictScalars C (RatFunc C) F
+  let : IsScalarTower C (RatFunc C) F :=
     IsScalarTower.of_algebraMap_eq' rfl
   have hExactF : algebraicClosure C F =
       (⊥ : IntermediateField C F) :=
     exactConstantExtensionFrobeniusTwistField_algebraicClosure_eq_bot
       C (RatFunc C) N S hExact g
   let U := ExactConstantExtension C F S
-  letI : Field U := exactConstantExtensionField C F S hExactF
-  letI : Algebra S U := Algebra.TensorProduct.leftAlgebra
-  letI : Algebra S T := Algebra.TensorProduct.leftAlgebra
+  let : Field U := exactConstantExtensionField C F S hExactF
+  let : Algebra S U := Algebra.TensorProduct.leftAlgebra
+  let : Algebra S T := Algebra.TensorProduct.leftAlgebra
   let e : U ≃ₐ[S] T :=
     exactConstantExtensionFrobeniusTwistMultiplicationAlgEquivOverConstants
       C (RatFunc C) N S hExact g hdiv

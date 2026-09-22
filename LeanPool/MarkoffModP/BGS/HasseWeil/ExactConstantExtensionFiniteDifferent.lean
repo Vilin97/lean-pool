@@ -34,7 +34,7 @@ private theorem finiteDifferentCanonicalRatFuncPolynomialFractionRing
     (K : Type*) [Field K] :
     letI := finiteDifferentCanonicalRatFuncPolynomialAlgebra K
     IsFractionRing K[X] (RatFunc K) := by
-  letI := finiteDifferentCanonicalRatFuncPolynomialAlgebra K
+  let := finiteDifferentCanonicalRatFuncPolynomialAlgebra K
   infer_instance
 
 @[reducible] private noncomputable def
@@ -46,7 +46,7 @@ private theorem finiteDifferentCanonicalFractionRing
     (R : Type*) [CommRing R] [IsDomain R] :
     letI := finiteDifferentCanonicalFractionRingAlgebra R
     IsFractionRing R (FractionRing R) := by
-  letI := finiteDifferentCanonicalFractionRingAlgebra R
+  let := finiteDifferentCanonicalFractionRingAlgebra R
   infer_instance
 
 private theorem different_eq_map_of_disjoint_fields
@@ -192,33 +192,33 @@ theorem exactConstantExtension_rationalFunctionRanges_linearDisjoint :
     let F₂ : IntermediateField (RatFunc C) L := f₂.fieldRange
     F₁.LinearDisjoint F₂ ∧ F₁ ⊔ F₂ = ⊤ := by
   let L := ExactConstantExtension C N S
-  letI : Field L := exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc C) L :=
+  let : Field L := exactConstantExtensionField C N S hExact
+  let : Algebra (RatFunc C) L :=
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-  letI : SMul (RatFunc C) L := Algebra.toSMul
-  letI : Module (RatFunc C) L := Algebra.toModule
-  letI : DistribMulAction (RatFunc C) L := Module.toDistribMulAction
-  letI : MulAction (RatFunc C) L := DistribMulAction.toMulAction
-  letI : Algebra N L := exactConstantExtensionAlgebra C N S
-  letI : SMul N L := Algebra.toSMul
-  letI : Module N L := Algebra.toModule
-  letI : IsScalarTower (RatFunc C) N L :=
+  let : SMul (RatFunc C) L := Algebra.toSMul
+  let : Module (RatFunc C) L := Algebra.toModule
+  let : DistribMulAction (RatFunc C) L := Module.toDistribMulAction
+  let : MulAction (RatFunc C) L := DistribMulAction.toMulAction
+  let : Algebra N L := exactConstantExtensionAlgebra C N S
+  let : SMul N L := Algebra.toSMul
+  let : Module N L := Algebra.toModule
+  let : IsScalarTower (RatFunc C) N L :=
     exactConstantExtensionBaseTower C (RatFunc C) N S
-  letI : Algebra (RatFunc C) (RatFunc S) :=
+  let : Algebra (RatFunc C) (RatFunc S) :=
     ratFuncCoefficientAlgebra C S
-  letI : SMul (RatFunc C) (RatFunc S) := Algebra.toSMul
-  letI : Module (RatFunc C) (RatFunc S) := Algebra.toModule
-  letI : Algebra (RatFunc S) L :=
+  let : SMul (RatFunc C) (RatFunc S) := Algebra.toSMul
+  let : Module (RatFunc C) (RatFunc S) := Algebra.toModule
+  let : Algebra (RatFunc S) L :=
     ratFuncExactConstantExtensionAlgebra C S N hExact
-  letI : SMul (RatFunc S) L := Algebra.toSMul
-  letI : Module (RatFunc S) L := Algebra.toModule
-  letI : IsScalarTower (RatFunc C) (RatFunc S) L :=
+  let : SMul (RatFunc S) L := Algebra.toSMul
+  let : Module (RatFunc S) L := Algebra.toModule
+  let : IsScalarTower (RatFunc C) (RatFunc S) L :=
     rationalBase_scalarTower C S N hExact
   let e := exactConstantExtensionLinearEquiv C N S
-  letI : Module.Finite N (N ⊗[C] S) :=
+  let : Module.Finite N (N ⊗[C] S) :=
     Module.Finite.base_change C N S
-  letI : Module.Finite N L := Module.Finite.equiv e
-  letI : FiniteDimensional (RatFunc C) L :=
+  let : Module.Finite N L := Module.Finite.equiv e
+  let : FiniteDimensional (RatFunc C) L :=
     Module.Finite.trans N L
   let f₁ : RatFunc S →ₐ[RatFunc C] L :=
     IsScalarTower.toAlgHom (RatFunc C) (RatFunc S) L
@@ -244,11 +244,11 @@ theorem exactConstantExtension_rationalFunctionRanges_linearDisjoint :
         exact (F₁ ⊔ F₂).add_mem (hx (by simp)) (hy (by simp))
   let e₁ : RatFunc S ≃ₐ[RatFunc C] F₁ := f₁.equivFieldRange
   let e₂ : N ≃ₐ[RatFunc C] F₂ := f₂.equivFieldRange
-  letI : FiniteDimensional (RatFunc C) F₁ := by
-    letI : Module.Finite (RatFunc C) (RatFunc S) :=
+  let : FiniteDimensional (RatFunc C) F₁ := by
+    let : Module.Finite (RatFunc C) (RatFunc S) :=
       ratFuncCoefficient_moduleFinite C S
     exact Module.Finite.equiv e₁.toLinearEquiv
-  letI : FiniteDimensional (RatFunc C) F₂ :=
+  let : FiniteDimensional (RatFunc C) F₂ :=
     Module.Finite.equiv e₂.toLinearEquiv
   have hfinL :
       Module.finrank (RatFunc C) L =

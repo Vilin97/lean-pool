@@ -139,10 +139,10 @@ theorem ratFuncFinitePlaceResidueField_finite [Fintype K]
       p.asIdeal = (normalizedPrimeFinitePlace (K := K) r).asIdeal := by
         rw [normalizedPrimeFinitePlace_finitePlaceNormalizedPrime]
       _ = Ideal.span ({(r : K[X])} : Set K[X]) := rfl
-  letI : Module.Finite K (K[X] ⧸ p.asIdeal) := by
+  let : Module.Finite K (K[X] ⧸ p.asIdeal) := by
     rw [hp]
     exact hrmonic.finite_quotient
-  letI : Finite (K[X] ⧸ p.asIdeal) := Module.finite_of_finite K
+  let : Finite (K[X] ⧸ p.asIdeal) := Module.finite_of_finite K
   infer_instance
 
 omit [DecidableEq (RatFunc K)] in
@@ -151,14 +151,14 @@ finite over a finite constant field. -/
 theorem finiteExtensionFinitePlaceResidueField_finite [Fintype K]
     (P : FiniteExtensionFinitePlace K N) : Finite P.asIdeal.ResidueField := by
   let p := HeightOneSpectrum.under K[X] P
-  letI : Finite p.asIdeal.ResidueField :=
+  let : Finite p.asIdeal.ResidueField :=
     ratFuncFinitePlaceResidueField_finite K p
-  letI : P.asIdeal.LiesOver p.asIdeal := ⟨rfl⟩
-  letI := Localization.AtPrime.algebraOfLiesOver p.asIdeal P.asIdeal
+  let : P.asIdeal.LiesOver p.asIdeal := ⟨rfl⟩
+  let := Localization.AtPrime.algebraOfLiesOver p.asIdeal P.asIdeal
   let _ : IsScalarTower K[X] (Localization.AtPrime p.asIdeal)
       (Localization.AtPrime P.asIdeal) := inferInstance
-  letI : Algebra.QuasiFiniteAt K[X] P.asIdeal := inferInstance
-  letI : Module.Finite p.asIdeal.ResidueField P.asIdeal.ResidueField :=
+  let : Algebra.QuasiFiniteAt K[X] P.asIdeal := inferInstance
+  let : Module.Finite p.asIdeal.ResidueField P.asIdeal.ResidueField :=
     inferInstance
   exact Module.finite_of_finite p.asIdeal.ResidueField
 
@@ -182,14 +182,14 @@ noncomputable instance functionFieldConstantField_finiteDimensional [Fintype K] 
   let P : p.asIdeal.primesOver (RatFuncFiniteIntegralClosure K N) :=
     ⟨Q, hQprime, ⟨hQcomap.symm⟩⟩
   let q : FiniteExtensionFinitePlace K N := primeOverHeightOne p P
-  letI : Finite q.asIdeal.ResidueField :=
+  let : Finite q.asIdeal.ResidueField :=
     finiteExtensionFinitePlaceResidueField_finite K N q
-  letI : Finite (RatFuncFiniteIntegralClosure K N ⧸ q.asIdeal) :=
+  let : Finite (RatFuncFiniteIntegralClosure K N ⧸ q.asIdeal) :=
     Finite.of_injective
       (algebraMap (RatFuncFiniteIntegralClosure K N ⧸ q.asIdeal)
         q.asIdeal.ResidueField)
       (Ideal.injective_algebraMap_quotient_residueField q.asIdeal)
-  letI : Module.Finite K
+  let : Module.Finite K
       (RatFuncFiniteIntegralClosure K N ⧸ q.asIdeal) :=
     Module.Finite.of_finite
   exact FiniteDimensional.of_injective

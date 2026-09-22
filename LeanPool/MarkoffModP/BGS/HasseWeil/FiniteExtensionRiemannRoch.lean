@@ -208,7 +208,7 @@ def finiteExtensionInfinityPrimesOverEquivHeightOne :
   toFun P := primeOverHeightOne (ratFuncInfinityPlace K) P
   invFun q := ⟨q.asIdeal, q.isPrime, ⟨by
     let A := RatFuncInfinityIntegers K
-    letI : q.asIdeal.IsMaximal := q.isPrime.isMaximal q.ne_bot
+    let : q.asIdeal.IsMaximal := q.isPrime.isMaximal q.ne_bot
     have hq : q.asIdeal.under A = IsLocalRing.maximalIdeal A :=
       IsLocalRing.eq_maximalIdeal (Ideal.IsMaximal.under A q.asIdeal)
     have hp : (ratFuncInfinityPlace K).asIdeal =
@@ -609,7 +609,7 @@ theorem exists_hasFiniteExtensionUniformEventualRiemannFormula_of_constants
     ∃ genus threshold,
       HasFiniteExtensionUniformEventualRiemannFormula
         K L genus threshold := by
-  letI : FunctionField.IsFullConstantField K L :=
+  let : FunctionField.IsFullConstantField K L :=
     (FunctionField.isFullConstantField_iff_algebraicClosure_eq_bot K L).2
       hconstants
   exact ⟨FunctionField.Chart.genus K L,

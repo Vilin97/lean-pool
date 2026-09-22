@@ -46,17 +46,17 @@ theorem finiteExtensionHeight_planeCurveFirstCoordinate
     finiteExtensionHeight K (PlaneCurveFunctionField f)
         (planeCurveFunction f 0) =
       MvPolynomial.degreeOf 1 f := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
   let L := PlaneCurveFunctionField f
   let x : L := planeCurveFunction f 0
-  letI : Algebra (RatFunc K) L :=
+  let : Algebra (RatFunc K) L :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : FiniteDimensional (RatFunc K) L :=
+  let : FiniteDimensional (RatFunc K) L :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K) L :=
+  let : Algebra.IsSeparable (RatFunc K) L :=
     separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
   have hx0 : x ≠ 0 := by
     change planeCurveFunction f 0 ≠ 0
@@ -90,17 +90,17 @@ theorem finiteExtensionDivisorDegree_planeCurveFirstCoordinate_poleDivisor
         (finiteExtensionPoleDivisor K (PlaneCurveFunctionField f)
           (planeCurveFunction f 0)) =
       (MvPolynomial.degreeOf 1 f : ℤ) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
   let L := PlaneCurveFunctionField f
   let x : L := planeCurveFunction f 0
-  letI : Algebra (RatFunc K) L :=
+  let : Algebra (RatFunc K) L :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : FiniteDimensional (RatFunc K) L :=
+  let : FiniteDimensional (RatFunc K) L :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K) L :=
+  let : Algebra.IsSeparable (RatFunc K) L :=
     separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
   change finiteExtensionDivisorDegree K L
       (finiteExtensionPoleDivisor K L x) =
@@ -148,17 +148,17 @@ theorem planeCurveFirstCoordinate_poleDivisor_support_nonempty
     letI := separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
     (finiteExtensionPoleDivisor K (PlaneCurveFunctionField f)
       (planeCurveFunction f 0)).support.Nonempty := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
   let L := PlaneCurveFunctionField f
   let x : L := planeCurveFunction f 0
-  letI : Algebra (RatFunc K) L :=
+  let : Algebra (RatFunc K) L :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : FiniteDimensional (RatFunc K) L :=
+  let : FiniteDimensional (RatFunc K) L :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K) L :=
+  let : Algebra.IsSeparable (RatFunc K) L :=
     separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
   change (finiteExtensionPoleDivisor K L x).support.Nonempty
   apply Finsupp.support_nonempty_iff.mpr
@@ -194,17 +194,17 @@ theorem exists_planeCurveFirstCoordinate_polePlace
         0 < finiteExtensionPlaceDegree K (PlaneCurveFunctionField f) P ∧
         finiteExtensionPlaceDegree K (PlaneCurveFunctionField f) P ≤
           MvPolynomial.degreeOf 1 f := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
     (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
   let L := PlaneCurveFunctionField f
   let x : L := planeCurveFunction f 0
-  letI : Algebra (RatFunc K) L :=
+  let : Algebra (RatFunc K) L :=
     planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : FiniteDimensional (RatFunc K) L :=
+  let : FiniteDimensional (RatFunc K) L :=
     finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K) L :=
+  let : Algebra.IsSeparable (RatFunc K) L :=
     separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
   obtain ⟨P, hPsupport⟩ :=
     planeCurveFirstCoordinate_poleDivisor_support_nonempty

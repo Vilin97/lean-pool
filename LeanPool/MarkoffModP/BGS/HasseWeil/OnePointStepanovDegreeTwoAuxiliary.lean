@@ -189,7 +189,7 @@ theorem exists_onePointStepanovBasisAuxiliary_of_degree_le_two
   obtain ⟨u, du, huMem, huNe, huOrder, hduInjective, hduLe, huLI⟩ :=
     exists_onePointSectionsWithConstant_of_le_card_strictLevels
       K L P ell (ell - g) hstrict
-  letI : Module.Finite K V :=
+  let : Module.Finite K V :=
     finiteExtensionOnePointRiemannSpace_moduleFinite K L P m
   let b := Module.finBasis K V
   let v : Fin (Module.finrank K V) → L := fun j => (b j : V)

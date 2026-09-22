@@ -150,7 +150,7 @@ theorem coeff_subfield_smul_parameter_pow {q : ℕ} (hq : 0 < q)
     change (HahnSeries.embDomain (R := K) (Γ := ℤ) (Γ' := ℤ) _
       (laurentUndilate K hq a)).coeff
         ((q : ℤ) * n + (i : ℤ) - (j : ℤ)) = 0
-    exact HahnSeries.embDomain_notin_range
+    exact HahnSeries.embDomain_of_notMem_range
       (dilation_notin_wrong_residue hq i j hij n)
 
 /-- The residue classes of exponents prove that

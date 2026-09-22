@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
 
+import Mathlib.Algebra.Polynomial.Degree.IsMonicOfDegree
 import LeanPool.MarkoffModP.BGS.Markoff.Core.Basic
 import Mathlib.GroupTheory.SpecificGroups.Cyclic
 
@@ -173,7 +174,7 @@ theorem elementsOfOrderLessThan_card_le_pred_mul_card_divisors [IsCyclic G] (bou
       apply Finset.sum_le_sum
       intro d hd
       by_cases hdvd : d ∣ Fintype.card G
-      · rw [if_pos hdvd]
+      · rw [ite_eq_left hdvd]
         have hfiber :
             (Finset.univ.filter fun g : G => orderOf g < bound).filter
                 (fun g => orderOf g = d) =
@@ -186,7 +187,7 @@ theorem elementsOfOrderLessThan_card_le_pred_mul_card_divisors [IsCyclic G] (bou
             exact ⟨h ▸ Finset.mem_range.mp hd, h⟩
         rw [hfiber, IsCyclic.card_orderOf_eq_totient hdvd]
         exact (Nat.totient_le d).trans (Nat.le_sub_one_of_lt (Finset.mem_range.mp hd))
-      · rw [if_neg hdvd]
+      · rw [ite_eq_right hdvd]
         have hempty : Finset.univ.filter (fun g : G => orderOf g = d) = ∅ := by
           ext g
           simp only [Finset.mem_filter, Finset.mem_univ, true_and,

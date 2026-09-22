@@ -229,7 +229,7 @@ theorem auxiliaryRelationPolynomial_coeff_natDegree_le
       exact Polynomial.natDegree_add_le_of_degree_le hA (hG 0)
   | succ s =>
       simp only [Polynomial.coeff_sub, Polynomial.coeff_add,
-        Polynomial.coeff_C, if_neg (Nat.succ_ne_zero s), zero_add,
+        Polynomial.coeff_C, ite_eq_right (Nat.succ_ne_zero s), zero_add,
         Polynomial.coeff_mul_X]
       simpa using Polynomial.natDegree_sub_le_of_le (hG (s + 1)) (hG s)
 
