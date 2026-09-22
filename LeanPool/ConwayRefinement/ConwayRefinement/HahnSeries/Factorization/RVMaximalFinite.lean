@@ -33,7 +33,28 @@ public noncomputable section
 
 open HahnSeries.Nonpositive
 
-variable {K : Type v} [Field K] [CharZero K]
+variable {K : Type v} [Field K]
+
+/-- A fixed component, regarded as an element of the monoid of homogeneous graded classes. -/
+def degreeHomogeneousClass (α : NatOrdinal)
+    (B : (HahnSeries.Nonpositive.degreeValuation K).Component α) :
+    (HahnSeries.Nonpositive.degreeValuation K).HomogeneousClasses :=
+  ⟨DirectSum.of
+      (HahnSeries.Nonpositive.degreeValuation K).Component α B,
+    (MaxAddDegree.mem_homogeneousClasses_iff
+      (HahnSeries.Nonpositive.degreeValuation K) _).mpr
+        (Or.inr ⟨α, B, rfl⟩)⟩
+
+/-- The underlying graded element of a fixed homogeneous class. -/
+@[simp]
+theorem coe_degreeHomogeneousClass (α : NatOrdinal)
+    (B : (HahnSeries.Nonpositive.degreeValuation K).Component α) :
+    (degreeHomogeneousClass α B : DegreeGraded K) =
+      DirectSum.of
+        (HahnSeries.Nonpositive.degreeValuation K).Component α B :=
+  (rfl)
+
+variable [CharZero K]
 
 private theorem directSum_index_eq_of_of_eq {ι : Type*} [DecidableEq ι]
     {A : ι → Type*} [∀ i, AddCommMonoid (A i)]
@@ -121,26 +142,6 @@ theorem coe_finiteSupportHomogeneousClass (p : FiniteSupportRing (K := K)) :
     rw [finiteSupportHomogeneousClass_apply,
       ← (HahnSeries.Nonpositive.degreeValuation K).rvEquivHomogeneous_apply]
     exact coe_rvEquivHomogeneous_finiteSupportRVEmbedding p
-
-/-- A fixed component, regarded as an element of the monoid of homogeneous graded classes. -/
-def degreeHomogeneousClass (α : NatOrdinal)
-    (B : (HahnSeries.Nonpositive.degreeValuation K).Component α) :
-    (HahnSeries.Nonpositive.degreeValuation K).HomogeneousClasses :=
-  ⟨DirectSum.of
-      (HahnSeries.Nonpositive.degreeValuation K).Component α B,
-    (MaxAddDegree.mem_homogeneousClasses_iff
-      (HahnSeries.Nonpositive.degreeValuation K) _).mpr
-        (Or.inr ⟨α, B, rfl⟩)⟩
-
-omit [CharZero K] in
-/-- The underlying graded element of a fixed homogeneous class. -/
-@[simp]
-theorem coe_degreeHomogeneousClass (α : NatOrdinal)
-    (B : (HahnSeries.Nonpositive.degreeValuation K).Component α) :
-    (degreeHomogeneousClass α B : DegreeGraded K) =
-      DirectSum.of
-        (HahnSeries.Nonpositive.degreeValuation K).Component α B :=
-  (rfl)
 
 /-- Multiplication of a finite-support homogeneous class with a fixed homogeneous class is the
 degree-zero residue action on that component. -/

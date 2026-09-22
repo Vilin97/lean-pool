@@ -136,7 +136,6 @@ theorem finiteDegreeOf_zero_scalar (k : K) :
     finiteDegreeOf K 0 (principalComponentScalarHom K k) =
       algebraMap K (principalFiniteDegreePart K) k := by
   apply Subtype.ext
-  rw [coe_finiteDegreeOf]
   exact principalSubring_algebraMap_apply k
 
 variable (K) in

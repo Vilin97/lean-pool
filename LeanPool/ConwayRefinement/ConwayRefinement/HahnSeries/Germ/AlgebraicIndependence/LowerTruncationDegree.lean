@@ -705,25 +705,25 @@ theorem exists_lt_forall_degree_homogeneous_leibniz_le
     intro d _
     exact hlamOf d.1 d.2
   · have hFsum : F = ∑ d ∈ F.support.attach,
-        MvPolynomial.C (MvPolynomial.coeff d.1 F) * MvPolynomial.monomial d.1 (1 : K) := by
+        MvPolynomial.C (F.coeff d.1) * MvPolynomial.monomial d.1 (1 : K) := by
       conv_lhs => rw [F.as_sum]
       rw [← Finset.sum_attach F.support
-        (fun d ↦ MvPolynomial.monomial d (MvPolynomial.coeff d F))]
+        (fun d ↦ MvPolynomial.monomial d (F.coeff d))]
       refine Finset.sum_congr rfl fun d _ ↦ ?_
       rw [MvPolynomial.C_mul_monomial, mul_one]
     have hleft : translatedTruncLE γ (aeval V F) =
-        ∑ d ∈ F.support.attach, MvPolynomial.coeff d.1 F •
+        ∑ d ∈ F.support.attach, F.coeff d.1 •
           translatedTruncLE γ (aeval V (MvPolynomial.monomial d.1 (1 : K))) := by
       conv_lhs => rw [hFsum]
       rw [map_sum, map_sum]
       refine Finset.sum_congr rfl fun d _ ↦ ?_
       rw [map_mul, MvPolynomial.aeval_C, ← Algebra.smul_def, translatedTruncLE_smul]
     have hright : ∑ i ∈ t, aeval V (MvPolynomial.pderiv i F) * translatedTruncLE γ (V i) =
-        ∑ d ∈ F.support.attach, MvPolynomial.coeff d.1 F •
+        ∑ d ∈ F.support.attach, F.coeff d.1 •
           ∑ i ∈ t, aeval V (MvPolynomial.pderiv i
             (MvPolynomial.monomial d.1 (1 : K))) * translatedTruncLE γ (V i) := by
       have hinner : ∀ i ∈ t, aeval V (MvPolynomial.pderiv i F) * translatedTruncLE γ (V i) =
-          ∑ d ∈ F.support.attach, MvPolynomial.coeff d.1 F •
+          ∑ d ∈ F.support.attach, F.coeff d.1 •
             (aeval V (MvPolynomial.pderiv i (MvPolynomial.monomial d.1 (1 : K))) *
               translatedTruncLE γ (V i)) := by
         intro i _
@@ -736,11 +736,11 @@ theorem exists_lt_forall_degree_homogeneous_leibniz_le
       exact Finset.sum_congr rfl fun d _ ↦ (Finset.smul_sum).symm
     rw [hleft, hright, ← Finset.sum_sub_distrib]
     have hcongr : ∀ d ∈ F.support.attach,
-        MvPolynomial.coeff d.1 F • translatedTruncLE γ
+        F.coeff d.1 • translatedTruncLE γ
             (aeval V (MvPolynomial.monomial d.1 (1 : K))) -
-          MvPolynomial.coeff d.1 F • ∑ i ∈ t, aeval V (MvPolynomial.pderiv i
+          F.coeff d.1 • ∑ i ∈ t, aeval V (MvPolynomial.pderiv i
             (MvPolynomial.monomial d.1 (1 : K))) * translatedTruncLE γ (V i) =
-          MvPolynomial.coeff d.1 F •
+          F.coeff d.1 •
             (translatedTruncLE γ (aeval V (MvPolynomial.monomial d.1 (1 : K))) -
               ∑ i ∈ t, aeval V (MvPolynomial.pderiv i
                 (MvPolynomial.monomial d.1 (1 : K))) * translatedTruncLE γ (V i)) :=

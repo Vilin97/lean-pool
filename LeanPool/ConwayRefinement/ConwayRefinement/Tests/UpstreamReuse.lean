@@ -47,6 +47,8 @@ import LeanPool.ConwayRefinement.CombinatorialGames.Surreal.Ordinal
 This module pins the availability and compiler-visible signatures of selected upstream interfaces.
 The anonymous examples retain these signature checks without adding a mathematical API.
 -/
+noncomputable section
+
 universe u v w
 
 example :

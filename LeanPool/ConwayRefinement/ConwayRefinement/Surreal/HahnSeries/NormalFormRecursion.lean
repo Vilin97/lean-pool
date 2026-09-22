@@ -97,7 +97,7 @@ theorem leadingCoeff_term (x : SurrealHahnSeries) (i : Ordinal) :
   · rw [term_of_le (le_of_not_gt hi), coeffIdx_of_le (le_of_not_gt hi)]
     simp
 
-theorem wlog_term {x : SurrealHahnSeries} {i : Ordinal} (hi : i < x.length) :
+theorem wlog_term {x : SurrealHahnSeries} {i : Ordinal} (hi : i ∈ Iio x.length) :
     (x.term i).wlog = x.exp ⟨i, hi⟩ := by
   have hc : x.coeffIdx i ≠ 0 := by
     rw [ne_eq, coeffIdx_eq_zero_iff]
@@ -106,7 +106,7 @@ theorem wlog_term {x : SurrealHahnSeries} {i : Ordinal} (hi : i < x.length) :
   rw [term_of_lt hi, Surreal.wlog_mul hc' (by simp)]
   simp
 
-theorem mk_term {x : SurrealHahnSeries} {i : Ordinal} (hi : i < x.length) :
+theorem mk_term {x : SurrealHahnSeries} {i : Ordinal} (hi : i ∈ Iio x.length) :
     ArchimedeanClass.mk (x.term i) = .mk (ω^ (x.exp ⟨i, hi⟩)) := by
   have hc : x.coeffIdx i ≠ 0 := by
     rw [ne_eq, coeffIdx_eq_zero_iff]
@@ -126,7 +126,7 @@ def single (r : ℝ) (e : Surreal) (hr : r ≠ 0) : TermSeq where
   coeff_ne_zero _ := hr
 
 /-- Appends a single term at the end of a `TermSeq`. -/
-@[simps (attr := grind =) -isSimp, expose]
+@[simps (attr := grind =) -isSimp length, expose]
 def appendSingle (s : TermSeq) (r : ℝ) (e : Surreal) (hr : r ≠ 0) (he : ∀ i, e < s.exp i) :
     TermSeq where
   length := s.length + 1
@@ -136,6 +136,24 @@ def appendSingle (s : TermSeq) (r : ℝ) (e : Surreal) (hr : r ≠ 0) (he : ∀ 
   coeff_ne_zero := by grind
 
 attribute [simp] appendSingle_length
+
+@[grind =]
+theorem appendSingle_exp (s : TermSeq) (r : ℝ) (e : Surreal) (hr : r ≠ 0)
+    (he : ∀ i, e < s.exp i) (i : Iio (s.appendSingle r e hr he).length) :
+    (s.appendSingle r e hr he).exp i =
+      if h : (i : Ordinal) = s.length then e else s.exp ⟨i, by
+        have hi := i.property
+        change (i : Ordinal) < s.length + 1 at hi
+        exact lt_of_le_of_ne (Order.lt_add_one_iff.mp hi) h⟩ := rfl
+
+@[grind =]
+theorem appendSingle_coeff (s : TermSeq) (r : ℝ) (e : Surreal) (hr : r ≠ 0)
+    (he : ∀ i, e < s.exp i) (i : Iio (s.appendSingle r e hr he).length) :
+    (s.appendSingle r e hr he).coeff i =
+      if h : (i : Ordinal) = s.length then r else s.coeff ⟨i, by
+        have hi := i.property
+        change (i : Ordinal) < s.length + 1 at hi
+        exact lt_of_le_of_ne (Order.lt_add_one_iff.mp hi) h⟩ := rfl
 
 theorem exp_eq_exp_appendSingle (s : TermSeq) (i r e hr he) :
     s.exp i = (s.appendSingle r e hr he).exp ⟨i.1, by grind⟩ := by
@@ -183,13 +201,27 @@ theorem coe_appendSingle {s : TermSeq} {r : ℝ} {e : Surreal} (hr : r ≠ 0) (h
         exact lt_of_le_of_ne hk' ‹↑k ≠ s.length›
 
 /-- Truncate a `TermSeq` at the i-th term. -/
-@[simps (attr := grind =), expose]
+@[simps (attr := grind =) length, expose]
 def trunc (s : TermSeq) (i : Ordinal) : TermSeq where
   length := min i s.length
   exp i := s.exp ⟨i, by grind⟩
   coeff i := s.coeff ⟨i, by grind⟩
   exp_strictAnti _ := by grind
   coeff_ne_zero := by grind
+
+@[simp, grind =]
+theorem trunc_exp (s : TermSeq) (j : Ordinal) (i : Iio (s.trunc j).length) :
+    (s.trunc j).exp i = s.exp ⟨i, by
+      have hi := i.property
+      change (i : Ordinal) < min j s.length at hi
+      exact hi.trans_le (min_le_right ..)⟩ := rfl
+
+@[simp, grind =]
+theorem trunc_coeff (s : TermSeq) (j : Ordinal) (i : Iio (s.trunc j).length) :
+    (s.trunc j).coeff i = s.coeff ⟨i, by
+      have hi := i.property
+      change (i : Ordinal) < min j s.length at hi
+      exact hi.trans_le (min_le_right ..)⟩ := rfl
 
 @[simp]
 theorem trunc_of_le {s : TermSeq} {i : Ordinal} (h : s.length ≤ i) : s.trunc i = s := by
@@ -215,7 +247,7 @@ theorem coe_trunc (s : TermSeq) (i : Ordinal) : s.trunc i = truncIdx s i := by
     · obtain ⟨⟨j, hj⟩, _, rfl⟩ := hj
       obtain hj' | hj' := lt_or_ge j i
       · rw [coeff_trunc_of_lt]
-        · have hj'' : j < (s.trunc i).length := by
+        · have hj'' : j ∈ Iio (s.trunc i).length := by
             simpa only [trunc_length, mem_Iio, lt_inf_iff] using And.intro hj' hj
           change
             coeff (s.trunc i : SurrealHahnSeries)
@@ -255,7 +287,7 @@ theorem trunc_appendSingle_self (s : TermSeq) {r e} (hr he) :
     trunc (s.appendSingle r e hr he) s.length = s := by
   rw [trunc_appendSingle le_rfl , trunc_of_le le_rfl]
 
-theorem trunc_add_one {s : TermSeq} {i} (hi : i < s.length) :
+theorem trunc_add_one {s : TermSeq} {i} (hi : i ∈ Iio s.length) :
     s.trunc (i + 1) =
       (s.trunc i).appendSingle (s.coeff ⟨i, hi⟩) (s.exp ⟨i, hi⟩) (by simp) (by grind) := by
   have hi' : i + 1 ≤ s.length := Order.add_one_le_iff.mpr hi
@@ -430,16 +462,13 @@ theorem coeffIdx_truncIdx_of_le {x : SurrealHahnSeries} {i j : Ordinal} (h : i �
   rw [coeffIdx_truncIdx]
   exact ite_eq_right h.not_gt
 
-theorem truncIdx_add_one {x : SurrealHahnSeries} {i : Ordinal} (hi : i < x.length) :
+theorem truncIdx_add_one {x : SurrealHahnSeries} {i : Ordinal} (hi : i ∈ Iio x.length) :
     x.truncIdx (i + 1) = x.truncIdx i + single (x.exp ⟨i, hi⟩) (x.coeffIdx i) := by
   induction x using termSeqRecOn with | mk s
-  rw [← TermSeq.coe_trunc, ← TermSeq.coe_trunc, TermSeq.exp_coe,
-    ← TermSeq.coe_appendSingle, TermSeq.trunc_add_one]
-  · congr
-    rw [TermSeq.coeffIdx_coe_of_lt (by simpa using hi)]
-  · simpa using hi
-  · simp_rw [TermSeq.trunc_exp]
-    grind
+  have hs : i ∈ Iio s.length := by simpa using hi
+  have hseq := congrArg (fun t : TermSeq ↦ (t : SurrealHahnSeries)) (TermSeq.trunc_add_one hs)
+  rw [TermSeq.coe_appendSingle] at hseq
+  simpa only [TermSeq.coe_trunc, TermSeq.exp_coe, TermSeq.coeffIdx_coe_of_lt hs] using hseq
 
 theorem eq_of_length_eq_add_one {x : SurrealHahnSeries} {i : Ordinal} (hi : x.length = i + 1) :
     x = x.truncIdx i + single (x.exp ⟨i, by simp [hi]⟩) (x.coeffIdx i) := by
@@ -462,7 +491,16 @@ theorem support_truncIdx_mono {x : SurrealHahnSeries} :
 
 @[simp]
 theorem exp_truncIdx {x : SurrealHahnSeries} {i : Ordinal} (j : Iio (x.truncIdx i).length) :
-    (x.truncIdx i).exp j = ⟨x.exp ⟨j, by aesop⟩, by aesop⟩ := by
+    (x.truncIdx i).exp j = ⟨x.exp ⟨j, by
+      exact j.property.trans_le ((length_truncIdx x i).le.trans (min_le_right ..))⟩, by
+        rw [support_truncIdx]
+        split_ifs with h
+        · refine ⟨(x.exp _).property, ?_⟩
+          change x.exp _ > x.exp ⟨i, h⟩
+          apply x.exp.map_rel_iff.mpr
+          change (j : Ordinal) < i
+          exact j.property.trans_le ((length_truncIdx x i).le.trans (min_le_left ..))
+        · exact (x.exp _).property⟩ := by
   induction x using termSeqRecOn with | mk s
   apply Subtype.val_injective
   rw [exp_congr (TermSeq.coe_trunc s i).symm]
@@ -486,16 +524,17 @@ theorem term_injective : term.Injective := by
   induction x using termSeqRecOn with | mk s
   induction y using termSeqRecOn with | mk t
   congr
-  ext i
+  ext i hs ht
   · refine eq_of_forall_ge_iff fun _ ↦ ?_
     simp_rw [← TermSeq.length_coe, ← term_eq_zero, h]
-  · have := congrFun h i
-    convert congrArg Surreal.wlog this <;>
-    · rw [wlog_term, TermSeq.exp_coe]
-      simpa
-  · have := congrFun h i
-    convert congrArg Surreal.leadingCoeff this <;>
-    · rw [leadingCoeff_term, TermSeq.coeffIdx_coe_of_lt]
+  · have he := congrArg Surreal.wlog (congrFun h i)
+    rw [wlog_term (by simpa using hs), wlog_term (by simpa using ht),
+      TermSeq.exp_coe, TermSeq.exp_coe] at he
+    exact he
+  · have hc := congrArg Surreal.leadingCoeff (congrFun h i)
+    rw [leadingCoeff_term, leadingCoeff_term,
+      TermSeq.coeffIdx_coe_of_lt hs, TermSeq.coeffIdx_coe_of_lt ht] at hc
+    exact hc
 
 @[simp]
 theorem term_inj {x y : SurrealHahnSeries} : x.term = y.term ↔ x = y :=

@@ -49,22 +49,21 @@ open ConwayRefinement.Standalone.Oz.FinitePowerFamily
 /-- The lexicographic sum of the finite-tuple orders of types `ω ^ n`. -/
 abbrev BoundaryIndex := Σₗ n : ℕ, FiniteLex n
 
-instance : WellFoundedLT BoundaryIndex where
-  wf := by
-    change WellFounded
-      (Sigma.Lex (· < ·) fun n => (· < · : FiniteLex n → FiniteLex n → Prop))
-    let e := Equiv.psigmaEquivSigma (fun n : ℕ => FiniteLex n)
-    let f :
-        (Sigma.Lex (· < ·) fun n => (· < · : FiniteLex n → FiniteLex n → Prop)) ↪r
-          (PSigma.Lex (· < ·) fun n => (· < · : FiniteLex n → FiniteLex n → Prop)) := {
-      toFun := e.symm
-      inj' := e.symm.injective
-      map_rel_iff' := by
-        rintro ⟨i, a⟩ ⟨j, b⟩
-        simp only [PSigma.lex_iff, Sigma.lex_iff]
-        rfl }
-    exact f.wellFounded
-      (WellFounded.psigma_lex wellFounded_lt fun n => (finiteLexWellFoundedLT n).wf)
+instance : WellFoundedLT BoundaryIndex := by
+  change WellFounded
+    (Sigma.Lex (· < ·) fun n => (· < · : FiniteLex n → FiniteLex n → Prop))
+  let e := Equiv.psigmaEquivSigma (fun n : ℕ => FiniteLex n)
+  let f :
+      (Sigma.Lex (· < ·) fun n => (· < · : FiniteLex n → FiniteLex n → Prop)) ↪r
+        (PSigma.Lex (· < ·) fun n => (· < · : FiniteLex n → FiniteLex n → Prop)) := {
+    toFun := e.symm
+    inj' := e.symm.injective
+    map_rel_iff' := by
+      rintro ⟨i, a⟩ ⟨j, b⟩
+      simp only [PSigma.lex_iff, Sigma.lex_iff]
+      rfl }
+  exact f.wellFounded
+    (WellFounded.psigma_lex wellFounded_lt fun n => (finiteLexWellFoundedLT n))
 
 private theorem fiber_type_le_boundary (n : ℕ) :
     (Ordinal.omega0 : Ordinal) ^ (n : Ordinal) ≤
