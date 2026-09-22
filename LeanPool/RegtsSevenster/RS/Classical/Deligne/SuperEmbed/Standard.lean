@@ -135,11 +135,11 @@ theorem sumPowIns_prj_same
     intro i
     induction i using Fin.lastCases with
     | last =>
-      rw [sumPowIns_succ, sumPowPrj_succ, Fin.lastCases_last,
+      erw [sumPowIns_succ, sumPowPrj_succ, Fin.lastCases_last,
         Fin.lastCases_last]
       exact biprod.inr_snd
     | cast j =>
-      rw [sumPowIns_succ, sumPowPrj_succ, Fin.lastCases_castSucc,
+      erw [sumPowIns_succ, sumPowPrj_succ, Fin.lastCases_castSucc,
         Fin.lastCases_castSucc]
       exact inl_sandwich _ _ (ih j)
 
@@ -161,17 +161,17 @@ theorem sumPowIns_prj_ne
       induction i' using Fin.lastCases with
       | last => exact absurd rfl hii'
       | cast j' =>
-        rw [sumPowIns_succ, sumPowPrj_succ, Fin.lastCases_last,
+        erw [sumPowIns_succ, sumPowPrj_succ, Fin.lastCases_last,
           Fin.lastCases_castSucc]
         exact inr_miss _
     | cast j =>
       induction i' using Fin.lastCases with
       | last =>
-        rw [sumPowIns_succ, sumPowPrj_succ, Fin.lastCases_castSucc,
+        erw [sumPowIns_succ, sumPowPrj_succ, Fin.lastCases_castSucc,
           Fin.lastCases_last]
         exact inl_miss _
       | cast j' =>
-        rw [sumPowIns_succ, sumPowPrj_succ, Fin.lastCases_castSucc,
+        erw [sumPowIns_succ, sumPowPrj_succ, Fin.lastCases_castSucc,
           Fin.lastCases_castSucc]
         exact inl_sandwich_zero _ _
           (ih (fun h => hii' (congrArg Fin.castSucc h)))
@@ -211,9 +211,9 @@ theorem sumPow_total [Category.{v} A] [Preadditive A] [HasBinaryBiproducts A]
   | succ k ih =>
     rw [Fin.sum_univ_castSucc]
     rw [Finset.sum_congr rfl fun j (_ : j ∈ Finset.univ) => by
-      rw [sumPowIns_succ, sumPowPrj_succ, Fin.lastCases_castSucc,
+      erw [sumPowIns_succ, sumPowPrj_succ, Fin.lastCases_castSucc,
         Fin.lastCases_castSucc]]
-    rw [sumPowIns_succ, sumPowPrj_succ, Fin.lastCases_last,
+    erw [sumPowIns_succ, sumPowPrj_succ, Fin.lastCases_last,
       Fin.lastCases_last]
     exact biprod_gather (sumPowPrj X k) (sumPowIns X k) ih
 
@@ -806,7 +806,7 @@ noncomputable def stdSuperLetters (p q : ℕ) :
               LinearMap.proj (R := ℂ)
                 (φ := fun _ : Fin (q + 1) => ℂ) j')
             ((0 : PUnit →ₗ[ℂ] (Fin (q + 1) → ℂ)) z) = 0
-          rw [LinearMap.zero_apply, map_zero]
+          erw [LinearMap.zero_apply, map_zero]
     | inr j =>
       cases k' with
       | inl i' =>
@@ -815,7 +815,7 @@ noncomputable def stdSuperLetters (p q : ℕ) :
           show (LinearMap.proj (R := ℂ)
               (φ := fun _ : Fin (p + 1) => ℂ) i')
             ((0 : (Fin 0 → ℂ) →ₗ[ℂ] (Fin (p + 1) → ℂ)) z) = 0
-          rw [LinearMap.zero_apply, map_zero]
+          rfl
         · refine LinearMap.ext fun z => ?_
           exact Subsingleton.elim (α := PUnit) _ _
       | inr j' =>

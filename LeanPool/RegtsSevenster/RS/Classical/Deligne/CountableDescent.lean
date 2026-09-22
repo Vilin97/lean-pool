@@ -246,7 +246,7 @@ theorem stageMul_spec
     (i : A.presentation.I) :
     indOf.map (stageMul A i) ≫ presStage A (nextStage A i) =
       stageMulToAlg A i := by
-  rw [stageMul, CategoryTheory.Functor.map_comp, Category.assoc,
+  erw [stageMul, CategoryTheory.Functor.map_comp, Category.assoc,
     presStage_naturality, mulStageMap_spec]
 
 /-- The stages of the generated tower. -/
@@ -591,10 +591,10 @@ theorem mono_imageSubalgebraHom
       ⟨⟨homOfLE (le_max_left _ _)⟩⟩, ⟨⟨homOfLE (le_max_right _ _)⟩⟩⟩
   have hu2 : (u' ≫ (AsSmall.down ⋙ imageSeq A i₀).map hsk) ≫
       colimit.ι (AsSmall.down ⋙ imageSeq A i₀) ⟨k⟩ = u := by
-    rw [Category.assoc, colimit.w, hu']
+    erw [Category.assoc, colimit.w, hu']
   have hv2 : (v' ≫ (AsSmall.down ⋙ imageSeq A i₀).map htk) ≫
       colimit.ι (AsSmall.down ⋙ imageSeq A i₀) ⟨k⟩ = v := by
-    rw [Category.assoc, colimit.w, hv']
+    erw [Category.assoc, colimit.w, hv']
   have hrung : colimit.ι (AsSmall.down ⋙ imageSeq A i₀) ⟨k⟩ ≫
       imageSubalgebraHom A i₀ = stageImageι A (towerIdx A i₀ k) :=
     imageRungι_comp_hom A i₀ k

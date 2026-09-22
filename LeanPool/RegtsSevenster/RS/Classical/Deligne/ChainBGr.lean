@@ -296,7 +296,7 @@ theorem whiskerLeft_ι_chainBGrMulStage
         fun b : ℤ => chainBGrComponent A M M' d b) ⟨b⟩) ≫
       chainBGrMulStage A M M' d a =
     chainBGrCompMul A M M' d a b ≫ chainBGrι A M M' d (a + b)
-  rw [chainBGrMulStage, ι_preservesColimitIso_hom_assoc]
+  erw [chainBGrMulStage, ι_preservesColimitIso_hom_assoc]
   exact colimit.ι_desc (chainBGrMulStageCocone A M M' d a) ⟨b⟩
 
 /-- The stage multiplications form a cocone over the left
@@ -370,7 +370,7 @@ theorem ι_whiskerRight_chainBGrMul
         fun a : ℤ => chainBGrComponent A M M' d a) ⟨a⟩) ≫
       chainBGrMul A M M' d =
     chainBGrMulStage A M M' d a
-  rw [chainBGrMul, ι_preservesColimitIso_hom_assoc]
+  erw [chainBGrMul, ι_preservesColimitIso_hom_assoc]
   exact colimit.ι_desc (chainBGrMulCocone A M M' d) ⟨a⟩
 
 /-- **Defining equation of the graded multiplication**: on a pair
@@ -647,7 +647,7 @@ theorem chainBGr_tensorRight_hom_ext
   apply colimit.hom_ext
   intro k
   obtain ⟨a⟩ := k
-  rw [ι_preservesColimitIso_inv_assoc,
+  erw [ι_preservesColimitIso_inv_assoc,
     ι_preservesColimitIso_inv_assoc]
   exact w a
 
@@ -672,7 +672,7 @@ theorem tensorLeft_chainBGr_hom_ext
   apply colimit.hom_ext
   intro k
   obtain ⟨b⟩ := k
-  rw [ι_preservesColimitIso_inv_assoc,
+  erw [ι_preservesColimitIso_inv_assoc,
     ι_preservesColimitIso_inv_assoc]
   exact w b
 
@@ -1256,7 +1256,7 @@ theorem chainBGr_sandwich_hom_ext
   apply colimit.hom_ext
   intro k
   obtain ⟨b⟩ := k
-  rw [ι_preservesColimitIso_inv_assoc,
+  erw [ι_preservesColimitIso_inv_assoc,
     ι_preservesColimitIso_inv_assoc]
   exact w b
 
