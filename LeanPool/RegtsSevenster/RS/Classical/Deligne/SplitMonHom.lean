@@ -83,7 +83,7 @@ theorem mul_chainBaseStage
           (chainSeed A M M' d)) ≫
         (A ◁ modTensorAct A (symPowMod A M'.X 0)
           (symPowMod A M.X 0)) := by
-    rw [chainBaseStage, MonoidalCategory.whiskerLeft_comp,
+    erw [chainBaseStage, MonoidalCategory.whiskerLeft_comp,
       MonoidalCategory.whiskerLeft_comp]
     rfl
   refine Eq.trans (eq_whisker hsplit

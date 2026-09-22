@@ -393,7 +393,7 @@ theorem lineToRegular_eq_zero_iff
   · intro h
     refine Mod.hom_ext _ _ ?_
     show (g.hom ▷ L.obj) ≫ (L.rot 𝔹).hom = 0
-    rw [show g.hom = 0 from congrArg Mod.Hom.hom h,
+    erw [show g.hom = 0 from congrArg Mod.Hom.hom h,
       MonoidalPreadditive.zero_whiskerRight, Limits.zero_comp]
 
 /-- **The free module on the odd line is nonzero** as soon as the
@@ -433,10 +433,12 @@ theorem simple_freeMod_oddLine
   haveI hgm : Mono g.hom := (mono_iff_hom 𝔹 g).1 hg
   haveI hwm : Mono (g.hom ▷ L.obj) :=
     inferInstanceAs (Mono ((tensorRight L.obj).map g.hom))
+  have hrot : IsIso (L.rot 𝔹).hom := (L.rot 𝔹).isIso_hom
+  have hrotMono : Mono (L.rot 𝔹).hom := @IsIso.mono_of_iso _ _ _ _ _ (L.rot 𝔹).isIso_hom
   haveI hhm : Mono (lineToRegular 𝔹 L g) := by
     refine mono_of_mono_hom _ ?_
     show Mono ((g.hom ▷ L.obj) ≫ (L.rot 𝔹).hom)
-    infer_instance
+    exact mono_comp' hwm hrotMono
   constructor
   · intro hiso h0
     haveI := hiso
@@ -450,7 +452,8 @@ theorem simple_freeMod_oddLine
     haveI : IsIso ((g.hom ▷ L.obj) ≫ (L.rot 𝔹).hom) :=
       (isIso_iff_hom 𝔹 (lineToRegular 𝔹 L g)).1 inferInstance
     haveI : IsIso (g.hom ▷ L.obj) :=
-      IsIso.of_isIso_comp_right _ (L.rot 𝔹).hom
+      @IsIso.of_isIso_comp_right _ _ _ _ _ _ _ hrot
+        ((isIso_iff_hom 𝔹 (lineToRegular 𝔹 L g)).1 inferInstance)
     exact (isIso_iff_hom 𝔹 g).2
       (isIso_of_whiskerRight L g.hom inferInstance)
 

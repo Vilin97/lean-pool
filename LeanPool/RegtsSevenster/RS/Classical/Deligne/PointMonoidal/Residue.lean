@@ -420,7 +420,7 @@ private theorem point_triple_ee
           (pointMod P : S.Mod.{u, u, u, u})).evenMap
           (tmulEE ((pointMod P).tensor (pointMod P)) (pointMod P)
             (tmulEE (pointMod P) (pointMod P) a b) c)))
-  rw [e1, e2, e3, pointMulHom_evenMap_tmulEE,
+  erw [e1, e2, e3, pointMulHom_evenMap_tmulEE,
     pointMulHom_evenMap_tmulEE]
   refine ULift.ext _ _ ?_
   show a.down * b.down * c.down = a.down * (b.down * c.down)
@@ -468,7 +468,7 @@ theorem pointMulHom_left_unit :
   refine hom_ext (fun x a => ?_) (fun u v => ?_)
     (fun x v => Subsingleton.elim _ _)
     (fun u a => Subsingleton.elim _ _)
-  · conv_lhs => rw [modWhiskerRight, comp_evenMap,
+  · conv_lhs => erw [modWhiskerRight, comp_evenMap,
       LinearMap.comp_apply, tensorHom_evenMap_tmulEE,
       pointUnitHom_evenMap, id_evenMap, LinearMap.id_coe, id_eq,
       pointMulHom_evenMap_tmulEE]
@@ -487,7 +487,7 @@ theorem pointMulHom_right_unit :
   refine hom_ext (fun a x => ?_) (fun v u => ?_)
     (fun a u => Subsingleton.elim _ _)
     (fun v x => Subsingleton.elim _ _)
-  · conv_lhs => rw [modWhiskerLeft, comp_evenMap,
+  · conv_lhs => erw [modWhiskerLeft, comp_evenMap,
       LinearMap.comp_apply, tensorHom_evenMap_tmulEE,
       pointUnitHom_evenMap, id_evenMap, LinearMap.id_coe, id_eq,
       pointMulHom_evenMap_tmulEE]
