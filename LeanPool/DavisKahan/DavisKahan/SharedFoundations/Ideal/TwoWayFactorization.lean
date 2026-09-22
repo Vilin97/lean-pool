@@ -127,7 +127,7 @@ variable {E F G H : Type u}
 /-- Membership transport through a displayed rectangular factorization. -/
 theorem SymmetricOperatorIdealFamily.mem_of_eq_comp_comp
     (N : TauCeti.SymmetricOperatorIdealFamily.{u, u} 𝕜)
-    [N.toOperatorIdealFamily.IsComplete]
+    
     {A : H →L[𝕜] G} {B : E →L[𝕜] F}
     (L : F →L[𝕜] G) (R : H →L[𝕜] E)
     (hB : N.Mem B) (hEq : A = L ∘L B ∘L R) : N.Mem A := by
@@ -137,7 +137,7 @@ theorem SymmetricOperatorIdealFamily.mem_of_eq_comp_comp
 /-- Gauge control through a displayed rectangular factorization. -/
 theorem SymmetricOperatorIdealFamily.gauge_le_of_eq_comp_comp
     (N : TauCeti.SymmetricOperatorIdealFamily.{u, u} 𝕜)
-    [N.toOperatorIdealFamily.IsComplete]
+    
     {A : H →L[𝕜] G} {B : E →L[𝕜] F}
     (L : F →L[𝕜] G) (R : H →L[𝕜] E)
     (hB : N.Mem B) (hEq : A = L ∘L B ∘L R) :

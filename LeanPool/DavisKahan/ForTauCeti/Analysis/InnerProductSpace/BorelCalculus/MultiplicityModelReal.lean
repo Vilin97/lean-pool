@@ -510,7 +510,7 @@ Self-adjointness is used for exactly one thing: the spectrum is real, so the bas
 resulting datum vanishes off the real axis, which by
 `TauCeti.MultiplicityDatum.starFixedInvariant_iff_base_im_eq_zero` is precisely what makes the
 `star`-fixed part of the model invariant.  It is delivered as a conclusion rather than assumed. -/
-theorem exists_hasMultiplicityModel_star [TopologicalSpace.SeparableSpace H]
+theorem exists_hasMultiplicityModel_star 
     (ha : IsStarNormal a) (hsa : IsSelfAdjoint a) {cH : H → H} (hcH : Continuous cH)
     (hcHadd : ∀ x y, cH (x + y) = cH x + cH y) {ξ : ℕ → H}
     (hsum : IsHilbertSum ℂ (fun n => Lp ℂ 2 (diagMeasure ha (ξ n)))

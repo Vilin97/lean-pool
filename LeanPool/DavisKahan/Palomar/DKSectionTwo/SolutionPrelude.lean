@@ -398,7 +398,7 @@ noncomputable def directedSine (E₀ : F →L[𝕜] E) (F₀ : K →L[𝕜] E) :
 
 /-- `sin Θ₀` for a trial *subspace*: `Q^⊥E₀ = P_{Vᗮ}|_U`. -/
 noncomputable def directedSineBlock (U V : Submodule 𝕜 E)
-    [U.HasOrthogonalProjection] [V.HasOrthogonalProjection] : U →L[𝕜] E :=
+     [V.HasOrthogonalProjection] : U →L[𝕜] E :=
   Vᗮ.starProjection ∘L U.subtypeL
 
 /-- `sin Θ`, the ambient sine: the projector difference, whose singular values

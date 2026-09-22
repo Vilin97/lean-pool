@@ -168,8 +168,8 @@ theorem gauge_adjoint {A : E →L[𝕜] F} (hA : N.Mem A) :
 
 /-- A linear isometric equivalence is a contraction. -/
 private theorem norm_isometryEquiv_le_one {X Y : Type v}
-    [NormedAddCommGroup X] [InnerProductSpace 𝕜 X] [CompleteSpace X]
-    [NormedAddCommGroup Y] [InnerProductSpace 𝕜 Y] [CompleteSpace Y]
+    [NormedAddCommGroup X] [InnerProductSpace 𝕜 X] 
+    [NormedAddCommGroup Y] [InnerProductSpace 𝕜 Y] 
     (g : X ≃ₗᵢ[𝕜] Y) : ‖(g.toContinuousLinearEquiv : X →L[𝕜] Y)‖ ≤ 1 := by
   refine ContinuousLinearMap.opNorm_le_bound _ zero_le_one fun x => ?_
   simp

@@ -62,8 +62,8 @@ noncomputable local instance uliftInnerProductSpace {E : Type*}
 
 /-- The approximation-number sequence of an operator, in `ℝ≥0∞`. -/
 noncomputable def approxSeq {E F : Type*}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] 
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] 
     (A : E →L[𝕜] F) (n : ℕ) : ℝ≥0∞ :=
   ENNReal.ofReal (A.approximationNumber n)
 

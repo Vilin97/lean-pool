@@ -49,17 +49,17 @@ noncomputable def tSqInner (p q : CenteredAffine) : ℝ :=
     + 2 * p.centered * q.centered / 15
 
 /-- The affine inner product is symmetric. -/
- lemma inner_symm (p q : CenteredAffine) : inner p q = inner q p := by
+lemma inner_symm (p q : CenteredAffine) : inner p q = inner q p := by
   unfold inner
   ring
 
 /-- The `t`-weighted inner product is symmetric. -/
- lemma tInner_symm (p q : CenteredAffine) : tInner p q = tInner q p := by
+lemma tInner_symm (p q : CenteredAffine) : tInner p q = tInner q p := by
   unfold tInner
   ring
 
 /-- The `t²`-weighted inner product is symmetric. -/
- lemma tSqInner_symm (p q : CenteredAffine) : tSqInner p q = tSqInner q p := by
+lemma tSqInner_symm (p q : CenteredAffine) : tSqInner p q = tSqInner q p := by
   unfold tSqInner
   ring
 

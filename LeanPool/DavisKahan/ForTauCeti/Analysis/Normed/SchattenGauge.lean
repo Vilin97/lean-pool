@@ -208,7 +208,7 @@ real-exponent case immediate, since an order isomorphism preserves suprema.
 This is a general `ℝ≥0∞` fact with no Schatten content.  It lives here because that is where
 its only consumer is; if a second one appears, move it somewhere shared rather than copying
 it. -/
-theorem iSup_rpow {ι : Sort*} [Nonempty ι] (f : ι → ℝ≥0∞) {r : ℝ} (hr : 0 < r) :
+theorem iSup_rpow {ι : Sort*} (f : ι → ℝ≥0∞) {r : ℝ} (hr : 0 < r) :
     (⨆ i, f i) ^ r = ⨆ i, f i ^ r := by
   have h := (ENNReal.orderIsoRpow r hr).map_iSup f
   simpa only [ENNReal.orderIsoRpow_apply] using h

@@ -144,8 +144,8 @@ The form the classification is actually used in: `exists_hilbertBasis` hands bac
 by an orthonormal *set* of vectors, so `hb` is the identification it comes with, separability
 makes that set countable, and the hypothesis is only that it is infinite. -/
 public theorem nonempty_linearIsometryEquiv_of_separable_of_infinite_hilbertBasis
-    [CompleteSpace E] [TopologicalSpace.SeparableSpace E]
-    [CompleteSpace F] [TopologicalSpace.SeparableSpace F]
+     [TopologicalSpace.SeparableSpace E]
+     [TopologicalSpace.SeparableSpace F]
     {w : Set E} {b : HilbertBasis w 𝕜 E} (hb : ⇑b = ((↑) : w → E)) (hw : w.Infinite)
     {w' : Set F} {b' : HilbertBasis w' 𝕜 F} (hb' : ⇑b' = ((↑) : w' → F)) (hw' : w'.Infinite) :
     Nonempty (E ≃ₗᵢ[𝕜] F) := by

@@ -54,7 +54,7 @@ variable {E : Type v} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 
 /-- Real directed sine block used by the Theorem 6.3 tangent estimate. -/
 noncomputable def theorem63DirectedSineBlockReal
-    (Z V : Submodule ℝ E) [Z.HasOrthogonalProjection]
+    (Z V : Submodule ℝ E) 
     [V.HasOrthogonalProjection] : Z →L[ℝ] E :=
   V.orthogonal.starProjection.comp Z.subtypeL
 

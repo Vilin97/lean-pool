@@ -181,7 +181,7 @@ def affineV (a b : ℂ) : BeamV :=
     affinePair_mem a b⟩
 
 /-- The inclusion of an affine form-domain element is the affine function. -/
- theorem beamEmbed_affineV (a b : ℂ) : beamEmbed (affineV a b) = affineLp a b := by
+theorem beamEmbed_affineV (a b : ℂ) : beamEmbed (affineV a b) = affineLp a b := by
   rw [show beamEmbed (affineV a b) = pairFst ((affineV a b : BeamV) : BeamPairSpace)
     from rfl]
   rw [show ((affineV a b : BeamV) : BeamPairSpace)
@@ -191,7 +191,7 @@ def affineV (a b : ℂ) : BeamV :=
   simp
 
 /-- An affine form-domain element has vanishing second derivative. -/
- theorem beamSnd_affineV (a b : ℂ) : beamSnd (affineV a b) = 0 := by
+theorem beamSnd_affineV (a b : ℂ) : beamSnd (affineV a b) = 0 := by
   rw [show beamSnd (affineV a b) = pairSnd ((affineV a b : BeamV) : BeamPairSpace)
     from rfl]
   rw [show ((affineV a b : BeamV) : BeamPairSpace)

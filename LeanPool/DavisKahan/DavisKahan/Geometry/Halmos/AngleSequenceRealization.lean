@@ -554,7 +554,7 @@ prescribed sequence itself has no zero angle.  This is the angle-`0` eigenspace 
 the combined datum, on either side. -/
 theorem ker_blockMap_angleSinOp (hθ0 : ∀ n, 0 ≤ θ n)
     (hθ2 : ∀ n, θ n ≤ Real.pi / 2) (hne : ∀ n, θ n ≠ 0)
-    (Z : Type*) [NormedAddCommGroup Z] [InnerProductSpace 𝕜 Z] [CompleteSpace Z] :
+    (Z : Type*) [NormedAddCommGroup Z] [InnerProductSpace 𝕜 Z] :
     LinearMap.ker ((blockMap (angleSinOp 𝕜 θ) (0 : Z →L[𝕜] Z)) :
         WithLp 2 (AngleSequenceSpace 𝕜 × Z) →ₗ[𝕜]
           WithLp 2 (AngleSequenceSpace 𝕜 × Z)) =

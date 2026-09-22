@@ -430,6 +430,7 @@ private theorem reflectionTangent_pair_norm_estimates
         linarith only [htM1]
   exact ⟨hmod1, hC0polar, hTstarMod, hC1T⟩
 
+omit [CompleteSpace E0] [CompleteSpace E1] in
 private theorem abs_re_inner_map_approx_scaled
     (B : E0 →L[ℂ] E1) {x y : E0} {z : E1} {c M eps : ℝ}
     (hz : ‖z‖ = 1) (hc0 : 0 < c) (hxy : ‖x - (c : ℂ) • y‖ ≤ M * eps) :

@@ -43,8 +43,8 @@ universe v
 `PartialMap` form below remains only for existing source-facing data. -/
 def LinearPMap.PairwiseSpectrumGap
     {E F : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-    [NormedAddCommGroup F] [InnerProductSpace ℂ F] [CompleteSpace F]
+    [NormedAddCommGroup E] [InnerProductSpace ℂ E] 
+    [NormedAddCommGroup F] [InnerProductSpace ℂ F] 
     (A : E →ₗ.[ℂ] E) (B : F →ₗ.[ℂ] F) (δ : ℝ) : Prop :=
   ∀ lam ∈ TauCeti.LinearPMap.spectrum A,
     ∀ α ∈ TauCeti.LinearPMap.spectrum B,

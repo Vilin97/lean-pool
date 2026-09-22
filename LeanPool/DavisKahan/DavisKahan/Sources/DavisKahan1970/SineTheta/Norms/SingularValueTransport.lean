@@ -40,10 +40,10 @@ abbrev SameApproximationSingularSequence
     {𝕜 : Type u} [RCLike 𝕜]
     {E₁ : Type vE1} {F₁ : Type vF1}
     {E₂ : Type vE2} {F₂ : Type vF2}
-    [NormedAddCommGroup E₁] [InnerProductSpace 𝕜 E₁] [CompleteSpace E₁]
-    [NormedAddCommGroup F₁] [InnerProductSpace 𝕜 F₁] [CompleteSpace F₁]
-    [NormedAddCommGroup E₂] [InnerProductSpace 𝕜 E₂] [CompleteSpace E₂]
-    [NormedAddCommGroup F₂] [InnerProductSpace 𝕜 F₂] [CompleteSpace F₂]
+    [NormedAddCommGroup E₁] [InnerProductSpace 𝕜 E₁] 
+    [NormedAddCommGroup F₁] [InnerProductSpace 𝕜 F₁] 
+    [NormedAddCommGroup E₂] [InnerProductSpace 𝕜 E₂] 
+    [NormedAddCommGroup F₂] [InnerProductSpace 𝕜 F₂] 
     (A : E₁ →L[𝕜] F₁) (B : E₂ →L[𝕜] F₂) : Prop :=
   A.HasSameApproximationNumbers B
 

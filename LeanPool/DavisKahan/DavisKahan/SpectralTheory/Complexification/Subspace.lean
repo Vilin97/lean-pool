@@ -316,7 +316,7 @@ omit [CompleteSpace E] in
 /-- Reduction by a real operator is preserved and reflected by operator and
 subspace complexification. -/
 theorem complexify_reduces_iff (T : E →L[ℝ] E) (U : Submodule ℝ E)
-    [U.HasOrthogonalProjection] :
+     :
     (complexify T).Reduces (complexifySubmodule U) ↔ T.Reduces U := by
   constructor
   · rintro ⟨hU, hUperp⟩

@@ -164,7 +164,7 @@ theorem isSymmetric_reflectionConjugate
 operator. -/
 theorem reduces_reflectedSubspace
     {A : E →L[𝕜] E} {U : Submodule 𝕜 E} {V : Submodule 𝕜 E}
-    [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
+     [V.HasOrthogonalProjection]
     (hU : A.Reduces U) :
     ContinuousLinearMap.Reduces (V.reflectionOperator ∘L A ∘L V.reflectionOperator)
       (reflectedSubspace V U) := by
@@ -358,7 +358,7 @@ endpoints: conjugation by the reflection preserves every restricted
 spectrum. -/
 theorem finiteGap_mixedIntervalExterior
     {A : E →L[𝕜] E} {U : Submodule 𝕜 E} (V : Submodule 𝕜 E)
-    [U.HasOrthogonalProjection] [V.HasOrthogonalProjection] {d : ℝ}
+     [V.HasOrthogonalProjection] {d : ℝ}
     (hfinite : FiniteGapConfiguration A U d) :
     ∃ l r l' r', l ≤ r ∧ l' ≤ r' ∧
       IntervalExteriorSeparated A U
@@ -382,7 +382,7 @@ configuration: both restricted spectra are invariant under reflection
 conjugation. -/
 theorem internalGap_reflection_transport
     {A : E →L[𝕜] E} {U : Submodule 𝕜 E} {V : Submodule 𝕜 E}
-    [U.HasOrthogonalProjection] [V.HasOrthogonalProjection] {d : ℝ}
+     [V.HasOrthogonalProjection] {d : ℝ}
     (hgap : InternalGap A U d) :
     HybridGap A (V.reflectionOperator ∘L A ∘L V.reflectionOperator)
       U (reflectedSubspace V U) d := by

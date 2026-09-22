@@ -291,7 +291,7 @@ theorem sinTwoTheta_commonDomain_block_kyFan
 /-- Source-oriented common-domain directed residual bound. Both displayed norms are finite.
 There is no bounded trial operator and no global bounded perturbation in the hypotheses. -/
 theorem sinTwoTheta_directed_commonDomain_whereDefinedUIN_rclike
-    [TopologicalSpace.SeparableSpace E]
+    
     (N : NormalizedSymmetricOperatorIdealFamily.{u, v} K)
     (hA : IsSelfAdjoint A) (hT : IsSelfAdjoint T)
     (hdom : T.domain = A.domain)

@@ -142,8 +142,8 @@ omit [CompleteSpace E] [CompleteSpace F] in
 /-- Ideal inequality for approximation singular values. -/
 theorem approximationSingularValue_comp_le
     {G : Type vG} {H : Type vH}
-    [NormedAddCommGroup G] [InnerProductSpace 𝕜 G] [CompleteSpace G]
-    [NormedAddCommGroup H] [InnerProductSpace 𝕜 H] [CompleteSpace H]
+    [NormedAddCommGroup G] [InnerProductSpace 𝕜 G] 
+    [NormedAddCommGroup H] [InnerProductSpace 𝕜 H] 
     (n : ℕ) (L : F →L[𝕜] G) (K : E →L[𝕜] F)
     (R : H →L[𝕜] E) :
     approximationSingularValue n (L ∘L K ∘L R)
@@ -533,8 +533,8 @@ theorem approximationSingularValue_restrict_mono
 singular value unchanged. -/
 theorem approximationSingularValue_orthogonalProjectionOnto_comp_eq
     {V : Type vG} {G : Type vH}
-    [NormedAddCommGroup V] [InnerProductSpace 𝕜 V] [CompleteSpace V]
-    [NormedAddCommGroup G] [InnerProductSpace 𝕜 G] [CompleteSpace G]
+    [NormedAddCommGroup V] [InnerProductSpace 𝕜 V] 
+    [NormedAddCommGroup G] [InnerProductSpace 𝕜 G] 
     (W : Submodule 𝕜 G) [W.HasOrthogonalProjection]
     (A : V →L[𝕜] G) (hA : ∀ x, A x ∈ W) (n : ℕ) :
     approximationSingularValue n (W.orthogonalProjectionOnto ∘L A) =
@@ -545,8 +545,8 @@ theorem approximationSingularValue_orthogonalProjectionOnto_comp_eq
 unchanged. -/
 theorem kyFanApproximationGauge_orthogonalProjectionOnto_comp_eq
     {V : Type vG} {G : Type vH}
-    [NormedAddCommGroup V] [InnerProductSpace 𝕜 V] [CompleteSpace V]
-    [NormedAddCommGroup G] [InnerProductSpace 𝕜 G] [CompleteSpace G]
+    [NormedAddCommGroup V] [InnerProductSpace 𝕜 V] 
+    [NormedAddCommGroup G] [InnerProductSpace 𝕜 G] 
     (W : Submodule 𝕜 G) [W.HasOrthogonalProjection]
     (A : V →L[𝕜] G) (hA : ∀ x, A x ∈ W) (k : ℕ) :
     kyFanApproximationGauge k (W.orthogonalProjectionOnto ∘L A) =
@@ -558,7 +558,7 @@ theorem kyFanApproximationGauge_add_le_finiteSource
     {V : Type vG} {G : Type vH}
     [NormedAddCommGroup V] [InnerProductSpace 𝕜 V]
     [FiniteDimensional 𝕜 V]
-    [NormedAddCommGroup G] [InnerProductSpace 𝕜 G] [CompleteSpace G]
+    [NormedAddCommGroup G] [InnerProductSpace 𝕜 G] 
     (k : ℕ) (A B : V →L[𝕜] G) :
     kyFanApproximationGauge k (A + B) ≤
       kyFanApproximationGauge k A + kyFanApproximationGauge k B :=

@@ -48,7 +48,7 @@ universe u
 variable {𝕜 : Type u} [RCLike 𝕜]
 
 /-- The two-dimensional model space `𝕜²` carrying the planar equality configuration. -/
-abbrev PlanarModelSpace (𝕜 : Type u) [RCLike 𝕜] := EuclideanSpace 𝕜 (Fin 2)
+abbrev PlanarModelSpace (𝕜 : Type u)  := EuclideanSpace 𝕜 (Fin 2)
 
 /-- First standard vector of the planar equality model. -/
 def planarModelE0 : PlanarModelSpace 𝕜 :=
@@ -403,7 +403,7 @@ noncomputable instance counterexampleTrial_projection :
 /-- Orthogonal projection onto a unit-generated real line. -/
 private theorem starProjection_span_singleton_apply_of_norm_one
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
-    [CompleteSpace E] (v x : E) (hv : ‖v‖ = 1) :
+     (v x : E) (hv : ‖v‖ = 1) :
     (Submodule.span ℝ {v}).starProjection x = ⟪v, x⟫_ℝ • v := by
   classical
   refine Submodule.eq_starProjection_of_mem_of_inner_eq_zero ?_ ?_

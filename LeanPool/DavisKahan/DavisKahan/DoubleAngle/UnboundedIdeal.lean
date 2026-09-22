@@ -69,7 +69,7 @@ complementary block be read either through `Uᗮ.map J_V` or through
 presentation. -/
 theorem projectionProduct_mem_and_gauge_le_isometric
     (N : TauCeti.SymmetricOperatorIdealFamily.{u, v} 𝕜)
-    [N.toOperatorIdealFamily.IsComplete]
+    
     (U W : Submodule 𝕜 H)
     [U.HasOrthogonalProjection] [W.HasOrthogonalProjection]
     [CompleteSpace U]
@@ -143,7 +143,7 @@ theorem projectionProduct_mem_and_gauge_le_overlap
 ideal containing the perturbation, with gauge cost at most two. -/
 theorem reflectionPerturbation_mem_and_gauge_le
     (N : TauCeti.SymmetricOperatorIdealFamily.{u, v} 𝕜)
-    [N.toOperatorIdealFamily.IsComplete]
+    
     (V : Submodule 𝕜 H) [V.HasOrthogonalProjection]
     (E : H →L[𝕜] H) (hEmem : N.Mem E) :
     N.Mem (reflectionPerturbation V E) ∧

@@ -490,7 +490,7 @@ section ReflectionForm
 /-- The projection onto a reflected complexified subspace is the complexification of the
 projection onto the reflected real subspace. -/
 theorem complexify_starProjection_map_reflection {F : Type v} [NormedAddCommGroup F]
-    [InnerProductSpace ℝ F] [CompleteSpace F] (U V : Submodule ℝ F)
+    [InnerProductSpace ℝ F]  (U V : Submodule ℝ F)
     [U.HasOrthogonalProjection] [V.HasOrthogonalProjection] :
     complexify ((U.map (V.reflection.toLinearEquiv : F →ₗ[ℝ] F)).starProjection -
         U.starProjection) =

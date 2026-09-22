@@ -43,7 +43,7 @@ The Ritz compression of `A` to the trial coordinates is contained in
 `[β, α]`, while the spectrum of `A` carried by the orthogonal complement of
 the exact subspace is contained in `[α + δ, ∞)`. -/
 def TanThetaIntervalGap (A : E →ₗ[𝕜] E) (U : Submodule 𝕜 E)
-    [U.HasOrthogonalProjection] (X : F →ₗᵢ[𝕜] E)
+     (X : F →ₗᵢ[𝕜] E)
     (β α δ : ℝ) : Prop :=
   PointSpectrumIn (compression A X) ⊤ (Set.Icc β α) ∧
     PointSpectrumIn A Uᗮ (Set.Ici (α + δ))

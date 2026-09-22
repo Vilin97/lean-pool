@@ -379,7 +379,7 @@ theorem measurable_chosenFiniteStepSymbol {n : ℕ}
   exact Measurable.piecewise (MeasurableSet.iUnion hcell) hstep measurable_id
 
 /-- The exact finite-step Borel identity required by the Sylvester file. -/
-theorem boundedSelfAdjointBorelCalculus_eq_finset_sum_indicator [Nontrivial H]
+theorem boundedSelfAdjointBorelCalculus_eq_finset_sum_indicator 
     (A : H →L[ℂ] H) (hA : A.IsSymmetric)
     {n : ℕ} (cell : Fin n → Set ℝ)
     (hcell : ∀ i, MeasurableSet (cell i))

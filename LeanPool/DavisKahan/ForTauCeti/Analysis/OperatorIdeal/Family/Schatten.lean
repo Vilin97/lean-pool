@@ -215,8 +215,8 @@ theorem schattenENorm_adjoint (p : ℝ) (T : E →L[𝕜] F) :
 omit [CompleteSpace E] [CompleteSpace F] in
 /-- **The two-sided ideal bound.** -/
 theorem schattenENorm_comp_le {p : ℝ} (hp0 : 0 < p) {G H : Type*}
-    [NormedAddCommGroup G] [InnerProductSpace 𝕜 G] [CompleteSpace G]
-    [NormedAddCommGroup H] [InnerProductSpace 𝕜 H] [CompleteSpace H]
+    [NormedAddCommGroup G] [InnerProductSpace 𝕜 G] 
+    [NormedAddCommGroup H] [InnerProductSpace 𝕜 H] 
     (L : F →L[𝕜] G) (T : E →L[𝕜] F) (R : H →L[𝕜] E) :
     (L ∘L T ∘L R).schattenENorm p ≤ ‖L‖ₑ * T.schattenENorm p * ‖R‖ₑ := by
   have hterm : ∀ n : ℕ, ENNReal.ofReal ((L ∘L T ∘L R).approximationNumber n) ^ p ≤

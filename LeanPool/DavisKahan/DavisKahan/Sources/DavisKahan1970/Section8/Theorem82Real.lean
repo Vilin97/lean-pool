@@ -235,7 +235,7 @@ omit [CompleteSpace E] in
 /-- A spectral placement for the perturbed operator on a real subspace becomes
 the same placement for the complexified pair on the complexified subspace. -/
 private theorem spectrumIn_complexify_add {A K : E →L[ℝ] E} {U : Submodule ℝ E}
-    [U.HasOrthogonalProjection] {s : Set ℝ}
+     {s : Set ℝ}
     (h : Foundation.SpectrumIn (A + K) U s) :
     Foundation.SpectrumIn (complexify A + complexify K) (complexifySubmodule U) s := by
   rw [show complexify A + complexify K = complexify (A + K) from
@@ -246,7 +246,7 @@ omit [CompleteSpace E] in
 /-- The same transport on the orthogonal complement, where complexification and
 orthogonal complementation have to be exchanged. -/
 private theorem spectrumIn_orthogonal_complexify_add {A K : E →L[ℝ] E}
-    {U : Submodule ℝ E} [U.HasOrthogonalProjection] {s : Set ℝ}
+    {U : Submodule ℝ E}  {s : Set ℝ}
     (h : Foundation.SpectrumIn (A + K) Uᗮ s) :
     Foundation.SpectrumIn (complexify A + complexify K) (complexifySubmodule U)ᗮ s := by
   rw [show complexify A + complexify K = complexify (A + K) from
@@ -726,7 +726,7 @@ theorem theorem8_2_real [FiniteDimensional ℝ E]
 /-- **Theorem 8.2's retained perturbation bound at the printed source scope over
 `ℝ`.** -/
 theorem theorem8_2_sinTwoTheta_perturbation_real_sourceExact
-    [TopologicalSpace.SeparableSpace E]
+    
     (N : ExactSinTheta.NormalizedUnitaryInvariantNorm.{0, _} ℝ)
     {A K : E →L[ℝ] E} (hA : A.IsSymmetric) (hK : K.IsSymmetric)
     {P Q : Submodule ℝ E} [P.HasOrthogonalProjection] [Q.HasOrthogonalProjection]
@@ -745,7 +745,7 @@ theorem theorem8_2_sinTwoTheta_perturbation_real_sourceExact
 /-- **Theorem 8.2's retained residual bound on the directed angle, at the printed
 source scope over `ℝ`.** -/
 theorem theorem8_2_sinTwoTheta_residual_directedAngle_real_sourceExact
-    [TopologicalSpace.SeparableSpace E]
+    
     (N : ExactSinTheta.NormalizedUnitaryInvariantNorm.{0, _} ℝ)
     {A K : E →L[ℝ] E} (hA : A.IsSymmetric) (hK : K.IsSymmetric)
     {P Q : Submodule ℝ E} [P.HasOrthogonalProjection] [Q.HasOrthogonalProjection]

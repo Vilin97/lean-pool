@@ -32,7 +32,7 @@ variable {E : Type v} [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [Complet
 
 omit [CompleteSpace E] in
 /-- Off-diagonality with respect to a closed splitting is scalar invariant. -/
-theorem isOddFor_clm_iff (U : Submodule 𝕜 E) [U.HasOrthogonalProjection]
+theorem isOddFor_clm_iff (U : Submodule 𝕜 E) 
     (B : E →L[𝕜] E) :
     TauCeti.IsOddFor (submodule (e := e) U) (clm (e := e) B) ↔
       TauCeti.IsOddFor U B := by

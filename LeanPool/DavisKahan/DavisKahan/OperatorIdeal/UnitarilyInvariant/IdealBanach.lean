@@ -46,8 +46,7 @@ variable {E F : Type v}
 
 /-- The linear subspace of members of a rectangular symmetric ideal. -/
 noncomputable def idealSubmodule
-    (N : TauCeti.SymmetricOperatorIdealFamily.{u, v} 𝕜)
-    [N.toOperatorIdealFamily.IsComplete] :
+    (N : TauCeti.SymmetricOperatorIdealFamily.{u, v} 𝕜) :
     Submodule 𝕜 (E →L[𝕜] F) where
   carrier := {A | N.Mem A}
   zero_mem' := N.zero_mem

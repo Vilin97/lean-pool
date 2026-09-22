@@ -97,7 +97,7 @@ noncomputable def localCurveIntegralFun
 /-- A continuous one-form gives an interval-integrable local curve integrand
 on each differentiable piece. -/
 theorem intervalIntegrable_localCurveIntegralFun
-    [CompleteSpace F]
+    
     (Γ : PiecewiseC1ClosedContour) (ω : ℂ → ℂ →L[ℂ] F)
     (hω : ContinuousOn ω Γ.image) (i : Fin Γ.pieceCount) :
     IntervalIntegrable (Γ.localCurveIntegralFun ω i) volume

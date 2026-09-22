@@ -475,7 +475,7 @@ Moore--Penrose initial projection and is the useful orientation for angular
 factorizations. -/
 theorem comp_moorePenroseInverse_comp_eq_of_ker_le
     {G : Type*} [NormedAddCommGroup G] [InnerProductSpace 𝕜 G]
-    [FiniteDimensional 𝕜 G]
+    
     (A : E →ₗ[𝕜] F) (B : E →ₗ[𝕜] G) (hker : A.ker ≤ B.ker) :
     B ∘ₗ moorePenroseInverse A ∘ₗ A = B := by
   apply (TauCeti.rightSingularBasis A).toBasis.ext

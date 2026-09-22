@@ -79,7 +79,7 @@ theorem intervalIntegrable_contourSpeed (Γ : PiecewiseC1ClosedContour) :
 /-- A curve integral is bounded by a uniform one-form norm times the
 parameterized contour length. -/
 theorem norm_curveIntegral_le_mul_contourLength
-    {F : Type u} [NormedAddCommGroup F] [NormedSpace ℂ F] [CompleteSpace F]
+    {F : Type u} [NormedAddCommGroup F] [NormedSpace ℂ F] 
     (Γ : PiecewiseC1ClosedContour) (ω : ℂ → ℂ →L[ℂ] F)
     {C : ℝ} (hbound : ∀ z ∈ Γ.image, ‖ω z‖ ≤ C) :
     ‖∫ᶜ z in Γ.path, ω z‖ ≤ C * Γ.contourLength := by

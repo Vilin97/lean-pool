@@ -69,6 +69,7 @@ private theorem reflectionOperator_inner_swap (U : Submodule ℂ E) [U.HasOrthog
   conv_lhs => rw [← hU]
   rw [ContinuousLinearMap.star_eq_adjoint, ContinuousLinearMap.adjoint_inner_left]
 
+omit [CompleteSpace E] in
 /-- A positive operator has strictly positive form when its mixed form controls an injective map. -/
 private theorem form_pos_of_injective_mixed_margin
     (X G : E →L[ℂ] E) {δ : ℝ} (hδpos : 0 < δ)

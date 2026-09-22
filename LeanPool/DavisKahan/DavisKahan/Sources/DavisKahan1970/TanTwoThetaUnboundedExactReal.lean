@@ -166,7 +166,7 @@ private theorem reflectionTangentCorner_gauge_congr_unboundedExactReal
 
 private theorem unboundedReflectionTangent_congr_unboundedExactReal
     {k : Type*} [RCLike k] {G : Type*}
-    [NormedAddCommGroup G] [InnerProductSpace k G] [CompleteSpace G]
+    [NormedAddCommGroup G] [InnerProductSpace k G] 
     {U V : Submodule k G} [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
     (h : U = V) (Z : G →L[k] G) :
     unboundedReflectionTangent U Z = unboundedReflectionTangent V Z := by
@@ -609,7 +609,7 @@ Separable ambient Hilbert space and normalized unitarily invariant norm.  Unlike
 the directed real clause, both sides of this estimate are real operators, so a
 single real source norm reaches them. -/
 theorem tanTwoTheta_ambient_unbounded_normalizedUIN_real
-    [TopologicalSpace.SeparableSpace E]
+    
     (N : NormalizedUnitaryInvariantNorm.{0, u} ℝ)
     {A : E →ₗ.[ℝ] E} {B : E →L[ℝ] E} {a b c : ℝ}
     (V : Submodule ℝ E) [V.HasOrthogonalProjection]

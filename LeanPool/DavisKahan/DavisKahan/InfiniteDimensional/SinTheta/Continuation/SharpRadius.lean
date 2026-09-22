@@ -137,7 +137,7 @@ theorem offDiagonal_enlargedInterval_separated_from_exterior
 /-- Path-uniform version of the enlarged-interval/exterior separation. -/
 theorem offDiagonal_path_enlargedInterval_separated_from_exterior
     {H : Type v} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
-    [CompleteSpace H]
+    
     (Hpert : H →L[ℂ] H)
     {left right d t x y : ℝ}
     (ht : t ∈ Set.Icc (0 : ℝ) 1)

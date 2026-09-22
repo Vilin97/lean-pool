@@ -447,8 +447,8 @@ not monotone across the quarter turn, and a unitarily invariant norm sees only
 the multiset of singular values. -/
 theorem kyFan_absTanTwoTheta_le_of_invariantSubspace
     {E₂ F₂ : Type u}
-    [NormedAddCommGroup E₂] [InnerProductSpace ℂ E₂] [CompleteSpace E₂]
-    [NormedAddCommGroup F₂] [InnerProductSpace ℂ F₂] [CompleteSpace F₂]
+    [NormedAddCommGroup E₂] [InnerProductSpace ℂ E₂] 
+    [NormedAddCommGroup F₂] [InnerProductSpace ℂ F₂] 
     (hA : IsSelfAdjoint A) (hH : IsSelfAdjoint H)
     (hAU : ∀ x ∈ U, A x ∈ U)
     (hHU : ∀ x ∈ U, H x ∈ Uᗮ) (hHUperp : ∀ x ∈ Uᗮ, H x ∈ U)

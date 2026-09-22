@@ -224,7 +224,7 @@ Both crossed defects finite-dimensional with the same `finrank`, or both
 infinite-dimensional.  On a separable space this is what "the two crossed defect spaces have
 equal Hilbert dimension" says. -/
 def CrossedDefectsSameDimension (U V : Submodule 𝕜 H)
-    [U.HasOrthogonalProjection] [V.HasOrthogonalProjection] : Prop :=
+      : Prop :=
   (FiniteDimensional 𝕜 (halmosSourceDefect U V) ∧
       FiniteDimensional 𝕜 (halmosTargetDefect U V) ∧
       Module.finrank 𝕜 (halmosSourceDefect U V)

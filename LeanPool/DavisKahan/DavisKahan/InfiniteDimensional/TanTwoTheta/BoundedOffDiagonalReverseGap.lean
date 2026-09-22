@@ -192,7 +192,7 @@ theorem quarterAcuteAngularCoordinate_sharp_bound_of_reverse_orderedSpectraSepar
     (A H : E →L[ℂ] E)
     (hA : A.IsSymmetric) (hH : H.IsSymmetric)
     (U V : Submodule ℂ E) [U.HasOrthogonalProjection]
-    [V.HasOrthogonalProjection] [Nontrivial U] [Nontrivial Uᗮ]
+    [V.HasOrthogonalProjection]  [Nontrivial Uᗮ]
     (hU : A.Reduces U) (hV : ContinuousLinearMap.Reduces (A + H) V)
     (hoff : Submodule.IsOffDiagonal U H)
     {d : ℝ} (hd : 0 < d)

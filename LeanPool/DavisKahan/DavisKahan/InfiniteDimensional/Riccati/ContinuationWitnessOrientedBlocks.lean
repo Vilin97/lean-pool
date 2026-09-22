@@ -53,7 +53,7 @@ variable {H : Type v} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
 /-- Synthesis from the orthogonal coordinates `U ⊕ Uᗮ` to the ambient
 Hilbert space. -/
 noncomputable def subspaceCoordinateSynthesis
-    (U : Submodule ℂ H) [U.HasOrthogonalProjection] :
+    (U : Submodule ℂ H)  :
     WithLp 2 (U × Uᗮ) →L[ℂ] H :=
   U.subtypeL ∘L WithLp.fstL 2 ℂ U Uᗮ +
     Uᗮ.subtypeL ∘L WithLp.sndL 2 ℂ U Uᗮ

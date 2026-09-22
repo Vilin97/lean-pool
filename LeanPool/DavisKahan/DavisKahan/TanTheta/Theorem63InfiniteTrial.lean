@@ -190,7 +190,7 @@ most `k · ε`. -/
 theorem kyFanApproximationGauge_theorem63Residual_le_add
     (T : H →L[ℂ] H) (Z F : Submodule ℂ H)
     [Z.HasOrthogonalProjection] [F.HasOrthogonalProjection]
-    [CompleteSpace Z] [CompleteSpace F]
+     [CompleteSpace F]
     (hFZ : F ≤ Z) {ε : ℝ} (hε : 0 ≤ ε)
     (hleak : ∀ f : F, ‖Z.starProjection (T (f : H)) -
         F.starProjection (Z.starProjection (T (f : H)))‖ ≤ ε * ‖(f : H)‖)

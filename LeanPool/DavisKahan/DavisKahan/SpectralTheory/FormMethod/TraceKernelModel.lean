@@ -160,7 +160,7 @@ noncomputable def freeFourthAmbient
 
 omit [CompleteSpace H] [CompleteSpace V] in
 /-- The ambient inverse undoes the free embedding. -/
- theorem freeAmbientInverse_freeEmbed
+theorem freeAmbientInverse_freeEmbed
     (D : FourthOrderTraceModel (𝕜 := 𝕜) (H := H) (V := V))
     (x : D.freeSubspace) :
     D.freeAmbientInverse
@@ -171,7 +171,7 @@ omit [CompleteSpace H] [CompleteSpace V] in
 
 omit [CompleteSpace H] [CompleteSpace V] in
 /-- The ambient fourth-order operator agrees with the model one through the embedding. -/
- theorem freeFourthAmbient_freeEmbed
+theorem freeFourthAmbient_freeEmbed
     (D : FourthOrderTraceModel (𝕜 := 𝕜) (H := H) (V := V))
     (x : D.freeSubspace) :
     D.freeFourthAmbient

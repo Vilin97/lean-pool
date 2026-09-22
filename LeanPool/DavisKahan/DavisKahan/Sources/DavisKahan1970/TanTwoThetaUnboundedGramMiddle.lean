@@ -427,7 +427,7 @@ theorem inner_reflectionResidualCorner (K : H →L[ℂ] H) (u : Uᗮ) (v : U) :
 omit [CompleteSpace H] in
 /-- A linear combination of a family inside a subspace has the same norm read in
 the subspace and in the ambient space. -/
-theorem norm_sum_smul_coe {W : Submodule ℂ H} [W.HasOrthogonalProjection]
+theorem norm_sum_smul_coe {W : Submodule ℂ H} 
     {n : ℕ} (u : Fin n → W) (α : Fin n → ℂ) :
     ‖∑ i, α i • u i‖ = ‖∑ i, α i • ((u i : W) : H)‖ := by
   have h : ((∑ i, α i • u i : W) : H) = ∑ i, α i • ((u i : W) : H) := by
@@ -738,7 +738,6 @@ private theorem sum_tanArcsin_le_of_retained_bound
     (hmk : m ≤ k) (hδ : 0 < b - a) (hτ : 0 ≤ τ)
     (hθ : 0 < θ) (hθ1 : θ < 1) (hκ : 0 < κ)
     (hρ : 0 < ρ) (hρdef : ρ = θ ^ 4) (hρθ : ρ ≤ θ)
-    (ha0 : ∀ p, 0 ≤ α p)
     (hdenominator : ∀ p, κ ≤ √(1 - α p ^ 2))
     (hleading : ∀ p, m ≤ p → p < k → α p ≤ θ)
     (hcsq : c ^ 2 = 1 + 3 * (k : ℝ) * (ρ / 4) / (θ ^ 2 * κ ^ 2))
@@ -762,7 +761,7 @@ private theorem sum_tanArcsin_le_of_retained_bound
         hdenominator p
       have hden0 : 0 < √(1 - α p ^ 2) := lt_of_lt_of_le hκ hden
       rw [div_le_div_iff₀ hden0 hκ]
-      nlinarith [ha0 p, hκ.le, hden]
+      nlinarith [hκ.le, hden]
     calc ∑ p ∈ Finset.Ico m k, Real.tan (Real.arcsin
           (α p)) ≤ ∑ _p ∈ Finset.Ico m k, θ / κ :=
           Finset.sum_le_sum hbd
@@ -992,7 +991,7 @@ theorem gap_mul_sum_tanArcsin_le_two_mul_kyFan_add_of_cutoff
     (fun p => X.approximationNumber p) m k a b τ θ κ ρ c
     (kyFanApproximationGauge m (reflectionResidualCorner U B))
     (kyFanApproximationGauge k (reflectionResidualCorner U B))
-    hmk hδ hτ hθ hθ1 hκ hρ hρdef hρθ.le ha0
+    hmk hδ hτ hθ hθ1 hκ hρ hρdef hρθ.le
     (fun p => hcκ _ (ha0 p) (har p))
     (fun p hp1 hp2 => approximationNumber_le_of_leadingCount_le X k θ hp1 hp2)
     hcsq hG0 hGm hmain

@@ -40,8 +40,8 @@ rank reaches the rank of the operator itself. -/
 theorem approximationSingularValue_eq_zero_of_rank_le
     {𝕜 : Type u} [RCLike 𝕜]
     {E : Type v} {F : Type vF}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] 
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] 
     {A : E →L[𝕜] F} {n : ℕ}
     (hA : A.rank ≤ (n : Cardinal)) :
     approximationSingularValue n A = 0 := by

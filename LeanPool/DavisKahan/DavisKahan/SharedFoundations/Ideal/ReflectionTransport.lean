@@ -68,7 +68,7 @@ theorem reflection_right_twoWay
 /-- Ideal membership is invariant under left reflection. -/
 theorem SymmetricOperatorIdealFamily.mem_reflection_comp_iff
     (N : TauCeti.SymmetricOperatorIdealFamily.{u, u} 𝕜)
-    [N.toOperatorIdealFamily.IsComplete]
+    
     (V : Submodule 𝕜 E) [V.HasOrthogonalProjection]
     (T : E →L[𝕜] E) :
     N.Mem (V.reflectionOperator ∘L T) ↔ N.Mem T := by
@@ -82,7 +82,7 @@ theorem SymmetricOperatorIdealFamily.mem_reflection_comp_iff
 /-- The ideal gauge is invariant under left reflection. -/
 theorem SymmetricOperatorIdealFamily.gauge_reflection_comp
     (N : TauCeti.SymmetricOperatorIdealFamily.{u, u} 𝕜)
-    [N.toOperatorIdealFamily.IsComplete]
+    
     (V : Submodule 𝕜 E) [V.HasOrthogonalProjection]
     {T : E →L[𝕜] E} (hT : N.Mem T) :
     N.gaugeReal (V.reflectionOperator ∘L T) = N.gaugeReal T := by
@@ -103,7 +103,7 @@ theorem SymmetricOperatorIdealFamily.gauge_reflection_comp
 /-- Ideal membership is invariant under right reflection. -/
 theorem SymmetricOperatorIdealFamily.mem_comp_reflection_iff
     (N : TauCeti.SymmetricOperatorIdealFamily.{u, u} 𝕜)
-    [N.toOperatorIdealFamily.IsComplete]
+    
     (V : Submodule 𝕜 E) [V.HasOrthogonalProjection]
     (T : E →L[𝕜] E) :
     N.Mem (T ∘L V.reflectionOperator) ↔ N.Mem T := by
@@ -117,7 +117,7 @@ theorem SymmetricOperatorIdealFamily.mem_comp_reflection_iff
 /-- The ideal gauge is invariant under right reflection. -/
 theorem SymmetricOperatorIdealFamily.gauge_comp_reflection
     (N : TauCeti.SymmetricOperatorIdealFamily.{u, u} 𝕜)
-    [N.toOperatorIdealFamily.IsComplete]
+    
     (V : Submodule 𝕜 E) [V.HasOrthogonalProjection]
     {T : E →L[𝕜] E} (hT : N.Mem T) :
     N.gaugeReal (T ∘L V.reflectionOperator) = N.gaugeReal T := by

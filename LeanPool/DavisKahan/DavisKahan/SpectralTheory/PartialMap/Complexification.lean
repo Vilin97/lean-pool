@@ -216,7 +216,7 @@ omit [CompleteSpace E] in
 
 omit [CompleteSpace E] in
 /-- Membership criterion for the complexified domain. -/
- theorem mem_complexify_domain_iff
+theorem mem_complexify_domain_iff
     (A : E →ₗ.[ℝ] E)
     (z : Eℂ) :
     z ∈ (complexify A).domain ↔ re z ∈ A.domain ∧ im z ∈ A.domain := by
@@ -245,7 +245,7 @@ omit [CompleteSpace E] in
 operator separates coordinatewise.  This is the `LinearPMap`-native form of
 `mem_complexify_domain_iff`, used while the historical bundle remains as a
 compatibility adapter. -/
- theorem mem_complexify_toLinearPMap_domain_iff
+theorem mem_complexify_toLinearPMap_domain_iff
     (A : E →ₗ.[ℝ] E)
     (z : Eℂ) :
     z ∈ (complexify A).domain ↔
@@ -268,7 +268,7 @@ def domainImPMap
 
 omit [CompleteSpace E] in
 /-- The same, through the underlying partial map. -/
- theorem complexify_toLinearPMap_apply_re
+theorem complexify_toLinearPMap_apply_re
     (A : E →ₗ.[ℝ] E)
     (z : (complexify A).domain) :
     re ((complexify A) z) =
@@ -277,7 +277,7 @@ omit [CompleteSpace E] in
 
 omit [CompleteSpace E] in
 /-- The same on the imaginary coordinate, through the underlying partial map. -/
- theorem complexify_toLinearPMap_apply_im
+theorem complexify_toLinearPMap_apply_im
     (A : E →ₗ.[ℝ] E)
     (z : (complexify A).domain) :
     im ((complexify A) z) =

@@ -57,7 +57,7 @@ omit [CompleteSpace H₁] [CompleteSpace H₂] in
 equivalence of ordered pairs. -/
 theorem pairOfSubspacesUnitaryEquivalent_orthogonal_right
     {U₁ V₁ : Submodule 𝕜 H₁} {U₂ V₂ : Submodule 𝕜 H₂}
-    [V₁.HasOrthogonalProjection] [V₂.HasOrthogonalProjection]
+     
     (h : PairOfSubspacesUnitaryEquivalent U₁ V₁ U₂ V₂) :
     PairOfSubspacesUnitaryEquivalent U₁ V₁ᗮ U₂ V₂ᗮ := by
   obtain ⟨e, hU, hV⟩ := h

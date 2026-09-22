@@ -70,15 +70,15 @@ consumers carry.  This mirrors `approximationNumber` itself, which is total in
 the same way. -/
 noncomputable def compactAngleEigenvalueList
     {K : Type*} [NormedAddCommGroup K] [InnerProductSpace 𝕜 K]
-    [CompleteSpace K] (A : K →L[𝕜] K) : ℕ → ℝ :=
+     (A : K →L[𝕜] K) : ℕ → ℝ :=
   fun n => A.approximationNumber n
 
 /-- **Approximation numbers are a unitary invariant.**  Conjugating by a linear isometric
 equivalence sandwiches the operator between two contractions in both directions, so no
 approximation number can move. -/
 theorem approximationNumber_eq_of_boundedOperatorsUnitaryEquivalent
-    {E F : Type*} [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
+    {E F : Type*} [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] 
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] 
     {A : E →L[𝕜] E} {B : F →L[𝕜] F}
     (h : BoundedOperatorsUnitaryEquivalent A B) (n : ℕ) :
     A.approximationNumber n = B.approximationNumber n := by

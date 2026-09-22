@@ -114,7 +114,7 @@ theorem projection_comp_opNorm_le
 omit [CompleteSpace E] [CompleteSpace F] in
 /-- The rectangular projection--operator--inclusion block is contractive. -/
 theorem restricted_projection_sandwich_norm_le
-    (U : Submodule 𝕜 E) [U.HasOrthogonalProjection]
+    (U : Submodule 𝕜 E) 
     (V : Submodule 𝕜 F) [V.HasOrthogonalProjection]
     (T : E →L[𝕜] F) :
     ‖((Vᗮ.starProjection ∘L T ∘L U.subtypeL)).codRestrict Vᗮ
@@ -200,7 +200,7 @@ theorem directedPerturbation_sylvesterEquation
     {A B : E →L[𝕜] E}
     (_hA : A.IsSymmetric) (hB : B.IsSymmetric)
     {U V : Submodule 𝕜 E}
-    [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
+     [V.HasOrthogonalProjection]
     (hU : A.Reduces U) (hV : B.Reduces V) :
     ContinuousLinearMap.sylvesterOperator (B.restrict hV.2)
       (A.restrict hU.1)
@@ -223,7 +223,7 @@ omit [CompleteSpace E] in
 theorem hybridGap_restrictions
     {A B : E →L[𝕜] E}
     {U V : Submodule 𝕜 E}
-    [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
+     
     (_hA : A.IsSymmetric) (_hB : B.IsSymmetric)
     (hU : A.Reduces U) (hV : B.Reduces V)
     {d : ℝ} (hgap : HybridGap A B U V d) :
@@ -247,7 +247,7 @@ rectangular ideal theorem. -/
 theorem intervalExteriorSeparated_restrictions
     {A B : E →L[𝕜] E}
     {U V : Submodule 𝕜 E}
-    [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
+     
     (_hA : A.IsSymmetric) (_hB : B.IsSymmetric)
     (hU : A.Reduces U) (hV : B.Reduces V)
     {left right d : ℝ}

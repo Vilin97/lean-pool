@@ -216,7 +216,7 @@ theorem associatedOperator_isSelfAdjoint
     D.resolvent_nonnegative
 
 /-- The form resolvent is the inverse of the associated operator on its domain. -/
- theorem associatedOperator_resolvent
+theorem associatedOperator_resolvent
     (D : CoerciveFormData (𝕜 := 𝕜) (H := H) (V := V)) (f : H) :
     D.associatedOperator
       ⟨D.resolvent f,

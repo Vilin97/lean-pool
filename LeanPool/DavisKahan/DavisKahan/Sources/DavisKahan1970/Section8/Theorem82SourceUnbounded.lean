@@ -80,7 +80,7 @@ context.**
 `P` reduces `A`, so the Ritz block of `P` is `A₀ = A|_P` and the residual of `P`
 for `A + H` is `R = (A + H)|_P − A₀ = H|_P`.
 `sourceResidual_eq_sub_ritzBlock` certifies that reading; it is not assumed. -/
-def sourceResidual (Hop : H →L[𝕜] H) (P : Submodule 𝕜 H) [P.HasOrthogonalProjection] :
+def sourceResidual (Hop : H →L[𝕜] H) (P : Submodule 𝕜 H)  :
     P →L[𝕜] H :=
   Hop ∘L (P.subtypeL : P →L[𝕜] H)
 

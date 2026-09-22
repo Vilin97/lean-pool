@@ -200,7 +200,7 @@ def beamLowOperator (ε : ℝ) (hε : 0 ≤ ε) :
       ⟨(x : BeamL2), beamLowFiveHundred_le_domain ε hε x.2⟩ x.2)
 
 /-- The restriction acts by the ambient operator. -/
- theorem beamLowOperator_coe (ε : ℝ) (hε : 0 ≤ ε) (x : beamLowFiveHundred ε) :
+theorem beamLowOperator_coe (ε : ℝ) (hε : 0 ≤ ε) (x : beamLowFiveHundred ε) :
     ((beamLowOperator ε hε x : beamLowFiveHundred ε) : BeamL2)
       = (beamPerturbed ε) ⟨(x : BeamL2), beamLowFiveHundred_le_domain ε hε x.2⟩ :=
   rfl

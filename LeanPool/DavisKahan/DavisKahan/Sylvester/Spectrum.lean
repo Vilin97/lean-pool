@@ -90,7 +90,7 @@ variable {F : Type*} [NormedAddCommGroup F] [InnerProductSpace ℂ F]
   [CompleteSpace F]
 /-- **Shifting by the interval midpoint pushes an exterior spectrum off zero.** -/
 private theorem shifted_spectrum_exterior {G : Type*} [NormedAddCommGroup G]
-    [InnerProductSpace ℂ G] [CompleteSpace G] {S : G →L[ℂ] G} {a b d c r : ℝ}
+    [InnerProductSpace ℂ G] {S : G →L[ℂ] G} {a b d c r : ℝ}
     (hc : c = (a + b) / 2) (hr : r = (b - a) / 2)
     (hspec : ∀ x ∈ spectrum ℝ S, x ≤ a - d ∨ b + d ≤ x) :
     ∀ x ∈ spectrum ℝ (S - algebraMap ℝ (G →L[ℂ] G) c), r + d ≤ |x| := by
@@ -111,7 +111,7 @@ private theorem shifted_spectrum_exterior {G : Type*} [NormedAddCommGroup G]
 
 Both Sylvester bounds in this file derived the pair inline. -/
 private theorem shifted_spectrum_interior {G : Type*} [NormedAddCommGroup G]
-    [InnerProductSpace ℂ G] [CompleteSpace G] {S : G →L[ℂ] G} {a b c r : ℝ}
+    [InnerProductSpace ℂ G] {S : G →L[ℂ] G} {a b c r : ℝ}
     (hc : c = (a + b) / 2) (hr : r = (b - a) / 2)
     (hspec : spectrum ℝ S ⊆ Set.Icc a b) :
     spectrum ℝ (S - algebraMap ℝ (G →L[ℂ] G) c) ⊆ Set.Icc (-r) r := by

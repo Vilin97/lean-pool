@@ -714,7 +714,7 @@ the four Halmos identities the printed converse asserts.
 theorem theorem3_1_realization_inAmbient_ofSpectralMultiplicityAwayFromZero_complex
     {A₀ : Type u} [NormedAddCommGroup A₀] [InnerProductSpace ℂ A₀] [CompleteSpace A₀]
     {A₁ : Type v} [NormedAddCommGroup A₁] [InnerProductSpace ℂ A₁] [CompleteSpace A₁]
-    {H : Type w} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
+    {H : Type w} [NormedAddCommGroup H] [InnerProductSpace ℂ H] 
     {Θ₀ : A₀ →L[ℂ] A₀} {Θ₁ : A₁ →L[ℂ] A₁}
     (hΘ₀ : IsSelfAdjoint Θ₀) (hΘ₁ : IsSelfAdjoint Θ₁)
     (hspec₀ : spectrum ℝ Θ₀ ⊆ Set.Icc 0 (Real.pi / 2))
@@ -757,7 +757,7 @@ space and its dimension clause.**  The real sibling of
 theorem theorem3_1_realization_inAmbient_ofSpectralMultiplicityAwayFromZero_real
     {A₀ : Type u} [NormedAddCommGroup A₀] [InnerProductSpace ℝ A₀] [CompleteSpace A₀]
     {A₁ : Type v} [NormedAddCommGroup A₁] [InnerProductSpace ℝ A₁] [CompleteSpace A₁]
-    {H : Type w} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+    {H : Type w} [NormedAddCommGroup H] [InnerProductSpace ℝ H] 
     {Θ₀ : A₀ →L[ℝ] A₀} {Θ₁ : A₁ →L[ℝ] A₁}
     (hΘ₀ : IsSelfAdjoint Θ₀) (hΘ₁ : IsSelfAdjoint Θ₁)
     (hspec₀ : spectrum ℝ Θ₀ ⊆ Set.Icc 0 (Real.pi / 2))
@@ -899,7 +899,7 @@ by a pair of subspaces of the paper's separable ambient space, up to isometric
 equivalence with the model pair carrying exactly those angle data. -/
 theorem theorem3_1_realization_sourceExact_complex
     [InnerProductSpace ℂ A₀] [InnerProductSpace ℂ A₁] [InnerProductSpace ℂ H]
-    [TopologicalSpace.SeparableSpace H]
+    
     {Θ₀ : A₀ →L[ℂ] A₀} {Θ₁ : A₁ →L[ℂ] A₁}
     (hΘ₀ : IsSelfAdjoint Θ₀) (hΘ₁ : IsSelfAdjoint Θ₁)
     (hspec₀ : spectrum ℝ Θ₀ ⊆ Set.Icc 0 (Real.pi / 2))
@@ -920,7 +920,7 @@ theorem theorem3_1_realization_sourceExact_complex
 scope over `ℝ`.** -/
 theorem theorem3_1_realization_sourceExact_real
     [InnerProductSpace ℝ A₀] [InnerProductSpace ℝ A₁] [InnerProductSpace ℝ H]
-    [TopologicalSpace.SeparableSpace H]
+    
     {Θ₀ : A₀ →L[ℝ] A₀} {Θ₁ : A₁ →L[ℝ] A₁}
     (hΘ₀ : IsSelfAdjoint Θ₀) (hΘ₁ : IsSelfAdjoint Θ₁)
     (hspec₀ : spectrum ℝ Θ₀ ⊆ Set.Icc 0 (Real.pi / 2))

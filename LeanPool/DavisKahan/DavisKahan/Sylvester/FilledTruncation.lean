@@ -362,7 +362,7 @@ theorem boundedInverseData_of_coercive_direct
 norm-bounded positive operator after adding its operator norm. -/
 theorem norm_add_opNorm_id_le_of_nonpos_direct
     {H : Type v}
-    [NormedAddCommGroup H] [InnerProductSpace 𝕜 H] [CompleteSpace H]
+    [NormedAddCommGroup H] [InnerProductSpace 𝕜 H] 
     {B : H →L[𝕜] H} (hBsym : B.IsSymmetric)
     (hBnonpos : ∀ x, RCLike.re ⟪B x, x⟫_𝕜 ≤ 0) :
     ‖B + ((‖B‖ : ℝ) : 𝕜) • ContinuousLinearMap.id 𝕜 H‖ ≤ ‖B‖ := by

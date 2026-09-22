@@ -133,7 +133,7 @@ certificate for the two-by-two obstruction data has coefficient mass at least
 `5 / 3`. -/
 theorem real_reciprocalOrbitInterpolation_mass_lower_bound
     {G : Type*} [NormedAddCommGroup G] [InnerProductSpace ℝ G]
-    [FiniteDimensional ℝ G]
+    
     (e : OrthonormalBasis (Fin (Module.finrank ℝ G)) ℝ G)
     (h2 : Module.finrank ℝ G = 2)
     {mass : ℝ}

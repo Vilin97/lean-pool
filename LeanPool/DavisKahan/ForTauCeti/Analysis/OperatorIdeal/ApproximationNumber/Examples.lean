@@ -134,7 +134,7 @@ theorem approximationNumber_starProjection (V : Submodule 𝕜 E)
 /-- **Acceptance example: an orthogonal projection, past its rank.**  Beyond the
 dimension of the subspace there is nothing left to approximate. -/
 theorem approximationNumber_starProjection_of_finrank_le (V : Submodule 𝕜 E)
-    [V.HasOrthogonalProjection] [FiniteDimensional 𝕜 V] {n : ℕ}
+    [V.HasOrthogonalProjection] {n : ℕ}
     (hn : finrank 𝕜 V ≤ n) :
     V.starProjection.approximationNumber n = 0 := by
   refine approximationNumber_eq_zero_of_finrank_range_le _ ?_

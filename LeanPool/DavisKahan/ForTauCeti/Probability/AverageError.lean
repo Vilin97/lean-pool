@@ -205,7 +205,7 @@ theorem tendsto_integral_of_tendsto_measure_ge_of_bounded [IsProbabilityMeasure 
 Nothing about independence is used, and nothing about the errors beyond their integrals: only
 that at a given stage they all have the same one.
 -/
-theorem integral_average_of_integral_eq [IsFiniteMeasure μ] {n : Nat} (E : Fin n → Ω → Real)
+theorem integral_average_of_integral_eq {n : Nat} (E : Fin n → Ω → Real)
     (hE : ∀ i, Integrable (E i) μ) {e : Real} (hmean : ∀ i, ∫ ω, E i ω ∂μ = e) :
     ∫ ω, ((n : Real))⁻¹ * ∑ i, E i ω ∂μ = ((n : Real))⁻¹ * ((n : Real) * e) := by
   classical

@@ -238,7 +238,7 @@ source's own ambient assumption.
 The hypotheses `hgf` say only that `g ∘ f` is the identity *on the spectrum*,
 which is all that a functional calculus sees. -/
 theorem sameSpectralMultiplicity_cfc_iff
-    [TopologicalSpace.SeparableSpace H₁] [TopologicalSpace.SeparableSpace H₂]
+    [TopologicalSpace.SeparableSpace H₁] 
     {A : H₁ →L[ℂ] H₁} {B : H₂ →L[ℂ] H₂}
     (hA : IsSelfAdjoint A) (hB : IsSelfAdjoint B)
     (f g : ℝ → ℝ)

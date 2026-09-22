@@ -77,7 +77,7 @@ domain. -/
 
 /-- Membership in the block domain is membership of each coordinate in its own
 diagonal domain. -/
- theorem mem_unboundedBlockOperatorCore_domain_iff
+theorem mem_unboundedBlockOperatorCore_domain_iff
     (H : UnboundedBlockData (𝕜 := 𝕜) (E0 := E0) (E1 := E1))
     (z : WithLp 2 (E0 × E1)) :
     z ∈ (unboundedBlockOperatorCore H).domain ↔

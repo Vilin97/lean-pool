@@ -49,7 +49,7 @@ def projectionBlock
 /-- The compression of `K` to the block coordinates `Γ → Ω`. -/
 def blockCompression
     (Ω Γ : Submodule 𝕜 E)
-    [Ω.HasOrthogonalProjection] [Γ.HasOrthogonalProjection]
+    [Ω.HasOrthogonalProjection] 
     (K : E →L[𝕜] E) : Γ →L[𝕜] Ω :=
   Ω.subtypeL.adjoint ∘L K ∘L Γ.subtypeL
 

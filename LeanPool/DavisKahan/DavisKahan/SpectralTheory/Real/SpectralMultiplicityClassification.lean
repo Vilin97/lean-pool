@@ -106,7 +106,7 @@ It is written out rather than derived from the complex statement: the only
 obstruction to sharing is the missing `Algebra ℝ (H →L[𝕜] H)` instance, and the
 real classification pair above supplies everything the argument needs. -/
 theorem sameSpectralMultiplicity_cfc_iff_real [CompleteSpace H₁] [CompleteSpace H₂]
-    [TopologicalSpace.SeparableSpace H₁] [TopologicalSpace.SeparableSpace H₂]
+    [TopologicalSpace.SeparableSpace H₁] 
     {A : H₁ →L[ℝ] H₁} {B : H₂ →L[ℝ] H₂}
     (hA : IsSelfAdjoint A) (hB : IsSelfAdjoint B)
     (f g : ℝ → ℝ)

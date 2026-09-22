@@ -56,7 +56,7 @@ omit [CompleteSpace H] in
 lifted Ritz compression. -/
 theorem trialResidualCore_eq_ritzDifference
     (T : H →L[ℂ] H) (Z : Submodule ℂ H)
-    [Z.HasOrthogonalProjection] [CompleteSpace Z] :
+    [Z.HasOrthogonalProjection]  :
     trialResidualCore T Z =
       T ∘L Z.subtypeL - Z.subtypeL ∘L compressOperator Z T := by
   apply ContinuousLinearMap.ext
@@ -181,7 +181,7 @@ theorem norm_isometricRangeCrossBlock_le_residual
 range cross block. -/
 theorem isometricRangeCrossBlock_mem
     (N : TauCeti.SymmetricOperatorIdealFamily.{0, u} ℂ)
-    [N.toOperatorIdealFamily.IsComplete]
+    
     (A : H →L[ℂ] H) (X : F →L[ℂ] H) (M : F →L[ℂ] F)
     (hX : IsometricEmbedding X) (hR : N.Mem (residual A X M)) :
     N.Mem (isometricRangeCrossBlock A X hX) := by
@@ -200,7 +200,7 @@ theorem isometricRangeCrossBlock_mem
 trial residual gauge. -/
 theorem gauge_isometricRangeCrossBlock_le
     (N : TauCeti.SymmetricOperatorIdealFamily.{0, u} ℂ)
-    [N.toOperatorIdealFamily.IsComplete]
+    
     (A : H →L[ℂ] H) (X : F →L[ℂ] H) (M : F →L[ℂ] F)
     (hX : IsometricEmbedding X) (hR : N.Mem (residual A X M)) :
     N.gaugeReal (isometricRangeCrossBlock A X hX) ≤

@@ -284,7 +284,7 @@ The body of this gauge is the same expression named by `hSinTheta₀` in
 Both norms are assumed finite. The norm record supplies the where-defined
 Ky Fan comparison; the conclusion makes no ideal-membership transfer claim. -/
 theorem sinTheta_unbounded_formGap_whereDefinedUIN_rclike
-    [TopologicalSpace.SeparableSpace E]
+    
     (N : NormalizedSymmetricOperatorIdealFamily.{u, v} 𝕜)
     (A : E →ₗ.[𝕜] E) (A₀ : F →ₗ.[𝕜] F) (Λ₁ : G →ₗ.[𝕜] G)
     (E₀ : F →L[𝕜] E) (F₀ : H →L[𝕜] E) (F₁ : G →L[𝕜] E) (R : F →L[𝕜] E)

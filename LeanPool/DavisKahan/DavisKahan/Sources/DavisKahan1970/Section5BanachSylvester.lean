@@ -330,7 +330,7 @@ the two bound norms.
 `theorem5_1_banach_sylvester_exact` is the same statement without completeness; it is the
 stronger theorem, and this one is the printed one. -/
 theorem theorem5_1_banach_sylvester_banachScope
-    [CompleteSpace X] [CompleteSpace Y]
+     
     (N : CompatibleCrossOperatorNorm (𝕜 := 𝕜) (X := X) (Y := Y))
     (A Ainv : Y →L[𝕜] Y) (B : X →L[𝕜] X)
     (T C : X →L[𝕜] Y) {gamma delta : ℝ}
@@ -364,8 +364,8 @@ follow-up review caught them; the row's registration had already been corrected 
 a bare ideal gauge rather than a norm. -/
 theorem theorem5_1_banach_sylvester_banachScope_ofProperties
     {𝕜 : Type*} [NontriviallyNormedField 𝕜]
-    {E F : Type*} [NormedAddCommGroup E] [NormedSpace 𝕜 E] [CompleteSpace E]
-    [NormedAddCommGroup F] [NormedSpace 𝕜 F] [CompleteSpace F]
+    {E F : Type*} [NormedAddCommGroup E] [NormedSpace 𝕜 E] 
+    [NormedAddCommGroup F] [NormedSpace 𝕜 F] 
     {N : (F →L[𝕜] E) → ℝ}
     (hadd : ∀ f g : F →L[𝕜] E, N (f + g) ≤ N f + N g)
     (hidealL : ∀ (L : E →L[𝕜] E) (f : F →L[𝕜] E), N (L ∘L f) ≤ ‖L‖ * N f)

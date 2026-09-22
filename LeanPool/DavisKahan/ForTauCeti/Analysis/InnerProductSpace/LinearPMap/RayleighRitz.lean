@@ -557,7 +557,7 @@ theorem finrank_le_of_le_specRange_Iic
     (hCoercive : ∀ x : A.domain, (x : H) ∈ Kᗮ →
       β * ‖(x : H)‖ ^ 2 ≤ (⟪A x, (x : H)⟫_ℂ).re)
     (hdom : ∀ x ∈ specRange hA (Set.Iic c) measurableSet_Iic, x ∈ A.domain)
-    {W : Submodule ℂ H} [FiniteDimensional ℂ W]
+    {W : Submodule ℂ H} 
     (hW : W ≤ specRange hA (Set.Iic c) measurableSet_Iic) :
     Module.finrank ℂ W ≤ Module.finrank ℂ K := by
   classical
@@ -592,7 +592,7 @@ theorem finrank_le_of_le_specRange_Iic
 /-- **Rayleigh--Ritz dimension count, lower half.**  The Ritz bound embeds the
 trial subspace into the low spectral range. -/
 theorem finrank_le_finrank_of_le_specRange_Iic
-    {K : Submodule ℂ H} [K.HasOrthogonalProjection] [FiniteDimensional ℂ K]
+    {K : Submodule ℂ H}  
     {α : ℝ} (hKdom : K ≤ A.domain)
     (hRitz : ∀ x : A.domain, (x : H) ∈ K → (⟪A x, (x : H)⟫_ℂ).re ≤ α * ‖(x : H)‖ ^ 2)
     {W : Submodule ℂ H} [FiniteDimensional ℂ W]

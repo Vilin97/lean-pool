@@ -334,8 +334,8 @@ theorem blockMap_apply (f : A →L[𝕜] C) (g : B →L[𝕜] D) (z : WithLp 2 (
 omit [CompleteSpace A] [CompleteSpace B] [CompleteSpace C] [CompleteSpace D] in
 /-- Block operators compose blockwise. -/
 theorem blockMap_comp {A' : Type*} [NormedAddCommGroup A'] [InnerProductSpace 𝕜 A']
-    [CompleteSpace A'] {B' : Type*} [NormedAddCommGroup B'] [InnerProductSpace 𝕜 B']
-    [CompleteSpace B'] (f : A →L[𝕜] C) (g : B →L[𝕜] D) (f' : A' →L[𝕜] A)
+     {B' : Type*} [NormedAddCommGroup B'] [InnerProductSpace 𝕜 B']
+     (f : A →L[𝕜] C) (g : B →L[𝕜] D) (f' : A' →L[𝕜] A)
     (g' : B' →L[𝕜] B) :
     blockMap f g ∘L blockMap f' g' = blockMap (f ∘L f') (g ∘L g') :=
   ContinuousLinearMap.ext fun z => by simp

@@ -475,8 +475,8 @@ theorem orthogonalBlockSum_mem_convexHull_twoSidedUnitaryOrbit
     [NormedAddCommGroup E₂] [InnerProductSpace 𝕜 E₂]
     [NormedAddCommGroup F₁] [InnerProductSpace 𝕜 F₁]
     [NormedAddCommGroup F₂] [InnerProductSpace 𝕜 F₂]
-    [FiniteDimensional 𝕜 E₁] [FiniteDimensional 𝕜 E₂]
-    [FiniteDimensional 𝕜 F₁] [FiniteDimensional 𝕜 F₂]
+     
+     
     {A C : E₁ →ₗ[𝕜] F₁} {B D : E₂ →ₗ[𝕜] F₂}
     (hA : A ∈ convexHull ℝ (twoSidedUnitaryOrbit C))
     (hB : B ∈ convexHull ℝ (twoSidedUnitaryOrbit D)) :

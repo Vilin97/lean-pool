@@ -284,9 +284,9 @@ weights and coordinatewise orthogonal rotations. -/
 def HasDoubledRealReciprocalOrbitInterpolation
     {ER FR : Type*}
     [NormedAddCommGroup ER] [InnerProductSpace ℝ ER]
-    [FiniteDimensional ℝ ER]
+    
     [NormedAddCommGroup FR] [InnerProductSpace ℝ FR]
-    [FiniteDimensional ℝ FR]
+    
     (eF : OrthonormalBasis (Fin (Module.finrank ℝ FR)) ℝ FR)
     (eE : OrthonormalBasis (Fin (Module.finrank ℝ ER)) ℝ ER)
     (alpha : Fin (Module.finrank ℝ FR) → ℝ)

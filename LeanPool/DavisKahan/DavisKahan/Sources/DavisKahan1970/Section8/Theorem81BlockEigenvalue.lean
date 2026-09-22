@@ -201,7 +201,7 @@ omit [CompleteSpace G] in
 /-- Half of the dimension comparison: if `P_V` is injective on `U` then `U` is no
 bigger than `V`. -/
 theorem finrank_le_finrank_of_isTransverse {U V : Submodule 𝕜 G}
-    [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
+     [V.HasOrthogonalProjection]
     (h : ∀ x ∈ U, V.starProjection x = 0 → x = 0) :
     finrank 𝕜 U ≤ finrank 𝕜 V := by
   have hinj : Function.Injective
@@ -830,7 +830,7 @@ infinite-dimensional extensions exist without printing one, and Section 1 leaves
 open whether the minimax sequence or spectral-multiplicity data is the right
 object in the noncompact case.  See the section docstring. -/
 theorem theorem8_1_upperApproximationRepulsion_blockExtension
-    [TopologicalSpace.SeparableSpace H] [P.HasOrthogonalProjection]
+     [P.HasOrthogonalProjection]
     {alpha delta : ℝ} (hdelta : 0 < delta)
     (hA : IsSelfAdjoint A) (hK : IsSelfAdjoint K)
     (hAP : ∀ x ∈ P, A x ∈ P)
@@ -850,7 +850,7 @@ theorem theorem8_1_upperApproximationRepulsion_blockExtension
 /-- **An approximation-number extension of Theorem 8.1 (ii), lower block, over
 `ℂ`.** -/
 theorem theorem8_1_lowerApproximationRepulsion_blockExtension
-    [TopologicalSpace.SeparableSpace H] [P.HasOrthogonalProjection]
+     [P.HasOrthogonalProjection]
     {alpha delta : ℝ} (hdelta : 0 < delta)
     (hA : IsSelfAdjoint A) (hK : IsSelfAdjoint K)
     (hAP : ∀ x ∈ P, A x ∈ P)
@@ -878,7 +878,7 @@ variable (A K : E →L[ℝ] E) (P : Submodule ℝ E)
 /-- **An approximation-number extension of Theorem 8.1 (ii), upper block, over
 `ℝ`.** -/
 theorem theorem8_1_upperApproximationRepulsion_blockExtension_real
-    [TopologicalSpace.SeparableSpace E] [P.HasOrthogonalProjection]
+     [P.HasOrthogonalProjection]
     {alpha delta : ℝ} (hdelta : 0 < delta)
     (hA : IsSelfAdjoint A) (hK : IsSelfAdjoint K)
     (hAP : ∀ x ∈ P, A x ∈ P)
@@ -901,7 +901,7 @@ theorem theorem8_1_upperApproximationRepulsion_blockExtension_real
 /-- **An approximation-number extension of Theorem 8.1 (ii), lower block, over
 `ℝ`.** -/
 theorem theorem8_1_lowerApproximationRepulsion_blockExtension_real
-    [TopologicalSpace.SeparableSpace E] [P.HasOrthogonalProjection]
+     [P.HasOrthogonalProjection]
     {alpha delta : ℝ} (hdelta : 0 < delta)
     (hA : IsSelfAdjoint A) (hK : IsSelfAdjoint K)
     (hAP : ∀ x ∈ P, A x ∈ P)

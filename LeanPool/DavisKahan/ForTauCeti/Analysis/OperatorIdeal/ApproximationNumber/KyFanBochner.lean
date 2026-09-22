@@ -95,7 +95,7 @@ extends it to the whole space still dominated by `p`, the domination makes it co
 and a continuous linear functional commutes with the Bochner integral.  Then
 `p v = ‖g v‖ = ‖∫ g (f a)‖ ≤ ∫ ‖g (f a)‖ ≤ ∫ p (f a)`. -/
 private theorem seminorm_integral_le {𝕜 : Type*} [RCLike 𝕜] {X : Type*}
-    [NormedAddCommGroup X] [NormedSpace 𝕜 X] [NormedSpace ℝ X] [IsScalarTower ℝ 𝕜 X]
+    [NormedAddCommGroup X] [NormedSpace 𝕜 X] [NormedSpace ℝ X] 
     [CompleteSpace X]
     {α : Type*} [MeasurableSpace α] {μ : Measure α}
     (p : Seminorm 𝕜 X) {C : ℝ} (hC0 : 0 ≤ C) (hC : ∀ x, p x ≤ C * ‖x‖)

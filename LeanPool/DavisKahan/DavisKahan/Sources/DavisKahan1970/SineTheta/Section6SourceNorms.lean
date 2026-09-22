@@ -63,7 +63,7 @@ theorem lemma6_2_sourceExact
 omit [ContinuousLinearMap.HasMinMaxLowerBoundEverywhere.{u, v} 𝕜] [CompleteSpace E] in
 /-- The Ky Fan gauge at level `0` is the empty sum. -/
 private theorem kyFanApproximationGauge_zero' {F : Type v}
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] 
     (A : E →L[𝕜] F) : kyFanApproximationGauge 0 A = 0 := by
   simp [kyFanApproximationGauge, ContinuousLinearMap.kyFanGauge]
 

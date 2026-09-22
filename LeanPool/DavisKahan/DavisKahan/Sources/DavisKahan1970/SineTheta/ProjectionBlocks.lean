@@ -66,7 +66,7 @@ theorem two_smul_diagonalPair_eq_add_reflections
 /-- Ideal membership for the diagonal pair. -/
 theorem diagonalPair_mem
     (N : TauCeti.SymmetricOperatorIdealFamily.{u, v} 𝕜)
-    [N.toOperatorIdealFamily.IsComplete]
+    
     (U V : Submodule 𝕜 E)
     [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
     {K : E →L[𝕜] E} (hK : N.Mem K) :

@@ -61,14 +61,14 @@ noncomputable local instance instCStarAlgebraSubspaceCoordinateCosineAngle
 /-- The overlap block whose singular values are the principal cosines. -/
 noncomputable def cosineBlockC
     (U V : Submodule ℂ E)
-    [U.HasOrthogonalProjection] [V.HasOrthogonalProjection] : U →L[ℂ] V :=
+     [V.HasOrthogonalProjection] : U →L[ℂ] V :=
   V.subtypeL.adjoint ∘L U.subtypeL
 
 /-- The complementary overlap block whose singular values are the directed
 principal sines. -/
 noncomputable def sineBlockC
     (U V : Submodule ℂ E)
-    [U.HasOrthogonalProjection] [V.HasOrthogonalProjection] : U →L[ℂ] Vᗮ :=
+      : U →L[ℂ] Vᗮ :=
   Vᗮ.subtypeL.adjoint ∘L U.subtypeL
 
 /-- The positive cosine operator on the trial coordinate space. -/

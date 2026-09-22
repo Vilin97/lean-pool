@@ -53,7 +53,7 @@ omit [CompleteSpace Er] in
 /-- **An upper form bound on a complexified subspace descends.**  Evaluate on the
 real copy of a real domain vector. -/
 theorem re_inner_le_of_complexifyReal_le {A : Er →ₗ.[ℝ] Er} {U : Submodule ℝ Er}
-    [U.HasOrthogonalProjection] {a : ℝ}
+     {a : ℝ}
     (h : ∀ z : (TauCeti.LinearPMap.complexifyReal A).domain,
       (z : RealComplexification Er) ∈ complexifySubmodule U →
         RCLike.re ⟪TauCeti.LinearPMap.complexifyReal A z,
@@ -75,7 +75,7 @@ theorem re_inner_le_of_complexifyReal_le {A : Er →ₗ.[ℝ] Er} {U : Submodule
 omit [CompleteSpace Er] in
 /-- **A lower form bound on the complement of a complexified subspace descends.** -/
 theorem le_re_inner_of_le_complexifyReal {A : Er →ₗ.[ℝ] Er} {U : Submodule ℝ Er}
-    [U.HasOrthogonalProjection] {b : ℝ}
+     {b : ℝ}
     (h : ∀ z : (TauCeti.LinearPMap.complexifyReal A).domain,
       (z : RealComplexification Er) ∈ (complexifySubmodule U)ᗮ →
         b * ‖(z : RealComplexification Er)‖ ^ 2 ≤

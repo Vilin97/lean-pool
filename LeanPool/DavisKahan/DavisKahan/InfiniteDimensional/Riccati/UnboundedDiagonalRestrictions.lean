@@ -74,7 +74,7 @@ lemma's argument is typed `(coordinateRestriction0 D).domain` and the second's
 `coordinateRestrictionDomain0 D`, and those are equal only definitionally -- `simp` matches at
 `instances` transparency and will not cross the gap.  This states the composite directly so
 one rewrite does the whole job. -/
- theorem coordinateRestriction0_apply'
+theorem coordinateRestriction0_apply'
     (D : DirectSumPMap (E0 := E0) (E1 := E1))
     (u : (coordinateRestriction0 D).domain) :
     coordinateRestriction0 D u =
@@ -90,7 +90,7 @@ omit [CompleteSpace E0] [CompleteSpace E1] in
 omit [CompleteSpace E0] [CompleteSpace E1] in
 /-- The composite of `coordinateRestriction1_apply` and `coordinateRestrictionMap1_apply`; see
 `coordinateRestriction0_apply'` for why the one-step form is needed. -/
- theorem coordinateRestriction1_apply'
+theorem coordinateRestriction1_apply'
     (D : DirectSumPMap (E0 := E0) (E1 := E1))
     (v : (coordinateRestriction1 D).domain) :
     coordinateRestriction1 D v =

@@ -335,7 +335,7 @@ end Cutoff
 /-- Strong operator convergence is preserved by complexification: the two
 coordinates converge separately and `‖z‖ ≤ ‖re z‖ + ‖im z‖`. -/
 theorem stronglyTendsto_complexify {ι : Type*} {l : Filter ι}
-    {F : Type v} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
+    {F : Type v} [NormedAddCommGroup F] [InnerProductSpace ℝ F] 
     {T : ι → F →L[ℝ] F} {S : F →L[ℝ] F}
     (h : TauCeti.ApproximationNumber.StronglyTendsto T l S) :
     TauCeti.ApproximationNumber.StronglyTendsto (fun i => complexify (T i)) l

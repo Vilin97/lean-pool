@@ -282,7 +282,7 @@ theorem smul_eq (a : 𝕜) (A : E →ₗ[𝕜] F) : N (a • A) = ‖a‖ * N A 
   N.smul' a A
 
 /-- A rectangular UI seminorm is invariant under negation. -/
- theorem apply_neg (A : E →ₗ[𝕜] F) : N (-A) = N A :=
+theorem apply_neg (A : E →ₗ[𝕜] F) : N (-A) = N A :=
   map_neg_eq_map N A
 
 

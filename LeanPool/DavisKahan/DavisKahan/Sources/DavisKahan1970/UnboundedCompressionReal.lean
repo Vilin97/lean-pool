@@ -82,7 +82,7 @@ closed operator.  The conjugating map is an isometry, so both the form and the n
 carried across unchanged. -/
 theorem semiboundedAbove_unitaryConjugate {G K : Type v}
     [NormedAddCommGroup G] [InnerProductSpace ℂ G] [CompleteSpace G]
-    [NormedAddCommGroup K] [InnerProductSpace ℂ K] [CompleteSpace K]
+    [NormedAddCommGroup K] [InnerProductSpace ℂ K] 
     (W : G ≃ₗᵢ[ℂ] K) (A : G →ₗ.[ℂ] G)
     (hA : IsSelfAdjoint A) {c : ℝ} (hc : TauCeti.LinearPMap.SemiboundedAbove A c) :
     TauCeti.LinearPMap.SemiboundedAbove (TauCeti.DavisKahan.unitaryConjugate W A hA) c := by

@@ -59,7 +59,7 @@ variable (U V : Submodule 𝕜 H) [U.HasOrthogonalProjection] [V.HasOrthogonalPr
 
 /-- **Davis--Kahan 1970, Proposition 3.1, at the paper's separable ambient
 scope.** -/
-theorem proposition3_1_separable [TopologicalSpace.SeparableSpace H]
+theorem proposition3_1_separable 
     (hacute : TauCeti.IsAcute U V) :
     acuteDirectRotation U V ∈ unitary (H →L[𝕜] H) ∧
       acuteDirectRotation U V * U.starProjection =
@@ -92,13 +92,13 @@ attribute [local instance 100] ContinuousLinearMap.realAlgebra
 /-- **Davis--Kahan 1970, Proposition 3.2, existence half, at the paper's
 separable ambient scope.** -/
 theorem proposition3_2_exists_iff_crossedDefectsEquivalent_separable
-    [TopologicalSpace.SeparableSpace H] :
+     :
     (∃ T : H →L[𝕜] H, IsDirectRotation U V T) ↔ CrossedDefectsEquivalent U V :=
   proposition3_2_exists_iff_crossedDefectsEquivalent U V
 
 /-- **Davis--Kahan 1970, Proposition 3.2, non-uniqueness half, at the paper's
 separable ambient scope.** -/
-theorem proposition3_2_not_unique_separable [TopologicalSpace.SeparableSpace H]
+theorem proposition3_2_not_unique_separable 
     (hdefect : CrossedDefectsEquivalent U V) (hnonacute : ¬ TauCeti.IsAcute U V) :
     ∃ T₁ T₂ : H →L[𝕜] H,
       IsDirectRotation U V T₁ ∧ IsDirectRotation U V T₂ ∧ T₁ ≠ T₂ :=
@@ -119,7 +119,7 @@ attribute [local instance 100] ContinuousLinearMap.realAlgebra
 
 /-- **Davis--Kahan 1970, Proposition 3.5, commutations, at the paper's separable
 ambient scope.** -/
-theorem proposition3_5_commutations_separable [TopologicalSpace.SeparableSpace H]
+theorem proposition3_5_commutations_separable 
     (J : halmosSourceDefect U V ≃ₗᵢ[𝕜] halmosTargetDefect U V) :
     Commute (proposition3Point5AngleOperator U V) (U.starProjection) ∧
       Commute (proposition3Point5AngleOperator U V) (V.starProjection) ∧
@@ -129,7 +129,7 @@ theorem proposition3_5_commutations_separable [TopologicalSpace.SeparableSpace H
 
 /-- **Davis--Kahan 1970, Proposition 3.5, eigenvector angle, at the paper's
 separable ambient scope.** -/
-theorem proposition3_5_eigenvector_angle_separable [TopologicalSpace.SeparableSpace H]
+theorem proposition3_5_eigenvector_angle_separable 
     (J : halmosSourceDefect U V ≃ₗᵢ[𝕜] halmosTargetDefect U V)
     {x : H} (hx0 : x ≠ 0) {θ : ℝ}
     (hx : proposition3Point5AngleOperator U V x = ((θ : ℝ) : 𝕜) • x) :
@@ -138,7 +138,7 @@ theorem proposition3_5_eigenvector_angle_separable [TopologicalSpace.SeparableSp
 
 /-- **Davis--Kahan 1970, Proposition 3.5, maximal fixed-cosine subspace, at the
 paper's separable ambient scope.** -/
-theorem proposition3_5_angleEigenspace_uniqueMaximal_separable [TopologicalSpace.SeparableSpace H]
+theorem proposition3_5_angleEigenspace_uniqueMaximal_separable 
     (hacute : TauCeti.IsAcute U V) {θ : ℝ}
     (hθ : Module.End.HasEigenvalue (proposition3Point5AngleOperator U V).toLinearMap
       ((θ : ℝ) : 𝕜)) :
@@ -151,7 +151,7 @@ theorem proposition3_5_angleEigenspace_uniqueMaximal_separable [TopologicalSpace
 
 /-- **Davis--Kahan 1970, Corollary 3.2, at the paper's separable ambient
 scope.** -/
-theorem corollary3_2_separable [TopologicalSpace.SeparableSpace H]
+theorem corollary3_2_separable 
     (J : halmosSourceDefect U V ≃ₗᵢ[𝕜] halmosTargetDefect U V) :
     proposition3Point5AngleOperator V U = proposition3Point5AngleOperator U V ∧
       corollary3Point2NonacuteQuarterTurn V U (swapCrossedDefectEquiv U V J) =
@@ -171,7 +171,7 @@ variable (U V : Submodule ℂ H) [U.HasOrthogonalProjection] [V.HasOrthogonalPro
 
 /-- **Davis--Kahan 1970, Proposition 3.3 over `ℂ`, forward half, at the paper's
 separable ambient scope.** -/
-theorem proposition3_3_complex_forward_separable [TopologicalSpace.SeparableSpace H]
+theorem proposition3_3_complex_forward_separable 
     (T : H →L[ℂ] H)
     (hunitary : T ∈ unitary (H →L[ℂ] H))
     (hintertwines : T * U.starProjection = V.starProjection * T)
@@ -185,7 +185,7 @@ theorem proposition3_3_complex_forward_separable [TopologicalSpace.SeparableSpac
 
 /-- **Davis--Kahan 1970, Proposition 3.3 over `ℂ`, converse half, at the paper's
 separable ambient scope.** -/
-theorem proposition3_3_complex_converse_separable [TopologicalSpace.SeparableSpace H]
+theorem proposition3_3_complex_converse_separable 
     (T : H →L[ℂ] H)
     (hroot : IsPrincipalUnitarySquareRoot (spectraReflectionProduct U V) T)
     (hcross : T '' (halmosSourceDefect U V : Set H) =
@@ -207,7 +207,7 @@ variable (U V : Submodule ℝ E) [U.HasOrthogonalProjection] [V.HasOrthogonalPro
 
 /-- **Davis--Kahan 1970, Proposition 3.3 over `ℝ`, forward half, at the paper's
 separable ambient scope.** -/
-theorem proposition3_3_real_forward_separable [TopologicalSpace.SeparableSpace E]
+theorem proposition3_3_real_forward_separable 
     (T : E →L[ℝ] E)
     (hunitary : T ∈ unitary (E →L[ℝ] E))
     (hintertwines : T * U.starProjection = V.starProjection * T)
@@ -221,7 +221,7 @@ theorem proposition3_3_real_forward_separable [TopologicalSpace.SeparableSpace E
 
 /-- **Davis--Kahan 1970, Proposition 3.3 over `ℝ`, converse half, at the paper's
 separable ambient scope.** -/
-theorem proposition3_3_real_converse_separable [TopologicalSpace.SeparableSpace E]
+theorem proposition3_3_real_converse_separable 
     (T : E →L[ℝ] E)
     (hroot : IsRealPrincipalUnitarySquareRoot U V T)
     (hcross : T '' (halmosSourceDefect U V : Set E) =
@@ -244,7 +244,7 @@ variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteS
 
 /-- **Davis--Kahan 1970, Proposition 3.4 over `ℂ`, at the paper's separable
 ambient scope.** -/
-theorem proposition3_4_full_complex_separable [TopologicalSpace.SeparableSpace H]
+theorem proposition3_4_full_complex_separable 
     (U V : Submodule ℂ H) [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
     (W : H →L[ℂ] H)
     (hunitary : W ∈ unitary (H →L[ℂ] H))
@@ -277,7 +277,7 @@ variable (U V : Submodule ℝ E) [U.HasOrthogonalProjection] [V.HasOrthogonalPro
 
 /-- **Davis--Kahan 1970, Proposition 3.4 over `ℝ`, at the paper's separable
 ambient scope.** -/
-theorem proposition3_4_full_real_separable [TopologicalSpace.SeparableSpace E]
+theorem proposition3_4_full_real_separable 
     (W : E →L[ℝ] E)
     (hunitary : W ∈ unitary (E →L[ℝ] E))
     (hintertwines : W * U.starProjection = V.starProjection * W)
@@ -312,9 +312,9 @@ variable {𝕜 : Type*} [RCLike 𝕜]
 ambient scope on both pairs.** -/
 theorem corollary3_1_compact_defectBlock_sourceAngleList_classification_separable
     {H₁ : Type u} [NormedAddCommGroup H₁] [InnerProductSpace 𝕜 H₁] [CompleteSpace H₁]
-    [TopologicalSpace.SeparableSpace H₁]
+    
     {H₂ : Type v} [NormedAddCommGroup H₂] [InnerProductSpace 𝕜 H₂] [CompleteSpace H₂]
-    [TopologicalSpace.SeparableSpace H₂]
+    
     (W₁ X₁ : Submodule 𝕜 H₁) [W₁.HasOrthogonalProjection] [X₁.HasOrthogonalProjection]
     (W₂ X₂ : Submodule 𝕜 H₂) [W₂.HasOrthogonalProjection] [X₂.HasOrthogonalProjection]
     (hcompact₁ : IsCompactOperator
@@ -342,7 +342,7 @@ section Prop42
 ambient scope.** -/
 theorem proposition4_2_compact_nonacute_separable {H : Type v}
     [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
-    [TopologicalSpace.SeparableSpace H]
+    
     (U V : Submodule ℂ H) [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
     (hcompact : IsCompactOperator (TauCeti.principalSineOperator U V))
     (hcrossed : DavisKahan.CrossedDefectsEquivalent U V)
@@ -359,7 +359,7 @@ theorem proposition4_2_compact_nonacute_separable {H : Type v}
 ambient scope.** -/
 theorem proposition4_2_compact_nonacute_real_separable {E : Type v}
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-    [TopologicalSpace.SeparableSpace E]
+    
     (U V : Submodule ℝ E) [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
     (hcompact : IsCompactOperator (TauCeti.principalSineOperator U V))
     (hcrossed : DavisKahan.CrossedDefectsEquivalent U V)

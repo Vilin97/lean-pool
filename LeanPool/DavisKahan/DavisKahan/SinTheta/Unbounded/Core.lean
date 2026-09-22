@@ -176,7 +176,7 @@ theorem unbounded_adjoint_residual_block_identity
  gauge is no larger than the original residual gauge. -/
 theorem adjointResidualBlock_mem_and_gauge_le
     (N : TauCeti.SymmetricOperatorIdealFamily.{u, v} 𝕜)
-    [N.toOperatorIdealFamily.IsComplete]
+    
     (D : UnboundedSinThetaData (𝕜 := 𝕜) (E := E) (F := F) (G := G))
     (hF₁ : IsometricEmbedding D.F₁)
     (hR : N.Mem D.residual) :

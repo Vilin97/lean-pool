@@ -214,7 +214,7 @@ theorem schattenNorm_nonneg (p : ℝ) (hp : 1 ≤ p) (A : E →ₗ[𝕜] F) :
   (schattenNorm p hp).nonneg A
 
 /-- The zero operator has zero Schatten norm at every exponent. -/
- theorem schattenNorm_zero (p : ℝ) (hp : 1 ≤ p) :
+theorem schattenNorm_zero (p : ℝ) (hp : 1 ≤ p) :
     schattenNorm (𝕜 := 𝕜) (E := E) (F := F) p hp 0 = 0 :=
   (schattenNorm p hp).apply_zero
 

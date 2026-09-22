@@ -40,7 +40,7 @@ variable {H : Type v} [NormedAddCommGroup H] [InnerProductSpace 𝕜 H]
 
 /-- The directed sine operator `P_{Vᗮ}|_U`. -/
 noncomputable def principalSineOperator (U V : Submodule 𝕜 H)
-    [U.HasOrthogonalProjection] [V.HasOrthogonalProjection] : U →L[𝕜] H :=
+     [V.HasOrthogonalProjection] : U →L[𝕜] H :=
   Vᗮ.starProjection ∘L U.subtypeL
 
 /-- Evaluating the principal sine operator. -/

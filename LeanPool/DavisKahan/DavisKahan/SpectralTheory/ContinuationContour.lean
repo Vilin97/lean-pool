@@ -90,12 +90,12 @@ def image (Γ : PiecewiseC1ClosedContour) : Set ℂ :=
   Set.range Γ.path
 
 /-- The contour starts at its recorded base point. -/
- theorem path_zero (Γ : PiecewiseC1ClosedContour) :
+theorem path_zero (Γ : PiecewiseC1ClosedContour) :
     Γ.path 0 = Γ.basePoint :=
   Γ.path.source
 
 /-- The contour ends at its recorded base point. -/
- theorem path_one (Γ : PiecewiseC1ClosedContour) :
+theorem path_one (Γ : PiecewiseC1ClosedContour) :
     Γ.path 1 = Γ.basePoint :=
   Γ.path.target
 

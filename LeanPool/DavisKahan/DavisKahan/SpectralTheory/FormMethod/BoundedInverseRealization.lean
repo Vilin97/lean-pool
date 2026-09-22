@@ -216,7 +216,7 @@ of a bounded injective operator. -/
   exact rangeInverse_mk_apply R hinj x
 
 /-- `R` recovers every vector in the inverse domain. -/
- theorem R_inversePartialMap_apply
+theorem R_inversePartialMap_apply
     (R : H →L[𝕜] H) (hR : IsSelfAdjoint R)
     (hinj : Function.Injective R)
     (x : (inversePartialMap R hR hinj).domain) :

@@ -55,10 +55,10 @@ variable {𝕜 : Type u} [RCLike 𝕜]
 /-- Continuous orthogonal block sum on Hilbert `L²` products. -/
 noncomputable def continuousOrthogonalBlockSum
     {E₀ E₁ F₀ F₁ : Type v}
-    [NormedAddCommGroup E₀] [InnerProductSpace 𝕜 E₀] [CompleteSpace E₀]
-    [NormedAddCommGroup E₁] [InnerProductSpace 𝕜 E₁] [CompleteSpace E₁]
-    [NormedAddCommGroup F₀] [InnerProductSpace 𝕜 F₀] [CompleteSpace F₀]
-    [NormedAddCommGroup F₁] [InnerProductSpace 𝕜 F₁] [CompleteSpace F₁]
+    [NormedAddCommGroup E₀] [InnerProductSpace 𝕜 E₀] 
+    [NormedAddCommGroup E₁] [InnerProductSpace 𝕜 E₁] 
+    [NormedAddCommGroup F₀] [InnerProductSpace 𝕜 F₀] 
+    [NormedAddCommGroup F₁] [InnerProductSpace 𝕜 F₁] 
     (A : E₀ →L[𝕜] F₀) (B : E₁ →L[𝕜] F₁) :
     WithLp 2 (E₀ × E₁) →L[𝕜] WithLp 2 (F₀ × F₁) :=
   ((WithLp.prodContinuousLinearEquiv 2 𝕜 F₀ F₁).symm :
@@ -534,10 +534,10 @@ end Aux
 /-- The split-prefix functional for two singular-value sequences. -/
 def splitKyFanGauge
     {E₀ E₁ F₀ F₁ : Type v}
-    [NormedAddCommGroup E₀] [InnerProductSpace 𝕜 E₀] [CompleteSpace E₀]
-    [NormedAddCommGroup E₁] [InnerProductSpace 𝕜 E₁] [CompleteSpace E₁]
-    [NormedAddCommGroup F₀] [InnerProductSpace 𝕜 F₀] [CompleteSpace F₀]
-    [NormedAddCommGroup F₁] [InnerProductSpace 𝕜 F₁] [CompleteSpace F₁]
+    [NormedAddCommGroup E₀] [InnerProductSpace 𝕜 E₀] 
+    [NormedAddCommGroup E₁] [InnerProductSpace 𝕜 E₁] 
+    [NormedAddCommGroup F₀] [InnerProductSpace 𝕜 F₀] 
+    [NormedAddCommGroup F₁] [InnerProductSpace 𝕜 F₁] 
     (k : ℕ) (A : E₀ →L[𝕜] F₀) (B : E₁ →L[𝕜] F₁) : ℝ :=
   Finset.sup' (Finset.range (k + 1)) (by simp)
     (fun r => kyFanApproximationGauge r A +
@@ -640,8 +640,8 @@ theorem kyFanApproximationGauge_blockSum_le
 prefixes. -/
 theorem approximationSingularValue_eq_kyFan_succ_sub
     {E F : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] 
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] 
     (n : ℕ) (A : E →L[𝕜] F) :
     A.approximationNumber n =
       kyFanApproximationGauge (n + 1) A - kyFanApproximationGauge n A := by

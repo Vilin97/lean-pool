@@ -140,8 +140,8 @@ theorem kyFanGauge_nonneg (T : E →L[𝕜] F) (k : ℕ) : 0 ≤ T.kyFanGauge k 
 
 /-- **The two-sided ideal inequality.** -/
 theorem kyFanGauge_comp_le {G : Type x} {H : Type y}
-    [NormedAddCommGroup G] [InnerProductSpace 𝕜 G] [CompleteSpace G]
-    [NormedAddCommGroup H] [InnerProductSpace 𝕜 H] [CompleteSpace H]
+    [NormedAddCommGroup G] [InnerProductSpace 𝕜 G] 
+    [NormedAddCommGroup H] [InnerProductSpace 𝕜 H] 
     (L : F →L[𝕜] G) (T : E →L[𝕜] F) (R : H →L[𝕜] E) (k : ℕ) :
     (L ∘L T ∘L R).kyFanGauge k ≤ ‖L‖ * T.kyFanGauge k * ‖R‖ := by
   calc

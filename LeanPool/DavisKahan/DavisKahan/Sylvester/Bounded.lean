@@ -167,7 +167,6 @@ theorem norm_sylvesterNeumannTerm_le
 /-- Each Neumann term belongs to the same rectangular ideal as `C`. -/
 theorem sylvesterNeumannTerm_mem
     (N : TauCeti.SymmetricOperatorIdealFamily.{u, v} 𝕜)
-    [N.toOperatorIdealFamily.IsComplete]
     {A : E →L[𝕜] E}
     (hA : BoundedInverseData A) (B : F →L[𝕜] F)
     {C : F →L[𝕜] E} (hC : N.Mem C) (n : ℕ) :
@@ -178,7 +177,6 @@ theorem sylvesterNeumannTerm_mem
 /-- Geometric bound for one Neumann term. -/
 theorem gauge_sylvesterNeumannTerm_le
     (N : TauCeti.SymmetricOperatorIdealFamily.{u, v} 𝕜)
-    [N.toOperatorIdealFamily.IsComplete]
     {A : E →L[𝕜] E}
     (hA : BoundedInverseData A) (B : F →L[𝕜] F)
     {C : F →L[𝕜] E} (hC : N.Mem C) (n : ℕ) :
@@ -269,7 +267,6 @@ theorem sylvesterNeumannPartialSum_cauchy
 /-- The ideal-norm limit of the Neumann series. -/
 noncomputable def sylvesterNeumannSolution
     (_N : TauCeti.SymmetricOperatorIdealFamily.{u, v} 𝕜)
-    [_N.toOperatorIdealFamily.IsComplete]
     {A : E →L[𝕜] E}
     (hA : BoundedInverseData A) (B : F →L[𝕜] F)
     (C : F →L[𝕜] E) : F →L[𝕜] E :=

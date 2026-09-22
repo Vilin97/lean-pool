@@ -108,7 +108,7 @@ open Filter
 variable {𝕜 : Type*} [RCLike 𝕜]
 
 /-- The model two-dimensional space in which the sharpness counterexamples live. -/
-abbrev Plane (𝕜 : Type*) [RCLike 𝕜] := EuclideanSpace 𝕜 (Fin 2)
+abbrev Plane (𝕜 : Type*)  := EuclideanSpace 𝕜 (Fin 2)
 
 /-- First standard basis vector of the planar model. -/
 noncomputable def e0 : Plane 𝕜 := EuclideanSpace.single 0 1
@@ -209,11 +209,11 @@ noncomputable def modelTanTwoThetaPerturbation (a b θ : ℝ) :
   simp [e1]
 
 /-- `e0` is normalised. -/
- theorem inner_e0_e0 : ⟪e0 (𝕜 := 𝕜), e0⟫_𝕜 = 1 := by
+theorem inner_e0_e0 : ⟪e0 (𝕜 := 𝕜), e0⟫_𝕜 = 1 := by
   simp [e0]
 
 /-- `e1` is normalised. -/
- theorem inner_e1_e1 : ⟪e1 (𝕜 := 𝕜), e1⟫_𝕜 = 1 := by
+theorem inner_e1_e1 : ⟪e1 (𝕜 := 𝕜), e1⟫_𝕜 = 1 := by
   simp [e1]
 
 /-- `e0` and `e1` are orthogonal. -/
@@ -267,7 +267,7 @@ private theorem plane_linearMap_ext {F' : Type*} [AddCommMonoid F'] [Module 𝕜
 
 private theorem starProjection_span_singleton_apply_of_norm_one
     {E' : Type*} [NormedAddCommGroup E'] [InnerProductSpace 𝕜 E']
-    [FiniteDimensional 𝕜 E'] (v x : E') (hv : ‖v‖ = 1) :
+     (v x : E') (hv : ‖v‖ = 1) :
     (Submodule.span 𝕜 {v}).starProjection x = ⟪v, x⟫_𝕜 • v := by
   classical
   refine Submodule.eq_starProjection_of_mem_of_inner_eq_zero ?_ ?_

@@ -166,7 +166,7 @@ def complexifyReal (A : E →ₗ.[ℝ] F) : Eℂ →ₗ.[ℂ] Fℂ where
     (complexifyReal A).domain = complexificationDomain A := rfl
 
 /-- Domain membership for the raw partial-map complexification. -/
- theorem mem_complexifyReal_domain_iff
+theorem mem_complexifyReal_domain_iff
     (A : E →ₗ.[ℝ] F) (z : Eℂ) :
     z ∈ (complexifyReal A).domain ↔ re z ∈ A.domain ∧ im z ∈ A.domain := by
   rfl

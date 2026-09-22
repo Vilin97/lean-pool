@@ -518,7 +518,7 @@ omit [CompleteSpace H] in
 spectra inherit exactly the same separation. -/
 theorem finiteSpectralStep_representatives_separated
     {K : Type v} [NormedAddCommGroup K] [InnerProductSpace ℂ K]
-    [CompleteSpace K]
+    
     {A : H →L[ℂ] H} {B : K →L[ℂ] K}
     {hA : A.IsSymmetric} {hB : B.IsSymmetric}
     {d : ℝ} (hsep : SpectraSeparated A ⊤ B ⊤ d)

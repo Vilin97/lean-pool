@@ -43,7 +43,7 @@ variable {H : Type v} [NormedAddCommGroup H] [InnerProductSpace 𝕜 H] [Complet
 
 /-- The directed sine block entering Theorem 6.3, at an arbitrary `RCLike` field. -/
 noncomputable def directedSineBlock
-    (Z V : Submodule 𝕜 H) [Z.HasOrthogonalProjection] [V.HasOrthogonalProjection] :
+    (Z V : Submodule 𝕜 H)  [V.HasOrthogonalProjection] :
     Z →L[𝕜] H :=
   Vᗮ.starProjection ∘L Z.subtypeL
 
@@ -64,7 +64,7 @@ omit [CompleteSpace H] in
 subspace coordinates. -/
 theorem scalarTransport_directedSineBlock
     (Z V : Submodule 𝕜 H) [Z.HasOrthogonalProjection] [V.HasOrthogonalProjection]
-    [CompleteSpace Z] :
+     :
     scalarTransportSubspaceCLM (e := e) Z (directedSineBlock Z V) =
       directedSineBlock (ScalarTransport.submodule (e := e) Z)
         (ScalarTransport.submodule (e := e) V) := by

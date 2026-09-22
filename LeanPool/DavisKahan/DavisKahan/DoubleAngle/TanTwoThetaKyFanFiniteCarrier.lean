@@ -117,8 +117,8 @@ private theorem sub_starProjection_mem_orthogonal'
 values. -/
 private theorem approximationSingularValue_comp_contractions_le
     {E₁ F G G' : Type*}
-    [NormedAddCommGroup E₁] [InnerProductSpace 𝕜 E₁] [CompleteSpace E₁]
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
+    [NormedAddCommGroup E₁] [InnerProductSpace 𝕜 E₁] 
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] 
     [NormedAddCommGroup G] [InnerProductSpace 𝕜 G] [CompleteSpace G]
     [NormedAddCommGroup G'] [InnerProductSpace 𝕜 G'] [CompleteSpace G']
     (n : ℕ) (L : F →L[𝕜] G) (K : E₁ →L[𝕜] F) (R : G' →L[𝕜] E₁)
@@ -503,8 +503,8 @@ double-angle tangents of the graph-coordinate approximation numbers obeys
 the prefix bounds. -/
 theorem kyFan_tanTwoTheta0_offDiagonal_le_of_finiteDimensional_invariantSubspace
     {E₂ F₂ : Type*}
-    [NormedAddCommGroup E₂] [InnerProductSpace 𝕜 E₂] [CompleteSpace E₂]
-    [NormedAddCommGroup F₂] [InnerProductSpace 𝕜 F₂] [CompleteSpace F₂]
+    [NormedAddCommGroup E₂] [InnerProductSpace 𝕜 E₂] 
+    [NormedAddCommGroup F₂] [InnerProductSpace 𝕜 F₂] 
     (hA : IsSelfAdjoint A) (hH : IsSelfAdjoint H)
     (hAU : ∀ x ∈ U, A x ∈ U)
     (hHU : ∀ x ∈ U, H x ∈ Uᗮ) (hHUperp : ∀ x ∈ Uᗮ, H x ∈ U)
@@ -574,8 +574,8 @@ is not monotone across the quarter turn.  A unitarily invariant norm sees
 only the multiset of singular values, so nothing is lost. -/
 theorem kyFan_absTanTwoTheta_le_of_finiteDimensional_invariantSubspace
     {E₂ F₂ : Type*}
-    [NormedAddCommGroup E₂] [InnerProductSpace 𝕜 E₂] [CompleteSpace E₂]
-    [NormedAddCommGroup F₂] [InnerProductSpace 𝕜 F₂] [CompleteSpace F₂]
+    [NormedAddCommGroup E₂] [InnerProductSpace 𝕜 E₂] 
+    [NormedAddCommGroup F₂] [InnerProductSpace 𝕜 F₂] 
     (hA : IsSelfAdjoint A) (hH : IsSelfAdjoint H)
     (hAU : ∀ x ∈ U, A x ∈ U)
     (hHU : ∀ x ∈ U, H x ∈ Uᗮ) (hHUperp : ∀ x ∈ Uᗮ, H x ∈ U)

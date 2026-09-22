@@ -110,7 +110,7 @@ omit [FiniteDimensional 𝕜 E] in
 /-- The linear map underlying the canonical isometric inclusion is the
 ordinary submodule inclusion. -/
 private theorem subtypeₗᵢ_toLinearMap_eq_subtype
-    (U : Submodule 𝕜 E) [U.HasOrthogonalProjection] :
+    (U : Submodule 𝕜 E)  :
     U.subtypeₗᵢ.toLinearMap = U.subtype := by
   ext x
   rfl

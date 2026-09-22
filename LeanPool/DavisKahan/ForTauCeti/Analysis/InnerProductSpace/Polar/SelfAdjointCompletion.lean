@@ -585,7 +585,7 @@ theorem norm_comp_subtypeL_eq_norm_comp_starProjection
     {𝕜 : Type*} [RCLike 𝕜] {Z : Type*} [NormedAddCommGroup Z]
     [InnerProductSpace 𝕜 Z]
     (T : Z →L[𝕜] Z) (P : Submodule 𝕜 Z) [P.HasOrthogonalProjection]
-    [CompleteSpace P] :
+     :
     ‖T ∘L P.subtypeL‖ = ‖T ∘L P.starProjection‖ := by
   refine le_antisymm ?_ ?_
   · refine ContinuousLinearMap.opNorm_le_bound _

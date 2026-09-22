@@ -129,7 +129,7 @@ noncomputable abbrev unboundedGraphRotationPullback
     (unboundedGraphRotationEquiv X)
 
 /-- Exact domain of the raw graph-rotated block core. -/
- theorem mem_unboundedGraphRotationPullback_domain_iff
+theorem mem_unboundedGraphRotationPullback_domain_iff
     (H : UnboundedBlockData (𝕜 := ℂ) (E0 := E0) (E1 := E1))
     (X : E0 →L[ℂ] E1) (z : WithLp 2 (E0 × E1)) :
     z ∈ (unboundedGraphRotationPullback H X).domain ↔

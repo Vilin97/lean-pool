@@ -81,7 +81,7 @@ theorem unboundedBlockGraphDomainVector_mem_graph
 /-- First coordinate of the block operator on a graph vector `(x, T x)`.  This
 is the form the Riccati reduction consumes: it is where the graph relation turns
 the block action into an equation in `T`. -/
- theorem unboundedBlockOperatorCore_graphVector_fst
+theorem unboundedBlockOperatorCore_graphVector_fst
     (H : UnboundedBlockData (𝕜 := 𝕜) (E0 := E0) (E1 := E1))
     (X : E0 →L[𝕜] E1) (hdom : PreservesRiccatiDomains H X)
     (x : H.A0.domain) :
@@ -91,7 +91,7 @@ the block action into an equation in `T`. -/
   rfl
 
 /-- Second coordinate of the block operator on a graph vector. -/
- theorem unboundedBlockOperatorCore_graphVector_snd
+theorem unboundedBlockOperatorCore_graphVector_snd
     (H : UnboundedBlockData (𝕜 := 𝕜) (E0 := E0) (E1 := E1))
     (X : E0 →L[𝕜] E1) (hdom : PreservesRiccatiDomains H X)
     (x : H.A0.domain) :

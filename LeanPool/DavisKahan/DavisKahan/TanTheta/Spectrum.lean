@@ -138,7 +138,7 @@ zero.  Derived here and in `UnboundedSpectrum.lean`.
 that tree's own phrasing; the two trees share no ancestor, so they are stated
 twice rather than shared. -/
 theorem le_abs_of_spectrum_exterior {K : Type*} [NormedAddCommGroup K]
-    [InnerProductSpace ℂ K] [CompleteSpace K] {M : K →L[ℂ] K} {α β δ : ℝ}
+    [InnerProductSpace ℂ K] {M : K →L[ℂ] K} {α β δ : ℝ}
     (hspec : ∀ x ∈ spectrum ℝ M, x ≤ α - δ ∨ β + δ ≤ x) :
     ∀ x ∈ spectrum ℝ (M - algebraMap ℝ (K →L[ℂ] K) ((α + β) / 2)),
       (β - α) / 2 + δ ≤ |x| := by

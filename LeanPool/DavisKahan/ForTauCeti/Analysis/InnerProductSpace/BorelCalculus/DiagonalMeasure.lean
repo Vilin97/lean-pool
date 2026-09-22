@@ -181,7 +181,7 @@ instance instRegular_diagMeasure (ξ : H) : (diagMeasure ha ξ).Regular := by
 
 /-- Continuous functions are integrable against a diagonal measure: the
 spectrum is compact and the measure is finite. -/
-theorem integrable_of_continuous {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+theorem integrable_of_continuous {E : Type*} [NormedAddCommGroup E] 
     (ξ : H) (f : C(spectrum ℂ a, E)) : Integrable f (diagMeasure ha ξ) :=
   f.continuous.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace f)
 

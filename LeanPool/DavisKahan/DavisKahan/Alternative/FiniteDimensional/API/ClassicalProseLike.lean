@@ -208,7 +208,7 @@ The conclusion is the vector version of `tan Θ ≤ residual / gap`:
 -/
 theorem partIII_tanTheta_vector_classical_prose_like
     {T : E →ₗ[𝕜] E} {Z V : Submodule 𝕜 E}
-    [Z.HasOrthogonalProjection] [V.HasOrthogonalProjection]
+     [V.HasOrthogonalProjection]
     {α β δ ρ : ℝ} (hgap : TanThetaVectorGapClassicalProseLike T Z V α β δ ρ) :
     ∀ x ∈ Z, δ * ‖x - V.starProjection x‖ ≤ ρ * ‖V.starProjection x‖ := by
   exact TauCeti.tan_theta_le hgap.T_symm hgap.V_inv hgap.strip_order

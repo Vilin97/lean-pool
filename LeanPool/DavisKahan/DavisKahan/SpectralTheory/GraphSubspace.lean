@@ -284,6 +284,7 @@ theorem projection_graphSubspace_formula
       simpa using h
     rw [happ, sub_self, inner_zero_right]
 
+omit [CompleteSpace E] in
 /-- Equal norms of the two complementary projection blocks determine the projection gap. -/
 private theorem norm_projection_sub_of_block_norms
     (U V : Submodule 𝕜 E) [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]

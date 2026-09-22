@@ -40,8 +40,8 @@ singular-value sequence. -/
 def approximationNumberEnergy
     {𝕜 : Type u} [RCLike 𝕜]
     {E : Type vE} {F : Type vF}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] 
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] 
     (A : E →L[𝕜] F) : ENNReal :=
   ∑' n : ℕ, ENNReal.ofReal ((approximationSingularValue n A) ^ 2)
 

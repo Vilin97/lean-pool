@@ -312,7 +312,7 @@ theorem singularValues_tanThetaEmbedding
 omit [FiniteDimensional 𝕜 E] in
 private theorem exists_intervalGap_of_orderedGap
     {A : E →ₗ[𝕜] E} {U : Submodule 𝕜 E}
-    [U.HasOrthogonalProjection] [Nontrivial F]
+     [Nontrivial F]
     {M : F →ₗ[𝕜] F} (hM : M.IsSymmetric)
     {δ : ℝ} (hgap : OrderedGap M ⊤ A Uᗮ δ) :
     ∃ β α, β ≤ α ∧ PointSpectrumIn M ⊤ (Set.Icc β α) ∧

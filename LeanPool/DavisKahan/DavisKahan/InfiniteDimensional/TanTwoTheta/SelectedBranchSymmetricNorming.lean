@@ -191,7 +191,7 @@ private theorem isQuarterAcute_of_orderedFormGap_finiteDimensional
 corresponding double compression of the full perturbation. -/
 private theorem ambientUpperRightBlock_eq
     (H : E →L[ℂ] E) (U : Submodule ℂ E)
-    [U.HasOrthogonalProjection] [CompleteSpace U]
+    [U.HasOrthogonalProjection] 
     [CompleteSpace (Uᗮ : Submodule ℂ E)]
     (B01 : Uᗮ →L[ℂ] U)
     (hB01 : B01 =

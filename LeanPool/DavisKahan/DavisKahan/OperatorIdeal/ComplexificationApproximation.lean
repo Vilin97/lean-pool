@@ -206,7 +206,7 @@ omit [CompleteSpace E] in
 /-- The complex span of real copies has real and imaginary coordinates in the
 corresponding real span. -/
 theorem coordinates_mem_real_span
-    {ι : Type*} [Fintype ι] (v : ι → E)
+    {ι : Type*} (v : ι → E)
     {z : RealComplexification E}
     (hz : z ∈ Submodule.span ℂ (Set.range fun i => ofReal (v i))) :
     re z ∈ Submodule.span ℝ (Set.range v) ∧

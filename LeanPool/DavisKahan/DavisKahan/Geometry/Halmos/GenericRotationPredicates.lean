@@ -62,8 +62,8 @@ structure IsDirectRotation
 identification.  This is the constructive form of equality of their Hilbert
 space dimensions. -/
 def CrossedDefectsEquivalent
-    (U V : Submodule 𝕜 H) [U.HasOrthogonalProjection]
-    [V.HasOrthogonalProjection] : Prop :=
+    (U V : Submodule 𝕜 H) 
+     : Prop :=
   Nonempty
     (halmosSourceDefect U V ≃ₗᵢ[𝕜] halmosTargetDefect U V)
 

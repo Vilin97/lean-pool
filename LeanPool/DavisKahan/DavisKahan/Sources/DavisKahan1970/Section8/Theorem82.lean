@@ -582,7 +582,7 @@ double-angle bounds. -/
 
 /-- **Theorem 8.2's retained perturbation bound, at the printed source scope.** -/
 theorem theorem8_2_sinTwoTheta_perturbation_sourceExact
-    [TopologicalSpace.SeparableSpace H]
+    
     (N : ExactSinTheta.NormalizedUnitaryInvariantNorm.{0, _} ℂ)
     {A K : H →L[ℂ] H} (hA : A.IsSymmetric) (hK : K.IsSymmetric)
     {P Q : Submodule ℂ H} [P.HasOrthogonalProjection] [Q.HasOrthogonalProjection]
@@ -601,7 +601,7 @@ theorem theorem8_2_sinTwoTheta_perturbation_sourceExact
 /-- **Theorem 8.2's retained residual bound on the directed angle, at the printed
 source scope.** -/
 theorem theorem8_2_sinTwoTheta_residual_directedAngle_sourceExact
-    [TopologicalSpace.SeparableSpace H]
+    
     (N : ExactSinTheta.NormalizedUnitaryInvariantNorm.{0, _} ℂ)
     {A K : H →L[ℂ] H} (hA : A.IsSymmetric) (hK : K.IsSymmetric)
     {P Q : Submodule ℂ H} [P.HasOrthogonalProjection] [Q.HasOrthogonalProjection]

@@ -1575,8 +1575,8 @@ dominance.
 
 private theorem blockInl_enorm_le_one_stabilization
     {E H : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-    [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H] :
+    [NormedAddCommGroup E] [InnerProductSpace ℂ E] 
+    [NormedAddCommGroup H] [InnerProductSpace ℂ H]  :
     ‖(blockInl (𝕜 := ℂ) (E₀ := E) (E₁ := H))‖ₑ ≤ 1 := by
   rw [← ofReal_norm, ← ENNReal.ofReal_one]
   exact ENNReal.ofReal_le_ofReal
@@ -1584,8 +1584,8 @@ private theorem blockInl_enorm_le_one_stabilization
 
 private theorem blockInr_enorm_le_one_stabilization
     {E H : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-    [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H] :
+    [NormedAddCommGroup E] [InnerProductSpace ℂ E] 
+    [NormedAddCommGroup H] [InnerProductSpace ℂ H]  :
     ‖(blockInr (𝕜 := ℂ) (E₀ := E) (E₁ := H))‖ₑ ≤ 1 := by
   rw [← ofReal_norm, ← ENNReal.ofReal_one]
   exact ENNReal.ofReal_le_ofReal
@@ -1593,8 +1593,8 @@ private theorem blockInr_enorm_le_one_stabilization
 
 private theorem fstL_enorm_le_one_stabilization
     {E H : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-    [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H] :
+    [NormedAddCommGroup E] [InnerProductSpace ℂ E] 
+    [NormedAddCommGroup H] [InnerProductSpace ℂ H]  :
     ‖(WithLp.fstL 2 ℂ E H)‖ₑ ≤ 1 := by
   rw [← ofReal_norm, ← ENNReal.ofReal_one]
   exact ENNReal.ofReal_le_ofReal
@@ -1602,8 +1602,8 @@ private theorem fstL_enorm_le_one_stabilization
 
 private theorem sndL_enorm_le_one_stabilization
     {E H : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-    [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H] :
+    [NormedAddCommGroup E] [InnerProductSpace ℂ E] 
+    [NormedAddCommGroup H] [InnerProductSpace ℂ H]  :
     ‖(WithLp.sndL 2 ℂ E H)‖ₑ ≤ 1 := by
   rw [← ofReal_norm, ← ENNReal.ofReal_one]
   exact ENNReal.ofReal_le_ofReal
@@ -1704,8 +1704,8 @@ If `H` is infinite-dimensional, then `E ⊕₂ H` is infinite-dimensional for ev
 
 private theorem blockInr_injective_stabilization
     {E H : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-    [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H] :
+    [NormedAddCommGroup E] [InnerProductSpace ℂ E] 
+    [NormedAddCommGroup H] [InnerProductSpace ℂ H]  :
     Function.Injective
       (blockInr (𝕜 := ℂ) (E₀ := E) (E₁ := H) :
         H → WithLp 2 (E × H)) := by
@@ -2062,8 +2062,8 @@ private theorem probeFiniteRank_adjoint_iff
 /-- Operator norm on finite-rank maps and `∞` elsewhere. -/
 noncomputable def finiteRankOperatorNormGauge
     {E F : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-    [NormedAddCommGroup F] [InnerProductSpace ℂ F] [CompleteSpace F]
+    [NormedAddCommGroup E] [InnerProductSpace ℂ E] 
+    [NormedAddCommGroup F] [InnerProductSpace ℂ F] 
     (A : E →L[ℂ] F) : ℝ≥0∞ := by
   classical
   exact if ProbeFiniteRank A then ‖A‖ₑ else ⊤
@@ -3169,7 +3169,7 @@ semantics rather than rebuilding the Davis--Kahan argument. -/
 theorem sinTheta_unbounded_formGap_sourceVacuous_complex_probe
     {E F G H : Type v}
     [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-    [TopologicalSpace.SeparableSpace E]
+    
     [NormedAddCommGroup F] [InnerProductSpace ℂ F] [CompleteSpace F]
     [NormedAddCommGroup G] [InnerProductSpace ℂ G] [CompleteSpace G]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]

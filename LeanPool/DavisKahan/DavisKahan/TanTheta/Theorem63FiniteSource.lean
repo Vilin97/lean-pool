@@ -64,7 +64,7 @@ variable {H : Type u} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
 /-- The directed sine block from finite trial coordinates into the unwanted
 exact subspace. -/
 noncomputable def theorem63DirectedSineBlock
-    (Z V : Submodule ℂ H) [Z.HasOrthogonalProjection]
+    (Z V : Submodule ℂ H) 
     [V.HasOrthogonalProjection] : Z →L[ℂ] H :=
   Vᗮ.starProjection ∘L Z.subtypeL
 
@@ -507,7 +507,7 @@ theorem orthonormal_theorem63ResidualWitness
 values are `sin θ_j`. -/
 def HasTheorem63DirectedTangentApproximationNumbers
     (Z V : Submodule ℂ H) [Z.HasOrthogonalProjection]
-    [V.HasOrthogonalProjection] [FiniteDimensional ℂ Z]
+    [V.HasOrthogonalProjection] 
     (tanTheta0 : Z →L[ℂ] H) : Prop :=
   ∀ n, approximationSingularValue n tanTheta0 =
     Real.tan (Real.arcsin
@@ -896,8 +896,8 @@ theorem theorem6_3_generalizedTanTheta_ideal
 /-- Historical scratch proposition used while the Ky Fan root was open. -/
 def Theorem63KyFanCore
     {E F : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-    [NormedAddCommGroup F] [InnerProductSpace ℂ F] [CompleteSpace F]
+    [NormedAddCommGroup E] [InnerProductSpace ℂ E] 
+    [NormedAddCommGroup F] [InnerProductSpace ℂ F] 
     (delta : ℝ) (tanTheta0 residual : E →L[ℂ] F) : Prop :=
   ∀ k, delta * ExactSinTheta.kyFanApproximationGauge k tanTheta0 ≤
     ExactSinTheta.kyFanApproximationGauge k residual

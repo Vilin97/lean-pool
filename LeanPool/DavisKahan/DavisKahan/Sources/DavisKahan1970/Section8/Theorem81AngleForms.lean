@@ -250,7 +250,7 @@ omit [CompleteSpace H] in
 /-- Every principal cosine of the upper pair lies in `[0, 1]`, so the printed
 angle `θ_i = arccos (a_i C₁)` of equation (1.16) is a genuine angle in
 `[0, π/2]` and satisfies `cos θ_i = a_i(C₁)`. -/
-theorem cos_arccos_approximationNumber_cosineBlock [FiniteDimensional 𝕜 H]
+theorem cos_arccos_approximationNumber_cosineBlock 
     (P Q : Submodule 𝕜 H) [P.HasOrthogonalProjection] [Q.HasOrthogonalProjection]
     (i : ℕ) :
     Real.cos (Real.arccos ((cosineBlock P Q).approximationNumber i)) =

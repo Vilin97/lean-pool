@@ -452,7 +452,6 @@ noncomputable def sinThetaBlock
 /-- Lower-frame transport from the raw complementary block to the sine block. -/
 theorem lowerFrame_sinThetaBlock_mem_and_gauge_le
     (N : TauCeti.SymmetricOperatorIdealFamily.{0, v} ℂ)
-    [N.toOperatorIdealFamily.IsComplete]
     (X : F →L[ℂ] E) (F₁ : G →L[ℂ] E) {ε : ℝ}
     (hX : LowerFrameBound X ε) (hε : 0 < ε)
     (hRaw : N.Mem (X.adjoint ∘L F₁)) :

@@ -153,7 +153,7 @@ theorem directedSinThetaOperator_eq_of_isometry
 block and the directed sine operator have the same ideal membership and gauge. -/
 theorem sinThetaBlock_mem_and_gauge_eq_directedSinThetaOperator
     (N : TauCeti.SymmetricOperatorIdealFamily.{0, v} ℂ)
-    [N.toOperatorIdealFamily.IsComplete]
+    
     (X : F →L[ℂ] E) (F₀ : H →L[ℂ] E) (F₁ : G →L[ℂ] E)
     {ε : ℝ} (hX : LowerFrameBound X ε) (hε : 0 < ε)
     (hdecomp : OrthogonalExactDecomposition F₀ F₁)
@@ -235,7 +235,7 @@ variable {E F G H : Type v}
 orthogonal-complement projection of the trial map have the same ideal gauge. -/
 theorem isometricComplementaryBlock_mem_and_gauge_eq_directed
     (N : TauCeti.SymmetricOperatorIdealFamily.{u, v} 𝕜)
-    [N.toOperatorIdealFamily.IsComplete]
+    
     (X : F →L[𝕜] E) (F₀ : H →L[𝕜] E) (F₁ : G →L[𝕜] E)
     (_hX : IsometricEmbedding X)
     (hdecomp : OrthogonalExactDecomposition F₀ F₁)

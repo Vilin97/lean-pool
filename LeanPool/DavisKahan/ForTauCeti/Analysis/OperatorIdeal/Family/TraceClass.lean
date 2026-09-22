@@ -155,8 +155,8 @@ theorem nuclearENorm_adjoint (T : E →L[𝕜] F) : T.adjoint.nuclearENorm = T.n
 omit [CompleteSpace E] [CompleteSpace F] in
 /-- **The two-sided ideal bound.** -/
 theorem nuclearENorm_comp_le {G H : Type v}
-    [NormedAddCommGroup G] [InnerProductSpace 𝕜 G] [CompleteSpace G]
-    [NormedAddCommGroup H] [InnerProductSpace 𝕜 H] [CompleteSpace H]
+    [NormedAddCommGroup G] [InnerProductSpace 𝕜 G] 
+    [NormedAddCommGroup H] [InnerProductSpace 𝕜 H] 
     (L : F →L[𝕜] G) (T : E →L[𝕜] F) (R : H →L[𝕜] E) :
     (L ∘L T ∘L R).nuclearENorm ≤ ‖L‖ₑ * T.nuclearENorm * ‖R‖ₑ := by
   calc (L ∘L T ∘L R).nuclearENorm

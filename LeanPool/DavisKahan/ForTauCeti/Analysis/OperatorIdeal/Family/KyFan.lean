@@ -116,7 +116,7 @@ approximation numbers, so it never reaches `∞`. -/
   simp
 
 /-- The real-valued Ky Fan gauge is recovered from the canonical one. -/
- theorem toReal_gauge_kyFanIdealFamily (k : ℕ) (hk : 0 < k) (A : E →L[𝕜] F) :
+theorem toReal_gauge_kyFanIdealFamily (k : ℕ) (hk : 0 < k) (A : E →L[𝕜] F) :
     ((kyFanIdealFamily.{u, v} 𝕜 k hk).gauge A).toReal = A.kyFanGauge k :=
   ENNReal.toReal_ofReal (A.kyFanGauge_nonneg k)
 
