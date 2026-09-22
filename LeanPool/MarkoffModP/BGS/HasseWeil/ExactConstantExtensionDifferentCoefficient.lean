@@ -620,6 +620,53 @@ theorem exactConstantExtensionPresentedInfinityPlace_ramificationIdx_eq_one
       exact exactConstantExtensionInfinityPlace_ramificationIdx_eq_one
         C S N hExact Q
 
+private theorem different_ne_bot_of_fraction_fields
+    (A B K L : Type*) [CommRing A] [IsDomain A] [IsIntegrallyClosed A]
+    [CommRing B] [IsDedekindDomain B] [Field K] [Field L]
+    [Algebra A K] [IsFractionRing A K] [Algebra B L] [IsFractionRing B L]
+    [Algebra A L] [Algebra K L] [Algebra.IsSeparable K L]
+    [IsScalarTower A K L] [Algebra A B] [IsScalarTower A B L]
+    [Module.Finite A B] [Module.IsTorsionFree A B] : differentIdeal A B ≠ ⊥ := by
+  let : Algebra A (FractionRing A) := exactConstantDifferentCoefficientCanonicalFractionRingAlgebra A
+  let : SMul A (FractionRing A) := Algebra.toSMul
+  let : IsFractionRing A (FractionRing A) := exactConstantDifferentCoefficientCanonicalFractionRing A
+  let : Algebra B (FractionRing B) := exactConstantDifferentCoefficientCanonicalFractionRingAlgebra B
+  let : SMul B (FractionRing B) := Algebra.toSMul
+  let : IsFractionRing B (FractionRing B) := exactConstantDifferentCoefficientCanonicalFractionRing B
+  let : Algebra A (FractionRing B) :=
+    RingHom.toAlgebra ((algebraMap B (FractionRing B)).comp (algebraMap A B))
+  let : SMul A (FractionRing B) := Algebra.toSMul
+  let : IsScalarTower A B (FractionRing B) := IsScalarTower.of_algebraMap_eq' rfl
+  let : FaithfulSMul A (FractionRing B) := by
+    rw [faithfulSMul_iff_algebraMap_injective]
+    change Function.Injective
+      ((algebraMap B (FractionRing B)).comp (algebraMap A B))
+    exact (IsFractionRing.injective B (FractionRing B)).comp
+      (FaithfulSMul.algebraMap_injective A B)
+  let : Algebra (FractionRing A) (FractionRing B) := FractionRing.liftAlgebra A (FractionRing B)
+  let : SMul (FractionRing A) (FractionRing B) := Algebra.toSMul
+  let : IsScalarTower A (FractionRing A) (FractionRing B) :=
+    FractionRing.isScalarTower_liftAlgebra A (FractionRing B)
+  let : Algebra.IsSeparable (FractionRing A) (FractionRing B) := by
+    refine Algebra.IsSeparable.of_equiv_equiv
+      (FractionRing.algEquiv A K).symm.toRingEquiv
+      (FractionRing.algEquiv B L).symm.toRingEquiv ?_
+    ext z
+    exact IsFractionRing.algEquiv_commutes
+      (FractionRing.algEquiv A K).symm (FractionRing.algEquiv B L).symm z
+  exact differentIdeal_ne_bot
+
+private theorem normalization_map_injective
+    {R B N E : Type*} [CommRing R] [CommRing B] [Field N] [Field E]
+    [Algebra R B] [Algebra N E]
+    (i : R → N) (j : B → E) (hi : Function.Injective i)
+    (hcompat : ∀ x, j (algebraMap R B x) = algebraMap N E (i x)) :
+    Function.Injective (algebraMap R B) := by
+  intro x y hxy
+  apply hi
+  apply (algebraMap N E).injective
+  exact (hcompat x).symm.trans ((congrArg j hxy).trans (hcompat y))
+
 /-- Exact constant extension preserves the total-different coefficient at
 every presented finite or infinity place. -/
 theorem exactConstantExtension_presented_totalDifferentMultiplicity_eq
@@ -627,25 +674,25 @@ theorem exactConstantExtension_presented_totalDifferentMultiplicity_eq
       (⊥ : IntermediateField C N))
     (q : ExactConstantExtensionPresentedPlace C S N) :
     let E := ExactConstantExtension C N S
-    letI : Field E := exactConstantExtensionField C N S hExact
-    letI : Algebra (RatFunc C) E :=
+    let : Field E := exactConstantExtensionField C N S hExact
+    let : Algebra (RatFunc C) E :=
       exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-    letI : SMul (RatFunc C) E := Algebra.toSMul
-    letI : Module (RatFunc C) E := Algebra.toModule
-    letI : FiniteDimensional (RatFunc C) E :=
+    let : SMul (RatFunc C) E := Algebra.toSMul
+    let : Module (RatFunc C) E := Algebra.toModule
+    let : FiniteDimensional (RatFunc C) E :=
       finiteDimensional_exactConstantExtension_over_baseRatFunc
         C S N hExact
-    letI : Algebra.IsSeparable (RatFunc C) E :=
+    let : Algebra.IsSeparable (RatFunc C) E :=
       isSeparable_exactConstantExtension_over_baseRatFunc C S N hExact
-    letI : Algebra (RatFunc S) E :=
+    let : Algebra (RatFunc S) E :=
       ratFuncExactConstantExtensionAlgebra C S N hExact
-    letI : SMul (RatFunc S) E := Algebra.toSMul
-    letI : Module (RatFunc S) E := Algebra.toModule
-    letI : Algebra S[X] E :=
+    let : SMul (RatFunc S) E := Algebra.toSMul
+    let : Module (RatFunc S) E := Algebra.toModule
+    let : Algebra S[X] E :=
       constantExtensionTensorPolynomialAlgebra C S N
-    letI : SMul S[X] E := Algebra.toSMul
-    letI : Module S[X] E := Algebra.toModule
-    letI : IsScalarTower S[X] (RatFunc S) E :=
+    let : SMul S[X] E := Algebra.toSMul
+    let : Module S[X] E := Algebra.toModule
+    let : IsScalarTower S[X] (RatFunc S) E :=
       IsScalarTower.of_algebraMap_eq' (by
         apply DFunLike.ext _ _
         intro p
@@ -654,9 +701,9 @@ theorem exactConstantExtension_presented_totalDifferentMultiplicity_eq
             (algebraMap S[X] (RatFunc S) p)
         exact
           (ratFuncToExactConstantExtension_algebraMap C S N hExact p).symm)
-    letI : FiniteDimensional (RatFunc S) E :=
+    let : FiniteDimensional (RatFunc S) E :=
       finiteDimensional_over_extendedRatFunc C S N hExact
-    letI : Algebra.IsSeparable (RatFunc S) E :=
+    let : Algebra.IsSeparable (RatFunc S) E :=
       isSeparable_over_extendedRatFunc C S N hExact
     finiteExtensionTotalDifferentEffectiveDivisor S E
         (exactConstantExtensionPresentedUpstairsPlaceEquiv
@@ -664,39 +711,8 @@ theorem exactConstantExtension_presented_totalDifferentMultiplicity_eq
       finiteExtensionTotalDifferentEffectiveDivisor C N
         (exactConstantExtensionPresentedDownstairsPlace
           C S N hExact q) := by
-  dsimp only
-  let E := ExactConstantExtension C N S
-  letI : Field E := exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc C) E :=
-    exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-  letI : SMul (RatFunc C) E := Algebra.toSMul
-  letI : Module (RatFunc C) E := Algebra.toModule
-  letI : FiniteDimensional (RatFunc C) E :=
-    finiteDimensional_exactConstantExtension_over_baseRatFunc
-      C S N hExact
-  letI : Algebra.IsSeparable (RatFunc C) E :=
-    isSeparable_exactConstantExtension_over_baseRatFunc C S N hExact
-  letI : Algebra (RatFunc S) E :=
-    ratFuncExactConstantExtensionAlgebra C S N hExact
-  letI : SMul (RatFunc S) E := Algebra.toSMul
-  letI : Module (RatFunc S) E := Algebra.toModule
-  letI : Algebra S[X] E :=
-    constantExtensionTensorPolynomialAlgebra C S N
-  letI : SMul S[X] E := Algebra.toSMul
-  letI : Module S[X] E := Algebra.toModule
-  letI : IsScalarTower S[X] (RatFunc S) E :=
-    IsScalarTower.of_algebraMap_eq' (by
-      apply DFunLike.ext _ _
-      intro p
-      change algebraMap S[X] E p =
-        ratFuncToExactConstantExtension C S N hExact
-          (algebraMap S[X] (RatFunc S) p)
-      exact
-        (ratFuncToExactConstantExtension_algebraMap C S N hExact p).symm)
-  letI : FiniteDimensional (RatFunc S) E :=
-    finiteDimensional_over_extendedRatFunc C S N hExact
-  letI : Algebra.IsSeparable (RatFunc S) E :=
-    isSeparable_over_extendedRatFunc C S N hExact
+  intro E model1 model2 model3 model4 model5 model6 model7 model8 model9
+    model10 model11 model12 model13 model14 model15
   cases q with
   | inl q =>
       letI : Algebra S[X] (RatFunc S) :=
@@ -731,6 +747,10 @@ theorem exactConstantExtension_presented_totalDifferentMultiplicity_eq
         exactConstantExtensionFiniteNormalizationAlgebra C S N
       letI : SMul R2 B := Algebra.toSMul
       letI : Module R2 B := Algebra.toModule
+      letI : SMul C R2 := Algebra.toSMul
+      letI : Module C R2 := Algebra.toModule
+      letI : Module.Free C R2 := Module.Free.of_divisionRing C R2
+      letI : Module.Flat C R2 := Module.Flat.of_free
       let eNorm : S ⊗[C] R2 ≃+* B :=
         finiteFieldConstantExtensionIntegralClosureRingEquiv C S N
       letI : Module.IsTorsionFree R2 B := by
@@ -861,51 +881,12 @@ theorem exactConstantExtension_presented_totalDifferentMultiplicity_eq
       letI : Module R2 B := Algebra.toModule
       letI : Module.IsTorsionFree R2 B := by
         rw [Module.isTorsionFree_iff_algebraMap_injective]
-        intro x y hxy
-        apply Subtype.ext
-        apply (algebraMap N E).injective
-        have hxy' := congrArg Subtype.val hxy
-        calc
-          algebraMap N E x.1 =
-              ((algebraMap R2 B x : B) : E) :=
-            (exactConstantExtensionInfinityNormalizationAlgebra_coe
-              C S N hExact x).symm
-          _ = ((algebraMap R2 B y : B) : E) := hxy'
-          _ = algebraMap N E y.1 :=
-            exactConstantExtensionInfinityNormalizationAlgebra_coe
-              C S N hExact y
+        exact normalization_map_injective Subtype.val Subtype.val
+          Subtype.val_injective
+          (exactConstantExtensionInfinityNormalizationAlgebra_coe C S N hExact)
       letI : IsFractionRing R2 N :=
         IsIntegralClosure.isFractionRing_of_finite_extension
           A (RatFunc C) N R2
-      letI : Algebra R2 (FractionRing R2) :=
-        exactConstantDifferentCoefficientCanonicalFractionRingAlgebra R2
-      letI : SMul R2 (FractionRing R2) := Algebra.toSMul
-      letI : IsFractionRing R2 (FractionRing R2) :=
-        exactConstantDifferentCoefficientCanonicalFractionRing R2
-      letI : Algebra A (FractionRing R2) :=
-        RingHom.toAlgebra
-          ((algebraMap R2 (FractionRing R2)).comp (algebraMap A R2))
-      letI : SMul A (FractionRing R2) := Algebra.toSMul
-      letI : IsScalarTower A R2 (FractionRing R2) :=
-        IsScalarTower.of_algebraMap_eq' rfl
-      letI : FaithfulSMul A (FractionRing R2) := by
-        rw [faithfulSMul_iff_algebraMap_injective]
-        exact (IsFractionRing.injective R2 (FractionRing R2)).comp
-          (Module.isTorsionFree_iff_algebraMap_injective.mp
-            (show Module.IsTorsionFree A R2 from inferInstance))
-      letI : Algebra (FractionRing A) (FractionRing R2) :=
-        FractionRing.liftAlgebra A (FractionRing R2)
-      letI : Algebra.IsSeparable (FractionRing A) (FractionRing R2) := by
-        refine Algebra.IsSeparable.of_equiv_equiv
-          (ratFuncInfinityFractionRingEquiv C).symm.toRingEquiv
-          (FractionRing.algEquiv R2 N).symm.toRingEquiv ?_
-        ext z
-        exact IsFractionRing.algEquiv_commutes
-          (A := A) (B := R2)
-          (K₁ := RatFunc C) (K₂ := FractionRing A)
-          (L₁ := N) (L₂ := FractionRing R2)
-          (ratFuncInfinityFractionRingEquiv C).symm
-          (FractionRing.algEquiv R2 N).symm z
       rw [exactConstantExtension_infinityDifferent_eq_map C S N hExact]
       let w := exactConstantExtensionUpstairsInfinityPlace
         C S N hExact q.1 q.2
@@ -918,7 +899,7 @@ theorem exactConstantExtension_presented_totalDifferentMultiplicity_eq
           C S N hExact q).symm⟩
       have hDifferentBase :
           differentIdeal (RatFuncInfinityIntegers C) R2 ≠ ⊥ :=
-        differentIdeal_ne_bot
+        different_ne_bot_of_fraction_fields A R2 (RatFunc C) N
       calc
         multiplicity w.1
             (Ideal.map (algebraMap R2 B)
