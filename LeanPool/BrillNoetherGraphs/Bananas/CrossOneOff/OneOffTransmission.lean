@@ -192,7 +192,11 @@ theorem transmission_oneOff_zero
       (g • one_chip (rightEndpoint B)) tau) :
     tau 0 = 0 := by
   apply transmission_value_of_rankDelta_eq_one hTau
-  simpa using rankDelta_oneOff_rightEndpoint_nsmul_eq_one
-    B alpha g hg le_rfl hLength
+  have hzero : (g • one_chip (rightEndpoint B) : CFDiv B.graph) +
+        (0 : ℤ) • one_chip (leftEndpoint B) -
+        (0 : ℤ) • one_chip (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩) =
+      g • one_chip (rightEndpoint B) := by simp
+  convert! rankDelta_oneOff_rightEndpoint_nsmul_eq_one B alpha g hg le_rfl hLength using 1
+  congr 1
 
 end Bananas

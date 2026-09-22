@@ -122,11 +122,13 @@ private theorem paperCoordinateSemibreak_eq_sum {g : ℕ} (B : Banana g)
         by_cases hag : alpha = gamma
         · subst alpha
           exact (hgamma halpha).elim
-        · rw [if_neg]
-          intro heq
-          have hsigma := Sum.inr.inj heq
-          have hslots : gamma = alpha := congrArg Sigma.fst hsigma
-          exact hag hslots.symm
+        · have hne : (Sum.inr ⟨gamma, offset⟩ : B.graph.V) ≠
+              Sum.inr ⟨alpha, normalizedInteriorOffset B alpha (p alpha) halpha⟩ := by
+            intro heq
+            have hsigma := Sum.inr.inj heq
+            have hslots : gamma = alpha := congrArg Sigma.fst hsigma
+            exact hag hslots.symm
+          exact if_neg hne
       · rw [dif_neg halpha]
         rfl
 

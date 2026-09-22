@@ -468,8 +468,6 @@ theorem linear_equiv_bridgeCanonicalLift_pushforward
       · have hax : (Sum.inl a : Sum G.V H.V) ≠ Sum.inl x :=
           fun h => ha (Sum.inl.inj h)
         simp [n, one_chip, ha]
-        intro h
-        exact (hax h).elim
   | inr b =>
       rw [hScaleApply]
       by_cases hb : b = y
@@ -478,8 +476,6 @@ theorem linear_equiv_bridgeCanonicalLift_pushforward
       · have hby : (Sum.inr b : Sum G.V H.V) ≠ Sum.inr y :=
           fun h => hb (Sum.inr.inj h)
         simp [n, one_chip, hb]
-        intro h
-        exact (hby h).elim
 
 /-- Linear equivalence descends through bridge contraction. -/
 theorem linear_equiv_bridgePushforward

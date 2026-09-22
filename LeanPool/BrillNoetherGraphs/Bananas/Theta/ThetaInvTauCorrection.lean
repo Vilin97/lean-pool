@@ -466,17 +466,17 @@ theorem nonRecurrent_of_kGeneralTransmission
   rw [hGenus, hEq] at hCount
   have hzero : (⟨0, hTorsion.1⟩ : Fin k) ∈
       effectiveDegreeOneTwistResidues (mark B.graph u v) (one_chip w) k := by
-    rw [mem_effectiveDegreeOneTwistResidues_one_chip_iff]
+    rw [mem_effectiveDegreeOneTwistResidues_one_chip_iff B.graph u v w k _]
     have hRank : rank B.graph (one_chip w) = 0 :=
       rank_one_chip_zero_banana_two B w
     simpa using hRank.ge
   have hnMem : n ∈
       effectiveDegreeOneTwistResidues (mark B.graph u v) (one_chip w) k := by
-    rw [mem_effectiveDegreeOneTwistResidues_one_chip_iff]
+    rw [mem_effectiveDegreeOneTwistResidues_one_chip_iff B.graph u v w k _]
     exact hnRank
   have hmMem : m ∈
       effectiveDegreeOneTwistResidues (mark B.graph u v) (one_chip w) k := by
-    rw [mem_effectiveDegreeOneTwistResidues_one_chip_iff]
+    rw [mem_effectiveDegreeOneTwistResidues_one_chip_iff B.graph u v w k _]
     exact hmRank
   exact eq_of_ncard_le_two_of_mem_three hCount hzero hnMem hmMem
     (fun h => hn (congrArg Fin.val h)) (fun h => hm (congrArg Fin.val h))

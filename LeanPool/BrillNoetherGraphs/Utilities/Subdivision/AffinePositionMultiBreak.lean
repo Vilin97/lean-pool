@@ -203,7 +203,10 @@ theorem certificate_valid (core : ExplicitPotential.Core n p)
   · intro anchor vertex
     have hContribution :
         (certificate core segment cone).lowerEndpointContribution anchor vertex = 0 := by
-      simp [ExplicitPotential.Certificate.lowerEndpointContribution, certificate]
+      change (∑ edge : Fin p,
+        ((if core.tail edge = vertex then (0 : ℤ) else 0) +
+          if core.head edge = vertex then (0 : ℤ) else 0)) = 0
+      simp
     rw [hContribution, add_zero]
     unfold ExplicitPotential.Certificate.targetCoefficient
     by_cases hAnchor : vertex = anchor <;> simp [certificate, hAnchor]

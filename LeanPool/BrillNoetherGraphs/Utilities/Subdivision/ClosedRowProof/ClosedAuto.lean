@@ -154,7 +154,14 @@ variable (symmetry : CoreSymmetry core) (length : Fin p → ℕ)
 abbrev targetLength : Fin p → ℕ := symmetry.reindexLength length
 private theorem zero_mem_map (e : Fin p) :
     symmetry.slotPerm e ∈ zeroSet (targetLength symmetry length) ↔ e ∈ zeroSet length := by
-  simp [zeroSet, targetLength, CoreSymmetry.reindexLength]
+  have hleft : symmetry.slotPerm e ∈ zeroSet (targetLength symmetry length) ↔
+      targetLength symmetry length (symmetry.slotPerm e) = 0 := by
+    exact Finset.mem_filter.trans (and_iff_right (Finset.mem_univ _))
+  have hright : e ∈ zeroSet length ↔ length e = 0 := by
+    exact Finset.mem_filter.trans (and_iff_right (Finset.mem_univ _))
+  have hlength : targetLength symmetry length (symmetry.slotPerm e) = length e := by
+    exact congrArg length (symmetry.slotPerm.symm_apply_apply e)
+  exact hleft.trans ((congrArg (· = 0) hlength).to_iff.trans hright.symm)
 
 theorem adj_map {u v : Fin n} :
     AdjInList core (edgeList (zeroSet length)) u v →

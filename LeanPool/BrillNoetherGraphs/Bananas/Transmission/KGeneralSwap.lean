@@ -470,9 +470,9 @@ theorem allSubmodular_swap_iff
   rw [allSubmodular_iff_rankDelta_nonneg,
     allSubmodular_iff_rankDelta_nonneg]
   constructor <;> intro h D
-  · rw [rankDelta_mark_swap]
+  · rw [rankDelta_mark_swap G v u D]
     exact h D
-  · rw [rankDelta_mark_swap]
+  · rw [rankDelta_mark_swap G u v D]
     exact h D
 
 /-- `k`-general transmission is independent of the ordering of the two marked
