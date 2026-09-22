@@ -79,7 +79,7 @@ theorem denseImmediateInstructionTM_hoareTime_frame
       (fun inp work out => inp = inp₀ ∧ work = initialWork ∧ out = out₀)
       (fun inp work out => inp = inp₀ ∧ work = valueWork ∧ out = out₀)
       (TM.binaryAddConstTime value 0) := by
-    simpa only [valueWork, zero_add] using hvalue
+    simpa only [valueWork, zero_add] using! hvalue
   have hquery : (TM.binaryAddConstTM tapes.update.entry.query
       destination).HoareTime
       (fun inp work out => inp = inp₀ ∧ work = valueWork ∧ out = out₀)
@@ -92,7 +92,7 @@ theorem denseImmediateInstructionTM_hoareTime_frame
       rw [show valueWork tapes.update.entry.query =
           initialWork tapes.update.entry.query by
         exact Function.update_of_ne hqueryReplacement _ initialWork]
-      exact ⟨hinitial.scanner.queryStart, by simpa using hinitial.scanner.query⟩
+      exact ⟨hinitial.scanner.queryStart, by simpa using! hinitial.scanner.query⟩
     have hrun := TM.binaryAddConstTM_hoareTime_frame
       tapes.update.entry.query destination 0 inp₀ valueWork out₀ hqueryZero
       hinput
@@ -100,15 +100,15 @@ theorem denseImmediateInstructionTM_hoareTime_frame
         by_cases hi : i = tapes.update.replacement
         · subst i
           have hnat := Tape.init_move_right_hasBinaryNat value
-          simpa only [valueWork, Function.update_self] using
+          simpa only [valueWork, Function.update_self] using!
             (show TM.Parked
                 ((Tape.init (value.bits.map Γ.ofBool)).move Dir3.right) from
               ⟨by rw [hnat.2.1],
                 hnat.2.hasBinaryContent.cells_ne_start⟩)
-        · simpa only [valueWork, Function.update_of_ne hi] using
+        · simpa only [valueWork, Function.update_of_ne hi] using!
             hinitial.scanner.parked i)
       houtputParked
-    simpa only [updateWork, zero_add] using hrun
+    simpa only [updateWork, zero_add] using! hrun
   have hready := immediateUpdate_ready_internal tapes overlay destination value
     initialWork hinitial
   have hupdate := taggedEntryUpdateTM_hoareTime_frame tapes.update overlay
@@ -135,8 +135,8 @@ theorem denseImmediateInstructionTM_hoareTime_frame
       subst work
       obtain ⟨hi, hw, ho⟩ := phaseTransition_of_parked
         (inp := inp) (work := updateWork) (out := out)
-        (by simpa [hinp] using hinput) hready.2.2.2.2.2
-        (by simpa [hout] using houtputParked)
+        (by simpa [hinp] using! hinput) hready.2.2.2.2.2
+        (by simpa [hout] using! houtputParked)
       rw [hi, hw, ho]
       exact ⟨hinp, rfl, hout⟩)
     hupdate'
@@ -152,20 +152,20 @@ theorem denseImmediateInstructionTM_hoareTime_frame
         by_cases hi : i = tapes.update.replacement
         · subst i
           have hnat := Tape.init_move_right_hasBinaryNat value
-          simpa only [valueWork, Function.update_self] using
+          simpa only [valueWork, Function.update_self] using!
             (show TM.Parked
                 ((Tape.init (value.bits.map Γ.ofBool)).move Dir3.right) from
               ⟨by rw [hnat.2.1], hnat.2.hasBinaryContent.cells_ne_start⟩)
-        · simpa only [valueWork, Function.update_of_ne hi] using
+        · simpa only [valueWork, Function.update_of_ne hi] using!
             hinitial.scanner.parked i
       obtain ⟨hi, hw, ho⟩ := phaseTransition_of_parked
         (inp := inp) (work := valueWork) (out := out)
-        (by simpa [hinp] using hinput) hparked
-        (by simpa [hout] using houtputParked)
+        (by simpa [hinp] using! hinput) hparked
+        (by simpa [hout] using! houtputParked)
       rw [hi, hw, ho]
       exact ⟨hinp, rfl, hout⟩)
     hqueryUpdate
-  simpa [denseImmediateInstructionTM, denseImmediateInstructionTime] using hall
+  simpa [denseImmediateInstructionTM, denseImmediateInstructionTime] using! hall
 
 end Machine
 end RegisterStore

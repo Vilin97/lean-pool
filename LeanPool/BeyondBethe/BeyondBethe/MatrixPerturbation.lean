@@ -31,7 +31,7 @@ theorem abs_finset_prod_le_pow {ι : Type*} {s : Finset ι}
     abs (∏ i ∈ s, f i) ≤ M ^ s.card := by
   classical
   rw [Finset.abs_prod]
-  simpa using Finset.prod_le_prod (fun _ _ ↦ abs_nonneg _)
+  simpa using Finset.prod_le_prod₀ (fun _ _ ↦ abs_nonneg _)
     (fun i hi ↦ hf i hi)
 
 /-- A deliberately coarse but uniform product perturbation estimate.  The

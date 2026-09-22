@@ -226,7 +226,7 @@ theorem fourCoreTransferCost_le_directedFourCoreCostUpper
     fourCoreTransferCost (τ : ℝ)
         (fun i j ↦ ((X i j : ℚ) : ℝ)) r s a b ≤
       (directedFourCoreCostUpper τ X r s a b p : ℝ) := by
-  rw [fourCoreTransferCost, directedFourCoreCostUpper]
+  unfold fourCoreTransferCost directedFourCoreCostUpper
   push_cast
   linarith [transferCost_le_directedTransferCostUpper hτ hXint r a p,
     transferCost_le_directedTransferCostUpper hτ hXint r b p,
@@ -249,7 +249,7 @@ theorem directedFourCoreCostUpper_le_add_error
   have hsb := directedTransferCostUpper_le_add_error hτ0 hτ1 hXint s b p
   have hecast : ((((1 / 2 : ℚ) ^ p : ℚ)) : ℝ) = (1 / 2 : ℝ) ^ p := by
     norm_num
-  rw [fourCoreTransferCost, directedFourCoreCostUpper]
+  unfold fourCoreTransferCost directedFourCoreCostUpper
   push_cast
   rw [← hecast]
   linarith

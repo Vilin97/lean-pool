@@ -90,18 +90,18 @@ private theorem denseIndirectLoaded_ready
   have hcountSource :
       (addressWork tapes.update.resultCount).HasBinaryNat overlay.length := by
     rw [show addressWork tapes.update.resultCount =
-        initialWork tapes.update.resultCount by simpa using haddress.countSource]
-    simpa using hinitial.countSource
+        initialWork tapes.update.resultCount by simpa using! haddress.countSource]
+    simpa using! hinitial.countSource
   refine
     { scanner := denseScanner_indirect_of_lhs tapes input overlay
         addressRegister initialWork addressWork haddress
       sourceStart := haddress.sourceStart
       sourceHead := haddress.sourceHead
-      count := by simpa using haddress.count
-      countSource := by simpa using hcountSource
-      querySource := by simpa using haddress.destination
+      count := by simpa using! haddress.count
+      countSource := by simpa using! hcountSource
+      querySource := by simpa using! haddress.destination
       destination := ?_
-      copyScratch := by simpa using haddress.copyScratch }
+      copyScratch := by simpa using! haddress.copyScratch }
   change (addressWork tapes.update.replacement).HasBinaryNat 0
   rw [hreplacementEq]
   exact hreplacement
@@ -136,7 +136,7 @@ private theorem denseIndirectReads_hoareTime
   let inp₀ := (Tape.init (input.map Γ.ofBool)).move Dir3.right
   have hinput : TM.Parked inp₀ := by
     refine ⟨by simp [inp₀, Tape.move], ?_⟩
-    simpa [inp₀] using Tape.init_ofBool_move_right_cells_ne_start input
+    simpa [inp₀] using! Tape.init_ofBool_move_right_cells_ne_start input
   have haddress := denseOverlayLookupStaticTM_hoareTime_internal
     tapes.lhsLookup input overlay addressRegister initialWork out₀ hvalid
     hinitial houtput
@@ -174,12 +174,12 @@ private theorem denseIndirectReads_hoareTime
       rintro inp work out ⟨hinp, haddressResult, hout⟩
       obtain ⟨hi, hw, ho⟩ := phaseTransition_of_parked
         (inp := inp) (work := work) (out := out)
-        (by simpa [inp₀, hinp] using hinput) haddressResult.parked
-        (by simpa [hout] using houtput)
+        (by simpa [inp₀, hinp] using! hinput) haddressResult.parked
+        (by simpa [hout] using! houtput)
       rw [hi, hw, ho]
       exact ⟨hinp, haddressResult, hout⟩)
     hloaded
-  simpa only [inp₀] using hall
+  simpa only [inp₀] using! hall
 
 /-- Exact semantic and time contract for one dense-overlay indirect load. -/
 theorem denseIndirectLoadInstructionTM_hoareTime_frame
@@ -209,7 +209,7 @@ theorem denseIndirectLoadInstructionTM_hoareTime_frame
   let inp₀ := (Tape.init (input.map Γ.ofBool)).move Dir3.right
   have hinput : TM.Parked inp₀ := by
     refine ⟨by simp [inp₀, Tape.move], ?_⟩
-    simpa [inp₀] using Tape.init_ofBool_move_right_cells_ne_start input
+    simpa [inp₀] using! Tape.init_ofBool_move_right_cells_ne_start input
   have houtputParked := hasBinaryPrefix_parked houtput
   have hreads := denseIndirectReads_hoareTime tapes input overlay
     addressRegister initialWork out₀ hvalid hinitial hreplacement houtputParked
@@ -239,17 +239,17 @@ theorem denseIndirectLoadInstructionTM_hoareTime_frame
       hloadedResult⟩, hout⟩
     have hqueryZero : (work tapes.update.entry.query).HasBinaryNat 0 :=
       ⟨hloadedResult.scanner.queryStart, by
-        simpa using hloadedResult.scanner.query⟩
+        simpa using! hloadedResult.scanner.query⟩
     have hrun := TM.binaryAddConstTM_hoareTime_frame
       tapes.update.entry.query destination 0 inp work out hqueryZero
-      (by simpa [hinp] using hinput)
+      (by simpa [hinp] using! hinput)
       (fun i _ => hloadedResult.parked i)
-      (by simpa [hout] using houtputParked)
+      (by simpa [hout] using! houtputParked)
     obtain ⟨final, time, htime, hreach, hhalt, hfinalInput,
         hfinalWork, hfinalOutput⟩ := hrun inp work out ⟨rfl, rfl, rfl⟩
     exact ⟨final, time, htime, hreach, hhalt, hfinalInput.trans hinp,
       ⟨addressWork, work, haddressResult, hloadedResult,
-        by simpa only [zero_add] using hfinalWork⟩,
+        by simpa only [zero_add] using! hfinalWork⟩,
       hfinalOutput.trans hout⟩
   have hupdate : (taggedEntryUpdateTM tapes.update).HoareTime
       (fun inp work out =>
@@ -297,23 +297,23 @@ theorem denseIndirectLoadInstructionTM_hoareTime_frame
         (loadedWork tapes.update.resultCount).HasBinaryNat overlay.length := by
       rw [show loadedWork tapes.update.resultCount =
           addressWork tapes.update.resultCount by
-        simpa using hloadedResult.countSource]
+        simpa using! hloadedResult.countSource]
       rw [show addressWork tapes.update.resultCount =
           initialWork tapes.update.resultCount by
-        simpa using haddressResult.countSource]
-      simpa using hinitial.countSource
+        simpa using! haddressResult.countSource]
+      simpa using! hinitial.countSource
     have hrun := taggedEntryUpdateTM_hoareTime_frame tapes.update overlay
       destination
       (DenseOverlay.read input overlay
         (DenseOverlay.read input overlay addressRegister))
       emittedBits updateWork inp₀ out₀ hvalid.1 hscanner
-      (by simpa only [updateWork, Function.update_of_ne hreplacementNe] using
+      (by simpa only [updateWork, Function.update_of_ne hreplacementNe] using!
         hloadedResult.value)
-      (by simpa only [updateWork, Function.update_of_ne hremainingNe] using
+      (by simpa only [updateWork, Function.update_of_ne hremainingNe] using!
         hloadedResult.count)
-      (by simpa only [updateWork, Function.update_of_ne hfoundNe] using
+      (by simpa only [updateWork, Function.update_of_ne hfoundNe] using!
         hloadedResult.copyScratch)
-      (by simpa only [updateWork, Function.update_of_ne hresultCountNe] using
+      (by simpa only [updateWork, Function.update_of_ne hresultCountNe] using!
         hresultCount)
       hinput houtput
     obtain ⟨final, time, htime, hreach, hhalt, hfinalInput,
@@ -335,8 +335,8 @@ theorem denseIndirectLoadInstructionTM_hoareTime_frame
         (inp := inp)
         (work := Function.update loadedWork tapes.update.entry.query
           ((Tape.init (destination.bits.map Γ.ofBool)).move Dir3.right))
-        (out := out) (by simpa [hinp] using hinput) hparked
-        (by simpa [hout] using houtputParked)
+        (out := out) (by simpa [hinp] using! hinput) hparked
+        (by simpa [hout] using! houtputParked)
       rw [hi, hw, ho]
       exact ⟨hinp, ⟨addressWork, loadedWork, haddressResult,
         hloadedResult, rfl⟩, hout⟩)
@@ -351,13 +351,13 @@ theorem denseIndirectLoadInstructionTM_hoareTime_frame
         hloadedResult⟩, hout⟩
       obtain ⟨hi, hw, ho⟩ := phaseTransition_of_parked
         (inp := inp) (work := work) (out := out)
-        (by simpa [hinp] using hinput) hloadedResult.parked
-        (by simpa [hout] using houtputParked)
+        (by simpa [hinp] using! hinput) hloadedResult.parked
+        (by simpa [hout] using! houtputParked)
       rw [hi, hw, ho]
       exact ⟨hinp, ⟨addressWork, haddressResult, hloadedResult⟩, hout⟩)
     hqueryUpdate
   simpa [denseIndirectLoadInstructionTM, denseIndirectLoadInstructionTime,
-    inp₀] using hall
+    inp₀] using! hall
 
 end Machine
 end RegisterStore

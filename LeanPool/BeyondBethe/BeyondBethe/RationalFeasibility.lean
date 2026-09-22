@@ -73,7 +73,7 @@ theorem rationalBallEllipsoid_contains {d : ℕ}
     rw [hyform, finiteNormSq_smul]
     have hR2 : 0 < (R : ℝ) ^ 2 := sq_pos_of_pos hRreal
     rw [inv_pow]
-    simpa [div_eq_mul_inv, mul_comm] using (div_le_one hR2).2 hx
+    simpa [div_eq_mul_inv, mul_comm] using! (div_le_one hR2).2 hx
   refine ⟨y, hynorm, ?_⟩
   ext i
   rw [rationalEllipsoidPoint]
@@ -115,14 +115,14 @@ theorem rationalBallDyadicExponent_works {d : ℕ} (hd : 0 < d)
   have hfac : (d.factorial : ℚ) ≤ (2 : ℚ) ^ (d ^ 2) := by
     exact_mod_cast factorial_le_two_pow_sq d
   have hRup : R < (2 : ℚ) ^ LR := by
-    simpa only [LR] using positive_rational_lt_two_pow_encodedBitLength hR
+    simpa only [LR] using! positive_rational_lt_two_pow_encodedBitLength hR
   have hRpow : R ^ d < (2 : ℚ) ^ (LR * d) := by
     calc
       R ^ d < ((2 : ℚ) ^ LR) ^ d :=
         pow_lt_pow_left₀ hRup hR.le hd.ne'
       _ = (2 : ℚ) ^ (LR * d) := by rw [← pow_mul]
   have hrlow : (1 / 2 : ℚ) ^ Lr < r := by
-    simpa only [Lr] using dyadic_encodedBitLength_lt_positive_rational hr
+    simpa only [Lr] using! dyadic_encodedBitLength_lt_positive_rational hr
   have hrpow : ((1 / 2 : ℚ) ^ Lr) ^ d < r ^ d :=
     pow_lt_pow_left₀ hrlow (by positivity) hd.ne'
   have hM : rationalBallDyadicExponent d R r = A + C + 1 := by
@@ -193,7 +193,7 @@ theorem rationalBallEllipsoid_dyadic_budget {d : ℕ} (hd : 0 < d)
         ((r ^ d : ℚ) : ℝ) := (Rat.cast_lt (K := ℝ)).mpr hq
   norm_num only [Rat.cast_mul, Rat.cast_pow, Rat.cast_div, Rat.cast_one,
     Rat.cast_ofNat, Rat.cast_natCast] at hcast
-  simpa using hcast
+  simpa using! hcast
 
 /-- Pullback identity for the physical displacement from the ellipsoid
 center. -/
@@ -231,7 +231,7 @@ theorem rationalPulledBackNormal_ne_zero_of_det_ne_zero {d : ℕ}
   intro hzero
   apply ha
   have hdetT : Matrix.det E.basis.transpose ≠ 0 := by
-    simpa [Matrix.det_transpose] using hdet
+    simpa [Matrix.det_transpose] using! hdet
   have hunit : IsUnit (Matrix.det E.basis.transpose) :=
     (isUnit_iff_ne_zero).2 hdetT
   have hinv := Matrix.nonsing_inv_mul E.basis.transpose hunit
@@ -266,7 +266,7 @@ theorem rationalEllipsoidCentralUpdate_contains_point {d : ℕ} (hd : 0 < d)
   have hpulled : finiteDot
       (fun j ↦ (rationalPulledBackNormal E a j : ℝ)) y ≤ 0 := by
     rw [← physicalDot_point_sub_center_eq_pulledDot E a y]
-    simpa only [hpoint] using hcut
+    simpa only [hpoint] using! hcut
   obtain ⟨y', hy', hpoint'⟩ :=
     rationalEllipsoidCentralUpdate_contains hd E a hnonzero hy hpulled
   exact ⟨y', hy', hpoint'.trans hpoint⟩
@@ -365,7 +365,7 @@ theorem rationalEllipsoidIterate_cuts_eq_of_exhausted {d : ℕ}
     (hrun : runRationalFeasibility oracle budget E = .exhausted E') :
     rationalEllipsoidIterate E (rationalFeasibilityCuts oracle budget E) = E' := by
   induction budget generalizing E E' with
-  | zero => simpa [runRationalFeasibility, rationalFeasibilityCuts] using hrun
+  | zero => simpa [runRationalFeasibility, rationalFeasibilityCuts] using! hrun
   | succ budget ih =>
       rw [runRationalFeasibility] at hrun
       split at hrun <;> rename_i hresponse
@@ -536,13 +536,13 @@ theorem runRationalFeasibility_ball_accepts
   cases hresult : result with
   | accepted x =>
       refine ⟨x, ?_, ?_⟩
-      · simpa only [result] using hresult
+      · simpa only [result] using! hresult
       · exact runRationalFeasibility_acceptsOnly haccept
-          (by simpa only [result] using hresult)
+          (by simpa only [result] using! hresult)
   | exhausted E' =>
       exfalso
       exact runRationalFeasibility_ball_not_exhausted hd hvalid c hR hr
         hKplus hKminus houterPlus houterMinus E'
-        (by simpa only [result] using hresult)
+        (by simpa only [result] using! hresult)
 
 end BeyondBethe

@@ -108,8 +108,8 @@ theorem of_complexity_cobham {n : ℕ}
           recNotation g h₀ h₁ (v ⟨0, Nat.zero_lt_succ n⟩) (Fin.tail v) := by
         refine .boundedRec ihg ihh₀ ihh₁ ihj ?_
         intro x v
-        simpa only [recNotation_eq_complexity] using hbound x v
-      simpa only [recNotation_eq_complexity] using hstable
+        simpa only [recNotation_eq_complexity] using! hbound x v
+      simpa only [recNotation_eq_complexity] using! hstable
 
 /-- The source-stable presentation also embeds back into Complexitylib's
 standard Cobham class. -/
@@ -128,8 +128,8 @@ theorem to_complexity_cobham {n : ℕ}
             (v ⟨0, Nat.zero_lt_succ n⟩) (Fin.tail v) := by
         refine .boundedRec ihg ihh₀ ihh₁ ihj ?_
         intro x v
-        simpa only [recNotation_eq_complexity] using hbound x v
-      simpa only [recNotation_eq_complexity] using hstandard
+        simpa only [recNotation_eq_complexity] using! hbound x v
+      simpa only [recNotation_eq_complexity] using! hstandard
 
 /-- Every polynomial-time function in Complexitylib's Cobham presentation
 belongs to the source-stable presentation used in the Palomar statement. -/

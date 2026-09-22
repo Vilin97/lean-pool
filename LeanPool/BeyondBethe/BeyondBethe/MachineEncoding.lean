@@ -28,10 +28,10 @@ row list. -/
 def machinePairSecond (word : List Bool) : List Bool := Cobham.sndBlock word
 
 theorem machinePairFirst_mem_FP : machinePairFirst ∈ Complexity.FP := by
-  simpa only [machinePairFirst] using Cobham.fstBlock_mem_FP
+  simpa only [machinePairFirst] using! Cobham.fstBlock_mem_FP
 
 theorem machinePairSecond_mem_FP : machinePairSecond ∈ Complexity.FP := by
-  simpa only [machinePairSecond] using Cobham.sndBlock_mem_FP
+  simpa only [machinePairSecond] using! Cobham.sndBlock_mem_FP
 
 @[simp] theorem machinePairFirst_pair (left right : List Bool) :
     machinePairFirst (pair left right) = left := by
@@ -51,11 +51,11 @@ def machineMatrixRowsWord (word : List Bool) : List Bool :=
 
 theorem machineMatrixDimensionWord_mem_FP :
     machineMatrixDimensionWord ∈ Complexity.FP := by
-  simpa only [machineMatrixDimensionWord] using machinePairFirst_mem_FP
+  simpa only [machineMatrixDimensionWord] using! machinePairFirst_mem_FP
 
 theorem machineMatrixRowsWord_mem_FP :
     machineMatrixRowsWord ∈ Complexity.FP := by
-  simpa only [machineMatrixRowsWord] using machinePairSecond_mem_FP
+  simpa only [machineMatrixRowsWord] using! machinePairSecond_mem_FP
 
 @[simp] theorem machineMatrixDimensionWord_encode {n : ℕ}
     (A : Matrix (Fin n) (Fin n) ℚ) :
@@ -80,10 +80,10 @@ def machineListHead (word : List Bool) : List Bool := machinePairFirst word
 def machineListTail (word : List Bool) : List Bool := machinePairSecond word
 
 theorem machineListHead_mem_FP : machineListHead ∈ Complexity.FP := by
-  simpa only [machineListHead] using machinePairFirst_mem_FP
+  simpa only [machineListHead] using! machinePairFirst_mem_FP
 
 theorem machineListTail_mem_FP : machineListTail ∈ Complexity.FP := by
-  simpa only [machineListTail] using machinePairSecond_mem_FP
+  simpa only [machineListTail] using! machinePairSecond_mem_FP
 
 @[simp] theorem machineListHead_cons {α : Type*}
     (encode : α → List Bool) (x : α) (xs : List α) :
@@ -106,11 +106,11 @@ def machineRationalEntryDenominatorWord (word : List Bool) : List Bool :=
 
 theorem machineRationalEntryNumeratorWord_mem_FP :
     machineRationalEntryNumeratorWord ∈ Complexity.FP := by
-  simpa only [machineRationalEntryNumeratorWord] using machinePairFirst_mem_FP
+  simpa only [machineRationalEntryNumeratorWord] using! machinePairFirst_mem_FP
 
 theorem machineRationalEntryDenominatorWord_mem_FP :
     machineRationalEntryDenominatorWord ∈ Complexity.FP := by
-  simpa only [machineRationalEntryDenominatorWord] using machinePairSecond_mem_FP
+  simpa only [machineRationalEntryDenominatorWord] using! machinePairSecond_mem_FP
 
 @[simp] theorem machineRationalEntryNumeratorWord_encode (q : ℚ) :
     machineRationalEntryNumeratorWord (rationalEntryBinaryCode q) =

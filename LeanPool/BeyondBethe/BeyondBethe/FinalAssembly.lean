@@ -78,8 +78,12 @@ structure CertifiedPositiveRoutine (ε : ℝ) where
 guard to remain a polynomial-time total function on all rational matrices,
 including inputs outside the approximation theorem's domain. -/
 def rationalMatrixNonnegativeDecision {n : ℕ}
-    (A : Matrix (Fin n) (Fin n) ℚ) : Bool :=
-  decide (∀ i : Fin n, ∀ j : Fin n, 0 ≤ A i j)
+    (A : Matrix (Fin n) (Fin n) ℚ) : Bool := by
+  letI : ∀ i j : Fin n, Decidable (0 ≤ A i j) := fun i j => inferInstance
+  letI : ∀ i : Fin n, Decidable (∀ j : Fin n, 0 ≤ A i j) :=
+    fun i => Fintype.decidableForallFintype
+  exact @decide (∀ i : Fin n, ∀ j : Fin n, 0 ≤ A i j)
+    Fintype.decidableForallFintype
 
 theorem rationalMatrixNonnegativeDecision_eq_true_iff {n : ℕ}
     (A : Matrix (Fin n) (Fin n) ℚ) :
@@ -181,7 +185,7 @@ theorem finset_prod_le_factor
     ∏ q ∈ s, f q ≤ f p := by
   rw [← Finset.prod_erase_mul s f hp]
   have herase : ∏ q ∈ s.erase p, f q ≤ 1 :=
-    Finset.prod_le_one
+    Finset.prod_le_one₀
       (fun q hq ↦ hpos q (Finset.mem_of_mem_erase hq))
       (fun q hq ↦ hone q (Finset.mem_of_mem_erase hq))
   exact (mul_le_mul_of_nonneg_right herase (hpos p hp)).trans_eq (one_mul _)
