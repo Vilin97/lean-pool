@@ -42,7 +42,7 @@ theorem nat_encodedBitLength_le (n : ℕ) :
         have hb := bool_dataEncode_size_le_four b
         omega
   have hadd := Nat.add_le_add_left hsum 2
-  simpa only [Function.comp_apply, Nat.size_eq_bits_len] using hadd
+  simpa only [Function.comp_apply, Nat.size_eq_bits_len] using! hadd
 
 theorem integer_encodedBitLength_le (z : ℤ) :
     encodedBitLength ℤ z ≤ 8 + 4 * z.natAbs.size := by
@@ -59,7 +59,7 @@ theorem integer_encodedBitLength_le (z : ℤ) :
   rw [encodedBitLength_eq_dataSize] at hn
   have hn' : (DataEncode.encode (integerPayload z).2).size ≤
       2 + 4 * z.natAbs.size := by
-    simpa only [integerPayload_snd] using hn
+    simpa only [integerPayload_snd] using! hn
   omega
 
 theorem rational_encodedBitLength_le (q : ℚ) :
@@ -69,7 +69,7 @@ theorem rational_encodedBitLength_le (q : ℚ) :
   change (DataEncode.encode (rationalPayload q)).size ≤ _
   rw [show DataEncode.encode (rationalPayload q) =
       Data.l [DataEncode.encode q.num, DataEncode.encode q.den] by
-      simpa only [rationalPayload] using DataEncode_pair q.num q.den]
+      simpa only [rationalPayload] using! DataEncode_pair q.num q.den]
   simp only [Data.size, List.map_cons, List.map_nil, List.sum_cons,
     List.sum_nil, add_zero]
   have hz := integer_encodedBitLength_le q.num
@@ -107,7 +107,7 @@ theorem rat_num_natAbs_le_of_abs_and_den_bounds
       (2 : ℚ) ^ K * q.den := by
     rw [rat_abs_eq_numNatAbs_div_den] at habs
     rw [div_le_iff₀ (by positivity : (0 : ℚ) < q.den)] at habs
-    simpa only [mul_comm] using habs
+    simpa only [mul_comm] using! habs
   have hboundQ : (q.num.natAbs : ℚ) ≤ (2 : ℚ) ^ (K + P) := by
     calc
       (q.num.natAbs : ℚ) ≤ (2 : ℚ) ^ K * q.den := hnumQ
@@ -177,7 +177,7 @@ theorem roundedEllipsoidInflationFactor_den_dvd (d : ℕ) :
     exact_mod_cast hdenZ
   have hadd : (1 + roundedEllipsoidInflation d).den ∣
       (roundedEllipsoidInflation d).den := by
-    simpa using Rat.add_den_dvd (1 : ℚ) (roundedEllipsoidInflation d)
+    simpa using! Rat.add_den_dvd (1 : ℚ) (roundedEllipsoidInflation d)
   exact hadd.trans hden
 
 theorem roundedEllipsoidInflationFactor_den_le {d : ℕ} (hd : 0 < d) :
@@ -408,12 +408,12 @@ theorem adaptiveRoundedEllipsoid_state_encodedBitLength_le
       ((adaptiveRoundedEllipsoid U).center i)) ≤
       d * (20 + 4 * K + 8 * P) := by
     simpa only [Finset.sum_const, Finset.card_univ, Fintype.card_fin,
-      nsmul_eq_mul] using hc
+      nsmul_eq_mul] using! hc
   have hB' : (∑ i : Fin d, ∑ j : Fin d, encodedBitLength ℚ
       ((adaptiveRoundedEllipsoid U).basis i j)) ≤
       d * (d * (100 + 4 * K + 8 * P + 32 * d)) := by
     simpa only [Finset.sum_const, Finset.card_univ, Fintype.card_fin,
-      nsmul_eq_mul] using hB
+      nsmul_eq_mul] using! hB
   calc
     6 + (∑ i, encodedBitLength ℚ
           ((adaptiveRoundedEllipsoid U).center i)) + 2 * d +

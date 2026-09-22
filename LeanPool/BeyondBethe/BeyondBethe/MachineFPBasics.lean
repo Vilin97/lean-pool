@@ -46,7 +46,7 @@ theorem machineZeroBlock_mem_FP :
 theorem machineCompose_mem_FP {f g : List Bool → List Bool}
     (hf : f ∈ Complexity.FP) (hg : g ∈ Complexity.FP) :
     (fun word => g (f word)) ∈ Complexity.FP := by
-  simpa only [Function.comp_apply] using mem_FP_comp hf hg
+  simpa only [Function.comp_apply] using! mem_FP_comp hf hg
 
 theorem machinePair_mem_FP {left right : List Bool → List Bool}
     (hleft : left ∈ Complexity.FP) (hright : right ∈ Complexity.FP) :

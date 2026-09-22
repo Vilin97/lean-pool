@@ -94,18 +94,18 @@ private theorem denseRhsReady_of_lhs
         finalWork hlookup
       sourceStart := hlookup.sourceStart
       sourceHead := hlookup.sourceHead
-      count := by simpa using hlookup.count
+      count := by simpa using! hlookup.count
       countSource := ?_
-      querySource := by simpa using hlookup.querySource
+      querySource := by simpa using! hlookup.querySource
       destination := by
         change (finalWork tapes.rhs).HasBinaryNat 0
         rw [hrhsEq]
         exact hrhs
-      copyScratch := by simpa using hlookup.copyScratch }
+      copyScratch := by simpa using! hlookup.copyScratch }
   change (finalWork tapes.update.resultCount).HasBinaryNat overlay.length
   rw [show finalWork tapes.update.resultCount =
-      initialWork tapes.update.resultCount by simpa using hlookup.countSource]
-  simpa using hinitial.countSource
+      initialWork tapes.update.resultCount by simpa using! hlookup.countSource]
+  simpa using! hinitial.countSource
 
 /-- Two fixed dense-overlay reads compose while retaining the shared scanner
 ABI and the immutable input tape. -/
@@ -133,7 +133,7 @@ theorem denseDirectBinaryOperands_hoareTime
   let inp₀ := (Tape.init (input.map Γ.ofBool)).move Dir3.right
   have hinput : TM.Parked inp₀ := by
     refine ⟨by simp [inp₀, Tape.move], ?_⟩
-    simpa [inp₀] using Tape.init_ofBool_move_right_cells_ne_start input
+    simpa [inp₀] using! Tape.init_ofBool_move_right_cells_ne_start input
   have hlhs := denseOverlayLookupStaticTM_hoareTime_internal tapes.lhsLookup
     input overlay source₀ initialWork out₀ hvalid hinitial houtput
   have hrhs : (denseOverlayLookupStaticTM tapes.rhsLookup source₁).HoareTime
@@ -164,12 +164,12 @@ theorem denseDirectBinaryOperands_hoareTime
       rintro inp work out ⟨hinp, hlhsResult, hout⟩
       obtain ⟨hi, hw, ho⟩ := phaseTransition_of_parked
         (inp := inp) (work := work) (out := out)
-        (by simpa [inp₀, hinp] using hinput) hlhsResult.parked
-        (by simpa [hout] using houtput)
+        (by simpa [inp₀, hinp] using! hinput) hlhsResult.parked
+        (by simpa [hout] using! houtput)
       rw [hi, hw, ho]
       exact ⟨hinp, hlhsResult, hout⟩)
     hrhs
-  simpa only [inp₀] using hall
+  simpa only [inp₀] using! hall
 
 private theorem denseDirectAddress_ready
     (tapes : BinaryInstructionTapes n) (input : List Bool)
@@ -213,10 +213,10 @@ private theorem denseDirectAddress_ready
   have hresultCount :
       (operandsWork tapes.update.resultCount).HasBinaryNat overlay.length := by
     rw [show operandsWork tapes.update.resultCount =
-        lhsWork tapes.update.resultCount by simpa using hrhs.countSource]
+        lhsWork tapes.update.resultCount by simpa using! hrhs.countSource]
     rw [show lhsWork tapes.update.resultCount =
-        initialWork tapes.update.resultCount by simpa using hlhs.countSource]
-    simpa using hinitial.countSource
+        initialWork tapes.update.resultCount by simpa using! hlhs.countSource]
+    simpa using! hinitial.countSource
   have hqueryNe (i : Fin n) (h : i ≠ tapes.update.entry.query) :
       Function.update operandsWork tapes.update.entry.query
         ((Tape.init (destination.bits.map Γ.ofBool)).move Dir3.right) i =
@@ -404,13 +404,13 @@ theorem denseBinaryInstructionUpdateTM_hoareTime_frame
       rintro inp work out ⟨hinp, harith, hout⟩
       obtain ⟨hi, hw, ho⟩ := phaseTransition_of_parked
         (inp := inp) (work := work) (out := out)
-        (by simpa [hinp] using hinput) harith.parked
-        (by simpa [hout] using hasBinaryPrefix_parked houtput)
+        (by simpa [hinp] using! hinput) harith.parked
+        (by simpa [hout] using! hasBinaryPrefix_parked houtput)
       rw [hi, hw, ho]
       exact ⟨hinp, harith, hout⟩)
     hupdate
   simpa [denseBinaryInstructionUpdateTM,
-    denseBinaryInstructionUpdateTime] using hall
+    denseBinaryInstructionUpdateTime] using! hall
 
 /-- Two dense reads, direct destination synthesis, arithmetic, successor
 tagging, and sparse update implement one RAM arithmetic instruction. -/
@@ -444,7 +444,7 @@ theorem denseDirectBinaryInstructionTM_hoareTime_frame
   let inp₀ := (Tape.init (input.map Γ.ofBool)).move Dir3.right
   have hinput : TM.Parked inp₀ := by
     refine ⟨by simp [inp₀, Tape.move], ?_⟩
-    simpa [inp₀] using Tape.init_ofBool_move_right_cells_ne_start input
+    simpa [inp₀] using! Tape.init_ofBool_move_right_cells_ne_start input
   have houtputParked := hasBinaryPrefix_parked houtput
   have hoperands := denseDirectBinaryOperands_hoareTime tapes input overlay
     source₀ source₁ initialWork out₀ hvalid hinitial hrhs₀ houtputParked
@@ -462,17 +462,17 @@ theorem denseDirectBinaryInstructionTM_hoareTime_frame
     rintro inp work out ⟨hinp, operands, hout⟩
     rcases operands with ⟨lhsWork, hlhsResult, hrhsResult⟩
     have hquery : (work tapes.update.entry.query).HasBinaryNat 0 :=
-      ⟨hrhsResult.scanner.queryStart, by simpa using hrhsResult.scanner.query⟩
+      ⟨hrhsResult.scanner.queryStart, by simpa using! hrhsResult.scanner.query⟩
     have hrun := TM.binaryAddConstTM_hoareTime_frame
       tapes.update.entry.query destination 0 inp work out hquery
-      (by simpa [hinp] using hinput)
+      (by simpa [hinp] using! hinput)
       (fun i _ => hrhsResult.parked i)
-      (by simpa [hout] using houtputParked)
+      (by simpa [hout] using! houtputParked)
     obtain ⟨final, time, htime, hreach, hhalt, hfinalInput,
         hfinalWork, hfinalOutput⟩ := hrun inp work out ⟨rfl, rfl, rfl⟩
     exact ⟨final, time, htime, hreach, hhalt, hfinalInput.trans hinp,
       ⟨work, ⟨lhsWork, hlhsResult, hrhsResult⟩,
-        by simpa only [zero_add] using hfinalWork⟩,
+        by simpa only [zero_add] using! hfinalWork⟩,
       hfinalOutput.trans hout⟩
   have hupdate : (denseBinaryInstructionUpdateTM tapes op).HoareTime
       (fun inp work out =>
@@ -517,9 +517,9 @@ theorem denseDirectBinaryInstructionTM_hoareTime_frame
       rcases hready with ⟨_, _, _, _, _, _, _, _, _, _, hparked⟩
       obtain ⟨hi, hw, ho⟩ := phaseTransition_of_parked
         (inp := inp) (work := work) (out := out)
-        (by simpa [hinp] using hinput)
+        (by simpa [hinp] using! hinput)
         hparked
-        (by simpa [hout] using houtputParked)
+        (by simpa [hout] using! houtputParked)
       rw [hi, hw, ho]
       exact ⟨hinp, haddressResult, hout⟩)
     hupdate
@@ -533,13 +533,13 @@ theorem denseDirectBinaryInstructionTM_hoareTime_frame
       rcases operands with ⟨lhsWork, hlhsResult, hrhsResult⟩
       obtain ⟨hi, hw, ho⟩ := phaseTransition_of_parked
         (inp := inp) (work := work) (out := out)
-        (by simpa [hinp] using hinput) hrhsResult.parked
-        (by simpa [hout] using houtputParked)
+        (by simpa [hinp] using! hinput) hrhsResult.parked
+        (by simpa [hout] using! houtputParked)
       rw [hi, hw, ho]
       exact ⟨hinp, ⟨lhsWork, hlhsResult, hrhsResult⟩, hout⟩)
     haddressUpdate
   simpa [denseDirectBinaryInstructionTM, denseDirectBinaryInstructionTime,
-    inp₀] using hall
+    inp₀] using! hall
 
 end Machine
 end RegisterStore

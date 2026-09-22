@@ -270,7 +270,9 @@ theorem directedPairCostPrecision_error_le (n : ℕ) :
         4 * (n + 3 : ℝ) *
           ((1 / 2 : ℝ) ^ n * (1 / 1048576 : ℝ)) := by
       gcongr
-        norm_num
+      exact (pow_le_pow_of_le_one (by norm_num : (0 : ℝ) ≤ 1 / 2)
+        (by norm_num : (1 / 2 : ℝ) ≤ 1) (show 20 ≤ 400 by omega)).trans_eq
+          (by norm_num)
     _ ≤
         4 * (4 * (2 : ℝ) ^ n) *
           ((1 / 2 : ℝ) ^ n * (1 / 1048576 : ℝ)) := by gcongr

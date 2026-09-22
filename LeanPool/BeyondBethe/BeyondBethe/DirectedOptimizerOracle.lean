@@ -262,7 +262,8 @@ theorem directedNegativeObjective_bounds
         3 * (n : ℝ) ^ 2 * (((1 / 2 : ℚ) ^ p : ℚ) : ℝ) := by
   have hcoord := fun i j ↦ directedNegativeObjectiveCoordinate_bounds
     hτ0 hτ1 (hA i j) (hX0 i j) (hX1 i j) p
-  rw [regularizedBetheObjective_eq_sum_coordinates]
+  rw [regularizedBetheObjective_eq_sum_coordinates (τ : ℝ)
+    (fun i j => (A i j : ℝ)) (fun i j => (X i j : ℝ))]
   have hexact :
       -(∑ i, ∑ j, regularizedBetheCoordinate (τ : ℝ)
           (A i j : ℝ) (X i j : ℝ)) =
