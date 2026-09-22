@@ -186,13 +186,13 @@ theorem machineRationalEllipsoidPayloadWord_mem_FP :
 
 theorem machineRationalEllipsoidCenterWord_mem_FP :
     machineRationalEllipsoidCenterWord ∈ FP := by
-  simpa only [machineRationalEllipsoidCenterWord] using
+  simpa only [machineRationalEllipsoidCenterWord] using!
     machineCompose_mem_FP machineRationalEllipsoidPayloadWord_mem_FP
       machinePairFirst_mem_FP
 
 theorem machineRationalEllipsoidBasisWord_mem_FP :
     machineRationalEllipsoidBasisWord ∈ FP := by
-  simpa only [machineRationalEllipsoidBasisWord] using
+  simpa only [machineRationalEllipsoidBasisWord] using!
     machineCompose_mem_FP machineRationalEllipsoidPayloadWord_mem_FP
       machinePairSecond_mem_FP
 

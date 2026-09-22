@@ -248,8 +248,8 @@ theorem finishBufferedDataTM_hoareTime_frame_internal
     rintro inp work out
       ⟨hinp, hbuffer, hpc, hcount, hsourceContent, hcleanup, hremaining,
         hscanner, hshift, htmp, hdbl, hparked, houtEq⟩
-    have hinpParked : TM.Parked inp := by simpa [hinp] using hinput
-    have houtParked : TM.Parked out := by simpa [houtEq] using hout
+    have hinpParked : TM.Parked inp := by simpa [hinp] using! hinput
+    have houtParked : TM.Parked out := by simpa [houtEq] using! hout
     have hrun := TM.binarySuccTM_hoareTime_frame tapes.liftedPC pcValue
       inp work out hpc hinpParked.read_ne_start
       (fun i _ => (hparked i).read_ne_start) houtParked.read_ne_start
@@ -314,8 +314,8 @@ theorem finishBufferedDataTM_hoareTime_frame_internal
       rintro inp work out
         ⟨hinp, hbuffer, hpc, hcount, hsourceContent, hcleanup, hremaining,
           hscanner, hshift, htmp, hdbl, hparked, houtEq⟩
-      have hinpParked : TM.Parked inp := by simpa [hinp] using hinput
-      have houtParked : TM.Parked out := by simpa [houtEq] using hout
+      have hinpParked : TM.Parked inp := by simpa [hinp] using! hinput
+      have houtParked : TM.Parked out := by simpa [houtEq] using! hout
       obtain ⟨hi, hw, ho⟩ :=
         TM.phaseTransition_eq_self_of_reads_ne_start
           hinpParked.read_ne_start
@@ -325,7 +325,7 @@ theorem finishBufferedDataTM_hoareTime_frame_internal
       exact ⟨hinp, hbuffer, hpc, hcount, hsourceContent, hcleanup,
         hremaining, hscanner, hshift, htmp, hdbl, hparked, houtEq⟩)
     hsucc
-  simpa only [out₀] using hseq
+  simpa only [out₀] using! hseq
 
 /-- Sparse-instruction specialization of buffered data finalization. -/
 private theorem finishDataInstructionTM_hoareTime_frame_internal
@@ -473,7 +473,7 @@ theorem retargetBufferedDataKernel_hoareTime_frame_internal
         (fun j => hparkedBase j) i
     exact ⟨hinp, hbuffer, hpc, hcount, hsourceContent, hcleanup,
       hremaining, by
-        simpa [ControlInstructionTapes.lifted] using
+        simpa [ControlInstructionTapes.lifted] using!
           entryScanReady_lifted tapes.data.update.entry _ _ work hscanner
             hparked,
       hshift, htmp, hdbl, hparked, hout⟩
@@ -664,7 +664,7 @@ theorem executeInstructionTM_imm_hoareTime_frame
         fin_cases slot
         · exact ⟨houtcome.ready.queryStart, by
             simpa [instructionCleanupValue, instructionCleanupTape,
-              instructionCleanupParentSlot] using houtcome.ready.query⟩
+              instructionCleanupParentSlot] using! houtcome.ready.query⟩
         · change ((fun i => work (Fin.castSucc i))
               tapes.data.update.replacement).HasBinaryNat value
           rw [show (fun i => work (Fin.castSucc i))
@@ -682,7 +682,7 @@ theorem executeInstructionTM_imm_hoareTime_frame
             exact Function.update_self _ _ _]
           exact Tape.init_move_right_hasBinaryNat value
         · simpa [instructionCleanupValue, instructionCleanupTape,
-            instructionCleanupParentSlot] using houtcome.found
+            instructionCleanupParentSlot] using! houtcome.found
         · change ((fun i => work (Fin.castSucc i)) tapes.data.lhs).HasBinaryNat 0
           rw [show (fun i => work (Fin.castSucc i)) tapes.data.lhs =
               updateWork tapes.data.lhs from
@@ -755,14 +755,14 @@ theorem executeInstructionTM_imm_hoareTime_frame
         exact hready.dbl
       refine ⟨hinp, ?_, hpc, ?_, hsourceContent, hcleanup, ?_, ?_, hshift,
         htmp', hdbl', hparked, hout⟩
-      · simpa [instructionStore, Snapshot.stepInstr] using hbuffer'
-      · simpa [instructionStore, Snapshot.stepInstr] using hcount
-      · simpa [instructionRemainingValue] using houtcome.remaining
-      · simpa [ControlInstructionTapes.lifted] using
+      · simpa [instructionStore, Snapshot.stepInstr] using! hbuffer'
+      · simpa [instructionStore, Snapshot.stepInstr] using! hcount
+      · simpa [instructionRemainingValue] using! houtcome.remaining
+      · simpa [ControlInstructionTapes.lifted] using!
           entryScanReady_lifted tapes.data.update.entry _ _ work
             houtcome.ready hparked
     · exact le_rfl
-  simpa only [executeInstructionTM, executeInstructionTime] using
+  simpa only [executeInstructionTM, executeInstructionTime] using!
     finishDataInstructionTM_hoareTime_frame_internal tapes
       (.imm destination value) store pcValue initialWork inp₀
       (immediateInstructionTM tapes.data destination value)
@@ -824,7 +824,7 @@ theorem executeInstructionTM_direct_hoareTime_frame
         source₁) := by
     cases op <;>
       simpa [Result, directInstruction, instructionStore, Snapshot.stepInstr,
-        BinaryInstrOp.eval] using hbaseRaw
+        BinaryInstrOp.eval] using! hbaseRaw
   have hresult : ∀ work, Result work →
       work tapes.pc = initialWork (Fin.castSucc tapes.pc) ∧
       (work tapes.data.update.resultCount).HasBinaryNat
@@ -898,29 +898,29 @@ theorem executeInstructionTM_direct_hoareTime_frame
       · exact ⟨houtcome.ready.queryStart, by
           cases op <;>
             simpa [directInstruction, instructionCleanupValue,
-              instructionCleanupParentSlot] using houtcome.ready.query⟩
+              instructionCleanupParentSlot] using! houtcome.ready.query⟩
       · change (work tapes.data.update.replacement).HasBinaryNat _
         rw [show work tapes.data.update.replacement =
             arithmeticWork tapes.data.update.replacement from
           houtcome.replacement]
         cases op <;>
           simpa [directInstruction, instructionCleanupValue,
-            BinaryInstrOp.eval] using harithmetic.result
+            BinaryInstrOp.eval] using! harithmetic.result
       · cases op <;>
           simpa [directInstruction, instructionCleanupValue,
-            instructionCleanupParentSlot] using houtcome.found
+            instructionCleanupParentSlot] using! houtcome.found
       · change (work tapes.data.lhs).HasBinaryNat _
         rw [houtcome.frame tapes.data.lhs (fun role =>
             (tapes.data.update_ne_lhs role).symm)]
         cases op <;>
           simpa [directInstruction, instructionCleanupValue,
-            instructionCleanupParentSlot] using harithmetic.lhsValue
+            instructionCleanupParentSlot] using! harithmetic.lhsValue
       · change (work tapes.data.rhs).HasBinaryNat _
         rw [houtcome.frame tapes.data.rhs (fun role =>
             (tapes.data.update_ne_rhs role).symm)]
         cases op <;>
           simpa [directInstruction, instructionCleanupValue,
-            instructionCleanupParentSlot] using harithmetic.rhsValue
+            instructionCleanupParentSlot] using! harithmetic.rhsValue
     have hshift : (work tapes.data.shift).HasBinaryNat 0 := by
       rw [houtcome.frame tapes.data.shift (fun slot =>
         (tapes.data.update_ne_shift slot).symm)]
@@ -938,12 +938,12 @@ theorem executeInstructionTM_direct_hoareTime_frame
       hcleanup, ?_, ?_, hshift, htmp', hdbl', houtcome.ready.parked⟩
     · cases op <;>
         simpa [directInstruction, instructionStore, Snapshot.stepInstr,
-          BinaryInstrOp.eval] using houtcome.resultCount
+          BinaryInstrOp.eval] using! houtcome.resultCount
     · cases op <;>
-        simpa [directInstruction, instructionRemainingValue] using
+        simpa [directInstruction, instructionRemainingValue] using!
           houtcome.remaining
     · cases op <;>
-        simpa [directInstruction, instructionCleanupValue] using
+        simpa [directInstruction, instructionCleanupValue] using!
           houtcome.ready
   have hdata := retargetDataKernel_hoareTime_frame_internal tapes
     (directInstruction op destination source₀ source₁) store pcValue
@@ -959,7 +959,7 @@ theorem executeInstructionTM_direct_hoareTime_frame
       source₁) (by cases op <;> rfl) hinput hdata
   cases op <;>
     simpa [directInstruction, executeInstructionTM, executeInstructionTime]
-      using hall
+      using! hall
 
 /-- Direct addition has the common one-buffer instruction contract. -/
 theorem executeInstructionTM_add_hoareTime_frame
@@ -979,7 +979,7 @@ theorem executeInstructionTM_add_hoareTime_frame
         out = (Tape.init []).move Dir3.right)
       (executeInstructionTime tapes (.add destination source₀ source₁)
         pcValue store) := by
-  simpa [directInstruction] using
+  simpa [directInstruction] using!
     executeInstructionTM_direct_hoareTime_frame tapes .add store pcValue
       destination source₀ source₁ initialWork inp₀ hready hinput
 
@@ -1001,7 +1001,7 @@ theorem executeInstructionTM_sub_hoareTime_frame
         out = (Tape.init []).move Dir3.right)
       (executeInstructionTime tapes (.sub destination source₀ source₁)
         pcValue store) := by
-  simpa [directInstruction] using
+  simpa [directInstruction] using!
     executeInstructionTM_direct_hoareTime_frame tapes .sub store pcValue
       destination source₀ source₁ initialWork inp₀ hready hinput
 
@@ -1023,7 +1023,7 @@ theorem executeInstructionTM_mul_hoareTime_frame
         out = (Tape.init []).move Dir3.right)
       (executeInstructionTime tapes (.mul destination source₀ source₁)
         pcValue store) := by
-  simpa [directInstruction] using
+  simpa [directInstruction] using!
     executeInstructionTM_direct_hoareTime_frame tapes .mul store pcValue
       destination source₀ source₁ initialWork inp₀ hready hinput
 
@@ -1073,7 +1073,7 @@ theorem executeInstructionTM_load_hoareTime_frame
           ((instructionStore instruction pcValue store).flatMap Entry.encode))
       (indirectLoadInstructionTime tapes.data store destination
         addressRegister) := by
-    simpa [Result, instruction, instructionStore, Snapshot.stepInstr] using
+    simpa [Result, instruction, instructionStore, Snapshot.stepInstr] using!
       hbaseRaw
   have hresult : ∀ work, Result work →
       work tapes.pc = initialWork (Fin.castSucc tapes.pc) ∧
@@ -1121,7 +1121,7 @@ theorem executeInstructionTM_load_hoareTime_frame
       fin_cases slot
       · exact ⟨houtcome.ready.queryStart, by
           simpa [instruction, instructionCleanupValue,
-            instructionCleanupParentSlot] using houtcome.ready.query⟩
+            instructionCleanupParentSlot] using! houtcome.ready.query⟩
       · change (work tapes.data.update.replacement).HasBinaryNat _
         rw [show work tapes.data.update.replacement =
             updateWork tapes.data.update.replacement from houtcome.replacement,
@@ -1132,7 +1132,7 @@ theorem executeInstructionTM_load_hoareTime_frame
               (tapes.data.update.ne (by decide)) _ _]
         exact hloaded.value
       · simpa [instruction, instructionCleanupValue,
-          instructionCleanupParentSlot] using houtcome.found
+          instructionCleanupParentSlot] using! houtcome.found
       · change (work tapes.data.lhs).HasBinaryNat _
         rw [show work tapes.data.lhs = updateWork tapes.data.lhs from
             houtcome.frame tapes.data.lhs (fun role =>
@@ -1143,7 +1143,7 @@ theorem executeInstructionTM_load_hoareTime_frame
               (tapes.data.update_ne_lhs 7).symm _ _]
         rw [show loadedWork tapes.data.lhs = addressWork tapes.data.lhs from
           hloaded.querySource]
-        simpa [instruction, instructionCleanupValue] using haddress.destination
+        simpa [instruction, instructionCleanupValue] using! haddress.destination
       · change (work tapes.data.rhs).HasBinaryNat _
         rw [show work tapes.data.rhs = updateWork tapes.data.rhs from
             houtcome.frame tapes.data.rhs (fun role =>
@@ -1168,7 +1168,7 @@ theorem executeInstructionTM_load_hoareTime_frame
         hloaded.frame tapes.data.shift (fun slot => by
           apply tapes.data.ne
           fin_cases slot <;> decide)]
-      simpa using haddress.querySource
+      simpa using! haddress.querySource
     have htmp' : (work tapes.data.tmp).HasBinaryNat 0 := by
       have hqueryNe : tapes.data.tmp ≠
           tapes.data.update.entry.query :=
@@ -1198,17 +1198,17 @@ theorem executeInstructionTM_load_hoareTime_frame
     refine ⟨hpcOutcome.trans (hpcUpdate.trans
       (hpcLoaded.trans hpcAddress)), ?_, hsourceContent, hcleanup,
       ?_, ?_, hshift, htmp', hdbl', houtcome.ready.parked⟩
-    · simpa [instruction, instructionStore, Snapshot.stepInstr] using
+    · simpa [instruction, instructionStore, Snapshot.stepInstr] using!
         houtcome.resultCount
-    · simpa [instruction, instructionRemainingValue] using
+    · simpa [instruction, instructionRemainingValue] using!
         houtcome.remaining
-    · simpa [instruction, instructionCleanupValue] using houtcome.ready
+    · simpa [instruction, instructionCleanupValue] using! houtcome.ready
   have hdata := retargetDataKernel_hoareTime_frame_internal tapes instruction
     store pcValue initialWork inp₀
     (indirectLoadInstructionTM tapes.data destination addressRegister)
     (indirectLoadInstructionTime tapes.data store destination addressRegister)
     Result hready hbase hresult
-  simpa only [instruction, executeInstructionTM, executeInstructionTime] using
+  simpa only [instruction, executeInstructionTM, executeInstructionTime] using!
     finishDataInstructionTM_hoareTime_frame_internal tapes instruction store
       pcValue initialWork inp₀
       (indirectLoadInstructionTM tapes.data destination addressRegister)
@@ -1261,7 +1261,7 @@ theorem executeInstructionTM_store_hoareTime_frame
         out.HasBinaryPrefix
           ((instructionStore instruction pcValue store).flatMap Entry.encode))
       (indirectStoreInstructionTime tapes.data store addressRegister source) := by
-    simpa [Result, instruction, instructionStore, Snapshot.stepInstr] using
+    simpa [Result, instruction, instructionStore, Snapshot.stepInstr] using!
       hbaseRaw
   have hresult : ∀ work, Result work →
       work tapes.pc = initialWork (Fin.castSucc tapes.pc) ∧
@@ -1313,7 +1313,7 @@ theorem executeInstructionTM_store_hoareTime_frame
       fin_cases slot
       · exact ⟨houtcome.ready.queryStart, by
           simpa [instruction, instructionCleanupValue,
-            instructionCleanupParentSlot] using houtcome.ready.query⟩
+            instructionCleanupParentSlot] using! houtcome.ready.query⟩
       · change (work tapes.data.update.replacement).HasBinaryNat _
         rw [show work tapes.data.update.replacement =
             updateWork tapes.data.update.replacement from houtcome.replacement,
@@ -1321,7 +1321,7 @@ theorem executeInstructionTM_store_hoareTime_frame
         exact Tape.init_move_right_hasBinaryNat
           (RegisterStore.read store source)
       · simpa [instruction, instructionCleanupValue,
-          instructionCleanupParentSlot] using houtcome.found
+          instructionCleanupParentSlot] using! houtcome.found
       · change (work tapes.data.lhs).HasBinaryNat _
         rw [show work tapes.data.lhs = updateWork tapes.data.lhs from
             houtcome.frame tapes.data.lhs (fun role =>
@@ -1361,7 +1361,7 @@ theorem executeInstructionTM_store_hoareTime_frame
             (tapes.data.update_ne_shift slot).symm),
         hupdateWork, Function.update_of_ne hreplacementNe,
         hqueryWork, Function.update_of_ne hqueryNe]
-      simpa using hrhsResult.querySource
+      simpa using! hrhsResult.querySource
     have htmp' : (work tapes.data.tmp).HasBinaryNat 0 := by
       have hreplacementNe : tapes.data.tmp ≠
           tapes.data.update.replacement :=
@@ -1397,17 +1397,17 @@ theorem executeInstructionTM_store_hoareTime_frame
     refine ⟨hpcOutcome.trans (hpcUpdate.trans
       (hpcQueryWork.trans (hpcRhs.trans hpcLhs))), ?_, hsourceContent,
       hcleanup, ?_, ?_, hshift, htmp', hdbl', houtcome.ready.parked⟩
-    · simpa [instruction, instructionStore, Snapshot.stepInstr] using
+    · simpa [instruction, instructionStore, Snapshot.stepInstr] using!
         houtcome.resultCount
-    · simpa [instruction, instructionRemainingValue] using
+    · simpa [instruction, instructionRemainingValue] using!
         houtcome.remaining
-    · simpa [instruction, instructionCleanupValue] using houtcome.ready
+    · simpa [instruction, instructionCleanupValue] using! houtcome.ready
   have hdata := retargetDataKernel_hoareTime_frame_internal tapes instruction
     store pcValue initialWork inp₀
     (indirectStoreInstructionTM tapes.data addressRegister source)
     (indirectStoreInstructionTime tapes.data store addressRegister source)
     Result hready hbase hresult
-  simpa only [instruction, executeInstructionTM, executeInstructionTime] using
+  simpa only [instruction, executeInstructionTM, executeInstructionTime] using!
     finishDataInstructionTM_hoareTime_frame_internal tapes instruction store
       pcValue initialWork inp₀
       (indirectStoreInstructionTM tapes.data addressRegister source)

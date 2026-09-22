@@ -157,7 +157,7 @@ theorem rawRatWidth_add_le (q r : RawRat) :
     · have h := mul_lt_two_pow_add
         (rawRat_num_lt_two_pow_width r)
         (rawRat_den_lt_two_pow_width q)
-      simpa only [Nat.add_comm] using h
+      simpa only [Nat.add_comm] using! h
   · rw [RawRat.add, Nat.size_le]
     exact (mul_lt_two_pow_add
       (rawRat_den_lt_two_pow_width q)
@@ -166,7 +166,7 @@ theorem rawRatWidth_add_le (q r : RawRat) :
 
 theorem rawRatWidth_sub_le (q r : RawRat) :
     rawRatWidth (q.sub r) ≤ rawRatWidth q + rawRatWidth r + 1 := by
-  simpa only [RawRat.sub, rawRatWidth_neg] using rawRatWidth_add_le q r.neg
+  simpa only [RawRat.sub, rawRatWidth_neg] using! rawRatWidth_add_le q r.neg
 
 theorem rawRat_value_den_dvd (q : RawRat) : q.value.den ∣ q.den := by
   have hz : (((q.value.den : ℕ) : ℤ) ∣ (q.den : ℤ)) := by
@@ -288,7 +288,7 @@ def rawRatOfRat (q : ℚ) : RawRat :=
 
 @[simp] theorem rawRatOfRat_value (q : ℚ) :
     (rawRatOfRat q).value = q := by
-  simpa only [rawRatOfRat, RawRat.value] using q.num_div_den
+  simpa only [rawRatOfRat, RawRat.value] using! q.num_div_den
 
 /-- The raw width of a canonical input is bounded by its exact project
 encoding length. -/

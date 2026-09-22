@@ -104,7 +104,7 @@ theorem explicitCertified_certificate_of_logKKT
   have hlogn : Real.log n ≤ (n : ℝ) * Real.log 2 :=
     log_natCast_le_natCast_mul_log_two (show 1 ≤ n by omega)
   have hξ : 0 < ξ := by
-    simpa only [ξ] using (show (0 : ℝ) < (explicitXi : ℝ) by
+    simpa only [ξ] using! (show (0 : ℝ) < (explicitXi : ℝ) by
       exact_mod_cast explicitXi_pos)
   have hτscale : (τq : ℝ) = ξ / (4 * (n : ℝ)) := by
     exact cast_explicitRegularizationScale n
@@ -115,7 +115,7 @@ theorem explicitCertified_certificate_of_logKKT
       regularizedBetheObjective (τq : ℝ) A Y ≤
         regularizedBetheObjective (τq : ℝ) A X := by
     exact regularizedBetheObjective_le_of_logKKT
-      (by simpa only [Fintype.card_fin] using (show 1 < n by omega))
+      (by simpa only [Fintype.card_fin] using! (show 1 < n by omega))
       (by exact_mod_cast hτ0q) hX hXint hKKT
   have hobjective :
       Real.log (bethePermanent A) - ξ * n ≤ betheObjective A X := by
@@ -143,7 +143,7 @@ theorem explicitCertified_certificate_of_logKKT
     have hmaximal := greedyThresholdRowMatching_isMaximal w explicitGamma
     have hthreshold : explicitGamma ≤ w q := by
       have hmem := hmaximal.subset hq
-      simpa only [List.mem_toFinset, mem_thresholdRowPairsList_iff] using hmem
+      simpa only [List.mem_toFinset, mem_thresholdRowPairsList_iff] using! hmem
     have hw : w q = explicitGamma := by
       exact certifiedConstantRowWeight_eq_gamma_of_threshold
         τq Xq explicitKappa explicitGamma (directedPairCostPrecision n) q
@@ -161,7 +161,7 @@ theorem explicitCertified_certificate_of_logKKT
         have hr : ((explicitXi : ℚ) : ℝ) ≤
             ((explicitXiSource : ℚ) : ℝ) := by
           exact_mod_cast hq
-        simpa only [ξ] using hr)
+        simpa only [ξ] using! hr)
       hτscale hA hX hXint hKKT (by norm_num) (by norm_num)
       (directedPairCostPrecision n) q heligible
   have hcertificate : Real.exp (betheObjective A X + gain) ≤
@@ -201,7 +201,7 @@ theorem explicitCertified_certificate_of_logKKT
   have hgap := positiveDichotomy_exponent hcases
   have hεcast := cast_rationalEpsilonPlus explicitCertifiedCompletionScales
   constructor
-  · simpa only [X, gain] using hcertificate
-  · simpa only [X, gain, η, δ, ξ, hεcast] using hgap
+  · simpa only [X, gain] using! hcertificate
+  · simpa only [X, gain, η, δ, ξ, hεcast] using! hgap
 
 end BeyondBethe

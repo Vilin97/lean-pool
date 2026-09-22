@@ -108,8 +108,8 @@ private theorem finishControlInstructionTM_hoareTime_frame_internal
     have hsourceOutput : (work source).HasOutput bits := by
       refine ⟨?_, ?_⟩
       · intro i hi
-        simpa [hsourceHead, Nat.add_comm] using hsourceSuffix.2.1 i hi
-      · simpa [hsourceHead, Nat.add_comm] using hsourceSuffix.2.2.1
+        simpa [hsourceHead, Nat.add_comm] using! hsourceSuffix.2.1 i hi
+      · simpa [hsourceHead, Nat.add_comm] using! hsourceSuffix.2.2.1
     have hbufferEq : work buffer = (Tape.init []).move Dir3.right := by
       rw [hcontrolResult.frame buffer
         tapes.liftedPC_ne_buffer.symm
@@ -121,7 +121,7 @@ private theorem finishControlInstructionTM_hoareTime_frame_internal
       intro slot
       fin_cases slot
       · exact ⟨hcontrolResult.ready.lookup.scanner.queryStart,
-          by simpa [instructionCleanupTape, instructionCleanupParentSlot] using
+          by simpa [instructionCleanupTape, instructionCleanupParentSlot] using!
             hcontrolResult.ready.lookup.scanner.query⟩
       · change (work tapes.lifted.data.update.replacement).HasBinaryNat 0
         rw [show work tapes.lifted.data.update.replacement =
@@ -130,9 +130,9 @@ private theorem finishControlInstructionTM_hoareTime_frame_internal
             (fun role =>
               (tapes.lifted.data.lhsLookup_ne_replacement role).symm)]
         exact hready.replacement
-      · simpa [instructionCleanupTape, instructionCleanupParentSlot] using
+      · simpa [instructionCleanupTape, instructionCleanupParentSlot] using!
           hcontrolResult.ready.lookup.copyScratch
-      · simpa [instructionCleanupTape, instructionCleanupParentSlot] using
+      · simpa [instructionCleanupTape, instructionCleanupParentSlot] using!
           hcontrolResult.ready.lookup.destination
       · change (work tapes.lifted.data.rhs).HasBinaryNat 0
         rw [show work tapes.lifted.data.rhs = initialWork tapes.lifted.data.rhs
@@ -190,8 +190,8 @@ private theorem finishControlInstructionTM_hoareTime_frame_internal
         · intro i hiSource hiBuffer
           rw [hworkFrame i hiSource hiBuffer]
           exact hPredFrame i hiSource hiBuffer)
-    have hinpParked : TM.Parked inp := by simpa [hinp] using hinput
-    have houtParked : TM.Parked out := by simpa [hout] using houtput
+    have hinpParked : TM.Parked inp := by simpa [hinp] using! hinput
+    have houtParked : TM.Parked out := by simpa [hout] using! houtput
     obtain ⟨final, time, htime, hreach, hhalt, hsourceCells,
         hsourceFinalHead, hsourceFinalOutput, hbufferPrefix, _hbufferStart,
         hfinalInput, hfinalOutput, hfinalPC, hfinalCount, hfinalCleanup,
@@ -287,7 +287,7 @@ private theorem finishControlInstructionTM_hoareTime_frame_internal
       refine ⟨by omega, ?_, ?_, ?_⟩
       · intro i hi
         simp at hi
-      · simpa [hsourceFinalHead, Nat.add_comm] using hsourceFinalOutput.2
+      · simpa [hsourceFinalHead, Nat.add_comm] using! hsourceFinalOutput.2
       · intro j hj
         rw [hsourceCells]
         exact hsourceSuffix.2.2.2 j hj
@@ -322,8 +322,8 @@ private theorem finishControlInstructionTM_hoareTime_frame_internal
     (by
       rintro inp work out ⟨hinp, hcontrolResult, hout⟩
       have hworkParked := hcontrolResult.ready.lookup.scanner.parked
-      have hinpParked : TM.Parked inp := by simpa [hinp] using hinput
-      have houtParked : TM.Parked out := by simpa [hout] using houtput
+      have hinpParked : TM.Parked inp := by simpa [hinp] using! hinput
+      have houtParked : TM.Parked out := by simpa [hout] using! houtput
       obtain ⟨hi, hw, ho⟩ :=
         TM.phaseTransition_eq_self_of_reads_ne_start
           hinpParked.read_ne_start
@@ -332,7 +332,7 @@ private theorem finishControlInstructionTM_hoareTime_frame_internal
       rw [hi, hw, ho]
       exact ⟨hinp, hcontrolResult, hout⟩)
     hcopy
-  simpa only [finishControlInstructionTM, bits, source, buffer] using hseq
+  simpa only [finishControlInstructionTM, bits, source, buffer] using! hseq
 
 /-- Representation-independent form of the control-instruction finisher.
 Control instructions preserve the encoded store, leave zero on every cleanup
@@ -411,11 +411,11 @@ theorem executeInstructionTM_jz_hoareTime_frame
     by_cases hzero : RegisterStore.read store source = 0
     · exact ⟨hinp,
         { buffer := by
-            simpa [instructionStore, Snapshot.stepInstr, hzero] using hbuffer
+            simpa [instructionStore, Snapshot.stepInstr, hzero] using! hbuffer
           pc := by
-            simpa [instructionPC, Snapshot.stepInstr, hzero] using hpc
+            simpa [instructionPC, Snapshot.stepInstr, hzero] using! hpc
           resultCount := by
-            simpa [instructionStore, Snapshot.stepInstr, hzero] using hcount
+            simpa [instructionStore, Snapshot.stepInstr, hzero] using! hcount
           sourceContent := hsourceContent
           cleanup := by
             intro slot
@@ -425,9 +425,9 @@ theorem executeInstructionTM_jz_hoareTime_frame
             rw [hvalue]
             exact hcleanup slot
           remaining := by
-            simpa [instructionRemainingValue] using hremaining
+            simpa [instructionRemainingValue] using! hremaining
           scanner := by
-            simpa [instructionCleanupValue] using hscanner
+            simpa [instructionCleanupValue] using! hscanner
           shift := hshift
           tmp := htmp
           dbl := hdbl
@@ -435,11 +435,11 @@ theorem executeInstructionTM_jz_hoareTime_frame
         hout⟩
     · exact ⟨hinp,
         { buffer := by
-            simpa [instructionStore, Snapshot.stepInstr, hzero] using hbuffer
+            simpa [instructionStore, Snapshot.stepInstr, hzero] using! hbuffer
           pc := by
-            simpa [instructionPC, Snapshot.stepInstr, hzero] using hpc
+            simpa [instructionPC, Snapshot.stepInstr, hzero] using! hpc
           resultCount := by
-            simpa [instructionStore, Snapshot.stepInstr, hzero] using hcount
+            simpa [instructionStore, Snapshot.stepInstr, hzero] using! hcount
           sourceContent := hsourceContent
           cleanup := by
             intro slot
@@ -449,9 +449,9 @@ theorem executeInstructionTM_jz_hoareTime_frame
             rw [hvalue]
             exact hcleanup slot
           remaining := by
-            simpa [instructionRemainingValue] using hremaining
+            simpa [instructionRemainingValue] using! hremaining
           scanner := by
-            simpa [instructionCleanupValue] using hscanner
+            simpa [instructionCleanupValue] using! hscanner
           shift := hshift
           tmp := htmp
           dbl := hdbl
@@ -486,10 +486,10 @@ theorem executeInstructionTM_jmp_hoareTime_frame
         hscanner, hshift, htmp, hdbl, hparked, hout⟩
     exact ⟨hinp,
       { buffer := by
-          simpa [instructionStore, Snapshot.stepInstr] using hbuffer
-        pc := by simpa [instructionPC, Snapshot.stepInstr] using hpc
+          simpa [instructionStore, Snapshot.stepInstr] using! hbuffer
+        pc := by simpa [instructionPC, Snapshot.stepInstr] using! hpc
         resultCount := by
-          simpa [instructionStore, Snapshot.stepInstr] using hcount
+          simpa [instructionStore, Snapshot.stepInstr] using! hcount
         sourceContent := hsourceContent
         cleanup := by
           intro slot
@@ -498,9 +498,9 @@ theorem executeInstructionTM_jmp_hoareTime_frame
           rw [hvalue]
           exact hcleanup slot
         remaining := by
-          simpa [instructionRemainingValue] using hremaining
+          simpa [instructionRemainingValue] using! hremaining
         scanner := by
-          simpa [instructionCleanupValue] using hscanner
+          simpa [instructionCleanupValue] using! hscanner
         shift := hshift
         tmp := htmp
         dbl := hdbl
@@ -534,10 +534,10 @@ theorem executeInstructionTM_halt_hoareTime_frame
         hscanner, hshift, htmp, hdbl, hparked, hout⟩
     exact ⟨hinp,
       { buffer := by
-          simpa [instructionStore, Snapshot.stepInstr] using hbuffer
-        pc := by simpa [instructionPC, Snapshot.stepInstr] using hpc
+          simpa [instructionStore, Snapshot.stepInstr] using! hbuffer
+        pc := by simpa [instructionPC, Snapshot.stepInstr] using! hpc
         resultCount := by
-          simpa [instructionStore, Snapshot.stepInstr] using hcount
+          simpa [instructionStore, Snapshot.stepInstr] using! hcount
         sourceContent := hsourceContent
         cleanup := by
           intro slot
@@ -546,9 +546,9 @@ theorem executeInstructionTM_halt_hoareTime_frame
           rw [hvalue]
           exact hcleanup slot
         remaining := by
-          simpa [instructionRemainingValue] using hremaining
+          simpa [instructionRemainingValue] using! hremaining
         scanner := by
-          simpa [instructionCleanupValue] using hscanner
+          simpa [instructionCleanupValue] using! hscanner
         shift := hshift
         tmp := htmp
         dbl := hdbl

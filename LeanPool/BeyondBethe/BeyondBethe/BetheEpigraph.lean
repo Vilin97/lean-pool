@@ -74,14 +74,14 @@ theorem finiteDot_squareMatrixToVector {m : ℕ} {R : Type*} [CommSemiring R]
       matrixPairing G D := by
   change (∑ k, squareMatrixToVector
       (fun i j ↦ G i j * D i j) k) = ∑ i, ∑ j, G i j * D i j
-  rw [sum_squareMatrixToVector]
+  exact sum_squareMatrixToVector (fun i j => G i j * D i j)
 
 theorem vectorL1_squareMatrixToVector {m : ℕ}
     (D : Matrix (Fin m) (Fin m) ℝ) :
     vectorL1 (squareMatrixToVector D) = matrixL1 D := by
   change (∑ k, squareMatrixToVector
       (fun i j ↦ abs (D i j)) k) = ∑ i, ∑ j, abs (D i j)
-  rw [sum_squareMatrixToVector]
+  exact sum_squareMatrixToVector (fun i j => abs (D i j))
 
 /-- Rational affine matrix represented by a flattened epigraph base point. -/
 def betheAffineMatrixQ {m : ℕ} (y : Fin (m * m) → ℚ) :
@@ -129,7 +129,7 @@ theorem betheDirectedEpigraphData_lower {m : ℕ}
         (vectorToSquareMatrix (fun k ↦ (y k : ℝ))) := by
   have h := (directedNegativeObjective_bounds hτ0 hτ1 hA hX0 hX1 p).1
   simpa [betheDirectedEpigraphData, affineNegativeObjective,
-    cast_betheAffineMatrixQ] using h
+    cast_betheAffineMatrixQ] using! h
 
 /-- The flattened stored gradient has the same explicit coordinate error as
 the affine pullback matrix. -/
@@ -149,7 +149,7 @@ theorem betheDirectedEpigraphData_gradient_error {m : ℕ}
       16 * (((1 / 2 : ℚ) ^ p : ℚ) : ℝ) := by
   let ij := finProdFinEquiv.symm k
   simpa [betheDirectedEpigraphData, squareMatrixToVector, ij,
-    affinePullbackGradient, abs_sub_comm] using
+    affinePullbackGradient, abs_sub_comm] using!
     directedAffineGradient_error hτ0 hτ1 hA hX0 hX1 p ij.1 ij.2
 
 /-- Exact bounded epigraph body in flattened affine coordinates. -/
@@ -171,7 +171,7 @@ theorem BetheEpigraphTarget_doublyStochastic {m : ℕ}
   let Y := vectorToSquareMatrix (epigraphBase z)
   let X := birkhoffAffineMap Y
   have hfloor : ∀ i j, δ ≤ X i j := by
-    simpa only [BetheEpigraphTarget, Y, X] using hz.1
+    simpa only [BetheEpigraphTarget, Y, X] using! hz.1
   refine ⟨fun i j ↦ hδ.trans (hfloor i j), ?_, ?_⟩
   · exact birkhoffAffineMap_row_sum Y
   · exact birkhoffAffineMap_col_sum Y
@@ -203,7 +203,7 @@ theorem betheDirectedEpigraphOracle_cut_valid {m : ℕ} (hm : 0 < m)
   let X : Matrix (Fin (m + 1)) (Fin (m + 1)) ℝ :=
     birkhoffAffineMap Y
   have hqueryFloor' : ∀ i j, δ ≤ Xq i j := by
-    simpa only [Xq, Yq, yq, betheAffineMatrixQ] using hqueryFloor
+    simpa only [Xq, Yq, yq, betheAffineMatrixQ] using! hqueryFloor
   have hquery := birkhoffAffineMap_interior hm hδ hqueryFloor'
   have hXqDS := hquery.1
   have hXqInt := hquery.2
@@ -217,14 +217,14 @@ theorem betheDirectedEpigraphOracle_cut_valid {m : ℕ} (hm : 0 < m)
     exact_mod_cast h
   have hδreal : 0 ≤ (δ : ℝ) := Rat.cast_nonneg.mpr hδ.le
   have hXDS : IsDoublyStochastic X := by
-    simpa only [X, Y] using
+    simpa only [X, Y] using!
       BetheEpigraphTarget_doublyStochastic hδreal hz
   have htargetFloor : ∀ i j, (δ : ℝ) ≤ X i j := by
-    simpa only [BetheEpigraphTarget, X, Y] using hz.1
+    simpa only [BetheEpigraphTarget, X, Y] using! hz.1
   have htargetEpigraph :
       affineNegativeObjective (τ : ℝ) (fun i j ↦ (A i j : ℝ)) Y ≤
         epigraphHeight z := by
-    simpa only [BetheEpigraphTarget, X, Y] using hz.2.1
+    simpa only [BetheEpigraphTarget, X, Y] using! hz.2.1
   let YqR : Matrix (Fin m) (Fin m) ℝ :=
     fun i j ↦ (Yq i j : ℝ)
   let Gm : Matrix (Fin m) (Fin m) ℝ :=
@@ -236,7 +236,7 @@ theorem betheDirectedEpigraphOracle_cut_valid {m : ℕ} (hm : 0 < m)
       (fun i j ↦ (Xq i j : ℝ)) := by
     ext i j
     symm
-    simpa only [Xq, Yq, YqR, yq] using cast_betheAffineMatrixQ yq i j
+    simpa only [Xq, Yq, YqR, yq] using! cast_betheAffineMatrixQ yq i j
   have hsupportMatrix := affineNegativeObjective_support hm
     (Rat.cast_nonneg.mpr hτ0)
     (A := fun i j ↦ (A i j : ℝ))
@@ -259,16 +259,17 @@ theorem betheDirectedEpigraphOracle_cut_valid {m : ℕ} (hm : 0 < m)
         epigraphBase z (finProdFinEquiv (finProdFinEquiv.symm k)) -
           (yq (finProdFinEquiv (finProdFinEquiv.symm k)) : ℝ)
       rw [hk]
-    rw [hDvec, finiteDot_squareMatrixToVector]
-    simpa only [Gm, hcastXq] using hsupportMatrix
+    rw [hDvec, finiteDot_squareMatrixToVector Gm
+      (fun i j => Y i j - YqR i j)]
+    simpa only [Gm, hcastXq] using! hsupportMatrix
   have hlower := betheDirectedEpigraphData_lower hτ0 hτ1 hA
-    (by simpa only [Xq, yq, betheAffineMatrixQ] using hXq0)
-    (by simpa only [Xq, yq, betheAffineMatrixQ] using hXq1) p
+    (by simpa only [Xq, yq, betheAffineMatrixQ] using! hXq0)
+    (by simpa only [Xq, yq, betheAffineMatrixQ] using! hXq1) p
   have hgradient : ∀ k,
       abs ((((betheDirectedEpigraphData τ A p).gradient yq k : ℚ) : ℝ) -
         Gv k) ≤ 16 * (((1 / 2 : ℚ) ^ p : ℚ) : ℝ) := by
     intro k
-    simpa only [Gv, Gm, Xq, yq, betheAffineMatrixQ] using
+    simpa only [Gv, Gm, Xq, yq, betheAffineMatrixQ] using!
       betheDirectedEpigraphData_gradient_error hτ0 hτ1 hA hXq0 hXq1 p k
   have hD : vectorL1 (fun k ↦ epigraphBase z k - (yq k : ℝ)) ≤
       (m * m : ℝ) := by
@@ -279,7 +280,7 @@ theorem betheDirectedEpigraphOracle_cut_valid {m : ℕ} (hm : 0 < m)
         intro k _
         let ij := finProdFinEquiv.symm k
         have hk : finProdFinEquiv ij = k := by
-          simpa only [ij] using Equiv.apply_symm_apply finProdFinEquiv k
+          simpa only [ij] using! Equiv.apply_symm_apply finProdFinEquiv k
         have hz0 : 0 ≤ epigraphBase z k := by
           have := hXDS.nonnegative ij.1.castSucc ij.2.castSucc
           simp only [X, Y, birkhoffAffineMap_castSucc_castSucc,
@@ -311,12 +312,12 @@ theorem betheDirectedEpigraphOracle_cut_valid {m : ℕ} (hm : 0 < m)
     (fZ := affineNegativeObjective (τ : ℝ)
       (fun i j ↦ (A i j : ℝ)) Y)
     (G := Gv) (z := z)
-  · simpa only [yq] using hsupport
-  · simpa only [yq, YqR] using hlower
+  · simpa only [yq] using! hsupport
+  · simpa only [yq, YqR] using! hlower
   · simpa only [yq, Rat.cast_mul, Rat.cast_pow, Rat.cast_div,
-      Rat.cast_one, Rat.cast_ofNat] using hgradient
+      Rat.cast_one, Rat.cast_ofNat] using! hgradient
   · norm_num only [Rat.cast_mul, Rat.cast_natCast]
-    simpa only [yq] using hD
+    simpa only [yq] using! hD
   · exact htargetEpigraph
 
 /-- Matrix covector selecting one full Birkhoff coordinate. -/
@@ -452,7 +453,7 @@ theorem firstBetheFloorViolationAll_eq_none_iff {m : ℕ} (δ : ℚ)
 theorem matrixPairing_entryCovector {n : ℕ} (i j : Fin n)
     (D : Matrix (Fin n) (Fin n) ℝ) :
     matrixPairing (fun a b ↦ (matrixEntryCovector i j a b : ℝ)) D = D i j := by
-  rw [matrixPairing]
+  unfold matrixPairing
   have hrow : ∀ a : Fin n,
       (∑ b, (matrixEntryCovector i j a b : ℝ) * D a b) =
         if a = i then D i j else 0 := by
@@ -494,7 +495,9 @@ theorem betheFloorCut_valid {m : ℕ} {δ : ℚ}
       birkhoffAffineMap Y i j - birkhoffAffineMap Yq i j =
         matrixPairing
           (affinePullbackGradient Gq) (fun a b ↦ Y a b - Yq a b) := by
-    rw [← hadjoint, matrixPairing_entryCovector]
+    rw [← hadjoint]
+    exact (matrixPairing_entryCovector i j
+      (fun a b => birkhoffAffineMap Y a b - birkhoffAffineMap Yq a b)).symm
   have hqueryCast : birkhoffAffineMap Yq i j =
       (betheAffineMatrixQ y i j : ℝ) := by
     symm
@@ -538,7 +541,8 @@ theorem betheFloorCut_valid {m : ℕ} {δ : ℚ}
     rw [hDvec, hnormalCast]
     rw [finiteDot]
     simp_rw [neg_mul, Finset.sum_neg_distrib]
-    rw [← finiteDot, finiteDot_squareMatrixToVector]
+    rw [← finiteDot, finiteDot_squareMatrixToVector
+      (affinePullbackGradient Gq) (fun a b => Y a b - Yq a b)]
   rw [finiteDot, Fin.sum_univ_castSucc]
   simp only [betheFloorCutNormal_castSucc, betheFloorCutNormal_last,
     Rat.cast_neg, Rat.cast_zero, zero_mul, add_zero, Fin.snoc_last,

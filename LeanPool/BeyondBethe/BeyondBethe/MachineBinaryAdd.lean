@@ -46,10 +46,10 @@ theorem machineBinaryAddPack_mem_FP
     (machinePair_mem_FP hy (machinePair_mem_FP hcarry hacc))
 
 theorem machineBinaryAddX_mem_FP : machineBinaryAddX ∈ Complexity.FP := by
-  simpa only [machineBinaryAddX] using machinePairFirst_mem_FP
+  simpa only [machineBinaryAddX] using! machinePairFirst_mem_FP
 
 theorem machineBinaryAddY_mem_FP : machineBinaryAddY ∈ Complexity.FP := by
-  simpa only [machineBinaryAddY] using
+  simpa only [machineBinaryAddY] using!
     (machineCompose_mem_FP (f := machinePairSecond) (g := machinePairFirst)
       machinePairSecond_mem_FP machinePairFirst_mem_FP)
 
@@ -60,7 +60,7 @@ theorem machineBinaryAddCarry_mem_FP :
         Complexity.FP :=
     machineCompose_mem_FP (f := machinePairSecond) (g := machinePairSecond)
       machinePairSecond_mem_FP machinePairSecond_mem_FP
-  simpa only [machineBinaryAddCarry] using
+  simpa only [machineBinaryAddCarry] using!
     (machineCompose_mem_FP (f := fun word =>
         machinePairSecond (machinePairSecond word))
       (g := machinePairFirst) hsecond machinePairFirst_mem_FP)
@@ -72,7 +72,7 @@ theorem machineBinaryAddAccRev_mem_FP :
         Complexity.FP :=
     machineCompose_mem_FP (f := machinePairSecond) (g := machinePairSecond)
       machinePairSecond_mem_FP machinePairSecond_mem_FP
-  simpa only [machineBinaryAddAccRev] using
+  simpa only [machineBinaryAddAccRev] using!
     (machineCompose_mem_FP (f := fun word =>
         machinePairSecond (machinePairSecond word))
       (g := machinePairSecond) hsecond machinePairSecond_mem_FP)
@@ -195,7 +195,7 @@ theorem machineBinaryAddWidth_mem_FP :
   have hpadded : padded ∈ Complexity.FP := by
     exact machineAppend_mem_FP (machineConst_mem_FP (List.replicate 8 false))
       id_mem_FP
-  simpa only [machineBinaryAddWidth, padded] using
+  simpa only [machineBinaryAddWidth, padded] using!
     Cobham.mulLenFn_mem_FP hpadded hpadded
 
 @[simp] theorem machineBinaryAddStep_pack
@@ -312,7 +312,7 @@ theorem machineBinaryAddIterate_wellFormed_length_le
         state.length + iterations := by
   intro iterations
   induction iterations with
-  | zero => simpa using And.intro hstate (Nat.le_refl state.length)
+  | zero => simpa using! And.intro hstate (Nat.le_refl state.length)
   | succ iterations ih =>
       rw [Function.iterate_succ_apply']
       obtain ⟨hwell, hlength⟩ := ih
@@ -379,7 +379,7 @@ theorem machineBinaryAddBits_mem_FP :
         (machineBinaryAddFinalState word)) ∈ Complexity.FP :=
     machineCompose_mem_FP machineBinaryAddFinalState_mem_FP
       machineBinaryAddAccRev_mem_FP
-  simpa only [machineBinaryAddBits] using
+  simpa only [machineBinaryAddBits] using!
     (machineCompose_mem_FP hacc machineReverse_mem_FP)
 
 end BeyondBethe
