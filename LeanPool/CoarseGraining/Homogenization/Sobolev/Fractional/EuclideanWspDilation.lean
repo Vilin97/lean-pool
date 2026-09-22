@@ -52,7 +52,8 @@ private theorem euclideanWspDilation_measurePreserving {d : ℕ}
   have hvol : cubeVolume (Book.Ch02.dilateCube k Q) = r ^ d * cubeVolume Q := by
     simpa only [r] using cubeVolume_dilateCube k Q
   refine ⟨T.measurable, ?_⟩
-  rw [normalizedCubeMeasure, normalizedCubeMeasure, Measure.map_smul, hres]
+  rw [normalizedCubeMeasure, normalizedCubeMeasure,
+    Measure.map_smul _ T.measurable.aemeasurable, hres]
   rw [smul_smul]
   congr 1
   rw [← ENNReal.ofReal_mul (inv_nonneg.mpr (cubeVolume_nonneg Q))]
@@ -148,10 +149,8 @@ theorem cubeEuclideanNormalizedLpENorm_dilate {d : ℕ}
   unfold BoundedMeasurableDomain.normalizedLpENorm
   rw [cubeBoundedMeasurableDomain_normalizedVolume_eq_normalizedCubeMeasure,
     cubeBoundedMeasurableDomain_normalizedVolume_eq_normalizedCubeMeasure]
-  rw [eLpNorm_eq_lintegral_rpow_enorm_toReal
-    (ne_of_gt (lt_trans zero_lt_one p.one_lt)) p.lt_top.ne,
-    eLpNorm_eq_lintegral_rpow_enorm_toReal
-      (ne_of_gt (lt_trans zero_lt_one p.one_lt)) p.lt_top.ne]
+  simp only [if_neg (ne_of_gt (lt_trans zero_lt_one p.one_lt)),
+    if_neg p.lt_top.ne, eLpNorm'_eq_lintegral_enorm]
   congr 1
   rw [MeasurePreserving.lintegral_map_equiv _ T hMP]
   rfl
@@ -182,26 +181,34 @@ theorem cubeEuclideanWspESeminorm_dilate {d : ℕ}
     simpa only [Function.comp_apply, r, a] using! cubeEuclideanWspKernel_dilate k s p F z
   rw [cubeEuclideanWspESeminorm,
     euclideanWspDilation_pair_measure_target_eq_smul_map]
-  rw [eLpNorm_smul_measure_of_ne_top p.lt_top.ne]
-  rw [TP.measurableEmbedding.eLpNorm_map_measure]
+  rw [eLpNorm'_smul_measure ENNReal.toReal_nonneg]
+  have hmap : eLpNorm' (cubeEuclideanWspKernel s p F) p.exponent.toReal
+      (Measure.map TP (Gagliardo.gagliardoCubeMeasure Q)) =
+      eLpNorm' (cubeEuclideanWspKernel s p F ∘ TP) p.exponent.toReal
+        (Gagliardo.gagliardoCubeMeasure Q) := by
+    simp only [eLpNorm'_eq_lintegral_enorm]
+    rw [TP.measurableEmbedding.lintegral_map]
+    rfl
+  rw [hmap]
   rw [hker]
-  change (ENNReal.ofReal r ^ d) ^ (1 / p.exponent).toReal *
-      eLpNorm (r ^ a • cubeEuclideanWspKernel s p
-        (fun x => F (Book.Ch02.dilateVec k x))) p.exponent
+  change (ENNReal.ofReal r ^ d) ^ (1 / p.exponent.toReal) *
+      eLpNorm' (r ^ a • cubeEuclideanWspKernel s p
+        (fun x => F (Book.Ch02.dilateVec k x))) p.exponent.toReal
         (Gagliardo.gagliardoCubeMeasure Q) = _
-  rw [eLpNorm_const_smul]
+  rw [eLpNorm'_const_smul _
+    (ENNReal.toReal_pos (ne_of_gt (lt_trans zero_lt_one p.one_lt)) p.lt_top.ne)]
   rw [Real.enorm_eq_ofReal (Real.rpow_nonneg hr.le a)]
   rw [← ENNReal.ofReal_rpow_of_pos hr]
   rw [← ENNReal.rpow_natCast (ENNReal.ofReal r) d]
   rw [← ENNReal.rpow_mul]
   rw [← mul_assoc, ← ENNReal.rpow_add _ _ hR0 hRtop]
-  change (ENNReal.ofReal r) ^ ((d : ℝ) * (1 / p.exponent).toReal + a) *
-      eLpNorm (cubeEuclideanWspKernel s p
-        (fun x => F (Book.Ch02.dilateVec k x))) p.exponent
+  change (ENNReal.ofReal r) ^ ((d : ℝ) * (1 / p.exponent.toReal) + a) *
+      eLpNorm' (cubeEuclideanWspKernel s p
+        (fun x => F (Book.Ch02.dilateVec k x))) p.exponent.toReal
         (Gagliardo.gagliardoCubeMeasure Q) =
       (ENNReal.ofReal r) ^ (-s.1) *
-        eLpNorm (cubeEuclideanWspKernel s p
-          (fun x => F (Book.Ch02.dilateVec k x))) p.exponent
+        eLpNorm' (cubeEuclideanWspKernel s p
+          (fun x => F (Book.Ch02.dilateVec k x))) p.exponent.toReal
           (Gagliardo.gagliardoCubeMeasure Q)
   congr 1
   congr 1

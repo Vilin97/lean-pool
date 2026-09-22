@@ -163,8 +163,9 @@ theorem eLpNorm_vecDot_le_mul {α : Type*} {d : ℕ} [MeasurableSpace α]
       eLpNorm (fun x => HilbertVec.ofVec (F x)) p μ *
         eLpNorm (fun x => HilbertVec.ofVec (G x)) r μ := by
   simpa [HilbertVec.inner_def] using
-    (eLpNorm_le_eLpNorm_mul_eLpNorm_of_nnnorm hF.1 hG.1
-      (fun x y : HilbertVec d => inner ℝ x y) 1
+    (eLpNorm_le_eLpNorm_mul_eLpNorm_of_nnnorm
+      (fun x y : HilbertVec d => inner ℝ x y) 1 (by fun_prop)
+      hF.aestronglyMeasurable hG.aestronglyMeasurable
       (Filter.Eventually.of_forall (fun x => by
         simpa using! norm_inner_le_norm (𝕜 := ℝ)
           (HilbertVec.ofVec (F x)) (HilbertVec.ofVec (G x)))))

@@ -1605,3 +1605,5 @@ Main declarations: `Homogenization.Book.MainResults.homogenizationComparison_uni
 Tags: elliptic-pde, stochastic-homogenization, probability, functional-analysis
 MSC: 35B27, 60H25
 -/
+
+import LeanPool.CoarseGraining.Homogenization.IntegralLpSeminorm

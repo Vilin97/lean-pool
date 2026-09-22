@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
 
+import LeanPool.CoarseGraining.Homogenization.IntegralLpSeminorm
 import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.TestSubmodule
 
 /-! # Cutoff Tail -/
@@ -45,7 +46,7 @@ an `L²` function by them converges back to the original function in `L²`.
 This is the measure-regularity part of the cube boundary approximation
 argument.  The cube geometry only has to prove the eventual-`1` hypothesis for
 the canonical inner cutoffs. -/
-theorem tendsto_eLpNorm_sub_mul_of_eventually_eq_one_on_compacts
+theorem tendsto_integralLpSeminorm_sub_mul_of_eventually_eq_one_on_compacts
     {d : ℕ} {U : Set (Vec d)} {g : Vec d → ℝ} {η : ℕ → Vec d → ℝ}
     (hUopen : IsOpen U) (hUfinite : MeasureTheory.volume U ≠ ⊤)
     (hg : MemScalarL2 U g)
@@ -56,7 +57,7 @@ theorem tendsto_eLpNorm_sub_mul_of_eventually_eq_one_on_compacts
         ∀ᶠ n in Filter.atTop, ∀ x ∈ K, η n x = 1) :
     Filter.Tendsto
       (fun n =>
-        MeasureTheory.eLpNorm (fun x => g x - η n x * g x) 2 (volumeMeasureOn U))
+        Gagliardo.integralLpSeminorm (fun x => g x - η n x * g x) 2 (volumeMeasureOn U))
       Filter.atTop (nhds 0) := by
   refine ENNReal.tendsto_nhds_zero.2 ?_
   intro ε hε
@@ -71,12 +72,12 @@ theorem tendsto_eLpNorm_sub_mul_of_eventually_eq_one_on_compacts
       positivity
     obtain ⟨δ, hδpos, hδ⟩ :=
       hg.eLpNorm_indicator_le (p := (2 : ENNReal)) (by norm_num)
-        ENNReal.ofNat_ne_top hε_real_pos
+        ENNReal.ofNat_ne_top (ENNReal.ofReal_pos.mpr hε_real_pos)
     obtain ⟨K, hKU, hK_compact, hK_closed, hμK⟩ :=
       hUopen.measurableSet.exists_isCompact_isClosed_sdiff_lt
         (μ := MeasureTheory.volume) hUfinite
-        ((ENNReal.ofReal_pos.mpr hδpos).ne')
-    have hsmall : volumeMeasureOn U (U \ K) ≤ ENNReal.ofReal δ := by
+        hδpos.ne'
+    have hsmall : volumeMeasureOn U (U \ K) ≤ δ := by
       unfold volumeMeasureOn
       rw [MeasureTheory.Measure.restrict_apply
         (hUopen.measurableSet.diff hK_closed.measurableSet)]
@@ -90,9 +91,12 @@ theorem tendsto_eLpNorm_sub_mul_of_eventually_eq_one_on_compacts
       exact (ENNReal.ofReal_le_iff_le_toReal hε_top).2 hhalf_le
     filter_upwards [hη_eventually_one K hK_compact hKU] with n hn
     calc
-      MeasureTheory.eLpNorm (fun x => g x - η n x * g x) 2 (volumeMeasureOn U)
-          ≤ MeasureTheory.eLpNorm ((U \ K).indicator g) 2 (volumeMeasureOn U) := by
-            refine MeasureTheory.eLpNorm_mono_ae ?_
+      Gagliardo.integralLpSeminorm (fun x => g x - η n x * g x) 2 (volumeMeasureOn U)
+          ≤ Gagliardo.integralLpSeminorm ((U \ K).indicator g) 2 (volumeMeasureOn U) := by
+            simp only [Gagliardo.integralLpSeminorm,
+              show (2 : ℝ≥0∞) ≠ 0 by norm_num, show (2 : ℝ≥0∞) ≠ ∞ by norm_num,
+              if_false, ENNReal.toReal_ofNat]
+            apply MeasureTheory.eLpNorm'_mono_ae (by norm_num)
             have hmem : ∀ᵐ x ∂ volumeMeasureOn U, x ∈ U := by
               simpa [volumeMeasureOn] using
                 MeasureTheory.ae_restrict_mem hUopen.measurableSet
@@ -105,8 +109,37 @@ theorem tendsto_eLpNorm_sub_mul_of_eventually_eq_one_on_compacts
               exact
                 norm_sub_mul_self_le_norm_of_nonneg_of_le_one
                   (η n x) (g x) (hη_nonneg n x) (hη_le_one n x)
+      _ ≤ MeasureTheory.eLpNorm ((U \ K).indicator g) 2 (volumeMeasureOn U) :=
+        Gagliardo.integralLpSeminorm_le_eLpNorm _ _ _
       _ ≤ ENNReal.ofReal (ε.toReal / 2) := htail
       _ ≤ ε := hε_bound
+
+
+/-- Measurable cutoffs satisfy the same convergence statement for Mathlib’s norm. -/
+theorem tendsto_eLpNorm_sub_mul_of_eventually_eq_one_on_compacts
+    {d : ℕ} {U : Set (Vec d)} {g : Vec d → ℝ} {η : ℕ → Vec d → ℝ}
+    (hUopen : IsOpen U) (hUfinite : MeasureTheory.volume U ≠ ⊤)
+    (hg : MemScalarL2 U g)
+    (hη_nonneg : ∀ n x, 0 ≤ η n x)
+    (hη_le_one : ∀ n x, η n x ≤ 1)
+    (hη_eventually_one :
+      ∀ K : Set (Vec d), IsCompact K → K ⊆ U →
+        ∀ᶠ n in Filter.atTop, ∀ x ∈ K, η n x = 1)
+    (hη : ∀ n, MeasureTheory.AEStronglyMeasurable (η n) (volumeMeasureOn U)) :
+    Filter.Tendsto
+      (fun n =>
+        MeasureTheory.eLpNorm (fun x => g x - η n x * g x) 2 (volumeMeasureOn U))
+      Filter.atTop (nhds 0) := by
+  have hraw := tendsto_integralLpSeminorm_sub_mul_of_eventually_eq_one_on_compacts
+    hUopen hUfinite hg hη_nonneg hη_le_one hη_eventually_one
+  have heq : (fun n => Gagliardo.integralLpSeminorm
+      (fun x => g x - η n x * g x) 2 (volumeMeasureOn U)) =
+      (fun n => MeasureTheory.eLpNorm
+        (fun x => g x - η n x * g x) 2 (volumeMeasureOn U)) := by
+    funext n
+    exact Gagliardo.integralLpSeminorm_eq_eLpNorm _ _ _
+      (hg.aestronglyMeasurable.sub ((hη n).mul hg.aestronglyMeasurable))
+  rwa [heq] at hraw
 
 /-- A compact subset of an open triadic cube is contained in a strictly smaller
 concentric closed cube. -/
@@ -210,6 +243,7 @@ theorem tendsto_eLpNorm_sub_mul_of_tendsto_inner
       (fun n x => (η n).nonneg x)
       (fun n x => (η n).le_one x)
       (eventually_eq_one_on_compacts_of_tendsto_inner η hρ₁)
+      (fun n => (η n).smooth.continuous.aestronglyMeasurable)
 
 end QuantitativeCubeCutoff
 
@@ -307,10 +341,7 @@ theorem tendsto_eLpNorm_euclideanCoordDeriv_mul_sub_of_tendsto_inner_of_boundary
           ≤ MeasureTheory.eLpNorm (fun x => -(Dψ x - η n x * Dψ x)) 2
                 (volumeMeasureOn U) +
               MeasureTheory.eLpNorm (B n) 2 (volumeMeasureOn U) := by
-            refine MeasureTheory.eLpNorm_add_le ?_ ?_ (by norm_num : (1 : ENNReal) ≤ 2)
-            · exact (hDψ_mem.aestronglyMeasurable.sub
-                (hηDψ_mem n).aestronglyMeasurable).neg
-            · exact (hB_mem n).aestronglyMeasurable
+            exact MeasureTheory.eLpNorm_add_le (by norm_num : (1 : ENNReal) ≤ 2)
       _ = MeasureTheory.eLpNorm (fun x => Dψ x - η n x * Dψ x) 2
                 (volumeMeasureOn U) +
               MeasureTheory.eLpNorm (B n) 2 (volumeMeasureOn U) := by

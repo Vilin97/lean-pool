@@ -40,7 +40,7 @@ private theorem continuousKGradientNorm_default_eq_zero {d : ℕ} :
       unfold BoundedMeasurableDomain.normalizedLpNorm
         BoundedMeasurableDomain.normalizedLpFiniteENorm
         BoundedMeasurableDomain.normalizedLpENorm
-      simp
+      simp [MeasureTheory.eLpNorm'_eq_lintegral_enorm]
 
 private theorem ofReal_continuousKResidualNorm_default_eq_normalizedEuclideanLpENorm
     {d : ℕ} (F : UnitCubeEuclideanL2Field d) :
@@ -60,13 +60,20 @@ private theorem ofReal_continuousKResidualNorm_default_eq_normalizedEuclideanLpE
     BoundedMeasurableDomain.normalizedLpNorm
     BoundedMeasurableDomain.normalizedLpFiniteENorm
     BoundedMeasurableDomain.normalizedLpENorm
+  simp only [show (2 : ℝ≥0∞) ≠ 0 by norm_num,
+    show (2 : ℝ≥0∞) ≠ ∞ by norm_num, if_false, ENNReal.toReal_ofNat]
   change ENNReal.ofReal
-      (MeasureTheory.eLpNorm
+      (MeasureTheory.eLpNorm'
         (fun x => euclideanNorm (F x - (default : ContinuousKCompetitor d).toField x))
-        (2 : ℝ≥0∞) (unitCenteredCubeDomain d).normalizedVolume).toReal =
-    MeasureTheory.eLpNorm (fun x => euclideanNorm (F x)) (2 : ℝ≥0∞)
-      (unitCenteredCubeDomain d).normalizedVolume
-  rw [hresidual, ENNReal.ofReal_toReal F.euclideanMagnitudeMemL2.eLpNorm_ne_top]
+        2 (unitCenteredCubeDomain d).normalizedVolume).toReal = _
+  rw [hresidual]
+  have hfinite : MeasureTheory.eLpNorm' (fun x => euclideanNorm (F x))
+      2 (unitCenteredCubeDomain d).normalizedVolume ≠ ∞ := by
+    have h := F.euclideanMagnitudeMemL2.eLpNorm_ne_top
+    rw [MeasureTheory.eLpNorm_eq_eLpNorm' (by norm_num) (by norm_num)
+      F.euclideanMagnitudeMemL2.aestronglyMeasurable] at h
+    exact h
+  exact ENNReal.ofReal_toReal hfinite
 
 private theorem continuousKFunctional_le_residualNorm_default {d : ℕ}
     (t : ContinuousKScale) (F : UnitCubeEuclideanL2Field d) :

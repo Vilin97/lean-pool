@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
 
+import LeanPool.CoarseGraining.Homogenization.IntegralLpSeminorm
 import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.StoppingCubeGeometry
 
 /-! # Axis Cube Normalized Lp -/
@@ -37,13 +38,14 @@ private theorem finiteLpExponent_exponent_toReal_pos (p : FiniteLpExponent) :
 
 /-- The `p`th power of a finite `eLpNorm` is its defining norm-power
 lintegral. -/
-theorem axisCube_eLpNorm_rpow_exponent_eq_lintegral_enorm
+theorem axisCube_integralLpSeminorm_rpow_exponent_eq_lintegral_enorm
     {d : ℕ} {E : Type*} [NormedAddCommGroup E]
     (z : Vec d) (L : ℝ) (p : FiniteLpExponent) (F : Vec d → E) :
-    (eLpNorm F p.exponent (axisCubeNormalizedMeasure z L)) ^ p.exponent.toReal =
+    (Gagliardo.integralLpSeminorm F p.exponent (axisCubeNormalizedMeasure z L)) ^ p.exponent.toReal =
       ∫⁻ x, ‖F x‖ₑ ^ p.exponent.toReal ∂axisCubeNormalizedMeasure z L := by
-  rw [eLpNorm_eq_lintegral_rpow_enorm_toReal (finiteLpExponent_exponent_ne_zero p)
-    p.lt_top.ne]
+  simp only [Gagliardo.integralLpSeminorm,
+    if_neg (finiteLpExponent_exponent_ne_zero p), if_neg p.lt_top.ne,
+    eLpNorm'_eq_lintegral_enorm]
   rw [← ENNReal.rpow_mul]
   have hp : p.exponent.toReal ≠ 0 :=
     finiteLpExponent_exponent_toReal_pos p |>.ne'
@@ -80,14 +82,14 @@ theorem axisCube_lintegral_ofReal_norm_rpow_eq_normalized_setLIntegral
 
 /-- The powered normalized finite-`p` norm is the normalized raw local
 norm-power integral. -/
-theorem axisCube_eLpNorm_rpow_exponent_eq_normalized_setLIntegral
+theorem axisCube_integralLpSeminorm_rpow_exponent_eq_normalized_setLIntegral
     {d : ℕ} {E : Type*} [NormedAddCommGroup E]
     (z : Vec d) {L : ℝ} (hL : 0 < L) (p : FiniteLpExponent) (F : Vec d → E) :
-    (eLpNorm F p.exponent (axisCubeNormalizedMeasure z L)) ^ p.exponent.toReal =
+    (Gagliardo.integralLpSeminorm F p.exponent (axisCubeNormalizedMeasure z L)) ^ p.exponent.toReal =
       ENNReal.ofReal ((L ^ d)⁻¹) *
         ∫⁻ x in axisCube z L, ENNReal.ofReal (‖F x‖ ^ p.exponent.toReal)
           ∂volume := by
-  rw [axisCube_eLpNorm_rpow_exponent_eq_lintegral_enorm,
+  rw [axisCube_integralLpSeminorm_rpow_exponent_eq_lintegral_enorm,
     axisCube_lintegral_enorm_rpow_eq_lintegral_ofReal_norm_rpow,
     axisCube_lintegral_ofReal_norm_rpow_eq_normalized_setLIntegral z hL]
 
@@ -130,41 +132,98 @@ theorem axisCube_setLIntegral_eq_of_ae_eq
 
 /-- The powered norm bridge written over the closed sup-ball associated to a
 positive axis cube. -/
-theorem axisCube_eLpNorm_rpow_exponent_eq_normalized_closedBallLIntegral
+theorem axisCube_integralLpSeminorm_rpow_exponent_eq_normalized_closedBallLIntegral
     {d : ℕ} [NeZero d] {E : Type*} [NormedAddCommGroup E]
     (z : Vec d) {L : ℝ} (hL : 0 < L) (p : FiniteLpExponent) (F : Vec d → E) :
-    (eLpNorm F p.exponent (axisCubeNormalizedMeasure z L)) ^ p.exponent.toReal =
+    (Gagliardo.integralLpSeminorm F p.exponent (axisCubeNormalizedMeasure z L)) ^ p.exponent.toReal =
       ENNReal.ofReal ((L ^ d)⁻¹) *
         ∫⁻ x in Metric.closedBall (axisCubeCenter z L) (L / 2),
           ENNReal.ofReal (‖F x‖ ^ p.exponent.toReal) ∂volume := by
-  rw [axisCube_eLpNorm_rpow_exponent_eq_normalized_setLIntegral z hL]
+  rw [axisCube_integralLpSeminorm_rpow_exponent_eq_normalized_setLIntegral z hL]
   congr 1
   exact axisCube_setLIntegral_eq_of_ae_eq z L _
     (axisCube_ae_eq_closedBall_axisCubeCenter z hL) _
 
 /-- The squared normalized `L²` norm is the normalized raw squared-energy
 integral on a positive axis cube. -/
-theorem axisCube_eLpNorm_two_sq_eq_normalized_setLIntegral
+theorem axisCube_integralLpSeminorm_two_sq_eq_normalized_setLIntegral
     {d : ℕ} {E : Type*} [NormedAddCommGroup E]
     (z : Vec d) {L : ℝ} (hL : 0 < L) (F : Vec d → E) :
-    (eLpNorm F 2 (axisCubeNormalizedMeasure z L)) ^ (2 : ℝ) =
+    (Gagliardo.integralLpSeminorm F 2 (axisCubeNormalizedMeasure z L)) ^ (2 : ℝ) =
       ENNReal.ofReal ((L ^ d)⁻¹) *
         ∫⁻ x in axisCube z L, ENNReal.ofReal (‖F x‖ ^ (2 : ℕ)) ∂volume := by
   simpa only [FiniteLpExponent.two_exponent, ENNReal.toReal_ofNat, Real.rpow_two] using
-    (axisCube_eLpNorm_rpow_exponent_eq_normalized_setLIntegral z hL
+    (axisCube_integralLpSeminorm_rpow_exponent_eq_normalized_setLIntegral z hL
       FiniteLpExponent.two F)
 
 /-- The squared normalized `L²` norm has the same closed-ball integral form. -/
-theorem axisCube_eLpNorm_two_sq_eq_normalized_closedBallLIntegral
+theorem axisCube_integralLpSeminorm_two_sq_eq_normalized_closedBallLIntegral
     {d : ℕ} [NeZero d] {E : Type*} [NormedAddCommGroup E]
     (z : Vec d) {L : ℝ} (hL : 0 < L) (F : Vec d → E) :
-    (eLpNorm F 2 (axisCubeNormalizedMeasure z L)) ^ (2 : ℝ) =
+    (Gagliardo.integralLpSeminorm F 2 (axisCubeNormalizedMeasure z L)) ^ (2 : ℝ) =
       ENNReal.ofReal ((L ^ d)⁻¹) *
         ∫⁻ x in Metric.closedBall (axisCubeCenter z L) (L / 2),
           ENNReal.ofReal (‖F x‖ ^ (2 : ℕ)) ∂volume := by
   simpa only [FiniteLpExponent.two_exponent, ENNReal.toReal_ofNat, Real.rpow_two] using
-    (axisCube_eLpNorm_rpow_exponent_eq_normalized_closedBallLIntegral z hL
+    (axisCube_integralLpSeminorm_rpow_exponent_eq_normalized_closedBallLIntegral z hL
       FiniteLpExponent.two F)
+
+/-- The integral identity expressed using Mathlib’s norm for a measurable function. -/
+theorem axisCube_eLpNorm_rpow_exponent_eq_lintegral_enorm
+    {d : ℕ} {E : Type*} [NormedAddCommGroup E]
+    (z : Vec d) (L : ℝ) (p : FiniteLpExponent) (F : Vec d → E)
+    (hF : AEStronglyMeasurable F (axisCubeNormalizedMeasure z L)) :
+    (eLpNorm F p.exponent (axisCubeNormalizedMeasure z L)) ^ p.exponent.toReal =
+      ∫⁻ x, ‖F x‖ₑ ^ p.exponent.toReal ∂axisCubeNormalizedMeasure z L := by
+  rw [← Gagliardo.integralLpSeminorm_eq_eLpNorm F p.exponent _ hF]
+  exact axisCube_integralLpSeminorm_rpow_exponent_eq_lintegral_enorm z L p F
+
+/-- The integral identity expressed using Mathlib’s norm for a measurable function. -/
+theorem axisCube_eLpNorm_rpow_exponent_eq_normalized_setLIntegral
+    {d : ℕ} {E : Type*} [NormedAddCommGroup E]
+    (z : Vec d) {L : ℝ} (hL : 0 < L) (p : FiniteLpExponent) (F : Vec d → E)
+    (hF : AEStronglyMeasurable F (axisCubeNormalizedMeasure z L)) :
+    (eLpNorm F p.exponent (axisCubeNormalizedMeasure z L)) ^ p.exponent.toReal =
+      ENNReal.ofReal ((L ^ d)⁻¹) *
+        ∫⁻ x in axisCube z L, ENNReal.ofReal (‖F x‖ ^ p.exponent.toReal)
+          ∂volume := by
+  rw [← Gagliardo.integralLpSeminorm_eq_eLpNorm F p.exponent _ hF]
+  exact axisCube_integralLpSeminorm_rpow_exponent_eq_normalized_setLIntegral z hL p F
+
+/-- The integral identity expressed using Mathlib’s norm for a measurable function. -/
+theorem axisCube_eLpNorm_rpow_exponent_eq_normalized_closedBallLIntegral
+    {d : ℕ} [NeZero d] {E : Type*} [NormedAddCommGroup E]
+    (z : Vec d) {L : ℝ} (hL : 0 < L) (p : FiniteLpExponent) (F : Vec d → E)
+    (hF : AEStronglyMeasurable F (axisCubeNormalizedMeasure z L)) :
+    (eLpNorm F p.exponent (axisCubeNormalizedMeasure z L)) ^ p.exponent.toReal =
+      ENNReal.ofReal ((L ^ d)⁻¹) *
+        ∫⁻ x in Metric.closedBall (axisCubeCenter z L) (L / 2),
+          ENNReal.ofReal (‖F x‖ ^ p.exponent.toReal) ∂volume := by
+  rw [← Gagliardo.integralLpSeminorm_eq_eLpNorm F p.exponent _ hF]
+  exact axisCube_integralLpSeminorm_rpow_exponent_eq_normalized_closedBallLIntegral z hL p F
+
+/-- The integral identity expressed using Mathlib’s norm for a measurable function. -/
+theorem axisCube_eLpNorm_two_sq_eq_normalized_setLIntegral
+    {d : ℕ} {E : Type*} [NormedAddCommGroup E]
+    (z : Vec d) {L : ℝ} (hL : 0 < L) (F : Vec d → E)
+    (hF : AEStronglyMeasurable F (axisCubeNormalizedMeasure z L)) :
+    (eLpNorm F 2 (axisCubeNormalizedMeasure z L)) ^ (2 : ℝ) =
+      ENNReal.ofReal ((L ^ d)⁻¹) *
+        ∫⁻ x in axisCube z L, ENNReal.ofReal (‖F x‖ ^ (2 : ℕ)) ∂volume := by
+  rw [← Gagliardo.integralLpSeminorm_eq_eLpNorm F 2 _ hF]
+  exact axisCube_integralLpSeminorm_two_sq_eq_normalized_setLIntegral z hL F
+
+/-- The integral identity expressed using Mathlib’s norm for a measurable function. -/
+theorem axisCube_eLpNorm_two_sq_eq_normalized_closedBallLIntegral
+    {d : ℕ} [NeZero d] {E : Type*} [NormedAddCommGroup E]
+    (z : Vec d) {L : ℝ} (hL : 0 < L) (F : Vec d → E)
+    (hF : AEStronglyMeasurable F (axisCubeNormalizedMeasure z L)) :
+    (eLpNorm F 2 (axisCubeNormalizedMeasure z L)) ^ (2 : ℝ) =
+      ENNReal.ofReal ((L ^ d)⁻¹) *
+        ∫⁻ x in Metric.closedBall (axisCubeCenter z L) (L / 2),
+          ENNReal.ofReal (‖F x‖ ^ (2 : ℕ)) ∂volume := by
+  rw [← Gagliardo.integralLpSeminorm_eq_eLpNorm F 2 _ hF]
+  exact axisCube_integralLpSeminorm_two_sq_eq_normalized_closedBallLIntegral z hL F
 
 end CubeCalderonZygmund
 

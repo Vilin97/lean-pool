@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
 
+import LeanPool.CoarseGraining.Homogenization.IntegralLpSeminorm
 import LeanPool.CoarseGraining.Homogenization.Besov.Duality.Full
 import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactCircDomination
 import LeanPool.CoarseGraining.Homogenization.Book.Ch01.FieldSpaces
@@ -81,14 +82,24 @@ noncomputable abbrev normalizedLpNorm {d : ℕ} {E : Type*}
       (Homogenization.cubeBoundedMeasurableDomain Q).normalizedVolume) : ℝ :=
   (Homogenization.cubeBoundedMeasurableDomain Q).normalizedLpNorm p f hf
 
-/-- The cube extended norm is `eLpNorm` for normalized cube measure. -/
-theorem normalizedLpENorm_eq_eLpNorm_normalizedCubeMeasure {d : ℕ}
+/-- The cube integral seminorm uses normalized cube measure, including for nonmeasurable functions. -/
+theorem normalizedLpENorm_eq_integralLpSeminorm_normalizedCubeMeasure {d : ℕ}
     {E : Type*} [ENorm E] (Q : Cube d) (p : ℝ≥0∞) (f : Vec d → E) :
     normalizedLpENorm Q p f =
-      MeasureTheory.eLpNorm f p (Homogenization.normalizedCubeMeasure Q) := by
-  change MeasureTheory.eLpNorm f p
-    (Homogenization.cubeBoundedMeasurableDomain Q).normalizedVolume = _
+      Gagliardo.integralLpSeminorm f p (Homogenization.normalizedCubeMeasure Q) := by
+  unfold normalizedLpENorm Homogenization.BoundedMeasurableDomain.normalizedLpENorm
+    Gagliardo.integralLpSeminorm
   rw [Homogenization.cubeBoundedMeasurableDomain_normalizedVolume_eq_normalizedCubeMeasure]
+
+/-- For measurable functions the cube extended norm agrees with Mathlib’s norm. -/
+theorem normalizedLpENorm_eq_eLpNorm_normalizedCubeMeasure {d : ℕ}
+    {E : Type*} [ENorm E] [TopologicalSpace E]
+    (Q : Cube d) (p : ℝ≥0∞) (f : Vec d → E)
+    (hf : MeasureTheory.AEStronglyMeasurable f (Homogenization.normalizedCubeMeasure Q)) :
+    normalizedLpENorm Q p f =
+      MeasureTheory.eLpNorm f p (Homogenization.normalizedCubeMeasure Q) := by
+  rw [normalizedLpENorm_eq_integralLpSeminorm_normalizedCubeMeasure,
+    Gagliardo.integralLpSeminorm_eq_eLpNorm _ _ _ hf]
 
 /-- For finite `p ≥ 1`, the exact normalized cube norm has the manuscript moment formula. -/
 theorem normalizedLpNorm_eq_integral_rpow {d : ℕ} {E : Type*}

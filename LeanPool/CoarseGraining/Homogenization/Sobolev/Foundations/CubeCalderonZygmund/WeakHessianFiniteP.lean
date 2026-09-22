@@ -84,13 +84,14 @@ theorem eLpNorm_hessianHilbertMat_le_sum_rows (H : HasWeakHessianOn U u)
     MeasureTheory.eLpNorm (∑ i : Fin d, singleRow i) q.exponent μ ≤
         ∑ i : Fin d, MeasureTheory.eLpNorm (singleRow i) q.exponent μ := by
       exact MeasureTheory.eLpNorm_sum_le
-        (fun i _ ↦ (hsingleRow i).aestronglyMeasurable) q.one_lt.le
+        q.one_lt.le
     _ = ∑ i : Fin d, MeasureTheory.eLpNorm
         (fun x ↦ HilbertVec.ofVec (fun j ↦ H.hess i j x))
         q.exponent μ := by
       apply Finset.sum_congr rfl
       intro i _
       apply MeasureTheory.eLpNorm_congr_norm_ae
+        (hsingleRow i).aestronglyMeasurable (hrows i).aestronglyMeasurable
       exact MeasureTheory.ae_of_all μ fun x ↦ by simp [singleRow, row]
 
 /-- Normalized-cube specialization of

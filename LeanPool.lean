@@ -1796,6 +1796,7 @@ import LeanPool.CoarseGraining.Homogenization.HighContrast.Variance.Projection
 import LeanPool.CoarseGraining.Homogenization.HighContrast.Variance.RpowOpt
 import LeanPool.CoarseGraining.Homogenization.HighContrast.Variance.Scalar
 import LeanPool.CoarseGraining.Homogenization.HighContrast.Variance.ScalarBounds
+import LeanPool.CoarseGraining.Homogenization.IntegralLpSeminorm
 import LeanPool.CoarseGraining.Homogenization.Internal
 import LeanPool.CoarseGraining.Homogenization.Internal.Ch02
 import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Adapters

@@ -211,6 +211,72 @@ private theorem norm_cubeCoordinateFoldSign {d : ℕ}
   rw [Real.norm_eq_abs, sq_abs, one_pow, pow_two,
     cubeCoordinateFoldSign_mul_self]
 
+private theorem eLpNorm_foldSign_smul {d : ℕ} {E : Type*}
+    [NormedAddCommGroup E] [NormedSpace ℝ E]
+    (Q : TriadicCube d) (i : Fin d) (f : Vec d → E)
+    (p : ℝ≥0∞) (μ : MeasureTheory.Measure (Vec d)) :
+    MeasureTheory.eLpNorm (fun x => cubeCoordinateFoldSign Q x i • f x) p μ =
+      MeasureTheory.eLpNorm f p μ := by
+  have hsign : MeasureTheory.AEStronglyMeasurable
+      (fun x => cubeCoordinateFoldSign Q x i) μ := by
+    apply Measurable.aestronglyMeasurable
+    unfold cubeCoordinateFoldSign
+    exact Measurable.ite
+      (measurableSet_lt (measurable_pi_apply i) measurable_const) measurable_const
+      (Measurable.ite
+        (measurableSet_lt (measurable_pi_apply i) measurable_const)
+        measurable_const measurable_const)
+  have hback : MeasureTheory.AEStronglyMeasurable
+      (fun x => cubeCoordinateFoldSign Q x i • f x) μ →
+      MeasureTheory.AEStronglyMeasurable f μ := by
+    intro h
+    apply (hsign.smul h).congr
+    exact MeasureTheory.ae_of_all _ fun x => by
+      change cubeCoordinateFoldSign Q x i •
+        (cubeCoordinateFoldSign Q x i • f x) = f x
+      rw [smul_smul, cubeCoordinateFoldSign_mul_self, one_smul]
+  by_cases hf : MeasureTheory.AEStronglyMeasurable f μ
+  · apply MeasureTheory.eLpNorm_congr_norm_ae (hsign.smul hf) hf
+    exact MeasureTheory.ae_of_all _ fun x => by
+      change ‖cubeCoordinateFoldSign Q x i • f x‖ = ‖f x‖
+      rw [norm_smul, norm_cubeCoordinateFoldSign, one_mul]
+  · rw [MeasureTheory.eLpNorm_of_not_aestronglyMeasurable hf,
+      MeasureTheory.eLpNorm_of_not_aestronglyMeasurable (fun h => hf (hback h))]
+
+private theorem eLpNorm_gradientCoordScalar_eq_odd {d : ℕ}
+    (Q : TriadicCube d) (i : Fin d) (v : Vec d → ℝ)
+    (p : ℝ≥0∞) (μ : MeasureTheory.Measure (Vec d)) :
+    MeasureTheory.eLpNorm (cubeDirichletOddReflectionGradientCoordScalar Q i v) p μ =
+      MeasureTheory.eLpNorm (cubeDirichletOddReflectionScalar Q v) p μ := by
+  have heq : cubeDirichletOddReflectionGradientCoordScalar Q i v =
+      fun x => cubeCoordinateFoldSign Q x i • cubeDirichletOddReflectionScalar Q v x := by
+    funext x
+    simp only [cubeDirichletOddReflectionGradientCoordScalar,
+      cubeDirichletOddReflectionScalar, smul_eq_mul]
+    ring
+  rw [heq]
+  exact eLpNorm_foldSign_smul Q i _ p μ
+
+private theorem eLpNorm_hessianRowVectorField_eq_odd {d : ℕ}
+    (Q : TriadicCube d) (i : Fin d) (R : Vec d → Vec d)
+    (p : ℝ≥0∞) (μ : MeasureTheory.Measure (Vec d)) :
+    MeasureTheory.eLpNorm
+      (fun x => HilbertVec.ofVec (cubeDirichletOddReflectionHessianRowVectorField Q i R x))
+      p μ = MeasureTheory.eLpNorm
+        (fun x => HilbertVec.ofVec (cubeDirichletOddReflectionVectorField Q R x)) p μ := by
+  have heq : (fun x => HilbertVec.ofVec
+      (cubeDirichletOddReflectionHessianRowVectorField Q i R x)) =
+      fun x => cubeCoordinateFoldSign Q x i •
+        HilbertVec.ofVec (cubeDirichletOddReflectionVectorField Q R x) := by
+    funext x
+    ext j
+    simp only [cubeDirichletOddReflectionHessianRowVectorField_apply,
+      cubeDirichletOddReflectionVectorField, cubeCoordinateFoldReflectedVectorField,
+      Pi.smul_apply, smul_eq_mul, HilbertVec.ofVec, PiLp.smul_apply, PiLp.toLp_apply]
+    ring
+  rw [heq]
+  exact eLpNorm_foldSign_smul Q i _ p μ
+
 /-- The mixed scalar has the same pointwise norm as the all-odd scalar
 reflection. -/
 theorem norm_cubeDirichletOddReflectionGradientCoordScalar_eq_oddReflection
@@ -435,10 +501,7 @@ theorem eLpNorm_cubeFaceReflectionBlockSet_gradientCoordScalar
       ((3 : ℝ≥0∞) ^ d) ^ (1 / p.exponent.toReal) *
         MeasureTheory.eLpNorm v p.exponent
           (MeasureTheory.volume.restrict (openCubeSet Q)) := by
-  rw [MeasureTheory.eLpNorm_congr_norm_ae
-    (MeasureTheory.ae_of_all _ fun x ↦
-      norm_cubeDirichletOddReflectionGradientCoordScalar_eq_oddReflection
-        Q i v x)]
+  rw [eLpNorm_gradientCoordScalar_eq_odd Q i v p.exponent _]
   exact eLpNorm_cubeFaceReflectionBlockSet_cubeDirichletOddReflectionScalar Q v p
 
 /-- `MemLp` transport for a mixed scalar on the full reflection block. -/
@@ -470,10 +533,7 @@ theorem eLpNorm_openCubeSet_succ_originCube_gradientCoordScalar
       ((3 : ℝ≥0∞) ^ d) ^ (1 / p.exponent.toReal) *
         MeasureTheory.eLpNorm v p.exponent
           (MeasureTheory.volume.restrict (openCubeSet (originCube d m))) := by
-  rw [MeasureTheory.eLpNorm_congr_norm_ae
-    (MeasureTheory.ae_of_all _ fun x ↦
-      norm_cubeDirichletOddReflectionGradientCoordScalar_eq_oddReflection
-        (originCube d m) i v x)]
+  rw [eLpNorm_gradientCoordScalar_eq_odd (originCube d m) i v p.exponent _]
   exact
     eLpNorm_openCubeSet_succ_originCube_cubeDirichletOddReflectionScalar v p
 
@@ -509,10 +569,7 @@ theorem eLpNorm_normalizedCubeMeasure_succ_originCube_gradientCoordScalar
       p.exponent (normalizedCubeMeasure (originCube d (m + 1))) =
       MeasureTheory.eLpNorm v p.exponent
         (normalizedCubeMeasure (originCube d m)) := by
-  rw [MeasureTheory.eLpNorm_congr_norm_ae
-    (MeasureTheory.ae_of_all _ fun x ↦
-      norm_cubeDirichletOddReflectionGradientCoordScalar_eq_oddReflection
-        (originCube d m) i v x)]
+  rw [eLpNorm_gradientCoordScalar_eq_odd (originCube d m) i v p.exponent _]
   exact
     eLpNorm_normalizedCubeMeasure_succ_originCube_cubeDirichletOddReflectionScalar
       v p
@@ -550,10 +607,7 @@ theorem eLpNorm_cubeFaceReflectionBlockSet_hessianRowVectorField
       ((3 : ℝ≥0∞) ^ d) ^ (1 / p.exponent.toReal) *
         MeasureTheory.eLpNorm (fun x ↦ HilbertVec.ofVec (R x)) p.exponent
           (MeasureTheory.volume.restrict (openCubeSet Q)) := by
-  rw [MeasureTheory.eLpNorm_congr_norm_ae
-    (MeasureTheory.ae_of_all _ fun x ↦
-      norm_hilbertVec_cubeDirichletOddReflectionHessianRowVectorField_eq_oddReflection
-        Q i R x)]
+  rw [eLpNorm_hessianRowVectorField_eq_odd Q i R p.exponent _]
   exact eLpNorm_cubeFaceReflectionBlockSet_cubeDirichletOddReflectionVectorField
     Q R p
 
@@ -591,10 +645,7 @@ theorem eLpNorm_openCubeSet_succ_originCube_hessianRowVectorField
       ((3 : ℝ≥0∞) ^ d) ^ (1 / p.exponent.toReal) *
         MeasureTheory.eLpNorm (fun x ↦ HilbertVec.ofVec (R x)) p.exponent
           (MeasureTheory.volume.restrict (openCubeSet (originCube d m))) := by
-  rw [MeasureTheory.eLpNorm_congr_norm_ae
-    (MeasureTheory.ae_of_all _ fun x ↦
-      norm_hilbertVec_cubeDirichletOddReflectionHessianRowVectorField_eq_oddReflection
-        (originCube d m) i R x)]
+  rw [eLpNorm_hessianRowVectorField_eq_odd (originCube d m) i R p.exponent _]
   exact
     eLpNorm_openCubeSet_succ_originCube_cubeDirichletOddReflectionVectorField R p
 
@@ -634,10 +685,7 @@ theorem eLpNorm_normalizedCubeMeasure_succ_originCube_hessianRowVectorField
       p.exponent (normalizedCubeMeasure (originCube d (m + 1))) =
       MeasureTheory.eLpNorm (fun x ↦ HilbertVec.ofVec (R x)) p.exponent
         (normalizedCubeMeasure (originCube d m)) := by
-  rw [MeasureTheory.eLpNorm_congr_norm_ae
-    (MeasureTheory.ae_of_all _ fun x ↦
-      norm_hilbertVec_cubeDirichletOddReflectionHessianRowVectorField_eq_oddReflection
-        (originCube d m) i R x)]
+  rw [eLpNorm_hessianRowVectorField_eq_odd (originCube d m) i R p.exponent _]
   exact
     eLpNorm_normalizedCubeMeasure_succ_originCube_cubeDirichletOddReflectionVectorField
       R p

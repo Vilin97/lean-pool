@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
 
+import LeanPool.CoarseGraining.Homogenization.IntegralLpSeminorm
 import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.GlobalLocalization
 import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.WeakHessianEuclidean
 import Mathlib.MeasureTheory.Function.LpSeminorm.TriangleInequality
@@ -23,18 +24,27 @@ open MeasureTheory
 
 /-- Total square-weighted mass is exactly the square of the `L²` `eLpNorm`.
 This identity itself needs no integrability assumption. -/
-theorem sqWeightedMeasure_apply_univ_eq_eLpNorm_two_sq
+theorem sqWeightedMeasure_apply_univ_eq_integralLpSeminorm_two_sq
     {α E : Type*} [MeasurableSpace α] [NormedAddCommGroup E]
     (f : α → E) (μ : Measure α) :
-    sqWeightedMeasure f μ Set.univ = (eLpNorm f 2 μ) ^ (2 : ℕ) := by
+    sqWeightedMeasure f μ Set.univ = (Gagliardo.integralLpSeminorm f 2 μ) ^ (2 : ℕ) := by
   rw [sqWeightedMeasure, withDensity_apply _ MeasurableSet.univ,
     Measure.restrict_univ]
   change (∫⁻ x, ENNReal.ofReal (‖f x‖ ^ (2 : ℕ)) ∂μ) = _
   simp_rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
-  rw [← ENNReal.rpow_natCast,
-    eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num),
-    ← ENNReal.rpow_mul]
+  simp only [Gagliardo.integralLpSeminorm,
+    show (2 : ℝ≥0∞) ≠ 0 by norm_num, show (2 : ℝ≥0∞) ≠ ∞ by norm_num,
+    if_false, eLpNorm'_eq_lintegral_enorm]
+  rw [← ENNReal.rpow_natCast, ← ENNReal.rpow_mul]
   norm_num
+
+/-- The square-mass identity written using Mathlib’s norm for measurable functions. -/
+theorem sqWeightedMeasure_apply_univ_eq_eLpNorm_two_sq
+    {α E : Type*} [MeasurableSpace α] [NormedAddCommGroup E]
+    (f : α → E) (μ : Measure α) (hf : AEStronglyMeasurable f μ) :
+    sqWeightedMeasure f μ Set.univ = (eLpNorm f 2 μ) ^ (2 : ℕ) := by
+  rw [sqWeightedMeasure_apply_univ_eq_integralLpSeminorm_two_sq,
+    Gagliardo.integralLpSeminorm_eq_eLpNorm _ _ _ hf]
 
 end CubeCalderonZygmund
 
@@ -106,11 +116,12 @@ theorem eLpNorm_hessianHilbertRow_two_le
       ∑ j : Fin d, eLpNorm (fun x ↦ H.hess i j x) 2
         (volumeMeasureOn U) := by
     rw [hrow]
-    refine (eLpNorm_sum_le (fun j _ ↦ (hsingle j).aestronglyMeasurable)
+    refine (eLpNorm_sum_le
       (by norm_num : (1 : ℝ≥0∞) ≤ 2)).trans_eq ?_
     apply Finset.sum_congr rfl
     intro j _
-    apply eLpNorm_congr_norm_ae
+    apply eLpNorm_congr_norm_ae (hsingle j).aestronglyMeasurable
+      (H.hess_memL2 i j).aestronglyMeasurable
     exact ae_of_all _ fun x ↦ by simp [singleCoord]
   calc
     eLpNorm (hilbertifyVecField (fun x j ↦ H.hess i j x)) 2
@@ -149,7 +160,8 @@ theorem sqWeightedMeasure_hessianHilbertRow_apply_univ_le
         (hilbertifyVecField (fun x j ↦ H.hess i j x))
         (volumeMeasureOn U) Set.univ ≤
       ENNReal.ofReal (H.hessianCoordL2NormSum ^ (2 : ℕ)) := by
-  rw [CubeCalderonZygmund.sqWeightedMeasure_apply_univ_eq_eLpNorm_two_sq]
+  rw [CubeCalderonZygmund.sqWeightedMeasure_apply_univ_eq_eLpNorm_two_sq _ _
+    (H.hessianHilbertRow_memLp_two i).aestronglyMeasurable]
   rw [ENNReal.ofReal_pow H.hessianCoordL2NormSum_nonneg]
   exact pow_le_pow_left₀ bot_le (H.eLpNorm_hessianHilbertRow_two_le i) 2
 
@@ -222,7 +234,8 @@ theorem sqWeightedMeasure_hessianHilbertRow_normalizedCubeMeasure_apply_univ_le
       ENNReal.ofReal
         ((((cubeVolume Q)⁻¹) ^ (1 / 2 : ℝ) *
           H.hessianCoordL2NormSum) ^ (2 : ℕ)) := by
-  rw [CubeCalderonZygmund.sqWeightedMeasure_apply_univ_eq_eLpNorm_two_sq]
+  rw [CubeCalderonZygmund.sqWeightedMeasure_apply_univ_eq_eLpNorm_two_sq _ _
+    (H.hessianHilbertRow_memLp_two_normalizedCubeMeasure Q i).aestronglyMeasurable]
   rw [ENNReal.ofReal_pow (mul_nonneg
     (Real.rpow_nonneg (inv_nonneg.mpr (cubeVolume_nonneg Q)) _)
     H.hessianCoordL2NormSum_nonneg)]

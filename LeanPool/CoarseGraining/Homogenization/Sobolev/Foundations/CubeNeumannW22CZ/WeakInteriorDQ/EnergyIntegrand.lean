@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
 
+import LeanPool.CoarseGraining.Homogenization.IntegralLpSeminorm
 import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInterior
 import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.DifferenceQuotientH1
 import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.H1Graph.Preliminaries
@@ -390,14 +391,26 @@ theorem integral_subset_of_support_subset
 
 /-- If a function is supported in an interior set `V ⊆ U`, its `eLpNorm` on
 the ambient restricted measure agrees with its `eLpNorm` on `V`. -/
-theorem eLpNorm_restrict_eq_restrict_of_support_subset
+theorem integralLpSeminorm_restrict_eq_restrict_of_support_subset
     {E : Type*} [NormedAddCommGroup E] {F : Vec d → E} {p : ℝ≥0∞}
     (hVU : V ⊆ U) (hF_support : Function.support F ⊆ V) :
+    Gagliardo.integralLpSeminorm F p (MeasureTheory.volume.restrict U) =
+      Gagliardo.integralLpSeminorm F p (MeasureTheory.volume.restrict V) := by
+  have hsupportU : Function.support F ⊆ U := hF_support.trans hVU
+  rw [Gagliardo.integralLpSeminorm_restrict_eq_of_support_subset hsupportU]
+  rw [← Gagliardo.integralLpSeminorm_restrict_eq_of_support_subset hF_support]
+
+
+/-- For globally measurable functions the support restriction identity uses Mathlib’s norm. -/
+theorem eLpNorm_restrict_eq_restrict_of_support_subset
+    {E : Type*} [NormedAddCommGroup E] {F : Vec d → E} {p : ℝ≥0∞}
+    (hVU : V ⊆ U) (hF_support : Function.support F ⊆ V)
+    (hF : MeasureTheory.AEStronglyMeasurable F MeasureTheory.volume) :
     MeasureTheory.eLpNorm F p (MeasureTheory.volume.restrict U) =
       MeasureTheory.eLpNorm F p (MeasureTheory.volume.restrict V) := by
   have hsupportU : Function.support F ⊆ U := hF_support.trans hVU
-  rw [MeasureTheory.eLpNorm_restrict_eq_of_support_subset hsupportU]
-  rw [← MeasureTheory.eLpNorm_restrict_eq_of_support_subset hF_support]
+  rw [MeasureTheory.eLpNorm_restrict_eq_of_support_subset hF hsupportU]
+  rw [← MeasureTheory.eLpNorm_restrict_eq_of_support_subset hF hF_support]
 
 /-- Translation invariance of global `eLpNorm` for a coordinate shift. -/
 theorem eLpNorm_comp_euclideanCoordShift_of_aestronglyMeasurable
@@ -473,10 +486,12 @@ theorem eLpNorm_backwardDifferenceQuotient_sub_le
         MeasureTheory.eLpNorm Δ 2 MeasureTheory.volume +
           MeasureTheory.eLpNorm (fun x => Δ (euclideanCoordShift (-step) i x))
             2 MeasureTheory.volume := by
-    simpa [sub_eq_add_neg] using!
+    simpa only [sub_eq_add_neg, Pi.add_apply,
+      MeasureTheory.eLpNorm_neg] using!
       MeasureTheory.eLpNorm_add_le
         (μ := MeasureTheory.volume) (p := (2 : ℝ≥0∞))
-        hΔ hshift_meas.neg (by norm_num : (1 : ℝ≥0∞) ≤ 2)
+        (f := Δ) (g := -(fun x => Δ (euclideanCoordShift (-step) i x)))
+        (by norm_num : (1 : ℝ≥0∞) ≤ 2)
   calc
     MeasureTheory.eLpNorm
         (fun x =>
@@ -587,11 +602,20 @@ theorem tendsto_eLpNorm_backwardDifferenceQuotient_sub_zero
 /-- If a function is supported in `U`, then its global `L²` norm is the same
 as its `L²` norm over `U`.  This is just mathlib's support-restriction lemma
 with the equality oriented for H¹₀ approximation limits. -/
-theorem eLpNorm_eq_restrict_of_support_subset
+theorem integralLpSeminorm_eq_restrict_of_support_subset
     {F : Vec d → ℝ} (hF_support : Function.support F ⊆ U) :
+    Gagliardo.integralLpSeminorm F 2 MeasureTheory.volume =
+      Gagliardo.integralLpSeminorm F 2 (MeasureTheory.volume.restrict U) :=
+  (Gagliardo.integralLpSeminorm_restrict_eq_of_support_subset hF_support).symm
+
+
+/-- The support restriction identity for Mathlib’s norm of a globally measurable function. -/
+theorem eLpNorm_eq_restrict_of_support_subset
+    {F : Vec d → ℝ} (hF_support : Function.support F ⊆ U)
+    (hF : MeasureTheory.AEStronglyMeasurable F MeasureTheory.volume) :
     MeasureTheory.eLpNorm F 2 MeasureTheory.volume =
       MeasureTheory.eLpNorm F 2 (MeasureTheory.volume.restrict U) :=
-  (MeasureTheory.eLpNorm_restrict_eq_of_support_subset hF_support).symm
+  (MeasureTheory.eLpNorm_restrict_eq_of_support_subset hF hF_support).symm
 
 /-- A restricted a.e.-strongly-measurable scalar function with genuine support
 in `U` is globally a.e.-strongly-measurable after extension by zero. -/

@@ -127,6 +127,9 @@ theorem centeredCubeEuclideanHsIntegrand_congr_ae {d : ℕ} {m : ℤ}
     centeredCubeEuclideanHsIntegrand s F =ᵐ[
       centeredCubeEuclideanHsProductMeasure d m]
         centeredCubeEuclideanHsIntegrand s G := by
+  letI : SFinite (centeredCubeDomain d m).restrictedVolume := by
+    change SFinite (MeasureTheory.volume.restrict _)
+    infer_instance
   have hFG_restricted :
       F =ᵐ[(centeredCubeDomain d m).restrictedVolume] G :=
     ae_restrictedVolume_of_ae_normalizedVolume hFG
@@ -134,12 +137,12 @@ theorem centeredCubeEuclideanHsIntegrand_congr_ae {d : ℕ} {m : ℤ}
       (fun z : Vec d × Vec d => F z.1) =ᵐ[
         centeredCubeEuclideanHsProductMeasure d m] fun z => G z.1 := by
     rw [centeredCubeEuclideanHsProductMeasure]
-    exact Measure.quasiMeasurePreserving_fst.ae_eq hFG
+    exact Measure.quasiMeasurePreserving_fst.ae_eq_comp hFG
   have hsnd :
       (fun z : Vec d × Vec d => F z.2) =ᵐ[
         centeredCubeEuclideanHsProductMeasure d m] fun z => G z.2 := by
     rw [centeredCubeEuclideanHsProductMeasure]
-    exact Measure.quasiMeasurePreserving_snd.ae_eq hFG_restricted
+    exact Measure.quasiMeasurePreserving_snd.ae_eq_comp hFG_restricted
   filter_upwards [hfst, hsnd] with z hz1 hz2
   simp only [centeredCubeEuclideanHsIntegrand, hz1, hz2]
 
