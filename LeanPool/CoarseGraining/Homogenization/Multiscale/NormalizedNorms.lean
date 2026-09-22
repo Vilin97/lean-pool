@@ -5,6 +5,7 @@ Authors: Scott Armstrong, Tuomo Kuusi
 -/
 
 import LeanPool.CoarseGraining.Homogenization.Multiscale.Projection
+import LeanPool.CoarseGraining.Homogenization.IntegralLpSeminorm
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.MeasureTheory.Function.LpSeminorm.CompareExp
 import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
@@ -83,7 +84,14 @@ theorem cubeAverage_eq_integral_normalizedCubeMeasure {d : ℕ} (Q : TriadicCube
 
 noncomputable def cubeLpNorm {d : ℕ} {E : Type*} [NormedAddCommGroup E]
     (Q : TriadicCube d) (p : ℝ≥0∞) (f : Vec d → E) : ℝ :=
-  (MeasureTheory.eLpNorm f p (normalizedCubeMeasure Q)).toReal
+  (Gagliardo.integralLpSeminorm f p (normalizedCubeMeasure Q)).toReal
+
+/-- On measurable fields the integral definition of the cube norm agrees with Mathlib. -/
+theorem cubeLpNorm_eq_eLpNorm_toReal {d : ℕ} {E : Type*} [NormedAddCommGroup E]
+    (Q : TriadicCube d) (p : ℝ≥0∞) (f : Vec d → E)
+    (hf : MeasureTheory.AEStronglyMeasurable f (normalizedCubeMeasure Q)) :
+    cubeLpNorm Q p f = (MeasureTheory.eLpNorm f p (normalizedCubeMeasure Q)).toReal := by
+  rw [cubeLpNorm, Gagliardo.integralLpSeminorm_eq_eLpNorm _ _ _ hf]
 
 noncomputable def cubeFluctuation {d : ℕ} (Q : TriadicCube d) (f : Vec d → ℝ) :
     Vec d → ℝ :=
@@ -150,12 +158,13 @@ theorem cubeLpNorm_nonneg {d : ℕ} {E : Type*} [NormedAddCommGroup E]
 @[simp] theorem cubeLpNorm_zero {d : ℕ} {E : Type*} [NormedAddCommGroup E]
     (Q : TriadicCube d) (p : ℝ≥0∞) :
     cubeLpNorm Q p (fun _ => (0 : E)) = 0 := by
-  simp [cubeLpNorm]
+  rw [cubeLpNorm_eq_eLpNorm_toReal Q p _ MeasureTheory.aestronglyMeasurable_const]
+  simp
 
 theorem cubeLpNorm_const {d : ℕ} {E : Type*} [NormedAddCommGroup E]
     (Q : TriadicCube d) (p : ℝ≥0∞) (c : E) (hp : p ≠ 0) :
     cubeLpNorm Q p (fun _ => c) = ‖c‖ := by
-  unfold cubeLpNorm
+  rw [cubeLpNorm_eq_eLpNorm_toReal Q p _ MeasureTheory.aestronglyMeasurable_const]
   rw [MeasureTheory.eLpNorm_const c hp (normalizedCubeMeasure_ne_zero Q),
     normalizedCubeMeasure_apply_univ]
   simp
@@ -164,7 +173,7 @@ theorem cubeLpNorm_one_eq_integral_norm {d : ℕ} {E : Type*} [NormedAddCommGrou
     (Q : TriadicCube d) (f : Vec d → E)
     (hf : MeasureTheory.AEStronglyMeasurable f (normalizedCubeMeasure Q)) :
     cubeLpNorm Q 1 f = ∫ x, ‖f x‖ ∂ normalizedCubeMeasure Q := by
-  unfold cubeLpNorm
+  rw [cubeLpNorm_eq_eLpNorm_toReal Q 1 f hf]
   rw [MeasureTheory.eLpNorm_one_eq_lintegral_enorm hf,
     ← MeasureTheory.integral_norm_eq_lintegral_enorm hf]
 
@@ -185,7 +194,8 @@ theorem cubeLpNorm_rpow_eq_cubeAverage_norm_rpow {d : ℕ} {E : Type*}
   calc
     (cubeLpNorm Q p f) ^ p.toReal
         = ((MeasureTheory.eLpNorm f p (normalizedCubeMeasure Q)) ^ p.toReal).toReal := by
-            rw [cubeLpNorm, ← ENNReal.toReal_rpow]
+            rw [cubeLpNorm_eq_eLpNorm_toReal Q p f hf.aestronglyMeasurable,
+              ← ENNReal.toReal_rpow]
     _ = (∫⁻ x, ‖f x‖ₑ ^ p.toReal ∂ normalizedCubeMeasure Q).toReal := by
           rw [MeasureTheory.eLpNorm_eq_lintegral_rpow_enorm_toReal hp0 hpTop hf.aestronglyMeasurable]
           let A : ℝ≥0∞ := ∫⁻ x, ‖f x‖ₑ ^ p.toReal ∂ normalizedCubeMeasure Q
@@ -232,7 +242,11 @@ theorem cubeLpNorm_mul_le_mul_cubeLpNorm_of_holderConjugate {d : ℕ}
         (1 * MeasureTheory.eLpNorm f p (normalizedCubeMeasure Q) *
           MeasureTheory.eLpNorm g q (normalizedCubeMeasure Q)).toReal :=
     ENNReal.toReal_mono hmul_top hmul
-  simpa [cubeLpNorm, hf_top, hg_top, mul_assoc] using htoReal
+  rw [cubeLpNorm_eq_eLpNorm_toReal Q 1 (fun x => f x * g x)
+    (hf.aestronglyMeasurable.mul hg.aestronglyMeasurable),
+    cubeLpNorm_eq_eLpNorm_toReal Q p f hf.aestronglyMeasurable,
+    cubeLpNorm_eq_eLpNorm_toReal Q q g hg.aestronglyMeasurable]
+  simpa [hf_top, hg_top, mul_assoc] using htoReal
 
 theorem cubeLpNorm_mul_le_mul_cubeLpNorm_conjExponent {d : ℕ}
     (Q : TriadicCube d) (p : ℝ≥0∞) (f g : Vec d → ℝ)
