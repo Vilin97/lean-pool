@@ -38,8 +38,12 @@ theorem eLpNorm_foldComp_finiteLp {v : Vec d → ℝ} (p : FiniteLpExponent)
     eLpNorm (fun x => v (Fold lo hi x)) p.exponent (volume.restrict (Box3 lo hi))
       = ((3 : ℝ≥0∞) ^ d) ^ (1 / p.exponent.toReal) *
           eLpNorm v p.exponent (volume.restrict (Box lo hi)) := by
-  rw [eLpNorm_eq_lintegral_rpow_enorm_toReal (finiteLpExponent_ne_zero p) p.lt_top.ne,
-    eLpNorm_eq_lintegral_rpow_enorm_toReal (finiteLpExponent_ne_zero p) p.lt_top.ne]
+  have hcomp : AEStronglyMeasurable (fun x => v (Fold lo hi x))
+      (volume.restrict (Box3 lo hi)) :=
+    (hv.comp (continuous_Fold lo hi (fun k => (hlt k).le)).measurable).aestronglyMeasurable
+  rw [eLpNorm_eq_lintegral_rpow_enorm_toReal (finiteLpExponent_ne_zero p) p.lt_top.ne hcomp,
+    eLpNorm_eq_lintegral_rpow_enorm_toReal (finiteLpExponent_ne_zero p) p.lt_top.ne
+      hv.aestronglyMeasurable]
   have hgmeas : Measurable (fun x : Vec d => ‖v x‖ₑ ^ p.exponent.toReal) :=
     ENNReal.continuous_rpow_const.measurable.comp hv.enorm
   have htrans : ∫⁻ x in Box3 lo hi, ‖v (Fold lo hi x)‖ₑ ^ p.exponent.toReal
@@ -62,7 +66,18 @@ theorem eLpNorm_foldComp_mul_foldSign_le_finiteLp {D : Vec d → ℝ}
         p.exponent (volume.restrict (Box3 lo hi))
       ≤ eLpNorm (fun x => D (Fold lo hi x)) p.exponent
           (volume.restrict (Box3 lo hi)) := by
-        refine eLpNorm_mono (fun x => ?_)
+        have hsign : Measurable (foldSign (lo i) (hi i)) := by
+          unfold foldSign
+          refine Measurable.ite (measurableSet_lt measurable_id measurable_const)
+            measurable_const ?_
+          exact Measurable.ite (measurableSet_lt measurable_const measurable_id)
+            measurable_const measurable_const
+        have hmeas : AEStronglyMeasurable
+            (fun x => D (Fold lo hi x) * foldSign (lo i) (hi i) (x i))
+            (volume.restrict (Box3 lo hi)) :=
+          ((hD.comp (continuous_Fold lo hi (fun k => (hlt k).le)).measurable).mul
+            (hsign.comp (measurable_pi_apply i))).aestronglyMeasurable
+        refine eLpNorm_mono hmeas (fun x => ?_)
         rw [norm_mul]
         exact mul_le_of_le_one_right (norm_nonneg _) (by
           unfold foldSign
