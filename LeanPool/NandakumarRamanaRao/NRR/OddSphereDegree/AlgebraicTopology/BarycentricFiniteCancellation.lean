@@ -78,7 +78,7 @@ theorem internal_faces_cancel_for_index
 
 /-- Double internal-face cancellation after summing over all internal face indices. -/
 theorem internal_faces_double_sum_cancel
-    {ιx α M : Type} [Fintype ιx] [Fintype α] [DecidableEq α] [AddCommGroup M]
+    {ιx α M : Type} [Fintype ιx] [Fintype α] [AddCommGroup M]
     (swapFor : ιx → α → α)
     (hswap_invol : ∀ i, Function.Involutive (swapFor i))
     (hswap_ne : ∀ i a, swapFor i a ≠ a)

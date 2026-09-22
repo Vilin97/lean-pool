@@ -53,7 +53,7 @@ noncomputable def deviation
     y (FoxNeuwirthOrderComplex.ReferenceAffineOrbitCount.lastLabel hp)
 
 /-- Mean coordinate. -/
-noncomputable def mean (hp : Nat.Prime p) (y : Fin p → Real) : Real :=
+noncomputable def mean (p : Nat) (y : Fin p → Real) : Real :=
   coordinateMean p y
 
 /-- Restriction to the facet omitting vertex `k`. -/
@@ -96,7 +96,7 @@ def FacetHasPositiveRayIntersection
   ∃ w : StandardSimplex (p - 1),
     StandardSimplex.IsInterior w ∧
       (∀ r : Fin (p - 1), deviation hp (facetAffineValue V k w) r = 0) ∧
-      0 < mean hp (facetAffineValue V k w)
+      0 < mean p (facetAffineValue V k w)
 
 noncomputable instance facetHasPositiveRayIntersectionDecidable
     (hp : Nat.Prime p) (V : VertexMap p) (k : Fin (p + 1)) :
@@ -133,7 +133,7 @@ negative mean are irrelevant to the open positive ray and are intentionally perm
 def AvoidsPositiveRayCodimTwo (hp : Nat.Prime p) (V : VertexMap p) : Prop :=
   ∀ (w : StandardSimplex p) (i j : Fin (p + 1)), i ≠ j →
     (∀ r : Fin (p - 1), deviation hp (affineValue V w) r = 0) →
-      0 < mean hp (affineValue V w) → ¬ (w i = 0 ∧ w j = 0)
+      0 < mean p (affineValue V w) → ¬ (w i = 0 ∧ w j = 0)
 
 /-- Exact local hypotheses needed by positive-ray Stokes.  This is weaker than `GeneralPosition`:
 it excludes codimension-two degeneracy only on the positive part of the deviation-zero line. -/
@@ -411,7 +411,7 @@ theorem coordinate_eq_lastLabel_of_deviation_eq_zero
 theorem mean_eq_lastLabel_of_deviation_eq_zero
     (hp : Nat.Prime p) (y : Fin p → Real)
     (hdev : ∀ q : Fin (p - 1), deviation hp y q = 0) :
-    mean hp y = y (FoxNeuwirthOrderComplex.ReferenceAffineOrbitCount.lastLabel hp) := by
+    mean p y = y (FoxNeuwirthOrderComplex.ReferenceAffineOrbitCount.lastLabel hp) := by
   have hall : ∀ i : Fin p,
       y i = y (FoxNeuwirthOrderComplex.ReferenceAffineOrbitCount.lastLabel hp) :=
     coordinate_eq_lastLabel_of_deviation_eq_zero hp y hdev
@@ -437,7 +437,7 @@ theorem coordinateDeviation_eq_zero_of_deviation_eq_zero
 theorem coordinate_eq_zero_of_deviation_eq_zero_of_mean_eq_zero
     (hp : Nat.Prime p) (y : Fin p → Real)
     (hdev : ∀ q : Fin (p - 1), deviation hp y q = 0)
-    (hmean : mean hp y = 0) :
+    (hmean : mean p y = 0) :
     y = 0 := by
   apply (coordinate_eq_zero_iff hp.pos y).2
   exact ⟨coordinateDeviation_eq_zero_of_deviation_eq_zero hp y hdev,
@@ -445,9 +445,9 @@ theorem coordinate_eq_zero_of_deviation_eq_zero_of_mean_eq_zero
 
 /-- The coordinate mean commutes with barycentric affine interpolation. -/
 theorem mean_affineValue_eq_weighted_sum
-    (hp : Nat.Prime p) (V : VertexMap p) (w : StandardSimplex p) :
-    mean hp (affineValue V w) =
-      ∑ k : Fin (p + 1), w k * mean hp (V.value k) := by
+    (p : Nat) (V : VertexMap p) (w : StandardSimplex p) :
+    mean p (affineValue V w) =
+      ∑ k : Fin (p + 1), w k * mean p (V.value k) := by
   have haffine : affineValue V w =
       ∑ k : Fin (p + 1), w k • V.value k := by
     funext r
@@ -1023,30 +1023,30 @@ theorem deviation_eq_zero_iff_exists_lineSimplexPoint_eq
 /-- Slope of the coordinate mean along the cofactor line. -/
 noncomputable def cofactorMeanSlope
     (hp : Nat.Prime p) (V : VertexMap p) : Real :=
-  ∑ k : Fin (p + 1), cofactorDirection hp V k * mean hp (V.value k)
+  ∑ k : Fin (p + 1), cofactorDirection hp V k * mean p (V.value k)
 
 /-- The coordinate mean along the feasible cofactor line is affine in the line parameter. -/
 theorem lineSimplexPoint_mean_eq
     (hp : Nat.Prime p) (V : VertexMap p) (w : StandardSimplex p)
     (t : Real) (ht : LineFeasible hp V w t) :
-    mean hp (affineValue V (lineSimplexPoint hp V w t ht)) =
-      mean hp (affineValue V w) + t * cofactorMeanSlope hp V := by
+    mean p (affineValue V (lineSimplexPoint hp V w t ht)) =
+      mean p (affineValue V w) + t * cofactorMeanSlope hp V := by
   rw [mean_affineValue_eq_weighted_sum]
   calc
     ∑ k : Fin (p + 1),
-        lineSimplexPoint hp V w t ht k * mean hp (V.value k) =
+        lineSimplexPoint hp V w t ht k * mean p (V.value k) =
         ∑ k : Fin (p + 1),
-          (w k * mean hp (V.value k) +
-            t * (cofactorDirection hp V k * mean hp (V.value k))) := by
+          (w k * mean p (V.value k) +
+            t * (cofactorDirection hp V k * mean p (V.value k))) := by
               apply Finset.sum_congr rfl
               intro k hk
               rw [lineSimplexPoint_apply, lineCoordinate]
               ring
-    _ = (∑ k : Fin (p + 1), w k * mean hp (V.value k)) +
+    _ = (∑ k : Fin (p + 1), w k * mean p (V.value k)) +
           ∑ k : Fin (p + 1),
-            t * (cofactorDirection hp V k * mean hp (V.value k)) :=
+            t * (cofactorDirection hp V k * mean p (V.value k)) :=
           Finset.sum_add_distrib
-    _ = mean hp (affineValue V w) + t * cofactorMeanSlope hp V := by
+    _ = mean p (affineValue V w) + t * cofactorMeanSlope hp V := by
           rw [← mean_affineValue_eq_weighted_sum, ← Finset.mul_sum]
           rfl
 
@@ -1055,7 +1055,7 @@ theorem mean_ne_zero_of_deviation_eq_zero_of_avoidsOrigin
     (hp : Nat.Prime p) (V : VertexMap p)
     (havoid : AvoidsOrigin V) (w : StandardSimplex p)
     (hw : ∀ q : Fin (p - 1), deviation hp (affineValue V w) q = 0) :
-    mean hp (affineValue V w) ≠ 0 := by
+    mean p (affineValue V w) ≠ 0 := by
   intro hmean
   apply havoid w
   exact coordinate_eq_zero_of_deviation_eq_zero_of_mean_eq_zero
@@ -1067,7 +1067,7 @@ theorem lineSimplexPoint_mean_ne_zero
     (havoid : AvoidsOrigin V) (w : StandardSimplex p)
     (hw : ∀ q : Fin (p - 1), deviation hp (affineValue V w) q = 0)
     (t : Real) (ht : LineFeasible hp V w t) :
-    mean hp (affineValue V (lineSimplexPoint hp V w t ht)) ≠ 0 := by
+    mean p (affineValue V (lineSimplexPoint hp V w t ht)) ≠ 0 := by
   apply mean_ne_zero_of_deviation_eq_zero_of_avoidsOrigin hp V havoid
   intro q
   exact lineSimplexPoint_deviation_eq_zero hp V w hw t ht q
@@ -1118,12 +1118,12 @@ theorem lineSimplexPoint_mean_pos_iff_of_le
     (hw : ∀ q : Fin (p - 1), deviation hp (affineValue V w) q = 0)
     (t₀ t₁ : Real) (ht₀ : LineFeasible hp V w t₀)
     (ht₁ : LineFeasible hp V w t₁) (ht : t₀ ≤ t₁) :
-    0 < mean hp (affineValue V (lineSimplexPoint hp V w t₀ ht₀)) ↔
-      0 < mean hp (affineValue V (lineSimplexPoint hp V w t₁ ht₁)) := by
-  let a : Real := mean hp (affineValue V w)
+    0 < mean p (affineValue V (lineSimplexPoint hp V w t₀ ht₀)) ↔
+      0 < mean p (affineValue V (lineSimplexPoint hp V w t₁ ht₁)) := by
+  let a : Real := mean p (affineValue V w)
   let b : Real := cofactorMeanSlope hp V
-  let m₀ : Real := mean hp (affineValue V (lineSimplexPoint hp V w t₀ ht₀))
-  let m₁ : Real := mean hp (affineValue V (lineSimplexPoint hp V w t₁ ht₁))
+  let m₀ : Real := mean p (affineValue V (lineSimplexPoint hp V w t₀ ht₀))
+  let m₁ : Real := mean p (affineValue V (lineSimplexPoint hp V w t₁ ht₁))
   have hm₀ : m₀ = a + t₀ * b := by
     simpa [a, b, m₀] using lineSimplexPoint_mean_eq hp V w t₀ ht₀
   have hm₁ : m₁ = a + t₁ * b := by
@@ -1147,7 +1147,7 @@ theorem lineSimplexPoint_mean_pos_iff_of_le
       apply (lineFeasible_iff_mem_Icc hp V hregular w t).2
       exact ⟨ht₀Icc.1.trans htbetween.1, htbetween.2.trans ht₁Icc.2⟩
     have hlineMeanZero :
-        mean hp (affineValue V (lineSimplexPoint hp V w t htfeasible)) = 0 := by
+        mean p (affineValue V (lineSimplexPoint hp V w t htfeasible)) = 0 := by
       rw [lineSimplexPoint_mean_eq]
       simpa [a, b] using hmeanZero
     exact (lineSimplexPoint_mean_ne_zero hp V havoid w hw t htfeasible) hlineMeanZero
@@ -1171,8 +1171,8 @@ theorem lineSimplexPoint_mean_pos_iff
     (hw : ∀ q : Fin (p - 1), deviation hp (affineValue V w) q = 0)
     (t₀ t₁ : Real) (ht₀ : LineFeasible hp V w t₀)
     (ht₁ : LineFeasible hp V w t₁) :
-    0 < mean hp (affineValue V (lineSimplexPoint hp V w t₀ ht₀)) ↔
-      0 < mean hp (affineValue V (lineSimplexPoint hp V w t₁ ht₁)) := by
+    0 < mean p (affineValue V (lineSimplexPoint hp V w t₀ ht₀)) ↔
+      0 < mean p (affineValue V (lineSimplexPoint hp V w t₁ ht₁)) := by
   by_cases ht : t₀ ≤ t₁
   · exact lineSimplexPoint_mean_pos_iff_of_le hp V hregular havoid w hw
       t₀ t₁ ht₀ ht₁ ht
@@ -1229,7 +1229,7 @@ theorem lowerEndpoint_unique_zero_of_positiveMean
     (hcodim : AvoidsPositiveRayCodimTwo hp V)
     (w : StandardSimplex p)
     (hw : ∀ q : Fin (p - 1), deviation hp (affineValue V w) q = 0)
-    (hmean : 0 < mean hp
+    (hmean : 0 < mean p
       (affineValue V (lineSimplexPoint hp V w
         (lowerParameter hp V hregular w)
         (lowerParameter_feasible hp V hregular w))))
@@ -1256,7 +1256,7 @@ theorem upperEndpoint_unique_zero_of_positiveMean
     (hcodim : AvoidsPositiveRayCodimTwo hp V)
     (w : StandardSimplex p)
     (hw : ∀ q : Fin (p - 1), deviation hp (affineValue V w) q = 0)
-    (hmean : 0 < mean hp
+    (hmean : 0 < mean p
       (affineValue V (lineSimplexPoint hp V w
         (upperParameter hp V hregular w)
         (upperParameter_feasible hp V hregular w))))
@@ -1283,7 +1283,7 @@ theorem lowerEndpoint_coordinate_pos_of_ne_of_positiveMean
     (hcodim : AvoidsPositiveRayCodimTwo hp V)
     (w : StandardSimplex p)
     (hw : ∀ q : Fin (p - 1), deviation hp (affineValue V w) q = 0)
-    (hmean : 0 < mean hp
+    (hmean : 0 < mean p
       (affineValue V (lineSimplexPoint hp V w
         (lowerParameter hp V hregular w)
         (lowerParameter_feasible hp V hregular w))))
@@ -1306,7 +1306,7 @@ theorem upperEndpoint_coordinate_pos_of_ne_of_positiveMean
     (hcodim : AvoidsPositiveRayCodimTwo hp V)
     (w : StandardSimplex p)
     (hw : ∀ q : Fin (p - 1), deviation hp (affineValue V w) q = 0)
-    (hmean : 0 < mean hp
+    (hmean : 0 < mean p
       (affineValue V (lineSimplexPoint hp V w
         (upperParameter hp V hregular w)
         (upperParameter_feasible hp V hregular w))))
@@ -1648,8 +1648,8 @@ theorem affineValue_fullSimplexOfFacet
 @[simp] theorem mean_affineValue_fullSimplexOfFacet
     (hp : Nat.Prime p) (V : VertexMap p) (k : Fin (p + 1))
     (u : StandardSimplex (p - 1)) :
-    mean hp (affineValue V (fullSimplexOfFacet hp k u)) =
-      mean hp (facetAffineValue V k u) := by
+    mean p (affineValue V (fullSimplexOfFacet hp k u)) =
+      mean p (facetAffineValue V k u) := by
   rw [affineValue_fullSimplexOfFacet]
 
 /-- A facet point with zero fixed deviations gives a full-simplex point with zero fixed deviations. -/
@@ -1666,8 +1666,8 @@ theorem fullSimplexOfFacet_deviation_eq_zero
 theorem fullSimplexOfFacet_mean_pos
     (hp : Nat.Prime p) (V : VertexMap p) (k : Fin (p + 1))
     (u : StandardSimplex (p - 1))
-    (hu : 0 < mean hp (facetAffineValue V k u)) :
-    0 < mean hp (affineValue V (fullSimplexOfFacet hp k u)) := by
+    (hu : 0 < mean p (facetAffineValue V k u)) :
+    0 < mean p (affineValue V (fullSimplexOfFacet hp k u)) := by
   simpa using hu
 
 /-- The deviation-zero and positive-mean data of a positive-ray facet witness transfer together to
@@ -1676,10 +1676,10 @@ theorem fullSimplexOfFacet_positiveRayData
     (hp : Nat.Prime p) (V : VertexMap p) (k : Fin (p + 1))
     (u : StandardSimplex (p - 1))
     (hdev : ∀ q : Fin (p - 1), deviation hp (facetAffineValue V k u) q = 0)
-    (hmean : 0 < mean hp (facetAffineValue V k u)) :
+    (hmean : 0 < mean p (facetAffineValue V k u)) :
     (∀ q : Fin (p - 1),
       deviation hp (affineValue V (fullSimplexOfFacet hp k u)) q = 0) ∧
-      0 < mean hp (affineValue V (fullSimplexOfFacet hp k u)) :=
+      0 < mean p (affineValue V (fullSimplexOfFacet hp k u)) :=
   ⟨fullSimplexOfFacet_deviation_eq_zero hp V k u hdev,
     fullSimplexOfFacet_mean_pos hp V k u hmean⟩
 
@@ -1785,7 +1785,7 @@ theorem lowerEndpointFacetPoint_isInterior_of_positiveMean
     (hcodim : AvoidsPositiveRayCodimTwo hp V)
     (w : StandardSimplex p)
     (hw : ∀ q : Fin (p - 1), deviation hp (affineValue V w) q = 0)
-    (hmean : 0 < mean hp (affineValue V
+    (hmean : 0 < mean p (affineValue V
       (lowerEndpointSimplexPoint hp V hregular w))) :
     StandardSimplex.IsInterior (lowerEndpointFacetPoint hp V hregular w) := by
   refine facetCoordinates_isInterior hp
@@ -1805,7 +1805,7 @@ theorem upperEndpointFacetPoint_isInterior_of_positiveMean
     (hcodim : AvoidsPositiveRayCodimTwo hp V)
     (w : StandardSimplex p)
     (hw : ∀ q : Fin (p - 1), deviation hp (affineValue V w) q = 0)
-    (hmean : 0 < mean hp (affineValue V
+    (hmean : 0 < mean p (affineValue V
       (upperEndpointSimplexPoint hp V hregular w))) :
     StandardSimplex.IsInterior (upperEndpointFacetPoint hp V hregular w) := by
   refine facetCoordinates_isInterior hp
@@ -1881,8 +1881,8 @@ theorem lowerEndpoint_mean_pos_iff_upperEndpoint_mean_pos
     (hregular : FacetRegular hp V) (havoid : AvoidsOrigin V)
     (w : StandardSimplex p)
     (hw : ∀ q : Fin (p - 1), deviation hp (affineValue V w) q = 0) :
-    0 < mean hp (affineValue V (lowerEndpointSimplexPoint hp V hregular w)) ↔
-      0 < mean hp (affineValue V (upperEndpointSimplexPoint hp V hregular w)) := by
+    0 < mean p (affineValue V (lowerEndpointSimplexPoint hp V hregular w)) ↔
+      0 < mean p (affineValue V (upperEndpointSimplexPoint hp V hregular w)) := by
   simpa [lowerEndpointSimplexPoint, upperEndpointSimplexPoint] using
     lineSimplexPoint_mean_pos_iff hp V hregular havoid w hw
       (lowerParameter hp V hregular w) (upperParameter hp V hregular w)
@@ -1895,10 +1895,10 @@ theorem lowerEndpointFacet_mean_pos_iff_upperEndpointFacet_mean_pos
     (hregular : FacetRegular hp V) (havoid : AvoidsOrigin V)
     (w : StandardSimplex p)
     (hw : ∀ q : Fin (p - 1), deviation hp (affineValue V w) q = 0) :
-    0 < mean hp
+    0 < mean p
         (facetAffineValue V (lowerEndpointIndex hp V hregular w)
           (lowerEndpointFacetPoint hp V hregular w)) ↔
-      0 < mean hp
+      0 < mean p
         (facetAffineValue V (upperEndpointIndex hp V hregular w)
           (upperEndpointFacetPoint hp V hregular w)) := by
   rw [lowerEndpoint_facetAffineValue_eq, upperEndpoint_facetAffineValue_eq]
@@ -1911,7 +1911,7 @@ theorem lowerEndpoint_facetHasPositiveRayIntersection
     (hcodim : AvoidsCodimTwoDeviationZero hp V)
     (w : StandardSimplex p)
     (hw : ∀ q : Fin (p - 1), deviation hp (affineValue V w) q = 0)
-    (hmean : 0 < mean hp
+    (hmean : 0 < mean p
       (affineValue V (lineSimplexPoint hp V w
         (lowerParameter hp V hregular w)
         (lowerParameter_feasible hp V hregular w)))) :
@@ -1930,7 +1930,7 @@ theorem upperEndpoint_facetHasPositiveRayIntersection
     (hcodim : AvoidsCodimTwoDeviationZero hp V)
     (w : StandardSimplex p)
     (hw : ∀ q : Fin (p - 1), deviation hp (affineValue V w) q = 0)
-    (hmean : 0 < mean hp
+    (hmean : 0 < mean p
       (affineValue V (lineSimplexPoint hp V w
         (upperParameter hp V hregular w)
         (upperParameter_feasible hp V hregular w)))) :
@@ -1950,7 +1950,7 @@ theorem lowerEndpoint_facetHasPositiveRayIntersection_of_positiveCodimTwo
     (hcodim : AvoidsPositiveRayCodimTwo hp V)
     (w : StandardSimplex p)
     (hw : ∀ q : Fin (p - 1), deviation hp (affineValue V w) q = 0)
-    (hmean : 0 < mean hp
+    (hmean : 0 < mean p
       (affineValue V (lowerEndpointSimplexPoint hp V hregular w))) :
     FacetHasPositiveRayIntersection hp V (lowerEndpointIndex hp V hregular w) := by
   refine ⟨lowerEndpointFacetPoint hp V hregular w,
@@ -1969,7 +1969,7 @@ theorem upperEndpoint_facetHasPositiveRayIntersection_of_positiveCodimTwo
     (hcodim : AvoidsPositiveRayCodimTwo hp V)
     (w : StandardSimplex p)
     (hw : ∀ q : Fin (p - 1), deviation hp (affineValue V w) q = 0)
-    (hmean : 0 < mean hp
+    (hmean : 0 < mean p
       (affineValue V (upperEndpointSimplexPoint hp V hregular w))) :
     FacetHasPositiveRayIntersection hp V (upperEndpointIndex hp V hregular w) := by
   refine ⟨upperEndpointFacetPoint hp V hregular w,
@@ -2027,17 +2027,17 @@ theorem facetHasPositiveRayIntersection_endpoint_classification
     (k : Fin (p + 1))
     (hfacet : FacetHasPositiveRayIntersection hp V k) :
     (k = lowerEndpointIndex hp V hregular w₀ ∧
-        0 < mean hp
+        0 < mean p
           (affineValue V (lowerEndpointSimplexPoint hp V hregular w₀))) ∨
       (k = upperEndpointIndex hp V hregular w₀ ∧
-        0 < mean hp
+        0 < mean p
           (affineValue V (upperEndpointSimplexPoint hp V hregular w₀))) := by
   rcases hfacet with ⟨u, hu, hdev, hmean⟩
   let w₁ : StandardSimplex p := fullSimplexOfFacet hp k u
   have hw₁ : ∀ q : Fin (p - 1), deviation hp (affineValue V w₁) q = 0 := by
     intro q
     simpa [w₁] using fullSimplexOfFacet_deviation_eq_zero hp V k u hdev q
-  have hw₁mean : 0 < mean hp (affineValue V w₁) := by
+  have hw₁mean : 0 < mean p (affineValue V w₁) := by
     simpa [w₁] using fullSimplexOfFacet_mean_pos hp V k u hmean
   obtain ⟨t, ht, hpoint⟩ :=
     exists_lineSimplexPoint_eq_of_deviation_eq_zero
@@ -2077,17 +2077,17 @@ theorem facetHasPositiveRayIntersection_endpoint_classification_of_positiveCodim
     (k : Fin (p + 1))
     (hfacet : FacetHasPositiveRayIntersection hp V k) :
     (k = lowerEndpointIndex hp V hregular w₀ ∧
-        0 < mean hp
+        0 < mean p
           (affineValue V (lowerEndpointSimplexPoint hp V hregular w₀))) ∨
       (k = upperEndpointIndex hp V hregular w₀ ∧
-        0 < mean hp
+        0 < mean p
           (affineValue V (upperEndpointSimplexPoint hp V hregular w₀))) := by
   rcases hfacet with ⟨u, hu, hdev, hmean⟩
   let w₁ : StandardSimplex p := fullSimplexOfFacet hp k u
   have hw₁ : ∀ q : Fin (p - 1), deviation hp (affineValue V w₁) q = 0 := by
     intro q
     simpa [w₁] using fullSimplexOfFacet_deviation_eq_zero hp V k u hdev q
-  have hw₁mean : 0 < mean hp (affineValue V w₁) := by
+  have hw₁mean : 0 < mean p (affineValue V w₁) := by
     simpa [w₁] using fullSimplexOfFacet_mean_pos hp V k u hmean
   obtain ⟨t, ht, hpoint⟩ :=
     exists_lineSimplexPoint_eq_of_deviation_eq_zero
@@ -2102,7 +2102,7 @@ theorem facetHasPositiveRayIntersection_endpoint_classification_of_positiveCodim
   rcases lineParameter_eq_lower_or_upper_of_coordinate_eq_zero
       hp V hregular w₀ t ht k hkzero with htLower | htUpper
   · subst t
-    have hmeanLower : 0 < mean hp
+    have hmeanLower : 0 < mean p
         (affineValue V (lowerEndpointSimplexPoint hp V hregular w₀)) := by
       rw [hpoint] at hw₁mean
       simpa [lowerEndpointSimplexPoint] using hw₁mean
@@ -2111,7 +2111,7 @@ theorem facetHasPositiveRayIntersection_endpoint_classification_of_positiveCodim
         (by simpa [lowerEndpointSimplexPoint] using hmeanLower) k hkzero
     exact Or.inl ⟨hkLower, hmeanLower⟩
   · subst t
-    have hmeanUpper : 0 < mean hp
+    have hmeanUpper : 0 < mean p
         (affineValue V (upperEndpointSimplexPoint hp V hregular w₀)) := by
       rw [hpoint] at hw₁mean
       simpa [upperEndpointSimplexPoint] using hw₁mean
@@ -2147,7 +2147,7 @@ theorem facetHasPositiveRayIntersection_iff_eq_lower_or_upper_of_positiveCodimTw
     (havoid : AvoidsOrigin V)
     (w₀ : StandardSimplex p)
     (hw₀ : ∀ q : Fin (p - 1), deviation hp (affineValue V w₀) q = 0)
-    (hlowerMean : 0 < mean hp
+    (hlowerMean : 0 < mean p
       (affineValue V (lowerEndpointSimplexPoint hp V hregular w₀)))
     (k : Fin (p + 1)) :
     FacetHasPositiveRayIntersection hp V k ↔
@@ -2159,7 +2159,7 @@ theorem facetHasPositiveRayIntersection_iff_eq_lower_or_upper_of_positiveCodimTw
   · rintro (rfl | rfl)
     · exact lowerEndpoint_facetHasPositiveRayIntersection_of_positiveCodimTwo
         hp V hregular hcodim w₀ hw₀ hlowerMean
-    · have hupperMean : 0 < mean hp
+    · have hupperMean : 0 < mean p
           (affineValue V (upperEndpointSimplexPoint hp V hregular w₀)) :=
         (lowerEndpoint_mean_pos_iff_upperEndpoint_mean_pos
           hp V hregular havoid w₀ hw₀).1 hlowerMean
@@ -2192,7 +2192,7 @@ theorem facetHasPositiveRayIntersection_iff_eq_lower_or_upper
     (havoid : AvoidsOrigin V)
     (w₀ : StandardSimplex p)
     (hw₀ : ∀ q : Fin (p - 1), deviation hp (affineValue V w₀) q = 0)
-    (hlowerMean : 0 < mean hp
+    (hlowerMean : 0 < mean p
       (affineValue V (lowerEndpointSimplexPoint hp V hregular w₀)))
     (k : Fin (p + 1)) :
     FacetHasPositiveRayIntersection hp V k ↔
@@ -2204,7 +2204,7 @@ theorem facetHasPositiveRayIntersection_iff_eq_lower_or_upper
   · rintro (rfl | rfl)
     · exact lowerEndpoint_facetHasPositiveRayIntersection
         hp V hregular hcodim w₀ hw₀ hlowerMean
-    · have hupperMean : 0 < mean hp
+    · have hupperMean : 0 < mean p
           (affineValue V (upperEndpointSimplexPoint hp V hregular w₀)) :=
         (lowerEndpoint_mean_pos_iff_upperEndpoint_mean_pos
           hp V hregular havoid w₀ hw₀).1 hlowerMean
@@ -2287,7 +2287,7 @@ noncomputable def rayBoundaryCertificate
   · let w₀ : StandardSimplex p := Classical.choose hzero
     have hw₀ : ∀ q : Fin (p - 1),
         deviation hp (affineValue V w₀) q = 0 := Classical.choose_spec hzero
-    by_cases hlowerMean : 0 < mean hp
+    by_cases hlowerMean : 0 < mean p
         (affineValue V (lowerEndpointSimplexPoint hp V hgp.facetRegular w₀))
     · exact RayBoundaryCertificate.pair
         (lowerEndpointIndex hp V hgp.facetRegular w₀)
@@ -2303,7 +2303,7 @@ noncomputable def rayBoundaryCertificate
             hp V hgp.facetRegular hgp.avoidsCodimTwo w₀ hw₀ k hfacet with
           hLower | hUpper
         · exact hlowerMean hLower.2
-        · have hlowerMean' : 0 < mean hp
+        · have hlowerMean' : 0 < mean p
               (affineValue V
                 (lowerEndpointSimplexPoint hp V hgp.facetRegular w₀)) :=
             (lowerEndpoint_mean_pos_iff_upperEndpoint_mean_pos
@@ -2326,7 +2326,7 @@ noncomputable def rayBoundaryCertificateOfPositiveRayGeneralPosition
   · let w₀ : StandardSimplex p := Classical.choose hzero
     have hw₀ : ∀ q : Fin (p - 1),
         deviation hp (affineValue V w₀) q = 0 := Classical.choose_spec hzero
-    by_cases hlowerMean : 0 < mean hp
+    by_cases hlowerMean : 0 < mean p
         (affineValue V (lowerEndpointSimplexPoint hp V hgp.facetRegular w₀))
     · exact RayBoundaryCertificate.pair
         (lowerEndpointIndex hp V hgp.facetRegular w₀)
@@ -2344,7 +2344,7 @@ noncomputable def rayBoundaryCertificateOfPositiveRayGeneralPosition
               w₀ hw₀ k hfacet with
           hLower | hUpper
         · exact hlowerMean hLower.2
-        · have hlowerMean' : 0 < mean hp
+        · have hlowerMean' : 0 < mean p
               (affineValue V
                 (lowerEndpointSimplexPoint hp V hgp.facetRegular w₀)) :=
             (lowerEndpoint_mean_pos_iff_upperEndpoint_mean_pos

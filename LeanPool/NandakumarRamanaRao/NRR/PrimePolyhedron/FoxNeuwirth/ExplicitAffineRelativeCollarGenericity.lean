@@ -222,7 +222,7 @@ def HorizontalPositiveRayCodimTwoSafe
   ∀ (q : C.Cell) (w : StandardSimplex p) (i j : Fin (p + 1)), (hij : i ≠ j) →
     (∀ r : Fin (p - 1),
       deviation hp (affineValue (localVertexMap hp C a q) w) r = 0) →
-    0 < mean hp (affineValue (localVertexMap hp C a q) w) →
+    0 < mean p (affineValue (localVertexMap hp C a q) w) →
     IsPurelyHorizontalCodimTwo hp C q (i, omittedIndex i j hij) →
     ¬ (w i = 0 ∧ w j = 0)
 

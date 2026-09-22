@@ -133,12 +133,14 @@ noncomputable def orbitQuotient
     rw [orbitBoundary_eq_coveringBoundary (G := G) C E qf]
     exact C.boundary_zero (facetRepresentative (G := G) C qf)
 
+omit [Fintype G] in
 @[simp] theorem orbitQuotient_coefficient
     (E : EquivariantData (G := G) C)
     (q : TopOrbit (G := G) C) :
     (orbitQuotient (G := G) C E).coefficient q = orbitCoefficient (G := G) C q :=
   rfl
 
+omit [Fintype G] in
 @[simp] theorem orbitQuotient_incidence
     (E : EquivariantData (G := G) C)
     (qf : FacetOrbit (G := G) C) (qt : TopOrbit (G := G) C) :

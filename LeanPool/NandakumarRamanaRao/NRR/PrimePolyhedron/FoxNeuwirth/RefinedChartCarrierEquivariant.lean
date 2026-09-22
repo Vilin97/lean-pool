@@ -78,7 +78,7 @@ theorem refinedPoint_prime_smul
 
 /-- Prime relabelling commutes with every represented refined vertex. -/
 theorem refinedVertex_prime_smul
-    (hp : Nat.Prime p) (g : PrimeSymmetry p)
+    (p : Nat) (g : PrimeSymmetry p)
     (s : Simplex p (p - 1)) (N : Nat) (rho : RefinementWord p N)
     (i : Fin p) :
     (g • s).refinedVertex N rho i = g • s.refinedVertex N rho i := by
@@ -230,7 +230,7 @@ theorem simplexValue_prime_smul
   simp only [simplexValue, PrimeSymmetry.smul_coordinate_apply]
   apply Finset.sum_congr rfl
   intro i hi
-  rw [refinedVertex_prime_smul hp g s N rho i, hF g]
+  rw [refinedVertex_prime_smul p g s N rho i, hF g]
   rfl
 
 /-- Symmetry-decorated refined affine values agree whenever the decorated chart points agree. -/

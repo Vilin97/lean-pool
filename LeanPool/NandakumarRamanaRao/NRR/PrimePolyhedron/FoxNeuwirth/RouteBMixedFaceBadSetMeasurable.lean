@@ -58,7 +58,7 @@ noncomputable def jointDeviation
 noncomputable def jointMean
     (base : Assignment hp C) (κ : MixedFaceCase hp C)
     (z : MovableParameterSpace hp C × StandardSimplex p) : Real :=
-  mean hp (fun j => jointAffineCoordinate hp C base κ z j)
+  mean p (fun j => jointAffineCoordinate hp C base κ z j)
 
 /-- Joint affine coordinates are continuous in both the movable parameters and
 the simplex witness. -/

@@ -84,7 +84,7 @@ def mixedFaceScalarFiber
           (localVertexMap hp C
             (assignmentOfMovableParameters hp C base
               (replaceCoordinate hp C x (κ.selectedParameter hp C) t)) κ.cell) w) r = 0) ∧
-    0 < mean hp
+    0 < mean p
       (affineValue
         (localVertexMap hp C
           (assignmentOfMovableParameters hp C base

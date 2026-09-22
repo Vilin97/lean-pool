@@ -85,7 +85,7 @@ def mixedFaceBadSet
           (affineValue
             (Polynomials.localVertexMap hp C
               (assignmentOfMovableParameters hp C base x) κ.cell) w) r = 0) ∧
-      0 < mean hp
+      0 < mean p
         (affineValue
           (Polynomials.localVertexMap hp C
             (assignmentOfMovableParameters hp C base x) κ.cell) w)}
@@ -111,7 +111,7 @@ theorem mem_mixedFaceBadSet_of_incidence
         (affineValue
           (Polynomials.localVertexMap hp C
             (assignmentOfMovableParameters hp C base x) q) w) r = 0)
-    (hmean : 0 < mean hp
+    (hmean : 0 < mean p
       (affineValue
         (Polynomials.localVertexMap hp C
           (assignmentOfMovableParameters hp C base x) q) w))
@@ -145,7 +145,7 @@ theorem incidence_of_mem_mixedFaceBadSet
           (affineValue
             (Polynomials.localVertexMap hp C
               (assignmentOfMovableParameters hp C base x) κ.cell) w) r = 0) ∧
-      0 < mean hp
+      0 < mean p
         (affineValue
           (Polynomials.localVertexMap hp C
             (assignmentOfMovableParameters hp C base x) κ.cell) w) := by
@@ -165,7 +165,7 @@ theorem exists_badCase_iff_incidence_with_movableWitness
             (affineValue
               (Polynomials.localVertexMap hp C
                 (assignmentOfMovableParameters hp C base x) q) w) r = 0) ∧
-        0 < mean hp
+        0 < mean p
           (affineValue
             (Polynomials.localVertexMap hp C
               (assignmentOfMovableParameters hp C base x) q) w) ∧

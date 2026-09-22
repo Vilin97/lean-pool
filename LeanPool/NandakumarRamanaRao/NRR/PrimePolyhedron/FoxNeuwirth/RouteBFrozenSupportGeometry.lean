@@ -52,7 +52,7 @@ def LowerPositiveSupportRaySafe
       (i j : Fin (p + 1)), i ≠ j →
     (∀ r : Fin (p - 1),
       deviation hp (affineValue (localVertexMap hp C a q) w) r = 0) →
-    0 < mean hp (affineValue (localVertexMap hp C a q) w) →
+    0 < mean p (affineValue (localVertexMap hp C a q) w) →
     (∀ k : Fin (p + 1), 0 < w k → (C.vertex q k).time.1 = 0) →
     ¬ (w i = 0 ∧ w j = 0)
 
@@ -64,7 +64,7 @@ def UpperPositiveSupportRaySafe
       (i j : Fin (p + 1)), i ≠ j →
     (∀ r : Fin (p - 1),
       deviation hp (affineValue (localVertexMap hp C a q) w) r = 0) →
-    0 < mean hp (affineValue (localVertexMap hp C a q) w) →
+    0 < mean p (affineValue (localVertexMap hp C a q) w) →
     (∀ k : Fin (p + 1), 0 < w k → (C.vertex q k).time.1 = 1) →
     ¬ (w i = 0 ∧ w j = 0)
 

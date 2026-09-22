@@ -100,7 +100,7 @@ noncomputable def deviation
 
 /-- Mean of the affine coordinate vector. -/
 noncomputable def mean
-    (hp : Nat.Prime p)
+    (p : Nat)
     (F : CoordinateAffineVertexMap p)
     (s : Simplex p (p - 1))
     (w : StandardSimplex (p - 1)) : Real :=
@@ -127,7 +127,7 @@ def HasPositiveInteriorZero
   ∃ w : StandardSimplex (p - 1),
     StandardSimplex.IsInterior w ∧
       (∀ r, (F.deviation hp).value s w r = 0) ∧
-      0 < F.mean hp s w
+      0 < F.mean p s w
 
 noncomputable instance hasPositiveInteriorZeroDecidable
     (hp : Nat.Prime p)
@@ -188,7 +188,7 @@ theorem not_hasPositiveInteriorZero_of_vertex_neg
     ¬ F.HasPositiveInteriorZero hp s := by
   rintro ⟨w, hw, hdev, hmean⟩
   have hi : ∀ i : Fin p, F.value s w i < 0 := F.value_neg_of_vertex_neg s w hneg
-  have hmeanneg : F.mean hp s w < 0 := by
+  have hmeanneg : F.mean p s w < 0 := by
     unfold mean coordinateMean
     haveI : Nonempty (Fin p) := ⟨⟨0, hp.pos⟩⟩
     have hsumneg : (∑ i : Fin p, F.value s w i) < 0 :=

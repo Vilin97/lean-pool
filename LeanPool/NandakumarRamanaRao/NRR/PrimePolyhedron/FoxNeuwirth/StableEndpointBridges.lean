@@ -139,7 +139,7 @@ theorem segmentSafe_smul
 
 /-- Segment safety is equivalent along a prime orbit. -/
 theorem segmentSafe_smul_iff
-    (hp : Nat.Prime p)
+    (p : Nat)
     (F G : ContinuousCoordinateMap p)
     (hF : IsEquivariantCoordinateMap p F)
     (hG : IsEquivariantCoordinateMap p G)
@@ -475,7 +475,7 @@ theorem segmentSafe_of_bridgeWeight_pos
     · apply not_lt.mp
       intro hg
       apply hnone
-      exact (segmentSafe_smul_iff hp F.map A.toRegularApproximation.map
+      exact (segmentSafe_smul_iff p F.map A.toRegularApproximation.map
         F.equivariant A.toRegularApproximation.equivariant x g).mp
         (segmentSafe_of_rawBridgeWeight_pos hp F A (g • x) hg)
     · exact rawBridgeWeight_nonneg hp F A (g • x)

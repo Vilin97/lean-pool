@@ -118,7 +118,7 @@ theorem permutationOrientationSign_smul
 
 /-- The completed top-flag chain coefficient is constant on prime-symmetry orbits. -/
 theorem chain_smul
-    (hp : Nat.Prime p) (g : PrimeSymmetry p) (s : Simplex p (p - 1)) :
+    (p : Nat) (g : PrimeSymmetry p) (s : Simplex p (p - 1)) :
     TopFlagSubdivision.chain (g • s) = TopFlagSubdivision.chain s := by
   unfold TopFlagSubdivision.chain TopFlagSubdivision.integralCoefficient
   push_cast
@@ -177,7 +177,7 @@ noncomputable def coveringEquivariantData
         (h ▸ TopFlagSubdivision.chain) (g • t) = (h ▸ TopFlagSubdivision.chain) t := by
       intro D h t
       subst h
-      exact chain_smul hp g t
+      exact chain_smul p g t
     exact gen hdim s
   incidence_smul := by
     intro g f s

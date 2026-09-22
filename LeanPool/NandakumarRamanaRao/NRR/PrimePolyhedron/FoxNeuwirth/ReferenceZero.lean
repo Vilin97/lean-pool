@@ -56,7 +56,7 @@ theorem uniformWeights_relabel
 
 /-- Mean of any point of the standard simplex. -/
 theorem coordinateMean_weights
-    (hp : Nat.Prime p) (w : FoxNeuwirthWeights p) :
+    (p : Nat) (w : FoxNeuwirthWeights p) :
     coordinateMean p w.1 = 1 / (p : Real) := by
   simp [coordinateMean, w.sum_eq_one]
 
@@ -77,14 +77,14 @@ theorem reference_eq_zero_iff_weights_eq_uniform
     have hi := congrArg
       (fun v : ZeroSum p => v i) hz
     change z.2 i - coordinateMean p z.2.1 = 0 at hi
-    rw [coordinateMean_weights hp z.2] at hi
+    rw [coordinateMean_weights p z.2] at hi
     have hi' : z.2 i = 1 / (p : Real) := sub_eq_zero.mp hi
     simpa only [uniformWeights_apply] using hi'
   · intro hz
     apply ZeroSum.ext
     intro i
     change z.2 i - coordinateMean p z.2.1 = 0
-    rw [coordinateMean_weights hp z.2]
+    rw [coordinateMean_weights p z.2]
     have hi := congrArg (fun w : FoxNeuwirthWeights p => w i) hz
     simpa only [uniformWeights_apply, sub_eq_zero] using hi
 

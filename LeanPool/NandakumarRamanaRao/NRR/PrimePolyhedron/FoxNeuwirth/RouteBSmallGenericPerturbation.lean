@@ -91,7 +91,7 @@ def FrozenPositiveSupportRaySafe
       (i j : Fin (p + 1)), i ≠ j →
     (∀ r : Fin (p - 1),
       deviation hp (affineValue (localVertexMap hp C a q) w) r = 0) →
-    0 < mean hp (affineValue (localVertexMap hp C a q) w) →
+    0 < mean p (affineValue (localVertexMap hp C a q) w) →
     (∀ k : Fin (p + 1), 0 < w k →
       ∀ c : Fin p, IsFrozenParameter hp C (localParameter hp C q k c)) →
     ¬ (w i = 0 ∧ w j = 0)

@@ -385,8 +385,8 @@ private theorem facetHasPositiveRayIntersection_primeSmul_iff
       have hinv := congrArg (fun z : ZeroSum p => g⁻¹ • z) hsmul
       simpa [smul_smul] using hinv
     · have hmeanEq :
-          mean hp (facetAffineValue (primeSmulVertexMap p g V) k w) =
-            mean hp (facetAffineValue V k w) := by
+          mean p (facetAffineValue (primeSmulVertexMap p g V) k w) =
+            mean p (facetAffineValue V k w) := by
         rw [facetAffineValue_primeSmul p]
         simpa [mean] using
           coordinateMean_prime_smul p (facetAffineValue V k w) g
@@ -400,8 +400,8 @@ private theorem facetHasPositiveRayIntersection_primeSmul_iff
         coordinateDeviation_eq_zero_of_deviation_eq_zero hp _ hwdev]
       simp
     · have hmeanEq :
-          mean hp (facetAffineValue (primeSmulVertexMap p g V) k w) =
-            mean hp (facetAffineValue V k w) := by
+          mean p (facetAffineValue (primeSmulVertexMap p g V) k w) =
+            mean p (facetAffineValue V k w) := by
         rw [facetAffineValue_primeSmul p]
         simpa [mean] using
           coordinateMean_prime_smul p (facetAffineValue V k w) g

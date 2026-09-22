@@ -106,7 +106,7 @@ theorem no_incidence_with_movableWitness_of_avoids_all_badSets
             (affineValue
               (localVertexMap hp C
                 (assignmentOfMovableParameters hp C base x) q) w) r = 0) ∧
-        0 < mean hp
+        0 < mean p
           (affineValue
             (localVertexMap hp C
               (assignmentOfMovableParameters hp C base x) q) w) ∧

@@ -271,7 +271,7 @@ theorem selectedFiber_subset_badFiberSubmodule
   have haffine :
       (∑ i : Fin (p + 1),
         w i • κ.localVertexBlock hp C base u rest i) =
-        (mean hp
+        (mean p
           (affineValue
             (localVertexMap hp C
               (assignmentOfMovableParameters hp C base
@@ -311,7 +311,7 @@ theorem selectedFiber_subset_badFiberSubmodule
     rw [hotherEq i hi]
   have hscaled : w κ.retained • u ∈ S := by
     have hrhs :
-        (mean hp
+        (mean p
           (affineValue
             (localVertexMap hp C
               (assignmentOfMovableParameters hp C base
