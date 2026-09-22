@@ -189,13 +189,13 @@ theorem selectHeadFn_mem_FP {f a b : List Bool → List Bool}
     (fun z => selectHead (f z) (a z) (b z)) ∈ FP := by
   have hflag : ∀ t : Bool, (fun z => headFlag t (f z)) ∈ FP := fun t => by
     have := mem_FP_comp hf (headFlag_mem_FP t)
-    simpa [Function.comp] using this
+    simpa [Function.comp] using! this
   have hx : (fun z => (a z).take ((headFlag true (f z)).length * (a z).length)) ∈ FP := by
     have := takeLenFn_mem_FP (mulLenFn_mem_FP (hflag true) ha) ha
-    simpa using this
+    simpa using! this
   have hy : (fun z => (b z).take ((headFlag false (f z)).length * (b z).length)) ∈ FP := by
     have := takeLenFn_mem_FP (mulLenFn_mem_FP (hflag false) hb) hb
-    simpa using this
+    simpa using! this
   have h := appendFn_mem_FP hx hy
   have heq : (fun z => (a z).take ((headFlag true (f z)).length * (a z).length)
       ++ (b z).take ((headFlag false (f z)).length * (b z).length))
@@ -372,7 +372,7 @@ theorem exists_pow_ruler (c d : ℕ) :
   induction d with
   | zero =>
       obtain ⟨K, hK, hlen⟩ := exists_const_ruler c
-      exact ⟨K, hK, fun z => by simpa using hlen z⟩
+      exact ⟨K, hK, fun z => by simpa using! hlen z⟩
   | succ d ih =>
       obtain ⟨R, hR, hlen⟩ := ih
       refine ⟨fun z => List.replicate ((R z).length * (pair [] z).length) false,
@@ -404,10 +404,10 @@ arithmetic operations now available — `mulLenFn_mem_FP` multiplies lengths and
 theorem const_replicate_mem_FP (c : ℕ) :
     (fun _ : List Bool => List.replicate c false) ∈ FP := by
   induction c with
-  | zero => simpa using const_nil_mem_FP
+  | zero => simpa using! const_nil_mem_FP
   | succ c ih =>
       have := mem_FP_comp ih (cons_mem_FP false)
-      simpa [Function.comp, List.replicate_succ] using this
+      simpa [Function.comp, List.replicate_succ] using! this
 
 /-- A ruler of length exactly `|z| ^ d`. -/
 private theorem exists_pow_exact_ruler (d : ℕ) :
@@ -477,10 +477,10 @@ theorem loopStep_mem_FP {A B : List Bool → List Bool} (hA : A ∈ FP) (hB : B 
   have hsnd : sndBlock ∈ FP := sndBlock_mem_FP
   have hcomp₁ : ∀ {g : List Bool → List Bool}, g ∈ FP →
       (fun v => fstBlock (g v)) ∈ FP := fun hg => by
-    simpa [Function.comp] using mem_FP_comp hg hfst
+    simpa [Function.comp] using! mem_FP_comp hg hfst
   have hcomp₂ : ∀ {g : List Bool → List Bool}, g ∈ FP →
       (fun v => sndBlock (g v)) ∈ FP := fun hg => by
-    simpa [Function.comp] using mem_FP_comp hg hsnd
+    simpa [Function.comp] using! mem_FP_comp hg hsnd
   have hP : (fun v : List Bool => fstBlock v) ∈ FP := hfst
   have hR : (fun v : List Bool => fstBlock (fstBlock v)) ∈ FP := hcomp₁ hP
   have hW : (fun v : List Bool => fstBlock (sndBlock (fstBlock v))) ∈ FP :=
@@ -491,21 +491,21 @@ theorem loopStep_mem_FP {A B : List Bool → List Bool} (hA : A ∈ FP) (hB : B 
   have ha : (fun v : List Bool => sndBlock (sndBlock v)) ∈ FP := hcomp₂ hsnd
   have hrev : ∀ {g : List Bool → List Bool}, g ∈ FP →
       (fun v => (g v).reverse) ∈ FP := fun hg => by
-    simpa [Function.comp] using mem_FP_comp hg reverse_mem_FP
+    simpa [Function.comp] using! mem_FP_comp hg reverse_mem_FP
   have hcons : (fun v : List Bool => false :: fstBlock (sndBlock v)) ∈ FP := by
-    simpa [Function.comp] using mem_FP_comp ht (cons_mem_FP false)
+    simpa [Function.comp] using! mem_FP_comp ht (cons_mem_FP false)
   have ht' : (fun v : List Bool =>
       (takeLen (pair (false :: fstBlock (sndBlock v))
         (sndBlock (sndBlock (fstBlock v))).reverse)).reverse) ∈ FP := by
     refine hrev ?_
     have := takeLenFn_mem_FP hcons (hrev hs)
-    simpa [takeLen_pair] using this
+    simpa [takeLen_pair] using! this
   have hX : (fun v : List Bool =>
       pair (pair (fstBlock (sndBlock (fstBlock v))) (sndBlock (sndBlock v)))
         (fstBlock (sndBlock v))) ∈ FP := pairFn_mem_FP (pairFn_mem_FP hW ha) ht
   have hsel := selectHeadFn_mem_FP ht'
-    (by simpa [Function.comp] using mem_FP_comp hX hB)
-    (by simpa [Function.comp] using mem_FP_comp hX hA)
+    (by simpa [Function.comp] using! mem_FP_comp hX hB)
+    (by simpa [Function.comp] using! mem_FP_comp hX hA)
   have hacc : (fun v : List Bool => takeLen (pair (fstBlock (fstBlock v))
       (selectHead ((takeLen (pair (false :: fstBlock (sndBlock v))
           (sndBlock (sndBlock (fstBlock v))).reverse)).reverse)
@@ -514,10 +514,10 @@ theorem loopStep_mem_FP {A B : List Bool → List Bool} (hA : A ∈ FP) (hB : B 
         (A (pair (pair (fstBlock (sndBlock (fstBlock v))) (sndBlock (sndBlock v)))
             (fstBlock (sndBlock v))))))) ∈ FP := by
     have := takeLenFn_mem_FP hR hsel
-    simpa [takeLen_pair, Function.comp] using this
+    simpa [takeLen_pair, Function.comp] using! this
   have hall := pairFn_mem_FP (pairFn_mem_FP hR (pairFn_mem_FP hW hs))
     (pairFn_mem_FP ht' hacc)
-  simpa [loopStep, loopStepOn] using hall
+  simpa [loopStep, loopStepOn] using! hall
 
 /-- **The loop's invariant.** After `m` iterations the state holds the suffix
 `s.drop (|s| - m)` and the clamped fold over it. -/
@@ -650,25 +650,25 @@ theorem iterStep_iterate_length_le (F : List Bool → List Bool) (x : List Bool)
 theorem emptyFlag_mem_FP {f : List Bool → List Bool} (hf : f ∈ FP) :
     (fun z => emptyFlag (f z)) ∈ FP := by
   have hcst : (fun _ : List Bool => [true]) ∈ FP := by
-    simpa [Function.comp] using mem_FP_comp const_nil_mem_FP (cons_mem_FP true)
+    simpa [Function.comp] using! mem_FP_comp const_nil_mem_FP (cons_mem_FP true)
   have h1 : (fun z => headFlag true (f z)) ∈ FP := by
-    simpa [Function.comp] using mem_FP_comp hf (headFlag_mem_FP true)
+    simpa [Function.comp] using! mem_FP_comp hf (headFlag_mem_FP true)
   have h2 : (fun z => headFlag false (f z)) ∈ FP := by
-    simpa [Function.comp] using mem_FP_comp hf (headFlag_mem_FP false)
+    simpa [Function.comp] using! mem_FP_comp hf (headFlag_mem_FP false)
   exact appendFn_mem_FP (appendFn_mem_FP h1 h2) hcst
 
 theorem nextCounter_mem_FP : nextCounter ∈ FP := by
   have hf : fstBlock ∈ FP := fstBlock_mem_FP
   have hs : sndBlock ∈ FP := sndBlock_mem_FP
   have hc : (fun w => false :: fstBlock (fstBlock w)) ∈ FP := by
-    simpa [Function.comp] using
+    simpa [Function.comp] using!
       mem_FP_comp (mem_FP_comp hf hf) (cons_mem_FP false)
   have hk : (fun w => fstBlock (fstBlock (sndBlock w))) ∈ FP := by
-    simpa [Function.comp] using mem_FP_comp hs (mem_FP_comp hf hf)
+    simpa [Function.comp] using! mem_FP_comp hs (mem_FP_comp hf hf)
   have := takeLenFn_mem_FP hc hk
   have hrev : (fun w => ((fstBlock (fstBlock (sndBlock w))).take
       (false :: fstBlock (fstBlock w)).length).reverse) ∈ FP := by
-    simpa [Function.comp] using mem_FP_comp this reverse_mem_FP
+    simpa [Function.comp] using! mem_FP_comp this reverse_mem_FP
   have heq : (fun w => ((fstBlock (fstBlock (sndBlock w))).take
       (false :: fstBlock (fstBlock w)).length).reverse) = nextCounter := by
     funext w
@@ -688,7 +688,7 @@ theorem nextValue_mem_FP {F : List Bool → List Bool} (hF : F ∈ FP) :
   have hclamp : (fun w => takeLen (pair (sndBlock (fstBlock (sndBlock w)))
       (F (sndBlock (fstBlock w))))) ∈ FP := by
     have := takeLenFn_mem_FP hW hFv
-    simpa [takeLen_pair] using this
+    simpa [takeLen_pair] using! this
   exact selectHeadFn_mem_FP (emptyFlag_mem_FP hC) hv0
     (selectHeadFn_mem_FP nextCounter_mem_FP hv hclamp)
 
@@ -700,7 +700,7 @@ theorem iterStep_mem_FP {F : List Bool → List Bool} (hF : F ∈ FP) :
   have hclamp : (fun w => takeLen (pair (sndBlock w)
       (pair (nextCounter w) (nextValue F w)))) ∈ FP := by
     have := takeLenFn_mem_FP hs hpair
-    simpa [takeLen_pair] using this
+    simpa [takeLen_pair] using! this
   exact pairFn_mem_FP hclamp hs
 
 /-- The value the loop carries after `i` iterations, from the second on. -/
@@ -778,7 +778,7 @@ theorem iterStep_iterate (F : List Bool → List Bool) (Krev W v₀ : List Bool)
 
 theorem counter_take_le (a j : ℕ) (h : j ≤ a) :
     (List.replicate a false ++ [true]).take j = List.replicate j false := by
-  rw [List.take_append_of_le_length (by simpa using h), List.take_replicate, min_eq_left h]
+  rw [List.take_append_of_le_length (by simpa using! h), List.take_replicate, min_eq_left h]
 
 theorem counter_head_false (a j : ℕ) (h1 : 1 ≤ j) (h2 : j ≤ a) :
     (((List.replicate a false ++ [true]).take j).reverse).head? = some false := by
@@ -887,18 +887,18 @@ theorem iterate_mem_FP {F init ruler width : List Bool → List Bool}
         ≤ (3 * Polynomial.X + Polynomial.C 2 : Polynomial ℕ).eval x.length := by
     intro x i _
     have := iterStep_iterate_length_le F x i
-    simpa using this
+    simpa using! this
   have hΛ := iterate_input_mem_FP hstep (3 * Polynomial.X + Polynomial.C 2) hr
   -- the wrapper is `FP`, so the composite is
   have hXFP : X ∈ FP := by
     have hone : (fun _ : List Bool => [false]) ∈ FP := by
-      simpa [Function.comp] using mem_FP_comp const_nil_mem_FP (cons_mem_FP false)
+      simpa [Function.comp] using! mem_FP_comp const_nil_mem_FP (cons_mem_FP false)
     have htrue : (fun _ : List Bool => [true]) ∈ FP := by
-      simpa [Function.comp] using mem_FP_comp const_nil_mem_FP (cons_mem_FP true)
+      simpa [Function.comp] using! mem_FP_comp const_nil_mem_FP (cons_mem_FP true)
     have hrl : (fun z => ruler z ++ [false]) ∈ FP := appendFn_mem_FP hruler hone
     have hrep : (fun z => List.replicate ((ruler z).length + 1) false) ∈ FP := by
       have := mulLenFn_mem_FP hrl hone
-      simpa using this
+      simpa using! this
     exact pairFn_mem_FP (pairFn_mem_FP (appendFn_mem_FP hrep htrue) hwidth) hinit
   have hXeq : ∀ z, X z = pair (pair (Krev z) (width z)) (init z) := fun z => by rw [hX]
   have heq : (fun z => F^[(ruler z).length] (init z))

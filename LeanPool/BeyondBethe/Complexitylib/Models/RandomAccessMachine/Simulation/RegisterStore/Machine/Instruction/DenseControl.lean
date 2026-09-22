@@ -80,7 +80,7 @@ private theorem denseControlResult_of_zeroJumpReset
     · subst i
       simp only [finalWork, Function.update_self]
       exact hasBinaryNat_parked (Tape.init_move_right_hasBinaryNat 0)
-    · simpa only [finalWork, Function.update_of_ne hi] using hparked i
+    · simpa only [finalWork, Function.update_of_ne hi] using! hparked i
   have hscanner : EntryScanReady tapes.data.lhsLookup.scan.entry
       (overlay.flatMap Entry.encode) [] finalWork finalWork := by
     refine
@@ -163,7 +163,7 @@ private theorem denseControlResult_of_zeroJumpReset
       rw [hrole 10 (by decide)]
       rw [show lookupWork (tapes.data.lhsLookup.idx 10) =
           initialWork (tapes.data.lhsLookup.idx 10) by
-        simpa using hlookup.countSource]
+        simpa using! hlookup.countSource]
       exact hinitial.lookup.countSource
     · change (finalWork (tapes.data.lhsLookup.idx 11)).HasBinaryNat 0
       rw [hrole 11 (by decide)]
@@ -174,7 +174,7 @@ private theorem denseControlResult_of_zeroJumpReset
     · change (finalWork (tapes.data.lhsLookup.idx 13)).HasBinaryNat 0
       rw [hrole 13 (by decide)]
       exact hlookup.copyScratch
-    · simpa only [finalWork, Function.update_of_ne tapes.pc_ne_lhs] using hpc
+    · simpa only [finalWork, Function.update_of_ne tapes.pc_ne_lhs] using! hpc
   refine
     { ready := hfinalReady
       sourceCells := ?_
@@ -223,7 +223,7 @@ theorem denseZeroJumpInstructionTM_hoareTime_frame
         work ∧ out = out₀
   have hinput : TM.Parked inp₀ := by
     refine ⟨by simp [inp₀, Tape.move], ?_⟩
-    simpa [inp₀] using Tape.init_ofBool_move_right_cells_ne_start input
+    simpa [inp₀] using! Tape.init_ofBool_move_right_cells_ne_start input
   have hlookup := denseOverlayLookupStaticTM_hoareTime_frame
     tapes.data.lhsLookup input overlay source initialWork out₀ hvalid
     hready.lookup houtput
@@ -246,8 +246,8 @@ theorem denseZeroJumpInstructionTM_hoareTime_frame
         exact hready.pc
       have hset := setProgramCounterTM_hoareTime_frame_internal tapes.pc
         pcValue target inp work out hpcWork
-        (by simpa [hinp] using hinput)
-        hlookupResult.parked (by simpa [hout] using houtput)
+        (by simpa [hinp] using! hinput)
+        hlookupResult.parked (by simpa [hout] using! houtput)
       obtain ⟨final, time, htime, hreach, hhalt, hfinalInput,
           hfinalWork, hfinalOutput⟩ := hset inp work out ⟨rfl, rfl, rfl⟩
       refine ⟨final, time, htime, hreach, hhalt,
@@ -258,16 +258,16 @@ theorem denseZeroJumpInstructionTM_hoareTime_frame
       have htarget : targetTape.HasBinaryNat target :=
         Tape.init_move_right_hasBinaryNat target
       refine ⟨work, hlookupResult, ?_, ?_, ?_, ?_⟩
-      · simpa only [Function.update_of_ne tapes.lhs_ne_pc, value] using
+      · simpa only [Function.update_of_ne tapes.lhs_ne_pc, value] using!
           hlookupResult.destination
       · simpa only [targetTape, Function.update_self, newPC, hzero, ite_eq_left]
-          using htarget
+          using! htarget
       · intro i
         by_cases hi : i = tapes.pc
         · subst i
-          simpa only [targetTape, Function.update_self] using
+          simpa only [targetTape, Function.update_self] using!
             hasBinaryNat_parked htarget
-        · simpa only [targetTape, Function.update_of_ne hi] using
+        · simpa only [targetTape, Function.update_of_ne hi] using!
             hlookupResult.parked i
       · intro i hi
         exact Function.update_of_ne hi _ work
@@ -279,9 +279,9 @@ theorem denseZeroJumpInstructionTM_hoareTime_frame
           (fun slot => (tapes.lookup_ne_pc slot).symm)]
         exact hready.pc
       have hsucc := TM.binarySuccTM_hoareTime_frame tapes.pc pcValue inp
-        work out hpcWork (by simpa [hinp] using hinput.read_ne_start)
+        work out hpcWork (by simpa [hinp] using! hinput.read_ne_start)
         (fun i _ => (hlookupResult.parked i).read_ne_start)
-        (by simpa [hout] using houtput.read_ne_start)
+        (by simpa [hout] using! houtput.read_ne_start)
       obtain ⟨final, time, htime, hreach, hhalt, hfinalInput,
           hframe, hfinalPC, hfinalOutput⟩ :=
         hsucc inp work out ⟨rfl, rfl, rfl⟩
@@ -289,8 +289,8 @@ theorem denseZeroJumpInstructionTM_hoareTime_frame
         hfinalInput.trans hinp, ?_, hfinalOutput.trans hout⟩
       refine ⟨work, hlookupResult, ?_, ?_, ?_, hframe⟩
       · rw [hframe tapes.data.lhs tapes.lhs_ne_pc]
-        simpa only [value] using hlookupResult.destination
-      · simpa only [newPC, ite_eq_right hnonzero] using hfinalPC
+        simpa only [value] using! hlookupResult.destination
+      · simpa only [newPC, ite_eq_right hnonzero] using! hfinalPC
       · intro i
         by_cases hi : i = tapes.pc
         · subst i
@@ -303,9 +303,9 @@ theorem denseZeroJumpInstructionTM_hoareTime_frame
       (nonblankPre := nonblankPre) (blankPost := branchPost)
       (nonblankPost := branchPost)
       (fun inp work out hpre =>
-        ⟨(by simpa [hpre.1] using hinput.read_ne_start),
+        ⟨(by simpa [hpre.1] using! hinput.read_ne_start),
           fun i => (hpre.2.1.parked i).read_ne_start,
-          by simpa [hpre.2.2] using houtput.read_ne_start⟩)
+          by simpa [hpre.2.2] using! houtput.read_ne_start⟩)
       (fun _ _ _ hpre hread =>
         ⟨hpre, hpre.2.1.destination.read_eq_blank_iff.mp hread⟩)
       (fun _ _ _ hpre hread =>
@@ -326,8 +326,8 @@ theorem denseZeroJumpInstructionTM_hoareTime_frame
     have hrun := TM.resetBinaryWorkTM_hoareTime_frame tapes.data.lhs
       value.bits 1 inp work out hoperand.2.hasBinaryContent hoperand.1
       ⟨by rw [hoperand.2.1], by rw [hoperand.2.1]⟩
-      (by simpa [hinp] using hinput)
-      (fun i _ => hparked i) (by simpa [hout] using houtput)
+      (by simpa [hinp] using! hinput)
+      (fun i _ => hparked i) (by simpa [hout] using! houtput)
     obtain ⟨final, time, htime, hreach, hhalt, hfinalInput,
         hfinalWork, hfinalOutput⟩ := hrun inp work out ⟨rfl, rfl, rfl⟩
     refine ⟨final, time, htime, hreach, hhalt,
@@ -346,8 +346,8 @@ theorem denseZeroJumpInstructionTM_hoareTime_frame
         hparked, hframe⟩ := hbranchResult
       obtain ⟨hi, hw, ho⟩ := phaseTransition_of_parked
         (inp := inp) (work := work) (out := out)
-        (by simpa [hinp] using hinput) hparked
-        (by simpa [hout] using houtput)
+        (by simpa [hinp] using! hinput) hparked
+        (by simpa [hout] using! houtput)
       rw [hi, hw, ho]
       exact ⟨hinp,
         ⟨lookupWork, hlookupResult, hoperand, hpcResult, hparked, hframe⟩,
@@ -363,13 +363,13 @@ theorem denseZeroJumpInstructionTM_hoareTime_frame
       rintro inp work out ⟨hinp, hlookupResult, hout⟩
       obtain ⟨hi, hw, ho⟩ := phaseTransition_of_parked
         (inp := inp) (work := work) (out := out)
-        (by simpa [inp₀, hinp] using hinput) hlookupResult.parked
-        (by simpa [hout] using houtput)
+        (by simpa [inp₀, hinp] using! hinput) hlookupResult.parked
+        (by simpa [hout] using! houtput)
       rw [hi, hw, ho]
       exact ⟨hinp, hlookupResult, hout⟩)
     hbranchReset
   simpa [denseZeroJumpInstructionTM, denseZeroJumpInstructionTime, inp₀,
-    value, newPC] using hall
+    value, newPC] using! hall
 
 end Machine
 end RegisterStore

@@ -143,48 +143,48 @@ theorem binaryInstructionArithmeticTM_hoareTime_frame_internal
             hlhs' hrhs' hresult' hframe hwork hshift htmp hdbl, hout⟩)
   | mul =>
       exact (TM.binaryShiftMulTM_hoareTime_frame tapes.mul lhs rhs inp₀ work₀
-        out₀ (by simpa using hlhs) (by simpa using hrhs)
-        (by simpa using hresult) (by simpa using hshift)
-        (by simpa using htmp) (by simpa using hdbl) hinput hwork
+        out₀ (by simpa using! hlhs) (by simpa using! hrhs)
+        (by simpa using! hresult) (by simpa using! hshift)
+        (by simpa using! htmp) (by simpa using! hdbl) hinput hwork
         houtput).strengthen_post (by
           rintro inp work out
             ⟨hinp, hlhs', hrhs', hresult', hshift', htmp', hdbl', hframe,
               hout⟩
           refine ⟨hinp, ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩, hout⟩
-          · simpa using hlhs'
-          · simpa using hrhs'
-          · simpa using hresult'
-          · simpa using hshift'
-          · simpa using htmp'
-          · simpa using hdbl'
+          · simpa using! hlhs'
+          · simpa using! hrhs'
+          · simpa using! hresult'
+          · simpa using! hshift'
+          · simpa using! htmp'
+          · simpa using! hdbl'
           · intro i
             by_cases hilhs : i = tapes.lhs
             · subst i
-              exact hasBinaryNat_parked (by simpa using hlhs')
+              exact hasBinaryNat_parked (by simpa using! hlhs')
             · by_cases hirhs : i = tapes.rhs
               · subst i
-                exact hasBinaryNat_parked (by simpa using hrhs')
+                exact hasBinaryNat_parked (by simpa using! hrhs')
               · by_cases hires : i = tapes.update.replacement
                 · subst i
-                  exact hasBinaryNat_parked (by simpa using hresult')
+                  exact hasBinaryNat_parked (by simpa using! hresult')
                 · by_cases hishift : i = tapes.shift
                   · subst i
-                    exact hasBinaryNat_parked (by simpa using hshift')
+                    exact hasBinaryNat_parked (by simpa using! hshift')
                   · by_cases hitmp : i = tapes.tmp
                     · subst i
-                      exact hasBinaryNat_parked (by simpa using htmp')
+                      exact hasBinaryNat_parked (by simpa using! htmp')
                     · by_cases hidbl : i = tapes.dbl
                       · subst i
-                        exact hasBinaryNat_parked (by simpa using hdbl')
-                      · rw [hframe i (by simpa using hilhs)
-                          (by simpa using hirhs) (by simpa using hires)
-                          (by simpa using hishift) (by simpa using hitmp)
-                          (by simpa using hidbl)]
+                        exact hasBinaryNat_parked (by simpa using! hdbl')
+                      · rw [hframe i (by simpa using! hilhs)
+                          (by simpa using! hirhs) (by simpa using! hires)
+                          (by simpa using! hishift) (by simpa using! hitmp)
+                          (by simpa using! hidbl)]
                         exact hwork i
           · intro i hilhs hirhs hires hishift hitmp hidbl
-            exact hframe i (by simpa using hilhs) (by simpa using hirhs)
-              (by simpa using hires) (by simpa using hishift)
-              (by simpa using hitmp) (by simpa using hidbl))
+            exact hframe i (by simpa using! hilhs) (by simpa using! hirhs)
+              (by simpa using! hires) (by simpa using! hishift)
+              (by simpa using! hitmp) (by simpa using! hidbl))
 
 /-- Arithmetic feeds its canonical result directly into sparse update. -/
 theorem binaryInstructionUpdateTM_hoareTime_frame_internal

@@ -69,21 +69,21 @@ private theorem indirectLoaded_ready
       (addressWork tapes.update.resultCount).HasBinaryNat store.length := by
     rw [show addressWork tapes.update.resultCount =
         initialWork tapes.update.resultCount by
-      simpa using haddress.countSource]
-    simpa using hinitial.countSource
+      simpa using! haddress.countSource]
+    simpa using! hinitial.countSource
   refine
     { scanner := scanner_indirect_of_lhs tapes store addressRegister
         initialWork addressWork haddress
       sourceStart := haddress.sourceStart
       sourceHead := haddress.sourceHead
-      count := by simpa using haddress.count
-      countSource := by simpa using hcountSource
-      querySource := by simpa using haddress.destination
+      count := by simpa using! haddress.count
+      countSource := by simpa using! hcountSource
+      querySource := by simpa using! haddress.destination
       destination := by
         change (addressWork tapes.update.replacement).HasBinaryNat 0
         rw [hreplacementEq]
         exact hreplacement
-      copyScratch := by simpa using haddress.copyScratch }
+      copyScratch := by simpa using! haddress.copyScratch }
 
 theorem scanner_updateQuery_of_indirect_internal
     (tapes : BinaryInstructionTapes n) (store : Store) (destination : ℕ)
@@ -121,52 +121,52 @@ theorem scanner_updateQuery_of_indirect_internal
   have hnat := Tape.init_move_right_hasBinaryNat destination
   refine
     { source := by
-        simpa only [finalWork, Function.update_of_ne hsource] using
+        simpa only [finalWork, Function.update_of_ne hsource] using!
           hscanner.source
       address := by
-        simpa only [finalWork, Function.update_of_ne haddress] using
+        simpa only [finalWork, Function.update_of_ne haddress] using!
           hscanner.address
       addressStart := by
-        simpa only [finalWork, Function.update_of_ne haddress] using
+        simpa only [finalWork, Function.update_of_ne haddress] using!
           hscanner.addressStart
       value := by
-        simpa only [finalWork, Function.update_of_ne hvalue] using
+        simpa only [finalWork, Function.update_of_ne hvalue] using!
           hscanner.value
       valueStart := by
-        simpa only [finalWork, Function.update_of_ne hvalue] using
+        simpa only [finalWork, Function.update_of_ne hvalue] using!
           hscanner.valueStart
       addressCounter := by
-        simpa only [finalWork, Function.update_of_ne haddressCounter] using
+        simpa only [finalWork, Function.update_of_ne haddressCounter] using!
           hscanner.addressCounter
       addressWidth := by
-        simpa only [finalWork, Function.update_of_ne haddressWidth] using
+        simpa only [finalWork, Function.update_of_ne haddressWidth] using!
           hscanner.addressWidth
       valueCounter := by
-        simpa only [finalWork, Function.update_of_ne hvalueCounter] using
+        simpa only [finalWork, Function.update_of_ne hvalueCounter] using!
           hscanner.valueCounter
       valueWidth := by
-        simpa only [finalWork, Function.update_of_ne hvalueWidth] using
+        simpa only [finalWork, Function.update_of_ne hvalueWidth] using!
           hscanner.valueWidth
       query := by
-        simpa only [finalWork, Function.update_self] using hnat.2
+        simpa only [finalWork, Function.update_self] using! hnat.2
       queryStart := by
-        simpa only [finalWork, Function.update_self] using hnat.1
+        simpa only [finalWork, Function.update_self] using! hnat.1
       result := by
-        simpa only [finalWork, Function.update_of_ne hresult] using
+        simpa only [finalWork, Function.update_of_ne hresult] using!
           hscanner.result
       resultStart := by
-        simpa only [finalWork, Function.update_of_ne hresult] using
+        simpa only [finalWork, Function.update_of_ne hresult] using!
           hscanner.resultStart
       parked := ?_
       frame := by intro i _ _ _ _ _ _ _ _ _; rfl }
   intro i
   by_cases hi : i = tapes.update.entry.query
   · subst i
-    simpa only [finalWork, Function.update_self] using
+    simpa only [finalWork, Function.update_self] using!
       (show TM.Parked
           ((Tape.init (destination.bits.map Γ.ofBool)).move Dir3.right) from
         ⟨by rw [hnat.2.1], hnat.2.hasBinaryContent.cells_ne_start⟩)
-  · simpa only [finalWork, Function.update_of_ne hi] using hscanner.parked i
+  · simpa only [finalWork, Function.update_of_ne hi] using! hscanner.parked i
 
 private theorem hasBinaryPrefix_parked {t : Tape} {bits : List Bool}
     (h : t.HasBinaryPrefix bits) : TM.Parked t := by
@@ -267,18 +267,18 @@ theorem indirectLoadInstructionTM_hoareTime_frame_internal
       hloadedResult⟩, hout⟩
     have hqueryZero : (work tapes.update.entry.query).HasBinaryNat 0 :=
       ⟨hloadedResult.scanner.queryStart, by
-        simpa using hloadedResult.scanner.query⟩
+        simpa using! hloadedResult.scanner.query⟩
     have hrun := TM.binaryAddConstTM_hoareTime_frame
       tapes.update.entry.query destination 0 inp work out hqueryZero
-      (by simpa [hinp] using hinput)
+      (by simpa [hinp] using! hinput)
       (fun i _ => hloadedResult.parked i)
-      (by simpa [hout] using houtputParked)
+      (by simpa [hout] using! houtputParked)
     obtain ⟨final, time, htime, hreach, hhalt, hfinalInput,
         hfinalWork, hfinalOutput⟩ :=
       hrun inp work out ⟨rfl, rfl, rfl⟩
     exact ⟨final, time, htime, hreach, hhalt, hfinalInput.trans hinp,
       ⟨addressWork, work, haddressResult, hloadedResult,
-        by simpa only [zero_add] using hfinalWork⟩,
+        by simpa only [zero_add] using! hfinalWork⟩,
       hfinalOutput.trans hout⟩
   have hupdate : (entryUpdateTM tapes.update).HoareTime
       (fun inp work out =>
@@ -326,21 +326,21 @@ theorem indirectLoadInstructionTM_hoareTime_frame_internal
         (loadedWork tapes.update.resultCount).HasBinaryNat store.length := by
       rw [show loadedWork tapes.update.resultCount =
           addressWork tapes.update.resultCount by
-        simpa using hloadedResult.countSource]
+        simpa using! hloadedResult.countSource]
       rw [show addressWork tapes.update.resultCount =
           initialWork tapes.update.resultCount by
-        simpa using haddressResult.countSource]
-      simpa using hinitial.countSource
+        simpa using! haddressResult.countSource]
+      simpa using! hinitial.countSource
     have hrun := entryUpdateTM_hoareTime_frame tapes.update store destination
       (RegisterStore.read store (RegisterStore.read store addressRegister))
       emittedBits updateWork inp₀ out₀ hcanonical hscanner
-      (by simpa only [updateWork, Function.update_of_ne hreplacementNe] using
+      (by simpa only [updateWork, Function.update_of_ne hreplacementNe] using!
         hloadedResult.value)
-      (by simpa only [updateWork, Function.update_of_ne hremainingNe] using
+      (by simpa only [updateWork, Function.update_of_ne hremainingNe] using!
         hloadedResult.count)
-      (by simpa only [updateWork, Function.update_of_ne hfoundNe] using
+      (by simpa only [updateWork, Function.update_of_ne hfoundNe] using!
         hloadedResult.copyScratch)
-      (by simpa only [updateWork, Function.update_of_ne hresultCountNe] using
+      (by simpa only [updateWork, Function.update_of_ne hresultCountNe] using!
         hresultCount)
       hinput houtput
     obtain ⟨final, time, htime, hreach, hhalt, hfinalInput,
@@ -374,8 +374,8 @@ theorem indirectLoadInstructionTM_hoareTime_frame_internal
         (inp := inp) (work := Function.update loadedWork
           tapes.update.entry.query
           ((Tape.init (destination.bits.map Γ.ofBool)).move Dir3.right))
-        (out := out) (by simpa [hinp] using hinput) hparked
-        (by simpa [hout] using houtputParked)
+        (out := out) (by simpa [hinp] using! hinput) hparked
+        (by simpa [hout] using! houtputParked)
       rw [hi, hw, ho]
       exact ⟨hinp, ⟨addressWork, loadedWork, haddressResult,
         hloadedResult, rfl⟩, hout⟩)
@@ -389,8 +389,8 @@ theorem indirectLoadInstructionTM_hoareTime_frame_internal
         hloadedResult⟩, hout⟩
       obtain ⟨hi, hw, ho⟩ := phaseTransition_of_parked
         (inp := inp) (work := work) (out := out)
-        (by simpa [hinp] using hinput) hloadedResult.parked
-        (by simpa [hout] using houtputParked)
+        (by simpa [hinp] using! hinput) hloadedResult.parked
+        (by simpa [hout] using! houtputParked)
       rw [hi, hw, ho]
       exact ⟨hinp, ⟨addressWork, haddressResult, hloadedResult⟩, hout⟩)
     hqueryUpdate
@@ -403,12 +403,12 @@ theorem indirectLoadInstructionTM_hoareTime_frame_internal
       rintro inp work out ⟨hinp, haddressResult, hout⟩
       obtain ⟨hi, hw, ho⟩ := phaseTransition_of_parked
         (inp := inp) (work := work) (out := out)
-        (by simpa [hinp] using hinput) haddressResult.parked
-        (by simpa [hout] using houtputParked)
+        (by simpa [hinp] using! hinput) haddressResult.parked
+        (by simpa [hout] using! houtputParked)
       rw [hi, hw, ho]
       exact ⟨hinp, haddressResult, hout⟩)
     hloadedRest
-  simpa [indirectLoadInstructionTM, indirectLoadInstructionTime] using hall
+  simpa [indirectLoadInstructionTM, indirectLoadInstructionTime] using! hall
 
 end Machine
 

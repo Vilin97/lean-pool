@@ -162,46 +162,46 @@ theorem immediateUpdate_ready_internal
         parked := ?_
         frame := by intro i _ _ _ _ _ _ _ _ _; rfl }
     · simpa only [updateWork, valueWork, Function.update_of_ne hsourceQuery,
-        Function.update_of_ne hsourceReplacement] using hinitial.scanner.source
+        Function.update_of_ne hsourceReplacement] using! hinitial.scanner.source
     · simpa only [updateWork, valueWork, Function.update_of_ne haddressQuery,
-        Function.update_of_ne haddressReplacement] using hinitial.scanner.address
+        Function.update_of_ne haddressReplacement] using! hinitial.scanner.address
     · simpa only [updateWork, valueWork, Function.update_of_ne haddressQuery,
-        Function.update_of_ne haddressReplacement] using
+        Function.update_of_ne haddressReplacement] using!
         hinitial.scanner.addressStart
     · simpa only [updateWork, valueWork, Function.update_of_ne hvalueQuery,
-        Function.update_of_ne hvalueReplacement] using hinitial.scanner.value
+        Function.update_of_ne hvalueReplacement] using! hinitial.scanner.value
     · simpa only [updateWork, valueWork, Function.update_of_ne hvalueQuery,
-        Function.update_of_ne hvalueReplacement] using
+        Function.update_of_ne hvalueReplacement] using!
         hinitial.scanner.valueStart
     · simpa only [updateWork, valueWork,
         Function.update_of_ne haddressCounterQuery,
-        Function.update_of_ne haddressCounterReplacement] using
+        Function.update_of_ne haddressCounterReplacement] using!
         hinitial.scanner.addressCounter
     · simpa only [updateWork, valueWork,
         Function.update_of_ne haddressWidthQuery,
-        Function.update_of_ne haddressWidthReplacement] using
+        Function.update_of_ne haddressWidthReplacement] using!
         hinitial.scanner.addressWidth
     · simpa only [updateWork, valueWork,
         Function.update_of_ne hvalueCounterQuery,
-        Function.update_of_ne hvalueCounterReplacement] using
+        Function.update_of_ne hvalueCounterReplacement] using!
         hinitial.scanner.valueCounter
     · simpa only [updateWork, valueWork,
         Function.update_of_ne hvalueWidthQuery,
-        Function.update_of_ne hvalueWidthReplacement] using
+        Function.update_of_ne hvalueWidthReplacement] using!
         hinitial.scanner.valueWidth
-    · simpa only [updateWork, Function.update_self, queryTape] using
+    · simpa only [updateWork, Function.update_self, queryTape] using!
         hqueryNat.2
-    · simpa only [updateWork, Function.update_self, queryTape] using
+    · simpa only [updateWork, Function.update_self, queryTape] using!
         hqueryNat.1
     · simpa only [updateWork, valueWork, Function.update_of_ne hresultQuery,
-        Function.update_of_ne hresultReplacement] using hinitial.scanner.result
+        Function.update_of_ne hresultReplacement] using! hinitial.scanner.result
     · simpa only [updateWork, valueWork, Function.update_of_ne hresultQuery,
-        Function.update_of_ne hresultReplacement] using
+        Function.update_of_ne hresultReplacement] using!
         hinitial.scanner.resultStart
     · intro i
       by_cases hiQuery : i = tapes.update.entry.query
       · subst i
-        simpa only [updateWork, Function.update_self, queryTape] using
+        simpa only [updateWork, Function.update_self, queryTape] using!
           (show TM.Parked queryTape from
             ⟨by rw [hqueryNat.2.1],
               hqueryNat.2.hasBinaryContent.cells_ne_start⟩)
@@ -210,22 +210,22 @@ theorem immediateUpdate_ready_internal
         rw [hiEq]
         by_cases hiReplacement : i = tapes.update.replacement
         · subst i
-          simpa only [valueWork, Function.update_self, valueTape] using
+          simpa only [valueWork, Function.update_self, valueTape] using!
             (show TM.Parked valueTape from
               ⟨by rw [hvalueNat.2.1],
                 hvalueNat.2.hasBinaryContent.cells_ne_start⟩)
-        · simpa only [valueWork, Function.update_of_ne hiReplacement] using
+        · simpa only [valueWork, Function.update_of_ne hiReplacement] using!
             hinitial.scanner.parked i
   refine ⟨hscanner, ?_, ?_, ?_, ?_, hscanner.parked⟩
   · simpa only [updateWork, Function.update_of_ne hreplacementQuery,
-      valueWork, Function.update_self, valueTape] using hvalueNat
+      valueWork, Function.update_self, valueTape] using! hvalueNat
   · simpa only [updateWork, Function.update_of_ne hremainingQuery,
-      valueWork, Function.update_of_ne hremainingReplacement] using
+      valueWork, Function.update_of_ne hremainingReplacement] using!
       hinitial.count
   · simpa only [updateWork, Function.update_of_ne hfoundQuery, valueWork,
-      Function.update_of_ne hfoundReplacement] using hinitial.copyScratch
+      Function.update_of_ne hfoundReplacement] using! hinitial.copyScratch
   · simpa only [updateWork, Function.update_of_ne hresultCountQuery,
-      valueWork, Function.update_of_ne hresultCountReplacement] using
+      valueWork, Function.update_of_ne hresultCountReplacement] using!
       hinitial.countSource
 
 /-- Exact semantic and time contract for one immediate sparse assignment. -/
@@ -260,7 +260,7 @@ theorem immediateInstructionTM_hoareTime_frame_internal
       (fun inp work out => inp = inp₀ ∧ work = initialWork ∧ out = out₀)
       (fun inp work out => inp = inp₀ ∧ work = valueWork ∧ out = out₀)
       (TM.binaryAddConstTime value 0) := by
-    simpa only [valueWork, zero_add] using hvalue
+    simpa only [valueWork, zero_add] using! hvalue
   have hquery : (TM.binaryAddConstTM tapes.update.entry.query
       destination).HoareTime
       (fun inp work out => inp = inp₀ ∧ work = valueWork ∧ out = out₀)
@@ -274,7 +274,7 @@ theorem immediateInstructionTM_hoareTime_frame_internal
           initialWork tapes.update.entry.query :=
         Function.update_of_ne hqueryReplacement _ initialWork
       rw [heq]
-      exact ⟨hinitial.scanner.queryStart, by simpa using hinitial.scanner.query⟩
+      exact ⟨hinitial.scanner.queryStart, by simpa using! hinitial.scanner.query⟩
     have hrun := TM.binaryAddConstTM_hoareTime_frame
       tapes.update.entry.query destination 0 inp₀ valueWork out₀ hqueryZero
       hinput
@@ -282,12 +282,12 @@ theorem immediateInstructionTM_hoareTime_frame_internal
         by_cases hi : i = tapes.update.replacement
         · subst i
           exact ⟨by simp [valueWork, Tape.init, Tape.move], by
-            simpa [valueWork] using
+            simpa [valueWork] using!
               (Tape.init_move_right_hasBinaryNat value).2.hasBinaryContent.cells_ne_start⟩
-        · simpa only [valueWork, Function.update_of_ne hi] using
+        · simpa only [valueWork, Function.update_of_ne hi] using!
             hinitial.scanner.parked i)
       houtputParked
-    simpa only [updateWork, zero_add] using hrun
+    simpa only [updateWork, zero_add] using! hrun
   have hready := immediateUpdate_ready_internal tapes store destination value initialWork
     hinitial
   have hupdate := entryUpdateTM_hoareTime_frame tapes.update store destination
@@ -325,8 +325,8 @@ theorem immediateInstructionTM_hoareTime_frame_internal
       subst work
       obtain ⟨hi, hw, ho⟩ := phaseTransition_of_parked
         (inp := inp) (work := updateWork) (out := out)
-        (by simpa [hinp] using hinput) hready.2.2.2.2.2
-        (by simpa [hout] using houtputParked)
+        (by simpa [hinp] using! hinput) hready.2.2.2.2.2
+        (by simpa [hout] using! houtputParked)
       rw [hi, hw, ho]
       exact ⟨hinp, rfl, hout⟩)
     hupdate'
@@ -342,20 +342,20 @@ theorem immediateInstructionTM_hoareTime_frame_internal
         by_cases hi : i = tapes.update.replacement
         · subst i
           have hnat := Tape.init_move_right_hasBinaryNat value
-          simpa only [valueWork, Function.update_self] using
+          simpa only [valueWork, Function.update_self] using!
             (show TM.Parked
                 ((Tape.init (value.bits.map Γ.ofBool)).move Dir3.right) from
               ⟨by rw [hnat.2.1], hnat.2.hasBinaryContent.cells_ne_start⟩)
-        · simpa only [valueWork, Function.update_of_ne hi] using
+        · simpa only [valueWork, Function.update_of_ne hi] using!
             hinitial.scanner.parked i
       obtain ⟨hi, hw, ho⟩ := phaseTransition_of_parked
         (inp := inp) (work := valueWork) (out := out)
-        (by simpa [hinp] using hinput) hparked
-        (by simpa [hout] using houtputParked)
+        (by simpa [hinp] using! hinput) hparked
+        (by simpa [hout] using! houtputParked)
       rw [hi, hw, ho]
       exact ⟨hinp, rfl, hout⟩)
     hqueryUpdate
-  simpa [immediateInstructionTM, immediateInstructionTime] using hall
+  simpa [immediateInstructionTM, immediateInstructionTime] using! hall
 
 end Machine
 
