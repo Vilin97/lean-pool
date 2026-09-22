@@ -608,44 +608,10 @@ private theorem principalIdeleHerbrandH0Map_mk
         (Rep.ofMulDistribMulAction (L ≃ₐ[K] L)
           (RelativeIdeleGroup K L))).homologyπ 0
       (tateH0FixedCycle aI)
-  have hP :
-      (tateH0IsoHerbrandH0
-          (G := L ≃ₐ[K] L)
-          (A := RelativeIdeleGroup.principalSubgroup K L)).hom cP =
-        (Additive.ofMul (HerbrandH0.mk a) :
-          Additive
-            (HerbrandH0 (L ≃ₐ[K] L)
-              (RelativeIdeleGroup.principalSubgroup K L))) := by
-    dsimp only [cP]
-    exact tateH0IsoHerbrandH0_fixedCycle a
-  have hI :
-      (tateH0IsoHerbrandH0
-          (G := L ≃ₐ[K] L)
-          (A := RelativeIdeleGroup K L)).hom cI =
-        (Additive.ofMul (HerbrandH0.mk aI) :
-          Additive (HerbrandH0 (L ≃ₐ[K] L) (RelativeIdeleGroup K L))) := by
-    dsimp only [cI]
-    exact tateH0IsoHerbrandH0_fixedCycle aI
-  have hPe :
-      eP cP =
-        (Additive.ofMul (HerbrandH0.mk a) :
-          Additive
-            (HerbrandH0 (L ≃ₐ[K] L)
-              (RelativeIdeleGroup.principalSubgroup K L))) := by
-    change
-      (tateH0IsoHerbrandH0
-          (G := L ≃ₐ[K] L)
-          (A := RelativeIdeleGroup.principalSubgroup K L)).hom cP = _
-    exact hP
-  have hIe :
-      eI cI =
-        (Additive.ofMul (HerbrandH0.mk aI) :
-          Additive (HerbrandH0 (L ≃ₐ[K] L) (RelativeIdeleGroup K L))) := by
-    change
-      (tateH0IsoHerbrandH0
-          (G := L ≃ₐ[K] L)
-          (A := RelativeIdeleGroup K L)).hom cI = _
-    exact hI
+  have hPe : eP cP = Additive.ofMul (HerbrandH0.mk a) :=
+    tateH0IsoHerbrandH0_fixedCycle a
+  have hIe : eI cI = Additive.ofMul (HerbrandH0.mk aI) :=
+    tateH0IsoHerbrandH0_fixedCycle aI
   have hc :
       ((tateCohomologyFunctor 0).map f).hom cP = cI := by
     dsimp only [cP, cI]

@@ -1019,9 +1019,9 @@ theorem dvrUnitsEquivHigherUnitQuotientInverseLimit_apply
       ((higherUnitQuotientInverseLimitEquivPowerIdealUnitInverseLimit hπ)
         (dvrUnitsEquivHigherUnitQuotientInverseLimit hπ u)) =
     unitReduction (uniformizerPowerIdeal π (n + 1)) u
-  simp? [dvrUnitsEquivHigherUnitQuotientInverseLimit,
-    adicPositiveUnitInverseLimitEquivDVRPowerIdealUnitInverseLimit,
-    unitReduction]
+  simp only [dvrUnitsEquivHigherUnitQuotientInverseLimit,
+    adicPositiveUnitInverseLimitEquivDVRPowerIdealUnitInverseLimit, Nat.succ_eq_add_one,
+    RingHom.toMonoidHom_eq_coe, MulEquiv.trans_apply, MulEquiv.apply_symm_apply, unitReduction]
   ext
   change (Ideal.quotientEquivAlgOfEq O
       (dvrPowerIdeal_one_pow π (n + 1)))

@@ -66,6 +66,16 @@ theorem card_sUnitPrincipalQuotient_mul_card_ideleClassQuotient_eq_power_two_tot
     card_supportedIdeleQuotient_eq_power_two_totalPlaceCard
       (K := K) n hmu S T hS]
 
+/-- Every place with nonunit valuation lies in the chosen finite support of a unit. -/
+private theorem mem_chosenUnitFiniteSupport_of_valuation_ne_one
+    (b : Kˣ) (w : HeightOneSpectrum (𝓞 K)) (hw : w.valuation K (b : K) ≠ 1) :
+    w ∈ chosenUnitFiniteSupport (K := K) b := by
+  classical
+  by_contra hnot
+  exact hw ((mem_SUnitGroup_iff
+    (K := K) (chosenUnitFiniteSupport (K := K) b) b).mp
+      (mem_sUnitGroup_chosenUnitFiniteSupport (K := K) b) w hnot)
+
 open scoped Classical in
 /-- The class-quotient calculation for the Kummer-selected prime set.
 The localization equality identifies the left term of the exact sequence
@@ -133,12 +143,7 @@ theorem
       Module.finrank K E
   have hnOne : 1 < (n : ℕ) := by
     rw [hn]
-    calc
-      1 < p := hp.one_lt
-      _ = p ^ 1 := (pow_one p).symm
-      _ ≤ p ^ v :=
-        Nat.pow_le_pow_right hp.pos
-          (Nat.succ_le_iff.mpr hv)
+    exact one_lt_pow₀ hp.one_lt hv.ne'
   have hr :
       r ≤ totalPlaceCard (K := K) S' := by
     simpa only [S'] using
@@ -211,22 +216,8 @@ theorem
       simpa using
         (IsDedekindDomain.HeightOneSpectrum.valuation_lt_one_iff_dvd
           (K := K) w ((n : ℕ) : 𝓞 K)).2 hwDvd
-    have hwSupport :
-        w ∈ chosenUnitFiniteSupport (K := K) nUnit := by
-      by_contra hwNotSupport
-      have hnUnitVal :
-          w.valuation K (nUnit : K) = 1 :=
-        (mem_SUnitGroup_iff
-          (K := K)
-          (chosenUnitFiniteSupport (K := K) nUnit) nUnit).mp
-            (mem_sUnitGroup_chosenUnitFiniteSupport
-              (K := K) nUnit)
-            w hwNotSupport
-      have hnValEq :
-          w.valuation K ((n : ℕ) : K) = 1 := by
-        change w.valuation K ((n : ℕ) : K) = 1 at hnUnitVal
-        exact hnUnitVal
-      exact (ne_of_lt hnValLt) hnValEq
+    have hwSupport := mem_chosenUnitFiniteSupport_of_valuation_ne_one
+      nUnit w (ne_of_lt hnValLt)
     exact
       subset_enlargeByFiniteKummerRadicalSupport
         (K := K) (L := E) n hmu S₀
@@ -290,16 +281,8 @@ theorem
             (2 * totalPlaceCard (K := K) S' - r) *
           (n : ℕ) ^ r := by
     rw [← pow_add, Nat.sub_add_cancel hr2]
-  have hClassCard :
-      Nat.card
-          (IdeleClassPowerLocalUnitQuotient
-            (K := K) n S' T) =
-        (n : ℕ) ^ r := by
-    exact
-      Nat.eq_of_mul_eq_mul_left
-        (pow_pos n.pos
-          (2 * totalPlaceCard (K := K) S' - r))
-        (hProduct.trans hPow)
+  have hClassCard := Nat.eq_of_mul_eq_mul_left
+    (pow_pos n.pos (2 * totalPlaceCard (K := K) S' - r)) (hProduct.trans hPow)
   calc
     Nat.card
           (IdeleClassPowerLocalUnitQuotient

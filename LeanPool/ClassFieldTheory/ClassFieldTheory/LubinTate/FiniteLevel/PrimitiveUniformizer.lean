@@ -519,6 +519,21 @@ theorem standardLubinTatePrimitivePointInteger_aeval
   simpa [i] using
     standardLubinTateLevelGenerator_aeval_primitivePolynomial hπ n
 
+private theorem enat_eq_one_of_mul_eq_nat
+    {d e : ℕ} {a : ℕ∞} (hd : d ≠ 0) (he : e ≤ d)
+    (ha : 1 ≤ a) (hmul : (d : ℕ∞) * a = (e : ℕ∞)) :
+    a = 1 ∧ e = d := by
+  have hdcoe : (d : ℕ∞) ≠ 0 := by exact_mod_cast hd
+  have hmul_le : (d : ℕ∞) * a ≤ (d : ℕ∞) * 1 := by
+    rw [hmul]
+    have hcast : (e : ℕ∞) ≤ (d : ℕ∞) := by exact_mod_cast he
+    simpa using hcast
+  have hav : a = 1 := le_antisymm
+    ((ENat.mul_le_mul_left_iff hdcoe (ENat.natCast_ne_top d)).1 hmul_le) ha
+  refine ⟨hav, ?_⟩
+  rw [hav, mul_one] at hmul
+  exact_mod_cast hmul.symm
+
 private theorem
     standardLubinTatePrimitivePointInteger_addVal_and_ramificationIndex
     {F : LocalField.{u, v} K} {π : F.valuationSubring}
@@ -643,10 +658,9 @@ private theorem
     rw [Polynomial.coeff_sub,
       standardLubinTatePrimitivePolynomial_coeff_zero]
     simp only [Polynomial.coeff_X_pow, ite_eq_right hdne.symm, sub_zero]
-  have hpiIrreducible : Irreducible π := by
-    exact
-      (IsDiscreteValuationRing.irreducible_iff_uniformizer π).2
-        (base.maximalIdeal_eq_span_uniformizer hπ)
+  have hpiIrreducible : Irreducible π :=
+    (IsDiscreteValuationRing.irreducible_iff_uniformizer π).2
+      (base.maximalIdeal_eq_span_uniformizer hπ)
   have hconst :
       IsDiscreteValuationRing.addVal target.valuationSubring
           (j (R.coeff 0)) = (e : ℕ∞) := by
@@ -722,25 +736,7 @@ private theorem
       (IsDiscreteValuationRing.mem_maximalIdeal_pow_iff_addVal_ge
         lambda 1).1
         (by simpa only [pow_one] using hlambdaMem)
-  have hdcoe : (d : ℕ∞) ≠ 0 := by
-    exact_mod_cast hdne
-  have hmul_le :
-      (d : ℕ∞) *
-          IsDiscreteValuationRing.addVal target.valuationSubring lambda ≤
-        (d : ℕ∞) * 1 := by
-    rw [hmul]
-    have hcast : (e : ℕ∞) ≤ (d : ℕ∞) := by
-      exact_mod_cast hele
-    simpa using hcast
-  have hvle :
-      IsDiscreteValuationRing.addVal target.valuationSubring lambda ≤ 1 :=
-    (ENat.mul_le_mul_left_iff hdcoe (ENat.natCast_ne_top d)).1 hmul_le
-  have hlambdaVal :
-      IsDiscreteValuationRing.addVal target.valuationSubring lambda = 1 :=
-    le_antisymm hvle honele
-  have hed : e = d := by
-    rw [hlambdaVal, mul_one] at hmul
-    exact_mod_cast hmul.symm
+  obtain ⟨hlambdaVal, hed⟩ := enat_eq_one_of_mul_eq_nat hdne hele honele hmul
   have heramDegree :
       ramificationIndex F.toCompleteDVF.toDVF
           (standardLubinTateLevelCompleteDVF hπ n).toDVF =

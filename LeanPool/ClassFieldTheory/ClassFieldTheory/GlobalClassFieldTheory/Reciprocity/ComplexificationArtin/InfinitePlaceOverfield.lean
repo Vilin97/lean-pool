@@ -255,6 +255,16 @@ noncomputable def
     (rationalComplexificationComplexEquiv.toAlgHom)
 
 open scoped Classical in
+omit [NumberField K] [FiniteDimensional K L] in
+/-- The fourth-root-field embedding preserves the chosen complex value. -/
+theorem rationalComplexificationEmbeddingInInfinitePlaceOverfield_coe
+    (v : InfinitePlace K) (x : rationalComplexificationCyclotomicField) :
+    ((rationalComplexificationEmbeddingInInfinitePlaceOverfield
+      (K := K) (L := L) v x :
+        infinitePlaceComplexificationOverfield (K := K) (L := L) v) : ℂ) =
+      (rationalComplexificationComplexEquiv x : ℂ) := rfl
+
+open scoped Classical in
 noncomputable instance
     rationalComplexificationInfinitePlaceOverfieldAlgebra
     (v : InfinitePlace K) :

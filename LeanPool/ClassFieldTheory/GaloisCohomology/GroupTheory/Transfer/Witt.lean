@@ -653,6 +653,7 @@ noncomputable def foxCoefficient (i j : X) :
   ((exists_rightFoxExpansion φ
     (relationWord φ hφ j)).choose i)
 
+omit [DecidableEq X] in
 theorem foxExpansion_relation (j : X) :
     ∑ i : X,
         groupRingDelta (φ (FreeGroup.of i)) *
@@ -668,6 +669,7 @@ theorem foxExpansion_relation (j : X) :
   exact h.symm.trans (by
     rw [relationWord_map, groupRingDelta_one])
 
+omit [DecidableEq X] in
 theorem augmentation_foxCoefficient (i j : X) :
     augmentation G (foxCoefficient φ hφ i j) =
       wordExponent (relationWord φ hφ j) i :=

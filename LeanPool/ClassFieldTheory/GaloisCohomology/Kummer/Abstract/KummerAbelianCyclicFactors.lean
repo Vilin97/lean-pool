@@ -223,7 +223,7 @@ theorem extensionSubgroup_closedCyclicFactorSubgroup_eq
         (closedCyclicFactorSubgroup_le_base K L hLK f) =
       cyclicFactorSubgroup (extensionSubgroup (G := G) K L hLK) f := by
   ext x
-  simp? [extensionSubgroup, closedCyclicFactorSubgroup]
+  simp only [extensionSubgroup, closedCyclicFactorSubgroup]
   rw [Subgroup.mem_subgroupOf]
   constructor
   · rintro ⟨y, hy, hxy⟩

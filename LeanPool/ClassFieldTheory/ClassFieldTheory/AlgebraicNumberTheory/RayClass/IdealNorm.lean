@@ -422,6 +422,7 @@ private theorem fractionalIdealNormPrimeBelow_eq_finitePlaceBelow
   ext
   rfl
 
+omit [FiniteDimensional K L] in
 open scoped Classical in
 private theorem idealNormExponentMap_eq_public :
     idealNormExponentMap (K := K) (L := L) =

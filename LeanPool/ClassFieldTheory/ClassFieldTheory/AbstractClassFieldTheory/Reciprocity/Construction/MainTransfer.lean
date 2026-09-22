@@ -965,12 +965,15 @@ private theorem abelianizedReciprocity_frobenius_eq_primeNormClass
         (Additive.ofMul (D.frobeniusRestriction
           (K.toFiniteResidueAbstractField D) L hLK σ)) σ rfl π hπ)
 
-/-- An identity between the underlying values gives the corresponding subgroup sum identity. -/
-private theorem addSubgroup_eq_sum_of_coe_eq
-    {B : Type*} [AddCommGroup B] {H : AddSubgroup B} {ι : Type*} [Fintype ι]
-    (x : H) (f : ι → H) (h : (x : B) = ∑ i, (f i : B)) : x = ∑ i, f i := by
-  apply Subtype.ext
-  exact h.trans (map_sum H.subtype f Finset.univ).symm
+/-- An equality of underlying subgroup values yields the corresponding mapped sum. -/
+private theorem map_eq_sum_of_coe_eq
+    {B C : Type*} [AddCommGroup B] [AddCommMonoid C]
+    {H : AddSubgroup B} {ι : Type*} [Fintype ι]
+    (g : H →+ C) (x : H) (f : ι → H) (h : (x : B) = ∑ i, (f i : B)) :
+    g x = ∑ i, g (f i) := by
+  have hsub : x = ∑ i, f i :=
+    Subtype.ext (h.trans (map_sum H.subtype f Finset.univ).symm)
+  rw [hsub, map_sum]
 
 /-- transfer--norm naturality on one Frobenius generator.  The proof follows: transfer is
 expanded over double cosets, the finite reciprocity equivalence
@@ -1179,16 +1182,9 @@ theorem transferNormNaturality_generator_square
     (transferNormNaturality_normQuotientInclusion_finiteNormClass
       A F.base.field F.field.field L hL F.below
       (relativeNorm A F.base.field S hSKF π))
-  have hNormSub :
-      fixedFieldInclusion A E.base.field E.field.field E.below
-          (relativeNorm A E.base.field S hSK π) =
-        ∑ q : Ω,
-          relativeNorm A E.field.field (Sβ q) (hSβK' q) (πβ q) :=
-    addSubgroup_eq_sum_of_coe_eq _ _ hNorm
-
-  have hNormClasses := congrArg
-    (finiteNormClassHom A F.field.field L hL) hNormSub
-  rw [map_sum] at hNormClasses
+  have hNormClasses := map_eq_sum_of_coe_eq
+    (finiteNormClassHom A F.field.field L hL) _
+    (fun q : Ω => relativeNorm A F.field.field (Sβ q) (hSβK'F q) (πβ q)) hNorm
   exact hNormClasses.symm.trans hRight.symm
 
 /-- Transfer--norm naturality.  For a finite Galois extension

@@ -419,7 +419,8 @@ theorem dvfValuationSubringUnitAut_div_mem_succ
               (base := base) (target := target) huniq sigma
               (a : target.valuationSubring) -
             (a : target.valuationSubring)) := by
-    simp? [div_eq_mul_inv]
+    simp only [div_eq_mul_inv, Units.val_mul, Units.coe_map, RingHom.toMonoidHom_eq_coe,
+      RingEquiv.toRingHom_eq_coe, MonoidHom.coe_coe, RingHom.coe_coe]
     have hinv :
         ((a⁻¹ : target.valuationSubringˣ) : target.valuationSubring) *
           (a : target.valuationSubring) = 1 := by

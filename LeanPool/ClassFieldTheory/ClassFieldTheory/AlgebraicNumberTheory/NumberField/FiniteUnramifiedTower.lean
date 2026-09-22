@@ -104,6 +104,7 @@ theorem trans
     (Ideal.ramificationIdx_eq_one_iff
       (R := 𝓞 k) (S := 𝓞 F) (q := P.asIdeal)).1 hTop
 
+omit [NumberField k] [NumberField K] [NumberField F] in
 /-- If the top of a number-field tower is unramified over the bottom,
 then it is unramified over the intermediate field. -/
 theorem top

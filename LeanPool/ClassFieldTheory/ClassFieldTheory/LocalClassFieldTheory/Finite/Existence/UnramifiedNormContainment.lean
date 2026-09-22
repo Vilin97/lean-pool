@@ -63,7 +63,7 @@ private theorem valuationAt_baseField_coe
       v.toAddMonoidHom x := by
   have hdivided :=
     v.residueDegree_nsmul_dividedAt (FiniteAbstractField.base G) x
-  simp? at hdivided
+  simp only [FiniteAbstractField.base_residueDegree, PNat.val_ofNat, one_smul] at hdivided
   change v.dividedAt (FiniteAbstractField.base G) x = v.toAddMonoidHom x
   rw [hdivided]
   let : Finite ((baseField G).toSubgroup ⧸

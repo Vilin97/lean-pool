@@ -239,12 +239,128 @@ theorem sUnitLocalUnitPowerMap_ker
     rw [localUnit_toField v]
     exact hx v
 
-open scoped Classical in
-/-- For the Kummer-selected primes, localization from the enlarged `S`-unit
-group onto the product of integral-unit power quotients is
-surjective.  The proof compares the actual Kummer radical quotient with
-`Gal(E/K)` and uses the local unit-index formula only at the end. -/
-theorem sUnitLocalUnitPowerMap_sUnitKummerPrimeSet_surjective
+/-- At a finite place where the exponent is a unit, the integral-unit power quotient
+has the expected cardinality when the base contains all roots of unity. -/
+private theorem card_adicIntegralUnitPowerQuotient
+    (n : ℕ+) (hmu : (primitiveRoots (n : ℕ) K).Nonempty)
+    (w : HeightOneSpectrum (𝓞 K)) (hnGlobal : w.valuation K ((n : ℕ) : K) = 1) :
+    Nat.card ((w.adicCompletionIntegers K)ˣ ⧸
+      (powMonoidHom (n : ℕ) : (w.adicCompletionIntegers K)ˣ →*
+        (w.adicCompletionIntegers K)ˣ).range) = (n : ℕ) := by
+  classical
+  let F :=
+    LocalFieldTheory.DiscreteValuationField.LocalField.ofWithZeroValuation
+      (Valued.v :
+        Valuation (w.adicCompletion K)
+          (WithZero (Multiplicative ℤ)))
+  let : NeZero (n : ℕ) := ⟨n.ne_zero⟩
+  have hnu : Function.Surjective
+      (Valued.v :
+        Valuation (w.adicCompletion K)
+          (WithZero (Multiplicative ℤ))) :=
+    w.valuedAdicCompletion_surjective K
+  have hnatCast :
+      (((n : ℕ) : K) : w.adicCompletion K) =
+        ((n : ℕ) : w.adicCompletion K) := by
+    change
+      algebraMap K (w.adicCompletion K) ((n : ℕ) : K) =
+        ((n : ℕ) : w.adicCompletion K)
+    rw [map_natCast]
+  have hnuN :
+      Valued.v ((n : ℕ) : w.adicCompletion K) = 1 := by
+    rw [← hnatCast,
+      HeightOneSpectrum.valuedAdicCompletion_eq_valuation']
+    exact hnGlobal
+  have hnuNF :
+      F.valuation ((n : ℕ) : w.adicCompletion K) = 1 := by
+    dsimp only [F]
+    unfold
+      LocalFieldTheory.DiscreteValuationField.LocalField.ofWithZeroValuation
+    unfold
+      LocalFieldTheory.DiscreteValuationField.LocalField.coherentWithZeroMultiplicativeIntGroup
+    exact hnuN
+  have hpnd :
+      ¬ F.residueCharacteristic ∣ (n : ℕ) := by
+    rw [←
+      F.valuation_natCast_lt_one_iff_residueCharacteristic_dvd]
+    rw [hnuNF]
+    exact lt_irrefl 1
+  let :
+      Fact
+        (Nat.Coprime (n : ℕ)
+          F.residueCharacteristic) :=
+    ⟨(F.residueCharacteristic_prime.coprime_iff_not_dvd.mpr
+      hpnd).symm⟩
+  let eValuationSubringUnits :
+      F.valuationSubringˣ ≃*
+        (w.adicCompletionIntegers K)ˣ := by
+    exact MulEquiv.refl ((w.adicCompletionIntegers K)ˣ)
+  have hindexPackaged :
+      Nat.card
+          (F.valuationSubringˣ ⧸
+            (powMonoidHom (n : ℕ) :
+              F.valuationSubringˣ →* F.valuationSubringˣ).range) =
+        Nat.card
+          ((powMonoidHom (n : ℕ) :
+            (w.adicCompletion K)ˣ →*
+              (w.adicCompletion K)ˣ).ker) := by
+    simpa only [F] using
+      LocalFieldTheory.DiscreteValuationField.LocalField.mixed_unitIndex_of_coprime
+        (Valued.v :
+          Valuation (w.adicCompletion K)
+            (WithZero (Multiplicative ℤ)))
+        hnu (n := (n : ℕ))
+  have hindex :
+      Nat.card
+          ((w.adicCompletionIntegers K)ˣ ⧸
+            (powMonoidHom (n : ℕ) :
+              (w.adicCompletionIntegers K)ˣ →*
+                (w.adicCompletionIntegers K)ˣ).range) =
+        Nat.card
+          ((powMonoidHom (n : ℕ) :
+            (w.adicCompletion K)ˣ →*
+              (w.adicCompletion K)ˣ).ker) := by
+    calc
+      Nat.card
+          ((w.adicCompletionIntegers K)ˣ ⧸
+            (powMonoidHom (n : ℕ) :
+              (w.adicCompletionIntegers K)ˣ →*
+                (w.adicCompletionIntegers K)ˣ).range) =
+          Nat.card
+            (F.valuationSubringˣ ⧸
+              (powMonoidHom (n : ℕ) :
+                F.valuationSubringˣ →* F.valuationSubringˣ).range) := by
+        exact Nat.card_congr
+          (LocalFieldTheory.nthPowerQuotientEquivOfMulEquiv
+            (w.adicCompletionIntegers K)ˣ
+            F.valuationSubringˣ
+            (n : ℕ)
+            eValuationSubringUnits.symm).toEquiv
+      _ = Nat.card
+            ((powMonoidHom (n : ℕ) :
+              (w.adicCompletion K)ˣ →*
+                (w.adicCompletion K)ˣ).ker) :=
+        hindexPackaged
+  have hroots :
+      Nat.card
+          ((powMonoidHom (n : ℕ) :
+            (w.adicCompletion K)ˣ →*
+              (w.adicCompletion K)ˣ).ker) =
+        (n : ℕ) := by
+    rw [
+      LocalFieldTheory.powMonoidHom_ker_units_eq_rootsOfUnity]
+    obtain ⟨zeta, hzeta⟩ := hmu
+    have hzetaPrimitive :
+        IsPrimitiveRoot zeta (n : ℕ) :=
+      (mem_primitiveRoots n.pos).mp hzeta
+    exact
+      (hzetaPrimitive.map_of_injective
+        (algebraMap K
+          (w.adicCompletion K)).injective).card_rootsOfUnity
+  simpa only [hroots] using hindex
+
+/-- The localization kernel modulo powers has the cardinality of the Kummer Galois group. -/
+private theorem card_sUnitLocalPowerKernel_on_kummerPrimeSet
     {Omega : Type} [Field Omega] [Algebra K Omega]
     [IsSepClosure K Omega]
     (E : IntermediateField K Omega)
@@ -266,12 +382,8 @@ theorem sUnitLocalUnitPowerMap_sUnitKummerPrimeSet_surjective
       sUnitKummerPrimeSet
         (K := K) (Omega := Omega) E n hmu
         p v hp hv hn r eG S
-    let hST : Disjoint S' T :=
-      (sUnitKummerPrimeSet_disjoint_enlargeByFiniteKummerRadicalSupport
-        (K := K) (Omega := Omega) E n hmu
-        p v hp hv hn r eG S).symm
-    Function.Surjective
-      (sUnitLocalUnitPowerMap (K := K) n S' T hST) := by
+    Nat.card (sUnitLocalPowerKernel (K := K) n S' T ⧸
+      sUnitLocalPowerKernelNthPowers (K := K) n S' T) = (n : ℕ) ^ r := by
   classical
   dsimp only
   let S' :=
@@ -281,21 +393,6 @@ theorem sUnitLocalUnitPowerMap_sUnitKummerPrimeSet_surjective
     sUnitKummerPrimeSet
       (K := K) (Omega := Omega) E n hmu
       p v hp hv hn r eG S
-  let hST : Disjoint S' T :=
-    (sUnitKummerPrimeSet_disjoint_enlargeByFiniteKummerRadicalSupport
-      (K := K) (Omega := Omega) E n hmu
-      p v hp hv hn r eG S).symm
-  let LocalPowerTarget : Type :=
-    ∀ w : T,
-      (w.1.adicCompletionIntegers K)ˣ ⧸
-        (powMonoidHom (n : ℕ) :
-          (w.1.adicCompletionIntegers K)ˣ →*
-            (w.1.adicCompletionIntegers K)ˣ).range
-  let f : SUnitGroup (K := K) S' →* LocalPowerTarget :=
-    sUnitLocalUnitPowerMap (K := K) n S' T hST
-  let rangeF : Subgroup LocalPowerTarget :=
-    MonoidHom.range
-      (G := SUnitGroup (K := K) S') (N := LocalPowerTarget) f
   let SU : Subgroup Kˣ :=
     SUnitGroup (K := K) S'
   let Delta : Subgroup SU :=
@@ -310,15 +407,6 @@ theorem sUnitLocalUnitPowerMap_sUnitKummerPrimeSet_surjective
   let D :=
     KummerTheory.chosenFiniteKummerRadicalDatum
       (K := K) (L := E) n
-  change Function.Surjective f
-  have hnOne : 1 < (n : ℕ) := by
-    rw [hn]
-    calc
-      1 < p := hp.one_lt
-      _ = p ^ 1 := (pow_one p).symm
-      _ ≤ p ^ v :=
-        Nat.pow_le_pow_right hp.pos
-          (Nat.succ_le_iff.mpr hv)
   have hDeltaEq :
       Delta = H.subgroupOf SU := by
     change
@@ -387,8 +475,7 @@ theorem sUnitLocalUnitPowerMap_sUnitKummerPrimeSet_surjective
             (H.subgroupOf SU) :=
     QuotientGroup.equivQuotientSubgroupOfOfEq
       hP rfl
-  let eH :
-      H.subgroupOf SU ≃* H :=
+  let eH :=
     Subgroup.subgroupOfEquivOfLe hHle
   have hmap :
       ((Npow.subgroupOf SU).subgroupOf
@@ -396,16 +483,9 @@ theorem sUnitLocalUnitPowerMap_sUnitKummerPrimeSet_surjective
         Npow.subgroupOf H := by
     rw [Subgroup.map_equiv_eq_comap_symm]
     rfl
-  let eInside :
-      H.subgroupOf SU ⧸
-          (Npow.subgroupOf SU).subgroupOf
-            (H.subgroupOf SU) ≃*
-        H ⧸ Npow.subgroupOf H :=
+  let eInside :=
     QuotientGroup.congr _ _ eH hmap
-  let eSecond :
-      H ⧸ Npow.subgroupOf H ≃*
-        (H ⊔ Npow : Subgroup Kˣ) ⧸
-          Npow.subgroupOf (H ⊔ Npow) :=
+  let eSecond :=
     QuotientGroup.quotientInfEquivProdNormalQuotient
       H Npow
   let eRadicalCarrier :
@@ -418,9 +498,7 @@ theorem sUnitLocalUnitPowerMap_sUnitKummerPrimeSet_surjective
       Npow.subgroupOf D.carrier =
         D.ambientNthPowersSubgroup := by
     rfl
-  let eNamedRadical :
-      D.carrier ⧸ Npow.subgroupOf D.carrier ≃*
-        D.RadicalQuotient :=
+  let eNamedRadical :=
     (QuotientGroup.quotientMulEquivOfEq hden).trans
       D.radicalQuotientMulEquiv.symm
   let : CommGroup Gal(E/K) := by
@@ -434,23 +512,15 @@ theorem sUnitLocalUnitPowerMap_sUnitKummerPrimeSet_surjective
         (K := K) (L := E) n :=
     KummerTheory.nthRootsOfUnityInBase_of_primitiveRoots
       (K := K) (L := E) n hmu
-  let eKummer :
-      D.RadicalQuotient ≃*
-        (Gal(E/K) →*
-          KummerTheory.nthRootsSubgroup E (n : ℕ)) :=
+  let eKummer :=
     KummerTheory.finiteKummerCharacterEquiv
       n hbase
-  let eDual :
-      (Gal(E/K) →*
-          KummerTheory.nthRootsSubgroup E (n : ℕ)) ≃*
-        Gal(E/K) :=
+  let eDual :=
     Classical.choice <|
       KummerTheory.finiteNthRootsCharacterDuality
         (G := Gal(E/K)) (K := K) (L := E)
         n hmu hexponentE
-  let eQuotient :
-      Delta ⧸ P.subgroupOf Delta ≃*
-        Gal(E/K) :=
+  let eQuotient :=
     eDelta.trans
       (ePower.trans
         (eInside.trans
@@ -474,6 +544,82 @@ theorem sUnitLocalUnitPowerMap_sUnitKummerPrimeSet_surjective
       _ = (n : ℕ) ^ r := by
         rw [Nat.card_congr eG.toEquiv, Nat.card_pi]
         simp
+  exact hDeltaCard
+
+open scoped Classical in
+/-- For the Kummer-selected primes, localization from the enlarged `S`-unit
+group onto the product of integral-unit power quotients is
+surjective.  The proof compares the actual Kummer radical quotient with
+`Gal(E/K)` and uses the local unit-index formula only at the end. -/
+theorem sUnitLocalUnitPowerMap_sUnitKummerPrimeSet_surjective
+    {Omega : Type} [Field Omega] [Algebra K Omega]
+    [IsSepClosure K Omega]
+    (E : IntermediateField K Omega)
+    [FiniteDimensional K E] [IsGalois K E]
+    [IsMulCommutative Gal(E/K)]
+    (n : ℕ+)
+    (hmu : (primitiveRoots (n : ℕ) K).Nonempty)
+    (p v : ℕ) (hp : p.Prime) (hv : 0 < v)
+    (hn : (n : ℕ) = p ^ v)
+    (r : ℕ)
+    (eG :
+      Gal(E/K) ≃*
+        (Fin r → Multiplicative (ZMod (n : ℕ))))
+    (S : Finset (HeightOneSpectrum (𝓞 K))) :
+    let S' :=
+      enlargeByFiniteKummerRadicalSupport
+        (K := K) (L := E) n hmu S
+    let T :=
+      sUnitKummerPrimeSet
+        (K := K) (Omega := Omega) E n hmu
+        p v hp hv hn r eG S
+    let hST : Disjoint S' T :=
+      (sUnitKummerPrimeSet_disjoint_enlargeByFiniteKummerRadicalSupport
+        (K := K) (Omega := Omega) E n hmu
+        p v hp hv hn r eG S).symm
+    Function.Surjective
+      (sUnitLocalUnitPowerMap (K := K) n S' T hST) := by
+  classical
+  dsimp only
+  let S' :=
+    enlargeByFiniteKummerRadicalSupport
+      (K := K) (L := E) n hmu S
+  let T :=
+    sUnitKummerPrimeSet
+      (K := K) (Omega := Omega) E n hmu
+      p v hp hv hn r eG S
+  let hST : Disjoint S' T :=
+    (sUnitKummerPrimeSet_disjoint_enlargeByFiniteKummerRadicalSupport
+      (K := K) (Omega := Omega) E n hmu
+      p v hp hv hn r eG S).symm
+  let LocalPowerTarget : Type :=
+    ∀ w : T,
+      (w.1.adicCompletionIntegers K)ˣ ⧸
+        (powMonoidHom (n : ℕ) :
+          (w.1.adicCompletionIntegers K)ˣ →*
+            (w.1.adicCompletionIntegers K)ˣ).range
+  let f : SUnitGroup (K := K) S' →* LocalPowerTarget :=
+    sUnitLocalUnitPowerMap (K := K) n S' T hST
+  let rangeF : Subgroup LocalPowerTarget :=
+    MonoidHom.range
+      (G := SUnitGroup (K := K) S') (N := LocalPowerTarget) f
+  let SU : Subgroup Kˣ :=
+    SUnitGroup (K := K) S'
+  let Delta : Subgroup SU :=
+    sUnitLocalPowerKernel (K := K) n S' T
+  let P : Subgroup SU :=
+    (powMonoidHom (n : ℕ) : SU →* SU).range
+  change Function.Surjective f
+  have hnOne : 1 < (n : ℕ) := by
+    rw [hn]
+    calc
+      1 < p := hp.one_lt
+      _ = p ^ 1 := (pow_one p).symm
+      _ ≤ p ^ v :=
+        Nat.pow_le_pow_right hp.pos
+          (Nat.succ_le_iff.mpr hv)
+  have hDeltaCard := card_sUnitLocalPowerKernel_on_kummerPrimeSet
+    (K := K) E n hmu p v hp hv hn r eG S
   have hPLe : P ≤ Delta :=
     nthPowerSubgroup_le_sUnitLocalPowerKernel
       (K := K) n S' T
@@ -544,139 +690,15 @@ theorem sUnitLocalUnitPowerMap_sUnitKummerPrimeSet_surjective
     rw [← Subgroup.index_ker
       (G := SUnitGroup (K := K) S') (G' := LocalPowerTarget) f, hfker]
     exact hDeltaIndex
-  have hLocalCard
-      (w : T) :
-      Nat.card
-          ((w.1.adicCompletionIntegers K)ˣ ⧸
-            (powMonoidHom (n : ℕ) :
-              (w.1.adicCompletionIntegers K)ˣ →*
-                (w.1.adicCompletionIntegers K)ˣ).range) =
-        (n : ℕ) := by
-    let F :=
-      LocalFieldTheory.DiscreteValuationField.LocalField.ofWithZeroValuation
-        (Valued.v :
-          Valuation (w.1.adicCompletion K)
-            (WithZero (Multiplicative ℤ)))
-    let : NeZero (n : ℕ) := ⟨n.ne_zero⟩
-    have hnu : Function.Surjective
-        (Valued.v :
-          Valuation (w.1.adicCompletion K)
-            (WithZero (Multiplicative ℤ))) :=
-      w.1.valuedAdicCompletion_surjective K
-    have hw :
-        w.1 ∈
-          sUnitKummerPrimeSet
-            (K := K) (Omega := Omega) E n hmu
-            p v hp hv hn r eG S :=
-      w.2
+  have hLocalCard (w : T) := card_adicIntegralUnitPowerQuotient n hmu w.1 (by
+    have hw := w.2
+    change w.1 ∈ sUnitKummerPrimeSet
+      (K := K) (Omega := Omega) E n hmu p v hp hv hn r eG S at hw
     rw [sUnitKummerPrimeSet, Finset.mem_image] at hw
     obtain ⟨i, _hi, hi⟩ := hw
-    have hnGlobal :
-        w.1.valuation K ((n : ℕ) : K) = 1 := by
-      rw [← hi]
-      exact
-        sUnitKummerChosenBasePlaces_valuation_natCast_eq_one
-          (K := K) (Omega := Omega) E n hmu
-          p v hp hv hn r eG S i
-    have hnatCast :
-        (((n : ℕ) : K) : w.1.adicCompletion K) =
-          ((n : ℕ) : w.1.adicCompletion K) := by
-      change
-        algebraMap K (w.1.adicCompletion K) ((n : ℕ) : K) =
-          ((n : ℕ) : w.1.adicCompletion K)
-      rw [map_natCast]
-    have hnuN :
-        Valued.v ((n : ℕ) : w.1.adicCompletion K) = 1 := by
-      rw [← hnatCast,
-        HeightOneSpectrum.valuedAdicCompletion_eq_valuation']
-      exact hnGlobal
-    have hnuNF :
-        F.valuation ((n : ℕ) : w.1.adicCompletion K) = 1 := by
-      dsimp only [F]
-      unfold
-        LocalFieldTheory.DiscreteValuationField.LocalField.ofWithZeroValuation
-      unfold
-        LocalFieldTheory.DiscreteValuationField.LocalField.coherentWithZeroMultiplicativeIntGroup
-      exact hnuN
-    have hpnd :
-        ¬ F.residueCharacteristic ∣ (n : ℕ) := by
-      rw [←
-        F.valuation_natCast_lt_one_iff_residueCharacteristic_dvd]
-      rw [hnuNF]
-      exact lt_irrefl 1
-    let :
-        Fact
-          (Nat.Coprime (n : ℕ)
-            F.residueCharacteristic) :=
-      ⟨(F.residueCharacteristic_prime.coprime_iff_not_dvd.mpr
-        hpnd).symm⟩
-    let eValuationSubringUnits :
-        F.valuationSubringˣ ≃*
-          (w.1.adicCompletionIntegers K)ˣ := by
-      exact MulEquiv.refl ((w.1.adicCompletionIntegers K)ˣ)
-    have hindexPackaged :
-        Nat.card
-            (F.valuationSubringˣ ⧸
-              (powMonoidHom (n : ℕ) :
-                F.valuationSubringˣ →* F.valuationSubringˣ).range) =
-          Nat.card
-            ((powMonoidHom (n : ℕ) :
-              (w.1.adicCompletion K)ˣ →*
-                (w.1.adicCompletion K)ˣ).ker) := by
-      simpa only [F] using
-        LocalFieldTheory.DiscreteValuationField.LocalField.mixed_unitIndex_of_coprime
-          (Valued.v :
-            Valuation (w.1.adicCompletion K)
-              (WithZero (Multiplicative ℤ)))
-          hnu (n := (n : ℕ))
-    have hindex :
-        Nat.card
-            ((w.1.adicCompletionIntegers K)ˣ ⧸
-              (powMonoidHom (n : ℕ) :
-                (w.1.adicCompletionIntegers K)ˣ →*
-                  (w.1.adicCompletionIntegers K)ˣ).range) =
-          Nat.card
-            ((powMonoidHom (n : ℕ) :
-              (w.1.adicCompletion K)ˣ →*
-                (w.1.adicCompletion K)ˣ).ker) := by
-      calc
-        Nat.card
-            ((w.1.adicCompletionIntegers K)ˣ ⧸
-              (powMonoidHom (n : ℕ) :
-                (w.1.adicCompletionIntegers K)ˣ →*
-                  (w.1.adicCompletionIntegers K)ˣ).range) =
-            Nat.card
-              (F.valuationSubringˣ ⧸
-                (powMonoidHom (n : ℕ) :
-                  F.valuationSubringˣ →* F.valuationSubringˣ).range) := by
-          exact Nat.card_congr
-            (LocalFieldTheory.nthPowerQuotientEquivOfMulEquiv
-              (w.1.adicCompletionIntegers K)ˣ
-              F.valuationSubringˣ
-              (n : ℕ)
-              eValuationSubringUnits.symm).toEquiv
-        _ = Nat.card
-              ((powMonoidHom (n : ℕ) :
-                (w.1.adicCompletion K)ˣ →*
-                  (w.1.adicCompletion K)ˣ).ker) :=
-          hindexPackaged
-    have hroots :
-        Nat.card
-            ((powMonoidHom (n : ℕ) :
-              (w.1.adicCompletion K)ˣ →*
-                (w.1.adicCompletion K)ˣ).ker) =
-          (n : ℕ) := by
-      rw [
-        LocalFieldTheory.powMonoidHom_ker_units_eq_rootsOfUnity]
-      obtain ⟨zeta, hzeta⟩ := hmu
-      have hzetaPrimitive :
-          IsPrimitiveRoot zeta (n : ℕ) :=
-        (mem_primitiveRoots n.pos).mp hzeta
-      exact
-        (hzetaPrimitive.map_of_injective
-          (algebraMap K
-            (w.1.adicCompletion K)).injective).card_rootsOfUnity
-    simpa only [hroots] using hindex
+    rw [← hi]
+    exact sUnitKummerChosenBasePlaces_valuation_natCast_eq_one
+      (K := K) (Omega := Omega) E n hmu p v hp hv hn r eG S i)
   have hTcard :
       T.card =
         sUnitKummerPrimeCount

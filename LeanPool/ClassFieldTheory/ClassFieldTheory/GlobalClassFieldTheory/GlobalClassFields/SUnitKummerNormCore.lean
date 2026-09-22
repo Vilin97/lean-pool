@@ -170,6 +170,24 @@ theorem supportedAt_sUnitKummerNormSupport_sup_principalSubgroup_eq_top
       (Finset.mem_union_right _ hv)
   · exact le_rfl
 
+/-- A root of a unit descends along a surjective field homomorphism. -/
+private theorem unit_mem_power_range_of_surjective
+    {F E : Type*} [Field F] [Field E] (f : F →+* E)
+    (hf : Function.Surjective f) (n : ℕ) (b : Fˣ) (beta : Eˣ)
+    (hbeta : beta ^ n = Units.map f.toMonoidHom b) :
+    b ∈ (powMonoidHom n : Fˣ →* Fˣ).range := by
+  obtain ⟨x, hx⟩ := hf (beta : E)
+  have hx_ne : x ≠ 0 := by
+    intro hzero
+    apply beta.ne_zero
+    rw [← hx, hzero, map_zero]
+  refine ⟨Units.mk0 x hx_ne, ?_⟩
+  apply Units.ext
+  apply f.injective
+  change f (x ^ n) = f (b : F)
+  rw [map_pow, hx]
+  exact congrArg Units.val hbeta
+
 open scoped Classical in
 /-- On the chosen Kummer norm support, the principal part of the
 local power subgroup consists exactly of powers of `S`-units. -/
@@ -189,14 +207,8 @@ theorem
   change
     principalIdelePowerLocalUnitSubgroup (K := K) n S' ∅ =
       sUnitNthPowersInField (K := K) n S'
-  have hLarge :
-      IdeleGroup.supportedAt
-            (K := K) (S' : Set (HeightOneSpectrum (𝓞 K))) ⊔
-          IdeleGroup.principalSubgroup K =
-        ⊤ := by
-    simpa only [S'] using
-      supportedAt_sUnitKummerNormSupport_sup_principalSubgroup_eq_top
-        (K := K) n S
+  have hLarge := supportedAt_sUnitKummerNormSupport_sup_principalSubgroup_eq_top
+    (K := K) n S
   apply le_antisymm
   · intro b hb
     have hbData :=
@@ -373,30 +385,8 @@ theorem
           Units.map (algebraMap K M).toMonoidHom b := by
       simpa only [M, beta] using
         KummerTheory.chosenSimpleKummerRootUnit_pow K n hnK b
-    obtain ⟨x, hx⟩ := hAlgMap.2 (beta : M)
-    have hx_ne : x ≠ 0 := by
-      intro hx_zero
-      apply beta.ne_zero
-      calc
-        (beta : M) = algebraMap K M x := hx.symm
-        _ = 0 := by rw [hx_zero, map_zero]
-    let xUnit : Kˣ := Units.mk0 x hx_ne
-    have hbPower :
-        b ∈ (powMonoidHom (n : ℕ) : Kˣ →* Kˣ).range := by
-      apply (MonoidHom.mem_range (G := Kˣ)).mpr
-      refine ⟨xUnit, ?_⟩
-      rw [powMonoidHom_apply]
-      apply Units.ext
-      apply (algebraMap K M).injective
-      change
-        algebraMap K M (x ^ (n : ℕ)) =
-          algebraMap K M (b : K)
-      calc
-        algebraMap K M (x ^ (n : ℕ)) =
-            (beta : M) ^ (n : ℕ) := by
-          rw [map_pow, hx]
-        _ = algebraMap K M (b : K) := by
-          simpa using congrArg Units.val hbeta
+    have hbPower := unit_mem_power_range_of_surjective
+      (algebraMap K M) hAlgMap.2 (n : ℕ) b beta hbeta
     exact
       (mem_sUnitNthPowersInField_iff
         (K := K) n S' b).2
