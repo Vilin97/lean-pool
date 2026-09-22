@@ -46,13 +46,14 @@ hypotheses are invariant under the appropriate sign changes. In the P1 example, 
 that one case (`mulOption_lt_of_lt`) is enough to conclude the others (`mulOption_lt`), and the same
 goes for the other parts of the proof.
 
-Note also that we express all inequalities in terms of `Game` instead of `IGame`; this allows us to
+Note also that we express all inequalities in terms of `ConwayGame` instead of `IGame`; this
+allows us to
 make use of `abel` and all of the theorems on `OrderedAddCommGroup`.
 -/
 
 universe u
 
-open Game IGame Relation WellFounded
+open ConwayGame IGame Relation WellFounded
 
 /-- A characterization of left moves of `x * y` in terms only of left moves. -/
 private lemma forall_leftMoves_mul' {P : IGame → Prop} {x y : IGame} :
@@ -74,16 +75,18 @@ private lemma forall_rightMoves_mul' {P : IGame → Prop} {x y : IGame} :
 
 /-- `P1 x y a b c d` means that `mulOption x y a b < mulOption x y c d`. This is the general form
 of the statements needed to prove that `x * y` is numeric. -/
-private def P1 (x y a b c d : IGame) := Game.mk (mulOption x y a b) < Game.mk (mulOption x y c d)
+private def P1 (x y a b c d : IGame) :=
+  ConwayGame.mk (mulOption x y a b) < ConwayGame.mk (mulOption x y c d)
 
 /-- `P2 x₁ x₂ y` states that if `x₁ ≈ x₂`, then `x₁ * y ≈ x₂ * y`. The RHS is stated in terms of
-`Game.mk` for rewriting convenience. -/
-private def P2 (x₁ x₂ y : IGame) := x₁ ≈ x₂ → Game.mk (x₁ * y) = Game.mk (x₂ * y)
+`ConwayGame.mk` for rewriting convenience. -/
+private def P2 (x₁ x₂ y : IGame) := x₁ ≈ x₂ → ConwayGame.mk (x₁ * y) = ConwayGame.mk (x₂ * y)
 
 /-- `P3 x₁ x₂ y₁ y₂` states that `x₁ * y₂ + x₂ * y₁ < x₁ * y₁ + x₂ * y₂`. Using distributivity, this
 is equivalent to `(x₁ - x₂) * (y₁ - y₂) > 0`. -/
 private def P3 (x₁ x₂ y₁ y₂ : IGame) :=
-  Game.mk (x₁ * y₂) + Game.mk (x₂ * y₁) < Game.mk (x₁ * y₁) + Game.mk (x₂ * y₂)
+  ConwayGame.mk (x₁ * y₂) + ConwayGame.mk (x₂ * y₁) <
+    ConwayGame.mk (x₁ * y₁) + ConwayGame.mk (x₂ * y₂)
 
 /-- `P4 x₁ x₂ y` states that if `x₁ < x₂`, then `P3 x₁ x₂ a y` when `a ∈ yᴸ`, and
 `P3 x₁ x₂ b y` when `b ∈ yᴿ`.
@@ -105,11 +108,11 @@ private lemma P3_comm : P3 x₁ x₂ y₁ y₂ ↔ P3 y₁ y₂ x₁ x₂ := by
   simp [P3, add_comm, mul_comm]
 
 private lemma P3.trans (h₁ : P3 x₁ x₂ y₁ y₂) (h₂ : P3 x₂ x₃ y₁ y₂) : P3 x₁ x₃ y₁ y₂ := by
-  rw [P3, ← add_lt_add_iff_left (Game.mk (x₂ * y₁) + Game.mk (x₂ * y₂))]
+  rw [P3, ← add_lt_add_iff_left (ConwayGame.mk (x₂ * y₁) + ConwayGame.mk (x₂ * y₂))]
   convert add_lt_add h₁ h₂ using 1 <;> abel
 
 private lemma P3_neg : P3 (-x₂) (-x₁) y₁ y₂ ↔ P3 x₁ x₂ y₁ y₂ := by
-  simp_rw [P3, neg_mul, Game.mk_neg]
+  simp_rw [P3, neg_mul, ConwayGame.mk_neg]
   rw [← _root_.neg_lt_neg_iff]
   abel_nf
 
@@ -247,18 +250,19 @@ private lemma P24_of_IH1 (ihxy : IH1 x y) (ha : a ∈ xᴸ) (hb : b ∈ xᴸ) : 
   ihxy ha hb (Or.inl rfl)
 
 private lemma mulOption_lt_iff_P1 :
-    Game.mk (mulOption x y a b) < -Game.mk (mulOption x (-y) c d) ↔ P1 x y a b c (-d) := by
+    ConwayGame.mk (mulOption x y a b) < -ConwayGame.mk (mulOption x (-y) c d) ↔
+      P1 x y a b c (-d) := by
   simp [P1, mulOption, sub_eq_add_neg, add_comm]
 
 private lemma mulOption_lt_of_lt [Numeric y] (ihxy : IH1 x y) (ihyx : IH1 y x) {a b c d} (h : a < c)
     (ha : a ∈ xᴸ) (hb : b ∈ yᴸ) (hc : c ∈ xᴸ) (hd : d ∈ (-y)ᴸ) :
-    Game.mk (mulOption x y a b) < -Game.mk (mulOption x (-y) c d) := by
+    ConwayGame.mk (mulOption x y a b) < -ConwayGame.mk (mulOption x (-y) c d) := by
   rw [mulOption_lt_iff_P1]
   exact P1_of_P3 (P3_of_IH1 ihyx hc hb hd) <| ((P24_of_IH1 ihxy ha hc).2 h).1 b hb
 
 private lemma mulOption_lt [Numeric x] [Numeric y] (ihxy : IH1 x y) (ihyx : IH1 y x) {a b c d}
     (ha : a ∈ xᴸ) (hb : b ∈ yᴸ) (hc : c ∈ xᴸ) (hd : d ∈ (-y)ᴸ) :
-    Game.mk (mulOption x y a b) < -Game.mk (mulOption x (-y) c d) := by
+    ConwayGame.mk (mulOption x y a b) < -ConwayGame.mk (mulOption x (-y) c d) := by
   numeric
   obtain (h | h | h) := Numeric.lt_or_equiv_or_gt a c
   · exact mulOption_lt_of_lt ihxy ihyx h ha hb hc hd
@@ -354,7 +358,7 @@ private lemma IH4_neg : IH4 x₁ x₂ y → IH4 (-x₂) (-x₁) y ∧ IH4 x₁ x
 
 private lemma mulOption_lt_mul_of_equiv [Numeric x₁] (h : IH24 x₁ x₂ y) (he : x₁ ≈ x₂)
     (hi : a ∈ x₁ᴸ) (hj : b ∈ yᴸ) :
-    Game.mk (mulOption x₁ y a b) < Game.mk (x₂ * y) := by
+    ConwayGame.mk (mulOption x₁ y a b) < ConwayGame.mk (x₂ * y) := by
   convert sub_lt_iff_lt_add'.2 (((h.1 hi).2 _).1 b hj) using 1
   · rw [← (h.2.2 hj).1 he]
     rfl
@@ -365,7 +369,7 @@ private lemma mul_right_le_of_equiv [Numeric x₁] [Numeric x₂]
     (ih₁₂ : IH24 x₁ x₂ y) (ih₂₁ : IH24 x₂ x₁ y) (he : x₁ ≈ x₂) : x₁ * y ≤ x₂ * y := by
   have he' := neg_equiv_neg_iff.2 he
   rw [IGame.le_iff_forall_lf]
-  simp_rw [← Game.mk_le_mk]
+  simp_rw [← ConwayGame.mk_le_mk]
   constructor
   · rw [forall_leftMoves_mul']
     constructor <;> intro a ha b hb
@@ -385,7 +389,7 @@ private lemma P2_of_IH (IH : ∀ a, ArgsRel a (Args.P24 x₁ x₂ y) → P124 a)
 /-! ### P4 follows from the inductive hypothesis -/
 
 private lemma mulOption_lt_mul_iff_P3 : mulOption x y a b < x * y ↔ P3 a x b y :=
-  @sub_lt_iff_lt_add' Game _ _ _ (.mk _) (.mk _) (.mk _)
+  @sub_lt_iff_lt_add' ConwayGame _ _ _ (.mk _) (.mk _) (.mk _)
 
 /-- A specialization of the induction hypothesis used to prove `P3`. -/
 private def IH3 (x₁ x' x₂ y₁ y₂ : IGame) : Prop :=
@@ -445,7 +449,7 @@ private theorem main (a : Args) : a.Numeric → P124 a := by
   | P24 x₁ x₂ y =>
     obtain ⟨_, _, _⟩ := Args.numeric_P24.1 ha
     constructor
-    · exact (Game.mk_eq <| P2_of_IH ih ·)
+    · exact (ConwayGame.mk_eq <| P2_of_IH ih ·)
     · exact P4_of_IH ih
 
 private lemma main_P24 (x₁ x₂ y : IGame) [hx₁ : Numeric x₁] [hx₂ : Numeric x₂] [hy : Numeric y] :
@@ -485,7 +489,7 @@ protected instance mulOption (x y a b : IGame) [Numeric x] [Numeric y] [Numeric 
   .sub ..
 
 theorem mul_congr_left [Numeric x₁] [Numeric x₂] [Numeric y] (he : x₁ ≈ x₂) : x₁ * y ≈ x₂ * y :=
-  Game.mk_eq_mk.1 ((main_P24 ..).1 he)
+  ConwayGame.mk_eq_mk.1 ((main_P24 ..).1 he)
 
 theorem mul_congr_right [Numeric x] [Numeric y₁] [Numeric y₂] (he : y₁ ≈ y₂) : x * y₁ ≈ x * y₂ := by
   rw [mul_comm, mul_comm x]; exact Numeric.mul_congr_left he

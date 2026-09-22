@@ -11,7 +11,7 @@ public import Mathlib.Data.QPF.Univariate.Basic
 import Mathlib.Logic.Small.Set
 
 /-!
-# Game functor
+# ConwayGame functor
 
 The type of games `IGame` is an inductive type, with a single constructor `ofSets` taking in two
 small sets of games (one for each player) and outputting a new game. This suggests the definition:
@@ -42,7 +42,7 @@ universe u
 
 @[expose] public section
 
-/-! ### Game Functor -/
+/-! ### ConwayGame Functor -/
 
 /-- The functor from a type into the subtype of small pairs of sets in that type.
 

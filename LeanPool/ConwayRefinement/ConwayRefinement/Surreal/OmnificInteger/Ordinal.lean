@@ -28,8 +28,8 @@ namespace NatOrdinal
 
 private theorem toIGame_le_sub_one_of_lt {a o : NatOrdinal.{u}} (hao : a < o) :
     a.toIGame ≤ o.toIGame - 1 := by
-  rw [← Game.mk_le_mk]
-  simp only [Game.mk_sub, Game.mk_one, Game.mk_natOrdinal_toIGame]
+  rw [← ConwayGame.mk_le_mk]
+  simp only [ConwayGame.mk_sub, ConwayGame.mk_one, ConwayGame.mk_natOrdinal_toIGame]
   rw [le_sub_iff_add_le, ← NatOrdinal.toGame_one, ← NatOrdinal.toGame_add]
   apply NatOrdinal.toGame.monotone
   simpa only [Order.succ_eq_add_one] using succ_le_of_lt hao

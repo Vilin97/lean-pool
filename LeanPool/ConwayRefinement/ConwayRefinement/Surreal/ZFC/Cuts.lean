@@ -113,7 +113,7 @@ theorem toSurreal_ofCodeSets (s t : Set GameCode.{u}) [Small.{u} s] [Small.{u} t
         (toSurreal_separated _ _ (codeValues_separated s t hs ht h)) := by
   apply _root_.Surreal.toGame_inj.1
   rw [ofCodeSets_eq_mk, toSurreal_mk, _root_.Surreal.toGame_mk,
-    GameCode.toIGame_ofSets, Game.mk_ofSets, _root_.Surreal.toGame_ofSets]
+    GameCode.toIGame_ofSets, ConwayGame.mk_ofSets, _root_.Surreal.toGame_ofSets]
   congr 1
   simp only [codeValues, Set.image_image, ← Set.range_comp, Function.comp_def,
     toSurreal_mk, _root_.Surreal.toGame_mk]

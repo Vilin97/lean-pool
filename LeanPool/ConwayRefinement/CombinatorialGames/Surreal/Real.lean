@@ -13,7 +13,8 @@ public import Mathlib.Algebra.Order.Hom.Ring
 # Real numbers as games
 
 We define the function `Real.toIGame`, casting a real number to its Dedekind cut, and prove that
-it's an order embedding. We then define the `Game` and `Surreal` versions of this map, and prove
+it's an order embedding. We then define the `ConwayGame` and `Surreal` versions of this map,
+and prove
 that they are ring and field homomorphisms respectively.
 
 ## TODO
@@ -276,44 +277,44 @@ theorem toIGame_dyadic_sub_equiv (q : Dyadic) (x : ℝ) : toIGame (q.toRat - x) 
 theorem toIGame_sub_equiv (x y : ℝ) : toIGame (x - y) ≈ x - y := by
   simpa [sub_eq_add_neg] using toIGame_add_equiv x (-y)
 
-/-! ### `ℝ` to `Game` -/
+/-! ### `ℝ` to `ConwayGame` -/
 
-/-- The canonical map from `ℝ` to `Game`, sending a real number to its Dedekind cut. -/
-@[coe, match_pattern] def toGame (x : ℝ) : Game := .mk x
+/-- The canonical map from `ℝ` to `ConwayGame`, sending a real number to its Dedekind cut. -/
+@[coe, match_pattern] def toGame (x : ℝ) : ConwayGame := .mk x
 
-instance : Coe ℝ Game := ⟨toGame⟩
+instance : Coe ℝ ConwayGame := ⟨toGame⟩
 
-@[simp] theorem _root_.Game.mk_real_toIGame (x : ℝ) : .mk x.toIGame = x.toGame := rfl
+@[simp] theorem _root_.ConwayGame.mk_real_toIGame (x : ℝ) : .mk x.toIGame = x.toGame := rfl
 
 theorem toGame_def (x : ℝ) :
     toGame x = !{(fun q => q.toRat) '' {q : Dyadic | q.toRat < x} |
       (fun q => q.toRat) '' {q : Dyadic | x < q.toRat}} := by
-  rw [← Game.mk_real_toIGame, toIGame]
+  rw [← ConwayGame.mk_real_toIGame, toIGame]
   simp [Set.image_image]
 
 /-- `Real.toGame` as an `OrderEmbedding`. -/
 @[simps!]
-def toGameEmbedding : ℝ ↪o Game :=
+def toGameEmbedding : ℝ ↪o ConwayGame :=
   .ofStrictMono toGame fun _ _ h ↦ toIGameEmbedding.strictMono h
 
 @[simp, norm_cast]
-theorem toGame_le_iff {x y : ℝ} : (x : Game) ≤ y ↔ x ≤ y :=
+theorem toGame_le_iff {x y : ℝ} : (x : ConwayGame) ≤ y ↔ x ≤ y :=
   toGameEmbedding.le_iff_le
 
 @[simp, norm_cast]
-theorem toGame_lt_iff {x y : ℝ} : (x : Game) < y ↔ x < y :=
+theorem toGame_lt_iff {x y : ℝ} : (x : ConwayGame) < y ↔ x < y :=
   toGameEmbedding.lt_iff_lt
 
 @[norm_cast]
-theorem toGame_equiv_iff {x y : ℝ} : (x : Game) ≈ y ↔ x = y := by
+theorem toGame_equiv_iff {x y : ℝ} : (x : ConwayGame) ≈ y ↔ x = y := by
   simp [AntisymmRel, le_antisymm_iff]
 
 @[simp, norm_cast]
-theorem toGame_inj {x y : ℝ} : (x : Game) = y ↔ x = y :=
+theorem toGame_inj {x y : ℝ} : (x : ConwayGame) = y ↔ x = y :=
   toGameEmbedding.inj
 
 @[simp, norm_cast]
-theorem toGame_ratCast (q : ℚ) : toGame q = q := Game.mk_eq (toIGame_ratCast_equiv q)
+theorem toGame_ratCast (q : ℚ) : toGame q = q := ConwayGame.mk_eq (toIGame_ratCast_equiv q)
 
 @[simp, norm_cast]
 theorem toGame_natCast (n : ℕ) : toGame n = n := by simpa using toGame_ratCast n
@@ -326,15 +327,15 @@ theorem toGame_intCast (n : ℤ) : toGame n = n := by simpa using toGame_ratCast
 
 @[simp]
 theorem toGame_add (x y : ℝ) : toGame (x + y) = toGame x + toGame y := by
-  simpa using Game.mk_eq (toIGame_add_equiv x y)
+  simpa using ConwayGame.mk_eq (toIGame_add_equiv x y)
 
 @[simp]
 theorem toGame_sub (x y : ℝ) : toGame (x - y) = toGame x - toGame y := by
-  simpa using Game.mk_eq (toIGame_sub_equiv x y)
+  simpa using ConwayGame.mk_eq (toIGame_sub_equiv x y)
 
 /-- `Real.toGame` as an `OrderAddMonoidHom`. -/
 @[simps]
-def toGameAddHom : ℝ →+o Game where
+def toGameAddHom : ℝ →+o ConwayGame where
   toFun := toGame
   map_zero' := toGame_zero
   map_add' := toGame_add

@@ -41,35 +41,36 @@ larger game. This is the standard meaning of `x = y` in the literature, though i
 equality, e.g. `{0, 1 | 0}` and `{1 | 0}` are equivalent, but not identical as the former has an
 extra move for Left.
 
-In particular, note that a `Game` has no well-defined notion of left and right options. This means
+In particular, note that a `ConwayGame` has no well-defined notion of left and right options.
+This means
 you should prefer `IGame` when analyzing specific games. -/
-def Game : Type (u + 1) :=
+def ConwayGame : Type (u + 1) :=
   Antisymmetrization IGame (· ≤ ·)
 
-namespace Game
+namespace ConwayGame
 
-/-- The quotient map from `IGame` into `Game`. -/
-def mk (x : IGame) : Game := Quotient.mk _ x
+/-- The quotient map from `IGame` into `ConwayGame`. -/
+def mk (x : IGame) : ConwayGame := Quotient.mk _ x
 theorem mk_eq_mk {x y : IGame} : mk x = mk y ↔ x ≈ y := Quotient.eq
 
 alias ⟨_, mk_eq⟩ := mk_eq_mk
 
 @[cases_eliminator]
-theorem ind {motive : Game → Prop} (mk : ∀ y, motive (mk y)) (x : Game) : motive x :=
+theorem ind {motive : ConwayGame → Prop} (mk : ∀ y, motive (mk y)) (x : ConwayGame) : motive x :=
   Quotient.ind mk x
 
 /-- Choose an element of the equivalence class using the axiom of choice. -/
-@[no_expose] def out (x : Game) : IGame := Quotient.out x
-@[simp] theorem out_eq (x : Game) : mk x.out = x := Quotient.out_eq x
+@[no_expose] def out (x : ConwayGame) : IGame := Quotient.out x
+@[simp] theorem out_eq (x : ConwayGame) : mk x.out = x := Quotient.out_eq x
 
 theorem mk_out_equiv (x : IGame) : (mk x).out ≈ x := Quotient.mk_out (s := AntisymmRel.setoid ..) x
 theorem equiv_mk_out (x : IGame) : x ≈ (mk x).out := (mk_out_equiv x).symm
 
-/-- Construct a `Game` from its left and right sets.
+/-- Construct a `ConwayGame` from its left and right sets.
 
 Note that although this function is well-defined, this function isn't injective, nor do equivalence
-classes in `Game` have a canonical representative. -/
-instance : OfSets Game.{u} fun _ ↦ True where
+classes in `ConwayGame` have a canonical representative. -/
+instance : OfSets ConwayGame.{u} fun _ ↦ True where
   ofSets st _ := mk !{fun p ↦ out '' (st p)}
 
 theorem mk_ofSets' (st : Player → Set IGame.{u}) [Small.{u} (st left)] [Small.{u} (st right)] :
@@ -83,18 +84,18 @@ theorem mk_ofSets (s t : Set IGame.{u}) [Small.{u} s] [Small.{u} t] :
   rw [mk_ofSets']
   simp_rw [Player.apply_cases]
 
-private theorem ofSets_cases (s t : Set Game.{u}) [Small.{u} s] [Small.{u} t] :
+private theorem ofSets_cases (s t : Set ConwayGame.{u}) [Small.{u} s] [Small.{u} t] :
     !{s | t} = mk !{out '' s | out '' t} := by
   simp [mk_ofSets, image_image]
 
-instance : Zero Game := ⟨mk 0⟩
-instance : One Game := ⟨mk 1⟩
-instance : Add Game := ⟨Quotient.map₂ _ @add_congr⟩
-instance : Neg Game := ⟨Quotient.map _ @neg_congr⟩
-instance : PartialOrder Game := inferInstanceAs (PartialOrder (Antisymmetrization ..))
-instance : Inhabited Game := ⟨0⟩
+instance : Zero ConwayGame := ⟨mk 0⟩
+instance : One ConwayGame := ⟨mk 1⟩
+instance : Add ConwayGame := ⟨Quotient.map₂ _ @add_congr⟩
+instance : Neg ConwayGame := ⟨Quotient.map _ @neg_congr⟩
+instance : PartialOrder ConwayGame := inferInstanceAs (PartialOrder (Antisymmetrization ..))
+instance : Inhabited ConwayGame := ⟨0⟩
 
-instance : AddCommGroupWithOne Game where
+instance : AddCommGroupWithOne ConwayGame where
   zero_add := by rintro ⟨x⟩; exact congr(mk $(zero_add _))
   add_zero := by rintro ⟨x⟩; exact congr(mk $(add_zero _))
   add_comm := by rintro ⟨x⟩ ⟨y⟩; exact congr(mk $(add_comm _ _))
@@ -103,10 +104,10 @@ instance : AddCommGroupWithOne Game where
   nsmul := nsmulRec
   zsmul := zsmulRec
 
-instance : IsOrderedAddMonoid Game where
+instance : IsOrderedAddMonoid ConwayGame where
   add_le_add_left := by rintro ⟨a⟩ ⟨b⟩ h ⟨c⟩; exact add_le_add_left (α := IGame) h _
 
-instance : RatCast Game where
+instance : RatCast ConwayGame where
   ratCast q := mk q
 
 @[simp] theorem mk_zero : mk 0 = 0 := rfl
@@ -133,19 +134,20 @@ theorem mk_intCast (n : ℤ) : mk n = n := by
   cases n <;> simp
 
 @[simp, norm_cast] theorem mk_ratCast (q : ℚ) : mk q = q := rfl
-@[simp, norm_cast] theorem ratCast_neg (q : ℚ) : ((-q : ℚ) : Game) = -q := by simp [← mk_ratCast]
+@[simp, norm_cast] theorem ratCast_neg (q : ℚ) : ((-q : ℚ) : ConwayGame) = -q := by
+  simp [← mk_ratCast]
 
-theorem zero_def : (0 : Game) = !{fun _ ↦ ∅} := by apply (mk_ofSets' ..).trans; simp
-theorem one_def : (1 : Game) = !{{0} | ∅} := by apply (mk_ofSets ..).trans; simp
+theorem zero_def : (0 : ConwayGame) = !{fun _ ↦ ∅} := by apply (mk_ofSets' ..).trans; simp
+theorem one_def : (1 : ConwayGame) = !{{0} | ∅} := by apply (mk_ofSets ..).trans; simp
 
-instance : ZeroLEOneClass Game where
+instance : ZeroLEOneClass ConwayGame where
   zero_le_one := zero_le_one (α := IGame)
 
-instance : NeZero (1 : Game) where
+instance : NeZero (1 : ConwayGame) where
   out := by apply ne_of_gt; exact IGame.zero_lt_one
 
-instance : Nontrivial Game := ⟨_, _, zero_ne_one⟩
-instance : CharZero Game := AddMonoidWithOne.toCharZero
+instance : Nontrivial ConwayGame := ⟨_, _, zero_ne_one⟩
+instance : CharZero ConwayGame := AddMonoidWithOne.toCharZero
 
 theorem mk_mul_add (x y z : IGame) : mk (x * (y + z)) = mk (x * y) + mk (x * z) := by
   rw [← mk_add, add_eq' (x * y), mul_eq']
@@ -198,68 +200,70 @@ theorem mk_mul_assoc (x y z : IGame) : mk (x * y * z) = mk (x * (y * z)) := by
       hx.elim (ihxl x) (ihxr x), hy.elim (ihyl y) (ihyr y), hz.elim (ihzl z) (ihzr z)]
     abel
 
-theorem lf_ofSets_of_mem_left {s t : Set Game.{u}} [Small.{u} s] [Small.{u} t] {x : Game.{u}}
+theorem lf_ofSets_of_mem_left {s t : Set ConwayGame.{u}} [Small.{u} s] [Small.{u} t]
+    {x : ConwayGame.{u}}
     (h : x ∈ s) : x ⧏ !{s | t} := by
   rw [ofSets_cases]
   have : x.out ∈ !{out '' s | out '' t}ᴸ := by simpa using mem_image_of_mem _ h
   simpa [← mk_le_mk] using left_lf this
 
-theorem ofSets_lf_of_mem_right {s t : Set Game.{u}} [Small.{u} s] [Small.{u} t] {x : Game.{u}}
+theorem ofSets_lf_of_mem_right {s t : Set ConwayGame.{u}} [Small.{u} s] [Small.{u} t]
+    {x : ConwayGame.{u}}
     (h : x ∈ t) : !{s | t} ⧏ x := by
   rw [ofSets_cases]
   have : x.out ∈ !{out '' s | out '' t}ᴿ := by simpa using mem_image_of_mem _ h
   simpa [← mk_le_mk] using lf_right this
 
-end Game
+end ConwayGame
 
 namespace IGame
 
 protected theorem sub_le_iff_le_add {x y z : IGame} : x - z ≤ y ↔ x ≤ y + z :=
-  @sub_le_iff_le_add Game _ _ _ (.mk x) (.mk y) (.mk z)
+  @sub_le_iff_le_add ConwayGame _ _ _ (.mk x) (.mk y) (.mk z)
 
 protected theorem le_sub_iff_add_le {x y z : IGame} : x ≤ z - y ↔ x + y ≤ z :=
-  @le_sub_iff_add_le Game _ _ _ (.mk x) (.mk y) (.mk z)
+  @le_sub_iff_add_le ConwayGame _ _ _ (.mk x) (.mk y) (.mk z)
 
 protected theorem sub_lt_iff_lt_add {x y z : IGame} : x - z < y ↔ x < y + z :=
-  @sub_lt_iff_lt_add Game _ _ _ (.mk x) (.mk y) (.mk z)
+  @sub_lt_iff_lt_add ConwayGame _ _ _ (.mk x) (.mk y) (.mk z)
 
 protected theorem lt_sub_iff_add_lt {x y z : IGame} : x < z - y ↔ x + y < z :=
-  @lt_sub_iff_add_lt Game _ _ _ (.mk x) (.mk y) (.mk z)
+  @lt_sub_iff_add_lt ConwayGame _ _ _ (.mk x) (.mk y) (.mk z)
 
 protected theorem sub_nonneg {x y : IGame} : 0 ≤ x - y ↔ y ≤ x :=
-  @sub_nonneg Game _ _ _ (.mk x) (.mk y)
+  @sub_nonneg ConwayGame _ _ _ (.mk x) (.mk y)
 
 protected theorem sub_nonpos {x y : IGame} : x - y ≤ 0 ↔ x ≤ y :=
-  @sub_nonpos Game _ _ _ (.mk x) (.mk y)
+  @sub_nonpos ConwayGame _ _ _ (.mk x) (.mk y)
 
 protected theorem sub_pos {x y : IGame} : 0 < x - y ↔ y < x :=
-  @sub_pos Game _ _ _ (.mk x) (.mk y)
+  @sub_pos ConwayGame _ _ _ (.mk x) (.mk y)
 
 protected theorem sub_neg {x y : IGame} : x - y < 0 ↔ x < y :=
-  @sub_neg Game _ _ _ (.mk x) (.mk y)
+  @sub_neg ConwayGame _ _ _ (.mk x) (.mk y)
 
 theorem mul_add_equiv (x y z : IGame) : x * (y + z) ≈ x * y + x * z :=
-  Game.mk_eq_mk.1 (Game.mk_mul_add x y z)
+  ConwayGame.mk_eq_mk.1 (ConwayGame.mk_mul_add x y z)
 
 theorem mul_sub_equiv (x y z : IGame) : x * (y - z) ≈ x * y - x * z :=
-  Game.mk_eq_mk.1 (Game.mk_mul_sub x y z)
+  ConwayGame.mk_eq_mk.1 (ConwayGame.mk_mul_sub x y z)
 
 theorem add_mul_equiv (x y z : IGame) : (x + y) * z ≈ x * z + y * z :=
-  Game.mk_eq_mk.1 (Game.mk_add_mul x y z)
+  ConwayGame.mk_eq_mk.1 (ConwayGame.mk_add_mul x y z)
 
 theorem sub_mul_equiv (x y z : IGame) : (x - y) * z ≈ x * z - y * z :=
-  Game.mk_eq_mk.1 (Game.mk_sub_mul x y z)
+  ConwayGame.mk_eq_mk.1 (ConwayGame.mk_sub_mul x y z)
 
 theorem mul_assoc_equiv (x y z : IGame) : x * y * z ≈ x * (y * z) :=
-  Game.mk_eq_mk.1 (Game.mk_mul_assoc x y z)
+  ConwayGame.mk_eq_mk.1 (ConwayGame.mk_mul_assoc x y z)
 
 @[simp, norm_cast]
 theorem natCast_le {m n : ℕ} : (m : IGame) ≤ n ↔ m ≤ n := by
-  simp [← Game.mk_le_mk]
+  simp [← ConwayGame.mk_le_mk]
 
 @[simp, norm_cast]
 theorem natCast_lt {m n : ℕ} : (m : IGame) < n ↔ m < n := by
-  simp [← Game.mk_lt_mk]
+  simp [← ConwayGame.mk_lt_mk]
 
 @[simp]
 theorem natCast_nonneg (n : ℕ) : 0 ≤ (n : IGame) :=
@@ -277,11 +281,11 @@ theorem natCast_equiv {m n : ℕ} : (m : IGame) ≈ n ↔ m = n := by
 
 @[simp, norm_cast]
 theorem intCast_le {m n : ℤ} : (m : IGame) ≤ n ↔ m ≤ n := by
-  simp [← Game.mk_le_mk]
+  simp [← ConwayGame.mk_le_mk]
 
 @[simp, norm_cast]
 theorem intCast_lt {m n : ℤ} : (m : IGame) < n ↔ m < n := by
-  simp [← Game.mk_lt_mk]
+  simp [← ConwayGame.mk_lt_mk]
 
 theorem intCast_strictMono : StrictMono ((↑) : ℤ → IGame) :=
   fun _ _ h ↦ intCast_lt.2 h
@@ -295,10 +299,10 @@ theorem intCast_equiv {m n : ℤ} : (m : IGame) ≈ n ↔ m = n := by
   simp [AntisymmRel, le_antisymm_iff]
 
 theorem intCast_add_equiv (m n : ℤ) : ((m + n : ℤ) : IGame) ≈ m + n := by
-  simp [← Game.mk_eq_mk]
+  simp [← ConwayGame.mk_eq_mk]
 
 theorem intCast_sub_equiv (m n : ℤ) : ((m - n : ℤ) : IGame) ≈ m - n := by
-  simp [← Game.mk_eq_mk]
+  simp [← ConwayGame.mk_eq_mk]
 
 @[simp, norm_cast]
 theorem zero_lt_intCast {n : ℤ} : 0 < (n : IGame) ↔ 0 < n := by
@@ -320,28 +324,30 @@ namespace Impartial
 variable (x y : IGame) [hx : Impartial x] [hy : Impartial y]
 
 @[simp]
-theorem neg_mk : -Game.mk x = Game.mk x :=
-  Game.mk_eq (equiv_neg x).symm
+theorem neg_mk : -ConwayGame.mk x = ConwayGame.mk x :=
+  ConwayGame.mk_eq (equiv_neg x).symm
 
 @[simp]
-theorem sub_mk (x : Game) : x - Game.mk y = x + Game.mk y := by
+theorem sub_mk (x : ConwayGame) : x - ConwayGame.mk y = x + ConwayGame.mk y := by
   rw [sub_eq_add_neg, neg_mk]
 
 @[simp]
-theorem mk_add_self : Game.mk x + Game.mk x = 0 := by
+theorem mk_add_self : ConwayGame.mk x + ConwayGame.mk x = 0 := by
   rw [add_eq_zero_iff_neg_eq, neg_mk]
 
 -- TODO: move these four lemmas earlier:
 
 theorem add_self_equiv (x : IGame) [Impartial x] : x + x ≈ 0 :=
-  Game.mk_eq_mk.1 (mk_add_self x)
+  ConwayGame.mk_eq_mk.1 (mk_add_self x)
 
 variable {x y}
 
 omit hx in
 /-- This lemma doesn't require `x` to be impartial. -/
 theorem equiv_iff_add_equiv_zero : x ≈ y ↔ x + y ≈ 0 := by
-  rw [← Game.mk_eq_mk, ← Game.mk_eq_mk, Game.mk_add, Game.mk_zero, add_eq_zero_iff_eq_neg, neg_mk]
+  rw [← ConwayGame.mk_eq_mk, ← ConwayGame.mk_eq_mk,
+    ConwayGame.mk_add, ConwayGame.mk_zero,
+    add_eq_zero_iff_eq_neg, neg_mk]
 
 omit hy in
 /-- This lemma doesn't require `y` to be impartial. -/

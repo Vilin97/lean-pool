@@ -128,7 +128,7 @@ def Surreal : Type (u + 1) :=
 
 namespace Surreal
 
-/-- The quotient map from the subtype of numeric `IGame`s into `Game`. -/
+/-- The quotient map from the subtype of numeric `IGame`s into `ConwayGame`. -/
 def mk (x : IGame) [h : Numeric x] : Surreal := Quotient.mk _ ⟨x, h⟩
 theorem mk_eq_mk {x y : IGame} [Numeric x] [Numeric y] : mk x = mk y ↔ x ≈ y := Quotient.eq
 
@@ -207,13 +207,13 @@ instance : NeZero (1 : Surreal) where
 instance : Nontrivial Surreal :=
   ⟨_, _, zero_ne_one⟩
 
-/-- Casts a `Surreal` number into a `Game`. -/
-def toGame : Surreal ↪o Game where
-  toFun := Quotient.lift (fun x ↦ .mk x) fun _ _ ↦ Game.mk_eq
+/-- Casts a `Surreal` number into a `ConwayGame`. -/
+def toGame : Surreal ↪o ConwayGame where
+  toFun := Quotient.lift (fun x ↦ .mk x) fun _ _ ↦ ConwayGame.mk_eq
   inj' x y := by
     cases x; cases y;
-    change Game.mk _ = Game.mk _ → _
-    simp [Game.mk_eq_mk, mk_eq_mk]
+    change ConwayGame.mk _ = ConwayGame.mk _ → _
+    simp [ConwayGame.mk_eq_mk, mk_eq_mk]
   map_rel_iff' := by rintro ⟨_⟩ ⟨_⟩; rfl
 
 @[simp] theorem toGame_mk (x : IGame) [Numeric x] : toGame (mk x) = .mk x := rfl
@@ -221,7 +221,7 @@ def toGame : Surreal ↪o Game where
 @[simp] theorem toGame_one : toGame 1 = 1 := rfl
 
 @[simp]
-theorem gameMk_out (x : Surreal) : Game.mk x.out = x.toGame := by
+theorem gameMk_out (x : Surreal) : ConwayGame.mk x.out = x.toGame := by
   conv_rhs => rw [← out_eq x, toGame_mk]
 
 theorem toGame_le_iff {a b : Surreal} : toGame a ≤ toGame b ↔ a ≤ b := by simp
@@ -230,7 +230,7 @@ theorem toGame_inj {a b : Surreal} : toGame a = toGame b ↔ a = b := by simp
 
 /-- `Surreal.toGame` as an `OrderAddMonoidHom` -/
 @[simps]
-def toGameAddHom : Surreal →+o Game where
+def toGameAddHom : Surreal →+o ConwayGame where
   toFun := toGame
   map_zero' := rfl
   map_add' := by rintro ⟨_⟩ ⟨_⟩; rfl
@@ -269,7 +269,7 @@ theorem toGame_ofSets' (st : Player → Set Surreal.{u}) [Small.{u} (st left)] [
     {H : ∀ x ∈ st left, ∀ y ∈ st right, x < y} :
     toGame !{st} = !{fun p ↦ toGame '' st p} := by
   change toGame (@mk _ (_)) = _
-  simp_rw [toGame_mk, Game.mk_ofSets', Set.image_image, gameMk_out]
+  simp_rw [toGame_mk, ConwayGame.mk_ofSets', Set.image_image, gameMk_out]
 
 @[simp]
 theorem toGame_ofSets (s t : Set Surreal.{u}) [Small.{u} s] [Small.{u} t]
@@ -284,7 +284,7 @@ theorem mk_ofSets' {st : Player → Set IGame.{u}}
       !{fun p ↦ .range fun x : st p ↦ mk x (h := H.of_mem_moves (p := p) (by simp))}'
       (by have := @H.left_lt_right; aesop) := by
   change _ = @mk _ (_)
-  simp_rw [← toGame_inj, toGame_mk, Game.mk_ofSets']
+  simp_rw [← toGame_inj, toGame_mk, ConwayGame.mk_ofSets']
   congr; aesop
 
 theorem mk_ofSets {s t : Set IGame.{u}} [Small.{u} s] [Small.{u} t] {H : Numeric !{s | t}} :
@@ -300,14 +300,14 @@ theorem lt_ofSets_of_mem_left {s t : Set Surreal.{u}} [Small.{u} s] [Small.{u} t
     {H : ∀ x ∈ s, ∀ y ∈ t, x < y} {x : Surreal} (hx : x ∈ s) :
     x < !{s | t} := by
   rw [lt_iff_not_ge, ← toGame_le_iff, toGame_ofSets]
-  exact Game.lf_ofSets_of_mem_left (Set.mem_image_of_mem _ hx)
+  exact ConwayGame.lf_ofSets_of_mem_left (Set.mem_image_of_mem _ hx)
 
 @[aesop apply safe]
 theorem ofSets_lt_of_mem_right {s t : Set Surreal.{u}} [Small.{u} s] [Small.{u} t]
     {H : ∀ x ∈ s, ∀ y ∈ t, x < y} {x : Surreal} (hx : x ∈ t) :
     !{s | t} < x := by
   rw [lt_iff_not_ge, ← toGame_le_iff, toGame_ofSets]
-  exact Game.ofSets_lf_of_mem_right (Set.mem_image_of_mem _ hx)
+  exact ConwayGame.ofSets_lf_of_mem_right (Set.mem_image_of_mem _ hx)
 
 theorem zero_def : (0 : Surreal) = !{fun _ ↦ ∅} := by apply (mk_ofSets' ..).trans; congr!; simp
 theorem one_def : (1 : Surreal) = !{{0} | ∅} := by apply (mk_ofSets ..).trans; congr! <;> aesop

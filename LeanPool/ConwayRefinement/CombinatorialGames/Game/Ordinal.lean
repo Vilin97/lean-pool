@@ -27,7 +27,7 @@ We also prove some properties about `NatCast`, which is related to the previous 
 # Main declarations
 
 - `NatOrdinal.toIGame`: The canonical map between `NatOrdinal` and `IGame`.
-- `NatOrdinal.toGame`: The canonical map between `NatOrdinal` and `Game`.
+- `NatOrdinal.toGame`: The canonical map between `NatOrdinal` and `ConwayGame`.
 -/
 
 universe u
@@ -136,23 +136,25 @@ theorem not_toIGame_fuzzy (a b : NatOrdinal) : ¬ toIGame a ‖ toIGame b := by
 theorem toIGame_nonneg (a : NatOrdinal) : 0 ≤ a.toIGame := by
   simpa using toIGame.monotone zero_le
 
-/-! ### `NatOrdinal` to `Game` -/
+/-! ### `NatOrdinal` to `ConwayGame` -/
 
 /-- Converts an ordinal into the corresponding game. -/
-noncomputable def toGame : NatOrdinal.{u} ↪o Game.{u} :=
+noncomputable def toGame : NatOrdinal.{u} ↪o ConwayGame.{u} :=
   .ofStrictMono (fun o ↦ .mk o.toIGame) fun _ _ h ↦ toIGame.strictMono h
 
-instance : Coe NatOrdinal Game where
+instance : Coe NatOrdinal ConwayGame where
   coe x := toGame x
 
-@[simp] theorem _root_.Game.mk_natOrdinal_toIGame (o : NatOrdinal) : .mk o.toIGame = o.toGame := rfl
+@[simp] theorem _root_.ConwayGame.mk_natOrdinal_toIGame (o : NatOrdinal) :
+    .mk o.toIGame = o.toGame :=
+  rfl
 
 theorem toGame_def (o : NatOrdinal) : o.toGame = !{toGame '' Iio o | ∅} := by
-  rw [← Game.mk_natOrdinal_toIGame, toIGame_def]
+  rw [← ConwayGame.mk_natOrdinal_toIGame, toIGame_def]
   simp [image_image]
 
-@[simp] theorem toGame_zero : toGame 0 = 0 := by simp [← Game.mk_natOrdinal_toIGame]
-@[simp] theorem toGame_one : toGame 1 = 1 := by simp [← Game.mk_natOrdinal_toIGame]
+@[simp] theorem toGame_zero : toGame 0 = 0 := by simp [← ConwayGame.mk_natOrdinal_toIGame]
+@[simp] theorem toGame_one : toGame 1 = 1 := by simp [← ConwayGame.mk_natOrdinal_toIGame]
 
 @[simp]
 theorem not_toGame_fuzzy (a b : NatOrdinal) : ¬ toGame a ‖ toGame b :=
@@ -180,7 +182,7 @@ termination_by (a, b)
 
 @[simp]
 theorem toGame_add (a b : NatOrdinal) : (a + b).toGame = a.toGame + b.toGame :=
-  Game.mk_eq (toIGame_add a b)
+  ConwayGame.mk_eq (toIGame_add a b)
 
 /-- The natural multiplication of ordinals corresponds to their product as games. -/
 theorem toIGame_mul (a b : NatOrdinal) : (a * b).toIGame ≈ a.toIGame * b.toIGame := by
@@ -200,11 +202,11 @@ termination_by (a, b)
 
 @[simp]
 theorem toGame_mul (a b : NatOrdinal) : (a * b).toGame = .mk (a.toIGame * b.toIGame) :=
-  Game.mk_eq (toIGame_mul a b)
+  ConwayGame.mk_eq (toIGame_mul a b)
 
 /-- `NatOrdinal.toGame` as an `OrderAddMonoidHom`. -/
 @[simps]
-def toGameAddHom : NatOrdinal →+o Game where
+def toGameAddHom : NatOrdinal →+o ConwayGame where
   toFun := toGame
   map_zero' := toGame_zero
   map_add' := toGame_add
@@ -218,7 +220,7 @@ theorem toGame_natCast : ∀ n : ℕ, toGame n = n :=
 
 /-- Note that the equality doesn't hold, as e.g. `↑2 = {1 | }`, while `toIGame 2 = {0, 1 | }`. -/
 theorem toIGame_natCast_equiv (n : ℕ) : toIGame n ≈ n :=
-  Game.mk_eq_mk.1 (by simp)
+  ConwayGame.mk_eq_mk.1 (by simp)
 
 end NatOrdinal
 

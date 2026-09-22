@@ -37,7 +37,8 @@ to express this on their own. See the docstring on `GameFunctor` for more inform
 
 We are also interested in further quotients of `IGame`. The quotient of games under equivalence
 `x ≈ y ↔ x ≤ y ∧ y ≤ x`, which in the literature is often what is meant by a "combinatorial game",
-is defined as `Game` in `CombinatorialGames.Game.Basic`. The surreal numbers `Surreal` are defined
+is defined as `ConwayGame` in `CombinatorialGames.Game.Basic`. The surreal numbers `Surreal`
+are defined
 as a quotient (of a subtype) of games in `CombinatorialGames.Surreal.Basic`.
 
 ## Conway induction
@@ -75,7 +76,7 @@ Most of the usual arithmetic operations can be defined for games. Addition is de
 `x = !{s₁ | t₁}` and `y = !{s₂ | t₂}` by `x + y = !{s₁ + y, x + s₂ | t₁ + y, x + t₂}`. Negation is
 defined by `-!{s | t} = !{-t | -s}`.
 
-The order structures interact in the expected way with arithmetic. In particular, `Game` is an
+The order structures interact in the expected way with arithmetic. In particular, `ConwayGame` is an
 `OrderedAddCommGroup`. Meanwhile, `IGame` satisfies the slightly weaker axioms of a
 `SubtractionCommMonoid`, since the equation `x - x = 0` is only true up to equivalence.
 -/
@@ -92,7 +93,7 @@ open Set Pointwise
 -- Computations can be performed through the `game_cmp` tactic.
 public noncomputable section
 
-/-! ### Game moves -/
+/-! ### ConwayGame moves -/
 
 /-- Well-founded games up to identity.
 
@@ -102,7 +103,8 @@ exactly when their left and right sets of options are.
 This is not the same equivalence as used broadly in combinatorial game theory literature, as a game
 like `{0, 1 | 0}` is not *identical* to `{1 | 0}`, despite being equivalent. However, many theorems
 can be proven over the 'identical' equivalence relation, and the literature may occasionally
-specifically use the 'identical' equivalence relation for this reason. The quotient `Game` of games
+specifically use the 'identical' equivalence relation for this reason. The quotient
+`ConwayGame` of games
 up to equality is defined in `CombinatorialGames.Game.Basic`.
 
 More precisely, `IGame` is the inductive type for the single constructor
@@ -163,7 +165,7 @@ theorem ofSets_leftMoves_rightMoves (x : IGame) : !{xᴸ | xᴿ} = x := by
 /-- Two `IGame`s are equal when their move sets are.
 
 For the weaker but more common notion of equivalence where `x = y` if `x ≤ y` and `y ≤ x`,
-use `Game`. -/
+use `ConwayGame`. -/
 @[ext]
 theorem ext {x y : IGame.{u}} (h : ∀ p, x.moves p = y.moves p) :
     x = y := by

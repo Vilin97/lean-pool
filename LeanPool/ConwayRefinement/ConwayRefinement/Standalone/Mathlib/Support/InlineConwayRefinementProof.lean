@@ -707,8 +707,8 @@ abbrev SupportSurreal := ConwayRefinement.Standalone.InlineSurreal.Surreal
 abbrev SupportQuotientGame := ConwayRefinement.Standalone.InlineSurreal.Game
 
 /-- Convert an auxiliary quotient game to the CombinatorialGames quotient. -/
-noncomputable def gameToCG (x : SupportQuotientGame.{u}) : _root_.Game.{u} :=
-  _root_.Game.mk (toCG x.out)
+noncomputable def gameToCG (x : SupportQuotientGame.{u}) : _root_.ConwayGame.{u} :=
+  _root_.ConwayGame.mk (toCG x.out)
 
 /-- Convert a surreal number from the auxiliary model to the CombinatorialGames model. -/
 noncomputable def surrealToCG (x : SupportSurreal.{u}) : _root_.Surreal.{u} :=
@@ -724,15 +724,16 @@ theorem toCG_equiv (x y : SupportGame.{u}) :
   rw [toCG_le, toCG_le]
 
 theorem gameToCG_mk (x : SupportGame.{u}) :
-    gameToCG (ConwayRefinement.Standalone.InlineSurreal.Game.mk x) = _root_.Game.mk (toCG x) := by
-  rw [gameToCG, _root_.Game.mk_eq_mk]
+    gameToCG (ConwayRefinement.Standalone.InlineSurreal.Game.mk x) =
+      _root_.ConwayGame.mk (toCG x) := by
+  rw [gameToCG, _root_.ConwayGame.mk_eq_mk]
   apply toCG_equiv _ _ |>.mp
   exact ConwayRefinement.Standalone.InlineSurreal.Game.mk_out_equiv x
 
 theorem gameToCG_singletonCut (l r : SupportQuotientGame.{u}) :
     gameToCG !{{l} | {r}} = !{{gameToCG l} | {gameToCG r}} := by
   rw [gameToCG]
-  apply _root_.Game.mk_eq
+  apply _root_.ConwayGame.mk_eq
   let sraw : SupportGame.{u} :=
     ConwayRefinement.Standalone.InlineSurreal.OfSets.ofSets
       (ConwayRefinement.Standalone.InlineSurreal.Player.cases {l.out} {r.out}) trivial
@@ -757,9 +758,9 @@ theorem gameToCG_singletonCut (l r : SupportQuotientGame.{u}) :
     rw [moves_toCG]
     cases p <;> simp [sraw, playerToSupport]
   have htarget :
-      toCG sraw ≤ !{fun p ↦ _root_.Game.out ''
+      toCG sraw ≤ !{fun p ↦ _root_.ConwayGame.out ''
           _root_.Player.cases {gameToCG l} {gameToCG r} p} ∧
-        !{fun p ↦ _root_.Game.out ''
+        !{fun p ↦ _root_.ConwayGame.out ''
           _root_.Player.cases {gameToCG l} {gameToCG r} p} ≤ toCG sraw := by
     rw [hraw]
     apply _root_.IGame.equiv_of_exists <;>
@@ -768,19 +769,19 @@ theorem gameToCG_singletonCut (l r : SupportQuotientGame.{u}) :
     · intro a ha
       subst a
       exact ⟨(gameToCG l).out, ⟨gameToCG l, rfl, rfl⟩,
-        (_root_.Game.mk_out_equiv (toCG l.out)).symm⟩
+        (_root_.ConwayGame.mk_out_equiv (toCG l.out)).symm⟩
     · intro a ha
       subst a
       exact ⟨(gameToCG r).out, ⟨gameToCG r, rfl, rfl⟩,
-        (_root_.Game.mk_out_equiv (toCG r.out)).symm⟩
+        (_root_.ConwayGame.mk_out_equiv (toCG r.out)).symm⟩
     · intro b hb
       obtain ⟨l', hl', rfl⟩ := hb
       subst l'
-      exact ⟨toCG l.out, rfl, (_root_.Game.mk_out_equiv (toCG l.out)).symm⟩
+      exact ⟨toCG l.out, rfl, (_root_.ConwayGame.mk_out_equiv (toCG l.out)).symm⟩
     · intro b hb
       obtain ⟨r', hr', rfl⟩ := hb
       subst r'
-      exact ⟨toCG r.out, rfl, (_root_.Game.mk_out_equiv (toCG r.out)).symm⟩
+      exact ⟨toCG r.out, rfl, (_root_.ConwayGame.mk_out_equiv (toCG r.out)).symm⟩
   exact ⟨hout.1.trans htarget.1, htarget.2.trans hout.2⟩
 
 theorem surrealToCG_mk (x : SupportGame.{u})

@@ -102,7 +102,7 @@ theorem birthday_ofSets_le {s t : Set Surreal.{u}}
       obtain ⟨hy, _, _⟩ := hf y
       exact hy
   have : !{s | t} = mk !{f '' s | f '' t} := by
-    rw [← toGame_inj, toGame_ofSets, toGame_mk, Game.mk_ofSets]
+    rw [← toGame_inj, toGame_ofSets, toGame_mk, ConwayGame.mk_ofSets]
     simp_rw [image_image]
     congr! with a ha a ha
     all_goals
@@ -129,7 +129,7 @@ proof_wanted birthday_mul_le (x y : Surreal) : (x * y).birthday ≤ x.birthday *
 theorem birthday_toGame_le (x : Surreal) : x.toGame.birthday ≤ x.birthday := by
   obtain ⟨c, _, rfl, h⟩ := birthday_eq_iGameBirthday x
   rw [← h, toGame_mk]
-  exact Game.birthday_mk_le c
+  exact ConwayGame.birthday_mk_le c
 
 /-- Surreals with a bounded birthday form a small set. -/
 instance small_setOf_birthday_le (o : NatOrdinal.{u}) : Small.{u} {x | birthday x ≤ o} := by

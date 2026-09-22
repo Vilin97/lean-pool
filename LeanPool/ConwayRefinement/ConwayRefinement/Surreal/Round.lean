@@ -33,7 +33,7 @@ theorem ofSets_eq_mk {s t : Set Surreal.{u}} [Small.{u} s] [Small.{u} t]
       rintro _ ⟨x, hx, rfl⟩ _ ⟨y, hy, rfl⟩
       rw [← Surreal.mk_lt_mk, out_eq, out_eq]
       exact H x hx y hy) (by simp)) := by
-  rw [← toGame_inj, toGame_ofSets, toGame_mk, Game.mk_ofSets]
+  rw [← toGame_inj, toGame_ofSets, toGame_mk, ConwayGame.mk_ofSets]
   simp_rw [image_image, gameMk_out]
 
 /-- A surreal cut is no more complex than any surreal strictly between all its options. -/

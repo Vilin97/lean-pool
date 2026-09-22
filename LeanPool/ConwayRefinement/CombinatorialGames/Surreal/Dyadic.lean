@@ -354,8 +354,8 @@ theorem toIGame_equiv (x : Dyadic) : (x : IGame) ≈ (x : ℚ) := by
 termination_by x.den
 
 @[simp]
-theorem _root_.Game.mk_dyadic (x : Dyadic) : Game.mk x = x :=
-  Game.mk_eq x.toIGame_equiv
+theorem _root_.ConwayGame.mk_dyadic (x : Dyadic) : ConwayGame.mk x = x :=
+  ConwayGame.mk_eq x.toIGame_equiv
 
 @[simp]
 theorem _root_.Surreal.mk_dyadic (x : Dyadic) : Surreal.mk x = x := by
@@ -575,9 +575,9 @@ theorem toIGame_toDyadic_equiv (x : IGame) [Short x] [Numeric x] : (x.toDyadic :
   (equiv_toIGame_toDyadic x).symm
 
 @[simp]
-theorem _root_.Game.ratCast_toDyadic (x : IGame) [Short x] [Numeric x] :
-    x.toDyadic = Game.mk x := by
-  simpa using Game.mk_eq (toIGame_toDyadic_equiv x)
+theorem _root_.ConwayGame.ratCast_toDyadic (x : IGame) [Short x] [Numeric x] :
+    x.toDyadic = ConwayGame.mk x := by
+  simpa using ConwayGame.mk_eq (toIGame_toDyadic_equiv x)
 
 @[simp]
 theorem _root_.Surreal.ratCast_toDyadic (x : IGame) [Short x] [Numeric x] :

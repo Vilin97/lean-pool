@@ -18,7 +18,8 @@ import Mathlib.Tactic.Ring
 # Surreal division
 
 In this file, we prove that if `x` is a positive numeric game, then `x⁻¹` (defined in
-`Mathlib.SetTheory.Game.IGame`) is a number and is a multiplicative inverse for `x`. We use that
+`CombinatorialGames.Game.IGame`) is a number and is a multiplicative inverse for `x`. We use
+that
 to define the field structure on `Surreal`.
 
 This is Theorem 1.10 in ONAG, and we follow the broad strokes of the proof. We prove
@@ -74,24 +75,24 @@ private lemma mulOption_self_inv (x : IGame) {y : IGame} (hy : y * y⁻¹ ≈ 1)
 
 private lemma mulOption_le (x y : IGame) {a b : IGame} [Numeric y] [Numeric a] [Numeric b]
     (ha : a ≤ 0) (hb : b ≤ y) : mulOption x y a b ≤ x * b := by
-  rw [mulOption, ← Game.mk_le_mk]
+  rw [mulOption, ← ConwayGame.mk_le_mk]
   dsimp
-  have : Game.mk (a * y) - Game.mk (a * b) ≤ 0 := by
-    rw [← Game.mk_mul_sub]
+  have : ConwayGame.mk (a * y) - ConwayGame.mk (a * b) ≤ 0 := by
+    rw [← ConwayGame.mk_mul_sub]
     apply Numeric.mul_nonpos_of_nonpos_of_nonneg ha
     rwa [IGame.sub_nonneg]
-  rw [← add_le_add_iff_left (Game.mk (x * b))] at this
+  rw [← add_le_add_iff_left (ConwayGame.mk (x * b))] at this
   convert this using 1 <;> abel
 
 private theorem le_mulOption (x y : IGame) {a b : IGame} [Numeric y] [Numeric a] [Numeric b]
     (ha : a ≤ 0) (hb : y ≤ b) : x * b ≤ mulOption x y a b := by
-  rw [mulOption, ← Game.mk_le_mk]
+  rw [mulOption, ← ConwayGame.mk_le_mk]
   dsimp
-  have : 0 ≤ Game.mk (a * y) - Game.mk (a * b) := by
-    rw [← Game.mk_mul_sub]
+  have : 0 ≤ ConwayGame.mk (a * y) - ConwayGame.mk (a * b) := by
+    rw [← ConwayGame.mk_mul_sub]
     apply Numeric.mul_nonneg_of_nonpos_of_nonpos ha
     rwa [IGame.sub_nonpos]
-  rw [← add_le_add_iff_left (Game.mk (x * b))] at this
+  rw [← add_le_add_iff_left (ConwayGame.mk (x * b))] at this
   convert this using 1 <;> abel
 
 /-! ### Inductive proof -/
@@ -306,7 +307,7 @@ theorem mk_ratCast (q : ℚ) : mk q = q := by
 
 @[simp]
 theorem toGame_ratCast (q : ℚ) : toGame q = q := by
-  rw [← mk_ratCast, toGame_mk, Game.mk_ratCast]
+  rw [← mk_ratCast, toGame_mk, ConwayGame.mk_ratCast]
 
 end Surreal
 
@@ -478,53 +479,53 @@ theorem mk_half : Surreal.mk ½ = 2⁻¹ := by
 
 end IGame
 
-namespace Game
+namespace ConwayGame
 
 @[simp, norm_cast]
-theorem ratCast_le {m n : ℚ} : (m : Game) ≤ n ↔ m ≤ n :=
+theorem ratCast_le {m n : ℚ} : (m : ConwayGame) ≤ n ↔ m ≤ n :=
   IGame.ratCast_le
 
 @[simp, norm_cast]
-theorem ratCast_lt {m n : ℚ} : (m : Game) < n ↔ m < n :=
+theorem ratCast_lt {m n : ℚ} : (m : ConwayGame) < n ↔ m < n :=
   IGame.ratCast_lt
 
-theorem ratCast_strictMono : StrictMono ((↑) : ℚ → Game) :=
+theorem ratCast_strictMono : StrictMono ((↑) : ℚ → ConwayGame) :=
   fun _ _ h ↦ ratCast_lt.2 h
 
 @[simp, norm_cast]
-theorem ratCast_inj {m n : ℚ} : (m : Game) = n ↔ m = n :=
+theorem ratCast_inj {m n : ℚ} : (m : ConwayGame) = n ↔ m = n :=
   ratCast_strictMono.injective.eq_iff
 
 @[simp, norm_cast]
-theorem ratCast_natCast (n : ℕ) : ((n : ℚ) : Game) = n := by
-  simpa using Game.mk_eq (IGame.ratCast_natCast_equiv n)
+theorem ratCast_natCast (n : ℕ) : ((n : ℚ) : ConwayGame) = n := by
+  simpa using ConwayGame.mk_eq (IGame.ratCast_natCast_equiv n)
 
 @[simp, norm_cast]
-theorem ratCast_intCast (n : ℤ) : ((n : ℚ) : Game) = n := by
-  simpa using Game.mk_eq (IGame.ratCast_intCast_equiv n)
+theorem ratCast_intCast (n : ℤ) : ((n : ℚ) : ConwayGame) = n := by
+  simpa using ConwayGame.mk_eq (IGame.ratCast_intCast_equiv n)
 
 @[simp, norm_cast]
-theorem ratCast_add (m n : ℚ) : ((m + n : ℚ) : Game) = m + n :=
-  Game.mk_eq (IGame.ratCast_add_equiv m n)
+theorem ratCast_add (m n : ℚ) : ((m + n : ℚ) : ConwayGame) = m + n :=
+  ConwayGame.mk_eq (IGame.ratCast_add_equiv m n)
 
 @[simp, norm_cast]
-theorem ratCast_sub (m n : ℚ) : ((m - n : ℚ) : Game) = m - n :=
-  Game.mk_eq (IGame.ratCast_sub_equiv m n)
+theorem ratCast_sub (m n : ℚ) : ((m - n : ℚ) : ConwayGame) = m - n :=
+  ConwayGame.mk_eq (IGame.ratCast_sub_equiv m n)
 
 @[simp, norm_cast]
-theorem zero_lt_ratCast {q : ℚ} : 0 < (q : Game) ↔ 0 < q :=
+theorem zero_lt_ratCast {q : ℚ} : 0 < (q : ConwayGame) ↔ 0 < q :=
   IGame.zero_lt_ratCast
 
 @[simp, norm_cast]
-theorem ratCast_lt_zero {q : ℚ} : (q : Game) < 0 ↔ q < 0 :=
+theorem ratCast_lt_zero {q : ℚ} : (q : ConwayGame) < 0 ↔ q < 0 :=
   IGame.ratCast_lt_zero
 
 @[simp, norm_cast]
-theorem zero_le_ratCast {q : ℚ} : 0 ≤ (q : Game) ↔ 0 ≤ q :=
+theorem zero_le_ratCast {q : ℚ} : 0 ≤ (q : ConwayGame) ↔ 0 ≤ q :=
   IGame.zero_le_ratCast
 
 @[simp, norm_cast]
-theorem ratCast_le_zero {q : ℚ} : (q : Game) ≤ 0 ↔ q ≤ 0 :=
+theorem ratCast_le_zero {q : ℚ} : (q : ConwayGame) ≤ 0 ↔ q ≤ 0 :=
   IGame.ratCast_le_zero
 
-end Game
+end ConwayGame

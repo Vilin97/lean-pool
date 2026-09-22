@@ -95,7 +95,7 @@ theorem mk_noncanonicalZero :
   apply Surreal.toGame_inj.1
   rw [ZFSet.Surreal.toSurreal_mk, Surreal.toGame_mk,
     ZFSet.Surreal.toSurreal_zero, Surreal.toGame_zero]
-  apply Game.mk_eq
+  apply ConwayGame.mk_eq
   rw [noncanonicalZero, ZFSet.GameCode.toIGame_ofSets]
   apply IGame.fits_zero_iff_equiv.1
   simp [IGame.Fits]

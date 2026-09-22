@@ -101,12 +101,12 @@ private theorem IsOmnificGame.neg {x : IGame.{u}} (hx : IsOmnificGame x) :
 private theorem cutGame_add_cutGame_equiv {x y : IGame.{u}}
     (hx : IsOmnificGame x) (hy : IsOmnificGame y) :
     cutGame x + cutGame y ≈ cutGame (x + y) := by
-  have hx' : Game.mk !{{x - 1} | {x + 1}} = Game.mk x := (Game.mk_eq hx).symm
-  have hy' : Game.mk !{{y - 1} | {y + 1}} = Game.mk y := (Game.mk_eq hy).symm
-  apply Game.mk_eq_mk.mp
-  simp only [cutGame, IGame.ofSets_add_ofSets, Game.mk_ofSets, Set.image_union,
+  have hx' : ConwayGame.mk !{{x - 1} | {x + 1}} = ConwayGame.mk x := (ConwayGame.mk_eq hx).symm
+  have hy' : ConwayGame.mk !{{y - 1} | {y + 1}} = ConwayGame.mk y := (ConwayGame.mk_eq hy).symm
+  apply ConwayGame.mk_eq_mk.mp
+  simp only [cutGame, IGame.ofSets_add_ofSets, ConwayGame.mk_ofSets, Set.image_union,
     Set.image_singleton]
-  simp only [Game.mk_add, Game.mk_sub, Game.mk_one, hx', hy']
+  simp only [ConwayGame.mk_add, ConwayGame.mk_sub, ConwayGame.mk_one, hx', hy']
   abel_nf
   congr <;> simp
 

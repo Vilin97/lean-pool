@@ -18,12 +18,13 @@ import Mathlib.Data.Set.Finite.Lattice
 There are two related but distinct notions of a birthday within combinatorial game theory. One is
 the birthday of an `IGame`, which represents the "step" at which it is constructed. We define it
 recursively as the least ordinal larger than the birthdays of its left and right options. On the
-other hand, the birthday of a `Game` is the smallest birthday among all `IGame`s that quotient to
+other hand, the birthday of a `ConwayGame` is the smallest birthday among all `IGame`s that
+quotient to
 it.
 
 The birthday of an `IGame` can be understood as representing the depth of its game tree. Meanwhile,
-the birthday of a `Game` more closely matches Conway's original description. The lemma
-`Game.birthday_eq_iGameBirthday` links both definitions together.
+the birthday of a `ConwayGame` more closely matches Conway's original description. The lemma
+`ConwayGame.birthday_eq_iGameBirthday` links both definitions together.
 -/
 
 universe u
@@ -306,23 +307,23 @@ theorem Short.birthday_lt_omega0 (x : IGame) [Short x] : birthday x < of .omega0
 
 end IGame
 
-/-! ### `Game` birthday -/
+/-! ### `ConwayGame` birthday -/
 
-namespace Game
+namespace ConwayGame
 
 /-- The birthday of a game is defined as the least birthday among all pre-games that define it. -/
-noncomputable def birthday (x : Game.{u}) : NatOrdinal.{u} :=
+noncomputable def birthday (x : ConwayGame.{u}) : NatOrdinal.{u} :=
   sInf (IGame.birthday '' (mk ⁻¹' {x}))
 
-theorem birthday_eq_iGameBirthday (x : Game) :
-    ∃ y : IGame, Game.mk y = x ∧ y.birthday = birthday x := by
+theorem birthday_eq_iGameBirthday (x : ConwayGame) :
+    ∃ y : IGame, ConwayGame.mk y = x ∧ y.birthday = birthday x := by
   refine csInf_mem (image_nonempty.2 ?_)
   exact ⟨_, x.out_eq⟩
 
 theorem birthday_mk_le (x : IGame) : birthday (mk x) ≤ x.birthday :=
   csInf_le' ⟨x, rfl, rfl⟩
 
-theorem le_birthday_iff {x : Game} {o : NatOrdinal} :
+theorem le_birthday_iff {x : ConwayGame} {o : NatOrdinal} :
     o ≤ x.birthday ↔ ∀ y, mk y = x → o ≤ y.birthday :=
   ⟨fun hx y hy => hx.trans (hy ▸ (birthday_mk_le y)),
     fun h => (birthday_eq_iGameBirthday x).elim fun y hy => (h y hy.1).trans_eq hy.2⟩
@@ -332,27 +333,27 @@ theorem birthday_zero : birthday 0 = 0 := by
   simpa using birthday_mk_le 0
 
 @[simp]
-theorem birthday_eq_zero {x : Game} : birthday x = 0 ↔ x = 0 := by
+theorem birthday_eq_zero {x : ConwayGame} : birthday x = 0 ↔ x = 0 := by
   obtain ⟨_, _, _⟩ := birthday_eq_iGameBirthday x
   refine ⟨fun _ ↦ ?_, ?_⟩ <;> simp_all
 
-private theorem birthday_neg_le (x : Game) : (-x).birthday ≤ x.birthday := by
+private theorem birthday_neg_le (x : ConwayGame) : (-x).birthday ≤ x.birthday := by
   obtain ⟨y, hy, hy'⟩ := birthday_eq_iGameBirthday x
   rw [← hy', ← hy]
   apply (birthday_mk_le _).trans
   rw [IGame.birthday_neg]
 
 @[simp]
-theorem birthday_neg (x : Game) : (-x).birthday = x.birthday := by
+theorem birthday_neg (x : ConwayGame) : (-x).birthday = x.birthday := by
   apply (birthday_neg_le x).antisymm
   simpa using birthday_neg_le (-x)
 
-theorem le_toGame_birthday (x : Game) : x ≤ x.birthday.toGame := by
+theorem le_toGame_birthday (x : ConwayGame) : x ≤ x.birthday.toGame := by
   obtain ⟨y, hy, hy'⟩ := birthday_eq_iGameBirthday x
   rw [← hy', ← hy]
   exact y.le_toIGame_birthday
 
-theorem neg_toGame_birthday_le (x : Game) : -x.birthday.toGame ≤ x := by
+theorem neg_toGame_birthday_le (x : ConwayGame) : -x.birthday.toGame ≤ x := by
   simpa [neg_le] using le_toGame_birthday (-x)
 
 @[simp]
@@ -374,13 +375,13 @@ theorem birthday_one : birthday 1 = 1 := by
   simpa using birthday_natCast 1
 
 @[simp]
-theorem birthday_star : birthday (Game.mk ⋆) = 1 := by
+theorem birthday_star : birthday (ConwayGame.mk ⋆) = 1 := by
   apply le_antisymm
   · simpa using birthday_mk_le ⋆
   · rw [one_le_iff_ne_zero, birthday_eq_zero.ne]
     exact IncompRel.ne (r := (· ≤ ·)) IGame.star_fuzzy_zero
 
-theorem birthday_ofSets_le {s t : Set Game.{u}} [Small.{u} s] [Small.{u} t] :
+theorem birthday_ofSets_le {s t : Set ConwayGame.{u}} [Small.{u} s] [Small.{u} t] :
     birthday !{s | t} ≤ max (sSup (succ ∘ birthday '' s)) (sSup (succ ∘ birthday '' t)) := by
   choose f hf using birthday_eq_iGameBirthday
   trans !{f '' s | f '' t}.birthday
@@ -390,13 +391,13 @@ theorem birthday_ofSets_le {s t : Set Game.{u}} [Small.{u} s] [Small.{u} t] :
   · simp_rw [IGame.birthday_ofSets, image_comp]
     congr! <;> aesop
 
-theorem birthday_add_le (x y : Game) : (x + y).birthday ≤ x.birthday + y.birthday := by
+theorem birthday_add_le (x y : ConwayGame) : (x + y).birthday ≤ x.birthday + y.birthday := by
   obtain ⟨a, ha, ha'⟩ := birthday_eq_iGameBirthday x
   obtain ⟨b, hb, hb'⟩ := birthday_eq_iGameBirthday y
   rw [← ha', ← hb', ← ha, ← hb, ← IGame.birthday_add]
   exact birthday_mk_le _
 
-theorem birthday_sub_le (x y : Game) : (x - y).birthday ≤ x.birthday + y.birthday := by
+theorem birthday_sub_le (x y : ConwayGame) : (x - y).birthday ≤ x.birthday + y.birthday := by
   simpa [sub_eq_add_neg] using birthday_add_le x (-y)
 
 /-- Games with a bounded birthday form a small set. -/
@@ -417,5 +418,5 @@ instance small_subtype_birthday_le (o : NatOrdinal.{u}) : Small.{u} {x // birthd
 instance small_subtype_birthday_lt (o : NatOrdinal.{u}) : Small.{u} {x // birthday x < o} :=
   small_setOf_birthday_lt o
 
-end Game
+end ConwayGame
 end
