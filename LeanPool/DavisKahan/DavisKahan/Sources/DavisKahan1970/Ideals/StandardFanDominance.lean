@@ -156,6 +156,7 @@ theorem gauge_adjoint (I : StandardSymmetricIdeal) (A : E →L[𝕜] F) :
 
 end StandardSymmetricIdeal
 
+omit [CompleteSpace E] [CompleteSpace F] in
 /-- Fan dominance for the minimal fully symmetric envelope.
 
 The witness from `B` remains a witness for `A`, because weak submajorization is

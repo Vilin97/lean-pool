@@ -270,7 +270,7 @@ The smallness hypothesis is the printed `‖R‖ < δ/2` on the residual itself,
 does not become `‖H‖ < δ/2`. -/
 theorem theorem8_2_residual_sourceExact_unbounded_complex
     {Hc : Type v} [NormedAddCommGroup Hc] [InnerProductSpace ℂ Hc] [CompleteSpace Hc]
-    [TopologicalSpace.SeparableSpace Hc]
+
     (N : NormalizedUnitaryInvariantNorm.{0, v} ℂ)
     {A : Hc →ₗ.[ℂ] Hc} (hA : IsSelfAdjoint A)
     (Hop : Hc →L[ℂ] Hc) (hHop : Hop.IsSymmetric)

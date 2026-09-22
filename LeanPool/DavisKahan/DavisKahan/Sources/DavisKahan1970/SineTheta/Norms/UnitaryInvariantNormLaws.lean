@@ -274,6 +274,7 @@ theorem extendedGauge_comp_le (N : SymmetricNormingFunction)
   ring
 
 omit [CompleteSpace G] in
+omit [CompleteSpace E] [CompleteSpace F] in
 /-- Membership is a two-sided operator ideal. -/
 theorem comp_mem (N : SymmetricNormingFunction)
     {A : E →L[𝕜] F} (hA : N.Mem A)
@@ -309,6 +310,7 @@ theorem extendedGauge_neg (N : SymmetricNormingFunction) (A : E →L[𝕜] F) :
   rw [hA, N.extendedGauge_smul]
   simp
 
+omit [CompleteSpace E] [CompleteSpace F] in
 /-- **Ideal membership does not see a sign.**
 
 Needed wherever a source theorem is read with the perturbation's sign reversed --
@@ -319,6 +321,7 @@ theorem mem_neg (N : SymmetricNormingFunction) {A : E →L[𝕜] F} :
     N.Mem (-A) ↔ N.Mem A := by
   simp only [Mem, N.extendedGauge_neg]
 
+omit [CompleteSpace E] [CompleteSpace F] in
 /-- **The real gauge does not see a sign.** -/
 theorem gauge_neg (N : SymmetricNormingFunction) (A : E →L[𝕜] F) :
     N.gauge (-A) = N.gauge A := by
@@ -341,6 +344,7 @@ theorem gauge_add_le
   rw [ENNReal.toReal_add hA hB] at hto
   exact hto
 
+omit [CompleteSpace G] in
 /-- Exact ideal inequality for the real-valued source norm. -/
 theorem gauge_comp_le (N : SymmetricNormingFunction)
     {A : E →L[𝕜] F} (hA : N.Mem A)

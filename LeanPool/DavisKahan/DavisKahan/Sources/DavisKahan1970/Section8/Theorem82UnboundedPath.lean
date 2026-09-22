@@ -878,7 +878,7 @@ The printed statement: add to the `sin 2Θ` theorem's hypotheses *either*
 conclude `Θ < π/4`.  Section 3's standing assumption (3.5) is what turns the
 directed conclusion into the printed symmetric one. -/
 theorem theorem8_2_branch_maximalAngle_lt_unbounded_source_complex
-    [TopologicalSpace.SeparableSpace Hc]
+
     {A : Hc →ₗ.[ℂ] Hc} (hA : IsSelfAdjoint A)
     (Hop : Hc →L[ℂ] Hc) (hHop : Hop.IsSymmetric)
     {P Q : Submodule ℂ Hc} [P.HasOrthogonalProjection] [Q.HasOrthogonalProjection]
