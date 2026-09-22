@@ -112,11 +112,11 @@ theorem machineRepeatPairRuler_mem_FP : machineRepeatPairRuler ∈ FP :=
   machinePairFirst_mem_FP
 
 theorem machineRepeatPairItem_mem_FP : machineRepeatPairItem ∈ FP := by
-  simpa only [machineRepeatPairItem] using
+  simpa only [machineRepeatPairItem] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineRepeatPairTail_mem_FP : machineRepeatPairTail ∈ FP := by
-  simpa only [machineRepeatPairTail] using
+  simpa only [machineRepeatPairTail] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairSecond_mem_FP
 
 theorem machineRepeatPairBound_mem_FP : machineRepeatPairBound ∈ FP :=
@@ -127,12 +127,12 @@ theorem machineRepeatPairStateItem_mem_FP :
 
 theorem machineRepeatPairStateAcc_mem_FP :
     machineRepeatPairStateAcc ∈ FP := by
-  simpa only [machineRepeatPairStateAcc] using
+  simpa only [machineRepeatPairStateAcc] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairFirst_mem_FP
 
 theorem machineRepeatPairStateBound_mem_FP :
     machineRepeatPairStateBound ∈ FP := by
-  simpa only [machineRepeatPairStateBound] using
+  simpa only [machineRepeatPairStateBound] using!
     machineCompose_mem_FP machinePairSecond_mem_FP machinePairSecond_mem_FP
 
 theorem machineRepeatPairCandidate_mem_FP :
@@ -142,7 +142,7 @@ theorem machineRepeatPairCandidate_mem_FP :
 
 theorem machineRepeatPairNextAcc_mem_FP :
     machineRepeatPairNextAcc ∈ FP := by
-  simpa only [machineRepeatPairNextAcc] using
+  simpa only [machineRepeatPairNextAcc] using!
     machineTake_mem_FP machineRepeatPairStateBound_mem_FP
       machineRepeatPairCandidate_mem_FP
 
@@ -241,7 +241,7 @@ theorem machineRepeatPairFinalState_mem_FP :
     machineRepeatPairWidth_mem_FP machineRepeatPairIterate_length_le_width
 
 theorem machineRepeatPairCode_mem_FP : machineRepeatPairCode ∈ FP := by
-  simpa only [machineRepeatPairCode] using
+  simpa only [machineRepeatPairCode] using!
     machineCompose_mem_FP machineRepeatPairFinalState_mem_FP
       machineRepeatPairStateAcc_mem_FP
 
@@ -339,6 +339,6 @@ theorem machineRepeatPairIterate_semantics
     (machineRepeatPairIterate_semantics n item tail n le_rfl)
   simpa [machineRepeatPairCode, machineRepeatPairFinalState,
     machineRepeatPairRuler, machineRepeatPairCanonicalInput,
-    machineRepeatPairCanonicalState] using hstate
+    machineRepeatPairCanonicalState] using! hstate
 
 end BeyondBethe

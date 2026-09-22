@@ -230,9 +230,9 @@ private theorem entryMissBits_length_le {m : ℕ}
     (hvalue : entry.2.bits.length ≤ bound) (i : Fin m) :
     (entryMissBits tapes entry queryBits i).length ≤ bound := by
   have haddressWidth : bitlen entry.1 ≤ bound := by
-    simpa only [bitlen, Nat.size_eq_bits_len] using haddress
+    simpa only [bitlen, Nat.size_eq_bits_len] using! haddress
   have hvalueWidth : bitlen entry.2 ≤ bound := by
-    simpa only [bitlen, Nat.size_eq_bits_len] using hvalue
+    simpa only [bitlen, Nat.size_eq_bits_len] using! hvalue
   unfold entryMissBits
   split_ifs <;>
     (try simp only [List.length_nil, List.length_replicate,
@@ -272,7 +272,7 @@ private theorem entryMissCleanupTime_canonical_le {m : ℕ}
           (entryMissTargets tapes) ≤
         7 * (1 + entryMatchReadTime entry queryBits + 2 * bound + 9) + 1 := by
     simpa [entryMissHeadBound, entryScanCanonicalWork,
-      TM.resetBinaryBlank, Tape.move, Tape.init] using hreset
+      TM.resetBinaryBlank, Tape.move, Tape.init] using! hreset
   unfold entryMissCleanupTime entryMissHeadBound entryScanCanonicalWork
   simp only [Function.const_apply]
   simp only [TM.resetBinaryBlank, Tape.move, Tape.init]
@@ -378,9 +378,9 @@ private theorem encodedStoreLength_le_uniform (store : Store) (bound : ℕ)
       have hhead : (Entry.encode entry).length ≤ 4 * bound + 2 := by
         rw [Entry.encode_length]
         have haddressWidth : bitlen entry.1 ≤ bound := by
-          simpa only [bitlen, Nat.size_eq_bits_len] using hentry.1
+          simpa only [bitlen, Nat.size_eq_bits_len] using! hentry.1
         have hvalueWidth : bitlen entry.2 ≤ bound := by
-          simpa only [bitlen, Nat.size_eq_bits_len] using hentry.2
+          simpa only [bitlen, Nat.size_eq_bits_len] using! hentry.2
         omega
       unfold encodedStoreLength at htail ⊢
       simp only [List.flatMap_cons, List.length_append, List.length_cons,
@@ -446,9 +446,9 @@ private theorem entryLookupEntryWidth_le (entry : Entry)
     (hentryValue : entry.2.bits.length ≤ bound) :
     entryLookupEntryWidth entry address ≤ bound := by
   have haddressWidth : bitlen entry.1 ≤ bound := by
-    simpa only [bitlen, Nat.size_eq_bits_len] using hentryAddress
+    simpa only [bitlen, Nat.size_eq_bits_len] using! hentryAddress
   have hvalueWidth : bitlen entry.2 ≤ bound := by
-    simpa only [bitlen, Nat.size_eq_bits_len] using hentryValue
+    simpa only [bitlen, Nat.size_eq_bits_len] using! hentryValue
   unfold entryLookupEntryWidth
   omega
 
@@ -459,7 +459,7 @@ private theorem entryLookupStoreWidth_le (store : Store)
       entry.1.bits.length ≤ bound ∧ entry.2.bits.length ≤ bound) :
     entryLookupStoreWidth address store ≤ bound := by
   induction store with
-  | nil => simpa [entryLookupStoreWidth] using haddress
+  | nil => simpa [entryLookupStoreWidth] using! haddress
   | cons entry rest ih =>
       have hentry := hentries entry (by simp)
       have hrest : ∀ current ∈ rest,
@@ -505,10 +505,10 @@ private theorem entryLookupLoadedTime_le {m : ℕ}
   have hread := read_bits_length_le store address bound
     (fun entry hentry => (hentries entry hentry).2)
   have hcopyAddress := binaryCopyTime_le_width address 0 bound
-    (by simpa [Nat.size_eq_bits_len] using haddress) (by simp)
+    (by simpa [Nat.size_eq_bits_len] using! haddress) (by simp)
   have hcopyRead := binaryCopyTime_le_width
     (RegisterStore.read store address) 0 bound
-    (by simpa [Nat.size_eq_bits_len] using hread) (by simp)
+    (by simpa [Nat.size_eq_bits_len] using! hread) (by simp)
   have hcopyCount := binaryCopyTime_le_width store.length 0 bound
     (le_trans (size_le_self store.length) hstoreLength) (by simp)
   unfold entryLookupLoadedTime entryLookupCopyRestoreTime
@@ -570,9 +570,9 @@ private theorem entryUpdatePostEmitHead_le {m : ℕ}
     (hvalue : entry.2.bits.length ≤ bound) :
     entryUpdatePostEmitHead tapes entry i ≤ bound + 1 := by
   have haddressWidth : bitlen entry.1 ≤ bound := by
-    simpa only [bitlen, Nat.size_eq_bits_len] using haddress
+    simpa only [bitlen, Nat.size_eq_bits_len] using! haddress
   have hvalueWidth : bitlen entry.2 ≤ bound := by
-    simpa only [bitlen, Nat.size_eq_bits_len] using hvalue
+    simpa only [bitlen, Nat.size_eq_bits_len] using! hvalue
   unfold entryUpdatePostEmitHead
   split_ifs <;> omega
 
@@ -756,7 +756,7 @@ private theorem entriesEncode_length_le (store : Store) (bound : ℕ)
       have htail := ih hrest
       have hhead : (Entry.encode entry).length ≤ 4 * bound + 2 := by
         rw [Entry.encode_length]
-        simpa [bitlen, Nat.size_eq_bits_len] using
+        simpa [bitlen, Nat.size_eq_bits_len] using!
           (show 2 * entry.1.bits.length + 2 * entry.2.bits.length + 2 ≤
               4 * bound + 2 by omega)
       simp only [List.flatMap_cons, List.length_append, List.length_cons]
@@ -770,9 +770,9 @@ private theorem binaryInstructionArithmeticTime_le
     binaryInstructionArithmeticTime op lhs rhs ≤
       1000 * (bound + 1) ^ 2 := by
   have hlhsSize : lhs.size ≤ bound := by
-    simpa [Nat.size_eq_bits_len] using hlhs
+    simpa [Nat.size_eq_bits_len] using! hlhs
   have hrhsSize : rhs.size ≤ bound := by
-    simpa [Nat.size_eq_bits_len] using hrhs
+    simpa [Nat.size_eq_bits_len] using! hrhs
   cases op with
   | add =>
       have htime := TM.binaryRippleAddTime_le lhs rhs
@@ -797,9 +797,9 @@ private theorem binaryInstrResult_bits_length_le
     (hrhs : rhs.bits.length ≤ bound) :
     (op.eval lhs rhs).bits.length ≤ 2 * bound + 1 := by
   have hlhsSize : lhs.size ≤ bound := by
-    simpa [Nat.size_eq_bits_len] using hlhs
+    simpa [Nat.size_eq_bits_len] using! hlhs
   have hrhsSize : rhs.size ≤ bound := by
-    simpa [Nat.size_eq_bits_len] using hrhs
+    simpa [Nat.size_eq_bits_len] using! hrhs
   rw [Nat.size_eq_bits_len (op.eval lhs rhs)]
   cases op with
   | add =>
@@ -951,9 +951,9 @@ private theorem indirectStoreInstructionTime_le {m : ℕ}
   have hlookupValue := entryLookupStaticTime_le tapes.rhsLookup store source
     bound hbound hstoreLength hsource hentries
   have hcopyAddress := binaryCopyTime_le_width address 0 bound
-    (by simpa [Nat.size_eq_bits_len] using haddress) (by simp)
+    (by simpa [Nat.size_eq_bits_len] using! haddress) (by simp)
   have hcopyValue := binaryCopyTime_le_width value 0 bound
-    (by simpa [Nat.size_eq_bits_len] using hvalue) (by simp)
+    (by simpa [Nat.size_eq_bits_len] using! hvalue) (by simp)
   have hupdate := entryUpdateTime_le tapes.update store address value bound
     hbound hstoreLength hentries haddress hvalue
   dsimp only [address, value] at hcopyAddress hcopyValue hupdate ⊢
@@ -977,7 +977,7 @@ private theorem executeInstructionTime_le {m : ℕ}
       200000 * (bound + 1) ^ 3 := by
   have hpcSucc : TM.binarySuccTime pcValue ≤ 2 * bound + 2 :=
     binarySuccTime_le_width pcValue bound (by
-      simpa [Nat.size_eq_bits_len] using hpc)
+      simpa [Nat.size_eq_bits_len] using! hpc)
   have hencoded := entriesEncode_length_le store bound hentries
   have hencodedCube : (store.flatMap Entry.encode).length ≤
       6 * (bound + 1) ^ 3 := by
@@ -1119,15 +1119,15 @@ private theorem dispatchProgramTime_le {m : ℕ}
       have hselectorBits : selector.bits.length ≤ bound := by
         rw [Nat.size_eq_bits_len selector]
         have hsize := Nat.size_le_size hselector
-        simpa [Nat.size_eq_bits_len] using le_trans hsize (by
-          simpa [Nat.size_eq_bits_len] using hpc)
+        simpa [Nat.size_eq_bits_len] using! le_trans hsize (by
+          simpa [Nat.size_eq_bits_len] using! hpc)
       have hreset : TM.resetBinaryWorkTime 1 selector.bits.length ≤
           2 * bound + 9 := by
         unfold TM.resetBinaryWorkTime TM.clearWorkTimeBound
         omega
       have hexecute := executeInstructionTime_le tapes .halt pcValue store bound
         hbound hstoreLength hentries hpc (by
-          simpa [instructionResourceMagnitude] using hbound)
+          simpa [instructionResourceMagnitude] using! hbound)
       simp only [dispatchProgramTime, List.length_nil, Nat.zero_add]
       have hboundCube : bound ≤ (bound + 1) ^ 3 := by
         exact le_trans (by omega)
@@ -1150,7 +1150,7 @@ private theorem dispatchProgramTime_le {m : ℕ}
         have hvalue : selector - 1 + 1 ≤ pcValue + 1 := by omega
         have hsize := Nat.size_le_size hvalue
         have hpcSize : pcValue.size ≤ bound := by
-          simpa [Nat.size_eq_bits_len] using hpc
+          simpa [Nat.size_eq_bits_len] using! hpc
         have hpcSucc : (pcValue + 1).size ≤ bound + 1 := by
           rw [Nat.size_le]
           have hlt := Nat.lt_size_self pcValue
@@ -1193,7 +1193,7 @@ private theorem programInstructionTime_le {m : ℕ}
       (instructionResourceMagnitude_le_program instruction program hinstruction)
       hprogram)
   have hcopy := binaryCopyTime_le_width pcValue 0 bound
-    (by simpa [Nat.size_eq_bits_len] using hpc) (by simp)
+    (by simpa [Nat.size_eq_bits_len] using! hpc) (by simp)
   unfold programInstructionTime
   have hboundCube : bound ≤ (bound + 1) ^ 3 := by
     exact le_trans (by omega)
@@ -1219,7 +1219,7 @@ private theorem maxWidth_le_of_entries (store : Store) (bound : ℕ)
           current.1.bits.length ≤ bound ∧ current.2.bits.length ≤ bound := by
         intro current hcurrent
         exact hentries current (by simp [hcurrent])
-      simpa [maxWidth, bitlen, Nat.size_eq_bits_len] using
+      simpa [maxWidth, bitlen, Nat.size_eq_bits_len] using!
         (max_le hentry.1 (max_le hentry.2 (ih hrest)))
 
 private theorem snapshotWidth_le_of_bounds (pcValue : ℕ) (store : Store)
@@ -1231,7 +1231,7 @@ private theorem snapshotWidth_le_of_bounds (pcValue : ℕ) (store : Store)
   have hcount : store.length.bits.length ≤ bound :=
     bits_length_le_of_value_le store.length bound hstoreLength
   have hwidth := maxWidth_le_of_entries store bound hentries
-  simpa [Snapshot.width, bitlen, Nat.size_eq_bits_len] using
+  simpa [Snapshot.width, bitlen, Nat.size_eq_bits_len] using!
     (max_le hpc (max_le hcount hwidth))
 
 private theorem entryBitlen_le_maxWidth (store : Store) (entry : Entry)
@@ -1258,7 +1258,7 @@ private theorem snapshotEntryBits_le_width (snapshot : Snapshot)
       maxWidth snapshot.store :=
     entryBitlen_le_maxWidth snapshot.store entry hentry
   have hboth := le_trans hmember hstore
-  simpa [bitlen, Nat.size_eq_bits_len] using
+  simpa [bitlen, Nat.size_eq_bits_len] using!
     (show bitlen entry.1 ≤ snapshot.width ∧
         bitlen entry.2 ≤ snapshot.width from
       ⟨le_trans (le_max_left _ _) hboth,
@@ -1281,7 +1281,7 @@ private theorem instructionLogCost_le (instruction : Instr)
       simp only [instructionResourceMagnitude] at hinstruction
       simp only [Instr.logCost]
       have hvalue := bits_length_le_of_value_le value bound (by omega)
-      simpa [bitlen, Nat.size_eq_bits_len] using
+      simpa [bitlen, Nat.size_eq_bits_len] using!
         (show value.bits.length + 1 ≤ 6 * (bound + 1) by omega)
   | add destination source₀ source₁ =>
       simp only [instructionResourceMagnitude] at hinstruction
@@ -1292,9 +1292,9 @@ private theorem instructionLogCost_le (instruction : Instr)
         (RegisterStore.read store source₁) bound hlhs hrhs
       have hresult' : (RegisterStore.read store source₀ +
           RegisterStore.read store source₁).bits.length ≤ 2 * bound + 1 := by
-        simpa [BinaryInstrOp.eval] using hresult
+        simpa [BinaryInstrOp.eval] using! hresult
       simpa [Instr.logCost, Snapshot.decode, RegisterStore.decode, bitlen,
-        Nat.size_eq_bits_len, BinaryInstrOp.eval] using
+        Nat.size_eq_bits_len, BinaryInstrOp.eval] using!
         (show (RegisterStore.read store source₀).bits.length +
             (RegisterStore.read store source₁).bits.length +
             (RegisterStore.read store source₀ +
@@ -1304,7 +1304,7 @@ private theorem instructionLogCost_le (instruction : Instr)
       have hlhs := hread source₀
       have hrhs := hread source₁
       simpa [Instr.logCost, Snapshot.decode, RegisterStore.decode, bitlen,
-        Nat.size_eq_bits_len] using
+        Nat.size_eq_bits_len] using!
         (show (RegisterStore.read store source₀).bits.length +
             (RegisterStore.read store source₁).bits.length + 1 ≤
             6 * (bound + 1) by omega)
@@ -1316,9 +1316,9 @@ private theorem instructionLogCost_le (instruction : Instr)
         (RegisterStore.read store source₁) bound hlhs hrhs
       have hresult' : (RegisterStore.read store source₀ *
           RegisterStore.read store source₁).bits.length ≤ 2 * bound + 1 := by
-        simpa [BinaryInstrOp.eval] using hresult
+        simpa [BinaryInstrOp.eval] using! hresult
       simpa [Instr.logCost, Snapshot.decode, RegisterStore.decode, bitlen,
-        Nat.size_eq_bits_len, BinaryInstrOp.eval] using
+        Nat.size_eq_bits_len, BinaryInstrOp.eval] using!
         (show (RegisterStore.read store source₀).bits.length +
             (RegisterStore.read store source₁).bits.length +
             (RegisterStore.read store source₀ *
@@ -1328,7 +1328,7 @@ private theorem instructionLogCost_le (instruction : Instr)
       have haddress := hread addressRegister
       have hvalue := hread (RegisterStore.read store addressRegister)
       simpa [Instr.logCost, Snapshot.decode, RegisterStore.decode, bitlen,
-        Nat.size_eq_bits_len] using
+        Nat.size_eq_bits_len] using!
         (show (RegisterStore.read store addressRegister).bits.length +
             (RegisterStore.read store
               (RegisterStore.read store addressRegister)).bits.length + 1 ≤
@@ -1337,14 +1337,14 @@ private theorem instructionLogCost_le (instruction : Instr)
       have haddress := hread addressRegister
       have hvalue := hread source
       simpa [Instr.logCost, Snapshot.decode, RegisterStore.decode, bitlen,
-        Nat.size_eq_bits_len] using
+        Nat.size_eq_bits_len] using!
         (show (RegisterStore.read store addressRegister).bits.length +
             (RegisterStore.read store source).bits.length + 1 ≤
             6 * (bound + 1) by omega)
   | jz source target =>
       have hvalue := hread source
       simpa [Instr.logCost, Snapshot.decode, RegisterStore.decode, bitlen,
-        Nat.size_eq_bits_len] using
+        Nat.size_eq_bits_len] using!
         (show (RegisterStore.read store source).bits.length + 1 ≤
             6 * (bound + 1) by omega)
   | jmp target => simp only [Instr.logCost]; omega
@@ -1411,10 +1411,10 @@ private theorem instructionStoreBounds (instruction : Instr)
     | jmp target => simp [next, snapshot, Snapshot.stepInstr]; omega
     | halt => simp [next, snapshot, Snapshot.stepInstr]; omega
   constructor
-  · simpa [next, snapshot, instructionStore] using hnextLength
+  · simpa [next, snapshot, instructionStore] using! hnextLength
   · intro entry hentry
     have := snapshotEntryBits_le_width next entry (by
-      simpa [next, snapshot, instructionStore] using hentry)
+      simpa [next, snapshot, instructionStore] using! hentry)
     exact ⟨le_trans this.1 hnextWidth, le_trans this.2 hnextWidth⟩
 
 private theorem instructionCleanupResetBits_le
@@ -1438,7 +1438,7 @@ private theorem instructionCleanupResetBits_le
     exact le_trans hencoded (le_trans hproduct (by nlinarith))
   have hencodedWide' : (store.map (fun entry => entry.encode.length)).sum ≤
       6 * (bound + 1) ^ 2 := by
-    simpa only [List.length_flatMap] using hencodedWide
+    simpa only [List.length_flatMap] using! hencodedWide
   have hboundWide : bound ≤ 6 * (bound + 1) ^ 2 := by nlinarith
   have hstoreLengthBitsWide : store.length.bits.length ≤
       6 * (bound + 1) ^ 2 := by
@@ -1473,7 +1473,7 @@ private theorem instructionCleanupResetBits_le
           (RegisterStore.read store source₀ +
             RegisterStore.read store source₁).bits.length ≤
             6 * (bound + 1) ^ 2 := by
-        simpa [BinaryInstrOp.eval] using hsmall _ hresult
+        simpa [BinaryInstrOp.eval] using! hsmall _ hresult
       fin_cases slot <;>
         simp [instructionCleanupResetBits, instructionCleanupValue,
           instructionRemainingValue] <;>
@@ -1493,7 +1493,7 @@ private theorem instructionCleanupResetBits_le
           (RegisterStore.read store source₀ -
             RegisterStore.read store source₁).bits.length ≤
             6 * (bound + 1) ^ 2 := by
-        simpa [BinaryInstrOp.eval] using hsmall _ hresult
+        simpa [BinaryInstrOp.eval] using! hsmall _ hresult
       fin_cases slot <;>
         simp [instructionCleanupResetBits, instructionCleanupValue,
           instructionRemainingValue] <;>
@@ -1513,7 +1513,7 @@ private theorem instructionCleanupResetBits_le
           (RegisterStore.read store source₀ *
             RegisterStore.read store source₁).bits.length ≤
             6 * (bound + 1) ^ 2 := by
-        simpa [BinaryInstrOp.eval] using hsmall _ hresult
+        simpa [BinaryInstrOp.eval] using! hsmall _ hresult
       fin_cases slot <;>
         simp [instructionCleanupResetBits, instructionCleanupValue,
           instructionRemainingValue] <;>
@@ -1569,11 +1569,11 @@ private theorem instructionCleanupTime_le {m : ℕ}
   have hnext := instructionStoreBounds instruction pcValue store bound hbound
     hstoreLength hentries hpc hinstruction
   have hnextLength : nextStore.length ≤ bound + 1 := by
-    simpa only [nextStore] using hnext.1
+    simpa only [nextStore] using! hnext.1
   have hnextEntries : ∀ entry ∈ nextStore,
       entry.1.bits.length ≤ 6 * (bound + 1) ∧
         entry.2.bits.length ≤ 6 * (bound + 1) := by
-    simpa only [nextStore] using hnext.2
+    simpa only [nextStore] using! hnext.2
   have hnextEncoded := entriesEncode_length_le nextStore (6 * (bound + 1))
     hnextEntries
   have hnextBits : nextBits.length ≤ 26 * (bound + 1) ^ 2 := by
@@ -1693,16 +1693,16 @@ private theorem dispatchHaltTime_le {m : ℕ}
       omega
   | cons instruction rest ih =>
       have hselectorPred : (selector - 1).bits.length ≤ bound := by
-        simpa only [Nat.size_eq_bits_len] using
+        simpa only [Nat.size_eq_bits_len] using!
           (le_trans (Nat.size_le_size (Nat.sub_le selector 1)) (by
-            simpa [Nat.size_eq_bits_len] using hselector))
+            simpa [Nat.size_eq_bits_len] using! hselector))
       have htail := ih (selector - 1) hselectorPred
       have hpred := TM.binaryPredTime_le (selector - 1)
       have hpredSize : (selector - 1 + 1).size ≤ bound + 1 := by
         have hvalue : selector - 1 + 1 ≤ selector + 1 := by omega
         have hsize := Nat.size_le_size hvalue
         have hselectorSize : selector.size ≤ bound := by
-          simpa [Nat.size_eq_bits_len] using hselector
+          simpa [Nat.size_eq_bits_len] using! hselector
         have hsucc : (selector + 1).size ≤ bound + 1 := by
           rw [Nat.size_le]
           have hlt := Nat.lt_size_self selector
@@ -1729,7 +1729,7 @@ private theorem programHaltTime_le {m : ℕ}
       40 * (program.length + 1) * (bound + 1) := by
   have hdispatch := dispatchHaltTime_le tapes program pcValue bound hbound hpc
   have hcopy := binaryCopyTime_le_width pcValue 0 bound
-    (by simpa [Nat.size_eq_bits_len] using hpc) (by simp)
+    (by simpa [Nat.size_eq_bits_len] using! hpc) (by simp)
   unfold programHaltTime
   nlinarith
 
@@ -1798,14 +1798,14 @@ private theorem programLoopTime_le {m : ℕ}
   | zero => simp [programLoopTime]
   | succ fuel ih =>
       have hcurrent : SnapshotBounded snapshot bound := by
-        simpa [snapshotSteps] using hall 0 (by omega)
+        simpa [snapshotSteps] using! hall 0 (by omega)
       have hnext : SnapshotBounded (snapshot.step program) bound := by
-        simpa [snapshotSteps] using hall 1 (by omega)
+        simpa [snapshotSteps] using! hall 1 (by omega)
       have hiteration := programLoopIterationTime_le tapes program snapshot
         bound hbound hcurrent hnext hprogram
       have htail := ih (snapshot.step program) (by
         intro k hk
-        simpa [snapshotSteps] using hall (k + 1) (by omega))
+        simpa [snapshotSteps] using! hall (k + 1) (by omega))
       simp only [programLoopTime]
       rw [Nat.succ_mul]
       omega
@@ -1862,7 +1862,7 @@ private theorem inputBitStoreFrom_bounds (address : ℕ) (input : List Bool)
           simp only [List.length_cons] at hsum
           omega)
       have hone : (1 : ℕ).bits.length ≤ bound := by
-        simpa using (show 1 ≤ bound by
+        simpa using! (show 1 ≤ bound by
           simp only [List.length_cons] at hsum
           omega)
       cases bit with
@@ -1897,7 +1897,7 @@ private theorem programInitialSnapshot_bounded (input : List Bool) :
   · change (RegisterStore.write (inputBitStoreFrom 1 input) 0
         input.length).length ≤ input.length + 1
     omega
-  · simpa [programInitialSnapshot, programInitialStore] using hentries
+  · simpa [programInitialSnapshot, programInitialStore] using! hentries
 
 private theorem rewindEntryEncodeRestoreTime_bound (entry : Entry) (bound : ℕ)
     (hbound : 1 ≤ bound) (haddress : entry.1.bits.length ≤ bound)
@@ -1936,7 +1936,7 @@ private theorem initialInputLoopTime_le {m : ℕ}
       have hrewind := rewindEntryEncodeRestoreTime_bound (address, 1) bound
         hbound haddressValue hone
       have hsuccAddress := binarySuccTime_le_width address bound (by
-        simpa [Nat.size_eq_bits_len] using haddressValue)
+        simpa [Nat.size_eq_bits_len] using! haddressValue)
       have hsuccCount := binarySuccTime_le_width count bound (by
         exact le_trans (size_le_self count) (by omega))
       cases bit with
@@ -1986,7 +1986,7 @@ private theorem initialCleanupBits_le {m : ℕ}
   split
   · exact hlength
   · split
-    · simpa using hbound
+    · simpa using! hbound
     · simp
 
 private theorem initialAbiInstallTime_le {m : ℕ}
@@ -2045,7 +2045,7 @@ private theorem programInitTime_le {m : ℕ}
       omega)
   have hsuccZero := TM.binarySuccTime_le 0
   have hsuccZero' : TM.binarySuccTime 0 ≤ 2 := by
-    simpa using hsuccZero
+    simpa using! hsuccZero
   unfold programInitTime
   dsimp only [bound] at hloop habi hlengthBits hbound ⊢
   have hsqCube : (input.length + 2) ^ 2 ≤
@@ -2061,13 +2061,13 @@ private theorem programInitTime_le {m : ℕ}
     calc
       initialInputLoopTime tapes 1 0 input ≤
           (input.length + 1) * (100 * (input.length + 2) ^ 2) := by
-        simpa only [Nat.add_assoc] using hloop
+        simpa only [Nat.add_assoc] using! hloop
       _ ≤ (input.length + 2) * (100 * (input.length + 2) ^ 2) :=
         Nat.mul_le_mul_right _ (by omega)
       _ = 100 * (input.length + 2) ^ 3 := by ring
   have habi' : initialAbiInstallTime tapes (programInitialStore input)
       input.length ≤ 100 * (input.length + 2) ^ 2 := by
-    simpa only [Nat.add_assoc] using habi
+    simpa only [Nat.add_assoc] using! habi
   nlinarith
 
 theorem programDecisionTime_le_envelope_internal {m : ℕ}
@@ -2094,7 +2094,7 @@ theorem programDecisionTime_le_envelope_internal {m : ℕ}
     exact programDecisionScale_pos_internal program input.length cost
   have hinitial := programInitialSnapshot_bounded input
   have hinitialRep : initial.Represents (RAM.initCfg input) := by
-    simpa only [initial] using programInitialSnapshot_represents_internal input
+    simpa only [initial] using! programInitialSnapshot_represents_internal input
   have hinitialWidth : initial.width ≤ input.length + 1 := by
     exact snapshotWidth_le_of_bounds initial.pc initial.store
       (input.length + 1) hinitial.1 hinitial.2.1 hinitial.2.2
@@ -2108,7 +2108,7 @@ theorem programDecisionTime_le_envelope_internal {m : ℕ}
     calc
       RAM.logTimeUpto program (fuel + 1) initial.decode =
           RAM.logTimeUpto program fuel initial.decode := by
-        simpa only [Nat.succ_eq_add_one] using hsame
+        simpa only [Nat.succ_eq_add_one] using! hsame
       _ = cost := by rw [hinitialRep.2]
   have hcanonical : Canonical initial.store := hinitialRep.1
   have hall : ∀ k, k ≤ fuel + 1 →
@@ -2131,7 +2131,7 @@ theorem programDecisionTime_le_envelope_internal {m : ℕ}
       Nat.mul_le_mul hunitCost hstaticMagnitude
     have hlengthScale : current.store.length ≤ scale := by
       have hinitialLength : initial.store.length ≤ input.length + 1 := by
-        simpa only [initial] using hinitial.1
+        simpa only [initial] using! hinitial.1
       have hlengthBase : current.store.length ≤
           input.length + 1 + RAM.unitTimeUpto program k initial.decode := by
         dsimp only [current]
@@ -2195,7 +2195,7 @@ theorem programDecisionTime_le_envelope_internal {m : ℕ}
     le_trans hinit (Nat.mul_le_mul_left 1000
       (Nat.pow_le_pow_left hinputScale 3))
   have hfuelScale : fuel + 1 ≤ scale + 1 := by
-    have hfuelCost : fuel ≤ cost := by simpa only [cost] using hfuel
+    have hfuelCost : fuel ≤ cost := by simpa only [cost] using! hfuel
     have hcostScale : cost ≤ scale := by
       change cost ≤ input.length + cost * (magnitude + 2) + magnitude + 3
       have hfactor : cost * 1 ≤ cost * (magnitude + 2) :=
@@ -2240,20 +2240,20 @@ theorem programDecisionTime_le_envelope_internal {m : ℕ}
     dsimp only [envelopeUnit]
     exact Nat.mul_pos hmagnitude (pow_pos (by omega) 4)
   have hinitUnit : programInitTime tapes input ≤ 1000 * envelopeUnit := by
-    simpa only [envelopeUnit, Nat.mul_assoc] using hinitEnvelope
+    simpa only [envelopeUnit, Nat.mul_assoc] using! hinitEnvelope
   have hloopUnit : programLoopTime tapes program (fuel + 1) initial ≤
       602000000 * envelopeUnit := by
-    simpa only [envelopeUnit, Nat.mul_assoc] using hloop'
+    simpa only [envelopeUnit, Nat.mul_assoc] using! hloop'
   have houtputUnit : programOutputTime tapes
       (initial.run program fuel).store ≤ 22000 * envelopeUnit := by
-    simpa only [envelopeUnit, Nat.mul_assoc] using houtputEnvelope
+    simpa only [envelopeUnit, Nat.mul_assoc] using! houtputEnvelope
   have hloopUnit' : programLoopTime tapes program (fuel + 1)
       (programInitialSnapshot input) ≤ 602000000 * envelopeUnit := by
-    simpa only [initial] using hloopUnit
+    simpa only [initial] using! hloopUnit
   have houtputUnit' : programOutputTime tapes
       ((programInitialSnapshot input).run program fuel).store ≤
       22000 * envelopeUnit := by
-    simpa only [initial] using houtputUnit
+    simpa only [initial] using! houtputUnit
   have htotal : programDecisionTime tapes program input fuel ≤
       602023002 * envelopeUnit := by
     unfold programDecisionTime
@@ -2263,7 +2263,7 @@ theorem programDecisionTime_le_envelope_internal {m : ℕ}
   unfold programDecisionEnvelope
   change 602023002 * envelopeUnit ≤
     1000000000 * magnitude * (scale + 1) ^ 4
-  simpa only [envelopeUnit, Nat.mul_assoc] using
+  simpa only [envelopeUnit, Nat.mul_assoc] using!
     (Nat.mul_le_mul_right envelopeUnit
       (show 602023002 ≤ 1000000000 by decide))
 

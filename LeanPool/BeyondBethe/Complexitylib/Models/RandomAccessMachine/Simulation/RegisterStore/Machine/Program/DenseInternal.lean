@@ -28,7 +28,7 @@ variable {n : ℕ}
 private theorem denseInput_parked (input : List Bool) :
     TM.Parked ((Tape.init (input.map Γ.ofBool)).move Dir3.right) := by
   refine ⟨by simp [Tape.move], ?_⟩
-  simpa using Tape.init_ofBool_move_right_cells_ne_start input
+  simpa using! Tape.init_ofBool_move_right_cells_ne_start input
 
 private theorem blankOutput_parked :
     TM.Parked ((Tape.init []).move Dir3.right) := by
@@ -66,7 +66,7 @@ theorem denseProgramOutputTM_hoareTime_internal
   let inp₀ := (Tape.init (input.map Γ.ofBool)).move Dir3.right
   let blank := (Tape.init []).move Dir3.right
   have hinput : TM.Parked inp₀ := by
-    simpa only [inp₀] using denseInput_parked input
+    simpa only [inp₀] using! denseInput_parked input
   have hlookup := denseOverlayLookupStaticTM_hoareTime_frame
     tapes.lifted.data.lhsLookup input overlay 0 initialWork blank hvalid
     hready.control.lookup blankOutput_parked
@@ -86,7 +86,7 @@ theorem denseProgramOutputTM_hoareTime_internal
       hresult.destination hinput hresult.parked
     obtain ⟨final, time, htime, hreach, hhalt, hfinalInput,
         _hfinalWork, hfinalOutput⟩ :=
-      hleaf inp work out ⟨hinp, rfl, by simpa only [blank] using hout⟩
+      hleaf inp work out ⟨hinp, rfl, by simpa only [blank] using! hout⟩
     exact ⟨final, time, htime, hreach, hhalt, hfinalInput, hfinalOutput⟩
   have hseq := TM.seqTM_hoareTime
     (denseOverlayLookupStaticTM tapes.lifted.data.lhsLookup 0)
@@ -95,13 +95,13 @@ theorem denseProgramOutputTM_hoareTime_internal
       rintro inp work out ⟨hinp, hresult, hout⟩
       obtain ⟨hi, hw, ho⟩ := phaseTransition_of_parked
         (inp := inp) (work := work) (out := out)
-        (by simpa [hinp] using hinput) hresult.parked
-        (by simpa [hout, blank] using blankOutput_parked)
+        (by simpa [hinp] using! hinput) hresult.parked
+        (by simpa [hout, blank] using! blankOutput_parked)
       rw [hi, hw, ho]
-      exact ⟨hinp, hresult, by simpa only [blank] using hout⟩)
+      exact ⟨hinp, hresult, by simpa only [blank] using! hout⟩)
     hverdict
   simpa only [denseProgramOutputTM, denseProgramOutputTime, mid, inp₀,
-    blank] using hseq
+    blank] using! hseq
 
 /-- Final dense lookup overwrites the loop's halt-test bit with the decoded
 RAM verdict. -/
@@ -122,7 +122,7 @@ theorem denseProgramOutputTM_hoareTime_haltOutput_internal
   let inp₀ := (Tape.init (input.map Γ.ofBool)).move Dir3.right
   let haltOut := instructionHaltOutput .halt
   have hinput : TM.Parked inp₀ := by
-    simpa only [inp₀] using denseInput_parked input
+    simpa only [inp₀] using! denseInput_parked input
   have hhaltOutParked : TM.Parked haltOut := by
     refine ⟨?_, ?_⟩
     · simp [haltOut, instructionHaltOutput, instructionHaltVerdict,
@@ -149,7 +149,7 @@ theorem denseProgramOutputTM_hoareTime_haltOutput_internal
       hresult.destination hinput hresult.parked
     obtain ⟨final, time, htime, hreach, hhalt, hfinalInput,
         _hfinalWork, hfinalOutput⟩ :=
-      hleaf inp work out ⟨hinp, rfl, by simpa only [haltOut] using hout⟩
+      hleaf inp work out ⟨hinp, rfl, by simpa only [haltOut] using! hout⟩
     exact ⟨final, time, htime, hreach, hhalt, hfinalInput, hfinalOutput⟩
   have hseq := TM.seqTM_hoareTime
     (denseOverlayLookupStaticTM tapes.lifted.data.lhsLookup 0)
@@ -158,13 +158,13 @@ theorem denseProgramOutputTM_hoareTime_haltOutput_internal
       rintro inp work out ⟨hinp, hresult, hout⟩
       obtain ⟨hi, hw, ho⟩ := phaseTransition_of_parked
         (inp := inp) (work := work) (out := out)
-        (by simpa [hinp] using hinput) hresult.parked
-        (by simpa [hout, haltOut] using hhaltOutParked)
+        (by simpa [hinp] using! hinput) hresult.parked
+        (by simpa [hout, haltOut] using! hhaltOutParked)
       rw [hi, hw, ho]
-      exact ⟨hinp, hresult, by simpa only [haltOut] using hout⟩)
+      exact ⟨hinp, hresult, by simpa only [haltOut] using! hout⟩)
     hverdict
   simpa only [denseProgramOutputTM, denseProgramOutputTime, mid, inp₀,
-    haltOut] using hseq
+    haltOut] using! hseq
 
 /-- One dense loop iteration realizes one overlay step and either halts on the
 successor's selected instruction or returns to the body start. -/
@@ -205,7 +205,7 @@ theorem denseProgramLoopTM_iteration_internal
   let inp₀ := (Tape.init (input.map Γ.ofBool)).move Dir3.right
   let blank := (Tape.init []).move Dir3.right
   have hinput : TM.Parked inp₀ := by
-    simpa only [inp₀] using denseInput_parked input
+    simpa only [inp₀] using! denseInput_parked input
   have hbody := denseProgramStepTM_hoareTime_frame tapes program input
     snapshot.overlay snapshot.pc initialWork hvalid hready
   obtain ⟨cbody, bodyTime, hbodyTime, hbodyReach, hbodyHalt,
@@ -215,14 +215,14 @@ theorem denseProgramLoopTM_iteration_internal
       cbody.work := by
     simpa [next, DenseOverlay.Snapshot.step,
       DenseOverlay.Snapshot.curInstr, denseInstructionStore,
-      denseInstructionPC, selectedInstruction_eq_getElem?_getD] using
+      denseInstructionPC, selectedInstruction_eq_getElem?_getD] using!
       hnextReadyRaw
   have hbodyInputParked : TM.Parked cbody.input := by
-    simpa [hbodyInput] using hinput
+    simpa [hbodyInput] using! hinput
   have hbodyWorkParked : ∀ i, TM.Parked (cbody.work i) :=
     hnextReady.control.lookup.scanner.parked
   have hbodyOutputParked : TM.Parked cbody.output := by
-    simpa [hbodyOutput, blank] using blankOutput_parked
+    simpa [hbodyOutput, blank] using! blankOutput_parked
   have hbodyLoop := TM.loopTM_body_simulation body test hbodyReach
   have hbodyTransition :
       (⟨test.qstart, TM.transitionInput cbody.input,
@@ -250,11 +250,11 @@ theorem denseProgramLoopTM_iteration_internal
     selectedInstruction_eq_getElem?_getD program next.pc
   have htestOutput' :
       ctest.output = instructionHaltOutput (next.curInstr program) := by
-    simpa only [hselected] using htestOutput
+    simpa only [hselected] using! htestOutput
   have htestInputParked : TM.Parked ctest.input := by
-    simpa [htestInput] using hinput
+    simpa [htestInput] using! hinput
   have htestWorkParked : ∀ i, TM.Parked (ctest.work i) := by
-    simpa [htestWork] using hbodyWorkParked
+    simpa [htestWork] using! hbodyWorkParked
   have htestOutputParked : TM.Parked ctest.output := by
     refine ⟨?_, ?_⟩
     · rw [htestOutput', instructionHaltOutput_head]
@@ -311,41 +311,45 @@ theorem denseProgramLoopTM_iteration_internal
       exact instructionHaltOutput_cell_one_eq_one_iff _ |>.2 hhalted
     have htailDone : ctail.state =
         Sum.inr (Sum.inl TM.LoopPhase.done) := by
-      simpa [hone] using htailState
+      simpa [hone] using! htailState
     have hcTail : ctail =
         { state := Sum.inr (Sum.inl TM.LoopPhase.done)
           input := inp₀
           work := cbody.work
           output := instructionHaltOutput (next.curInstr program) } := by
       cases ctail
-      simp only [Complexity.Cfg.mk.injEq]
-      exact ⟨htailDone, htailInput, htailWork,
-        htailOutput.trans htestOutput'⟩
-    simpa only [denseProgramLoopTM, body, test, inp₀, blank, hcTail] using
+      apply Complexity.Cfg.ext
+      · exact htailDone
+      · exact htailInput
+      · exact htailWork
+      · exact htailOutput.trans htestOutput'
+    simpa only [denseProgramLoopTM, body, test, inp₀, blank, hcTail] using!
       hreach
   · right
     refine ⟨hhalted, ?_⟩
     have hcur : next.curInstr program ≠ .halt := hhalted
     have hblankOutput : ctest.output = blank := by
       rw [htestOutput']
-      simpa only [blank] using
+      simpa only [blank] using!
         instructionHaltOutput_eq_blank_of_ne_halt hcur
     have hone : ctest.output.cells 1 ≠ Γ.one := by
       rw [htestOutput']
       exact fun h => hhalted
         (instructionHaltOutput_cell_one_eq_one_iff _ |>.1 h)
     have htailStart : ctail.state = Sum.inl body.qstart := by
-      simpa [hone] using htailState
+      simpa [hone] using! htailState
     have hcTail : ctail =
         { state := Sum.inl body.qstart
           input := inp₀
           work := cbody.work
           output := blank } := by
       cases ctail
-      simp only [Complexity.Cfg.mk.injEq]
-      exact ⟨htailStart, htailInput, htailWork,
-        htailOutput.trans hblankOutput⟩
-    simpa only [denseProgramLoopTM, body, test, inp₀, blank, hcTail] using
+      apply Complexity.Cfg.ext
+      · exact htailStart
+      · exact htailInput
+      · exact htailWork
+      · exact htailOutput.trans hblankOutput
+    simpa only [denseProgramLoopTM, body, test, inp₀, blank, hcTail] using!
       hreach
 
 /-- A halted dense snapshot is stationary under one selected step. -/
@@ -399,7 +403,7 @@ theorem denseProgramLoopTM_hoareTime_run_internal
       subst work
       subst out
       have hsnapshotHalted : snapshot.Halted program := by
-        simpa [DenseOverlay.Snapshot.run] using hhalted
+        simpa [DenseOverlay.Snapshot.run] using! hhalted
       have hstepSelf := denseSnapshot_step_eq_self_of_halted_internal
         program input snapshot hsnapshotHalted
       obtain ⟨nextWork, time, htime, hnextReady, hbranch⟩ :=
@@ -409,7 +413,7 @@ theorem denseProgramLoopTM_hoareTime_run_internal
           ⟨hnextRunning, _⟩
       · have hready' : InstructionExecutionReady tapes snapshot.overlay
             snapshot.pc nextWork := by
-          simpa only [hstepSelf] using hnextReady
+          simpa only [hstepSelf] using! hnextReady
         have hreach' : (denseProgramLoopTM tapes program).reachesIn time
             { state := (denseProgramLoopTM tapes program).qstart
               input := (Tape.init (input.map Γ.ofBool)).move Dir3.right
@@ -420,12 +424,12 @@ theorem denseProgramLoopTM_hoareTime_run_internal
               work := nextWork
               output := instructionHaltOutput
                 (snapshot.curInstr program) } := by
-          simpa only [hstepSelf] using hreach
+          simpa only [hstepSelf] using! hreach
         refine ⟨_, time, ?_, hreach', rfl, rfl, ?_, ?_⟩
-        · simpa [denseProgramLoopTime] using htime
-        · simpa [DenseOverlay.Snapshot.run] using hready'
+        · simpa [denseProgramLoopTime] using! htime
+        · simpa [DenseOverlay.Snapshot.run] using! hready'
         · simp [DenseOverlay.Snapshot.run]
-      · exact (hnextRunning (by simpa only [hstepSelf] using
+      · exact (hnextRunning (by simpa only [hstepSelf] using!
           hsnapshotHalted)).elim
   | succ fuel ih =>
       intro snapshot initialWork hvalid hready hhalted
@@ -445,7 +449,7 @@ theorem denseProgramLoopTM_hoareTime_run_internal
               hsnapshotHalted _
           have hready' : InstructionExecutionReady tapes snapshot.overlay
               snapshot.pc nextWork := by
-            simpa only [hstepSelf] using hnextReady
+            simpa only [hstepSelf] using! hnextReady
           have hreach' : (denseProgramLoopTM tapes program).reachesIn time
               { state := (denseProgramLoopTM tapes program).qstart
                 input := (Tape.init (input.map Γ.ofBool)).move Dir3.right
@@ -456,18 +460,18 @@ theorem denseProgramLoopTM_hoareTime_run_internal
                 work := nextWork
                 output := instructionHaltOutput
                   (snapshot.curInstr program) } := by
-            simpa only [hstepSelf] using hreach
+            simpa only [hstepSelf] using! hreach
           refine ⟨_, time, ?_, hreach', rfl, rfl, ?_, ?_⟩
           · simp only [denseProgramLoopTime]
             omega
-          · simpa only [hfinal] using hready'
+          · simpa only [hfinal] using! hready'
           · simp only [hfinal]
-        · exact (hnextRunning (by simpa only [hstepSelf] using
+        · exact (hnextRunning (by simpa only [hstepSelf] using!
             hsnapshotHalted)).elim
       · have hrunHalted :
             ((snapshot.step program input).run program input fuel).Halted
               program := by
-          simpa [DenseOverlay.Snapshot.run, hsnapshotHalted] using hhalted
+          simpa [DenseOverlay.Snapshot.run, hsnapshotHalted] using! hhalted
         have hiter := denseProgramLoopTM_iteration_internal tapes program
           input snapshot initialWork hvalid hready
         obtain ⟨nextWork, time₁, htime₁, hnextReady, hbranch⟩ := hiter
@@ -486,7 +490,7 @@ theorem denseProgramLoopTM_hoareTime_run_internal
           · simp only [denseProgramLoopTime]
             omega
           · simpa [DenseOverlay.Snapshot.run, hsnapshotHalted, hfinal]
-              using hnextReady
+              using! hnextReady
           · simp [DenseOverlay.Snapshot.run, hsnapshotHalted, hfinal]
         · have hnextValid := DenseOverlay.Snapshot.step_valid program input
             snapshot hvalid
@@ -509,9 +513,9 @@ theorem denseProgramLoopTM_hoareTime_run_internal
                 denseProgramLoopTime tapes program input (fuel + 1)
                   (snapshot.step program input)
             exact Nat.add_le_add htime₁ htime₂
-          · simpa [DenseOverlay.Snapshot.run, hsnapshotHalted] using
+          · simpa [DenseOverlay.Snapshot.run, hsnapshotHalted] using!
               hfinalReady
-          · simpa [DenseOverlay.Snapshot.run, hsnapshotHalted] using
+          · simpa [DenseOverlay.Snapshot.run, hsnapshotHalted] using!
               hfinalOutput
 
 end Machine

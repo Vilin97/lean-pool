@@ -85,7 +85,7 @@ theorem regularizedBetheObjective_sub_le_rationalRange
   have hregUpper :
       regularizedBetheObjective (τ : ℝ)
           (fun i j ↦ (A i j : ℝ)) X ≤ 2 * (n : ℝ) ^ 2 := by
-    rw [regularizedBetheObjective]
+    unfold regularizedBetheObjective
     have hτEntropy : (τ : ℝ) * totalRowEntropy X ≤ totalRowEntropy X :=
       mul_le_of_le_one_left hentropyX0 hτ1R
     linarith
@@ -93,7 +93,7 @@ theorem regularizedBetheObjective_sub_le_rationalRange
       (n : ℝ) * Real.log (m : ℝ) - n ≤
         regularizedBetheObjective (τ : ℝ)
           (fun i j ↦ (A i j : ℝ)) Z := by
-    rw [regularizedBetheObjective]
+    unfold regularizedBetheObjective
     have hτEntropy : 0 ≤ (τ : ℝ) * totalRowEntropy Z :=
       mul_nonneg hτ0R hentropyZ0
     linarith
@@ -164,7 +164,7 @@ theorem negativeRegularizedBetheObjective_rational_bounds
   have hregUpper :
       regularizedBetheObjective (τ : ℝ)
           (fun i j ↦ (A i j : ℝ)) X ≤ 2 * (n : ℝ) ^ 2 := by
-    rw [regularizedBetheObjective]
+    unfold regularizedBetheObjective
     have hτEntropy : (τ : ℝ) * totalRowEntropy X ≤ totalRowEntropy X :=
       mul_le_of_le_one_left hentropy0 hτ1R
     linarith
@@ -172,7 +172,7 @@ theorem negativeRegularizedBetheObjective_rational_bounds
       (n : ℝ) * Real.log (a : ℝ) - n ≤
         regularizedBetheObjective (τ : ℝ)
           (fun i j ↦ (A i j : ℝ)) X := by
-    rw [regularizedBetheObjective]
+    unfold regularizedBetheObjective
     have hτEntropy : 0 ≤ (τ : ℝ) * totalRowEntropy X :=
       mul_nonneg hτ0R hentropy0
     linarith
@@ -241,7 +241,10 @@ theorem birkhoffAffineMap_vector_spike_abs_sub_le
       (fun i j ↦
         vectorToSquareMatrix (fun l ↦ y l + coordinateSpike k r l) i j -
           vectorToSquareMatrix y i j) = abs r
-  rw [← vectorL1_squareMatrixToVector]
+  rw [← vectorL1_squareMatrixToVector
+    (fun i j ↦
+      vectorToSquareMatrix (fun l ↦ y l + coordinateSpike k r l) i j -
+        vectorToSquareMatrix y i j)]
   have hvec : squareMatrixToVector
       (fun i j ↦
         vectorToSquareMatrix (fun l ↦ y l + coordinateSpike k r l) i j -
@@ -331,7 +334,7 @@ theorem smoothedUniformSpike_properties
   let Ybase := fun i j ↦
     (1 - mix) * birkhoffAffineCoordinates X i j + mix * Zbase i j
   have hZ : IsDoublyStochastic (birkhoffAffineMap Zbase) := by
-    simpa only [Zbase] using uniformAffineSpike_doublyStochastic hm k hq
+    simpa only [Zbase] using! uniformAffineSpike_doublyStochastic hm k hq
   have hrecover : birkhoffAffineMap (birkhoffAffineCoordinates X) = X :=
     birkhoffAffineMap_coordinates_of_unit_sums X hX.row_sum hX.col_sum
   have hmap : birkhoffAffineMap Ybase =
@@ -358,7 +361,8 @@ theorem smoothedUniformSpike_properties
   have hrange := regularizedBetheObjective_sub_le_rationalRange
     (show 1 ≤ m + 1 by omega) hτ0 hτ1 hApos hAupper hX hZ
   refine ⟨by rwa [hmap], hfloor, ?_⟩
-  rw [affineNegativeObjective, hmap]
+  unfold affineNegativeObjective
+  rw [hmap]
   nlinarith
 
 /-- The unperturbed affine-coordinate center obtained by mixing `X` with the
@@ -468,8 +472,16 @@ theorem smoothedUniformSpike_mem_epigraph
   simp only [BetheEpigraphTarget, epigraphBase_epigraphPoint,
     epigraphHeight_epigraphPoint,
     vectorToSquareMatrix_squareMatrixToVector]
-  exact ⟨fun i j ↦ hδ.trans (hproperties.2.1 i j),
-    hproperties.2.2.trans hobjective, hsupper⟩
+  constructor
+  · intro i j
+    convert! hδ.trans (hproperties.2.1 i j) using 1
+    exact congrArg (fun B : Matrix (Fin m) (Fin m) ℝ => birkhoffAffineMap B i j)
+      (vectorToSquareMatrix_squareMatrixToVector _)
+  · constructor
+    · convert! hproperties.2.2.trans hobjective using 1
+      exact congrArg (affineNegativeObjective (τ : ℝ) (fun i j ↦ (A i j : ℝ)))
+        (vectorToSquareMatrix_squareMatrixToVector _)
+    · exact hsupper
 
 /-- The truncated epigraph above a threshold with two radii of objective
 slack contains a full coordinate cross.  This is the exact inner-region
@@ -526,7 +538,7 @@ theorem BetheEpigraphTarget_smoothed_inner_cross
       have hmem : BetheEpigraphTarget (τ : ℝ)
           (fun i j ↦ (A i j : ℝ)) δ upper
           (epigraphPoint (squareMatrixToVector Ybase) upper) := by
-        simpa only [Zbase, Ybase] using
+        simpa only [Zbase, Ybase] using!
           smoothedUniformSpike_mem_epigraph hm hτ0 hτ1 hApos hAupper
             hX hXfloor hmix0' hmix1 k0 (q := 0) (by
               simp; positivity) hδ
@@ -540,7 +552,7 @@ theorem BetheEpigraphTarget_smoothed_inner_cross
               fun l ↦ squareMatrixToVector
                   (smoothedUniformAffineBase X mix) l +
                 coordinateSpike k0 0 l := by
-            simpa only [Zbase, Ybase] using h
+            simpa only [Zbase, Ybase] using! h
           _ = squareMatrixToVector (smoothedUniformAffineBase X mix) := by
             ext l
             simp [coordinateSpike]
@@ -559,14 +571,14 @@ theorem BetheEpigraphTarget_smoothed_inner_cross
       have hmem : BetheEpigraphTarget (τ : ℝ)
           (fun i j ↦ (A i j : ℝ)) δ upper
           (epigraphPoint (squareMatrixToVector Ybase) (upper - r)) := by
-        simpa only [Zbase, Ybase, q] using
+        simpa only [Zbase, Ybase, q] using!
           smoothedUniformSpike_mem_epigraph hm hτ0 hτ1 hApos hAupper
             hX hXfloor hmix0' hmix1 k hqplus hδ
             hobjectiveCenter hcenterUpper
       have hvec : squareMatrixToVector Ybase =
           fun l ↦ squareMatrixToVector (smoothedUniformAffineBase X mix) l +
             coordinateSpike k r l := by
-        simpa only [Zbase, Ybase, q] using
+        simpa only [Zbase, Ybase, q] using!
           squareMatrixToVector_smoothedUniformSpike_of_mul
             X mix k q r hmul
       rw [epigraphPoint_add_baseSpike, ← hvec]
@@ -581,7 +593,7 @@ theorem BetheEpigraphTarget_smoothed_inner_cross
       have hmem : BetheEpigraphTarget (τ : ℝ)
           (fun i j ↦ (A i j : ℝ)) δ upper
           (epigraphPoint (squareMatrixToVector Ybase) (upper - 2 * r)) := by
-        simpa only [Zbase, Ybase] using
+        simpa only [Zbase, Ybase] using!
           smoothedUniformSpike_mem_epigraph hm hτ0 hτ1 hApos hAupper
             hX hXfloor hmix0' hmix1 k0 (q := 0) (by
               simp; positivity) hδ hobjectiveLow hlowUpper
@@ -594,7 +606,7 @@ theorem BetheEpigraphTarget_smoothed_inner_cross
               fun l ↦ squareMatrixToVector
                   (smoothedUniformAffineBase X mix) l +
                 coordinateSpike k0 0 l := by
-            simpa only [Zbase, Ybase] using h
+            simpa only [Zbase, Ybase] using! h
           _ = squareMatrixToVector (smoothedUniformAffineBase X mix) := by
             ext l
             simp [coordinateSpike]
@@ -613,14 +625,14 @@ theorem BetheEpigraphTarget_smoothed_inner_cross
       have hmem : BetheEpigraphTarget (τ : ℝ)
           (fun i j ↦ (A i j : ℝ)) δ upper
           (epigraphPoint (squareMatrixToVector Ybase) (upper - r)) := by
-        simpa only [Zbase, Ybase, q] using
+        simpa only [Zbase, Ybase, q] using!
           smoothedUniformSpike_mem_epigraph hm hτ0 hτ1 hApos hAupper
             hX hXfloor hmix0' hmix1 k hqminus hδ
             hobjectiveCenter hcenterUpper
       have hvec : squareMatrixToVector Ybase =
           fun l ↦ squareMatrixToVector (smoothedUniformAffineBase X mix) l +
             coordinateSpike k (-r) l := by
-        simpa only [Zbase, Ybase, q] using
+        simpa only [Zbase, Ybase, q] using!
           squareMatrixToVector_smoothedUniformSpike_of_mul
             X mix k q (-r) hmul
       have hspikeNeg :
@@ -652,7 +664,7 @@ theorem finiteNormSq_le_dimension_sq_of_abs_le
   rw [finiteNormSq, finiteDot]
   calc
     (∑ i, x i * x i) ≤ ∑ _i : Fin d, C ^ 2 :=
-      Finset.sum_le_sum fun i _ ↦ by simpa [pow_two] using hterm i
+      Finset.sum_le_sum fun i _ ↦ by simpa [pow_two] using! hterm i
     _ = (d : ℝ) * C ^ 2 := by simp
     _ ≤ ((d : ℝ) * C) ^ 2 := by
       have hdR : (1 : ℝ) ≤ d := by exact_mod_cast hd
@@ -734,7 +746,7 @@ theorem BetheEpigraphTarget_inner_cross_outer_zero
         exact htriangle.trans (by dsimp only [C]; linarith)
     · have hbase := BetheEpigraphTarget_epigraphBase_abs_le_one hδ
         (hplus k) l
-      simpa only [epigraphBase] using hbase.trans honeC
+      simpa only [epigraphBase] using! hbase.trans honeC
   · intro k
     apply finiteNormSq_le_dimension_sq_of_abs_le (by omega) hC
     intro i
@@ -762,6 +774,6 @@ theorem BetheEpigraphTarget_inner_cross_outer_zero
         exact htriangle.trans (by dsimp only [C]; linarith)
     · have hbase := BetheEpigraphTarget_epigraphBase_abs_le_one hδ
         (hminus k) l
-      simpa only [epigraphBase] using hbase.trans honeC
+      simpa only [epigraphBase] using! hbase.trans honeC
 
 end BeyondBethe

@@ -32,7 +32,7 @@ private theorem hasBinaryNat_parked {t : Tape} {value : ℕ}
 private theorem denseInput_parked (input : List Bool) :
     TM.Parked ((Tape.init (input.map Γ.ofBool)).move Dir3.right) := by
   refine ⟨by simp [Tape.move], ?_⟩
-  simpa using Tape.init_ofBool_move_right_cells_ne_start input
+  simpa using! Tape.init_ofBool_move_right_cells_ne_start input
 
 private theorem blankOutput_parked :
     TM.Parked ((Tape.init []).move Dir3.right) := by
@@ -73,9 +73,9 @@ theorem denseDispatchProgramTM_hoareTime_frame
   let inp₀ := (Tape.init (input.map Γ.ofBool)).move Dir3.right
   let out₀ := (Tape.init []).move Dir3.right
   have hinput : TM.Parked inp₀ := by
-    simpa only [inp₀] using denseInput_parked input
+    simpa only [inp₀] using! denseInput_parked input
   have houtput : TM.Parked out₀ := by
-    simpa only [out₀] using blankOutput_parked
+    simpa only [out₀] using! blankOutput_parked
   induction program generalizing selector work₀ with
   | nil =>
       let blankTape := (Tape.init []).move Dir3.right
@@ -86,7 +86,7 @@ theorem denseDispatchProgramTM_hoareTime_frame
       have hcleanLhs : cleanWork tapes.liftedLhs = blankTape := by
         have hzero := hready.1.control.lookup.destination
         change (cleanWork tapes.liftedLhs).HasBinaryNat 0 at hzero
-        simpa only [blankTape] using
+        simpa only [blankTape] using!
           Tape.HasBinaryNat.eq_init_move_right hzero
       have hwork₀Parked : ∀ i, TM.Parked (work₀ i) := by
         intro i
@@ -126,16 +126,16 @@ theorem denseDispatchProgramTM_hoareTime_frame
           rintro inp work out ⟨hinp, hworkEq, hout⟩
           obtain ⟨hi, hw, ho⟩ := phaseTransition_of_parked
             (inp := inp) (work := work) (out := out)
-            (by simpa [hinp] using hinput)
-            (by simpa [hworkEq] using
+            (by simpa [hinp] using! hinput)
+            (by simpa [hworkEq] using!
               hready.1.control.lookup.scanner.parked)
-            (by simpa [hout] using houtput)
+            (by simpa [hout] using! houtput)
           rw [hi, hw, ho]
           exact ⟨hinp, hworkEq, hout⟩)
         hhalt
       simpa only [denseDispatchProgramTM, dispatchWithTM,
         denseDispatchProgramTime, dispatchWithTime,
-        selectedInstruction, inp₀, out₀] using hseq
+        selectedInstruction, inp₀, out₀] using! hseq
   | cons instruction program ih =>
       let pre : TM.TapePred (n + 1) := fun inp work out =>
         inp = inp₀ ∧ work = work₀ ∧ out = out₀
@@ -188,8 +188,8 @@ theorem denseDispatchProgramTM_hoareTime_frame
             ⟨hinp, rfl, hout⟩
         refine ⟨final, time, htime, ?_, hhalt, hfinalInput, ?_,
           hfinalOutput⟩
-        · simpa [hworkClean] using hreach
-        · simpa only [selectedInstruction] using hresult
+        · simpa [hworkClean] using! hreach
+        · simpa only [selectedInstruction] using! hresult
       have hnonblank :
           (TM.seqTM (TM.binaryPredTM tapes.liftedLhs)
             (denseDispatchProgramTM tapes program)).HoareTime
@@ -204,11 +204,11 @@ theorem denseDispatchProgramTM_hoareTime_frame
           rw [hworkEq]
           rw [hsucc] at hselector
           exact hselector
-        have hinpParked : TM.Parked inp := by simpa [hinp] using hinput
-        have houtParked : TM.Parked out := by simpa [hout] using houtput
+        have hinpParked : TM.Parked inp := by simpa [hinp] using! hinput
+        have houtParked : TM.Parked out := by simpa [hout] using! houtput
         have hworkParked : ∀ i, TM.Parked (work i) := by
           intro i
-          simpa [hworkEq] using hwork₀Parked i
+          simpa [hworkEq] using! hwork₀Parked i
         have hpred := TM.binaryPredTM_hoareTime_frame tapes.liftedLhs
           (selector - 1) inp work out hvalue hinpParked.read_ne_start
           (fun i _ => (hworkParked i).read_ne_start)
@@ -253,7 +253,7 @@ theorem denseDispatchProgramTM_hoareTime_frame
                   selectedInstruction program (selector - 1) := by
               rw [hsucc]
               rfl
-            exact ⟨hinp', by simpa only [hselected] using hresult, hout'⟩
+            exact ⟨hinp', by simpa only [hselected] using! hresult, hout'⟩
           · exact le_rfl
         have hseq := TM.seqTM_hoareTime
           (TM.binaryPredTM tapes.liftedLhs)
@@ -262,7 +262,7 @@ theorem denseDispatchProgramTM_hoareTime_frame
             rintro inp' work' out' ⟨hinp', hwork', hout'⟩
             obtain ⟨hi, hw, ho⟩ := phaseTransition_of_parked
               (inp := inp') (work := work') (out := out')
-              (by simpa [hinp', hinp] using hinput)
+              (by simpa [hinp', hinp] using! hinput)
               (by
                 intro i
                 rw [hwork']
@@ -273,7 +273,7 @@ theorem denseDispatchProgramTM_hoareTime_frame
                     (Tape.init_move_right_hasBinaryNat (selector - 1))
                 · simp only [nextWork, Function.update_of_ne hidx]
                   exact hready.1.control.lookup.scanner.parked i)
-              (by simpa [hout', hout] using houtput)
+              (by simpa [hout', hout] using! houtput)
             rw [hi, hw, ho]
             exact ⟨hinp', hwork', hout'⟩)
           hrecursive'
@@ -287,10 +287,10 @@ theorem denseDispatchProgramTM_hoareTime_frame
           rw [hpre.2.1]
           exact hselector.read_eq_blank_iff.mpr rfl
         have hinpRead : inp.read ≠ Γ.start := by
-          simpa [hpre.1] using hinput.read_ne_start
+          simpa [hpre.1] using! hinput.read_ne_start
         have hworkRead : ∀ i, (work i).read ≠ Γ.start := by
           intro i
-          simpa [hpre.2.1] using (hwork₀Parked i).read_ne_start
+          simpa [hpre.2.1] using! (hwork₀Parked i).read_ne_start
         have houtRead : out.read ≠ Γ.start := by
           simp [hpre.2.2]
         obtain ⟨done, hreach', hhalt', hdoneInput, hdoneWork,
@@ -301,9 +301,9 @@ theorem denseDispatchProgramTM_hoareTime_frame
               (denseDispatchProgramTM tapes program))
             inp work out hread hinpRead hworkRead houtRead hreach hhalt
         refine ⟨done, time + 1, ?_, ?_, hhalt', ?_⟩
-        · simpa only [denseDispatchProgramTime, dispatchWithTime] using
+        · simpa only [denseDispatchProgramTime, dispatchWithTime] using!
             Nat.add_le_add_right htime 1
-        · simpa only [denseDispatchProgramTM, dispatchWithTM] using hreach'
+        · simpa only [denseDispatchProgramTM, dispatchWithTM] using! hreach'
         · rw [hdoneInput, hdoneWork, hdoneOutput]
           exact hpost
       · intro inp work out hpre
@@ -313,12 +313,12 @@ theorem denseDispatchProgramTM_hoareTime_frame
           intro hblankRead
           apply hzero
           exact hselector.read_eq_blank_iff.mp (by
-            simpa [hpre.2.1] using hblankRead)
+            simpa [hpre.2.1] using! hblankRead)
         have hinpRead : inp.read ≠ Γ.start := by
-          simpa [hpre.1] using hinput.read_ne_start
+          simpa [hpre.1] using! hinput.read_ne_start
         have hworkRead : ∀ i, (work i).read ≠ Γ.start := by
           intro i
-          simpa [hpre.2.1] using (hwork₀Parked i).read_ne_start
+          simpa [hpre.2.1] using! (hwork₀Parked i).read_ne_start
         have houtRead : out.read ≠ Γ.start := by
           simp [hpre.2.2]
         obtain ⟨done, hreach', hhalt', hdoneInput, hdoneWork,
@@ -330,9 +330,9 @@ theorem denseDispatchProgramTM_hoareTime_frame
             inp work out hread hinpRead hworkRead houtRead hreach hhalt
         refine ⟨done, time + 1, ?_, ?_, hhalt', ?_⟩
         · rw [show selector = selector - 1 + 1 by omega]
-          simpa only [denseDispatchProgramTime, dispatchWithTime] using
+          simpa only [denseDispatchProgramTime, dispatchWithTime] using!
             Nat.add_le_add_right htime 1
-        · simpa only [denseDispatchProgramTM, dispatchWithTM] using hreach'
+        · simpa only [denseDispatchProgramTM, dispatchWithTM] using! hreach'
         · rw [hdoneInput, hdoneWork, hdoneOutput]
           exact hpost
 
@@ -361,9 +361,9 @@ theorem denseProgramInstructionTM_hoareTime_frame
   let selectorWork :=
     Function.update initialWork tapes.liftedLhs selectorTape
   have hinput : TM.Parked inp₀ := by
-    simpa only [inp₀] using denseInput_parked input
+    simpa only [inp₀] using! denseInput_parked input
   have houtput : TM.Parked out₀ := by
-    simpa only [out₀] using blankOutput_parked
+    simpa only [out₀] using! blankOutput_parked
   have hcopy := TM.binaryCopyIntoTM_hoareTime_frame tapes.liftedPC
     tapes.liftedLhs tapes.liftedFound tapes.lifted.pc_ne_lhs
     (tapes.lifted.pc_ne 11) (tapes.lifted.data.ne (by decide)) pcValue 0
@@ -388,18 +388,18 @@ theorem denseProgramInstructionTM_hoareTime_frame
     (denseDispatchProgramTM tapes program) hcopy
     (by
       rintro inp work out ⟨hinp, hworkEq, hout⟩
-      have hinpParked : TM.Parked inp := by simpa [hinp] using hinput
-      have houtParked : TM.Parked out := by simpa [hout] using houtput
+      have hinpParked : TM.Parked inp := by simpa [hinp] using! hinput
+      have houtParked : TM.Parked out := by simpa [hout] using! houtput
       have hworkParked : ∀ i, TM.Parked (work i) := by
-        simpa [hworkEq, selectorWork, selectorTape] using hselectorParked
+        simpa [hworkEq, selectorWork, selectorTape] using! hselectorParked
       obtain ⟨hi, hw, ho⟩ := phaseTransition_of_parked
         hinpParked hworkParked houtParked
       rw [hi, hw, ho]
-      exact ⟨hinp, by simpa [selectorWork, selectorTape] using hworkEq,
+      exact ⟨hinp, by simpa [selectorWork, selectorTape] using! hworkEq,
         hout⟩)
     hdispatch
   simpa only [denseProgramInstructionTM, denseProgramInstructionTime,
-    selectorWork, selectorTape, inp₀, out₀] using hseq
+    selectorWork, selectorTape, inp₀, out₀] using! hseq
 
 /-- One fixed-program dense RAM step returns to the reusable clean ABI for the
 exact successor overlay snapshot. -/
@@ -434,7 +434,7 @@ theorem denseProgramStepTM_hoareTime_frame
   let sourceBound :=
     denseProgramStepSourceHeadBound tapes program input pcValue overlay
   have hinput : TM.Parked inp₀ := by
-    simpa only [inp₀] using denseInput_parked input
+    simpa only [inp₀] using! denseInput_parked input
   have hprogram := denseProgramInstructionTM_hoareTime_frame tapes program
     input overlay pcValue initialWork hvalid hready
   have hprogramCleanup :
@@ -450,10 +450,10 @@ theorem denseProgramStepTM_hoareTime_frame
           overlay) := by
     intro inp work out hpre
     obtain ⟨c, time, htime, hreach, hhalt, hinp, hresult, hout⟩ :=
-      hprogram inp work out (by simpa [inp₀, blank] using hpre)
+      hprogram inp work out (by simpa [inp₀, blank] using! hpre)
     have hsourceStart₀ :
         (work tapes.liftedSource).cells 0 = Γ.start := by
-      simpa [hpre.2.1] using hready.control.lookup.sourceStart
+      simpa [hpre.2.1] using! hready.control.lookup.sourceStart
     have hsourceStart := TM.work_cells_zero_eq_start_of_reachesIn
       tapes.liftedSource hreach hsourceStart₀
     have hbufferStart₀ :
@@ -472,13 +472,13 @@ theorem denseProgramStepTM_hoareTime_frame
         sourceStart := hsourceStart
         bufferStart := hbufferStart
         sourceHead := ?_ }
-    · simpa [nextStore, denseInstructionStore, instruction] using
+    · simpa [nextStore, denseInstructionStore, instruction] using!
         DenseOverlay.Snapshot.stepInstr_canonical input instruction
           { pc := pcValue, overlay := overlay } hvalid.1
     · simpa only [instruction, nextStore, nextPC, cleanupValues,
-        remainingValue] using hresult
+        remainingValue] using! hresult
     · have hsourceHead₀ : (work tapes.liftedSource).head = 1 := by
-        simpa [hpre.2.1] using hready.control.lookup.sourceHead
+        simpa [hpre.2.1] using! hready.control.lookup.sourceHead
       rw [hsourceHead₀] at hsourceHead
       simp only [sourceBound, denseProgramStepSourceHeadBound]
       omega
@@ -505,9 +505,9 @@ theorem denseProgramStepTM_hoareTime_frame
     hprogramCleanup
     (by
       rintro inp work out ⟨hinp, hcleanupReady, hout⟩
-      have hinpParked : TM.Parked inp := by simpa [hinp] using hinput
+      have hinpParked : TM.Parked inp := by simpa [hinp] using! hinput
       have houtParked : TM.Parked out := by
-        simpa [hout, blank] using blankOutput_parked
+        simpa [hout, blank] using! blankOutput_parked
       obtain ⟨hi, hw, ho⟩ := phaseTransition_of_parked hinpParked
         hcleanupReady.result.parked houtParked
       rw [hi, hw, ho]
@@ -515,7 +515,7 @@ theorem denseProgramStepTM_hoareTime_frame
     hcleanup
   simpa only [denseProgramStepTM, denseProgramStepTime, instruction,
     nextStore, nextPC, cleanupValues, remainingValue, sourceBound, inp₀,
-    blank] using hseq
+    blank] using! hseq
 
 end Machine
 end RegisterStore

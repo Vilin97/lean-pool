@@ -55,7 +55,7 @@ theorem programDecisionTM_hoareTime_run_internal
       hinitInput, hinitWork, hinitOutput⟩ :=
     hinit _ _ _ ⟨rfl, rfl, rfl⟩
   have hinitialCanonical : Canonical initial.store := by
-    simpa only [initial, programInitialSnapshot] using
+    simpa only [initial, programInitialSnapshot] using!
       programInitialStore_canonical_internal input
   have hready : InstructionExecutionReady tapes initial.store initial.pc
       initDone.work := by
@@ -67,7 +67,7 @@ theorem programDecisionTM_hoareTime_run_internal
     initDone.work initDone.input hready hinitInputParked hhalted
   obtain ⟨loopDone, loopTime, hloopTime, hloopReach, hloopHalt,
       hloopInput, hloopReady, hloopOutput⟩ :=
-    hloop _ _ _ ⟨rfl, rfl, by simpa [TM.resetBinaryBlank] using hinitOutput⟩
+    hloop _ _ _ ⟨rfl, rfl, by simpa [TM.resetBinaryBlank] using! hinitOutput⟩
   have hloopInputParked : TM.Parked loopDone.input := by
     rw [hloopInput]
     exact hinitInputParked
@@ -95,7 +95,7 @@ theorem programDecisionTM_hoareTime_run_internal
       hloopInputParked.read_ne_start
       (fun i => (hloopReady.control.lookup.scanner.parked i).read_ne_start)
       hloopOutputParked.read_ne_start
-    simpa only [hi, hw, ho] using houtputReach
+    simpa only [hi, hw, ho] using! houtputReach
   have htailReach := TM.seqTM_reachesIn_of_reachesIn
     (programLoopTM tapes program) (programOutputTM tapes)
     hloopReach hloopHalt houtputReach'
@@ -113,7 +113,7 @@ theorem programDecisionTM_hoareTime_run_internal
   have hinitOutputParked : TM.Parked initDone.output := by
     rw [hinitOutput]
     have hblankNat : TM.resetBinaryBlank.HasBinaryNat 0 := by
-      simpa [TM.resetBinaryBlank] using Tape.init_move_right_hasBinaryNat 0
+      simpa [TM.resetBinaryBlank] using! Tape.init_move_right_hasBinaryNat 0
     exact ⟨by rw [hblankNat.2.1],
       hblankNat.2.hasBinaryContent.cells_ne_start⟩
   have htailReach' :
@@ -130,7 +130,7 @@ theorem programDecisionTM_hoareTime_run_internal
       hinitInputParked.read_ne_start
       (fun i => (hinitWorkParked i).read_ne_start)
       hinitOutputParked.read_ne_start
-    simpa only [hi, hw, ho] using htailReach
+    simpa only [hi, hw, ho] using! htailReach
   have hreach := TM.seqTM_reachesIn_of_reachesIn
     (programInitTM tapes)
     (TM.seqTM (programLoopTM tapes program) (programOutputTM tapes))
@@ -144,8 +144,9 @@ theorem programDecisionTM_hoareTime_run_internal
     omega
   · change (programDecisionTM tapes program).halted done
     unfold programDecisionTM
-    rw [TM.phase2Wrap_halted_iff]
-    exact htailHalt
+    exact (TM.phase2Wrap_halted_iff (programInitTM tapes)
+      (TM.seqTM (programLoopTM tapes program) (programOutputTM tapes)) tailDone).mpr
+      htailHalt
   · change outputDone.output = registerVerdictOutput
         (RegisterStore.read final.store 0)
     exact houtputVerdict
@@ -168,7 +169,7 @@ theorem programDecisionTM_hoareTime_ramRun_internal
   let initial := programInitialSnapshot input
   let final := initial.run program fuel
   have hinitialRep : initial.Represents (RAM.initCfg input) := by
-    simpa only [initial] using programInitialSnapshot_represents_internal input
+    simpa only [initial] using! programInitialSnapshot_represents_internal input
   have hdecode : final.decode = RAM.run program fuel (RAM.initCfg input) := by
     have hrun := Snapshot.decode_run_internal program fuel initial hinitialRep.1
     rw [hinitialRep.2] at hrun

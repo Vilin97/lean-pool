@@ -32,18 +32,18 @@ def machineBinaryConst (k : ℕ) (_word : List Bool) : List Bool := k.bits
 
 theorem machineBinaryAddOf_mem_FP {f g : List Bool → List Bool}
     (hf : f ∈ FP) (hg : g ∈ FP) : machineBinaryAddOf f g ∈ FP := by
-  simpa only [machineBinaryAddOf] using
+  simpa only [machineBinaryAddOf] using!
     machineCompose_mem_FP (machinePair_mem_FP hf hg)
       machineBinaryAddBits_mem_FP
 
 theorem machineBinaryMulOf_mem_FP {f g : List Bool → List Bool}
     (hf : f ∈ FP) (hg : g ∈ FP) : machineBinaryMulOf f g ∈ FP := by
-  simpa only [machineBinaryMulOf] using
+  simpa only [machineBinaryMulOf] using!
     machineCompose_mem_FP (machinePair_mem_FP hf hg)
       machineBinaryMulBits_mem_FP
 
 theorem machineBinaryConst_mem_FP (k : ℕ) : machineBinaryConst k ∈ FP := by
-  simpa only [machineBinaryConst] using machineConst_mem_FP k.bits
+  simpa only [machineBinaryConst] using! machineConst_mem_FP k.bits
 
 @[simp] theorem machineBinaryAddOf_natBits
     (f g : List Bool → List Bool) (word : List Bool) (a b : ℕ)

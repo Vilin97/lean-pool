@@ -43,7 +43,7 @@ private theorem encodedStoreLength_eq_sums (store : Store) :
           2 * (rest.map fun entry => bitlen entry.1).sum +
             2 * (rest.map fun entry => bitlen entry.2).sum +
             2 * rest.length := by
-        simpa only [encodedStoreLength] using ih
+        simpa only [encodedStoreLength] using! ih
       rw [ih']
       omega
 
@@ -80,7 +80,7 @@ private theorem address_count_width_le_encodedStoreLength
             norm_num at hlt
             omega
           have hbits : bitlen store.length = 1 := by
-            simpa [bitlen] using hsize
+            simpa [bitlen] using! hsize
           rw [hbits]
           omega
       | succ width =>
@@ -93,25 +93,25 @@ private theorem address_count_width_le_encodedStoreLength
           have hlowSubset : low ⊆ Finset.range threshold := by
             intro address haddress
             have := (Finset.mem_filter.mp haddress).2
-            simpa [Finset.mem_range] using this
+            simpa [Finset.mem_range] using! this
           have hlow : low.card ≤ threshold := by
             exact le_trans (Finset.card_le_card hlowSubset) (by simp)
           have hpartition : low.card + high.card = store.length := by
             have hparts := Finset.card_filter_add_card_filter_not
               (s := addressSet) (p := fun address => address < threshold)
-            simpa [low, high, Nat.not_lt, hcard] using hparts
+            simpa [low, high, Nat.not_lt, hcard] using! hparts
           have hthresholdTwice : 2 * threshold ≤ store.length := by
             have hpow : 2 ^ (width + 1) ≤ store.length := by
               rw [← Nat.lt_size]
               omega
-            simpa [threshold, pow_succ, Nat.mul_comm] using hpow
+            simpa [threshold, pow_succ, Nat.mul_comm] using! hpow
           have hmanyHigh : store.length ≤ 2 * high.card := by omega
           have hhighWidth : ∀ address ∈ high, width + 1 ≤ bitlen address := by
             intro address haddress
             have hge := (Finset.mem_filter.mp haddress).2
             unfold bitlen
             have hlt : width < address.size := Nat.lt_size.mpr (by
-              simpa [threshold] using hge)
+              simpa [threshold] using! hge)
             omega
           have hhighSum : high.card * (width + 1) ≤
               ∑ address ∈ high, bitlen address := by
@@ -125,7 +125,7 @@ private theorem address_count_width_le_encodedStoreLength
               addressWidths.sum := by
             rw [← List.sum_toFinset (fun address => bitlen address) hnodup]
           have hwidth : bitlen store.length = width + 2 := by
-            simpa [bitlen] using hsize
+            simpa [bitlen] using! hsize
           rw [hwidth]
           have hmain : store.length * (width + 2) ≤
               2 * addressWidths.sum + store.length := by
@@ -133,7 +133,7 @@ private theorem address_count_width_le_encodedStoreLength
               store.length * (width + 1) + store.length by ring]
             have hproduct : store.length * (width + 1) ≤
                 2 * (high.card * (width + 1)) :=
-              by simpa [Nat.mul_assoc] using
+              by simpa [Nat.mul_assoc] using!
                 Nat.mul_le_mul_right (width + 1) hmanyHigh
             omega
           omega
@@ -190,7 +190,7 @@ private theorem count_bits_le_encodedStoreLength (store : Store)
   · simp [hzero, bitlen]
   · have hpos : 1 ≤ store.length := Nat.one_le_iff_ne_zero.mpr hzero
     have hle : bitlen store.length ≤ store.length * bitlen store.length := by
-      simpa only [one_mul] using
+      simpa only [one_mul] using!
         Nat.mul_le_mul_right (bitlen store.length) hpos
     exact le_trans hle hproduct
 
@@ -216,11 +216,11 @@ private theorem entryLookupStoreWidth_le_encoded (store : Store)
           · apply max_le
             · exact le_trans hentry.2 (Nat.le_add_right _ _)
             · apply max_le
-              · simpa [bitlen, Nat.size_eq_bits_len] using
+              · simpa [bitlen, Nat.size_eq_bits_len] using!
                   le_trans hentry.1 (Nat.le_add_right
                     (encodedStoreLength (entry :: rest)) address.bits.length)
               · apply max_le
-                · simpa [bitlen, Nat.size_eq_bits_len] using
+                · simpa [bitlen, Nat.size_eq_bits_len] using!
                     le_trans hentry.2 (Nat.le_add_right
                       (encodedStoreLength (entry :: rest)) address.bits.length)
                 · have hpositive : 1 ≤ encodedStoreLength (entry :: rest) := by
@@ -353,7 +353,7 @@ private theorem denseOverlayLookupTime_le_volume {m : ℕ}
         encodedStoreLength overlay + 1 := by
     have hreadSize : (RegisterStore.read overlay address).size ≤
         encodedStoreLength overlay := by
-      simpa [Nat.size_eq_bits_len] using htag
+      simpa [Nat.size_eq_bits_len] using! htag
     have hvalue : RegisterStore.read overlay address - 1 + 1 ≤
         RegisterStore.read overlay address + 1 := by omega
     have hsize := Nat.size_le_size hvalue
@@ -362,7 +362,7 @@ private theorem denseOverlayLookupTime_le_volume {m : ℕ}
       rw [Nat.size_le]
       have hlt := Nat.lt_size_self (RegisterStore.read overlay address)
       have hpow := Nat.pow_le_pow_right (by decide : 1 ≤ 2) (by
-        simpa [Nat.size_eq_bits_len] using htag)
+        simpa [Nat.size_eq_bits_len] using! htag)
       rw [pow_succ]
       omega
     exact le_trans hsize (le_trans hsucc (by omega))
@@ -374,11 +374,9 @@ private theorem denseOverlayLookupTime_le_volume {m : ℕ}
       (TM.binaryPredTime (RegisterStore.read overlay address - 1)) ≤
       90000 * denseLookupVolume inputLength overlay address := by
     apply max_le
-    · dsimp only at hvolume hfallback ⊢
-      unfold denseLookupVolume at hvolume ⊢
+    · unfold denseLookupVolume at hvolume ⊢
       omega
-    · dsimp only at hvolume hpred' ⊢
-      unfold denseLookupVolume at hvolume ⊢
+    · unfold denseLookupVolume at hvolume ⊢
       omega
   unfold denseOverlayLookupTime TM.branchWorkBlankTime
   omega
@@ -421,8 +419,8 @@ private theorem binaryInstructionArithmeticTime_le_width
     (hlhs : bitlen lhs ≤ width) (hrhs : bitlen rhs ≤ width) :
     binaryInstructionArithmeticTime op lhs rhs ≤
       1000 * (width + 1) ^ 2 := by
-  have hlhsSize : lhs.size ≤ width := by simpa [bitlen] using hlhs
-  have hrhsSize : rhs.size ≤ width := by simpa [bitlen] using hrhs
+  have hlhsSize : lhs.size ≤ width := by simpa [bitlen] using! hlhs
+  have hrhsSize : rhs.size ≤ width := by simpa [bitlen] using! hrhs
   cases op with
   | add =>
       have htime := TM.binaryRippleAddTime_le lhs rhs
@@ -533,12 +531,12 @@ private theorem denseOverlayLookupStaticTime_le_product {m : ℕ}
     calc
       denseOverlayLookupTime tapes inputLength overlay address ≤
           800000 * (volume * (width + 1)) := by
-        simpa only [volume, Nat.mul_assoc] using hlookup
+        simpa only [volume, Nat.mul_assoc] using! hlookup
       _ ≤ 800000 * unit := Nat.mul_le_mul_left 800000 hbase
   have hreset : TM.resetBinaryWorkTime 1 address.bits.length ≤
       2 * width + 9 := by
     unfold TM.resetBinaryWorkTime TM.clearWorkTimeBound
-    simpa [bitlen, Nat.size_eq_bits_len] using
+    simpa [bitlen, Nat.size_eq_bits_len] using!
       (show 1 + 2 + 1 + (2 * bitlen address + 5) ≤
           2 * width + 9 by omega)
   have hwidthUnit : width + 1 ≤ unit := by
@@ -587,7 +585,7 @@ private theorem taggedEntryUpdateTime_le_product {m : ℕ}
   have hlength : overlay.length ≤ volume := le_trans hlengthEncoded hencoded
   have hcountBits := count_bits_le_encodedStoreLength overlay hcanonical
   have hcount : bitlen overlay.length ≤ encodedStoreLength overlay := by
-    simpa [bitlen, Nat.size_eq_bits_len] using hcountBits
+    simpa [bitlen, Nat.size_eq_bits_len] using! hcountBits
   have hcountProduct :=
     address_count_width_le_encodedStoreLength overlay hcanonical
   have htag : bitlen (value + 1) ≤ width + 1 :=
@@ -620,7 +618,7 @@ private theorem taggedEntryUpdateTime_le_product {m : ℕ}
   have hsucc := TM.binarySuccTime_le value
   have hsucc' : TM.binarySuccTime value ≤
       3 * volume * (width + 1) := by
-    have hsize : value.size ≤ width := by simpa [bitlen] using hvalue
+    have hsize : value.size ≤ width := by simpa [bitlen] using! hvalue
     exact le_trans hsucc (by nlinarith)
   unfold taggedEntryUpdateTime
   dsimp only [volume] at hupdateVolume hsucc' ⊢
@@ -663,7 +661,7 @@ private theorem denseResourceVolume_le_unit (magnitude inputLength : ℕ)
     have := Nat.mul_le_mul_left
       (encodedStoreLength overlay + inputLength + width + 1)
       (show 1 ≤ width + 1 by omega)
-    simpa only [Nat.mul_one] using this)
+    simpa only [Nat.mul_one] using! this)
     (denseResourceBase_le_unit magnitude inputLength overlay width)
 
 private theorem denseResourceWidthSq_le_unit (magnitude inputLength : ℕ)
@@ -713,7 +711,7 @@ private theorem denseExecuteInstructionTime_le_product {m : ℕ}
   have hencoded : encodedStoreLength overlay ≤ unit := by
     exact le_trans (by omega) hvolume
   have hencodedBits : (overlay.flatMap Entry.encode).length ≤ unit := by
-    simpa only [encodedStoreLength] using hencoded
+    simpa only [encodedStoreLength] using! hencoded
   have hfixedAdd : ∀ fixedValue, fixedValue ≤ magnitude →
       TM.binaryAddConstTime fixedValue 0 ≤ 4 * unit := by
     intro fixedValue hconstant
@@ -764,7 +762,7 @@ private theorem denseExecuteInstructionTime_le_product {m : ℕ}
       denseOverlayLookupTime tapes.data.indirectLoadLookup input.length overlay
           address ≤ 800000 *
             ((encodedStoreLength overlay + input.length + width + 1) *
-              (width + 1)) := by simpa only [Nat.mul_assoc] using hlookup
+              (width + 1)) := by simpa only [Nat.mul_assoc] using! hlookup
       _ ≤ 800000 * unit := Nat.mul_le_mul_left 800000 hbase
   have htaggedUpdate : ∀ address value,
       bitlen address ≤ width → bitlen value ≤ width →
@@ -776,7 +774,7 @@ private theorem denseExecuteInstructionTime_le_product {m : ℕ}
     calc
       taggedEntryUpdateTime tapes.data.update overlay address value ≤
           20000 * ((encodedStoreLength overlay + input.length + width + 1) *
-            (width + 1)) := by simpa only [Nat.mul_assoc] using hupdate
+            (width + 1)) := by simpa only [Nat.mul_assoc] using! hupdate
       _ ≤ 20000 * unit := Nat.mul_le_mul_left 20000 hbase
   have harithmetic : ∀ op lhs rhs, bitlen lhs ≤ width →
       bitlen rhs ≤ width →
@@ -788,7 +786,7 @@ private theorem denseExecuteInstructionTime_le_product {m : ℕ}
       TM.binaryCopyTime value 0 ≤ 23 * unit := by
     intro value hvalue
     have htime := TM.binaryCopyTime_le value 0
-    have hsize : value.size ≤ width := by simpa [bitlen] using hvalue
+    have hsize : value.size ≤ width := by simpa [bitlen] using! hvalue
     rw [Nat.size_zero] at htime
     exact le_trans htime (by nlinarith)
   have hreset : ∀ value, bitlen value ≤ width →
@@ -796,7 +794,7 @@ private theorem denseExecuteInstructionTime_le_product {m : ℕ}
     intro value hvalue
     unfold TM.resetBinaryWorkTime TM.clearWorkTimeBound
     have hbits : value.bits.length ≤ width := by
-      simpa [bitlen, Nat.size_eq_bits_len] using hvalue
+      simpa [bitlen, Nat.size_eq_bits_len] using! hvalue
     nlinarith
   have hpcSize : pcValue.size ≤ magnitude :=
     le_trans (size_le_self pcValue) hpc
@@ -807,7 +805,7 @@ private theorem denseExecuteInstructionTime_le_product {m : ℕ}
       11 * unit := by
     unfold TM.resetBinaryWorkTime TM.clearWorkTimeBound
     have hbits : pcValue.bits.length ≤ magnitude := by
-      simpa [Nat.size_eq_bits_len] using hpcSize
+      simpa [Nat.size_eq_bits_len] using! hpcSize
     nlinarith
   cases instruction with
   | imm destination value =>
@@ -1097,14 +1095,14 @@ private theorem denseProgramInstructionTime_le_product {m : ℕ}
     exact selectedInstructionResourceMagnitude_le program snapshot.pc
   have hexecute := denseExecuteInstructionTime_le_product tapes input instruction
     snapshot.pc snapshot.overlay width magnitude hvalid hstatic hcost hfixed (by
-      simpa only [magnitude] using hpc)
+      simpa only [magnitude] using! hpc)
   have hdispatchRaw := dispatchWithTime_le_selected tapes
     (fun current => denseExecuteInstructionTime tapes input current snapshot.pc
       snapshot.overlay) program snapshot.pc
   have hselectorSquare : (snapshot.pc + 1) ^ 2 ≤
       (magnitude + 1) ^ 2 :=
     Nat.pow_le_pow_left (Nat.add_le_add_right (by
-      simpa only [magnitude] using hpc) 1) 2
+      simpa only [magnitude] using! hpc) 1) 2
   have hdispatch : denseDispatchProgramTime tapes input snapshot.overlay
       snapshot.pc program snapshot.pc ≤ 6100000 * unit := by
     unfold denseDispatchProgramTime
@@ -1113,7 +1111,7 @@ private theorem denseProgramInstructionTime_le_product {m : ℕ}
     nlinarith
   have hcopyRaw := TM.binaryCopyTime_le snapshot.pc 0
   have hpcSize : snapshot.pc.size ≤ magnitude :=
-    le_trans (size_le_self snapshot.pc) (by simpa only [magnitude] using hpc)
+    le_trans (size_le_self snapshot.pc) (by simpa only [magnitude] using! hpc)
   have hcopy : TM.binaryCopyTime snapshot.pc 0 ≤ 23 * unit := by
     rw [Nat.size_zero] at hcopyRaw
     exact le_trans hcopyRaw (by nlinarith)
@@ -1151,18 +1149,18 @@ private theorem bufferedCleanupTime_le_linear {m : ℕ}
       rw [bufferedCleanupResetBitsAt,
         (instructionCleanupResetTape_injective tapes).extend_apply]
       fin_cases slot
-      · simpa [bufferedCleanupResetBits] using hcleanup 0
-      · simpa [bufferedCleanupResetBits] using hcleanup 1
-      · simpa [bufferedCleanupResetBits] using hcleanup 2
-      · simpa [bufferedCleanupResetBits] using hcleanup 3
-      · simpa [bufferedCleanupResetBits] using hcleanup 4
-      · simpa [bufferedCleanupResetBits] using hremaining
-      · simpa [bufferedCleanupResetBits, encodedStoreLength] using hold)
+      · simpa [bufferedCleanupResetBits] using! hcleanup 0
+      · simpa [bufferedCleanupResetBits] using! hcleanup 1
+      · simpa [bufferedCleanupResetBits] using! hcleanup 2
+      · simpa [bufferedCleanupResetBits] using! hcleanup 3
+      · simpa [bufferedCleanupResetBits] using! hcleanup 4
+      · simpa [bufferedCleanupResetBits] using! hremaining
+      · simpa [bufferedCleanupResetBits, encodedStoreLength] using! hold)
   have htargets : (instructionCleanupResetTargets tapes).length = 7 := by
     simp [instructionCleanupResetTargets]
   rw [htargets] at hreset
   have hnextBits : nextBits.length ≤ bound := by
-    simpa only [nextBits, encodedStoreLength] using hnext
+    simpa only [nextBits, encodedStoreLength] using! hnext
   have hnextLength : nextStore.length ≤ bound :=
     le_trans (store_length_le_encodedStoreLength nextStore) hnext
   have hresetNext : TM.resetBinaryWorkTime (nextBits.length + 1)
@@ -1189,7 +1187,7 @@ private theorem denseInstructionCleanupValue_bits_le
       ≤ width + 1 := by
   have hbits (value : ℕ) (hvalue : bitlen value ≤ width + 1) :
       value.bits.length ≤ width + 1 := by
-    simpa [bitlen, Nat.size_eq_bits_len] using hvalue
+    simpa [bitlen, Nat.size_eq_bits_len] using! hvalue
   cases instruction with
   | imm destination value =>
       simp only [RegisterStore.Instr.staticWidth] at hstatic
@@ -1202,7 +1200,8 @@ private theorem denseInstructionCleanupValue_bits_le
       · exact hbits destination hdestination
       · exact hbits (value + 1) htag
       · simp only [denseInstructionCleanupValue]
-        split <;> simp
+        split <;> simp_all [Fin.ext_iff]
+        split <;> simp [Nat.bits]
       · simp [denseInstructionCleanupValue]
       · simp [denseInstructionCleanupValue]
   | add destination source₀ source₁ =>
@@ -1225,11 +1224,12 @@ private theorem denseInstructionCleanupValue_bits_le
       intro slot
       fin_cases slot
       · exact hbits destination hdestination
-      · simpa only [lhs, rhs] using hbits (lhs + rhs + 1) htag
+      · simpa only [lhs, rhs] using! hbits (lhs + rhs + 1) htag
       · simp only [denseInstructionCleanupValue]
-        split <;> simp
-      · simpa only [lhs] using hbits lhs hlhs
-      · simpa only [rhs] using hbits rhs hrhs
+        split <;> simp_all [Fin.ext_iff]
+        split <;> simp [Nat.bits]
+      · simpa only [lhs] using! hbits lhs hlhs
+      · simpa only [rhs] using! hbits rhs hrhs
   | sub destination source₀ source₁ =>
       simp only [RegisterStore.Instr.staticWidth] at hstatic
       simp only [Instr.logCost, DenseOverlay.Snapshot.decode,
@@ -1245,7 +1245,7 @@ private theorem denseInstructionCleanupValue_bits_le
         omega
       have hresult := binaryInstrResult_bitlen_le .sub lhs rhs
       have hresult' : bitlen (lhs - rhs) ≤ bitlen lhs + bitlen rhs + 1 := by
-        simpa [BinaryInstrOp.eval] using hresult
+        simpa [BinaryInstrOp.eval] using! hresult
       have hresultWidth : bitlen (lhs - rhs) ≤ width := by
         apply le_trans hresult'
         dsimp only [lhs, rhs] at hcost ⊢
@@ -1256,9 +1256,10 @@ private theorem denseInstructionCleanupValue_bits_le
       intro slot
       fin_cases slot
       · exact hbits destination hdestination
-      · simpa only [lhs, rhs] using hbits (lhs - rhs + 1) htag
+      · simpa only [lhs, rhs] using! hbits (lhs - rhs + 1) htag
       · simp only [denseInstructionCleanupValue]
-        split <;> simp
+        split <;> simp_all [Fin.ext_iff]
+        split <;> simp [Nat.bits]
       · exact hbits lhs (by omega)
       · exact hbits rhs (by omega)
   | mul destination source₀ source₁ =>
@@ -1281,11 +1282,12 @@ private theorem denseInstructionCleanupValue_bits_le
       intro slot
       fin_cases slot
       · exact hbits destination hdestination
-      · simpa only [lhs, rhs] using hbits (lhs * rhs + 1) htag
+      · simpa only [lhs, rhs] using! hbits (lhs * rhs + 1) htag
       · simp only [denseInstructionCleanupValue]
-        split <;> simp
-      · simpa only [lhs] using hbits lhs hlhs
-      · simpa only [rhs] using hbits rhs hrhs
+        split <;> simp_all [Fin.ext_iff]
+        split <;> simp [Nat.bits]
+      · simpa only [lhs] using! hbits lhs hlhs
+      · simpa only [rhs] using! hbits rhs hrhs
   | load destination addressRegister =>
       simp only [RegisterStore.Instr.staticWidth] at hstatic
       simp only [Instr.logCost, DenseOverlay.Snapshot.decode,
@@ -1303,10 +1305,11 @@ private theorem denseInstructionCleanupValue_bits_le
       intro slot
       fin_cases slot
       · exact hbits destination hdestination
-      · simpa only [address, value] using hbits (value + 1) htag
+      · simpa only [address, value] using! hbits (value + 1) htag
       · simp only [denseInstructionCleanupValue]
-        split <;> simp
-      · simpa only [address] using hbits address haddress
+        split <;> simp_all [Fin.ext_iff]
+        split <;> simp [Nat.bits]
+      · simpa only [address] using! hbits address haddress
       · simp [denseInstructionCleanupValue]
   | store addressRegister source =>
       simp only [RegisterStore.Instr.staticWidth] at hstatic
@@ -1324,12 +1327,13 @@ private theorem denseInstructionCleanupValue_bits_le
         le_trans (bitlen_succ_le value) (by omega)
       intro slot
       fin_cases slot
-      · simpa only [address] using hbits address haddress
-      · simpa only [value] using hbits (value + 1) htag
+      · simpa only [address] using! hbits address haddress
+      · simpa only [value] using! hbits (value + 1) htag
       · simp only [denseInstructionCleanupValue]
-        split <;> simp
-      · simpa only [address] using hbits address haddress
-      · simpa only [value] using hbits value (by omega)
+        split <;> simp_all [Fin.ext_iff]
+        split <;> simp [Nat.bits]
+      · simpa only [address] using! hbits address haddress
+      · simpa only [value] using! hbits value (by omega)
   | jz source target =>
       intro slot
       fin_cases slot <;> simp [denseInstructionCleanupValue]
@@ -1371,7 +1375,7 @@ theorem denseProgramStepTime_le_envelope_internal {m : ℕ}
   have hinstruction : instructionTime ≤ 7000000 * unit := by
     have htime := denseProgramInstructionTime_le_product tapes program input
       snapshot hvalid hpc
-    simpa only [instructionTime, unit, width, magnitude] using htime
+    simpa only [instructionTime, unit, width, magnitude] using! htime
   have hstatic : RegisterStore.Instr.staticWidth instruction ≤ width := by
     exact le_trans (selectedInstructionStaticWidth_le program snapshot.pc) (by
       unfold width denseStepWidth
@@ -1484,7 +1488,7 @@ private theorem denseSnapshot_step_pc_le_resourceMagnitude
       List.getElem?_eq_none (by omega)
     unfold DenseOverlay.Snapshot.step DenseOverlay.Snapshot.curInstr
     rw [houtOfRange]
-    simpa [DenseOverlay.Snapshot.stepInstr] using hpc
+    simpa [DenseOverlay.Snapshot.stepInstr] using! hpc
 
 private theorem denseStepVolume_le_runScale_succ
     (program : Program) (input : List Bool) (fuel : ℕ)
@@ -1566,16 +1570,16 @@ private theorem denseDispatchHaltTime_le_width {m : ℕ}
       omega
   | cons instruction rest ih =>
       have hselectorPred : (selector - 1).bits.length ≤ bound := by
-        simpa only [Nat.size_eq_bits_len] using
+        simpa only [Nat.size_eq_bits_len] using!
           (le_trans (Nat.size_le_size (Nat.sub_le selector 1)) (by
-            simpa [Nat.size_eq_bits_len] using hselector))
+            simpa [Nat.size_eq_bits_len] using! hselector))
       have htail := ih (selector - 1) hselectorPred
       have hpred := TM.binaryPredTime_le (selector - 1)
       have hpredSize : (selector - 1 + 1).size ≤ bound + 1 := by
         have hvalue : selector - 1 + 1 ≤ selector + 1 := by omega
         have hsize := Nat.size_le_size hvalue
         have hselectorSize : selector.size ≤ bound := by
-          simpa [Nat.size_eq_bits_len] using hselector
+          simpa [Nat.size_eq_bits_len] using! hselector
         have hsucc : (selector + 1).size ≤ bound + 1 := by
           rw [Nat.size_le]
           have hlt := Nat.lt_size_self selector
@@ -1604,7 +1608,7 @@ private theorem denseProgramHaltTime_le_magnitude {m : ℕ}
   have hpcSize : pcValue.size ≤ magnitude :=
     le_trans (size_le_self pcValue) hpc
   have hpcBits : pcValue.bits.length ≤ magnitude := by
-    simpa only [Nat.size_eq_bits_len] using hpcSize
+    simpa only [Nat.size_eq_bits_len] using! hpcSize
   have hdispatch := denseDispatchHaltTime_le_width tapes program pcValue
     magnitude hmagnitude hpcBits
   have hcopyRaw := TM.binaryCopyTime_le pcValue 0
@@ -1699,10 +1703,10 @@ theorem denseProgramLoopTime_le_envelope_internal {m : ℕ}
       have hiteration' :
           denseProgramLoopIterationTime tapes program input snapshot ≤
             fixed * volume * (width + 1) := by
-        simpa only [fixed, volume, width] using hiteration
+        simpa only [fixed, volume, width] using! hiteration
       have htail' : denseProgramLoopTime tapes program input fuel next ≤
           fixed * nextScale ^ 2 := by
-        simpa only [denseProgramLoopEnvelope, fixed, nextScale] using htail
+        simpa only [denseProgramLoopEnvelope, fixed, nextScale] using! htail
       rw [denseProgramLoopTime]
       unfold denseProgramLoopEnvelope
       dsimp only [next, fixed, currentScale] at hiteration' htail' ⊢
@@ -1761,7 +1765,7 @@ private theorem denseEntriesEncode_length_le (store : Store) (bound : ℕ)
       have htail := ih hrest
       have hhead : (Entry.encode entry).length ≤ 4 * bound + 2 := by
         rw [Entry.encode_length]
-        simpa [bitlen, Nat.size_eq_bits_len] using
+        simpa [bitlen, Nat.size_eq_bits_len] using!
           (show 2 * entry.1.bits.length + 2 * entry.2.bits.length + 2 ≤
               4 * bound + 2 by omega)
       simp only [List.flatMap_cons, List.length_append, List.length_cons]
@@ -1777,7 +1781,7 @@ private theorem denseInitialCleanupBits_le {m : ℕ}
   split
   · exact hlength
   · split
-    · simpa using hbound
+    · simpa using! hbound
     · simp
 
 private theorem denseInitialAbiInstallTime_le {m : ℕ}
@@ -1839,7 +1843,7 @@ private theorem denseProgramInitTime_le_quadratic {m : ℕ}
   have hloop := denseInitialLengthLoopTime_le 1 input (input.length + 1)
     (by omega)
   have htagBits : (input.length + 1).bits.length ≤ bound := by
-    simpa only [Nat.size_eq_bits_len] using
+    simpa only [Nat.size_eq_bits_len] using!
       (le_trans (size_le_self (input.length + 1)) (by
         dsimp only [bound]
         omega))
@@ -1860,7 +1864,7 @@ private theorem denseProgramInitTime_le_quadratic {m : ℕ}
     hstoreLength hentries htagBits
   have hsuccZero := TM.binarySuccTime_le 0
   have hsuccZero' : TM.binarySuccTime 0 ≤ 2 := by
-    simpa using hsuccZero
+    simpa using! hsuccZero
   unfold denseProgramInitTime
   dsimp only [bound] at hrewind habi htagBits hbound ⊢
   nlinarith
@@ -1891,7 +1895,7 @@ private theorem denseRunScale_initial_succ_le
   let cost := RAM.logTimeUpto program fuel (RAM.initCfg input)
   let magnitude := programResourceMagnitude program
   have hdecode : initial.decode input = RAM.initCfg input := by
-    simpa only [initial] using DenseOverlay.Snapshot.initial_decode input
+    simpa only [initial] using! DenseOverlay.Snapshot.initial_decode input
   have hhaltedInitial : RAM.Halted program
       (RAM.run program fuel (initial.decode input)) := by
     rw [hdecode]
@@ -1903,21 +1907,21 @@ private theorem denseRunScale_initial_succ_le
     calc
       RAM.logTimeUpto program (fuel + 1) (initial.decode input) =
           RAM.logTimeUpto program fuel (initial.decode input) := by
-        simpa only [Nat.succ_eq_add_one] using hsame
+        simpa only [Nat.succ_eq_add_one] using! hsame
       _ = cost := by rw [hdecode]
   have hunit := RAM.unitTimeUpto_le_logTimeUpto program (fuel + 1)
     (initial.decode input)
   rw [hcostSucc] at hunit
   have hstatic := programStaticWidth_le_resourceMagnitude program
   have hmagnitude : 1 ≤ magnitude := by
-    simpa only [magnitude] using programResourceMagnitude_pos program
+    simpa only [magnitude] using! programResourceMagnitude_pos program
   have hencodedRaw := DenseOverlay.Snapshot.initial_encodedStoreLength_run_le
     program input 0
   have hencoded : encodedStoreLength initial.overlay ≤
       2 * bitlen (input.length + 1) + 2 := by
     simpa only [initial, DenseOverlay.Snapshot.run,
       RAM.unitTimeUpto_zero, RAM.logTimeUpto_zero, Nat.zero_mul,
-      Nat.zero_add, Nat.mul_zero, Nat.add_zero] using hencodedRaw
+      Nat.zero_add, Nat.mul_zero, Nat.add_zero] using! hencodedRaw
   have hbitlen : bitlen (input.length + 1) ≤ input.length + 1 :=
     size_le_self (input.length + 1)
   have htime : fuel + 1 +
@@ -1976,12 +1980,12 @@ theorem denseProgramDecisionTime_le_envelope_internal {m : ℕ}
   let scale := input.length + cost + 1
   let fixed := (magnitude + 1) ^ 4 * scale ^ 2
   have hmagnitude : 1 ≤ magnitude := by
-    simpa only [magnitude] using programResourceMagnitude_pos program
+    simpa only [magnitude] using! programResourceMagnitude_pos program
   have hscale : 1 ≤ scale := by
     dsimp only [scale]
     omega
   have hinitialValid : DenseOverlay.Valid initial.overlay := by
-    simpa only [initial] using DenseOverlay.Snapshot.initial_valid input
+    simpa only [initial] using! DenseOverlay.Snapshot.initial_valid input
   have hinitialPc : initial.pc ≤ magnitude := by
     dsimp only [initial, DenseOverlay.Snapshot.initial, magnitude]
     omega

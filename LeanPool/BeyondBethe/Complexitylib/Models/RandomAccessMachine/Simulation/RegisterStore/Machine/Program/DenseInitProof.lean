@@ -188,10 +188,10 @@ theorem denseInitialLengthLoopTM_hoareTime_internal
         (by
           rw [houtput]
           have hblankNat : TM.resetBinaryBlank.HasBinaryNat 0 := by
-            simpa [TM.resetBinaryBlank] using Tape.init_move_right_hasBinaryNat 0
+            simpa [TM.resetBinaryBlank] using! Tape.init_move_right_hasBinaryNat 0
           exact (parked_of_binaryNat hblankNat).read_ne_start)
       refine ⟨done, 1, by simp [denseInitialLengthLoopTime],
-        .step (by simpa [done] using hstep) .zero, ?_, ?_⟩
+        .step (by simpa [done] using! hstep) .zero, ?_, ?_⟩
       · rfl
       · exact ⟨hinput, rfl, by simpa, rfl⟩
   | cons bit rest ih =>
@@ -214,7 +214,7 @@ theorem denseInitialLengthLoopTM_hoareTime_internal
       have houtputParked : TM.Parked out₀ := by
         rw [houtput]
         have hblankNat : TM.resetBinaryBlank.HasBinaryNat 0 := by
-          simpa [TM.resetBinaryBlank] using Tape.init_move_right_hasBinaryNat 0
+          simpa [TM.resetBinaryBlank] using! Tape.init_move_right_hasBinaryNat 0
         exact parked_of_binaryNat hblankNat
       have hreadNonblank : inp₀.read ≠ Γ.blank := by
         rw [hinput.read_cons]
@@ -228,7 +228,7 @@ theorem denseInitialLengthLoopTM_hoareTime_internal
         houtputParked.read_ne_start
       have hscanReach : (denseInitialLengthLoopTM tapes).reachesIn 1 scan
           (denseInitialLengthWrap tapes bodyStart) :=
-        .step (by simpa [scan, bodyStart, denseInitialLengthWrap] using
+        .step (by simpa [scan, bodyStart, denseInitialLengthWrap] using!
           hscanStep) .zero
       have hbody := initialZeroBitTM_hoareTime_internal tapes address count
         entries inp₀ work₀ out₀ hready hinputParked houtputParked
@@ -248,7 +248,7 @@ theorem denseInitialLengthLoopTM_hoareTime_internal
         (by rw [hbodyOutput]; exact houtputParked.read_ne_start)
       have hseamReach : (denseInitialLengthLoopTM tapes).reachesIn 1
           (denseInitialLengthWrap tapes bodyDone) nextScan :=
-        .step (by simpa [nextScan] using hseamStep) .zero
+        .step (by simpa [nextScan] using! hseamStep) .zero
       have hnextInput :
           (bodyDone.input.move Dir3.right).HasBinarySuffix rest := by
         rw [hbodyInput]
@@ -268,12 +268,12 @@ theorem denseInitialLengthLoopTM_hoareTime_internal
         htailHalt, ?_⟩
       · simp only [denseInitialLengthLoopTime]
         omega
-      · simpa [Nat.add_assoc] using hreach
+      · simpa [Nat.add_assoc] using! hreach
       · refine ⟨htailInput, ?_, ?_, htailOutput.trans hbodyOutput⟩
         · rw [htailHead, hbodyInput]
           simp only [Tape.move, List.length_cons]
           omega
-        · simpa [Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using htailReady
+        · simpa [Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using! htailReady
 
 private theorem denseProgramInitialStore_eq (input : List Bool) :
     denseProgramInitialStore input = [(0, input.length + 1)] := by
@@ -312,7 +312,7 @@ theorem denseProgramInitTM_hoareTime_internal
   have hsetupOutputParked : TM.Parked setupDone.output := by
     rw [hsetupOutput]
     have hblankNat : TM.resetBinaryBlank.HasBinaryNat 0 := by
-      simpa [TM.resetBinaryBlank] using Tape.init_move_right_hasBinaryNat 0
+      simpa [TM.resetBinaryBlank] using! Tape.init_move_right_hasBinaryNat 0
     exact parked_of_binaryNat hblankNat
   have hloop := denseInitialLengthLoopTM_hoareTime_internal tapes input
     1 0 [] setupDone.input setupDone.work setupDone.output hsetupInput
@@ -322,7 +322,7 @@ theorem denseProgramInitTM_hoareTime_internal
     hloop _ _ _ ⟨rfl, rfl, rfl⟩
   have hloopReady : InitialLoopReady tapes (input.length + 1) 0 []
       loopDone.work := by
-    simpa [Nat.add_comm] using hloopReadyRaw
+    simpa [Nat.add_comm] using! hloopReadyRaw
   have hloopBufferStart :
       (loopDone.work tapes.buffer).cells 0 = Γ.start :=
     TM.work_cells_zero_eq_start_of_reachesIn tapes.buffer hloopReach
@@ -334,7 +334,7 @@ theorem denseProgramInitTM_hoareTime_internal
   have hloopOutputParked : TM.Parked loopDone.output := by
     rw [hloopOutputBlank]
     have hblankNat : TM.resetBinaryBlank.HasBinaryNat 0 := by
-      simpa [TM.resetBinaryBlank] using Tape.init_move_right_hasBinaryNat 0
+      simpa [TM.resetBinaryBlank] using! Tape.init_move_right_hasBinaryNat 0
     exact parked_of_binaryNat hblankNat
   have hemit := initialLengthEmitTM_hoareTime_internal tapes
     (input.length + 1) 0 [] loopDone.input loopDone.work loopDone.output
@@ -350,7 +350,7 @@ theorem denseProgramInitTM_hoareTime_internal
       (denseProgramInitialStore input).length
       (denseProgramInitialStore input) emitDone.work := by
     rw [denseProgramInitialStore_eq]
-    simpa using hemitReadyRaw
+    simpa using! hemitReadyRaw
   have hemitInputParked : TM.Parked emitDone.input := by
     rw [hemitInput]
     exact hloopInputParked
@@ -359,7 +359,7 @@ theorem denseProgramInitTM_hoareTime_internal
   have hemitOutputParked : TM.Parked emitDone.output := by
     rw [hemitOutputBlank]
     have hblankNat : TM.resetBinaryBlank.HasBinaryNat 0 := by
-      simpa [TM.resetBinaryBlank] using Tape.init_move_right_hasBinaryNat 0
+      simpa [TM.resetBinaryBlank] using! Tape.init_move_right_hasBinaryNat 0
     exact parked_of_binaryNat hblankNat
   have habi := initialAbiInstallTM_hoareTime_internal tapes
     (denseProgramInitialStore input) (input.length + 1) emitDone.input
@@ -380,7 +380,7 @@ theorem denseProgramInitTM_hoareTime_internal
   let sparseInitial : Snapshot :=
     { pc := 0, store := denseProgramInitialStore input }
   have hsparseCanonical : Canonical sparseInitial.store := by
-    simpa [sparseInitial, denseProgramInitialStore] using
+    simpa [sparseInitial, denseProgramInitialStore] using!
       DenseOverlay.Snapshot.initial_canonical input
   have habiReady : InstructionExecutionReady tapes sparseInitial.store 0
       (programSnapshotWork tapes sparseInitial) :=
@@ -423,7 +423,7 @@ theorem denseProgramInitTM_hoareTime_internal
         habiWork
       rw [hworkEq]
       exact ⟨hiParked.read_ne_start, hiParked.1⟩
-    · simpa [denseProgramSnapshotWork, sparseInitial] using habiWork
+    · simpa [denseProgramSnapshotWork, sparseInitial] using! habiWork
     · exact habiOutput.trans hemitOutputBlank
   obtain ⟨rewindDone, rewindTime, hrewindTime, hrewindReach,
       hrewindHalt, hrewindHead, hrewindCells, hrewindWork,
@@ -450,7 +450,7 @@ theorem denseProgramInitTM_hoareTime_internal
         output := TM.transitionTape abiDone.output }
       rewindDone := by
     simpa only [habiInputTransition, habiWorkTransition,
-      habiOutputTransition] using hrewindReach
+      habiOutputTransition] using! hrewindReach
   have habiRewindReach := TM.seqTM_reachesIn_of_reachesIn
     (initialAbiInstallTM tapes) TM.rewindInputTM habiReach habiHalt
     hrewindReach'
@@ -477,7 +477,7 @@ theorem denseProgramInitTM_hoareTime_internal
           output := TM.transitionTape emitDone.output }
         abiRewindDone := by
     simpa only [hemitInputTransition, hemitWorkTransition,
-      hemitOutputTransition] using habiRewindReach
+      hemitOutputTransition] using! habiRewindReach
   have emitTailReach := TM.seqTM_reachesIn_of_reachesIn
     (initialLengthEmitTM tapes)
     (TM.seqTM (initialAbiInstallTM tapes) TM.rewindInputTM)
@@ -489,8 +489,10 @@ theorem denseProgramInitTM_hoareTime_internal
       (TM.seqTM (initialLengthEmitTM tapes)
         (TM.seqTM (initialAbiInstallTM tapes) TM.rewindInputTM)).halted
         emitTailDone := by
-    rw [TM.phase2Wrap_halted_iff]
-    exact habiRewindHalt
+    exact (TM.phase2Wrap_halted_iff
+      (initialLengthEmitTM tapes)
+      (TM.seqTM (initialAbiInstallTM tapes) TM.rewindInputTM) abiRewindDone).mpr
+      habiRewindHalt
   obtain ⟨hloopInputTransition, hloopWorkTransition,
       hloopOutputTransition⟩ :=
     TM.phaseTransition_eq_self_of_reads_ne_start
@@ -510,7 +512,7 @@ theorem denseProgramInitTM_hoareTime_internal
           output := TM.transitionTape loopDone.output }
         emitTailDone := by
     simpa only [hloopInputTransition, hloopWorkTransition,
-      hloopOutputTransition] using emitTailReach
+      hloopOutputTransition] using! emitTailReach
   have loopTailReach := TM.seqTM_reachesIn_of_reachesIn
     (denseInitialLengthLoopTM tapes)
     (TM.seqTM (initialLengthEmitTM tapes)
@@ -525,8 +527,11 @@ theorem denseProgramInitTM_hoareTime_internal
         (TM.seqTM (initialLengthEmitTM tapes)
           (TM.seqTM (initialAbiInstallTM tapes) TM.rewindInputTM))).halted
         loopTailDone := by
-    rw [TM.phase2Wrap_halted_iff]
-    exact emitTailHalt
+    exact (TM.phase2Wrap_halted_iff
+      (denseInitialLengthLoopTM tapes)
+      (TM.seqTM (initialLengthEmitTM tapes)
+        (TM.seqTM (initialAbiInstallTM tapes) TM.rewindInputTM)) emitTailDone).mpr
+      emitTailHalt
   obtain ⟨hsetupInputTransition, hsetupWorkTransition,
       hsetupOutputTransition⟩ :=
     TM.phaseTransition_eq_self_of_reads_ne_start
@@ -549,7 +554,7 @@ theorem denseProgramInitTM_hoareTime_internal
           output := TM.transitionTape setupDone.output }
         loopTailDone := by
     simpa only [hsetupInputTransition, hsetupWorkTransition,
-      hsetupOutputTransition] using loopTailReach
+      hsetupOutputTransition] using! loopTailReach
   have hreach := TM.seqTM_reachesIn_of_reachesIn
     (initialSetupTM tapes)
     (TM.seqTM (denseInitialLengthLoopTM tapes)
@@ -569,13 +574,17 @@ theorem denseProgramInitTM_hoareTime_internal
     omega
   · change (denseProgramInitTM tapes).halted finalCfg
     unfold denseProgramInitTM
-    rw [TM.phase2Wrap_halted_iff]
-    exact loopTailHalt
+    exact (TM.phase2Wrap_halted_iff
+      (initialSetupTM tapes)
+      (TM.seqTM (denseInitialLengthLoopTM tapes)
+        (TM.seqTM (initialLengthEmitTM tapes)
+          (TM.seqTM (initialAbiInstallTM tapes) TM.rewindInputTM))) loopTailDone).mpr
+      loopTailHalt
   · refine ⟨?_, hrewindWork, hrewindOutput⟩
     change rewindDone.input =
       (Tape.init (input.map Γ.ofBool)).move Dir3.right
-    exact Tape.ext (by simpa [Tape.move] using hrewindHead)
-      (by simpa [Tape.move] using hrewindCells)
+    exact Tape.ext (by simpa [Tape.move] using! hrewindHead)
+      (by simpa [Tape.move] using! hrewindCells)
 
 end Machine
 end RegisterStore
