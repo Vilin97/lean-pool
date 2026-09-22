@@ -201,8 +201,8 @@ theorem inTangentCoordinates_mvfderiv_apply_coordinate_eq_on_chart
     rw [TangentBundle.continuousLinearMapAt_trivializationAt]
     · simp [e', extChartAt_self_eq, modelWithCornersSelf_coe]
       rw [chartAt_self_eq]
-      change fderiv ℝ (id : ℝ → ℝ) _ _ = _
-      rw [fderiv_id]
+      change (mfderiv (I := 𝓘(ℝ, ℝ)) (I' := 𝓘(ℝ, ℝ)) (id : ℝ → ℝ) _) _ = _
+      rw [mfderiv_id]
       rfl
     · simpa [chartAt_self_eq]
   calc

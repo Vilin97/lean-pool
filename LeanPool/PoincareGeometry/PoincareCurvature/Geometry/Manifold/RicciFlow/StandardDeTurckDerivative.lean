@@ -264,6 +264,8 @@ theorem mvfderiv_standardDeTurckVectorField_localFrameCoeff_apply
       mvfderiv (I := I) f x = mvfderiv (I := I) g' x := by
     unfold mvfderiv
     rw [hfg.eq_of_nhds, hfg.mfderiv_eq]
+    ext v
+    rfl
   have hderivEq :
       mvfderiv (I := I)
           (fun y => e.localFrameCoeff I b k y

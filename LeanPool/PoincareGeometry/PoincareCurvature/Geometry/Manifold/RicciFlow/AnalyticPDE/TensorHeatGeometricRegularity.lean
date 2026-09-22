@@ -126,7 +126,8 @@ theorem contDiffOn_writtenInExtChartAt_of_contMDiffOn
   rw [← contMDiffOn_iff_contDiffOn]
   have hsymm := (contMDiffOn_extChartAt_symm (I := I) (n := n) p).mono hst
   have hcomp := hf.comp hsymm hsu
-  simpa [writtenInExtChartAt] using hcomp
+  simpa [writtenInExtChartAt, extChartAt_self_eq, chartAt_self_eq,
+    OpenPartialHomeomorph.refl_apply, Function.comp_def] using hcomp
 
 theorem contDiffOn_localFrameInChart
     (p : M)
@@ -175,7 +176,7 @@ theorem contDiffOn_localFrameInChart
       (VectorField.mpullbackWithin (modelWithCornersSelf ℝ E) I
         (extChartAt I p).symm (e.localFrame b i) s)
       (s ∩ (extChartAt I p).symm ⁻¹' t) := by
-    simpa [Function.comp_def] using hpullModel
+    convert! hpullModel using 1
   refine hpullModel'.congr fun z hz => ?_
   unfold localFrameInChart VectorField.mpullbackWithin
   have hsnhds : s ∈ nhds z := (isOpen_extChartAt_target p).mem_nhds hz.1
