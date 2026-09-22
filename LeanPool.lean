@@ -227,6 +227,7 @@ import LeanPool.AsymptoticTrianglePacking.Internal.Assemble
 import LeanPool.AsymptoticTrianglePacking.Internal.Assembly
 import LeanPool.AsymptoticTrianglePacking.Internal.Basic
 import LeanPool.AsymptoticTrianglePacking.Internal.BernoulliSpace
+import LeanPool.AsymptoticTrianglePacking.Internal.CeilingOracle
 import LeanPool.AsymptoticTrianglePacking.Internal.Conflict
 import LeanPool.AsymptoticTrianglePacking.Internal.Convergence
 import LeanPool.AsymptoticTrianglePacking.Internal.Covered
