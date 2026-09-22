@@ -15,6 +15,30 @@ open IsDedekindDomain
 noncomputable section
 
 
+private theorem finite_and_finrank_le_of_residue_map
+    {k E F : Type*} [Field k] [AddCommGroup E] [Module k E]
+    [AddCommGroup F] [Module k F] [Module.Finite k F]
+    (S T : Submodule k E) [Module.Finite k S] (hST : S ≤ T)
+    (f : T →ₗ[k] F) (hker : f.ker = Submodule.comap T.subtype S) :
+    Module.Finite k T ∧ Module.finrank k T ≤ Module.finrank k S + Module.finrank k F := by
+  let : Module.Finite k f.range := inferInstance
+  let : Module.Finite k f.ker := by
+    rw [hker]
+    exact Module.Finite.equiv (Submodule.comapSubtypeEquivOfLe hST).symm
+  let : Module.Finite k (T ⧸ f.ker) :=
+    Module.Finite.equiv f.quotKerEquivRange.symm
+  let hTFinite : Module.Finite k T := Module.Finite.of_submodule_quotient f.ker
+  have hkerRank : Module.finrank k f.ker = Module.finrank k S := by
+    rw [hker]
+    exact (Submodule.comapSubtypeEquivOfLe hST).finrank_eq
+  refine ⟨hTFinite, ?_⟩
+  calc
+    Module.finrank k T = Module.finrank k f.range + Module.finrank k f.ker :=
+      f.finrank_range_add_finrank_ker.symm
+    _ ≤ Module.finrank k F + Module.finrank k S :=
+      Nat.add_le_add f.range.finrank_le (le_of_eq hkerRank)
+    _ = Module.finrank k S + Module.finrank k F := Nat.add_comm _ _
+
 section InfinityPlace
 
 variable (K : Type*) [Field K] [Fintype K] [DecidableEq K]
@@ -119,22 +143,24 @@ theorem finiteExtensionRiemannSpace_infinityPlace_increment
   let Q : FiniteExtensionPlace K L := .inr P
   let S := finiteExtensionRiemannSpace K L D
   let T := finiteExtensionRiemannSpace K L (D + Finsupp.single Q 1)
-  letI : Algebra (RatFuncInfinityIntegralClosure K L)
+  let : Algebra (RatFuncInfinityIntegralClosure K L)
       (RatFuncInfinityIntegralClosure K L) :=
     Algebra.id (RatFuncInfinityIntegralClosure K L)
   let upperInfinityClosureLocalAlgebra :
       Algebra (RatFuncInfinityIntegralClosure K L)
         (FiniteExtensionInfinityPlaceLocalRing K L P) :=
     OreLocalization.instAlgebra
-  letI := upperInfinityClosureLocalAlgebra
-  letI : SMul (RatFuncInfinityIntegralClosure K L)
+  let := upperInfinityClosureLocalAlgebra
+  let : SMul (RatFuncInfinityIntegralClosure K L)
       (FiniteExtensionInfinityPlaceLocalRing K L P) :=
     upperInfinityClosureLocalAlgebra.toSMul
-  letI : Algebra K (FiniteExtensionInfinityPlaceLocalRing K L P) :=
+  let : Algebra K (FiniteExtensionInfinityPlaceLocalRing K L P) :=
     OreLocalization.instAlgebra
-  letI := finiteExtensionInfinityPlaceLocalAlgebra (K := K) (L := L) P
-  letI := finiteExtensionInfinityPlaceLocalIsFractionRing (K := K) (L := L) P
-  letI : IsScalarTower K R L := by
+  let := finiteExtensionInfinityPlaceLocalAlgebra (K := K) (L := L) P
+  let := finiteExtensionInfinityPlaceLocalIsFractionRing (K := K) (L := L) P
+  let : FaithfulSMul R L :=
+    (faithfulSMul_iff_algebraMap_injective R L).mpr (IsFractionRing.injective R L)
+  let : IsScalarTower K R L := by
     apply IsScalarTower.of_algebraMap_eq'
     ext c
     symm
@@ -149,7 +175,7 @@ theorem finiteExtensionRiemannSpace_infinityPlace_increment
           (finiteExtensionInfinityPlaceLocalizationToField_comp_algebraMap
             (K := K) (L := L) P) (algebraMap K A c)]
     exact (IsScalarTower.algebraMap_apply K A L c).symm
-  letI : IsDiscreteValuationRing R :=
+  let : IsDiscreteValuationRing R :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain
       A (primeOverHeightOne (ratFuncInfinityPlace K) P).ne_bot R
   obtain ⟨π, hπ⟩ := IsDiscreteValuationRing.exists_irreducible R
@@ -178,7 +204,9 @@ theorem finiteExtensionRiemannSpace_infinityPlace_increment
     apply finiteExtensionInfinityPlace_exists_local_lift_of_orderTop_nonnegative
       (K := K) (L := L) P (a * x.1)
     by_cases hx0 : x.1 = 0
-    · simp [a, hx0, finiteExtensionInfinityPlaceLocalOrderTop]
+    · simp only [hx0, mul_zero, finiteExtensionInfinityPlaceLocalOrderTop]
+      erw [finitePlaceOrderTop_zero]
+      exact le_top
     · have hxmem := (mem_finiteExtensionRiemannSpace (K := K) (L := L)).mp x.2
       rcases hxmem with hxmem | ⟨_, hxorders⟩
       · exact (hx0 hxmem).elim
@@ -329,39 +357,20 @@ theorem finiteExtensionRiemannSpace_infinityPlace_increment
     ext x
     rw [LinearMap.mem_ker, Submodule.mem_comap]
     exact hkerPoint x
-  letI : Finite (IsLocalRing.ResidueField R) := by
-    letI : Finite P.1.ResidueField :=
+  let : Finite (IsLocalRing.ResidueField R) := by
+    let : Finite P.1.ResidueField :=
       finiteExtensionInfinityPlace_residueField_finite (K := K) (L := L) P
     change Finite
       (primeOverHeightOne (ratFuncInfinityPlace K) P).asIdeal.ResidueField
     exact Finite.of_injective
       (infinityIncrementResidueFieldAlgEquiv K L P)
       (infinityIncrementResidueFieldAlgEquiv K L P).injective
-  letI : Module.Finite K (IsLocalRing.ResidueField R) :=
+  let : Module.Finite K (IsLocalRing.ResidueField R) :=
     Module.Finite.of_finite
-  letI : Module.Finite K f.range := inferInstance
-  letI : Module.Finite K f.ker := by
-    rw [hker]
-    exact Module.Finite.equiv (Submodule.comapSubtypeEquivOfLe hST).symm
-  letI : Module.Finite K (T ⧸ f.ker) :=
-    Module.Finite.equiv f.quotKerEquivRange.symm
-  letI hTFinite : Module.Finite K T :=
-    Module.Finite.of_submodule_quotient f.ker
-  have hkerRank : Module.finrank K f.ker = Module.finrank K S := by
-    rw [hker]
-    exact (Submodule.comapSubtypeEquivOfLe hST).finrank_eq
-  constructor
-  · exact hTFinite
-  · calc
-      Module.finrank K T =
-          Module.finrank K f.range + Module.finrank K f.ker :=
-        f.finrank_range_add_finrank_ker.symm
-      _ ≤ Module.finrank K (IsLocalRing.ResidueField R) +
-          Module.finrank K S :=
-        Nat.add_le_add f.range.finrank_le (le_of_eq hkerRank)
-      _ = Module.finrank K S +
-          finiteExtensionPlaceDegree K L (.inr P) := by
-        rw [hResidueRank, Nat.add_comm]
+  have hbound := finite_and_finrank_le_of_residue_map S T hST f hker
+  refine ⟨hbound.1, ?_⟩
+  rw [← hResidueRank]
+  exact hbound.2
 
 end InfinityPlace
 

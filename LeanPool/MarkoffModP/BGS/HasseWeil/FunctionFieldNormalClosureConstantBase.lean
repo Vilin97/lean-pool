@@ -63,6 +63,14 @@ constant field. -/
       (FunctionFieldNormalClosureConstantBase K L) :=
   (functionFieldNormalClosureConstantToBase K L).toAlgebra
 
+local instance normalClosureConstantBaseSMul :
+    SMul (FunctionFieldNormalClosureConstantField K L)
+      (FunctionFieldNormalClosureConstantBase K L) := Algebra.toSMul
+
+local instance normalClosureConstantBaseModule :
+    Module (FunctionFieldNormalClosureConstantField K L)
+      (FunctionFieldNormalClosureConstantBase K L) := Algebra.toModule
+
 /-- The embeddings of the constants into the fixed field and into the normal
 closure form a scalar tower. -/
 noncomputable instance functionFieldNormalClosureConstantBase_isScalarTower :
@@ -108,7 +116,7 @@ function-field normal closure. -/
 /-- The Galois group of the specialized constant extension is the product of
 the new constant Galois group and the kernel-fixed-field Galois group. -/
 noncomputable def functionFieldNormalClosureConstantExtensionAutMulEquiv :
-    letI := exactConstantExtensionBaseAlgebra
+    let := exactConstantExtensionBaseAlgebra
       (FunctionFieldNormalClosureConstantField K L)
       (FunctionFieldNormalClosureConstantBase K L)
       (FunctionFieldNormalClosure K L) S
@@ -123,7 +131,7 @@ noncomputable def functionFieldNormalClosureConstantExtensionAutMulEquiv :
         ExactConstantExtension
           (FunctionFieldNormalClosureConstantField K L)
           (FunctionFieldNormalClosure K L) S) := by
-  letI := exactConstantExtensionBaseAlgebra
+  let := exactConstantExtensionBaseAlgebra
     (FunctionFieldNormalClosureConstantField K L)
     (FunctionFieldNormalClosureConstantBase K L)
     (FunctionFieldNormalClosure K L) S
@@ -133,10 +141,9 @@ noncomputable def functionFieldNormalClosureConstantExtensionAutMulEquiv :
     (FunctionFieldNormalClosure K L) S
     (functionFieldNormalClosureConstantField_isExact K L)
 
-omit [Fintype K] [DecidableEq K] [DecidableEq (RatFunc K)] in
 /-- The specialized constant quotient is onto. -/
 theorem functionFieldNormalClosureConstantExtensionQuotient_surjective :
-    letI := exactConstantExtensionBaseAlgebra
+    let := exactConstantExtensionBaseAlgebra
       (FunctionFieldNormalClosureConstantField K L)
       (FunctionFieldNormalClosureConstantBase K L)
       (FunctionFieldNormalClosure K L) S
@@ -145,7 +152,7 @@ theorem functionFieldNormalClosureConstantExtensionQuotient_surjective :
       (FunctionFieldNormalClosureConstantBase K L)
       (FunctionFieldNormalClosure K L) S
       (functionFieldNormalClosureConstantField_isExact K L)) := by
-  letI := exactConstantExtensionBaseAlgebra
+  let := exactConstantExtensionBaseAlgebra
     (FunctionFieldNormalClosureConstantField K L)
     (FunctionFieldNormalClosureConstantBase K L)
     (FunctionFieldNormalClosure K L) S

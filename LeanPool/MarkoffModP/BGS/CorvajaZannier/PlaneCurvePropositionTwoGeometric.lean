@@ -26,6 +26,15 @@ namespace BGS.CorvajaZannier
 noncomputable section
 
 
+private theorem exceptionalPlaces_comm
+    (K : Type*) [Field K] [DecidableEq K] [DecidableEq (RatFunc K)]
+    (L : Type*) [Field L] [Algebra (RatFunc K) L]
+    [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L]
+    (u v : L) : propositionTwoExceptionalPlaces K L u v =
+      propositionTwoExceptionalPlaces K L v u := by
+  classical
+  exact Finset.union_comm _ _
+
 /-- The natural orientation `(u,v)=(x^m,y^n)` of the geometric Proposition 2
 argument. -/
 theorem planeCurvePropositionTwo_natural_of_poweredImageIndexBound
@@ -40,7 +49,7 @@ theorem planeCurvePropositionTwo_natural_of_poweredImageIndexBound
     (hnPrime : ¬ p ∣ n)
     (hcardK : MvPolynomial.degreeOf 1 f < Fintype.card K)
     (hindex :
-      letI := planeCurveCoordinateRing_isDomain hf
+      let := planeCurveCoordinateRing_isDomain hf
       Module.finrank (PoweredImageOverFirst f m n)
           (PlaneCurveFunctionField f) ≤
         2 * MvPolynomial.degreeOf 0 f * MvPolynomial.degreeOf 1 f) :
@@ -50,15 +59,15 @@ theorem planeCurvePropositionTwo_natural_of_poweredImageIndexBound
       (2 * MvPolynomial.degreeOf 0 f * MvPolynomial.degreeOf 1 f)
       (planeCurveExhaustiveTorsionGcdWeightedDegree
         hf hpartialSecond m n : ℝ) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : DecidableEq (RatFunc K) := Classical.decEq _
+  let : DecidableEq (RatFunc K) := Classical.decEq _
   let Chi := 2 * MvPolynomial.degreeOf 0 f * MvPolynomial.degreeOf 1 f
   apply planeCurvePropositionTwo_natural_of_auxiliaryBounds
     hf hpartialFirst hpartialSecond m n p Chi hm hn hindex
   intro h k hh hk hadmissible hexcluded
   let L := PlaneCurveFunctionField f
-  letI : CharP L p := charP_of_injective_algebraMap
+  let : CharP L p := charP_of_injective_algebraMap
     (algebraMap K L).injective p
   let gK := poweredCoordinateImageRelation hf hpartialSecond m hm n
   let g := poweredCoordinateFrobeniusImageRelation
@@ -110,7 +119,7 @@ theorem planeCurvePropositionTwo_swapped_of_poweredImageIndexBound
     (hmPrime : ¬ p ∣ m)
     (hcardK : MvPolynomial.degreeOf 1 f < Fintype.card K)
     (hindex :
-      letI := planeCurveCoordinateRing_isDomain hf
+      let := planeCurveCoordinateRing_isDomain hf
       Module.finrank (PoweredImageOverFirst f m n)
           (PlaneCurveFunctionField f) ≤
         2 * MvPolynomial.degreeOf 0 f * MvPolynomial.degreeOf 1 f) :
@@ -120,15 +129,15 @@ theorem planeCurvePropositionTwo_swapped_of_poweredImageIndexBound
       (2 * MvPolynomial.degreeOf 0 f * MvPolynomial.degreeOf 1 f)
       (planeCurveExhaustiveTorsionGcdWeightedDegree
         hf hpartialSecond m n : ℝ) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : DecidableEq (RatFunc K) := Classical.decEq _
+  let : DecidableEq (RatFunc K) := Classical.decEq _
   let Chi := 2 * MvPolynomial.degreeOf 0 f * MvPolynomial.degreeOf 1 f
   apply planeCurvePropositionTwo_swapped_of_auxiliaryBounds
     hf hpartialFirst hpartialSecond m n p Chi hm hn hindex
   intro h k hh hk hadmissible hexcluded
   let L := PlaneCurveFunctionField f
-  letI : CharP L p := charP_of_injective_algebraMap
+  let : CharP L p := charP_of_injective_algebraMap
     (algebraMap K L).injective p
   let F := frobeniusSubfield L p
   let ι : K →+* F :=
@@ -170,8 +179,8 @@ theorem planeCurvePropositionTwo_swapped_of_poweredImageIndexBound
   exact finiteExtensionGcdBound_planeCurvePowers_swapped_of_auxiliaryFamily_linearIndependent
     (p := p) hf hpartialFirst hpartialSecond m n hm hn
       h k hadmissible.1 Chi hLI (by
-        simpa only [propositionTwoExceptionalPlaces, Finset.union_comm] using
-          hEulerNatural)
+        erw [exceptionalPlaces_comm]
+        exact hEulerNatural)
 
 /-- The two orientations combine to the actual minimum/maximum degree form
 needed by the plane-curve endpoint. -/
@@ -188,7 +197,7 @@ theorem planeCurvePropositionTwo_of_poweredImageIndexBound
     (hlarge : 12 * MvPolynomial.degreeOf 0 f *
       MvPolynomial.degreeOf 1 f < p)
     (hindex :
-      letI := planeCurveCoordinateRing_isDomain hf
+      let := planeCurveCoordinateRing_isDomain hf
       Module.finrank (PoweredImageOverFirst f m n)
           (PlaneCurveFunctionField f) ≤
         2 * MvPolynomial.degreeOf 0 f * MvPolynomial.degreeOf 1 f) :
