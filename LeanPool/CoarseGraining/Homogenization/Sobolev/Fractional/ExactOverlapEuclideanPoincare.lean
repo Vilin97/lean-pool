@@ -53,14 +53,18 @@ private theorem enorm_ofVec_sq_eq_sum_enorm_sq {d : ℕ} (v : Vec d) :
   rw [Real.enorm_eq_ofReal_abs,
     ← ENNReal.ofReal_pow (abs_nonneg (v i)), sq_abs]
 
-private theorem eLpNorm_two_sq {d : ℕ} {E : Type*} [NormedAddCommGroup E]
+private theorem eLpNormPrime_two_sq {d : ℕ} {E : Type*} [NormedAddCommGroup E]
     {μ : Measure (Vec d)} (f : Vec d → E) :
+    (eLpNorm' f 2 μ) ^ (2 : ℕ) = ∫⁻ x, ‖f x‖ₑ ^ (2 : ℕ) ∂μ := by
+  rw [eLpNorm'_eq_lintegral_enorm, ← ENNReal.rpow_natCast, ← ENNReal.rpow_mul]
+  norm_num
+
+private theorem eLpNorm_two_sq {d : ℕ} {E : Type*} [NormedAddCommGroup E]
+    {μ : Measure (Vec d)} (f : Vec d → E) (hf : AEStronglyMeasurable f μ) :
     (eLpNorm f (2 : ℝ≥0∞) μ) ^ (2 : ℕ) =
       ∫⁻ x, ‖f x‖ₑ ^ (2 : ℕ) ∂μ := by
-  rw [← ENNReal.rpow_natCast]
-  rw [eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num)]
-  rw [← ENNReal.rpow_mul]
-  norm_num
+  rw [eLpNorm_eq_eLpNorm' (by norm_num) (by norm_num) hf]
+  simpa only [ENNReal.toReal_ofNat] using eLpNormPrime_two_sq f
 
 private theorem eLpNorm_hilbertVec_two_eq_coordinateENorm {d : ℕ}
     {μ : Measure (Vec d)} (F : Vec d → Vec d)
@@ -71,7 +75,7 @@ private theorem eLpNorm_hilbertVec_two_eq_coordinateENorm {d : ℕ}
   have henergy :
       (eLpNorm (fun x => HilbertVec.ofVec (F x)) (2 : ℝ≥0∞) μ) ^ (2 : ℕ) =
         ∑ i : Fin d, (eLpNorm (fun x => F x i) (2 : ℝ≥0∞) μ) ^ 2 := by
-    rw [eLpNorm_two_sq (fun x => HilbertVec.ofVec (F x))]
+    rw [eLpNorm_two_sq (fun x => HilbertVec.ofVec (F x)) hF.aestronglyMeasurable]
     calc
       (∫⁻ x, ‖HilbertVec.ofVec (F x)‖ₑ ^ (2 : ℕ) ∂μ) =
           ∫⁻ x, ∑ i : Fin d, ‖F x i‖ₑ ^ (2 : ℕ) ∂μ := by
@@ -85,7 +89,7 @@ private theorem eLpNorm_hilbertVec_two_eq_coordinateENorm {d : ℕ}
       _ = ∑ i : Fin d, (eLpNorm (fun x => F x i) (2 : ℝ≥0∞) μ) ^ 2 := by
         apply Finset.sum_congr rfl
         intro i _
-        exact (eLpNorm_two_sq (fun x => F x i)).symm
+        exact (eLpNorm_two_sq (fun x => F x i) (hF.eval_piLp i).aestronglyMeasurable).symm
   calc
     eLpNorm (fun x => HilbertVec.ofVec (F x)) (2 : ℝ≥0∞) μ =
         ((eLpNorm (fun x => HilbertVec.ofVec (F x)) (2 : ℝ≥0∞) μ) ^
@@ -161,7 +165,8 @@ private theorem exactOverlapRootWeight_mul_localOscillation_le_finiteSeminorm
       norm_num
     _ ≤ (∑' j : ℕ, (exactOverlapDepthTerm Q s.1 2 u hu j) ^ (2 : ℝ)) ^
         ((2 : ℝ)⁻¹) := by
-      apply ENNReal.rpow_le_rpow (ENNReal.le_tsum 0)
+      apply ENNReal.rpow_le_rpow
+        (ENNReal.le_tsum (f := fun j : ℕ => (exactOverlapDepthTerm Q s.1 2 u hu j) ^ (2 : ℝ)) 0)
       norm_num
 
 private theorem exactOverlapLocalOscillation_middleChildCube_two {d : ℕ}
@@ -251,8 +256,9 @@ private theorem eLpNorm_hilbertVec_le_residual_add_const {d : ℕ}
       (normalizedCubeMeasure Q) := by
     have hsub := hF.sub (memLp_const (HilbertVec.ofVec M))
     simpa only [Pi.sub_apply, map_sub] using! hsub
-  have hadd := eLpNorm_add_le hresidual.aestronglyMeasurable
-    (aestronglyMeasurable_const (b := HilbertVec.ofVec M))
+  have hadd := eLpNorm_add_le
+    (f := fun x => HilbertVec.ofVec (F x - M))
+    (g := fun _ : Vec d => HilbertVec.ofVec M) (μ := normalizedCubeMeasure Q)
     (show (1 : ℝ≥0∞) ≤ 2 by norm_num)
   rw [show (fun x => HilbertVec.ofVec (F x)) =
       (fun x => HilbertVec.ofVec (F x - M)) +
@@ -349,10 +355,15 @@ theorem unitCube_normalizedEuclideanLpENorm_le_exactOverlapEuclideanNormTwo
     exact F.euclideanMemL2
   have h := exactOverlapRootWeight_mul_eLpNorm_le_exactOverlapEuclideanNormTwo
     s (originCube d 0) F hmem
-  change eLpNorm (fun x => euclideanNorm (F x)) 2
-      (unitCenteredCubeDomain d).normalizedVolume ≤ _
-  rw [unitCenteredCubeDomain_normalizedVolume_eq_normalizedCubeMeasure]
-  simpa only [euclideanNorm_eq_norm_ofVec, eLpNorm_norm, exactOverlapRootWeight,
+  unfold BoundedMeasurableDomain.normalizedEuclideanLpENorm
+  have hmeas : AEStronglyMeasurable (fun x => euclideanNorm (F x))
+      (unitCenteredCubeDomain d).normalizedVolume := by
+    simpa only [euclideanNorm_eq_norm_ofVec] using F.euclideanMemL2.norm.aestronglyMeasurable
+  rw [BoundedMeasurableDomain.normalizedLpENorm_eq_eLpNorm _ _ _ hmeas,
+    unitCenteredCubeDomain_normalizedVolume_eq_normalizedCubeMeasure]
+  simp only [euclideanNorm_eq_norm_ofVec]
+  rw [eLpNorm_norm (fun x => HilbertVec.ofVec (F x)) hmem.aestronglyMeasurable]
+  simpa only [exactOverlapRootWeight,
     originCube, Int.cast_zero, neg_zero, zero_mul, ENNReal.rpow_zero, one_mul] using h
 
 end

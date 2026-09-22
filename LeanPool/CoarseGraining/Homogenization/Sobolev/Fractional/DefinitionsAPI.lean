@@ -41,16 +41,15 @@ theorem cubeGagliardoESeminorm_top (Q : TriadicCube d) (s : ℝ) (u : Vec d → 
       essSup (fun z : Vec d × Vec d =>
         ‖(dist z.1 z.2 ^ (-s)) • (u z.1 - u z.2)‖ₑ)
         (gagliardoCubeMeasure Q) := by
-  rw [Internal.cubeGagliardoESeminorm_def, eLpNorm_exponent_top,
-    eLpNormEssSup]
-  simp only [gagliardoKernel, kernelExponent_top]
+  simp only [cubeGagliardoESeminorm, integralLpSeminorm, ENNReal.top_ne_zero,
+    if_false, if_true, eLpNormEssSup, gagliardoKernel, kernelExponent_top]
 
 /-- Swap symmetry of the unnormalized seminorm: precomposing the kernel with
 the pair swap changes nothing, since the kernel is odd under the swap and the
 seminorm is even. -/
 theorem gagliardoESeminormOn_comp_swap (A : Set (Vec d)) (s : ℝ) (p : ℝ≥0∞)
     (u : Vec d → E) :
-    eLpNorm (gagliardoKernel s p u ∘ Prod.swap) p
+    integralLpSeminorm (gagliardoKernel s p u ∘ Prod.swap) p
         ((MeasureTheory.volume.restrict A).prod
           (MeasureTheory.volume.restrict A)) =
       gagliardoESeminormOn A s p u := by
@@ -62,7 +61,7 @@ theorem gagliardoESeminormOn_comp_swap (A : Set (Vec d)) (s : ℝ) (p : ℝ≥0�
     simp only [dist_comm z.2 z.1]
     rw [show u z.2 - u z.1 = -(u z.1 - u z.2) by abel, smul_neg]
   rw [hswap, gagliardoESeminormOn]
-  exact eLpNorm_neg _ _ _
+  exact integralLpSeminorm_neg _ _ _
 
 /-- Relation between the cube-normalized seminorm and the unnormalized
 `Set`-variant: the manuscript's `⨍∫` normalization contributes the volume
@@ -74,10 +73,10 @@ theorem cubeGagliardoESeminorm_eq_smul_gagliardoESeminormOn
         gagliardoESeminormOn (Homogenization.cubeSet Q) s p u := by
   have : SFinite (MeasureTheory.volume.restrict (Homogenization.cubeSet Q)) :=
     inferInstance
-  rw [Internal.cubeGagliardoESeminorm_def, gagliardoESeminormOn,
+  rw [cubeGagliardoESeminorm, gagliardoESeminormOn,
     gagliardoCubeMeasure, Homogenization.normalizedCubeMeasure,
     Homogenization.cubeMeasure, Measure.prod_smul_left,
-    eLpNorm_smul_measure_of_ne_top hpt]
+    integralLpSeminorm_smul_measure _ hpt, smul_eq_mul]
 
 section Translation
 
@@ -129,7 +128,8 @@ theorem cubeGagliardoESeminorm_translate (shift : Fin d → ℤ)
       Homogenization.normalizedCubeMeasure, Homogenization.normalizedCubeMeasure,
       Homogenization.cubeMeasure, Homogenization.cubeMeasure, hvol, hres,
       Measure.prod_smul_left, Measure.prod_smul_left,
-      Measure.map_prod_map _ _ T.measurable T.measurable, Measure.map_smul]
+      Measure.map_prod_map _ _ T.measurable T.measurable,
+      Measure.map_smul _ (T.measurable.prodMap T.measurable).aemeasurable]
   have hMP : MeasureTheory.MeasurePreserving (⇑(T.prodCongr T))
       (gagliardoCubeMeasure Q) (gagliardoCubeMeasure (translateCube shift Q)) := by
     refine ⟨(T.prodCongr T).measurable, ?_⟩

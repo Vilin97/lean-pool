@@ -342,8 +342,7 @@ instance instIsProbabilityMeasure_law (d : ℕ) (lam Lam : ℝ) (hlam : 0 < lam)
     IsProbabilityMeasure (law d lam Lam hlam hle p hp) := by
   let : IsProbabilityMeasure (baseLaw d lam Lam hlam hle p hp) := by
     unfold baseLaw
-    exact Measure.isProbabilityMeasure_map
-      (measurable_checkerCarrier (d := d) lam Lam hlam hle).aemeasurable
+    infer_instance
   unfold law
   exact Source.Coarse.isProbabilityMeasure_scaleNormalizedLaw _ _
 

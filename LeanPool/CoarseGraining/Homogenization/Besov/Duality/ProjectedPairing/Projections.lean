@@ -66,7 +66,7 @@ theorem cubeProjection_succ_memLp_of_mem_descendantsAtDepth {d : ℕ}
   have hproj_meas :
       MeasureTheory.AEStronglyMeasurable (cubeProjection Q (j + 1) g)
         (normalizedCubeMeasure R) :=
-    hone.1.congr hEq.symm
+    hone.aestronglyMeasurable.congr hEq.symm
   refine hone.congr_norm hproj_meas ?_
   filter_upwards [hEq] with x hx
   simpa using congrArg abs hx.symm

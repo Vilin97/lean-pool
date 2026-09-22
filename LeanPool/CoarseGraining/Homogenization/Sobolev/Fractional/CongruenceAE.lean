@@ -78,8 +78,7 @@ theorem cubeGagliardoESeminorm_congr_ae {Q : TriadicCube d} {s : ℝ}
     {p : ℝ≥0∞} {u v : Vec d → E}
     (h : u =ᵐ[Homogenization.cubeMeasure Q] v) :
     cubeGagliardoESeminorm Q s p u = cubeGagliardoESeminorm Q s p v := by
-  rw [Internal.cubeGagliardoESeminorm_def, Internal.cubeGagliardoESeminorm_def]
-  exact eLpNorm_congr_ae (gagliardoKernel_congr_ae h)
+  exact integralLpSeminorm_congr_ae (gagliardoKernel_congr_ae h)
 
 /-- A.e.-congruence of `W^{s,p}` membership. -/
 theorem memWsp_congr_ae {Q : TriadicCube d} {s : ℝ} {p : ℝ≥0∞}

@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
 
+import Mathlib.Analysis.Calculus.FDeriv.Measurable
 import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ConvexApproxSmoothing.PointwiseBounds
 import Mathlib.MeasureTheory.Function.ContinuousMapDense
 
@@ -204,7 +205,12 @@ theorem tendsto_eLpNorm_fderiv_convexApproxSmoothing_apply_basisVec_sub_zero_of_
         ENNReal.ofReal δ * MeasureTheory.volume U ^ (1 / p.toReal) := by
     exact
       MeasureTheory.eLpNorm_sub_le_of_dist_bdd
-        (μ := MeasureTheory.volume) (p := p) (s := U) hp hU_meas hδpos.le
+        (μ := MeasureTheory.volume) (p := p) (s := U) hp hU_meas.nullMeasurableSet hδpos.le
+        (by
+          have hf : Measurable (f n) := by
+            exact (measurable_fderiv_apply_const ℝ _ (basisVec i)).sub
+              (measurable_fderiv_apply_const ℝ _ (basisVec i))
+          exact (hf.indicator hU_meas).aestronglyMeasurable.sub MeasureTheory.aestronglyMeasurable_const)
         hdist hsupport_g (by simp : Function.support (fun _ : Vec d => (0 : ℝ)) ⊆ U)
   have hsub_zero : (g - fun _ : Vec d => (0 : ℝ)) = g := by
     ext x
@@ -326,7 +332,13 @@ theorem tendsto_eLpNorm_sub_zero_convexApproxSmoothing_of_continuous
         ENNReal.ofReal δ * MeasureTheory.volume U ^ (1 / p.toReal) := by
     exact
       MeasureTheory.eLpNorm_sub_le_of_dist_bdd
-        (μ := MeasureTheory.volume) (p := p) (s := U) hp hU_meas hδpos.le
+        (μ := MeasureTheory.volume) (p := p) (s := U) hp hU_meas.nullMeasurableSet hδpos.le
+        (by
+          have hf : Continuous (f n) :=
+            (continuous_convexApproxSmoothing hρ.continuous hρ.compactSupport hu
+              x0 r (ε n)).sub hu
+          exact (hf.measurable.indicator hU_meas).aestronglyMeasurable.sub
+            MeasureTheory.aestronglyMeasurable_const)
         hdist hsupport_g (by simp : Function.support (fun _ : Vec d => (0 : ℝ)) ⊆ U)
   have hsub_zero : (g - fun _ : Vec d => (0 : ℝ)) = g := by
     ext x
@@ -488,7 +500,7 @@ theorem tendsto_eLpNorm_sub_zero_convexApproxSmoothing_of_memLpOn
       exact
         ((continuous_convexApproxSmoothing hρ.continuous hρ.compactSupport g.continuous
           x0 r (ε n)).sub g.continuous).aestronglyMeasurable
-    exact hη₂ _ _ hmid_meas hthird_mem.aestronglyMeasurable hmid hthird_norm
+    exact hη₂ _ _ hmid hthird_norm
   have hfirst_eventually :
       ∀ᶠ n : ℕ in Filter.atTop,
         MeasureTheory.eLpNorm
@@ -556,7 +568,7 @@ theorem tendsto_eLpNorm_sub_zero_convexApproxSmoothing_of_memLpOn
         x0 r (ε n)).sub g.continuous).aestronglyMeasurable).add
         hthird_mem.aestronglyMeasurable
   have hsum : MeasureTheory.eLpNorm (F + G) p μ < η := by
-    exact hη₁ _ _ hF_meas hG_meas hfirst (le_of_lt hcombo)
+    exact hη₁ _ _ hfirst (le_of_lt hcombo)
   have hdecomp :
       MeasureTheory.eLpNorm (fun x => convexApproxSmoothing ρ u x0 r (ε n) x - u x) p μ =
         MeasureTheory.eLpNorm (F + G) p μ := by
@@ -690,7 +702,7 @@ theorem tendsto_eLpNorm_sub_zero_one_sub_mul_convexApproxSmoothing_of_memLpOn
             positivity
       _ ≤ η₁ := hsmall
   have hsum : MeasureTheory.eLpNorm (F + G) p μ < η := by
-    exact hη₁ _ _ hF_meas hG_meas hvalue hG_norm
+    exact hη₁ _ _ hvalue hG_norm
   have hdecomp :
       MeasureTheory.eLpNorm
           (fun x => (1 - ε n) * convexApproxSmoothing ρ u x0 r (ε n) x - u x)

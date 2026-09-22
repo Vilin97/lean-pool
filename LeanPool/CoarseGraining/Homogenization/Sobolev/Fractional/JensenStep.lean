@@ -75,9 +75,9 @@ theorem eLpNorm_sub_average_rpow_le_double_lintegral {d : ℕ}
         (∫⁻ y, ‖u x - u y‖ₑ ^ p.toReal ∂μ) ^ (1 / p.toReal) := by
       have hle : eLpNorm (fun y => u x - u y) 1 μ ≤
           eLpNorm (fun y => u x - u y) p μ :=
-        eLpNorm_le_eLpNorm_of_exponent_le hp hmeas
-      rwa [eLpNorm_one_eq_lintegral_enorm,
-        eLpNorm_eq_lintegral_rpow_enorm_toReal hp0 hpt] at hle
+        eLpNorm_le_eLpNorm_of_exponent_le hp
+      rwa [eLpNorm_one_eq_lintegral_enorm hmeas,
+        eLpNorm_eq_lintegral_rpow_enorm_toReal hp0 hpt hmeas] at hle
     calc ‖u x - ScalarOverlap.cubeAverage S u‖ₑ ^ p.toReal
         ≤ ((∫⁻ y, ‖u x - u y‖ₑ ^ p.toReal ∂μ) ^ (1 / p.toReal)) ^ p.toReal :=
           ENNReal.rpow_le_rpow (h1.trans h2) hpr.le
@@ -87,7 +87,9 @@ theorem eLpNorm_sub_average_rpow_le_double_lintegral {d : ℕ}
   have hLHS : (eLpNorm (fun x => u x - ScalarOverlap.cubeAverage S u) p μ)
       ^ p.toReal =
       ∫⁻ x, ‖u x - ScalarOverlap.cubeAverage S u‖ₑ ^ p.toReal ∂μ := by
-    rw [eLpNorm_eq_lintegral_rpow_enorm_toReal hp0 hpt, ← ENNReal.rpow_mul,
+    rw [eLpNorm_eq_lintegral_rpow_enorm_toReal hp0 hpt
+      (f := fun x => u x - ScalarOverlap.cubeAverage S u)
+      (hu.aestronglyMeasurable.sub aestronglyMeasurable_const), ← ENNReal.rpow_mul,
       one_div_mul_cancel hpr.ne', ENNReal.rpow_one]
   calc (eLpNorm (fun x => u x - ScalarOverlap.cubeAverage S u) p μ) ^ p.toReal
       = ∫⁻ x, ‖u x - ScalarOverlap.cubeAverage S u‖ₑ ^ p.toReal ∂μ := hLHS

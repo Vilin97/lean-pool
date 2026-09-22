@@ -137,8 +137,7 @@ noncomputable def ofTendstoELpNorm
           simp only [Pi.add_apply]
           ring
         rw [heq]
-        refine (eLpNorm_add_le (hsm_ψ.sub hsm_un) (hsm_un.sub hsm_target)
-          p.one_lt.le).trans ?_
+        refine (eLpNorm_add_le p.one_lt.le).trans ?_
         exact add_le_add (le_of_lt (hk n).1) le_rfl
       tendsto_approx_grad := by
         intro i
@@ -163,8 +162,7 @@ noncomputable def ofTendstoELpNorm
           simp only [Pi.add_apply]
           ring
         rw [heq]
-        refine (eLpNorm_add_le (hsm_dψ.sub hsm_un) (hsm_un.sub hsm_target)
-          p.one_lt.le).trans ?_
+        refine (eLpNorm_add_le p.one_lt.le).trans ?_
         exact add_le_add (le_of_lt ((hk n).2 i)) le_rfl }
 
 @[simp] theorem ofTendstoELpNorm_toFun

@@ -394,7 +394,9 @@ private theorem lintegral_enorm_sub_average_eq {S : TriadicCube d} {p : ℝ≥0�
   have hLp : (eLpNorm (fun x => u x - ScalarOverlap.cubeAverage S u) p
       (ScalarOverlap.normalizedCubeMeasure S)) ^ p.toReal =
       ∫⁻ x, g x ∂(ScalarOverlap.normalizedCubeMeasure S) := by
-    rw [eLpNorm_eq_lintegral_rpow_enorm_toReal hp0 hpt, ← ENNReal.rpow_mul,
+    rw [eLpNorm_eq_lintegral_rpow_enorm_toReal hp0 hpt
+      (f := fun x => u x - ScalarOverlap.cubeAverage S u)
+      (hu.aestronglyMeasurable.sub aestronglyMeasurable_const), ← ENNReal.rpow_mul,
       one_div_mul_cancel hpr.ne', ENNReal.rpow_one]
   calc (∫⁻ x in ScalarOverlap.cubeSet S, g x ∂MeasureTheory.volume)
       = 1 * ∫⁻ x in ScalarOverlap.cubeSet S, g x ∂MeasureTheory.volume :=

@@ -125,6 +125,29 @@ theorem integralLpSeminorm_eq_eLpNorm {α : Type*} [MeasurableSpace α]
     integralLpSeminorm f p μ = eLpNorm f p μ := by
   simp only [integralLpSeminorm, eLpNorm, if_pos hf]
 
+/-- Negation leaves the integral seminorm unchanged, without measurability assumptions. -/
+theorem integralLpSeminorm_neg {α : Type*} [MeasurableSpace α]
+    (f : α → E) (p : ℝ≥0∞) (μ : Measure α) :
+    integralLpSeminorm (-f) p μ = integralLpSeminorm f p μ := by
+  simp only [integralLpSeminorm, eLpNormEssSup_eq_essSup_enorm,
+    Pi.neg_apply, enorm_neg, eLpNorm'_neg]
+
+/-- Almost everywhere equal functions have equal integral seminorms. -/
+theorem integralLpSeminorm_congr_ae {α : Type*} [MeasurableSpace α]
+    {f g : α → E} {p : ℝ≥0∞} {μ : Measure α} (h : f =ᵐ[μ] g) :
+    integralLpSeminorm f p μ = integralLpSeminorm g p μ := by
+  simp only [integralLpSeminorm, eLpNormEssSup_congr_ae h, eLpNorm'_congr_ae h]
+
+/-- Scaling a measure scales the finite-exponent integral seminorm. -/
+theorem integralLpSeminorm_smul_measure {α : Type*} [MeasurableSpace α]
+    (f : α → E) {p : ℝ≥0∞} (hp : p ≠ ∞) (μ : Measure α) (c : ℝ≥0∞) :
+    integralLpSeminorm f p (c • μ) = c ^ (1 / p).toReal * integralLpSeminorm f p μ := by
+  by_cases hp0 : p = 0
+  · simp [integralLpSeminorm, hp0]
+  · simp only [integralLpSeminorm, if_neg hp0, if_neg hp]
+    simpa only [one_div, ENNReal.toReal_inv] using
+      eLpNorm'_smul_measure (f := f) (μ := μ) ENNReal.toReal_nonneg c
+
 /-- `[u]_{W̲^{s,p}(Q)}`, ℝ≥0∞-valued, defined for all `p ∈ [1,∞]`
 (`p = ∞` gives the essential Hölder seminorm). -/
 noncomputable def cubeGagliardoESeminorm (Q : TriadicCube d) (s : ℝ)

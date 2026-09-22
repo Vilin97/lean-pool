@@ -180,7 +180,7 @@ private theorem integral_abs_sq_rpow_half_le_integral_abs_pow_rpow_inv
   have hcmp :
       eLpNorm X (2 : ENNReal) μ ≤ eLpNorm X (p : ENNReal) μ := by
     exact eLpNorm_le_eLpNorm_of_exponent_le
-      (μ := μ) (f := X) (by exact_mod_cast hp) hX_ae
+      (μ := μ) (f := X) (by exact_mod_cast hp)
   rw [h_memLp_two.eLpNorm_eq_integral_rpow_norm (by norm_num) (by simp),
     h_memLp_p.eLpNorm_eq_integral_rpow_norm (by exact_mod_cast hp_ne_zero) (by simp)] at hcmp
   exact (ENNReal.ofReal_le_ofReal_iff (by positivity)).1 (by
@@ -564,7 +564,6 @@ private theorem integral_abs_sq_rpow_half_le_integral_abs_rpow_rpow_inv
         calc
           (2 : ENNReal) = ENNReal.ofReal (2 : ℝ) := by norm_num
           _ ≤ ENNReal.ofReal p := ENNReal.ofReal_le_ofReal hp)
-      h_meas.aestronglyMeasurable
   rw [h_memLp_two.eLpNorm_eq_integral_rpow_norm (by norm_num) (by simp),
     h_memLp_p.eLpNorm_eq_integral_rpow_norm
       (by simp [ENNReal.ofReal_eq_zero, not_le.mpr hp_pos]) ENNReal.ofReal_ne_top] at hcmp
