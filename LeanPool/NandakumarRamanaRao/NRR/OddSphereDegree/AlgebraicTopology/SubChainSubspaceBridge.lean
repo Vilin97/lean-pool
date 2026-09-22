@@ -5,7 +5,8 @@ Authors: Arseniy Akopyan
 -/
 
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.MayerVietoris
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionHomotopyFormula
+import
+  LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionHomotopyFormula
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.BallBoundaryLES
 
 /-! # Sub Chain Subspace Bridge -/
@@ -57,20 +58,25 @@ theorem exists_pushSimplex_of_subordinate (S : Set X) (n : ℕ)
 theorem singularChainMap_sInclusion_mem (S : Set X) (n : ℕ)
     (c : singularChainGroup R (TopCat.of S) n) :
     (singularChainMap R (sInclusion S) n).hom c ∈ subChainSubmodule R X S n := by
-  let f : singularChainGroup R (TopCat.of S) n ⟶ ModuleCat.of R (singularChainGroup R X n ⧸ subChainSubmodule R X S n) :=
-    singularChainMap R (sInclusion S) n ≫ ModuleCat.ofHom (Submodule.mkQ (subChainSubmodule R X S n))
+  let f : singularChainGroup R (TopCat.of S) n ⟶ ModuleCat.of R (singularChainGroup R X n ⧸
+    subChainSubmodule R X S n) :=
+    singularChainMap R (sInclusion S) n ≫ ModuleCat.ofHom (Submodule.mkQ (subChainSubmodule R X
+      S n))
   have hf : f = 0 := by
     apply Limits.colimit.hom_ext
     intro τ
-    have h1 : (Sigma.ι (fun _ : singularSimplices (TopCat.of S) n => ModuleCat.of R R) τ.as ≫ f).hom (1 : R) = 0 := by
-      change Submodule.mkQ _ ((singularChainMap R (sInclusion S) n).hom (chainGenerator R (TopCat.of S) n τ.as)) = 0
+    have h1 : (Sigma.ι (fun _ : singularSimplices (TopCat.of S) n => ModuleCat.of R R) τ.as ≫
+      f).hom (1 : R) = 0 := by
+      change Submodule.mkQ _ ((singularChainMap R (sInclusion S) n).hom (chainGenerator R
+        (TopCat.of S) n τ.as)) = 0
       rw [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero, singularChainMap_generator]
       exact chainGenerator_mem_subChainSubmodule (isSubordinate_pushSimplex_sInclusion S n τ.as)
     apply ModuleCat.hom_ext
     apply LinearMap.ext_ring
     exact h1
   have hc := DFunLike.congr_fun (congrArg ModuleCat.Hom.hom hf) c
-  change (Submodule.mkQ (subChainSubmodule R X S n)) ((singularChainMap R (sInclusion S) n).hom c) = 0 at hc
+  change (Submodule.mkQ (subChainSubmodule R X S n)) ((singularChainMap R (sInclusion S) n).hom
+    c) = 0 at hc
   rw [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero] at hc
   exact hc
 
@@ -87,9 +93,12 @@ def subChainCorestrict (R : Type) [CommRing R] (X : TopCat.{0}) (S : Set X) :
     apply LinearMap.ext
     intro c
     apply Subtype.ext
-    have := singularChainMap_boundary_apply R (sInclusion S) j (c : singularChainGroup R (TopCat.of S) (j + 1))
+    have := singularChainMap_boundary_apply R (sInclusion S) j (c : singularChainGroup R
+      (TopCat.of S) (j + 1))
     simp_all [singularBoundary]
-    change (subBoundary R X S j).hom ((LinearMap.codRestrict (subChainSubmodule R X S (j + 1)) (singularChainMap R (sInclusion S) (j + 1)).hom (singularChainMap_sInclusion_mem S (j + 1))) c) =
+    change (subBoundary R X S j).hom ((LinearMap.codRestrict (subChainSubmodule R X S (j + 1))
+      (singularChainMap R (sInclusion S) (j + 1)).hom (singularChainMap_sInclusion_mem S (j +
+      1))) c) =
          ⟨(singularChainMap R (sInclusion S) j).hom ((singularBoundary R (TopCat.of S) j).hom c), _⟩
     apply Subtype.ext
     exact this
@@ -98,7 +107,8 @@ def subChainCorestrict (R : Type) [CommRing R] (X : TopCat.{0}) (S : Set X) :
 noncomputable def reindexChainMap (R : Type) [CommRing R] {X Y : TopCat.{0}} (n : ℕ)
     (g : singularSimplices Y n → singularSimplices X n) :
     singularChainGroup R Y n ⟶ singularChainGroup R X n :=
-  Limits.Sigma.desc (fun s => Limits.Sigma.ι (fun _ : singularSimplices X n => ModuleCat.of R R) (g s))
+  Limits.Sigma.desc (fun s => Limits.Sigma.ι (fun _ : singularSimplices X n => ModuleCat.of R R)
+    (g s))
 
 @[simp] theorem reindexChainMap_generator {X Y : TopCat.{0}} (n : ℕ)
     (g : singularSimplices Y n → singularSimplices X n) (σ : singularSimplices Y n) :
@@ -126,7 +136,8 @@ theorem singularChainMap_injective_of_pushSimplex_injective {X Y : TopCat.{0}}
     (f : X ⟶ Y) (n : ℕ) (hf : Function.Injective (pushSimplex f n)) :
     Function.Injective (singularChainMap R f n).hom := by
   have : Mono (singularChainMap R f n) :=
-    @MonoCoprod.mono_of_injective' (ModuleCat.{0} R) _ _ (singularSimplices Y n) (singularSimplices X n)
+    @MonoCoprod.mono_of_injective' (ModuleCat.{0} R) _ _ (singularSimplices Y n)
+      (singularSimplices X n)
       (fun _ => ModuleCat.of R R) (pushSimplex f n) hf _ _ _
   exact (ModuleCat.mono_iff_injective _).mp this
 
@@ -134,7 +145,8 @@ theorem subChainCorestrict_bijective (S : Set X) (n : ℕ) :
     Function.Bijective ((subChainCorestrict R X S).f n).hom := by
   constructor
   · intro x y hxy
-    have h_inj := @singularChainMap_injective_of_pushSimplex_injective R _ (TopCat.of S) X (sInclusion S) n
+    have h_inj := @singularChainMap_injective_of_pushSimplex_injective R _ (TopCat.of S) X
+      (sInclusion S) n
       (pushSimplex_sInclusion_injective S n)
     apply h_inj
     apply Subtype.ext_iff.mp at hxy

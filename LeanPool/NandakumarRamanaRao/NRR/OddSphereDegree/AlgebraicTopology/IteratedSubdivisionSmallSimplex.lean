@@ -6,9 +6,11 @@ Authors: Arseniy Akopyan
 
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SmallChains
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionDiameter
+import
+  LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionDiameter
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionIter
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SingularSimplexLebesgueNumber
+import
+  LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SingularSimplexLebesgueNumber
 import Mathlib.Tactic
 /-!
 # Each singular simplex eventually becomes small after iterated subdivision
@@ -81,17 +83,21 @@ theorem prefixBarycenter_val_eq_stepVertices (n : ℕ) (π : Equiv.Perm (Fin (n 
     (k : Fin (n + 1)) :
     (prefixBarycenter n π k).val = stepVertices n (stdVerts n) π k := by
   unfold prefixBarycenter stepVertices;
-  ext j; simp +decide [ SphereOddDegree.FiniteSimplex.map, SphereOddDegree.FiniteSimplex.barycenter,  stdVerts ];
+  ext j; simp +decide [ SphereOddDegree.FiniteSimplex.map,
+    SphereOddDegree.FiniteSimplex.barycenter,  stdVerts ];
   unfold FunOnFinite.linearMap; simp +decide [ Finset.mul_sum _ _ _ ];
   simp +decide [ Finsupp.mapDomain, Finsupp.linearEquivFunOnFinite, Pi.single_apply ];
   simp +decide [ Finsupp.sum_fintype, prefixVertex ];
-  rw [ ← Finset.sum_subset ( show Finset.image ( fun x : Fin ( k.val + 1 ) => ⟨ x, by linarith [ Fin.is_lt x, Fin.is_lt k ] ⟩ ) Finset.univ ⊆ Finset.Iic k from ?_ ) ];
+  rw [ ← Finset.sum_subset ( show Finset.image ( fun x : Fin ( k.val + 1 ) => ⟨ x, by
+    linarith [ Fin.is_lt x, Fin.is_lt k ] ⟩ ) Finset.univ ⊆ Finset.Iic k from ?_ ) ];
   · rw [ Finset.sum_image ] <;> norm_num;
     · exact Finset.sum_congr rfl fun _ _ => by rw [ Finsupp.single_apply ]; aesop;
     · exact fun x y h => by simpa [ Fin.ext_iff ] using h;
   · simp +decide [ Fin.ext_iff ];
-    exact fun x hx₁ hx₂ hx₃ => False.elim <| hx₂ ⟨ x, by linarith [ Fin.is_lt x, Fin.is_lt k, show ( x : ℕ ) ≤ k from hx₁ ] ⟩ rfl;
-  · exact Finset.image_subset_iff.mpr fun x _ => Finset.mem_Iic.mpr ( Nat.le_trans ( Nat.le_of_lt_succ ( Fin.is_lt x ) ) ( Nat.le_refl _ ) )
+    exact fun x hx₁ hx₂ hx₃ => False.elim <| hx₂ ⟨ x, by
+      linarith [ Fin.is_lt x, Fin.is_lt k, show ( x : ℕ ) ≤ k from hx₁ ] ⟩ rfl;
+  · exact Finset.image_subset_iff.mpr fun x _ => Finset.mem_Iic.mpr ( Nat.le_trans (
+      Nat.le_of_lt_succ ( Fin.is_lt x ) ) ( Nat.le_refl _ ) )
 
 theorem affineSubdivLinear_stdVerts (n : ℕ) (π : Equiv.Perm (Fin (n + 1)))
     (k : Fin (n + 1)) :
@@ -125,7 +131,8 @@ theorem affineCompLinear_stdVerts (n N : ℕ) (ρs : Fin N → Equiv.Perm (Fin (
   | succ N ih =>
     intro k
     rw [affineCompLinear_succ, iterVertices_succ]
-    change (affineCompLinear n N (fun i => ρs i.castSucc)) (affineSubdivLinear n (ρs (Fin.last N)) (stdVerts n k)) = _
+    change (affineCompLinear n N (fun i => ρs i.castSucc)) (affineSubdivLinear n (ρs (Fin.last
+      N)) (stdVerts n k)) = _
     rw [affineSubdivLinear_stdVerts]
     dsimp [stepVertices]
     rw [map_smul, map_sum]
@@ -149,7 +156,8 @@ theorem affineCompMap_succ (n N : ℕ) (ρs : Fin (N + 1) → Equiv.Perm (Fin (n
 
 theorem affineCompMap_coe (n N : ℕ) (ρs : Fin N → Equiv.Perm (Fin (n + 1))) (x : Delta n) :
     (affineCompMap n N ρs x).val = affineCompLinear n N ρs x.val := by
-  induction' N with N ih generalizing x <;> simp_all +decide [ affineCompMap_succ, affineCompLinear_succ ];
+  induction' N with N ih generalizing x <;> simp_all +decide [ affineCompMap_succ,
+    affineCompLinear_succ ];
   rw [ ← affineSubdivLinear_coe ]
 
 theorem affineCompMap_snoc (n N : ℕ) (ρs : Fin N → Equiv.Perm (Fin (n + 1)))
@@ -161,11 +169,15 @@ theorem affineCompMap_snoc (n N : ℕ) (ρs : Fin N → Equiv.Perm (Fin (n + 1))
 theorem range_affineCompMap_val (n N : ℕ) (ρs : Fin N → Equiv.Perm (Fin (n + 1))) :
     (Subtype.val) '' (Set.range (affineCompMap n N ρs))
       = convexHull ℝ (Set.range (iterVertices n N ρs (stdVerts n))) := by
-  have h_range : Set.range (fun x : Delta n => (affineCompMap n N ρs x).val) = (affineCompLinear n N ρs) '' (SphereOddDegree.finiteSimplex ℝ (Fin (n + 1))) := by
+  have h_range : Set.range (fun x : Delta n => (affineCompMap n N ρs x).val) = (affineCompLinear
+    n N ρs) '' (SphereOddDegree.finiteSimplex ℝ (Fin (n + 1))) := by
     ext; simp [affineCompMap_coe];
   convert h_range using 1;
-  · exact Set.ext fun x => ⟨ by rintro ⟨ y, ⟨ z, rfl ⟩, rfl ⟩; exact ⟨ z, rfl ⟩, by rintro ⟨ z, rfl ⟩; exact ⟨ _, ⟨ z, rfl ⟩, rfl ⟩ ⟩;
-  · rw [ show SphereOddDegree.finiteSimplex ℝ ( Fin ( n + 1 ) ) = convexHull ℝ ( Set.range ( stdVerts n ) ) from by
+  · exact Set.ext fun x => ⟨ by
+      rintro ⟨ y, ⟨ z, rfl ⟩, rfl ⟩; exact ⟨ z, rfl ⟩, by
+      rintro ⟨ z, rfl ⟩; exact ⟨ _, ⟨ z, rfl ⟩, rfl ⟩ ⟩;
+  · rw [ show SphereOddDegree.finiteSimplex ℝ ( Fin ( n + 1 ) ) = convexHull ℝ ( Set.range (
+      stdVerts n ) ) from by
           have := (SphereOddDegree.convexHull_range_single_eq_finiteSimplex ℝ (Fin (n + 1))).symm
           exact this ];
     rw [ LinearMap.image_convexHull ]
@@ -235,7 +247,8 @@ theorem support_iteratedSubdivision_generator_subset_affineSummands
   | succ N ih =>
     rw [barycentricSubdivisionIterLinearMap_succ']
     generalize h_elem : barycentricSubdivisionIterLinearMap R X N n (chainGenerator R X n σ) = w
-    have hw : w ∈ Submodule.span R {c | ∃ ρs : Fin N → Equiv.Perm (Fin (n + 1)), chainGenerator R X n (affineSummandSimplex n N σ ρs) = c} := by
+    have hw : w ∈ Submodule.span R {c | ∃ ρs : Fin N → Equiv.Perm (Fin (n + 1)), chainGenerator
+      R X n (affineSummandSimplex n N σ ρs) = c} := by
       rw [← h_elem]; exact ih σ
     clear h_elem
     induction hw using Submodule.span_induction with

@@ -184,7 +184,8 @@ lemma continuous_augmentedAreaDeviation
     apply continuous_pi
     intro j
     exact (hcoord j).sub (hsum.div_const (n : ℝ))
-  have hdev : Continuous (fun w : WeightE n => areaDeviation K s (fun j => w j - (∑ k, w k) / (n : ℝ)) i) :=
+  have hdev : Continuous (fun w : WeightE n => areaDeviation K s (fun j => w j - (∑ k, w k) / (n
+    : ℝ)) i) :=
     ((continuous_apply i).comp (continuous_areaDeviation_weights K s hs)).comp hnorm
   have hmean : Continuous (fun w : WeightE n => (∑ k, w k) / (n : ℝ)) :=
     hsum.div_const (n : ℝ)
@@ -382,11 +383,15 @@ lemma augmentedAreaDeviation_outward_on_radius
     0 < inner Real x
       (augmentedAreaDeviation K s
         (equalAreaOutwardRadius K s hn • x)) := by
-  have h_gauge : weightCoercivityGauge (fun i => (equalAreaOutwardRadius K s hn • x) i) > (n : ℝ) * (powerGapBound K s + 1) + (powerGapBound K s * K.area + 1) := by
-    have h_gauge_eq : weightCoercivityGauge (fun i => (equalAreaOutwardRadius K s hn • x) i) = (equalAreaOutwardRadius K s hn) * weightCoercivityGauge (fun i => x i) := by
-      have h1 : (fun i => (equalAreaOutwardRadius K s hn • x) i) = (equalAreaOutwardRadius K s hn) • (fun i => x i) := rfl
+  have h_gauge : weightCoercivityGauge (fun i => (equalAreaOutwardRadius K s hn • x) i) > (n :
+    ℝ) * (powerGapBound K s + 1) + (powerGapBound K s * K.area + 1) := by
+    have h_gauge_eq : weightCoercivityGauge (fun i => (equalAreaOutwardRadius K s hn • x) i) =
+      (equalAreaOutwardRadius K s hn) * weightCoercivityGauge (fun i => x i) := by
+      have h1 : (fun i => (equalAreaOutwardRadius K s hn • x) i) = (equalAreaOutwardRadius K s
+        hn) • (fun i => x i) := rfl
       rw [h1]
-      exact weightCoercivityGauge_smul (equalAreaOutwardRadius_pos K s hn |> le_of_lt) (fun i => x i)
+      exact weightCoercivityGauge_smul (equalAreaOutwardRadius_pos K s hn |> le_of_lt) (fun i =>
+        x i)
     have hspec := Classical.choose_spec (exists_positive_gauge_lower_bound_on_sphere hn)
     have hx_lb := hspec.2 x hx
     rw [h_gauge_eq]
@@ -396,14 +401,21 @@ lemma augmentedAreaDeviation_outward_on_radius
       add_nonneg
         (mul_nonneg (Nat.cast_nonneg _) (add_nonneg (powerGapBound_nonneg K s) zero_le_one))
         (add_nonneg (mul_nonneg (powerGapBound_nonneg K s) K.area_nonneg) zero_le_one)
-    have hG_ge : ((n : ℝ) * (powerGapBound K s + 1) + (powerGapBound K s * K.area + 1) + 1) / Classical.choose (exists_positive_gauge_lower_bound_on_sphere hn) * Classical.choose (exists_positive_gauge_lower_bound_on_sphere hn)
-        ≤ ((n : ℝ) * (powerGapBound K s + 1) + (powerGapBound K s * K.area + 1) + 1) / Classical.choose (exists_positive_gauge_lower_bound_on_sphere hn) * weightCoercivityGauge (fun i => x i) :=
+    have hG_ge : ((n : ℝ) * (powerGapBound K s + 1) + (powerGapBound K s * K.area + 1) + 1) /
+      Classical.choose (exists_positive_gauge_lower_bound_on_sphere hn) * Classical.choose
+      (exists_positive_gauge_lower_bound_on_sphere hn)
+        ≤ ((n : ℝ) * (powerGapBound K s + 1) + (powerGapBound K s * K.area + 1) + 1) /
+          Classical.choose (exists_positive_gauge_lower_bound_on_sphere hn) *
+          weightCoercivityGauge (fun i => x i) :=
       mul_le_mul_of_nonneg_left hx_lb (div_nonneg (by linarith) (le_of_lt hpos_min))
-    have h_cancel : ((n : ℝ) * (powerGapBound K s + 1) + (powerGapBound K s * K.area + 1) + 1) / Classical.choose (exists_positive_gauge_lower_bound_on_sphere hn) * Classical.choose (exists_positive_gauge_lower_bound_on_sphere hn)
+    have h_cancel : ((n : ℝ) * (powerGapBound K s + 1) + (powerGapBound K s * K.area + 1) + 1) /
+      Classical.choose (exists_positive_gauge_lower_bound_on_sphere hn) * Classical.choose
+      (exists_positive_gauge_lower_bound_on_sphere hn)
         = (n : ℝ) * (powerGapBound K s + 1) + (powerGapBound K s * K.area + 1) + 1 :=
       div_mul_cancel₀ _ (ne_of_gt hpos_min)
     linarith
-  have hpos := NRR.EMP.augmentedPairing_pos_of_gauge_large K s hn hs (equalAreaOutwardRadius K s hn • x) h_gauge
+  have hpos := NRR.EMP.augmentedPairing_pos_of_gauge_large K s hn hs (equalAreaOutwardRadius K s
+    hn • x) h_gauge
   rw [inner_smul_left] at hpos
   exact (mul_pos_iff_of_pos_left (equalAreaOutwardRadius_pos K s hn)).mp hpos
 

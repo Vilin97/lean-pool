@@ -81,7 +81,8 @@ theorem linearEquiv_int_of_finrank_one {N : Type} [AddCommGroup N] [Module ℤ N
     [Module.Free ℤ N] [Module.Finite ℤ N] (h : Module.finrank ℤ N = 1) :
     Nonempty (N ≃ₗ[ℤ] ℤ) := by
   have := ( Module.finBasis ℤ N );
-  rw [ h ] at this; exact ⟨ this.equivFun.trans ( LinearEquiv.ofFinrankEq _ _ <| by simp +decide [  ] ) ⟩;
+  rw [ h ] at this; exact ⟨ this.equivFun.trans ( LinearEquiv.ofFinrankEq _ _ <| by
+    simp +decide [  ] ) ⟩;
 
 /-- **Algebra helper.** The kernel of a surjection from a rank-`2` finite free
 `ℤ`-module onto `ℤ` is isomorphic to `ℤ`. -/
@@ -116,9 +117,13 @@ theorem ker_linearEquiv_int_of_finrank_two {M : Type} [AddCommGroup M] [Module �
 -/
 theorem sphere0_equiv_fin2 : Nonempty (Sphere 0 ≃ Fin 2) := by
   refine' ⟨ _ ⟩;
-  refine' Equiv.ofBijective ( fun x => if x = ⟨ EuclideanSpace.single 0 1, by norm_num [ EuclideanSpace.norm_eq ] ⟩ then 0 else 1 ) ⟨ _, _ ⟩;
+  refine' Equiv.ofBijective ( fun x => if x = ⟨ EuclideanSpace.single 0 1, by
+    norm_num [ EuclideanSpace.norm_eq ] ⟩ then 0 else 1 ) ⟨ _, _ ⟩;
   · intro x y hxy;
-    cases sphere_zero_eq_or_neg x ⟨ EuclideanSpace.single 0 1, by norm_num [ EuclideanSpace.norm_eq ] ⟩ <;> cases sphere_zero_eq_or_neg y ⟨ EuclideanSpace.single 0 1, by norm_num [ EuclideanSpace.norm_eq ] ⟩ <;> aesop;
+    cases sphere_zero_eq_or_neg x ⟨ EuclideanSpace.single 0 1, by
+      norm_num [ EuclideanSpace.norm_eq ] ⟩ <;> cases sphere_zero_eq_or_neg y ⟨
+        EuclideanSpace.single 0 1, by
+      norm_num [ EuclideanSpace.norm_eq ] ⟩ <;> aesop;
   · intro x;
     fin_cases x <;> simp +decide;
     refine' ⟨ EuclideanSpace.single 0 ( -1 ), _, _ ⟩ <;> norm_num;
@@ -132,14 +137,17 @@ theorem h0_sphere0_free_finrank :
     Module.Finite ℤ ((singularChainComplex ℤ (TopCat.of (Sphere 0))).homology 0) ∧
     Module.finrank ℤ ((singularChainComplex ℤ (TopCat.of (Sphere 0))).homology 0) = 2 := by
   refine' ⟨ _, _, _ ⟩;
-  · have := AlgebraicTopology.singularHomologyFunctorZeroOfTotallyDisconnectedSpace ( ModuleCat ℤ ) ( ModuleCat.of ℤ ℤ ) ( TopCat.of ( Sphere 0 ) );
+  · have := AlgebraicTopology.singularHomologyFunctorZeroOfTotallyDisconnectedSpace ( ModuleCat
+      ℤ ) ( ModuleCat.of ℤ ℤ ) ( TopCat.of ( Sphere 0 ) );
     have := this.toLinearEquiv;
     exact Module.Free.of_equiv this.symm;
-  · have := singularHomologyFunctorZeroOfTotallyDisconnectedSpace ( ModuleCat ℤ ) ( ModuleCat.of ℤ ℤ ) ( TopCat.of ( Sphere 0 ) );
+  · have := singularHomologyFunctorZeroOfTotallyDisconnectedSpace ( ModuleCat ℤ ) ( ModuleCat.of
+      ℤ ℤ ) ( TopCat.of ( Sphere 0 ) );
     have := this.toLinearEquiv;
     exact Module.Finite.of_surjective this.symm.toLinearMap this.symm.surjective;
   · obtain ⟨ e ⟩ := sphere0_equiv_fin2;
-    have h_iso : (singularChainComplex ℤ (TopCat.of (Sphere 0))).homology 0 ≅ ModuleCat.of ℤ (DirectSum (Sphere 0) (fun _ => ℤ)) := by
+    have h_iso : (singularChainComplex ℤ (TopCat.of (Sphere 0))).homology 0 ≅ ModuleCat.of ℤ
+      (DirectSum (Sphere 0) (fun _ => ℤ)) := by
       have hi := singularHomologyFunctorZeroOfTotallyDisconnectedSpace
         (ModuleCat ℤ) (ModuleCat.of ℤ ℤ) (TopCat.of (Sphere 0))
       change (singularChainComplex ℤ (TopCat.of (Sphere 0))).homology 0 ≅ _ at hi
@@ -208,7 +216,8 @@ theorem biprod_homology_zero_iff
       (HomologicalComplex.homologyMap (biprod.fst :
           (subChainComplex ℤ circleTop ↑circU ⊞ subChainComplex ℤ circleTop ↑circV) ⟶ _) 0) y = 0
         ∧ (HomologicalComplex.homologyMap (biprod.snd :
-          (subChainComplex ℤ circleTop ↑circU ⊞ subChainComplex ℤ circleTop ↑circV) ⟶ _) 0) y = 0 := by
+          (subChainComplex ℤ circleTop ↑circU ⊞ subChainComplex ℤ circleTop ↑circV) ⟶ _) 0) y =
+            0 := by
   constructor
   · rintro rfl
     exact ⟨map_zero _, map_zero _⟩
@@ -261,9 +270,11 @@ theorem kerF0_iso_kerBand :
     change HomologicalComplex.homologyMap (mvLeftChainMap ℤ circU circV) 0 ≫ _ = _
     rw [← HomologicalComplex.homologyMap_comp]
     simp [mvLeftChainMap, HomologicalComplex.homologyMap_neg]
-  have hinjU : Function.Injective (ModuleCat.Hom.hom (subH0aug circleTop (circU : Set circleTop))) :=
+  have hinjU : Function.Injective (ModuleCat.Hom.hom (subH0aug circleTop (circU : Set
+    circleTop))) :=
     (ModuleCat.mono_iff_injective _).mp inferInstance
-  have hinjV : Function.Injective (ModuleCat.Hom.hom (subH0aug circleTop (circV : Set circleTop))) :=
+  have hinjV : Function.Injective (ModuleCat.Hom.hom (subH0aug circleTop (circV : Set
+    circleTop))) :=
     (ModuleCat.mono_iff_injective _).mp inferInstance
   have hUx : ∀ z, (subH0aug circleTop (circU : Set circleTop))
       ((HomologicalComplex.homologyMap (mvInclUVU ℤ circU circV) 0) z)
@@ -335,12 +346,16 @@ theorem sphereH1_iso_kerF0 :
   refine ⟨(sphereModelHomologyIso 1 1).trans
     ((smallChainsHomologyIso ℤ (TopCat.of (Sphere 1))
       (twoSetCover circU circV circUV_top) 1).symm.trans ?_)⟩
-  have hδ_mono : Mono ( (mvShortExact ℤ circU circV circUV_top).δ 1 0 (by simp [ComplexShape.down_Rel]) ) := by
+  have hδ_mono : Mono ( (mvShortExact ℤ circU circV circUV_top).δ 1 0 (by
+    simp [ComplexShape.down_Rel]) ) := by
     have hδ_mono : IsZero ( (mvShortComplex ℤ circU circV circUV_top).X₂.homology 1 ) := by
       apply isZero_mvX₂_homology;
-      · convert isZero_subChainComplex_homology_of_contractible circleTop ( ↑circU ) 1 ( by norm_num ) using 1;
-      · apply isZero_subChainComplex_homology_of_contractible circleTop (lowerOpens 0) 1 (by norm_num);
-    have := ( mvShortExact ℤ circU circV circUV_top ).homology_exact₃ 1 0 ( by simp [ ComplexShape.down_Rel ] );
+      · convert isZero_subChainComplex_homology_of_contractible circleTop ( ↑circU ) 1 ( by
+          norm_num ) using 1;
+      · apply isZero_subChainComplex_homology_of_contractible circleTop (lowerOpens 0) 1 (by
+          norm_num);
+    have := ( mvShortExact ℤ circU circV circUV_top ).homology_exact₃ 1 0 ( by
+      simp [ ComplexShape.down_Rel ] );
     convert this.mono_g;
     simp +decide [  ];
     exact Or.inl ( hδ_mono.eq_of_src _ _ );

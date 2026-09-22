@@ -107,30 +107,42 @@ theorem continuous_finiteHalfspaceIntersectionArea_pi [Fintype ι]
     (K : ConvexBody Plane) (u : ι → Plane) (hu : ∀ i, u i ≠ 0) :
     Continuous fun f : ι → ℝ => finiteHalfspaceIntersectionArea K u f := by
   refine' continuous_iff_continuousAt.mpr fun f₀ => _;
-  have h_dominated : ∀ᵐ x ∂volume, ContinuousAt (fun f : ι → ℝ => (K.finiteHalfspaceIntersection u f).indicator (fun _ => (1 : ℝ)) x) f₀ := by
+  have h_dominated : ∀ᵐ x ∂volume, ContinuousAt (fun f : ι → ℝ => (K.finiteHalfspaceIntersection
+    u f).indicator (fun _ => (1 : ℝ)) x) f₀ := by
     refine' MeasureTheory.measure_mono_null _ _;
     exact ⋃ i, { x : Plane | ⟪u i, x⟫ = f₀ i };
     · intro x hx; contrapose! hx; simp_all +decide [ ContinuousAt ];
-      by_cases hxK : x ∈ (K : Set Plane) <;> simp_all +decide [ NRR.Geometry.ConvexBody.finiteHalfspaceIntersection ];
+      by_cases hxK : x ∈ (K : Set Plane) <;> simp_all +decide [
+        NRR.Geometry.ConvexBody.finiteHalfspaceIntersection ];
       by_cases h : ∀ i, ⟪u i, x⟫ ≤ f₀ i <;> simp_all +decide;
-      · exact fun i => Filter.eventually_of_mem ( IsOpen.mem_nhds ( isOpen_lt ( continuous_const ) ( continuous_apply i ) ) ( lt_of_le_of_ne ( h i ) ( hx i ) ) ) fun f hf => hf.le;
+      · exact fun i => Filter.eventually_of_mem ( IsOpen.mem_nhds ( isOpen_lt ( continuous_const
+          ) ( continuous_apply i ) ) ( lt_of_le_of_ne ( h i ) ( hx i ) ) ) fun f hf => hf.le;
       · obtain ⟨ i, hi ⟩ := h;
-        filter_upwards [ IsOpen.mem_nhds ( isOpen_lt ( continuous_apply i ) continuous_const ) hi ] with f hf using iff_of_false ( fun h => hf.not_ge <| h i ) ( fun h => hi.not_ge <| h i );
-    · exact MeasureTheory.measure_iUnion_null fun i => NRR.Halfspace.hyperplane_null ( hu i ) ( f₀ i );
-  have h_integrable : MeasureTheory.Integrable (fun x => (K : Set Plane).indicator (fun _ => (1 : ℝ)) x) volume := by
+        filter_upwards [ IsOpen.mem_nhds ( isOpen_lt ( continuous_apply i ) continuous_const )
+          hi ] with f hf using iff_of_false ( fun h => hf.not_ge <| h i ) ( fun h => hi.not_ge
+          <| h i );
+    · exact MeasureTheory.measure_iUnion_null fun i => NRR.Halfspace.hyperplane_null ( hu i ) (
+        f₀ i );
+  have h_integrable : MeasureTheory.Integrable (fun x => (K : Set Plane).indicator (fun _ => (1
+    : ℝ)) x) volume := by
     rw [ MeasureTheory.integrable_indicator_iff ];
     · simp +decide [ K.isCompact.measure_lt_top ];
     · exact K.isCompact.measurableSet;
-  have h_dominated : ∀ᵐ x ∂volume, ∀ f : ι → ℝ, |(K.finiteHalfspaceIntersection u f).indicator (fun _ => (1 : ℝ)) x| ≤ (K : Set Plane).indicator (fun _ => (1 : ℝ)) x := by
+  have h_dominated : ∀ᵐ x ∂volume, ∀ f : ι → ℝ, |(K.finiteHalfspaceIntersection u f).indicator
+    (fun _ => (1 : ℝ)) x| ≤ (K : Set Plane).indicator (fun _ => (1 : ℝ)) x := by
     filter_upwards [ ] with x f; by_cases hx : x ∈ K.carrier <;> simp +decide [ hx ];
     · by_cases h : x ∈ K.finiteHalfspaceIntersection u f <;> simp +decide [ h ];
     · exact fun h => hx h.1;
-  have h_cont : ContinuousAt (fun f : ι → ℝ => ∫ x, (K.finiteHalfspaceIntersection u f).indicator (fun _ => (1 : ℝ)) x ∂volume) f₀ := by
+  have h_cont : ContinuousAt (fun f : ι → ℝ => ∫ x, (K.finiteHalfspaceIntersection u
+    f).indicator (fun _ => (1 : ℝ)) x ∂volume) f₀ := by
     apply_rules [ MeasureTheory.continuousAt_of_dominated ];
-    · exact Filter.Eventually.of_forall fun f => Measurable.aestronglyMeasurable ( by exact Measurable.indicator measurable_const ( by exact measurableSet_finiteHalfspaceIntersection K u f ) );
+    · exact Filter.Eventually.of_forall fun f => Measurable.aestronglyMeasurable ( by
+        exact Measurable.indicator measurable_const ( by
+          exact measurableSet_finiteHalfspaceIntersection K u f ) );
     · exact Filter.Eventually.of_forall fun f => h_dominated.mono fun x hx => hx f;
   convert h_cont using 1;
-  ext f; rw [ MeasureTheory.integral_indicator ( measurableSet_finiteHalfspaceIntersection K u f ) ]; simp +decide [ finiteHalfspaceIntersectionArea ];
+  ext f; rw [ MeasureTheory.integral_indicator ( measurableSet_finiteHalfspaceIntersection K u f
+    ) ]; simp +decide [ finiteHalfspaceIntersectionArea ];
   rfl
 
 /-- **Continuity of the finite fixed-normal moving-halfspace intersection area.** For fixed

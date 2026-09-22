@@ -284,18 +284,23 @@ noncomputable def topExtensionLeftOrderEmb
       simp [hi₁, hi₂]
     have hpso := topExtension_preserves_sameBlock_order a c i₁ i₂ hs
     simp only [hi₁, hi₂] at hpso
-    change ((c.1 : BarredPermutation p).rank i₁).1 ≤ ((c.1 : BarredPermutation p).rank i₂).1 ↔ r₁.1 ≤ r₂.1
+    change ((c.1 : BarredPermutation p).rank i₁).1 ≤ ((c.1 : BarredPermutation p).rank i₂).1 ↔
+      r₁.1 ≤ r₂.1
     rw [le_iff_lt_or_eq, le_iff_lt_or_eq, hpso]
-    have heq : ((c.1 : BarredPermutation p).rank i₁).1 = ((c.1 : BarredPermutation p).rank i₂).1 ↔ r₁.1 = r₂.1 := by
-      have injc : Function.Injective ((c.1 : BarredPermutation p).rank) := ((c.1 : BarredPermutation p).rank).injective
+    have heq : ((c.1 : BarredPermutation p).rank i₁).1 = ((c.1 : BarredPermutation p).rank i₂).1
+      ↔ r₁.1 = r₂.1 := by
+      have injc : Function.Injective ((c.1 : BarredPermutation p).rank) := ((c.1 :
+        BarredPermutation p).rank).injective
       constructor
       · intro h
-        have heq1 : (c.1 : BarredPermutation p).rank i₁ = (c.1 : BarredPermutation p).rank i₂ := Fin.ext h
+        have heq1 : (c.1 : BarredPermutation p).rank i₁ = (c.1 : BarredPermutation p).rank i₂ :=
+          Fin.ext h
         have heq2 : i₁ = i₂ := injc heq1
         rw [← hi₁, ← hi₂, heq2]
       · intro h
         have heq1 : r₁ = r₂ := Fin.ext h
-        have heq2 : i₁ = i₂ := congrArg (fun r => a.rank.symm ⟨r.1, lt_trans r.2 (facetLeftSize_lt hp a ha)⟩) heq1
+        have heq2 : i₁ = i₂ := congrArg (fun r => a.rank.symm ⟨r.1, lt_trans r.2
+          (facetLeftSize_lt hp a ha)⟩) heq1
         simp [heq2]
     rw [heq]
 
@@ -380,16 +385,20 @@ noncomputable def topExtensionRightOrderEmb
     -- hpres : r₁ < r₂ ↔ (c.1.rank i₁) < (c.1.rank i₂)
     -- Goal is about (c.1.rank i₁).1 ≤ (c.1.rank i₂).1 ↔ r₁ ≤ r₂
     rw [Nat.add_lt_add_iff_left] at hpres
-    have hpres_le : ((c.1 : BarredPermutation.TopCell p) : BarredPermutation p).rank i₁ ≤ ((c.1 : BarredPermutation.TopCell p) : BarredPermutation p).rank i₂ ↔ r₁ ≤ r₂ := by
+    have hpres_le : ((c.1 : BarredPermutation.TopCell p) : BarredPermutation p).rank i₁ ≤ ((c.1
+      : BarredPermutation.TopCell p) : BarredPermutation p).rank i₂ ↔ r₁ ≤ r₂ := by
       rw [le_iff_lt_or_eq, le_iff_lt_or_eq]
       refine ⟨fun h => ?_, fun h => ?_⟩
       · rcases h with h | heq
         · left; exact hpres.mpr h
         · right
-          have hpres_rev : r₂ < r₁ ↔ (((c.1 : BarredPermutation.TopCell p) : BarredPermutation p).rank i₂) < (((c.1 : BarredPermutation.TopCell p) : BarredPermutation p).rank i₁) := by
+          have hpres_rev : r₂ < r₁ ↔ (((c.1 : BarredPermutation.TopCell p) : BarredPermutation
+            p).rank i₂) < (((c.1 : BarredPermutation.TopCell p) : BarredPermutation p).rank i₁)
+            := by
             rcases lt_trichotomy r₁ r₂ with h | h | h
             · -- r₁ < r₂: both sides of iff are false
-              have hc : ((c.1 : BarredPermutation.TopCell p) : BarredPermutation p).rank i₁ < ((c.1 : BarredPermutation.TopCell p) : BarredPermutation p).rank i₂ := hpres.mp h
+              have hc : ((c.1 : BarredPermutation.TopCell p) : BarredPermutation p).rank i₁ <
+                ((c.1 : BarredPermutation.TopCell p) : BarredPermutation p).rank i₂ := hpres.mp h
               simp [not_lt.mpr (le_of_lt h), not_lt.mpr (le_of_lt hc)]
             · -- r₁ = r₂: both sides of iff are false
               subst h
@@ -397,20 +406,24 @@ noncomputable def topExtensionRightOrderEmb
             · -- r₂ < r₁: both sides of iff are true
               have hnot1 : ¬(r₁ < r₂) := not_lt.mpr (le_of_lt h)
               have hnot2 : ¬(((c.1 : BarredPermutation.TopCell p) : BarredPermutation p).rank i₁ <
-                             ((c.1 : BarredPermutation.TopCell p) : BarredPermutation p).rank i₂) := by
+                             ((c.1 : BarredPermutation.TopCell p) : BarredPermutation p).rank
+                               i₂) := by
                 intro hc
                 exact hnot1 (hpres.mpr hc)
               have hne : (((c.1 : BarredPermutation.TopCell p) : BarredPermutation p).rank i₁ ≠
                           ((c.1 : BarredPermutation.TopCell p) : BarredPermutation p).rank i₂) := by
                 intro heq'
-                have heq_i : i₁ = i₂ := (((c.1 : BarredPermutation.TopCell p) : BarredPermutation p).rank.injective heq')
+                have heq_i : i₁ = i₂ := (((c.1 : BarredPermutation.TopCell p) :
+                  BarredPermutation p).rank.injective heq')
                 have : r₁ = r₂ := by
                   have := congr_arg a.rank heq_i
                   simp [hrank_i1, hrank_i2] at this
                   exact Fin.ext (by omega)
                 exact lt_irrefl _ (h.trans_le (le_of_eq this))
-              rcases lt_trichotomy (((c.1 : BarredPermutation.TopCell p) : BarredPermutation p).rank i₁)
-                                  (((c.1 : BarredPermutation.TopCell p) : BarredPermutation p).rank i₂) with h' | h' | h'
+              rcases lt_trichotomy (((c.1 : BarredPermutation.TopCell p) : BarredPermutation
+                p).rank i₁)
+                                  (((c.1 : BarredPermutation.TopCell p) : BarredPermutation
+                                    p).rank i₂) with h' | h' | h'
               · exact False.elim (hnot2 h')
               · exact False.elim (hne h')
               · exact Iff.intro (fun _ => h') (fun _ => h)

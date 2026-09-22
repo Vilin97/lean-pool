@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeSubdivisionOneStepBoundary
+import
+  LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeSubdivisionOneStepBoundary
 
 /-!
 # Endpoint-identified one-step subdivision collar
@@ -34,7 +35,8 @@ theorem lowerBoundaryCoefficient_zero_of_not_lower
     (hs : ¬ (RelativeSubdivisionOneStepCells.cellSystem hp N).IsLowerFacet s) :
     RelativeSubdivisionOneStepBoundary.lowerBoundaryCoefficient hp N s = 0 := by
   classical
-  unfold RelativeSubdivisionOneStepBoundary.lowerBoundaryCoefficient RelativeSubdivisionOneStepBoundaryBase.lowerEndpointPairing
+  unfold RelativeSubdivisionOneStepBoundary.lowerBoundaryCoefficient
+    RelativeSubdivisionOneStepBoundaryBase.lowerEndpointPairing
   apply Finset.sum_eq_zero
   intro q hq
   have hne : RelativeSubdivisionOneStepEndpoints.lowerFacet hp N q ≠ s := by
@@ -51,7 +53,8 @@ theorem upperBoundaryCoefficient_zero_of_not_upper
     (hs : ¬ (RelativeSubdivisionOneStepCells.cellSystem hp N).IsUpperFacet s) :
     RelativeSubdivisionOneStepBoundary.upperBoundaryCoefficient hp N s = 0 := by
   classical
-  unfold RelativeSubdivisionOneStepBoundary.upperBoundaryCoefficient RelativeSubdivisionOneStepBoundaryBase.upperEndpointPairing
+  unfold RelativeSubdivisionOneStepBoundary.upperBoundaryCoefficient
+    RelativeSubdivisionOneStepBoundaryBase.upperEndpointPairing
   apply Finset.sum_eq_zero
   intro q hq
   have hne : RelativeSubdivisionOneStepEndpoints.upperFacet hp N q ≠ s := by
@@ -69,14 +72,17 @@ theorem lowerBoundaryPairing_eq
     (∑ s : (RelativeSubdivisionOneStepCells.cellSystem hp N).Facet,
       RelativeSubdivisionOneStepBoundary.lowerBoundaryCoefficient hp N s * W s) =
       ∑ q : TopCell hp N,
-        RefinedAffineMap.coefficient hp N q * W (RelativeSubdivisionOneStepEndpoints.lowerFacet hp N q) := by
+        RefinedAffineMap.coefficient hp N q * W (RelativeSubdivisionOneStepEndpoints.lowerFacet
+          hp N q) := by
   classical
-  unfold RelativeSubdivisionOneStepBoundary.lowerBoundaryCoefficient RelativeSubdivisionOneStepBoundaryBase.lowerEndpointPairing
+  unfold RelativeSubdivisionOneStepBoundary.lowerBoundaryCoefficient
+    RelativeSubdivisionOneStepBoundaryBase.lowerEndpointPairing
   calc
     (∑ s : (RelativeSubdivisionOneStepCells.cellSystem hp N).Facet,
       (∑ q : TopCell hp N,
         RefinedAffineMap.coefficient hp N q *
-          RelativeSubdivisionOneStepBoundary.quotientIndicator s (RelativeSubdivisionOneStepEndpoints.lowerFacet hp N q)) * W s) =
+          RelativeSubdivisionOneStepBoundary.quotientIndicator s
+            (RelativeSubdivisionOneStepEndpoints.lowerFacet hp N q)) * W s) =
       ∑ s : (RelativeSubdivisionOneStepCells.cellSystem hp N).Facet,
         ∑ q : TopCell hp N,
           if RelativeSubdivisionOneStepEndpoints.lowerFacet hp N q = s then
@@ -109,14 +115,17 @@ theorem upperBoundaryPairing_eq
     (∑ s : (RelativeSubdivisionOneStepCells.cellSystem hp N).Facet,
       RelativeSubdivisionOneStepBoundary.upperBoundaryCoefficient hp N s * W s) =
       ∑ q : TopCell hp (N + 1),
-        RefinedAffineMap.coefficient hp (N + 1) q * W (RelativeSubdivisionOneStepEndpoints.upperFacet hp N q) := by
+        RefinedAffineMap.coefficient hp (N + 1) q * W
+          (RelativeSubdivisionOneStepEndpoints.upperFacet hp N q) := by
   classical
-  unfold RelativeSubdivisionOneStepBoundary.upperBoundaryCoefficient RelativeSubdivisionOneStepBoundaryBase.upperEndpointPairing
+  unfold RelativeSubdivisionOneStepBoundary.upperBoundaryCoefficient
+    RelativeSubdivisionOneStepBoundaryBase.upperEndpointPairing
   calc
     (∑ s : (RelativeSubdivisionOneStepCells.cellSystem hp N).Facet,
       (∑ q : TopCell hp (N + 1),
         RefinedAffineMap.coefficient hp (N + 1) q *
-          RelativeSubdivisionOneStepBoundary.quotientIndicator s (RelativeSubdivisionOneStepEndpoints.upperFacet hp N q)) * W s) =
+          RelativeSubdivisionOneStepBoundary.quotientIndicator s
+            (RelativeSubdivisionOneStepEndpoints.upperFacet hp N q)) * W s) =
       ∑ s : (RelativeSubdivisionOneStepCells.cellSystem hp N).Facet,
         ∑ q : TopCell hp (N + 1),
           if RelativeSubdivisionOneStepEndpoints.upperFacet hp N q = s then
@@ -165,8 +174,10 @@ noncomputable def endpointIdentifiedCollar
   upperFacet_exhaustive := RelativeSubdivisionOneStepEndpoints.upperFacet_exhaustive hp N
   lowerBoundaryPairing_eq := lowerBoundaryPairing_eq hp N
   upperBoundaryPairing_eq := upperBoundaryPairing_eq hp N
-  lowerFacetOccurrenceVertex_eq := RelativeSubdivisionOneStepEndpoints.lowerFacetOccurrenceVertex_eq hp N
-  upperFacetOccurrenceVertex_eq := RelativeSubdivisionOneStepEndpoints.upperFacetOccurrenceVertex_eq hp N
+  lowerFacetOccurrenceVertex_eq :=
+    RelativeSubdivisionOneStepEndpoints.lowerFacetOccurrenceVertex_eq hp N
+  upperFacetOccurrenceVertex_eq :=
+    RelativeSubdivisionOneStepEndpoints.upperFacetOccurrenceVertex_eq hp N
 
 /-- Existence form of the one-step relative subdivision collar. -/
 theorem relativeAffineCollarExists_succ

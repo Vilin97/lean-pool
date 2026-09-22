@@ -18,7 +18,8 @@ identity for the cochain-level singular cup product, over `ZMod 2` coefficients
 ```
 
 This is the central algebraic identity that descends the cochain cup product
-`cochainCup` of `CupProduct.lean` to a cohomology-level product. Every statement in this module is proved.
+`cochainCup` of `CupProduct.lean` to a cohomology-level product. Every statement in this module
+  is proved.
 
 ## Strategy
 
@@ -107,17 +108,21 @@ theorem cochainCoboundary_eval (R : Type) [CommRing R] (Z : TopCat.{0}) (n : ℕ
     (φ : singularCochainGroup R Z n) (σ : singularSimplices Z (n + 1)) :
     cochainEval (n + 1) (cochainCoboundary R Z n φ) σ
       = ∑ i : Fin (n + 2), (-1 : R) ^ (i : ℕ) * cochainEval n φ (faceSimplex Z n i σ) := by
-  let F : Fin (n + 2) → (ModuleCat.of R R ⟶ (((singularChainComplexFunctor (ModuleCat.{0} R)).obj (ModuleCat.of R R)).obj Z).X n) :=
-    fun i => Limits.Sigma.ι (fun (_ : singularSimplices Z n) => ModuleCat.of R R) (faceSimplex Z n i σ)
+  let F : Fin (n + 2) → (ModuleCat.of R R ⟶ (((singularChainComplexFunctor (ModuleCat.{0}
+    R)).obj (ModuleCat.of R R)).obj Z).X n) :=
+    fun i => Limits.Sigma.ι (fun (_ : singularSimplices Z n) => ModuleCat.of R R) (faceSimplex Z
+      n i σ)
   have hd : (Limits.Sigma.ι (fun (_ : singularSimplices Z (n + 1)) => ModuleCat.of R R) σ)
       ≫ (((singularChainComplexFunctor (ModuleCat.{0} R)).obj (ModuleCat.of R R)).obj Z).d (n + 1) n
       = ∑ (i : Fin (n + 2)), (-1 : ℤ) ^ i.val • F i :=
     @SSet.ιChainComplex_d (ModuleCat R) _ _ _ (TopCat.toSSet.obj Z) (ModuleCat.of R R) n σ
-  have h_congr := congrArg (fun (f : ModuleCat.of R R ⟶ (((singularChainComplexFunctor (ModuleCat.{0} R)).obj (ModuleCat.of R R)).obj Z).X n) => (f ≫ φ).hom (1 : R)) hd
+  have h_congr := congrArg (fun (f : ModuleCat.of R R ⟶ (((singularChainComplexFunctor
+    (ModuleCat.{0} R)).obj (ModuleCat.of R R)).obj Z).X n) => (f ≫ φ).hom (1 : R)) hd
   dsimp at h_congr
   have h_comp : cochainEval (n + 1) (cochainCoboundary R Z n φ) σ
       = φ.hom (((Limits.Sigma.ι (fun (_ : singularSimplices Z (n + 1)) => ModuleCat.of R R) σ
-          ≫ (((singularChainComplexFunctor (ModuleCat.{0} R)).obj (ModuleCat.of R R)).obj Z).d (n + 1) n).hom (1 : R))) := rfl
+          ≫ (((singularChainComplexFunctor (ModuleCat.{0} R)).obj (ModuleCat.of R R)).obj Z).d
+            (n + 1) n).hom (1 : R))) := rfl
   have h_lin : ((∑ (i : Fin (n + 2)), (-1 : ℤ) ^ i.val • F i) ≫ φ).hom (1 : R)
       = ∑ (i : Fin (n + 2)), (-1 : R) ^ (i : ℕ) * cochainEval n φ (faceSimplex Z n i σ) := by
     have hcomp : (∑ (i : Fin (n + 2)), (-1 : ℤ) ^ i.val • F i) ≫ φ
@@ -159,11 +164,14 @@ theorem cochainCast_eval_awCastSimplex (R : Type) [CommRing R] (X : TopCat.{0}) 
     (χ : singularCochainGroup R X (p + 1 + q)) (σ : singularSimplices X (p + q + 1)) :
     cochainEval (p + q + 1) (cochainCast (aw_degree_left_succ p q) χ) σ
       = cochainEval (p + 1 + q) χ (awCastSimplex X p q σ) := by
-  have hgen := singularChainSimplicialModule_map_generator R X (p + 1 + q) (p + q + 1) ((awCastLeft p q).op) σ
+  have hgen := singularChainSimplicialModule_map_generator R X (p + 1 + q) (p + q + 1)
+    ((awCastLeft p q).op) σ
   have hmap : ((singularChainSimplicialModule R X).map (awCastLeft p q).op)
       = (eqToHom (by rw [aw_degree_left_succ p q]) :
-          (((singularChainComplexFunctor (ModuleCat.{0} R)).obj (ModuleCat.of R R)).obj X).X (p + q + 1) ⟶
-          (((singularChainComplexFunctor (ModuleCat.{0} R)).obj (ModuleCat.of R R)).obj X).X (p + 1 + q)) := by
+          (((singularChainComplexFunctor (ModuleCat.{0} R)).obj (ModuleCat.of R R)).obj X).X (p
+            + q + 1) ⟶
+          (((singularChainComplexFunctor (ModuleCat.{0} R)).obj (ModuleCat.of R R)).obj X).X (p
+            + 1 + q)) := by
     dsimp [awCastLeft]
     rw [eqToHom_op, eqToHom_map]
     rfl
@@ -276,7 +284,8 @@ all Koszul signs are trivial):
 δ(φ ⌣ ψ) = δφ ⌣ ψ + φ ⌣ δψ.
 ```
 
-This is the chain-map identity that lets the cup product descend to cohomology. The `δφ ⌣ ψ` term, naturally of degree `(p+1)+q`, and the
+This is the chain-map identity that lets the cup product descend to cohomology. The `δφ ⌣ ψ`
+  term, naturally of degree `(p+1)+q`, and the
 `φ ⌣ δψ` term, of degree `p+(q+1)`, are transported to degree `(p+q)+1` via the
 cochain degree cast. -/
 theorem aw_cochain_leibniz_zmod2 {X : TopCat.{0}} (p q : ℕ)

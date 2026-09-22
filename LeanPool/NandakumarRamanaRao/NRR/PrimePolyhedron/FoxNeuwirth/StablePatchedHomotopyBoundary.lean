@@ -126,7 +126,8 @@ theorem patchedBoundarySiteValue_eq_of_orbitRel
   rcases hab with ⟨g, hgab⟩
   subst a
   simp only [patchedBoundarySiteValue, Prod.smul_fst, Prod.smul_snd, globalPoint_smul,
-    EquivariantPrismVertexParameters.CylinderPoint.smul_time, EquivariantPrismVertexParameters.CylinderPoint.smul_spatial]
+    EquivariantPrismVertexParameters.CylinderPoint.smul_time,
+      EquivariantPrismVertexParameters.CylinderPoint.smul_spatial]
   split_ifs
   · have heq := A₀.toRegularApproximation.equivariant g (globalPoint hp C b.1).spatial
     have hj := congrFun heq (g • b.2)
@@ -137,7 +138,8 @@ theorem patchedBoundarySiteValue_eq_of_orbitRel
   · have heq := (stablePatchedHomotopy hp F₀ F₁ H A₀ A₁).equivariant g
       (globalPoint hp C b.1).spatial (globalPoint hp C b.1).time
     have hj := congrFun heq (g • b.2)
-    simpa [EquivariantPrismVertexParameters.CylinderPoint.toProd, PrimeSymmetry.smul_coordinate_apply,
+    simpa [EquivariantPrismVertexParameters.CylinderPoint.toProd,
+      PrimeSymmetry.smul_coordinate_apply,
       PrimeSymmetry.smul_label] using hj
 
 /-- The boundary-compatible assignment associated with the patched homotopy. -/
@@ -286,7 +288,8 @@ theorem lowerFacetVertex_eq_patchedHomotopySample
   let s : C.cells.VertexSlot := (o.1, o.2.succAbove i)
   have hpoint : C.cells.slotPoint s =
       g • lowerCylinderPoint
-        (vertex hp A₀.toRegularApproximation.level q (Fin.cast (Nat.sub_add_cancel hp.pos).symm i)) := by
+        (vertex hp A₀.toRegularApproximation.level q (Fin.cast (Nat.sub_add_cancel hp.pos).symm
+          i)) := by
     simpa [s, RelativeAffineCellSystem.facetSignature,
       RelativeAffineCellSystem.slotPoint] using hg i
   change vectorValue hp C.cells
@@ -302,17 +305,23 @@ theorem lowerFacetVertex_eq_patchedHomotopySample
           rw [globalPoint_sampleVertex, hpoint]
           simp [lowerCylinderPoint])
     _ = g • A₀.toRegularApproximation.map
-        (vertex hp A₀.toRegularApproximation.level q (Fin.cast (Nat.sub_add_cancel hp.pos).symm i)) := by
+        (vertex hp A₀.toRegularApproximation.level q (Fin.cast (Nat.sub_add_cancel hp.pos).symm
+          i)) := by
       rw [hpoint]
       exact A₀.toRegularApproximation.equivariant g _
     _ = g • (StableEndpointBridges.endpointInterpolant hp F₀ A₀).map.map
-        (vertex hp A₀.toRegularApproximation.level q (Fin.cast (Nat.sub_add_cancel hp.pos).symm i)) := by
-      rw [StableEndpointBridges.endpointInterpolant_refinedVertex hp F₀ A₀ q (Fin.cast (Nat.sub_add_cancel hp.pos).symm i)]
+        (vertex hp A₀.toRegularApproximation.level q (Fin.cast (Nat.sub_add_cancel hp.pos).symm
+          i)) := by
+      rw [StableEndpointBridges.endpointInterpolant_refinedVertex hp F₀ A₀ q (Fin.cast
+        (Nat.sub_add_cancel hp.pos).symm i)]
     _ = (StableEndpointBridges.endpointInterpolant hp F₀ A₀).map.map
-        (g • vertex hp A₀.toRegularApproximation.level q (Fin.cast (Nat.sub_add_cancel hp.pos).symm i)) := by
+        (g • vertex hp A₀.toRegularApproximation.level q (Fin.cast (Nat.sub_add_cancel
+          hp.pos).symm i)) := by
       rw [(StableEndpointBridges.endpointInterpolant hp F₀ A₀).map.equivariant g]
     _ = (stablePatchedHomotopy hp F₀ F₁ H A₀ A₁).map
-        (g • vertex hp A₀.toRegularApproximation.level q (Fin.cast (Nat.sub_add_cancel hp.pos).symm i), ⟨0, by simp⟩) := by
+        (g • vertex hp A₀.toRegularApproximation.level q (Fin.cast (Nat.sub_add_cancel
+          hp.pos).symm i), ⟨0, by
+          simp⟩) := by
       symm
       exact (stablePatchedHomotopy hp F₀ F₁ H A₀ A₁).map_zero _
     _ = (stablePatchedHomotopy hp F₀ F₁ H A₀ A₁).map
@@ -345,7 +354,8 @@ theorem upperFacetVertex_eq_patchedHomotopySample
   let s : C.cells.VertexSlot := (o.1, o.2.succAbove i)
   have hpoint : C.cells.slotPoint s =
       g • upperCylinderPoint
-        (vertex hp A₁.toRegularApproximation.level q (Fin.cast (Nat.sub_add_cancel hp.pos).symm i)) := by
+        (vertex hp A₁.toRegularApproximation.level q (Fin.cast (Nat.sub_add_cancel hp.pos).symm
+          i)) := by
     simpa [s, RelativeAffineCellSystem.facetSignature,
       RelativeAffineCellSystem.slotPoint] using hg i
   change vectorValue hp C.cells
@@ -361,17 +371,23 @@ theorem upperFacetVertex_eq_patchedHomotopySample
           rw [globalPoint_sampleVertex, hpoint]
           simp [upperCylinderPoint])
     _ = g • A₁.toRegularApproximation.map
-        (vertex hp A₁.toRegularApproximation.level q (Fin.cast (Nat.sub_add_cancel hp.pos).symm i)) := by
+        (vertex hp A₁.toRegularApproximation.level q (Fin.cast (Nat.sub_add_cancel hp.pos).symm
+          i)) := by
       rw [hpoint]
       exact A₁.toRegularApproximation.equivariant g _
     _ = g • (StableEndpointBridges.endpointInterpolant hp F₁ A₁).map.map
-        (vertex hp A₁.toRegularApproximation.level q (Fin.cast (Nat.sub_add_cancel hp.pos).symm i)) := by
-      rw [StableEndpointBridges.endpointInterpolant_refinedVertex hp F₁ A₁ q (Fin.cast (Nat.sub_add_cancel hp.pos).symm i)]
+        (vertex hp A₁.toRegularApproximation.level q (Fin.cast (Nat.sub_add_cancel hp.pos).symm
+          i)) := by
+      rw [StableEndpointBridges.endpointInterpolant_refinedVertex hp F₁ A₁ q (Fin.cast
+        (Nat.sub_add_cancel hp.pos).symm i)]
     _ = (StableEndpointBridges.endpointInterpolant hp F₁ A₁).map.map
-        (g • vertex hp A₁.toRegularApproximation.level q (Fin.cast (Nat.sub_add_cancel hp.pos).symm i)) := by
+        (g • vertex hp A₁.toRegularApproximation.level q (Fin.cast (Nat.sub_add_cancel
+          hp.pos).symm i)) := by
       rw [(StableEndpointBridges.endpointInterpolant hp F₁ A₁).map.equivariant g]
     _ = (stablePatchedHomotopy hp F₀ F₁ H A₀ A₁).map
-        (g • vertex hp A₁.toRegularApproximation.level q (Fin.cast (Nat.sub_add_cancel hp.pos).symm i), ⟨1, by simp⟩) := by
+        (g • vertex hp A₁.toRegularApproximation.level q (Fin.cast (Nat.sub_add_cancel
+          hp.pos).symm i), ⟨1, by
+          simp⟩) := by
       symm
       exact (stablePatchedHomotopy hp F₀ F₁ H A₀ A₁).map_one _
     _ = (stablePatchedHomotopy hp F₀ F₁ H A₀ A₁).map
