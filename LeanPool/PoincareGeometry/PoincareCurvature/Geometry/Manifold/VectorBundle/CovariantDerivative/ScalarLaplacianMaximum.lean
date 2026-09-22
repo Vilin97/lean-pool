@@ -57,24 +57,13 @@ theorem deriv_comp_of_hasMFDerivAt_velocity
       ((mfderiv I 𝓘(ℝ) f (γ t)).comp
         ((1 : ℝ →L[ℝ] ℝ).smulRight (X (γ t)))) :=
     HasMFDerivAt.comp t hf.hasMFDerivAt hγ
-  have hfrechet := hcomp.hasFDerivAt
-  have hd := hfrechet.hasDerivAt
-  have hc := congrArg
-    (fun q : TangentSpace 𝓘(ℝ) (f (γ t)) =>
-      NormedSpace.fromTangentSpace (𝕜 := ℝ) (E := ℝ) (f (γ t)) q) hd.deriv
-  change
-    NormedSpace.fromTangentSpace (𝕜 := ℝ) (E := ℝ)
-        (f (γ t)) (deriv (f ∘ γ) t) =
-      NormedSpace.fromTangentSpace (𝕜 := ℝ) (E := ℝ) (f (γ t))
-        (mfderiv I 𝓘(ℝ) f (γ t) (X (γ t)))
-  rw [hc]
-  congr 1
-  change
-    mfderiv I 𝓘(ℝ) f (γ t)
-        (((1 : ℝ →L[ℝ] ℝ).smulRight (X (γ t))) 1) =
-      mfderiv I 𝓘(ℝ) f (γ t) (X (γ t))
-  congr 1
-  norm_num
+  have hfrechet := hcomp.2
+  simp only [mfld_simps, hasFDerivWithinAt_univ] at hfrechet
+  have hd := HasFDerivAt.hasDerivAt (F := ℝ) hfrechet
+  convert! hd.deriv using 1
+  change (mfderiv I 𝓘(ℝ) f (γ t)) (X (γ t)) =
+    (mfderiv I 𝓘(ℝ) f (γ t)) ((1 : ℝ) • X (γ t))
+  rw [one_smul]
 
 /-- Intrinsic first-order chain rule for scalar functions.  The tangent
 direction is realized by the local integral curve of its canonical smooth
@@ -96,7 +85,9 @@ theorem scalarDifferential_comp_of_hasDerivAt
   have hfzero : MDiffAt f (γ 0) := by
     simpa only [hγzero] using hf
   have hcurve := HasMFDerivAt.comp 0 hfzero.hasMFDerivAt hγ.hasMFDerivAt
-  have hcurveDeriv := hcurve.hasFDerivAt.hasDerivAt
+  have hcurveFrechet := hcurve.2
+  simp only [mfld_simps, hasFDerivWithinAt_univ] at hcurveFrechet
+  have hcurveDeriv := hcurveFrechet.hasDerivAt
   have hfcurveEq : deriv (f ∘ γ) 0 =
       scalarDifferential (I := I) f x u := by
     have h := deriv_comp_of_hasMFDerivAt_velocity
