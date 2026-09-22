@@ -38,12 +38,11 @@ automorphism of the constant extension that acts trivially on the enlarged
 constants. -/
 noncomputable def exactConstantExtensionFunctionAutHomToConstantKernel
     (hExact : algebraicClosure C N = (⊥ : IntermediateField C N)) :
-    letI := exactConstantExtensionField C N S hExact
-    letI := exactConstantExtensionBaseAlgebra C L N S
+    let := exactConstantExtensionField C N S hExact
+    let := exactConstantExtensionBaseAlgebra C L N S
     (N ≃ₐ[L] N) →*
       (exactConstantExtensionConstantQuotient C L N S hExact).ker := by
-  letI := exactConstantExtensionField C N S hExact
-  letI := exactConstantExtensionBaseAlgebra C L N S
+  intro fieldModel algebraModel
   let f := exactConstantExtensionFunctionAutHom C L N S
   exact
     { toFun := fun g => ⟨f g, by
@@ -59,12 +58,11 @@ noncomputable def exactConstantExtensionFunctionAutHomToConstantKernel
 
 theorem exactConstantExtensionFunctionAutHomToConstantKernel_injective
     (hExact : algebraicClosure C N = (⊥ : IntermediateField C N)) :
-    letI := exactConstantExtensionField C N S hExact
-    letI := exactConstantExtensionBaseAlgebra C L N S
+    let := exactConstantExtensionField C N S hExact
+    let := exactConstantExtensionBaseAlgebra C L N S
     Function.Injective
       (exactConstantExtensionFunctionAutHomToConstantKernel C L N S hExact) := by
-  letI := exactConstantExtensionField C N S hExact
-  letI := exactConstantExtensionBaseAlgebra C L N S
+  intro fieldModel algebraModel
   intro g h hgh
   have hfun : exactConstantExtensionFunctionAutHom C L N S g =
       exactConstantExtensionFunctionAutHom C L N S h :=
@@ -77,12 +75,11 @@ theorem exactConstantExtensionFunctionAutHomToConstantKernel_injective
 
 theorem exactConstantExtensionFunctionAutHomToConstantKernel_surjective
     (hExact : algebraicClosure C N = (⊥ : IntermediateField C N)) :
-    letI := exactConstantExtensionField C N S hExact
-    letI := exactConstantExtensionBaseAlgebra C L N S
+    let := exactConstantExtensionField C N S hExact
+    let := exactConstantExtensionBaseAlgebra C L N S
     Function.Surjective
       (exactConstantExtensionFunctionAutHomToConstantKernel C L N S hExact) := by
-  letI := exactConstantExtensionField C N S hExact
-  letI := exactConstantExtensionBaseAlgebra C L N S
+  intro fieldModel algebraModel
   intro x
   have hx : x.1 ∈ (exactConstantExtensionFunctionAutHom C L N S).range := by
     rw [← exactConstantExtensionConstantQuotient_ker C L N S hExact]
@@ -97,12 +94,11 @@ it is canonically the kernel of restriction from the full extended Galois
 group to the Galois group of the enlarged constants. -/
 noncomputable def exactConstantExtensionFunctionAutMulEquiv
     (hExact : algebraicClosure C N = (⊥ : IntermediateField C N)) :
-    letI := exactConstantExtensionField C N S hExact
-    letI := exactConstantExtensionBaseAlgebra C L N S
+    let := exactConstantExtensionField C N S hExact
+    let := exactConstantExtensionBaseAlgebra C L N S
     (N ≃ₐ[L] N) ≃*
       (exactConstantExtensionConstantQuotient C L N S hExact).ker := by
-  letI := exactConstantExtensionField C N S hExact
-  letI := exactConstantExtensionBaseAlgebra C L N S
+  intro fieldModel algebraModel
   exact MulEquiv.ofBijective
     (exactConstantExtensionFunctionAutHomToConstantKernel C L N S hExact)
     ⟨exactConstantExtensionFunctionAutHomToConstantKernel_injective
@@ -134,9 +130,15 @@ theorem functionFieldNormalClosureConstantExtensionTensor_isField :
 /-- The constant extension has the expected degree over the original normal
 closure. -/
 theorem functionFieldNormalClosureConstantExtension_finrank_over_normalClosure :
-    letI := exactConstantExtensionAlgebra
+    let := exactConstantExtensionAlgebra
       (FunctionFieldNormalClosureConstantField K F)
       (FunctionFieldNormalClosure K F) S
+    let : SMul (FunctionFieldNormalClosure K F)
+        (ExactConstantExtension (FunctionFieldNormalClosureConstantField K F)
+          (FunctionFieldNormalClosure K F) S) := Algebra.toSMul
+    let : Module (FunctionFieldNormalClosure K F)
+        (ExactConstantExtension (FunctionFieldNormalClosureConstantField K F)
+          (FunctionFieldNormalClosure K F) S) := Algebra.toModule
     Module.finrank (FunctionFieldNormalClosure K F)
       (ExactConstantExtension
         (FunctionFieldNormalClosureConstantField K F)
@@ -153,8 +155,8 @@ theorem functionFieldNormalClosureConstantExtension_isGalois_over_constantBase :
     let B := FunctionFieldNormalClosureConstantBase K F
     let N := FunctionFieldNormalClosure K F
     let hExact := functionFieldNormalClosureConstantField_isExact K F
-    letI := exactConstantExtensionField C N S hExact
-    letI := exactConstantExtensionBaseAlgebra C B N S
+    let := exactConstantExtensionField C N S hExact
+    let := exactConstantExtensionBaseAlgebra C B N S
     IsGalois B (ExactConstantExtension C N S) := by
   exact exactConstantExtension_isGalois
     (FunctionFieldNormalClosureConstantField K F)
@@ -170,8 +172,8 @@ noncomputable def
     let B := FunctionFieldNormalClosureConstantBase K F
     let N := FunctionFieldNormalClosure K F
     let hExact := functionFieldNormalClosureConstantField_isExact K F
-    letI := exactConstantExtensionField C N S hExact
-    letI := exactConstantExtensionBaseAlgebra C B N S
+    let := exactConstantExtensionField C N S hExact
+    let := exactConstantExtensionBaseAlgebra C B N S
     (N ≃ₐ[B] N) ≃*
       (exactConstantExtensionConstantQuotient C B N S hExact).ker := by
   exact exactConstantExtensionFunctionAutMulEquiv

@@ -55,9 +55,9 @@ theorem weightedTracePropositionTwo_natural_eulerSeven
   let hpartialSecond : MvPolynomial.pderiv 1 f ≠ 0 :=
     weightedTraceTorusClosurePolynomial_pderiv_second_ne_zero
       alpha beta hadmissible.2.1
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : DecidableEq (RatFunc K) := Classical.decEq _
+  let : DecidableEq (RatFunc K) := Classical.decEq _
   have hindexTwo :
       Module.finrank (PoweredImageOverFirst f m n)
           (PlaneCurveFunctionField f) ≤ 2 := by
@@ -72,7 +72,7 @@ theorem weightedTracePropositionTwo_natural_eulerSeven
     hf hpartialFirst hpartialSecond m n p 7 hm hn hindexSeven
   intro h k hh hk hparameters hexcluded
   let L := PlaneCurveFunctionField f
-  letI : CharP L p := charP_of_injective_algebraMap
+  let : CharP L p := charP_of_injective_algebraMap
     (algebraMap K L).injective p
   let gK := poweredCoordinateImageRelation hf hpartialSecond m hm n
   let g := poweredCoordinateFrobeniusImageRelation
@@ -113,6 +113,15 @@ theorem weightedTracePropositionTwo_natural_eulerSeven
       h k hparameters.1 7 hLI (by
         simpa only [f, hf, Nat.cast_ofNat] using hEuler)
 
+private theorem exceptionalPlaces_comm
+    (K : Type*) [Field K] [DecidableEq K] [DecidableEq (RatFunc K)]
+    (L : Type*) [Field L] [Algebra (RatFunc K) L]
+    [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L]
+    (u v : L) : propositionTwoExceptionalPlaces K L u v =
+      propositionTwoExceptionalPlaces K L v u := by
+  classical
+  exact Finset.union_comm _ _
+
 theorem weightedTracePropositionTwo_swapped_eulerSeven
     {K : Type*} [Field K] [Fintype K] [DecidableEq K]
     {p : ℕ} [Fact p.Prime] [CharP K p]
@@ -143,9 +152,9 @@ theorem weightedTracePropositionTwo_swapped_eulerSeven
   let hpartialSecond : MvPolynomial.pderiv 1 f ≠ 0 :=
     weightedTraceTorusClosurePolynomial_pderiv_second_ne_zero
       alpha beta hadmissible.2.1
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
+  let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
-  letI : DecidableEq (RatFunc K) := Classical.decEq _
+  let : DecidableEq (RatFunc K) := Classical.decEq _
   have hindexTwo :
       Module.finrank (PoweredImageOverFirst f m n)
           (PlaneCurveFunctionField f) ≤ 2 := by
@@ -160,7 +169,7 @@ theorem weightedTracePropositionTwo_swapped_eulerSeven
     hf hpartialFirst hpartialSecond m n p 7 hm hn hindexSeven
   intro h k hh hk hparameters hexcluded
   let L := PlaneCurveFunctionField f
-  letI : CharP L p := charP_of_injective_algebraMap
+  let : CharP L p := charP_of_injective_algebraMap
     (algebraMap K L).injective p
   let F := frobeniusSubfield L p
   let ι : K →+* F :=
@@ -205,8 +214,8 @@ theorem weightedTracePropositionTwo_swapped_eulerSeven
     finiteExtensionGcdBound_planeCurvePowers_swapped_of_auxiliaryFamily_linearIndependent
       (p := p) hf hpartialFirst hpartialSecond m n hm hn
         h k hparameters.1 7 hLI (by
-          simpa only [f, hf, propositionTwoExceptionalPlaces,
-            Finset.union_comm, Nat.cast_ofNat] using hEuler)
+          erw [exceptionalPlaces_comm]
+          exact hEuler)
 
 /-- The natural and swapped orientations give the minimum/maximum form with
 Euler budget exactly seven. -/
