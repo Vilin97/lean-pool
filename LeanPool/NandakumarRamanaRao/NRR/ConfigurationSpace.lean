@@ -110,7 +110,7 @@ theorem relabel_eq_self_imp {n : ℕ} (σ : Equiv.Perm (Fin n)) (s : Config n)
     exact s.injective_pts hi
   apply Equiv.ext
   intro i
-  show σ i = i
+  change σ i = i
   rw [← hpt (σ i), Equiv.symm_apply_apply]
 
 /-- **Freeness of relabelling, biconditional form.** Relabelling a configuration by `σ` leaves

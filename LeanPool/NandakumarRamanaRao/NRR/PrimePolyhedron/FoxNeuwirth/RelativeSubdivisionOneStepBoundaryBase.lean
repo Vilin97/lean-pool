@@ -148,7 +148,7 @@ theorem endpointBasePairing_eq_upper_sub_lower
     apply Finset.sum_congr rfl
     intro rho hrho
     let q : TopCell hp N := (orbit, rho)
-    simp [q, baseOccurrence,
+    simp [ baseOccurrence,
       RelativeSubdivisionOneStepCells.coefficient,
       RelativeSubdivisionOneStepEndpoints.lowerFacet,
       RelativeSubdivisionOneStepEndpoints.lowerOccurrence]

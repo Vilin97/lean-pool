@@ -42,7 +42,7 @@ theorem singularChainMap_generator (R : Type) [CommRing R] {X Y : TopCat.{0}}
       ≫ (((singularChainComplexFunctor (ModuleCat.{0} R)).obj (ModuleCat.of R R)).map f).f n
       = Limits.Sigma.ι (fun (_ : singularSimplices Y n) => ModuleCat.of R R)
         ((TopCat.toSSet.map f).app (Opposite.op (SimplexCategory.mk n)) σ) := by
-    show Sigma.ι (fun _ => ModuleCat.of R R) σ ≫
+    change Sigma.ι (fun _ => ModuleCat.of R R) σ ≫
          (sigmaConst.obj (ModuleCat.of R R)).map ((TopCat.toSSet.map f).app (Opposite.op ⦋n⦌)) = _
     rw [sigmaConst_obj_map, Sigma.ι_comp_map']
     simp
@@ -93,7 +93,7 @@ theorem homotopyFromUniversal_generator (R : Type) [CommRing R] (X : TopCat.{0})
     (σ : singularSimplices X n) :
     (homotopyFromUniversal R X n T).hom (chainGenerator R X n σ)
       = (singularChainMap R (TopCat.ofHom (singularSimplexAsContinuousMap X n σ)) (n + 1)).hom T := by
-  have h := Sigma.ι_desc (fun σ => pushUniversalHom R X n T σ) σ
+  have h := Sigma.ι_comp_desc (fun σ => pushUniversalHom R X n T σ) σ
   have happ := congrArg (fun (m : ModuleCat.of R R ⟶ singularChainGroup R X (n + 1)) => m.hom (1 : R)) h
   simp only [ModuleCat.hom_comp, LinearMap.comp_apply] at happ
   have h1 : (pushUniversalHom R X n T σ).hom (1 : R)

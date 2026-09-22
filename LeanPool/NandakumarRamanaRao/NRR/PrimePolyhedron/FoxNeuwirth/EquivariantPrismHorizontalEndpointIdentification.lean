@@ -226,12 +226,12 @@ theorem lowerHorizontalContribution_eq_occurrence_sum
         · simp
       · have hmap : ¬ MapIsLowerHorizontal (occurrenceFacetMap hp N L o) :=
           fun h => hlow (hl.mp h)
-        rw [if_neg hmap, mul_zero]
+        rw [ite_eq_right hmap, mul_zero]
         apply Finset.sum_eq_zero
         intro s hs
         by_cases heq : facetSignature hp N L o = s
         · subst s
-          simp [hmap, hlow]
+          simp [ hlow]
         · simp [heq]
 
 /-- Occurrence expansion of the upper-horizontal signature contribution. -/
@@ -297,12 +297,12 @@ theorem upperHorizontalContribution_eq_occurrence_sum
         · simp
       · have hmap : ¬ MapIsUpperHorizontal (occurrenceFacetMap hp N L o) :=
           fun h => hupp (hu.mp h)
-        rw [if_neg hmap, mul_zero]
+        rw [ite_eq_right hmap, mul_zero]
         apply Finset.sum_eq_zero
         intro s hs
         by_cases heq : facetSignature hp N L o = s
         · subst s
-          simp [hmap, hupp]
+          simp [ hupp]
         · simp [heq]
 
 /-- Lower endpoint maps are lower-horizontal and not upper-horizontal. -/
@@ -371,7 +371,7 @@ theorem affineCompMap_succ_last_vertex_pos
   have hi : i ∈ prefixSet n (rho (Fin.last N)) (Fin.last n) := by
     rw [mem_prefixSet]
     exact Fin.le_last _
-  rw [if_pos hi]
+  rw [ite_eq_left hi]
   positivity
 
 /-- A strictly positive barycentric point has strictly interior staircase time. -/
@@ -412,12 +412,12 @@ theorem genericStaircaseIntervalPoint_pos_lt_one
       apply Finset.sum_nonneg
       intro j hj
       dsimp [f]
-      split_ifs <;> simp [w.2.1 j]
+      split_ifs <;> simp []
     have hcomp_pos : 0 < ∑ j, (w j - f j) := by
       have hterm : ∀ j : Fin (n + 2), 0 ≤ w j - f j := by
         intro j
         dsimp [f]
-        split_ifs <;> simp [w.2.1 j]
+        split_ifs <;> simp []
       have hle : w 0 - f 0 ≤ ∑ j : Fin (n + 2), (w j - f j) :=
         Finset.single_le_sum (fun j _ => hterm j) (Finset.mem_univ 0)
       rw [hzero, sub_zero] at hle
@@ -610,15 +610,15 @@ theorem lowerHorizontalContribution_eq_neg_lowerEndpointRefinedCount
           (fun x => tau (affineCompMap p L eta x)))]
     simp only [lowerHorizontalMapWeight,
       refinedSidePrismMap_not_lowerHorizontal hp N _ _ _ L _, if_false]
-    simp only [MapIsLowerHorizontal, MapIsUpperHorizontal,
+    simp only [MapIsLowerHorizontal,
       lowerEndpointMap, upperEndpointMap]
-    simp only [iteratedSign, subdivisionSign, permSignCoeff]
+    simp only [iteratedSign,  permSignCoeff]
     have hlower (sigma : Delta p → Realization (p + 1)) :
         realizedFacetWeight hp N L a (lowerEndpointMap sigma) =
           realizedFacetWeight hp N L a (fun x => (sigma x, ⟨0, by constructor <;> norm_num⟩)) := rfl
-    simp [lowerEndpointRefinedCount, endpointSpatialMap_succ, endpointSpatialMap, hlower,
-      endpointRefinementWord, lowerEndpointMap,
-      subdivisionSign, permSignCoeff]
+    simp [lowerEndpointRefinedCount, endpointSpatialMap_succ,  hlower,
+
+      subdivisionSign]
 /-- The upper horizontal contribution is the refined upper endpoint count. -/
 theorem upperHorizontalContribution_eq_upperEndpointRefinedCount
     (hp : Nat.Prime p) (N L : Nat) (a : Assignment hp N L) :
@@ -704,15 +704,15 @@ theorem upperHorizontalContribution_eq_upperEndpointRefinedCount
           (fun x => tau (affineCompMap p L eta x)))]
     simp only [upperHorizontalMapWeight,
       refinedSidePrismMap_not_upperHorizontal hp N _ _ _ L _, if_false]
-    simp only [MapIsLowerHorizontal, MapIsUpperHorizontal,
+    simp only [ MapIsUpperHorizontal,
       lowerEndpointMap, upperEndpointMap]
-    simp only [iteratedSign, subdivisionSign, permSignCoeff]
+    simp only [iteratedSign,  permSignCoeff]
     have hupper (sigma : Delta p → Realization (p + 1)) :
         realizedFacetWeight hp N L a (upperEndpointMap sigma) =
           realizedFacetWeight hp N L a (fun x => (sigma x, ⟨1, by constructor <;> norm_num⟩)) := rfl
-    simp [upperEndpointRefinedCount, endpointSpatialMap_succ, endpointSpatialMap, hupper,
-      endpointRefinementWord, upperEndpointMap,
-      subdivisionSign, permSignCoeff]
+    simp [upperEndpointRefinedCount, endpointSpatialMap_succ,  hupper,
+
+      subdivisionSign]
 
 /-- Horizontal balance identifies the two refined endpoint counts represented by any compatible
 assignment. -/

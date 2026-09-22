@@ -174,7 +174,7 @@ theorem segmentSafe_refinedVertex
       A.toRegularApproximation.map
         (vertex hp A.toRegularApproximation.level q i) := by
     funext j
-    simp [value, vertexValue, StandardSimplex.ofDelta, stdSimplex.vertex,
+    simp [value, vertexValue, StandardSimplex.ofDelta,
       Pi.single_apply, ite_mul, Finset.sum_ite_eq']
   rw [hchart, hvalue] at h
   exact h
@@ -550,7 +550,7 @@ theorem bridgedMap_zeroFreeStraightLine
   intro x t
   by_cases hb : bridgeWeight hp F A x = 0
   · have hmap : (bridgedMap hp F A).map x = F.map x := by
-      show (1 - bridgeWeight hp F A x) • F.map x +
+      change (1 - bridgeWeight hp F A x) • F.map x +
         bridgeWeight hp F A x • A.toRegularApproximation.map x = F.map x
       rw [hb]
       module
@@ -570,7 +570,7 @@ theorem bridgedMap_zeroFreeStraightLine
     have heq :
         (1 - t.1) • F.map x + t.1 • (bridgedMap hp F A).map x =
           (1 - u.1) • F.map x + u.1 • A.toRegularApproximation.map x := by
-      show (1 - t.1) • F.map x +
+      change (1 - t.1) • F.map x +
           t.1 • ((1 - bridgeWeight hp F A x) • F.map x +
             bridgeWeight hp F A x • A.toRegularApproximation.map x) =
         (1 - t.1 * bridgeWeight hp F A x) • F.map x +

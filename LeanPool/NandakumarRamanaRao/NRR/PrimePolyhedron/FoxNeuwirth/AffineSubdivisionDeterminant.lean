@@ -51,8 +51,8 @@ theorem stepVertexMatrix_eq
       apply Finset.sum_congr rfl
       intro j _
       by_cases hj : r = pi j
-      · rw [if_pos hj, if_pos (by rw [hj, Equiv.symm_apply_apply])]
-      · rw [if_neg hj, if_neg (by intro heq; apply hj; rw [heq, Equiv.apply_symm_apply])]
+      · rw [ite_eq_left hj, ite_eq_left (by rw [hj, Equiv.symm_apply_apply])]
+      · rw [ite_eq_right hj, ite_eq_right (by intro heq; apply hj; rw [heq, Equiv.apply_symm_apply])]
     rw [heq]
     split_ifs with h
     · have hmem : pi.symm r ∈ Finset.Iic k := Finset.mem_Iic.mpr h
@@ -69,14 +69,14 @@ theorem det_prefixAverageMatrix (n : Nat) :
     Matrix.det (prefixAverageMatrix n) =
       ∏ k : Fin (n + 1), (k.1 + 1 : Real)⁻¹ := by
   rw [Matrix.det_of_isUpperTriangular]
-  · congr 1; ext k; dsimp [prefixAverageMatrix]; rw [if_pos (le_refl _)]
+  · congr 1; ext k; dsimp [prefixAverageMatrix]; rw [ite_eq_left (le_refl _)]
   · intro i j hij
     dsimp [prefixAverageMatrix]
     have hnot : ¬ (i.1 ≤ j.1) := by
       intro hle
       have : (i : Fin (n + 1)) ≤ (j : Fin (n + 1)) := Fin.le_iff_val_le_val.mpr hle
       exact (not_le_of_gt hij) this
-    rw [if_neg hnot]
+    rw [ite_eq_right hnot]
 
 /-- One barycentric subdivision simplex is nondegenerate. -/
 theorem det_stepVertexMatrix_ne_zero

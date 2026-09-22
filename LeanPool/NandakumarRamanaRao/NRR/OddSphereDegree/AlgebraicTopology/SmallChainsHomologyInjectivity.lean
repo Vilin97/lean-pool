@@ -29,7 +29,7 @@ theorem exists_d_eq_iCycles_of_homologyπ_zero
       apply ModuleCat.hom_ext
       apply LinearMap.ext
       intro x
-      show (LinearMap.range (K.toCycles (n + 1) n).hom).mkQ ((K.toCycles (n + 1) n).hom x) = 0
+      change (LinearMap.range (K.toCycles (n + 1) n).hom).mkQ ((K.toCycles (n + 1) n).hom x) = 0
       exact (Submodule.Quotient.mk_eq_zero _).mpr ⟨x, rfl⟩
     have hl := h_cok.fac (CokernelCofork.ofπ (ModuleCat.ofHom (LinearMap.range (K.toCycles (n + 1) n).hom).mkQ) h_range_zero) WalkingParallelPair.one
     have hl_app := congr_arg (fun (f : K.cycles n ⟶ _) => f.hom W) hl

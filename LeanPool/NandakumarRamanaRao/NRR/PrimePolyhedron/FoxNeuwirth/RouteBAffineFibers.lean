@@ -107,7 +107,7 @@ theorem assignment_replace_selected_apply
   · have hne : localParameter hp C κ.cell i j ≠ κ.selectedParameter hp C := by
       intro h
       exact (MixedFaceCase.selectedParameter hp C κ).property (h ▸ hq)
-    simp [assignmentOfMovableParameters, replaceCoordinate, replaceMovable,
+    simp [assignmentOfMovableParameters,  replaceMovable,
       hq, hne]
   · let q : MovableParameter hp C :=
       ⟨localParameter hp C κ.cell i j, hq⟩

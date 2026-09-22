@@ -67,7 +67,7 @@ theorem barycentricSubdivisionGenerator_zero (R : Type) [CommRing R] (X : TopCat
     apply singularSimplices_ext
     rw [barycentricSubdivSimplex_continuousMap]
     ext x
-    show singularSimplexAsContinuousMap X 0 σ (affineSubdivContinuousMap 0 π x)
+    change singularSimplexAsContinuousMap X 0 σ (affineSubdivContinuousMap 0 π x)
        = singularSimplexAsContinuousMap X 0 σ x
     rw [delta0_subsingleton (affineSubdivContinuousMap 0 π x) x]
   have huniq : (Finset.univ : Finset (Equiv.Perm (Fin 1))) = {1} := by
@@ -115,7 +115,7 @@ theorem singularChainMap_barycentricSubdivision (R : Type) [CommRing R]
   have key : barycentricSubdivisionLinearMap R X n ≫ singularChainMap R f n
        = singularChainMap R f n ≫ barycentricSubdivisionLinearMap R Y n := by
     apply Sigma.hom_ext; intro σ; ext
-    show (singularChainMap R f n).hom ((barycentricSubdivisionLinearMap R X n).hom
+    change (singularChainMap R f n).hom ((barycentricSubdivisionLinearMap R X n).hom
         (chainGenerator R X n σ))
        = (barycentricSubdivisionLinearMap R Y n).hom
           ((singularChainMap R f n).hom (chainGenerator R X n σ))
@@ -144,7 +144,7 @@ theorem singularChainMap_barycentricHomotopy (R : Type) [CommRing R]
   have key : barycentricSubdivisionHomotopyLinearMap R X n ≫ singularChainMap R f (n+1)
        = singularChainMap R f n ≫ barycentricSubdivisionHomotopyLinearMap R Y n := by
     apply Sigma.hom_ext; intro σ; ext
-    show (singularChainMap R f (n+1)).hom ((barycentricSubdivisionHomotopyLinearMap R X n).hom
+    change (singularChainMap R f (n+1)).hom ((barycentricSubdivisionHomotopyLinearMap R X n).hom
         (chainGenerator R X n σ))
        = (barycentricSubdivisionHomotopyLinearMap R Y n).hom
           ((singularChainMap R f n).hom (chainGenerator R X n σ))

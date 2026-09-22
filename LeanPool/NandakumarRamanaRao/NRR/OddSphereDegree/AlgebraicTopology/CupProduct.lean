@@ -131,7 +131,7 @@ noncomputable def cochainCup {R : Type} [CommRing R] {Z : TopCat.{0}} (p q : ℕ
       = cochainEval p φ (frontSimplex Z p q σ) * cochainEval q ψ (backSimplex Z p q σ) := by
   dsimp [cochainEval, cochainCup]
   have h := congrArg (fun (f : ModuleCat.of R R ⟶ ModuleCat.of R R) => f.hom (1 : R))
-    (Sigma.ι_desc (fun (σ : singularSimplices Z (p + q)) =>
+    (Sigma.ι_comp_desc (fun (σ : singularSimplices Z (p + q)) =>
       ModuleCat.ofHom ((cochainEval p φ (frontSimplex Z p q σ)
         * cochainEval q ψ (backSimplex Z p q σ)) • (LinearMap.id : R →ₗ[R] R))) σ)
   dsimp at h
@@ -239,7 +239,7 @@ noncomputable def cochainOne {R : Type} [CommRing R] {Z : TopCat.{0}} :
     (τ : singularSimplices Z 0) : cochainEval 0 (cochainOne (R := R) (Z := Z)) τ = 1 := by
   unfold cochainEval cochainOne
   have h := DFunLike.congr_fun (congrArg ModuleCat.Hom.hom
-    (Sigma.ι_desc (fun (_ : singularSimplices Z 0) => 𝟙 (ModuleCat.of R R)) τ)) (1 : R)
+    (Sigma.ι_comp_desc (fun (_ : singularSimplices Z 0) => 𝟙 (ModuleCat.of R R)) τ)) (1 : R)
   simp only [ModuleCat.hom_comp, LinearMap.comp_apply] at h
   exact h.trans (by simp)
 

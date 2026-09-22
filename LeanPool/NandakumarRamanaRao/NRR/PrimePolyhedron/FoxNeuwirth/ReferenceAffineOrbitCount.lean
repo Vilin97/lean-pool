@@ -80,7 +80,7 @@ theorem triangular_injective : Function.Injective triangular :=
 
 /-- Sum of an indicator over a finite type is the cardinality of its support, cast to the ring. -/
 theorem sum_if_one_zero_eq_card
-    {X R : Type*} [Fintype X]  [Semiring R]
+    {X R : Type*} [Fintype X] [Semiring R]
     (P : X → Prop) [DecidablePred P] :
     (∑ x : X, if P x then (1 : R) else 0) =
       ((Fintype.card {x : X // P x} : Nat) : R) := by
@@ -216,7 +216,7 @@ theorem det_lowerCumulativeMatrix (n : Nat) :
     have hlt : i < j := by simpa using hij
     have hval : i.1 < j.1 := hlt
     simp only [lowerCumulativeMatrix, Matrix.of_apply]
-    rw [if_neg (by omega)])]
+    rw [ite_eq_right (by omega)])]
   simp [lowerCumulativeMatrix]
 
 /-- Cumulative rows ordered by a permutation. -/
@@ -239,7 +239,7 @@ theorem det_cumulativePermutationMatrix
     rw [Finset.sum_eq_single (rho.symm k)]
     · simp
     · intro x _ hx
-      rw [if_neg (fun h => hx h.symm), zero_mul]
+      rw [ite_eq_right (fun h => hx h.symm), zero_mul]
     · intro h; exact absurd (Finset.mem_univ _) h
   rw [hmul, Matrix.det_mul, Matrix.det_permutation,
     det_lowerCumulativeMatrix]
@@ -340,7 +340,7 @@ theorem stageBlock_adjacent_sub
         · exact ⟨hr, by omega⟩
         · exact ⟨hqS, by omega⟩
     rw [hfilter, Finset.card_insert_of_notMem (by simp)]
-    rw [if_pos ((mem_retainedBars_iff z j r).1 hr)]
+    rw [ite_eq_left ((mem_retainedBars_iff z j r).1 hr)]
     norm_num
   · have hfilter :
         S.filter (fun q => q.1 < r.1 + 1) =
@@ -356,7 +356,7 @@ theorem stageBlock_adjacent_sub
       · rintro ⟨hqS, hq⟩
         exact ⟨hqS, by omega⟩
     rw [hfilter, sub_self]
-    rw [if_neg]
+    rw [ite_eq_right]
     exact fun h => hr ((mem_retainedBars_iff z j r).2 h)
 
 /-- The number of indices in a finite ordinal not exceeding `r`. -/
@@ -412,10 +412,10 @@ theorem selected_stageBlock_sum_rank
           have h := stageBlock_adjacent_sub hp (selectedCode sigma)
             (stageIndex hp j.castSucc) r
           have e1 : (selectedCode sigma).bottom.symm (stageIndex hp r.succ) = x1 := by
-            show sigma.symm (stageIndex hp r.succ) = sigma.symm ⟨m + 1, hm⟩
+            change sigma.symm (stageIndex hp r.succ) = sigma.symm ⟨m + 1, hm⟩
             rw [hsucc]
           have e0 : (selectedCode sigma).bottom.symm (stageIndex hp r.castSucc) = x0 := by
-            show sigma.symm (stageIndex hp r.castSucc) = sigma.symm ⟨m, hm0⟩
+            change sigma.symm (stageIndex hp r.castSucc) = sigma.symm ⟨m, hm0⟩
             rw [hcast]
           rw [e1, e0] at h
           rw [h]
@@ -464,7 +464,7 @@ theorem sum_blockDifference_selected
   rw [Finset.sum_sub_distrib,
     selected_stageBlock_sum_rank hp sigma (coordinateLabel hp r),
     selected_stageBlock_sum_rank hp sigma (lastLabel hp)]
-  simp [topDirection, selectedSimplex, toSimplex_apply, stageIndex_last,
+  simp [topDirection,   stageIndex_last,
     stageCell, stageRank_last hp]
 
 /-- Type-A cut-basis matrix in the fixed diagonal-quotient coordinates. -/
@@ -485,7 +485,7 @@ theorem det_cutBasisMatrix
     Matrix.det (cutBasisMatrix hp sigma) =
       (-1 : Int) ^ (p - 1) * permSignInt sigma := by
   classical
-  letI : NeZero p := ⟨hp.ne_zero⟩
+  let : NeZero p := ⟨hp.ne_zero⟩
   let A : Matrix (Fin p) (Fin p) Int := Matrix.of fun x j =>
     if j.1 ≤ (sigma x).1 then 1 else 0
   let T : Matrix (Fin p) (Fin p) Int := Matrix.of fun i j =>
@@ -503,10 +503,10 @@ theorem det_cutBasisMatrix
       omega
     simp only [T, Matrix.of_apply]
     by_cases hi : i = lastLabel hp
-    · rw [if_pos hi, if_neg hjlast]
-    · rw [if_neg hi]
+    · rw [ite_eq_left hi, ite_eq_right hjlast]
+    · rw [ite_eq_right hi]
       have hji' : j ≠ i := by intro h; rw [h] at hji2; exact lt_irrefl _ hji2
-      rw [if_neg hji', if_neg hjlast]
+      rw [ite_eq_right hji', ite_eq_right hjlast]
   have hdetT : Matrix.det T = 1 := by
     rw [Matrix.det_of_isUpperTriangular hTtri]
     simp [T]
@@ -519,24 +519,24 @@ theorem det_cutBasisMatrix
     rw [Finset.sum_eq_single (sigma i)]
     · simp
     · intro x _ hx
-      rw [if_neg (fun h => hx h.symm), zero_mul]
+      rw [ite_eq_right (fun h => hx h.symm), zero_mul]
     · intro h; exact absurd (Finset.mem_univ _) h
   have hdetA : Matrix.det A = permSignInt sigma := by
     rw [hA, Matrix.det_mul, Matrix.det_permutation,
       det_lowerCumulativeMatrix]
     simp [permSignInt]
   have hdetB : Matrix.det B = permSignInt sigma := by
-    show Matrix.det (T * A) = permSignInt sigma
+    change Matrix.det (T * A) = permSignInt sigma
     rw [Matrix.det_mul, hdetT, one_mul, hdetA]
   have hcol : ∀ x : Fin p, A x 0 = 1 := by
     intro x; simp [A]
   have hBfirst (i : Fin p) :
       B i 0 = if i = lastLabel hp then 1 else 0 := by
-    show (T * A) i 0 = _
+    change (T * A) i 0 = _
     by_cases hi : i = lastLabel hp
-    · simp only [Matrix.mul_apply, T, Matrix.of_apply, hcol, mul_one, if_pos hi]
+    · simp only [Matrix.mul_apply, T, Matrix.of_apply, hcol, mul_one, ite_eq_left hi]
       simp [Finset.sum_ite_eq']
-    · simp only [Matrix.mul_apply, T, Matrix.of_apply, hcol, mul_one, if_neg hi]
+    · simp only [Matrix.mul_apply, T, Matrix.of_apply, hcol, mul_one, ite_eq_right hi]
       have hrw : ∀ x : Fin p,
           (if x = i then (1:Int) else if x = lastLabel hp then -1 else 0)
             = (if x = i then 1 else 0) + (if x = lastLabel hp then -1 else 0) := by
@@ -600,9 +600,9 @@ theorem det_cutBasisMatrix
       rw [Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.sum_ite_eq']
       simp [sub_eq_add_neg]
     simp only [B', Matrix.submatrix_apply, her]
-    show (T * A) (coordinateLabel hp r) (e (Fin.succ k)) = cutBasisMatrix hp sigma r k
+    change (T * A) (coordinateLabel hp r) (e (Fin.succ k)) = cutBasisMatrix hp sigma r k
     rw [Matrix.mul_apply]
-    simp only [T, Matrix.of_apply, if_neg hlast]
+    simp only [T, Matrix.of_apply, ite_eq_right hlast]
     have hkey := key (coordinateLabel hp r) (fun x => A x (e (Fin.succ k))) hlast
     rw [hkey]
     simp only [A, Matrix.of_apply, cutBasisMatrix, hval]
@@ -614,7 +614,7 @@ theorem det_cutBasisMatrix
         (-1 : Int) ^ (p - 1) *
           Matrix.det (cutBasisMatrix hp sigma) := by
     rw [Finset.sum_eq_single (Fin.last (p - 1))]
-    · rw [hB'first, if_pos rfl, Fin.val_last, hminor']
+    · rw [hB'first, ite_eq_left rfl, Fin.val_last, hminor']
       ring
     · intro i hi hne
       simp [hB'first, hne]
@@ -632,7 +632,7 @@ theorem det_cutBasisMatrix
           Matrix.det (cutBasisMatrix hp sigma) := hsum
   have hunit : ((-1 : Int) ^ (p - 1)) * ((-1 : Int) ^ (p - 1)) = 1 := by
     rw [← pow_add]
-    simp [two_mul]
+    simp []
   calc
     Matrix.det (cutBasisMatrix hp sigma)
         = 1 * Matrix.det (cutBasisMatrix hp sigma) := by simp
@@ -746,7 +746,7 @@ theorem det_blockVertexMatrix
   rw [Matrix.det_mul]
   rw [det_cutBasisMatrix hp z.bottom]
   rw [det_cumulativePermutationMatrix z.removal]
-  simp [coefficient, mul_assoc, mul_left_comm, mul_comm]
+  simp [coefficient, mul_assoc, mul_left_comm]
 
 /-- At parameter zero, expansion along the final vertex column identifies the affine
 augmented determinant with the real cast of the integral block-vertex determinant. -/
@@ -767,13 +767,13 @@ theorem determinant_zero_toSimplex
       rw [h]
       have := j.isLt; simp only [Fin.val_castSucc]; omega
     simp [A, AffineVertexMap.augmentedMatrix, blockVertexMatrix,
-      Fin.succAbove_last_apply, mapAt, hnot]
+       mapAt, hnot]
   rw [Matrix.det_succ_column A (Fin.last (p - 1))]
   rw [Finset.sum_eq_single (Fin.last (p - 1))]
   · rw [hminor, ← RingHom.map_det]
     have hsq : ((-1 : Real)) ^ (p - 1) * (-1) ^ (p - 1) = 1 := by
       rw [← pow_add, ← two_mul, pow_mul, neg_one_sq, one_pow]
-    simp [A, AffineVertexMap.augmentedMatrix, hsq]
+    simp [A, AffineVertexMap.augmentedMatrix]
   · intro i hi hne
     rcases Fin.eq_castSucc_or_eq_last i with ⟨q, rfl⟩ | rfl
     · have htop : (stageCell z (lastStage hp)).IsTop := by
@@ -811,8 +811,8 @@ theorem continuous_determinant_mapAt
       exact continuous_const
     · simp only [Fin.lastCases_castSucc, mapAt]
       by_cases htop : (s i).IsTop
-      · simp only [if_pos htop]; fun_prop
-      · simp only [if_neg htop]; fun_prop
+      · simp only [ite_eq_left htop]; fun_prop
+      · simp only [ite_eq_right htop]; fun_prop
   exact hcont.matrix_det
 
 /-- A finite family of continuous nonzero values at zero has a common positive neighborhood on
@@ -992,8 +992,8 @@ theorem top_weight_pos_of_zero
     have hvv : (referenceMap hp).vertexValue (toSimplex hp z j.castSucc) r
         = (blockDifference hp (toSimplex hp z j.castSucc) r : Real) := by
       simp only [referenceMap, mapAt]
-      rw [if_neg (hnotTop j)]
-    show A r j * v j = w j.castSucc * (referenceMap hp).vertexValue (toSimplex hp z j.castSucc) r
+      rw [ite_eq_right (hnotTop j)]
+    change A r j * v j = w j.castSucc * (referenceMap hp).vertexValue (toSimplex hp z j.castSucc) r
     rw [hvv]
     simp only [A, v, blockVertexMatrix]
     ring
@@ -1035,12 +1035,12 @@ theorem strictOrder_eq_of_top_weight_pos
       liftedVertexValue p (epsilon hp) (toSimplex hp z j.castSucc) u
         = ((toSimplex hp z j.castSucc).blockIndex u : Real) := by
     intro j u
-    simp only [liftedVertexValue, if_neg (hnotTopT j)]
+    simp only [liftedVertexValue, ite_eq_right (hnotTopT j)]
   have hliftLast : ∀ (u : Fin p),
       liftedVertexValue p (epsilon hp) (toSimplex hp z (Fin.last (p - 1))) u
         = -(epsilon hp) * (triangular (z.top u).1 : Real) := by
     intro u
-    simp only [liftedVertexValue, if_pos htopLastT]
+    simp only [liftedVertexValue, ite_eq_left htopLastT]
     have hrank : ((toSimplex hp z (Fin.last (p - 1))).rank u) = z.top u := by
       simp only [toSimplex_apply, stageCell, stageIndex_last, stageRank_last hp]
     rw [hrank]
@@ -1139,7 +1139,7 @@ theorem strictOrder_eq_of_top_weight_pos
     have he2 : e k.succ = stageIndex hp k.succ := by
       apply Fin.ext; simp [e, Fin.castOrderIso, stageIndex_val]
     simp only [Function.comp, he1, he2]
-    show tau (stageIndex hp k.castSucc) < tau (stageIndex hp k.succ)
+    change tau (stageIndex hp k.castSucc) < tau (stageIndex hp k.succ)
     simpa only [tau, Equiv.coe_trans, Function.comp] using hk
   have htau : StrictMono tau := by
     intro a b hab
@@ -1191,7 +1191,7 @@ theorem removal_eq_identity_of_top_weight_pos
       have hstage := stageBlock_adjacent_sub hp z (stageIndex hp j.castSucc) r
       simp only [stageIndex_val, Fin.val_castSucc] at hstage
       simp only [liftedVertexValue]
-      rw [if_neg (hnotTop j), if_neg (hnotTop j)]
+      rw [ite_eq_right (hnotTop j), ite_eq_right (hnotTop j)]
       simp only [toSimplex_apply, stageCell_blockIndex, x, y, Fin.le_def]
       exact_mod_cast hstage
     have htopDiff :
@@ -1201,7 +1201,7 @@ theorem removal_eq_identity_of_top_weight_pos
               (toSimplex hp z (Fin.last (p - 1))) x =
           -(epsilon hp) * (r.1 + 1) := by
       simp only [liftedVertexValue]
-      rw [if_pos htopLast, if_pos htopLast]
+      rw [ite_eq_left htopLast, ite_eq_left htopLast]
       simp only [toSimplex_apply, stageIndex_last, stageCell, stageRank_last hp, x, y,
         horder, Equiv.apply_symm_apply, stageIndex_succ_val, stageIndex_castSucc_val]
       have htri : (triangular (r.1 + 1) : ℝ) - triangular r.1 = (r.1 : ℝ) + 1 := by
@@ -1331,7 +1331,7 @@ theorem hasInteriorZero_toSimplex_iff
           ring⟩
     refine ⟨w, ?_, ?_⟩
     · intro i
-      show 0 < if i.1 = p - 1 then 1 / denom else epsilon hp / denom
+      change 0 < if i.1 = p - 1 then 1 / denom else epsilon hp / denom
       split_ifs
       · exact div_pos (by norm_num) hdenom
       · exact div_pos (epsilon_pos hp) hdenom
@@ -1366,8 +1366,8 @@ theorem hasInteriorZero_toSimplex_iff
               rw [AffineVertexMap.value, Fin.sum_univ_castSucc]
               have hxne : ∀ x : Fin (p - 1), x.1 ≠ p - 1 := fun x => by
                 have := x.isLt; omega
-              simp [w, referenceMap, mapAt, hnotTop, htopLast, hjnot, hxne, Fin.val_last,
-                Finset.mul_sum, mul_comm, mul_left_comm, mul_assoc]
+              simp [w, referenceMap, mapAt, hnotTop, htopLast,  hxne, Fin.val_last,
+                Finset.mul_sum,  mul_left_comm]
         _ = (epsilon hp / denom) *
                 (topDirection hp
                   (selectedSimplex hp sigma (Fin.last (p - 1))) r : Real) +
@@ -1472,12 +1472,12 @@ theorem localZeroIndex_toSimplex
         determinantIndex_zero_toSimplex hp z
       _ = (coefficient z : ZMod p) := by
         rw [Int.cast_mul, hparity, one_mul]
-  · simp [hsel]
+  · simp []
 
 /-- The covering top cell has dimension `p - 1`. -/
 theorem coveringTopCell_eq (hp : Nat.Prime p) :
     (PrimeOrbitCycle.coveringCycle hp).TopCell = Simplex p (p - 1) := by
-  show Simplex p (p - 2 + 1) = Simplex p (p - 1)
+  change Simplex p (p - 2 + 1) = Simplex p (p - 1)
   have := hp.two_le
   congr 1
   omega
@@ -1658,7 +1658,7 @@ theorem card_selectedOrbit
   classical
   let X := BarredPermutation.TopCell p
   -- Relabelling makes the top cells a torsor for the full permutation group.
-  letI fullPermAction : MulAction (Equiv.Perm (Fin p)) X := {
+  let fullPermAction : MulAction (Equiv.Perm (Fin p)) X := {
     smul sigma c :=
       ⟨c.1.relabel sigma,
         (BarredPermutation.isTop_relabel sigma c.1).2 c.2⟩
@@ -1672,7 +1672,7 @@ theorem card_selectedOrbit
         rfl
       · rfl }
   let x0 : X := BarredPermutation.TopCell.evenRepresentative
-  letI : MulAction.IsPretransitive (Equiv.Perm (Fin p)) X := by
+  let : MulAction.IsPretransitive (Equiv.Perm (Fin p)) X := by
     constructor
     intro a b
     refine ⟨a.1.rank.trans b.1.rank.symm, ?_⟩
@@ -1683,7 +1683,7 @@ theorem card_selectedOrbit
     · ext i
       simp [BarredPermutation.relabel]
     · exact a.2.trans b.2.symm
-  letI : IsCancelSMul (Equiv.Perm (Fin p)) X := {
+  let : IsCancelSMul (Equiv.Perm (Fin p)) X := {
     toIsLeftCancelSMul := inferInstance
     right_cancel' sigma tau c h := by
       have hrank := congrArg (fun d : X => d.1.rank) h
@@ -1758,7 +1758,7 @@ theorem coefficient_mul_referenceIndex
     rcases permSignInt_eq_one_or_neg_one z.bottom with hb | hb <;>
       rcases permSignInt_eq_one_or_neg_one z.removal with hr | hr <;>
       simp [coefficient, hb, hr]
-  · simp [hsel]
+  · simp []
 
 theorem referenceZeroCount_eq
     (hp : Nat.Prime p) :

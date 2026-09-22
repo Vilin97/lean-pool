@@ -119,10 +119,10 @@ theorem unsignedFacetIndex_eq_of_facetValue_eq
   unfold unsignedFacetIndex
   by_cases hV : FacetHasPositiveRayIntersection hp V k
   · have hW : FacetHasPositiveRayIntersection hp W l := hinter.mp hV
-    rw [if_pos hV, if_pos hW, hdet]
+    rw [ite_eq_left hV, ite_eq_left hW, hdet]
   · have hW : ¬ FacetHasPositiveRayIntersection hp W l :=
       fun h => hV (hinter.mpr h)
-    rw [if_neg hV, if_neg hW]
+    rw [ite_eq_right hV, ite_eq_right hW]
 
 /-- Relabel every output coordinate vector of a local affine simplex by a prime symmetry. -/
 noncomputable def primeSmulVertexMap
@@ -224,8 +224,7 @@ private theorem facetBlockMatrix_eq_swappedRowReduced
       by_cases hr : r = ReferenceAffineOrbitCount.lastLabel hp
       · subst r
         simp [facetBlockMatrix, facetRowReducedMatrix, facetBorderSwap,
-          facetRowCoefficient, facetBorderedMatrix, facetCoordinateMatrix,
-          augmentedRowEquiv_lastLabel]
+          facetRowCoefficient, facetBorderedMatrix, facetCoordinateMatrix]
       · have hrmem : r ∈ {x : Fin p |
             x ≠ ReferenceAffineOrbitCount.lastLabel hp} := hr
         rw [← ReferenceAffineOrbitCount.coordinateLabel_range hp] at hrmem
@@ -238,7 +237,7 @@ private theorem facetBlockMatrix_eq_swappedRowReduced
             ReferenceAffineOrbitCount.lastLabel] at hv
           omega
         simp [facetBlockMatrix, facetRowReducedMatrix, facetBorderSwap,
-          facetRowCoefficient, facetBorderedMatrix, facetCoordinateMatrix, hq,
+          facetRowCoefficient, facetBorderedMatrix,  hq,
           Equiv.swap_apply_of_ne_of_ne]
   · rcases u with ⟨⟩
     rcases c with c | v
@@ -246,7 +245,7 @@ private theorem facetBlockMatrix_eq_swappedRowReduced
         facetRowCoefficient, facetBorderedMatrix, facetCoordinateMatrix]
     · rcases v with ⟨⟩
       simp [facetBlockMatrix, facetRowReducedMatrix, facetBorderSwap,
-        facetRowCoefficient, facetBorderedMatrix, facetCoordinateMatrix]
+        facetRowCoefficient, facetBorderedMatrix]
 
 private theorem det_facetRowReducedMatrix
     (hp : Nat.Prime p) (V : VertexMap p) (k : Fin (p + 1)) :
@@ -308,12 +307,12 @@ private theorem facetBorderedMatrix_primeSmul
     · simp [facetBorderedMatrix, facetCoordinateMatrix, primeBorderRowPerm,
         primeSmulVertexMap, facetValue, PrimeSymmetry.smul_coordinate_apply]
     · rcases v with ⟨⟩
-      simp [facetBorderedMatrix, facetCoordinateMatrix, primeBorderRowPerm]
+      simp [facetBorderedMatrix,  primeBorderRowPerm]
   · rcases u with ⟨⟩
     rcases c with c | v
-    · simp [facetBorderedMatrix, facetCoordinateMatrix, primeBorderRowPerm]
+    · simp [facetBorderedMatrix,  primeBorderRowPerm]
     · rcases v with ⟨⟩
-      simp [facetBorderedMatrix, facetCoordinateMatrix, primeBorderRowPerm]
+      simp [facetBorderedMatrix,  primeBorderRowPerm]
 
 /-- Exact determinant transformation under prime coordinate relabeling. -/
 private theorem facetDeterminant_primeSmul
@@ -342,8 +341,8 @@ theorem facetDeterminant_primeSmul_ne_zero_iff
       facetDeterminant hp V k ≠ 0 := by
   rw [facetDeterminant_primeSmul]
   rcases Int.units_eq_one_or (Equiv.Perm.sign (PrimeSymmetry.toPerm p g)) with h | h
-  · simp [h]
-  · simp [h]
+  · simp []
+  · simp []
 
 private theorem deviations_eq_zero_of_coordinateDeviation_eq_zero
     (hp : Nat.Prime p) (y : Fin p → Real)
@@ -417,11 +416,11 @@ private theorem determinantIndex_neg
   · have hnneg : -x < 0 := neg_neg_of_pos hpos
     have hnpos : ¬ 0 < -x := not_lt.mpr (le_of_lt hnneg)
     have hxneg : ¬ x < 0 := not_lt.mpr (le_of_lt hpos)
-    simp [hpos, hxneg, hnpos, hnneg]
+    simp [hpos,  hnpos, hnneg]
   · by_cases hneg : x < 0
     · have hnpos : 0 < -x := neg_pos.mpr hneg
       have hnneg : ¬ -x < 0 := not_lt.mpr (le_of_lt hnpos)
-      simp [hpos, hneg, hnpos, hnneg]
+      simp [hpos, hneg, hnpos]
     · have hx : x = 0 := le_antisymm (le_of_not_gt hpos) (le_of_not_gt hneg)
       subst x
       simp
@@ -452,13 +451,13 @@ theorem unsignedFacetIndex_primeSmul
   by_cases h : FacetHasPositiveRayIntersection hp V k
   · have h' : FacetHasPositiveRayIntersection hp (primeSmulVertexMap p g V) k :=
       hinter.mpr h
-    rw [if_pos h', if_pos h, facetDeterminant_primeSmul,
+    rw [ite_eq_left h', ite_eq_left h, facetDeterminant_primeSmul,
       determinantIndex_sign_mul,
       PrimeOrbitCycle.primeSymmetry_sign_cast_eq_one]
     simp
   · have h' : ¬ FacetHasPositiveRayIntersection hp (primeSmulVertexMap p g V) k :=
       fun hg => h (hinter.mp hg)
-    rw [if_neg h', if_neg h]
+    rw [ite_eq_right h', ite_eq_right h]
 
 
 /-- If the ordered values of one facet are a simultaneous prime relabelling of another, their

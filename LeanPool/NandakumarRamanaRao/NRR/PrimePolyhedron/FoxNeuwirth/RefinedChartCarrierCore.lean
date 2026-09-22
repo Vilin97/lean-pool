@@ -68,7 +68,7 @@ theorem chartWeight_at_maximal_vertex
   unfold Simplex.chartWeight
   rw [Finset.sum_eq_single_of_mem i (Finset.mem_univ i)]
   intro j _ hji
-  rw [if_neg]
+  rw [ite_eq_right]
   intro hjc
   exact hji (maximal_raw_index_eq_of_vertex_eq hp t s hjc)
 
@@ -262,7 +262,7 @@ theorem refined_active_vertex_and_coefficient_eq
       · have htc : t j ≠ c := by
           intro htc
           exact hsc (hst.symm.trans htc)
-        simp [StandardSimplex.ofDelta, hsc, htc]
+        simp [ hsc, htc]
   have hglobal' :
       s.realizationPoint
           (StandardSimplex.ofDelta

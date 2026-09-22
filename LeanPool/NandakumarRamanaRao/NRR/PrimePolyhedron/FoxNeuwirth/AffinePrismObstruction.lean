@@ -190,7 +190,7 @@ theorem not_hasPositiveInteriorZero_of_vertex_neg
   have hi : ∀ i : Fin p, F.value s w i < 0 := F.value_neg_of_vertex_neg s w hneg
   have hmeanneg : F.mean p s w < 0 := by
     unfold mean coordinateMean
-    haveI : Nonempty (Fin p) := ⟨⟨0, hp.pos⟩⟩
+    let : Nonempty (Fin p) := ⟨⟨0, hp.pos⟩⟩
     have hsumneg : (∑ i : Fin p, F.value s w i) < 0 :=
       Finset.sum_neg (fun i _ => hi i) Finset.univ_nonempty
     exact div_neg_of_neg_of_pos hsumneg (by exact_mod_cast hp.pos)
@@ -210,7 +210,7 @@ theorem hasPositiveInteriorZero_iff_of_vertex_pos
     refine ⟨w, hw, hdev, ?_⟩
     unfold mean coordinateMean
     have hi : ∀ i : Fin p, 0 < F.value s w i := F.value_pos_of_vertex_pos s w hpos
-    haveI : Nonempty (Fin p) := ⟨⟨0, hp.pos⟩⟩
+    let : Nonempty (Fin p) := ⟨⟨0, hp.pos⟩⟩
     have hsumpos : 0 < ∑ i : Fin p, F.value s w i :=
       Finset.sum_pos (fun i _ => hi i) Finset.univ_nonempty
     exact div_pos hsumpos (by exact_mod_cast hp.pos)

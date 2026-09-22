@@ -289,7 +289,7 @@ theorem endpointInterpolant_equivariant
   apply Finset.sum_congr rfl
   intro g hg
   congr 1
-  simp [← mul_smul, mul_assoc]
+  simp [← mul_smul]
 
 /-- The symmetrized interpolant still realizes every horizontal sample. -/
 @[simp] theorem endpointInterpolant_sample
@@ -1254,7 +1254,6 @@ theorem RelativeResult.lower_zeroCount_eq_endpointRefinedCount
             hp N L R.prism.assignment
             (EquivariantPrismNonhorizontalCancellation.lowerEndpointMap
               (endpointSpatialMap hp N L q eta)))
-
   rw [
     RelativeCollarMiddlePrismEndpoints.coefficient_endpointTopCell,
     lower_realizedFacetWeight_eq_localIndex
@@ -1296,7 +1295,6 @@ theorem RelativeResult.upper_zeroCount_eq_endpointRefinedCount
             hp N L R.prism.assignment
             (EquivariantPrismNonhorizontalCancellation.upperEndpointMap
               (endpointSpatialMap hp N L q eta)))
-
   rw [
     RelativeCollarMiddlePrismEndpoints.coefficient_endpointTopCell,
     upper_realizedFacetWeight_eq_localIndex

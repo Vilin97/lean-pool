@@ -114,8 +114,8 @@ theorem lowerOccurrence_facetSignature
         rw [Fin.addCases_left]
       exact hword
   rw [he]
-  simp [slabPoint, slabTime, lowerCylinderPoint, EndpointFaceRefinement.endpointTopCell,
-    EndpointFaceRefinement.appendRefinementWord, emptyEndpointRefinementWord, firstSlab]
+  simp [slabPoint, slabTime, lowerCylinderPoint,
+      firstSlab]
 
 /-- Ordered vertices of the canonical upper occurrence are exactly the level-`N` upper endpoint
 vertices. -/
@@ -145,8 +145,7 @@ theorem upperOccurrence_facetSignature
       exact hword
   rw [he]
   have hmR : (0 : Real) < (m : Real) := by exact_mod_cast hm
-  simp [slabPoint, slabTime, upperCylinderPoint, lastSlab,
-    div_self (ne_of_gt hmR)]
+  simp [slabPoint, slabTime, upperCylinderPoint, lastSlab]
   apply Subtype.ext
   norm_num
   have hcast : ((m - 1 : Nat) : Real) + 1 = (m : Real) := by

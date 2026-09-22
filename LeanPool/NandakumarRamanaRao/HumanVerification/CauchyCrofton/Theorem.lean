@@ -55,7 +55,7 @@ theorem hausdorffPerimeter_eq_cauchyPerimeter_of_zero_mem
       refine ⟨r⁻¹ • x, ?_, ?_⟩
       · rw [hP, polyBody_carrier]
         exact hA ⟨x, hx, rfl⟩
-      · show r • r⁻¹ • x = x
+      · change r • r⁻¹ • x = x
         rw [smul_smul, mul_inv_cancel₀ hr0.ne', one_smul]
     have hpoly : hPerimeter P = cPerimeter P := polygon_hPerimeter_eq_cPerimeter h0
     constructor

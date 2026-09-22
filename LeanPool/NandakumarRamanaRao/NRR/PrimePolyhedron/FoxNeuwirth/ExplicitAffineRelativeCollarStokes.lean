@@ -392,10 +392,10 @@ theorem unsignedFacetIndex_eq_refinedLocalIndex
   by_cases hfacet : FacetHasPositiveRayIntersection hp V k
   · have hrefined : RefinedAffineMap.HasPositiveInteriorZero hp N F q :=
       hinter.mp hfacet
-    rw [if_pos hfacet, if_pos hrefined, hdet]
+    rw [ite_eq_left hfacet, ite_eq_left hrefined, hdet]
   · have hrefined : ¬ RefinedAffineMap.HasPositiveInteriorZero hp N F q :=
       fun h => hfacet (hinter.mpr h)
-    rw [if_neg hfacet, if_neg hrefined]
+    rw [ite_eq_right hfacet, ite_eq_right hrefined]
 
 /-- Affine interpolation commutes with simultaneous prime relabelling of all vertex values. -/
 private theorem facetAffineValue_primeSmul_local
@@ -431,7 +431,7 @@ theorem unsignedFacetIndex_eq_refinedLocalIndex_primeSmul
     intro w
     rw [facetAffineValue_primeSmul_local]
     rw [haffine w]
-    simp [mul_smul]
+    simp []
   calc
     unsignedFacetIndex hp V k = unsignedFacetIndex hp W k := by
       exact (unsignedFacetIndex_primeSmul hp g⁻¹ V k).symm

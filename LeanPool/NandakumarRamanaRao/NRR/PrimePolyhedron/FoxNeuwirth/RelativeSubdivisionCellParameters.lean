@@ -306,7 +306,7 @@ noncomputable def globalPoint : GlobalVertex p B → CylinderPoint p :=
     globalPoint p B (g • x) = g • globalPoint p B x := by
   refine Quotient.inductionOn x ?_
   intro s
-  show coverPoint p B (actCoverVertex p B g s) = g • coverPoint p B s
+  change coverPoint p B (actCoverVertex p B g s) = g • coverPoint p B s
   simp
 
 /-- Global sampled vertex represented by an undecorated local collar slot. -/
@@ -494,7 +494,7 @@ theorem replaceMovable_horizontal_localValue
       vectorValue p B base (sampleVertex p B s) := by
   funext j
   apply replaceMovable_eq_base p B
-  show IsFrozenVertex p B (sampleVertex p B s)
+  change IsFrozenVertex p B (sampleVertex p B s)
   simpa [IsFrozenVertex] using hs
 
 end RelativeCylinderParameters

@@ -82,7 +82,7 @@ theorem smallBoundary_comp_smallBoundary
   apply LinearMap.ext
   intro c
   apply Subtype.ext
-  show (singularBoundary R X n).hom ((singularBoundary R X (n + 1)).hom (c : singularChainGroup R X (n + 2))) = 0
+  change (singularBoundary R X n).hom ((singularBoundary R X (n + 1)).hom (c : singularChainGroup R X (n + 2))) = 0
   have h := (singularChainComplex R X).d_comp_d (n + 2) (n + 1) n
   have happ := congrArg (fun (m : (singularChainComplex R X).X (n + 2) ⟶ (singularChainComplex R X).X n) => m.hom (c : singularChainGroup R X (n + 2))) h
   exact happ

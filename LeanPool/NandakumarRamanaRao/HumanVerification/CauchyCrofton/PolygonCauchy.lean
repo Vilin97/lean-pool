@@ -85,7 +85,7 @@ theorem integral_abs_cos_full_period (φ : ℝ) :
     norm_num
   have hper2 : Function.Periodic (fun x : ℝ => |Real.cos x|) (2 * Real.pi) := by
     intro x
-    show |Real.cos (x + 2 * Real.pi)| = |Real.cos x|
+    change |Real.cos (x + 2 * Real.pi)| = |Real.cos x|
     rw [Real.cos_add_two_pi]
   have hshift : (∫ θ in (0 : ℝ)..(2 * Real.pi), |Real.cos (θ - φ)|)
       = ∫ x in (0 - φ : ℝ)..(2 * Real.pi - φ), |Real.cos x| := by

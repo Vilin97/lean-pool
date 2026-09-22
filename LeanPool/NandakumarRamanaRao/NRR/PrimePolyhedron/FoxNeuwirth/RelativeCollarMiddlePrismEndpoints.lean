@@ -363,7 +363,7 @@ theorem lowerOccurrence_classification_zero
   have htime : ∀ i : Fin p, staircaseTime k (j.succAbove i) = 0 := by
     intro i
     have hi := ho i
-    simp [RelativeCollarMiddlePrism.cellSystem,
+    simp [
       RelativeAffineCellSystem.facetSignature,
       RelativeCollarMiddlePrism.vertex, SubdivisionPrismCharts.vertex,
       SubdivisionPrismCharts.chart, staircasePoint, intervalPoint,
@@ -412,7 +412,7 @@ theorem upperOccurrence_classification_zero
   have htime : ∀ i : Fin p, staircaseTime k (j.succAbove i) = 1 := by
     intro i
     have hi := ho i
-    simp [RelativeCollarMiddlePrism.cellSystem,
+    simp [
       RelativeAffineCellSystem.facetSignature,
       RelativeCollarMiddlePrism.vertex, SubdivisionPrismCharts.vertex,
       SubdivisionPrismCharts.chart, staircasePoint, intervalPoint,
@@ -467,7 +467,7 @@ theorem horizontalFacetExhaustive_zero
     refine Quotient.inductionOn s (fun o ho => ?_) hs
     obtain ⟨q, hq⟩ := lowerOccurrence_classification_zero hp N o ho
     refine ⟨endpointTopCell hp N 0 q (emptyEndpointRefinementWord p), ?_⟩
-    simp only [lowerFacet, splitTopCellEquiv_endpointTopCell, Prod.fst, Prod.snd]
+    simp only [lowerFacet, splitTopCellEquiv_endpointTopCell, Prod.fst]
     calc
       _ = (RelativeCollarMiddlePrism.cellSystem hp N 0).facetClass o := hq.symm
       _ = Quotient.mk _ o := rfl
@@ -475,7 +475,7 @@ theorem horizontalFacetExhaustive_zero
     refine Quotient.inductionOn s (fun o ho => ?_) hs
     obtain ⟨q, hq⟩ := upperOccurrence_classification_zero hp N o ho
     refine ⟨endpointTopCell hp N 0 q (emptyEndpointRefinementWord p), ?_⟩
-    simp only [upperFacet, splitTopCellEquiv_endpointTopCell, Prod.fst, Prod.snd]
+    simp only [upperFacet, splitTopCellEquiv_endpointTopCell, Prod.fst]
     calc
       _ = (RelativeCollarMiddlePrism.cellSystem hp N 0).facetClass o := hq.symm
       _ = Quotient.mk _ o := rfl

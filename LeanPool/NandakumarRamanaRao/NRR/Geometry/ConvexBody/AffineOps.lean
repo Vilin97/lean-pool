@@ -112,12 +112,12 @@ theorem mem_scalePos (K : ConvexBody E) {r : ℝ} (hr : 0 < r) (x : E) :
   rw [scalePos_carrier]
   constructor
   · rintro ⟨y, hy, rfl⟩
-    show r⁻¹ • r • y ∈ (K : Set E)
+    change r⁻¹ • r • y ∈ (K : Set E)
     rw [smul_smul, inv_mul_cancel₀ hr.ne', one_smul]
     exact hy
   · intro hx
     refine ⟨r⁻¹ • x, hx, ?_⟩
-    show r • r⁻¹ • x = x
+    change r • r⁻¹ • x = x
     rw [smul_smul, mul_inv_cancel₀ hr.ne', one_smul]
 
 @[simp] theorem scalePos_one (K : ConvexBody E) :

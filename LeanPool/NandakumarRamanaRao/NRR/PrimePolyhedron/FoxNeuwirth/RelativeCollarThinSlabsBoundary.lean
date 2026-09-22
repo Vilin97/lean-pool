@@ -214,7 +214,7 @@ theorem stackFacetOrbitIndicator_occurrence
       refine ⟨o, hos, 1, ?_⟩
       simpa using htau
     unfold stackFacetOrbitIndicator
-    rw [if_pos hex, if_pos hos]
+    rw [ite_eq_left hex, ite_eq_left hos]
   · have hnot : ¬ ∃ o' : (StackCells hp N m hm).FacetOccurrence,
         (StackCells hp N m hm).facetClass o' = s ∧
           ∃ g : PrimeSymmetry p,
@@ -232,7 +232,7 @@ theorem stackFacetOrbitIndicator_occurrence
         Quotient.sound ⟨g, hsig⟩
       exact hclass.symm.trans ho'
     unfold stackFacetOrbitIndicator
-    rw [if_neg hnot, if_neg hos]
+    rw [ite_eq_right hnot, ite_eq_right hos]
 
 /-- On an actual base occurrence embedded in slab `r`, the pulled-back weight is the Kronecker
 weight of its stack quotient facet. -/
@@ -281,8 +281,8 @@ theorem facetIncidence_eq_sum_slabOccurrencePairing
   apply Finset.sum_congr rfl
   intro k hk
   rw [slabFacetOrbitIndicator_occurrence]
-  simp [stackOccurrence, RelativeCollarThinSlabs.cellSystem,
-    RelativeCollarThinSlabs.Cell, occurrenceCoefficient,
+  simp [stackOccurrence,
+     occurrenceCoefficient,
     RelativeAffineCellSystem.alternatingSign,
     SimplicialChain.faceSign, RelativeCollarMiddlePrism.cellSystem]
   change

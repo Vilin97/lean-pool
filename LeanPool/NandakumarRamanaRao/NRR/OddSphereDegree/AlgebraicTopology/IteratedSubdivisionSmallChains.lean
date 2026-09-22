@@ -43,7 +43,7 @@ theorem barycentricSubdivision_maps_smallChainSubmodule (R : Type) [CommRing R]
   have hle : smallChainSubmodule R X 𝒰 n ≤ Submodule.comap (barycentricSubdivisionLinearMap R X n).hom (smallChainSubmodule R X 𝒰 n) := by
     refine Submodule.span_le.mpr ?_
     rintro c ⟨σ, hσ, rfl⟩
-    show (barycentricSubdivisionLinearMap R X n).hom (chainGenerator R X n σ) ∈ smallChainSubmodule R X 𝒰 n
+    change (barycentricSubdivisionLinearMap R X n).hom (chainGenerator R X n σ) ∈ smallChainSubmodule R X 𝒰 n
     rw [barycentricSubdivisionLinearMap_generator_sum]
     exact Submodule.sum_mem _ fun π _ => Submodule.smul_mem _ _ (chainGenerator_mem_smallChainSubmodule (IsSmallSimplex.barycentricSubdivSimplex hσ π))
   exact hle hc
@@ -95,7 +95,7 @@ theorem chainGenerator_span_top (R : Type) [CommRing R] (n : ℕ) :
     intro σ
     apply ModuleCat.hom_ext
     apply LinearMap.ext_ring
-    show Submodule.Quotient.mk (chainGenerator R X n σ) = 0
+    change Submodule.Quotient.mk (chainGenerator R X n σ) = 0
     rw [Submodule.Quotient.mk_eq_zero]
     exact Submodule.subset_span (Set.mem_range_self σ)
   refine Submodule.eq_top_iff'.mpr fun x => ?_

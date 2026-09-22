@@ -191,10 +191,10 @@ theorem cast_simplex_apply {a b : ℕ} (h : a = b) (s : Simplex p a) (i : Fin (b
 theorem val_succAbove_eq {n : ℕ} (k : Fin (n + 1)) (j : Fin n) :
     (k.succAbove j).1 = if j.1 < k.1 then j.1 else j.1 + 1 := by
   rcases lt_or_ge j.castSucc k with hlt | hge
-  · rw [Fin.succAbove_of_castSucc_lt _ _ hlt, if_pos]
+  · rw [Fin.succAbove_of_castSucc_lt _ _ hlt, ite_eq_left]
     · simp
     · rw [Fin.lt_def] at hlt; simpa using hlt
-  · rw [Fin.succAbove_of_le_castSucc _ _ hge, if_neg]
+  · rw [Fin.succAbove_of_le_castSucc _ _ hge, ite_eq_right]
     · simp
     · rw [Fin.le_def] at hge; simp only [Fin.val_castSucc] at hge; omega
 /-- Reindex an actual fixed-position simplicial source sum by maximal-flag codes. -/

@@ -151,7 +151,7 @@ theorem continuous_affineConeMap {n k : ℕ} (v : Delta n) (τ : C(Delta k, Delt
         mul_le_mul_of_nonneg_left htau_le1 hx0_le
       rw [mul_one] at h_prod
       have hx_val : (1 - (x : Fin (k + 1 + 1) → ℝ) 0) * ((τ (coneTail x)) : Fin (n + 1) → ℝ) j = 0 := by simp [hx]
-      show ‖(1 - (e : Fin (k + 1 + 1) → ℝ) 0) * ((τ (coneTail e)) : Fin (n + 1) → ℝ) j - (1 - (x : Fin (k + 1 + 1) → ℝ) 0) * ((τ (coneTail x)) : Fin (n + 1) → ℝ) j‖ ≤ abs (1 - (e : Fin (k + 1 + 1) → ℝ) 0)
+      change ‖(1 - (e : Fin (k + 1 + 1) → ℝ) 0) * ((τ (coneTail e)) : Fin (n + 1) → ℝ) j - (1 - (x : Fin (k + 1 + 1) → ℝ) 0) * ((τ (coneTail x)) : Fin (n + 1) → ℝ) j‖ ≤ abs (1 - (e : Fin (k + 1 + 1) → ℝ) 0)
       rw [hx_val, sub_zero, Real.norm_eq_abs, abs_mul]
       exact h_prod
     · refine ContinuousAt.mul ?_ ?_
@@ -181,17 +181,17 @@ theorem cone_face_zero {n k : ℕ} (v : Delta n) (τ : Delta k → Delta n) :
   have h_ne : (cofaceTop k 0 y : Fin (k + 1 + 1) → ℝ) 0 ≠ 1 := by rw [h0]; norm_num
   apply Subtype.ext
   ext j
-  show (affineConeMap v τ (cofaceTop k 0 y) : Fin (n + 1) → ℝ) j = (τ y : Fin (n + 1) → ℝ) j
+  change (affineConeMap v τ (cofaceTop k 0 y) : Fin (n + 1) → ℝ) j = (τ y : Fin (n + 1) → ℝ) j
   rw [affineConeMap_coord, h0]
   simp only [zero_mul, sub_zero, one_mul, zero_add]
   have h_tail : coneTail (cofaceTop k 0 y) = y := by
     apply Subtype.ext
     ext m
     have h_app := coneTail_apply (cofaceTop k 0 y) h_ne m
-    show (coneTail (cofaceTop k 0 y) : Fin (k + 1) → ℝ) m = y.1 m
+    change (coneTail (cofaceTop k 0 y) : Fin (k + 1) → ℝ) m = y.1 m
     rw [h_app, h0, sub_zero, div_one]
-    show (cofaceTop k 0 y : Fin (k + 1 + 1) → ℝ) m.succ = y m
-    show (stdSimplex.map (S := ℝ) (Fin.succAbove 0) y : Fin (k + 1 + 1) → ℝ) m.succ = y m
+    change (cofaceTop k 0 y : Fin (k + 1 + 1) → ℝ) m.succ = y m
+    change (stdSimplex.map (S := ℝ) (Fin.succAbove 0) y : Fin (k + 1 + 1) → ℝ) m.succ = y m
     rw [stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply, Fin.succAbove_zero]
     rw [Finset.sum_eq_single m]
     · intro b hb hbm
@@ -204,7 +204,7 @@ theorem coneTail_cofaceTop_succ {k : ℕ} (j : Fin (k + 1 + 1)) (y : Delta (k + 
     (hy : (y : Fin (k + 1 + 1) → ℝ) 0 ≠ 1) :
     coneTail (cofaceTop (k + 1) j.succ y) = cofaceTop k j (coneTail y) := by
   have h0 : (cofaceTop (k + 1) j.succ y : Fin (k + 1 + 1 + 1) → ℝ) 0 = (y : Fin (k + 1 + 1) → ℝ) 0 := by
-    show (stdSimplex.map (S := ℝ) (Fin.succAbove j.succ) y : Fin (k + 1 + 1 + 1) → ℝ) 0 = y 0
+    change (stdSimplex.map (S := ℝ) (Fin.succAbove j.succ) y : Fin (k + 1 + 1 + 1) → ℝ) 0 = y 0
     rw [stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
     have hj0 : (j.succ : Fin (k + 1 + 1 + 1)).succAbove 0 = 0 := by
       rw [Fin.succAbove_of_castSucc_lt]
@@ -226,12 +226,12 @@ theorem coneTail_cofaceTop_succ {k : ℕ} (j : Fin (k + 1 + 1)) (y : Delta (k + 
   apply Subtype.ext
   ext i
   have h_app1 := coneTail_apply (cofaceTop (k + 1) j.succ y) h_ne i
-  show (coneTail (cofaceTop (k + 1) j.succ y) : Fin (k + 1 + 1) → ℝ) i = (cofaceTop k j (coneTail y) : Fin (k + 1 + 1) → ℝ) i
+  change (coneTail (cofaceTop (k + 1) j.succ y) : Fin (k + 1 + 1) → ℝ) i = (cofaceTop k j (coneTail y) : Fin (k + 1 + 1) → ℝ) i
   rw [h_app1, h0]
-  show (cofaceTop (k + 1) j.succ y : Fin (k + 1 + 1 + 1) → ℝ) i.succ / (1 - (y : Fin (k + 1 + 1) → ℝ) 0)
+  change (cofaceTop (k + 1) j.succ y : Fin (k + 1 + 1 + 1) → ℝ) i.succ / (1 - (y : Fin (k + 1 + 1) → ℝ) 0)
     = (stdSimplex.map (S := ℝ) (Fin.succAbove j) (coneTail y) : Fin (k + 1 + 1) → ℝ) i
   rw [stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
-  show (stdSimplex.map (S := ℝ) (Fin.succAbove j.succ) y : Fin (k + 1 + 1 + 1) → ℝ) i.succ / (1 - (y : Fin (k + 1 + 1) → ℝ) 0)
+  change (stdSimplex.map (S := ℝ) (Fin.succAbove j.succ) y : Fin (k + 1 + 1 + 1) → ℝ) i.succ / (1 - (y : Fin (k + 1 + 1) → ℝ) 0)
     = ∑ b ∈ Finset.filter (fun x => j.succAbove x = i) Finset.univ, (coneTail y : Fin (k + 1) → ℝ) b
   rw [stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
   have h_sum_tail : (∑ b ∈ Finset.filter (fun x => j.succAbove x = i) Finset.univ, (coneTail y : Fin (k + 1) → ℝ) b)
@@ -269,7 +269,7 @@ theorem cone_face_succ {n k : ℕ} (v : Delta n) (τ : Delta (k + 1) → Delta n
       = (fun y : Delta (k + 1) => affineConeMap v (fun z : Delta k => τ (cofaceTop k j z)) y) := by
   funext y
   have h0 : (cofaceTop (k + 1) j.succ y : Fin (k + 1 + 1 + 1) → ℝ) 0 = (y : Fin (k + 1 + 1) → ℝ) 0 := by
-    show (stdSimplex.map (S := ℝ) (Fin.succAbove j.succ) y : Fin (k + 1 + 1 + 1) → ℝ) 0 = y 0
+    change (stdSimplex.map (S := ℝ) (Fin.succAbove j.succ) y : Fin (k + 1 + 1 + 1) → ℝ) 0 = y 0
     rw [stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
     have hj0 : (j.succ : Fin (k + 1 + 1 + 1)).succAbove 0 = 0 := by
       rw [Fin.succAbove_of_castSucc_lt]; rfl; exact Fin.succ_pos j
@@ -286,7 +286,7 @@ theorem cone_face_succ {n k : ℕ} (v : Delta n) (τ : Delta (k + 1) → Delta n
       exact (h (Finset.mem_filter.mpr ⟨Finset.mem_univ _, hj0⟩)).elim
   apply Subtype.ext
   ext c
-  show (affineConeMap v τ (cofaceTop (k + 1) j.succ y) : Fin (n + 1) → ℝ) c
+  change (affineConeMap v τ (cofaceTop (k + 1) j.succ y) : Fin (n + 1) → ℝ) c
     = (affineConeMap v (fun z => τ (cofaceTop k j z)) y : Fin (n + 1) → ℝ) c
   rw [affineConeMap_coord, affineConeMap_coord, h0]
   by_cases hy : (y : Fin (k + 1 + 1) → ℝ) 0 = 1
@@ -327,7 +327,7 @@ theorem coneSimplex_face_zero (n k : ℕ) (v : Delta n)
   rw [faceSimplex_continuousMap, coneSimplex_continuousMap]
   apply ContinuousMap.ext
   intro y
-  show (affineConeContinuousMap v (singularSimplexAsContinuousMap (TopCat.of (Delta n)) k σ)) (cofaceTop k 0 y)
+  change (affineConeContinuousMap v (singularSimplexAsContinuousMap (TopCat.of (Delta n)) k σ)) (cofaceTop k 0 y)
     = (singularSimplexAsContinuousMap (TopCat.of (Delta n)) k σ) y
   simp only [affineConeContinuousMap_apply]
   exact congrFun (cone_face_zero v (singularSimplexAsContinuousMap (TopCat.of (Delta n)) k σ)) y
@@ -340,9 +340,9 @@ theorem coneSimplex_face_succ (n k : ℕ) (v : Delta n)
   rw [faceSimplex_continuousMap, coneSimplex_continuousMap, coneSimplex_continuousMap, faceSimplex_continuousMap]
   apply ContinuousMap.ext
   intro y
-  show (affineConeContinuousMap v (singularSimplexAsContinuousMap (TopCat.of (Delta n)) (k + 1) σ)) (cofaceTop (k + 1) j.succ y)
+  change (affineConeContinuousMap v (singularSimplexAsContinuousMap (TopCat.of (Delta n)) (k + 1) σ)) (cofaceTop (k + 1) j.succ y)
     = (affineConeContinuousMap v (ContinuousMap.comp (singularSimplexAsContinuousMap (TopCat.of (Delta n)) (k + 1) σ) (cofaceTop k j))) y
-  show (affineConeMap v (singularSimplexAsContinuousMap (TopCat.of (Delta n)) (k + 1) σ)) (cofaceTop (k + 1) j.succ y)
+  change (affineConeMap v (singularSimplexAsContinuousMap (TopCat.of (Delta n)) (k + 1) σ)) (cofaceTop (k + 1) j.succ y)
     = (affineConeMap v (fun z => (singularSimplexAsContinuousMap (TopCat.of (Delta n)) (k + 1) σ) (cofaceTop k j z))) y
   exact congrFun (cone_face_succ v (singularSimplexAsContinuousMap (TopCat.of (Delta n)) (k + 1) σ) j) y
 
@@ -354,7 +354,7 @@ theorem coneSimplex_face_one_zero (n : ℕ) (v : Delta n)
   rw [faceSimplex_continuousMap, coneSimplex_continuousMap, constSimplex0_continuousMap]
   apply ContinuousMap.ext
   intro y
-  show (affineConeContinuousMap v (singularSimplexAsContinuousMap (TopCat.of (Delta n)) 0 σ)) (cofaceTop 0 1 y) = v
+  change (affineConeContinuousMap v (singularSimplexAsContinuousMap (TopCat.of (Delta n)) 0 σ)) (cofaceTop 0 1 y) = v
   simp only [affineConeContinuousMap_apply]
   have h1 : (cofaceTop 0 1 y : Fin 2 → ℝ) 0 = 1 := by
     have hcast := cofaceTop_last_castSucc 0 0 y
@@ -365,7 +365,7 @@ theorem coneSimplex_face_one_zero (n : ℕ) (v : Delta n)
     exact hcast.trans hy0
   apply Subtype.ext
   ext j
-  show (affineConeMap v (singularSimplexAsContinuousMap (TopCat.of (Delta n)) 0 σ) (cofaceTop 0 1 y) : Fin (n + 1) → ℝ) j = (v : Fin (n + 1) → ℝ) j
+  change (affineConeMap v (singularSimplexAsContinuousMap (TopCat.of (Delta n)) 0 σ) (cofaceTop 0 1 y) : Fin (n + 1) → ℝ) j = (v : Fin (n + 1) → ℝ) j
   rw [affineConeMap_coord, h1]
   ring
 
@@ -396,7 +396,7 @@ theorem coneLinearMap_generator (R : Type) [CommRing R] (n k : ℕ) (v : Delta n
     (σ : singularSimplices (TopCat.of (Delta n)) k) :
     (coneLinearMap R n k v).hom (chainGenerator R (TopCat.of (Delta n)) k σ)
       = coneGenerator R n k v σ := by
-  have h := Sigma.ι_desc (fun σ => coneGeneratorHom R n k v σ) σ
+  have h := Sigma.ι_comp_desc (fun σ => coneGeneratorHom R n k v σ) σ
   have happ := congrArg (fun (m : ModuleCat.of R R ⟶ singularChainGroup R (TopCat.of (Delta n)) (k + 1)) => m.hom (1 : R)) h
   simp only [ModuleCat.hom_comp, LinearMap.comp_apply] at happ
   have h1 : (coneGeneratorHom R n k v σ).hom (1 : R) = coneGenerator R n k v σ := one_smul R (coneGenerator R n k v σ)
@@ -442,7 +442,7 @@ theorem singularBoundary_coneGenerator_succ (R : Type) [CommRing R] (n m : ℕ) 
     rw [map_smul]
     erw [coneLinearMap_generator]
     rw [coneSimplex_face_succ]
-    show ((-1 : R) ^ (i.succ : ℕ)) • coneGenerator R n m v (AlexanderWhitney.faceSimplex (TopCat.of ↑(Delta n)) m i σ) = _
+    change ((-1 : R) ^ (i.succ : ℕ)) • coneGenerator R n m v (AlexanderWhitney.faceSimplex (TopCat.of ↑(Delta n)) m i σ) = _
     rw [Fin.val_succ, pow_succ, mul_smul, smul_comm, neg_one_smul]
   rw [sub_eq_add_neg, h_neg_sum]
 

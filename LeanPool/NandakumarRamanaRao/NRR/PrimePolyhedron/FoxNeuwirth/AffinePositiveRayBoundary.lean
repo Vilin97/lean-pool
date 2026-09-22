@@ -2239,13 +2239,13 @@ theorem faceSign_mul_determinantIndex_eq_directionIndex
   · have hpowR : ((-1 : Real) ^ k.1) = 1 := Even.neg_one_pow heven
     have hpowZ : ((-1 : ZMod p) ^ k.1) = 1 := Even.neg_one_pow heven
     rcases lt_trichotomy (facetDeterminant hp V k) 0 with hneg | hzero | hpos
-    · simp [FoxNeuwirthOrderComplex.SimplicialChain.faceSign, cofactorDirection,
+    · simp [ cofactorDirection,
         FoxNeuwirthOrderComplex.AffineVertexMap.determinantIndex,
         hpowR, hpowZ, hneg]
-    · simp [FoxNeuwirthOrderComplex.SimplicialChain.faceSign, cofactorDirection,
+    · simp [ cofactorDirection,
         FoxNeuwirthOrderComplex.AffineVertexMap.determinantIndex,
         hpowR, hpowZ, hzero]
-    · simp [FoxNeuwirthOrderComplex.SimplicialChain.faceSign, cofactorDirection,
+    · simp [ cofactorDirection,
         FoxNeuwirthOrderComplex.AffineVertexMap.determinantIndex,
         hpowR, hpowZ, hpos]
   · have hpowR : ((-1 : Real) ^ k.1) = -1 := Odd.neg_one_pow hodd
@@ -2255,15 +2255,15 @@ theorem faceSign_mul_determinantIndex_eq_directionIndex
       have hnpos : ¬ 0 < facetDeterminant hp V k := by linarith
       simp [cofactorDirection,
         FoxNeuwirthOrderComplex.AffineVertexMap.determinantIndex,
-        hpowR, hpowZ, hneg, hprod, hnpos]
-    · simp [FoxNeuwirthOrderComplex.SimplicialChain.faceSign, cofactorDirection,
+        hpowR, hpowZ, hneg,  hnpos]
+    · simp [ cofactorDirection,
         FoxNeuwirthOrderComplex.AffineVertexMap.determinantIndex,
         hpowR, hpowZ, hzero]
     · have hprod : (-1 : Real) * facetDeterminant hp V k < 0 := by linarith
       have hnneg : ¬ facetDeterminant hp V k < 0 := by linarith
       simp [cofactorDirection,
         FoxNeuwirthOrderComplex.AffineVertexMap.determinantIndex,
-        hpowR, hpowZ, hpos, hprod, hnneg]
+        hpowR, hpowZ, hpos,  hnneg]
 
 /-- The exact local line-geometry statement needed for the prism argument.  It says that facet
 regularity and origin avoidance produce the two signed boundary points of the positive-ray
@@ -2371,20 +2371,20 @@ theorem alternating_facetIndex_sum_eq_zero_of_certificate
   | empty hnone =>
       apply Finset.sum_eq_zero
       intro k hk
-      rw [facetIndex, if_neg (hnone k)]
+      rw [facetIndex, ite_eq_right (hnone k)]
   | pair lower upper hne hlower hupper hfacets =>
       have hlow : facetIndex hp V lower = 1 := by
-        rw [facetIndex, if_pos ((hfacets lower).2 (Or.inl rfl))]
+        rw [facetIndex, ite_eq_left ((hfacets lower).2 (Or.inl rfl))]
         rw [faceSign_mul_determinantIndex_eq_directionIndex]
         simp [FoxNeuwirthOrderComplex.AffineVertexMap.determinantIndex, hlower]
       have hupp : facetIndex hp V upper = -1 := by
-        rw [facetIndex, if_pos ((hfacets upper).2 (Or.inr rfl))]
+        rw [facetIndex, ite_eq_left ((hfacets upper).2 (Or.inr rfl))]
         rw [faceSign_mul_determinantIndex_eq_directionIndex]
         have hnpos : ¬ 0 < cofactorDirection hp V upper := by linarith
         simp [FoxNeuwirthOrderComplex.AffineVertexMap.determinantIndex, hupper, hnpos]
       have hother : ∀ k, k ≠ lower → k ≠ upper → facetIndex hp V k = 0 := by
         intro k hkl hku
-        rw [facetIndex, if_neg]
+        rw [facetIndex, ite_eq_right]
         intro hk
         rcases (hfacets k).1 hk with hk | hk
         · exact hkl hk

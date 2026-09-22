@@ -163,7 +163,7 @@ theorem chart_spatial_eq_linear
     staircaseSpatialLinear,
     RefinedAffineMap.chart, Simplex.refinedContinuousMap,
     Simplex.realizationContinuousMap, Simplex.realizationPoint,
-    Simplex.chartWeight, staircasePoint, spatialPoint, spatialWeight,
+     staircasePoint, spatialPoint,
     StandardSimplex.toDelta, StandardSimplex.ofDelta, affineCompMap_coe,
     Fin.ext_iff, Fin.val_cast, hspatial]
   change (ReferenceAffineOrbitCount.topRepr hp q.1.1.1).chartWeight

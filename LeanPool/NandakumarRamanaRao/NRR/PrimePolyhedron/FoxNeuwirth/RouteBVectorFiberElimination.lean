@@ -90,8 +90,8 @@ Fubini. -/
 theorem VectorBlockEliminationData.volume_bad_eq_zero
     {p : Nat} (D : VectorBlockEliminationData p) :
     ((volume : Measure D.Rest).prod volume) D.badInSplitCoordinates = 0 := by
-  letI : MeasureSpace D.Rest := D.instMeasureSpaceRest
-  letI : SFinite (volume : Measure D.Rest) := D.instSFiniteVolumeRest
+  let : MeasureSpace D.Rest := D.instMeasureSpaceRest
+  let : SFinite (volume : Measure D.Rest) := D.instSFiniteVolumeRest
   exact volume_prod_eq_zero_of_fiberwise_eq_zero
     (volume : Measure D.Rest) volume D.badInSplitCoordinates
     D.measurable_bad D.fiber_null

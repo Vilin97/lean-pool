@@ -92,7 +92,7 @@ noncomputable def cofaceTop (n : ℕ) (k : Fin (n + 2)) : C(Delta n, Delta (n + 
 the deleted vertex `k`. -/
 theorem cofaceTop_apply_base (n : ℕ) (k : Fin (n + 2)) (y : Delta n) :
     (cofaceTop n k y : Fin (n + 2) → ℝ) k = 0 := by
-  show (stdSimplex.map (S := ℝ) (Fin.succAbove k) y : Fin (n + 2) → ℝ) k = 0
+  change (stdSimplex.map (S := ℝ) (Fin.succAbove k) y : Fin (n + 2) → ℝ) k = 0
   rw [stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
   apply Finset.sum_eq_zero
   intro x hx
@@ -102,7 +102,7 @@ theorem cofaceTop_apply_base (n : ℕ) (k : Fin (n + 2)) (y : Delta n) :
 its `castSucc t` coordinate is the `t` coordinate of `y`. -/
 theorem cofaceTop_last_castSucc (n : ℕ) (t : Fin (n + 1)) (y : Delta n) :
     (cofaceTop n (Fin.last (n + 1)) y : Fin (n + 2) → ℝ) (Fin.castSucc t) = y t := by
-  show (stdSimplex.map (S := ℝ) (Fin.succAbove (Fin.last (n + 1))) y : Fin (n + 2) → ℝ)
+  change (stdSimplex.map (S := ℝ) (Fin.succAbove (Fin.last (n + 1))) y : Fin (n + 2) → ℝ)
       (Fin.castSucc t) = y t
   rw [stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply, Fin.succAbove_last]
   rw [Finset.sum_eq_single t]

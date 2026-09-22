@@ -368,7 +368,7 @@ theorem sidePairing_tupleBoundaryWeight
   classical
   unfold RelativeSubdivisionCylinderCombinatorics.Oriented.sidePairing
     tupleBoundaryWeight fullBoundaryPairing
-  simp only [SimplicialChain.faceSign, facetTuple, deleteTuple, sideTuple]
+  simp only [SimplicialChain.faceSign, facetTuple, deleteTuple]
   simp_rw [Finset.mul_sum]
   rw [← Finset.sum_neg_distrib]
   apply Finset.sum_congr rfl
@@ -398,7 +398,7 @@ theorem neg_weighted_sidePairing_eq_recursive_side_side
                   (RelativeSubdivisionCylinderCombinatorics.vertex n q i))) := by
   classical
   unfold RelativeSubdivisionCylinderCombinatorics.Oriented.sidePairing
-  simp only [SimplicialChain.faceSign, sideTuple]
+  simp only [SimplicialChain.faceSign]
   simp_rw [Finset.mul_sum]
   rw [← Finset.sum_neg_distrib]
   apply Finset.sum_congr rfl

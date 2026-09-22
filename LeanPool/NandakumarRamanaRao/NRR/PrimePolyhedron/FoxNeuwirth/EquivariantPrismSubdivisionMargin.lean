@@ -136,7 +136,7 @@ theorem exists_staircase_refinement_oscillation
         (H.map (chart hp N L q (StandardSimplex.toDelta v))) < eps := by
   classical
   let Q := BasePrismCell hp N
-  letI : NeZero p := ⟨hp.ne_zero⟩
+  let : NeZero p := ⟨hp.ne_zero⟩
   have huc : ∀ q : Q,
       UniformContinuous (H.map.comp (basePrismChart hp N q)) := by
     intro q

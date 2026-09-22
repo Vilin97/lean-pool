@@ -200,7 +200,7 @@ theorem cupRight_cocycle_cond (X : TopCat.{0}) (p q : ℕ)
     ((cochainCxZMod2 X).iCycles p ≫ cupRightMor X p q ψ) ≫ (cochainCxZMod2 X).d (p + q) (p + q + 1)
       = 0 := by
   apply ModuleCat.hom_ext; apply LinearMap.ext; intro c
-  show cochainCoboundary (ZMod 2) X (p + q)
+  change cochainCoboundary (ZMod 2) X (p + q)
       (cochainCup p q (((cochainCxZMod2 X).iCycles p).hom c) ψ) = 0
   exact cochainCupZMod2_respects_cocycles p q _ ψ (cochainCoboundary_iCycles X p c) hψ
 
@@ -210,7 +210,7 @@ theorem cupLeftFixed_cocycle_cond (X : TopCat.{0}) (p q : ℕ)
     ((cochainCxZMod2 X).iCycles q ≫ cupLeftFixedMor X p q φ) ≫
         (cochainCxZMod2 X).d (p + q) (p + q + 1) = 0 := by
   apply ModuleCat.hom_ext; apply LinearMap.ext; intro c
-  show cochainCoboundary (ZMod 2) X (p + q)
+  change cochainCoboundary (ZMod 2) X (p + q)
       (cochainCup p q φ (((cochainCxZMod2 X).iCycles q).hom c)) = 0
   exact cochainCupZMod2_respects_cocycles p q φ _ hφ (cochainCoboundary_iCycles X q c)
 
@@ -372,7 +372,7 @@ theorem cupLeftMor_toCycles (X : TopCat.{0}) (p q : ℕ)
     (ψ : singularCochainGroup (ZMod 2) X q) (hψ : cochainCoboundary (ZMod 2) X q ψ = 0) :
     (cochainCxZMod2 X).toCycles ((ComplexShape.up ℕ).prev p) p ≫ cupLeftMor X p q ψ hψ = 0 := by
   apply ModuleCat.hom_ext; apply LinearMap.ext; intro η
-  show (cupLeftMor X p q ψ hψ).hom
+  change (cupLeftMor X p q ψ hψ).hom
       (((cochainCxZMod2 X).toCycles ((ComplexShape.up ℕ).prev p) p).hom η) = 0
   rw [cupLeftMor_apply]
   have heq : cochainCup p q (((cochainCxZMod2 X).iCycles p).hom
@@ -389,7 +389,7 @@ theorem cupRightMor'_toCycles (X : TopCat.{0}) (p q : ℕ)
     (φ : singularCochainGroup (ZMod 2) X p) (hφ : cochainCoboundary (ZMod 2) X p φ = 0) :
     (cochainCxZMod2 X).toCycles ((ComplexShape.up ℕ).prev q) q ≫ cupRightMor' X p q φ hφ = 0 := by
   apply ModuleCat.hom_ext; apply LinearMap.ext; intro η
-  show (cupRightMor' X p q φ hφ).hom
+  change (cupRightMor' X p q φ hφ).hom
       (((cochainCxZMod2 X).toCycles ((ComplexShape.up ℕ).prev q) q).hom η) = 0
   rw [cupRightMor'_apply]
   have heq : cochainCup p q φ (((cochainCxZMod2 X).iCycles q).hom
@@ -439,7 +439,7 @@ theorem cupHomologyLeft_apply (X : TopCat.{0}) (p q : ℕ)
       = cocycleClass X (p + q) (cochainCup p q φ ψ)
           (cochainCupZMod2_respects_cocycles p q φ ψ hφ hψ) := by
   dsimp [cocycleClass]
-  show ((cochainCxZMod2 X).homologyπ p ≫ cupHomologyLeft X p q ψ hψ).hom
+  change ((cochainCxZMod2 X).homologyπ p ≫ cupHomologyLeft X p q ψ hψ).hom
       ((cochainCxZMod2 X).cyclesMk φ (p + 1) (cochainCx_next p) hφ) = _
   rw [homologyπ_cupHomologyLeft]
   exact cupLeftMor_cyclesMk X p q ψ hψ φ hφ
@@ -452,7 +452,7 @@ theorem cupHomologyRight_apply (X : TopCat.{0}) (p q : ℕ)
       = cocycleClass X (p + q) (cochainCup p q φ ψ)
           (cochainCupZMod2_respects_cocycles p q φ ψ hφ hψ) := by
   dsimp [cocycleClass]
-  show ((cochainCxZMod2 X).homologyπ q ≫ cupHomologyRight X p q φ hφ).hom
+  change ((cochainCxZMod2 X).homologyπ q ≫ cupHomologyRight X p q φ hφ).hom
       ((cochainCxZMod2 X).cyclesMk ψ (q + 1) (cochainCx_next q) hψ) = _
   rw [homologyπ_cupHomologyRight]
   exact cupRightMor'_cyclesMk X p q φ hφ ψ hψ
@@ -529,7 +529,7 @@ theorem cochainPullback_cocycle {X Y : TopCat.{0}} (f : X ⟶ Y) (n : ℕ)
     (φ : singularCochainGroup (ZMod 2) Y n) (hφ : cochainCoboundary (ZMod 2) Y n φ = 0) :
     cochainCoboundary (ZMod 2) X n (cochainPullback f n φ) = 0 := by
   rw [cochainPullback_cochainCoboundary, hφ]
-  show (((singularCochainComplexZMod2).map f.op).f (n + 1)).hom 0 = 0
+  change (((singularCochainComplexZMod2).map f.op).f (n + 1)).hom 0 = 0
   rw [map_zero]
 
 /-
@@ -624,7 +624,7 @@ theorem cohPullback_cupPowZMod2 {X Y : TopCat.{0}} (f : X ⟶ Y) (a : cohomology
     (cohPullback f n).hom (cupPowZMod2 a n) = cupPowZMod2 ((cohPullback f 1).hom a) n := by
   induction n with
   | zero =>
-      show (cohPullback f 0).hom (oneZMod2 Y) = oneZMod2 X
+      change (cohPullback f 0).hom (oneZMod2 Y) = oneZMod2 X
       rw [oneZMod2, cohPullback_cocycleClass]
       refine cocycleClass_congr X 0 ?_ _ _
       apply cochain_ext; intro σ

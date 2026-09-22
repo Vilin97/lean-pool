@@ -46,7 +46,7 @@ def orientedTopCoefficient (b : BarredPermutation p) : ZMod p :=
 theorem orientedTopCoefficient_ne_zero_iff
     (hp : Nat.Prime p) (b : BarredPermutation p) :
     orientedTopCoefficient b ≠ 0 ↔ b.IsTop := by
-  letI : Fact (Nat.Prime p) := ⟨hp⟩
+  let : Fact (Nat.Prime p) := ⟨hp⟩
   by_cases hb : b.IsTop
   · rcases b.orientationSign_eq_one_or_neg_one with hsign | hsign
     · simp [orientedTopCoefficient, hb, hsign]
@@ -60,9 +60,9 @@ theorem signedIncidence_mul_orientedTopCoefficient
     (hab : a.IsFacet b) (hb : b.IsTop) :
     (signedIncidence a b : ZMod p) * orientedTopCoefficient b =
       (a.orientationSign : ZMod p) := by
-  letI : Fact (Nat.Prime p) := ⟨hp⟩
+  let : Fact (Nat.Prime p) := ⟨hp⟩
   rw [signedIncidence_of_facet hab]
-  rw [orientedTopCoefficient, if_pos hb]
+  rw [orientedTopCoefficient, ite_eq_left hb]
   push_cast
   rw [mul_assoc, ← Int.cast_mul,
     BarredPermutation.orientationSign_sq]

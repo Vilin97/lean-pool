@@ -51,16 +51,16 @@ theorem realizationPoint_prime_smul
       have := congrArg (fun z : BarredPermutation p =>
         z.relabel (PrimeSymmetry.toPerm p g).symm) h
       simpa using this
-    simp [h, h']
+    simp [ h']
   · have h' : s i ≠ c.relabel (PrimeSymmetry.toPerm p g).symm := by
       intro hs
       apply h
       have := congrArg (fun z : BarredPermutation p =>
         z.relabel (PrimeSymmetry.toPerm p g)) hs
       simpa using this
-    rw [if_neg h']
+    rw [ite_eq_right h']
     change (if g • (s i : BarredPermutation p) = c then w i else 0) = 0
-    exact if_neg h
+    exact ite_eq_right h
 
 /-- Prime relabelling commutes with every iterated refined chart. -/
 theorem refinedPoint_prime_smul
@@ -165,7 +165,7 @@ theorem simplex_active_vertex_and_coefficient_eq
       · have htc : t j ≠ c := by
           intro htc
           exact hsc (hst.symm.trans htc)
-        simp [StandardSimplex.ofDelta, hsc, htc]
+        simp [ hsc, htc]
   constructor
   · change
       s.realizationPoint (StandardSimplex.ofDelta z) =

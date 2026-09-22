@@ -76,10 +76,9 @@ noncomputable def deltaCast {m n : Nat} (h : m = n) : Delta m → Delta n :=
     (n : Nat) (k : Fin (n + 2)) (x : Delta n) (i : Fin (n + 1)) :
     cofacePoint n k x (k.succAbove i) = x i := by
   unfold cofacePoint
-  simp +decide [Finset.sum_ite, Finset.filter_lt_eq_Ioi,
-    Finset.filter_gt_eq_Iio]
-  simp +decide [FunOnFinite.linearMap, Finset.sum_ite,
-    Finset.filter_lt_eq_Ioi, Finset.filter_gt_eq_Iio]
+  simp +decide [ Finset.filter_lt_eq_Ioi]
+  simp +decide [FunOnFinite.linearMap,
+    Finset.filter_lt_eq_Ioi]
   simp +decide [Finsupp.mapDomain, Finsupp.single_apply]
   exact fun h => h.symm
 
@@ -103,10 +102,10 @@ noncomputable def deltaCast {m n : Nat} (h : m = n) : Delta m → Delta n :=
 theorem fin_succAbove_val {n : Nat} (k : Fin (n + 1)) (i : Fin n) :
     (k.succAbove i).1 = if i.1 < k.1 then i.1 else i.1 + 1 := by
   rcases lt_or_ge i.castSucc k with hlt | hge
-  · rw [Fin.succAbove_of_castSucc_lt k i hlt, if_pos]
+  · rw [Fin.succAbove_of_castSucc_lt k i hlt, ite_eq_left]
     · rfl
     · simpa [Fin.lt_def] using hlt
-  · rw [Fin.succAbove_of_le_castSucc k i hge, if_neg]
+  · rw [Fin.succAbove_of_le_castSucc k i hge, ite_eq_right]
     · rfl
     · simp only [Fin.le_def, Fin.val_castSucc] at hge
       omega
@@ -148,8 +147,7 @@ theorem oneStep_internal_face_eq
   funext x
   apply congrArg sigma
   rw [affineCompMap_succ, affineCompMap_succ]
-  simp only [affineCompMap_zero, ContinuousMap.id_apply,
-    affineSubdivContinuousMap_apply]
+  simp only [affineCompMap_zero, ContinuousMap.id_apply]
   apply affineSubdiv_face_internal_swap
   exact cofacePoint_apply_deleted n (Fin.castSucc i) x
 
@@ -163,8 +161,7 @@ theorem oneStep_last_face_eq
   funext x
   apply congrArg sigma
   rw [affineCompMap_succ, affineCompMap_succ]
-  simp only [affineCompMap_zero, ContinuousMap.id_apply,
-    affineSubdivContinuousMap_apply]
+  simp only [affineCompMap_zero, ContinuousMap.id_apply]
   let pi : Equiv.Perm (Fin (n + 2)) := lastFaceEquiv n (j, rho)
   have hj : j = pi (lastVertex n) := by
     simpa [pi, lastFaceEquiv_apply] using
@@ -341,8 +338,7 @@ theorem sum_cycle_right3
       iteratedFacetMap n 1
         (fun y => sigma (affineCompMap (n + 1) N rho y)) (fun _ => pi) k := by
   funext x
-  simp [iteratedFacetMap, affineCompMap_snoc, affineCompMap_succ,
-    Function.comp_def]
+  simp [iteratedFacetMap,  affineCompMap_succ]
 
 @[simp] theorem iteratedBoundaryMap_snoc
     {X : Type} (n N : Nat) (sigma : Delta (n + 1) → X)
@@ -352,7 +348,7 @@ theorem sum_cycle_right3
     iteratedBoundaryMap n (N + 1) sigma j (Fin.snoc eta theta) =
       fun x => iteratedBoundaryMap n N sigma j eta (affineSubdivMap n theta x) := by
   funext x
-  simp [iteratedBoundaryMap, affineCompMap_snoc, Function.comp_def]
+  simp [iteratedBoundaryMap, affineCompMap_snoc]
 
 @[simp] theorem iteratedFacetMap_zero
     {X : Type} (n : Nat) (sigma : Delta (n + 1) → X)
@@ -514,7 +510,7 @@ noncomputable def genericStaircaseSpatialPoint
   · intro i
     exact Finset.sum_nonneg fun j _ => by
       by_cases h : genericStaircaseSpatial k j = i
-      · simp [h, w.2.1 j]
+      · simp [h]
       · simp [h]
   · calc
       (∑ i, ∑ j : Fin (n + 2),
@@ -526,7 +522,7 @@ noncomputable def genericStaircaseSpatialPoint
         rw [Finset.sum_eq_single (genericStaircaseSpatial k j)]
         · simp
         · intro i hi hne
-          rw [if_neg (Ne.symm hne)]
+          rw [ite_eq_right (Ne.symm hne)]
         · simp
       _ = 1 := w.2.2
 
@@ -538,7 +534,7 @@ noncomputable def genericStaircaseIntervalPoint
   constructor
   · exact Finset.sum_nonneg fun j _ => by
       by_cases h : genericStaircaseTime k j = 1
-      · simp [h, w.2.1 j]
+      · simp [h]
       · simp [h]
   · calc
       (∑ j : Fin (n + 2), if genericStaircaseTime k j = 1 then w j else 0)
@@ -546,8 +542,8 @@ noncomputable def genericStaircaseIntervalPoint
             apply Finset.sum_le_sum
             intro j hj
             by_cases h : genericStaircaseTime k j = 1
-            · simp [h, w.2.1 j]
-            · simp [h, w.2.1 j]
+            · simp [h]
+            · simp [h]
       _ = 1 := w.2.2
 
 /-- Generic staircase prism simplex over a spatial simplex map. -/
@@ -731,16 +727,16 @@ noncomputable def staircaseFacetEquiv
     · by_cases heq : j.1 = k.1
       · by_cases hz : k.1 = 0
         · apply Prod.ext <;> apply Fin.ext <;>
-            simp [staircaseFacetClassify, staircaseFacetUnclassify, hlt, heq, hz]
+            simp [staircaseFacetClassify, staircaseFacetUnclassify,  heq, hz]
         · apply Prod.ext <;> apply Fin.ext <;>
-            simp [staircaseFacetClassify, staircaseFacetUnclassify, hlt, heq, hz] <;> omega
+            simp [staircaseFacetClassify, staircaseFacetUnclassify,  heq, hz] <;> omega
       · by_cases hnext : j.1 = k.1 + 1
         · by_cases hlast : k.1 = n
           · apply Prod.ext <;> apply Fin.ext <;>
-              simp [staircaseFacetClassify, staircaseFacetUnclassify, hlt, heq,
+              simp [staircaseFacetClassify, staircaseFacetUnclassify,
                 hnext, hlast]
           · apply Prod.ext <;> apply Fin.ext <;>
-              simp [staircaseFacetClassify, staircaseFacetUnclassify, hlt, heq,
+              simp [staircaseFacetClassify, staircaseFacetUnclassify,
                 hnext, hlast]
         · have hfar : k.1 + 1 < j.1 := by omega
           have hside : ¬ j.1 - 1 ≤ k.1 := by omega
@@ -942,7 +938,7 @@ theorem staircase_upper_face_eq
         Fin.succAbove (0 : Fin (n + 2)) = id := by
       funext i
       apply Fin.ext
-      simp [genericStaircaseSpatial, fin_succAbove_val]
+      simp [genericStaircaseSpatial]
     rw [hf]
     apply stdSimplex.ext
     funext i
@@ -950,7 +946,7 @@ theorem staircase_upper_face_eq
     exact Finset.sum_eq_single i (by simp) (by simp)
   · apply Subtype.ext
     simp only [staircasePrismMap, upperEndpointMap,
-      genericStaircaseIntervalPoint, genericStaircaseTime, Prod.snd]
+      genericStaircaseIntervalPoint, genericStaircaseTime]
     rw [Fin.sum_univ_succ]
     simp +instances only [Fin.val_zero, zero_le, ↓reduceIte, Fin.val_succ]
     have hs : (∑ i : Fin (n + 1), cofacePoint n 0 x i.succ) =
@@ -963,7 +959,7 @@ theorem staircase_upper_face_eq
       if (if i.val + 1 ≤ 0 then (0 : Fin 2) else 1) = 1
       then cofacePoint n 0 x i.succ else 0) = 1
     have hpos : ∀ i : Fin (n + 1), ¬ i.val + 1 ≤ 0 := by intro i; omega
-    simp_rw [if_neg (hpos _)]
+    simp_rw [ite_eq_right (hpos _)]
     simp only [↓reduceIte, zero_add]
     rw [hs]
     exact x.2.2
@@ -993,7 +989,7 @@ theorem staircase_lower_face_eq
     exact Finset.sum_eq_single i (by simp) (by simp)
   · apply Subtype.ext
     simp only [staircasePrismMap, lowerEndpointMap,
-      genericStaircaseIntervalPoint, genericStaircaseTime, Prod.snd]
+      genericStaircaseIntervalPoint, genericStaircaseTime]
     apply Finset.sum_eq_zero
     intro i hi
     by_cases hni : n < i.1
@@ -1131,7 +1127,7 @@ theorem staircase_weighted_boundary
       apply Fin.ext
       simp [Fin.val_succ, Fin.val_castSucc]
     rw [hi, ← staircase_internal_face_eq n sigma h]
-    simp only [SimplicialChain.faceSign, Fin.val_succ, Fin.castSucc_mk, pow_succ]
+    simp only [SimplicialChain.faceSign,   pow_succ]
     ring
   have hside :
       (∑ r : Fin (n + 1), ∑ h : Fin n,
@@ -1152,19 +1148,19 @@ theorem staircase_weighted_boundary
             apply Finset.sum_congr rfl
             intro h hh
             by_cases hrh : r.1 <= h.1
-            · rw [if_pos hrh]
+            · rw [ite_eq_left hrh]
               dsimp [F]
               rw [staircase_side_face_of_le n sigma r h hrh]
-              simp only [SimplicialChain.faceSign, Fin.val_succ,
-                Fin.castSucc_mk, Fin.val_castSucc]
+              simp only [SimplicialChain.faceSign,
+                 Fin.val_castSucc]
               rw [pow_succ]
               ring
-            · rw [if_neg hrh]
+            · rw [ite_eq_right hrh]
               have hhr : h.1 < r.1 := Nat.lt_of_not_ge hrh
               dsimp [F]
               rw [staircase_side_face_of_gt n sigma r h hhr]
               simp only [SimplicialChain.faceSign, Fin.val_succ,
-                Fin.castSucc_mk, Fin.val_castSucc]
+                Fin.castSucc_mk]
               rw [pow_succ]
               ring
       _ = -∑ r : Fin (n + 1),
@@ -1404,7 +1400,7 @@ theorem nonhorizontalMapWeight_lowerEndpointMap
     (sigma : Delta (p - 1) -> Realization p) :
     nonhorizontalMapWeight hp N L a (lowerEndpointMap sigma) = 0 := by
   unfold nonhorizontalMapWeight
-  rw [if_neg]
+  rw [ite_eq_right]
   intro h
   apply h.1
   intro i
@@ -1416,7 +1412,7 @@ theorem nonhorizontalMapWeight_upperEndpointMap
     (sigma : Delta (p - 1) -> Realization p) :
     nonhorizontalMapWeight hp N L a (upperEndpointMap sigma) = 0 := by
   unfold nonhorizontalMapWeight
-  rw [if_neg]
+  rw [ite_eq_right]
   intro h
   apply h.2
   intro i
@@ -1501,12 +1497,12 @@ theorem nonhorizontalContribution_eq_occurrence_sum
             ¬ MapIsUpperHorizontal (occurrenceFacetMap hp N L o)) := by
           intro hm
           exact hnon ⟨fun h => hm.1 (hl.mpr h), fun h => hm.2 (hu.mpr h)⟩
-        rw [if_neg hmap, mul_zero]
+        rw [ite_eq_right hmap, mul_zero]
         apply Finset.sum_eq_zero
         intro s hs
         by_cases heq : facetSignature hp N L o = s
         · subst s
-          simp [hmap, hnon]
+          simp [ hnon]
         · simp [heq]
 
 /-- Prime relabelling does not change the nonhorizontal facet weight. -/
@@ -1527,14 +1523,14 @@ theorem nonhorizontalMapWeight_smul
   · have hg : ¬ MapIsLowerHorizontal (translateFacetMap p g tau) ∧
         ¬ MapIsUpperHorizontal (translateFacetMap p g tau) := by
       exact ⟨fun hlow => h.1 (hl.mp hlow), fun hupp => h.2 (hu.mp hupp)⟩
-    rw [if_pos hg, if_pos h]
+    rw [ite_eq_left hg, ite_eq_left h]
     exact realizedFacetWeight_translateFacetMap hp N L a g tau
   · have hg : ¬ (¬ MapIsLowerHorizontal (translateFacetMap p g tau) ∧
         ¬ MapIsUpperHorizontal (translateFacetMap p g tau)) := by
       intro htrans
       exact h ⟨fun hlow => htrans.1 (hl.mpr hlow),
         fun hupp => htrans.2 (hu.mpr hupp)⟩
-    rw [if_neg hg, if_neg h]
+    rw [ite_eq_right hg, ite_eq_right h]
 
 /-- Transport from the ambient prime-cardinality index to the face index of a
 `(p - 2)`-simplex. -/
@@ -1909,7 +1905,7 @@ theorem realizationPoint_prime_smul_any
       have := congrArg (fun z : BarredPermutation p =>
         z.relabel (PrimeSymmetry.toPerm p g).symm) h
       simpa using this
-    simp [h, h']
+    simp [ h']
   · have h' : s i ≠ c.relabel (PrimeSymmetry.toPerm p g).symm := by
       intro hs
       apply h
@@ -1918,7 +1914,7 @@ theorem realizationPoint_prime_smul_any
       simpa using this
     change (if g • s i = c then w i else 0) =
       (if s i = c.relabel (PrimeSymmetry.toPerm p g).symm then w i else 0)
-    rw [if_neg h, if_neg h']
+    rw [ite_eq_right h, ite_eq_right h']
 
 /-- Weight of a staircase side simplex built over a spatial facet. -/
 noncomputable def spatialSideWeight
@@ -2083,7 +2079,7 @@ private theorem fixed_refined_side_cancels (N L n : ℕ) (hp : Nat.Prime (n + 1 
             congr 1
             funext x
             apply Prod.ext
-            · simp only [translateFacetMap, staircasePrismMap, Prod.fst]
+            · simp only [translateFacetMap, staircasePrismMap]
               exact realizationPoint_prime_smul_any (n + 1 + 1) g f _
             · rfl
       _ = _ := nonhorizontalMapWeight_smul hp N L a g _
@@ -2099,10 +2095,9 @@ private theorem fixed_refined_side_cancels (N L n : ℕ) (hp : Nat.Prime (n + 1 
     funext x
     apply Realization.ext
     intro c
-    simp [W, iteratedBoundaryMap, ReferenceAffineOrbitCount.topRepr,
+    simp [ iteratedBoundaryMap, ReferenceAffineOrbitCount.topRepr,
       Simplex.realizationContinuousMap, Simplex.realizationPoint,
-      Simplex.chartWeight, cofacePoint, stdSimplex.map_coe,
-      FunOnFinite.linearMap_apply_apply]
+      Simplex.chartWeight, cofacePoint, stdSimplex.map_coe]
     change (∑ i : Fin (n + 1 + 1),
       if (ReferenceAffineOrbitCount.topRepr hp orbit) i = c then
         (StandardSimplex.ofDelta
@@ -2123,7 +2118,7 @@ private theorem fixed_refined_side_cancels (N L n : ℕ) (hp : Nat.Prime (n + 1 
     change (if (ReferenceAffineOrbitCount.topRepr hp orbit) (j.succAbove i) = c then _ else 0) =
       if (ReferenceAffineOrbitCount.topRepr hp orbit) (j.succAbove i) = c then _ else 0
     by_cases hic : (ReferenceAffineOrbitCount.topRepr hp orbit) (j.succAbove i) = c
-    · rw [if_pos hic, if_pos hic]
+    · rw [ite_eq_left hic, ite_eq_left hic]
       change stdSimplex.map (S := Real) j.succAbove
         (affineCompMap n N theta x) (j.succAbove i) =
           affineCompMap n N theta x i
@@ -2135,7 +2130,7 @@ private theorem fixed_refined_side_cancels (N L n : ℕ) (hp : Nat.Prime (n + 1 
           exact hqi (Fin.succAbove_right_injective heq)
         have hq' : j.succAbove q = j.succAbove i := by simpa using hq
         exact (hsucc hq').elim) (by simp)
-    · rw [if_neg hic, if_neg hic]
+    · rw [ite_eq_right hic, ite_eq_right hic]
   simp_rw [hmap]
   calc
     _ = (iteratedSign (ZMod (n + 1 + 1)) L eta *
@@ -2217,7 +2212,7 @@ theorem nonhorizontalContribution_eq_zero_core
   conv_lhs =>
     enter [2, cell, 2, j]
     rw [occurrenceFacetMap_eq_iteratedFacetMap_succ]
-  simp only [subdivisionSign, staircaseSign, iteratedSign, permSignCoeff]
+  simp only [subdivisionSign, staircaseSign, iteratedSign]
   ring_nf
   rw [Fintype.sum_prod_type]
   rw [Fintype.sum_prod_type]

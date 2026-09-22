@@ -236,7 +236,7 @@ def kroneckerCyclesMap (X : TopCat.{0}) (n : ℕ) :
 theorem kroneckerCyclesMap_toCycles (X : TopCat.{0}) (n : ℕ) :
     (cochainCxZMod2 X).toCycles ((ComplexShape.up ℕ).prev n) n ≫ kroneckerCyclesMap X n = 0 := by
   apply ModuleCat.hom_ext; apply LinearMap.ext; intro w
-  show (kroneckerCyclesMap X n).hom (((cochainCxZMod2 X).toCycles ((ComplexShape.up ℕ).prev n) n).hom w) = 0
+  change (kroneckerCyclesMap X n).hom (((cochainCxZMod2 X).toCycles ((ComplexShape.up ℕ).prev n) n).hom w) = 0
   rw [kroneckerCyclesMap_hom_apply]
   apply LinearMap.ext; intro x
   obtain ⟨z, rfl⟩ := (ModuleCat.epi_iff_surjective ((chainCxZMod2 X).homologyπ n)).1 inferInstance x

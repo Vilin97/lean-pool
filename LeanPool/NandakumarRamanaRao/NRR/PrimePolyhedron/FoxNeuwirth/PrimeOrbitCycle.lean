@@ -225,7 +225,7 @@ namespace AAK
 /-- Step S4: the completed Fox--Neuwirth simplicial cycle descends to a finite incidence cycle on
 prime-symmetry top and facet orbits. -/
 theorem simplestRoute_primeOrbitCycle_complete :
-    ∀ {p : Nat} (hp : Nat.Prime p),
+    ∀ {p : Nat} (_hp : Nat.Prime p),
       Nonempty (FiniteIncidenceCycle.{0, 0, 0} (ZMod p)) :=
   fun hp => ⟨FoxNeuwirthOrderComplex.PrimeOrbitCycle.orbitCycle hp⟩
 

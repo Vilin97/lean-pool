@@ -55,11 +55,11 @@ theorem barDifferenceMatrix_toSimplex_apply
     simp
   · have hkne : ¬ k = z.removal.symm r := fun hh => h hh.symm
     have hvne : (k : ℕ) ≠ (z.removal.symm r : ℕ) := fun hh => hkne (Fin.ext hh)
-    rw [if_neg hkne]
+    rw [ite_eq_right hkne]
     rcases Nat.lt_or_ge (k : ℕ) (z.removal.symm r : ℕ) with hlt | hge
-    · rw [if_pos (le_of_lt hlt), if_pos (by omega)]
+    · rw [ite_eq_left (le_of_lt hlt), ite_eq_left (by omega)]
       ring
-    · rw [if_neg (by omega), if_neg (by omega)]
+    · rw [ite_eq_right (by omega), ite_eq_right (by omega)]
       ring
 
 /-- The complete bar-removal matrix is the inverse-removal permutation matrix. -/

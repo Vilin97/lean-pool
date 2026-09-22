@@ -604,7 +604,7 @@ theorem exists_positive_localAffineCoordinateNormMargin
         · intro hw
           refine ⟨StandardSimplex.toDelta w, ?_⟩
           exact StandardSimplex.ofDelta_toDelta w
-      letI : CompactSpace (SphereOddDegree.AffineBarycentricSubdivision.Delta p) :=
+      let : CompactSpace (SphereOddDegree.AffineBarycentricSubdivision.Delta p) :=
         isCompact_iff_compactSpace.mp (isCompact_stdSimplex ℝ (Fin (p + 1)))
       have himage : IsCompact (Set.range f) := isCompact_range hf
       rw [hrange] at himage

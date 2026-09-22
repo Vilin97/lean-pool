@@ -53,7 +53,7 @@ def InStratum (c : BarredPermutation p) (s : Config p) : Prop :=
     c.InStratum c.canonicalConfig := by
   intro i j hij
   by_cases hblock : c.SameBlock i j
-  · rw [if_pos hblock]
+  · rw [ite_eq_left hblock]
     constructor
     · rw [canonicalConfig_pts, canonicalConfig_pts,
         canonicalPoint_x, canonicalPoint_x]
@@ -61,7 +61,7 @@ def InStratum (c : BarredPermutation p) (s : Config p) : Prop :=
     · rw [canonicalConfig_pts, canonicalConfig_pts,
         canonicalPoint_y, canonicalPoint_y]
       exact Nat.cast_lt.mpr hij
-  · rw [if_neg hblock]
+  · rw [ite_eq_right hblock]
     rw [canonicalConfig_pts, canonicalConfig_pts,
       canonicalPoint_x, canonicalPoint_x]
     exact Nat.cast_lt.mpr (c.blockIndex_lt_of_rank_lt_of_not_sameBlock hij hblock)

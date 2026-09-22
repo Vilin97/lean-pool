@@ -115,7 +115,7 @@ lemma prism_id_zero (H : ContinuousMap.Homotopy f.hom g.hom) (n : ℕ) :
       SSet.stdSimplex.δ_objMk₁_of_lt _ _ (by apply Fin.lt_def.mpr; simp)]
     apply SSet.yonedaEquiv.injective
     rw [SSet.yonedaEquiv.apply_symm_apply, SSet.yonedaEquiv_comp, SSet.yonedaEquiv.apply_symm_apply]
-    show _ = SSet.stdSimplex.const 1 1 (Opposite.op ⦋n⦌)
+    change _ = SSet.stdSimplex.const 1 1 (Opposite.op ⦋n⦌)
     rw [← objMk₁_zero_eq_const]
     congr 1
 lemma prism_id_last (H : ContinuousMap.Homotopy f.hom g.hom) (n : ℕ) :
@@ -142,7 +142,7 @@ lemma prism_id_last (H : ContinuousMap.Homotopy f.hom g.hom) (n : ℕ) :
       SSet.stdSimplex.δ_objMk₁_of_le _ _ (by apply Fin.le_def.mpr; simp)]
     apply SSet.yonedaEquiv.injective
     rw [SSet.yonedaEquiv.apply_symm_apply, SSet.yonedaEquiv_comp, SSet.yonedaEquiv.apply_symm_apply]
-    show _ = SSet.stdSimplex.const 1 0 (Opposite.op ⦋n⦌)
+    change _ = SSet.stdSimplex.const 1 0 (Opposite.op ⦋n⦌)
     rw [← objMk₁_last_eq_const]
     congr 1
 

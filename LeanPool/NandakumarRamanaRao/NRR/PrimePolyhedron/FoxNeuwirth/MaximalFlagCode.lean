@@ -142,11 +142,11 @@ theorem bottomPartner_involutive (hp : Nat.Prime p) :
     Function.Involutive (bottomPartner hp : Code p → Code p) := by
   intro z
   apply Code.ext
-  · show (Equiv.swap (firstCutLeftLabel hp (bottomPartner hp z))
+  · change (Equiv.swap (firstCutLeftLabel hp (bottomPartner hp z))
         (firstCutRightLabel hp (bottomPartner hp z))).trans
         (bottomPartner hp z).bottom = z.bottom
     rw [bottomPartner_leftLabel, bottomPartner_rightLabel]
-    show (Equiv.swap (firstCutRightLabel hp z) (firstCutLeftLabel hp z)).trans
+    change (Equiv.swap (firstCutRightLabel hp z) (firstCutLeftLabel hp z)).trans
       ((Equiv.swap (firstCutLeftLabel hp z) (firstCutRightLabel hp z)).trans z.bottom)
         = z.bottom
     rw [Equiv.swap_comm (firstCutRightLabel hp z), ← Equiv.trans_assoc,
@@ -214,7 +214,7 @@ theorem removalPartner_involutive
   intro z
   apply Code.ext
   · rfl
-  · show (Equiv.swap (eQ hp i.castSucc) (eQ hp i.succ)).trans
+  · change (Equiv.swap (eQ hp i.castSucc) (eQ hp i.succ)).trans
       ((Equiv.swap (eQ hp i.castSucc) (eQ hp i.succ)).trans z.removal) = z.removal
     rw [← Equiv.trans_assoc, Equiv.swap_swap, Equiv.refl_trans]
   · rfl

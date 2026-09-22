@@ -82,14 +82,14 @@ def rightCoverVertex
     coverPoint hp (combinedCells C D) (leftCoverVertex C D s) =
       leftPoint (coverPoint hp C s) := by
   simp [leftCoverVertex, coverPoint, RelativeAffineCellSystem.slotPoint,
-    combinedCells, mul_smul]
+    combinedCells]
 
 @[simp] theorem coverPoint_rightCoverVertex
     (s : CoverVertexSlot hp D) :
     coverPoint hp (combinedCells C D) (rightCoverVertex C D s) =
       rightPoint (coverPoint hp D s) := by
   simp [rightCoverVertex, coverPoint, RelativeAffineCellSystem.slotPoint,
-    combinedCells, mul_smul]
+    combinedCells]
 
 /-- Seam compatibility for two vector assignments.  It is stated directly on geometric cover
 occurrences so it applies before either component is embedded into the combined quotient. -/

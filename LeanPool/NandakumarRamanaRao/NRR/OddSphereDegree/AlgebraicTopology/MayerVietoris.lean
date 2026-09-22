@@ -136,7 +136,7 @@ theorem isZero_mvX₂_homology (U V : Opens X) (hUV : U ⊔ V = ⊤) (i : ℕ)
     (hU : IsZero ((subChainComplex R X (U : Set X)).homology i))
     (hV : IsZero ((subChainComplex R X (V : Set X)).homology i)) :
     IsZero ((mvShortComplex R U V hUV).X₂.homology i) := by
-  haveI : Limits.PreservesBinaryBiproduct
+  let : Limits.PreservesBinaryBiproduct
       (subChainComplex R X (U : Set X)) (subChainComplex R X (V : Set X))
       (HomologicalComplex.homologyFunctor (ModuleCat.{0} R) (ComplexShape.down ℕ) i) :=
     Limits.preservesBinaryBiproduct_of_preservesBiproduct _ _ _

@@ -86,7 +86,7 @@ theorem kroneckerMap_naturality (f : X ⟶ Y) (n : ℕ) :
   apply LinearMap.ext
   intro a
   obtain ⟨φ, hφ, rfl⟩ := cocycleClass_surjective Y n a
-  show (kroneckerMap X n).hom ((cohPullback f n).hom (cocycleClass Y n φ hφ))
+  change (kroneckerMap X n).hom ((cohPullback f n).hom (cocycleClass Y n φ hφ))
     = (homologyDualMap f n).hom ((kroneckerMap Y n).hom (cocycleClass Y n φ hφ))
   rw [cohPullback_cocycleClass, kroneckerMap_cocycleClass, kroneckerMap_cocycleClass, homologyDualMap_hom_apply]
   apply LinearMap.ext
@@ -205,7 +205,7 @@ theorem kroneckerMap_injective (X : TopCat.{0}) (n : ℕ) :
           = (chainCxZMod2 X).d (m + 1) m ≫ η := rfl
       rw [hstep]
       apply ModuleCat.hom_ext
-      show φ.hom = ((chainCxZMod2 X).d (m + 1) m ≫ η).hom
+      change φ.hom = ((chainCxZMod2 X).d (m + 1) m ≫ η).hom
       rw [ModuleCat.hom_comp]
       exact hη.symm
     rw [cocycleClass_congr X (m + 1) hcob hφ

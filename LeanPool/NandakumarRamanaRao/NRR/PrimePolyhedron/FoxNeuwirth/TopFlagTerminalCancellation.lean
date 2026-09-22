@@ -302,7 +302,7 @@ theorem liftedTerminalChain_eq_of_terminalSource
   rw [simplicialChain_cast_apply]
   apply chain_eq_of_head_matrix
   · -- head vertex
-    simp [simplicialChain_cast_apply, simplex_cast_apply]
+    simp [ simplex_cast_apply]
     exact (terminalSource_castSucc hp target u 0).trans (terminalSource_castSucc hp target v 0).symm
   · -- barDifferenceMatrix
     ext k r
@@ -317,10 +317,10 @@ theorem liftedTerminalChain_eq_of_terminalSource
     have hv_cast_r : (Fin.cast hpc r : ℕ) = (r : ℕ) := by rfl
     have hrcast_eq : Fin.cast heq (Fin.castSucc r) = Fin.castSucc (Fin.cast hpc r) := by
       apply Fin.ext
-      simp [Fin.val_castSucc, hv_cast_r]
+      simp [Fin.val_castSucc]
     have rsucc_cast_eq : Fin.cast heq (Fin.succ r) = Fin.succ (Fin.cast hpc r) := by
       apply Fin.ext
-      simp [Fin.val_succ, hv_cast_r]
+      simp [Fin.val_succ]
     rw [hrcast_eq, rsucc_cast_eq]
     -- Now both sides use the same indices, so they're equal
     let r' : Fin ((p - 2) + 1) := Fin.cast hpc r
@@ -359,7 +359,7 @@ theorem liftedTerminalChain_eq_of_terminalSource
       have hi_eq : i.castSucc = Fin.cast heq r.succ := by
         rw [rsucc_cast_eq]
         ext
-        simp only [i, Fin.castSucc_mk, Fin.succ_mk, Fin.val_cast]
+        simp only [i, Fin.castSucc_mk, Fin.succ_mk]
         rfl
       have hi_bar_eq : barIndicator (u.1 i.castSucc) k = barIndicator (v.1 i.castSucc) k := by
         rw [hi_castSucc_u, hi_castSucc_v]

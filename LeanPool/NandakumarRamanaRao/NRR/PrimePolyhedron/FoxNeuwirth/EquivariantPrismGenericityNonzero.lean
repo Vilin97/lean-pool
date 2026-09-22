@@ -137,7 +137,7 @@ theorem spatialWeight_eq_of_lt
   unfold spatialWeight
   simp only [spatialIndex, Fin.cast_inj]
   rw [Finset.sum_eq_single i.castSucc]
-  · rw [if_pos]
+  · rw [ite_eq_left]
     exact by
       simp [staircaseSpatial, Fin.ext_iff]
       omega
@@ -151,7 +151,7 @@ theorem spatialWeight_eq_of_lt
       · have hklt : k.1 < j.1 := Nat.lt_of_not_ge hjk
         have : j.1 - 1 = i.1 := by simpa using congrArg Fin.val h
         omega
-    exact if_neg hne
+    exact ite_eq_right hne
   · simp
 
 /-- Spatial weights above the doubled staircase vertex recover the successor domain coordinate. -/
@@ -165,7 +165,7 @@ theorem spatialWeight_eq_of_gt
   unfold spatialWeight
   simp only [spatialIndex, Fin.cast_inj]
   rw [Finset.sum_eq_single j]
-  · rw [if_pos]
+  · rw [ite_eq_left]
     exact by
       simp [j, staircaseSpatial, Fin.ext_iff]
       omega
@@ -183,7 +183,7 @@ theorem spatialWeight_eq_of_gt
           omega
         have : j'.1 = i.1 + 1 := by omega
         exact hjne (Fin.ext this)
-    exact if_neg hne
+    exact ite_eq_right hne
   · simp
 
 /-- The doubled spatial coordinate is the sum of the two staircase coordinates. -/
@@ -223,7 +223,7 @@ theorem spatialWeight_pivot
         omega
       have : j.1 = k.1 + 1 := by omega
       exact hj1 (Fin.ext this)
-  exact if_neg hne
+  exact ite_eq_right hne
 
 /-- The interval coordinate is the sum of all domain coordinates strictly above the staircase
 cut. -/
@@ -233,7 +233,7 @@ theorem intervalWeight_eq_sum_gt
       ∑ j : Fin (p + 1), if k.1 < j.1 then w j else 0 := by
   apply Finset.sum_congr rfl
   intro j hj
-  simp [intervalWeight, staircaseTime]
+  simp [ staircaseTime]
 
 /-- The interval coordinate splits into the upper pivot coordinate and the spatial tail. -/
 theorem intervalWeight_eq_pivot_add_spatial_tail
@@ -256,19 +256,19 @@ theorem intervalWeight_eq_pivot_add_spatial_tail
   by_cases hki : k.1 < i.1
   · have hle : kp ≤ i.castSucc := by
       apply Fin.mk_le_mk.mpr
-      simp [kp]
+      simp []
       omega
     rw [Fin.succAbove_of_le_castSucc kp i hle]
-    rw [if_pos hki, if_pos]
+    rw [ite_eq_left hki, ite_eq_left]
     · exact (spatialWeight_eq_of_gt hp k w i hki).symm
     · simp
       omega
   · have hlt : i.castSucc < kp := by
       apply Fin.mk_lt_mk.mpr
-      simp [kp]
+      simp []
       omega
     rw [Fin.succAbove_of_castSucc_lt kp i hlt]
-    rw [if_neg hki, if_neg]
+    rw [ite_eq_right hki, ite_eq_right]
     simp
     omega
 
@@ -575,7 +575,7 @@ theorem facetWitnessTarget_succAbove
   rw [facetWitnessTarget, dif_pos hv]
   have hc : Classical.choose hv = c := by
     exact (Fin.succAbove_right_injective (p := k)) (Classical.choose_spec hv).symm
-  simp [hc]
+  simp []
 
 /-- The real facet matrix produced by the witness assignment is triangular with diagonal one. -/
 theorem facetMatrix_witness
@@ -598,7 +598,7 @@ theorem facetMatrix_witness
       facetWitnessTarget_succAbove]
     generalize hc : AffinePositiveRayBoundary.VertexMap.augmentedRowEquiv hp c = c'
     refine Fin.lastCases ?_ (fun t => ?_) c'
-    · simp [coordinateLabel_ne_last]
+    · simp []
     · have hinj : coordinateLabel hp s = coordinateLabel hp t ↔ s = t :=
         (coordinateLabel_injective hp).eq_iff
       have hlast : lastLabel hp ≠ coordinateLabel hp t :=
@@ -652,7 +652,7 @@ theorem facetDeterminant_witness
       · intro hord
         rw [Fin.lastCases_last]
       · rw [Fin.lastCases_castSucc]
-        rw [if_neg]
+        rw [ite_eq_right]
         intro hst
         exact (ne_of_lt hord) (congrArg Fin.val (congrArg Fin.castSucc hst))
 

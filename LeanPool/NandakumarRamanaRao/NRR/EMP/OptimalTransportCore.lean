@@ -81,7 +81,7 @@ theorem EMP.powerDiagram_equalArea_weights_exists_core
     ∃ w : Fin n → ℝ, EMP.IsEqualAreaWeight K s w := by
   by_cases hn1 : n = 1
   · subst n
-    letI : NeZero 1 := ⟨by omega⟩
+    let : NeZero 1 := ⟨by omega⟩
     refine ⟨fun _ => 0, ?_⟩
     intro i
     fin_cases i

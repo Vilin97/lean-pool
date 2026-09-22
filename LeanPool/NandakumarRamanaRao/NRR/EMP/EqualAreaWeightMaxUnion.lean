@@ -134,7 +134,7 @@ theorem weightDifference_eq_of_equalArea
     simp only [U, Set.mem_iUnion, Set.mem_ofPred_eq]
     exact ⟨xi, hxbody.2⟩
 
-  letI : PreconnectedSpace X :=
+  let : PreconnectedSpace X :=
     Subtype.preconnectedSpace K.convex.isPreconnected
   have hUuniv : U = Set.univ :=
     (show IsClopen U from ⟨hUclosed, hUopen⟩).eq_univ hUnonempty

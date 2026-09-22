@@ -122,7 +122,7 @@ theorem localLastIndex_side_ne_deleted
     (d : Nat) (k : Fin (d + 2)) (q : RelativeSubdivisionCylinderCombinatorics.Cell d) (i : Fin (d + 2)) :
     localLastIndex (d + 1) (RelativeSubdivisionCylinderCombinatorics.sideCell d k q) i.succ ≠ k := by
   apply lastSupportIndex_ne_of_coordinate_eq_zero
-  simp [localLastIndex, RelativeSubdivisionCylinderCombinatorics.vertex_succ_side, RelativeSubdivisionCylinderCombinatorics.sidePoint_spatial_deleted]
+  simp [ RelativeSubdivisionCylinderCombinatorics.vertex_succ_side, RelativeSubdivisionCylinderCombinatorics.sidePoint_spatial_deleted]
 
 
 /-- Reinterpret the selected local index in the ambient `p`-vertex endpoint simplex. -/

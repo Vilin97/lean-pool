@@ -159,7 +159,7 @@ theorem facetOrbitIndicator_occurrence
       refine ⟨o, hos, 1, ?_⟩
       simpa using mapVertexSignature_occurrenceFacetMap hp N L o
     unfold facetOrbitIndicator
-    rw [if_pos hex, if_pos hos]
+    rw [ite_eq_left hex, ite_eq_left hos]
   · have hnot : ¬ ∃ o' : (Cells hp N L).FacetOccurrence,
         (Cells hp N L).facetClass o' = s ∧
           ∃ g : PrimeSymmetry p,
@@ -176,7 +176,7 @@ theorem facetOrbitIndicator_occurrence
         Quotient.sound ⟨g, hsig⟩
       exact hclass.symm.trans ho'
     unfold facetOrbitIndicator
-    rw [if_neg hnot, if_neg hos]
+    rw [ite_eq_right hnot, ite_eq_right hos]
 
 /-! ## Generic weighted boundary formulas -/
 
@@ -342,14 +342,14 @@ theorem occurrencePairing_lower
           (fun x => tau (affineCompMap p L eta x)))]
     simp only [lowerMapWeight,
       refinedSidePrismMap_not_lowerHorizontal hp N _ _ _ L _, if_false]
-    simp only [MapIsLowerHorizontal, MapIsUpperHorizontal,
+    simp only [MapIsLowerHorizontal,
       lowerEndpointMap, upperEndpointMap]
-    simp only [iteratedSign, subdivisionSign, permSignCoeff]
+    simp only [iteratedSign,  permSignCoeff]
     have hlower (sigma : Delta p → Realization (p + 1)) :
         lowerEndpointMap sigma = fun x => (sigma x, 0) := rfl
-    simp [lowerEndpointPairing, endpointSpatialMap_succ, endpointSpatialMap,
-      endpointRefinementWord, lowerEndpointMap,
-      subdivisionSign, permSignCoeff, hlower]
+    simp [lowerEndpointPairing, endpointSpatialMap_succ,
+
+      subdivisionSign,  hlower]
     rfl
 
 /-- Upper-horizontal part of the arbitrary weighted occurrence pairing. -/
@@ -438,14 +438,14 @@ theorem occurrencePairing_upper
           (fun x => tau (affineCompMap p L eta x)))]
     simp only [upperMapWeight,
       refinedSidePrismMap_not_upperHorizontal hp N _ _ _ L _, if_false]
-    simp only [MapIsLowerHorizontal, MapIsUpperHorizontal,
+    simp only [ MapIsUpperHorizontal,
       lowerEndpointMap, upperEndpointMap]
-    simp only [iteratedSign, subdivisionSign, permSignCoeff]
+    simp only [iteratedSign,  permSignCoeff]
     have hupper (sigma : Delta p → Realization (p + 1)) :
         upperEndpointMap sigma = fun x => (sigma x, 1) := rfl
-    simp [upperEndpointPairing, endpointSpatialMap_succ, endpointSpatialMap,
-      endpointRefinementWord, upperEndpointMap,
-      subdivisionSign, permSignCoeff, hupper]
+    simp [upperEndpointPairing, endpointSpatialMap_succ,
+
+      subdivisionSign,  hupper]
     rfl
 
 /-- Prime invariance is inherited by the nonhorizontal restriction of a weight. -/
@@ -467,11 +467,11 @@ theorem sideMapWeight_translate
   · have hside' : ¬ MapIsLowerHorizontal (translateFacetMap p g tau) ∧
         ¬ MapIsUpperHorizontal (translateFacetMap p g tau) := by
       simpa only [hl, hu] using hside
-    rw [if_pos hside, if_pos hside', hW g tau]
+    rw [ite_eq_left hside, ite_eq_left hside', hW g tau]
   · have hside' : ¬ (¬ MapIsLowerHorizontal (translateFacetMap p g tau) ∧
         ¬ MapIsUpperHorizontal (translateFacetMap p g tau)) := by
       simpa only [hl, hu] using hside
-    rw [if_neg hside, if_neg hside']
+    rw [ite_eq_right hside, ite_eq_right hside']
 
 /-- Weight of a staircase side simplex for an arbitrary affine-facet weight.  This is the
 weight-independent form of the construction used in nonhorizontal cancellation. -/
@@ -649,7 +649,7 @@ private theorem fixed_refined_side_pairing_cancels (N L n : ℕ) (hp : Nat.Prime
             congr 1
             funext x
             apply Prod.ext
-            · simp only [translateFacetMap, staircasePrismMap, Prod.fst]
+            · simp only [translateFacetMap, staircasePrismMap]
               exact realizationPoint_prime_smul_any (n + 1 + 1) g f _
             · rfl
       _ = _ := sideMapWeight_translate (n + 1 + 1) W hW g _
@@ -665,11 +665,10 @@ private theorem fixed_refined_side_pairing_cancels (N L n : ℕ) (hp : Nat.Prime
     funext x
     apply Realization.ext
     intro c
-    simp [Vsimplex, arbitrarySpatialSideWeight, iteratedBoundaryMap,
+    simp [  iteratedBoundaryMap,
       ReferenceAffineOrbitCount.topRepr,
       Simplex.realizationContinuousMap, Simplex.realizationPoint,
-      Simplex.chartWeight, cofacePoint, stdSimplex.map_coe,
-      FunOnFinite.linearMap_apply_apply]
+      Simplex.chartWeight, cofacePoint, stdSimplex.map_coe]
     change (∑ i : Fin (n + 1 + 1),
       if (ReferenceAffineOrbitCount.topRepr hp orbit) i = c then
         (StandardSimplex.ofDelta
@@ -690,7 +689,7 @@ private theorem fixed_refined_side_pairing_cancels (N L n : ℕ) (hp : Nat.Prime
     change (if (ReferenceAffineOrbitCount.topRepr hp orbit) (j.succAbove i) = c then _ else 0) =
       if (ReferenceAffineOrbitCount.topRepr hp orbit) (j.succAbove i) = c then _ else 0
     by_cases hic : (ReferenceAffineOrbitCount.topRepr hp orbit) (j.succAbove i) = c
-    · rw [if_pos hic, if_pos hic]
+    · rw [ite_eq_left hic, ite_eq_left hic]
       change stdSimplex.map (S := Real) j.succAbove
         (affineCompMap n N theta x) (j.succAbove i) =
           affineCompMap n N theta x i
@@ -702,7 +701,7 @@ private theorem fixed_refined_side_pairing_cancels (N L n : ℕ) (hp : Nat.Prime
           exact hqi (Fin.succAbove_right_injective heq)
         have hq' : j.succAbove q = j.succAbove i := by simpa using hq
         exact (hsucc hq').elim) (by simp)
-    · rw [if_neg hic, if_neg hic]
+    · rw [ite_eq_right hic, ite_eq_right hic]
   simp_rw [hmap]
   calc
     _ = (iteratedSign (ZMod (n + 1 + 1)) L eta *
@@ -782,7 +781,7 @@ theorem occurrencePairing_side_eq_zero
   conv_lhs =>
     enter [2, cell, 2, j]
     rw [occurrenceFacetMap_eq_iteratedFacetMap_succ]
-  simp only [subdivisionSign, staircaseSign, iteratedSign, permSignCoeff]
+  simp only [subdivisionSign, staircaseSign, iteratedSign]
   ring_nf
   rw [Fintype.sum_prod_type]
   rw [Fintype.sum_prod_type]
@@ -798,7 +797,7 @@ theorem occurrencePairing_side_eq_zero
     rw [← Finset.mul_sum]
   have hfacetFaceIndex (j : Fin (n + 2)) : facetFaceIndex hp j = j := by
     apply Fin.ext
-    simp [occurrenceCoefficient, SimplicialChain.faceSign, facetFaceIndex]
+    simp [  facetFaceIndex]
   simp_rw [hfacetFaceIndex]
   conv_lhs =>
     enter [2, orbit, 2, spatial, 2]
@@ -868,7 +867,7 @@ theorem occurrencePairing_side_eq_zero
     change sideMapWeight W
       (lowerEndpointMap (fun x => sigma (affineCompMap n L eta x))) = 0
     unfold sideMapWeight
-    rw [if_neg]
+    rw [ite_eq_right]
     intro hside
     apply hside.1
     intro i
@@ -880,7 +879,7 @@ theorem occurrencePairing_side_eq_zero
     change sideMapWeight W
       (upperEndpointMap (fun x => sigma (affineCompMap n L eta x))) = 0
     unfold sideMapWeight
-    rw [if_neg]
+    rw [ite_eq_right]
     intro hside
     apply hside.2
     intro i

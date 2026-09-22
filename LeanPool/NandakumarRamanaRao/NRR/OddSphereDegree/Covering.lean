@@ -82,7 +82,7 @@ private theorem antipodalSMul_def {n : ℕ} (g : DeckGroup) (x : Sphere n) :
 
 private theorem antipodalSMul_one {n : ℕ} (x : Sphere n) :
     (1 : DeckGroup) • x = x := by
-  show (if Multiplicative.toAdd (1 : DeckGroup) = 0 then x else -x) = x
+  change (if Multiplicative.toAdd (1 : DeckGroup) = 0 then x else -x) = x
   rfl
 
 /-- The antipodal `DeckGroup`-action on `S^n`. -/

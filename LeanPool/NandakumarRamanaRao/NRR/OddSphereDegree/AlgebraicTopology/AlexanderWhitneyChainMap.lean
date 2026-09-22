@@ -75,7 +75,7 @@ theorem singularChainSimplicialModule_map_generator (R : Type) [CommRing R] (X :
       = Limits.Sigma.ι (fun (_ : singularSimplices X m) => ModuleCat.of R R)
         ((TopCat.toSSet.obj X).map g σ) := by
     dsimp [singularChainSimplicialModule, SimplicialObject.whiskering, Limits.sigmaConst]
-    exact Limits.Sigma.ι_desc _ _
+    exact Limits.Sigma.ι_comp_desc _ _
   have h := congrArg (fun f => f.hom (1 : R)) key
   dsimp at h
   exact h

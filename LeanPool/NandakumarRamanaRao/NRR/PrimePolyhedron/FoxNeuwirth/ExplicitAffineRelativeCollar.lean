@@ -588,9 +588,9 @@ noncomputable def endpointAdjustedSiteValue
     (A₀ : RefinedAffineMap.RegularApproximation hp F₀.map)
     (A₁ : RefinedAffineMap.RegularApproximation hp F₁.map)
     (s : ScalarSite hp C) : Real :=
-  if h₀ : (globalPoint hp C s.1).time.1 = 0 then
+  if _h₀ : (globalPoint hp C s.1).time.1 = 0 then
     A₀.map (globalPoint hp C s.1).spatial s.2
-  else if h₁ : (globalPoint hp C s.1).time.1 = 1 then
+  else if _h₁ : (globalPoint hp C s.1).time.1 = 1 then
     A₁.map (globalPoint hp C s.1).spatial s.2
   else
     H.map (CylinderPoint.toProd (globalPoint hp C s.1)) s.2
@@ -613,8 +613,8 @@ theorem endpointAdjustedSiteValue_eq_of_orbitRel
     change (globalPoint hp C (g • b.1)).time.1 = _
     rw [globalPoint_smul]
     rfl
-  simp only [endpointAdjustedSiteValue, Prod.fst, Prod.snd, globalPoint_smul,
-    CylinderPoint.smul_time, CylinderPoint.smul_spatial]
+  simp only [endpointAdjustedSiteValue,
+    CylinderPoint.smul_time]
   rw [htime]
   split_ifs
   · have heq := A₀.equivariant g (globalPoint hp C b.1).spatial
@@ -672,7 +672,7 @@ theorem vectorValue_endpointAdjustedAssignment_upper
     norm_num
   funext j
   simp [vectorValue, scalarValue, endpointAdjustedAssignment,
-    endpointAdjustedSiteValue, hx, hx₀]
+    endpointAdjustedSiteValue, hx]
 
 /-- Away from both horizontal boundaries, reconstructing the endpoint-adjusted assignment gives
 the original homotopy sample. -/

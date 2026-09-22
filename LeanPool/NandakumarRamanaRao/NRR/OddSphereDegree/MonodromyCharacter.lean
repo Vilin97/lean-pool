@@ -100,7 +100,7 @@ theorem classifyingHomAb_inducedOnRP_naturality (n : ℕ) (f : C(Sphere n, Spher
           (FundamentalGroup.map ⟨inducedOnRP f hf, (inducedOnRP f hf).continuous⟩ x))
       = classifyingHomAb n x := by
   refine Abelianization.hom_ext _ _ (MonoidHom.ext fun a => ?_)
-  show classifyingHomAb n (inducedOnRP f hf x)
+  change classifyingHomAb n (inducedOnRP f hf x)
       (Abelianization.map
         (FundamentalGroup.map ⟨inducedOnRP f hf, (inducedOnRP f hf).continuous⟩ x)
         (Abelianization.of a))

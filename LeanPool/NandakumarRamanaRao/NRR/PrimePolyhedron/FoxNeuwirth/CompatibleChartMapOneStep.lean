@@ -63,7 +63,7 @@ theorem baseOriginalPLMap_isAffine
   intro q w
   funext c
   simp [baseOriginalPLMap, RefinedAffineMap.value,
-    RefinedAffineMap.vertexValue, StandardSimplex.ofDelta, stdSimplex.vertex,
+    RefinedAffineMap.vertexValue, StandardSimplex.ofDelta,
     Pi.single_apply, ite_mul, Finset.sum_ite_eq']
 
 /-- Affinity is preserved when a chart map is pulled back through further barycentric
@@ -86,7 +86,7 @@ theorem ChartMap.IsAffine.refine
         (ancestorWeight N k q w : Fin (p - 1 + 1) → Real) j *
           K.value r (StandardSimplex.ofDelta
             (stdSimplex.vertex (S := Real) j)) c := by
-    show K.value r (ancestorWeight N k q w) c = _
+    change K.value r (ancestorWeight N k q w) c = _
     rw [hval]
   have hR : ∀ x : Fin (p - 1 + 1),
       (K.refine k).value q
@@ -97,7 +97,7 @@ theorem ChartMap.IsAffine.refine
             K.value r (StandardSimplex.ofDelta
               (stdSimplex.vertex (S := Real) j)) c := by
     intro x
-    show K.value r (ancestorWeight N k q _) c = _
+    change K.value r (ancestorWeight N k q _) c = _
     rw [hval]
   have hcoord : ∀ j : Fin (p - 1 + 1),
       (ancestorWeight N k q w : Fin (p - 1 + 1) → Real) j =
@@ -108,7 +108,7 @@ theorem ChartMap.IsAffine.refine
     exact affineCompMap_coordinate_eq_sum_vertices
       (p - 1) k (fun j => Simplex.refinementIndexPerm (ancestorTail N k q j))
       (StandardSimplex.toDelta w) j
-  show (K.refine k).value q w c = _
+  change (K.refine k).value q w c = _
   rw [hL]
   simp_rw [hcoord, hR, Finset.sum_mul, Finset.mul_sum]
   rw [Finset.sum_comm]

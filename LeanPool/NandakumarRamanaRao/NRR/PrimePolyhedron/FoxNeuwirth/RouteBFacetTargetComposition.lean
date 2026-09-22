@@ -110,7 +110,7 @@ theorem facetWitnessTarget_determinant
       · intro hord
         rw [Fin.lastCases_last]
       · rw [Fin.lastCases_castSucc]
-        rw [if_neg]
+        rw [ite_eq_right]
         intro hst
         exact (ne_of_lt hord) (congrArg Fin.val (congrArg Fin.castSucc hst))
 

@@ -25,7 +25,7 @@ noncomputable def referenceL1 (M : PrimeConfigurationModel hp) (x : M.Point) : â
 
  theorem referenceL1_nonneg (M : PrimeConfigurationModel hp) (x : M.Point) :
     0 â‰¤ M.referenceL1 x :=
-  Finset.sum_nonneg fun i _ => abs_nonneg _
+  Finset.sum_nonneg fun _i _ => abs_nonneg _
 
  theorem continuous_referenceL1 (M : PrimeConfigurationModel hp) :
     Continuous M.referenceL1 := by

@@ -43,12 +43,12 @@ theorem equivariantReferenceCoordinateMap_deviation
     ({ vertexValue := vertexValue } : AffineVertexMap p (p - 1)))
   funext c r
   by_cases htop : c.IsTop
-  · simp [equivariantReferenceCoordinateMap, CoordinateAffineVertexMap.deviation,
-      ReferenceAffineOrbitCount.referenceMap, ReferenceAffineOrbitCount.mapAt,
+  · simp [equivariantReferenceCoordinateMap,
+
       ReferenceAffineOrbitCount.topDirection, htop]
     ring
-  · simp [equivariantReferenceCoordinateMap, CoordinateAffineVertexMap.deviation,
-      ReferenceAffineOrbitCount.referenceMap, ReferenceAffineOrbitCount.mapAt,
+  · simp [equivariantReferenceCoordinateMap,
+
       ReferenceAffineOrbitCount.blockDifference, htop]
 
 /-- Vertex data transform by coordinate relabelling. -/
@@ -172,8 +172,7 @@ noncomputable def negativeEquivariantReferenceCoordinateMap
   apply congrArg (fun vertexValue : BarredPermutation p → Fin (p - 1) → ℝ =>
     ({ vertexValue := vertexValue } : AffineVertexMap p (p - 1)))
   funext c r
-  simp [positiveEquivariantReferenceCoordinateMap,
-    CoordinateAffineVertexMap.deviation]
+  simp [positiveEquivariantReferenceCoordinateMap]
 
  theorem negativeEquivariantReferenceCoordinateMap_deviation
     (hp : Nat.Prime p) :
@@ -183,8 +182,7 @@ noncomputable def negativeEquivariantReferenceCoordinateMap
   apply congrArg (fun vertexValue : BarredPermutation p → Fin (p - 1) → ℝ =>
     ({ vertexValue := vertexValue } : AffineVertexMap p (p - 1)))
   funext c r
-  simp [negativeEquivariantReferenceCoordinateMap,
-    CoordinateAffineVertexMap.deviation]
+  simp [negativeEquivariantReferenceCoordinateMap]
 
  theorem positiveEquivariantReferenceCoordinateMap_global_smul
     (hp : Nat.Prime p) (g : PrimeSymmetry p) (x : Realization p) :

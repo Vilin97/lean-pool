@@ -39,7 +39,7 @@ theorem aug_natural {Y Z : TopCat.{0}} (f : Y ⟶ Z) :
   intro τ
   apply ModuleCat.hom_ext
   apply LinearMap.ext_ring
-  show (aug Z).hom ((singularChainMap ℤ f 0).hom (chainGenerator ℤ Y 0 τ.as)) = (aug Y).hom (chainGenerator ℤ Y 0 τ.as)
+  change (aug Z).hom ((singularChainMap ℤ f 0).hom (chainGenerator ℤ Y 0 τ.as)) = (aug Y).hom (chainGenerator ℤ Y 0 τ.as)
   rw [singularChainMap_generator, aug_generator, aug_generator]
 
 theorem opcyclesMap_descOpcycles {C : Type*} [Category C] [Abelian C] {K L : HomologicalComplex C (ComplexShape.down ℕ)} (φ : K ⟶ L)
@@ -167,7 +167,7 @@ theorem subChainCorestrict_inclusion_square (X : TopCat.{0}) (S T : Set X) (h : 
   apply LinearMap.ext
   intro c
   apply Subtype.ext
-  show (singularChainMap ℤ (sInclusion S) n).hom c =
+  change (singularChainMap ℤ (sInclusion S) n).hom c =
        (singularChainMap ℤ (sInclusion T) n).hom ((singularChainMap ℤ (setInclusionTopCat X S T h) n).hom c)
   have h_comp := singularChainMap_comp ℤ (setInclusionTopCat X S T h) (sInclusion T) n
   have key := DFunLike.congr_fun (congrArg ModuleCat.Hom.hom h_comp) c

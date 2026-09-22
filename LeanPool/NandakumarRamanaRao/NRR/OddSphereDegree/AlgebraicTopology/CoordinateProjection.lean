@@ -26,7 +26,7 @@ theorem keepHom_generator {n : ℕ} (P : singularSimplices X n → Prop) [Decida
     (σ : singularSimplices X n) :
     (keepHom R X P).hom (chainGenerator R X n σ)
       = if P σ then chainGenerator R X n σ else 0 := by
-  have h := Sigma.ι_desc (fun σ => if P σ then Sigma.ι (fun (_ : singularSimplices X n) => ModuleCat.of R R) σ else 0) σ
+  have h := Sigma.ι_comp_desc (fun σ => if P σ then Sigma.ι (fun (_ : singularSimplices X n) => ModuleCat.of R R) σ else 0) σ
   have h2 := congrArg (fun (m : ModuleCat.of R R ⟶ singularChainGroup R X n) => m.hom (1 : R)) h
   erw [ModuleCat.hom_comp, LinearMap.comp_apply] at h2
   have hgen : chainGenerator R X n σ = (Sigma.ι (fun (_ : singularSimplices X n) => ModuleCat.of R R) σ).hom (1 : R) := rfl

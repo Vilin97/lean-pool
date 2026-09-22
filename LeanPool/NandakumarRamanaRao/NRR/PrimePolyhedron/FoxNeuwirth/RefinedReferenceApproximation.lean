@@ -127,7 +127,7 @@ theorem positiveReference_localIndex_zero
         · have hpos := AAK.positiveEquivariantReferenceCoordinateMap_global_pos hp
             (chart hp 0 q (StandardSimplex.toDelta w))
           unfold coordinateMean
-          haveI : Nonempty (Fin p) := ⟨⟨0, hp.pos⟩⟩
+          let : Nonempty (Fin p) := ⟨⟨0, hp.pos⟩⟩
           exact div_pos
             (Finset.sum_pos (fun i _ => by
               simpa [value_zero_ofCoordinateAffineVertexMap hp F q w] using hpos i)
@@ -139,10 +139,10 @@ theorem positiveReference_localIndex_zero
   by_cases hz : (ReferenceAffineOrbitCount.referenceMap hp).HasInteriorZero
       (ReferenceAffineOrbitCount.topRepr hp q.1)
   · have hz' := hzero.mpr hz
-    rw [if_pos hz', if_pos hz, hdet]
+    rw [ite_eq_left hz', ite_eq_left hz, hdet]
   · have hz' : ¬ HasPositiveInteriorZero hp 0 (ofCoordinateAffineVertexMap F) q :=
       fun h => hz (hzero.mp h)
-    rw [if_neg hz', if_neg hz]
+    rw [ite_eq_right hz', ite_eq_right hz]
 
 /-- The positive level-zero refined count is the S5 reference orbit count. -/
 theorem positiveReference_zeroCount_zero
@@ -182,7 +182,7 @@ theorem negativeReference_localIndex_zero
         (ofCoordinateAffineVertexMap (AAK.negativeEquivariantReferenceCoordinateMap hp)) q = 0 := by
   classical
   unfold localIndex
-  rw [if_neg]
+  rw [ite_eq_right]
   rintro ⟨w, hw, hdev, hmean⟩
   let x := chart hp 0 q (StandardSimplex.toDelta w)
   have hneg := AAK.negativeEquivariantReferenceCoordinateMap_global_neg hp x
@@ -191,7 +191,7 @@ theorem negativeReference_localIndex_zero
         (ofCoordinateAffineVertexMap (AAK.negativeEquivariantReferenceCoordinateMap hp)) q w) < 0 := by
     rw [value_zero_ofCoordinateAffineVertexMap]
     unfold coordinateMean
-    haveI : Nonempty (Fin p) := ⟨⟨0, hp.pos⟩⟩
+    let : Nonempty (Fin p) := ⟨⟨0, hp.pos⟩⟩
     exact div_neg_of_neg_of_pos
       (Finset.sum_neg (fun i _ => hneg i) Finset.univ_nonempty)
       (by exact_mod_cast hp.pos)

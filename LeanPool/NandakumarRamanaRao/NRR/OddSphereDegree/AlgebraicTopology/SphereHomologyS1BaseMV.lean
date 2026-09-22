@@ -72,7 +72,7 @@ abbrev circF0 :
 
 /-- A point of `S⁰`. -/
 instance instNonemptySphere0 : Nonempty (Sphere 0) :=
-  ⟨⟨EuclideanSpace.single 0 1, by simp [EuclideanSpace.norm_eq]⟩⟩
+  ⟨⟨EuclideanSpace.single 0 1, by simp []⟩⟩
 
 /-
 **Algebra helper.** A finite free `ℤ`-module of rank `1` is isomorphic to `ℤ`.
@@ -81,7 +81,7 @@ theorem linearEquiv_int_of_finrank_one {N : Type} [AddCommGroup N] [Module ℤ N
     [Module.Free ℤ N] [Module.Finite ℤ N] (h : Module.finrank ℤ N = 1) :
     Nonempty (N ≃ₗ[ℤ] ℤ) := by
   have := ( Module.finBasis ℤ N );
-  rw [ h ] at this; exact ⟨ this.equivFun.trans ( LinearEquiv.ofFinrankEq _ _ <| by simp +decide [ h ] ) ⟩;
+  rw [ h ] at this; exact ⟨ this.equivFun.trans ( LinearEquiv.ofFinrankEq _ _ <| by simp +decide [  ] ) ⟩;
 
 /-- **Algebra helper.** The kernel of a surjection from a rank-`2` finite free
 `ℤ`-module onto `ℤ` is isomorphic to `ℤ`. -/
@@ -93,19 +93,19 @@ theorem ker_linearEquiv_int_of_finrank_two {M : Type} [AddCommGroup M] [Module �
   -- `AddCommGroup.toIntModule`); we work with `Submodule.module` and bridge with
   -- `Subsingleton.elim` at the end.
   have key : @Module.finrank ℤ ↥(LinearMap.ker g) _ _ (LinearMap.ker g).module = 1 := by
-    letI : Module ℤ ↥(LinearMap.ker g) := (LinearMap.ker g).module
-    letI : Module ℤ (M ⧸ LinearMap.ker g) := Submodule.Quotient.module _
-    haveI hfin : Module.Finite ℤ ↥(LinearMap.ker g) :=
+    let : Module ℤ ↥(LinearMap.ker g) := (LinearMap.ker g).module
+    let : Module ℤ (M ⧸ LinearMap.ker g) := Submodule.Quotient.module _
+    let hfin : Module.Finite ℤ ↥(LinearMap.ker g) :=
       Module.Finite.of_fg (IsNoetherian.noetherian (LinearMap.ker g))
     have h1 := Submodule.finrank_quotient_add_finrank (LinearMap.ker g)
     have hq := (g.quotKerEquivOfSurjective hg).finrank_eq
     rw [Module.finrank_self] at hq
     rw [hq, hM] at h1
     omega
-  letI : Module ℤ ↥(LinearMap.ker g) := (LinearMap.ker g).module
-  haveI hfin : Module.Finite ℤ ↥(LinearMap.ker g) :=
+  let : Module ℤ ↥(LinearMap.ker g) := (LinearMap.ker g).module
+  let hfin : Module.Finite ℤ ↥(LinearMap.ker g) :=
     Module.Finite.of_fg (IsNoetherian.noetherian (LinearMap.ker g))
-  haveI hfree : Module.Free ℤ ↥(LinearMap.ker g) :=
+  let hfree : Module.Free ℤ ↥(LinearMap.ker g) :=
     Module.free_of_finite_type_torsion_free'
   obtain ⟨e⟩ := linearEquiv_int_of_finrank_one key
   exact ⟨(Subsingleton.elim (LinearMap.ker g).module
@@ -155,8 +155,8 @@ theorem h0_sphere0_free_finrank :
 theorem reducedH0_sphere0_iso :
     Nonempty (kernel (H0aug (TopCat.of (Sphere 0))) ≅ ModuleCat.of ℤ ℤ) := by
   obtain ⟨hFree, hFin, hrank⟩ := h0_sphere0_free_finrank
-  haveI := hFree
-  haveI := hFin
+  let := hFree
+  let := hFin
   obtain ⟨e⟩ := ker_linearEquiv_int_of_finrank_two hrank
     (ModuleCat.Hom.hom (H0aug (TopCat.of (Sphere 0)))) (surjective_H0aug _)
   -- Use the isomorphism from the kernel to the integers to construct the desired isomorphism.
@@ -241,8 +241,8 @@ theorem biprod_homology_zero_iff
 `ker(H₀(U ∩ V) → H₀(U) ⊕ H₀(V)) ≅ ker(H₀(U ∩ V) → ℤ)`. -/
 theorem kerF0_iso_kerBand :
     Nonempty (kernel circF0 ≅ kernel (subH0aug circleTop circBand)) := by
-  haveI := isIso_subH0aug circleTop (circU : Set circleTop)
-  haveI := isIso_subH0aug circleTop (circV : Set circleTop)
+  let := isIso_subH0aug circleTop (circU : Set circleTop)
+  let := isIso_subH0aug circleTop (circV : Set circleTop)
   have hUeq : HomologicalComplex.homologyMap (mvInclUVU ℤ circU circV) 0
       ≫ subH0aug circleTop (circU : Set circleTop) = subH0aug circleTop circBand :=
     subH0aug_natural_inclusion circleTop circBand (circU : Set circleTop) Set.inter_subset_left
@@ -307,7 +307,7 @@ theorem kerF0_iso_kerBand :
     · intro x hx
       rw [LinearMap.mem_ker] at hx ⊢
       have hcx : circF0 x = 0 := hx
-      show subH0aug circleTop circBand x = 0
+      change subH0aug circleTop circBand x = 0
       rw [← hUx x, ← hfx x, hcx, map_zero, map_zero]
     · intro x hx
       rw [LinearMap.mem_ker] at hx ⊢
@@ -316,7 +316,7 @@ theorem kerF0_iso_kerBand :
         apply hinjU; rw [map_zero, hUx x, hbandx]
       have hbx : (HomologicalComplex.homologyMap (mvInclUVV ℤ circU circV) 0) x = 0 := by
         apply hinjV; rw [map_zero, hVx x, hbandx]
-      show circF0 x = 0
+      change circF0 x = 0
       refine (biprod_homology_zero_iff (circF0 x)).mpr ⟨?_, ?_⟩
       · rw [hfx x, hax]
       · rw [hsx x, hbx, neg_zero]
@@ -342,7 +342,7 @@ theorem sphereH1_iso_kerF0 :
       · apply isZero_subChainComplex_homology_of_contractible circleTop (lowerOpens 0) 1 (by norm_num);
     have := ( mvShortExact ℤ circU circV circUV_top ).homology_exact₃ 1 0 ( by simp [ ComplexShape.down_Rel ] );
     convert this.mono_g;
-    simp +decide [ hδ_mono.eq_of_src ];
+    simp +decide [  ];
     exact Or.inl ( hδ_mono.eq_of_src _ _ );
   have hexact := (mvShortExact ℤ circU circV circUV_top).homology_exact₁ 1 0
     (by simp [ComplexShape.down_Rel])

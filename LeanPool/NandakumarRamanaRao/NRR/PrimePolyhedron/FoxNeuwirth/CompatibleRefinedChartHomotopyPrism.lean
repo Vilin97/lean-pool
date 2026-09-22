@@ -52,7 +52,7 @@ instance compactSpace_standardSimplex (d : Nat) : CompactSpace (StandardSimplex 
     ext w
     exact ⟨fun _ => Set.mem_univ _,
       fun _ => ⟨StandardSimplex.toDelta w, StandardSimplex.ofDelta_toDelta w⟩⟩
-  letI : CompactSpace (Delta d) :=
+  let : CompactSpace (Delta d) :=
     isCompact_iff_compactSpace.mp (isCompact_stdSimplex Real (Fin (d + 1)))
   refine isCompact_univ_iff.mp ?_
   have := isCompact_range (continuous_ofDelta (d := d))
@@ -234,7 +234,7 @@ theorem exists_positive_norm_margin
         M ≤ ‖basePrismValue hp J q w‖ := by
   classical
   let Q := BasePrismCell hp N
-  haveI : Nonempty Q := ⟨(RelativeCollarMiddlePrism.defaultTopCell hp N, ⟨0, hp.pos⟩)⟩
+  let : Nonempty Q := ⟨(RelativeCollarMiddlePrism.defaultTopCell hp N, ⟨0, hp.pos⟩)⟩
   have hmin : ∀ q : Q, ∃ w : StandardSimplex p,
       ∀ v : StandardSimplex p,
         ‖basePrismValue hp J q w‖ ≤ ‖basePrismValue hp J q v‖ := by
@@ -274,7 +274,7 @@ theorem exists_refinement_oscillation
         (refinedPrismValue hp J L q v) < eps := by
   classical
   let Q := BasePrismCell hp N
-  haveI : Nonempty Q := ⟨(RelativeCollarMiddlePrism.defaultTopCell hp N, ⟨0, hp.pos⟩)⟩
+  let : Nonempty Q := ⟨(RelativeCollarMiddlePrism.defaultTopCell hp N, ⟨0, hp.pos⟩)⟩
   have huc : ∀ q : Q, UniformContinuous (basePrismValueMap hp J q) := by
     intro q
     exact CompactSpace.uniformContinuous_of_continuous
@@ -297,7 +297,7 @@ theorem exists_refinement_oscillation
   have hdpos : 0 < d := by
     have hmem := Finset.min'_mem ds hds
     rcases Finset.mem_image.mp hmem with ⟨q, hq, hqe⟩
-    show 0 < ds.min' hds
+    change 0 < ds.min' hds
     rw [← hqe]
     exact (hdelta q).1
   have hdle : ∀ q : Q, d ≤ delta q := by
@@ -408,7 +408,7 @@ theorem lower_boundary_value
             (affineCompMap p L s.1.2
               (stdSimplex.vertex (S := Real) s.2)))).1 := by
   rw [assignment, vectorValue_assignmentOfEquivariantVector]
-  show J.value s.1.1.1
+  change J.value s.1.1.1
       (staircasePoint hp s.1.1.2
         (StandardSimplex.ofDelta
           (affineCompMap p L s.1.2 (stdSimplex.vertex (S := Real) s.2)))).1
@@ -443,7 +443,7 @@ theorem upper_boundary_value
             (affineCompMap p L s.1.2
               (stdSimplex.vertex (S := Real) s.2)))).1 := by
   rw [assignment, vectorValue_assignmentOfEquivariantVector]
-  show J.value s.1.1.1
+  change J.value s.1.1.1
       (staircasePoint hp s.1.1.2
         (StandardSimplex.ofDelta
           (affineCompMap p L s.1.2 (stdSimplex.vertex (S := Real) s.2)))).1

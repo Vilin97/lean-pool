@@ -169,10 +169,10 @@ theorem isClosed_mixedFaceThresholdBadSet
       · exact fun _ => Set.mem_univ _
       · intro _
         exact ⟨StandardSimplex.toDelta w, StandardSimplex.ofDelta_toDelta w⟩
-    letI : CompactSpace (SphereOddDegree.AffineBarycentricSubdivision.Delta p) :=
+    let : CompactSpace (SphereOddDegree.AffineBarycentricSubdivision.Delta p) :=
       isCompact_iff_compactSpace.mp (isCompact_stdSimplex ℝ (Fin (p + 1)))
     simpa [hrange] using (isCompact_range hf)
-  letI : CompactSpace (StandardSimplex p) :=
+  let : CompactSpace (StandardSimplex p) :=
     isCompact_univ_iff.mp hcompact
   exact isClosedMap_fst_of_compactSpace
     (mixedFaceThresholdRelation hp C base κ n m)

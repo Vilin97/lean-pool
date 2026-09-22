@@ -181,7 +181,7 @@ theorem vtx_mem_polyVerts (j : ℤ) : vtx K A j ∈ polyVerts K A := by
   rw [heq]
   have hlt : (j % A.m).toNat < A.m := by omega
   refine Set.mem_insert_iff.2 (Or.inr ⟨⟨(j % A.m).toNat, hlt⟩, ?_⟩)
-  show vtx K A (((⟨(j % A.m).toNat, hlt⟩ : Fin A.m) : ℤ)) = vtx K A (j % A.m)
+  change vtx K A (((⟨(j % A.m).toNat, hlt⟩ : Fin A.m) : ℤ)) = vtx K A (j % A.m)
   congr 1
   simp [Int.toNat_of_nonneg hmod.1]
 

@@ -190,7 +190,7 @@ theorem barycentricSubdivisionLinearMap_generator (R : Type) [CommRing R]
       = barycentricSubdivisionGenerator R X n σ := by
   have key : Sigma.ι (fun (_ : singularSimplices X n) => ModuleCat.of R R) σ
         ≫ barycentricSubdivisionLinearMap R X n
-      = barycentricSubdivisionGeneratorHom R X n σ := Sigma.ι_desc _ _
+      = barycentricSubdivisionGeneratorHom R X n σ := Sigma.ι_comp_desc _ _
   have h := congrArg (fun (f : ModuleCat.of R R ⟶ singularChainGroup R X n) => f.hom (1 : R)) key
   dsimp [chainGenerator, barycentricSubdivisionGeneratorHom] at h
   have hone : (1 : R) • barycentricSubdivisionGenerator R X n σ = barycentricSubdivisionGenerator R X n σ := one_smul _ _

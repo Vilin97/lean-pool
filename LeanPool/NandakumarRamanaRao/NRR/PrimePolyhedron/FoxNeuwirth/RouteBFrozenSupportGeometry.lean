@@ -143,7 +143,7 @@ theorem lowerSpatialWeight_not_interior
   obtain ⟨c, hc⟩ := hmissing
   intro hinterior
   have hcoord : RelativeSubdivisionCylinderCombinatorics.spatialPoint d q w c = 0 := by
-    show (∑ k : Fin (d + 2), w k *
+    change (∑ k : Fin (d + 2), w k *
       (RelativeSubdivisionCylinderCombinatorics.vertex d q k).1 c) = 0
     apply Finset.sum_eq_zero
     intro k hk

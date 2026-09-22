@@ -88,7 +88,7 @@ theorem modelAlpha_pow_eq_zero_iff (n k : ℕ) :
     push Not at hc
     rw [Polynomial.X_pow_dvd_iff] at h
     have := h k (by omega)
-    rw [Polynomial.coeff_X_pow, if_pos rfl] at this
+    rw [Polynomial.coeff_X_pow, ite_eq_left rfl] at this
     exact one_ne_zero this
   · intro h
     exact pow_dvd_pow X h

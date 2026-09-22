@@ -243,7 +243,7 @@ theorem retainedCut_lt_stageRank_iff
       simp only [bottomPrefix, Finset.mem_filter, Finset.mem_univ, true_and] at hy
       simp only [lower, Finset.mem_filter, Finset.mem_univ, true_and]
       have hblock := stageBlock_lt_of_bottom_le_cut_lt z j r hr y x hy hbottom
-      show stageKey z j y < stageKey z j x
+      change stageKey z j y < stageKey z j x
       unfold stageKey
       exact Prod.Lex.left _ _ hblock
     have hcard := Finset.card_le_card hsub

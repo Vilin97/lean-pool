@@ -107,7 +107,7 @@ noncomputable def aug (X : TopCat.{0}) : singularChainGroup ℤ X 0 ⟶ ModuleCa
 @[simp] theorem aug_generator (σ : singularSimplices X 0) :
     (aug X).hom (chainGenerator ℤ X 0 σ) = 1 := by
   have key : (Sigma.ι (fun _ : singularSimplices X 0 => ModuleCat.of ℤ ℤ) σ) ≫ (aug X) = 𝟙 _ :=
-    Sigma.ι_desc _ _
+    Sigma.ι_comp_desc _ _
   have := DFunLike.congr_fun (congrArg ModuleCat.Hom.hom key) (1 : ℤ)
   erw [ModuleCat.hom_comp, LinearMap.comp_apply] at this
   exact this
@@ -121,7 +121,7 @@ theorem aug_boundary (c : singularChainGroup ℤ X 1) :
     intro τ
     apply ModuleCat.hom_ext
     apply LinearMap.ext_ring
-    show (aug X).hom ((singularBoundary ℤ X 0).hom (chainGenerator ℤ X 1 τ.as)) = 0
+    change (aug X).hom ((singularBoundary ℤ X 0).hom (chainGenerator ℤ X 1 τ.as)) = 0
     have key := singularBoundary_chainGenerator_formula ℤ X 0 τ.as
     rw [Fin.sum_univ_two] at key
     simp only [Fin.val_zero, pow_zero, Fin.val_one, pow_one, neg_smul] at key

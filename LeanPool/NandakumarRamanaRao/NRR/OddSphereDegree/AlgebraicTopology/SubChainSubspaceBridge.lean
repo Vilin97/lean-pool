@@ -63,7 +63,7 @@ theorem singularChainMap_sInclusion_mem (S : Set X) (n : ℕ)
     apply Limits.colimit.hom_ext
     intro τ
     have h1 : (Sigma.ι (fun _ : singularSimplices (TopCat.of S) n => ModuleCat.of R R) τ.as ≫ f).hom (1 : R) = 0 := by
-      show Submodule.mkQ _ ((singularChainMap R (sInclusion S) n).hom (chainGenerator R (TopCat.of S) n τ.as)) = 0
+      change Submodule.mkQ _ ((singularChainMap R (sInclusion S) n).hom (chainGenerator R (TopCat.of S) n τ.as)) = 0
       rw [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero, singularChainMap_generator]
       exact chainGenerator_mem_subChainSubmodule (isSubordinate_pushSimplex_sInclusion S n τ.as)
     apply ModuleCat.hom_ext
@@ -89,7 +89,7 @@ def subChainCorestrict (R : Type) [CommRing R] (X : TopCat.{0}) (S : Set X) :
     apply Subtype.ext
     have := singularChainMap_boundary_apply R (sInclusion S) j (c : singularChainGroup R (TopCat.of S) (j + 1))
     simp_all [singularBoundary]
-    show (subBoundary R X S j).hom ((LinearMap.codRestrict (subChainSubmodule R X S (j + 1)) (singularChainMap R (sInclusion S) (j + 1)).hom (singularChainMap_sInclusion_mem S (j + 1))) c) =
+    change (subBoundary R X S j).hom ((LinearMap.codRestrict (subChainSubmodule R X S (j + 1)) (singularChainMap R (sInclusion S) (j + 1)).hom (singularChainMap_sInclusion_mem S (j + 1))) c) =
          ⟨(singularChainMap R (sInclusion S) j).hom ((singularBoundary R (TopCat.of S) j).hom c), _⟩
     apply Subtype.ext
     exact this
@@ -105,7 +105,7 @@ noncomputable def reindexChainMap (R : Type) [CommRing R] {X Y : TopCat.{0}} (n 
     (reindexChainMap R n g).hom (chainGenerator R Y n σ) = chainGenerator R X n (g σ) := by
   have key : (Sigma.ι (fun _ : singularSimplices Y n => ModuleCat.of R R) σ) ≫
       (reindexChainMap R n g) = Sigma.ι (fun _ : singularSimplices X n => ModuleCat.of R R) (g σ) :=
-    Sigma.ι_desc _ _
+    Sigma.ι_comp_desc _ _
   have := DFunLike.congr_fun (congrArg ModuleCat.Hom.hom key) (1 : R)
   erw [ModuleCat.hom_comp, LinearMap.comp_apply] at this
   exact this
@@ -118,7 +118,7 @@ theorem reindexChainMap_comp_singularChainMap {X Y : TopCat.{0}}
   intro τ
   apply ModuleCat.hom_ext
   apply LinearMap.ext_ring
-  show (reindexChainMap R n g).hom ((singularChainMap R f n).hom (chainGenerator R X n τ.as)) =
+  change (reindexChainMap R n g).hom ((singularChainMap R f n).hom (chainGenerator R X n τ.as)) =
        chainGenerator R X n τ.as
   rw [singularChainMap_generator, reindexChainMap_generator, hg τ.as]
 

@@ -90,7 +90,7 @@ theorem PrimeSymmetry.exists_map_label
         rw [primeSymmetrySubgroup_eq_top p h2]
         trivial
       refine ⟨⟨σ, hmem⟩, ?_⟩
-      simp [σ, hij]
+      simp [σ]
   · by_cases hij : i = j
     · refine ⟨1, ?_⟩
       simpa [hij]
@@ -104,6 +104,6 @@ theorem PrimeSymmetry.exists_map_label
         rw [primeSymmetrySubgroup_eq_alternating p h2]
         exact hσalt
       refine ⟨⟨σ, hmem⟩, ?_⟩
-      simp [σ, hki, hki.symm, hkj, hij]
+      simp [σ,   hkj]
 
 end NRR

@@ -60,7 +60,7 @@ extended distance between the same carriers. -/
 theorem isometry_toNonemptyCompacts :
     Isometry (ConvexSubbody.toNonemptyCompacts (K := K)) := by
   intro C D
-  show Metric.hausdorffEDist (C.body : Set Plane) (D.body : Set Plane) = edist C D
+  change Metric.hausdorffEDist (C.body : Set Plane) (D.body : Set Plane) = edist C D
   rw [ConvexBody.hausdorffEDist_coe]
   rfl
 

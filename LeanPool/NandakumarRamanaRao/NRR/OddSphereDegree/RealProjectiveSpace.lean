@@ -308,7 +308,7 @@ theorem inducedOnRP_comp
       = inducedOnRP (g.comp f) (hg.comp hf) := by
   apply inducedOnRP_unique (hg.comp hf)
   intro x
-  show (inducedOnRP g hg) ((inducedOnRP f hf) (proj n x)) = proj n (g (f x))
+  change (inducedOnRP g hg) ((inducedOnRP f hf) (proj n x)) = proj n (g (f x))
   rw [inducedOnRP_comm f hf x, inducedOnRP_comm g hg (f x)]
 
 /-- The descended map depends only on the underlying odd map, not on the chosen

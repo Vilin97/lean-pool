@@ -47,8 +47,8 @@ noncomputable instance primeRefinementIndexFintype :
   induction ps with
   | nil => simp [PrimeRefinementIndex, primeFactorProduct]
   | cons p ps ih =>
-      letI := primeRefinementIndexFintype ps
-      show Fintype.card (Fin p.1 × PrimeRefinementIndex ps) =
+      let := primeRefinementIndexFintype ps
+      change Fintype.card (Fin p.1 × PrimeRefinementIndex ps) =
         primeFactorProduct (p :: ps)
       rw [Fintype.card_prod, Fintype.card_fin, ih]
       simp [primeFactorProduct]

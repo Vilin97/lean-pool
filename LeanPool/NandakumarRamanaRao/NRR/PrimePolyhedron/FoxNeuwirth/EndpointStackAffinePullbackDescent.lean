@@ -100,8 +100,7 @@ theorem pullbackVector_eq_value
     (stdSimplex.vertex (S := Real) s.2)
   funext c
   have hc := congrFun h c
-  simp [RelativeSubdivisionOneStepCells.localWeight,
-    Nat.sub_add_cancel hp.pos] at hc
+  simp [RelativeSubdivisionOneStepCells.localWeight] at hc
   rw [show RelativeSubdivisionCylinderCombinatorics.spatialPoint k s.1.2
       (stdSimplex.vertex (S := Real) s.2) =
       (RelativeSubdivisionCylinderCombinatorics.vertex k s.1.2 s.2).1 by

@@ -105,9 +105,9 @@ theorem oneStep_originalPL_lowerFixed
   rw [CompatibleChartMapOneStep.vectorValue_assignment_sample]
   simp [CompatibleChartMapOneStep.localVector,
     CompatibleChartMapOneStep.localSpatialWeight,
-    baseOriginalPLMap, RefinedAffineMap.value, RefinedAffineMap.vertexValue,
+    baseOriginalPLMap,
     RelativeSubdivisionOneStepCells.localPoint, RelativeSubdivisionOneStepCells.localWeight, hj,
-    RelativeSubdivisionCylinderCombinatorics.lowerBoundaryVertex, RefinedAffineMap.vertex,
+    RelativeSubdivisionCylinderCombinatorics.lowerBoundaryVertex,
     RelativeAffineCellSystem.slotPoint, RelativeSubdivisionOneStepCells.cellSystem,
     RelativeSubdivisionOneStepCells.vertex, RelativeSubdivisionOneStepCells.chart,
     RelativeSubdivisionOneStepCells.liftPoint, EquivariantPrismVertexParameters.CylinderPoint.ofProd]

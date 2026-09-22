@@ -93,8 +93,8 @@ theorem refinedChart_coordinate_eq_linear
     RefinedAffineMap.chart hp N q w c = refinedCoordinateLinear hp N q c w.1 := by
   simp [refinedCoordinateLinear, RefinedAffineMap.chart,
     Simplex.refinedContinuousMap, Simplex.realizationContinuousMap,
-    Simplex.realizationPoint, Simplex.chartWeight, StandardSimplex.ofDelta,
-    affineCompMap_coe, realizationCoordinateLinear]
+    Simplex.realizationPoint,  StandardSimplex.ofDelta,
+     realizationCoordinateLinear]
   change (∑ i, if (ReferenceAffineOrbitCount.topRepr hp q.1) i = c then
     (affineCompMap (p - 1) N (fun k => Simplex.refinementIndexPerm (q.2 k)) w) i else 0) = _
   apply Finset.sum_congr rfl

@@ -74,8 +74,8 @@ otherwise. This is the arithmetic content of "delete the `k`-th vertex". -/
 theorem succAbove_val' (n : ℕ) (k : Fin (n + 1)) (i : Fin n) :
     (k.succAbove i : ℕ) = if i.val < k.val then i.val else i.val + 1 := by
   rcases lt_or_ge i.castSucc k with h | h
-  · rw [Fin.succAbove_of_castSucc_lt k i h, Fin.val_castSucc, if_pos]; exact h
-  · rw [Fin.succAbove_of_le_castSucc k i h, Fin.val_succ, if_neg]
+  · rw [Fin.succAbove_of_castSucc_lt k i h, Fin.val_castSucc, ite_eq_left]; exact h
+  · rw [Fin.succAbove_of_le_castSucc k i h, Fin.val_succ, ite_eq_right]
     simp only [Fin.le_def, Fin.val_castSucc] at h; omega
 
 /-- The vertex value of the face map `SimplexCategory.δ k` applied to a vertex `x`:
@@ -83,7 +83,7 @@ it deletes the `k`-th vertex, sending `x` to `x` if `x < k` and to `x + 1`
 otherwise. -/
 @[simp] lemma δ_toOrderHom_val {n : ℕ} (k : Fin (n + 2)) (x : Fin (n + 1)) :
     ((SimplexCategory.δ k).toOrderHom x : ℕ) = if x.val < k.val then x.val else x.val + 1 := by
-  show (k.succAbove x : ℕ) = _; rw [succAbove_val']
+  change (k.succAbove x : ℕ) = _; rw [succAbove_val']
 
 /-! ## 2. Degree bookkeeping -/
 
@@ -138,7 +138,7 @@ theorem frontFace_comp_δ_of_le (p q : ℕ) (k : Fin (p + q + 2)) (hk : k.val �
       = SimplexCategory.δ (⟨k.val, by omega⟩ : Fin (p + 2)) ≫ frontFace (p + 1) q
         ≫ awCastLeft p q := by
   ext x : 3; apply Fin.ext
-  show ((SimplexCategory.δ k).toOrderHom ((frontFace p q).toOrderHom x) : ℕ)
+  change ((SimplexCategory.δ k).toOrderHom ((frontFace p q).toOrderHom x) : ℕ)
      = (((awCastLeft p q).toOrderHom
           ((frontFace (p + 1) q).toOrderHom
             ((SimplexCategory.δ (⟨k.val, by omega⟩ : Fin (p + 2))).toOrderHom x))) : ℕ)
@@ -150,7 +150,7 @@ disturb the front `p`-block, so the front `p`-face of `d_k σ` equals the front
 theorem frontFace_comp_δ_of_gt (p q : ℕ) (k : Fin (p + q + 2)) (hk : p < k.val) :
     frontFace p q ≫ SimplexCategory.δ k = frontFace p (q + 1) := by
   ext x : 3; apply Fin.ext
-  show ((SimplexCategory.δ k).toOrderHom ((frontFace p q).toOrderHom x) : ℕ)
+  change ((SimplexCategory.δ k).toOrderHom ((frontFace p q).toOrderHom x) : ℕ)
      = ((frontFace p (q + 1)).toOrderHom x : ℕ)
   rw [δ_toOrderHom_val, frontFace_apply, frontFace_apply]
   have hx : x.val < p + 1 := x.isLt
@@ -166,10 +166,10 @@ theorem backFace_comp_δ_of_le (p q : ℕ) (k : Fin (p + q + 2)) (hk : k.val ≤
     backFace p q ≫ SimplexCategory.δ k
       = backFace (p + 1) q ≫ awCastLeft p q := by
   ext x : 3; apply Fin.ext
-  show ((SimplexCategory.δ k).toOrderHom ((backFace p q).toOrderHom x) : ℕ)
+  change ((SimplexCategory.δ k).toOrderHom ((backFace p q).toOrderHom x) : ℕ)
      = (((awCastLeft p q).toOrderHom ((backFace (p + 1) q).toOrderHom x)) : ℕ)
   rw [awCastLeft_val, δ_toOrderHom_val, backFace_apply, backFace_apply]
-  rw [if_neg (by have := x.isLt; omega)]; omega
+  rw [ite_eq_right (by have := x.isLt; omega)]; omega
 
 /-- **Internal back face, `p < k`.** Deleting a vertex `k > p` from `σ` and then
 taking the back `q`-face is the same as taking the back `q`-face of the
@@ -180,7 +180,7 @@ theorem backFace_comp_δ_of_gt (p q : ℕ) (k : Fin (p + q + 2)) (hk : p < k.val
       = SimplexCategory.δ (⟨k.val - p, by have := k.isLt; omega⟩ : Fin (q + 2))
           ≫ backFace p (q + 1) := by
   ext x : 3; apply Fin.ext
-  show ((SimplexCategory.δ k).toOrderHom ((backFace p q).toOrderHom x) : ℕ)
+  change ((SimplexCategory.δ k).toOrderHom ((backFace p q).toOrderHom x) : ℕ)
      = ((backFace p (q + 1)).toOrderHom
           ((SimplexCategory.δ (⟨k.val - p, by have := k.isLt; omega⟩ : Fin (q + 2))).toOrderHom x) : ℕ)
   rw [δ_toOrderHom_val, backFace_apply, backFace_apply, δ_toOrderHom_val]
@@ -188,8 +188,8 @@ theorem backFace_comp_δ_of_gt (p q : ℕ) (k : Fin (p + q + 2)) (hk : p < k.val
   rw [hf]
   have hx : x.val < q + 1 := x.isLt
   by_cases hc : x.val + p < k.val
-  · rw [if_pos hc, if_pos (by omega)]
-  · rw [if_neg hc, if_neg (by omega)]; omega
+  · rw [ite_eq_left hc, ite_eq_left (by omega)]
+  · rw [ite_eq_right hc, ite_eq_right (by omega)]; omega
 
 /-! ## 4. Endpoint identities and their cancellation
 
@@ -205,7 +205,7 @@ theorem aw_endpoint_front (p q : ℕ) :
     SimplexCategory.δ (Fin.last (p + 1)) ≫ frontFace (p + 1) q ≫ awCastLeft p q
       = frontFace p (q + 1) := by
   ext x : 3; apply Fin.ext
-  show (((awCastLeft p q).toOrderHom
+  change (((awCastLeft p q).toOrderHom
           ((frontFace (p + 1) q).toOrderHom
             ((SimplexCategory.δ (Fin.last (p + 1))).toOrderHom x))) : ℕ)
      = ((frontFace p (q + 1)).toOrderHom x : ℕ)
@@ -220,7 +220,7 @@ theorem aw_endpoint_back (p q : ℕ) :
     SimplexCategory.δ 0 ≫ backFace p (q + 1)
       = backFace (p + 1) q ≫ awCastLeft p q := by
   ext x : 3; apply Fin.ext
-  show ((backFace p (q + 1)).toOrderHom ((SimplexCategory.δ (0 : Fin (q + 2))).toOrderHom x) : ℕ)
+  change ((backFace p (q + 1)).toOrderHom ((SimplexCategory.δ (0 : Fin (q + 2))).toOrderHom x) : ℕ)
      = (((awCastLeft p q).toOrderHom ((backFace (p + 1) q).toOrderHom x)) : ℕ)
   rw [awCastLeft_val, backFace_apply, backFace_apply, δ_toOrderHom_val]
   split_ifs with h

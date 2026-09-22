@@ -64,7 +64,7 @@ theorem joined_antipode (n : ℕ) (hn : 1 ≤ n) (e : Sphere n) : Joined e (-e) 
   have h_path_connected : IsPathConnected (Metric.sphere (0 : EuclideanSpace ℝ (Fin (n + 1))) 1) :=
     isPathConnected_sphere (one_lt_rank_euclidean n hn) 0 (by norm_num)
   have he_neg : (-e : EuclideanSpace ℝ (Fin (n + 1))) ∈ Metric.sphere (0 : EuclideanSpace ℝ (Fin (n + 1))) 1 := by
-    show ‖(-e : EuclideanSpace ℝ (Fin (n + 1))) - 0‖ = 1
+    change ‖(-e : EuclideanSpace ℝ (Fin (n + 1))) - 0‖ = 1
     simp
   have hj : JoinedIn (Metric.sphere (0 : EuclideanSpace ℝ (Fin (n + 1))) 1) (e : EuclideanSpace ℝ (Fin (n + 1))) (-e : EuclideanSpace ℝ (Fin (n + 1))) :=
     h_path_connected.joinedIn (e : EuclideanSpace ℝ (Fin (n + 1))) e.2 (-e : EuclideanSpace ℝ (Fin (n + 1))) he_neg

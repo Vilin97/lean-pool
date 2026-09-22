@@ -61,7 +61,7 @@ theorem smallChainsInclusion_surjective_on_homology
   -- `cS` is a cycle in the small complex.
   have hcond : (ConcreteCategory.hom ((forget₂ (ModuleCat.{0} R) Ab).map
       ((smallChainComplex R X 𝒰).d n ((ComplexShape.down ℕ).next n)))) cS = 0 := by
-    show ((smallChainComplex R X 𝒰).d n ((ComplexShape.down ℕ).next n)).hom cS = 0
+    change ((smallChainComplex R X 𝒰).d n ((ComplexShape.down ℕ).next n)).hom cS = 0
     have hinj : Function.Injective
         ((smallChainsInclusion R X 𝒰).f ((ComplexShape.down ℕ).next n)).hom := by
       intro a b hab; exact Subtype.ext hab

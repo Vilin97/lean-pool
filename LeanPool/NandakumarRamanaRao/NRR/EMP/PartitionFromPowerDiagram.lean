@@ -51,7 +51,7 @@ noncomputable def EMP.powerPartition
       PowerDiagram.bodyCellSet_subset K s.pts
         (EMP.normalizedWeight K s.pts hn s.injective_pts) i
   covers := by
-    haveI : NeZero n := ⟨hn.ne'⟩
+    let : NeZero n := ⟨hn.ne'⟩
     have h := PowerDiagram.iUnion_bodyCellSet K s.pts
       (EMP.normalizedWeight K s.pts hn s.injective_pts)
     exact h.ge.trans_eq' rfl
@@ -76,7 +76,7 @@ theorem EMP.powerPartition_isEqualArea
     (K : Geometry.ConvexBody Plane) (s : Config n) (hn : 0 < n) (hK : 0 < K.area) :
     (EMP.powerPartition K s hn hK).IsEqualArea := by
   intro i j
-  show (EMP.powerPartitionPiece K s hn hK i).area
+  change (EMP.powerPartitionPiece K s hn hK i).area
     = (EMP.powerPartitionPiece K s hn hK j).area
   rw [EMP.powerPartitionPiece_area_eq K s hn hK i,
     EMP.powerPartitionPiece_area_eq K s hn hK j]

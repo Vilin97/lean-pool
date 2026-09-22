@@ -120,7 +120,7 @@ def evalAtOneℤ : (ℤ →ₗ[ℤ] ℤ) →+* ℤ where
   toFun f := f 1
   map_one' := rfl
   map_mul' f g := by
-    show (f.comp g) 1 = f 1 * g 1
+    change (f.comp g) 1 = f 1 * g 1
     simp [LinearMap.comp_apply]
   map_zero' := rfl
   map_add' _ _ := rfl

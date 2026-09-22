@@ -147,7 +147,7 @@ lemma frontFace_succ (p q : ℕ) :
   apply Fin.ext
   have hR : ((frontFace p q ≫ SimplexCategory.δ (Fin.last (p + q + 1))).toOrderHom x : ℕ)
       = x.val := by
-    show ((Fin.last (p + q + 1)).succAbove ((frontFace p q).toOrderHom x) : ℕ) = x.val
+    change ((Fin.last (p + q + 1)).succAbove ((frontFace p q).toOrderHom x) : ℕ) = x.val
     rw [Fin.succAbove_last]; rfl
   have hL : ((frontFace p (q + 1)).toOrderHom x : ℕ) = x.val := rfl
   omega
@@ -162,11 +162,11 @@ lemma backFace_succ_square (p q : ℕ) :
   apply Fin.ext
   have hL : ((SimplexCategory.δ (0 : Fin (q + 2)) ≫ backFace p (q + 1)).toOrderHom x : ℕ)
       = x.val + 1 + p := by
-    show ((backFace p (q + 1)).toOrderHom ((0 : Fin (q + 2)).succAbove x) : ℕ) = x.val + 1 + p
+    change ((backFace p (q + 1)).toOrderHom ((0 : Fin (q + 2)).succAbove x) : ℕ) = x.val + 1 + p
     rw [Fin.succAbove_zero, backFace_apply, Fin.val_succ]
   have hR : ((backFace p q ≫ SimplexCategory.δ (0 : Fin (p + q + 2))).toOrderHom x : ℕ)
       = x.val + p + 1 := by
-    show ((0 : Fin (p + q + 2)).succAbove ((backFace p q).toOrderHom x) : ℕ) = x.val + p + 1
+    change ((0 : Fin (p + q + 2)).succAbove ((backFace p q).toOrderHom x) : ℕ) = x.val + p + 1
     rw [Fin.succAbove_zero, Fin.val_succ, backFace_apply]
   omega
 

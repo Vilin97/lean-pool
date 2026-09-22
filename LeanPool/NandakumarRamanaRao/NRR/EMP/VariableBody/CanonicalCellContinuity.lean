@@ -87,7 +87,7 @@ theorem isClosed_canonicalCellGraph
   have hpos : 0 < (canonicalCell sites hA hn a.1 i).area := by
     rw [hcanon_target, targetArea]
     exact div_pos (BodySpace.area_pos hA a.1.1) (by exact_mod_cast hn)
-  show a.2 = canonicalCell sites hA hn a.1 i
+  change a.2 = canonicalCell sites hA hn a.1 i
   exact ConvexSubbody.eq_of_subset_of_area_eq hsubset harea hpos
 
 /-- **Continuity of the canonical cell.** Each canonical power cell depends continuously on the

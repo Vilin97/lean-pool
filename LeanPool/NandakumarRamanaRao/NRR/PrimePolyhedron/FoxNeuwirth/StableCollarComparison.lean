@@ -100,7 +100,7 @@ def StableCollarComparisonTheorem : Prop :=
     (H : ZeroFreeHomotopy hp F₀ F₁)
     (A₀ : StableRegularApproximation hp F₀.map)
     (A₁ : StableRegularApproximation hp F₁.map)
-    (C : StableCollar hp H A₀ A₁),
+    (_C : StableCollar hp H A₀ A₁),
       A₀.zeroCount = A₁.zeroCount
 
 /-- The stable collar comparison proposition is proved by global signed prism cancellation. -/

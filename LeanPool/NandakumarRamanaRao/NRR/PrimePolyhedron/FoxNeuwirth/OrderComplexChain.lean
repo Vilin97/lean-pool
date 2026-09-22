@@ -111,7 +111,7 @@ def boundary (chain : SimplicialChain R p (d + 1)) :
   apply Finset.sum_congr rfl
   intro k _
   by_cases h : source.restrict (FaceMap.delete k) = target
-  · simp [faceContribution, h, mul_assoc, mul_left_comm]
+  · simp [faceContribution, h,  mul_left_comm]
   · simp [faceContribution, h]
 
 /-- Boundary as an `R`-linear map. -/

@@ -82,7 +82,7 @@ theorem affineCompMap_extendSpatialRefinementWord_lastFace
       cofacePoint n (Fin.last (n + 1)) (affineCompMap n L eta x) := by
   induction L generalizing x with
   | zero =>
-      simp [extendSpatialRefinementWord]
+      simp []
   | succ L ih =>
       have hstep := congrFun
         (oneStep_last_face_eq n (fun z : Delta (n + 1) => z)

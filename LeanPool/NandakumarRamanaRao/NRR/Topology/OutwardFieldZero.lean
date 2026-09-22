@@ -67,11 +67,9 @@ theorem exists_zero_closedBall_of_inner_pos_on_sphere
   have hFne : ∀ x : SphereOddDegree.Disk d, F x.1 ≠ 0 := by
     intro x hx
     exact hzero x.1 x.2 hx
-
   let r : C(SphereOddDegree.Disk d, Sphere d) :=
     radialNormalizeMap (fun x => F x.1)
       (hF.comp continuous_subtype_val) hFne
-
   let incl : C(Sphere d, SphereOddDegree.Disk d) :=
     ⟨fun x => ⟨x.1, by
         have hxnorm : ‖(x.1 : Ambient d)‖ = 1 := by
@@ -82,23 +80,18 @@ theorem exists_zero_closedBall_of_inner_pos_on_sphere
         have hxnorm : ‖(x.1 : Ambient d)‖ = 1 := by
           simp
         simp)⟩
-
   let boundaryMap : C(Sphere d, Sphere d) := r.comp incl
-
   obtain ⟨yDisk, hyDisk⟩ :
       ∃ y : SphereOddDegree.Disk d,
         ContinuousMap.Homotopic (ContinuousMap.id (SphereOddDegree.Disk d))
           (ContinuousMap.const (SphereOddDegree.Disk d) y) := by
     exact id_nullhomotopic (SphereOddDegree.Disk d)
-
   have hincl_null : ContinuousMap.Homotopic incl
       (ContinuousMap.const (Sphere d) yDisk) := by
     simpa using hyDisk.comp (ContinuousMap.Homotopic.refl incl)
-
   have hboundary_null : ContinuousMap.Homotopic boundaryMap
       (ContinuousMap.const (Sphere d) (r yDisk)) := by
     simpa [boundaryMap] using (ContinuousMap.Homotopic.refl r).comp hincl_null
-
   have hboundary_id : ContinuousMap.Homotopic boundaryMap
       (ContinuousMap.id (Sphere d)) := by
     have hcomb_ne : ∀ p : unitInterval × Sphere d,
@@ -121,7 +114,6 @@ theorem exists_zero_closedBall_of_inner_pos_on_sphere
           nlinarith
       rw [hEq, inner_zero_right] at hinner
       exact lt_irrefl 0 hinner
-
     let V : unitInterval × Sphere d → Ambient d := fun p =>
       (1 - (p.1 : Real)) • F p.2.1 + (p.1 : Real) • p.2.1
     have hV : Continuous V := by
@@ -136,7 +128,6 @@ theorem exists_zero_closedBall_of_inner_pos_on_sphere
     · intro x
       apply Subtype.ext
       simp [Hmap, V, radialNormalizeMap, radialNormalize]
-
   let o : SphereOrientationPos := sphereOrientationPosUnconditional
   have hdeg_id : degreePos o hd boundaryMap = 1 := by
     rw [degreePos_homotopy o hd hboundary_id]

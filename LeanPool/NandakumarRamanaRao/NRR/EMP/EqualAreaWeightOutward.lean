@@ -126,7 +126,7 @@ lemma deviationPairing_lower_bound_of_max
     (w : Fin n → Real) (hw : EMP.WeightNormalized w)
     (k : Fin n) :
     (w k - powerGapBound K s) * K.area ≤ deviationPairing K s w := by
-  letI : NeZero n := ⟨hn.ne'⟩
+  let : NeZero n := ⟨hn.ne'⟩
   have hterm : ∀ i : Fin n,
       (w k - powerGapBound K s) * EMP.areaVec K s w i ≤
         w i * EMP.areaVec K s w i := by

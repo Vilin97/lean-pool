@@ -107,7 +107,7 @@ theorem shuffleRank_apply_right
     shuffleRank hp a ha s i =
       s.1ᶜ.orderEmbOfFin (shuffle_compl_card hp a ha s)
         ⟨(a.rank i).1 - facetLeftSize hp a ha, by
-          have hirank := (a.rank i).2
+          have _hirank := (a.rank i).2
           have hk := facetLeftSize_lt hp a ha
           omega⟩ := by
   simp [shuffleRank, facetLabelSumEquiv, shuffleMergeEquiv, hi,
@@ -126,7 +126,7 @@ theorem sameBlock_iff_same_side
   by_cases hi : (facetBar hp a ha).1 < (a.rank i).1
   <;> by_cases hj : (facetBar hp a ha).1 < (a.rank j).1
   <;> simp [hi, hj, facetLeftSize, Finset.filter_singleton,
-      apply_ite Finset.card, Finset.card_singleton, Finset.card_empty]
+       Finset.card_singleton, Finset.card_empty]
   <;> omega
 
 /-- The shuffle merge preserves the old order inside each of the two facet blocks. -/
@@ -218,7 +218,7 @@ theorem firstBlockPositions_shuffleToTopExtension
       simp only [Finset.mem_image, Finset.mem_univ, true_and] at hx
       obtain ⟨j, rfl⟩ := hx
       exact s.1.orderEmbOfFin_mem s.2 j
-    · simp [Finset.card_image_of_injective _ (s.1.orderEmbOfFin s.2).injective, hcard]
+    · simp [Finset.card_image_of_injective _ (s.1.orderEmbOfFin s.2).injective]
   exact himage.trans hfinal
 
 @[simp] theorem topExtensionToShuffle_shuffleToTopExtension
@@ -284,7 +284,7 @@ noncomputable def topExtensionLeftOrderEmb
       simp [hi₁, hi₂]
     have hpso := topExtension_preserves_sameBlock_order a c i₁ i₂ hs
     simp only [hi₁, hi₂] at hpso
-    show ((c.1 : BarredPermutation p).rank i₁).1 ≤ ((c.1 : BarredPermutation p).rank i₂).1 ↔ r₁.1 ≤ r₂.1
+    change ((c.1 : BarredPermutation p).rank i₁).1 ≤ ((c.1 : BarredPermutation p).rank i₂).1 ↔ r₁.1 ≤ r₂.1
     rw [le_iff_lt_or_eq, le_iff_lt_or_eq, hpso]
     have heq : ((c.1 : BarredPermutation p).rank i₁).1 = ((c.1 : BarredPermutation p).rank i₂).1 ↔ r₁.1 = r₂.1 := by
       have injc : Function.Injective ((c.1 : BarredPermutation p).rank) := ((c.1 : BarredPermutation p).rank).injective
@@ -306,7 +306,7 @@ theorem topExtensionLeftOrderEmb_mem
     (c : TopExtension a) (r : Fin (facetLeftSize hp a ha)) :
     topExtensionLeftOrderEmb hp a ha c r ∈ firstBlockPositions hp a ha c.1 := by
   apply (rank_mem_firstBlockPositions_iff hp a ha c _).2
-  simp [topExtensionLeftOrderEmb]
+  simp []
 
 /-- The increasing enumeration of first-block positions agrees with every top-cell extension. -/
 theorem topExtension_left_rank_eq_orderEmb
@@ -379,7 +379,6 @@ noncomputable def topExtensionRightOrderEmb
     rw [hrank_i1, hrank_i2] at hpres
     -- hpres : r₁ < r₂ ↔ (c.1.rank i₁) < (c.1.rank i₂)
     -- Goal is about (c.1.rank i₁).1 ≤ (c.1.rank i₂).1 ↔ r₁ ≤ r₂
-
     rw [Nat.add_lt_add_iff_left] at hpres
     have hpres_le : ((c.1 : BarredPermutation.TopCell p) : BarredPermutation p).rank i₁ ≤ ((c.1 : BarredPermutation.TopCell p) : BarredPermutation p).rank i₂ ↔ r₁ ≤ r₂ := by
       rw [le_iff_lt_or_eq, le_iff_lt_or_eq]
@@ -434,7 +433,7 @@ theorem topExtensionRightOrderEmb_mem
       (firstBlockPositions hp a ha c.1)ᶜ := by
   rw [Finset.mem_compl]
   apply (rank_mem_firstBlockPositions_iff hp a ha c _).not.mpr
-  simp [topExtensionRightOrderEmb]
+  simp []
 
 /-- The increasing enumeration of complementary positions agrees with every top-cell extension. -/
 theorem topExtension_right_rank_eq_orderEmb
@@ -446,7 +445,7 @@ theorem topExtension_right_rank_eq_orderEmb
       (firstBlockPositions hp a ha c.1)ᶜ.orderEmbOfFin
         (card_compl_firstBlockPositions hp a ha c)
         ⟨(a.rank i).1 - facetLeftSize hp a ha, by
-          have hirank := (a.rank i).2
+          have _hirank := (a.rank i).2
           have hk := facetLeftSize_lt hp a ha
           omega⟩ := by
   have hemb :

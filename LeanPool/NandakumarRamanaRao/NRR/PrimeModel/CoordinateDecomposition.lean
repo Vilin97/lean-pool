@@ -48,7 +48,7 @@ noncomputable def coordinateDeviation (hn : 0 < n) :
     change c * v i - coordinateMean n (c • v) =
       c * (v i - coordinateMean n v)
     rw [map_smul]
-    simp only [RingHom.id_apply, smul_eq_mul]
+    simp only [ smul_eq_mul]
     ring
 
 @[simp] theorem coordinateDeviation_apply

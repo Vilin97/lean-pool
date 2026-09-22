@@ -50,8 +50,8 @@ theorem abs_signedDistance
   classical
   unfold signedDistance
   by_cases hz : z ∈ S.lower
-  · rw [if_pos hz, abs_neg, abs_of_nonneg Metric.infDist_nonneg]
-  · rw [if_neg hz, abs_of_nonneg Metric.infDist_nonneg]
+  · rw [ite_eq_left hz, abs_neg, abs_of_nonneg Metric.infDist_nonneg]
+  · rw [ite_eq_right hz, abs_of_nonneg Metric.infDist_nonneg]
 
 /-- The zero set of the signed distance is exactly the carrier. -/
 theorem signedDistance_eq_zero_iff
@@ -80,7 +80,7 @@ theorem signedDistance_neg_of_mem_lower
   have hpos : 0 < Metric.infDist z S.carrier :=
     NRR.MetricTools.infDist_pos_of_not_mem S.isClosed_carrier S.carrier_nonempty hnc
   unfold signedDistance
-  rw [if_pos hz]
+  rw [ite_eq_left hz]
   exact neg_neg_iff_pos.2 hpos
 
 /-- The signed distance is strictly positive on the upper region. -/
@@ -95,7 +95,7 @@ theorem signedDistance_pos_of_mem_upper
   have hpos : 0 < Metric.infDist z S.carrier :=
     NRR.MetricTools.infDist_pos_of_not_mem S.isClosed_carrier S.carrier_nonempty hnc
   unfold signedDistance
-  rw [if_neg hnl]
+  rw [ite_eq_right hnl]
   exact hpos
 
 /-- At the bottom boundary point the signed distance is strictly negative. -/
@@ -130,14 +130,14 @@ theorem continuous_signedDistance
     refine ContinuousAt.congr_of_eventuallyEq
       (f := fun z' => -Metric.infDist z' S.carrier)
       ((NRR.MetricTools.continuous_infDist S.carrier).neg.continuousAt) ?_
-    filter_upwards [S.isOpen_lower.mem_nhds hz] with z' hz' using if_pos hz'
+    filter_upwards [S.isOpen_lower.mem_nhds hz] with z' hz' using ite_eq_left hz'
   · by_cases hz' : z ∈ S.upper
     · -- Upper points: locally `signedDistance = infDist` (upper excludes lower).
       refine ContinuousAt.congr_of_eventuallyEq
         (f := fun z' => Metric.infDist z' S.carrier)
         ((NRR.MetricTools.continuous_infDist S.carrier).continuousAt) ?_
       filter_upwards [S.isOpen_upper.mem_nhds hz'] with x hx using
-        if_neg fun h => S.disjoint_lower_upper.le_bot ⟨h, hx⟩
+        ite_eq_right fun h => S.disjoint_lower_upper.le_bot ⟨h, hx⟩
     · -- Carrier points: control by the distance estimate.
       have hzc : z ∈ S.carrier :=
         Classical.not_not.1 fun h =>

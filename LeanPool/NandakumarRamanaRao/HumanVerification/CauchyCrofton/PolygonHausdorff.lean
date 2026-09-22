@@ -54,7 +54,7 @@ theorem aedisjoint_edge (h0 : (0 : Point2) ∈ interior (K : Set Point2))
       apply hjk
       have hnat : (j : ℕ) = (k : ℕ) := by exact_mod_cast hcon
       exact Fin.ext hnat)
-  show μH[1] (edge K A (j : ℤ) ∩ edge K A (k : ℤ)) = 0
+  change μH[1] (edge K A (j : ℤ) ∩ edge K A (k : ℤ)) = 0
   refine measure_mono_null hsub ?_
   rw [Set.insert_eq, measure_union_null (measure_singleton _) (measure_singleton _)]
 

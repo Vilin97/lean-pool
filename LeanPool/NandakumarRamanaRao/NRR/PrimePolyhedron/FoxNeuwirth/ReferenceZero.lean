@@ -152,7 +152,7 @@ theorem referenceOrbitMultiplicity_eq_two
     intro h
     have hval := congrArg Fin.val h
     simp [i, j] at hval
-  letI : Nontrivial (Fin p) := ⟨⟨i, j, hij⟩⟩
+  let : Nontrivial (Fin p) := ⟨⟨i, j, hij⟩⟩
   rw [referenceOrbitMultiplicity,
     primeSymmetrySubgroup_eq_alternating p h2]
   exact alternatingGroup.index_eq_two

@@ -165,7 +165,7 @@ theorem finrank_sphereTopHomologyℤ_zero :
   classical
   have hFin : Finite (TopCat.sphere.{0} 0 : Type) :=
     Finite.of_injective _ (topCatSphereHomeomorph 0).injective
-  letI : Fintype (TopCat.sphere.{0} 0 : Type) := Fintype.ofFinite _
+  let : Fintype (TopCat.sphere.{0} 0 : Type) := Fintype.ofFinite _
   -- `H₀(S⁰; ℤ)` is `ℤ`-linearly isomorphic to `⨁_{x ∈ S⁰} ℤ`.
   have e := (sphere0H0IsoCoprod ≪≫
       ModuleCat.coprodIsoDirectSum (fun _ : (TopCat.sphere.{0} 0 : Type) ↦

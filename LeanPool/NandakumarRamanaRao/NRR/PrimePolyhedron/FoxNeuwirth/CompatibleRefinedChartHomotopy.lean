@@ -292,9 +292,9 @@ noncomputable def trans
     have hz : clampUnit (2 * (0 : Real)) = ⟨0, by norm_num⟩ := by
       apply Subtype.ext
       simp [clampUnit]
-    show (if ((0 : Real)) ≤ 1 / 2 then J01.value q w (clampUnit (2 * (0 : Real)))
+    change (if ((0 : Real)) ≤ 1 / 2 then J01.value q w (clampUnit (2 * (0 : Real)))
       else J12.value q w (clampUnit (2 * (0 : Real) - 1))) = K0.value q w
-    rw [if_pos hcond, hz]
+    rw [ite_eq_left hcond, hz]
     exact J01.value_zero q w
   value_one := by
     intro q w
@@ -302,9 +302,9 @@ noncomputable def trans
     have hz : clampUnit (2 * (1 : Real) - 1) = ⟨1, by norm_num⟩ := by
       apply Subtype.ext
       norm_num [clampUnit]
-    show (if ((1 : Real)) ≤ 1 / 2 then J01.value q w (clampUnit (2 * (1 : Real)))
+    change (if ((1 : Real)) ≤ 1 / 2 then J01.value q w (clampUnit (2 * (1 : Real)))
       else J12.value q w (clampUnit (2 * (1 : Real) - 1))) = K2.value q w
-    rw [if_neg hcond, hz]
+    rw [ite_eq_right hcond, hz]
     exact J12.value_one q w
   decorated_compatible := by
     intro g h q r w v t hchart
@@ -362,7 +362,7 @@ noncomputable def originalPLToGlobal
             continuous_toDelta))).comp continuous_fst))
   value_zero := by
     intro q w
-    show (1 - (0 : Real)) • (originalPLMap hp A.toRegularApproximation k).value q w +
+    change (1 - (0 : Real)) • (originalPLMap hp A.toRegularApproximation k).value q w +
         (0 : Real) • F.map
           (chart hp (A.toRegularApproximation.level + k) q
             (StandardSimplex.toDelta w)) =
@@ -370,7 +370,7 @@ noncomputable def originalPLToGlobal
     module
   value_one := by
     intro q w
-    show (1 - (1 : Real)) • (originalPLMap hp A.toRegularApproximation k).value q w +
+    change (1 - (1 : Real)) • (originalPLMap hp A.toRegularApproximation k).value q w +
         (1 : Real) • F.map
           (chart hp (A.toRegularApproximation.level + k) q
             (StandardSimplex.toDelta w)) =

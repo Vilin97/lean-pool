@@ -53,7 +53,7 @@ theorem cylinderVertex_time (hp : Nat.Prime p) {N : Nat}
         (Fin.cast (dimShift hp) i)).2.1 =
       ((RelativeSubdivisionOneStepCells.cellSystem hp N).vertex q i).time.1 := by
   obtain ⟨m, rfl⟩ : ∃ m, p = m + 1 := ⟨p - 1, (Nat.succ_pred_eq_of_pos hp.pos).symm⟩
-  show (RelativeSubdivisionCylinderCombinatorics.vertex m q.2 i).2.1 = _
+  change (RelativeSubdivisionCylinderCombinatorics.vertex m q.2 i).2.1 = _
   simp [RelativeSubdivisionOneStepCells.cellSystem,
     RelativeSubdivisionOneStepCells.vertex, RelativeSubdivisionOneStepCells.chart,
     RelativeSubdivisionOneStepCells.liftPoint,
@@ -69,7 +69,7 @@ theorem cylinderVertex_point (hp : Nat.Prime p) {N : Nat}
       RelativeSubdivisionCylinderCombinatorics.vertex (p - 1) q.2
         (Fin.cast (dimShift hp) i) := by
   obtain ⟨m, rfl⟩ : ∃ m, p = m + 1 := ⟨p - 1, (Nat.succ_pred_eq_of_pos hp.pos).symm⟩
-  show RelativeSubdivisionOneStepCells.localPoint hp q.2
+  change RelativeSubdivisionOneStepCells.localPoint hp q.2
       (stdSimplex.vertex (S := Real) i) =
     RelativeSubdivisionCylinderCombinatorics.vertex m q.2 i
   simp [RelativeSubdivisionOneStepCells.localPoint,
@@ -77,7 +77,7 @@ theorem cylinderVertex_point (hp : Nat.Prime p) {N : Nat}
 
 /-- A finite partial injection into a finite type extends to a permutation. -/
 theorem exists_perm_extending_finset
-    {α : Type*}  [DecidableEq α]
+    {α : Type*} [DecidableEq α]
     (s : Finset α) (f : α → α)
     (hinj : Set.InjOn f (s : Set α)) :
     ∃ e : Equiv.Perm α, ∀ x ∈ s, e x = f x := by

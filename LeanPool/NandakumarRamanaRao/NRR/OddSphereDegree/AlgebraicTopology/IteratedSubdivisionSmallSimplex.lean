@@ -80,8 +80,8 @@ theorem prefixBarycenter_val_eq_stepVertices (n : ℕ) (π : Equiv.Perm (Fin (n 
     (k : Fin (n + 1)) :
     (prefixBarycenter n π k).val = stepVertices n (stdVerts n) π k := by
   unfold prefixBarycenter stepVertices;
-  ext j; simp +decide [ stdSimplex.map, stdSimplex.barycenter, prefixVertex, stdVerts ];
-  unfold FunOnFinite.linearMap; simp +decide [ Finset.mul_sum _ _ _, mul_comm ];
+  ext j; simp +decide [ stdSimplex.map, stdSimplex.barycenter,  stdVerts ];
+  unfold FunOnFinite.linearMap; simp +decide [ Finset.mul_sum _ _ _ ];
   simp +decide [ Finsupp.mapDomain, Finsupp.linearEquivFunOnFinite, Pi.single_apply ];
   simp +decide [ Finsupp.sum_fintype, prefixVertex ];
   rw [ ← Finset.sum_subset ( show Finset.image ( fun x : Fin ( k.val + 1 ) => ⟨ x, by linarith [ Fin.is_lt x, Fin.is_lt k ] ⟩ ) Finset.univ ⊆ Finset.Iic k from ?_ ) ];
@@ -95,7 +95,7 @@ theorem prefixBarycenter_val_eq_stepVertices (n : ℕ) (π : Equiv.Perm (Fin (n 
 theorem affineSubdivLinear_stdVerts (n : ℕ) (π : Equiv.Perm (Fin (n + 1)))
     (k : Fin (n + 1)) :
     affineSubdivLinear n π (stdVerts n k) = stepVertices n (stdVerts n) π k := by
-  ext j; simp +decide [ affineSubdivLinear_apply, stdVerts, Pi.single_apply, Finset.sum_ite_eq ];
+  ext j; simp +decide [ affineSubdivLinear_apply, stdVerts, Pi.single_apply ];
   exact congr_fun ( prefixBarycenter_val_eq_stepVertices n π k ) j
 
 /-- Compose the barycentric subdivision linear maps selected by a permutation word. -/
@@ -124,7 +124,7 @@ theorem affineCompLinear_stdVerts (n N : ℕ) (ρs : Fin N → Equiv.Perm (Fin (
   | succ N ih =>
     intro k
     rw [affineCompLinear_succ, iterVertices_succ]
-    show (affineCompLinear n N (fun i => ρs i.castSucc)) (affineSubdivLinear n (ρs (Fin.last N)) (stdVerts n k)) = _
+    change (affineCompLinear n N (fun i => ρs i.castSucc)) (affineSubdivLinear n (ρs (Fin.last N)) (stdVerts n k)) = _
     rw [affineSubdivLinear_stdVerts]
     dsimp [stepVertices]
     rw [map_smul, map_sum]

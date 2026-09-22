@@ -116,8 +116,8 @@ theorem permToZMod2_permCongr {α β : Type*} [Finite α] [Finite β]
     (e : α ≃ β) (p : Equiv.Perm α) :
     permToZMod2 (e.permCongr p) = permToZMod2 p := by
   classical
-  letI := Fintype.ofFinite α
-  letI := Fintype.ofFinite β
+  let := Fintype.ofFinite α
+  let := Fintype.ofFinite β
   simp only [permToZMod2, MonoidHom.coe_comp, Function.comp_apply]
   rw [Equiv.Perm.sign_permCongr]
 
@@ -143,7 +143,7 @@ theorem intUnitsToZMod2_injective : Function.Injective intUnitsToZMod2 := by
 theorem card_two_elim {α : Type*} [Finite α] (h : Nat.card α = 2) :
     ∃ a b : α, a ≠ b ∧ ∀ x, x = a ∨ x = b := by
   classical
-  letI := Fintype.ofFinite α
+  let := Fintype.ofFinite α
   have hcard : (Finset.univ : Finset α).card = 2 := by
     rw [Finset.card_univ, ← Nat.card_eq_fintype_card]; exact h
   obtain ⟨a, b, hab, huniv⟩ := Finset.card_eq_two.mp hcard
@@ -181,14 +181,14 @@ theorem perm_two_eq_one_or_fixedpointfree {α : Type*} [Finite α] (h : Nat.card
 theorem permToZMod2_injective {α : Type*} [Finite α] (h : Nat.card α = 2) :
     Function.Injective (permToZMod2 (α := α)) := by
   classical
-  letI := Fintype.ofFinite α
+  let := Fintype.ofFinite α
   have hcard : Fintype.card α = 2 := by rw [← Nat.card_eq_fintype_card]; exact h
   have hsign : Function.Bijective (Equiv.Perm.sign (α := α)) := by
     rw [Fintype.bijective_iff_surjective_and_card]
     have : Nontrivial α := by rw [← Fintype.one_lt_card_iff_nontrivial, hcard]; norm_num
     refine ⟨Equiv.Perm.sign_surjective α, ?_⟩
     rw [Fintype.card_perm, hcard]; decide
-  show Function.Injective (intUnitsToZMod2 ∘ Equiv.Perm.sign)
+  change Function.Injective (intUnitsToZMod2 ∘ Equiv.Perm.sign)
   exact intUnitsToZMod2_injective.comp hsign.injective
 
 /-- On a two-element type the parity character is trivial exactly on the identity
@@ -319,7 +319,7 @@ theorem projMonodromyPerm_map_eq_permCongr (n : ℕ) (f : C(Sphere n, Sphere n))
       = (inducedOnRPFiberEquiv n f hf x).permCongr (projMonodromyPerm n γ) := by
   refine Equiv.ext fun y => ?_
   obtain ⟨z, rfl⟩ := (inducedOnRPFiberEquiv n f hf x).surjective y
-  show projMonodromyPerm n (γ.map ⟨inducedOnRP f hf, (inducedOnRP f hf).continuous⟩)
+  change projMonodromyPerm n (γ.map ⟨inducedOnRP f hf, (inducedOnRP f hf).continuous⟩)
       (inducedOnRPFiberMap n f hf z)
     = (inducedOnRPFiberEquiv n f hf x).permCongr (projMonodromyPerm n γ)
         (inducedOnRPFiberEquiv n f hf x z)
@@ -344,7 +344,7 @@ theorem classifyingHom_inducedOnRP_naturality (n : ℕ) (f : C(Sphere n, Sphere 
       = classifyingHom n x := by
   refine MonoidHom.ext (fun a => ?_)
   rw [MonoidHom.comp_apply, classifyingHom_apply, classifyingHom_apply]
-  show permToZMod2 (projMonodromyPerm n
+  change permToZMod2 (projMonodromyPerm n
       ((FundamentalGroup.toPath a).map ⟨inducedOnRP f hf, (inducedOnRP f hf).continuous⟩))
     = permToZMod2 (projMonodromyPerm n (FundamentalGroup.toPath a))
   rw [projMonodromyPerm_map_eq_permCongr n f hf]

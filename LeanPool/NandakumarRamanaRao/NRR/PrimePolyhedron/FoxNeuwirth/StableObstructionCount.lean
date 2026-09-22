@@ -96,7 +96,7 @@ noncomputable def negativeReferenceStableApproximation
         (AAK.negativeEquivariantReferenceCoordinateMap hp) q w
       rw [heq]
       unfold coordinateMean
-      haveI : Nonempty (Fin p) := ⟨⟨0, hp.pos⟩⟩
+      let : Nonempty (Fin p) := ⟨⟨0, hp.pos⟩⟩
       exact div_neg_of_neg_of_pos
         (Finset.sum_neg (fun i _ => hneg i) Finset.univ_nonempty)
         (by exact_mod_cast hp.pos)

@@ -205,8 +205,8 @@ theorem mvInclU_small_comp_routeU (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ
   apply LinearMap.ext
   rintro ⟨c, hc⟩
   apply Subtype.ext
-  simp only [ModuleCat.hom_comp, LinearMap.comp_apply, ModuleCat.hom_id, LinearMap.id_apply]
-  show (keepHom R X (IsSubordinate (U : Set X))).hom c = c
+  simp only [ModuleCat.hom_comp,  ModuleCat.hom_id]
+  change (keepHom R X (IsSubordinate (U : Set X))).hom c = c
   exact keepHom_eq_self_of_mem hc
 
 theorem mvInclU_small_comp_routeV (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ) :
@@ -215,8 +215,8 @@ theorem mvInclU_small_comp_routeV (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ
   apply LinearMap.ext
   rintro ⟨c, hc⟩
   apply Subtype.ext
-  simp only [ModuleCat.hom_comp, LinearMap.comp_apply, ModuleCat.hom_zero, LinearMap.zero_apply]
-  show (keepHom R X (IsSubVnotU U V)).hom c = 0
+  simp only [ModuleCat.hom_comp,  ModuleCat.hom_zero]
+  change (keepHom R X (IsSubVnotU U V)).hom c = 0
   exact keepHom_PV_eq_zero_of_mem_U R U V k c hc
 
 theorem mvInclV_small_comp_routeU (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ) :
@@ -240,8 +240,8 @@ theorem mvInclUV_V_comp_projVtoUV (U V : Opens X) (k : ℕ) :
   apply LinearMap.ext
   rintro ⟨c, hc⟩
   apply Subtype.ext
-  simp only [ModuleCat.hom_comp, LinearMap.comp_apply, ModuleCat.hom_id, LinearMap.id_apply]
-  show (keepHom R X (IsSubordinate (U : Set X))).hom c = c
+  simp only [ModuleCat.hom_comp,  ModuleCat.hom_id]
+  change (keepHom R X (IsSubordinate (U : Set X))).hom c = c
   exact keepHom_eq_self_of_mem (subChainSubmodule_mono Set.inter_subset_left k hc)
 
 theorem projVtoUV_inclUV_V_add_inclV_routeV (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ) :
@@ -256,8 +256,8 @@ theorem projVtoUV_inclUV_V_add_inclV_routeV (U V : Opens X) (hUV : U ⊔ V = ⊤
   apply LinearMap.ext
   rintro ⟨c, hc⟩
   apply Subtype.ext
-  simp only [ModuleCat.hom_add, ModuleCat.hom_comp, LinearMap.add_apply, LinearMap.comp_apply,
-    ModuleCat.hom_id, LinearMap.id_apply]
+  simp only [ModuleCat.hom_add, ModuleCat.hom_comp,
+    ModuleCat.hom_id]
   exact keepHom_split_subV R U V hUV k c hc
 
 /-- The degreewise module short complex underlying the Mayer–Vietoris construction. -/
@@ -295,8 +295,8 @@ noncomputable def mvSplitting (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ) :
     apply LinearMap.ext
     rintro ⟨c, hc⟩
     apply Subtype.ext
-    simp only [ModuleCat.hom_add, ModuleCat.hom_comp, LinearMap.add_apply, LinearMap.comp_apply,
-      ModuleCat.hom_id, LinearMap.id_apply]
+    simp only [ModuleCat.hom_add, ModuleCat.hom_comp,
+      ModuleCat.hom_id]
     exact keepHom_split_small R U V hUV k c hc
   id := by
     change biprod.desc 0 (-projVtoUV R U V k) ≫
@@ -341,13 +341,13 @@ noncomputable def mvEvalIso (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ) :
     (HomologicalComplex.biprodXIso (subChainComplex R X (U : Set X)) (subChainComplex R X (V : Set X)) k)
     (Iso.refl _)
     (by
-      show 𝟙 _ ≫ biprod.lift ((mvInclUVU R U V).f k) (-(mvInclUVV R U V).f k) =
+      change 𝟙 _ ≫ biprod.lift ((mvInclUVU R U V).f k) (-(mvInclUVV R U V).f k) =
            (mvLeftChainMap R U V).f k ≫
              (HomologicalComplex.biprodXIso (subChainComplex R X ↑U) (subChainComplex R X ↑V) k).hom
       rw [Category.id_comp]
       exact (biprodXIso_lift_f (R := R) (mvInclUVU R U V) (-mvInclUVV R U V) k).symm)
     (by
-      show (HomologicalComplex.biprodXIso (subChainComplex R X ↑U) (subChainComplex R X ↑V) k).hom ≫
+      change (HomologicalComplex.biprodXIso (subChainComplex R X ↑U) (subChainComplex R X ↑V) k).hom ≫
              biprod.desc ((mvInclUSmall R U V hUV).f k) ((mvInclVSmall R U V hUV).f k) =
            (mvRightChainMap R U V hUV).f k ≫ 𝟙 _
       rw [Category.comp_id]

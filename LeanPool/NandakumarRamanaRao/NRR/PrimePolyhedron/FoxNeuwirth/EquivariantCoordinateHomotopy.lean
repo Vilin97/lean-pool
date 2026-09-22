@@ -120,9 +120,9 @@ noncomputable def trans
     change (if t.1 ≤ 1 / 2 then H₀₁.map (g • x, _) else H₁₂.map (g • x, _)) =
       g • (if t.1 ≤ 1 / 2 then H₀₁.map (x, _) else H₁₂.map (x, _))
     by_cases h : t.1 ≤ 1 / 2
-    · simp only [if_pos h]
+    · simp only [ite_eq_left h]
       exact H₀₁.equivariant g x _
-    · simp only [if_neg h]
+    · simp only [ite_eq_right h]
       exact H₁₂.equivariant g x _
   zeroFree := by
     intro x t

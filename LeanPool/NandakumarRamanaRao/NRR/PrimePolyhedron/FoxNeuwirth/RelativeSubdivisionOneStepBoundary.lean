@@ -156,7 +156,7 @@ theorem facetOrbitIndicator_occurrence
               fun i => g • (RelativeSubdivisionOneStepCells.cellSystem hp N).facetSignature o' i := by
       exact ⟨o, hos, 1, by funext i; simp⟩
     unfold facetOrbitIndicator
-    rw [if_pos hex, if_pos hos]
+    rw [ite_eq_left hex, ite_eq_left hos]
   · have hnot : ¬ ∃ o' : (RelativeSubdivisionOneStepCells.cellSystem hp N).FacetOccurrence,
         (RelativeSubdivisionOneStepCells.cellSystem hp N).facetClass o' = s ∧
           ∃ g : PrimeSymmetry p,
@@ -173,7 +173,7 @@ theorem facetOrbitIndicator_occurrence
           simpa [mul_smul] using hgi⟩
       exact hclass.trans ho'
     unfold facetOrbitIndicator
-    rw [if_neg hnot, if_neg hos]
+    rw [ite_eq_right hnot, ite_eq_right hos]
 
 /-- Local tuple weight induced by one global quotient-facet class. -/
 noncomputable def localTupleWeight
@@ -301,7 +301,7 @@ theorem localBase_eq_globalBase
     (liftTuple hp N q
       (RelativeSubdivisionCylinderCombinatorics.Oriented.baseFacetVertex (p - 1) r))) = _
   rw [htuple, facetOrbitIndicator_occurrence]
-  simp [localTupleWeight, quotientIndicator, RelativeSubdivisionOneStepBoundaryBase.baseOccurrence,
+  simp [ quotientIndicator, RelativeSubdivisionOneStepBoundaryBase.baseOccurrence,
     RelativeSubdivisionOneStepCells.coefficient]
   exact (mul_assoc _ _ _).symm
 
@@ -419,11 +419,10 @@ private theorem fixed_side_refinement_cancels (d : ℕ) (hp : Nat.Prime (d + 2))
     funext x
     apply Realization.ext
     intro c
-    simp [W, EquivariantPrismNonhorizontalCancellation.iteratedBoundaryMap,
+    simp [ EquivariantPrismNonhorizontalCancellation.iteratedBoundaryMap,
       ReferenceAffineOrbitCount.topRepr,
       Simplex.realizationContinuousMap, Simplex.realizationPoint,
-      Simplex.chartWeight, cofacePoint, stdSimplex.map_coe,
-      FunOnFinite.linearMap_apply_apply]
+      Simplex.chartWeight, cofacePoint, stdSimplex.map_coe]
     change (∑ i : Fin (d + 2),
       if (ReferenceAffineOrbitCount.topRepr hp orbit) i = c then
         (StandardSimplex.ofDelta
@@ -445,7 +444,7 @@ private theorem fixed_side_refinement_cancels (d : ℕ) (hp : Nat.Prime (d + 2))
       then _ else 0) = if (ReferenceAffineOrbitCount.topRepr hp orbit)
         (j.succAbove i) = c then _ else 0
     by_cases hic : (ReferenceAffineOrbitCount.topRepr hp orbit) (j.succAbove i) = c
-    · rw [if_pos hic, if_pos hic]
+    · rw [ite_eq_left hic, ite_eq_left hic]
       change stdSimplex.map (S := Real) j.succAbove
         (affineCompMap d N theta x) (j.succAbove i) =
           affineCompMap d N theta x i
@@ -457,7 +456,7 @@ private theorem fixed_side_refinement_cancels (d : ℕ) (hp : Nat.Prime (d + 2))
           exact hqi (Fin.succAbove_right_injective heq)
         have hq' : j.succAbove q = j.succAbove i := by simpa using hq
         exact (hsucc hq').elim) (by simp)
-    · rw [if_neg hic, if_neg hic]
+    · rw [ite_eq_right hic, ite_eq_right hic]
   simp_rw [hmap]
   calc
     _ =
@@ -566,8 +565,7 @@ private theorem fixedSideCell_sum_eq_zero_dim
   classical
   simp only [
     RefinedAffineMap.subdivisionSign,
-    EquivariantPrismNonhorizontalCancellation.iteratedSign,
-    permSignCoeff
+    EquivariantPrismNonhorizontalCancellation.iteratedSign
   ]
   have hreindex (c : PrimeOrbitCycle.TopOrbit hp) :
       (∑ rho : RefinementWord (d + 2) N,
@@ -706,7 +704,7 @@ private theorem sideMapWeight_baseOccurrence_sideCell
       RelativeSubdivisionOneStepBoundaryBase.baseOccurrence,
       RelativeAffineCellSystem.facetSignature,
       RelativeSubdivisionOneStepCells.cellSystem,
-      RelativeSubdivisionCylinderCombinatorics.Oriented.baseFacetVertex,
+
       RelativeSubdivisionCylinderCombinatorics.sidePoint,
       RelativeSubdivisionOneStepCells.liftPoint,
       RelativeSubdivisionOneStepCells.localPoint,

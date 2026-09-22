@@ -113,7 +113,7 @@ theorem chainSupported_set_eq :
   ext weight
   constructor
   · intro h
-    simp only [Set.mem_iInter, Set.mem_ofPred_eq]
+    simp only [Set.mem_iInter]
     intro a b
     change PairCompatible a b ∨ weight a = 0 ∨ weight b = 0
     by_cases ha : weight a = 0

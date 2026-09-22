@@ -101,9 +101,9 @@ noncomputable def patchedBoundarySiteValue
     (A₀ : StableRegularApproximation hp F₀.map)
     (A₁ : StableRegularApproximation hp F₁.map)
     (s : ScalarSite hp C) : Real :=
-  if h₀ : (globalPoint hp C s.1).time.1 = 0 then
+  if _h₀ : (globalPoint hp C s.1).time.1 = 0 then
     A₀.toRegularApproximation.map (globalPoint hp C s.1).spatial s.2
-  else if h₁ : (globalPoint hp C s.1).time.1 = 1 then
+  else if _h₁ : (globalPoint hp C s.1).time.1 = 1 then
     A₁.toRegularApproximation.map (globalPoint hp C s.1).spatial s.2
   else
     (stablePatchedHomotopy hp F₀ F₁ H A₀ A₁).map
@@ -190,7 +190,7 @@ theorem vectorValue_patchedBoundaryAssignment_upper
     norm_num
   funext j
   simp [vectorValue, scalarValue, patchedBoundaryAssignment,
-    patchedBoundarySiteValue, hx, hx₀]
+    patchedBoundarySiteValue, hx]
 
 /-- At every nonhorizontal sampled vertex, the patched assignment is the actual value of the
 continuous patched homotopy. -/

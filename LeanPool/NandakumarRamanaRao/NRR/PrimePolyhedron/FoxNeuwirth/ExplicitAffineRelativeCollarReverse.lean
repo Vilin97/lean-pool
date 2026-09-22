@@ -145,7 +145,7 @@ theorem reverse_facetIncidence
     · apply (facetEquiv C).injective
       exact h
   simp only [heq]
-  split_ifs <;> simp [reverseCells]
+  split_ifs <;> simp []
 
 /-- Lower-horizontal reflected facets are precisely upper-horizontal original facets. -/
 theorem reverse_isLower_iff_isUpper

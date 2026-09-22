@@ -98,12 +98,12 @@ theorem affineSubdivMap_perm_drop
     by_cases hrklt : r.1 < k.1
     · have hrk : r.1 <= k.1 := Nat.le_of_lt hrklt
       have hsucc : r.succ.1 <= k.1 := by simpa using hrklt
-      simp [hrk, hsucc, hrklt]
+      simp [hrk,  hrklt]
     · have hkrlt : k.1 < r.1 := by omega
       have hrk : ¬ r.1 <= k.1 := Nat.not_le.mpr hkrlt
       have hsucc : ¬ r.succ.1 <= k.1 :=
         fun h => hrk (le_trans (by simp) h)
-      simp [hrk, hsucc, hrklt]
+      simp [hrk,  hrklt]
   · simp
 
 /-- The final ordered coordinate recovers the final source coefficient. -/
@@ -514,7 +514,7 @@ theorem affineCompMap_eq_of_vertex_eq_on_support
     have hstd : BarycentricSubdivisionDiameter.stdVerts n i =
         (stdSimplex.vertex (S := Real) i).1 := by
       ext j
-      simp [BarycentricSubdivisionDiameter.stdVerts, stdSimplex.vertex, Pi.single_apply]
+      simp [BarycentricSubdivisionDiameter.stdVerts,  Pi.single_apply]
     rw [hstd]
     exact congrArg (fun q => z i • q) hv
 
@@ -656,7 +656,7 @@ theorem affineCompMap_coordinate_eq_sum_vertices
     have hstd : BarycentricSubdivisionDiameter.stdVerts n r =
         (stdSimplex.vertex (S := Real) r).1 := by
       ext k
-      simp [BarycentricSubdivisionDiameter.stdVerts, stdSimplex.vertex, Pi.single_apply]
+      simp [BarycentricSubdivisionDiameter.stdVerts,  Pi.single_apply]
     rw [hstd]
     have hv := affineCompMap_coe n N rho
       (stdSimplex.vertex (S := Real) r)

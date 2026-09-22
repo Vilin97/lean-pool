@@ -77,24 +77,18 @@ theorem endpointInterpolant_deviationSkeletonFree
   intro q w hdev
   obtain ⟨q₀, eta, rfl⟩ :=
     endpointTopCell_surjective hp N L q
-
   by_contra hnot
   simp only [StandardSimplex.IsInterior, not_forall] at hnot
   obtain ⟨i, hi⟩ := hnot
-
   have hi0 : w i = 0 :=
     le_antisymm (not_lt.mp hi) (w.nonneg i)
-
   let prismCell : PrismCell hp N L :=
     endpointPrismCell hp N L s q₀ eta
-
   let omitted : Fin (p + 1) :=
     endpointOmittedIndex L s
-
   let full : StandardSimplex p :=
     AffinePositiveRayBoundary.VertexMap.fullSimplexOfFacet
       hp omitted w
-
   have haffine :
       AffinePositiveRayBoundary.VertexMap.facetAffineValue
           (localVertexMap hp N L a prismCell) omitted w =
@@ -128,7 +122,6 @@ theorem endpointInterpolant_deviationSkeletonFree
       congrFun
         (endpointInterpolant_vertexValue
           hp N L s a q₀ eta i) j
-
   have hfullDev : ∀ r : Fin (p - 1),
       AffinePositiveRayBoundary.VertexMap.deviation hp
         (AffinePositiveRayBoundary.VertexMap.affineValue
@@ -139,21 +132,17 @@ theorem endpointInterpolant_deviationSkeletonFree
       haffine
     ]
     exact sub_eq_zero.mpr (hdev r)
-
   let i' : Fin p :=
     AffinePositiveRayBoundary.VertexMap.facetIndexEquiv hp i
-
   have hzero1 : full omitted = 0 := by
     exact
       AffinePositiveRayBoundary.VertexMap.fullSimplexOfFacet_omitted_eq_zero hp omitted w
-
   have hzero2 : full (omitted.succAbove i') = 0 := by
     rw [show full (omitted.succAbove i') = w i by
       exact
         AffinePositiveRayBoundary.VertexMap.fullSimplexOfFacet_succAbove_facetIndexEquiv
             hp omitted w i]
     exact hi0
-
   exact hcodim prismCell full omitted (omitted.succAbove i')
     (Fin.succAbove_ne omitted i').symm
     hfullDev
@@ -298,7 +287,7 @@ theorem collarExistence_implies_endpoint_level_alignment
     (HC : StableCollarExistenceTheorem) :
     ∀ {p : Nat} (hp : Nat.Prime p)
       (F₀ F₁ : ZeroFreeMap hp)
-      (H : ZeroFreeHomotopy hp F₀ F₁)
+      (_H : ZeroFreeHomotopy hp F₀ F₁)
       (A₀ : StableRegularApproximation hp F₀.map)
       (A₁ : StableRegularApproximation hp F₁.map),
       A₀.toRegularApproximation.level = A₁.toRegularApproximation.level := by
@@ -311,9 +300,9 @@ theorem collarExistence_implies_lower_deviationSkeletonFree
     (HC : StableCollarExistenceTheorem) :
     ∀ {p : Nat} (hp : Nat.Prime p)
       (F₀ F₁ : ZeroFreeMap hp)
-      (H : ZeroFreeHomotopy hp F₀ F₁)
+      (_H : ZeroFreeHomotopy hp F₀ F₁)
       (A₀ : StableRegularApproximation hp F₀.map)
-      (A₁ : StableRegularApproximation hp F₁.map),
+      (_A₁ : StableRegularApproximation hp F₁.map),
       DeviationSkeletonFree hp A₀.toRegularApproximation.level
         A₀.toRegularApproximation.map := by
   intro p hp F₀ F₁ H A₀ A₁
@@ -326,8 +315,8 @@ theorem collarExistence_implies_upper_deviationSkeletonFree
     (HC : StableCollarExistenceTheorem) :
     ∀ {p : Nat} (hp : Nat.Prime p)
       (F₀ F₁ : ZeroFreeMap hp)
-      (H : ZeroFreeHomotopy hp F₀ F₁)
-      (A₀ : StableRegularApproximation hp F₀.map)
+      (_H : ZeroFreeHomotopy hp F₀ F₁)
+      (_A₀ : StableRegularApproximation hp F₀.map)
       (A₁ : StableRegularApproximation hp F₁.map),
       DeviationSkeletonFree hp A₁.toRegularApproximation.level
         A₁.toRegularApproximation.map := by

@@ -81,7 +81,7 @@ end StableRegularApproximation
 def StableHomotopyInvarianceTheorem : Prop :=
   ∀ {p : Nat} (hp : Nat.Prime p)
     (F₀ F₁ : EquivariantCoordinateHomotopy.ZeroFreeMap hp)
-    (H : EquivariantCoordinateHomotopy.ZeroFreeHomotopy hp F₀ F₁)
+    (_H : EquivariantCoordinateHomotopy.ZeroFreeHomotopy hp F₀ F₁)
     (A₀ : StableRegularApproximation hp F₀.map)
     (A₁ : StableRegularApproximation hp F₁.map),
       A₀.zeroCount = A₁.zeroCount

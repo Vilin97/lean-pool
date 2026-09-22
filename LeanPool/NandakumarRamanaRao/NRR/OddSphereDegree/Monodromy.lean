@@ -334,7 +334,7 @@ def inducedOnRPFiberMap (n : ℕ) (f : C(Sphere n, Sphere n)) (hf : IsOddMap f)
     {q : RP n} (e : proj n ⁻¹' {q}) : proj n ⁻¹' {inducedOnRP f hf q} :=
   ⟨f e.1, by
     have he : proj n e.1 = q := e.2
-    show proj n (f e.1) = inducedOnRP f hf q
+    change proj n (f e.1) = inducedOnRP f hf q
     rw [← inducedOnRP_comm f hf e.1, he]⟩
 
 /-- The underlying point of `inducedOnRPFiberMap` is `f` applied to the
@@ -368,7 +368,7 @@ theorem inducedOnRPFiberMap_projMonodromy (n : ℕ) (f : C(Sphere n, Sphere n))
     apply Subtype.ext
     dsimp [inducedOnRPFiberMap, projMonodromy, IsCoveringMap.monodromy]
     have he : (γ_path : C(unitInterval, RP n)) 0 = proj n p := by
-      show γ_path 0 = proj n p
+      change γ_path 0 = proj n p
       rw [γ_path.source, hp.symm]
     have he_f : (γ_path.map (inducedOnRP f hf).continuous : C(unitInterval, RP n)) 0 = proj n (f p) := by
       change inducedOnRP f hf (γ_path 0) = proj n (f p)

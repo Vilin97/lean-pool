@@ -96,7 +96,7 @@ theorem slabPoint_injective
           have hspatial : xs = ys := congrArg CylinderPoint.spatial hxy
           have htimeVal : xt.1 = yt.1 := by
             have h := congrArg (fun z : CylinderPoint p => z.time.1) hxy
-            simp only [slabPoint_time] at h
+            simp only [] at h
             have hmR : (0 : Real) < (m : Real) := by exact_mod_cast hm
             have hm0 : (m : Real) ≠ 0 := ne_of_gt hmR
             change ((r.1 : Real) + xt.1) / (m : Real) =
@@ -142,8 +142,7 @@ noncomputable def chart
     (q : Cell hp N m) (i : Fin (p + 1)) :
     chart hp N m hm q (stdSimplex.vertex (S := Real) i) =
       vertex hp N m hm q i := by
-  simp [chart, vertex,
-    (RelativeCollarMiddlePrism.cellSystem hp N 0).chart_vertex]
+  simp [chart, vertex]
 
 /-- The thin stack is a genuine affine cell system with unchanged spatial endpoint level `N`. -/
 noncomputable def cellSystem

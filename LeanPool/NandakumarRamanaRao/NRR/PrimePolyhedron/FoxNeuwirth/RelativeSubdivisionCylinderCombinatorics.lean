@@ -300,7 +300,7 @@ theorem chart_upper_injective
     rw [h0] at hc
     have h_sub := add_left_cancel hc
     dsimp [AffineSubdivisionDeterminant.stepVertexMatrix, Matrix.mulVec, dotProduct]
-    show ∑ i, prefixBarycenter d pi i c * x i.succ = ∑ i, prefixBarycenter d pi i c * y i.succ
+    change ∑ i, prefixBarycenter d pi i c * x i.succ = ∑ i, prefixBarycenter d pi i c * y i.succ
     simp_rw [mul_comm (prefixBarycenter _ _ _ _)]
     exact h_sub
   have h_tail_eq : x ∘ Fin.succ = y ∘ Fin.succ := by
@@ -465,7 +465,7 @@ theorem spatialPoint_side_succAbove_decompose
   rw [Fin.sum_univ_succ]
   simp only [vertex_zero, vertex_succ_side, apex, sidePoint_spatial_succAbove]
   congr 1
-  show (∑ j : Fin (d + 2), w j.succ * (vertex d q j).1 c) = (1 - w 0) * ∑ i : Fin (d + 2), (coneTail w) i * (vertex d q i).1 c
+  change (∑ j : Fin (d + 2), w j.succ * (vertex d q j).1 c) = (1 - w 0) * ∑ i : Fin (d + 2), (coneTail w) i * (vertex d q i).1 c
   rw [Finset.mul_sum]
   apply Finset.sum_congr rfl
   intro i _
@@ -481,7 +481,7 @@ theorem timePoint_side_decompose
     (timePoint (d + 1) (sideCell d k q) w).1 =
       w 0 / 2 + (1 - w 0) * (timePoint d q (coneTail w)).1 := by
   rw [ timePoint_side, timePoint ];
-  simp +decide [ Finset.mul_sum _ _ _, mul_assoc, mul_left_comm, Finset.sum_mul _ _ _, hw, coneTail_apply, div_eq_inv_mul ];
+  simp +decide [ Finset.mul_sum _ _ _, mul_assoc, mul_left_comm,  hw, coneTail_apply, div_eq_inv_mul ];
   grind
 
 /-
@@ -568,8 +568,8 @@ open SphereOddDegree.AffineBarycentricSubdivision
 def coefficientInt : (d : Nat) → Cell d → Int
   | 0, Sum.inl _ => -1
   | 0, Sum.inr pi => Equiv.Perm.sign pi
-  | d + 1, Sum.inl _ => -1
-  | d + 1, Sum.inr (Sum.inl pi) => Equiv.Perm.sign pi
+  | _d + 1, Sum.inl _ => -1
+  | _d + 1, Sum.inr (Sum.inl pi) => Equiv.Perm.sign pi
   | d + 1, Sum.inr (Sum.inr (k, q)) =>
       -((-1 : Int) ^ k.1) * coefficientInt d q
 
@@ -578,8 +578,8 @@ noncomputable def coefficient
     (R : Type) [CommRing R] : (d : Nat) → Cell d → R
   | 0, Sum.inl _ => -1
   | 0, Sum.inr pi => permSignCoeff R pi
-  | d + 1, Sum.inl _ => -1
-  | d + 1, Sum.inr (Sum.inl pi) => permSignCoeff R pi
+  | _d + 1, Sum.inl _ => -1
+  | _d + 1, Sum.inr (Sum.inl pi) => permSignCoeff R pi
   | d + 1, Sum.inr (Sum.inr (k, q)) =>
       -((-1 : R) ^ k.1) * coefficient R d q
 
