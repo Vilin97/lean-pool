@@ -364,6 +364,7 @@ theorem gauge_comp_le (N : SymmetricNormingFunction)
   exact hto
 
 omit [CompleteSpace G] in
+omit [CompleteSpace E] [CompleteSpace F] in
 /-- The canonical source norm satisfies the contraction-compatibility law
 used in the paper. -/
 theorem gauge_comp_le_of_contractions (N : SymmetricNormingFunction)
