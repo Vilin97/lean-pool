@@ -56,7 +56,8 @@ noncomputable def fibreRestrictMonoidal
     rw [CategoryTheory.Functor.LaxMonoidal.comp_ε]
     have h1 : IsIso (CategoryTheory.Functor.LaxMonoidal.ε
         (fibreOver L R)) := by
-      rw [fibreOver_ε]; infer_instance
+      rw [fibreOver_ε]
+      exact (fibreEpsIso L R).isIso_hom
     exact IsIso.comp_isIso' h1
       (@CategoryTheory.Functor.map_isIso _ _ _ _ _ _
         (fibreOver L R) (CategoryTheory.Functor.LaxMonoidal.ε F)

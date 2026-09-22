@@ -140,6 +140,7 @@ theorem projFormula_natural_right
   refine Eq.trans (Category.assoc _ _ _).symm ?_
   refine Eq.trans (eq_whisker (hend _ _) _) ?_
   simp only [Category.assoc]
+  conv_lhs => erw [Category.assoc]; arg 2; erw [Category.assoc]
   rfl
 
 /-- **The structure map is natural in the first slot.** -/
@@ -315,6 +316,7 @@ theorem projFormula_assoc_leftCover
       (projFormula A B φ M N).hom
       (modTensorπ A (restrictRegular φ) P)) _) ?_
     simp only [Category.assoc]
+    erw [Category.assoc]
     rfl
   have hcore2 : ∀ {Z : D}
       (h : (baseChangeMod φ (modTensorMod A M N)).X ⊗
@@ -342,6 +344,8 @@ theorem projFormula_assoc_leftCover
         modTensorπ A (restrictRegular φ)
           (modTensorMod A M N) := by
       simp only [Category.assoc]
+      conv_lhs => erw [Category.assoc, Category.assoc]
+      conv_rhs => erw [Category.assoc]; arg 2; erw [Category.assoc]
       exact projFormula_tensorμ_cover A B φ M N
     refine Eq.trans (Category.assoc _ _ _).symm ?_
     refine Eq.trans (eq_whisker
@@ -371,9 +375,18 @@ theorem projFormula_assoc_leftCover
       (B ◁ modTensorAssocMid A M N P) ≫
       modTensorπ A (restrictRegular φ)
         (modTensorMod A M (modTensorMod A N P)) := by
-    refine Eq.trans ((reassoc_of%
-      (projFormula_tensorμ_cover A B φ
-        (modTensorMod A M N) P)) _) ?_
+    have hcover := congrArg (fun t => t ≫
+        modTensorMap A (𝟙 (restrictRegular φ))
+          (modTensorAssocModIso A M N P).hom)
+      (projFormula_tensorμ_cover A B φ (modTensorMod A M N) P)
+    conv at hcover =>
+      lhs
+      erw [Category.assoc]
+      arg 2
+      erw [Category.assoc]
+      arg 2
+      erw [Category.assoc]
+    refine Eq.trans hcover ?_
     refine Eq.trans (Category.assoc _ _ _) ?_
     refine Eq.trans (whisker_eq _ (Category.assoc _ _ _)) ?_
     refine Eq.trans (whisker_eq _ (whisker_eq _
@@ -505,6 +518,7 @@ theorem projFormula_assoc_rightCover
       modTensorπ A (restrictRegular φ)
         (modTensorMod A N P) := by
     simp only [Category.assoc]
+    conv_rhs => erw [Category.assoc]; arg 2; erw [Category.assoc]
     exact projFormula_tensorμ_cover A B φ N P
   have hfoldX : ((baseChangeMod φ M).X ◁
         (modTensorπ A (restrictRegular φ) N ▷ (B ⊗ P.X))) ≫
@@ -521,7 +535,7 @@ theorem projFormula_assoc_rightCover
       ((baseChangeMod φ M).X ◁
         modTensorπ A (restrictRegular φ)
           (modTensorMod A N P)) := by
-    simp only [← MonoidalCategory.whiskerLeft_comp]
+    repeat' erw [← MonoidalCategory.whiskerLeft_comp]
     exact congrArg
       (fun t => (baseChangeMod φ M).X ◁ t) hfoldNP
   have hfoldM : (modTensorπ A (restrictRegular φ) M ▷
@@ -607,7 +621,25 @@ theorem projFormula_assoc
   have hc := eq_whisker (projFormula_assoc_core A B M N P)
     (modTensorπ A (restrictRegular φ)
       (modTensorMod A M (modTensorMod A N P)))
-  simpa only [Category.assoc] using hc
+  conv at hc =>
+    lhs
+    erw [Category.assoc]
+    arg 2
+    erw [Category.assoc]
+  conv at hc =>
+    rhs
+    erw [Category.assoc]
+    arg 2
+    erw [Category.assoc]
+    arg 2
+    erw [Category.assoc]
+  conv at hc =>
+    rhs
+    arg 2
+    arg 1
+    arg 2
+    erw [Category.assoc]
+  exact hc
 
 end Assoc
 

@@ -121,17 +121,17 @@ theorem permAlg_of_scalar
     (hβ : (β_ X X).hom = c • 𝟙 (X ⊗ X)) (hc2 : c * c = 1)
     {n : ℕ} (x : SymGroupAlgebra n) :
     permAlg X n x =
-      (∑ σ : Equiv.Perm (Fin n), x σ *
+      (∑ σ : Equiv.Perm (Fin n), x.coeff σ *
         (if Equiv.Perm.sign σ = 1 then (1 : ℂ) else c)) •
         𝟙 (tensorPow A X n) := by
   classical
   have hlift : permAlg X n x =
-      x.sum fun σ r => r • permMor X n σ := by
+      x.coeff.sum fun σ r => r • permMor X n σ := by
     rw [permAlg]
     exact MonoidAlgebra.lift_apply _ _
   rw [hlift]
-  rw [show (x.sum fun σ r => r • permMor X n σ) =
-    ∑ σ ∈ x.support, x σ • permMor X n σ from rfl]
+  rw [show (x.coeff.sum fun σ r => r • permMor X n σ) =
+    ∑ σ ∈ x.coeff.support, x.coeff σ • permMor X n σ from rfl]
   rw [Finset.sum_congr rfl fun σ _ => by
     rw [permMor_of_scalar hβ hc2 σ, smul_smul]]
   rw [← Finset.sum_smul]
@@ -143,12 +143,13 @@ theorem permAlg_of_scalar
 at its own size. -/
 theorem pe_eq_shape_e (P : SchurPackage.{v}) (lam : YoungDiagram) :
     P.e lam = Shape.e P (⟨lam, rfl⟩ : Shape lam.card) := by
-  rw [Shape.e, symCast_le_refl]
+  unfold Shape.e
+  erw [symCast_le_refl]
 
 /-- The plain coefficient sum of the central idempotent is the
 dimension times the Schur specialisation at one even variable. -/
 theorem sum_e_coeff (P : SchurPackage.{v}) (lam : YoungDiagram) :
-    (∑ σ : Equiv.Perm (Fin lam.card), (P.e lam) σ) =
+    (∑ σ : Equiv.Perm (Fin lam.card), (P.e lam).coeff σ) =
       (P.dim lam : ℂ) * diagramSchur lam (superPS 1 0) := by
   classical
   have hfrob : ((lam.card.factorial : ℂ))⁻¹ *
@@ -169,7 +170,7 @@ theorem sum_e_coeff (P : SchurPackage.{v}) (lam : YoungDiagram) :
       jtChar lam (permCast (rfl : lam.card = lam.card).symm π)
     from Finset.sum_congr rfl fun π _ => by
       rw [hone π, mul_one]] at hfrob
-  calc ∑ σ : Equiv.Perm (Fin lam.card), (P.e lam) σ
+  calc ∑ σ : Equiv.Perm (Fin lam.card), (P.e lam).coeff σ
       = ∑ σ : Equiv.Perm (Fin lam.card),
         ((P.dim lam : ℂ) / (lam.card.factorial : ℂ)) *
           jtChar lam (permCast (rfl : lam.card = lam.card).symm
@@ -190,7 +191,7 @@ theorem sum_e_coeff (P : SchurPackage.{v}) (lam : YoungDiagram) :
 dimension times the Schur specialisation at one odd variable. -/
 theorem sum_e_coeff_sign (P : SchurPackage.{v})
     (lam : YoungDiagram) :
-    (∑ σ : Equiv.Perm (Fin lam.card), (P.e lam) σ *
+    (∑ σ : Equiv.Perm (Fin lam.card), (P.e lam).coeff σ *
       ((Equiv.Perm.sign σ : ℤ) : ℂ)) =
       (P.dim lam : ℂ) * diagramSchur lam (superPS 0 1) := by
   classical
@@ -213,14 +214,14 @@ theorem sum_e_coeff_sign (P : SchurPackage.{v})
       jtChar lam (permCast (rfl : lam.card = lam.card).symm π) *
         ((Equiv.Perm.sign π : ℤ) : ℂ)
     from Finset.sum_congr rfl fun π _ => by rw [hsgn π]] at hfrob
-  calc ∑ σ : Equiv.Perm (Fin lam.card), (P.e lam) σ *
+  calc ∑ σ : Equiv.Perm (Fin lam.card), (P.e lam).coeff σ *
       ((Equiv.Perm.sign σ : ℤ) : ℂ)
       = ∑ σ : Equiv.Perm (Fin lam.card),
         ((P.dim lam : ℂ) / (lam.card.factorial : ℂ)) *
           (jtChar lam (permCast (rfl : lam.card = lam.card).symm
             σ) * ((Equiv.Perm.sign σ : ℤ) : ℂ)) := by
         refine Finset.sum_congr rfl fun σ _ => ?_
-        have hc : (P.e lam) σ =
+        have hc : (P.e lam).coeff σ =
             ((P.dim lam : ℂ) / (lam.card.factorial : ℂ)) *
               jtChar lam
                 (permCast (rfl : lam.card = lam.card).symm σ) := by
@@ -252,13 +253,12 @@ theorem schurKilled_of_braiding_id
   have hβ' : (β_ X X).hom = (1 : ℂ) • 𝟙 (X ⊗ X) := by
     rw [one_smul, hβ]
   rw [permAlg_of_scalar hβ' (by norm_num)]
-  rw [show (∑ σ : Equiv.Perm (Fin lam.card), (P.e lam) σ *
+  rw [show (∑ σ : Equiv.Perm (Fin lam.card), (P.e lam).coeff σ *
       (if Equiv.Perm.sign σ = 1 then (1 : ℂ) else 1)) =
-    ∑ σ : Equiv.Perm (Fin lam.card), (P.e lam) σ from
+    ∑ σ : Equiv.Perm (Fin lam.card), (P.e lam).coeff σ from
     Finset.sum_congr rfl fun σ _ => by rw [ite_self, mul_one]]
   rw [sum_e_coeff, diagramSchur_superPS_row,
     if_neg (by omega), mul_zero, zero_smul]
-  rfl
 
 /-- **Self-braiding `−1` kills every non-column Schur functor**:
 the central idempotent acts by the signed character sum, the Schur
@@ -275,9 +275,9 @@ theorem schurKilled_of_braiding_neg
   have hβ' : (β_ X X).hom = (-1 : ℂ) • 𝟙 (X ⊗ X) := by
     rw [neg_one_smul, hβ]
   rw [permAlg_of_scalar hβ' (by norm_num)]
-  rw [show (∑ σ : Equiv.Perm (Fin lam.card), (P.e lam) σ *
+  rw [show (∑ σ : Equiv.Perm (Fin lam.card), (P.e lam).coeff σ *
       (if Equiv.Perm.sign σ = 1 then (1 : ℂ) else -1)) =
-    ∑ σ : Equiv.Perm (Fin lam.card), (P.e lam) σ *
+    ∑ σ : Equiv.Perm (Fin lam.card), (P.e lam).coeff σ *
       ((Equiv.Perm.sign σ : ℤ) : ℂ) from
     Finset.sum_congr rfl fun σ _ => by
       by_cases hs : Equiv.Perm.sign σ = 1
@@ -288,7 +288,6 @@ theorem schurKilled_of_braiding_neg
         norm_num]
   rw [sum_e_coeff_sign, diagramSchur_superPS_col,
     if_neg (by omega), mul_zero, zero_smul]
-  rfl
 
 /-- The unit is killed at the two-cell column. -/
 theorem schurKilled_unit_col

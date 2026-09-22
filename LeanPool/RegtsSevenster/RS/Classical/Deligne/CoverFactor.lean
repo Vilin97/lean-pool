@@ -33,7 +33,7 @@ theorem modPowπ_one [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [MonObj A]
     (X : D) [ModObj A X] :
     modPowπ A X 1 ≫ (modPowOne A X).hom = (λ_ X).hom := by
-  rw [modPowOne, Iso.trans_hom, ← Category.assoc,
+  erw [modPowOne, Iso.trans_hom, ← Category.assoc,
     show modPowπ A X 1 ≫ (modPowTriv A X (by omega)).hom =
       𝟙 (tensorPow D X 1) from
         (modPowTriv A X (by omega)).inv_hom_id,
@@ -131,7 +131,7 @@ private theorem twistPow_cover_factor_zero
           ((𝟙_ D ⊗ V) ◁ (modPowOne A R.X).inv))) =
     (plainShuffle V R.X 1).hom ≫
       ((𝟙_ D ⊗ V) ◁ modPowπ A R.X 1)
-  rw [← Category.assoc, modPowπ_one, modPowOne_inv,
+  erw [← Category.assoc, modPowπ_one, modPowOne_inv,
     MonoidalCategory.whiskerLeft_comp]
   have hL : (λ_ (V ⊗ R.X)).hom ≫ ((λ_ V).inv ▷ R.X) ≫
       ((𝟙_ D ⊗ V) ◁ (λ_ R.X).inv) =
@@ -386,6 +386,7 @@ theorem twistPow_cover_factor
                   (tensorPow D R.X (0 + 1)) ≫ z) hRside)))
     refine (modPowπ_powSplit_assoc A ((tensorLeftMod A V R).X)
       k 0 _).trans ?_
+    conv_lhs => arg 2; erw [Category.assoc]
     refine (congrArg (fun z =>
         (tensorPowConcat ((tensorLeftMod A V R).X) (k + 1)
           (0 + 1)).inv ≫

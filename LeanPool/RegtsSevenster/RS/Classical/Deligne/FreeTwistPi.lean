@@ -97,7 +97,7 @@ theorem freeTensorTwistIso_gpair
         (freeTensorTwistIso A V M).hom.hom =
       (m ⊗ₘ n) ≫ ((β_ A V).hom ▷ M.X) ≫ (α_ V A M.X).hom ≫
         (V ◁ actLeft A M.X) := by
-  rw [gpair_def, Category.assoc]
+  erw [gpair_def, Category.assoc]
   exact whisker_eq _ (modTensorπ_freeTensorTwistIso A V M)
 
 end RS

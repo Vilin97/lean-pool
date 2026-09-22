@@ -110,7 +110,7 @@ theorem pairAlg_diagEmbed
     (x : SymGroupAlgebra n) :
     pairAlg X Y n (diagEmbed x) = diagAlg X Y n x := by
   have hext : (pairAlg X Y n).comp diagEmbed = diagAlg X Y n := by
-    refine MonoidAlgebra.algHom_ext fun σ => ?_
+    refine MonoidAlgebra.algHom_ext (fun σ => ?_) (Subsingleton.elim _ _)
     show pairAlg X Y n (diagEmbed (MonoidAlgebra.single σ 1)) =
       diagAlg X Y n (MonoidAlgebra.single σ 1)
     have hd : diagEmbed (MonoidAlgebra.single σ (1 : ℂ)) =
@@ -137,7 +137,7 @@ theorem pairAlg_extFst
       (MonoidAlgebra.mapDomainAlgHom ℂ ℂ (extFstHom n)) =
       (whiskerAlg (tensorPow A X n) (tensorPow A Y n)).comp
         (permAlg X n) := by
-    refine MonoidAlgebra.algHom_ext fun σ => ?_
+    refine MonoidAlgebra.algHom_ext (fun σ => ?_) (Subsingleton.elim _ _)
     show pairAlg X Y n (MonoidAlgebra.mapDomainAlgHom ℂ ℂ
         (extFstHom n) (MonoidAlgebra.single σ 1)) =
       whiskerAlg (tensorPow A X n) (tensorPow A Y n)
@@ -169,7 +169,7 @@ theorem pairAlg_extSnd
       (MonoidAlgebra.mapDomainAlgHom ℂ ℂ (extSndHom n)) =
       (whiskerLeftAlg (tensorPow A X n) (tensorPow A Y n)).comp
         (permAlg Y n) := by
-    refine MonoidAlgebra.algHom_ext fun τ => ?_
+    refine MonoidAlgebra.algHom_ext (fun τ => ?_) (Subsingleton.elim _ _)
     show pairAlg X Y n (MonoidAlgebra.mapDomainAlgHom ℂ ℂ
         (extSndHom n) (MonoidAlgebra.single τ 1)) =
       whiskerLeftAlg (tensorPow A X n) (tensorPow A Y n)
@@ -243,7 +243,8 @@ theorem SchurKilled.tensorObj
   rw [SchurKilled]
   -- The recast idempotent at size `lam.card` is the idempotent.
   have heS : Shape.e P (⟨lam, rfl⟩ : Shape lam.card) = P.e lam := by
-    rw [Shape.e, symCast_le_refl]
+    unfold Shape.e
+    erw [symCast_le_refl]
   -- Each external term of the double action dies.
   have hterm : ∀ μ' ν' : Shape lam.card,
       (pairAlg X Y lam.card
@@ -286,7 +287,6 @@ theorem SchurKilled.tensorObj
           exact permAlg_compat X _ _ hkilled
         rw [hz, MonoidalPreadditive.zero_whiskerRight,
           Limits.comp_zero, Limits.comp_zero]
-        rfl
       · have hkilled : SchurKilled P Y ν'.val :=
           hY.mono P (le_of_box_of_cell hνc hνr hcν)
         have hz : permAlg Y lam.card (Shape.e P ν') =
@@ -296,7 +296,6 @@ theorem SchurKilled.tensorObj
           exact permAlg_compat Y _ _ hkilled
         rw [hz, MonoidalPreadditive.whiskerLeft_zero,
           Limits.zero_comp, Limits.comp_zero]
-        rfl
   -- The diagonal double action of the idempotent vanishes: expand
   -- the diagonal image over the complete external family.
   have hdiag : (diagAlg X Y lam.card (P.e lam) :

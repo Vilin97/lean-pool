@@ -220,7 +220,7 @@ theorem chainInsQ_mul
           (symPowMod A M.X s)) ≫
         chainMul2 A M M' p q r s)) ≫
       chainInsQ A M M' (p + 1 + r) (q + 1 + s) := by
-    rw [← Category.assoc, ← MonoidalCategory.whiskerLeft_comp]
+    erw [← Category.assoc, ← MonoidalCategory.whiskerLeft_comp]
   have l2 : (M.X ◁
       ((modTensorπ A (symPowMod A M'.X p) (symPowMod A M.X q) ⊗ₘ
         modTensorπ A (symPowMod A M'.X r)
@@ -284,7 +284,7 @@ theorem chainInsQ_mul
         (symPowMod A M.X (q + 1 + s))) ≫
         chainInsQ A M M' (p + 1 + r) (q + 1 + s)) := by
     rw [l3w1, l3w2]
-    simp only [Category.assoc]
+    repeat' erw [Category.assoc]
   have l4 : (M.X ◁ tensorμ (symPow A M'.X (p + 1))
         (symPow A M.X (q + 1)) (symPow A M'.X (r + 1))
         (symPow A M.X (s + 1))) ≫
@@ -458,11 +458,14 @@ theorem chainInsQ_mul
       (chainInsQ A M M' p q ▷ chainStage2 A M M' r s) ≫
       chainMul2 A M M' p (q + 1) r s ≫
       chainStage2Cast A M M' hp₀ hq₀ :=
-    ((reassoc_of% hα1)
-      ((chainInsQ A M M' p q ▷ chainStage2 A M M' r s) ≫
-        chainMul2 A M M' p (q + 1) r s ≫
-        chainStage2Cast A M M' hp₀ hq₀)).trans
-      (Category.assoc _ _ _)
+    by
+      have h := congrArg (fun t => t ≫
+          ((chainInsQ A M M' p q ▷ chainStage2 A M M' r s) ≫
+            chainMul2 A M M' p (q + 1) r s ≫
+            chainStage2Cast A M M' hp₀ hq₀)) hα1
+      conv at h => lhs; erw [Category.assoc]
+      conv at h => rhs; erw [Category.assoc]
+      exact h
   have r2 : (α_ M.X
       (symPow A M'.X (p + 1) ⊗ symPow A M.X (q + 1))
       (symPow A M'.X (r + 1) ⊗ symPow A M.X (s + 1))).inv ≫
@@ -561,9 +564,9 @@ theorem chainInsQ_mul
           (symPowMod A M.X s)) ≫
       chainMul2 A M M' p (q + 1) r s ≫
       chainStage2Cast A M M' hp₀ hq₀ := by
-    rw [MonoidalCategory.tensorHom_comp_tensorHom_assoc,
+    erw [MonoidalCategory.tensorHom_comp_tensorHom_assoc,
       Category.id_comp]
-    simp only [Category.assoc]
+    repeat' erw [Category.assoc]
   have r5 : (α_ M.X
       (symPow A M'.X (p + 1) ⊗ symPow A M.X (q + 1))
       (symPow A M'.X (r + 1) ⊗ symPow A M.X (s + 1))).inv ≫
@@ -612,12 +615,12 @@ theorem chainInsQ_mul
             (symPow A M.X (q + 1))).hom ≫
           (symPow A M'.X (p + 1) ◁ symInsL A M.X q)) ⊗ₘ
           𝟙 (symPow A M'.X (r + 1) ⊗ symPow A M.X (s + 1))) ≫ t)
-      (((reassoc_of%
-          (tensorHom_π_chainMul2 A M M' p (q + 1) r s))
-        (chainStage2Cast A M M' hp₀ hq₀)).trans
-        ((Category.assoc _ _ _).trans
-          (congrArg (CategoryStruct.comp _)
-            (Category.assoc _ _ _))))
+      (by
+        have h := congrArg (fun t => t ≫ chainStage2Cast A M M' hp₀ hq₀)
+          (tensorHom_π_chainMul2 A M M' p (q + 1) r s)
+        conv at h => lhs; erw [Category.assoc]
+        conv at h => rhs; erw [Category.assoc]; arg 2; erw [Category.assoc]
+        exact h)
   have hcast : modTensorπ A (symPowMod A M'.X (p + 1 + r))
       (symPowMod A M.X (q + 1 + 1 + s)) ≫
       chainStage2Cast A M M' hp₀ hq₀ =
@@ -790,7 +793,7 @@ theorem chainInsQ_mul
           symPowCast A M.X (congrArg Nat.succ hq₀))) ≫
       modTensorπ A (symPowMod A M'.X (p + 1 + r))
         (symPowMod A M.X (q + 1 + s + 1)) := by
-    rw [MonoidalCategory.tensorHom_comp_tensorHom_assoc,
+    erw [MonoidalCategory.tensorHom_comp_tensorHom_assoc,
       MonoidalCategory.tensorHom_comp_tensorHom_assoc]
   have h₁ : q + 1 + s + 2 = q + 2 + (s + 1) := by omega
   have hcc : symPowCast A M.X h₁ ≫
@@ -821,8 +824,8 @@ theorem chainInsQ_mul
       symPowCast A M.X (congrArg Nat.succ hq₀)) =
     (M.X ◁ symMul A M.X (q + 1) (s + 1)) ≫
       symInsL A M.X (q + 1 + s)
-    simp only [Category.assoc]
-    rw [reassoc_of% (symInsL_symMul A M.X q s),
+    conv_lhs => erw [Category.assoc, Category.assoc]
+    erw [reassoc_of% (symInsL_symMul A M.X q s),
       Iso.inv_hom_id_assoc]
     exact congrArg (CategoryStruct.comp
       (M.X ◁ symMul A M.X (q + 1) (s + 1)))
@@ -948,7 +951,7 @@ theorem chainInsQ_delta2
       ((M.X ◁ chainMul2 A M M' p q 0 0) ≫
         chainInsQ A M M' (p + 1) (q + 1)) := by
     rw [w1, w2]
-    simp only [Category.assoc]
+    repeat' erw [Category.assoc]
   have l3 : (M.X ◁ (ρ_ (chainStage2 A M M' p q)).inv) ≫
       (M.X ◁ MonoidalCategory.whiskerLeft
         (chainStage2 A M M' p q)
