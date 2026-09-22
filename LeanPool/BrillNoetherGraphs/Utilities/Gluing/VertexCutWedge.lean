@@ -222,7 +222,7 @@ end OneVertexCut
 /-! ## Closed regression -/
 
 /-- A three-vertex path split at its middle vertex. -/
-private def threeVertexPath : CFGraph where
+private abbrev threeVertexPath : CFGraph where
   V := Fin 3
   edges := {(0, 1), (1, 2)}
   loopless := by decide

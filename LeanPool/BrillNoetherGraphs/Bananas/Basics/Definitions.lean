@@ -68,7 +68,7 @@ structure TwiceMarked where
   v : graph.V
 
 /-- Bundle a graph and an ordered pair of its vertices as a twice-marked graph. -/
-def mark (G : CFGraph) (u v : G.V) : TwiceMarked := ⟨G, u, v⟩
+abbrev mark (G : CFGraph) (u v : G.V) : TwiceMarked := ⟨G, u, v⟩
 
 /-- Paper source: `def-Delt` (Definition 2.8), the function `Δ(D)`.
 

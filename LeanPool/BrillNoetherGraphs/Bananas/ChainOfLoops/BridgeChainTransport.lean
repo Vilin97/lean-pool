@@ -15,7 +15,7 @@ universe u
 
 namespace Utilities.MarkedGraph
 
-def bridge (M N : MarkedGraph.{u}) : MarkedGraph.{u} where
+abbrev bridge (M N : MarkedGraph.{u}) : MarkedGraph.{u} where
   graph := bridgeGraph M.graph N.graph M.right N.left
   left := Sum.inl M.left
   right := Sum.inr N.right
@@ -47,127 +47,38 @@ noncomputable def bridgeWedgeAssocIso (M N K : MarkedGraph.{u}) :
           left_inv := by rintro ((a | b) | c) <;> rfl
           right_inv := by rintro (a | (b | c)) <;> rfl }
       map_num_edges := by
-        rintro ((a | a) | a) ((b | b) | b)
-        · change num_edges (bridgeGraph M.graph
-              (vertexWedge N.graph K.graph N.right K.left) M.right
-                (Sum.inl N.left))
-              (Sum.inl a) (Sum.inl b) =
-            num_edges (vertexWedge
-              (bridgeGraph M.graph N.graph M.right N.left) K.graph
-                (Sum.inr N.right) K.left)
-              (Sum.inl (Sum.inl a)) (Sum.inl (Sum.inl b))
-          simp
-        · change num_edges (bridgeGraph M.graph
-              (vertexWedge N.graph K.graph N.right K.left) M.right
-                (Sum.inl N.left))
-              (Sum.inl a) (Sum.inr (Sum.inl b)) =
-            num_edges (vertexWedge
-              (bridgeGraph M.graph N.graph M.right N.left) K.graph
-                (Sum.inr N.right) K.left)
-              (Sum.inl (Sum.inl a)) (Sum.inl (Sum.inr b))
-          simp only [num_edges_bridgeGraph_inl_inr,
-            num_edges_vertexWedge_left]
-          congr 1
-          apply propext
-          constructor
-          · rintro ⟨ha, hb⟩
-            exact ⟨ha, Sum.inl.inj hb⟩
-          · rintro ⟨ha, hb⟩
-            exact ⟨ha, congrArg Sum.inl hb⟩
-        · change num_edges (bridgeGraph M.graph
-              (vertexWedge N.graph K.graph N.right K.left) M.right
-                (Sum.inl N.left))
-              (Sum.inl a) (Sum.inr (Sum.inr b)) =
-            num_edges (vertexWedge
-              (bridgeGraph M.graph N.graph M.right N.left) K.graph
-                (Sum.inr N.right) K.left)
-              (Sum.inl (Sum.inl a)) (Sum.inr b)
-          simp
-        · change num_edges (bridgeGraph M.graph
-              (vertexWedge N.graph K.graph N.right K.left) M.right
-                (Sum.inl N.left))
-              (Sum.inr (Sum.inl a)) (Sum.inl b) =
-            num_edges (vertexWedge
-              (bridgeGraph M.graph N.graph M.right N.left) K.graph
-                (Sum.inr N.right) K.left)
-              (Sum.inl (Sum.inr a)) (Sum.inl (Sum.inl b))
-          calc
-            _ = num_edges (bridgeGraph M.graph
-                  (vertexWedge N.graph K.graph N.right K.left) M.right
-                    (Sum.inl N.left))
-                  (Sum.inl b) (Sum.inr (Sum.inl a)) :=
-                num_edges_symmetric _ _ _
-            _ = (if b = M.right ∧ a = N.left then 1 else 0) := by
-              rw [num_edges_bridgeGraph_inl_inr]
-              congr 1
-              apply propext
-              constructor
-              · rintro ⟨hb, ha⟩
-                exact ⟨hb, Sum.inl.inj ha⟩
-              · rintro ⟨hb, ha⟩
-                exact ⟨hb, congrArg Sum.inl ha⟩
-            _ = num_edges (bridgeGraph M.graph N.graph M.right N.left)
-                  (Sum.inl b) (Sum.inr a) := by
-              rw [num_edges_bridgeGraph_inl_inr]
-            _ = num_edges (bridgeGraph M.graph N.graph M.right N.left)
-                  (Sum.inr a) (Sum.inl b) := num_edges_symmetric _ _ _
-            _ = _ := (num_edges_vertexWedge_left _ _ _ _ _ _).symm
-        · change num_edges (bridgeGraph M.graph
-              (vertexWedge N.graph K.graph N.right K.left) M.right
-                (Sum.inl N.left))
-              (Sum.inr (Sum.inl a)) (Sum.inr (Sum.inl b)) =
-            num_edges (vertexWedge
-              (bridgeGraph M.graph N.graph M.right N.left) K.graph
-                (Sum.inr N.right) K.left)
-              (Sum.inl (Sum.inr a)) (Sum.inl (Sum.inr b))
-          simp
-        · change num_edges (bridgeGraph M.graph
-              (vertexWedge N.graph K.graph N.right K.left) M.right
-                (Sum.inl N.left))
-              (Sum.inr (Sum.inl a)) (Sum.inr (Sum.inr b)) =
-            num_edges (vertexWedge
-              (bridgeGraph M.graph N.graph M.right N.left) K.graph
-                (Sum.inr N.right) K.left)
-              (Sum.inl (Sum.inr a)) (Sum.inr b)
-          simp only [num_edges_bridgeGraph_inr,
-            num_edges_vertexWedge_left_right]
-          by_cases h : a = N.right
-          · subst a
-            simp
-          · rw [if_neg h, if_neg (fun he => h (Sum.inr.inj he))]
-        · change num_edges (bridgeGraph M.graph
-              (vertexWedge N.graph K.graph N.right K.left) M.right
-                (Sum.inl N.left))
-              (Sum.inr (Sum.inr a)) (Sum.inl b) =
-            num_edges (vertexWedge
-              (bridgeGraph M.graph N.graph M.right N.left) K.graph
-                (Sum.inr N.right) K.left)
-              (Sum.inr a) (Sum.inl (Sum.inl b))
-          rw [num_edges_symmetric]
-          simp
-        · change num_edges (bridgeGraph M.graph
-              (vertexWedge N.graph K.graph N.right K.left) M.right
-                (Sum.inl N.left))
-              (Sum.inr (Sum.inr a)) (Sum.inr (Sum.inl b)) =
-            num_edges (vertexWedge
-              (bridgeGraph M.graph N.graph M.right N.left) K.graph
-                (Sum.inr N.right) K.left)
-              (Sum.inr a) (Sum.inl (Sum.inr b))
-          simp only [num_edges_bridgeGraph_inr, num_edges_symmetric,
-            num_edges_vertexWedge_left_right]
-          by_cases h : b = N.right
-          · subst b
-            simp
-          · rw [if_neg h, if_neg (fun he => h (Sum.inr.inj he))]
-        · change num_edges (bridgeGraph M.graph
-              (vertexWedge N.graph K.graph N.right K.left) M.right
-                (Sum.inl N.left))
-              (Sum.inr (Sum.inr a)) (Sum.inr (Sum.inr b)) =
-            num_edges (vertexWedge
-              (bridgeGraph M.graph N.graph M.right N.left) K.graph
-                (Sum.inr N.right) K.left)
-              (Sum.inr a) (Sum.inr b)
-          simp }
+        have hLeftFirst := num_edges_bridgeGraph_inl M.graph N.graph M.right N.left
+        have hRightFirst := num_edges_bridgeGraph_inr M.graph N.graph M.right N.left
+        have hCrossFirst := num_edges_bridgeGraph_inl_inr M.graph N.graph M.right N.left
+        have hReverseFirst (a) (b) :=
+          (num_edges_symmetric (bridgeGraph M.graph N.graph M.right N.left) (Sum.inr a) (Sum.inl b)).trans
+            (hCrossFirst b a)
+        have hLeftTarget := num_edges_bridgeGraph_inl M.graph (vertexWedge N.graph K.graph N.right K.left) M.right (Sum.inl N.left)
+        have hRightTarget := num_edges_bridgeGraph_inr M.graph (vertexWedge N.graph K.graph N.right K.left) M.right (Sum.inl N.left)
+        have hCrossTarget := num_edges_bridgeGraph_inl_inr M.graph (vertexWedge N.graph K.graph N.right K.left) M.right (Sum.inl N.left)
+        have hReverseTarget (a) (b) :=
+          (num_edges_symmetric (bridgeGraph M.graph (vertexWedge N.graph K.graph N.right K.left) M.right (Sum.inl N.left)) (Sum.inr a) (Sum.inl b)).trans
+            (hCrossTarget b a)
+        have hLeftSecond := num_edges_vertexWedge_left N.graph K.graph N.right K.left
+        have hRightSecond := num_edges_vertexWedge_right N.graph K.graph N.right K.left
+        have hCrossSecond := num_edges_vertexWedge_left_right N.graph K.graph N.right K.left
+        have hReverseSecond (a) (b) :=
+          (num_edges_symmetric (vertexWedge N.graph K.graph N.right K.left) (Sum.inr a) (Sum.inl b)).trans
+            (hCrossSecond b a)
+        have hLeftSource := num_edges_vertexWedge_left (bridgeGraph M.graph N.graph M.right N.left) K.graph (Sum.inr N.right) K.left
+        have hRightSource := num_edges_vertexWedge_right (bridgeGraph M.graph N.graph M.right N.left) K.graph (Sum.inr N.right) K.left
+        have hCrossSource := num_edges_vertexWedge_left_right (bridgeGraph M.graph N.graph M.right N.left) K.graph (Sum.inr N.right) K.left
+        have hReverseSource (a) (b) :=
+          (num_edges_symmetric (vertexWedge (bridgeGraph M.graph N.graph M.right N.left) K.graph (Sum.inr N.right) K.left) (Sum.inr a) (Sum.inl b)).trans
+            (hCrossSource b a)
+        rintro ((a | a) | a) ((b | b) | b) <;>
+          simp only [Equiv.coe_fn_mk,
+            hLeftFirst, hRightFirst, hCrossFirst, hReverseFirst,
+            hLeftTarget, hRightTarget, hCrossTarget, hReverseTarget,
+            hLeftSecond, hRightSecond, hCrossSecond, hReverseSecond,
+            hLeftSource, hRightSource, hCrossSource, hReverseSource,
+            Sum.inl.injEq, Sum.inr.injEq, Sum.inl_ne_inr, Sum.inr_ne_inl,
+            and_false, ite_false] }
 
 @[simp] theorem bridgeWedgeAssocIso_apply_left (M N K : MarkedGraph.{u}) :
     (bridgeWedgeAssocIso M N K).vertexEquiv ((M.bridge N).wedge K).left =

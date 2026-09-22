@@ -65,7 +65,7 @@ theorem sum_getD_eq_list_sum (xs : List ℤ) (n : ℕ) (hLength : xs.length = n)
 
 /-- W7 turns the representation-independent degree calculation into the
 degree declared by the rich leaf. -/
-theorem deg_richDivisor_eq_declared
+theorem deg_richDivisor_eq_declared {degree : ℤ}
     (d : Utilities.Certificate.DegenerateSpec.DegSpec n p)
     (w : RichWitness) (fallback : Fin n) (x : List ℤ)
     (hLength : w.divisorCore.length = n) (hDegree :

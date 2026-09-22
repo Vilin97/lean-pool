@@ -69,7 +69,8 @@ theorem sectionFive_dual_transmission_proof
   rw [show (if rawInverse tau b = a then (1 : ℤ) else 0) =
       (if tau a = b then 1 else 0) by simp only [hInverse]]
   rw [hTau.2 b a]
-  rw [rankDelta_mark_swap G u v]
+  rw [rankDelta_mark_swap G u v
+    (transmissionDualDivisor u v D + a • one_chip v - b • one_chip u)]
   have hDual := rankDelta_canonical_dual (mark G u v) hconn
     (D + b • one_chip u - a • one_chip v)
   change rankDelta (mark G u v) (D + b • one_chip u - a • one_chip v) =

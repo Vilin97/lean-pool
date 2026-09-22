@@ -279,7 +279,7 @@ structure MarkedGraph where
 namespace MarkedGraph
 
 /-- Glue the right mark of `M` to the left mark of `N`. -/
-def wedge (M N : MarkedGraph) : MarkedGraph where
+abbrev wedge (M N : MarkedGraph) : MarkedGraph where
   graph := vertexWedge M.graph N.graph M.right N.left
   left := Sum.inl M.left
   right := wedgeRightVertex M.graph N.graph M.right N.left N.right
