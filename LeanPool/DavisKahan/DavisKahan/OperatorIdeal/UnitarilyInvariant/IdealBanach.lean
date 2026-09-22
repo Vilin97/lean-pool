@@ -146,6 +146,7 @@ omit [N.IsComplete] in
     (A : IdealOperator (E := E) (F := F) N) :
     ‖A‖ = N.gaugeReal A.toOp := rfl
 
+omit [N.IsComplete] in
 /-- Norm laws supplied directly by the rectangular ideal fields. -/
 theorem core : NormedSpace.Core 𝕜 (IdealOperator (E := E) (F := F) N) where
   norm_nonneg A := N.gaugeReal_nonneg A.mem
@@ -175,6 +176,7 @@ noncomputable instance instNormedSpace :
     NormedSpace 𝕜 (IdealOperator (E := E) (F := F) N) :=
   NormedSpace.ofCore (core (E := E) (F := F) N)
 
+omit [N.IsComplete] in
 /-- Forgetting to the bounded-operator space is contractive. -/
 theorem norm_toOp_le
     (A : IdealOperator (E := E) (F := F) N) :

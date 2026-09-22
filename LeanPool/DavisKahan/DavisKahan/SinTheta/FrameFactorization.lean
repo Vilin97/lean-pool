@@ -155,6 +155,20 @@ theorem gram_coercive
   have hprod := mul_nonneg hdiff hsum
   nlinarith
 
+/-- Algebraic and analytic laws for the two operators in a lower-frame polar factorization. -/
+structure LowerFramePolarLaws (X : F →L[𝕜] E) (ε : ℝ)
+    (sqrt invSqrt : F →L[𝕜] F) : Prop where
+  invSqrt_sqrt : invSqrt ∘L sqrt = ContinuousLinearMap.id 𝕜 F
+  sqrt_invSqrt : sqrt ∘L invSqrt = ContinuousLinearMap.id 𝕜 F
+  sqrt_sq : sqrt ∘L sqrt = X.adjoint ∘L X
+  normalized_isometry : IsometricEmbedding (X ∘L invSqrt)
+  factorization : X = (X ∘L invSqrt) ∘L sqrt
+  invSqrt_norm_le : ‖invSqrt‖ ≤ ε⁻¹
+  range_normalized :
+    LinearMap.range (X ∘L invSqrt).toLinearMap = LinearMap.range X.toLinearMap
+  invSqrt_eq_id_of_isometry :
+    ∀ _hIso : IsometricEmbedding X, invSqrt = ContinuousLinearMap.id 𝕜 F
+
 /-- Proof-carrying lower-frame polar data.  The single existence theorem below
 is the functional-calculus seam; all public factorization and transport results
 are projections or consequences of this package. -/
@@ -167,16 +181,64 @@ structure LowerFramePolarData
   invSqrt : F →L[𝕜] F
   /-- Bounded inverse data for the trial map’s Gram operator. -/
   gramInverse : BoundedInverseData (X.adjoint ∘L X)
-  invSqrt_sqrt : invSqrt ∘L sqrt = ContinuousLinearMap.id 𝕜 F
-  sqrt_invSqrt : sqrt ∘L invSqrt = ContinuousLinearMap.id 𝕜 F
-  sqrt_sq : sqrt ∘L sqrt = X.adjoint ∘L X
-  normalized_isometry : IsometricEmbedding (X ∘L invSqrt)
-  factorization : X = (X ∘L invSqrt) ∘L sqrt
-  invSqrt_norm_le : ‖invSqrt‖ ≤ ε⁻¹
-  range_normalized :
-    LinearMap.range (X ∘L invSqrt).toLinearMap = LinearMap.range X.toLinearMap
-  invSqrt_eq_id_of_isometry :
-    ∀ _hIso : IsometricEmbedding X, invSqrt = ContinuousLinearMap.id 𝕜 F
+  /-- The inverse, isometry, norm, range, and normalization guarantees. -/
+  laws : LowerFramePolarLaws X ε sqrt invSqrt
+
+/-- The chosen inverse square root is a left inverse of the square root. -/
+theorem LowerFramePolarData.invSqrt_sqrt
+    {X : F →L[𝕜] E} {ε : ℝ} {hX : LowerFrameBound X ε} {hε : 0 < ε}
+    (d : LowerFramePolarData X ε hX hε) :
+    d.invSqrt ∘L d.sqrt = ContinuousLinearMap.id 𝕜 F :=
+  d.laws.invSqrt_sqrt
+
+/-- The chosen inverse square root is a right inverse of the square root. -/
+theorem LowerFramePolarData.sqrt_invSqrt
+    {X : F →L[𝕜] E} {ε : ℝ} {hX : LowerFrameBound X ε} {hε : 0 < ε}
+    (d : LowerFramePolarData X ε hX hε) :
+    d.sqrt ∘L d.invSqrt = ContinuousLinearMap.id 𝕜 F :=
+  d.laws.sqrt_invSqrt
+
+/-- The chosen square root squares to the Gram operator. -/
+theorem LowerFramePolarData.sqrt_sq
+    {X : F →L[𝕜] E} {ε : ℝ} {hX : LowerFrameBound X ε} {hε : 0 < ε}
+    (d : LowerFramePolarData X ε hX hε) :
+    d.sqrt ∘L d.sqrt = X.adjoint ∘L X :=
+  d.laws.sqrt_sq
+
+/-- Normalizing the trial map by the inverse square root gives an isometry. -/
+theorem LowerFramePolarData.normalized_isometry
+    {X : F →L[𝕜] E} {ε : ℝ} {hX : LowerFrameBound X ε} {hε : 0 < ε}
+    (d : LowerFramePolarData X ε hX hε) :
+    IsometricEmbedding (X ∘L d.invSqrt) :=
+  d.laws.normalized_isometry
+
+/-- The normalized isometry and square root factor the original trial map. -/
+theorem LowerFramePolarData.factorization
+    {X : F →L[𝕜] E} {ε : ℝ} {hX : LowerFrameBound X ε} {hε : 0 < ε}
+    (d : LowerFramePolarData X ε hX hε) :
+    X = (X ∘L d.invSqrt) ∘L d.sqrt :=
+  d.laws.factorization
+
+/-- The lower frame bound controls the inverse square root norm. -/
+theorem LowerFramePolarData.invSqrt_norm_le
+    {X : F →L[𝕜] E} {ε : ℝ} {hX : LowerFrameBound X ε} {hε : 0 < ε}
+    (d : LowerFramePolarData X ε hX hε) :
+    ‖d.invSqrt‖ ≤ ε⁻¹ :=
+  d.laws.invSqrt_norm_le
+
+/-- Normalization preserves the range of the trial map. -/
+theorem LowerFramePolarData.range_normalized
+    {X : F →L[𝕜] E} {ε : ℝ} {hX : LowerFrameBound X ε} {hε : 0 < ε}
+    (d : LowerFramePolarData X ε hX hε) :
+    LinearMap.range (X ∘L d.invSqrt).toLinearMap = LinearMap.range X.toLinearMap :=
+  d.laws.range_normalized
+
+/-- For an isometric trial map the chosen inverse square root is the identity. -/
+theorem LowerFramePolarData.invSqrt_eq_id_of_isometry
+    {X : F →L[𝕜] E} {ε : ℝ} {hX : LowerFrameBound X ε} {hε : 0 < ε}
+    (d : LowerFramePolarData X ε hX hε) :
+    ∀ _hIso : IsometricEmbedding X, d.invSqrt = ContinuousLinearMap.id 𝕜 F :=
+  d.laws.invSqrt_eq_id_of_isometry
 
 /-- The polar package is explicit when the trial map is already isometric. -/
 def lowerFramePolarDataOfIsometry
@@ -192,14 +254,16 @@ def lowerFramePolarDataOfIsometry
       left_inv := ?_
       right_inv := ?_
     }
-    invSqrt_sqrt := ?_
-    sqrt_invSqrt := ?_
-    sqrt_sq := ?_
-    normalized_isometry := ?_
-    factorization := ?_
-    invSqrt_norm_le := ?_
-    range_normalized := ?_
-    invSqrt_eq_id_of_isometry := ?_
+    laws := {
+      invSqrt_sqrt := ?_
+      sqrt_invSqrt := ?_
+      sqrt_sq := ?_
+      normalized_isometry := ?_
+      factorization := ?_
+      invSqrt_norm_le := ?_
+      range_normalized := ?_
+      invSqrt_eq_id_of_isometry := ?_
+    }
   }
   · rw [hgram]
     simp [I]
@@ -343,14 +407,16 @@ theorem lowerFramePolarData_nonempty
       left_inv := by simpa [gram] using hgramInv_left
       right_inv := by simpa [gram] using hgramInv_right
     }
-    invSqrt_sqrt := hinvSqrt_sqrt
-    sqrt_invSqrt := hsqrt_invSqrt
-    sqrt_sq := hsqrt_sq
-    normalized_isometry := hnormalized
-    factorization := hfactorization
-    invSqrt_norm_le := hinvSqrt_norm
-    range_normalized := hrange
-    invSqrt_eq_id_of_isometry := ?_
+    laws := {
+      invSqrt_sqrt := hinvSqrt_sqrt
+      sqrt_invSqrt := hsqrt_invSqrt
+      sqrt_sq := hsqrt_sq
+      normalized_isometry := hnormalized
+      factorization := hfactorization
+      invSqrt_norm_le := hinvSqrt_norm
+      range_normalized := hrange
+      invSqrt_eq_id_of_isometry := ?_
+    }
   }⟩
   intro hIso
   have hgram_id : gram = ContinuousLinearMap.id ℂ F := by

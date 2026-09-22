@@ -2707,10 +2707,10 @@ symmetric norming function. -/
 theorem symmetricNorming_extendedGauge_le_cross
     (M : SymmetricNormingFunction)
     {E F E' F' : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-    [NormedAddCommGroup F] [InnerProductSpace ℂ F] [CompleteSpace F]
-    [NormedAddCommGroup E'] [InnerProductSpace ℂ E'] [CompleteSpace E']
-    [NormedAddCommGroup F'] [InnerProductSpace ℂ F'] [CompleteSpace F']
+    [NormedAddCommGroup E] [InnerProductSpace ℂ E]
+    [NormedAddCommGroup F] [InnerProductSpace ℂ F]
+    [NormedAddCommGroup E'] [InnerProductSpace ℂ E']
+    [NormedAddCommGroup F'] [InnerProductSpace ℂ F']
     {A : E →L[ℂ] F} {B : E' →L[ℂ] F'}
     (h : ∀ k : ℕ, kyFanApproximationGauge k A ≤
       kyFanApproximationGauge k B) :

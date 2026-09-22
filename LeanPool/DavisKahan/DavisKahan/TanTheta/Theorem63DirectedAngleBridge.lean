@@ -264,6 +264,7 @@ private theorem norm_directedSine_eq_norm_coordinateSine :
     exact (directedSine Z V).le_opNorm z
 
 omit [Z.HasOrthogonalProjection] in
+omit [CompleteSpace H] in
 /-- If every finite-source directed sine singular value is strictly below one,
 then the whole directed sine block has norm strictly below one.  The zero
 coordinate-space case is handled by the vanishing of all approximation

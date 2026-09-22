@@ -118,6 +118,7 @@ theorem kyFanApproximationGauge_conj_le_complex {F : Type v} [NormedAddCommGroup
       mul_le_mul h1 hR (norm_nonneg _) (by linarith)
     _ = kyFanApproximationGauge k A := by ring
 
+omit [CompleteSpace E] in
 /-- **Ky Fan approximation gauges are invariant under conjugation by an isometry
 equivalence**, in the form the block chart needs: a contraction pair with `R ∘L L = 1`.
 
@@ -126,7 +127,7 @@ Only the one-sided hypothesis `R ∘L L = 1` is used.  The `≤` direction is
 exchanged, applied to `L ∘L A ∘L R`, since `R ∘L (L ∘L A ∘L R) ∘L L = A`.  Proving it once
 and applying it twice is what keeps this off a self-referential rewrite. -/
 theorem kyFanApproximationGauge_conj_eq_complex {F : Type v} [NormedAddCommGroup F]
-    [InnerProductSpace ℂ F] [CompleteSpace F] {L : E →L[ℂ] F} {R : F →L[ℂ] E}
+    [InnerProductSpace ℂ F]  {L : E →L[ℂ] F} {R : F →L[ℂ] E}
     (hL : ‖L‖ ≤ 1) (hR : ‖R‖ ≤ 1) (hRL : R ∘L L = ContinuousLinearMap.id ℂ E)
     (A : E →L[ℂ] E) (k : ℕ) :
     kyFanApproximationGauge k (L ∘L A ∘L R) = kyFanApproximationGauge k A := by

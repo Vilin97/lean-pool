@@ -43,20 +43,20 @@ noncomputable def principalAngleSequence (U V : Submodule 𝕜 H)
 
 /-- Principal angles are nonnegative. -/
 theorem principalAngleSequence_nonneg (U V : Submodule 𝕜 H)
-    [U.HasOrthogonalProjection] [V.HasOrthogonalProjection] (n : ℕ) :
+     [V.HasOrthogonalProjection] (n : ℕ) :
     0 ≤ principalAngleSequence U V n := by
   exact Real.arcsin_nonneg.mpr (principalSineSequence_nonneg U V n)
 
 /-- Principal angles lie in the first quadrant. -/
 theorem principalAngleSequence_le_pi_div_two (U V : Submodule 𝕜 H)
-    [U.HasOrthogonalProjection] [V.HasOrthogonalProjection] (n : ℕ) :
+     [V.HasOrthogonalProjection] (n : ℕ) :
     principalAngleSequence U V n ≤ Real.pi / 2 := by
   exact Real.arcsin_le_pi_div_two _
 
 /-- The sine of the `n`th principal angle is the `n`th principal sine. -/
 @[simp]
 theorem sin_principalAngleSequence (U V : Submodule 𝕜 H)
-    [U.HasOrthogonalProjection] [V.HasOrthogonalProjection] (n : ℕ) :
+     [V.HasOrthogonalProjection] (n : ℕ) :
     Real.sin (principalAngleSequence U V n) = principalSineSequence U V n := by
   rw [principalAngleSequence]
   exact Real.sin_arcsin

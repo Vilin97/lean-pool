@@ -898,9 +898,10 @@ private theorem kyFanApproximationGauge_conj_le_real {F : Type v}
       mul_le_mul (mul_le_mul_of_nonneg_right hL hnn) hR (norm_nonneg _) (by linarith)
     _ = kyFanApproximationGauge k A := by ring
 
+omit [CompleteSpace E] in
 /-- Ky Fan gauges are invariant under a real isometric change of chart. -/
 private theorem kyFanApproximationGauge_conj_eq_real {F : Type v}
-    [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
+    [NormedAddCommGroup F] [InnerProductSpace ℝ F]
     {L : E →L[ℝ] F} {R : F →L[ℝ] E}
     (hL : ‖L‖ ≤ 1) (hR : ‖R‖ ≤ 1)
     (hRL : R ∘L L = ContinuousLinearMap.id ℝ E)

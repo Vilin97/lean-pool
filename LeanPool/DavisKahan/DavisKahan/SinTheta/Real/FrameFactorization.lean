@@ -289,14 +289,16 @@ theorem lowerFramePolarData_real_nonempty
       left_inv := hgramInv_left
       right_inv := hgramInv_right
     }
-    invSqrt_sqrt := hinvSqrt_sqrtR
-    sqrt_invSqrt := hsqrt_invSqrtR
-    sqrt_sq := hsqrt_sqR
-    normalized_isometry := hnormalizedR
-    factorization := hfactorizationR
-    invSqrt_norm_le := hinvSqrt_normR
-    range_normalized := hrangeR
-    invSqrt_eq_id_of_isometry := ?_
+    laws := {
+      invSqrt_sqrt := hinvSqrt_sqrtR
+      sqrt_invSqrt := hsqrt_invSqrtR
+      sqrt_sq := hsqrt_sqR
+      normalized_isometry := hnormalizedR
+      factorization := hfactorizationR
+      invSqrt_norm_le := hinvSqrt_normR
+      range_normalized := hrangeR
+      invSqrt_eq_id_of_isometry := ?_
+    }
   }⟩
   intro hIso
   have hgram_id : gramR = ContinuousLinearMap.id ℝ F := by

@@ -310,6 +310,7 @@ theorem rank_continuousOrthogonalBlockSum_le
   refine (LinearMap.rank_add_le _ _).trans ?_
   exact add_le_add (hcomp _ _ _) (hcomp _ _ _)
 
+omit [CompleteSpace E₀] [CompleteSpace E₁] [CompleteSpace F₀] [CompleteSpace F₁] in
 /-- Sharp interleaving bound: an allocation of `r` ranks to the first block and
 `s` to the second bounds the `(r + s)`-th approximation number of the block sum
 by the larger of the two block approximation numbers. -/

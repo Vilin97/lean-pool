@@ -160,6 +160,7 @@ theorem exists_finiteDimensional_le_lt_approximationSingularValue
     exact h
   exact lt_of_lt_of_le hcs hbound
 
+omit [CompleteSpace H] in
 /-- Under the source gap, **every** approximation singular value of the directed sine
 block of a finite-dimensional trial space is strictly below one. -/
 theorem approximationSingularValue_sineBlock_lt_one_of_finite

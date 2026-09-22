@@ -126,8 +126,8 @@ canonical prefix supremum is finite. -/
 def Mem
     {𝕜 : Type u} [RCLike 𝕜]
     {E F : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F]
     (N : SymmetricNormingFunction) (A : E →L[𝕜] F) : Prop :=
   N.extendedGauge A ≠ ⊤
 
@@ -135,8 +135,8 @@ def Mem
 def gauge
     {𝕜 : Type u} [RCLike 𝕜]
     {E F : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F]
     (N : SymmetricNormingFunction) (A : E →L[𝕜] F) : ℝ :=
   (N.extendedGauge A).toReal
 
@@ -289,8 +289,8 @@ theorem mul_prefixGauge_le_of_all_mul_kyFan_le
 theorem extendedGauge_le_of_all_kyFan_le
     {𝕜 : Type u} [RCLike 𝕜]
     {E F : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F]
     (N : SymmetricNormingFunction) {A B : E →L[𝕜] F}
     (h : ∀ k : ℕ, kyFanApproximationGauge k A ≤
       kyFanApproximationGauge k B) :
@@ -306,8 +306,8 @@ norm in the sense of Davis and Kahan. -/
 theorem mul_extendedGauge_le_of_all_mul_kyFan_le
     {𝕜 : Type u} [RCLike 𝕜]
     {E F : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F]
     (N : SymmetricNormingFunction) {A B : E →L[𝕜] F}
     {c : ℝ} (hc : 0 ≤ c)
     (h : ∀ k : ℕ, c * kyFanApproximationGauge k A ≤
@@ -392,10 +392,10 @@ ambient projection block `E → E` to its compression `Γ → Ω`. -/
 theorem extendedGauge_eq_of_hasSameApproximationNumbers
     {𝕜 : Type u} [RCLike 𝕜]
     {E₁ F₁ E₂ F₂ : Type v}
-    [NormedAddCommGroup E₁] [InnerProductSpace 𝕜 E₁] [CompleteSpace E₁]
-    [NormedAddCommGroup F₁] [InnerProductSpace 𝕜 F₁] [CompleteSpace F₁]
-    [NormedAddCommGroup E₂] [InnerProductSpace 𝕜 E₂] [CompleteSpace E₂]
-    [NormedAddCommGroup F₂] [InnerProductSpace 𝕜 F₂] [CompleteSpace F₂]
+    [NormedAddCommGroup E₁] [InnerProductSpace 𝕜 E₁]
+    [NormedAddCommGroup F₁] [InnerProductSpace 𝕜 F₁]
+    [NormedAddCommGroup E₂] [InnerProductSpace 𝕜 E₂]
+    [NormedAddCommGroup F₂] [InnerProductSpace 𝕜 F₂]
     (N : SymmetricNormingFunction) {A : E₁ →L[𝕜] F₁} {B : E₂ →L[𝕜] F₂}
     (h : A.HasSameApproximationNumbers B) :
     N.extendedGauge A = N.extendedGauge B := by

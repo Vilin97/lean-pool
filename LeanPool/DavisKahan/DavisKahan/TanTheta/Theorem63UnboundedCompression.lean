@@ -647,6 +647,7 @@ theorem tendsto_approximationSingularValue_truncSineBlock (n : ℕ) :
   refine h.congr fun τ => ?_
   exact (D.approximationSingularValue_truncSineBlock V τ n).symm
 
+omit [CompleteSpace H] in
 /-- Every truncated sine approximation number is at most the ambient one. -/
 theorem approximationSingularValue_truncSineBlock_le (τ : ℝ) (n : ℕ) :
     approximationSingularValue n (theorem63DirectedSineBlock (D.truncSpace τ) V) ≤

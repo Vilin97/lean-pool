@@ -84,9 +84,10 @@ theorem scalarTransport_directedSineBlock
   rw [hx]
   exact (ScalarTransport.starProjection_orthogonal_of (e := e) V _).symm
 
+omit [CompleteSpace H] in
 /-- Approximation numbers of the directed sine block are scalar invariant. -/
 theorem approximationNumber_directedSineBlock_transport
-    (Z V : Submodule 𝕜 H) [Z.HasOrthogonalProjection] [V.HasOrthogonalProjection]
+    (Z V : Submodule 𝕜 H)  [V.HasOrthogonalProjection]
      (n : ℕ) :
     (directedSineBlock (ScalarTransport.submodule (e := e) Z)
       (ScalarTransport.submodule (e := e) V)).approximationNumber n =

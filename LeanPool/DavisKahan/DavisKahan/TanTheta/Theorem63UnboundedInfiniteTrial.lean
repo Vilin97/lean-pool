@@ -197,6 +197,7 @@ theorem exists_finiteDimensional_superset_compression_leak
       _ = ε * ‖(f : H)‖ := by rw [hxnorm]
 
 omit [CompleteSpace ↥Z] in
+omit [CompleteSpace H] in
 /-- The finite-dimensional no-pole fact over abstract trial-block data, stated with
 approximation numbers rather than finite-source indices. -/
 theorem approximationSingularValue_sineBlock_lt_one_of_finiteData

@@ -134,6 +134,7 @@ theorem approximationEnergy_starProjection_comp_le
     (approximationSingularValue_nonneg i _)
     hcomp 2
 
+omit [CompleteSpace E] [CompleteSpace F] in
 /-- A finite-rank operator's prefix square energy is the real form of its
 paper Hilbert--Schmidt energy. -/
 theorem approximationEnergy_eq_approximationNumberEnergy_toReal_of_rank_le

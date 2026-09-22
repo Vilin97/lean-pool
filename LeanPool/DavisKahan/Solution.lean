@@ -67,7 +67,7 @@ noncomputable def UISeminorm.toTauCeti {G : Type v} [NormedAddCommGroup G]
 omit [CompleteSpace E] [CompleteSpace F] in
 /-- The diagonal operators used by the two finite gauges coincide. -/
 theorem diagOp_eq {n : ℕ} {G : Type v} [NormedAddCommGroup G]
-    [InnerProductSpace ℂ G] 
+    [InnerProductSpace ℂ G]
     (b : OrthonormalBasis (Fin n) ℂ G) (x : Fin n → ℝ) :
     diagOp b x = TauCeti.diagOp b x := rfl
 
@@ -96,6 +96,7 @@ noncomputable def SymmetricNormingFunction.toSourceNorm (N : SymmetricNormingFun
     rw [← UISeminorm.gauge_eq, ← UISeminorm.gauge_eq]
     exact N.zero_pad x
 
+omit [CompleteSpace E] [CompleteSpace F] in
 /-- A sequence represented as the approximation-number sequence of an operator
 has the same extended norm in the Challenge and production vocabularies. -/
 theorem SymmetricNormingFunction.evalSeq_eq_of_approximationNumber
@@ -370,7 +371,7 @@ variable {E F G K : Type v}
 
 /-- **The `sin Θ` theorem, at the source where-defined norm boundary.** -/
 theorem sinTheta (N : SymmetricNormingFunction)
-    
+
     {A : E →ₗ.[𝕜] E} {A₀ : F →ₗ.[𝕜] F} {Λ₁ : G →ₗ.[𝕜] G}
     {E₀ : F →L[𝕜] E} {F₀ : K →L[𝕜] E} {F₁ : G →L[𝕜] E} {R : F →L[𝕜] E}
     (hA : IsSelfAdjoint A) (hA₀ : IsSelfAdjoint A₀) (hΛ₁ : IsSelfAdjoint Λ₁)
@@ -389,7 +390,7 @@ theorem sinTheta (N : SymmetricNormingFunction)
 
 /-- **The `tan Θ` theorem, in its stronger residual form.** -/
 theorem tanTheta (N : SymmetricNormingFunction)
-    
+
     {A : E →ₗ.[𝕜] E} (_hA : IsSelfAdjoint A)
     {V : Submodule 𝕜 E} [V.HasOrthogonalProjection] (hV : Reduces A V)
     {α δ : ℝ} (hδ : 0 < δ)
@@ -435,7 +436,7 @@ theorem tanTheta (N : SymmetricNormingFunction)
 /-- **The residual clause of the `sin 2Θ` theorem, at the source common-domain
 scope.** -/
 theorem sinTwoTheta_directed (N : SymmetricNormingFunction)
-    
+
     {A T : E →ₗ.[𝕜] E} (hA : IsSelfAdjoint A) (hT : IsSelfAdjoint T)
     (hdom : T.domain = A.domain)
     {U : Submodule 𝕜 E} [U.HasOrthogonalProjection] (hU : Reduces A U)
@@ -492,7 +493,7 @@ theorem sinTwoTheta_directed (N : SymmetricNormingFunction)
 /-- **The whole-space clause of the `sin 2Θ` theorem, with the printed
 operator roles.** -/
 theorem sinTwoTheta_ambient (N : SymmetricNormingFunction)
-    
+
     {A : E →ₗ.[𝕜] E} (hA : IsSelfAdjoint A)
     {U : Submodule 𝕜 E} [U.HasOrthogonalProjection] (hU : Reduces A U)
     (H : E →L[𝕜] E) (hH : IsSelfAdjoint H)
@@ -542,7 +543,7 @@ theorem sinTwoTheta_ambient (N : SymmetricNormingFunction)
 
 /-- **The `tan 2Θ` theorem, in its stronger residual form.** -/
 theorem tanTwoTheta (N : SymmetricNormingFunction)
-    
+
     {A : E →ₗ.[𝕜] E} (hA : IsSelfAdjoint A)
     {U : Submodule 𝕜 E} [U.HasOrthogonalProjection] (hU : Reduces A U)
     (H : E →L[𝕜] E) (_hH : IsSelfAdjoint H)

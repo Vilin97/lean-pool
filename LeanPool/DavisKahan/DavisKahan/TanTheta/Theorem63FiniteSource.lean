@@ -324,7 +324,7 @@ theorem inner_apply_left_of_adjointL_eq_smul {K : Type*} [NormedAddCommGroup K]
 excluded the tangent pole. -/
 theorem orthonormal_theorem63ResidualWitness
     (Z V : Submodule ℂ H) [V.HasOrthogonalProjection]
-    [Z.HasOrthogonalProjection] [FiniteDimensional ℂ Z]
+     [FiniteDimensional ℂ Z]
     (hlt : ∀ i, finiteSourceSingularValue (theorem63DirectedSineBlock Z V) i < 1) :
     Orthonormal ℂ (theorem63ResidualWitness Z V) := by
   classical
@@ -991,6 +991,7 @@ theorem approximationSingularValue_eq_zero_of_finrank_le_complex
   calc (A : Z →ₗ[ℂ] H).rank ≤ Module.rank ℂ Z := LinearMap.rank_le_domain _
     _ = ((finrank ℂ Z : ℕ) : Cardinal) := (Module.finrank_eq_rank ℂ Z).symm
 
+omit [CompleteSpace H] in
 /-- **The directed tangent has the approximation numbers Theorem 6.3 asks
 for.**
 

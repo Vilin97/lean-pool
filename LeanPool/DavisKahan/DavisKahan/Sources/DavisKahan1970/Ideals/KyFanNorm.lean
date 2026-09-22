@@ -274,8 +274,8 @@ exactly the Ky Fan approximation gauge. -/
 theorem kyFanNormingFunction_extendedGauge
     {𝕜 : Type u} [RCLike 𝕜]
     {E F : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F]
     (k : ℕ) (hk : 0 < k) (A : E →L[𝕜] F) :
     (kyFanNormingFunction k hk).extendedGauge A =
       ENNReal.ofReal (kyFanApproximationGauge k A) := by

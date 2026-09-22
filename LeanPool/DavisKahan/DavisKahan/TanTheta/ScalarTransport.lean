@@ -88,10 +88,11 @@ theorem approximationNumber_scalarTransportSubspaceCLM
   rw [← hsame n]
   exact ScalarTransport.approximationNumber_clm (e := e) T n
 
+omit [CompleteSpace H] in
 /-- Every finite source gauge is unchanged for a transported subspace-domain map. -/
 theorem prefixGauge_scalarTransportSubspaceCLM
     (N : SymmetricNormingFunction) (n : ℕ)
-    (Z : Submodule 𝕜 H) [Z.HasOrthogonalProjection] (T : Z →L[𝕜] H) :
+    (Z : Submodule 𝕜 H)  (T : Z →L[𝕜] H) :
     N.prefixGauge n (scalarTransportSubspaceCLM (e := e) Z T) =
       N.prefixGauge n T := by
   unfold SymmetricNormingFunction.prefixGauge
@@ -252,11 +253,12 @@ theorem approximationNumber_scalarTransportOrthogonalSubspaceBlockCLMInv
     _ = X.approximationNumber n := by rw [hclm]
     _ = T.approximationNumber n := (hcoord n).symm
 
+omit [CompleteSpace H] in
 /-- The extended symmetric-norming gauge is unchanged by orthogonal-corner
 transport.  This is proved directly from the cross-field approximation-number
 identity: `HasSameApproximationNumbers` itself is intentionally same-field. -/
 theorem extendedGauge_scalarTransportOrthogonalSubspaceBlockCLM
-    (N : SymmetricNormingFunction) (Z : Submodule 𝕜 H) [Z.HasOrthogonalProjection]
+    (N : SymmetricNormingFunction) (Z : Submodule 𝕜 H)
     (T : Z →L[𝕜] Zᗮ) :
     N.extendedGauge (scalarTransportOrthogonalSubspaceBlockCLM (e := e) Z T) =
       N.extendedGauge T := by
@@ -284,10 +286,11 @@ theorem gauge_scalarTransportOrthogonalSubspaceBlockCLM
   unfold SymmetricNormingFunction.gauge
   rw [extendedGauge_scalarTransportOrthogonalSubspaceBlockCLM]
 
+omit [CompleteSpace H] in
 /-- The extended symmetric-norming gauge is unchanged by inverse
 orthogonal-corner transport. -/
 theorem extendedGauge_scalarTransportOrthogonalSubspaceBlockCLMInv
-    (N : SymmetricNormingFunction) (Z : Submodule 𝕜 H) [Z.HasOrthogonalProjection]
+    (N : SymmetricNormingFunction) (Z : Submodule 𝕜 H)
     (T : ScalarTransport.submodule (e := e) Z →L[𝕂]
       (ScalarTransport.submodule (e := e) Z)ᗮ) :
     N.extendedGauge (scalarTransportOrthogonalSubspaceBlockCLMInv (e := e) Z T) =
@@ -318,9 +321,10 @@ theorem gauge_scalarTransportOrthogonalSubspaceBlockCLMInv
   unfold SymmetricNormingFunction.gauge
   rw [extendedGauge_scalarTransportOrthogonalSubspaceBlockCLMInv]
 
+omit [CompleteSpace H] in
 /-- Approximation numbers of the inverse transported coordinates are unchanged. -/
 theorem approximationNumber_scalarTransportSubspaceBlockCLMEquiv_symm
-    (Z W : Submodule 𝕜 H) [Z.HasOrthogonalProjection] [W.HasOrthogonalProjection]
+    (Z W : Submodule 𝕜 H)
     (T : ScalarTransport.submodule (e := e) Z →L[𝕂]
       ScalarTransport.submodule (e := e) W) (n : ℕ) :
     ((scalarTransportSubspaceBlockCLMEquiv (e := e) Z W).symm T).approximationNumber n =
@@ -333,10 +337,11 @@ theorem approximationNumber_scalarTransportSubspaceBlockCLMEquiv_symm
   rw [Equiv.apply_symm_apply] at h
   exact h.symm
 
+omit [CompleteSpace H] in
 /-- The extended source gauge is unchanged by two-sided subspace transport. -/
 theorem extendedGauge_scalarTransportSubspaceBlockCLM
     (N : SymmetricNormingFunction) (Z W : Submodule 𝕜 H)
-    [Z.HasOrthogonalProjection] [W.HasOrthogonalProjection]
+
     (T : Z →L[𝕜] W) :
     N.extendedGauge (scalarTransportSubspaceBlockCLM (e := e) Z W T) =
       N.extendedGauge T := by

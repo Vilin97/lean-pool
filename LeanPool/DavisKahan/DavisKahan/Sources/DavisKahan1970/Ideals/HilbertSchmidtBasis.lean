@@ -275,6 +275,7 @@ theorem approximationNumberEnergy_comp_starProjection
     _ = ∑ k : Fin n, ‖T (c k)‖ ^ 2 := hfrob
     _ = ∑ k : Fin n, ‖A ((c k : F))‖ ^ 2 := rfl
 
+omit [CompleteSpace E] [CompleteSpace F] in
 /-- Finite-cutoff Frobenius identity in approximation-number form. -/
 theorem approximationNumberEnergy_comp_basisProjection
     {ι : Type*} (b : HilbertBasis ι 𝕜 F) (s : Finset ι)

@@ -342,6 +342,7 @@ theorem approximationSingularValue_eq_zero_of_finrank_le_real
   calc (A : Z →ₗ[ℝ] G).rank ≤ Module.rank ℝ Z := LinearMap.rank_le_domain _
     _ = ((Module.finrank ℝ Z : Nat) : Cardinal) := (Module.finrank_eq_rank ℝ Z).symm
 
+omit [CompleteSpace E] in
 /-- The finite-dimensional real representative has exactly the approximation
 numbers the paper's directed tangent prescribes. -/
 theorem hasTheorem63DirectedTangentApproximationNumbersInfiniteReal_theorem63DirectedTangentReal

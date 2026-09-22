@@ -175,6 +175,7 @@ theorem subtypeL_comp_blockCompression (K : E →L[ℝ] E) :
       Ω.starProjection ∘L K ∘L Γ.subtypeL :=
   ContinuousLinearMap.ext fun z => coe_blockCompression_apply Ω Γ K z
 
+omit [Γ.HasOrthogonalProjection] in
 /-- **Through the canonical subspace adapters, the complexified directed corner is
 exactly the complexification of the real directed corner.** -/
 theorem blockCompression_complexify_equiv (K : E →L[ℝ] E) :

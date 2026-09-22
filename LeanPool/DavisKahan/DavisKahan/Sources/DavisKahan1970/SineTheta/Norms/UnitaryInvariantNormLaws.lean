@@ -45,6 +45,7 @@ theorem finiteGauge_zero (N : SymmetricNormingFunction) (n : ℕ) :
   have h := N.finiteGauge_smul (n := n) 0 (0 : Fin n → ℝ)
   simpa only [smul_zero, abs_zero, zero_mul] using h
 
+omit [CompleteSpace E] [CompleteSpace F] in
 /-- The source norm of the zero operator is zero. -/
 @[simp]
 theorem extendedGauge_zero (N : SymmetricNormingFunction) :
@@ -229,6 +230,7 @@ theorem prefixGauge_le_of_all_kyFan_le_hetero (N : SymmetricNormingFunction)
       rw [huniv, sum_approximationPrefix n A, sum_approximationPrefix n B]
       exact h n
 
+omit [CompleteSpace E] [CompleteSpace F] [CompleteSpace G] in
 /-- Universal Fan dominance between operators with different codomains. -/
 theorem extendedGauge_le_of_all_kyFan_le_hetero
     (N : SymmetricNormingFunction)

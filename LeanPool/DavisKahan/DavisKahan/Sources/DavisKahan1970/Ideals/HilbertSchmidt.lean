@@ -170,8 +170,8 @@ theorem approximationNumberEnergy_ne_top_smul_iff
 theorem approximationNumberEnergy_ne_top_neg_iff
     {𝕜 : Type u} [RCLike 𝕜]
     {E : Type vE} {F : Type vF}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F]
     (A : E →L[𝕜] F) :
     approximationNumberEnergy (-A) ≠ ⊤ ↔ approximationNumberEnergy A ≠ ⊤ := by
   have h := approximationNumberEnergy_ne_top_smul_iff (-1 : 𝕜) (by simp) A

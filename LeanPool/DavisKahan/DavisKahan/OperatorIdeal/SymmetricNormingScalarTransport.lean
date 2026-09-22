@@ -49,6 +49,7 @@ theorem prefixGauge_clm (N : SymmetricNormingFunction) (n : ℕ) (T : E →L[�
   unfold prefixGauge
   rw [approximationPrefix_clm]
 
+omit [CompleteSpace E] [CompleteSpace F] in
 /-- The extended source gauge is unchanged by scalar transport. -/
 theorem extendedGauge_clm (N : SymmetricNormingFunction) (T : E →L[𝕜] F) :
     N.extendedGauge (clm (e := e) T) = N.extendedGauge T := by
