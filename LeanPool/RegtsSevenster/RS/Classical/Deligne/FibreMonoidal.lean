@@ -440,6 +440,529 @@ theorem gammaFunMap_freeModMap_oddMap
 
 /-! ## Associativity -/
 
+private theorem fibreTensorComp_EE
+    {S : SuperCommAlgebra.{v, v}} {M M' N P Q : S.Mod.{v, v, v, v}}
+    (f : M ⟶ M') (g : M'.tensor N ⟶ P) (h : P ⟶ Q)
+    (m : M.even) (n : N.even) :
+    (SuperCommAlgebra.Mod.tensorHom f (𝟙 N) ≫ g ≫ h).evenMap (tmulEE M N m n) =
+      h.evenMap (g.evenMap (tmulEE M' N (f.evenMap m) n)) := by
+  simp only [comp_evenMap, LinearMap.comp_apply, tensorHom_evenMap_tmulEE, id_evenMap,
+    LinearMap.id_coe, id_eq]
+
+private theorem fibreTensorComp_EO
+    {S : SuperCommAlgebra.{v, v}} {M M' N P Q : S.Mod.{v, v, v, v}}
+    (f : M ⟶ M') (g : M'.tensor N ⟶ P) (h : P ⟶ Q)
+    (m : M.even) (n : N.odd) :
+    (SuperCommAlgebra.Mod.tensorHom f (𝟙 N) ≫ g ≫ h).oddMap (tmulEO M N m n) =
+      h.oddMap (g.oddMap (tmulEO M' N (f.evenMap m) n)) := by
+  simp only [comp_oddMap, LinearMap.comp_apply, tensorHom_oddMap_tmulEO, id_oddMap,
+    LinearMap.id_coe, id_eq]
+
+private theorem fibreTensorComp_OE
+    {S : SuperCommAlgebra.{v, v}} {M M' N P Q : S.Mod.{v, v, v, v}}
+    (f : M ⟶ M') (g : M'.tensor N ⟶ P) (h : P ⟶ Q)
+    (m : M.odd) (n : N.even) :
+    (SuperCommAlgebra.Mod.tensorHom f (𝟙 N) ≫ g ≫ h).oddMap (tmulOE M N m n) =
+      h.oddMap (g.oddMap (tmulOE M' N (f.oddMap m) n)) := by
+  simp only [comp_oddMap, LinearMap.comp_apply, tensorHom_oddMap_tmulOE, id_evenMap,
+    LinearMap.id_coe, id_eq]
+
+private theorem fibreTensorComp_OO
+    {S : SuperCommAlgebra.{v, v}} {M M' N P Q : S.Mod.{v, v, v, v}}
+    (f : M ⟶ M') (g : M'.tensor N ⟶ P) (h : P ⟶ Q)
+    (m : M.odd) (n : N.odd) :
+    (SuperCommAlgebra.Mod.tensorHom f (𝟙 N) ≫ g ≫ h).evenMap (tmulOO M N m n) =
+      h.evenMap (g.evenMap (tmulOO M' N (f.oddMap m) n)) := by
+  simp only [comp_evenMap, LinearMap.comp_apply, tensorHom_evenMap_tmulOO, id_oddMap,
+    LinearMap.id_coe, id_eq]
+
+private theorem fibreAssocTensorComp_EEE
+    {S : SuperCommAlgebra.{v, v}} {M N P Q T : S.Mod.{v, v, v, v}}
+    (f : N.tensor P ⟶ Q) (g : M.tensor Q ⟶ T)
+    (m : M.even) (n : N.even)
+    (p : P.even) :
+    (assocHom M N P ≫ SuperCommAlgebra.Mod.tensorHom (𝟙 M) f ≫ g).evenMap
+        (tmulEE (M.tensor N) P (tmulEE M N m n) p) =
+      g.evenMap (tmulEE M Q m (f.evenMap (tmulEE N P n p))) := by
+  simp only [comp_evenMap, LinearMap.comp_apply, tensorHom_evenMap_tmulEE,
+    assocHom_evenMap_tmulEE, assocFee_tmulEE, id_evenMap, LinearMap.id_coe, id_eq]
+
+private theorem fibreAssocTensorComp_EEO
+    {S : SuperCommAlgebra.{v, v}} {M N P Q T : S.Mod.{v, v, v, v}}
+    (f : N.tensor P ⟶ Q) (g : M.tensor Q ⟶ T)
+    (m : M.even) (n : N.even)
+    (p : P.odd) :
+    (assocHom M N P ≫ SuperCommAlgebra.Mod.tensorHom (𝟙 M) f ≫ g).oddMap
+        (tmulEO (M.tensor N) P (tmulEE M N m n) p) =
+      g.oddMap (tmulEO M Q m (f.oddMap (tmulEO N P n p))) := by
+  simp only [comp_oddMap, LinearMap.comp_apply, tensorHom_oddMap_tmulEO, assocHom_oddMap_tmulEO,
+    assocFeo_tmulEE, id_evenMap, LinearMap.id_coe, id_eq]
+
+private theorem fibreAssocTensorComp_EOE
+    {S : SuperCommAlgebra.{v, v}} {M N P Q T : S.Mod.{v, v, v, v}}
+    (f : N.tensor P ⟶ Q) (g : M.tensor Q ⟶ T)
+    (m : M.even) (n : N.odd)
+    (p : P.even) :
+    (assocHom M N P ≫ SuperCommAlgebra.Mod.tensorHom (𝟙 M) f ≫ g).oddMap
+        (tmulOE (M.tensor N) P (tmulEO M N m n) p) =
+      g.oddMap (tmulEO M Q m (f.oddMap (tmulOE N P n p))) := by
+  simp only [comp_oddMap, LinearMap.comp_apply, tensorHom_oddMap_tmulEO, assocHom_oddMap_tmulOE,
+    assocFoe_tmulEO, id_evenMap, LinearMap.id_coe, id_eq]
+
+private theorem fibreAssocTensorComp_EOO
+    {S : SuperCommAlgebra.{v, v}} {M N P Q T : S.Mod.{v, v, v, v}}
+    (f : N.tensor P ⟶ Q) (g : M.tensor Q ⟶ T)
+    (m : M.even) (n : N.odd)
+    (p : P.odd) :
+    (assocHom M N P ≫ SuperCommAlgebra.Mod.tensorHom (𝟙 M) f ≫ g).evenMap
+        (tmulOO (M.tensor N) P (tmulEO M N m n) p) =
+      g.evenMap (tmulEE M Q m (f.evenMap (tmulOO N P n p))) := by
+  simp only [comp_evenMap, LinearMap.comp_apply, tensorHom_evenMap_tmulEE,
+    assocHom_evenMap_tmulOO, assocFoo_tmulEO, id_evenMap, LinearMap.id_coe, id_eq]
+
+private theorem fibreAssocTensorComp_OEE
+    {S : SuperCommAlgebra.{v, v}} {M N P Q T : S.Mod.{v, v, v, v}}
+    (f : N.tensor P ⟶ Q) (g : M.tensor Q ⟶ T)
+    (m : M.odd) (n : N.even)
+    (p : P.even) :
+    (assocHom M N P ≫ SuperCommAlgebra.Mod.tensorHom (𝟙 M) f ≫ g).oddMap
+        (tmulOE (M.tensor N) P (tmulOE M N m n) p) =
+      g.oddMap (tmulOE M Q m (f.evenMap (tmulEE N P n p))) := by
+  simp only [comp_oddMap, LinearMap.comp_apply, tensorHom_oddMap_tmulOE, assocHom_oddMap_tmulOE,
+    assocFoe_tmulOE, id_oddMap, LinearMap.id_coe, id_eq]
+
+private theorem fibreAssocTensorComp_OEO
+    {S : SuperCommAlgebra.{v, v}} {M N P Q T : S.Mod.{v, v, v, v}}
+    (f : N.tensor P ⟶ Q) (g : M.tensor Q ⟶ T)
+    (m : M.odd) (n : N.even)
+    (p : P.odd) :
+    (assocHom M N P ≫ SuperCommAlgebra.Mod.tensorHom (𝟙 M) f ≫ g).evenMap
+        (tmulOO (M.tensor N) P (tmulOE M N m n) p) =
+      g.evenMap (tmulOO M Q m (f.oddMap (tmulEO N P n p))) := by
+  simp only [comp_evenMap, LinearMap.comp_apply, tensorHom_evenMap_tmulOO,
+    assocHom_evenMap_tmulOO, assocFoo_tmulOE, id_oddMap, LinearMap.id_coe, id_eq]
+
+private theorem fibreAssocTensorComp_OOE
+    {S : SuperCommAlgebra.{v, v}} {M N P Q T : S.Mod.{v, v, v, v}}
+    (f : N.tensor P ⟶ Q) (g : M.tensor Q ⟶ T)
+    (m : M.odd) (n : N.odd)
+    (p : P.even) :
+    (assocHom M N P ≫ SuperCommAlgebra.Mod.tensorHom (𝟙 M) f ≫ g).evenMap
+        (tmulEE (M.tensor N) P (tmulOO M N m n) p) =
+      g.evenMap (tmulOO M Q m (f.oddMap (tmulOE N P n p))) := by
+  simp only [comp_evenMap, LinearMap.comp_apply, tensorHom_evenMap_tmulOO,
+    assocHom_evenMap_tmulEE, assocFee_tmulOO, id_oddMap, LinearMap.id_coe, id_eq]
+
+private theorem fibreAssocTensorComp_OOO
+    {S : SuperCommAlgebra.{v, v}} {M N P Q T : S.Mod.{v, v, v, v}}
+    (f : N.tensor P ⟶ Q) (g : M.tensor Q ⟶ T)
+    (m : M.odd) (n : N.odd)
+    (p : P.odd) :
+    (assocHom M N P ≫ SuperCommAlgebra.Mod.tensorHom (𝟙 M) f ≫ g).oddMap
+        (tmulEO (M.tensor N) P (tmulOO M N m n) p) =
+      g.oddMap (tmulOE M Q m (f.evenMap (tmulOO N P n p))) := by
+  simp only [comp_oddMap, LinearMap.comp_apply, tensorHom_oddMap_tmulOE, assocHom_oddMap_tmulEO,
+    assocFeo_tmulOO, id_oddMap, LinearMap.id_coe, id_eq]
+
+/- Keep intermediate computations in bundled module types, so rewriting does not repeatedly
+unfold the module instance dictionaries. The final coherence step unfolds the products once. -/
+private noncomputable def fibreProductEE
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [MonoidalPreadditive D] [Linear ℂ D]
+    [MonoidalLinear ℂ D]
+    (L : OddLine D) (R : D) [MonObj R] [IsCommMonObj R] (V W : D)
+    (m : (gammaModule D L R (freeMod R V).X).even)
+    (n : (gammaModule D L R (freeMod R W).X).even) :
+    (gammaModule D L R (freeMod R (V ⊗ W)).X).even :=
+  (λ_ (𝟙_ D)).inv ≫ (m ⊗ₘ n) ≫ freeModShuffle R V W
+
+private noncomputable def fibreProductOO
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [MonoidalPreadditive D] [Linear ℂ D]
+    [MonoidalLinear ℂ D]
+    (L : OddLine D) (R : D) [MonObj R] [IsCommMonObj R] (V W : D)
+    (m : (gammaModule D L R (freeMod R V).X).odd)
+    (n : (gammaModule D L R (freeMod R W).X).odd) :
+    (gammaModule D L R (freeMod R (V ⊗ W)).X).even :=
+  L.sq.inv ≫ (m ⊗ₘ n) ≫ freeModShuffle R V W
+
+private noncomputable def fibreProductEO
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [MonoidalPreadditive D] [Linear ℂ D]
+    [MonoidalLinear ℂ D]
+    (L : OddLine D) (R : D) [MonObj R] [IsCommMonObj R] (V W : D)
+    (m : (gammaModule D L R (freeMod R V).X).even)
+    (n : (gammaModule D L R (freeMod R W).X).odd) :
+    (gammaModule D L R (freeMod R (V ⊗ W)).X).odd :=
+  (λ_ L.obj).inv ≫ (m ⊗ₘ n) ≫ freeModShuffle R V W
+
+private noncomputable def fibreProductOE
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [MonoidalPreadditive D] [Linear ℂ D]
+    [MonoidalLinear ℂ D]
+    (L : OddLine D) (R : D) [MonObj R] [IsCommMonObj R] (V W : D)
+    (m : (gammaModule D L R (freeMod R V).X).odd)
+    (n : (gammaModule D L R (freeMod R W).X).even) :
+    (gammaModule D L R (freeMod R (V ⊗ W)).X).odd :=
+  (ρ_ L.obj).inv ≫ (m ⊗ₘ n) ≫ freeModShuffle R V W
+
+private noncomputable def fibreMapEven
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [MonoidalPreadditive D] [Linear ℂ D]
+    [MonoidalLinear ℂ D]
+    (L : OddLine D) (R : D) [MonObj R] [IsCommMonObj R] {V W : D}
+    (f : V ⟶ W) (m : (gammaModule D L R (freeMod R V).X).even) :
+    (gammaModule D L R (freeMod R W).X).even := m ≫ R ◁ f
+
+private noncomputable def fibreMapOdd
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [MonoidalPreadditive D] [Linear ℂ D]
+    [MonoidalLinear ℂ D]
+    (L : OddLine D) (R : D) [MonObj R] [IsCommMonObj R] {V W : D}
+    (f : V ⟶ W) (m : (gammaModule D L R (freeMod R V).X).odd) :
+    (gammaModule D L R (freeMod R W).X).odd := m ≫ R ◁ f
+
+private theorem typedFibreMuEE
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [MonoidalPreadditive D] [Linear ℂ D]
+    [MonoidalLinear ℂ D] [HasCoequalizers D]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)]
+    (L : OddLine D) (R : D) [MonObj R] [IsCommMonObj R] (V W : D)
+    (m : (gammaModule D L R (freeMod R V).X).even)
+    (n : (gammaModule D L R (freeMod R W).X).even) :
+    (fibreMu L R V W).evenMap
+      (tmulEE (gammaModule D L R (freeMod R V).X)
+        (gammaModule D L R (freeMod R W).X) m n) = fibreProductEE L R V W m n :=
+  fibreMu_evenMap_tmulEE L R V W m n
+
+private theorem typedFibreMuOO
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [MonoidalPreadditive D] [Linear ℂ D]
+    [MonoidalLinear ℂ D] [HasCoequalizers D]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)]
+    (L : OddLine D) (R : D) [MonObj R] [IsCommMonObj R] (V W : D)
+    (m : (gammaModule D L R (freeMod R V).X).odd)
+    (n : (gammaModule D L R (freeMod R W).X).odd) :
+    (fibreMu L R V W).evenMap
+      (tmulOO (gammaModule D L R (freeMod R V).X)
+        (gammaModule D L R (freeMod R W).X) m n) = fibreProductOO L R V W m n :=
+  fibreMu_evenMap_tmulOO L R V W m n
+
+private theorem typedFibreMuEO
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [MonoidalPreadditive D] [Linear ℂ D]
+    [MonoidalLinear ℂ D] [HasCoequalizers D]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)]
+    (L : OddLine D) (R : D) [MonObj R] [IsCommMonObj R] (V W : D)
+    (m : (gammaModule D L R (freeMod R V).X).even)
+    (n : (gammaModule D L R (freeMod R W).X).odd) :
+    (fibreMu L R V W).oddMap
+      (tmulEO (gammaModule D L R (freeMod R V).X)
+        (gammaModule D L R (freeMod R W).X) m n) = fibreProductEO L R V W m n :=
+  fibreMu_oddMap_tmulEO L R V W m n
+
+private theorem typedFibreMuOE
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [MonoidalPreadditive D] [Linear ℂ D]
+    [MonoidalLinear ℂ D] [HasCoequalizers D]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)]
+    (L : OddLine D) (R : D) [MonObj R] [IsCommMonObj R] (V W : D)
+    (m : (gammaModule D L R (freeMod R V).X).odd)
+    (n : (gammaModule D L R (freeMod R W).X).even) :
+    (fibreMu L R V W).oddMap
+      (tmulOE (gammaModule D L R (freeMod R V).X)
+        (gammaModule D L R (freeMod R W).X) m n) = fibreProductOE L R V W m n :=
+  fibreMu_oddMap_tmulOE L R V W m n
+
+private theorem typedFibreMapEven
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [MonoidalPreadditive D] [Linear ℂ D]
+    [MonoidalLinear ℂ D]
+    (L : OddLine D) (R : D) [MonObj R] [IsCommMonObj R] {V W : D}
+    (f : V ⟶ W) (m : (gammaModule D L R (freeMod R V).X).even) :
+    (gammaFunMap L R (freeModMap R f)).evenMap m = fibreMapEven L R f m := rfl
+
+private theorem typedFibreMapOdd
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [MonoidalPreadditive D] [Linear ℂ D]
+    [MonoidalLinear ℂ D]
+    (L : OddLine D) (R : D) [MonObj R] [IsCommMonObj R] {V W : D}
+    (f : V ⟶ W) (m : (gammaModule D L R (freeMod R V).X).odd) :
+    (gammaFunMap L R (freeModMap R f)).oddMap m = fibreMapOdd L R f m := rfl
+
+private theorem fibreMu_associativity_eee
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [MonoidalPreadditive D] [Linear ℂ D]
+    [MonoidalLinear ℂ D] [HasCoequalizers D]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)]
+    (L : OddLine D) (R : D) [MonObj R] [IsCommMonObj R]
+    (V W Z : D) :
+    ∀ m n p,
+      (SuperCommAlgebra.Mod.tensorHom (fibreMu L R V W)
+          (𝟙 (gammaModule D L R (freeMod R Z).X)) ≫
+        fibreMu L R (V ⊗ W) Z ≫
+          gammaFunMap L R (freeModMap R (α_ V W Z).hom)).evenMap (tmulEE ((gammaModule D L R
+            (freeMod R V).X).tensor (gammaModule D L R (freeMod R W).X)) (gammaModule D L R
+            (freeMod R Z).X)
+          (tmulEE (gammaModule D L R (freeMod R V).X) (gammaModule D L R (freeMod R W).X) m n) p) =
+      (assocHom (gammaModule D L R (freeMod R V).X)
+            (gammaModule D L R (freeMod R W).X)
+            (gammaModule D L R (freeMod R Z).X) ≫
+          SuperCommAlgebra.Mod.tensorHom
+              (𝟙 (gammaModule D L R (freeMod R V).X))
+              (fibreMu L R W Z) ≫
+            fibreMu L R V (W ⊗ Z)).evenMap (tmulEE ((gammaModule D L R (freeMod R V).X).tensor
+              (gammaModule D L R (freeMod R W).X)) (gammaModule D L R (freeMod R Z).X)
+          (tmulEE (gammaModule D L R (freeMod R V).X) (gammaModule D L R (freeMod R W).X) m n)
+            p) := by
+  intro m n p
+  rw [fibreTensorComp_EE, fibreAssocTensorComp_EEE]
+  rw [typedFibreMuEE, typedFibreMuEE, typedFibreMuEE, typedFibreMuEE,
+    typedFibreMapEven]
+  refine freeModShuffle_assoc_at' R _ _ _ _ ?_ m n p
+  monoidal
+
+private theorem fibreMu_associativity_ooe
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [MonoidalPreadditive D] [Linear ℂ D]
+    [MonoidalLinear ℂ D] [HasCoequalizers D]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)]
+    (L : OddLine D) (R : D) [MonObj R] [IsCommMonObj R]
+    (V W Z : D) :
+    ∀ m n p,
+      (SuperCommAlgebra.Mod.tensorHom (fibreMu L R V W)
+          (𝟙 (gammaModule D L R (freeMod R Z).X)) ≫
+        fibreMu L R (V ⊗ W) Z ≫
+          gammaFunMap L R (freeModMap R (α_ V W Z).hom)).evenMap (tmulEE ((gammaModule D L R
+            (freeMod R V).X).tensor (gammaModule D L R (freeMod R W).X)) (gammaModule D L R
+            (freeMod R Z).X)
+          (tmulOO (gammaModule D L R (freeMod R V).X) (gammaModule D L R (freeMod R W).X) m n) p) =
+      (assocHom (gammaModule D L R (freeMod R V).X)
+            (gammaModule D L R (freeMod R W).X)
+            (gammaModule D L R (freeMod R Z).X) ≫
+          SuperCommAlgebra.Mod.tensorHom
+              (𝟙 (gammaModule D L R (freeMod R V).X))
+              (fibreMu L R W Z) ≫
+            fibreMu L R V (W ⊗ Z)).evenMap (tmulEE ((gammaModule D L R (freeMod R V).X).tensor
+              (gammaModule D L R (freeMod R W).X)) (gammaModule D L R (freeMod R Z).X)
+          (tmulOO (gammaModule D L R (freeMod R V).X) (gammaModule D L R (freeMod R W).X) m n)
+            p) := by
+  intro m n p
+  rw [fibreTensorComp_EE, fibreAssocTensorComp_OOE]
+  rw [typedFibreMuOO, typedFibreMuEE, typedFibreMuOE, typedFibreMuOO,
+    typedFibreMapEven]
+  refine freeModShuffle_assoc_at' R _ _ _ _ ?_ m n p
+  have hc : (ρ_ (L.obj ⊗ L.obj)).inv ≫
+      (α_ L.obj L.obj (𝟙_ D)).hom =
+      L.obj ◁ (ρ_ L.obj).inv := by monoidal
+  rw [unitors_inv_equal, ← Category.assoc,
+    ← rightUnitor_inv_naturality, Category.assoc, hc]
+
+private theorem fibreMu_associativity_eoo
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [MonoidalPreadditive D] [Linear ℂ D]
+    [MonoidalLinear ℂ D] [HasCoequalizers D]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)]
+    (L : OddLine D) (R : D) [MonObj R] [IsCommMonObj R]
+    (V W Z : D) :
+    ∀ m n p,
+      (SuperCommAlgebra.Mod.tensorHom (fibreMu L R V W)
+          (𝟙 (gammaModule D L R (freeMod R Z).X)) ≫
+        fibreMu L R (V ⊗ W) Z ≫
+          gammaFunMap L R (freeModMap R (α_ V W Z).hom)).evenMap (tmulOO ((gammaModule D L R
+            (freeMod R V).X).tensor (gammaModule D L R (freeMod R W).X)) (gammaModule D L R
+            (freeMod R Z).X)
+          (tmulEO (gammaModule D L R (freeMod R V).X) (gammaModule D L R (freeMod R W).X) m n) p) =
+      (assocHom (gammaModule D L R (freeMod R V).X)
+            (gammaModule D L R (freeMod R W).X)
+            (gammaModule D L R (freeMod R Z).X) ≫
+          SuperCommAlgebra.Mod.tensorHom
+              (𝟙 (gammaModule D L R (freeMod R V).X))
+              (fibreMu L R W Z) ≫
+            fibreMu L R V (W ⊗ Z)).evenMap (tmulOO ((gammaModule D L R (freeMod R V).X).tensor
+              (gammaModule D L R (freeMod R W).X)) (gammaModule D L R (freeMod R Z).X)
+          (tmulEO (gammaModule D L R (freeMod R V).X) (gammaModule D L R (freeMod R W).X) m n)
+            p) := by
+  intro m n p
+  rw [fibreTensorComp_OO, fibreAssocTensorComp_EOO]
+  rw [typedFibreMuEO, typedFibreMuOO, typedFibreMuOO, typedFibreMuEE,
+    typedFibreMapEven]
+  refine freeModShuffle_assoc_at' R _ _ _ _ ?_ m n p
+  have hc : (λ_ L.obj).inv ▷ L.obj ≫
+      (α_ (𝟙_ D) L.obj L.obj).hom =
+      (λ_ (L.obj ⊗ L.obj)).inv := by monoidal
+  rw [hc]
+  exact leftUnitor_inv_naturality L.sq.inv
+
+private theorem fibreMu_associativity_oeo
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [MonoidalPreadditive D] [Linear ℂ D]
+    [MonoidalLinear ℂ D] [HasCoequalizers D]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)]
+    (L : OddLine D) (R : D) [MonObj R] [IsCommMonObj R]
+    (V W Z : D) :
+    ∀ m n p,
+      (SuperCommAlgebra.Mod.tensorHom (fibreMu L R V W)
+          (𝟙 (gammaModule D L R (freeMod R Z).X)) ≫
+        fibreMu L R (V ⊗ W) Z ≫
+          gammaFunMap L R (freeModMap R (α_ V W Z).hom)).evenMap (tmulOO ((gammaModule D L R
+            (freeMod R V).X).tensor (gammaModule D L R (freeMod R W).X)) (gammaModule D L R
+            (freeMod R Z).X)
+          (tmulOE (gammaModule D L R (freeMod R V).X) (gammaModule D L R (freeMod R W).X) m n) p) =
+      (assocHom (gammaModule D L R (freeMod R V).X)
+            (gammaModule D L R (freeMod R W).X)
+            (gammaModule D L R (freeMod R Z).X) ≫
+          SuperCommAlgebra.Mod.tensorHom
+              (𝟙 (gammaModule D L R (freeMod R V).X))
+              (fibreMu L R W Z) ≫
+            fibreMu L R V (W ⊗ Z)).evenMap (tmulOO ((gammaModule D L R (freeMod R V).X).tensor
+              (gammaModule D L R (freeMod R W).X)) (gammaModule D L R (freeMod R Z).X)
+          (tmulOE (gammaModule D L R (freeMod R V).X) (gammaModule D L R (freeMod R W).X) m n)
+            p) := by
+  intro m n p
+  rw [fibreTensorComp_OO, fibreAssocTensorComp_OEO]
+  rw [typedFibreMuOE, typedFibreMuOO, typedFibreMuEO, typedFibreMuOO,
+    typedFibreMapEven]
+  refine freeModShuffle_assoc_at' R _ _ _ _ ?_ m n p
+  have hc : (ρ_ L.obj).inv ▷ L.obj ≫
+      (α_ L.obj (𝟙_ D) L.obj).hom =
+      L.obj ◁ (λ_ L.obj).inv := by monoidal
+  rw [hc]
+
+private theorem fibreMu_associativity_eeo
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [MonoidalPreadditive D] [Linear ℂ D]
+    [MonoidalLinear ℂ D] [HasCoequalizers D]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)]
+    (L : OddLine D) (R : D) [MonObj R] [IsCommMonObj R]
+    (V W Z : D) :
+    ∀ m n p,
+      (SuperCommAlgebra.Mod.tensorHom (fibreMu L R V W)
+          (𝟙 (gammaModule D L R (freeMod R Z).X)) ≫
+        fibreMu L R (V ⊗ W) Z ≫
+          gammaFunMap L R (freeModMap R (α_ V W Z).hom)).oddMap (tmulEO ((gammaModule D L R
+            (freeMod R V).X).tensor (gammaModule D L R (freeMod R W).X)) (gammaModule D L R
+            (freeMod R Z).X)
+          (tmulEE (gammaModule D L R (freeMod R V).X) (gammaModule D L R (freeMod R W).X) m n) p) =
+      (assocHom (gammaModule D L R (freeMod R V).X)
+            (gammaModule D L R (freeMod R W).X)
+            (gammaModule D L R (freeMod R Z).X) ≫
+          SuperCommAlgebra.Mod.tensorHom
+              (𝟙 (gammaModule D L R (freeMod R V).X))
+              (fibreMu L R W Z) ≫
+            fibreMu L R V (W ⊗ Z)).oddMap (tmulEO ((gammaModule D L R (freeMod R V).X).tensor
+              (gammaModule D L R (freeMod R W).X)) (gammaModule D L R (freeMod R Z).X)
+          (tmulEE (gammaModule D L R (freeMod R V).X) (gammaModule D L R (freeMod R W).X) m n)
+            p) := by
+  intro m n p
+  rw [fibreTensorComp_EO, fibreAssocTensorComp_EEO]
+  rw [typedFibreMuEE, typedFibreMuEO, typedFibreMuEO, typedFibreMuEO,
+    typedFibreMapOdd]
+  refine freeModShuffle_assoc_at' R _ _ _ _ ?_ m n p
+  monoidal
+
+private theorem fibreMu_associativity_ooo
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [MonoidalPreadditive D] [Linear ℂ D]
+    [MonoidalLinear ℂ D] [HasCoequalizers D]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)]
+    (L : OddLine D) (R : D) [MonObj R] [IsCommMonObj R]
+    (V W Z : D) :
+    ∀ m n p,
+      (SuperCommAlgebra.Mod.tensorHom (fibreMu L R V W)
+          (𝟙 (gammaModule D L R (freeMod R Z).X)) ≫
+        fibreMu L R (V ⊗ W) Z ≫
+          gammaFunMap L R (freeModMap R (α_ V W Z).hom)).oddMap (tmulEO ((gammaModule D L R
+            (freeMod R V).X).tensor (gammaModule D L R (freeMod R W).X)) (gammaModule D L R
+            (freeMod R Z).X)
+          (tmulOO (gammaModule D L R (freeMod R V).X) (gammaModule D L R (freeMod R W).X) m n) p) =
+      (assocHom (gammaModule D L R (freeMod R V).X)
+            (gammaModule D L R (freeMod R W).X)
+            (gammaModule D L R (freeMod R Z).X) ≫
+          SuperCommAlgebra.Mod.tensorHom
+              (𝟙 (gammaModule D L R (freeMod R V).X))
+              (fibreMu L R W Z) ≫
+            fibreMu L R V (W ⊗ Z)).oddMap (tmulEO ((gammaModule D L R (freeMod R V).X).tensor
+              (gammaModule D L R (freeMod R W).X)) (gammaModule D L R (freeMod R Z).X)
+          (tmulOO (gammaModule D L R (freeMod R V).X) (gammaModule D L R (freeMod R W).X) m n)
+            p) := by
+  intro m n p
+  rw [fibreTensorComp_EO, fibreAssocTensorComp_OOO]
+  rw [typedFibreMuOO, typedFibreMuEO, typedFibreMuOO, typedFibreMuOE,
+    typedFibreMapOdd]
+  refine freeModShuffle_assoc_at' R _ _ _ _ ?_ m n p
+  have h2 : L.sq.inv ▷ L.obj ≫ (α_ L.obj L.obj L.obj).hom =
+      (λ_ L.obj).hom ≫ (ρ_ L.obj).inv ≫
+        L.obj ◁ L.sq.inv := by
+    rw [← reassoc_of% L.evaluation_coevaluation,
+      ← MonoidalCategory.whiskerLeft_comp, Iso.hom_inv_id,
+      MonoidalCategory.whiskerLeft_id, Category.comp_id]
+  rw [h2, ← Category.assoc, Iso.inv_hom_id, Category.id_comp]
+
+private theorem fibreMu_associativity_eoe
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [MonoidalPreadditive D] [Linear ℂ D]
+    [MonoidalLinear ℂ D] [HasCoequalizers D]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)]
+    (L : OddLine D) (R : D) [MonObj R] [IsCommMonObj R]
+    (V W Z : D) :
+    ∀ m n p,
+      (SuperCommAlgebra.Mod.tensorHom (fibreMu L R V W)
+          (𝟙 (gammaModule D L R (freeMod R Z).X)) ≫
+        fibreMu L R (V ⊗ W) Z ≫
+          gammaFunMap L R (freeModMap R (α_ V W Z).hom)).oddMap (tmulOE ((gammaModule D L R
+            (freeMod R V).X).tensor (gammaModule D L R (freeMod R W).X)) (gammaModule D L R
+            (freeMod R Z).X)
+          (tmulEO (gammaModule D L R (freeMod R V).X) (gammaModule D L R (freeMod R W).X) m n) p) =
+      (assocHom (gammaModule D L R (freeMod R V).X)
+            (gammaModule D L R (freeMod R W).X)
+            (gammaModule D L R (freeMod R Z).X) ≫
+          SuperCommAlgebra.Mod.tensorHom
+              (𝟙 (gammaModule D L R (freeMod R V).X))
+              (fibreMu L R W Z) ≫
+            fibreMu L R V (W ⊗ Z)).oddMap (tmulOE ((gammaModule D L R (freeMod R V).X).tensor
+              (gammaModule D L R (freeMod R W).X)) (gammaModule D L R (freeMod R Z).X)
+          (tmulEO (gammaModule D L R (freeMod R V).X) (gammaModule D L R (freeMod R W).X) m n)
+            p) := by
+  intro m n p
+  rw [fibreTensorComp_OE, fibreAssocTensorComp_EOE]
+  rw [typedFibreMuEO, typedFibreMuOE, typedFibreMuOE, typedFibreMuEO,
+    typedFibreMapOdd]
+  refine freeModShuffle_assoc_at' R _ _ _ _ ?_ m n p
+  monoidal
+
+private theorem fibreMu_associativity_oee
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [MonoidalPreadditive D] [Linear ℂ D]
+    [MonoidalLinear ℂ D] [HasCoequalizers D]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)]
+    (L : OddLine D) (R : D) [MonObj R] [IsCommMonObj R]
+    (V W Z : D) :
+    ∀ m n p,
+      (SuperCommAlgebra.Mod.tensorHom (fibreMu L R V W)
+          (𝟙 (gammaModule D L R (freeMod R Z).X)) ≫
+        fibreMu L R (V ⊗ W) Z ≫
+          gammaFunMap L R (freeModMap R (α_ V W Z).hom)).oddMap (tmulOE ((gammaModule D L R
+            (freeMod R V).X).tensor (gammaModule D L R (freeMod R W).X)) (gammaModule D L R
+            (freeMod R Z).X)
+          (tmulOE (gammaModule D L R (freeMod R V).X) (gammaModule D L R (freeMod R W).X) m n) p) =
+      (assocHom (gammaModule D L R (freeMod R V).X)
+            (gammaModule D L R (freeMod R W).X)
+            (gammaModule D L R (freeMod R Z).X) ≫
+          SuperCommAlgebra.Mod.tensorHom
+              (𝟙 (gammaModule D L R (freeMod R V).X))
+              (fibreMu L R W Z) ≫
+            fibreMu L R V (W ⊗ Z)).oddMap (tmulOE ((gammaModule D L R (freeMod R V).X).tensor
+              (gammaModule D L R (freeMod R W).X)) (gammaModule D L R (freeMod R Z).X)
+          (tmulOE (gammaModule D L R (freeMod R V).X) (gammaModule D L R (freeMod R W).X) m n)
+            p) := by
+  intro m n p
+  rw [fibreTensorComp_OE, fibreAssocTensorComp_OEE]
+  rw [typedFibreMuOE, typedFibreMuOE, typedFibreMuEE, typedFibreMuOE,
+    typedFibreMapOdd]
+  refine freeModShuffle_assoc_at' R _ _ _ _ ?_ m n p
+  monoidal
+
 /-- **Associativity of the monoidal comparison of the fibre
 functor**: the two ways of comparing a threefold tensor product
 agree, up to the associator of the super modules and the
@@ -462,54 +985,15 @@ theorem fibreMu_associativity
               (𝟙 (gammaModule D L R (freeMod R V).X))
               (fibreMu L R W Z) ≫
             fibreMu L R V (W ⊗ Z) := by
-  refine hom_ext₃ (fun m n p => ?_) (fun m n p => ?_)
-    (fun m n p => ?_) (fun m n p => ?_) (fun m n p => ?_)
-    (fun m n p => ?_) (fun m n p => ?_) (fun m n p => ?_) <;>
-    simp only [comp_evenMap, comp_oddMap, LinearMap.comp_apply,
-      tensorHom_evenMap_tmulEE, tensorHom_evenMap_tmulOO,
-      tensorHom_oddMap_tmulEO, tensorHom_oddMap_tmulOE,
-      assocHom_evenMap_tmulEE, assocHom_evenMap_tmulOO,
-      assocHom_oddMap_tmulEO, assocHom_oddMap_tmulOE,
-      assocFee_tmulEE, assocFee_tmulOO, assocFoo_tmulEO,
-      assocFoo_tmulOE, assocFeo_tmulEE, assocFeo_tmulOO,
-      assocFoe_tmulEO, assocFoe_tmulOE, id_evenMap, id_oddMap,
-      LinearMap.id_coe, id_eq, fibreMu_evenMap_tmulEE,
-      fibreMu_evenMap_tmulOO, fibreMu_oddMap_tmulEO,
-      fibreMu_oddMap_tmulOE, gammaFunMap_freeModMap_evenMap,
-      gammaFunMap_freeModMap_oddMap]
-  · refine freeModShuffle_assoc_at' R _ _ _ _ ?_ m n p
-    monoidal
-  · refine freeModShuffle_assoc_at' R _ _ _ _ ?_ m n p
-    have hc : (ρ_ (L.obj ⊗ L.obj)).inv ≫
-        (α_ L.obj L.obj (𝟙_ D)).hom =
-        L.obj ◁ (ρ_ L.obj).inv := by monoidal
-    rw [unitors_inv_equal, ← Category.assoc,
-      ← rightUnitor_inv_naturality, Category.assoc, hc]
-  · refine freeModShuffle_assoc_at' R _ _ _ _ ?_ m n p
-    have hc : (λ_ L.obj).inv ▷ L.obj ≫
-        (α_ (𝟙_ D) L.obj L.obj).hom =
-        (λ_ (L.obj ⊗ L.obj)).inv := by monoidal
-    rw [hc]
-    exact leftUnitor_inv_naturality L.sq.inv
-  · refine freeModShuffle_assoc_at' R _ _ _ _ ?_ m n p
-    have hc : (ρ_ L.obj).inv ▷ L.obj ≫
-        (α_ L.obj (𝟙_ D) L.obj).hom =
-        L.obj ◁ (λ_ L.obj).inv := by monoidal
-    rw [hc]
-  · refine freeModShuffle_assoc_at' R _ _ _ _ ?_ m n p
-    monoidal
-  · refine freeModShuffle_assoc_at' R _ _ _ _ ?_ m n p
-    have h2 : L.sq.inv ▷ L.obj ≫ (α_ L.obj L.obj L.obj).hom =
-        (λ_ L.obj).hom ≫ (ρ_ L.obj).inv ≫
-          L.obj ◁ L.sq.inv := by
-      rw [← reassoc_of% L.evaluation_coevaluation,
-        ← MonoidalCategory.whiskerLeft_comp, Iso.hom_inv_id,
-        MonoidalCategory.whiskerLeft_id, Category.comp_id]
-    rw [h2, ← Category.assoc, Iso.inv_hom_id, Category.id_comp]
-  · refine freeModShuffle_assoc_at' R _ _ _ _ ?_ m n p
-    monoidal
-  · refine freeModShuffle_assoc_at' R _ _ _ _ ?_ m n p
-    monoidal
+  exact hom_ext₃
+    (fibreMu_associativity_eee L R V W Z)
+    (fibreMu_associativity_ooe L R V W Z)
+    (fibreMu_associativity_eoo L R V W Z)
+    (fibreMu_associativity_oeo L R V W Z)
+    (fibreMu_associativity_eeo L R V W Z)
+    (fibreMu_associativity_ooo L R V W Z)
+    (fibreMu_associativity_eoe L R V W Z)
+    (fibreMu_associativity_oee L R V W Z)
 
 /-! ## Unitality -/
 
@@ -530,21 +1014,21 @@ theorem fibreMu_left_unitality
             gammaFunMap L R (freeModMap R (λ_ V).hom) := by
   refine hom_ext (fun x m => ?_) (fun u m => ?_) (fun x m => ?_)
     (fun u m => ?_)
-  · rw [leftUnitorHom_evenMap_tmulEE, comp_evenMap_apply,
+  · erw [leftUnitorHom_evenMap_tmulEE, comp_evenMap_apply,
       comp_evenMap_apply, tensorHom_evenMap_tmulEE,
-      fibreMu_evenMap_tmulEE, gammaFunMap_freeModMap_evenMap]
+      typedFibreMuEE, typedFibreMapEven]
     exact (freeModShuffle_unit_left_at' R (λ_ (𝟙_ D)).inv x m).symm
-  · rw [leftUnitorHom_evenMap_tmulOO, comp_evenMap_apply,
+  · erw [leftUnitorHom_evenMap_tmulOO, comp_evenMap_apply,
       comp_evenMap_apply, tensorHom_evenMap_tmulOO,
-      fibreMu_evenMap_tmulOO, gammaFunMap_freeModMap_evenMap]
+      typedFibreMuOO, typedFibreMapEven]
     exact (freeModShuffle_unit_left_at' R L.sq.inv u m).symm
-  · rw [leftUnitorHom_oddMap_tmulEO, comp_oddMap_apply,
+  · erw [leftUnitorHom_oddMap_tmulEO, comp_oddMap_apply,
       comp_oddMap_apply, tensorHom_oddMap_tmulEO,
-      fibreMu_oddMap_tmulEO, gammaFunMap_freeModMap_oddMap]
+      typedFibreMuEO, typedFibreMapOdd]
     exact (freeModShuffle_unit_left_at' R (λ_ L.obj).inv x m).symm
-  · rw [leftUnitorHom_oddMap_tmulOE, comp_oddMap_apply,
+  · erw [leftUnitorHom_oddMap_tmulOE, comp_oddMap_apply,
       comp_oddMap_apply, tensorHom_oddMap_tmulOE,
-      fibreMu_oddMap_tmulOE, gammaFunMap_freeModMap_oddMap]
+      typedFibreMuOE, typedFibreMapOdd]
     exact (freeModShuffle_unit_left_at' R (ρ_ L.obj).inv u m).symm
 
 /-- **Right unitality of the monoidal comparison of the fibre
@@ -567,21 +1051,21 @@ theorem fibreMu_right_unitality
             gammaFunMap L R (freeModMap R (ρ_ V).hom) := by
   refine hom_ext (fun m x => ?_) (fun m u => ?_) (fun m u => ?_)
     (fun m x => ?_)
-  · rw [rightUnitorHom_evenMap_tmulEE, comp_evenMap_apply,
+  · erw [rightUnitorHom_evenMap_tmulEE, comp_evenMap_apply,
       comp_evenMap_apply, tensorHom_evenMap_tmulEE,
-      fibreMu_evenMap_tmulEE, gammaFunMap_freeModMap_evenMap]
+      typedFibreMuEE, typedFibreMapEven]
     exact (freeModShuffle_unit_right_ee R V m x).symm
-  · rw [rightUnitorHom_evenMap_tmulOO, comp_evenMap_apply,
+  · erw [rightUnitorHom_evenMap_tmulOO, comp_evenMap_apply,
       comp_evenMap_apply, tensorHom_evenMap_tmulOO,
-      fibreMu_evenMap_tmulOO, gammaFunMap_freeModMap_evenMap]
+      typedFibreMuOO, typedFibreMapEven]
     exact (freeModShuffle_unit_right_oo L R V m u).symm
-  · rw [rightUnitorHom_oddMap_tmulEO, comp_oddMap_apply,
+  · erw [rightUnitorHom_oddMap_tmulEO, comp_oddMap_apply,
       comp_oddMap_apply, tensorHom_oddMap_tmulEO,
-      fibreMu_oddMap_tmulEO, gammaFunMap_freeModMap_oddMap]
+      typedFibreMuEO, typedFibreMapOdd]
     exact (freeModShuffle_unit_right_eo L R V m u).symm
-  · rw [rightUnitorHom_oddMap_tmulOE, comp_oddMap_apply,
+  · erw [rightUnitorHom_oddMap_tmulOE, comp_oddMap_apply,
       comp_oddMap_apply, tensorHom_oddMap_tmulOE,
-      fibreMu_oddMap_tmulOE, gammaFunMap_freeModMap_oddMap]
+      typedFibreMuOE, typedFibreMapOdd]
     exact (freeModShuffle_unit_right_oe L R V m x).symm
 
 /-! ## Compatibility with the braiding -/
@@ -605,21 +1089,21 @@ theorem fibreMu_braided
           gammaFunMap L R (freeModMap R (β_ V W).hom) := by
   refine hom_ext (fun m n => ?_) (fun m n => ?_) (fun m n => ?_)
     (fun m n => ?_)
-  · rw [comp_evenMap_apply, braidingHom_evenMap_tmulEE,
-      fibreMu_evenMap_tmulEE, comp_evenMap_apply,
-      fibreMu_evenMap_tmulEE, gammaFunMap_freeModMap_evenMap]
+  · erw [comp_evenMap_apply, braidingHom_evenMap_tmulEE,
+      typedFibreMuEE, comp_evenMap_apply,
+      typedFibreMuEE, typedFibreMapEven]
     exact (freeModShuffle_braiding_ee R V W m n).symm
-  · rw [comp_evenMap_apply, braidingHom_evenMap_tmulOO, map_neg,
-      fibreMu_evenMap_tmulOO, comp_evenMap_apply,
-      fibreMu_evenMap_tmulOO, gammaFunMap_freeModMap_evenMap]
+  · erw [comp_evenMap_apply, braidingHom_evenMap_tmulOO, map_neg,
+      typedFibreMuOO, comp_evenMap_apply,
+      typedFibreMuOO, typedFibreMapEven]
     exact (freeModShuffle_braiding_oo L R V W m n).symm
-  · rw [comp_oddMap_apply, braidingHom_oddMap_tmulEO,
-      fibreMu_oddMap_tmulOE, comp_oddMap_apply,
-      fibreMu_oddMap_tmulEO, gammaFunMap_freeModMap_oddMap]
+  · erw [comp_oddMap_apply, braidingHom_oddMap_tmulEO,
+      typedFibreMuOE, comp_oddMap_apply,
+      typedFibreMuEO, typedFibreMapOdd]
     exact (freeModShuffle_braiding_eo L R V W m n).symm
-  · rw [comp_oddMap_apply, braidingHom_oddMap_tmulOE,
-      fibreMu_oddMap_tmulEO, comp_oddMap_apply,
-      fibreMu_oddMap_tmulOE, gammaFunMap_freeModMap_oddMap]
+  · erw [comp_oddMap_apply, braidingHom_oddMap_tmulOE,
+      typedFibreMuEO, comp_oddMap_apply,
+      typedFibreMuOE, typedFibreMapOdd]
     exact (freeModShuffle_braiding_oe L R V W m n).symm
 
 /-! ## The lax monoidal and lax braided structures -/
