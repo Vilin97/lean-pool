@@ -69,11 +69,11 @@ theorem loopTM_body_step (tmBody tmTest : TM n) {c c' : Cfg n tmBody.Q}
     (hstep : tmBody.step c = some c') :
     (loopTM tmBody tmTest).step (loopBodyWrap tmBody tmTest c) =
       some (loopBodyWrap tmBody tmTest c') := by
+  classical
   have hne : c.state ≠ tmBody.qhalt := state_ne_qhalt_of_step hstep
   simp only [step, hne, ↓reduceIte, Option.some.injEq] at hstep
   subst hstep
-  show (if (loopBodyWrap tmBody tmTest c).state =
-           (loopTM tmBody tmTest).qhalt then none else some _) = some _
+  unfold step
   simp only [loopBodyWrap, loopTM, ite_eq_right loopQ_body_ne_halt, ite_eq_right hne]
 
 /-- A `t`-step run of `tmBody` lifts to a `t`-step run of `loopTM` between the
@@ -101,8 +101,8 @@ theorem loopTM_body_to_test (tmBody tmTest : TM n) {c : Cfg n tmBody.Q}
           input := transitionInput c.input,
           work := fun i => transitionTape (c.work i),
           output := transitionTape c.output }) := by
-  show (if (loopBodyWrap tmBody tmTest c).state =
-           (loopTM tmBody tmTest).qhalt then none else some _) = some _
+  classical
+  unfold step
   simp only [loopBodyWrap, loopTM, ite_eq_right loopQ_body_ne_halt, hhalt, ↓reduceIte]
   congr 1
 
@@ -116,11 +116,11 @@ theorem loopTM_test_step (tmBody tmTest : TM n) {c c' : Cfg n tmTest.Q}
     (hstep : tmTest.step c = some c') :
     (loopTM tmBody tmTest).step (loopTestWrap tmBody tmTest c) =
       some (loopTestWrap tmBody tmTest c') := by
+  classical
   have hne : c.state ≠ tmTest.qhalt := state_ne_qhalt_of_step hstep
   simp only [step, hne, ↓reduceIte, Option.some.injEq] at hstep
   subst hstep
-  show (if (loopTestWrap tmBody tmTest c).state =
-           (loopTM tmBody tmTest).qhalt then none else some _) = some _
+  unfold step
   simp only [loopTestWrap, loopTM, ite_eq_right loopQ_test_ne_halt, ite_eq_right hne]
 
 /-- A `t`-step run of `tmTest` lifts to a `t`-step run of `loopTM` between the
@@ -147,8 +147,8 @@ theorem loopTM_test_to_rewind (tmBody tmTest : TM n) {c : Cfg n tmTest.Q}
              input := transitionInput c.input,
              work := fun i => transitionTape (c.work i),
              output := transitionTape c.output } := by
-  show (if (loopTestWrap tmBody tmTest c).state =
-           (loopTM tmBody tmTest).qhalt then none else some _) = some _
+  classical
+  unfold step
   simp only [loopTestWrap, loopTM, ite_eq_right loopQ_test_ne_halt, hhalt, ↓reduceIte]
   congr 1
 

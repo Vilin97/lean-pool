@@ -58,7 +58,7 @@ theorem gibbsSequentialDivergence_eq_entropy
     gibbsSequentialDivergence A =
       -shannonEntropy (gibbsProbability A) +
         ∑ i, rowScore (assignmentMarginal A i) := by
-  rw [gibbsSequentialDivergence, averagedSequentialDivergence]
+  unfold gibbsSequentialDivergence averagedSequentialDivergence
   calc
     uniformAverage (fun π : Equiv.Perm (Fin m) ↦
         finiteKL (gibbsProbability A)
@@ -73,7 +73,7 @@ theorem gibbsSequentialDivergence_eq_entropy
         (gibbs_hasAssignmentMarginals A)
     _ = -shannonEntropy (gibbsProbability A) +
           ∑ i, rowScore (assignmentMarginal A i) := by
-      rw [← neg_logMarginals_add_rowT_eq_rowScore]
+      rw [← neg_logMarginals_add_rowT_eq_rowScore (assignmentMarginal A)]
       ring
 
 theorem gibbsSequentialDivergence_nonneg

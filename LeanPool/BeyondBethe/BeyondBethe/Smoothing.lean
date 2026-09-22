@@ -91,7 +91,7 @@ theorem prod_add_const_sub_prod_le
       have hs1 : ∀ i ∈ s, a i ≤ 1 := fun i hi ↦ ha1 i (Finset.mem_insert_of_mem hi)
       have hprod : (∏ i ∈ s, (a i + δ)) ≤ (1 + δ) ^ s.card := by
         rw [← Finset.prod_const]
-        exact Finset.prod_le_prod
+        exact Finset.prod_le_prod₀
           (fun i hi ↦ add_nonneg (hs0 i hi) hδ)
           (fun i hi ↦ by simpa [add_comm] using add_le_add_right (hs1 i hi) δ)
       have hpow : 0 ≤ (1 + δ) ^ s.card - 1 := by
@@ -125,7 +125,8 @@ theorem permanent_add_uniform_sub_le
     Matrix.permanent (fun i j ↦ A i j + δ) - Matrix.permanent A
       ≤ Nat.factorial (Fintype.card n) * ((1 + δ) ^ Fintype.card n - 1) := by
   classical
-  rw [Matrix.permanent, Matrix.permanent, ← Finset.sum_sub_distrib]
+  unfold Matrix.permanent
+  rw [← Finset.sum_sub_distrib]
   calc
     ∑ σ : Equiv.Perm n,
         ((∏ i, (A (σ i) i + δ)) - ∏ i, A (σ i) i)

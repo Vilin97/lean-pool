@@ -86,11 +86,11 @@ theorem ifTM_test_step (tmTest tmThen tmElse : TM n) {c c' : Cfg n tmTest.Q}
     (hstep : tmTest.step c = some c') :
     (ifTM tmTest tmThen tmElse).step (ifTestWrap tmTest tmThen tmElse c) =
       some (ifTestWrap tmTest tmThen tmElse c') := by
+  classical
   have hne : c.state ≠ tmTest.qhalt := state_ne_qhalt_of_step hstep
   simp only [step, hne, ↓reduceIte, Option.some.injEq] at hstep
   subst hstep
-  show (if (ifTestWrap tmTest tmThen tmElse c).state =
-           (ifTM tmTest tmThen tmElse).qhalt then none else some _) = some _
+  unfold step
   simp only [ifTestWrap, ifTM, ite_eq_right ifQ_test_ne_halt, ite_eq_right hne]
 
 /-- Multi-step test phase simulation. -/
@@ -112,11 +112,11 @@ theorem ifTM_then_step (tmTest tmThen tmElse : TM n) {c c' : Cfg n tmThen.Q}
     (hstep : tmThen.step c = some c') :
     (ifTM tmTest tmThen tmElse).step (ifThenWrap tmTest tmThen tmElse c) =
       some (ifThenWrap tmTest tmThen tmElse c') := by
+  classical
   have hne : c.state ≠ tmThen.qhalt := state_ne_qhalt_of_step hstep
   simp only [step, hne, ↓reduceIte, Option.some.injEq] at hstep
   subst hstep
-  show (if (ifThenWrap tmTest tmThen tmElse c).state =
-           (ifTM tmTest tmThen tmElse).qhalt then none else some _) = some _
+  unfold step
   simp only [ifThenWrap, ifTM, ite_eq_right ifQ_then_ne_halt, ite_eq_right hne]
 
 /-- Multi-step then-branch simulation. -/
@@ -138,11 +138,11 @@ theorem ifTM_else_step (tmTest tmThen tmElse : TM n) {c c' : Cfg n tmElse.Q}
     (hstep : tmElse.step c = some c') :
     (ifTM tmTest tmThen tmElse).step (ifElseWrap tmTest tmThen tmElse c) =
       some (ifElseWrap tmTest tmThen tmElse c') := by
+  classical
   have hne : c.state ≠ tmElse.qhalt := state_ne_qhalt_of_step hstep
   simp only [step, hne, ↓reduceIte, Option.some.injEq] at hstep
   subst hstep
-  show (if (ifElseWrap tmTest tmThen tmElse c).state =
-           (ifTM tmTest tmThen tmElse).qhalt then none else some _) = some _
+  unfold step
   simp only [ifElseWrap, ifTM, ite_eq_right ifQ_else_ne_halt, ite_eq_right hne]
 
 /-- Multi-step else-branch simulation. -/
@@ -167,8 +167,8 @@ theorem ifTM_then_halt_step (tmTest tmThen tmElse : TM n) {c : Cfg n tmThen.Q}
              input := transitionInput c.input,
              work := fun i => transitionTape (c.work i),
              output := transitionTape c.output } := by
-  show (if (ifThenWrap tmTest tmThen tmElse c).state =
-           (ifTM tmTest tmThen tmElse).qhalt then none else some _) = some _
+  classical
+  unfold step
   simp only [ifThenWrap, ifTM, ite_eq_right ifQ_then_ne_halt, hhalt, ↓reduceIte]
   congr 1
 
@@ -180,8 +180,8 @@ theorem ifTM_else_halt_step (tmTest tmThen tmElse : TM n) {c : Cfg n tmElse.Q}
              input := transitionInput c.input,
              work := fun i => transitionTape (c.work i),
              output := transitionTape c.output } := by
-  show (if (ifElseWrap tmTest tmThen tmElse c).state =
-           (ifTM tmTest tmThen tmElse).qhalt then none else some _) = some _
+  classical
+  unfold step
   simp only [ifElseWrap, ifTM, ite_eq_right ifQ_else_ne_halt, hhalt, ↓reduceIte]
   congr 1
 
@@ -197,8 +197,8 @@ theorem ifTM_test_to_rewind (tmTest tmThen tmElse : TM n) {c : Cfg n tmTest.Q}
              input := transitionInput c.input,
              work := fun i => transitionTape (c.work i),
              output := transitionTape c.output } := by
-  show (if (ifTestWrap tmTest tmThen tmElse c).state =
-           (ifTM tmTest tmThen tmElse).qhalt then none else some _) = some _
+  classical
+  unfold step
   simp only [ifTestWrap, ifTM, ite_eq_right ifQ_test_ne_halt, hhalt, ↓reduceIte]
   congr 1
 

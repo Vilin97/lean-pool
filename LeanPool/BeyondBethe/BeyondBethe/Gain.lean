@@ -33,7 +33,7 @@ theorem rowZeta_le_one
     (hp : IsProbabilityVector p) :
     rowZeta τ p ≤ 1 := by
   rw [rowZeta]
-  apply Finset.prod_le_one
+  apply Finset.prod_le_one₀
   · intro j _
     exact Real.rpow_nonneg (hp.nonnegative j) _
   · intro j _
@@ -273,7 +273,7 @@ theorem productExcept_le_one
     {p : ι → ℝ} (hp : IsProbabilityVector p) (j : ι) :
     productExcept p j ≤ 1 := by
   rw [productExcept]
-  apply Finset.prod_le_one
+  apply Finset.prod_le_one₀
   · intro k _
     exact sub_nonneg.mpr (hp.le_one k)
   · intro k _

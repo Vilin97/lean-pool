@@ -95,7 +95,8 @@ noncomputable def permutationGlobalClusterChoiceEquiv
     funext c
     apply Function.Embedding.ext
     intro k
-    simp [clusterChoiceMap, permutationClusterChoice]
+    simp [clusterChoiceMap, permutationClusterChoice, Equiv.ofBijective_apply]
+    rfl
 
 noncomputable instance globalClusterChoiceFintype
     {n : ℕ} (C : RowClustering n) : Fintype (GlobalClusterChoice C) :=
