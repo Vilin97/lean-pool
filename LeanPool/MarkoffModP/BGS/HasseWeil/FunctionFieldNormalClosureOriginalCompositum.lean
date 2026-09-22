@@ -37,6 +37,30 @@ variable (K F : Type*) [Field K] [Field F]
   [FiniteDimensional (RatFunc K) F]
   [Algebra.IsSeparable (RatFunc K) F]
 
+local instance originalCompositumNormalClosureSMul :
+    SMul K (FunctionFieldNormalClosure K F) := Algebra.toSMul
+
+local instance originalCompositumNormalClosureModule :
+    Module K (FunctionFieldNormalClosure K F) := Algebra.toModule
+
+local instance originalCompositumNormalClosureSelfTower :
+    IsScalarTower K K (FunctionFieldNormalClosure K F) :=
+  ⟨fun x y z => (smul_smul x y z).symm⟩
+
+local instance originalCompositumBaseConstantSMul :
+    SMul K (FunctionFieldNormalClosureConstantField K F) := Algebra.toSMul
+
+local instance originalCompositumBaseConstantModule :
+    Module K (FunctionFieldNormalClosureConstantField K F) := Algebra.toModule
+
+local instance originalCompositumConstantBaseSMul :
+    SMul (FunctionFieldNormalClosureConstantField K F)
+      (FunctionFieldNormalClosureConstantBase K F) := Algebra.toSMul
+
+local instance originalCompositumConstantBaseModule :
+    Module (FunctionFieldNormalClosureConstantField K F)
+      (FunctionFieldNormalClosureConstantBase K F) := Algebra.toModule
+
 /-- Multiplication of the two embedded factors `C` and `F` inside the normal
 closure.  Before exactness is imposed this is merely an algebra homomorphism
 from the tensor product; exactness will make its source a field and hence the
@@ -123,14 +147,24 @@ noncomputable def functionFieldNormalClosureConstantToOriginalCompositum
       (FunctionFieldNormalClosureOriginalCompositum K F hExact) :=
   (functionFieldNormalClosureConstantToOriginalCompositum K F hExact).toAlgebra
 
+local instance originalCompositumConstantSMul
+    (hExact : algebraicClosure K F = (⊥ : IntermediateField K F)) :
+    SMul (FunctionFieldNormalClosureConstantField K F)
+      (FunctionFieldNormalClosureOriginalCompositum K F hExact) := Algebra.toSMul
+
+local instance originalCompositumConstantModule
+    (hExact : algebraicClosure K F = (⊥ : IntermediateField K F)) :
+    Module (FunctionFieldNormalClosureConstantField K F)
+      (FunctionFieldNormalClosureOriginalCompositum K F hExact) := Algebra.toModule
+
 /-- The tensor/compositum equivalence respects the enlarged constants. -/
 noncomputable def exactConstantExtensionOriginalCompositumConstantAlgEquiv
     (hExact : algebraicClosure K F = (⊥ : IntermediateField K F)) :
-    letI : Field (ExactConstantExtension K F
+    let : Field (ExactConstantExtension K F
         (FunctionFieldNormalClosureConstantField K F)) :=
       exactConstantExtensionField K F
         (FunctionFieldNormalClosureConstantField K F) hExact
-    letI : Algebra (FunctionFieldNormalClosureConstantField K F)
+    let : Algebra (FunctionFieldNormalClosureConstantField K F)
         (ExactConstantExtension K F
           (FunctionFieldNormalClosureConstantField K F)) :=
       Algebra.TensorProduct.leftAlgebra
@@ -138,14 +172,7 @@ noncomputable def exactConstantExtensionOriginalCompositumConstantAlgEquiv
         (FunctionFieldNormalClosureConstantField K F) ≃ₐ[
       FunctionFieldNormalClosureConstantField K F]
         FunctionFieldNormalClosureOriginalCompositum K F hExact := by
-  letI : Field (ExactConstantExtension K F
-      (FunctionFieldNormalClosureConstantField K F)) :=
-    exactConstantExtensionField K F
-      (FunctionFieldNormalClosureConstantField K F) hExact
-  letI : Algebra (FunctionFieldNormalClosureConstantField K F)
-      (ExactConstantExtension K F
-        (FunctionFieldNormalClosureConstantField K F)) :=
-    Algebra.TensorProduct.leftAlgebra
+  intro model1 model2
   refine
     { exactConstantExtensionOriginalCompositumAlgEquiv K F hExact with
       commutes' := ?_ }
@@ -235,15 +262,39 @@ noncomputable def functionFieldNormalClosureConstantBaseToOriginalCompositum
   map_add' _ _ := rfl
   commutes' _ := rfl
 
+@[reducible] private noncomputable def originalCompositumRatFuncSelfAlgebra
+    (C : Type*) [Field C] : Algebra C (RatFunc C) :=
+  RatFunc.instAlgebraOfPolynomial C C
+
+private theorem originalCompositum_ratFunc_algHom_ext
+    {C M : Type*} [Field C] [Field M] [Algebra C M]
+    (f g : RatFunc C →ₐ[C] M) (hX : f RatFunc.X = g RatFunc.X) : f = g := by
+  have hRing : f.toRingHom = g.toRingHom := by
+    apply IsFractionRing.ringHom_ext (A := C[X])
+    intro p
+    induction p using Polynomial.induction_on' with
+    | add p q hp hq =>
+        simpa only [map_add] using congrArg₂ (fun x y => x + y) hp hq
+    | monomial n c =>
+        rw [← Polynomial.C_mul_X_pow_eq_monomial]
+        simp only [map_mul, map_pow, RatFunc.algebraMap_C,
+          RatFunc.algebraMap_X]
+        rw [← RatFunc.algebraMap_eq_C]
+        have hfc : f.toRingHom (algebraMap C (RatFunc C) c) =
+            algebraMap C M c := f.commutes c
+        have hgc : g.toRingHom (algebraMap C (RatFunc C) c) =
+            algebraMap C M c := g.commutes c
+        have hX' : f.toRingHom RatFunc.X = g.toRingHom RatFunc.X := hX
+        rw [hfc, hgc, hX']
+  exact DFunLike.ext _ _ (fun r => DFunLike.congr_fun hRing r)
+
 /-- The standard coefficient algebra structure on `C(t)` used by the
 rational-function equivalence. -/
 @[reducible] noncomputable instance (priority := 2000)
     functionFieldNormalClosureConstantFieldRatFuncAlgebraForOriginalCompositum :
     Algebra (FunctionFieldNormalClosureConstantField K F)
       (RatFunc (FunctionFieldNormalClosureConstantField K F)) :=
-  RatFunc.instAlgebraOfPolynomial
-    (FunctionFieldNormalClosureConstantField K F)
-    (FunctionFieldNormalClosureConstantField K F)
+  originalCompositumRatFuncSelfAlgebra (FunctionFieldNormalClosureConstantField K F)
 
 /-- The `C(t)`-algebra structure on `CF`, transported through the canonical
 equivalence `C(t) ≃ C K(t)` inside the normal closure. -/
@@ -350,34 +401,48 @@ whose constant algebra is definitionally this restriction. -/
   RingHom.toAlgebra
     ((algebraMap (RatFunc K) F).comp (algebraMap K (RatFunc K)))
 
+private theorem originalMultiplicationCanonicalRatFunc_X :
+    let : Algebra K F := functionFieldCanonicalConstantAlgebra K F
+    let : IsScalarTower K (RatFunc K) F := IsScalarTower.of_algebraMap_eq' rfl
+    ∀ (hExact : algebraicClosure K F = (⊥ : IntermediateField K F)),
+      functionFieldNormalClosureOriginalMultiplication K F
+        (ratFuncToExactConstantExtension K
+          (FunctionFieldNormalClosureConstantField K F) F hExact RatFunc.X) =
+        algebraMap (RatFunc K) (FunctionFieldNormalClosure K F) RatFunc.X := by
+  intro model1 model2 hExact
+  let C := FunctionFieldNormalClosureConstantField K F
+  letI : Algebra K[X] F :=
+    RingHom.toAlgebra
+      ((algebraMap (RatFunc K) F).comp (algebraMap K[X] (RatFunc K)))
+  rw [ratFuncToExactConstantExtension_X]
+  simp only [polynomialTensorCancelEvaluationPoint, Algebra.TensorProduct.includeRight_apply]
+  rw [functionFieldNormalClosureOriginalMultiplication_tmul]
+  change (1 : FunctionFieldNormalClosure K F) *
+      functionFieldToNormalClosure K F (algebraMap K[X] F Polynomial.X) = _
+  rw [one_mul]
+  change functionFieldToNormalClosure K F
+      (algebraMap (RatFunc K) F (algebraMap K[X] (RatFunc K) Polynomial.X)) = _
+  rw [RatFunc.algebraMap_X]
+  exact (functionFieldToNormalClosure K F).commutes RatFunc.X
+
 /-- For the canonical restricted constant algebra, the tensor/compositum
 equivalence is linear over `C(t)`, not merely over `K`. -/
 noncomputable def
     exactConstantExtensionOriginalCompositumCanonicalRatFuncAlgEquiv :
-    letI : Algebra K F := functionFieldCanonicalConstantAlgebra K F
-    letI : IsScalarTower K (RatFunc K) F :=
+    let : Algebra K F := functionFieldCanonicalConstantAlgebra K F
+    let : IsScalarTower K (RatFunc K) F :=
       IsScalarTower.of_algebraMap_eq' rfl
     ∀ (hExact : algebraicClosure K F = (⊥ : IntermediateField K F)),
       let C := FunctionFieldNormalClosureConstantField K F
       let E := ExactConstantExtension K F C
       let M := FunctionFieldNormalClosureOriginalCompositum K F hExact
-      letI : Field E := exactConstantExtensionField K F C hExact
-      letI : Algebra C E := Algebra.TensorProduct.leftAlgebra
-      letI : Algebra (RatFunc C) E :=
+      let : Field E := exactConstantExtensionField K F C hExact
+      let : Algebra C E := Algebra.TensorProduct.leftAlgebra
+      let : Algebra (RatFunc C) E :=
         ratFuncExactConstantExtensionAlgebra K C F hExact
       E ≃ₐ[RatFunc C] M := by
-  letI : Algebra K F := functionFieldCanonicalConstantAlgebra K F
-  letI : IsScalarTower K (RatFunc K) F :=
-    IsScalarTower.of_algebraMap_eq' rfl
-  intro hExact
-  let C := FunctionFieldNormalClosureConstantField K F
-  letI : Algebra C (RatFunc C) := RatFunc.instAlgebraOfPolynomial C C
-  let E := ExactConstantExtension K F C
-  let M := FunctionFieldNormalClosureOriginalCompositum K F hExact
-  letI : Field E := exactConstantExtensionField K F C hExact
-  letI : Algebra C E := Algebra.TensorProduct.leftAlgebra
-  letI : Algebra (RatFunc C) E :=
-    ratFuncExactConstantExtensionAlgebra K C F hExact
+  intro model1 model2 hExact C E M model3 model4 model5
+  letI : Algebra C (RatFunc C) := originalCompositumRatFuncSelfAlgebra C
   letI : Algebra K[X] F :=
     RingHom.toAlgebra
       ((algebraMap (RatFunc K) F).comp
@@ -390,51 +455,11 @@ noncomputable def
     functionFieldNormalClosureOriginalCompositumConstantRatFuncAlgHom
       K F hExact
   have hX : f RatFunc.X = g RatFunc.X := by
-    have hfX : ((f RatFunc.X : M) : FunctionFieldNormalClosure K F) =
-        algebraMap (RatFunc K) (FunctionFieldNormalClosure K F) RatFunc.X := by
-      change functionFieldNormalClosureOriginalMultiplication K F
-          (ratFuncToExactConstantExtension K C F hExact RatFunc.X) = _
-      rw [ratFuncToExactConstantExtension_X]
-      simp only [polynomialTensorCancelEvaluationPoint,
-        Algebra.TensorProduct.includeRight_apply]
-      rw [functionFieldNormalClosureOriginalMultiplication_tmul]
-      change (1 : FunctionFieldNormalClosure K F) *
-          functionFieldToNormalClosure K F
-            (algebraMap K[X] F Polynomial.X) = _
-      rw [one_mul]
-      change functionFieldToNormalClosure K F
-          (algebraMap (RatFunc K) F
-            (algebraMap K[X] (RatFunc K) Polynomial.X)) = _
-      rw [RatFunc.algebraMap_X]
-      exact (functionFieldToNormalClosure K F).commutes RatFunc.X
-    have hgX : ((g RatFunc.X : M) : FunctionFieldNormalClosure K F) =
-        algebraMap (RatFunc K) (FunctionFieldNormalClosure K F) RatFunc.X := by
-      change ((functionFieldNormalClosureConstantBaseRatFuncAlgEquiv K F
-        RatFunc.X : FunctionFieldNormalClosureConstantBase K F) :
-          FunctionFieldNormalClosure K F) = _
-      rw [functionFieldNormalClosureConstantBaseRatFuncAlgEquiv_X]
-      rfl
     apply Subtype.ext
+    have hfX := originalMultiplicationCanonicalRatFunc_X K F hExact
+    have hgX := congrArg Subtype.val (functionFieldNormalClosureConstantBaseRatFuncAlgEquiv_X K F)
     exact hfX.trans hgX.symm
-  have hRing : f.toRingHom = g.toRingHom := by
-    apply IsFractionRing.ringHom_ext (A := C[X])
-    intro p
-    induction p using Polynomial.induction_on' with
-    | add p q hp hq =>
-        simpa only [map_add] using congrArg₂ (fun x y => x + y) hp hq
-    | monomial n c =>
-        rw [← Polynomial.C_mul_X_pow_eq_monomial]
-        simp only [map_mul, map_pow, RatFunc.algebraMap_C,
-          RatFunc.algebraMap_X]
-        rw [← RatFunc.algebraMap_eq_C]
-        have hfc : f.toRingHom (algebraMap C (RatFunc C) c) =
-            algebraMap C M c := f.commutes c
-        have hgc : g.toRingHom (algebraMap C (RatFunc C) c) =
-            algebraMap C M c := g.commutes c
-        have hX' : f.toRingHom RatFunc.X = g.toRingHom RatFunc.X := hX
-        rw [hfc, hgc, hX']
-  have hfg : f = g :=
-    DFunLike.ext _ _ (fun r => DFunLike.congr_fun hRing r)
+  have hfg : f = g := originalCompositum_ratFunc_algHom_ext (C := C) (M := M) f g hX
   refine { eC with commutes' := ?_ }
   intro r
   exact DFunLike.congr_fun hfg r
