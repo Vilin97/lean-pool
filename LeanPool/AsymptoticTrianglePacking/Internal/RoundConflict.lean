@@ -30,7 +30,7 @@ namespace Hypergraph
 
 variable {V : Type*} [DecidableEq V]
 
-/-- **C4b-0' — survival ⟺ retained with no retained conflict.** For a retained set `R ⊆ H`, an
+/-- **C4b-0' — survival iff retained with no retained conflict.** For a retained set `R ⊆ H`, an
 edge `e` is in the round's matching iff `e ∈ R` and none of its conflicting edges lies in `R`. -/
 theorem mem_roundMatching_iff_conflicts {H R : Finset (Finset V)} (hRH : R ⊆ H)
     {e : Finset V} :
