@@ -12,6 +12,11 @@ Artin's monic coprime-factor lifting criterion implies the exact primitive
 factorization form of Hensel's lemma from the primitive factorization definition.
 -/
 
+open _root_.ValuationTheory.DiscreteValuationField.Valuation renaming
+  exists_extension_valuationSubring_with_hasExtension →
+    exists_extension_valuationSubring_with_hasExtension
+
+
 noncomputable section
 
 open Polynomial
@@ -165,7 +170,7 @@ theorem primitiveIrreducibleReductionProperty_of_monicResidualCoprimeFactorLifti
     exact ⟨Or.inr hbranch.1, hbranch.2⟩
   · let L : Type u := (Q.map V.subtype).SplittingField
     obtain ⟨B, _hB, _hlocal, _hpullback, hExt⟩ :=
-      ValuationTheory.DiscreteValuationField.Valuation.exists_extension_valuationSubring_with_hasExtension
+      exists_extension_valuationSubring_with_hasExtension
         (L := L) V.valuation
     let : V.valuation.HasExtension B.valuation := hExt
     let : Normal K L :=

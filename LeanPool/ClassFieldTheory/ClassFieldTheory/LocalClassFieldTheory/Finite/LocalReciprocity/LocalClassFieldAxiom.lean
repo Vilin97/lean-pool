@@ -57,18 +57,17 @@ private theorem galoisAmbientUnits_satisfiesClassFieldAxiom
       k Ω K L hLK hKfinite hfinite
   let : IsGalois F E :=
     abstractRelativeFixedField_isGalois k Ω K L hLK hnormal
-  let eQ : Q ≃* Gal(E / F) :=
+  let eQ : Q ≃* Gal(E/F) :=
     abstractExtensionQuotientEquivGaloisGroup k Ω K L hLK hnormal
-  let g' : Gal(E / F) := eQ g
-  have hg' : ∀ σ : Gal(E / F), σ ∈ Subgroup.zpowers g' :=
+  let g' : Gal(E/F) := eQ g
+  have hg' : ∀ σ : Gal(E/F), σ ∈ Subgroup.zpowers g' :=
     map_cyclicGenerator eQ g hg
   have hUnitsTateCard := finiteTowerUnits_tate_card_of_generator k F E g' hg'
-
   let : IsCyclic Q := CyclicCohomology.isCyclic_of_generator g hg
   let : CommGroup Q := IsCyclic.commGroup
-  let : IsCyclic (Gal(E / F)) :=
+  let : IsCyclic (Gal(E/F)) :=
     CyclicCohomology.isCyclic_of_generator g' hg'
-  let : CommGroup (Gal(E / F)) := IsCyclic.commGroup
+  let : CommGroup (Gal(E/F)) := IsCyclic.commGroup
   let M := extensionFixedRepresentation
     (galoisAmbientUnitsRep k Ω) K L hLK hnormal
   let U := Rep.ofAlgebraAutOnUnits F E

@@ -8,6 +8,11 @@ import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLoca
 import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.ValuationExactSequence
 
 /-! # Uniformizer Principal Quotient -/
+
+open _root_.LocalFieldTheory.IsNonarchimedeanLocalField renaming
+  integerUnitsToFieldUnits_uniformizerUnitFactor →
+    integerUnitsToFieldUnits_uniformizerUnitFactor
+
 open scoped ValuativeRel
 
 /-!
@@ -39,7 +44,7 @@ theorem uniformizerUnitFactor_one
     (hpi : LocalFieldTheory.IsNonarchimedeanLocalField.valuationMap K (Additive.ofMul pi) = 1) :
     LocalFieldTheory.IsNonarchimedeanLocalField.uniformizerUnitFactor K pi hpi 1 = 1 := by
   apply integerUnitsToFieldUnits_injective K
-  rw [LocalFieldTheory.IsNonarchimedeanLocalField.integerUnitsToFieldUnits_uniformizerUnitFactor]
+  rw [integerUnitsToFieldUnits_uniformizerUnitFactor]
   rw [LocalFieldTheory.IsNonarchimedeanLocalField.valuationMap_ofMul_one]
   simp
 
@@ -57,7 +62,7 @@ theorem uniformizerUnitFactor_mul
   apply integerUnitsToFieldUnits_injective K
   rw [map_mul]
   simp only
-    [LocalFieldTheory.IsNonarchimedeanLocalField.integerUnitsToFieldUnits_uniformizerUnitFactor]
+    [integerUnitsToFieldUnits_uniformizerUnitFactor]
   rw [LocalFieldTheory.IsNonarchimedeanLocalField.valuationMap_ofMul_mul, zpow_add]
   simp only [div_eq_mul_inv, mul_inv_rev]
   ac_rfl
@@ -73,7 +78,7 @@ theorem uniformizerUnitFactor_integerUnit
     LocalFieldTheory.IsNonarchimedeanLocalField.uniformizerUnitFactor K pi hpi
         (integerUnitsToFieldUnits K u) = u := by
   apply integerUnitsToFieldUnits_injective K
-  rw [LocalFieldTheory.IsNonarchimedeanLocalField.integerUnitsToFieldUnits_uniformizerUnitFactor]
+  rw [integerUnitsToFieldUnits_uniformizerUnitFactor]
   have hv : LocalFieldTheory.IsNonarchimedeanLocalField.valuationMap K
       (Additive.ofMul (integerUnitsToFieldUnits K u)) = 0 := by
     rw [LocalFieldTheory.IsNonarchimedeanLocalField.valuationMap_apply]
@@ -152,7 +157,7 @@ theorem fieldUnitsToIntegerUnitsPrincipalQuotientHom_ker
       have hfactor : LocalFieldTheory.IsNonarchimedeanLocalField.uniformizerUnitFactor K pi hpi
         pi = 1 := by
         apply integerUnitsToFieldUnits_injective K
-        rw [LocalFieldTheory.IsNonarchimedeanLocalField.integerUnitsToFieldUnits_uniformizerUnitFactor,
+        rw [integerUnitsToFieldUnits_uniformizerUnitFactor,
           hpi]
         simp
       rw [hfactor]

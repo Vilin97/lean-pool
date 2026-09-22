@@ -276,10 +276,9 @@ noncomputable def ramifiedInfinitePlaceOverextensionRestriction
       (chosenInfinitePlaceAbove (L := L) v).IsRamified K) :
     Gal(
       (infinitePlaceComplexificationOverfield
-        (K := K) (L := L) v) /
-      (ramifiedInfinitePlaceRealFixedField
+        (K := K) (L := L) v)/(ramifiedInfinitePlaceRealFixedField
         (K := K) (L := L) v hRamified)) →*
-      Gal(L / K) :=
+      Gal(L/K) :=
   (AlgEquiv.restrictNormalHom L).comp
     (AlgEquiv.restrictScalarsHom K)
 
@@ -430,8 +429,7 @@ theorem
             (K := K) (L := L) v)).range) ≃*
         Gal(
           (infinitePlaceComplexificationOverfield
-            (K := K) (L := L) v) /
-          (ramifiedInfinitePlaceRealFixedField
+            (K := K) (L := L) v)/(ramifiedInfinitePlaceRealFixedField
             (K := K) (L := L) v hRamified)) :=
     AddEquiv.toMultiplicative
       (globalNormResidueEquivOfEmbedding
@@ -582,7 +580,7 @@ open scoped Classical in
 /-- The base global norm-residue value at the negative-one class of `v`. -/
 noncomputable def ramifiedInfinitePlaceGlobalNormResidueNegOneValue
     (v : InfinitePlace K) :
-    Gal(L / K) :=
+    Gal(L/K) :=
   globalNormResidueMonoidHom K L
     (IdeleGroup.infinitePlaceIdeleClass v (-1 : v.Completionˣ))
 
@@ -590,7 +588,7 @@ open scoped Classical in
 /-- The chosen local Artin value at negative one at `v`. -/
 noncomputable def ramifiedInfinitePlaceLocalArtinNegOneValue
     (v : InfinitePlace K) :
-    Gal(L / K) :=
+    Gal(L/K) :=
   chosenInfinitePlaceArtinMonoidHom
     (K := K) (L := L) v (-1 : v.Completionˣ)
 
@@ -647,8 +645,7 @@ noncomputable def
       (chosenInfinitePlaceAbove (L := L) v).IsRamified K) :
     Gal(
       (infinitePlaceComplexificationOverfield
-        (K := K) (L := L) v) /
-      (ramifiedInfinitePlaceRealFixedField
+        (K := K) (L := L) v)/(ramifiedInfinitePlaceRealFixedField
         (K := K) (L := L) v hRamified)) :=
   globalNormResidueMonoidHomOfEmbedding
     (ramifiedInfinitePlaceRealFixedField
@@ -667,7 +664,7 @@ noncomputable def
     (v : InfinitePlace K)
     (hRamified :
       (chosenInfinitePlaceAbove (L := L) v).IsRamified K) :
-    Gal(L / K) :=
+    Gal(L/K) :=
   ramifiedInfinitePlaceOverextensionRestriction
     (K := K) (L := L) v hRamified
     (ramifiedInfinitePlaceOverextensionGlobalNormResidueNegOneValue
@@ -680,7 +677,7 @@ noncomputable def
     (v : InfinitePlace K)
     (hRamified :
       (chosenInfinitePlaceAbove (L := L) v).IsRamified K) :
-    Gal(L / K) :=
+    Gal(L/K) :=
   globalNormResidueMonoidHomOfEmbedding K L
     (infinitePlaceComplexificationLowerSeparableClosureEmbedding
       (K := K) (L := L) v)

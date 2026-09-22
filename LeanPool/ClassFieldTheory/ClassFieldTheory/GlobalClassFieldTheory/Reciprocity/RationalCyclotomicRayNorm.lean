@@ -497,7 +497,7 @@ theorem
     rationalCyclotomicLevelFiniteDimensional m
   let : IsAbelianGalois ℚ L :=
     rationalCyclotomicLevelIsAbelianGalois m
-  let σ : Gal(L / ℚ) :=
+  let σ : Gal(L/ℚ) :=
     chosenFinitePlaceArtinMonoidHom
       (K := ℚ) (L := L) (RayClass.rationalPrime q) x
   apply
@@ -543,7 +543,7 @@ theorem
     rationalCyclotomicLevelFiniteDimensional mp
   let : IsAbelianGalois ℚ P :=
     rationalCyclotomicLevelIsAbelianGalois mp
-  let χ : Gal(P / ℚ) ≃* (ZMod (p.1 ^ k))ˣ :=
+  let χ : Gal(P/ℚ) ≃* (ZMod (p.1 ^ k))ˣ :=
     IsCyclotomicExtension.Rat.galEquivZMod
       (p.1 ^ k) P
   have hFL : P ≤ L := by

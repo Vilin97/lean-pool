@@ -16,6 +16,11 @@ The statement is independent of the global Kummer construction so it can be
 reused by local reciprocity arguments.
 -/
 
+open _root_.RamificationTheory.DiscreteValuationField.ValuedExtension renaming
+  isUnramifiedAt_of_aeval_derivative_isUnit →
+    isUnramifiedAt_of_aeval_derivative_isUnit
+
+
 open scoped ValuativeRel
 open LocalFieldTheory
 
@@ -122,7 +127,7 @@ theorem isUnramifiedValuedExtension_of_unit_kummer_generator
   have hunramifiedAt :
       Algebra.IsUnramifiedAt
         base.valuationSubring target.maximalIdeal :=
-    RamificationTheory.DiscreteValuationField.ValuedExtension.isUnramifiedAt_of_aeval_derivative_isUnit
+    isUnramifiedAt_of_aeval_derivative_isUnit
       base target z hzgen P hP hPderiv
   refine ⟨?_⟩
   change target.maximalIdeal.ramificationIdx base.valuationSubring = 1

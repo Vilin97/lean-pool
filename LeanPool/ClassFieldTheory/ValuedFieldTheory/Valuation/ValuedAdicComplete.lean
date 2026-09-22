@@ -9,6 +9,11 @@ import Mathlib.RingTheory.AdicCompletion.Topology
 import Mathlib.Topology.Algebra.Valued.ValuedField
 
 /-! # Valued Adic Complete -/
+
+open _root_.ValuationTheory.DiscreteValuationField.Valuation renaming
+  mem_maximalIdeal_pow_iff_valuation_le_uniformizer_pow →
+    mem_maximalIdeal_pow_iff_valuation_le_uniformizer_pow
+
 universe u v
 
 namespace ValuationTheory
@@ -85,7 +90,7 @@ theorem rankOneDiscreteValuationSubring_isAdic
     convert h_preimage_open using 1
     ext x
     exact
-      (ValuationTheory.DiscreteValuationField.Valuation.mem_maximalIdeal_pow_iff_valuation_le_uniformizer_pow
+      (mem_maximalIdeal_pow_iff_valuation_le_uniformizer_pow
           (val := val) (pi := pi) hpi n)
   · intro s hs
     rcases
@@ -109,7 +114,7 @@ theorem rankOneDiscreteValuationSubring_isAdic
     change val.restrict (x : K) < gamma.1
     rw [Valuation.restrict_lt_iff_lt_embedding]
     have hx_le :=
-      (ValuationTheory.DiscreteValuationField.Valuation.mem_maximalIdeal_pow_iff_valuation_le_uniformizer_pow
+      (mem_maximalIdeal_pow_iff_valuation_le_uniformizer_pow
           (val := val) (pi := pi) hpi n).1 hx
     calc
       val (x : K) ≤ val (((pi ^ n : val.valuationSubring) : K)) := hx_le

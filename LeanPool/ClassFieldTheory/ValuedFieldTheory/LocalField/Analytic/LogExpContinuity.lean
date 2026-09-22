@@ -112,7 +112,6 @@ a.toAdd`.
 The proof is the valuation estimate `v(Exp(a) - 1) = v(a)`: membership in `m^n`
 puts every nonzero `a` above the ramified convergence threshold. -/
 theorem continuousAt_zero_principalUnitExpSeries_maximalIdealPow_fieldVal_ofWithZeroValuationScaled
-
     (v : _root_.Valuation K (WithZero (Multiplicative ℤ)))
     [ValuationTheory.DiscreteValuationField.Valuation.IsCompleteDiscrete v]
     {p : ℕ} [Fact p.Prime] (e n : ℕ)

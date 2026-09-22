@@ -184,7 +184,8 @@ private theorem valuationAt_unramified_representation_norm
     ∀ y : (extensionFixedRepresentation A E.base.field E.field.field E.below hnormal).V,
     v.valuationAt E.field
         (extensionFixedRepresentationEquiv A E.base.field E.field.field E.below hnormal
-          ((extensionFixedRepresentation A E.base.field E.field.field E.below hnormal).norm.hom y)) =
+          ((extensionFixedRepresentation A E.base.field E.field.field E.below hnormal).norm.hom
+            y)) =
       (E.degree : ℕ) • v.valuationAt E.field
         (extensionFixedRepresentationEquiv A E.base.field E.field.field E.below hnormal y) := by
   let := Fintype.ofFinite

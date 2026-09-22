@@ -232,7 +232,7 @@ theorem
     (hgenerate :
       Subgroup.closure ({σ.1} : Set (Gal(L/K))) = ⊤)
     (hprimary :
-      σ.1 ∈ CommGroup.primaryComponent (Gal(L / K)) p.1)
+      σ.1 ∈ CommGroup.primaryComponent (Gal(L/K)) p.1)
     (x : (v.adicCompletion K)ˣ)
     (hx :
       chosenFinitePlaceArtinMonoidHom
@@ -403,7 +403,7 @@ private theorem exists_finitePlaceNormDescent_localGlobalRepresentative
           (AlgEquiv.restrictScalarsHom K)) σM :=
         congrArg
           (((AlgEquiv.restrictNormalHom L).comp
-            (AlgEquiv.restrictScalarsHom K)) : Gal(L / M) →* Gal(L / K)) hy
+            (AlgEquiv.restrictScalarsHom K)) : Gal(L/M) →* Gal(L/K)) hy
       _ = σG := hrestrict
   let j : L →ₐ[ℚ] SeparableClosure ℚ :=
     AlgebraicNumberTheory.numberFieldSeparableClosureEmbedding L
@@ -483,7 +483,7 @@ private theorem exists_finitePlacePrimaryNormDescent_localGlobalRepresentative
     (hgenerate :
       Subgroup.closure ({δM.1} : Set (Gal(L/M))) = ⊤)
     (hprimary :
-      δM.1 ∈ CommGroup.primaryComponent (Gal(L / M)) p.1)
+      δM.1 ∈ CommGroup.primaryComponent (Gal(L/M)) p.1)
     (σG : Gal(L/K))
     (hrestrict :
       ((AlgEquiv.restrictNormalHom L).comp
@@ -517,11 +517,11 @@ private theorem exists_finitePlacePrimary_cyclicFixedFieldRepresentative
           (K := K) (L := L) v z = δ.1 ∧
       globalNormResidueMonoidHom K L
           (IdeleGroup.finitePlaceIdeleClass v z) = δ.1 := by
-  let σG : Gal(L / K) := δ.1
+  let σG : Gal(L/K) := δ.1
   let M := automorphismCyclicFixedField σG
   let : NumberField M := NumberField.of_module_finite K M
   let W := automorphismCyclicFixedPlace v σG
-  let σM : Gal(L / M) := automorphismOverCyclicFixedField σG
+  let σM : Gal(L/M) := automorphismOverCyclicFixedField σG
   have hσMdecomposition :
       σM ∈
         absoluteValueDecompositionGroup M
@@ -536,14 +536,14 @@ private theorem exists_finitePlacePrimary_cyclicFixedFieldRepresentative
   have hσMrestrict : σM.restrictScalars K = σG :=
     automorphismOverCyclicFixedField_restrictScalars σG
   have hσMprimary :
-      σM ∈ CommGroup.primaryComponent (Gal(L / M)) p.1 := by
+      σM ∈ CommGroup.primaryComponent (Gal(L/M)) p.1 := by
     obtain ⟨n, hn⟩ := hprimary
     have hnG : σG ^ (p.1 ^ n) = 1 := hn
     refine ⟨n, ?_⟩
     apply AlgEquiv.restrictScalars_injective K
     change
       (AlgEquiv.restrictScalarsHom K) (σM ^ (p.1 ^ n)) =
-        (AlgEquiv.restrictScalarsHom K) (1 : Gal(L / M))
+        (AlgEquiv.restrictScalarsHom K) (1 : Gal(L/M))
     rw [
       map_pow,
       AlgEquiv.restrictScalarsHom_apply,
@@ -588,7 +588,7 @@ theorem finitePlaceGlobalNormResidueFactor_eq_subtype_on_primary
       (σ :
         (chosenFinitePlaceArtinMonoidHom
           (K := K) (L := L) v).range) := by
-  let σG : Gal(L / K) :=
+  let σG : Gal(L/K) :=
     (σ :
       (chosenFinitePlaceArtinMonoidHom
         (K := K) (L := L) v).range)
@@ -610,7 +610,7 @@ theorem finitePlaceGlobalNormResidueFactor_eq_subtype_on_primary
         (chosenFinitePlaceExtension (L := L) v).1 :=
     ⟨σG, hσdecomposition⟩
   have hσprimary :
-      σG ∈ CommGroup.primaryComponent (Gal(L / K)) p := by
+      σG ∈ CommGroup.primaryComponent (Gal(L/K)) p := by
     obtain ⟨n, hn⟩ := σ.property
     exact ⟨n, congrArg Subtype.val hn⟩
   let pPrime : Nat.Primes := ⟨p, hp.out⟩
@@ -736,7 +736,7 @@ theorem finitePlaceGlobalNormResidueFactor_eq_subtype_iff_primary
     exact congrArg
       (fun f :
         (chosenFinitePlaceArtinMonoidHom
-          (K := K) (L := L) v).range →* Gal(L / K) => f σ)
+          (K := K) (L := L) v).range →* Gal(L/K) => f σ)
       h
   · intro h
     apply MonoidHom.ext_of_eq_on_finitePrimaryComponents

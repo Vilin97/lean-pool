@@ -16,6 +16,19 @@ for maximal Kummer extensions and the characteristic-zero local existence
 theorem.
 -/
 
+open _root_.LocalFieldTheory.DiscreteValuationField.LocalField renaming
+  chosenFirstPrincipalUnitStructureEqualCharacteristic →
+    chosenFirstPrincipalUnitStructureEqualCharacteristic
+
+open _root_.LocalFieldTheory.DiscreteValuationField.LocalField renaming
+  chosenMixedFirstPrincipalUnitStructureOfWithZeroValuation →
+    chosenMixedFirstPrincipalUnitStructureOfWithZeroValuation
+
+open _root_.LocalFieldTheory.DiscreteValuationField renaming
+  finite_fieldUnits_nthPowerQuotient_of_finite_principalUnits →
+    finite_fieldUnits_nthPowerQuotient_of_finite_principalUnits
+
+
 noncomputable section
 
 namespace LocalFieldTheory
@@ -46,7 +59,7 @@ theorem finite_nthPowerQuotient_of_natCast_ne_zero
       LocalFieldTheory.DiscreteValuationField.LocalField.mixedWithZeroValuationContext v
     let d := Module.finrank ℚ_[F.residueCharacteristic] K
     obtain ⟨a, e⟩ :=
-      LocalFieldTheory.DiscreteValuationField.LocalField.chosenMixedFirstPrincipalUnitStructureOfWithZeroValuation
+      chosenMixedFirstPrincipalUnitStructureOfWithZeroValuation
         v (localIntegerValuation_surjective K)
     let U1 :=
       LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
@@ -69,7 +82,7 @@ theorem finite_nthPowerQuotient_of_natCast_ne_zero
         F.toCompleteDVF.valuation.IsUniformizer (π : K) :=
       Classical.choose_spec hex
     exact
-      LocalFieldTheory.DiscreteValuationField.finite_fieldUnits_nthPowerQuotient_of_finite_principalUnits
+      finite_fieldUnits_nthPowerQuotient_of_finite_principalUnits
         F.toCompleteDVF hπ n
   · let : CharP K p := hcharP
     have hpne : p ≠ 0 := hp.out.ne_zero
@@ -86,7 +99,7 @@ theorem finite_nthPowerQuotient_of_natCast_ne_zero
       ⟨(F.residueCharacteristic_prime.coprime_iff_not_dvd.mpr hpn).symm⟩
     let valuedK : Valued K (WithZero (Multiplicative ℤ)) := Valued.mk' v
     let e :=
-      LocalFieldTheory.DiscreteValuationField.LocalField.chosenFirstPrincipalUnitStructureEqualCharacteristic
+      chosenFirstPrincipalUnitStructureEqualCharacteristic
         v
     let U1 :=
       LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
@@ -106,7 +119,7 @@ theorem finite_nthPowerQuotient_of_natCast_ne_zero
         F.toCompleteDVF.valuation.IsUniformizer (π : K) :=
       Classical.choose_spec hex
     exact
-      LocalFieldTheory.DiscreteValuationField.finite_fieldUnits_nthPowerQuotient_of_finite_principalUnits
+      finite_fieldUnits_nthPowerQuotient_of_finite_principalUnits
         F.toCompleteDVF hπ n
 
 end LocalFieldTheory

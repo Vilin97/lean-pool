@@ -392,7 +392,6 @@ open scoped Classical in
 `S`-unit radical supplied by the chosen finite enlargement. -/
 theorem kummerRadicalExtension_enlargedSUnitKummerSubgroup_eq
     {Omega : Type*} [Field Omega] [Algebra K Omega]
-
     (E : IntermediateField K Omega)
     [FiniteDimensional K E] [IsGalois K E]
     [IsMulCommutative Gal(E/K)]

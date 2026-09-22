@@ -50,7 +50,7 @@ theorem quotientNorm_oneAdd_uniformizerPow_eq_trace
   classical
   intro πL hπL a
   let b : (𝓂[L] ^ n : Ideal 𝒪[L]) :=
-    ⟨Finset.univ.sum fun σ : Gal(L / K) =>
+    ⟨Finset.univ.sum fun σ : Gal(L/K) =>
         galoisGroupIntegerRingEquivOfIsIntegralClosure K L σ (a : 𝒪[L]),
       by
         exact Ideal.sum_mem _ fun σ _ =>
@@ -85,23 +85,23 @@ theorem quotientNorm_oneAdd_uniformizerPow_eq_trace
   congr 1
   have hb_eq :
       (b : 𝒪[L]) =
-        (Finset.univ.sum fun σ : Gal(L / K) =>
+        (Finset.univ.sum fun σ : Gal(L/K) =>
           galoisGroupIntegerRingEquivOfIsIntegralClosure K L σ r) * πL ^ n := by
     simpa [b, a, πL] using
       galoisGroup_sum_mul_base_uniformizer_pow_eq_coeff_sum_of_isIntegralClosure K L n r
   rw [show maximalIdealPowSuccQuotMk L n b =
       maximalIdealPowSuccQuotMulUniformizerPowMap L πL hπL n
-        (Finset.univ.sum fun σ : Gal(L / K) =>
+        (Finset.univ.sum fun σ : Gal(L/K) =>
           galoisGroupIntegerRingEquivOfIsIntegralClosure K L σ r) by
     rw [maximalIdealPowSuccQuotMulUniformizerPowMap_apply]
     apply congrArg (maximalIdealPowSuccQuotMk L n)
     apply Subtype.ext
     calc
-      (b : 𝒪[L]) = (Finset.univ.sum fun σ : Gal(L / K) =>
+      (b : 𝒪[L]) = (Finset.univ.sum fun σ : Gal(L/K) =>
             galoisGroupIntegerRingEquivOfIsIntegralClosure K L σ r) * πL ^ n := hb_eq
       _ =
           ((maximalIdealPowMulUniformizerPowMap L πL hπL n
-            (Finset.univ.sum fun σ : Gal(L / K) =>
+            (Finset.univ.sum fun σ : Gal(L/K) =>
               galoisGroupIntegerRingEquivOfIsIntegralClosure K L σ r) :
             (𝓂[L] ^ n : Ideal 𝒪[L])) : 𝒪[L]) := by
         rw [maximalIdealPowMulUniformizerPowMap_apply]]

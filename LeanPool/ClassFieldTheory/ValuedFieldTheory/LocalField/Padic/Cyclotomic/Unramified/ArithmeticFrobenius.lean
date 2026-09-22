@@ -421,7 +421,7 @@ noncomputable def padicCyclotomicUnramifiedGalToResidueGal
         (padicCyclotomicUnramifiedResidueField vL) :=
       padicCyclotomicUnramifiedResidueAlgebra vK vL hExt
     Gal(L/K) →*
-      Gal(padicCyclotomicUnramifiedResidueField vL / padicCyclotomicUnramifiedResidueField vK) := by
+      Gal(padicCyclotomicUnramifiedResidueField vL/padicCyclotomicUnramifiedResidueField vK) := by
   let V := LubinTate.Valuations.exponentialValuationSubring vK
   let W := LubinTate.Valuations.exponentialValuationSubring vL
   let i := unramifiedValuationRingValuationRingMap vK vL hExt
@@ -1000,7 +1000,7 @@ noncomputable def padicCyclotomicUnramifiedGalEquivResidueGal
         (padicCyclotomicUnramifiedResidueField vL) :=
       padicCyclotomicUnramifiedResidueAlgebra vK vL hExt
     Gal(L/K) ≃*
-      Gal(padicCyclotomicUnramifiedResidueField vL / padicCyclotomicUnramifiedResidueField vK) := by
+      Gal(padicCyclotomicUnramifiedResidueField vL/padicCyclotomicUnramifiedResidueField vK) := by
   letI : Algebra (padicCyclotomicUnramifiedResidueField vK)
       (padicCyclotomicUnramifiedResidueField vL) :=
     padicCyclotomicUnramifiedResidueAlgebra vK vL hExt

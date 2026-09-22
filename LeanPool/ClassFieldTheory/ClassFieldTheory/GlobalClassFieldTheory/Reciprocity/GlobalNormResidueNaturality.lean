@@ -941,8 +941,7 @@ private noncomputable def
     P.toFiniteGaloisExtension.extensionQuotient ≃*
       Gal(
         (abstractRelativeFixedField
-          ℚ (SeparableClosure ℚ) P.below) /
-        (abstractFixedField ℚ (SeparableClosure ℚ) H.field)) := by
+          ℚ (SeparableClosure ℚ) P.below)/(abstractFixedField ℚ (SeparableClosure ℚ) H.field)) := by
   let F := abstractFixedField ℚ (SeparableClosure ℚ) H.field
   let E :=
     abstractRelativeFixedField
@@ -982,8 +981,7 @@ private noncomputable def
     P.toFiniteGaloisExtension.extensionQuotient ≃*
       Gal(
         (abstractRelativeFixedField
-          ℚ (SeparableClosure ℚ) P.below) /
-        (abstractFixedField ℚ (SeparableClosure ℚ) H.field)) := by
+          ℚ (SeparableClosure ℚ) P.below)/(abstractFixedField ℚ (SeparableClosure ℚ) H.field)) := by
   exact
     P.toFiniteGaloisExtension.extensionQuotientMulEquiv.trans
       (abstractExtensionQuotientEquivGaloisGroup
@@ -999,8 +997,7 @@ private noncomputable def
     (q : P.toFiniteGaloisExtension.extensionQuotient) :
     Gal(
       (abstractRelativeFixedField
-        ℚ (SeparableClosure ℚ) P.below) /
-      (abstractFixedField ℚ (SeparableClosure ℚ) H.field)) :=
+        ℚ (SeparableClosure ℚ) P.below)/(abstractFixedField ℚ (SeparableClosure ℚ) H.field)) :=
   abstractFixedFieldInclusionEmbeddedExtensionQuotientEquiv H P q
 
 /-- Pointwise opaque endpoint of the canonical quotient equivalence. -/
@@ -1012,8 +1009,7 @@ private noncomputable def
     (q : P.toFiniteGaloisExtension.extensionQuotient) :
     Gal(
       (abstractRelativeFixedField
-        ℚ (SeparableClosure ℚ) P.below) /
-      (abstractFixedField ℚ (SeparableClosure ℚ) H.field)) :=
+        ℚ (SeparableClosure ℚ) P.below)/(abstractFixedField ℚ (SeparableClosure ℚ) H.field)) :=
   abstractFixedFieldInclusionCanonicalExtensionQuotientEquiv H P q
 
 /-- Fully applied ambient value of the embedded quotient endpoint. -/
@@ -1050,8 +1046,7 @@ private noncomputable def
     (σ : H.field.toSubgroup) :
     Gal(
       (abstractRelativeFixedField
-        ℚ (SeparableClosure ℚ) P.below) /
-      (abstractFixedField ℚ (SeparableClosure ℚ) H.field)) := by
+        ℚ (SeparableClosure ℚ) P.below)/(abstractFixedField ℚ (SeparableClosure ℚ) H.field)) := by
   let F := abstractFixedField ℚ (SeparableClosure ℚ) H.field
   let E :=
     abstractRelativeFixedField
@@ -1342,8 +1337,7 @@ private noncomputable def
     P.toFiniteGaloisExtension.extensionQuotient ≃*
       Gal(
         (abstractRelativeFixedField
-          ℚ (SeparableClosure ℚ) P.below) /
-        (abstractFixedField ℚ (SeparableClosure ℚ) H.field)) := by
+          ℚ (SeparableClosure ℚ) P.below)/(abstractFixedField ℚ (SeparableClosure ℚ) H.field)) := by
   let F :=
     abstractFixedField ℚ (SeparableClosure ℚ) H.field
   let E :=
@@ -1381,8 +1375,7 @@ private noncomputable def
     (q : P.toFiniteGaloisExtension.extensionQuotient) :
     Gal(
       (abstractRelativeFixedField
-        ℚ (SeparableClosure ℚ) P.below) /
-      (abstractFixedField ℚ (SeparableClosure ℚ) H.field)) :=
+        ℚ (SeparableClosure ℚ) P.below)/(abstractFixedField ℚ (SeparableClosure ℚ) H.field)) :=
   abstractFixedFieldInclusionTransportedExtensionQuotientEquiv H P q
 
 /-- Transporting a canonical representative of the embedded finite Galois
@@ -1493,8 +1486,7 @@ private noncomputable def
       Additive
         (Gal(
           (abstractRelativeFixedField
-            ℚ (SeparableClosure ℚ) P.below) /
-          (abstractFixedField ℚ (SeparableClosure ℚ) H.field))) := by
+            ℚ (SeparableClosure ℚ) P.below)/(abstractFixedField ℚ (SeparableClosure ℚ) H.field))) := by
   let F :=
     abstractFixedField ℚ (SeparableClosure ℚ) H.field
   let E :=
@@ -1538,13 +1530,11 @@ private noncomputable def
       Additive
         (Gal(
           (abstractRelativeFixedField
-            ℚ (SeparableClosure ℚ) P.below) /
-          (abstractFixedField ℚ (SeparableClosure ℚ) H.field))) := by
+            ℚ (SeparableClosure ℚ) P.below)/(abstractFixedField ℚ (SeparableClosure ℚ) H.field))) := by
   let Q :=
     Gal(
       (abstractRelativeFixedField
-        ℚ (SeparableClosure ℚ) P.below) /
-      (abstractFixedField ℚ (SeparableClosure ℚ) H.field))
+        ℚ (SeparableClosure ℚ) P.below)/(abstractFixedField ℚ (SeparableClosure ℚ) H.field))
   exact
     MulEquiv.toAdditive
       ((MulEquiv.abelianizationCongr
@@ -1562,8 +1552,7 @@ private noncomputable def
     Additive
       (Gal(
         (abstractRelativeFixedField
-          ℚ (SeparableClosure ℚ) P.below) /
-        (abstractFixedField ℚ (SeparableClosure ℚ) H.field))) :=
+          ℚ (SeparableClosure ℚ) P.below)/(abstractFixedField ℚ (SeparableClosure ℚ) H.field))) :=
   abstractFixedFieldInclusionTransportedAbelianizedEquiv H P z
 
 /-- Pointwise opaque value of the canonical abelianization comparison built
@@ -1578,8 +1567,7 @@ private noncomputable def
     Additive
       (Gal(
         (abstractRelativeFixedField
-          ℚ (SeparableClosure ℚ) P.below) /
-        (abstractFixedField ℚ (SeparableClosure ℚ) H.field))) :=
+          ℚ (SeparableClosure ℚ) P.below)/(abstractFixedField ℚ (SeparableClosure ℚ) H.field))) :=
   abstractFixedFieldInclusionTransportedCanonicalAbelianizedEquiv H P z
 
 /-- Pointwise opaque value of the intrinsic abstract fixed-field
@@ -1594,8 +1582,7 @@ private noncomputable def
     Additive
       (Gal(
         (abstractRelativeFixedField
-          ℚ (SeparableClosure ℚ) P.below) /
-        (abstractFixedField ℚ (SeparableClosure ℚ) H.field))) :=
+          ℚ (SeparableClosure ℚ) P.below)/(abstractFixedField ℚ (SeparableClosure ℚ) H.field))) :=
   abstractFixedFieldAbelianizedExtensionQuotientEquivGaloisGroup H P z
 
 /-- The transported abelianized endpoint agrees pointwise with the canonical
@@ -1633,7 +1620,7 @@ private theorem
           PEmbedded =
         P.toFiniteGaloisExtension :=
     numberFieldEmbeddedFiniteGaloisSubextension_transport_eq H P
-  let qEmbedded : PEmbedded.extensionQuotient ≃* Gal(E / F) :=
+  let qEmbedded : PEmbedded.extensionQuotient ≃* Gal(E/F) :=
     numberFieldEmbeddedExtensionQuotientEquivGaloisGroup F E j
   have hCanonical :
       abstractFixedFieldInclusionTransportedAbelianizedEquiv H P =
@@ -1766,8 +1753,7 @@ private noncomputable def
     Additive
       (Gal(
         (abstractRelativeFixedField
-          ℚ (SeparableClosure ℚ) P.below) /
-        (abstractFixedField ℚ (SeparableClosure ℚ) H.field))) := by
+          ℚ (SeparableClosure ℚ) P.below)/(abstractFixedField ℚ (SeparableClosure ℚ) H.field))) := by
   let F :=
     abstractFixedField ℚ (SeparableClosure ℚ) H.field
   let E :=
@@ -1799,8 +1785,7 @@ private noncomputable def
     Additive
       (Gal(
         (abstractRelativeFixedField
-          ℚ (SeparableClosure ℚ) P.below) /
-        (abstractFixedField ℚ (SeparableClosure ℚ) H.field))) := by
+          ℚ (SeparableClosure ℚ) P.below)/(abstractFixedField ℚ (SeparableClosure ℚ) H.field))) := by
   let F :=
     abstractFixedField ℚ (SeparableClosure ℚ) H.field
   let E :=
@@ -1844,8 +1829,7 @@ private noncomputable def
     Additive
       (Gal(
         (abstractRelativeFixedField
-          ℚ (SeparableClosure ℚ) P.below) /
-        (abstractFixedField ℚ (SeparableClosure ℚ) H.field))) :=
+          ℚ (SeparableClosure ℚ) P.below)/(abstractFixedField ℚ (SeparableClosure ℚ) H.field))) :=
   rationalFiniteNormResidueValue H P.toFiniteGaloisExtension
     (rationalAbstractFixedFieldIdeleClassEquivFixed H.field)
     (abstractFixedFieldAbelianizedExtensionQuotientEquivGaloisGroup H P)
@@ -1900,7 +1884,7 @@ private theorem
       (H := H) (P := P)
       (A := HEmbedded)
       (C := Additive (IdeleClassGroup F))
-      (X := Additive Gal(E / F))
+      (X := Additive Gal(E/F))
       hHEmbedded PEmbedded hPEmbedded
       eIdeleEmbedded eGaloisEmbedded c)
 
@@ -2421,19 +2405,19 @@ theorem
   let qLowerRaw :
       (H.toSubgroup ⧸
           CyclicCohomology.extensionSubgroup H J hJH) ≃*
-        Gal(L / K) := by
+        Gal(L/K) := by
     exact
       { qLower.toEquiv with
         map_mul' := fun x y => qLower.map_mul x y }
   let qUpperRaw :
       (H'.toSubgroup ⧸
           CyclicCohomology.extensionSubgroup H' J' hJ'H') ≃*
-        Gal(L' / K') := by
+        Gal(L'/K') := by
     exact
       { qUpper.toEquiv with
         map_mul' := fun x y => qUpper.map_mul x y }
   let restrictActual :
-      Gal(L' / K') →* Gal(L / K) :=
+      Gal(L'/K') →* Gal(L/K) :=
     (AlgEquiv.restrictNormalHom L).comp
       (AlgEquiv.restrictScalarsHom K)
   obtain ⟨q, rfl⟩ :=
@@ -2443,10 +2427,10 @@ theorem
       K' L' j).extensionQuotientMk_surjective q
   change
     restrictActual
-        ((Abelianization.equivOfComm (H := Gal(L' / K'))).symm
+        ((Abelianization.equivOfComm (H := Gal(L'/K'))).symm
           (qUpperRaw.abelianizationCongr
             (Abelianization.of (QuotientGroup.mk σ)))) =
-      (Abelianization.equivOfComm (H := Gal(L / K))).symm
+      (Abelianization.equivOfComm (H := Gal(L/K))).symm
         (qLowerRaw.abelianizationCongr
           (normResidueNaturalityAbelianizedRestriction
             H H' J J' hJH hJ'H' hH'H hJ'J
@@ -2740,7 +2724,7 @@ theorem globalNormResidueMonoidHomOfEmbedding_norm_restriction
           CyclicCohomology.extensionSubgroup H' J' hJ'H')
     exact numberFieldEmbeddedExtensionQuotient_finite K' L' j
   let restrictActual :
-      Gal(L' / K') →* Gal(L / K) :=
+      Gal(L'/K') →* Gal(L/K) :=
     (AlgEquiv.restrictNormalHom L).comp
       (AlgEquiv.restrictScalarsHom K)
   apply MonoidHom.ext

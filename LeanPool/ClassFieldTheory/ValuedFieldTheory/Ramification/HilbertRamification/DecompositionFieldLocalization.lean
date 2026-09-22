@@ -19,6 +19,11 @@ canonical residue-field isomorphism and equality of absolute-value ranges in
 the nonarchimedean case.
 -/
 
+open _root_.ValuationTheory.DiscreteValuationField.ResidueField renaming
+  residue_eq_residue_iff_sub_mem_maximalIdeal →
+    residue_eq_residue_iff_sub_mem_maximalIdeal
+
+
 noncomputable section
 
 universe u v
@@ -471,7 +476,7 @@ theorem decompositionField_decompositionField_residueMap_surjective
   change IsLocalRing.ResidueField.map f (IsLocalRing.residue AK xA) =
     IsLocalRing.residue AZ z
   rw [IsLocalRing.ResidueField.map_residue]
-  rw [ValuationTheory.DiscreteValuationField.ResidueField.residue_eq_residue_iff_sub_mem_maximalIdeal]
+  rw [residue_eq_residue_iff_sub_mem_maximalIdeal]
   rw [absoluteValueValuationSubring_mem_maximalIdeal_iff_abs_lt_one]
   calc
     (AlgebraicNumberTheory.Valuations.absoluteValueRestrictIntermediateField w.1 Z)

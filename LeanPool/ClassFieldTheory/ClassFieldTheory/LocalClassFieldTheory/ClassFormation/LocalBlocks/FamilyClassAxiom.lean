@@ -665,52 +665,32 @@ theorem localBlockFamily_herbrandQuotient_eq_product_localDegrees
     [∀ i,
       IsNonarchimedeanLocalField
         (d i).base.Completion] :
-    letI _extensionAlgebra : ∀ i,
-        Algebra K (d i).extension.1.Completion :=
-      fun i ↦ AbsoluteValue.extensionCompletionAlgebra
+    letI _extensionAlgebra :=
+      fun i : ι ↦ AbsoluteValue.extensionCompletionAlgebra
         (K := K) (d i).extension.1
     letI _extensionSmul : ∀ i,
         SMul K (d i).extension.1.Completion :=
       fun i ↦ (inferInstance :
         Algebra K (d i).extension.1.Completion).toSMul
-    letI _completionAlgebra : ∀ i,
-        Algebra (d i).base.Completion
-          (d i).extension.1.Completion :=
-      fun i ↦ AbsoluteValue.completionAlgebra
+    letI _completionAlgebra :=
+      fun i : ι ↦ AbsoluteValue.completionAlgebra
         (d i).base (d i).extension.1
         (d i).extension.2
-    letI _globalAlgebra : ∀ i,
-        Algebra K
-          (LocalizedCompletion
-            (d i).base (d i).extension) :=
-      fun i ↦ localizedCompletionGlobalAlgebra
+    letI _globalAlgebra :=
+      fun i : ι ↦ localizedCompletionGlobalAlgebra
         (d i).base (d i).extension
-    letI _scalarTower : ∀ i,
-        IsScalarTower K (d i).base.Completion
-          (LocalizedCompletion
-            (d i).base (d i).extension) :=
-      fun i ↦ localizedCompletionIsScalarTower
+    letI _scalarTower :=
+      fun i : ι ↦ localizedCompletionIsScalarTower
         (d i).base (d i).extension
-    letI _localizedFinite : ∀ i,
-        FiniteDimensional (d i).base.Completion
-          (LocalizedCompletion
-            (d i).base (d i).extension) :=
-      fun i ↦ localizedCompletionModuleFinite
+    letI _localizedFinite :=
+      fun i : ι ↦ localizedCompletionModuleFinite
         (d i).base (d i).base_isNontrivial
         (d i).extension
-    letI _localizedGalois : ∀ i,
-        IsGalois (d i).base.Completion
-          (LocalizedCompletion
-            (d i).base (d i).extension) :=
-      fun i ↦ HilbertRamification.algebraicLocalization_isGalois
+    letI _localizedGalois :=
+      fun i : ι ↦ HilbertRamification.algebraicLocalization_isGalois
         (d i).base (d i).extension
-    letI _localAction : ∀ i,
-        MulDistribMulAction
-          (absoluteValueDecompositionGroup K
-            (d i).extension.1)
-          (LocalizedCompletion
-            (d i).base (d i).extension)ˣ :=
-      fun i ↦ decompositionGroupLocalUnitsAction
+    letI _localAction :=
+      fun i : ι ↦ decompositionGroupLocalUnitsAction
         (d i).base (d i).base_isNontrivial
         (d i).extension
     letI _blockAction : ∀ i,
@@ -718,12 +698,10 @@ theorem localBlockFamily_herbrandQuotient_eq_product_localDegrees
           (LocalPlaceBlock
             (d i).base (d i).base_isNontrivial
             (d i).extension) :=
-      fun i ↦ inducedMulDistribMulAction
+      fun i : ι ↦ inducedMulDistribMulAction
         (absoluteValueDecompositionGroup K
           (d i).extension.1)
-    letI _familyAction :
-        MulDistribMulAction (L ≃ₐ[K] L)
-          (LocalBlockFamily d) :=
+    letI _familyAction :=
       piMulDistribMulAction (L ≃ₐ[K] L)
         (fun i ↦ LocalPlaceBlock
           (d i).base (d i).base_isNontrivial
@@ -733,16 +711,10 @@ theorem localBlockFamily_herbrandQuotient_eq_product_localDegrees
           (absoluteValueDecompositionGroup K
             (d i).extension.1) :=
       fun _ ↦ Fintype.ofFinite _
-    letI _familyH0Finite :
-        Finite
-          (HerbrandH0 (L ≃ₐ[K] L)
-            (LocalBlockFamily d)) :=
+    letI _familyH0Finite :=
       localBlockFamilyHerbrandH0Finite
         d σ hgen
-    letI _familyHMinusOneFinite :
-        Finite
-          (HerbrandHMinusOne (L ≃ₐ[K] L)
-            (LocalBlockFamily d) σ) :=
+    letI _familyHMinusOneFinite :=
       localBlockFamilyHerbrandHMinusOneFinite
         d σ hgen
     herbrandQuotient
@@ -752,51 +724,31 @@ theorem localBlockFamily_herbrandQuotient_eq_product_localDegrees
         (d i).base.Completion
         (LocalizedCompletion
           (d i).base (d i).extension) : ℚ) := by
-  let extensionAlgebra : ∀ i,
-      Algebra K (d i).extension.1.Completion :=
-    fun i ↦ AbsoluteValue.extensionCompletionAlgebra
+  let extensionAlgebra :=
+    fun i : ι ↦ AbsoluteValue.extensionCompletionAlgebra
       (K := K) (d i).extension.1
   let extensionSmul : ∀ i,
       SMul K (d i).extension.1.Completion :=
     fun i ↦ (extensionAlgebra i).toSMul
-  let completionAlgebra : ∀ i,
-      Algebra (d i).base.Completion
-        (d i).extension.1.Completion :=
-    fun i ↦ AbsoluteValue.completionAlgebra
+  let completionAlgebra :=
+    fun i : ι ↦ AbsoluteValue.completionAlgebra
       (d i).base (d i).extension.1
       (d i).extension.2
-  let globalAlgebra : ∀ i,
-      Algebra K
-        (LocalizedCompletion
-          (d i).base (d i).extension) :=
-    fun i ↦ localizedCompletionGlobalAlgebra
+  let globalAlgebra :=
+    fun i : ι ↦ localizedCompletionGlobalAlgebra
       (d i).base (d i).extension
-  let scalarTower : ∀ i,
-      IsScalarTower K (d i).base.Completion
-        (LocalizedCompletion
-          (d i).base (d i).extension) :=
-    fun i ↦ localizedCompletionIsScalarTower
+  let scalarTower :=
+    fun i : ι ↦ localizedCompletionIsScalarTower
       (d i).base (d i).extension
-  let localizedFinite : ∀ i,
-      FiniteDimensional (d i).base.Completion
-        (LocalizedCompletion
-          (d i).base (d i).extension) :=
-    fun i ↦ localizedCompletionModuleFinite
+  let localizedFinite :=
+    fun i : ι ↦ localizedCompletionModuleFinite
       (d i).base (d i).base_isNontrivial
       (d i).extension
-  let localizedGalois : ∀ i,
-      IsGalois (d i).base.Completion
-        (LocalizedCompletion
-          (d i).base (d i).extension) :=
-    fun i ↦ HilbertRamification.algebraicLocalization_isGalois
+  let localizedGalois :=
+    fun i : ι ↦ HilbertRamification.algebraicLocalization_isGalois
       (d i).base (d i).extension
-  let localAction : ∀ i,
-      MulDistribMulAction
-        (absoluteValueDecompositionGroup K
-          (d i).extension.1)
-        (LocalizedCompletion
-          (d i).base (d i).extension)ˣ :=
-    fun i ↦ decompositionGroupLocalUnitsAction
+  let localAction :=
+    fun i : ι ↦ decompositionGroupLocalUnitsAction
       (d i).base (d i).base_isNontrivial
       (d i).extension
   let blockAction : ∀ i,
@@ -804,12 +756,10 @@ theorem localBlockFamily_herbrandQuotient_eq_product_localDegrees
         (LocalPlaceBlock
           (d i).base (d i).base_isNontrivial
           (d i).extension) :=
-    fun i ↦ inducedMulDistribMulAction
+    fun i : ι ↦ inducedMulDistribMulAction
       (absoluteValueDecompositionGroup K
         (d i).extension.1)
-  let familyAction :
-      MulDistribMulAction (L ≃ₐ[K] L)
-        (LocalBlockFamily d) :=
+  let familyAction :=
     piMulDistribMulAction (L ≃ₐ[K] L)
       (fun i ↦ LocalPlaceBlock
         (d i).base (d i).base_isNontrivial
@@ -819,37 +769,16 @@ theorem localBlockFamily_herbrandQuotient_eq_product_localDegrees
         (absoluteValueDecompositionGroup K
           (d i).extension.1) :=
     fun _ ↦ Fintype.ofFinite _
-  let localH0Finite : ∀ i,
-      Finite
-        (HerbrandH0
-          (absoluteValueDecompositionGroup K
-            (d i).extension.1)
-          (LocalizedCompletion
-            (d i).base (d i).extension)ˣ) :=
-    fun i ↦ localHerbrandH0Finite
+  let localH0Finite :=
+    fun i : ι ↦ localHerbrandH0Finite
       (d i).base (d i).base_isNontrivial
       (d i).extension σ hgen
-  let localHMinusOneFinite : ∀ i,
-      Finite
-        (HerbrandHMinusOne
-          (absoluteValueDecompositionGroup K
-            (d i).extension.1)
-          (LocalizedCompletion
-            (d i).base (d i).extension)ˣ
-          (subgroupGeneratorOfGenerator
-            (absoluteValueDecompositionGroup K
-              (d i).extension.1)
-            σ hgen)) :=
-    fun i ↦ localHerbrandHMinusOneFinite
+  let localHMinusOneFinite :=
+    fun i : ι ↦ localHerbrandHMinusOneFinite
       (d i).base (d i).base_isNontrivial
       (d i).extension σ hgen
-  let blockH0Finite : ∀ i,
-      Finite
-        (HerbrandH0 (L ≃ₐ[K] L)
-          (LocalPlaceBlock
-            (d i).base (d i).base_isNontrivial
-            (d i).extension)) :=
-    fun i ↦ Finite.of_equiv
+  let blockH0Finite :=
+    fun i : ι ↦ Finite.of_equiv
       (HerbrandH0
         (absoluteValueDecompositionGroup K
           (d i).extension.1)
@@ -858,13 +787,8 @@ theorem localBlockFamily_herbrandQuotient_eq_product_localDegrees
       (localPlaceBlockHerbrandH0Equiv
         (d i).base (d i).base_isNontrivial
         (d i).extension σ hgen).symm.toEquiv
-  let blockHMinusOneFinite : ∀ i,
-      Finite
-        (HerbrandHMinusOne (L ≃ₐ[K] L)
-          (LocalPlaceBlock
-            (d i).base (d i).base_isNontrivial
-            (d i).extension) σ) :=
-    fun i ↦ Finite.of_equiv
+  let blockHMinusOneFinite :=
+    fun i : ι ↦ Finite.of_equiv
       (HerbrandHMinusOne
         (absoluteValueDecompositionGroup K
           (d i).extension.1)
@@ -877,16 +801,10 @@ theorem localBlockFamily_herbrandQuotient_eq_product_localDegrees
       (localPlaceBlockHerbrandHMinusOneEquiv
         (d i).base (d i).base_isNontrivial
         (d i).extension σ hgen).symm.toEquiv
-  let familyH0Finite :
-      Finite
-        (HerbrandH0 (L ≃ₐ[K] L)
-          (LocalBlockFamily d)) :=
+  let familyH0Finite :=
     localBlockFamilyHerbrandH0Finite
       d σ hgen
-  let familyHMinusOneFinite :
-      Finite
-        (HerbrandHMinusOne (L ≃ₐ[K] L)
-          (LocalBlockFamily d) σ) :=
+  let familyHMinusOneFinite :=
     localBlockFamilyHerbrandHMinusOneFinite
       d σ hgen
   calc
@@ -908,77 +826,16 @@ theorem localBlockFamily_herbrandQuotient_eq_product_localDegrees
           (d i).base (d i).extension) : ℚ) := by
       apply Finset.prod_congr rfl
       intro i _
-      have hH0 :
-          Nat.card
-              (HerbrandH0 (L ≃ₐ[K] L)
-                (LocalPlaceBlock
-                  (d i).base
-                  (d i).base_isNontrivial
-                  (d i).extension)) =
-            Module.finrank
-              (d i).base.Completion
-              (LocalizedCompletion
-                (d i).base (d i).extension) := by
-        calc
-          Nat.card
-              (HerbrandH0 (L ≃ₐ[K] L)
-                (LocalPlaceBlock
-                  (d i).base
-                  (d i).base_isNontrivial
-                  (d i).extension)) =
-            Nat.card
-              (HerbrandH0
-                (absoluteValueDecompositionGroup K
-                  (d i).extension.1)
-                (LocalizedCompletion
-                  (d i).base (d i).extension)ˣ) :=
-            Nat.card_congr
-              (localPlaceBlockHerbrandH0Equiv
-                (d i).base
-                (d i).base_isNontrivial
-                (d i).extension σ hgen).toEquiv
-          _ = Module.finrank
-              (d i).base.Completion
-              (LocalizedCompletion
-                (d i).base (d i).extension) :=
-            localHerbrandH0_card_eq_localDegree
-              (d i).base
-              (d i).base_isNontrivial
-              (d i).extension σ hgen
-      have hHMinusOne :
-          Nat.card
-              (HerbrandHMinusOne (L ≃ₐ[K] L)
-                (LocalPlaceBlock
-                  (d i).base
-                  (d i).base_isNontrivial
-                  (d i).extension) σ) = 1 := by
-        calc
-          Nat.card
-              (HerbrandHMinusOne (L ≃ₐ[K] L)
-                (LocalPlaceBlock
-                  (d i).base
-                  (d i).base_isNontrivial
-                  (d i).extension) σ) =
-            Nat.card
-              (HerbrandHMinusOne
-                (absoluteValueDecompositionGroup K
-                  (d i).extension.1)
-                (LocalizedCompletion
-                  (d i).base (d i).extension)ˣ
-                (subgroupGeneratorOfGenerator
-                  (absoluteValueDecompositionGroup K
-                    (d i).extension.1)
-                  σ hgen)) :=
-            Nat.card_congr
-              (localPlaceBlockHerbrandHMinusOneEquiv
-                (d i).base
-                (d i).base_isNontrivial
-                (d i).extension σ hgen).toEquiv
-          _ = 1 :=
-            localHerbrandHMinusOne_card_eq_one
-              (d i).base
-              (d i).base_isNontrivial
-              (d i).extension σ hgen
+      have hH0 := (Nat.card_congr
+        (localPlaceBlockHerbrandH0Equiv
+          (d i).base (d i).base_isNontrivial (d i).extension σ hgen).toEquiv).trans
+        (localHerbrandH0_card_eq_localDegree
+          (d i).base (d i).base_isNontrivial (d i).extension σ hgen)
+      have hHMinusOne := (Nat.card_congr
+        (localPlaceBlockHerbrandHMinusOneEquiv
+          (d i).base (d i).base_isNontrivial (d i).extension σ hgen).toEquiv).trans
+        (localHerbrandHMinusOne_card_eq_one
+          (d i).base (d i).base_isNontrivial (d i).extension σ hgen)
       rw [herbrandQuotient_eq_card_ratio,
         hH0, hHMinusOne]
       simp

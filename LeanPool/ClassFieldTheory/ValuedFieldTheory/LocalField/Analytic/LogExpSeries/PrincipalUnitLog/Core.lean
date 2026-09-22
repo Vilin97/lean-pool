@@ -10,6 +10,31 @@ Restricts the logarithm series to principal units and places its values in the c
 additive ideal.
 -/
 
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup renaming
+  principalUnitOneAddOfMemPowSubgroup_val →
+    principalUnitOneAddOfMemPowSubgroup_val
+
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup renaming
+  principalUnitOneAddOfMemPow_val →
+    principalUnitOneAddOfMemPow_val
+
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup renaming
+  principalUnitSuccQuotMk →
+    principalUnitSuccQuotMk
+
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup renaming
+  principalUnitSuccQuotOfIdealPow →
+    principalUnitSuccQuotOfIdealPow
+
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup renaming
+  principalUnitSuccQuotOfIdealPow_apply →
+    principalUnitSuccQuotOfIdealPow_apply
+
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup renaming
+  principalUnitSuccQuotOfIdealPow_eq_of_sub_mem_succ →
+    principalUnitSuccQuotOfIdealPow_eq_of_sub_mem_succ
+
+
 open Filter
 open Polynomial
 open scoped Topology
@@ -217,7 +242,7 @@ theorem principalUnitExpSeries_logSeries_principalUnitSuccQuot_eq_self_ofWithZer
       CompleteSpace K)
     (u : (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
       (completeDVFOfWithZeroValuation v)) n) :
-    LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.principalUnitSuccQuotMk
+    principalUnitSuccQuotMk
         (completeDVFOfWithZeroValuation v) n
         (principalUnitExpSeriesOfMaximalIdealPowOfWithZeroValuationScaled
           (v := v) (p := p) e n (π := π) hπ hπval hn hlevel
@@ -225,7 +250,7 @@ theorem principalUnitExpSeries_logSeries_principalUnitSuccQuot_eq_self_ofWithZer
           (principalUnitLogSeriesOfHigherPrincipalUnitGroupOfWithZeroValuationScaled
             (v := v) (p := p) e n (π := π) hπ hπval hn hlevel
             hnKlog hnvalLog hcomplete u)) =
-      LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.principalUnitSuccQuotMk
+      principalUnitSuccQuotMk
         (completeDVFOfWithZeroValuation v) n u := by
   let F : CompleteDVF.{u, 0} K := completeDVFOfWithZeroValuation v
   let loga : ((F.maximalIdeal ^ n : Ideal F.valuationSubring) : Type u) :=
@@ -242,18 +267,18 @@ theorem principalUnitExpSeries_logSeries_principalUnitSuccQuot_eq_self_ofWithZer
         (w0 : F.valuationSubring),
         w0 = ((w : F.valuationSubringˣ) : F.valuationSubring) - 1 →
         ∀ hw0 : w0 ∈ F.maximalIdeal ^ n,
-        LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.principalUnitSuccQuotMk F n w =
-          LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.principalUnitSuccQuotOfIdealPow
+        principalUnitSuccQuotMk F n w =
+          principalUnitSuccQuotOfIdealPow
             F n hn ⟨w0, hw0⟩ := by
     intro w w0 hw0eq hw0
     subst w0
-    rw [LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.principalUnitSuccQuotOfIdealPow_apply]
+    rw [principalUnitSuccQuotOfIdealPow_apply]
     congr 1
     dsimp
     apply Subtype.ext
-    rw [LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.principalUnitOneAddOfMemPowSubgroup_val]
+    rw [principalUnitOneAddOfMemPowSubgroup_val]
     apply Units.ext
-    rw [LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.principalUnitOneAddOfMemPow_val]
+    rw [principalUnitOneAddOfMemPow_val]
     ring
   let a0 : F.valuationSubring :=
     ((u : F.valuationSubringˣ) : F.valuationSubring) - 1
@@ -284,7 +309,7 @@ theorem principalUnitExpSeries_logSeries_principalUnitSuccQuot_eq_self_ofWithZer
       principalUnitLogSeriesOfHigherPrincipalUnitGroupOfWithZeroValuationScaled, F]
   rw [class_eq_subOne expLogu b0 rfl hb0, class_eq_subOne u a0 rfl ha0]
   exact
-    LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.principalUnitSuccQuotOfIdealPow_eq_of_sub_mem_succ
+    principalUnitSuccQuotOfIdealPow_eq_of_sub_mem_succ
       F n hn b a hdiff
 
 /-- The deep exponential–logarithm equivalence, additive finite-level defect: the evaluated

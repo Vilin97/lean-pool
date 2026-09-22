@@ -285,7 +285,7 @@ theorem
     padicCompletedChangedUniformizerRelativeArtinCandidate_apply,
     padicCompletedChangedUniformizerArtinCandidate_standardLevel]
   exact congrArg
-    (fun σ : Gal(T / ℚ_[p]) =>
+    (fun σ : Gal(T/ℚ_[p]) =>
       padicStandardLevelToCompletedChangedCompositum p u n (σ x))
     (standardLubinTateUnitParameterEquivGal_apply (padicLocalField p) hπ n
       (standardLubinTateUnitParameterClass (padicLocalField p) n u)).symm
@@ -563,7 +563,7 @@ theorem padicMultiplicativeAbelianLocalArtin_primitiveRoot
           (standardLubinTateUnitParameterClass F n u) :=
     padicMultiplicativeAbelianLocalArtin_eq_unitParameter p n u
   exact
-    (congrArg (fun σ : Gal(T / ℚ_[p]) =>
+    (congrArg (fun σ : Gal(T/ℚ_[p]) =>
       σ (padicMultiplicativePrimitiveRoot p n)) hArtin).trans
       (padicMultiplicativePrimitiveRoot_unitParameterGaloisAction p n u)
 
@@ -614,7 +614,7 @@ noncomputable def padicMultiplicativeArtinUnitParameterHom
     (p : ℕ) [Fact p.Prime] (n : ℕ) :
     standardLubinTateUnitParameter (padicLocalField p) n →*
       Gal((standardLubinTateLevelField
-        (padicMultiplicativeLubinTateSeries_isUniformizer p) n) / ℚ_[p]) := by
+        (padicMultiplicativeLubinTateSeries_isUniformizer p) n)/ℚ_[p]) := by
   let F := padicLocalField p
   let hπ := padicMultiplicativeLubinTateSeries_isUniformizer p
   let L := standardLubinTateLevelField hπ n
@@ -698,7 +698,7 @@ noncomputable def padicMultiplicativeArtinUnitParameterEquiv
     (p : ℕ) [Fact p.Prime] (n : ℕ) :
     standardLubinTateUnitParameter (padicLocalField p) n ≃*
       Gal((standardLubinTateLevelField
-        (padicMultiplicativeLubinTateSeries_isUniformizer p) n) / ℚ_[p]) := by
+        (padicMultiplicativeLubinTateSeries_isUniformizer p) n)/ℚ_[p]) := by
   let F := padicLocalField p
   let hπ := padicMultiplicativeLubinTateSeries_isUniformizer p
   let L := standardLubinTateLevelField hπ n
@@ -980,7 +980,7 @@ theorem
     padicMultiplicativeAbelianLocalArtin_eq_unitParameter_of_mem_higherPrincipalUnitGroup
       p n u hu
   exact
-    (congrArg (fun σ : Gal(L / ℚ_[p]) =>
+    (congrArg (fun σ : Gal(L/ℚ_[p]) =>
       σ (padicMultiplicativePrimitiveRoot p n)) hArtin).trans
       (padicMultiplicativePrimitiveRoot_galoisAction p n u)
 

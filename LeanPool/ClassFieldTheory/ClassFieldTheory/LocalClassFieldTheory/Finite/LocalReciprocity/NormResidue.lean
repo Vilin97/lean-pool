@@ -29,14 +29,14 @@ variable (K L : Type) [Field K] [Field L] [Algebra K L]
 /-- The finite local Artin homomorphism with values in the actual Galois
 group of an abelian extension. -/
 noncomputable def abelianLocalArtinMonoidHom :
-    Kˣ →* Gal(L / K) :=
-  ((Abelianization.equivOfComm (H := Gal(L / K))).symm).toMonoidHom.comp
+    Kˣ →* Gal(L/K) :=
+  ((Abelianization.equivOfComm (H := Gal(L/K))).symm).toMonoidHom.comp
     (localArtinMonoidHom K L)
 
 /-- The actual abelian local Artin homomorphism is surjective. -/
 theorem abelianLocalArtinMonoidHom_surjective :
     Function.Surjective (abelianLocalArtinMonoidHom K L) :=
-  (Abelianization.equivOfComm (H := Gal(L / K))).symm.surjective.comp
+  (Abelianization.equivOfComm (H := Gal(L/K))).symm.surjective.comp
     (localArtinMonoidHom_surjective K L)
 
 /-- The kernel of the actual abelian local Artin homomorphism is the norm
@@ -50,7 +50,7 @@ theorem abelianLocalArtinMonoidHom_ker :
     MonoidHom.coe_comp, Function.comp_apply]
   constructor
   · intro ha
-    apply (Abelianization.equivOfComm (H := Gal(L / K))).symm.injective
+    apply (Abelianization.equivOfComm (H := Gal(L/K))).symm.injective
     simpa using ha
   · intro ha
     rw [ha, map_one]
@@ -58,12 +58,12 @@ theorem abelianLocalArtinMonoidHom_ker :
 /-- For a finite abelian Galois extension, topological abelianization is
 canonically homeomorphic to the actual Galois group. -/
 noncomputable def topologicalAbelianizationEquivSelf :
-    TopologicalAbelianization Gal(L / K) ≃ₜ* Gal(L / K) := by
-  letI : DiscreteTopology (TopologicalAbelianization Gal(L / K)) :=
+    TopologicalAbelianization Gal(L/K) ≃ₜ* Gal(L/K) := by
+  letI : DiscreteTopology (TopologicalAbelianization Gal(L/K)) :=
     QuotientGroup.discreteTopology (isOpen_discrete _)
-  let e : TopologicalAbelianization Gal(L / K) ≃* Gal(L / K) :=
+  let e : TopologicalAbelianization Gal(L/K) ≃* Gal(L/K) :=
     (topologicalAbelianizationFiniteEquiv K L).symm.trans
-      (Abelianization.equivOfComm (H := Gal(L / K))).symm
+      (Abelianization.equivOfComm (H := Gal(L/K))).symm
   exact
     { e with
       continuous_toFun := continuous_of_discreteTopology
@@ -72,7 +72,7 @@ noncomputable def topologicalAbelianizationEquivSelf :
 /-- The continuous local Artin map with values in the actual Galois group
 of a finite abelian extension. -/
 noncomputable def abelianLocalArtinMap :
-    Kˣ →ₜ* Gal(L / K) :=
+    Kˣ →ₜ* Gal(L/K) :=
   (ContinuousMonoidHom.toContinuousMonoidHom
       (topologicalAbelianizationEquivSelf K L)).comp
     (localArtinMap K L)
@@ -83,10 +83,10 @@ theorem abelianLocalArtinMap_toMonoidHom :
     (abelianLocalArtinMap K L).toMonoidHom =
       abelianLocalArtinMonoidHom K L := by
   change
-    ((Abelianization.equivOfComm (H := Gal(L / K))).symm).toMonoidHom.comp
+    ((Abelianization.equivOfComm (H := Gal(L/K))).symm).toMonoidHom.comp
         ((topologicalAbelianizationFiniteEquiv K L).symm.toMonoidHom.comp
           (localArtinMap K L).toMonoidHom) =
-      ((Abelianization.equivOfComm (H := Gal(L / K))).symm).toMonoidHom.comp
+      ((Abelianization.equivOfComm (H := Gal(L/K))).symm).toMonoidHom.comp
         (localArtinMonoidHom K L)
   rw [localArtinMap_toMonoidHom K L]
 

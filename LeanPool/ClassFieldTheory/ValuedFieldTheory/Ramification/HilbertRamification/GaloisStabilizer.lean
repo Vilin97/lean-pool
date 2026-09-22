@@ -32,7 +32,7 @@ theorem adjoin_le_adjoin_of_forall_fixed_imp_fixed
     [FiniteDimensional K M] [IsGalois K M]
     (a b : M)
     (hfixed :
-      ∀ σ : Gal(M / K), σ b = b → σ a = a) :
+      ∀ σ : Gal(M/K), σ b = b → σ a = a) :
     K⟮a⟯ ≤ K⟮b⟯ := by
   rw [← IsGalois.fixedField_fixingSubgroup K⟮b⟯,
     IntermediateField.adjoin_le_iff]

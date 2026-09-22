@@ -39,7 +39,7 @@ noncomputable def ambientEmbeddedPrimeTransportValue
     (j : E →ₐ[K] SeparableClosure K)
     (e : ambientEmbeddedSeparableClosureEquiv K F E j)
     (z : Abelianization Gal(E/F)) :
-    Abelianization Gal(E / F) := by
+    Abelianization Gal(E/F) := by
   let i :=
     j.comp (IsScalarTower.toAlgHom K F E)
   letI : Algebra F (SeparableClosure K) :=
@@ -66,9 +66,9 @@ noncomputable def ambientEmbeddedPrimeTransportValue
     ambientEmbeddedExtensionQuotient_finite K F E j e
   letI hHabsolute : Finite
       ((baseField
-        Gal(SeparableClosure K / K)).toSubgroup ⧸
+        Gal(SeparableClosure K/K)).toSubgroup ⧸
         extensionSubgroup
-          (baseField Gal(SeparableClosure K / K))
+          (baseField Gal(SeparableClosure K/K))
           H₀ (le_baseField H₀)) := by
     exact ambientEmbeddedAbsoluteQuotientFinite K F i
   let F₀ :=
@@ -158,13 +158,13 @@ noncomputable def ambientEmbeddedPrimeSymbolProperty
     ambientEmbeddedExtensionQuotient_finite K F E j e
   letI hHabsolute : Finite
       ((baseField
-        Gal(SeparableClosure K / K)).toSubgroup ⧸
+        Gal(SeparableClosure K/K)).toSubgroup ⧸
         extensionSubgroup
-          (baseField Gal(SeparableClosure K / K))
+          (baseField Gal(SeparableClosure K/K))
           H₀ (le_baseField H₀)) := by
     exact ambientEmbeddedAbsoluteQuotientFinite K F i
   let H : FiniteAbstractField
-      Gal(SeparableClosure K / K) :=
+      Gal(SeparableClosure K/K) :=
     ⟨H₀, ambientEmbeddedAbsoluteQuotientFinite K F i⟩
   let F₀ :=
     abstractFixedField K (SeparableClosure K) H₀
@@ -283,13 +283,13 @@ theorem
       ambientEmbeddedExtensionQuotient_finite K F E j e
     letI hHabsolute : Finite
         ((baseField
-          Gal(SeparableClosure K / K)).toSubgroup ⧸
+          Gal(SeparableClosure K/K)).toSubgroup ⧸
           extensionSubgroup
-            (baseField Gal(SeparableClosure K / K))
+            (baseField Gal(SeparableClosure K/K))
             H₀ (le_baseField H₀)) := by
       exact ambientEmbeddedAbsoluteQuotientFinite K F i
     let H : FiniteAbstractField
-        Gal(SeparableClosure K / K) :=
+        Gal(SeparableClosure K/K) :=
       ⟨H₀, ambientEmbeddedAbsoluteQuotientFinite K F i⟩
     let F₀ :=
       abstractFixedField K (SeparableClosure K) H₀

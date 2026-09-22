@@ -40,7 +40,6 @@ equivalence preserves the represented element of `L`. -/
 theorem padicCyclotomicTotallyRamified_exists_adjoin_sub_one_equiv_valuationSubring
     (ζ : L) (hζ : IsPrimitiveRoot ζ (p ^ (k + 1)))
     (hgen : Algebra.adjoin ℚ_[p] ({ζ} : Set L) = ⊤)
-
     (target : ValuationTheory.DiscreteValuationField.CompleteDVF.{u, 0} L)
     [hExt : (LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicCompleteDVF
       p).valuation.HasExtension

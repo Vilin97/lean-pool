@@ -26,11 +26,11 @@ variable (K L : Type u) [Field K] [Field L] [Algebra K L]
 /-- The `Gal(L / K)` orbit of Mathlib's normal-basis generator spans `L` over `K`. -/
 theorem normalBasisConjugates_span_eq_top :
     Submodule.span K
-        (Set.range (fun σ : Gal(L / K) =>
-          σ (IsGalois.normalBasis K L (1 : Gal(L / K))))) = ⊤ := by
+        (Set.range (fun σ : Gal(L/K) =>
+          σ (IsGalois.normalBasis K L (1 : Gal(L/K))))) = ⊤ := by
   have hset :
-      Set.range (fun σ : Gal(L / K) =>
-        σ (IsGalois.normalBasis K L (1 : Gal(L / K)))) =
+      Set.range (fun σ : Gal(L/K) =>
+        σ (IsGalois.normalBasis K L (1 : Gal(L/K)))) =
         Set.range (IsGalois.normalBasis K L) := by
     ext x
     constructor
@@ -48,16 +48,16 @@ normal-basis orbit.  Bounds comparing this lattice with `𝒪_L` are deliberatel
 made explicit in the lattice-comparison theorems below. -/
 def chosenNormalBasisIntegerLattice : Submodule 𝒪[K] L :=
   Submodule.span 𝒪[K]
-    (Set.range (fun σ : Gal(L / K) =>
-      σ (IsGalois.normalBasis K L (1 : Gal(L / K)))))
+    (Set.range (fun σ : Gal(L/K) =>
+      σ (IsGalois.normalBasis K L (1 : Gal(L/K)))))
 
 /-- Public characterization of the chosen normal-basis lattice as the span of
 the chosen generator's Galois orbit. -/
 theorem chosenNormalBasisIntegerLattice_eq_span :
     chosenNormalBasisIntegerLattice K L =
       Submodule.span 𝒪[K]
-        (Set.range (fun σ : Gal(L / K) =>
-          σ (IsGalois.normalBasis K L (1 : Gal(L / K))))) :=
+        (Set.range (fun σ : Gal(L/K) =>
+          σ (IsGalois.normalBasis K L (1 : Gal(L/K))))) :=
   rfl
 
 /-- Every normal-basis vector lies in the `𝒪_K`-span lattice `M`. -/
@@ -68,9 +68,9 @@ theorem normalBasis_mem_integerLattice (σ : Gal(L/K)) :
 
 /-- Mathlib's normal-basis generator lies in the `𝒪_K`-span lattice `M`. -/
 theorem normalBasis_one_mem_integerLattice :
-    IsGalois.normalBasis K L (1 : Gal(L / K)) ∈
+    IsGalois.normalBasis K L (1 : Gal(L/K)) ∈
       chosenNormalBasisIntegerLattice K L :=
-  normalBasis_mem_integerLattice (K := K) (L := L) (1 : Gal(L / K))
+  normalBasis_mem_integerLattice (K := K) (L := L) (1 : Gal(L/K))
 
 /-- After extending scalars back to `K`, the normal-basis lattice spans all of
 `L`. -/
@@ -95,7 +95,7 @@ theorem galoisGroup_apply_mem_chosenNormalBasisIntegerLattice
   · intro x hx
     rcases hx with ⟨σ, rfl⟩
     have hτ :
-        τ (σ (IsGalois.normalBasis K L (1 : Gal(L / K)))) =
+        τ (σ (IsGalois.normalBasis K L (1 : Gal(L/K)))) =
           IsGalois.normalBasis K L (τ * σ) := by
       rw [IsGalois.normalBasis_apply (K := K) (L := L) (τ * σ)]
       rfl

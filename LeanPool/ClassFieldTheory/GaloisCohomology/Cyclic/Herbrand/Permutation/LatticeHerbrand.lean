@@ -280,7 +280,6 @@ permutation representation. -/
 def completePermutationLatticeDistribMulAction
     (ρ : G →* Equiv.Perm ι)
     (L : Submodule ℤ (ι → ℝ)) [DiscreteTopology L]
-
     (hL : ∀ (g : G) (x : ι → ℝ), x ∈ L →
       permutationRepresentation ρ g x ∈ L) :
     DistribMulAction G L where

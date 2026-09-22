@@ -109,7 +109,10 @@ theorem base_hasExtension_fixedFieldValuationSubringDVF
         (K := K) (target := target) H).valuation := by
   apply _root_.Valuation.HasExtension.ofComapInteger
   ext a
-  simp [ValuationSubring.integer_valuation, _root_.Valuation.mem_integer_iff]
+  simp only [ValuationSubring.integer_valuation, Subring.mem_comap,
+    ValuationSubring.mem_toSubring, mem_fixedFieldValuationSubringDVF_iff,
+    IntermediateField.algebraMap_apply, SubalgebraClass.coe_algebraMap,
+    Valuation.mem_valuationSubring_iff, Valuation.mem_integer_iff]
   exact _root_.Valuation.HasExtension.val_map_le_one_iff
     (vR := base.valuation) (vA := target.valuation) a
 

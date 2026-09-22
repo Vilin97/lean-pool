@@ -172,13 +172,13 @@ theorem infiniteAbelianClassFieldCorrespondence_finite_iff_open
   calc
     FiniteDimensional K L ↔
         IsOpen (L.fixingSubgroup : Set
-          Gal(maximalAbelianExtension K / K)) :=
+          Gal(maximalAbelianExtension K/K)) :=
       (InfiniteGalois.isOpen_iff_finite L).symm
-    _ ↔ IsOpen (T : Set Gal(maximalAbelianExtension K / K)) := by
+    _ ↔ IsOpen (T : Set Gal(maximalAbelianExtension K/K)) := by
       rw [hfix]
       change
-        IsOpen (T : Set Gal(maximalAbelianExtension K / K)) ↔
-          IsOpen (T : Set Gal(maximalAbelianExtension K / K))
+        IsOpen (T : Set Gal(maximalAbelianExtension K/K)) ↔
+          IsOpen (T : Set Gal(maximalAbelianExtension K/K))
       exact Iff.rfl
     _ ↔ IsOpen (H : Set (ideleClassComponentQuotient K)) := by
       change

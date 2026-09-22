@@ -311,7 +311,7 @@ theorem finiteReciprocityNaturalityFrobeniusFixedField_le
     E.base.field E.field.field L L' hLK hL'K' E.below hL'L
   change f (QuotientGroup.mk k') ∈
     (closedSubgroupGenerated ({f σ.1} : Set _) : Subgroup _) at hmap
-  simp [DegreeData.frobeniusClosure]
+  simp? [DegreeData.frobeniusClosure]
   change f (QuotientGroup.mk k') ∈
     (closedSubgroupGenerated ({f σ.1} : Set _) : Subgroup _)
   exact hmap

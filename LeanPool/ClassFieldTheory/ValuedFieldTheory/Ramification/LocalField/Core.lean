@@ -19,6 +19,15 @@ complete-DVF structure of a nonarchimedean local field, together with its
 right-limit subgroup and the intrinsic predicate for an upper jump.
 -/
 
+open _root_.RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration renaming
+  herbrandFunction_eq_of_card_lower_eq →
+    herbrandFunction_eq_of_card_lower_eq
+
+open _root_.RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration renaming
+  herbrandFunction_of_nonpos →
+    herbrandFunction_of_nonpos
+
+
 noncomputable section
 
 open ValuationTheory.DiscreteValuationField
@@ -90,7 +99,7 @@ noncomputable def localLowerRamificationGroup
     [FiniteDimensional K L] [IsGalois K L]
     [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K]
-    (t : ℝ) : Subgroup Gal(L / K) :=
+    (t : ℝ) : Subgroup Gal(L/K) :=
   Higher.lowerRamificationGroup
     (base := (localCompleteDVF K).toDVF)
     (target := (chosenLocalExtensionCompleteDVF K L).toDVF)
@@ -103,7 +112,7 @@ noncomputable def localUpperRamificationGroup
     [FiniteDimensional K L] [IsGalois K L]
     [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K]
-    (t : ℝ) : Subgroup Gal(L / K) :=
+    (t : ℝ) : Subgroup Gal(L/K) :=
   Higher.upperRamificationGroupOfUniqueExtension
     (base := (localCompleteDVF K).toDVF)
     (target := (chosenLocalExtensionCompleteDVF K L).toDVF)
@@ -243,7 +252,7 @@ theorem localUpperRamificationGroup_map_autCongr
           (base := base.toDVF) (target := targetM.toDVF)
           huniqM s := by
     exact
-      RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction_eq_of_card_lower_eq
+      herbrandFunction_eq_of_card_lower_eq
         _ _ hcard s
   have hinverse (u : ℝ) :
       inverseHerbrandFunctionOfUniqueExtension
@@ -405,11 +414,11 @@ private theorem fixedFieldUpperRamificationGroup_map_autCongr
     rw [← hmapIdeal s]
     exact Ideal.apply_mem_of_equiv_iff.symm
   let φ :
-      Gal(IntermediateField.fixedField H / K) ≃*
-        Gal(M / K) :=
+      Gal(IntermediateField.fixedField H/K) ≃*
+        Gal(M/K) :=
     AlgEquiv.autCongr e
   have hdisplacement
-      (σ : Gal(IntermediateField.fixedField H / K))
+      (σ : Gal(IntermediateField.fixedField H/K))
       (a : B) :
       r (fixedFieldValuationSubringAutDVF
             (base := base.toDVF) (target := targetL.toDVF)
@@ -425,7 +434,7 @@ private theorem fixedFieldUpperRamificationGroup_map_autCongr
           e (a : IntermediateField.fixedField H)
     simp [AlgEquiv.autCongr_apply]
   have hmem (s : ℝ)
-      (σ : Gal(IntermediateField.fixedField H / K)) :
+      (σ : Gal(IntermediateField.fixedField H/K)) :
       σ ∈ fixedFieldLowerRamificationGroup
             (base := base.toDVF) (target := targetL.toDVF)
             huniqL H s ↔
@@ -486,7 +495,7 @@ private theorem fixedFieldUpperRamificationGroup_map_autCongr
           (base := base.toDVF) (target := targetM.toDVF)
           huniqM s := by
     exact
-      RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction_eq_of_card_lower_eq
+      herbrandFunction_eq_of_card_lower_eq
         _ _ hcard s
   have hinverse (u : ℝ) :
       fixedFieldInverseHerbrandFunction
@@ -580,7 +589,7 @@ theorem localUpperRamificationGroup_map_restrict
         apply Subtype.ext
         rfl }
   let : IsGalois K EF := IsGalois.of_algEquiv eEF.symm
-  let H : Subgroup Gal(F / K) := EF.fixingSubgroup
+  let H : Subgroup Gal(F/K) := EF.fixingSubgroup
   let : H.Normal := by
     dsimp only [H]
     infer_instance
@@ -588,7 +597,7 @@ theorem localUpperRamificationGroup_map_restrict
     (IntermediateField.equivOfEq
       (IsGalois.fixedField_fixingSubgroup EF)).trans eEF
   let qEquiv :
-      (Gal(F / K) ⧸ H) ≃* Gal(E / K) :=
+      (Gal(F/K) ⧸ H) ≃* Gal(E/K) :=
     (IsGalois.normalAutEquivQuotient H).trans
       (AlgEquiv.autCongr eFixed)
   let base := (localCompleteDVF K).toDVF
@@ -621,8 +630,13 @@ theorem localUpperRamificationGroup_map_restrict
       E.val (intermediateFieldRestrictNormalHom E F hEF σ x) =
         E.val ((qEquiv.toMonoidHom.comp (QuotientGroup.mk' H)) σ x)
     rw [intermediateFieldRestrictNormalHom_apply_val]
-    simp [qEquiv, eFixed, eEF, EF, H, AlgEquiv.autCongr_apply,
-      IsGalois.normalAutEquivQuotient_apply]
+    simp only [IntermediateField.coe_val, MulEquiv.toMonoidHom_eq_coe,
+      MulEquiv.coe_monoidHom_trans, MonoidHom.coe_comp, MonoidHom.coe_coe, QuotientGroup.coe_mk',
+      Function.comp_apply, IsGalois.normalAutEquivQuotient_apply, AlgEquiv.autCongr_apply,
+      AlgEquiv.trans_apply, AlgEquiv.symm_trans_apply, IntermediateField.equivOfEq_symm,
+      AlgEquiv.symm_mk, Equiv.symm_mk, AlgEquiv.coe_mk, Equiv.coe_fn_mk,
+      IntermediateField.equivOfEq_apply, IntermediateField.val_mk, SetLike.coe_eq_coe, H, EF,
+      qEquiv, eFixed, eEF]
     symm
     exact
       AlgEquiv.restrictNormal_commutes σ
@@ -685,7 +699,7 @@ def localUpperRamificationGroupAfter
     [FiniteDimensional K L] [IsGalois K L]
     [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K]
-    (t : ℝ) : Subgroup Gal(L / K) :=
+    (t : ℝ) : Subgroup Gal(L/K) :=
   ⨆ s : {s : ℝ // t < s}, localUpperRamificationGroup K L s
 
 /-- The right-limit upper group lies in the group at the limiting index. -/
@@ -798,7 +812,7 @@ private theorem localInverseHerbrandFunction_eq_self_of_nonpos
       huniq).injective
   rw [herbrandFunctionOfUniqueExtension_psi]
   exact
-    (RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction_of_nonpos
+    (herbrandFunction_of_nonpos
       (lowerRamificationFiltrationOfUniqueExtension
         (base := (localCompleteDVF K).toDVF)
         (target := (chosenLocalExtensionCompleteDVF K L).toDVF)
@@ -912,7 +926,7 @@ theorem not_isLocalUpperRamificationJump_of_lt_neg_one
   rw [htgroup]
   apply le_antisymm
   · calc
-      (⊤ : Subgroup Gal(L / K)) =
+      (⊤ : Subgroup Gal(L/K)) =
           localUpperRamificationGroup K L (s : ℝ) := hsgroup.symm
       _ ≤ localUpperRamificationGroupAfter K L t :=
         le_iSup (fun u : {u : ℝ // t < u} =>

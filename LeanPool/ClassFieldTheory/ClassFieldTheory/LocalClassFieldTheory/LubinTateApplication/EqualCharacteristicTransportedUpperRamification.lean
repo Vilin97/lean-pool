@@ -165,7 +165,7 @@ noncomputable def equalCharacteristicTransportedLubinTateGaloisEquiv
     letI : Algebra K E :=
       equalCharacteristicTransportedLubinTateLevelAlgebra
         K p ϖ hϖ n
-    Gal(E / B) ≃* Gal(E / K) := by
+    Gal(E/B) ≃* Gal(E/K) := by
   let F := equalCharacteristicTargetLocalField K
   let B := F.residueField⸨X⸩
   letI : CharP K F.residueCharacteristic :=
@@ -197,7 +197,7 @@ theorem equalCharacteristicTransportedLubinTateGaloisEquiv_apply
       let E := equalCharacteristicLubinTateLevelField F n
       letI : Algebra B E :=
         equalCharacteristicLubinTateLevelAlgebra F n
-      Gal(E / B))
+      Gal(E/B))
     (x :
       let F := equalCharacteristicTargetLocalField K
       letI : CharP K F.residueCharacteristic :=

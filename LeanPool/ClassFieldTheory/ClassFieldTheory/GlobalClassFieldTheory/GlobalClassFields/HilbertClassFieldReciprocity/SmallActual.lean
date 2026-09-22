@@ -53,8 +53,7 @@ open scoped Classical in
 selected small Hilbert class field with the ordinary ideal class group
 of the original number field. -/
 private noncomputable def smallHilbertClassFieldReciprocityData :
-    {e : Gal((smallHilbertClassField K) /
-          (smallHilbertClassFieldBase K)) ≃*
+    {e : Gal((smallHilbertClassField K)/(smallHilbertClassFieldBase K)) ≃*
         ClassGroup (𝓞 K) //
       ∀ c : IdeleClassGroup (smallHilbertClassFieldBase K),
         e (globalNormResidueMonoidHom
@@ -84,8 +83,7 @@ open scoped Classical in
 /-- The reciprocity equivalence from the actual small Hilbert Galois group
 to the ordinary ideal class group of the original number field. -/
 noncomputable def smallHilbertClassFieldGaloisEquivClassGroup :
-    Gal((smallHilbertClassField K) /
-        (smallHilbertClassFieldBase K)) ≃*
+    Gal((smallHilbertClassField K)/(smallHilbertClassFieldBase K)) ≃*
       ClassGroup (𝓞 K) :=
   (smallHilbertClassFieldReciprocityData (K := K)).1
 

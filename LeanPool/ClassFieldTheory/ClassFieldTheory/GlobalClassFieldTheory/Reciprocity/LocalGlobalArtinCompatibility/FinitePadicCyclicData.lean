@@ -63,7 +63,7 @@ noncomputable local instance numberFieldTowerExtensionQuotientIsMulCommutative :
             (numberFieldTowerBaseSubgroup K L)
             (numberFieldTowerTopSubgroup L)
             (numberFieldTowerTopSubgroup_le_baseSubgroup K L)) ≃*
-        Gal(L / K) :=
+        Gal(L/K) :=
     numberFieldTowerExtensionQuotientEquivGaloisGroup K L
   exact
     { is_comm :=
@@ -72,7 +72,7 @@ noncomputable local instance numberFieldTowerExtensionQuotientIsMulCommutative :
           rw [map_mul, map_mul]
           exact
             (inferInstance :
-              IsMulCommutative (Gal(L / K))).is_comm.comm
+              IsMulCommutative (Gal(L/K))).is_comm.comm
                 (e x) (e y)⟩ }
 
 local instance numberFieldTowerBaseSubgroupCompactSpace :
@@ -110,7 +110,7 @@ noncomputable def numberFieldTowerFiniteQuotientCoordinate :
 Galois group. -/
 noncomputable def rationalSeparableClosurePadicCyclotomicDegree
     (p : Nat.Primes) :
-    Gal(SeparableClosure ℚ / ℚ) →ₜ*
+    Gal(SeparableClosure ℚ/ℚ) →ₜ*
       Multiplicative ℤ_[p.1] :=
   (rationalCyclotomicPadicCoordinate p).comp
     rationalAbsoluteGaloisRestrictionToCyclotomicZHat
@@ -603,7 +603,7 @@ used in the finite-place reduction. -/
 noncomputable def numberFieldTowerFinitePadicCyclicFixedSubgroup
     (p : Nat.Primes)
     (τ : (numberFieldTowerBaseSubgroup K L).toSubgroup) :
-    ClosedSubgroup (Gal(SeparableClosure ℚ / ℚ)) := by
+    ClosedSubgroup (Gal(SeparableClosure ℚ/ℚ)) := by
   let H :=
     numberFieldTowerBaseSubgroup K L
   let U :=
@@ -626,7 +626,7 @@ in the auxiliary subgroup whose fixed field is used for descent. -/
 theorem numberFieldTowerFinitePadicCyclicFixedSubgroup_generator_mem
     (p : Nat.Primes)
     (τ : (numberFieldTowerBaseSubgroup K L).toSubgroup) :
-    (τ : Gal(SeparableClosure ℚ / ℚ)) ∈
+    (τ : Gal(SeparableClosure ℚ/ℚ)) ∈
       (numberFieldTowerFinitePadicCyclicFixedSubgroup
         (K := K) (L := L) p τ).toSubgroup := by
   let H :=
@@ -642,7 +642,7 @@ theorem numberFieldTowerFinitePadicCyclicFixedSubgroup_generator_mem
     numberFieldTowerFinitePadicCyclicPreimage
       (K := K) (L := L) p τ
   change
-    (τ : Gal(SeparableClosure ℚ / ℚ)) ∈
+    (τ : Gal(SeparableClosure ℚ/ℚ)) ∈
       U.toSubgroup.map H.toSubgroup.subtype
   refine ⟨τ, ?_, rfl⟩
   change rangeRestriction τ ∈ Γ.toSubgroup
@@ -809,8 +809,8 @@ theorem numberFieldTowerFinitePadicCyclicFixedSubgroup_isOpen
       ((numberFieldTowerFinitePadicCyclicFixedSubgroup
           (K := K) (L := L) p τ :
         ClosedSubgroup
-          (Gal(SeparableClosure ℚ / ℚ))) :
-        Set (Gal(SeparableClosure ℚ / ℚ))) := by
+          (Gal(SeparableClosure ℚ/ℚ))) :
+        Set (Gal(SeparableClosure ℚ/ℚ))) := by
   let H :=
     numberFieldTowerBaseSubgroup K L
   let U :=

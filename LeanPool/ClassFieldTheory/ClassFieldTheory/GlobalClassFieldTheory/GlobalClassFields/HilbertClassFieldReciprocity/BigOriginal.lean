@@ -77,7 +77,7 @@ the original number field gives the narrow ideal class group directly,
 without a residual fixed-field transport. -/
 private noncomputable def
     bigHilbertClassFieldReciprocityOverOriginalData :
-    {e : Gal((bigHilbertClassField K) / K) ≃*
+    {e : Gal((bigHilbertClassField K)/K) ≃*
         RayClass.NarrowClassGroup K //
       ∀ c : IdeleClassGroup K,
         e (globalNormResidueMonoidHom K
@@ -101,7 +101,7 @@ open scoped Classical in
 using the original number field as the scalar base. -/
 noncomputable def
     bigHilbertClassFieldGaloisEquivNarrowClassGroupOverOriginal :
-    Gal((bigHilbertClassField K) / K) ≃*
+    Gal((bigHilbertClassField K)/K) ≃*
       RayClass.NarrowClassGroup K :=
   (bigHilbertClassFieldReciprocityOverOriginalData (K := K)).1
 

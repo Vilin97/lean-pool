@@ -96,7 +96,7 @@ def galoisGroupResidueAlgEquivHomOfIsIntegralClosure (K L : Type u)
     [Field K] [ValuativeRel K] [Field L] [ValuativeRel L] [Algebra K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L] :
-    Gal(L / K) →* (𝓀[L] ≃ₐ[𝓀[K]] 𝓀[L]) where
+    Gal(L/K) →* (𝓀[L] ≃ₐ[𝓀[K]] 𝓀[L]) where
   toFun := galoisGroupResidueAlgEquivOfIsIntegralClosure K L
   map_one' := by
     apply AlgEquiv.ext
@@ -130,9 +130,9 @@ theorem galoisGroup_sum_residue_eq_residueAlgEquiv_sum_of_isIntegralClosure
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L] (a : 𝒪[L]) :
     IsLocalRing.residue 𝒪[L]
-        (Finset.univ.sum fun σ : Gal(L / K) =>
+        (Finset.univ.sum fun σ : Gal(L/K) =>
           galoisGroupIntegerRingEquivOfIsIntegralClosure K L σ a) =
-      Finset.univ.sum fun σ : Gal(L / K) =>
+      Finset.univ.sum fun σ : Gal(L/K) =>
         galoisGroupResidueAlgEquivOfIsIntegralClosure K L σ
           (IsLocalRing.residue 𝒪[L] a) := by
   rw [map_sum]
@@ -146,7 +146,7 @@ def galoisGroupResidueStabilizerHomOfIsIntegralClosure (K L : Type u)
     [Field K] [ValuativeRel K] [Field L] [ValuativeRel L] [Algebra K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L] :
-    @MulAction.stabilizer Gal(L / K) (Ideal 𝒪[L]) _
+    @MulAction.stabilizer Gal(L/K) (Ideal 𝒪[L]) _
         (galoisGroupIntegerRingIdealMulActionOfIsIntegralClosure K L)
         (𝓂[L] : Ideal 𝒪[L]) →*
       (𝓀[L] ≃ₐ[𝓀[K]] 𝓀[L]) := by
@@ -154,23 +154,23 @@ def galoisGroupResidueStabilizerHomOfIsIntegralClosure (K L : Type u)
   letI := galoisGroupIntegerRingSMulCommClassOfIsIntegralClosure K L
   letI := galoisGroupIntegerRingIdealDistribMulActionOfIsIntegralClosure K L
   exact Ideal.Quotient.stabilizerHom (𝓂[L] : Ideal 𝒪[L])
-    (𝓂[K] : Ideal 𝒪[K]) Gal(L / K)
+    (𝓂[K] : Ideal 𝒪[K]) Gal(L/K)
 
 /-- The inertia subgroup for the actual integral-closure action on `𝒪[L]`. -/
 def galoisGroupMaximalIdealInertiaOfIsIntegralClosure (K L : Type u)
     [Field K] [ValuativeRel K] [Field L] [ValuativeRel L] [Algebra K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L] :
-    Subgroup Gal(L / K) := by
+    Subgroup Gal(L/K) := by
   letI := galoisGroupIntegerRingMulSemiringActionOfIsIntegralClosure K L
-  exact (𝓂[L] : Ideal 𝒪[L]).toAddSubgroup.inertia Gal(L / K)
+  exact (𝓂[L] : Ideal 𝒪[L]).toAddSubgroup.inertia Gal(L/K)
 
 /-- The actual residue action obtained through the maximal-ideal stabilizer. -/
 def galoisGroupResidueStabilizerHomFromGaloisGroupOfIsIntegralClosure (K L : Type u)
     [Field K] [ValuativeRel K] [Field L] [ValuativeRel L] [Algebra K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L] :
-    Gal(L / K) →* (𝓀[L] ≃ₐ[𝓀[K]] 𝓀[L]) :=
+    Gal(L/K) →* (𝓀[L] ≃ₐ[𝓀[K]] 𝓀[L]) :=
   (galoisGroupResidueStabilizerHomOfIsIntegralClosure K L).comp
     (galoisGroupMaximalIdealStabilizerHomOfIsIntegralClosure K L)
 
@@ -208,14 +208,14 @@ theorem galoisGroupResidueStabilizerHomOfIsIntegralClosure_ker_eq_maximalIdealIn
     [IsIntegralClosure 𝒪[L] 𝒪[K] L] :
     (galoisGroupResidueStabilizerHomOfIsIntegralClosure K L).ker =
       (galoisGroupMaximalIdealInertiaOfIsIntegralClosure K L).subgroupOf
-        (@MulAction.stabilizer Gal(L / K) (Ideal 𝒪[L]) _
+        (@MulAction.stabilizer Gal(L/K) (Ideal 𝒪[L]) _
           (galoisGroupIntegerRingIdealMulActionOfIsIntegralClosure K L)
           (𝓂[L] : Ideal 𝒪[L])) := by
   let := galoisGroupIntegerRingMulSemiringActionOfIsIntegralClosure K L
   let := galoisGroupIntegerRingSMulCommClassOfIsIntegralClosure K L
   let := galoisGroupIntegerRingIdealDistribMulActionOfIsIntegralClosure K L
   exact Ideal.Quotient.ker_stabilizerHom (𝓂[L] : Ideal 𝒪[L])
-    (𝓂[K] : Ideal 𝒪[K]) Gal(L / K)
+    (𝓂[K] : Ideal 𝒪[K]) Gal(L/K)
 
 /-- A Galois automorphism acts trivially on the residue field exactly when it belongs to
 maximal-ideal inertia. -/
@@ -323,7 +323,7 @@ theorem galoisGroupMaximalIdealInertiaOfIsIntegralClosure_card_eq_ramificationId
     infer_instance
   simpa [galoisGroupMaximalIdealInertiaOfIsIntegralClosure] using
     (Ideal.card_inertia_eq_ramificationIdxIn
-      (R := 𝒪[K]) (S := 𝒪[L]) (G := Gal(L / K))
+      (R := 𝒪[K]) (S := 𝒪[L]) (G := Gal(L/K))
       (𝓂[K] : Ideal 𝒪[K]) (𝓂[L] : Ideal 𝒪[L]))
 
 /-- The actual integral-closure inertia cardinality, rewritten with the
@@ -341,7 +341,7 @@ theorem galoisGroupMaximalIdealInertiaOfIsIntegralClosure_card_eq_ramificationId
   let := galoisGroupIntegerRing_isGaloisGroup_of_isIntegralClosure K L
   rw [galoisGroupMaximalIdealInertiaOfIsIntegralClosure_card_eq_ramificationIdxIn K L]
   exact Ideal.ramificationIdxIn_eq_ramificationIdx
-    (𝓂[K] : Ideal 𝒪[K]) (𝓂[L] : Ideal 𝒪[L]) Gal(L / K)
+    (𝓂[K] : Ideal 𝒪[K]) (𝓂[L] : Ideal 𝒪[L]) Gal(L/K)
 
 /-- If the valuation-integer-ring extension has ramification index one, then
 the actual integral-closure inertia subgroup has cardinality one. -/

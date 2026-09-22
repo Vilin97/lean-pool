@@ -95,12 +95,12 @@ noncomputable def inducedIntegerUnitsToLocalPlaceBlock :
                     (LocalizedCompletion vK w) (f.1 g)
             rw [f.2 h g]
             let : MulDistribMulAction
-                (Gal(LocalizedCompletion vK w / vK.Completion))
+                (Gal(LocalizedCompletion vK w/vK.Completion))
                 𝒪[LocalizedCompletion vK w]ˣ :=
               galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure
                 vK.Completion (LocalizedCompletion vK w)
             let : MulDistribMulAction
-                (Gal(LocalizedCompletion vK w / vK.Completion))
+                (Gal(LocalizedCompletion vK w/vK.Completion))
                 (LocalizedCompletion vK w)ˣ :=
               galoisGroupFieldUnitsMulDistribMulAction
                 vK.Completion (LocalizedCompletion vK w)

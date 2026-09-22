@@ -627,7 +627,6 @@ identification to the `hval` input used by the finite-separable uniqueness API. 
 theorem integralClosure_mem_or_inv_of_target_valuationSubring_isIntegralClosure
     (base : CompleteDVF.{u, v} K) (target : CompleteDVF.{w, x} L)
     [base.valuation.HasExtension target.valuation]
-
     [IsIntegralClosure target.toDVF.valuationSubring base.toDVF.valuationSubring L] :
     ∀ z : L,
       z ∈ (integralClosure base.toDVF.valuationSubring L).toSubring ∨

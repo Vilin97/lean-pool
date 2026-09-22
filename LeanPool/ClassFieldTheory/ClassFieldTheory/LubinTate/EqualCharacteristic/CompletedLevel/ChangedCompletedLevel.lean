@@ -436,7 +436,6 @@ theorem equalCharacteristicChangedCompletedLevelUniformizer_norm_lt_one
 
 private theorem equalCharacteristicChangedPiPolynomial_eval₂
     (F : LocalField.{u, v} K)
-
     (u : F.residueField⟦X⟧ˣ)
     {A : Type*} [Field A] [CharP A F.residueCharacteristic]
     (φ : F.residueField⸨X⸩ →+* A) (x : A) :

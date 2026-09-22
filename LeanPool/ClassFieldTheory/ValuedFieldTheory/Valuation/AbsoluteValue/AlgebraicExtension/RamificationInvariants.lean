@@ -1405,7 +1405,6 @@ theorem ramificationInvariants_fundamental_inequality
   let k := IsLocalRing.ResidueField V
   let ell := IsLocalRing.ResidueField W
   let : Algebra k ell := (IsLocalRing.ResidueField.map i).toAlgebra
-
   let Q := ExponentialValueGroupQuotient v w
   have hsur : Function.Surjective
       (fun x : Lˣ ↦ exponentialValueCoset v w (x : L) x.ne_zero) :=
@@ -1440,7 +1439,6 @@ theorem ramificationInvariants_fundamental_inequality
       exact congrArg Prod.fst hqr)).finite
   let : Finite Q := hfiniteQ
   let : Fintype Q := Fintype.ofFinite Q
-
   let J := Module.Free.ChooseBasisIndex k ell
   let beta : Basis J k ell := Module.Free.chooseBasis k ell
   let omega : J → W := fun j ↦
@@ -1467,7 +1465,6 @@ theorem ramificationInvariants_fundamental_inequality
       exact congrArg Prod.snd hab)).finite
   let : Finite J := hfiniteJ
   let : Fintype J := Fintype.ofFinite J
-
   exact ramificationInvariants_fundamental_inequality_of_representatives
     v w hExt pi hpi0 hpiBij omega beta homega
 

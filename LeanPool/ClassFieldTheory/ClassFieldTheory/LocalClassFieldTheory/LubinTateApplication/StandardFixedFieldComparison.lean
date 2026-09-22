@@ -80,7 +80,7 @@ theorem standardLubinTateFiniteAbelianSubextension_filteredLocalReciprocity
     finiteAbelianSubextension_fixedField_isAbelianGalois K T
   let e : E ≃ₐ[K] M :=
     standardLubinTateFiniteAbelianSubextensionFixedFieldEquiv K m
-  let q : Gal(E / K) ≃* Gal(M / K) :=
+  let q : Gal(E/K) ≃* Gal(M/K) :=
     AlgEquiv.autCongr e
   have hArtin :
       Subgroup.map q.toMonoidHom

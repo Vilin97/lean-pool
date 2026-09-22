@@ -58,9 +58,9 @@ noncomputable def semilinearGaloisGroupCongr
     (hcomm : ∀ x : K,
       eL (algebraMap K L x) =
         algebraMap K' L' (eK x)) :
-    Gal(L / K) ≃* Gal(L' / K') := by
-  let conjugate (σ : Gal(L / K)) :
-      Gal(L' / K') :=
+    Gal(L/K) ≃* Gal(L'/K') := by
+  let conjugate (σ : Gal(L/K)) :
+      Gal(L'/K') :=
     AlgEquiv.ofRingEquiv
       (f := eL.symm.trans (σ.toRingEquiv.trans eL))
       (fun x => by
@@ -73,8 +73,8 @@ noncomputable def semilinearGaloisGroupCongr
           apply eL.injective
           rw [eL.apply_symm_apply, hcomm, eK.apply_symm_apply]
         rw [hpre, σ.commutes, hcomm, eK.apply_symm_apply])
-  let unconjugate (τ : Gal(L' / K')) :
-      Gal(L / K) :=
+  let unconjugate (τ : Gal(L'/K')) :
+      Gal(L/K) :=
     AlgEquiv.ofRingEquiv
       (f := eL.trans (τ.toRingEquiv.trans eL.symm))
       (fun x => by
@@ -113,7 +113,7 @@ theorem semilinearGaloisGroupCongr_apply_equiv
     (hcomm : ∀ x : K,
       eL (algebraMap K L x) =
         algebraMap K' L' (eK x))
-    (σ : Gal(L / K)) (x : L) :
+    (σ : Gal(L/K)) (x : L) :
     semilinearGaloisGroupCongr K K' L L' eK eL hcomm σ (eL x) =
       eL (σ x) := by
   change eL (σ (eL.symm (eL x))) = eL (σ x)
@@ -189,10 +189,10 @@ theorem abelianLocalArtinMonoidHom_semilinear_conjugation
   let conjugation :=
     semilinearGaloisGroupCongr K K' L L' eK eL hcomm
   let restriction :
-      Gal(L' / K') →* Gal(L / K) :=
+      Gal(L'/K') →* Gal(L/K) :=
     (AlgEquiv.restrictNormalHom L).comp
       (AlgEquiv.restrictScalarsHom K)
-  have hrestriction (τ : Gal(L' / K')) :
+  have hrestriction (τ : Gal(L'/K')) :
       restriction τ = conjugation.symm τ := by
     apply AlgEquiv.ext
     intro x
@@ -350,6 +350,6 @@ theorem abelianLocalArtinMonoidHom_semilinear_action
         (abelianLocalArtinMonoidHom K L u) z).symm
     _ = abelianLocalArtinMonoidHom K' L'
           (Units.map eK.toMonoidHom u) (eL z) :=
-      congrArg (fun sigma : Gal(L' / K') => sigma (eL z)) hArtin
+      congrArg (fun sigma : Gal(L'/K') => sigma (eL z)) hArtin
 
 end LocalClassFieldTheory

@@ -73,7 +73,7 @@ theorem eq_zero_of_derivative_mul_one_add_X_eq_self
             ring
           rw [hmul, map_add, PowerSeries.coeff_succ_mul_X,
             PowerSeries.coeff_derivative, PowerSeries.coeff_derivative] at hcoeff
-          simp [ih] at hcoeff
+          simp only [Nat.cast_add, Nat.cast_one, ih, map_zero, zero_mul, add_zero] at hcoeff
           have hzero :
               PowerSeries.coeff (n + 2) f *
                   ((Nat.succ (n + 1) : ℕ) : A) = 0 := by

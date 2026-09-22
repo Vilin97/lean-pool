@@ -202,7 +202,7 @@ theorem extensionSubgroup_intermediateField_eq
         (L.intermediateField_le_base S) =
       L.intermediateSubgroup S := by
   ext x
-  simp [extensionSubgroup, intermediateField]
+  simp only [extensionSubgroup, intermediateField, mem_intermediateSubgroup_iff]
   rw [Subgroup.mem_subgroupOf]
   constructor
   · rintro ⟨y, hy, hxy⟩

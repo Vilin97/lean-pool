@@ -30,6 +30,11 @@ All fields in this file are the actual mathlib intermediate fields in
 Galois group is introduced.
 -/
 
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup renaming
+  continuousMulEquivOfCompactToT2 →
+    continuousMulEquivOfCompactToT2
+
+
 noncomputable section
 
 namespace GlobalClassFieldTheory
@@ -109,7 +114,7 @@ noncomputable def rationalCyclotomicZHatFieldGalEquivZHat :
           rationalCyclotomicTorsionFixedField) ≃ₜ*
         (rationalCyclotomicZHatField ≃ₐ[ℚ]
           rationalCyclotomicZHatField) :=
-    LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.continuousMulEquivOfCompactToT2
+    continuousMulEquivOfCompactToT2
         (AlgEquiv.autCongr e)
         (continuous_algEquiv_autCongr e)
   exact c.symm.trans
@@ -155,7 +160,7 @@ theorem rationalCyclotomicZHatFieldGalEquivZHat_fullRestriction
           KummerTheory.rationalCyclotomicTorsionFixedField) ≃ₜ*
         (rationalCyclotomicZHatField ≃ₐ[ℚ]
           rationalCyclotomicZHatField) :=
-    LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.continuousMulEquivOfCompactToT2
+    continuousMulEquivOfCompactToT2
       (AlgEquiv.autCongr e)
       (continuous_algEquiv_autCongr e)
   change

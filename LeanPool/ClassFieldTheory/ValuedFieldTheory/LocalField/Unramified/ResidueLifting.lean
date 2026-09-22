@@ -103,7 +103,6 @@ theorem exists_integral_root_lifting_separable_residue_element
   have hcoprime : IsCoprime gbar hbar := by
     exact Polynomial.isCoprime_of_is_root_of_eval_derivative_ne_zero
       pbar alpha hpbarDerivative
-
   have hHenselianW : ValuationTheory.DiscreteValuationField.HenselianValuationByFactorization
       (LubinTate.Valuations.exponentialValuationSubringAsValuationSubring w).valuation :=
     henselianValuation_of_algebraic_extension v w hExt hhens
@@ -220,7 +219,6 @@ theorem exists_finiteUnramifiedSubextension_residue_image_eq
   obtain ⟨F, beta, hFmonic, hFmap, hFroot, hbetaResidue⟩ :=
     exists_integral_root_lifting_separable_residue_element
       v w hExt hhens alpha halpha
-
   let pK : Polynomial K := F.map V.subtype
   have hpKmonic : pK.Monic := hFmonic.map V.subtype
   have hpKroot : Polynomial.aeval (beta : L) pK = 0 := by

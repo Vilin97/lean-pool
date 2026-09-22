@@ -858,7 +858,6 @@ theorem card_principalUnitClassInQuotient_eq_mul_of_le {l m n : ℕ}
 /-- Cardinality form of the class/subquotient identification. -/
 theorem card_principalUnitSubquotient_eq_classInQuotient_of_le
     {m n : ℕ} (hmn : m ≤ n) [(U.principalUnitSubgroup n).Normal]
-
     [Finite (U.principalUnitSubgroupClassInQuotient m n)] :
     Nat.card (U.principalUnitSubquotient m n) =
       Nat.card (U.principalUnitSubgroupClassInQuotient m n) := by

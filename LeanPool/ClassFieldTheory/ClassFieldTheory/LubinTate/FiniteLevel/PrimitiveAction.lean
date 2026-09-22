@@ -52,8 +52,9 @@ private theorem standardLubinTateSeries_hasLinearTerm
           linearForm (fun _ : Unit => π) =
         (PowerSeries.X : PowerSeries F.valuationSubring) ^
           Nat.card F.residueField := by
-    simp [LubinTateSeries.standardLubinTateSeries_toPowerSeries,
-      standardLubinTatePowerSeries, linearForm]
+    simp only [LubinTateSeries.standardLubinTateSeries_toPowerSeries,
+      standardLubinTatePowerSeries, linearForm, Finset.univ_unique, PUnit.default_eq_unit,
+      Finset.sum_singleton]
     rw [PowerSeries.C_apply, PowerSeries.X_apply]
     ring
   rw [HasLinearTerm, hlinear, ← PowerSeries.order_eq_order,

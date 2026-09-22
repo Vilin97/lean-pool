@@ -70,10 +70,10 @@ Passing from `K` to this field is the genuine cyclic reduction used in
 the proof of finite-place local--global compatibility: over this field
 the given automorphism generates the whole Galois group. -/
 noncomputable def automorphismCyclicFixedField
-    (σ : Gal(L / K)) :
+    (σ : Gal(L/K)) :
     IntermediateField K L :=
   IntermediateField.fixedField
-    (Subgroup.closure ({σ} : Set (Gal(L / K))))
+    (Subgroup.closure ({σ} : Set (Gal(L/K))))
 
 noncomputable local instance automorphismCyclicFixedFieldNumberField
     (σ : Gal(L/K)) :
@@ -85,7 +85,7 @@ noncomputable local instance automorphismCyclicFixedFieldNumberField
 subgroup it generates. -/
 noncomputable def automorphismOverCyclicFixedField
     (σ : Gal(L/K)) :
-    Gal(L / automorphismCyclicFixedField σ) :=
+    Gal(L/automorphismCyclicFixedField σ) :=
   IntermediateField.fixingSubgroupEquiv
     (automorphismCyclicFixedField σ)
     ⟨σ, by
@@ -113,14 +113,14 @@ theorem automorphismOverCyclicFixedField_generates
     Subgroup.closure
         ({automorphismOverCyclicFixedField σ} :
           Set
-            (Gal(L / automorphismCyclicFixedField σ))) =
+            (Gal(L/automorphismCyclicFixedField σ))) =
       ⊤ := by
   let M := automorphismCyclicFixedField σ
-  let σM : Gal(L / M) :=
+  let σM : Gal(L/M) :=
     automorphismOverCyclicFixedField σ
   let e :
       M.fixingSubgroup ≃*
-        Gal(L / M) :=
+        Gal(L/M) :=
     IntermediateField.fixingSubgroupEquiv M
   have hσ :
       (⟨σ, by
@@ -140,7 +140,7 @@ theorem automorphismOverCyclicFixedField_generates
     (f := e.symm.toMonoidHom) e.symm.injective
   change
     Subgroup.map e.symm.toMonoidHom
-        (Subgroup.closure ({σM} : Set (Gal(L / M)))) =
+        (Subgroup.closure ({σM} : Set (Gal(L/M)))) =
       Subgroup.map e.symm.toMonoidHom ⊤
   rw [MonoidHom.map_closure, Set.image_singleton,
     ← hσ, Subgroup.map_top_of_surjective
@@ -151,7 +151,7 @@ theorem automorphismOverCyclicFixedField_generates
   rw [MonoidHom.map_closure, Set.image_singleton,
     ← MonoidHom.range_eq_map, M.fixingSubgroup.range_subtype]
   change
-    Subgroup.closure ({σ} : Set (Gal(L / K))) =
+    Subgroup.closure ({σ} : Set (Gal(L/K))) =
       (automorphismCyclicFixedField σ).fixingSubgroup
   rw [automorphismCyclicFixedField,
     IntermediateField.fixingSubgroup_fixedField]
@@ -308,7 +308,7 @@ theorem automorphismOverCyclicFixedField_mem_chosenFinitePlaceDecompositionGroup
     chosenFinitePlaceExtension (L := L) v
   let wM :=
     automorphismCyclicFixedTopExtension v σ.1
-  let σM : Gal(L / M) :=
+  let σM : Gal(L/M) :=
     automorphismOverCyclicFixedField σ.1
   have hrestrict :
       RamificationTheory.HilbertRamification.ValuationSubring.restrictAutomorphismScalars
@@ -468,7 +468,7 @@ theorem finitePlaceSeparableClosureDecompositionRestriction_coe
       absoluteValueDecompositionGroup K wΩ.1),
     ((finitePlaceSeparableClosureDecompositionRestriction
         (K := K) (L := L) v) τ :
-      Gal(L / K)) =
+      Gal(L/K)) =
       AlgEquiv.restrictNormalHom L τ.1 := by
   let : Algebra K (SeparableClosure ℚ) :=
     numberFieldTowerSeparableClosureBaseAlgebra K L
@@ -637,7 +637,7 @@ theorem
       _ = η.1 (algebraMap L (SeparableClosure ℚ) x) := rfl
       _ = algebraMap L (SeparableClosure ℚ) x := η.1.commutes x
       _ = algebraMap L (SeparableClosure ℚ)
-            ((1 : Gal(L / K)) x) := rfl
+            ((1 : Gal(L/K)) x) := rfl
   · intro hτ
     have hrestriction :
         AlgEquiv.restrictNormalHom L τ.1 = 1 := by
@@ -646,7 +646,7 @@ theorem
       calc
         AlgEquiv.restrictNormalHom L τ.1 =
             ((1 : absoluteValueDecompositionGroup K wL.1).1 :
-              Gal(L / K)) := by
+              Gal(L/K)) := by
           simpa only [
             finitePlaceSeparableClosureDecompositionRestriction_coe] using
               hτVal
@@ -658,7 +658,7 @@ theorem
           have hcomm :=
             AlgEquiv.restrictNormal_commutes τ.1 L x
           have hx :=
-            congrArg (fun ρ : Gal(L / K) => ρ x) hrestriction
+            congrArg (fun ρ : Gal(L/K) => ρ x) hrestriction
           change (τ.1.restrictNormal L) x = x at hx
           calc
             τ.1 (algebraMap L (SeparableClosure ℚ) x) =
@@ -940,7 +940,7 @@ noncomputable def finitePlaceSeparableClosureCyclotomicRestriction
       numberFieldTowerFinitePlaceExtensionToSeparableClosure
         K L v (chosenFinitePlaceExtension (L := L) v)
     absoluteValueDecompositionGroup K wΩ.1 →*
-      Gal(rationalCyclotomicZHatField / ℚ) :=
+      Gal(rationalCyclotomicZHatField/ℚ) :=
   by
     letI : Algebra K (SeparableClosure ℚ) :=
       numberFieldTowerSeparableClosureBaseAlgebra K L

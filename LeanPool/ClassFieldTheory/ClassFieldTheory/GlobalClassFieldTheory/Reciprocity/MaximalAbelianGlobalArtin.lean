@@ -28,7 +28,7 @@ open scoped Classical in
 /-- The continuous global Artin homomorphism from the idele class group to
 the Galois group of the maximal abelian extension. -/
 noncomputable def maximalAbelianGlobalArtin :
-    IdeleClassGroup K →ₜ* Gal(maximalAbelianExtension K / K) :=
+    IdeleClassGroup K →ₜ* Gal(maximalAbelianExtension K/K) :=
   infiniteGlobalIdeleClassArtinContinuousMonoidHom
     (K := K) (Ω := maximalAbelianExtension K)
 

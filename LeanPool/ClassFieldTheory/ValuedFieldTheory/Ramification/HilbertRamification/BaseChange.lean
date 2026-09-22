@@ -17,6 +17,11 @@ the archimedean case; the valuation-subring statements give the three
 nonarchimedean homomorphisms.
 -/
 
+open _root_.ValuationTheory.DiscreteValuationField.ResidueField renaming
+  residue_eq_residue_iff_sub_mem_maximalIdeal →
+    residue_eq_residue_iff_sub_mem_maximalIdeal
+
+
 noncomputable section
 
 universe u v u' v'
@@ -188,7 +193,7 @@ private theorem mem_inertiaGroup_iff_sub_mem_nonunits
     change sigma • (IsLocalRing.residue A x) =
       IsLocalRing.residue A x at happ
     rw [← IsLocalRing.ResidueField.residue_smul,
-      ValuationTheory.DiscreteValuationField.ResidueField.residue_eq_residue_iff_sub_mem_maximalIdeal]
+      residue_eq_residue_iff_sub_mem_maximalIdeal]
       at happ
     exact A.coe_mem_nonunits_iff.mpr happ
   · intro hsigma
@@ -198,7 +203,7 @@ private theorem mem_inertiaGroup_iff_sub_mem_nonunits
     change sigma • (IsLocalRing.residue A x) =
       IsLocalRing.residue A x
     rw [← IsLocalRing.ResidueField.residue_smul,
-      ValuationTheory.DiscreteValuationField.ResidueField.residue_eq_residue_iff_sub_mem_maximalIdeal]
+      residue_eq_residue_iff_sub_mem_maximalIdeal]
     exact A.coe_mem_nonunits_iff.mp (hsigma x)
 
 include hsquare in

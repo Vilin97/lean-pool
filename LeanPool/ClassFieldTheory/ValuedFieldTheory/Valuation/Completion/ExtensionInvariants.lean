@@ -41,6 +41,11 @@ local extension `L_w / K_v` is finite separable.  The fundamental inequality the
   the result.
 -/
 
+open _root_.ValuationTheory.DiscreteValuationField.ResidueField renaming
+  residue_eq_residue_iff_sub_mem_maximalIdeal →
+    residue_eq_residue_iff_sub_mem_maximalIdeal
+
+
 noncomputable section
 
 open scoped BigOperators
@@ -245,7 +250,7 @@ theorem completionResidueMap_surjective
   let xV : V := ⟨x, (mem_absoluteValueExponentialSubring_iff a ha x).2 hx_le⟩
   refine ⟨IsLocalRing.residue V xV, ?_⟩
   rw [IsLocalRing.ResidueField.map_residue]
-  rw [ValuationTheory.DiscreteValuationField.ResidueField.residue_eq_residue_iff_sub_mem_maximalIdeal]
+  rw [residue_eq_residue_iff_sub_mem_maximalIdeal]
   rw [mem_absoluteValueExponentialSubring_maximalIdeal_iff aC haC]
   exact hclose
 

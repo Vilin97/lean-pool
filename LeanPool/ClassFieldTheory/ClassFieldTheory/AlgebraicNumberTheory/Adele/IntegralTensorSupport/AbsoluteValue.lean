@@ -78,7 +78,6 @@ noncomputable def realAbsoluteValueValuation
     exact hvF x y
 
 /-- The following two lemmas expose the valuation-subring interface used by later modules. -/
-
 @[simp]
 theorem realAbsoluteValueValuation_apply
     {F : Type*} [Field F]

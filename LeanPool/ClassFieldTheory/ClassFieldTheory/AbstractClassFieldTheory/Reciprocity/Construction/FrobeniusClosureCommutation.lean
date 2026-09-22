@@ -37,7 +37,6 @@ namespace DegreeData
 procyclic closure. -/
 theorem frobeniusClosure_commutes_of_commutes_generator (D : DegreeData G)
     [IsTopologicalGroup G]
-
     (K : FiniteResidueAbstractField D) (L : ClosedSubgroup G)
     (hLK : L.toSubgroup ≤ K.field.toSubgroup)
     [hLnormal : (extensionSubgroup K.field L hLK).Normal]

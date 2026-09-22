@@ -664,9 +664,9 @@ theorem equalCharacteristicTransportedLubinTateLevel_isAbelianGalois
     equalCharacteristicTransportedLubinTateLevel_isGalois
       K p ϖ hϖ m
   let restrictToLaurent :
-      Gal(E / K) →* Gal(E / B) :=
-    { toFun := fun (σ : Gal(E / K)) =>
-        show Gal(E / B) from
+      Gal(E/K) →* Gal(E/B) :=
+    { toFun := fun (σ : Gal(E/K)) =>
+        show Gal(E/B) from
           { σ.toRingEquiv with
             commutes' := fun x => by
               rw [← he x]
@@ -685,7 +685,7 @@ theorem equalCharacteristicTransportedLubinTateLevel_isAbelianGalois
     exact DFunLike.congr_fun hστ x
   refine { is_comm.comm := fun σ τ => hrestrict ?_ }
   exact
-    (inferInstance : IsMulCommutative (Gal(E / B))).is_comm.comm
+    (inferInstance : IsMulCommutative (Gal(E/B))).is_comm.comm
       (restrictToLaurent σ) (restrictToLaurent τ)
 
 /-- The actual norm subgroup of the transported level field. -/

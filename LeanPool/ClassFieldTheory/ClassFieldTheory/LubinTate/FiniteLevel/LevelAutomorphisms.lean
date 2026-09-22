@@ -238,7 +238,7 @@ private theorem
       (standardLubinTateLevelField hπ n) :=
     standardLubinTateLevelCompleteDVF_isIntegralClosure hπ n
   have hforward
-      (τ : Gal((standardLubinTateLevelField hπ n) / K))
+      (τ : Gal((standardLubinTateLevelField hπ n)/K))
       {y : standardLubinTateLevelField hπ n}
       (hy : y ∈ target.valuation.valuationSubring) :
       τ y ∈ target.valuation.valuationSubring := by
@@ -537,7 +537,7 @@ noncomputable def standardLubinTateUnitParameterToGal
     (hπ : F.toCompleteDVF.valuation.IsUniformizer (π : K))
     (n : ℕ) :
     standardLubinTateUnitParameter F n →
-      Gal((standardLubinTateLevelField hπ n) / K) :=
+      Gal((standardLubinTateLevelField hπ n)/K) :=
   standardLubinTateUnitParameterAlgEquiv F hπ n
 
 /-- Faithfulness of the primitive action makes the parameter-to-automorphism
@@ -551,7 +551,7 @@ theorem standardLubinTateUnitParameterToGal_injective
   intro a b hab
   apply standardLubinTateUnitParameterLevelRoot_injective F hπ n
   have hgen := congrArg
-    (fun σ : Gal((standardLubinTateLevelField hπ n) / K) =>
+    (fun σ : Gal((standardLubinTateLevelField hπ n)/K) =>
       σ (standardLubinTateLevelPowerBasis hπ n).gen) hab
   simpa [standardLubinTateUnitParameterToGal] using hgen
 
@@ -579,7 +579,7 @@ theorem standardLubinTateUnitParameterToGal_mul
 noncomputable instance standardLubinTateLevelField_galFinite
     {F : LocalField.{u, v} K} {π : F.valuationSubring}
     (hπ : F.toCompleteDVF.valuation.IsUniformizer (π : K)) (n : ℕ) :
-    Finite (Gal((standardLubinTateLevelField hπ n) / K)) := by
+    Finite (Gal((standardLubinTateLevelField hπ n)/K)) := by
   let : FiniteDimensional K (standardLubinTateLevelField hπ n) :=
     standardLubinTateLevelField_finiteDimensional hπ n
   let : Module.Free K (standardLubinTateLevelField hπ n) :=
@@ -595,7 +595,7 @@ its field degree. -/
 theorem standardLubinTateLevelField_natCard_gal_le_finrank
     {F : LocalField.{u, v} K} {π : F.valuationSubring}
     (hπ : F.toCompleteDVF.valuation.IsUniformizer (π : K)) (n : ℕ) :
-    Nat.card (Gal((standardLubinTateLevelField hπ n) / K)) ≤
+    Nat.card (Gal((standardLubinTateLevelField hπ n)/K)) ≤
       Module.finrank K (standardLubinTateLevelField hπ n) := by
   let : FiniteDimensional K (standardLubinTateLevelField hπ n) :=
     standardLubinTateLevelField_finiteDimensional hπ n
@@ -607,7 +607,7 @@ to the field degree. -/
 theorem standardLubinTateLevelField_natCard_gal
     {F : LocalField.{u, v} K} {π : F.valuationSubring}
     (hπ : F.toCompleteDVF.valuation.IsUniformizer (π : K)) (n : ℕ) :
-    Nat.card (Gal((standardLubinTateLevelField hπ n) / K)) =
+    Nat.card (Gal((standardLubinTateLevelField hπ n)/K)) =
       Module.finrank K (standardLubinTateLevelField hπ n) := by
   let : FiniteDimensional K (standardLubinTateLevelField hπ n) :=
     standardLubinTateLevelField_finiteDimensional hπ n
@@ -618,7 +618,7 @@ theorem standardLubinTateLevelField_natCard_gal
           Nat.card (standardLubinTateUnitParameter F n) := by
         rw [standardLubinTateLevelField_finrank hπ n,
           standardLubinTateUnitParameter_natCard F n]
-      _ ≤ Nat.card (Gal((standardLubinTateLevelField hπ n) / K)) :=
+      _ ≤ Nat.card (Gal((standardLubinTateLevelField hπ n)/K)) :=
         Nat.card_le_card_of_injective
           (standardLubinTateUnitParameterToGal F hπ n)
           (standardLubinTateUnitParameterToGal_injective F hπ n)

@@ -69,7 +69,6 @@ theorem isAbelianGalois_sup
   let j : M →ₐ[K] Omega := M.val
   let A' : IntermediateField K M := A.comap j
   let B' : IntermediateField K M := B.comap j
-
   have hjrange : j.fieldRange = M :=
     IntermediateField.fieldRange_val M
   have hAmap : A'.map j = A := by
@@ -84,7 +83,6 @@ theorem isAbelianGalois_sup
     apply IntermediateField.map_injective j
     rw [IntermediateField.map_sup, hAmap, hBmap,
       ← AlgHom.fieldRange_eq_map, hjrange]
-
   let eA : A' →ₐ[K] A :=
     ((j.comp A'.val).codRestrict A.toSubalgebra fun x ↦ x.2)
   let eB : B' →ₐ[K] B :=
@@ -92,7 +90,6 @@ theorem isAbelianGalois_sup
   let : IsAbelianGalois K A' := IsAbelianGalois.of_algHom eA
   let : IsAbelianGalois K B' := IsAbelianGalois.of_algHom eB
   let : IsGalois K M := inferInstance
-
   let rA : (M ≃ₐ[K] M) →* (A' ≃ₐ[K] A') :=
     AlgEquiv.restrictNormalHom A'
   let rB : (M ≃ₐ[K] M) →* (B' ≃ₐ[K] B') :=
@@ -114,7 +111,6 @@ theorem isAbelianGalois_sup
       rw [IntermediateField.fixingSubgroup_sup]
       exact ⟨hmemA, hmemB⟩
     simpa [hsup] using hmem
-
   exact
     { is_comm.comm := fun sigma tau ↦ by
         apply hr

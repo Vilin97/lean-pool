@@ -37,7 +37,7 @@ noncomputable def standardLubinTateUnitParameterToGalHom
     (hπ : F.toCompleteDVF.valuation.IsUniformizer (π : K))
     (n : ℕ) :
     standardLubinTateUnitParameter F n →*
-      Gal((standardLubinTateLevelField hπ n) / K) where
+      Gal((standardLubinTateLevelField hπ n)/K) where
   toFun := standardLubinTateUnitParameterToGal F hπ n
   map_one' := standardLubinTateUnitParameterToGal_one F hπ n
   map_mul' := standardLubinTateUnitParameterToGal_mul F hπ n
@@ -60,7 +60,7 @@ noncomputable def standardLubinTateUnitParameterEquivGal
     (hπ : F.toCompleteDVF.valuation.IsUniformizer (π : K))
     (n : ℕ) :
     standardLubinTateUnitParameter F n ≃*
-      Gal((standardLubinTateLevelField hπ n) / K) :=
+      Gal((standardLubinTateLevelField hπ n)/K) :=
   MulEquiv.ofBijective
     (standardLubinTateUnitParameterToGalHom F hπ n)
     (by
@@ -137,7 +137,7 @@ instance standardLubinTateLevelField_isMulCommutative
     (hπ : F.toCompleteDVF.valuation.IsUniformizer (π : K))
     (n : ℕ) :
     IsMulCommutative
-      (Gal((standardLubinTateLevelField hπ n) / K)) :=
+      (Gal((standardLubinTateLevelField hπ n)/K)) :=
   ⟨⟨standardLubinTateLevelField_gal_comm F hπ n⟩⟩
 
 /-- Every standard finite Lubin--Tate level is abelian Galois over its base

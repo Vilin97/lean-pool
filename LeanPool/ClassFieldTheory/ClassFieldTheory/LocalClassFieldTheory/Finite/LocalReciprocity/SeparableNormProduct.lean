@@ -36,7 +36,6 @@ theorem prod_embeddings_algebraMap_powerBasisGen_eq
     (k Ω : Type) [Field k] [Field Ω] [Algebra k Ω] [IsSepClosed Ω]
     {L E : Type} [Field L] [Field E]
     [Algebra k L] [Algebra k E] [Algebra L E] [IsScalarTower k L E]
-
     [Algebra.IsSeparable k E] [FiniteDimensional k E]
     (pb : PowerBasis k L) :
     ∏ σ : E →ₐ[k] Ω, σ (algebraMap L E pb.gen) =

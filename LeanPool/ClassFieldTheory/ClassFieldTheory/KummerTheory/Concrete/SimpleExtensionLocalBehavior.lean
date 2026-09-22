@@ -214,7 +214,6 @@ theorem
       vK w hvK hvKna
   let : Module.Finite 𝒪[C] 𝒪[F] :=
     integerRing_moduleFinite_of_isIntegralClosure C F
-
   have hbAbv : vK (b : K) = 1 := by
     rw [HeightOneSpectrum.adicAbv_def, hb]
     simp

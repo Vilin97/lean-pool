@@ -70,7 +70,7 @@ theorem localHilbertSymbol_left_kernel
       (K := K) (Omega := SeparableClosure K) n hmu Delta.1
   constructor
   · intro h
-    let sigma : Gal(E / K) :=
+    let sigma : Gal(E/K) :=
       maximalLocalKummerNormResidueAutomorphism K n hnK hmu a
     have hsigma : sigma = 1 := by
       apply

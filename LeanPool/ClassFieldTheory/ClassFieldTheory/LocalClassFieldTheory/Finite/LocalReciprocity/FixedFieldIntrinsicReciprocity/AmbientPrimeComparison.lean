@@ -96,9 +96,9 @@ theorem
     ambientEmbeddedExtensionQuotient_finite K F E j e
   let hHabsolute : Finite
       ((baseField
-        Gal(SeparableClosure K / K)).toSubgroup ⧸
+        Gal(SeparableClosure K/K)).toSubgroup ⧸
         extensionSubgroup
-          (baseField Gal(SeparableClosure K / K))
+          (baseField Gal(SeparableClosure K/K))
           H₀ (le_baseField H₀)) := by
     exact ambientEmbeddedAbsoluteQuotientFinite K F i
   let F₀ :=
@@ -248,11 +248,11 @@ theorem
     ambientEmbeddedNormResidueAbelianElement_eq_of_normClass_eq
       K F E j e a x hnormClass
   change
-    (Abelianization.equivOfComm (H := Gal(E / F))).symm
+    (Abelianization.equivOfComm (H := Gal(E/F))).symm
         (localArtinMonoidHom F E a) =
-      (Abelianization.equivOfComm (H := Gal(E / F))).symm
+      (Abelianization.equivOfComm (H := Gal(E/F))).symm
         (ambientEmbeddedNormResidueAbelianElement K F E j e a)
-  apply congrArg (Abelianization.equivOfComm (H := Gal(E / F))).symm
+  apply congrArg (Abelianization.equivOfComm (H := Gal(E/F))).symm
   calc
     localArtinMonoidHom F E a =
         ambientEmbeddedNormResidueAbelianElement K F E j e x :=

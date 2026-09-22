@@ -90,12 +90,12 @@ theorem normQuotientToUnramifiedNormQuotient_surjective :
 
 /-- Cyclicity identifies the unramified Galois group with its abelianization. -/
 noncomputable def galoisGroupEquivAbelianizationOfUnramifiedValuation :
-    Gal(L / K) ≃* Abelianization (Gal(L / K)) := by
-  letI : IsCyclic (Gal(L / K)) :=
+    Gal(L/K) ≃* Abelianization (Gal(L/K)) := by
+  letI : IsCyclic (Gal(L/K)) :=
     isCyclic_galoisGroup_of_unramifiedValuation K L
-  letI : CommGroup (Gal(L / K)) :=
-    IsCyclic.commGroup (α := Gal(L / K))
-  exact Abelianization.equivOfComm (H := Gal(L / K))
+  letI : CommGroup (Gal(L/K)) :=
+    IsCyclic.commGroup (α := Gal(L/K))
+  exact Abelianization.equivOfComm (H := Gal(L/K))
 
 /-- The cyclic Galois-group equivalence is the canonical map to the abelianization. -/
 @[simp]
@@ -107,19 +107,19 @@ theorem galoisGroupEquivAbelianizationOfUnramifiedValuation_apply
 
 noncomputable local instance unramifiedNormComparisonNormQuotientFinite :
     Finite (NormQuotient K L) :=
-  Finite.of_equiv (Gal(L / K))
+  Finite.of_equiv (Gal(L/K))
     ((galoisGroupEquivAbelianizationOfUnramifiedValuation K L).toEquiv.trans
       (abelianizationEquivNormQuotient K L).toEquiv)
 
 private theorem normQuotient_card_eq_finrank :
     Nat.card (NormQuotient K L) = Module.finrank K L := by
-  let : Finite (Abelianization (Gal(L / K))) :=
+  let : Finite (Abelianization (Gal(L/K))) :=
     Finite.of_surjective Abelianization.of QuotientGroup.mk_surjective
   calc
     Nat.card (NormQuotient K L) =
-        Nat.card (Abelianization (Gal(L / K))) :=
+        Nat.card (Abelianization (Gal(L/K))) :=
       Nat.card_congr (abelianizationEquivNormQuotient K L).symm.toEquiv
-    _ = Nat.card (Gal(L / K)) :=
+    _ = Nat.card (Gal(L/K)) :=
       (Nat.card_congr
         (galoisGroupEquivAbelianizationOfUnramifiedValuation K L).toEquiv).symm
     _ = Module.finrank K L :=
@@ -131,7 +131,7 @@ theorem normQuotientToUnramifiedNormQuotient_injective :
       (normQuotientToUnramifiedNormQuotient K L) := by
   let : NeZero (Module.finrank K L) := ⟨Module.finrank_pos.ne'⟩
   let : Finite (NormQuotient K L) :=
-    Finite.of_equiv (Gal(L / K))
+    Finite.of_equiv (Gal(L/K))
       ((galoisGroupEquivAbelianizationOfUnramifiedValuation K L).trans
         (abelianizationEquivNormQuotient K L)).toEquiv
   have hcard :

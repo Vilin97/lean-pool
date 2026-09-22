@@ -14,6 +14,11 @@ exact sequence and packages the algebraic and topological structure of
 the first principal-unit group.
 -/
 
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup renaming
+  toPrincipalUnitFiltration →
+    toPrincipalUnitFiltration
+
+
 noncomputable section
 
 universe u v
@@ -376,7 +381,7 @@ noncomputable def mixedFirstPrincipalUnitFiniteQuotientSetup
   letI : Module.Finite R q := Module.Finite.of_finite
   let projection : M →ₗ[R] q := F.principalUnitQuotientProjectionLinear n
   let U :=
-    LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.toPrincipalUnitFiltration
+    toPrincipalUnitFiltration
     F.toCompleteDVF
   let quotientKernel := (U.principalUnitSubgroup (n + 1)).subgroupOf
     (U.principalUnitSubgroup 1)

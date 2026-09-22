@@ -34,7 +34,6 @@ private noncomputable instance
     [Field F]
     [Field E]
     [Algebra ℚ F] [Algebra F E] [Algebra ℚ E]
-
     :
     CommGroup (TowerRelativeIdeleGroup.ClassGroup ℚ F E) := by
   letI : CommGroup (TowerRelativeIdeleGroup ℚ F E) :=

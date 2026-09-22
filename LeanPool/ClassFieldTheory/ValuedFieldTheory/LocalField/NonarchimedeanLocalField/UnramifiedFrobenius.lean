@@ -132,7 +132,7 @@ noncomputable def arithmeticFrobeniusOfUnramifiedValuation
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L] [Module.Finite 𝒪[K] 𝒪[L]]
     [LocalFieldTheory.IsNonarchimedeanLocalField.IsUnramifiedValuedExtension K L] :
-    Gal(L / K) :=
+    Gal(L/K) :=
   (galoisGroupEquivResidueAlgEquivOfUnramifiedValuationOfIsIntegralClosure K L).symm
     (residueExtensionArithmeticFrobeniusOfValuationExtension K L)
 
@@ -277,7 +277,7 @@ theorem arithmeticFrobeniusOfUnramifiedValuation_apply_primitiveRoot
         (A := 𝒪[L]) (R := 𝒪[K]) (B := L)).1 hζIntegral with
     ⟨a, ha⟩
   change (a : L) = ζ at ha
-  let φ : Gal(L / K) :=
+  let φ : Gal(L/K) :=
     arithmeticFrobeniusOfUnramifiedValuation K L
   let b : 𝒪[L] :=
     galoisGroupIntegerRingEquivOfIsIntegralClosure K L φ a
@@ -369,7 +369,7 @@ theorem arithmeticFrobeniusOfUnramifiedValuation_generates
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L] [Module.Finite 𝒪[K] 𝒪[L]]
     [LocalFieldTheory.IsNonarchimedeanLocalField.IsUnramifiedValuedExtension K L] :
-    ∀ σ : Gal(L / K),
+    ∀ σ : Gal(L/K),
       σ ∈ Subgroup.zpowers (arithmeticFrobeniusOfUnramifiedValuation K L) := by
   intro σ
   let e := galoisGroupEquivResidueAlgEquivOfUnramifiedValuationOfIsIntegralClosure K L
@@ -403,7 +403,7 @@ theorem isCyclic_galoisGroup_of_unramifiedValuation
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L] [Module.Finite 𝒪[K] 𝒪[L]]
     [LocalFieldTheory.IsNonarchimedeanLocalField.IsUnramifiedValuedExtension K L] :
-    IsCyclic Gal(L / K) := by
+    IsCyclic Gal(L/K) := by
   rw [isCyclic_iff_exists_zpowers_eq_top]
   exact ⟨arithmeticFrobeniusOfUnramifiedValuation K L,
     arithmeticFrobeniusOfUnramifiedValuation_zpowers_eq_top K L⟩
@@ -419,7 +419,7 @@ theorem galoisGroup_card_eq_finrank_of_unramifiedValuation
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L] [Module.Finite 𝒪[K] 𝒪[L]]
     [LocalFieldTheory.IsNonarchimedeanLocalField.IsUnramifiedValuedExtension K L] :
-    Nat.card Gal(L / K) = Module.finrank K L := by
+    Nat.card Gal(L/K) = Module.finrank K L := by
   have hcard :=
     orderOf_eq_card_of_zpowers_eq_top
       (arithmeticFrobeniusOfUnramifiedValuation_zpowers_eq_top K L)
@@ -436,11 +436,11 @@ noncomputable def galoisGroupEquivZModOfUnramifiedValuation
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L] [Module.Finite 𝒪[K] 𝒪[L]]
     [LocalFieldTheory.IsNonarchimedeanLocalField.IsUnramifiedValuedExtension K L] :
-    Gal(L / K) ≃* Multiplicative (ZMod (Module.finrank K L)) := by
-  letI : IsCyclic Gal(L / K) :=
+    Gal(L/K) ≃* Multiplicative (ZMod (Module.finrank K L)) := by
+  letI : IsCyclic Gal(L/K) :=
     isCyclic_galoisGroup_of_unramifiedValuation K L
   exact (galoisGroup_card_eq_finrank_of_unramifiedValuation K L) ▸
-    (zmodCyclicMulEquiv (G := Gal(L / K)) inferInstance).symm
+    (zmodCyclicMulEquiv (G := Gal(L/K)) inferInstance).symm
 
 /-- Internal quotient construction for a specified additive generator. The
 public local-field API below supplies `horder` and `hgen` from the already proved
@@ -531,7 +531,7 @@ noncomputable def galoisGroupEquivZModOfUnramifiedValuationNormalized
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L] [Module.Finite 𝒪[K] 𝒪[L]]
     [LocalFieldTheory.IsNonarchimedeanLocalField.IsUnramifiedValuedExtension K L] :
-    Gal(L / K) ≃* Multiplicative (ZMod (Module.finrank K L)) :=
+    Gal(L/K) ≃* Multiplicative (ZMod (Module.finrank K L)) :=
   (zmodCyclicMulEquivOfGenerator
     (arithmeticFrobeniusOfUnramifiedValuation K L)
     (orderOf_arithmeticFrobeniusOfUnramifiedValuation K L)

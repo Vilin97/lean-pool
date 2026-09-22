@@ -9,6 +9,15 @@ import Mathlib.RingTheory.Valuation.RamificationGroup
 import Mathlib.FieldTheory.Normal.Basic
 
 /-! # Unique Ring -/
+
+open _root_.ValuationTheory.DiscreteValuationField.Valuation renaming
+  hasExtension_valuation_of_valuationSubring_pullback →
+    hasExtension_valuation_of_valuationSubring_pullback
+
+open _root_.ValuationTheory.DiscreteValuationField.Valuation renaming
+  valuationSubring_pullback_of_hasExtension_valuation →
+    valuationSubring_pullback_of_hasExtension_valuation
+
 namespace ValuationTheory
 
 /-!
@@ -49,11 +58,11 @@ theorem algEquiv_smul_valuationSubring_hasExtension
       _ ↔ x ∈ V := by
         simpa only [ValuationSubring.mem_toSubring,
           ValuationSubring.valuationSubring_valuation] using
-          (ValuationTheory.DiscreteValuationField.Valuation.valuationSubring_pullback_of_hasExtension_valuation
+          (valuationSubring_pullback_of_hasExtension_valuation
             V.valuation W x)
       _ ↔ x ∈ V.toSubring := (V.mem_toSubring x).symm
   apply
-    ValuationTheory.DiscreteValuationField.Valuation.hasExtension_valuation_of_valuationSubring_pullback
+    hasExtension_valuation_of_valuationSubring_pullback
   intro x
   simpa only [ValuationSubring.mem_toSubring,
     ValuationSubring.valuationSubring_valuation] using hpullback x
@@ -171,7 +180,7 @@ def valuationSubringMapOfHasExtension
   exact (algebraMap K L).restrict V.toSubring W.toSubring (by
     intro x hx
     exact
-      (ValuationTheory.DiscreteValuationField.Valuation.valuationSubring_pullback_of_hasExtension_valuation
+      (valuationSubring_pullback_of_hasExtension_valuation
         V.valuation W x).2 (by
           simpa only [ValuationSubring.valuationSubring_valuation,
             ValuationSubring.mem_toSubring] using hx))

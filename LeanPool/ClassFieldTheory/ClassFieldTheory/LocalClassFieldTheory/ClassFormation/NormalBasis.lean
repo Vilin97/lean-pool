@@ -11,6 +11,19 @@ import Mathlib.LinearAlgebra.Quotient.Pi
 /-! Provides the public declarations in the `LocalClassFieldTheory.ClassFormation.NormalBasis`
   Lean module. -/
 
+open _root_.CyclicCohomology.ProfiniteCohomology.Herbrand renaming
+  herbrandH0_subsingleton_of_addEquiv_rightRegularFunction →
+    herbrandH0_subsingleton_of_addEquiv_rightRegularFunction
+
+open _root_.CyclicCohomology.ProfiniteCohomology.Herbrand renaming
+  herbrandHMinusOne_subsingleton_of_addEquiv_rightRegularFunction →
+    herbrandHMinusOne_subsingleton_of_addEquiv_rightRegularFunction
+
+open _root_.CyclicCohomology.ProfiniteCohomology.Herbrand renaming
+  multiplicativeMulDistribMulActionOfDistribMulAction →
+    multiplicativeMulDistribMulActionOfDistribMulAction
+
+
 namespace LocalClassFieldTheory
 
 open LocalFieldTheory
@@ -43,7 +56,7 @@ theorem span_normalBasis_eq_chosenNormalBasisIntegerLattice :
 This is the coordinate source for the induced-module calculation in the local
 class-field-axiom proof. -/
 noncomputable def chosenNormalBasisIntegerLatticeBasis :
-    Module.Basis Gal(L / K) 𝒪[K] (chosenNormalBasisIntegerLattice K L) :=
+    Module.Basis Gal(L/K) 𝒪[K] (chosenNormalBasisIntegerLattice K L) :=
   ((IsGalois.normalBasis K L).restrictScalars 𝒪[K]).map
     (LinearEquiv.ofEq _ _
       (span_normalBasis_eq_chosenNormalBasisIntegerLattice K L))
@@ -227,16 +240,16 @@ theorem chosenNormalBasisLatticeSuccQuotToIntegerLatticeQuotLinearEquiv_mk_mulPo
 /-- Coordinate functions all of whose values lie in the maximal ideal of
 `𝒪_K`. -/
 def chosenNormalBasisCoordinateMaximalSubmodule :
-    Submodule 𝒪[K] (Gal(L / K) → 𝒪[K]) :=
+    Submodule 𝒪[K] (Gal(L/K) → 𝒪[K]) :=
   Submodule.pi Set.univ (fun _ => (𝓂[K] : Ideal 𝒪[K]))
 
 omit [FiniteDimensional K L] [IsGalois K L] in
 /-- A coordinate function lies in the maximal submodule exactly when every value is nonunit. -/
 @[simp]
 theorem mem_chosenNormalBasisCoordinateMaximalSubmodule_iff
-    (f : Gal(L / K) → 𝒪[K]) :
+    (f : Gal(L/K) → 𝒪[K]) :
     f ∈ chosenNormalBasisCoordinateMaximalSubmodule K L ↔
-      ∀ σ : Gal(L / K), f σ ∈ (𝓂[K] : Ideal 𝒪[K]) := by
+      ∀ σ : Gal(L/K), f σ ∈ (𝓂[K] : Ideal 𝒪[K]) := by
   simp [chosenNormalBasisCoordinateMaximalSubmodule]
 
 /-- Normal-basis coordinates identify the uniformizer submodule with pointwise maximal-ideal
@@ -244,7 +257,7 @@ values. -/
 theorem chosenNormalBasisIntegerLatticeUniformizerSubmodule_map_equivFun :
     (chosenNormalBasisIntegerLatticeUniformizerSubmodule K L).map
         ((chosenNormalBasisIntegerLatticeBasis K L).equivFun :
-          chosenNormalBasisIntegerLattice K L →ₗ[𝒪[K]] (Gal(L / K) → 𝒪[K])) =
+          chosenNormalBasisIntegerLattice K L →ₗ[𝒪[K]] (Gal(L/K) → 𝒪[K])) =
       chosenNormalBasisCoordinateMaximalSubmodule K L := by
   ext f
   constructor
@@ -264,15 +277,15 @@ theorem chosenNormalBasisIntegerLatticeUniformizerSubmodule_map_equivFun :
     rw [hx_eq]
     simp [mul_comm]
   · intro hf
-    have hf' : ∀ σ : Gal(L / K),
+    have hf' : ∀ σ : Gal(L/K),
         ∃ c : 𝒪[K], c * chosenIntegerRingUniformizer K = f σ := by
       intro σ
       have hσ := (Submodule.mem_pi.mp hf) σ (Set.mem_univ σ)
       rw [chosenIntegerRingUniformizer_maximalIdeal_eq,
         Ideal.mem_span_singleton'] at hσ
       exact hσ
-    let c : Gal(L / K) → 𝒪[K] := fun σ => Classical.choose (hf' σ)
-    have hc (σ : Gal(L / K)) :
+    let c : Gal(L/K) → 𝒪[K] := fun σ => Classical.choose (hf' σ)
+    have hc (σ : Gal(L/K)) :
         c σ * chosenIntegerRingUniformizer K = f σ :=
       Classical.choose_spec (hf' σ)
     let z : chosenNormalBasisIntegerLattice K L :=
@@ -302,7 +315,7 @@ maximal-ideal quotient. -/
 noncomputable def chosenNormalBasisIntegerLatticeQuotCoordinateQuotLinearEquiv :
     (chosenNormalBasisIntegerLattice K L ⧸
         chosenNormalBasisIntegerLatticeUniformizerSubmodule K L) ≃ₗ[𝒪[K]]
-      ((Gal(L / K) → 𝒪[K]) ⧸ chosenNormalBasisCoordinateMaximalSubmodule K L) :=
+      ((Gal(L/K) → 𝒪[K]) ⧸ chosenNormalBasisCoordinateMaximalSubmodule K L) :=
   Submodule.Quotient.equiv
     (chosenNormalBasisIntegerLatticeUniformizerSubmodule K L)
     (chosenNormalBasisCoordinateMaximalSubmodule K L)
@@ -312,27 +325,27 @@ noncomputable def chosenNormalBasisIntegerLatticeQuotCoordinateQuotLinearEquiv :
 /-- Quotienting coordinate functions by the pointwise maximal ideal is the
 function space with values in `𝒪_K / 𝓂_K`. -/
 noncomputable def chosenNormalBasisCoordinateQuotPiLinearEquiv :
-    ((Gal(L / K) → 𝒪[K]) ⧸ chosenNormalBasisCoordinateMaximalSubmodule K L) ≃ₗ[𝒪[K]]
-      (Gal(L / K) → (𝒪[K] ⧸ (𝓂[K] : Ideal 𝒪[K]))) := by
+    ((Gal(L/K) → 𝒪[K]) ⧸ chosenNormalBasisCoordinateMaximalSubmodule K L) ≃ₗ[𝒪[K]]
+      (Gal(L/K) → (𝒪[K] ⧸ (𝓂[K] : Ideal 𝒪[K]))) := by
   classical
-  exact Submodule.quotientPi (fun _ : Gal(L / K) => (𝓂[K] : Ideal 𝒪[K]))
+  exact Submodule.quotientPi (fun _ : Gal(L/K) => (𝓂[K] : Ideal 𝒪[K]))
 
 omit [IsGalois K L] in
 /-- The coordinate quotient equivalence sends a representative to its pointwise residue classes. -/
 @[simp]
 theorem chosenNormalBasisCoordinateQuotPiLinearEquiv_mk
-    (f : Gal(L / K) → 𝒪[K]) :
+    (f : Gal(L/K) → 𝒪[K]) :
     chosenNormalBasisCoordinateQuotPiLinearEquiv K L
         (Submodule.Quotient.mk f) =
-      fun σ : Gal(L / K) => Submodule.Quotient.mk (f σ) :=
+      fun σ : Gal(L/K) => Submodule.Quotient.mk (f σ) :=
   rfl
 
 /-- Apply `𝒪_K / 𝓂_K ≃ 𝓀_K` pointwise and reverse the Galois index.  The
 inverse index converts the natural left-regular coordinate rule into the
 right-regular convention used in the Herbrand calculation. -/
 def chosenNormalBasisPiResidueInverseIndexAddEquiv :
-    (Gal(L / K) → (𝒪[K] ⧸ (𝓂[K] : Ideal 𝒪[K]))) ≃+
-      (Gal(L / K) → 𝓀[K]) where
+    (Gal(L/K) → (𝒪[K] ⧸ (𝓂[K] : Ideal 𝒪[K]))) ≃+
+      (Gal(L/K) → 𝓀[K]) where
   toFun f σ := integerRingModMaximalIdealAddEquivResidue K (f σ⁻¹)
   invFun f σ := (integerRingModMaximalIdealAddEquivResidue K).symm (f σ⁻¹)
   left_inv := by
@@ -352,7 +365,7 @@ omit [FiniteDimensional K L] [IsGalois K L] in
 /-- The inverse-index equivalence evaluates a residue function at the inverse Galois element. -/
 @[simp]
 theorem chosenNormalBasisPiResidueInverseIndexAddEquiv_apply
-    (f : Gal(L / K) → (𝒪[K] ⧸ (𝓂[K] : Ideal 𝒪[K])))
+    (f : Gal(L/K) → (𝒪[K] ⧸ (𝓂[K] : Ideal 𝒪[K])))
     (σ : Gal(L/K)) :
     chosenNormalBasisPiResidueInverseIndexAddEquiv K L f σ =
       integerRingModMaximalIdealAddEquivResidue K (f σ⁻¹) :=
@@ -362,7 +375,7 @@ theorem chosenNormalBasisPiResidueInverseIndexAddEquiv_apply
 `π_K^n M / π_K^(n+1) M` as the right-regular function module over the residue
 field. -/
 noncomputable def chosenNormalBasisLatticeSuccQuotRightRegularAddEquiv (n : Nat) :
-    chosenNormalBasisLatticeSuccQuot K L n ≃+ (Gal(L / K) → 𝓀[K]) :=
+    chosenNormalBasisLatticeSuccQuot K L n ≃+ (Gal(L/K) → 𝓀[K]) :=
   (chosenNormalBasisLatticeSuccQuotToIntegerLatticeQuotLinearEquiv K L n).toAddEquiv.trans
     ((chosenNormalBasisIntegerLatticeQuotCoordinateQuotLinearEquiv K L).toAddEquiv.trans
       ((chosenNormalBasisCoordinateQuotPiLinearEquiv K L).toAddEquiv.trans
@@ -378,9 +391,13 @@ theorem chosenNormalBasisLatticeSuccQuotRightRegularAddEquiv_mk_mulPow
       IsLocalRing.residue 𝒪[K]
         ((chosenNormalBasisIntegerLatticeBasis K L).equivFun x σ⁻¹) := by
   rw [chosenNormalBasisLatticeSuccQuotRightRegularAddEquiv]
-  simp [chosenNormalBasisIntegerLatticeQuotCoordinateQuotLinearEquiv,
-    chosenNormalBasisCoordinateQuotPiLinearEquiv,
-    chosenNormalBasisPiResidueInverseIndexAddEquiv]
+  simp only [chosenNormalBasisIntegerLatticeQuotCoordinateQuotLinearEquiv,
+    chosenNormalBasisCoordinateQuotPiLinearEquiv, chosenNormalBasisPiResidueInverseIndexAddEquiv,
+    AddEquiv.trans_apply, AddEquiv.coe_mk, AddHom.toFun_eq_coe, LinearMap.coe_toAddHom,
+    LinearEquiv.coe_coe, LinearEquiv.invFun_eq_symm, Equiv.coe_fn_mk,
+    chosenNormalBasisLatticeSuccQuotToIntegerLatticeQuotLinearEquiv_mk_mulPow,
+    Submodule.Quotient.equiv_symm, Submodule.Quotient.equiv_apply, Submodule.mapQ_apply,
+    Module.Basis.equivFun_apply]
   change integerRingModMaximalIdealAddEquivResidue K
       (Ideal.Quotient.mk (𝓂[K] : Ideal 𝒪[K])
         ((chosenNormalBasisIntegerLatticeBasis K L).equivFun x σ⁻¹)) = _
@@ -448,7 +465,6 @@ theorem galoisGroupChosenNormalBasisIntegerLatticeLinearEquiv_mul_apply
   rfl
 
 omit [TopologicalSpace K] [IsNonarchimedeanLocalField K] in
-
 /-- Normal-basis lattice coordinates obey the left-regular rule before the
 inverse-index reindexing. -/
 theorem chosenNormalBasisIntegerLatticeBasis_equivFun_galoisGroup
@@ -458,7 +474,7 @@ theorem chosenNormalBasisIntegerLatticeBasis_equivFun_galoisGroup
       (chosenNormalBasisIntegerLatticeBasis K L).equivFun x (τ⁻¹ * σ) := by
   let b := chosenNormalBasisIntegerLatticeBasis K L
   let f := galoisGroupChosenNormalBasisIntegerLatticeLinearEquiv K L τ
-  let e : Gal(L / K) ≃ Gal(L / K) := Equiv.mulLeft τ⁻¹
+  let e : Gal(L/K) ≃ Gal(L/K) := Equiv.mulLeft τ⁻¹
   have hbmap : b.map f = b.reindex e := by
     ext ρ
     rw [Module.Basis.map_apply, Module.Basis.reindex_apply]
@@ -470,7 +486,7 @@ theorem chosenNormalBasisIntegerLatticeBasis_equivFun_galoisGroup
     rw [IsGalois.normalBasis_apply (K := K) (L := L) (τ * ρ),
       IsGalois.normalBasis_apply (K := K) (L := L) ρ]
     rfl
-  have hcoord (ρ : Gal(L / K)) :
+  have hcoord (ρ : Gal(L/K)) :
       b.equivFun (f x) (τ * ρ) = b.equivFun x ρ := by
     calc
       b.equivFun (f x) (τ * ρ) =
@@ -625,7 +641,7 @@ the actual action on the extension field. -/
 @[implicit_reducible]
 noncomputable def galoisGroupChosenNormalBasisLatticeSuccQuotDistribMulAction
     (n : Nat) :
-    DistribMulAction Gal(L / K) (chosenNormalBasisLatticeSuccQuot K L n) where
+    DistribMulAction Gal(L/K) (chosenNormalBasisLatticeSuccQuot K L n) where
   smul τ q := galoisGroupChosenNormalBasisLatticeSuccQuotAddEquiv K L n τ q
   one_smul := by
     intro q
@@ -677,8 +693,8 @@ theorem galoisGroupChosenNormalBasisLatticeSuccQuotDistribMulAction_smul_mk_mulP
 /-- The inverse-indexed residue coordinates intertwine the Galois
 action with the pointwise right-regular action. -/
 theorem chosenNormalBasisLatticeSuccQuotRightRegularAddEquiv_commutes
-    (n : Nat) (τ : Gal(L / K))
-    (q : chosenNormalBasisLatticeSuccQuot K L n) (σ : Gal(L / K)) :
+    (n : Nat) (τ : Gal(L/K))
+    (q : chosenNormalBasisLatticeSuccQuot K L n) (σ : Gal(L/K)) :
     letI := galoisGroupChosenNormalBasisLatticeSuccQuotDistribMulAction K L n
     chosenNormalBasisLatticeSuccQuotRightRegularAddEquiv K L n (τ • q) σ =
       chosenNormalBasisLatticeSuccQuotRightRegularAddEquiv K L n q (σ * τ) := by
@@ -705,14 +721,14 @@ piece. -/
 theorem chosenNormalBasisLatticeSuccQuot_herbrandH0_subsingleton (n : Nat) :
     letI := galoisGroupChosenNormalBasisLatticeSuccQuotDistribMulAction K L n
     letI :=
-      CyclicCohomology.ProfiniteCohomology.Herbrand.multiplicativeMulDistribMulActionOfDistribMulAction
-        Gal(L / K) (chosenNormalBasisLatticeSuccQuot K L n)
+      multiplicativeMulDistribMulActionOfDistribMulAction
+        Gal(L/K) (chosenNormalBasisLatticeSuccQuot K L n)
     Subsingleton (CyclicCohomology.ProfiniteCohomology.Herbrand.HerbrandH0
-      Gal(L / K) (Multiplicative (chosenNormalBasisLatticeSuccQuot K L n))) := by
+      Gal(L/K) (Multiplicative (chosenNormalBasisLatticeSuccQuot K L n))) := by
   let := galoisGroupChosenNormalBasisLatticeSuccQuotDistribMulAction K L n
   exact
-    CyclicCohomology.ProfiniteCohomology.Herbrand.herbrandH0_subsingleton_of_addEquiv_rightRegularFunction
-      (G := Gal(L / K)) (M := chosenNormalBasisLatticeSuccQuot K L n) (D := 𝓀[K])
+    herbrandH0_subsingleton_of_addEquiv_rightRegularFunction
+      (G := Gal(L/K)) (M := chosenNormalBasisLatticeSuccQuot K L n) (D := 𝓀[K])
       (chosenNormalBasisLatticeSuccQuotRightRegularAddEquiv K L n)
       (chosenNormalBasisLatticeSuccQuotRightRegularAddEquiv_commutes K L n)
 
@@ -720,17 +736,17 @@ theorem chosenNormalBasisLatticeSuccQuot_herbrandH0_subsingleton (n : Nat) :
 graded piece. -/
 theorem chosenNormalBasisLatticeSuccQuot_herbrandHMinusOne_subsingleton
     (n : Nat) (τ : Gal(L/K))
-    (hgen : ∀ g : Gal(L / K), g ∈ Subgroup.zpowers τ) :
+    (hgen : ∀ g : Gal(L/K), g ∈ Subgroup.zpowers τ) :
     letI := galoisGroupChosenNormalBasisLatticeSuccQuotDistribMulAction K L n
     letI :=
-      CyclicCohomology.ProfiniteCohomology.Herbrand.multiplicativeMulDistribMulActionOfDistribMulAction
-        Gal(L / K) (chosenNormalBasisLatticeSuccQuot K L n)
+      multiplicativeMulDistribMulActionOfDistribMulAction
+        Gal(L/K) (chosenNormalBasisLatticeSuccQuot K L n)
     Subsingleton (CyclicCohomology.ProfiniteCohomology.Herbrand.HerbrandHMinusOne
-      Gal(L / K) (Multiplicative (chosenNormalBasisLatticeSuccQuot K L n)) τ) := by
+      Gal(L/K) (Multiplicative (chosenNormalBasisLatticeSuccQuot K L n)) τ) := by
   let := galoisGroupChosenNormalBasisLatticeSuccQuotDistribMulAction K L n
   exact
-    CyclicCohomology.ProfiniteCohomology.Herbrand.herbrandHMinusOne_subsingleton_of_addEquiv_rightRegularFunction
-      (G := Gal(L / K)) (M := chosenNormalBasisLatticeSuccQuot K L n) (D := 𝓀[K])
+    herbrandHMinusOne_subsingleton_of_addEquiv_rightRegularFunction
+      (G := Gal(L/K)) (M := chosenNormalBasisLatticeSuccQuot K L n) (D := 𝓀[K])
       τ hgen (chosenNormalBasisLatticeSuccQuotRightRegularAddEquiv K L n)
       (chosenNormalBasisLatticeSuccQuotRightRegularAddEquiv_commutes K L n)
 

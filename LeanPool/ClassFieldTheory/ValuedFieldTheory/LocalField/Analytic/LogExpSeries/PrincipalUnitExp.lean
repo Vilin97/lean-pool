@@ -10,6 +10,11 @@ Restricts the exponential series to deep additive ideals and shows that its valu
 corresponding principal-unit subgroups.
 -/
 
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup renaming
+  principalUnitOneAddOfMemPowSubgroup →
+    principalUnitOneAddOfMemPowSubgroup
+
+
 open Filter
 open Polynomial
 open scoped Topology
@@ -63,7 +68,7 @@ noncomputable def principalUnitExpSeriesOfWithZeroValuation
       exact hlt
     simpa [pow_one] using ha0
   exact
-    LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.principalUnitOneAddOfMemPowSubgroup
+    principalUnitOneAddOfMemPowSubgroup
       F (n := 1) le_rfl a ha
 
 /-- Sharp ramified endpoint form of the exponential: if `a ∈ m^n` and
@@ -158,7 +163,7 @@ noncomputable def principalUnitExpSeriesOfMaximalIdealPowOfWithZeroValuationScal
       rw [hvaleq]
       exact hge
   exact
-    LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.principalUnitOneAddOfMemPowSubgroup
+    principalUnitOneAddOfMemPowSubgroup
       F hn b hbmem
 
 /--

@@ -144,7 +144,7 @@ theorem
     padicCompletedChangedUniformizerRelativeArtinCandidate p u n
   let σ :=
     padicCompletedChangedUniformizerArtinCandidate p u n
-  let forget : Gal(M / D) →* Gal(M / ℚ_[p]) :=
+  let forget : Gal(M/D) →* Gal(M/ℚ_[p]) :=
     AlgEquiv.restrictScalarsHom ℚ_[p]
   apply top_unique
   intro g _

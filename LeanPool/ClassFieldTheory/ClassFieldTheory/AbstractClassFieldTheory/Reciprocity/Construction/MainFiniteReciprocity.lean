@@ -1019,7 +1019,6 @@ class is bijective: the prime class generates the norm quotient, and both
 finite groups have order `[L : K]`. -/
 theorem unramifiedReciprocity_bijective_of_generator
     (v : ValuationData D A) (hAxiom : SatisfiesUnramifiedUnitCohomology D v)
-
     (K : FiniteAbstractField G) (L : ClosedSubgroup G)
     (hLK : L.toSubgroup ≤ K.field.toSubgroup)
     [hnormal : (extensionSubgroup K.field L hLK).Normal]

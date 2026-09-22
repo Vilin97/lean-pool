@@ -185,15 +185,15 @@ theorem standardLubinTateRealUpperRamificationGroup_eq_restrictKer
       IsScalarTower.of_algebraMap_eq' rfl
     change Function.Surjective
       (AlgEquiv.restrictNormalHom E :
-        Gal(L / K) →* Gal(E / K))
+        Gal(L/K) →* Gal(E/K))
     exact
       AlgEquiv.restrictNormalHom_surjective
         (F := K) (K₁ := E) (E := L)
   let q := Nat.card F.residueField
   have hcardGalE :
-      Nat.card (Gal(E / K)) = (q - 1) * q ^ m := by
+      Nat.card (Gal(E/K)) = (q - 1) * q ^ m := by
     calc
-      Nat.card (Gal(E / K)) =
+      Nat.card (Gal(E/K)) =
           Module.finrank K E := by
             simpa [E] using
               standardLubinTateLevelField_natCard_gal
@@ -203,9 +203,9 @@ theorem standardLubinTateRealUpperRamificationGroup_eq_restrictKer
               standardLubinTateLevelField_finrank
                 (F := F) hπ m
   have hcardGalL :
-      Nat.card (Gal(L / K)) = (q - 1) * q ^ n := by
+      Nat.card (Gal(L/K)) = (q - 1) * q ^ n := by
     calc
-      Nat.card (Gal(L / K)) =
+      Nat.card (Gal(L/K)) =
           Module.finrank K L := by
             simpa [L] using
               standardLubinTateLevelField_natCard_gal
@@ -215,13 +215,13 @@ theorem standardLubinTateRealUpperRamificationGroup_eq_restrictKer
               standardLubinTateLevelField_finrank
                 (F := F) hπ n
   have hindex :
-      ψ.ker.index = Nat.card (Gal(E / K)) := by
+      ψ.ker.index = Nat.card (Gal(E/K)) := by
     rw [Subgroup.index_ker,
       ψ.range_eq_top_of_surjective hψ_surjective,
       Subgroup.card_top]
   have hcardKerMul :
-      Nat.card ψ.ker * Nat.card (Gal(E / K)) =
-        Nat.card (Gal(L / K)) := by
+      Nat.card ψ.ker * Nat.card (Gal(E/K)) =
+        Nat.card (Gal(L/K)) := by
     rw [← hindex]
     exact Subgroup.card_mul_index ψ.ker
   rw [hcardGalE, hcardGalL] at hcardKerMul

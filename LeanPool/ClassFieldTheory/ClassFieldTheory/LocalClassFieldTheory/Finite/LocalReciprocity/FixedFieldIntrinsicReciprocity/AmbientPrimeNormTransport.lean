@@ -359,7 +359,7 @@ theorem
       ((baseField
         Gal(SeparableClosure K/K)).toSubgroup ⧸
         extensionSubgroup
-          (baseField Gal(SeparableClosure K / K))
+          (baseField Gal(SeparableClosure K/K))
           H (le_baseField H))]
     (p : (abstractRelativeFixedField
       K (SeparableClosure K) hLH)ˣ)
@@ -414,9 +414,9 @@ theorem
     (K : Type) [Field K] [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K]
     (H : FiniteAbstractField
-      Gal(SeparableClosure K / K))
+      Gal(SeparableClosure K/K))
     (J : ClosedSubgroup
-      Gal(SeparableClosure K / K))
+      Gal(SeparableClosure K/K))
     (hJH : J.toSubgroup ≤ H.field.toSubgroup)
     [hJnormal :
       (extensionSubgroup H.field J hJH).Normal]
@@ -470,9 +470,9 @@ theorem
   intro p x hprime hnorm
   let hHabsolute : Finite
       ((baseField
-        Gal(SeparableClosure K / K)).toSubgroup ⧸
+        Gal(SeparableClosure K/K)).toSubgroup ⧸
         extensionSubgroup
-          (baseField Gal(SeparableClosure K / K))
+          (baseField Gal(SeparableClosure K/K))
           H.field (le_baseField H.field)) :=
     H.finite
   let S :=
@@ -493,7 +493,7 @@ theorem
       (H.toFiniteResidueAbstractField (localResidueDatum K))
       J hJH sigma
   let SigmaS : FiniteAbstractField
-      Gal(SeparableClosure K / K) :=
+      Gal(SeparableClosure K/K) :=
     ⟨S, hSabsolute⟩
   let pi : ambientFixedAddSubgroup
       (galoisAmbientUnitsRep K (SeparableClosure K)) S :=
@@ -557,9 +557,9 @@ theorem
     [ValuativeRel L] [TopologicalSpace L]
     [IsNonarchimedeanLocalField L]
     (H : FiniteAbstractField
-      Gal(SeparableClosure K / K))
+      Gal(SeparableClosure K/K))
     (J : ClosedSubgroup
-      Gal(SeparableClosure K / K))
+      Gal(SeparableClosure K/K))
     (hJH : J.toSubgroup ≤ H.field.toSubgroup)
     [hJnormal :
       (extensionSubgroup H.field J hJH).Normal]
@@ -652,7 +652,7 @@ theorem
   let pH :=
     Units.mapEquiv phi.toMulEquiv pF
   let SigmaH : FiniteAbstractField
-      Gal(SeparableClosure K / K) :=
+      Gal(SeparableClosure K/K) :=
     ⟨(localResidueDatum K).frobeniusFixedField
         (H.toFiniteResidueAbstractField (localResidueDatum K))
         J hJH sigma,

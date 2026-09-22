@@ -140,7 +140,6 @@ theorem equalCharacteristicLubinTatePrimitivePolynomial_natDegree
 distinguished endomorphism. -/
 theorem equalCharacteristicLubinTatePiPolynomial_eval₂
     (F : LocalField.{u, v} K)
-
     {A : Type*} [Field A] [CharP A F.residueCharacteristic]
     (φ : F.residueField⸨X⸩ →+* A) (x : A) :
     Polynomial.eval₂ φ x (equalCharacteristicLubinTatePiPolynomial F) =
@@ -329,7 +328,6 @@ closure.  Separability of this polynomial is established below before the
 root is used to define the level field. -/
 theorem exists_equalCharacteristicLubinTatePrimitivePolynomial_root
     (F : LocalField.{u, v} K)
-
     (n : ℕ) :
     ∃ x : SeparableClosure F.residueField⸨X⸩,
       ((equalCharacteristicLubinTatePrimitivePolynomial F n).map

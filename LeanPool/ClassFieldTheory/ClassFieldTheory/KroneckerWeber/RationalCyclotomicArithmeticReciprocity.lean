@@ -135,7 +135,7 @@ theorem
           (rationalPrimeArithmeticFrobeniusLocalInput q)) := by
   let n : ℕ+ := ⟨m, NeZero.pos m⟩
   let g : IdeleClassGroup ℚ →*
-      Gal(KummerTheory.rationalCyclotomicLevel n / ℚ) :=
+      Gal(KummerTheory.rationalCyclotomicLevel n/ℚ) :=
     globalNormResidueMonoidHom ℚ (KummerTheory.rationalCyclotomicLevel n)
   let i : ((RayClass.rationalPrime q).adicCompletion ℚ)ˣ →*
       IdeleClassGroup ℚ :=
@@ -186,13 +186,13 @@ noncomputable def
     :
     Gal(
         KummerTheory.rationalCyclotomicLevel
-          ⟨m, NeZero.pos m⟩ / ℚ) ≃ₜ*
+          ⟨m, NeZero.pos m⟩/ℚ) ≃ₜ*
       RayClass.RayClassGroup (RayClass.rationalModulus m) := by
   exact
     (commutativeGroupInversionContinuousMulEquiv
       (Gal(
         KummerTheory.rationalCyclotomicLevel
-          ⟨m, NeZero.pos m⟩ / ℚ))).trans
+          ⟨m, NeZero.pos m⟩/ℚ))).trans
       (rationalCyclotomicLevelGaloisContinuousMulEquivRayClassGroup m)
 
 open scoped Classical in

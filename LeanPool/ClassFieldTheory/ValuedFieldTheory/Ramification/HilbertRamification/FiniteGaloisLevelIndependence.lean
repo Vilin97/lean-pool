@@ -15,6 +15,11 @@ filtration formed from the chosen integral-closure target with the filtration
 formed from any other complete-DVF target extending the base valuation.
 -/
 
+open _root_.RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration renaming
+  inverseHerbrandFunction →
+    inverseHerbrandFunction
+
+
 noncomputable section
 
 universe u v w x y z
@@ -167,7 +172,6 @@ theorem lowerRamificationFiltration_eq_of_valuationSubring_eq
 /-- Herbrand functions are unchanged when the two target valuations have the
 same valuation ring. -/
 theorem herbrandFunction_eq_of_valuationSubring_eq
-
     (huniq : RamificationTheory.DiscreteValuationField.DVF.HasUniqueValuationExtension.{u, v, w,
       x, x} base target)
     (huniq' : RamificationTheory.DiscreteValuationField.DVF.HasUniqueValuationExtension.{u, v,
@@ -189,7 +193,6 @@ theorem herbrandFunction_eq_of_valuationSubring_eq
 /-- Inverse Herbrand functions are unchanged when the two target valuations
 have the same valuation ring. -/
 theorem inverseHerbrandFunction_eq_of_valuationSubring_eq
-
     (huniq : RamificationTheory.DiscreteValuationField.DVF.HasUniqueValuationExtension.{u, v, w,
       x, x} base target)
     (huniq' : RamificationTheory.DiscreteValuationField.DVF.HasUniqueValuationExtension.{u, v,
@@ -205,7 +208,7 @@ theorem inverseHerbrandFunction_eq_of_valuationSubring_eq
       huniq huniq' hvaluationSubring
   exact congrArg
     (fun F =>
-      RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.inverseHerbrandFunction F)
+      inverseHerbrandFunction F)
     hF
 
 /-- Upper ramification groups are unchanged when the two target valuations

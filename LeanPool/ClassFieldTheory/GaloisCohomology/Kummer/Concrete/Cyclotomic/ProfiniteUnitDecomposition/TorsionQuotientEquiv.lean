@@ -9,6 +9,11 @@ import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.Cyclotomic.Pro
 # Torsion quotients of a profinite-integer product decomposition
 -/
 
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup renaming
+  continuousMulEquivOfCompactToT2 →
+    continuousMulEquivOfCompactToT2
+
+
 open scoped Topology
 
 noncomputable section
@@ -97,7 +102,7 @@ noncomputable def torsionQuotientEquivOfZHatMulDecomposition
       (QuotientGroup.quotientKerEquivOfSurjective
         freePart hsurj)
   exact
-    LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.continuousMulEquivOfCompactToT2
+    continuousMulEquivOfCompactToT2
         e
         (by
           rw [←

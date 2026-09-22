@@ -115,7 +115,7 @@ theorem norm_oneAdd_sub_galoisSum_mem_next
           (principalUnitsNormOfUnramifiedValuationOfIsIntegralClosure K L n
             (principalUnitOneAddOfMemPowSubgroup L hn (a : 𝒪[L]) a.2)) :
         principalUnits L n) : 𝒪[L]ˣ) : 𝒪[L]) - 1 -
-      (Finset.univ.sum fun σ : Gal(L / K) =>
+      (Finset.univ.sum fun σ : Gal(L/K) =>
         galoisGroupIntegerRingEquivOfIsIntegralClosure K L σ (a : 𝒪[L])) ∈
         (𝓂[L] ^ (n + 1) : Ideal 𝒪[L]) := by
   rw [principalUnitsMap_normOfUnramifiedValuationOfIsIntegralClosure_eq_normExtensionSide
@@ -184,7 +184,7 @@ theorem principalUnitsSuccQuotMap_normOfUnramifiedValuationOfIsIntegralClosure_o
     [LocalFieldTheory.IsNonarchimedeanLocalField.IsUnramifiedValuedExtension K L]
     (n : Nat) (hn : 1 ≤ n) (a : (𝓂[L] ^ n : Ideal 𝒪[L])) :
     let b : (𝓂[L] ^ n : Ideal 𝒪[L]) :=
-      ⟨Finset.univ.sum fun σ : Gal(L / K) =>
+      ⟨Finset.univ.sum fun σ : Gal(L/K) =>
           galoisGroupIntegerRingEquivOfIsIntegralClosure K L σ (a : 𝒪[L]),
         by
           classical

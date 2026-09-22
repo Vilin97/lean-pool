@@ -34,7 +34,7 @@ theorem map_fixedFieldFiniteNormSubgroup_eq_additiveNormSubgroup
       (K.toSubgroup ⧸ extensionSubgroup K L hLK)]
     [hKabsolute : Finite
       ((baseField Gal(Ω/k)).toSubgroup ⧸
-        extensionSubgroup (baseField Gal(Ω / k)) K
+        extensionSubgroup (baseField Gal(Ω/k)) K
           (le_baseField K))] :
     (finiteNormSubgroup (galoisAmbientUnitsRep k Ω) K L hLK).map
         (abstractFixedFieldUnitsEquivGaloisFixed
@@ -101,7 +101,7 @@ noncomputable def fixedFieldFiniteNormQuotientEquivNormQuotient
       (K.toSubgroup ⧸ extensionSubgroup K L hLK)]
     [hKabsolute : Finite
       ((baseField Gal(Ω/k)).toSubgroup ⧸
-        extensionSubgroup (baseField Gal(Ω / k)) K
+        extensionSubgroup (baseField Gal(Ω/k)) K
           (le_baseField K))] :
     FiniteNormQuotient (galoisAmbientUnitsRep k Ω) K L hLK ≃+
       Additive
@@ -193,7 +193,7 @@ theorem fixedFieldFiniteNormQuotientEquivNormQuotient_finiteNormClass
       (K.toSubgroup ⧸ extensionSubgroup K L hLK)]
     [hKabsolute : Finite
       ((baseField Gal(Ω/k)).toSubgroup ⧸
-        extensionSubgroup (baseField Gal(Ω / k)) K
+        extensionSubgroup (baseField Gal(Ω/k)) K
           (le_baseField K))]
     (a : ambientFixedAddSubgroup (galoisAmbientUnitsRep k Ω) K) :
     fixedFieldFiniteNormQuotientEquivNormQuotient
@@ -254,7 +254,7 @@ theorem abstractFixedFieldNormResidueSymbol_apply_primeNorm
       (K.toSubgroup ⧸ extensionSubgroup K L hLK)]
     [hKabsolute : Finite
       ((baseField Gal(Ω/k)).toSubgroup ⧸
-        extensionSubgroup (baseField Gal(Ω / k)) K
+        extensionSubgroup (baseField Gal(Ω/k)) K
           (le_baseField K))]
     (q : K.toSubgroup ⧸ extensionSubgroup K L hLK)
     (σ : D.FrobeniusElements
@@ -269,7 +269,7 @@ theorem abstractFixedFieldNormResidueSymbol_apply_primeNorm
           Gal(Ω/k)).toFiniteResidueAbstractField D)
         L hLK σ))
     (hπ :
-      let KF : FiniteAbstractField Gal(Ω / k) :=
+      let KF : FiniteAbstractField Gal(Ω/k) :=
         ⟨K, hKabsolute⟩
       let KR := KF.toFiniteResidueAbstractField D
       let S := D.frobeniusFixedField KR L hLK σ
@@ -277,10 +277,10 @@ theorem abstractFixedFieldNormResidueSymbol_apply_primeNorm
       letI : Finite
           (K.toSubgroup ⧸ extensionSubgroup K S hSK) :=
         D.frobeniusFixedField_finite KR L hLK σ
-      let Sigma : FiniteAbstractField Gal(Ω / k) :=
+      let Sigma : FiniteAbstractField Gal(Ω/k) :=
         ⟨S, D.frobeniusFixedField_absoluteFinite KF L hLK σ⟩
       v.IsPrimeElement Sigma π) :
-    let KF : FiniteAbstractField Gal(Ω / k) :=
+    let KF : FiniteAbstractField Gal(Ω/k) :=
       ⟨K, hKabsolute⟩
     let KR := KF.toFiniteResidueAbstractField D
     let S := D.frobeniusFixedField KR L hLK σ
@@ -300,7 +300,7 @@ theorem abstractFixedFieldNormResidueSymbol_apply_primeNorm
           k Ω K L hLK hnormal).abelianizationCongr
           (Abelianization.of q)) := by
   dsimp only
-  let KF : FiniteAbstractField Gal(Ω / k) :=
+  let KF : FiniteAbstractField Gal(Ω/k) :=
     ⟨K, hKabsolute⟩
   let E : FiniteGaloisSubextension KF.field :=
     ⟨L, hLK, hnormal, hfinite⟩
@@ -366,7 +366,7 @@ theorem abstractFixedFieldNormResidueSymbol_eq_of_normClass_eq
       (K.toSubgroup ⧸ extensionSubgroup K L hLK)]
     [hKabsolute : Finite
       ((baseField Gal(Ω/k)).toSubgroup ⧸
-        extensionSubgroup (baseField Gal(Ω / k)) K
+        extensionSubgroup (baseField Gal(Ω/k)) K
           (le_baseField K))]
     (x y : (abstractFixedField k Ω K)ˣ)
     (hxy :
@@ -404,7 +404,7 @@ theorem abstractFixedFieldNormResidueSymbol_eq_of_normClass_eq
         (D.normResidueSymbol
           (galoisAmbientUnitsRep k Ω) v hcf
           (⟨K, hKabsolute⟩ : FiniteAbstractField
-            Gal(Ω / k))
+            Gal(Ω/k))
           (⟨L, hLK, hnormal, hfinite⟩ :
             FiniteGaloisSubextension K)
           (finiteNormClass (galoisAmbientUnitsRep k Ω)
@@ -415,7 +415,7 @@ theorem abstractFixedFieldNormResidueSymbol_eq_of_normClass_eq
         (D.normResidueSymbol
           (galoisAmbientUnitsRep k Ω) v hcf
           (⟨K, hKabsolute⟩ : FiniteAbstractField
-            Gal(Ω / k))
+            Gal(Ω/k))
           (⟨L, hLK, hnormal, hfinite⟩ :
             FiniteGaloisSubextension K)
           (finiteNormClass (galoisAmbientUnitsRep k Ω)
@@ -428,8 +428,8 @@ equivalence. -/
 theorem fixedFieldQuotientEquiv_mk_compatibility
     (K : Type) [Field K]
     (H : FiniteAbstractField
-      Gal(SeparableClosure K / K))
-    (J : ClosedSubgroup Gal(SeparableClosure K / K))
+      Gal(SeparableClosure K/K))
+    (J : ClosedSubgroup Gal(SeparableClosure K/K))
     (hJH : J.toSubgroup ≤ H.field.toSubgroup)
     [hJnormal : (extensionSubgroup H.field J hJH).Normal]
     [hJfinite : Finite
@@ -449,7 +449,7 @@ theorem fixedFieldQuotientEquiv_mk_compatibility
     let i : E →ₐ[F] SeparableClosure F :=
       e.symm.toAlgHom.comp E.val
     let φ :
-        Gal(SeparableClosure F / F) ≃*
+        Gal(SeparableClosure F/F) ≃*
           H.field.toSubgroup :=
       (AlgEquiv.autCongr e).trans
         (abstractSubgroupEquivGaloisGroup
@@ -474,7 +474,7 @@ theorem fixedFieldQuotientEquiv_mk_compatibility
   let i : E →ₐ[F] SeparableClosure F :=
     e.symm.toAlgHom.comp E.val
   let φ :
-      Gal(SeparableClosure F / F) ≃*
+      Gal(SeparableClosure F/F) ≃*
         H.field.toSubgroup :=
     (AlgEquiv.autCongr e).trans
       (abstractSubgroupEquivGaloisGroup

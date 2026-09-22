@@ -37,13 +37,13 @@ noncomputable def mathlibIdeleClassConnectedQuotientEquivAbelianization
   let e₁ : ClassFieldTheory.IdeleClassConnectedQuotient K ≃ₜ*
       ideleClassComponentQuotient K := compEquiv.symm
   let e₂ : ideleClassComponentQuotient K ≃ₜ*
-      Gal(maximalAbelianExtension K / K) :=
+      Gal(maximalAbelianExtension K/K) :=
     ideleClassComponentQuotientEquivMaximalAbelianGalois K
-  let e₃ : TopologicalAbelianization Gal(SeparableClosure K / K) ≃ₜ*
-      Gal(maximalAbelianExtension K / K) :=
+  let e₃ : TopologicalAbelianization Gal(SeparableClosure K/K) ≃ₜ*
+      Gal(maximalAbelianExtension K/K) :=
     absoluteTopologicalAbelianizationEquivMaximalAbelianGalois K
   let e₄ : Field.absoluteGaloisGroupAbelianization K ≃ₜ*
-      TopologicalAbelianization Gal(SeparableClosure K / K) :=
+      TopologicalAbelianization Gal(SeparableClosure K/K) :=
     absoluteGaloisGroupAbelianizationEquivSeparable K
   exact e₁.trans (e₂.trans (e₃.symm.trans e₄.symm))
 

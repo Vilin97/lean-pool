@@ -493,10 +493,10 @@ theorem abelianLocalArtinMonoidHom_eq_frobenius_zpow (x : Kˣ) :
   rw [localArtinMonoidHom_eq_frobenius_zpow K L x, map_zpow]
   exact
     congrArg
-      (fun σ : Gal(L / K) =>
+      (fun σ : Gal(L/K) =>
         σ ^ LocalFieldTheory.IsNonarchimedeanLocalField.valuationMap K
           (Additive.ofMul x))
-      ((Abelianization.equivOfComm (H := Gal(L / K))).symm_apply_apply
+      ((Abelianization.equivOfComm (H := Gal(L/K))).symm_apply_apply
         (arithmeticFrobeniusOfUnramifiedValuation K L))
 
 end AbelianUnramifiedPrimeClass
@@ -573,7 +573,7 @@ theorem finiteAbelianLocalArtinMap_inverseUniformizer_residue_pow
       (z : L) = (LocalClassFieldTheory.abelianLocalArtinMap K L π) (x : L) ∧
         IsLocalRing.residue 𝒪[L] z =
           (IsLocalRing.residue 𝒪[L] x) ^ Nat.card 𝓀[K] := by
-  let σ : Gal(L / K) := LocalClassFieldTheory.abelianLocalArtinMap K L π
+  let σ : Gal(L/K) := LocalClassFieldTheory.abelianLocalArtinMap K L π
   let z : 𝒪[L] :=
     LocalFieldTheory.galoisGroupIntegerRingEquivOfIsIntegralClosure K L σ x
   refine ⟨z, ?_, ?_⟩

@@ -17,6 +17,31 @@ continuous homomorphism and extends it to field units with the unique
 uniformizer value forced by `log p = 0`.
 -/
 
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup renaming
+  mem_zeroSubgroup_iff_exists_valuationSubringUnitFieldUnitHom_eq →
+    mem_zeroSubgroup_iff_exists_valuationSubringUnitFieldUnitHom_eq
+
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup renaming
+  valuationSubringUnitFieldUnitHom →
+    valuationSubringUnitFieldUnitHom
+
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF renaming
+  multiplicativeIntegerValuationOfUniformizer →
+    multiplicativeIntegerValuationOfUniformizer
+
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF renaming
+  multiplicativeIntegerValuationOfUniformizer_isUniformizer →
+    multiplicativeIntegerValuationOfUniformizer_isUniformizer
+
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF renaming
+  multiplicativeIntegerValuationOfUniformizer_zeroSubgroup_eq_unitGroup →
+    multiplicativeIntegerValuationOfUniformizer_zeroSubgroup_eq_unitGroup
+
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF renaming
+  uniformizerValueUnit_zpow_uniformizerValueExponent_eq_fieldUnitValueUnit →
+    uniformizerValueUnit_zpow_uniformizerValueExponent_eq_fieldUnitValueUnit
+
+
 noncomputable section
 
 universe u
@@ -246,7 +271,7 @@ theorem uniformizerValueExponent_residueCharacteristic_ne_zero
       F.natCast_residueCharacteristic_ne_zero_of_charZero
   intro hm
   have hvalue :=
-    (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueUnit_zpow_uniformizerValueExponent_eq_fieldUnitValueUnit F.toCompleteDVF)
+    (uniformizerValueUnit_zpow_uniformizerValueExponent_eq_fieldUnitValueUnit F.toCompleteDVF)
       hπ pUnit
   rw [hm, zpow_zero] at hvalue
   have hvalue' :=
@@ -269,7 +294,7 @@ theorem fieldUnitLogHomWithUniformizerValue_unique_of_killing
     (ψ : Kˣ →* Multiplicative K)
     (hψprincipal : ∀ u :
       (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) 1,
-      ψ (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.valuationSubringUnitFieldUnitHom F
+      ψ (valuationSubringUnitFieldUnitHom F
           (u : F.valuationSubringˣ)) = φ u)
     (hψa : ψ a = 1) :
     ψ = fieldUnitLogHomWithUniformizerValue F
@@ -313,7 +338,7 @@ theorem fieldUnitLogHomWithUniformizerValue_unique_of_killing
     rw [L.map_mul, L.map_mul, L.map_zpow]
     rw [toAdd_mul, toAdd_mul, toAdd_zpow]
     have hLprincipal :
-        L (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.valuationSubringUnitFieldUnitHom F
+        L (valuationSubringUnitFieldUnitHom F
             (z.1.2 : F.valuationSubringˣ)) = φ z.1.2 := by
       simpa [L, d] using
         fieldUnitLogHomWithUniformizerValue_eq_of_completeDVF_principal
@@ -332,16 +357,16 @@ theorem fieldUnitLogHomWithUniformizerValue_unique_of_killing
     apply Multiplicative.toAdd.injective
     exact zsmul_right_injective hm hpow
   apply monoidHom_toMultiplicative_ext_of_agree_principalUnits_and_uniformizer
-    F ((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.multiplicativeIntegerValuationOfUniformizer F) hπ)
+    F ((multiplicativeIntegerValuationOfUniformizer F) hπ)
   · intro y
     exact
-      LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.mem_zeroSubgroup_iff_exists_valuationSubringUnitFieldUnitHom_eq
+      mem_zeroSubgroup_iff_exists_valuationSubringUnitFieldUnitHom_eq
         (F := F)
-          ((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.multiplicativeIntegerValuationOfUniformizer F) hπ)
-        ((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.multiplicativeIntegerValuationOfUniformizer_zeroSubgroup_eq_unitGroup F) hπ)
+          ((multiplicativeIntegerValuationOfUniformizer F) hπ)
+        ((multiplicativeIntegerValuationOfUniformizer_zeroSubgroup_eq_unitGroup F) hπ)
         y
   · exact
-      (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.multiplicativeIntegerValuationOfUniformizer_isUniformizer F) hπ
+      (multiplicativeIntegerValuationOfUniformizer_isUniformizer F) hπ
   · intro u
     rw [hψprincipal u]
     simpa [L, d] using
@@ -441,7 +466,7 @@ theorem existsUnique_continuous_log
       ∀ u : (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
         F.toCompleteDVF) 1,
         Multiplicative.toAdd
-            (L (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.valuationSubringUnitFieldUnitHom
+            (L (valuationSubringUnitFieldUnitHom
               F.toCompleteDVF (u : F.toCompleteDVF.valuationSubringˣ))) =
           principalUnitLogSeriesOfWithZeroValuation v u hnK := by
   let F : LocalField.{u, 0} K := LocalField.ofWithZeroValuation v
@@ -507,7 +532,7 @@ theorem existsUnique_continuous_log
     (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
     F.toCompleteDVF) 1,
       Multiplicative.toAdd
-          (L (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.valuationSubringUnitFieldUnitHom
+          (L (valuationSubringUnitFieldUnitHom
             F.toCompleteDVF (u : F.toCompleteDVF.valuationSubringˣ))) =
         principalUnitLogSeriesOfWithZeroValuation v u hnK := by
     intro u
@@ -530,7 +555,7 @@ theorem existsUnique_continuous_log
     apply Multiplicative.toAdd.injective
     calc
       Multiplicative.toAdd
-          (ψ (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.valuationSubringUnitFieldUnitHom
+          (ψ (valuationSubringUnitFieldUnitHom
             F.toCompleteDVF (u : F.toCompleteDVF.valuationSubringˣ))) =
           principalUnitLogSeriesOfWithZeroValuation v u hnK := hψ.2.2 u
       _ = Multiplicative.toAdd (φ u) := by

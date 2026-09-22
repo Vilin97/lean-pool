@@ -30,7 +30,7 @@ def artinPrincipalUnitGroup
     [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K]
     [FiniteDimensional K L] [IsAbelianGalois K L]
-    (n : ℕ) : Subgroup (Gal(L / K)) :=
+    (n : ℕ) : Subgroup (Gal(L/K)) :=
   (LocalFieldTheory.fieldPrincipalUnits K n).map (abelianLocalArtinMonoidHom K L)
 
 /-- The Artin images of principal units form an antitone filtration. -/
@@ -108,7 +108,7 @@ def artinPrincipalUnitStepGroup
     [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K]
     [FiniteDimensional K L] [IsAbelianGalois K L]
-    (t : ℝ) : Subgroup (Gal(L / K)) :=
+    (t : ℝ) : Subgroup (Gal(L/K)) :=
   natCeilStepFiltration (artinPrincipalUnitGroup K L) t
 
 /-- Restriction along a tower carries the real-indexed Artin principal-unit

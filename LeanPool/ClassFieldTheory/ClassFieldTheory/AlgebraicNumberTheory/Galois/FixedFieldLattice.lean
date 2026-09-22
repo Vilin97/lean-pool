@@ -29,8 +29,8 @@ theorem fixedField_sup_eq_inf
   · intro x hx
     rw [IntermediateField.mem_fixedField_iff]
     intro σ hσ
-    let stabilizer : Subgroup (Gal(Ω / k)) :=
-      MulAction.stabilizer (Gal(Ω / k)) x
+    let stabilizer : Subgroup (Gal(Ω/k)) :=
+      MulAction.stabilizer (Gal(Ω/k)) x
     have hS : S ≤ stabilizer := by
       intro τ hτ
       change τ x = x

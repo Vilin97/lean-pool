@@ -69,7 +69,8 @@ theorem adicCompletion_units_coordinates_surjective
   · simp
   · intro n
     ext
-    simp [unitReduction]
+    simp only [unitReduction, RingHom.toMonoidHom_eq_coe, Units.coe_map, MonoidHom.coe_coe,
+      AlgHom.toRingHom_eq_coe, AlgHom.toRingHom_toMonoidHom]
     have hval :
         (((adicCompletionUnitsEquiv I).symm z : Rˣ) : R) =
           (adicCompletionAlgEquiv I).symm
@@ -1018,7 +1019,7 @@ theorem dvrUnitsEquivHigherUnitQuotientInverseLimit_apply
       ((higherUnitQuotientInverseLimitEquivPowerIdealUnitInverseLimit hπ)
         (dvrUnitsEquivHigherUnitQuotientInverseLimit hπ u)) =
     unitReduction (uniformizerPowerIdeal π (n + 1)) u
-  simp [dvrUnitsEquivHigherUnitQuotientInverseLimit,
+  simp? [dvrUnitsEquivHigherUnitQuotientInverseLimit,
     adicPositiveUnitInverseLimitEquivDVRPowerIdealUnitInverseLimit,
     unitReduction]
   ext
@@ -1552,7 +1553,6 @@ theorem completeValuedField_uniformizer_irreducible
     [LinearOrderedCommGroupWithZero Gamma]
     [Valued K Gamma]
     [(Valued.v : Valuation K Gamma).IsRankOneDiscrete]
-
     {pi : (Valued.v : Valuation K Gamma).valuationSubring}
     (hpi : (Valued.v : Valuation K Gamma).IsUniformizer (pi : K)) :
     Irreducible pi := by
@@ -1573,7 +1573,6 @@ theorem completeValuedField_uniformizerPowerIdeal_one_eq_maximalIdeal
     [LinearOrderedCommGroupWithZero Gamma]
     [Valued K Gamma]
     [(Valued.v : Valuation K Gamma).IsRankOneDiscrete]
-
     {pi : (Valued.v : Valuation K Gamma).valuationSubring}
     (hpi : (Valued.v : Valuation K Gamma).IsUniformizer (pi : K)) :
     uniformizerPowerIdeal pi 1 =

@@ -121,9 +121,9 @@ theorem maximalLocalKummerPairingRightHom_eq_localHilbertSymbolHom
   let betaE : Eˣ := chosenSimpleKummerRootUnit K n hnK b
   let betaF : Fˣ :=
     Units.map (IntermediateField.inclusion hEF).toMonoidHom betaE
-  let sigmaF : Gal(F / K) :=
+  let sigmaF : Gal(F/K) :=
     maximalLocalKummerNormResidueAutomorphism K n hnK hmu a
-  let sigmaE : Gal(E / K) :=
+  let sigmaE : Gal(E/K) :=
     chosenSimpleKummerNormResidueAutomorphism K n hnK hmu b a
   let : FiniteDimensional K E :=
     chosenSimpleKummerExtension_finiteDimensional K n hnK b

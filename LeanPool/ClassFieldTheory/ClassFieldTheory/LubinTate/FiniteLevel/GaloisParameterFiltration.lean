@@ -33,7 +33,7 @@ noncomputable def standardLubinTateGaloisParameterSubgroup
     (F : LocalField.{u, v} K) {π : F.valuationSubring}
     (hπ : F.toCompleteDVF.valuation.IsUniformizer (π : K))
     (n k : ℕ) :
-    Subgroup (Gal((standardLubinTateLevelField hπ n) / K)) :=
+    Subgroup (Gal((standardLubinTateLevelField hπ n)/K)) :=
   Subgroup.map (standardLubinTateUnitParameterToGalHom F hπ n)
     (standardLubinTateUnitParameterSubgroup F n k)
 

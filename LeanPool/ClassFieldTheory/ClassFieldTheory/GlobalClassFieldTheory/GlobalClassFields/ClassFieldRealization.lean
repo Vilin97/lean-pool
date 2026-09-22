@@ -118,7 +118,7 @@ noncomputable instance
   let : IsGalois F E :=
     abstractRelativeFixedField_isGalois
       k Ω K L.field L.below L.normal
-  let e : L.extensionQuotient ≃* Gal(E / F) :=
+  let e : L.extensionQuotient ≃* Gal(E/F) :=
     L.extensionQuotientMulEquiv.trans
       (abstractExtensionQuotientEquivGaloisGroup
         k Ω K L.field L.below L.normal)

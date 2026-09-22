@@ -14,6 +14,11 @@ that the resulting Galois groups have the same upper filtration, after
 identifying their automorphisms by their common action on the target.
 -/
 
+open _root_.RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration renaming
+  herbrandFunction_eq_of_card_lower_eq →
+    herbrandFunction_eq_of_card_lower_eq
+
+
 noncomputable section
 
 namespace RamificationTheory.LocalField
@@ -34,7 +39,7 @@ noncomputable def galoisGroupEquivOfBaseRingEquiv
     [Algebra B E] [Algebra K E]
     (e : B ≃+* K)
     (he : ∀ b, algebraMap K E (e b) = algebraMap B E b) :
-    Gal(E / B) ≃* Gal(E / K) where
+    Gal(E/B) ≃* Gal(E/K) where
   toFun σ :=
     { σ.toRingEquiv with
       commutes' := by
@@ -84,7 +89,7 @@ private theorem upperRamificationGroup_map_baseChange
     (huniqK :
       RamificationTheory.DiscreteValuationField.DVF.HasUniqueValuationExtension
         (base := baseK) (target := target))
-    (q : Gal(E / B) ≃* Gal(E/K))
+    (q : Gal(E/B) ≃* Gal(E/K))
     (hq : ∀ σ x, q σ x = σ x)
     (t : ℝ) :
     Subgroup.map q.toMonoidHom
@@ -93,7 +98,7 @@ private theorem upperRamificationGroup_map_baseChange
       upperRamificationGroupOfUniqueExtension
         (base := baseK) (target := target) huniqK t := by
   have hdisplacement
-      (σ : Gal(E / B)) (a : target.valuationSubring) :
+      (σ : Gal(E/B)) (a : target.valuationSubring) :
       valuationSubringAutOfUniqueExtension
             (base := baseK) (target := target)
             huniqK (q σ) a - a =
@@ -103,7 +108,7 @@ private theorem upperRamificationGroup_map_baseChange
     apply Subtype.ext
     change q σ (a : E) - (a : E) = σ (a : E) - (a : E)
     rw [hq σ (a : E)]
-  have hmem (s : ℝ) (σ : Gal(E / B)) :
+  have hmem (s : ℝ) (σ : Gal(E/B)) :
       σ ∈ lowerRamificationGroup
             (base := baseB) (target := target) huniqB s ↔
         q σ ∈ lowerRamificationGroup
@@ -148,7 +153,7 @@ private theorem upperRamificationGroup_map_baseChange
         herbrandFunctionOfUniqueExtension
           (base := baseK) (target := target) huniqK s := by
     exact
-      RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction_eq_of_card_lower_eq
+      herbrandFunction_eq_of_card_lower_eq
         _ _ hcard s
   have hinverse (u : ℝ) :
       inverseHerbrandFunctionOfUniqueExtension

@@ -14,6 +14,11 @@ valuation is represented by its valuation subring, so uniqueness is literal
 equality of valuation subrings (equivalently, equivalence of valuations).
 -/
 
+open _root_.ValuationTheory.DiscreteValuationField.Valuation renaming
+  integralClosureValuationSubringOfMemOrInv_hasExtension →
+    integralClosureValuationSubringOfMemOrInv_hasExtension
+
+
 noncomputable section
 
 namespace AlgebraicNumberTheory
@@ -70,7 +75,7 @@ theorem normFormula_algebraic_extension
     ValuationTheory.DiscreteValuationField.Valuation.integralClosureValuationSubringOfMemOrInv
       (L := L) V.valuation hval
   have hBext : V.valuation.HasExtension B.valuation :=
-    ValuationTheory.DiscreteValuationField.Valuation.integralClosureValuationSubringOfMemOrInv_hasExtension
+    integralClosureValuationSubringOfMemOrInv_hasExtension
       (L := L) V.valuation hval
   have hBclosure : B.toSubring = (integralClosure V L).toSubring := by
     change

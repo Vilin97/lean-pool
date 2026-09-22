@@ -36,7 +36,6 @@ theorem
     [Algebra F M] [Algebra M L] [Algebra F L]
     [IsScalarTower F M L]
     [FiniteDimensional F L]
-
     [IsGalois F L] [IsGalois M L]
     [IsMulCommutative (L ≃ₐ[F] L)]
     (p : HeightOneSpectrum (𝓞 F))

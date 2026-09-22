@@ -198,11 +198,9 @@ theorem kroneckerWeberCompositum_isUnramifiedAt_of_not_mem
   have hpS : p ∉ kroneckerWeberRamifiedPrimes (L := L) := by
     intro hp
     exact hQoutside ⟨p, hp, hpq⟩
-
   let : Q.LiesOver (rationalPrimeIdeal p) := ⟨hpq⟩
   have hp0 : rationalPrimeIdeal p ≠ ⊥ :=
     (Rat.HeightOneSpectrum.primesEquiv.symm p).ne_bot
-
   let PA : Ideal (𝓞 A) := Q.under (𝓞 A)
   let PB : Ideal (𝓞 B) := Q.under (𝓞 B)
   let : Q.LiesOver PA := ⟨rfl⟩
@@ -219,7 +217,6 @@ theorem kroneckerWeberCompositum_isUnramifiedAt_of_not_mem
     (inferInstance : PA.IsPrime).isMaximal hPA0
   let : PB.IsMaximal :=
     (inferInstance : PB.IsPrime).isMaximal hPB0
-
   have hPAramification :
       PA.ramificationIdx ℤ = 1 :=
     kroneckerWeber_leftFactor_ramificationIdx_eq_one
@@ -228,7 +225,6 @@ theorem kroneckerWeberCompositum_isUnramifiedAt_of_not_mem
       PB.ramificationIdx ℤ = 1 :=
     kroneckerWeber_cyclotomicFactor_ramificationIdx_eq_one
       (L := L) eCB p hpS PB
-
   let aAlg : Algebra ℚ A := inferInstance
   let hANormal : @Normal ℚ A _ _ aAlg := inferInstance
   let hAAlg : Algebra ℚ A := A.algebra'
@@ -251,7 +247,6 @@ theorem kroneckerWeberCompositum_isUnramifiedAt_of_not_mem
   have hIB : inertiaGroup PB Gal(B/ℚ) = ⊥ :=
     @inertiaGroup_eq_bot_of_ramificationIdx_eq_one_int B _ _ hBGalois
       (rationalPrimeIdeal p) PB _ _ _ _ hp0 hPBramification
-
   have hIM : inertiaGroup Q Gal(M/ℚ) = ⊥ :=
     inertiaGroup_eq_bot_of_restrictNormal_of_sup_eq_top
       A B Q hsup (by simpa only [PA] using hIA)

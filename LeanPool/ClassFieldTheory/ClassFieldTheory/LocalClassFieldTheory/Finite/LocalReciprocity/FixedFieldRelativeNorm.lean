@@ -108,7 +108,7 @@ private theorem abstractFixedFieldCosetToAlgHom_surjective
       (K := abstractFixedField k Ω K)
       (L := abstractRelativeFixedField k Ω hLK)
       (M := Ω) (E := Ω)) f
-  let σReal : Gal(Ω / abstractFixedField k Ω K) :=
+  let σReal : Gal(Ω/abstractFixedField k Ω K) :=
     AlgEquiv.ofBijective φ
       (Normal.toIsAlgebraic.algHom_bijective₂
         φ (AlgHom.id (abstractFixedField k Ω K) Ω)).1
@@ -232,7 +232,6 @@ theorem relativeNorm_abstractFixedFieldUnit_eq_normUnits
         K L hLK
         (abstractRelativeFixedFieldUnitsEquivGaloisFixed
           k Ω K L hLK (Additive.ofMul x)) q) : Ωˣ) : Ω) = _
-
   change (Units.coeHom Ω) (∏ q : Q,
     Additive.toMul
       (relativeCosetAction (galoisAmbientUnitsRep k Ω)

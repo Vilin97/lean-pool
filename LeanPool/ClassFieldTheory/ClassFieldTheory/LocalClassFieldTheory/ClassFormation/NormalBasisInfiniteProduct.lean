@@ -141,11 +141,11 @@ theorem tendsto_galoisGroupIntegerUnits_tateNorm_of_tendsto
     letI := galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L
     Tendsto
       (fun d : Nat =>
-        ((tateNorm (Gal(L / K)) 𝒪[L]ˣ (f d) : 𝒪[L]ˣ) : 𝒪[L]))
+        ((tateNorm (Gal(L/K)) 𝒪[L]ˣ (f d) : 𝒪[L]ˣ) : 𝒪[L]))
       atTop
-      (nhds ((tateNorm (Gal(L / K)) 𝒪[L]ˣ x : 𝒪[L]ˣ) : 𝒪[L])) := by
+      (nhds ((tateNorm (Gal(L/K)) 𝒪[L]ˣ x : 𝒪[L]ˣ) : 𝒪[L])) := by
   let := galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L
-  have hσ (sigma : Gal(L / K)) : Tendsto
+  have hσ (sigma : Gal(L/K)) : Tendsto
       (fun d : Nat => ((sigma • f d : 𝒪[L]ˣ) : 𝒪[L])) atTop
       (nhds ((sigma • x : 𝒪[L]ˣ) : 𝒪[L])) := by
     have he :=
@@ -163,7 +163,7 @@ theorem tendsto_galoisGroupIntegerUnits_tateNorm_of_tendsto
     simpa [
       galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure_smul] using he
   have hprod := tendsto_finsetProd
-    (Finset.univ : Finset (Gal(L / K))) (fun sigma _ => hσ sigma)
+    (Finset.univ : Finset (Gal(L/K))) (fun sigma _ => hσ sigma)
   convert hprod using 1 <;> simp [tateNorm]
 
 omit [FiniteDimensional K L] [IsGalois K L]
@@ -181,9 +181,9 @@ theorem tendsto_galoisGroupIntegerUnits_sigmaMinusOne_of_tendsto
     letI := galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L
     Tendsto
       (fun d : Nat =>
-        ((sigmaMinusOne (Gal(L / K)) 𝒪[L]ˣ g (f d) : 𝒪[L]ˣ) : 𝒪[L]))
+        ((sigmaMinusOne (Gal(L/K)) 𝒪[L]ˣ g (f d) : 𝒪[L]ˣ) : 𝒪[L]))
       atTop
-      (nhds ((sigmaMinusOne (Gal(L / K)) 𝒪[L]ˣ g x : 𝒪[L]ˣ) : 𝒪[L])) := by
+      (nhds ((sigmaMinusOne (Gal(L/K)) 𝒪[L]ˣ g x : 𝒪[L]ˣ) : 𝒪[L])) := by
   let := galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L
   have hgO : Tendsto
       (fun d : Nat => ((g • f d : 𝒪[L]ˣ) : 𝒪[L])) atTop
@@ -291,7 +291,6 @@ theorem chosenNormalBasisPrincipalUnitCorrectionProduct_eq_principalUnitsCorrect
       rfl
 
 omit [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)] in
-
 /-- If `V^n` is multiplicatively closed, every finite correction product
 stays in `V^n`. -/
 theorem chosenNormalBasisPrincipalUnitCorrectionProduct_mem
@@ -315,7 +314,6 @@ theorem chosenNormalBasisPrincipalUnitCorrectionProduct_mem
         (Nat.le_add_right n d) (hz d)
 
 omit [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)] in
-
 /-- The quotient of two partial products is controlled by the filtration
 level at the earlier index.  This is the exact tail recurrence used in both
 `H⁰` and `H⁻¹` correction arguments. -/
@@ -384,7 +382,6 @@ theorem exists_tendsto_chosenNormalBasisPrincipalUnitCorrectionProduct_principal
       (K := K) (L := L) hb hbn z hz d).symm
 
 omit [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)] in
-
 /-- A unit-valued limit of partial products remains in the initial
 normal-basis filtration level whenever that lattice is closed. -/
 theorem chosenNormalBasisPrincipalUnitCorrectionProduct_limit_mem

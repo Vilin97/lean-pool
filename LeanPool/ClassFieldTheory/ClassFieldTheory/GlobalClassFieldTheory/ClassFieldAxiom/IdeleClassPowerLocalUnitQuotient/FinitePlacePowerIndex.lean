@@ -15,6 +15,19 @@ This file supplies the completion instances and local cardinality formulas used
 to evaluate finite-place factors in idele power quotients.
 -/
 
+open _root_.LocalFieldTheory.DiscreteValuationField.LocalField renaming
+  chosenMixedFirstPrincipalUnitStructureOfWithZeroValuation →
+    chosenMixedFirstPrincipalUnitStructureOfWithZeroValuation
+
+open _root_.LocalFieldTheory.DiscreteValuationField.LocalField renaming
+  valuation_natCast_eq_exp_neg_ramificationIndex_mul_padicValNat →
+    valuation_natCast_eq_exp_neg_ramificationIndex_mul_padicValNat
+
+open _root_.LocalFieldTheory.DiscreteValuationField renaming
+  finite_fieldUnits_nthPowerQuotient_of_finite_principalUnits →
+    finite_fieldUnits_nthPowerQuotient_of_finite_principalUnits
+
+
 open scoped NumberField NNReal ValuativeRel TensorProduct
 open NumberField IsDedekindDomain
 
@@ -81,7 +94,7 @@ theorem card_finitePlace_nthPowerQuotient
     Module.finrank ℚ_[F.residueCharacteristic]
       (v₀.adicCompletion K)
   obtain ⟨a, e⟩ :=
-    LocalFieldTheory.DiscreteValuationField.LocalField.chosenMixedFirstPrincipalUnitStructureOfWithZeroValuation
+    chosenMixedFirstPrincipalUnitStructureOfWithZeroValuation
       ν hν
   let U :=
     LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
@@ -116,7 +129,7 @@ theorem card_finitePlace_nthPowerQuotient
         (powMonoidHom (n : ℕ) :
           (v₀.adicCompletion K)ˣ →*
             (v₀.adicCompletion K)ˣ).range) :=
-    LocalFieldTheory.DiscreteValuationField.finite_fieldUnits_nthPowerQuotient_of_finite_principalUnits
+    finite_fieldUnits_nthPowerQuotient_of_finite_principalUnits
       F.toCompleteDVF hπ (n : ℕ)
   have hindex :=
     LocalFieldTheory.DiscreteValuationField.LocalField.mixed_fieldIndex
@@ -222,7 +235,7 @@ theorem finitePlaceNthPowerDefect_eq_absNorm_maxPowDividing
         WithZero.exp
           (-((e : ℤ) * (k : ℤ))) := by
     simpa [F, e, k] using
-      LocalFieldTheory.DiscreteValuationField.LocalField.valuation_natCast_eq_exp_neg_ramificationIndex_mul_padicValNat
+      valuation_natCast_eq_exp_neg_ramificationIndex_mul_padicValNat
         ν (n : ℕ) n.ne_zero
   have hval :
       v.intValuation x =

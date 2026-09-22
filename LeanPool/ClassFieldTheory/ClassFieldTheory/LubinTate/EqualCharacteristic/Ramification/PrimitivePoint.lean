@@ -24,6 +24,15 @@ finite equal-characteristic Lubin--Tate level.  It proves that the chosen
 primitive point generates the integral closure and is a uniformizer.
 -/
 
+open _root_.ValuationTheory.DiscreteValuationField.ValuedExtension renaming
+  exists_integralClosure_standard_fundamental_identity →
+    exists_integralClosure_standard_fundamental_identity
+
+open _root_.ValuationTheory.DiscreteValuationField.ValuedExtension renaming
+  hasUniqueValuationExtension_of_finite_separable →
+    hasUniqueValuationExtension_of_finite_separable
+
+
 noncomputable section
 
 open scoped LaurentSeries Pointwise PowerSeries
@@ -338,7 +347,7 @@ private theorem equalCharacteristicLubinTateLevelCompleteDVFData_exists
       (equalCharacteristicLubinTateLevelField F n) :=
     equalCharacteristicLubinTateLevelField_isGalois F n
   exact
-    ValuationTheory.DiscreteValuationField.ValuedExtension.exists_integralClosure_standard_fundamental_identity
+    exists_integralClosure_standard_fundamental_identity
       (K := F.residueField⸨X⸩)
       (L := equalCharacteristicLubinTateLevelField F n)
       (equalCharacteristicLubinTateBaseCompleteDVF F)
@@ -514,7 +523,6 @@ chosen Laurent uniformizer. -/
 theorem
     equalCharacteristicLubinTatePrimitivePolynomialInBaseValuationSubring_isEisensteinAt
     (F : LocalField.{0, v} K₀)
-
     (n : ℕ) :
     (equalCharacteristicLubinTatePrimitivePolynomialInBaseValuationSubring
       F n).IsEisensteinAt
@@ -624,7 +632,7 @@ theorem
       (equalCharacteristicLubinTateLevelField F n) :=
     equalCharacteristicLubinTateLevelField_isGalois F n
   exact
-    (ValuationTheory.DiscreteValuationField.ValuedExtension.hasUniqueValuationExtension_of_finite_separable
+    (hasUniqueValuationExtension_of_finite_separable
         (equalCharacteristicLubinTateBaseCompleteDVF F)
         (equalCharacteristicLubinTateLevelCompleteDVF F n) :
       ValuationTheory.DiscreteValuationField.ValuedExtension.HasUniqueValuationExtension.{0, 0,
@@ -740,8 +748,7 @@ theorem equalCharacteristicLubinTateBaseUniformizer_orbitProduct
     let target := equalCharacteristicLubinTateLevelCompleteDVF F n
     integerMap base.toDVF target.toDVF
         (equalCharacteristicLubinTateBaseUniformizerInteger F) =
-      ∏ sigma : Gal((equalCharacteristicLubinTateLevelField F n) /
-          F.residueField⸨X⸩),
+      ∏ sigma : Gal((equalCharacteristicLubinTateLevelField F n)/F.residueField⸨X⸩),
         valuationSubringAutOfUniqueExtension
           (base := base.toDVF) (target := target.toDVF)
           (equalCharacteristicLubinTateLevelCompleteDVF_hasUniqueDVFValuationExtension_zero
@@ -757,8 +764,7 @@ theorem equalCharacteristicLubinTateBaseUniformizer_orbitProduct
         (equalCharacteristicLubinTateLevelField F n)
         (equalCharacteristicLaurentUniformizer F) =
       (equalCharacteristicLubinTateLevelCompleteDVF F n).valuation.valuationSubring.subtype
-          (∏ sigma : Gal((equalCharacteristicLubinTateLevelField F n) /
-              F.residueField⸨X⸩),
+          (∏ sigma : Gal((equalCharacteristicLubinTateLevelField F n)/F.residueField⸨X⸩),
             valuationSubringAutOfUniqueExtension
               (base :=
                 (equalCharacteristicLubinTateBaseCompleteDVF F).toDVF)
@@ -777,14 +783,12 @@ theorem equalCharacteristicLubinTateBaseUniformizer_orbitProduct
           (Algebra.norm F.residueField⸨X⸩
             (-equalCharacteristicLubinTateLevelGenerator F n)) := by
               rw [equalCharacteristicLubinTate_norm_neg_levelGenerator]
-    _ = ∏ sigma : Gal((equalCharacteristicLubinTateLevelField F n) /
-          F.residueField⸨X⸩),
+    _ = ∏ sigma : Gal((equalCharacteristicLubinTateLevelField F n)/F.residueField⸨X⸩),
         sigma (-equalCharacteristicLubinTateLevelGenerator F n) :=
       Algebra.norm_eq_prod_automorphisms
         F.residueField⸨X⸩
         (-equalCharacteristicLubinTateLevelGenerator F n)
-    _ = ∏ sigma : Gal((equalCharacteristicLubinTateLevelField F n) /
-          F.residueField⸨X⸩),
+    _ = ∏ sigma : Gal((equalCharacteristicLubinTateLevelField F n)/F.residueField⸨X⸩),
         (equalCharacteristicLubinTateLevelCompleteDVF F n).valuation.valuationSubring.subtype
             (valuationSubringAutOfUniqueExtension
               (base :=
@@ -827,8 +831,7 @@ theorem equalCharacteristicLubinTatePrimitivePointInteger_addVal
     (IsDiscreteValuationRing.addVal target.valuationSubring) horbit
   have hnorm :
       (e : ℕ∞) =
-        Nat.card Gal((equalCharacteristicLubinTateLevelField F n) /
-            F.residueField⸨X⸩) •
+        Nat.card Gal((equalCharacteristicLubinTateLevelField F n)/F.residueField⸨X⸩) •
           IsDiscreteValuationRing.addVal target.valuationSubring lambda := by
     rw [hbase] at hadd
     rw [addVal_prod_valuationSubringAut
@@ -837,8 +840,7 @@ theorem equalCharacteristicLubinTatePrimitivePointInteger_addVal
         F n)] at hadd
     simpa [lambda] using hadd
   have hcard :
-      Nat.card Gal((equalCharacteristicLubinTateLevelField F n) /
-          F.residueField⸨X⸩) = d := by
+      Nat.card Gal((equalCharacteristicLubinTateLevelField F n)/F.residueField⸨X⸩) = d := by
     simpa [d, degree] using
       (IsGalois.card_aut_eq_finrank F.residueField⸨X⸩
         (equalCharacteristicLubinTateLevelField F n))
@@ -936,8 +938,7 @@ theorem
     (F : LocalField.{0, v} K₀)
     [CharP K₀ F.residueCharacteristic]
     (n : ℕ)
-    (σ : Gal((equalCharacteristicLubinTateLevelField F n) /
-      F.residueField⸨X⸩))
+    (σ : Gal((equalCharacteristicLubinTateLevelField F n)/F.residueField⸨X⸩))
     (a : equalCharacteristicLubinTateUnitParameter F n)
     (ha :
       σ (equalCharacteristicLubinTateLevelPowerBasis F n).gen =
@@ -1063,8 +1064,7 @@ theorem equalCharacteristicLubinTateBaseUniformizerInteger_map_addVal_eq_degree
     equalCharacteristicLubinTatePrimitivePointInteger_addVal] at hadd
   rw [nsmul_one, Nat.card_eq_fintype_card] at hadd
   calc
-    _ = (Fintype.card Gal((equalCharacteristicLubinTateLevelField F n) /
-        F.residueField⸨X⸩) : ℕ∞) := hadd
+    _ = (Fintype.card Gal((equalCharacteristicLubinTateLevelField F n)/F.residueField⸨X⸩) : ℕ∞) := hadd
     _ = ((Nat.card F.residueField - 1) *
         Nat.card F.residueField ^ n : ℕ) := by
       congr 1

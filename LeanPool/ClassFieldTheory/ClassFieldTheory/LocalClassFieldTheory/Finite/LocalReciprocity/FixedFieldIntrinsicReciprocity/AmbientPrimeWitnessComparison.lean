@@ -86,13 +86,13 @@ theorem
     ambientEmbeddedExtensionQuotient_finite K F E j e
   let hHabsolute : Finite
       ((baseField
-        Gal(SeparableClosure K / K)).toSubgroup ⧸
+        Gal(SeparableClosure K/K)).toSubgroup ⧸
         extensionSubgroup
-          (baseField Gal(SeparableClosure K / K))
+          (baseField Gal(SeparableClosure K/K))
           H₀ (le_baseField H₀)) := by
     exact ambientEmbeddedAbsoluteQuotientFinite K F i
   let H : FiniteAbstractField
-      Gal(SeparableClosure K / K) :=
+      Gal(SeparableClosure K/K) :=
     ⟨H₀, ambientEmbeddedAbsoluteQuotientFinite K F i⟩
   let qF :=
     finiteGaloisAbstractQuotientEquivGaloisGroupOfEmbedding
@@ -148,7 +148,7 @@ theorem
         extensionSubgroup RF.field SF hSFB)
     exact hSFfinite
   let SigmaF : FiniteAbstractField
-      Gal(SeparableClosure F / F) :=
+      Gal(SeparableClosure F/F) :=
     ⟨SF, hSFabsolute⟩
   let LF :=
     abstractFixedField F (SeparableClosure F) SF
@@ -379,13 +379,13 @@ theorem
     ambientEmbeddedExtensionQuotient_finite K F E j e
   let hHabsolute : Finite
       ((baseField
-        Gal(SeparableClosure K / K)).toSubgroup ⧸
+        Gal(SeparableClosure K/K)).toSubgroup ⧸
         extensionSubgroup
-          (baseField Gal(SeparableClosure K / K))
+          (baseField Gal(SeparableClosure K/K))
           H₀ (le_baseField H₀)) := by
     exact ambientEmbeddedAbsoluteQuotientFinite K F i
   let H : FiniteAbstractField
-      Gal(SeparableClosure K / K) :=
+      Gal(SeparableClosure K/K) :=
     ⟨H₀, ambientEmbeddedAbsoluteQuotientFinite K F i⟩
   let F₀ :=
     abstractFixedField K (SeparableClosure K) H₀
@@ -569,7 +569,7 @@ theorem
     IsNonarchimedeanLocalField.valuationMap LH
       (Additive.ofMul pH) = 1 at hpHvalue
   let SigmaH : FiniteAbstractField
-      Gal(SeparableClosure K / K) :=
+      Gal(SeparableClosure K/K) :=
     ⟨SH, hSHabsolute⟩
   let piH : ambientFixedAddSubgroup
       (galoisAmbientUnitsRep K (SeparableClosure K)) SH :=
@@ -718,13 +718,13 @@ theorem
     ambientEmbeddedExtensionQuotient_finite K F E j e
   let hHabsolute : Finite
       ((baseField
-        Gal(SeparableClosure K / K)).toSubgroup ⧸
+        Gal(SeparableClosure K/K)).toSubgroup ⧸
         extensionSubgroup
-          (baseField Gal(SeparableClosure K / K))
+          (baseField Gal(SeparableClosure K/K))
           H₀ (le_baseField H₀)) := by
     exact ambientEmbeddedAbsoluteQuotientFinite K F i
   let H : FiniteAbstractField
-      Gal(SeparableClosure K / K) :=
+      Gal(SeparableClosure K/K) :=
     ⟨H₀, ambientEmbeddedAbsoluteQuotientFinite K F i⟩
   let qF :=
     finiteGaloisAbstractQuotientEquivGaloisGroupOfEmbedding

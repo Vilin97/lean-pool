@@ -65,9 +65,9 @@ theorem relativeNorm_coe_eq_of_closedSubgroup_eq
 fixed coefficients has the same underlying field element as the ordinary
 field norm from its concrete fixed field. -/
 theorem normToBase_abstractFixedFieldUnit_val_of_isSeparable
-    (H : ClosedSubgroup (Gal(Ω / K)))
+    (H : ClosedSubgroup (Gal(Ω/K)))
     [Finite ((baseField (Gal(Ω/K))).toSubgroup ⧸
-      extensionSubgroup (baseField (Gal(Ω / K))) H (le_baseField H))]
+      extensionSubgroup (baseField (Gal(Ω/K))) H (le_baseField H))]
     [FiniteDimensional K (abstractFixedField K Ω H)]
     [Algebra.IsSeparable K (abstractFixedField K Ω H)]
     (x : (abstractFixedField K Ω H)ˣ) :
@@ -90,7 +90,7 @@ theorem normToBase_abstractFixedFieldUnit_val_of_isSeparable
   have htransport := relativeNorm_coe_eq_of_closedSubgroup_eq
     (galoisAmbientUnitsRep K Ω)
     (closedFixingSubgroup K Ω (⊥ : IntermediateField K Ω))
-    (baseField (Gal(Ω / K)))
+    (baseField (Gal(Ω/K)))
     (closedFixingSubgroup K Ω E) H
     (fixingSubgroupLeBase K Ω E) (le_baseField H)
     (closedFixingSubgroup_bot_eq_baseField K Ω)
@@ -109,9 +109,9 @@ normalized valuation of the concrete field norm. -/
 theorem localBaseValuation_normToBase_abstractFixedFieldUnit
     (K : Type) [Field K] [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K]
-    (H : ClosedSubgroup (Gal(SeparableClosure K / K)))
+    (H : ClosedSubgroup (Gal(SeparableClosure K/K)))
     [Finite ((baseField (Gal(SeparableClosure K/K))).toSubgroup ⧸
-      extensionSubgroup (baseField (Gal(SeparableClosure K / K))) H
+      extensionSubgroup (baseField (Gal(SeparableClosure K/K))) H
         (le_baseField H))]
     [FiniteDimensional K
       (abstractFixedField K (SeparableClosure K) H)]
@@ -174,9 +174,9 @@ multiple of the base value group. -/
 theorem localBaseValuation_comp_normToBase_range_eq_residueFinrank
     (K : Type) [Field K] [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K]
-    (H : ClosedSubgroup (Gal(SeparableClosure K / K)))
+    (H : ClosedSubgroup (Gal(SeparableClosure K/K)))
     [Finite ((baseField (Gal(SeparableClosure K/K))).toSubgroup ⧸
-      extensionSubgroup (baseField (Gal(SeparableClosure K / K))) H
+      extensionSubgroup (baseField (Gal(SeparableClosure K/K))) H
         (le_baseField H))]
     [FiniteDimensional K
       (abstractFixedField K (SeparableClosure K) H)]

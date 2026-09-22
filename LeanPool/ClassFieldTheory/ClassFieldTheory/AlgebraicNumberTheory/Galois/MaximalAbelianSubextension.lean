@@ -30,18 +30,16 @@ variable
 /-- The subgroup of the finite-normal-closure Galois group fixing the
 distinguished copy of the original extension. -/
 noncomputable def finiteNormalClosureOriginalFixingSubgroup :
-    Subgroup Gal(finiteNormalClosure K L / K) :=
+    Subgroup Gal(finiteNormalClosure K L/K) :=
   (finiteNormalClosureOriginalField K L).fixingSubgroup
 
 /-- The relative Galois group over the distinguished original field is the
 corresponding fixing subgroup of the full normal-closure Galois group. -/
 noncomputable def finiteNormalClosureOriginalFixingSubgroupEquiv :
-    Gal(finiteNormalClosure K L /
-        finiteNormalClosureOriginalField K L) ≃*
+    Gal(finiteNormalClosure K L/finiteNormalClosureOriginalField K L) ≃*
       finiteNormalClosureOriginalFixingSubgroup K L := by
   change
-    Gal(finiteNormalClosure K L /
-        finiteNormalClosureOriginalField K L) ≃*
+    Gal(finiteNormalClosure K L/finiteNormalClosureOriginalField K L) ≃*
       (finiteNormalClosureOriginalField K L).fixingSubgroup
   exact
     (IntermediateField.fixingSubgroupEquiv
@@ -53,7 +51,7 @@ noncomputable def finiteNormalClosureMaximalAbelianSubfield :
     IntermediateField K (finiteNormalClosure K L) :=
   IntermediateField.fixedField
     (finiteNormalClosureOriginalFixingSubgroup K L ⊔
-      _root_.commutator Gal(finiteNormalClosure K L / K))
+      _root_.commutator Gal(finiteNormalClosure K L/K))
 
 /-- The maximal abelian subfield is contained in the distinguished copy of
 the original extension. -/

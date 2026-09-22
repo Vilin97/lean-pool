@@ -238,7 +238,7 @@ theorem
 noncomputable def
     numberFieldCyclotomicZHatCompositumIdeleClassArtinMonoidHom :
     IdeleClassGroup K →*
-      Gal(numberFieldCyclotomicZHatCompositum K / K) :=
+      Gal(numberFieldCyclotomicZHatCompositum K/K) :=
   QuotientGroup.lift
     (IdeleGroup.principalSubgroup K)
     (infiniteGlobalArtinMonoidHom K
@@ -363,7 +363,7 @@ private structure NumberFieldCyclotomicZHatFiniteLayerArtinData
     Type where
   toMonoidHom :
     IdeleGroup K →*
-      Gal(numberFieldCyclotomicZHatFiniteLayerInCompositum K E / K)
+      Gal(numberFieldCyclotomicZHatFiniteLayerInCompositum K E/K)
   principal (x : Kˣ) :
     toMonoidHom (IdeleGroup.principalIdele K x) = 1
   restriction (a : IdeleGroup K) :
@@ -463,7 +463,7 @@ noncomputable def
       FiniteGaloisIntermediateField
         ℚ rationalCyclotomicZHatField) :
     IdeleGroup K →*
-      Gal(numberFieldCyclotomicZHatFiniteLayerInCompositum K E / K) :=
+      Gal(numberFieldCyclotomicZHatFiniteLayerInCompositum K E/K) :=
   (numberFieldCyclotomicZHatFiniteLayerArtinData K E).toMonoidHom
 
 /-- Every finite cyclotomic layer over a number field inherits the
@@ -502,7 +502,7 @@ noncomputable def
       FiniteGaloisIntermediateField
         ℚ rationalCyclotomicZHatField) :
     IdeleClassGroup K →*
-      Gal(numberFieldCyclotomicZHatFiniteLayerInCompositum K E / K) := by
+      Gal(numberFieldCyclotomicZHatFiniteLayerInCompositum K E/K) := by
   exact
     QuotientGroup.lift
       (IdeleGroup.principalSubgroup K)

@@ -267,8 +267,8 @@ noncomputable def
     (E :
       FiniteGaloisIntermediateField
         ℚ rationalCyclotomicZHatField) :
-    Gal(numberFieldCyclotomicZHatFiniteCompositum F E / F) →*
-      Gal(E / ℚ) := by
+    Gal(numberFieldCyclotomicZHatFiniteCompositum F E/F) →*
+      Gal(E/ℚ) := by
   letI : Normal ℚ E := E.isGalois.to_normal
   exact
     IntermediateField.restrictRestrictAlgEquivMapHom
@@ -354,7 +354,7 @@ theorem
     apply AlgEquiv.ext
     intro x
     exact congrArg (fun f : C ≃ₐ[A] C => f x) hστ
-  let transportE : Gal(E / ℚ) →* (B ≃ₐ[ℚ] B) :=
+  let transportE : Gal(E/ℚ) →* (B ≃ₐ[ℚ] B) :=
     (AlgEquiv.autCongr eE).toMonoidHom
   have raw_restriction_commutes
       (σ : C ≃ₐ[F] C) (x : E) :
@@ -422,14 +422,14 @@ noncomputable def
     (E :
       FiniteGaloisIntermediateField
         ℚ rationalCyclotomicZHatField) :
-    Gal(numberFieldCyclotomicZHatFiniteCompositum F E / F) ≃*
+    Gal(numberFieldCyclotomicZHatFiniteCompositum F E/F) ≃*
       (numberFieldCyclotomicZHatFiniteIntersection F E).fixingSubgroup := by
   letI : Normal ℚ E := E.isGalois.to_normal
   let r :=
     numberFieldCyclotomicZHatFiniteCompositumRestriction
       (F := F) E
   let eRange :
-      Gal(numberFieldCyclotomicZHatFiniteCompositum F E / F) ≃*
+      Gal(numberFieldCyclotomicZHatFiniteCompositum F E/F) ≃*
         r.range :=
     MulEquiv.ofBijective r.rangeRestrict
       ⟨fun σ τ h =>
@@ -455,7 +455,7 @@ theorem
       FiniteGaloisIntermediateField
         ℚ rationalCyclotomicZHatField) :
     Nat.card
-        (Gal(numberFieldCyclotomicZHatFiniteCompositum F E / F)) =
+        (Gal(numberFieldCyclotomicZHatFiniteCompositum F E/F)) =
       Nat.card
         (numberFieldCyclotomicZHatFiniteIntersection F E).fixingSubgroup :=
   Nat.card_congr
@@ -624,7 +624,7 @@ theorem numberFieldCyclotomicZHatCompositumRestriction_range
 over a number field. -/
 noncomputable def numberFieldCyclotomicZHatCompositumCoordinate
     (F : Type*) [Field F] [NumberField F] :
-    Gal(numberFieldCyclotomicZHatCompositum F / F) →*
+    Gal(numberFieldCyclotomicZHatCompositum F/F) →*
       Multiplicative ZHat :=
   rationalCyclotomicZHatFieldGalEquivZHat.toMonoidHom.comp
     (numberFieldCyclotomicZHatCompositumRestriction F)
@@ -644,7 +644,7 @@ noncomputable instance
     numberFieldCyclotomicZHatCompositumGal_isMulTorsionFree
     (F : Type*) [Field F] [NumberField F] :
     IsMulTorsionFree
-      (Gal(numberFieldCyclotomicZHatCompositum F / F)) :=
+      (Gal(numberFieldCyclotomicZHatCompositum F/F)) :=
   Function.Injective.isMulTorsionFree
     (numberFieldCyclotomicZHatCompositumCoordinate F)
     (numberFieldCyclotomicZHatCompositumCoordinate_injective F)
@@ -1900,7 +1900,7 @@ noncomputable def
     (F : Type*) [Field F] [NumberField F]
     (p : Nat.Primes) (n : ℕ) :
     Gal(numberFieldCyclotomicZHatFiniteCompositum F
-          (rationalCyclotomicPadicFiniteLevel p n) / F) →*
+          (rationalCyclotomicPadicFiniteLevel p n)/F) →*
       Multiplicative (ZMod (p.1 ^ n)) :=
   (rationalCyclotomicPadicFiniteLevelGalEquivZMod
       p n).toMonoidHom.comp
@@ -1933,7 +1933,7 @@ theorem
     (p : Nat.Primes) (n : ℕ) :
     IsCyclic
       (Gal(numberFieldCyclotomicZHatFiniteCompositum F
-        (rationalCyclotomicPadicFiniteLevel p n) / F)) :=
+        (rationalCyclotomicPadicFiniteLevel p n)/F)) :=
   isCyclic_of_injective
     (numberFieldCyclotomicPadicFiniteCompositumCoordinate
       F p n)

@@ -87,7 +87,6 @@ theorem
     (vF : AbsoluteValue F ℝ)
     (hvF : IsNonarchimedean (vF : F → ℝ))
     [IsUltrametricDist vF.Completion]
-
     [(NormedField.valuation
       (K := vF.Completion)).IsNontrivial]
     [LocallyCompactSpace vF.Completion] :

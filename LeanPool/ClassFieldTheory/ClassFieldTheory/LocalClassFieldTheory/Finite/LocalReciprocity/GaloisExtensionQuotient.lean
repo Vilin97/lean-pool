@@ -31,10 +31,10 @@ variable (K Ω : Type) [Field K] [Field Ω] [Algebra K Ω] [IsGalois K Ω]
 base field of the class formation. -/
 theorem closedFixingSubgroup_bot_eq_baseField :
     closedFixingSubgroup K Ω (⊥ : IntermediateField K Ω) =
-      baseField (Gal(Ω / K)) := by
+      baseField (Gal(Ω/K)) := by
   ext σ
   change σ ∈ (⊥ : IntermediateField K Ω).fixingSubgroup ↔
-    σ ∈ (⊤ : Subgroup (Gal(Ω / K)))
+    σ ∈ (⊤ : Subgroup (Gal(Ω/K)))
   rw [IntermediateField.fixingSubgroup_bot]
 
 /-- The fixing subgroup of an intermediate field lies in the fixing subgroup
@@ -78,7 +78,7 @@ ambient quotient by `Gal(Ω/E)`. -/
 def baseFixingToAmbientQuotient
     (E : IntermediateField K Ω) [IsGalois K E] :
     (closedFixingSubgroup K Ω (⊥ : IntermediateField K Ω)).toSubgroup →*
-      Gal(Ω / K) ⧸ (closedFixingSubgroup K Ω E).toSubgroup :=
+      Gal(Ω/K) ⧸ (closedFixingSubgroup K Ω E).toSubgroup :=
   (QuotientGroup.mk' (closedFixingSubgroup K Ω E).toSubgroup).comp
     (closedFixingSubgroup K Ω (⊥ : IntermediateField K Ω)).toSubgroup.subtype
 
@@ -121,7 +121,7 @@ def baseFixingExtensionQuotientEquivAmbient
       extensionSubgroup
         (closedFixingSubgroup K Ω (⊥ : IntermediateField K Ω))
         (closedFixingSubgroup K Ω E) (fixingSubgroupLeBase K Ω E)) ≃*
-      Gal(Ω / K) ⧸ (closedFixingSubgroup K Ω E).toSubgroup :=
+      Gal(Ω/K) ⧸ (closedFixingSubgroup K Ω E).toSubgroup :=
   (QuotientGroup.quotientMulEquivOfEq
       (baseFixingToAmbientQuotient_ker K Ω E).symm).trans
     (QuotientGroup.quotientKerEquivOfSurjective
@@ -146,8 +146,8 @@ def baseFixingExtensionQuotientEquivGaloisGroup
       extensionSubgroup
         (closedFixingSubgroup K Ω (⊥ : IntermediateField K Ω))
         (closedFixingSubgroup K Ω E) (fixingSubgroupLeBase K Ω E)) ≃*
-      Gal(E / K) := by
-  let H : ClosedSubgroup (Gal(Ω / K)) := closedFixingSubgroup K Ω E
+      Gal(E/K) := by
+  let H : ClosedSubgroup (Gal(Ω/K)) := closedFixingSubgroup K Ω E
   letI : H.toSubgroup.Normal := closedFixingSubgroup_normal K Ω E
   exact (baseFixingExtensionQuotientEquivAmbient K Ω E).trans
     ((InfiniteGalois.normalAutEquivQuotient H).trans

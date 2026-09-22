@@ -70,13 +70,12 @@ noncomputable def abstractFixedFieldNormResidueSymbol
       (K.toSubgroup ⧸ extensionSubgroup K L hLK)]
     [hKabsolute : Finite
       ((baseField (Gal(Ω/k))).toSubgroup ⧸
-        extensionSubgroup (baseField (Gal(Ω / k))) K
+        extensionSubgroup (baseField (Gal(Ω/k))) K
           (le_baseField K))] :
     Additive (abstractFixedField k Ω K)ˣ →+
       Additive (Abelianization
-        Gal(abstractRelativeFixedField k Ω hLK /
-          abstractFixedField k Ω K)) := by
-  let KF : FiniteAbstractField (Gal(Ω / k)) :=
+        Gal(abstractRelativeFixedField k Ω hLK/abstractFixedField k Ω K)) := by
+  let KF : FiniteAbstractField (Gal(Ω/k)) :=
     ⟨K, hKabsolute⟩
   let E : FiniteGaloisSubextension KF.field :=
     ⟨L, hLK, hnormal, hfinite⟩
@@ -113,11 +112,9 @@ noncomputable def abstractFixedFieldAbelianizedRestriction
     [hLnormal : (extensionSubgroup K L hLK).Normal]
     [hL'normal : (extensionSubgroup K' L' hL'K').Normal] :
     Additive (Abelianization
-        Gal(abstractRelativeFixedField k Ω hL'K' /
-          abstractFixedField k Ω K')) →+
+        Gal(abstractRelativeFixedField k Ω hL'K'/abstractFixedField k Ω K')) →+
       Additive (Abelianization
-        Gal(abstractRelativeFixedField k Ω hLK /
-          abstractFixedField k Ω K)) :=
+        Gal(abstractRelativeFixedField k Ω hLK/abstractFixedField k Ω K)) :=
   MonoidHom.toAdditive
     ((abstractExtensionQuotientEquivGaloisGroup
       k Ω K L hLK hLnormal).abelianizationCongr.toMonoidHom.comp
@@ -190,13 +187,13 @@ theorem abstractFixedFieldNormResidueSymbol_norm_restriction
     [hK'Kfinite : Finite
       (K.toSubgroup ⧸ extensionSubgroup K K' hK'K)]
     [hKabsolute : Finite
-      ((baseField (Gal(Ω / k))).toSubgroup ⧸
-        extensionSubgroup (baseField (Gal(Ω / k))) K
+      ((baseField (Gal(Ω/k))).toSubgroup ⧸
+        extensionSubgroup (baseField (Gal(Ω/k))) K
           (le_baseField K))] :
-    letI : Finite ((baseField (Gal(Ω / k))).toSubgroup ⧸
-        extensionSubgroup (baseField (Gal(Ω / k))) K'
+    letI : Finite ((baseField (Gal(Ω/k))).toSubgroup ⧸
+        extensionSubgroup (baseField (Gal(Ω/k))) K'
           (le_baseField K')) :=
-      relativeTowerQuotientFinite (baseField (Gal(Ω / k))) K K' hK'K
+      relativeTowerQuotientFinite (baseField (Gal(Ω/k))) K K' hK'K
         (le_baseField K)
     (abstractFixedFieldAbelianizedRestriction
         k Ω K K' L L' hLK hL'K' hK'K hL'L).comp
@@ -205,16 +202,16 @@ theorem abstractFixedFieldNormResidueSymbol_norm_restriction
       (abstractFixedFieldNormResidueSymbol
         k Ω D v hcf K L hLK).comp
         (abstractFixedFieldNormUnits k Ω K K' hK'K) := by
-  let : Finite ((baseField (Gal(Ω / k))).toSubgroup ⧸
-      extensionSubgroup (baseField (Gal(Ω / k))) K'
+  let : Finite ((baseField (Gal(Ω/k))).toSubgroup ⧸
+      extensionSubgroup (baseField (Gal(Ω/k))) K'
         (le_baseField K')) :=
-    relativeTowerQuotientFinite (baseField (Gal(Ω / k))) K K' hK'K
+    relativeTowerQuotientFinite (baseField (Gal(Ω/k))) K K' hK'K
       (le_baseField K)
-  let KF : FiniteAbstractField (Gal(Ω / k)) :=
+  let KF : FiniteAbstractField (Gal(Ω/k)) :=
     ⟨K, hKabsolute⟩
-  let K'F : FiniteAbstractField (Gal(Ω / k)) :=
+  let K'F : FiniteAbstractField (Gal(Ω/k)) :=
     ⟨K', inferInstance⟩
-  let T : FiniteAbstractFieldExtension (Gal(Ω / k)) :=
+  let T : FiniteAbstractFieldExtension (Gal(Ω/k)) :=
     { field := K'F
       base := KF
       below := hK'K
@@ -300,11 +297,9 @@ noncomputable def abstractFixedFieldAbelianizedTransfer
       FiniteGaloisSubextension.finite_extension_over_intermediate
         (hLK'.trans hK'K) hK'K hLK'
     Additive (Abelianization
-        Gal(abstractRelativeFixedField k Ω (hLK'.trans hK'K) /
-          abstractFixedField k Ω K)) →+
+        Gal(abstractRelativeFixedField k Ω (hLK'.trans hK'K)/abstractFixedField k Ω K)) →+
       Additive (Abelianization
-        Gal(abstractRelativeFixedField k Ω hLK' /
-          abstractFixedField k Ω K')) := by
+        Gal(abstractRelativeFixedField k Ω hLK'/abstractFixedField k Ω K')) := by
   letI : (extensionSubgroup K' L hLK').Normal :=
     transferNormNaturality_intermediateExtension_normal K K' L hLK' hK'K
   letI : Finite
@@ -338,7 +333,7 @@ theorem abstractFixedFieldNormResidueSymbol_transfer_inclusion
         extensionSubgroup K L (hLK'.trans hK'K))]
     [hKabsolute : Finite
       ((baseField (Gal(Ω/k))).toSubgroup ⧸
-        extensionSubgroup (baseField (Gal(Ω / k))) K
+        extensionSubgroup (baseField (Gal(Ω/k))) K
           (le_baseField K))] :
     letI : (extensionSubgroup K' L hLK').Normal :=
       transferNormNaturality_intermediateExtension_normal K K' L hLK' hK'K
@@ -350,10 +345,10 @@ theorem abstractFixedFieldNormResidueSymbol_transfer_inclusion
         (K.toSubgroup ⧸ extensionSubgroup K K' hK'K) :=
       FiniteGaloisSubextension.finite_intermediate_extension
         (hLK'.trans hK'K) hLK' hK'K
-    letI : Finite ((baseField (Gal(Ω / k))).toSubgroup ⧸
-        extensionSubgroup (baseField (Gal(Ω / k))) K'
+    letI : Finite ((baseField (Gal(Ω/k))).toSubgroup ⧸
+        extensionSubgroup (baseField (Gal(Ω/k))) K'
           (le_baseField K')) :=
-      relativeTowerQuotientFinite (baseField (Gal(Ω / k))) K K' hK'K
+      relativeTowerQuotientFinite (baseField (Gal(Ω/k))) K K' hK'K
         (le_baseField K)
     (abstractFixedFieldAbelianizedTransfer
         k Ω K K' L hLK' hK'K).comp
@@ -372,16 +367,16 @@ theorem abstractFixedFieldNormResidueSymbol_transfer_inclusion
       (K.toSubgroup ⧸ extensionSubgroup K K' hK'K) :=
     FiniteGaloisSubextension.finite_intermediate_extension
       (hLK'.trans hK'K) hLK' hK'K
-  let : Finite ((baseField (Gal(Ω / k))).toSubgroup ⧸
-      extensionSubgroup (baseField (Gal(Ω / k))) K'
+  let : Finite ((baseField (Gal(Ω/k))).toSubgroup ⧸
+      extensionSubgroup (baseField (Gal(Ω/k))) K'
         (le_baseField K')) :=
-    relativeTowerQuotientFinite (baseField (Gal(Ω / k))) K K' hK'K
+    relativeTowerQuotientFinite (baseField (Gal(Ω/k))) K K' hK'K
       (le_baseField K)
-  let KF : FiniteAbstractField (Gal(Ω / k)) :=
+  let KF : FiniteAbstractField (Gal(Ω/k)) :=
     ⟨K, hKabsolute⟩
-  let K'F : FiniteAbstractField (Gal(Ω / k)) :=
+  let K'F : FiniteAbstractField (Gal(Ω/k)) :=
     ⟨K', inferInstance⟩
-  let T : FiniteAbstractFieldExtension (Gal(Ω / k)) :=
+  let T : FiniteAbstractFieldExtension (Gal(Ω/k)) :=
     { field := K'F
       base := KF
       below := hK'K
@@ -455,13 +450,13 @@ structure LocalFixedFieldNormRestrictionSquare
     (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k]
     [IsNonarchimedeanLocalField k] where
   /-- The subgroup fixing the lower base field. -/
-  lowerBase : ClosedSubgroup (Gal(SeparableClosure k / k))
+  lowerBase : ClosedSubgroup (Gal(SeparableClosure k/k))
   /-- The subgroup fixing the upper base field. -/
-  upperBase : ClosedSubgroup (Gal(SeparableClosure k / k))
+  upperBase : ClosedSubgroup (Gal(SeparableClosure k/k))
   /-- The subgroup fixing the top field of the lower horizontal extension. -/
-  lowerTop : ClosedSubgroup (Gal(SeparableClosure k / k))
+  lowerTop : ClosedSubgroup (Gal(SeparableClosure k/k))
   /-- The subgroup fixing the top field of the upper horizontal extension. -/
-  upperTop : ClosedSubgroup (Gal(SeparableClosure k / k))
+  upperTop : ClosedSubgroup (Gal(SeparableClosure k/k))
   /-- The lower top subgroup lies in the lower base subgroup. -/
   lowerTop_le_lowerBase : lowerTop.toSubgroup ≤ lowerBase.toSubgroup
   /-- The upper top subgroup lies in the upper base subgroup. -/
@@ -491,8 +486,8 @@ structure LocalFixedFieldNormRestrictionSquare
   /-- The lower base field is finite over the original local field. -/
   lowerAbsoluteFinite :
     Finite
-      ((baseField (Gal(SeparableClosure k / k))).toSubgroup ⧸
-        extensionSubgroup (baseField (Gal(SeparableClosure k / k)))
+      ((baseField (Gal(SeparableClosure k/k))).toSubgroup ⧸
+        extensionSubgroup (baseField (Gal(SeparableClosure k/k)))
           lowerBase (le_baseField lowerBase))
 
 namespace LocalFixedFieldNormRestrictionSquare
@@ -504,14 +499,14 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k]
 theorem upperAbsoluteFinite
     (T : LocalFixedFieldNormRestrictionSquare k) :
     Finite
-      ((baseField (Gal(SeparableClosure k / k))).toSubgroup ⧸
-        extensionSubgroup (baseField (Gal(SeparableClosure k / k)))
+      ((baseField (Gal(SeparableClosure k/k))).toSubgroup ⧸
+        extensionSubgroup (baseField (Gal(SeparableClosure k/k)))
           T.upperBase (le_baseField T.upperBase)) := by
   let := T.lowerAbsoluteFinite
   let := T.baseFinite
   exact
     relativeTowerQuotientFinite
-      (baseField (Gal(SeparableClosure k / k)))
+      (baseField (Gal(SeparableClosure k/k)))
       T.lowerBase T.upperBase T.upperBase_le_lowerBase
       (le_baseField T.lowerBase)
 
@@ -595,11 +590,11 @@ structure LocalFixedFieldTransferTower
     (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k]
     [IsNonarchimedeanLocalField k] where
   /-- The subgroup fixing the base field of the tower. -/
-  base : ClosedSubgroup (Gal(SeparableClosure k / k))
+  base : ClosedSubgroup (Gal(SeparableClosure k/k))
   /-- The subgroup fixing the intermediate field of the tower. -/
-  intermediate : ClosedSubgroup (Gal(SeparableClosure k / k))
+  intermediate : ClosedSubgroup (Gal(SeparableClosure k/k))
   /-- The subgroup fixing the top field of the tower. -/
-  top : ClosedSubgroup (Gal(SeparableClosure k / k))
+  top : ClosedSubgroup (Gal(SeparableClosure k/k))
   /-- The top subgroup lies in the intermediate subgroup. -/
   top_le_intermediate : top.toSubgroup ≤ intermediate.toSubgroup
   /-- The intermediate subgroup lies in the base subgroup. -/
@@ -616,8 +611,8 @@ structure LocalFixedFieldTransferTower
   /-- The base field is finite over the original local field. -/
   baseAbsoluteFinite :
     Finite
-      ((baseField (Gal(SeparableClosure k / k))).toSubgroup ⧸
-        extensionSubgroup (baseField (Gal(SeparableClosure k / k)))
+      ((baseField (Gal(SeparableClosure k/k))).toSubgroup ⧸
+        extensionSubgroup (baseField (Gal(SeparableClosure k/k)))
           base (le_baseField base))
 
 namespace LocalFixedFieldTransferTower
@@ -664,14 +659,14 @@ theorem baseIntermediateFinite
 theorem intermediateAbsoluteFinite
     (T : LocalFixedFieldTransferTower k) :
     Finite
-      ((baseField (Gal(SeparableClosure k / k))).toSubgroup ⧸
-        extensionSubgroup (baseField (Gal(SeparableClosure k / k)))
+      ((baseField (Gal(SeparableClosure k/k))).toSubgroup ⧸
+        extensionSubgroup (baseField (Gal(SeparableClosure k/k)))
           T.intermediate (le_baseField T.intermediate)) := by
   let := T.baseAbsoluteFinite
   let := baseIntermediateFinite T
   exact
     relativeTowerQuotientFinite
-      (baseField (Gal(SeparableClosure k / k)))
+      (baseField (Gal(SeparableClosure k/k)))
       T.base T.intermediate T.intermediate_le_base
       (le_baseField T.base)
 

@@ -438,7 +438,7 @@ and the native quotient topology on the ray class group. -/
 noncomputable def
     rayClassFieldGaloisContinuousMulEquivRayClassGroup
     (m : RayClass.Modulus K) :
-    Gal((rayClassField K m) / K) ≃ₜ*
+    Gal((rayClassField K m)/K) ≃ₜ*
       RayClass.RayClassGroup m := by
   letI : DiscreteTopology (RayClass.RayClassGroup m) :=
     QuotientGroup.discreteTopology
@@ -515,7 +515,7 @@ open scoped Classical in
 selected ray class field with the ray class group `C_K / C_K^m`. -/
 noncomputable abbrev rayClassFieldGaloisEquivRayClassGroup
     (m : RayClass.Modulus K) :
-    Gal((rayClassField K m) / K) ≃*
+    Gal((rayClassField K m)/K) ≃*
       RayClass.RayClassGroup m :=
   closedFiniteIndexClassFieldGaloisEquivNormQuotient
     (K := K) (RayClass.Modulus.congruenceSubgroup m)

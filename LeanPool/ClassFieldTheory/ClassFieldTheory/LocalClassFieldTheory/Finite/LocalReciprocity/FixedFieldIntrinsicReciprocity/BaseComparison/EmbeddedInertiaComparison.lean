@@ -101,13 +101,13 @@ theorem
     exact (AlgHom.fieldRange i).fixingSubgroup_le hRange
   let hHabsolute : Finite
       ((baseField
-        Gal(SeparableClosure K / K)).toSubgroup ⧸
+        Gal(SeparableClosure K/K)).toSubgroup ⧸
         extensionSubgroup
-          (baseField Gal(SeparableClosure K / K))
+          (baseField Gal(SeparableClosure K/K))
           H₀ (le_baseField H₀)) := by
     exact ambientEmbeddedAbsoluteQuotientFinite K F i
   let H : FiniteAbstractField
-      Gal(SeparableClosure K / K) :=
+      Gal(SeparableClosure K/K) :=
     ⟨H₀, ambientEmbeddedAbsoluteQuotientFinite K F i⟩
   let RF :=
     (intrinsicFiniteAbstractBase F).toFiniteResidueAbstractField

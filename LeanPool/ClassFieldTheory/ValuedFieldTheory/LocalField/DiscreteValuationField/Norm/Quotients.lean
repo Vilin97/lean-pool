@@ -2381,7 +2381,6 @@ theorem card_normQuotient_eq_residueDegree
     {ϖG : G} (hϖG : vG.IsUniformizer ϖG)
     {ϖH : H} (hϖH : vH.IsUniformizer ϖH)
     (hzero : vG.zeroSubgroup ≤ N.normSubgroup)
-
     :
     Nat.card (G ⧸ N.normSubgroup) = N.residueDegree := by
   calc

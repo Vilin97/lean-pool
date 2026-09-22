@@ -17,6 +17,11 @@ its valuation in the completed target is the global ramification index, and
 its image generates the completed base maximal ideal.
 -/
 
+open _root_.ValuationTheory.DiscreteValuationField.Valuation renaming
+  mem_maximalIdeal_pow_iff_valuation_le_uniformizer_pow →
+    mem_maximalIdeal_pow_iff_valuation_le_uniformizer_pow
+
+
 open scoped NumberField NNReal ValuativeRel
 open NumberField IsDedekindDomain
 
@@ -133,7 +138,7 @@ theorem chosenFinitePlace_completed_ramificationIdx'_eq_centre
     exact h
   have hπConcreteMem (n : ℕ) :
       πConcrete ∈ targetDVF.maximalIdeal ^ n ↔ n ≤ eGlobal := by
-    rw [ValuationTheory.DiscreteValuationField.Valuation.mem_maximalIdeal_pow_iff_valuation_le_uniformizer_pow
+    rw [mem_maximalIdeal_pow_iff_valuation_le_uniformizer_pow
       targetDVF.valuation hϖ n]
     change Valued.v (πConcrete : W.adicCompletion L) ≤
       Valued.v ((ϖ : W.adicCompletion L) ^ n) ↔ n ≤ eGlobal

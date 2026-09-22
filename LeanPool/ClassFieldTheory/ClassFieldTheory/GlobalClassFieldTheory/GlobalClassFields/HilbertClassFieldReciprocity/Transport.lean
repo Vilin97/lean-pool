@@ -76,7 +76,7 @@ noncomputable def hilbertClassFieldGlobalReciprocityTransportEquiv
     (H : Subgroup (IdeleClassGroup F))
     (h : (_root_.ideleClassNorm F E).range = H)
     (f : IdeleClassGroup F ⧸ H ≃* I) :
-    Gal(E / F) ≃* I :=
+    Gal(E/F) ≃* I :=
   (AddEquiv.toMultiplicative
       (globalReciprocityEquiv F E)).trans
     ((QuotientGroup.quotientMulEquivOfEq h).trans f)
@@ -141,7 +141,7 @@ noncomputable def hilbertClassFieldGlobalReciprocityTransportData
     (H : Subgroup (IdeleClassGroup F))
     (h : (_root_.ideleClassNorm F E).range = H)
     (f : IdeleClassGroup F ⧸ H ≃* I) :
-    {e : Gal(E / F) ≃* I //
+    {e : Gal(E/F) ≃* I //
       ∀ c : IdeleClassGroup F,
         e (globalNormResidueMonoidHom F E c) =
           f (QuotientGroup.mk' H c)} :=

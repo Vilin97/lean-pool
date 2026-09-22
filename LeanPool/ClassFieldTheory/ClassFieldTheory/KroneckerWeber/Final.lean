@@ -67,7 +67,6 @@ theorem kroneckerWeberCompositum_finrank_le_totient :
       ℚ L
         (CyclotomicField
           (kroneckerWeberConductorCandidate (L := L)) ℚ)
-
   let chosen : ∀ p : Nat.Primes,
       Ideal.primesOver (rationalPrimeIdeal p) (𝓞 M) := fun p ↦
     if hp : p ∈ S then
@@ -82,7 +81,6 @@ theorem kroneckerWeberCompositum_finrank_le_totient :
         by simpa only [hpPrime] using globalPadicPrimeIdeal_liesOver p.1 M wM⟩
     else
       kroneckerWeberCompositumPrimeAbove (L := L) p
-
   have hunramifiedOutside :
       ∀ (Q : Ideal (𝓞 M)) [Q.IsPrime] [Q.IsMaximal],
         (¬ ∃ p ∈ S, rationalPrimeIdeal p = Q.under ℤ) →
@@ -90,7 +88,6 @@ theorem kroneckerWeberCompositum_finrank_le_totient :
     intro Q _ _ hQ
     exact kroneckerWeberCompositum_isUnramifiedAt_of_not_mem
       (L := L) A B eLA eCB hsup Q hQ
-
   have hcard : ∀ p ∈ S,
       Nat.card
           (inertiaGroup (chosen p).1 (M ≃ₐ[ℚ] M)) ≤
@@ -112,7 +109,6 @@ theorem kroneckerWeberCompositum_finrank_le_totient :
         (L := L) p hp
     rw [kroneckerWeberGlobalCompositumValuationInertiaCard] at hlocal
     exact hbridge.trans hlocal
-
   have hdegree :=
     finrank_le_totient_prod_primePowers_of_chosen_primes
       M S e chosen hunramifiedOutside hcard

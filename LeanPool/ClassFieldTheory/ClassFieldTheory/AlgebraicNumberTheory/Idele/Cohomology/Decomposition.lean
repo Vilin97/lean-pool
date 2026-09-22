@@ -358,16 +358,16 @@ theorem unramifiedLocalIntegerUnitsHerbrand_subsingleton
     [LocalFieldTheory.IsNonarchimedeanLocalField.IsUnramifiedValuedExtension
       k ell]
     (g : Gal(ell/k))
-    (hg : ∀ σ : Gal(ell / k),
+    (hg : ∀ σ : Gal(ell/k),
       σ ∈ Subgroup.zpowers g) :
     letI :=
       galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure
         k ell
     Subsingleton
-        (HerbrandH0 (Gal(ell / k)) 𝒪[ell]ˣ) ∧
+        (HerbrandH0 (Gal(ell/k)) 𝒪[ell]ˣ) ∧
       Subsingleton
         (HerbrandHMinusOne
-          (Gal(ell / k)) 𝒪[ell]ˣ g) := by
+          (Gal(ell/k)) 𝒪[ell]ˣ g) := by
   exact
     (unramified_units_tateCohomology_and_norm_surjective_for_generator
       k ell g hg).1
@@ -393,10 +393,10 @@ theorem unramifiedLocalIntegerUnitsHerbrand_subsingleton_frobenius
       galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure
         k ell
     Subsingleton
-        (HerbrandH0 (Gal(ell / k)) 𝒪[ell]ˣ) ∧
+        (HerbrandH0 (Gal(ell/k)) 𝒪[ell]ˣ) ∧
       Subsingleton
         (HerbrandHMinusOne
-          (Gal(ell / k)) 𝒪[ell]ˣ φ) := by
+          (Gal(ell/k)) 𝒪[ell]ˣ φ) := by
   exact
     (unramified_units_tateCohomology_and_norm_surjective
       k ell).1
@@ -424,7 +424,7 @@ noncomputable def unramifiedInducedIntegerUnitsHerbrandH0Equiv
       MulDistribMulAction.compHom 𝒪[ell]ˣ e.toMonoidHom
     letI : Fintype H := Fintype.ofFinite H
     HerbrandH0 G (InducedModule (B := 𝒪[ell]ˣ) H) ≃*
-      HerbrandH0 (Gal(ell / k)) 𝒪[ell]ˣ := by
+      HerbrandH0 (Gal(ell/k)) 𝒪[ell]ˣ := by
   letI : MulDistribMulAction H 𝒪[ell]ˣ :=
     MulDistribMulAction.compHom 𝒪[ell]ˣ e.toMonoidHom
   letI : Fintype H := Fintype.ofFinite H
@@ -449,7 +449,7 @@ noncomputable def unramifiedInducedIntegerUnitsHerbrandHMinusOneEquiv
     letI : Fintype H := Fintype.ofFinite H
     HerbrandHMinusOne G
         (InducedModule (B := 𝒪[ell]ˣ) H) σ ≃*
-      HerbrandHMinusOne (Gal(ell / k)) 𝒪[ell]ˣ
+      HerbrandHMinusOne (Gal(ell/k)) 𝒪[ell]ˣ
         (e (subgroupGeneratorOfGenerator H σ hσ)) := by
   letI : MulDistribMulAction H 𝒪[ell]ˣ :=
     MulDistribMulAction.compHom 𝒪[ell]ˣ e.toMonoidHom
@@ -479,10 +479,10 @@ theorem unramifiedInducedIntegerUnitsHerbrand_subsingleton
     [Module.Finite 𝒪[k] 𝒪[ell]]
     [LocalFieldTheory.IsNonarchimedeanLocalField.IsUnramifiedValuedExtension
       k ell]
-    (e : H ≃* Gal(ell / k))
+    (e : H ≃* Gal(ell/k))
     (σ : G)
     (hσ : ∀ τ : G, τ ∈ Subgroup.zpowers σ) :
-    letI : MulDistribMulAction (Gal(ell / k)) 𝒪[ell]ˣ :=
+    letI : MulDistribMulAction (Gal(ell/k)) 𝒪[ell]ˣ :=
       galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure
         k ell
     letI : MulDistribMulAction H 𝒪[ell]ˣ :=
@@ -494,14 +494,14 @@ theorem unramifiedInducedIntegerUnitsHerbrand_subsingleton
       Subsingleton
         (HerbrandHMinusOne G
           (InducedModule (B := 𝒪[ell]ˣ) H) σ) := by
-  let _ : MulDistribMulAction (Gal(ell / k)) 𝒪[ell]ˣ :=
+  let _ : MulDistribMulAction (Gal(ell/k)) 𝒪[ell]ˣ :=
     galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure
       k ell
   let _ : MulDistribMulAction H 𝒪[ell]ˣ :=
     MulDistribMulAction.compHom 𝒪[ell]ˣ e.toMonoidHom
   let _ : Fintype H := Fintype.ofFinite H
   let δ := subgroupGeneratorOfGenerator H σ hσ
-  have hδ : ∀ τ : Gal(ell / k),
+  have hδ : ∀ τ : Gal(ell/k),
       τ ∈ Subgroup.zpowers (e δ) := by
     intro τ
     have hmem :

@@ -77,7 +77,7 @@ the original number field gives the ordinary ideal class group
 directly. -/
 private noncomputable def
     smallHilbertClassFieldReciprocityOverOriginalData :
-    {e : Gal((smallHilbertClassField K) / K) ≃*
+    {e : Gal((smallHilbertClassField K)/K) ≃*
         ClassGroup (𝓞 K) //
       ∀ c : IdeleClassGroup K,
         e (globalNormResidueMonoidHom K
@@ -100,7 +100,7 @@ open scoped Classical in
 /-- The direct reciprocity equivalence for the small Hilbert class field,
 using the original number field as the scalar base. -/
 noncomputable def smallHilbertClassFieldGaloisEquivClassGroupOverOriginal :
-    Gal((smallHilbertClassField K) / K) ≃*
+    Gal((smallHilbertClassField K)/K) ≃*
       ClassGroup (𝓞 K) :=
   (smallHilbertClassFieldReciprocityOverOriginalData (K := K)).1
 

@@ -9,6 +9,11 @@ import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.GaloisValuation.
 /-! Provides the public declarations in the
   `RamificationTheory.GaloisValuation.AbsoluteGalois.FiniteExtensionCorrespondence` Lean module. -/
 
+open _root_.RamificationTheory.Field.absoluteGaloisGroup renaming
+  valuationSubring_mem_preserved_on_finite_separable_intermediate →
+    valuationSubring_mem_preserved_on_finite_separable_intermediate
+
+
 namespace RamificationTheory
 
 open ValuationTheory
@@ -47,30 +52,30 @@ def fixingSubgroupOfExtension (i : L →ₐ[K] AlgebraicClosure K) :
     Subgroup (Field.absoluteGaloisGroup K) where
   carrier :=
     {σ | ∀ x : L,
-      (show Gal(AlgebraicClosure K / K) from σ) (i x) = i x}
+      (show Gal(AlgebraicClosure K/K) from σ) (i x) = i x}
   one_mem' := by
     intro x
     rfl
   mul_mem' := by
     intro σ τ hσ hτ x
-    change (show Gal(AlgebraicClosure K / K) from σ)
-      ((show Gal(AlgebraicClosure K / K) from τ) (i x)) = i x
+    change (show Gal(AlgebraicClosure K/K) from σ)
+      ((show Gal(AlgebraicClosure K/K) from τ) (i x)) = i x
     rw [hτ x, hσ x]
   inv_mem' := by
     intro σ hσ x
-    change (show Gal(AlgebraicClosure K / K) from σ).symm (i x) = i x
+    change (show Gal(AlgebraicClosure K/K) from σ).symm (i x) = i x
     have h :=
       congrArg (fun y =>
-        (show Gal(AlgebraicClosure K / K) from σ).symm y) (hσ x)
+        (show Gal(AlgebraicClosure K/K) from σ).symm y) (hσ x)
     exact h.symm.trans
-      ((show Gal(AlgebraicClosure K / K) from σ).symm_apply_apply (i x))
+      ((show Gal(AlgebraicClosure K/K) from σ).symm_apply_apply (i x))
 
 /-- States the theorem `mem_fixingSubgroupOfExtension`. -/
 @[simp]
 theorem mem_fixingSubgroupOfExtension
     (i : L →ₐ[K] AlgebraicClosure K) (σ : Field.absoluteGaloisGroup K) :
     σ ∈ fixingSubgroupOfExtension K i ↔
-      ∀ x : L, (show Gal(AlgebraicClosure K / K) from σ) (i x) = i x :=
+      ∀ x : L, (show Gal(AlgebraicClosure K/K) from σ) (i x) = i x :=
   Iff.rfl
 
 /-- The concrete pointwise-fixing subgroup is the usual fixing subgroup of
@@ -80,7 +85,7 @@ theorem fixingSubgroupOfExtension_eq_fieldRange_fixingSubgroup
     fixingSubgroupOfExtension K i =
       (AlgHom.fieldRange i).fixingSubgroup := by
   change
-    (show Subgroup (Gal(AlgebraicClosure K / K)) from
+    (show Subgroup (Gal(AlgebraicClosure K/K)) from
       fixingSubgroupOfExtension K i) =
       (AlgHom.fieldRange i).fixingSubgroup
   ext σ
@@ -107,7 +112,7 @@ theorem fixingSubgroupOfExtension_le_of_fieldRange_le
     fixingSubgroupOfExtension K iM ≤ fixingSubgroupOfExtension K iL := by
   intro σ hσ x
   rcases (AlgHom.mem_fieldRange (f := iM)).mp (h ⟨x, rfl⟩) with ⟨y, hy⟩
-  change (show Gal(AlgebraicClosure K / K) from σ) (iL.toRingHom x) =
+  change (show Gal(AlgebraicClosure K/K) from σ) (iL.toRingHom x) =
     iL.toRingHom x
   rw [← hy]
   exact hσ y
@@ -148,7 +153,7 @@ theorem mem_openSubgroupOfFiniteExtension [FiniteDimensional K L]
     (i : L →ₐ[K] AlgebraicClosure K) (σ : Field.absoluteGaloisGroup K) :
     σ ∈ openSubgroupOfFiniteExtension K i ↔
       ∀ x ∈ AlgHom.fieldRange i,
-        (show Gal(AlgebraicClosure K / K) from σ) x = x := by
+        (show Gal(AlgebraicClosure K/K) from σ) x = x := by
   let := finiteDimensional_fieldRange (K := K) i
   exact mem_openSubgroupOfFiniteIntermediateField K (AlgHom.fieldRange i) σ
 
@@ -159,7 +164,7 @@ theorem mem_openSubgroupOfFiniteExtension_iff_forall_apply_eq
     [FiniteDimensional K L]
     (i : L →ₐ[K] AlgebraicClosure K) (σ : Field.absoluteGaloisGroup K) :
     σ ∈ openSubgroupOfFiniteExtension K i ↔
-      ∀ x : L, (show Gal(AlgebraicClosure K / K) from σ) (i x) = i x := by
+      ∀ x : L, (show Gal(AlgebraicClosure K/K) from σ) (i x) = i x := by
   rw [mem_openSubgroupOfFiniteExtension]
   constructor
   · intro hσ x
@@ -246,7 +251,7 @@ def quotientNormalClosureOpenSubgroupEquivGalOfFiniteExtension
         (openSubgroupOfNormalClosureFiniteExtension K i :
           Subgroup (Field.absoluteGaloisGroup K)) ≃*
       Gal(IntermediateField.normalClosure K (AlgHom.fieldRange i)
-        (AlgebraicClosure K) / K) := by
+        (AlgebraicClosure K)/K) := by
   letI := finiteDimensional_fieldRange (K := K) i
   exact quotientNormalClosureOpenSubgroupEquivGal K (AlgHom.fieldRange i)
 
@@ -272,7 +277,7 @@ this cardinal is used for a finite extension. -/
 noncomputable def normalClosureFiniteExtensionGaloisCard
     (i : L →ₐ[K] AlgebraicClosure K) : ℕ := by
   exact Nat.card (Gal(IntermediateField.normalClosure K (AlgHom.fieldRange i)
-    (AlgebraicClosure K) / K))
+    (AlgebraicClosure K)/K))
 
 /-- The index of the normal-closure open subgroup attached to an embedded
 finite extension is the safely computed cardinality of its Galois group. -/
@@ -293,7 +298,7 @@ instance openSubgroupOfFiniteExtension.instFiniteIndex [FiniteDimensional K L]
       Subgroup (Field.absoluteGaloisGroup K))).FiniteIndex := by
   let := finiteDimensional_fieldRange (K := K) i
   change ((openSubgroupOfFiniteIntermediateField K (AlgHom.fieldRange i) :
-    Subgroup (Gal(AlgebraicClosure K / K)))).FiniteIndex
+    Subgroup (Gal(AlgebraicClosure K/K)))).FiniteIndex
   infer_instance
 
 /-- Provides the instance `instFiniteIndex`. -/
@@ -305,7 +310,7 @@ instance openSubgroupOfNormalClosureFiniteExtension.instFiniteIndex
   let := finiteDimensional_fieldRange (K := K) i
   change ((openSubgroupOfNormalClosureFiniteIntermediateField K
     (AlgHom.fieldRange i) :
-      Subgroup (Gal(AlgebraicClosure K / K)))).FiniteIndex
+      Subgroup (Gal(AlgebraicClosure K/K)))).FiniteIndex
   infer_instance
 
 /-- If the chosen algebraic closure is Galois over `K`, the index of the
@@ -325,7 +330,7 @@ theorem openSubgroupOfFiniteExtension_index_eq_finrank
 def conjugateEmbedding
     (i : L →ₐ[K] AlgebraicClosure K) (σ : Field.absoluteGaloisGroup K) :
     L →ₐ[K] AlgebraicClosure K :=
-  (show Gal(AlgebraicClosure K / K) from σ).toAlgHom.comp i
+  (show Gal(AlgebraicClosure K/K) from σ).toAlgHom.comp i
 
 /-- States the theorem `conjugateEmbedding_apply`. -/
 @[simp]
@@ -333,7 +338,7 @@ theorem conjugateEmbedding_apply
     (i : L →ₐ[K] AlgebraicClosure K)
     (σ : Field.absoluteGaloisGroup K) (x : L) :
     conjugateEmbedding K i σ x =
-      (show Gal(AlgebraicClosure K / K) from σ) (i x) :=
+      (show Gal(AlgebraicClosure K/K) from σ) (i x) :=
   rfl
 
 /-- The field range of the conjugated embedding is the image of the original
@@ -343,9 +348,9 @@ theorem fieldRange_conjugateEmbedding
     (σ : Field.absoluteGaloisGroup K) :
     AlgHom.fieldRange (conjugateEmbedding K i σ) =
       (AlgHom.fieldRange i).map
-        (show Gal(AlgebraicClosure K / K) from σ).toAlgHom :=
+        (show Gal(AlgebraicClosure K/K) from σ).toAlgHom :=
   (AlgHom.map_fieldRange i
-    (show Gal(AlgebraicClosure K / K) from σ).toAlgHom).symm
+    (show Gal(AlgebraicClosure K/K) from σ).toAlgHom).symm
 
 /-- Membership in the open subgroup attached to a conjugated embedding is
 membership in the original open subgroup after conjugating the automorphism
@@ -361,26 +366,26 @@ theorem mem_openSubgroupOfFiniteExtension_conjugateEmbedding_iff
   constructor
   · intro h x
     have hx := h x
-    change (show Gal(AlgebraicClosure K / K) from σ⁻¹ * τ * σ) (i x) = i x
-    change (show Gal(AlgebraicClosure K / K) from σ).symm
-      ((show Gal(AlgebraicClosure K / K) from τ)
-        ((show Gal(AlgebraicClosure K / K) from σ) (i x))) = i x
+    change (show Gal(AlgebraicClosure K/K) from σ⁻¹ * τ * σ) (i x) = i x
+    change (show Gal(AlgebraicClosure K/K) from σ).symm
+      ((show Gal(AlgebraicClosure K/K) from τ)
+        ((show Gal(AlgebraicClosure K/K) from σ) (i x))) = i x
     exact (congrArg
-      (fun y => (show Gal(AlgebraicClosure K / K) from σ).symm y) hx).trans
-        ((show Gal(AlgebraicClosure K / K) from σ).symm_apply_apply (i x))
+      (fun y => (show Gal(AlgebraicClosure K/K) from σ).symm y) hx).trans
+        ((show Gal(AlgebraicClosure K/K) from σ).symm_apply_apply (i x))
   · intro h x
     have hx := h x
-    change (show Gal(AlgebraicClosure K / K) from σ).symm
-      ((show Gal(AlgebraicClosure K / K) from τ)
-        ((show Gal(AlgebraicClosure K / K) from σ) (i x))) = i x at hx
-    change (show Gal(AlgebraicClosure K / K) from τ)
-        ((show Gal(AlgebraicClosure K / K) from σ) (i x)) =
-      (show Gal(AlgebraicClosure K / K) from σ) (i x)
+    change (show Gal(AlgebraicClosure K/K) from σ).symm
+      ((show Gal(AlgebraicClosure K/K) from τ)
+        ((show Gal(AlgebraicClosure K/K) from σ) (i x))) = i x at hx
+    change (show Gal(AlgebraicClosure K/K) from τ)
+        ((show Gal(AlgebraicClosure K/K) from σ) (i x)) =
+      (show Gal(AlgebraicClosure K/K) from σ) (i x)
     have hx' := congrArg
-      (fun y => (show Gal(AlgebraicClosure K / K) from σ) y) hx
-    exact ((show Gal(AlgebraicClosure K / K) from σ).apply_symm_apply
-      ((show Gal(AlgebraicClosure K / K) from τ)
-        ((show Gal(AlgebraicClosure K / K) from σ) (i x)))).symm.trans hx'
+      (fun y => (show Gal(AlgebraicClosure K/K) from σ) y) hx
+    exact ((show Gal(AlgebraicClosure K/K) from σ).apply_symm_apply
+      ((show Gal(AlgebraicClosure K/K) from τ)
+        ((show Gal(AlgebraicClosure K/K) from σ) (i x)))).symm.trans hx'
 
 /-- Conjugating the embedding conjugates the associated concrete open subgroup
 inside `G_K`. -/
@@ -471,9 +476,9 @@ theorem openSubgroupOfFiniteExtensionSup_toSubgroup
   change
     (openSubgroupOfFiniteIntermediateFieldSup K
       (AlgHom.fieldRange iL) (AlgHom.fieldRange iM) :
-        Subgroup (Gal(AlgebraicClosure K / K))) =
+        Subgroup (Gal(AlgebraicClosure K/K))) =
       (openSubgroupOfFiniteIntermediateField K (AlgHom.fieldRange iL) :
-        Subgroup (Gal(AlgebraicClosure K / K))) ⊓
+        Subgroup (Gal(AlgebraicClosure K/K))) ⊓
         openSubgroupOfFiniteIntermediateField K (AlgHom.fieldRange iM)
   exact openSubgroupOfFiniteIntermediateFieldSup_toSubgroup K
     (AlgHom.fieldRange iL) (AlgHom.fieldRange iM)
@@ -492,16 +497,16 @@ theorem mem_openSubgroupOfFiniteExtensionSup
   let : FiniteDimensional K (AlgHom.fieldRange iM) :=
     finiteDimensional_fieldRange (K := K) iM
   change
-    (show Gal(AlgebraicClosure K / K) from σ) ∈
+    (show Gal(AlgebraicClosure K/K) from σ) ∈
       (openSubgroupOfFiniteIntermediateFieldSup K
         (AlgHom.fieldRange iL) (AlgHom.fieldRange iM) :
-      Subgroup (Gal(AlgebraicClosure K / K))) ↔
-      (show Gal(AlgebraicClosure K / K) from σ) ∈
+      Subgroup (Gal(AlgebraicClosure K/K))) ↔
+      (show Gal(AlgebraicClosure K/K) from σ) ∈
         (openSubgroupOfFiniteIntermediateField K (AlgHom.fieldRange iL) :
-        Subgroup (Gal(AlgebraicClosure K / K))) ∧
-        (show Gal(AlgebraicClosure K / K) from σ) ∈
+        Subgroup (Gal(AlgebraicClosure K/K))) ∧
+        (show Gal(AlgebraicClosure K/K) from σ) ∈
           (openSubgroupOfFiniteIntermediateField K (AlgHom.fieldRange iM) :
-          Subgroup (Gal(AlgebraicClosure K / K)))
+          Subgroup (Gal(AlgebraicClosure K/K)))
   rw [openSubgroupOfFiniteIntermediateFieldSup_toSubgroup]
   exact Iff.rfl
 
@@ -513,8 +518,8 @@ theorem mem_openSubgroupOfFiniteExtensionSup_iff_forall_apply_eq
     (iM : M →ₐ[K] AlgebraicClosure K)
     (σ : Field.absoluteGaloisGroup K) :
     σ ∈ openSubgroupOfFiniteExtensionSup K iL iM ↔
-      (∀ x : L, (show Gal(AlgebraicClosure K / K) from σ) (iL x) = iL x) ∧
-        ∀ y : M, (show Gal(AlgebraicClosure K / K) from σ) (iM y) = iM y := by
+      (∀ x : L, (show Gal(AlgebraicClosure K/K) from σ) (iL x) = iL x) ∧
+        ∀ y : M, (show Gal(AlgebraicClosure K/K) from σ) (iM y) = iM y := by
   rw [mem_openSubgroupOfFiniteExtensionSup,
     mem_openSubgroupOfFiniteExtension_iff_forall_apply_eq,
     mem_openSubgroupOfFiniteExtension_iff_forall_apply_eq]
@@ -526,7 +531,7 @@ isomorphic to `Gal(K^al/i(L))`. -/
 def openSubgroupOfFiniteExtensionContinuousMulEquiv [FiniteDimensional K L]
     (i : L →ₐ[K] AlgebraicClosure K) :
     openSubgroupOfFiniteExtension K i ≃ₜ*
-      Gal(AlgebraicClosure K / AlgHom.fieldRange i) := by
+      Gal(AlgebraicClosure K/AlgHom.fieldRange i) := by
   letI := finiteDimensional_fieldRange (K := K) i
   exact
     openSubgroupOfFiniteIntermediateFieldContinuousMulEquiv K
@@ -535,7 +540,7 @@ def openSubgroupOfFiniteExtensionContinuousMulEquiv [FiniteDimensional K L]
 /-- The inclusion `Gal(K^al / i(L)) → G_K` attached to an embedded finite
 extension. -/
 def ofFiniteExtension (i : L →ₐ[K] AlgebraicClosure K) :
-    Gal(AlgebraicClosure K / AlgHom.fieldRange i) →*
+    Gal(AlgebraicClosure K/AlgHom.fieldRange i) →*
       Field.absoluteGaloisGroup K :=
   ofIntermediateField K (AlgHom.fieldRange i)
 
@@ -602,12 +607,12 @@ theorem mem_range_ofFiniteExtension_iff
     (σ : Field.absoluteGaloisGroup K) :
     σ ∈ MonoidHom.range (ofFiniteExtension K i) ↔
       ∀ x ∈ AlgHom.fieldRange i,
-        (show Gal(AlgebraicClosure K / K) from σ) x = x := by
+        (show Gal(AlgebraicClosure K/K) from σ) x = x := by
   change
-    (show Gal(AlgebraicClosure K / K) from σ) ∈
+    (show Gal(AlgebraicClosure K/K) from σ) ∈
         MonoidHom.range (ofIntermediateField K (AlgHom.fieldRange i)) ↔
       ∀ x ∈ AlgHom.fieldRange i,
-        (show Gal(AlgebraicClosure K / K) from σ) x = x
+        (show Gal(AlgebraicClosure K/K) from σ) x = x
   rw [mem_range_ofIntermediateField_iff]
   exact IntermediateField.mem_fixingSubgroup_iff (AlgHom.fieldRange i) σ
 
@@ -616,7 +621,7 @@ theorem mem_range_ofFiniteExtension_iff_forall_apply_eq
     [FiniteDimensional K L] (i : L →ₐ[K] AlgebraicClosure K)
     (σ : Field.absoluteGaloisGroup K) :
     σ ∈ MonoidHom.range (ofFiniteExtension K i) ↔
-      ∀ x : L, (show Gal(AlgebraicClosure K / K) from σ) (i x) = i x := by
+      ∀ x : L, (show Gal(AlgebraicClosure K/K) from σ) (i x) = i x := by
   rw [range_ofFiniteExtension]
   exact mem_openSubgroupOfFiniteExtension_iff_forall_apply_eq K i σ
 
@@ -663,8 +668,8 @@ instance openSubgroupOfFiniteExtension.instNormal_coe
 group of the embedded field range. -/
 def quotientEquivGalFieldRangeOfNormalFiniteExtension
     (i : L →ₐ[K] AlgebraicClosure K) [Normal K (AlgHom.fieldRange i)] :
-    Gal(AlgebraicClosure K / K) ⧸ (AlgHom.fieldRange i).fixingSubgroup ≃*
-      Gal(AlgHom.fieldRange i / K) :=
+    Gal(AlgebraicClosure K/K) ⧸ (AlgHom.fieldRange i).fixingSubgroup ≃*
+      Gal(AlgHom.fieldRange i/K) :=
   quotientEquivGalOfNormalIntermediateField K (AlgHom.fieldRange i)
 
 /-- States the theorem `quotientEquivGalFieldRangeOfNormalFiniteExtension_mk'`. -/
@@ -680,8 +685,8 @@ theorem quotientEquivGalFieldRangeOfNormalFiniteExtension_mk'
 automorphism group `Gal(L/K)`, transported across the chosen embedding. -/
 def quotientEquivGalOfNormalFiniteExtension [FiniteDimensional K L]
     (i : L →ₐ[K] AlgebraicClosure K) [Normal K (AlgHom.fieldRange i)] :
-    Gal(AlgebraicClosure K / K) ⧸ (AlgHom.fieldRange i).fixingSubgroup ≃*
-      Gal(L / K) :=
+    Gal(AlgebraicClosure K/K) ⧸ (AlgHom.fieldRange i).fixingSubgroup ≃*
+      Gal(L/K) :=
   (quotientEquivGalFieldRangeOfNormalFiniteExtension K i).trans
     (AlgEquiv.autCongr (AlgEquiv.ofInjectiveField i)).symm
 
@@ -706,7 +711,7 @@ def quotientOpenSubgroupEquivGalFieldRangeOfNormalFiniteExtension
     Field.absoluteGaloisGroup K ⧸
         (openSubgroupOfFiniteExtension K i :
           Subgroup (Field.absoluteGaloisGroup K)) ≃*
-      Gal(AlgHom.fieldRange i / K) :=
+      Gal(AlgHom.fieldRange i/K) :=
   quotientEquivGalFieldRangeOfNormalFiniteExtension K i
 
 /-- States the theorem `quotientOpenSubgroupEquivGalFieldRangeOfNormalFiniteExtension_mk'`. -/
@@ -730,7 +735,7 @@ def quotientOpenSubgroupEquivGalOfNormalFiniteExtension
     Field.absoluteGaloisGroup K ⧸
         (openSubgroupOfFiniteExtension K i :
           Subgroup (Field.absoluteGaloisGroup K)) ≃*
-      Gal(L / K) :=
+      Gal(L/K) :=
   (quotientOpenSubgroupEquivGalFieldRangeOfNormalFiniteExtension K i).trans
     (AlgEquiv.autCongr (AlgEquiv.ofInjectiveField i)).symm
 
@@ -754,7 +759,7 @@ private def automorphismsOverFieldRangeEquiv
     (i : L →ₐ[K] AlgebraicClosure K) [Algebra L (AlgebraicClosure K)]
     (hmap : ∀ x, algebraMap L (AlgebraicClosure K) x = i x) :
     (AlgebraicClosure K ≃ₐ[L] AlgebraicClosure K) ≃*
-      Gal(AlgebraicClosure K / AlgHom.fieldRange i) where
+      Gal(AlgebraicClosure K/AlgHom.fieldRange i) where
   toFun σ :=
     { σ.toRingEquiv with
       commutes' := by
@@ -786,7 +791,7 @@ private theorem automorphismsOverFieldRangeEquiv_continuous
     (hmap : ∀ x, algebraMap L (AlgebraicClosure K) x = i x) :
     Continuous (automorphismsOverFieldRangeEquiv K i hmap :
       (AlgebraicClosure K ≃ₐ[L] AlgebraicClosure K) →
-        Gal(AlgebraicClosure K / AlgHom.fieldRange i)) := by
+        Gal(AlgebraicClosure K/AlgHom.fieldRange i)) := by
   let : Algebra L (AlgHom.fieldRange i) :=
     (AlgEquiv.ofInjectiveField i).toRingHom.toAlgebra
   have : IsScalarTower L (AlgHom.fieldRange i) (AlgebraicClosure K) :=
@@ -868,7 +873,7 @@ private theorem automorphismsOverFieldRangeEquiv_symm_continuous
     (i : L →ₐ[K] AlgebraicClosure K) [Algebra L (AlgebraicClosure K)]
     (hmap : ∀ x, algebraMap L (AlgebraicClosure K) x = i x) :
     Continuous ((automorphismsOverFieldRangeEquiv K i hmap).symm :
-      Gal(AlgebraicClosure K / AlgHom.fieldRange i) →
+      Gal(AlgebraicClosure K/AlgHom.fieldRange i) →
         (AlgebraicClosure K ≃ₐ[L] AlgebraicClosure K)) := by
   have : IsScalarTower K L (AlgebraicClosure K) :=
     IsScalarTower.of_algebraMap_eq fun x => by
@@ -966,7 +971,7 @@ identified with `Gal(K^al / i(L))`. -/
 def equivGalFieldRangeOfFiniteExtension
     (i : L →ₐ[K] AlgebraicClosure K) :
     Field.absoluteGaloisGroup L ≃*
-      Gal(AlgebraicClosure K / AlgHom.fieldRange i) := by
+      Gal(AlgebraicClosure K/AlgHom.fieldRange i) := by
   letI : Algebra L (AlgebraicClosure K) := i.toRingHom.toAlgebra
   have hmap : ∀ x, algebraMap L (AlgebraicClosure K) x = i x := fun _ => rfl
   haveI : IsScalarTower K L (AlgebraicClosure K) := .of_algebraMap_eq fun x => by
@@ -985,7 +990,7 @@ theorem equivGalFieldRangeOfFiniteExtension_continuous
     [FiniteDimensional K L] (i : L →ₐ[K] AlgebraicClosure K) :
     Continuous (equivGalFieldRangeOfFiniteExtension K i :
       Field.absoluteGaloisGroup L →
-        Gal(AlgebraicClosure K / AlgHom.fieldRange i)) := by
+        Gal(AlgebraicClosure K/AlgHom.fieldRange i)) := by
   let : Algebra L (AlgebraicClosure K) := i.toRingHom.toAlgebra
   have hmap : ∀ x, algebraMap L (AlgebraicClosure K) x = i x := fun _ => rfl
   have : IsScalarTower K L (AlgebraicClosure K) := .of_algebraMap_eq fun x => by
@@ -1000,7 +1005,7 @@ theorem equivGalFieldRangeOfFiniteExtension_continuous
   change Continuous (((AlgEquiv.autCongr e).trans
     (automorphismsOverFieldRangeEquiv K i hmap)) :
       Field.absoluteGaloisGroup L →
-        Gal(AlgebraicClosure K / AlgHom.fieldRange i))
+        Gal(AlgebraicClosure K/AlgHom.fieldRange i))
   exact (automorphismsOverFieldRangeEquiv_continuous K i hmap).comp
     (algEquiv_autCongr_continuous e)
 
@@ -1009,7 +1014,7 @@ continuous. -/
 theorem equivGalFieldRangeOfFiniteExtension_symm_continuous
     [FiniteDimensional K L] (i : L →ₐ[K] AlgebraicClosure K) :
     Continuous ((equivGalFieldRangeOfFiniteExtension K i).symm :
-      Gal(AlgebraicClosure K / AlgHom.fieldRange i) →
+      Gal(AlgebraicClosure K/AlgHom.fieldRange i) →
         Field.absoluteGaloisGroup L) := by
   let : Algebra L (AlgebraicClosure K) := i.toRingHom.toAlgebra
   have hmap : ∀ x, algebraMap L (AlgebraicClosure K) x = i x := fun _ => rfl
@@ -1024,7 +1029,7 @@ theorem equivGalFieldRangeOfFiniteExtension_symm_continuous
     IsAlgClosure.equiv L (AlgebraicClosure L) (AlgebraicClosure K)
   change Continuous ((((AlgEquiv.autCongr e).trans
     (automorphismsOverFieldRangeEquiv K i hmap)).symm) :
-      Gal(AlgebraicClosure K / AlgHom.fieldRange i) →
+      Gal(AlgebraicClosure K/AlgHom.fieldRange i) →
         Field.absoluteGaloisGroup L)
   exact (algEquiv_autCongr_symm_continuous e).comp
     (automorphismsOverFieldRangeEquiv_symm_continuous K i hmap)
@@ -1034,7 +1039,7 @@ topological group isomorphism. -/
 def equivGalFieldRangeOfFiniteExtensionContinuousMulEquiv
     [FiniteDimensional K L] (i : L →ₐ[K] AlgebraicClosure K) :
     Field.absoluteGaloisGroup L ≃ₜ*
-      Gal(AlgebraicClosure K / AlgHom.fieldRange i) :=
+      Gal(AlgebraicClosure K/AlgHom.fieldRange i) :=
   { toMulEquiv := equivGalFieldRangeOfFiniteExtension K i
     continuous_toFun := equivGalFieldRangeOfFiniteExtension_continuous K i
     continuous_invFun := equivGalFieldRangeOfFiniteExtension_symm_continuous K i }
@@ -1294,7 +1299,7 @@ theorem mem_range_ofFiniteExtensionAbsolute_iff [FiniteDimensional K L]
     (σ : Field.absoluteGaloisGroup K) :
     σ ∈ MonoidHom.range (ofFiniteExtensionAbsolute K i) ↔
       ∀ x ∈ AlgHom.fieldRange i,
-        (show Gal(AlgebraicClosure K / K) from σ) x = x := by
+        (show Gal(AlgebraicClosure K/K) from σ) x = x := by
   rw [range_ofFiniteExtensionAbsolute]
   exact mem_openSubgroupOfFiniteExtension K i σ
 
@@ -1322,7 +1327,7 @@ def quotientRangeEquivGalFieldRangeOfNormalFiniteExtension
     (i : L →ₐ[K] AlgebraicClosure K) :
     Field.absoluteGaloisGroup K ⧸
         MonoidHom.range (ofFiniteExtensionAbsolute K i) ≃*
-      Gal(AlgHom.fieldRange i / K) :=
+      Gal(AlgHom.fieldRange i/K) :=
   (QuotientGroup.quotientMulEquivOfEq
       (range_ofFiniteExtensionAbsolute K i)).trans
     (quotientOpenSubgroupEquivGalFieldRangeOfNormalFiniteExtension K i)
@@ -1353,7 +1358,7 @@ def quotientRangeEquivGalOfNormalFiniteExtension
     (i : L →ₐ[K] AlgebraicClosure K) :
     Field.absoluteGaloisGroup K ⧸
         MonoidHom.range (ofFiniteExtensionAbsolute K i) ≃*
-      Gal(L / K) :=
+      Gal(L/K) :=
   (quotientRangeEquivGalFieldRangeOfNormalFiniteExtension K i).trans
     (AlgEquiv.autCongr (AlgEquiv.ofInjectiveField i)).symm
 
@@ -1417,13 +1422,13 @@ theorem mem_range_ofFiniteExtensionAbsolute_inf_iff
     (σ : Field.absoluteGaloisGroup K) :
     σ ∈ MonoidHom.range (ofFiniteExtensionAbsolute K iL) ⊓
         MonoidHom.range (ofFiniteExtensionAbsolute K iM) ↔
-      (∀ x : L, (show Gal(AlgebraicClosure K / K) from σ) (iL x) = iL x) ∧
-        ∀ y : M, (show Gal(AlgebraicClosure K / K) from σ) (iM y) = iM y := by
+      (∀ x : L, (show Gal(AlgebraicClosure K/K) from σ) (iL x) = iL x) ∧
+        ∀ y : M, (show Gal(AlgebraicClosure K/K) from σ) (iM y) = iM y := by
   rw [← openSubgroupOfFiniteExtensionSup_eq_range_inf]
   change
     σ ∈ openSubgroupOfFiniteExtensionSup K iL iM ↔
-      (∀ x : L, (show Gal(AlgebraicClosure K / K) from σ) (iL x) = iL x) ∧
-        ∀ y : M, (show Gal(AlgebraicClosure K / K) from σ) (iM y) = iM y
+      (∀ x : L, (show Gal(AlgebraicClosure K/K) from σ) (iL x) = iL x) ∧
+        ∀ y : M, (show Gal(AlgebraicClosure K/K) from σ) (iM y) = iM y
   exact mem_openSubgroupOfFiniteExtensionSup_iff_forall_apply_eq K iL iM σ
 
 end TwoFiniteExtensions
@@ -1433,7 +1438,7 @@ theorem mem_range_ofFiniteExtensionAbsolute_iff_forall_apply_eq
     [FiniteDimensional K L] (i : L →ₐ[K] AlgebraicClosure K)
     (σ : Field.absoluteGaloisGroup K) :
     σ ∈ MonoidHom.range (ofFiniteExtensionAbsolute K i) ↔
-      ∀ x : L, (show Gal(AlgebraicClosure K / K) from σ) (i x) = i x := by
+      ∀ x : L, (show Gal(AlgebraicClosure K/K) from σ) (i x) = i x := by
   rw [range_ofFiniteExtensionAbsolute_eq_fixingSubgroupOfExtension]
   rfl
 
@@ -1441,7 +1446,7 @@ theorem mem_range_ofFiniteExtensionAbsolute_iff_forall_apply_eq
 theorem ofFiniteExtensionAbsolute_apply_embedding
     [FiniteDimensional K L] (i : L →ₐ[K] AlgebraicClosure K)
     (σ : Field.absoluteGaloisGroup L) (x : L) :
-    (show Gal(AlgebraicClosure K / K) from
+    (show Gal(AlgebraicClosure K/K) from
       ofFiniteExtensionAbsolute K i σ) (i x) = i x := by
   exact (mem_openSubgroupOfFiniteExtension_iff_forall_apply_eq K i
     (ofFiniteExtensionAbsolute K i σ)).1
@@ -1451,7 +1456,7 @@ theorem ofFiniteExtensionAbsolute_apply_embedding
 theorem coe_toOpenSubgroupOfFiniteExtension_apply_embedding
     [FiniteDimensional K L] (i : L →ₐ[K] AlgebraicClosure K)
     (σ : Field.absoluteGaloisGroup L) (x : L) :
-    (show Gal(AlgebraicClosure K / K) from
+    (show Gal(AlgebraicClosure K/K) from
       ((toOpenSubgroupOfFiniteExtension K i σ :
         openSubgroupOfFiniteExtension K i) :
         Field.absoluteGaloisGroup K)) (i x) = i x := by
@@ -1590,7 +1595,7 @@ theorem existsUnique_ofFiniteExtensionAbsolute_eq_iff_forall_apply_eq
     (σ : Field.absoluteGaloisGroup K) :
     (∃! τ : Field.absoluteGaloisGroup L,
       ofFiniteExtensionAbsolute K i τ = σ) ↔
-      ∀ x : L, (show Gal(AlgebraicClosure K / K) from σ) (i x) = i x := by
+      ∀ x : L, (show Gal(AlgebraicClosure K/K) from σ) (i x) = i x := by
   constructor
   · rintro ⟨τ, hτ, _⟩ x
     rw [← hτ]
@@ -1628,8 +1633,8 @@ theorem mem_absoluteValuationSubring_iff_apply_mem_of_finite_separable_intermedi
         F target)
     (sigma : Field.absoluteGaloisGroup K) (x : E) :
     ((x : AlgebraicClosure K) ∈ A) ↔
-      (show Gal(AlgebraicClosure K / K) from sigma) (x : AlgebraicClosure K) ∈ A :=
-  RamificationTheory.Field.absoluteGaloisGroup.valuationSubring_mem_preserved_on_finite_separable_intermediate
+      (show Gal(AlgebraicClosure K/K) from sigma) (x : AlgebraicClosure K) ∈ A :=
+  valuationSubring_mem_preserved_on_finite_separable_intermediate
     (K := K) F A E target hA huniq sigma x
 
 end HenselianDVF

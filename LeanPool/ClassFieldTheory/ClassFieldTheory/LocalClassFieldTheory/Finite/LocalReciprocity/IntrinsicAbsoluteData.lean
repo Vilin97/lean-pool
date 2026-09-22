@@ -24,7 +24,7 @@ open ClassFormation
 /-- The absolute Galois group of a field, formed using its chosen separable closure. -/
 abbrev intrinsicAbsoluteGalois
     (F : Type) [Field F] :=
-  Gal(SeparableClosure F / F)
+  Gal(SeparableClosure F/F)
 
 /-- The integral representation of the intrinsic absolute Galois group on the
 units of the chosen separable closure. -/

@@ -33,7 +33,7 @@ variable (K Ω : Type) [Field K] [Field Ω] [Algebra K Ω]
 
 /-- The actual Galois representation on `Ωˣ`, written additively for the
 group-cohomology API. -/
-abbrev galoisAmbientUnitsRep : Rep ℤ (Gal(Ω / K)) :=
+abbrev galoisAmbientUnitsRep : Rep ℤ (Gal(Ω/K)) :=
   Rep.ofAlgebraAutOnUnits K Ω
 
 /-- Inclusion of the units of an intermediate field into the units of the
@@ -91,10 +91,10 @@ theorem mem_galoisAmbientUnits_fixed_iff
       simpa only [closedFixingSubgroup] using σ.2
     have hρ :
         (Rep.ofAlgebraAutOnUnits K Ω).ρ
-            (σ : Gal(Ω / K)) x =
+            (σ : Gal(Ω/K)) x =
           Additive.ofMul
             (Units.mapEquiv
-              (σ : Gal(Ω / K)).toMulEquiv (Additive.toMul x)) :=
+              (σ : Gal(Ω/K)).toMulEquiv (Additive.toMul x)) :=
       rfl
     rw [hρ]
     apply Additive.ext

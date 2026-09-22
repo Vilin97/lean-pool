@@ -37,6 +37,39 @@ Lubin--Tate, and local reciprocity infrastructure is exported by its owner
 libraries rather than through this facade.
 -/
 
+open _root_.RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration renaming
+  herbrandFunction →
+    herbrandFunction
+
+open _root_.RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration renaming
+  herbrandFunction_nat →
+    herbrandFunction_nat
+
+open _root_.RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration renaming
+  herbrandFunction_of_floor →
+    herbrandFunction_of_floor
+
+open _root_.RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration renaming
+  herbrandFunction_of_nonpos →
+    herbrandFunction_of_nonpos
+
+open _root_.RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration renaming
+  herbrandValueNat →
+    herbrandValueNat
+
+open _root_.RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration renaming
+  herbrandValueNat_succ →
+    herbrandValueNat_succ
+
+open _root_.RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration renaming
+  herbrandValueNat_zero →
+    herbrandValueNat_zero
+
+open _root_.RamificationTheory.DiscreteValuationField.DVF renaming
+  mem_valuationSubring_algEquiv_iff_of_hasUniqueValuationExtension →
+    mem_valuationSubring_algEquiv_iff_of_hasUniqueValuationExtension
+
+
 /-!
 # Hasse--Arf integrality
 
@@ -217,7 +250,7 @@ theorem chosenLocalExtension_decompositionSubgroup_eq_top
   ext z
   rw [ValuationSubring.mem_pointwise_smul_iff_inv_smul_mem]
   exact
-    (RamificationTheory.DiscreteValuationField.DVF.mem_valuationSubring_algEquiv_iff_of_hasUniqueValuationExtension
+    (mem_valuationSubring_algEquiv_iff_of_hasUniqueValuationExtension
     (base := base) (target := target) huniq σ⁻¹ z).symm
 
 /-- At integer indices the lower group defined using Mathlib's valuation
@@ -379,21 +412,21 @@ theorem chosenHerbrandFunctionAtLowerIndex_real_eq
     (base := base) (target := target) huniq
   change ((ClassFieldTheory.herbrandFunctionAtLowerIndex K
       target.valuation.valuationSubring n : ℚ) : ℝ) =
-    RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction
+    herbrandFunction
       F (n : ℝ)
   induction n with
   | zero =>
       simp only [ClassFieldTheory.herbrandFunctionAtLowerIndex,
         show Finset.Icc (1 : ℕ) 0 = ∅ from by decide,
         Finset.sum_empty, zero_div, Rat.cast_zero,
-        RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction_nat,
-        RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandValueNat_zero]
+        herbrandFunction_nat,
+        herbrandValueNat_zero]
   | succ n ih =>
       rw [herbrandFunctionAtLowerIndex_succ, Rat.cast_add, Rat.cast_div]
-      rw [RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction_nat,
-        RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandValueNat_succ]
+      rw [herbrandFunction_nat,
+        herbrandValueNat_succ]
       rw [←
-        RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction_nat
+        herbrandFunction_nat
         F n, ih]
       congr 1
       rw [RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandSlope]
@@ -416,7 +449,6 @@ theorem chosenLocalExtension_valuationSubring_eq_canonical
     [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K]
     [ValuativeRel L] [TopologicalSpace L]
-
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)] :
     (chosenLocalExtensionCompleteDVF K L).valuation.valuationSubring =
       (ValuativeRel.valuation L).valuationSubring := by
@@ -482,7 +514,7 @@ theorem chosenHerbrandFunction_eq_localHerbrandFunction
   have hnat (m : ℕ) :
       ((ClassFieldTheory.herbrandFunctionAtLowerIndex K
         target.valuation.valuationSubring m : ℚ) : ℝ) =
-        RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandValueNat
+        herbrandValueNat
           F m := by
     calc
       ((ClassFieldTheory.herbrandFunctionAtLowerIndex K
@@ -491,13 +523,13 @@ theorem chosenHerbrandFunction_eq_localHerbrandFunction
             (base := base) (target := target) huniq (m : ℝ) :=
         chosenHerbrandFunctionAtLowerIndex_real_eq K L m
       _ =
-          RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandValueNat
+          herbrandValueNat
             F m := by
         change
-          RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction
+          herbrandFunction
             F (m : ℝ) = _
         exact
-          RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction_nat
+          herbrandFunction_nat
             F m
   have hslope (m : ℕ) :
       ((Nat.card (ClassFieldTheory.lowerRamificationGroup K
@@ -509,18 +541,18 @@ theorem chosenHerbrandFunction_eq_localHerbrandFunction
     unfold RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandSlope
     rw [hcard (m + 1), hcard 0]
   change ClassFieldTheory.herbrandFunction K target.valuation.valuationSubring s =
-    RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction
+    herbrandFunction
       F s
   unfold ClassFieldTheory.herbrandFunction
   by_cases hs : 0 ≤ s
   · rw [ite_eq_left hs]
     dsimp only
-    rw [RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction_of_floor
+    rw [herbrandFunction_of_floor
       F hs ⌊s⌋₊ rfl]
     rw [hnat ⌊s⌋₊, hslope ⌊s⌋₊]
   · rw [ite_eq_right hs]
     exact
-      (RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction_of_nonpos
+      (herbrandFunction_of_nonpos
         F (le_of_lt (lt_of_not_ge hs))).symm
 
 /-- The public piecewise-linear Herbrand function of the canonical valuation
@@ -918,7 +950,7 @@ noncomputable def shrinkGalEquiv
     (K L : Type*) [Field K] [Field L] [Algebra K L]
     [Small.{0} K] [Small.{0} L] :
     letI : Algebra (Shrink.{0} K) (Shrink.{0} L) := shrinkAlgebra K L
-    Gal(Shrink.{0} L / Shrink.{0} K) ≃ Gal(L/K) :=
+    Gal(Shrink.{0} L/Shrink.{0} K) ≃ Gal(L/K) :=
   letI : Algebra (Shrink.{0} K) (Shrink.{0} L) := shrinkAlgebra K L
   ClassFieldTheory.galEquivOfEquivEquiv
     (Shrink.ringEquiv K).symm (Shrink.ringEquiv L).symm
@@ -929,7 +961,7 @@ theorem shrinkGalEquiv_apply
     (K L : Type*) [Field K] [Field L] [Algebra K L]
     [Small.{0} K] [Small.{0} L] :
     letI : Algebra (Shrink.{0} K) (Shrink.{0} L) := shrinkAlgebra K L
-    ∀ (σ : Gal(Shrink.{0} L / Shrink.{0} K)) (x : Shrink.{0} L),
+    ∀ (σ : Gal(Shrink.{0} L/Shrink.{0} K)) (x : Shrink.{0} L),
       shrinkGalEquiv K L σ (Shrink.ringEquiv L x) =
         Shrink.ringEquiv L (σ x) :=
   letI : Algebra (Shrink.{0} K) (Shrink.{0} L) := shrinkAlgebra K L
@@ -967,7 +999,7 @@ theorem shrink_mem_pointwise_smul_iff
     [IsNonarchimedeanLocalField L] :
     letI : Algebra (Shrink.{0} K) (Shrink.{0} L) := shrinkAlgebra K L
     letI : ValuativeRel (Shrink.{0} L) := shrinkLocalFieldValuativeRel L
-    ∀ (σ : Gal(Shrink.{0} L / Shrink.{0} K)) (x : Shrink.{0} L),
+    ∀ (σ : Gal(Shrink.{0} L/Shrink.{0} K)) (x : Shrink.{0} L),
       x ∈ σ • (ValuativeRel.valuation (Shrink.{0} L)).valuationSubring ↔
         Shrink.ringEquiv L x ∈
           shrinkGalEquiv K L σ •
@@ -1017,7 +1049,7 @@ theorem shrink_mem_decompositionSubgroup_iff
     [IsNonarchimedeanLocalField L] :
     letI : Algebra (Shrink.{0} K) (Shrink.{0} L) := shrinkAlgebra K L
     letI : ValuativeRel (Shrink.{0} L) := shrinkLocalFieldValuativeRel L
-    ∀ σ : Gal(Shrink.{0} L / Shrink.{0} K),
+    ∀ σ : Gal(Shrink.{0} L/Shrink.{0} K),
       σ ∈ ((ValuativeRel.valuation (Shrink.{0} L)).valuationSubring).decompositionSubgroup
         (Shrink.{0} K) ↔
       shrinkGalEquiv K L σ ∈
@@ -1100,7 +1132,7 @@ theorem shrink_mem_lowerRamificationGroup_iff
     (n : ℕ) :
     letI : Algebra (Shrink.{0} K) (Shrink.{0} L) := shrinkAlgebra K L
     letI : ValuativeRel (Shrink.{0} L) := shrinkLocalFieldValuativeRel L
-    ∀ (σ : Gal(Shrink.{0} L / Shrink.{0} K))
+    ∀ (σ : Gal(Shrink.{0} L/Shrink.{0} K))
       (hσ : σ ∈
         ((ValuativeRel.valuation (Shrink.{0} L)).valuationSubring).decompositionSubgroup
           (Shrink.{0} K)),

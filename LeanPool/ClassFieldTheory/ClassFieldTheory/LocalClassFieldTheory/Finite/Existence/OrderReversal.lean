@@ -53,7 +53,7 @@ def finiteAbelianAbstractExtensionOfEmbedding
           simp only [map_mul]
           exact
             (inferInstance :
-              IsMulCommutative (Gal(L / K))).is_comm.comm (e x) (e y) }
+              IsMulCommutative (Gal(L/K))).is_comm.comm (e x) (e y) }
 
 /-- Under the canonical identification of the abstract base fixed units with
 `Kˣ`, the abstract norm subgroup of an embedded finite abelian extension is
@@ -135,15 +135,15 @@ theorem exists_uniformizerPrincipalSubgroup_le_normSubgroup
     ∃ d n : ℕ, 0 < d ∧ 1 ≤ n ∧
       LocalFieldTheory.uniformizerPrincipalSubgroup K ϖ d n ≤
         localNormSubgroup K L := by
-  let : Finite (Gal(L / K)) := by
+  let : Finite (Gal(L/K)) := by
     apply Nat.finite_of_card_ne_zero
     rw [IsGalois.card_aut_eq_finrank K L]
     exact Nat.ne_of_gt Module.finrank_pos
-  let : Finite (Abelianization (Gal(L / K))) :=
+  let : Finite (Abelianization (Gal(L/K))) :=
     Finite.of_surjective Abelianization.of QuotientGroup.mk_surjective
   let : Finite (NormQuotient K L) :=
     Finite.of_equiv
-      (Abelianization (Gal(L / K)))
+      (Abelianization (Gal(L/K)))
       (abelianizationEquivNormQuotient K L).toEquiv
   let : Finite (Kˣ ⧸ localNormSubgroup K L) := by
     change Finite (NormQuotient K L)

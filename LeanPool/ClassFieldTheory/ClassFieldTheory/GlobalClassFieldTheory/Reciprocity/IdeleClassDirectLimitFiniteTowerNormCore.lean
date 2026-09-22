@@ -74,7 +74,6 @@ private theorem relativeAdeleEmbedding_toAlgHom_unflatten
     [Field L]
     [Algebra K M] [Algebra M L] [Algebra K L]
     [IsScalarTower K M L]
-
     (a : RelativeAdeleRing K M) :
     towerRelativeAdeleUnflatten K M L
         (RelativeIdeleGroup.adeleEmbedding
@@ -215,7 +214,6 @@ theorem classEmbedding_smul_eq_classEmbedding_comp
     [Field K] [NumberField K]
     [Field E] [Field U]
     [Algebra K E] [Algebra K U]
-
     (j : E →ₐ[K] U) (σ : U ≃ₐ[K] U)
     (c : RelativeIdeleGroup.ClassGroup K E) :
     σ • RelativeIdeleGroup.classEmbedding j c =
@@ -388,8 +386,6 @@ private theorem classEmbedding_comp
     [Field K] [NumberField K]
     [Field E] [Field N] [Field U]
     [Algebra K E] [Algebra K N] [Algebra K U]
-
-
     (f : E →ₐ[K] N) (g : N →ₐ[K] U)
     (c : RelativeIdeleGroup.ClassGroup K E) :
     RelativeIdeleGroup.classEmbedding g

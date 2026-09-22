@@ -189,7 +189,6 @@ theorem kummerRadicalExtension_isGalois
 `sigma(beta) / beta` is an `n`-th root of unity, hence lies in and is fixed
 by the base field under the primitive-root hypothesis. -/
 theorem kummerRadicalExtension_generator_commute
-
     (n : ℕ+) (hmu : (primitiveRoots (n : ℕ) K).Nonempty)
     (Delta : Subgroup Kˣ)
     (sigma tau : Gal(kummerRadicalExtension (K := K) (Omega := Omega) n Delta/K))
@@ -256,7 +255,6 @@ theorem kummerRadicalExtension_isMulCommutative
 /-- On every radical generator, the `n`-th power of an automorphism is the
 identity. -/
 theorem kummerRadicalExtension_generator_pow_eq_one
-
     (n : ℕ+) (hmu : (primitiveRoots (n : ℕ) K).Nonempty)
     (Delta : Subgroup Kˣ)
     (sigma : Gal(kummerRadicalExtension (K := K) (Omega := Omega) n Delta/K))

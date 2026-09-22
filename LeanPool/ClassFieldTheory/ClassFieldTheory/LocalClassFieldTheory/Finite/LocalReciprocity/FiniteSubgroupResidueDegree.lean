@@ -91,7 +91,7 @@ theorem localAbstractFixedDecompositionGroup_eq_top
   let A := localSeparableValuationSubring K
   apply top_unique
   intro tau _htau
-  let sigma : Gal(SeparableClosure K / K) := tau.restrictScalars K
+  let sigma : Gal(SeparableClosure K/K) := tau.restrictScalars K
   have hsigma : sigma • A = A := by
     change sigma ∈ decompositionGroup K A
     rw [localSeparableDecompositionGroup_eq_top K]
@@ -259,16 +259,16 @@ the selected residue algebraic closure.  Finiteness is deduced from the
 finite index of `H`: surjectivity of the absolute residue action makes the
 index of its image divide the index of `H`. -/
 theorem localAbstractFixedResidueIntermediateField_finiteDimensional
-    (H : ClosedSubgroup (Gal(SeparableClosure K / K)))
+    (H : ClosedSubgroup (Gal(SeparableClosure K/K)))
     [Finite
       ((baseField (Gal(SeparableClosure K/K))).toSubgroup ⧸
         extensionSubgroup
-          (baseField (Gal(SeparableClosure K / K))) H
+          (baseField (Gal(SeparableClosure K/K))) H
           (le_baseField H))] :
     FiniteDimensional
       (decompositionResidueField K (localSeparableValuationSubring K))
       (localAbstractFixedResidueIntermediateField K H) := by
-  let G := Gal(SeparableClosure K / K)
+  let G := Gal(SeparableClosure K/K)
   let A := localSeparableValuationSubring K
   let k := decompositionResidueField K A
   let Omega := selectedResidueField A
@@ -303,11 +303,11 @@ theorem localAbstractFixedResidueIntermediateField_finiteDimensional
 /-- The finite residue subfield, packaged in the form used by the intrinsic
 finite-field residue datum. -/
 noncomputable def localAbstractFixedResidueFiniteGaloisIntermediateField
-    (H : ClosedSubgroup (Gal(SeparableClosure K / K)))
+    (H : ClosedSubgroup (Gal(SeparableClosure K/K)))
     [Finite
       ((baseField (Gal(SeparableClosure K/K))).toSubgroup ⧸
         extensionSubgroup
-          (baseField (Gal(SeparableClosure K / K))) H
+          (baseField (Gal(SeparableClosure K/K))) H
           (le_baseField H))] :
     FiniteGaloisIntermediateField
       (decompositionResidueField K (localSeparableValuationSubring K))

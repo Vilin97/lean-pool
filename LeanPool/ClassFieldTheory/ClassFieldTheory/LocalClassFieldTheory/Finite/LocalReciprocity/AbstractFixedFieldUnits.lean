@@ -162,7 +162,7 @@ theorem abstractExtensionQuotientEquivGaloisGroup_mk_apply_val
   let := hnormal
   let : (abstractRelativeFixedField k Ω hLK).fixingSubgroup.Normal :=
     abstractRelativeFixingSubgroup_normal k Ω K L hLK hnormal
-  let H : ClosedSubgroup (Gal(Ω / abstractFixedField k Ω K)) :=
+  let H : ClosedSubgroup (Gal(Ω/abstractFixedField k Ω K)) :=
     closedFixingSubgroup (abstractFixedField k Ω K) Ω
       (abstractRelativeFixedField k Ω hLK)
   let : H.toSubgroup.Normal :=
@@ -184,8 +184,8 @@ theorem abstractExtensionQuotientEquivGaloisGroup_mk_apply_val
         (closedFixingSubgroup (abstractFixedField k Ω K) Ω
           (abstractRelativeFixedField k Ω hLK))
         ((abstractSubgroupEquivGaloisGroup k Ω K σ :
-            Gal(Ω / abstractFixedField k Ω K)) :
-          Gal(Ω / abstractFixedField k Ω K) ⧸
+            Gal(Ω/abstractFixedField k Ω K)) :
+          Gal(Ω/abstractFixedField k Ω K) ⧸
             (abstractRelativeFixedField k Ω hLK).fixingSubgroup))) x :
       abstractRelativeFixedField k Ω hLK) : Ω)
   rw [InfiniteGalois.normalAutEquivQuotient_apply,

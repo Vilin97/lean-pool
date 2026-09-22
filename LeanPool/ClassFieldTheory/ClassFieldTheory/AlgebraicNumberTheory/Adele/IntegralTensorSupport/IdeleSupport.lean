@@ -41,7 +41,6 @@ noncomputable def relativeIdeleLocalTensorDecompositionSupport
         (K := K) (L := L)
 
 /-- The support is exposed through this membership characterization. -/
-
 @[simp]
 theorem mem_relativeIdeleLocalTensorDecompositionSupport_iff
     (z : RelativeIdeleGroup K L)

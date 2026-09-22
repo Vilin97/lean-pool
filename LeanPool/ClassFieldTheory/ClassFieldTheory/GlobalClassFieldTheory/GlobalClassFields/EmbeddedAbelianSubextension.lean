@@ -48,7 +48,7 @@ noncomputable def numberFieldEmbeddedAbelianSubextension
       commutative := by
         let e :
             (numberFieldEmbeddedFiniteGaloisSubextension K E j).extensionQuotient ≃*
-              Gal(E / K) := by
+              Gal(E/K) := by
           exact
             numberFieldEmbeddedExtensionQuotientEquivGaloisGroup
               K E j
@@ -58,7 +58,7 @@ noncomputable def numberFieldEmbeddedAbelianSubextension
               simpa only [map_mul] using
                 (inferInstance :
                   IsMulCommutative
-                    (Gal(E / K))).is_comm.comm
+                    (Gal(E/K))).is_comm.comm
                   (e x) (e y) } }
 
 /-- The top subgroup of the embedded abelian subextension is the fixing

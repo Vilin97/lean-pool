@@ -29,7 +29,7 @@ variable (K L : Type) [Field K] [Field L] [Algebra K L]
 the abelianization of the actual relative Galois group. -/
 noncomputable def abelianizedGaloisConjugationOfEmbeddings
     (i j : L →ₐ[K] SeparableClosure K) :
-    Abelianization (Gal(L / K)) ≃* Abelianization (Gal(L / K)) :=
+    Abelianization (Gal(L/K)) ≃* Abelianization (Gal(L/K)) :=
   (finiteGaloisAbstractQuotientEquivGaloisGroupOfEmbedding K L i).abelianizationCongr.symm.trans
     ((finiteGaloisConjugationOfEmbeddings K L i j).abelianizationCongr.trans
       (finiteGaloisAbstractQuotientEquivGaloisGroupOfEmbedding K L j).abelianizationCongr)
@@ -39,7 +39,7 @@ transported conjugation is the identity on the abelianization. -/
 theorem abelianizedGaloisConjugationOfEmbeddings_eq_refl
     (i j : L →ₐ[K] SeparableClosure K) :
     abelianizedGaloisConjugationOfEmbeddings K L i j =
-      MulEquiv.refl (Abelianization (Gal(L / K))) := by
+      MulEquiv.refl (Abelianization (Gal(L/K))) := by
   apply MulEquiv.ext
   intro z
   change
@@ -100,12 +100,12 @@ end LocalAlgebraic
 topological abelianization of the finite Krull Galois group. -/
 noncomputable def topologicalAbelianizationConjugationOfEmbeddings
     (i j : L →ₐ[K] SeparableClosure K) :
-    TopologicalAbelianization (Gal(L / K)) ≃ₜ*
-      TopologicalAbelianization (Gal(L / K)) := by
-  letI : DiscreteTopology (TopologicalAbelianization (Gal(L / K))) :=
+    TopologicalAbelianization (Gal(L/K)) ≃ₜ*
+      TopologicalAbelianization (Gal(L/K)) := by
+  letI : DiscreteTopology (TopologicalAbelianization (Gal(L/K))) :=
     QuotientGroup.discreteTopology (isOpen_discrete _)
-  let e : TopologicalAbelianization (Gal(L / K)) ≃*
-      TopologicalAbelianization (Gal(L / K)) :=
+  let e : TopologicalAbelianization (Gal(L/K)) ≃*
+      TopologicalAbelianization (Gal(L/K)) :=
     (topologicalAbelianizationFiniteEquiv K L).symm.trans
       ((abelianizedGaloisConjugationOfEmbeddings K L i j).trans
         (topologicalAbelianizationFiniteEquiv K L))

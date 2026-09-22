@@ -40,11 +40,11 @@ variable (K L : Type) [Field K] [Field L] [Algebra K L]
 /-- The integer-unit Herbrand witness used by the local class-field axiom,
 including the proof that its Herbrand quotient is one. -/
 theorem exists_localIntegerUnitsHerbrandDefinedAndEqOne
-    (g : Gal(L / K))
-    (hg : ∀ sigma : Gal(L / K), sigma ∈ Subgroup.zpowers g) :
+    (g : Gal(L/K))
+    (hg : ∀ sigma : Gal(L/K), sigma ∈ Subgroup.zpowers g) :
     letI := galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L
-    ∃ hU : HerbrandQuotientDefined (Gal(L / K)) 𝒪[L]ˣ g,
-      @herbrandQuotient (Gal(L / K)) 𝒪[L]ˣ _ _ _
+    ∃ hU : HerbrandQuotientDefined (Gal(L/K)) 𝒪[L]ˣ g,
+      @herbrandQuotient (Gal(L/K)) 𝒪[L]ˣ _ _ _
         (galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L)
         g hU.1 hU.2 = 1 := by
   rcases exists_chosenNormalBasisPrincipalUnitSubgroup
@@ -70,17 +70,17 @@ theorem exists_localIntegerUnitsHerbrandDefinedAndEqOne
 /-- Canonical choice of the integer-unit finiteness witness constructed by
 the local normal-basis argument. -/
 private theorem localIntegerUnitsHerbrandDefined
-    (g : Gal(L / K))
-    (hg : ∀ sigma : Gal(L / K), sigma ∈ Subgroup.zpowers g) :
+    (g : Gal(L/K))
+    (hg : ∀ sigma : Gal(L/K), sigma ∈ Subgroup.zpowers g) :
     letI := galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L
-    HerbrandQuotientDefined (Gal(L / K)) 𝒪[L]ˣ g :=
+    HerbrandQuotientDefined (Gal(L/K)) 𝒪[L]ˣ g :=
   Classical.choose (exists_localIntegerUnitsHerbrandDefinedAndEqOne K L g hg)
 
 private theorem localIntegerUnitsHerbrandQuotient_eq_one
-    (g : Gal(L / K))
-    (hg : ∀ sigma : Gal(L / K), sigma ∈ Subgroup.zpowers g) :
+    (g : Gal(L/K))
+    (hg : ∀ sigma : Gal(L/K), sigma ∈ Subgroup.zpowers g) :
     letI := galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L
-    @herbrandQuotient (Gal(L / K)) 𝒪[L]ˣ _ _ _
+    @herbrandQuotient (Gal(L/K)) 𝒪[L]ˣ _ _ _
       (galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L) g
       (localIntegerUnitsHerbrandDefined K L g hg).1
       (localIntegerUnitsHerbrandDefined K L g hg).2 = 1 :=
@@ -90,7 +90,7 @@ private theorem localIntegerUnitsHerbrandQuotient_eq_one
 normal-basis witness as the cardinality theorem. -/
 theorem localFieldUnitsTateH0FiniteOfGenerator
     (g : Gal(L/K))
-    (hg : ∀ sigma : Gal(L / K), sigma ∈ Subgroup.zpowers g) :
+    (hg : ∀ sigma : Gal(L/K), sigma ∈ Subgroup.zpowers g) :
     Finite (tateCohomology (Rep.ofAlgebraAutOnUnits K L) 0) :=
   unitsTateH0FiniteOfIntegerUnitsHerbrand K L g hg
     (localIntegerUnitsHerbrandDefined K L g hg)
@@ -98,7 +98,7 @@ theorem localFieldUnitsTateH0FiniteOfGenerator
 /-- The local class-field-axiom theorem for a specified generator of the cyclic Galois group. -/
 theorem localFieldUnits_tate_card_of_generator
     (g : Gal(L/K))
-    (hg : ∀ sigma : Gal(L / K), sigma ∈ Subgroup.zpowers g) :
+    (hg : ∀ sigma : Gal(L/K), sigma ∈ Subgroup.zpowers g) :
     letI := localFieldUnitsTateH0FiniteOfGenerator K L g hg
     Nat.card (tateCohomology (Rep.ofAlgebraAutOnUnits K L) 0) = Module.finrank K L ∧
       Nat.card (tateCohomology (Rep.ofAlgebraAutOnUnits K L) (-1)) = 1 := by
@@ -111,7 +111,7 @@ theorem localFieldUnitsTateH0FiniteOfIsCyclic
     [IsCyclic (Gal(L/K))] :
     Finite (tateCohomology (Rep.ofAlgebraAutOnUnits K L) 0) := by
   obtain ⟨g, hg⟩ := (IsCyclic.exists_generator :
-    ∃ g : Gal(L / K), ∀ sigma : Gal(L / K),
+    ∃ g : Gal(L/K), ∀ sigma : Gal(L/K),
       sigma ∈ Subgroup.zpowers g)
   exact localFieldUnitsTateH0FiniteOfGenerator K L g hg
 
@@ -122,7 +122,7 @@ theorem localFieldUnits_tate_card_of_isCyclic [IsCyclic (Gal(L/K))] :
     Nat.card (tateCohomology (Rep.ofAlgebraAutOnUnits K L) 0) = Module.finrank K L ∧
       Nat.card (tateCohomology (Rep.ofAlgebraAutOnUnits K L) (-1)) = 1 := by
   rcases (IsCyclic.exists_generator :
-    ∃ g : Gal(L / K), ∀ sigma : Gal(L / K),
+    ∃ g : Gal(L/K), ∀ sigma : Gal(L/K),
       sigma ∈ Subgroup.zpowers g) with ⟨g, hg⟩
   exact localFieldUnits_tate_card_of_generator K L g hg
 

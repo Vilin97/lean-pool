@@ -16,6 +16,23 @@ finite Galois extension of `ℚ_p` with the intrinsic value-group ramification
 index, then applies the prime-power cyclotomic ramification bound.
 -/
 
+open _root_.RamificationTheory.HilbertRamification.CompleteDVF renaming
+  natCard_decompositionInertiaSubgroup_eq_ramificationIndex →
+    natCard_decompositionInertiaSubgroup_eq_ramificationIndex
+
+open _root_.ValuationTheory.DiscreteValuationField.ValuedExtension renaming
+  exists_integralClosure_standard_fundamental_identity →
+    exists_integralClosure_standard_fundamental_identity
+
+open _root_.ValuationTheory.DiscreteValuationField.ValuedExtension renaming
+  moduleFinite_target_valuationSubring_of_finite_separable →
+    moduleFinite_target_valuationSubring_of_finite_separable
+
+open _root_.ValuationTheory.DiscreteValuationField.ValuedExtension renaming
+  residueField_finiteDimensional_of_moduleFinite →
+    residueField_finiteDimensional_of_moduleFinite
+
+
 noncomputable section
 
 namespace HilbertRamification
@@ -40,7 +57,7 @@ theorem natCard_padicCanonicalInertia_eq_exponentialRamificationIndex
         (padicFiniteExtensionExponentialValuation p E) := by
   let base := LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicCompleteDVF p
   obtain ⟨target, hExt, hTarget, _hFundamental⟩ :=
-    ValuationTheory.DiscreteValuationField.ValuedExtension.exists_integralClosure_standard_fundamental_identity
+    exists_integralClosure_standard_fundamental_identity
       (K := ℚ_[p]) (L := E) base
   let : base.valuation.HasExtension target.valuation := hExt
   let : IsIntegralClosure target.valuationSubring base.valuationSubring E := hTarget
@@ -49,12 +66,12 @@ theorem natCard_padicCanonicalInertia_eq_exponentialRamificationIndex
     intro x
     rfl
   let : Module.Finite base.valuationSubring target.valuationSubring :=
-    ValuationTheory.DiscreteValuationField.ValuedExtension.moduleFinite_target_valuationSubring_of_finite_separable
+    moduleFinite_target_valuationSubring_of_finite_separable
       base target
   let : FiniteDimensional
       (base.valuationSubring ⧸ base.maximalIdeal)
       (target.valuationSubring ⧸ target.maximalIdeal) :=
-    ValuationTheory.DiscreteValuationField.ValuedExtension.residueField_finiteDimensional_of_moduleFinite
+    residueField_finiteDimensional_of_moduleFinite
       base target
   let : Algebra.IsAlgebraic
       (base.valuationSubring ⧸ base.maximalIdeal)
@@ -73,7 +90,7 @@ theorem natCard_padicCanonicalInertia_eq_exponentialRamificationIndex
       (target.valuationSubring ⧸ target.maximalIdeal) := by
     exact Algebra.IsAlgebraic.isSeparable_of_perfectField
   have hCard :=
-    RamificationTheory.HilbertRamification.CompleteDVF.natCard_decompositionInertiaSubgroup_eq_ramificationIndex
+    natCard_decompositionInertiaSubgroup_eq_ramificationIndex
       (K := ℚ_[p]) (L := E) base target
   have hAssociated :
       LubinTate.Valuations.exponentialValuationSubringAsValuationSubring

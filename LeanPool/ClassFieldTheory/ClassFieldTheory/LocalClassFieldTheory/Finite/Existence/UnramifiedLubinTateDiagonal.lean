@@ -115,7 +115,7 @@ abbrev standardLubinTateDiagonalAutomorphism
     (K : Type) [Field K] [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K]
     (n : ℕ) (u : (standardLocalField K).valuationSubringˣ) :
-    Gal((standardLubinTateDiagonalCompositumField K n u) / K) :=
+    Gal((standardLubinTateDiagonalCompositumField K n u)/K) :=
   lubinTateUniformizerDiagonalAutomorphism K
     (standardLocalFieldUniformizer_isUniformizer K) n u
 

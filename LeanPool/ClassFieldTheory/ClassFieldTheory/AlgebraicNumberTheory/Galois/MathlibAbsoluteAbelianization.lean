@@ -25,7 +25,7 @@ topological abelianization are canonically isomorphic as topological groups. -/
 noncomputable def absoluteGaloisGroupAbelianizationEquivSeparable
     (K : Type u) [Field K] :
     Field.absoluteGaloisGroupAbelianization K ≃ₜ*
-      TopologicalAbelianization Gal(SeparableClosure K / K) :=
+      TopologicalAbelianization Gal(SeparableClosure K/K) :=
   LocalClassFieldTheory.topologicalAbelianizationCongr
     (RamificationTheory.Field.absoluteGaloisGroup.separableClosureContinuousMulEquiv K)
 

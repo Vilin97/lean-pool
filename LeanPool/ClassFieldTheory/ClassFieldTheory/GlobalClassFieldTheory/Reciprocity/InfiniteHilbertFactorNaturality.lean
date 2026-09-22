@@ -86,7 +86,7 @@ theorem globalInfinitePlaceHilbertSymbol_congr
         by_cases hb : InfinitePlace.embedding_of_isReal hv (b : F) < 0
         · have hbG := hbiff.mp hb
           change InfinitePlace.embedding_of_isReal hW (e (b : F)) < 0 at hbG
-          simp [globalInfinitePlaceHilbertSymbol, hn, hv,
+          simp? [globalInfinitePlaceHilbertSymbol, hn, hv,
             hW, ha, hb, haG, hbG]
           apply Subtype.ext
           apply Units.ext

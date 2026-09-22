@@ -35,7 +35,7 @@ noncomputable def standardLubinTateRealLowerRamificationGroup
     {F : LocalField.{u, v} K} {π : F.valuationSubring}
     (hπ : F.toCompleteDVF.valuation.IsUniformizer (π : K))
     (n : ℕ) (s : ℝ) :
-    Subgroup Gal((standardLubinTateLevelField hπ n) / K) :=
+    Subgroup Gal((standardLubinTateLevelField hπ n)/K) :=
   lowerRamificationGroup
     (base := F.toCompleteDVF.toDVF)
     (target := (standardLubinTateLevelCompleteDVF hπ n).toDVF)

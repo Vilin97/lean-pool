@@ -102,7 +102,6 @@ theorem extensionFixedEndomorphism_fixed_val
 subgroups intersect in `G_L`.  The generation conclusion is derived from
 the radicals' stabilizers; it is not an input. -/
 theorem closedSetFixingSubgroup_range_extensionFixed_eq
-
     (A : Rep ℤ G) (hcontinuous : IsContinuousDiscreteRepresentation A)
     (K L : ClosedSubgroup G) (hLK : L.toSubgroup ≤ K.toSubgroup)
     {iota : Type*}

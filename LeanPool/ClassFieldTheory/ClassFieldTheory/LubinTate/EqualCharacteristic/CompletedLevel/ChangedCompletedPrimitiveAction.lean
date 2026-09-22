@@ -287,7 +287,6 @@ noncomputable def equalCharacteristicChangedCompletedUnitRoot
 
 private theorem equalCharacteristicChangedActionPiPolynomial_eval₂
     (F : LocalField.{u, v} K)
-
     (u : F.residueField⟦X⟧ˣ)
     {A : Type*} [Field A] [CharP A F.residueCharacteristic]
     (f : F.residueField⸨X⸩ →+* A) (x : A) :

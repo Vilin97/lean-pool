@@ -76,7 +76,7 @@ noncomputable def decompositionGroupLocalizedIntegerUnitsAction :
   letI := LocalInductionInternal.isIntegralClosure
     vK w hvK hvKna
   letI : MulDistribMulAction
-      (Gal(LocalizedCompletion vK w / vK.Completion))
+      (Gal(LocalizedCompletion vK w/vK.Completion))
       𝒪[LocalizedCompletion vK w]ˣ :=
     galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure
       vK.Completion (LocalizedCompletion vK w)

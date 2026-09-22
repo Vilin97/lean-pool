@@ -108,7 +108,7 @@ def galoisGroupIntegerRingEquivHomOfIsIntegralClosure
     [Algebra K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L] :
-    Gal(L / K) →* (𝒪[L] ≃+* 𝒪[L]) where
+    Gal(L/K) →* (𝒪[L] ≃+* 𝒪[L]) where
   toFun := galoisGroupIntegerRingEquivOfIsIntegralClosure K L
   map_one' := by
     ext x
@@ -126,7 +126,7 @@ def galoisGroupIntegerRingMulSemiringActionOfIsIntegralClosure
     [Algebra K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L] :
-    MulSemiringAction (Gal(L / K)) 𝒪[L] :=
+    MulSemiringAction (Gal(L/K)) 𝒪[L] :=
   MulSemiringAction.compHom 𝒪[L] (galoisGroupIntegerRingEquivHomOfIsIntegralClosure K L)
 
 /-- Restriction of a Galois automorphism commutes with the inclusion of the integer ring into the
@@ -167,7 +167,7 @@ theorem galoisGroupIntegerRingSMulCommClassOfIsIntegralClosure
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L] :
     letI := galoisGroupIntegerRingMulSemiringActionOfIsIntegralClosure K L
-    SMulCommClass (Gal(L / K)) 𝒪[K] 𝒪[L] := by
+    SMulCommClass (Gal(L/K)) 𝒪[K] 𝒪[L] := by
   let := galoisGroupIntegerRingMulSemiringActionOfIsIntegralClosure K L
   refine ⟨?_⟩
   intro σ x y
@@ -191,7 +191,7 @@ theorem galoisGroupIntegerRingFieldSMulDistribClassOfIsIntegralClosure
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L] :
     letI := galoisGroupIntegerRingMulSemiringActionOfIsIntegralClosure K L
-    SMulDistribClass (Gal(L / K)) 𝒪[L] L := by
+    SMulDistribClass (Gal(L/K)) 𝒪[L] L := by
   let := galoisGroupIntegerRingMulSemiringActionOfIsIntegralClosure K L
   refine ⟨?_⟩
   intro σ r s
@@ -209,12 +209,12 @@ theorem galoisGroupIntegerRing_isGaloisGroup_of_isIntegralClosure
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L] :
     letI := galoisGroupIntegerRingMulSemiringActionOfIsIntegralClosure K L
-    IsGaloisGroup (Gal(L / K)) 𝒪[K] 𝒪[L] := by
+    IsGaloisGroup (Gal(L/K)) 𝒪[K] 𝒪[L] := by
   let := galoisGroupIntegerRingMulSemiringActionOfIsIntegralClosure K L
   let := galoisGroupIntegerRingFieldSMulDistribClassOfIsIntegralClosure K L
   let : Algebra.IsIntegral 𝒪[K] 𝒪[L] :=
     IsIntegralClosure.isIntegral_algebra 𝒪[K] L
-  exact IsGaloisGroup.of_isFractionRing (Gal(L / K)) 𝒪[K] 𝒪[L] K L
+  exact IsGaloisGroup.of_isFractionRing (Gal(L/K)) 𝒪[K] 𝒪[L] K L
 
 /-- The ideal action induced by the actual integral-closure restriction. -/
 @[reducible]
@@ -223,7 +223,7 @@ def galoisGroupIntegerRingIdealDistribMulActionOfIsIntegralClosure
     [Algebra K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L] :
-    DistribMulAction (Gal(L / K)) (Ideal 𝒪[L]) := by
+    DistribMulAction (Gal(L/K)) (Ideal 𝒪[L]) := by
   letI := galoisGroupIntegerRingMulSemiringActionOfIsIntegralClosure K L
   exact Ideal.pointwiseDistribMulAction
 
@@ -235,7 +235,7 @@ def galoisGroupIntegerRingIdealMulActionOfIsIntegralClosure
     [Algebra K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L] :
-    MulAction (Gal(L / K)) (Ideal 𝒪[L]) := by
+    MulAction (Gal(L/K)) (Ideal 𝒪[L]) := by
   exact (galoisGroupIntegerRingIdealDistribMulActionOfIsIntegralClosure K L).toMulAction
 
 /-- The Galois action on an integral-closure valuation ring preserves its maximal ideal. -/
@@ -244,8 +244,8 @@ theorem galoisGroupIntegerRingAction_map_maximalIdeal_of_isIntegralClosure
     [Algebra K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L]
-    (σ : Gal(L / K)) :
-    Ideal.map (@MulSemiringAction.toRingHom (Gal(L / K)) _ 𝒪[L] _
+    (σ : Gal(L/K)) :
+    Ideal.map (@MulSemiringAction.toRingHom (Gal(L/K)) _ 𝒪[L] _
         (galoisGroupIntegerRingMulSemiringActionOfIsIntegralClosure K L) σ)
       (𝓂[L] : Ideal 𝒪[L]) =
       (𝓂[L] : Ideal 𝒪[L]) := by
@@ -263,13 +263,13 @@ theorem galoisGroupIntegerRingAction_mem_maximalIdeal_stabilizer_of_isIntegralCl
     [Algebra K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L]
-    (σ : Gal(L / K)) :
-    σ ∈ @MulAction.stabilizer (Gal(L / K)) (Ideal 𝒪[L]) _
+    (σ : Gal(L/K)) :
+    σ ∈ @MulAction.stabilizer (Gal(L/K)) (Ideal 𝒪[L]) _
       (galoisGroupIntegerRingIdealMulActionOfIsIntegralClosure K L)
       (𝓂[L] : Ideal 𝒪[L]) := by
-  rw [@MulAction.mem_stabilizer_iff (Gal(L / K)) (Ideal 𝒪[L]) _
+  rw [@MulAction.mem_stabilizer_iff (Gal(L/K)) (Ideal 𝒪[L]) _
     (galoisGroupIntegerRingIdealMulActionOfIsIntegralClosure K L)]
-  change Ideal.map (@MulSemiringAction.toRingHom (Gal(L / K)) _ 𝒪[L] _
+  change Ideal.map (@MulSemiringAction.toRingHom (Gal(L/K)) _ 𝒪[L] _
       (galoisGroupIntegerRingMulSemiringActionOfIsIntegralClosure K L) σ)
         (𝓂[L] : Ideal 𝒪[L]) =
     (𝓂[L] : Ideal 𝒪[L])
@@ -282,7 +282,7 @@ def galoisGroupMaximalIdealStabilizerHomOfIsIntegralClosure
     [Algebra K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L] :
-    Gal(L / K) →* @MulAction.stabilizer (Gal(L / K)) (Ideal 𝒪[L]) _
+    Gal(L/K) →* @MulAction.stabilizer (Gal(L/K)) (Ideal 𝒪[L]) _
       (galoisGroupIntegerRingIdealMulActionOfIsIntegralClosure K L)
       (𝓂[L] : Ideal 𝒪[L]) where
   toFun σ :=
@@ -328,7 +328,7 @@ def galoisGroupPrincipalUnitsMapEquivHomOfIsIntegralClosure
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L]
     (n : Nat) :
-    Gal(L / K) →* (principalUnits L n ≃* principalUnits L n) where
+    Gal(L/K) →* (principalUnits L n ≃* principalUnits L n) where
   toFun := galoisGroupPrincipalUnitsMapEquivOfIsIntegralClosure K L n
   map_one' := by
     ext u
@@ -373,7 +373,7 @@ def galoisGroupMaximalIdealPowSuccQuotMapEquivHomOfIsIntegralClosure
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L]
     (n : Nat) :
-    Gal(L / K) →*
+    Gal(L/K) →*
       Multiplicative
         (AddAut (MaximalIdealPowSuccQuot L n)) where
   toFun σ := Multiplicative.ofAdd
@@ -415,7 +415,7 @@ def galoisGroupMaximalIdealPowSuccQuotDistribMulActionOfIsIntegralClosure
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L]
     (n : Nat) :
-    DistribMulAction (Gal(L / K)) (MaximalIdealPowSuccQuot L n) where
+    DistribMulAction (Gal(L/K)) (MaximalIdealPowSuccQuot L n) where
   smul σ x := galoisGroupMaximalIdealPowSuccQuotMapEquivOfIsIntegralClosure K L n σ x
   one_smul := by
     intro x
@@ -463,7 +463,7 @@ def galoisGroupMaximalIdealPowSuccQuotMultiplicativeMulDistribMulActionOfIsInteg
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L]
     (n : Nat) :
-    MulDistribMulAction (Gal(L / K)) (Multiplicative (MaximalIdealPowSuccQuot L n)) where
+    MulDistribMulAction (Gal(L/K)) (Multiplicative (MaximalIdealPowSuccQuot L n)) where
   smul σ x :=
     maximalIdealPowSuccQuotMultiplicativeMapEquivOfIntegerRingEquiv L n
       (galoisGroupIntegerRingEquivOfIsIntegralClosure K L σ) x
@@ -548,7 +548,7 @@ def galoisGroupPrincipalUnitsSuccQuotMapEquivHomOfIsIntegralClosure
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L]
     (n : Nat) :
-    Gal(L / K) →* (PrincipalUnitsSuccQuot L n ≃* PrincipalUnitsSuccQuot L n) where
+    Gal(L/K) →* (PrincipalUnitsSuccQuot L n ≃* PrincipalUnitsSuccQuot L n) where
   toFun := galoisGroupPrincipalUnitsSuccQuotMapEquivOfIsIntegralClosure K L n
   map_one' := by
     ext x
@@ -572,7 +572,7 @@ def galoisGroupPrincipalUnitsSuccQuotMulDistribMulActionOfIsIntegralClosure
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L]
     (n : Nat) :
-    MulDistribMulAction (Gal(L / K)) (PrincipalUnitsSuccQuot L n) where
+    MulDistribMulAction (Gal(L/K)) (PrincipalUnitsSuccQuot L n) where
   smul σ x := galoisGroupPrincipalUnitsSuccQuotMapEquivOfIsIntegralClosure K L n σ x
   one_smul := by
     intro x
@@ -618,7 +618,7 @@ def galoisGroupPrincipalUnitsSuccQuotAddDistribMulActionOfIsIntegralClosure
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L]
     (n : Nat) :
-    DistribMulAction (Gal(L / K)) (Additive (PrincipalUnitsSuccQuot L n)) where
+    DistribMulAction (Gal(L/K)) (Additive (PrincipalUnitsSuccQuot L n)) where
   smul σ x :=
     Additive.ofMul
       (galoisGroupPrincipalUnitsSuccQuotMapEquivOfIsIntegralClosure K L n σ
@@ -765,14 +765,14 @@ theorem galoisGroup_prod_one_add_sub_one_sub_sum_mem_maximalIdeal_pow_succ_of_is
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L]
     (n : Nat) (hn : 1 ≤ n) (a : (𝓂[L] ^ n : Ideal 𝒪[L])) :
-    (Finset.univ.prod fun σ : Gal(L / K) =>
+    (Finset.univ.prod fun σ : Gal(L/K) =>
         1 + galoisGroupIntegerRingEquivOfIsIntegralClosure K L σ (a : 𝒪[L])) - 1 -
-      (Finset.univ.sum fun σ : Gal(L / K) =>
+      (Finset.univ.sum fun σ : Gal(L/K) =>
         galoisGroupIntegerRingEquivOfIsIntegralClosure K L σ (a : 𝒪[L])) ∈
         (𝓂[L] ^ (n + 1) : Ideal 𝒪[L]) := by
   classical
   refine finset_prod_one_add_sub_one_sub_sum_mem_maximalIdeal_pow_succ L
-    (Finset.univ : Finset (Gal(L / K))) n hn
+    (Finset.univ : Finset (Gal(L/K))) n hn
     (fun σ => galoisGroupIntegerRingEquivOfIsIntegralClosure K L σ (a : 𝒪[L])) ?_
   intro σ _
   exact (integerRingEquiv_mem_maximalIdeal_pow L

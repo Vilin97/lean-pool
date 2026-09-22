@@ -324,7 +324,6 @@ def galoisAverage
 
 omit [NumberField L] in
 theorem galoisAverage_eq_of_fixed
-
     (z : RelativeAdeleRing K L)
     (hz : ∀ σ : L ≃ₐ[K] L,
       conjugation K L σ z = z) :

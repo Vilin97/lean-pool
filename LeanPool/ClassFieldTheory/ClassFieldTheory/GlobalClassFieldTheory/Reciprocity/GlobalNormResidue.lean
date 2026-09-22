@@ -79,14 +79,14 @@ noncomputable def
         (Abelianization
           (ClassFormation.FiniteGaloisSubextension.extensionQuotient
             (numberFieldTowerFiniteGaloisSubextension K L))) ≃+
-      Additive (Gal(L / K)) :=
+      Additive (Gal(L/K)) :=
   MulEquiv.toAdditive
     (MulEquiv.trans
       (MulEquiv.abelianizationCongr
         (numberFieldTowerExtensionQuotientEquivGaloisGroup K L))
         (Abelianization.equivOfComm :
-          Gal(L / K) ≃*
-            Abelianization (Gal(L / K))).symm)
+          Gal(L/K) ≃*
+            Abelianization (Gal(L/K))).symm)
 
 /-- The compatible abelianized extension-quotient comparison sends the
 class of an abstract automorphism to the corresponding actual
@@ -104,8 +104,8 @@ theorem
   apply Additive.toMul.injective
   change
     (Abelianization.equivOfComm :
-        Gal(L / K) ≃*
-          Abelianization (Gal(L / K))).symm
+        Gal(L/K) ≃*
+          Abelianization (Gal(L/K))).symm
         (MulEquiv.abelianizationCongr
           (numberFieldTowerExtensionQuotientEquivGaloisGroup K L)
           (Abelianization.of q)) =
@@ -113,8 +113,8 @@ theorem
   rw [abelianizationCongr_of]
   exact
     (Abelianization.equivOfComm :
-      Gal(L / K) ≃*
-        Abelianization (Gal(L / K))).symm_apply_apply _
+      Gal(L/K) ≃*
+        Abelianization (Gal(L/K))).symm_apply_apply _
 
 /-- The abstract norm-residue map followed by the compatible actual
 Galois-group comparison.  Keeping this composition behind a typed boundary
@@ -126,7 +126,7 @@ private noncomputable def
         (numberFieldTowerBaseSubgroup K L)
         (numberFieldTowerTopSubgroup L)
         (numberFieldTowerTopSubgroup_le_baseSubgroup K L) ≃+
-      Additive (Gal(L / K)) := by
+      Additive (Gal(L/K)) := by
   letI : AddCommGroup
       (FiniteNormQuotient rationalIdeleClassRepresentation
         (numberFieldTowerBaseSubgroup K L)
@@ -146,7 +146,7 @@ private noncomputable def
         (Abelianization
           (ClassFormation.FiniteGaloisSubextension.extensionQuotient
             (numberFieldTowerFiniteGaloisSubextension K L))))
-      (Additive (Gal(L / K)))
+      (Additive (Gal(L/K)))
       inferInstance inferInstance inferInstance
       (rationalCyclotomicDegreeData.normResidueSymbol
         rationalIdeleClassRepresentation
@@ -183,7 +183,7 @@ noncomputable def globalNormResidueEquiv :
     Additive
         (IdeleClassGroup K ⧸
           (_root_.ideleClassNorm K L).range) ≃+
-      Additive (Gal(L / K)) := by
+      Additive (Gal(L/K)) := by
   exact
     (numberFieldTowerFiniteNormQuotientEquivIdeleClassNormQuotient
         K L).symm.trans
@@ -303,7 +303,7 @@ theorem globalNormResidueEquiv_finiteReciprocityHom
 
 `Gal(L / K) ≃ C_K / N_{L/K} C_L`. -/
 noncomputable def globalReciprocityEquiv :
-    Additive (Gal(L / K)) ≃+
+    Additive (Gal(L/K)) ≃+
       Additive
         (IdeleClassGroup K ⧸
           (_root_.ideleClassNorm K L).range) :=
@@ -313,11 +313,11 @@ noncomputable def globalReciprocityEquiv :
 group, obtained by composing the genuine quotient map with the global
 norm-residue equivalence. -/
 noncomputable def globalNormResidueMonoidHom :
-    IdeleClassGroup K →* Gal(L / K) := by
+    IdeleClassGroup K →* Gal(L/K) := by
   let e :
       (IdeleClassGroup K ⧸
           (_root_.ideleClassNorm K L).range) ≃*
-        Gal(L / K) :=
+        Gal(L/K) :=
     AddEquiv.toMultiplicative (globalNormResidueEquiv K L)
   exact
     e.toMonoidHom.comp
@@ -429,7 +429,7 @@ theorem globalNormResidueMonoidHom_eq_one_iff
   let e :
       (IdeleClassGroup K ⧸
           (_root_.ideleClassNorm K L).range) ≃*
-        Gal(L / K) :=
+        Gal(L/K) :=
     AddEquiv.toMultiplicative (globalNormResidueEquiv K L)
   change
     e (QuotientGroup.mk'
@@ -488,9 +488,9 @@ theorem ideleClassNorm_index_eq_finrank_abelian :
             (IdeleClassGroup K ⧸
               (_root_.ideleClassNorm K L).range)) :=
       (Nat.card_congr Additive.toMul).symm
-    _ = Nat.card (Additive (Gal(L / K))) :=
+    _ = Nat.card (Additive (Gal(L/K))) :=
       Nat.card_congr (globalNormResidueEquiv K L).toEquiv
-    _ = Nat.card (Gal(L / K)) :=
+    _ = Nat.card (Gal(L/K)) :=
       Nat.card_congr Additive.toMul
     _ = Module.finrank K L :=
       IsGalois.card_aut_eq_finrank K L

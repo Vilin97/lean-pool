@@ -46,7 +46,6 @@ omit [FiniteDimensional K L] in
 /-- Trace-dual membership written directly as a trace integrality condition. -/
 theorem mem_codifferentSubmodule_iff_trace_mul_integral
     [IsScalarTower base.valuationSubring target.valuationSubring L]
-
     {z : L} :
     z ∈ (RamificationTheory.DiscreteValuationField.ValuedExtension.codifferentSubmodule base
       target) ↔
@@ -169,7 +168,6 @@ trying the very general `FractionRing.liftAlgebra` instance globally. -/
 private theorem fractionRing_isSeparable_of_finite_separable
     [Algebra.IsSeparable K L]
     [IsScalarTower base.valuationSubring target.valuationSubring L]
-
     [Module.IsTorsionFree base.valuationSubring target.valuationSubring] :
     letI : FaithfulSMul base.valuationSubring target.valuationSubring :=
       Module.IsTorsionFree.to_faithfulSMul
@@ -697,7 +695,6 @@ theorem differentIdeal_tower
 /-- Finite-separable tower formula for the different, using the
 finite-separable different ideals on all three steps. -/
 theorem differentIdealOfFiniteSeparable_tower
-
     [Algebra.IsSeparable K M] [Algebra.IsSeparable M L]
     [Algebra.IsSeparable K L]
     [IsScalarTower base.valuationSubring middle.valuationSubring target.valuationSubring]

@@ -43,7 +43,7 @@ noncomputable abbrev closedFiniteIndexClassFieldGaloisEquivNormQuotient
     (hclosed : IsClosed (H : Set (IdeleClassGroup K)))
     [H.FiniteIndex] :
     Gal((closedFiniteIndexClassField
-          (K := K) H hclosed) / K) ≃*
+          (K := K) H hclosed)/K) ≃*
       IdeleClassGroup K ⧸ H :=
   (closedFiniteIndexClassFieldGaloisContinuousEquivNormQuotient
     (K := K) H hclosed).toMulEquiv

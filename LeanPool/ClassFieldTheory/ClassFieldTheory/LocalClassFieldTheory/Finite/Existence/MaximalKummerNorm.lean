@@ -98,7 +98,7 @@ theorem powMonoidHom_range_le_maximalKummerNormSubgroup
   let : CommGroup Gal(E/K) :=
     CommGroup.mk (fun a b => IsMulCommutative.is_comm.comm a b)
   have habExponent :
-      ∀ a : Abelianization (Gal(E / K)), a ^ (n : ℕ) = 1 := by
+      ∀ a : Abelianization (Gal(E/K)), a ^ (n : ℕ) = 1 := by
     intro a
     apply (Abelianization.equivOfComm :
       Gal(E/K) ≃* Abelianization (Gal(E/K))).symm.injective

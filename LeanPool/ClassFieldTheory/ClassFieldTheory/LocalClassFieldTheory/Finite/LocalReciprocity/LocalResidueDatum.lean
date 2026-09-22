@@ -10,6 +10,19 @@ import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.GaloisValuation.
 import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.FiniteExtensionCompleteDVF
 
 /-! # Local Residue Datum -/
+
+open _root_.ValuationTheory.DiscreteValuationField.Valuation renaming
+  hasExtension_valuation_of_valuationSubring_pullback →
+    hasExtension_valuation_of_valuationSubring_pullback
+
+open _root_.ValuationTheory.DiscreteValuationField.ValuedExtension renaming
+  exists_integralClosure_standard_fundamental_identity →
+    exists_integralClosure_standard_fundamental_identity
+
+open _root_.ValuationTheory.DiscreteValuationField.ValuedExtension renaming
+  target_valuationSubring_eq_of_finite_separable →
+    target_valuationSubring_eq_of_finite_separable
+
 namespace LocalClassFieldTheory
 
 open ClassFormation
@@ -79,7 +92,7 @@ private theorem localAbsoluteValuationSubring_pullback (x : K) :
 private noncomputable instance localAbsoluteValuationHasExtension :
     (localCompleteDVF K).valuation.HasExtension
       (localAbsoluteValuationSubring K).valuation :=
-  ValuationTheory.DiscreteValuationField.Valuation.hasExtension_valuation_of_valuationSubring_pullback
+  hasExtension_valuation_of_valuationSubring_pullback
     (localCompleteDVF K).valuation (localAbsoluteValuationSubring K)
       (localAbsoluteValuationSubring_pullback K)
 
@@ -107,7 +120,7 @@ theorem localSeparableValuationSubring_pullback (x : K) :
 noncomputable instance localSeparableValuationHasExtension :
     (localCompleteDVF K).valuation.HasExtension
       (localSeparableValuationSubring K).valuation :=
-  ValuationTheory.DiscreteValuationField.Valuation.hasExtension_valuation_of_valuationSubring_pullback
+  hasExtension_valuation_of_valuationSubring_pullback
     (localCompleteDVF K).valuation (localSeparableValuationSubring K)
       (localSeparableValuationSubring_pullback K)
 
@@ -126,7 +139,7 @@ theorem localSeparableValuationSubring_eq_of_hasExtension
       (Algebra.IsIntegral.isIntegral z)
   let : Algebra.IsSeparable K E := inferInstance
   obtain ⟨target, hExt, _hIntegralClosure, _hFundamental⟩ :=
-    ValuationTheory.DiscreteValuationField.ValuedExtension.exists_integralClosure_standard_fundamental_identity
+    exists_integralClosure_standard_fundamental_identity
       (K := K) (L := E) (localCompleteDVF K)
   let : (localCompleteDVF K).valuation.HasExtension target.valuation := hExt
   let : IsScalarTower (localCompleteDVF K).valuationSubring
@@ -142,10 +155,10 @@ theorem localSeparableValuationSubring_eq_of_hasExtension
     RamificationTheory.ValuationSubring.restrictIntermediateField_hasExtension
       (localCompleteDVF K).valuation B E
   have hA : target.valuation.valuationSubring = Ares :=
-    ValuationTheory.DiscreteValuationField.ValuedExtension.target_valuationSubring_eq_of_finite_separable
+    target_valuationSubring_eq_of_finite_separable
       (localCompleteDVF K) target Ares
   have hB : target.valuation.valuationSubring = Bres :=
-    ValuationTheory.DiscreteValuationField.ValuedExtension.target_valuationSubring_eq_of_finite_separable
+    target_valuationSubring_eq_of_finite_separable
       (localCompleteDVF K) target Bres
   have hAB : Ares = Bres := hA.symm.trans hB
   let zE : E :=
@@ -375,7 +388,7 @@ private theorem localSeparableResidueAlgAction_continuous :
 
 /-- The continuous residue action on the chosen residue algebraic closure. -/
 noncomputable def localSeparableResidueAlgAction :
-    Gal(SeparableClosure K / K) →ₜ*
+    Gal(SeparableClosure K/K) →ₜ*
       (selectedResidueField (localSeparableValuationSubring K) ≃ₐ[
         decompositionResidueField K (localSeparableValuationSubring K)]
           selectedResidueField (localSeparableValuationSubring K)) where
@@ -396,7 +409,7 @@ theorem localSeparableResidueAlgAction_surjective :
 defined directly on the separable-closure model used by the local reciprocity
 formalization. -/
 noncomputable def localResidueDegree :
-    Gal(SeparableClosure K / K) →ₜ* ZHatMul where
+    Gal(SeparableClosure K/K) →ₜ* ZHatMul where
   toMonoidHom :=
     (residueAbsoluteDegreeIn
       (decompositionResidueField K (localSeparableValuationSubring K))
@@ -431,7 +444,7 @@ theorem localResidueDegree_surjective :
 /-- **Finite local reciprocity.**  The actual abstract class-formation datum
 `d : G_K -> ZHat` furnished by the residue action of a local field. -/
 noncomputable def localResidueDatum :
-    DegreeData (Gal(SeparableClosure K / K)) where
+    DegreeData (Gal(SeparableClosure K/K)) where
   degree := localResidueDegree K
   degree_surjective := localResidueDegree_surjective K
 

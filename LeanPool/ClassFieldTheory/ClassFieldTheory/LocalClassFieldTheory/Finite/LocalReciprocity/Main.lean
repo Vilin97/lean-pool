@@ -37,7 +37,7 @@ isomorphism
 The coefficient module used in the construction is
 `(SeparableClosure K)ˣ`, in the fixed-separable-closure model. -/
 noncomputable def abelianizationEquivNormQuotient :
-    Abelianization (Gal(L / K)) ≃* NormQuotient K L :=
+    Abelianization (Gal(L/K)) ≃* NormQuotient K L :=
   concreteReciprocityEquiv K L
     (localResidueDatum K)
     (localHenselianValuation K)
@@ -63,7 +63,7 @@ private theorem abelianizationEquivNormQuotient_eq_of_embedding
 /-- The local norm-residue symbol is the inverse of reciprocity, preceded by
 the quotient map from `Kˣ`. -/
 noncomputable def localArtinMonoidHom :
-    Kˣ →* Abelianization (Gal(L / K)) :=
+    Kˣ →* Abelianization (Gal(L/K)) :=
   (abelianizationEquivNormQuotient K L).symm.toMonoidHom.comp
     (normClass K L)
 

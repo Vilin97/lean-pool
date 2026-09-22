@@ -140,9 +140,9 @@ the standard `V^n`. -/
 def chosenNormalBasisPrincipalUnitSubgroupMulDistribMulAction
     (n : Nat) (V : Subgroup 𝒪[L]ˣ)
     (hV : (V : Set 𝒪[L]ˣ) = chosenNormalBasisPrincipalUnitSet K L n) :
-    MulDistribMulAction (Gal(L / K)) V := by
+    MulDistribMulAction (Gal(L/K)) V := by
   letI := galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L
-  exact subgroupMulDistribMulActionOfStable (Gal(L / K)) 𝒪[L]ˣ V
+  exact subgroupMulDistribMulActionOfStable (Gal(L/K)) 𝒪[L]ˣ V
     (by
       intro sigma a ha
       change sigma • (a : 𝒪[L]ˣ) ∈ (V : Set 𝒪[L]ˣ)
@@ -170,13 +170,13 @@ theorem chosenNormalBasisPrincipalUnitSubgroup_tateNorm_coe
     (a : V) :
     letI := chosenNormalBasisPrincipalUnitSubgroupMulDistribMulAction K L n V hV
     letI := galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L
-    ((tateNorm (Gal(L / K)) V a : V) : 𝒪[L]ˣ) =
-      tateNorm (Gal(L / K)) 𝒪[L]ˣ (a : 𝒪[L]ˣ) := by
+    ((tateNorm (Gal(L/K)) V a : V) : 𝒪[L]ˣ) =
+      tateNorm (Gal(L/K)) 𝒪[L]ˣ (a : 𝒪[L]ˣ) := by
   let := chosenNormalBasisPrincipalUnitSubgroupMulDistribMulAction K L n V hV
   let := galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L
   unfold tateNorm
-  change V.subtype (∏ g : Gal(L / K), g • a) =
-    ∏ g : Gal(L / K), g • (a : 𝒪[L]ˣ)
+  change V.subtype (∏ g : Gal(L/K), g • a) =
+    ∏ g : Gal(L/K), g • (a : 𝒪[L]ˣ)
   rw [map_prod]
   apply Finset.prod_congr rfl
   intro g _hg
@@ -187,11 +187,11 @@ theorem chosenNormalBasisPrincipalUnitSubgroup_tateNorm_coe
 theorem chosenNormalBasisPrincipalUnitSubgroup_sigmaMinusOne_coe
     (n : Nat) (V : Subgroup 𝒪[L]ˣ)
     (hV : (V : Set 𝒪[L]ˣ) = chosenNormalBasisPrincipalUnitSet K L n)
-    (sigma : Gal(L / K)) (a : V) :
+    (sigma : Gal(L/K)) (a : V) :
     letI := chosenNormalBasisPrincipalUnitSubgroupMulDistribMulAction K L n V hV
     letI := galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L
-    ((sigmaMinusOne (Gal(L / K)) V sigma a : V) : 𝒪[L]ˣ) =
-      sigmaMinusOne (Gal(L / K)) 𝒪[L]ˣ sigma (a : 𝒪[L]ˣ) := by
+    ((sigmaMinusOne (Gal(L/K)) V sigma a : V) : 𝒪[L]ˣ) =
+      sigmaMinusOne (Gal(L/K)) 𝒪[L]ˣ sigma (a : 𝒪[L]ˣ) := by
   let := chosenNormalBasisPrincipalUnitSubgroupMulDistribMulAction K L n V hV
   let := galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L
   rfl
@@ -202,10 +202,10 @@ Galois action. -/
 def chosenNormalBasisIntegerUnitsQuotMulDistribMulAction
     (n : Nat) (V : Subgroup 𝒪[L]ˣ)
     (hV : (V : Set 𝒪[L]ˣ) = chosenNormalBasisPrincipalUnitSet K L n) :
-    MulDistribMulAction (Gal(L / K)) (𝒪[L]ˣ ⧸ V) := by
+    MulDistribMulAction (Gal(L/K)) (𝒪[L]ˣ ⧸ V) := by
   letI := galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L
   exact quotientMulDistribMulActionOfSubgroupStable
-    (Gal(L / K)) 𝒪[L]ˣ V (by
+    (Gal(L/K)) 𝒪[L]ˣ V (by
       intro sigma a ha
       change a ∈ (V : Set 𝒪[L]ˣ) at ha
       change sigma • a ∈ (V : Set 𝒪[L]ˣ)

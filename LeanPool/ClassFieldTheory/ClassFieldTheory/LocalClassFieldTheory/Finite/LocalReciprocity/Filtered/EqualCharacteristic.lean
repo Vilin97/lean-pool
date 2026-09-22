@@ -95,7 +95,7 @@ theorem equalCharacteristic_filteredLocalReciprocity
       (localUpperRamificationGroup K E)
       (localUpperRamificationGroup K F)
       hupper hcover t ht
-  let q : Gal(E / K) ≃* Gal(L / K) :=
+  let q : Gal(E/K) ≃* Gal(L/K) :=
     AlgEquiv.autCongr e.symm
   have hArtin :
       Subgroup.map q.toMonoidHom

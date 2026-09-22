@@ -17,6 +17,11 @@ field structures and transports adic completeness, compactness, properness,
 and completeness.
 -/
 
+open _root_.ValuationTheory.DiscreteValuationField.Valuation renaming
+  mem_maximalIdeal_pow_iff_valuation_le_uniformizer_pow →
+    mem_maximalIdeal_pow_iff_valuation_le_uniformizer_pow
+
+
 noncomputable section
 
 universe u v
@@ -151,7 +156,7 @@ theorem mem_subfield_of_mrangeRestrict_isClosed_of_forall_valuationSubring_smodE
         F.valuation ((zInt - b : F.valuationSubring) : K) ≤
           F.valuation (((π ^ N : F.valuationSubring) : K)) := by
       exact
-        (ValuationTheory.DiscreteValuationField.Valuation.mem_maximalIdeal_pow_iff_valuation_le_uniformizer_pow
+        (mem_maximalIdeal_pow_iff_valuation_le_uniformizer_pow
           (val := F.valuation) hπ N (x := zInt - b)).1 hdiff_mem
     refine ⟨(z : K), ?_, z.2⟩
     apply hgamma

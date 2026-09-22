@@ -74,7 +74,7 @@ theorem residueUnitsMap_normIntegerUnits_eq_galoisGroup_residue_prod_of_isIntegr
     (u : 𝒪[L]ˣ) :
     residueUnitsMapOfValuationExtension K L
         (integerUnitsToResidueUnits K (normIntegerUnits K L u)) =
-      Finset.univ.prod (fun σ : Gal(L / K) =>
+      Finset.univ.prod (fun σ : Gal(L/K) =>
         Units.mapEquiv
           (galoisGroupResidueFieldEquivOfIsIntegralClosure K L σ).toMulEquiv
           (integerUnitsToResidueUnits L u)) := by
@@ -99,7 +99,7 @@ theorem residueUnitsMap_normIntegerUnits_eq_galoisGroup_residue_algEquiv_prod_of
     (u : 𝒪[L]ˣ) :
     residueUnitsMapOfValuationExtension K L
         (integerUnitsToResidueUnits K (normIntegerUnits K L u)) =
-      Finset.univ.prod (fun σ : Gal(L / K) =>
+      Finset.univ.prod (fun σ : Gal(L/K) =>
         Units.mapEquiv
           (galoisGroupResidueAlgEquivOfIsIntegralClosure K L σ).toMulEquiv
           (integerUnitsToResidueUnits L u)) := by
@@ -125,7 +125,7 @@ theorem integerUnitsModPrincipalUnitsNormOfGaloisOfIsIntegralClosure_residue_alg
     residueUnitsMapOfValuationExtension K L
         (integerUnitsModPrincipalUnitsEquivResidueUnits K
           (integerUnitsModPrincipalUnitsNormOfGaloisOfIsIntegralClosure K L x)) =
-      Finset.univ.prod (fun σ : Gal(L / K) =>
+      Finset.univ.prod (fun σ : Gal(L/K) =>
         Units.mapEquiv
           (galoisGroupResidueAlgEquivOfIsIntegralClosure K L σ).toMulEquiv
           (integerUnitsModPrincipalUnitsEquivResidueUnits L x)) := by
@@ -134,7 +134,7 @@ theorem integerUnitsModPrincipalUnitsNormOfGaloisOfIsIntegralClosure_residue_alg
       residueUnitsMapOfValuationExtension K L
           (integerUnitsModPrincipalUnitsEquivResidueUnits K
             (integerUnitsModPrincipalUnitsNormOfGaloisOfIsIntegralClosure K L x)) =
-        Finset.univ.prod (fun σ : Gal(L / K) =>
+        Finset.univ.prod (fun σ : Gal(L/K) =>
           Units.mapEquiv
             (galoisGroupResidueAlgEquivOfIsIntegralClosure K L σ).toMulEquiv
             (integerUnitsModPrincipalUnitsEquivResidueUnits L x)))

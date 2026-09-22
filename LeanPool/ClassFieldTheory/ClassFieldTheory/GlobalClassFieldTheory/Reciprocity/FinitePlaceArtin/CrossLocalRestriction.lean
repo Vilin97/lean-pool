@@ -198,7 +198,6 @@ noncomputable def finitePlaceArtinLocalizedCompletionRingHom
     [Field L'] [NumberField L']
     [NumberField L]
     [Algebra K K'] [Algebra K' L'] [Algebra K L']
-
     [Algebra L L']
     (v : HeightOneSpectrum (𝓞 K))
     (W : HeightOneSpectrum (𝓞 K'))
@@ -620,7 +619,6 @@ noncomputable def finitePlaceCrossLocalRestrictionMonoidHom
     [Algebra K K'] [Algebra K' L'] [Algebra K L']
     [IsScalarTower K K' L']
     [Algebra L L'] [IsScalarTower K L L']
-
     (v : HeightOneSpectrum (𝓞 K))
     (W : HeightOneSpectrum (𝓞 K'))
     (hW : finitePlaceBelow (K := K) W = v)

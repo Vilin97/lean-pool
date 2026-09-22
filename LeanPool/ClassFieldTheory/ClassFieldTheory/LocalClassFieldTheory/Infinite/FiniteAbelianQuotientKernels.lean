@@ -35,8 +35,8 @@ group of a finite abelian subextension. -/
 noncomputable def absoluteAbelianRestriction
     (E : IntermediateField K (SeparableClosure K))
     [FiniteDimensional K E] [IsAbelianGalois K E] :
-    localAbsoluteAbelianProfinite K →ₜ* Gal(E / K) := by
-  let r : intrinsicAbsoluteGalois K →* Gal(E / K) :=
+    localAbsoluteAbelianProfinite K →ₜ* Gal(E/K) := by
+  let r : intrinsicAbsoluteGalois K →* Gal(E/K) :=
     AlgEquiv.restrictNormalHom E
   have hcomm : commutator (intrinsicAbsoluteGalois K) ≤ r.ker :=
     Abelianization.commutator_subset_ker r
@@ -47,7 +47,7 @@ noncomputable def absoluteAbelianRestriction
       (commutator (intrinsicAbsoluteGalois K)).topologicalClosure ≤ r.ker :=
     (commutator (intrinsicAbsoluteGalois K)).topologicalClosure_minimal
       hcomm hkerClosed
-  let q : localAbsoluteAbelianProfinite K →* Gal(E / K) :=
+  let q : localAbsoluteAbelianProfinite K →* Gal(E/K) :=
     QuotientGroup.lift
       (commutator (intrinsicAbsoluteGalois K)).topologicalClosure r
       (fun σ hσ ↦ MonoidHom.mem_ker.mp (hclosure hσ))

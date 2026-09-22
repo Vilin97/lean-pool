@@ -44,10 +44,10 @@ theorem valuationHerbrand_shortExact :
     letI := galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L
     letI := galoisGroupFieldUnitsMulDistribMulAction K L
     letI := galoisGroupValueGroupMulDistribMulAction K L
-    (∀ (σ : Gal(L / K)) (x : (ValuativeRel.valuation L).integerˣ),
+    (∀ (σ : Gal(L/K)) (x : (ValuativeRel.valuation L).integerˣ),
         integerUnitsToFieldUnits L (σ • x) =
           σ • integerUnitsToFieldUnits L x) ∧
-      (∀ (σ : Gal(L / K)) (x : Lˣ),
+      (∀ (σ : Gal(L/K)) (x : Lˣ),
         valuationUnitsMulHom L (σ • x) =
           σ • valuationUnitsMulHom L x) ∧
       (∀ x : Lˣ, valuationUnitsMulHom L x = 1 ↔
@@ -73,9 +73,9 @@ omit [ValuativeRel K] [ValuativeRel L] [TopologicalSpace L]
 its degree-zero group is finite cyclic and its degree-minus-one group is
 trivial. -/
 theorem galoisGroupValueGroup_herbrandQuotientDefined
-    (g : Gal(L / K)) :
+    (g : Gal(L/K)) :
     letI := galoisGroupValueGroupMulDistribMulAction K L
-    HerbrandQuotientDefined (Gal(L / K)) (Multiplicative Int) g := by
+    HerbrandQuotientDefined (Gal(L/K)) (Multiplicative Int) g := by
   exact ⟨galoisGroupValueGroupHerbrandH0Finite K L,
     galoisGroupValueGroupHerbrandHMinusOneFinite K L g⟩
 
@@ -89,34 +89,34 @@ field-unit quotient is defined and
 The only non-derived finiteness input is `hU`, the two finite low-degree
 Herbrand quotients for the actual integer-unit action. -/
 theorem valuationHerbrand_multiplicativity_of_integerUnits_defined
-    (g : Gal(L / K))
-    (hg : ∀ σ : Gal(L / K), σ ∈ Subgroup.zpowers g)
+    (g : Gal(L/K))
+    (hg : ∀ σ : Gal(L/K), σ ∈ Subgroup.zpowers g)
     (hU :
       letI := galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L
-      HerbrandQuotientDefined (Gal(L / K))
+      HerbrandQuotientDefined (Gal(L/K))
         (ValuativeRel.valuation L).integerˣ g) :
     letI := galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L
     letI := galoisGroupFieldUnitsMulDistribMulAction K L
     letI := galoisGroupValueGroupMulDistribMulAction K L
-    let hZ : HerbrandQuotientDefined (Gal(L / K)) (Multiplicative Int) g :=
+    let hZ : HerbrandQuotientDefined (Gal(L/K)) (Multiplicative Int) g :=
       galoisGroupValueGroup_herbrandQuotientDefined K L g
-    ∃ hField : HerbrandQuotientDefined (Gal(L / K)) Lˣ g,
-      @herbrandQuotient (Gal(L / K)) Lˣ _ _ _
+    ∃ hField : HerbrandQuotientDefined (Gal(L/K)) Lˣ g,
+      @herbrandQuotient (Gal(L/K)) Lˣ _ _ _
           (galoisGroupFieldUnitsMulDistribMulAction K L) g hField.1 hField.2 =
-        @herbrandQuotient (Gal(L / K))
+        @herbrandQuotient (Gal(L/K))
             (ValuativeRel.valuation L).integerˣ _ _ _
             (galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L)
             g hU.1 hU.2 *
-          @herbrandQuotient (Gal(L / K)) (Multiplicative Int) _ _ _
+          @herbrandQuotient (Gal(L/K)) (Multiplicative Int) _ _ _
             (galoisGroupValueGroupMulDistribMulAction K L) g hZ.1 hZ.2 := by
   let := galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L
   let := galoisGroupFieldUnitsMulDistribMulAction K L
   let := galoisGroupValueGroupMulDistribMulAction K L
-  let hZ : HerbrandQuotientDefined (Gal(L / K)) (Multiplicative Int) g :=
+  let hZ : HerbrandQuotientDefined (Gal(L/K)) (Multiplicative Int) g :=
     galoisGroupValueGroup_herbrandQuotientDefined K L g
   let hseq := valuationHerbrand_shortExact K L
   let hField := herbrandQuotientDefined_middle_of_left_right
-    (G := Gal(L / K))
+    (G := Gal(L/K))
     (A := (ValuativeRel.valuation L).integerˣ)
     (B := Lˣ) (C := Multiplicative Int)
     (integerUnitsToFieldUnits L) (valuationUnitsMulHom L)
@@ -124,18 +124,18 @@ theorem valuationHerbrand_multiplicativity_of_integerUnits_defined
     g hg hU hZ
   refine ⟨hField, ?_⟩
   let : Finite
-      (HerbrandH0 (Gal(L / K)) (ValuativeRel.valuation L).integerˣ) := hU.1
+      (HerbrandH0 (Gal(L/K)) (ValuativeRel.valuation L).integerˣ) := hU.1
   let : Finite
-      (HerbrandHMinusOne (Gal(L / K))
+      (HerbrandHMinusOne (Gal(L/K))
         (ValuativeRel.valuation L).integerˣ g) := hU.2
-  let : Finite (HerbrandH0 (Gal(L / K)) Lˣ) := hField.1
-  let : Finite (HerbrandHMinusOne (Gal(L / K)) Lˣ g) := hField.2
+  let : Finite (HerbrandH0 (Gal(L/K)) Lˣ) := hField.1
+  let : Finite (HerbrandHMinusOne (Gal(L/K)) Lˣ g) := hField.2
   let : Finite
-      (HerbrandH0 (Gal(L / K)) (Multiplicative Int)) := hZ.1
+      (HerbrandH0 (Gal(L/K)) (Multiplicative Int)) := hZ.1
   let : Finite
-      (HerbrandHMinusOne (Gal(L / K)) (Multiplicative Int) g) := hZ.2
+      (HerbrandHMinusOne (Gal(L/K)) (Multiplicative Int) g) := hZ.2
   exact herbrandQuotient_multiplicative_of_shortExact
-    (G := Gal(L / K))
+    (G := Gal(L/K))
     (A := (ValuativeRel.valuation L).integerˣ)
     (B := Lˣ) (C := Multiplicative Int)
     (integerUnitsToFieldUnits L) (valuationUnitsMulHom L)

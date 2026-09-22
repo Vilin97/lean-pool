@@ -140,7 +140,6 @@ private theorem rationalTowerRelativeClass_norm
     [Algebra ℚ F] [Algebra F E] [Algebra ℚ E]
     [IsScalarTower ℚ F E]
     [FiniteDimensional ℚ F] [FiniteDimensional F E]
-
     (c : Additive (IdeleClassGroup E)) :
     let dF :=
       towerRelativeIdeleClassBaseChangeMulEquiv ℚ F E
@@ -907,12 +906,7 @@ theorem
         rationalIdeleClassRepresentation L :=
     rationalAbstractRelativeFixedFieldIdeleClassEquivFixed
       (hKfinite := hKfinite) (hfinite := hfinite) K L hLK
-  let f :
-      KummerTheory.ambientFixedAddSubgroup
-          rationalIdeleClassRepresentation L →+
-        KummerTheory.ambientFixedAddSubgroup
-          rationalIdeleClassRepresentation K :=
-    relativeNorm rationalIdeleClassRepresentation K L hLK
+  let f := relativeNorm rationalIdeleClassRepresentation K L hLK
   let g : IdeleClassGroup E →* IdeleClassGroup F :=
     _root_.ideleClassNorm F E
   change f.range.map eK.symm.toAddMonoidHom = g.range.toAddSubgroup
@@ -924,11 +918,8 @@ theorem
     (G := IdeleClassGroup E) (H := IdeleClassGroup F)
     (f := f) (g := g) (eU := eUpper) (eA := eK) ?_
   intro c
-  have hcompat :
-      f (eUpper c) = eK (Additive.ofMul (g (Additive.toMul c))) := by
-    exact
-      rationalAbstractRelativeFixedFieldIdeleClassEquivFixed_relativeNorm
-        (hKfinite := hKfinite) (hfinite := hfinite) K L hLK hnormal c
+  have hcompat := rationalAbstractRelativeFixedFieldIdeleClassEquivFixed_relativeNorm
+    (hKfinite := hKfinite) (hfinite := hfinite) K L hLK hnormal c
   apply eK.injective
   exact Eq.trans (eK.apply_symm_apply (f (eUpper c))) hcompat
 
@@ -978,16 +969,7 @@ noncomputable def
   letI : IsScalarTower ℚ
       (abstractFixedField ℚ (SeparableClosure ℚ) K)
       (abstractRelativeFixedField ℚ (SeparableClosure ℚ) hLK) :=
-    IsScalarTower.of_algebraMap_eq'
-      (R := ℚ)
-      (S := abstractFixedField ℚ (SeparableClosure ℚ) K)
-      (A := abstractRelativeFixedField ℚ (SeparableClosure ℚ) hLK)
-      (RingHom.ext_rat
-        (algebraMap ℚ (abstractRelativeFixedField ℚ (SeparableClosure ℚ) hLK))
-        ((algebraMap
-            (abstractFixedField ℚ (SeparableClosure ℚ) K)
-            (abstractRelativeFixedField ℚ (SeparableClosure ℚ) hLK)).comp
-          (algebraMap ℚ (abstractFixedField ℚ (SeparableClosure ℚ) K))))
+    IsScalarTower.of_algebraMap_eq' (RingHom.ext_rat _ _)
   letI : NumberField (abstractFixedField ℚ (SeparableClosure ℚ) K) :=
     rationalNormQuotientAbstractFixedFieldNumberField
       (hKfinite := hKfinite) K

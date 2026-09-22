@@ -55,7 +55,7 @@ private noncomputable def
     (hclosed : IsClosed (H : Set (IdeleClassGroup K)))
     [H.FiniteIndex] :
     {e : Gal((closedFiniteIndexClassField
-            (K := K) H hclosed) / K) ≃ₜ*
+            (K := K) H hclosed)/K) ≃ₜ*
           IdeleClassGroup K ⧸ H //
       ∀ c : IdeleClassGroup K,
         e (arithmeticGlobalNormResidueMonoidHom K
@@ -127,7 +127,7 @@ noncomputable def
     (hclosed : IsClosed (H : Set (IdeleClassGroup K)))
     [H.FiniteIndex] :
     Gal((closedFiniteIndexClassField
-          (K := K) H hclosed) / K) ≃ₜ*
+          (K := K) H hclosed)/K) ≃ₜ*
       IdeleClassGroup K ⧸ H :=
   (arithmeticClosedFiniteIndexClassFieldReciprocityData
     (K := K) H hclosed).1

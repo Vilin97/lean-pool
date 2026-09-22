@@ -537,7 +537,7 @@ theorem equalCharacteristicFiniteUnramifiedExtension_isGalois :
 
 /-- Its distinguished arithmetic Frobenius. -/
 noncomputable def equalCharacteristicFiniteUnramifiedFrobenius :
-    Gal(equalCharacteristicFiniteUnramifiedExtension k p n / k⸨X⸩) :=
+    Gal(equalCharacteristicFiniteUnramifiedExtension k p n/k⸨X⸩) :=
   laurentSeriesCoefficientGalHom (FiniteField.Extension.frob k p n)
 
 /-- Finite unramified Frobenius applies finite-field Frobenius coefficientwise. -/

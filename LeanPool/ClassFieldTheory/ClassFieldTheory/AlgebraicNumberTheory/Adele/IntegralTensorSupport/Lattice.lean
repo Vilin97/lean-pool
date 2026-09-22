@@ -116,7 +116,6 @@ noncomputable def scaledRelativeExtensionBasis :
       (K := K) (L := L)
 
 /-- Evaluation and integrality properties of the scaled relative basis. -/
-
 @[simp]
 theorem scaledRelativeExtensionBasis_apply
     (i : RelativeAdeleBasisIndex (K := K) (L := L)) :
@@ -165,7 +164,6 @@ noncomputable def scaledRelativeExtensionInteger
       (K := K) (L := L) i⟩
 
 /-- The named scaled integer is the corresponding scaled basis vector. -/
-
 @[simp]
 theorem scaledRelativeExtensionInteger_coe
     (i : RelativeAdeleBasisIndex (K := K) (L := L)) :
@@ -433,7 +431,6 @@ noncomputable def integralTensorBadPlaces :
       (K := K) (L := L))).toFinset
 
 /-- Membership in the finite bad-place set is ideal membership. -/
-
 @[simp]
 theorem mem_integralTensorBadPlaces_iff
     (w : HeightOneSpectrum (𝓞 K)) :

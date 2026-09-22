@@ -72,11 +72,11 @@ theorem unit_mem_localNormSubgroup_chosenSimpleKummerExtension_one_sub
     chosenSimpleKummerExtension_finiteDimensional K n hnK b
   let _ : IsAbelianGalois K E :=
     chosenSimpleKummerExtension_isAbelianGalois K n hnK hmu b
-  let _ : MulDistribMulAction Gal(E / K) Eˣ :=
+  let _ : MulDistribMulAction Gal(E/K) Eˣ :=
     AlgEquiv.instMulDistribMulActionUnits
   let _ : NeZero (n : ℕ) := ⟨n.ne_zero⟩
   let mu := nthRootsSubgroup E (n : ℕ)
-  let chi : Gal(E / K) →* mu :=
+  let chi : Gal(E/K) →* mu :=
     chosenSimpleKummerRootCharacter K n hnK hmu b
   let H : Subgroup mu := chi.range
   let Q := mu ⧸ H
@@ -85,9 +85,9 @@ theorem unit_mem_localNormSubgroup_chosenSimpleKummerExtension_one_sub
   have hchi : Function.Injective chi := by
     simpa only [chi, E] using
       chosenSimpleKummerRootCharacter_injective K n hnK hmu b
-  let indexEquiv : Q × Gal(E / K) ≃ mu :=
+  let indexEquiv : Q × Gal(E/K) ≃ mu :=
     quotientCharacterProductEquiv chi hchi
-  have indexEquiv_apply (q : Q) (sigma : Gal(E / K)) :
+  have indexEquiv_apply (q : Q) (sigma : Gal(E/K)) :
       indexEquiv (q, sigma) = Quotient.out q * chi sigma := by
     rfl
   have factor_ne (q : Q) :
@@ -117,7 +117,7 @@ theorem unit_mem_localNormSubgroup_chosenSimpleKummerExtension_one_sub
   let hbase : NthRootsOfUnityInBase (K := K) (L := E) n :=
     nthRootsOfUnityInBase_of_primitiveRoots
       (K := K) (L := E) n hmu
-  have chi_mul_beta (sigma : Gal(E / K)) :
+  have chi_mul_beta (sigma : Gal(E/K)) :
       (chi sigma).1 * beta = Units.map sigma.toMonoidHom beta := by
     change
       (chosenSimpleKummerRootCharacter K n hnK hmu b sigma).1 * beta =
@@ -131,7 +131,7 @@ theorem unit_mem_localNormSubgroup_chosenSimpleKummerExtension_one_sub
     simp only [AlgEquiv.smul_units_def]
     apply Units.ext
     rfl
-  have map_factor (sigma : Gal(E / K)) (q : Q) :
+  have map_factor (sigma : Gal(E/K)) (q : Q) :
       sigma (factor q : E) =
         1 - (((((Quotient.out q : mu) * chi sigma).1 : Eˣ) : E) *
           (beta : E)) := by
@@ -218,14 +218,14 @@ theorem unit_mem_localNormSubgroup_chosenSimpleKummerExtension_one_sub
   calc
     algebraMap K E (Algebra.norm K (witness : E)) =
         Finset.univ.prod
-          (fun sigma : Gal(E / K) => sigma (witness : E)) :=
+          (fun sigma : Gal(E/K) => sigma (witness : E)) :=
       Algebra.norm_eq_prod_automorphisms K (witness : E)
-    _ = Finset.univ.prod (fun sigma : Gal(E / K) =>
+    _ = Finset.univ.prod (fun sigma : Gal(E/K) =>
           Finset.univ.prod (fun q : Q => sigma (factor q : E))) := by
       apply Finset.prod_congr rfl
       intro sigma _
       simp only [witness, Units.coe_prod, map_prod]
-    _ = Finset.univ.prod (fun sigma : Gal(E / K) =>
+    _ = Finset.univ.prod (fun sigma : Gal(E/K) =>
           Finset.univ.prod (fun q : Q =>
             1 - (((((Quotient.out q : mu) * chi sigma).1 : Eˣ) : E) *
               (beta : E)))) := by
@@ -234,7 +234,7 @@ theorem unit_mem_localNormSubgroup_chosenSimpleKummerExtension_one_sub
       apply Finset.prod_congr rfl
       intro q _
       exact map_factor sigma q
-    _ = Finset.univ.prod (fun p : Q × Gal(E / K) =>
+    _ = Finset.univ.prod (fun p : Q × Gal(E/K) =>
           1 - (((((Quotient.out p.1 : mu) * chi p.2).1 : Eˣ) : E) *
             (beta : E))) := by
       exact (Fintype.prod_prod_type_right' _).symm

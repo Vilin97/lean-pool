@@ -70,7 +70,7 @@ topologies. -/
 noncomputable def globalNormResidueContinuousMulEquiv :
     (IdeleClassGroup K ⧸
         (_root_.ideleClassNorm K L).range) ≃ₜ*
-      Gal(L / K) := by
+      Gal(L/K) := by
   let : DiscreteTopology
       (IdeleClassGroup K ⧸
         (_root_.ideleClassNorm K L).range) :=
@@ -78,7 +78,7 @@ noncomputable def globalNormResidueContinuousMulEquiv :
   let e :
       (IdeleClassGroup K ⧸
           (_root_.ideleClassNorm K L).range) ≃*
-        Gal(L / K) :=
+        Gal(L/K) :=
     AddEquiv.toMultiplicative
       (globalNormResidueEquiv K L)
   exact
@@ -109,7 +109,7 @@ This is the inverse of the norm-residue equivalence as a
 and the native quotient topology on the idele-class quotient are part
 of the public statement. -/
 noncomputable def globalReciprocityContinuousMulEquiv :
-    Gal(L / K) ≃ₜ*
+    Gal(L/K) ≃ₜ*
       (IdeleClassGroup K ⧸
         (_root_.ideleClassNorm K L).range) :=
   (globalNormResidueContinuousMulEquiv K L).symm
@@ -140,7 +140,7 @@ noncomputable def ideleClassNormQuotientContinuousMonoidHom :
 /-- The actual global norm-residue map, bundled as a continuous
 homomorphism on the ordinary idele-class topology. -/
 noncomputable def globalNormResidueContinuousMonoidHom :
-    IdeleClassGroup K →ₜ* Gal(L / K) :=
+    IdeleClassGroup K →ₜ* Gal(L/K) :=
   (ContinuousMonoidHom.toContinuousMonoidHom
       (globalNormResidueContinuousMulEquiv K L)).comp
     (ideleClassNormQuotientContinuousMonoidHom K L)

@@ -74,7 +74,6 @@ theorem fixedFieldOfSubgroup_forall_isUnramifiedAt_of_inertiaGroup_le
     Ideal.ne_bot_of_liesOver_of_ne_bot hP0 Q
   let : Q.IsMaximal :=
     (inferInstance : Q.IsPrime).isMaximal hQ0
-
   let p : Ideal ℤ := P.under ℤ
   let : p.IsPrime := inferInstance
   let : P.LiesOver p := ⟨rfl⟩
@@ -82,7 +81,6 @@ theorem fixedFieldOfSubgroup_forall_isUnramifiedAt_of_inertiaGroup_le
   have hp0 : p ≠ ⊥ :=
     Ring.ne_bot_of_isMaximal_of_not_isField
       (M := p) inferInstance Int.not_isField
-
   let : Module.Finite (𝓞 F) (𝓞 M) :=
     ringOfIntegers_moduleFinite (K := F) (L := M)
   let : Finite (ℤ ⧸ p) :=
@@ -95,7 +93,6 @@ theorem fixedFieldOfSubgroup_forall_isUnramifiedAt_of_inertiaGroup_le
   let : PerfectField ((𝓞 F) ⧸ P) := PerfectField.ofFinite
   let : Algebra.IsSeparable ((𝓞 F) ⧸ P) ((𝓞 M) ⧸ Q) :=
     Algebra.IsAlgebraic.isSeparable_of_perfectField
-
   have hIH :
       inertiaGroup Q H = (inertiaGroup Q G).subgroupOf H := by
     ext σ
@@ -105,7 +102,6 @@ theorem fixedFieldOfSubgroup_forall_isUnramifiedAt_of_inertiaGroup_le
     rw [hIH]
     exact Nat.card_congr
       (Subgroup.subgroupOfEquivOfLe (hI Q)).toEquiv
-
   have hcard_base :
       Nat.card (inertiaGroup Q G) =
         Q.ramificationIdx ℤ :=
@@ -119,7 +115,6 @@ theorem fixedFieldOfSubgroup_forall_isUnramifiedAt_of_inertiaGroup_le
   have heq :
       Q.ramificationIdx ℤ = Q.ramificationIdx (𝓞 F) := by
     exact hcard_base.symm.trans (hcard.symm.trans hcard_relative)
-
   have htower :
       Q.ramificationIdx ℤ =
         P.ramificationIdx ℤ * Q.ramificationIdx (𝓞 F) :=

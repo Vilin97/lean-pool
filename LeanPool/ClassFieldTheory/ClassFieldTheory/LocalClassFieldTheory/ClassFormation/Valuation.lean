@@ -27,7 +27,7 @@ field automorphism to a unit. -/
 @[implicit_reducible]
 def galoisGroupFieldUnitsMulDistribMulAction
     (K L : Type u) [Field K] [Field L] [Algebra K L] :
-    MulDistribMulAction (Gal(L / K)) Lˣ where
+    MulDistribMulAction (Gal(L/K)) Lˣ where
   smul σ x := Units.mapEquiv σ.toMulEquiv x
   one_smul := by
     intro x
@@ -61,7 +61,7 @@ def galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure
     [Algebra K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L] :
-    MulDistribMulAction (Gal(L / K)) 𝒪[L]ˣ where
+    MulDistribMulAction (Gal(L/K)) 𝒪[L]ˣ where
   smul σ x := Units.mapEquiv
     (galoisGroupIntegerRingEquivOfIsIntegralClosure K L σ).toMulEquiv x
   one_smul := by
@@ -101,7 +101,7 @@ multiplicatively so that it is a multiplicative Galois module. -/
 @[implicit_reducible]
 def galoisGroupValueGroupMulDistribMulAction
     (K L : Type u) [Field K] [Field L] [Algebra K L] :
-    MulDistribMulAction (Gal(L / K)) (Multiplicative Int) where
+    MulDistribMulAction (Gal(L/K)) (Multiplicative Int) where
   smul _ n := n
   one_smul := by intro n; rfl
   mul_smul := by intro _ _ n; rfl

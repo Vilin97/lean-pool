@@ -27,8 +27,8 @@ theorem intrinsicFixedFieldFrobeniusClosure_mem_iff
     (K : Type) [Field K] [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K]
     (H : FiniteAbstractField
-      Gal(SeparableClosure K / K))
-    (J : ClosedSubgroup Gal(SeparableClosure K / K))
+      Gal(SeparableClosure K/K))
+    (J : ClosedSubgroup Gal(SeparableClosure K/K))
     (hJH : J.toSubgroup ≤ H.field.toSubgroup)
     [hJnormal : (extensionSubgroup H.field J hJH).Normal]
     [hJfinite : Finite
@@ -127,8 +127,8 @@ theorem ambientFixedFieldFrobeniusClosure_mem_iff
     (K : Type) [Field K] [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K]
     (H : FiniteAbstractField
-      Gal(SeparableClosure K / K))
-    (J : ClosedSubgroup Gal(SeparableClosure K / K))
+      Gal(SeparableClosure K/K))
+    (J : ClosedSubgroup Gal(SeparableClosure K/K))
     (hJH : J.toSubgroup ≤ H.field.toSubgroup)
     [hJnormal : (extensionSubgroup H.field J hJH).Normal]
     [hJfinite : Finite
@@ -223,8 +223,8 @@ theorem intrinsicFixedFieldFrobeniusClosure_le_ambientFixedField
     (K : Type) [Field K] [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K]
     (H : FiniteAbstractField
-      Gal(SeparableClosure K / K))
-    (J : ClosedSubgroup Gal(SeparableClosure K / K))
+      Gal(SeparableClosure K/K))
+    (J : ClosedSubgroup Gal(SeparableClosure K/K))
     (hJH : J.toSubgroup ≤ H.field.toSubgroup)
     [hJnormal : (extensionSubgroup H.field J hJH).Normal]
     [hJfinite : Finite
@@ -298,8 +298,8 @@ theorem ambientFixedFieldFrobeniusClosure_le_intrinsicFixedField
     (K : Type) [Field K] [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K]
     (H : FiniteAbstractField
-      Gal(SeparableClosure K / K))
-    (J : ClosedSubgroup Gal(SeparableClosure K / K))
+      Gal(SeparableClosure K/K))
+    (J : ClosedSubgroup Gal(SeparableClosure K/K))
     (hJH : J.toSubgroup ≤ H.field.toSubgroup)
     [hJnormal : (extensionSubgroup H.field J hJH).Normal]
     [hJfinite : Finite
@@ -338,8 +338,8 @@ theorem intrinsicFrobeniusClosure_iff_ambientFixedField
     (K : Type) [Field K] [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K]
     (H : FiniteAbstractField
-      Gal(SeparableClosure K / K))
-    (J : ClosedSubgroup Gal(SeparableClosure K / K))
+      Gal(SeparableClosure K/K))
+    (J : ClosedSubgroup Gal(SeparableClosure K/K))
     (hJH : J.toSubgroup ≤ H.field.toSubgroup)
     [hJnormal : (extensionSubgroup H.field J hJH).Normal]
     [hJfinite : Finite

@@ -53,8 +53,7 @@ open scoped Classical in
 selected big Hilbert class field with the narrow ideal class group of
 the original number field. -/
 private noncomputable def bigHilbertClassFieldReciprocityData :
-    {e : Gal((bigHilbertClassField K) /
-          (bigHilbertClassFieldBase K)) ≃*
+    {e : Gal((bigHilbertClassField K)/(bigHilbertClassFieldBase K)) ≃*
         RayClass.NarrowClassGroup K //
       ∀ c : IdeleClassGroup (bigHilbertClassFieldBase K),
         e (globalNormResidueMonoidHom
@@ -84,8 +83,7 @@ open scoped Classical in
 /-- The reciprocity equivalence from the actual big Hilbert Galois group
 to the narrow class group of the original number field. -/
 noncomputable def bigHilbertClassFieldGaloisEquivNarrowClassGroup :
-    Gal((bigHilbertClassField K) /
-        (bigHilbertClassFieldBase K)) ≃*
+    Gal((bigHilbertClassField K)/(bigHilbertClassFieldBase K)) ≃*
       RayClass.NarrowClassGroup K :=
   (bigHilbertClassFieldReciprocityData (K := K)).1
 

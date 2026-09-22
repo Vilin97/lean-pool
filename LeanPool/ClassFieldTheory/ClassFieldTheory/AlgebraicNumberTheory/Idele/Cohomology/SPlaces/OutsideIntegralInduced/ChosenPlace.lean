@@ -50,8 +50,7 @@ private noncomputable def
     (w₀ : HeightOneSpectrum (𝓞 K)) :
     MulDistribMulAction
       (Gal(
-        ChosenFinitePlaceLocalizedCompletion (K := K) (L := L) w₀ /
-        ChosenFinitePlaceBaseCompletion (K := K) w₀))
+        ChosenFinitePlaceLocalizedCompletion (K := K) (L := L) w₀/ChosenFinitePlaceBaseCompletion (K := K) w₀))
       𝒪[ChosenFinitePlaceLocalizedCompletion
         (K := K) (L := L) w₀]ˣ :=
   galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure
@@ -177,7 +176,7 @@ private theorem
     chosenFinitePlaceDecompositionGroupEquivProvider
       (K := K) (L := L) w₀
   let : MulDistribMulAction
-      (Gal(E / vK.Completion)) 𝒪[E]ˣ :=
+      (Gal(E/vK.Completion)) 𝒪[E]ˣ :=
     chosenFinitePlaceLocalizedIntegerUnitsGaloisActionProvider
       (K := K) (L := L) w₀
   let : Fintype H :=

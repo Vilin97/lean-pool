@@ -17,6 +17,23 @@ supplies the generator hidden inside
 uses exactly the canonical standing hypotheses and has no generator parameter.
 -/
 
+open _root_.RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration renaming
+  card_lower_succ_eq_sum_indicator →
+    card_lower_succ_eq_sum_indicator
+
+open _root_.RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration renaming
+  herbrandFunction_eq_depth_sum_of_mem_Icc →
+    herbrandFunction_eq_depth_sum_of_mem_Icc
+
+open _root_.RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration renaming
+  herbrandFunction_of_nonpos →
+    herbrandFunction_of_nonpos
+
+open _root_.RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration renaming
+  truncatedLowerDepth →
+    truncatedLowerDepth
+
+
 noncomputable section
 
 universe u v w x
@@ -83,7 +100,8 @@ theorem truncate_intrinsicRamificationNumberOfUniqueExtension_eq_intrinsic_summa
         (intrinsicRamificationNumberOfUniqueExtension
           (base := base) (target := target) huniq (sigma : Gal(L/K)))
         (s + 1) =
-      1 + ((RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.truncatedLowerDepth (lowerRamificationFiltrationOfUniqueExtension (base := base) (target := target) huniq)) m sigma : ℝ) +
+      1 + ((truncatedLowerDepth (lowerRamificationFiltrationOfUniqueExtension (base := base)
+        (target := target) huniq)) m sigma : ℝ) +
       (s - m) *
         (if (sigma : Gal(L/K)) ∈ (lowerRamificationFiltrationOfUniqueExtension
           (base := base) (target := target) huniq).lower (m + 1)
@@ -94,7 +112,7 @@ theorem truncate_intrinsicRamificationNumberOfUniqueExtension_eq_intrinsic_summa
   let i := intrinsicRamificationNumberOfUniqueExtension
     (base := base) (target := target) huniq (sigma : Gal(L/K))
   change truncateENatAtDVF i (s + 1) =
-    1 + ((RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.truncatedLowerDepth F) m sigma : ℝ) +
+    1 + ((truncatedLowerDepth F) m sigma : ℝ) +
       (s - m) * (if (sigma : Gal(L/K)) ∈ F.lower (m + 1) then 1 else 0)
   have hi_one : (1 : ℕ∞) ≤ i := by
     exact (mem_lowerRamificationGroup_nat_iff_intrinsicRamificationNumberOfUniqueExtension_ge
@@ -105,8 +123,8 @@ theorem truncate_intrinsicRamificationNumberOfUniqueExtension_eq_intrinsic_summa
         (base := base) (target := target) huniq (m + 1)
           (sigma : Gal(L/K))).2 (by simpa [i, Nat.add_assoc] using hhigh)
     have hdepth :
-      (RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.truncatedLowerDepth F) m sigma = m := by
-      rw [RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.truncatedLowerDepth]
+      (truncatedLowerDepth F) m sigma = m := by
+      rw [truncatedLowerDepth]
       rw [Finset.filter_eq_self.2]
       · simp
       · intro j hj
@@ -141,8 +159,8 @@ theorem truncate_intrinsicRamificationNumberOfUniqueExtension_eq_intrinsic_summa
             (sigma : Gal(L/K))).1 hmem
       exact hhigh (by simpa [i, Nat.add_assoc] using hge)
     have hdepth :
-      (RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.truncatedLowerDepth F) m sigma = k - 1 := by
-      rw [RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.truncatedLowerDepth]
+      (truncatedLowerDepth F) m sigma = k - 1 := by
+      rw [truncatedLowerDepth]
       have hfilter :
           (Finset.range m).filter
               (fun j => (sigma : Gal(L/K)) ∈ F.lower (j + 1)) =
@@ -168,7 +186,8 @@ theorem truncate_intrinsicRamificationNumberOfUniqueExtension_eq_intrinsic_summa
       have : (k : ℝ) ≤ m + 1 := by exact_mod_cast hk_upper
       linarith
     rw [htrunc, hdepth]
-    simp [hmem]
+    simp only [lowerRamificationFiltrationOfUniqueExtension_lower, hmem, ↓reduceIte, mul_zero,
+      add_zero]
     exact_mod_cast (by omega : k = 1 + (k - 1))
 
 /-- States the theorem
@@ -251,7 +270,8 @@ theorem sum_inertia_truncate_intrinsicRamificationNumberOfUniqueExtension_eq_int
         (base := base) (target := target) huniq).lower 0) +
       (∑ sigma : (lowerRamificationFiltrationOfUniqueExtension
           (base := base) (target := target) huniq).lower 0,
-        ((RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.truncatedLowerDepth (lowerRamificationFiltrationOfUniqueExtension (base := base) (target := target) huniq)) m sigma : ℝ)) +
+        ((truncatedLowerDepth (lowerRamificationFiltrationOfUniqueExtension (base := base)
+          (target := target) huniq)) m sigma : ℝ)) +
       (s - m) * Nat.card ((lowerRamificationFiltrationOfUniqueExtension
         (base := base) (target := target) huniq).lower (m + 1)) := by
   classical
@@ -262,7 +282,7 @@ theorem sum_inertia_truncate_intrinsicRamificationNumberOfUniqueExtension_eq_int
         (base := base) (target := target) huniq (sigma : Gal(L/K))) (s + 1)) =
     (Nat.card (F.lower 0) : ℝ) +
       (∑ sigma : F.lower 0,
-        ((RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.truncatedLowerDepth F) m sigma : ℝ)) +
+        ((truncatedLowerDepth F) m sigma : ℝ)) +
       (s - m) * Nat.card (F.lower (m + 1))
   simp_rw [truncate_intrinsicRamificationNumberOfUniqueExtension_eq_intrinsic_summand
     (base := base) (target := target) huniq m hms hsm]
@@ -271,10 +291,10 @@ theorem sum_inertia_truncate_intrinsicRamificationNumberOfUniqueExtension_eq_int
         (if (sigma : Gal(L/K)) ∈ F.lower (m + 1) then (1 : ℝ) else 0)) =
         Nat.card (F.lower (m + 1)) := by
     exact_mod_cast
-      ((RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.card_lower_succ_eq_sum_indicator F) m).symm
+      ((card_lower_succ_eq_sum_indicator F) m).symm
   change Finset.sum Finset.univ (fun sigma : F.lower 0 =>
       (1 : ℝ) +
-        ((RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.truncatedLowerDepth F) m sigma : ℝ) +
+        ((truncatedLowerDepth F) m sigma : ℝ) +
         (s - m) *
           (if (sigma : Gal(L/K)) ∈ F.lower (m + 1) then 1 else 0)) = _
   rw [Finset.sum_add_distrib, Finset.sum_add_distrib]
@@ -319,11 +339,11 @@ theorem herbrandFunctionOfUniqueExtension_eq_intrinsicRamificationNumber_sum
     have hsm : s ≤ m + 1 := (Nat.lt_floor_add_one s).le
     rw [sum_inertia_truncate_intrinsicRamificationNumberOfUniqueExtension_eq_intrinsic
       (base := base) (target := target) huniq m hms hsm]
-    rw [(RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction_eq_depth_sum_of_mem_Icc F) m hms hsm]
+    rw [(herbrandFunction_eq_depth_sum_of_mem_Icc F) m hms hsm]
     field_simp
     ring
   · have hsle : s ≤ 0 := le_of_not_ge hs0
-    rw [(RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction_of_nonpos F) hsle]
+    rw [(herbrandFunction_of_nonpos F) hsle]
     have hpoint : ∀ sigma : F.lower 0,
         truncateENatAtDVF
           (intrinsicRamificationNumberOfUniqueExtension

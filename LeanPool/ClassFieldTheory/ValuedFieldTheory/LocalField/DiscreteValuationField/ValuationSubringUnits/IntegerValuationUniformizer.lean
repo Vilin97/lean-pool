@@ -14,6 +14,11 @@ This file relates the induced integer valuation to normalized uniformizers,
 valuation-ring units, and scalar extension of field units.
 -/
 
+open _root_.LocalFieldTheory.DiscreteValuationField.MultiplicativeIntegerValuation renaming
+  mem_zeroSubgroup_iff →
+    mem_zeroSubgroup_iff
+
+
 noncomputable section
 
 universe u
@@ -91,7 +96,7 @@ theorem ofWithZeroValuation_zeroSubgroup_eq_unitGroup
     (ofWithZeroValuation v).zeroSubgroup =
       v.valuationSubring.unitGroup := by
   ext x
-  rw [LocalFieldTheory.DiscreteValuationField.MultiplicativeIntegerValuation.mem_zeroSubgroup_iff, _root_.Valuation.mem_unitGroup_iff]
+  rw [mem_zeroSubgroup_iff, _root_.Valuation.mem_unitGroup_iff]
   change -WithZero.log (v (x : K)) = 0 ↔ v (x : K) = 1
   have hx : v (x : K) ≠ 0 :=
     (_root_.Valuation.ne_zero_iff v).2 x.ne_zero

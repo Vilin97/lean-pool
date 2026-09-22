@@ -197,7 +197,6 @@ The second is exactly `[L : K] = [lambda : kappa]`, with the right-hand side
 given by the actual residue finrank from the fundamental inequality.  In particular no
 separability assumption on the field extension `L/K` is inserted. -/
 def FiniteUnramifiedExtension
-
     (v : LubinTate.Valuations.ExponentialValuation K) (w :
       LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a) : Prop :=
@@ -266,7 +265,6 @@ def finiteUnramifiedSubextensionUnion
 /-- Arbitrary algebraic-extension form:
 the ambient field is the union of its finite unramified subextensions. -/
 def AlgebraicUnramifiedExtension
-
     (v : LubinTate.Valuations.ExponentialValuation K) (w :
       LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a) : Prop :=
@@ -289,7 +287,6 @@ separate from the literal union definition, so the finite unramified-extension d
   does not
 silently assume closure of finite unramified extensions under compositum. -/
 def AlgebraicUnramifiedExtensionFiniteSupport
-
     (v : LubinTate.Valuations.ExponentialValuation K) (w :
       LubinTate.Valuations.ExponentialValuation L)
     (hExt : ∀ a : K, w (algebraMap K L a) = v a) : Prop :=

@@ -17,6 +17,11 @@ function and the resulting upper ramification groups of the chosen
 equal-characteristic Lubin--Tate level.
 -/
 
+open _root_.RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration renaming
+  herbrandSlope →
+    herbrandSlope
+
+
 noncomputable section
 
 open scoped LaurentSeries Pointwise PowerSeries
@@ -109,8 +114,7 @@ private noncomputable def
     [CharP K₀ F.residueCharacteristic]
     (n : ℕ) :
     RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration
-      Gal((equalCharacteristicLubinTateLevelField F n) /
-        LaurentSeries F.residueField) :=
+      Gal((equalCharacteristicLubinTateLevelField F n)/LaurentSeries F.residueField) :=
   lowerRamificationFiltrationOfUniqueExtension
     (base := (equalCharacteristicLubinTateBaseCompleteDVF F).toDVF)
     (target := (equalCharacteristicLubinTateLevelCompleteDVF F n).toDVF)
@@ -123,13 +127,13 @@ private theorem equalCharacteristicLubinTateHerbrandSlope_eq_of_pow_interval
     (n k i : ℕ) (hk : 1 ≤ k) (hkn : k ≤ n + 1)
     (hlow : Nat.card F.residueField ^ (k - 1) ≤ i + 1)
     (hhigh : i + 1 < Nat.card F.residueField ^ k) :
-    RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandSlope
+    herbrandSlope
         (equalCharacteristicLubinTateLowerRamificationFiltration F n) i =
       (Nat.card F.residueField ^ (n + 1 - k) : ℕ) /
         ((Nat.card F.residueField - 1) *
           Nat.card F.residueField ^ n : ℕ) := by
   rw [
-    RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandSlope]
+    herbrandSlope]
   change
     (Nat.card
         (equalCharacteristicLubinTateRealLowerRamificationGroup F n
@@ -186,7 +190,7 @@ private theorem equalCharacteristicLubinTateHerbrandValueNat_pow_sub_one
         omega
       have hslope :
           ∀ x ∈ Finset.range b,
-            RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandSlope
+            herbrandSlope
                 filtration (a + x) =
               (q ^ (n + 1 - (k + 1)) : ℕ) /
                 ((q - 1) * q ^ n : ℕ) := by
@@ -222,7 +226,7 @@ private theorem equalCharacteristicLubinTateHerbrandValueNat_pow_sub_one
         Nat.mul_pos (Nat.sub_pos_of_lt hqone) (Nat.pow_pos hqpos)
       have htail :
           (∑ x ∈ Finset.range b,
-              RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandSlope
+              herbrandSlope
                 filtration (a + x)) = 1 := by
         calc
           _ = ∑ _x ∈ Finset.range b,
@@ -240,14 +244,14 @@ private theorem equalCharacteristicLubinTateHerbrandValueNat_pow_sub_one
               exact_mod_cast (Nat.ne_of_gt hdenpos)
       change
         (∑ i ∈ Finset.range (q ^ (k + 1) - 1),
-          RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandSlope
+          herbrandSlope
             filtration i) = ((k + 1 : ℕ) : ℝ)
       rw [hdecomp, Finset.sum_range_add]
       change
         RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandValueNat
             filtration a +
           (∑ x ∈ Finset.range b,
-            RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandSlope
+            herbrandSlope
               filtration (a + x)) =
           ((k + 1 : ℕ) : ℝ)
       rw [show a = q ^ k - 1 by rfl, ihval, htail]
@@ -292,8 +296,7 @@ noncomputable def equalCharacteristicLubinTateRealUpperRamificationGroup
     (F : LocalField.{0, v} K₀)
     [CharP K₀ F.residueCharacteristic]
     (n : ℕ) (s : ℝ) :
-    Subgroup Gal((equalCharacteristicLubinTateLevelField F n) /
-      LaurentSeries F.residueField) :=
+    Subgroup Gal((equalCharacteristicLubinTateLevelField F n)/LaurentSeries F.residueField) :=
   upperRamificationGroupOfUniqueExtension
     (base := (equalCharacteristicLubinTateBaseCompleteDVF F).toDVF)
     (target := (equalCharacteristicLubinTateLevelCompleteDVF F n).toDVF)

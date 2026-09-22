@@ -643,7 +643,7 @@ private theorem padicMultiplicativeLevelAlgEquiv_mem_valuationSubring_iff
       (padicLocalField p).valuationSubring L :=
     standardLubinTateLevelCompleteDVF_isIntegralClosure hπ n
   have hforward
-      (τ : Gal(L / ℚ_[p])) {y : L}
+      (τ : Gal(L/ℚ_[p])) {y : L}
       (hy : y ∈ target.valuation.valuationSubring) :
       τ y ∈ target.valuation.valuationSubring := by
     have hyIntegral :
@@ -769,7 +769,7 @@ private theorem
   let hπ := padicMultiplicativeLubinTateSeries_isUniformizer p
   let target := standardLubinTateLevelCompleteDVF hπ n
   let L := standardLubinTateLevelField hπ n
-  let σ : Gal(L / ℚ_[p]) :=
+  let σ : Gal(L/ℚ_[p]) :=
     (standardLubinTateUnitParameterEquivGal
       (padicLocalField p) hπ n
       (standardLubinTateUnitParameterClass
@@ -871,7 +871,7 @@ theorem padicMultiplicativePrimitiveRoot_galoisAction
   let hπ := padicMultiplicativeLubinTateSeries_isUniformizer p
   let target := standardLubinTateLevelCompleteDVF hπ n
   let L := standardLubinTateLevelField hπ n
-  let σ : Gal(L / ℚ_[p]) :=
+  let σ : Gal(L/ℚ_[p]) :=
     (standardLubinTateUnitParameterEquivGal
       (padicLocalField p) hπ n
       (standardLubinTateUnitParameterClass

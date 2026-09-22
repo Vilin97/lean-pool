@@ -240,7 +240,13 @@ theorem isAdicComplete_of_moduleFinite_sameUniverse
         ((AdicCompletion.ofTensorProductEquivOfFiniteNoetherian I M).restrictScalars R))
   have heq : (e : M →ₗ[R] AdicCompletion I M) = AdicCompletion.of I M := by
     ext x n
-    simp [e]
+    simp only [LinearEquiv.coe_coe, LinearEquiv.trans_apply, TensorProduct.lid_symm_apply,
+      TensorProduct.congr_tmul, AdicCompletion.ofLinearEquiv_apply, LinearEquiv.refl_apply,
+      LinearEquiv.restrictScalars_apply,
+      AdicCompletion.ofTensorProductEquivOfFiniteNoetherian_apply,
+      AdicCompletion.ofTensorProduct_tmul, AdicCompletion.smul_eval, smul_eq_mul,
+      Submodule.mapQ_eq_factor, Submodule.factor_eq_factor, AdicCompletion.of_apply,
+      Submodule.mkQ_apply, Ideal.Quotient.mk_eq_mk, map_one, e]
     exact one_smul (R ⧸ (I ^ n • ⊤ : Ideal R))
       (Submodule.Quotient.mk (p := (I ^ n • ⊤ : Submodule R M)) x)
   have hebij : Function.Bijective (e : M → AdicCompletion I M) := e.bijective

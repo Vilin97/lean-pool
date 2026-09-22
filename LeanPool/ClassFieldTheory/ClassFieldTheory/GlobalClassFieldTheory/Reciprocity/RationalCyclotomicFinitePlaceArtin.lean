@@ -37,6 +37,11 @@ root in the localized cyclotomic level identifies the image of arithmetic
 Frobenius under the global cyclotomic character with the residue prime.
 -/
 
+open _root_.ValuationTheory.DiscreteValuationField.ValuedExtension renaming
+  valuation_hasExtension_of_valuationSubring_equiv →
+    valuation_hasExtension_of_valuationSubring_equiv
+
+
 open scoped NNReal NumberField ValuativeRel
 open NumberField IsDedekindDomain
 
@@ -514,7 +519,7 @@ theorem
       (localCompleteDVF F).valuation.HasExtension
         (padicCompleteDVF p.1).valuation
     apply
-      ValuationTheory.DiscreteValuationField.ValuedExtension.valuation_hasExtension_of_valuationSubring_equiv
+      valuation_hasExtension_of_valuationSubring_equiv
         (localCompleteDVF F)
         (padicCompleteDVF p.1)
         eO
@@ -1903,7 +1908,7 @@ private theorem
         (finitePlaceLocalArtinMonoidHom
           (K := K) (L := L) v w x) z := by
   exact
-    congrArg (fun sigma : Gal(L / K) => sigma z)
+    congrArg (fun sigma : Gal(L/K) => sigma z)
       (chosenFinitePlaceArtinMonoidHom_apply_factor_of_extension_eq
         (K := K) (L := L) v w hw x)
 
@@ -1921,7 +1926,7 @@ private theorem finitePlaceLocalToGlobalMonoidHom_apply_pow_of_localized_action
       let E := LocalizedCompletion vK w
       letI : Algebra vK.Completion E :=
         finitePlaceLocalArtinLocalizedAlgebra v w
-      Gal(E / vK.Completion))
+      Gal(E/vK.Completion))
     (z : L)
     (zLocal :
       let vK := HeightOneSpectrum.adicAbv K v
@@ -1943,7 +1948,7 @@ private theorem finitePlaceLocalToGlobalMonoidHom_apply_pow_of_localized_action
   let E := LocalizedCompletion vK w
   let : Algebra vK.Completion E :=
     finitePlaceLocalArtinLocalizedAlgebra v w
-  let eD : absoluteValueDecompositionGroup K w.1 ≃* Gal(E / vK.Completion) :=
+  let eD : absoluteValueDecompositionGroup K w.1 ≃* Gal(E/vK.Completion) :=
     decompositionGroupEquivAlgebraicLocalizationAut vK hvK w
   let eLoc : L →+* E :=
     AbsoluteValue.toAlgebraicLocalization vK w.1 w.2
@@ -1957,7 +1962,7 @@ private theorem finitePlaceLocalToGlobalMonoidHom_apply_pow_of_localized_action
       (localizationRamificationGroups_decompositionGroupEquiv_toLocalization
         vK hvK w delta z).symm
     _ = sigma (eLoc z) :=
-      congrArg (fun tau : Gal(E / vK.Completion) => tau (eLoc z))
+      congrArg (fun tau : Gal(E/vK.Completion) => tau (eLoc z))
         hDecomposition
     _ = sigma zLocal :=
       congrArg (fun y : E => sigma y) hLocalization
@@ -2278,7 +2283,7 @@ private theorem
 open scoped Classical in
 private noncomputable def rationalCyclotomicPrincipalPrimePadicTargetArtin
     (p : Nat.Primes) (n : ℕ) (x : ℚˣ) :
-    Gal(RationalCyclotomicPrincipalPrimePadicLevel p n / ℚ_[p.1]) :=
+    Gal(RationalCyclotomicPrincipalPrimePadicLevel p n/ℚ_[p.1]) :=
   @LocalClassFieldTheory.abelianLocalArtinMonoidHom
     ℚ_[p.1] (RationalCyclotomicPrincipalPrimePadicLevel p n)
     (inferInstance : Field ℚ_[p.1])
@@ -2301,7 +2306,7 @@ open scoped Classical in
 private noncomputable def
     rationalCyclotomicPrincipalPrimePadicUnitParameterArtin
     (p : Nat.Primes) (n : ℕ) (x : ℚˣ) :
-    Gal(RationalCyclotomicPrincipalPrimePadicLevel p n / ℚ_[p.1]) :=
+    Gal(RationalCyclotomicPrincipalPrimePadicLevel p n/ℚ_[p.1]) :=
   standardLubinTateUnitParameterEquivGal
     (padicLocalField p.1)
     (padicMultiplicativeLubinTateSeries_isUniformizer p.1) n
@@ -2443,7 +2448,7 @@ private theorem
   let eL : E ≃ₐ[ℚ_[p.1]] T :=
     rationalCyclotomicLocalizedCompletionPadicAlgEquiv p n
   let zetaE : E := rationalCyclotomicPrincipalPrimeLocalizedRoot p n
-  let tau : Gal(T / ℚ_[p.1]) :=
+  let tau : Gal(T/ℚ_[p.1]) :=
     rationalCyclotomicPrincipalPrimePadicUnitParameterArtin p n x
   let a := rationalCyclotomicPrincipalPrimeResidueUnit p n x
   let zetaT : T := padicMultiplicativePrimitiveRoot p.1 n
@@ -2704,7 +2709,7 @@ the completion and Galois instance arguments frozen at the provider boundary. -/
 noncomputable def rationalCyclotomicChosenFinitePlaceArtinValue
     (m : ℕ+) (q : Nat.Primes)
     (x : ((RayClass.rationalPrime q).adicCompletion ℚ)ˣ) :
-    Gal(KummerTheory.rationalCyclotomicLevel m / ℚ) :=
+    Gal(KummerTheory.rationalCyclotomicLevel m/ℚ) :=
   chosenFinitePlaceArtinMonoidHom
     (K := ℚ)
     (L := KummerTheory.rationalCyclotomicLevel m)

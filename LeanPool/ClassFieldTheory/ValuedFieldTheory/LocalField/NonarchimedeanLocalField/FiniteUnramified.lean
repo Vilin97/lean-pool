@@ -687,7 +687,7 @@ theorem principalUnits_of_integerUnitsMap_mem_principalUnits_of_unramifiedValuat
 degree. -/
 theorem galoisGroup_card_eq_finrank (K L : Type u)
     [Field K] [Field L] [Algebra K L] [FiniteDimensional K L] [IsGalois K L] :
-    Nat.card Gal(L / K) = Module.finrank K L :=
+    Nat.card Gal(L/K) = Module.finrank K L :=
   IsGalois.card_aut_eq_finrank (F := K) (E := L)
 
 /-- For an unramified extension, the residue-field automorphism group has cardinality equal to the
@@ -713,7 +713,7 @@ theorem residueAlgEquiv_card_eq_galoisGroup_card_of_unramifiedValuation
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [Module.Finite 𝒪[K] 𝒪[L]]
     [LocalFieldTheory.IsNonarchimedeanLocalField.IsUnramifiedValuedExtension K L] :
-    Nat.card (𝓀[L] ≃ₐ[𝓀[K]] 𝓀[L]) = Nat.card Gal(L / K) := by
+    Nat.card (𝓀[L] ≃ₐ[𝓀[K]] 𝓀[L]) = Nat.card Gal(L/K) := by
   rw [residueAlgEquiv_card_eq_finrank_of_unramifiedValuation K L,
     galoisGroup_card_eq_finrank K L]
 
@@ -802,7 +802,7 @@ noncomputable def galoisGroupEquivResidueAlgEquivOfUnramifiedValuationOfIsIntegr
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L] [Module.Finite 𝒪[K] 𝒪[L]]
     [LocalFieldTheory.IsNonarchimedeanLocalField.IsUnramifiedValuedExtension K L] :
-    Gal(L / K) ≃* (𝓀[L] ≃ₐ[𝓀[K]] 𝓀[L]) :=
+    Gal(L/K) ≃* (𝓀[L] ≃ₐ[𝓀[K]] 𝓀[L]) :=
   MulEquiv.ofBijective (galoisGroupResidueAlgEquivHomOfIsIntegralClosure K L)
     (galoisGroupResidueAlgEquivHomOfIsIntegralClosure_bijective_of_unramifiedValuation K L)
 
@@ -834,14 +834,14 @@ theorem galoisGroupResidueAlgEquivOfIsIntegralClosure_prod_eq_prod_algEquiv_of_u
     [IsIntegralClosure 𝒪[L] 𝒪[K] L] [Module.Finite 𝒪[K] 𝒪[L]]
     [LocalFieldTheory.IsNonarchimedeanLocalField.IsUnramifiedValuedExtension K L]
     (u : 𝓀[L]ˣ) :
-    Finset.univ.prod (fun σ : Gal(L / K) =>
+    Finset.univ.prod (fun σ : Gal(L/K) =>
       Units.mapEquiv
         (galoisGroupResidueAlgEquivOfIsIntegralClosure K L σ).toMulEquiv u) =
     Finset.univ.prod (fun τ : 𝓀[L] ≃ₐ[𝓀[K]] 𝓀[L] =>
       Units.mapEquiv τ.toMulEquiv u) :=
   Fintype.prod_equiv
     (galoisGroupEquivResidueAlgEquivOfUnramifiedValuationOfIsIntegralClosure K L).toEquiv
-    (fun σ : Gal(L / K) =>
+    (fun σ : Gal(L/K) =>
       Units.mapEquiv
         (galoisGroupResidueAlgEquivOfIsIntegralClosure K L σ).toMulEquiv u)
     (fun τ : 𝓀[L] ≃ₐ[𝓀[K]] 𝓀[L] => Units.mapEquiv τ.toMulEquiv u)
@@ -859,12 +859,12 @@ theorem galoisGroupResidueAlgEquivOfIsIntegralClosure_sum_eq_sum_algEquiv_of_unr
     [IsIntegralClosure 𝒪[L] 𝒪[K] L] [Module.Finite 𝒪[K] 𝒪[L]]
     [LocalFieldTheory.IsNonarchimedeanLocalField.IsUnramifiedValuedExtension K L]
     (x : 𝓀[L]) :
-    Finset.univ.sum (fun σ : Gal(L / K) =>
+    Finset.univ.sum (fun σ : Gal(L/K) =>
       galoisGroupResidueAlgEquivOfIsIntegralClosure K L σ x) =
     Finset.univ.sum (fun τ : 𝓀[L] ≃ₐ[𝓀[K]] 𝓀[L] => τ x) :=
   Fintype.sum_equiv
     (galoisGroupEquivResidueAlgEquivOfUnramifiedValuationOfIsIntegralClosure K L).toEquiv
-    (fun σ : Gal(L / K) => galoisGroupResidueAlgEquivOfIsIntegralClosure K L σ x)
+    (fun σ : Gal(L/K) => galoisGroupResidueAlgEquivOfIsIntegralClosure K L σ x)
     (fun τ : 𝓀[L] ≃ₐ[𝓀[K]] 𝓀[L] => τ x)
     (by intro σ; rfl)
 
@@ -880,7 +880,7 @@ theorem galoisGroup_sum_residue_eq_algebraMap_trace_of_unramifiedValuation_of_is
     [LocalFieldTheory.IsNonarchimedeanLocalField.IsUnramifiedValuedExtension K L]
     (a : 𝒪[L]) :
     IsLocalRing.residue 𝒪[L]
-        (Finset.univ.sum fun σ : Gal(L / K) =>
+        (Finset.univ.sum fun σ : Gal(L/K) =>
           galoisGroupIntegerRingEquivOfIsIntegralClosure K L σ a) =
       algebraMap 𝓀[K] 𝓀[L]
         (Algebra.trace 𝓀[K] 𝓀[L] (IsLocalRing.residue 𝒪[L] a)) := by
@@ -900,9 +900,9 @@ theorem galoisGroup_sum_mul_base_uniformizer_pow_eq_coeff_sum_of_isIntegralClosu
     [IsIntegralClosure 𝒪[L] 𝒪[K] L]
     (n : Nat) (r : 𝒪[L]) :
     let πL := integerRingMapOfValuationExtension K L (chosenIntegerRingUniformizer K)
-    Finset.univ.sum (fun σ : Gal(L / K) =>
+    Finset.univ.sum (fun σ : Gal(L/K) =>
         galoisGroupIntegerRingEquivOfIsIntegralClosure K L σ (r * πL ^ n)) =
-      (Finset.univ.sum fun σ : Gal(L / K) =>
+      (Finset.univ.sum fun σ : Gal(L/K) =>
         galoisGroupIntegerRingEquivOfIsIntegralClosure K L σ r) * πL ^ n := by
   intro πL
   rw [Finset.sum_mul]
@@ -929,14 +929,14 @@ theorem galoisSum_uniformizerGraded_eq_residueTrace
     let πL := integerRingMapOfValuationExtension K L (chosenIntegerRingUniformizer K)
     let hπL := integerRingMap_uniformizer_irreducible_of_unramifiedValuation K L
     maximalIdealPowSuccQuotMulUniformizerPowMap L πL hπL n
-        (Finset.univ.sum fun σ : Gal(L / K) =>
+        (Finset.univ.sum fun σ : Gal(L/K) =>
           galoisGroupIntegerRingEquivOfIsIntegralClosure K L σ r) =
       residueAddEquivMaximalIdealPowSuccQuotOfIrreducible L πL hπL n
         (algebraMap 𝓀[K] 𝓀[L]
           (Algebra.trace 𝓀[K] 𝓀[L] (IsLocalRing.residue 𝒪[L] r))) := by
   intro πL hπL
   rw [← residueAddEquivMaximalIdealPowSuccQuotOfIrreducible_residue L πL hπL n
-    (Finset.univ.sum fun σ : Gal(L / K) =>
+    (Finset.univ.sum fun σ : Gal(L/K) =>
       galoisGroupIntegerRingEquivOfIsIntegralClosure K L σ r)]
   rw [galoisGroup_sum_residue_eq_algebraMap_trace_of_unramifiedValuation_of_isIntegralClosure
     K L r]

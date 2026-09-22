@@ -25,6 +25,11 @@ finite levels. Arithmetic Frobenius on unramified extensions removes it for
 the entire coherent family, including ramified extensions.
 -/
 
+open _root_.LocalFieldTheory.IsNonarchimedeanLocalField.IsUnramifiedValuedExtension renaming
+  maximalIdeal_ramificationIdx_eq_one →
+    maximalIdeal_ramificationIdx_eq_one
+
+
 open scoped ValuativeRel
 
 noncomputable section
@@ -137,7 +142,7 @@ theorem finiteAbelianLocalReciprocity_family_ext
     norm_num
   have hUnram :
       (𝓂[U] : Ideal 𝒪[U]).ramificationIdx 𝒪[K] = 1 :=
-    LocalFieldTheory.IsNonarchimedeanLocalField.IsUnramifiedValuedExtension.maximalIdeal_ramificationIdx_eq_one
+    maximalIdeal_ramificationIdx_eq_one
   have hUeq : f Upack = g Upack :=
     finiteAbelianLocalReciprocity_unramified_family_ext K f g
       hfker hgker hfrob hgrob Upack hUnram π hπ

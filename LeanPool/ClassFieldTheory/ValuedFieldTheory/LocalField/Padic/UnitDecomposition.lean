@@ -18,6 +18,27 @@ This file constructs the reusable topological decomposition of
 `ℤ_[p]ˣ` into its finite factor and its principal `p`-adic factor.
 -/
 
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup renaming
+  continuousMulEquivOfCompactToT2 →
+    continuousMulEquivOfCompactToT2
+
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup renaming
+  residueRootsOfUnityContinuousMulEquivZMod →
+    residueRootsOfUnityContinuousMulEquivZMod
+
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup renaming
+  residueRootsOfUnityEquivResidueFieldUnits →
+    residueRootsOfUnityEquivResidueFieldUnits
+
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup renaming
+  valuationSubringUnitsEquivRootsTimesPrincipalUnits →
+    valuationSubringUnitsEquivRootsTimesPrincipalUnits
+
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup renaming
+  valuationSubringUnitsEquivRootsTimesPrincipalUnits_apply →
+    valuationSubringUnitsEquivRootsTimesPrincipalUnits_apply
+
+
 open scoped Topology
 
 noncomputable section
@@ -515,11 +536,11 @@ noncomputable def padicUnitDecomposition
       LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued
         F.toCompleteDVF
     exact
-      (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.residueRootsOfUnityContinuousMulEquivZMod
+      (residueRootsOfUnityContinuousMulEquivZMod
         F.toCompleteDVF).toMulEquiv
   letI : Finite RootGroup :=
     Finite.of_equiv F.residueFieldˣ
-      (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.residueRootsOfUnityEquivResidueFieldUnits
+      (residueRootsOfUnityEquivResidueFieldUnits
         F.toCompleteDVF).symm.toEquiv
   letI : Finite RootCyc :=
     Finite.of_equiv RootGroup rootsAlg.symm.toEquiv
@@ -553,7 +574,7 @@ noncomputable def padicUnitDecomposition
         (continuousMulEquivProdCongr roots principal)
   let unitsAlg : RootGroup × U ≃*
       F.valuationSubringˣ :=
-    LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.valuationSubringUnitsEquivRootsTimesPrincipalUnits
+    valuationSubringUnitsEquivRootsTimesPrincipalUnits
       F.toCompleteDVF
   let totalAlg :
       (RootCyc × FinCyc) × Multiplicative ℤ_[p] ≃*
@@ -568,14 +589,14 @@ noncomputable def padicUnitDecomposition
     refine hmul.congr ?_
     intro z
     exact
-      (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.valuationSubringUnitsEquivRootsTimesPrincipalUnits_apply
+      (valuationSubringUnitsEquivRootsTimesPrincipalUnits_apply
         F.toCompleteDVF z).symm
   have hTotal : Continuous totalAlg :=
     hUnitsAlg.comp factors.continuous_toFun
   let total :
       (RootCyc × FinCyc) × Multiplicative ℤ_[p] ≃ₜ*
         F.valuationSubringˣ :=
-    LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.continuousMulEquivOfCompactToT2
+    continuousMulEquivOfCompactToT2
       totalAlg hTotal
   let integral :
       ℤ_[p]ˣ ≃ₜ* F.valuationSubringˣ := by

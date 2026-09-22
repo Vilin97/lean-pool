@@ -154,7 +154,7 @@ theorem rootMinpolySetoid_rel_iff_orbitRel
     {F : Type u} [Field F] {E : Type v} [Field E] [Algebra F E]
     [Normal F E] {p : F[X]} (x y : PolynomialRootsIn E p) :
     (rootMinpolySetoid p).r x y ↔
-      MulAction.orbitRel Gal(E / F) E (x : E) (y : E) := by
+      MulAction.orbitRel Gal(E/F) E (x : E) (y : E) := by
   exact isConjRoot_iff_orbitRel
 
 /-- For a simple finite extension `L = K(α)`, `K`-embeddings into an

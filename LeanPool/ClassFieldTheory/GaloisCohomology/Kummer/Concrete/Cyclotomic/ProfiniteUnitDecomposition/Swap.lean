@@ -9,6 +9,11 @@ import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.Cyclotomic.Pro
 # Compiled final swap stage of the profinite-unit decomposition
 -/
 
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup renaming
+  continuousMulEquivProdComm →
+    continuousMulEquivProdComm
+
+
 open scoped Topology
 
 noncomputable section
@@ -21,7 +26,7 @@ open ClassFormation
 noncomputable def freeFiniteSwap :
     CyclotomicFinitePart × Multiplicative ZHat ≃ₜ*
       Multiplicative ZHat × CyclotomicFinitePart :=
-  LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.continuousMulEquivProdComm
+  continuousMulEquivProdComm
     CyclotomicFinitePart (Multiplicative ZHat)
 
 end KummerTheory.ProfiniteUnitDecomposition.Internal

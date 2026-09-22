@@ -29,15 +29,11 @@ over `F` with its realization inside the ambient separable closure of `K`. -/
 abbrev ambientEmbeddedSeparableClosureEquiv
     (K F E : Type)
     [Field K] [ValuativeRel K] [TopologicalSpace K]
-
     [Field F] [ValuativeRel F] [TopologicalSpace F]
-
     [Field E] [Algebra K F] [Algebra F E] [Algebra K E]
     [IsScalarTower K F E]
-
     [Valuation.HasExtension
       (ValuativeRel.valuation K) (ValuativeRel.valuation F)]
-
     (j : E →ₐ[K] SeparableClosure K) :=
   @AlgEquiv F (SeparableClosure F) (SeparableClosure K)
     _ _ _
@@ -66,7 +62,7 @@ structure AmbientEmbeddedFixedFieldPresentation
   /-- The given base field embedded in the ambient separable closure. -/
   baseEmbedding : F →ₐ[K] SeparableClosure K
   /-- The finite ambient fixed field representing the embedded base field. -/
-  base : FiniteAbstractField Gal(SeparableClosure K / K)
+  base : FiniteAbstractField Gal(SeparableClosure K/K)
   /-- The finite Galois ambient fixed-field extension representing `E / F`. -/
   extension : FiniteGaloisSubextension base.field
   /-- The base embedding is induced by the embedding of the top field. -/
@@ -92,7 +88,7 @@ structure AmbientEmbeddedFixedFieldPresentation
         SeparableClosure K) =
       baseEmbedding x
   /-- The actual quotient equivalence to the original Galois group. -/
-  quotientEquiv : extension.extensionQuotient ≃* Gal(E / F)
+  quotientEquiv : extension.extensionQuotient ≃* Gal(E/F)
   /-- The quotient equivalence acts through the supplied ambient embedding. -/
   quotientEquiv_mk_apply
       (sigma : base.field.toSubgroup) (x : E) :
@@ -119,8 +115,7 @@ noncomputable def fixedFieldQuotientEquiv
     (P : AmbientEmbeddedFixedFieldPresentation K F E j) :
     P.extension.extensionQuotient ≃*
       Gal(abstractRelativeFixedField K (SeparableClosure K)
-        P.extension.below /
-        abstractFixedField K (SeparableClosure K) P.base.field) :=
+        P.extension.below/abstractFixedField K (SeparableClosure K) P.base.field) :=
   P.extension.extensionQuotientMulEquiv.trans
     (abstractExtensionQuotientEquivGaloisGroup
       K (SeparableClosure K) P.base.field P.extension.field
@@ -146,9 +141,8 @@ noncomputable def abelianizedTransport
     Additive
       (Abelianization
         Gal(abstractRelativeFixedField K (SeparableClosure K)
-          P.extension.below /
-          abstractFixedField K (SeparableClosure K) P.base.field)) ≃+
-      Additive (Abelianization Gal(E / F)) :=
+          P.extension.below/abstractFixedField K (SeparableClosure K) P.base.field)) ≃+
+      Additive (Abelianization Gal(E/F)) :=
   (P.fixedFieldQuotientEquiv.abelianizationCongr.toAdditive.symm).trans
     P.quotientEquiv.abelianizationCongr.toAdditive
 
@@ -168,7 +162,7 @@ noncomputable def normResidueAbelianElement
     [FiniteDimensional F E] [IsGalois F E]
     {j : E →ₐ[K] SeparableClosure K}
     (P : AmbientEmbeddedFixedFieldPresentation K F E j)
-    (a : Fˣ) : Abelianization Gal(E / F) := by
+    (a : Fˣ) : Abelianization Gal(E/F) := by
   letI : (extensionSubgroup
       P.base.field P.extension.field P.extension.below).Normal :=
     P.extension.normal
@@ -179,9 +173,9 @@ noncomputable def normResidueAbelianElement
     P.extension.finite
   letI : Finite
       ((baseField
-        Gal(SeparableClosure K / K)).toSubgroup ⧸
+        Gal(SeparableClosure K/K)).toSubgroup ⧸
         extensionSubgroup
-          (baseField Gal(SeparableClosure K / K))
+          (baseField Gal(SeparableClosure K/K))
           P.base.field (le_baseField P.base.field)) :=
     P.base.finite
   exact
@@ -224,9 +218,9 @@ theorem normResidueAbelianElement_apply
       P.extension.finite
     letI : Finite
         ((baseField
-          Gal(SeparableClosure K / K)).toSubgroup ⧸
+          Gal(SeparableClosure K/K)).toSubgroup ⧸
           extensionSubgroup
-            (baseField Gal(SeparableClosure K / K))
+            (baseField Gal(SeparableClosure K/K))
             P.base.field (le_baseField P.base.field)) :=
       P.base.finite
     P.normResidueAbelianElement a =
@@ -290,13 +284,13 @@ noncomputable def ambientEmbeddedFixedFieldPresentation
     ambientEmbeddedExtensionQuotient_finite K F E j e
   letI _hHabsolute : Finite
       ((baseField
-        Gal(SeparableClosure K / K)).toSubgroup ⧸
+        Gal(SeparableClosure K/K)).toSubgroup ⧸
         extensionSubgroup
-          (baseField Gal(SeparableClosure K / K))
+          (baseField Gal(SeparableClosure K/K))
         H₀ (le_baseField H₀)) := by
     exact ambientEmbeddedAbsoluteQuotientFinite K F i
   let H : FiniteAbstractField
-      Gal(SeparableClosure K / K) :=
+      Gal(SeparableClosure K/K) :=
     ⟨H₀, _hHabsolute⟩
   let T : FiniteGaloisSubextension H.field :=
     ⟨J₀, hJH, _hTargetNormal, _hTargetFinite⟩
@@ -352,7 +346,7 @@ noncomputable def ambientEmbeddedNormResidueAbelianElement
     [FiniteDimensional F E] [IsGalois F E]
     (j : E →ₐ[K] SeparableClosure K)
     (e : ambientEmbeddedSeparableClosureEquiv K F E j)
-    (a : Fˣ) : Abelianization Gal(E / F) :=
+    (a : Fˣ) : Abelianization Gal(E/F) :=
   (ambientEmbeddedFixedFieldPresentation K F E j e).normResidueAbelianElement a
 
 /-- The ambient fixed-field norm-residue value in `Gal(E/F)`, obtained
@@ -371,8 +365,8 @@ noncomputable def ambientEmbeddedNormResidueElement
     [FiniteDimensional F E] [IsAbelianGalois F E]
     (j : E →ₐ[K] SeparableClosure K)
     (e : ambientEmbeddedSeparableClosureEquiv K F E j)
-    (a : Fˣ) : Gal(E / F) :=
-  (Abelianization.equivOfComm (H := Gal(E / F))).symm
+    (a : Fˣ) : Gal(E/F) :=
+  (Abelianization.equivOfComm (H := Gal(E/F))).symm
     (ambientEmbeddedNormResidueAbelianElement K F E j e a)
 
 end LocalClassFieldTheory

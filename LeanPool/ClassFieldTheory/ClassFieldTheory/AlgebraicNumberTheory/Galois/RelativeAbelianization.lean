@@ -26,13 +26,13 @@ variable [Field F] [Field M] [Algebra F M] [IsGalois F M]
 
 /-- Closed commutator subgroup of a relative, possibly infinite, Galois
 group. -/
-def relativeCommutatorClosure : ClosedSubgroup Gal(M / F) where
-  toSubgroup := (commutator Gal(M / F)).topologicalClosure
+def relativeCommutatorClosure : ClosedSubgroup Gal(M/F) where
+  toSubgroup := (commutator Gal(M/F)).topologicalClosure
   isClosed' := Subgroup.isClosed_topologicalClosure _
 
 local instance relativeCommutatorClosure_normal :
     (relativeCommutatorClosure F M).Normal := by
-  change ((commutator Gal(M / F)).topologicalClosure).Normal
+  change ((commutator Gal(M/F)).topologicalClosure).Normal
   infer_instance
 
 /-- Maximal abelian intermediate field of a relative Galois extension. -/
@@ -56,8 +56,8 @@ local instance relativeMaximalAbelianSubextension.instIsGalois :
 
 /-- Algebraic quotient equivalence for relative abelianization. -/
 noncomputable def relativeAbelianizationMulEquiv :
-    TopologicalAbelianization Gal(M / F) ≃*
-      Gal(relativeMaximalAbelianSubextension F M / F) :=
+    TopologicalAbelianization Gal(M/F) ≃*
+      Gal(relativeMaximalAbelianSubextension F M/F) :=
   InfiniteGalois.normalAutEquivQuotient (relativeCommutatorClosure F M)
 
 /-- The quotient equivalence sends a class to restriction. -/
@@ -80,8 +80,8 @@ theorem relativeAbelianizationMulEquiv_continuous :
 /-- The topological abelianization is the Galois group of the maximal
 relative abelian subfield. -/
 noncomputable def relativeTopologicalAbelianizationEquiv :
-    TopologicalAbelianization Gal(M / F) ≃ₜ*
-      Gal(relativeMaximalAbelianSubextension F M / F) := by
+    TopologicalAbelianization Gal(M/F) ≃ₜ*
+      Gal(relativeMaximalAbelianSubextension F M/F) := by
   let h := Continuous.homeoOfEquivCompactToT2
     (relativeAbelianizationMulEquiv_continuous F M)
   exact

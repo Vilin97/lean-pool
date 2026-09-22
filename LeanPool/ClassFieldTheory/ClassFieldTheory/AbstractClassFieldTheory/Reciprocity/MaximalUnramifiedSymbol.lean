@@ -119,9 +119,10 @@ theorem finiteUnramifiedRestriction_mk
     finiteUnramifiedRestriction D K L hUnramified (QuotientGroup.mk k) =
       L.extensionQuotientMk k := by
   apply L.extensionQuotientMulEquiv.injective
-  simp [finiteUnramifiedRestriction,
-    maximalUnramifiedExtensionRestriction_mk,
-    FiniteGaloisSubextension.toGaloisExtensionQuotientMulEquiv]
+  simp only [finiteUnramifiedRestriction,
+    FiniteGaloisSubextension.toGaloisExtensionQuotientMulEquiv, MulEquiv.toMonoidHom_eq_coe,
+    MonoidHom.coe_comp, MonoidHom.coe_coe, Function.comp_apply,
+    maximalUnramifiedExtensionRestriction_mk, FiniteGaloisSubextension.extensionQuotientMk_apply]
   exact L.toGaloisSubextension.extensionQuotientMk_apply k
 
 /--
@@ -139,7 +140,8 @@ theorem finiteUnramifiedRestriction_frobenius
   rw [finiteUnramifiedRestriction, MonoidHom.comp_apply,
     maximalUnramifiedRestriction_frobenius]
   apply L.extensionQuotientMulEquiv.injective
-  simp [FiniteGaloisSubextension.toGaloisExtensionQuotientMulEquiv]
+  simp only [FiniteGaloisSubextension.toGaloisExtensionQuotientMulEquiv,
+    MulEquiv.toMonoidHom_eq_coe, MonoidHom.coe_coe, MulEquiv.apply_symm_apply]
   exact
     L.toGaloisSubextension.extensionQuotientMulEquiv.apply_symm_apply
       (D.unramifiedFrobenius K L.field L.below)
@@ -377,7 +379,6 @@ isomorphisms.  This is the generator calculation in the unramified norm-quotient
 expressed in the normalization needed. -/
 theorem canonicalUnramifiedReciprocity_degree_of_generator
     (v : ValuationData D A)
-
     (K : FiniteAbstractField G) (L : FiniteGaloisSubextension K.field) :
     letI : Finite
         (K.field.toSubgroup ⧸

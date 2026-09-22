@@ -13,6 +13,11 @@ Henselian uniqueness then identifies the selected valuation rings on the
 separable closures; no equality of the extension valuations is assumed.
 -/
 
+open _root_.ValuationTheory.DiscreteValuationField.Valuation renaming
+  hasExtension_valuation_of_valuationSubring_pullback →
+    hasExtension_valuation_of_valuationSubring_pullback
+
+
 noncomputable section
 
 namespace ClassFieldTower.Martinet.Shafarevich
@@ -36,7 +41,7 @@ theorem localSeparableValuationSubring_comap_semilinear
   let B := (localSeparableValuationSubring K').comap e.toRingHom
   let _ : (localCompleteDVF K).valuation.HasExtension B.valuation := by
     apply
-      ValuationTheory.DiscreteValuationField.Valuation.hasExtension_valuation_of_valuationSubring_pullback
+      hasExtension_valuation_of_valuationSubring_pullback
     intro x
     change e (algebraMap K (SeparableClosure K) x) ∈ localSeparableValuationSubring K' ↔
       x ∈ (localCompleteDVF K).valuation.valuationSubring

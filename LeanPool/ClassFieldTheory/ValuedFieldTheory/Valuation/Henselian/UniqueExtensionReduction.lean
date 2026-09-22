@@ -15,6 +15,11 @@ field in fact splits over every extension valuation ring: its roots are
 integral over the base and hence belong to that ring.
 -/
 
+open _root_.ValuationTheory.DiscreteValuationField.Valuation renaming
+  integralClosure_mem_valuationSubring_of_hasExtension →
+    integralClosure_mem_valuationSubring_of_hasExtension
+
+
 noncomputable section
 
 open Polynomial
@@ -69,7 +74,7 @@ theorem monic_splits_in_extension_valuationSubring
       rw [ValuationSubring.valuationSubring_valuation]
       exact hαint
     have hz : α ∈ W.valuation.valuationSubring :=
-      ValuationTheory.DiscreteValuationField.Valuation.integralClosure_mem_valuationSubring_of_hasExtension
+      integralClosure_mem_valuationSubring_of_hasExtension
         (L := L) V.valuation W.valuation ⟨α, hαint'⟩
     simpa [ValuationSubring.valuationSubring_valuation] using hz
   exact ⟨⟨α, hαmem⟩, rfl⟩

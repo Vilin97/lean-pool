@@ -23,6 +23,11 @@ an actual `ℚ_[p]`-algebra automorphism.  No second Witt ring, p-adic field,
 or Frobenius is introduced.
 -/
 
+open _root_.ValuationTheory.DiscreteValuationField.ValuedExtension renaming
+  valuation_hasExtension_of_local_valuationSubring_map →
+    valuation_hasExtension_of_local_valuationSubring_map
+
+
 noncomputable section
 
 namespace LubinTate
@@ -367,7 +372,7 @@ theorem padicCompletedUnramifiedValuation_hasExtension
     apply ((IsLocalRing.local_hom_TFAE f).out 3 1).mp
     rw [padicCompletedUnramifiedIntegerMap_map_maximalIdeal]
   exact
-    ValuationTheory.DiscreteValuationField.ValuedExtension.valuation_hasExtension_of_local_valuationSubring_map
+    valuation_hasExtension_of_local_valuationSubring_map
         (padicLocalField p).toCompleteDVF
         (padicCompletedUnramifiedCompleteDVF p)
         f

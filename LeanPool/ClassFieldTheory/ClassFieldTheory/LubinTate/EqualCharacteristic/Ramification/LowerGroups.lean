@@ -43,8 +43,7 @@ noncomputable def equalCharacteristicLubinTateRealLowerRamificationGroup
     (F : LocalField.{0, v} K₀)
     [CharP K₀ F.residueCharacteristic]
     (n : ℕ) (s : ℝ) :
-    Subgroup Gal((equalCharacteristicLubinTateLevelField F n) /
-      F.residueField⸨X⸩) :=
+    Subgroup Gal((equalCharacteristicLubinTateLevelField F n)/F.residueField⸨X⸩) :=
   RamificationTheory.HilbertRamification.Higher.lowerRamificationGroup
     (base := (equalCharacteristicLubinTateBaseCompleteDVF F).toDVF)
     (target := (equalCharacteristicLubinTateLevelCompleteDVF F n).toDVF)
@@ -82,8 +81,7 @@ theorem
     (F : LocalField.{0, v} K₀)
     [CharP K₀ F.residueCharacteristic]
     (n i : ℕ)
-    (sigma : Gal((equalCharacteristicLubinTateLevelField F n) /
-      F.residueField⸨X⸩)) :
+    (sigma : Gal((equalCharacteristicLubinTateLevelField F n)/F.residueField⸨X⸩)) :
     sigma ∈ equalCharacteristicLubinTateRealLowerRamificationGroup
         F n (i : ℝ) ↔
       ((i + 1 : ℕ) : ℕ∞) ≤
@@ -151,8 +149,7 @@ theorem
     (F : LocalField.{0, v} K₀)
     [CharP K₀ F.residueCharacteristic]
     (n i : ℕ)
-    (sigma : Gal((equalCharacteristicLubinTateLevelField F n) /
-      F.residueField⸨X⸩))
+    (sigma : Gal((equalCharacteristicLubinTateLevelField F n)/F.residueField⸨X⸩))
     (a : equalCharacteristicLubinTateUnitParameter F n)
     (ha :
       sigma (equalCharacteristicLubinTateLevelPowerBasis F n).gen =
@@ -179,8 +176,7 @@ noncomputable def equalCharacteristicLubinTateUnitParameterEquivGal
     [CharP K F.residueCharacteristic]
     (n : ℕ) :
     equalCharacteristicLubinTateUnitParameter F n ≃
-      Gal((equalCharacteristicLubinTateLevelField F n) /
-        LaurentSeries F.residueField) :=
+      Gal((equalCharacteristicLubinTateLevelField F n)/LaurentSeries F.residueField) :=
   Equiv.ofBijective
     (equalCharacteristicLubinTateUnitParameterToGal F n)
     ⟨equalCharacteristicLubinTateUnitParameterToGal_injective F n,

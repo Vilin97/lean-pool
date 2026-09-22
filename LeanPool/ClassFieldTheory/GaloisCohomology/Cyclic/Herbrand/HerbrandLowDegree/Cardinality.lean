@@ -69,11 +69,9 @@ private noncomputable def periodicChainMap
   comm' := by
     rintro i j ⟨rfl⟩
     by_cases hj : Even (j + 1)
-    · simp [Rep.FiniteCyclicGroup.moduleCatChainComplex,
-        HomologicalComplex.alternatingConst, hj]
+    · simp only [Rep.FiniteCyclicGroup.moduleCatChainComplex, HomologicalComplex.alternatingConst, ComplexShape.down_Rel, dite_eq_ite, Nat.add_left_cancel_iff, ↓reduceIte, hj]
       exact (subCompNormMap σ f hf).comm₂₃
-    · simp [Rep.FiniteCyclicGroup.moduleCatChainComplex,
-        HomologicalComplex.alternatingConst, hj]
+    · simp only [Rep.FiniteCyclicGroup.moduleCatChainComplex, HomologicalComplex.alternatingConst, ComplexShape.down_Rel, dite_eq_ite, Nat.add_left_cancel_iff, ↓reduceIte, hj]
       exact (subCompNormMap σ f hf).comm₁₂
 
 private noncomputable def periodicShortComplex

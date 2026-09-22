@@ -1137,7 +1137,6 @@ noncomputable def principalUnitSuccQuotAddEquivResidueOfUniformizer
 /-- Cardinality form of the associated-graded identification
 `U^n/U^(n+1) ≃ k` for `n ≥ 1`. -/
 theorem card_principalUnitSuccQuot_eq_residue_of_uniformizer
-
     {pi : F.valuationSubring} (hpi : F.valuation.IsUniformizer (pi : K))
     (n : ℕ) (hn : 1 ≤ n) :
     Nat.card (higherPrincipalUnitGroup.principalUnitSuccQuot F n) =

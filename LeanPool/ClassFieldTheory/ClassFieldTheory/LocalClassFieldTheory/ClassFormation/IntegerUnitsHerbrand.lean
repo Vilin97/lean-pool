@@ -50,10 +50,10 @@ theorem chosenNormalBasisIntegerUnitsHerbrand_shortExact
     letI := chosenNormalBasisPrincipalUnitSubgroupMulDistribMulAction K L n V hV
     letI := galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L
     letI := chosenNormalBasisIntegerUnitsQuotMulDistribMulAction K L n V hV
-    (∀ (sigma : Gal(L / K)) (a : V),
+    (∀ (sigma : Gal(L/K)) (a : V),
         chosenNormalBasisPrincipalUnitSubgroupInclusion (L := L) V (sigma • a) =
           sigma • chosenNormalBasisPrincipalUnitSubgroupInclusion (L := L) V a) ∧
-      (∀ (sigma : Gal(L / K)) (a : 𝒪[L]ˣ),
+      (∀ (sigma : Gal(L/K)) (a : 𝒪[L]ˣ),
         chosenNormalBasisIntegerUnitsQuotientMap (L := L) V (sigma • a) =
           sigma • chosenNormalBasisIntegerUnitsQuotientMap (L := L) V a) ∧
       (∀ a : 𝒪[L]ˣ,
@@ -98,30 +98,30 @@ theorem integerUnits_herbrandQuotient_eq_one_of_chosenNormalBasis
     (n : Nat) (V : Subgroup 𝒪[L]ˣ)
     (hV : (V : Set 𝒪[L]ˣ) = chosenNormalBasisPrincipalUnitSet K L n)
     (hfinite : Finite (𝒪[L]ˣ ⧸ V))
-    (g : Gal(L / K))
-    (hg : ∀ sigma : Gal(L / K), sigma ∈ Subgroup.zpowers g)
+    (g : Gal(L/K))
+    (hg : ∀ sigma : Gal(L/K), sigma ∈ Subgroup.zpowers g)
     (hH0 :
       letI := chosenNormalBasisPrincipalUnitSubgroupMulDistribMulAction K L n V hV
-      Subsingleton (HerbrandH0 (Gal(L / K)) V))
+      Subsingleton (HerbrandH0 (Gal(L/K)) V))
     (hHminusOne :
       letI := chosenNormalBasisPrincipalUnitSubgroupMulDistribMulAction K L n V hV
-      Subsingleton (HerbrandHMinusOne (Gal(L / K)) V g)) :
+      Subsingleton (HerbrandHMinusOne (Gal(L/K)) V g)) :
     letI := chosenNormalBasisPrincipalUnitSubgroupMulDistribMulAction K L n V hV
     letI := galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L
     letI := chosenNormalBasisIntegerUnitsQuotMulDistribMulAction K L n V hV
-    ∃ hU : HerbrandQuotientDefined (Gal(L / K)) 𝒪[L]ˣ g,
-      @herbrandQuotient (Gal(L / K)) 𝒪[L]ˣ _ _ _
+    ∃ hU : HerbrandQuotientDefined (Gal(L/K)) 𝒪[L]ˣ g,
+      @herbrandQuotient (Gal(L/K)) 𝒪[L]ˣ _ _ _
         (galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L)
         g hU.1 hU.2 = 1 := by
   let := chosenNormalBasisPrincipalUnitSubgroupMulDistribMulAction K L n V hV
   let := galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L
   let := chosenNormalBasisIntegerUnitsQuotMulDistribMulAction K L n V hV
   let : Finite (𝒪[L]ˣ ⧸ V) := hfinite
-  let : Subsingleton (HerbrandH0 (Gal(L / K)) V) := hH0
-  let : Subsingleton (HerbrandHMinusOne (Gal(L / K)) V g) := hHminusOne
-  let hVdefined : HerbrandQuotientDefined (Gal(L / K)) V g :=
+  let : Subsingleton (HerbrandH0 (Gal(L/K)) V) := hH0
+  let : Subsingleton (HerbrandHMinusOne (Gal(L/K)) V g) := hHminusOne
+  let hVdefined : HerbrandQuotientDefined (Gal(L/K)) V g :=
     ⟨inferInstance, inferInstance⟩
-  let hQdefined : HerbrandQuotientDefined (Gal(L / K)) (𝒪[L]ˣ ⧸ V) g :=
+  let hQdefined : HerbrandQuotientDefined (Gal(L/K)) (𝒪[L]ˣ ⧸ V) g :=
     ⟨inferInstance, inferInstance⟩
   let hseq := chosenNormalBasisIntegerUnitsHerbrand_shortExact K L n V hV
   have hsurj : ∀ c : 𝒪[L]ˣ ⧸ V, ∃ b : 𝒪[L]ˣ,
@@ -129,27 +129,27 @@ theorem integerUnits_herbrandQuotient_eq_one_of_chosenNormalBasis
     intro c
     exact hseq.2.2.2.2 c
   let hU := herbrandQuotientDefined_middle_of_left_right
-    (G := Gal(L / K)) (A := V) (B := 𝒪[L]ˣ) (C := 𝒪[L]ˣ ⧸ V)
+    (G := Gal(L/K)) (A := V) (B := 𝒪[L]ˣ) (C := 𝒪[L]ˣ ⧸ V)
     (chosenNormalBasisPrincipalUnitSubgroupInclusion (L := L) V)
     (chosenNormalBasisIntegerUnitsQuotientMap (L := L) V)
     hseq.1 hseq.2.1 hseq.2.2.1 hseq.2.2.2.1 hsurj
     g hg hVdefined hQdefined
   refine ⟨hU, ?_⟩
-  let : Finite (HerbrandH0 (Gal(L / K)) 𝒪[L]ˣ) := hU.1
-  let : Finite (HerbrandHMinusOne (Gal(L / K)) 𝒪[L]ˣ g) := hU.2
-  have hVone : herbrandQuotient (G := Gal(L / K)) (A := V) g = 1 := by
+  let : Finite (HerbrandH0 (Gal(L/K)) 𝒪[L]ˣ) := hU.1
+  let : Finite (HerbrandHMinusOne (Gal(L/K)) 𝒪[L]ˣ g) := hU.2
+  have hVone : herbrandQuotient (G := Gal(L/K)) (A := V) g = 1 := by
     exact herbrandQuotient_eq_one_of_card_eq
-      (G := Gal(L / K)) (A := V) g
+      (G := Gal(L/K)) (A := V) g
       (by simp only [Nat.card_unique])
   have hQone :
-      herbrandQuotient (G := Gal(L / K)) (A := 𝒪[L]ˣ ⧸ V) g = 1 := by
+      herbrandQuotient (G := Gal(L/K)) (A := 𝒪[L]ˣ ⧸ V) g = 1 := by
     exact herbrandQuotient_eq_one_of_finite_module
-      (G := Gal(L / K)) (A := 𝒪[L]ˣ ⧸ V) g hg
-  have hmul : herbrandQuotient (G := Gal(L / K)) (A := 𝒪[L]ˣ) g =
-      herbrandQuotient (G := Gal(L / K)) (A := V) g *
-        herbrandQuotient (G := Gal(L / K)) (A := 𝒪[L]ˣ ⧸ V) g :=
+      (G := Gal(L/K)) (A := 𝒪[L]ˣ ⧸ V) g hg
+  have hmul : herbrandQuotient (G := Gal(L/K)) (A := 𝒪[L]ˣ) g =
+      herbrandQuotient (G := Gal(L/K)) (A := V) g *
+        herbrandQuotient (G := Gal(L/K)) (A := 𝒪[L]ˣ ⧸ V) g :=
     herbrandQuotient_multiplicative_of_shortExact
-      (G := Gal(L / K)) (A := V) (B := 𝒪[L]ˣ) (C := 𝒪[L]ˣ ⧸ V)
+      (G := Gal(L/K)) (A := V) (B := 𝒪[L]ˣ) (C := 𝒪[L]ˣ ⧸ V)
       (chosenNormalBasisPrincipalUnitSubgroupInclusion (L := L) V)
       (chosenNormalBasisIntegerUnitsQuotientMap (L := L) V)
       hseq.1 hseq.2.1 hseq.2.2.1 hseq.2.2.2.1 hsurj g hg
@@ -165,17 +165,17 @@ theorem exists_integerUnits_herbrandQuotient_eq_one_of_large_chosenNormalBasisLe
     ∃ c : Nat, ∀ n : Nat, c ≤ n →
       ∀ (V : Subgroup 𝒪[L]ˣ)
         (hV : (V : Set 𝒪[L]ˣ) = chosenNormalBasisPrincipalUnitSet K L n)
-        (g : Gal(L / K)),
-        (∀ sigma : Gal(L / K), sigma ∈ Subgroup.zpowers g) →
+        (g : Gal(L/K)),
+        (∀ sigma : Gal(L/K), sigma ∈ Subgroup.zpowers g) →
         (letI := chosenNormalBasisPrincipalUnitSubgroupMulDistribMulAction K L n V hV;
-          Subsingleton (HerbrandH0 (Gal(L / K)) V)) →
+          Subsingleton (HerbrandH0 (Gal(L/K)) V)) →
         (letI := chosenNormalBasisPrincipalUnitSubgroupMulDistribMulAction K L n V hV;
-          Subsingleton (HerbrandHMinusOne (Gal(L / K)) V g)) →
+          Subsingleton (HerbrandHMinusOne (Gal(L/K)) V g)) →
         letI := chosenNormalBasisPrincipalUnitSubgroupMulDistribMulAction K L n V hV
         letI := galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L
         letI := chosenNormalBasisIntegerUnitsQuotMulDistribMulAction K L n V hV
-        ∃ hU : HerbrandQuotientDefined (Gal(L / K)) 𝒪[L]ˣ g,
-          @herbrandQuotient (Gal(L / K)) 𝒪[L]ˣ _ _ _
+        ∃ hU : HerbrandQuotientDefined (Gal(L/K)) 𝒪[L]ˣ g,
+          @herbrandQuotient (Gal(L/K)) 𝒪[L]ˣ _ _ _
             (galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L)
             g hU.1 hU.2 = 1 := by
   rcases exists_finite_chosenNormalBasisIntegerUnitsQuotient

@@ -12,6 +12,11 @@ This file identifies `ℤ_[p][ζ]` with the actual integral closure and proves
 that it is a discrete valuation ring.
 -/
 
+open _root_.ValuationTheory.DiscreteValuationField.ValuedExtension renaming
+  integralClosure_isDiscreteValuationRing_of_finite_separable →
+    integralClosure_isDiscreteValuationRing_of_finite_separable
+
+
 noncomputable section
 
 namespace AlgebraicNumberTheory
@@ -164,7 +169,7 @@ theorem padicCyclotomicTotallyRamified_adjoin_isDiscreteValuationRing
       map_mul' := fun _ _ => rfl
       map_add' := fun _ _ => rfl }
   let : IsDiscreteValuationRing (integralClosure V L) :=
-    ValuationTheory.DiscreteValuationField.ValuedExtension.integralClosure_isDiscreteValuationRing_of_finite_separable
+    integralClosure_isDiscreteValuationRing_of_finite_separable
       base
   let : IsDiscreteValuationRing (integralClosure ℤ_[p] L) :=
     IsDiscreteValuationRing.RingEquivClass.isDiscreteValuationRing eIC.symm

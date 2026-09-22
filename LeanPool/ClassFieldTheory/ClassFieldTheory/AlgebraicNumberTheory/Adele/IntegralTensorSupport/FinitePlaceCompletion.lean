@@ -39,7 +39,6 @@ noncomputable def relativeFinitePlaceCompletionBaseMap
       (NumberField.HeightOneSpectrum.adicAbv K w)).toRingHom
 
 /-- These lemmas record the canonical map and equivalence interfaces for the finite-place model. -/
-
 @[simp]
 theorem relativeFinitePlaceCompletionBaseMap_apply
     (w : HeightOneSpectrum (𝓞 K))
@@ -78,7 +77,6 @@ noncomputable def relativeFinitePlaceCompletionRingHom
     (relativeFinitePlaceCompletionBaseMap_isometry w).continuous
 
 /-- Coercion, isometry, and surjectivity facts for the canonical ring homomorphism. -/
-
 @[simp]
 theorem relativeFinitePlaceCompletionRingHom_coe
     (w : HeightOneSpectrum (𝓞 K))
@@ -224,7 +222,6 @@ theorem basis_coord_isIntegral_of_integral_traces
     [CommRing R] [Field A] [CommRing B]
     [Algebra R A] [Algebra A B]
     [Fintype ι] [DecidableEq ι]
-
     (b : Module.Basis ι A B)
     {x : B}
     (hM : ∀ j k, IsIntegral R

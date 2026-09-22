@@ -159,11 +159,11 @@ theorem relativeNorm_intermediateFieldUnit_val (x : Eˣ) :
           (intermediateFieldUnitsEquivGaloisFixed K Ω E
             (Additive.ofMul x)) q) : Ωˣ) : Ω)) = _
   calc
-    _ = ∏ σ : Gal(E / K), E.val (σ (x : E)) := by
+    _ = ∏ σ : Gal(E/K), E.val (σ (x : E)) := by
       exact Fintype.prod_equiv
         (baseFixingExtensionQuotientEquivGaloisGroup K Ω E).toEquiv
         (fun q : Q => ((Additive.toMul (action q) : Ωˣ) : Ω))
-        (fun σ : Gal(E / K) => E.val (σ (x : E)))
+        (fun σ : Gal(E/K) => E.val (σ (x : E)))
         (relativeCosetAction_intermediateFieldUnit_val K Ω E x)
     _ = E.val (algebraMap K E (Algebra.norm K (x : E))) := by
       rw [Algebra.norm_eq_prod_automorphisms, map_prod]
@@ -353,7 +353,6 @@ noncomputable local instance embeddedFieldRangeIsGalois :
   IsGalois.of_algEquiv (AlgEquiv.ofInjectiveField i)
 
 omit [IsGalois K Ω] [FiniteDimensional K L] [IsGalois K L] in
-
 /-- The field norm is invariant under an algebra equivalence, at unit level. -/
 theorem normUnits_embeddedExtensionAlgEquiv (x : Lˣ) :
     normUnits K (AlgHom.fieldRange i)
@@ -364,7 +363,6 @@ theorem normUnits_embeddedExtensionAlgEquiv (x : Lˣ) :
     (AlgEquiv.ofInjectiveField i) (x : L)
 
 omit [IsGalois K Ω] [FiniteDimensional K L] [IsGalois K L] in
-
 /-- The ordinary norm subgroups are independent of the chosen realization of
 the finite extension inside the ambient Galois extension. -/
 theorem localNormSubgroup_fieldRange_eq :

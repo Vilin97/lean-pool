@@ -332,7 +332,7 @@ theorem frobeniusActionRemainder_mul (D : DegreeData G)
           (D.frobeniusActionConjugate K L hLK φ σ₂
             (D.frobeniusExponent K L hLK σ₁)) *
         D.frobeniusActionRemainder K L hLK φ σ₁ := by
-  simp [frobeniusActionRemainder, frobeniusExponent_mul,
+  simp? [frobeniusActionRemainder, frobeniusExponent_mul,
     frobeniusActionConjugate_coe, frobeniusExponent_actionConjugate,
     frobeniusMul_coe, pow_add, mul_assoc]
   have hp : φ.1 ^ D.frobeniusExponent K L hLK σ₁ *

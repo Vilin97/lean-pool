@@ -39,14 +39,14 @@ variable (K L : Type u) [Field K] [Field L] [Algebra K L]
 `V`, both low-degree Herbrand quotients are trivial. -/
 theorem exists_chosenNormalBasisPrincipalUnit_herbrand_subsingleton
     (g : Gal(L/K))
-    (hgen : ∀ sigma : Gal(L / K), sigma ∈ Subgroup.zpowers g) :
+    (hgen : ∀ sigma : Gal(L/K), sigma ∈ Subgroup.zpowers g) :
     ∃ c : Nat, ∀ n : Nat, c ≤ n →
       ∀ (V : Subgroup 𝒪[L]ˣ)
         (hV : (V : Set 𝒪[L]ˣ) = chosenNormalBasisPrincipalUnitSet K L n),
         letI := chosenNormalBasisPrincipalUnitSubgroupMulDistribMulAction
           K L n V hV
-        Subsingleton (HerbrandH0 (Gal(L / K)) V) ∧
-          Subsingleton (HerbrandHMinusOne (Gal(L / K)) V g) := by
+        Subsingleton (HerbrandH0 (Gal(L/K)) V) ∧
+          Subsingleton (HerbrandHMinusOne (Gal(L/K)) V g) := by
   rcases exists_chosenNormalBasisPrincipalUnit_fixed_is_tateNorm
       (K := K) (L := L) with ⟨c0, hc0⟩
   rcases exists_chosenNormalBasisPrincipalUnit_normOne_is_sigmaMinusOne
@@ -57,15 +57,15 @@ theorem exists_chosenNormalBasisPrincipalUnit_herbrand_subsingleton
   have hcmn : cm ≤ n := le_trans (le_max_right c0 cm) hn
   let := chosenNormalBasisPrincipalUnitSubgroupMulDistribMulAction
     K L n V hV
-  have hfixed : fixedSubgroup (Gal(L / K)) V ≤
-      tateNormSubgroup (Gal(L / K)) V := by
+  have hfixed : fixedSubgroup (Gal(L/K)) V ≤
+      tateNormSubgroup (Gal(L/K)) V := by
     intro a ha
     have haSet : ((a : V) : 𝒪[L]ˣ) ∈ (V : Set 𝒪[L]ˣ) := (a : V).2
     have haLevel : ((a : V) : 𝒪[L]ˣ) ∈
         chosenNormalBasisPrincipalUnitSet K L n := by
       rw [← hV]
       exact haSet
-    have haFixed : ∀ sigma : Gal(L / K),
+    have haFixed : ∀ sigma : Gal(L/K),
         letI := galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L
         sigma • ((a : V) : 𝒪[L]ˣ) = ((a : V) : 𝒪[L]ˣ) := by
       intro sigma
@@ -81,8 +81,8 @@ theorem exists_chosenNormalBasisPrincipalUnit_herbrand_subsingleton
     rw [tateNormHom_apply,
       chosenNormalBasisPrincipalUnitSubgroup_tateNorm_coe K L n V hV]
     exact hab.symm
-  have hkernel : normKernelSubgroup (Gal(L / K)) V ≤
-      augmentationSubgroup (Gal(L / K)) V g := by
+  have hkernel : normKernelSubgroup (Gal(L/K)) V ≤
+      augmentationSubgroup (Gal(L/K)) V g := by
     intro a ha
     have haLevel : ((a : V) : 𝒪[L]ˣ) ∈
         chosenNormalBasisPrincipalUnitSet K L n := by
@@ -90,7 +90,7 @@ theorem exists_chosenNormalBasisPrincipalUnit_herbrand_subsingleton
       exact (a : V).2
     have haNorm :
         letI := galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L
-        tateNorm (Gal(L / K)) 𝒪[L]ˣ ((a : V) : 𝒪[L]ˣ) = 1 := by
+        tateNorm (Gal(L/K)) 𝒪[L]ˣ ((a : V) : 𝒪[L]ˣ) = 1 := by
       rw [← chosenNormalBasisPrincipalUnitSubgroup_tateNorm_coe K L n V hV]
       exact congrArg (fun z : V => (z : 𝒪[L]ˣ)) ha
     rcases hcm n hcmn ((a : V) : 𝒪[L]ˣ) haLevel haNorm with

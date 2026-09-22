@@ -45,7 +45,7 @@ noncomputable def standardLubinTateLowerRamificationFiltration
     (hπ : F.toCompleteDVF.valuation.IsUniformizer (π : K))
     (n : ℕ) :
     RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration
-      Gal((standardLubinTateLevelField hπ n) / K) :=
+      Gal((standardLubinTateLevelField hπ n)/K) :=
   lowerRamificationFiltrationOfUniqueExtension
     (base := F.toCompleteDVF.toDVF)
     (target := (standardLubinTateLevelCompleteDVF hπ n).toDVF)
@@ -79,7 +79,7 @@ noncomputable def standardLubinTateRealUpperRamificationGroup
     {F : LocalField.{u, v} K} {π : F.valuationSubring}
     (hπ : F.toCompleteDVF.valuation.IsUniformizer (π : K))
     (n : ℕ) (t : ℝ) :
-    Subgroup Gal((standardLubinTateLevelField hπ n) / K) :=
+    Subgroup Gal((standardLubinTateLevelField hπ n)/K) :=
   upperRamificationGroupOfUniqueExtension
     (base := F.toCompleteDVF.toDVF)
     (target := (standardLubinTateLevelCompleteDVF hπ n).toDVF)

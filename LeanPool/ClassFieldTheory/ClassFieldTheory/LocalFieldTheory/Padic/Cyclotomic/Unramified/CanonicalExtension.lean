@@ -33,6 +33,23 @@ field theory files.  It also specializes the least-exponent degree formula
 to roots of unity of order `p ^ f - 1`.
 -/
 
+open _root_.LocalFieldTheory.DiscreteValuationField.ValuedExtension renaming
+  ramificationIndex_eq_one_iff_residueDegree_eq_degree_of_finite_separable →
+    ramificationIndex_eq_one_iff_residueDegree_eq_degree_of_finite_separable
+
+open _root_.ValuationTheory.DiscreteValuationField.ValuedExtension renaming
+  exists_integralClosure_standard_fundamental_identity →
+    exists_integralClosure_standard_fundamental_identity
+
+open _root_.ValuationTheory.DiscreteValuationField.ValuedExtension renaming
+  moduleFinite_target_valuationSubring_of_finite_separable →
+    moduleFinite_target_valuationSubring_of_finite_separable
+
+open _root_.ValuationTheory.DiscreteValuationField.ValuedExtension renaming
+  residueField_finiteDimensional_of_moduleFinite →
+    residueField_finiteDimensional_of_moduleFinite
+
+
 noncomputable section
 
 namespace AlgebraicNumberTheory
@@ -850,10 +867,10 @@ theorem padicCyclotomicUnramified_padic_isFiniteUnramified_prime_pow_sub_one
     intro x
     rfl
   let : Module.Finite base.valuationSubring target.valuationSubring :=
-    ValuationTheory.DiscreteValuationField.ValuedExtension.moduleFinite_target_valuationSubring_of_finite_separable
+    moduleFinite_target_valuationSubring_of_finite_separable
       base target
   let : FiniteDimensional base.residueField target.residueField :=
-    ValuationTheory.DiscreteValuationField.ValuedExtension.residueField_finiteDimensional_of_moduleFinite
+    residueField_finiteDimensional_of_moduleFinite
       base target
   let : Finite base.residueField := by
     simpa [base] using
@@ -864,7 +881,7 @@ theorem padicCyclotomicUnramified_padic_isFiniteUnramified_prime_pow_sub_one
     infer_instance
   refine ⟨hresidueSeparable, ?_⟩
   exact
-    ((LocalFieldTheory.DiscreteValuationField.ValuedExtension.ramificationIndex_eq_one_iff_residueDegree_eq_degree_of_finite_separable
+    ((ramificationIndex_eq_one_iff_residueDegree_eq_degree_of_finite_separable
         base target).1
       (padicCyclotomic_ramificationIndex_eq_one_prime_pow_sub_one
         p f hf hζ hζgen target)).symm
@@ -898,7 +915,7 @@ theorem exists_padicCyclotomic_completeDVF_isFiniteUnramified_degree_eq
   let : Algebra.IsSeparable ℚ_[p] L := by infer_instance
   let base := LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicCompleteDVF p
   obtain ⟨target, hExt, hTarget, _hfundamental⟩ :=
-    ValuationTheory.DiscreteValuationField.ValuedExtension.exists_integralClosure_standard_fundamental_identity
+    exists_integralClosure_standard_fundamental_identity
       (K := ℚ_[p]) (L := L) base
   let : base.valuation.HasExtension target.valuation := hExt
   let : IsIntegralClosure target.valuationSubring base.valuationSubring L := hTarget

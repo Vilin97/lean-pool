@@ -35,6 +35,23 @@ map `κ((X)) -> K` by first evaluating `κ⟦X⟧` at `X = π`, then using the
 localization description `κ((X)) = κ⟦X⟧[X⁻¹]`.
 -/
 
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup renaming
+  residueMap_comp_residueTeichmullerRingHomOfCharP →
+    residueMap_comp_residueTeichmullerRingHomOfCharP
+
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup renaming
+  residueTeichmullerFieldHomOfCharP →
+    residueTeichmullerFieldHomOfCharP
+
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup renaming
+  residueTeichmullerRingHomOfCharP →
+    residueTeichmullerRingHomOfCharP
+
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF renaming
+  mrangeRestrictNontriviallyNormedField →
+    mrangeRestrictNontriviallyNormedField
+
+
 noncomputable section
 
 universe u v
@@ -58,7 +75,7 @@ abbrev coeffSubringHom [Finite F.residueField] (p : ℕ) [Fact p.Prime]
     [CharP F.valuationSubring p] {n : ℕ+}
     (hcard : Nat.card F.residueField = p ^ (n : ℕ)) :
     F.residueField →+* F.valuationSubring :=
-  LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.residueTeichmullerRingHomOfCharP
+  residueTeichmullerRingHomOfCharP
     (F := F) p hcard
 
 /-- The Teichmuller coefficient-field embedding `κ -> K` used in the
@@ -67,7 +84,7 @@ abbrev coeffHom [Finite F.residueField] (p : ℕ) [Fact p.Prime]
     [CharP F.valuationSubring p] {n : ℕ+}
     (hcard : Nat.card F.residueField = p ^ (n : ℕ)) :
     F.residueField →+* K :=
-  LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.residueTeichmullerFieldHomOfCharP
+  residueTeichmullerFieldHomOfCharP
     (F := F) p hcard
 
 /-- The Teichmuller section is a representative system for the residue field. -/
@@ -79,7 +96,7 @@ noncomputable def teichmullerRepresentativeSystem [Finite F.residueField]
   residue_repr := by
     intro a
     have hcomp :=
-      LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.residueMap_comp_residueTeichmullerRingHomOfCharP
+      residueMap_comp_residueTeichmullerRingHomOfCharP
         (F := F) p hcard
     simpa [coeffSubringHom, RingHom.comp_apply] using
       congrFun (congrArg DFunLike.coe hcomp) a
@@ -943,7 +960,7 @@ noncomputable def laurentImageSubfieldNontriviallyNormedField
       ((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued
         F.toCompleteDVF))
     letI : NontriviallyNormedField K :=
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F.toCompleteDVF
+      mrangeRestrictNontriviallyNormedField F.toCompleteDVF
     NontriviallyNormedField
       (F.laurentImageSubfield p hcard π hπ) := by
   let Γ : Type v :=
@@ -959,7 +976,7 @@ noncomputable def laurentImageSubfieldNontriviallyNormedField
       _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictRankOne
         F.toCompleteDVF
   letI : NontriviallyNormedField K :=
-    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F.toCompleteDVF
+    mrangeRestrictNontriviallyNormedField F.toCompleteDVF
   let piSub : F.laurentImageSubfield p hcard π hπ :=
     F.laurentSeriesEquivLaurentImageSubfield p hcard π hπ
       (algebraMap F.residueField⟦X⟧ F.residueField⸨X⸩
@@ -1002,7 +1019,7 @@ noncomputable def laurentImageSubfieldNormedAlgebra
       ((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued
         F.toCompleteDVF))
     letI : NontriviallyNormedField K :=
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F.toCompleteDVF
+      mrangeRestrictNontriviallyNormedField F.toCompleteDVF
     letI : NontriviallyNormedField
         (F.laurentImageSubfield p hcard π hπ) :=
       F.laurentImageSubfieldNontriviallyNormedField p hcard π hπ
@@ -1013,7 +1030,7 @@ noncomputable def laurentImageSubfieldNormedAlgebra
     ((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued
     F.toCompleteDVF))
   letI : NontriviallyNormedField K :=
-    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F.toCompleteDVF
+    mrangeRestrictNontriviallyNormedField F.toCompleteDVF
   letI : NontriviallyNormedField
       (F.laurentImageSubfield p hcard π hπ) :=
     F.laurentImageSubfieldNontriviallyNormedField p hcard π hπ
@@ -1036,7 +1053,7 @@ theorem finiteDimensional_over_laurentImageSubfield
       ((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued
         F.toCompleteDVF))
     letI : NontriviallyNormedField K :=
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F.toCompleteDVF
+      mrangeRestrictNontriviallyNormedField F.toCompleteDVF
     letI : NontriviallyNormedField
         (F.laurentImageSubfield p hcard π hπ) :=
       F.laurentImageSubfieldNontriviallyNormedField p hcard π hπ
@@ -1050,7 +1067,7 @@ theorem finiteDimensional_over_laurentImageSubfield
     ((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued
     F.toCompleteDVF))
   let : NontriviallyNormedField K :=
-    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F.toCompleteDVF
+    mrangeRestrictNontriviallyNormedField F.toCompleteDVF
   let : NontriviallyNormedField
       (F.laurentImageSubfield p hcard π hπ) :=
     F.laurentImageSubfieldNontriviallyNormedField p hcard π hπ
@@ -1120,7 +1137,7 @@ theorem finiteDimensional_over_laurentSeries
     ((_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued
     F.toCompleteDVF))
   let : NontriviallyNormedField K :=
-    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F.toCompleteDVF
+    mrangeRestrictNontriviallyNormedField F.toCompleteDVF
   let : NontriviallyNormedField
       (F.laurentImageSubfield p hcard π hπ) :=
     F.laurentImageSubfieldNontriviallyNormedField p hcard π hπ

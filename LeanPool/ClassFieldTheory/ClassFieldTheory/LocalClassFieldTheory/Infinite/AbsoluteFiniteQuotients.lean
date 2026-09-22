@@ -149,7 +149,7 @@ isomorphism theorem and infinite Galois correspondence. -/
 noncomputable def absoluteFiniteQuotientMulEquiv
     (N : OpenNormalSubgroup (localAbsoluteAbelianProfinite K)) :
     localAbsoluteAbelianProfinite K ⧸ N.toSubgroup ≃*
-      Gal(absoluteFiniteQuotientField K N / K) :=
+      Gal(absoluteFiniteQuotientField K N/K) :=
   (QuotientGroup.quotientMulEquivOfEq
       (finiteQuotientPreimage_map_eq K N).symm).trans
     ((QuotientGroup.quotientQuotientEquivQuotient
@@ -163,7 +163,7 @@ noncomputable def absoluteFiniteQuotientMulEquiv
 noncomputable def absoluteFiniteQuotientEquiv
     (N : OpenNormalSubgroup (localAbsoluteAbelianProfinite K)) :
     localAbsoluteAbelianProfinite K ⧸ N.toSubgroup ≃ₜ*
-      Gal(absoluteFiniteQuotientField K N / K) := by
+      Gal(absoluteFiniteQuotientField K N/K) := by
   letI : DiscreteTopology
       (localAbsoluteAbelianProfinite K ⧸ N.toSubgroup) :=
     QuotientGroup.discreteTopology N.isOpen'

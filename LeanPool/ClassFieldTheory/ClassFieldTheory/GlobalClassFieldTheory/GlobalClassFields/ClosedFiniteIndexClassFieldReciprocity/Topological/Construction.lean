@@ -43,7 +43,7 @@ noncomputable def
     (hclosed : IsClosed (H : Set (IdeleClassGroup K)))
     [H.FiniteIndex] :
     Gal((closedFiniteIndexClassField
-          (K := K) H hclosed) / K) ≃ₜ*
+          (K := K) H hclosed)/K) ≃ₜ*
       IdeleClassGroup K ⧸ H :=
   (globalReciprocityContinuousMulEquiv K
     (closedFiniteIndexClassField

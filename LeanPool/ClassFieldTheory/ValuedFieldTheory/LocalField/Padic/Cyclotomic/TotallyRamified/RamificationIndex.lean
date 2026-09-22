@@ -13,6 +13,11 @@ This file maps the Eisenstein unit relation into the target valuation ring and p
   ℚ_[p]]`, together with the uniformizer statement.
 -/
 
+open _root_.LocalFieldTheory.DiscreteValuationField.ValuedExtension renaming
+  target_maximalIdeal_pow_not_le_pow_succ →
+    target_maximalIdeal_pow_not_le_pow_succ
+
+
 noncomputable section
 
 namespace AlgebraicNumberTheory
@@ -164,7 +169,7 @@ theorem padicCyclotomicTotallyRamified_uniformizer_and_ramificationIndex_eq_degr
       base.maximalIdeal ≤ target.maximalIdeal ^ (d + 1) := by
     rw [hmapT]
     exact
-      LocalFieldTheory.DiscreteValuationField.ValuedExtension.target_maximalIdeal_pow_not_le_pow_succ
+      target_maximalIdeal_pow_not_le_pow_succ
         target hπ d
   have he :
       ValuedExtension.ramificationIndex

@@ -33,16 +33,16 @@ theorem ambientEmbeddedAbsoluteQuotientFinite
         (AlgHom.fieldRange i)
     Finite
       ((baseField
-        Gal(SeparableClosure K / K)).toSubgroup ⧸
+        Gal(SeparableClosure K/K)).toSubgroup ⧸
         extensionSubgroup
-          (baseField Gal(SeparableClosure K / K))
+          (baseField Gal(SeparableClosure K/K))
           H₀ (le_baseField H₀)) := by
   let H₀ :=
     closedFixingSubgroup K (SeparableClosure K)
       (AlgHom.fieldRange i)
   let : FiniteDimensional K (AlgHom.fieldRange i) :=
     (AlgEquiv.ofInjectiveField i).toLinearEquiv.finiteDimensional
-  let G := Gal(SeparableClosure K / K)
+  let G := Gal(SeparableClosure K/K)
   let Bases := { B : ClosedSubgroup G //
     H₀.toSubgroup ≤ B.toSubgroup }
   let Bfix : Bases :=
@@ -160,7 +160,7 @@ noncomputable def intrinsicBaseEquivAmbientFixedField
     (separableClosure F (AlgebraicClosure F)).algebra
   intro e
   let φ :
-      Gal(SeparableClosure F / F) ≃*
+      Gal(SeparableClosure F/F) ≃*
         H.field.toSubgroup :=
     (AlgEquiv.autCongr e).trans
       (abstractSubgroupEquivGaloisGroup
@@ -211,13 +211,13 @@ noncomputable def
       (AlgHom.fieldRange i)
   letI hHabsolute : Finite
       ((baseField
-        Gal(SeparableClosure K / K)).toSubgroup ⧸
+        Gal(SeparableClosure K/K)).toSubgroup ⧸
         extensionSubgroup
-          (baseField Gal(SeparableClosure K / K))
+          (baseField Gal(SeparableClosure K/K))
           H₀ (le_baseField H₀)) := by
     exact ambientEmbeddedAbsoluteQuotientFinite K F i
   let H : FiniteAbstractField
-      Gal(SeparableClosure K / K) :=
+      Gal(SeparableClosure K/K) :=
     ⟨H₀, hHabsolute⟩
   let F₀ :=
     abstractFixedField K (SeparableClosure K) H₀
@@ -254,8 +254,8 @@ noncomputable def
     rw [e₀.apply_symm_apply, e.commutes, e₀.commutes]
     rfl
   let theta :
-      Gal(SeparableClosure F / F) ≃*
-        Gal(SeparableClosure F₀ / F₀) := {
+      Gal(SeparableClosure F/F) ≃*
+        Gal(SeparableClosure F₀/F₀) := {
     toFun := fun sigma =>
       { c.symm.trans (sigma.toRingEquiv.trans c) with
         commutes' := fun x => by
@@ -322,13 +322,13 @@ theorem
           (AlgHom.fieldRange i)
       letI hHabsolute : Finite
           ((baseField
-            Gal(SeparableClosure K / K)).toSubgroup ⧸
+            Gal(SeparableClosure K/K)).toSubgroup ⧸
             extensionSubgroup
-              (baseField Gal(SeparableClosure K / K))
+              (baseField Gal(SeparableClosure K/K))
               H₀ (le_baseField H₀)) := by
         exact ambientEmbeddedAbsoluteQuotientFinite K F i
       let _H : FiniteAbstractField
-          Gal(SeparableClosure K / K) :=
+          Gal(SeparableClosure K/K) :=
         ⟨H₀, hHabsolute⟩
       let F₀ :=
         abstractFixedField K (SeparableClosure K) H₀
@@ -339,7 +339,7 @@ theorem
       let phi : F ≃+* F₀ :=
         ((i.equivFieldRange).trans
           (IntermediateField.equivOfEq hfixed.symm)).toRingEquiv
-      let rho : Gal(SeparableClosure K / F₀) :=
+      let rho : Gal(SeparableClosure K/F₀) :=
         { e.symm.toRingEquiv.trans
             (tau.1.toRingEquiv.trans e.toRingEquiv) with
           commutes' := fun x => by
@@ -380,13 +380,13 @@ theorem
       (AlgHom.fieldRange i)
   let hHabsolute : Finite
       ((baseField
-        Gal(SeparableClosure K / K)).toSubgroup ⧸
+        Gal(SeparableClosure K/K)).toSubgroup ⧸
         extensionSubgroup
-          (baseField Gal(SeparableClosure K / K))
+          (baseField Gal(SeparableClosure K/K))
           H₀ (le_baseField H₀)) := by
     exact ambientEmbeddedAbsoluteQuotientFinite K F i
   let H : FiniteAbstractField
-      Gal(SeparableClosure K / K) :=
+      Gal(SeparableClosure K/K) :=
     ⟨H₀, hHabsolute⟩
   let F₀ :=
     abstractFixedField K (SeparableClosure K) H₀
@@ -422,7 +422,7 @@ theorem
     apply e₀.injective
     rw [e₀.apply_symm_apply, e.commutes, e₀.commutes]
     rfl
-  let thetaTau : Gal(SeparableClosure F₀ / F₀) :=
+  let thetaTau : Gal(SeparableClosure F₀/F₀) :=
     { c.symm.trans (tau.1.toRingEquiv.trans c) with
       commutes' := fun x => by
         change c (tau.1 (c.symm
@@ -435,7 +435,7 @@ theorem
           apply c.injective
           rw [c.apply_symm_apply, hc, phi.apply_symm_apply]
         rw [hpre, tau.1.commutes, hc, phi.apply_symm_apply] }
-  let rho : Gal(SeparableClosure K / F₀) :=
+  let rho : Gal(SeparableClosure K/F₀) :=
     { e.symm.toRingEquiv.trans
         (tau.1.toRingEquiv.trans e.toRingEquiv) with
       commutes' := fun x => by
@@ -517,13 +517,13 @@ theorem
       (AlgHom.fieldRange i)
   let hHabsolute : Finite
       ((baseField
-        Gal(SeparableClosure K / K)).toSubgroup ⧸
+        Gal(SeparableClosure K/K)).toSubgroup ⧸
         extensionSubgroup
-          (baseField Gal(SeparableClosure K / K))
+          (baseField Gal(SeparableClosure K/K))
           H₀ (le_baseField H₀)) := by
     exact ambientEmbeddedAbsoluteQuotientFinite K F i
   let H : FiniteAbstractField
-      Gal(SeparableClosure K / K) :=
+      Gal(SeparableClosure K/K) :=
     ⟨H₀, hHabsolute⟩
   let F₀ :=
     abstractFixedField K (SeparableClosure K) H₀
@@ -534,7 +534,7 @@ theorem
   let phi : F ≃+* F₀ :=
     ((i.equivFieldRange).trans
       (IntermediateField.equivOfEq hfixed.symm)).toRingEquiv
-  let rho : Gal(SeparableClosure K / F₀) :=
+  let rho : Gal(SeparableClosure K/F₀) :=
     { e.symm.toRingEquiv.trans
         (tau.1.toRingEquiv.trans e.toRingEquiv) with
       commutes' := fun y => by
@@ -602,13 +602,13 @@ theorem
           (AlgHom.fieldRange i)
       letI hHabsolute : Finite
           ((baseField
-            Gal(SeparableClosure K / K)).toSubgroup ⧸
+            Gal(SeparableClosure K/K)).toSubgroup ⧸
             extensionSubgroup
-              (baseField Gal(SeparableClosure K / K))
+              (baseField Gal(SeparableClosure K/K))
               H₀ (le_baseField H₀)) := by
         exact ambientEmbeddedAbsoluteQuotientFinite K F i
       let H : FiniteAbstractField
-          Gal(SeparableClosure K / K) :=
+          Gal(SeparableClosure K/K) :=
         ⟨H₀, hHabsolute⟩
       (localResidueDatum F).normalizedDegree
           ((intrinsicFiniteAbstractBase F).toFiniteResidueAbstractField
@@ -625,13 +625,13 @@ theorem
       (AlgHom.fieldRange i)
   let hHabsolute : Finite
       ((baseField
-        Gal(SeparableClosure K / K)).toSubgroup ⧸
+        Gal(SeparableClosure K/K)).toSubgroup ⧸
         extensionSubgroup
-          (baseField Gal(SeparableClosure K / K))
+          (baseField Gal(SeparableClosure K/K))
           H₀ (le_baseField H₀)) := by
     exact ambientEmbeddedAbsoluteQuotientFinite K F i
   let H : FiniteAbstractField
-      Gal(SeparableClosure K / K) :=
+      Gal(SeparableClosure K/K) :=
     ⟨H₀, hHabsolute⟩
   rw [intrinsicBase_normalizedDegree_eq_localResidueDegree F tau]
   have hdegree :=

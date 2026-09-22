@@ -106,7 +106,6 @@ omit [NumberField L] in
 /-- A Galois-fixed relative idele class has a Galois-fixed idele
 representative. This is the Noether–Hilbert-90 step in idele-class descent. -/
 theorem exists_fixed_representative_of_fixed_class
-
     (a : RelativeIdeleGroup K L)
     (ha :
       ∀ σ : L ≃ₐ[K] L,

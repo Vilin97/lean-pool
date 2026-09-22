@@ -57,11 +57,11 @@ theorem rationalIdeleClassRepresentation_satisfiesClassFieldAxiom :
   let : IsGalois F E :=
     abstractRelativeFixedField_isGalois
       ℚ (SeparableClosure ℚ) K L hLK hnormal
-  let eQ : Q ≃* Gal(E / F) :=
+  let eQ : Q ≃* Gal(E/F) :=
     abstractExtensionQuotientEquivGaloisGroup
       ℚ (SeparableClosure ℚ) K L hLK hnormal
-  let g' : Gal(E / F) := eQ g
-  have hg' : ∀ σ : Gal(E / F),
+  let g' : Gal(E/F) := eQ g
+  have hg' : ∀ σ : Gal(E/F),
       σ ∈ Subgroup.zpowers g' :=
     map_cyclicGenerator eQ g hg
   let :=
@@ -72,9 +72,9 @@ theorem rationalIdeleClassRepresentation_satisfiesClassFieldAxiom :
   let : IsCyclic Q :=
     CyclicCohomology.isCyclic_of_generator g hg
   let : CommGroup Q := IsCyclic.commGroup
-  let : IsCyclic (Gal(E / F)) :=
+  let : IsCyclic (Gal(E/F)) :=
     CyclicCohomology.isCyclic_of_generator g' hg'
-  let : CommGroup (Gal(E / F)) := IsCyclic.commGroup
+  let : CommGroup (Gal(E/F)) := IsCyclic.commGroup
   let M :=
     extensionFixedRepresentation rationalIdeleClassRepresentation
       K L hLK hnormal

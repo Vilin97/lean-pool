@@ -23,6 +23,19 @@ closure permits descent by restriction, and the resulting algebra
 equivalence transports both filtrations back to the original extension.
 -/
 
+open _root_.RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration renaming
+  herbrandFunction_one_pos_le_one →
+    herbrandFunction_one_pos_le_one
+
+open _root_.RamificationTheory.HilbertRamification.Higher renaming
+  upperRamificationGroupOfUniqueExtension_herbrandFunction →
+    upperRamificationGroupOfUniqueExtension_herbrandFunction
+
+open _root_.RamificationTheory.HilbertRamification.ValuationSubring renaming
+  ramificationGroup_eq_bot_iff_residueChar_not_dvd_inertia_card →
+    ramificationGroup_eq_bot_iff_residueChar_not_dvd_inertia_card
+
+
 noncomputable section
 
 open scoped ValuativeRel
@@ -93,7 +106,7 @@ theorem finiteAbelian_filteredLocalReciprocity
       (localUpperRamificationGroup K E)
       (localUpperRamificationGroup K F)
       hupper hcover t ht
-  let q : Gal(E / K) ≃* Gal(L / K) :=
+  let q : Gal(E/K) ≃* Gal(L/K) :=
     AlgEquiv.autCongr e.symm
   have hArtin :
       Subgroup.map q.toMonoidHom
@@ -145,7 +158,7 @@ theorem finiteAbelian_localUpperRamificationGroup_one_eq_localLowerRamificationG
       (RamificationTheory.HilbertRamification.Higher.lowerRamificationFiltrationOfUniqueExtension
         (base := base) (target := target) huniq)) 1 ≤ 1
     exact
-      RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction_one_pos_le_one _
+      herbrandFunction_one_pos_le_one _
   have hStep (t : ℝ) (ht0 : 0 < t) (ht1 : t ≤ 1) :
       localUpperRamificationGroup K L t =
         artinPrincipalUnitGroup K L 1 := by
@@ -170,7 +183,7 @@ theorem finiteAbelian_localUpperRamificationGroup_one_eq_localLowerRamificationG
       RamificationTheory.HilbertRamification.Higher.lowerRamificationGroup
         (base := base) (target := target) huniq 1
     exact
-      RamificationTheory.HilbertRamification.Higher.upperRamificationGroupOfUniqueExtension_herbrandFunction
+      upperRamificationGroupOfUniqueExtension_herbrandFunction
       (base := base) (target := target) huniq 1
   calc
     localUpperRamificationGroup K L 1 = artinPrincipalUnitGroup K L 1 :=
@@ -246,7 +259,7 @@ theorem localConductorExponent_le_one_iff_residueChar_not_dvd_ramificationIndex
   let A := (chosenLocalExtensionCompleteDVF K L).valuation.valuationSubring
   rw [localConductorExponent_le_one_iff_hilbertRamificationGroup_eq_bot]
   exact
-    (RamificationTheory.HilbertRamification.ValuationSubring.ramificationGroup_eq_bot_iff_residueChar_not_dvd_inertia_card
+    (ramificationGroup_eq_bot_iff_residueChar_not_dvd_inertia_card
     K A p).trans (by
       rw [RamificationTheory.LocalField.chosenLocalExtension_inertia_card_eq_ramificationIndex K L])
 

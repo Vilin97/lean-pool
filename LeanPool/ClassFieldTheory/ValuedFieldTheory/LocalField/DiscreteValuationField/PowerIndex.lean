@@ -15,6 +15,39 @@ API to the unit and principal-unit decompositions of a complete discrete
 valuation field.
 -/
 
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup renaming
+  card_principalUnitSubquotient_one_eq_residue_pow_of_uniformizer →
+    card_principalUnitSubquotient_one_eq_residue_pow_of_uniformizer
+
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup renaming
+  fieldUnitDecompositionFactors →
+    fieldUnitDecompositionFactors
+
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup renaming
+  finite_principalUnitSubquotient_of_finite_residue →
+    finite_principalUnitSubquotient_of_finite_residue
+
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup renaming
+  residueRootsOfUnityEquivResidueFieldUnits →
+    residueRootsOfUnityEquivResidueFieldUnits
+
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup renaming
+  residueRootsOfUnityGroup →
+    residueRootsOfUnityGroup
+
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup renaming
+  toPrincipalUnitFiltration →
+    toPrincipalUnitFiltration
+
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup renaming
+  valuationSubringUnitsEquivRootsTimesPrincipalUnits →
+    valuationSubringUnitsEquivRootsTimesPrincipalUnits
+
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup renaming
+  fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF →
+    fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
+
+
 noncomputable section
 
 open ValuationTheory.DiscreteValuationField
@@ -34,9 +67,9 @@ unit group of the finite residue field. -/
 noncomputable instance finite_residueRootsOfUnityGroup
     (F : CompleteDVF.{u, v} K) [Finite F.residueField] :
     Finite
-      (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.residueRootsOfUnityGroup F) :=
+      (residueRootsOfUnityGroup F) :=
   Finite.of_equiv F.residueFieldˣ
-    (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.residueRootsOfUnityEquivResidueFieldUnits
+    (residueRootsOfUnityEquivResidueFieldUnits
       F).symm.toEquiv
 
 /-- A nonzero power has only finitely many roots in the valuation-ring unit
@@ -81,13 +114,13 @@ noncomputable instance finite_valuationSubringUnits_nthPowerQuotient
       F.valuationSubringˣ).range) := by
   let e :
       F.valuationSubringˣ ≃*
-        LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.residueRootsOfUnityGroup F ×
+        residueRootsOfUnityGroup F ×
           (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) 1 :=
-    (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.valuationSubringUnitsEquivRootsTimesPrincipalUnits
+    (valuationSubringUnitsEquivRootsTimesPrincipalUnits
       F).symm
   exact LocalFieldTheory.finite_nthPowerQuotient_of_mulEquiv
     F.valuationSubringˣ
-    (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.residueRootsOfUnityGroup F ×
+    (residueRootsOfUnityGroup F ×
       (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) 1)
     n e
 
@@ -107,15 +140,15 @@ theorem finite_fieldUnits_nthPowerQuotient_of_finite_principalUnits
           1)).range)] :
     Finite (Kˣ ⧸ (powMonoidHom n : Kˣ →* Kˣ).range) := by
   let eField :
-      LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.fieldUnitDecompositionFactors F ≃*
+      fieldUnitDecompositionFactors F ≃*
         Kˣ :=
-    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
+    fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
       F hπ
   let eUnits :
-      LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.residueRootsOfUnityGroup F ×
+      residueRootsOfUnityGroup F ×
           (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) 1 ≃*
         F.valuationSubringˣ :=
-    LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.valuationSubringUnitsEquivRootsTimesPrincipalUnits
+    valuationSubringUnitsEquivRootsTimesPrincipalUnits
       F
   let e :
       Kˣ ≃* F.valuationSubringˣ × Multiplicative ℤ :=
@@ -138,15 +171,15 @@ theorem card_fieldUnits_nthPowerQuotient_eq_mul_unit_nthPowerQuotient
       n * Nat.card (F.valuationSubringˣ ⧸
         (powMonoidHom n : F.valuationSubringˣ →* F.valuationSubringˣ).range) := by
   let eField :
-      LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.fieldUnitDecompositionFactors F ≃*
+      fieldUnitDecompositionFactors F ≃*
         Kˣ :=
-    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
+    fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
       F hπ
   let eUnits :
-      LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.residueRootsOfUnityGroup F ×
+      residueRootsOfUnityGroup F ×
           (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) 1 ≃*
         F.valuationSubringˣ :=
-    LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.valuationSubringUnitsEquivRootsTimesPrincipalUnits
+    valuationSubringUnitsEquivRootsTimesPrincipalUnits
       F
   let e :
       Kˣ ≃* F.valuationSubringˣ × Multiplicative ℤ :=
@@ -170,9 +203,9 @@ theorem card_unit_nthPowerQuotient_eq_mul_roots_principalUnit_nthPowerQuotient
     Nat.card (F.valuationSubringˣ ⧸
         (powMonoidHom n : F.valuationSubringˣ →* F.valuationSubringˣ).range) =
       Nat.card
-          (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.residueRootsOfUnityGroup F ⧸
+          (residueRootsOfUnityGroup F ⧸
             (powMonoidHom n :
-              (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.residueRootsOfUnityGroup F) →* (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.residueRootsOfUnityGroup F)).range) *
+              (residueRootsOfUnityGroup F) →* (residueRootsOfUnityGroup F)).range) *
         Nat.card
           ((LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) 1 ⧸
             (powMonoidHom n :
@@ -182,14 +215,14 @@ theorem card_unit_nthPowerQuotient_eq_mul_roots_principalUnit_nthPowerQuotient
               1)).range) := by
   let e :
       F.valuationSubringˣ ≃*
-        LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.residueRootsOfUnityGroup F ×
+        residueRootsOfUnityGroup F ×
           (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) 1 :=
-    (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.valuationSubringUnitsEquivRootsTimesPrincipalUnits
+    (valuationSubringUnitsEquivRootsTimesPrincipalUnits
       F).symm
   exact
     LocalFieldTheory.card_nthPowerQuotient_eq_mul_of_mulEquiv_prod
       F.valuationSubringˣ
-      (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.residueRootsOfUnityGroup F)
+      (residueRootsOfUnityGroup F)
       ((LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) 1) n e
 
 /-- On the finite Teichmuller root factor, the `n`-th-power quotient has the
@@ -197,25 +230,25 @@ same size as the subgroup killed by `n`. -/
 theorem card_residueRoots_nthPowerQuotient_eq_nthPowerKernel
     (F : CompleteDVF.{u, v} K) [Finite F.residueField] (n : ℕ) :
     Nat.card
-        (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.residueRootsOfUnityGroup F ⧸
+        (residueRootsOfUnityGroup F ⧸
           (powMonoidHom n :
-            (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.residueRootsOfUnityGroup F) →* (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.residueRootsOfUnityGroup F)).range) =
+            (residueRootsOfUnityGroup F) →* (residueRootsOfUnityGroup F)).range) =
       Nat.card
         ((powMonoidHom n :
-          (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.residueRootsOfUnityGroup F) →* (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.residueRootsOfUnityGroup F)).ker) := by
+          (residueRootsOfUnityGroup F) →* (residueRootsOfUnityGroup F)).ker) := by
   classical
   let e :
-      LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.residueRootsOfUnityGroup F ≃*
+      residueRootsOfUnityGroup F ≃*
         F.residueFieldˣ :=
-    LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.residueRootsOfUnityEquivResidueFieldUnits
+    residueRootsOfUnityEquivResidueFieldUnits
       F
   have :
       Finite
-        (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.residueRootsOfUnityGroup F) :=
+        (residueRootsOfUnityGroup F) :=
     Finite.of_equiv F.residueFieldˣ e.symm.toEquiv
   exact
     LocalFieldTheory.card_nthPowerQuotient_eq_nthPowerKernel
-      (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.residueRootsOfUnityGroup F) n
+      (residueRootsOfUnityGroup F) n
 
 /-- The `n`-torsion kernel of the full unit group splits into the finite
 Teichmuller root factor and the first principal-unit factor. -/
@@ -225,7 +258,7 @@ theorem card_unit_nthPowerKernel_eq_mul_roots_principalUnit_nthPowerKernel
         ((powMonoidHom n : F.valuationSubringˣ →* F.valuationSubringˣ).ker) =
       Nat.card
           ((powMonoidHom n :
-            (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.residueRootsOfUnityGroup F) →* (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.residueRootsOfUnityGroup F)).ker) *
+            (residueRootsOfUnityGroup F) →* (residueRootsOfUnityGroup F)).ker) *
         Nat.card
           ((powMonoidHom n :
             ((LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) 1)
@@ -233,14 +266,14 @@ theorem card_unit_nthPowerKernel_eq_mul_roots_principalUnit_nthPowerKernel
             1)).ker) := by
   let e :
       F.valuationSubringˣ ≃*
-        LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.residueRootsOfUnityGroup F ×
+        residueRootsOfUnityGroup F ×
           (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) 1 :=
-    (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.valuationSubringUnitsEquivRootsTimesPrincipalUnits
+    (valuationSubringUnitsEquivRootsTimesPrincipalUnits
       F).symm
   exact
     LocalFieldTheory.card_nthPowerKernel_eq_mul_of_mulEquiv_prod
       F.valuationSubringˣ
-      (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.residueRootsOfUnityGroup F)
+      (residueRootsOfUnityGroup F)
       ((LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) 1) n e
 
 /-- For nonzero `n`, the field-unit `n`-torsion kernel is the unit
@@ -253,15 +286,15 @@ theorem card_fieldUnits_nthPowerKernel_eq_unit_nthPowerKernel
     Nat.card ((powMonoidHom n : Kˣ →* Kˣ).ker) =
       Nat.card ((powMonoidHom n : F.valuationSubringˣ →* F.valuationSubringˣ).ker) := by
   let eField :
-      LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.fieldUnitDecompositionFactors F ≃*
+      fieldUnitDecompositionFactors F ≃*
         Kˣ :=
-    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
+    fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
       F hπ
   let eUnits :
-      LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.residueRootsOfUnityGroup F ×
+      residueRootsOfUnityGroup F ×
           (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) 1 ≃*
         F.valuationSubringˣ :=
-    LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.valuationSubringUnitsEquivRootsTimesPrincipalUnits
+    valuationSubringUnitsEquivRootsTimesPrincipalUnits
       F
   let e :
       Kˣ ≃* F.valuationSubringˣ × Multiplicative ℤ :=
@@ -282,7 +315,7 @@ theorem card_fieldUnits_nthPowerKernel_eq_mul_roots_principalUnit_nthPowerKernel
     Nat.card ((powMonoidHom n : Kˣ →* Kˣ).ker) =
       Nat.card
           ((powMonoidHom n :
-            (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.residueRootsOfUnityGroup F) →* (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.residueRootsOfUnityGroup F)).ker) *
+            (residueRootsOfUnityGroup F) →* (residueRootsOfUnityGroup F)).ker) *
         Nat.card
           ((powMonoidHom n :
             ((LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) 1)
@@ -308,7 +341,7 @@ theorem card_unit_nthPowerQuotient_eq_mul_rootsKernel_principalUnit_nthPowerQuot
         (powMonoidHom n : F.valuationSubringˣ →* F.valuationSubringˣ).range) =
       Nat.card
           ((powMonoidHom n :
-            (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.residueRootsOfUnityGroup F) →* (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.residueRootsOfUnityGroup F)).ker) *
+            (residueRootsOfUnityGroup F) →* (residueRootsOfUnityGroup F)).ker) *
         Nat.card
           ((LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) 1 ⧸
             (powMonoidHom n :
@@ -471,7 +504,7 @@ theorem card_fieldUnits_nthPowerQuotient_eq_mul_rootsKernel_principalUnit_nthPow
       n *
         (Nat.card
             ((powMonoidHom n :
-              (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.residueRootsOfUnityGroup F) →* (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.residueRootsOfUnityGroup F)).ker) *
+              (residueRootsOfUnityGroup F) →* (residueRootsOfUnityGroup F)).ker) *
           Nat.card
             ((LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) 1 ⧸
               (powMonoidHom n :
@@ -490,7 +523,7 @@ if the `n`-th powers in `U^1` are exactly `U^m`, then the principal-unit
 theorem card_principalUnit_nthPowerQuotient_eq_subquotient_of_image_eq
     (F : CompleteDVF.{u, v} K) (n m : ℕ)
     [Finite
-      ((LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.toPrincipalUnitFiltration F).principalUnitSubquotient
+      ((toPrincipalUnitFiltration F).principalUnitSubquotient
         1 m)]
     (hpow :
       (powMonoidHom n :
@@ -507,10 +540,10 @@ theorem card_principalUnit_nthPowerQuotient_eq_subquotient_of_image_eq
             →* ((LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F)
             1)).range) =
     Nat.card
-        ((LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.toPrincipalUnitFiltration F).principalUnitSubquotient
+        ((toPrincipalUnitFiltration F).principalUnitSubquotient
           1 m) := by
   let U :=
-    LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.toPrincipalUnitFiltration
+    toPrincipalUnitFiltration
       F
   let : Finite
       (U.principalUnitSubgroup 1 ⧸
@@ -564,14 +597,14 @@ theorem card_principalUnit_nthPowerQuotient_eq_residue_pow_of_image_eq
             1)).range) =
       Nat.card F.residueField ^ (m - 1) := by
   let : Finite
-      ((LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.toPrincipalUnitFiltration F).principalUnitSubquotient
+      ((toPrincipalUnitFiltration F).principalUnitSubquotient
         1 m) :=
-    LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.finite_principalUnitSubquotient_of_finite_residue
+    finite_principalUnitSubquotient_of_finite_residue
       F 1 m
   rw [card_principalUnit_nthPowerQuotient_eq_subquotient_of_image_eq
     (F := F) n m hpow]
   exact
-    LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.card_principalUnitSubquotient_one_eq_residue_pow_of_uniformizer
+    card_principalUnitSubquotient_one_eq_residue_pow_of_uniformizer
       F hπ hm
 
 /-- The field-unit structure theorem logarithmic transport, principal-unit form: any
@@ -637,7 +670,6 @@ theorem card_principalUnit_nthPowerQuotient_eq_additive_quotient_of_logEquiv_nsm
     (e : (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) 1 ≃*
       Multiplicative A)
     (B : AddSubgroup A)
-
     (hB : LocalFieldTheory.nsmulAddSubgroup A n = B) :
     Nat.card
         ((LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) 1 ⧸

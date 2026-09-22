@@ -34,8 +34,7 @@ theorem equalCharacteristicLubinTate_galoisAction_eq_bracket_unique
     (F : LocalField.{u, v} K)
     [CharP K F.residueCharacteristic]
     (n : ℕ)
-    (σ : Gal((equalCharacteristicLubinTateLevelField F n) /
-      F.residueField⸨X⸩)) :
+    (σ : Gal((equalCharacteristicLubinTateLevelField F n)/F.residueField⸨X⸩)) :
     ∃! a : equalCharacteristicLubinTateUnitParameter F n,
       σ (equalCharacteristicLubinTateLevelPowerBasis F n).gen =
         equalCharacteristicLubinTateLevelBracket F n (n + 1)

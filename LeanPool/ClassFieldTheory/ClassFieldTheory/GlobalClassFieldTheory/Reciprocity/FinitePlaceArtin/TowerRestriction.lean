@@ -257,6 +257,25 @@ theorem finitePlaceRestrictedLocalizedCompletionAlgHom_toAlgebraicLocalization
 
 omit [NumberField K] [FiniteDimensional K L] in
 open scoped Classical in
+/-- Compatible embeddings descend a commuting square of actions along an injective map. -/
+private theorem action_commutes_of_embedding_square
+    {E L EL LL : Type*} [Field E] [Field L] [Field EL] [Field LL]
+    (i : E →+* L) (f : E →+* EL) (g : L →+* LL) (j : EL →+* LL)
+    (sigmaE : E → E) (sigmaL : L → L) (tauE : EL → EL) (tauL : LL → LL)
+    (hdiagram : ∀ z, j (f z) = g (i z))
+    (htau : ∀ z, tauL (j z) = j (tauE z))
+    (hE : ∀ z, tauE (f z) = f (sigmaE z))
+    (hL : ∀ z, tauL (g z) = g (sigmaL z)) (z : E) :
+    i (sigmaE z) = sigmaL (i z) := by
+  apply g.injective
+  calc
+    g (i (sigmaE z)) = j (f (sigmaE z)) := (hdiagram _).symm
+    _ = j (tauE (f z)) := congrArg j (hE _).symm
+    _ = tauL (j (f z)) := (htau _).symm
+    _ = tauL (g (i z)) := congrArg tauL (hdiagram _)
+    _ = g (sigmaL (i z)) := hL _
+
+omit [NumberField K] [FiniteDimensional K L] in
 /-- A compatible embedding of algebraic localizations carries
 restriction of decomposition-group elements to restriction of the
 corresponding local automorphisms. -/
@@ -382,72 +401,23 @@ theorem decompositionGroupEquivAlgebraicLocalizationAut_restrict_of_commutes
   apply AlgEquiv.ext
   intro z
   apply (algebraMap E L).injective
-  apply
-    (AbsoluteValue.toAlgebraicLocalization
-      vK wL.1 wL.2).injective
-  let u : EL :=
-    AbsoluteValue.toAlgebraicLocalization
-      vK wE.1 wE.2 z
-  have hcommutes :
-      tauL (localizationEmbedding u) =
-        localizationEmbedding
-          ((AlgEquiv.restrictNormalHom EL tauL) u) := by
-    change
-      tauL (algebraMap EL LL u) =
-        algebraMap EL LL
-          ((AlgEquiv.restrictNormalHom EL tauL) u)
-    exact
-      (AlgEquiv.restrictNormal_commutes
-        tauL EL u).symm
-  calc
-    AbsoluteValue.toAlgebraicLocalization vK wL.1 wL.2
-        (algebraMap E L
-          ((AlgEquiv.restrictNormalHom E
-            (rhoL.1 : L ≃ₐ[K] L)) z)) =
-      AbsoluteValue.toAlgebraicLocalization vK wL.1 wL.2
-        ((rhoL.1 : L ≃ₐ[K] L)
-          (algebraMap E L z)) := by
-            exact congrArg
-              (AbsoluteValue.toAlgebraicLocalization
-                vK wL.1 wL.2)
-              (AlgEquiv.restrictNormal_commutes
-                (rhoL.1 : L ≃ₐ[K] L) E z)
-    _ = eDL rhoL
-        (AbsoluteValue.toAlgebraicLocalization
-          vK wL.1 wL.2 (algebraMap E L z)) := by
-            rw [localizationRamificationGroups_decompositionGroupEquiv_toLocalization]
-    _ = tauL
-        (AbsoluteValue.toAlgebraicLocalization
-          vK wL.1 wL.2 (algebraMap E L z)) := by
-            rw [eDL.apply_symm_apply]
-    _ = tauL
-        (localizationEmbedding
-          (AbsoluteValue.toAlgebraicLocalization
-            vK wE.1 wE.2 z)) := by
-            rw [hlocalization]
-    _ = localizationEmbedding
-        ((AlgEquiv.restrictNormalHom EL tauL)
-          (AbsoluteValue.toAlgebraicLocalization
-            vK wE.1 wE.2 z)) := by
-            exact hcommutes
-    _ = localizationEmbedding
-        (tauE
-          (AbsoluteValue.toAlgebraicLocalization
-            vK wE.1 wE.2 z)) := by
-            rfl
-    _ = localizationEmbedding
-        (eDE rhoE
-          (AbsoluteValue.toAlgebraicLocalization
-            vK wE.1 wE.2 z)) := by
-            rw [eDE.apply_symm_apply]
-    _ = localizationEmbedding
-        (AbsoluteValue.toAlgebraicLocalization vK wE.1 wE.2
-          ((rhoE.1 : E ≃ₐ[K] E) z)) := by
-            rw [localizationRamificationGroups_decompositionGroupEquiv_toLocalization]
-    _ = AbsoluteValue.toAlgebraicLocalization vK wL.1 wL.2
-        (algebraMap E L
-          ((rhoE.1 : E ≃ₐ[K] E) z)) := by
-            rw [hlocalization]
+  refine (AlgEquiv.restrictNormal_commutes (rhoL.1 : L ≃ₐ[K] L) E z).trans ?_
+  symm
+  apply action_commutes_of_embedding_square
+    (algebraMap E L)
+    (AbsoluteValue.toAlgebraicLocalization vK wE.1 wE.2)
+    (AbsoluteValue.toAlgebraicLocalization vK wL.1 wL.2)
+    localizationEmbedding.toRingHom rhoE.1 rhoL.1 tauE tauL hlocalization
+  · intro u
+    exact (AlgEquiv.restrictNormal_commutes tauL EL u).symm
+  · intro u
+    change tauE _ = _
+    rw [← eDE.apply_symm_apply tauE]
+    exact localizationRamificationGroups_decompositionGroupEquiv_toLocalization vK hvK wE _ _
+  · intro u
+    change tauL _ = _
+    rw [← eDL.apply_symm_apply tauL]
+    exact localizationRamificationGroups_decompositionGroupEquiv_toLocalization vK hvK wL _ _
 
 open scoped Classical in
 private noncomputable def finitePlaceLocalRestrictionMonoidHom

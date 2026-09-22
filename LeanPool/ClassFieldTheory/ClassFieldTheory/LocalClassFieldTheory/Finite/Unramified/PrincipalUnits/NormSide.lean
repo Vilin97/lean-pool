@@ -43,7 +43,7 @@ theorem integerUnitsMap_normIntegerUnits_eq_galoisGroup_prod_of_isIntegralClosur
     [IsIntegralClosure 𝒪[L] 𝒪[K] L] [LocalFieldTheory.ValuativeExtension K L]
     (u : 𝒪[L]ˣ) :
     integerUnitsMapOfValuationExtension K L (normIntegerUnits K L u) =
-      Finset.univ.prod (fun σ : Gal(L / K) =>
+      Finset.univ.prod (fun σ : Gal(L/K) =>
         Units.mapEquiv
           (galoisGroupIntegerRingEquivOfIsIntegralClosure K L σ).toMulEquiv u) := by
   ext
@@ -53,7 +53,7 @@ theorem integerUnitsMap_normIntegerUnits_eq_galoisGroup_prod_of_isIntegralClosur
   simp only [mapBaseUnitsToExtensionUnits_apply_coe, normUnits_apply_coe,
     integerUnitsToFieldUnits_apply] at hfield'
   change (algebraMap K L (((normIntegerUnits K L u : 𝒪[K]ˣ) : 𝒪[K]) : K)) =
-      (((Finset.univ.prod (fun σ : Gal(L / K) =>
+      (((Finset.univ.prod (fun σ : Gal(L/K) =>
         Units.mapEquiv
           (galoisGroupIntegerRingEquivOfIsIntegralClosure K L σ).toMulEquiv u) : 𝒪[L]ˣ) :
           𝒪[L]) : L)
@@ -69,12 +69,12 @@ theorem galoisGroup_prod_mem_principalUnits_of_isIntegralClosure (K L : Type u)
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L]
     (n : Nat) (u : 𝒪[L]ˣ) (hu : u ∈ principalUnits L n) :
-    Finset.univ.prod (fun σ : Gal(L / K) =>
+    Finset.univ.prod (fun σ : Gal(L/K) =>
       Units.mapEquiv
         (galoisGroupIntegerRingEquivOfIsIntegralClosure K L σ).toMulEquiv u) ∈
         principalUnits L n := by
   simpa using (Subgroup.prod_mem (principalUnits L n) (t := Finset.univ)
-    (f := fun σ : Gal(L / K) =>
+    (f := fun σ : Gal(L/K) =>
       Units.mapEquiv
         (galoisGroupIntegerRingEquivOfIsIntegralClosure K L σ).toMulEquiv u)
     (fun σ _ =>
@@ -144,7 +144,7 @@ theorem principalUnitsNormExtensionSideOfIsIntegralClosure_eq_galoisGroup_prod
     [IsIntegralClosure 𝒪[L] 𝒪[K] L] [LocalFieldTheory.ValuativeExtension K L]
     (n : Nat) (u : principalUnits L n) :
     principalUnitsNormExtensionSideOfIsIntegralClosure K L n u =
-      Finset.univ.prod (fun σ : Gal(L / K) =>
+      Finset.univ.prod (fun σ : Gal(L/K) =>
         galoisGroupPrincipalUnitsMapEquivOfIsIntegralClosure K L n σ u) := by
   apply Subtype.ext
   simpa [principalUnitsNormExtensionSideOfIsIntegralClosure_apply,
@@ -165,7 +165,7 @@ theorem
     (((principalUnitsNormExtensionSideOfIsIntegralClosure K L n
           (principalUnitOneAddOfMemPowSubgroup L hn (a : 𝒪[L]) a.2) :
         principalUnits L n) : 𝒪[L]ˣ) : 𝒪[L]) - 1 -
-      (Finset.univ.sum fun σ : Gal(L / K) =>
+      (Finset.univ.sum fun σ : Gal(L/K) =>
         galoisGroupIntegerRingEquivOfIsIntegralClosure K L σ (a : 𝒪[L])) ∈
         (𝓂[L] ^ (n + 1) : Ideal 𝒪[L]) := by
   classical
@@ -226,20 +226,20 @@ theorem principalUnitsSuccQuotNormExtensionSideOfIsIntegralClosure_eq_galoisGrou
     [IsIntegralClosure 𝒪[L] 𝒪[K] L] [LocalFieldTheory.ValuativeExtension K L]
     (n : Nat) (x : PrincipalUnitsSuccQuot L n) :
     principalUnitsSuccQuotNormExtensionSideOfIsIntegralClosure K L n x =
-      Finset.univ.prod (fun σ : Gal(L / K) =>
+      Finset.univ.prod (fun σ : Gal(L/K) =>
         galoisGroupPrincipalUnitsSuccQuotMapEquivOfIsIntegralClosure K L n σ x) := by
   refine QuotientGroup.induction_on x ?_
   intro u
   rw [principalUnitsSuccQuotNormExtensionSideOfIsIntegralClosure_mk,
     principalUnitsNormExtensionSideOfIsIntegralClosure_eq_galoisGroup_prod]
   change (principalUnitsSuccQuotMk L n)
-      (Finset.univ.prod (fun σ : Gal(L / K) =>
+      (Finset.univ.prod (fun σ : Gal(L/K) =>
         galoisGroupPrincipalUnitsMapEquivOfIsIntegralClosure K L n σ u)) =
-    Finset.univ.prod (fun σ : Gal(L / K) =>
+    Finset.univ.prod (fun σ : Gal(L/K) =>
       (principalUnitsSuccQuotMk L n)
         (galoisGroupPrincipalUnitsMapEquivOfIsIntegralClosure K L n σ u))
   exact map_prod (principalUnitsSuccQuotMk L n)
-    (fun σ : Gal(L / K) =>
+    (fun σ : Gal(L/K) =>
       galoisGroupPrincipalUnitsMapEquivOfIsIntegralClosure K L n σ u) Finset.univ
 
 end LocalClassFieldTheory

@@ -152,8 +152,8 @@ open scoped Classical in
 /-- Restriction from `F(μ₄)/F` to the rational fourth-root
 cyclotomic factor. -/
 noncomputable def numberFieldComplexificationRestriction :
-    Gal(numberFieldComplexification F / F) →*
-      Gal(rationalComplexificationCyclotomicField / ℚ) :=
+    Gal(numberFieldComplexification F/F) →*
+      Gal(rationalComplexificationCyclotomicField/ℚ) :=
   IntermediateField.restrictRestrictAlgEquivMapHom
     ℚ rationalComplexificationCyclotomicField F
       (numberFieldComplexification F)
@@ -263,9 +263,8 @@ private theorem numberFieldComplexificationBaseEquiv_algebraMap
 
 open scoped Classical in
 private noncomputable def numberFieldComplexificationChangeBase :
-    Gal(numberFieldComplexification F / F) →*
-      Gal(numberFieldComplexification F /
-        numberFieldComplexificationBaseLayer F) where
+    Gal(numberFieldComplexification F/F) →*
+      Gal(numberFieldComplexification F/numberFieldComplexificationBaseLayer F) where
   toFun σ :=
     { σ.toRingEquiv with
       commutes' := by
@@ -299,15 +298,13 @@ private theorem numberFieldComplexificationChangeBase_injective :
   intro x
   exact congrArg
     (fun f :
-      Gal(numberFieldComplexification F /
-        numberFieldComplexificationBaseLayer F) => f x)
+      Gal(numberFieldComplexification F/numberFieldComplexificationBaseLayer F) => f x)
     hστ
 
 open scoped Classical in
 private noncomputable def numberFieldComplexificationLayerRestriction :
-    Gal(numberFieldComplexification F /
-        numberFieldComplexificationBaseLayer F) →*
-      Gal(numberFieldComplexificationCyclotomicLayer F / ℚ) := by
+    Gal(numberFieldComplexification F/numberFieldComplexificationBaseLayer F) →*
+      Gal(numberFieldComplexificationCyclotomicLayer F/ℚ) := by
   letI : IsGalois ℚ (numberFieldComplexificationCyclotomicLayer F) :=
     numberFieldComplexificationCyclotomicLayer_isGalois F
   letI : Normal ℚ (numberFieldComplexificationCyclotomicLayer F) :=
@@ -334,8 +331,8 @@ private theorem numberFieldComplexificationLayerRestriction_injective :
 
 open scoped Classical in
 private noncomputable def numberFieldComplexificationTransportCyclotomic :
-    Gal(rationalComplexificationCyclotomicField / ℚ) →*
-      Gal(numberFieldComplexificationCyclotomicLayer F / ℚ) :=
+    Gal(rationalComplexificationCyclotomicField/ℚ) →*
+      Gal(numberFieldComplexificationCyclotomicLayer F/ℚ) :=
   (AlgEquiv.autCongr
     (numberFieldComplexificationCyclotomicEquiv F)).toMonoidHom
 

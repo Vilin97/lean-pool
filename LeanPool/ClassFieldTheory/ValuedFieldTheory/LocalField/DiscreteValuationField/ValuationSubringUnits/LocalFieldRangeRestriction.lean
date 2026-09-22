@@ -12,6 +12,15 @@ This file packages range restriction as a `LocalField` and exposes the
 properness and completeness of the resulting topology.
 -/
 
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF renaming
+  mrangeRestrict_completeSpace_of_residueField_finite →
+    mrangeRestrict_completeSpace_of_residueField_finite
+
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF renaming
+  mrangeRestrict_properSpace_of_residueField_finite →
+    mrangeRestrict_properSpace_of_residueField_finite
+
+
 noncomputable section
 
 universe u v
@@ -51,7 +60,7 @@ theorem mrangeRestrict_properSpace
         F.toCompleteDVF)
     ProperSpace K := by
   exact
-    (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_properSpace_of_residueField_finite F.toCompleteDVF)
+    (mrangeRestrict_properSpace_of_residueField_finite F.toCompleteDVF)
 
 /-- The range-restricted topology attached to a local-field package is complete. -/
 theorem mrangeRestrict_completeSpace
@@ -65,7 +74,7 @@ theorem mrangeRestrict_completeSpace
         F.toCompleteDVF)
     CompleteSpace K := by
   exact
-    (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_completeSpace_of_residueField_finite F.toCompleteDVF)
+    (mrangeRestrict_completeSpace_of_residueField_finite F.toCompleteDVF)
 
 
 end LocalField

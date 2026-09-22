@@ -133,17 +133,14 @@ private theorem primitive_separable_integral_model_on_commonTop_core
         (LubinTate.Valuations.exponentialValuationSubringAsValuationSubring wRight).valuation :=
     henselianValuation_of_algebraic_extension
       v wRight hRight hhens
-
   obtain ⟨a, F, haGen, hFfield, _hFresidueMinpoly,
       hFreduction, _haSeparable⟩ :=
     exists_primitive_lift_minpoly_of_finiteUnramifiedExtension
       v wLeft hLeft hhens hUnramified
-
   let aTop : WTop :=
     restrictedValuationRingMapOfLE w
       (show L ≤ (L ⊔ K' : IntermediateField K Ω) from le_sup_left) a
   let FRight : Polynomial WRight := F.map iRight
-
   have haGenAlg :
       Algebra.adjoin K ({(a : L)} : Set L) =
         (⊤ : Subalgebra K L) := by
@@ -156,7 +153,6 @@ private theorem primitive_separable_integral_model_on_commonTop_core
     simpa [aTop] using
       (sup_right_adjoin_left_singleton_eq_top_of_adjoin_eq_top
         (K := K) (Ω := Ω) L K' (a : L) haGenAlg)
-
   have hFRightMonic : FRight.Monic := by
     have hFmapMonic : (F.map V.subtype).Monic := by
       rw [hFfield]
@@ -164,7 +160,6 @@ private theorem primitive_separable_integral_model_on_commonTop_core
     have hFMonic : F.Monic :=
       (V.subtype_injective.monic_map_iff (p := F)).2 hFmapMonic
     exact hFMonic.map iRight
-
   have hFrootLeft :
       (F.map ((algebraMap K L).comp V.subtype)).eval (a : L) = 0 := by
     have hmin : Polynomial.aeval (a : L) (minpoly K (a : L)) = 0 :=
@@ -176,7 +171,6 @@ private theorem primitive_separable_integral_model_on_commonTop_core
       rw [Polynomial.map_map]
     rw [hpoly, hFfield]
     exact hmin
-
   let iLeftTop : L →+* (L ⊔ K' : IntermediateField K Ω) :=
     (IntermediateField.inclusion
       (show L ≤ (L ⊔ K' : IntermediateField K Ω) from le_sup_left)).toRingHom
@@ -194,7 +188,9 @@ private theorem primitive_separable_integral_model_on_commonTop_core
     apply Polynomial.ext
     intro n
     apply Subtype.ext
-    simp [FRight, iRight, iLeftTop]
+    simp only [Polynomial.coeff_map, RingHom.coe_comp, Subring.coe_subtype, Function.comp_apply,
+      AlgHom.toRingHom_eq_coe, RingHom.coe_coe, AlgHom.commutes, SubalgebraClass.coe_algebraMap,
+      FRight, iRight, iLeftTop]
     rw [unramifiedValuationRingValuationRingMap_apply]
     change (((algebraMap K' (L ⊔ K' : IntermediateField K Ω))
         (algebraMap K K' (F.coeff n : K)) :
@@ -210,7 +206,6 @@ private theorem primitive_separable_integral_model_on_commonTop_core
           (aTop : (L ⊔ K' : IntermediateField K Ω)) = 0 := by
     rw [hFmapTop]
     exact hFrootTopFromLeft
-
   have hFRightReduction :
       (FRight.map (IsLocalRing.residue WRight)).Separable := by
     have hReductionMap :=
@@ -221,7 +216,6 @@ private theorem primitive_separable_integral_model_on_commonTop_core
       at hReductionMap
     rw [hReductionMap]
     exact hFreduction.map
-
   exact ⟨hhensRight, hRightTop, a, aTop, FRight, rfl, haTopGen,
     hFRightMonic, hFRightRoot, hFRightReduction⟩
 

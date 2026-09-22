@@ -29,6 +29,11 @@ by
 hypothesis.
 -/
 
+open _root_.ValuationTheory.DiscreteValuationField.Valuation renaming
+  valuationSubring_eq_of_le_of_mem_maximalIdeal_iff →
+    valuationSubring_eq_of_le_of_mem_maximalIdeal_iff
+
+
 noncomputable section
 
 namespace HilbertRamification.Dedekind
@@ -347,7 +352,7 @@ theorem globalPadicPrime_localizationValuationSubring_eq
     rw [hmk, map_div₀, hsEq, div_one]
     exact haLe
   apply
-    (ValuationTheory.DiscreteValuationField.Valuation.valuationSubring_eq_of_le_of_mem_maximalIdeal_iff
+    (valuationSubring_eq_of_le_of_mem_maximalIdeal_iff
       V A hVA ?_).symm
   intro x
   rcases x.property with ⟨a, s, hs, hx⟩

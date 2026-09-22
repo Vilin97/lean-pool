@@ -196,7 +196,6 @@ theorem exists_primitive_lift_minpoly_of_finiteUnramifiedExtension
     finiteUnramifiedExtension_residue_isSeparable
       v w hExt hUnramified
   let : Algebra.IsSeparable k ell := hressep
-
   obtain ⟨abar, habarPrimitive⟩ :=
     @Field.exists_primitive_element k ell _ _ _ hresfinAlgebra hressep
   have habarIntegral : IsIntegral k abar :=
@@ -252,7 +251,6 @@ theorem exists_primitive_lift_minpoly_of_finiteUnramifiedExtension
         intro j
         rw [hbL j]
         rfl }
-
   let algVL : Algebra V L :=
     ((algebraMap K L).comp V.subtype).toAlgebra
   let : Algebra V L := algVL
@@ -292,7 +290,6 @@ theorem exists_primitive_lift_minpoly_of_finiteUnramifiedExtension
     exact a.property
   have haIntegralV : IsIntegral V (a : L) :=
     (eV.isIntegral_iff heV (a : L)).mpr haIntegralVv
-
   let pV : Polynomial V := minpoly V (a : L)
   let pK : Polynomial K := minpoly K (a : L)
   let pbar : Polynomial k := pV.map (IsLocalRing.residue V)

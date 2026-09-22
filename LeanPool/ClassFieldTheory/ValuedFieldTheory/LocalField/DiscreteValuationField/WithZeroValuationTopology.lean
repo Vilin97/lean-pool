@@ -23,6 +23,15 @@ complete discrete valuation back to the topology obtained directly from
 `Valued.mk' v`.
 -/
 
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF renaming
+  mrangeRestrictNontriviallyNormedField →
+    mrangeRestrictNontriviallyNormedField
+
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF renaming
+  mrangeRestrict_completeSpace_of_residueField_finite →
+    mrangeRestrict_completeSpace_of_residueField_finite
+
+
 noncomputable section
 
 universe u
@@ -79,17 +88,17 @@ theorem completeSpace_ofWithZeroValuation
   let F : CompleteDVF.{u, 0} K := completeDVF v
   let direct : Valued K (WithZero (Multiplicative ℤ)) := Valued.mk' v
   let restrictedNormed : NontriviallyNormedField K :=
-    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F
+    mrangeRestrictNontriviallyNormedField F
   have : Finite F.residueField := by
     change Finite (IsLocalRing.ResidueField v.valuationSubring)
     infer_instance
   have hcomplete : @CompleteSpace K restrictedNormed.toUniformSpace := by
     exact
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_completeSpace_of_residueField_finite F
+      mrangeRestrict_completeSpace_of_residueField_finite F
   have huniform : direct.toUniformSpace = restrictedNormed.toUniformSpace := by
     change
       (Valued.mk' v).toUniformSpace =
-        (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField
+        (mrangeRestrictNontriviallyNormedField
           (completeDVF v)).toUniformSpace
     calc
       (Valued.mk' v).toUniformSpace =
@@ -97,7 +106,7 @@ theorem completeSpace_ofWithZeroValuation
             (completeDVF v)).toUniformSpace :=
         valuedMk_uniformSpace_eq_mrangeRestrict v
       _ =
-          (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField
+          (mrangeRestrictNontriviallyNormedField
             (completeDVF v)).toUniformSpace := by
         rfl
   let : Valued K (WithZero (Multiplicative ℤ)) := direct

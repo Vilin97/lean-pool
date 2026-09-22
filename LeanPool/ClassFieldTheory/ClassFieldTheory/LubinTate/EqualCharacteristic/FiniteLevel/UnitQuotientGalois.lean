@@ -280,8 +280,7 @@ noncomputable def equalCharacteristicLubinTateArtinUnitToGal
     [CharP K F.residueCharacteristic]
     (n : ℕ) :
     F.residueField⟦X⟧ˣ →*
-      Gal((equalCharacteristicLubinTateLevelField F n) /
-        F.residueField⸨X⸩) where
+      Gal((equalCharacteristicLubinTateLevelField F n)/F.residueField⸨X⸩) where
   toFun := equalCharacteristicLubinTateArtinUnitAlgEquiv F n
   map_one' := equalCharacteristicLubinTateArtinUnitAlgEquiv_one F n
   map_mul' := equalCharacteristicLubinTateArtinUnitAlgEquiv_mul F n
@@ -309,8 +308,7 @@ theorem equalCharacteristicLubinTateArtinUnitToGal_ker
   constructor
   · intro ha
     have hgen := congrArg
-      (fun σ : Gal((equalCharacteristicLubinTateLevelField F n) /
-          F.residueField⸨X⸩) =>
+      (fun σ : Gal((equalCharacteristicLubinTateLevelField F n)/F.residueField⸨X⸩) =>
         σ (equalCharacteristicLubinTateLevelPowerBasis F n).gen) ha
     rw [equalCharacteristicLubinTateArtinUnitToGal_apply_gen] at hgen
     simp only [AlgEquiv.one_apply] at hgen
@@ -383,8 +381,7 @@ noncomputable def equalCharacteristicLubinTateArtinUnitQuotientEquivGal
     (n : ℕ) :
     F.residueField⟦X⟧ˣ ⧸
         equalCharacteristicLubinTateHigherUnitSubgroup F n ≃*
-      Gal((equalCharacteristicLubinTateLevelField F n) /
-        F.residueField⸨X⸩) :=
+      Gal((equalCharacteristicLubinTateLevelField F n)/F.residueField⸨X⸩) :=
   (QuotientGroup.quotientMulEquivOfEq
       (equalCharacteristicLubinTateArtinUnitToGal_ker F n).symm).trans
     (QuotientGroup.quotientKerEquivOfSurjective

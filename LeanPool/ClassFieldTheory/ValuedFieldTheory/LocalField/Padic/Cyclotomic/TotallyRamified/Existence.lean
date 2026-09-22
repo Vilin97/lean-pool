@@ -11,6 +11,11 @@ import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Padic.Cyclotomic.T
 This file packages the actual integral-closure complete-DVF model as a totally ramified extension.
 -/
 
+open _root_.LocalFieldTheory.DiscreteValuationField.ValuedExtension renaming
+  isTotallyRamified_iff_ramificationIndex_eq_degree_of_finite_separable →
+    isTotallyRamified_iff_ramificationIndex_eq_degree_of_finite_separable
+
+
 noncomputable section
 
 namespace AlgebraicNumberTheory
@@ -78,7 +83,7 @@ theorem padicCyclotomicTotallyRamified_exists_totallyRamified_extension
     padicCyclotomicTotallyRamified_uniformizer_and_ramificationIndex_eq_degree
       ζ hζ hgen target
   exact ⟨hfd, target, hExt, hsource.1,
-    (LocalFieldTheory.DiscreteValuationField.ValuedExtension.isTotallyRamified_iff_ramificationIndex_eq_degree_of_finite_separable
+    (isTotallyRamified_iff_ramificationIndex_eq_degree_of_finite_separable
         base target).2 hsource.2⟩
 
 end CyclotomicExtension

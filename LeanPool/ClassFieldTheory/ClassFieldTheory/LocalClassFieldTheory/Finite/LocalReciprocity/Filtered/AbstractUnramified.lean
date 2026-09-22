@@ -249,7 +249,7 @@ private theorem baseFixingExtensionSubgroup_index_eq_finrank
             (⊥ : IntermediateField K Ω))
           (closedFixingSubgroup K Ω E)
           (fixingSubgroupLeBase K Ω E)) :=
-    Finite.of_equiv (Gal(E / K))
+    Finite.of_equiv (Gal(E/K))
       (baseFixingExtensionQuotientEquivGaloisGroup K Ω E).symm.toEquiv
   calc
     _ = Nat.card
@@ -261,7 +261,7 @@ private theorem baseFixingExtensionSubgroup_index_eq_finrank
             (closedFixingSubgroup K Ω E)
             (fixingSubgroupLeBase K Ω E)) :=
       Subgroup.index_eq_card _
-    _ = Nat.card (Gal(E / K)) :=
+    _ = Nat.card (Gal(E/K)) :=
       Nat.card_congr
         (baseFixingExtensionQuotientEquivGaloisGroup K Ω E).toEquiv
     _ = Module.finrank K E :=
@@ -327,7 +327,7 @@ theorem finiteAbstractField_degree_eq_abstractFixedField_finrank
   calc
     (H.toFiniteAbstractExtension.degree : ℕ) =
         (extensionSubgroup
-          (baseField (Gal(SeparableClosure K / K))) H.field
+          (baseField (Gal(SeparableClosure K/K))) H.field
           (le_baseField H.field)).index :=
       H.toFiniteAbstractExtension.extensionSubgroup_index_eq_degree.symm
     _ = H.field.toSubgroup.index := by
@@ -388,7 +388,6 @@ theorem abstractFixedField_isUnramifiedValuedExtension
       K (SeparableClosure K) H.field H.finite
   let : IsGalois K E :=
     abstractFixedField_isGalois_of_base_normal K H.field hnormal
-
   let : NontriviallyNormedField K :=
     localFieldNontriviallyNormedField K
   let : IsUltrametricDist K :=
@@ -407,7 +406,6 @@ theorem abstractFixedField_isUnramifiedValuedExtension
     localCompleteDVF_integerRing_isIntegralClosure K E
   let : Module.Finite 𝒪[K] 𝒪[E] :=
     localCompleteDVF_integerRing_moduleFinite K E
-
   let f : ℕ :=
     @Module.finrank 𝓀[K] 𝓀[E] _ _
       (IsLocalRing.ResidueField.instModule
@@ -429,7 +427,6 @@ theorem abstractFixedField_isUnramifiedValuedExtension
       _ = Module.finrank K E :=
         finiteAbstractField_degree_eq_abstractFixedField_finrank
           K H hnormal
-
   have hdegree' :
       (𝓂[E] : Ideal 𝒪[E]).ramificationIdx 𝒪[K] *
           f =
@@ -478,7 +475,6 @@ theorem localUpperRamificationGroup_abstractFixedField_eq_bot
       K (SeparableClosure K) H.field H.finite
   let : IsGalois K E :=
     abstractFixedField_isGalois_of_base_normal K H.field hnormal
-
   let : NontriviallyNormedField K :=
     localFieldNontriviallyNormedField K
   let : IsUltrametricDist K :=
@@ -639,7 +635,6 @@ theorem
         (localFiniteUnramifiedAbelianSubextension K d hd).field)
     exact finiteAbelianSubextension_fixedField_isAbelianGalois K
       (localFiniteUnramifiedAbelianSubextension K d hd)
-
   let : NontriviallyNormedField K :=
     localFieldNontriviallyNormedField K
   let : IsUltrametricDist K :=

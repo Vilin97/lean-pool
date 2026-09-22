@@ -495,7 +495,6 @@ theorem principalUnitsNormOfUnramifiedValuationOfIsIntegralClosure_eq_of_error_m
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [LocalFieldTheory.ValuativeExtension K L] [IsIntegralClosure 𝒪[L] 𝒪[K] L]
     [Module.Finite 𝒪[K] 𝒪[L]]
-
     (n : Nat) (y : principalUnits K n) (x : principalUnits L n)
     (h : ∀ d : Nat,
       ((y : 𝒪[K]ˣ) / normIntegerUnits K L (x : 𝒪[L]ˣ)) ∈

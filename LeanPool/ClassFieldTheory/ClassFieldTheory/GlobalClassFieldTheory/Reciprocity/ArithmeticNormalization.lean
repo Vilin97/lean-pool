@@ -60,7 +60,7 @@ variable
 /-- Reuse the quotient topology chosen by topological global reciprocity. -/
 local instance
     arithmeticGlobalNormResidueAbelianizationGaloisAbelianizationTopology :
-    TopologicalSpace (Abelianization (Gal(L / K))) :=
+    TopologicalSpace (Abelianization (Gal(L/K))) :=
   topologicalGlobalNormResidueAbelianizationGaloisAbelianizationTopology
     K L
 
@@ -68,19 +68,19 @@ local instance
 structure. -/
 local instance
     arithmeticGlobalNormResidueAbelianization_galoisAbelianizationIsTopologicalGroup :
-    IsTopologicalGroup (Abelianization (Gal(L / K))) := by
+    IsTopologicalGroup (Abelianization (Gal(L/K))) := by
   change
     IsTopologicalGroup
-      (Gal(L / K) ⧸ commutator (Gal(L / K)))
+      (Gal(L/K) ⧸ commutator (Gal(L/K)))
   infer_instance
 
 /-- The global norm-residue homomorphism with arithmetic
 Frobenius normalization, for an arbitrary finite Galois extension. -/
 noncomputable def arithmeticGlobalNormResidueAbelianizationMonoidHom :
     IdeleClassGroup K →*
-      Abelianization (Gal(L / K)) :=
+      Abelianization (Gal(L/K)) :=
   (MulEquiv.inv
-      (Abelianization (Gal(L / K)))).toMonoidHom.comp
+      (Abelianization (Gal(L/K)))).toMonoidHom.comp
     (globalNormResidueAbelianizationMonoidHom K L)
 
 /-- Arithmetic normalization evaluates by inverting the geometric
@@ -108,7 +108,7 @@ theorem arithmeticGlobalNormResidueAbelianizationMonoidHom_surjective :
     Function.Surjective
       (arithmeticGlobalNormResidueAbelianizationMonoidHom K L) :=
   (MulEquiv.inv
-      (Abelianization (Gal(L / K)))).surjective.comp
+      (Abelianization (Gal(L/K)))).surjective.comp
     (globalNormResidueAbelianizationMonoidHom_surjective K L)
 
 /-- The arithmetic finite-Galois norm-residue isomorphism, with the
@@ -118,10 +118,10 @@ noncomputable def
     arithmeticGlobalNormResidueAbelianizationContinuousMulEquiv :
     (IdeleClassGroup K ⧸
         (_root_.ideleClassNorm K L).range) ≃ₜ*
-      Abelianization (Gal(L / K)) :=
+      Abelianization (Gal(L/K)) :=
   (globalNormResidueAbelianizationContinuousMulEquiv K L).trans
     (commutativeGroupInversionContinuousMulEquiv
-      (Abelianization (Gal(L / K))))
+      (Abelianization (Gal(L/K))))
 
 /-- The arithmetic abelianized norm-residue equivalence is pointwise the
 inverse of the geometric equivalence. -/
@@ -136,12 +136,12 @@ theorem
   calc
     arithmeticGlobalNormResidueAbelianizationContinuousMulEquiv K L q =
         commutativeGroupInversionContinuousMulEquiv
-          (Abelianization (Gal(L / K)))
+          (Abelianization (Gal(L/K)))
           (globalNormResidueAbelianizationContinuousMulEquiv K L q) :=
       ContinuousMulEquiv.trans_apply
         (globalNormResidueAbelianizationContinuousMulEquiv K L)
         (commutativeGroupInversionContinuousMulEquiv
-          (Abelianization (Gal(L / K)))) q
+          (Abelianization (Gal(L/K)))) q
     _ = (globalNormResidueAbelianizationContinuousMulEquiv K L q)⁻¹ :=
       rfl
 
@@ -150,7 +150,7 @@ theorem
 global reciprocity theorem. -/
 noncomputable def
     arithmeticGlobalReciprocityAbelianizationContinuousMulEquiv :
-    Abelianization (Gal(L / K)) ≃ₜ*
+    Abelianization (Gal(L/K)) ≃ₜ*
       (IdeleClassGroup K ⧸
         (_root_.ideleClassNorm K L).range) :=
   (arithmeticGlobalNormResidueAbelianizationContinuousMulEquiv
@@ -200,8 +200,8 @@ variable
 /-- The global norm-residue homomorphism in arithmetic Frobenius
 normalization for a finite abelian extension. -/
 noncomputable def arithmeticGlobalNormResidueMonoidHom :
-    IdeleClassGroup K →* Gal(L / K) :=
-  (MulEquiv.inv (Gal(L / K))).toMonoidHom.comp
+    IdeleClassGroup K →* Gal(L/K) :=
+  (MulEquiv.inv (Gal(L/K))).toMonoidHom.comp
     (globalNormResidueMonoidHom K L)
 
 /-- Arithmetic normalization evaluates by inverting the geometric global
@@ -227,7 +227,7 @@ theorem arithmeticGlobalNormResidueMonoidHom_ker :
 theorem arithmeticGlobalNormResidueMonoidHom_surjective :
     Function.Surjective
       (arithmeticGlobalNormResidueMonoidHom K L) :=
-  (MulEquiv.inv (Gal(L / K))).surjective.comp
+  (MulEquiv.inv (Gal(L/K))).surjective.comp
     (globalNormResidueMonoidHom_surjective K L)
 
 /-- The arithmetic global norm-residue map is continuous for the
@@ -243,10 +243,10 @@ group. -/
 noncomputable def arithmeticGlobalNormResidueContinuousMulEquiv :
     (IdeleClassGroup K ⧸
         (_root_.ideleClassNorm K L).range) ≃ₜ*
-      Gal(L / K) :=
+      Gal(L/K) :=
   (globalNormResidueContinuousMulEquiv K L).trans
     (commutativeGroupInversionContinuousMulEquiv
-      (Gal(L / K)))
+      (Gal(L/K)))
 
 /-- The arithmetic norm-residue equivalence is pointwise the inverse of the
 geometric equivalence. -/
@@ -262,7 +262,7 @@ theorem arithmeticGlobalNormResidueContinuousMulEquiv_apply
 /-- The canonical arithmetic reciprocity isomorphism in the direction
 `Gal(L/K) ≃ₜ* C_K / N_{L/K}(C_L)`. -/
 noncomputable def arithmeticGlobalReciprocityContinuousMulEquiv :
-    Gal(L / K) ≃ₜ*
+    Gal(L/K) ≃ₜ*
       (IdeleClassGroup K ⧸
         (_root_.ideleClassNorm K L).range) :=
   (arithmeticGlobalNormResidueContinuousMulEquiv K L).symm
@@ -304,8 +304,8 @@ normalization.  A usual local uniformizer therefore maps to arithmetic
 Frobenius. -/
 noncomputable def arithmeticChosenFinitePlaceArtinMonoidHom
     (v : HeightOneSpectrum (𝓞 K)) :
-    (v.adicCompletion K)ˣ →* Gal(L / K) :=
-  (MulEquiv.inv (Gal(L / K))).toMonoidHom.comp
+    (v.adicCompletion K)ˣ →* Gal(L/K) :=
+  (MulEquiv.inv (Gal(L/K))).toMonoidHom.comp
     (chosenFinitePlaceArtinMonoidHom
       (K := K) (L := L) v)
 
@@ -337,7 +337,7 @@ theorem
       (chosenFinitePlaceArtinMonoidHom
         (K := K) (L := L) v x)⁻¹
   simpa only [MonoidHom.comp_apply] using
-    congrArg (fun σ : Gal(L / K) => σ⁻¹)
+    congrArg (fun σ : Gal(L/K) => σ⁻¹)
       (DFunLike.congr_fun
         (globalNormResidueMonoidHom_comp_finitePlaceIdeleClass
           (K := K) (L := L) v) x)
@@ -346,8 +346,8 @@ theorem
 normalization. -/
 noncomputable def arithmeticChosenInfinitePlaceArtinMonoidHom
     (v : InfinitePlace K) :
-    v.Completionˣ →* Gal(L / K) :=
-  (MulEquiv.inv (Gal(L / K))).toMonoidHom.comp
+    v.Completionˣ →* Gal(L/K) :=
+  (MulEquiv.inv (Gal(L/K))).toMonoidHom.comp
     (chosenInfinitePlaceArtinMonoidHom
       (K := K) (L := L) v)
 
@@ -379,15 +379,15 @@ theorem
       (chosenInfinitePlaceArtinMonoidHom
         (K := K) (L := L) v x)⁻¹
   simpa only [MonoidHom.comp_apply] using
-    congrArg (fun σ : Gal(L / K) => σ⁻¹)
+    congrArg (fun σ : Gal(L/K) => σ⁻¹)
       (DFunLike.congr_fun
         (globalNormResidueMonoidHom_comp_infinitePlaceIdeleClass
           (K := K) (L := L) v) x)
 
 /-- The idèle-level global Artin product in arithmetic normalization. -/
 noncomputable def arithmeticGlobalArtinMonoidHom :
-    IdeleGroup K →* Gal(L / K) :=
-  (MulEquiv.inv (Gal(L / K))).toMonoidHom.comp
+    IdeleGroup K →* Gal(L/K) :=
+  (MulEquiv.inv (Gal(L/K))).toMonoidHom.comp
     (globalArtinMonoidHom (K := K) (L := L))
 
 omit [FiniteDimensional K L] in
@@ -450,7 +450,7 @@ theorem
         (IdeleGroup.principalSubgroup K) a))⁻¹ =
       (globalArtinMonoidHom (K := K) (L := L) a)⁻¹
   simpa only [MonoidHom.comp_apply] using
-    congrArg (fun σ : Gal(L / K) => σ⁻¹)
+    congrArg (fun σ : Gal(L/K) => σ⁻¹)
       (DFunLike.congr_fun
         (globalNormResidueMonoidHom_comp_ideleClassQuotient_eq_globalArtin
           (K := K) (L := L)) a)

@@ -77,7 +77,7 @@ theorem not_dvd_differentIdeal_of_coprime_norm_exponent
   obtain ⟨x, hx⟩ := Ideal.Quotient.mk_surjective (e.symm (1, 0))
   refine not_dvd_differentIdeal_of_intTrace_not_mem ℤ R Q hMul x ?_ ?_
   · have h := congr((e $hx).2)
-    simp at h
+    simp? at h
     change Ideal.Quotient.mk Q x = 0 at h
     exact Ideal.Quotient.eq_zero_iff_mem.mp h
   · rw [← Ideal.Quotient.eq_zero_iff_mem,

@@ -396,7 +396,7 @@ theorem logOnePlusSeriesField_eq_logOnePlusSeries_mk0
     logOnePlusSeriesFieldOfWithZeroValuation v x hnK =
       logOnePlusSeriesOfWithZeroValuation v (Units.mk0 x hx) hnK := by
   let : Valued K (WithZero (Multiplicative ℤ)) := Valued.mk' v
-  simp [logOnePlusSeriesFieldOfWithZeroValuation,
+  simp? [logOnePlusSeriesFieldOfWithZeroValuation,
     logOnePlusSeriesOfWithZeroValuation]
   apply tsum_congr
   intro n
@@ -421,7 +421,7 @@ theorem expSeriesField_eq_expSeries_mk0
     expSeriesFieldOfWithZeroValuation v x hnK =
       expSeriesOfWithZeroValuation v (Units.mk0 x hx) hnK := by
   let : Valued K (WithZero (Multiplicative ℤ)) := Valued.mk' v
-  simp [expSeriesFieldOfWithZeroValuation, expSeriesOfWithZeroValuation]
+  simp? [expSeriesFieldOfWithZeroValuation, expSeriesOfWithZeroValuation]
   apply tsum_congr
   intro n
   exact expSeriesTermField_eq_expSeriesTerm_mk0 hx hnK n

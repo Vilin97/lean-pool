@@ -63,7 +63,7 @@ noncomputable instance finiteGaloisFieldRangeOfEmbedding_finiteDimensional
 `L/K` in the separable closure. -/
 def finiteGaloisClosedFixingSubgroupOfEmbedding
     (i : L →ₐ[K] SeparableClosure K) :
-    ClosedSubgroup (Gal(SeparableClosure K / K)) :=
+    ClosedSubgroup (Gal(SeparableClosure K/K)) :=
   closedFixingSubgroup K (SeparableClosure K)
     (finiteGaloisFieldRangeOfEmbedding K L i)
 
@@ -119,7 +119,7 @@ def finiteGaloisAbstractQuotientEquivGaloisGroupOfEmbedding
         (finiteGaloisClosedFixingSubgroupOfEmbedding K L i)
         (fixingSubgroupLeBase K (SeparableClosure K)
           (finiteGaloisFieldRangeOfEmbedding K L i))) ≃*
-      Gal(L / K) :=
+      Gal(L/K) :=
   (baseFixingExtensionQuotientEquivGaloisGroup K (SeparableClosure K)
     (finiteGaloisFieldRangeOfEmbedding K L i)).trans
       (AlgEquiv.autCongr
@@ -145,7 +145,7 @@ theorem finiteGaloisExtensionSubgroupOfEmbedding_index_eq_finrank
           (finiteGaloisClosedFixingSubgroupOfEmbedding K L i)
           (fixingSubgroupLeBase K (SeparableClosure K)
             (finiteGaloisFieldRangeOfEmbedding K L i))) :=
-    Finite.of_equiv (Gal(L / K))
+    Finite.of_equiv (Gal(L/K))
       (finiteGaloisAbstractQuotientEquivGaloisGroupOfEmbedding K L i).symm.toEquiv
   calc
     _ = Nat.card
@@ -158,7 +158,7 @@ theorem finiteGaloisExtensionSubgroupOfEmbedding_index_eq_finrank
             (fixingSubgroupLeBase K (SeparableClosure K)
               (finiteGaloisFieldRangeOfEmbedding K L i))) :=
       Subgroup.index_eq_card _
-    _ = Nat.card (Gal(L / K)) :=
+    _ = Nat.card (Gal(L/K)) :=
       Nat.card_congr
         (finiteGaloisAbstractQuotientEquivGaloisGroupOfEmbedding K L i).toEquiv
     _ = Module.finrank K L := IsGalois.card_aut_eq_finrank K L
@@ -191,7 +191,7 @@ instance finiteGaloisFieldRange_finiteDimensional :
 /-- The concrete closed subgroup of the absolute separable Galois group
 attached to `L/K`. -/
 def finiteGaloisClosedFixingSubgroup :
-    ClosedSubgroup (Gal(SeparableClosure K / K)) :=
+    ClosedSubgroup (Gal(SeparableClosure K/K)) :=
   finiteGaloisClosedFixingSubgroupOfEmbedding K L
     (AlgebraicNumberTheory.separableEmbeddingIntoSeparableClosure K L)
 
@@ -245,7 +245,7 @@ def finiteGaloisAbstractQuotientEquivGaloisGroup :
         (finiteGaloisClosedFixingSubgroup K L)
         (fixingSubgroupLeBase K (SeparableClosure K)
           (finiteGaloisFieldRange K L))) ≃*
-      Gal(L / K) :=
+      Gal(L/K) :=
   finiteGaloisAbstractQuotientEquivGaloisGroupOfEmbedding K L
     (AlgebraicNumberTheory.separableEmbeddingIntoSeparableClosure K L)
 

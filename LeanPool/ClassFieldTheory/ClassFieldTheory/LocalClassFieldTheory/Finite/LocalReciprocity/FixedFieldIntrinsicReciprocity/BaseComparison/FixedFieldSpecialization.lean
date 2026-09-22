@@ -35,8 +35,8 @@ membership in its ambient extension subgroup. -/
 theorem intrinsicExtensionSubgroup_iff_ambientFixedField
     (K : Type) [Field K]
     (H : FiniteAbstractField
-      Gal(SeparableClosure K / K))
-    (J : ClosedSubgroup Gal(SeparableClosure K / K))
+      Gal(SeparableClosure K/K))
+    (J : ClosedSubgroup Gal(SeparableClosure K/K))
     (hJH : J.toSubgroup ≤ H.field.toSubgroup)
     [hJnormal : (extensionSubgroup H.field J hJH).Normal]
     [hJfinite : Finite
@@ -57,7 +57,7 @@ theorem intrinsicExtensionSubgroup_iff_ambientFixedField
       e.symm.toAlgHom.comp E.val
     let EI := finiteGaloisAbstractExtensionOfEmbedding F E i
     let φ :
-        Gal(SeparableClosure F / F) ≃*
+        Gal(SeparableClosure F/F) ≃*
           H.field.toSubgroup :=
       (AlgEquiv.autCongr e).trans
         (abstractSubgroupEquivGaloisGroup
@@ -81,7 +81,7 @@ theorem intrinsicExtensionSubgroup_iff_ambientFixedField
     e.symm.toAlgHom.comp E.val
   let EI := finiteGaloisAbstractExtensionOfEmbedding F E i
   let φ :
-      Gal(SeparableClosure F / F) ≃*
+      Gal(SeparableClosure F/F) ≃*
         H.field.toSubgroup :=
     (AlgEquiv.autCongr e).trans
       (abstractSubgroupEquivGaloisGroup
@@ -149,8 +149,8 @@ theorem intrinsicExtensionInertia_iff_ambientFixedField
     (K : Type) [Field K] [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K]
     (H : FiniteAbstractField
-      Gal(SeparableClosure K / K))
-    (J : ClosedSubgroup Gal(SeparableClosure K / K))
+      Gal(SeparableClosure K/K))
+    (J : ClosedSubgroup Gal(SeparableClosure K/K))
     (hJH : J.toSubgroup ≤ H.field.toSubgroup)
     [hJnormal : (extensionSubgroup H.field J hJH).Normal]
     [hJfinite : Finite
@@ -180,7 +180,7 @@ theorem intrinsicExtensionInertia_iff_ambientFixedField
       e.symm.toAlgHom.comp E.val
     let EI := finiteGaloisAbstractExtensionOfEmbedding F E i
     let φ :
-        Gal(SeparableClosure F / F) ≃*
+        Gal(SeparableClosure F/F) ≃*
           H.field.toSubgroup :=
       (AlgEquiv.autCongr e).trans
         (abstractSubgroupEquivGaloisGroup
@@ -214,7 +214,7 @@ theorem intrinsicExtensionInertia_iff_ambientFixedField
     e.symm.toAlgHom.comp E.val
   let EI := finiteGaloisAbstractExtensionOfEmbedding F E i
   let φ :
-      Gal(SeparableClosure F / F) ≃*
+      Gal(SeparableClosure F/F) ≃*
         H.field.toSubgroup :=
     (AlgEquiv.autCongr e).trans
       (abstractSubgroupEquivGaloisGroup
@@ -287,8 +287,8 @@ abbrev intrinsicFixedFieldFrobeniusQuotient
     (K : Type) [Field K] [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K]
     (H : FiniteAbstractField
-      Gal(SeparableClosure K / K))
-    (J : ClosedSubgroup Gal(SeparableClosure K / K))
+      Gal(SeparableClosure K/K))
+    (J : ClosedSubgroup Gal(SeparableClosure K/K))
     (hJH : J.toSubgroup ≤ H.field.toSubgroup)
     [hJnormal : (extensionSubgroup H.field J hJH).Normal]
     [hJfinite : Finite

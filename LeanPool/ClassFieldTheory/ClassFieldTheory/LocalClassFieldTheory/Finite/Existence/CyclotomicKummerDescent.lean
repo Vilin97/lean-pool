@@ -44,7 +44,6 @@ theorem exists_finiteGalois_normSubgroup_le_powMonoidHom_range
   obtain ⟨zeta, hzeta⟩ :=
     (CyclotomicField.isCyclotomicExtension (n : ℕ) K).exists_isPrimitiveRoot
       (Set.mem_singleton (n : ℕ)) n.ne_zero
-
   let j : C →ₐ[K] SeparableClosure K := IsSepClosed.lift
   let K1 := AlgHom.fieldRange j
   let eC : C ≃ₐ[K] K1 := AlgEquiv.ofInjectiveField j
@@ -58,7 +57,6 @@ theorem exists_finiteGalois_normSubgroup_le_powMonoidHom_range
   have hmu1 : (primitiveRoots (n : ℕ) K1).Nonempty :=
     ⟨eC zeta, (mem_primitiveRoots n.pos).2
       (hzeta.map_of_injective eC.injective)⟩
-
   let : UniformSpace K := IsTopologicalAddGroup.rightUniformSpace K
   let : IsUniformAddGroup K := isUniformAddGroup_of_addCommGroup
   let : Valued K (ValuativeRel.ValueGroupWithZero K) := inferInstance
@@ -72,7 +70,6 @@ theorem exists_finiteGalois_normSubgroup_le_powMonoidHom_range
     Valued.toNontriviallyNormedField
       (L := K) (Γ₀ := ValuativeRel.ValueGroupWithZero K)
   let : CompleteSpace K := inferInstance
-
   let : NontriviallyNormedField K1 :=
     spectralNorm.nontriviallyNormedField K K1
   let : NormedSpace K K1 := spectralNorm.normedSpace K K1
@@ -102,7 +99,6 @@ theorem exists_finiteGalois_normSubgroup_le_powMonoidHom_range
     { toIsValuativeTopology := inferInstance
       toLocallyCompactSpace := inferInstance
       toIsNontrivial := inferInstance }
-
   let : IsScalarTower K K1 (SeparableClosure K) := by
     apply IsScalarTower.of_algebraMap_eq
     intro x
@@ -127,7 +123,6 @@ theorem exists_finiteGalois_normSubgroup_le_powMonoidHom_range
     simpa only [L1, Delta] using
       maximalKummerNormSubgroup_eq_powMonoidHom_range
         (K := K1) (Omega := SeparableClosure K) n hnK1 hmu1
-
   have hnormL1 :
       localNormSubgroup K L1 ≤ (powMonoidHom (n : ℕ) : Kˣ →* Kˣ).range := by
     rintro x ⟨y, rfl⟩
@@ -142,7 +137,6 @@ theorem exists_finiteGalois_normSubgroup_le_powMonoidHom_range
           normUnits K K1 (a ^ (n : ℕ)) := by rw [map_pow]
       _ = normUnits K K1 (normUnits K1 L1 y) := congrArg _ ha
       _ = normUnits K L1 y := LocalFieldTheory.normUnits_tower K K1 L1 y
-
   let L0 := L1.restrictScalars K
   let : FiniteDimensional K L1 := FiniteDimensional.trans K K1 L1
   let eLin : L0 ≃ₗ[K] L1 :=
@@ -165,7 +159,6 @@ theorem exists_finiteGalois_normSubgroup_le_powMonoidHom_range
       localNormSubgroup K L0 ≤ (powMonoidHom (n : ℕ) : Kˣ →* Kˣ).range := by
     rw [LocalFieldTheory.normSubgroup_algEquiv K L1 L0 eL]
     exact hnormL1
-
   let F := IntermediateField.normalClosure K L0 (SeparableClosure K)
   let : FiniteDimensional K F :=
     normalClosure.is_finiteDimensional K L0 (SeparableClosure K)
@@ -181,13 +174,11 @@ theorem exists_finiteGalois_normSubgroup_le_powMonoidHom_range
     intro x
     rfl
   let : FiniteDimensional L0 F := FiniteDimensional.right K L0 F
-
   have hnormFL0 : localNormSubgroup K F ≤ localNormSubgroup K L0 :=
     LocalFieldTheory.normSubgroup_le_of_tower K L0 F
   have hnormF : localNormSubgroup K F ≤ (powMonoidHom (n : ℕ) : Kˣ →* Kˣ).range := by
     intro x hx
     exact hnormL0 (hnormFL0 hx)
-
   let E : FiniteGaloisIntermediateField K (SeparableClosure K) :=
     { toIntermediateField := F
       finiteDimensional := inferInstance

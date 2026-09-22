@@ -914,7 +914,7 @@ noncomputable def
     letI : NumberField E' := hE'
     letI : NumberField E := hE
     letI : IsAbelianGalois ℚ E := hAbelian
-    {x : Gal(E / ℚ) × Gal(E / ℚ) × Gal(E / ℚ) //
+    {x : Gal(E/ℚ) × Gal(E/ℚ) × Gal(E/ℚ) //
       x.1 = x.2.1 ∧ x.2.1 = x.2.2} := by
   letI : NumberField E' := hE'
   letI : NumberField E := hE

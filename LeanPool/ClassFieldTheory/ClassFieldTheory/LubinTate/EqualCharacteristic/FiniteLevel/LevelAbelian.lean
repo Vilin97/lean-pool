@@ -45,12 +45,10 @@ theorem equalCharacteristicLubinTateUnitParameterToGal_surjective
       (equalCharacteristicLubinTateLevelField F n) :=
     equalCharacteristicLubinTateLevelField_finiteDimensional F n
   let : Finite
-      (Gal((equalCharacteristicLubinTateLevelField F n) /
-        F.residueField⸨X⸩)) :=
+      (Gal((equalCharacteristicLubinTateLevelField F n)/F.residueField⸨X⸩)) :=
     equalCharacteristicLubinTateLevelField_galFinite F n
   have hcard :
-      Nat.card (Gal((equalCharacteristicLubinTateLevelField F n) /
-          F.residueField⸨X⸩)) ≤
+      Nat.card (Gal((equalCharacteristicLubinTateLevelField F n)/F.residueField⸨X⸩)) ≤
         Nat.card (equalCharacteristicLubinTateUnitParameter F n) := by
     rw [equalCharacteristicLubinTateLevelField_natCard_gal,
       equalCharacteristicLubinTateLevelField_finrank,
@@ -66,8 +64,7 @@ theorem equalCharacteristicLubinTateLevelField_exists_unitParameter
     (F : LocalField.{u, v} K)
     [CharP K F.residueCharacteristic]
     (n : ℕ)
-    (σ : Gal((equalCharacteristicLubinTateLevelField F n) /
-      F.residueField⸨X⸩)) :
+    (σ : Gal((equalCharacteristicLubinTateLevelField F n)/F.residueField⸨X⸩)) :
     ∃ a : equalCharacteristicLubinTateUnitParameter F n,
       σ = equalCharacteristicLubinTateUnitParameterAlgEquiv F n a := by
   obtain ⟨a, ha⟩ :=
@@ -326,8 +323,7 @@ theorem equalCharacteristicLubinTateLevelField_gal_comm
     (F : LocalField.{u, v} K)
     [CharP K F.residueCharacteristic]
     (n : ℕ)
-    (σ τ : Gal((equalCharacteristicLubinTateLevelField F n) /
-      F.residueField⸨X⸩)) :
+    (σ τ : Gal((equalCharacteristicLubinTateLevelField F n)/F.residueField⸨X⸩)) :
     σ * τ = τ * σ := by
   obtain ⟨a, rfl⟩ := equalCharacteristicLubinTateLevelField_exists_unitParameter F n σ
   obtain ⟨b, rfl⟩ := equalCharacteristicLubinTateLevelField_exists_unitParameter F n τ
@@ -339,8 +335,7 @@ instance equalCharacteristicLubinTateLevelField_isMulCommutative
     [CharP K F.residueCharacteristic]
     (n : ℕ) :
     IsMulCommutative
-      (Gal((equalCharacteristicLubinTateLevelField F n) /
-        F.residueField⸨X⸩)) :=
+      (Gal((equalCharacteristicLubinTateLevelField F n)/F.residueField⸨X⸩)) :=
   ⟨⟨equalCharacteristicLubinTateLevelField_gal_comm F n⟩⟩
 
 /-- Every explicit equal-characteristic Lubin--Tate level extension is

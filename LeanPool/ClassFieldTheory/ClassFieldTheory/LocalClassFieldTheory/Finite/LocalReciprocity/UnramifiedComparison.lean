@@ -17,6 +17,19 @@ closure with the ordinary unramified valuation extension and its arithmetic
 Frobenius.
 -/
 
+open _root_.ValuationTheory.DiscreteValuationField.Valuation renaming
+  hasExtension_valuation_of_valuationSubring_pullback →
+    hasExtension_valuation_of_valuationSubring_pullback
+
+open _root_.ValuationTheory.DiscreteValuationField.ValuedExtension renaming
+  exists_integralClosure_standard_fundamental_identity →
+    exists_integralClosure_standard_fundamental_identity
+
+open _root_.ValuationTheory.DiscreteValuationField.ValuedExtension renaming
+  target_valuationSubring_eq_of_finite_separable →
+    target_valuationSubring_eq_of_finite_separable
+
+
 noncomputable section
 
 namespace LocalClassFieldTheory
@@ -161,7 +174,7 @@ theorem localSeparableValuationSubring_comap_embedding
   let C := (ValuativeRel.valuation L).valuationSubring
   have hBext : (localCompleteDVF K).valuation.HasExtension B.valuation := by
     apply
-      ValuationTheory.DiscreteValuationField.Valuation.hasExtension_valuation_of_valuationSubring_pullback
+      hasExtension_valuation_of_valuationSubring_pullback
     intro x
     change i (algebraMap K L x) ∈ A ↔
       x ∈ (localCompleteDVF K).valuation.valuationSubring
@@ -169,7 +182,7 @@ theorem localSeparableValuationSubring_comap_embedding
     exact localSeparableValuationSubring_pullback K x
   have hCext : (localCompleteDVF K).valuation.HasExtension C.valuation := by
     apply
-      ValuationTheory.DiscreteValuationField.Valuation.hasExtension_valuation_of_valuationSubring_pullback
+      hasExtension_valuation_of_valuationSubring_pullback
     intro x
     change ValuativeRel.valuation L (algebraMap K L x) ≤ 1 ↔
       (localCompleteDVF K).valuation x ≤ 1
@@ -177,17 +190,17 @@ theorem localSeparableValuationSubring_comap_embedding
       (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     rfl
   obtain ⟨target, htarget, _hintegral, _hFundamental⟩ :=
-    ValuationTheory.DiscreteValuationField.ValuedExtension.exists_integralClosure_standard_fundamental_identity
+    exists_integralClosure_standard_fundamental_identity
       (K := K) (L := L) (localCompleteDVF K)
   let : IsScalarTower (localCompleteDVF K).valuationSubring
       target.valuationSubring L :=
     ValuationTheory.DiscreteValuationField.Valuation.valuationSubring_isScalarTower_of_hasExtension
       (localCompleteDVF K).valuation target.valuation
   have hB : target.valuation.valuationSubring = B :=
-    ValuationTheory.DiscreteValuationField.ValuedExtension.target_valuationSubring_eq_of_finite_separable
+    target_valuationSubring_eq_of_finite_separable
       (localCompleteDVF K) target B
   have hC : target.valuation.valuationSubring = C :=
-    ValuationTheory.DiscreteValuationField.ValuedExtension.target_valuationSubring_eq_of_finite_separable
+    target_valuationSubring_eq_of_finite_separable
       (localCompleteDVF K) target C
   exact hB.symm.trans hC
 
@@ -241,7 +254,7 @@ theorem finiteGaloisResidueEmbeddingOfEmbedding_equivariant
       localSeparableResidueAlgAction K τ.1
         (finiteGaloisResidueEmbeddingOfEmbedding K L i x) := by
   let A := localSeparableValuationSubring K
-  let σ : Gal(L / K) :=
+  let σ : Gal(L/K) :=
     finiteGaloisAbstractQuotientEquivGaloisGroupOfEmbedding K L i
       (QuotientGroup.mk τ)
   obtain ⟨a, rfl⟩ := IsLocalRing.residue_surjective x
@@ -300,7 +313,7 @@ theorem finiteGaloisAbstractExtensionOfEmbedding_isUnramified :
   let k := decompositionResidueField K A
   let Omega := selectedResidueField A
   let τ : (abstractBase K).toSubgroup := ⟨g, hg.1⟩
-  let q : Gal(L / K) :=
+  let q : Gal(L/K) :=
     finiteGaloisAbstractQuotientEquivGaloisGroupOfEmbedding K L i
       (QuotientGroup.mk τ)
   have hdegree : localResidueDegree K g = 1 := hg.2
@@ -373,7 +386,7 @@ theorem finiteGaloisAbstractUnramifiedFrobenius_eq_arithmeticFrobenius :
           (finiteGaloisAbstractExtensionOfEmbedding K L i).below) =
       arithmeticFrobeniusOfUnramifiedValuation K L := by
   let phi := abstractBaseFrobeniusLift K
-  let q : Gal(L / K) :=
+  let q : Gal(L/K) :=
     finiteGaloisAbstractQuotientEquivGaloisGroupOfEmbedding K L i
       (QuotientGroup.mk phi)
   have hselected :

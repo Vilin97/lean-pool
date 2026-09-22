@@ -49,12 +49,13 @@ theorem subgroupQuotientEquivQuotientOfSupEqTop_mk
     subgroupQuotientEquivQuotientOfSupEqTop S P hSP
         (QuotientGroup.mk' (P.subgroupOf S) s) =
       QuotientGroup.mk' P (s : G) := by
-  simp [subgroupQuotientEquivQuotientOfSupEqTop,
+  simp only [subgroupQuotientEquivQuotientOfSupEqTop,
     QuotientGroup.quotientInfEquivProdNormalQuotient,
     QuotientGroup.quotientInfEquivProdNormalizerQuotient,
-    QuotientGroup.quotientKerEquivOfSurjective,
-    QuotientGroup.quotientKerEquivOfRightInverse,
-    QuotientGroup.kerLift_mk]
+    QuotientGroup.quotientKerEquivOfSurjective, QuotientGroup.quotientKerEquivOfRightInverse,
+    MonoidHom.coe_comp, QuotientGroup.coe_mk', QuotientGroup.mk'_apply, MulEquiv.trans_apply,
+    QuotientGroup.quotientMulEquivOfEq_mk, MulEquiv.coe_mk, Equiv.coe_fn_mk,
+    QuotientGroup.kerLift_mk, Function.comp_apply, QuotientGroup.congr_mk]
   have ofBijective_apply'
       (f : (S ⊔ P : Subgroup G) →* G)
       (hf : Function.Injective f ∧ Function.Surjective f)

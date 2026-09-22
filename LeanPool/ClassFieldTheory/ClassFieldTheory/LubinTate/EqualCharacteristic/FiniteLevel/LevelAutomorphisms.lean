@@ -281,8 +281,7 @@ noncomputable def equalCharacteristicLubinTateUnitParameterToGal
     [CharP K F.residueCharacteristic]
     (n : ℕ) :
     equalCharacteristicLubinTateUnitParameter F n →
-      Gal((equalCharacteristicLubinTateLevelField F n) /
-        F.residueField⸨X⸩) :=
+      Gal((equalCharacteristicLubinTateLevelField F n)/F.residueField⸨X⸩) :=
   equalCharacteristicLubinTateUnitParameterAlgEquiv F n
 
 /-- Faithfulness of the bracket action makes the parameter-to-automorphism
@@ -296,8 +295,7 @@ theorem equalCharacteristicLubinTateUnitParameterToGal_injective
   intro a b hab
   apply equalCharacteristicLubinTateUnitParameterLevelRoot_injective F n
   have hgen := congrArg
-    (fun σ : Gal((equalCharacteristicLubinTateLevelField F n) /
-      F.residueField⸨X⸩) =>
+    (fun σ : Gal((equalCharacteristicLubinTateLevelField F n)/F.residueField⸨X⸩) =>
         σ (equalCharacteristicLubinTateLevelPowerBasis F n).gen) hab
   simpa [equalCharacteristicLubinTateUnitParameterToGal] using hgen
 
@@ -306,8 +304,7 @@ noncomputable instance equalCharacteristicLubinTateLevelField_galFinite
     (F : LocalField.{u, v} K)
     [CharP K F.residueCharacteristic]
     (n : ℕ) :
-    Finite (Gal((equalCharacteristicLubinTateLevelField F n) /
-      F.residueField⸨X⸩)) := by
+    Finite (Gal((equalCharacteristicLubinTateLevelField F n)/F.residueField⸨X⸩)) := by
   let : FiniteDimensional F.residueField⸨X⸩
       (equalCharacteristicLubinTateLevelField F n) :=
     equalCharacteristicLubinTateLevelField_finiteDimensional F n
@@ -327,8 +324,7 @@ theorem equalCharacteristicLubinTateLevelField_natCard_gal
     (F : LocalField.{u, v} K)
     [CharP K F.residueCharacteristic]
     (n : ℕ) :
-    Nat.card (Gal((equalCharacteristicLubinTateLevelField F n) /
-        F.residueField⸨X⸩)) =
+    Nat.card (Gal((equalCharacteristicLubinTateLevelField F n)/F.residueField⸨X⸩)) =
       Module.finrank F.residueField⸨X⸩
         (equalCharacteristicLubinTateLevelField F n) := by
   let : FiniteDimensional F.residueField⸨X⸩
@@ -343,8 +339,7 @@ theorem equalCharacteristicLubinTateLevelField_natCard_gal
           Nat.card (equalCharacteristicLubinTateUnitParameter F n) := by
             rw [equalCharacteristicLubinTateLevelField_finrank,
               equalCharacteristicLubinTateUnitParameter_natCard]
-      _ ≤ Nat.card (Gal((equalCharacteristicLubinTateLevelField F n) /
-          F.residueField⸨X⸩)) :=
+      _ ≤ Nat.card (Gal((equalCharacteristicLubinTateLevelField F n)/F.residueField⸨X⸩)) :=
         Nat.card_le_card_of_injective
           (equalCharacteristicLubinTateUnitParameterToGal F n)
           (equalCharacteristicLubinTateUnitParameterToGal_injective F n)

@@ -292,8 +292,8 @@ noncomputable def numberFieldTowerSeparableClosureRestriction :
       numberFieldTowerSeparableClosureTopAlgebra L
     letI : IsScalarTower K L (SeparableClosure ℚ) :=
       numberFieldTowerSeparableClosureScalarTower K L
-    Gal(SeparableClosure ℚ / K) →ₜ*
-      Gal(L / K) := by
+    Gal(SeparableClosure ℚ/K) →ₜ*
+      Gal(L/K) := by
   letI : Algebra K (SeparableClosure ℚ) :=
     numberFieldTowerSeparableClosureBaseAlgebra K L
   let _ : Algebra L (SeparableClosure ℚ) :=
@@ -309,12 +309,12 @@ noncomputable def numberFieldTowerSeparableClosureRestriction :
   letI : IsGalois K E :=
     IsGalois.of_algEquiv eL.equivFieldRange
   let c :
-      Gal(L / K) ≃*
-        Gal(E / K) :=
+      Gal(L/K) ≃*
+        Gal(E/K) :=
     AlgEquiv.autCongr eL.equivFieldRange
   let rE :
-      Gal(SeparableClosure ℚ / K) →*
-        Gal(E / K) :=
+      Gal(SeparableClosure ℚ/K) →*
+        Gal(E/K) :=
     AlgEquiv.restrictNormalHom E
   refine
     { toMonoidHom :=
@@ -371,7 +371,7 @@ theorem numberFieldTowerSeparableClosureRestriction_apply
         numberFieldTowerSeparableClosureTopAlgebra L
       letI : IsScalarTower K L (SeparableClosure ℚ) :=
         numberFieldTowerSeparableClosureScalarTower K L
-      Gal(SeparableClosure ℚ / K)) :
+      Gal(SeparableClosure ℚ/K)) :
     letI : Algebra K (SeparableClosure ℚ) :=
       numberFieldTowerSeparableClosureBaseAlgebra K L
     letI : Algebra L (SeparableClosure ℚ) :=
@@ -424,7 +424,7 @@ copy of `K`. -/
 noncomputable def numberFieldTowerSeparableClosureToBaseSubgroup :
     letI : Algebra K (SeparableClosure ℚ) :=
       numberFieldTowerSeparableClosureBaseAlgebra K L
-    Gal(SeparableClosure ℚ / K) →*
+    Gal(SeparableClosure ℚ/K) →*
       (numberFieldTowerBaseSubgroup K L).toSubgroup := by
   let _ : Algebra K (SeparableClosure ℚ) :=
     numberFieldTowerSeparableClosureBaseAlgebra K L
@@ -452,7 +452,7 @@ Galois group. -/
 noncomputable def numberFieldTowerSeparableClosureEquivBaseSubgroup :
     letI : Algebra K (SeparableClosure ℚ) :=
       numberFieldTowerSeparableClosureBaseAlgebra K L
-    Gal(SeparableClosure ℚ / K) ≃*
+    Gal(SeparableClosure ℚ/K) ≃*
       (numberFieldTowerBaseSubgroup K L).toSubgroup := by
   letI : Algebra K (SeparableClosure ℚ) :=
     numberFieldTowerSeparableClosureBaseAlgebra K L
@@ -493,12 +493,12 @@ theorem numberFieldTowerSeparableClosureEquivBaseSubgroup_apply_coe
     (σ :
       letI : Algebra K (SeparableClosure ℚ) :=
         numberFieldTowerSeparableClosureBaseAlgebra K L
-      Gal(SeparableClosure ℚ / K)) :
+      Gal(SeparableClosure ℚ/K)) :
     letI : Algebra K (SeparableClosure ℚ) :=
       numberFieldTowerSeparableClosureBaseAlgebra K L
     ((numberFieldTowerSeparableClosureEquivBaseSubgroup K L σ :
         (numberFieldTowerBaseSubgroup K L).toSubgroup) :
-      Gal(SeparableClosure ℚ / ℚ)) =
+      Gal(SeparableClosure ℚ/ℚ)) =
       AlgEquiv.restrictScalars ℚ σ := by
   let : Algebra K (SeparableClosure ℚ) :=
     numberFieldTowerSeparableClosureBaseAlgebra K L

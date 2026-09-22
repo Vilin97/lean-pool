@@ -301,7 +301,7 @@ def galoisGroupIntegerUnitsModPrincipalUnitsMapEquivHomOfIsIntegralClosure
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L]
     (n : Nat) :
-    Gal(L / K) →*
+    Gal(L/K) →*
       (IntegerUnitsModPrincipalUnitsAtLevel L n ≃*
         IntegerUnitsModPrincipalUnitsAtLevel L n) where
   toFun := galoisGroupIntegerUnitsModPrincipalUnitsMapEquivOfIsIntegralClosure K L n
@@ -350,7 +350,7 @@ def galoisGroupIntegerUnitsModPrincipalUnitsMulDistribMulActionOfIsIntegralClosu
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L]
     (n : Nat) :
-    MulDistribMulAction (Gal(L / K)) (IntegerUnitsModPrincipalUnitsAtLevel L n) where
+    MulDistribMulAction (Gal(L/K)) (IntegerUnitsModPrincipalUnitsAtLevel L n) where
   smul σ x := galoisGroupIntegerUnitsModPrincipalUnitsMapEquivOfIsIntegralClosure K L n σ x
   one_smul := by
     intro x
@@ -523,7 +523,7 @@ theorem integerUnitsModPrincipalUnitsAtLevel_herbrandH0_finite_of_isNonarchimede
     [Fintype (Gal(L/K))] (n : Nat) :
     letI := galoisGroupIntegerUnitsModPrincipalUnitsMulDistribMulActionOfIsIntegralClosure K L n
     Finite (CyclicCohomology.ProfiniteCohomology.Herbrand.HerbrandH0
-      (Gal(L / K)) (IntegerUnitsModPrincipalUnitsAtLevel L n)) := by
+      (Gal(L/K)) (IntegerUnitsModPrincipalUnitsAtLevel L n)) := by
   let := galoisGroupIntegerUnitsModPrincipalUnitsMulDistribMulActionOfIsIntegralClosure K L n
   let : Finite (IntegerUnitsModPrincipalUnitsAtLevel L n) :=
     integerUnitsModPrincipalUnitsAtLevel_finite_of_isNonarchimedeanLocalField L n
@@ -535,10 +535,10 @@ theorem integerUnitsModPrincipalUnitsAtLevel_herbrandHMinusOne_finite_of_isNonar
     [TopologicalSpace L] [IsNonarchimedeanLocalField L] [Algebra K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L]
-    [Fintype (Gal(L/K))] (n : Nat) (σ : Gal(L / K)) :
+    [Fintype (Gal(L/K))] (n : Nat) (σ : Gal(L/K)) :
     letI := galoisGroupIntegerUnitsModPrincipalUnitsMulDistribMulActionOfIsIntegralClosure K L n
     Finite (CyclicCohomology.ProfiniteCohomology.Herbrand.HerbrandHMinusOne
-      (Gal(L / K)) (IntegerUnitsModPrincipalUnitsAtLevel L n) σ) := by
+      (Gal(L/K)) (IntegerUnitsModPrincipalUnitsAtLevel L n) σ) := by
   let := galoisGroupIntegerUnitsModPrincipalUnitsMulDistribMulActionOfIsIntegralClosure K L n
   let : Finite (IntegerUnitsModPrincipalUnitsAtLevel L n) :=
     integerUnitsModPrincipalUnitsAtLevel_finite_of_isNonarchimedeanLocalField L n
@@ -552,17 +552,17 @@ theorem integerUnitsModPrincipalUnitsAtLevel_herbrandQuotient_eq_one_of_isNonarc
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L]
     [Fintype (Gal(L/K))] (n : Nat) (σ : Gal(L/K))
-    (hgen : ∀ g : Gal(L / K), g ∈ Subgroup.zpowers σ) :
+    (hgen : ∀ g : Gal(L/K), g ∈ Subgroup.zpowers σ) :
     letI := galoisGroupIntegerUnitsModPrincipalUnitsMulDistribMulActionOfIsIntegralClosure K L n
     letI : Finite (IntegerUnitsModPrincipalUnitsAtLevel L n) :=
       integerUnitsModPrincipalUnitsAtLevel_finite_of_isNonarchimedeanLocalField L n
     CyclicCohomology.ProfiniteCohomology.Herbrand.herbrandQuotient
-      (G := Gal(L / K)) (A := IntegerUnitsModPrincipalUnitsAtLevel L n) σ = 1 := by
+      (G := Gal(L/K)) (A := IntegerUnitsModPrincipalUnitsAtLevel L n) σ = 1 := by
   let := galoisGroupIntegerUnitsModPrincipalUnitsMulDistribMulActionOfIsIntegralClosure K L n
   let : Finite (IntegerUnitsModPrincipalUnitsAtLevel L n) :=
     integerUnitsModPrincipalUnitsAtLevel_finite_of_isNonarchimedeanLocalField L n
   exact CyclicCohomology.ProfiniteCohomology.Herbrand.herbrandQuotient_finite_module_eq_one
-    (G := Gal(L / K)) (A := IntegerUnitsModPrincipalUnitsAtLevel L n) σ hgen
+    (G := Gal(L/K)) (A := IntegerUnitsModPrincipalUnitsAtLevel L n) σ hgen
 
 /-- GC Herbrand multiplicativity specialized to the actual finite principal-unit
 quotient tower
@@ -572,76 +572,76 @@ theorem integerUnitsModPrincipalUnitsSucc_herbrandQuotient_exact_multiplicative_
     [Algebra K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L]
-    [Fintype (Gal(L/K))] (n : Nat) (σ : Gal(L / K))
-    (hgen : ∀ g : Gal(L / K), g ∈ Subgroup.zpowers σ)
+    [Fintype (Gal(L/K))] (n : Nat) (σ : Gal(L/K))
+    (hgen : ∀ g : Gal(L/K), g ∈ Subgroup.zpowers σ)
     (hA0 :
       letI := galoisGroupPrincipalUnitsSuccQuotMulDistribMulActionOfIsIntegralClosure K L n
       Finite (CyclicCohomology.ProfiniteCohomology.Herbrand.HerbrandH0
-        (Gal(L / K)) (PrincipalUnitsSuccQuot L n)))
+        (Gal(L/K)) (PrincipalUnitsSuccQuot L n)))
     (hAm :
       letI := galoisGroupPrincipalUnitsSuccQuotMulDistribMulActionOfIsIntegralClosure K L n
       Finite (CyclicCohomology.ProfiniteCohomology.Herbrand.HerbrandHMinusOne
-        (Gal(L / K)) (PrincipalUnitsSuccQuot L n) σ))
+        (Gal(L/K)) (PrincipalUnitsSuccQuot L n) σ))
     (hB0 :
       letI := galoisGroupIntegerUnitsModPrincipalUnitsMulDistribMulActionOfIsIntegralClosure
         K L (n + 1)
       Finite (CyclicCohomology.ProfiniteCohomology.Herbrand.HerbrandH0
-        (Gal(L / K)) (IntegerUnitsModPrincipalUnitsAtLevel L (n + 1))))
+        (Gal(L/K)) (IntegerUnitsModPrincipalUnitsAtLevel L (n + 1))))
     (hBm :
       letI := galoisGroupIntegerUnitsModPrincipalUnitsMulDistribMulActionOfIsIntegralClosure
         K L (n + 1)
       Finite (CyclicCohomology.ProfiniteCohomology.Herbrand.HerbrandHMinusOne
-        (Gal(L / K)) (IntegerUnitsModPrincipalUnitsAtLevel L (n + 1)) σ))
+        (Gal(L/K)) (IntegerUnitsModPrincipalUnitsAtLevel L (n + 1)) σ))
     (hC0 :
       letI := galoisGroupIntegerUnitsModPrincipalUnitsMulDistribMulActionOfIsIntegralClosure
         K L n
       Finite (CyclicCohomology.ProfiniteCohomology.Herbrand.HerbrandH0
-        (Gal(L / K)) (IntegerUnitsModPrincipalUnitsAtLevel L n)))
+        (Gal(L/K)) (IntegerUnitsModPrincipalUnitsAtLevel L n)))
     (hCm :
       letI := galoisGroupIntegerUnitsModPrincipalUnitsMulDistribMulActionOfIsIntegralClosure
         K L n
       Finite (CyclicCohomology.ProfiniteCohomology.Herbrand.HerbrandHMinusOne
-        (Gal(L / K)) (IntegerUnitsModPrincipalUnitsAtLevel L n) σ)) :
+        (Gal(L/K)) (IntegerUnitsModPrincipalUnitsAtLevel L n) σ)) :
     letI := galoisGroupPrincipalUnitsSuccQuotMulDistribMulActionOfIsIntegralClosure K L n
     letI := galoisGroupIntegerUnitsModPrincipalUnitsMulDistribMulActionOfIsIntegralClosure
       K L (n + 1)
     letI := galoisGroupIntegerUnitsModPrincipalUnitsMulDistribMulActionOfIsIntegralClosure K L n
     letI : Finite (CyclicCohomology.ProfiniteCohomology.Herbrand.HerbrandH0
-        (Gal(L / K)) (PrincipalUnitsSuccQuot L n)) := hA0
+        (Gal(L/K)) (PrincipalUnitsSuccQuot L n)) := hA0
     letI : Finite (CyclicCohomology.ProfiniteCohomology.Herbrand.HerbrandHMinusOne
-        (Gal(L / K)) (PrincipalUnitsSuccQuot L n) σ) := hAm
+        (Gal(L/K)) (PrincipalUnitsSuccQuot L n) σ) := hAm
     letI : Finite (CyclicCohomology.ProfiniteCohomology.Herbrand.HerbrandH0
-        (Gal(L / K)) (IntegerUnitsModPrincipalUnitsAtLevel L (n + 1))) := hB0
+        (Gal(L/K)) (IntegerUnitsModPrincipalUnitsAtLevel L (n + 1))) := hB0
     letI : Finite (CyclicCohomology.ProfiniteCohomology.Herbrand.HerbrandHMinusOne
-        (Gal(L / K)) (IntegerUnitsModPrincipalUnitsAtLevel L (n + 1)) σ) := hBm
+        (Gal(L/K)) (IntegerUnitsModPrincipalUnitsAtLevel L (n + 1)) σ) := hBm
     letI : Finite (CyclicCohomology.ProfiniteCohomology.Herbrand.HerbrandH0
-        (Gal(L / K)) (IntegerUnitsModPrincipalUnitsAtLevel L n)) := hC0
+        (Gal(L/K)) (IntegerUnitsModPrincipalUnitsAtLevel L n)) := hC0
     letI : Finite (CyclicCohomology.ProfiniteCohomology.Herbrand.HerbrandHMinusOne
-        (Gal(L / K)) (IntegerUnitsModPrincipalUnitsAtLevel L n) σ) := hCm
+        (Gal(L/K)) (IntegerUnitsModPrincipalUnitsAtLevel L n) σ) := hCm
     CyclicCohomology.ProfiniteCohomology.Herbrand.herbrandQuotient
-        (G := Gal(L / K)) (A := IntegerUnitsModPrincipalUnitsAtLevel L (n + 1)) σ =
+        (G := Gal(L/K)) (A := IntegerUnitsModPrincipalUnitsAtLevel L (n + 1)) σ =
       CyclicCohomology.ProfiniteCohomology.Herbrand.herbrandQuotient
-          (G := Gal(L / K)) (A := PrincipalUnitsSuccQuot L n) σ *
+          (G := Gal(L/K)) (A := PrincipalUnitsSuccQuot L n) σ *
         CyclicCohomology.ProfiniteCohomology.Herbrand.herbrandQuotient
-          (G := Gal(L / K)) (A := IntegerUnitsModPrincipalUnitsAtLevel L n) σ := by
+          (G := Gal(L/K)) (A := IntegerUnitsModPrincipalUnitsAtLevel L n) σ := by
   let := galoisGroupPrincipalUnitsSuccQuotMulDistribMulActionOfIsIntegralClosure K L n
   let := galoisGroupIntegerUnitsModPrincipalUnitsMulDistribMulActionOfIsIntegralClosure
     K L (n + 1)
   let := galoisGroupIntegerUnitsModPrincipalUnitsMulDistribMulActionOfIsIntegralClosure K L n
   let : Finite (CyclicCohomology.ProfiniteCohomology.Herbrand.HerbrandH0
-      (Gal(L / K)) (PrincipalUnitsSuccQuot L n)) := hA0
+      (Gal(L/K)) (PrincipalUnitsSuccQuot L n)) := hA0
   let : Finite (CyclicCohomology.ProfiniteCohomology.Herbrand.HerbrandHMinusOne
-      (Gal(L / K)) (PrincipalUnitsSuccQuot L n) σ) := hAm
+      (Gal(L/K)) (PrincipalUnitsSuccQuot L n) σ) := hAm
   let : Finite (CyclicCohomology.ProfiniteCohomology.Herbrand.HerbrandH0
-      (Gal(L / K)) (IntegerUnitsModPrincipalUnitsAtLevel L (n + 1))) := hB0
+      (Gal(L/K)) (IntegerUnitsModPrincipalUnitsAtLevel L (n + 1))) := hB0
   let : Finite (CyclicCohomology.ProfiniteCohomology.Herbrand.HerbrandHMinusOne
-      (Gal(L / K)) (IntegerUnitsModPrincipalUnitsAtLevel L (n + 1)) σ) := hBm
+      (Gal(L/K)) (IntegerUnitsModPrincipalUnitsAtLevel L (n + 1)) σ) := hBm
   let : Finite (CyclicCohomology.ProfiniteCohomology.Herbrand.HerbrandH0
-      (Gal(L / K)) (IntegerUnitsModPrincipalUnitsAtLevel L n)) := hC0
+      (Gal(L/K)) (IntegerUnitsModPrincipalUnitsAtLevel L n)) := hC0
   let : Finite (CyclicCohomology.ProfiniteCohomology.Herbrand.HerbrandHMinusOne
-      (Gal(L / K)) (IntegerUnitsModPrincipalUnitsAtLevel L n) σ) := hCm
+      (Gal(L/K)) (IntegerUnitsModPrincipalUnitsAtLevel L n) σ) := hCm
   exact CyclicCohomology.ProfiniteCohomology.Herbrand.herbrandQuotient_exact_multiplicative
-    (G := Gal(L / K))
+    (G := Gal(L/K))
     (A := PrincipalUnitsSuccQuot L n)
     (B := IntegerUnitsModPrincipalUnitsAtLevel L (n + 1))
     (C := IntegerUnitsModPrincipalUnitsAtLevel L n)
@@ -669,76 +669,76 @@ theorem integerUnitsModPrincipalUnitsSucc_herbrandQuotient_eq_one_of_isIntegralC
     [Algebra K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L]
-    [Fintype (Gal(L/K))] (n : Nat) (σ : Gal(L / K))
-    (hgen : ∀ g : Gal(L / K), g ∈ Subgroup.zpowers σ)
+    [Fintype (Gal(L/K))] (n : Nat) (σ : Gal(L/K))
+    (hgen : ∀ g : Gal(L/K), g ∈ Subgroup.zpowers σ)
     (hA0 :
       letI := galoisGroupPrincipalUnitsSuccQuotMulDistribMulActionOfIsIntegralClosure K L n
       Finite (CyclicCohomology.ProfiniteCohomology.Herbrand.HerbrandH0
-        (Gal(L / K)) (PrincipalUnitsSuccQuot L n)))
+        (Gal(L/K)) (PrincipalUnitsSuccQuot L n)))
     (hAm :
       letI := galoisGroupPrincipalUnitsSuccQuotMulDistribMulActionOfIsIntegralClosure K L n
       Finite (CyclicCohomology.ProfiniteCohomology.Herbrand.HerbrandHMinusOne
-        (Gal(L / K)) (PrincipalUnitsSuccQuot L n) σ))
+        (Gal(L/K)) (PrincipalUnitsSuccQuot L n) σ))
     (hB0 :
       letI := galoisGroupIntegerUnitsModPrincipalUnitsMulDistribMulActionOfIsIntegralClosure
         K L (n + 1)
       Finite (CyclicCohomology.ProfiniteCohomology.Herbrand.HerbrandH0
-        (Gal(L / K)) (IntegerUnitsModPrincipalUnitsAtLevel L (n + 1))))
+        (Gal(L/K)) (IntegerUnitsModPrincipalUnitsAtLevel L (n + 1))))
     (hBm :
       letI := galoisGroupIntegerUnitsModPrincipalUnitsMulDistribMulActionOfIsIntegralClosure
         K L (n + 1)
       Finite (CyclicCohomology.ProfiniteCohomology.Herbrand.HerbrandHMinusOne
-        (Gal(L / K)) (IntegerUnitsModPrincipalUnitsAtLevel L (n + 1)) σ))
+        (Gal(L/K)) (IntegerUnitsModPrincipalUnitsAtLevel L (n + 1)) σ))
     (hC0 :
       letI := galoisGroupIntegerUnitsModPrincipalUnitsMulDistribMulActionOfIsIntegralClosure
         K L n
       Finite (CyclicCohomology.ProfiniteCohomology.Herbrand.HerbrandH0
-        (Gal(L / K)) (IntegerUnitsModPrincipalUnitsAtLevel L n)))
+        (Gal(L/K)) (IntegerUnitsModPrincipalUnitsAtLevel L n)))
     (hCm :
       letI := galoisGroupIntegerUnitsModPrincipalUnitsMulDistribMulActionOfIsIntegralClosure
         K L n
       Finite (CyclicCohomology.ProfiniteCohomology.Herbrand.HerbrandHMinusOne
-        (Gal(L / K)) (IntegerUnitsModPrincipalUnitsAtLevel L n) σ))
+        (Gal(L/K)) (IntegerUnitsModPrincipalUnitsAtLevel L n) σ))
     (hA :
       letI := galoisGroupPrincipalUnitsSuccQuotMulDistribMulActionOfIsIntegralClosure K L n
       letI : Finite (CyclicCohomology.ProfiniteCohomology.Herbrand.HerbrandH0
-          (Gal(L / K)) (PrincipalUnitsSuccQuot L n)) := hA0
+          (Gal(L/K)) (PrincipalUnitsSuccQuot L n)) := hA0
       letI : Finite (CyclicCohomology.ProfiniteCohomology.Herbrand.HerbrandHMinusOne
-          (Gal(L / K)) (PrincipalUnitsSuccQuot L n) σ) := hAm
+          (Gal(L/K)) (PrincipalUnitsSuccQuot L n) σ) := hAm
       CyclicCohomology.ProfiniteCohomology.Herbrand.herbrandQuotient
-        (G := Gal(L / K)) (A := PrincipalUnitsSuccQuot L n) σ = 1)
+        (G := Gal(L/K)) (A := PrincipalUnitsSuccQuot L n) σ = 1)
     (hC :
       letI := galoisGroupIntegerUnitsModPrincipalUnitsMulDistribMulActionOfIsIntegralClosure K L n
       letI : Finite (CyclicCohomology.ProfiniteCohomology.Herbrand.HerbrandH0
-          (Gal(L / K)) (IntegerUnitsModPrincipalUnitsAtLevel L n)) := hC0
+          (Gal(L/K)) (IntegerUnitsModPrincipalUnitsAtLevel L n)) := hC0
       letI : Finite (CyclicCohomology.ProfiniteCohomology.Herbrand.HerbrandHMinusOne
-          (Gal(L / K)) (IntegerUnitsModPrincipalUnitsAtLevel L n) σ) := hCm
+          (Gal(L/K)) (IntegerUnitsModPrincipalUnitsAtLevel L n) σ) := hCm
       CyclicCohomology.ProfiniteCohomology.Herbrand.herbrandQuotient
-        (G := Gal(L / K)) (A := IntegerUnitsModPrincipalUnitsAtLevel L n) σ = 1) :
+        (G := Gal(L/K)) (A := IntegerUnitsModPrincipalUnitsAtLevel L n) σ = 1) :
     letI := galoisGroupIntegerUnitsModPrincipalUnitsMulDistribMulActionOfIsIntegralClosure
       K L (n + 1)
     letI : Finite (CyclicCohomology.ProfiniteCohomology.Herbrand.HerbrandH0
-        (Gal(L / K)) (IntegerUnitsModPrincipalUnitsAtLevel L (n + 1))) := hB0
+        (Gal(L/K)) (IntegerUnitsModPrincipalUnitsAtLevel L (n + 1))) := hB0
     letI : Finite (CyclicCohomology.ProfiniteCohomology.Herbrand.HerbrandHMinusOne
-        (Gal(L / K)) (IntegerUnitsModPrincipalUnitsAtLevel L (n + 1)) σ) := hBm
+        (Gal(L/K)) (IntegerUnitsModPrincipalUnitsAtLevel L (n + 1)) σ) := hBm
     CyclicCohomology.ProfiniteCohomology.Herbrand.herbrandQuotient
-      (G := Gal(L / K)) (A := IntegerUnitsModPrincipalUnitsAtLevel L (n + 1)) σ = 1 := by
+      (G := Gal(L/K)) (A := IntegerUnitsModPrincipalUnitsAtLevel L (n + 1)) σ = 1 := by
   let := galoisGroupPrincipalUnitsSuccQuotMulDistribMulActionOfIsIntegralClosure K L n
   let := galoisGroupIntegerUnitsModPrincipalUnitsMulDistribMulActionOfIsIntegralClosure
     K L (n + 1)
   let := galoisGroupIntegerUnitsModPrincipalUnitsMulDistribMulActionOfIsIntegralClosure K L n
   let : Finite (CyclicCohomology.ProfiniteCohomology.Herbrand.HerbrandH0
-      (Gal(L / K)) (PrincipalUnitsSuccQuot L n)) := hA0
+      (Gal(L/K)) (PrincipalUnitsSuccQuot L n)) := hA0
   let : Finite (CyclicCohomology.ProfiniteCohomology.Herbrand.HerbrandHMinusOne
-      (Gal(L / K)) (PrincipalUnitsSuccQuot L n) σ) := hAm
+      (Gal(L/K)) (PrincipalUnitsSuccQuot L n) σ) := hAm
   let : Finite (CyclicCohomology.ProfiniteCohomology.Herbrand.HerbrandH0
-      (Gal(L / K)) (IntegerUnitsModPrincipalUnitsAtLevel L (n + 1))) := hB0
+      (Gal(L/K)) (IntegerUnitsModPrincipalUnitsAtLevel L (n + 1))) := hB0
   let : Finite (CyclicCohomology.ProfiniteCohomology.Herbrand.HerbrandHMinusOne
-      (Gal(L / K)) (IntegerUnitsModPrincipalUnitsAtLevel L (n + 1)) σ) := hBm
+      (Gal(L/K)) (IntegerUnitsModPrincipalUnitsAtLevel L (n + 1)) σ) := hBm
   let : Finite (CyclicCohomology.ProfiniteCohomology.Herbrand.HerbrandH0
-      (Gal(L / K)) (IntegerUnitsModPrincipalUnitsAtLevel L n)) := hC0
+      (Gal(L/K)) (IntegerUnitsModPrincipalUnitsAtLevel L n)) := hC0
   let : Finite (CyclicCohomology.ProfiniteCohomology.Herbrand.HerbrandHMinusOne
-      (Gal(L / K)) (IntegerUnitsModPrincipalUnitsAtLevel L n) σ) := hCm
+      (Gal(L/K)) (IntegerUnitsModPrincipalUnitsAtLevel L n) σ) := hCm
   rw [integerUnitsModPrincipalUnitsSucc_herbrandQuotient_exact_multiplicative_of_isIntegralClosure
     K L n σ hgen hA0 hAm hB0 hBm hC0 hCm, hA, hC, one_mul]
 

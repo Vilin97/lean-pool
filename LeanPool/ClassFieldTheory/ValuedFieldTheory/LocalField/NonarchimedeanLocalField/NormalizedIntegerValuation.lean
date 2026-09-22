@@ -17,6 +17,11 @@ valuation to the integer model and proves that completeness and the finite
 residue field are preserved.
 -/
 
+open _root_.ValuationTheory.DiscreteValuationField.ValuedExtension renaming
+  moduleFinite_target_valuationSubring_of_finite_separable →
+    moduleFinite_target_valuationSubring_of_finite_separable
+
+
 noncomputable section
 
 namespace LocalFieldTheory
@@ -75,7 +80,7 @@ theorem integerRing_moduleFinite_of_finite_separable
   let :
       Module.Finite (localCompleteDVF K).valuationSubring
         (localCompleteDVF L).valuationSubring :=
-    ValuationTheory.DiscreteValuationField.ValuedExtension.moduleFinite_target_valuationSubring_of_finite_separable
+    moduleFinite_target_valuationSubring_of_finite_separable
       (localCompleteDVF K) (localCompleteDVF L)
   have hK :
       (ValuativeRel.valuation K).integer =

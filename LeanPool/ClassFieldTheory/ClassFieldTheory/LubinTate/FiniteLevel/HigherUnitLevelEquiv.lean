@@ -38,6 +38,11 @@ old primitive point, and the derivative exponent controls the product of the
 other changed-root displacements.
 -/
 
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup renaming
+  isUnit_one_add_of_mem_maximalIdeal_pow →
+    isUnit_one_add_of_mem_maximalIdeal_pow
+
+
 noncomputable section
 
 open scoped Polynomial IntermediateField
@@ -241,7 +246,7 @@ private theorem standardLubinTate_iterate_derivative_factor_addVal
       IsUnit
         (1 + standardLubinTateLevelCoefficientHom hπ n c *
           y ^ (q - 1)) :=
-    LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.isUnit_one_add_of_mem_maximalIdeal_pow
+    isUnit_one_add_of_mem_maximalIdeal_pow
         target (n := 1) le_rfl
         (standardLubinTateLevelCoefficientHom hπ n c *
           y ^ (q - 1)) (by
@@ -1048,7 +1053,7 @@ private theorem
   let : level.valuation.HasExtension target.valuation :=
     standardLubinTateLevelToChangedLevelCompositum_hasExtension
       hπ u n
-  let tau : Gal(L / K) := σ.restrictNormal L
+  let tau : Gal(L/K) := σ.restrictNormal L
   have hrestrict :=
     valuationSubringAutOfUniqueExtension_integerMap_restrictNormal
       (base := F.toCompleteDVF.toDVF)
@@ -1265,7 +1270,7 @@ private theorem
     exists_standardLubinTateChangedPrimitiveRootInCompositum_close
       hπ u n hu
   have hstabilizer :
-      ∀ σ : Gal(M / K),
+      ∀ σ : Gal(M/K),
         σ (beta : M) = (beta : M) →
           σ (alpha : M) = (alpha : M) := by
     intro σ hfix

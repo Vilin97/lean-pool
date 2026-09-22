@@ -31,9 +31,9 @@ variable
 abelianizations. -/
 noncomputable def intermediateAbelianizedRestriction
     (M : IntermediateField K N) :
-    Abelianization Gal(N / M) →* Abelianization Gal(N / K) :=
+    Abelianization Gal(N/M) →* Abelianization Gal(N/K) :=
   Abelianization.map
-    (AlgEquiv.restrictScalarsHom K : Gal(N / M) →* Gal(N / K))
+    (AlgEquiv.restrictScalarsHom K : Gal(N/M) →* Gal(N/K))
 
 omit [NumberField K] [NumberField N] [IsGalois K N] in
 /-- The image of abelianized restriction from an intermediate field is the
@@ -42,23 +42,23 @@ theorem intermediateAbelianizedRestriction_range_eq_fixingSubgroup_image
     (M : IntermediateField K N) :
     (intermediateAbelianizedRestriction (K := K) (N := N) M).range =
       M.fixingSubgroup.map
-        (Abelianization.of : Gal(N / K) →* Abelianization Gal(N / K)) := by
+        (Abelianization.of : Gal(N/K) →* Abelianization Gal(N/K)) := by
   ext z
   constructor
   · rintro ⟨q, rfl⟩
     obtain ⟨sigma, rfl⟩ :=
       QuotientGroup.mk'_surjective
-        (_root_.commutator Gal(N / M)) q
+        (_root_.commutator Gal(N/M)) q
     let tau : M.fixingSubgroup :=
       (IntermediateField.fixingSubgroupEquiv M).symm sigma
     refine ⟨tau, tau.property, ?_⟩
     change
-      Abelianization.of (tau : Gal(N / K)) =
+      Abelianization.of (tau : Gal(N/K)) =
         Abelianization.of
           ((AlgEquiv.restrictScalarsHom K) sigma)
     rfl
   · rintro ⟨tau, htau, rfl⟩
-    let sigma : Gal(N / M) :=
+    let sigma : Gal(N/M) :=
       IntermediateField.fixingSubgroupEquiv M ⟨tau, htau⟩
     refine ⟨Abelianization.of sigma, ?_⟩
     change
@@ -75,7 +75,7 @@ theorem
     ((intermediateAbelianizedRestriction (K := K) (N := N) M).comp
         (globalNormResidueAbelianizationMonoidHom M N)).range =
       M.fixingSubgroup.map
-        (Abelianization.of : Gal(N / K) →* Abelianization Gal(N / K)) := by
+        (Abelianization.of : Gal(N/K) →* Abelianization Gal(N/K)) := by
   calc
     ((intermediateAbelianizedRestriction (K := K) (N := N) M).comp
         (globalNormResidueAbelianizationMonoidHom M N)).range =
@@ -89,7 +89,7 @@ theorem
         refine ⟨c, ?_⟩
         simp only [MonoidHom.comp_apply, hc]
     _ = M.fixingSubgroup.map
-        (Abelianization.of : Gal(N / K) →* Abelianization Gal(N / K)) :=
+        (Abelianization.of : Gal(N/K) →* Abelianization Gal(N/K)) :=
       intermediateAbelianizedRestriction_range_eq_fixingSubgroup_image M
 
 /-- Ordinary idèle-class norm from an arbitrary intermediate field agrees
@@ -113,7 +113,7 @@ theorem ideleClassNorm_range_eq_artin_preimage_abelianizedFixingSubgroup
     (M : IntermediateField K N) :
     (_root_.ideleClassNorm K M).range =
       (M.fixingSubgroup.map
-        (Abelianization.of : Gal(N / K) →* Abelianization Gal(N / K))).comap
+        (Abelianization.of : Gal(N/K) →* Abelianization Gal(N/K))).comap
         (globalNormResidueAbelianizationMonoidHom K N) := by
   let f := globalNormResidueAbelianizationMonoidHom K N
   let g := globalNormResidueAbelianizationMonoidHom M N
@@ -130,7 +130,7 @@ theorem ideleClassNorm_range_eq_artin_preimage_abelianizedFixingSubgroup
   · rintro ⟨c, rfl⟩
     change f (n c) ∈
       M.fixingSubgroup.map
-        (Abelianization.of : Gal(N / K) →* Abelianization Gal(N / K))
+        (Abelianization.of : Gal(N/K) →* Abelianization Gal(N/K))
     have hpoint : f (n c) = r (g c) :=
       DFunLike.congr_fun hnat c
     rw [hpoint, ← hrange]
@@ -138,7 +138,7 @@ theorem ideleClassNorm_range_eq_artin_preimage_abelianizedFixingSubgroup
   · intro hx
     change f x ∈
       M.fixingSubgroup.map
-        (Abelianization.of : Gal(N / K) →* Abelianization Gal(N / K))
+        (Abelianization.of : Gal(N/K) →* Abelianization Gal(N/K))
       at hx
     have hxrange : f x ∈ r.range := by
       rw [hrange]

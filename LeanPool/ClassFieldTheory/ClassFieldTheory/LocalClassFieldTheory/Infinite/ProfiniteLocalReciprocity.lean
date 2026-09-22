@@ -64,7 +64,7 @@ noncomputable instance standardLocalAbsoluteAbelianization_compactSpace :
 noncomputable instance standardLocalAbsoluteAbelianization_t2Space :
     T2Space (_root_.Field.absoluteGaloisGroupAbelianization K) :=
   by
-    have htarget : T2Space Gal(localMaximalAbelianExtension K / K) :=
+    have htarget : T2Space Gal(localMaximalAbelianExtension K/K) :=
       krullTopology_t2
     have hsource : T2Space
         (TopologicalAbelianization (intrinsicAbsoluteGalois K)) :=

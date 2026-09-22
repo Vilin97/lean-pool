@@ -23,6 +23,19 @@ the finite standard/changed compositum.  Since the same element is a
 uniformizer on both sides, their relative ramification index is one.
 -/
 
+open _root_.LocalFieldTheory.DiscreteValuationField.ValuedExtension renaming
+  ramificationIndex_eq_one_of_integerMap_uniformizer →
+    ramificationIndex_eq_one_of_integerMap_uniformizer
+
+open _root_.ValuationTheory.DiscreteValuationField.ValuedExtension renaming
+  moduleFinite_target_valuationSubring_of_finite_separable →
+    moduleFinite_target_valuationSubring_of_finite_separable
+
+open _root_.ValuationTheory.DiscreteValuationField.ValuedExtension renaming
+  moduleIsTorsionFree_target_valuationSubring_of_finite_separable →
+    moduleIsTorsionFree_target_valuationSubring_of_finite_separable
+
+
 noncomputable section
 
 namespace LubinTate
@@ -227,7 +240,7 @@ theorem
     rw [integerMap_apply]
     exact hthetaM
   exact
-    LocalFieldTheory.DiscreteValuationField.ValuedExtension.ramificationIndex_eq_one_of_integerMap_uniformizer
+    ramificationIndex_eq_one_of_integerMap_uniformizer
       base target thetaInteger
       (by simpa only [thetaInteger] using hthetaD)
       hthetaMap
@@ -277,7 +290,7 @@ theorem
         Module.Finite (localCompleteDVF D).valuationSubring
           (localCompleteDVF M).valuationSubring
       exact
-        ValuationTheory.DiscreteValuationField.ValuedExtension.moduleFinite_target_valuationSubring_of_finite_separable
+        moduleFinite_target_valuationSubring_of_finite_separable
           (localCompleteDVF D) (localCompleteDVF M)
     LocalFieldTheory.IsNonarchimedeanLocalField.IsUnramifiedValuedExtension
       D M := by
@@ -319,13 +332,13 @@ theorem
       Module.Finite (localCompleteDVF D).valuationSubring
         (localCompleteDVF M).valuationSubring
     exact
-      ValuationTheory.DiscreteValuationField.ValuedExtension.moduleFinite_target_valuationSubring_of_finite_separable
+      moduleFinite_target_valuationSubring_of_finite_separable
         (localCompleteDVF D) (localCompleteDVF M)
   let base := localCompleteDVF D
   let target := localCompleteDVF M
   let :
       Module.IsTorsionFree base.valuationSubring target.valuationSubring :=
-    ValuationTheory.DiscreteValuationField.ValuedExtension.moduleIsTorsionFree_target_valuationSubring_of_finite_separable
+    moduleIsTorsionFree_target_valuationSubring_of_finite_separable
       base target
   have hramification :
       ramificationIndex base.toDVF target.toDVF = 1 :=

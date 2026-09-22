@@ -184,7 +184,7 @@ theorem
   let : IsAbelianGalois K L :=
     equalCharacteristicTransportedLubinTateLevel_isAbelianGalois
       K p ϖ hϖ n
-  let φ : Kˣ →* Gal(L / K) :=
+  let φ : Kˣ →* Gal(L/K) :=
     abelianLocalArtinMonoidHom K L
   have hφ : Function.Surjective φ := by
     change Function.Surjective (abelianLocalArtinMonoidHom K L)

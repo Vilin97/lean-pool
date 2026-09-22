@@ -422,7 +422,7 @@ noncomputable def
           (extensionSubgroup H₀ J₀ hJH).Normal :=
         ambientEmbeddedExtensionSubgroup_normal K F E j e
       (H₀.toSubgroup ⧸ extensionSubgroup H₀ J₀ hJH) ≃*
-        Gal(E / F) := by
+        Gal(E/F) := by
   dsimp only
   let i :=
     j.comp (IsScalarTower.toAlgHom K F E)

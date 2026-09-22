@@ -191,9 +191,9 @@ open scoped Classical in
 idele class group with the maximal abelian Galois group. -/
 noncomputable def ideleClassComponentQuotientEquivMaximalAbelianGalois :
     ideleClassComponentQuotient K ≃ₜ*
-      Gal(maximalAbelianExtension K / K) := by
+      Gal(maximalAbelianExtension K/K) := by
   let e : ideleClassComponentQuotient K ≃*
-      Gal(maximalAbelianExtension K / K) :=
+      Gal(maximalAbelianExtension K/K) :=
     QuotientGroup.liftEquiv
       (ideleClassIdentityComponent K)
       (maximalAbelianGlobalArtin_surjective K)

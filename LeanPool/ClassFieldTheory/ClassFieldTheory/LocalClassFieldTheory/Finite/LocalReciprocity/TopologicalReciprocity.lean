@@ -22,6 +22,11 @@ finite Galois extension is open.  Consequently its quotient is discrete, as
 is the topological abelianization of the finite Krull Galois group.
 -/
 
+open _root_.ValuationTheory.DiscreteValuationField.Valuation renaming
+  valuationSubring_isIntegralClosure_of_isIntegral →
+    valuationSubring_isIntegralClosure_of_isIntegral
+
+
 noncomputable section
 
 namespace LocalClassFieldTheory
@@ -139,16 +144,15 @@ private theorem localNormSubgroup_isOpen_of_compatibleLocalField
     integerUnitNormSubgroup_isCompact K L
   have hclosed : IsClosed (integerUnitNormSubgroup K L : Set Kˣ) :=
     hcompact.isClosed
-
-  let : Finite (Gal(L / K)) := by
+  let : Finite (Gal(L/K)) := by
     apply Nat.finite_of_card_ne_zero
     rw [IsGalois.card_aut_eq_finrank K L]
     exact Nat.ne_of_gt Module.finrank_pos
-  let : Finite (Abelianization (Gal(L / K))) :=
+  let : Finite (Abelianization (Gal(L/K))) :=
     Finite.of_surjective Abelianization.of QuotientGroup.mk_surjective
   let : Finite (NormQuotient K L) :=
     Finite.of_equiv
-      (Abelianization (Gal(L / K)))
+      (Abelianization (Gal(L/K)))
       (abelianizationEquivNormQuotient K L).toEquiv
   let : Finite (Kˣ ⧸ localNormSubgroup K L) := by
     change Finite (NormQuotient K L)
@@ -157,7 +161,6 @@ private theorem localNormSubgroup_isOpen_of_compatibleLocalField
     Subgroup.finiteIndex_of_finite_quotient
   let : ((localNormSubgroup K L).subgroupOf
       (localBaseUnitSubgroup K)).FiniteIndex := inferInstance
-
   have hrelativeClosed :
       IsClosed
         ((localNormSubgroup K L).subgroupOf (localBaseUnitSubgroup K) :
@@ -180,7 +183,6 @@ private theorem localNormSubgroup_isOpen_of_compatibleLocalField
         exact ⟨hz, z.property⟩
       · exact fun hz => hz.1]
     exact hpreimage
-
   have hrelativeOpen :
       IsOpen
         ((localNormSubgroup K L).subgroupOf (localBaseUnitSubgroup K) :
@@ -206,7 +208,6 @@ private theorem localNormSubgroup_isOpen_of_compatibleLocalField
       rw [hintersection] at hx'
       exact ⟨⟨x, hx'.2⟩, hx'.1, rfl⟩
   rw [himage] at himageOpen
-
   apply Subgroup.isOpen_mono
     (H₁ := integerUnitNormSubgroup K L)
     (H₂ := localNormSubgroup K L) ?_ himageOpen
@@ -233,7 +234,6 @@ theorem localNormSubgroup_isOpen
   let : NontriviallyNormedField K :=
     Valued.toNontriviallyNormedField
       (L := K) (Γ₀ := ValuativeRel.ValueGroupWithZero K)
-
   let : NontriviallyNormedField L :=
     spectralNorm.nontriviallyNormedField K L
   let : NormedAlgebra K L := spectralNorm.normedAlgebra K L
@@ -260,7 +260,6 @@ theorem localNormSubgroup_isOpen
     { toIsValuativeTopology := inferInstance
       toLocallyCompactSpace := inferInstance
       toIsNontrivial := inferInstance }
-
   let : (ValuativeRel.valuation K).HasExtension
       (ValuativeRel.valuation L) := by
     apply Valuation.HasExtension.ofComapInteger
@@ -272,7 +271,6 @@ theorem localNormSubgroup_isOpen
       ValuativeRel.valuation K x ≤ 1
     rw [spectralNorm_extends]
     exact Valued.toNormedField.norm_le_one_iff
-
   let : Algebra.IsIntegral 𝒪[K] 𝒪[L] := ⟨by
     intro y
     apply IsIntegral.tower_bot
@@ -315,7 +313,6 @@ theorem localNormSubgroup_isOpen
           Polynomial.map_toSubring]
         exact minpoly.aeval K (y : L)
       rwa [Polynomial.aeval_map_algebraMap K (y : L) p] at hmaproot⟩
-
   let : Algebra.IsIntegral
       (ValuativeRel.valuation K).valuationSubring
       (ValuativeRel.valuation L).valuationSubring := by
@@ -324,14 +321,13 @@ theorem localNormSubgroup_isOpen
   let hIntegralClosure : IsIntegralClosure
       (ValuativeRel.valuation L).valuationSubring
       (ValuativeRel.valuation K).valuationSubring L :=
-    ValuationTheory.DiscreteValuationField.Valuation.valuationSubring_isIntegralClosure_of_isIntegral
+    valuationSubring_isIntegralClosure_of_isIntegral
       (ValuativeRel.valuation K) (ValuativeRel.valuation L)
   let : IsIntegralClosure 𝒪[L] 𝒪[K] L := by
     change IsIntegralClosure
       (ValuativeRel.valuation L).valuationSubring
       (ValuativeRel.valuation K).valuationSubring L
     exact hIntegralClosure
-
   exact localNormSubgroup_isOpen_of_compatibleLocalField K L
 
 /-- The native quotient topology on the finite norm quotient is discrete. -/
@@ -365,20 +361,20 @@ private theorem commutator_topologicalClosure_eq
 /-- For a finite-dimensional Galois extension, algebraic and topological
 abelianization agree as multiplicative groups. -/
 noncomputable def topologicalAbelianizationFiniteEquiv :
-    Abelianization (Gal(L / K)) ≃* TopologicalAbelianization (Gal(L / K)) := by
-  let h : Subgroup.topologicalClosure (commutator (Gal(L / K))) =
-      commutator (Gal(L / K)) :=
-    commutator_topologicalClosure_eq (Gal(L / K))
+    Abelianization (Gal(L/K)) ≃* TopologicalAbelianization (Gal(L/K)) := by
+  let h : Subgroup.topologicalClosure (commutator (Gal(L/K))) =
+      commutator (Gal(L/K)) :=
+    commutator_topologicalClosure_eq (Gal(L/K))
   exact QuotientGroup.quotientMulEquivOfEq h.symm
 
 /-- Finite local reciprocity as a homeomorphic group isomorphism from the
 norm quotient to the topological abelianization of the Krull Galois group. -/
 noncomputable def localReciprocityEquiv :
-    NormQuotient K L ≃ₜ* TopologicalAbelianization (Gal(L / K)) := by
+    NormQuotient K L ≃ₜ* TopologicalAbelianization (Gal(L/K)) := by
   letI : DiscreteTopology (NormQuotient K L) := normQuotient_discrete K L
-  letI : DiscreteTopology (TopologicalAbelianization (Gal(L / K))) :=
+  letI : DiscreteTopology (TopologicalAbelianization (Gal(L/K))) :=
     QuotientGroup.discreteTopology (isOpen_discrete _)
-  let e : NormQuotient K L ≃* TopologicalAbelianization (Gal(L / K)) :=
+  let e : NormQuotient K L ≃* TopologicalAbelianization (Gal(L/K)) :=
     (abelianizationEquivNormQuotient K L).symm.trans
       (topologicalAbelianizationFiniteEquiv K L)
   exact
@@ -403,7 +399,7 @@ noncomputable def normClassContinuous :
 
 /-- The continuous finite local Artin map. -/
 noncomputable def localArtinMap :
-    Kˣ →ₜ* TopologicalAbelianization (Gal(L / K)) :=
+    Kˣ →ₜ* TopologicalAbelianization (Gal(L/K)) :=
   (ContinuousMonoidHom.toContinuousMonoidHom (localReciprocityEquiv K L)).comp
     (normClassContinuous K L)
 
@@ -466,7 +462,7 @@ theorem localArtinMap_ker :
 local Artin map. -/
 noncomputable def localArtinMapQuotientKerEquiv :
     Kˣ ⧸ (localArtinMap K L).toMonoidHom.ker ≃*
-      TopologicalAbelianization (Gal(L / K)) :=
+      TopologicalAbelianization (Gal(L/K)) :=
   QuotientGroup.quotientKerEquivOfSurjective
     (localArtinMap K L).toMonoidHom (localArtinMap_surjective K L)
 

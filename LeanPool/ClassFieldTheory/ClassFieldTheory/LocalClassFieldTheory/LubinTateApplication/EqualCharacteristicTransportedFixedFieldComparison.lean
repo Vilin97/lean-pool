@@ -107,7 +107,7 @@ theorem
   let e : E ≃ₐ[K] M :=
     equalCharacteristicTransportedLubinTateFixedFieldEquiv
       K p ϖ hϖ m
-  let q : Gal(E / K) ≃* Gal(M / K) :=
+  let q : Gal(E/K) ≃* Gal(M/K) :=
     AlgEquiv.autCongr e
   have hArtin :
       Subgroup.map q.toMonoidHom

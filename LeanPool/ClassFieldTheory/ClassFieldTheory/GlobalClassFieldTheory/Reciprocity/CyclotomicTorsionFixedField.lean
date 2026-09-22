@@ -35,6 +35,11 @@ torsion closure and the group-theoretic decomposition of `ℤ̂ˣ` gives the
 cyclotomic `ℤ̂`-extension.
 -/
 
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup renaming
+  continuousMulEquivOfCompactToT2 →
+    continuousMulEquivOfCompactToT2
+
+
 noncomputable section
 
 namespace GlobalClassFieldTheory
@@ -55,7 +60,7 @@ private noncomputable def rationalCyclotomicTorsionRestrictionEquiv :
         rationalCyclotomicTorsionFixedField) :=
     krullTopology_t2
   exact
-    LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup.continuousMulEquivOfCompactToT2
+    continuousMulEquivOfCompactToT2
       (InfiniteGalois.normalAutEquivQuotient
         (k := ℚ) (K := rationalCyclotomicField)
         rationalCyclotomicTorsionClosure)

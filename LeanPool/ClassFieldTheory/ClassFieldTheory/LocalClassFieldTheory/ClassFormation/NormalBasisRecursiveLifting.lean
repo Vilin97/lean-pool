@@ -56,9 +56,9 @@ theorem exists_chosenNormalBasisPrincipalUnit_fixed_is_tateNorm :
     letI := galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L
     ∃ c : Nat, ∀ n : Nat, c ≤ n → ∀ a : 𝒪[L]ˣ,
       a ∈ chosenNormalBasisPrincipalUnitSet K L n →
-      (∀ sigma : Gal(L / K), sigma • a = a) →
+      (∀ sigma : Gal(L/K), sigma • a = a) →
       ∃ b : 𝒪[L]ˣ, b ∈ chosenNormalBasisPrincipalUnitSet K L n ∧
-        a = tateNorm (Gal(L / K)) 𝒪[L]ˣ b := by
+        a = tateNorm (Gal(L/K)) 𝒪[L]ˣ b := by
   let := galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L
   rcases exists_chosenNormalBasisPrincipalUnit_h0_oneStep_lifting
       (K := K) (L := L) with ⟨cStep, hStep⟩
@@ -80,9 +80,9 @@ theorem exists_chosenNormalBasisPrincipalUnit_fixed_is_tateNorm :
   let P : Nat → 𝒪[L]ˣ → Prop := fun k x =>
     x ∈ chosenNormalBasisPrincipalUnitSet K L k
   let R : 𝒪[L]ˣ → Prop := fun x =>
-    ∀ sigma : Gal(L / K), sigma • x = x
+    ∀ sigma : Gal(L/K), sigma • x = x
   let F : 𝒪[L]ˣ →* 𝒪[L]ˣ :=
-    tateNormHom (G := Gal(L / K)) (A := 𝒪[L]ˣ)
+    tateNormHom (G := Gal(L/K)) (A := 𝒪[L]ˣ)
   let initial : FilteredLiftState 𝒪[L]ˣ P R n 0 :=
     ⟨a, by simpa [P] using ha, hfixed⟩
   let step : ∀ i (s : FilteredLiftState 𝒪[L]ˣ P R n i),
@@ -118,7 +118,7 @@ theorem exists_chosenNormalBasisPrincipalUnit_fixed_is_tateNorm :
     (K := K) (L := L)
     (fun d => chosenNormalBasisPrincipalUnitCorrectionProduct (L := L) z d) x hx
   have hrec (d : Nat) :
-      a = tateNorm (Gal(L / K)) 𝒪[L]ˣ
+      a = tateNorm (Gal(L/K)) 𝒪[L]ˣ
           (chosenNormalBasisPrincipalUnitCorrectionProduct (L := L) z d) *
         (states d).value := by
     have h := filteredLift_initial_eq_correctionProduct_mul_state
@@ -128,16 +128,16 @@ theorem exists_chosenNormalBasisPrincipalUnit_fixed_is_tateNorm :
     simpa [initial, states, F] using h
   have hmul : Tendsto
       (fun d : Nat =>
-        ((tateNorm (Gal(L / K)) 𝒪[L]ˣ
+        ((tateNorm (Gal(L/K)) 𝒪[L]ˣ
             (chosenNormalBasisPrincipalUnitCorrectionProduct (L := L) z d) :
           𝒪[L]ˣ) : 𝒪[L]) * (((states d).value : 𝒪[L]ˣ) : 𝒪[L]))
       atTop
-      (nhds (((tateNorm (Gal(L / K)) 𝒪[L]ˣ x : 𝒪[L]ˣ) : 𝒪[L]) * 1)) :=
+      (nhds (((tateNorm (Gal(L/K)) 𝒪[L]ˣ x : 𝒪[L]ˣ) : 𝒪[L]) * 1)) :=
     hnorm.mul hrem
   have hconst : Tendsto (fun _d : Nat => ((a : 𝒪[L]ˣ) : 𝒪[L])) atTop
       (nhds ((a : 𝒪[L]ˣ) : 𝒪[L])) := tendsto_const_nhds
   have heqO : ((a : 𝒪[L]ˣ) : 𝒪[L]) =
-      ((tateNorm (Gal(L / K)) 𝒪[L]ˣ x : 𝒪[L]ˣ) : 𝒪[L]) * 1 := by
+      ((tateNorm (Gal(L/K)) 𝒪[L]ˣ x : 𝒪[L]ˣ) : 𝒪[L]) * 1 := by
     apply tendsto_nhds_unique hconst
     exact hmul.congr' (Eventually.of_forall (fun d => by
       simpa using congrArg (fun q : 𝒪[L]ˣ => (q : 𝒪[L])) (hrec d).symm))
@@ -149,14 +149,14 @@ theorem exists_chosenNormalBasisPrincipalUnit_fixed_is_tateNorm :
 every sufficiently deep norm-one unit is an actual coboundary from the same
 normal-basis level. -/
 theorem exists_chosenNormalBasisPrincipalUnit_normOne_is_sigmaMinusOne
-    (g : Gal(L / K)) (hgen : ∀ sigma : Gal(L / K),
+    (g : Gal(L/K)) (hgen : ∀ sigma : Gal(L/K),
       sigma ∈ Subgroup.zpowers g) :
     letI := galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L
     ∃ c : Nat, ∀ n : Nat, c ≤ n → ∀ a : 𝒪[L]ˣ,
       a ∈ chosenNormalBasisPrincipalUnitSet K L n →
-      tateNorm (Gal(L / K)) 𝒪[L]ˣ a = 1 →
+      tateNorm (Gal(L/K)) 𝒪[L]ˣ a = 1 →
       ∃ b : 𝒪[L]ˣ, b ∈ chosenNormalBasisPrincipalUnitSet K L n ∧
-        a = sigmaMinusOne (Gal(L / K)) 𝒪[L]ˣ g b := by
+        a = sigmaMinusOne (Gal(L/K)) 𝒪[L]ˣ g b := by
   let := galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L
   rcases exists_chosenNormalBasisPrincipalUnit_hMinusOne_oneStep_lifting
       (K := K) (L := L) g hgen with ⟨cStep, hStep⟩
@@ -178,9 +178,9 @@ theorem exists_chosenNormalBasisPrincipalUnit_normOne_is_sigmaMinusOne
   let P : Nat → 𝒪[L]ˣ → Prop := fun k x =>
     x ∈ chosenNormalBasisPrincipalUnitSet K L k
   let R : 𝒪[L]ˣ → Prop := fun x =>
-    tateNorm (Gal(L / K)) 𝒪[L]ˣ x = 1
+    tateNorm (Gal(L/K)) 𝒪[L]ˣ x = 1
   let F : 𝒪[L]ˣ →* 𝒪[L]ˣ :=
-    sigmaMinusOneHom (G := Gal(L / K)) (A := 𝒪[L]ˣ) g
+    sigmaMinusOneHom (G := Gal(L/K)) (A := 𝒪[L]ˣ) g
   let initial : FilteredLiftState 𝒪[L]ˣ P R n 0 :=
     ⟨a, by simpa [P] using ha, hnorma⟩
   let step : ∀ i (s : FilteredLiftState 𝒪[L]ˣ P R n i),
@@ -216,7 +216,7 @@ theorem exists_chosenNormalBasisPrincipalUnit_normOne_is_sigmaMinusOne
     (K := K) (L := L) g
     (fun d => chosenNormalBasisPrincipalUnitCorrectionProduct (L := L) z d) x hx
   have hrec (d : Nat) :
-      a = sigmaMinusOne (Gal(L / K)) 𝒪[L]ˣ g
+      a = sigmaMinusOne (Gal(L/K)) 𝒪[L]ˣ g
           (chosenNormalBasisPrincipalUnitCorrectionProduct (L := L) z d) *
         (states d).value := by
     have h := filteredLift_initial_eq_correctionProduct_mul_state
@@ -226,16 +226,16 @@ theorem exists_chosenNormalBasisPrincipalUnit_normOne_is_sigmaMinusOne
     simpa [initial, states, F] using h
   have hmul : Tendsto
       (fun d : Nat =>
-        ((sigmaMinusOne (Gal(L / K)) 𝒪[L]ˣ g
+        ((sigmaMinusOne (Gal(L/K)) 𝒪[L]ˣ g
             (chosenNormalBasisPrincipalUnitCorrectionProduct (L := L) z d) :
           𝒪[L]ˣ) : 𝒪[L]) * (((states d).value : 𝒪[L]ˣ) : 𝒪[L]))
       atTop
-      (nhds (((sigmaMinusOne (Gal(L / K)) 𝒪[L]ˣ g x : 𝒪[L]ˣ) : 𝒪[L]) * 1)) :=
+      (nhds (((sigmaMinusOne (Gal(L/K)) 𝒪[L]ˣ g x : 𝒪[L]ˣ) : 𝒪[L]) * 1)) :=
     hcob.mul hrem
   have hconst : Tendsto (fun _d : Nat => ((a : 𝒪[L]ˣ) : 𝒪[L])) atTop
       (nhds ((a : 𝒪[L]ˣ) : 𝒪[L])) := tendsto_const_nhds
   have heqO : ((a : 𝒪[L]ˣ) : 𝒪[L]) =
-      ((sigmaMinusOne (Gal(L / K)) 𝒪[L]ˣ g x : 𝒪[L]ˣ) : 𝒪[L]) * 1 := by
+      ((sigmaMinusOne (Gal(L/K)) 𝒪[L]ˣ g x : 𝒪[L]ˣ) : 𝒪[L]) * 1 := by
     apply tendsto_nhds_unique hconst
     exact hmul.congr' (Eventually.of_forall (fun d => by
       simpa using congrArg (fun q : 𝒪[L]ˣ => (q : 𝒪[L])) (hrec d).symm))

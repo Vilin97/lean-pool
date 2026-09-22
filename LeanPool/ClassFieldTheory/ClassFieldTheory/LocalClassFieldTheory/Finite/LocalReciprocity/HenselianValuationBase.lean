@@ -31,7 +31,7 @@ noncomputable section
 variable (K : Type) [Field K] [ValuativeRel K] [TopologicalSpace K]
   [IsNonarchimedeanLocalField K]
 
-private abbrev G := Gal(SeparableClosure K / K)
+private abbrev G := Gal(SeparableClosure K/K)
 
 private abbrev A : Rep ℤ (G K) :=
   galoisAmbientUnitsRep K (SeparableClosure K)

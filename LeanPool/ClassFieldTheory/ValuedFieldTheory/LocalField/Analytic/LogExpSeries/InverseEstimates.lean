@@ -10,6 +10,11 @@ Develops the valuation estimates showing that logarithm and exponential series a
 their common principal-unit domain.
 -/
 
+open _root_.ValuationTheory.DiscreteValuationField.Valuation renaming
+  mem_maximalIdeal_pow_iff_valuation_le_uniformizer_pow →
+    mem_maximalIdeal_pow_iff_valuation_le_uniformizer_pow
+
+
 open Filter
 open Polynomial
 open scoped Topology
@@ -998,7 +1003,7 @@ theorem mem_maximalIdeal_pow_ofWithZeroValuation_val_ge
         v (a : K) ≤ WithZero.exp (-(n : ℤ)) :=
       WithZero.le_exp_of_log_le hlog
     exact
-      (ValuationTheory.DiscreteValuationField.Valuation.mem_maximalIdeal_pow_iff_valuation_le_uniformizer_pow
+      (mem_maximalIdeal_pow_iff_valuation_le_uniformizer_pow
         (val := v) hπ n (x := a)).2 (by
           change v (a : K) ≤ v ((π : K) ^ n)
           rw [map_pow, hπpow]
@@ -1045,7 +1050,7 @@ theorem ofWithZeroValuation_val_ge_of_mem_maximalIdeal_pow
   have hva :
       v (a : K) ≤ WithZero.exp (-(n : ℤ)) := by
     have h :=
-      (ValuationTheory.DiscreteValuationField.Valuation.mem_maximalIdeal_pow_iff_valuation_le_uniformizer_pow
+      (mem_maximalIdeal_pow_iff_valuation_le_uniformizer_pow
         (val := v) hπ n (x := a)).1 ha
     change v (a : K) ≤ v ((π : K) ^ n) at h
     rw [map_pow, hπpow] at h

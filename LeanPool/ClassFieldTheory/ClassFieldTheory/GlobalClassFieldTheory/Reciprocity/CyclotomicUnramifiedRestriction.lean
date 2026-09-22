@@ -110,14 +110,13 @@ noncomputable def abstractFixedFieldCyclotomicFiniteRestrictionMonoidHom
     let U :=
       LocalClassFieldTheory.abstractRelativeFixedField
         ℚ (SeparableClosure ℚ) hI
-    Gal(U / F) →* Gal(E / F) := by
+    Gal(U/F) →* Gal(E/F) := by
   dsimp only
   let qFinite :
       L.toFiniteGaloisExtension.extensionQuotient ≃*
         Gal(
           LocalClassFieldTheory.abstractRelativeFixedField
-            ℚ (SeparableClosure ℚ) L.below /
-          LocalClassFieldTheory.abstractFixedField
+            ℚ (SeparableClosure ℚ) L.below/LocalClassFieldTheory.abstractFixedField
             ℚ (SeparableClosure ℚ) H.field) :=
     L.toFiniteGaloisExtension.extensionQuotientMulEquiv.trans
       (LocalClassFieldTheory.abstractExtensionQuotientEquivGaloisGroup
@@ -149,8 +148,7 @@ theorem abstractFixedFieldCyclotomicFiniteRestrictionMonoidHom_apply
     (σ : Gal(
       LocalClassFieldTheory.abstractRelativeFixedField
           ℚ (SeparableClosure ℚ)
-          (rationalCyclotomicFieldInertia_le H.field) /
-        LocalClassFieldTheory.abstractFixedField
+          (rationalCyclotomicFieldInertia_le H.field)/LocalClassFieldTheory.abstractFixedField
           ℚ (SeparableClosure ℚ) H.field)) :
     abstractFixedFieldCyclotomicFiniteRestrictionMonoidHom H L hUnramified σ =
       (L.toFiniteGaloisExtension.extensionQuotientMulEquiv.trans

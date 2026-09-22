@@ -442,7 +442,6 @@ theorem extensionDegreeKernelRestriction_injective (D : DegreeData G)
 
 /-- The extension's inertia subgroup is closed inside its base subgroup. -/
 theorem extensionInertiaWithin_isClosed (D : DegreeData G)
-
     (K : FiniteResidueAbstractField D) (L : ClosedSubgroup G)
     (hLK : L.toSubgroup ≤ K.field.toSubgroup) :
     IsClosed (D.extensionInertiaWithin K.field L hLK : Set K.field.toSubgroup) := by

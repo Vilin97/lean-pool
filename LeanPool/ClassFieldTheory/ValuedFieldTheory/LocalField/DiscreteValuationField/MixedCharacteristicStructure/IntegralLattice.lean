@@ -25,6 +25,19 @@ the mixed-characteristic field-unit structure theorem.  The comparison is made f
 constructed in the local-field structure classification, not for a separately assumed scalar action.
 -/
 
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF renaming
+  mrangeRestrictNontriviallyNormedField →
+    mrangeRestrictNontriviallyNormedField
+
+open _root_.ValuationTheory.DiscreteValuationField.ValuedExtension renaming
+  moduleFinite_target_valuationSubring_of_finite_separable →
+    moduleFinite_target_valuationSubring_of_finite_separable
+
+open _root_.ValuationTheory.DiscreteValuationField.ValuedExtension renaming
+  target_valuationSubring_isIntegralClosure_of_finite_separable →
+    target_valuationSubring_isIntegralClosure_of_finite_separable
+
+
 noncomputable section
 
 universe u v
@@ -111,7 +124,7 @@ theorem qpadicInt_algebraMap_mem_valuationSubring
   let : Valued K F.mrangeValueGroup :=
     _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F.toCompleteDVF
   let : NontriviallyNormedField K :=
-    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F.toCompleteDVF
+    mrangeRestrictNontriviallyNormedField F.toCompleteDVF
   have hcontinuous : Continuous (algebraMap ℚ_[p] K) := by
     change Continuous
       (fun x : ℚ_[p] =>
@@ -284,7 +297,7 @@ theorem valuationSubring_isIntegralClosure_over_qpadicIntegers
   let : MixedQPadicContext F := mixedQPadicContext F
   let : Algebra.IsSeparable ℚ_[p] K := by infer_instance
   exact
-    _root_.ValuationTheory.DiscreteValuationField.ValuedExtension.target_valuationSubring_isIntegralClosure_of_finite_separable
+    target_valuationSubring_isIntegralClosure_of_finite_separable
     (Examples.Qp.padicCompleteDVF p) F.toCompleteDVF
 
 /-- Consequently the integer ring of `K` is finite over the integer ring of
@@ -299,7 +312,7 @@ theorem valuationSubring_moduleFinite_over_qpadicIntegers
   let : MixedQPadicContext F := mixedQPadicContext F
   let : Algebra.IsSeparable ℚ_[p] K := by infer_instance
   exact
-    _root_.ValuationTheory.DiscreteValuationField.ValuedExtension.moduleFinite_target_valuationSubring_of_finite_separable
+    moduleFinite_target_valuationSubring_of_finite_separable
     (Examples.Qp.padicCompleteDVF p) F.toCompleteDVF
 
 /-- The same integer ring is free over the canonical `Q_p` integer ring. -/
@@ -315,11 +328,11 @@ theorem valuationSubring_moduleFree_over_qpadicIntegers
   let : Module.Finite
       (Examples.Qp.padicCompleteDVF p).valuationSubring
       F.toCompleteDVF.valuationSubring :=
-    _root_.ValuationTheory.DiscreteValuationField.ValuedExtension.moduleFinite_target_valuationSubring_of_finite_separable
+    moduleFinite_target_valuationSubring_of_finite_separable
       (Examples.Qp.padicCompleteDVF p) F.toCompleteDVF
   let : IsIntegralClosure F.toCompleteDVF.valuationSubring
       (Examples.Qp.padicCompleteDVF p).valuationSubring K :=
-    _root_.ValuationTheory.DiscreteValuationField.ValuedExtension.target_valuationSubring_isIntegralClosure_of_finite_separable
+    target_valuationSubring_isIntegralClosure_of_finite_separable
       (Examples.Qp.padicCompleteDVF p) F.toCompleteDVF
   let : IsFractionRing
       (Examples.Qp.padicCompleteDVF p).valuationSubring ℚ_[p] :=
@@ -351,7 +364,7 @@ theorem valuationSubring_finrank_over_qpadicIntegers
   let : Algebra.IsSeparable ℚ_[p] K := by infer_instance
   let : IsIntegralClosure F.toCompleteDVF.valuationSubring
       (Examples.Qp.padicCompleteDVF p).valuationSubring K :=
-    _root_.ValuationTheory.DiscreteValuationField.ValuedExtension.target_valuationSubring_isIntegralClosure_of_finite_separable
+    target_valuationSubring_isIntegralClosure_of_finite_separable
       (Examples.Qp.padicCompleteDVF p) F.toCompleteDVF
   let : IsFractionRing
       (Examples.Qp.padicCompleteDVF p).valuationSubring ℚ_[p] :=
@@ -511,7 +524,7 @@ theorem valuationSubring_isIntegralClosure_over_padicInt
   let : Algebra.IsSeparable ℚ_[p] K := by infer_instance
   let hclosure : IsIntegralClosure F.toCompleteDVF.valuationSubring
       (Examples.Qp.padicCompleteDVF p).valuationSubring K :=
-    _root_.ValuationTheory.DiscreteValuationField.ValuedExtension.target_valuationSubring_isIntegralClosure_of_finite_separable
+    target_valuationSubring_isIntegralClosure_of_finite_separable
       (Examples.Qp.padicCompleteDVF p) F.toCompleteDVF
   let e : ℤ_[p] ≃+* (Examples.Qp.padicCompleteDVF p).valuationSubring :=
     Examples.Qp.padicIntEquivValuationSubring p

@@ -75,16 +75,16 @@ theorem localIntermediateField_isUnramified_of_inertia_le
     letI : Module.Finite 𝒪[K] 𝒪[E] :=
       localCompleteDVF_integerRing_moduleFinite K E
     IsUnramifiedValuedExtension K E := by
-  let H : FiniteAbstractField (Gal(SeparableClosure K / K)) :=
+  let H : FiniteAbstractField (Gal(SeparableClosure K/K)) :=
     { field := closedFixingSubgroup K (SeparableClosure K) E
       finite := by
         apply Nat.finite_of_card_ne_zero
         change (extensionSubgroup
-          (baseField (Gal(SeparableClosure K / K)))
+          (baseField (Gal(SeparableClosure K/K)))
           (closedFixingSubgroup K (SeparableClosure K) E)
           (le_baseField _)).index ≠ 0
         have hindex : (extensionSubgroup
-            (baseField (Gal(SeparableClosure K / K)))
+            (baseField (Gal(SeparableClosure K/K)))
             (closedFixingSubgroup K (SeparableClosure K) E)
             (le_baseField _)).index = E.fixingSubgroup.index := by
           symm
@@ -95,15 +95,15 @@ theorem localIntermediateField_isUnramified_of_inertia_le
         exact (Module.finrank_pos (R := K) (M := E)).ne' }
   have hnormal :
       (extensionSubgroup
-        (baseField (Gal(SeparableClosure K / K))) H.field
+        (baseField (Gal(SeparableClosure K/K))) H.field
         (le_baseField H.field)).Normal := by
     change (E.fixingSubgroup.subgroupOf
-      (⊤ : Subgroup (Gal(SeparableClosure K / K)))).Normal
+      (⊤ : Subgroup (Gal(SeparableClosure K/K)))).Normal
     infer_instance
   have hunramified :
       H.toFiniteAbstractExtension.IsUnramified (localResidueDatum K) := by
     change
-      (baseField (Gal(SeparableClosure K / K))).toSubgroup ⊓
+      (baseField (Gal(SeparableClosure K/K))).toSubgroup ⊓
           (localResidueDegree K).toMonoidHom.ker ≤ E.fixingSubgroup
     exact inf_le_right.trans hE
   have h := abstractFixedField_isUnramifiedValuedExtension K H hnormal hunramified

@@ -67,7 +67,10 @@ theorem relativeAdeleInfiniteComponent_basis_repr
         (K := K) (L := L) z i).1 w := by
   classical
   rw [relativeAdeleInfiniteComponent_eq_sum_tmul_coefficients]
-  simp [relativeExtensionBasis, Finsupp.single_apply]
+  simp only [relativeExtensionBasis, map_sum, Algebra.TensorProduct.basis_repr_tmul,
+    Module.Basis.repr_self, Finsupp.mapRange_single, InfinitePlace.Completion.algebraMap_apply,
+    WithAbs.toAbs_one, Finsupp.smul_single, smul_eq_mul, Finsupp.coe_finsetSum, Finset.sum_apply,
+    Finsupp.single_apply, Finset.sum_ite_eq', Finset.mem_univ, ↓reduceIte]
   change
     (relativeAdeleCoefficient
         (K := K) (L := L) z i).1 w *

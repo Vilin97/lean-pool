@@ -117,7 +117,7 @@ private theorem
 open scoped Classical in
 private noncomputable def arithmeticBigHilbertClassFieldReciprocityData
     (K : Type) [Field K] [NumberField K] :
-    { e : Gal((bigHilbertClassField K) / K) ≃*
+    { e : Gal((bigHilbertClassField K)/K) ≃*
         RayClass.NarrowClassGroup K //
       ∀ c : IdeleClassGroup K,
         e (arithmeticGlobalNormResidueMonoidHom
@@ -143,7 +143,7 @@ private noncomputable def arithmeticBigHilbertClassFieldReciprocityData
 open scoped Classical in
 private noncomputable def arithmeticSmallHilbertClassFieldReciprocityData
     (K : Type) [Field K] [NumberField K] :
-    { e : Gal((smallHilbertClassField K) / K) ≃*
+    { e : Gal((smallHilbertClassField K)/K) ≃*
         ClassGroup (𝓞 K) //
       ∀ c : IdeleClassGroup K,
         e (arithmeticGlobalNormResidueMonoidHom
@@ -171,7 +171,7 @@ open scoped Classical in
 field over the original number field. -/
 noncomputable def
     arithmeticBigHilbertClassFieldGaloisEquivNarrowClassGroupOverOriginal :
-    Gal((bigHilbertClassField K) / K) ≃*
+    Gal((bigHilbertClassField K)/K) ≃*
       RayClass.NarrowClassGroup K :=
   (arithmeticBigHilbertClassFieldReciprocityData K).1
 
@@ -214,7 +214,7 @@ open scoped Classical in
 field over the original number field. -/
 noncomputable def
     arithmeticSmallHilbertClassFieldGaloisEquivClassGroupOverOriginal :
-    Gal((smallHilbertClassField K) / K) ≃*
+    Gal((smallHilbertClassField K)/K) ≃*
       ClassGroup (𝓞 K) :=
   (arithmeticSmallHilbertClassFieldReciprocityData K).1
 

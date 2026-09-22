@@ -72,7 +72,7 @@ noncomputable local instance finitePadicAuxiliaryExtensionQuotientIsMulCommutati
             (numberFieldTowerBaseSubgroup K L)
             (numberFieldTowerTopSubgroup L)
             (numberFieldTowerTopSubgroup_le_baseSubgroup K L)) ≃*
-        Gal(L / K) :=
+        Gal(L/K) :=
     numberFieldTowerExtensionQuotientEquivGaloisGroup K L
   exact
     { is_comm :=
@@ -81,7 +81,7 @@ noncomputable local instance finitePadicAuxiliaryExtensionQuotientIsMulCommutati
           rw [map_mul, map_mul]
           exact
             (inferInstance :
-              IsMulCommutative (Gal(L / K))).is_comm.comm
+              IsMulCommutative (Gal(L/K))).is_comm.comm
                 (e x) (e y)⟩ }
 
 /-- The concrete auxiliary fixed field attached to a simultaneous
@@ -455,8 +455,7 @@ noncomputable def numberFieldTowerFinitePadicAuxiliaryAutomorphism
         (K := K) (L := L) p τ
     Gal(
       LocalClassFieldTheory.abstractRelativeFixedField
-        ℚ (SeparableClosure ℚ) P.below /
-      LocalClassFieldTheory.abstractFixedField
+        ℚ (SeparableClosure ℚ) P.below/LocalClassFieldTheory.abstractFixedField
         ℚ (SeparableClosure ℚ) S) := by
   dsimp only
   let P :=
@@ -1128,7 +1127,7 @@ private theorem numberFieldTowerFinitePadicAuxiliaryLocalGlobalRepresentative_no
   letI auxiliaryCompletionAlgebra :
       Algebra (v.adicCompletion K) (V.adicCompletion F) :=
     (finitePlaceAdicCompletionMap K F v Vover).toAlgebra
-  let σE : Gal(E / F) :=
+  let σE : Gal(E/F) :=
     numberFieldTowerFinitePadicAuxiliaryAutomorphism
       (K := K) (L := L) p τ
   have hσtop :
@@ -1161,11 +1160,11 @@ private theorem numberFieldTowerFinitePadicAuxiliaryLocalGlobalRepresentative_no
       z = LocalFieldTheory.normUnits
         (v.adicCompletion K) (V.adicCompletion F) y := by
     rfl
-  let σK : Gal(L / K) :=
+  let σK : Gal(L/K) :=
     numberFieldTowerExtensionQuotientEquivGaloisGroup K L
       (numberFieldTowerFiniteQuotientCoordinate
         (K := K) (L := L) τ)
-  let restriction : Gal(E / F) →* Gal(L / K) :=
+  let restriction : Gal(E/F) →* Gal(L/K) :=
     (AlgEquiv.restrictNormalHom L).comp
       (AlgEquiv.restrictScalarsHom K)
   have hrestrict : restriction σE = σK :=
@@ -1217,7 +1216,7 @@ private theorem numberFieldTowerFinitePadicAuxiliaryLocalGlobalRepresentative_no
           (IdeleGroup.finitePlaceIdeleClass V y) =
         σE :=
     (congrArg
-      (fun φ : (V.adicCompletion F)ˣ →* Gal(E / F) => φ y)
+      (fun φ : (V.adicCompletion F)ˣ →* Gal(E/F) => φ y)
       hcompat).trans hy
   have hnormClass :
       _root_.ideleClassNorm K F

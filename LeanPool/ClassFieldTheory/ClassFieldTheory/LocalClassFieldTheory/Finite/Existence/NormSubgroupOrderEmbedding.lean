@@ -97,7 +97,7 @@ theorem finiteAbelianSubextension_fixedField_isAbelianGalois
       (finiteAbelianSubextension_normal_over_absoluteBase K L)
   let : (extensionSubgroup
       (intrinsicAbstractBase K) L.field L.below).Normal := L.normal
-  let e : L.extensionQuotient ≃* Gal(E / K) := by
+  let e : L.extensionQuotient ≃* Gal(E/K) := by
     let e₀ := baseFixingExtensionQuotientEquivGaloisGroup
       K (SeparableClosure K) E
     have hclosed : closedFixingSubgroup K (SeparableClosure K) E =
@@ -361,14 +361,14 @@ theorem finiteAbelianNormSubgroup_finiteIndex
   let : IsGalois K E :=
     abstractFixedField_isGalois_of_base_normal K L.field
       (finiteAbelianSubextension_normal_over_absoluteBase K L)
-  let : Finite (Gal(E / K)) := by
+  let : Finite (Gal(E/K)) := by
     apply Nat.finite_of_card_ne_zero
     rw [IsGalois.card_aut_eq_finrank K E]
     exact Nat.ne_of_gt Module.finrank_pos
-  let : Finite (Abelianization (Gal(E / K))) :=
+  let : Finite (Abelianization (Gal(E/K))) :=
     Finite.of_surjective Abelianization.of QuotientGroup.mk_surjective
   let : Finite (NormQuotient K E) :=
-    Finite.of_equiv (Abelianization (Gal(E / K)))
+    Finite.of_equiv (Abelianization (Gal(E/K)))
       (abelianizationEquivNormQuotient K E).toEquiv
   let : Finite (Kˣ ⧸ localNormSubgroup K E) := by
     change Finite (NormQuotient K E)

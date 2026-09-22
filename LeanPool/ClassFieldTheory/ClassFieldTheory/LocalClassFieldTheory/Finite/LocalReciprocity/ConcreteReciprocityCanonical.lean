@@ -327,7 +327,8 @@ private theorem normResidueSymbol_congr
   subst hFinite'
   have ha : hAbsolute = hAbsolute' := Subsingleton.elim _ _
   subst hAbsolute'
-  simp [extensionQuotientCongr, finiteNormQuotientCongr]
+  simp only [extensionQuotientCongr, abelianizationCongr_refl, AddEquiv.toAddMonoidHom_eq_coe,
+    finiteNormQuotientCongr, AddEquiv.coe_addMonoidHom_refl, AddMonoidHom.comp_id]
   apply AddMonoidHom.ext
   intro x
   rfl

@@ -112,7 +112,7 @@ noncomputable def chosenLowerRamificationFiltration
     (base : CompleteDVF.{u, v} K)
     (E : FiniteGaloisIntermediateField K (AlgebraicClosure K)) :
     RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration
-      Gal(E / K) :=
+      Gal(E/K) :=
   Higher.lowerRamificationFiltrationOfUniqueExtension
     (base := base.toDVF) (target := (chosenIntegralClosureTarget base E).toDVF)
     (chosenIntegralClosureTarget_hasUniqueDVFValuationExtension base E)
@@ -122,7 +122,7 @@ integral-closure valuation. -/
 noncomputable def chosenUpperRamificationFiltration
     (base : CompleteDVF.{u, v} K)
     (E : FiniteGaloisIntermediateField K (AlgebraicClosure K)) :
-    ℝ → Subgroup Gal(E / K) := fun t =>
+    ℝ → Subgroup Gal(E/K) := fun t =>
   Higher.upperRamificationGroupOfUniqueExtension
     (base := base.toDVF) (target := (chosenIntegralClosureTarget base E).toDVF)
     (chosenIntegralClosureTarget_hasUniqueDVFValuationExtension base E) t
@@ -131,7 +131,7 @@ noncomputable def chosenUpperRamificationFiltration
 noncomputable abbrev chosenUpperRamificationGroup
     (base : CompleteDVF.{u, v} K)
     (E : FiniteGaloisIntermediateField K (AlgebraicClosure K))
-    (t : ℝ) : Subgroup Gal(E / K) :=
+    (t : ℝ) : Subgroup Gal(E/K) :=
   chosenUpperRamificationFiltration base E t
 
 /-- States the theorem `chosenUpperRamificationFiltration_apply`. -/
@@ -160,8 +160,8 @@ theorem chosenLowerRamificationGroup_isClosed
     (E : FiniteGaloisIntermediateField K (AlgebraicClosure K))
     (n : ℕ) :
     IsClosed
-      ((chosenLowerRamificationFiltration base E).lower n : Set Gal(E / K)) :=
-  ((chosenLowerRamificationFiltration base E).lower n : Set Gal(E / K)).toFinite.isClosed
+      ((chosenLowerRamificationFiltration base E).lower n : Set Gal(E/K)) :=
+  ((chosenLowerRamificationFiltration base E).lower n : Set Gal(E/K)).toFinite.isClosed
 
 /-- States the theorem `chosenUpperRamificationGroup_normal`. -/
 theorem chosenUpperRamificationGroup_normal
@@ -181,7 +181,7 @@ theorem chosenUpperRamificationGroup_isClosed
     (base : CompleteDVF.{u, v} K)
     (E : FiniteGaloisIntermediateField K (AlgebraicClosure K))
     (t : ℝ) :
-    IsClosed (chosenUpperRamificationGroup base E t : Set Gal(E / K)) :=
-  (chosenUpperRamificationGroup base E t : Set Gal(E / K)).toFinite.isClosed
+    IsClosed (chosenUpperRamificationGroup base E t : Set Gal(E/K)) :=
+  (chosenUpperRamificationGroup base E t : Set Gal(E/K)).toFinite.isClosed
 
 end RamificationTheory.HilbertRamification.FiniteGaloisLevel

@@ -26,16 +26,16 @@ variable (K : Type) [Field K]
 /-- The closure of the commutator subgroup of the separable absolute Galois
 group, packaged as a closed subgroup. -/
 def absoluteCommutatorClosure :
-    ClosedSubgroup Gal(SeparableClosure K / K) where
+    ClosedSubgroup Gal(SeparableClosure K/K) where
   toSubgroup :=
-    (commutator Gal(SeparableClosure K / K)).topologicalClosure
+    (commutator Gal(SeparableClosure K/K)).topologicalClosure
   isClosed' := Subgroup.isClosed_topologicalClosure _
 
 /-- The topological closure of the absolute commutator subgroup is normal. -/
 instance absoluteCommutatorClosure_normal :
     (absoluteCommutatorClosure K).Normal := by
   change
-    ((commutator Gal(SeparableClosure K / K)).topologicalClosure).Normal
+    ((commutator Gal(SeparableClosure K/K)).topologicalClosure).Normal
   infer_instance
 
 /-- The maximal abelian subextension of the separable closure. -/
@@ -58,8 +58,8 @@ instance maximalAbelianExtension_isGalois :
 /-- The algebraic quotient equivalence from the absolute topological
 abelianization to the Galois group of the maximal abelian extension. -/
 noncomputable def absoluteAbelianizationMulEquivMaximalAbelianGalois :
-    TopologicalAbelianization Gal(SeparableClosure K / K) ≃*
-      Gal(maximalAbelianExtension K / K) :=
+    TopologicalAbelianization Gal(SeparableClosure K/K) ≃*
+      Gal(maximalAbelianExtension K/K) :=
   InfiniteGalois.normalAutEquivQuotient (absoluteCommutatorClosure K)
 
 /-- The algebraic equivalence sends a quotient class to restriction to the
@@ -86,13 +86,13 @@ theorem absoluteAbelianizationMulEquivMaximalAbelianGalois_continuous :
 /-- The canonical topological identification of the absolute separable
 Galois group's abelianization with the maximal abelian Galois group. -/
 noncomputable def absoluteTopologicalAbelianizationEquivMaximalAbelianGalois :
-    TopologicalAbelianization Gal(SeparableClosure K / K) ≃ₜ*
-      Gal(maximalAbelianExtension K / K) := by
-  letI : T2Space Gal(maximalAbelianExtension K / K) :=
+    TopologicalAbelianization Gal(SeparableClosure K/K) ≃ₜ*
+      Gal(maximalAbelianExtension K/K) := by
+  letI : T2Space Gal(maximalAbelianExtension K/K) :=
     krullTopology_t2
   let h :
-      TopologicalAbelianization Gal(SeparableClosure K / K) ≃ₜ
-        Gal(maximalAbelianExtension K / K) :=
+      TopologicalAbelianization Gal(SeparableClosure K/K) ≃ₜ
+        Gal(maximalAbelianExtension K/K) :=
     Continuous.homeoOfEquivCompactToT2
       (f := (absoluteAbelianizationMulEquivMaximalAbelianGalois K).toEquiv)
       (absoluteAbelianizationMulEquivMaximalAbelianGalois_continuous K)
@@ -104,7 +104,7 @@ noncomputable def absoluteTopologicalAbelianizationEquivMaximalAbelianGalois :
 /-- The absolute topological abelianization is totally disconnected. -/
 instance absoluteTopologicalAbelianization_totallyDisconnectedSpace :
     TotallyDisconnectedSpace
-      (TopologicalAbelianization Gal(SeparableClosure K / K)) :=
+      (TopologicalAbelianization Gal(SeparableClosure K/K)) :=
   Homeomorph.totallyDisconnectedSpace
     (absoluteTopologicalAbelianizationEquivMaximalAbelianGalois K).symm.toHomeomorph
 
@@ -125,7 +125,7 @@ theorem finiteAbelianIntermediateField_le_maximalAbelianExtension
     E ≤ maximalAbelianExtension K := by
   rw [maximalAbelianExtension, IntermediateField.le_iff_le]
   change
-    (commutator Gal(SeparableClosure K / K)).topologicalClosure ≤
+    (commutator Gal(SeparableClosure K/K)).topologicalClosure ≤
       E.fixingSubgroup
   apply Subgroup.topologicalClosure_minimal
   · rw [← E.restrictNormalHom_ker]

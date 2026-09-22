@@ -282,9 +282,9 @@ theorem
         (abelianLocalArtinMonoidHom_restrict B E L hEL) a).trans ha
   let q := Nat.card F.residueField
   have hcardGalE :
-      Nat.card (Gal(E / B)) = (q - 1) * q ^ m := by
+      Nat.card (Gal(E/B)) = (q - 1) * q ^ m := by
     calc
-      Nat.card (Gal(E / B)) =
+      Nat.card (Gal(E/B)) =
           Module.finrank B E := by
             simpa [B, E] using
               equalCharacteristicLubinTateLevelField_natCard_gal F m
@@ -292,9 +292,9 @@ theorem
             simpa [B, E, q] using
               equalCharacteristicLubinTateLevelField_finrank F m
   have hcardGalL :
-      Nat.card (Gal(L / B)) = (q - 1) * q ^ n := by
+      Nat.card (Gal(L/B)) = (q - 1) * q ^ n := by
     calc
-      Nat.card (Gal(L / B)) =
+      Nat.card (Gal(L/B)) =
           Module.finrank B L := by
             simpa [B, L] using
               equalCharacteristicLubinTateLevelField_natCard_gal F n

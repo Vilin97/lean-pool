@@ -71,7 +71,7 @@ absolute abelianized Galois group, with restriction as transition map. -/
 noncomputable def finiteAbelianGaloisDiagram :
     AbsoluteFiniteIndex K ⥤ ProfiniteGrp where
   obj N := ProfiniteGrp.of
-    (Gal(absoluteFiniteQuotientField K N / K))
+    (Gal(absoluteFiniteQuotientField K N/K))
   map {N M} f := ProfiniteGrp.ofHom <|
     intermediateFieldRestrictContinuous K
       (absoluteFiniteQuotientField K M)

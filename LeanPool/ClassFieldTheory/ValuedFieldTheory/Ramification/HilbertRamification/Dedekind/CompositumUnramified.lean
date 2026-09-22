@@ -33,7 +33,6 @@ theorem inertiaGroup_eq_bot_of_restrictNormal_of_sup_eq_top
     {K M : Type*}
     [Field K]
     [Field M] [Algebra K M]
-
     (A B : IntermediateField K M) [Normal K A] [Normal K B]
     (Q : Ideal (𝓞 M))
     (hsup : A ⊔ B = ⊤)
@@ -123,7 +122,6 @@ theorem inertiaGroup_eq_bot_of_finset_adjoin_eq_top
     {K M : Type*}
     [Field K]
     [Field M] [NumberField M] [Algebra K M]
-
     (T : Finset M)
     (Q : Ideal (𝓞 M))
     (hnormal :

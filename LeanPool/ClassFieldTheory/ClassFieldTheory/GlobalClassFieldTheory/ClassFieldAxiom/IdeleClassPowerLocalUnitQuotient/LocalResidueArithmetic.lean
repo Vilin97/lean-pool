@@ -17,6 +17,27 @@ This file relates global ideal norms to the residue fields and ramification
 invariants of the corresponding finite completions.
 -/
 
+open _root_.LocalFieldTheory.DiscreteValuationField.LocalField renaming
+  valuation_residueCharacteristic_eq_exp_neg_ramificationIndex →
+    valuation_residueCharacteristic_eq_exp_neg_ramificationIndex
+
+open _root_.LocalFieldTheory.DiscreteValuationField.ValuedExtension renaming
+  degree_eq_ramificationIndex_mul_residueDegree_of_finite_separable →
+    degree_eq_ramificationIndex_mul_residueDegree_of_finite_separable
+
+open _root_.LocalFieldTheory.DiscreteValuationField.ValuedExtension renaming
+  exists_unit_mul_target_uniformizer_pow_eq_base_uniformizer_image →
+    exists_unit_mul_target_uniformizer_pow_eq_base_uniformizer_image
+
+open _root_.LocalFieldTheory.DiscreteValuationField.WithZeroValuation renaming
+  exists_valuationSubring_valuation_eq_exp_neg_one_of_surjective →
+    exists_valuationSubring_valuation_eq_exp_neg_one_of_surjective
+
+open _root_.LocalFieldTheory.DiscreteValuationField.WithZeroValuation renaming
+  isUniformizer_of_valuation_eq_exp_neg_one →
+    isUniformizer_of_valuation_eq_exp_neg_one
+
+
 open scoped NumberField NNReal ValuativeRel
 open NumberField IsDedekindDomain
 open LocalFieldTheory
@@ -98,7 +119,7 @@ theorem ramificationIndexOfWithZeroValuation_eq_extensionRamificationIndex
         (ϖ : ℚ_[p]) := by
     dsimp [base, ϖ] at hϖval ⊢
     exact
-      LocalFieldTheory.DiscreteValuationField.WithZeroValuation.isUniformizer_of_valuation_eq_exp_neg_one
+      isUniformizer_of_valuation_eq_exp_neg_one
         (LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicDVRValuation p)
         ((LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicIntEquivValuationSubring
           p (p : ℤ_[p]) :
@@ -106,14 +127,14 @@ theorem ramificationIndexOfWithZeroValuation_eq_extensionRamificationIndex
               p).valuationSubring) : ℚ_[p])
         hϖval
   obtain ⟨π, hπval⟩ :=
-    LocalFieldTheory.DiscreteValuationField.WithZeroValuation.exists_valuationSubring_valuation_eq_exp_neg_one_of_surjective
+    exists_valuationSubring_valuation_eq_exp_neg_one_of_surjective
       ν hν
   have hπ :
       target.valuation.IsUniformizer (π : E) :=
-    LocalFieldTheory.DiscreteValuationField.WithZeroValuation.isUniformizer_of_valuation_eq_exp_neg_one
+    isUniformizer_of_valuation_eq_exp_neg_one
       ν (π : E) hπval
   obtain ⟨u, hu⟩ :=
-    LocalFieldTheory.DiscreteValuationField.ValuedExtension.exists_unit_mul_target_uniformizer_pow_eq_base_uniformizer_image
+    exists_unit_mul_target_uniformizer_pow_eq_base_uniformizer_image
       base target hϖ hπ
   have huval :
       ν ((u : target.valuationSubring) : E) = 1 := by
@@ -167,7 +188,7 @@ theorem ramificationIndexOfWithZeroValuation_eq_extensionRamificationIndex
         congr 1
         simp
   have hcustom :=
-    LocalFieldTheory.DiscreteValuationField.LocalField.valuation_residueCharacteristic_eq_exp_neg_ramificationIndex
+    valuation_residueCharacteristic_eq_exp_neg_ramificationIndex
       ν
   have hexp :
       WithZero.exp
@@ -290,7 +311,7 @@ theorem finrank_qp_eq_ramificationIndex_mul_residueDegree
     ramificationIndexOfWithZeroValuation_eq_extensionRamificationIndex
       ν hν]
   exact
-    LocalFieldTheory.DiscreteValuationField.ValuedExtension.degree_eq_ramificationIndex_mul_residueDegree_of_finite_separable
+    degree_eq_ramificationIndex_mul_residueDegree_of_finite_separable
       base target
 
 open scoped Classical in

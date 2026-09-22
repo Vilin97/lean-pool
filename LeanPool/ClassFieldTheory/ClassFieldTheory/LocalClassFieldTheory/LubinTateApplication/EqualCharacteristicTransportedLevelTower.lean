@@ -56,7 +56,7 @@ noncomputable def
     letI : Algebra K L :=
       equalCharacteristicTransportedLubinTateLevelAlgebra
         K p ϖ hϖ n
-    Gal(L / K) →* Gal(E / K) := by
+    Gal(L/K) →* Gal(E/K) := by
   let F := equalCharacteristicTargetLocalField K
   let B := F.residueField⸨X⸩
   letI hKq : CharP K F.residueCharacteristic :=
@@ -104,7 +104,7 @@ theorem
       letI : Algebra K L :=
         equalCharacteristicTransportedLubinTateLevelAlgebra
           K p ϖ hϖ n
-      Gal(L / K))
+      Gal(L/K))
     (x :
       let F := equalCharacteristicTargetLocalField K
       letI : CharP K F.residueCharacteristic :=
@@ -175,7 +175,7 @@ theorem
         L.val (σ (IntermediateField.inclusion hEL x)) := by
     have h :=
       congrArg
-        (fun τ : Gal(L / K) =>
+        (fun τ : Gal(L/K) =>
           L.val (τ (IntermediateField.inclusion hEL x)))
         (qL.apply_symm_apply σ)
     rw [equalCharacteristicTransportedLubinTateGaloisEquiv_apply] at h
@@ -201,7 +201,7 @@ theorem
       let L := equalCharacteristicLubinTateLevelField F n
       letI : Algebra B L :=
         equalCharacteristicLubinTateLevelAlgebra F n
-      Gal(L / B)) :
+      Gal(L/B)) :
     let F := equalCharacteristicTargetLocalField K
     let B := F.residueField⸨X⸩
     letI : CharP K F.residueCharacteristic :=

@@ -71,7 +71,7 @@ theorem abstractFixedField_isGalois_of_base_normal
         (baseField (Gal(SeparableClosure K/K))) H
         (le_baseField H)).Normal) :
     IsGalois K (abstractFixedField K (SeparableClosure K) H) := by
-  let B := baseField (Gal(SeparableClosure K / K))
+  let B := baseField (Gal(SeparableClosure K/K))
   have hsub :
       extensionSubgroup B H (le_baseField H) =
         H.toSubgroup.subgroupOf B.toSubgroup := by
@@ -82,7 +82,7 @@ theorem abstractFixedField_isGalois_of_base_normal
     rw [← hsub]
     exact hnormal
   have hconj :
-      ∀ h g : Gal(SeparableClosure K / K),
+      ∀ h g : Gal(SeparableClosure K/K),
         h ∈ H.toSubgroup → g ∈ B.toSubgroup →
           g * h * g⁻¹ ∈ H.toSubgroup :=
     (Subgroup.normal_subgroupOf_iff (le_baseField H)).1 hrelative

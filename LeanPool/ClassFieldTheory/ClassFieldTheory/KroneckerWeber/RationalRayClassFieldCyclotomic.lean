@@ -51,14 +51,14 @@ private noncomputable def
     (r : RayClass.Modulus ℚ)
     (h : (_root_.ideleClassNorm ℚ L).range =
       RayClass.Modulus.congruenceSubgroup r) :
-    Gal(L / ℚ) ≃ₜ* RayClass.RayClassGroup r := by
+    Gal(L/ℚ) ≃ₜ* RayClass.RayClassGroup r := by
   letI : (_root_.ideleClassNorm ℚ L).range.Normal :=
     h ▸ inferInstance
   letI : DiscreteTopology (RayClass.RayClassGroup r) :=
     QuotientGroup.discreteTopology
       (RayClass.isOpen_congruenceSubgroup r)
   let reciprocity :
-      Gal(L / ℚ) ≃*
+      Gal(L/ℚ) ≃*
         (IdeleClassGroup ℚ ⧸
           (_root_.ideleClassNorm ℚ L).range) :=
     AddEquiv.toMultiplicative (globalReciprocityEquiv ℚ L)
@@ -448,7 +448,7 @@ noncomputable def
     :
     Gal(
         KummerTheory.rationalCyclotomicLevel
-          ⟨m, NeZero.pos m⟩ / ℚ) ≃ₜ*
+          ⟨m, NeZero.pos m⟩/ℚ) ≃ₜ*
       RayClass.RayClassGroup (RayClass.rationalModulus m) :=
   galoisContinuousMulEquivRayClassGroupOfNormRangeEq
       (KummerTheory.rationalCyclotomicLevel
@@ -558,7 +558,7 @@ field, obtained by transporting the genuine global one-place Artin
 symbol from the internal cyclotomic level. -/
 noncomputable def rationalCyclotomicPrimeArithmeticFrobenius
     (q : Nat.Primes) :
-    Gal(CyclotomicField m ℚ / ℚ) := by
+    Gal(CyclotomicField m ℚ/ℚ) := by
   let mp : ℕ+ := ⟨m, NeZero.pos m⟩
   let L : Type := KummerTheory.rationalCyclotomicLevel mp
   let : NumberField L :=
@@ -720,7 +720,7 @@ field, with target the rational ray class group modulo `(m)`. -/
 noncomputable def
     rationalCyclotomicGaloisContinuousMulEquivRayClassGroup
     :
-    Gal(CyclotomicField m ℚ / ℚ) ≃ₜ*
+    Gal(CyclotomicField m ℚ/ℚ) ≃ₜ*
       RayClass.RayClassGroup (RayClass.rationalModulus m) :=
   galoisContinuousMulEquivRayClassGroupOfNormRangeEq
       (CyclotomicField m ℚ) (RayClass.rationalModulus m)
@@ -734,7 +734,7 @@ topology on the actual Galois group and the discrete topology on
 noncomputable def
     rationalCyclotomicGaloisContinuousMulEquivZModUnits
     :
-    Gal(CyclotomicField m ℚ / ℚ) ≃ₜ*
+    Gal(CyclotomicField m ℚ/ℚ) ≃ₜ*
       (ZMod m)ˣ := by
   exact
     { IsCyclotomicExtension.Rat.galEquivZMod

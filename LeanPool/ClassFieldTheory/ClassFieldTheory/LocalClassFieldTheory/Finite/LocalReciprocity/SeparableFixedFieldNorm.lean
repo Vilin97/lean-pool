@@ -176,7 +176,6 @@ variable (E : IntermediateField K Ω)
   [FiniteDimensional K E] [Algebra.IsSeparable K E]
 
 omit [IsSepClosed Ω] [FiniteDimensional K E] [Algebra.IsSeparable K E] in
-
 /-- The abstract coset action on an `E`-unit is evaluation under the
 corresponding actual `K`-embedding of `E`. -/
 theorem relativeCosetAction_intermediateFieldUnit_val_of_isSeparable
@@ -228,7 +227,6 @@ theorem relativeNorm_intermediateFieldUnit_val_of_isSeparable (x : Eˣ) :
         (closedFixingSubgroup K Ω E) (fixingSubgroupLeBase K Ω E)
         (intermediateFieldUnitsEquivGaloisFixed K Ω E
           (Additive.ofMul x)) q) : Ωˣ) : Ω) = _
-
   change (Units.coeHom Ω) (∏ q : Q,
     Additive.toMul
       (relativeCosetAction (galoisAmbientUnitsRep K Ω)

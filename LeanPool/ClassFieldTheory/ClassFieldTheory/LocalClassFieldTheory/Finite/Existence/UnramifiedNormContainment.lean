@@ -63,7 +63,7 @@ private theorem valuationAt_baseField_coe
       v.toAddMonoidHom x := by
   have hdivided :=
     v.residueDegree_nsmul_dividedAt (FiniteAbstractField.base G) x
-  simp at hdivided
+  simp? at hdivided
   change v.dividedAt (FiniteAbstractField.base G) x = v.toAddMonoidHom x
   rw [hdivided]
   let : Finite ((baseField G).toSubgroup ⧸
@@ -106,7 +106,6 @@ theorem finiteUnramifiedNormSubgroup_map_le_unramifiedNormSubgroup
     change FiniteGaloisSubextension K₀ at h
     exact h
   dsimp only
-
   let hUfinite : Finite
       (K₀.toSubgroup ⧸ extensionSubgroup K₀ U.field U.below) :=
     U.finite
@@ -126,12 +125,10 @@ theorem finiteUnramifiedNormSubgroup_map_le_unramifiedNormSubgroup
       base := Kfinite
       below := U.below
       finiteQuotient := U.finite }
-
   intro x hx
   rcases hx with ⟨y, hy, rfl⟩
   change y ∈ ClassFormation.FiniteGaloisSubextension.normSubgroup A U at hy
   rcases hy with ⟨a, rfl⟩
-
   have hres : (EU.residueDegree D : ℕ) = d := by
     have h :=
       ClassFormation.DegreeData.finiteUnramifiedExtension_residueDegree
@@ -144,7 +141,6 @@ theorem finiteUnramifiedNormSubgroup_map_le_unramifiedNormSubgroup
         d • ((v.valuationAt Ufinite a : v.valueGroup) : ZHat) := by
     rw [← hres]
     exact (v.normalizedValuation_tower EU a).symm
-
   have hbase : K₀ = baseField G := by
     exact closedFixingSubgroup_bot_eq_baseField K (SeparableClosure K)
   let eBase : ambientFixedAddSubgroup A K₀ ≃+
@@ -153,7 +149,6 @@ theorem finiteUnramifiedNormSubgroup_map_le_unramifiedNormSubgroup
       (congrArg (ambientFixedAddSubgroup A) hbase)
   let yBase : ambientFixedAddSubgroup A (baseField G) :=
     eBase (relativeNorm A K₀ U.field U.below a)
-
   let BaseFinite : FiniteAbstractField G :=
     FiniteAbstractField.base G
   have hyTransport :
@@ -186,7 +181,6 @@ theorem finiteUnramifiedNormSubgroup_map_le_unramifiedNormSubgroup
           ((baseUnitsEquivGaloisAmbientFixed K (SeparableClosure K)).symm
             (relativeNorm A K₀ U.field U.below a))) = _
     exact localBaseValuation_baseFieldUnitsEquiv K _
-
   apply (mem_unramifiedNormSubgroup_iff K d _).2
   apply (ZMod.intCast_zmod_eq_zero_iff_dvd _ d).1
   rw [← zHatReduction_int d hd]

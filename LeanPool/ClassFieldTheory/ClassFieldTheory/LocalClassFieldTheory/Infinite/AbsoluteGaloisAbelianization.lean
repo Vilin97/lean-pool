@@ -44,7 +44,7 @@ instance localMaximalAbelianExtension_isGalois :
 /-- Compatibility name for the underlying multiplicative equivalence. -/
 noncomputable abbrev localAbsoluteAbelianizationMulEquiv :
     TopologicalAbelianization (intrinsicAbsoluteGalois K) ≃*
-      Gal(localMaximalAbelianExtension K / K) :=
+      Gal(localMaximalAbelianExtension K/K) :=
   absoluteAbelianizationMulEquivMaximalAbelianGalois K
 
 /-- The compatibility equivalence sends a quotient class to restriction. -/
@@ -63,7 +63,7 @@ theorem localAbsoluteAbelianizationMulEquiv_continuous :
 /-- Compatibility name for the canonical topological equivalence. -/
 noncomputable abbrev localAbsoluteAbelianizationEquiv :
     TopologicalAbelianization (intrinsicAbsoluteGalois K) ≃ₜ*
-      Gal(localMaximalAbelianExtension K / K) :=
+      Gal(localMaximalAbelianExtension K/K) :=
   absoluteTopologicalAbelianizationEquivMaximalAbelianGalois K
 
 /-- Compatibility instance for total disconnectedness. -/

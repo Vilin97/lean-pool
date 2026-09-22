@@ -30,7 +30,7 @@ noncomputable def intermediateFieldRestrictContinuous
     (E F : IntermediateField K (SeparableClosure K)) (hEF : E ≤ F)
     [FiniteDimensional K E] [FiniteDimensional K F]
     [IsGalois K E] [IsGalois K F] :
-    Gal(F / K) →ₜ* Gal(E / K) :=
+    Gal(F/K) →ₜ* Gal(E/K) :=
   { intermediateFieldRestrictNormalHom E F hEF with
     continuous_toFun := continuous_of_discreteTopology }
 

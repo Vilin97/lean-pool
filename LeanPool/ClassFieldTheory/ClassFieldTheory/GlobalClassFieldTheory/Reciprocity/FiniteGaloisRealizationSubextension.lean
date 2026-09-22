@@ -122,8 +122,8 @@ theorem numberFieldTowerBaseSubgroup_isOpen :
     IsOpen
       ((numberFieldTowerBaseSubgroup K L :
           ClosedSubgroup
-            (Gal(SeparableClosure ℚ / ℚ))) :
-        Set (Gal(SeparableClosure ℚ / ℚ))) :=
+            (Gal(SeparableClosure ℚ/ℚ))) :
+        Set (Gal(SeparableClosure ℚ/ℚ))) :=
   abstractFiniteClosedSubgroup_isOpen
     ℚ (SeparableClosure ℚ)
     (numberFieldTowerBaseSubgroup K L)
@@ -134,7 +134,7 @@ the actual `Gal(L / K)`. -/
 noncomputable def
     numberFieldTowerExtensionQuotientEquivGaloisGroup :
     (numberFieldTowerFiniteGaloisSubextension K L).extensionQuotient ≃*
-      Gal(L / K) := by
+      Gal(L/K) := by
   let j := numberFieldSeparableClosureEmbedding L
   let i :=
     j.comp (IsScalarTower.toAlgHom ℚ K L)
@@ -158,7 +158,7 @@ noncomputable def
       ℚ K L j e
   change
     (H₀.toSubgroup ⧸ extensionSubgroup H₀ J₀ hJH) ≃*
-      Gal(L / K)
+      Gal(L/K)
   exact
     ambientEmbeddedExtensionQuotientEquivGaloisGroup
       ℚ K L j e
@@ -170,7 +170,7 @@ theorem
     (σ :
       letI : Algebra K (SeparableClosure ℚ) :=
         numberFieldTowerSeparableClosureBaseAlgebra K L
-      Gal(SeparableClosure ℚ / K)) :
+      Gal(SeparableClosure ℚ/K)) :
     letI : Algebra K (SeparableClosure ℚ) :=
       numberFieldTowerSeparableClosureBaseAlgebra K L
     letI : Algebra L (SeparableClosure ℚ) :=

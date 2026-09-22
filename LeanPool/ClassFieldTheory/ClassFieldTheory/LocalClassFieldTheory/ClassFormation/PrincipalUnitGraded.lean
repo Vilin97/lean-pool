@@ -27,7 +27,6 @@ variable (K L : Type u) [Field K] [Field L] [Algebra K L]
   [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
 
 omit [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)] in
-
 /-- The map `u ↦ u - 1` on successive normal-basis principal-unit quotients
 is injective.  Its kernel calculation is exactly the statement that
 `u - 1 ∈ π_K^(n+1)M` if and only if `u ∈ V^(n+1)`. -/

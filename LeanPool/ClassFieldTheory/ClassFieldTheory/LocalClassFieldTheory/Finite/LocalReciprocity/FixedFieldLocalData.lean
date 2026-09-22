@@ -18,6 +18,15 @@ of its concrete fixed field.  The concrete field is equipped with the
 canonical spectral extension of the topology on the original local field.
 -/
 
+open _root_.ValuationTheory.DiscreteValuationField.Valuation renaming
+  hasExtension_valuation_of_valuationSubring_pullback →
+    hasExtension_valuation_of_valuationSubring_pullback
+
+open _root_.ValuationTheory.DiscreteValuationField.Valuation renaming
+  valuationSubring_pullback_of_hasExtension_valuation →
+    valuationSubring_pullback_of_hasExtension_valuation
+
+
 noncomputable section
 
 namespace LocalClassFieldTheory
@@ -247,7 +256,7 @@ theorem localSeparableValuationSubring_eq_comap_finiteExtensionEquiv
   have hBext :
       (localCompleteDVF F).valuation.HasExtension B.valuation := by
     apply
-      ValuationTheory.DiscreteValuationField.Valuation.hasExtension_valuation_of_valuationSubring_pullback
+      hasExtension_valuation_of_valuationSubring_pullback
     intro x
     change e (algebraMap F (SeparableClosure F) x) ∈ A ↔
       x ∈ (localCompleteDVF F).valuation.valuationSubring
@@ -300,7 +309,7 @@ theorem localSeparableDecompositionGroup_eq_top_finiteExtensionEquiv
     localSeparableDecompositionGroup_eq_top F
   apply top_unique
   intro sigma _hsigma
-  let sigmaF : Gal(SeparableClosure F / F) :=
+  let sigmaF : Gal(SeparableClosure F/F) :=
     AlgEquiv.autCongr e.symm sigma
   have hsigmaF :
       sigmaF • AF = AF := by
@@ -399,7 +408,7 @@ theorem
     letI : IsSepClosure F (SeparableClosure K) :=
       ⟨inferInstance, inferInstance⟩
     ∀ (e : SeparableClosure F ≃ₐ[F] SeparableClosure K)
-      (sigma : Gal(SeparableClosure F / F)),
+      (sigma : Gal(SeparableClosure F/F)),
       letI : Fintype (decompositionResidueField F
           (localSeparableValuationSubring K)) :=
         finiteExtensionDecompositionResidueFintype K F i e
@@ -560,8 +569,8 @@ theorem localResidueDegree_semilinear_conjugation
     (hvaluation :
       localSeparableValuationSubring K =
         (localSeparableValuationSubring F).comap e.toRingHom)
-    (sigma : Gal(SeparableClosure K / K)) :
-    let sigmaF : Gal(SeparableClosure F / F) :=
+    (sigma : Gal(SeparableClosure K/K)) :
+    let sigmaF : Gal(SeparableClosure F/F) :=
       { e.symm.trans (sigma.toRingEquiv.trans e) with
         commutes' := fun x => by
           change e (sigma (e.symm
@@ -654,7 +663,7 @@ theorem localResidueDegree_semilinear_conjugation
     congr 1
     apply Subtype.ext
     exact (hr _).trans (he (a : K))
-  let sigmaF : Gal(SeparableClosure F / F) :=
+  let sigmaF : Gal(SeparableClosure F/F) :=
     { e.symm.trans (sigma.toRingEquiv.trans e) with
       commutes' := fun x => by
         change e (sigma (e.symm
@@ -773,7 +782,7 @@ theorem localSeparableValuationSubring_eq_comap_abstractFixedFieldEquiv
   have hBext :
       (localCompleteDVF F).valuation.HasExtension B.valuation := by
     apply
-      ValuationTheory.DiscreteValuationField.Valuation.hasExtension_valuation_of_valuationSubring_pullback
+      hasExtension_valuation_of_valuationSubring_pullback
     intro x
     change e (algebraMap F (SeparableClosure F) x) ∈ A ↔
       x ∈ (localCompleteDVF F).valuation.valuationSubring
@@ -830,7 +839,7 @@ private theorem exists_abstractFixedFieldResidueEquiv
     (abstractFixedField K (SeparableClosure K) H.field).val
   let : (localCompleteDVF K).valuation.HasExtension C.valuation := by
     apply
-      ValuationTheory.DiscreteValuationField.Valuation.hasExtension_valuation_of_valuationSubring_pullback
+      hasExtension_valuation_of_valuationSubring_pullback
     intro x
     change ValuativeRel.valuation F (algebraMap K F x) ≤ 1 ↔
       (localCompleteDVF K).valuation x ≤ 1
@@ -839,10 +848,10 @@ private theorem exists_abstractFixedFieldResidueEquiv
     rfl
   have hVC : V.valuation.HasExtension C.valuation := by
     apply
-      ValuationTheory.DiscreteValuationField.Valuation.hasExtension_valuation_of_valuationSubring_pullback
+      hasExtension_valuation_of_valuationSubring_pullback
     intro x
     simpa only [V, ValuationSubring.valuationSubring_valuation] using
-      (ValuationTheory.DiscreteValuationField.Valuation.valuationSubring_pullback_of_hasExtension_valuation
+      (valuationSubring_pullback_of_hasExtension_valuation
         (localCompleteDVF K).valuation C x)
   have hC : A.comap (algebraMap F (SeparableClosure K)) = C := by
     simpa only [
@@ -936,8 +945,7 @@ private theorem residueAbsoluteDegreeIn_eq_normalizedDegree_abstractFixedFieldEq
       (localSeparableValuationSubring K))]
     (e : SeparableClosure (finiteFixedField K H) ≃ₐ[
       finiteFixedField K H] SeparableClosure K)
-    (sigma : Gal(SeparableClosure (finiteFixedField K H) /
-      finiteFixedField K H))
+    (sigma : Gal(SeparableClosure (finiteFixedField K H)/finiteFixedField K H))
     (htop : decompositionGroup (finiteFixedField K H)
       (localSeparableValuationSubring K) = ⊤)
     (tau : decompositionResidueField (finiteFixedField K H)
@@ -1031,8 +1039,7 @@ theorem localResidueDegree_eq_normalizedDegree_abstractFixedFieldEquiv
     (H : FiniteAbstractField (Gal(SeparableClosure K/K)))
     (e : SeparableClosure (finiteFixedField K H) ≃ₐ[
           finiteFixedField K H] SeparableClosure K)
-    (sigma : Gal(SeparableClosure (finiteFixedField K H) /
-      finiteFixedField K H)) :
+    (sigma : Gal(SeparableClosure (finiteFixedField K H)/finiteFixedField K H)) :
     letI : FiniteDimensional K
         (finiteFixedField K H) :=
       abstractFixedField_finiteDimensional
@@ -1103,7 +1110,7 @@ private theorem finite_absoluteFixingQuotient_fieldRange
   let H₀ := closedFixingSubgroup K (SeparableClosure K) (AlgHom.fieldRange i)
   let : FiniteDimensional K (AlgHom.fieldRange i) :=
     (AlgEquiv.ofInjectiveField i).toLinearEquiv.finiteDimensional
-  let G := Gal(SeparableClosure K / K)
+  let G := Gal(SeparableClosure K/K)
   let Bases := { B : ClosedSubgroup G //
     H₀.toSubgroup ≤ B.toSubgroup }
   let Bfix : Bases :=
@@ -1167,19 +1174,19 @@ theorem
     letI : Algebra F (SeparableClosure K) :=
       i.toRingHom.toAlgebra
     ∀ (e : SeparableClosure F ≃ₐ[F] SeparableClosure K)
-      (sigma : Gal(SeparableClosure F / F)),
+      (sigma : Gal(SeparableClosure F/F)),
       let H₀ :=
         closedFixingSubgroup K (SeparableClosure K)
           (AlgHom.fieldRange i)
       letI hHabsolute : Finite
           ((baseField
-            (Gal(SeparableClosure K / K))).toSubgroup ⧸
+            (Gal(SeparableClosure K/K))).toSubgroup ⧸
             extensionSubgroup
-              (baseField (Gal(SeparableClosure K / K)))
+              (baseField (Gal(SeparableClosure K/K)))
               H₀ (le_baseField H₀)) :=
         finite_absoluteFixingQuotient_fieldRange K F i
       let H : FiniteAbstractField
-          (Gal(SeparableClosure K / K)) :=
+          (Gal(SeparableClosure K/K)) :=
         ⟨H₀, hHabsolute⟩
       let F₀ :=
         abstractFixedField K (SeparableClosure K) H₀
@@ -1212,13 +1219,13 @@ theorem
       (AlgHom.fieldRange i)
   let hHabsolute : Finite
       ((baseField
-        (Gal(SeparableClosure K / K))).toSubgroup ⧸
+        (Gal(SeparableClosure K/K))).toSubgroup ⧸
         extensionSubgroup
-          (baseField (Gal(SeparableClosure K / K)))
+          (baseField (Gal(SeparableClosure K/K)))
           H₀ (le_baseField H₀)) :=
     finite_absoluteFixingQuotient_fieldRange K F i
   let H : FiniteAbstractField
-      (Gal(SeparableClosure K / K)) :=
+      (Gal(SeparableClosure K/K)) :=
     ⟨H₀, hHabsolute⟩
   let F₀ :=
     abstractFixedField K (SeparableClosure K) H₀

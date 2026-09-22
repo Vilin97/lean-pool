@@ -75,15 +75,15 @@ def chosenNormalBasisPrincipalUnitSuccQuotMulDistribMulAction
     (hVn : (Vn : Set 𝒪[L]ˣ) = chosenNormalBasisPrincipalUnitSet K L n)
     (hVsucc : (Vsucc : Set 𝒪[L]ˣ) =
       chosenNormalBasisPrincipalUnitSet K L (n + 1)) :
-    MulDistribMulAction (Gal(L / K))
+    MulDistribMulAction (Gal(L/K))
       (chosenNormalBasisPrincipalUnitSuccQuot (L := L) hV) := by
   letI := galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L
   letI := chosenNormalBasisPrincipalUnitSubgroupMulDistribMulAction
     K L n Vn hVn
-  change MulDistribMulAction (Gal(L / K))
+  change MulDistribMulAction (Gal(L/K))
     (Vn ⧸ chosenNormalBasisPrincipalUnitSuccSubgroup (L := L) hV)
   exact quotientMulDistribMulActionOfSubgroupStable
-    (Gal(L / K)) Vn
+    (Gal(L/K)) Vn
     (chosenNormalBasisPrincipalUnitSuccSubgroup (L := L) hV) (by
       intro sigma a ha
       apply (mem_chosenNormalBasisPrincipalUnitSuccSubgroup_iff
@@ -126,7 +126,7 @@ theorem chosenNormalBasisPrincipalUnitSuccQuotMulEquiv_galoisGroup
         Multiplicative.ofAdd
           (chosenNormalBasisPrincipalUnitLatticeClass K L n (u : 𝒪[L]ˣ)
             (by exact hVn ▸ u.2)))
-    (sigma : Gal(L / K))
+    (sigma : Gal(L/K))
     (q : chosenNormalBasisPrincipalUnitSuccQuot (L := L) hV) :
     letI := chosenNormalBasisPrincipalUnitSubgroupMulDistribMulAction
       K L n Vn hVn
@@ -134,7 +134,7 @@ theorem chosenNormalBasisPrincipalUnitSuccQuotMulEquiv_galoisGroup
       K L n hV hVn hVsucc
     letI := galoisGroupChosenNormalBasisLatticeSuccQuotDistribMulAction K L n
     letI := multiplicativeMulDistribMulActionOfDistribMulAction
-      (Gal(L / K)) (chosenNormalBasisLatticeSuccQuot K L n)
+      (Gal(L/K)) (chosenNormalBasisLatticeSuccQuot K L n)
     Phi (sigma • q) = sigma • Phi q := by
   let := galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L
   let := chosenNormalBasisPrincipalUnitSubgroupMulDistribMulAction
@@ -143,7 +143,7 @@ theorem chosenNormalBasisPrincipalUnitSuccQuotMulEquiv_galoisGroup
     K L n hV hVn hVsucc
   let := galoisGroupChosenNormalBasisLatticeSuccQuotDistribMulAction K L n
   let := multiplicativeMulDistribMulActionOfDistribMulAction
-    (Gal(L / K)) (chosenNormalBasisLatticeSuccQuot K L n)
+    (Gal(L/K)) (chosenNormalBasisLatticeSuccQuot K L n)
   refine
     chosenNormalBasisPrincipalUnitSuccQuot.inductionOn
       (L := L) hV
@@ -164,12 +164,12 @@ theorem exists_chosenNormalBasisPrincipalUnit_h0_oneStep_lifting
     letI := galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L
     ∃ c : Nat, ∀ k : Nat, c ≤ k → ∀ a : 𝒪[L]ˣ,
       a ∈ chosenNormalBasisPrincipalUnitSet K L k →
-      (∀ sigma : Gal(L / K), sigma • a = a) →
+      (∀ sigma : Gal(L/K), sigma • a = a) →
       ∃ b a' : 𝒪[L]ˣ,
         b ∈ chosenNormalBasisPrincipalUnitSet K L k ∧
         a' ∈ chosenNormalBasisPrincipalUnitSet K L (k + 1) ∧
-        (∀ sigma : Gal(L / K), sigma • a' = a') ∧
-        a = tateNorm (Gal(L / K)) 𝒪[L]ˣ b * a' := by
+        (∀ sigma : Gal(L/K), sigma • a' = a') ∧
+        a = tateNorm (Gal(L/K)) 𝒪[L]ˣ b * a' := by
   let := galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L
   rcases exists_chosenNormalBasisPrincipalUnitSuccQuotMulEquivLatticeSuccQuot
       (K := K) (L := L) with ⟨c, hc⟩
@@ -183,14 +183,14 @@ theorem exists_chosenNormalBasisPrincipalUnit_h0_oneStep_lifting
     K L k hV hVn hVsucc
   let := galoisGroupChosenNormalBasisLatticeSuccQuotDistribMulAction K L k
   let := multiplicativeMulDistribMulActionOfDistribMulAction
-    (Gal(L / K)) (chosenNormalBasisLatticeSuccQuot K L k)
+    (Gal(L/K)) (chosenNormalBasisLatticeSuccQuot K L k)
   let av : Vn := ⟨a, by
     change a ∈ (Vn : Set 𝒪[L]ˣ)
     rw [hVn]
     exact ha⟩
   let q : Multiplicative (chosenNormalBasisLatticeSuccQuot K L k) :=
     Phi (chosenNormalBasisPrincipalUnitSuccQuotMk (L := L) hV av)
-  have hqfixed : ∀ sigma : Gal(L / K), sigma • q = q := by
+  have hqfixed : ∀ sigma : Gal(L/K), sigma • q = q := by
     intro sigma
     dsimp [q]
     calc
@@ -204,19 +204,19 @@ theorem exists_chosenNormalBasisPrincipalUnit_h0_oneStep_lifting
         congr 2
         apply Subtype.ext
         exact hfixed sigma
-  let qfixed : fixedSubgroup (Gal(L / K))
+  let qfixed : fixedSubgroup (Gal(L/K))
       (Multiplicative (chosenNormalBasisLatticeSuccQuot K L k)) :=
     ⟨q, hqfixed⟩
   have hH0 := chosenNormalBasisLatticeSuccQuot_herbrandH0_subsingleton K L k
   have hqone :
       QuotientGroup.mk'
-          ((tateNormSubgroup (Gal(L / K))
+          ((tateNormSubgroup (Gal(L/K))
             (Multiplicative (chosenNormalBasisLatticeSuccQuot K L k))).subgroupOf
-              (fixedSubgroup (Gal(L / K))
+              (fixedSubgroup (Gal(L/K))
                 (Multiplicative (chosenNormalBasisLatticeSuccQuot K L k))))
           qfixed = 1 :=
     @Subsingleton.elim _ hH0 _ _
-  have hqmem : q ∈ tateNormSubgroup (Gal(L / K))
+  have hqmem : q ∈ tateNormSubgroup (Gal(L/K))
       (Multiplicative (chosenNormalBasisLatticeSuccQuot K L k)) := by
     have hm := (QuotientGroup.eq_one_iff _).1 hqone
     exact hm
@@ -227,36 +227,36 @@ theorem exists_chosenNormalBasisPrincipalUnit_h0_oneStep_lifting
     ⟨bv, hbvmk⟩
   change chosenNormalBasisPrincipalUnitSuccQuotMk (L := L) hV bv = qb at hbvmk
   have hPhiNorm :
-      Phi (tateNorm (Gal(L / K))
+      Phi (tateNorm (Gal(L/K))
         (chosenNormalBasisPrincipalUnitSuccQuot (L := L) hV)
         (chosenNormalBasisPrincipalUnitSuccQuotMk (L := L) hV bv)) = q := by
     calc
-      Phi (tateNorm (Gal(L / K))
+      Phi (tateNorm (Gal(L/K))
           (chosenNormalBasisPrincipalUnitSuccQuot (L := L) hV)
           (chosenNormalBasisPrincipalUnitSuccQuotMk (L := L) hV bv)) =
-          tateNorm (Gal(L / K))
+          tateNorm (Gal(L/K))
             (Multiplicative (chosenNormalBasisLatticeSuccQuot K L k))
             (Phi (chosenNormalBasisPrincipalUnitSuccQuotMk (L := L) hV bv)) :=
         map_tateNorm Phi.toMonoidHom
           (fun sigma z => chosenNormalBasisPrincipalUnitSuccQuotMulEquiv_galoisGroup
             (K := K) (L := L) k hV hVn hVsucc Phi hPhi sigma z) _
-      _ = tateNorm (Gal(L / K))
+      _ = tateNorm (Gal(L/K))
           (Multiplicative (chosenNormalBasisLatticeSuccQuot K L k)) y := by
         rw [hbvmk, hqb]
       _ = q := hy
   have hquotNorm :
-      tateNorm (Gal(L / K))
+      tateNorm (Gal(L/K))
           (chosenNormalBasisPrincipalUnitSuccQuot (L := L) hV)
           (chosenNormalBasisPrincipalUnitSuccQuotMk (L := L) hV bv) =
         chosenNormalBasisPrincipalUnitSuccQuotMk (L := L) hV av := by
     apply Phi.injective
     simpa [q] using hPhiNorm
-  let bn : Vn := tateNorm (Gal(L / K)) Vn bv
+  let bn : Vn := tateNorm (Gal(L/K)) Vn bv
   have hmkbn : chosenNormalBasisPrincipalUnitSuccQuotMk (L := L) hV bn =
       chosenNormalBasisPrincipalUnitSuccQuotMk (L := L) hV av := by
     calc
       chosenNormalBasisPrincipalUnitSuccQuotMk (L := L) hV bn =
-          tateNorm (Gal(L / K))
+          tateNorm (Gal(L/K))
             (chosenNormalBasisPrincipalUnitSuccQuot (L := L) hV)
             (chosenNormalBasisPrincipalUnitSuccQuotMk (L := L) hV bv) := by
         exact map_tateNorm
@@ -272,14 +272,14 @@ theorem exists_chosenNormalBasisPrincipalUnit_h0_oneStep_lifting
     dsimp [aprimev]
     rw [map_div, hmkbn]
     simp
-  have havfixed : ∀ sigma : Gal(L / K), sigma • av = av := by
+  have havfixed : ∀ sigma : Gal(L/K), sigma • av = av := by
     intro sigma
     apply Subtype.ext
     exact hfixed sigma
-  have hbnfixed : ∀ sigma : Gal(L / K), sigma • bn = bn := by
+  have hbnfixed : ∀ sigma : Gal(L/K), sigma • bn = bn := by
     intro sigma
-    exact smul_tateNorm_eq (G := Gal(L / K)) (A := Vn) sigma bv
-  have haprimefixed : ∀ sigma : Gal(L / K), sigma • aprimev = aprimev := by
+    exact smul_tateNorm_eq (G := Gal(L/K)) (A := Vn) sigma bv
+  have haprimefixed : ∀ sigma : Gal(L/K), sigma • aprimev = aprimev := by
     intro sigma
     dsimp [aprimev]
     have ha' := havfixed sigma
@@ -294,12 +294,12 @@ theorem exists_chosenNormalBasisPrincipalUnit_h0_oneStep_lifting
   · intro sigma
     exact congrArg (fun z : Vn => (z : 𝒪[L]ˣ)) (haprimefixed sigma)
   · have hbnval : (bn : 𝒪[L]ˣ) =
-        tateNorm (Gal(L / K)) 𝒪[L]ˣ (bv : 𝒪[L]ˣ) := by
+        tateNorm (Gal(L/K)) 𝒪[L]ˣ (bv : 𝒪[L]ˣ) := by
       exact map_tateNorm
         (chosenNormalBasisPrincipalUnitSubgroupInclusion (L := L) Vn)
         (fun sigma z => chosenNormalBasisPrincipalUnitSubgroupInclusion_equivariant
           (K := K) (L := L) k Vn hVn sigma z) bv
-    change a = tateNorm (Gal(L / K)) 𝒪[L]ˣ (bv : 𝒪[L]ˣ) *
+    change a = tateNorm (Gal(L/K)) 𝒪[L]ˣ (bv : 𝒪[L]ˣ) *
       (aprimev : 𝒪[L]ˣ)
     rw [← hbnval]
     dsimp [aprimev, av]
@@ -311,17 +311,17 @@ norm-one unit one level deeper. -/
 theorem exists_chosenNormalBasisPrincipalUnit_hMinusOne_oneStep_lifting
     [TopologicalSpace L] [IsNonarchimedeanLocalField L]
     [Module.Finite 𝒪[K] 𝒪[L]]
-    (g : Gal(L / K)) (hgen : ∀ sigma : Gal(L / K),
+    (g : Gal(L/K)) (hgen : ∀ sigma : Gal(L/K),
       sigma ∈ Subgroup.zpowers g) :
     letI := galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L
     ∃ c : Nat, ∀ k : Nat, c ≤ k → ∀ a : 𝒪[L]ˣ,
       a ∈ chosenNormalBasisPrincipalUnitSet K L k →
-      tateNorm (Gal(L / K)) 𝒪[L]ˣ a = 1 →
+      tateNorm (Gal(L/K)) 𝒪[L]ˣ a = 1 →
       ∃ b a' : 𝒪[L]ˣ,
         b ∈ chosenNormalBasisPrincipalUnitSet K L k ∧
         a' ∈ chosenNormalBasisPrincipalUnitSet K L (k + 1) ∧
-        tateNorm (Gal(L / K)) 𝒪[L]ˣ a' = 1 ∧
-        a = sigmaMinusOne (Gal(L / K)) 𝒪[L]ˣ g b * a' := by
+        tateNorm (Gal(L/K)) 𝒪[L]ˣ a' = 1 ∧
+        a = sigmaMinusOne (Gal(L/K)) 𝒪[L]ˣ g b * a' := by
   let := galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L
   rcases exists_chosenNormalBasisPrincipalUnitSuccQuotMulEquivLatticeSuccQuot
       (K := K) (L := L) with ⟨c, hc⟩
@@ -335,39 +335,39 @@ theorem exists_chosenNormalBasisPrincipalUnit_hMinusOne_oneStep_lifting
     K L k hV hVn hVsucc
   let := galoisGroupChosenNormalBasisLatticeSuccQuotDistribMulAction K L k
   let := multiplicativeMulDistribMulActionOfDistribMulAction
-    (Gal(L / K)) (chosenNormalBasisLatticeSuccQuot K L k)
+    (Gal(L/K)) (chosenNormalBasisLatticeSuccQuot K L k)
   let av : Vn := ⟨a, by
     change a ∈ (Vn : Set 𝒪[L]ˣ)
     rw [hVn]
     exact ha⟩
-  have hnormv : tateNorm (Gal(L / K)) Vn av = 1 := by
+  have hnormv : tateNorm (Gal(L/K)) Vn av = 1 := by
     apply Subtype.ext
     have hmap := map_tateNorm
       (chosenNormalBasisPrincipalUnitSubgroupInclusion (L := L) Vn)
       (fun sigma z => chosenNormalBasisPrincipalUnitSubgroupInclusion_equivariant
         (K := K) (L := L) k Vn hVn sigma z) av
     change ((chosenNormalBasisPrincipalUnitSubgroupInclusion (L := L) Vn)
-      (tateNorm (Gal(L / K)) Vn av) : 𝒪[L]ˣ) =
-        tateNorm (Gal(L / K)) 𝒪[L]ˣ a at hmap
+      (tateNorm (Gal(L/K)) Vn av) : 𝒪[L]ˣ) =
+        tateNorm (Gal(L/K)) 𝒪[L]ˣ a at hmap
     rw [hnorm] at hmap
     exact hmap
   let q : Multiplicative (chosenNormalBasisLatticeSuccQuot K L k) :=
     Phi (chosenNormalBasisPrincipalUnitSuccQuotMk (L := L) hV av)
-  have hqnorm : tateNorm (Gal(L / K))
+  have hqnorm : tateNorm (Gal(L/K))
       (Multiplicative (chosenNormalBasisLatticeSuccQuot K L k)) q = 1 := by
     dsimp [q]
     calc
-      tateNorm (Gal(L / K))
+      tateNorm (Gal(L/K))
           (Multiplicative (chosenNormalBasisLatticeSuccQuot K L k))
           (Phi (chosenNormalBasisPrincipalUnitSuccQuotMk (L := L) hV av)) =
-          Phi (tateNorm (Gal(L / K))
+          Phi (tateNorm (Gal(L/K))
             (chosenNormalBasisPrincipalUnitSuccQuot (L := L) hV)
             (chosenNormalBasisPrincipalUnitSuccQuotMk (L := L) hV av)) :=
         (map_tateNorm Phi.toMonoidHom
           (fun sigma z => chosenNormalBasisPrincipalUnitSuccQuotMulEquiv_galoisGroup
             (K := K) (L := L) k hV hVn hVsucc Phi hPhi sigma z) _).symm
       _ = Phi (chosenNormalBasisPrincipalUnitSuccQuotMk (L := L) hV
-          (tateNorm (Gal(L / K)) Vn av)) := by
+          (tateNorm (Gal(L/K)) Vn av)) := by
         congr 1
         exact (map_tateNorm
           (chosenNormalBasisPrincipalUnitSuccQuotMk (L := L) hV)
@@ -375,20 +375,20 @@ theorem exists_chosenNormalBasisPrincipalUnit_hMinusOne_oneStep_lifting
             (chosenNormalBasisPrincipalUnitSuccQuotMulDistribMulAction_smul_mk
               (K := K) (L := L) k hV hVn hVsucc sigma z).symm) av).symm
       _ = 1 := by rw [hnormv]; simp
-  let qker : normKernelSubgroup (Gal(L / K))
+  let qker : normKernelSubgroup (Gal(L/K))
       (Multiplicative (chosenNormalBasisLatticeSuccQuot K L k)) :=
     ⟨q, hqnorm⟩
   have hHm := chosenNormalBasisLatticeSuccQuot_herbrandHMinusOne_subsingleton
     K L k g hgen
   have hqone :
       QuotientGroup.mk'
-          ((augmentationSubgroup (Gal(L / K))
+          ((augmentationSubgroup (Gal(L/K))
             (Multiplicative (chosenNormalBasisLatticeSuccQuot K L k)) g).subgroupOf
-              (normKernelSubgroup (Gal(L / K))
+              (normKernelSubgroup (Gal(L/K))
                 (Multiplicative (chosenNormalBasisLatticeSuccQuot K L k))))
           qker = 1 :=
     @Subsingleton.elim _ hHm _ _
-  have hqmem : q ∈ augmentationSubgroup (Gal(L / K))
+  have hqmem : q ∈ augmentationSubgroup (Gal(L/K))
       (Multiplicative (chosenNormalBasisLatticeSuccQuot K L k)) g := by
     have hm := (QuotientGroup.eq_one_iff _).1 hqone
     exact hm
@@ -399,36 +399,36 @@ theorem exists_chosenNormalBasisPrincipalUnit_hMinusOne_oneStep_lifting
     ⟨bv, hbvmk⟩
   change chosenNormalBasisPrincipalUnitSuccQuotMk (L := L) hV bv = qb at hbvmk
   have hPhiCoboundary :
-      Phi (sigmaMinusOne (Gal(L / K))
+      Phi (sigmaMinusOne (Gal(L/K))
         (chosenNormalBasisPrincipalUnitSuccQuot (L := L) hV) g
         (chosenNormalBasisPrincipalUnitSuccQuotMk (L := L) hV bv)) = q := by
     calc
-      Phi (sigmaMinusOne (Gal(L / K))
+      Phi (sigmaMinusOne (Gal(L/K))
           (chosenNormalBasisPrincipalUnitSuccQuot (L := L) hV) g
           (chosenNormalBasisPrincipalUnitSuccQuotMk (L := L) hV bv)) =
-          sigmaMinusOne (Gal(L / K))
+          sigmaMinusOne (Gal(L/K))
             (Multiplicative (chosenNormalBasisLatticeSuccQuot K L k)) g
             (Phi (chosenNormalBasisPrincipalUnitSuccQuotMk (L := L) hV bv)) :=
         map_sigmaMinusOne Phi.toMonoidHom
           (fun sigma z => chosenNormalBasisPrincipalUnitSuccQuotMulEquiv_galoisGroup
             (K := K) (L := L) k hV hVn hVsucc Phi hPhi sigma z) g _
-      _ = sigmaMinusOne (Gal(L / K))
+      _ = sigmaMinusOne (Gal(L/K))
           (Multiplicative (chosenNormalBasisLatticeSuccQuot K L k)) g y := by
         rw [hbvmk, hqb]
       _ = q := hy
   have hquotCoboundary :
-      sigmaMinusOne (Gal(L / K))
+      sigmaMinusOne (Gal(L/K))
           (chosenNormalBasisPrincipalUnitSuccQuot (L := L) hV) g
           (chosenNormalBasisPrincipalUnitSuccQuotMk (L := L) hV bv) =
         chosenNormalBasisPrincipalUnitSuccQuotMk (L := L) hV av := by
     apply Phi.injective
     simpa [q] using hPhiCoboundary
-  let cobv : Vn := sigmaMinusOne (Gal(L / K)) Vn g bv
+  let cobv : Vn := sigmaMinusOne (Gal(L/K)) Vn g bv
   have hmkcob : chosenNormalBasisPrincipalUnitSuccQuotMk (L := L) hV cobv =
       chosenNormalBasisPrincipalUnitSuccQuotMk (L := L) hV av := by
     calc
       chosenNormalBasisPrincipalUnitSuccQuotMk (L := L) hV cobv =
-          sigmaMinusOne (Gal(L / K))
+          sigmaMinusOne (Gal(L/K))
             (chosenNormalBasisPrincipalUnitSuccQuot (L := L) hV) g
             (chosenNormalBasisPrincipalUnitSuccQuotMk (L := L) hV bv) := by
         exact map_sigmaMinusOne
@@ -444,12 +444,12 @@ theorem exists_chosenNormalBasisPrincipalUnit_hMinusOne_oneStep_lifting
     dsimp [aprimev]
     rw [map_div, hmkcob]
     simp
-  have haprimeNormV : tateNorm (Gal(L / K)) Vn aprimev = 1 := by
+  have haprimeNormV : tateNorm (Gal(L/K)) Vn aprimev = 1 := by
     dsimp [aprimev, cobv]
     rw [div_eq_mul_inv, tateNorm_mul, tateNorm_inv, hnormv,
       tateNorm_sigmaMinusOne_eq_one]
     simp
-  have haprimeNorm : tateNorm (Gal(L / K)) 𝒪[L]ˣ
+  have haprimeNorm : tateNorm (Gal(L/K)) 𝒪[L]ˣ
       (aprimev : 𝒪[L]ˣ) = 1 := by
     have hmap := map_tateNorm
       (chosenNormalBasisPrincipalUnitSubgroupInclusion (L := L) Vn)
@@ -457,24 +457,24 @@ theorem exists_chosenNormalBasisPrincipalUnit_hMinusOne_oneStep_lifting
         (K := K) (L := L) k Vn hVn sigma z) aprimev
     have hleft :
         chosenNormalBasisPrincipalUnitSubgroupInclusion (L := L) Vn
-          (tateNorm (Gal(L / K)) Vn aprimev) = 1 :=
+          (tateNorm (Gal(L/K)) Vn aprimev) = 1 :=
       (congrArg
         (chosenNormalBasisPrincipalUnitSubgroupInclusion (L := L) Vn)
         haprimeNormV).trans
           (chosenNormalBasisPrincipalUnitSubgroupInclusion (L := L) Vn).map_one
-    exact (congrArg (tateNorm (Gal(L / K)) 𝒪[L]ˣ)
+    exact (congrArg (tateNorm (Gal(L/K)) 𝒪[L]ˣ)
       (chosenNormalBasisPrincipalUnitSubgroupInclusion_apply
         (L := L) Vn aprimev)).symm.trans (hmap.symm.trans hleft)
   refine ⟨(bv : 𝒪[L]ˣ), (aprimev : 𝒪[L]ˣ), ?_, ?_, haprimeNorm, ?_⟩
   · exact hVn ▸ bv.2
   · exact hVsucc ▸ haprimeSucc
   · have hcobval : (cobv : 𝒪[L]ˣ) =
-        sigmaMinusOne (Gal(L / K)) 𝒪[L]ˣ g (bv : 𝒪[L]ˣ) := by
+        sigmaMinusOne (Gal(L/K)) 𝒪[L]ˣ g (bv : 𝒪[L]ˣ) := by
       exact map_sigmaMinusOne
         (chosenNormalBasisPrincipalUnitSubgroupInclusion (L := L) Vn)
         (fun sigma z => chosenNormalBasisPrincipalUnitSubgroupInclusion_equivariant
           (K := K) (L := L) k Vn hVn sigma z) g bv
-    change a = sigmaMinusOne (Gal(L / K)) 𝒪[L]ˣ g (bv : 𝒪[L]ˣ) *
+    change a = sigmaMinusOne (Gal(L/K)) 𝒪[L]ˣ g (bv : 𝒪[L]ˣ) *
       (aprimev : 𝒪[L]ˣ)
     rw [← hcobval]
     dsimp [aprimev, av]

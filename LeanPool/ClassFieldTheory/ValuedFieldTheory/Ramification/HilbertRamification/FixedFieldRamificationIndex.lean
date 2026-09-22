@@ -16,6 +16,17 @@ For `M = L ^ H`, this file defines `e(L/M)` from the literal inclusion
 depth subgroup require no completeness or Henselian hypothesis.
 -/
 
+open _root_.RamificationTheory.DiscreteValuationField.HerbrandGroupTheory.NonarchimedeanDepth
+  renaming
+  depthLowerFiltration_lower →
+    depthLowerFiltration_lower
+
+open _root_.RamificationTheory.DiscreteValuationField.HerbrandGroupTheory.NonarchimedeanDepth
+  renaming
+  mem_depthLowerSubgroup_iff →
+    mem_depthLowerSubgroup_iff
+
+
 noncomputable section
 
 universe u v w x
@@ -295,8 +306,8 @@ private theorem depthLowerFiltration_zero_eq_fixedFieldInertiaSubgroupDVF
         (base := base) (target := target) huniq).depthLowerFiltration H).lower 0 =
       target.maximalIdeal.toAddSubgroup.inertia H
   ext tau
-  rw [RamificationTheory.DiscreteValuationField.HerbrandGroupTheory.NonarchimedeanDepth.depthLowerFiltration_lower,
-    RamificationTheory.DiscreteValuationField.HerbrandGroupTheory.NonarchimedeanDepth.mem_depthLowerSubgroup_iff]
+  rw [depthLowerFiltration_lower,
+    mem_depthLowerSubgroup_iff]
   change
     (1 : ℕ∞) ≤ intrinsicRamificationNumberOfUniqueExtension
         (base := base) (target := target) huniq (tau : Gal(L/K)) ↔
@@ -346,7 +357,7 @@ private theorem card_stabilizer_eq_inertia_mul_inertiaDeg
       G p P p.ResidueField P.ResidueField
   have hindex :
       Subgroup.index (Ideal.inertia (MulAction.stabilizer G P) P) =
-        Nat.card Gal(P.ResidueField / p.ResidueField) :=
+        Nat.card Gal(P.ResidueField/p.ResidueField) :=
     Nat.card_congr
       (IsFractionRing.stabilizerQuotientInertiaEquiv
         G p P p.ResidueField P.ResidueField).toEquiv

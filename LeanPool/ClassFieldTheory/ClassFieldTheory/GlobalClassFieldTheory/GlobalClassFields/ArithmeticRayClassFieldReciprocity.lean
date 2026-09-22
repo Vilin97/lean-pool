@@ -80,7 +80,7 @@ field, bundled with both native topologies. -/
 noncomputable def
     arithmeticRayClassFieldGaloisContinuousMulEquivRayClassGroup
     (m : RayClass.Modulus K) :
-    Gal((rayClassField K m) / K) ≃ₜ*
+    Gal((rayClassField K m)/K) ≃ₜ*
       RayClass.RayClassGroup m := by
   letI normQuotientDiscreteTopology : DiscreteTopology
       (IdeleClassGroup K ⧸

@@ -36,7 +36,7 @@ theorem finiteAbelianUnramifiedCompositum_pow_eq_one
     [FiniteDimensional K E] [IsAbelianGalois K E]
     (d : ℕ) (hd : 0 < d)
     (hcard : Nat.card (E ≃ₐ[K] E) ∣ d) :
-    ∀ σ : Gal(↑(E ⊔ localFiniteUnramifiedField K d hd) / K),
+    ∀ σ : Gal(↑(E ⊔ localFiniteUnramifiedField K d hd)/K),
       σ ^ d = 1 := by
   let U := localFiniteUnramifiedField K d hd
   let F := E ⊔ U

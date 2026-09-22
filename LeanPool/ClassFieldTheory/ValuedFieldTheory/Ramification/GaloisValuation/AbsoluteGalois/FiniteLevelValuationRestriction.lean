@@ -176,7 +176,8 @@ theorem smul_hasExtension
     _root_.Valuation.HasExtension v (σ • A).valuation := by
   apply _root_.Valuation.HasExtension.ofComapInteger
   ext x
-  simp [ValuationSubring.integer_valuation, Valuation.mem_integer_iff]
+  simp only [ValuationSubring.integer_valuation, ValuationSubring.pointwise_smul_toSubring,
+    Subring.mem_comap, Valuation.mem_integer_iff]
   rw [Subring.mem_pointwise_smul_iff_inv_smul_mem]
   have hcomm : (σ⁻¹) (algebraMap K Ω x) = algebraMap K Ω x :=
     (σ⁻¹).commutes x

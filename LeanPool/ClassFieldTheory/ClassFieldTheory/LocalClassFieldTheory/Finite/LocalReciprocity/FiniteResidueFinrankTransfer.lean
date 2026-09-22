@@ -10,6 +10,15 @@ import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLoca
 import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.UniqueRing
 
 /-! # Finite Residue Finrank Transfer -/
+
+open _root_.ValuationTheory.DiscreteValuationField.Valuation renaming
+  hasExtension_valuation_of_valuationSubring_pullback →
+    hasExtension_valuation_of_valuationSubring_pullback
+
+open _root_.ValuationTheory.DiscreteValuationField.Valuation renaming
+  valuationSubring_pullback_of_hasExtension_valuation →
+    valuationSubring_pullback_of_hasExtension_valuation
+
 namespace LocalClassFieldTheory
 open CyclicCohomology RamificationTheory ClassFormation
 
@@ -163,10 +172,9 @@ theorem localResidueDatum_residueDegree_eq_residueFinrank
     exact IsLocalRing.ResidueField.instModule
   change (H.residueDegree (localResidueDatum K) : ℕ) =
     Module.finrank kK kE
-
   have hExtC : (localCompleteDVF K).valuation.HasExtension C.valuation := by
     apply
-      ValuationTheory.DiscreteValuationField.Valuation.hasExtension_valuation_of_valuationSubring_pullback
+      hasExtension_valuation_of_valuationSubring_pullback
     intro x
     change ValuativeRel.valuation E (algebraMap K E x) ≤ 1 ↔
       (localCompleteDVF K).valuation x ≤ 1
@@ -176,10 +184,10 @@ theorem localResidueDatum_residueDegree_eq_residueFinrank
   let : (localCompleteDVF K).valuation.HasExtension C.valuation := hExtC
   have hVC : V.valuation.HasExtension C.valuation := by
     apply
-      ValuationTheory.DiscreteValuationField.Valuation.hasExtension_valuation_of_valuationSubring_pullback
+      hasExtension_valuation_of_valuationSubring_pullback
     intro x
     simpa only [V, ValuationSubring.valuationSubring_valuation] using
-      (ValuationTheory.DiscreteValuationField.Valuation.valuationSubring_pullback_of_hasExtension_valuation
+      (valuationSubring_pullback_of_hasExtension_valuation
         (localCompleteDVF K).valuation C x)
   have hC : A.comap (algebraMap E (SeparableClosure K)) = C := by
     simpa only [RamificationTheory.ValuationSubring.restrictIntermediateField_eq_comap] using
@@ -188,7 +196,6 @@ theorem localResidueDatum_residueDegree_eq_residueFinrank
         (abstractFixedField K (SeparableClosure K) H.field) C)
   have htop : decompositionGroup E A = ⊤ :=
     localAbstractFixedDecompositionGroup_eq_top K H.field
-
   let eK : kK ≃+* k₀ :=
     localBaseResidueEquivDecompositionResidue K
   let eE : kE ≃+* kE' :=
@@ -197,7 +204,6 @@ theorem localResidueDatum_residueDegree_eq_residueFinrank
     ValuationTheory.Valuations.valuationSubringMapOfHasExtension V C hVC
   let bar : kE →+* Omega :=
     (algebraMap kE' Omega).comp eE.toRingHom
-
   have hbar_base (x : kK) :
       bar (algebraMap kK kE x) =
         algebraMap k₀ Omega (eK x) := by
@@ -224,7 +230,6 @@ theorem localResidueDatum_residueDegree_eq_residueFinrank
       (eK (IsLocalRing.residue V a)) = _ at hbase
     rw [hbase]
     congr 1
-
   let : Algebra k₀ kE :=
     ((algebraMap kK kE).comp eK.symm.toRingHom).toAlgebra
   let barAlg : kE →ₐ[k₀] Omega :=
@@ -233,7 +238,6 @@ theorem localResidueDatum_residueDegree_eq_residueFinrank
         change bar (algebraMap kK kE (eK.symm z)) =
           algebraMap k₀ Omega z
         simpa using hbar_base (eK.symm z) }
-
   have hF : F = barAlg.fieldRange := by
     change IntermediateField.adjoin k₀
         (Set.range (algebraMap kE' Omega)) = barAlg.fieldRange
@@ -245,7 +249,6 @@ theorem localResidueDatum_residueDegree_eq_residueFinrank
     · rintro y ⟨x, rfl⟩
       apply IntermediateField.subset_adjoin
       exact ⟨eE x, rfl⟩
-
   let eRange : kE ≃+* barAlg.fieldRange :=
     (AlgEquiv.ofInjectiveField barAlg).toRingEquiv
   let : Algebra k₀ barAlg.fieldRange := barAlg.fieldRange.algebra

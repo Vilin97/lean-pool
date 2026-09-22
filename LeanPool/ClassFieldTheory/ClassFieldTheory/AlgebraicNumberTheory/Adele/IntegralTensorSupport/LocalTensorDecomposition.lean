@@ -92,7 +92,6 @@ noncomputable def scaledRelativeBasisDiscriminantInteger :
         (K := K) (L := L) i⟩
 
 /-- Coercion and nonvanishing properties of the discriminant control element. -/
-
 @[simp]
 theorem scaledRelativeBasisDiscriminantInteger_coe :
     (scaledRelativeBasisDiscriminantInteger
@@ -135,7 +134,6 @@ noncomputable def scaledRelativeBasisDiscriminantBadPlaces :
       (K := K) (L := L))).toFinset
 
 /-- Membership in the discriminant bad-place set is ideal membership. -/
-
 @[simp]
 theorem mem_scaledRelativeBasisDiscriminantBadPlaces_iff
     (w : HeightOneSpectrum (𝓞 K)) :
@@ -195,7 +193,6 @@ noncomputable def integralTensorComparisonBadPlaces :
         (K := K) (L := L)
 
 /-- Membership in the combined comparison bad-place set is componentwise. -/
-
 @[simp]
 theorem mem_integralTensorComparisonBadPlaces_iff
     (w : HeightOneSpectrum (𝓞 K)) :

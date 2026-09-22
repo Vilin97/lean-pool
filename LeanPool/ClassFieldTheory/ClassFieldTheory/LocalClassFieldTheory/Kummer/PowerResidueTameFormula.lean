@@ -218,7 +218,7 @@ theorem residue_arithmeticFrobenius_integerUnitQuotient
       (residueUnitsConcreteEquiv L (integerUnitsToResidueUnits L u)) ^
         (Nat.card 𝓀[K] - 1) := by
   let : Fintype 𝓀[K] := Fintype.ofFinite _
-  let phi : Gal(L / K) :=
+  let phi : Gal(L/K) :=
     arithmeticFrobeniusOfUnramifiedValuation K L
   let uBar : 𝓀[L]ˣ :=
     residueUnitsConcreteEquiv L (integerUnitsToResidueUnits L u)
@@ -571,10 +571,10 @@ theorem nthRootsSubgroupMap_localTamePowerResidueSymbol_eq_arithmeticFrobenius_r
       rootQuotient (K := K) (L := L) beta
         (arithmeticFrobeniusOfUnramifiedValuation K L) := by
   let : Fintype 𝓀[K] := Fintype.ofFinite _
-  let phi : Gal(L / K) :=
+  let phi : Gal(L/K) :=
     arithmeticFrobeniusOfUnramifiedValuation K L
   have hbetaPowFixed :
-      ∀ sigma : Gal(L / K), sigma • (beta ^ (n : ℕ)) = beta ^ (n : ℕ) := by
+      ∀ sigma : Gal(L/K), sigma • (beta ^ (n : ℕ)) = beta ^ (n : ℕ) := by
     intro sigma
     rw [hbetaPow]
     exact RadicalDatum.smul_algebraMap_unit

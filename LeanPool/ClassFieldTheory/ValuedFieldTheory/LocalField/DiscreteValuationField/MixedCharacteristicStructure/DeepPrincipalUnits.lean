@@ -13,6 +13,11 @@ topology and transports integral-basis coordinates through the deep
 exponential--logarithm equivalence.
 -/
 
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF renaming
+  mrangeRestrictNontriviallyNormedField →
+    mrangeRestrictNontriviallyNormedField
+
+
 noncomputable section
 
 universe u v
@@ -93,7 +98,7 @@ theorem continuous_qpadicNumbersAlgebra_ofWithZeroValuation
         (algebraMap ℚ_[p] K) := by
     let : Valued K F.mrangeValueGroup := restricted
     let : NontriviallyNormedField K :=
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F.toCompleteDVF
+      mrangeRestrictNontriviallyNormedField F.toCompleteDVF
     change Continuous
       (fun x : ℚ_[p] =>
         ((F.qpadicNumbersEquivQpadicClosureSubfield x :
