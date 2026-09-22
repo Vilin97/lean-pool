@@ -144,12 +144,12 @@ def splitVertex (_source : SubdivisionGraph.Spec n p) : Fin (n + 1) :=
   Fin.last n
 
 /-- Original slots embed below the fresh last edge slot. -/
-def oldSlot (_source : SubdivisionGraph.Spec n p) (edge : Fin p) :
+abbrev oldSlot (_source : SubdivisionGraph.Spec n p) (edge : Fin p) :
     Fin (p + 1) :=
   edge.castSucc
 
 /-- Slot occupied by the second half of the split edge. -/
-def secondSlot (_source : SubdivisionGraph.Spec n p) : Fin (p + 1) :=
+abbrev secondSlot (_source : SubdivisionGraph.Spec n p) : Fin (p + 1) :=
   Fin.last p
 
 variable (source : SubdivisionGraph.Spec n p) (split : Fin p)
@@ -631,22 +631,12 @@ def canonicalSplitStepEquiv
         rw [canonicalSplitStepMapInv_old_split source split first second hFirst hSecond hLength,
           canonicalSplitStepMap_split source split first second hFirst hSecond hLength,
           dif_pos hBefore]
-        apply Sigma.ext
-        · rfl
-        · apply heq_of_eq
-          apply Fin.ext
-          rfl
 
       · change canonicalSplitStepMap source split first second hFirst hSecond hLength
           (canonicalSplitStepMapInv source split first second hFirst hSecond hLength
             ⟨oldSlot source old, oldOffset⟩) = ⟨oldSlot source old, oldOffset⟩
         rw [canonicalSplitStepMapInv_old source split old first second hFirst hSecond hLength hEdge,
           canonicalSplitStepMap_old source split old first second hFirst hSecond hLength hEdge]
-        apply Sigma.ext
-        · rfl
-        · apply heq_of_eq
-          apply Fin.ext
-          rfl
 
 
 /-! ### Compatibility of the canonical vertex and step maps -/

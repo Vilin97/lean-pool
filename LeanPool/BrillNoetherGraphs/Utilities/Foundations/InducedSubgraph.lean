@@ -38,7 +38,7 @@ private theorem inducedEdges_all (G : CFGraph.{u}) (S : Finset G.V) :
   exact (Multiset.mem_filter.mp hEdge).2
 
 /-- The subgraph of `G` induced by the nonempty finite vertex set `S`. -/
-noncomputable def inducedSubgraph (G : CFGraph.{u}) (S : Finset G.V)
+noncomputable abbrev inducedSubgraph (G : CFGraph.{u}) (S : Finset G.V)
     (hS : S.Nonempty) : CFGraph where
   V := {v : G.V // v ∈ S}
   instNonempty := by

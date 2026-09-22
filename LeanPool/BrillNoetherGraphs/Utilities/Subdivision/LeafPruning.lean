@@ -108,7 +108,7 @@ private theorem keptEdges_all :
   exact (Multiset.mem_filter.mp hEdge).2
 
 /-- Delete `leaf`, retaining precisely the edges whose endpoints remain. -/
-noncomputable def deleteLeaf
+noncomputable abbrev deleteLeaf
     (hDegree : vertex_degree G leaf = 1) : CFGraph where
   V := Remaining G leaf
   instNonempty := ⟨root G leaf hDegree⟩
@@ -263,21 +263,32 @@ noncomputable def laplacianEquiv_deleteLeaf_addLeaf
         simp
       · rw [vertexEquiv_leaf,
           vertexEquiv_of_ne G leaf hDegree y hy]
-        simp only [LeafExtension.num_edges_none_some]
-        simpa only [mk_eq_rootInDeleteLeaf_iff] using
-          (num_edges_leaf_eq G leaf hDegree y).symm
+        calc
+          _ = if (⟨y, hy⟩ : (deleteLeaf G leaf hDegree).V) =
+              rootInDeleteLeaf G leaf hDegree then 1 else 0 :=
+            LeafExtension.num_edges_none_some (deleteLeaf G leaf hDegree)
+              (rootInDeleteLeaf G leaf hDegree) ⟨y, hy⟩
+          _ = _ := by
+            simpa only [rootInDeleteLeaf, root, id_eq, Subtype.mk.injEq] using
+              (num_edges_leaf_eq G leaf hDegree y).symm
     · by_cases hy : y = leaf
       · subst y
         rw [vertexEquiv_of_ne G leaf hDegree x hx,
           vertexEquiv_leaf]
-        simp only [LeafExtension.num_edges_some_none]
-        rw [num_edges_symmetric]
-        simpa only [mk_eq_rootInDeleteLeaf_iff] using
-          (num_edges_leaf_eq G leaf hDegree x).symm
+        calc
+          _ = if (⟨x, hx⟩ : (deleteLeaf G leaf hDegree).V) =
+              rootInDeleteLeaf G leaf hDegree then 1 else 0 :=
+            LeafExtension.num_edges_some_none (deleteLeaf G leaf hDegree)
+              (rootInDeleteLeaf G leaf hDegree) ⟨x, hx⟩
+          _ = _ := by
+            rw [num_edges_symmetric]
+            simpa only [rootInDeleteLeaf, root, id_eq, Subtype.mk.injEq] using
+              (num_edges_leaf_eq G leaf hDegree x).symm
       · rw [vertexEquiv_of_ne G leaf hDegree x hx,
           vertexEquiv_of_ne G leaf hDegree y hy]
-        simp only [LeafExtension.num_edges_some_some]
-        exact num_edges_deleteLeaf G leaf hDegree ⟨x, hx⟩ ⟨y, hy⟩
+        exact (LeafExtension.num_edges_some_some (deleteLeaf G leaf hDegree)
+          (rootInDeleteLeaf G leaf hDegree) ⟨x, hx⟩ ⟨y, hy⟩).trans
+          (num_edges_deleteLeaf G leaf hDegree ⟨x, hx⟩ ⟨y, hy⟩)
 
 /-- Rank-one Brill--Noether existence on the pruned graph lifts back to the
 original connected graph.  The local lifting calculation uses only the exact

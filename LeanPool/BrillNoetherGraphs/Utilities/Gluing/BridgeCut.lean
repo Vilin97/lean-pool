@@ -48,11 +48,11 @@ namespace OneBridgeCut
 variable {K : CFGraph.{u}} (cut : OneBridgeCut K)
 
 /-- The induced left factor. -/
-noncomputable def leftGraph : CFGraph :=
+noncomputable abbrev leftGraph : CFGraph :=
   inducedSubgraph K cut.left cut.left_nonempty
 
 /-- The induced right factor. -/
-noncomputable def rightGraph : CFGraph :=
+noncomputable abbrev rightGraph : CFGraph :=
   inducedSubgraph K cut.right cut.right_nonempty
 
 /-- The left endpoint, as a vertex of the left induced factor. -/
@@ -74,7 +74,7 @@ private theorem not_right_of_left {z : K.V} (hz : z ∈ cut.left) : z ∉ cut.ri
   fun hzRight => (Finset.disjoint_left.mp cut.disjoint) hz hzRight
 
 /-- The concrete bridge graph determined by the cut. -/
-noncomputable def bridgeGraph : CFGraph :=
+noncomputable abbrev bridgeGraph : CFGraph :=
   Utilities.bridgeGraph cut.leftGraph cut.rightGraph cut.leftGlue cut.rightGlue
 /-- The vertex equivalence from the concrete bridge model to the ambient
 graph. -/
@@ -143,7 +143,9 @@ noncomputable def graphIso : CFGraphIso cut.bridgeGraph K where
       rw [num_edges_bridgeGraph_inl]
       simp [leftGraph]
     · unfold bridgeGraph
-      simpa using cut.num_edges_cross a b'
+      exact (cut.num_edges_cross a b').trans
+        (num_edges_bridgeGraph_inl_inr cut.leftGraph cut.rightGraph
+          cut.leftGlue cut.rightGlue a b').symm
     · unfold bridgeGraph
       calc
         num_edges K b.val a'.val = num_edges K a'.val b.val :=
@@ -153,7 +155,8 @@ noncomputable def graphIso : CFGraphIso cut.bridgeGraph K where
         _ = num_edges (Utilities.bridgeGraph cut.leftGraph cut.rightGraph
             cut.leftGlue cut.rightGlue) (Sum.inr b) (Sum.inl a') := by
           rw [num_edges_symmetric]
-          simp
+          exact (num_edges_bridgeGraph_inl_inr cut.leftGraph cut.rightGraph
+            cut.leftGlue cut.rightGlue a' b).symm
     · unfold bridgeGraph
       rw [num_edges_bridgeGraph_inr]
       simp [rightGraph]

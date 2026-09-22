@@ -20,7 +20,7 @@ open Multiset Finset
 namespace Utilities
 
 /-- Add one edge between two distinct existing vertices. -/
-def addEdge (H : CFGraph) (x y : H.V) (hxy : x ≠ y) : CFGraph where
+abbrev addEdge (H : CFGraph) (x y : H.V) (hxy : x ≠ y) : CFGraph where
   V := H.V
   edges := (x, y) ::ₘ H.edges
   loopless := by

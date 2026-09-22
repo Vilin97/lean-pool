@@ -197,7 +197,7 @@ theorem decodePosition_val_of_fromHead_false
     (hDirection : code.fromHead = false) :
     (code.decodePosition certificate point core_nonempty hValid hBounds hCone).val =
       code.rawOffset point := by
-  simp [decodePosition_val, coordinate, hDirection]
+  simp only [decodePosition_val, coordinate, hDirection, Bool.false_eq_true, ite_false]
 
 /-- Head-oriented codes use the complementary tail coordinate. -/
 theorem decodePosition_val_of_fromHead_true
@@ -208,7 +208,8 @@ theorem decodePosition_val_of_fromHead_true
     (hDirection : code.fromHead = true) :
     (code.decodePosition certificate point core_nonempty hValid hBounds hCone).val =
       certificate.segmentNat point code.edge - code.rawOffset point := by
-  simp [decodePosition_val, coordinate, hDirection]
+  simp only [decodePosition_val, coordinate, hDirection, Bool.false_eq_true, ite_false]
+  rfl
 /-- Tail-oriented decoding is definitionally the ordinary bounded path
 position constructor. -/
 theorem decodePosition_eq_pathPosition_of_fromHead_false
@@ -222,7 +223,8 @@ theorem decodePosition_eq_pathPosition_of_fromHead_false
         code.edge (code.rawOffset point)
         (code.rawOffset_le_segmentNat certificate point hValid hBounds hCone) := by
   apply Fin.ext
-  simp [decodePosition_val, coordinate, hDirection]
+  simp only [decodePosition_val, coordinate, hDirection, Bool.false_eq_true, ite_false]
+  rfl
 
 /-- A decoded position is interior whenever its normalized coordinate is
 strictly between the two endpoints. -/

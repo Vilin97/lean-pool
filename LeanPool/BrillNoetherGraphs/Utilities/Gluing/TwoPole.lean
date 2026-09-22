@@ -41,12 +41,12 @@ namespace TwoPole
 
 /-- The lower-genus presentation of a two-pole join: retain only the first
 cross-edge, which is a separating bridge. -/
-def bridge (A : CFGraph.{u}) (B : CFGraph.{v})
+abbrev bridge (A : CFGraph.{u}) (B : CFGraph.{v})
     (p : TwoPole A) (q : TwoPole B) : CFGraph.{max u v} :=
   bridgeGraph A B p.first q.first
 
 /-- Join two graphs by matching their first poles and their second poles. -/
-def join (A : CFGraph.{u}) (B : CFGraph.{v})
+abbrev join (A : CFGraph.{u}) (B : CFGraph.{v})
     (p : TwoPole A) (q : TwoPole B) : CFGraph.{max u v} :=
   addEdge (bridge A B p q) (Sum.inl p.second) (Sum.inr q.second) (by
     change (Sum.inl p.second : Sum A.V B.V) ≠ Sum.inr q.second
@@ -259,7 +259,9 @@ theorem connected_join
 @[simp] theorem deg_canonicalSum
     (A : CFGraph.{u}) (B : CFGraph.{v}) (p : TwoPole A) (q : TwoPole B) :
     deg (canonicalSum A B p q) = 2 * genus A + 2 * genus B - 4 := by
-  simp [canonicalSum, degree_of_canonical_divisor]
+  change deg (sumDivisor A B p q (canonical_divisor A) (canonical_divisor B)) = _
+  rw [deg_sumDivisor]
+  simp only [degree_of_canonical_divisor]
   ring
 /-- Canonical bookkeeping for a two-pole join.  The global canonical divisor
 is the local canonical sum plus exactly the four pole chips. -/

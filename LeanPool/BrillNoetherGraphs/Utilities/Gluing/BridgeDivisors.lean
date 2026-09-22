@@ -352,7 +352,6 @@ theorem prin_leftSideIndicator
       · subst a
         simp
       · simp [ha]
-        exact fun h => ha (Sum.inl.inj h)
   | inr b =>
       change
         (∑ z : Sum G.V H.V,
@@ -379,6 +378,5 @@ theorem prin_leftSideIndicator
         rw [hFilter]
         simp
       · simp [hb]
-        exact fun h => hb (Sum.inr.inj h)
 
 end MarkedGraphs

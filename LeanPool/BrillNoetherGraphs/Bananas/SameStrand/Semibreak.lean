@@ -1408,8 +1408,8 @@ private theorem false_of_q_reduced_two_positive_same_strand_of_lt
       exact ⟨lt_of_lt_of_le hpInterior.1 hrLo,
         lt_of_le_of_lt hrHi hqInterior.2⟩
     rw [B.pathVertex_eq_interiorVertex γ r hrInterior]
-    simp [leftEndpoint, SubdivisionGraph.Spec.coreVertex,
-      SubdivisionGraph.Spec.interiorVertex]
+    change Sum.inr _ ∈ Finset.univ.filter (fun x : B.graph.V => x ≠ Sum.inl 0)
+    exact Finset.mem_filter.mpr ⟨Finset.mem_univ _, by simp⟩
   have hNonempty : S.Nonempty := by
     refine ⟨B.pathVertex γ ppos, ?_⟩
     simp only [S, Finset.mem_filter, Finset.mem_univ, true_and]

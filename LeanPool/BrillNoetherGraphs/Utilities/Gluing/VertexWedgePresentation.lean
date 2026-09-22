@@ -144,8 +144,8 @@ carried to the advertised ambient map. -/
     P.vertexEquiv (wedgeRightVertex G H x y b) = P.rightMap b := by
   by_cases hb : b = y
   · subst b
-    simpa using P.marked_eq
-  · simp [wedgeRightVertex, hb]
+    simpa [wedgeRightVertex, vertexEquiv, map] using P.marked_eq
+  · simp [wedgeRightVertex, hb, vertexEquiv, map]
 
 /-- A wedge presentation determines an isomorphism from the concrete wedge to
 the ambient graph. -/
@@ -157,8 +157,8 @@ noncomputable def graphIso (P : VertexWedgePresentation K G H x y) :
     cases p with
     | inl a =>
         cases q with
-        | inl b => simpa using P.num_edges_left a b
-        | inr b => simpa using P.num_edges_cross a b.1 b.2
+        | inl b => simpa [vertexEquiv, map] using P.num_edges_left a b
+        | inr b => simpa [vertexEquiv, map] using P.num_edges_cross a b.1 b.2
     | inr a =>
         cases q with
         | inl b =>
@@ -172,7 +172,7 @@ noncomputable def graphIso (P : VertexWedgePresentation K G H x y) :
                 (num_edges_vertexWedge_left_right G H x y b a).symm
               _ = num_edges (vertexWedge G H x y) (Sum.inr a) (Sum.inl b) :=
                 num_edges_symmetric _ _ _
-        | inr b => simpa using P.num_edges_right a.1 b.1
+        | inr b => simpa [vertexEquiv, map] using P.num_edges_right a.1 b.1
 
 @[simp] theorem graphIso_apply_left (P : VertexWedgePresentation K G H x y) (a : G.V) :
     P.graphIso.vertexEquiv (Sum.inl a) = P.leftMap a := rfl

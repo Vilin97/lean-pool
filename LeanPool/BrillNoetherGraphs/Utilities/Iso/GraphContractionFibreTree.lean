@@ -191,12 +191,26 @@ theorem sum_fibreGraph_edge_cards (c : GraphContractionCertificate G H)
       intro target hTarget
       have hAt := (Finset.mem_filter.mp hTarget).2
       exact hInternal (c.fibreEdgeAt_implies_internal target edge hAt)
-  simp only [fibreGraph, inducedSubgraph_edge_card_eq_filter, fibreVertices,
-    Finset.mem_filter, Finset.mem_univ, true_and]
+  have hCards : (∑ target : H.V, (c.fibreGraph hValid target).edges.card) =
+      ∑ target : H.V, (G.edges.filter (c.fibreEdgeAt target)).card := by
+    apply Finset.sum_congr rfl
+    intro target _
+    have hcard := inducedSubgraph_edge_card_eq_filter G (c.fibreVertices target)
+      (c.fibreVertices_nonempty hValid target)
+    simp only [fibreVertices, Finset.mem_filter, Finset.mem_univ, true_and] at hcard
+    convert! hcard using 1
+    apply congrArg (fun edges : Multiset (G.V × G.V) => edges.card)
+    exact Multiset.filter_congr (fun _ _ => Iff.rfl)
+  rw [hCards]
   rw [sum_card_filter_eq_sum_map]
-  rw [Multiset.map_congr rfl (fun edge _ => by
-    simpa only [fibreEdgeAt] using hCount edge),
-    sum_map_ite_eq_card_filter]
+  calc
+    _ = Multiset.sum (G.edges.map fun edge =>
+        if c.vertexMap edge.1 = c.vertexMap edge.2 then 1 else 0) := by
+      congr 1
+      exact Multiset.map_congr rfl (fun edge _ => by
+        simpa only [fibreEdgeAt] using hCount edge)
+    _ = _ := sum_map_ite_eq_card_filter G.edges
+      (fun edge => c.vertexMap edge.1 = c.vertexMap edge.2)
 
 /-- Internal directed multiplicity counts every contracted edge occurrence at
 each of its two endpoints. -/
