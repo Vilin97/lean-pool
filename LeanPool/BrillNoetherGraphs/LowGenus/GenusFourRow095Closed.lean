@@ -60,7 +60,7 @@ theorem validFaces_complete (F : Finset (Fin 9))
     (hNotLoopy : ¬ IsLoopy LowGenus.GenusFourRow095.core F) :
     F ∈ validFaces := by
   revert F
-  decide
+  decide +kernel
 
 /-! ## The nine quotient types -/
 

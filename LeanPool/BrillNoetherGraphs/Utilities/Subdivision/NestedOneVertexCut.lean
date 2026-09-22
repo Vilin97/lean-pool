@@ -84,9 +84,9 @@ noncomputable def restrictRight
   right := Finset.univ.filter fun z => z.val ∈ second.right
   glue := ⟨second.glue, hLeft second.glue_mem_left⟩
   glue_mem_left := by
-    simp [second.glue_mem_left]
+    exact Finset.mem_filter.mpr ⟨Finset.mem_univ _, second.glue_mem_left⟩
   glue_mem_right := by
-    simp [second.glue_mem_right]
+    exact Finset.mem_filter.mpr ⟨Finset.mem_univ _, second.glue_mem_right⟩
   vertex_cover := by
     intro z
     rcases second.vertex_cover z.val with hz | hz
@@ -110,8 +110,8 @@ noncomputable def restrictRight
       intro h
       apply hbGlue
       exact Subtype.ext h
-    simpa [rightGraph, leftGraph] using
-      second.no_cross a.val haLeft haNe b.val hbRight hbNe
+    exact (num_edges_inducedSubgraph K first.right first.right_nonempty a b).trans
+      (second.no_cross a.val haLeft haNe b.val hbRight hbNe)
 
 /-- Connectivity of the restricted-cut factors follows from connectivity of
 the original ambient graph. -/

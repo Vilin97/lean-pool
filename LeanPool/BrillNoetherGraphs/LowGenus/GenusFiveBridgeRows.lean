@@ -112,12 +112,12 @@ theorem bnExists_face_of_two_three_cut
     exact hEq.symm
   have hLeftGraph : genus graphCut.leftGraph = 2 := by
     dsimp only [graphCut]
-    rw [transported.leftGraph_genus d.contractedSpec hTransportedValid,
-      contractedCut_leftGenus d cut hValid hRep hLoopless, hLeft]
+    rw [transported.leftGraph_genus d.contractedSpec hTransportedValid]
+    exact (contractedCut_leftGenus d cut hValid hRep hLoopless).trans hLeft
   have hRightGraph : genus graphCut.rightGraph = 3 := by
     dsimp only [graphCut]
-    rw [transported.rightGraph_genus d.contractedSpec hTransportedValid,
-      contractedCut_rightGenus d cut hValid hRep hLoopless, hRight]
+    rw [transported.rightGraph_genus d.contractedSpec hTransportedValid]
+    exact (contractedCut_rightGenus d cut hValid hRep hLoopless).trans hRight
   have hContracted : BNExists d.contractedSpec.graph 1 4 :=
     Utilities.BNExists_one_four_of_positiveGenus_oneVertexCut genusFour
       d.contractedSpec.graph hContractedConnected hContractedGenus graphCut
