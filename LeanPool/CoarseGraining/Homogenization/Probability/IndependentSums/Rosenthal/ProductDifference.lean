@@ -35,15 +35,15 @@ theorem iIndepFun_prodMk_comp_fst_comp_snd_prod
   let P : Ω × Ω → ι → ℝ × ℝ := fun ω i => (X i ω.1, X i ω.2)
   let Q : Ω × Ω → (ι → ℝ) × (ι → ℝ) := fun ω => (fun i => X i ω.1, fun i => X i ω.2)
   have hXT_meas : Measurable XT := by
-    exact measurable_pi_lambda _ h_meas
+    exact measurable_pi_lambda h_meas
   have hXT_map : μ.map XT = Measure.pi (fun i => μ.map (X i)) := by
     simpa [XT] using
       (ProbabilityTheory.iIndepFun_iff_map_fun_eq_pi_map
         (μ := μ) (f := X) (hf := fun i => (h_meas i).aemeasurable)).1 h_indep
   have hQfst_meas : Measurable (fun ω : Ω × Ω => fun i => X i ω.1) := by
-    exact measurable_pi_lambda _ fun i => (h_meas i).comp measurable_fst
+    exact measurable_pi_lambda fun i => (h_meas i).comp measurable_fst
   have hQsnd_meas : Measurable (fun ω : Ω × Ω => fun i => X i ω.2) := by
-    exact measurable_pi_lambda _ fun i => (h_meas i).comp measurable_snd
+    exact measurable_pi_lambda fun i => (h_meas i).comp measurable_snd
   have hQ_map :
       (μ.prod μ).map Q =
         (Measure.pi (fun i => μ.map (X i))).prod
@@ -89,7 +89,7 @@ theorem iIndepFun_prodMk_comp_fst_comp_snd_prod
       _ = (Measure.pi (fun i => μ.map (X i))).prod
             (Measure.pi (fun i => μ.map (X i))) := by rw [hXT_map]
   have hP_meas : Measurable P := by
-    exact measurable_pi_lambda _ fun i =>
+    exact measurable_pi_lambda fun i =>
       ((h_meas i).comp measurable_fst).prodMk ((h_meas i).comp measurable_snd)
   have hP_map :
       (μ.prod μ).map P = Measure.pi (fun i => (μ.map (X i)).prod (μ.map (X i))) := by

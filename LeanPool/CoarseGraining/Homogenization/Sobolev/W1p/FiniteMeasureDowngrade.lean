@@ -172,7 +172,7 @@ theorem eLpNorm_normalizedCubeMeasure_downgrade_le {d : ℕ} (Q : TriadicCube d)
       MeasureTheory.eLpNorm f 2 (normalizedCubeMeasure Q) := by
   let : MeasureTheory.IsProbabilityMeasure (normalizedCubeMeasure Q) :=
     ⟨normalizedCubeMeasure_apply_univ Q⟩
-  exact MeasureTheory.eLpNorm_le_eLpNorm_of_exponent_le hp hf
+  exact MeasureTheory.eLpNorm_le_eLpNorm_of_exponent_le hp
 
 /-- The normalized-cube exponent downgrade for the value representative of
 an `H¹` function. -/

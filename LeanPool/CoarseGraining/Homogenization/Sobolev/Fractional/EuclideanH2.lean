@@ -107,6 +107,7 @@ theorem euclideanHsIntegrand_congr_ae {d : ℕ} {s : FractionalOrder}
     (hFG : F =ᵐ[(unitCenteredCubeDomain d).normalizedVolume] G) :
     euclideanHsIntegrand s F =ᵐ[euclideanHsProductMeasure d]
       euclideanHsIntegrand s G := by
+  letI := (unitCenteredCubeDomain d).restrictedVolume_isFiniteMeasure
   have hFG_restricted : F =ᵐ[(unitCenteredCubeDomain d).restrictedVolume] G :=
     ae_restrictedVolume_of_ae_normalizedVolume hFG
   have hfst : (fun z : Vec d × Vec d => F z.1) =ᵐ[euclideanHsProductMeasure d]

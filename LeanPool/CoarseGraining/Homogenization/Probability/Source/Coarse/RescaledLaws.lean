@@ -26,7 +26,8 @@ noncomputable def scaleNormalizedLaw {d : ℕ} (k : ℕ) (P : Measure (Carrier d
 theorem isProbabilityMeasure_scaleNormalizedLaw {d : ℕ} (k : ℕ) (P : Measure (Carrier d))
     [IsProbabilityMeasure P] :
     IsProbabilityMeasure (scaleNormalizedLaw k P) := by
-  exact Measure.isProbabilityMeasure_map (measurable_rescale_globalSigma k).aemeasurable
+  unfold scaleNormalizedLaw
+  infer_instance
 
 private theorem indep_map_measurableEquiv
     {α β : Type*} [mα : MeasurableSpace α] [mβ : MeasurableSpace β]

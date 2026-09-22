@@ -165,7 +165,9 @@ theorem exactOverlapEuclideanRootMean_coordinate_le {d : ℕ} (Q : TriadicCube d
     ENNReal.ofReal |exactOverlapRootMean Q (fun x => F x i)
       (hF.coordinate i).root| ≤ exactOverlapEuclideanRootMeanENorm Q F hF := by
   rw [exactOverlapEuclideanRootMeanENorm_eq]
-  exact coordinate_le_euclideanENorm _ i
+  exact coordinate_le_euclideanENorm
+    (fun j => ENNReal.ofReal |exactOverlapRootMean Q (fun x => F x j)
+      (hF.coordinate j).root|) i
 
 /-- Each exact scalar coordinate seminorm is bounded by the exact Euclidean
 seminorm. -/
@@ -176,7 +178,9 @@ theorem exactOverlapEuclideanSeminormTwo_coordinate_le {d : ℕ}
       (fun x => F x i) (hF.coordinate i) ≤
         exactOverlapEuclideanSeminormTwo s Q F hF := by
   rw [exactOverlapEuclideanSeminormTwo_eq]
-  exact coordinate_le_euclideanENorm _ i
+  exact coordinate_le_euclideanENorm
+    (fun j => exactOverlapFiniteSeminorm (exactOverlapTwoParameters s) Q
+      (fun x => F x j) (hF.coordinate j)) i
 
 /-- Each exact scalar coordinate full norm is bounded by the source-facing
 Euclidean full norm. -/

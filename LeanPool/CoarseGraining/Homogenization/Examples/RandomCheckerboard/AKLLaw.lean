@@ -92,7 +92,7 @@ instance instIsProbabilityMeasure_law (d : ℕ) (Θ : ℝ) (hΘ : 1 ≤ Θ)
       (law d Θ hΘ p hp) := by
   let : MeasurableSpace (Source.AKL.Carrier d Θ) := Source.AKL.globalSigma d Θ
   rw [law]
-  exact Measure.isProbabilityMeasure_map (measurable_checkerCarrier hΘ).aemeasurable
+  infer_instance
 
 theorem isProbabilityMeasure_law (d : ℕ) (Θ : ℝ) (hΘ : 1 ≤ Θ)
     (p : ℝ≥0) (hp : p ≤ 1) :

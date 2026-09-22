@@ -77,7 +77,7 @@ theorem cubeProjection_memLp_of_mem_descendantsAtDepth {d : ℕ}
     MeasureTheory.memLp_const c
   have hproj_meas :
       MeasureTheory.AEStronglyMeasurable (cubeProjection Q j f) (normalizedCubeMeasure R) :=
-    hconst.1.congr
+    hconst.aestronglyMeasurable.congr
       (cubeProjection_ae_eq_cubeAverage_of_mem_descendantsAtDepth (Q := Q) (R := R) (j := j) f hR).symm
   refine hconst.congr_norm hproj_meas ?_
   filter_upwards
@@ -116,7 +116,7 @@ theorem cubeProjectionResidual_memLp_of_mem_descendantsAtDepth
   have hres_meas :
       MeasureTheory.AEStronglyMeasurable (cubeProjectionResidual Q j u)
         (normalizedCubeMeasure R) :=
-    hu.1.congr hfluct
+    hu.aestronglyMeasurable.congr hfluct
   refine hu.congr_norm hres_meas ?_
   filter_upwards [hfluct] with x hx
   simpa using congrArg abs hx
@@ -137,7 +137,7 @@ theorem abs_cubeAverage_mul_cubeProjectionResidual_le_mul_cubeLpNorm_cubeBesovOs
   have hres_meas :
       MeasureTheory.AEStronglyMeasurable (cubeProjectionResidual Q j u)
         (normalizedCubeMeasure R) :=
-    hu.1.congr hfluct
+    hu.aestronglyMeasurable.congr hfluct
   have hu_res :
       MeasureTheory.MemLp (cubeProjectionResidual Q j u) (ENNReal.conjExponent p)
         (normalizedCubeMeasure R) := by
