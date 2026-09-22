@@ -478,7 +478,7 @@ noncomputable def imageLeftMulCocone
               stageImageι A (towerIdx A i₀ (ULift.down m'))) =
             stageImageι A (towerIdx A i₀ n) ⊗ₘ
               stageImageι A (towerIdx A i₀ (ULift.down m)) := by
-          rw [whiskerLeft_comp_tensorHom, imageDiagram_map_comp_ι]
+          erw [whiskerLeft_comp_tensorHom, imageDiagram_map_comp_ι]
           rfl
         refine Eq.trans ?_ (Category.comp_id _).symm
         refine imageSubalgebra_hom_ext A i₀ ?_
@@ -526,7 +526,7 @@ theorem imageLeftMul_comp_hom
             imageSubalgebraHom A i₀) =
           stageImageι A (towerIdx A i₀ n) ⊗ₘ
             stageImageι A (towerIdx A i₀ (ULift.down m)) := by
-        rw [whiskerLeft_comp_tensorHom, imageColimitι_comp_hom]
+        erw [whiskerLeft_comp_tensorHom, imageColimitι_comp_hom]
         rfl
       ((Category.assoc _ _ _).symm.trans
         ((eq_whisker (imageLeftMul_fac A i₀ n m) _).trans
@@ -550,7 +550,7 @@ noncomputable def imageMulCocone
               imageSubalgebraHom A i₀) =
             stageImageι A (towerIdx A i₀ (ULift.down n)) ⊗ₘ
               imageSubalgebraHom A i₀ := by
-          rw [whiskerRight_comp_tensorHom, imageDiagram_map_comp_ι]
+          erw [whiskerRight_comp_tensorHom, imageDiagram_map_comp_ι]
           rfl
         refine Eq.trans ?_ (Category.comp_id _).symm
         refine imageSubalgebra_hom_ext A i₀ ?_
@@ -595,7 +595,7 @@ theorem imageMul_comp_hom
           (imageSubalgebraHom A i₀ ⊗ₘ imageSubalgebraHom A i₀) =
           stageImageι A (towerIdx A i₀ (ULift.down n)) ⊗ₘ
             imageSubalgebraHom A i₀ := by
-        rw [whiskerRight_comp_tensorHom, imageColimitι_comp_hom]
+        erw [whiskerRight_comp_tensorHom, imageColimitι_comp_hom]
         rfl
       ((Category.assoc _ _ _).symm.trans
         ((eq_whisker (imageMul_fac A i₀ n) _).trans

@@ -101,7 +101,7 @@ theorem unit_chainBaseStage
       (λ_ (chainStage2 A M M' 0 0)).hom =
     (λ_ (𝟙_ D)).hom ≫ chainSeed A M M' d :=
     leftUnitor_naturality _
-  rw [chainBaseStage, reassoc_of% h1, reassoc_of% h2]
+  erw [chainBaseStage, reassoc_of% h1, reassoc_of% h2]
   exact (congrArg (fun t => (ρ_ (𝟙_ D)).inv ≫
       MonoidalCategory.whiskerLeft (𝟙_ D)
         (Y₂ := chainStage2 A M M' 0 0)
@@ -124,9 +124,8 @@ theorem chainStage2Cast_actLeft
       modTensorAct A (symPowMod A M'.X p) (symPowMod A M.X q) ≫
         chainStage2Cast A M M' hp hq := by
   subst hp hq
-  simp only [chainStage2Cast_rfl,
-    MonoidalCategory.whiskerLeft_id, Category.id_comp]
-  exact (Category.comp_id _).symm
+  erw [chainStage2Cast_rfl, MonoidalCategory.whiskerLeft_id,
+    Category.id_comp, Category.comp_id]
 
 /-- **The two-index transition is linear over the base**: acting
 on a stage and raising is raising and acting. -/
@@ -243,7 +242,7 @@ theorem chainBaseStage_mul2
           chainStage2 A M M' p q) ≫
         (modTensorAct A (symPowMod A M'.X 0)
           (symPowMod A M.X 0) ▷ chainStage2 A M M' p q) := by
-    rw [chainBaseStage, MonoidalCategory.comp_whiskerRight,
+    erw [chainBaseStage, MonoidalCategory.comp_whiskerRight,
       MonoidalCategory.comp_whiskerRight]
     rfl
   have hb : (modTensorAct A (symPowMod A M'.X 0)
@@ -1266,7 +1265,7 @@ theorem pairIns [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
           (symPowMod A M.X 0) ⊗ₘ
         modTensorπ A (symPowMod A M'.X 0)
           (symPowMod A M.X 0)) := by
-    rw [MonoidalCategory.comp_whiskerRight, Category.assoc,
+    erw [MonoidalCategory.comp_whiskerRight, Category.assoc,
       ← MonoidalCategory.tensorHom_def]
   have hL3 : (modTensorπ A (symPowMod A M'.X 0)
       (symPowMod A M.X 0) ⊗ₘ
@@ -1405,7 +1404,7 @@ theorem pairIns [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     (M'.X ◁ (symPow A M'.X 1 ◁ symInsL A M.X 0)) ≫
     (M'.X ◁ modTensorπ A (symPowMod A M'.X 0)
       (symPowMod A M.X 1)) := by
-    simp only [MonoidalCategory.whiskerLeft_comp]
+    repeat' erw [MonoidalCategory.whiskerLeft_comp]
   have hRfinal : ((M'.X ⊗ M.X) ◁ modTensorπ A
       (symPowMod A M'.X 0) (symPowMod A M.X 0)) ≫
       (α_ M'.X M.X (chainStage2 A M M' 0 0)).hom ≫
@@ -1423,7 +1422,7 @@ theorem pairIns [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
         (eq_whisker hexp _)))).trans ?_
     -- peel the five whiskers
     refine (whisker_eq _ (by
-      simp only [Category.assoc] :
+      repeat' erw [Category.assoc] :
         ((M'.X ◁ (α_ M.X (symPow A M'.X 1)
             (symPow A M.X 1)).inv) ≫
           (M'.X ◁ ((β_ M.X (symPow A M'.X 1)).hom ▷
@@ -1709,7 +1708,7 @@ private theorem comp_chainDelta2
           ((f ▷ chainStage2 A M M' 0 0) ≫
             chainMul2 A M M' p q 0 0) := by
         rw [h2]
-        simp only [Category.assoc]
+        repeat' erw [Category.assoc]
 
 /-- **The raw pair product, normalised**: both letters braid to
 canonical position, the seeds feed in, and the two insertions
@@ -1973,7 +1972,7 @@ private theorem swapDelta_normal
       (M'.X ◁ chainInsQ A M M' 0 0) ≫
       (chainInsP A M M' 0 1 ≫
         chainDelta2 A M M' d 1 1) := by
-    simp only [Category.assoc]
+    repeat' erw [Category.assoc]
   have C4 : (ρ_ (M'.X ⊗ M.X)).inv ≫
       ((M'.X ⊗ M.X) ◁ chainSeed A M M' d) ≫
       (α_ M'.X M.X (chainStage2 A M M' 0 0)).hom ≫
@@ -2296,7 +2295,7 @@ private theorem pairSeed_match
             (M.X ◁ ((chainSeed A M M' d ▷
               (chainStage2 A M M' 0 0)) ≫
               chainMul2 A M M' 0 0 0 0)) := by
-          simp only [Category.assoc]
+          repeat' erw [Category.assoc]
         refine hre.trans ?_
         refine (eq_whisker (seedShuffle A M
           (S := chainStage2 A M M' 0 0)
@@ -2465,7 +2464,7 @@ theorem chainPairMul_eq
       (symPowOne A M'.X).inv from rfl,
       show (toSymPowModZero A M).hom =
         (symPowOne A M.X).inv from rfl]
-    simp only [Category.assoc]
+    repeat' erw [Category.assoc]
     rfl
   rw [hRside]
   exact whisker_eq _ (Category.assoc _ _ _)

@@ -659,7 +659,8 @@ theorem smallComparison_square :
     superOddSquare.hom
   rw [smallOddSquare, Functor.FullyFaithful.preimageIso_hom,
     Functor.FullyFaithful.map_preimage]
-  simp
+  simp only [Iso.trans_hom, Iso.symm_hom, Category.assoc, Iso.hom_inv_id_assoc]
+  erw [Iso.trans_hom, Category.assoc, Iso.hom_inv_id, Category.comp_id]
 
 /-- **The braiding sign at the small odd generator**, by
 reflection along the inclusion from `RS.stdSuper_braiding_neg`. -/

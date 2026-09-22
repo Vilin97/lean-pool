@@ -263,7 +263,7 @@ noncomputable def superLetters (r s : ℕ) :
           show (LinearMap.proj (R := ℂ)
               (φ := fun _ : Fin r => ℂ) i')
             ((0 : (Fin 0 → ℂ) →ₗ[ℂ] (Fin r → ℂ)) z) = 0
-          rw [LinearMap.zero_apply, map_zero]
+          rfl
         · refine LinearMap.ext fun z => ?_
           exact Subsingleton.elim (α := PUnit) _ _
       | inr j' =>
