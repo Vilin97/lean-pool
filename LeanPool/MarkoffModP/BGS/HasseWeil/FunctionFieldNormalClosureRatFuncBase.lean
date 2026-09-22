@@ -29,6 +29,18 @@ variable (K L : Type*) [Field K] [Field L]
   [FiniteDimensional (RatFunc K) L]
   [Algebra.IsSeparable (RatFunc K) L]
 
+local instance ratFuncBaseConstantSMul :
+    SMul (FunctionFieldNormalClosureConstantField K L)
+      (FunctionFieldNormalClosureConstantBase K L) := Algebra.toSMul
+
+local instance ratFuncBaseConstantModule :
+    Module (FunctionFieldNormalClosureConstantField K L)
+      (FunctionFieldNormalClosureConstantBase K L) := Algebra.toModule
+
+local instance normalClosureConstantBaseRatFuncTower :
+    IsScalarTower K (RatFunc K) (FunctionFieldNormalClosureConstantBase K L) :=
+  IsScalarTower.of_algebraMap_eq' rfl
+
 /-- The compositum of the original rational function field and the algebraic
 constant field, formed inside the chosen normal closure. -/
 def functionFieldNormalClosureConstantCompositum :
@@ -94,6 +106,10 @@ algebraic constants of the normal closure. -/
 theorem functionFieldNormalClosureConstantBaseX_transcendental :
     Transcendental (FunctionFieldNormalClosureConstantField K L)
       (functionFieldNormalClosureConstantBaseX K L) := by
+  let : Algebra.IsAlgebraic K (FunctionFieldNormalClosureConstantField K L) :=
+    algebraicClosure.isAlgebraic K (FunctionFieldNormalClosure K L)
+  let : Algebra.IsIntegral K (FunctionFieldNormalClosureConstantField K L) :=
+    Algebra.IsAlgebraic.isIntegral
   intro hx
   have hxIntegralK : IsIntegral K
       (functionFieldNormalClosureConstantBaseX K L) :=
