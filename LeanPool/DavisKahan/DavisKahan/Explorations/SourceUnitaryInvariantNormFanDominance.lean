@@ -88,14 +88,16 @@ import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber
 import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.SameSequence
 import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CompactApproximationEigenvalues
 import LeanPool.DavisKahan.DavisKahan.SharedFoundations.Ideal.ModulusTransport
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.UnitarilyInvariantSeminorm.Majorization
+import
+  LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.UnitarilyInvariantSeminorm.Majorization
 import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Singular.System
 import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SeparableOrthonormal
 import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.BlockSum
 import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.OperatorNorm
 import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.RankOneNormalization
 import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.KyFanNorm
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.NormalizedUnitaryInvariantNormExamples
+import
+  LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.NormalizedUnitaryInvariantNormExamples
 import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Presentation
 import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaAmbientUnbounded
 import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaDirectedAngle
@@ -745,7 +747,8 @@ theorem source_zeroExtension_sameSequence_and_gauge
   constructor
   · rw [ContinuousLinearMap.hasSameApproximationNumbers_iff]
     intro n
-    exact (TauCeti.ApproximationNumber.approximationNumber_subtypeL_comp_comp_orthogonalProjectionOnto
+    exact
+      (TauCeti.ApproximationNumber.approximationNumber_subtypeL_comp_comp_orthogonalProjectionOnto
       W A n).symm
   · exact (source_gauge_zeroExtension_eq N W A).symm
 
@@ -2412,7 +2415,8 @@ theorem finiteRankNormalizedSymmetricOperatorIdealFamily_not_fanDominant :
   intro hfan
   have hle := hfan (A := fanCounterexampleA) (B := fanCounterexampleB)
     fanCounterexample_kyFan_domination
-  rw [finiteRankNormalizedSymmetricOperatorIdealFamily_gauge_A, finiteRankNormalizedSymmetricOperatorIdealFamily_gauge_B] at hle
+  rw [finiteRankNormalizedSymmetricOperatorIdealFamily_gauge_A,
+    finiteRankNormalizedSymmetricOperatorIdealFamily_gauge_B] at hle
   have hbad : (⊤ : ℝ≥0∞) = 1 := le_antisymm hle le_top
   simp at hbad
 
@@ -2432,7 +2436,8 @@ theorem finiteRankNormalizedSymmetricOperatorIdealFamily_not_fanDominantSeparabl
   intro hfan
   have hle := hfan (A := fanCounterexampleA) (B := fanCounterexampleB)
     fanCounterexample_kyFan_domination
-  rw [finiteRankNormalizedSymmetricOperatorIdealFamily_gauge_A, finiteRankNormalizedSymmetricOperatorIdealFamily_gauge_B] at hle
+  rw [finiteRankNormalizedSymmetricOperatorIdealFamily_gauge_A,
+    finiteRankNormalizedSymmetricOperatorIdealFamily_gauge_B] at hle
   have hbad : (⊤ : ℝ≥0∞) = 1 := le_antisymm hle le_top
   simp at hbad
 
@@ -2587,7 +2592,8 @@ theorem fanDominanceSeparable_iff_whereDefined_and_membershipTransfer
 on its ideal, the source gauge is just the operator norm, which is the first Ky
 Fan gauge. -/
 theorem finiteRankNormalizedSymmetricOperatorIdealFamily_fanDominantWhereDefined :
-    HasFanDominanceSeparableWhereDefined (finiteRankNormalizedSymmetricOperatorIdealFamily.{0}) := by
+    HasFanDominanceSeparableWhereDefined (finiteRankNormalizedSymmetricOperatorIdealFamily.{0})
+      := by
   intro E F E' F' _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ A B hA hB hAB
   have hAfin : ProbeFiniteRank A := by
     change finiteRankOperatorNormGauge A ≠ ⊤ at hA
@@ -2607,7 +2613,8 @@ theorem finiteRankNormalizedSymmetricOperatorIdealFamily_fanDominantWhereDefined
 not the norm inequality on the finite-rank ideal. -/
 theorem finiteRankNormalizedSymmetricOperatorIdealFamily_not_membershipTransfer
     [TopologicalSpace.SeparableSpace FanCounterexampleSpace] :
-    ¬ HasKyFanMembershipTransferSeparable (finiteRankNormalizedSymmetricOperatorIdealFamily.{0}) := by
+    ¬ HasKyFanMembershipTransferSeparable (finiteRankNormalizedSymmetricOperatorIdealFamily.{0})
+      := by
   intro htransfer
   have hB :
       (finiteRankNormalizedSymmetricOperatorIdealFamily.{0}).toSymmetricOperatorIdealFamily.gauge
@@ -2742,7 +2749,8 @@ def HasMemberwiseSymmetricNormingRepresentation
 symmetric-norming representation: on its domain it is just the first Ky Fan norm.
 Thus a value-only reading of the source's symmetric-gauge sentence does not by
 itself rule out the countermodel. -/
-theorem finiteRankNormalizedSymmetricOperatorIdealFamily_hasMemberwiseSymmetricNormingRepresentation :
+theorem
+  finiteRankNormalizedSymmetricOperatorIdealFamily_hasMemberwiseSymmetricNormingRepresentation :
     HasMemberwiseSymmetricNormingRepresentation
       (finiteRankNormalizedSymmetricOperatorIdealFamily.{0}) := by
   have h1 : 0 < (1 : ℕ) := by omega
@@ -3002,7 +3010,8 @@ theorem mem_kyFanNormalizedSymmetricOperatorIdealFamily
     [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
     [NormedAddCommGroup F] [InnerProductSpace ℂ F] [CompleteSpace F]
     (A : E →L[ℂ] F) :
-    (kyFanNormalizedSymmetricOperatorIdealFamily k hk).toSymmetricOperatorIdealFamily.gauge A ≠ ⊤ := by
+    (kyFanNormalizedSymmetricOperatorIdealFamily k hk).toSymmetricOperatorIdealFamily.gauge A ≠
+      ⊤ := by
   rw [gauge_kyFanNormalizedSymmetricOperatorIdealFamily]
   exact ENNReal.ofReal_ne_top
 
@@ -3300,7 +3309,8 @@ property after forgetting its stronger membership-transfer field. -/
 theorem normalizedUnitaryInvariantNorm_hasFanDominanceWhereDefined
     (N : NormalizedUnitaryInvariantNorm.{0, v} ℂ) :
     HasFanDominanceWhereDefined N.toNormalizedSymmetricOperatorIdealFamily :=
-  ((fanDominance_iff_whereDefined_and_membershipTransfer N.toNormalizedSymmetricOperatorIdealFamily).mp
+  ((fanDominance_iff_whereDefined_and_membershipTransfer
+    N.toNormalizedSymmetricOperatorIdealFamily).mp
     N.toNormalizedSymmetricOperatorIdealFamily_hasFanDominance).1
 
 /-- The compiled finite-rank source norm is outside the image of the current
@@ -3309,9 +3319,11 @@ norms genuinely excludes raw source norms that satisfy the printed-law
 abstraction and where-defined Fan comparison. -/
 theorem finiteRankNormalizedSymmetricOperatorIdealFamily_not_from_normalizedUnitaryInvariantNorm :
     ¬ ∃ N : NormalizedUnitaryInvariantNorm.{0, 0} ℂ,
-      N.toNormalizedSymmetricOperatorIdealFamily = finiteRankNormalizedSymmetricOperatorIdealFamily.{0} := by
+      N.toNormalizedSymmetricOperatorIdealFamily =
+        finiteRankNormalizedSymmetricOperatorIdealFamily.{0} := by
   rintro ⟨N, hN⟩
-  have hfan : N.toNormalizedSymmetricOperatorIdealFamily.HasFanDominance := N.toNormalizedSymmetricOperatorIdealFamily_hasFanDominance
+  have hfan : N.toNormalizedSymmetricOperatorIdealFamily.HasFanDominance :=
+    N.toNormalizedSymmetricOperatorIdealFamily_hasFanDominance
   rw [hN] at hfan
   exact finiteRankNormalizedSymmetricOperatorIdealFamily_not_fanDominant hfan
 
@@ -3369,7 +3381,8 @@ theorem sinTheta_unbounded_formGap_normalizedAsSourceVacuous_complex_probe
     ScaledSourceEstimateWithVacuity N.toNormalizedSymmetricOperatorIdealFamily δ
       ((ContinuousLinearMap.id ℂ E - F₀ ∘L F₀.adjoint) ∘L E₀) R :=
   sinTheta_unbounded_formGap_sourceVacuous_complex_probe
-    N.toNormalizedSymmetricOperatorIdealFamily (normalizedUnitaryInvariantNorm_hasFanDominanceWhereDefined N)
+    N.toNormalizedSymmetricOperatorIdealFamily
+      (normalizedUnitaryInvariantNorm_hasFanDominanceWhereDefined N)
     A A₀ Λ₁ E₀ F₀ F₁ R hA hA₀ hΛ₁ htrial hexact hδ hgap
 
 /-! ### Probe 42: package the literal source-facing norm quantifier -/
@@ -3554,7 +3567,8 @@ theorem sinTwoTheta_directed_whereDefinedUIN_rclike_production_probe
       δ * N.gaugeReal
           (TauCeti.DavisKahan.Angle.directedSinTwoAngleOperator trial gapCarrier) ≤
         2 * N.gaugeReal R := by
-  exact TauCeti.DavisKahan1970.sinTwoTheta_directed_unboundedResidual_reducing_whereDefinedUIN_rclike
+  exact
+    TauCeti.DavisKahan1970.sinTwoTheta_directed_unboundedResidual_reducing_whereDefinedUIN_rclike
     N hA hred htrialDom hres hδ hgap
 
 /-- **Probe 47: the complete short `SectionTwo.sinTwoTheta` API is scalar-generic.**
@@ -3592,7 +3606,8 @@ theorem sinTwoTheta_complete_whereDefinedUIN_rclike_production_probe
         δ * N.gaugeReal (TauCeti.DavisKahan.Angle.sinTwoAngleOperator P Q) ≤
           2 * N.gaugeReal Hop) := by
   constructor
-  · exact TauCeti.DavisKahan1970.sinTwoTheta_directed_unboundedResidual_reducing_whereDefinedUIN_rclike
+  · exact
+      TauCeti.DavisKahan1970.sinTwoTheta_directed_unboundedResidual_reducing_whereDefinedUIN_rclike
       N (DavisKahan.addBounded_isSelfAdjoint A hA Hop hHop) hQred hPdom hres hδ hgap
   · exact TauCeti.DavisKahan1970.sinTwoTheta_ambient_unbounded_perturbedGap_whereDefinedUIN_rclike
       N hA Hop hHop hPred hQred hδ hgap

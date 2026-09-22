@@ -21,7 +21,8 @@ This file inhabits the abstract form method of
 `ShiftedBeamRealization`.  The form space is the closed subspace of
 `WithLp 2 (L² × L²)` of pairs `(u, w)` in which `w` is the weak second derivative of `u`,
 tested against the polynomial bump family of `IntervalWeakSecondDeriv`.  Its inner product is
-exactly the shifted bending form `∫ u conj(v) + ∫ u'' conj(v)''`, so the represented form operator is the
+exactly the shifted bending form `∫ u conj(v) + ∫ u'' conj(v)''`, so the represented form
+  operator is the
 identity and coercivity is trivial.
 
 The three genuinely analytic inputs are all imported:
@@ -61,20 +62,24 @@ abbrev BeamPairSpace : Type _ := WithLp 2 ((BeamL2 (𝕜 := 𝕜)) × (BeamL2 (�
 /-- First coordinate of a pair, as a continuous linear map. -/
 def pairFst : (BeamPairSpace (𝕜 := 𝕜)) →L[𝕜] (BeamL2 (𝕜 := 𝕜)) :=
   (ContinuousLinearMap.fst 𝕜 (BeamL2 (𝕜 := 𝕜)) (BeamL2 (𝕜 := 𝕜))).comp
-    (WithLp.prodContinuousLinearEquiv 2 𝕜 (BeamL2 (𝕜 := 𝕜)) (BeamL2 (𝕜 := 𝕜)) : (BeamPairSpace (𝕜 := 𝕜)) →L[𝕜] (BeamL2 (𝕜 := 𝕜)) × (BeamL2 (𝕜 := 𝕜)))
+    (WithLp.prodContinuousLinearEquiv 2 𝕜 (BeamL2 (𝕜 := 𝕜)) (BeamL2 (𝕜 := 𝕜)) : (BeamPairSpace
+      (𝕜 := 𝕜)) →L[𝕜] (BeamL2 (𝕜 := 𝕜)) × (BeamL2 (𝕜 := 𝕜)))
 
 /-- Second coordinate of a pair, as a continuous linear map. -/
 def pairSnd : (BeamPairSpace (𝕜 := 𝕜)) →L[𝕜] (BeamL2 (𝕜 := 𝕜)) :=
   (ContinuousLinearMap.snd 𝕜 (BeamL2 (𝕜 := 𝕜)) (BeamL2 (𝕜 := 𝕜))).comp
-    (WithLp.prodContinuousLinearEquiv 2 𝕜 (BeamL2 (𝕜 := 𝕜)) (BeamL2 (𝕜 := 𝕜)) : (BeamPairSpace (𝕜 := 𝕜)) →L[𝕜] (BeamL2 (𝕜 := 𝕜)) × (BeamL2 (𝕜 := 𝕜)))
+    (WithLp.prodContinuousLinearEquiv 2 𝕜 (BeamL2 (𝕜 := 𝕜)) (BeamL2 (𝕜 := 𝕜)) : (BeamPairSpace
+      (𝕜 := 𝕜)) →L[𝕜] (BeamL2 (𝕜 := 𝕜)) × (BeamL2 (𝕜 := 𝕜)))
 
 /-- Evaluating the first pair coordinate. -/
 @[simp] theorem pairFst_apply (p : (BeamPairSpace (𝕜 := 𝕜))) :
-    pairFst p = (WithLp.prodContinuousLinearEquiv 2 𝕜 (BeamL2 (𝕜 := 𝕜)) (BeamL2 (𝕜 := 𝕜)) p).1 := rfl
+    pairFst p = (WithLp.prodContinuousLinearEquiv 2 𝕜 (BeamL2 (𝕜 := 𝕜)) (BeamL2 (𝕜 := 𝕜)) p).1
+      := rfl
 
 /-- Evaluating the second pair coordinate. -/
 @[simp] theorem pairSnd_apply (p : (BeamPairSpace (𝕜 := 𝕜))) :
-    pairSnd p = (WithLp.prodContinuousLinearEquiv 2 𝕜 (BeamL2 (𝕜 := 𝕜)) (BeamL2 (𝕜 := 𝕜)) p).2 := rfl
+    pairSnd p = (WithLp.prodContinuousLinearEquiv 2 𝕜 (BeamL2 (𝕜 := 𝕜)) (BeamL2 (𝕜 := 𝕜)) p).2
+      := rfl
 
 /-! ## Pairing functionals and the constraint subspace -/
 
@@ -183,7 +188,8 @@ theorem isClosed_beamFormSubmodule :
     IsClosed ((beamFormSubmodule (𝕜 := 𝕜)) : Set (BeamPairSpace (𝕜 := 𝕜))) := by
   have : ((beamFormSubmodule (𝕜 := 𝕜)) : Set (BeamPairSpace (𝕜 := 𝕜)))
       = ⋂ k : ℕ,
-        (LinearMap.ker (constraintCLM (𝕜 := 𝕜) k : (BeamPairSpace (𝕜 := 𝕜)) →ₗ[𝕜] 𝕜) : Set (BeamPairSpace (𝕜 := 𝕜))) := by
+        (LinearMap.ker (constraintCLM (𝕜 := 𝕜) k : (BeamPairSpace (𝕜 := 𝕜)) →ₗ[𝕜] 𝕜) : Set
+          (BeamPairSpace (𝕜 := 𝕜))) := by
     rw [beamFormSubmodule]
     exact Submodule.coe_iInf _
   rw [this]
@@ -197,16 +203,20 @@ instance : CompleteSpace (BeamV (𝕜 := 𝕜)) :=
   (isClosed_beamFormSubmodule (𝕜 := 𝕜)).completeSpace_coe
 
 /-- The form-space embedding into the ambient `L²`. -/
-def beamEmbed : (BeamV (𝕜 := 𝕜)) →L[𝕜] (BeamL2 (𝕜 := 𝕜)) := pairFst.comp (beamFormSubmodule (𝕜 := 𝕜)).subtypeL
+def beamEmbed : (BeamV (𝕜 := 𝕜)) →L[𝕜] (BeamL2 (𝕜 := 𝕜)) := pairFst.comp (beamFormSubmodule (𝕜
+  := 𝕜)).subtypeL
 
 /-- The bending-slot projection of the form space. -/
-def beamSnd : (BeamV (𝕜 := 𝕜)) →L[𝕜] (BeamL2 (𝕜 := 𝕜)) := pairSnd.comp (beamFormSubmodule (𝕜 := 𝕜)).subtypeL
+def beamSnd : (BeamV (𝕜 := 𝕜)) →L[𝕜] (BeamL2 (𝕜 := 𝕜)) := pairSnd.comp (beamFormSubmodule (𝕜 :=
+  𝕜)).subtypeL
 
 /-- Evaluating the form-domain inclusion. -/
-@[simp] theorem beamEmbed_apply (p : (BeamV (𝕜 := 𝕜))) : beamEmbed p = pairFst (p : (BeamPairSpace (𝕜 := 𝕜))) := rfl
+@[simp] theorem beamEmbed_apply (p : (BeamV (𝕜 := 𝕜))) : beamEmbed p = pairFst (p :
+  (BeamPairSpace (𝕜 := 𝕜))) := rfl
 
 /-- Evaluating the form-domain second-derivative map. -/
-@[simp] theorem beamSnd_apply (p : (BeamV (𝕜 := 𝕜))) : beamSnd p = pairSnd (p : (BeamPairSpace (𝕜 := 𝕜))) := rfl
+@[simp] theorem beamSnd_apply (p : (BeamV (𝕜 := 𝕜))) : beamSnd p = pairSnd (p : (BeamPairSpace
+  (𝕜 := 𝕜))) := rfl
 
 /-- The weak-derivative identities, in the form the representation theorem consumes. -/
 theorem beamV_weak (p : (BeamV (𝕜 := 𝕜))) (k : ℕ) :
@@ -324,9 +334,11 @@ theorem beamEmbed_injective : Function.Injective (beamEmbed (𝕜 := 𝕜)) := b
       have hcoords := WithLp.prodContinuousLinearEquiv 2 𝕜 (BeamL2 (𝕜 := 𝕜)) (BeamL2 (𝕜 := 𝕜))
       have hfst' : pairFst (p : (BeamPairSpace (𝕜 := 𝕜))) = 0 := h1
       have hsnd' : pairSnd (p : (BeamPairSpace (𝕜 := 𝕜))) = 0 := h2
-      have : (WithLp.prodContinuousLinearEquiv 2 𝕜 (BeamL2 (𝕜 := 𝕜)) (BeamL2 (𝕜 := 𝕜))) (p : (BeamPairSpace (𝕜 := 𝕜)))
+      have : (WithLp.prodContinuousLinearEquiv 2 𝕜 (BeamL2 (𝕜 := 𝕜)) (BeamL2 (𝕜 := 𝕜))) (p :
+        (BeamPairSpace (𝕜 := 𝕜)))
           = 0 := Prod.ext hfst' hsnd'
-      have := congrArg (WithLp.prodContinuousLinearEquiv 2 𝕜 (BeamL2 (𝕜 := 𝕜)) (BeamL2 (𝕜 := 𝕜))).symm this
+      have := congrArg (WithLp.prodContinuousLinearEquiv 2 𝕜 (BeamL2 (𝕜 := 𝕜)) (BeamL2 (𝕜 :=
+        𝕜))).symm this
       simpa using this
     exact Subtype.ext this
   intro p q hpq
@@ -387,13 +399,15 @@ theorem contPair_mem {f f1 f2 : ℝ → ℝ}
       ∈ beamFormSubmodule := by
   rw [mem_beamFormSubmodule_iff]
   intro k
-  have hfst : pairFst ((WithLp.prodContinuousLinearEquiv 2 𝕜 (BeamL2 (𝕜 := 𝕜)) (BeamL2 (𝕜 := 𝕜))).symm
+  have hfst : pairFst ((WithLp.prodContinuousLinearEquiv 2 𝕜 (BeamL2 (𝕜 := 𝕜)) (BeamL2 (𝕜 :=
+    𝕜))).symm
       (contToLp (fun t => (f t : 𝕜)) (by fun_prop),
         contToLp (fun t => (f2 t : 𝕜)) (by fun_prop)))
       = contToLp (fun t => (f t : 𝕜)) (by fun_prop) := by
     rw [pairFst_apply]
     simp
-  have hsnd : pairSnd ((WithLp.prodContinuousLinearEquiv 2 𝕜 (BeamL2 (𝕜 := 𝕜)) (BeamL2 (𝕜 := 𝕜))).symm
+  have hsnd : pairSnd ((WithLp.prodContinuousLinearEquiv 2 𝕜 (BeamL2 (𝕜 := 𝕜)) (BeamL2 (𝕜 :=
+    𝕜))).symm
       (contToLp (fun t => (f t : 𝕜)) (by fun_prop),
         contToLp (fun t => (f2 t : 𝕜)) (by fun_prop)))
       = contToLp (fun t => (f2 t : 𝕜)) (by fun_prop) := by
@@ -463,9 +477,11 @@ theorem denseRange_beamEmbed : DenseRange (beamEmbed (𝕜 := 𝕜)) := by
         = contToLp (𝕜 := 𝕜) (fun t => ((pre.eval t : ℝ) : 𝕜)) (by fun_prop)
           + (RCLike.I : 𝕜) • contToLp (𝕜 := 𝕜) (fun t => ((pim.eval t : ℝ) : 𝕜)) (by fun_prop) := by
       rw [map_add, map_smul]
-      have h1 : (beamEmbed (𝕜 := 𝕜)) vre = contToLp (𝕜 := 𝕜) (fun t => ((pre.eval t : ℝ) : 𝕜)) (by fun_prop) :=
+      have h1 : (beamEmbed (𝕜 := 𝕜)) vre = contToLp (𝕜 := 𝕜) (fun t => ((pre.eval t : ℝ) : 𝕜)) (by
+        fun_prop) :=
         hvre
-      have h2 : (beamEmbed (𝕜 := 𝕜)) vim = contToLp (𝕜 := 𝕜) (fun t => ((pim.eval t : ℝ) : 𝕜)) (by fun_prop) :=
+      have h2 : (beamEmbed (𝕜 := 𝕜)) vim = contToLp (𝕜 := 𝕜) (fun t => ((pim.eval t : ℝ) : 𝕜)) (by
+        fun_prop) :=
         hvim
       rw [h1, h2]
     rw [hy, dist_eq_norm]
@@ -559,7 +575,8 @@ theorem beamEmbed_adjoint_injective :
 
 /-- The concrete coercive form data of the free beam: the form space carries the shifted
 bending form as its own inner product, so the represented operator is the identity. -/
-def beamCoerciveFormData : Abstract.CoerciveFormData (𝕜 := 𝕜) (H := (BeamL2 (𝕜 := 𝕜))) (V := (BeamV (𝕜 := 𝕜))) where
+def beamCoerciveFormData : Abstract.CoerciveFormData (𝕜 := 𝕜) (H := (BeamL2 (𝕜 := 𝕜))) (V :=
+  (BeamV (𝕜 := 𝕜))) where
   embed := beamEmbed (𝕜 := 𝕜)
   embed_injective := beamEmbed_injective (𝕜 := 𝕜)
   embed_dense := denseRange_beamEmbed (𝕜 := 𝕜)

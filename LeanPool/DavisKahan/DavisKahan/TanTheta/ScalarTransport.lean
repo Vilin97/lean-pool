@@ -52,7 +52,8 @@ noncomputable def scalarTransportSubspaceCLM (Z : Submodule 𝕜 H)
     (T : Z →L[𝕜] H) :
     ScalarTransport.submodule (e := e) Z →L[𝕂] ScalarTransport e H :=
   ScalarTransport.clm (e := e) T ∘L
-    (ScalarTransport.submoduleSubtypeEquiv (e := e) Z).symm.toContinuousLinearEquiv.toContinuousLinearMap
+    (ScalarTransport.submoduleSubtypeEquiv (e := e)
+      Z).symm.toContinuousLinearEquiv.toContinuousLinearMap
 
 /-- Scalar transport is a bijection on bounded maps out of a closed subspace. -/
 noncomputable def scalarTransportSubspaceCLMEquiv (Z : Submodule 𝕜 H) :
@@ -60,7 +61,8 @@ noncomputable def scalarTransportSubspaceCLMEquiv (Z : Submodule 𝕜 H) :
       (ScalarTransport.submodule (e := e) Z →L[𝕂] ScalarTransport e H) where
   toFun := scalarTransportSubspaceCLM (e := e) Z
   invFun T := (ScalarTransport.clmEquiv (e := e)).symm
-    (T ∘L (ScalarTransport.submoduleSubtypeEquiv (e := e) Z).toContinuousLinearEquiv.toContinuousLinearMap)
+    (T ∘L (ScalarTransport.submoduleSubtypeEquiv (e := e)
+      Z).toContinuousLinearEquiv.toContinuousLinearMap)
   left_inv T := by
     apply ContinuousLinearMap.ext
     intro z
@@ -137,9 +139,11 @@ noncomputable def scalarTransportSubspaceBlockCLM
     (T : Z →L[𝕜] W) :
     ScalarTransport.submodule (e := e) Z →L[𝕂]
       ScalarTransport.submodule (e := e) W :=
-  (ScalarTransport.submoduleSubtypeEquiv (e := e) W).toContinuousLinearEquiv.toContinuousLinearMap ∘L
+  (ScalarTransport.submoduleSubtypeEquiv (e := e)
+    W).toContinuousLinearEquiv.toContinuousLinearMap ∘L
     ScalarTransport.clm (e := e) T ∘L
-      (ScalarTransport.submoduleSubtypeEquiv (e := e) Z).symm.toContinuousLinearEquiv.toContinuousLinearMap
+      (ScalarTransport.submoduleSubtypeEquiv (e := e)
+        Z).symm.toContinuousLinearEquiv.toContinuousLinearMap
 
 /-- Scalar transport is a bijection on bounded maps between closed subspaces. -/
 noncomputable def scalarTransportSubspaceBlockCLMEquiv
@@ -149,8 +153,10 @@ noncomputable def scalarTransportSubspaceBlockCLMEquiv
         ScalarTransport.submodule (e := e) W) where
   toFun := scalarTransportSubspaceBlockCLM (e := e) Z W
   invFun T := (ScalarTransport.clmEquiv (e := e)).symm
-    ((ScalarTransport.submoduleSubtypeEquiv (e := e) W).symm.toContinuousLinearEquiv.toContinuousLinearMap ∘L T ∘L
-      (ScalarTransport.submoduleSubtypeEquiv (e := e) Z).toContinuousLinearEquiv.toContinuousLinearMap)
+    ((ScalarTransport.submoduleSubtypeEquiv (e := e)
+      W).symm.toContinuousLinearEquiv.toContinuousLinearMap ∘L T ∘L
+      (ScalarTransport.submoduleSubtypeEquiv (e := e)
+        Z).toContinuousLinearEquiv.toContinuousLinearMap)
   left_inv T := by
     apply ContinuousLinearMap.ext
     intro z
@@ -188,9 +194,11 @@ noncomputable def scalarTransportOrthogonalSubspaceBlockCLM
     (T : Z →L[𝕜] Zᗮ) :
     ScalarTransport.submodule (e := e) Z →L[𝕂]
       (ScalarTransport.submodule (e := e) Z)ᗮ :=
-  (ScalarTransport.orthogonalSubmoduleSubtypeEquiv (e := e) Z).toContinuousLinearEquiv.toContinuousLinearMap ∘L
+  (ScalarTransport.orthogonalSubmoduleSubtypeEquiv (e := e)
+    Z).toContinuousLinearEquiv.toContinuousLinearMap ∘L
     ScalarTransport.clm (e := e) T ∘L
-      (ScalarTransport.submoduleSubtypeEquiv (e := e) Z).symm.toContinuousLinearEquiv.toContinuousLinearMap
+      (ScalarTransport.submoduleSubtypeEquiv (e := e)
+        Z).symm.toContinuousLinearEquiv.toContinuousLinearMap
 
 /-- Transport a bounded operator from the transported subspace and its orthogonal
 complement back to the original scalar field.  This is deliberately a named inverse
@@ -204,9 +212,11 @@ noncomputable def scalarTransportOrthogonalSubspaceBlockCLMInv
       (ScalarTransport.submodule (e := e) Z)ᗮ) :
     Z →L[𝕜] Zᗮ :=
   (ScalarTransport.clmEquiv (e := e)).symm
-    ((ScalarTransport.orthogonalSubmoduleSubtypeEquiv (e := e) Z).symm.toContinuousLinearEquiv.toContinuousLinearMap ∘L
+    ((ScalarTransport.orthogonalSubmoduleSubtypeEquiv (e := e)
+      Z).symm.toContinuousLinearEquiv.toContinuousLinearMap ∘L
       T ∘L
-      (ScalarTransport.submoduleSubtypeEquiv (e := e) Z).toContinuousLinearEquiv.toContinuousLinearMap)
+      (ScalarTransport.submoduleSubtypeEquiv (e := e)
+        Z).toContinuousLinearEquiv.toContinuousLinearMap)
 
 omit [CompleteSpace H] in
 /-- Orthogonal-corner transport preserves every approximation number. -/

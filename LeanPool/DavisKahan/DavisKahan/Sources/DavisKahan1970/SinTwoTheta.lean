@@ -567,7 +567,8 @@ open DavisKahan DavisKahan.RealSpectralRestriction in
 /-- **Davis--Kahan 1970, `sin 2Θ` over a REAL Hilbert space, bounded-perturbation
 form, stated on the angle operator itself.**
 
-`sinTwoTheta_directed_unbounded_addBounded_blockRepresentative_symmetricNorming_real` concludes about
+`sinTwoTheta_directed_unbounded_addBounded_blockRepresentative_symmetricNorming_real` concludes
+  about
 `sinTwoThetaIdealBlock`, the overlap of the selected spectral subspace with the
 reflected complement, which is the proof's vehicle rather than the paper's
 object.  `DavisKahan.gauge_directedSinTwoAngleOperatorRC` moves it to `2 sin Θ cos Θ`
@@ -575,7 +576,8 @@ for the real pair: the two have the same approximation singular values
 (`DavisKahan.approximationSingularValue_sinTwoThetaIdealBlock_real`), so every
 source unitarily invariant norm sees them identically.
 
-The real mirror of `sinTwoTheta_directed_unbounded_addBounded_spectrumGap_symmetricNorming_complex`.  The angle
+The real mirror of
+  `sinTwoTheta_directed_unbounded_addBounded_spectrumGap_symmetricNorming_complex`.  The angle
 is the *directed* double-angle sine of the real pair, read in the canonical
 complexification, which is where this development keeps the real double-angle
 operators; the ambient spelling `sinTwoAngleOperatorR` is a different
@@ -601,7 +603,9 @@ theorem sinTwoTheta_directed_unbounded_addBounded_symmetricNorming_real
         (realSelfAdjointSpectralSubspace (TauCeti.LinearPMap.addBounded A Eop)
           (addBounded_isSelfAdjoint A hA Eop hEop) S hS)) ≤
         2 * N.gauge Eop := by
-  obtain ⟨hmem, hle⟩ := sinTwoTheta_directed_unbounded_addBounded_blockRepresentative_symmetricNorming_real N A hA Eop hEop
+  obtain ⟨hmem, hle⟩ :=
+    sinTwoTheta_directed_unbounded_addBounded_blockRepresentative_symmetricNorming_real N A hA
+    Eop hEop
     B S hB hS hδ hgap hEmem
   refine ⟨(DavisKahan.mem_directedSinTwoAngleOperatorRC_iff _ _ N).mpr hmem, ?_⟩
   rwa [DavisKahan.gauge_directedSinTwoAngleOperatorRC]
@@ -676,7 +680,8 @@ alias sinTwoTheta_unbounded_reflectionResidual_opNorm_real :=
 
 /-! ### The complex source norm, completing the pair
 
-`sinTwoTheta_directed_unbounded_addBounded_blockRepresentative_symmetricNorming_real` above states the bounded-perturbation
+`sinTwoTheta_directed_unbounded_addBounded_blockRepresentative_symmetricNorming_real` above
+  states the bounded-perturbation
 `sin 2Θ` theorem for a `SymmetricNormingFunction` over a real Hilbert space.
 The complex counterpart was missing, even though the complex ideal-level theorem
 `DavisKahan.sinTwoTheta_addBounded_unitaryInvariant_of_spectrum_gap` has been
@@ -704,8 +709,10 @@ self-adjoint operator, in a source unitarily invariant norm, over `ℂ`.**
 `B` is semibounded between `β` and `α`, and the restriction to `Bᶜ` has spectrum
 avoiding `(β − δ, α + δ)`.
 
-The complex counterpart of `sinTwoTheta_directed_unbounded_addBounded_blockRepresentative_symmetricNorming_real`. -/
-theorem sinTwoTheta_directed_unbounded_addBounded_blockRepresentative_spectrumGap_symmetricNorming_complex
+The complex counterpart of
+  `sinTwoTheta_directed_unbounded_addBounded_blockRepresentative_symmetricNorming_real`. -/
+theorem
+  sinTwoTheta_directed_unbounded_addBounded_blockRepresentative_spectrumGap_symmetricNorming_complex
     (N : SymmetricNormingFunction)
     (A : Hc →ₗ.[ℂ] Hc) (hA : IsSelfAdjoint A)
     (Eop : Hc →L[ℂ] Hc) (hEop : Eop.IsSymmetric)
@@ -788,7 +795,8 @@ theorem sinTwoTheta_directed_unbounded_addBounded_spectrumGap_symmetricNorming_c
         (DavisKahan.selfAdjointSpectralSubspace (TauCeti.LinearPMap.addBounded A Eop)
           (DavisKahan.addBounded_isSelfAdjoint A hA Eop hEop) S hS)) ≤
         2 * N.gauge Eop := by
-  obtain ⟨hmem, hle⟩ := sinTwoTheta_directed_unbounded_addBounded_blockRepresentative_spectrumGap_symmetricNorming_complex N A hA Eop hEop B S hB hS
+  obtain ⟨hmem, hle⟩ :=
+    sinTwoTheta_directed_unbounded_addBounded_blockRepresentative_spectrumGap_symmetricNorming_complex N A hA Eop hEop B S hB hS
     hβα hδ hBlow hBhigh hBcomplSpec hEmem
   refine ⟨(DavisKahan.mem_directedSinTwoAngleOperatorC_iff _ _ N).mpr hmem, ?_⟩
   rwa [DavisKahan.gauge_directedSinTwoAngleOperatorC]

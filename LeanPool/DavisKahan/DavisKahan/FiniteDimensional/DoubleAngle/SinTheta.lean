@@ -324,10 +324,12 @@ theorem sin_two_theta_starProjection_le_of_eigenvalues (N : UnitarilyInvariantSe
   N.sin_two_theta_starProjection_le hT hS
     (fun _ hx => LinearMap.IsSymmetric.map_mem_spanIndices hT hn _ hx)
     (fun _ hx => LinearMap.IsSymmetric.map_mem_spanIndices hS hn _ hx) hab
-    (fun _ hx => LinearMap.IsSymmetric.le_re_inner_apply_self_of_mem_spanIndices hT hn (fun i hi => hb i hi) hx)
+    (fun _ hx => LinearMap.IsSymmetric.le_re_inner_apply_self_of_mem_spanIndices hT hn (fun i hi
+      => hb i hi) hx)
     (fun w hw => by
       rw [OrthonormalBasis.orthogonal_spanIndices] at hw
-      exact LinearMap.IsSymmetric.re_inner_apply_self_le_of_mem_spanIndices hT hn (fun i hi => ha i hi) hw)
+      exact LinearMap.IsSymmetric.re_inner_apply_self_le_of_mem_spanIndices hT hn (fun i hi =>
+        ha i hi) hw)
 
 /-- **Mirror-defect sin 2Θ, spectral form.**  As
 `sin_two_theta_starProjection_le_of_eigenvalues` but with an arbitrary subspace
@@ -345,10 +347,12 @@ theorem sin_two_theta_reflection_le_of_eigenvalues (N : UnitarilyInvariantSemino
       ≤ N (W.reflection.toLinearMap ∘ₗ T ∘ₗ W.reflection.toLinearMap - T) / (b - a) :=
   N.sin_two_theta_reflection_le hT
     (fun _ hx => LinearMap.IsSymmetric.map_mem_spanIndices hT hn _ hx) hab
-    (fun _ hx => LinearMap.IsSymmetric.le_re_inner_apply_self_of_mem_spanIndices hT hn (fun i hi => hb i hi) hx)
+    (fun _ hx => LinearMap.IsSymmetric.le_re_inner_apply_self_of_mem_spanIndices hT hn (fun i hi
+      => hb i hi) hx)
     (fun w hw => by
       rw [OrthonormalBasis.orthogonal_spanIndices] at hw
-      exact LinearMap.IsSymmetric.re_inner_apply_self_le_of_mem_spanIndices hT hn (fun i hi => ha i hi) hw)
+      exact LinearMap.IsSymmetric.re_inner_apply_self_le_of_mem_spanIndices hT hn (fun i hi =>
+        ha i hi) hw)
 
 end Spectral
 
@@ -400,9 +404,11 @@ theorem apply_orthogonal_starProjection_comp_starProjection_comp
   set C : E →ₗ[𝕜] E := P ∘ₗ Ph ∘ₗ P with hCdef
   -- Pointwise projection facts.
   have hPP : ∀ z, P (P z) = P z := fun z =>
-    Submodule.starProjection_eq_self_iff.mpr ((Submodule.span 𝕜 (Set.range u)).starProjection_apply_mem z)
+    Submodule.starProjection_eq_self_iff.mpr ((Submodule.span 𝕜 (Set.range
+      u)).starProjection_apply_mem z)
   have hPhPh : ∀ z, Ph (Ph z) = Ph z := fun z =>
-    Submodule.starProjection_eq_self_iff.mpr ((Submodule.span 𝕜 (Set.range v)).starProjection_apply_mem z)
+    Submodule.starProjection_eq_self_iff.mpr ((Submodule.span 𝕜 (Set.range
+      v)).starProjection_apply_mem z)
   have hQz : ∀ z, Q z = z - P z := fun z => by
     simp only [hQdef, hPdef, ContinuousLinearMap.coe_coe]
     rw [Submodule.starProjection_orthogonal]
@@ -459,7 +465,8 @@ theorem apply_orthogonal_starProjection_comp_starProjection_comp
       exact singularValues_le_one_of_contraction (overlapOp_contraction hv hu)
         finrank_euclideanSpace_fin ⟨k, hk⟩
     · rw [cosPrincipalAngles_eq,
-        (overlapOp hv hu).singularValues_of_finrank_le (by rw [finrank_euclideanSpace_fin]; exact hk)]
+        (overlapOp hv hu).singularValues_of_finrank_le (by
+          rw [finrank_euclideanSpace_fin]; exact hk)]
       exact zero_le_one
   -- Gram of `M` equals gram of the diagonal operator.
   set w : Fin (finrank 𝕜 E) → ℝ := fun i => c i * Real.sqrt (1 - c i ^ 2) with hwdef

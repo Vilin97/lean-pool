@@ -758,7 +758,8 @@ private theorem singularValues_modelTanThetaPerturbation
 
 Lean proof route for a weaker agent:
 
-1. Write the two normalized spanning vectors explicitly, compute the single overlap singular value `|cos θ|`, and use the angle-range hypotheses to simplify `arccos`.
+1. Write the two normalized spanning vectors explicitly, compute the single overlap singular
+  value `|cos θ|`, and use the angle-range hypotheses to simplify `arccos`.
 2. Prove the overlap scalar is nonnegative on `[0,π/2]`, so the absolute value disappears.
 3. Rewrite the first principal angle with `Real.arccos_cos` and the supplied range bounds.
 -/
@@ -785,7 +786,9 @@ private theorem norm_ofReal_sub_of_lt {a b : ℝ} (hab : a < b) :
 Lean proof route for a weaker agent:
 
 1. First separate the correct planar model for this theorem family.
-2. Then compute the two-by-two matrices, their singular values, the gap, and the relevant angle function explicitly; equality should reduce to a scalar trigonometric identity.
+2. Then compute the two-by
+  -two matrices, their singular values, the gap, and the relevant angle function explicitly;
+    equality should reduce to a scalar trigonometric identity.
 
 Signature audit: The theorem now uses a dedicated `sin Θ` perturbation model; do not reuse it
 for the tangent or double-angle families.
@@ -819,7 +822,9 @@ theorem sinTheta_model_equality
 Lean proof route for a weaker agent:
 
 1. First separate the correct planar model for this theorem family.
-2. Then compute the two-by-two matrices, their singular values, the gap, and the relevant angle function explicitly; equality should reduce to a scalar trigonometric identity.
+2. Then compute the two-by
+  -two matrices, their singular values, the gap, and the relevant angle function explicitly;
+    equality should reduce to a scalar trigonometric identity.
 
 Signature audit: The dedicated tangent model must include the zero-compression/Galerkin
 hypothesis required by the theorem it saturates.
@@ -855,7 +860,9 @@ theorem tanTheta_model_equality
 Lean proof route for a weaker agent:
 
 1. First separate the correct planar model for this theorem family.
-2. Then compute the two-by-two matrices, their singular values, the gap, and the relevant angle function explicitly; equality should reduce to a scalar trigonometric identity.
+2. Then compute the two-by
+  -two matrices, their singular values, the gap, and the relevant angle function explicitly;
+    equality should reduce to a scalar trigonometric identity.
 
 Signature audit: The dedicated double-angle model is reflection-compatible and is independent
 of the single-angle extremizer.
@@ -989,7 +996,9 @@ theorem norm_sinTwoAngle_model_eq_norm_sinAngle_doubled
 Lean proof route for a weaker agent:
 
 1. First separate the correct planar model for this theorem family.
-2. Then compute the two-by-two matrices, their singular values, the gap, and the relevant angle function explicitly; equality should reduce to a scalar trigonometric identity.
+2. Then compute the two-by
+  -two matrices, their singular values, the gap, and the relevant angle function explicitly;
+    equality should reduce to a scalar trigonometric identity.
 -/
 theorem tanTwoTheta_model_equality
     (N : UnitarilyInvariantSeminorm 𝕜 (Plane 𝕜) (Plane 𝕜))
@@ -1037,7 +1046,8 @@ theorem tanTwoTheta_model_equality
 
 Lean proof route for a weaker agent:
 
-1. Instantiate the corrected planar equality model at any nonzero admissible angle and use `c < 1` or `c < 2` to obtain the strict counterexample to a smaller universal constant.
+1. Instantiate the corrected planar equality model at any nonzero admissible angle and use `c <
+  1` or `c < 2` to obtain the strict counterexample to a smaller universal constant.
 2. Choose explicit `a<b` and `0<θ<π/2`, then invoke `sinTheta_model_equality` for the operator norm.
 3. Multiply the strict inequality `c<1` by the positive perturbation norm.
 -/
@@ -1072,8 +1082,10 @@ theorem sinTheta_constant_optimal :
 
 Lean proof route for a weaker agent:
 
-1. Instantiate the corrected planar equality model at any nonzero admissible angle and use `c < 1` or `c < 2` to obtain the strict counterexample to a smaller universal constant.
-2. Choose an angle with nonzero double-angle map and invoke `sinTwoTheta_model_operatorNorm_equality`.
+1. Instantiate the corrected planar equality model at any nonzero admissible angle and use `c <
+  1` or `c < 2` to obtain the strict counterexample to a smaller universal constant.
+2. Choose an angle with nonzero double-angle map and invoke
+  `sinTwoTheta_model_operatorNorm_equality`.
 3. Multiply `c<2` by the positive perturbation norm and rewrite the equality.
 -/
 theorem sinTwoTheta_constant_optimal :

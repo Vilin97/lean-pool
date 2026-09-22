@@ -89,11 +89,13 @@ the Lemma 6.2 pinch — is *branch-free*.  It needs only the paper's own
 `cos 2θ ≠ 0`, which is what makes `tan 2Θ` a bounded operator at all; principal
 angles may exceed `π/4`, and where they do, `tan 2θ` turns negative and the
 object every unitarily invariant norm sees is `|tan 2Θ|`.  This is recorded as
-`tanTwoTheta_ambient_bounded_branchFree_symmetricNorming_complex_of_corner`, which derives the whole ambient
+`tanTwoTheta_ambient_bounded_branchFree_symmetricNorming_complex_of_corner`, which derives the
+  whole ambient
 conclusion from the directed corner estimate with no branch anywhere.
 
 The branch enters at exactly **one** place: the directed corner estimate
-itself, `tanTwoTheta_directed_boundedResidual_blockRepresentative_kyFan_complex`, which routes through
+itself, `tanTwoTheta_directed_boundedResidual_blockRepresentative_kyFan_complex`, which routes
+  through
 the contractive Riccati coordinate and therefore needs `IsQuarterAcute U V`
 (`‖sin Θ‖ < √2/2`, every principal angle below `π/4`).  Quarter-acuteness is
 **concluded, not assumed**, from the paper's four ordered form bounds — the
@@ -119,7 +121,8 @@ statement is *not* proved here; see the module note below.
   kyFan_k R`.
 * `TauCeti.DavisKahan1970.tanTwoTheta_ambient_bounded_orderedForm_kyFan_complex`: the Ky Fan form,
   `δ · kyFan_k (tan 2Θ) ≤ 2 · kyFan_k H` for every `k`.
-* `TauCeti.DavisKahan1970.tanTwoTheta_ambient_bounded_orderedForm_symmetricNorming_complex`: the source form,
+* `TauCeti.DavisKahan1970.tanTwoTheta_ambient_bounded_orderedForm_symmetricNorming_complex`: the
+  source form,
   `δ N(tan 2Θ) ≤ 2 N(H)` for every unitarily invariant norm `N` in the paper's
   sense.
 * `TauCeti.DavisKahan1970.tanTwoTheta_directed_boundedResidual_blockRepresentative_kyFan_complex`: the
@@ -1425,7 +1428,8 @@ bounded operator.
 
 So the whole branch dependence of the ambient half sits in the single remaining
 hypothesis `hcorner`, the printed residual estimate on the directed corner.
-`tanTwoTheta_directed_boundedResidual_blockRepresentative_kyFan_complex` supplies it in the quarter-acute
+`tanTwoTheta_directed_boundedResidual_blockRepresentative_kyFan_complex` supplies it in the
+  quarter-acute
 branch, through the contractive Riccati coordinate; a branch-free supply of the
 same estimate is the one thing the branch-free ambient theorem still needs. -/
 theorem tanTwoTheta_ambient_bounded_branchFree_kyFan_complex_of_corner
@@ -1521,7 +1525,8 @@ theorem tanTwoTheta_ambient_bounded_orderedForm_kyFan_complex
   have htr := norm_sinAngleOperatorC_lt_of_isQuarterAcute hq
   have h := tanTwoTheta_ambient_bounded_branchFree_kyFan_complex_of_corner hH hab
     (fun _ ht => cos_two_ne_zero_of_norm_sinAngleOperatorC_lt htr ht)
-    (fun j => tanTwoTheta_directed_boundedResidual_blockRepresentative_kyFan_complex hA hH hAU hAplusH_V
+    (fun j => tanTwoTheta_directed_boundedResidual_blockRepresentative_kyFan_complex hA hH hAU
+      hAplusH_V
       hab hUhigh hUperpLow hHU hHUperp hq j) k
   rwa [absTanTwoAngleOperatorC_eq_directedTanTwoAngleOperatorC U V htr] at h
 

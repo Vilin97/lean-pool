@@ -10,7 +10,8 @@ import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanThetaScalarGener
 import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoTheta
 import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaAmbientUnbounded
 import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaUnboundedDirectedResidual
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaUnboundedDirectedResidualReal
+import
+  LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaUnboundedDirectedResidualReal
 import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaDirectedAngle
 import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaDirectedRCLike
 import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaCommonDomain
@@ -43,9 +44,13 @@ The names say which.
 | result | directed clause | ambient clause |
 | --- | --- | --- |
 | `sin Θ` | `sinTheta`, `sinTheta_complex`, `sinTheta_real` | -- (one printed conclusion) |
-| `tan Θ` | `tanTheta_directed` (`RCLike`), plus fixed-field specializations | `tanTheta_ambient` (`RCLike`), plus fixed-field specializations |
-| `sin 2Θ` (`sinTwoTheta`) | `sinTwoTheta_directed`, `sinTwoTheta_directed_complex`, `sinTwoTheta_directed_real` | `sinTwoTheta_ambient`, `sinTwoTheta_ambient_complex`, `sinTwoTheta_ambient_real` |
-| `tan 2Θ` | `tanTwoTheta_directed` (`RCLike`), plus fixed-field specializations | `tanTwoTheta_ambient` (`RCLike`), plus fixed-field specializations |
+| `tan Θ` | `tanTheta_directed` (`RCLike`), plus fixed-field specializations |
+  `tanTheta_ambient` (`RCLike`), plus fixed-field specializations |
+| `sin 2Θ` (`sinTwoTheta`) | `sinTwoTheta_directed`, `sinTwoTheta_directed_complex`,
+  `sinTwoTheta_directed_real` | `sinTwoTheta_ambient`, `sinTwoTheta_ambient_complex`,
+  `sinTwoTheta_ambient_real` |
+| `tan 2Θ` | `tanTwoTheta_directed` (`RCLike`), plus fixed-field specializations |
+  `tanTwoTheta_ambient` (`RCLike`), plus fixed-field specializations |
 
 `sinTwoTheta_bothConclusions_{complex,real}` and `tanTwoTheta_bothConclusions_{complex,real}`
 state both clauses of one result under one set of separation hypotheses, so a reviewer has a
@@ -200,7 +205,8 @@ The printed `sin 2Θ` theorem has two boxed conclusions.  This name is the first
 ambient one, `δ N(sin 2Θ) ≤ 2 N(H)`, is `sinTwoTheta_ambient_complex`.
 `sinTwoTheta_bothConclusions_complex` below states both together.
 
-The public alias uses the where-defined norm boundary on `Angle.directedSinTwoAngleOperator V U` with `V` the trial
+The public alias uses the where-defined norm boundary on `Angle.directedSinTwoAngleOperator V U`
+  with `V` the trial
 subspace and `U` the spectral subspace whose two blocks the gap separates: that is
 the paper's `Θ₀`, whose sine is `Q^⊥ E₀` in the source's own notation, and it is
 the trial-side object.  Not the proof's overlap block, and not the other ordering
@@ -243,7 +249,8 @@ the standalone Davis--Kahan submission repository under `submodules/` still cons
 delete them once that repository has been refreshed. -/
 
 /-- **`tan Θ`, ambient clause, over `ℂ`**: `δ N(tan Θ) ≤ N(H)`. -/
-alias tanTheta_ambient_complex := tanTheta_ambient_unboundedRitz_definedTangent_symmetricNorming_complex
+alias tanTheta_ambient_complex :=
+  tanTheta_ambient_unboundedRitz_definedTangent_symmetricNorming_complex
 
 /-- **`tan Θ`, ambient clause, over `ℝ`**. -/
 alias tanTheta_ambient_real := tanTheta_ambient_unboundedRitz_definedTangent_symmetricNorming_real
