@@ -70,7 +70,7 @@ omit [CompleteSpace H] in
 /-- Synthesis reassembles a pair of components into their sum in the ambient space. -/
 @[simp]
 theorem subspaceCoordinateSynthesis_apply
-    (U : Submodule ℂ H) [U.HasOrthogonalProjection]
+    (U : Submodule ℂ H) 
     (z : WithLp 2 (U × Uᗮ)) :
     subspaceCoordinateSynthesis U z =
       ((WithLp.fst z : U) : H) + ((WithLp.snd z : Uᗮ) : H) := by

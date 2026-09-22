@@ -69,8 +69,8 @@ noncomputable def approxSeq {E F : Type*}
 
 /-- The approximation-number sequence is antitone. -/
 theorem approxSeq_antitone {E F : Type*}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] 
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] 
     (A : E →L[𝕜] F) : Antitone (approxSeq A) := by
   intro m n hmn
   exact ENNReal.ofReal_le_ofReal (A.approximationNumber_antitone hmn)
@@ -78,8 +78,8 @@ theorem approxSeq_antitone {E F : Type*}
 /-- Every approximation number is finite, so `approxSeq` never takes the value
 `⊤`.  This is what lets the `ℝ≥0∞` reductions in `SymmetricGauge` fire. -/
 theorem approxSeq_ne_top {E F : Type*}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] 
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] 
     (A : E →L[𝕜] F) (n : ℕ) : approxSeq A n ≠ ⊤ :=
   ENNReal.ofReal_ne_top
 
@@ -124,6 +124,7 @@ theorem extend_approxSeq_add_le (A B : E →L[𝕜] F) :
       (approxSeq_prefix_add_le A B)
   exact hmaj.trans (Φ.extend_add_le _ _)
 
+omit [CompleteSpace E] [CompleteSpace F] in
 /-- **Homogeneity of the induced gauge.** -/
 theorem extend_approxSeq_smul (c : 𝕜) (A : E →L[𝕜] F) :
     Φ.extend (approxSeq (c • A)) = ‖c‖ₑ * Φ.extend (approxSeq A) := by
@@ -135,6 +136,7 @@ theorem extend_approxSeq_smul (c : 𝕜) (A : E →L[𝕜] F) :
   rw [hseq, Φ.extend_smul]
   rfl
 
+omit [CompleteSpace E] [CompleteSpace F] in
 /-- **The gauge dominates the operator norm**, via `a₀ T = ‖T‖`. -/
 theorem enorm_le_extend_approxSeq (A : E →L[𝕜] F) :
     ‖A‖ₑ ≤ Φ.extend (approxSeq A) := by
@@ -144,12 +146,13 @@ theorem enorm_le_extend_approxSeq (A : E →L[𝕜] F) :
   calc ‖A‖ₑ = approxSeq A 0 := h0.symm
     _ ≤ Φ.extend (approxSeq A) := Φ.le_extend _ 0
 
+omit [CompleteSpace E] [CompleteSpace F] in
 /-- **The composition bound.**  `approxSeq` of `L ∘L A ∘L R` is dominated
 termwise by `‖L‖ * ‖R‖` times `approxSeq A`, and `extend_mono` plus
 `extend_smul` turn that into the gauge statement. -/
 theorem extend_approxSeq_comp_le {G H : Type*}
-    [NormedAddCommGroup G] [InnerProductSpace 𝕜 G] [CompleteSpace G]
-    [NormedAddCommGroup H] [InnerProductSpace 𝕜 H] [CompleteSpace H]
+    [NormedAddCommGroup G] [InnerProductSpace 𝕜 G] 
+    [NormedAddCommGroup H] [InnerProductSpace 𝕜 H] 
     (L : F →L[𝕜] G) (A : E →L[𝕜] F) (R : H →L[𝕜] E) :
     Φ.extend (approxSeq (L ∘L A ∘L R)) ≤ ‖L‖ₑ * Φ.extend (approxSeq A) * ‖R‖ₑ := by
   have hterm : ∀ n, approxSeq (L ∘L A ∘L R) n
@@ -270,8 +273,8 @@ theorem symmetricGaugeFamily_injective {Phi Psi : SymmetricGauge}
 
 /-- The extended finite-sequence Schatten gauge is the power-sum norm. -/
 theorem extend_approxSeq_schattenGauge {p : ℝ} (hp : 1 ≤ p) {E : Type v} {F : Type w}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] 
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] 
     (T : E →L[𝕜] F) :
     (schattenGauge p hp).extend (approxSeq T)
       = ContinuousLinearMap.schattenENorm p T := by

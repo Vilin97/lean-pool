@@ -88,7 +88,7 @@ Under the crossed-defect equivalence the source crossed intersection `U ⊓ Vᗮ
 is trivial exactly when the target crossed intersection `Uᗮ ⊓ V` is.  This is
 the only consequence of (3.5) that the gap identity consumes. -/
 theorem halmosSourceDefect_eq_bot_iff_halmosTargetDefect_eq_bot
-    (U V : Submodule 𝕜 H) [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
+    (U V : Submodule 𝕜 H)  
     (h : CrossedDefectsEquivalent U V) :
     halmosSourceDefect U V = ⊥ ↔ halmosTargetDefect U V = ⊥ := by
   obtain ⟨e⟩ := h
@@ -187,7 +187,7 @@ Dimension equality of Hilbert spaces *is* the existence of an isometry between
 them; stating it as data is what lets Proposition 3.2 produce a direct rotation
 from it, which an equality of cardinals could not do. -/
 theorem crossedDefectsEquivalent_iff_finrank_eq
-    (U V : Submodule 𝕜 H) [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
+    (U V : Submodule 𝕜 H)  
     [FiniteDimensional 𝕜 (halmosSourceDefect U V)]
     [FiniteDimensional 𝕜 (halmosTargetDefect U V)] :
     CrossedDefectsEquivalent U V ↔

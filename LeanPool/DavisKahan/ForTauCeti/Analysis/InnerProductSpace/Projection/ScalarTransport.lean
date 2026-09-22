@@ -80,7 +80,7 @@ consumer wants the two transports pushed inside, not a reflection of a transport
 
 /-- The projector onto the mirror image transports. -/
 theorem starProjection_map_reflection_of (S T : Submodule 𝕜 E)
-    [S.HasOrthogonalProjection] [T.HasOrthogonalProjection]
+     [T.HasOrthogonalProjection]
     [(S.map (T.reflection.toLinearEquiv : E →ₗ[𝕜] E)).HasOrthogonalProjection]
     [((submodule (e := e) S).map
       ((submodule (e := e) T).reflection.toLinearEquiv :

@@ -125,7 +125,7 @@ theorem projectionProduct_mem_and_gauge_le_isometric
 product in every rectangular symmetric ideal family. -/
 theorem projectionProduct_mem_and_gauge_le_overlap
     (N : TauCeti.SymmetricOperatorIdealFamily.{u, v} 𝕜)
-    [N.toOperatorIdealFamily.IsComplete]
+    
     (U W : Submodule 𝕜 H)
     [U.HasOrthogonalProjection] [W.HasOrthogonalProjection]
     [CompleteSpace U] [CompleteSpace W]

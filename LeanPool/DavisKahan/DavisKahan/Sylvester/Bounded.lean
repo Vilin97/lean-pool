@@ -222,7 +222,7 @@ theorem sylvesterNeumannTerm_summable
 /-- Ideal-norm Cauchy control for partial Neumann sums under the strict ratio. -/
 theorem sylvesterNeumannPartialSum_cauchy
     (N : TauCeti.SymmetricOperatorIdealFamily.{u, v} 𝕜)
-    [N.toOperatorIdealFamily.IsComplete]
+    
     {A : E →L[𝕜] E}
     (hA : BoundedInverseData A) (B : F →L[𝕜] F)
     {C : F →L[𝕜] E} (hC : N.Mem C)
@@ -319,7 +319,7 @@ omit [CompleteSpace F] in
 /-- The Neumann solution satisfies the Sylvester equation. -/
 theorem sylvesterNeumannSolution_eq
     (N : TauCeti.SymmetricOperatorIdealFamily.{u, v} 𝕜)
-    [N.toOperatorIdealFamily.IsComplete]
+    
     {A : E →L[𝕜] E}
     (hA : BoundedInverseData A) (B : F →L[𝕜] F)
     (C : F →L[𝕜] E)

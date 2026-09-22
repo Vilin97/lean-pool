@@ -38,7 +38,7 @@ variable {F : Type u} [NormedAddCommGroup F] [InnerProductSpace ℂ F]
 reflection defect into the square member of the same family. -/
 theorem SymmetricOperatorIdealFamily.reflectionDefect_isometricRange_mem
     (N : TauCeti.SymmetricOperatorIdealFamily.{0, u} ℂ)
-    [N.toOperatorIdealFamily.IsComplete]
+    
     (A : H →L[ℂ] H) (hA : IsSelfAdjoint A)
     (X : F →L[ℂ] H) (M : F →L[ℂ] F)
     (hX : IsometricEmbedding X) (hR : N.Mem (residual A X M)) :
@@ -65,7 +65,7 @@ theorem SymmetricOperatorIdealFamily.reflectionDefect_isometricRange_mem
 the trial residual. -/
 theorem SymmetricOperatorIdealFamily.gauge_reflectionDefect_isometricRange_le_four_mul
     (N : TauCeti.SymmetricOperatorIdealFamily.{0, u} ℂ)
-    [N.toOperatorIdealFamily.IsComplete]
+    
     (A : H →L[ℂ] H) (hA : IsSelfAdjoint A)
     (X : F →L[ℂ] H) (M : F →L[ℂ] F)
     (hX : IsometricEmbedding X) (hR : N.Mem (residual A X M)) :

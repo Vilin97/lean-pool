@@ -148,7 +148,7 @@ theorem SymmetricOperatorIdealFamily.gauge_le_of_eq_comp_comp
 /-- A rectangular contraction factorization does not increase the gauge. -/
 theorem SymmetricOperatorIdealFamily.gauge_le_of_contraction_factorization
     (N : TauCeti.SymmetricOperatorIdealFamily.{u, u} 𝕜)
-    [N.toOperatorIdealFamily.IsComplete]
+    
     {A : H →L[𝕜] G} {B : E →L[𝕜] F}
     (L : F →L[𝕜] G) (R : H →L[𝕜] E)
     (hB : N.Mem B) (hEq : A = L ∘L B ∘L R)

@@ -595,7 +595,7 @@ acts as a certificate. -/
 `sinTwoTheta_ambient_unbounded_perturbedGap_whereDefinedUIN_rclike`. -/
 theorem sinTwoTheta_ambient_unbounded_perturbedGap_whereDefinedUIN_complex
     {Hc : Type v} [NormedAddCommGroup Hc] [InnerProductSpace ℂ Hc] [CompleteSpace Hc]
-    [TopologicalSpace.SeparableSpace Hc]
+    
     (N : NormalizedSymmetricOperatorIdealFamily.{0, v} ℂ)
     {A : Hc →ₗ.[ℂ] Hc} (hA : IsSelfAdjoint A)
     (Hop : Hc →L[ℂ] Hc) (hHop : Hop.IsSymmetric)
@@ -620,7 +620,7 @@ theorem sinTwoTheta_ambient_unbounded_perturbedGap_whereDefinedUIN_complex
 `sinTwoTheta_ambient_unbounded_perturbedGap_whereDefinedUIN_rclike`. -/
 theorem sinTwoTheta_ambient_unbounded_perturbedGap_whereDefinedUIN_real
     {Er : Type v} [NormedAddCommGroup Er] [InnerProductSpace ℝ Er] [CompleteSpace Er]
-    [TopologicalSpace.SeparableSpace Er]
+    
     (N : NormalizedSymmetricOperatorIdealFamily.{0, v} ℝ)
     {A : Er →ₗ.[ℝ] Er} (hA : IsSelfAdjoint A)
     (Hop : Er →L[ℝ] Er) (hHop : Hop.IsSymmetric)

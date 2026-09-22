@@ -54,7 +54,7 @@ noncomputable def fullSinAngleBlockC
 /-- The cross projection sum in coordinates of `U` and `V complement`. -/
 noncomputable def crossBlockSumC
     (U V : Submodule ℂ E)
-    [U.HasOrthogonalProjection] [V.HasOrthogonalProjection] :
+      :
     WithLp 2 (U × Uᗮ) →L[ℂ] WithLp 2 (Vᗮ × (Vᗮ)ᗮ) :=
   continuousOrthogonalBlockSum
     (sineBlockC U V)

@@ -273,7 +273,7 @@ with `δ = 1 > 0`), yet no certificate of mass `π / 2` exists because
 `π / 2 < 5 / 3`. -/
 theorem not_real_reciprocalOrbitInterpolation_pi_div_two
     {G : Type*} [NormedAddCommGroup G] [InnerProductSpace ℝ G]
-    [FiniteDimensional ℝ G]
+    
     (e : OrthonormalBasis (Fin (Module.finrank ℝ G)) ℝ G)
     (h2 : Module.finrank ℝ G = 2) :
     ¬ HasReciprocalOrbitInterpolation e e
@@ -447,9 +447,9 @@ an exact finite orthogonal-orbit certificate for arbitrary real maps. -/
 theorem finiteUnitaryOrbitCertificate_orthogonalBlockSum_of_reciprocalInterpolation
     {ER FR : Type*}
     [NormedAddCommGroup ER] [InnerProductSpace ℝ ER]
-    [FiniteDimensional ℝ ER]
+    
     [NormedAddCommGroup FR] [InnerProductSpace ℝ FR]
-    [FiniteDimensional ℝ FR]
+    
     (eF : OrthonormalBasis (Fin (Module.finrank ℝ FR)) ℝ FR)
     (eE : OrthonormalBasis (Fin (Module.finrank ℝ ER)) ℝ ER)
     (alpha : Fin (Module.finrank ℝ FR) → ℝ)

@@ -163,6 +163,7 @@ theorem sin_same_projectionDiff
   rw [TauCeti.DavisKahan.Angle.sinAngleOperatorC]
   exact modulus_hasSameApproximationNumbers _
 
+omit [CompleteSpace E] in
 /-- Negation changes no approximation singular value. -/
 theorem sameApproximationSingularValues_neg (A : E →L[ℂ] E) :
     SameApproximationSingularValues (-A) A := by

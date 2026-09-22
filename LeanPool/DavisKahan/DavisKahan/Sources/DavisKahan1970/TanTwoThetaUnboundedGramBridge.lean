@@ -319,6 +319,7 @@ theorem adjoint_blockCompression (K : G →L[𝕜] G) :
     ContinuousLinearMap.adjoint_comp, ContinuousLinearMap.adjoint_adjoint,
     ContinuousLinearMap.comp_assoc]
 
+omit [Γ.HasOrthogonalProjection] in
 /-- The block compression, evaluated in the ambient space. -/
 theorem coe_blockCompression_apply (K : G →L[𝕜] G) (y : Γ) :
     ((blockCompression Ω Γ K y : Ω) : G) = Ω.starProjection (K (y : G)) := by

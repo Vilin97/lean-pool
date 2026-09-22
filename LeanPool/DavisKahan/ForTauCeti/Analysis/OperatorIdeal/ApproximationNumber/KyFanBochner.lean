@@ -174,6 +174,7 @@ theorem norm_le_one_of_mem_unitary {L : E →L[𝕜] E}
     rw [one_mul]
     exact le_of_eq (norm_map_of_mem_unitary hL x)
 
+omit [CompleteSpace E] [CompleteSpace F] in
 /-- Sandwiching between two contractions cannot increase a Ky Fan gauge. -/
 theorem kyFanGauge_comp_comp_le_of_norm_le_one {L : F →L[𝕜] F} {R : E →L[𝕜] E}
     (hL : ‖L‖ ≤ 1) (hR : ‖R‖ ≤ 1) (T : E →L[𝕜] F) (k : ℕ) :

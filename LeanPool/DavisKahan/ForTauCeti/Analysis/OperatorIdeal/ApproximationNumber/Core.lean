@@ -656,8 +656,8 @@ omit [CompleteSpace E] [CompleteSpace F] in
 /-- Two-sided ideal inequality for finite Ky Fan gauges. -/
 theorem kyFanApproximationGauge_comp_le
     {G H : Type v}
-    [NormedAddCommGroup G] [InnerProductSpace 𝕜 G] [CompleteSpace G]
-    [NormedAddCommGroup H] [InnerProductSpace 𝕜 H] [CompleteSpace H]
+    [NormedAddCommGroup G] [InnerProductSpace 𝕜 G] 
+    [NormedAddCommGroup H] [InnerProductSpace 𝕜 H] 
     (k : ℕ) (L : F →L[𝕜] G) (K : E →L[𝕜] F)
     (R : H →L[𝕜] E) :
     kyFanApproximationGauge k (L ∘L K ∘L R) ≤
@@ -693,6 +693,7 @@ theorem kyFanApproximationGauge_le_nat_mul_opNorm
   K.kyFanGauge_le_nat_mul_opNorm k
 
 omit [CompleteSpace E] in
+omit [CompleteSpace F] in
 /-- **The Ky Fan gauge is approached by orthonormal pairings.**
 
 For a bounded `K : E →L[𝕜] F` and any `ε > 0` there are orthonormal `k`-families `v` in `E`

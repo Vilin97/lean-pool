@@ -49,7 +49,7 @@ noncomputable def directedSineBlock
 
 /-- A directed tangent representative has exactly the singular values `tan θⱼ`. -/
 noncomputable def HasDirectedTangentApproximationNumbers
-    (Z V : Submodule 𝕜 H) [Z.HasOrthogonalProjection] [V.HasOrthogonalProjection]
+    (Z V : Submodule 𝕜 H)  [V.HasOrthogonalProjection]
     (tanTheta0 : Z →L[𝕜] H) : Prop :=
   ∀ n, tanTheta0.approximationNumber n =
     Real.tan (Real.arcsin ((directedSineBlock Z V).approximationNumber n))
@@ -63,7 +63,7 @@ omit [CompleteSpace H] in
 /-- Scalar transport carries the directed sine block into the canonical transported
 subspace coordinates. -/
 theorem scalarTransport_directedSineBlock
-    (Z V : Submodule 𝕜 H) [Z.HasOrthogonalProjection] [V.HasOrthogonalProjection]
+    (Z V : Submodule 𝕜 H)  [V.HasOrthogonalProjection]
      :
     scalarTransportSubspaceCLM (e := e) Z (directedSineBlock Z V) =
       directedSineBlock (ScalarTransport.submodule (e := e) Z)
@@ -87,7 +87,7 @@ theorem scalarTransport_directedSineBlock
 /-- Approximation numbers of the directed sine block are scalar invariant. -/
 theorem approximationNumber_directedSineBlock_transport
     (Z V : Submodule 𝕜 H) [Z.HasOrthogonalProjection] [V.HasOrthogonalProjection]
-    [CompleteSpace Z] (n : ℕ) :
+     (n : ℕ) :
     (directedSineBlock (ScalarTransport.submodule (e := e) Z)
       (ScalarTransport.submodule (e := e) V)).approximationNumber n =
       (directedSineBlock Z V).approximationNumber n := by

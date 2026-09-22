@@ -82,7 +82,7 @@ omit [CompleteSpace E] in
 /-- Through the canonical subspace adapter, the complex directed sine block is
 exactly the complexification of the real directed sine block. -/
 theorem theorem63DirectedSineBlock_complexify_equiv
-    (Z V : Submodule ℝ E) [Z.HasOrthogonalProjection]
+    (Z V : Submodule ℝ E) 
     [V.HasOrthogonalProjection] :
     (theorem63DirectedSineBlock (complexifySubmodule Z) (complexifySubmodule V)).comp
         (complexifySubmoduleEquiv Z).toContinuousLinearEquiv.toContinuousLinearMap =
@@ -248,12 +248,13 @@ theorem approximationSingularValue_sineBlock_lt_one_infiniteTrial_real
 /-- A real tangent representative has exactly the approximation numbers
 prescribed by the paper's directed angle. -/
 def HasTheorem63DirectedTangentApproximationNumbersInfiniteReal
-    (Z V : Submodule ℝ E) [Z.HasOrthogonalProjection] [V.HasOrthogonalProjection]
+    (Z V : Submodule ℝ E)  [V.HasOrthogonalProjection]
     (tanTheta0 : Z →L[ℝ] E) : Prop :=
   ∀ n, approximationSingularValue n tanTheta0 =
     Real.tan (Real.arcsin
       (approximationSingularValue n (theorem63DirectedSineBlockReal Z V)))
 
+omit [CompleteSpace E] in
 /-- Inclusion of a closed real trial subspace preserves every approximation
 singular value of an endomorphism of that subspace. -/
 theorem approximationSingularValue_subtypeL_comp_real
@@ -314,7 +315,7 @@ two cases together cover every real trial subspace. -/
 /-- Diagonal entries of the real directed tangent on a finite-dimensional trial
 space: tangents of the directed angles, read off the sine block. -/
 noncomputable def theorem63DirectedTangentDiagonalReal
-    (Z V : Submodule ℝ E) [Z.HasOrthogonalProjection] [V.HasOrthogonalProjection]
+    (Z V : Submodule ℝ E)  [V.HasOrthogonalProjection]
     (i : Fin (Module.finrank ℝ Z)) : ℝ :=
   Real.tan (Real.arcsin
     (approximationSingularValue (i : Nat) (theorem63DirectedSineBlockReal Z V)))
@@ -553,6 +554,7 @@ theorem theorem63ResidualReal_eq_neg_of_invariant
     eq_neg_of_add_eq_zero_left hsplit
   simpa using hneg
 
+omit [CompleteSpace E] in
 /-- Termwise domination of the real residual's approximation numbers by those of the
 restricted perturbation.  The residual is a contraction applied to `P|_Z`, so no estimate is
 involved. -/

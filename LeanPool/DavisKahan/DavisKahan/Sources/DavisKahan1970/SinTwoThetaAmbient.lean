@@ -132,7 +132,7 @@ theorem sinTheta_spectrum_block_gauge
 
 /-- The scaled identity block, in coordinates. -/
 theorem blockCompression_smul_one (Ω Γ : Submodule ℂ E)
-    [Ω.HasOrthogonalProjection] [Γ.HasOrthogonalProjection] (c : ℂ) :
+    [Ω.HasOrthogonalProjection]  (c : ℂ) :
     blockCompression Ω Γ (c • (1 : E →L[ℂ] E)) =
       c • (Ω.orthogonalProjectionOnto ∘L Γ.subtypeL) := by
   rw [blockCompression, Submodule.adjoint_subtypeL]
@@ -141,7 +141,7 @@ theorem blockCompression_smul_one (Ω Γ : Submodule ℂ E)
 
 /-- A perturbation block, in coordinates. -/
 theorem blockCompression_apply (Ω Γ : Submodule ℂ E)
-    [Ω.HasOrthogonalProjection] [Γ.HasOrthogonalProjection]
+    [Ω.HasOrthogonalProjection] 
     (K : E →L[ℂ] E) :
     blockCompression Ω Γ K =
       Ω.orthogonalProjectionOnto ∘L K ∘L Γ.subtypeL := by

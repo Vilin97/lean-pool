@@ -98,8 +98,7 @@ theorem realSpectrum_reducingRestriction_complexifyReal_of_eq
 omit [CompleteSpace E] in
 /-- **The residual norm survives complexification.** -/
 theorem norm_complexify_comp_subtypeL (T : E →L[ℝ] E) (P : Submodule ℝ E)
-    [P.HasOrthogonalProjection] [CompleteSpace P]
-    [CompleteSpace (complexifySubmodule P)] :
+    [P.HasOrthogonalProjection] :
     ‖TauCeti.RealComplexification.complexify T ∘L
         ((complexifySubmodule P).subtypeL :
           complexifySubmodule P →L[ℂ] TauCeti.RealComplexification E)‖

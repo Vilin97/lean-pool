@@ -827,7 +827,7 @@ The realization inside the ambient `H` is produced, not supplied. -/
 theorem theorem3_1_realization_inAmbient_ofSameHilbertDimension_complex
     {A₀ : Type u} [NormedAddCommGroup A₀] [InnerProductSpace ℂ A₀] [CompleteSpace A₀]
     {A₁ : Type v} [NormedAddCommGroup A₁] [InnerProductSpace ℂ A₁] [CompleteSpace A₁]
-    {H : Type w} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
+    {H : Type w} [NormedAddCommGroup H] [InnerProductSpace ℂ H] 
     {Θ₀ : A₀ →L[ℂ] A₀} {Θ₁ : A₁ →L[ℂ] A₁}
     (hΘ₀ : IsSelfAdjoint Θ₀) (hΘ₁ : IsSelfAdjoint Θ₁)
     (hspec₀ : spectrum ℝ Θ₀ ⊆ Set.Icc 0 (Real.pi / 2))
@@ -852,7 +852,7 @@ printed dimension clause as a proposition.** -/
 theorem theorem3_1_realization_inAmbient_ofSameHilbertDimension_real
     {A₀ : Type u} [NormedAddCommGroup A₀] [InnerProductSpace ℝ A₀] [CompleteSpace A₀]
     {A₁ : Type v} [NormedAddCommGroup A₁] [InnerProductSpace ℝ A₁] [CompleteSpace A₁]
-    {H : Type w} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+    {H : Type w} [NormedAddCommGroup H] [InnerProductSpace ℝ H] 
     {Θ₀ : A₀ →L[ℝ] A₀} {Θ₁ : A₁ →L[ℝ] A₁}
     (hΘ₀ : IsSelfAdjoint Θ₀) (hΘ₁ : IsSelfAdjoint Θ₁)
     (hspec₀ : spectrum ℝ Θ₀ ⊆ Set.Icc 0 (Real.pi / 2))

@@ -45,6 +45,7 @@ variable {E F : Type v}
   [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
   [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
 
+omit [CompleteSpace F] in
 /-- Extending a map from a closed subspace by zero on its orthogonal complement
 preserves every approximation singular value. -/
 theorem sameApproximationSingularValues_extendDomainByZero
@@ -54,6 +55,7 @@ theorem sameApproximationSingularValues_extendDomainByZero
       (T ∘L U.subtypeL.adjoint) T :=
   ContinuousLinearMap.hasSameApproximationNumbers_extendDomainByZero U T
 
+omit [CompleteSpace E] in
 /-- Including the range of a map into the ambient Hilbert space preserves every
 approximation singular value. -/
 theorem sameApproximationSingularValues_includeCodomain

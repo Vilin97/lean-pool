@@ -94,7 +94,7 @@ compressions in the same interval and exterior sets. -/
 theorem _root_.TauCeti.DavisKahan.Foundation.FiniteGapConfiguration.exists_compressOperator_enclosures
     (A : Hspace →L[ℂ] Hspace)
     (U : Submodule ℂ Hspace) [U.HasOrthogonalProjection]
-    [CompleteSpace U] [CompleteSpace (Uᗮ : Submodule ℂ Hspace)]
+     
     (hU : A.Reduces U) {d : ℝ}
     (hfinite : FiniteGapConfiguration A U d) :
     ∃ left right : ℝ, left ≤ right ∧

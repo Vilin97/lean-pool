@@ -162,7 +162,7 @@ This is the fixed-field production form of the norm-layer construction validated
 It does not claim ideal-membership transfer: the numerical estimate is asserted when both
 `N(sin 2Θ₀)` and `N(R)` are defined. -/
 theorem sinTwoTheta_directed_unboundedResidual_whereDefinedUIN_complex
-    [TopologicalSpace.SeparableSpace H]
+    
     (N : NormalizedSymmetricOperatorIdealFamily.{0, v} ℂ)
     (hA : IsSelfAdjoint A)
     (B : Set ℝ) (hB : MeasurableSet B)
@@ -273,7 +273,7 @@ theorem sinTwoTheta_directed_unboundedResidual_normalizedUIN_real
 
 /-- Real fixed-field where-defined norm boundary for the directed `sin 2Θ₀` clause. -/
 theorem sinTwoTheta_directed_unboundedResidual_whereDefinedUIN_real
-    [TopologicalSpace.SeparableSpace E]
+    
     (N : NormalizedSymmetricOperatorIdealFamily.{0, v} ℝ)
     (hA : IsSelfAdjoint A)
     (B : Set ℝ) (hB : MeasurableSet B)

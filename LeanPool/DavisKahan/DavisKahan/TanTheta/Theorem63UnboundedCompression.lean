@@ -580,6 +580,7 @@ theorem all_kyFan_core_trunc {α δ : ℝ} (hδ : 0 < δ)
 
 /-! ### Releasing the cutoff -/
 
+omit [CompleteSpace H] in
 /-- The sine block of the truncated trial subspace is the ambient sine block precomposed
 with the inclusion. -/
 theorem truncSineBlock_eq (τ : ℝ) :

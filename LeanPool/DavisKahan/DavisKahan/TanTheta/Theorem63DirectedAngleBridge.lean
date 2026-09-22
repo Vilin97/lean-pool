@@ -139,6 +139,7 @@ private theorem subtypeL_comp_adjoint_subtypeL
   rfl
 
 omit [FiniteDimensional ℂ ↥Z] in
+omit [Z.HasOrthogonalProjection] in
 private theorem directedSine_eq_subtype_comp_coordinateSine :
     directedSine Z V = Vᗮ.subtypeL ∘L coordinateSine Z V := by
   rw [directedSine, coordinateSine, theorem63DirectedSineBlock, sineBlockC,
@@ -156,6 +157,7 @@ private theorem adjoint_subtypeL_comp_subtypeL
     (Submodule.orthogonalProjectionOnto_mem_subspace_eq_self x)
 
 omit [FiniteDimensional ℂ ↥Z] in
+omit [Z.HasOrthogonalProjection] in
 private theorem subtype_adjoint_comp_subtype_comp_coordinateSine :
     Vᗮ.subtypeL.adjoint ∘L Vᗮ.subtypeL ∘L coordinateSine Z V =
       coordinateSine Z V := by
@@ -260,6 +262,7 @@ private theorem norm_directedSine_eq_norm_coordinateSine :
     rw [← hnorm z]
     exact (directedSine Z V).le_opNorm z
 
+omit [Z.HasOrthogonalProjection] in
 /-- If every finite-source directed sine singular value is strictly below one,
 then the whole directed sine block has norm strictly below one.  The zero
 coordinate-space case is handled by the vanishing of all approximation

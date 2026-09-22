@@ -35,6 +35,7 @@ variable {e : RCLikeIso 𝕜 𝕂}
 variable {E : Type v} [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
 variable {F : Type v} [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
 
+omit [CompleteSpace E] [CompleteSpace F] in
 /-- Approximation singular-value prefixes are unchanged by scalar transport. -/
 theorem approximationPrefix_clm (n : ℕ) (T : E →L[𝕜] F) :
     approximationPrefix n (clm (e := e) T) = approximationPrefix n T := by

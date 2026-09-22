@@ -347,7 +347,7 @@ noncomputable def basisDiagonalRealCoeffMap
 /-- The diagonal map acts on a basis vector by its coefficient. -/
 @[simp] theorem basisDiagonalRealCoeffMap_apply_basis
     {G ι : Type*} [NormedAddCommGroup G] [InnerProductSpace 𝕜 G]
-    [Fintype ι] [DecidableEq ι]
+    [Fintype ι] 
     (e : OrthonormalBasis ι 𝕜 G) (c : ι → ℝ) (i : ι) :
     basisDiagonalRealCoeffMap e c (e i) = ((c i : ℝ) : 𝕜) • e i := by
   exact e.toBasis.constr_basis 𝕜 _ i

@@ -291,6 +291,7 @@ theorem halmosTargetDefect_coordinateHalfSpace (b : HilbertBasis ℤ 𝕜 H) :
     simpa using hall n
   exact b.repr.injective (hrepr.trans (map_zero b.repr).symm)
 
+omit [CompleteSpace H] in
 /-- **The crossed-defect hypothesis fails for the shift pair.**
 
 The two crossed intersections cannot be isometrically identified: one is a line

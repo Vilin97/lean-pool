@@ -47,12 +47,14 @@ and `V` rather than of the summand names.
 -/
 
 omit [CompleteSpace H] in
+omit [U.HasOrthogonalProjection] [V.HasOrthogonalProjection] in
 /-- No vector of the generic part lies in both `U` and `V`. -/
 theorem halmosGenericPart_inf_inf_eq_bot_left_right :
     halmosGenericPart U V ⊓ (U ⊓ V) = ⊥ :=
   halmosGenericPart_inf_eq_bot_of_le_trivial U V _ (halmosCommonPart_le_trivial U V)
 
 omit [CompleteSpace H] in
+omit [U.HasOrthogonalProjection] [V.HasOrthogonalProjection] in
 /-- No vector of the generic part lies in `U` and is orthogonal to `V`. -/
 theorem halmosGenericPart_inf_inf_eq_bot_left_rightCompl :
     halmosGenericPart U V ⊓ (U ⊓ Vᗮ) = ⊥ :=
@@ -60,6 +62,7 @@ theorem halmosGenericPart_inf_inf_eq_bot_left_rightCompl :
     (halmosSourceDefect_le_trivial U V)
 
 omit [CompleteSpace H] in
+omit [U.HasOrthogonalProjection] [V.HasOrthogonalProjection] in
 /-- No vector of the generic part is orthogonal to `U` and lies in `V`. -/
 theorem halmosGenericPart_inf_inf_eq_bot_leftCompl_right :
     halmosGenericPart U V ⊓ (Uᗮ ⊓ V) = ⊥ :=
@@ -67,6 +70,7 @@ theorem halmosGenericPart_inf_inf_eq_bot_leftCompl_right :
     (halmosTargetDefect_le_trivial U V)
 
 omit [CompleteSpace H] in
+omit [U.HasOrthogonalProjection] [V.HasOrthogonalProjection] in
 /-- No vector of the generic part is orthogonal to both. -/
 theorem halmosGenericPart_inf_inf_eq_bot_leftCompl_rightCompl :
     halmosGenericPart U V ⊓ (Uᗮ ⊓ Vᗮ) = ⊥ :=

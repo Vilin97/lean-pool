@@ -119,8 +119,8 @@ private theorem approximationSingularValue_comp_contractions_le
     {E₁ F G G' : Type*}
     [NormedAddCommGroup E₁] [InnerProductSpace 𝕜 E₁] 
     [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] 
-    [NormedAddCommGroup G] [InnerProductSpace 𝕜 G] [CompleteSpace G]
-    [NormedAddCommGroup G'] [InnerProductSpace 𝕜 G'] [CompleteSpace G']
+    [NormedAddCommGroup G] [InnerProductSpace 𝕜 G] 
+    [NormedAddCommGroup G'] [InnerProductSpace 𝕜 G'] 
     (n : ℕ) (L : F →L[𝕜] G) (K : E₁ →L[𝕜] F) (R : G' →L[𝕜] E₁)
     (hL : ‖L‖ ≤ 1) (hR : ‖R‖ ≤ 1) :
     approximationSingularValue n (L ∘L K ∘L R) ≤

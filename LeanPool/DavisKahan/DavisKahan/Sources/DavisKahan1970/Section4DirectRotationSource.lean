@@ -142,7 +142,7 @@ theorem proposition4_1_directRotation_sourceExact_complex
 The displacement of the fixed direct rotation is minimal in every normalized
 unitarily invariant norm. -/
 theorem corollary4_1_directRotation_sourceExact_complex
-    [TopologicalSpace.SeparableSpace H]
+    
     (N : NormalizedUnitaryInvariantNorm.{0, v} ℂ)
     (U V : Submodule ℂ H) [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
     (hcompact : IsCompactOperator (TauCeti.principalSineOperator U V))
@@ -165,7 +165,7 @@ theorem corollary4_1_directRotation_sourceExact_complex
 
 /-- **Davis--Kahan 1970, Proposition 4.3, on the source's own direct rotation.** -/
 theorem proposition4_3_directRotation_sourceExact_complex
-    [TopologicalSpace.SeparableSpace H]
+    
     (N : NormalizedUnitaryInvariantNorm.{0, v} ℂ)
     (U V : Submodule ℂ H) [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
     (hcompact : IsCompactOperator (TauCeti.principalSineOperator U V))
@@ -221,7 +221,7 @@ theorem proposition4_1_directRotation_sourceExact_real
 /-- **Davis--Kahan 1970, Corollary 4.1 over `ℝ`, on the source's own direct
 rotation.** -/
 theorem corollary4_1_directRotation_sourceExact_real
-    [TopologicalSpace.SeparableSpace E]
+    
     (N : NormalizedUnitaryInvariantNorm.{0, v} ℝ)
     (U V : Submodule ℝ E) [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
     (hcompact : IsCompactOperator (TauCeti.principalSineOperator U V))
@@ -245,7 +245,7 @@ theorem corollary4_1_directRotation_sourceExact_real
 /-- **Davis--Kahan 1970, Proposition 4.3 over `ℝ`, on the source's own direct
 rotation.** -/
 theorem proposition4_3_directRotation_sourceExact_real
-    [TopologicalSpace.SeparableSpace E]
+    
     (N : NormalizedUnitaryInvariantNorm.{0, v} ℝ)
     (U V : Submodule ℝ E) [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
     (hcompact : IsCompactOperator (TauCeti.principalSineOperator U V))

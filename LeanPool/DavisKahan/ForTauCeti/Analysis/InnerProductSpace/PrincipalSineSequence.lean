@@ -46,14 +46,14 @@ noncomputable def principalSineOperator (U V : Submodule 𝕜 H)
 /-- Evaluating the principal sine operator. -/
 @[simp]
 theorem principalSineOperator_apply (U V : Submodule 𝕜 H)
-    [U.HasOrthogonalProjection] [V.HasOrthogonalProjection] (x : U) :
+     [V.HasOrthogonalProjection] (x : U) :
     principalSineOperator U V x = Vᗮ.starProjection (x : H) := by
   simp only [principalSineOperator, ContinuousLinearMap.comp_apply, Submodule.subtypeL_apply]
 
 /-- Principal sines in arbitrary Hilbert dimension, ordered decreasingly and
 padded by zero when the directed sine operator has finite rank. -/
 noncomputable def principalSineSequence (U V : Submodule 𝕜 H)
-    [U.HasOrthogonalProjection] [V.HasOrthogonalProjection] (n : ℕ) : ℝ :=
+     [V.HasOrthogonalProjection] (n : ℕ) : ℝ :=
   (principalSineOperator U V).approximationNumber n
 
 /-- Principal sines are nonnegative. -/

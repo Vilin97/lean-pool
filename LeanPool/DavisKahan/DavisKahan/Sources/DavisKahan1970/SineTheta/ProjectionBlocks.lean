@@ -78,7 +78,7 @@ theorem diagonalPair_mem
 /-- **Davis--Kahan Lemma 6.2 for an arbitrary rectangular symmetric ideal.** -/
 theorem diagonalPair_gauge_le
     (N : TauCeti.SymmetricOperatorIdealFamily.{u, v} 𝕜)
-    [N.toOperatorIdealFamily.IsComplete]
+    
     (U V : Submodule 𝕜 E)
     [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
     {K : E →L[𝕜] E} (hK : N.Mem K) :
@@ -154,6 +154,7 @@ theorem diagonalPair_normingGauge_le
     (N.extendedGauge K).toReal
   exact (ENNReal.toReal_le_toReal hB hK).mpr hle
 
+omit [CompleteSpace E] in
 /-- Right composition with a subspace reflection preserves every approximation
 singular value. -/
 theorem sameApproximationSingularValues_comp_reflection_right
@@ -191,6 +192,7 @@ theorem sameApproximationSingularValues_comp_reflection_right
           hright (A ∘L U.reflectionOperator)
   exact key
 
+omit [CompleteSpace E] in
 /-- Left composition with a subspace reflection preserves every approximation
 singular value. -/
 theorem sameApproximationSingularValues_comp_reflection_left

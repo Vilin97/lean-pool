@@ -68,6 +68,7 @@ theorem finiteSourceSingularValue_nonneg (A : E →L[ℂ] F)
     0 ≤ finiteSourceSingularValue A i :=
   A.rangeRestrict.toLinearMap.singularValues_nonneg i
 
+omit [CompleteSpace F] in
 /-- The finite-source singular value equals the corresponding approximation singular value
 of the original ambient-codomain operator. -/
 theorem approximationSingularValue_eq_finiteSourceSingularValue

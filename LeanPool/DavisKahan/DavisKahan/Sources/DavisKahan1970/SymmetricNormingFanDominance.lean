@@ -295,7 +295,7 @@ reading and the one to use when a particular rotation is in hand.  This
 corollary is for the caller who has only the source's hypothesis: it names a
 direct rotation and asserts the minimality for it. -/
 theorem proposition4_3_compact_nonacute_sourceExact_ofCrossedDefects_complex
-    [TopologicalSpace.SeparableSpace H]
+    
     (N : NormalizedUnitaryInvariantNorm.{0, v} ℂ)
     (U V : Submodule ℂ H) [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
     (hcompact : IsCompactOperator (TauCeti.principalSineOperator U V))
@@ -405,7 +405,7 @@ theorem proposition4_3_compact_nonacute_sourceExact_real
 complex sibling for why the crossed-defect condition, not a chosen
 identification, is what a caller should supply. -/
 theorem proposition4_3_compact_nonacute_sourceExact_ofCrossedDefects_real
-    [TopologicalSpace.SeparableSpace E]
+    
     (N : NormalizedUnitaryInvariantNorm.{0, v} ℝ)
     (U V : Submodule ℝ E) [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
     (hcompact : IsCompactOperator (TauCeti.principalSineOperator U V))

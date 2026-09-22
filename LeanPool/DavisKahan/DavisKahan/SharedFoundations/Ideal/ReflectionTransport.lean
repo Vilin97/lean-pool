@@ -156,7 +156,7 @@ theorem directedSinBlock_reflected_eq_reflection_comp_sinTwo
 membership and equal ideal gauge. -/
 theorem SymmetricOperatorIdealFamily.directed_reflected_mem_iff_and_gauge_eq
     (N : TauCeti.SymmetricOperatorIdealFamily.{u, u} 𝕜)
-    [N.toOperatorIdealFamily.IsComplete]
+    
     (U V : Submodule 𝕜 E)
     [U.HasOrthogonalProjection] [V.HasOrthogonalProjection] :
     (N.Mem (directedSinBlock U (reflectedSubspace V U)) ↔

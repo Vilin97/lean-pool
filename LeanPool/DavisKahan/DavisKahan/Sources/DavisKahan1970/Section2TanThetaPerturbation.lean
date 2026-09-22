@@ -94,11 +94,12 @@ theorem theorem63Residual_eq_neg_of_invariant
     eq_neg_of_add_eq_zero_left hsplit
   simpa using this
 
+omit [CompleteSpace H] in
 /-- Termwise domination of the residual's approximation numbers by those of the
 restricted perturbation. -/
 theorem approximationSingularValue_theorem63Residual_le_of_invariant
     (T E : H →L[ℂ] H) (Z : Submodule ℂ H) [Z.HasOrthogonalProjection]
-    [CompleteSpace Z]
+    
     (hinv : ∀ x ∈ Z, (T + E) x ∈ Z) (n : ℕ) :
     approximationSingularValue n (theorem63Residual T Z) ≤
       approximationSingularValue n (E ∘L Z.subtypeL) := by

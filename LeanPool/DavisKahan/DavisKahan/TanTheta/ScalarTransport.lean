@@ -138,7 +138,7 @@ noncomputable def scalarTransportSubspaceBlockCLM
 
 /-- Scalar transport is a bijection on bounded maps between closed subspaces. -/
 noncomputable def scalarTransportSubspaceBlockCLMEquiv
-    (Z W : Submodule 𝕜 H) [W.HasOrthogonalProjection] :
+    (Z W : Submodule 𝕜 H)  :
     (Z →L[𝕜] W) ≃
       (ScalarTransport.submodule (e := e) Z →L[𝕂]
         ScalarTransport.submodule (e := e) W) where

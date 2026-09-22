@@ -56,8 +56,8 @@ so long. -/
 theorem refl
     {𝕜 : Type u} [RCLike 𝕜]
     {E : Type vE} {F : Type vF}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] 
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] 
     (A : E →L[𝕜] F) : SameApproximationSingularSequence A A := fun _ => rfl
 
 /-- Symmetry, swapping two independently-typed pairs of spaces. -/
@@ -66,10 +66,10 @@ theorem symm
     {𝕜 : Type u} [RCLike 𝕜]
     {E₁ : Type vE1} {F₁ : Type vF1}
     {E₂ : Type vE2} {F₂ : Type vF2}
-    [NormedAddCommGroup E₁] [InnerProductSpace 𝕜 E₁] [CompleteSpace E₁]
-    [NormedAddCommGroup F₁] [InnerProductSpace 𝕜 F₁] [CompleteSpace F₁]
-    [NormedAddCommGroup E₂] [InnerProductSpace 𝕜 E₂] [CompleteSpace E₂]
-    [NormedAddCommGroup F₂] [InnerProductSpace 𝕜 F₂] [CompleteSpace F₂]
+    [NormedAddCommGroup E₁] [InnerProductSpace 𝕜 E₁] 
+    [NormedAddCommGroup F₁] [InnerProductSpace 𝕜 F₁] 
+    [NormedAddCommGroup E₂] [InnerProductSpace 𝕜 E₂] 
+    [NormedAddCommGroup F₂] [InnerProductSpace 𝕜 F₂] 
     {A : E₁ →L[𝕜] F₁} {B : E₂ →L[𝕜] F₂}
     (h : SameApproximationSingularSequence A B) :
     SameApproximationSingularSequence B A := fun n => (h n).symm
@@ -81,12 +81,12 @@ theorem trans
     {E₁ : Type vE1} {F₁ : Type vF1}
     {E₂ : Type vE2} {F₂ : Type vF2}
     {E₃ : Type vE3} {F₃ : Type vF3}
-    [NormedAddCommGroup E₁] [InnerProductSpace 𝕜 E₁] [CompleteSpace E₁]
-    [NormedAddCommGroup F₁] [InnerProductSpace 𝕜 F₁] [CompleteSpace F₁]
-    [NormedAddCommGroup E₂] [InnerProductSpace 𝕜 E₂] [CompleteSpace E₂]
-    [NormedAddCommGroup F₂] [InnerProductSpace 𝕜 F₂] [CompleteSpace F₂]
-    [NormedAddCommGroup E₃] [InnerProductSpace 𝕜 E₃] [CompleteSpace E₃]
-    [NormedAddCommGroup F₃] [InnerProductSpace 𝕜 F₃] [CompleteSpace F₃]
+    [NormedAddCommGroup E₁] [InnerProductSpace 𝕜 E₁] 
+    [NormedAddCommGroup F₁] [InnerProductSpace 𝕜 F₁] 
+    [NormedAddCommGroup E₂] [InnerProductSpace 𝕜 E₂] 
+    [NormedAddCommGroup F₂] [InnerProductSpace 𝕜 F₂] 
+    [NormedAddCommGroup E₃] [InnerProductSpace 𝕜 E₃] 
+    [NormedAddCommGroup F₃] [InnerProductSpace 𝕜 F₃] 
     {A : E₁ →L[𝕜] F₁} {B : E₂ →L[𝕜] F₂} {C : E₃ →L[𝕜] F₃}
     (hAB : SameApproximationSingularSequence A B)
     (hBC : SameApproximationSingularSequence B C) :
@@ -97,10 +97,10 @@ theorem opNorm_eq
     {𝕜 : Type u} [RCLike 𝕜]
     {E₁ : Type vE1} {F₁ : Type vF1}
     {E₂ : Type vE2} {F₂ : Type vF2}
-    [NormedAddCommGroup E₁] [InnerProductSpace 𝕜 E₁] [CompleteSpace E₁]
-    [NormedAddCommGroup F₁] [InnerProductSpace 𝕜 F₁] [CompleteSpace F₁]
-    [NormedAddCommGroup E₂] [InnerProductSpace 𝕜 E₂] [CompleteSpace E₂]
-    [NormedAddCommGroup F₂] [InnerProductSpace 𝕜 F₂] [CompleteSpace F₂]
+    [NormedAddCommGroup E₁] [InnerProductSpace 𝕜 E₁] 
+    [NormedAddCommGroup F₁] [InnerProductSpace 𝕜 F₁] 
+    [NormedAddCommGroup E₂] [InnerProductSpace 𝕜 E₂] 
+    [NormedAddCommGroup F₂] [InnerProductSpace 𝕜 F₂] 
     {A : E₁ →L[𝕜] F₁} {B : E₂ →L[𝕜] F₂}
     (h : SameApproximationSingularSequence A B) : ‖A‖ = ‖B‖ :=
   ContinuousLinearMap.HasSameApproximationNumbers.norm_eq h
@@ -110,10 +110,10 @@ theorem kyFanApproximationGauge_eq
     {𝕜 : Type u} [RCLike 𝕜]
     {E₁ : Type vE1} {F₁ : Type vF1}
     {E₂ : Type vE2} {F₂ : Type vF2}
-    [NormedAddCommGroup E₁] [InnerProductSpace 𝕜 E₁] [CompleteSpace E₁]
-    [NormedAddCommGroup F₁] [InnerProductSpace 𝕜 F₁] [CompleteSpace F₁]
-    [NormedAddCommGroup E₂] [InnerProductSpace 𝕜 E₂] [CompleteSpace E₂]
-    [NormedAddCommGroup F₂] [InnerProductSpace 𝕜 F₂] [CompleteSpace F₂]
+    [NormedAddCommGroup E₁] [InnerProductSpace 𝕜 E₁] 
+    [NormedAddCommGroup F₁] [InnerProductSpace 𝕜 F₁] 
+    [NormedAddCommGroup E₂] [InnerProductSpace 𝕜 E₂] 
+    [NormedAddCommGroup F₂] [InnerProductSpace 𝕜 F₂] 
     {A : E₁ →L[𝕜] F₁} {B : E₂ →L[𝕜] F₂}
     (h : SameApproximationSingularSequence A B) (k : ℕ) :
     kyFanApproximationGauge k A = kyFanApproximationGauge k B :=
@@ -189,6 +189,7 @@ def SameApproximationSingularValues (A B : E →L[𝕜] F) : Prop :=
 
 namespace SameApproximationSingularValues
 
+omit [CompleteSpace E] [CompleteSpace F] in
 /-- Two-sided composition by isometric equivalences preserves every
 approximation singular value. -/
 theorem comp_isometricEquiv
@@ -200,12 +201,13 @@ theorem comp_isometricEquiv
   intro n
   exact approximationNumber_comp_isometricEquiv_eq U V A n
 
+omit [CompleteSpace E] [CompleteSpace F] in
 /-- If an operator becomes another operator after unitary coordinate changes,
 they have the same complete singular sequence. -/
 theorem of_isometricEquiv_comp
     {E' : Type vE1} {F' : Type vF1}
-    [NormedAddCommGroup E'] [InnerProductSpace 𝕜 E'] [CompleteSpace E']
-    [NormedAddCommGroup F'] [InnerProductSpace 𝕜 F'] [CompleteSpace F']
+    [NormedAddCommGroup E'] [InnerProductSpace 𝕜 E'] 
+    [NormedAddCommGroup F'] [InnerProductSpace 𝕜 F'] 
     (U : F ≃ₗᵢ[𝕜] F') (V : E ≃ₗᵢ[𝕜] E')
     {A : E →L[𝕜] F} {B : E' →L[𝕜] F'}
     (h : U.toContinuousLinearEquiv.toContinuousLinearMap ∘L A ∘L
@@ -216,12 +218,14 @@ theorem of_isometricEquiv_comp
   rw [h] at hkey
   exact hkey.symm
 
+omit [CompleteSpace E] [CompleteSpace F] in
 /-- Reflexivity.  With `symm` and `trans` this makes `SameApproximationSingularValues` an
 equivalence usable by `refl`/`symm`/`trans` via the attributes. -/
 @[refl]
 theorem refl (A : E →L[𝕜] F) : SameApproximationSingularValues A A :=
   fun _ => rfl
 
+omit [CompleteSpace E] [CompleteSpace F] in
 /-- Symmetry. -/
 @[symm]
 theorem symm {A B : E →L[𝕜] F}
@@ -229,6 +233,7 @@ theorem symm {A B : E →L[𝕜] F}
     SameApproximationSingularValues B A :=
   fun n => (h n).symm
 
+omit [CompleteSpace E] [CompleteSpace F] in
 /-- Transitivity. -/
 @[trans]
 theorem trans {A B C : E →L[𝕜] F}
@@ -237,6 +242,7 @@ theorem trans {A B C : E →L[𝕜] F}
     SameApproximationSingularValues A C :=
   fun n => (hAB n).trans (hBC n)
 
+omit [CompleteSpace E] [CompleteSpace F] in
 /-- Equal complete singular-value data gives equal finite Ky Fan gauges. -/
 theorem kyFanApproximationGauge_eq {A B : E →L[𝕜] F}
     (h : SameApproximationSingularValues A B) (k : ℕ) :

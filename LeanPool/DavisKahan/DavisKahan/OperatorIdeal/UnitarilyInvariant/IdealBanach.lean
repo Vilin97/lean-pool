@@ -58,7 +58,7 @@ its norm.  This is a fresh type synonym so it does not inherit the ambient
 operator norm from the submodule subtype. -/
 def IdealOperator
     (N : TauCeti.SymmetricOperatorIdealFamily.{u, v} 𝕜)
-    [N.toOperatorIdealFamily.IsComplete] : Type _ :=
+     : Type _ :=
   ↥(idealSubmodule (E := E) (F := F) N)
 
 namespace IdealOperator

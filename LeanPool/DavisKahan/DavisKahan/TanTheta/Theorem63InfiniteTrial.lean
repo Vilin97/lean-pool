@@ -334,6 +334,7 @@ private theorem compression_upper_transfer {alpha : ℝ}
   rw [re_inner_theorem63Compression_eq] at h
   simpa using h
 
+omit [CompleteSpace ↥Z] in
 /-- The finite leakage step: an almost-invariant finite-dimensional subspace of the trial
 space obeys the target Ky Fan bound up to the leakage error. -/
 private theorem finite_leak_step (hT : T.IsSymmetric)
@@ -632,7 +633,7 @@ end CoreAssembly
 trial dimension: the tangent representative's approximation numbers are the tangents of
 the arcsines of the directed sine block's approximation numbers. -/
 def HasTheorem63DirectedTangentApproximationNumbersInfinite
-    (Z V : Submodule ℂ H) [Z.HasOrthogonalProjection] [V.HasOrthogonalProjection]
+    (Z V : Submodule ℂ H)  [V.HasOrthogonalProjection]
     (tanTheta0 : Z →L[ℂ] H) : Prop :=
   ∀ n, approximationSingularValue n tanTheta0 =
     Real.tan (Real.arcsin
@@ -675,11 +676,12 @@ theorem theorem6_3_infiniteTrial_of_formBounds
 
 /-! ### The tangent representative exists at every trial dimension -/
 
+omit [CompleteSpace H] in
 /-- Composing with the trial-space inclusion moves no approximation singular value; the
 finite-source file proves this under a finiteness instance, and this is the general form.
 -/
 theorem approximationSingularValue_subtypeL_comp_infinite
-    (Z : Submodule ℂ H) [Z.HasOrthogonalProjection] [CompleteSpace Z]
+    (Z : Submodule ℂ H) [Z.HasOrthogonalProjection] 
     (A : Z →L[ℂ] Z) (k : ℕ) :
     approximationSingularValue k (Z.subtypeL ∘L A) = approximationSingularValue k A := by
   have hmem : ∀ x : Z, (Z.subtypeL ∘L A) x ∈ Z := fun x => (A x).property
@@ -780,7 +782,7 @@ only restricts where the condition can be *stated*.  This is what lets
 `theorem6_3_infiniteTrial_ideal` below subsume the finite-trial source facade. -/
 theorem hasTheorem63DirectedTangentApproximationNumbers_iff_infinite
     (Z V : Submodule ℂ H) [Z.HasOrthogonalProjection] [V.HasOrthogonalProjection]
-    [FiniteDimensional ℂ Z] (tanTheta0 : Z →L[ℂ] H) :
+     (tanTheta0 : Z →L[ℂ] H) :
     HasTheorem63DirectedTangentApproximationNumbers Z V tanTheta0 ↔
       HasTheorem63DirectedTangentApproximationNumbersInfinite Z V tanTheta0 :=
   Iff.rfl

@@ -460,7 +460,7 @@ at this source-facing boundary.  The two `N.Mem` arrows are written literally
 after the colon: they are the logical form of the paper's vacuity convention,
 not hypotheses required to invoke the theorem. -/
 theorem sinTheta_unbounded_formGap_whereDefinedUIN_complex
-    [TopologicalSpace.SeparableSpace E]
+    
     (N : NormalizedSymmetricOperatorIdealFamily.{0, v} ℂ)
     (A : E →ₗ.[ℂ] E) (A₀ : F →ₗ.[ℂ] F) (Λ₁ : G →ₗ.[ℂ] G)
     (E₀ : F →L[ℂ] E) (F₀ : H →L[ℂ] E) (F₁ : G →L[ℂ] E) (R : F →L[ℂ] E)
@@ -594,7 +594,7 @@ The real sibling of `sinTheta_unbounded_formGap_whereDefinedUIN_complex`, with t
 same partial-norm/vacuity boundary and the same explicit `Mem → Mem →`
 conclusion shape. -/
 theorem sinTheta_unbounded_formGap_whereDefinedUIN_real
-    [TopologicalSpace.SeparableSpace E]
+    
     (N : NormalizedSymmetricOperatorIdealFamily.{0, v} ℝ)
     (A : E →ₗ.[ℝ] E) (A₀ : F →ₗ.[ℝ] F) (Λ₁ : G →ₗ.[ℝ] G)
     (E₀ : F →L[ℝ] E) (F₀ : H →L[ℝ] E) (F₁ : G →L[ℝ] E) (R : F →L[ℝ] E)

@@ -72,10 +72,10 @@ summand and `B` on the second. -/
 @[simp]
 theorem continuousOrthogonalBlockSum_apply
     {E₀ E₁ F₀ F₁ : Type v}
-    [NormedAddCommGroup E₀] [InnerProductSpace 𝕜 E₀] [CompleteSpace E₀]
-    [NormedAddCommGroup E₁] [InnerProductSpace 𝕜 E₁] [CompleteSpace E₁]
-    [NormedAddCommGroup F₀] [InnerProductSpace 𝕜 F₀] [CompleteSpace F₀]
-    [NormedAddCommGroup F₁] [InnerProductSpace 𝕜 F₁] [CompleteSpace F₁]
+    [NormedAddCommGroup E₀] [InnerProductSpace 𝕜 E₀] 
+    [NormedAddCommGroup E₁] [InnerProductSpace 𝕜 E₁] 
+    [NormedAddCommGroup F₀] [InnerProductSpace 𝕜 F₀] 
+    [NormedAddCommGroup F₁] [InnerProductSpace 𝕜 F₁] 
     (A : E₀ →L[𝕜] F₀) (B : E₁ →L[𝕜] F₁)
     (x : WithLp 2 (E₀ × E₁)) :
     continuousOrthogonalBlockSum A B x =
@@ -86,10 +86,10 @@ theorem continuousOrthogonalBlockSum_apply
 @[simp]
 theorem continuousOrthogonalBlockSum_zero_left
     {E₀ E₁ F₀ F₁ : Type v}
-    [NormedAddCommGroup E₀] [InnerProductSpace 𝕜 E₀] [CompleteSpace E₀]
-    [NormedAddCommGroup E₁] [InnerProductSpace 𝕜 E₁] [CompleteSpace E₁]
-    [NormedAddCommGroup F₀] [InnerProductSpace 𝕜 F₀] [CompleteSpace F₀]
-    [NormedAddCommGroup F₁] [InnerProductSpace 𝕜 F₁] [CompleteSpace F₁]
+    [NormedAddCommGroup E₀] [InnerProductSpace 𝕜 E₀] 
+    [NormedAddCommGroup E₁] [InnerProductSpace 𝕜 E₁] 
+    [NormedAddCommGroup F₀] [InnerProductSpace 𝕜 F₀] 
+    [NormedAddCommGroup F₁] [InnerProductSpace 𝕜 F₁] 
     (B : E₁ →L[𝕜] F₁) :
     continuousOrthogonalBlockSum (0 : E₀ →L[𝕜] F₀) B =
       ((WithLp.prodContinuousLinearEquiv 2 𝕜 F₀ F₁).symm :
@@ -166,6 +166,7 @@ theorem norm_sndL_le : ‖(WithLp.sndL 2 𝕜 F₀ F₁)‖ ≤ 1 := by
     exact_mod_cast le_of_sq_le_sq h1 (norm_nonneg x)
   simpa using h2
 
+omit [CompleteSpace E₀] [CompleteSpace E₁] [CompleteSpace F₀] [CompleteSpace F₁] in
 /-- The first component is recovered from the block sum by an isometric
 compression. -/
 theorem fstL_comp_blockSum_comp_blockInl (A : E₀ →L[𝕜] F₀) (B : E₁ →L[𝕜] F₁) :
@@ -174,6 +175,7 @@ theorem fstL_comp_blockSum_comp_blockInl (A : E₀ →L[𝕜] F₀) (B : E₁ �
   ext x
   simp
 
+omit [CompleteSpace E₀] [CompleteSpace E₁] [CompleteSpace F₀] [CompleteSpace F₁] in
 /-- The second component is recovered from the block sum by an isometric
 compression. -/
 theorem sndL_comp_blockSum_comp_blockInr (A : E₀ →L[𝕜] F₀) (B : E₁ →L[𝕜] F₁) :
@@ -228,6 +230,7 @@ theorem approximationNumber_le_blockSum_right
                 ContinuousLinearMap.approximationNumber_nonneg _ _
     _ = _ := by rw [one_mul, mul_one]
 
+omit [CompleteSpace E₀] [CompleteSpace E₁] [CompleteSpace F₀] [CompleteSpace F₁] in
 /-- The operator norm of a block sum is the larger of the two block norms;
 only the upper bound is needed here. -/
 theorem norm_continuousOrthogonalBlockSum_le
@@ -265,6 +268,7 @@ theorem norm_continuousOrthogonalBlockSum_le
     exact le_of_sq_le_sq hsq (mul_nonneg hM (norm_nonneg x))
   exact_mod_cast hgoal
 
+omit [CompleteSpace E₀] [CompleteSpace E₁] [CompleteSpace F₀] [CompleteSpace F₁] in
 /-- A block sum splits as a sum of two compressions, one per summand. -/
 theorem continuousOrthogonalBlockSum_eq_add
     (R : E₀ →L[𝕜] F₀) (Q : E₁ →L[𝕜] F₁) :
@@ -275,6 +279,7 @@ theorem continuousOrthogonalBlockSum_eq_add
   apply WithLp.ofLp_injective 2
   simp
 
+omit [CompleteSpace E₀] [CompleteSpace E₁] [CompleteSpace F₀] [CompleteSpace F₁] in
 /-- Difference of block sums is the block sum of the differences. -/
 theorem continuousOrthogonalBlockSum_sub
     (A R : E₀ →L[𝕜] F₀) (B Q : E₁ →L[𝕜] F₁) :
@@ -548,14 +553,14 @@ live in different coordinate spaces, since only the two scalar Ky Fan
 sequences enter the definition. -/
 theorem splitKyFanGauge_mono
     {E₀ E₁ F₀ F₁ E₀' E₁' F₀' F₁' : Type v}
-    [NormedAddCommGroup E₀] [InnerProductSpace 𝕜 E₀] [CompleteSpace E₀]
-    [NormedAddCommGroup E₁] [InnerProductSpace 𝕜 E₁] [CompleteSpace E₁]
-    [NormedAddCommGroup F₀] [InnerProductSpace 𝕜 F₀] [CompleteSpace F₀]
-    [NormedAddCommGroup F₁] [InnerProductSpace 𝕜 F₁] [CompleteSpace F₁]
-    [NormedAddCommGroup E₀'] [InnerProductSpace 𝕜 E₀'] [CompleteSpace E₀']
-    [NormedAddCommGroup E₁'] [InnerProductSpace 𝕜 E₁'] [CompleteSpace E₁']
-    [NormedAddCommGroup F₀'] [InnerProductSpace 𝕜 F₀'] [CompleteSpace F₀']
-    [NormedAddCommGroup F₁'] [InnerProductSpace 𝕜 F₁'] [CompleteSpace F₁']
+    [NormedAddCommGroup E₀] [InnerProductSpace 𝕜 E₀] 
+    [NormedAddCommGroup E₁] [InnerProductSpace 𝕜 E₁] 
+    [NormedAddCommGroup F₀] [InnerProductSpace 𝕜 F₀] 
+    [NormedAddCommGroup F₁] [InnerProductSpace 𝕜 F₁] 
+    [NormedAddCommGroup E₀'] [InnerProductSpace 𝕜 E₀'] 
+    [NormedAddCommGroup E₁'] [InnerProductSpace 𝕜 E₁'] 
+    [NormedAddCommGroup F₀'] [InnerProductSpace 𝕜 F₀'] 
+    [NormedAddCommGroup F₁'] [InnerProductSpace 𝕜 F₁'] 
     {A : E₀ →L[𝕜] F₀} {C : E₀' →L[𝕜] F₀'}
     {B : E₁ →L[𝕜] F₁} {D : E₁' →L[𝕜] F₁'}
     (hA : ∀ k, kyFanApproximationGauge k A ≤ kyFanApproximationGauge k C)
@@ -745,7 +750,6 @@ The proof is pointwise and immediate: on `toLp (u, u')` the two star projections
 `(Π_U A u, Π_Uᗮ A u')`. -/
 theorem orthogonalDecomposition_conj_diagonalPart
     (U : Submodule 𝕜 H) [U.HasOrthogonalProjection]
-    [CompleteSpace (U : Type v)] [CompleteSpace ((Uᗮ : Submodule 𝕜 H) : Type v)]
     (A : H →L[𝕜] H) :
     (U.orthogonalDecomposition : H →L[𝕜] WithLp 2 (U × Uᗮ)) ∘L U.diagonalPart A ∘L
         (U.orthogonalDecomposition.symm : WithLp 2 (U × Uᗮ) →L[𝕜] H) =

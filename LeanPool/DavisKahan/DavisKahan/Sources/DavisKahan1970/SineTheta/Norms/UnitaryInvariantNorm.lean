@@ -106,8 +106,8 @@ def approximationPrefix
 def prefixGauge
     {𝕜 : Type u} [RCLike 𝕜]
     {E F : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] 
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] 
     (N : SymmetricNormingFunction) (n : ℕ) (A : E →L[𝕜] F) : ℝ :=
   N.finiteGauge n (approximationPrefix n A)
 
@@ -184,8 +184,8 @@ Ky Fan gauge. -/
 theorem sum_approximationPrefix
     {𝕜 : Type u} [RCLike 𝕜]
     {E F : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] 
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] 
     (n : ℕ) (A : E →L[𝕜] F) :
     ∑ i : Fin n, approximationPrefix n A i =
       kyFanApproximationGauge n A := by

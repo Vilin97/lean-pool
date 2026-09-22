@@ -206,11 +206,13 @@ multiplicity, recovered from the eigenvalue list of the sine-square block by
 noncomputable def compactAngleList (A : K₁ →L[𝕜] K₁) : ℕ → ℝ :=
   fun n => Real.arcsin (Real.sqrt (compactAngleEigenvalueList A n))
 
+omit [CompleteSpace K₁] in
 /-- The angle list lands in the principal-angle range `[0, π/2]`. -/
 theorem compactAngleList_mem_Icc (A : K₁ →L[𝕜] K₁) (n : ℕ) :
     compactAngleList A n ∈ Set.Icc 0 (Real.pi / 2) :=
   ⟨Real.arcsin_nonneg.mpr (Real.sqrt_nonneg _), Real.arcsin_le_pi_div_two _⟩
 
+omit [CompleteSpace K₁] [CompleteSpace K₂] in
 /-- **The angle list determines the sine-square list, and conversely**, given that
 the sine-square values lie in `[0, 1]`.
 

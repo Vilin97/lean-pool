@@ -88,7 +88,7 @@ omit [CompleteSpace H] in
 /-- `sourceResidual` is the printed residual: `R = (A + H)|_P − A₀`, for any
 bounded realization `M` of the Ritz block `A₀ = A|_P`. -/
 theorem sourceResidual_eq_sub_ritzBlock {A : H →ₗ.[𝕜] H} {Hop : H →L[𝕜] H}
-    {P : Submodule 𝕜 H} [P.HasOrthogonalProjection] {M : P →L[𝕜] P}
+    {P : Submodule 𝕜 H}  {M : P →L[𝕜] P}
     (hPdom : ∀ v : P, (v : H) ∈ A.domain)
     (hRitz : ∀ v : P, ((M v : P) : H) = A ⟨(v : H), hPdom v⟩) (v : P) :
     sourceResidual Hop P v

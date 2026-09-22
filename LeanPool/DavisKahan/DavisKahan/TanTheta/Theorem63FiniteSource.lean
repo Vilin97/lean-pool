@@ -127,7 +127,7 @@ theorem theorem63_sylvester_identity
 omit [CompleteSpace H] in
 /-- The directed sine block is a contraction. -/
 theorem theorem63DirectedSineBlock_apply_norm_le
-    (Z V : Submodule ℂ H) [Z.HasOrthogonalProjection]
+    (Z V : Submodule ℂ H) 
     [V.HasOrthogonalProjection] (z : Z) :
     ‖theorem63DirectedSineBlock Z V z‖ ≤ ‖z‖ := by
   calc
@@ -233,7 +233,7 @@ omit [CompleteSpace H] in
 Its range is contained there.  Derived twice below, the copies differing only in
 indentation. -/
 private theorem finiteSourceLeftSingularVector_mem_orthogonal
-    (Z V : Submodule ℂ H) [Z.HasOrthogonalProjection]
+    (Z V : Submodule ℂ H) 
     [V.HasOrthogonalProjection] [FiniteDimensional ℂ Z]
     (i : Fin (finrank ℂ Z)) :
     finiteSourceLeftSingularVector (theorem63DirectedSineBlock Z V) i ∈ Vᗮ := by
@@ -281,7 +281,7 @@ theorem theorem63_subtypeAdjoint_apply_finiteSourceLeftSingularVector
 /-- The normalized residual-side witness associated with one directed sine
 singular vector. -/
 noncomputable def theorem63ResidualWitness
-    (Z V : Submodule ℂ H) [Z.HasOrthogonalProjection]
+    (Z V : Submodule ℂ H) 
     [V.HasOrthogonalProjection] [FiniteDimensional ℂ Z]
     (i : Fin (finrank ℂ Z)) : H :=
   let S := theorem63DirectedSineBlock Z V
@@ -506,7 +506,7 @@ theorem orthonormal_theorem63ResidualWitness
 `tan Θ₀` have singular values `tan θ_j`, where the directed sine singular
 values are `sin θ_j`. -/
 def HasTheorem63DirectedTangentApproximationNumbers
-    (Z V : Submodule ℂ H) [Z.HasOrthogonalProjection]
+    (Z V : Submodule ℂ H) 
     [V.HasOrthogonalProjection] 
     (tanTheta0 : Z →L[ℂ] H) : Prop :=
   ∀ n, approximationSingularValue n tanTheta0 =
@@ -959,6 +959,7 @@ noncomputable def theorem63DirectedTangent : Z →L[ℂ] H :=
     (diagOp (finiteSourceRightSingularBasis (theorem63DirectedSineBlock Z V))
       (theorem63DirectedTangentDiagonal Z V)).toContinuousLinearMap
 
+omit [CompleteSpace H] [FiniteDimensional ℂ ↥Z] in
 /-- Composing with the inclusion of the trial space does not move approximation
 singular values: the inclusion is an isometry with a norm-one left inverse. -/
 theorem approximationSingularValue_subtypeL_comp_complex

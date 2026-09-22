@@ -433,7 +433,7 @@ variable {E : Type v}
 /-- **Davis--Kahan 1970, Lemma 6.1 on the source's two operators, over `ℂ`.** -/
 theorem lemma6_1_sourceOperators_separable_complex
     [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-    [TopologicalSpace.SeparableSpace E]
+    
     (N : NormalizedUnitaryInvariantNorm.{0, v} ℂ)
     (Ω Γ : Submodule ℂ E) [Ω.HasOrthogonalProjection] [Γ.HasOrthogonalProjection]
     (K L : E →L[ℂ] E)
@@ -454,7 +454,7 @@ theorem lemma6_1_sourceOperators_separable_complex
 /-- **Davis--Kahan 1970, Lemma 6.1 on the source's two operators, over `ℝ`.** -/
 theorem lemma6_1_sourceOperators_separable_real
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-    [TopologicalSpace.SeparableSpace E]
+    
     (N : NormalizedUnitaryInvariantNorm.{0, v} ℝ)
     (Ω Γ : Submodule ℝ E) [Ω.HasOrthogonalProjection] [Γ.HasOrthogonalProjection]
     (K L : E →L[ℝ] E)
@@ -478,7 +478,7 @@ The printed converse compares the two diagonal blocks *of `K`* and *of `L`*: eac
 operator's two blocks are equisingular, and the sum inequality is assumed. -/
 theorem lemma6_1_converse_sourceOperators_separable_complex
     [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-    [TopologicalSpace.SeparableSpace E]
+    
     (N : NormalizedUnitaryInvariantNorm.{0, v} ℂ)
     (Ω Γ : Submodule ℂ E) [Ω.HasOrthogonalProjection] [Γ.HasOrthogonalProjection]
     (K L : E →L[ℂ] E)
@@ -499,7 +499,7 @@ theorem lemma6_1_converse_sourceOperators_separable_complex
 /-- **Lemma 6.1's converse on the source's two operators, over `ℝ`.** -/
 theorem lemma6_1_converse_sourceOperators_separable_real
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-    [TopologicalSpace.SeparableSpace E]
+    
     (N : NormalizedUnitaryInvariantNorm.{0, v} ℝ)
     (Ω Γ : Submodule ℝ E) [Ω.HasOrthogonalProjection] [Γ.HasOrthogonalProjection]
     (K L : E →L[ℝ] E)

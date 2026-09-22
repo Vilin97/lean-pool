@@ -219,7 +219,7 @@ At stage `r` the collection has `N r` members and each of their errors has mean 
 of the average is then `e r` as well, whatever `N r` is, so the average is controlled by a single
 error even as the collection grows.  The subsequence is the one `L¹` convergence always costs.
 -/
-theorem exists_subseq_ae_tendsto_average [IsProbabilityMeasure μ]
+theorem exists_subseq_ae_tendsto_average 
     (N : Nat → Nat) (hN : ∀ r, 0 < N r) (E : ∀ r, Fin (N r) → Ω → Real)
     (hE0 : ∀ r i, 0 ≤ᵐ[μ] E r i) (hEi : ∀ r i, Integrable (E r i) μ)
     (e : Nat → Real) (hmean : ∀ r i, ∫ ω, E r i ω ∂μ = e r)

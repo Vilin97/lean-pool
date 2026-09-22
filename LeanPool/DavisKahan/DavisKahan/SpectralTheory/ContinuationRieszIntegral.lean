@@ -154,7 +154,7 @@ theorem localCurveIntegralFun_eq_curveIntegralFun_on_uIoo
 /-- A continuous complex one-form is curve integrable along every finitely
 piecewise-`C1` closed contour. -/
 theorem curveIntegrable_of_continuousOn
-    [CompleteSpace F]
+    
     (Γ : PiecewiseC1ClosedContour) (ω : ℂ → ℂ →L[ℂ] F)
     (hω : ContinuousOn ω Γ.image) : CurveIntegrable ω Γ.path := by
   change IntervalIntegrable (curveIntegralFun ω Γ.path) volume 0 1
