@@ -232,7 +232,7 @@ omit [CompleteSpace E] [CompleteSpace F] in
 /-- A real lower modulus on a real span becomes the same complex lower modulus
 on the complex span. -/
 theorem lowerBound_complex_span
-    {ι : Type*} 
+    {ι : Type*}
     (T : E →L[ℝ] F) (v : ι → E) {s : ℝ} (hs : 0 ≤ s)
     (hV : ∀ x ∈ Submodule.span ℝ (Set.range v),
       s * ‖x‖ ≤ ‖T x‖) :

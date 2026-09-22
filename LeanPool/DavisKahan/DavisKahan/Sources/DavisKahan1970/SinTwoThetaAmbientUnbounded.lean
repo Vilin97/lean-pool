@@ -473,7 +473,7 @@ production wrapper uses the weaker normalized symmetric operator-ideal family se
 source review and asserts the numerical inequality only when both displayed norms exist.
 The factor two is handled by applying Fan dominance to the equivalent `δ / 2` estimate. -/
 theorem sinTwoTheta_ambient_unbounded_perturbedGap_whereDefinedUIN_rclike
-    
+
     (N : NormalizedSymmetricOperatorIdealFamily.{u, v} 𝕜)
     {A : H →ₗ.[𝕜] H} (hA : IsSelfAdjoint A)
     (Hop : H →L[𝕜] H) (hHop : Hop.IsSymmetric)
@@ -595,7 +595,7 @@ acts as a certificate. -/
 `sinTwoTheta_ambient_unbounded_perturbedGap_whereDefinedUIN_rclike`. -/
 theorem sinTwoTheta_ambient_unbounded_perturbedGap_whereDefinedUIN_complex
     {Hc : Type v} [NormedAddCommGroup Hc] [InnerProductSpace ℂ Hc] [CompleteSpace Hc]
-    
+
     (N : NormalizedSymmetricOperatorIdealFamily.{0, v} ℂ)
     {A : Hc →ₗ.[ℂ] Hc} (hA : IsSelfAdjoint A)
     (Hop : Hc →L[ℂ] Hc) (hHop : Hop.IsSymmetric)
@@ -620,7 +620,7 @@ theorem sinTwoTheta_ambient_unbounded_perturbedGap_whereDefinedUIN_complex
 `sinTwoTheta_ambient_unbounded_perturbedGap_whereDefinedUIN_rclike`. -/
 theorem sinTwoTheta_ambient_unbounded_perturbedGap_whereDefinedUIN_real
     {Er : Type v} [NormedAddCommGroup Er] [InnerProductSpace ℝ Er] [CompleteSpace Er]
-    
+
     (N : NormalizedSymmetricOperatorIdealFamily.{0, v} ℝ)
     {A : Er →ₗ.[ℝ] Er} (hA : IsSelfAdjoint A)
     (Hop : Er →L[ℝ] Er) (hHop : Hop.IsSymmetric)
@@ -657,7 +657,7 @@ it -- the spectral gap between the two blocks of the *perturbed* operator
 `A + H` relative to `Q`. -/
 theorem sinTwoTheta_ambient_unbounded_perturbedGap_normalizedUIN_complex
     {Hc : Type v} [NormedAddCommGroup Hc] [InnerProductSpace ℂ Hc] [CompleteSpace Hc]
-    
+
     (N : NormalizedUnitaryInvariantNorm.{0, v} ℂ)
     {A : Hc →ₗ.[ℂ] Hc} (hA : IsSelfAdjoint A)
     (Hop : Hc →L[ℂ] Hc) (hHop : Hop.IsSymmetric)
@@ -682,7 +682,7 @@ theorem sinTwoTheta_ambient_unbounded_perturbedGap_normalizedUIN_complex
 /-- **Real normalized-UIN specialization of the ambient `sin 2Θ` theorem.** -/
 theorem sinTwoTheta_ambient_unbounded_perturbedGap_normalizedUIN_real
     {Er : Type v} [NormedAddCommGroup Er] [InnerProductSpace ℝ Er] [CompleteSpace Er]
-    
+
     (N : NormalizedUnitaryInvariantNorm.{0, v} ℝ)
     {A : Er →ₗ.[ℝ] Er} (hA : IsSelfAdjoint A)
     (Hop : Er →L[ℝ] Er) (hHop : Hop.IsSymmetric)

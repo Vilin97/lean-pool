@@ -525,9 +525,9 @@ data is not itself a Lean instance in the pinned Mathlib — there is no
 theorem corollary3_1_realization_zeroMultiplicity_sourceScope (𝕜 : Type*) [RCLike 𝕜]
     (θ : ℕ → ℝ)
     (Z₀ : Type*) [NormedAddCommGroup Z₀] [InnerProductSpace 𝕜 Z₀] [CompleteSpace Z₀]
-    
+
     (Z₁ : Type*) [NormedAddCommGroup Z₁] [InnerProductSpace 𝕜 Z₁] [CompleteSpace Z₁]
-    
+
     (hθ0 : ∀ n, 0 ≤ θ n) (hθ2 : ∀ n, θ n ≤ Real.pi / 2) (hanti : Antitone θ)
     (hlim : Filter.Tendsto θ Filter.atTop (nhds 0)) (hne : ∀ n, θ n ≠ 0) :
     IsCompactOperator

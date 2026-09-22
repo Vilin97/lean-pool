@@ -40,10 +40,10 @@ abbrev SameApproximationSingularSequence
     {𝕜 : Type u} [RCLike 𝕜]
     {E₁ : Type vE1} {F₁ : Type vF1}
     {E₂ : Type vE2} {F₂ : Type vF2}
-    [NormedAddCommGroup E₁] [InnerProductSpace 𝕜 E₁] 
-    [NormedAddCommGroup F₁] [InnerProductSpace 𝕜 F₁] 
-    [NormedAddCommGroup E₂] [InnerProductSpace 𝕜 E₂] 
-    [NormedAddCommGroup F₂] [InnerProductSpace 𝕜 F₂] 
+    [NormedAddCommGroup E₁] [InnerProductSpace 𝕜 E₁]
+    [NormedAddCommGroup F₁] [InnerProductSpace 𝕜 F₁]
+    [NormedAddCommGroup E₂] [InnerProductSpace 𝕜 E₂]
+    [NormedAddCommGroup F₂] [InnerProductSpace 𝕜 F₂]
     (A : E₁ →L[𝕜] F₁) (B : E₂ →L[𝕜] F₂) : Prop :=
   A.HasSameApproximationNumbers B
 
@@ -56,8 +56,8 @@ so long. -/
 theorem refl
     {𝕜 : Type u} [RCLike 𝕜]
     {E : Type vE} {F : Type vF}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] 
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] 
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F]
     (A : E →L[𝕜] F) : SameApproximationSingularSequence A A := fun _ => rfl
 
 /-- Symmetry, swapping two independently-typed pairs of spaces. -/
@@ -66,10 +66,10 @@ theorem symm
     {𝕜 : Type u} [RCLike 𝕜]
     {E₁ : Type vE1} {F₁ : Type vF1}
     {E₂ : Type vE2} {F₂ : Type vF2}
-    [NormedAddCommGroup E₁] [InnerProductSpace 𝕜 E₁] 
-    [NormedAddCommGroup F₁] [InnerProductSpace 𝕜 F₁] 
-    [NormedAddCommGroup E₂] [InnerProductSpace 𝕜 E₂] 
-    [NormedAddCommGroup F₂] [InnerProductSpace 𝕜 F₂] 
+    [NormedAddCommGroup E₁] [InnerProductSpace 𝕜 E₁]
+    [NormedAddCommGroup F₁] [InnerProductSpace 𝕜 F₁]
+    [NormedAddCommGroup E₂] [InnerProductSpace 𝕜 E₂]
+    [NormedAddCommGroup F₂] [InnerProductSpace 𝕜 F₂]
     {A : E₁ →L[𝕜] F₁} {B : E₂ →L[𝕜] F₂}
     (h : SameApproximationSingularSequence A B) :
     SameApproximationSingularSequence B A := fun n => (h n).symm
@@ -81,12 +81,12 @@ theorem trans
     {E₁ : Type vE1} {F₁ : Type vF1}
     {E₂ : Type vE2} {F₂ : Type vF2}
     {E₃ : Type vE3} {F₃ : Type vF3}
-    [NormedAddCommGroup E₁] [InnerProductSpace 𝕜 E₁] 
-    [NormedAddCommGroup F₁] [InnerProductSpace 𝕜 F₁] 
-    [NormedAddCommGroup E₂] [InnerProductSpace 𝕜 E₂] 
-    [NormedAddCommGroup F₂] [InnerProductSpace 𝕜 F₂] 
-    [NormedAddCommGroup E₃] [InnerProductSpace 𝕜 E₃] 
-    [NormedAddCommGroup F₃] [InnerProductSpace 𝕜 F₃] 
+    [NormedAddCommGroup E₁] [InnerProductSpace 𝕜 E₁]
+    [NormedAddCommGroup F₁] [InnerProductSpace 𝕜 F₁]
+    [NormedAddCommGroup E₂] [InnerProductSpace 𝕜 E₂]
+    [NormedAddCommGroup F₂] [InnerProductSpace 𝕜 F₂]
+    [NormedAddCommGroup E₃] [InnerProductSpace 𝕜 E₃]
+    [NormedAddCommGroup F₃] [InnerProductSpace 𝕜 F₃]
     {A : E₁ →L[𝕜] F₁} {B : E₂ →L[𝕜] F₂} {C : E₃ →L[𝕜] F₃}
     (hAB : SameApproximationSingularSequence A B)
     (hBC : SameApproximationSingularSequence B C) :
@@ -97,10 +97,10 @@ theorem opNorm_eq
     {𝕜 : Type u} [RCLike 𝕜]
     {E₁ : Type vE1} {F₁ : Type vF1}
     {E₂ : Type vE2} {F₂ : Type vF2}
-    [NormedAddCommGroup E₁] [InnerProductSpace 𝕜 E₁] 
-    [NormedAddCommGroup F₁] [InnerProductSpace 𝕜 F₁] 
-    [NormedAddCommGroup E₂] [InnerProductSpace 𝕜 E₂] 
-    [NormedAddCommGroup F₂] [InnerProductSpace 𝕜 F₂] 
+    [NormedAddCommGroup E₁] [InnerProductSpace 𝕜 E₁]
+    [NormedAddCommGroup F₁] [InnerProductSpace 𝕜 F₁]
+    [NormedAddCommGroup E₂] [InnerProductSpace 𝕜 E₂]
+    [NormedAddCommGroup F₂] [InnerProductSpace 𝕜 F₂]
     {A : E₁ →L[𝕜] F₁} {B : E₂ →L[𝕜] F₂}
     (h : SameApproximationSingularSequence A B) : ‖A‖ = ‖B‖ :=
   ContinuousLinearMap.HasSameApproximationNumbers.norm_eq h
@@ -110,10 +110,10 @@ theorem kyFanApproximationGauge_eq
     {𝕜 : Type u} [RCLike 𝕜]
     {E₁ : Type vE1} {F₁ : Type vF1}
     {E₂ : Type vE2} {F₂ : Type vF2}
-    [NormedAddCommGroup E₁] [InnerProductSpace 𝕜 E₁] 
-    [NormedAddCommGroup F₁] [InnerProductSpace 𝕜 F₁] 
-    [NormedAddCommGroup E₂] [InnerProductSpace 𝕜 E₂] 
-    [NormedAddCommGroup F₂] [InnerProductSpace 𝕜 F₂] 
+    [NormedAddCommGroup E₁] [InnerProductSpace 𝕜 E₁]
+    [NormedAddCommGroup F₁] [InnerProductSpace 𝕜 F₁]
+    [NormedAddCommGroup E₂] [InnerProductSpace 𝕜 E₂]
+    [NormedAddCommGroup F₂] [InnerProductSpace 𝕜 F₂]
     {A : E₁ →L[𝕜] F₁} {B : E₂ →L[𝕜] F₂}
     (h : SameApproximationSingularSequence A B) (k : ℕ) :
     kyFanApproximationGauge k A = kyFanApproximationGauge k B :=
@@ -206,8 +206,8 @@ omit [CompleteSpace E] [CompleteSpace F] in
 they have the same complete singular sequence. -/
 theorem of_isometricEquiv_comp
     {E' : Type vE1} {F' : Type vF1}
-    [NormedAddCommGroup E'] [InnerProductSpace 𝕜 E'] 
-    [NormedAddCommGroup F'] [InnerProductSpace 𝕜 F'] 
+    [NormedAddCommGroup E'] [InnerProductSpace 𝕜 E']
+    [NormedAddCommGroup F'] [InnerProductSpace 𝕜 F']
     (U : F ≃ₗᵢ[𝕜] F') (V : E ≃ₗᵢ[𝕜] E')
     {A : E →L[𝕜] F} {B : E' →L[𝕜] F'}
     (h : U.toContinuousLinearEquiv.toContinuousLinearMap ∘L A ∘L

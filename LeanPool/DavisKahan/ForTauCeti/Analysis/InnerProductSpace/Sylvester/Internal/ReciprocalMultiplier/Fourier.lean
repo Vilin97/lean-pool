@@ -284,9 +284,9 @@ weights and coordinatewise orthogonal rotations. -/
 def HasDoubledRealReciprocalOrbitInterpolation
     {ER FR : Type*}
     [NormedAddCommGroup ER] [InnerProductSpace ℝ ER]
-    
+
     [NormedAddCommGroup FR] [InnerProductSpace ℝ FR]
-    
+
     (eF : OrthonormalBasis (Fin (Module.finrank ℝ FR)) ℝ FR)
     (eE : OrthonormalBasis (Fin (Module.finrank ℝ ER)) ℝ ER)
     (alpha : Fin (Module.finrank ℝ FR) → ℝ)
@@ -779,9 +779,9 @@ certificate contains the whole remaining analytic content. -/
 theorem hasReciprocalOrbitInterpolation_of_finiteFourierInterpolation
     {EC FC : Type*}
     [NormedAddCommGroup EC] [InnerProductSpace ℂ EC]
-    
+
     [NormedAddCommGroup FC] [InnerProductSpace ℂ FC]
-    
+
     (eF : OrthonormalBasis (Fin (Module.finrank ℂ FC)) ℂ FC)
     (eE : OrthonormalBasis (Fin (Module.finrank ℂ EC)) ℂ EC)
     (α : Fin (Module.finrank ℂ FC) → ℝ)
@@ -816,9 +816,9 @@ its argument is absorbed into the left coordinate rotation. -/
 theorem hasDoubledRealReciprocalOrbitInterpolation_of_finiteFourierInterpolation
     {ER FR : Type*}
     [NormedAddCommGroup ER] [InnerProductSpace ℝ ER]
-    
+
     [NormedAddCommGroup FR] [InnerProductSpace ℝ FR]
-    
+
     (eF : OrthonormalBasis (Fin (Module.finrank ℝ FR)) ℝ FR)
     (eE : OrthonormalBasis (Fin (Module.finrank ℝ ER)) ℝ ER)
     (alpha : Fin (Module.finrank ℝ FR) → ℝ)

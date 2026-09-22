@@ -681,7 +681,7 @@ omit [CompleteSpace H] in
 finite-source file proves this under a finiteness instance, and this is the general form.
 -/
 theorem approximationSingularValue_subtypeL_comp_infinite
-    (Z : Submodule ℂ H) [Z.HasOrthogonalProjection] 
+    (Z : Submodule ℂ H) [Z.HasOrthogonalProjection]
     (A : Z →L[ℂ] Z) (k : ℕ) :
     approximationSingularValue k (Z.subtypeL ∘L A) = approximationSingularValue k A := by
   have hmem : ∀ x : Z, (Z.subtypeL ∘L A) x ∈ Z := fun x => (A x).property

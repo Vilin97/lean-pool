@@ -116,7 +116,7 @@ theorem frameIsometryOfPolarData_eq_of_isometry
 and its sharp norm estimate. -/
 theorem lowerFrame_sinThetaBlockOfPolarData_mem_and_gauge_le
     (N : TauCeti.SymmetricOperatorIdealFamily.{u, v} 𝕜)
-    
+
     {X : F →L[𝕜] E} {ε : ℝ}
     {hX : LowerFrameBound X ε} {hε : 0 < ε}
     (P : LowerFramePolarData X ε hX hε)
@@ -154,7 +154,7 @@ theorem lowerFrame_sinThetaBlockOfPolarData_mem_and_gauge_le
 block and explicit directed sine operator have identical ideal gauge. -/
 theorem sinThetaBlockOfPolarData_mem_and_gauge_eq_directed
     (N : TauCeti.SymmetricOperatorIdealFamily.{u, v} 𝕜)
-    
+
     {X : F →L[𝕜] E} {ε : ℝ}
     {hX : LowerFrameBound X ε} {hε : 0 < ε}
     (P : LowerFramePolarData X ε hX hε)
@@ -225,7 +225,7 @@ theorem sinThetaBlockOfPolarData_mem_and_gauge_eq_directed
 data and a raw Sylvester estimate are supplied. -/
 theorem generalizedSinTheta_of_polarData_of_sylvesterBound
     (N : TauCeti.SymmetricOperatorIdealFamily.{u, v} 𝕜)
-    
+
     {X : F →L[𝕜] E} {F₁ : G →L[𝕜] E} {C : G →L[𝕜] F}
     {ε δ : ℝ} {hX : LowerFrameBound X ε} {hε : 0 < ε}
     (P : LowerFramePolarData X ε hX hε)

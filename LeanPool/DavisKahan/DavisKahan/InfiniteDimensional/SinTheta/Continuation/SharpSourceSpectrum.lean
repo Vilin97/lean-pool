@@ -63,7 +63,7 @@ restricted spectrum used by the theorem-facing gap predicates. -/
 theorem realSpectrum_compressOperator_eq_restrictedSpectrum_of_reduces
     (A : Hspace →L[ℂ] Hspace)
     (U : Submodule ℂ Hspace) [U.HasOrthogonalProjection]
-    
+
     (hU : A.Reduces U) :
     realSpectrum (compressOperator U A) = restrictedSpectrum A U := by
   have hInv : InvariantFor A U := by
@@ -94,7 +94,7 @@ compressions in the same interval and exterior sets. -/
 theorem _root_.TauCeti.DavisKahan.Foundation.FiniteGapConfiguration.exists_compressOperator_enclosures
     (A : Hspace →L[ℂ] Hspace)
     (U : Submodule ℂ Hspace) [U.HasOrthogonalProjection]
-     
+
     (hU : A.Reduces U) {d : ℝ}
     (hfinite : FiniteGapConfiguration A U d) :
     ∃ left right : ℝ, left ≤ right ∧

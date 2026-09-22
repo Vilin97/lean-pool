@@ -40,8 +40,8 @@ rank reaches the rank of the operator itself. -/
 theorem approximationSingularValue_eq_zero_of_rank_le
     {𝕜 : Type u} [RCLike 𝕜]
     {E : Type v} {F : Type vF}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] 
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] 
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F]
     {A : E →L[𝕜] F} {n : ℕ}
     (hA : A.rank ≤ (n : Cardinal)) :
     approximationSingularValue n A = 0 := by
@@ -55,8 +55,8 @@ approximation singular-value sequence vanishes. -/
 theorem approximationSingularValue_eq_zero_of_rank_le_nat
     {𝕜 : Type u} [RCLike 𝕜]
     {E : Type v} {F : Type vF}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] 
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] 
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F]
     {A : E →L[𝕜] F} {r n : ℕ}
     (hA : A.rank ≤ (r : Cardinal)) (hrn : r ≤ n) :
     approximationSingularValue n A = 0 := by

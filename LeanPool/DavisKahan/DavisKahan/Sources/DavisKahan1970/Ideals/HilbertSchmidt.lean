@@ -40,8 +40,8 @@ singular-value sequence. -/
 def approximationNumberEnergy
     {𝕜 : Type u} [RCLike 𝕜]
     {E : Type vE} {F : Type vF}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] 
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] 
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F]
     (A : E →L[𝕜] F) : ENNReal :=
   ∑' n : ℕ, ENNReal.ofReal ((approximationSingularValue n A) ^ 2)
 
@@ -51,7 +51,7 @@ def approximationNumberEnergy
 theorem approximationNumberEnergy_zero
     {𝕜 : Type u} [RCLike 𝕜]
     {E : Type vE} {F : Type vF}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] 
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
     [NormedAddCommGroup F] [InnerProductSpace 𝕜 F]  :
     approximationNumberEnergy (0 : E →L[𝕜] F) = 0 := by
   unfold approximationNumberEnergy
@@ -64,10 +64,10 @@ theorem SameApproximationSingularSequence.approximationNumberEnergy_eq
     {𝕜 : Type u} [RCLike 𝕜]
     {E₁ : Type vE1} {F₁ : Type vF1}
     {E₂ : Type vE2} {F₂ : Type vF2}
-    [NormedAddCommGroup E₁] [InnerProductSpace 𝕜 E₁] 
-    [NormedAddCommGroup F₁] [InnerProductSpace 𝕜 F₁] 
-    [NormedAddCommGroup E₂] [InnerProductSpace 𝕜 E₂] 
-    [NormedAddCommGroup F₂] [InnerProductSpace 𝕜 F₂] 
+    [NormedAddCommGroup E₁] [InnerProductSpace 𝕜 E₁]
+    [NormedAddCommGroup F₁] [InnerProductSpace 𝕜 F₁]
+    [NormedAddCommGroup E₂] [InnerProductSpace 𝕜 E₂]
+    [NormedAddCommGroup F₂] [InnerProductSpace 𝕜 F₂]
     {A : E₁ →L[𝕜] F₁} {B : E₂ →L[𝕜] F₂}
     (h : SameApproximationSingularSequence A B) :
     approximationNumberEnergy A = approximationNumberEnergy B := by
@@ -133,8 +133,8 @@ theorem approximationNumberEnergy_ne_top_complexify_iff
 theorem approximationNumberEnergy_smul
     {𝕜 : Type u} [RCLike 𝕜]
     {E : Type vE} {F : Type vF}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] 
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] 
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F]
     (c : 𝕜) (A : E →L[𝕜] F) :
     approximationNumberEnergy (c • A) =
       ENNReal.ofReal (‖c‖ ^ 2) * approximationNumberEnergy A := by
@@ -184,10 +184,10 @@ theorem approximationNumberEnergy_comp_le
     {𝕜 : Type u} [RCLike 𝕜]
     {E : Type vE} {F : Type vF}
     {G : Type vG} {H : Type vH}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] 
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] 
-    [NormedAddCommGroup G] [InnerProductSpace 𝕜 G] 
-    [NormedAddCommGroup H] [InnerProductSpace 𝕜 H] 
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F]
+    [NormedAddCommGroup G] [InnerProductSpace 𝕜 G]
+    [NormedAddCommGroup H] [InnerProductSpace 𝕜 H]
     (L : F →L[𝕜] G) (A : E →L[𝕜] F) (R : H →L[𝕜] E) :
     approximationNumberEnergy (L ∘L A ∘L R) ≤
       ENNReal.ofReal ((‖L‖ * ‖R‖) ^ 2) *

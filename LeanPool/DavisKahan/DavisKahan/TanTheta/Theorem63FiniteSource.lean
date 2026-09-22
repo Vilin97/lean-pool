@@ -64,7 +64,7 @@ variable {H : Type u} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
 /-- The directed sine block from finite trial coordinates into the unwanted
 exact subspace. -/
 noncomputable def theorem63DirectedSineBlock
-    (Z V : Submodule ℂ H) 
+    (Z V : Submodule ℂ H)
     [V.HasOrthogonalProjection] : Z →L[ℂ] H :=
   Vᗮ.starProjection ∘L Z.subtypeL
 
@@ -127,7 +127,7 @@ theorem theorem63_sylvester_identity
 omit [CompleteSpace H] in
 /-- The directed sine block is a contraction. -/
 theorem theorem63DirectedSineBlock_apply_norm_le
-    (Z V : Submodule ℂ H) 
+    (Z V : Submodule ℂ H)
     [V.HasOrthogonalProjection] (z : Z) :
     ‖theorem63DirectedSineBlock Z V z‖ ≤ ‖z‖ := by
   calc
@@ -233,7 +233,7 @@ omit [CompleteSpace H] in
 Its range is contained there.  Derived twice below, the copies differing only in
 indentation. -/
 private theorem finiteSourceLeftSingularVector_mem_orthogonal
-    (Z V : Submodule ℂ H) 
+    (Z V : Submodule ℂ H)
     [V.HasOrthogonalProjection] [FiniteDimensional ℂ Z]
     (i : Fin (finrank ℂ Z)) :
     finiteSourceLeftSingularVector (theorem63DirectedSineBlock Z V) i ∈ Vᗮ := by
@@ -281,7 +281,7 @@ theorem theorem63_subtypeAdjoint_apply_finiteSourceLeftSingularVector
 /-- The normalized residual-side witness associated with one directed sine
 singular vector. -/
 noncomputable def theorem63ResidualWitness
-    (Z V : Submodule ℂ H) 
+    (Z V : Submodule ℂ H)
     [V.HasOrthogonalProjection] [FiniteDimensional ℂ Z]
     (i : Fin (finrank ℂ Z)) : H :=
   let S := theorem63DirectedSineBlock Z V
@@ -506,8 +506,8 @@ theorem orthonormal_theorem63ResidualWitness
 `tan Θ₀` have singular values `tan θ_j`, where the directed sine singular
 values are `sin θ_j`. -/
 def HasTheorem63DirectedTangentApproximationNumbers
-    (Z V : Submodule ℂ H) 
-    [V.HasOrthogonalProjection] 
+    (Z V : Submodule ℂ H)
+    [V.HasOrthogonalProjection]
     (tanTheta0 : Z →L[ℂ] H) : Prop :=
   ∀ n, approximationSingularValue n tanTheta0 =
     Real.tan (Real.arcsin
@@ -896,8 +896,8 @@ theorem theorem6_3_generalizedTanTheta_ideal
 /-- Historical scratch proposition used while the Ky Fan root was open. -/
 def Theorem63KyFanCore
     {E F : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace ℂ E] 
-    [NormedAddCommGroup F] [InnerProductSpace ℂ F] 
+    [NormedAddCommGroup E] [InnerProductSpace ℂ E]
+    [NormedAddCommGroup F] [InnerProductSpace ℂ F]
     (delta : ℝ) (tanTheta0 residual : E →L[ℂ] F) : Prop :=
   ∀ k, delta * ExactSinTheta.kyFanApproximationGauge k tanTheta0 ≤
     ExactSinTheta.kyFanApproximationGauge k residual

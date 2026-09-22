@@ -1575,7 +1575,7 @@ dominance.
 
 private theorem blockInl_enorm_le_one_stabilization
     {E H : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace ℂ E] 
+    [NormedAddCommGroup E] [InnerProductSpace ℂ E]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H]  :
     ‖(blockInl (𝕜 := ℂ) (E₀ := E) (E₁ := H))‖ₑ ≤ 1 := by
   rw [← ofReal_norm, ← ENNReal.ofReal_one]
@@ -1584,7 +1584,7 @@ private theorem blockInl_enorm_le_one_stabilization
 
 private theorem blockInr_enorm_le_one_stabilization
     {E H : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace ℂ E] 
+    [NormedAddCommGroup E] [InnerProductSpace ℂ E]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H]  :
     ‖(blockInr (𝕜 := ℂ) (E₀ := E) (E₁ := H))‖ₑ ≤ 1 := by
   rw [← ofReal_norm, ← ENNReal.ofReal_one]
@@ -1593,7 +1593,7 @@ private theorem blockInr_enorm_le_one_stabilization
 
 private theorem fstL_enorm_le_one_stabilization
     {E H : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace ℂ E] 
+    [NormedAddCommGroup E] [InnerProductSpace ℂ E]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H]  :
     ‖(WithLp.fstL 2 ℂ E H)‖ₑ ≤ 1 := by
   rw [← ofReal_norm, ← ENNReal.ofReal_one]
@@ -1602,7 +1602,7 @@ private theorem fstL_enorm_le_one_stabilization
 
 private theorem sndL_enorm_le_one_stabilization
     {E H : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace ℂ E] 
+    [NormedAddCommGroup E] [InnerProductSpace ℂ E]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H]  :
     ‖(WithLp.sndL 2 ℂ E H)‖ₑ ≤ 1 := by
   rw [← ofReal_norm, ← ENNReal.ofReal_one]
@@ -1704,7 +1704,7 @@ If `H` is infinite-dimensional, then `E ⊕₂ H` is infinite-dimensional for ev
 
 private theorem blockInr_injective_stabilization
     {E H : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace ℂ E] 
+    [NormedAddCommGroup E] [InnerProductSpace ℂ E]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H]  :
     Function.Injective
       (blockInr (𝕜 := ℂ) (E₀ := E) (E₁ := H) :
@@ -1717,8 +1717,8 @@ private theorem blockInr_injective_stabilization
 `H` is infinite-dimensional. -/
 theorem stabilization_infinite_of_right_infinite
     {E H : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace ℂ E] 
-    [NormedAddCommGroup H] [InnerProductSpace ℂ H] 
+    [NormedAddCommGroup E] [InnerProductSpace ℂ E]
+    [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     (hHinf : ¬ FiniteDimensional ℂ H) :
     ¬ FiniteDimensional ℂ (WithLp 2 (E × H)) := by
   intro hfin
@@ -2062,8 +2062,8 @@ private theorem probeFiniteRank_adjoint_iff
 /-- Operator norm on finite-rank maps and `∞` elsewhere. -/
 noncomputable def finiteRankOperatorNormGauge
     {E F : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace ℂ E] 
-    [NormedAddCommGroup F] [InnerProductSpace ℂ F] 
+    [NormedAddCommGroup E] [InnerProductSpace ℂ E]
+    [NormedAddCommGroup F] [InnerProductSpace ℂ F]
     (A : E →L[ℂ] F) : ℝ≥0∞ := by
   classical
   exact if ProbeFiniteRank A then ‖A‖ₑ else ⊤
@@ -2220,8 +2220,8 @@ noncomputable def finiteRankNormalizedSymmetricOperatorIdealFamily :
 @[simp]
 theorem finiteRankOperatorNormGauge_eq_top_iff
     {E F : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace ℂ E] 
-    [NormedAddCommGroup F] [InnerProductSpace ℂ F] 
+    [NormedAddCommGroup E] [InnerProductSpace ℂ E]
+    [NormedAddCommGroup F] [InnerProductSpace ℂ F]
     (A : E →L[ℂ] F) :
     finiteRankOperatorNormGauge A = ⊤ ↔ ¬ ProbeFiniteRank A := by
   classical
@@ -2244,8 +2244,8 @@ theorem finiteRankOperatorNormGauge_ne_top_iff
 @[simp]
 theorem finiteRankOperatorNormGauge_of_finiteRank
     {E F : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace ℂ E] 
-    [NormedAddCommGroup F] [InnerProductSpace ℂ F] 
+    [NormedAddCommGroup E] [InnerProductSpace ℂ E]
+    [NormedAddCommGroup F] [InnerProductSpace ℂ F]
     {A : E →L[ℂ] F} (hA : ProbeFiniteRank A) :
     finiteRankOperatorNormGauge A = ‖A‖ₑ := by
   rw [finiteRankOperatorNormGauge, ite_eq_left hA]
@@ -3169,7 +3169,7 @@ semantics rather than rebuilding the Davis--Kahan argument. -/
 theorem sinTheta_unbounded_formGap_sourceVacuous_complex_probe
     {E F G H : Type v}
     [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-    
+
     [NormedAddCommGroup F] [InnerProductSpace ℂ F] [CompleteSpace F]
     [NormedAddCommGroup G] [InnerProductSpace ℂ G] [CompleteSpace G]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
@@ -3327,7 +3327,7 @@ constructed there.  It is enough to witness the theorem-signature distinction. -
 theorem sinTheta_unbounded_formGap_finiteRankSourceVacuous_complex_probe
     {E F G H : Type}
     [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-    
+
     [NormedAddCommGroup F] [InnerProductSpace ℂ F] [CompleteSpace F]
     [NormedAddCommGroup G] [InnerProductSpace ℂ G] [CompleteSpace G]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
@@ -3355,7 +3355,7 @@ membership or a membership-transfer conclusion. -/
 theorem sinTheta_unbounded_formGap_normalizedAsSourceVacuous_complex_probe
     {E F G H : Type v}
     [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-    
+
     [NormedAddCommGroup F] [InnerProductSpace ℂ F] [CompleteSpace F]
     [NormedAddCommGroup G] [InnerProductSpace ℂ G] [CompleteSpace G]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
@@ -3403,7 +3403,7 @@ source-facing Davis--Kahan statement. -/
 theorem everySourceSinThetaEstimateWithVacuity_of_whereDefinedFanClass
     {E F G H : Type v}
     [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-    
+
     [NormedAddCommGroup F] [InnerProductSpace ℂ F] [CompleteSpace F]
     [NormedAddCommGroup G] [InnerProductSpace ℂ G] [CompleteSpace G]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
@@ -3486,7 +3486,7 @@ theorem sinTheta_unbounded_formGap_whereDefinedUIN_rclike_probe
     {𝕜 : Type u} [RCLike 𝕜]
     {E F G H : Type v}
     [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
-    
+
     [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
     [NormedAddCommGroup G] [InnerProductSpace 𝕜 G] [CompleteSpace G]
     [NormedAddCommGroup H] [InnerProductSpace 𝕜 H] [CompleteSpace H]
@@ -3514,7 +3514,7 @@ The factor two is handled by proving the equivalent `(δ / 2)` estimate first. -
 theorem sinTwoTheta_ambient_unbounded_perturbedGap_whereDefinedUIN_rclike_probe
     {𝕜 : Type u} [RCLike 𝕜]
     {E : Type v} [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
-    
+
     (N : NormalizedSymmetricOperatorIdealFamily.{u, v} 𝕜)
     {A : E →ₗ.[𝕜] E} (hA : IsSelfAdjoint A)
     (Hop : E →L[𝕜] E) (hHop : Hop.IsSymmetric)
@@ -3543,7 +3543,7 @@ boundary over arbitrary `RCLike`. -/
 theorem sinTwoTheta_directed_whereDefinedUIN_rclike_production_probe
     {𝕜 : Type u} [RCLike 𝕜]
     {E : Type v} [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
-    
+
     (N : NormalizedSymmetricOperatorIdealFamily.{u, v} 𝕜)
     {A : E →ₗ.[𝕜] E} (hA : IsSelfAdjoint A)
     {trial gapCarrier : Submodule 𝕜 E}
@@ -3572,7 +3572,7 @@ gap on the two perturbed reducing restrictions. -/
 theorem sinTwoTheta_complete_whereDefinedUIN_rclike_production_probe
     {𝕜 : Type u} [RCLike 𝕜]
     {E : Type v} [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
-    
+
     (N : NormalizedSymmetricOperatorIdealFamily.{u, v} 𝕜)
     {A : E →ₗ.[𝕜] E} (hA : IsSelfAdjoint A)
     (Hop : E →L[𝕜] E) (hHop : Hop.IsSymmetric)

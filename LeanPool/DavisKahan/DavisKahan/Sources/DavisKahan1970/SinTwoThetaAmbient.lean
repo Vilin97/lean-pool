@@ -141,7 +141,7 @@ theorem blockCompression_smul_one (Ω Γ : Submodule ℂ E)
 
 /-- A perturbation block, in coordinates. -/
 theorem blockCompression_apply (Ω Γ : Submodule ℂ E)
-    [Ω.HasOrthogonalProjection] 
+    [Ω.HasOrthogonalProjection]
     (K : E →L[ℂ] E) :
     blockCompression Ω Γ K =
       Ω.orthogonalProjectionOnto ∘L K ∘L Γ.subtypeL := by

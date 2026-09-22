@@ -109,7 +109,7 @@ rather than syntactically.  `subst` does the rest. -/
 theorem re_inner_le_of_complexifyReal_le_of_eq {A : Er →ₗ.[ℝ] Er}
     {Ac : RealComplexification Er →ₗ.[ℂ] RealComplexification Er}
     (heq : Ac = TauCeti.LinearPMap.complexifyReal A)
-    {U : Submodule ℝ Er} 
+    {U : Submodule ℝ Er}
     {Uc : Submodule ℂ (RealComplexification Er)} [Uc.HasOrthogonalProjection]
     (hU : Uc = complexifySubmodule U) {a : ℝ}
     (h : ∀ z : Ac.domain, (z : RealComplexification Er) ∈ Uc →
@@ -125,7 +125,7 @@ omit [CompleteSpace Er] in
 theorem le_re_inner_of_le_complexifyReal_of_eq {A : Er →ₗ.[ℝ] Er}
     {Ac : RealComplexification Er →ₗ.[ℂ] RealComplexification Er}
     (heq : Ac = TauCeti.LinearPMap.complexifyReal A)
-    {U : Submodule ℝ Er} 
+    {U : Submodule ℝ Er}
     {Uc : Submodule ℂ (RealComplexification Er)} [Uc.HasOrthogonalProjection]
     (hU : Uc = complexifySubmodule U) {b : ℝ}
     (h : ∀ z : Ac.domain, (z : RealComplexification Er) ∈ Ucᗮ →

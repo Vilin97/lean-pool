@@ -111,7 +111,7 @@ For the direct rotation `D` the paper has fixed, both printed formulations hold:
 the pointwise angle bound against an arbitrary competitor `W`, and the
 singular-value identity and domination. -/
 theorem proposition4_1_directRotation_sourceExact_complex
-    
+
     (U V : Submodule ℂ H) [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
     (hcompact : IsCompactOperator (TauCeti.principalSineOperator U V))
     (D : H →L[ℂ] H) (hD : DavisKahan.IsSourceDirectRotation U V D)
@@ -142,7 +142,7 @@ theorem proposition4_1_directRotation_sourceExact_complex
 The displacement of the fixed direct rotation is minimal in every normalized
 unitarily invariant norm. -/
 theorem corollary4_1_directRotation_sourceExact_complex
-    
+
     (N : NormalizedUnitaryInvariantNorm.{0, v} ℂ)
     (U V : Submodule ℂ H) [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
     (hcompact : IsCompactOperator (TauCeti.principalSineOperator U V))
@@ -165,7 +165,7 @@ theorem corollary4_1_directRotation_sourceExact_complex
 
 /-- **Davis--Kahan 1970, Proposition 4.3, on the source's own direct rotation.** -/
 theorem proposition4_3_directRotation_sourceExact_complex
-    
+
     (N : NormalizedUnitaryInvariantNorm.{0, v} ℂ)
     (U V : Submodule ℂ H) [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
     (hcompact : IsCompactOperator (TauCeti.principalSineOperator U V))
@@ -192,7 +192,7 @@ variable {E : Type v} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 /-- **Davis--Kahan 1970, Proposition 4.1 over `ℝ`, on the source's own direct
 rotation.** -/
 theorem proposition4_1_directRotation_sourceExact_real
-    
+
     (U V : Submodule ℝ E) [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
     (hcompact : IsCompactOperator (TauCeti.principalSineOperator U V))
     (D : E →L[ℝ] E) (hD : DavisKahan.IsSourceDirectRotation U V D)
@@ -221,7 +221,7 @@ theorem proposition4_1_directRotation_sourceExact_real
 /-- **Davis--Kahan 1970, Corollary 4.1 over `ℝ`, on the source's own direct
 rotation.** -/
 theorem corollary4_1_directRotation_sourceExact_real
-    
+
     (N : NormalizedUnitaryInvariantNorm.{0, v} ℝ)
     (U V : Submodule ℝ E) [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
     (hcompact : IsCompactOperator (TauCeti.principalSineOperator U V))
@@ -245,7 +245,7 @@ theorem corollary4_1_directRotation_sourceExact_real
 /-- **Davis--Kahan 1970, Proposition 4.3 over `ℝ`, on the source's own direct
 rotation.** -/
 theorem proposition4_3_directRotation_sourceExact_real
-    
+
     (N : NormalizedUnitaryInvariantNorm.{0, v} ℝ)
     (U V : Submodule ℝ E) [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
     (hcompact : IsCompactOperator (TauCeti.principalSineOperator U V))

@@ -283,7 +283,7 @@ private theorem coe_compressOperator_apply_of_maps
   rfl
 
 private theorem coe_blockCompression_apply_of_maps
-    {Ω Γ : Submodule ℂ E} [Ω.HasOrthogonalProjection] 
+    {Ω Γ : Submodule ℂ E} [Ω.HasOrthogonalProjection]
     (K : E →L[ℂ] E) (hK : ∀ x ∈ Γ, K x ∈ Ω) (x : Γ) :
     ((blockCompression Ω Γ K x : Ω) : E) = K (x : E) := by
   rw [blockCompression, Submodule.adjoint_subtypeL]

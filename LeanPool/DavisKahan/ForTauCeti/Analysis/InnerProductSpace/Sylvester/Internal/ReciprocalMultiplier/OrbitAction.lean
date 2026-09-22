@@ -129,7 +129,7 @@ coordinate factors.  This is the finite-dimensional operator attached to one
 Fourier character in the reciprocal-multiplier argument. -/
 noncomputable def basisDiagonalUnitary {G : Type*}
     [NormedAddCommGroup G] [InnerProductSpace 𝕜 G]
-    {ι : Type*} [Fintype ι] 
+    {ι : Type*} [Fintype ι]
     (e : OrthonormalBasis ι 𝕜 G) (ζ : ι → unitary 𝕜) : G ≃ₗᵢ[𝕜] G :=
   e.repr.trans <|
     (LinearIsometryEquiv.piLpCongrRight 2 fun i =>
@@ -340,14 +340,14 @@ under another name.  It lives here rather than there because this file is upstre
 in the import order and a `private` definition is not visible across files. -/
 noncomputable def basisDiagonalRealCoeffMap
     {G ι : Type*} [NormedAddCommGroup G] [InnerProductSpace 𝕜 G]
-    [Fintype ι] 
+    [Fintype ι]
     (e : OrthonormalBasis ι 𝕜 G) (c : ι → ℝ) : G →ₗ[𝕜] G :=
   e.toBasis.constr 𝕜 fun i => ((c i : ℝ) : 𝕜) • e i
 
 /-- The diagonal map acts on a basis vector by its coefficient. -/
 @[simp] theorem basisDiagonalRealCoeffMap_apply_basis
     {G ι : Type*} [NormedAddCommGroup G] [InnerProductSpace 𝕜 G]
-    [Fintype ι] 
+    [Fintype ι]
     (e : OrthonormalBasis ι 𝕜 G) (c : ι → ℝ) (i : ι) :
     basisDiagonalRealCoeffMap e c (e i) = ((c i : ℝ) : 𝕜) • e i := by
   exact e.toBasis.constr_basis 𝕜 _ i
@@ -847,9 +847,9 @@ right phase angles on a doubled coordinate matrix unit. -/
 theorem basisDoubledRealRotation_comp_basisMatrixUnit
     {ER FR : Type*}
     [NormedAddCommGroup ER] [InnerProductSpace ℝ ER]
-    
+
     [NormedAddCommGroup FR] [InnerProductSpace ℝ FR]
-    
+
     (eF : OrthonormalBasis (Fin (Module.finrank ℝ FR)) ℝ FR)
     (eE : OrthonormalBasis (Fin (Module.finrank ℝ ER)) ℝ ER)
     (thetaF : Fin (Module.finrank ℝ FR) → ℝ)
@@ -899,9 +899,9 @@ used after obtaining a scalar reciprocal Fourier representation. -/
 theorem complexUnitaryOrbitAction_basisMatrixUnit_exp_sub
     {EC FC : Type*}
     [NormedAddCommGroup EC] [InnerProductSpace ℂ EC]
-    
+
     [NormedAddCommGroup FC] [InnerProductSpace ℂ FC]
-    
+
     (eF : OrthonormalBasis (Fin (Module.finrank ℂ FC)) ℂ FC)
     (eE : OrthonormalBasis (Fin (Module.finrank ℂ EC)) ℂ EC)
     (α : Fin (Module.finrank ℂ FC) → ℝ)

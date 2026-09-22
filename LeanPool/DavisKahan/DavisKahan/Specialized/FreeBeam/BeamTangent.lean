@@ -491,7 +491,7 @@ theorem beamPerturbed_specRange_le_domain (ε : ℝ) (hε : 0 ≤ ε)
 subspace of the perturbed beam's spectral range below `500` has more dimensions
 than the affine trial subspace. -/
 theorem beamPerturbed_finrank_le (ε : ℝ) (hε : 0 ≤ ε)
-    {W : Submodule ℂ BeamL2} 
+    {W : Submodule ℂ BeamL2}
     (hW : W ≤ TauCeti.LinearPMap.specRange (beamPerturbed_isSelfAdjoint ε)
       (Set.Iic 500) measurableSet_Iic) :
     Module.finrank ℂ W ≤ Module.finrank ℂ beamTrial :=

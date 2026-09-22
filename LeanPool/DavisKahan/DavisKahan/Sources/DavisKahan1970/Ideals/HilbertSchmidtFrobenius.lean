@@ -43,9 +43,9 @@ theorem approximationNumberEnergy_eq_ofReal_sum_sq_singularValues
     {𝕜 : Type u} [RCLike 𝕜]
     {E : Type vE} {F : Type vF}
     [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
-    [FiniteDimensional 𝕜 E] 
+    [FiniteDimensional 𝕜 E]
     [NormedAddCommGroup F] [InnerProductSpace 𝕜 F]
-    [FiniteDimensional 𝕜 F] 
+    [FiniteDimensional 𝕜 F]
     (A : E →L[𝕜] F) :
     approximationNumberEnergy A =
       ENNReal.ofReal

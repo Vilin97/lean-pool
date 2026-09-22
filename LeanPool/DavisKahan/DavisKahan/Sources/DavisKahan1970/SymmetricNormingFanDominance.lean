@@ -249,7 +249,7 @@ statement that the source class sits inside the Fan-dominant one. -/
 
 /-- **Davis--Kahan 1970, Corollary 4.1 at the printed source scope over `ℂ`.** -/
 theorem corollary4_1_compact_nonacute_sourceExact_complex
-    
+
     (N : NormalizedUnitaryInvariantNorm.{0, v} ℂ)
     (U V : Submodule ℂ H) [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
     (hcompact : IsCompactOperator (TauCeti.principalSineOperator U V))
@@ -267,7 +267,7 @@ theorem corollary4_1_compact_nonacute_sourceExact_complex
 
 /-- **Davis--Kahan 1970, Proposition 4.3 at the printed source scope over `ℂ`.** -/
 theorem proposition4_3_compact_nonacute_sourceExact_complex
-    
+
     (N : NormalizedUnitaryInvariantNorm.{0, v} ℂ)
     (U V : Submodule ℂ H) [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
     (hcompact : IsCompactOperator (TauCeti.principalSineOperator U V))
@@ -295,7 +295,7 @@ reading and the one to use when a particular rotation is in hand.  This
 corollary is for the caller who has only the source's hypothesis: it names a
 direct rotation and asserts the minimality for it. -/
 theorem proposition4_3_compact_nonacute_sourceExact_ofCrossedDefects_complex
-    
+
     (N : NormalizedUnitaryInvariantNorm.{0, v} ℂ)
     (U V : Submodule ℂ H) [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
     (hcompact : IsCompactOperator (TauCeti.principalSineOperator U V))
@@ -366,7 +366,7 @@ theorem proposition4_3_compact_nonacute_symmetricNorming_real
 
 /-- **Davis--Kahan 1970, Corollary 4.1 at the printed source scope over `ℝ`.** -/
 theorem corollary4_1_compact_nonacute_sourceExact_real
-    
+
     (N : NormalizedUnitaryInvariantNorm.{0, v} ℝ)
     (U V : Submodule ℝ E) [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
     (hcompact : IsCompactOperator (TauCeti.principalSineOperator U V))
@@ -384,7 +384,7 @@ theorem corollary4_1_compact_nonacute_sourceExact_real
 
 /-- **Davis--Kahan 1970, Proposition 4.3 at the printed source scope over `ℝ`.** -/
 theorem proposition4_3_compact_nonacute_sourceExact_real
-    
+
     (N : NormalizedUnitaryInvariantNorm.{0, v} ℝ)
     (U V : Submodule ℝ E) [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
     (hcompact : IsCompactOperator (TauCeti.principalSineOperator U V))
@@ -405,7 +405,7 @@ theorem proposition4_3_compact_nonacute_sourceExact_real
 complex sibling for why the crossed-defect condition, not a chosen
 identification, is what a caller should supply. -/
 theorem proposition4_3_compact_nonacute_sourceExact_ofCrossedDefects_real
-    
+
     (N : NormalizedUnitaryInvariantNorm.{0, v} ℝ)
     (U V : Submodule ℝ E) [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
     (hcompact : IsCompactOperator (TauCeti.principalSineOperator U V))

@@ -128,7 +128,7 @@ theorem gauge_scalarTransportSubspaceCLM
 /-- Transport a bounded operator between two closed subspaces, using the canonical
 transported-subspace coordinates on both sides. -/
 noncomputable def scalarTransportSubspaceBlockCLM
-    (Z W : Submodule 𝕜 H) 
+    (Z W : Submodule 𝕜 H)
     (T : Z →L[𝕜] W) :
     ScalarTransport.submodule (e := e) Z →L[𝕂]
       ScalarTransport.submodule (e := e) W :=
@@ -178,7 +178,7 @@ the orthogonal complement of the transported `Z`.  Thus the result has exactly
 the type used by the fixed-field directed tangent-corner theorems, without any
 submodule equality casts. -/
 noncomputable def scalarTransportOrthogonalSubspaceBlockCLM
-    (Z : Submodule 𝕜 H) 
+    (Z : Submodule 𝕜 H)
     (T : Z →L[𝕜] Zᗮ) :
     ScalarTransport.submodule (e := e) Z →L[𝕂]
       (ScalarTransport.submodule (e := e) Z)ᗮ :=
@@ -193,7 +193,7 @@ transport rather than an `Equiv`: the orthogonal-complement adapter contains a p
 irrelevant equality casts.  The approximation-number theorems below are the invariant
 actually needed by the source layer. -/
 noncomputable def scalarTransportOrthogonalSubspaceBlockCLMInv
-    (Z : Submodule 𝕜 H) 
+    (Z : Submodule 𝕜 H)
     (T : ScalarTransport.submodule (e := e) Z →L[𝕂]
       (ScalarTransport.submodule (e := e) Z)ᗮ) :
     Z →L[𝕜] Zᗮ :=

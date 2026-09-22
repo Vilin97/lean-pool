@@ -43,8 +43,8 @@ universe v
 `PartialMap` form below remains only for existing source-facing data. -/
 def LinearPMap.PairwiseSpectrumGap
     {E F : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace ℂ E] 
-    [NormedAddCommGroup F] [InnerProductSpace ℂ F] 
+    [NormedAddCommGroup E] [InnerProductSpace ℂ E]
+    [NormedAddCommGroup F] [InnerProductSpace ℂ F]
     (A : E →ₗ.[ℂ] E) (B : F →ₗ.[ℂ] F) (δ : ℝ) : Prop :=
   ∀ lam ∈ TauCeti.LinearPMap.spectrum A,
     ∀ α ∈ TauCeti.LinearPMap.spectrum B,
@@ -55,8 +55,8 @@ namespace LinearPMap.PairwiseSpectrumGap
 /-- Pairwise spectral distance is symmetric. -/
 theorem symm
     {E F : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace ℂ E] 
-    [NormedAddCommGroup F] [InnerProductSpace ℂ F] 
+    [NormedAddCommGroup E] [InnerProductSpace ℂ E]
+    [NormedAddCommGroup F] [InnerProductSpace ℂ F]
     {A : E →ₗ.[ℂ] E} {B : F →ₗ.[ℂ] F} {δ : ℝ}
     (h : LinearPMap.PairwiseSpectrumGap A B δ) :
     LinearPMap.PairwiseSpectrumGap B A δ := by
@@ -66,8 +66,8 @@ theorem symm
 /-- Decreasing the requested distance preserves pairwise separation. -/
 theorem mono
     {E F : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace ℂ E] 
-    [NormedAddCommGroup F] [InnerProductSpace ℂ F] 
+    [NormedAddCommGroup E] [InnerProductSpace ℂ E]
+    [NormedAddCommGroup F] [InnerProductSpace ℂ F]
     {A : E →ₗ.[ℂ] E} {B : F →ₗ.[ℂ] F} {δ ε : ℝ}
     (h : LinearPMap.PairwiseSpectrumGap A B δ) (hεδ : ε ≤ δ) :
     LinearPMap.PairwiseSpectrumGap A B ε := by
@@ -77,8 +77,8 @@ theorem mono
 /-- Positive pairwise separation implies disjoint spectra. -/
 theorem disjoint
     {E F : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace ℂ E] 
-    [NormedAddCommGroup F] [InnerProductSpace ℂ F] 
+    [NormedAddCommGroup E] [InnerProductSpace ℂ E]
+    [NormedAddCommGroup F] [InnerProductSpace ℂ F]
     {A : E →ₗ.[ℂ] E} {B : F →ₗ.[ℂ] F} {δ : ℝ}
     (h : LinearPMap.PairwiseSpectrumGap A B δ) (hδ : 0 < δ) :
     Disjoint (TauCeti.LinearPMap.spectrum A)
@@ -93,8 +93,8 @@ end LinearPMap.PairwiseSpectrumGap
 /-- Every point of the two real spectra is separated by at least `delta`. -/
 def PairwiseSpectrumGap
     {E F : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace ℂ E] 
-    [NormedAddCommGroup F] [InnerProductSpace ℂ F] 
+    [NormedAddCommGroup E] [InnerProductSpace ℂ E]
+    [NormedAddCommGroup F] [InnerProductSpace ℂ F]
     (A : E →ₗ.[ℂ] E)
     (B : F →ₗ.[ℂ] F)
     (δ : ℝ) : Prop :=

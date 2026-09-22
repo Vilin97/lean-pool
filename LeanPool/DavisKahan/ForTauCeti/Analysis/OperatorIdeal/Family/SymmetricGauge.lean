@@ -62,15 +62,15 @@ noncomputable local instance uliftInnerProductSpace {E : Type*}
 
 /-- The approximation-number sequence of an operator, in `ℝ≥0∞`. -/
 noncomputable def approxSeq {E F : Type*}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] 
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] 
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F]
     (A : E →L[𝕜] F) (n : ℕ) : ℝ≥0∞ :=
   ENNReal.ofReal (A.approximationNumber n)
 
 /-- The approximation-number sequence is antitone. -/
 theorem approxSeq_antitone {E F : Type*}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] 
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] 
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F]
     (A : E →L[𝕜] F) : Antitone (approxSeq A) := by
   intro m n hmn
   exact ENNReal.ofReal_le_ofReal (A.approximationNumber_antitone hmn)
@@ -78,8 +78,8 @@ theorem approxSeq_antitone {E F : Type*}
 /-- Every approximation number is finite, so `approxSeq` never takes the value
 `⊤`.  This is what lets the `ℝ≥0∞` reductions in `SymmetricGauge` fire. -/
 theorem approxSeq_ne_top {E F : Type*}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] 
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] 
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F]
     (A : E →L[𝕜] F) (n : ℕ) : approxSeq A n ≠ ⊤ :=
   ENNReal.ofReal_ne_top
 
@@ -151,8 +151,8 @@ omit [CompleteSpace E] [CompleteSpace F] in
 termwise by `‖L‖ * ‖R‖` times `approxSeq A`, and `extend_mono` plus
 `extend_smul` turn that into the gauge statement. -/
 theorem extend_approxSeq_comp_le {G H : Type*}
-    [NormedAddCommGroup G] [InnerProductSpace 𝕜 G] 
-    [NormedAddCommGroup H] [InnerProductSpace 𝕜 H] 
+    [NormedAddCommGroup G] [InnerProductSpace 𝕜 G]
+    [NormedAddCommGroup H] [InnerProductSpace 𝕜 H]
     (L : F →L[𝕜] G) (A : E →L[𝕜] F) (R : H →L[𝕜] E) :
     Φ.extend (approxSeq (L ∘L A ∘L R)) ≤ ‖L‖ₑ * Φ.extend (approxSeq A) * ‖R‖ₑ := by
   have hterm : ∀ n, approxSeq (L ∘L A ∘L R) n
@@ -273,8 +273,8 @@ theorem symmetricGaugeFamily_injective {Phi Psi : SymmetricGauge}
 
 /-- The extended finite-sequence Schatten gauge is the power-sum norm. -/
 theorem extend_approxSeq_schattenGauge {p : ℝ} (hp : 1 ≤ p) {E : Type v} {F : Type w}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] 
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] 
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F]
     (T : E →L[𝕜] F) :
     (schattenGauge p hp).extend (approxSeq T)
       = ContinuousLinearMap.schattenENorm p T := by

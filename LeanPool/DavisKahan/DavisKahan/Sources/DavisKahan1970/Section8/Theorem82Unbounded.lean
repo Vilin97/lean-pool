@@ -114,7 +114,7 @@ The operator norm is the first Ky Fan norm, hence a member of the source norm
 class, so the printed universal-norm estimate specializes to it. -/
 theorem norm_sinTwoAngleOperator_le_of_perturbedGap_unbounded_complex
     {Hc : Type v} [NormedAddCommGroup Hc] [InnerProductSpace ℂ Hc] [CompleteSpace Hc]
-    
+
     {A : Hc →ₗ.[ℂ] Hc} (hA : IsSelfAdjoint A)
     (Hop : Hc →L[ℂ] Hc) (hHop : Hop.IsSymmetric)
     {P Q : Submodule ℂ Hc} [P.HasOrthogonalProjection] [Q.HasOrthogonalProjection]
