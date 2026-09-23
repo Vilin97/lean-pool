@@ -3,7 +3,9 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.GeneratedStructure
+module
+
+public import LeanPool.Schoenflies.GeneratedStructure
 
 /-!
 # Carriers, refinement compatibility, and the star lemmas
@@ -78,6 +80,8 @@ transport, and the substance of (c) is its consequence, `Refines.carrier_congr`.
 operations replace a single cell `c` by a set `N` of fresh cells and send `N` to `c`, so one
 lemma serves both.
 -/
+
+@[expose] public section
 
 open Set Metric Bornology
 open scoped Graph

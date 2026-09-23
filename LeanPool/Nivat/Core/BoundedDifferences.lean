@@ -4,13 +4,15 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Boon Suan Ho
 -/
 
-import LeanPool.Nivat.Core.Basic
-import Mathlib.Basic.Finite.Prod
-import Mathlib.Data.Set.Finite.Lattice
-import Mathlib.Algebra.Module.Torsion.Free
-import Mathlib.Algebra.Order.Archimedean.Basic
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
+module
+
+public import LeanPool.Nivat.Core.Basic
+public import Mathlib.Basic.Finite.Prod
+public import Mathlib.Data.Set.Finite.Lattice
+public import Mathlib.Algebra.Module.Torsion.Free
+public import Mathlib.Algebra.Order.Archimedean.Basic
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
 
 /-
 Upstream: https://github.com/boonsuan/nivat
@@ -53,6 +55,8 @@ specialization `difference_eq_zero_of_iterate`, and
 `periodic_of_parallel_mixed_difference`. Finite-range closure lemmas also support
 the orbit-closure difference in Corollary 3.6 (`cor:periodic-difference`).
 -/
+
+@[expose] public section
 
 namespace Nivat
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Strip
-import LeanPool.Schoenflies.SimpleArc
-import LeanPool.Schoenflies.UniformBound
-import LeanPool.Schoenflies.Graph.Drawing
+module
+
+public import LeanPool.Schoenflies.Strip
+public import LeanPool.Schoenflies.SimpleArc
+public import LeanPool.Schoenflies.UniformBound
+public import LeanPool.Schoenflies.Graph.Drawing
 
 /-!
 # Local structure of a polygonal skeleton
@@ -68,6 +70,8 @@ sectors in aggregate — as one `Plane.cone` over all free directions at once.
   `lem:polygonal-side-accessibility`, assembled: a straight segment from `x` to a point of the
   exterior inside a local disk lies, minus `x`, in that point's face.
 -/
+
+@[expose] public section
 
 open Metric Set
 open scoped Graph

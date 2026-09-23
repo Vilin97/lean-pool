@@ -3,9 +3,11 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import Mathlib.Tactic.Ring
-import LeanPool.ACMax.Spectral.AlgConn
-import LeanPool.ACMax.Cuts.WeightedCut
+module
+
+public import Mathlib.Tactic.Ring
+public import LeanPool.ACMax.Spectral.AlgConn
+public import LeanPool.ACMax.Cuts.WeightedCut
 
 /-!
 # The "good `K_{2,3}`" certificate
@@ -19,6 +21,8 @@ This is the dedicated cut for the `n = 12` sparse-hub residual that good `C₄` 
 with two degree-4 vertices on the small side has `C₄`s of degree-sum `14 > 13` (not a good `C₄`),
 yet the denser 5-vertex set still yields `cut = 5`.
 -/
+
+@[expose] public section
 
 namespace ACMax
 

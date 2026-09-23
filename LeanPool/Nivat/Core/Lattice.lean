@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Boon Suan Ho
 -/
 
-import LeanPool.Nivat.Core.Basic
-import Mathlib.Data.Int.GCD
-import Mathlib.LinearAlgebra.Prod
-import Mathlib.Tactic.Ring
+module
+
+public import LeanPool.Nivat.Core.Basic
+public import Mathlib.Data.Int.GCD
+public import Mathlib.LinearAlgebra.Prod
+public import Mathlib.Tactic.Ring
 
 /-
 Upstream: https://github.com/boonsuan/nivat
@@ -50,6 +52,8 @@ The main results are `exists_lattice_basis_for_nonzero`,
 rational extension permits convex windows to be transported through the same
 coordinate change as the lattice configurations.
 -/
+
+@[expose] public section
 
 namespace Nivat
 
