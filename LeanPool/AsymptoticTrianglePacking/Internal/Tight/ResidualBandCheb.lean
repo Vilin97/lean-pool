@@ -170,10 +170,7 @@ theorem exists_round_residual_band_cheb {H : Finset (Finset V)} {p : ℝ} {r Δ 
   refine ⟨retainedSet H ρ ω, Finset.filter_subset _ _, B, hBcard, ?_, hcov⟩
   intro v hv hvc
   obtain ⟨hlo, hup⟩ := hband v hv
-  have hsafe : safeDegree H (covered (retainedSet H ρ ω)) v
-      = degree (Hypergraph.residual H (retainedSet H ρ ω)) v :=
-    safeDegree_eq_residual_degree_of_not_covered hvc
-  rw [hsafe] at hlo hup
+  rw [safeDegree_eq_residual_degree_of_not_covered hvc] at hlo hup
   have hqhi : ∀ u : V, coverRate H p u ≤ (Δ : ℝ) * p := by
     intro u
     refine le_trans (coverRate_le hp0' hp1' u) ?_

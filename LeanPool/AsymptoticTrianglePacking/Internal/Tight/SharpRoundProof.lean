@@ -165,10 +165,8 @@ theorem exists_sharp_round_band {K : Finset (Finset V)} (A : Finset V) {r Δ δ 
   refine ⟨retainedSet K ρ ω, Finset.filter_subset _ _, B, hBcard, ?_, hcov⟩
   intro v hvA hvB hvc
   have hb := hband v hvB
-  have hsafe : safeDegree K (covered (retainedSet K ρ ω)) v
-      = degree (Hypergraph.residual K (retainedSet K ρ ω)) v :=
-    safeDegree_eq_residual_degree_of_not_covered hvc
-  rw [hsafe, safeDegMean_cubeRetention K hp0.le hp1.le v] at hb
+  rw [safeDegree_eq_residual_degree_of_not_covered hvc,
+    safeDegMean_cubeRetention K hp0.le hp1.le v] at hb
   have habs := abs_lt.mp hb
   exact ⟨by linarith only [hlo v hvA, habs.1], by linarith only [hhi v hvA, habs.2]⟩
 

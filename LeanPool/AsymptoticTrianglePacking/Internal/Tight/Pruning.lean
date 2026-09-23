@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
 import LeanPool.AsymptoticTrianglePacking.Internal.Basic
+import LeanPool.AsymptoticTrianglePacking.Internal.Greedy
 import Mathlib.Algebra.BigOperators.Group.Finset.Piecewise
 import Mathlib.Algebra.Group.Action.Defs
 import Mathlib.Algebra.Order.BigOperators.Group.Finset
@@ -42,15 +43,8 @@ omit [Fintype V] in
 theorem card_edges_meeting_le {H : Finset (Finset V)} {Δ : ℕ} (hΔ : ∀ x, degree H x ≤ Δ)
     (B : Finset V) : (H.filter (fun e => ¬ Disjoint e B)).card ≤ B.card * Δ := by
   classical
-  have hsub : H.filter (fun e => ¬ Disjoint e B) ⊆
-      B.biUnion (fun x => H.filter (fun e => x ∈ e)) := by
-    intro e he
-    rw [Finset.mem_filter] at he
-    obtain ⟨x, hxe, hxB⟩ := Finset.not_disjoint_iff.mp he.2
-    exact Finset.mem_biUnion.mpr ⟨x, hxB, Finset.mem_filter.mpr ⟨he.1, hxe⟩⟩
   calc (H.filter (fun e => ¬ Disjoint e B)).card
-      ≤ (B.biUnion (fun x => H.filter (fun e => x ∈ e))).card := Finset.card_le_card hsub
-    _ ≤ ∑ x ∈ B, (H.filter (fun e => x ∈ e)).card := Finset.card_biUnion_le
+      ≤ ∑ x ∈ B, degree H x := Hypergraph.edges_meeting_le_of_not_disjoint H B
     _ ≤ ∑ _x ∈ B, Δ := Finset.sum_le_sum (fun x _ => hΔ x)
     _ = B.card * Δ := by rw [Finset.sum_const, smul_eq_mul]
 

@@ -169,17 +169,7 @@ omit [Fintype V] in
 /-- The number of edges meeting `B`, bounded by the degree sum over `B`. -/
 theorem card_edges_meeting_le_sum {K : Finset (Finset V)} (B : Finset V) :
     (K.filter (fun e => ¬ Disjoint e B)).card ≤ ∑ x ∈ B, degree K x := by
-  classical
-  have hsub : K.filter (fun e => ¬ Disjoint e B)
-      ⊆ B.biUnion (fun x => K.filter (fun e => x ∈ e)) := by
-    intro e he
-    rw [Finset.mem_filter] at he
-    obtain ⟨x, hxe, hxB⟩ := Finset.not_disjoint_iff.mp he.2
-    exact Finset.mem_biUnion.mpr ⟨x, hxB, Finset.mem_filter.mpr ⟨he.1, hxe⟩⟩
-  calc (K.filter (fun e => ¬ Disjoint e B)).card
-      ≤ (B.biUnion (fun x => K.filter (fun e => x ∈ e))).card := Finset.card_le_card hsub
-    _ ≤ ∑ x ∈ B, (K.filter (fun e => x ∈ e)).card := Finset.card_biUnion_le
-    _ = ∑ x ∈ B, degree K x := rfl
+  exact Hypergraph.edges_meeting_le_of_not_disjoint K B
 
 /-- The total loss equals the size of the edges meeting `B`. -/
 theorem sum_lostDegree_eq {K : Finset (Finset V)} (B : Finset V) :

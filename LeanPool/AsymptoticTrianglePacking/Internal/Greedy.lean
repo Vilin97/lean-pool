@@ -68,6 +68,24 @@ theorem edges_meeting_le (H : Finset (Finset V)) (S : Finset V) :
     _ ≤ ∑ v ∈ S, (H.filter (fun e => v ∈ e)).card := Finset.card_biUnion_le
     _ = ∑ v ∈ S, degree H v := rfl
 
+/-- The same incidence bound with meeting expressed as non-disjointness. -/
+theorem edges_meeting_le_of_not_disjoint (H : Finset (Finset V)) (S : Finset V) :
+    (H.filter (fun e => ¬ Disjoint e S)).card ≤ ∑ v ∈ S, degree H v := by
+  classical
+  have hfilter : H.filter (fun e => ¬ Disjoint e S) =
+      H.filter (fun e => (e ∩ S).Nonempty) := by
+    ext e
+    simp only [Finset.mem_filter]
+    constructor
+    · rintro ⟨he, hnd⟩
+      obtain ⟨x, hxe, hxS⟩ := Finset.not_disjoint_iff.mp hnd
+      exact ⟨he, ⟨x, Finset.mem_inter.mpr ⟨hxe, hxS⟩⟩⟩
+    · rintro ⟨he, x, hx⟩
+      exact ⟨he, Finset.not_disjoint_iff.mpr ⟨x, (Finset.mem_inter.mp hx).1,
+        (Finset.mem_inter.mp hx).2⟩⟩
+  rw [hfilter]
+  exact edges_meeting_le H S
+
 /-- **A3 — greedy / maximal-matching bound.** If `M` is a matching whose support meets every
 edge of `H` (a *maximal* matching) and every vertex has degree `≤ Δ`, then
 `|H| ≤ r · Δ · |M|`. Equivalently `ν(H) ≥ |E| / (rΔ)`. -/

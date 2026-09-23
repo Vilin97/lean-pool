@@ -130,10 +130,7 @@ theorem exists_round_residual_band {H : Finset (Finset V)} {p : ℝ} {r Δ δ κ
   intro v hv hvc
   obtain ⟨hlo, hup⟩ := hband v hv
   -- the safe degree is the residual degree for an uncovered vertex
-  have hsafe : safeDegree H (covered (retainedSet H ρ ω)) v
-      = degree (Hypergraph.residual H (retainedSet H ρ ω)) v :=
-    safeDegree_eq_residual_degree_of_not_covered hvc
-  rw [hsafe] at hlo hup
+  rw [safeDegree_eq_residual_degree_of_not_covered hvc] at hlo hup
   -- squeeze the mean loss
   have hqhi : ∀ u : V, coverRate H p u ≤ (Δ : ℝ) * p := by
     intro u
