@@ -3,9 +3,11 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Graph.PathGraph
-import LeanPool.Schoenflies.Graph.Drawing
-import LeanPool.Schoenflies.Graph.TwoConnected
+module
+
+public import LeanPool.Schoenflies.Graph.PathGraph
+public import LeanPool.Schoenflies.Graph.Drawing
+public import LeanPool.Schoenflies.Graph.TwoConnected
 
 /-!
 # Relabelling the edges of a multigraph
@@ -17,6 +19,8 @@ fresh abstract cell names while retaining every vertex and every incidence.
 The relabelling map only has to be injective on the graph's edge set.  Walks, paths, and path
 graphs then push forward by mapping their edge lists.
 -/
+
+@[expose] public section
 
 open Set
 open Schoenflies
@@ -160,7 +164,7 @@ theorem IsWalk.relabelEdges_deleteVerts {X : Set α} {u v : α} {W : List β}
   | nil hx =>
       apply IsWalk.nil
       rw [vertexSet_deleteVerts, vertexSet_relabelEdges]
-      exact hx
+      simpa only [vertexSet_deleteVerts] using hx
   | cons hl hW ih =>
       apply IsWalk.cons _ ih
       rw [deleteVerts_isLink] at hl ⊢

@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.PolyPath
-import LeanPool.Schoenflies.Curve
+module
+
+public import LeanPool.Schoenflies.PolyPath
+public import LeanPool.Schoenflies.Curve
 
 /-!
 # Polygonal sets, and segments as arcs
@@ -22,6 +24,8 @@ segment itself, and the distinctness of its ends is already part of well-formedn
 * `IsPolygonal` — §1, "an arc or curve is polygonal if it is a finite union of line segments".
 * `isArcBetween_segment` — a nondegenerate segment is an arc between its endpoints.
 -/
+
+@[expose] public section
 
 open Metric Set
 

@@ -3,12 +3,14 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Combinatorics.SimpleGraph.Finite
-import Mathlib.Tactic.Push
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Ring.Basic
-import LeanPool.ACMax.Spectral.AlgConn
+module
+
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Combinatorics.SimpleGraph.Finite
+public import Mathlib.Tactic.Push
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.Ring.Basic
+public import LeanPool.ACMax.Spectral.AlgConn
 
 /-!
 # A triangle-free graph of small degree on enough vertices has an induced `2K₂`
@@ -26,6 +28,8 @@ vertices contains an induced `2K₂`).  Hence `|D| ≥ 8` forces an induced `2K�
 NOTE: the threshold is `8`, not `7` — there is an explicit triangle-free, max-degree-3,
 `2K₂`-free graph on `7` vertices (containing an induced `C₅`).
 -/
+
+@[expose] public section
 
 namespace ACMax
 

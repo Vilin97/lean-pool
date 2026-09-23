@@ -4,9 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import LeanPool.GapCVP.Part03E
+module
+
+public import LeanPool.GapCVP.Part03E
 
 /-! # GapCVP proof, part 03, continuation 06 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -372,7 +376,7 @@ def delimitedCompareFirstMissingPrefixTrace
     secondCounter secondReversed firstForward secondForward source sourcePrefix output
 
 /-- Reads the first payload using any compatible machine step. -/
-private def DelimitedCompareTrace.firstPayload
+def DelimitedCompareTrace.firstPayload
     (chosenStep : delimitedPairComparisonMachine.Cfg →
       Option delimitedPairComparisonMachine.Cfg)
     (lift : DelimitedCompareTrace.NonComparisonStepLift chosenStep)
@@ -579,7 +583,7 @@ def delimitedCompareSecondMissingPrefixTrace
     secondCounter secondReversed firstForward secondForward source sourcePrefix output
 
 /-- Reads the second payload using any compatible machine step. -/
-private def DelimitedCompareTrace.secondPayload
+def DelimitedCompareTrace.secondPayload
     (chosenStep : delimitedPairComparisonMachine.Cfg →
       Option delimitedPairComparisonMachine.Cfg)
     (lift : DelimitedCompareTrace.NonComparisonStepLift chosenStep)
@@ -797,7 +801,7 @@ def DelimitedCompareTrace.secondRecord
   exact rebound hcast (by omega)
 
 /-- Reverses the first payload using any compatible machine step. -/
-private def DelimitedCompareTrace.reverseFirst
+def DelimitedCompareTrace.reverseFirst
     (chosenStep : delimitedPairComparisonMachine.Cfg →
       Option delimitedPairComparisonMachine.Cfg)
     (lift : DelimitedCompareTrace.NonComparisonStepLift chosenStep)
@@ -827,7 +831,7 @@ private def DelimitedCompareTrace.reverseFirst
         EvalsToInTime.trans chosenStep _ _ _ _ _ hfirst hrest
 
 /-- Reverses the second payload using any compatible machine step. -/
-private def DelimitedCompareTrace.reverseSecond
+def DelimitedCompareTrace.reverseSecond
     (chosenStep : delimitedPairComparisonMachine.Cfg →
       Option delimitedPairComparisonMachine.Cfg)
     (lift : DelimitedCompareTrace.NonComparisonStepLift chosenStep)
@@ -856,7 +860,8 @@ private def DelimitedCompareTrace.reverseSecond
           List.length_cons, Nat.add_assoc, Nat.reduceAdd] using
         EvalsToInTime.trans chosenStep _ _ _ _ _ hfirst hrest
 
-private def lexicographicEncodedWordResiduals :
+/-- Drop matching leading bits, leaving both words at their first difference. -/
+def lexicographicEncodedWordResiduals :
     List Bool → List Bool → List Bool × List Bool
   | [], right => ([], right)
   | bit :: left, [] => (bit :: left, [])
@@ -869,7 +874,8 @@ private def lexicographicEncodedWordResiduals :
   | true :: left, true :: right =>
       lexicographicEncodedWordResiduals left right
 
-private def delimitedCompare_wordsTrace
+/-- Compare two encoded words and leave their unmatched suffixes in the machine state. -/
+def delimitedCompareWordsTrace
     (outcome : EncodedWordOrdering)
     (first second input firstCounter firstReversed
       secondCounter secondReversed source sourcePrefix output : List Bool) :
@@ -1002,7 +1008,7 @@ private def delimitedCompare_wordsTrace
                 lexicographicEncodedWordResiduals,
                 List.length_cons, Nat.add_assoc, Nat.reduceAdd] using hfull
 
-private theorem lexicographicEncodedWordResiduals_first_length_le
+theorem lexicographicEncodedWordResidualsFirstLengthLe
     (first second : List Bool) :
     (lexicographicEncodedWordResiduals first second).1.length ≤
       first.length := by
@@ -1022,7 +1028,7 @@ private theorem lexicographicEncodedWordResiduals_first_length_le
               using
                 Nat.le_trans (ih second) (Nat.le_succ remaining.length)
 
-private theorem lexicographicEncodedWordResiduals_second_length_le
+theorem lexicographicEncodedWordResidualsSecondLengthLe
     (first second : List Bool) :
     (lexicographicEncodedWordResiduals first second).2.length ≤
       second.length := by
@@ -1152,7 +1158,7 @@ def delimitedCompareValidTrace
   let saved := secondCode.reverse ++ firstCode.reverse
   let prefixMarkers := List.replicate secondCode.length true ++
     List.replicate firstCode.length true
-  have hcompare := delimitedCompare_wordsTrace .invalid
+  have hcompare := delimitedCompareWordsTrace .invalid
     first second suffix [] [] [] [] saved prefixMarkers []
   have hassembly := DelimitedCompareTrace.validAssembly
     delimitedPairComparisonMachine.step (fun _ transition => oneStep _ _ transition)
@@ -1185,9 +1191,9 @@ def delimitedCompareValidTrace
   rw [← hrestored]
   apply rebound hassembly
   have hfirstResidual :=
-    lexicographicEncodedWordResiduals_first_length_le first second
+    lexicographicEncodedWordResidualsFirstLengthLe first second
   have hsecondResidual :=
-    lexicographicEncodedWordResiduals_second_length_le first second
+    lexicographicEncodedWordResidualsSecondLengthLe first second
   simp only [List.length_append, List.length_reverse, List.length_replicate,
     lengthPrefixedWord_length]
   omega

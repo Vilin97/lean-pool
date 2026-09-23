@@ -3,7 +3,9 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.SourceAttachment
+module
+
+public import LeanPool.Schoenflies.SourceAttachment
 
 /-!
 # Extending an existing straight overlay
@@ -16,6 +18,8 @@ edges* as the new source pieces and retains every current vertex as a prescribed
 The resulting overlay is automatically a plane subdivision of the old overlay.  This is the
 finite straight-line engine needed before the wild outer graph and the joining ear are glued.
 -/
+
+@[expose] public section
 
 open Set
 open scoped Graph

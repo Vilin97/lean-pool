@@ -3,8 +3,10 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import LeanPool.ACMax.Band.Sum
-import LeanPool.ACMax.Counting.V9Discharge
+module
+
+public import LeanPool.ACMax.Band.Sum
+public import LeanPool.ACMax.Counting.V9Discharge
 
 /-!
 # The SUM band-discharge subset wrapper (B5)
@@ -39,6 +41,8 @@ verification.
   length
   `3 ≤ k ≤ L` inside `S`, in the `ZMod k` cyclic-map form.
 -/
+
+@[expose] public section
 
 namespace ACMax
 

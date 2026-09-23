@@ -3,14 +3,16 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import Mathlib.Tactic.FinCases
-import Mathlib.Tactic.GCongr
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
-import LeanPool.ACMax.Counting.Moats
-import LeanPool.ACMax.Counting.ResidualInterface
-import LeanPool.ACMax.Counting.XBoundAssembly
-import LeanPool.ACMax.Reduction.Residual
+module
+
+public import Mathlib.Tactic.FinCases
+public import Mathlib.Tactic.GCongr
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Ring
+public import LeanPool.ACMax.Counting.Moats
+public import LeanPool.ACMax.Counting.ResidualInterface
+public import LeanPool.ACMax.Counting.XBoundAssembly
+public import LeanPool.ACMax.Reduction.Residual
 
 /-!
 # The starved-world census and the owner-choke rows
@@ -38,6 +40,8 @@ feeding the caps into the twin-incidence total against the degree-excess ledger
   `p_choke_row_unconditional` — the shared-twin decorated-edge moat (fires at
   `9·(deg u + deg v) ≤ n + 56`) discharging the last moat-provenance hypothesis.
 -/
+
+@[expose] public section
 
 namespace ACMax
 

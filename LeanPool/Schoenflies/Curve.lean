@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Plane
-import Mathlib.Topology.UnitInterval
+module
+
+public import LeanPool.Schoenflies.Plane
+public import Mathlib.Topology.UnitInterval
 
 /-!
 # Arcs and Jordan curves
@@ -31,6 +33,8 @@ form most of the development speaks, since gluing and cutting are stated about e
 * `IsArcBetween` — an arc between two named points.
 * `IsLoop` — the parametrisation underlying a Jordan curve.
 -/
+
+@[expose] public section
 
 open Set unitInterval
 

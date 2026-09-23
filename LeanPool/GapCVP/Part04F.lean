@@ -4,9 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import LeanPool.GapCVP.Part04E
+module
+
+public import LeanPool.GapCVP.Part04E
+import all Mathlib.Logic.Equiv.Multiset
 
 /-! # GapCVP proof, part 04, continuation 06 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -24,7 +29,8 @@ open Computability Turing GapCVP.BinaryEncoding GapCVP.SourceTotalStructuralDeco
 
 open GapCVP.OutputBoundedDependentRecordFold GapCVP.CNFTypedRecordWorkerTM
 
-private def flatLiteralRecord_prefixTrace
+/-- Scans a length prefix through its delimiter and enters the sign-reading phase. -/
+def flatLiteralRecordPrefixTrace
     (sign : Option Bool) (count : ℕ)
     (tail counter reversed markers suffix output : List Bool) :
     EvalsToInTime actualFlatLiteralRecordWorker.step (flatLiteralRecordConfiguration 0 sign
@@ -49,7 +55,8 @@ private def flatLiteralRecord_prefixTrace
           SourceStructuralDecoder.replicate_true_append_cons] using
           EvalsToInTime.trans actualFlatLiteralRecordWorker.step _ _ _ _ _ hfirst hrest
 
-private def flatLiteralRecord_missingPrefixTrace
+/-- Sends an unterminated length prefix to invalid-input handling. -/
+def flatLiteralRecordMissingPrefixTrace
     (sign : Option Bool) (count : ℕ)
     (counter reversed markers suffix output : List Bool) :
     EvalsToInTime actualFlatLiteralRecordWorker.step (flatLiteralRecordConfiguration 0 sign
@@ -74,7 +81,8 @@ private def flatLiteralRecord_missingPrefixTrace
           SourceStructuralDecoder.replicate_true_append_cons] using
           EvalsToInTime.trans actualFlatLiteralRecordWorker.step _ _ _ _ _ hfirst hrest
 
-private def flatLiteralRecord_payloadTrace
+/-- Copies a complete literal payload into the reversed and marker stacks. -/
+def flatLiteralRecordPayloadTrace
     (sign : Bool) (payload input reversed markers suffix output : List Bool) :
     EvalsToInTime actualFlatLiteralRecordWorker.step (flatLiteralRecordConfiguration 2 (some sign)
         (payload ++ input) (List.replicate payload.length true)
@@ -101,7 +109,8 @@ private def flatLiteralRecord_payloadTrace
           SourceStructuralDecoder.replicate_true_append_cons] using
           EvalsToInTime.trans actualFlatLiteralRecordWorker.step _ _ _ _ _ hfirst hrest
 
-private def flatLiteralRecord_restoreTrace
+/-- Restores the payload bits to the output after reading a literal. -/
+def flatLiteralRecordRestoreTrace
     (sign : Option Bool)
     (input reversed markers suffix output : List Bool) :
     EvalsToInTime actualFlatLiteralRecordWorker.step (flatLiteralRecordConfiguration 3 sign
@@ -124,7 +133,8 @@ private def flatLiteralRecord_restoreTrace
           List.length_cons, Nat.add_assoc, Nat.reduceAdd] using
           EvalsToInTime.trans actualFlatLiteralRecordWorker.step _ _ _ _ _ hfirst hrest
 
-private def flatLiteralRecord_markerTrace
+/-- Moves payload length markers to the output as a unary prefix. -/
+def flatLiteralRecordMarkerTrace
     (sign : Option Bool)
     (input markers suffix output : List Bool) :
     EvalsToInTime actualFlatLiteralRecordWorker.step (flatLiteralRecordConfiguration 4 sign
@@ -147,7 +157,8 @@ private def flatLiteralRecord_markerTrace
           Nat.reduceAdd, SourceStructuralDecoder.replicate_true_append_cons] using
           EvalsToInTime.trans actualFlatLiteralRecordWorker.step _ _ _ _ _ hfirst hrest
 
-private def flatLiteralRecord_suffixScanTrace
+/-- Moves the unread suffix to the scratch stack before finishing output. -/
+def flatLiteralRecordSuffixScanTrace
     (sign : Option Bool)
     (input suffix output : List Bool) :
     EvalsToInTime actualFlatLiteralRecordWorker.step (flatLiteralRecordConfiguration 5 sign
@@ -169,7 +180,8 @@ private def flatLiteralRecord_suffixScanTrace
           List.length_cons, Nat.add_assoc, Nat.reduceAdd] using
           EvalsToInTime.trans actualFlatLiteralRecordWorker.step _ _ _ _ _ hfirst hrest
 
-private def flatLiteralRecord_suffixRestoreTrace
+/-- Restores the suffix from scratch and halts with the completed output. -/
+def flatLiteralRecordSuffixRestoreTrace
     (sign : Option Bool) (suffix output : List Bool) :
     EvalsToInTime actualFlatLiteralRecordWorker.step (flatLiteralRecordConfiguration 6 sign
         [] [] [] [] suffix output)
@@ -189,7 +201,8 @@ private def flatLiteralRecord_suffixRestoreTrace
           List.length_cons, Nat.add_assoc, Nat.reduceAdd] using
           EvalsToInTime.trans actualFlatLiteralRecordWorker.step _ _ _ _ _ hfirst hrest
 
-private def flatLiteralRecord_invalidTrace
+/-- Clears every occupied stack of an invalid literal record and halts empty. -/
+def flatLiteralRecordInvalidTrace
     (sign : Option Bool)
     (input count reversed markers : List Bool) :
     EvalsToInTime actualFlatLiteralRecordWorker.step (flatLiteralRecordConfiguration 7 sign
@@ -220,7 +233,8 @@ private def flatLiteralRecord_invalidTrace
   have hfull := EvalsToInTime.trans actualFlatLiteralRecordWorker.step _ _ _ _ _ h0123 hfinish
   exact rebound hfull (by omega)
 
-private def flatLiteralRecord_truncatedPayloadTrace
+/-- Detects a payload shorter than its length prefix and enters invalid-input handling. -/
+def flatLiteralRecordTruncatedPayloadTrace
     (sign : Bool) (payload : List Bool) (count : ℕ)
     (hshort : payload.length < count)
     (reversed markers : List Bool) :
@@ -261,7 +275,8 @@ private def flatLiteralRecord_truncatedPayloadTrace
               SourceStructuralDecoder.replicate_true_append_cons] using
               EvalsToInTime.trans actualFlatLiteralRecordWorker.step _ _ _ _ _ hfirst hrest
 
-private def flatLiteralRecord_validTrace
+/-- Converts a valid length-prefixed signed literal to its flat record encoding. -/
+def flatLiteralRecordValidTrace
     (sign : Bool) (payload suffix : List Bool) :
     EvalsToInTime actualFlatLiteralRecordWorker.step (flatLiteralRecordConfiguration 0 none
         (lengthPrefixedWord (sign :: payload) ++ suffix)
@@ -270,30 +285,30 @@ private def flatLiteralRecord_validTrace
         (suffix ++ lengthPrefixedWord payload ++ [sign])))
       (8 * (lengthPrefixedWord (sign :: payload) ++ suffix).length +
         16) := by
-  have hprefix := flatLiteralRecord_prefixTrace
+  have hprefix := flatLiteralRecordPrefixTrace
     none (payload.length + 1)
     (sign :: (payload ++ suffix)) [] [] [] [] []
   simp only [List.append_nil, List.replicate_succ] at hprefix
   have hsign := oneStep _ _ (flatLiteralRecord_sign_step none sign true
       (payload ++ suffix)
       (List.replicate payload.length true) [] [] [] [])
-  have hpayload := flatLiteralRecord_payloadTrace
+  have hpayload := flatLiteralRecordPayloadTrace
     sign payload suffix [] [] [] []
   simp only [List.append_nil] at hpayload
-  have hrestore := flatLiteralRecord_restoreTrace
+  have hrestore := flatLiteralRecordRestoreTrace
     (some sign) suffix payload.reverse
     (List.replicate payload.length true) [] [sign]
   simp only [List.reverse_reverse] at hrestore
-  have hmarkers := flatLiteralRecord_markerTrace
+  have hmarkers := flatLiteralRecordMarkerTrace
     (some sign) suffix (List.replicate payload.length true)
     [] (false :: (payload ++ [sign]))
   simp only [List.length_replicate] at hmarkers
-  have hsuffixScan := flatLiteralRecord_suffixScanTrace
+  have hsuffixScan := flatLiteralRecordSuffixScanTrace
     (some sign) suffix []
     (List.replicate payload.length true ++
       false :: (payload ++ [sign]))
   simp only [List.append_nil] at hsuffixScan
-  have hsuffixRestore := flatLiteralRecord_suffixRestoreTrace
+  have hsuffixRestore := flatLiteralRecordSuffixRestoreTrace
     (some sign) suffix.reverse
     (List.replicate payload.length true ++
       false :: (payload ++ [sign]))
@@ -321,7 +336,8 @@ private def flatLiteralRecord_validTrace
       List.cons_append, List.append_assoc, List.length_append, List.length_replicate]
           using hbounded
 
-private def flatLiteralRecord_totalTrace (input : List Bool) :
+/-- Runs the literal-record worker on every input within a linear step bound. -/
+def flatLiteralRecordTotalTrace (input : List Bool) :
     EvalsToInTime actualFlatLiteralRecordWorker.step
       (flatLiteralRecordConfiguration 0 none input [] [] [] [] [])
       (some (Turing.haltList actualFlatLiteralRecordWorker
@@ -331,10 +347,10 @@ private def flatLiteralRecord_totalTrace (input : List Bool) :
   | inl witness =>
       obtain ⟨count, hinput⟩ := witness
       subst input
-      have hprefix := flatLiteralRecord_missingPrefixTrace
+      have hprefix := flatLiteralRecordMissingPrefixTrace
         none count [] [] [] [] []
       simp only [List.append_nil] at hprefix
-      have hclean := flatLiteralRecord_invalidTrace
+      have hclean := flatLiteralRecordInvalidTrace
         none [] (List.replicate count true) [] []
       have hfull := EvalsToInTime.trans actualFlatLiteralRecordWorker.step _ _ _ _ _
         hprefix hclean
@@ -349,10 +365,10 @@ private def flatLiteralRecord_totalTrace (input : List Bool) :
       subst input
       cases count with
       | zero =>
-          have hprefix := flatLiteralRecord_prefixTrace
+          have hprefix := flatLiteralRecordPrefixTrace
             none 0 tail [] [] [] [] []
           have hsign := oneStep _ _ (flatLiteralRecord_sign_empty none tail [] [] [] [])
-          have hclean := flatLiteralRecord_invalidTrace
+          have hclean := flatLiteralRecordInvalidTrace
             none tail [] [] []
           have hfirst := EvalsToInTime.trans actualFlatLiteralRecordWorker.step _ _ _ _ _
             hprefix hsign
@@ -372,13 +388,13 @@ private def flatLiteralRecord_totalTrace (input : List Bool) :
       | succ count =>
           cases tail with
           | nil =>
-              have hprefix := flatLiteralRecord_prefixTrace
+              have hprefix := flatLiteralRecordPrefixTrace
                 none (count + 1) [] [] [] [] [] []
               simp only [List.append_nil,
                 List.replicate_succ] at hprefix
               have hsign := oneStep _ _ (flatLiteralRecord_sign_missing none true
                   (List.replicate count true) [] [] [] [])
-              have hclean := flatLiteralRecord_invalidTrace
+              have hclean := flatLiteralRecordInvalidTrace
                 none [] (true :: List.replicate count true) [] []
               have hfirst := EvalsToInTime.trans actualFlatLiteralRecordWorker.step _ _ _ _ _
                 hprefix hsign
@@ -416,7 +432,7 @@ private def flatLiteralRecord_totalTrace (input : List Bool) :
                       tail.drop count := by
                   simpa only [List.take_succ_cons, List.drop_succ_cons] using hshape
                 rw [hshape']
-                have hvalid := flatLiteralRecord_validTrace
+                have hvalid := flatLiteralRecordValidTrace
                   sign (tail.take count) (tail.drop count)
                 have hbounded := rebound (newBudget :=
                     20 * (lengthPrefixedWord
@@ -428,7 +444,7 @@ private def flatLiteralRecord_totalTrace (input : List Bool) :
                     List.length_append, lengthPrefixedWord_length, List.length_cons,
                         List.length_take, List.length_drop] using hbounded
               · have hshort : tail.length < count := by omega
-                have hprefix := flatLiteralRecord_prefixTrace
+                have hprefix := flatLiteralRecordPrefixTrace
                   none (count + 1) (sign :: tail)
                   [] [] [] [] []
                 simp only [List.append_nil,
@@ -437,10 +453,10 @@ private def flatLiteralRecord_totalTrace (input : List Bool) :
                     tail (List.replicate count true)
                     [] [] [] [])
                 have htruncated :=
-                  flatLiteralRecord_truncatedPayloadTrace
+                  flatLiteralRecordTruncatedPayloadTrace
                     sign tail count hshort [] []
                 simp only [List.append_nil] at htruncated
-                have hclean := flatLiteralRecord_invalidTrace
+                have hclean := flatLiteralRecordInvalidTrace
                   (some sign) []
                   (List.replicate (count - tail.length) true)
                   tail.reverse
@@ -471,7 +487,8 @@ private def flatLiteralRecord_totalTrace (input : List Bool) :
                     List.length_cons,
                     List.length_append, List.length_replicate] using hbounded
 
-private noncomputable def actualFlatLiteralRecordWorkerComputable :
+/-- Polynomial-time machine computing one flat literal-record step. -/
+noncomputable def actualFlatLiteralRecordWorkerComputable :
     BitTM
       flatLiteralRecordStep where
   tm := actualFlatLiteralRecordWorker
@@ -479,21 +496,22 @@ private noncomputable def actualFlatLiteralRecordWorkerComputable :
   outputAlphabet := Equiv.refl Bool
   time := 20 * Polynomial.X + 30
   outputsFun input := {
-    steps := (flatLiteralRecord_totalTrace input).steps
+    steps := (flatLiteralRecordTotalTrace input).steps
     evals_in_steps := by
       simpa only [Option.bind_eq_bind, FinTM2.step, Fin.isValue, Equiv.invFun_as_coe,
           Equiv.refl_symm,
           Equiv.coe_refl, bitEncoding, id_eq, List.map_id_fun, actualFlatLiteralRecordWorker_init,
               Option.map_some] using
-          (flatLiteralRecord_totalTrace input).evals_in_steps
+          (flatLiteralRecordTotalTrace input).evals_in_steps
     steps_le_m := by
-      have hsteps := (flatLiteralRecord_totalTrace input).steps_le_m
+      have hsteps := (flatLiteralRecordTotalTrace input).steps_le_m
       simpa only [FinTM2.step, Fin.isValue, bitEncoding, id_eq, Polynomial.eval_add,
           Polynomial.eval_mul,
           Polynomial.eval_ofNat, Polynomial.eval_X, ge_iff_le] using hsteps
   }
 
-private noncomputable def actualFlatLiteralRecordFoldComputable :
+/-- Polynomial-time machine repeatedly applying the flat literal-record step. -/
+noncomputable def actualFlatLiteralRecordFoldComputable :
     BitTM
       (boundedRecordFoldOutput flatLiteralRecordStep) :=
   boundedDependentRecordFoldComputable
@@ -930,7 +948,7 @@ def totalVerifierSortedFiveFamilyFlatFoldInput
         (totalVerifierFiveFamilySourceClauseCandidates
           bound machine input)))
 
-private theorem boundedRecordFoldOutput_totalVerifierSortedFiveFamilies
+theorem boundedRecordFoldOutputTotalVerifierSortedFiveFamilies
     (bound : Polynomial ℕ)
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
@@ -962,7 +980,7 @@ noncomputable def actualWholeStructuralCNFOutputComputableOfFlatPreparation
             bound machine input)) =
         structuralWholeCNFWord bound machine := by
     funext input
-    exact boundedRecordFoldOutput_totalVerifierSortedFiveFamilies
+    exact boundedRecordFoldOutputTotalVerifierSortedFiveFamilies
       bound machine input
   rw [← hequality]
   simpa only [Function.comp_def] using hphysical
@@ -1019,7 +1037,8 @@ def polynomialSignedLiteralDescriptorWord
   lengthPrefixedWord
     (sign :: encodeNat (polynomial.eval input.length))
 
-private noncomputable def polynomialSignedLiteralDescriptorComputable
+/-- Polynomial-time machine producing a signed, length-prefixed polynomial value. -/
+noncomputable def polynomialSignedLiteralDescriptorComputable
     (polynomial : Polynomial ℕ) (sign : Bool) :
     BitTM
       (polynomialSignedLiteralDescriptorWord polynomial sign) := by
@@ -1134,7 +1153,8 @@ def unarySourcePairOutput (input : List Bool) : List Bool :=
       List.replicate (Nat.pair first second) true := by
   simp only [unarySourcePairOutput, unarySourcePairWord, readUnaryPrefix_replicate]
 
-private def unaryPairPeek (stack : Fin 9)
+/-- Inspects a unary-pair stack and branches on whether it contains a bit. -/
+def unaryPairPeek (stack : Fin 9)
     (present absent : Turing.TM2.Stmt
       (fun _ : Fin 9 => Bool) (Fin 12) (Option Bool)) :
     Turing.TM2.Stmt
@@ -1142,21 +1162,24 @@ private def unaryPairPeek (stack : Fin 9)
   .peek stack (fun _ symbol => symbol)
     (.branch (fun symbol => symbol.isSome) present absent)
 
-private def unaryPairPop (stack : Fin 9)
+/-- Removes the top bit of a unary-pair stack and continues. -/
+def unaryPairPop (stack : Fin 9)
     (continuation : Turing.TM2.Stmt
       (fun _ : Fin 9 => Bool) (Fin 12) (Option Bool)) :
     Turing.TM2.Stmt
       (fun _ : Fin 9 => Bool) (Fin 12) (Option Bool) :=
   .pop stack (fun symbol _ => symbol) continuation
 
-private def unaryPairPush (stack : Fin 9)
+/-- Pushes a unary marker onto the selected stack. -/
+def unaryPairPush (stack : Fin 9)
     (continuation : Turing.TM2.Stmt
       (fun _ : Fin 9 => Bool) (Fin 12) (Option Bool)) :
     Turing.TM2.Stmt
       (fun _ : Fin 9 => Bool) (Fin 12) (Option Bool) :=
   .push stack (fun _ => true) continuation
 
-private def unaryPairGoto (phase : Fin 12) :
+/-- Clears the inspected bit and enters the selected unary-pair phase. -/
+def unaryPairGoto (phase : Fin 12) :
     Turing.TM2.Stmt
       (fun _ : Fin 9 => Bool) (Fin 12) (Option Bool) :=
   .load (fun _ => none) (.goto (fun _ => phase))

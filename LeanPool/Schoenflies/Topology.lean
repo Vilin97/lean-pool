@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Plane
-import Mathlib.Topology.Connected.LocallyConnected
+module
+
+public import LeanPool.Schoenflies.Plane
+public import Mathlib.Topology.Connected.LocallyConnected
 
 /-!
 # Topology of the plane: the gaps Mathlib leaves
@@ -29,6 +31,8 @@ This module collects the few that are not stated in the form the development use
 * `continuousOn_union_of_isClosed` — Appendix C item 6, the pasting lemma, in the two-piece
   form the development pastes with.
 -/
+
+@[expose] public section
 
 open Metric Set
 
