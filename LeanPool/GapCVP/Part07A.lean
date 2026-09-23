@@ -375,7 +375,7 @@ theorem sourceFourFamilyOriginalMarkerRotationOutput_eq
   simp only [firstFieldContents_valid, List.append_assoc, firstFieldSuffix_valid]
 
 /-- GapCVP reduction support. -/
-def fourFamilyOriginalMarkerStream
+@[expose] def fourFamilyOriginalMarkerStream
     (marker : List Bool → List Bool)
     (queries : List (List Bool)) : List Bool :=
   queries.flatMap marker
@@ -514,6 +514,7 @@ noncomputable def sourceFourFamilyBooleanNotComputable :
   cases bit <;> rfl
 
 /-- GapCVP reduction support. -/
+@[expose]
 def sourceFourFamilyBooleanAndPairWord : List Bool → List Bool :=
   markerConditionalOutput
     (markerConditionalOutput
@@ -536,6 +537,7 @@ noncomputable def sourceFourFamilyBooleanAndPairComputable :
   cases first <;> cases second <;> rfl
 
 /-- GapCVP reduction support. -/
+@[expose]
 def sourceFourFamilyBooleanAndOutput
     (first second : List Bool → List Bool)
     (input : List Bool) : List Bool :=
@@ -569,6 +571,7 @@ theorem fourFamilyBooleanAndOutput_bits
       sourceFourFamilyBooleanAndPairWord_bits]
 
 /-- GapCVP reduction support. -/
+@[expose]
 def sourceFourFamilyBooleanNotOutput
     (marker : List Bool → List Bool) : List Bool → List Bool :=
   sourceFourFamilyBooleanNotWord ∘ marker
@@ -651,6 +654,7 @@ theorem sourceFourFamilyDelimitedUnaryComparisonInput_valid
       sourceFourFamilySecondUnaryNaturalRecordOutput, firstFieldSuffix_valid]
 
 /-- GapCVP reduction support. -/
+@[expose]
 def fourFamilyNaturalOrderingBitsOutput
     (input : List Bool) : List Bool :=
   firstFieldSuffix

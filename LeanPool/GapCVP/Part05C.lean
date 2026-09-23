@@ -446,8 +446,8 @@ open Turing GapCVP.BinaryEncoding GapCVP.SourceLatticeFormulaPreservation
 open GapCVP.SourceLatticeDependentSectionComputation GapCVP.FormulaTotalCert
 open GapCVP.OutputBoundedDependentRecordFold
 
-/-- GapCVP reduction support. -/
-def sourceVectorStructuralRecords
+/-- Encode each entry of a fixed-length vector as a separate structural record. -/
+@[expose] def sourceVectorStructuralRecords
     {α : Type*} [Encodable α]
     (n : ℕ) (values : Fin n → α) : List (List Bool) :=
   List.ofFn (fun index => encodeAtomic (values index))
@@ -469,8 +469,8 @@ theorem sourceVectorStructuralRecords_flatten
           encodeFinValues,
           List.append_cancel_left_eq] using hfull
 
-/-- GapCVP reduction support. -/
-def sourceMatrixStructuralRecords
+/-- Flatten the structural records for each row of an integer matrix. -/
+@[expose] def sourceMatrixStructuralRecords
     (m n : ℕ) (matrix : Fin m → Fin n → ℤ) :
     List (List Bool) :=
   (List.ofFn (fun row =>
@@ -516,8 +516,8 @@ theorem sourceMatrixStructuralRecords_flatten
               Nat.add_comm,
           Nat.add_left_cancel_iff] using hfull
 
-/-- GapCVP reduction support. -/
-def sourceLatticeStructuralRecords
+/-- Record a lattice instance's dimension, radius, target, and basis. -/
+@[expose] def sourceLatticeStructuralRecords
     (lattice : GapCVPInstance) : List (List Bool) :=
   [encodeAtomic lattice.dimension, encodeAtomic lattice.radius] ++
     sourceVectorStructuralRecords lattice.dimension lattice.target ++
@@ -544,6 +544,7 @@ theorem sourceLatticeStructuralRecords_flatten
   omega
 
 /-- GapCVP reduction support. -/
+@[expose]
 def constructiveCanonicalSourceMarker (input : List Bool) : Bool :=
   match decodeThreeCNF input with
   | none => false

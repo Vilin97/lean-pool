@@ -1082,6 +1082,7 @@ open Turing GapCVP.OutputPolynomialCompositionClosure GapCVP.CNFFlatAdjacentReco
 open GapCVP.CNFFlatAdjacentRecordSwapTotalCert
 
 /-- GapCVP reduction support. -/
+@[expose]
 def flatAdjacentConditionalSwapOutput : List Bool → List Bool
   | true :: input => flatAdjacentRecordSwapOutput input
   | false :: input => input

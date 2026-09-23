@@ -10,7 +10,7 @@ public import LeanPool.GapCVP.Part10A
 
 /-! # GapCVP proof, part 10, continuation 02 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -36,7 +36,8 @@ open Turing GapCVP.SourceOriginalSourcePreservingTM
 open GapCVP.SourceMixedRadixMaskSelectedRankTaggedSquareBasisPairTM
 open GapCVP.CNFGuardedFiveFamilyTagDispatchTM
 
-private def sourceQaryMaskRankTaggedLowerLeftEqualitySelection
+/-- Prepend the equality marker for two computed words to the original input. -/
+def sourceQaryMaskRankTaggedLowerLeftEqualitySelection
     (first second : List Bool → List Bool)
     (input : List Bool) : List Bool :=
   (maskComputedWordEquality first second input).headD
@@ -491,7 +492,7 @@ theorem sourceNormalizedVariableLiteralList_variables
       formulaVariables]
 
 /-- GapCVP reduction support. -/
-def sourceNormalizedVariableRankQuery
+@[expose] def sourceNormalizedVariableRankQuery
     (variableIndex : ℕ) (formula : ThreeCNF) : List Bool :=
   lengthPrefixedWord (Computability.encodeNat variableIndex) ++
     encodeThreeCNF formula
@@ -1346,7 +1347,7 @@ open Turing GapCVP.BinaryEncoding GapCVP.SourceFormulaStructuralDecoder GapCVP.G
 open GapCVP.CNFFlatPhysicalBinaryAppendTM
 
 /-- GapCVP reduction support. -/
-def affineCellQuery
+@[expose] def affineCellQuery
     (row column : ℕ) (source : List Bool) : List Bool :=
   lengthPrefixedWord (List.replicate row true) ++
     lengthPrefixedWord (List.replicate column true) ++ source
@@ -1514,7 +1515,7 @@ open GapCVP.SourceLatticeStructuralRadiusNumerator GapCVP.SourceLatticeStructura
 open GapCVP.SourceLatticeStructuralRationalRadiusTM
 
 /-- GapCVP reduction support. -/
-def squareRootAccumulator (input : List Bool) : List Bool :=
+@[expose] def squareRootAccumulator (input : List Bool) : List Bool :=
   firstFieldContents input
 
 /-- GapCVP reduction support. -/
@@ -1524,7 +1525,7 @@ noncomputable def squareRootAccumulatorComputable :
   firstFieldContentsComputable
 
 /-- GapCVP reduction support. -/
-def squareRootTarget (input : List Bool) : List Bool :=
+@[expose] def squareRootTarget (input : List Bool) : List Bool :=
   firstFieldContents (firstFieldSuffix input)
 
 /-- GapCVP reduction support. -/
@@ -1670,7 +1671,7 @@ private theorem squareRootCandidate_valid
   · simp only [hlt, decide_false, Bool.false_eq_true, ↓reduceIte, List.append_nil, squareRootStep]
 
 /-- GapCVP reduction support. -/
-def squareRootAnchor (target : List Bool) : List Bool :=
+@[expose] def squareRootAnchor (target : List Bool) : List Bool :=
   lengthPrefixedWord target ++ target
 
 private noncomputable def squareRootAnchorComputable
@@ -1829,7 +1830,7 @@ private theorem squareRootStep_iterate_target (target : ℕ) :
     Nat.min_eq_right (ceil_sqrt_le_target target)]
 
 /-- GapCVP reduction support. -/
-def squareRootFoldPreparation
+@[expose] def squareRootFoldPreparation
     (target : List Bool → List Bool)
     (input : List Bool) : List Bool :=
   target input ++ false ::
@@ -1977,7 +1978,7 @@ namespace GaussianPivotScheduleTM
 open Turing
 
 /-- GapCVP reduction support. -/
-def binaryGaussianPivotWord (candidates : List Bool) : List Bool :=
+@[expose] def binaryGaussianPivotWord (candidates : List Bool) : List Bool :=
   match candidates.findIdx? id with
   | none => [false]
   | some index => true :: List.replicate index true
@@ -2293,7 +2294,7 @@ noncomputable def binaryGaussianPivotComputable :
   }
 
 /-- GapCVP reduction support. -/
-def effectiveGaussianPivotCandidates
+@[expose] def effectiveGaussianPivotCandidates
     {m n : ℕ} (state : GapCVP.Core.EffectiveBinaryGaussian.State m n)
     (column : Fin n) : List Bool :=
   (List.finRange m).map (fun row =>
@@ -2337,11 +2338,13 @@ private noncomputable def binaryGaussianPackedPivotCandidateComputable :
     (fun input => (binaryGaussianPivotEligibilityWord_length input).le)
 
 /-- GapCVP reduction support. -/
+@[expose]
 def binaryGaussianPackedPivotRowQuery
     (eligible entry : Bool) (source : List Bool) : List Bool :=
   eligible :: entry :: source
 
 /-- GapCVP reduction support. -/
+@[expose]
 def binaryGaussianPackedPivotColumnWord
     (rows : List (Bool × Bool)) (source : List Bool) : List Bool :=
   unaryBoundedFoldWord rows.length
@@ -2402,6 +2405,7 @@ open GapCVP.CNFFlatPhysicalBinaryAppendTM GapCVP.CNFFlatAdjacentRecordSwapTM
 open GapCVP.CNFFlatAdjacentConditionalSwapTM GapCVP.GaussianRowWorker
 
 /-- GapCVP reduction support. -/
+@[expose]
 def binaryGaussianDynamicBranchOutput
     (selector : List Bool → Bool)
     (valid fallback : List Bool → List Bool)
@@ -2483,6 +2487,7 @@ noncomputable def binaryGaussianIndexedBatchComputable :
     hskip firstFieldContentsComputable
 
 /-- GapCVP reduction support. -/
+@[expose]
 def binaryGaussianPivotBatchStream
     (batches : List (List Bool)) : List Bool :=
   sourceMixedRadixOriginalSourceQueryStream batches
@@ -2604,19 +2609,12 @@ noncomputable def structuralRankOriginalSourceComputable :
   unfold structuralRankOriginalSource
     constructiveStructuralRankQuery
     sourceQaryMaskDynamicGridBaseSource
-  change
-    firstFieldSuffix
-      (firstFieldSuffix
-        (lengthPrefixedWord (List.replicate rank true) ++
-          (lengthPrefixedWord
-            (constructiveStructuralRecordCountOutput dimension input) ++
-              input))) = input
   rw [firstFieldSuffix_valid
     (List.replicate rank true)
     (lengthPrefixedWord
-      (constructiveStructuralRecordCountOutput dimension input) ++ input)]
+      ((constructiveStructuralRecordWidth dimension).output input) ++ input)]
   exact firstFieldSuffix_valid
-    (constructiveStructuralRecordCountOutput dimension input) input
+    ((constructiveStructuralRecordWidth dimension).output input) input
 
 /-- GapCVP reduction support. -/
 def structuralRankLessBit
@@ -3082,7 +3080,7 @@ open Turing GapCVP.GaussianRowWorker GapCVP.GaussianPivotScheduleTM
 open GapCVP.GaussianPackedPivotColumnTM GapCVP.SourceFourFamilyBooleanPredicateTM
 
 /-- GapCVP reduction support. -/
-def binaryGaussianReducedConsistencyWord : List Bool → List Bool :=
+@[expose] def binaryGaussianReducedConsistencyWord : List Bool → List Bool :=
   sourceFourFamilyBooleanNotWord ∘
     binaryGaussianFirstCellWord ∘
     binaryGaussianPivotWord ∘
@@ -3260,40 +3258,40 @@ theorem binaryGaussianPivotWord_effective
   cases findPivotOption state column <;> rfl
 
 /-- GapCVP reduction support. -/
-def effectiveGaussianPackedCheckBits
+@[expose] def effectiveGaussianPackedCheckBits
     {m n : ℕ} (state : State m n) : List Bool :=
   (List.finRange m).flatMap fun row =>
     (List.finRange n).map fun column =>
       decide (state.system.check row column = (1 : ZMod 2))
 
 /-- GapCVP reduction support. -/
-def effectiveGaussianPackedRhsBits
+@[expose] def effectiveGaussianPackedRhsBits
     {m n : ℕ} (state : State m n) : List Bool :=
   (List.finRange m).map fun row =>
     decide (state.system.rhs row = (1 : ZMod 2))
 
 /-- GapCVP reduction support. -/
-def effectiveGaussianStatePivotRowOption
+@[expose] def effectiveGaussianStatePivotRowOption
     {m n : ℕ} (state : State m n) (column : Fin n) : Option (Fin m) :=
   (state.pivots.find? fun pivot =>
     decide (pivot.2 = column)).map Prod.fst
 
 /-- GapCVP reduction support. -/
-def effectiveGaussianStatePivotWord
+@[expose] def effectiveGaussianStatePivotWord
     {m n : ℕ} (state : State m n) (column : Fin n) : List Bool :=
   match effectiveGaussianStatePivotRowOption state column with
   | none => [false]
   | some row => true :: List.replicate row.val true
 
 /-- GapCVP reduction support. -/
-def effectiveGaussianStateReducedConsistencyRows
+@[expose] def effectiveGaussianStateReducedConsistencyRows
     {m n : ℕ} (state : State m n) : List (Bool × Bool) :=
   (List.finRange m).map fun row =>
     (decide (state.nextPivot ≤ row.val),
       decide (state.system.rhs row = (1 : ZMod 2)))
 
 /-- GapCVP reduction support. -/
-def effectiveGaussianStateReducedConsistencyQuery
+@[expose] def effectiveGaussianStateReducedConsistencyQuery
     {m n : ℕ} (state : State m n) (source : List Bool) : List Bool :=
   binaryGaussianPackedPivotColumnWord
     (effectiveGaussianStateReducedConsistencyRows state) source
@@ -3346,7 +3344,7 @@ open Turing GapCVP.BinaryEncoding GapCVP.SourceFormulaStructuralDecoder
 open GapCVP.BinaryModularReductionTM
 
 /-- GapCVP reduction support. -/
-def factor400BinarySourceFieldQuery
+@[expose] def factor400BinarySourceFieldQuery
     (lower left right source : List Bool) : List Bool :=
   lengthPrefixedWord lower ++
     lengthPrefixedWord left ++
@@ -3357,7 +3355,7 @@ def factor400BinarySourceLowerBits : List Bool → List Bool :=
   firstFieldContents
 
 /-- GapCVP reduction support. -/
-def factor400BinarySourceLeftBits : List Bool → List Bool :=
+@[expose] def factor400BinarySourceLeftBits : List Bool → List Bool :=
   firstFieldContents ∘ firstFieldSuffix
 
 /-- GapCVP reduction support. -/
@@ -3428,7 +3426,7 @@ noncomputable def factor400BinarySourceFieldSuffixComputable :
       Function.comp_apply, firstFieldSuffix_valid]
 
 /-- GapCVP reduction support. -/
-def factor400BinarySourcePaddedWord
+@[expose] def factor400BinarySourcePaddedWord
     (degree : ℕ) (bits : List Bool) :
     GapCVP.Core.EffectiveBinaryField.Word degree :=
   fun position => bits.getD position.val false
@@ -3452,7 +3450,7 @@ def factor400BinarySourcePaddedWord
   simp only [List.getElem_map, List.getElem_finRange, Fin.cast_mk, Fin.eta]
 
 /-- GapCVP reduction support. -/
-def binarySourceMultiplyModWord
+@[expose] def binarySourceMultiplyModWord
     (input : List Bool) : List Bool :=
   match readLengthPrefixedWord input with
   | none => []
@@ -3823,7 +3821,7 @@ noncomputable def sourcePhysicalLagrangeProductFoldComputable
     sourcePhysicalLagrangeProduct_polynomiallyBoundedFoldStates
 
 /-- GapCVP reduction support. -/
-def sourcePhysicalLagrangePackedFactorWords
+@[expose] def sourcePhysicalLagrangePackedFactorWords
     {degree : ℕ}
     (factors : List (GapCVP.Core.EffectiveBinaryField.Word degree)) :
     List Bool :=
@@ -3963,11 +3961,11 @@ open GapCVP.Core GapCVP.Core.EffectiveBinaryField Polynomial
 open scoped BigOperators
 
 /-- GapCVP reduction support. -/
-def zeroWord (degree : ℕ) : EffectiveBinaryField.Word degree :=
+@[expose] def zeroWord (degree : ℕ) : EffectiveBinaryField.Word degree :=
   fun _ => false
 
 /-- GapCVP reduction support. -/
-def oneWord (degree : ℕ) : EffectiveBinaryField.Word degree :=
+@[expose] def oneWord (degree : ℕ) : EffectiveBinaryField.Word degree :=
   fun bit => decide (bit.val = 0)
 
 theorem wordPolynomial_zeroWord (degree : ℕ) :
@@ -4156,7 +4154,7 @@ private theorem reduceAt_preserves_above {e : ℕ}
   · rfl
 
 /-- GapCVP reduction support. -/
-def reducePrefix {e : ℕ} (lower : Word e) (count : ℕ)
+@[expose] def reducePrefix {e : ℕ} (lower : Word e) (count : ℕ)
     (word : Word (2 * e)) : Word (2 * e) :=
   (List.range count).foldl
     (fun accumulator offset =>
@@ -4234,7 +4232,7 @@ private theorem reduceProduct_high_zero {e : ℕ}
   omega
 
 /-- GapCVP reduction support. -/
-def truncateWord {e : ℕ} (word : Word (2 * e)) : Word e :=
+@[expose] def truncateWord {e : ℕ} (word : Word (2 * e)) : Word e :=
   fun i => word ⟨i.val, by
     have hi := i.isLt
     omega⟩
@@ -4299,7 +4297,7 @@ private theorem wordElement_multiplyMod {degree : ℕ}
   exact multiplyMod_quotient (irreducibleWord degree) left right
 
 /-- GapCVP reduction support. -/
-noncomputable def sourceWordValue
+@[expose] noncomputable def sourceWordValue
     (encodingLength : ℕ) (formula : GapCVP.Core.Formula)
     (word : Word
       (GapCVP.Core.sourceFieldExponent
@@ -4371,7 +4369,7 @@ theorem sourceWordValue_sourceWordPow
       rw [sourceWordPow, sourceWordValue_multiplyMod, ih, pow_succ]
 
 /-- GapCVP reduction support. -/
-def sourceInverseWord {degree : ℕ}
+@[expose] def sourceInverseWord {degree : ℕ}
     (word : Word degree) : Word degree :=
   sourceWordPow word ((2 ^ degree - 2))
 

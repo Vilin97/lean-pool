@@ -50,7 +50,7 @@ open GapCVP.CNFBoundedRecordFoldTM GapCVP.CNFFlatPhysicalBinaryAppendTM
 open GapCVP.CNFFiveFamilyFlatIndexedCatalogueTM
 
 /-- GapCVP reduction support. -/
-def fiveIndependentSourceCountWord
+@[expose] def fiveIndependentSourceCountWord
     (count : Polynomial ℕ) (original : List Bool) : List Bool :=
   List.replicate (count.eval original.length) true
 
@@ -82,7 +82,7 @@ private noncomputable def fiveFamilyIndependentSourceRankDescriptorComputable
   simpa only [Function.comp_def] using physical
 
 /-- GapCVP reduction support. -/
-def fiveIndependentSourceRankWords
+@[expose] def fiveIndependentSourceRankWords
     (count : ℕ) : List (List Bool) :=
   (List.range count).map fun rank => List.replicate rank true
 

@@ -560,6 +560,7 @@ open GapCVP.SourceCanonicalFixedWordTuringTM GapCVP.CLStructuralPrefixWriter
 open GapCVP.CNFCappedUnaryPairArithmeticTM GapCVP.CNFFlatPhysicalBinaryAppendTM
 
 /-- GapCVP reduction support. -/
+@[expose]
 def sourceOriginalIndexedClauseQuery
     (index : ℕ) (formula : ThreeCNF) : List Bool :=
   List.replicate index true ++ false :: encodeThreeCNF formula
@@ -705,6 +706,7 @@ private theorem sourceOriginalIndexedClauseSuffix_iterate_body
     formula index
 
 /-- GapCVP reduction support. -/
+@[expose]
 def sourceOriginalIndexedLiteralSignOutput
     (input : List Bool) : List Bool :=
   markerConditionalOutput
@@ -726,6 +728,7 @@ noncomputable def sourceOriginalIndexedLiteralSignComputable :
   simpa only [Function.comp_def] using hphysical
 
 /-- GapCVP reduction support. -/
+@[expose]
 def sourceOriginalIndexedLiteralVariableOutput
     (input : List Bool) : List Bool :=
   lengthPrefixedWord (firstFieldContents input)
@@ -740,6 +743,7 @@ private noncomputable def sourceOriginalIndexedLiteralVariableComputable :
   simpa only [Function.comp_def] using hphysical
 
 /-- GapCVP reduction support. -/
+@[expose]
 def sourceOriginalIndexedPhysicalLiteralOutput
     (input : List Bool) : List Bool :=
   sourceOriginalIndexedLiteralVariableOutput input ++
@@ -768,6 +772,7 @@ noncomputable def sourceOriginalIndexedPhysicalLiteralComputable :
       List.append_assoc]
 
 /-- GapCVP reduction support. -/
+@[expose]
 def sourceOriginalIndexedSecondLiteralOutput : List Bool → List Bool :=
   sourceOriginalIndexedPhysicalLiteralOutput ∘ literalSuffix
 
@@ -779,6 +784,7 @@ private noncomputable def sourceOriginalIndexedSecondLiteralComputable :
     sourceOriginalIndexedPhysicalLiteralComputable
 
 /-- GapCVP reduction support. -/
+@[expose]
 def sourceOriginalIndexedThirdLiteralOutput : List Bool → List Bool :=
   sourceOriginalIndexedPhysicalLiteralOutput ∘
     (literalSuffix ∘ literalSuffix)
@@ -792,6 +798,7 @@ private noncomputable def sourceOriginalIndexedThirdLiteralComputable :
     sourceOriginalIndexedPhysicalLiteralComputable
 
 /-- GapCVP reduction support. -/
+@[expose]
 def sourceOriginalIndexedPhysicalThreeClauseOutput
     (input : List Bool) : List Bool :=
   sourceOriginalIndexedPhysicalLiteralOutput input ++
@@ -898,6 +905,7 @@ open GapCVP.CNFFlatAdjacentRecordSwapTM GapCVP.CNFFlatAdjacentRecordSwapTotalCer
 open GapCVP.CNFFlatPhysicalBinaryAppendTM
 
 /-- GapCVP reduction support. -/
+@[expose]
 def sourceAnchoredGridRankSourcePair (input : List Bool) : List Bool :=
   lengthPrefixedWord (firstFieldContents (firstFieldSuffix input)) ++
     firstFieldContents input
@@ -912,7 +920,7 @@ private noncomputable def sourceAnchoredGridRankSourcePairComputable :
   exact pointwiseAppendComputable hprefix firstFieldContentsComputable
 
 /-- GapCVP reduction support. -/
-def sourceAnchoredGridRawCandidate
+@[expose] def sourceAnchoredGridRawCandidate
     (candidate : List Bool → List Bool)
     (input : List Bool) : List Bool :=
   candidate (sourceAnchoredGridRankSourcePair input)
@@ -1079,7 +1087,7 @@ private noncomputable def sourceAnchoredGridCandidateSelectionComputable
   simpa only [Function.comp_def] using hphysical
 
 /-- GapCVP reduction support. -/
-def sourceAnchoredGridGuardedCandidate
+@[expose] def sourceAnchoredGridGuardedCandidate
     (candidate : List Bool → List Bool)
     (input : List Bool) : List Bool :=
   if sourceAnchoredGridCandidateSelector candidate input
@@ -2238,6 +2246,7 @@ noncomputable def fiveFamilyOriginalHeadBitComputable :
       cases head <;> rfl
 
 /-- GapCVP reduction support. -/
+@[expose]
 def fiveFamilyOriginalDynamicBitWord
     (index source : List Bool → List Bool)
     (input : List Bool) : List Bool :=
