@@ -3,10 +3,14 @@ Copyright (c) 2026 Haowei Lin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Haowei Lin, Shanda Li
 -/
-import LeanPool.SumDifferenceExponent.Main
-import Mathlib.Analysis.Complex.ExponentialBounds
+module
+
+public import LeanPool.SumDifferenceExponent.Main
+public import Mathlib.Analysis.Complex.ExponentialBounds
 
 /-! A fully explicit `10⁻⁹⁹⁹` quantitative witness. -/
+
+@[expose] public section
 
 open scoped BigOperators Pointwise
 open Filter Topology
@@ -20,7 +24,8 @@ def quantitativeScale : ℕ := 10 ^ 999
 def quantitativePower : ℕ := 100 * quantitativeScale
 
 -- Keep kernel conversion from evaluating the enormous closed power in the witness.
-private def powerOfTwo (n : ℕ) : ℕ := 2 ^ n
+/-- A power of two kept as a named definition in the quantitative witness. -/
+def powerOfTwo (n : ℕ) : ℕ := 2 ^ n
 
 private theorem two_le_powerOfTwo (n : ℕ) (hn : 0 < n) : 2 ≤ powerOfTwo n :=
   Nat.le_pow hn

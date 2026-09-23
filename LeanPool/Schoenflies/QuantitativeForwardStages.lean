@@ -3,10 +3,12 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.SourceJoining
-import LeanPool.Schoenflies.QuantitativeStages
-import LeanPool.Schoenflies.StageTower
-import LeanPool.Schoenflies.Windows
+module
+
+public import LeanPool.Schoenflies.SourceJoining
+public import LeanPool.Schoenflies.QuantitativeStages
+public import LeanPool.Schoenflies.StageTower
+public import LeanPool.Schoenflies.Windows
 
 /-!
 # Quantitative forward local-grid stages
@@ -16,6 +18,8 @@ This module turns that containment into the pointwise source-star estimate used 
 `prop:shrinking-stars`, and records that the target face mesh from the preceding reverse stage
 survives the forward refinement.
 -/
+
+@[expose] public section
 
 open Metric Set
 

@@ -3,7 +3,9 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import LeanPool.ACMax.Cuts.WeightedCut
+module
+
+public import LeanPool.ACMax.Cuts.WeightedCut
 
 /-!
 # The good-triangle certificate
@@ -12,6 +14,8 @@ A triangle sends `deg x + deg y + deg z - 6` edges to its complement.  The
 usual weighted cut vector therefore certifies algebraic connectivity at most
 two whenever that boundary satisfies the corresponding cut inequality.
 -/
+
+@[expose] public section
 
 namespace ACMax
 

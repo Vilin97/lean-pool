@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.RealizeSplit
-import LeanPool.Schoenflies.FaceCycles
+module
+
+public import LeanPool.Schoenflies.RealizeSplit
+public import LeanPool.Schoenflies.FaceCycles
 
 /-!
 # The skeleton homeomorphism across a 2-cell split
@@ -98,6 +100,8 @@ arcs of the graph's own edges. It is stated in the root `Graph` namespace next t
 `Graph.pointSet_union` (which lives in `Schoenflies/FaceCycles.lean`); if a second consumer
 appears it belongs there or in `Schoenflies/Graph/Drawing.lean`.
 -/
+
+@[expose] public section
 
 open Set Schoenflies
 open scoped Graph
