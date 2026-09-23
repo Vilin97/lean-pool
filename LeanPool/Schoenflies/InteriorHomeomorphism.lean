@@ -3,9 +3,11 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.InitialGenerated
-import LeanPool.Schoenflies.InitialOuterCycle
-import LeanPool.Schoenflies.QuantitativeRecursion
+module
+
+public import LeanPool.Schoenflies.InitialGenerated
+public import LeanPool.Schoenflies.InitialOuterCycle
+public import LeanPool.Schoenflies.QuantitativeRecursion
 
 /-!
 # The interior homeomorphism
@@ -14,6 +16,8 @@ This module starts the quantitative recursion at the canonical initial matched p
 the construction of the nested stage sequence and therefore obtains the limit homeomorphism
 between the inside of an arbitrary Jordan curve and the open square.
 -/
+
+@[expose] public section
 
 open Set
 

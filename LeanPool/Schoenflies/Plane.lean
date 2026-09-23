@@ -3,9 +3,11 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.Analysis.Convex.Topology
-import Mathlib.Topology.MetricSpace.Thickening
+module
+
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import Mathlib.Analysis.Convex.Topology
+public import Mathlib.Topology.MetricSpace.Thickening
 
 /-!
 # The plane, and the compactness toolkit
@@ -26,6 +28,8 @@ connectedness that the rest of the development uses without comment.
 
 Lemma 1.5 (closure and diameter) is `Metric.diam_closure` in Mathlib.
 -/
+
+@[expose] public section
 
 open Metric Set
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Boon Suan Ho. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Boon Suan Ho
 -/
-import LeanPool.FourAP.Words
-import LeanPool.FourAP.Splice
+module
+
+public import LeanPool.FourAP.Words
+public import LeanPool.FourAP.Splice
 
 /-!
 # Joining the odd and even extensions
@@ -18,6 +20,8 @@ are rescaled by `x ↦ 2x+1` and `x ↦ 2x` when appended to the old word `P`.
 The guard on the odd target set is exactly the paper's requirement that all
 normalized odd entries below `h` have been included.
 -/
+
+@[expose] public section
 
 namespace FourAP
 

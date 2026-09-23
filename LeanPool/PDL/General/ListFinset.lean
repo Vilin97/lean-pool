@@ -4,16 +4,20 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PDL formalization contributors (see project card)
 -/
 
-import Mathlib.Data.Finset.Dedup
-import Mathlib.Data.Finset.Image
-import Mathlib.Data.List.Basic
-import Mathlib.Data.Vector.Basic
+module
+
+public import Mathlib.Data.Finset.Dedup
+public import Mathlib.Data.Finset.Image
+public import Mathlib.Data.List.Basic
+public import Mathlib.Data.Vector.Basic
 
 /-! # General helper lemmas
 
 Nothing in this file is about PDL. These are helper definitions and lemmas that are
 used in several places and might also be in (newer versions of) Mathlib.
 -/
+
+@[expose] public section
 
 namespace PDL
 

@@ -4,9 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import LeanPool.GapCVP.Part06A
+module
+
+public import LeanPool.GapCVP.Part06A
 
 /-! # GapCVP proof, part 06, continuation 02 -/
+
+public section
 
 noncomputable section
 
@@ -602,7 +606,8 @@ structure SourceUnaryDivisionState where
   current : Option Bool
   deriving Fintype
 
-private def sourceUnaryDivisionControl (valid : Bool) : SourceUnaryDivisionState :=
+/-- Control state for unary division, with no bit currently inspected. -/
+def sourceUnaryDivisionControl (valid : Bool) : SourceUnaryDivisionState :=
   ⟨valid, none⟩
 
 private def sourceUnaryDivisionPeek (stack : Fin 8)
@@ -1240,13 +1245,13 @@ section
 open Turing GapCVP.BinaryEncoding
 
 /-- GapCVP reduction support. -/
-def sourceUnaryDivisionQuery
+@[expose] def sourceUnaryDivisionQuery
     (dividend modulus : ℕ) (source : List Bool) : List Bool :=
   List.replicate dividend true ++
     false :: (List.replicate modulus true ++ false :: source)
 
 /-- GapCVP reduction support. -/
-def sourceUnaryDivisionOutput (input : List Bool) : List Bool :=
+@[expose] def sourceUnaryDivisionOutput (input : List Bool) : List Bool :=
   match readUnaryPrefix input with
   | none => false :: false :: input
   | some (dividend, remaining) =>

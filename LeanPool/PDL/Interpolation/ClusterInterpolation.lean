@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PDL formalization contributors (see project card)
 -/
 
-import LeanPool.PDL.Interpolation.ClusterSatDownFacts
+module
+
+public import LeanPool.PDL.Interpolation.ClusterSatDownFacts
 
 /-! # Interpolants for proper clusters (Lemma 9.3)
 
@@ -31,6 +33,8 @@ coarse `PathIn` sense. The first half of the file bridges that gap, by pushing t
 interpolants of the coarse exits upwards through the local tableaux with
 `LocalTableau.interpolant`.
 -/
+
+@[expose] public section
 
 namespace PDL
 
