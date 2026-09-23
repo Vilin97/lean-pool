@@ -3,7 +3,9 @@ Copyright (c) 2026 Xiaoyu Li, Andi Han, Jiaojiao Jiang, Junbin Gao. All rights r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xiaoyu Li, Andi Han, Jiaojiao Jiang, Junbin Gao
 -/
-import LeanPool.LanguageGeneration.Core.ClassGeneration
+module
+
+public import LeanPool.LanguageGeneration.Core.ClassGeneration
 
 /-!
 # Finite positive witnesses for ordinary generation
@@ -11,6 +13,8 @@ import LeanPool.LanguageGeneration.Core.ClassGeneration
 This extension uses the upstream sequence-input model without redefining it.
 `SetDriven` below refers to dependence on the input set, not set-valued output.
 -/
+
+@[expose] public section
 
 namespace GenLimit.FiniteWitness
 

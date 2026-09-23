@@ -3,7 +3,9 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Curve
+module
+
+public import LeanPool.Schoenflies.Curve
 
 /-!
 # Gluing arcs
@@ -41,6 +43,8 @@ itself. Pinning those needs the start/finish counterparts of the midpoint lemmas
   Jordan curve; the converse of the two-arcs decomposition, and the form every *construction*
   of a curve takes.
 -/
+
+@[expose] public section
 
 open Set unitInterval
 

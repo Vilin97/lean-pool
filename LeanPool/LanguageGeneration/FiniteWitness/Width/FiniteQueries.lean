@@ -3,12 +3,16 @@ Copyright (c) 2026 Xiaoyu Li, Andi Han, Jiaojiao Jiang, Junbin Gao. All rights r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xiaoyu Li, Andi Han, Jiaojiao Jiang, Junbin Gao
 -/
-import LeanPool.LanguageGeneration.FiniteWitness.Characterization
-import Mathlib.Data.Finset.Prod
+module
+
+public import LeanPool.LanguageGeneration.FiniteWitness.Characterization
+public import Mathlib.Data.Finset.Prod
 
 /-!
 # Finite history domains and query bounds for normalization
 -/
+
+@[expose] public section
 
 namespace GenLimit.FiniteWitness
 

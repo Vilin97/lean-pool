@@ -3,8 +3,10 @@ Copyright (c) 2026 Jonathan Conrad, Paula Muermann, Maryna Viazovska. All rights
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jonathan Conrad, Paula Muermann, Maryna Viazovska
 -/
-import LeanPool.PentagonalNumberTheoremAnalytic.QSeries.Defs
-import Mathlib.Analysis.SpecialFunctions.Log.Summable
+module
+
+public import LeanPool.PentagonalNumberTheoremAnalytic.QSeries.Defs
+public import Mathlib.Analysis.SpecialFunctions.Log.Summable
 
 /-!
 # Infinite q-Pochhammer symbol
@@ -24,6 +26,8 @@ partial-product convergence.
 * `QSeries.qPochhammerInf_ne_zero` — non-vanishing for $\|z\| < 1$, $\|q\| < 1$.
 * `QSeries.qPochhammerInf_eq_one_sub_mul` — telescoping $(z;q)_\infty = (1-z)(zq;q)_\infty$.
 -/
+
+@[expose] public section
 
 open Finset Filter
 open scoped Topology

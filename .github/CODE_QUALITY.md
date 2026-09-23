@@ -109,7 +109,7 @@ Branch protection to require these checks before merge is future work.
 
 ### 6. LLM Review
 
-[`llm-review.yml`](workflows/llm-review.yml) runs after successful Lean Action CI on a PR head, or manually through `/review` and `workflow_dispatch`. It fetches the PR diff with `gh`, classifies the PR, and posts a sticky PR comment containing the reviewed head SHA, structured assessment, verdict, findings, token counts, and billing source. Reviews use GPT-6-Astra through the Azure VM's Codex account pool, without an OpenAI API key or paid API fallback. See [Azure review operations](../python/azure-review.md).
+A private worker polls open PRs and `/review` comments every ten minutes. Automatic content reviews wait for successful Lean Action CI on the current head. Anyone can request a review on any open PR with `/review`. The worker posts the existing sticky comment with the reviewed head SHA, rubric verdicts, findings, and token accounting. Reviews use GPT-6-Astra at `xhigh` with Codex subscription quota and no paid API fallback. See [review operations](../python/review-operations.md).
 
 The rules applied depend on what the PR does:
 

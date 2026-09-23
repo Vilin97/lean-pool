@@ -4,9 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PDL formalization contributors (see project card)
 -/
 
-import LeanPool.PDL.Interpolation.Theorem
+module
+
+public import LeanPool.PDL.Interpolation.Theorem
 
 /-! # Beth Definability (Corollary 7.5) -/
+
+@[expose] public section
 
 namespace PDL
 

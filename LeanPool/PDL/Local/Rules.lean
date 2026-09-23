@@ -5,12 +5,16 @@ Authors: PDL formalization contributors (see project card)
 -/
 
 
-import LeanPool.PDL.Sequent
-import LeanPool.PDL.Local.UnfoldBox
-import LeanPool.PDL.Local.UnfoldDia
-import Mathlib.Data.Finset.Sort
+module
+
+public import LeanPool.PDL.Sequent
+public import LeanPool.PDL.Local.UnfoldBox
+public import LeanPool.PDL.Local.UnfoldDia
+public import Mathlib.Data.Finset.Sort
 
 /-! ## Local rules and local rule applications  -/
+
+@[expose] public section
 
 namespace PDL
 

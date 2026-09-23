@@ -3,8 +3,10 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import LeanPool.ACMax.Band.Subset
-import LeanPool.ACMax.Counting.V9DischargeSharp
+module
+
+public import LeanPool.ACMax.Band.Subset
+public import LeanPool.ACMax.Counting.V9DischargeSharp
 
 /-!
 # The SUM tier-9 kill at the bulk-credited moat (`starved_v9_kill_ahl_sum_sharp`)
@@ -22,6 +24,8 @@ The EDGE companion (`starved_v9_kill_ahl_edge`) has no sharp counterpart here be
 longer needed: at the longer target the SUM disjunct alone covers every cell of the region on
 `55 ≤ n ≤ 122` (the EDGE disjunct was load-bearing exactly on `77 ≤ n ≤ 81` at the old target).
 -/
+
+@[expose] public section
 
 namespace ACMax
 

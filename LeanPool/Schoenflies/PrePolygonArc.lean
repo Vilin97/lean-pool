@@ -3,7 +3,9 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.PrePolygonSep
+module
+
+public import LeanPool.Schoenflies.PrePolygonSep
 
 /-!
 # The arcs of a `PrePolygon`, and inserting a vertex
@@ -68,6 +70,8 @@ of the split edge lies on neither half.
   theorem **with the cut points anywhere on the curve**. Compare
   `Schoenflies.exists_closedPolygon_split`, which requires them to be corners.
 -/
+
+@[expose] public section
 
 open Bornology Metric Set
 
