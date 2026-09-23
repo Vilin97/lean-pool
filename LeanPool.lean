@@ -6064,6 +6064,11 @@ import LeanPool.Polytopes.MainTheorem
 import LeanPool.Polytopes.Polar
 import LeanPool.Polytopes.Polytope
 import LeanPool.Polytopes.Pre
+import LeanPool.Puiseux
+import LeanPool.Puiseux.AlgClosed
+import LeanPool.Puiseux.Algebraic
+import LeanPool.Puiseux.Basic
+import LeanPool.Puiseux.HenselSplitting
 import LeanPool.PumpingCfg
 import LeanPool.PumpingCfg.ChomskyNormalForm.Basic
 import LeanPool.PumpingCfg.ChomskyNormalForm.ContextFreeGrammarExtras
