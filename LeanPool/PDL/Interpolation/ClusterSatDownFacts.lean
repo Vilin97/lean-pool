@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PDL formalization contributors (see project card)
 -/
 
-import LeanPool.PDL.Interpolation.Uniformity
+module
+
+public import LeanPool.PDL.Interpolation.Uniformity
 
 /-! # The facts about a proper cluster used for Lemma 10.7
 
@@ -27,6 +29,8 @@ We import `Pdl.Uniformity` and not `Pdl.ClusterInterpolation`, because the latte
 `LoadedCluster.satDownFacts` gets used; the helper lemmas about right rules that we need
 are the copies in the `Uniformity` namespace.
 -/
+
+@[expose] public section
 
 namespace PDL
 

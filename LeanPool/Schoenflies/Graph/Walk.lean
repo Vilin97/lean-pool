@@ -3,9 +3,11 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import Mathlib.Combinatorics.Graph.Subgraph
-import Mathlib.Combinatorics.Graph.Delete
-import Mathlib.Data.List.Basic
+module
+
+public import Mathlib.Combinatorics.Graph.Subgraph
+public import Mathlib.Combinatorics.Graph.Delete
+public import Mathlib.Data.List.Basic
 
 /-!
 # Walks and paths in a multigraph
@@ -79,6 +81,8 @@ by shortening an arbitrary walk at repeated vertices"). This file supplies that 
 * `Graph.IsPath.reverse`, `Graph.IsPath.split` — a path backwards, and a path cut in two at a
   vertex it visits; what `lem:subdivision-ear-preserve` and `lem:relative-ear` run on.
 -/
+
+@[expose] public section
 
 open Set
 

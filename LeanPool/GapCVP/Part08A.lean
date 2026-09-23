@@ -4,13 +4,17 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import LeanPool.GapCVP.Part07
-import Mathlib.FieldTheory.Finite.GaloisField
-import Mathlib.FieldTheory.PrimitiveElement
-import Mathlib.LinearAlgebra.Lagrange
-import Mathlib.LinearAlgebra.Vandermonde
+module
+
+public import LeanPool.GapCVP.Part07
+public import Mathlib.FieldTheory.Finite.GaloisField
+public import Mathlib.FieldTheory.PrimitiveElement
+public import Mathlib.LinearAlgebra.Lagrange
+public import Mathlib.LinearAlgebra.Vandermonde
 
 /-! # GapCVP proof, part 08 -/
+
+public section
 
 noncomputable section
 
@@ -647,7 +651,7 @@ private theorem fiveFamilyIndependentActualSourceClauses_toFinset
     or_assoc]
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def fiveIndependentActualSourceClauseCountPolynomial
+@[expose] def fiveIndependentActualSourceClauseCountPolynomial
     (bound : Polynomial ℕ)
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier) :
@@ -713,7 +717,7 @@ private theorem fiveFamilyIndependentSquareGridRank_eq
     (rowWidth bound machine original + 1)
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def fiveIndependentSquareGridSlots
+@[expose] def fiveIndependentSquareGridSlots
     (bound : Polynomial ℕ)
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
@@ -851,7 +855,7 @@ private theorem fiveFamilyIndependentForbiddenGridRank_eq
     (rowWidth bound machine original + 1)
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def fiveIndependentForbiddenGridWindows
+@[expose] def fiveIndependentForbiddenGridWindows
     (bound : Polynomial ℕ)
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
@@ -1137,7 +1141,7 @@ theorem fiveFamilyIndependentForbiddenRankWorker_valid
       List.append_assoc] using hphysical
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def fiveIndependentPhysicalAtLeastSourceClauses
+@[expose] def fiveIndependentPhysicalAtLeastSourceClauses
     (bound : Polynomial ℕ)
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
@@ -1151,7 +1155,7 @@ def fiveIndependentPhysicalAtLeastSourceClauses
         position.1 position.2
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def fiveIndependentPhysicalAtMostSourceClauses
+@[expose] def fiveIndependentPhysicalAtMostSourceClauses
     (bound : Polynomial ℕ)
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
@@ -1168,7 +1172,7 @@ def fiveIndependentPhysicalAtMostSourceClauses
           atLeastOneClause position.1 position.2
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def fiveIndependentInitialGridPositions
+@[expose] def fiveIndependentInitialGridPositions
     (bound : Polynomial ℕ)
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
@@ -1202,7 +1206,7 @@ def fiveIndependentInitialGridPositions
   rfl
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def fiveIndependentPhysicalInitialSourceClauses
+@[expose] def fiveIndependentPhysicalInitialSourceClauses
     (bound : Polynomial ℕ)
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
@@ -1216,7 +1220,7 @@ def fiveIndependentPhysicalInitialSourceClauses
           bound machine original).input)
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def fiveIndependentPhysicalForbiddenSourceClauses
+@[expose] def fiveIndependentPhysicalForbiddenSourceClauses
     (bound : Polynomial ℕ)
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
@@ -1232,7 +1236,7 @@ def fiveIndependentPhysicalForbiddenSourceClauses
           else atLeastOneClause window.1.1 window.1.2
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def fiveIndependentPhysicalSourceClauses
+@[expose] def fiveIndependentPhysicalSourceClauses
     (bound : Polynomial ℕ)
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)

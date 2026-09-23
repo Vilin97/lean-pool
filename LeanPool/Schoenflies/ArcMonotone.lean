@@ -3,7 +3,9 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Subarc
+module
+
+public import LeanPool.Schoenflies.Subarc
 
 /-!
 # A continuous injection between two arcs is monotone
@@ -65,6 +67,8 @@ Declarations:
 * `Schoenflies.ArcMatch.image_initial`, `…image_terminal` — initial and terminal subarcs, given
   matching endpoints.
 -/
+
+@[expose] public section
 
 open Set unitInterval
 

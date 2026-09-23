@@ -3,7 +3,9 @@ Copyright (c) 2026 Jonathan Conrad, Paula Muermann, Maryna Viazovska. All rights
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jonathan Conrad, Paula Muermann, Maryna Viazovska
 -/
-import LeanPool.PentagonalNumberTheoremAnalytic.QSeries.JTPCore
+module
+
+public import LeanPool.PentagonalNumberTheoremAnalytic.QSeries.JTPCore
 
 /-!
 # Jacobi triple product identity
@@ -24,6 +26,8 @@ The proof uses:
 
 * `QSeries.jacobiTripleProduct` — the Jacobi triple product identity.
 -/
+
+@[expose] public section
 
 open Finset Filter
 open scoped Topology

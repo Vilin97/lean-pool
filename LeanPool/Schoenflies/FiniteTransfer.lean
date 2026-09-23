@@ -3,16 +3,18 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.RefinementStars
-import LeanPool.Schoenflies.OverlayGraph
-import LeanPool.Schoenflies.SkeletonAccess
-import LeanPool.Schoenflies.Graph.RelativeEar
-import LeanPool.Schoenflies.Graph.Relabel
-import LeanPool.Schoenflies.Graph.CycleJordan
-import LeanPool.Schoenflies.JordanClosed
-import LeanPool.Schoenflies.BoundaryCyclesGenerated
-import LeanPool.Schoenflies.MatchedSplit
-import LeanPool.Schoenflies.MatchedArc
+module
+
+public import LeanPool.Schoenflies.RefinementStars
+public import LeanPool.Schoenflies.OverlayGraph
+public import LeanPool.Schoenflies.SkeletonAccess
+public import LeanPool.Schoenflies.Graph.RelativeEar
+public import LeanPool.Schoenflies.Graph.Relabel
+public import LeanPool.Schoenflies.Graph.CycleJordan
+public import LeanPool.Schoenflies.JordanClosed
+public import LeanPool.Schoenflies.BoundaryCyclesGenerated
+public import LeanPool.Schoenflies.MatchedSplit
+public import LeanPool.Schoenflies.MatchedArc
 
 /-!
 # Finite transfer, direction (a): toward the square
@@ -139,6 +141,8 @@ there as `Schoenflies.finite_transfer_toward_square`.
   `Schoenflies.finite_transfer_toward_square_of_commonSubdivision_of_earStep` — the
   finite-transfer induction parametrized by its two construction interfaces.
 -/
+
+@[expose] public section
 
 open Metric Set
 open scoped Graph
