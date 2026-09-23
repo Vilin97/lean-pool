@@ -3,9 +3,11 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Graph.Component
-import LeanPool.Schoenflies.Graph.Ear
-import LeanPool.Schoenflies.Graph.Tree
+module
+
+public import LeanPool.Schoenflies.Graph.Component
+public import LeanPool.Schoenflies.Graph.Ear
+public import LeanPool.Schoenflies.Graph.Tree
 
 /-!
 # The relative ear decomposition
@@ -90,6 +92,8 @@ current graph and add the next geometric ear") and of the finite transfer of Par
 
 Root `Graph`, as fixed by `Schoenflies/Graph/Walk.lean`.
 -/
+
+@[expose] public section
 
 open Set
 open scoped Graph

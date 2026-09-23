@@ -3,7 +3,9 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Curve
+module
+
+public import LeanPool.Schoenflies.Curve
 
 /-!
 # Subarcs, open arcs, and the subarc basis
@@ -44,6 +46,8 @@ the density arguments of `lem:accessible-dense`, which need `basic_piece_inside_
   `openArc_subarc_isRelOpen` are the "relatively open subarcs" of `lem:jordan-circle`.
 * `basic_piece_inside_ball` — the subarc basis.
 -/
+
+@[expose] public section
 
 open Set unitInterval
 

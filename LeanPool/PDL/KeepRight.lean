@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PDL formalization contributors (see project card)
 -/
 
-import LeanPool.PDL.Soundness
+module
+
+public import LeanPool.PDL.Soundness
 
 /-! ## Helpers for Lemma 9.4: single steps keep the loading on the right
 
@@ -12,6 +14,8 @@ The lemmas here say that a single step in a tableau, starting at a node that is 
 on the right, can only lead to a node that is loaded on the right or free, and that no
 rule adds formulas to an empty left component.
 -/
+
+@[expose] public section
 
 namespace PDL
 

@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Boon Suan Ho
 -/
 
-import LeanPool.Nivat.Core.Patterns
-import Mathlib.Data.Fintype.EquivFin
-import Mathlib.Data.Rat.Cast.Order
+module
+
+public import LeanPool.Nivat.Core.Patterns
+public import Mathlib.Data.Fintype.EquivFin
+public import Mathlib.Data.Rat.Cast.Order
 
 /-
 Upstream: https://github.com/boonsuan/nivat
@@ -42,6 +44,8 @@ SOFTWARE.
 The reduction in Section 1.1, used in Section 6 to prove Theorem 1.1 (`thm:main`).
 `exists_rational_model` preserves all pattern counts and all individual periods.
 -/
+
+@[expose] public section
 
 namespace Nivat
 

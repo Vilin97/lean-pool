@@ -3,12 +3,14 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Graph.K33Land
-import LeanPool.Schoenflies.Graph.OuterFace
-import LeanPool.Schoenflies.TwoArcs
-import LeanPool.Schoenflies.SimpleArc
-import LeanPool.Schoenflies.SegmentCut
-import LeanPool.Schoenflies.SegmentOrder
+module
+
+public import LeanPool.Schoenflies.Graph.K33Land
+public import LeanPool.Schoenflies.Graph.OuterFace
+public import LeanPool.Schoenflies.TwoArcs
+public import LeanPool.Schoenflies.SimpleArc
+public import LeanPool.Schoenflies.SegmentCut
+public import LeanPool.Schoenflies.SegmentOrder
 
 /-!
 # A Jordan curve separates the plane
@@ -81,6 +83,8 @@ Three groups of declarations here are general and have no home yet on `main`:
 * `Graph.isArcK33_of_pieces` belongs in `Schoenflies/Graph/K33Planar.lean`, next to
   `Graph.IsArcK33`.
 -/
+
+@[expose] public section
 
 open Metric Set unitInterval
 

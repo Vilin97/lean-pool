@@ -4,9 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import LeanPool.GapCVP.Part04D
+module
+
+public import LeanPool.GapCVP.Part04D
 
 /-! # GapCVP proof, part 04, continuation 05 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -22,7 +26,8 @@ namespace OutputBoundedDependentRecordFold
 
 open Turing
 
-private noncomputable def boundedFold_validScanTrace
+/-- Scans a valid unary fold prefix and reaches dispatch within `count + 1` steps. -/
+noncomputable def boundedFoldValidScanTrace
     {worker : List Bool → List Bool}
     (computer : BitTM worker)
     (count : ℕ) (seed : List Bool) (counter : List Bool) :
@@ -54,7 +59,8 @@ private noncomputable def boundedFold_validScanTrace
               Nat.reduceAdd,
           SourceStructuralDecoder.replicate_true_append_cons] using hfull
 
-private noncomputable def boundedFold_drainTrace
+/-- Drains the worker output into scratch before restoring it as the next input. -/
+noncomputable def boundedFoldDrainTrace
     {worker : List Bool → List Bool}
     (computer : BitTM worker)
     (output : List (computer.tm.Γ computer.tm.k₁))
@@ -80,7 +86,8 @@ private noncomputable def boundedFold_drainTrace
           List.append_assoc, List.cons_append, List.nil_append, List.length_cons, Nat.add_comm]
               using hfull
 
-private noncomputable def boundedFold_restoreTrace
+/-- Restores saved bits to the input stack and resumes fold dispatch. -/
+noncomputable def boundedFoldRestoreTrace
     {worker : List Bool → List Bool}
     (computer : BitTM worker)
     (scratch : List Bool)
@@ -111,7 +118,8 @@ private noncomputable def boundedFold_restoreTrace
               List.length_cons, Nat.add_comm,
           Nat.add_left_comm, Nat.reduceAdd] using hfull
 
-private noncomputable def boundedFold_outputTransportTrace
+/-- Transfers one worker output to the next iteration's input within a linear step bound. -/
+noncomputable def boundedFoldOutputTransportTrace
     {worker : List Bool → List Bool}
     (computer : BitTM worker)
     (output counter : List Bool) :
@@ -121,10 +129,10 @@ private noncomputable def boundedFold_outputTransportTrace
       (some (boundedFoldDispatchConfiguration computer
         (List.map computer.inputAlphabet.invFun output) counter))
       (2 * output.length + 2) := by
-  have hfirst := boundedFold_drainTrace computer
+  have hfirst := boundedFoldDrainTrace computer
     (List.map computer.outputAlphabet.invFun output) counter []
   simp only [List.append_nil] at hfirst
-  have hrestore := boundedFold_restoreTrace computer
+  have hrestore := boundedFoldRestoreTrace computer
     (List.map computer.outputAlphabet
       (List.map computer.outputAlphabet.invFun output).reverse)
     [] counter
@@ -147,7 +155,8 @@ private noncomputable def boundedFold_outputTransportTrace
     simp only [List.length_map, List.length_reverse] at hbudget
     omega
 
-private noncomputable def boundedFold_workerExecutionTrace
+/-- Runs the worker machine from its fold configuration within its time bound. -/
+noncomputable def boundedFoldWorkerExecutionTrace
     {worker : List Bool → List Bool}
     (computer : BitTM worker)
     (input counter : List Bool) :
@@ -170,7 +179,8 @@ private noncomputable def boundedFold_workerExecutionTrace
       boundedFoldWorkerConfiguration_halt] using
       hphysical
 
-private noncomputable def boundedFoldRunBudget
+/-- Recursive step budget for the remaining fold iterations. -/
+noncomputable def boundedFoldRunBudget
     {worker : List Bool → List Bool}
     (computer : BitTM worker) : ℕ → List Bool → ℕ
   | 0, _ => 1
@@ -179,7 +189,8 @@ private noncomputable def boundedFoldRunBudget
         (2 * (worker seed).length + 2) +
         boundedFoldRunBudget computer count (worker seed)
 
-private noncomputable def boundedFold_iterationTrace
+/-- Executes all remaining fold iterations from the dispatch configuration. -/
+noncomputable def boundedFoldIterationTrace
     {worker : List Bool → List Bool}
     (computer : BitTM worker)
     (count : ℕ) (seed : List Bool) :
@@ -207,9 +218,9 @@ private noncomputable def boundedFold_iterationTrace
       have hdispatch := oneStep _ _ (boundedFold_dispatch_step computer
           (List.map computer.inputAlphabet.invFun seed)
           (List.replicate count true))
-      have hworker := boundedFold_workerExecutionTrace
+      have hworker := boundedFoldWorkerExecutionTrace
         computer seed (List.replicate count true)
-      have htransport := boundedFold_outputTransportTrace
+      have htransport := boundedFoldOutputTransportTrace
         computer (worker seed) (List.replicate count true)
       have hremaining := ih (worker seed)
       have hfirst := EvalsToInTime.trans (boundedDependentRecordFoldMachine computer).step
@@ -235,7 +246,8 @@ private noncomputable def boundedFold_iterationTrace
         simp only [boundedFoldRunBudget]
         omega
 
-private noncomputable def boundedFold_validTotalTrace
+/-- Runs a valid unary encoded fold input from initialization to its result. -/
+noncomputable def boundedFoldValidTotalTrace
     {worker : List Bool → List Bool}
     (computer : BitTM worker)
     (count : ℕ) (seed : List Bool) :
@@ -248,11 +260,11 @@ private noncomputable def boundedFold_validTotalTrace
         (List.map computer.inputAlphabet.invFun
           ((worker^[count]) seed))))
       (count + 1 + boundedFoldRunBudget computer count seed) := by
-  have hscan := boundedFold_validScanTrace
+  have hscan := boundedFoldValidScanTrace
     computer count seed []
   simp only [List.append_nil] at hscan
   rw [← boundedDependentRecordFoldMachine_init] at hscan
-  have hrun := boundedFold_iterationTrace computer count seed
+  have hrun := boundedFoldIterationTrace computer count seed
   have hfull := EvalsToInTime.trans (boundedDependentRecordFoldMachine computer).step
     (count + 1) (boundedFoldRunBudget computer count seed)
     _ _ _ hscan hrun
@@ -289,7 +301,7 @@ theorem parseUnaryBoundedFold_eq_word
               have hexact := ih parsedCount parsedSeed hremaining
               simp only [hexact, unaryBoundedFoldWord, List.replicate_succ, List.cons_append]
 
-private theorem parseUnaryBoundedFold_none_eq_replicate
+theorem parseUnaryBoundedFoldNoneEqReplicate
     (input : List Bool)
     (hparse : parseUnaryBoundedFold input = none) :
     input = List.replicate input.length true := by
@@ -310,7 +322,8 @@ private theorem parseUnaryBoundedFold_none_eq_replicate
             true :: List.replicate remaining.length true
           exact congrArg (List.cons true) hexact
 
-private noncomputable def boundedFold_missingScanTrace
+/-- Scans a prefix with no delimiter and enters malformed-input handling. -/
+noncomputable def boundedFoldMissingScanTrace
     {worker : List Bool → List Bool}
     (computer : BitTM worker)
     (count : ℕ) (counter : List Bool) :
@@ -338,7 +351,8 @@ private noncomputable def boundedFold_missingScanTrace
           List.cons_append, Nat.add_comm, Nat.add_left_comm, Nat.reduceAdd,
           SourceStructuralDecoder.replicate_true_append_cons] using hfull
 
-private noncomputable def boundedFold_malformedTrace
+/-- Clears a malformed unary prefix and halts with empty output. -/
+noncomputable def boundedFoldMalformedTrace
     {worker : List Bool → List Bool}
     (computer : BitTM worker)
     (count : ℕ) :
@@ -359,7 +373,8 @@ private noncomputable def boundedFold_malformedTrace
       simpa only [FinTM2.step, List.replicate_succ, Nat.add_comm, Nat.add_left_comm, Nat.reduceAdd]
           using hfull
 
-private noncomputable def boundedFold_malformedTotalTrace
+/-- Runs an input lacking a fold delimiter to empty output from initialization. -/
+noncomputable def boundedFoldMalformedTotalTrace
     {worker : List Bool → List Bool}
     (computer : BitTM worker)
     (count : ℕ) :
@@ -370,10 +385,10 @@ private noncomputable def boundedFold_malformedTotalTrace
       (some (Turing.haltList
         (boundedDependentRecordFoldMachine computer) []))
       (2 * count + 2) := by
-  have hscan := boundedFold_missingScanTrace computer count []
+  have hscan := boundedFoldMissingScanTrace computer count []
   simp only [List.append_nil] at hscan
   rw [← boundedDependentRecordFoldMachine_init] at hscan
-  have hclear := boundedFold_malformedTrace computer count
+  have hclear := boundedFoldMalformedTrace computer count
   have hfull := EvalsToInTime.trans (boundedDependentRecordFoldMachine computer).step
     (count + 1) (count + 1) _ _ _ hscan hclear
   refine {
@@ -384,7 +399,8 @@ private noncomputable def boundedFold_malformedTotalTrace
   have hbudget := hfull.steps_le_m
   omega
 
-private noncomputable def boundedDependentRecordFoldTimePolynomial
+/-- Polynomial time bound for a fold with polynomially bounded intermediate states. -/
+noncomputable def boundedDependentRecordFoldTimePolynomial
     {worker : List Bool → List Bool}
     (computer : BitTM worker)
     (bound : Polynomial ℕ) : Polynomial ℕ :=
@@ -445,7 +461,7 @@ private theorem boundedFoldRunBudget_le
           dsimp [cost]
           ring
 
-private theorem boundedFold_validTotalBudget_le
+theorem boundedFoldValidTotalBudgetLe
     {worker : List Bool → List Bool}
     (computer : BitTM worker)
     (bound : Polynomial ℕ)
@@ -479,7 +495,7 @@ private theorem boundedFold_validTotalBudget_le
     count * transitionCost + 1 at hrun
   omega
 
-private theorem boundedFold_malformedTotalBudget_le
+theorem boundedFoldMalformedTotalBudgetLe
     {worker : List Bool → List Bool}
     (computer : BitTM worker)
     (bound : Polynomial ℕ) (inputLength : ℕ) :
@@ -492,7 +508,8 @@ private theorem boundedFold_malformedTotalBudget_le
     Polynomial.eval_ofNat]
   omega
 
-private noncomputable def boundedDependentRecordFold_totalTrace
+/-- Total execution trace of the bounded fold, including malformed inputs. -/
+noncomputable def boundedDependentRecordFoldTotalTrace
     {worker : List Bool → List Bool}
     (computer : BitTM worker)
     (bound : Polynomial ℕ)
@@ -509,12 +526,12 @@ private noncomputable def boundedDependentRecordFold_totalTrace
         computer bound).eval input.length) := by
   cases hparse : parseUnaryBoundedFold input with
   | none =>
-      have hinput := parseUnaryBoundedFold_none_eq_replicate
+      have hinput := parseUnaryBoundedFoldNoneEqReplicate
         input hparse
-      have hphysical := boundedFold_malformedTotalTrace
+      have hphysical := boundedFoldMalformedTotalTrace
         computer input.length
       rw [← hinput] at hphysical
-      have hbudget := boundedFold_malformedTotalBudget_le
+      have hbudget := boundedFoldMalformedTotalBudgetLe
         computer bound input.length
       have htotal := rebound hphysical hbudget
       convert htotal using 1;
@@ -523,10 +540,10 @@ private noncomputable def boundedDependentRecordFold_totalTrace
       obtain ⟨count, seed⟩ := parsed
       have hinput := parseUnaryBoundedFold_eq_word
         input count seed hparse
-      have hphysical := boundedFold_validTotalTrace
+      have hphysical := boundedFoldValidTotalTrace
         computer count seed
       rw [← hinput] at hphysical
-      have hbudget := boundedFold_validTotalBudget_le
+      have hbudget := boundedFoldValidTotalBudgetLe
         computer bound hbounded input count seed hparse
       have htotal := rebound hphysical hbudget
       simpa only [FinTM2.step, Equiv.invFun_as_coe, boundedRecordFoldOutput, hparse] using htotal
@@ -555,7 +572,7 @@ noncomputable def boundedDependentRecordFoldComputable
           (boundedRecordFoldOutput worker input))))
       ((boundedDependentRecordFoldTimePolynomial
         computer bound).eval input.length)
-    exact boundedDependentRecordFold_totalTrace
+    exact boundedDependentRecordFoldTotalTrace
       computer bound hbounded input
 
 end OutputBoundedDependentRecordFold
@@ -648,7 +665,8 @@ structure FlatLiteralRecordState where
   sign : Option Bool
   deriving Fintype
 
-private def flatLiteralRecordPeek (stack : Fin 6)
+/-- Inspects the top bit of a stack and branches on whether it is present. -/
+def flatLiteralRecordPeek (stack : Fin 6)
     (present absent : Turing.TM2.Stmt
       (fun _ : Fin 6 => Bool) (Fin 8) FlatLiteralRecordState) :
     Turing.TM2.Stmt
@@ -656,28 +674,32 @@ private def flatLiteralRecordPeek (stack : Fin 6)
   .peek stack (fun state bit => { state with inspected := bit })
     (.branch (fun state => state.inspected.isSome) present absent)
 
-private def flatLiteralRecordPop (stack : Fin 6)
+/-- Removes the top bit of a stack and continues without changing the state. -/
+def flatLiteralRecordPop (stack : Fin 6)
     (continuation : Turing.TM2.Stmt
       (fun _ : Fin 6 => Bool) (Fin 8) FlatLiteralRecordState) :
     Turing.TM2.Stmt
       (fun _ : Fin 6 => Bool) (Fin 8) FlatLiteralRecordState :=
   .pop stack (fun state _ => state) continuation
 
-private def flatLiteralRecordPushBit (stack : Fin 6)
+/-- Pushes the inspected bit, using false when no bit was inspected. -/
+def flatLiteralRecordPushBit (stack : Fin 6)
     (continuation : Turing.TM2.Stmt
       (fun _ : Fin 6 => Bool) (Fin 8) FlatLiteralRecordState) :
     Turing.TM2.Stmt
       (fun _ : Fin 6 => Bool) (Fin 8) FlatLiteralRecordState :=
   .push stack (fun state => state.inspected.getD false) continuation
 
-private def flatLiteralRecordPushConstant (stack : Fin 6) (bit : Bool)
+/-- Pushes a fixed bit onto a stack before continuing. -/
+def flatLiteralRecordPushConstant (stack : Fin 6) (bit : Bool)
     (continuation : Turing.TM2.Stmt
       (fun _ : Fin 6 => Bool) (Fin 8) FlatLiteralRecordState) :
     Turing.TM2.Stmt
       (fun _ : Fin 6 => Bool) (Fin 8) FlatLiteralRecordState :=
   .push stack (fun _ => bit) continuation
 
-private def flatLiteralRecordGoto (phase : Fin 8) :
+/-- Clears the inspected bit and enters the given control phase. -/
+def flatLiteralRecordGoto (phase : Fin 8) :
     Turing.TM2.Stmt
       (fun _ : Fin 6 => Bool) (Fin 8) FlatLiteralRecordState :=
   .load (fun state => { state with inspected := none })

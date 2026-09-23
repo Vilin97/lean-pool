@@ -4,11 +4,15 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import LeanPool.GapCVP.Part10
-import Mathlib.Analysis.SpecialFunctions.Pow.NthRootLemmas
-import Mathlib.InformationTheory.Hamming
+module
+
+public import LeanPool.GapCVP.Part10
+public import Mathlib.Analysis.SpecialFunctions.Pow.NthRootLemmas
+public import Mathlib.InformationTheory.Hamming
 
 /-! # GapCVP proof, part 11 -/
+
+public section
 
 noncomputable section
 
@@ -41,7 +45,7 @@ private noncomputable def sourcePhysicalLagrangeOriginalSourceComputable :
   sourceExplicitAffineCellOriginalSourceComputable
 
 /-- GapCVP reduction support. -/
-def sourcePhysicalLagrangePrefixedOutput
+@[expose] def sourcePhysicalLagrangePrefixedOutput
     (worker : SourcePhysicalLagrangeWordComputer)
     (input : List Bool) : List Bool :=
   lengthPrefixedWord (worker.output input)
@@ -149,7 +153,7 @@ open GapCVP.CLStructuralPrefixWriter GapCVP.CNFFlatPhysicalBinaryAppendTM
 open GapCVP.BinaryModularReductionTM GapCVP.BinarySourceFieldMultiplicationTM
 
 /-- GapCVP reduction support. -/
-def binarySourceFieldInverseQuery
+@[expose] def binarySourceFieldInverseQuery
     (lower operand source : List Bool) : List Bool :=
   lengthPrefixedWord lower ++ lengthPrefixedWord operand ++ source
 
@@ -265,14 +269,14 @@ open GapCVP.SourceAnchoredGridRecordFoldTM GapCVP.BinaryModularReductionTM
 open GapCVP.BinarySourceFieldMultiplicationTM
 
 /-- GapCVP reduction support. -/
-def sourceFieldPowerStep {degree : ℕ}
+@[expose] def sourceFieldPowerStep {degree : ℕ}
     (lower operand : GapCVP.Core.EffectiveBinaryField.Word degree)
     (current : GapCVP.Core.EffectiveBinaryField.Word degree) :
     GapCVP.Core.EffectiveBinaryField.Word degree :=
   GapCVP.Core.EffectiveBinaryField.multiplyMod lower current operand
 
 /-- GapCVP reduction support. -/
-def sourceFieldPowerIterate {degree : ℕ}
+@[expose] def sourceFieldPowerIterate {degree : ℕ}
     (lower operand : GapCVP.Core.EffectiveBinaryField.Word degree)
     (steps : ℕ) : GapCVP.Core.EffectiveBinaryField.Word degree :=
   ((sourceFieldPowerStep lower operand)^[steps]) operand

@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Boon Suan Ho
 -/
 
-import LeanPool.Nivat.Core.Patterns
-import LeanPool.Nivat.TwoFactors.PeriodicRows
+module
+
+public import LeanPool.Nivat.Core.Patterns
+public import LeanPool.Nivat.TwoFactors.PeriodicRows
 
 /-
 Upstream: https://github.com/boonsuan/nivat
@@ -44,6 +46,8 @@ surjection on occurring patterns. A small total increase forces a zero increase
 at one boundary site, and the total excess of fiber sizes bounds the number of
 interior patterns with more than one boundary extension.
 -/
+
+@[expose] public section
 
 namespace Nivat.TwoFactors
 

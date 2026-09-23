@@ -4,9 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import LeanPool.GapCVP.Part12C
+module
+
+public import LeanPool.GapCVP.Part12C
 
 /-! # GapCVP proof, part 12, continuation 04 -/
+
+public section
 
 noncomputable section
 
@@ -858,7 +862,7 @@ noncomputable def gaussianPhysicalColumnActiveUnaryComputable :
   firstFieldContentsComputable
 
 /-- GapCVP reduction support. -/
-def gaussianPhysicalColumnCurrentState : List Bool → List Bool :=
+@[expose] def gaussianPhysicalColumnCurrentState : List Bool → List Bool :=
   firstFieldSuffix
 
 /-- GapCVP reduction support. -/
@@ -1391,7 +1395,7 @@ private theorem gaussianPhysicalColumnUpdatedPivotWord_effective
             ↓reduceIte]
 
 /-- GapCVP reduction support. -/
-def gaussianPhysicalColumnPivotWidthOutput : List Bool → List Bool :=
+@[expose] def gaussianPhysicalColumnPivotWidthOutput : List Bool → List Bool :=
   gaussianDenseStateDimensionUnary ∘
     gaussianPhysicalColumnCurrentState
 
@@ -1403,10 +1407,18 @@ noncomputable def gaussianPhysicalColumnPivotWidthComputable :
     gaussianPhysicalColumnCurrentStateComputable
     gaussianDenseStateDimensionUnaryComputable
 
-private noncomputable def gaussianPhysicalColumnPivotWidth :
+/-- Width certificate for the physical Gaussian pivot-column catalogue. -/
+noncomputable def gaussianPhysicalColumnPivotWidth :
     SourceQaryMaskDynamicGridWidth where
   output := gaussianPhysicalColumnPivotWidthOutput
   computer := gaussianPhysicalColumnPivotWidthComputable
+
+/-- The pivot-width machine computes its declared output function. -/
+theorem gaussianPhysicalColumnPivotWidth_output
+    (input : List Bool) :
+    gaussianPhysicalColumnPivotWidth.output input =
+      gaussianPhysicalColumnPivotWidthOutput input := by
+  rfl
 
 private def gaussianPhysicalColumnUpdatedPivotRecordOutput :
     List Bool → List Bool :=

@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import Mathlib.Combinatorics.Graph.Maps
-import LeanPool.Schoenflies.FaceCyclesProof
+module
+
+public import Mathlib.Combinatorics.Graph.Maps
+public import LeanPool.Schoenflies.FaceCyclesProof
 
 /-!
 # Matching and cutting simple polygonal arcs
@@ -18,6 +20,8 @@ those descriptions.
 * An arc contained in a polygonal arc is polygonal.  Consequently the images of all source
   edge arcs under the parameter-matching homeomorphism are polygonal target edge arcs.
 -/
+
+@[expose] public section
 
 open Set unitInterval
 

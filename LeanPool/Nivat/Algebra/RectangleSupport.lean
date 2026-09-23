@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Boon Suan Ho
 -/
 
-import LeanPool.Nivat.Algebra.Action
-import LeanPool.Nivat.Core.Patterns
-import Mathlib.Algebra.MonoidAlgebra.Support
+module
+
+public import LeanPool.Nivat.Algebra.Action
+public import LeanPool.Nivat.Core.Patterns
+public import Mathlib.Algebra.MonoidAlgebra.Support
 
 /-
 Upstream: https://github.com/boonsuan/nivat
@@ -50,6 +52,8 @@ as for positive rectangles. The injective finite multiplier map and the
 associated dimension calculation from Lemma 2.1 are constructed in
 `Nivat.Descent.ExactDescent`, where they enter Theorem 2.2 (`thm:descent`).
 -/
+
+@[expose] public section
 
 namespace Nivat.Algebra
 
@@ -114,7 +118,7 @@ def erosion (Φ : Laurent) (R : Finset Lattice) : Set Lattice :=
 
 /-- Auxiliary to Lemma 2.1 (`lem:supported`): erosion by a nonzero filter is finite because any one
 support point embeds it into a translate of the finite target window. -/
-private theorem erosion_finite (Φ : Laurent) (hΦ : Φ ≠ 0) (R : Finset Lattice) :
+theorem erosion_finite (Φ : Laurent) (hΦ : Φ ≠ 0) (R : Finset Lattice) :
     (erosion Φ R).Finite := by
   have hS : Φ.coeff.support.Nonempty := by simpa [Finsupp.support_nonempty_iff] using hΦ
   obtain ⟨a, ha⟩ := hS
