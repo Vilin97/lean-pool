@@ -4,13 +4,15 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Boon Suan Ho
 -/
 
-import Mathlib.Algebra.Ring.Periodic
-import Mathlib.Data.Int.Interval
-import Mathlib.Data.Set.Card
-import Mathlib.Data.Fintype.Pi
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Push
-import Mathlib.Tactic.Convert
+module
+
+public import Mathlib.Algebra.Ring.Periodic
+public import Mathlib.Data.Int.Interval
+public import Mathlib.Data.Set.Card
+public import Mathlib.Data.Fintype.Pi
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.Push
+public import Mathlib.Tactic.Convert
 
 /-
 Upstream: https://github.com/boonsuan/nivat
@@ -49,6 +51,8 @@ makes the deterministic successor map on occurring states a permutation.
 A complexity plateau supplies a finite-state presentation of a word; a periodic
 parameter is handled by recording its phase together with the finite memory.
 -/
+
+@[expose] public section
 
 namespace Nivat.TwoFactors
 

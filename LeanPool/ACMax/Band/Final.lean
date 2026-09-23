@@ -3,8 +3,10 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import LeanPool.ACMax.Band.AssemblyAllRange
-import LeanPool.ACMax.Counting.Windows
+module
+
+public import LeanPool.ACMax.Band.AssemblyAllRange
+public import LeanPool.ACMax.Counting.Windows
 
 /-!
 # Final two-range assembly
@@ -19,6 +21,8 @@ The second range combines the direct incidence-capacity proof on
 `32 ≤ n ≤ 49` with the exact Moore closure for `n ≥ 48`; their overlap at
 orders `48` and `49` is harmless.
 -/
+
+@[expose] public section
 
 namespace ACMax
 

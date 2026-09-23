@@ -3,9 +3,11 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Graph.Walk
-import Mathlib.Combinatorics.Graph.Delete
-import Mathlib.Data.Set.Finite.Basic
+module
+
+public import LeanPool.Schoenflies.Graph.Walk
+public import Mathlib.Combinatorics.Graph.Delete
+public import Mathlib.Data.Set.Finite.Basic
 
 /-!
 # A path presented as a graph
@@ -69,6 +71,8 @@ later module.
 Root `Graph`, as fixed by `Schoenflies/Graph/Walk.lean`, so that `h.reaches_an_end` and
 `G.pathGraphOf u W` resolve by dot notation.
 -/
+
+@[expose] public section
 
 open Set
 open scoped Graph

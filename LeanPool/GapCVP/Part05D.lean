@@ -4,9 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import LeanPool.GapCVP.Part05C
+module
+
+public import LeanPool.GapCVP.Part05C
 
 /-! # GapCVP proof, part 05, continuation 04 -/
+
+public section
 
 noncomputable section
 
@@ -689,8 +693,8 @@ private noncomputable def originalSourcePreservingWorker_evalsToInTime
       computer backup scratch result)
     trace
 
-/-- GapCVP reduction support. -/
-def originalSourcePreservingOutput
+/-- Append the original input after the computed output, separated by a false bit. -/
+@[expose] def originalSourcePreservingOutput
     (f : List Bool → List Bool) (input : List Bool) : List Bool :=
   f input ++ false :: input
 
@@ -1325,8 +1329,8 @@ namespace CNFFlatAdjacentRecordSwapTM
 
 open Turing GapCVP.BinaryEncoding GapCVP.CNFGuardedSourceDescriptorRotationBoundedFoldTM
 
-/-- GapCVP reduction support. -/
-def flatAdjacentRecordSwapOutput (input : List Bool) : List Bool :=
+/-- Swap the first two length-prefixed records while preserving the suffix. -/
+@[expose] def flatAdjacentRecordSwapOutput (input : List Bool) : List Bool :=
   match readLengthPrefixedWord input with
   | none => []
   | some (first, rest) =>

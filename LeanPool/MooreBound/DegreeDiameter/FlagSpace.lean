@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wouter Cames van Batenburg, Samuel Korsky
 -/
 
-import Mathlib.LinearAlgebra.Dimension.Constructions
-import Mathlib.LinearAlgebra.FiniteDimensional.Defs
-import Mathlib.LinearAlgebra.Pi
-import Mathlib.SetTheory.Cardinal.Finite
+module
+
+public import Mathlib.LinearAlgebra.Dimension.Constructions
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Mathlib.LinearAlgebra.Pi
+public import Mathlib.SetTheory.Cardinal.Finite
 
 /-!
 # The recursively split flag space
@@ -20,6 +22,8 @@ on the lower-bound construction merely to obtain this coordinate model.
 Lean Pool port of wewantmoore commit d59bd80ea93fabb9faf769e790ab47692645e022.
 The port adds a namespace and adapts proofs to the current Mathlib APIs and repository style.
 -/
+
+@[expose] public section
 
 namespace MooreBound
 
