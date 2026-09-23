@@ -80,3 +80,20 @@ Created as part of the [UW Lean Hackathon](https://uw2026leanhackathon.github.io
 - Palomar is a registry, not a unified repository.
 
 Projects accepted to the Palomar Registry may be submitted to Lean Pool, and priority will be given to them.
+
+### Citation
+
+To cite Lean Pool, use the [paper](https://arxiv.org/abs/2609.25199):
+
+```bibtex
+@misc{ilin2026leanpool,
+  title = {{Lean Pool}: An {AI}-Maintained Archive of Formalized Mathematics},
+  author = {Vasily Ilin},
+  year = {2026},
+  eprint = {2609.25199},
+  archivePrefix = {arXiv},
+  primaryClass = {cs.AI},
+  doi = {10.48550/arXiv.2609.25199},
+  url = {https://arxiv.org/abs/2609.25199}
+}
+```
