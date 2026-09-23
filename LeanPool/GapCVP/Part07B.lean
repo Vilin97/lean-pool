@@ -4,9 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import LeanPool.GapCVP.Part07A
+module
+
+public import LeanPool.GapCVP.Part07A
 
 /-! # GapCVP proof, part 07, continuation 02 -/
+
+public section
 
 noncomputable section
 
@@ -495,7 +499,7 @@ inductive FiveFamilyForbiddenWindowCoordinate where
   | next
 
 /-- GapCVP reduction support. -/
-def fiveForbiddenUnarySuccessorWord
+@[expose] def fiveForbiddenUnarySuccessorWord
     (source : List Bool → List Bool)
     (input : List Bool) : List Bool :=
   true :: source input
@@ -569,7 +573,7 @@ private theorem fiveFamilyForbiddenComputedUnaryMinimumWord_valid
       second []
 
 /-- GapCVP reduction support. -/
-def fiveFamilyForbiddenWindowSourceRank
+@[expose] def fiveFamilyForbiddenWindowSourceRank
     {T : ℕ} (window : Window T) : ℕ :=
   fiveFamilyFlatSourceRowMajorIndex window.1.1 window.1.2
 
@@ -930,7 +934,7 @@ noncomputable def fiveFamilyForbiddenCoordinateSourceVariableCodeComputable
   simpa only [Function.comp_def] using physical
 
 /-- GapCVP reduction support. -/
-def fiveForbiddenWindowSourceVariable
+@[expose] def fiveForbiddenWindowSourceVariable
     {T S : ℕ}
     (window : Window T)
     (symbols : WindowSymbols S) :
@@ -941,7 +945,7 @@ def fiveForbiddenWindowSourceVariable
   | .next => (nextTime window, window.1.2, symbols.2.2.2)
 
 /-- GapCVP reduction support. -/
-def fiveFamilyForbiddenWindowSlotSymbol
+@[expose] def fiveFamilyForbiddenWindowSlotSymbol
     {S : ℕ} (symbols : WindowSymbols S) :
     FiveFamilyForbiddenWindowCoordinate → Symbol S
   | .left => symbols.1

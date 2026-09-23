@@ -3,9 +3,11 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Accessible
-import LeanPool.Schoenflies.Jordan
-import Mathlib.Geometry.Euclidean.Inversion.Basic
+module
+
+public import LeanPool.Schoenflies.Accessible
+public import LeanPool.Schoenflies.Jordan
+public import Mathlib.Geometry.Euclidean.Inversion.Basic
 
 /-!
 # Inversion in the unit circle, and the density of strongly accessible points
@@ -92,6 +94,8 @@ abstract `IsSeparating` curve, do not need it.
 * `Schoenflies.IsHomeoOn` — no blueprint statement; the language "restricts to a homeomorphism
   of `S` onto `T`" that `prop:exterior-extension` is phrased in.
 -/
+
+@[expose] public section
 
 open Bornology Metric Set
 

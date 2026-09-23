@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.SquareMesh
-import LeanPool.Schoenflies.JordanClosed
+module
+
+public import LeanPool.Schoenflies.SquareMesh
+public import LeanPool.Schoenflies.JordanClosed
 
 /-!
 # The local windows `W_n(p)` of the stage recursion
@@ -75,6 +77,8 @@ subset of the plane supplies a `b` as close to `x` as asked, inside `D`.
   infinitely often"*, and the consequence `prop:shrinking-stars` uses.
 * `Schoenflies.tendsto_two_pow_neg`, `.two_pow_neg_pos` — `ε_n = 2^{-n}`.
 -/
+
+@[expose] public section
 
 open Filter Metric Set
 

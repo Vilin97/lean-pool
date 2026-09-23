@@ -3,11 +3,13 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import LeanPool.ACMax.Counting.FarPair
-import LeanPool.ACMax.Counting.CompactCell
-import LeanPool.ACMax.Counting.CompactLedgers
-import LeanPool.ACMax.Counting.HubCross
-import LeanPool.ACMax.Counting.Quotient
+module
+
+public import LeanPool.ACMax.Counting.FarPair
+public import LeanPool.ACMax.Counting.CompactCell
+public import LeanPool.ACMax.Counting.CompactLedgers
+public import LeanPool.ACMax.Counting.HubCross
+public import LeanPool.ACMax.Counting.Quotient
 
 /-!
 # The σ-weighted firing laws, the σ-transfer, and the `W₅ᵇ` cloud bound
@@ -36,6 +38,8 @@ on the one cloud class (`W₅ᵇ`) that obstructs it. All certificates use the �
 * `suppressed_ledger_beta` — the assembled supply bound `β = 105/128 < 7/8` for
   `n ≥ 512`.
 -/
+
+@[expose] public section
 
 namespace ACMax
 
