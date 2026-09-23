@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PDL formalization contributors (see project card)
 -/
 
-import LeanPool.PDL.Interpolation.EvalQ
-import LeanPool.PDL.Interpolation.ClusterRho
+module
+
+public import LeanPool.PDL.Interpolation.EvalQ
+public import LeanPool.PDL.Interpolation.ClusterRho
 
 /-! # Satisfiability down the quasi-tableau, and the right half of the correctness of `θ_r`
 
@@ -20,6 +22,8 @@ where they are numbered 7.47. The auxiliary notions used below — the evaluatio
 Q-formulas with an assignment, the witness distance `witDist`, and `BasicBetween` — are in
 `Pdl.EvalQ`.
 -/
+
+@[expose] public section
 
 namespace PDL
 /-! ## Lemma 10.6

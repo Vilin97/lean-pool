@@ -3,9 +3,11 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Graph.K33
-import LeanPool.Schoenflies.Graph.Redrawing
-import LeanPool.Schoenflies.AlternatingCrosscuts
+module
+
+public import LeanPool.Schoenflies.Graph.K33
+public import LeanPool.Schoenflies.Graph.Redrawing
+public import LeanPool.Schoenflies.AlternatingCrosscuts
 
 /-!
 # Lemma 3.10: the utility graph is not planar, and Corollary 3.11 for its subdivisions
@@ -74,6 +76,8 @@ realization a polygonal drawing and accepts *any* drawing back. This restriction
 `Schoenflies.IsPolygonalCrosscut`, not from anything here; the alternative is a crosscut
 interface that lets the two cut points be interior to edges of `C`.
 -/
+
+@[expose] public section
 
 open Set Schoenflies unitInterval
 open scoped Graph

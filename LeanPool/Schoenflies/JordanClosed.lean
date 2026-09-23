@@ -3,9 +3,11 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.SquareCycle
-import LeanPool.Schoenflies.PolyArcRealize
-import LeanPool.Schoenflies.Jordan
+module
+
+public import LeanPool.Schoenflies.SquareCycle
+public import LeanPool.Schoenflies.PolyArcRealize
+public import LeanPool.Schoenflies.Jordan
 
 /-!
 # Part I, with nothing assumed
@@ -41,6 +43,8 @@ Discharging the first makes `thm:arc-complement`, and with it `lem:accessible-de
 * `Schoenflies.crosscut_theorem`, `Schoenflies.crosscut_theorem_three_regions` —
   **`thm:general-crosscut`**.
 -/
+
+@[expose] public section
 
 open Set
 

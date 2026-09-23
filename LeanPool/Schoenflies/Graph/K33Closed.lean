@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Realization
-import LeanPool.Schoenflies.Graph.K33Planar
+module
+
+public import LeanPool.Schoenflies.Realization
+public import LeanPool.Schoenflies.Graph.K33Planar
 
 /-!
 # Discharging the realization hypothesis of `lem:k33`
@@ -60,6 +62,8 @@ drawing can be redrawn so that no two edges at a vertex are collinear there — 
 genuinely about changing the drawing, not about presentations. `Graph.Bendable` is that
 statement in the shape the theorems below consume; nothing here proves it.
 -/
+
+@[expose] public section
 
 open Metric Set unitInterval
 open scoped Graph
