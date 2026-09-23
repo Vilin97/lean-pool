@@ -2268,7 +2268,7 @@ theorem paperFormulaRetainedClause_sourceClause
     (2 ^ paperFormulaClauseWidth formula index - 1)
 
 /-- GapCVP reduction support. -/
-def paperVariableArityLocalTagWordOrder
+@[expose] def paperVariableArityLocalTagWordOrder
     (formula : ThreeCNF) :
     Fin (paperVariableArityLocalTagCount formula) ≃
       (Σ index : Fin (srcFormula formula).clauses.length,

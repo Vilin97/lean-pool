@@ -10,7 +10,7 @@ public import LeanPool.GapCVP.Part13
 
 /-! # GapCVP proof, part 14 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -172,7 +172,8 @@ abbrev sourceIrreducibleFormulaDegree (formula : ThreeCNF) : ℕ :=
       (encodeThreeCNF formula).length
       (srcFormula formula))
 
-private def sourceIrreducibleRankDegreeUnary : List Bool → List Bool :=
+/-- Encode the irreducible candidate rank's degree in unary form. -/
+def sourceIrreducibleRankDegreeUnary : List Bool → List Bool :=
   physicalFamilyFieldDegreeUnary ∘ binaryIrreducibleRankOriginal
 
 /-- GapCVP reduction support. -/

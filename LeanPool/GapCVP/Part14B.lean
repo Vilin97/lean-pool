@@ -10,7 +10,7 @@ public import LeanPool.GapCVP.Part14A
 
 /-! # GapCVP proof, part 14, continuation 02 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -54,7 +54,8 @@ private def sourceIrreducibleCandidateQuery
     sourceQaryMaskDynamicGridBaseSource
       sourceIrreducibleCandidateWidth input
 
-private def sourceIrreducibleCandidateCardinalityUnary :
+/-- Encode the number of irreducibility candidates in unary form. -/
+def sourceIrreducibleCandidateCardinalityUnary :
     List Bool → List Bool :=
   physicalFamilyFieldCardinalityUnary ∘
     binaryIrreducibleRankOriginal
@@ -68,7 +69,8 @@ private def sourceIrreducibleCandidateCardinalityUnary :
     factor400BinaryIrreducibleRankOriginalComputable
     paperVariableArityPhysicalFamilyFieldCardinalityUnaryComputable
 
-private def paperVariableAritySourceIrreducibleFactorPairWidthOutput :
+/-- Compute the encoded width of an irreducibility factor pair. -/
+def paperVariableAritySourceIrreducibleFactorPairWidthOutput :
     List Bool → List Bool :=
   (fun input : List Bool =>
     List.replicate ((Polynomial.X ^ 2).eval input.length) true) ∘
@@ -92,7 +94,8 @@ private abbrev sourceIrreducibleFactorPairOriginalSource :
     List Bool → List Bool :=
   factor400BinarySourceIrreducibleFactorPairOriginalSource
 
-private def sourceIrreducibleFactorPairCardinalityUnary :
+/-- Encode the number of irreducibility factor pairs in unary form. -/
+def sourceIrreducibleFactorPairCardinalityUnary :
     List Bool → List Bool :=
   physicalFamilyFieldCardinalityUnary ∘
     sourceIrreducibleFactorPairOriginalSource
@@ -106,7 +109,8 @@ private def sourceIrreducibleFactorPairCardinalityUnary :
     factor400BinarySourceIrreducibleFactorPairOriginalSourceComputable
     paperVariableArityPhysicalFamilyFieldCardinalityUnaryComputable
 
-private def sourceIrreducibleFactorPairDivisionQuery
+/-- Prepare the division query for an irreducibility factor pair. -/
+def sourceIrreducibleFactorPairDivisionQuery
     (input : List Bool) : List Bool :=
   firstFieldContents input ++ false ::
     (sourceIrreducibleFactorPairCardinalityUnary input ++
@@ -127,7 +131,8 @@ private def sourceIrreducibleFactorPairDivisionQuery
   exact factor400BinaryIrreduciblePhysicalAppendComputer
     firstFieldContentsComputable hseparator
 
-private def sourceIrreducibleFactorPairOdometer :
+/-- Decode a factor-pair index into a mixed-radix row-major pair. -/
+def sourceIrreducibleFactorPairOdometer :
     List Bool → List Bool :=
   sourceMixedRadixRowMajorPairOutput ∘
     sourceIrreducibleFactorPairDivisionQuery
@@ -141,7 +146,8 @@ private def sourceIrreducibleFactorPairOdometer :
     paperVariableAritySourceIrreducibleFactorPairDivisionQueryComputable
     sourceMixedRadixRowMajorPairComputable
 
-private def sourceIrreducibleFactorPairFirstRank
+/-- Read the first factor rank from a factor-pair state. -/
+def sourceIrreducibleFactorPairFirstRank
     (input : List Bool) : List Bool :=
   (unaryPrefixOutput
     (sourceIrreducibleFactorPairOdometer input)).tail
@@ -157,7 +163,8 @@ private def sourceIrreducibleFactorPairFirstRank
   exact factor400BinaryIrreduciblePhysicalCompositionComputer
     hprefix factor400BinaryIrreduciblePhysicalDropHeadComputer
 
-private def sourceIrreducibleFactorPairSecondRank
+/-- Read the second factor rank from a factor-pair state. -/
+def sourceIrreducibleFactorPairSecondRank
     (input : List Bool) : List Bool :=
   (unaryPrefixOutput (unaryPrefixSuffixOutput
     (sourceIrreducibleFactorPairOdometer input))).tail
@@ -175,7 +182,8 @@ private def sourceIrreducibleFactorPairSecondRank
   exact factor400BinaryIrreduciblePhysicalCompositionComputer
     hprefix factor400BinaryIrreduciblePhysicalDropHeadComputer
 
-private def sourceIrreducibleFactorRankQuery
+/-- Prepare the query for a factor's rank. -/
+def sourceIrreducibleFactorRankQuery
     (rank : List Bool → List Bool)
     (input : List Bool) : List Bool :=
   binaryIrreduciblePhysicalComputedPrefixOutput rank input ++
@@ -197,7 +205,8 @@ private def sourceIrreducibleFactorRankQuery
         paperVariableAritySourceIrreducibleFactorPairCardinalityComputable)
       factor400BinarySourceIrreducibleFactorPairOriginalSourceComputable)
 
-private def sourceIrreducibleFactorPairLowerWord :
+/-- Extract the lower word of an irreducibility factor pair. -/
+def sourceIrreducibleFactorPairLowerWord :
     List Bool → List Bool :=
   sourceIrreducibleRankCoefficientWord ∘
     binarySourceIrreducibleFactorPairCandidateSource
@@ -211,7 +220,8 @@ private def sourceIrreducibleFactorPairLowerWord :
     factor400BinarySourceIrreducibleFactorPairCandidateSourceComputable
     paperVariableAritySourceIrreducibleRankCoefficientWordComputable
 
-private def sourceIrreducibleFactorPairFirstWord :
+/-- Extract the first word of an irreducibility factor pair. -/
+def sourceIrreducibleFactorPairFirstWord :
     List Bool → List Bool :=
   sourceIrreducibleRankCoefficientWord ∘
     sourceIrreducibleFactorRankQuery
@@ -227,7 +237,8 @@ private def sourceIrreducibleFactorPairFirstWord :
       paperVariableAritySourceIrreducibleFactorPairFirstRankComputable)
     paperVariableAritySourceIrreducibleRankCoefficientWordComputable
 
-private def sourceIrreducibleFactorPairSecondWord :
+/-- Extract the second word of an irreducibility factor pair. -/
+def sourceIrreducibleFactorPairSecondWord :
     List Bool → List Bool :=
   sourceIrreducibleRankCoefficientWord ∘
     sourceIrreducibleFactorRankQuery
@@ -243,7 +254,8 @@ private def sourceIrreducibleFactorPairSecondWord :
       paperVariableAritySourceIrreducibleFactorPairSecondRankComputable)
     paperVariableAritySourceIrreducibleRankCoefficientWordComputable
 
-private def sourceIrreducibleFactorPairProductQuery
+/-- Prepare the product query for an irreducibility factor pair. -/
+def sourceIrreducibleFactorPairProductQuery
     (input : List Bool) : List Bool :=
   binaryIrreduciblePhysicalComputedPrefixOutput
       sourceIrreducibleFactorPairLowerWord input ++
@@ -269,7 +281,8 @@ private def sourceIrreducibleFactorPairProductQuery
           paperVariableAritySourceIrreducibleFactorPairSecondWordComputable)
         factor400BinarySourceIrreducibleFactorPairOriginalSourceComputable))
 
-private def sourceIrreducibleFactorPairProductWord :
+/-- Compute the product word of an irreducibility factor pair. -/
+def sourceIrreducibleFactorPairProductWord :
     List Bool → List Bool :=
   binarySourceRawConvolutionWord ∘
     sourceIrreducibleFactorPairProductQuery
@@ -283,7 +296,8 @@ private def sourceIrreducibleFactorPairProductWord :
     paperVariableAritySourceIrreducibleFactorPairProductQueryComputable
     factor400BinaryIrreduciblePhysicalConvolutionComputer
 
-private def sourceIrreducibleFactorPairDegreeUnary :
+/-- Encode the degree of an irreducibility factor pair in unary form. -/
+def sourceIrreducibleFactorPairDegreeUnary :
     List Bool → List Bool :=
   physicalFamilyFieldDegreeUnary ∘
     sourceIrreducibleFactorPairOriginalSource
@@ -297,7 +311,8 @@ private def sourceIrreducibleFactorPairDegreeUnary :
     factor400BinarySourceIrreducibleFactorPairOriginalSourceComputable
     paperVariableArityPhysicalFamilyFieldDegreeUnaryComputable
 
-private def paperVariableAritySourceIrreducibleMonicZeroWidthOutput
+/-- Compute the width of the monic zero word. -/
+def paperVariableAritySourceIrreducibleMonicZeroWidthOutput
     (input : List Bool) : List Bool :=
   (sourceIrreducibleFactorPairDegreeUnary input).tail
 
@@ -315,7 +330,8 @@ private noncomputable def sourceIrreducibleMonicZeroWidth :
   factor400BinaryIrreduciblePhysicalDynamicWidth
     paperVariableAritySourceIrreducibleMonicZeroWidthComputable
 
-private def sourceIrreducibleMonicZeroWord :
+/-- Construct the monic zero word for an irreducibility test. -/
+def sourceIrreducibleMonicZeroWord :
     List Bool → List Bool :=
   maskDynamicGridRecordCatalogueOutput
     sourceIrreducibleMonicZeroWidth
@@ -330,7 +346,8 @@ private def sourceIrreducibleMonicZeroWord :
     sourceIrreducibleMonicZeroWidth
     factor400BinaryIrreduciblePhysicalFalseComputer
 
-private def sourceIrreducibleFactorPairMonicWord
+/-- Construct the monic word for an irreducibility factor pair. -/
+def sourceIrreducibleFactorPairMonicWord
     (input : List Bool) : List Bool :=
   sourceIrreducibleFactorPairLowerWord input ++
     ([true] ++ sourceIrreducibleMonicZeroWord input)
@@ -346,7 +363,8 @@ private def sourceIrreducibleFactorPairMonicWord
   exact factor400BinaryIrreduciblePhysicalAppendComputer
     paperVariableAritySourceIrreducibleFactorPairLowerWordComputable htail
 
-private def sourceIrreducibleFactorPairMarker :
+/-- Mark factor pairs whose product equals the candidate monic word. -/
+def sourceIrreducibleFactorPairMarker :
     List Bool → List Bool :=
   maskComputedWordEquality
     sourceIrreducibleFactorPairProductWord
@@ -361,7 +379,8 @@ private def sourceIrreducibleFactorPairMarker :
     paperVariableAritySourceIrreducibleFactorPairProductWordComputable
     paperVariableAritySourceIrreducibleFactorPairMonicWordComputable
 
-private def sourceIrreducibleFactorPairMarkerStream :
+/-- Concatenate markers for enumerated factor pairs. -/
+def sourceIrreducibleFactorPairMarkerStream :
     List Bool → List Bool :=
   maskDynamicGridRecordCatalogueOutput
     sourceIrreducibleFactorPairWidth
@@ -376,7 +395,8 @@ private def sourceIrreducibleFactorPairMarkerStream :
     sourceIrreducibleFactorPairWidth
     paperVariableAritySourceIrreducibleFactorPairMarkerComputable
 
-private def paperVariableAritySourceIrreducibleProperFactorExistsWord :
+/-- Encode whether a proper irreducibility factor exists. -/
+def paperVariableAritySourceIrreducibleProperFactorExistsWord :
     List Bool → List Bool :=
   binaryGaussianFirstCellWord ∘ binaryGaussianPivotWord ∘
     sourceIrreducibleFactorPairMarkerStream
@@ -392,7 +412,8 @@ private def paperVariableAritySourceIrreducibleProperFactorExistsWord :
   exact factor400BinaryIrreduciblePhysicalCompositionComputer
     hscan binaryGaussianFirstCellComputable
 
-private def sourceIrreducibleNoProperFactorWord :
+/-- Encode the absence of a proper factor. -/
+def sourceIrreducibleNoProperFactorWord :
     List Bool → List Bool :=
   sourceFourFamilyBooleanNotWord ∘
     paperVariableAritySourceIrreducibleProperFactorExistsWord
@@ -406,7 +427,8 @@ private def sourceIrreducibleNoProperFactorWord :
     paperVariableAritySourceIrreducibleProperFactorExistsComputable
     sourceFourFamilyBooleanNotComputable
 
-private def sourceActualIrreducibleCandidateMarkerStream :
+/-- Concatenate markers for actual irreducible candidates. -/
+def sourceActualIrreducibleCandidateMarkerStream :
     List Bool → List Bool :=
   maskDynamicGridRecordCatalogueOutput
     sourceIrreducibleCandidateWidth
@@ -421,7 +443,8 @@ private def sourceActualIrreducibleCandidateMarkerStream :
     sourceIrreducibleCandidateWidth
     paperVariableAritySourceIrreducibleNoProperFactorComputable
 
-private def sourceActualIrreducibleFirstCandidateWord :
+/-- Select the first marked irreducible candidate word. -/
+def sourceActualIrreducibleFirstCandidateWord :
     List Bool → List Bool :=
   binaryGaussianPivotWord ∘
     sourceActualIrreducibleCandidateMarkerStream
@@ -435,7 +458,8 @@ private def sourceActualIrreducibleFirstCandidateWord :
     paperVariableAritySourceActualIrreducibleCandidateMarkerStreamComputable
     binaryGaussianPivotComputable
 
-private def sourceActualIrreducibleSelectedRankUnary :
+/-- Encode the selected irreducible candidate rank in unary form. -/
+def sourceActualIrreducibleSelectedRankUnary :
     List Bool → List Bool :=
   List.tail ∘ sourceActualIrreducibleFirstCandidateWord
 
@@ -448,7 +472,8 @@ private def sourceActualIrreducibleSelectedRankUnary :
     paperVariableAritySourceActualIrreducibleFirstCandidateComputable
     factor400BinaryIrreduciblePhysicalDropHeadComputer
 
-private def paperVariableAritySourceActualIrreducibleSelectedRankQuery
+/-- Prepare the selected irreducible candidate rank query. -/
+def paperVariableAritySourceActualIrreducibleSelectedRankQuery
     (input : List Bool) : List Bool :=
   binaryIrreduciblePhysicalComputedPrefixOutput
       sourceActualIrreducibleSelectedRankUnary input ++
@@ -1605,7 +1630,8 @@ open GapCVP.PhysicalRightHandSideTM
 
 attribute [local instance] Classical.propDecidable
 
-private def physicalCoefficientFieldCardinalityUnary :
+/-- Encode the physical coefficient field cardinality in unary form. -/
+def physicalCoefficientFieldCardinalityUnary :
     List Bool → List Bool :=
   physicalCellSourceLift
     physicalFamilyFieldCardinalityUnary
@@ -1629,7 +1655,8 @@ noncomputable def
   rw [paperVariableArityPhysicalCellSourceLift_query,
     paperVariableArityPhysicalFamilyFieldCardinalityUnary_valid]
 
-private def physicalCoefficientGridCardinalityUnary :
+/-- Encode the physical coefficient grid cardinality in unary form. -/
+def physicalCoefficientGridCardinalityUnary :
     List Bool → List Bool :=
   physicalCellSourceLift
     physicalFamilyGridCardinalityUnary
@@ -1818,7 +1845,8 @@ noncomputable def paperVariableArityPhysicalColumnTypeRankUnaryComputable :
     (paperVariableArityPhysicalCoefficientGridCardinalityUnary_query
       row column formula)
 
-private def physicalGlobalRowFieldRankUnary :
+/-- Encode a global row's field rank in unary form. -/
+def physicalGlobalRowFieldRankUnary :
     List Bool → List Bool :=
   sourcePhysicalComputedUnaryQuotient
     sourceExplicitAffineCellRow
@@ -1948,7 +1976,8 @@ private noncomputable def paperVariableArityPhysicalGlobalGridMatchBitComputable
     (paperVariableArityPhysicalGlobalRowFieldRankUnary_query
       row column formula)
 
-private def physicalGlobalFamilyCoefficientWord :
+/-- Compute a coefficient word for the global physical family. -/
+def physicalGlobalFamilyCoefficientWord :
     List Bool → List Bool :=
   sourceFourFamilyBooleanAndOutput
     physicalColumnGlobalTypeBit
@@ -3747,7 +3776,8 @@ noncomputable def
     sourceOriginalIndexedClauseQuery,
     paperSourcePreprocessingFilteredFormulaWord_valid]
 
-private def paperRefinementPrefixIndexedClauseWeightUnary :
+/-- Encode the indexed clause weight in a refinement prefix. -/
+def paperRefinementPrefixIndexedClauseWeightUnary :
     List Bool → List Bool :=
   paperVariableArityClauseWeightUnary ∘
     sourceOriginalIndexedClauseOutput ∘
@@ -3897,7 +3927,8 @@ open GapCVP.RefinementClauseOffsetTM GapCVP.PhysicalFamilyRowTM GapCVP.PhysicalF
 open GapCVP.PhysicalRightHandSideTM GapCVP.PhysicalGlobalRefinementCoefficientTM
 open GapCVP.PhysicalRefinementRowProjection
 
-private def physicalRefinementRowLocalRankUnary :
+/-- Encode the refinement row's local rank in unary form. -/
+def physicalRefinementRowLocalRankUnary :
     List Bool → List Bool :=
   unarySubtractionOutput sourceExplicitAffineCellRow
     physicalCellGlobalBoundaryUnary
@@ -3930,7 +3961,8 @@ noncomputable def
     (paperVariableArityPhysicalCellGlobalBoundaryUnary_query
       row column formula)
 
-private def physicalRefinementRowFieldQuotientUnary :
+/-- Encode the refinement row's field quotient in unary form. -/
+def physicalRefinementRowFieldQuotientUnary :
     List Bool → List Bool :=
   sourcePhysicalComputedUnaryQuotient
     physicalRefinementRowLocalRankUnary
@@ -3967,7 +3999,8 @@ noncomputable def
     (paperVariableArityPhysicalRightHandSideCellDegreeUnary_query
       row column formula)
 
-private def physicalRefinementRowFieldValueRankUnary :
+/-- Encode the refinement row's field-value rank in unary form. -/
+def physicalRefinementRowFieldValueRankUnary :
     List Bool → List Bool :=
   sourcePhysicalComputedUnaryRemainder
     physicalRefinementRowFieldQuotientUnary
@@ -4007,7 +4040,8 @@ noncomputable def
     (paperVariableArityPhysicalCoefficientFieldCardinalityUnary_query
       row column formula)
 
-private def physicalRefinementRowGridQuotientUnary :
+/-- Encode the refinement row's grid quotient in unary form. -/
+def physicalRefinementRowGridQuotientUnary :
     List Bool → List Bool :=
   sourcePhysicalComputedUnaryQuotient
     physicalRefinementRowFieldQuotientUnary
@@ -4047,7 +4081,8 @@ noncomputable def
     (paperVariableArityPhysicalCoefficientFieldCardinalityUnary_query
       row column formula)
 
-private def physicalRefinementRowGridRankUnary :
+/-- Encode the refinement row's grid rank in unary form. -/
+def physicalRefinementRowGridRankUnary :
     List Bool → List Bool :=
   sourcePhysicalComputedUnaryRemainder
     physicalRefinementRowGridQuotientUnary
@@ -4088,7 +4123,8 @@ noncomputable def
     (paperVariableArityPhysicalCoefficientGridCardinalityUnary_query
       row column formula)
 
-private def physicalRefinementClauseRankUnary :
+/-- Encode the refinement clause rank in unary form. -/
+def physicalRefinementClauseRankUnary :
     List Bool → List Bool :=
   sourcePhysicalComputedUnaryQuotient
     physicalRefinementRowGridQuotientUnary
@@ -4103,7 +4139,8 @@ noncomputable def
     paperVariableArityPhysicalRefinementRowGridQuotientUnaryComputable
     paperVariableArityPhysicalCoefficientGridCardinalityUnaryComputable
 
-private abbrev physicalRefinementRowClauseRank
+/-- Compute the clause rank of a physical refinement row. -/
+abbrev physicalRefinementRowClauseRank
     (row : ℕ) (formula : ThreeCNF) : ℕ :=
   (((row - physicalFormulaGlobalBoundary formula) /
       physDegree formula) /
@@ -4133,7 +4170,8 @@ private abbrev physicalRefinementRowClauseRank
     (paperVariableArityPhysicalCoefficientGridCardinalityUnary_query
       row column formula)
 
-private def physicalRefinementClauseRankEnvelopeOutput
+/-- Construct the refinement clause-rank envelope word. -/
+def physicalRefinementClauseRankEnvelopeOutput
     (input : List Bool) : List Bool :=
   lengthPrefixedWord
       (physicalRefinementClauseRankUnary input) ++
@@ -4168,7 +4206,8 @@ noncomputable def
   rw [paperVariableArityPhysicalRefinementClauseRankUnary_query,
     sourceExplicitAffineCellOriginalSource_query]
 
-private def physicalRefinementClauseOffsetUnary :
+/-- Encode the refinement clause offset in unary form. -/
+def physicalRefinementClauseOffsetUnary :
     List Bool → List Bool :=
   GapCVP.RefinementClauseOffsetTM.paperRefinementClauseOffsetUnary ∘
     physicalRefinementClauseRankEnvelopeOutput
@@ -4201,7 +4240,8 @@ noncomputable def
     formula (physicalRefinementRowClauseRank row formula)
     hbound
 
-private def physicalRefinementClauseWidthUnary :
+/-- Encode the refinement clause width in unary form. -/
+def physicalRefinementClauseWidthUnary :
     List Bool → List Bool :=
   paperVariableArityClauseWeightUnary ∘
     sourceOriginalIndexedClauseOutput ∘
@@ -4247,7 +4287,8 @@ noncomputable def
         ⟨physicalRefinementRowClauseRank row formula,
           hbound⟩) [])
 
-private def physicalRefinementColumnLocalTagUnary :
+/-- Encode the refinement column's local tag in unary form. -/
+def physicalRefinementColumnLocalTagUnary :
     List Bool → List Bool :=
   unarySubtractionOutput
     physicalColumnTypeRankUnary
@@ -4285,7 +4326,8 @@ noncomputable def
       row column formula)
     (by rfl)
 
-private def physicalRefinementClauseLocalTagUpperUnary :
+/-- Encode the upper local tag for a refinement clause. -/
+def physicalRefinementClauseLocalTagUpperUnary :
     List Bool → List Bool :=
   fourFamilyComputedUnarySumOutput
     physicalRefinementClauseOffsetUnary
@@ -4333,7 +4375,8 @@ noncomputable def
     (paperVariableArityPhysicalRefinementClauseWidthUnary_query
       row column formula hbound)
 
-private def physicalRefinementLocalTagBelowPrefixBit :
+/-- Test whether the local tag lies below the prefix boundary. -/
+def physicalRefinementLocalTagBelowPrefixBit :
     List Bool → List Bool :=
   fourFamilyComputedUnaryLessBitOutput
     physicalRefinementColumnLocalTagUnary
@@ -4348,7 +4391,8 @@ noncomputable def
     paperVariableArityPhysicalRefinementColumnLocalTagUnaryComputable
     paperVariableArityPhysicalRefinementClauseOffsetUnaryComputable
 
-private def physicalRefinementLocalTagBelowUpperBit :
+/-- Test whether the local tag lies below the upper boundary. -/
+def physicalRefinementLocalTagBelowUpperBit :
     List Bool → List Bool :=
   fourFamilyComputedUnaryLessBitOutput
     physicalRefinementColumnLocalTagUnary
@@ -4363,7 +4407,8 @@ noncomputable def
     paperVariableArityPhysicalRefinementColumnLocalTagUnaryComputable
     paperVariableArityPhysicalRefinementClauseLocalTagUpperUnaryComputable
 
-private def physicalRefinementLocalTagMarker :
+/-- Mark a local tag inside the refinement interval. -/
+def physicalRefinementLocalTagMarker :
     List Bool → List Bool :=
   sourceFourFamilyBooleanAndOutput
     (sourceFourFamilyBooleanNotOutput
@@ -4481,7 +4526,8 @@ open GapCVP.PhysicalRefinementClauseLocalTagTM
 
 attribute [local instance] Classical.propDecidable
 
-private abbrev physicalRefinementColumnTypeRank
+/-- Compute the type rank of a physical refinement column. -/
+abbrev physicalRefinementColumnTypeRank
     (column : ℕ) (formula : ThreeCNF) : ℕ :=
   (column / physFieldCard formula) /
     physGridCard formula
@@ -4502,7 +4548,8 @@ private abbrev paperVariableArityPhysicalRefinementLocalSourceWidth
         hbound⟩)
 
 attribute [-instance] Classical.propDecidable in
-private def physicalRefinementSourceLocalTagInRange
+/-- Test whether a source local tag is in refinement range. -/
+def physicalRefinementSourceLocalTagInRange
     (row column : ℕ) (formula : ThreeCNF)
     (hbound : physicalRefinementRowClauseRank row formula <
       (noTautClauses formula).length) : Bool :=
@@ -4534,7 +4581,8 @@ private def physicalRefinementSourceFieldMatch
     physicalRefinementSourceLocalTagInRange
       row column formula hbound)
   )
-private def physicalRefinementGridMatchBit :
+/-- Test whether a refinement grid coordinate matches. -/
+def physicalRefinementGridMatchBit :
     List Bool → List Bool :=
   physicalCoefficientUnaryEquality
     physicalColumnGridRankUnary
@@ -4577,7 +4625,8 @@ noncomputable def
     (paperVariableArityPhysicalRefinementRowGridRankUnary_query
       row column formula)
 
-private def physicalRefinementFieldValueMatchBit :
+/-- Test whether a refinement field value matches. -/
+def physicalRefinementFieldValueMatchBit :
     List Bool → List Bool :=
   physicalCoefficientUnaryEquality
     physicalColumnFieldValueRankUnary
@@ -4616,7 +4665,8 @@ noncomputable def
     (paperVariableArityPhysicalRefinementRowFieldValueRankUnary_query
       row column formula)
 
-private def physicalRefinementAllowedTypeBit :
+/-- Test whether a refinement type is allowed. -/
+def physicalRefinementAllowedTypeBit :
     List Bool → List Bool :=
   sourceFourFamilyBooleanOrOutput
     physicalColumnGlobalTypeBit
@@ -4663,7 +4713,8 @@ noncomputable def
         (paperVariableArityPhysicalRefinementLocalTagMarker_query
           row column formula hbound))
 
-private def physicalRefinementFamilyCoefficientWord :
+/-- Compute the coefficient word for a refinement family. -/
+def physicalRefinementFamilyCoefficientWord :
     List Bool → List Bool :=
   sourceFourFamilyBooleanAndOutput
     physicalRefinementGridMatchBit
@@ -5406,7 +5457,8 @@ open GapCVP.BinaryPhysicalLagrangeCoefficientTM GapCVP.BinaryFieldBasis
 open GapCVP.BinaryFieldInverseAlgebra GapCVP.BinaryFieldInverseTM
 open GapCVP.BinaryModularReductionTM GapCVP.BinarySourceFieldMultiplicationTM
 
-private abbrev physicalFieldFormulaDegree
+/-- Compute the physical field degree associated with a formula. -/
+abbrev physicalFieldFormulaDegree
     (formula : ThreeCNF) : ℕ :=
   GapCVP.Core.sourceFieldExponent
     (GapCVP.Core.sourceSizeParameter
@@ -5629,7 +5681,8 @@ open GapCVP.BinaryFieldInverseAlgebra GapCVP.BinaryFieldInverseTM
 open GapCVP.BinaryModularReductionTM GapCVP.PhysicalFamilyRowTM
 open GapCVP.BinaryPhysicalLagrangeCoefficientTM
 
-private def paperVariableAritySourceSelectedFieldOperandQuery
+/-- Prepare the operand query for a selected source-field value. -/
+def paperVariableAritySourceSelectedFieldOperandQuery
     (operand source : List Bool) : List Bool :=
   lengthPrefixedWord operand ++ source
 
@@ -5932,7 +5985,8 @@ theorem compactPhysicalFieldWordXorValue_sourceWordValue_sub
   exact compactPhysicalFieldWordXorValue_sourceWordValue
     encodingLength formula left right
 
-private def compactPhysicalFieldWordXorOriginalCell : List Bool → List Bool :=
+/-- Read the original cell for a compact field-word XOR. -/
+def compactPhysicalFieldWordXorOriginalCell : List Bool → List Bool :=
   firstFieldSuffix ∘ firstFieldSuffix
 
 /-- GapCVP reduction support. -/
@@ -5943,7 +5997,8 @@ private def compactPhysicalFieldWordXorOriginalCell : List Bool → List Bool :=
   factor400BinaryPhysicalWordRuntimeCompositionComputer
     firstFieldSuffixComputable firstFieldSuffixComputable
 
-private def compactPhysicalFieldWordXorCandidateOperand
+/-- Read the candidate operand for a compact field-word XOR. -/
+def compactPhysicalFieldWordXorCandidateOperand
     (worker : SourcePhysicalLagrangeWordComputer) :
     List Bool → List Bool :=
   worker.output ∘ compactPhysicalFieldWordXorOriginalCell
@@ -5957,7 +6012,8 @@ private def compactPhysicalFieldWordXorCandidateOperand
   factor400BinaryPhysicalWordRuntimeCompositionComputer
     compactPhysicalFieldWordXorOriginalCellComputable worker.computer
 
-private def compactPhysicalFieldWordXorCandidateBit
+/-- Compute a candidate bit for the compact field-word XOR. -/
+def compactPhysicalFieldWordXorCandidateBit
     (worker : SourcePhysicalLagrangeWordComputer) :
     List Bool → List Bool :=
   fiveFamilyOriginalDynamicBitWord firstFieldContents
@@ -5972,7 +6028,8 @@ private def compactPhysicalFieldWordXorCandidateBit
   fiveOriginalDynamicBitComputable firstFieldContentsComputable
     (compactPhysicalFieldWordXorCandidateOperandComputable worker)
 
-private def compactPhysicalFieldWordXorCandidate
+/-- Construct the candidate compact field-word XOR output. -/
+def compactPhysicalFieldWordXorCandidate
     (left right : SourcePhysicalLagrangeWordComputer) :
     List Bool → List Bool :=
   binaryGaussianXorHeadWord ∘
@@ -6142,6 +6199,7 @@ private theorem compactPhysicalLagrangeProductWord_generic_valid
         (factors.foldl
           (GapCVP.Core.EffectiveBinaryField.multiplyMod lower)
           initial) := by
+  unfold compactPhysicalLagrangeProductWord compactPhysicalLagrangeProductFold
   change
     firstFieldContents
       (firstFieldSuffix
@@ -6244,7 +6302,8 @@ private noncomputable def compactPhysicalLagrangeFactorProductAnchorComputable
       lengthPrefixedWord (lower.output input) ++ source.output input)
   exact hphysical
 
-private def compactPhysicalLagrangeFactorProductPreparation
+/-- Prepare the product query for compact physical Lagrange factors. -/
+def compactPhysicalLagrangeFactorProductPreparation
     (width : SourceQaryMaskDynamicGridWidth)
     (lower initial source factor : SourcePhysicalLagrangeWordComputer)
     (input : List Bool) : List Bool :=
@@ -6350,7 +6409,8 @@ abbrev PaperVariableArityPhysicalInterpolationWord (formula : ThreeCNF) :=
   GapCVP.Core.EffectiveBinaryField.Word
     (physDegree formula)
 
-private def physicalInterpolationDegreeWord :
+/-- Read the field degree from the original source of a physical interpolation query. -/
+def physicalInterpolationDegreeWord :
     List Bool → List Bool :=
   physicalFamilyFieldDegreeUnary ∘
     sourceExplicitAffineCellOriginalSource
@@ -6380,7 +6440,8 @@ private noncomputable def paperVariableArityPhysicalInterpolationDegreeComputer 
   rw [Function.comp_apply, sourceExplicitAffineCellOriginalSource_query]
   exact paperVariableArityPhysicalFamilyFieldDegreeUnary_valid formula
 
-private def physicalInterpolationDifferenceWord
+/-- Compute the field-word difference of the outputs of two interpolation computers. -/
+def physicalInterpolationDifferenceWord
     (left right : SourcePhysicalLagrangeWordComputer) :
     List Bool → List Bool :=
   compactPhysicalFieldWordXorWithDegree
@@ -6402,6 +6463,11 @@ noncomputable def paperVariableArityPhysicalInterpolationDifferenceComputer
   output := physicalInterpolationDifferenceWord left right
   computer :=
     paperVariableArityPhysicalInterpolationDifferenceWordComputable left right
+
+theorem paperVariableArityPhysicalInterpolationDifferenceComputer_output
+    (left right : SourcePhysicalLagrangeWordComputer) :
+    (paperVariableArityPhysicalInterpolationDifferenceComputer left right).output =
+      physicalInterpolationDifferenceWord left right := by rfl
 
 theorem paperVariableArityPhysicalInterpolationDifferenceWord_valid
     (left right : SourcePhysicalLagrangeWordComputer)
@@ -6565,7 +6631,8 @@ open GapCVP.SourceMixedRadixMaskSelectedFlatPreparationTM GapCVP.BinaryDimension
 open GapCVP.BinaryExplicitAffineRows GapCVP.BinaryPhysicalLagrangeCoefficientTM
 open GapCVP.BinaryCompactPhysicalNodeParityTM GapCVP.PhysicalFamilyRowTM
 
-private def physicalInterpolationVariableCountWord :
+/-- Encode the physical interpolation variable count. -/
+def physicalInterpolationVariableCountWord :
     List Bool → List Bool :=
   physicalFamilyVariableCountUnary ∘
     sourceExplicitAffineCellOriginalSource
@@ -6590,7 +6657,8 @@ noncomputable def
   rw [Function.comp_apply, sourceExplicitAffineCellOriginalSource_query]
   exact paperVariableArityPhysicalFamilyVariableCountUnary_valid formula
 
-private def physicalInterpolationShiftedVariableCountWord :
+/-- Encode the shifted interpolation variable count. -/
+def physicalInterpolationShiftedVariableCountWord :
     List Bool → List Bool :=
   unarySubtractionOutput
     physicalInterpolationVariableCountWord
@@ -6673,6 +6741,11 @@ noncomputable def physicalOrdinaryNodePrefixWidth
   output := physicalOrdinaryNodePrefixWord moment
   computer := paperVariableArityPhysicalOrdinaryNodePrefixWordComputable moment
 
+theorem physicalOrdinaryNodePrefixWidth_output
+    (moment : SourcePhysicalLagrangeWordComputer) :
+    (physicalOrdinaryNodePrefixWidth moment).output =
+      physicalOrdinaryNodePrefixWord moment := by rfl
+
 /-- GapCVP reduction support. -/
 def physicalShiftedNodePrefixWord
     (moment : SourcePhysicalLagrangeWordComputer)
@@ -6723,6 +6796,11 @@ noncomputable def physicalShiftedNodePrefixWidth
     SourceQaryMaskDynamicGridWidth where
   output := physicalShiftedNodePrefixWord moment
   computer := paperVariableArityPhysicalShiftedNodePrefixWordComputable moment
+
+theorem physicalShiftedNodePrefixWidth_output
+    (moment : SourcePhysicalLagrangeWordComputer) :
+    (physicalShiftedNodePrefixWidth moment).output =
+      physicalShiftedNodePrefixWord moment := by rfl
 
 /-- GapCVP reduction support. -/
 def physicalInterpolationNodeParity
@@ -7143,7 +7221,7 @@ open GapCVP.Factor400BinaryConstructivePaperVariableAritySourceFieldArithmeticMa
 open GapCVP.Factor400BinaryConstructivePaperVariableAritySourceFieldOperationsMachine
 
 /-- GapCVP reduction support. -/
-def physicalFamilyStart
+@[expose] def physicalFamilyStart
     (family : Fin 4) (formula : ThreeCNF) : ℕ :=
   if family.val = 0 then 0
   else if family.val = 1 then
@@ -7152,7 +7230,8 @@ def physicalFamilyStart
     physicalFormulaRefinementBoundary formula
   else physicalFormulaOrdinaryBoundary formula
 
-private def physicalFamilyStartUnary
+/-- Encode the start index of a physical family in unary form. -/
+def physicalFamilyStartUnary
     (family : Fin 4) : List Bool → List Bool :=
   if family.val = 0 then fun _ => []
   else if family.val = 1 then
@@ -7198,7 +7277,8 @@ private def physicalFamilyStartUnary
       · simp only [physicalFamilyStartUnary, hzero, ↓reduceIte, hone, htwo,
             paperVariableArityPhysicalCellOrdinaryBoundaryUnary_query, physicalFamilyStart]
 
-private def physicalMomentCellDegreeUnary :
+/-- Encode a physical moment cell's degree in unary form. -/
+def physicalMomentCellDegreeUnary :
     List Bool → List Bool :=
   physicalCellSourceLift
     physicalFamilyFieldDegreeUnary
@@ -7272,7 +7352,8 @@ def physicalMomentCellMomentCountUnary :
   rw [paperVariableArityPhysicalCellSourceLift_query,
     paperVariableArityPhysicalFamilyMomentCountUnary_valid]
 
-private def physicalFamilyRowLocalOffsetWord
+/-- Encode the local offset of a physical family row. -/
+def physicalFamilyRowLocalOffsetWord
     (family : Fin 4) : List Bool → List Bool :=
   unarySubtractionOutput sourceExplicitAffineCellRow
     (physicalFamilyStartUnary family)
@@ -7382,7 +7463,7 @@ def physicalFamilyRowGridQuotientWord
       row column formula)
 
 /-- GapCVP reduction support. -/
-def physicalFamilyRowMoment
+@[expose] def physicalFamilyRowMoment
     (family : Fin 4) (row : ℕ) (formula : ThreeCNF) : ℕ :=
   (((row - physicalFamilyStart family formula) /
     physDegree formula) /
@@ -7413,7 +7494,7 @@ def physicalFamilyRowMomentRankWord
     paperVariableArityPhysicalMomentCellMomentCountUnaryComputable
 
 /-- GapCVP reduction support. -/
-noncomputable def physicalFamilyRowMomentRankComputer
+@[expose] noncomputable def physicalFamilyRowMomentRankComputer
     (family : Fin 4) : SourcePhysicalLagrangeWordComputer where
   output := physicalFamilyRowMomentRankWord family
   computer := paperVariableArityPhysicalFamilyRowMomentRankComputable family
@@ -7545,7 +7626,7 @@ noncomputable def paperVariableArityPhysicalFamilyMomentPowerComputable
     (compactPhysicalLagrangeMomentNodeFactorComputer base)
 
 /-- GapCVP reduction support. -/
-noncomputable def physicalFamilyMomentPowerComputer
+@[expose] noncomputable def physicalFamilyMomentPowerComputer
     (family : Fin 4) (base : SourcePhysicalLagrangeWordComputer) :
     SourcePhysicalLagrangeWordComputer where
   output := physicalFamilyMomentPowerWord family base

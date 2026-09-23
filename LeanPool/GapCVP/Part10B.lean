@@ -3505,6 +3505,7 @@ private def sourcePhysicalLagrangeProductAnchor
   firstFieldContents state
 
 /-- GapCVP reduction support. -/
+@[expose]
 def sourcePhysicalLagrangeProductAccumulator
     (state : List Bool) : List Bool :=
   firstFieldContents (firstFieldSuffix state)
@@ -3836,6 +3837,7 @@ noncomputable def sourcePhysicalLagrangeProductFoldComputable
     (fun factor => lengthPrefixedWord (finiteWordBits factor))
 
 /-- GapCVP reduction support. -/
+@[expose]
 def sourcePhysicalLagrangeProductSourceAnchor
     {degree : ℕ}
     (lower : GapCVP.Core.EffectiveBinaryField.Word degree)
@@ -3930,13 +3932,17 @@ private theorem sourcePhysicalLagrangeProduct_iterate_valid
           initial factor)
 
 /-- GapCVP reduction support. -/
+@[expose]
 def sourcePhysicalLagrangeProductFoldWord
     {degree : ℕ}
     (lower initial : GapCVP.Core.EffectiveBinaryField.Word degree)
     (factors : List (GapCVP.Core.EffectiveBinaryField.Word degree))
     (source : List Bool) : List Bool :=
   unaryBoundedFoldWord factors.length
-    (sourcePhysicalLagrangeProductSeed lower initial factors source)
+    (lengthPrefixedWord
+        (sourcePhysicalLagrangeProductSourceAnchor lower source) ++
+      lengthPrefixedWord (finiteWordBits initial) ++
+        sourcePhysicalLagrangePackedFactorWords factors)
 
 theorem sourcePhysicalLagrangeProductFoldOutput_valid
     {degree : ℕ}
@@ -4355,6 +4361,7 @@ theorem sourceWordValue_multiplyMod
   rw [wordElement_multiplyMod, map_mul]
 
 /-- GapCVP reduction support. -/
+@[expose]
 def sourceWordPow {degree : ℕ}
     (word : Word degree) : ℕ → Word degree
   | 0 => oneWord degree
