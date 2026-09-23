@@ -26,7 +26,8 @@ namespace SourceStructuralDecoder
 
 open Turing
 
-private def payload_validTrace
+/-- Decode a valid length-prefixed payload and discard its suffix within a linear time bound. -/
+def payloadValidTrace
     (payload suffix : List Bool) :
     EvalsToInTime payloadDecoderMachine.step (payloadConfiguration 0
         (BinaryEncoding.lengthPrefixedWord payload ++ suffix)
@@ -81,7 +82,8 @@ namespace SourceTotalStructuralDecoder
 
 open Turing GapCVP.SourceStructuralDecoder
 
-private def payload_failureTrace
+/-- Clear the decoder's work stacks and halt with a failure flag. -/
+def payloadFailureTrace
     (input counter reversed output : List Bool) :
     EvalsToInTime payloadDecoderMachine.step (payloadConfiguration 4 input counter reversed output)
       (some (Turing.haltList payloadDecoderMachine (false :: output)))
@@ -104,7 +106,8 @@ private def payload_failureTrace
   have hfull := EvalsToInTime.trans payloadDecoderMachine.step _ _ _ _ _ hsecond hfinish
   exact rebound hfull (by omega)
 
-private def payload_missingPrefixTrace
+/-- Enter the failure state when the unary length prefix has no delimiter. -/
+def payloadMissingPrefixTrace
     (count : ℕ) (counter reversed output : List Bool) :
     EvalsToInTime payloadDecoderMachine.step (payloadConfiguration 0 (List.replicate count true)
         counter reversed output)
@@ -125,7 +128,8 @@ private def payload_missingPrefixTrace
           Nat.reduceAdd,
           replicate_true_append_cons] using hboth
 
-private def payload_missingTrace (count : ℕ) :
+/-- Reject an input consisting entirely of a unary length prefix. -/
+def payloadMissingTrace (count : ℕ) :
     EvalsToInTime payloadDecoderMachine.step
       (payloadConfiguration 0 (List.replicate count true) [] [] [])
       (some (Turing.haltList payloadDecoderMachine [false]))
@@ -136,9 +140,9 @@ private def payload_missingTrace (count : ℕ) :
         (some (payloadConfiguration 4 []
           (List.replicate count true) [] []))
         (count + 1) := by
-    simpa only [FinTM2.step, Fin.isValue, List.append_nil] using payload_missingPrefixTrace count
+    simpa only [FinTM2.step, Fin.isValue, List.append_nil] using payloadMissingPrefixTrace count
         [] [] []
-  have hcleanup := payload_failureTrace [] (List.replicate count true) [] []
+  have hcleanup := payloadFailureTrace [] (List.replicate count true) [] []
   have hfull := EvalsToInTime.trans payloadDecoderMachine.step _ _ _ _ _ hprefix hcleanup
   exact {
     steps := hfull.steps
@@ -149,7 +153,8 @@ private def payload_missingTrace (count : ℕ) :
       omega
   }
 
-private def payload_partialCopyTrace
+/-- Copy all available payload bits while retaining any unconsumed length counter. -/
+def payloadPartialCopyTrace
     (payload remaining reversed output : List Bool) :
     EvalsToInTime payloadDecoderMachine.step (payloadConfiguration 1 payload
         (List.replicate payload.length true ++ remaining)
@@ -174,7 +179,8 @@ private def payload_partialCopyTrace
           List.cons_append,
           List.reverse_cons, List.append_assoc, List.nil_append] using hboth
 
-private def payload_truncatedTrace
+/-- Reject a payload shorter than its declared length within a linear time bound. -/
+def payloadTruncatedTrace
     (payload : List Bool) (extra : ℕ) :
     EvalsToInTime payloadDecoderMachine.step (payloadConfiguration 0
         (List.replicate (payload.length + extra + 1) true ++
@@ -206,7 +212,7 @@ private def payload_truncatedTrace
         payload.length + (extra + 1) by omega, List.replicate_add]
     rw [hcounter]
     simpa only [FinTM2.step, Fin.isValue, List.replicate_append_replicate, List.append_nil] using
-        payload_partialCopyTrace payload (List.replicate (extra + 1) true) [] []
+        payloadPartialCopyTrace payload (List.replicate (extra + 1) true) [] []
   have hinsufficient :
       EvalsToInTime payloadDecoderMachine.step (payloadConfiguration 1 []
           (List.replicate (extra + 1) true) payload.reverse [])
@@ -215,7 +221,7 @@ private def payload_truncatedTrace
         1 := by
     simpa only [FinTM2.step, Fin.isValue, List.replicate_succ] using
         oneStep _ _ (payload_insufficient (List.replicate extra true) payload.reverse [])
-  have hcleanup := payload_failureTrace []
+  have hcleanup := payloadFailureTrace []
     (List.replicate (extra + 1) true) payload.reverse []
   have h01 := EvalsToInTime.trans payloadDecoderMachine.step _ _ _ _ _ hprefix hcopy
   have h012 := EvalsToInTime.trans payloadDecoderMachine.step _ _ _ _ _ h01 hinsufficient
@@ -310,7 +316,8 @@ theorem validInput_reconstruct
   simp only [BinaryEncoding.lengthPrefixedWord, htake, List.append_assoc, List.cons_append,
       List.take_append_drop]
 
-private def payload_totalTrace (input : List Bool) :
+/-- A time-bounded decoder execution for every input, including malformed encodings. -/
+def payloadTotalTrace (input : List Bool) :
     EvalsToInTime payloadDecoderMachine.step (payloadConfiguration 0 input [] [] [])
       (some (Turing.haltList payloadDecoderMachine
         (payloadDecodeOutput input)))
@@ -319,7 +326,7 @@ private def payload_totalTrace (input : List Bool) :
   | inl witness =>
     obtain ⟨count, hinput⟩ := witness
     subst input
-    have htrace := payload_missingTrace count
+    have htrace := payloadMissingTrace count
     exact {
       steps := htrace.steps
       evals_in_steps := by
@@ -337,7 +344,7 @@ private def payload_totalTrace (input : List Bool) :
     by_cases hlen : count ≤ tail.length
     · have hreconstruct := validInput_reconstruct count tail hlen
       rw [hreconstruct]
-      have htrace := payload_validTrace (tail.take count) (tail.drop count)
+      have htrace := payloadValidTrace (tail.take count) (tail.drop count)
       exact {
         steps := htrace.steps
         evals_in_steps := by
@@ -356,7 +363,7 @@ private def payload_totalTrace (input : List Bool) :
         dsimp [extra]
         omega
       rw [hcount]
-      have htrace := payload_truncatedTrace tail extra
+      have htrace := payloadTruncatedTrace tail extra
       exact {
         steps := htrace.steps
         evals_in_steps := by
@@ -379,15 +386,15 @@ noncomputable def payloadDecoderComputable :
   outputAlphabet := Equiv.refl Bool
   time := 3 * Polynomial.X + 6
   outputsFun input := {
-    steps := (payload_totalTrace input).steps
+    steps := (payloadTotalTrace input).steps
     evals_in_steps := by
       simpa only [Option.bind_eq_bind, FinTM2.step, Fin.isValue, Equiv.invFun_as_coe,
           Equiv.refl_symm,
           Equiv.coe_refl, bitEncoding, id_eq, List.map_id_fun, payloadDecoderMachine_init,
               Option.map_some] using
-          (payload_totalTrace input).evals_in_steps
+          (payloadTotalTrace input).evals_in_steps
     steps_le_m := by
-      have hsteps := (payload_totalTrace input).steps_le_m
+      have hsteps := (payloadTotalTrace input).steps_le_m
       simpa only [FinTM2.step, Fin.isValue, bitEncoding, id_eq, Polynomial.eval_add,
           Polynomial.eval_mul,
           Polynomial.eval_ofNat, Polynomial.eval_X, ge_iff_le] using hsteps
@@ -399,7 +406,8 @@ namespace SourceFormulaStructuralDecoder
 
 open Turing GapCVP.SourceTotalStructuralDecoder
 
-private abbrev dropHeadMachine : Turing.FinTM2 where
+/-- The single-step machine that removes the first bit of its input. -/
+abbrev dropHeadMachine : Turing.FinTM2 where
   K := Unit
   k₀ := ()
   k₁ := ()

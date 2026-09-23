@@ -39,7 +39,8 @@ open GapCVP.CLCompactWindowSoundness GapCVP.CLBoundedRowInduction
 open GapCVP.CLFullStackStepSoundness GapCVP.CLNaturalTimeCompiler GapCVP.CLAcceptanceAnchor
 open GapCVP.CLVerifiedLocalTableauCompiler GapCVP.CLFinalTableauAssembly
 
-private noncomputable def PaddedAcceptancePhaseAllowed
+/-- Decide whether a complete phase window satisfies stack, head, and acceptance coherence. -/
+noncomputable def PaddedAcceptancePhaseAllowed
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
     (window : CompletePhaseWindow machine.tm) : Bool :=
@@ -50,7 +51,8 @@ private noncomputable def PaddedAcceptancePhaseAllowed
       window.2.2.2.mode = .accepting →
         TrueOutputMachineHead machine window.2.1)
   ) (Classical.propDecidable _)
-private def paddedAcceptancePhaseAllowed
+/-- Compute the padded acceptance condition for a complete phase window. -/
+def paddedAcceptancePhaseAllowed
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
     (window : CompletePhaseWindow machine.tm) : Bool := by
@@ -305,7 +307,7 @@ private theorem paddedAcceptanceValidTrace_machineHead_constant
       rw [leftBlock_succ] at hleft
       exact hleft.symm.trans ih
 
-private theorem paddedAcceptanceValidTrace_firstAcceptance_trueHalt
+theorem paddedAcceptanceValidTraceFirstAcceptanceTrueHalt
     (bound : Polynomial ℕ)
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
@@ -458,7 +460,8 @@ private theorem paddedAcceptanceValidTrace_firstAcceptance_trueHalt
     htrueFirst, htrueHalt.1, htrueHalt.2,
     ⟨htrueRun⟩, hruntime, hprefix⟩
 
-private def paddedAcceptanceValidTrace_guessingExecution
+/-- Extract an accepting guessing execution from a valid padded tableau trace. -/
+def paddedAcceptanceValidTraceGuessingExecution
     (bound : Polynomial ℕ)
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
@@ -471,7 +474,7 @@ private def paddedAcceptanceValidTrace_guessingExecution
   apply Classical.choice
   obtain ⟨time, _, certificate, _, _, _, _, _, _, _, _,
       ⟨run⟩, hruntime, _⟩ :=
-    paddedAcceptanceValidTrace_firstAcceptance_trueHalt
+    paddedAcceptanceValidTraceFirstAcceptanceTrueHalt
       bound machine x trace htrace
   exact ⟨{
     certificate := certificate
@@ -1117,7 +1120,7 @@ def paddedAcceptanceLocalTableauCompiler
     exact acceptedExecution_paddedAcceptance_validTrace
       bound machine accepted
   decode x trace htrace :=
-    paddedAcceptanceValidTrace_guessingExecution
+    paddedAcceptanceValidTraceGuessingExecution
       bound machine x trace htrace
 
 end CLPaddedAcceptanceCompiler
@@ -1177,7 +1180,8 @@ namespace CLStructuralPrefixWriter
 
 open Turing GapCVP.BinaryEncoding
 
-private def prefixWriterPeek (stack : Fin 4)
+/-- Branch according to whether the selected stack has a top symbol. -/
+def prefixWriterPeek (stack : Fin 4)
     (present absent : Turing.TM2.Stmt
       (fun _ : Fin 4 => Bool) (Fin 3) (Option Bool)) :
     Turing.TM2.Stmt
@@ -1185,33 +1189,38 @@ private def prefixWriterPeek (stack : Fin 4)
   .peek stack (fun _ symbol => symbol)
     (.branch (fun symbol => symbol.isSome) present absent)
 
-private def prefixWriterPop (stack : Fin 4)
+/-- Remove the top symbol of a stack, then continue. -/
+def prefixWriterPop (stack : Fin 4)
     (continuation : Turing.TM2.Stmt
       (fun _ : Fin 4 => Bool) (Fin 3) (Option Bool)) :
     Turing.TM2.Stmt
       (fun _ : Fin 4 => Bool) (Fin 3) (Option Bool) :=
   .pop stack (fun symbol _ => symbol) continuation
 
-private def prefixWriterPushBit (stack : Fin 4)
+/-- Push the current bit onto a stack, defaulting to false when no bit is loaded. -/
+def prefixWriterPushBit (stack : Fin 4)
     (continuation : Turing.TM2.Stmt
       (fun _ : Fin 4 => Bool) (Fin 3) (Option Bool)) :
     Turing.TM2.Stmt
       (fun _ : Fin 4 => Bool) (Fin 3) (Option Bool) :=
   .push stack (fun symbol => symbol.getD false) continuation
 
-private def prefixWriterPushMarker (stack : Fin 4)
+/-- Push a true delimiter marker onto a stack. -/
+def prefixWriterPushMarker (stack : Fin 4)
     (continuation : Turing.TM2.Stmt
       (fun _ : Fin 4 => Bool) (Fin 3) (Option Bool)) :
     Turing.TM2.Stmt
       (fun _ : Fin 4 => Bool) (Fin 3) (Option Bool) :=
   .push stack (fun _ => true) continuation
 
-private def prefixWriterGoto (phase : Fin 3) :
+/-- Clear the current symbol and enter the specified phase. -/
+def prefixWriterGoto (phase : Fin 3) :
     Turing.TM2.Stmt
       (fun _ : Fin 4 => Bool) (Fin 3) (Option Bool) :=
   .load (fun _ => none) (.goto (fun _ => phase))
 
-private def prefixWriterScanStatement :
+/-- Move input bits to scratch while counting them with markers. -/
+def prefixWriterScanStatement :
     Turing.TM2.Stmt
       (fun _ : Fin 4 => Bool) (Fin 3) (Option Bool) :=
   prefixWriterPeek 0
@@ -1220,7 +1229,8 @@ private def prefixWriterScanStatement :
         (prefixWriterPushMarker 2 (prefixWriterGoto 0))))
     (prefixWriterGoto 1)
 
-private def prefixWriterRestoreStatement :
+/-- Restore the saved input bits to output and append a false separator. -/
+def prefixWriterRestoreStatement :
     Turing.TM2.Stmt
       (fun _ : Fin 4 => Bool) (Fin 3) (Option Bool) :=
   prefixWriterPeek 1
@@ -1228,7 +1238,8 @@ private def prefixWriterRestoreStatement :
       (prefixWriterPushBit 3 (prefixWriterGoto 1)))
     (.push 3 (fun _ => false) (prefixWriterGoto 2))
 
-private def prefixWriterMarkerStatement :
+/-- Transfer one true marker per input bit to output, then halt. -/
+def prefixWriterMarkerStatement :
     Turing.TM2.Stmt
       (fun _ : Fin 4 => Bool) (Fin 3) (Option Bool) :=
   prefixWriterPeek 2
@@ -1236,7 +1247,8 @@ private def prefixWriterMarkerStatement :
       (prefixWriterPushMarker 3 (prefixWriterGoto 2)))
     .halt
 
-private abbrev structuralPrefixWriter : Turing.FinTM2 where
+/-- Four-stack machine that writes the length prefix before the input word. -/
+abbrev structuralPrefixWriter : Turing.FinTM2 where
   K := Fin 4
   k₀ := 0
   k₁ := 3
@@ -1253,7 +1265,8 @@ private abbrev structuralPrefixWriter : Turing.FinTM2 where
     else
       prefixWriterMarkerStatement
 
-private def prefixWriterConfiguration (phase : Fin 3)
+/-- Configuration of the prefix writer in a chosen phase with four stack contents. -/
+def prefixWriterConfiguration (phase : Fin 3)
     (input scratch markers output : List Bool) :
     structuralPrefixWriter.Cfg where
   l := some phase
@@ -1284,7 +1297,7 @@ macro "prefixWriterStepTac" : tactic =>
             (first | rfl | simp [Function.update]) } <;>
           try rfl)))
 
-private theorem prefixWriter_scan_step (bit : Bool)
+theorem prefixWriterScanStep (bit : Bool)
     (input scratch markers output : List Bool) :
     structuralPrefixWriter.step
       (prefixWriterConfiguration 0
@@ -1293,14 +1306,14 @@ private theorem prefixWriter_scan_step (bit : Bool)
         input (bit :: scratch) (true :: markers) output) := by
   cases bit <;> prefixWriterStepTac
 
-private theorem prefixWriter_scan_finish
+theorem prefixWriterScanFinish
     (scratch markers output : List Bool) :
     structuralPrefixWriter.step
       (prefixWriterConfiguration 0 [] scratch markers output) =
       some (prefixWriterConfiguration 1 [] scratch markers output) := by
   prefixWriterStepTac
 
-private theorem prefixWriter_restore_step (bit : Bool)
+theorem prefixWriterRestoreStep (bit : Bool)
     (scratch markers output : List Bool) :
     structuralPrefixWriter.step
       (prefixWriterConfiguration 1 []
@@ -1309,7 +1322,7 @@ private theorem prefixWriter_restore_step (bit : Bool)
         scratch markers (bit :: output)) := by
   cases bit <;> prefixWriterStepTac
 
-private theorem prefixWriter_restore_finish
+theorem prefixWriterRestoreFinish
     (markers output : List Bool) :
     structuralPrefixWriter.step
       (prefixWriterConfiguration 1 [] [] markers output) =
@@ -1317,7 +1330,7 @@ private theorem prefixWriter_restore_finish
         (false :: output)) := by
   prefixWriterStepTac
 
-private theorem prefixWriter_marker_step (bit : Bool)
+theorem prefixWriterMarkerStep (bit : Bool)
     (markers output : List Bool) :
     structuralPrefixWriter.step
       (prefixWriterConfiguration 2 [] [] (bit :: markers) output) =
@@ -1325,13 +1338,14 @@ private theorem prefixWriter_marker_step (bit : Bool)
         (true :: output)) := by
   cases bit <;> prefixWriterStepTac
 
-private theorem prefixWriter_finish (output : List Bool) :
+theorem prefixWriterFinish (output : List Bool) :
     structuralPrefixWriter.step
       (prefixWriterConfiguration 2 [] [] [] output) =
       some (Turing.haltList structuralPrefixWriter output) := by
   prefixWriterStepTac
 
-private def prefixWriter_scanTrace
+/-- The scan phase reverses the input onto scratch and records its length in markers. -/
+def prefixWriterScanTrace
     (input scratch markers output : List Bool) :
     EvalsToInTime structuralPrefixWriter.step
       (prefixWriterConfiguration 0 input scratch markers output)
@@ -1343,16 +1357,17 @@ private def prefixWriter_scanTrace
   | nil =>
       simpa only [FinTM2.step, Fin.isValue, List.reverse_nil, List.nil_append, List.length_nil,
           List.replicate_zero,
-          zero_add] using oneStep _ _ (prefixWriter_scan_finish scratch markers output)
+          zero_add] using oneStep _ _ (prefixWriterScanFinish scratch markers output)
   | cons bit input ih =>
-      have hfirst := oneStep _ _ (prefixWriter_scan_step bit input scratch markers output)
+      have hfirst := oneStep _ _ (prefixWriterScanStep bit input scratch markers output)
       have hrest := ih (bit :: scratch) (true :: markers)
       have hfull := EvalsToInTime.trans structuralPrefixWriter.step _ _ _ _ _ hfirst hrest
       simpa only [FinTM2.step, Fin.isValue, List.reverse_cons, List.append_assoc, List.cons_append,
           List.nil_append,
           List.length_cons, List.replicate_succ', Nat.add_assoc, Nat.reduceAdd] using hfull
 
-private def prefixWriter_restoreTrace
+/-- The restore phase copies scratch back to output after a false separator. -/
+def prefixWriterRestoreTrace
     (scratch markers output : List Bool) :
     EvalsToInTime structuralPrefixWriter.step
       (prefixWriterConfiguration 1 [] scratch markers output)
@@ -1363,16 +1378,17 @@ private def prefixWriter_restoreTrace
   | nil =>
       simpa only [FinTM2.step, Fin.isValue, List.reverse_nil, List.nil_append, List.length_nil,
           zero_add] using
-          oneStep _ _ (prefixWriter_restore_finish markers output)
+          oneStep _ _ (prefixWriterRestoreFinish markers output)
   | cons bit scratch ih =>
-      have hfirst := oneStep _ _ (prefixWriter_restore_step bit scratch markers output)
+      have hfirst := oneStep _ _ (prefixWriterRestoreStep bit scratch markers output)
       have hrest := ih (bit :: output)
       have hfull := EvalsToInTime.trans structuralPrefixWriter.step _ _ _ _ _ hfirst hrest
       simpa only [FinTM2.step, Fin.isValue, List.reverse_cons, List.append_assoc, List.cons_append,
           List.nil_append,
           List.length_cons, Nat.add_assoc, Nat.reduceAdd] using hfull
 
-private def prefixWriter_markerTrace (markers output : List Bool) :
+/-- The marker phase writes the unary length prefix and halts. -/
+def prefixWriterMarkerTrace (markers output : List Bool) :
     EvalsToInTime structuralPrefixWriter.step (prefixWriterConfiguration 2 [] [] markers output)
       (some (Turing.haltList structuralPrefixWriter
         (List.replicate markers.length true ++ output)))
@@ -1381,26 +1397,27 @@ private def prefixWriter_markerTrace (markers output : List Bool) :
   | nil =>
       simpa only [FinTM2.step, Fin.isValue, List.length_nil, List.replicate_zero, List.nil_append,
           zero_add] using
-          oneStep _ _ (prefixWriter_finish output)
+          oneStep _ _ (prefixWriterFinish output)
   | cons bit markers ih =>
-      have hfirst := oneStep _ _ (prefixWriter_marker_step bit markers output)
+      have hfirst := oneStep _ _ (prefixWriterMarkerStep bit markers output)
       have hrest := ih (true :: output)
       have hfull := EvalsToInTime.trans structuralPrefixWriter.step _ _ _ _ _ hfirst hrest
       simpa only [FinTM2.step, Fin.isValue, List.length_cons, List.replicate_succ',
           List.append_assoc,
           List.cons_append, List.nil_append, Nat.add_assoc, Nat.reduceAdd] using hfull
 
-private def prefixWriter_totalTrace (input : List Bool) :
+/-- The three phases write the complete length-prefixed word within linear time. -/
+def prefixWriterTotalTrace (input : List Bool) :
     EvalsToInTime structuralPrefixWriter.step (prefixWriterConfiguration 0 input [] [] [])
       (some (Turing.haltList structuralPrefixWriter
         (lengthPrefixedWord input)))
       (3 * input.length + 3) := by
-  have hscan := prefixWriter_scanTrace input [] [] []
+  have hscan := prefixWriterScanTrace input [] [] []
   simp only [List.append_nil] at hscan
-  have hrestore := prefixWriter_restoreTrace
+  have hrestore := prefixWriterRestoreTrace
     input.reverse (List.replicate input.length true) []
   simp only [List.reverse_reverse, List.append_nil] at hrestore
-  have hmarkers := prefixWriter_markerTrace
+  have hmarkers := prefixWriterMarkerTrace
     (List.replicate input.length true) (false :: input)
   simp only [List.length_replicate] at hmarkers
   have hfirst := EvalsToInTime.trans structuralPrefixWriter.step _ _ _ _ _ hscan hrestore
@@ -1420,15 +1437,15 @@ noncomputable def structuralPrefixWriterComputable :
   outputAlphabet := Equiv.refl Bool
   time := 3 * Polynomial.X + 3
   outputsFun input := {
-    steps := (prefixWriter_totalTrace input).steps
+    steps := (prefixWriterTotalTrace input).steps
     evals_in_steps := by
       simpa only [Option.bind_eq_bind, FinTM2.step, Fin.isValue, Equiv.invFun_as_coe,
           Equiv.refl_symm,
           Equiv.coe_refl, bitEncoding, id_eq, List.map_id_fun, structuralPrefixWriter_init,
               Option.map_some] using
-          (prefixWriter_totalTrace input).evals_in_steps
+          (prefixWriterTotalTrace input).evals_in_steps
     steps_le_m := by
-      have hsteps := (prefixWriter_totalTrace input).steps_le_m
+      have hsteps := (prefixWriterTotalTrace input).steps_le_m
       simpa only [FinTM2.step, Fin.isValue, bitEncoding, id_eq, Polynomial.eval_add,
           Polynomial.eval_mul,
           Polynomial.eval_ofNat, Polynomial.eval_X, ge_iff_le] using hsteps
@@ -1440,7 +1457,8 @@ namespace SourceMachineCert
 
 open Turing
 
-private def prependBitMachine (bit : Bool) : Turing.FinTM2 where
+/-- Single-step machine that prepends a fixed bit to its input. -/
+def prependBitMachine (bit : Bool) : Turing.FinTM2 where
   K := Unit
   k₀ := ()
   k₁ := ()
@@ -1560,7 +1578,8 @@ namespace SourceUniformTuringTM
 
 open Turing
 
-private abbrev eraseMachine : Turing.FinTM2 where
+/-- Machine that pops every input bit and returns an empty word. -/
+abbrev eraseMachine : Turing.FinTM2 where
   K := Unit
   k₀ := ()
   k₁ := ()
@@ -1609,7 +1628,8 @@ private theorem eraseMachine_iterate (input : List Bool) :
       rw [eraseMachine_step_cons]
       exact ih
 
-private noncomputable def eraseComputable :
+/-- Polynomial-time realization of the constant empty-word function. -/
+noncomputable def eraseComputable :
     BitTM
       (fun _ : List Bool => []) where
   tm := eraseMachine
@@ -1650,7 +1670,8 @@ namespace SourceStructuralTuringTM
 
 open Turing
 
-private abbrev unaryPrefixMachine : Turing.FinTM2 where
+/-- Two-stack machine that reads a unary prefix and writes its decoded payload. -/
+abbrev unaryPrefixMachine : Turing.FinTM2 where
   K := Bool
   k₀ := false
   k₁ := true
@@ -1970,7 +1991,7 @@ theorem payload_prefix_true
         reversed output) := by
   compactMachineStepTac [payloadDecoderMachine, payloadConfiguration]
 
-private theorem payload_prefix_delimiter
+theorem payloadPrefixDelimiter
     (input counter reversed output : List Bool) :
     payloadDecoderMachine.step
       (payloadConfiguration 0 (false :: input) counter reversed output) =
@@ -2012,7 +2033,7 @@ theorem payload_counter_complete
       some (payloadConfiguration 2 input [] reversed output) := by
   compactMachineStepTac [payloadDecoderMachine, payloadConfiguration]
 
-private theorem payload_reverse_step
+theorem payloadReverseStep
     (bit : Bool) (input reversed output : List Bool) :
     payloadDecoderMachine.step
       (payloadConfiguration 2 input [] (bit :: reversed) output) =
@@ -2027,14 +2048,14 @@ theorem payload_reverse_complete
       some (payloadConfiguration 3 input [] [] output) := by
   compactMachineStepTac [payloadDecoderMachine, payloadConfiguration]
 
-private theorem payload_drain_step
+theorem payloadDrainStep
     (bit : Bool) (input output : List Bool) :
     payloadDecoderMachine.step
       (payloadConfiguration 3 (bit :: input) [] [] output) =
       some (payloadConfiguration 3 input [] [] output) := by
   cases bit <;> compactMachineStepTac [payloadDecoderMachine, payloadConfiguration]
 
-private theorem payload_drain_finish
+theorem payloadDrainFinish
     (output : List Bool) :
     payloadDecoderMachine.step
       (payloadConfiguration 3 [] [] [] output) =
@@ -2094,7 +2115,7 @@ def payloadPrefixTrace
   induction count generalizing counter with
   | zero =>
       simpa only [FinTM2.step, Fin.isValue, List.replicate_zero, List.nil_append, zero_add] using
-          oneStep _ _ (payload_prefix_delimiter tail counter reversed output)
+          oneStep _ _ (payloadPrefixDelimiter tail counter reversed output)
   | succ count ih =>
       have hfirst := oneStep _ _ (payload_prefix_true
           (List.replicate count true ++ false :: tail)
@@ -2143,7 +2164,7 @@ def payloadReverseTrace
           using
           EvalsToInTime.refl payloadDecoderMachine.step (payloadConfiguration 2 input [] [] output)
   | cons bit reversed ih =>
-      have hfirst := oneStep _ _ (payload_reverse_step bit input reversed output)
+      have hfirst := oneStep _ _ (payloadReverseStep bit input reversed output)
       have hrest := ih (bit :: output)
       have hboth := EvalsToInTime.trans payloadDecoderMachine.step 1 reversed.length
         _ _ _ hfirst hrest
@@ -2160,9 +2181,9 @@ def payloadDrainTrace
   induction suffix with
   | nil =>
       simpa only [FinTM2.step, Fin.isValue, List.length_nil, zero_add] using
-          oneStep _ _ (payload_drain_finish output)
+          oneStep _ _ (payloadDrainFinish output)
   | cons bit suffix ih =>
-      have hfirst := oneStep _ _ (payload_drain_step bit suffix output)
+      have hfirst := oneStep _ _ (payloadDrainStep bit suffix output)
       have hboth := EvalsToInTime.trans payloadDecoderMachine.step 1 (suffix.length + 1)
         _ _ _ hfirst ih
       simpa only [FinTM2.step, Fin.isValue, List.length_cons, Nat.add_assoc, Nat.reduceAdd]
