@@ -3,7 +3,9 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import LeanPool.ACMax.Cuts.Ind2K2
+module
+
+public import LeanPool.ACMax.Cuts.Ind2K2
 
 /-!
 # The quotient (class-vector) master certificate
@@ -34,6 +36,8 @@ edge counts, exactly what the campaign's counting machinery produces.
 * degree-class handshake identities on the residual cell, expressing the
   quotient data of the degree partition `{3}/{4}/{≥5}` in ledger terms.
 -/
+
+@[expose] public section
 
 namespace ACMax
 

@@ -3,10 +3,14 @@ Copyright (c) 2026 Xiaoyu Li, Andi Han, Jiaojiao Jiang, Junbin Gao. All rights r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xiaoyu Li, Andi Han, Jiaojiao Jiang, Junbin Gao
 -/
-import LeanPool.LanguageGeneration.FiniteWitness.Normalization
-import Mathlib.Data.Nat.Nth
+module
+
+public import LeanPool.LanguageGeneration.FiniteWitness.Normalization
+public import Mathlib.Data.Nat.Nth
 
 /-! First-k checkpoints, exactly as in the simplified manuscript. -/
+
+@[expose] public section
 
 namespace GenLimit.FiniteWitness.Simplified
 

@@ -3,7 +3,9 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import LeanPool.ACMax.Band.CertUniform
+module
+
+public import LeanPool.ACMax.Band.CertUniform
 
 /-!
 # An exact Moore certificate for every order at least 48
@@ -12,6 +14,8 @@ The existing power estimate handles exponents four through seven.  For
 exponent at least eight, the fourth nonconstant term of the binomial expansion
 gives a uniform certificate with no upper bound on the order.
 -/
+
+@[expose] public section
 
 namespace ACMax
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.FiniteTransferTargetMesh
-import LeanPool.Schoenflies.SkeletonLocal
+module
+
+public import LeanPool.Schoenflies.FiniteTransferTargetMesh
+public import LeanPool.Schoenflies.SkeletonLocal
 
 /-!
 # Overlaying a target skeleton with the anchored square mesh
@@ -54,6 +56,8 @@ reverse-transfer stage.
 * `Schoenflies.TargetSegmentCover.finite_transfer_toward_source_relabelledMeshOverlay_of_outerCycle`
   — the accessible clean overlay performs the complete reverse finite transfer.
 -/
+
+@[expose] public section
 
 open Set
 open scoped Graph

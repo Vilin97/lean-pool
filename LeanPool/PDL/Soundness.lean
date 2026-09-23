@@ -4,11 +4,15 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PDL formalization contributors (see project card)
 -/
 
-import LeanPool.PDL.General.FinReach
-import LeanPool.PDL.Local.Soundness
-import LeanPool.PDL.TableauPath
+module
+
+public import LeanPool.PDL.General.FinReach
+public import LeanPool.PDL.Local.Soundness
+public import LeanPool.PDL.TableauPath
 
 /-! # Soundness (Section 6) -/
+
+@[expose] public section
 
 namespace PDL
 

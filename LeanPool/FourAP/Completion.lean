@@ -3,7 +3,9 @@ Copyright (c) 2026 Boon Suan Ho. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Boon Suan Ho
 -/
-import LeanPool.FourAP.Basic
+module
+
+public import LeanPool.FourAP.Basic
 
 /-!
 # Reading a finite prefix and its completion
@@ -13,6 +15,8 @@ These elementary bookkeeping facts make precise the paper's statements that
 prefix does not move any of its old entries. They are independent of the special
 binary order.
 -/
+@[expose] public section
+
 namespace FourAP
 
 variable {R : ℕ → ℕ → Prop} {P Q : List ℕ} {a b c : ℕ}
