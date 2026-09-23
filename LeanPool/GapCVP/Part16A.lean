@@ -11,7 +11,7 @@ public import Mathlib.Data.List.Intervals
 
 /-! # GapCVP proof, part 16 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -109,7 +109,10 @@ private theorem paperVariableArityPhysicalExplicitGridOrder_value_eq_evaluation
         (Fin.cast
           (physicalInterpolationExplicitGridCardinality_eq
             formula) index) := by
-  rfl
+  simp only [sourceFormulaExplicitGridOrder, sourceFormulaGridOrder,
+    Equiv.trans_apply, finCongr_apply]
+  rw [sourceFormulaGridWordOrder_apply_val]
+  congr 1
 
 private theorem paperVariableArityPhysicalOrdinarySourceRowMoment_eq_family
     (formula : ThreeCNF)
@@ -1150,9 +1153,10 @@ private noncomputable def paperShiftedPrefixRankWidth :
     (input : List Bool) :
     paperShiftedPrefixRankWidth.output input =
       firstFieldContents input := by
-  rfl
+  exact paperVariableArityRefinementPrefixRankWidth_output input
 
-private def paperVariableArityShiftedPrefixIndexedClauseQuery
+/-- The indexed-clause query used to compute a shifted prefix weight. -/
+def paperVariableArityShiftedPrefixIndexedClauseQuery
     (input : List Bool) : List Bool :=
   paperRefinementPrefixIndexedClauseQuery input
 
@@ -1163,7 +1167,8 @@ noncomputable def
       paperVariableArityShiftedPrefixIndexedClauseQuery :=
   paperVariableArityRefinementPrefixIndexedClauseQueryComputable
 
-private def paperShiftedClauseRankEnvelope
+/-- Pair a clause rank with the retained-source grid envelope. -/
+def paperShiftedClauseRankEnvelope
     (formula : ThreeCNF) (rank : ℕ) : List Bool :=
   lengthPrefixedWord (List.replicate rank true) ++
     sourceQaryMaskDynamicGridBaseSource
@@ -1182,7 +1187,8 @@ private def paperVariableArityShiftedPrefixRankEnvelope
         (noTautClauses formula) :=
   paperVariableArityRefinementPrefixIndexedClauseQuery_valid formula outer inner
 
-private def paperShiftedPrefixIndexedClauseWeightUnary :
+/-- Read the shifted weight of the indexed clause in a prefix query. -/
+def paperShiftedPrefixIndexedClauseWeightUnary :
     List Bool → List Bool :=
   paperShiftedClauseWeightUnary ∘
     sourceOriginalIndexedClauseOutput ∘
@@ -1276,7 +1282,8 @@ private theorem paperVariableArityShiftedClauseOffsetUnary_valid
     List.getElem?_take, ite_eq_left hlt,
     List.getElem?_eq_getElem hinner, List.get_eq_getElem]
 
-private def paperShiftedSelectedOriginalClauseWord :
+/-- Read the original clause selected by a shifted indexed-clause query. -/
+def paperShiftedSelectedOriginalClauseWord :
     List Bool → List Bool :=
   sourceOriginalIndexedClauseOutput ∘
     paperShiftedIndexedClauseQuery
@@ -1332,7 +1339,8 @@ open GapCVP.SourcePreprocessingTM GapCVP.SourcePreprocessingSemantics GapCVP.Cla
 open GapCVP.ShiftedTupleTM GapCVP.ShiftedClauseOffsetTM GapCVP.ShiftedTupleBetaTM
 open GapCVP.PhysicalFamilyRowTM GapCVP.SourceFieldMomentOperationsTM
 
-private def physicalShiftedRowMixedTagWord :
+/-- Compute the shifted row's mixed tag from its grid quotient and moment count. -/
+def physicalShiftedRowMixedTagWord :
     List Bool → List Bool :=
   sourcePhysicalComputedUnaryQuotient
     (physicalFamilyRowGridQuotientWord (3 : Fin 4))
@@ -1379,7 +1387,8 @@ private def physicalShiftedRowMixedTagWord :
   · exact paperVariableArityPhysicalMomentCellMomentCountUnary_valid
       row column formula
 
-private def physicalShiftedRowRetainedCountWord :
+/-- Read the retained clause count from the shifted row's original source. -/
+def physicalShiftedRowRetainedCountWord :
     List Bool → List Bool :=
   paperRetainedClauseCountUnary ∘
     sourceExplicitAffineCellOriginalSource
@@ -1414,7 +1423,8 @@ private noncomputable def physicalShiftedRowRetainedClauseWidth :
       physicalShiftedRowRetainedCountWord input := by
   rfl
 
-private def physicalShiftedRowMixedTag
+/-- The mixed tag of a shifted row after removing degree, grid, and moment coordinates. -/
+def physicalShiftedRowMixedTag
     (formula : ThreeCNF) (row : ℕ) : ℕ :=
   (((row - physicalFormulaOrdinaryBoundary formula) /
     physDegree formula) /
@@ -1426,14 +1436,16 @@ private def physicalShiftedRowClausePrefix
   paperShiftedSourceClauseWeightSum
     ((noTautClauses formula).take rank)
 
-private def physicalShiftedRowCandidateRankEnvelope
+/-- Pair a candidate clause rank with the shifted row's retained-source grid envelope. -/
+def physicalShiftedRowCandidateRankEnvelope
     (formula : ThreeCNF) (row column rank : ℕ) : List Bool :=
   lengthPrefixedWord (List.replicate rank true) ++
     sourceQaryMaskDynamicGridBaseSource
       physicalShiftedRowRetainedClauseWidth
       (affineCellQuery row column (encodeThreeCNF formula))
 
-private def physicalShiftedRowCandidateCell :
+/-- Recover the cell query after dropping two fields from a candidate envelope. -/
+def physicalShiftedRowCandidateCell :
     List Bool → List Bool :=
   paperSourcePreprocessingSuffixAt 2
 
@@ -1455,7 +1467,8 @@ private def physicalShiftedRowCandidateCell :
     sourceQaryMaskDynamicGridBaseSource,
     paperSourcePreprocessingSuffixAt, Function.iterate_succ_apply]
 
-private def physicalShiftedRowCandidateClauseEnvelope
+/-- Rebuild the candidate clause envelope over the cell's original source. -/
+def physicalShiftedRowCandidateClauseEnvelope
     (input : List Bool) : List Bool :=
   lengthPrefixedWord (firstFieldContents input) ++
     sourceQaryMaskDynamicGridBaseSource
@@ -1493,7 +1506,8 @@ private def physicalShiftedRowCandidateClauseEnvelope
     physicalShiftedRowCandidateCell,
     paperSourcePreprocessingSuffixAt, Function.iterate_succ_apply]
 
-private def physicalShiftedRowCandidatePrefixWord :
+/-- Read the shifted prefix offset of a candidate clause. -/
+def physicalShiftedRowCandidatePrefixWord :
     List Bool → List Bool :=
   paperShiftedClauseOffsetUnary ∘
     physicalShiftedRowCandidateClauseEnvelope
@@ -1521,7 +1535,8 @@ private theorem paperVariableArityPhysicalShiftedRowCandidatePrefixWord_query
     paperVariableArityShiftedClauseOffsetUnary_valid formula rank hbound]
   rfl
 
-private def physicalShiftedRowCandidateMixedTagWord :
+/-- Read the mixed row tag from a candidate's cell query. -/
+def physicalShiftedRowCandidateMixedTagWord :
     List Bool → List Bool :=
   physicalShiftedRowMixedTagWord ∘
     physicalShiftedRowCandidateCell
@@ -1549,7 +1564,8 @@ private def physicalShiftedRowCandidateMixedTagWord :
     paperVariableArityPhysicalShiftedRowMixedTagWord_query]
   rfl
 
-private def paperVariableArityPhysicalShiftedRowCandidatePrefixMarker :
+/-- Test whether the mixed row tag reaches the candidate clause's prefix offset. -/
+def paperVariableArityPhysicalShiftedRowCandidatePrefixMarker :
     List Bool → List Bool :=
   sourceFourFamilyBooleanNotOutput
     (fourFamilyComputedUnaryLessBitOutput
@@ -1566,7 +1582,8 @@ private def paperVariableArityPhysicalShiftedRowCandidatePrefixMarker :
       paperVariableArityPhysicalShiftedRowCandidateMixedTagComputable
       paperVariableArityPhysicalShiftedRowCandidatePrefixComputable)
 
-private def physicalShiftedRowCandidatePrefixRecord :
+/-- Emit one unary marker when the candidate clause's prefix is accepted. -/
+def physicalShiftedRowCandidatePrefixRecord :
     List Bool → List Bool :=
   paperShiftedTupleGuardedSourceWord
     paperVariableArityPhysicalShiftedRowCandidatePrefixMarker
@@ -1619,7 +1636,8 @@ private theorem paperVariableArityPhysicalShiftedRowCandidatePrefixRecord_query
   · simp only [reached, decide_false, Bool.not_false, ↓reduceIte, paperShiftedTupleConstantUnary,
         List.replicate_one, tag, sourceOffset]
 
-private def physicalShiftedRowAcceptedPrefixCountWord :
+/-- Count accepted candidate prefixes using the retained-clause catalogue. -/
+def physicalShiftedRowAcceptedPrefixCountWord :
     List Bool → List Bool :=
   maskDynamicGridRecordCatalogueOutput
     physicalShiftedRowRetainedClauseWidth
@@ -1701,7 +1719,8 @@ private theorem paperVariableArityPhysicalShiftedRowAcceptedPrefixCountWord_quer
     formula row column rank
     (Nat.le_of_lt (List.mem_range.mp membership))
 
-private def physicalShiftedRowClauseRankWord :
+/-- Subtract one from the accepted prefix count to obtain the selected clause rank. -/
+def physicalShiftedRowClauseRankWord :
     List Bool → List Bool :=
   unarySubtractionOutput
     physicalShiftedRowAcceptedPrefixCountWord
@@ -1716,7 +1735,8 @@ private def physicalShiftedRowClauseRankWord :
     paperVariableArityPhysicalShiftedRowAcceptedPrefixCountComputable
     (paperVariableArityShiftedTupleConstantUnaryComputable 1)
 
-private def physicalShiftedRowClauseRank
+/-- The clause rank selected by the shifted row's accepted prefix count. -/
+def physicalShiftedRowClauseRank
     (formula : ThreeCNF) (row : ℕ) : ℕ :=
   physicalShiftedRowAcceptedPrefixCount formula row - 1
 
@@ -1738,7 +1758,8 @@ private def physicalShiftedRowClauseRank
       formula row column
   · rfl
 
-private def physicalShiftedRowSelectedClauseEnvelope
+/-- Pair the selected clause rank with the retained-source envelope. -/
+def physicalShiftedRowSelectedClauseEnvelope
     (input : List Bool) : List Bool :=
   lengthPrefixedWord
       (physicalShiftedRowClauseRankWord input) ++
@@ -1772,7 +1793,8 @@ private def physicalShiftedRowSelectedClauseEnvelope
   rw [paperVariableArityPhysicalShiftedRowClauseRankWord_query,
     sourceExplicitAffineCellOriginalSource_query]
 
-private def physicalShiftedRowSelectedClauseArityWord :
+/-- Read the arity of the shifted row's selected clause. -/
+def physicalShiftedRowSelectedClauseArityWord :
     List Bool → List Bool :=
   paperVariableArityShiftedSelectedClauseArityUnary ∘
     physicalShiftedRowSelectedClauseEnvelope
@@ -1786,7 +1808,8 @@ private def physicalShiftedRowSelectedClauseArityWord :
     paperVariableArityPhysicalShiftedRowSelectedClauseEnvelopeComputable
     paperVariableArityShiftedSelectedClauseArityUnaryComputable
 
-private def physicalShiftedRowSelectedClausePrefixWord :
+/-- Read the shifted prefix offset of the selected clause. -/
+def physicalShiftedRowSelectedClausePrefixWord :
     List Bool → List Bool :=
   paperShiftedClauseOffsetUnary ∘
     physicalShiftedRowSelectedClauseEnvelope
@@ -1864,7 +1887,8 @@ private theorem paperVariableArityPhysicalShiftedRowSelectedClauseArity_pos
         ⟨physicalShiftedRowClauseRank formula row,
           hbound⟩))
 
-private def physicalShiftedRowLocalTagWord :
+/-- Subtract the selected clause's prefix offset from the mixed row tag. -/
+def physicalShiftedRowLocalTagWord :
     List Bool → List Bool :=
   unarySubtractionOutput
     physicalShiftedRowMixedTagWord
@@ -1908,7 +1932,8 @@ private theorem paperVariableArityPhysicalShiftedRowLocalTagWord_query
   · exact paperVariableArityPhysicalShiftedRowSelectedClausePrefixWord_query
       formula row column hbound
 
-private def physicalShiftedRowTupleRankWord :
+/-- Divide the local tag by the selected clause's arity to obtain the tuple rank. -/
+def physicalShiftedRowTupleRankWord :
     List Bool → List Bool :=
   sourcePhysicalComputedUnaryQuotient
     physicalShiftedRowLocalTagWord
@@ -1923,7 +1948,8 @@ private def physicalShiftedRowTupleRankWord :
     paperVariableArityPhysicalShiftedRowLocalTagComputable
     paperVariableArityPhysicalShiftedRowSelectedClauseArityComputable
 
-private def physicalShiftedRowVariablePositionWord :
+/-- Take the local tag modulo the selected clause's arity to obtain its variable position. -/
+def physicalShiftedRowVariablePositionWord :
     List Bool → List Bool :=
   sourcePhysicalComputedUnaryRemainder
     physicalShiftedRowLocalTagWord
@@ -1946,7 +1972,8 @@ private def physicalShiftedRowTupleRank
     physicalShiftedRowSelectedClauseArity
       formula row hbound
 
-private def physicalShiftedRowVariablePosition
+/-- The variable position within the shifted row's selected clause. -/
+def physicalShiftedRowVariablePosition
     (formula : ThreeCNF) (row : ℕ)
     (hbound : physicalShiftedRowClauseRank formula row <
       (noTautClauses formula).length) : ℕ :=
@@ -2006,7 +2033,8 @@ private theorem paperVariableArityPhysicalShiftedRowVariablePositionWord_query
   · exact paperVariableArityPhysicalShiftedRowSelectedClauseArityWord_query
       formula row column hbound
 
-private noncomputable def physicalShiftedRowTupleRankComputers :
+/-- Collect the clause, tuple, and variable-position computers for a shifted row. -/
+noncomputable def physicalShiftedRowTupleRankComputers :
     PaperVariableArityShiftedTupleRankComputers where
   clause :=
     { output := physicalShiftedRowClauseRankWord
@@ -2101,7 +2129,8 @@ open GapCVP.BinaryExplicitAffineRows GapCVP.BinarySourceTautologyNormalizationEx
 open GapCVP.BinaryPhysicalLagrangeCoefficientTM GapCVP.ClauseOffsetTM GapCVP.ShiftedTupleBetaTM
 open GapCVP.RefinementClauseOffsetTM GapCVP.PhysicalShiftedRowTupleRankTM
 
-private def physicalShiftedExpectedLocalTypePrefixWord :
+/-- Read the refinement type prefix for the shifted row's selected clause. -/
+def physicalShiftedExpectedLocalTypePrefixWord :
     List Bool → List Bool :=
   paperRefinementClauseOffsetUnary ∘
     physicalShiftedRowSelectedClauseEnvelope
@@ -2141,7 +2170,8 @@ private theorem paperVariableArityPhysicalShiftedExpectedLocalTypePrefixWord_que
     formula (physicalShiftedRowClauseRank formula row)
     hbound
 
-private def physicalShiftedExpectedTableTypeRankWord :
+/-- Assemble the expected table-type rank from the local prefix and row coordinates. -/
+def physicalShiftedExpectedTableTypeRankWord :
     List Bool → List Bool :=
   fourFamilyComputedUnarySumOutput
     (paperShiftedTupleConstantUnary 1)
@@ -2283,7 +2313,7 @@ private theorem paperVariableArityPhysicalShiftedInterpolationNumeratorComputer_
             (sourceIrreducibleFormulaDegree formula)
             (paperShiftedTupleBetaFieldIndex formula bit))) := by
   simp only [physicalShiftedInterpolationNumeratorComputer,
-    paperVariableArityPhysicalInterpolationDifferenceComputer]
+    paperVariableArityPhysicalInterpolationDifferenceComputer_output]
   apply paperVariableArityPhysicalInterpolationDifferenceWord_valid
     physicalShiftedColumnValueComputer
     (paperShiftedTupleBetaFieldComputer ranks)
@@ -2316,9 +2346,7 @@ private theorem paperVariableArityPhysicalShiftedAnchorComputer_valid
       finiteWordBits
         (paperShiftedTupleSelectedSourceVariableWord
           formula rank bounded position validPosition) := by
-  change paperShiftedTupleRetainedAnchorFieldWord ranks
-    (affineCellQuery row column
-      (encodeThreeCNF formula)) = _
+  rw [paperShiftedTupleRetainedAnchorFieldComputer_output]
   exact paperVariableArityShiftedTupleRetainedAnchorFieldWord_query
     ranks row column formula rank bounded correctRank
     position validPosition correctPosition
@@ -2350,7 +2378,7 @@ private theorem paperVariableArityPhysicalShiftedInterpolationDenominatorCompute
           (paperShiftedTupleSelectedSourceVariableWord
             formula rank bounded position validPosition)) := by
   simp only [paperVariableArityPhysicalShiftedInterpolationDenominatorComputer,
-    paperVariableArityPhysicalInterpolationDifferenceComputer]
+    paperVariableArityPhysicalInterpolationDifferenceComputer_output]
   apply paperVariableArityPhysicalInterpolationDifferenceWord_valid
     physicalShiftedColumnGridComputer
     (paperShiftedTupleRetainedAnchorFieldComputer ranks)
@@ -2390,11 +2418,7 @@ private theorem paperVariableArityPhysicalShiftedInterpolationDenominatorInverse
               formula column)
             (paperShiftedTupleSelectedSourceVariableWord
               formula rank bounded position validPosition))) := by
-  change physicalCellInverseWord
-    (paperVariableArityPhysicalShiftedInterpolationDenominatorComputer
-      ranks)
-    (affineCellQuery row column
-      (encodeThreeCNF formula)) = _
+  rw [paperVariableArityPhysicalCellInverseComputer_output]
   apply paperVariableArityPhysicalCellInverseWord_valid
     (paperVariableArityPhysicalShiftedInterpolationDenominatorComputer
       ranks)
@@ -2542,7 +2566,8 @@ private theorem physicalShiftedRowVariablePosition_lt_normalized
   exact paperVariableArityPhysicalShiftedRowVariablePosition_lt_arity
     formula row bounded
 
-private def physicalShiftedCanonicalInterpolationBaseSourceWord
+/-- The canonical interpolation base word for a shifted row with a valid clause rank. -/
+def physicalShiftedCanonicalInterpolationBaseSourceWord
     (formula : ThreeCNF) (row column : ℕ)
     (bounded : physicalShiftedRowClauseRank formula row <
       (noTautClauses formula).length) :
@@ -2949,7 +2974,7 @@ private theorem paperVariableArityPhysicalShiftedInterpolationBaseSourceWord_sou
     paperVariableArityShiftedTupleSelectedSourceVariableWord_sourceField,
     div_eq_mul_inv]
 
-theorem
+private theorem
     paperVariableArityPhysicalShiftedCanonicalInterpolationBaseSourceWord_sourceField
     (formula : ThreeCNF) (row column : ℕ)
     (bounded : physicalShiftedRowClauseRank formula row <
@@ -3369,7 +3394,8 @@ open GapCVP.PhysicalShiftedInterpolationBaseTM
 open GapCVP.PhysicalShiftedInterpolationParityFieldCorrectness
 open GapCVP.SourceFieldMomentOperationsTM
 
-private noncomputable def physicalShiftedFiniteRowCanonicalBaseSourceWord
+/-- The canonical shifted interpolation base word at finite row and column indices. -/
+noncomputable def physicalShiftedFiniteRowCanonicalBaseSourceWord
     (formula : ThreeCNF)
     (row : Fin (paperExplicitBinaryRowWordCount
       (encodeThreeCNF formula).length formula))
@@ -5292,7 +5318,8 @@ private theorem paperVariableArityNormalizedClauseVariableTransport_sourceRank
         paperVariableArityVariableRank formula
           (normalized.get position).1 := by
   subst target
-  rfl
+  exact paperLocalVariableWordOrder_apply_rank
+    formula normalized membership position
 
 private theorem paperVariableArityFormulaClauseTupleWordOrder_sourceBit
     (formula : ThreeCNF)
@@ -5646,7 +5673,7 @@ open GapCVP.PhysicalShiftedInterpolationBaseSourceFieldCorrectness
 open GapCVP.PhysicalInterpolationColumnSourceFieldCorrectness
 open GapCVP.PhysicalShiftedInterpolationParityMaskedFieldCorrectness
 
-theorem
+private theorem
     paperVariableArityPhysicalShiftedFiniteRowCanonicalBaseSourceWord_eq_decodedSourceRatio
     (formula : ThreeCNF)
     (row : Fin (paperExplicitBinaryRowWordCount
