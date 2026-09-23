@@ -3,16 +3,18 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import Mathlib.Tactic.Convert
-import Mathlib.Tactic.GCongr
-import Mathlib.Tactic.Lift
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Push
-import Mathlib.Tactic.Ring
-import LeanPool.ACMax.Counting.CompactCell
-import LeanPool.ACMax.Counting.DoubleStar
-import LeanPool.ACMax.Counting.StarvedCensus
-import LeanPool.ACMax.Counting.SqrtGirth
+module
+
+public import Mathlib.Tactic.Convert
+public import Mathlib.Tactic.GCongr
+public import Mathlib.Tactic.Lift
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.Push
+public import Mathlib.Tactic.Ring
+public import LeanPool.ACMax.Counting.CompactCell
+public import LeanPool.ACMax.Counting.DoubleStar
+public import LeanPool.ACMax.Counting.StarvedCensus
+public import LeanPool.ACMax.Counting.SqrtGirth
 
 /-!
 # The tier-9 girth discharge of the starved census
@@ -42,6 +44,8 @@ twins turns the honest excess into `t₉ = n − 4 − X − 3h = Θ(n)` (`X = e
   threshold came from three separate losses in the girth bound (see
   `GirthExcessBound`) and a `119`-fold giant credit in `heavy_full_budget`.
 -/
+
+@[expose] public section
 
 namespace ACMax
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.StripConstants
-import LeanPool.Schoenflies.StripConnected
+module
+
+public import LeanPool.Schoenflies.StripConstants
+public import LeanPool.Schoenflies.StripConnected
 
 /-!
 # The local two-sidedness assertion of Lemma 1.8
@@ -57,6 +59,8 @@ which stays in the sector because an arc of directions is a cone (`Plane.smul_me
 The local two-sidedness assertion *at a vertex* is not proved here; see the module note at the
 end.
 -/
+
+@[expose] public section
 
 open Metric Set
 

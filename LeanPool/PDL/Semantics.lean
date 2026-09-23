@@ -4,20 +4,24 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PDL formalization contributors (see project card)
 -/
 
-import Mathlib.Data.Finset.Basic
-import Mathlib.Data.Vector.Basic
-import Mathlib.Data.Set.Lattice.Bounded
-import Mathlib.Data.Set.Lattice.Disjoint
-import Mathlib.Data.Set.Lattice.Image
-import Mathlib.Data.Set.Lattice.Indexed
-import Mathlib.Data.Set.Lattice.Order
-import Mathlib.Logic.Relation
-import Mathlib.Order.CompleteLattice.Basic
+module
 
-import LeanPool.PDL.Syntax
-import LeanPool.PDL.General.ListFinset
+public import Mathlib.Data.Finset.Basic
+public import Mathlib.Data.Vector.Basic
+public import Mathlib.Data.Set.Lattice.Bounded
+public import Mathlib.Data.Set.Lattice.Disjoint
+public import Mathlib.Data.Set.Lattice.Image
+public import Mathlib.Data.Set.Lattice.Indexed
+public import Mathlib.Data.Set.Lattice.Order
+public import Mathlib.Logic.Relation
+public import Mathlib.Order.CompleteLattice.Basic
+
+public import LeanPool.PDL.Syntax
+public import LeanPool.PDL.General.ListFinset
 
 /-! # Semantics (Section 2.2) -/
+
+@[expose] public section
 
 namespace PDL
 

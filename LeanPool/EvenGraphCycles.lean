@@ -4,11 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
 
-import Mathlib.Data.Finset.Card
-import Mathlib.Data.List.GetD
-import Mathlib.Data.Sym.Sym2
-import Mathlib.Combinatorics.SimpleGraph.Finite
-import Mathlib.Tactic.IntervalCases
+module
+
+public import Mathlib.Data.Finset.Card
+public import Mathlib.Data.List.GetD
+public import Mathlib.Data.Sym.Sym2
+public import Mathlib.Combinatorics.SimpleGraph.Finite
+public import Mathlib.Tactic.IntervalCases
 
 /-!
 # Even graphs are edge-disjoint unions of cycles
@@ -66,6 +68,8 @@ minimum positive degree at least two, so a path of maximal length closes up into
 * `Finset.cycleEdgeDegree`: the degree of a vertex in a finite edge set;
 * `Finset.edgeSupport`: the set of vertices incident with an edge of a finite edge set.
 -/
+
+@[expose] public section
 
 open Finset
 

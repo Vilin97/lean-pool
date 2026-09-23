@@ -3,9 +3,11 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import Mathlib.Combinatorics.Graph.Maps
-import LeanPool.Schoenflies.Graph.Drawing
-import LeanPool.Schoenflies.Graph.TwoConnected
+module
+
+public import Mathlib.Combinatorics.Graph.Maps
+public import LeanPool.Schoenflies.Graph.Drawing
+public import LeanPool.Schoenflies.Graph.TwoConnected
 
 /-!
 # Combinatorial invariance
@@ -82,6 +84,8 @@ from one combinatorial hypothesis.
   an injective relabelling of the vertices; the transport that the pushforward representation
   of a realization needs.
 -/
+
+@[expose] public section
 
 open Set Schoenflies
 open scoped Graph

@@ -3,8 +3,10 @@ Copyright (c) 2026 Boon Suan Ho. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Boon Suan Ho
 -/
-import LeanPool.FourAP.Binary
-import LeanPool.FourAP.Completion
+module
+
+public import LeanPool.FourAP.Binary
+public import LeanPool.FourAP.Completion
 
 /-!
 # The contradiction at the heart of Lemma 2
@@ -15,6 +17,8 @@ and the odd-before-even comparison in equation (2) holds. We isolate this
 argument so that the subsequent recursive construction can be read separately
 from its safety proof.
 -/
+@[expose] public section
+
 namespace FourAP
 
 /-- Lemma 2, from “Suppose, for a contradiction, that a 4AP ...” to the end.

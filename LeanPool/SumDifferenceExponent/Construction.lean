@@ -3,14 +3,18 @@ Copyright (c) 2026 Haowei Lin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Haowei Lin, Shanda Li
 -/
-import LeanPool.SumDifferenceExponent.Column
-import Mathlib.Data.Int.Interval
-import Mathlib.Tactic.GCongr
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Positivity
+module
+
+public import LeanPool.SumDifferenceExponent.Column
+public import Mathlib.Data.Int.Interval
+public import Mathlib.Tactic.GCongr
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.LinearCombination
+public import Mathlib.Tactic.Positivity
 
 /-! Explicit row-column sets and their cardinality estimates. -/
+
+@[expose] public section
 
 open scoped BigOperators Pointwise
 

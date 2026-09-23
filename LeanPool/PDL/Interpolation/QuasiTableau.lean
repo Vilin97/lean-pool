@@ -4,10 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PDL formalization contributors (see project card)
 -/
 
-import LeanPool.PDL.Interpolation.QFormula
-import LeanPool.PDL.Interpolation.Cluster
+module
+
+public import LeanPool.PDL.Interpolation.QFormula
+public import LeanPool.PDL.Interpolation.Cluster
 
 /-! ## Quasi-Tableaux (Def 9.8) -/
+
+@[expose] public section
 
 namespace PDL
 
