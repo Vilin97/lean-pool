@@ -319,7 +319,7 @@ theorem newton_puiseux_descent [IsAlgClosed K] [CharZero K] (n : ℕ+)
   obtain ⟨a₀, hk0, hkm⟩ := hRmonic.exists_rootMultiplicity_pos_lt hRdeg
     (Nat.cast_ne_zero.mpr (hex.elim fun _ ⟨hi, _⟩ => (Nat.zero_lt_of_lt hi).ne')) hRsub hRne
   obtain ⟨G, h, hG, hh, hPeq, hGdeg, -⟩ :=
-    hPm.exists_factorization_rootMultiplicity (a := a₀) hPdeg rfl hk0 hkm
+    hPm.exists_factorization_rootMultiplicity (a := a₀) hPdeg rfl hkm.le
   refine ⟨q, HahnSeries.single ((a : ℚ) / ((n * q : ℕ+) : ℕ)) 1,
     G.map (HahnSeries.ofPowerSeries ℤ K), ⟨HahnSeries.single a 1, by rw [toHahn_single]⟩,
     hG.map _, ?_, ?_, ?_⟩
