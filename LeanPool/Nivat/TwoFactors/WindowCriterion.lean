@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Boon Suan Ho
 -/
 
-import LeanPool.Nivat.TwoFactors.BoundaryPeriod
-import LeanPool.Nivat.TwoFactors.StripStates
+module
+
+public import LeanPool.Nivat.TwoFactors.BoundaryPeriod
+public import LeanPool.Nivat.TwoFactors.StripStates
 
 /-
 Upstream: https://github.com/boonsuan/nivat
@@ -44,6 +46,8 @@ strip with a boundary disagreement. Lemma 5.7 gives periodic interior rows in
 the latter case, and Lemma 5.8 extends a multiple of the horizontal direction
 to a global period. The conclusion retains which input direction supplies it.
 -/
+
+@[expose] public section
 
 namespace Nivat.TwoFactors
 

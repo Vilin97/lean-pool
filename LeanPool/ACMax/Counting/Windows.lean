@@ -3,15 +3,17 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import LeanPool.ACMax.Spectral.AlgConnK2
-import LeanPool.ACMax.Cuts.LowDegreeVertex
-import LeanPool.ACMax.Counting.ResidualInterface
-import LeanPool.ACMax.Counting.XBoundAssembly
-import LeanPool.ACMax.Counting.StarvedCensus
-import LeanPool.ACMax.Counting.MEdgeSparse
-import LeanPool.ACMax.Counting.SmallDegreeThreeCore
-import LeanPool.ACMax.Counting.StarMoatSharp
-import LeanPool.ACMax.Counting.StarForcing
+module
+
+public import LeanPool.ACMax.Spectral.AlgConnK2
+public import LeanPool.ACMax.Cuts.LowDegreeVertex
+public import LeanPool.ACMax.Counting.ResidualInterface
+public import LeanPool.ACMax.Counting.XBoundAssembly
+public import LeanPool.ACMax.Counting.StarvedCensus
+public import LeanPool.ACMax.Counting.MEdgeSparse
+public import LeanPool.ACMax.Counting.SmallDegreeThreeCore
+public import LeanPool.ACMax.Counting.StarMoatSharp
+public import LeanPool.ACMax.Counting.StarForcing
 
 /-!
 # Orders below fifty
@@ -36,6 +38,8 @@ present ⟹ the sparse-core moat fires; absent ⟹ the shared-hub stars are forc
 `10 ≤ n ≤ 31` the E1 count `z1_forced_of_le_31` forces `Z1` with no heavy
 hypothesis (negating `Z1` starves the degree-4 hubs and the incidence total forces
 `n ≥ 32`). The same star moat fires throughout this range by `z1_fires_sharp`. -/
+
+@[expose] public section
 
 namespace ACMax
 

@@ -3,7 +3,9 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import LeanPool.ACMax.Band.Final
+module
+
+public import LeanPool.ACMax.Band.Final
 
 /-!
 # Universal upper bound
@@ -20,6 +22,8 @@ This library proves the conjecture, sorry-free and axiom-clean, for every
 two-range assembly in `Band.Final`: the low-order proof handles `4 ≤ n ≤ 31`,
 and the incidence-capacity and exact Moore arguments jointly handle `n ≥ 32`.
 -/
+
+@[expose] public section
 
 namespace ACMax
 

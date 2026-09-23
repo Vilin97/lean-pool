@@ -4,12 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Boon Suan Ho
 -/
 
-import LeanPool.Nivat.Core.Lattice
-import LeanPool.Nivat.TwoFactors.BoundaryCounting
-import Mathlib.Analysis.Convex.Basic
-import Mathlib.Data.Rat.Floor
-import Mathlib.Data.Finset.Max
-import Mathlib.Tactic.FieldSimp
+module
+
+public import LeanPool.Nivat.Core.Lattice
+public import LeanPool.Nivat.TwoFactors.BoundaryCounting
+public import Mathlib.Analysis.Convex.Basic
+public import Mathlib.Data.Rat.Floor
+public import Mathlib.Data.Finset.Max
+public import Mathlib.Tactic.FieldSimp
 
 /-
 Upstream: https://github.com/boonsuan/nivat
@@ -50,6 +52,8 @@ after either nonempty endpoint is deleted; choosing its shorter endpoint gives
 the boundary cost inequality. This finite minimization implements the
 lemma's discrepancy-crossing selection.
 -/
+
+@[expose] public section
 
 namespace Nivat.TwoFactors
 

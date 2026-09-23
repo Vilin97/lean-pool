@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PDL formalization contributors (see project card)
 -/
 
-import Mathlib.Algebra.Order.Group.Nat
-import Mathlib.Data.Fintype.Card
+module
+
+public import Mathlib.Algebra.Order.Group.Nat
+public import Mathlib.Data.Fintype.Card
 
 /-! # Reachability in a finite type
 
@@ -13,6 +15,8 @@ To decide `◃⁺` we compute, for a decidable relation on a finite type, the se
 elements reachable in at least one step. Because `reachStep` only grows sets, after
 `Fintype.card α` iterations we must have reached a fixed point, which then is exactly
 the set of `Relation.TransGen`-successors. -/
+
+@[expose] public section
 
 namespace PDL
 
