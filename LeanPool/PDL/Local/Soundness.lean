@@ -4,10 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PDL formalization contributors (see project card)
 -/
 
-import LeanPool.PDL.Distance
-import LeanPool.PDL.Local.Tableau
+module
+
+public import LeanPool.PDL.Distance
+public import LeanPool.PDL.Local.Tableau
 
 /-! # Local Lemmas for Soundness (part of Section 6) -/
+
+@[expose] public section
 
 namespace PDL
 

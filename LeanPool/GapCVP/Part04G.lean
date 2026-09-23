@@ -4,9 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import LeanPool.GapCVP.Part04F
+module
+
+public import LeanPool.GapCVP.Part04F
 
 /-! # GapCVP proof, part 04, continuation 07 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -81,7 +85,8 @@ def unaryPairSecondTrace
           Nat.reduceAdd, SourceStructuralDecoder.replicate_true_append_cons] using
           EvalsToInTime.trans actualUnaryPairIndexMachine.step _ _ _ _ _ hfirst hrest
 
-private def unaryPair_squareCopyTrace
+/-- Copy the unary base to both output and scratch during a squaring iteration. -/
+def unaryPairSquareCopyTrace
     (count : ℕ) (outer output scratch : List Bool) :
     EvalsToInTime actualUnaryPairIndexMachine.step (unaryPairConfiguration 8 [] [] [] [] []
         (List.replicate count true) outer output scratch)
@@ -103,7 +108,8 @@ private def unaryPair_squareCopyTrace
           SourceStructuralDecoder.replicate_true_append_cons] using
           EvalsToInTime.trans actualUnaryPairIndexMachine.step _ _ _ _ _ hfirst hrest
 
-private def unaryPair_squareRestoreTrace
+/-- Restore the unary base from scratch and return to the squaring loop. -/
+def unaryPairSquareRestoreTrace
     (count : ℕ) (base outer output : List Bool) :
     EvalsToInTime actualUnaryPairIndexMachine.step (unaryPairConfiguration 9 [] [] [] [] []
         base outer output (List.replicate count true))
@@ -124,7 +130,8 @@ private def unaryPair_squareRestoreTrace
           SourceStructuralDecoder.replicate_true_append_cons] using
           EvalsToInTime.trans actualUnaryPairIndexMachine.step _ _ _ _ _ hfirst hrest
 
-private def unaryPair_squareCleanupTrace
+/-- Clear the unary base after the squaring loop and halt with the accumulated output. -/
+def unaryPairSquareCleanupTrace
     (count : ℕ) (output : List Bool) :
     EvalsToInTime actualUnaryPairIndexMachine.step (unaryPairConfiguration 10 [] [] [] [] []
         (List.replicate count true) [] output [])
@@ -154,7 +161,7 @@ def unaryPairSquareTrace
   | zero =>
       have houter := oneStep _ _ (unaryPair_outer_finish
           (List.replicate baseCount true) output)
-      have hclean := unaryPair_squareCleanupTrace baseCount output
+      have hclean := unaryPairSquareCleanupTrace baseCount output
       simpa only [FinTM2.step, Fin.isValue, List.replicate_zero, mul_zero, List.nil_append,
           zero_mul, zero_add,
           Nat.add_assoc, Nat.reduceAdd] using EvalsToInTime.trans actualUnaryPairIndexMachine.step
@@ -162,10 +169,10 @@ def unaryPairSquareTrace
   | succ outerCount ih =>
       have houter := oneStep _ _ (unaryPair_outer_step (List.replicate baseCount true)
           (List.replicate outerCount true) output)
-      have hcopy := unaryPair_squareCopyTrace baseCount
+      have hcopy := unaryPairSquareCopyTrace baseCount
         (List.replicate outerCount true) output []
       simp only [List.append_nil] at hcopy
-      have hrestore := unaryPair_squareRestoreTrace baseCount []
+      have hrestore := unaryPairSquareRestoreTrace baseCount []
         (List.replicate outerCount true)
         (List.replicate baseCount true ++ output)
       simp only [List.append_nil] at hrestore

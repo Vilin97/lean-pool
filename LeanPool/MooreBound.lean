@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wouter Cames van Batenburg, Samuel Korsky
 -/
 
-import LeanPool.MooreBound.DegreeDiameter.All
+module
+
+public import LeanPool.MooreBound.DegreeDiameter.All
 
 /-!
 # Asymptotically attaining the Moore bound

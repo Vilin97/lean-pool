@@ -3,7 +3,9 @@ Copyright (c) 2026 Boon Suan Ho. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Boon Suan Ho
 -/
-import LeanPool.FourAP.Glue
+module
+
+public import LeanPool.FourAP.Glue
 
 /-!
 # Lemma 2: the executable extension of a safe word
@@ -20,6 +22,8 @@ largest entry. `extendAlgorithm_spec` proves its safety, prefix preservation,
 and target coverage in one induction. The paper's existential Lemma 2 is the
 immediate corollary `safe_extend`.
 -/
+
+@[expose] public section
 
 namespace FourAP
 

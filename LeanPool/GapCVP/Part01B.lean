@@ -4,9 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import LeanPool.GapCVP.Part01A
+module
+
+public import LeanPool.GapCVP.Part01A
 
 /-! # GapCVP proof, part 01, continuation 02 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -414,7 +418,7 @@ private def defaultCompletePhaseCell
 def completePhaseSymbolCount (tm : Turing.FinTM2) : ℕ :=
   Fintype.card (CompletePhaseCell tm) - 1
 
-private theorem completePhaseSymbolCount_card
+theorem completePhaseSymbolCount_card
     (tm : Turing.FinTM2) :
     completePhaseSymbolCount tm + 1 =
       Fintype.card (CompletePhaseCell tm) := by

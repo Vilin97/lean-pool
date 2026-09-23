@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import Mathlib.Analysis.Normed.Affine.AddTorsor
-import LeanPool.Schoenflies.SegmentCut
+module
+
+public import Mathlib.Analysis.Normed.Affine.AddTorsor
+public import LeanPool.Schoenflies.SegmentCut
 
 /-!
 # Along one segment: the distance from an end as a coordinate
@@ -54,6 +56,8 @@ excluded by the hypotheses or settled outright, and that case split lives inside
   points, and so interior to nothing, two pieces that share an interior point coincide instead
   of merely overlapping.
 -/
+
+@[expose] public section
 
 open Set
 

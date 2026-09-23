@@ -4,10 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PDL formalization contributors (see project card)
 -/
 
-import LeanPool.PDL.Tableau
-import LeanPool.PDL.Interpolation.Local
+module
+
+public import LeanPool.PDL.Tableau
+public import LeanPool.PDL.Interpolation.Local
 
 /-! ## Helper lemmas about vocabularies and interpolants -/
+
+@[expose] public section
 
 namespace PDL
 

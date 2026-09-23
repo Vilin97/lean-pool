@@ -3,7 +3,9 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import LeanPool.ACMax.Counting.StarvedCensus
+module
+
+public import LeanPool.ACMax.Counting.StarvedCensus
 
 /-!
 # Heavy-degree census lemmas
@@ -13,6 +15,8 @@ Two elementary set-counting facts used by the exact Moore argument on
 development; this neutral module keeps the active proof independent of that
 historical assembly.
 -/
+
+@[expose] public section
 
 namespace ACMax
 

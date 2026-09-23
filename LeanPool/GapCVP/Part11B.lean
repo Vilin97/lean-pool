@@ -4,9 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import LeanPool.GapCVP.Part11A
+module
+
+public import LeanPool.GapCVP.Part11A
 
 /-! # GapCVP proof, part 11, continuation 02 -/
+
+public section
 
 noncomputable section
 
@@ -47,7 +51,7 @@ open GapCVP.CNFGuardedFiveFamilyTagDispatchTM GapCVP.CLStructuralPrefixWriter
 open GapCVP.BinaryCoefficientTM GapCVP.BinarySourceFieldMultiplicationTM
 
 /-- GapCVP reduction support. -/
-def factor400BinarySourceSkipFields :
+@[expose] def factor400BinarySourceSkipFields :
     ℕ → (List Bool → List Bool)
   | 0 => id
   | count + 1 => firstFieldSuffix ∘
@@ -96,7 +100,8 @@ private noncomputable def factor400BinarySourceConvolutionPairWidthComputable :
       ((factor400BinarySourceLeftBits input).length ^ 2) true)
   simpa only [Polynomial.eval_pow, Polynomial.eval_X, Function.comp_def] using hphysical
 
-private def binarySourceConvolutionCoefficientQuery
+/-- Prefix the source with the unary index of the requested convolution coefficient. -/
+def binarySourceConvolutionCoefficientQuery
     (coefficient : ℕ) (source : List Bool) : List Bool :=
   lengthPrefixedWord (List.replicate coefficient true) ++ source
 
@@ -343,7 +348,8 @@ private def factor400BinarySourceConvolutionCoefficientRawSource :
     List Bool → List Bool :=
   firstFieldSuffix
 
-private def binarySourceConvolutionCoefficientPairWidthOutput :
+/-- Read the convolution pair width from the coefficient query's raw source. -/
+def binarySourceConvolutionCoefficientPairWidthOutput :
     List Bool → List Bool :=
   binarySourceConvolutionPairWidthOutput ∘
     factor400BinarySourceConvolutionCoefficientRawSource
@@ -1555,7 +1561,7 @@ private noncomputable def factor400BinarySourceModularReductionPrefixedProductCo
     structuralPrefixWriterComputable
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def binarySourceModularReductionInitialState
+@[expose] def binarySourceModularReductionInitialState
     (lower product source : List Bool) : List Bool :=
   lengthPrefixedWord [] ++
     (lengthPrefixedWord lower ++
@@ -1799,14 +1805,14 @@ open GapCVP.SourceMixedRadixMaskSelectedFlatPreparationTM GapCVP.BinaryDimension
 open GapCVP.BinarySourceConvolutionTM GapCVP.BinaryModularReductionTM
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def binarySourceModularDegreeState
+@[expose] def binarySourceModularDegreeState
     (offset : ℕ) (lower current source : List Bool) : List Bool :=
   lengthPrefixedWord (List.replicate offset true) ++
     lengthPrefixedWord lower ++
       lengthPrefixedWord current ++ source
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def binarySourceModularOffsetUnary : List Bool → List Bool :=
+@[expose] def binarySourceModularOffsetUnary : List Bool → List Bool :=
   firstFieldContents
 
 /-- Internal support shared across GapCVP continuation modules. -/
@@ -1816,7 +1822,7 @@ noncomputable def factor400BinarySourceModularOffsetUnaryComputable :
   firstFieldContentsComputable
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def binarySourceModularLowerWord : List Bool → List Bool :=
+@[expose] def binarySourceModularLowerWord : List Bool → List Bool :=
   firstFieldContents ∘ factor400BinarySourceSkipFields 1
 
 /-- Internal support shared across GapCVP continuation modules. -/
@@ -1828,7 +1834,7 @@ noncomputable def factor400BinarySourceModularLowerWordComputable :
     firstFieldContentsComputable
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def binarySourceModularCurrentWord : List Bool → List Bool :=
+@[expose] def binarySourceModularCurrentWord : List Bool → List Bool :=
   firstFieldContents ∘ factor400BinarySourceSkipFields 2
 
 /-- Internal support shared across GapCVP continuation modules. -/
@@ -1840,7 +1846,7 @@ noncomputable def factor400BinarySourceModularCurrentWordComputable :
     firstFieldContentsComputable
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def binarySourceModularOriginalSource : List Bool → List Bool :=
+@[expose] def binarySourceModularOriginalSource : List Bool → List Bool :=
   factor400BinarySourceSkipFields 3
 
 /-- Internal support shared across GapCVP continuation modules. -/
@@ -1904,7 +1910,7 @@ private noncomputable def factor400BinarySourceModularLowerDegreeUnaryComputable
     sourceInputLengthUnaryComputable
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def binarySourceModularCurrentWidthUnary
+@[expose] def binarySourceModularCurrentWidthUnary
     (input : List Bool) : List Bool :=
   sourceInputLengthUnary (binarySourceModularCurrentWord input)
 
@@ -1943,7 +1949,7 @@ noncomputable def factor400BinarySourceModularDescendingDegreeUnaryComputable :
     factor400BinarySourceModularOffsetUnaryComputable
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def binarySourceModularShiftStartUnary : List Bool → List Bool :=
+@[expose] def binarySourceModularShiftStartUnary : List Bool → List Bool :=
   unarySubtractionOutput
     binarySourceModularDescendingDegreeUnary
     binarySourceModularLowerDegreeUnary
@@ -1957,7 +1963,7 @@ noncomputable def factor400BinarySourceModularShiftStartUnaryComputable :
     factor400BinarySourceModularLowerDegreeUnaryComputable
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def binarySourceModularLeadingGate : List Bool → List Bool :=
+@[expose] def binarySourceModularLeadingGate : List Bool → List Bool :=
   fiveFamilyOriginalDynamicBitWord
     binarySourceModularDescendingDegreeUnary
     binarySourceModularCurrentWord

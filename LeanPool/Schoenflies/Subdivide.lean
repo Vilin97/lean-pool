@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.SegmentCut
-import LeanPool.Schoenflies.SegmentOrder
+module
+
+public import LeanPool.Schoenflies.SegmentCut
+public import LeanPool.Schoenflies.SegmentOrder
 
 /-!
 # Subdividing a list of segments
@@ -33,6 +35,8 @@ Three facts about one cut, each lifted across the piece list and then across the
 * `Piece`, `cover` — the segment representation and what a list of them occupies.
 * `subdivide` and its three properties — the cutting half of Lemma 3.7 (polygonal overlay).
 -/
+
+@[expose] public section
 
 open Metric Set
 

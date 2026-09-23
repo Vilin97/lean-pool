@@ -3,9 +3,11 @@ Copyright (c) 2026 Jonathan Conrad, Paula Muermann, Maryna Viazovska. All rights
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jonathan Conrad, Paula Muermann, Maryna Viazovska
 -/
-import Mathlib.LinearAlgebra.Complex.FiniteDimensional
-import LeanPool.PentagonalNumberTheoremAnalytic.QSeries.CauchyIdentity
-import LeanPool.PentagonalNumberTheoremAnalytic.QSeries.FiniteBinomial
+module
+
+public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+public import LeanPool.PentagonalNumberTheoremAnalytic.QSeries.CauchyIdentity
+public import LeanPool.PentagonalNumberTheoremAnalytic.QSeries.FiniteBinomial
 
 /-!
 # Euler's q-exponential identities
@@ -23,6 +25,8 @@ Two classical specializations of the Cauchy identity:
 * `QSeries.euler_first_identity` — the first Euler identity.
 * `QSeries.euler_second_identity` — the second Euler identity.
 -/
+
+@[expose] public section
 
 open Finset Filter
 open scoped Topology

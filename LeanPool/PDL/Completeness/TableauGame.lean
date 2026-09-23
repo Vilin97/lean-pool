@@ -4,16 +4,20 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PDL formalization contributors (see project card)
 -/
 
-import Mathlib.Data.Finset.Powerset
-import Mathlib.Data.Finset.Functor
-import LeanPool.PDL.Interpolation.Uniformity
+module
 
-import LeanPool.PDL.General.Game
-import LeanPool.PDL.Local.AllLocalTab
-import LeanPool.PDL.Completeness.Modelgraphs
-import LeanPool.PDL.StayingInFL
+public import Mathlib.Data.Finset.Powerset
+public import Mathlib.Data.Finset.Functor
+public import LeanPool.PDL.Interpolation.Uniformity
+
+public import LeanPool.PDL.General.Game
+public import LeanPool.PDL.Local.AllLocalTab
+public import LeanPool.PDL.Completeness.Modelgraphs
+public import LeanPool.PDL.StayingInFL
 
 /-! # The Tableau Game (Section 6.2) -/
+
+@[expose] public section
 
 namespace PDL
 
