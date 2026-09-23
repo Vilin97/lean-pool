@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wouter Cames van Batenburg, Samuel Korsky
 -/
 
-import Mathlib.Data.Fintype.Fin
+module
+
+public import Mathlib.Data.Fintype.Fin
 
 /-!
 # Odd-even transposition routes
@@ -14,6 +16,8 @@ An n-round sorting network gives the alternating permutation route used for comp
 Lean Pool port of wewantmoore commit d59bd80ea93fabb9faf769e790ab47692645e022.
 The port adds a namespace and adapts proofs to the current Mathlib APIs and repository style.
 -/
+
+@[expose] public section
 
 namespace MooreBound
 
@@ -679,7 +683,7 @@ theorem threshold_evolve_perm_finRange {n : ℕ} (xs : List (Fin n))
   have hsum : (n - a.val) + a.val = n := by omega
   have hb := bool_getElem_of_pref_full a.val (n - a.val) q bs
     (by omega) hcountbs i (by omega)
-  rw [hsum] at hb
+  simp only [hsum] at hb
   dsimp [bs] at hb
   have hmap := map_threshold_evolve a q n xs
   have hie : i < (evolve q xs n).length := by simpa [hlenxs] using hi

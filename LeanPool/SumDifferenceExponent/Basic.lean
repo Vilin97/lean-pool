@@ -3,8 +3,10 @@ Copyright (c) 2026 Haowei Lin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Haowei Lin, Shanda Li
 -/
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Combinatorics.Additive.PluenneckeRuzsa
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import Mathlib.Combinatorics.Additive.PluenneckeRuzsa
 
 /-!
 # Strict upper bound for the sum–difference growth exponent
@@ -41,6 +43,8 @@ is never attained.
 
 This product is licensed under the Apache License, Version 2.0; see the LICENSE file.
 -/
+
+@[expose] public section
 
 open scoped BigOperators Pointwise
 

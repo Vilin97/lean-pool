@@ -3,10 +3,12 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Square
-import LeanPool.Schoenflies.UniformBound
-import LeanPool.Schoenflies.Subarc
-import LeanPool.Schoenflies.Graph.Drawing
+module
+
+public import LeanPool.Schoenflies.Square
+public import LeanPool.Schoenflies.UniformBound
+public import LeanPool.Schoenflies.Subarc
+public import LeanPool.Schoenflies.Graph.Drawing
 
 /-!
 # The vertex squares, the last parameter inside a closed set, and the cores
@@ -54,6 +56,8 @@ Bricks B2, B3 and B4 of `lem:polygonal-redrawing`.
 * `Graph.IsDrawing.closedSquare_disjoint_edgeArc_of_ne` — B4's "meets no other vertex square",
   which is a property of the whole arc.
 -/
+
+@[expose] public section
 
 open Metric Set unitInterval
 

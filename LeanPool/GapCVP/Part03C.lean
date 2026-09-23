@@ -4,9 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import LeanPool.GapCVP.Part03B
+module
+
+public import LeanPool.GapCVP.Part03B
 
 /-! # GapCVP proof, part 03, continuation 03 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -22,7 +26,8 @@ namespace SourceFormulaStructuralDecoder
 
 open Turing GapCVP.SourceTotalStructuralDecoder
 
-private def suffix_prefixTrace
+/-- Consume a unary length prefix and its delimiter, recording the count. -/
+def suffixPrefixTrace
     (count : ℕ) (tail counter reversed output : List Bool) :
     EvalsToInTime suffixDecoderMachine.step (suffixConfiguration 0
         (List.replicate count true ++ false :: tail)
@@ -45,7 +50,8 @@ private def suffix_prefixTrace
           Nat.reduceAdd,
           SourceStructuralDecoder.replicate_true_append_cons] using hboth
 
-private def suffix_copyTrace
+/-- Copy the counted payload into reversed scratch storage. -/
+def suffixCopyTrace
     (payload suffix reversed output : List Bool) :
     EvalsToInTime suffixDecoderMachine.step (suffixConfiguration 1 (payload ++ suffix)
         (List.replicate payload.length true) reversed output)
@@ -68,7 +74,8 @@ private def suffix_copyTrace
           List.replicate_succ,
           List.reverse_cons, List.append_assoc, List.nil_append] using hboth
 
-private def suffix_discardTrace
+/-- Discard the copied payload before collecting the remaining suffix. -/
+def suffixDiscardTrace
     (input reversed output : List Bool) :
     EvalsToInTime suffixDecoderMachine.step (suffixConfiguration 2 input [] reversed output)
       (some (suffixConfiguration 3 input [] [] output))
@@ -84,7 +91,8 @@ private def suffix_discardTrace
       simpa only [FinTM2.step, Fin.isValue, List.length_cons, Nat.add_assoc, Nat.reduceAdd]
           using hboth
 
-private def suffix_collectTrace
+/-- Collect the suffix in reversed scratch storage. -/
+def suffixCollectTrace
     (input reversed output : List Bool) :
     EvalsToInTime suffixDecoderMachine.step (suffixConfiguration 3 input [] reversed output)
       (some (suffixConfiguration 4 [] []
@@ -104,7 +112,8 @@ private def suffix_collectTrace
           List.nil_append,
           List.length_cons, Nat.add_assoc, Nat.reduceAdd] using hboth
 
-private def suffix_restoreTrace
+/-- Restore the collected suffix to the output stack and halt. -/
+def suffixRestoreTrace
     (reversed output : List Bool) :
     EvalsToInTime suffixDecoderMachine.step (suffixConfiguration 4 [] [] reversed output)
       (some (Turing.haltList suffixDecoderMachine
@@ -124,7 +133,8 @@ private def suffix_restoreTrace
           List.nil_append,
           List.length_cons, Nat.add_assoc, Nat.reduceAdd] using hboth
 
-private def suffix_validTrace
+/-- Decode a valid length-prefixed payload and return its trailing suffix. -/
+def suffixValidTrace
     (payload suffix : List Bool) :
     EvalsToInTime suffixDecoderMachine.step (suffixConfiguration 0
         (BinaryEncoding.lengthPrefixedWord payload ++ suffix)
@@ -140,28 +150,28 @@ private def suffix_validTrace
         (payload.length + 1) := by
     simpa only [FinTM2.step, Fin.isValue, BinaryEncoding.lengthPrefixedWord, List.append_assoc,
         List.cons_append,
-        List.append_nil] using suffix_prefixTrace payload.length (payload ++ suffix) [] [] []
+        List.append_nil] using suffixPrefixTrace payload.length (payload ++ suffix) [] [] []
   have hcopy :
       EvalsToInTime suffixDecoderMachine.step (suffixConfiguration 1 (payload ++ suffix)
           (List.replicate payload.length true) [] [])
         (some (suffixConfiguration 1 suffix [] payload.reverse []))
         payload.length := by
-    simpa only [FinTM2.step, Fin.isValue, List.append_nil] using suffix_copyTrace payload suffix []
+    simpa only [FinTM2.step, Fin.isValue, List.append_nil] using suffixCopyTrace payload suffix []
         []
   have hcounter := oneStep _ _ (suffix_counter_complete suffix payload.reverse [])
-  have hdiscard := suffix_discardTrace suffix payload.reverse []
+  have hdiscard := suffixDiscardTrace suffix payload.reverse []
   have hcollect :
       EvalsToInTime suffixDecoderMachine.step (suffixConfiguration 3 suffix [] [] [])
         (some (suffixConfiguration 4 [] [] suffix.reverse []))
         (suffix.length + 1) := by
-    simpa only [FinTM2.step, Fin.isValue, List.append_nil] using suffix_collectTrace suffix [] []
+    simpa only [FinTM2.step, Fin.isValue, List.append_nil] using suffixCollectTrace suffix [] []
   have hrestore :
       EvalsToInTime suffixDecoderMachine.step (suffixConfiguration 4 [] [] suffix.reverse [])
         (some (Turing.haltList suffixDecoderMachine suffix))
         (suffix.length + 1) := by
     simpa only [FinTM2.step, Fin.isValue, List.reverse_reverse, List.append_nil,
         List.length_reverse] using
-        suffix_restoreTrace suffix.reverse []
+        suffixRestoreTrace suffix.reverse []
   have h01 := EvalsToInTime.trans suffixDecoderMachine.step _ _ _ _ _ hprefix hcopy
   have h012 := EvalsToInTime.trans suffixDecoderMachine.step _ _ _ _ _ h01 hcounter
   have h0123 := EvalsToInTime.trans suffixDecoderMachine.step _ _ _ _ _ h012 hdiscard
@@ -176,7 +186,8 @@ private def suffix_validTrace
       omega
   }
 
-private def suffix_failureTrace
+/-- Clear all work stacks after a malformed input and halt with the current output. -/
+def suffixFailureTrace
     (input counter reversed output : List Bool) :
     EvalsToInTime suffixDecoderMachine.step (suffixConfiguration 5 input counter reversed output)
       (some (Turing.haltList suffixDecoderMachine output))
@@ -199,7 +210,8 @@ private def suffix_failureTrace
   have hfull := EvalsToInTime.trans suffixDecoderMachine.step _ _ _ _ _ h012 hfinish
   exact rebound hfull (by omega)
 
-private def suffix_missingPrefixTrace
+/-- Enter the failure phase when a unary length prefix has no delimiter. -/
+def suffixMissingPrefixTrace
     (count : ℕ) (counter reversed output : List Bool) :
     EvalsToInTime suffixDecoderMachine.step (suffixConfiguration 0 (List.replicate count true)
         counter reversed output)
@@ -220,7 +232,8 @@ private def suffix_missingPrefixTrace
           Nat.reduceAdd,
           SourceStructuralDecoder.replicate_true_append_cons] using hboth
 
-private def suffix_missingTrace (count : ℕ) :
+/-- Reject an input consisting only of a unary length prefix. -/
+def suffixMissingTrace (count : ℕ) :
     EvalsToInTime suffixDecoderMachine.step
       (suffixConfiguration 0 (List.replicate count true) [] [] [])
       (some (Turing.haltList suffixDecoderMachine []))
@@ -231,9 +244,9 @@ private def suffix_missingTrace (count : ℕ) :
         (some (suffixConfiguration 5 []
           (List.replicate count true) [] []))
         (count + 1) := by
-    simpa only [FinTM2.step, Fin.isValue, List.append_nil] using suffix_missingPrefixTrace count []
+    simpa only [FinTM2.step, Fin.isValue, List.append_nil] using suffixMissingPrefixTrace count []
         [] []
-  have hcleanup := suffix_failureTrace []
+  have hcleanup := suffixFailureTrace []
     (List.replicate count true) [] []
   have hfull := EvalsToInTime.trans suffixDecoderMachine.step _ _ _ _ _ hprefix hcleanup
   exact {
@@ -245,7 +258,8 @@ private def suffix_missingTrace (count : ℕ) :
       omega
   }
 
-private def suffix_partialCopyTrace
+/-- Copy all available payload bits while leaving surplus count markers. -/
+def suffixPartialCopyTrace
     (payload remaining reversed output : List Bool) :
     EvalsToInTime suffixDecoderMachine.step (suffixConfiguration 1 payload
         (List.replicate payload.length true ++ remaining)
@@ -270,7 +284,8 @@ private def suffix_partialCopyTrace
           List.cons_append,
           List.reverse_cons, List.append_assoc, List.nil_append] using hboth
 
-private def suffix_truncatedTrace
+/-- Reject a length prefix larger than the available payload. -/
+def suffixTruncatedTrace
     (payload : List Bool) (extra : ℕ) :
     EvalsToInTime suffixDecoderMachine.step (suffixConfiguration 0
         (List.replicate (payload.length + extra + 1) true ++
@@ -287,7 +302,7 @@ private def suffix_truncatedTrace
           (List.replicate (payload.length + extra + 1) true) [] []))
         (payload.length + extra + 1 + 1) := by
     simpa only [FinTM2.step, Fin.isValue, List.append_nil] using
-        suffix_prefixTrace (payload.length + extra + 1) payload [] [] []
+        suffixPrefixTrace (payload.length + extra + 1) payload [] [] []
   have hcopy :
       EvalsToInTime suffixDecoderMachine.step (suffixConfiguration 1 payload
           (List.replicate (payload.length + extra + 1) true) [] [])
@@ -302,7 +317,7 @@ private def suffix_truncatedTrace
         payload.length + (extra + 1) by omega, List.replicate_add]
     rw [hcounter]
     simpa only [FinTM2.step, Fin.isValue, List.replicate_append_replicate, List.append_nil] using
-        suffix_partialCopyTrace payload (List.replicate (extra + 1) true) [] []
+        suffixPartialCopyTrace payload (List.replicate (extra + 1) true) [] []
   have hinsufficient :
       EvalsToInTime suffixDecoderMachine.step (suffixConfiguration 1 []
           (List.replicate (extra + 1) true) payload.reverse [])
@@ -311,7 +326,7 @@ private def suffix_truncatedTrace
         1 := by
     simpa only [FinTM2.step, Fin.isValue, List.replicate_succ] using
         oneStep _ _ (suffix_insufficient (List.replicate extra true) payload.reverse [])
-  have hcleanup := suffix_failureTrace []
+  have hcleanup := suffixFailureTrace []
     (List.replicate (extra + 1) true) payload.reverse []
   have h01 := EvalsToInTime.trans suffixDecoderMachine.step _ _ _ _ _ hprefix hcopy
   have h012 := EvalsToInTime.trans suffixDecoderMachine.step _ _ _ _ _ h01 hinsufficient
@@ -363,7 +378,8 @@ private theorem suffixDecoderMachine_init (input : List Bool) :
   funext stack
   fin_cases stack <;> simp
 
-private def suffix_totalTrace (input : List Bool) :
+/-- Decode the suffix for every input, including malformed prefixes. -/
+def suffixTotalTrace (input : List Bool) :
     EvalsToInTime suffixDecoderMachine.step (suffixConfiguration 0 input [] [] [])
       (some (Turing.haltList suffixDecoderMachine
         (firstFieldSuffix input)))
@@ -372,7 +388,7 @@ private def suffix_totalTrace (input : List Bool) :
   | inl witness =>
       obtain ⟨count, hinput⟩ := witness
       subst input
-      have htrace := suffix_missingTrace count
+      have htrace := suffixMissingTrace count
       exact {
         steps := htrace.steps
         evals_in_steps := by
@@ -390,7 +406,7 @@ private def suffix_totalTrace (input : List Bool) :
       by_cases hlen : count ≤ tail.length
       · have hreconstruct := validInput_reconstruct count tail hlen
         rw [hreconstruct]
-        have htrace := suffix_validTrace
+        have htrace := suffixValidTrace
           (tail.take count) (tail.drop count)
         exact {
           steps := htrace.steps
@@ -409,7 +425,7 @@ private def suffix_totalTrace (input : List Bool) :
           dsimp [extra]
           omega
         rw [hcount]
-        have htrace := suffix_truncatedTrace tail extra
+        have htrace := suffixTruncatedTrace tail extra
         exact {
           steps := htrace.steps
           evals_in_steps := by
@@ -432,15 +448,15 @@ noncomputable def firstFieldSuffixComputable :
   outputAlphabet := Equiv.refl Bool
   time := 3 * Polynomial.X + 6
   outputsFun input := {
-    steps := (suffix_totalTrace input).steps
+    steps := (suffixTotalTrace input).steps
     evals_in_steps := by
       simpa only [Option.bind_eq_bind, FinTM2.step, Fin.isValue, Equiv.invFun_as_coe,
           Equiv.refl_symm,
           Equiv.coe_refl, bitEncoding, id_eq, List.map_id_fun, suffixDecoderMachine_init,
               Option.map_some] using
-          (suffix_totalTrace input).evals_in_steps
+          (suffixTotalTrace input).evals_in_steps
     steps_le_m := by
-      have hsteps := (suffix_totalTrace input).steps_le_m
+      have hsteps := (suffixTotalTrace input).steps_le_m
       simpa only [FinTM2.step, Fin.isValue, bitEncoding, id_eq, Polynomial.eval_add,
           Polynomial.eval_mul,
           Polynomial.eval_ofNat, Polynomial.eval_X, ge_iff_le] using hsteps
@@ -502,17 +518,20 @@ namespace SourceVariableFormulaDecoder
 
 open Turing GapCVP.SourceFormulaStructuralDecoder
 
-private def variablePrefixLabel (position : Fin 3) : Fin 7 :=
+/-- State label for reading the prefix of one of three clause literals. -/
+def variablePrefixLabel (position : Fin 3) : Fin 7 :=
   ⟨position.val, by omega⟩
 
-private def variablePayloadLabel (position : Fin 3) : Fin 7 :=
+/-- State label for reading the payload of one of three clause literals. -/
+def variablePayloadLabel (position : Fin 3) : Fin 7 :=
   ⟨position.val + 3, by omega⟩
 
 /-- Internal support shared across GapCVP continuation modules. -/
 def nextLiteralPosition (position : Fin 3) : Fin 3 :=
   if position = 0 then 1 else if position = 1 then 2 else 0
 
-private def variablePrefixStatement (position : Fin 3) :
+/-- Parse a literal's unary prefix or enter its payload or failure phase. -/
+def variablePrefixStatement (position : Fin 3) :
     Turing.TM2.Stmt (fun _ : Fin 3 => Bool) (Fin 7) (Option Bool) :=
   .peek 0 (fun _ symbol => symbol)
     (.branch (fun symbol => symbol == some true)
@@ -530,7 +549,8 @@ private def variablePrefixStatement (position : Fin 3) :
             else
               .goto (fun _ => (6 : Fin 7)))))))
 
-private def variablePayloadStatement (position : Fin 3) :
+/-- Match a literal's payload against its prefix count and advance the clause. -/
+def variablePayloadStatement (position : Fin 3) :
     Turing.TM2.Stmt (fun _ : Fin 3 => Bool) (Fin 7) (Option Bool) :=
   .peek 1 (fun _ symbol => symbol)
     (.branch (fun symbol => symbol.isSome)
@@ -551,7 +571,8 @@ private def variablePayloadStatement (position : Fin 3) :
                 (nextLiteralPosition position))))
           (.goto (fun _ => (6 : Fin 7))))))
 
-private abbrev variableClauseMachine : Turing.FinTM2 where
+/-- Three-stack machine that checks the three encoded literals of a clause. -/
+abbrev variableClauseMachine : Turing.FinTM2 where
   K := Fin 3
   k₀ := 0
   k₁ := 2
@@ -576,14 +597,15 @@ private abbrev variableClauseMachine : Turing.FinTM2 where
               (.pop 1 (fun _ _ => none) (.goto (fun _ => 6)))
               (.push 2 (fun _ => false) .halt))))
 
-private def variableConfiguration
+/-- Decoder configuration with input, count markers, and accumulated output count. -/
+def variableConfiguration
     (phase : Fin 7) (input counter : List Bool) (count : ℕ) :
     variableClauseMachine.Cfg where
   l := some phase
   var := none
   stk := ![input, counter, List.replicate count true]
 
-private theorem variable_prefix_true
+theorem variablePrefixTrue
     (position : Fin 3) (input counter : List Bool) (count : ℕ) :
     variableClauseMachine.step
       (variableConfiguration (variablePrefixLabel position)
@@ -594,7 +616,7 @@ private theorem variable_prefix_true
     compactMachineStepTac [variableClauseMachine, variableConfiguration, variablePrefixLabel,
       variablePrefixStatement]
 
-private theorem variable_prefix_delimiter
+theorem variablePrefixDelimiter
     (position : Fin 3) (input counter : List Bool) (count : ℕ) :
     variableClauseMachine.step
       (variableConfiguration (variablePrefixLabel position)
@@ -605,7 +627,7 @@ private theorem variable_prefix_delimiter
     compactMachineStepTac [variableClauseMachine, variableConfiguration, variablePrefixLabel,
       variablePayloadLabel, variablePrefixStatement]
 
-private theorem variable_payload_step
+theorem variablePayloadStep
     (position : Fin 3) (bit counterBit : Bool)
     (input counter : List Bool) (count : ℕ) :
     variableClauseMachine.step
@@ -617,7 +639,7 @@ private theorem variable_payload_step
     compactMachineStepTac [variableClauseMachine, variableConfiguration, variablePayloadLabel,
       variablePayloadStatement]
 
-private theorem variable_sign_step
+theorem variableSignStep
     (position : Fin 3) (hposition : position ≠ 2)
     (sign : Bool) (input : List Bool) (count : ℕ) :
     variableClauseMachine.step
@@ -633,7 +655,7 @@ private theorem variable_sign_step
         variablePrefixLabel, variablePayloadLabel, nextLiteralPosition,
         variablePayloadStatement]
 
-private theorem variable_completeClause_step
+theorem variableCompleteClauseStep
     (sign : Bool) (input : List Bool) (count : ℕ) :
     variableClauseMachine.step
       (variableConfiguration (variablePayloadLabel 2)
@@ -645,7 +667,7 @@ private theorem variable_completeClause_step
       variablePrefixLabel, variablePayloadLabel, variablePayloadStatement,
       List.replicate_succ]
 
-private theorem variable_finish_valid (count : ℕ) :
+theorem variableFinishValid (count : ℕ) :
     variableClauseMachine.step
       (variableConfiguration (variablePrefixLabel 0) [] [] count) =
       some (Turing.haltList variableClauseMachine
@@ -653,7 +675,7 @@ private theorem variable_finish_valid (count : ℕ) :
   compactMachineStepTac [variableClauseMachine, variableConfiguration, variablePrefixLabel,
     variablePrefixStatement]
 
-private theorem variable_prefix_unfinished
+theorem variablePrefixUnfinished
     (position : Fin 3) (bit : Bool)
     (counter : List Bool) (count : ℕ) :
     variableClauseMachine.step
@@ -664,7 +686,7 @@ private theorem variable_prefix_unfinished
     compactMachineStepTac [variableClauseMachine, variableConfiguration, variablePrefixLabel,
       variablePrefixStatement]
 
-private theorem variable_prefix_incompleteClause
+theorem variablePrefixIncompleteClause
     (position : Fin 3) (hposition : position ≠ 0) (count : ℕ) :
     variableClauseMachine.step
       (variableConfiguration (variablePrefixLabel position)
@@ -676,7 +698,7 @@ private theorem variable_prefix_incompleteClause
       Turing.FinTM2.step, Turing.TM2.step, Turing.TM2.stepAux] <;>
     rfl
 
-private theorem variable_payload_missing
+theorem variablePayloadMissing
     (position : Fin 3) (counter : List Bool) (count : ℕ) :
     variableClauseMachine.step
       (variableConfiguration (variablePayloadLabel position)
@@ -686,28 +708,29 @@ private theorem variable_payload_missing
     compactMachineStepTac [variableClauseMachine, variableConfiguration, variablePayloadLabel,
       variablePayloadStatement]
 
-private theorem variable_failure_drop_input
+theorem variableFailureDropInput
     (bit : Bool) (input counter : List Bool) (count : ℕ) :
     variableClauseMachine.step
       (variableConfiguration 6 (bit :: input) counter count) =
       some (variableConfiguration 6 input counter count) := by
   cases bit <;> compactMachineStepTac [variableClauseMachine, variableConfiguration]
 
-private theorem variable_failure_drop_counter
+theorem variableFailureDropCounter
     (bit : Bool) (counter : List Bool) (count : ℕ) :
     variableClauseMachine.step
       (variableConfiguration 6 [] (bit :: counter) count) =
       some (variableConfiguration 6 [] counter count) := by
   cases bit <;> compactMachineStepTac [variableClauseMachine, variableConfiguration]
 
-private theorem variable_failure_finish (count : ℕ) :
+theorem variableFailureFinish (count : ℕ) :
     variableClauseMachine.step
       (variableConfiguration 6 [] [] count) =
       some (Turing.haltList variableClauseMachine
         (false :: List.replicate count true)) := by
   compactMachineStepTac [variableClauseMachine, variableConfiguration]
 
-private def variable_failureTrace
+/-- Clear the decoder work stacks and emit a failure marker. -/
+def variableFailureTrace
     (input counter : List Bool) (count : ℕ) :
     EvalsToInTime variableClauseMachine.step (variableConfiguration 6 input counter count)
       (some (Turing.haltList variableClauseMachine
@@ -715,22 +738,24 @@ private def variable_failureTrace
       (input.length + counter.length + 1) := by
   have hinput := TraceGolf.sweep variableClauseMachine.step
     (fun current => variableConfiguration 6 current counter count)
-    (fun bit remaining => variable_failure_drop_input bit remaining counter count)
+    (fun bit remaining => variableFailureDropInput bit remaining counter count)
     input
   have hcounter := TraceGolf.sweep variableClauseMachine.step
     (fun current => variableConfiguration 6 [] current count)
-    (fun bit remaining => variable_failure_drop_counter bit remaining count)
+    (fun bit remaining => variableFailureDropCounter bit remaining count)
     counter
-  have hfinish := oneStep _ _ (variable_failure_finish count)
+  have hfinish := oneStep _ _ (variableFailureFinish count)
   have hfirst := EvalsToInTime.trans variableClauseMachine.step _ _ _ _ _ hinput hcounter
   have hfull := EvalsToInTime.trans variableClauseMachine.step _ _ _ _ _ hfirst hfinish
   exact rebound hfull (by omega)
 
-private def variableScanPhase (payload : Bool) (position : Fin 3) : Fin 7 :=
+/-- Select the prefix or payload state for the current literal. -/
+def variableScanPhase (payload : Bool) (position : Fin 3) : Fin 7 :=
   if payload then variablePayloadLabel position
   else variablePrefixLabel position
 
-private def variableScanOutput :
+/-- Output encoded by the remaining input and current clause parsing state. -/
+def variableScanOutput :
     List Bool → Bool → Fin 3 → List Bool → ℕ → List Bool
   | [], true, _, _, count => false :: List.replicate count true
   | [], false, position, [], count =>
@@ -749,7 +774,8 @@ private def variableScanOutput :
   | _ :: rest, true, position, _ :: counter, count =>
       variableScanOutput rest true position counter count
 
-private def variableScanTrace
+/-- Simulate the clause decoder through its remaining input to its final output. -/
+def variableScanTrace
     (input : List Bool) (payload : Bool) (position : Fin 3)
     (counter : List Bool) (count : ℕ) :
     EvalsToInTime variableClauseMachine.step
@@ -766,14 +792,14 @@ private def variableScanTrace
           | nil =>
               by_cases hposition : position = 0
               · subst position
-                have htrace := oneStep _ _ (variable_finish_valid count)
+                have htrace := oneStep _ _ (variableFinishValid count)
                 simpa only [FinTM2.step, Fin.isValue, variableScanPhase, Bool.false_eq_true,
                     ↓reduceIte, variableScanOutput,
                     List.length_nil, mul_zero, add_zero, zero_add] using rebound (newBudget := 2)
                         htrace (by omega)
-              · have hfirst := oneStep _ _ (variable_prefix_incompleteClause
+              · have hfirst := oneStep _ _ (variablePrefixIncompleteClause
                     position hposition count)
-                have hcleanup := variable_failureTrace [] [] count
+                have hcleanup := variableFailureTrace [] [] count
                 have hfull := EvalsToInTime.trans
                   variableClauseMachine.step _ _ _ _ _ hfirst hcleanup
                 simpa only [FinTM2.step, Fin.isValue, variableScanPhase, Bool.false_eq_true,
@@ -784,9 +810,9 @@ private def variableScanTrace
                         simp only [List.length_nil]
                         omega)
           | cons counterBit counter =>
-              have hfirst := oneStep _ _ (variable_prefix_unfinished position
+              have hfirst := oneStep _ _ (variablePrefixUnfinished position
                   counterBit counter count)
-              have hcleanup := variable_failureTrace []
+              have hcleanup := variableFailureTrace []
                 (counterBit :: counter) count
               have hfull := EvalsToInTime.trans variableClauseMachine.step _ _ _ _ _ hfirst
                   hcleanup
@@ -798,8 +824,8 @@ private def variableScanTrace
                       simp only [List.length_nil, List.length_cons]
                       omega)
       | true =>
-          have hfirst := oneStep _ _ (variable_payload_missing position counter count)
-          have hcleanup := variable_failureTrace [] counter count
+          have hfirst := oneStep _ _ (variablePayloadMissing position counter count)
+          have hcleanup := variableFailureTrace [] counter count
           have hfull := EvalsToInTime.trans variableClauseMachine.step _ _ _ _ _ hfirst hcleanup
           simpa only [FinTM2.step, Fin.isValue, variableScanPhase, ↓reduceIte, variableScanOutput,
               List.length_nil,
@@ -813,7 +839,7 @@ private def variableScanTrace
       | false =>
           cases bit with
           | false =>
-              have hfirst := oneStep _ _ (variable_prefix_delimiter position input counter count)
+              have hfirst := oneStep _ _ (variablePrefixDelimiter position input counter count)
               have hrest := ih true position counter count
               have hfull := EvalsToInTime.trans variableClauseMachine.step _ _ _ _ _ hfirst hrest
               simpa only [FinTM2.step, Fin.isValue, variableScanPhase, Bool.false_eq_true,
@@ -821,7 +847,7 @@ private def variableScanTrace
                   List.length_cons] using rebound (newBudget := 2 * (input.length + 1) +
                       counter.length + 2) hfull (by omega)
           | true =>
-              have hfirst := oneStep _ _ (variable_prefix_true position input counter count)
+              have hfirst := oneStep _ _ (variablePrefixTrue position input counter count)
               have hrest := ih false position (true :: counter) count
               have hfull := EvalsToInTime.trans variableClauseMachine.step _ _ _ _ _ hfirst hrest
               simpa only [FinTM2.step, Fin.isValue, variableScanPhase, Bool.false_eq_true,
@@ -836,7 +862,7 @@ private def variableScanTrace
           | nil =>
               by_cases hcomplete : position = 2
               · subst position
-                have hfirst := oneStep _ _ (variable_completeClause_step bit input count)
+                have hfirst := oneStep _ _ (variableCompleteClauseStep bit input count)
                 have hrest := ih false 0 [] (count + 1)
                 have hfull := EvalsToInTime.trans variableClauseMachine.step _ _ _ _ _ hfirst hrest
                 simpa only [FinTM2.step, Fin.isValue, variableScanPhase, ↓reduceIte,
@@ -846,7 +872,7 @@ private def variableScanTrace
                       (by
                         simp only [List.length_nil]
                         omega)
-              · have hfirst := oneStep _ _ (variable_sign_step position hcomplete
+              · have hfirst := oneStep _ _ (variableSignStep position hcomplete
                     bit input count)
                 have hrest := ih false
                   (nextLiteralPosition position) [] count
@@ -859,7 +885,7 @@ private def variableScanTrace
                         simp only [List.length_nil]
                         omega)
           | cons counterBit counter =>
-              have hfirst := oneStep _ _ (variable_payload_step position bit counterBit
+              have hfirst := oneStep _ _ (variablePayloadStep position bit counterBit
                   input counter count)
               have hrest := ih true position counter count
               have hfull := EvalsToInTime.trans variableClauseMachine.step _ _ _ _ _ hfirst hrest
@@ -1100,7 +1126,8 @@ def canonicalPayloadLabel (position : Fin 3) : Fin 17 :=
 def canonicalClearLabel (position : Fin 3) : Fin 17 :=
   ⟨position.val + 10, by omega⟩
 
-private def canonicalSignStatement (position : Fin 3) :
+/-- Consume a literal sign and advance to the next literal or final check. -/
+def canonicalSignStatement (position : Fin 3) :
     Turing.TM2.Stmt (fun _ : Fin 6 => Bool) (Fin 17) (Option Bool) :=
   .peek 0 (fun _ symbol => symbol)
     (.branch (fun symbol => symbol.isSome)
@@ -1275,7 +1302,7 @@ theorem canonical_header_prefix_true
         (true :: counter) field binary borrow output) := by
   compactMachineStepTac [canonicalFormulaMachine, canonicalConfiguration]
 
-private theorem canonical_header_prefix_delimiter
+theorem canonicalHeaderPrefixDelimiter
     (input counter field binary borrow output : List Bool) :
     canonicalFormulaMachine.step
       (canonicalConfiguration 0 (false :: input)
@@ -1354,7 +1381,7 @@ theorem canonical_header_check_zero
         [] binary borrow output) := by
   compactMachineStepTac [canonicalFormulaMachine, canonicalConfiguration, canonicalPrefixLabel]
 
-private theorem canonical_header_reverse_step
+theorem canonicalHeaderReverseStep
     (bit : Bool) (input field binary borrow output : List Bool) :
     canonicalFormulaMachine.step
       (canonicalConfiguration 3 input []
@@ -1363,7 +1390,7 @@ private theorem canonical_header_reverse_step
         field (bit :: binary) borrow output) := by
   cases bit <;> compactMachineStepTac [canonicalFormulaMachine, canonicalConfiguration]
 
-private theorem canonical_header_reverse_complete
+theorem canonicalHeaderReverseComplete
     (input binary borrow output : List Bool) :
     canonicalFormulaMachine.step
       (canonicalConfiguration 3 input []
@@ -1372,7 +1399,7 @@ private theorem canonical_header_reverse_complete
         [] binary borrow output) := by
   compactMachineStepTac [canonicalFormulaMachine, canonicalConfiguration, canonicalPrefixLabel]
 
-private theorem canonical_borrow_zero
+theorem canonicalBorrowZero
     (input counter field binary borrow output : List Bool) :
     canonicalFormulaMachine.step
       (canonicalConfiguration 13 input counter field
@@ -1381,7 +1408,7 @@ private theorem canonical_borrow_zero
         binary (true :: borrow) output) := by
   compactMachineStepTac [canonicalFormulaMachine, canonicalConfiguration]
 
-private theorem canonical_borrow_one
+theorem canonicalBorrowOne
     (input counter field binary borrow output : List Bool) :
     canonicalFormulaMachine.step
       (canonicalConfiguration 13 input counter field
@@ -1390,7 +1417,7 @@ private theorem canonical_borrow_one
         (false :: binary) borrow output) := by
   compactMachineStepTac [canonicalFormulaMachine, canonicalConfiguration]
 
-private theorem canonical_borrow_exhausted
+theorem canonicalBorrowExhausted
     (input counter field borrow output : List Bool) :
     canonicalFormulaMachine.step
       (canonicalConfiguration 13 input counter field
@@ -1399,7 +1426,7 @@ private theorem canonical_borrow_exhausted
         [] borrow output) := by
   compactMachineStepTac [canonicalFormulaMachine, canonicalConfiguration]
 
-private theorem canonical_borrow_restore_step
+theorem canonicalBorrowRestoreStep
     (bit : Bool) (input counter field binary borrow output : List Bool) :
     canonicalFormulaMachine.step
       (canonicalConfiguration 14 input counter field
@@ -1408,7 +1435,7 @@ private theorem canonical_borrow_restore_step
         (true :: binary) borrow output) := by
   cases bit <;> compactMachineStepTac [canonicalFormulaMachine, canonicalConfiguration]
 
-private theorem canonical_borrow_restore_complete
+theorem canonicalBorrowRestoreComplete
     (input counter field binary output : List Bool) :
     canonicalFormulaMachine.step
       (canonicalConfiguration 14 input counter field
@@ -1417,7 +1444,7 @@ private theorem canonical_borrow_restore_complete
         input counter field binary [] output) := by
   compactMachineStepTac [canonicalFormulaMachine, canonicalConfiguration, canonicalPrefixLabel]
 
-private theorem canonical_zeroCheck_false
+theorem canonicalZeroCheckFalse
     (input counter field binary borrow output : List Bool) :
     canonicalFormulaMachine.step
       (canonicalConfiguration 16 input counter field
@@ -1426,7 +1453,7 @@ private theorem canonical_zeroCheck_false
         binary borrow output) := by
   compactMachineStepTac [canonicalFormulaMachine, canonicalConfiguration]
 
-private theorem canonical_zeroCheck_true
+theorem canonicalZeroCheckTrue
     (input counter field binary borrow output : List Bool) :
     canonicalFormulaMachine.step
       (canonicalConfiguration 16 input counter field
@@ -1435,7 +1462,7 @@ private theorem canonical_zeroCheck_true
         (true :: binary) borrow output) := by
   compactMachineStepTac [canonicalFormulaMachine, canonicalConfiguration]
 
-private theorem canonical_zeroCheck_finish :
+theorem canonicalZeroCheckFinish :
     canonicalFormulaMachine.step
       (canonicalConfiguration 16 [] [] [] [] [] []) =
       some (Turing.haltList canonicalFormulaMachine [true]) := by
@@ -1535,7 +1562,7 @@ theorem canonical_literal_clear_step
     compactMachineStepTac [canonicalFormulaMachine, canonicalConfiguration, canonicalClearLabel,
       canonicalClearStatement]
 
-private theorem canonical_clear_sign_step
+theorem canonicalClearSignStep
     (position : Fin 3) (hposition : position ≠ 2)
     (sign : Bool) (input binary borrow output : List Bool) :
     canonicalFormulaMachine.step
@@ -1551,7 +1578,7 @@ private theorem canonical_clear_sign_step
         canonicalClearLabel, canonicalPrefixLabel, canonicalClearStatement,
         canonicalSignStatement, nextLiteralPosition]
 
-private theorem canonical_clear_completeClause
+theorem canonicalClearCompleteClause
     (sign : Bool) (input binary borrow output : List Bool) :
     canonicalFormulaMachine.step
       (canonicalConfiguration (canonicalClearLabel 2)
@@ -1602,7 +1629,8 @@ theorem canonical_body_finish
   compactMachineStepTac [canonicalFormulaMachine, canonicalConfiguration, canonicalPrefixLabel,
     canonicalPrefixStatement]
 
-private def canonical_borrowZerosTrace
+/-- Borrow across zero bits until a one bit is reached. -/
+def canonicalBorrowZerosTrace
     (zeros : ℕ) (tail input counter field borrow output : List Bool) :
     EvalsToInTime canonicalFormulaMachine.step (canonicalConfiguration 13 input counter field
         (List.replicate zeros false ++ true :: tail) borrow output)
@@ -1612,9 +1640,9 @@ private def canonical_borrowZerosTrace
   induction zeros generalizing borrow with
   | zero =>
       simpa only [FinTM2.step, Fin.isValue, List.replicate_zero, List.nil_append, zero_add] using
-          oneStep _ _ (canonical_borrow_one input counter field tail borrow output)
+          oneStep _ _ (canonicalBorrowOne input counter field tail borrow output)
   | succ zeros ih =>
-      have hfirst := oneStep _ _ (canonical_borrow_zero input counter field
+      have hfirst := oneStep _ _ (canonicalBorrowZero input counter field
           (List.replicate zeros false ++ true :: tail)
           borrow output)
       have hrest := ih (true :: borrow)
@@ -1624,7 +1652,8 @@ private def canonical_borrowZerosTrace
           Nat.reduceAdd,
           SourceStructuralDecoder.replicate_true_append_cons] using hboth
 
-private def canonical_restoreTrace
+/-- Restore borrowed markers as one bits and return to prefix parsing. -/
+def canonicalRestoreTrace
     (zeros : ℕ)
     (input counter field binary output : List Bool) :
     EvalsToInTime canonicalFormulaMachine.step (canonicalConfiguration 14 input counter field
@@ -1636,9 +1665,9 @@ private def canonical_restoreTrace
   induction zeros generalizing binary with
   | zero =>
       simpa only [FinTM2.step, Fin.isValue, List.replicate_zero, List.nil_append, zero_add] using
-          oneStep _ _ (canonical_borrow_restore_complete input counter field binary output)
+          oneStep _ _ (canonicalBorrowRestoreComplete input counter field binary output)
   | succ zeros ih =>
-      have hfirst := oneStep _ _ (canonical_borrow_restore_step true input counter field
+      have hfirst := oneStep _ _ (canonicalBorrowRestoreStep true input counter field
           binary (List.replicate zeros true) output)
       have hrest := ih (true :: binary)
       have hboth := EvalsToInTime.trans canonicalFormulaMachine.step 1 (zeros + 1)
@@ -1647,7 +1676,8 @@ private def canonical_restoreTrace
           Nat.reduceAdd,
           SourceStructuralDecoder.replicate_true_append_cons] using hboth
 
-private def canonical_decrementTrace
+/-- Decrement a positive binary stack by borrowing and restoring markers. -/
+def canonicalDecrementTrace
     (zeros : ℕ)
     (tail input counter field output : List Bool) :
     EvalsToInTime canonicalFormulaMachine.step (canonicalConfiguration 13 input counter field
@@ -1663,8 +1693,8 @@ private def canonical_decrementTrace
           (false :: tail) (List.replicate zeros true) output))
         (zeros + 1) := by
     simpa only [FinTM2.step, Fin.isValue, List.append_nil] using
-        canonical_borrowZerosTrace zeros tail input counter field [] output
-  have hrestore := canonical_restoreTrace zeros
+        canonicalBorrowZerosTrace zeros tail input counter field [] output
+  have hrestore := canonicalRestoreTrace zeros
     input counter field (false :: tail) output
   have hfull := EvalsToInTime.trans canonicalFormulaMachine.step _ _ _ _ _ hborrow hrestore
   exact {
@@ -1687,7 +1717,7 @@ theorem binaryStackDecrement_replicate
   | succ zeros ih =>
       simp only [List.replicate_succ, List.cons_append, binaryStackDecrement, ih]
 
-private theorem canonical_failure_drop_input
+theorem canonicalFailureDropInput
     (bit : Bool)
     (input counter field binary borrow output : List Bool) :
     canonicalFormulaMachine.step
@@ -1697,7 +1727,7 @@ private theorem canonical_failure_drop_input
         counter field binary borrow output) := by
   cases bit <;> compactMachineStepTac [canonicalFormulaMachine, canonicalConfiguration]
 
-private theorem canonical_failure_drop_counter
+theorem canonicalFailureDropCounter
     (bit : Bool)
     (counter field binary borrow output : List Bool) :
     canonicalFormulaMachine.step
@@ -1707,7 +1737,7 @@ private theorem canonical_failure_drop_counter
         counter field binary borrow output) := by
   cases bit <;> compactMachineStepTac [canonicalFormulaMachine, canonicalConfiguration]
 
-private theorem canonical_failure_drop_field
+theorem canonicalFailureDropField
     (bit : Bool) (field binary borrow output : List Bool) :
     canonicalFormulaMachine.step
       (canonicalConfiguration 15 [] []
@@ -1716,7 +1746,7 @@ private theorem canonical_failure_drop_field
         field binary borrow output) := by
   cases bit <;> compactMachineStepTac [canonicalFormulaMachine, canonicalConfiguration]
 
-private theorem canonical_failure_drop_binary
+theorem canonicalFailureDropBinary
     (bit : Bool) (binary borrow output : List Bool) :
     canonicalFormulaMachine.step
       (canonicalConfiguration 15 [] [] []
@@ -1725,7 +1755,7 @@ private theorem canonical_failure_drop_binary
         binary borrow output) := by
   cases bit <;> compactMachineStepTac [canonicalFormulaMachine, canonicalConfiguration]
 
-private theorem canonical_failure_drop_borrow
+theorem canonicalFailureDropBorrow
     (bit : Bool) (borrow output : List Bool) :
     canonicalFormulaMachine.step
       (canonicalConfiguration 15 [] [] [] []
@@ -1734,7 +1764,7 @@ private theorem canonical_failure_drop_borrow
         borrow output) := by
   cases bit <;> compactMachineStepTac [canonicalFormulaMachine, canonicalConfiguration]
 
-private theorem canonical_failure_finish (output : List Bool) :
+theorem canonicalFailureFinish (output : List Bool) :
     canonicalFormulaMachine.step
       (canonicalConfiguration 15 [] [] [] [] [] output) =
       some (Turing.haltList canonicalFormulaMachine
@@ -1752,7 +1782,7 @@ def canonicalFailureTrace
         binary.length + borrow.length + 1) := by
   induction input generalizing counter field binary borrow output with
   | cons bit input ih =>
-      have hfirst := oneStep _ _ (canonical_failure_drop_input
+      have hfirst := oneStep _ _ (canonicalFailureDropInput
           bit input counter field binary borrow output)
       have hrest := ih counter field binary borrow output
       have hboth := EvalsToInTime.trans canonicalFormulaMachine.step _ _ _ _ _ hfirst hrest
@@ -1762,7 +1792,7 @@ def canonicalFailureTrace
   | nil =>
       induction counter generalizing field binary borrow output with
       | cons bit counter ih =>
-          have hfirst := oneStep _ _ (canonical_failure_drop_counter
+          have hfirst := oneStep _ _ (canonicalFailureDropCounter
               bit counter field binary borrow output)
           have hrest := ih field binary borrow output
           have hboth := EvalsToInTime.trans canonicalFormulaMachine.step _ _ _ _ _ hfirst hrest
@@ -1772,7 +1802,7 @@ def canonicalFailureTrace
       | nil =>
           induction field generalizing binary borrow output with
           | cons bit field ih =>
-              have hfirst := oneStep _ _ (canonical_failure_drop_field
+              have hfirst := oneStep _ _ (canonicalFailureDropField
                   bit field binary borrow output)
               have hrest := ih binary borrow output
               have hboth := EvalsToInTime.trans canonicalFormulaMachine.step _ _ _ _ _ hfirst hrest
@@ -1783,7 +1813,7 @@ def canonicalFailureTrace
               induction binary generalizing borrow output with
               | cons bit binary ih =>
                   have hfirst := oneStep _ _
-                    (canonical_failure_drop_binary bit binary borrow output)
+                    (canonicalFailureDropBinary bit binary borrow output)
                   have hrest := ih borrow output
                   have hboth := EvalsToInTime.trans
                     canonicalFormulaMachine.step _ _ _ _ _ hfirst hrest
@@ -1793,7 +1823,7 @@ def canonicalFailureTrace
               | nil =>
                   induction borrow generalizing output with
                   | cons bit borrow ih =>
-                      have hfirst := oneStep _ _ (canonical_failure_drop_borrow bit borrow output)
+                      have hfirst := oneStep _ _ (canonicalFailureDropBorrow bit borrow output)
                       have hrest := ih output
                       have hboth := EvalsToInTime.trans
                         canonicalFormulaMachine.step _ _ _ _ _ hfirst hrest
@@ -1803,7 +1833,7 @@ def canonicalFailureTrace
                   | nil =>
                       simpa only [FinTM2.step, Fin.isValue, List.length_nil, add_zero, zero_add]
                           using
-                          oneStep _ _ (canonical_failure_finish output)
+                          oneStep _ _ (canonicalFailureFinish output)
 
 /-- Internal support shared across GapCVP continuation modules. -/
 def canonicalZeroTrace (zeros : ℕ) :
@@ -1814,9 +1844,9 @@ def canonicalZeroTrace (zeros : ℕ) :
   induction zeros with
   | zero =>
       simpa only [FinTM2.step, Fin.isValue, List.replicate_zero, zero_add] using
-          oneStep _ _ canonical_zeroCheck_finish
+          oneStep _ _ canonicalZeroCheckFinish
   | succ zeros ih =>
-      have hfirst := oneStep _ _ (canonical_zeroCheck_false [] [] []
+      have hfirst := oneStep _ _ (canonicalZeroCheckFalse [] [] []
           (List.replicate zeros false) [] [])
       have hboth := EvalsToInTime.trans canonicalFormulaMachine.step 1 (zeros + 1)
         _ _ _ hfirst ih
@@ -1902,7 +1932,7 @@ def canonicalHeaderPrefixTrace
   induction length generalizing counter with
   | zero =>
       simpa only [FinTM2.step, Fin.isValue, List.replicate_zero, List.nil_append, zero_add] using
-          oneStep _ _ (canonical_header_prefix_delimiter tail counter field binary borrow output)
+          oneStep _ _ (canonicalHeaderPrefixDelimiter tail counter field binary borrow output)
   | succ length ih =>
       have hfirst := oneStep _ _ (canonical_header_prefix_true
           (List.replicate length true ++ false :: tail)
@@ -1953,9 +1983,9 @@ def canonicalHeaderReverseTrace
   | nil =>
       simpa only [FinTM2.step, Fin.isValue, List.reverse_nil, List.nil_append, List.length_nil,
           zero_add] using
-          oneStep _ _ (canonical_header_reverse_complete input binary borrow output)
+          oneStep _ _ (canonicalHeaderReverseComplete input binary borrow output)
   | cons bit field ih =>
-      have hfirst := oneStep _ _ (canonical_header_reverse_step bit
+      have hfirst := oneStep _ _ (canonicalHeaderReverseStep bit
           input field binary borrow output)
       have hrest := ih (bit :: binary)
       have hboth := EvalsToInTime.trans canonicalFormulaMachine.step 1 (field.length + 1)
@@ -2034,9 +2064,9 @@ def canonicalBorrowFailureTrace
   induction zeros generalizing borrow with
   | zero =>
       simpa only [FinTM2.step, Fin.isValue, List.replicate_zero, List.nil_append, zero_add] using
-          oneStep _ _ (canonical_borrow_exhausted input counter field borrow output)
+          oneStep _ _ (canonicalBorrowExhausted input counter field borrow output)
   | succ zeros ih =>
-      have hfirst := oneStep _ _ (canonical_borrow_zero input counter field
+      have hfirst := oneStep _ _ (canonicalBorrowZero input counter field
           (List.replicate zeros false) borrow output)
       have hrest := ih (true :: borrow)
       have hboth := EvalsToInTime.trans canonicalFormulaMachine.step 1 (zeros + 1)
@@ -2060,7 +2090,7 @@ def canonicalClearFieldTrace
   induction field with
   | nil =>
       simpa only [FinTM2.step, Fin.isValue, List.length_nil, zero_add] using
-          oneStep _ _ (canonical_clear_sign_step position hposition sign input binary borrow
+          oneStep _ _ (canonicalClearSignStep position hposition sign input binary borrow
               output)
   | cons bit field ih =>
       have hfirst := oneStep _ _ (canonical_literal_clear_step position bit
@@ -2082,7 +2112,7 @@ def canonicalClearThirdFieldTrace
   induction field with
   | nil =>
       simpa only [FinTM2.step, Fin.isValue, List.length_nil, zero_add] using
-          oneStep _ _ (canonical_clear_completeClause sign input binary borrow output)
+          oneStep _ _ (canonicalClearCompleteClause sign input binary borrow output)
   | cons bit field ih =>
       have hfirst := oneStep _ _ (canonical_literal_clear_step 2 bit
           (sign :: input) field binary borrow output)
@@ -2167,12 +2197,13 @@ def canonicalDecrementSomeTrace
   subst bits
   rw [binaryStackDecrement_replicate] at hdecrement
   cases Option.some.inj hdecrement
-  apply rebound (canonical_decrementTrace zeros tail input counter field output)
+  apply rebound (canonicalDecrementTrace zeros tail input counter field output)
   simp only [List.length_append, List.length_replicate,
     List.length_cons]
   omega
 
-private def canonical_zeroPrefixTrace
+/-- Skip leading zero bits during the final zero check. -/
+def canonicalZeroPrefixTrace
     (zeros : ℕ) (tail : List Bool) :
     EvalsToInTime canonicalFormulaMachine.step (canonicalConfiguration 16 [] [] []
         (List.replicate zeros false ++ tail) [] [])
@@ -2184,7 +2215,7 @@ private def canonical_zeroPrefixTrace
           EvalsToInTime.refl canonicalFormulaMachine.step (canonicalConfiguration 16 [] [] [] tail
               [] [])
   | succ zeros ih =>
-      have hfirst := oneStep _ _ (canonical_zeroCheck_false [] [] []
+      have hfirst := oneStep _ _ (canonicalZeroCheckFalse [] [] []
           (List.replicate zeros false ++ tail) [] [])
       have hboth := EvalsToInTime.trans canonicalFormulaMachine.step 1 zeros _ _ _ hfirst ih
       simpa only [FinTM2.step, Fin.isValue, List.replicate_succ, List.cons_append] using hboth
@@ -2197,8 +2228,8 @@ def canonicalZeroFailureTrace
       (2 * bits.length + 3) := by
   obtain ⟨zeros, tail, hshape⟩ := positiveBinarySplit bits hpositive
   subst bits
-  have hprefix := canonical_zeroPrefixTrace zeros (true :: tail)
-  have hreject := oneStep _ _ (canonical_zeroCheck_true [] [] [] tail [] [])
+  have hprefix := canonicalZeroPrefixTrace zeros (true :: tail)
+  have hreject := oneStep _ _ (canonicalZeroCheckTrue [] [] [] tail [] [])
   have hcleanup := canonicalFailureTrace [] [] [] (true :: tail) [] []
   have hfirst := EvalsToInTime.trans canonicalFormulaMachine.step _ _ _ _ _ hprefix hreject
   have hfull := EvalsToInTime.trans canonicalFormulaMachine.step _ _ _ _ _ hfirst hcleanup

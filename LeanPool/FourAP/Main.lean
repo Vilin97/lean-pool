@@ -3,7 +3,9 @@ Copyright (c) 2026 Boon Suan Ho. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Boon Suan Ho
 -/
-import LeanPool.FourAP.Construction
+module
+
+public import LeanPool.FourAP.Construction
 
 /-!
 # The theorem of the paper
@@ -15,6 +17,8 @@ integers”. For the closest match to the displayed theorem in the paper, see
 as positions and as values, and an arbitrary nonzero integer difference.
 Each existential statement below uses the explicit, verified construction.
 -/
+@[expose] public section
+
 namespace FourAP
 
 /-- The main theorem before the final shift: a permutation of `ℕ₀` with no
