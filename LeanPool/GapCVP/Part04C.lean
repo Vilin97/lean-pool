@@ -4,10 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import LeanPool.GapCVP.Part04B
-import LeanPool.GapCVP.StatementLifting
+module
+
+public import LeanPool.GapCVP.Part04B
+public import LeanPool.GapCVP.StatementLifting
 
 /-! # GapCVP proof, part 04, continuation 03 -/
+
+@[expose] public section
 
 noncomputable section
 

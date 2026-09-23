@@ -3,11 +3,13 @@ Copyright (c) 2026 Arthur Freitas Ramos et al. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
-import Mathlib.GroupTheory.CoprodI
-import Mathlib.GroupTheory.DoubleCoset
-import Mathlib.GroupTheory.FreeGroup.NielsenSchreier
-import Mathlib.CategoryTheory.Groupoid.FreeGroupoid
-import Mathlib.Algebra.Group.ULift
+module
+
+public import Mathlib.GroupTheory.CoprodI
+public import Mathlib.GroupTheory.DoubleCoset
+public import Mathlib.GroupTheory.FreeGroup.NielsenSchreier
+public import Mathlib.CategoryTheory.Groupoid.FreeGroupoid
+public import Mathlib.Algebra.Group.ULift
 
 /-!
 # The free-product data used by Kurosh's theorem
@@ -33,6 +35,8 @@ Adapted for Lean Pool from Arthur742Ramos/KuroshSubgroupTheorem,
 commit `911707126c8b9bb0c764bf853008fe1053c0aad9`: imports, API compatibility,
 and proof organization were revised.
 -/
+
+@[expose] public section
 
 open Set Function
 open CategoryTheory
@@ -1645,7 +1649,8 @@ def quotientGraphLabelPrefunctor {ι : Type v} (G : ι → Type u)
   obj := fun _ => ()
   map := fun e => quotientEdgeLabel G H e
 
-private def freeGroupoidPathHom {V : Type u} [q : Quiver.{v} V] {a : V} :
+/-- Interpret a symmetric quiver path as a morphism in its free groupoid. -/
+def freeGroupoidPathHom {V : Type u} [q : Quiver.{v} V] {a : V} :
     ∀ {b : V},
       @Quiver.Path (Quiver.Symmetrify V) _ a b →
         @Quiver.Hom (Quiver.FreeGroupoid V)
@@ -1712,22 +1717,26 @@ private theorem freeGroupoid_isConnected_of_rootedConnected
   rcases hb with ⟨pb⟩
   exact Zigzag.of_inv_hom (freeGroupoidPathHom pa) (freeGroupoidPathHom pb)
 
-private def freeGroupoidBaseObj {V : Type u} [q : Quiver.{v} V]
+/-- Recover the original vertex from an object of the free groupoid. -/
+def freeGroupoidBaseObj {V : Type u} [q : Quiver.{v} V]
     (a : Quiver.FreeGroupoid V) : V := by
   exact a.as
 
-@[instance_reducible] private def freeGroupoidCategoryQuiver {V : Type u} [q : Quiver.{v} V] :
+/-- The quiver underlying the category structure of the free groupoid. -/
+@[instance_reducible] def freeGroupoidCategoryQuiver {V : Type u} [q : Quiver.{v} V] :
     Quiver (Quiver.FreeGroupoid V) := by
   letI : CategoryTheory.Category (Quiver.FreeGroupoid V) :=
     Quiver.FreeGroupoid.instCategory
   infer_instance
 
-@[instance_reducible] private def freeGroupoidGeneratorQuiver {V : Type u} [q : Quiver.{v} V] :
+/-- Original quiver arrows, lifted to the universe of free groupoid morphisms. -/
+@[instance_reducible] def freeGroupoidGeneratorQuiver {V : Type u} [q : Quiver.{v} V] :
     Quiver.{max u v} (Quiver.FreeGroupoid V) :=
   { Hom := fun a b => ULift.{u}
       (@Quiver.Hom V q (freeGroupoidBaseObj a) (freeGroupoidBaseObj b)) }
 
-private def freeGroupoidGeneratorArrow {V : Type u} [q : Quiver.{v} V]
+/-- Include a lifted generating arrow into the free groupoid. -/
+def freeGroupoidGeneratorArrow {V : Type u} [q : Quiver.{v} V]
     {a b : Quiver.FreeGroupoid V}
     (e : ULift.{u}
       (@Quiver.Hom V q (freeGroupoidBaseObj a) (freeGroupoidBaseObj b))) :

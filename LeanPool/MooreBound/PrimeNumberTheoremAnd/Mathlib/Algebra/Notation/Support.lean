@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PrimeNumberTheoremAnd contributors
 -/
 
-import Mathlib.Algebra.Notation.Support
+module
+
+public import Mathlib.Algebra.Notation.Support
 
 /-!
 Ported for Lean Pool from PrimeNumberTheoremAnd commit
@@ -14,6 +16,8 @@ The port adds the MooreBound namespace and updates Mathlib APIs and proof style.
 Wiener and Consequences retain the PNT and prime-interval dependency closure;
 unrelated later developments and LeanArchitect annotations are omitted.
 -/
+
+@[expose] public section
 
 namespace MooreBound
 

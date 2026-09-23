@@ -4,10 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import LeanPool.GapCVP.Part15
-import Mathlib.Data.List.Intervals
+module
+
+public import LeanPool.GapCVP.Part15
+public import Mathlib.Data.List.Intervals
 
 /-! # GapCVP proof, part 16 -/
+
+@[expose] public section
 
 noncomputable section
 

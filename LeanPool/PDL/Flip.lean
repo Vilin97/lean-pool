@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PDL formalization contributors (see project card)
 -/
 
-import Mathlib.Tactic.DepRewrite
+module
 
-import LeanPool.PDL.Soundness
+public import Mathlib.Tactic.DepRewrite
+
+public import LeanPool.PDL.Soundness
 
 /-! # Flipping a tableau (for section 7)
 
@@ -15,6 +17,8 @@ For the case where the loaded formula is on the left, we flip the tableau left-t
 
 The lemmas here then allow us to prove `clusterInterpolation` from `clusterInterpolationRight`.
 -/
+
+@[expose] public section
 
 namespace PDL
 

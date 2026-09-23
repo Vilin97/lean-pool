@@ -3,7 +3,9 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import LeanPool.ACMax.AHL.AHLStationary
+module
+
+public import LeanPool.ACMax.AHL.AHLStationary
 
 /-!
 # The AHL stationary marginal VALUES — `xP = x` and its consequences (nodes W3–W5)
@@ -30,6 +32,8 @@ Throughout `hδ2 : ∀ v, 2 ≤ G.degree v`.  A directed edge is the `(penultima
 * **W5 — the total** (`nbWeightTotal_eq`).  The total weight of all length-`k` non-backtracking
   walks is exactly `D = ∑ v, deg v` — the normalization the weighted AM–GM (W7) consumes.
 -/
+
+@[expose] public section
 
 namespace ACMax
 

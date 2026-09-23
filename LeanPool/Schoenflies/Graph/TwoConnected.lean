@@ -3,9 +3,12 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import Mathlib.Combinatorics.Graph.Delete
-import Mathlib.Data.Set.Card
-import LeanPool.Schoenflies.Graph.Walk
+module
+
+public import Mathlib.Combinatorics.Graph.Delete
+import all Mathlib.Combinatorics.Graph.Delete
+public import Mathlib.Data.Set.Card
+public import LeanPool.Schoenflies.Graph.Walk
 
 /-!
 # Vertex deletion and 2-connectivity
@@ -99,6 +102,8 @@ subgraphs of the union.
 * `Graph.IsTwoConnected.union` — `lem:union-two-connected`, "if two finite 2-connected graphs
   have at least two vertices in common, their union is 2-connected".
 -/
+
+@[expose] public section
 
 open Set
 

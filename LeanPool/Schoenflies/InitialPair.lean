@@ -3,12 +3,14 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.CombinatorialInvariance
-import LeanPool.Schoenflies.GeneralCrosscut
-import LeanPool.Schoenflies.ModelCurve
-import LeanPool.Schoenflies.AccessibleJoin
-import LeanPool.Schoenflies.Jordan
-import LeanPool.Schoenflies.Line
+module
+
+public import LeanPool.Schoenflies.CombinatorialInvariance
+public import LeanPool.Schoenflies.GeneralCrosscut
+public import LeanPool.Schoenflies.ModelCurve
+public import LeanPool.Schoenflies.AccessibleJoin
+public import LeanPool.Schoenflies.Jordan
+public import LeanPool.Schoenflies.Line
 
 /-!
 # The initial matched pair
@@ -83,6 +85,8 @@ restatement of anything proved here.
 * `Schoenflies.InitialData.exists_initialData`, `Schoenflies.initial_pair` —
   `prop:initial-pair`.
 -/
+
+@[expose] public section
 
 open Metric Set Topology unitInterval
 open scoped Graph

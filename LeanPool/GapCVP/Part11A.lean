@@ -4,11 +4,15 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import LeanPool.GapCVP.Part10
-import Mathlib.Analysis.SpecialFunctions.Pow.NthRootLemmas
-import Mathlib.InformationTheory.Hamming
+module
+
+public import LeanPool.GapCVP.Part10
+public import Mathlib.Analysis.SpecialFunctions.Pow.NthRootLemmas
+public import Mathlib.InformationTheory.Hamming
 
 /-! # GapCVP proof, part 11 -/
+
+@[expose] public section
 
 noncomputable section
 

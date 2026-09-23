@@ -4,9 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import LeanPool.GapCVP.Part09
+module
+
+public import LeanPool.GapCVP.Part09
 
 /-! # GapCVP proof, part 10 -/
+
+@[expose] public section
 
 noncomputable section
 
