@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.OuterChain
-import LeanPool.Schoenflies.CombinatorialInvariance
+module
+
+public import LeanPool.Schoenflies.OuterChain
+public import LeanPool.Schoenflies.CombinatorialInvariance
 
 /-!
 # `thm:polygonal-crosscut` at the level of sets, and the geometric half of the outer-chain descent
@@ -99,6 +101,8 @@ have to add the field.
 * `Graph.IsPlaneChain.outer_chain_of_crosscutExists` — **`lem:outer-chain`**, assuming only the
   combinatorial half `Graph.CrosscutExists`.
 -/
+
+@[expose] public section
 
 open Bornology Set
 

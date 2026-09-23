@@ -3,10 +3,12 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Graph.CycleJordan
-import LeanPool.Schoenflies.Graph.RelativeEar
-import LeanPool.Schoenflies.Graph.OuterFace
-import LeanPool.Schoenflies.Subarc
+module
+
+public import LeanPool.Schoenflies.Graph.CycleJordan
+public import LeanPool.Schoenflies.Graph.RelativeEar
+public import LeanPool.Schoenflies.Graph.OuterFace
+public import LeanPool.Schoenflies.Subarc
 
 /-!
 # Face cycles: the base cycle, and the faces of a plane graph that grows by ears
@@ -107,6 +109,8 @@ Root `Graph`, as fixed by `Schoenflies/Graph/Walk.lean`. The two arc lemmas are 
   interior, which lies in `F`, so they lie on `∂F`; the ear is therefore a crosscut of that
   side".
 -/
+
+@[expose] public section
 
 open Set
 open scoped Graph

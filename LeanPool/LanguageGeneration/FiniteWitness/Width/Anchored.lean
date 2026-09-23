@@ -3,13 +3,17 @@ Copyright (c) 2026 Xiaoyu Li, Andi Han, Jiaojiao Jiang, Junbin Gao. All rights r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xiaoyu Li, Andi Han, Jiaojiao Jiang, Junbin Gao
 -/
-import LeanPool.LanguageGeneration.FiniteWitness.Width.Capture
-import LeanPool.LanguageGeneration.FiniteWitness.Width.Cost
-import Mathlib.Data.Finset.Preimage
+module
+
+public import LeanPool.LanguageGeneration.FiniteWitness.Width.Capture
+public import LeanPool.LanguageGeneration.FiniteWitness.Width.Cost
+public import Mathlib.Data.Finset.Preimage
 
 /-!
 # Anchored families and their positive witness geometry
 -/
+
+@[expose] public section
 
 namespace GenLimit.FiniteWitness.Anchored
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PDL formalization contributors (see project card)
 -/
 
-import LeanPool.PDL.AllPdlRule
+module
+
+public import LeanPool.PDL.AllPdlRule
 
 /-! # Concrete PDL rule applications
 
@@ -22,6 +24,8 @@ The main results are:
 - `Sequent.exists_atomic_modal_steps`: the combination of (L+) and (M), giving the
   `a`-successor of a free basic sequent.
 -/
+
+@[expose] public section
 
 namespace PDL
 

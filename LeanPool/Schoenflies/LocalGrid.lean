@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.SquareMeshFixed
-import LeanPool.Schoenflies.Graph.TwoPaths
+module
+
+public import LeanPool.Schoenflies.SquareMeshFixed
+public import LeanPool.Schoenflies.Graph.TwoPaths
 
 /-!
 # The local source grid, and the missing hypothesis of the anchored square mesh
@@ -77,6 +79,8 @@ report.
   `Graph.IsTwoConnected.ear`; `Graph.IsTwoConnected.of_le_of_vertexSet_subset` is the
   "spanning 2-connected subgraph" form the assembly needs.
 -/
+
+@[expose] public section
 
 open Metric Set
 open scoped Graph

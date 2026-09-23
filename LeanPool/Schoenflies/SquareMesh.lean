@@ -3,10 +3,12 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.OverlayGraph
-import LeanPool.Schoenflies.ModelCurve
-import LeanPool.Schoenflies.Graph.OuterFace
-import LeanPool.Schoenflies.Graph.Redrawing
+module
+
+public import LeanPool.Schoenflies.OverlayGraph
+public import LeanPool.Schoenflies.ModelCurve
+public import LeanPool.Schoenflies.Graph.OuterFace
+public import LeanPool.Schoenflies.Graph.Redrawing
 
 /-!
 # The anchored square mesh
@@ -77,6 +79,8 @@ the rings are disjoint frames.
 * `subdivide_covers_source`, `subdivide_end_of_mem` — two general facts about `subdivide` that
   belong in `Schoenflies/Subdivide.lean`.
 -/
+
+@[expose] public section
 
 open Metric Set
 open scoped Graph
