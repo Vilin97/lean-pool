@@ -3,9 +3,11 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.StageTransition
-import LeanPool.Schoenflies.LimitMap
-import LeanPool.Schoenflies.BoundaryContinuity2
+module
+
+public import LeanPool.Schoenflies.StageTransition
+public import LeanPool.Schoenflies.LimitMap
+public import LeanPool.Schoenflies.BoundaryContinuity2
 
 /-!
 # From a sequence of transferred stages to a `LimitTower`
@@ -59,6 +61,8 @@ facts about the square.
   **`prop:interior-homeomorphism`** for a stage sequence, which is the third conjunct of
   `Schoenflies.HasLimitHomeomorphism`.
 -/
+
+@[expose] public section
 
 open Bornology Filter Metric Set Topology
 open scoped Graph

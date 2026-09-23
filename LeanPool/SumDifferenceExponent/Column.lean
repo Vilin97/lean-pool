@@ -3,14 +3,18 @@ Copyright (c) 2026 Haowei Lin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Haowei Lin, Shanda Li
 -/
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Algebra.Group.Pointwise.Finset.Basic
-import Mathlib.Data.Fintype.Pi
-import Mathlib.Data.List.Indexes
-import Mathlib.Data.List.OfFn
-import Mathlib.Data.Nat.Digits.Lemmas
+module
+
+public import Mathlib.Algebra.BigOperators.Fin
+public import Mathlib.Algebra.Group.Pointwise.Finset.Basic
+public import Mathlib.Data.Fintype.Pi
+public import Mathlib.Data.List.Indexes
+public import Mathlib.Data.List.OfFn
+public import Mathlib.Data.Nat.Digits.Lemmas
 
 /-! Kernel-friendly base-39 column construction. -/
+
+@[expose] public section
 
 open scoped BigOperators Pointwise
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Boon Suan Ho. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Boon Suan Ho
 -/
-import LeanPool.FourAP.Binary
-import LeanPool.FourAP.Completion
-import Mathlib.Data.Finset.Sort
-import Mathlib.Tactic.SplitIfs
+module
+
+public import LeanPool.FourAP.Binary
+public import LeanPool.FourAP.Completion
+public import Mathlib.Data.Finset.Sort
+public import Mathlib.Tactic.SplitIfs
 
 /-!
 # Finite safe words
@@ -16,6 +18,8 @@ Lemma, and Lemma 1 (reverse binary order is safe).
 The two arithmetic-progression equations used below include both increasing
 and decreasing progressions.
 -/
+
+@[expose] public section
 
 namespace FourAP
 

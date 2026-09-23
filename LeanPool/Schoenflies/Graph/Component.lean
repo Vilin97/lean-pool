@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Graph.Walk
-import LeanPool.Schoenflies.Graph.TwoConnected
+module
+
+public import LeanPool.Schoenflies.Graph.Walk
+public import LeanPool.Schoenflies.Graph.TwoConnected
 
 /-!
 # Components and shortest paths
@@ -76,6 +78,8 @@ must aim at a vertex of `S` other than `c`. In the application `S` is the vertex
 
 Root `Graph`, as fixed by `Schoenflies/Graph/Walk.lean`.
 -/
+
+@[expose] public section
 
 open Set
 open scoped Graph

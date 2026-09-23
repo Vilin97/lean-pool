@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PDL formalization contributors (see project card)
 -/
 
-import LeanPool.Lean4GlCoalgebras.Pdl.Game
+module
+
+public import LeanPool.Lean4GlCoalgebras.Pdl.Game
 
 /-! # Shared finite, well-founded game theory
 
