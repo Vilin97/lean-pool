@@ -57,8 +57,9 @@ projects:
         informal: >-
           For the explicit eight-qubit second-order word L1,L2,L2,L1 and angles
           0 < θ < π/2, truncating the evolved weight-one input at weight one
-          discards a nonzero weight-six coefficient. Thus the two distinct
-          layer types give an invalid bound 1*2^2; repetitions must be counted.
+          discards a nonzero coefficient of weight greater than four. Thus the
+          two distinct layer types give an invalid bound 1*2^2; repetitions
+          must be counted.
         source_ref: Upstream Pauli/LayerCounterexample.lean, exact symbolic witness.
     tags:
       - quantum-information
