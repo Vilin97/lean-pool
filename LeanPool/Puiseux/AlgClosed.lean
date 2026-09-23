@@ -161,6 +161,97 @@ theorem toHahn_expand_single_scaling (n q : ℕ+) (a : ℤ) (c : LaurentSeries K
   push_cast
   ring_nf
 
+private theorem exists_minimal_newton_slope {p : Polynomial (LaurentSeries K)} {m : ℕ}
+    (hex : ∃ i < m, p.coeff i ≠ 0) :
+    ∃ (q : ℕ+) (a : ℤ),
+      (∀ i, i < m → p.coeff i ≠ 0 →
+        0 ≤ (q : ℤ) * (p.coeff i).order + a * ((i : ℤ) - m)) ∧
+      ∃ i₀ < m, p.coeff i₀ ≠ 0 ∧
+        (q : ℤ) * (p.coeff i₀).order + a * ((i₀ : ℤ) - m) = 0 := by
+  classical
+  obtain ⟨i₁, hi₁m, hi₁⟩ := hex
+  obtain ⟨i₀, hi₀S, hi₀min⟩ :=
+    ((Finset.range m).filter (fun i => p.coeff i ≠ 0)).exists_min_image
+      (fun i => ((p.coeff i).order : ℚ) / ((m - i : ℕ) : ℚ))
+      ⟨i₁, Finset.mem_filter.2 ⟨Finset.mem_range.2 hi₁m, hi₁⟩⟩
+  obtain ⟨hi₀m, hc₀⟩ : i₀ < m ∧ p.coeff i₀ ≠ 0 := by
+    simpa [Finset.mem_filter, Finset.mem_range] using hi₀S
+  let q : ℕ+ := ⟨m - i₀, Nat.zero_lt_sub_of_lt hi₀m⟩
+  have hqZ : (q : ℤ) = (m : ℤ) - i₀ := by simp [q, Int.ofNat_sub hi₀m.le]
+  refine ⟨q, (p.coeff i₀).order, ?_, i₀, hi₀m, hc₀, ?_⟩
+  · intro i him hci
+    have h := hi₀min i (Finset.mem_filter.2 ⟨Finset.mem_range.2 him, hci⟩)
+    rw [div_le_div_iff₀ (mod_cast Nat.zero_lt_sub_of_lt hi₀m : (0 : ℚ) < _)
+      (mod_cast Nat.zero_lt_sub_of_lt him : (0 : ℚ) < _)] at h
+    push_cast [Nat.cast_sub him.le, Nat.cast_sub hi₀m.le] at h
+    have hscaled : (p.coeff i₀).order * ((m : ℤ) - i) ≤
+        (p.coeff i).order * ((m : ℤ) - i₀) := by exact_mod_cast h
+    rw [hqZ]
+    nlinarith only [hscaled]
+  · rw [hqZ]; ring
+
+private theorem exists_scaled_powerSeries_coefficients
+    {p : Polynomial (LaurentSeries K)} {m : ℕ} (hp : p.Monic) (hm : p.natDegree = m)
+    (hsub : p.coeff (m - 1) = 0) (q : ℕ+) (a : ℤ)
+    (key : ∀ i, i < m → p.coeff i ≠ 0 →
+      0 ≤ (q : ℤ) * (p.coeff i).order + a * ((i : ℤ) - m))
+    (hex : ∃ i₀ < m, p.coeff i₀ ≠ 0 ∧
+      (q : ℤ) * (p.coeff i₀).order + a * ((i₀ : ℤ) - m) = 0) :
+    ∃ D : ℕ → PowerSeries K, D m = 1 ∧ D (m - 1) = 0 ∧
+      (∃ i₀ < m, PowerSeries.constantCoeff (D i₀) ≠ 0) ∧
+      ∀ i ≤ m, HahnSeries.ofPowerSeries ℤ K (D i) =
+        expand K q (p.coeff i) * HahnSeries.single (a * ((i : ℤ) - m)) 1 := by
+  classical
+  let d : ℕ → LaurentSeries K := fun i =>
+    expand K q (p.coeff i) * HahnSeries.single (a * ((i : ℤ) - m)) 1
+  have hdm : d m = 1 := by simp [d, show p.coeff m = 1 from hm ▸ hp.coeff_natDegree]
+  have hdz {i} (hi : p.coeff i = 0) : d i = 0 := by simp [d, hi]
+  have horder {i} (hci : p.coeff i ≠ 0) :
+      (d i).orderTop = (((q : ℤ) * (p.coeff i).order + a * ((i : ℤ) - m) : ℤ) :
+        WithTop ℤ) := by
+    simp [d, HahnSeries.orderTop_mul, orderTop_expand, HahnSeries.orderTop_single one_ne_zero,
+      ← HahnSeries.order_eq_orderTop_of_ne_zero hci]
+  have hdnn (i : ℕ) :
+      (0 : WithTop ℤ) ≤ (if i ≤ m then d i else 0 : LaurentSeries K).orderTop := by
+    split_ifs with him
+    · rcases eq_or_lt_of_le him with heq | hlt
+      · simp [heq, hdm]
+      · by_cases hci : p.coeff i = 0
+        · simp [hdz hci]
+        · rw [horder hci]; exact_mod_cast key i hlt hci
+    · simp
+  choose D hD using fun i => exists_ofPowerSeries_eq_of_order_nonneg
+    (Or.inr (HahnSeries.zero_le_orderTop_iff.mp (hdnn i)))
+  have hDi {i} (hi : i ≤ m) : HahnSeries.ofPowerSeries ℤ K (D i) = d i :=
+    (hD i).trans (ite_eq_left hi)
+  refine ⟨D, ?_, ?_, ?_, fun _ hi => hDi hi⟩
+  · exact HahnSeries.ofPowerSeries_injective (Γ := ℤ) (by simpa [hdm] using hDi le_rfl)
+  · exact HahnSeries.ofPowerSeries_injective (Γ := ℤ)
+      (by simpa [hdz hsub] using hDi (Nat.sub_le m 1))
+  · obtain ⟨i₀, hi₀m, hc₀, hz⟩ := hex
+    refine ⟨i₀, hi₀m, ?_⟩
+    have := HahnSeries.coeff_orderTop_ne (by rw [horder hc₀, hz])
+    rw [← hDi hi₀m.le] at this
+    convert this
+    simpa using (LaurentSeries.coeff_coe_powerSeries (D i₀) 0).symm
+
+private theorem exists_monic_of_coefficients (D : ℕ → PowerSeries K) {m : ℕ}
+    (hDm : D m = 1) :
+    ∃ P : Polynomial (PowerSeries K), P.Monic ∧ P.natDegree = m ∧
+      ∀ j, P.coeff j = if j ≤ m then D j else 0 := by
+  classical
+  set P : Polynomial (PowerSeries K) := ∑ i ∈ Finset.range (m + 1), Polynomial.monomial i (D i)
+  have hPcoeff (j) : P.coeff j = if j ≤ m then D j else 0 := by
+    simp [P, Polynomial.finsetSum_coeff, Polynomial.coeff_monomial, Finset.sum_ite_eq']
+  have hnd : P.natDegree = m :=
+    le_antisymm (Polynomial.natDegree_le_iff_coeff_eq_zero.2 fun N hN => by
+        rw [hPcoeff, ite_eq_right (Nat.not_le_of_lt hN)])
+      (Polynomial.le_natDegree_of_ne_zero (by
+        rw [hPcoeff, ite_eq_left le_rfl, hDm]
+        exact one_ne_zero))
+  refine ⟨P, ?_, hnd, hPcoeff⟩
+  rw [Polynomial.Monic, Polynomial.leadingCoeff, hnd, hPcoeff, ite_eq_left le_rfl, hDm]
+
 /-- **Newton slope scaling**: given `p` monic of degree `m` over `K((t))` with vanishing
 subleading coefficient and some nonzero lower coefficient, there are `q ≥ 1`, `a : ℤ`, and a
 monic `P` of degree `m` over `K⟦X⟧` whose reduction has vanishing subleading coefficient but
@@ -181,78 +272,14 @@ theorem newton_slope_scaling (n : ℕ+) {p : Polynomial (LaurentSeries K)} {m : 
           = HahnSeries.single ((a : ℚ) / ((n * q : ℕ+) : ℕ)) 1 ^ m *
               (P.map ((toHahn K (n * q)).comp (HahnSeries.ofPowerSeries ℤ K))).eval y := by
   classical
-  obtain ⟨i₁, hi₁m, hi₁⟩ := hex
-  obtain ⟨i₀, hi₀S, hi₀min⟩ :=
-    ((Finset.range m).filter (fun i => p.coeff i ≠ 0)).exists_min_image
-      (fun i => ((p.coeff i).order : ℚ) / ((m - i : ℕ) : ℚ))
-      ⟨i₁, Finset.mem_filter.2 ⟨Finset.mem_range.2 hi₁m, hi₁⟩⟩
-  obtain ⟨hi₀m, hc₀⟩ : i₀ < m ∧ p.coeff i₀ ≠ 0 := by
-    simpa [Finset.mem_filter, Finset.mem_range] using hi₀S
-  obtain ⟨q, hq⟩ : ∃ q : ℕ+, (q : ℕ) = m - i₀ :=
-    ⟨⟨m - i₀, Nat.zero_lt_sub_of_lt hi₀m⟩, rfl⟩
-  set a : ℤ := (p.coeff i₀).order
-  have hqZ : ((q : ℕ) : ℤ) = (m : ℤ) - (i₀ : ℤ) := by rw [hq]; omega
-  have key : ∀ i, i < m → p.coeff i ≠ 0 →
-      0 ≤ ((q : ℕ) : ℤ) * (p.coeff i).order + a * ((i : ℤ) - (m : ℤ)) := by
-    intro i him hci
-    have h := hi₀min i (Finset.mem_filter.2 ⟨Finset.mem_range.2 him, hci⟩)
-    rw [div_le_div_iff₀ (mod_cast Nat.zero_lt_sub_of_lt hi₀m : (0 : ℚ) < _)
-      (mod_cast Nat.zero_lt_sub_of_lt him : (0 : ℚ) < _)] at h
-    push_cast [Nat.cast_sub him.le, Nat.cast_sub hi₀m.le] at h
-    have hscaled : a * ((m : ℤ) - i) ≤ (p.coeff i).order * ((m : ℤ) - i₀) := by
-      exact_mod_cast h
-    rw [hqZ]
-    nlinarith only [hscaled]
-  let d : ℕ → LaurentSeries K := fun i =>
-    expand K q (p.coeff i) * HahnSeries.single (a * ((i : ℤ) - (m : ℤ))) 1
-  have hdm : d m = 1 := by simp [d, show p.coeff m = 1 from hm ▸ hp.coeff_natDegree]
-  have hdz {i} (hi : p.coeff i = 0) : d i = 0 := by simp [d, hi]
-  have horder {i} (him : i < m) (hci : p.coeff i ≠ 0) :
-      (d i).orderTop = ((((q : ℕ) : ℤ) * (p.coeff i).order + a * ((i : ℤ) - (m : ℤ)) : ℤ) :
-        WithTop ℤ) := by
-    simp [d, HahnSeries.orderTop_mul, orderTop_expand, HahnSeries.orderTop_single one_ne_zero,
-      ← HahnSeries.order_eq_orderTop_of_ne_zero hci]
-  have hdnn (i : ℕ) :
-      (0 : WithTop ℤ) ≤ (if i ≤ m then d i else 0 : LaurentSeries K).orderTop := by
-    split_ifs with him
-    · rcases eq_or_lt_of_le him with heq | hlt
-      · simp [heq, hdm]
-      · by_cases hci : p.coeff i = 0
-        · simp [hdz hci]
-        · rw [horder hlt hci]; exact_mod_cast key i hlt hci
-    · simp
-  choose D hD using fun i => exists_ofPowerSeries_eq_of_order_nonneg
-    (Or.inr (HahnSeries.zero_le_orderTop_iff.mp (hdnn i)))
-  have hDi {i} (hi : i ≤ m) : HahnSeries.ofPowerSeries ℤ K (D i) = d i :=
-    (hD i).trans (ite_eq_left hi)
-  have hDm : D m = 1 :=
-    HahnSeries.ofPowerSeries_injective (Γ := ℤ) (by simpa [hdm] using hDi le_rfl)
-  have hDm1 : D (m - 1) = 0 :=
-    HahnSeries.ofPowerSeries_injective (Γ := ℤ)
-      (by simpa [hdz hsub] using hDi (Nat.sub_le m 1))
-  have hPcoeff (j) :
-      (∑ i ∈ Finset.range (m + 1), Polynomial.monomial i (D i)).coeff j =
-        if j ≤ m then D j else 0 := by
-    simp [Polynomial.finsetSum_coeff, Polynomial.coeff_monomial, Finset.sum_ite_eq']
-  set P : Polynomial (PowerSeries K) := ∑ i ∈ Finset.range (m + 1), Polynomial.monomial i (D i)
-  have hnd : P.natDegree = m :=
-    le_antisymm (Polynomial.natDegree_le_iff_coeff_eq_zero.2 fun N hN => by
-        rw [hPcoeff, ite_eq_right (Nat.not_le_of_lt hN)])
-      (Polynomial.le_natDegree_of_ne_zero (by
-        rw [hPcoeff, ite_eq_left le_rfl, hDm]
-        exact one_ne_zero))
-  have hmon : P.Monic := by
-    rw [Polynomial.Monic, Polynomial.leadingCoeff, hnd, hPcoeff, ite_eq_left le_rfl, hDm]
+  obtain ⟨q, a, key, hex⟩ := exists_minimal_newton_slope hex
+  obtain ⟨D, hDm, hDm1, ⟨i₀, hi₀m, hc₀⟩, hDi⟩ :=
+    exists_scaled_powerSeries_coefficients hp hm hsub q a key hex
+  obtain ⟨P, hmon, hnd, hPcoeff⟩ := exists_monic_of_coefficients D hDm
   refine ⟨q, a, P, hmon, hnd, ?_, ?_, ?_⟩
   · rw [Polynomial.coeff_map, hPcoeff, ite_eq_left (Nat.sub_le _ _), hDm1, map_zero]
   · refine ⟨i₀, hi₀m, ?_⟩
-    rw [Polynomial.coeff_map, hPcoeff, ite_eq_left hi₀m.le]
-    have hz : ((q : ℕ) : ℤ) * (p.coeff i₀).order + a * ((i₀ : ℤ) - (m : ℤ)) = 0 := by
-      rw [hqZ]; simp [a]; ring
-    have := HahnSeries.coeff_orderTop_ne (by rw [horder hi₀m hc₀, hz])
-    rw [← hDi hi₀m.le] at this
-    convert this
-    simpa using (LaurentSeries.coeff_coe_powerSeries (D i₀) 0).symm
+    simpa only [Polynomial.coeff_map, hPcoeff, ite_eq_left hi₀m.le] using hc₀
   · intro y
     conv_lhs =>
       rw [Polynomial.eval_eq_sum_range'
@@ -263,8 +290,7 @@ theorem newton_slope_scaling (n : ℕ+) {p : Polynomial (LaurentSeries K)} {m : 
     refine Finset.sum_congr rfl fun i hi => ?_
     have him : i ≤ m := Nat.lt_succ_iff.mp (Finset.mem_range.mp hi)
     rw [Polynomial.coeff_map, Polynomial.coeff_map, hPcoeff, ite_eq_left him, RingHom.comp_apply,
-      hDi him]
-    simp only [d]
+      hDi i him]
     rw [mul_pow, ← mul_assoc, ← mul_assoc, toHahn_expand_single_scaling n q a (p.coeff i) i m]
 
 /-! ## The descent step and the main induction -/
@@ -311,6 +337,17 @@ open LaurentSeries
 
 variable {K : Type*} [Field K]
 
+private theorem eq_power_of_lower_coefficients_zero {F : Type*} [Field F]
+    {p : F[X]} {m : ℕ} (hp : p.Monic) (hm : p.natDegree = m)
+    (hall : ∀ i < m, p.coeff i = 0) : p = X ^ m := by
+  apply Polynomial.ext
+  intro i
+  rcases lt_trichotomy i m with hi | rfl | hi
+  · simp [hall i hi, Polynomial.coeff_X_pow, hi.ne]
+  · simpa [Polynomial.leadingCoeff, hm] using hp.leadingCoeff
+  · rw [Polynomial.coeff_eq_zero_of_natDegree_lt (by omega), Polynomial.coeff_X_pow,
+      ite_eq_right hi.ne']
+
 /-- The Newton–Puiseux induction, in the form suitable for strong induction on the degree:
 the statement is quantified over all indices `n`, since the descent step re-enters at a finer
 index. -/
@@ -336,12 +373,7 @@ private theorem exists_root_mem_subfield_aux [IsAlgClosed K] [CharZero K] :
       exact ⟨τ * y, mul_mem ((PuiseuxSeries.mem_subfield_iff K).mpr ⟨n * q, hτ⟩) hy,
         htrans y hy0⟩
     · have hall : ∀ i < m, p'.coeff i = 0 := fun i hi => by_contra fun hne => hex ⟨i, hi, hne⟩
-      have hXm : p' = X ^ m := Polynomial.ext fun i => by
-        rcases lt_trichotomy i m with hi | rfl | hi
-        · simp [hall i hi, Polynomial.coeff_X_pow, hi.ne]
-        · simpa [Polynomial.leadingCoeff, hp'deg] using hp'm.leadingCoeff
-        · rw [Polynomial.coeff_eq_zero_of_natDegree_lt (by omega), Polynomial.coeff_X_pow,
-            ite_eq_right hi.ne']
+      have hXm := eq_power_of_lower_coefficients_zero hp'm hp'deg hall
       exact ⟨0, zero_mem _, by simp [hXm, Polynomial.map_pow, zero_pow (Nat.ne_zero_of_lt hm1)]⟩
   obtain ⟨y, hy, hy0⟩ := key
   refine ⟨y + toHahn K n b, add_mem hy ((PuiseuxSeries.mem_subfield_iff K).mpr ⟨n, b, rfl⟩), ?_⟩

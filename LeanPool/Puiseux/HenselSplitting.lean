@@ -38,19 +38,11 @@ namespace Polynomial
 
 variable {K : Type*} [Field K]
 
-/-- **Hensel splitting at zero**: a monic `p` over `K⟦X⟧` of degree `m` whose reduction
-(coefficientwise `PowerSeries.constantCoeff`) has `0` as a root of multiplicity `k` with
-`0 < k ≤ m` factors as `p = g * h` with `g`, `h` monic of degrees `k` and `m - k`, and `g`
-distinguished: its reduction is `X ^ k`. -/
-theorem Monic.exists_factorization_rootMultiplicity_zero {p : (PowerSeries K)[X]} {m k : ℕ}
-    (hp : p.Monic) (hm : p.natDegree = m)
-    (hk : (p.map (PowerSeries.constantCoeff (R := K))).rootMultiplicity 0 = k)
-    (_hk0 : 0 < k) (hkm : k ≤ m) :
-    ∃ g h : (PowerSeries K)[X], g.Monic ∧ h.Monic ∧ p = g * h ∧
-      g.natDegree = k ∧ h.natDegree = m - k ∧
-      g.map (PowerSeries.constantCoeff (R := K)) = X ^ k := by
-  have : IsAdicComplete (IsLocalRing.maximalIdeal (PowerSeries K)) (PowerSeries K) := by
-    rw [PowerSeries.maximalIdeal_eq_span_X]; infer_instance
+private theorem order_map_residue_of_rootMultiplicity
+    {p : (PowerSeries K)[X]} {k : ℕ} (hp : p.Monic)
+    (hk : (p.map (PowerSeries.constantCoeff (R := K))).rootMultiplicity 0 = k) :
+    ((p : PowerSeries (PowerSeries K)).map
+      (IsLocalRing.residue (PowerSeries K))).order = (k : ℕ∞) := by
   set A := PowerSeries K
   set e := PowerSeries.residueFieldOfPowerSeries (k := K)
   set φ := (p : PowerSeries A).map (IsLocalRing.residue A) with hφ
@@ -71,7 +63,25 @@ theorem Monic.exists_factorization_rootMultiplicity_zero {p : (PowerSeries K)[X]
     have h : (φ.map e.toRingHom).map e.symm.toRingHom = φ := by ext n; simp
     refine le_antisymm ?_ (PowerSeries.le_order_map _)
     simpa only [h] using PowerSeries.le_order_map (φ := φ.map e.toRingHom) e.symm.toRingHom
-  have horder : φ.order = (k : ℕ∞) := by rw [← hmap, key, hordK]
+  rw [← hmap, key, hordK]
+
+/-- **Hensel splitting at zero**: a monic `p` over `K⟦X⟧` of degree `m` whose reduction
+(coefficientwise `PowerSeries.constantCoeff`) has `0` as a root of multiplicity `k` with
+`0 < k ≤ m` factors as `p = g * h` with `g`, `h` monic of degrees `k` and `m - k`, and `g`
+distinguished: its reduction is `X ^ k`. -/
+theorem Monic.exists_factorization_rootMultiplicity_zero {p : (PowerSeries K)[X]} {m k : ℕ}
+    (hp : p.Monic) (hm : p.natDegree = m)
+    (hk : (p.map (PowerSeries.constantCoeff (R := K))).rootMultiplicity 0 = k)
+    (_hk0 : 0 < k) (hkm : k ≤ m) :
+    ∃ g h : (PowerSeries K)[X], g.Monic ∧ h.Monic ∧ p = g * h ∧
+      g.natDegree = k ∧ h.natDegree = m - k ∧
+      g.map (PowerSeries.constantCoeff (R := K)) = X ^ k := by
+  have : IsAdicComplete (IsLocalRing.maximalIdeal (PowerSeries K)) (PowerSeries K) := by
+    rw [PowerSeries.maximalIdeal_eq_span_X]; infer_instance
+  set A := PowerSeries K
+  set e := PowerSeries.residueFieldOfPowerSeries (k := K)
+  set φ := (p : PowerSeries A).map (IsLocalRing.residue A) with hφ
+  have horder : φ.order = (k : ℕ∞) := order_map_residue_of_rootMultiplicity hp hk
   have hφnz : φ ≠ 0 := fun h ↦ by simp [h] at horder
   -- Weierstrass preparation for `A⟦X⟧`.
   obtain ⟨f, u, H⟩ := PowerSeries.exists_isWeierstrassFactorization hφnz
