@@ -3,7 +3,9 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.PolyPath
+module
+
+public import LeanPool.Schoenflies.PolyPath
 
 /-!
 # How two segments meet
@@ -22,6 +24,8 @@ convex subset of `ℝ`, hence a closed interval; pushing that interval forward i
 
 * `segment_inter_segment` — the meet dichotomy used by Lemma 3.7.
 -/
+
+@[expose] public section
 
 open Metric Set
 

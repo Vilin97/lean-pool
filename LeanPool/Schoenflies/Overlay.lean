@@ -3,11 +3,13 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Subdivide
-import LeanPool.Schoenflies.SegmentOrder
-import LeanPool.Schoenflies.SegmentMeet
-import LeanPool.Schoenflies.Polygonal
-import LeanPool.Schoenflies.Graph.Drawing
+module
+
+public import LeanPool.Schoenflies.Subdivide
+public import LeanPool.Schoenflies.SegmentOrder
+public import LeanPool.Schoenflies.SegmentMeet
+public import LeanPool.Schoenflies.Polygonal
+public import LeanPool.Schoenflies.Graph.Drawing
 
 /-!
 # The polygonal overlay
@@ -19,6 +21,8 @@ duplicated subsegment is named once (`lem:polygonal-overlay`).
 
 * `polygonal_overlay` — Lemma 3.7 (polygonal overlay).
 -/
+
+@[expose] public section
 
 open Metric Set
 

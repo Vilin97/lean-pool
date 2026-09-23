@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Boon Suan Ho
 -/
 
-import LeanPool.Nivat.Main
+module
+
+public import LeanPool.Nivat.Main
 
 /-
 Upstream: https://github.com/boonsuan/nivat
@@ -41,6 +43,8 @@ This module is compiled separately from `Challenge`. Its theorem has the same
 fully expanded statement and is proved by the public finite-alphabet theorem.
 It does not import the Challenge or its deliberate proof hole.
 -/
+
+@[expose] public section
 
 namespace NivatSubmission
 

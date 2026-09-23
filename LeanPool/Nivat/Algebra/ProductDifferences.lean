@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Boon Suan Ho
 -/
 
-import LeanPool.Nivat.Algebra.RationalScaling
-import Mathlib.FieldTheory.Finite.Basic
-import Mathlib.Data.Nat.Factorial.Basic
-import Mathlib.Algebra.Polynomial.Eval.Defs
+module
+
+public import LeanPool.Nivat.Algebra.RationalScaling
+public import Mathlib.FieldTheory.Finite.Basic
+public import Mathlib.Data.Nat.Factorial.Basic
+public import Mathlib.Algebra.Polynomial.Eval.Defs
 
 /-
 Upstream: https://github.com/boonsuan/nivat
@@ -60,6 +62,8 @@ gives a product of `M - 1`. Casting back to rationals and cancelling the
 nonzero scaling factors concludes the proof.
 -/
 
+@[expose] public section
+
 namespace Nivat.Algebra
 
 section CoefficientAction
@@ -68,14 +72,14 @@ variable {R S : Type*} [CommRing R] [CommRing S]
 
 /-- Auxiliary to Proposition 3.3 (`prop:product`), Appendix A (`app:product`): a forward translation
 as a linear endomorphism over the coefficient ring. -/
-private def coefficientShift (h : Lattice) : Module.End R (Configuration R) where
+def coefficientShift (h : Lattice) : Module.End R (Configuration R) where
   toFun := shift h
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
 
 /-- Auxiliary to Proposition 3.3 (`prop:product`), Appendix A (`app:product`): the integer lattice
 acts by forward translations over a commutative ring. -/
-private def coefficientShiftRepresentation :
+def coefficientShiftRepresentation :
     Multiplicative Lattice →* Module.End R (Configuration R) where
   toFun h := coefficientShift h.toAdd
   map_one' := by
@@ -89,7 +93,7 @@ private def coefficientShiftRepresentation :
 
 /-- Auxiliary to Proposition 3.3 (`prop:product`), Appendix A (`app:product`): extend the
 coefficient-ring shift representation to a Laurent algebra action. -/
-private noncomputable def coefficientActionHom :
+noncomputable def coefficientActionHom :
     AddMonoidAlgebra R Lattice →ₐ[R] Module.End R (Configuration R) :=
   AddMonoidAlgebra.lift R (Module.End R (Configuration R)) Lattice coefficientShiftRepresentation
 
@@ -175,7 +179,7 @@ theorem coefficientAct_map (ρ : R →+* S) (f : AddMonoidAlgebra R Lattice)
 
 /-- Auxiliary to Proposition 3.3 (`prop:product`), Appendix A (`app:product`): natural scaling of
 lattice exponents as an additive homomorphism. -/
-private def dilationLattice (n : ℕ) : Lattice →+ Lattice where
+def dilationLattice (n : ℕ) : Lattice →+ Lattice where
   toFun h := n • h
   map_zero' := nsmul_zero n
   map_add' h t := nsmul_add h t n

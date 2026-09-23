@@ -3,10 +3,12 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.PolygonBridge
-import LeanPool.Schoenflies.StripLocal
-import LeanPool.Schoenflies.CrosscutCells
-import LeanPool.Schoenflies.Bounded
+module
+
+public import LeanPool.Schoenflies.PolygonBridge
+public import LeanPool.Schoenflies.StripLocal
+public import LeanPool.Schoenflies.CrosscutCells
+public import LeanPool.Schoenflies.Bounded
 
 /-!
 # The polygonal Jordan curve theorem
@@ -60,6 +62,8 @@ whole plane-graph layer into the polygonal Jordan curve theorem, which every lat
 argument depends on, would invert the layering. They are `private` so that the duplicate names
 cannot collide when the integrator hoists the originals.
 -/
+
+@[expose] public section
 
 open Bornology Metric Set
 

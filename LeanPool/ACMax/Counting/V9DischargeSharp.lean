@@ -3,8 +3,10 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import LeanPool.ACMax.Counting.V9Discharge
-import LeanPool.ACMax.Counting.MoatSharp
+module
+
+public import LeanPool.ACMax.Counting.V9Discharge
+public import LeanPool.ACMax.Counting.MoatSharp
 
 /-!
 # The import-free starved kill at `n ≥ 123` (bulk-credited moat)
@@ -32,6 +34,8 @@ variable cubic that is monotone decreasing in `H` (every `H`-coefficient is nega
 so its minimum sits at `17H = 4N − 200`; there `4913·gap − cubic` splits *exactly* as a sum of
 three manifestly non-negative products, and `strip_cubic_sharp` closes.
 -/
+
+@[expose] public section
 
 namespace ACMax
 
