@@ -10,7 +10,7 @@ public import LeanPool.GapCVP.Part05A
 
 /-! # GapCVP proof, part 05, continuation 02 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1092,7 +1092,7 @@ private noncomputable def sourceMarkerRotationComputable :
   }
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def validatedPreservedFormulaOutput : List Bool → List Bool :=
+@[expose] def validatedPreservedFormulaOutput : List Bool → List Bool :=
   sourceMarkerRotatedOutput ∘ formulaPreservedOutput
 
 /-- Internal support shared across GapCVP continuation modules. -/
