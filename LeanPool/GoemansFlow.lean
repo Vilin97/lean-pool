@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jason Hickey
 -/
 
-import LeanPool.GoemansFlow.Counterexample
+module
+
+public import LeanPool.GoemansFlow.Counterexample
 
 /-!
 # Counterexample to Goemans' unsplittable-flow cost conjecture

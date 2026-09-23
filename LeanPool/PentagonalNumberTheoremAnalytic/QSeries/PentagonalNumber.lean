@@ -3,7 +3,9 @@ Copyright (c) 2026 Jonathan Conrad, Paula Muermann, Maryna Viazovska. All rights
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jonathan Conrad, Paula Muermann, Maryna Viazovska
 -/
-import LeanPool.PentagonalNumberTheoremAnalytic.QSeries.JacobiTripleProduct
+module
+
+public import LeanPool.PentagonalNumberTheoremAnalytic.QSeries.JacobiTripleProduct
 
 /-!
 # Euler's pentagonal number theorem
@@ -23,6 +25,8 @@ $\{3n\} \cup \{3n-2\} \cup \{3n-1\} = \mathbb{Z}_{\geq 1}$.
 
 * `QSeries.euler_pentagonal_number` — the pentagonal number theorem.
 -/
+
+@[expose] public section
 
 open Finset Filter
 open scoped Topology

@@ -4,9 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import LeanPool.GapCVP.Part05
+module
+
+public import LeanPool.GapCVP.Part05
 
 /-! # GapCVP proof, part 06 -/
+
+public section
 
 noncomputable section
 
@@ -516,23 +520,23 @@ noncomputable def duplicatedUnarySignedLiteralCodeComputable
       List.nil_append, flatDuplicatedUnaryField, unarySourcePairWord]
 
 /-- GapCVP reduction support. -/
-def flatSourceClauseDescriptorPayload {T S : ℕ}
+@[expose] def flatSourceClauseDescriptorPayload {T S : ℕ}
     (clause : Clause T S) : List Bool :=
   flatSignedLiteralDescriptorStream
     ((sortedElements clause).map sourceLiteral)
 
 /-- GapCVP reduction support. -/
-def flatSourceClauseDuplicatedCodePayload {T S : ℕ}
+@[expose] def flatSourceClauseDuplicatedCodePayload {T S : ℕ}
     (clause : Clause T S) : List Bool :=
   flatDuplicatedUnarySourceStream (flatSourceFinsetCodes clause)
 
 /-- GapCVP reduction support. -/
-def flatSourceClauseUnaryCountPayload {T S : ℕ}
+@[expose] def flatSourceClauseUnaryCountPayload {T S : ℕ}
     (clause : Clause T S) : List Bool :=
   List.replicate clause.card true
 
 /-- GapCVP reduction support. -/
-def flatSourceClauseAnnotatedRecord {T S : ℕ}
+@[expose] def flatSourceClauseAnnotatedRecord {T S : ℕ}
     (clause : Clause T S) : List Bool :=
   lengthPrefixedWord (flatSourceClauseDescriptorPayload clause) ++
     lengthPrefixedWord (flatSourceClauseDuplicatedCodePayload clause) ++
@@ -857,7 +861,7 @@ open GapCVP.CNFCappedUnaryMinimumTM GapCVP.CNFCappedUnaryMinimumTotalCert
 open GapCVP.CNFFlatPhysicalBinaryAppendTM
 
 /-- GapCVP reduction support. -/
-def flatAnnotatedSourceFieldTail
+@[expose] def flatAnnotatedSourceFieldTail
     (offset : ℕ) (input : List Bool) : List Bool :=
   (firstFieldSuffix^[offset]) input
 
@@ -881,7 +885,7 @@ noncomputable def annotatedSourceFieldTailComputable :
           using physical
 
 /-- GapCVP reduction support. -/
-def flatAnnotatedSourceFieldAt
+@[expose] def flatAnnotatedSourceFieldAt
     (offset : ℕ) (input : List Bool) : List Bool :=
   firstFieldContents (flatAnnotatedSourceFieldTail offset input)
 
@@ -899,7 +903,7 @@ noncomputable def annotatedSourceFieldAtComputable
   exact physical
 
 /-- GapCVP reduction support. -/
-def annotatedSourceAdjacentClauseWord
+@[expose] def annotatedSourceAdjacentClauseWord
     (firstClause firstCodes : List Bool) (firstCount : ℕ)
     (secondClause secondCodes : List Bool) (secondCount : ℕ)
     (suffix : List Bool) : List Bool :=
@@ -1053,7 +1057,7 @@ noncomputable def flatAnnotatedSourceZipCountComputable :
       simp only [List.replicate_succ, List.tail_cons, add_tsub_cancel_right]
 
 /-- GapCVP reduction support. -/
-def flatAnnotatedSourcePrefixedField
+@[expose] def flatAnnotatedSourcePrefixedField
     (offset : ℕ) (input : List Bool) : List Bool :=
   lengthPrefixedWord (flatAnnotatedSourceFieldAt offset input)
 
@@ -1078,6 +1082,7 @@ open Turing GapCVP.OutputPolynomialCompositionClosure GapCVP.CNFFlatAdjacentReco
 open GapCVP.CNFFlatAdjacentRecordSwapTotalCert
 
 /-- GapCVP reduction support. -/
+@[expose]
 def flatAdjacentConditionalSwapOutput : List Bool → List Bool
   | true :: input => flatAdjacentRecordSwapOutput input
   | false :: input => input
@@ -1282,7 +1287,7 @@ open GapCVP.SourceFormulaStructuralDecoder GapCVP.OutputPolynomialCompositionClo
 open GapCVP.SourceOriginalSourcePreservingTM GapCVP.CNFEncodedClauseSort
 
 /-- GapCVP reduction support. -/
-def keepFirstDropSecondWord : List Bool → List Bool
+@[expose] def keepFirstDropSecondWord : List Bool → List Bool
   | [] => []
   | bit :: remaining => bit :: remaining.tail
 
@@ -1424,7 +1429,7 @@ noncomputable def fixedDelimitedWordEqualityBitComputable
   simpa only [Function.comp_def] using hphysical
 
 /-- GapCVP reduction support. -/
-def fixedDelimitedWordEqualitySelector
+@[expose] def fixedDelimitedWordEqualitySelector
     (expected : List Bool) (input : List Bool) : Bool :=
   decide
     (delimitedPairWordOrdering
@@ -1477,7 +1482,7 @@ private noncomputable def fixedDelimitedWordEqualitySelectionComputable
   simpa only [Function.comp_def] using hphysical
 
 /-- GapCVP reduction support. -/
-def fixedDelimitedGuardedWorkerWord
+@[expose] def fixedDelimitedGuardedWorkerWord
     (expected : List Bool) (worker : List Bool → List Bool)
     (input : List Bool) : List Bool :=
   if fixedDelimitedWordEqualitySelector expected input
@@ -1533,7 +1538,7 @@ private noncomputable def flatEncodedOrderingGreaterBitComputable :
               cases second <;> rfl
 
 /-- GapCVP reduction support. -/
-def flatComparisonGreaterMarker
+@[expose] def flatComparisonGreaterMarker
     (comparison : List Bool → List Bool)
     (input : List Bool) : Bool :=
   let outcome := firstFieldSuffix (comparison input)
@@ -1626,12 +1631,12 @@ open GapCVP.CNFFlatCappedComparisonControlledSwapTM GapCVP.CNFFlatPhysicalBinary
 open GapCVP.CNFFiveFamilyFlatCandidateGenerationTM
 
 /-- GapCVP reduction support. -/
-def flatAnnotatedBundledClauseRecord {T S : ℕ}
+@[expose] def flatAnnotatedBundledClauseRecord {T S : ℕ}
     (clause : Clause T S) : List Bool :=
   lengthPrefixedWord (flatSourceClauseAnnotatedRecord clause)
 
 /-- GapCVP reduction support. -/
-def flatAnnotatedBundledClauseStream {T S : ℕ}
+@[expose] def flatAnnotatedBundledClauseStream {T S : ℕ}
     (clauses : List (Clause T S)) : List Bool :=
   clauses.flatMap flatAnnotatedBundledClauseRecord
 
@@ -1655,7 +1660,7 @@ private noncomputable def flatAnnotatedBundledPairComparisonInputComputable :
   simpa only [Function.comp_def] using physical
 
 /-- GapCVP reduction support. -/
-def annotatedBundledPairComparisonWord
+@[expose] def annotatedBundledPairComparisonWord
     (comparison : List Bool → List Bool) (input : List Bool) : List Bool :=
   comparison (annotatedBundledPairComparisonInput input)
 
@@ -1684,7 +1689,7 @@ theorem flatAnnotatedBundledPairComparisonInput_records
       firstFieldContents_valid, firstFieldSuffix_valid]
 
 /-- GapCVP reduction support. -/
-def flatAnnotatedBubblePassState
+@[expose] def flatAnnotatedBubblePassState
     (active emitted : List Bool) : List Bool :=
   lengthPrefixedWord active ++ lengthPrefixedWord emitted
 
@@ -1901,14 +1906,14 @@ noncomputable def flatAnnotatedBubblePassFoldComputable
     (flatAnnotatedBubblePass_polynomiallyBoundedFoldStates comparison)
 
 /-- GapCVP reduction support. -/
-def flatAnnotatedBubbleClauseState {T S : ℕ}
+@[expose] def flatAnnotatedBubbleClauseState {T S : ℕ}
     (active emitted : List (Clause T S)) : List Bool :=
   flatAnnotatedBubblePassState
     (flatAnnotatedBundledClauseStream active)
     (flatAnnotatedBundledClauseStream emitted)
 
 /-- GapCVP reduction support. -/
-noncomputable def CorrectFlatAnnotatedBundledSourceComparison
+@[expose] noncomputable def CorrectFlatAnnotatedBundledSourceComparison
     (comparison : List Bool → List Bool) : Bool :=
   @decide (
   ∀ {T S : ℕ} (first second : Clause T S) (suffix : List Bool),
@@ -1975,12 +1980,12 @@ section
 open Turing GapCVP.BinaryEncoding
 
 /-- GapCVP reduction support. -/
-def sourceUnaryIntegerMultiplicationQuery
+@[expose] def sourceUnaryIntegerMultiplicationQuery
     (left right : ℕ) : List Bool :=
   List.replicate left true ++ false :: List.replicate right true
 
 /-- GapCVP reduction support. -/
-def sourceUnaryIntegerMultiplicationOutput
+@[expose] def sourceUnaryIntegerMultiplicationOutput
     (input : List Bool) : List Bool :=
   match readUnaryPrefix input with
   | none => []

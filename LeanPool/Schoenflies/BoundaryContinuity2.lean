@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.BoundaryContinuity
-import LeanPool.Schoenflies.Endgame
+module
+
+public import LeanPool.Schoenflies.BoundaryContinuity
+public import LeanPool.Schoenflies.Endgame
 
 /-!
 # Continuity at the Jordan curve, and `thm:square-extension`
@@ -85,6 +87,8 @@ corresponding target side, whose trace on `S` is `u(A₁)` — and `r ∉ A₁`.
   `Schoenflies.squareExtension_of_hasLimitHomeomorphism` —
   **`thm:square-extension`**.
 -/
+
+@[expose] public section
 
 open Bornology Filter Metric Schoenflies Set Topology
 open scoped Graph

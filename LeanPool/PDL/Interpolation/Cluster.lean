@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PDL formalization contributors (see project card)
 -/
 
-import LeanPool.PDL.Interpolation.FinePath
-import LeanPool.PDL.Interpolation.Local
+module
+
+public import LeanPool.PDL.Interpolation.FinePath
+public import LeanPool.PDL.Interpolation.Local
 
 /-! # Loaded Clusters (start of Section 9)
 
@@ -17,6 +19,8 @@ separate files: `Pdl.Interpolation.QFormula` has Definitions 9.15 and 9.16 and F
 i.e. the interpolant for the root of a proper cluster. Counterexamples to Lemma 9.12 (c)
 and (d) as stated in the paper are in `Pdl.ClusterCorrection`.
 -/
+
+@[expose] public section
 
 namespace PDL
 

@@ -3,7 +3,9 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.BoundaryAnchors
+module
+
+public import LeanPool.Schoenflies.BoundaryAnchors
 
 /-!
 # The Jordan–Schönflies theorem
@@ -18,6 +20,8 @@ nonboundary edge paths supply matched crosscuts. These data prove `HasLimitHomeo
 The declarations below close `thm:square-extension` and `thm:main`; the intervening square
 reduction, closed-interior, pointed, and exterior extensions are supplied by `Endgame.lean`.
 -/
+
+@[expose] public section
 
 open Set
 

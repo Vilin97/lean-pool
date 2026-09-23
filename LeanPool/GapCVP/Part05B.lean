@@ -4,9 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import LeanPool.GapCVP.Part05A
+module
+
+public import LeanPool.GapCVP.Part05A
 
 /-! # GapCVP proof, part 05, continuation 02 -/
+
+public section
 
 noncomputable section
 
@@ -1088,7 +1092,7 @@ private noncomputable def sourceMarkerRotationComputable :
   }
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def validatedPreservedFormulaOutput : List Bool → List Bool :=
+@[expose] def validatedPreservedFormulaOutput : List Bool → List Bool :=
   sourceMarkerRotatedOutput ∘ formulaPreservedOutput
 
 /-- Internal support shared across GapCVP continuation modules. -/

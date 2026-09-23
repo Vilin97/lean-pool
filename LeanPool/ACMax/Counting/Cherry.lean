@@ -3,10 +3,12 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Push
-import Mathlib.Tactic.Ring
-import LeanPool.ACMax.Counting.PoorCorner
+module
+
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Push
+public import Mathlib.Tactic.Ring
+public import LeanPool.ACMax.Counting.PoorCorner
 
 /-!
 # The cherry case (`e(M) ≥ 2`)
@@ -43,6 +45,8 @@ cut, so any disjoint `3`-block `P` with `2·e(P,N) + leak(P) ≤ 7` closes.
   closure of the blocked corner, and hence of the whole cherry case, in the sea
   `Δ ≤ 4`, `e(M) = 2` regime for every `n ≥ 18`.
 -/
+
+@[expose] public section
 
 namespace ACMax
 
