@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lasse Rempe
 -/
 
-import LeanPool.ExpChaotic.HalfPlane
-import LeanPool.ExpChaotic.StripGeometry
+module
+
+public import LeanPool.ExpChaotic.HalfPlane
+public import LeanPool.ExpChaotic.StripGeometry
 
 /-!
 # Every domain eventually meets the real axis
@@ -17,6 +19,8 @@ with generative AI assistance including Copilot, Claude, and particularly ChatGP
 The initial proof architecture uses John Harrison's HOL Light formalisation.
 See `LeanPool.ExpChaotic` for attribution and the upstream source.
 -/
+
+@[expose] public section
 
 open Function Filter Set Metric
 open scoped Topology NNReal Uniformity

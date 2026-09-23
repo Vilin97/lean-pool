@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Boon Suan Ho
 -/
 
-import LeanPool.Nivat.Algebra.RectangleSupport
-import Mathlib.Tactic.Linarith
+module
+
+public import LeanPool.Nivat.Algebra.RectangleSupport
+public import Mathlib.Tactic.Linarith
 
 /-
 Upstream: https://github.com/boonsuan/nivat
@@ -51,6 +53,8 @@ and the filtered complexity inequality in Corollary 2.3 come from
 `Nivat.Descent.exact_complexity_descent`; the final rectangular induction
 combines them with the geometry proved here.
 -/
+
+@[expose] public section
 
 namespace Nivat.Algebra
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Shuangping Li, Peng Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shuangping Li, Peng Zhang
 -/
-import Mathlib.Data.Finset.Card
-import Mathlib.Data.Nat.Find
-import Mathlib.Data.Set.Finite.Basic
+module
+
+public import Mathlib.Data.Finset.Card
+public import Mathlib.Data.Nat.Find
+public import Mathlib.Data.Set.Finite.Basic
 
 /-!
 # A generic countable-universe interface
@@ -19,6 +21,8 @@ A finite history of length `t` is represented by `Fin t → α`. Thus a
 `Generator α` is literally a function on finite sequences, while
 `output G stream t` exposes only the prefix strictly before time `t`.
 -/
+
+@[expose] public section
 
 namespace GenLimit.Generic
 
