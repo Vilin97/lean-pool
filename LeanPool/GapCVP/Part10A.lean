@@ -1571,7 +1571,7 @@ theorem constructiveStructuralDescriptorOutput_eq_records
         rfl
 
 /-- GapCVP reduction support. -/
-def constructiveStructuralSourceWord
+@[expose] def constructiveStructuralSourceWord
     (dimension : SourceQaryMaskDynamicGridWidth)
     (atom : ConstructiveStructuralAtomComputer) :
     List Bool → List Bool :=

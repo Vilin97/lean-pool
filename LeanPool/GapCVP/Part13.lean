@@ -4153,7 +4153,7 @@ private theorem gaussianPaperVariableArityExactSourceReducedStateOutput_eq
   output_eq := gaussianPaperVariableArityExactSourceReducedStateOutput_eq worker
 
 /-- Compute exact Gaussian consistency on every source input. -/
-def gaussianPaperVariableArityAllInputExactConsistencyOutput
+@[expose] def gaussianPaperVariableArityAllInputExactConsistencyOutput
     (input : List Bool) : List Bool :=
   binaryGaussianSourceConsistencyGuard
       paperCanonicalSourceBinarySystem input :: input

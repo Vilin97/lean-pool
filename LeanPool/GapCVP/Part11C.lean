@@ -2127,7 +2127,7 @@ noncomputable def gaussianPackedIndexedTargetBitComputable :
     gaussianPackedIndexedPivotRhsBitComputable
 
 /-- GapCVP reduction support. -/
-def gaussianPackedIndexedTargetAtom : List Bool → List Bool :=
+@[expose] def gaussianPackedIndexedTargetAtom : List Bool → List Bool :=
   effectiveTargetPackedAtom ∘ gaussianPackedIndexedTargetBit
 
 private noncomputable def gaussianPackedIndexedTargetAtomComputable :
@@ -3436,7 +3436,7 @@ def finitePCeilingRoot (a value : ℕ) : ℕ :=
   if root ^ a = value then root else root + 1
 
 /-- GapCVP reduction support. -/
-def finitePRadiusNumerator (p : ℚ) (R : ℕ) : ℕ :=
+@[expose] def finitePRadiusNumerator (p : ℚ) (R : ℕ) : ℕ :=
   finitePCeilingRoot p.num.natAbs
     (finitePRadiusScale p ^ p.num.natAbs * R ^ p.den)
 
@@ -5651,12 +5651,12 @@ private theorem binaryMatrixOfIntegers_lift {m n : ℕ}
     record.generator index column * coefficients column
 
 /-- GapCVP reduction support. -/
-def binaryNearestTarget (record : BinaryNearestCodewordInstance) :
+@[expose] def binaryNearestTarget (record : BinaryNearestCodewordInstance) :
     Fin record.blockLength → ZMod 2 :=
   record.target
 
 /-- GapCVP reduction support. -/
-def binarySyndromeProduct
+@[expose] def binarySyndromeProduct
     (record : BinarySyndromeDecodingInstance)
     (word : Fin record.blockLength → ZMod 2) :
     Fin record.checkCount → ZMod 2 :=
@@ -5664,7 +5664,7 @@ def binarySyndromeProduct
     record.parityCheck row column * word column
 
 /-- GapCVP reduction support. -/
-def binarySyndromeTarget (record : BinarySyndromeDecodingInstance) :
+@[expose] def binarySyndromeTarget (record : BinarySyndromeDecodingInstance) :
     Fin record.checkCount → ZMod 2 :=
   record.syndrome
 

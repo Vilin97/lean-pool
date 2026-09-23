@@ -10,7 +10,7 @@ public import LeanPool.GapCVP.Part16A
 
 /-! # GapCVP proof, part 16, continuation 02 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -258,12 +258,12 @@ open GapCVP.Factor400BinaryConstructivePaperVariableArityPhysicalSourceMap
 open GapCVP.ExactPhysicalSourceTM
 
 /-- GapCVP reduction support. -/
-noncomputable def HasIntegerTarget (record : GapCVPInstance) : Bool :=
+@[expose] noncomputable def HasIntegerTarget (record : GapCVPInstance) : Bool :=
   @decide (
   ∀ index : Fin record.dimension, ∃ value : ℤ, record.target index = (value : ℚ)
   ) (Classical.propDecidable _)
 /-- GapCVP reduction support. -/
-def integerTargetGapCVP400Promise : PromiseProblem where
+@[expose] def integerTargetGapCVP400Promise : PromiseProblem where
   yes bits :=
     @decide (
  ∃ record : GapCVPInstance,
@@ -356,7 +356,9 @@ private def paperVariableArityPhysicalIntegerTargetSourceReduction :
       apply strengthen input
       have witness :=
         paperVariableArityPhysicalSourceReduction.completeness input satisfiable
-      simp only [GapCVP.gapCVP400Promise, decide_eq_true_eq] at witness
+      simp only [GapCVP.gapCVP400Promise, decide_eq_true_eq,
+        paperVariableArityPhysicalSourceReduction,
+        paperVariableArityPhysicalSourceReductionOfMachine_map] at witness
       change ∃ record : GapCVPInstance,
         (binaryFinEncoding GapCVPInstance).encode record =
           paperVariableArityPhysicalSourceMap input ∧ gapYES400 record at witness
@@ -366,7 +368,9 @@ private def paperVariableArityPhysicalIntegerTargetSourceReduction :
       apply strengthen input
       have witness :=
         paperVariableArityPhysicalSourceReduction.soundness input unsatisfiable
-      simp only [GapCVP.gapCVP400Promise, decide_eq_true_eq] at witness
+      simp only [GapCVP.gapCVP400Promise, decide_eq_true_eq,
+        paperVariableArityPhysicalSourceReduction,
+        paperVariableArityPhysicalSourceReductionOfMachine_map] at witness
       change ∃ record : GapCVPInstance,
         (binaryFinEncoding GapCVPInstance).encode record =
           paperVariableArityPhysicalSourceMap input ∧ gapNO400 record at witness
@@ -386,7 +390,7 @@ open scoped BigOperators
 
 open GapCVP.Factor400BinaryCodeDecodingCorollary GapCVP.Factor400BinaryDecodingPromiseReduction
 
-private theorem one_le_binaryCodeGapFactor {blockLength : ℕ}
+theorem one_le_binaryCodeGapFactor {blockLength : ℕ}
     (hblock : 0 < blockLength) :
     1 ≤ binaryCodeGapFactor blockLength := by
   unfold binaryCodeGapFactor
@@ -407,7 +411,7 @@ theorem encodeBinarySyndromeDecodingInstance_injective :
   simpa only [decodeBinarySyndromeDecodingInstance_encode, Option.some.injEq] using hdecode
 
 /-- GapCVP reduction support. -/
-noncomputable def binaryNearestCodewordPromise : GapCVP.PromiseProblem where
+@[expose] noncomputable def binaryNearestCodewordPromise : GapCVP.PromiseProblem where
   yes bits :=
     @decide (
     ∃ record : BinaryNearestCodewordInstance,
@@ -453,7 +457,7 @@ noncomputable def binaryNearestCodewordPromise : GapCVP.PromiseProblem where
     linarith [hfar coefficients]
 
 /-- GapCVP reduction support. -/
-noncomputable def binarySyndromeDecodingPromise : GapCVP.PromiseProblem where
+@[expose] noncomputable def binarySyndromeDecodingPromise : GapCVP.PromiseProblem where
   yes bits :=
     @decide (
     ∃ record : BinarySyndromeDecodingInstance,
@@ -1612,7 +1616,7 @@ private def finitePCanonicalCoordinate :
   ⟨0, by norm_num [finitePCanonicalNoInstance]⟩
 
 /-- GapCVP reduction support. -/
-def finitePCanonicalNoWord : List Bool :=
+@[expose] def finitePCanonicalNoWord : List Bool :=
   (binaryFinEncoding GapCVPInstance).encode finitePCanonicalNoInstance
 
 private theorem finitePCanonicalNo_distance (p : ℚ) (hp : 1 ≤ p)
@@ -1646,7 +1650,7 @@ theorem finitePCanonicalNo_mem_no (p : ℚ) (hp : 1 ≤ p) :
       Rat.cast_inv, Rat.cast_ofNat, one_mul, gt_iff_lt] using h
 
 /-- GapCVP reduction support. -/
-def effectiveFinitePSignedDiscrepancy
+@[expose] def effectiveFinitePSignedDiscrepancy
     (H : GapCVP.Core.BinaryAffineSystem)
     (coefficients : Fin H.dimension → ℤ) : Fin H.dimension → ℤ :=
   H.effectiveAffineRepresentative -

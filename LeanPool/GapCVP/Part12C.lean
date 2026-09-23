@@ -1056,6 +1056,14 @@ noncomputable def paperVariableArityPhysicalSourceReductionOfMachine
       (fun satisfiable => unsatisfiable
         ((paperOriginalThreeSATLanguage_iff input).mpr satisfiable))
 
+/-- The reduction built from a machine uses the physical source map. -/
+theorem paperVariableArityPhysicalSourceReductionOfMachine_map
+    (machine : BitTM paperVariableArityPhysicalSourceMap)
+    (input : List Bool) :
+    (paperVariableArityPhysicalSourceReductionOfMachine machine).map input =
+      paperVariableArityPhysicalSourceMap input := by
+  rfl
+
 end Factor400BinaryConstructivePaperVariableArityPhysicalSourceMap
 
 namespace ClauseOffsetTM

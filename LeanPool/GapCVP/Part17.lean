@@ -10,7 +10,7 @@ public import LeanPool.GapCVP.Part16
 
 /-! # GapCVP proof, part 17 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -375,7 +375,8 @@ open GapCVP.Factor400FinitePNormCorollary GapCVP.Factor400FinitePNormPromiseRedu
 open GapCVP.Factor400FinitePNormSourceReduction GapCVP.Factor400FinitePNormUnconditional
 open GapCVP.Factor400FinitePRadiusArithmetic GapCVP.Factor400FinitePRadiusBounds
 
-private abbrev paperFinitePPhysicalSystem
+/-- The binary affine system associated with the physically encoded formula. -/
+abbrev paperFinitePPhysicalSystem
     (encodingLength : ℕ) (formula : ThreeCNF) : BinaryAffineSystem :=
   physicalFormulaSystem encodingLength formula
 
@@ -394,7 +395,8 @@ private theorem paperVariableArityFinitePPhysicalSystem_dimension_pos
   physicalFormulaSystem_dimension_pos
     encodingLength formula
 
-private def paperFinitePPhysicalFormulaInstance
+/-- Construct the finite-p GapCVP instance of a physically encoded formula. -/
+def paperFinitePPhysicalFormulaInstance
     (p : ℚ) (hp : 1 ≤ p)
     (encodingLength : ℕ) (formula : ThreeCNF) : GapCVPInstance :=
   effectiveGapCVPInstance
@@ -906,7 +908,8 @@ private theorem paperVariableArityPhysicalOneHotWeightUnary_eq_integerRadius
   unfold paperVariableArityIntegerRadius sourceBinaryDecodingRadius
   rw [paperVariableAritySourceFormula_clauses_length]
 
-private def paperFinitePThresholdUnary (p : ℚ)
+/-- Encode the scaled finite-p radius threshold in unary. -/
+def paperFinitePThresholdUnary (p : ℚ)
     (input : List Bool) : List Bool :=
   List.replicate
     (finitePRadiusScale p ^ p.num.natAbs *
@@ -946,7 +949,8 @@ private theorem paperVariableArityFinitePThresholdUnary_valid
   rw [paperVariableArityPhysicalOneHotWeightUnary_eq_integerRadius formula]
   simp only [List.length_replicate]
 
-private def paperFinitePNumeratorUnary (p : ℚ) :
+/-- Compute the unary root used as the finite-p radius numerator. -/
+def paperFinitePNumeratorUnary (p : ℚ) :
     List Bool → List Bool :=
   finitePNthRootUnaryOutput p.num.natAbs
     (paperFinitePThresholdUnary p)
@@ -977,7 +981,8 @@ private theorem paperVariableArityFinitePNumeratorUnary_valid
         (encodeThreeCNF formula).length formula ^ p.den)
     (paperVariableArityFinitePThresholdUnary_valid p formula)
 
-private def paperVariableArityFinitePRadiusAtomicOutput (p : ℚ) :
+/-- Encode the reduced rational finite-p radius as an atomic source word. -/
+def paperVariableArityFinitePRadiusAtomicOutput (p : ℚ) :
     List Bool → List Bool :=
   sourceReducedRationalAtomicOutput
     (finitePRadiusScale p) (paperFinitePNumeratorUnary p)
@@ -1011,7 +1016,8 @@ private theorem paperVariableArityFinitePRadiusAtomicOutput_valid
     (paperVariableArityFinitePNumeratorUnary_valid p hp formula)
   simpa only [finitePRadius] using physical
 
-private noncomputable def paperFinitePPhysicalStructuralOutput
+/-- Assemble the finite-p physical source word from the Gaussian matrix and radius data. -/
+noncomputable def paperFinitePPhysicalStructuralOutput
     (p : ℚ) {shape : PaperVariableArityCanonicalBinaryMatrixShape}
     (cell : PaperVariableArityCanonicalBinaryMatrixCellComputer shape) :
     List Bool → List Bool :=
@@ -1060,7 +1066,8 @@ private theorem paperVariableArityFinitePPhysicalStructuralOutput_valid
         cell formula)
   simpa only [paperFinitePPhysicalFormulaInstance, paperFinitePPhysicalSystem] using physical
 
-private def paperFinitePPhysicalRoutedOutput
+/-- Route the source to the canonical or structural finite-p output according to its guards. -/
+def paperFinitePPhysicalRoutedOutput
     (p : ℚ) {shape : PaperVariableArityCanonicalBinaryMatrixShape}
     (cell : PaperVariableArityCanonicalBinaryMatrixCellComputer shape)
     (input : List Bool) : List Bool :=
