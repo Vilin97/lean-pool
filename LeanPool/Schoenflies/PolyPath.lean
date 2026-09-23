@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Plane
-import Mathlib.Analysis.Convex.PathConnected
+module
+
+public import LeanPool.Schoenflies.Plane
+public import Mathlib.Analysis.Convex.PathConnected
 
 /-!
 # Polygonal paths
@@ -21,6 +23,8 @@ primitive.
 * `exists_poly_of_isPreconnected` — Lemma 1.1 (polygonal connectedness), less the passage
   to a *simple* arc, which needs the finite-graph machinery and is proved with Lemma 1.2.
 -/
+
+@[expose] public section
 
 open Metric Set
 

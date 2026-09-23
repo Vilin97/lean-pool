@@ -3,10 +3,12 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Positivity
+module
+
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.Positivity
 
 /-!
 # A uniform certificate for the finite Moore band
@@ -24,6 +26,8 @@ endpoint estimate; the remaining exponents follow from the first three nonconsta
 terms and an exact chord identity for a cubic polynomial.  This replaces the five numerical
 ratio certificates formerly used by `Band.Assembly`.
 -/
+
+@[expose] public section
 
 namespace ACMax
 

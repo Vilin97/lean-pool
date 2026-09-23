@@ -3,12 +3,16 @@ Copyright (c) 2026 Xiaoyu Li, Andi Han, Jiaojiao Jiang, Junbin Gao. All rights r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xiaoyu Li, Andi Han, Jiaojiao Jiang, Junbin Gao
 -/
-import LeanPool.LanguageGeneration.FiniteWitness.Basic
-import LeanPool.LanguageGeneration.Core.Text
-import Mathlib.Data.List.OfFn
-import Mathlib.Data.List.Infix
+module
+
+public import LeanPool.LanguageGeneration.FiniteWitness.Basic
+public import LeanPool.LanguageGeneration.Core.Text
+public import Mathlib.Data.List.OfFn
+public import Mathlib.Data.List.Infix
 
 /-! # Exhaustive limits of nested finite histories -/
+
+@[expose] public section
 
 namespace GenLimit.FiniteWitness
 

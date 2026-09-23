@@ -4,14 +4,18 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PDL formalization contributors (see project card)
 -/
 
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Algebra.Order.BigOperators.Group.List
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Data.Multiset.DershowitzManna
+module
 
-import LeanPool.PDL.Local.Rules
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+public import Mathlib.Algebra.Order.BigOperators.Group.List
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Data.Multiset.DershowitzManna
+
+public import LeanPool.PDL.Local.Rules
 
 /-! # Local Tableaux (Section 3) -/
+
+@[expose] public section
 
 namespace PDL
 

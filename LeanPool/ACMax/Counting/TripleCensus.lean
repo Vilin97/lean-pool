@@ -3,11 +3,13 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Algebra.Order.Ring.Nat
-import Mathlib.Data.Nat.Cast.Order.Basic
-import Mathlib.Tactic.Push
+module
+
+public import Mathlib.Algebra.BigOperators.Ring.Finset
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Algebra.Order.Ring.Nat
+public import Mathlib.Data.Nat.Cast.Order.Basic
+public import Mathlib.Tactic.Push
 
 /-!
 # A six-column three-group census
@@ -17,6 +19,8 @@ endpoint of the shared-star moat.  Each column records how many of its three
 incidences land in three two-vertex groups.  If too few pairs are repeated
 inside the groups and across the first group, the six columns cannot exist.
 -/
+
+@[expose] public section
 
 namespace ACMax
 

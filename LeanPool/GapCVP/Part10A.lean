@@ -4,9 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import LeanPool.GapCVP.Part09
+module
+
+public import LeanPool.GapCVP.Part09
 
 /-! # GapCVP proof, part 10 -/
+
+public section
 
 noncomputable section
 
@@ -22,7 +26,7 @@ namespace SourceFactor400BinaryConstructionABounds
 open scoped BigOperators
 
 /-- GapCVP reduction support. -/
-noncomputable def gapFactor400 (dimension : ℕ) : ℝ :=
+@[expose] noncomputable def gapFactor400 (dimension : ℕ) : ℝ :=
   (dimension : ℝ) ^ ((1 : ℝ) / 400)
 
 theorem gapFactor400_sq (dimension : ℕ) :
@@ -732,7 +736,7 @@ theorem adaptGapCVPInstance_gapNO400_iff_metricNo
       adaptGapCVPInstance_distanceSquared] using h
 
 /-- GapCVP reduction support. -/
-def effectiveGapCVPInstance
+@[expose] def effectiveGapCVPInstance
     (H : GapCVP.Core.BinaryAffineSystem)
     (hdimension : 0 < H.dimension)
     (radius : ℚ) (hradius : 0 < radius) : GapCVPInstance :=
@@ -796,7 +800,7 @@ noncomputable def effectiveBasisPackedAtomComputable :
   simp only [effectiveBasisPackedAtom, markerConditionalOutput]
 
 /-- GapCVP reduction support. -/
-def effectiveTargetPackedAtom : List Bool → List Bool :=
+@[expose] def effectiveTargetPackedAtom : List Bool → List Bool :=
   markerConditionalOutput
     (fun _ : List Bool => encodeAtomic (1 : ℚ))
     (encodeAtomic (0 : ℚ))
@@ -992,7 +996,7 @@ structure SourceQaryMaskDynamicGridWidth where
   computer : BitTM output
 
 /-- GapCVP reduction support. -/
-def sourceQaryMaskDynamicGridBaseSource
+@[expose] def sourceQaryMaskDynamicGridBaseSource
     (width : SourceQaryMaskDynamicGridWidth)
     (input : List Bool) : List Bool :=
   lengthPrefixedWord (width.output input) ++ input
@@ -1477,7 +1481,7 @@ structure ConstructiveStructuralAtomComputer where
   computer : BitTM output
 
 /-- GapCVP reduction support. -/
-def constructiveStructuralRankQuery
+@[expose] def constructiveStructuralRankQuery
     (dimension : SourceQaryMaskDynamicGridWidth)
     (input : List Bool) (rank : ℕ) : List Bool :=
   lengthPrefixedWord (List.replicate rank true) ++
@@ -1567,7 +1571,7 @@ theorem constructiveStructuralDescriptorOutput_eq_records
         rfl
 
 /-- GapCVP reduction support. -/
-def constructiveStructuralSourceWord
+@[expose] def constructiveStructuralSourceWord
     (dimension : SourceQaryMaskDynamicGridWidth)
     (atom : ConstructiveStructuralAtomComputer) :
     List Bool → List Bool :=
@@ -2889,7 +2893,7 @@ namespace Factor400BinaryPhysicalWorkers
 open Turing GapCVP.SourceWholeOutputAssemblyTM GapCVP.CNFGuardedFiveFamilyTagDispatchTM
 
 /-- GapCVP reduction support. -/
-def factor400KeepFirstDropSecondWord : List Bool → List Bool
+@[expose] def factor400KeepFirstDropSecondWord : List Bool → List Bool
   | [] => []
   | marker :: remaining => marker :: remaining.tail
 
@@ -2934,7 +2938,7 @@ noncomputable def sourceClauseCountUnaryComputable :
       variableClauseBodyOutput_valid, List.tail_cons]
 
 /-- GapCVP reduction support. -/
-def sourceInputLengthUnary (input : List Bool) : List Bool :=
+@[expose] def sourceInputLengthUnary (input : List Bool) : List Bool :=
   List.replicate input.length true
 
 /-- GapCVP reduction support. -/

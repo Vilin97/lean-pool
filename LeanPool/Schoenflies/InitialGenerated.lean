@@ -3,9 +3,11 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.FiniteTransfer
-import LeanPool.Schoenflies.InitialPairFixed
-import LeanPool.Schoenflies.BoundaryContinuity2
+module
+
+public import LeanPool.Schoenflies.FiniteTransfer
+public import LeanPool.Schoenflies.InitialPairFixed
+public import LeanPool.Schoenflies.BoundaryContinuity2
 
 /-!
 # Stage 0: the initial pair as a `GeneratedPair`
@@ -80,6 +82,8 @@ holding the anchored form.
   `def:admissible-graph` on both sides, which the initial pair does satisfy
   (`rem:intermediate-disconnection` waives it only at intermediate stages).
 -/
+
+@[expose] public section
 
 open Metric Set Topology unitInterval
 open scoped Graph

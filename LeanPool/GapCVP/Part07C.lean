@@ -4,9 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import LeanPool.GapCVP.Part07B
+module
+
+public import LeanPool.GapCVP.Part07B
 
 /-! # GapCVP proof, part 07, continuation 03 -/
+
+public section
 
 noncomputable section
 
@@ -43,13 +47,13 @@ open GapCVP.CNFCappedFlatSourceListFoldTM GapCVP.CNFFlatPhysicalBinaryAppendTM
 open GapCVP.CNFAnnotatedSourceClausePairPreparationTM
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def flatAnnotatedSourceZipArchivedPair
+@[expose] def flatAnnotatedSourceZipArchivedPair
     (pair : ℕ × ℕ) : List Bool :=
   flatDuplicatedUnaryField pair.1 ++
     flatDuplicatedUnaryField pair.2
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def flatAnnotatedSourceZipHeadPair
+@[expose] def flatAnnotatedSourceZipHeadPair
     (offset : ℕ) (input : List Bool) : List Bool :=
   sourcePairPrefixOutput (flatAnnotatedSourceFieldAt offset input)
 
@@ -121,7 +125,7 @@ open GapCVP.CNFAnnotatedSourceClausePairPreparationTM GapCVP.CNFAnnotatedSourceC
 open GapCVP.CNFAnnotatedSourceClauseBubblePassTM
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def flatAnnotatedCountedSourceZipState
+@[expose] def flatAnnotatedCountedSourceZipState
     (first second : List ℕ)
     (archive suffix : List Bool) : List Bool :=
   lengthPrefixedWord (flatDuplicatedUnarySourceStream first) ++
@@ -796,7 +800,7 @@ open GapCVP.CNFAnnotatedSourceCountedClausePairZipTM
 open GapCVP.CNFAnnotatedSourceUnaryTailReversalTM
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def annotatedCountedResidualTailCount
+@[expose] def annotatedCountedResidualTailCount
     (offset : ℕ) (input : List Bool) : List Bool :=
   List.tail (flatAnnotatedSourceFieldAt (offset + 3) input)
 
@@ -1804,7 +1808,7 @@ private theorem flatAnnotatedSquareResolvedOrderingWord_length_le
                   List.append_nil, hthird, hfourth, List.length_nil, zero_le]
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def flatAnnotatedSquareResolutionState
+@[expose] def flatAnnotatedSquareResolutionState
     (major : EncodedWordOrdering)
     (archive suffix : List Bool) : List Bool :=
   lengthPrefixedWord (encodedWordOrderingWord major) ++
