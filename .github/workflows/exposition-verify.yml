@@ -85,6 +85,9 @@ jobs:
       - name: Build pool
         run: ~/.elan/bin/lake build LeanPool
 
+      - name: Build Mathlib aggregate
+        run: ~/.elan/bin/lake build Mathlib
+
       - name: Restore project extraction cache
         id: extraction-cache
         uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
