@@ -3,7 +3,9 @@ Copyright (c) 2026 Jonathan Conrad, Paula Muermann, Maryna Viazovska. All rights
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jonathan Conrad, Paula Muermann, Maryna Viazovska
 -/
-import LeanPool.PentagonalNumberTheoremAnalytic.QSeries.JTPKeyIdentity
+module
+
+public import LeanPool.PentagonalNumberTheoremAnalytic.QSeries.JTPKeyIdentity
 
 /-!
 # Core lemmas for the Jacobi triple product proof
@@ -15,6 +17,8 @@ The proof strategy: Show $(q;q)_∞ (-z;q)_∞ (-q/z;q)_∞ = g(z)$ by:
 
 Key identity: $(q;q)_∞ / (q;q)_n = (q^{n+1};q)_∞$ (telescoping)
 -/
+
+@[expose] public section
 
 open Finset Filter
 open scoped Topology

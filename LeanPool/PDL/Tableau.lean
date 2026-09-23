@@ -4,11 +4,15 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PDL formalization contributors (see project card)
 -/
 
-import Mathlib.Data.List.ReduceOption
+module
 
-import LeanPool.PDL.Local.Tableau
+public import Mathlib.Data.List.ReduceOption
+
+public import LeanPool.PDL.Local.Tableau
 
 /-! # PDL-Tableaux (Section 4) -/
+
+@[expose] public section
 
 namespace PDL
 

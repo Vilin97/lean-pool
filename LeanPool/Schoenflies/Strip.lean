@@ -3,9 +3,11 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Direction
-import LeanPool.Schoenflies.UniformBound
-import Mathlib.Data.ZMod.Basic
+module
+
+public import LeanPool.Schoenflies.Direction
+public import LeanPool.Schoenflies.UniformBound
+public import Mathlib.Data.ZMod.Basic
 
 /-!
 # Two-sided polygonal strips
@@ -75,6 +77,8 @@ What is still missing from Lemma 1.8 as a whole: the **local two-sidedness** cla
 sufficiently small disk about a point of the curve meets the complement in exactly two
 components, one in each side), and part **(b)**, the arc case.
 -/
+
+@[expose] public section
 
 open Metric Set
 

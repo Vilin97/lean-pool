@@ -4,14 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wouter Cames van Batenburg, Samuel Korsky
 -/
 
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Combinatorics.SimpleGraph.Diam
-import Mathlib.Combinatorics.SimpleGraph.Finite
-import Mathlib.Combinatorics.SimpleGraph.LineGraph
-import Mathlib.Data.Fin.Embedding
-import Mathlib.Data.Set.Card
-import Mathlib.Order.Lattice.Nat
-import Mathlib.SetTheory.Cardinal.NatCard
+module
+
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Combinatorics.SimpleGraph.Diam
+public import Mathlib.Combinatorics.SimpleGraph.Finite
+public import Mathlib.Combinatorics.SimpleGraph.LineGraph
+public import Mathlib.Data.Fin.Embedding
+public import Mathlib.Data.Set.Card
+public import Mathlib.Order.Lattice.Nat
+public import Mathlib.SetTheory.Cardinal.NatCard
 
 /-!
 # Generic finite-graph framework for the degree--diameter preprint
@@ -25,6 +27,8 @@ extended diameter is infinite, and would therefore allow disconnected graphs acc
 Lean Pool port of wewantmoore commit d59bd80ea93fabb9faf769e790ab47692645e022.
 The port adds a namespace and adapts proofs to the current Mathlib APIs and repository style.
 -/
+
+@[expose] public section
 
 namespace MooreBound
 

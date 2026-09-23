@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Graph.TwoConnected
-import LeanPool.Schoenflies.Graph.PathGraph
+module
+
+public import LeanPool.Schoenflies.Graph.TwoConnected
+public import LeanPool.Schoenflies.Graph.PathGraph
 
 /-!
 # Ears
@@ -87,6 +89,8 @@ consumer discharges it from its drawing.
   remaining part of the subdivided edge attaches `w` to `u` or `v`" together with "a
   2-connected graph has no bridge", turned into one transfer lemma.
 -/
+
+@[expose] public section
 
 open Set
 open scoped Graph

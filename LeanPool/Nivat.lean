@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Boon Suan Ho
 -/
 
-import LeanPool.Nivat.Main
-import LeanPool.Nivat.Statement
+module
+
+public import LeanPool.Nivat.Main
+public import LeanPool.Nivat.Statement
 
 /-!
 # Nivat's conjecture

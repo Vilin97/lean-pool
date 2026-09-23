@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.GeneratedStructure
-import LeanPool.Schoenflies.FaceCyclesProof
+module
+
+public import LeanPool.Schoenflies.GeneratedStructure
+public import LeanPool.Schoenflies.FaceCyclesProof
 
 /-!
 # Cyclic boundaries of abstract 2-cells
@@ -27,6 +29,8 @@ Stating the carrier clause with
   sentence in `lem:cellulation-invariants` that the cells below every 2-cell form its boundary
   cycle.
 -/
+
+@[expose] public section
 
 open Set
 open scoped Graph

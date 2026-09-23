@@ -3,9 +3,11 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import Mathlib.Combinatorics.Graph.Subgraph
-import Mathlib.Data.Set.Card
-import Mathlib.Algebra.BigOperators.Group.Finset.Piecewise
+module
+
+public import Mathlib.Combinatorics.Graph.Subgraph
+public import Mathlib.Data.Set.Card
+public import Mathlib.Algebra.BigOperators.Group.Finset.Piecewise
 
 /-!
 # Degree and the handshake lemma
@@ -70,6 +72,8 @@ Everything lives in the root `Graph` namespace rather than in `Schoenflies`, so 
 notation `G.degree`, `G.IsLeaf`, `G.vertexFinset` works on a `G : Graph α β`. Later graph
 modules should do the same.
 -/
+
+@[expose] public section
 
 open scoped Graph
 

@@ -4,11 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lasse Rempe
 -/
 
-import LeanPool.ExpChaotic.Basic
-import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Analysis.Complex.OpenMapping
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+module
+
+public import LeanPool.ExpChaotic.Basic
+public import Mathlib.Algebra.Order.Ring.Star
+public import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.Analysis.Complex.OpenMapping
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
 
 /-!
 # Derivative growth and quantitative open mapping
@@ -20,6 +22,8 @@ with generative AI assistance including Copilot, Claude, and particularly ChatGP
 The initial proof architecture uses John Harrison's HOL Light formalisation.
 See `LeanPool.ExpChaotic` for attribution and the upstream source.
 -/
+
+@[expose] public section
 
 open Function Filter Set Metric
 open scoped Topology NNReal Uniformity

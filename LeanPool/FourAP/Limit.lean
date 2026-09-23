@@ -3,9 +3,11 @@ Copyright (c) 2026 Boon Suan Ho. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Boon Suan Ho
 -/
-import LeanPool.FourAP.Basic
-import Mathlib.Data.List.GetD
-import Mathlib.Logic.Equiv.Defs
+module
+
+public import LeanPool.FourAP.Basic
+public import Mathlib.Data.List.GetD
+public import Mathlib.Logic.Equiv.Defs
 
 /-!
 # A computable permutation from safe stages
@@ -23,6 +25,8 @@ These bounds are sufficient, but not necessarily efficient.  The theorem
 in the paper's remark: stop at *any* stage long enough to contain the position.
 Neither direction of the equivalence uses a choice of preimage.
 -/
+
+@[expose] public section
 
 namespace FourAP
 

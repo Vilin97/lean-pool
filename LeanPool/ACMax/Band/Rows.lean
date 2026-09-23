@@ -3,8 +3,10 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import LeanPool.ACMax.Counting.HeavyClass
-import LeanPool.ACMax.Counting.V9Discharge
+module
+
+public import LeanPool.ACMax.Counting.HeavyClass
+public import LeanPool.ACMax.Counting.V9Discharge
 
 /-!
 # Region inequalities for the exact Moore range
@@ -23,6 +25,8 @@ a degree-`3`-separated obstruction at `n ≥ 48`. Notation:
 
 Everything is `sorry`-free and axiom-clean (`[propext, Classical.choice, Quot.sound]`).
 -/
+
+@[expose] public section
 
 namespace ACMax
 

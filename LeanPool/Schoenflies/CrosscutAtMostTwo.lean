@@ -3,10 +3,12 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Subarc
-import LeanPool.Schoenflies.Topology
-import LeanPool.Schoenflies.Polygonal
-import LeanPool.Schoenflies.Strip
+module
+
+public import LeanPool.Schoenflies.Subarc
+public import LeanPool.Schoenflies.Topology
+public import LeanPool.Schoenflies.Polygonal
+public import LeanPool.Schoenflies.Strip
 
 /-!
 # A crosscut cuts a region into at most two pieces
@@ -76,6 +78,8 @@ existential.
   `Schoenflies.segment_crosscut_at_most_two` is Lemma "At most two sides" for a straight
   crosscut with no hypothesis left standing, and certifies that `HasArcCollars` is satisfiable.
 -/
+
+@[expose] public section
 
 open Metric Set unitInterval
 

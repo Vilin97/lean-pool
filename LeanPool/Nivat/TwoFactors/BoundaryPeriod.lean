@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Boon Suan Ho
 -/
 
-import LeanPool.Nivat.TwoFactors.BoundaryCounting
+module
+
+public import LeanPool.Nivat.TwoFactors.BoundaryCounting
 
 /-
 Upstream: https://github.com/boonsuan/nivat
@@ -43,6 +45,8 @@ then rules out agreement on any complete boundary edge. Counting the resulting
 ambiguous extensions bounds the complexity of a word whose letters collect
 all the interior rows; Morse–Hedlund gives one period for those rows.
 -/
+
+@[expose] public section
 
 namespace Nivat.TwoFactors
 

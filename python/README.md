@@ -5,8 +5,8 @@ and decide which Lean projects belong in `lean-pool`.
 
 Managed with [uv](https://docs.astral.sh/uv/).
 
-LLM pull request reviews run through GPT-6-Astra on the Azure VM's Codex account
-pool. See [Azure review operations](azure-review.md) for deployment and diagnostics.
+LLM pull request reviews run through GPT-6-Astra through a private Codex worker.
+See [review operations](review-operations.md) for contributor-facing behavior.
 
 ## Setup
 
