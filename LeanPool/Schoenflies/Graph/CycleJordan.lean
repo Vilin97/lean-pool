@@ -3,10 +3,12 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Concatenate
-import LeanPool.Schoenflies.Graph.Cycle
-import LeanPool.Schoenflies.Graph.Drawing
-import LeanPool.Schoenflies.Polygonal
+module
+
+public import LeanPool.Schoenflies.Concatenate
+public import LeanPool.Schoenflies.Graph.Cycle
+public import LeanPool.Schoenflies.Graph.Drawing
+public import LeanPool.Schoenflies.Polygonal
 
 /-!
 # The realisation of a cycle is a Jordan curve
@@ -57,6 +59,8 @@ realisation is a single arc and not a Jordan curve.
   in exactly the edge's two ends. `Schoenflies.IsJordanCurve.of_two_arcs` consumes only one
   inclusion of it, but the equality is what the blueprint asserts.
 -/
+
+@[expose] public section
 
 open Set Schoenflies unitInterval
 open scoped Graph

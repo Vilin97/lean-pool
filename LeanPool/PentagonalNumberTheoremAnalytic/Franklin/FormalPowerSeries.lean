@@ -3,24 +3,26 @@ Copyright (c) 2026 Jonathan Conrad, Paula Muermann, Maryna Viazovska. All rights
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jonathan Conrad, Paula Muermann, Maryna Viazovska
 -/
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Combinatorics.Enumerative.Partition.GenFun
-import Mathlib.Data.Finset.Powerset
-import Mathlib.Data.Nat.Choose.Basic
-import Mathlib.Order.Interval.Finset.Nat
-import Mathlib.RingTheory.PowerSeries.Basic
-import Mathlib.RingTheory.PowerSeries.PiTopology
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Zify
-import LeanPool.PentagonalNumberTheoremAnalytic.Franklin.Defs
-import LeanPool.PentagonalNumberTheoremAnalytic.Franklin.Helpers
-import LeanPool.PentagonalNumberTheoremAnalytic.Franklin.Lemmas
+module
+
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+public import Mathlib.Algebra.BigOperators.Ring.Finset
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Combinatorics.Enumerative.Partition.GenFun
+public import Mathlib.Data.Finset.Powerset
+public import Mathlib.Data.Nat.Choose.Basic
+public import Mathlib.Order.Interval.Finset.Nat
+public import Mathlib.RingTheory.PowerSeries.Basic
+public import Mathlib.RingTheory.PowerSeries.PiTopology
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.LinearCombination
+public import Mathlib.Tactic.Zify
+public import LeanPool.PentagonalNumberTheoremAnalytic.Franklin.Defs
+public import LeanPool.PentagonalNumberTheoremAnalytic.Franklin.Helpers
+public import LeanPool.PentagonalNumberTheoremAnalytic.Franklin.Lemmas
 
 /-! # Pentagonal Number Theorem — Formal Power Series Statements
 This file contains the formal power series identities from the source document
@@ -28,6 +30,8 @@ This file contains the formal power series identities from the source document
 These results connect the combinatorial content (proved in `Lemmas.lean`)
 to the algebraic identities involving generating functions.
 -/
+
+@[expose] public section
 
 open Finset PowerSeries
 open scoped PowerSeries.WithPiTopology

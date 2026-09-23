@@ -4,12 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PDL formalization contributors (see project card)
 -/
 
-import Mathlib.Tactic.ClearExcept
-import Mathlib.Data.Vector.Basic
+module
 
-import LeanPool.PDL.Local.Rules
+public import Mathlib.Tactic.ClearExcept
+public import Mathlib.Data.Vector.Basic
+
+public import LeanPool.PDL.Local.Rules
 
 /-! # Model Graphs (Section 7.1) -/
+
+@[expose] public section
 
 namespace PDL
 

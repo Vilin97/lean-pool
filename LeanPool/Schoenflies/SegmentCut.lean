@@ -3,7 +3,9 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Plane
+module
+
+public import LeanPool.Schoenflies.Plane
 
 /-!
 # Cutting a segment
@@ -24,6 +26,8 @@ far coefficient vanishes.
 * `openSegment_left_subset`, `openSegment_right_subset` — a cut is permanent; underneath
   `subdivide_inside`.
 -/
+
+@[expose] public section
 
 open Set
 

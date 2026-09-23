@@ -3,10 +3,12 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.LocalGrid
-import LeanPool.Schoenflies.Graph.Ear
-import LeanPool.Schoenflies.Line
-import LeanPool.Schoenflies.PolygonalCarrier
+module
+
+public import LeanPool.Schoenflies.LocalGrid
+public import LeanPool.Schoenflies.Graph.Ear
+public import LeanPool.Schoenflies.Line
+public import LeanPool.Schoenflies.PolygonalCarrier
 
 /-!
 # Attaching a local source grid — `prop:local-grid-attachment`
@@ -77,6 +79,8 @@ lemmas of this module, and all three are statements about `Γ`, never about the 
 
 Neither is a restatement of a goal of this module, and both are true.
 -/
+
+@[expose] public section
 
 open Metric Set
 open scoped Graph

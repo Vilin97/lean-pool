@@ -4,12 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Boon Suan Ho
 -/
 
-import LeanPool.Nivat.Dynamics.OrbitClosure
-import LeanPool.Nivat.Core.Lattice
-import LeanPool.Nivat.Core.BoundedDifferences
-import LeanPool.Nivat.Algebra.Action
-import LeanPool.Nivat.Algebra.ProductDifferences
-import Mathlib.Tactic.Ring
+module
+
+public import LeanPool.Nivat.Dynamics.OrbitClosure
+public import LeanPool.Nivat.Core.Lattice
+public import LeanPool.Nivat.Core.BoundedDifferences
+public import LeanPool.Nivat.Algebra.Action
+public import LeanPool.Nivat.Algebra.ProductDifferences
+public import Mathlib.Tactic.Ring
 
 /-
 Upstream: https://github.com/boonsuan/nivat
@@ -52,6 +54,8 @@ The main results are `exists_tangent_period_of_nonzero_annihilator` and
 `periodic_difference_of_nonzero_annihilator`. The latter combines the tangent
 period with Lemma 3.1 and the pattern inheritance of Section 1.1.
 -/
+
+@[expose] public section
 
 namespace Nivat.Dynamics
 
