@@ -4,9 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import LeanPool.GapCVP.Part07E
+module
+
+public import LeanPool.GapCVP.Part07E
 
 /-! # GapCVP proof, part 07, continuation 06 -/
+
+public section
 
 noncomputable section
 
@@ -46,7 +50,7 @@ open GapCVP.CNFBoundedRecordFoldTM GapCVP.CNFFlatPhysicalBinaryAppendTM
 open GapCVP.CNFFiveFamilyFlatIndexedCatalogueTM
 
 /-- GapCVP reduction support. -/
-def fiveIndependentSourceCountWord
+@[expose] def fiveIndependentSourceCountWord
     (count : Polynomial ℕ) (original : List Bool) : List Bool :=
   List.replicate (count.eval original.length) true
 
@@ -78,7 +82,7 @@ private noncomputable def fiveFamilyIndependentSourceRankDescriptorComputable
   simpa only [Function.comp_def] using physical
 
 /-- GapCVP reduction support. -/
-def fiveIndependentSourceRankWords
+@[expose] def fiveIndependentSourceRankWords
     (count : ℕ) : List (List Bool) :=
   (List.range count).map fun rank => List.replicate rank true
 
