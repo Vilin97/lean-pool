@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard
 -/
 
-import Mathlib.AlgebraicGeometry.EllipticCurve.Affine.Point
-import Mathlib.GroupTheory.Torsion
+module
+
+public import Mathlib.AlgebraicGeometry.EllipticCurve.Affine.Point
+public import Mathlib.GroupTheory.Torsion
 
 /-!
 # Mazur's bound on the torsion of an elliptic curve over the rationals
@@ -23,6 +25,8 @@ Informal statement:
   returns 0 on an infinite set, so the statement reads "at most 16, or infinite"; that is the form
   the FLT project assumes, since finiteness of the torsion subgroup is classical and far easier.
 -/
+
+public section
 
 namespace Challenge.Mazur
 

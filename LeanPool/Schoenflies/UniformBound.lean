@@ -3,7 +3,9 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Plane
+module
+
+public import LeanPool.Schoenflies.Plane
 
 /-!
 # One positive bound for finitely many
@@ -23,6 +25,8 @@ member at once.
 * `exists_pos_forall_of_finite` — the form consumers use: a downward-monotone predicate
   holding at some positive bound for each member holds at one common positive bound.
 -/
+
+@[expose] public section
 
 open Set
 

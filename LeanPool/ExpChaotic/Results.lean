@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lasse Rempe
 -/
 
-import LeanPool.ExpChaotic.Normality
-import LeanPool.ExpChaotic.PaperConsequences
+module
+
+public import LeanPool.ExpChaotic.Normality
+public import LeanPool.ExpChaotic.PaperConsequences
 
 /-!
 # Public results: the exponential map is chaotic
@@ -23,6 +25,8 @@ The proofs use the paper and, for the initial proof architecture underlying dens
 escaping set, John Harrison's HOL Light formalisation of Misiurewicz's original proof.
 See `LeanPool.ExpChaotic` for attribution and the upstream source.
 -/
+
+@[expose] public section
 
 open Function Filter Set Metric
 

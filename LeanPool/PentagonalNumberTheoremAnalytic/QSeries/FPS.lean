@@ -3,10 +3,12 @@ Copyright (c) 2026 Jonathan Conrad, Paula Muermann, Maryna Viazovska. All rights
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jonathan Conrad, Paula Muermann, Maryna Viazovska
 -/
-import Mathlib.Algebra.Polynomial.Laurent
-import Mathlib.Basic.Complex.Basic
-import Mathlib.RingTheory.PowerSeries.Inverse
-import Mathlib.RingTheory.PowerSeries.PiTopology
+module
+
+public import Mathlib.Algebra.Polynomial.Laurent
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.RingTheory.PowerSeries.Inverse
+public import Mathlib.RingTheory.PowerSeries.PiTopology
 
 /-!
 # q-Pochhammer symbols as formal power series
@@ -37,6 +39,8 @@ convergence hypotheses are needed.
 * `QSeries.FormalPowerSeries.jacobiTripleProduct` — The Jacobi triple product in `A⟦X⟧`
   (proved in `QSeries.FPSAlgebra`).
 -/
+
+@[expose] public section
 
 noncomputable section
 

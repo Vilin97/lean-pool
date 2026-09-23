@@ -3,10 +3,12 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import LeanPool.ACMax.Counting.Incidence
-import Mathlib.Tactic.Ring
-import LeanPool.ACMax.Reduction.Reduction
-import LeanPool.ACMax.Cuts.SignedCut
+module
+
+public import LeanPool.ACMax.Counting.Incidence
+public import Mathlib.Tactic.Ring
+public import LeanPool.ACMax.Reduction.Reduction
+public import LeanPool.ACMax.Cuts.SignedCut
 
 /-!
 # Uniformly-provable foundation layers for the general ACMAX residual program
@@ -55,6 +57,8 @@ program identified by the investigation of the per-`n` architecture (`n = 12..19
 
 Everything here is sorry-free and axiom-clean.
 -/
+
+@[expose] public section
 
 namespace ACMax
 

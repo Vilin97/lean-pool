@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.FiniteTransferTarget
-import LeanPool.Schoenflies.InitialPairFixed
+module
+
+public import LeanPool.Schoenflies.FiniteTransferTarget
+public import LeanPool.Schoenflies.InitialPairFixed
 
 /-!
 # The initial distinguished outer graph is a simple cycle
@@ -19,6 +21,8 @@ This module supplies its base case for the concrete initial hexagon.
 * `Schoenflies.outerEdgesFormCycle_initialStructure` — the distinguished outer graph of the
   initial matched cellulation is its six-edge simple cycle.
 -/
+
+@[expose] public section
 
 open Set
 open scoped Graph

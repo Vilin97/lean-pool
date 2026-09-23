@@ -3,9 +3,11 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.FiniteTransferTargetMesh
-import LeanPool.Schoenflies.InitialGenerated
-import LeanPool.Schoenflies.InitialOuterCycle
+module
+
+public import LeanPool.Schoenflies.FiniteTransferTargetMesh
+public import LeanPool.Schoenflies.InitialGenerated
+public import LeanPool.Schoenflies.InitialOuterCycle
 
 /-!
 # Reverse square-mesh transfer over the initial cell-name type
@@ -25,6 +27,8 @@ cell name.  Edge relabelling preserves the ambient boundary geometry used by rev
   specialization: choose the fresh names, assemble the extension from the three explicit
   subdivision hypotheses, and run reverse transfer.
 -/
+
+@[expose] public section
 
 open Set
 open scoped Graph

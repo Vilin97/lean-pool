@@ -3,12 +3,14 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
-import LeanPool.ACMax.Spectral.AlgConn
-import LeanPool.ACMax.Spectral.RayleighUpper
-import LeanPool.ACMax.Spectral.TestVector
+module
+
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Ring
+public import LeanPool.ACMax.Spectral.AlgConn
+public import LeanPool.ACMax.Spectral.RayleighUpper
+public import LeanPool.ACMax.Spectral.TestVector
 
 /-!
 # Two-vertex-cut certificate (Fiedler's `κ ≤ 2` bound)
@@ -26,6 +28,8 @@ which is precisely `(x·)²` at the non-cut endpoint.  Summing, the ordered
 quadratic form is at most `2 · (∑ c) · (∑ x²) = 4 ∑ x²`, hence
 `xᵀ L x ≤ 2 ∑ x²` and the universal test-vector certificate applies.
 -/
+
+@[expose] public section
 
 namespace ACMax
 
