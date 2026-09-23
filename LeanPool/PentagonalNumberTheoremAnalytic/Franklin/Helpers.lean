@@ -20,7 +20,6 @@ public import Mathlib.Tactic.FieldSimp
 public import Mathlib.Tactic.Positivity
 public import LeanPool.PentagonalNumberTheoremAnalytic.Franklin.Defs
 
-@[expose] public section
 /-!
 # Helper lemmas for Franklin's involution
 
@@ -37,6 +36,8 @@ and properties of `αOp`/`βOp`.
 * `consecutiveTopRun_Icc`, `partBase_Icc`, `partMax_Icc`, `partSlope_Icc`: the structural
   invariants of an interval, which is the shape both pentagonal families `smkSet`/`spkSet` take
 -/
+
+@[expose] public section
 
 open Finset
 

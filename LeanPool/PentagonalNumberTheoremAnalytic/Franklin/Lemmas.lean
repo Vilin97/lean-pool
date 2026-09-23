@@ -21,7 +21,6 @@ public import Mathlib.Tactic.Positivity
 public import LeanPool.PentagonalNumberTheoremAnalytic.Franklin.Defs
 public import LeanPool.PentagonalNumberTheoremAnalytic.Franklin.Helpers
 
-@[expose] public section
 /-!
 # Pentagonal Number Theorem — Lemmas
 
@@ -36,6 +35,8 @@ following Franklin's involution argument.
 * `parity_flip`: Franklin's involution flips even/odd parity
 * `signed_partition_main`: pe(n) - po(n) = (-1)^k for pentagonal n, 0 otherwise
 -/
+
+@[expose] public section
 
 open Finset
 
