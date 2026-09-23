@@ -81,7 +81,7 @@ private def paperVariableArityLocalVariableMomentWordOrder
       (momentBudget + 1))
 
 /-- GapCVP reduction support. -/
-def paperShiftedClauseWordOrder
+@[expose] def paperShiftedClauseWordOrder
     (formula : ThreeCNF) (momentBudget : ℕ)
     (index : Fin (srcFormula formula).clauses.length) :
     Fin (paperShiftedClauseTagCount
@@ -106,8 +106,13 @@ def paperShiftedClauseWordOrder
         (momentBudget + 1)))).symm.trans
       (Equiv.sigmaCongr
         (paperFormulaClauseTupleWordOrder formula index)
-        (fun _ => paperVariableArityLocalVariableMomentWordOrder
-          formula momentBudget index)))
+        (fun _ =>
+          (finProdFinEquiv
+            (m := paperFormulaClauseWidth formula index)
+            (n := momentBudget + 1)).symm.trans
+              ((paperFormulaClauseVariableWordOrder
+                formula index).prodCongr
+                  (Equiv.refl (Fin (momentBudget + 1)))))))
 
 /-- GapCVP reduction support. -/
 @[expose] def paperShiftedFamilyTagCount
@@ -117,7 +122,7 @@ def paperShiftedClauseWordOrder
       formula momentBudget index
 
 /-- GapCVP reduction support. -/
-def paperShiftedFamilyWordOrder
+@[expose] def paperShiftedFamilyWordOrder
     (formula : ThreeCNF) (momentBudget : ℕ) :
     Fin (paperShiftedFamilyTagCount
       formula momentBudget) ≃

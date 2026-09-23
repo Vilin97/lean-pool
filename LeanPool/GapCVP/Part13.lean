@@ -4984,7 +4984,7 @@ open GapCVP.BinarySourceTautologyNormalizationExact GapCVP.SourcePreprocessingSe
 open GapCVP.SourcePreprocessingTM GapCVP.ClauseOffsetTM
 
 /-- GapCVP reduction support. -/
-def paperShiftedSourceClauseWeight (clause : ThreeClause) : ℕ :=
+@[expose] def paperShiftedSourceClauseWeight (clause : ThreeClause) : ℕ :=
   (paperSourceNormalizedClause clause).length *
     (2 ^ (paperSourceNormalizedClause clause).length - 1)
 

@@ -10,7 +10,7 @@ public import LeanPool.GapCVP.Part14
 
 /-! # GapCVP proof, part 15 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -30,7 +30,8 @@ open GapCVP.BinaryPhysicalRowBasisDivisionTM GapCVP.PhysicalFamilyRowTM
 open GapCVP.PhysicalGlobalRefinementCoefficientTM GapCVP.SourceFieldMomentOperationsTM
 open GapCVP.PhysicalMatrixCellTM
 
-private def physicalInterpolationRowGridRankWord
+/-- The unary grid rank of an interpolation row within its family. -/
+def physicalInterpolationRowGridRankWord
     (family : Fin 4) : List Bool → List Bool :=
   sourcePhysicalComputedUnaryRemainder
     (physicalFamilyRowFieldRankWord family)
@@ -68,7 +69,8 @@ noncomputable def
     (paperVariableArityPhysicalMomentCellGridCardinalityUnary_valid
       row column formula)
 
-private def physicalInterpolationDirectGridMatchBit
+/-- Compare the interpolation row's grid rank with the column's grid rank. -/
+def physicalInterpolationDirectGridMatchBit
     (family : Fin 4) : List Bool → List Bool :=
   physicalCoefficientUnaryEquality
     (physicalInterpolationRowGridRankWord family)
@@ -245,7 +247,8 @@ open GapCVP.PhysicalMatrixCellTM GapCVP.SourceFieldMomentOperationsTM
 open GapCVP.PhysicalOrdinaryShiftedCoefficientSumTM GapCVP.SourceFourFamilyBooleanPredicateTM
 open GapCVP.SourceMixedRadixMaskSelectedFlatPreparationTM
 
-private def physicalInterpolationOuterColumnGridRank :
+/-- Read the outer cell's column grid rank from a nested node query. -/
+def physicalInterpolationOuterColumnGridRank :
     List Bool → List Bool :=
   physicalColumnGridRankUnary ∘
     compactPhysicalLagrangeNestedNodeOuterCell
@@ -259,7 +262,8 @@ private def physicalInterpolationOuterColumnGridRank :
     compactPhysicalLagrangeNestedNodeOuterCellComputable
     physicalColumnGridRankUnaryComputable
 
-private def physicalInterpolationNodeColumnGridMask :
+/-- Test whether the nested node rank matches the outer column's grid rank. -/
+def physicalInterpolationNodeColumnGridMask :
     List Bool → List Bool :=
   physicalCoefficientUnaryEquality
     compactPhysicalLagrangeNestedNodeRank
@@ -303,7 +307,8 @@ private theorem paperVariableArityPhysicalInterpolationNodeColumnGridMask_valid
     exact paperVariableArityPhysicalColumnGridRankUnary_query
       row column formula
 
-private def physicalInterpolationNestedBasisRankWord :
+/-- Read the outer cell's matrix basis rank from a nested node query. -/
+def physicalInterpolationNestedBasisRankWord :
     List Bool → List Bool :=
   (physicalMatrixBasisRankComputer
     physicalMatrixFieldDegreeComputer).output ∘
@@ -349,7 +354,7 @@ private theorem paperVariableArityPhysicalInterpolationNestedBasisRankWord_valid
       row column formula)
 
 /-- GapCVP reduction support. -/
-def physicalInterpolationRowBasisIndex
+@[expose] def physicalInterpolationRowBasisIndex
     (row : ℕ) (formula : ThreeCNF) :
     Fin (physDegree formula) :=
   ⟨row % physDegree formula,
@@ -359,7 +364,8 @@ def physicalInterpolationRowBasisIndex
           (encodeThreeCNF formula).length
           (srcFormula formula)))⟩
 
-private def physicalInterpolationNodeWeightBasisBit
+/-- Extract the prepared field coefficient of a weighted interpolation node. -/
+def physicalInterpolationNodeWeightBasisBit
     (weight : SourcePhysicalLagrangeWordComputer) :
     List Bool → List Bool :=
   compactPhysicalFieldCoefficientPreparedBit
@@ -406,10 +412,12 @@ private theorem paperVariableArityPhysicalInterpolationNodeWeightBasisBit_valid
   · exact paperVariableArityPhysicalInterpolationNestedBasisRankWord_valid
       width node row column formula
   · exact correctWeight
-  · exact compactPhysicalLagrangeNestedNodeOriginalSource_query
-      width node row column formula
+  · simpa only [compactPhysicalLagrangeNestedNodeSourceWordComputer_output] using
+      compactPhysicalLagrangeNestedNodeOriginalSource_query
+        width node row column formula
 
-private def physicalMaskedNodeInterpolationBit
+/-- Restrict a weighted interpolation node's coefficient to its matching column. -/
+def physicalMaskedNodeInterpolationBit
     (weight : SourcePhysicalLagrangeWordComputer) :
     List Bool → List Bool :=
   sourceFourFamilyBooleanAndOutput
@@ -477,13 +485,13 @@ noncomputable def physicalShiftedInterpolationMomentComputer :
   physicalFamilyRowMomentRankComputer (3 : Fin 4)
 
 /-- GapCVP reduction support. -/
-def physicalOrdinaryInterpolationNodeCount
+@[expose] def physicalOrdinaryInterpolationNodeCount
     (row : ℕ) (formula : ThreeCNF) : ℕ :=
   physicalFormulaVariableCount formula *
     physicalFamilyRowMoment (2 : Fin 4) row formula + 1
 
 /-- GapCVP reduction support. -/
-def physicalShiftedInterpolationNodeCount
+@[expose] def physicalShiftedInterpolationNodeCount
     (row : ℕ) (formula : ThreeCNF) : ℕ :=
   (physicalFormulaVariableCount formula - 1) *
     physicalFamilyRowMoment (3 : Fin 4) row formula + 1
@@ -541,7 +549,7 @@ private theorem paperVariableArityPhysicalOrdinaryInterpolationNodeWidth_output 
       physicalOrdinaryInterpolationMomentComputer).output =
       physicalOrdinaryNodePrefixWord
         physicalOrdinaryInterpolationMomentComputer := by
-  dsimp only [physicalOrdinaryNodePrefixWidth]
+  exact physicalOrdinaryNodePrefixWidth_output _
 
 theorem paperVariableArityPhysicalOrdinaryInterpolationNodeWidth_valid
     (row column : ℕ) (formula : ThreeCNF) :
@@ -565,7 +573,7 @@ private theorem paperVariableArityPhysicalShiftedInterpolationNodeWidth_output :
       physicalShiftedInterpolationMomentComputer).output =
       physicalShiftedNodePrefixWord
         physicalShiftedInterpolationMomentComputer := by
-  dsimp only [physicalShiftedNodePrefixWidth]
+  exact physicalShiftedNodePrefixWidth_output _
 
 theorem paperVariableArityPhysicalShiftedInterpolationNodeWidth_valid
     (row column : ℕ) (formula : ThreeCNF) :
@@ -742,7 +750,8 @@ abbrev PaperVariableArityPhysicalInterpolationGridIndex
   Fin (2 ^ sourceIrreducibleFormulaDegree formula -
     (srcFormula formula).variableCount)
 
-private def physicalInterpolationRebuiltGridCell
+/-- Rebuild a grid-cell query from computed rank and source words. -/
+def physicalInterpolationRebuiltGridCell
     (rank source : SourcePhysicalLagrangeWordComputer)
     (input : List Bool) : List Bool :=
   lengthPrefixedWord (rank.output input) ++
@@ -782,7 +791,8 @@ private noncomputable def paperVariableArityPhysicalInterpolationGridCellRowComp
   output := sourceExplicitAffineCellRow
   computer := sourceExplicitAffineCellRowComputable
 
-private def physicalInterpolationRebuiltGridWord
+/-- Read the field word at the grid cell rebuilt from computed rank and source words. -/
+def physicalInterpolationRebuiltGridWord
     (rank source : SourcePhysicalLagrangeWordComputer) :
     List Bool → List Bool :=
   physicalCellGridWordAt
@@ -862,13 +872,15 @@ private theorem paperVariableArityPhysicalInterpolationNestedOtherGridComputer_v
       (compactPhysicalLagrangeNestedNodeEnvelope outerWidth node.val
         (affineCellQuery row column
           (encodeThreeCNF formula)))) formula other
-  · exact compactPhysicalLagrangeNestedNodeRank_query
-      innerWidth other.val
-      (compactPhysicalLagrangeNestedNodeEnvelope outerWidth node.val
-        (affineCellQuery row column
-          (encodeThreeCNF formula)))
-  · exact compactPhysicalLagrangeNestedOtherOriginalSource_query
-      innerWidth outerWidth other.val node.val row column formula
+  · simpa only [compactPhysicalLagrangeNestedOtherRankWordComputer_output] using
+      compactPhysicalLagrangeNestedNodeRank_query
+        innerWidth other.val
+        (compactPhysicalLagrangeNestedNodeEnvelope outerWidth node.val
+          (affineCellQuery row column
+            (encodeThreeCNF formula)))
+  · simpa only [compactPhysicalLagrangeNestedOtherSourceWordComputer_output] using
+      compactPhysicalLagrangeNestedOtherOriginalSource_query
+        innerWidth outerWidth other.val node.val row column formula
 
 private noncomputable def physicalInterpolationNestedAnchorGridComputer :
     SourcePhysicalLagrangeWordComputer :=
@@ -899,14 +911,17 @@ private theorem paperVariableArityPhysicalInterpolationNestedAnchorGridComputer_
       (compactPhysicalLagrangeNestedNodeEnvelope outerWidth node.val
         (affineCellQuery row column
           (encodeThreeCNF formula)))) formula node
-  · exact compactPhysicalLagrangeNestedAnchorRank_query
-      innerWidth outerWidth other.val node.val
-      (affineCellQuery row column
-        (encodeThreeCNF formula))
-  · exact compactPhysicalLagrangeNestedOtherOriginalSource_query
-      innerWidth outerWidth other.val node.val row column formula
+  · simpa only [compactPhysicalLagrangeNestedAnchorRankWordComputer_output] using
+      compactPhysicalLagrangeNestedAnchorRank_query
+        innerWidth outerWidth other.val node.val
+        (affineCellQuery row column
+          (encodeThreeCNF formula))
+  · simpa only [compactPhysicalLagrangeNestedOtherSourceWordComputer_output] using
+      compactPhysicalLagrangeNestedOtherOriginalSource_query
+        innerWidth outerWidth other.val node.val row column formula
 
-private def paperVariableArityPhysicalInterpolationNestedOtherSelfMask :
+/-- Compare the nested node rank with its anchor rank. -/
+def paperVariableArityPhysicalInterpolationNestedOtherSelfMask :
     List Bool → List Bool :=
   fourFamilyComputedUnaryEqBitOutput
     compactPhysicalLagrangeNestedNodeRank
@@ -944,7 +959,8 @@ private noncomputable def paperVariableArityPhysicalInterpolationFieldOneRankCom
   output := fun _ => [true]
   computer := sourceFixedWordComputable [true]
 
-private def physicalInterpolationCellFieldOneWord :
+/-- Read the field word representing one at an interpolation cell. -/
+def physicalInterpolationCellFieldOneWord :
     List Bool → List Bool :=
   physicalCellFieldWordAt
     paperVariableArityPhysicalInterpolationFieldOneRankComputer
@@ -983,7 +999,8 @@ private theorem paperVariableArityPhysicalInterpolationCellFieldOneWord_valid
     row column formula unit (by rfl)]
   exact congrArg finiteWordBits indexed
 
-private def physicalInterpolationNestedOtherFieldOneWord :
+/-- Read the field word representing one from the nested query's actual cell. -/
+def physicalInterpolationNestedOtherFieldOneWord :
     List Bool → List Bool :=
   physicalInterpolationCellFieldOneWord ∘
     compactPhysicalLagrangeNestedOtherActualCell
@@ -1030,7 +1047,7 @@ open GapCVP.SourceFieldMomentOperationsTM GapCVP.PhysicalInterpolationNodeGridMa
 open GapCVP.Factor400BinaryConstructiveSourcePlaces
 
 /-- GapCVP reduction support. -/
-def physicalInterpolationFamilyRowGridPosition
+@[expose] def physicalInterpolationFamilyRowGridPosition
     (family : Fin 4) (row : ℕ) (formula : ThreeCNF) :
     PaperVariableArityPhysicalInterpolationGridIndex formula :=
   ⟨((row - physicalFamilyStart family formula) /
@@ -1045,7 +1062,8 @@ def physicalInterpolationFamilyRowGridPosition
       exact Nat.mod_lt _
         (physicalRefinementGridCard_pos formula)⟩
 
-private def physicalInterpolationCellRowGridRankWord
+/-- Compute a cell row's grid rank modulo the grid cardinality. -/
+def physicalInterpolationCellRowGridRankWord
     (family : Fin 4) : List Bool → List Bool :=
   sourcePhysicalComputedUnaryRemainder
     (physicalFamilyRowFieldRankWord family)
@@ -1085,7 +1103,8 @@ private def physicalInterpolationCellRowGridRankWord
     (paperVariableArityPhysicalMomentCellGridCardinalityUnary_valid
       row column formula)
 
-private def physicalInterpolationNestedRowGridRankWord
+/-- Read a family row's grid rank from the nested query's actual cell. -/
+def physicalInterpolationNestedRowGridRankWord
     (family : Fin 4) : List Bool → List Bool :=
   physicalInterpolationCellRowGridRankWord family ∘
     compactPhysicalLagrangeNestedOtherActualCell
@@ -1170,10 +1189,12 @@ private theorem paperVariableArityPhysicalInterpolationNestedRowGridComputer_val
   · exact
       paperVariableArityPhysicalInterpolationNestedRowGridRankWord_valid
         family innerWidth outerWidth other.val node.val row column formula
-  · exact compactPhysicalLagrangeNestedOtherOriginalSource_query
-      innerWidth outerWidth other.val node.val row column formula
+  · simpa only [compactPhysicalLagrangeNestedOtherSourceWordComputer_output] using
+      compactPhysicalLagrangeNestedOtherOriginalSource_query
+        innerWidth outerWidth other.val node.val row column formula
 
-private def physicalInterpolationNestedOtherDegreeWord :
+/-- Read the field degree from the nested query's original source. -/
+def physicalInterpolationNestedOtherDegreeWord :
     List Bool → List Bool :=
   physicalFamilyFieldDegreeUnary ∘
     compactPhysicalLagrangeNestedOtherOriginalSource
@@ -1211,7 +1232,8 @@ noncomputable def
     compactPhysicalLagrangeNestedOtherOriginalSource_query,
     paperVariableArityPhysicalFamilyFieldDegreeUnary_valid]
 
-private def physicalInterpolationNestedDifferenceWord
+/-- Compute the field-word difference of two nested interpolation outputs. -/
+def physicalInterpolationNestedDifferenceWord
     (left right : SourcePhysicalLagrangeWordComputer) :
     List Bool → List Bool :=
   compactPhysicalFieldWordXorWithDegree
@@ -1276,7 +1298,8 @@ private theorem paperVariableArityPhysicalInterpolationNestedDifferenceWord_vali
       innerWidth outerWidth other node row column formula)
     hleft hright
 
-private def physicalInterpolationNestedEraseSelection :
+/-- Prefix the nested query with the marker selecting its anchor node. -/
+def physicalInterpolationNestedEraseSelection :
     List Bool → List Bool :=
   flatPhysicalPrependComputedRecordOutput
     paperVariableArityPhysicalInterpolationNestedOtherSelfMask
@@ -1303,7 +1326,8 @@ private def physicalInterpolationNestedEraseSelection :
   simp only [physicalInterpolationNestedEraseSelection, flatPhysicalPrependComputedRecordOutput_eq,
       paperVariableArityPhysicalInterpolationNestedOtherSelfMask_valid]
 
-private def paperVariableArityPhysicalInterpolationNestedEraseOneBranch :
+/-- Emit the field word one for the selected anchor node. -/
+def paperVariableArityPhysicalInterpolationNestedEraseOneBranch :
     List Bool → List Bool :=
   fourFamilyTaggedGuardedWorkerWord [true]
       physicalInterpolationNestedOtherFieldOneWord ∘
@@ -1319,7 +1343,8 @@ private def paperVariableArityPhysicalInterpolationNestedEraseOneBranch :
     (fourFamilyTaggedGuardedWorkerComputable [true]
       paperVariableArityPhysicalInterpolationNestedOtherFieldOneWordComputable)
 
-private def paperVariableArityPhysicalInterpolationNestedEraseOtherBranch
+/-- Emit the supplied factor for a node other than the selected anchor. -/
+def paperVariableArityPhysicalInterpolationNestedEraseOtherBranch
     (factor : SourcePhysicalLagrangeWordComputer) :
     List Bool → List Bool :=
   fourFamilyTaggedGuardedWorkerWord [false] factor.output ∘
@@ -1337,7 +1362,8 @@ private def paperVariableArityPhysicalInterpolationNestedEraseOtherBranch
     (fourFamilyTaggedGuardedWorkerComputable [false]
       factor.computer)
 
-private def physicalInterpolationNestedEraseFactorWord
+/-- Replace the selected anchor's factor with one, retaining every other factor. -/
+def physicalInterpolationNestedEraseFactorWord
     (factor : SourcePhysicalLagrangeWordComputer)
     (input : List Bool) : List Bool :=
   paperVariableArityPhysicalInterpolationNestedEraseOneBranch input ++
@@ -1389,7 +1415,8 @@ private theorem paperVariableArityPhysicalInterpolationNestedEraseFactorWord_val
       List.cons.injEq,
         Bool.true_eq_false, and_true, ↓reduceIte, List.nil_append]
 
-private abbrev physicalInterpolationNodeGridWord
+/-- The finite field word indexed by an interpolation grid point. -/
+abbrev physicalInterpolationNodeGridWord
     (formula : ThreeCNF)
     (point : PaperVariableArityPhysicalInterpolationGridIndex formula) :
     GapCVP.Core.EffectiveBinaryField.Word
@@ -1417,7 +1444,8 @@ noncomputable def
     physicalInterpolationNestedAnchorGridComputer
     physicalInterpolationNestedOtherGridComputer
 
-private def physicalInterpolationNumeratorNodeFactorWord
+/-- The numerator factor for a nested node, with the anchor factor replaced by one. -/
+def physicalInterpolationNumeratorNodeFactorWord
     (family : Fin 4) : List Bool → List Bool :=
   physicalInterpolationNestedEraseFactorWord
     (paperVariableArityPhysicalInterpolationNumeratorNodeDifferenceComputer
@@ -1444,7 +1472,8 @@ noncomputable def
     paperVariableArityPhysicalInterpolationNumeratorNodeFactorWordComputable
       family
 
-private def physicalInterpolationDenominatorNodeFactorWord :
+/-- The denominator factor for a nested node, with the anchor factor replaced by one. -/
+def physicalInterpolationDenominatorNodeFactorWord :
     List Bool → List Bool :=
   physicalInterpolationNestedEraseFactorWord
     paperVariableArityPhysicalInterpolationDenominatorNodeDifferenceComputer
@@ -1678,7 +1707,7 @@ abbrev PaperVariableArityPhysicalLagrangeNodeGridIndex
     (srcFormula formula).variableCount)
 
 /-- GapCVP reduction support. -/
-def physicalLagrangeNodeEvaluationWord
+@[expose] def physicalLagrangeNodeEvaluationWord
     (formula : ThreeCNF)
     (point : PaperVariableArityPhysicalLagrangeNodeGridIndex formula) :
     PaperVariableArityPhysicalInterpolationWord formula :=
@@ -1697,9 +1726,15 @@ theorem physicalLagrangeNodeEvaluationWord_sourceField
         formula point) =
       sourceFormulaEvaluationWord (encodeThreeCNF formula).length
         (srcFormula formula) point := by
-  rfl
+  exact (effectiveEvaluationEmbedding_apply _
+    (sourceFieldExponent_pos
+      (sourceSizeParameter_ge_one_hundred
+        (encodeThreeCNF formula).length (srcFormula formula)))
+    (variableCount_le_fieldWordCount
+      (encodeThreeCNF formula).length (srcFormula formula)) point).symm
 
-private def physicalLagrangeNodeSelectedWordProduct
+/-- Multiply a list of interpolation words modulo the selected irreducible polynomial. -/
+def physicalLagrangeNodeSelectedWordProduct
     (formula : ThreeCNF)
     (factors : List (PaperVariableArityPhysicalInterpolationWord formula)) :
     PaperVariableArityPhysicalInterpolationWord formula :=
@@ -1739,7 +1774,8 @@ private def physicalLagrangeNumeratorNodeFactorValue
         formula ⟨other, bounded⟩)
   else oneWord (physDegree formula)
 
-private def physicalLagrangeNumeratorNodeFactorValues
+/-- List the numerator factor values for the initial interpolation nodes. -/
+def physicalLagrangeNumeratorNodeFactorValues
     (formula : ThreeCNF)
     (node point : PaperVariableArityPhysicalLagrangeNodeGridIndex formula)
     (count : ℕ) :
@@ -1755,7 +1791,8 @@ private def physicalLagrangeDenominatorNodeFactorValue
   physicalLagrangeNumeratorNodeFactorValue
     formula node node other
 
-private def physicalLagrangeDenominatorNodeFactorValues
+/-- List the denominator factor values for the initial interpolation nodes. -/
+def physicalLagrangeDenominatorNodeFactorValues
     (formula : ThreeCNF)
     (node : PaperVariableArityPhysicalLagrangeNodeGridIndex formula)
     (count : ℕ) :
@@ -2029,7 +2066,8 @@ open GapCVP.PhysicalLagrangeNodeProductCatalogueCorrectness
 open GapCVP.BinarySourceFieldMultiplicationTM
 open GapCVP.SourceMixedRadixMaskSelectedFlatPreparationTM
 
-private def physicalInterpolationNestedNodeSelectedModulusWord :
+/-- Read the selected irreducible modulus from a nested node's original source. -/
+def physicalInterpolationNestedNodeSelectedModulusWord :
     List Bool → List Bool :=
   sourceSelectedIrreducibleWord ∘
     compactPhysicalLagrangeNestedNodeOriginalSource
@@ -2076,7 +2114,8 @@ theorem
     compactPhysicalLagrangeNestedNodeOriginalSource_query]
   exact paperVariableAritySourceSelectedIrreducibleWord_valid formula
 
-private def physicalInterpolationNestedNodeFieldOneWord :
+/-- Read the field word one from a nested node's outer cell. -/
+def physicalInterpolationNestedNodeFieldOneWord :
     List Bool → List Bool :=
   physicalInterpolationCellFieldOneWord ∘
     compactPhysicalLagrangeNestedNodeOuterCell
@@ -2114,7 +2153,8 @@ noncomputable def
   exact paperVariableArityPhysicalInterpolationCellFieldOneWord_valid
     row column formula
 
-private def paperVariableArityPhysicalInterpolationNestedNodeInverseQuery
+/-- Pair a computed operand with the nested node's original source for inversion. -/
+def paperVariableArityPhysicalInterpolationNestedNodeInverseQuery
     (operand : SourcePhysicalLagrangeWordComputer)
     (input : List Bool) : List Bool :=
   lengthPrefixedWord (operand.output input) ++
@@ -2131,7 +2171,8 @@ private def paperVariableArityPhysicalInterpolationNestedNodeInverseQuery
     (sourcePhysicalLagrangePrefixedComputable operand)
     compactPhysicalLagrangeNestedNodeOriginalSourceComputable
 
-private def physicalInterpolationNestedNodeInverseWord
+/-- Invert a computed operand using the nested node's selected field. -/
+def physicalInterpolationNestedNodeInverseWord
     (operand : SourcePhysicalLagrangeWordComputer) :
     List Bool → List Bool :=
   sourceSelectedFieldInverseWord ∘
@@ -2182,7 +2223,8 @@ private theorem paperVariableArityPhysicalInterpolationNestedNodeInverseWord_val
   exact paperVariableAritySourceSelectedFieldInverseWord_valid
     formula value
 
-private def paperVariableArityPhysicalInterpolationNestedNodeMultiplyQuery
+/-- Assemble a field-multiplication query from the computed modulus and operands. -/
+def paperVariableArityPhysicalInterpolationNestedNodeMultiplyQuery
     (lower left right : SourcePhysicalLagrangeWordComputer)
     (input : List Bool) : List Bool :=
   factor400BinarySourceFieldQuery
@@ -2211,7 +2253,8 @@ private def paperVariableArityPhysicalInterpolationNestedNodeMultiplyQuery
       sourcePhysicalLagrangePrefixedOutput] using
       hcomplete
 
-private def physicalInterpolationNestedNodeMultiplyWord
+/-- Multiply two computed words in the nested node's selected field. -/
+def physicalInterpolationNestedNodeMultiplyWord
     (left right : SourcePhysicalLagrangeWordComputer) :
     List Bool → List Bool :=
   binarySourceMultiplyModWord ∘
@@ -2278,7 +2321,8 @@ private theorem paperVariableArityPhysicalInterpolationNestedNodeMultiplyWord_va
       (sourceIrreducibleFormulaDegree formula))
     leftWord rightWord (encodeThreeCNF formula)
 
-private def physicalInterpolationNestedNumeratorNodeProductWord
+/-- Multiply the numerator node factors over the supplied grid width. -/
+def physicalInterpolationNestedNumeratorNodeProductWord
     (family : Fin 4) (width : SourceQaryMaskDynamicGridWidth) :
     List Bool → List Bool :=
   compactPhysicalLagrangeFactorProductWord
@@ -2314,7 +2358,8 @@ noncomputable def
     paperVariableArityPhysicalInterpolationNestedNumeratorNodeProductComputable
       family width
 
-private def physicalInterpolationNestedDenominatorNodeProductWord
+/-- Multiply the denominator node factors over the supplied grid width. -/
+def physicalInterpolationNestedDenominatorNodeProductWord
     (width : SourceQaryMaskDynamicGridWidth) :
     List Bool → List Bool :=
   compactPhysicalLagrangeFactorProductWord
@@ -2390,8 +2435,9 @@ private theorem physicalInterpolationNestedNodeProductWord_valid
       outerWidth node.val row column formula
   · exact paperVariableArityPhysicalInterpolationNestedNodeFieldOneWord_valid
       outerWidth node.val row column formula
-  · exact compactPhysicalLagrangeNestedNodeOriginalSource_query
-      outerWidth node.val row column formula
+  · simpa only [compactPhysicalLagrangeNestedNodeSourceWordComputer_output] using
+      compactPhysicalLagrangeNestedNodeOriginalSource_query
+        outerWidth node.val row column formula
   · exact correctFactors
 
 theorem
@@ -2626,7 +2672,8 @@ open GapCVP.SourceFieldMomentOperationsTM GapCVP.PhysicalInterpolationNodeFactor
 open GapCVP.PhysicalLagrangeNodeProductAlgebra GapCVP.PhysicalInterpolationNestedNodeProductTM
 open GapCVP.SourceMixedRadixMaskSelectedFlatPreparationTM
 
-private def physicalInterpolationNestedNodeMomentWord
+/-- Raise a computed base to the outer cell's family moment. -/
+def physicalInterpolationNestedNodeMomentWord
     (family : Fin 4) (base : SourcePhysicalLagrangeWordComputer) :
     List Bool → List Bool :=
   physicalFamilyMomentPowerWord family base ∘
@@ -2686,7 +2733,8 @@ noncomputable def
     (paperVariableArityPhysicalInterpolationNestedDenominatorNodeProductComputer
       width)
 
-private def paperVariableArityPhysicalInterpolationNodeWeightWord
+/-- Compute the weighted Lagrange contribution of a nested interpolation node. -/
+def paperVariableArityPhysicalInterpolationNodeWeightWord
     (family : Fin 4) (width : SourceQaryMaskDynamicGridWidth)
     (base : SourcePhysicalLagrangeWordComputer) :
     List Bool → List Bool :=
@@ -3105,7 +3153,8 @@ private theorem paperVariableArityPhysicalInterpolationColumnFieldRankComputer_o
       physicalColumnFieldValueRankUnary := by
   dsimp only [physicalInterpolationColumnFieldRankComputer]
 
-private def physicalInterpolationColumnFieldWord :
+/-- Read the field word indexed by an interpolation column. -/
+def physicalInterpolationColumnFieldWord :
     List Bool → List Bool :=
   physicalCellFieldWordAt
     physicalInterpolationColumnFieldRankComputer
@@ -3150,7 +3199,8 @@ private theorem paperVariableArityPhysicalInterpolationColumnFieldWord_valid
     paperVariableArityPhysicalColumnFieldValueRankUnary_query,
     correctIndex]
 
-private def physicalInterpolationFamilyTypeRankUnary
+/-- Compute a family's type rank from its row grid quotient and moment count. -/
+def physicalInterpolationFamilyTypeRankUnary
     (family : Fin 4) : List Bool → List Bool :=
   sourcePhysicalComputedUnaryQuotient
     (physicalFamilyRowGridQuotientWord family)
@@ -3199,7 +3249,7 @@ noncomputable def physicalInterpolationFamilyTypeRankComputer
     paperVariableArityPhysicalInterpolationFamilyTypeRankUnaryComputable family
 
 /-- GapCVP reduction support. -/
-def physicalInterpolationExpectedTypeMatchBit
+@[expose] def physicalInterpolationExpectedTypeMatchBit
     (expected : SourcePhysicalLagrangeWordComputer) :
     List Bool → List Bool :=
   physicalCoefficientUnaryEquality
@@ -3238,7 +3288,7 @@ noncomputable def
         family width base))
 
 /-- GapCVP reduction support. -/
-def physicalInterpolationNodeSourceWord
+@[expose] def physicalInterpolationNodeSourceWord
     (family : Fin 4) (row : ℕ) (formula : ThreeCNF)
     (count : ℕ)
     (bounded : count ≤
@@ -3322,7 +3372,7 @@ private theorem paperVariableArityPhysicalInterpolationNodeCorrectionBit_valid
       actualWeight
 
 /-- GapCVP reduction support. -/
-def physicalSourceInterpolationFamilyCheckBit
+@[expose] def physicalSourceInterpolationFamilyCheckBit
     (family : Fin 4) (marker : List Bool → List Bool)
     (expected : SourcePhysicalLagrangeWordComputer)
     (width : SourceQaryMaskDynamicGridWidth)
@@ -3403,7 +3453,7 @@ theorem paperVariableArityPhysicalSourceInterpolationFamilyCheckBit_bits
         input directBit correctionBit directCorrect correctionCorrect))
 
 /-- GapCVP reduction support. -/
-def physicalOrdinaryCheckBit : List Bool → List Bool :=
+@[expose] def physicalOrdinaryCheckBit : List Bool → List Bool :=
   physicalSourceInterpolationFamilyCheckBit
     (2 : Fin 4)
     physicalOrdinaryRowMarker
@@ -4007,7 +4057,8 @@ structure PaperVariableArityShiftedTupleRankComputers where
   /-- GapCVP reduction support. -/
   variablePosition : SourcePhysicalLagrangeWordComputer
 
-private def paperShiftedTupleRetainedSource :
+/-- Read the filtered formula from a shifted tuple query's original source. -/
+def paperShiftedTupleRetainedSource :
     List Bool → List Bool :=
   paperPreprocessingFilteredFormulaWord ∘
     sourceExplicitAffineCellOriginalSource
@@ -4032,7 +4083,8 @@ private def paperShiftedTupleRetainedSource :
     sourceExplicitAffineCellOriginalSource_query,
     paperSourcePreprocessingFilteredFormulaWord_valid]
 
-private def paperVariableArityShiftedTupleClauseQuery
+/-- Pair the computed clause rank with the retained source formula. -/
+def paperVariableArityShiftedTupleClauseQuery
     (ranks : PaperVariableArityShiftedTupleRankComputers)
     (input : List Bool) : List Bool :=
   ranks.clause.output input ++
@@ -4049,7 +4101,8 @@ private def paperVariableArityShiftedTupleClauseQuery
     (prependBitComputable false)
   exact pointwiseAppendComputable ranks.clause.computer retained
 
-private def paperShiftedTupleOriginalClauseWord
+/-- Read the original clause selected by the tuple's computed clause rank. -/
+def paperShiftedTupleOriginalClauseWord
     (ranks : PaperVariableArityShiftedTupleRankComputers) :
     List Bool → List Bool :=
   sourceOriginalIndexedClauseOutput ∘
@@ -4158,7 +4211,7 @@ theorem paperShiftedTupleGuardedSourceWord_valid
   cases bit <;> rfl
 
 /-- GapCVP reduction support. -/
-def paperShiftedTupleConstantUnary
+@[expose] def paperShiftedTupleConstantUnary
     (value : ℕ) : List Bool → List Bool :=
   fun _ => List.replicate value true
 
@@ -4170,7 +4223,8 @@ def paperShiftedTupleConstantUnary
       (paperShiftedTupleConstantUnary value) :=
   sourceFixedWordComputable (List.replicate value true)
 
-private def paperShiftedTupleOriginalSignWord
+/-- Read one literal sign from the tuple's original clause. -/
+def paperShiftedTupleOriginalSignWord
     (ranks : PaperVariableArityShiftedTupleRankComputers)
     (position : Fin 3) : List Bool → List Bool :=
   paperSourceClauseSignWord position ∘
@@ -4187,7 +4241,8 @@ private def paperShiftedTupleOriginalSignWord
     (paperVariableArityShiftedTupleOriginalClauseWordComputable ranks)
     (paperSourceClauseSignWordComputable position)
 
-private def paperShiftedTupleOriginalSecondKeepBit
+/-- Read the marker deciding whether the original clause's second literal is retained. -/
+def paperShiftedTupleOriginalSecondKeepBit
     (ranks : PaperVariableArityShiftedTupleRankComputers) :
     List Bool → List Bool :=
   paperSourceClauseSecondKeepMarker ∘
@@ -4203,7 +4258,8 @@ private def paperShiftedTupleOriginalSecondKeepBit
     (paperVariableArityShiftedTupleOriginalClauseWordComputable ranks)
     paperSourceClauseSecondKeepMarkerComputable
 
-private def paperShiftedTupleSelectedSourceBit
+/-- Select between two computed bits using a computed marker. -/
+def paperShiftedTupleSelectedSourceBit
     (marker first second : List Bool → List Bool) :
     List Bool → List Bool :=
   sourceFourFamilyBooleanOrOutput
@@ -4251,7 +4307,8 @@ private theorem paperVariableArityShiftedTupleSelectedSourceBit_valid
     hleft hright
   cases selector <;> simpa using selected
 
-private def paperShiftedTupleNormalizedSignWord
+/-- Read the literal sign at a position in the tuple's normalized clause. -/
+def paperShiftedTupleNormalizedSignWord
     (ranks : PaperVariableArityShiftedTupleRankComputers)
     (position : Fin 3) : List Bool → List Bool :=
   if position.val = 0 then
@@ -4284,7 +4341,8 @@ private def paperShiftedTupleNormalizedSignWord
     · exact paperVariableArityShiftedTupleOriginalSignWordComputable
         ranks 2
 
-private def paperShiftedTupleNormalizedPositionBit
+/-- Test whether a literal position lies below the normalized clause's arity. -/
+def paperShiftedTupleNormalizedPositionBit
     (ranks : PaperVariableArityShiftedTupleRankComputers)
     (position : Fin 3) : List Bool → List Bool :=
   fourFamilyComputedUnaryLessBitOutput
@@ -4302,7 +4360,8 @@ private def paperShiftedTupleNormalizedPositionBit
     (paperVariableArityShiftedTupleConstantUnaryComputable position.val)
     (paperVariableArityShiftedTupleNormalizedArityUnaryComputable ranks)
 
-private def paperShiftedTupleRejectedPositionBit
+/-- Mark a normalized clause position whose literal rejects the corresponding bit. -/
+def paperShiftedTupleRejectedPositionBit
     (ranks : PaperVariableArityShiftedTupleRankComputers)
     (position : Fin 3) : List Bool → List Bool :=
   sourceFourFamilyBooleanAndOutput
@@ -4344,7 +4403,8 @@ private theorem paperVariableArityShiftedTupleRejectedPositionBit_valid
       (paperShiftedTupleNormalizedSignWord ranks position)
       input sign hsign)
 
-private def paperShiftedTupleRejectedWeightedUnary
+/-- Encode a rejected literal position's binary weight in unary. -/
+def paperShiftedTupleRejectedWeightedUnary
     (ranks : PaperVariableArityShiftedTupleRankComputers)
     (position : Fin 3) : List Bool → List Bool :=
   paperShiftedTupleGuardedSourceWord
@@ -4387,7 +4447,8 @@ private theorem paperVariableArityShiftedTupleRejectedWeightedUnary_valid
   cases present <;> cases sign <;>
     simp [paperShiftedTupleConstantUnary]
 
-private def paperShiftedTupleRejectedRankUnary
+/-- Sum the rejected literal positions' binary weights to obtain the rejected rank. -/
+def paperShiftedTupleRejectedRankUnary
     (ranks : PaperVariableArityShiftedTupleRankComputers) :
     List Bool → List Bool :=
   fourFamilyComputedUnarySumOutput
@@ -4472,7 +4533,8 @@ private theorem paperVariableArityShiftedTupleRejectedRankUnary_valid
           Fin.coe_ofNat_eq_mod, Nat.zero_mod,
       pow_zero, Nat.one_mod, pow_one, Nat.mod_succ, Nat.reducePow] using hfull
 
-private def paperVariableArityShiftedTupleBeforeRejectedBit
+/-- Test whether the tuple rank precedes the clause's rejected assignment rank. -/
+def paperVariableArityShiftedTupleBeforeRejectedBit
     (ranks : PaperVariableArityShiftedTupleRankComputers) :
     List Bool → List Bool :=
   fourFamilyComputedUnaryLessBitOutput
@@ -4489,7 +4551,8 @@ private def paperVariableArityShiftedTupleBeforeRejectedBit
     ranks.tuple.computer
     (paperVariableArityShiftedTupleRejectedRankUnaryComputable ranks)
 
-private def paperShiftedTupleSkipUnary
+/-- Encode whether the tuple rank must skip the rejected assignment. -/
+def paperShiftedTupleSkipUnary
     (ranks : PaperVariableArityShiftedTupleRankComputers) :
     List Bool → List Bool :=
   sourceOriginalClauseBooleanUnaryOutput ∘
@@ -4507,7 +4570,8 @@ private def paperShiftedTupleSkipUnary
       (paperVariableArityShiftedTupleBeforeRejectedBitComputable ranks))
     sourceOriginalClauseBooleanUnaryComputable
 
-private def paperShiftedTupleSatisfyingWordRankUnary
+/-- Adjust the tuple rank to skip the clause's rejected assignment. -/
+def paperShiftedTupleSatisfyingWordRankUnary
     (ranks : PaperVariableArityShiftedTupleRankComputers) :
     List Bool → List Bool :=
   fourFamilyComputedUnarySumOutput
@@ -4572,7 +4636,8 @@ private theorem paperVariableArityShiftedTupleSatisfyingWordRankUnary_valid
     (if tuple < paperShiftedTupleRejectedNatural arity sign
       then 0 else 1) htuple skip
 
-private def paperShiftedTupleLocalPowerNumeratorUnary
+/-- Compute the unary numerator used for the tuple position's local power. -/
+def paperShiftedTupleLocalPowerNumeratorUnary
     (ranks : PaperVariableArityShiftedTupleRankComputers) :
     List Bool → List Bool :=
   fourFamilyComputedUnarySumOutput
@@ -4617,7 +4682,8 @@ private theorem paperVariableArityShiftedTupleLocalPowerNumeratorUnary_valid
       (paperShiftedTupleConstantUnary 2))
     input (position * position) (position + 2) product offset
 
-private def paperShiftedTupleLocalBinaryPowerUnary
+/-- Divide the local power numerator by two in unary. -/
+def paperShiftedTupleLocalBinaryPowerUnary
     (ranks : PaperVariableArityShiftedTupleRankComputers) :
     List Bool → List Bool :=
   sourcePhysicalComputedUnaryQuotient
@@ -4656,7 +4722,8 @@ private theorem paperVariableArityShiftedTupleLocalBinaryPowerUnary_valid
       ranks input position hrank) rfl,
     paperVariableArityShiftedTupleBoundedBinaryPower position hposition]
 
-private def paperVariableArityShiftedTupleSatisfyingPositionQuotientUnary
+/-- Divide the satisfying assignment rank by the position's local binary power. -/
+def paperVariableArityShiftedTupleSatisfyingPositionQuotientUnary
     (ranks : PaperVariableArityShiftedTupleRankComputers) :
     List Bool → List Bool :=
   sourcePhysicalComputedUnaryQuotient
@@ -4673,7 +4740,8 @@ private def paperVariableArityShiftedTupleSatisfyingPositionQuotientUnary
     (paperVariableArityShiftedTupleSatisfyingWordRankUnaryComputable ranks)
     (paperVariableArityShiftedTupleLocalBinaryPowerUnaryComputable ranks)
 
-private def paperVariableArityShiftedTupleSatisfyingPositionDigitUnary
+/-- Extract the satisfying assignment's position digit by taking the quotient modulo two. -/
+def paperVariableArityShiftedTupleSatisfyingPositionDigitUnary
     (ranks : PaperVariableArityShiftedTupleRankComputers) :
     List Bool → List Bool :=
   sourcePhysicalComputedUnaryRemainder
@@ -4769,7 +4837,7 @@ namespace SatisfyingWordSourceRankSemantics
 open GapCVP.SourceOrder GapCVP.ShiftedTupleBetaTM
 
 /-- GapCVP reduction support. -/
-def paperVariableArityBoundedSourceSign
+@[expose] def paperVariableArityBoundedSourceSign
     (arity : ℕ) (harity : arity ≤ 3)
     (sign : Fin 3 → Bool) : Fin arity → Bool :=
   fun position =>
@@ -4808,14 +4876,8 @@ private theorem paperVariableArityRejectedWord_eq_shiftedTupleRejectedSourceWord
         !(paperVariableArityBoundedSourceSign
           arity harity sign position)) by
       simp only [paperVariableArityRejectedWord, Equiv.apply_symm_apply]]
-  change
-    (fun position : Fin arity =>
-      !(paperVariableArityBoundedSourceSign
-        arity harity sign position)) =
-      (fun position : Fin arity =>
-        (paperVariableArityShiftedTupleRejectedSourceWord
-          arity harity sign).val.testBit position.val)
   funext position
+  rw [paperVariableArityBooleanWordOrder_apply_testBit]
   interval_cases arity <;>
     fin_cases position <;>
     cases hzero : sign 0 <;>
@@ -4838,14 +4900,6 @@ private theorem paperVariableArityShiftedTupleRejectedNatural_eq_rejectedWord_va
   rw [paperVariableArityRejectedWord_eq_shiftedTupleRejectedSourceWord]
   rfl
 
-private theorem paperVariableAritySuccAbove_val
-    {count : ℕ} (removed : Fin (count + 1))
-    (tuple : Fin count) :
-    (removed.succAbove tuple).val =
-      tuple.val + if tuple.val < removed.val then 0 else 1 := by
-  by_cases h : tuple.val < removed.val <;>
-    simp [Fin.succAbove, Fin.lt_def, h]
-
 private theorem paperVariableAritySatisfyingWordOrder_apply_eq_testBit
     (arity : ℕ) (sign : Fin arity → Bool)
     (tuple : Fin (2 ^ arity - 1))
@@ -4854,22 +4908,7 @@ private theorem paperVariableAritySatisfyingWordOrder_apply_eq_testBit
       (tuple.val +
         if tuple.val < (paperVariableArityRejectedWord arity sign).val
         then 0 else 1).testBit position.val := by
-  have positive : 0 < 2 ^ arity := by positivity
-  have cardinality : 2 ^ arity - 1 + 1 = 2 ^ arity := by omega
-  let correction :
-      Fin (2 ^ arity - 1 + 1) ≃ Fin (2 ^ arity) :=
-    finCongr cardinality
-  let removed : Fin (2 ^ arity - 1 + 1) :=
-    correction.symm (paperVariableArityRejectedWord arity sign)
-  change
-    (correction (removed.succAbove tuple)).val.testBit position.val = _
-  change
-    (removed.succAbove tuple).val.testBit position.val = _
-  rw [paperVariableAritySuccAbove_val]
-  have hremoved :
-      removed.val = (paperVariableArityRejectedWord arity sign).val := by
-    rfl
-  rw [hremoved]
+  exact paperSatisfyingWordOrder_apply_testBit arity sign tuple position
 
 theorem paperVariableAritySatisfyingWordOrder_apply_eq_shiftedTupleBetaBit
     (arity : ℕ) (harity : arity ≤ 3)
@@ -6132,7 +6171,8 @@ private theorem paperVariableArityShiftedTupleOriginalSecondKeepBit_query
   simpa only [List.get_eq_getElem, Fin.isValue, List.append_nil] using
       paperSourceClauseSecondKeepMarker_valid ((noTautClauses formula).get ⟨rank, hbound⟩) []
 
-private def paperShiftedTupleOriginalVariableWord
+/-- Read the variable word at a literal position in the original clause. -/
+def paperShiftedTupleOriginalVariableWord
     (ranks : PaperVariableArityShiftedTupleRankComputers)
     (position : Fin 3) : List Bool → List Bool :=
   paperSourceClauseVariableWord position ∘
@@ -6171,7 +6211,8 @@ private theorem paperVariableArityShiftedTupleOriginalVariableWord_query
   simpa only [List.get_eq_getElem, List.append_nil] using
       paperSourceClauseVariableWord_valid position ((noTautClauses formula).get ⟨rank, hbound⟩) []
 
-private def paperShiftedTupleSelectedSourceWord
+/-- Select one of two computed source words using a computed marker. -/
+def paperShiftedTupleSelectedSourceWord
     (marker first second : List Bool → List Bool)
     (input : List Bool) : List Bool :=
   paperShiftedTupleGuardedSourceWord marker first input ++
@@ -6211,7 +6252,8 @@ private theorem paperVariableArityShiftedTupleSelectedSourceWord_valid
       input (!selector) hnot]
   cases selector <;> simp
 
-private def paperShiftedTupleNormalizedVariableWord
+/-- Read the variable word at a position in the normalized clause. -/
+def paperShiftedTupleNormalizedVariableWord
     (ranks : PaperVariableArityShiftedTupleRankComputers)
     (position : Fin 3) : List Bool → List Bool :=
   if position.val = 0 then
@@ -6440,7 +6482,8 @@ private theorem paperVariableArityShiftedTupleNormalizedVariableWord_query
       ((noTautClauses formula).get
         ⟨rank, hbound⟩) position hposition]
 
-private def paperShiftedTupleLocalPositionMarker
+/-- Test whether the computed variable position equals a specified literal position. -/
+def paperShiftedTupleLocalPositionMarker
     (ranks : PaperVariableArityShiftedTupleRankComputers)
     (position : Fin 3) : List Bool → List Bool :=
   maskComputedWordEquality
@@ -6470,7 +6513,8 @@ private theorem paperVariableArityShiftedTupleLocalPositionMarker_valid
   rw [sourceQaryMaskSquareComputedWordEquality_valid, hposition]
   simp only [paperShiftedTupleConstantUnary, List.replicate_inj, or_true, and_true]
 
-private def paperShiftedTupleSelectedNormalizedVariableWord
+/-- Select the normalized clause's variable word at the computed position. -/
+def paperShiftedTupleSelectedNormalizedVariableWord
     (ranks : PaperVariableArityShiftedTupleRankComputers)
     (input : List Bool) : List Bool :=
   paperShiftedTupleGuardedSourceWord
@@ -6580,7 +6624,8 @@ private theorem paperVariableArityShiftedTupleSelectedNormalizedVariableWord_que
         paperVariableArityShiftedTupleNormalizedVariableWord_query ranks row column formula rank
             hbound hrank 2 hposition
 
-private def paperShiftedTupleRetainedAnchorRankQuery
+/-- Pair the selected normalized variable with the source used to locate its retained rank. -/
+def paperShiftedTupleRetainedAnchorRankQuery
     (ranks : PaperVariableArityShiftedTupleRankComputers)
     (input : List Bool) : List Bool :=
   lengthPrefixedWord
@@ -6632,7 +6677,8 @@ private theorem paperVariableArityShiftedTupleRetainedAnchorRankQuery_query
     paperVariableArityShiftedTupleRetainedSource_query]
   rfl
 
-private def paperShiftedTupleRetainedAnchorRankUnary
+/-- Compute the retained source rank of the selected normalized variable. -/
+def paperShiftedTupleRetainedAnchorRankUnary
     (ranks : PaperVariableArityShiftedTupleRankComputers) :
     List Bool → List Bool :=
   compactSourceVariableRankUnary ∘
@@ -6715,6 +6761,13 @@ noncomputable def paperShiftedTupleRetainedAnchorFieldComputer
   output := paperShiftedTupleRetainedAnchorFieldWord ranks
   computer :=
     paperVariableArityShiftedTupleRetainedAnchorFieldWordComputable ranks
+
+/-- The retained-anchor computer outputs its specified field word. -/
+theorem paperShiftedTupleRetainedAnchorFieldComputer_output
+    (ranks : PaperVariableArityShiftedTupleRankComputers) (input : List Bool) :
+    (paperShiftedTupleRetainedAnchorFieldComputer ranks).output input =
+      paperShiftedTupleRetainedAnchorFieldWord ranks input := by
+  rfl
 
 end ShiftedTupleBetaSourceCorrectness
 
@@ -6833,7 +6886,7 @@ theorem paperShiftedTupleRetainedNormalizedClause_mem
     List.get_mem _ ⟨rank, hbound⟩, rfl⟩
 
 /-- GapCVP reduction support. -/
-def paperShiftedTupleSelectedSourceVariableIndex
+@[expose] def paperShiftedTupleSelectedSourceVariableIndex
     (formula : ThreeCNF) (rank : ℕ)
     (hbound : rank < (noTautClauses formula).length)
     (position : ℕ)
@@ -6972,7 +7025,14 @@ theorem paperVariableArityShiftedTupleSelectedSourceVariableWord_sourceField
         (srcFormula formula)
         (paperShiftedTupleSelectedSourceVariableIndex
           formula rank hbound position hposition) := by
-  rfl
+  exact (GapCVP.BinaryFieldBasis.effectiveAnchor_apply _
+    (GapCVP.Core.sourceFieldExponent_pos
+      (GapCVP.Core.sourceSizeParameter_ge_one_hundred
+        (encodeThreeCNF formula).length (srcFormula formula)))
+    (variableCount_le_fieldWordCount
+      (encodeThreeCNF formula).length (srcFormula formula))
+    (paperShiftedTupleSelectedSourceVariableIndex
+      formula rank hbound position hposition)).symm
 
 end ShiftedTupleAnchorSourceFieldCorrectness
 
@@ -7197,7 +7257,7 @@ def physicalShiftedColumnValueWord :
     paperVariableArityPhysicalShiftedColumnValueRankComputer
 
 /-- GapCVP reduction support. -/
-noncomputable def physicalShiftedColumnValueComputer :
+@[expose] noncomputable def physicalShiftedColumnValueComputer :
     SourcePhysicalLagrangeWordComputer where
   output := physicalShiftedColumnValueWord
   computer := paperVariableArityPhysicalShiftedColumnValueWordComputable
@@ -7260,13 +7320,13 @@ def physicalShiftedColumnGridWord :
     paperVariableArityPhysicalShiftedColumnGridRankComputer
 
 /-- GapCVP reduction support. -/
-noncomputable def physicalShiftedColumnGridComputer :
+@[expose] noncomputable def physicalShiftedColumnGridComputer :
     SourcePhysicalLagrangeWordComputer where
   output := physicalShiftedColumnGridWord
   computer := paperVariableArityPhysicalShiftedColumnGridWordComputable
 
 /-- GapCVP reduction support. -/
-def physicalShiftedColumnGridIndex
+@[expose] def physicalShiftedColumnGridIndex
     (formula : ThreeCNF) (column : ℕ) :
     Fin (2 ^ sourceIrreducibleFormulaDegree formula -
       (srcFormula formula).variableCount) :=
@@ -7276,7 +7336,7 @@ def physicalShiftedColumnGridIndex
       (physicalRefinementGridCard_pos formula)⟩
 
 /-- GapCVP reduction support. -/
-def physicalShiftedColumnGridSourceWord
+@[expose] def physicalShiftedColumnGridSourceWord
     (formula : ThreeCNF) (column : ℕ) :
     GapCVP.Core.EffectiveBinaryField.Word
       (sourceIrreducibleFormulaDegree formula) :=
@@ -7307,7 +7367,7 @@ theorem paperVariableArityPhysicalShiftedColumnGridWord_valid
     row column formula
 
 /-- GapCVP reduction support. -/
-noncomputable def physicalShiftedInterpolationNumeratorComputer
+@[expose] noncomputable def physicalShiftedInterpolationNumeratorComputer
     (ranks : PaperVariableArityShiftedTupleRankComputers) :
     SourcePhysicalLagrangeWordComputer :=
   paperVariableArityPhysicalInterpolationDifferenceComputer
@@ -7315,7 +7375,7 @@ noncomputable def physicalShiftedInterpolationNumeratorComputer
     (paperShiftedTupleBetaFieldComputer ranks)
 
 /-- GapCVP reduction support. -/
-noncomputable def
+@[expose] noncomputable def
     paperVariableArityPhysicalShiftedInterpolationDenominatorComputer
     (ranks : PaperVariableArityShiftedTupleRankComputers) :
     SourcePhysicalLagrangeWordComputer :=
@@ -7324,7 +7384,7 @@ noncomputable def
     (paperShiftedTupleRetainedAnchorFieldComputer ranks)
 
 /-- GapCVP reduction support. -/
-def physicalShiftedInterpolationBaseWord
+@[expose] def physicalShiftedInterpolationBaseWord
     (ranks : PaperVariableArityShiftedTupleRankComputers) :
     List Bool → List Bool :=
   paperVariableArityPhysicalInterpolationProductWord
@@ -7346,7 +7406,7 @@ def physicalShiftedInterpolationBaseWord
         ranks))
 
 /-- GapCVP reduction support. -/
-noncomputable def paperVariableArityPhysicalShiftedInterpolationBaseComputer
+@[expose] noncomputable def paperVariableArityPhysicalShiftedInterpolationBaseComputer
     (ranks : PaperVariableArityShiftedTupleRankComputers) :
     SourcePhysicalLagrangeWordComputer where
   output := physicalShiftedInterpolationBaseWord ranks
@@ -7354,7 +7414,7 @@ noncomputable def paperVariableArityPhysicalShiftedInterpolationBaseComputer
     ranks
 
 /-- GapCVP reduction support. -/
-def physicalShiftedInterpolationBaseSourceWord
+@[expose] def physicalShiftedInterpolationBaseSourceWord
     (formula : ThreeCNF) (column rank : ℕ)
     (bounded : rank < (noTautClauses formula).length)
     (position : ℕ)
@@ -7399,6 +7459,12 @@ private theorem sourceIndexedWord_sourceFieldCardOrder_symm_val
         (indexedWord
           (sourceFormulaWordDegree encodingLength formula) index))).val =
       index.val := by
+  have value :
+      sourceWordValue encodingLength formula
+          (indexedWord (sourceFormulaWordDegree encodingLength formula) index) =
+        sourceFormulaFieldWordOrder encodingLength formula index :=
+    (sourceFormulaFieldWordOrder_apply encodingLength formula index).symm
+  rw [value]
   change
     ((((finCongr
       (sourceFormulaFieldWordOrder_card encodingLength formula)).trans
@@ -7545,9 +7611,12 @@ theorem paperVariableArityPhysicalInterpolationColumnGridSourceWord_sourceField
                   formula column.val)
     _ = ((sourceCoordinateWordOrder
         (encodeThreeCNF formula).length formula column).2.1).val := by
-          exact congrArg Subtype.val
-            (paperVariableArityPhysicalInterpolationColumnGridPoint_eq_sourceCoordinate
-              formula column)
+          exact (sourceFormulaGridWordOrder_apply_val
+            (encodeThreeCNF formula).length (srcFormula formula)
+            (physicalShiftedColumnGridIndex formula column.val)).symm.trans
+              (congrArg Subtype.val
+                (paperVariableArityPhysicalInterpolationColumnGridPoint_eq_sourceCoordinate
+                  formula column))
 
 end PhysicalInterpolationColumnSourceFieldCorrectness
 

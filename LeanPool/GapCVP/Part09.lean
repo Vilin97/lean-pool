@@ -63,6 +63,7 @@ theorem variableCount_le_fieldWordCount
   exact hvariable.trans (hpower.trans hcard)
 
 /-- GapCVP reduction support. -/
+@[expose]
 def sourceFormulaVariableWordIndex
     (encodingLength : ℕ) (formula : Formula) :
     Fin formula.variableCount ↪
@@ -82,6 +83,7 @@ def sourceFormulaVariableWordIndex
     (sourceFormulaVariableWordIndex encodingLength formula index)
 
 /-- GapCVP reduction support. -/
+@[expose]
 def sourceFormulaVariablePlace
     (encodingLength : ℕ) (formula : Formula) :
     Fin formula.variableCount → sourceFormulaField encodingLength formula :=
@@ -252,6 +254,19 @@ def sourceFormulaFieldWordOrder
     (sourceFieldExponent_pos
       (sourceSizeParameter_ge_one_hundred encodingLength formula))
 
+/-- The field word order evaluates the binary word represented by its index. -/
+theorem sourceFormulaFieldWordOrder_apply
+    (encodingLength : ℕ) (formula : Formula)
+    (index : Fin (2 ^ sourceFormulaWordDegree encodingLength formula)) :
+    sourceFormulaFieldWordOrder encodingLength formula index =
+      EffectiveBinaryField.extensionAlgEquivGaloisField
+        (sourceFormulaWordDegree encodingLength formula)
+        (sourceFieldExponent_pos
+          (sourceSizeParameter_ge_one_hundred encodingLength formula))
+        (wordElement
+          (indexedWord (sourceFormulaWordDegree encodingLength formula) index)) := by
+  exact indexedFieldEquiv_apply _ _ index
+
 theorem sourceFormulaFieldWordOrder_card
     (encodingLength : ℕ) (formula : Formula) :
     Fintype.card
@@ -262,6 +277,7 @@ theorem sourceFormulaFieldWordOrder_card
     (sourceSizeParameter_ge_one_hundred encodingLength formula)
 
 /-- GapCVP reduction support. -/
+@[expose]
 def sourceFormulaFieldCardOrder
     (encodingLength : ℕ) (formula : Formula) :
     Fin (Fintype.card
@@ -274,6 +290,7 @@ def sourceFormulaFieldCardOrder
       (sourceFormulaFieldWordOrder encodingLength formula)
 
 /-- GapCVP reduction support. -/
+@[expose]
 def sourceFormulaEvaluationWord
     (encodingLength : ℕ) (formula : Formula)
     (index : Fin
@@ -355,7 +372,17 @@ def sourceFormulaGridWordOrder
     (sourceFormulaGridWordEmbedding encodingLength formula)
     (sourceFormulaGridWordEmbedding_bijective encodingLength formula)
 
+/-- The grid word order retains the field value of its indexed word. -/
+theorem sourceFormulaGridWordOrder_apply_val
+    (encodingLength : ℕ) (formula : Formula)
+    (index : Fin (2 ^ sourceFormulaWordDegree encodingLength formula -
+      formula.variableCount)) :
+    (sourceFormulaGridWordOrder encodingLength formula index).val =
+      sourceFormulaEvaluationWord encodingLength formula index := by
+  rfl
+
 /-- GapCVP reduction support. -/
+@[expose]
 def sourceFormulaGridOrder
     (encodingLength : ℕ) (formula : Formula) :
     Fin ((GapCVP.Factor400BinaryConstructiveSourcePlaces.sourceFormulaGrid

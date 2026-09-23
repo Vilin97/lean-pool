@@ -3684,12 +3684,14 @@ theorem indexedWord_injective (degree : ℕ) :
       Nat.testBit_eq_false_of_lt hright]
 
 /-- GapCVP reduction support. -/
+@[expose]
 def boundedWordIndex {degree count : ℕ}
     (hcount : count ≤ 2 ^ degree) :
     Fin count ↪ Fin (2 ^ degree) :=
   Fin.castLEEmb hcount
 
 /-- GapCVP reduction support. -/
+@[expose]
 def evaluationWordIndex {degree count : ℕ}
     (hcount : count ≤ 2 ^ degree) :
     Fin (2 ^ degree - count) ↪ Fin (2 ^ degree) :=
@@ -3798,6 +3800,14 @@ def indexedFieldEquiv (degree : ℕ) (hdegree : 0 < degree) :
   Equiv.ofBijective (indexedFieldElement degree hdegree)
     (indexedFieldElement_bijective degree hdegree)
 
+/-- The indexed field equivalence evaluates the corresponding binary word. -/
+theorem indexedFieldEquiv_apply (degree : ℕ) (hdegree : 0 < degree)
+    (index : Fin (2 ^ degree)) :
+    indexedFieldEquiv degree hdegree index =
+      EffectiveBinaryField.extensionAlgEquivGaloisField degree hdegree
+        (wordElement (indexedWord degree index)) := by
+  rfl
+
 /-- GapCVP reduction support. -/
 def effectiveAnchor (degree : ℕ) (hdegree : 0 < degree)
     {count : ℕ} (hcount : count ≤ 2 ^ degree) :
@@ -3815,6 +3825,23 @@ def effectiveEvaluationEmbedding (degree : ℕ) (hdegree : 0 < degree)
     (evaluationWordIndex hcount index)
   inj' := (indexedFieldElement_injective degree hdegree).comp
     (evaluationWordIndex hcount).injective
+
+/-- The anchor embedding evaluates the indexed binary word in the extension field. -/
+theorem effectiveAnchor_apply (degree : ℕ) (hdegree : 0 < degree)
+    {count : ℕ} (hcount : count ≤ 2 ^ degree) (index : Fin count) :
+    effectiveAnchor degree hdegree hcount index =
+      EffectiveBinaryField.extensionAlgEquivGaloisField degree hdegree
+        (wordElement (indexedWord degree (boundedWordIndex hcount index))) := by
+  rfl
+
+/-- The evaluation embedding evaluates the indexed binary word in the extension field. -/
+theorem effectiveEvaluationEmbedding_apply (degree : ℕ) (hdegree : 0 < degree)
+    {count : ℕ} (hcount : count ≤ 2 ^ degree)
+    (index : Fin (2 ^ degree - count)) :
+    effectiveEvaluationEmbedding degree hdegree hcount index =
+      EffectiveBinaryField.extensionAlgEquivGaloisField degree hdegree
+        (wordElement (indexedWord degree (evaluationWordIndex hcount index))) := by
+  rfl
 
 theorem effectiveEvaluationEmbedding_ne_anchor
     (degree : ℕ) (hdegree : 0 < degree)

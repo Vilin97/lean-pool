@@ -1937,6 +1937,13 @@ def paperVariableArityBooleanWordOrder (arity : ℕ) :
   simp only [Fintype.card_fin, Fintype.card_pi, Fintype.card_bool, Finset.prod_const,
       Finset.card_univ]
 
+/-- The Boolean word order reads each coordinate as the corresponding rank bit. -/
+theorem paperVariableArityBooleanWordOrder_apply_testBit
+    (arity : ℕ) (word : Fin (2 ^ arity)) (position : Fin arity) :
+    paperVariableArityBooleanWordOrder arity word position =
+      word.val.testBit position.val := by
+  rfl
+
 /-- GapCVP reduction support. -/
 @[expose] def paperVariableArityRejectedWord
     (arity : ℕ) (sign : Fin arity → Bool) : Fin (2 ^ arity) :=
@@ -2010,6 +2017,40 @@ def paperSatisfyingWordOrder
       arity sign (correction word)).mpr satisfied
     apply different
     simpa [removed] using congrArg correction equal
+
+private theorem paperSatisfyingWordOrder_succAbove_val
+    {count : ℕ} (removed : Fin (count + 1))
+    (tuple : Fin count) :
+    (removed.succAbove tuple).val =
+      tuple.val + if tuple.val < removed.val then 0 else 1 := by
+  by_cases h : tuple.val < removed.val <;>
+    simp [Fin.succAbove, Fin.lt_def, h]
+
+/-- A satisfying word's bit is the rank bit after skipping the rejected assignment. -/
+theorem paperSatisfyingWordOrder_apply_testBit
+    (arity : ℕ) (sign : Fin arity → Bool)
+    (tuple : Fin (2 ^ arity - 1))
+    (position : Fin arity) :
+    (paperSatisfyingWordOrder arity sign tuple).val position =
+      (tuple.val +
+        if tuple.val < (paperVariableArityRejectedWord arity sign).val
+        then 0 else 1).testBit position.val := by
+  have positive : 0 < 2 ^ arity := by positivity
+  have cardinality : 2 ^ arity - 1 + 1 = 2 ^ arity := by omega
+  let correction :
+      Fin (2 ^ arity - 1 + 1) ≃ Fin (2 ^ arity) :=
+    finCongr cardinality
+  let removed : Fin (2 ^ arity - 1 + 1) :=
+    correction.symm (paperVariableArityRejectedWord arity sign)
+  change
+    (correction (removed.succAbove tuple)).val.testBit position.val = _
+  change
+    (removed.succAbove tuple).val.testBit position.val = _
+  rw [paperSatisfyingWordOrder_succAbove_val]
+  have hremoved :
+      removed.val = (paperVariableArityRejectedWord arity sign).val := by
+    rfl
+  rw [hremoved]
 
 private theorem paperVariableAritySourceLiteral_mem_sourceClause
     (formula : ThreeCNF) (clause : List GapCVP.Literal)
@@ -2116,6 +2157,15 @@ def paperLocalVariableWordOrder
         formula clause hclause).injective,
       paperVariableArityLocalVariableEmbedding_surjective
         formula clause hclause⟩
+
+/-- The local word order maps a clause position to its normalized variable rank. -/
+theorem paperLocalVariableWordOrder_apply_rank
+    (formula : ThreeCNF) (clause : List GapCVP.Literal)
+    (hclause : clause ∈ paperSourceNormalizedClauses formula)
+    (position : Fin clause.length) :
+    ((paperLocalVariableWordOrder formula clause hclause) position).val.val =
+      paperVariableArityVariableRank formula (clause.get position).1 := by
+  rfl
 
 /-- GapCVP reduction support. -/
 @[expose] def paperLocalAssignmentWordOrder

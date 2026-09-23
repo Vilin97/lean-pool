@@ -3434,7 +3434,7 @@ private theorem paperVariableAritySourceFiniteClauseWeight_eq
   rfl
 
 /-- GapCVP reduction support. -/
-def sourceRetainedPrefixIndex
+@[expose] def sourceRetainedPrefixIndex
     (formula : ThreeCNF)
     (clause : Fin (srcFormula formula).clauses.length)
     (index : Fin clause.val) :
@@ -3713,7 +3713,7 @@ open GapCVP.CNFFlatPhysicalBinaryAppendTM GapCVP.BinarySourceTautologyNormalizat
 open GapCVP.SourcePreprocessingTM GapCVP.ClauseOffsetTM GapCVP.ShiftedTupleTM
 
 /-- GapCVP reduction support. -/
-def paperRefinementClauseRankEnvelope
+@[expose] def paperRefinementClauseRankEnvelope
     (formula : ThreeCNF) (rank : ℕ) : List Bool :=
   lengthPrefixedWord (List.replicate rank true) ++
     sourceQaryMaskDynamicGridBaseSource
@@ -3726,14 +3726,15 @@ noncomputable def paperRefinementPrefixRankWidth :
   output := firstFieldContents
   computer := firstFieldContentsComputable
 
-@[simp] private theorem paperVariableArityRefinementPrefixRankWidth_output
+/-- The refinement prefix-width computer reads the leading unary field. -/
+@[simp] theorem paperVariableArityRefinementPrefixRankWidth_output
     (input : List Bool) :
     paperRefinementPrefixRankWidth.output input =
       firstFieldContents input := by
   rfl
 
 /-- GapCVP reduction support. -/
-def paperRefinementPrefixRankEnvelope
+@[expose] def paperRefinementPrefixRankEnvelope
     (formula : ThreeCNF) (outer inner : ℕ) : List Bool :=
   lengthPrefixedWord (List.replicate inner true) ++
     sourceQaryMaskDynamicGridBaseSource
@@ -5682,7 +5683,7 @@ open GapCVP.BinaryModularReductionTM GapCVP.PhysicalFamilyRowTM
 open GapCVP.BinaryPhysicalLagrangeCoefficientTM
 
 /-- Prepare the operand query for a selected source-field value. -/
-def paperVariableAritySourceSelectedFieldOperandQuery
+@[expose] def paperVariableAritySourceSelectedFieldOperandQuery
     (operand source : List Bool) : List Bool :=
   lengthPrefixedWord operand ++ source
 
@@ -5819,6 +5820,14 @@ noncomputable def paperVariableArityPhysicalCellInverseComputer
     SourcePhysicalLagrangeWordComputer where
   output := physicalCellInverseWord operand
   computer := paperVariableArityPhysicalCellInverseComputable operand
+
+/-- The physical cell inverse computer returns the declared inverse word. -/
+theorem paperVariableArityPhysicalCellInverseComputer_output
+    (operand : SourcePhysicalLagrangeWordComputer)
+    (input : List Bool) :
+    (paperVariableArityPhysicalCellInverseComputer operand).output input =
+      physicalCellInverseWord operand input := by
+  rfl
 
 @[simp] theorem paperVariableArityPhysicalCellInverseWord_valid
     (operand : SourcePhysicalLagrangeWordComputer)
@@ -6258,7 +6267,7 @@ private noncomputable def compactPhysicalLagrangeNodeFactorCatalogueComputable
     width (compactPhysicalLagrangeNodeFactorRecordComputable factor)
 
 /-- GapCVP reduction support. -/
-def compactPhysicalLagrangeNodeFactorQuery
+@[expose] def compactPhysicalLagrangeNodeFactorQuery
     (width : SourceQaryMaskDynamicGridWidth)
     (input : List Bool) (rank : ℕ) : List Bool :=
   lengthPrefixedWord (List.replicate rank true) ++
@@ -6843,7 +6852,7 @@ open GapCVP.SourceMixedRadixMaskSelectedFlatPreparationTM GapCVP.BinaryExplicitA
 open GapCVP.BinaryPhysicalLagrangeCoefficientTM GapCVP.BinaryPhysicalWordRuntimeDegreeTM
 
 /-- GapCVP reduction support. -/
-def compactPhysicalLagrangeNestedNodeEnvelope
+@[expose] def compactPhysicalLagrangeNestedNodeEnvelope
     (width : SourceQaryMaskDynamicGridWidth)
     (rank : ℕ) (source : List Bool) : List Bool :=
   lengthPrefixedWord (List.replicate rank true) ++
@@ -7020,6 +7029,34 @@ noncomputable def compactPhysicalLagrangeNestedAnchorRankWordComputer :
     SourcePhysicalLagrangeWordComputer where
   output := compactPhysicalLagrangeNestedAnchorRank
   computer := compactPhysicalLagrangeNestedAnchorRankComputable
+
+/-- The nested node source computer returns its declared source word. -/
+theorem compactPhysicalLagrangeNestedNodeSourceWordComputer_output
+    (input : List Bool) :
+    compactPhysicalLagrangeNestedNodeSourceWordComputer.output input =
+      compactPhysicalLagrangeNestedNodeOriginalSource input := by
+  rfl
+
+/-- The nested other-source computer returns its declared source word. -/
+theorem compactPhysicalLagrangeNestedOtherSourceWordComputer_output
+    (input : List Bool) :
+    compactPhysicalLagrangeNestedOtherSourceWordComputer.output input =
+      compactPhysicalLagrangeNestedOtherOriginalSource input := by
+  rfl
+
+/-- The nested other-rank computer returns the encoded node rank. -/
+theorem compactPhysicalLagrangeNestedOtherRankWordComputer_output
+    (input : List Bool) :
+    compactPhysicalLagrangeNestedOtherRankWordComputer.output input =
+      compactPhysicalLagrangeNestedNodeRank input := by
+  rfl
+
+/-- The nested anchor-rank computer returns the encoded anchor rank. -/
+theorem compactPhysicalLagrangeNestedAnchorRankWordComputer_output
+    (input : List Bool) :
+    compactPhysicalLagrangeNestedAnchorRankWordComputer.output input =
+      compactPhysicalLagrangeNestedAnchorRank input := by
+  rfl
 
 end BinaryCompactPhysicalLagrangeNestedNodeTM
 
