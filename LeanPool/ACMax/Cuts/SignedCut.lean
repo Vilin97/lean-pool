@@ -3,13 +3,15 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Tauto
-import LeanPool.ACMax.Spectral.AlgConn
-import LeanPool.ACMax.Spectral.RayleighUpper
-import LeanPool.ACMax.Spectral.TestVector
+module
+
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.Tauto
+public import LeanPool.ACMax.Spectral.AlgConn
+public import LeanPool.ACMax.Spectral.RayleighUpper
+public import LeanPool.ACMax.Spectral.TestVector
 
 /-!
 # Signed (three-valued) certificate — the unifying general method
@@ -29,6 +31,8 @@ This **subsumes**:
 and, unlike any bipartition cut, it certifies the `λ₂ = 2` Fiedler-eigenvector graphs at
 `n = 9` (the eigenvectors are `{-1,0,1}`-valued, with the high-degree vertices in `Z`).
 -/
+
+@[expose] public section
 
 namespace ACMax
 

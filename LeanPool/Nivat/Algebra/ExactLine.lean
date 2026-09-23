@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Boon Suan Ho
 -/
 
-import LeanPool.Nivat.Algebra.Action
-import Mathlib.Algebra.Polynomial.FieldDivision
-import Mathlib.Data.Int.LeastGreatest
-import Lean.Elab.Tactic.Omega
+module
+
+public import LeanPool.Nivat.Algebra.Action
+public import Mathlib.Algebra.Polynomial.FieldDivision
+public import Mathlib.Data.Int.LeastGreatest
+public import Lean.Elab.Tactic.Omega
 
 /-
 Upstream: https://github.com/boonsuan/nivat
@@ -60,6 +62,8 @@ for every factor multiplicity. Clearing negative horizontal exponents by a
 monomial unit extends coefficient divisibility to all Laurent filters.
 Finally, exponent reindexing transports the equality through the lattice basis.
 -/
+
+@[expose] public section
 
 namespace Nivat.Algebra
 

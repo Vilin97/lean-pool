@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PDL formalization contributors (see project card)
 -/
 
-import Mathlib.Data.Vector.Basic
-import Mathlib.Logic.Relation
+module
+
+public import Mathlib.Data.Vector.Basic
+public import Mathlib.Logic.Relation
 
 /-!
 # Helper Lemmas about the Kleene Star
@@ -13,6 +15,8 @@ import Mathlib.Logic.Relation
 Nothing here is specific about PDL, but we prove some useful results about the reflexive-transitive
 closure `ReflTransGen` and the transitive closure `TransGen`.
 -/
+
+@[expose] public section
 
 namespace PDL
 

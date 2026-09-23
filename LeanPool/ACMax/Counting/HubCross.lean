@@ -3,15 +3,17 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import LeanPool.ACMax.Counting.Incidence
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Ring
-import LeanPool.ACMax.Counting.FarPair
-import LeanPool.ACMax.Counting.CompactCell
-import LeanPool.ACMax.Counting.CompactLedgers
+module
+
+public import LeanPool.ACMax.Counting.Incidence
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.Ring
+public import LeanPool.ACMax.Counting.FarPair
+public import LeanPool.ACMax.Counting.CompactCell
+public import LeanPool.ACMax.Counting.CompactLedgers
 
 /-!
 # The hub-cross firing law and the big-clean-twin structure
@@ -39,6 +41,8 @@ with the rigidity of the twin population it controls.
   neighbour, two degree-4 partners), `sum_big_inc_le`, `sum_small_inc_le` — the
   bipartite incidence counts feeding the hub-cross coverage argument.
 -/
+
+@[expose] public section
 
 namespace ACMax
 

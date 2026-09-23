@@ -3,7 +3,9 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import LeanPool.ACMax.AHL.AHLAmGm
+module
+
+public import LeanPool.ACMax.AHL.AHLAmGm
 
 /-!
 # The SUM (vertex-ball) Moore refutation — the band-discharge spine (B1–B3)
@@ -30,6 +32,8 @@ buying the extra half-level over the pair form `ahl_irregular_moore`.
   **`ahl_ball_girth_bound`** (`n^ℓ(n − 1) < D · Σ … ⟹ ∃ cycle ≤ 2ℓ`), the form the band
   arithmetic instantiates at the extremal `V₉/2`-core.
 -/
+
+@[expose] public section
 
 namespace ACMax
 

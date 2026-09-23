@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.FaceCycles
-import LeanPool.Schoenflies.Realization
+module
+
+public import LeanPool.Schoenflies.FaceCycles
+public import LeanPool.Schoenflies.Realization
 
 /-!
 # Face cycles: the proof
@@ -100,6 +102,8 @@ general and belong in `Schoenflies/Graph/Walk.lean` and `Schoenflies/Graph/Cycle
 * `Graph.IsDrawing.hasFaceCycles_union` — one ear.
 * `Graph.face_cycles` — `lem:face-cycles`, modulo `Schoenflies.CrosscutSplitsRegion`.
 -/
+
+@[expose] public section
 
 open Metric Set unitInterval
 open scoped Graph
