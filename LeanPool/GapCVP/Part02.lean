@@ -40,7 +40,8 @@ namespace CLPhaseSpecification
 open Computability Turing GapCVP.CLBoundedStates GapCVP.CLLocalWindows
 open GapCVP.CLCompleteVerifierSimulation
 
-private noncomputable def CorrectedGuessingAllowed
+/-- Check the guessing phase, its preserved tracks, and the witness and input guesses. -/
+noncomputable def CorrectedGuessingAllowed
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
     (window : CompletePhaseWindow machine.tm) : Bool :=
@@ -93,7 +94,8 @@ noncomputable def FirstBlockAnchored (tm : Turing.FinTM2)
       cell.payload = cell.payloadHead ∧
       cell.range = cell.rangeHead
   ) (Classical.propDecidable _)
-private noncomputable def PhaseBoundaryPreserved
+/-- Check that a local step preserves whether the cell is in the first machine block. -/
+noncomputable def PhaseBoundaryPreserved
     (tm : Turing.FinTM2)
     (window : CompletePhaseWindow tm) : Bool :=
   @decide (
@@ -1903,7 +1905,8 @@ open GapCVP.CLLocalWindows GapCVP.CLExactStackRules GapCVP.CLCompleteLocalCompil
 open GapCVP.CLTableauSimulationCert GapCVP.CLCompleteVerifierSimulation
 open GapCVP.CLPhaseGlobalSimulation GapCVP.CLStackVerifierSimulation
 
-private noncomputable def DecodableOrBlank
+/-- Check that a cell atom is blank or decodes to a symbol of the designated stack. -/
+noncomputable def DecodableOrBlank
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
     (stack : machine.tm.K)
@@ -2740,7 +2743,8 @@ open GapCVP.CLStackVerifierSimulation GapCVP.CLAnchoredTraceSimulation
 open GapCVP.CLArbitraryRowOccupancy GapCVP.CLRawTrackSimulation GapCVP.CLCompactWindowSoundness
 open GapCVP.CLNoHoleTimeInduction
 
-private def packedPhaseCapacity (tm : Turing.FinTM2) (width : ℕ) : ℕ :=
+/-- Total number of atom positions across all blocks of a phase row. -/
+def packedPhaseCapacity (tm : Turing.FinTM2) (width : ℕ) : ℕ :=
   (width + 1) * blockSize tm
 
 /-- GapCVP reduction support. -/
@@ -3025,7 +3029,8 @@ private theorem fullPackedPhaseStackAtoms_occupied
   · simp only [hblank, Option.isSome_none, Bool.false_eq_true, and_false] at hfiltered
   · exact hoccupied
 
-private def decodedFullPackedPhaseStack
+/-- Decode a stack from the packed phase row, discarding atoms without a stack symbol. -/
+def decodedFullPackedPhaseStack
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
     (width : ℕ)

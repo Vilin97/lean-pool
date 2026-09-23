@@ -418,7 +418,7 @@ private def defaultCompletePhaseCell
 def completePhaseSymbolCount (tm : Turing.FinTM2) : ℕ :=
   Fintype.card (CompletePhaseCell tm) - 1
 
-private theorem completePhaseSymbolCount_card
+theorem completePhaseSymbolCount_card
     (tm : Turing.FinTM2) :
     completePhaseSymbolCount tm + 1 =
       Fintype.card (CompletePhaseCell tm) := by

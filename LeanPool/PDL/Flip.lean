@@ -382,8 +382,10 @@ lemma Tableau.flip_flip {Hist X} {tab : Tableau Hist X} :
       specialize IH Y Y_in
       rw! (castMode := .all) [@Sequent.flip_flip Y]
       simp_all
-    · simp
-    · rfl
+    · exact eq_of_heq (by assumption)
+    · apply eqRec_heq_iff.mpr
+      rfl
+    all_goals rfl
   case pdl r next IH =>
     nth_rewrite 1 [Tableau.flip]
     nth_rewrite 1 [Tableau.flip]

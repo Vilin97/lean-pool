@@ -6,7 +6,6 @@ Authors: Álvaro Begué
 module
 
 public import Mathlib.Combinatorics.Graph.Delete
-import all Mathlib.Combinatorics.Graph.Delete
 public import Mathlib.Data.Set.Card
 public import LeanPool.Schoenflies.Graph.Walk
 
@@ -124,7 +123,11 @@ theorem mem_deleteVerts_singleton_of_ne (hy : y ∈ V(G)) (hyx : y ≠ x) :
 /-- Deleting a vertex the graph does not have leaves the graph alone — on the nose, not merely
 up to isomorphism, because `V(G) \ {x}` is literally `V(G)`. -/
 theorem deleteVerts_singleton_eq_self (hx : x ∉ V(G)) : G.deleteVerts {x} = G := by
-  rw [deleteVerts, sdiff_singleton_eq_self hx, induce_vertexSet]
+  refine Graph.ext (by simp [sdiff_singleton_eq_self hx]) fun e u v ↦ ?_
+  rw [deleteVerts_isLink]
+  exact ⟨fun h ↦ h.1, fun h ↦ ⟨h, by
+    simpa only [mem_singleton_iff] using ne_of_mem_of_not_mem h.left_mem hx, by
+    simpa only [mem_singleton_iff] using ne_of_mem_of_not_mem h.right_mem hx⟩⟩
 
 /-- Deleting the same vertices from both sides of an inclusion keeps it. -/
 theorem deleteVerts_mono (h : G ≤ H) (X : Set α) : G.deleteVerts X ≤ H.deleteVerts X where

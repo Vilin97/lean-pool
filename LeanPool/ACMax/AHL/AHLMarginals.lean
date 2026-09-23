@@ -6,6 +6,8 @@ Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 module
 
 public import LeanPool.ACMax.AHL.AHLStationary
+public import Mathlib.Algebra.BigOperators.Ring.Finset
+public import Mathlib.Tactic.Ring
 
 /-!
 # The AHL stationary marginal VALUES — `xP = x` and its consequences (nodes W3–W5)

@@ -462,7 +462,8 @@ def encodeThreeClause (clause : ThreeClause) : List Bool :=
   encodeLiteral (clause 0) ++
     encodeLiteral (clause 1) ++ encodeLiteral (clause 2)
 
-private def readThreeClause (bits : List Bool) :
+/-- Decode one three-literal clause and return the remaining bits. -/
+def readThreeClause (bits : List Bool) :
     Option (ThreeClause × List Bool) :=
   match readLiteral bits with
   | some (a, rest₁) =>
@@ -484,7 +485,8 @@ private def readThreeClause (bits : List Bool) :
   simp only [readThreeClause, encodeThreeClause, Fin.isValue, List.append_assoc,
       readLiteral_append, hclause]
 
-private def readThreeClauses : ℕ → List Bool → Option (ThreeCNF × List Bool)
+/-- Decode a fixed number of clauses while preserving the unused suffix. -/
+def readThreeClauses : ℕ → List Bool → Option (ThreeCNF × List Bool)
   | 0, bits => some ([], bits)
   | n + 1, bits =>
       match readThreeClause bits with
@@ -655,7 +657,8 @@ def encodeGapCVPInstance (I : GapCVPInstance) : List Bool :=
     encodeFinValues I.dimension I.target ++
     encodeMatrixRows I.dimension I.dimension (Matrix.of.symm I.basis)
 
-private def decodeGapCVPInstance (bits : List Bool) : Option GapCVPInstance :=
+/-- Decode the binary fields of a closest-vector instance. -/
+def decodeGapCVPInstance (bits : List Bool) : Option GapCVPInstance :=
   match (readAtomic bits : Option (ℕ × List Bool)) with
   | none => none
   | some (n, afterDimension) =>
@@ -676,7 +679,7 @@ private def decodeGapCVPInstance (bits : List Bool) : Option GapCVPInstance :=
                   }
               | _ => none
 
-@[simp] private theorem decodeGapCVPInstance_encode
+@[simp] theorem decodeGapCVPInstance_encode
     (I : GapCVPInstance) :
     decodeGapCVPInstance (encodeGapCVPInstance I) =
       some I := by
@@ -809,7 +812,8 @@ namespace TMComposition
 
 open Turing
 
-private abbrev Stack (first second : FinTM2) :=
+/-- Stack labels of the machine formed by sequential composition. -/
+abbrev Stack (first second : FinTM2) :=
   first.K ⊕ { k : second.K // k ≠ second.k₀ }
 
 /-- GapCVP reduction support. -/
@@ -817,11 +821,14 @@ abbrev alphabet (first second : FinTM2) : Stack first second → Type
   | .inl k => first.Γ k
   | .inr k => second.Γ k.val
 
-private abbrev Label (first second : FinTM2) := first.Λ ⊕ second.Λ
+/-- Control labels of the sequential composition machine. -/
+abbrev Label (first second : FinTM2) := first.Λ ⊕ second.Λ
 
-private abbrev InternalState (first second : FinTM2) := first.σ × second.σ
+/-- Paired internal states of the sequential composition machine. -/
+abbrev InternalState (first second : FinTM2) := first.σ × second.σ
 
-private def statementPushCount {K : Type} {Γ : K → Type} {Λ σ : Type} :
+/-- Maximum number of pushes along a branch of a Turing statement. -/
+def statementPushCount {K : Type} {Γ : K → Type} {Λ σ : Type} :
     Turing.TM2.Stmt Γ Λ σ → ℕ
   | .push _ _ q => statementPushCount q + 1
   | .peek _ _ q => statementPushCount q
@@ -957,7 +964,7 @@ private theorem evals_stack_length_le (tm : Turing.FinTM2)
   apply iterate_stack_length_le tm h.steps c c' _ target
   exact h.evals_in_steps
 
-private theorem iterate_map_of_some
+theorem iterate_map_of_some
     {α β : Type} (stepA : α → Option α) (stepB : β → Option β)
     (translate : α → β)
     (hstep : ∀ a a', stepA a = some a' →
@@ -1079,14 +1086,15 @@ theorem outputLengthPolynomial_bounds
       Polynomial.eval_natCast, Nat.cast_id, Nat.mul_comm] using polynomialComputer_output_length_le
           first x
 
-private noncomputable def compositeTimePolynomial
+/-- Time bound obtained by composing the two machine bounds. -/
+noncomputable def compositeTimePolynomial
     {f g : List Bool → List Bool}
     (first : BitTM f)
     (second : BitTM g) :
     Polynomial ℕ :=
   first.time + second.time.comp (outputLengthPolynomial first)
 
-private theorem compositeTimePolynomial_bounds
+theorem compositeTimePolynomial_bounds
     {f g : List Bool → List Bool}
     (first : BitTM f)
     (second : BitTM g)
@@ -1099,11 +1107,13 @@ private theorem compositeTimePolynomial_bounds
       add_le_add_iff_left,
       ge_iff_le] using Nat.add_le_add_left hsecond (first.time.eval x.length)
 
-private noncomputable def secondStack (first second : FinTM2) (k : second.K) :
+/-- Embed a stack of the second machine into the composite stack type. -/
+noncomputable def secondStack (first second : FinTM2) (k : second.K) :
     Stack first second :=
   if h : k = second.k₀ then .inl first.k₁ else .inr ⟨k, h⟩
 
-private noncomputable def secondAlphabetEquiv
+/-- Identify a second-machine stack alphabet with its composite counterpart. -/
+noncomputable def secondAlphabetEquiv
     {f g : List Bool → List Bool}
     (first : BitTM f)
     (second : BitTM g)
@@ -1117,7 +1127,8 @@ private noncomputable def secondAlphabetEquiv
     exact second.inputAlphabet.trans first.outputAlphabet.symm
   · exact Equiv.refl (second.tm.Γ k)
 
-private def liftFirstStmt (first second : FinTM2) :
+/-- Run a statement of the first machine inside the composite machine. -/
+def liftFirstStmt (first second : FinTM2) :
     Turing.TM2.Stmt first.Γ first.Λ first.σ →
       Turing.TM2.Stmt (alphabet first second)
         (Label first second) (InternalState first second)
@@ -1137,7 +1148,8 @@ private def liftFirstStmt (first second : FinTM2) :
   | .goto f => .goto (fun s => .inl (f s.1))
   | .halt => .goto (fun _ => .inr second.main)
 
-private noncomputable def liftSecondStmt
+/-- Run a statement of the second machine inside the composite machine. -/
+noncomputable def liftSecondStmt
     {f g : List Bool → List Bool}
     (first : BitTM f)
     (second : BitTM g) :
@@ -1227,7 +1239,8 @@ noncomputable def auxiliary
     (secondAlphabetEquiv first second second.tm.k₁).symm.trans
       second.outputAlphabet
 
-private def firstStacks (first second : FinTM2)
+/-- Embed the first machine stack contents into composite stacks. -/
+def firstStacks (first second : FinTM2)
     (sourceStacks : ∀ k, List (first.Γ k)) :
     (k : Stack first second) → List (alphabet first second k)
   | .inl k => sourceStacks k
@@ -1250,7 +1263,8 @@ private theorem firstStacks_update (first second : FinTM2)
   | inr j =>
       simp only [ne_eq, firstStacks, Function.update, reduceCtorEq, ↓reduceDIte]
 
-private noncomputable def firstConfiguration
+/-- Embed a first-machine configuration into the composite machine. -/
+noncomputable def firstConfiguration
     {f g : List Bool → List Bool}
     (first : BitTM f)
     (second : BitTM g)
@@ -1319,7 +1333,7 @@ private theorem liftFirstStmt_stepAux
   | goto p => rfl
   | halt => rfl
 
-private theorem firstConfiguration_step
+theorem firstConfiguration_step
     {f g : List Bool → List Bool}
     (first : BitTM f)
     (second : BitTM g)
@@ -1346,7 +1360,8 @@ private theorem firstConfiguration_step
       rw [liftFirstStmt_stepAux]
       rfl
 
-private noncomputable def firstConfiguration_evalsToInTime
+/-- Transfer a timed first-machine evaluation to the composite machine. -/
+noncomputable def firstConfigurationEvalsToInTime
     {f g : List Bool → List Bool}
     (first : BitTM f)
     (second : BitTM g)
@@ -1360,7 +1375,7 @@ private noncomputable def firstConfiguration_evalsToInTime
     (machine first second).step (firstConfiguration first second)
     (firstConfiguration_step first second) h
 
-private theorem firstConfiguration_init
+theorem firstConfiguration_init
     {f g : List Bool → List Bool}
     (first : BitTM f)
     (second : BitTM g)
@@ -1387,7 +1402,8 @@ private theorem firstConfiguration_init
   | inr k =>
       simp only [ne_eq, firstStacks, reduceCtorEq, ↓reduceDIte]
 
-private noncomputable def secondStacks
+/-- Embed the second machine stack contents into composite stacks. -/
+noncomputable def secondStacks
     {f g : List Bool → List Bool}
     (first : BitTM f)
     (second : BitTM g)
@@ -1472,7 +1488,8 @@ private theorem secondStacks_private_update
       · simp only [ne_eq, secondStacks, Function.update, hj, ↓reduceDIte, Sum.inr.injEq,
           Subtype.mk.injEq]
 
-private noncomputable def secondConfiguration
+/-- Embed a second-machine configuration into the composite machine. -/
+noncomputable def secondConfiguration
     {f g : List Bool → List Bool}
     (first : BitTM f)
     (second : BitTM g)
@@ -1663,7 +1680,7 @@ private theorem liftSecondStmt_stepAux
   | goto p => rfl
   | halt => rfl
 
-private theorem secondConfiguration_step
+theorem secondConfiguration_step
     {f g : List Bool → List Bool}
     (first : BitTM f)
     (second : BitTM g)
@@ -1690,7 +1707,7 @@ private theorem secondConfiguration_step
       rw [liftSecondStmt_stepAux]
       rfl
 
-private theorem phaseConfiguration
+theorem phaseConfiguration
     {f g : List Bool → List Bool}
     (first : BitTM f)
     (second : BitTM g)
@@ -1758,7 +1775,7 @@ private theorem secondStacks_secondStack
       | cons a rest ih =>
           exact congrArg (List.cons a) ih
 
-private theorem secondConfiguration_halt
+theorem secondConfiguration_halt
     {f g : List Bool → List Bool}
     (first : BitTM f)
     (second : BitTM g)
@@ -1829,7 +1846,8 @@ private theorem secondConfiguration_halt
           simp only [ne_eq, secondStack, hprivate, ↓reduceDIte, Sum.inr.injEq, Subtype.ext_iff, h]
         exact haltList_stk_of_ne _ _ _ hout
 
-private noncomputable def computableInPolyTimeOfSeam
+/-- Compose two polynomial-time machines across their shared seam. -/
+noncomputable def computableInPolyTimeOfSeam
     {f g : List Bool → List Bool}
     (first : BitTM f)
     (second : BitTM g)
@@ -1839,7 +1857,7 @@ private noncomputable def computableInPolyTimeOfSeam
   time := compositeTimePolynomial first second
   outputsFun := by
     intro x
-    have hfirst := firstConfiguration_evalsToInTime
+    have hfirst := firstConfigurationEvalsToInTime
       first second (first.outputsFun x)
     rw [firstConfiguration_init first second x,
       phaseConfiguration first second x] at hfirst
@@ -1882,7 +1900,8 @@ theorem polynomialTimeClosedUnderComposition :
 
 namespace PromiseReduction
 
-private def compWithCertificate {A B : BitLanguage} {P : PromiseProblem}
+/-- Compose a promise reduction with a certificate-producing map. -/
+def compWithCertificate {A B : BitLanguage} {P : PromiseProblem}
     (first : PolynomialReduction A B)
     (second : PromiseReduction B P)
     (certificate : Nonempty
@@ -2770,7 +2789,8 @@ private theorem encodeFormulaFrom_allDistinct {T S : ℕ}
     exact ⟨encodeClause_allDistinct clauseIndex clause,
       ih (clauseIndex + 1)⟩
 
-private def encodeFormula {T S : ℕ} (formula : Formula T S) : ThreeCNF :=
+/-- Encode a finite formula as clauses for the reduction. -/
+def encodeFormula {T S : ℕ} (formula : Formula T S) : ThreeCNF :=
   encodeFormulaFrom 0 (sortedElements formula)
 
 theorem encodeFormula_allDistinct {T S : ℕ} (formula : Formula T S) :
@@ -3176,7 +3196,7 @@ noncomputable def witnessTimePolynomial
     (machine : VerifierTM verifier) : Polynomial ℕ :=
   machine.time.comp (Polynomial.X + bound)
 
-private theorem witnessTimePolynomial_bounds
+theorem witnessTimePolynomial_bounds
     (bound : Polynomial ℕ)
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
@@ -4095,7 +4115,8 @@ namespace CLBoundedStates
 
 open Computability GapCVP.CLVerifier GapCVP.CLNondeterminism
 
-private def statementPushSlots
+/-- List the push locations in a Turing statement. -/
+def statementPushSlots
     {K : Type} {Γ : K → Type} {Λ σ : Type} :
     Turing.TM2.Stmt Γ Λ σ → ℕ
   | .push _ _ next => statementPushSlots next + 1
@@ -4107,7 +4128,8 @@ private def statementPushSlots
   | .goto _ => 0
   | .halt => 0
 
-private abbrev PushSlot (tm : Turing.FinTM2) :=
+/-- A push location in the verifier machine. -/
+abbrev PushSlot (tm : Turing.FinTM2) :=
   Σ label : tm.Λ, Fin (statementPushSlots (tm.m label))
 
 noncomputable instance instFintypePushSlot
@@ -4160,10 +4182,12 @@ namespace CLPushAlphabet
 
 open Computability GapCVP.CLVerifier GapCVP.CLBoundedStates
 
-private abbrev PushSource (tm : Turing.FinTM2) :=
+/-- A source location and state for a stack push. -/
+abbrev PushSource (tm : Turing.FinTM2) :=
   Σ stack : tm.K, tm.σ → tm.Γ stack
 
-private def statementPushSources
+/-- Collect the source locations of pushes in a statement. -/
+def statementPushSources
     {K : Type} {Γ : K → Type} {Λ σ : Type} :
     Turing.TM2.Stmt Γ Λ σ → List (Σ stack : K, σ → Γ stack)
   | .push stack value next =>
@@ -4195,7 +4219,8 @@ private def statementPushSources
   | goto value => rfl
   | halt => rfl
 
-private def pushSourceOfSlot (tm : Turing.FinTM2)
+/-- Recover the source of a push from its indexed slot. -/
+def pushSourceOfSlot (tm : Turing.FinTM2)
     (slot : PushSlot tm) : PushSource tm :=
   (statementPushSources (tm.m slot.1)).get
     ⟨slot.2.val, by
@@ -4546,7 +4571,8 @@ private theorem certificatePhase_bit
         PhaseTag.guessing := by
   simp only [certificatePhase, hindex, ↓reduceDIte, List.get_eq_getElem]
 
-private abbrev CellRow (tm : Turing.FinTM2) (width : ℕ) :=
+/-- A complete row of encoded stack cells. -/
+abbrev CellRow (tm : Turing.FinTM2) (width : ℕ) :=
   Fin (width + 1) → LocalCellSymbol tm
 
 /-- GapCVP reduction support. -/
@@ -4607,7 +4633,8 @@ def statementStackActions
   | .goto _ => 0
   | .halt => 0
 
-private def maxStackEditsPerStep (tm : Turing.FinTM2) : ℕ := by
+/-- Bound the number of stack edits made in one machine step. -/
+def maxStackEditsPerStep (tm : Turing.FinTM2) : ℕ := by
   classical
   letI : Fintype tm.Λ := tm.ΛFin
   exact Finset.univ.sup fun label =>
@@ -4652,7 +4679,8 @@ instance instFintypeBlockCell (tm : Turing.FinTM2) :
 def blankCell (tm : Turing.FinTM2) : LocalCellSymbol tm :=
   (.guessing, none, fun _ => none, false)
 
-private abbrev BlockRow (tm : Turing.FinTM2) (width : ℕ) :=
+/-- A row of blocks covering the encoded machine configuration. -/
+abbrev BlockRow (tm : Turing.FinTM2) (width : ℕ) :=
   Fin (width + 1) → BlockCell tm
 
 /-- GapCVP reduction support. -/
@@ -4943,7 +4971,9 @@ def canonicalCellAtom
     (hsupported : SupportedStackValue machine stack value) :
     CellAtom machine.tm :=
   Classical.choose
-    (by simpa only [SupportedStackValue, decide_eq_true_eq] using hsupported)
+    (show ∃ atom : CellAtom machine.tm,
+        cellAtomValue machine stack atom = some value from by
+      simpa only [SupportedStackValue, decide_eq_true_eq] using hsupported)
 
 theorem canonicalCellAtom_decode
     {verifier : List Bool × List Bool → Bool}
@@ -5800,13 +5830,16 @@ namespace CLEmittedCNFTM
 
 open Computability Turing
 
-private abbrev LookupMemory (limit : ℕ) :=
+/-- Finite memory carried by the bounded lookup machine. -/
+abbrev LookupMemory (limit : ℕ) :=
   Fin (limit + 1) × (Fin limit → Bool) × Bool
 
-private def initialLookupMemory (limit : ℕ) : LookupMemory limit :=
+/-- Initial state of the bounded lookup memory. -/
+def initialLookupMemory (limit : ℕ) : LookupMemory limit :=
   (0, fun _ => false, false)
 
-private def advanceLookupMemory (limit : ℕ)
+/-- Update lookup memory after reading one input bit. -/
+def advanceLookupMemory (limit : ℕ)
     (memory : LookupMemory limit) (bit : Bool) :
     LookupMemory limit :=
   if h : memory.1.val < limit then
@@ -5816,16 +5849,19 @@ private def advanceLookupMemory (limit : ℕ)
   else
     (memory.1, memory.2.1, true)
 
-private def lookupMemoryBits (limit : ℕ)
+/-- Encode the current lookup memory as bits. -/
+def lookupMemoryBits (limit : ℕ)
     (memory : LookupMemory limit) : List Bool :=
   (List.ofFn memory.2.1).take memory.1.val
 
-private def lookupMemoryOutput (limit : ℕ)
+/-- Extract the lookup result from the final memory state. -/
+def lookupMemoryOutput (limit : ℕ)
     (table : List Bool → Bool)
     (memory : LookupMemory limit) : Bool :=
   if memory.2.2 then false else table (lookupMemoryBits limit memory)
 
-private abbrev boundedLookupMachine (limit : ℕ)
+/-- Finite machine implementing bounded lookup. -/
+abbrev boundedLookupMachine (limit : ℕ)
     (table : List Bool → Bool) : Turing.FinTM2 where
   K := Bool
   k₀ := false
@@ -6192,7 +6228,8 @@ def finiteHeadConfiguration
   var := control.2
   stk stack := decodedAtomBlock machine stack (heads stack)
 
-private def finiteHeadQueryOf
+/-- Turn a finite query into a head-position query. -/
+def finiteHeadQueryOf
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
     (first next : machine.tm.Cfg)
@@ -6305,7 +6342,8 @@ def emptyPrefixScript {K : Type} (Γ : K → Type) :
   funext stack
   simp only [scriptStacks, emptyPrefixScript, List.drop_zero, List.nil_append]
 
-private def pushPrefixScript
+/-- Script that pushes a prescribed prefix onto a stack. -/
+def pushPrefixScript
     {K : Type} {Γ : K → Type} [DecidableEq K]
     (script : PrefixScript Γ)
     (stack : K) (value : Γ stack) : PrefixScript Γ where
@@ -6327,7 +6365,8 @@ private theorem scriptStacks_push
     simp only [scriptStacks, pushPrefixScript, Function.update_self, List.cons_append]
   · simp only [scriptStacks, pushPrefixScript, Function.update, htarget, ↓reduceDIte]
 
-private def popPrefixScript
+/-- Script that removes a prescribed prefix from a stack. -/
+def popPrefixScript
     {K : Type} {Γ : K → Type} [DecidableEq K]
     (script : PrefixScript Γ)
     (stack : K) : PrefixScript Γ :=
@@ -7646,7 +7685,8 @@ namespace CLFullTableauEmitter
 open Computability Turing GapCVP.CLLocalWindows GapCVP.CLCompleteLocalCompiler
 open GapCVP.CLExactVerifierTransition GapCVP.CLTableauSimulationCert
 
-private def defaultSingleStackHint (tm : Turing.FinTM2) :
+/-- Default bound for a machine with one active stack. -/
+def defaultSingleStackHint (tm : Turing.FinTM2) :
     SingleStackHint tm :=
   (⟨0, blockSize_pos tm⟩,
     ⟨0, blockSize_pos tm⟩,

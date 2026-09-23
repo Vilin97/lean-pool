@@ -877,9 +877,11 @@ theorem deleteVert_connected_initSkel (k : Fin 6) :
   have h23 := stepDel k (m := 2) (m' := 3) (by decide) (by decide) (by decide)
   have h34 := stepDel k (m := 3) (m' := 4) (by decide) (by decide) (by decide)
   have h45 := stepDel k (m := 4) (m' := 5) (by decide) (by decide) (by decide)
-  have hhub : (InitialCell.vert (k + 1)) ∈ V(initSkel.deleteVerts {InitialCell.vert k}) :=
-    ⟨⟨k + 1, rfl⟩, vert_notMem_del (by decide)⟩
+  have hhub : (InitialCell.vert (k + 1)) ∈ V(initSkel.deleteVerts {InitialCell.vert k}) := by
+    rw [Graph.vertexSet_deleteVerts]
+    exact ⟨⟨k + 1, rfl⟩, vert_notMem_del (by decide)⟩
   refine Graph.Connected.of_hub hhub ?_
+  simp only [Graph.vertexSet_deleteVerts]
   rintro _ ⟨⟨j, rfl⟩, hj⟩
   obtain ⟨m, rfl⟩ : ∃ m, j = k + m := ⟨j - k, fin6_add_sub k j⟩
   have hm : m ≠ 0 := by
