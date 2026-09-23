@@ -10,7 +10,7 @@ public import LeanPool.GapCVP.Part05E
 
 /-! # GapCVP proof, part 05, continuation 06 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -339,8 +339,8 @@ open GapCVP.CNFUnaryPairIndexTotalRuntimeCert GapCVP.CNFSourcePairPrefixWorkerTM
 open GapCVP.CNFSourcePairPrefixWorkerTotalCert GapCVP.CNFCappedUnaryMinimumTM
 open GapCVP.CNFCappedUnaryMinimumTotalCert
 
-/-- GapCVP reduction support. -/
-def unaryPrefixSuffixOutput (input : List Bool) : List Bool :=
+/-- Discard the first unary field and return its remaining suffix. -/
+@[expose] def unaryPrefixSuffixOutput (input : List Bool) : List Bool :=
   match readUnaryPrefix input with
   | none => []
   | some (_, suffix) => suffix
@@ -575,8 +575,8 @@ open GapCVP.CNFSourcePairPrefixWorkerTotalCert GapCVP.CNFCappedUnaryMinimumTM
 open GapCVP.CNFCappedUnaryMinimumTotalCert GapCVP.CNFCappedUnaryPairArithmeticTM
 open GapCVP.CNFFlatPhysicalBinaryAppendTM
 
-/-- GapCVP reduction support. -/
-def flatUnaryDropFields (count : ℕ) (input : List Bool) : List Bool :=
+/-- Discard the specified number of leading unary fields. -/
+@[expose] def flatUnaryDropFields (count : ℕ) (input : List Bool) : List Bool :=
   (unaryPrefixSuffixOutput^[count]) input
 
 /-- GapCVP reduction support. -/
@@ -600,8 +600,8 @@ noncomputable def flatUnaryDropFieldsComputable :
       simpa only [Function.iterate_succ_apply', Function.comp_def, flatUnaryDropFields]
           using hphysical
 
-/-- GapCVP reduction support. -/
-def flatDuplicatedUnaryValueWord (input : List Bool) : List Bool :=
+/-- Read the minimum of the first two unary values as a unary word. -/
+@[expose] def flatDuplicatedUnaryValueWord (input : List Bool) : List Bool :=
   cappedUnaryMinimumOutput input
 
 /-- GapCVP reduction support. -/
@@ -610,8 +610,8 @@ noncomputable def flatDuplicatedUnaryValueComputable :
       flatDuplicatedUnaryValueWord :=
   actualCappedUnaryMinimumComputable
 
-/-- GapCVP reduction support. -/
-def flatDuplicatedUnaryFieldWord (input : List Bool) : List Bool :=
+/-- Terminate the minimum-value unary word with a false bit. -/
+@[expose] def flatDuplicatedUnaryFieldWord (input : List Bool) : List Bool :=
   flatDuplicatedUnaryValueWord input ++ [false]
 
 private noncomputable def flatDuplicatedUnaryFieldComputable :
@@ -622,8 +622,8 @@ private noncomputable def flatDuplicatedUnaryFieldComputable :
     (constantWordComputable [false])
   exact hphysical
 
-/-- GapCVP reduction support. -/
-def flatDuplicatedUnaryFieldAt
+/-- Read a duplicated unary field after skipping the given number of fields. -/
+@[expose] def flatDuplicatedUnaryFieldAt
     (offset : ℕ) (input : List Bool) : List Bool :=
   flatDuplicatedUnaryFieldWord (flatUnaryDropFields offset input)
 
@@ -639,8 +639,8 @@ private noncomputable def flatDuplicatedUnaryFieldAtComputable
       flatDuplicatedUnaryFieldWord (flatUnaryDropFields offset input))
   simpa only [Function.comp_def] using hphysical
 
-/-- GapCVP reduction support. -/
-def flatCappedUnarySourceListQuery
+/-- Concatenate duplicated unary fields selected at offsets zero, two, and four. -/
+@[expose] def flatCappedUnarySourceListQuery
     (input : List Bool) : List Bool :=
   flatDuplicatedUnaryFieldAt 0 input ++
     flatDuplicatedUnaryFieldAt 2 input ++
@@ -665,8 +665,8 @@ private noncomputable def flatCappedUnarySourceListQueryComputable :
   rw [← heq]
   exact hphysical
 
-/-- GapCVP reduction support. -/
-def flatCappedUnarySourceListNextField
+/-- Compute the next capped source-list field from its three-field query. -/
+@[expose] def flatCappedUnarySourceListNextField
     (input : List Bool) : List Bool :=
   cappedUnarySourcePairRecurrenceWord
       (flatCappedUnarySourceListQuery input) ++ [false]
@@ -685,8 +685,8 @@ private noncomputable def flatCappedUnarySourceListNextFieldComputable :
         (flatCappedUnarySourceListQuery input) ++ [false])
   simpa only [Function.comp_apply] using hphysical
 
-/-- GapCVP reduction support. -/
-def flatCappedUnaryPendingPair
+/-- Read the pending source pair after the first six unary fields. -/
+@[expose] def flatCappedUnaryPendingPair
     (input : List Bool) : List Bool :=
   sourcePairPrefixOutput (flatUnaryDropFields 6 input)
 
@@ -701,8 +701,8 @@ private noncomputable def flatCappedUnaryPendingPairComputable :
       sourcePairPrefixOutput (flatUnaryDropFields 6 input))
   simpa only [Function.comp_def] using hphysical
 
-/-- GapCVP reduction support. -/
-def flatCappedUnaryPendingRemainder
+/-- Return the suffix after the six header fields and pending pair. -/
+@[expose] def flatCappedUnaryPendingRemainder
     (input : List Bool) : List Bool :=
   flatUnaryDropFields 2 (flatUnaryDropFields 6 input)
 
@@ -717,8 +717,8 @@ private noncomputable def flatCappedUnaryPendingRemainderComputable :
       flatUnaryDropFields 2 (flatUnaryDropFields 6 input))
   simpa only [Function.comp_def] using hphysical
 
-/-- GapCVP reduction support. -/
-def flatCappedUnarySourceListStep
+/-- Advance the flat capped unary source-list encoding by one step. -/
+@[expose] def flatCappedUnarySourceListStep
     (input : List Bool) : List Bool :=
   flatDuplicatedUnaryFieldAt 0 input ++
     flatDuplicatedUnaryFieldAt 0 input ++
@@ -756,17 +756,17 @@ noncomputable def flatCappedUnarySourceListStepComputable :
   rw [← heq]
   exact hphysical
 
-/-- GapCVP reduction support. -/
-def flatDuplicatedUnaryField (value : ℕ) : List Bool :=
+/-- Encode a unary value twice as an adjacent pair. -/
+@[expose] def flatDuplicatedUnaryField (value : ℕ) : List Bool :=
   unarySourcePairWord value value
 
-/-- GapCVP reduction support. -/
-def flatDuplicatedUnarySourceStream
+/-- Concatenate duplicated unary encodings of the source records. -/
+@[expose] def flatDuplicatedUnarySourceStream
     (records : List ℕ) : List Bool :=
   records.flatMap flatDuplicatedUnaryField
 
-/-- GapCVP reduction support. -/
-def flatCappedUnarySourceListState
+/-- Encode the cap, current accumulator, and remaining source records. -/
+@[expose] def flatCappedUnarySourceListState
     (cap accumulator : ℕ) : List ℕ → List Bool
   | [] =>
       flatDuplicatedUnaryField cap ++
