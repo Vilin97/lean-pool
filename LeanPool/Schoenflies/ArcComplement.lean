@@ -3,11 +3,13 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.ArcComplementPrep
-import LeanPool.Schoenflies.CombinatorialInvariance
-import LeanPool.Schoenflies.Graph.VertexSquares
-import LeanPool.Schoenflies.OuterChainClosed
-import LeanPool.Schoenflies.AccessibleJoin
+module
+
+public import LeanPool.Schoenflies.ArcComplementPrep
+public import LeanPool.Schoenflies.CombinatorialInvariance
+public import LeanPool.Schoenflies.Graph.VertexSquares
+public import LeanPool.Schoenflies.OuterChainClosed
+public import LeanPool.Schoenflies.AccessibleJoin
 
 /-!
 # A simple arc does not separate the plane
@@ -82,6 +84,8 @@ Three hypotheses, all named in the statements that carry them.
   complement of a simple arc is connected, and any two of its points are joined in it by a
   simple polygonal arc.
 -/
+
+@[expose] public section
 
 open Metric Set unitInterval
 open scoped Graph

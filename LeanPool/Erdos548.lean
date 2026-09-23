@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tom Adamczewski
 -/
 
-import LeanPool.Erdos548.Main
-import LeanPool.Erdos548.RootedTrees
-import LeanPool.Erdos548.Words
+module
+
+public import LeanPool.Erdos548.Main
+public import LeanPool.Erdos548.RootedTrees
+public import LeanPool.Erdos548.Words
 
 /-!
 # The Erdős–Sós conjecture (Erdős Problem 548)

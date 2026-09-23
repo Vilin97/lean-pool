@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Graph.PathGraph
-import LeanPool.Schoenflies.Graph.TwoConnected
+module
+
+public import LeanPool.Schoenflies.Graph.PathGraph
+public import LeanPool.Schoenflies.Graph.TwoConnected
 
 /-!
 # A cycle, as two paths sharing their ends, is 2-connected
@@ -29,6 +31,8 @@ one cycle at a time, and any later argument that has to see a subdivided closed 
 
 * `Graph.isTwoConnected_of_two_paths` — the cycle base case of `lem:union-two-connected`.
 -/
+
+@[expose] public section
 
 open Set
 open scoped Graph

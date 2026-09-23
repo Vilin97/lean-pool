@@ -4,21 +4,23 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
 
-import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.Analysis.Normed.Field.Basic
-import Mathlib.Data.Finset.Card
-import Mathlib.Data.List.Chain
-import Mathlib.Logic.Relation
-import Mathlib.Tactic.Bound
-import Mathlib.Tactic.Continuity
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
-import Mathlib.Topology.Algebra.Group.Basic
-import Mathlib.Topology.Algebra.Monoid
-import Mathlib.Topology.Algebra.Ring.Real
-import Mathlib.Topology.MetricSpace.Bounded
+module
+
+public import Mathlib.Algebra.BigOperators.Ring.Finset
+public import Mathlib.Analysis.Normed.Field.Basic
+public import Mathlib.Data.Finset.Card
+public import Mathlib.Data.List.Chain
+public import Mathlib.Logic.Relation
+public import Mathlib.Tactic.Bound
+public import Mathlib.Tactic.Continuity
+public import Mathlib.Tactic.IntervalCases
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Ring
+public import Mathlib.Topology.Algebra.Group.Basic
+public import Mathlib.Topology.Algebra.Monoid
+public import Mathlib.Topology.Algebra.Ring.Real
+public import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Finite max-flow / min-cut
@@ -54,6 +56,8 @@ Contents:
 The development is `sorry`-free and uses only the standard axioms
 `propext`, `Classical.choice`, `Quot.sound`.
 -/
+
+@[expose] public section
 
 namespace Contrib.MaxFlowMinCut
 
@@ -202,9 +206,9 @@ theorem pairs_rel {R : N → N → Prop} (l : List N) (hc : l.IsChain R)
   exact this
 
 /-- Out-neighbour predicate: `u` sits at a non-final position. -/
-private def POut (l : List N) (u : N) : Prop := ∃ i : ℕ, i + 1 < l.length ∧ l[i]? = some u
+def POut (l : List N) (u : N) : Prop := ∃ i : ℕ, i + 1 < l.length ∧ l[i]? = some u
 /-- In-neighbour predicate: `u` sits at a non-initial position. -/
-private def PIn (l : List N) (u : N) : Prop := ∃ i : ℕ, i + 1 < l.length ∧ l[i + 1]? = some u
+def PIn (l : List N) (u : N) : Prop := ∃ i : ℕ, i + 1 < l.length ∧ l[i + 1]? = some u
 
 instance (l : List N) (u : N) : Decidable (POut l u) :=
   decidable_of_iff (∃ i ∈ Finset.range l.length, i + 1 < l.length ∧ l[i]? = some u) (by

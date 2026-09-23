@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
 
-import LeanPool.ConcentrationInequalities.BennettBernstein
-import LeanPool.ConcentrationInequalities.ConditionalHoeffding
-import LeanPool.ConcentrationInequalities.FreedmanBernstein
-import LeanPool.ConcentrationInequalities.HoeffdingUpper
+module
+
+public import LeanPool.ConcentrationInequalities.BennettBernstein
+public import LeanPool.ConcentrationInequalities.ConditionalHoeffding
+public import LeanPool.ConcentrationInequalities.FreedmanBernstein
+public import LeanPool.ConcentrationInequalities.HoeffdingUpper
 
 /-!
 # Bennett--Bernstein, Freedman, and Hoeffding concentration inequalities

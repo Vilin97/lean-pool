@@ -3,12 +3,14 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.AccessibleJoin
-import LeanPool.Schoenflies.JordanClosed
-import LeanPool.Schoenflies.Inversion
-import LeanPool.Schoenflies.ModelCurve
-import LeanPool.Schoenflies.ArcComplementPrep
-import LeanPool.Schoenflies.Graph.Drawing
+module
+
+public import LeanPool.Schoenflies.AccessibleJoin
+public import LeanPool.Schoenflies.JordanClosed
+public import LeanPool.Schoenflies.Inversion
+public import LeanPool.Schoenflies.ModelCurve
+public import LeanPool.Schoenflies.ArcComplementPrep
+public import LeanPool.Schoenflies.Graph.Drawing
 
 /-!
 # `lem:skeleton-crosscuts`: a crosscut inside one stage of the skeleton
@@ -46,6 +48,8 @@ An earlier version of this docstring listed those as if they were here; they nev
   polygonal crosscut between two prescribed points of `C` that the stage joins. Clause 2, the
   target crosscut, is in `Schoenflies/BoundaryContinuity2.lean`.
 -/
+
+@[expose] public section
 
 open Metric Set Schoenflies
 open scoped Graph
