@@ -3,9 +3,11 @@ Copyright (c) 2026 Boon Suan Ho. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Boon Suan Ho
 -/
-import LeanPool.FourAP.Extension
-import LeanPool.FourAP.Limit
-import Mathlib.Data.PNat.Basic
+module
+
+public import LeanPool.FourAP.Extension
+public import LeanPool.FourAP.Limit
+public import Mathlib.Data.PNat.Basic
 
 /-!
 # The permutation of the positive integers
@@ -20,6 +22,8 @@ as well gives the positive permutation in the paper's indexing convention.
 The numerical prefixes from the remark are checked separately in
 its upstream numerical examples module, using the stabilization results proved here.
 -/
+
+@[expose] public section
 
 namespace FourAP
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.LocallyPolygonal
-import LeanPool.Schoenflies.PolygonalCarrier
+module
+
+public import LeanPool.Schoenflies.LocallyPolygonal
+public import LeanPool.Schoenflies.PolygonalCarrier
 
 /-!
 # Local polygonal connectedness, in the form brick B7 consumes
@@ -56,6 +58,8 @@ Brick B5 ↔ brick B6 of `lem:polygonal-redrawing` (H6), and the interface B7 us
 * `polyReaches_of_isPreconnected_of_isRelOpenIn`, `polyReaches_connectedComponentIn` — the
   payoff: two points of a connected relatively open piece are joined *inside that piece*.
 -/
+
+@[expose] public section
 
 open Metric Set
 

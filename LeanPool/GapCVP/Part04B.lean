@@ -4,9 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import LeanPool.GapCVP.Part04A
+module
+
+public import LeanPool.GapCVP.Part04A
 
 /-! # GapCVP proof, part 04, continuation 02 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -26,7 +30,8 @@ open GapCVP.CNFSortingDedup GapCVP.CNFEncodedClauseSort GapCVP.CNFNaturalOrderCo
 
 open GapCVP.CNFNaturalOrderTotalComparator
 
-private def certifiedNatural_liftStep
+/-- Transfer a pair-comparator step outside phase six to the natural-number comparator. -/
+def certifiedNaturalLiftStep
     {first next : delimitedNaturalComparisonMachine.Cfg}
     (hphase : first.l ≠ some (6 : Fin 12))
     (hstep : delimitedPairComparisonMachine.step first = some next) :
@@ -38,7 +43,8 @@ private def certifiedNatural_liftStep
 
 
 
-private def certifiedNatural_finishTrace
+/-- Restore the source and finish the natural comparison with the supplied ordering result. -/
+def certifiedNaturalFinishTrace
     (outcome : EncodedWordOrdering)
     (input firstCounter firstReversed secondCounter secondReversed
       firstForward secondForward source sourcePrefix output : List Bool) :
@@ -63,10 +69,11 @@ private def certifiedNatural_finishTrace
       firstForward.length + secondForward.length +
       3 * input.length + source.length + sourcePrefix.length + 5)
   exact DelimitedCompareTrace.finish delimitedNaturalComparisonMachine.step
-    certifiedNatural_liftStep outcome input firstCounter firstReversed secondCounter
+    certifiedNaturalLiftStep outcome input firstCounter firstReversed secondCounter
     secondReversed firstForward secondForward source sourcePrefix output
 
-private def certifiedNatural_firstPrefixTrace
+/-- Read the first unary length prefix into the counter and save the consumed source bits. -/
+def certifiedNaturalFirstPrefixTrace
     (outcome : EncodedWordOrdering) (count : ℕ)
     (tail firstCounter firstReversed secondCounter secondReversed
       firstForward secondForward source sourcePrefix output : List Bool) :
@@ -82,10 +89,11 @@ private def certifiedNatural_firstPrefixTrace
         (List.replicate (count + 1) true ++ sourcePrefix) output))
       (count + 1) := by
   exact DelimitedCompareTrace.firstPrefix delimitedNaturalComparisonMachine.step
-    certifiedNatural_liftStep outcome count tail firstCounter firstReversed secondCounter
+    certifiedNaturalLiftStep outcome count tail firstCounter firstReversed secondCounter
     secondReversed firstForward secondForward source sourcePrefix output
 
-private def certifiedNatural_firstMissingPrefixTrace
+/-- Enter the invalid-result phase when the first length prefix lacks its delimiter. -/
+def certifiedNaturalFirstMissingPrefixTrace
     (outcome : EncodedWordOrdering) (count : ℕ)
     (firstCounter firstReversed secondCounter secondReversed
       firstForward secondForward source sourcePrefix output : List Bool) :
@@ -101,10 +109,11 @@ private def certifiedNatural_firstMissingPrefixTrace
         (List.replicate count true ++ sourcePrefix) output))
       (count + 1) := by
   exact DelimitedCompareTrace.firstMissingPrefix delimitedNaturalComparisonMachine.step
-    certifiedNatural_liftStep outcome count firstCounter firstReversed secondCounter secondReversed
+    certifiedNaturalLiftStep outcome count firstCounter firstReversed secondCounter secondReversed
     firstForward secondForward source sourcePrefix output
 
-private def certifiedNatural_firstPartialPayloadTrace
+/-- Copy the available first payload while keeping its remaining length counter. -/
+def certifiedNaturalFirstPartialPayloadTrace
     (outcome : EncodedWordOrdering)
     (payload remainingCounter firstReversed
       secondCounter secondReversed firstForward secondForward
@@ -120,10 +129,11 @@ private def certifiedNatural_firstPartialPayloadTrace
         (List.replicate payload.length true ++ sourcePrefix) output))
       payload.length := by
   exact DelimitedCompareTrace.firstPartialPayload delimitedNaturalComparisonMachine.step
-    certifiedNatural_liftStep outcome payload remainingCounter firstReversed secondCounter
+    certifiedNaturalLiftStep outcome payload remainingCounter firstReversed secondCounter
     secondReversed firstForward secondForward source sourcePrefix output
 
-private def certifiedNatural_secondPrefixTrace
+/-- Read the second unary length prefix into its counter and preserve the source. -/
+def certifiedNaturalSecondPrefixTrace
     (outcome : EncodedWordOrdering) (count : ℕ)
     (tail firstCounter firstReversed secondCounter secondReversed
       firstForward secondForward source sourcePrefix output : List Bool) :
@@ -139,10 +149,11 @@ private def certifiedNatural_secondPrefixTrace
         (List.replicate (count + 1) true ++ sourcePrefix) output))
       (count + 1) := by
   exact DelimitedCompareTrace.secondPrefix delimitedNaturalComparisonMachine.step
-    certifiedNatural_liftStep outcome count tail firstCounter firstReversed secondCounter
+    certifiedNaturalLiftStep outcome count tail firstCounter firstReversed secondCounter
     secondReversed firstForward secondForward source sourcePrefix output
 
-private def certifiedNatural_secondMissingPrefixTrace
+/-- Enter the invalid-result phase when the second length prefix lacks its delimiter. -/
+def certifiedNaturalSecondMissingPrefixTrace
     (outcome : EncodedWordOrdering) (count : ℕ)
     (firstCounter firstReversed secondCounter secondReversed
       firstForward secondForward source sourcePrefix output : List Bool) :
@@ -158,10 +169,11 @@ private def certifiedNatural_secondMissingPrefixTrace
         (List.replicate count true ++ sourcePrefix) output))
       (count + 1) := by
   exact DelimitedCompareTrace.secondMissingPrefix delimitedNaturalComparisonMachine.step
-    certifiedNatural_liftStep outcome count firstCounter firstReversed secondCounter secondReversed
+    certifiedNaturalLiftStep outcome count firstCounter firstReversed secondCounter secondReversed
     firstForward secondForward source sourcePrefix output
 
-private def certifiedNatural_secondPartialPayloadTrace
+/-- Copy the available second payload while keeping its remaining length counter. -/
+def certifiedNaturalSecondPartialPayloadTrace
     (outcome : EncodedWordOrdering)
     (payload remainingCounter firstCounter firstReversed
       secondReversed firstForward secondForward
@@ -179,10 +191,11 @@ private def certifiedNatural_secondPartialPayloadTrace
         (List.replicate payload.length true ++ sourcePrefix) output))
       payload.length := by
   exact DelimitedCompareTrace.secondPartialPayload delimitedNaturalComparisonMachine.step
-    certifiedNatural_liftStep outcome payload remainingCounter firstCounter firstReversed
+    certifiedNaturalLiftStep outcome payload remainingCounter firstCounter firstReversed
     secondReversed firstForward secondForward source sourcePrefix output
 
-private def certifiedNatural_firstRecordTrace
+/-- Read a complete first length-prefixed record and advance to the second record. -/
+def certifiedNaturalFirstRecordTrace
     (outcome : EncodedWordOrdering)
     (payload tail firstReversed secondCounter secondReversed
       firstForward secondForward source sourcePrefix output : List Bool) :
@@ -198,11 +211,12 @@ private def certifiedNatural_firstRecordTrace
           sourcePrefix) output))
       (2 * payload.length + 2) := by
   exact DelimitedCompareTrace.firstRecord delimitedNaturalComparisonMachine.step
-    certifiedNatural_liftStep outcome payload tail firstReversed secondCounter secondReversed
+    certifiedNaturalLiftStep outcome payload tail firstReversed secondCounter secondReversed
     firstForward secondForward source sourcePrefix output
 
 
-private def certifiedNatural_validTrace
+/-- Compare two valid encoded natural numbers within a linear time bound, preserving the source. -/
+def certifiedNaturalValidTrace
     (first second suffix : List Bool) :
     EvalsToInTime delimitedNaturalComparisonMachine.step (naturalCompareConfiguration 0 .invalid
         (lengthPrefixedWord first ++
@@ -240,7 +254,7 @@ private def certifiedNatural_validTrace
         suffix [] [] [] [] [] [] saved prefixMarkers []))
       (first.length + second.length + 1) at hcompare
   have hassembly := DelimitedCompareTrace.validAssembly
-    delimitedNaturalComparisonMachine.step certifiedNatural_liftStep
+    delimitedNaturalComparisonMachine.step certifiedNaturalLiftStep
     first second suffix [] [] (littleEndianNaturalOrdering first second)
     (first.length + second.length + 1)
     (by simpa only [firstCode, secondCode, saved, prefixMarkers] using hcompare)
@@ -271,7 +285,8 @@ private def certifiedNatural_validTrace
     List.length_nil, lengthPrefixedWord_length]
   omega
 
-private def certifiedNatural_missingFirstTrace (count : ℕ) :
+/-- Finish with an invalid result when the first record has an undelimited length prefix. -/
+def certifiedNaturalMissingFirstTrace (count : ℕ) :
     EvalsToInTime delimitedNaturalComparisonMachine.step (naturalCompareConfiguration 0 .invalid
         (List.replicate count true) [] [] [] [] [] [] [] [] [])
       (some (Turing.haltList delimitedNaturalComparisonMachine
@@ -288,8 +303,8 @@ private def certifiedNatural_missingFirstTrace (count : ℕ) :
           (List.replicate count true) []))
         (count + 1) := by
     simpa only [FinTM2.step, Fin.isValue, List.append_nil] using
-        certifiedNatural_firstMissingPrefixTrace .invalid count [] [] [] [] [] [] [] [] []
-  have hfinish := certifiedNatural_finishTrace .invalid
+        certifiedNaturalFirstMissingPrefixTrace .invalid count [] [] [] [] [] [] [] [] []
+  have hfinish := certifiedNaturalFinishTrace .invalid
     [] (List.replicate count true) [] [] [] [] []
     (List.replicate count true) (List.replicate count true) []
   have hrestored :
@@ -307,7 +322,8 @@ private def certifiedNatural_missingFirstTrace (count : ℕ) :
   simp only [List.length_replicate, List.length_nil]
   omega
 
-private def certifiedNatural_truncatedFirstTrace
+/-- Finish with an invalid result when the first payload is shorter than declared. -/
+def certifiedNaturalTruncatedFirstTrace
     (count : ℕ) (payload : List Bool)
     (hshort : payload.length < count) :
     EvalsToInTime delimitedNaturalComparisonMachine.step (naturalCompareConfiguration 0 .invalid
@@ -343,7 +359,7 @@ private def certifiedNatural_truncatedFirstTrace
           (List.replicate (count + 1) true) []))
         (count + 1) := by
     simpa only [FinTM2.step, Fin.isValue, List.append_nil] using
-        certifiedNatural_firstPrefixTrace .invalid count payload [] [] [] [] [] [] [] [] []
+        certifiedNaturalFirstPrefixTrace .invalid count payload [] [] [] [] [] [] [] [] []
   have hpartial :
       EvalsToInTime delimitedNaturalComparisonMachine.step
         (naturalCompareConfiguration 1 .invalid
@@ -358,20 +374,20 @@ private def certifiedNatural_truncatedFirstTrace
         List.replicate (extra + 1) true =
           true :: List.replicate extra true := by
       simp only [List.replicate_succ]
-    have hraw := certifiedNatural_firstPartialPayloadTrace
+    have hraw := certifiedNaturalFirstPartialPayloadTrace
       .invalid payload (List.replicate (extra + 1) true)
       [] [] [] [] [] (false :: List.replicate count true)
       (List.replicate (count + 1) true) []
     rw [← hcounter, hremaining] at hraw
     simpa only [saved, prefixMarkers, List.append_nil] using hraw
-  have hmissing := certifiedNatural_liftStep
+  have hmissing := certifiedNaturalLiftStep
     (by simp only [delimitedCompareConfiguration, Fin.isValue, ne_eq, Option.some.injEq,
         Fin.reduceEq,
             not_false_eq_true])
     (delimitedCompare_firstPayload_missing .invalid true
       (List.replicate extra true) payload.reverse
       [] [] [] [] saved prefixMarkers [])
-  have hfinish := certifiedNatural_finishTrace .invalid
+  have hfinish := certifiedNaturalFinishTrace .invalid
     [] (List.replicate extra true) payload.reverse
     [] [] [] [] saved prefixMarkers []
   have hprefixLength :
@@ -405,7 +421,8 @@ private def certifiedNatural_truncatedFirstTrace
     List.length_cons, List.length_nil]
   omega
 
-private def certifiedNatural_missingSecondTrace
+/-- Finish with an invalid result when the second record has an undelimited length prefix. -/
+def certifiedNaturalMissingSecondTrace
     (first : List Bool) (count : ℕ) :
     EvalsToInTime delimitedNaturalComparisonMachine.step (naturalCompareConfiguration 0 .invalid
         (lengthPrefixedWord first ++ List.replicate count true)
@@ -431,7 +448,7 @@ private def certifiedNatural_missingSecondTrace
           [] first.reverse [] [] [] [] firstCode.reverse
           (List.replicate firstCode.length true) []))
         (2 * first.length + 2) := by
-    simpa [firstCode] using certifiedNatural_firstRecordTrace
+    simpa [firstCode] using certifiedNaturalFirstRecordTrace
       .invalid first (List.replicate count true)
       [] [] [] [] [] [] [] []
   have hmissing :
@@ -445,10 +462,10 @@ private def certifiedNatural_missingSecondTrace
           [] [] [] saved prefixMarkers []))
         (count + 1) := by
     simpa [saved, prefixMarkers] using
-      certifiedNatural_secondMissingPrefixTrace .invalid count
+      certifiedNaturalSecondMissingPrefixTrace .invalid count
         [] first.reverse [] [] [] []
         firstCode.reverse (List.replicate firstCode.length true) []
-  have hfinish := certifiedNatural_finishTrace .invalid
+  have hfinish := certifiedNaturalFinishTrace .invalid
     [] [] first.reverse (List.replicate count true)
     [] [] [] saved prefixMarkers []
   have hprefixLength :
@@ -481,7 +498,8 @@ private def certifiedNatural_missingSecondTrace
     lengthPrefixedWord_length]
   omega
 
-private def certifiedNatural_truncatedSecondTrace
+/-- Finish with an invalid result when the second payload is shorter than declared. -/
+def certifiedNaturalTruncatedSecondTrace
     (first : List Bool) (count : ℕ) (payload : List Bool)
     (hshort : payload.length < count) :
     EvalsToInTime delimitedNaturalComparisonMachine.step (naturalCompareConfiguration 0 .invalid
@@ -524,7 +542,7 @@ private def certifiedNatural_truncatedSecondTrace
           [] first.reverse [] [] [] [] firstCode.reverse
           (List.replicate firstCode.length true) []))
         (2 * first.length + 2) := by
-    simpa [firstCode] using certifiedNatural_firstRecordTrace
+    simpa [firstCode] using certifiedNaturalFirstRecordTrace
       .invalid first (List.replicate count true ++ false :: payload)
       [] [] [] [] [] [] [] []
   have hprefix :
@@ -540,7 +558,7 @@ private def certifiedNatural_truncatedSecondTrace
           (List.replicate (count + 1) true ++
             List.replicate firstCode.length true) []))
         (count + 1) := by
-    simpa using certifiedNatural_secondPrefixTrace .invalid count
+    simpa using certifiedNaturalSecondPrefixTrace .invalid count
       payload [] first.reverse [] [] [] []
       firstCode.reverse (List.replicate firstCode.length true) []
   have hpartial :
@@ -559,7 +577,7 @@ private def certifiedNatural_truncatedSecondTrace
         List.replicate (extra + 1) true =
           true :: List.replicate extra true := by
       simp [List.replicate_succ]
-    have hraw := certifiedNatural_secondPartialPayloadTrace
+    have hraw := certifiedNaturalSecondPartialPayloadTrace
       .invalid payload (List.replicate (extra + 1) true)
       [] first.reverse [] [] []
       (false :: (List.replicate count true ++ firstCode.reverse))
@@ -567,12 +585,12 @@ private def certifiedNatural_truncatedSecondTrace
         List.replicate firstCode.length true) []
     rw [← hcounter, hremaining] at hraw
     simpa only [saved, prefixMarkers, List.append_nil] using hraw
-  have hmissing := certifiedNatural_liftStep
+  have hmissing := certifiedNaturalLiftStep
     (by simp [delimitedCompareConfiguration])
     (delimitedCompare_secondPayload_missing .invalid true
       [] first.reverse (List.replicate extra true)
       payload.reverse [] [] saved prefixMarkers [])
-  have hfinish := certifiedNatural_finishTrace .invalid
+  have hfinish := certifiedNaturalFinishTrace .invalid
     [] [] first.reverse (List.replicate extra true)
     payload.reverse [] [] saved prefixMarkers []
   have hprefixLength :
@@ -609,7 +627,8 @@ private def certifiedNatural_truncatedSecondTrace
     lengthPrefixedWord_length]
   omega
 
-private def certifiedNatural_totalTrace (input : List Bool) :
+/-- A linear-time natural-comparison execution for every input, including malformed records. -/
+def certifiedNaturalTotalTrace (input : List Bool) :
     EvalsToInTime delimitedNaturalComparisonMachine.step (naturalCompareConfiguration 0 .invalid
         input [] [] [] [] [] [] [] [] [])
       (some (Turing.haltList delimitedNaturalComparisonMachine
@@ -621,14 +640,14 @@ private def certifiedNatural_totalTrace (input : List Bool) :
       (some (Turing.haltList delimitedNaturalComparisonMachine
         (sourcePreservingDelimitedNaturalComparisonWord input)))
       (24 * (input.length + 1) + 24)) ?_ ?_ ?_ ?_ ?_ input
-  · exact certifiedNatural_missingFirstTrace
-  · exact certifiedNatural_truncatedFirstTrace
-  · exact certifiedNatural_missingSecondTrace
+  · exact certifiedNaturalMissingFirstTrace
+  · exact certifiedNaturalTruncatedFirstTrace
+  · exact certifiedNaturalMissingSecondTrace
   · intro first count tail hlength
     simpa only [List.append_assoc] using
-      certifiedNatural_truncatedSecondTrace first count tail hlength
+      certifiedNaturalTruncatedSecondTrace first count tail hlength
   · intro first second suffix
-    simpa only [List.append_assoc] using certifiedNatural_validTrace first second suffix
+    simpa only [List.append_assoc] using certifiedNaturalValidTrace first second suffix
 
 /-- GapCVP reduction support. -/
 def sourcePreservingDelimitedNaturalComparisonComputable :
@@ -639,15 +658,15 @@ def sourcePreservingDelimitedNaturalComparisonComputable :
   outputAlphabet := Equiv.refl Bool
   time := 24 * (Polynomial.X + 1) + 24
   outputsFun input := {
-    steps := (certifiedNatural_totalTrace input).steps
+    steps := (certifiedNaturalTotalTrace input).steps
     evals_in_steps := by
       simpa only [Option.bind_eq_bind, FinTM2.step, Fin.isValue, Equiv.invFun_as_coe,
           Equiv.refl_symm,
           Equiv.coe_refl, bitEncoding, id_eq, List.map_id_fun,
               delimitedNaturalComparisonMachine_init, Option.map_some] using
-          (certifiedNatural_totalTrace input).evals_in_steps
+          (certifiedNaturalTotalTrace input).evals_in_steps
     steps_le_m := by
-      have hsteps := (certifiedNatural_totalTrace input).steps_le_m
+      have hsteps := (certifiedNaturalTotalTrace input).steps_le_m
       simpa only [FinTM2.step, Fin.isValue, bitEncoding, id_eq, Polynomial.eval_add,
           Polynomial.eval_mul,
           Polynomial.eval_ofNat, Polynomial.eval_X, Polynomial.eval_one, ge_iff_le] using hsteps
@@ -741,7 +760,8 @@ def polynomialRowMarkerTopStage
     PolynomialRowMarkerStage polynomial :=
   ⟨polynomial.natDegree, by omega⟩
 
-private def polynomialRowMarkerPeek
+/-- Read a row-marker stack head into the state and branch on whether it is present. -/
+def polynomialRowMarkerPeek
     (polynomial : Polynomial ℕ)
     (stack : Fin 7)
     (present absent : Turing.TM2.Stmt
@@ -755,7 +775,8 @@ private def polynomialRowMarkerPeek
   .peek stack (fun _ bit => bit)
     (.branch (fun bit => bit.isSome) present absent)
 
-private def polynomialRowMarkerPop
+/-- Pop a row-marker stack while preserving the bit stored in the machine state. -/
+def polynomialRowMarkerPop
     (polynomial : Polynomial ℕ)
     (stack : Fin 7)
     (continuation : Turing.TM2.Stmt
@@ -768,7 +789,8 @@ private def polynomialRowMarkerPop
       (Option Bool) :=
   .pop stack (fun bit _ => bit) continuation
 
-private def polynomialRowMarkerPushBit
+/-- Push the stored row-marker bit, defaulting to false when the state is empty. -/
+def polynomialRowMarkerPushBit
     (polynomial : Polynomial ℕ)
     (stack : Fin 7)
     (continuation : Turing.TM2.Stmt
@@ -781,7 +803,8 @@ private def polynomialRowMarkerPushBit
       (Option Bool) :=
   .push stack (fun bit => bit.getD false) continuation
 
-private def polynomialRowMarkerPushConstant
+/-- Push a fixed bit on a row-marker stack before the continuation. -/
+def polynomialRowMarkerPushConstant
     (polynomial : Polynomial ℕ)
     (stack : Fin 7) (bit : Bool)
     (continuation : Turing.TM2.Stmt
@@ -794,7 +817,8 @@ private def polynomialRowMarkerPushConstant
       (Option Bool) :=
   .push stack (fun _ => bit) continuation
 
-private def polynomialRowMarkerGoto
+/-- Clear the stored bit and enter the selected polynomial stage and machine phase. -/
+def polynomialRowMarkerGoto
     (polynomial : Polynomial ℕ)
     (phase : Fin 9)
     (stage : PolynomialRowMarkerStage polynomial) :
@@ -804,7 +828,8 @@ private def polynomialRowMarkerGoto
       (Option Bool) :=
   .load (fun _ => none) (.goto (fun _ => (phase, stage)))
 
-private def polynomialRowMarkerPushBits
+/-- Push a sequence of constant bits, in list order, before executing the continuation. -/
+def polynomialRowMarkerPushBits
     (polynomial : Polynomial ℕ)
     (stack : Fin 7) :
     List Bool →

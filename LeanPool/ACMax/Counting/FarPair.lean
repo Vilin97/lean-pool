@@ -3,12 +3,14 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Tauto
-import LeanPool.ACMax.Spectral.TestVector
+module
+
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.Tauto
+public import LeanPool.ACMax.Spectral.TestVector
 
 /-!
 # Far-pair and apex double-star test-vector certificates
@@ -42,6 +44,8 @@ general ACMAX argument.
 All three are direct instances of `algConn_le_two_of_testvector`; no new spectral
 machinery is introduced.
 -/
+
+@[expose] public section
 
 namespace ACMax
 

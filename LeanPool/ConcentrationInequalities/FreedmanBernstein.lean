@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
 
-import Mathlib.Tactic.FunProp
-import LeanPool.ConcentrationInequalities.BennettBernstein
+module
+
+public import Mathlib.Tactic.FunProp
+public import LeanPool.ConcentrationInequalities.BennettBernstein
 
 /-!
 # Freedman / Bernstein inequality for martingales (adapted sums of sub-gamma increments)
@@ -23,6 +25,8 @@ of `Contrib.BennettBernstein`, with kernel-level tower additivity of the varianc
 
 Sorry-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Real Contrib.Bennett
 open scoped ENNReal NNReal Topology
