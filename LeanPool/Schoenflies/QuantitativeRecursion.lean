@@ -3,7 +3,9 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.QuantitativeForwardStages
+module
+
+public import LeanPool.Schoenflies.QuantitativeForwardStages
 
 /-!
 # The recursive quantitative stage construction
@@ -11,6 +13,8 @@ import LeanPool.Schoenflies.QuantitativeForwardStages
 This module iterates the two-sided quantitative successor. Window centres are
 read from a recurrent sequence and all three quantitative parameters use a dyadic scale.
 -/
+
+@[expose] public section
 
 open Filter Metric Set
 

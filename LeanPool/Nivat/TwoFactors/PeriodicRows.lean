@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Boon Suan Ho
 -/
 
-import LeanPool.Nivat.Core.Basic
-import LeanPool.Nivat.TwoFactors.FiniteState
-import Mathlib.Algebra.Ring.Periodic
-import Mathlib.Tactic.Linarith
+module
+
+public import LeanPool.Nivat.Core.Basic
+public import LeanPool.Nivat.TwoFactors.FiniteState
+public import Mathlib.Algebra.Ring.Periodic
+public import Mathlib.Tactic.Linarith
 
 /-
 Upstream: https://github.com/boonsuan/nivat
@@ -46,6 +48,8 @@ rows periodic. A common multiple of those row periods and the horizontal
 mixed-difference direction gives a difference vanishing on a full transverse
 fundamental strip; its transverse period then makes it vanish everywhere.
 -/
+
+@[expose] public section
 
 namespace Nivat.TwoFactors
 

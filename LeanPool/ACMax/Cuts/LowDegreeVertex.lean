@@ -3,12 +3,14 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
-import LeanPool.ACMax.Spectral.AlgConn
-import LeanPool.ACMax.Spectral.RayleighUpper
-import LeanPool.ACMax.Spectral.TestVector
+module
+
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Ring
+public import LeanPool.ACMax.Spectral.AlgConn
+public import LeanPool.ACMax.Spectral.RayleighUpper
+public import LeanPool.ACMax.Spectral.TestVector
 
 /-!
 # A single low-degree vertex already forces `algConn ≤ 2`
@@ -27,6 +29,8 @@ This closes every `n ≤ 7` instance of the conjecture: `m = 2(n-2) < 3n/2` for 
 forces a vertex of degree `≤ 2`.  The open core is exactly the graphs with minimum
 degree `≥ 3` (possible only for `n ≥ 8`).
 -/
+
+@[expose] public section
 
 namespace ACMax
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Concatenate
-import LeanPool.Schoenflies.CrosscutAtMostTwo
-import LeanPool.Schoenflies.StripLocal
+module
+
+public import LeanPool.Schoenflies.Concatenate
+public import LeanPool.Schoenflies.CrosscutAtMostTwo
+public import LeanPool.Schoenflies.StripLocal
 
 /-!
 # Two-sided collars along a simple polygonal arc
@@ -85,6 +87,8 @@ arc, and `Schoenflies.isPolyArcCarrier_segment` exhibits one.
 * `Schoenflies.segmentPolyArc`, `Schoenflies.isPolyArcCarrier_segment` — a straight crosscut as
   a `PolyArc`, which recovers `Schoenflies.hasArcCollars_segment` as a special case.
 -/
+
+@[expose] public section
 
 open Metric Set
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Curve
-import LeanPool.Schoenflies.Topology
-import LeanPool.Schoenflies.Bounded
-import LeanPool.Schoenflies.Graph.Degree
+module
+
+public import LeanPool.Schoenflies.Curve
+public import LeanPool.Schoenflies.Topology
+public import LeanPool.Schoenflies.Bounded
+public import LeanPool.Schoenflies.Graph.Degree
 
 /-!
 # Plane graphs
@@ -46,6 +48,8 @@ only that are unaffected.
 * `face` — the component of the exterior through a point off the drawing. Named by a point
   rather than indexed, so no face has to be produced before it is spoken about.
 -/
+
+@[expose] public section
 
 open Metric Set Schoenflies unitInterval
 open scoped Graph

@@ -4,14 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tom Adamczewski
 -/
 
-import Mathlib.Algebra.BigOperators.Group.Finset.Piecewise
-import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Algebra.Ring.Nat
-import Mathlib.Data.Finset.Prod
-import Mathlib.Data.List.Permutation
-import Mathlib.Data.Nat.Cast.Basic
-import Mathlib.Data.Nat.Find
+module
+
+public import Mathlib.Algebra.BigOperators.Group.Finset.Piecewise
+public import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Algebra.Ring.Nat
+public import Mathlib.Data.Finset.Prod
+public import Mathlib.Data.List.Permutation
+public import Mathlib.Data.Nat.Cast.Basic
+public import Mathlib.Data.Nat.Find
 
 /-!
 # Marked words, permutation words and the gluing inequalities
@@ -36,6 +38,8 @@ fixed word `l₀`; `fullWordCount_eq_sum` decomposes it by root, `full_word_glui
 the gluing inequality to full words, and `full_word_transfer_count` bounds one family by another
 through the cut-reversal involution `reverseCutPair`, losing at most one first cut per word.
 -/
+
+@[expose] public section
 
 namespace Erdos548
 

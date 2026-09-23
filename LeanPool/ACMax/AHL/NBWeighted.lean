@@ -3,9 +3,11 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import LeanPool.ACMax.AHL.NBWalkCount
-import Mathlib.Combinatorics.SimpleGraph.Walk.Operations
-import Mathlib.Algebra.Order.Chebyshev
+module
+
+public import LeanPool.ACMax.AHL.NBWalkCount
+public import Mathlib.Combinatorics.SimpleGraph.Walk.Operations
+public import Mathlib.Algebra.Order.Chebyshev
 
 /-!
 # The total non-backtracking walk count
@@ -15,6 +17,8 @@ in a graph, summed over all ordered start/end vertex pairs.  This is the quantit
 Alon–Hoory–Linial irregular Moore bound chain; the walk-count and average-degree lemmas that consume
 it live downstream (`AHL.AHLAmGm`, `Band.Sum`).
 -/
+
+@[expose] public section
 
 namespace ACMax
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import Mathlib.Combinatorics.SimpleGraph.Paths
-import Mathlib.Combinatorics.SimpleGraph.Finite
+module
+
+public import Mathlib.Combinatorics.SimpleGraph.Paths
+public import Mathlib.Combinatorics.SimpleGraph.Finite
 
 /-!
 # Non-backtracking walks — the foundation of the AHL irregular-Moore ladder
@@ -39,6 +41,8 @@ for every valid `i`.  This is the exact `getVert` form the SQRT ray/ball rows co
 The degree-weighted lower bound on the *number* of non-backtracking walks and the weighted AM-GM
 assembly into the Moore bound are the follow-up counting node; this file lands the foundation only.
 -/
+
+@[expose] public section
 
 namespace ACMax
 
