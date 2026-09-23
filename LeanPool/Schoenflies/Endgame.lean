@@ -3,11 +3,13 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Inversion
-import LeanPool.Schoenflies.JordanClosed
-import LeanPool.Schoenflies.ModelCurve
-import LeanPool.Schoenflies.SquareMover
-import LeanPool.Schoenflies.Topology
+module
+
+public import LeanPool.Schoenflies.Inversion
+public import LeanPool.Schoenflies.JordanClosed
+public import LeanPool.Schoenflies.ModelCurve
+public import LeanPool.Schoenflies.SquareMover
+public import LeanPool.Schoenflies.Topology
 
 /-!
 # The endgame: from the square extension to the relative Jordan–Schönflies theorem
@@ -89,6 +91,8 @@ into the module that owns `Schoenflies.IsHomeoOn`:
 `Schoenflies.IsHomeoOn.image_inv_eq`, `Schoenflies.image_eq_diff_of_bijOn_union`,
 `Schoenflies.paste` and `Schoenflies.Plane.IsSquareMover.isHomeoOn`.
 -/
+
+@[expose] public section
 
 open Bornology Metric Set
 

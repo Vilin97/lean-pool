@@ -3,8 +3,10 @@ Copyright (c) 2026 Shuangping Li, Peng Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shuangping Li, Peng Zhang
 -/
-import Mathlib.Data.Finset.Image
-import Mathlib.Data.Set.Basic
+module
+
+public import Mathlib.Data.Finset.Image
+public import Mathlib.Data.Set.Basic
 
 /-!
 # Language generation in the limit: basic definitions
@@ -14,6 +16,8 @@ The family is indexed, rather than represented as a set of sets, because the
 Kleinberg--Mullainathan algorithm depends on the enumeration order and permits
 repeated languages.
 -/
+
+@[expose] public section
 
 namespace GenLimit
 

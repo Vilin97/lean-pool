@@ -3,8 +3,10 @@ Copyright (c) 2026 Jonathan Conrad, Paula Muermann, Maryna Viazovska. All rights
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jonathan Conrad, Paula Muermann, Maryna Viazovska
 -/
-import LeanPool.PentagonalNumberTheoremAnalytic.QSeries.FPSEuler
-import LeanPool.PentagonalNumberTheoremAnalytic.QSeries.FiniteBinomial
+module
+
+public import LeanPool.PentagonalNumberTheoremAnalytic.QSeries.FPSEuler
+public import LeanPool.PentagonalNumberTheoremAnalytic.QSeries.FiniteBinomial
 
 /-!
 # Algebraic identities for FPS q-series
@@ -24,6 +26,8 @@ and Cauchy product, these identities yield the Jacobi triple product.
 * `QSeries.FormalPowerSeries.hasSum_pow_choose_two_neg` — Cauchy diagonal coefficient for `n < 0`.
 * `QSeries.FormalPowerSeries.jacobiTripleProduct` — FPS Jacobi Triple Product Identity.
 -/
+
+@[expose] public section
 
 noncomputable section
 

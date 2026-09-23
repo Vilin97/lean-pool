@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Boon Suan Ho
 -/
 
-import LeanPool.Nivat.Algebra.Action
-import LeanPool.Nivat.Core.Patterns
-import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
-import Mathlib.Tactic.Ring
+module
+
+public import LeanPool.Nivat.Algebra.Action
+public import LeanPool.Nivat.Core.Patterns
+public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+public import Mathlib.Tactic.Ring
 
 /-
 Upstream: https://github.com/boonsuan/nivat
@@ -49,6 +51,8 @@ Laurent polynomials supported in the window. Its injectivity, support, action,
 and reconstruction lemmas also supply the finite-dimensional pairing used in
 Theorem 2.2 (`thm:descent`).
 -/
+
+@[expose] public section
 
 namespace Nivat.Algebra
 

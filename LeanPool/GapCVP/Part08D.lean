@@ -4,9 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import LeanPool.GapCVP.Part08C
+module
+
+public import LeanPool.GapCVP.Part08C
 
 /-! # GapCVP proof, part 08, continuation 04 -/
+
+public section
 
 noncomputable section
 
@@ -2186,18 +2190,18 @@ end CNFFiveFamilySourceIndexedORGadgetFinalCert
 section
 
 /-- GapCVP reduction support. -/
-noncomputable def gapFactor400 (I : GapCVPInstance) : ℝ :=
+@[expose] noncomputable def gapFactor400 (I : GapCVPInstance) : ℝ :=
   (I.dimension : ℝ) ^ ((1 : ℝ) / 400)
 
 /-- GapCVP reduction support. -/
-noncomputable def gapYES400 (I : GapCVPInstance) : Bool :=
+@[expose] noncomputable def gapYES400 (I : GapCVPInstance) : Bool :=
   @decide (
   gapCVPWellFormed I ∧
     ∃ z : Fin I.dimension → ℤ,
       distanceSquared I z ≤ (I.radius : ℝ) ^ 2
   ) (Classical.propDecidable _)
 /-- GapCVP reduction support. -/
-noncomputable def gapNO400 (I : GapCVPInstance) : Bool :=
+@[expose] noncomputable def gapNO400 (I : GapCVPInstance) : Bool :=
   @decide (
   gapCVPWellFormed I ∧
     ∀ z : Fin I.dimension → ℤ,
@@ -2236,7 +2240,7 @@ theorem gapYES400_not_gapNO400 (I : GapCVPInstance)
   linarith
 
 /-- GapCVP reduction support. -/
-noncomputable def gapCVP400Promise : PromiseProblem where
+@[expose] noncomputable def gapCVP400Promise : PromiseProblem where
   yes bits :=
     @decide (
  ∃ I : GapCVPInstance,
@@ -2318,6 +2322,7 @@ private theorem adaptedCanonicalNoInstance_gapNO400 :
       Real.one_rpow, Rat.cast_inv, Rat.cast_ofNat, one_mul, inv_pow, gt_iff_lt] using h
 
 /-- GapCVP reduction support. -/
+@[expose]
 def adaptedCanonicalNoWord : List Bool :=
   (binaryFinEncoding GapCVPInstance).encode adaptedCanonicalNoInstance
 
@@ -2354,21 +2359,21 @@ structure Formula where
   clauses : List (Clause variableCount)
 
 /-- GapCVP reduction support. -/
-noncomputable def Clause.Satisfied {variableCount : ℕ} (clause : Clause variableCount)
+@[expose] noncomputable def Clause.Satisfied {variableCount : ℕ} (clause : Clause variableCount)
     (assignment : Fin variableCount → Bool) : Bool :=
   @decide (
   ∃ literal ∈ clause.literals,
     assignment literal.variableIndex = literal.satisfyingValue
   ) (Classical.propDecidable _)
 /-- GapCVP reduction support. -/
-noncomputable def Formula.Satisfied (formula : Formula)
+@[expose] noncomputable def Formula.Satisfied (formula : Formula)
     (assignment : Fin formula.variableCount → Bool) : Bool :=
   @decide (
   ∀ i : Fin formula.clauses.length,
     (formula.clauses.get i).Satisfied assignment
   ) (Classical.propDecidable _)
 /-- GapCVP reduction support. -/
-noncomputable def Formula.Satisfiable (formula : Formula) : Bool :=
+@[expose] noncomputable def Formula.Satisfiable (formula : Formula) : Bool :=
   @decide (
   ∃ assignment : Fin formula.variableCount → Bool,
     formula.Satisfied assignment
@@ -2400,11 +2405,11 @@ namespace BinarySourceVariableCompaction
 open GapCVP.SourceMachineCert
 
 /-- GapCVP reduction support. -/
-def occurringVariables (formula : ThreeCNF) : List ℕ :=
+@[expose] def occurringVariables (formula : ThreeCNF) : List ℕ :=
   (formulaVariables formula).eraseDups
 
 /-- GapCVP reduction support. -/
-def occurringVariableCount (formula : ThreeCNF) : ℕ :=
+@[expose] def occurringVariableCount (formula : ThreeCNF) : ℕ :=
   (occurringVariables formula).length
 
 theorem mem_occurringVariables_iff
@@ -2435,7 +2440,7 @@ theorem occurringVariables_nodup (formula : ThreeCNF) :
   eraseDups_nodup (formulaVariables formula)
 
 /-- GapCVP reduction support. -/
-def compactVariableRank (formula : ThreeCNF) (name : ℕ) : ℕ :=
+@[expose] def compactVariableRank (formula : ThreeCNF) (name : ℕ) : ℕ :=
   (occurringVariables formula).idxOf name
 
 theorem mem_formulaVariables_iff_exists_literal
@@ -2471,13 +2476,13 @@ structure System (m n : ℕ) where
   rhs : Fin m → ZMod 2
 
 /-- GapCVP reduction support. -/
-noncomputable def System.Satisfies {m n : ℕ} (system : System m n)
+@[expose] noncomputable def System.Satisfies {m n : ℕ} (system : System m n)
     (assignment : Fin n → ZMod 2) : Bool :=
   @decide (
   system.check.mulVec assignment = system.rhs
   ) (Classical.propDecidable _)
 /-- GapCVP reduction support. -/
-def swapRows {m n : ℕ} (system : System m n)
+@[expose] def swapRows {m n : ℕ} (system : System m n)
     (left right : Fin m) : System m n where
   check row column := system.check (Equiv.swap left right row) column
   rhs row := system.rhs (Equiv.swap left right row)
@@ -2498,7 +2503,7 @@ theorem swapRows_satisfies_iff {m n : ℕ} (system : System m n)
     simpa only [mulVec, dotProduct, swapRows] using hr
 
 /-- GapCVP reduction support. -/
-def addRow {m n : ℕ} (system : System m n)
+@[expose] def addRow {m n : ℕ} (system : System m n)
     (source target : Fin m) : System m n where
   check row column :=
     if row = target then
@@ -2576,7 +2581,7 @@ inductive RowOperation (m : ℕ) where
   | add (source target : Fin m) (distinct : source ≠ target)
 
 /-- GapCVP reduction support. -/
-def RowOperation.apply {m n : ℕ} (operation : RowOperation m)
+@[expose] def RowOperation.apply {m n : ℕ} (operation : RowOperation m)
     (system : System m n) : System m n :=
   match operation with
   | .swap left right => swapRows system left right
@@ -2605,14 +2610,14 @@ structure State (m n : ℕ) where
   operations : List (RowOperation m)
 
 /-- GapCVP reduction support. -/
-def initialState {m n : ℕ} (system : System m n) : State m n where
+@[expose] def initialState {m n : ℕ} (system : System m n) : State m n where
   system := system
   nextPivot := 0
   pivots := []
   operations := []
 
 /-- GapCVP reduction support. -/
-def applyOperation {m n : ℕ} (state : State m n)
+@[expose] def applyOperation {m n : ℕ} (state : State m n)
     (operation : RowOperation m) : State m n where
   system := operation.apply state.system
   nextPivot := state.nextPivot
@@ -2627,7 +2632,7 @@ private theorem applyOperation_satisfies_iff {m n : ℕ}
   operation.satisfies_iff state.system assignment
 
 /-- GapCVP reduction support. -/
-def findPivotOption {m n : ℕ} (state : State m n)
+@[expose] def findPivotOption {m n : ℕ} (state : State m n)
     (column : Fin n) : Option (Fin m) :=
   (List.finRange m).find? fun row =>
     decide (state.nextPivot ≤ row.val ∧
@@ -2642,7 +2647,7 @@ theorem findPivotOption_some {m n : ℕ} (state : State m n)
   simpa only [Bool.decide_and, Bool.and_eq_true, decide_eq_true_eq] using hp
 
 /-- GapCVP reduction support. -/
-def clearTarget {m n : ℕ} (pivot : Fin m) (column : Fin n)
+@[expose] def clearTarget {m n : ℕ} (pivot : Fin m) (column : Fin n)
     (state : State m n) (target : Fin m) : State m n :=
   if htarget : target = pivot then
     state
@@ -2722,7 +2727,7 @@ private theorem clearTarget_check_target_zero {m n : ℕ}
     exact binary_eq_zero_of_ne_one _ hone
 
 /-- GapCVP reduction support. -/
-def clearTargets {m n : ℕ} (pivot : Fin m) (column : Fin n)
+@[expose] def clearTargets {m n : ℕ} (pivot : Fin m) (column : Fin n)
     (targets : List (Fin m)) (state : State m n) : State m n :=
   targets.foldl (clearTarget pivot column) state
 
@@ -2796,7 +2801,7 @@ private theorem clearTargets_check_zero_of_mem {m n : ℕ}
         · exact hrest
 
 /-- GapCVP reduction support. -/
-def columnStep {m n : ℕ} (state : State m n)
+@[expose] def columnStep {m n : ℕ} (state : State m n)
     (column : Fin n) : State m n :=
   if hrow : state.nextPivot < m then
     match findPivotOption state column with
@@ -2915,7 +2920,7 @@ theorem clearTargets_check_of_pivot_zero {m n : ℕ}
             pivot pivotColumn oldColumn state target row hzero
 
 /-- GapCVP reduction support. -/
-def runColumns {m n : ℕ}
+@[expose] def runColumns {m n : ℕ}
     (columns : List (Fin n)) (state : State m n) : State m n :=
   columns.foldl columnStep state
 
@@ -2934,7 +2939,7 @@ private theorem runColumns_satisfies_iff {m n : ℕ}
         (columnStep_satisfies_iff state column assignment)
 
 /-- GapCVP reduction support. -/
-def eliminate {m n : ℕ} (system : System m n) : State m n :=
+@[expose] def eliminate {m n : ℕ} (system : System m n) : State m n :=
   runColumns (List.finRange n) (initialState system)
 
 theorem eliminate_satisfies_iff {m n : ℕ}
@@ -2955,6 +2960,7 @@ open Polynomial
 abbrev Word (e : ℕ) := Fin e → Bool
 
 /-- GapCVP reduction support. -/
+@[expose]
 def allWords : (e : ℕ) → List (Word e)
   | 0 => [fun i => Fin.elim0 i]
   | e + 1 =>
@@ -2986,7 +2992,7 @@ theorem mem_allWords {e : ℕ} (word : Word e) : word ∈ allWords e := by
       cases hbit : word 0 <;> simp
 
 /-- GapCVP reduction support. -/
-def bitValue (bit : Bool) : ZMod 2 :=
+@[expose] def bitValue (bit : Bool) : ZMod 2 :=
   if bit then 1 else 0
 
 theorem bitValue_xor (left right : Bool) :
@@ -3008,7 +3014,7 @@ private theorem bitValue_decide (value : ZMod 2) :
     simp only [bitValue, hz, zero_ne_one, decide_false, Bool.false_eq_true, ↓reduceIte]
 
 /-- GapCVP reduction support. -/
-noncomputable def wordPolynomial {e : ℕ}
+@[expose] noncomputable def wordPolynomial {e : ℕ}
     (word : Word e) : (ZMod 2)[X] :=
   ∑ i : Fin e, Polynomial.monomial i.val (bitValue (word i))
 
@@ -3046,7 +3052,7 @@ theorem wordPolynomial_degree_lt {e : ℕ}
   exact wordPolynomial_coeff_eq_zero word k hk
 
 /-- GapCVP reduction support. -/
-noncomputable def monicPolynomial {e : ℕ}
+@[expose] noncomputable def monicPolynomial {e : ℕ}
     (word : Word e) : (ZMod 2)[X] :=
   Polynomial.X ^ e + wordPolynomial word
 
@@ -3162,7 +3168,7 @@ private theorem finRange_list_sum {e : ℕ} (f : Fin e → ZMod 2) :
   rfl
 
 /-- GapCVP reduction support. -/
-def multiplyWords {e : ℕ} (left right : Word e) : Word (2 * e) :=
+@[expose] def multiplyWords {e : ℕ} (left right : Word e) : Word (2 * e) :=
   fun k =>
     (List.finRange e).foldl
       (fun acc i =>
@@ -3288,7 +3294,7 @@ theorem wordPolynomial_multiplyWords {e : ℕ}
     simp only [hne, ↓reduceIte]
 
 /-- GapCVP reduction support. -/
-def monicWord {e : ℕ} (lower : Word e) : Word (2 * e) :=
+@[expose] def monicWord {e : ℕ} (lower : Word e) : Word (2 * e) :=
   fun i =>
     if h : i.val < e then lower ⟨i.val, h⟩
     else decide (i.val = e)
@@ -3486,7 +3492,7 @@ private theorem noProperFactors_eq_true_iff_irreducible {e : ℕ}
   exact (monicPolynomial_irreducible_iff he lower).symm
 
 /-- GapCVP reduction support. -/
-def findIrreducibleWordOption (e : ℕ) : Option (Word e) :=
+@[expose] def findIrreducibleWordOption (e : ℕ) : Option (Word e) :=
   (allWords e).find? (noProperFactors e)
 
 private theorem findIrreducibleWordOption_some {e : ℕ} (word : Word e)
@@ -3516,7 +3522,7 @@ theorem findIrreducibleWordOption_exists
       exact findIrreducibleWordOption_some word hfind
 
 /-- GapCVP reduction support. -/
-def irreducibleWord (e : ℕ) : Word e :=
+@[expose] def irreducibleWord (e : ℕ) : Word e :=
   (findIrreducibleWordOption e).getD fun _ => false
 
 private theorem irreducibleWord_irreducible (e : ℕ) (he : 0 < e) :
@@ -3525,7 +3531,7 @@ private theorem irreducibleWord_irreducible (e : ℕ) (he : 0 < e) :
   simpa only [irreducibleWord, hword, Option.getD_some] using hirr
 
 /-- GapCVP reduction support. -/
-def xorAt {d : ℕ} (word : Word d) (index : Fin d) (bit : Bool) : Word d :=
+@[expose] def xorAt {d : ℕ} (word : Word d) (index : Fin d) (bit : Bool) : Word d :=
   fun i => if i = index then Bool.xor (word i) bit else word i
 
 theorem wordPolynomial_xorAt {d : ℕ}
@@ -3562,7 +3568,7 @@ theorem wordPolynomial_xorAt {d : ℕ}
     simp only [hindex, ↓reduceIte, add_zero]
 
 /-- GapCVP reduction support. -/
-def shiftXor {e : ℕ} (lower : Word e) (degree : ℕ)
+@[expose] def shiftXor {e : ℕ} (lower : Word e) (degree : ℕ)
     (word : Word (2 * e)) : Word (2 * e) :=
   (List.finRange e).foldl
     (fun accumulator i =>
@@ -3573,7 +3579,7 @@ def shiftXor {e : ℕ} (lower : Word e) (degree : ℕ)
     word
 
 /-- GapCVP reduction support. -/
-def reduceAt {e : ℕ} (lower : Word e) (degree : ℕ)
+@[expose] def reduceAt {e : ℕ} (lower : Word e) (degree : ℕ)
     (word : Word (2 * e)) : Word (2 * e) :=
   if hd : e ≤ degree ∧ degree < 2 * e then
     let leading : Fin (2 * e) := ⟨degree, hd.2⟩
@@ -3585,6 +3591,7 @@ def reduceAt {e : ℕ} (lower : Word e) (degree : ℕ)
     word
 
 /-- GapCVP reduction support. -/
+@[expose]
 def reduceProduct {e : ℕ} (lower : Word e)
     (word : Word (2 * e)) : Word (2 * e) :=
   (List.range e).foldl
@@ -3593,6 +3600,7 @@ def reduceProduct {e : ℕ} (lower : Word e)
     word
 
 /-- GapCVP reduction support. -/
+@[expose]
 def multiplyMod {e : ℕ}
     (lower left right : Word e) : Word e :=
   fun i =>
@@ -3602,6 +3610,7 @@ def multiplyMod {e : ℕ}
         omega⟩
 
 /-- GapCVP reduction support. -/
+@[expose]
 noncomputable def selectedPolynomial (e : ℕ) : (ZMod 2)[X] :=
   monicPolynomial (irreducibleWord e)
 
@@ -3621,7 +3630,9 @@ private theorem selectedPolynomial_irreducible (e : ℕ) (he : 0 < e) :
 abbrev Extension (e : ℕ) :=
   AdjoinRoot (selectedPolynomial e)
 
-private noncomputable def extensionBasis (e : ℕ) :
+/-- Power basis of the selected binary field extension, reindexed by its degree. -/
+@[expose]
+noncomputable def extensionBasis (e : ℕ) :
     Module.Basis (Fin e) (ZMod 2) (Extension e) :=
   (AdjoinRoot.powerBasisAux' (selectedPolynomial_monic e)).reindex
     (finCongr (selectedPolynomial_natDegree e))
@@ -3650,7 +3661,7 @@ namespace BinaryFieldBasis
 open Polynomial GapCVP.Core GapCVP.Core.EffectiveBinaryField
 
 /-- GapCVP reduction support. -/
-def indexedWord (degree : ℕ) (index : Fin (2 ^ degree)) :
+@[expose] def indexedWord (degree : ℕ) (index : Fin (2 ^ degree)) :
     EffectiveBinaryField.Word degree :=
   fun bit => index.val.testBit bit.val
 
@@ -3673,12 +3684,14 @@ theorem indexedWord_injective (degree : ℕ) :
       Nat.testBit_eq_false_of_lt hright]
 
 /-- GapCVP reduction support. -/
+@[expose]
 def boundedWordIndex {degree count : ℕ}
     (hcount : count ≤ 2 ^ degree) :
     Fin count ↪ Fin (2 ^ degree) :=
   Fin.castLEEmb hcount
 
 /-- GapCVP reduction support. -/
+@[expose]
 def evaluationWordIndex {degree count : ℕ}
     (hcount : count ≤ 2 ^ degree) :
     Fin (2 ^ degree - count) ↪ Fin (2 ^ degree) :=
@@ -3693,7 +3706,7 @@ noncomputable instance (priority := 100)
   Fintype.ofFinite (GaloisField 2 degree)
 
 /-- GapCVP reduction support. -/
-def wordElement {degree : ℕ}
+@[expose] def wordElement {degree : ℕ}
     (word : EffectiveBinaryField.Word degree) :
     EffectiveBinaryField.Extension degree :=
   AdjoinRoot.mk (EffectiveBinaryField.selectedPolynomial degree)
@@ -3733,6 +3746,7 @@ theorem wordElement_injective (degree : ℕ) :
     (sub_eq_zero.mp hzero)
 
 /-- GapCVP reduction support. -/
+@[expose]
 def effectiveExtensionBasis (degree : ℕ) :
     Module.Basis (Fin degree) (ZMod 2)
       (EffectiveBinaryField.Extension degree) :=
@@ -3786,6 +3800,14 @@ def indexedFieldEquiv (degree : ℕ) (hdegree : 0 < degree) :
   Equiv.ofBijective (indexedFieldElement degree hdegree)
     (indexedFieldElement_bijective degree hdegree)
 
+/-- The indexed field equivalence evaluates the corresponding binary word. -/
+theorem indexedFieldEquiv_apply (degree : ℕ) (hdegree : 0 < degree)
+    (index : Fin (2 ^ degree)) :
+    indexedFieldEquiv degree hdegree index =
+      EffectiveBinaryField.extensionAlgEquivGaloisField degree hdegree
+        (wordElement (indexedWord degree index)) := by
+  rfl
+
 /-- GapCVP reduction support. -/
 def effectiveAnchor (degree : ℕ) (hdegree : 0 < degree)
     {count : ℕ} (hcount : count ≤ 2 ^ degree) :
@@ -3803,6 +3825,23 @@ def effectiveEvaluationEmbedding (degree : ℕ) (hdegree : 0 < degree)
     (evaluationWordIndex hcount index)
   inj' := (indexedFieldElement_injective degree hdegree).comp
     (evaluationWordIndex hcount).injective
+
+/-- The anchor embedding evaluates the indexed binary word in the extension field. -/
+theorem effectiveAnchor_apply (degree : ℕ) (hdegree : 0 < degree)
+    {count : ℕ} (hcount : count ≤ 2 ^ degree) (index : Fin count) :
+    effectiveAnchor degree hdegree hcount index =
+      EffectiveBinaryField.extensionAlgEquivGaloisField degree hdegree
+        (wordElement (indexedWord degree (boundedWordIndex hcount index))) := by
+  rfl
+
+/-- The evaluation embedding evaluates the indexed binary word in the extension field. -/
+theorem effectiveEvaluationEmbedding_apply (degree : ℕ) (hdegree : 0 < degree)
+    {count : ℕ} (hcount : count ≤ 2 ^ degree)
+    (index : Fin (2 ^ degree - count)) :
+    effectiveEvaluationEmbedding degree hdegree hcount index =
+      EffectiveBinaryField.extensionAlgEquivGaloisField degree hdegree
+        (wordElement (indexedWord degree (evaluationWordIndex hcount index))) := by
+  rfl
 
 theorem effectiveEvaluationEmbedding_ne_anchor
     (degree : ℕ) (hdegree : 0 < degree)
@@ -3831,7 +3870,7 @@ variable {K : Type*} [Field K] [Algebra (ZMod 2) K]
 variable {e m n : ℕ}
 
 /-- GapCVP reduction support. -/
-def binaryFieldVectorEquiv
+@[expose] def binaryFieldVectorEquiv
     (basis : Module.Basis (Fin e) (ZMod 2) K) (dimension : ℕ) :
     (Fin dimension → K) ≃ₗ[ZMod 2]
       ((Fin dimension × Fin e) → ZMod 2) :=
@@ -3839,13 +3878,13 @@ def binaryFieldVectorEquiv
     (LinearEquiv.curry (ZMod 2) (ZMod 2) (Fin dimension) (Fin e)).symm
 
 /-- GapCVP reduction support. -/
-def binaryFieldBitEmbedding (dimension : ℕ) :
+@[expose] def binaryFieldBitEmbedding (dimension : ℕ) :
     (Fin dimension → ZMod 2) →ₗ[ZMod 2] (Fin dimension → K) :=
   LinearMap.pi fun i =>
     (Algebra.linearMap (ZMod 2) K).comp (LinearMap.proj i)
 
 /-- GapCVP reduction support. -/
-def binaryFieldParityLinearMap
+@[expose] def binaryFieldParityLinearMap
     (basis : Module.Basis (Fin e) (ZMod 2) K)
     (checks : Matrix (Fin m) (Fin n) K) :
     (Fin n → ZMod 2) →ₗ[ZMod 2]
@@ -3855,7 +3894,7 @@ def binaryFieldParityLinearMap
       (binaryFieldBitEmbedding n))
 
 /-- GapCVP reduction support. -/
-def binaryFieldParityMatrix
+@[expose] def binaryFieldParityMatrix
     (basis : Module.Basis (Fin e) (ZMod 2) K)
     (checks : Matrix (Fin m) (Fin n) K) :
     Matrix (Fin m × Fin e) (Fin n) (ZMod 2) :=
@@ -3900,7 +3939,7 @@ end
 section
 
 /-- GapCVP reduction support. -/
-def binaryResidue {n : ℕ} (z : Fin n → ℤ) : Fin n → ZMod 2 :=
+@[expose] def binaryResidue {n : ℕ} (z : Fin n → ℤ) : Fin n → ZMod 2 :=
   fun i => (z i : ZMod 2)
 
 theorem binaryResidue_sub {n : ℕ} (x y : Fin n → ℤ) :
@@ -3920,13 +3959,13 @@ structure BinaryAffineSystem where
   rightHandSide : Fin rowCount → ZMod 2
 
 /-- GapCVP reduction support. -/
-noncomputable def BinaryAffineSystem.Solves (system : BinaryAffineSystem)
+@[expose] noncomputable def BinaryAffineSystem.Solves (system : BinaryAffineSystem)
     (z : Fin system.dimension → ℤ) : Bool :=
   @decide (
   system.check.mulVec (binaryResidue z) = system.rightHandSide
   ) (Classical.propDecidable _)
 /-- GapCVP reduction support. -/
-noncomputable def BinaryAffineSystem.InLattice (system : BinaryAffineSystem)
+@[expose] noncomputable def BinaryAffineSystem.InLattice (system : BinaryAffineSystem)
     (z : Fin system.dimension → ℤ) : Bool :=
   @decide (
   system.check.mulVec (binaryResidue z) = 0
@@ -3950,6 +3989,7 @@ abbrev assembledBinaryRow (rowCounts : ι → ℕ) (e : ℕ) :=
   Σ family : ι, Fin (rowCounts family) × Fin e
 
 /-- GapCVP reduction support. -/
+@[expose]
 def assembledBinaryParityMatrix
     (basis : Module.Basis (Fin e) (ZMod 2) K)
     (rowCounts : ι → ℕ)
@@ -3959,12 +3999,14 @@ def assembledBinaryParityMatrix
     binaryFieldParityMatrix basis (checks row.1) row.2 column
 
 /-- GapCVP reduction support. -/
+@[expose]
 def assembledBinaryRightHandSide
     (basis : Module.Basis (Fin e) (ZMod 2) K)
     (rowCounts : ι → ℕ)
     (targets : (family : ι) → Fin (rowCounts family) → K) :
     assembledBinaryRow rowCounts e → ZMod 2 :=
-  fun row => binaryFieldRightHandSide basis (targets row.1) row.2
+  fun row =>
+    (binaryFieldVectorEquiv basis (rowCounts row.1) (targets row.1)) row.2
 
 @[simp] theorem assembledBinaryParityMatrix_mulVec_apply
     (basis : Module.Basis (Fin e) (ZMod 2) K)
@@ -4134,7 +4176,7 @@ private theorem source_moment_degree_lt_punctured_grid {N q m : ℕ}
   omega
 
 /-- GapCVP reduction support. -/
-def sourcePuncturedGrid {k : Type*} [Fintype k] [DecidableEq k]
+@[expose] def sourcePuncturedGrid {k : Type*} [Fintype k] [DecidableEq k]
     (variablePlaces : Finset k) : Finset k :=
   Finset.univ \ variablePlaces
 
@@ -4372,7 +4414,7 @@ private theorem exists_assignment_interpolant {K : Type*} [Field K] {m : ℕ}
         (s := points) hinj.injOn (Finset.mem_univ i))
 
 /-- GapCVP reduction support. -/
-noncomputable def supportMoment {K : Type*} [Field K]
+@[expose] noncomputable def supportMoment {K : Type*} [Field K]
     (support : Finset K) (j : ℕ) : K :=
   ∑ a ∈ support, a ^ j
 
@@ -4463,7 +4505,7 @@ private theorem support_eq_of_supportMoments_eq_below_card_sum
       (Finset.card_union_le s t))
 
 /-- GapCVP reduction support. -/
-def paritySupport {K : Type*} [DecidableEq K] :
+@[expose] def paritySupport {K : Type*} [DecidableEq K] :
     List (Finset K) → Finset K
   | [] => ∅
   | s :: supports => s ∆ paritySupport supports
@@ -4558,7 +4600,7 @@ theorem scaled_shifted_supportMoment {K : Type*} [Field K]
     _ = _ := shifted_supportMoment_binomial support β j
 
 /-- GapCVP reduction support. -/
-noncomputable def shiftedMomentCombination {K : Type*} [Field K]
+@[expose] noncomputable def shiftedMomentCombination {K : Type*} [Field K]
     (moments : ℕ → K[X]) (β : K) (j : ℕ) : K[X] :=
   ∑ l ∈ Finset.range (j + 1),
     Polynomial.C ((j.choose l : K) * (-β) ^ (j - l)) * moments l
@@ -4568,7 +4610,7 @@ end
 section
 
 /-- GapCVP reduction support. -/
-def sourceSizeParameter (encodingLength : ℕ) (formula : Formula) : ℕ :=
+@[expose] def sourceSizeParameter (encodingLength : ℕ) (formula : Formula) : ℕ :=
   100 + encodingLength + formula.variableCount + formula.clauses.length
 
 theorem sourceSizeParameter_ge_one_hundred
@@ -4593,7 +4635,7 @@ open scoped BigOperators
 open Finset Matrix Polynomial
 
 /-- GapCVP reduction support. -/
-def Clause.variableSet {m : ℕ} (C : Clause m) : Finset (Fin m) :=
+@[expose] def Clause.variableSet {m : ℕ} (C : Clause m) : Finset (Fin m) :=
   C.literals.image (fun literal => literal.variableIndex)
 
 theorem Clause.variableSet_card_le_three {m : ℕ} (C : Clause m) :
@@ -4609,7 +4651,7 @@ abbrev Clause.LocalAssignment {m : ℕ} (C : Clause m) :=
   C.LocalVariable → Bool
 
 /-- GapCVP reduction support. -/
-noncomputable def Clause.LocalSatisfied {m : ℕ} (C : Clause m)
+@[expose] noncomputable def Clause.LocalSatisfied {m : ℕ} (C : Clause m)
     (assignment : C.LocalAssignment) : Bool :=
   @decide (
   ∃ (literal : Literal m) (hliteral : literal ∈ C.literals),
@@ -4694,7 +4736,7 @@ abbrev sourceSATTableCoordinate
   sourceSATTableType F × sourceSATGridPoint points × K
 
 /-- GapCVP reduction support. -/
-def sourceSATTableDimension
+@[expose] def sourceSATTableDimension
     (F : Formula) (K : Type*) [Fintype K]
     (points : Finset K) : ℕ :=
   Fintype.card (sourceSATTableCoordinate F K points)
@@ -4784,13 +4826,13 @@ private theorem sourceReedSolomonParityMap_eq_zero_iff
   exact Submodule.Quotient.mk_eq_zero _
 
 /-- GapCVP reduction support. -/
-def sourceFiniteReindexLinearEquiv
+@[expose] def sourceFiniteReindexLinearEquiv
     (α : Type*) [Fintype α] :
     (α → K) ≃ₗ[K] (Fin (Fintype.card α) → K) :=
   LinearEquiv.funCongrLeft K K (Fintype.equivFin α).symm
 
 /-- GapCVP reduction support. -/
-def sourceSATColumnIndex
+@[expose] def sourceSATColumnIndex
     (F : Formula) [Fintype K] (points : Finset K)
     (tableType : sourceSATTableType F)
     (point : sourceSATGridPoint points) (value : K) :
@@ -4799,7 +4841,7 @@ def sourceSATColumnIndex
     (tableType, point, value)
 
 /-- GapCVP reduction support. -/
-def sourceGlobalNormalizationMap
+@[expose] def sourceGlobalNormalizationMap
     (F : Formula) [Fintype K] (points : Finset K) :
     (Fin (sourceSATTableDimension F K points) → K) →ₗ[K]
       (sourceSATGridPoint points → K) where
@@ -4814,7 +4856,7 @@ def sourceGlobalNormalizationMap
     simp only [List.get_eq_getElem, Pi.smul_apply, smul_eq_mul, RingHom.id_apply, mul_sum]
 
 /-- GapCVP reduction support. -/
-def sourceClauseRefinementMap
+@[expose] def sourceClauseRefinementMap
     (F : Formula) [Fintype K] (points : Finset K)
     (clause : Fin F.clauses.length) :
     (Fin (sourceSATTableDimension F K points) → K) →ₗ[K]
@@ -4835,7 +4877,7 @@ def sourceClauseRefinementMap
     rw [Finset.mul_sum]
 
 /-- GapCVP reduction support. -/
-def sourceOrdinaryMomentMap
+@[expose] def sourceOrdinaryMomentMap
     (F : Formula) [Fintype K] (points : Finset K)
     (tableType : sourceSATTableType F) (j : ℕ) :
     (Fin (sourceSATTableDimension F K points) → K) →ₗ[K]
@@ -4852,11 +4894,11 @@ def sourceOrdinaryMomentMap
     simp only [Pi.smul_apply, smul_eq_mul, mul_assoc, RingHom.id_apply, mul_sum]
 
 /-- GapCVP reduction support. -/
-def sourceSATFieldBit (bit : Bool) : K :=
+@[expose] def sourceSATFieldBit (bit : Bool) : K :=
   if bit then 1 else 0
 
 /-- GapCVP reduction support. -/
-def sourceShiftedMomentMap
+@[expose] def sourceShiftedMomentMap
     (F : Formula) [Fintype K] (points : Finset K)
     (variablePlace : Fin F.variableCount → K)
     (clause : Fin F.clauses.length)
@@ -4889,7 +4931,8 @@ abbrev sourceSATConstraintFamily (F : Formula) (momentBudget : ℕ) :=
             (F.clauses.get clause).LocalVariable ×
               Fin (momentBudget + 1))))
 
-private def sourceSATFamilyRowCount
+/-- Number of field checks contributed by one SAT constraint family. -/
+def sourceSATFamilyRowCount
     (F : Formula) [Fintype K]
     (points : Finset K) (momentBudget : ℕ)
     (family : sourceSATConstraintFamily F momentBudget) : ℕ :=
@@ -4936,7 +4979,8 @@ private def sourceSATFamilyLinearMap
               (sourceShiftedMomentMap F points variablePlace
                 clause tuple localVar j.val)
 
-private def sourceSATFamilyTarget
+/-- Target values for the field checks of one SAT constraint family. -/
+def sourceSATFamilyTarget
     (F : Formula) [Fintype K]
     (points : Finset K) (momentBudget : ℕ)
     (family : sourceSATConstraintFamily F momentBudget) :
@@ -4945,7 +4989,8 @@ private def sourceSATFamilyTarget
     | .inl _ => 1
     | .inr _ => 0
 
-private def sourceSATFamilyFieldMatrix
+/-- Matrix of field checks for one SAT constraint family. -/
+def sourceSATFamilyFieldMatrix
     (F : Formula) [Fintype K]
     (points : Finset K)
     (variablePlace : Fin F.variableCount → K)
@@ -4958,7 +5003,7 @@ private def sourceSATFamilyFieldMatrix
     (sourceSATFamilyLinearMap F points variablePlace momentBudget family)
 
 /-- GapCVP reduction support. -/
-def concreteSATBinaryAffineSystem
+@[expose] def concreteSATBinaryAffineSystem
     [Algebra (ZMod 2) K] [Fintype K]
     (F : Formula)
     {e : ℕ} (fieldBasis : Module.Basis (Fin e) (ZMod 2) K)
@@ -4991,7 +5036,7 @@ private theorem concreteSATBinaryAffineSystem_solves_iff_family
   simp only [sourceSATFamilyFieldMatrix, LinearMap.toMatrix'_mulVec]
 
 /-- GapCVP reduction support. -/
-noncomputable def concreteSATFieldChecks
+@[expose] noncomputable def concreteSATFieldChecks
     (F : Formula) [Fintype K]
     (points : Finset K)
     (variablePlace : Fin F.variableCount → K)
@@ -5136,7 +5181,7 @@ theorem concreteSATBinaryAffineSystem_solves_iff
         momentBudget _)
 
 /-- GapCVP reduction support. -/
-def sourceSATPuncturedGrid
+@[expose] def sourceSATPuncturedGrid
     (F : Formula) [Fintype K]
     (variablePlace : Fin F.variableCount → K) : Finset K := by
   classical
@@ -5238,7 +5283,7 @@ theorem exists_sourceSAT_assignment_interpolant_of_injective
     omega
 
 /-- GapCVP reduction support. -/
-def sourceOneHotSignedTable
+@[expose] def sourceOneHotSignedTable
     (F : Formula) (points : Finset K)
     (assignment : Fin F.variableCount → Bool)
     (hsatisfies : F.Satisfied assignment)
@@ -5788,11 +5833,11 @@ theorem sourceOneHotSignedTable_squaredNorm
       simp only [one_mul, Nat.add_comm]
 
 /-- GapCVP reduction support. -/
-def integerSquaredNorm {n : ℕ} (z : Fin n → ℤ) : ℕ :=
+@[expose] def integerSquaredNorm {n : ℕ} (z : Fin n → ℤ) : ℕ :=
   ∑ i : Fin n, (z i).natAbs ^ 2
 
 /-- GapCVP reduction support. -/
-def sourceOneHotCompletenessRadius
+@[expose] def sourceOneHotCompletenessRadius
     (F : Formula) {α : Type*} (points : Finset α) : ℚ :=
   (Nat.ceil
     (Real.sqrt (((F.clauses.length + 1) * points.card : ℕ) : ℝ)) : ℚ)
