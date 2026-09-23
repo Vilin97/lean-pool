@@ -3,12 +3,14 @@ Copyright (c) 2026 Jonathan Conrad, Paula Muermann, Maryna Viazovska. All rights
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jonathan Conrad, Paula Muermann, Maryna Viazovska
 -/
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Data.Nat.Choose.Basic
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Ring.RingNF
-import Mathlib.Topology.Defs.Filter
+module
+
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+public import Mathlib.Data.Nat.Choose.Basic
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.LinearCombination
+public import Mathlib.Tactic.Ring.RingNF
+public import Mathlib.Topology.Defs.Filter
 
 /-!
 # q-Pochhammer symbol and Gaussian binomial coefficient
@@ -32,6 +34,8 @@ binomial coefficient $\binom{n}{k}_q$, together with their basic properties.
 * `QSeries.qBinom_mul_qPochhammer_mul_qPochhammer` — closed-form identity
   $\binom{n}{k}_q (q;q)_k (q;q)_{n-k} = (q;q)_n$.
 -/
+
+@[expose] public section
 
 open Finset Filter
 open scoped Topology

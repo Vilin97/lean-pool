@@ -3,9 +3,12 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import LeanPool.ACMax.AHL.NBWeighted
-import Mathlib.Algebra.BigOperators.Intervals
-import Mathlib.Basic.Real.Basic
+module
+
+public import LeanPool.ACMax.AHL.NBWeighted
+public import Mathlib.Algebra.BigOperators.Intervals
+public import Mathlib.Algebra.Order.BigOperators.GroupWithZero.Finset
+public import Mathlib.Basic.Real.Basic
 
 /-!
 # The AHL stationary-measure vocabulary — walk decomposition, weights, and marginal sums
@@ -47,6 +50,8 @@ on those two fields — keeping the marginal identities as sums over the already
 finsets with **no** `Dart`-to-walk bridge.  (`Walk.penultimate_concat` is already in Mathlib, so the
 "penultimate of an extension" fiber fact needs no fresh lemma.)
 -/
+
+@[expose] public section
 
 namespace ACMax
 

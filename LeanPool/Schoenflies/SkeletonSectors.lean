@@ -3,7 +3,9 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.SkeletonLocal
+module
+
+public import LeanPool.Schoenflies.SkeletonLocal
 
 /-!
 # The sector decomposition of a local disk, and the branches that cut it
@@ -108,6 +110,8 @@ component is connected by construction.
   order; this is the part of "pairwise distinct directions" that the background package does
   not cover.
 -/
+
+@[expose] public section
 
 open Metric Set unitInterval
 open scoped Graph

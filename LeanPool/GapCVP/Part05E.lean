@@ -4,9 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import LeanPool.GapCVP.Part05D
+module
+
+public import LeanPool.GapCVP.Part05D
 
 /-! # GapCVP proof, part 05, continuation 05 -/
+
+public section
 
 noncomputable section
 
@@ -354,8 +358,8 @@ private def flatAdjacentRecord_validTrace
           List.nil_append] using
       hbounded
 
-/-- GapCVP reduction support. -/
-def flatAdjacentRecordSwapTimePolynomial : Polynomial ℕ :=
+/-- Linear time bound for swapping two adjacent flat records. -/
+@[expose] def flatAdjacentRecordSwapTimePolynomial : Polynomial ℕ :=
   16 * Polynomial.X + 32
 
 private def flatAdjacentRecord_missingFirstTotalTrace
@@ -825,8 +829,8 @@ namespace CNFCappedUnaryMinimumTM
 
 open Turing GapCVP.BinaryEncoding GapCVP.CNFUnaryPairIndexTM
 
-/-- GapCVP reduction support. -/
-def cappedUnaryMinimumOutput (input : List Bool) : List Bool :=
+/-- Encode the minimum of the first two unary fields in the input. -/
+@[expose] def cappedUnaryMinimumOutput (input : List Bool) : List Bool :=
   match readUnaryPrefix input with
   | none => []
   | some (first, remaining) =>
