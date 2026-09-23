@@ -4,12 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PDL formalization contributors (see project card)
 -/
 
-import Mathlib.Tactic.Linarith
+module
 
-import LeanPool.PDL.Substitution
-import LeanPool.PDL.Star
+public import Mathlib.Tactic.Linarith
+
+public import LeanPool.PDL.Substitution
+public import LeanPool.PDL.Star
 
 /-! # Local Diamond Unfolding (Section 3.2 and 3.3) -/
+
+@[expose] public section
 
 namespace PDL
 

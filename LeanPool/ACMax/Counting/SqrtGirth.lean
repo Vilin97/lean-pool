@@ -3,15 +3,17 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import Mathlib.Combinatorics.SimpleGraph.Acyclic
-import Mathlib.Combinatorics.SimpleGraph.Girth
-import Mathlib.Combinatorics.SimpleGraph.DegreeSum
-import Mathlib.Combinatorics.SimpleGraph.Maps
-import Mathlib.Combinatorics.SimpleGraph.Paths
-import Mathlib.Combinatorics.SimpleGraph.Metric
-import Mathlib.Combinatorics.SimpleGraph.Finite
-import Mathlib.Data.ZMod.Basic
-import Mathlib.Tactic.Ring
+module
+
+public import Mathlib.Combinatorics.SimpleGraph.Acyclic
+public import Mathlib.Combinatorics.SimpleGraph.Girth
+public import Mathlib.Combinatorics.SimpleGraph.DegreeSum
+public import Mathlib.Combinatorics.SimpleGraph.Maps
+public import Mathlib.Combinatorics.SimpleGraph.Paths
+public import Mathlib.Combinatorics.SimpleGraph.Metric
+public import Mathlib.Combinatorics.SimpleGraph.Finite
+public import Mathlib.Data.ZMod.Basic
+public import Mathlib.Tactic.Ring
 
 /-!
 # The SQRT girth cluster
@@ -37,6 +39,8 @@ engine is a BFS ball-excess count in a graph with no cycle of length `≤ 2r + 1
   `|V|·(1 + 2r) + 2·t·r² ≤ |V|²`, together with the 2-core extraction
   `two_core_of_excess` (`degWithin`, `edgeSumWithin`).
 -/
+
+@[expose] public section
 
 namespace ACMax
 

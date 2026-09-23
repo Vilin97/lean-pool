@@ -3,9 +3,11 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.PolygonalCarrier
-import LeanPool.Schoenflies.Square
-import LeanPool.Schoenflies.UniformBound
+module
+
+public import LeanPool.Schoenflies.PolygonalCarrier
+public import LeanPool.Schoenflies.Square
+public import LeanPool.Schoenflies.UniformBound
 
 /-!
 # The plane minus finitely many open squares is locally polygonally connected
@@ -50,6 +52,8 @@ point misses all the others outright, so `M` looks locally exactly like the one-
 * `isLocallyPolyConn_compl_biUnion` — brick B5: the plane minus finitely many open squares with
   pairwise disjoint closures is locally polygonally connected.
 -/
+
+@[expose] public section
 
 open Metric Set
 
