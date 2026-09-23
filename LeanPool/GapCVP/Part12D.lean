@@ -1395,7 +1395,7 @@ private theorem gaussianPhysicalColumnUpdatedPivotWord_effective
             ↓reduceIte]
 
 /-- GapCVP reduction support. -/
-def gaussianPhysicalColumnPivotWidthOutput : List Bool → List Bool :=
+@[expose] def gaussianPhysicalColumnPivotWidthOutput : List Bool → List Bool :=
   gaussianDenseStateDimensionUnary ∘
     gaussianPhysicalColumnCurrentState
 
@@ -1412,6 +1412,13 @@ noncomputable def gaussianPhysicalColumnPivotWidth :
     SourceQaryMaskDynamicGridWidth where
   output := gaussianPhysicalColumnPivotWidthOutput
   computer := gaussianPhysicalColumnPivotWidthComputable
+
+/-- The pivot-width machine computes its declared output function. -/
+theorem gaussianPhysicalColumnPivotWidth_output
+    (input : List Bool) :
+    gaussianPhysicalColumnPivotWidth.output input =
+      gaussianPhysicalColumnPivotWidthOutput input := by
+  rfl
 
 private def gaussianPhysicalColumnUpdatedPivotRecordOutput :
     List Bool → List Bool :=

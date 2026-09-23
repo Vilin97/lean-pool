@@ -1955,7 +1955,7 @@ open GapCVP.Factor400BinaryEffectiveBasisSerializerTM GapCVP.CNFFiveFamilyOrigin
 open GapCVP.CNFFlatPhysicalBinaryAppendTM GapCVP.SourceFourFamilyBooleanPredicateTM
 
 /-- GapCVP reduction support. -/
-def gaussianPackedIndexedStateWord
+@[expose] def gaussianPackedIndexedStateWord
     (index : ℕ) (state : List Bool) : List Bool :=
   lengthPrefixedWord (List.replicate index true) ++ state
 
@@ -2265,7 +2265,7 @@ open GapCVP.SourceMixedRadixUnaryQuotientRemainderTM
 open GapCVP.GaussianAdaptiveEliminationCorrectness GapCVP.GaussianAdaptivePackedTraceCorrectness
 
 /-- GapCVP reduction support. -/
-def gaussianDenseStateCheckLengthUnary : List Bool → List Bool :=
+@[expose] def gaussianDenseStateCheckLengthUnary : List Bool → List Bool :=
   sourceInputLengthUnary ∘ gaussianPackedStateCheckBits
 
 private noncomputable def gaussianDenseStateCheckLengthUnaryComputable :
@@ -2276,7 +2276,7 @@ private noncomputable def gaussianDenseStateCheckLengthUnaryComputable :
     sourceInputLengthUnaryComputable
 
 /-- GapCVP reduction support. -/
-def gaussianDenseStateRowCountUnary : List Bool → List Bool :=
+@[expose] def gaussianDenseStateRowCountUnary : List Bool → List Bool :=
   sourceInputLengthUnary ∘ gaussianPackedStateRhsBits
 
 /-- GapCVP reduction support. -/

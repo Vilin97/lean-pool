@@ -161,7 +161,7 @@ def paperShiftedFamilyWordOrder
       paperShiftedFamilyTagCount formula budget))
 
 /-- GapCVP reduction support. -/
-def paperExplicitFamilyWordOrder
+@[expose] def paperExplicitFamilyWordOrder
     (encodingLength : ℕ) (formula : ThreeCNF) :
     Fin (paperExplicitFamilyTagCount
       encodingLength formula) ≃
@@ -226,7 +226,7 @@ abbrev paperExplicitBinaryRowDegree
       encodingLength formula index
 
 /-- GapCVP reduction support. -/
-def paperVariableArityExplicitBinaryRowWordOrder
+@[expose] def paperVariableArityExplicitBinaryRowWordOrder
     (encodingLength : ℕ) (formula : ThreeCNF) :
     Fin (paperExplicitBinaryRowWordCount
       encodingLength formula) ≃
@@ -677,7 +677,7 @@ theorem physicalFormulaRadius_pos
     (srcFormula formula)
 
 /-- GapCVP reduction support. -/
-def physicalFormulaInstance
+@[expose] def physicalFormulaInstance
     (encodingLength : ℕ) (formula : ThreeCNF) : GapCVPInstance :=
   effectiveGapCVPInstance
     (physicalFormulaSystem encodingLength formula)
@@ -3618,7 +3618,7 @@ open GapCVP.SourceFourFamilyInterpolationMembershipPredicateTM
 open GapCVP.SourceFourFamilyDiagonalMembershipPredicateTM
 
 /-- GapCVP reduction support. -/
-def gaussianPhysicalColumnCellQuery
+@[expose] def gaussianPhysicalColumnCellQuery
     (row column active : ℕ) (state : List Bool) : List Bool :=
   affineCellQuery row column
     (gaussianPhysicalPivotColumnQuery active state)

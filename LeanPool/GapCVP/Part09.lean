@@ -102,6 +102,7 @@ theorem sourceFormulaVariablePlace_injective
     (variableCount_le_fieldWordCount encodingLength formula)).injective
 
 /-- GapCVP reduction support. -/
+@[expose]
 def sourceFormulaFieldBasis (encodingLength : ℕ) (formula : Formula) :
     Module.Basis
       (Fin (sourceFieldExponent
@@ -6639,6 +6640,7 @@ abbrev ExplicitGridPoint
       encodingLength formula)
 
 /-- Reindexes a field-valued coordinate function along a finite equivalence. -/
+@[expose]
 def explicitFiniteReindexLinearEquiv
     {K : Type*} [Field K]
     {α : Type*} {n : ℕ}
@@ -6954,6 +6956,7 @@ namespace BinaryOrderedRefinement
 open GapCVP.Core GapCVP.BinaryExplicitAffineSystem GapCVP.BinarySourceRowOrder
 
 /-- GapCVP reduction support. -/
+@[expose]
 def sourceFormulaPhysicalFamilyLinearMap
     (encodingLength : ℕ) (formula : GapCVP.Core.Formula)
     (family : ExplicitConstraintFamily encodingLength formula) :

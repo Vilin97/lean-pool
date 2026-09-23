@@ -3303,6 +3303,13 @@ theorem effectiveGaussianStatePivotRow_effective
       system.effectivePivotRowOption column := by
   rfl
 
+theorem effectiveGaussianStateReducedConsistencyQuery_effective
+    (system : BinaryAffineSystem) (source : List Bool) :
+    effectiveGaussianStateReducedConsistencyQuery
+        system.effectiveGaussianState source =
+      GapCVP.GaussianReducedConsistencyTM.effectiveGaussianReducedConsistencyQuery
+        system source := by rfl
+
 end GaussianAdaptiveEliminationCorrectness
 
 namespace BinaryPhysicalWordEntries

@@ -2960,6 +2960,7 @@ open Polynomial
 abbrev Word (e : ℕ) := Fin e → Bool
 
 /-- GapCVP reduction support. -/
+@[expose]
 def allWords : (e : ℕ) → List (Word e)
   | 0 => [fun i => Fin.elim0 i]
   | e + 1 =>
@@ -3630,6 +3631,7 @@ abbrev Extension (e : ℕ) :=
   AdjoinRoot (selectedPolynomial e)
 
 /-- Power basis of the selected binary field extension, reindexed by its degree. -/
+@[expose]
 noncomputable def extensionBasis (e : ℕ) :
     Module.Basis (Fin e) (ZMod 2) (Extension e) :=
   (AdjoinRoot.powerBasisAux' (selectedPolynomial_monic e)).reindex
@@ -3742,6 +3744,7 @@ theorem wordElement_injective (degree : ℕ) :
     (sub_eq_zero.mp hzero)
 
 /-- GapCVP reduction support. -/
+@[expose]
 def effectiveExtensionBasis (degree : ℕ) :
     Module.Basis (Fin degree) (ZMod 2)
       (EffectiveBinaryField.Extension degree) :=
@@ -3959,6 +3962,7 @@ abbrev assembledBinaryRow (rowCounts : ι → ℕ) (e : ℕ) :=
   Σ family : ι, Fin (rowCounts family) × Fin e
 
 /-- GapCVP reduction support. -/
+@[expose]
 def assembledBinaryParityMatrix
     (basis : Module.Basis (Fin e) (ZMod 2) K)
     (rowCounts : ι → ℕ)
@@ -3968,12 +3972,14 @@ def assembledBinaryParityMatrix
     binaryFieldParityMatrix basis (checks row.1) row.2 column
 
 /-- GapCVP reduction support. -/
+@[expose]
 def assembledBinaryRightHandSide
     (basis : Module.Basis (Fin e) (ZMod 2) K)
     (rowCounts : ι → ℕ)
     (targets : (family : ι) → Fin (rowCounts family) → K) :
     assembledBinaryRow rowCounts e → ZMod 2 :=
-  fun row => binaryFieldRightHandSide basis (targets row.1) row.2
+  fun row =>
+    (binaryFieldVectorEquiv basis (rowCounts row.1) (targets row.1)) row.2
 
 @[simp] theorem assembledBinaryParityMatrix_mulVec_apply
     (basis : Module.Basis (Fin e) (ZMod 2) K)
