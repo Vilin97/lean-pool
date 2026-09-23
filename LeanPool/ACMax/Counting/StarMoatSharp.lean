@@ -3,14 +3,16 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import LeanPool.ACMax.Counting.StarNeighbors
-import LeanPool.ACMax.Counting.Incidence
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Push
-import LeanPool.ACMax.Counting.Moats
-import LeanPool.ACMax.Counting.SparseCore
-import LeanPool.ACMax.Counting.TripleCensus
-import LeanPool.ACMax.Counting.DecoratedC4
+module
+
+public import LeanPool.ACMax.Counting.StarNeighbors
+public import LeanPool.ACMax.Counting.Incidence
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.Push
+public import LeanPool.ACMax.Counting.Moats
+public import LeanPool.ACMax.Counting.SparseCore
+public import LeanPool.ACMax.Counting.TripleCensus
+public import LeanPool.ACMax.Counting.DecoratedC4
 
 /-!
 # The sharpened `Z1` star moat
@@ -37,6 +39,8 @@ original cut or exposes a sparse bulk core, which supplies another cut certifica
 remaining orders `10 ≤ n ≤ 15` have rigid excess profiles; the same ledgers, supplemented by
 triangle and decorated-`C₄` certificates at the tight corners, close them directly.
 -/
+
+@[expose] public section
 
 namespace ACMax
 

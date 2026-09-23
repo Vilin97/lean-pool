@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.FaceCyclesProof
-import LeanPool.Schoenflies.PrePolygonArc
+module
+
+public import LeanPool.Schoenflies.FaceCyclesProof
+public import LeanPool.Schoenflies.PrePolygonArc
 
 /-!
 # `lem:face-cycles`, with nothing assumed
@@ -76,6 +78,8 @@ Once this module is moved above `Schoenflies/FaceCyclesProof.lean`, the hypothes
 * `Graph.IsFaceCycle.eq_inside_of_isBounded'` — "in particular, every bounded face is the
   interior of its boundary cycle".
 -/
+@[expose] public section
+
 open Bornology Metric Set
 
 namespace Schoenflies

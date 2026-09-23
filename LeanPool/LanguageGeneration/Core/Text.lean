@@ -3,7 +3,9 @@ Copyright (c) 2026 Shuangping Li, Peng Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shuangping Li, Peng Zhang
 -/
-import LeanPool.LanguageGeneration.Core.Basic
+module
+
+public import LeanPool.LanguageGeneration.Core.Basic
 
 /-!
 # Ordered finite prefixes of information streams
@@ -14,6 +16,8 @@ forgets order and repetitions; `textPrefix` retains both.  The bridge theorem
 `textPrefix_toFinset` shows that the two views contain the same observed
 values.
 -/
+
+@[expose] public section
 
 namespace GenLimit
 

@@ -3,9 +3,12 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import Mathlib.Tactic.Ring
-import LeanPool.ACMax.Counting.Quotient
-import LeanPool.ACMax.Cuts.WeightedCut
+module
+
+public import Mathlib.Tactic.Ring
+public import Mathlib.Combinatorics.SimpleGraph.DegreeSum
+public import LeanPool.ACMax.Counting.Quotient
+public import LeanPool.ACMax.Cuts.WeightedCut
 
 /-!
 # Sparse-boundary cores from internal edge excess
@@ -15,6 +18,8 @@ degree excess above three, iterative deletion cannot remove every vertex while
 always deleting a vertex with at least three external neighbors.  The surviving
 set has external degree at most two at every vertex.
 -/
+
+@[expose] public section
 
 namespace ACMax
 

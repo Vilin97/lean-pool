@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PrimeNumberTheoremAnd contributors
 -/
 
-import Mathlib.Analysis.Calculus.Deriv.Support
-import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-import Mathlib.Order.Filter.ZeroAndBoundedAtFilter
+module
+
+public import Mathlib.Analysis.Calculus.Deriv.Support
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
+public import Mathlib.Order.Filter.ZeroAndBoundedAtFilter
 
 /-!
 Ported for Lean Pool from PrimeNumberTheoremAnd commit
@@ -16,6 +18,8 @@ The port adds the MooreBound namespace and updates Mathlib APIs and proof style.
 Wiener and Consequences retain the PNT and prime-interval dependency closure;
 unrelated later developments and LeanArchitect annotations are omitted.
 -/
+
+@[expose] public section
 
 namespace MooreBound
 

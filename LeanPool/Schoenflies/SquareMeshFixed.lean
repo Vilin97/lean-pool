@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.SquareMeshConnected
-import LeanPool.Schoenflies.Graph.Ear
+module
+
+public import LeanPool.Schoenflies.SquareMeshConnected
+public import LeanPool.Schoenflies.Graph.Ear
 
 /-!
 # The anchored square mesh: the three gaps an audit found
@@ -111,6 +113,8 @@ hypothesis giving two distinct fresh points.
 * `lem:union-two-connected` is *not* used here; the assembly that would use it is the part left
   open.
 -/
+
+@[expose] public section
 
 open Metric Set
 open scoped Graph
