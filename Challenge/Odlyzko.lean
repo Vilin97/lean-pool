@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard
 -/
 
-import Mathlib.NumberTheory.NumberField.Discriminant.Defs
-import Mathlib.NumberTheory.NumberField.InfinitePlace.TotallyRealComplex
+module
+
+public import Mathlib.NumberTheory.NumberField.Discriminant.Defs
+public import Mathlib.NumberTheory.NumberField.InfinitePlace.TotallyRealComplex
 
 /-!
 # Odlyzko bound for root discriminants
@@ -22,6 +24,8 @@ Informal statement:
   rationals is at least 18, the absolute value of the discriminant of K is at least 8.25 raised to
   the power of that degree.
 -/
+
+public section
 
 namespace Challenge.Odlyzko
 
