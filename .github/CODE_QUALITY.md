@@ -8,7 +8,7 @@ Lean Pool uses deterministic CI for mechanical quality checks and LLM review for
 
 [`lean_action_ci.yml`](workflows/lean_action_ci.yml) currently runs:
 
-- `lake exe mk_all --check` (all three library indexes)
+- `lake exe mk_all --module --check` (all three library indexes must use `module` and `public import`)
 - `lake build LeanPool`
 - a warning scan over the build log
 - [`scripts/ci/build-challenges.sh`](../scripts/ci/build-challenges.sh) — `lake build Challenge Solution` with a warning scan that tolerates only Lean's `declaration uses 'sorry'` notices, which challenge statements are expected to emit
@@ -17,6 +17,8 @@ Lean Pool uses deterministic CI for mechanical quality checks and LLM review for
 - `python -m lean_pool.quality --repo ..`
 
 The Lean workflow runs on Lean, Lake, project metadata, quality-checker, and workflow changes. It restores and saves Lake caches and pulls Mathlib oleans with `lake exe cache get` when the cache is cold.
+
+The generated module-system indexes import every library file, so building them rejects any file missing a `module` header. Regenerate the indexes with `lake exe mk_all --module`. Package-level `requiresModuleSystem = true` also makes Lake warn when a legacy file imports Lean Pool.
 
 ### 2. Repository Quality Checker
 
