@@ -1,4 +1,76 @@
 projects:
+  - slug: low-weight-pauli-dynamics
+    title: Low-weight Pauli dynamics and truncation error
+    summary: >-
+      Derives a normalized Pauli 2-norm truncation-error bound for concrete
+      circuits of disjoint-support Hermitian Pauli rotations, with explicit
+      locality, angle, step-count, and cutoff hypotheses. Develops a faithful
+      matrix representation, Pauli coefficient reconstruction, finite Schur
+      bounds, and reusable scalar multi-jump ladder estimates. Also proves a
+      combinatorial light-cone bound and exact counterexamples showing why
+      repeated product-formula layers must count toward the layer exponent.
+      This is the norm-level analysis, not a formalization of expectation-value
+      accuracy, Hamiltonian approximation, or the paper's full algorithm.
+    branch: quantum information
+    entry_module: LeanPool.LowWeightPauliDynamics
+    authors:
+      - Jue Xu
+    source:
+      title: Classical Simulation of Noiseless Quantum Dynamics without Randomness
+      arxiv: '2601.15770'
+      url: https://github.com/Jue-Xu/Lean4LPD/tree/ad0561661c46ca4c331d21104468e5dc65b2a028
+      github_repo: Jue-Xu/Lean4LPD
+      commit: ad0561661c46ca4c331d21104468e5dc65b2a028
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - Lean4LPD.PauliString.pauliNorm_layerStep_error_le_model_of_source_regime
+    main_results:
+      - declaration: Lean4LPD.PauliString.pauliNorm_layerStep_error_le_model_of_source_regime
+        informal: >-
+          For an observable supported on Pauli weights at most ko, a block of
+          Γ positive-many disjoint-support layers of Hermitian rotations of
+          weight at most kh, kh ≥ 2, and |sin θ| ≤ a ≤ αt/r with α > 0 and t ≥ 0,
+          truncation to weight ko + m(kh - 1) after each of r blocks has Pauli
+          2-norm error at most (2Γ(kh - 1)αt)^(m+1) (e(m+1))^(ko/(kh-1)) times
+          the input norm. The conditions include m ≥ 1, r ≥ 5, m ≤ r,
+          rΓ ≥ 8(m+1)^2, and r ≥ 8e^2(ko+kh-1)αt. Γ counts every layer of the
+          actual block, including repeated product-formula layers.
+        source_ref: >-
+          Upstream STATEMENTS.md and Pauli/LayerError.lean at the pinned commit;
+          norm-level counterpart of the revised supplement's truncation bound.
+      - declaration: Lean4LPD.l2_opNorm_le_schur
+        informal: >-
+          A finite rectangular matrix over any RCLike field, with absolute row
+          sums bounded by nonnegative R and absolute column sums bounded by
+          nonnegative C, has Euclidean operator norm at most sqrt(RC).
+        source_ref: Upstream Schur.lean, finite-dimensional Schur test.
+      - declaration: Lean4LPD.PauliString.reachable_weight_le
+        informal: >-
+          Every Pauli string reachable through a list of disjoint-support
+          kh-local layers, kh ≥ 1, has weight at most its initial weight times
+          kh raised to the number of layers. Reachability is combinatorial;
+          this theorem does not assert that a reachable coefficient is nonzero.
+        source_ref: Upstream Pauli/LayerWitness.lean, effective-layer light cone.
+      - declaration: Lean4LPD.LayerCounterexample.actual_discard_exceeds_gamma_bound
+        informal: >-
+          For the explicit eight-qubit second-order word L1,L2,L2,L1 and angles
+          0 < θ < π/2, truncating the evolved weight-one input at weight one
+          discards a nonzero coefficient of weight greater than four. Thus the
+          two distinct layer types give an invalid bound 1*2^2; repetitions
+          must be counted.
+        source_ref: Upstream Pauli/LayerCounterexample.lean, exact symbolic witness.
+    tags:
+      - quantum-information
+      - pauli-operators
+      - numerical-analysis
+      - operator-norms
+      - truncation-error
+    msc:
+      - 81P68
+      - 65L70
+      - 47A30
   - slug: granville-moore
     title: Integer Moore determinants and iterated Fermat quotients
     summary: >-
