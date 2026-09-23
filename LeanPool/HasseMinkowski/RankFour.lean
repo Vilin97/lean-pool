@@ -109,75 +109,6 @@ end LocalSplitting
 
 section RankFourDiagonal
 
--- The bridge between representability by a rank-two form and ternary isotropy.  The identical
--- lemma in `HilbertSymbol/Local.lean` is `private`, and that file is frozen, so we reprove it.
-private lemma wss_two_represents_iff_ternary {k : Type*} [Field k] [Invertible (2 : k)]
-    {a b x : k} (ha : a ≠ 0) (hb : b ≠ 0) (hx : x ≠ 0) :
-    (weightedSumSquares k ![a, b]).represents x ↔
-      (weightedSumSquares k ![a, b, -x]).Isotropic := by
-  have key2 : ∀ y : Fin 2 → k,
-      (weightedSumSquares k ![a, b]) y = a * y 0 ^ 2 + b * y 1 ^ 2 := by
-    intro y
-    simp [weightedSumSquares_apply, Fin.sum_univ_two, smul_eq_mul, pow_two]
-  have key3 : ∀ y : Fin 3 → k,
-      (weightedSumSquares k ![a, b, -x]) y =
-        a * y 0 ^ 2 + b * y 1 ^ 2 + (-x) * y 2 ^ 2 := by
-    intro y
-    simp [weightedSumSquares_apply, Fin.sum_univ_three, smul_eq_mul, pow_two]
-  constructor
-  · rintro ⟨y, _hy, hyQ⟩
-    refine ⟨![y 0, y 1, 1], ?_, ?_⟩
-    · intro h0
-      have h1 : (1 : k) = 0 := by simpa using congr_fun h0 2
-      exact one_ne_zero h1
-    · rw [key3]
-      simp only [Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
-        Matrix.cons_val_two, Matrix.tail_cons]
-      rw [key2] at hyQ
-      linear_combination hyQ
-  · rintro ⟨y, hy, hyQ⟩
-    rw [key3] at hyQ
-    by_cases hy2 : y 2 = 0
-    · have hyQ' : a * y 0 ^ 2 + b * y 1 ^ 2 = 0 := by
-        have h := hyQ
-        rw [hy2] at h
-        simpa using h
-      have hneq : (![y 0, y 1] : Fin 2 → k) ≠ 0 := by
-        intro h0
-        apply hy
-        funext j
-        fin_cases j
-        · simpa using congr_fun h0 0
-        · simpa using congr_fun h0 1
-        · exact hy2
-      have hiso : (weightedSumSquares k ![a, b]).Isotropic := by
-        refine ⟨![y 0, y 1], hneq, ?_⟩
-        rw [key2]
-        simp only [Matrix.cons_val_zero, Matrix.cons_val_one]
-        exact hyQ'
-      have hnd : (weightedSumSquares k ![a, b]).Nondegenerate := by
-        let w : Fin 2 → kˣ := ![Units.mk0 a ha, Units.mk0 b hb]
-        have hw : (fun i => (w i : k)) = ![a, b] := by
-          funext i
-          fin_cases i <;> simp [w]
-        rw [← hw]
-        exact nondegenerate_weightedSumSquares w
-      exact represents_of_isotropic_nondegenerate hnd hiso x
-    · set z : Fin 2 → k := ![y 0 / y 2, y 1 / y 2] with hz_def
-      have hzval : (weightedSumSquares k ![a, b]) z = x := by
-        rw [key2]
-        simp only [hz_def, Matrix.cons_val_zero, Matrix.cons_val_one]
-        have hdiv : a * (y 0 / y 2) ^ 2 + b * (y 1 / y 2) ^ 2 =
-            (a * y 0 ^ 2 + b * y 1 ^ 2) / y 2 ^ 2 := by
-          field_simp [hy2]
-        rw [hdiv]
-        have hthis : a * y 0 ^ 2 + b * y 1 ^ 2 = x * y 2 ^ 2 := by
-          linear_combination hyQ
-        rw [hthis, mul_div_assoc, div_self (pow_ne_zero 2 hy2), mul_one]
-      exact ⟨z, fun h0 => by
-        rw [h0, map_zero] at hzval
-        exact hx hzval.symm, hzval⟩
-
 -- Theorem: at a place `K` in which the symbol identity `(x, −ab) = (a,b)` holds, the ternary
 -- diagonal form `⟨a,b,−x⟩` is isotropic.
 private lemma isotropic_three_of_symbol {K : Type*} [Field K] [Invertible (2 : K)]
@@ -186,8 +117,8 @@ private lemma isotropic_three_of_symbol {K : Type*} [Field K] [Invertible (2 : K
     (weightedSumSquares K ![(a : K), (b : K), -(x : K)]).Isotropic := by
   have hcast : (((-(a * b)) : ℚ) : K) = -((a : K) * (b : K)) := by push_cast; ring
   rw [hcast, hilbertSym_comm] at h
-  exact (wss_two_represents_iff_ternary (Rat.cast_ne_zero.mpr ha) (Rat.cast_ne_zero.mpr hb)
-    (Rat.cast_ne_zero.mpr hx)).mp
+  exact (weightedSumSquares_two_represents_iff_ternary (Rat.cast_ne_zero.mpr ha)
+    (Rat.cast_ne_zero.mpr hb) (Rat.cast_ne_zero.mpr hx)).mp
     ((represents_weightedSumSquares_two_iff (Rat.cast_ne_zero.mpr ha)
       (Rat.cast_ne_zero.mpr hb) (Rat.cast_ne_zero.mpr hx)).mpr h)
 
@@ -229,7 +160,7 @@ private lemma represents_two_of_local_symbol {a b x : ℚ} (ha : a ≠ 0) (hb : 
   have hiso : (weightedSumSquares ℚ w3).Isotropic :=
     isotropic_of_rank_three' (weightedSumSquares ℚ w3) (Module.finrank_fin_fun (R := ℚ))
       hnd hloc
-  exact (wss_two_represents_iff_ternary ha hb hx).mpr hiso
+  exact (weightedSumSquares_two_represents_iff_ternary ha hb hx).mpr hiso
 
 -- Theorem (WP4.2): diagonal rank-four Hasse–Minkowski over `ℚ`.
 theorem rankFourDiagonalHM : RankFourDiagonalHM := by

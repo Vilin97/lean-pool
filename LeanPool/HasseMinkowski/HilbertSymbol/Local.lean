@@ -51,7 +51,7 @@ This is the bridge between representability by a rank-two form and the ternary i
 criterion of `RankCriteria.lean`.  The hard case is when the isotropic vector of `⟨a, b, -x⟩`
 has last coordinate `0`: then `⟨a, b⟩` is itself isotropic, and since it is nondegenerate it
 represents every value. -/
-private lemma weightedSumSquares_two_represents_iff_ternary {a b x : k} [Invertible (2 : k)]
+lemma weightedSumSquares_two_represents_iff_ternary {a b x : k} [Invertible (2 : k)]
     (ha : a ≠ 0) (hb : b ≠ 0) (hx : x ≠ 0) :
     (weightedSumSquares k ![a, b]).represents x ↔
       (weightedSumSquares k ![a, b, -x]).Isotropic := by

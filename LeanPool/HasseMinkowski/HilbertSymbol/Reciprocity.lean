@@ -23,10 +23,10 @@ This file records the two global properties:
   numerator or denominator of `a` or `b`, both arguments are `p`-adic units, and the
   case `00` of Serre's formula gives `1`.
 
-* Hilbert reciprocity `∏_v (a,b)_v = 1`.  The hard input is quadratic reciprocity.  We do
-  **not** formalise that here (see the note at the end of the file); instead we prove the
-  case in which one argument is a square, where every local symbol is `1`
-  (`prod_eq_one_of_isSquare_left`, `prod_eq_one_of_isSquare_right`).
+* Hilbert reciprocity `∏_v (a,b)_v = 1` (`hilbertReciprocity`).  The hard input is
+  quadratic reciprocity (`legendreSym.quadratic_reciprocity`); the proof reduces to the
+  square-class generators `-1` and the primes, using the case in which one argument is a
+  square (`prod_eq_one_of_isSquare`, where every local symbol is `1`) as a step.
 -/
 
 namespace HasseMinkowski

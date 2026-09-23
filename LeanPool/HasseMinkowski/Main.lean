@@ -19,12 +19,11 @@ rank-by-rank inputs proved in the earlier layers:
 * `rankFourDiagonalHM` (`RankFour.lean`, the diagonal rank-four case),
 * `RankFiveLeDiagonalHM` (`HighRank.lean`, diagonal rank `≥ 5`).
 
-The two ingredients that are still isolated as `Prop`s:
-`RankFourDiagonalHM` (proved in `RankFour.lean`) and `RankFiveLeDiagonalHM` (the WP5.3
-induction, not yet proved), enter as explicit hypotheses of `hasseMinkowski_of` and
-`meyer_of`.  Once the rank `≥ 5` induction lands, the unconditional statements are the
-one-liners `hasseMinkowski h4 := hasseMinkowski_of rankFourDiagonalHM h4` and
-`meyer h4 := meyer_of rankFourDiagonalHM h4`; we deliberately do not stub them here.
+The two diagonal ingredients `RankFourDiagonalHM` (`RankFour.lean`) and
+`RankFiveLeDiagonalHM` (the WP5.3 induction, `HighRank.lean`) enter as explicit hypotheses
+of the conditional `hasseMinkowski_of` and `meyer_of`; the unconditional `hasseMinkowski`
+and `meyer` below specialise them with `rankFourDiagonalHM` and
+`rankFiveLeDiagonalHM rankFourDiagonalHM`.
 
 ## Main results
 

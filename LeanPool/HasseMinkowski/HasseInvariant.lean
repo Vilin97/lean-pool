@@ -18,15 +18,13 @@ all the pairwise Hilbert symbols
 
 `ε(w) = ∏_{i < j} (wᵢ, wⱼ)_k`.
 
-This file defines `hasseMinkowskiInvAux` on the diagonal data and `hasseMinkowskiInv` on a
-nondegenerate form by choosing a diagonalization, and proves the elementary evaluations of the
-invariant.  These are exactly the statements of Serre's *Cours d'arithmétique*, Ch. IV, together
-with the small-rank computations used in the classification.
+This file defines `hasseMinkowskiInvAux` on the diagonal data and proves the elementary
+evaluations of the invariant.  These are exactly the statements of Serre's *Cours
+d'arithmétique*, Ch. IV, together with the small-rank computations used in the classification.
 
 ## Main definitions
 
 * `hasseMinkowskiInvAux w`: the invariant of the diagonal form with weights `w : Fin n → kˣ`.
-* `hasseMinkowskiInv Q hQ`: the invariant of a nondegenerate form `Q`.
 
 ## Main results
 
@@ -43,14 +41,15 @@ with the small-rank computations used in the classification.
 The well-definedness of the invariant, i.e. the statement that equivalent diagonal forms have the
 same invariant (`hasseMinkowskiInvAux.eq_of_equivalent` in the reference development), is *not*
 stated here: it depends on the theory of Hilbert symbols over local fields that is not yet
-available in this project.  As a consequence the computational lemmas at the level of
-`hasseMinkowskiInv` (which all pass through well-definedness) are also omitted.  In particular the
-reference development's `hasseMinkowskiInv.weightedSumSquares`, `…_two`, `…_three`,
-`hasseMinkowskiInv.prod_rank_one` and `hasseMinkowskiInv.of_baseChange_weightedSumSquares` are not
-reproduced: without `eq_of_equivalent` there is no way to identify the diagonalization chosen by
-`Classical.choose` with any concrete list of weights.  The diagonal-level statements
-(`hasseMinkowskiInvAux_*`) proved here are exactly the part of the development that does not need
-that machinery.
+available in this project.  A form-level invariant `hasseMinkowskiInv` is therefore kept as a
+`private` definition that no theorem or consumer exposes.  As a consequence the computational
+lemmas at the level of `hasseMinkowskiInv` (which all pass through well-definedness) are also
+omitted.  In particular the reference development's `hasseMinkowskiInv.weightedSumSquares`,
+`…_two`, `…_three`, `hasseMinkowskiInv.prod_rank_one` and
+`hasseMinkowskiInv.of_baseChange_weightedSumSquares` are not reproduced: without
+`eq_of_equivalent` there is no way to identify the diagonalization chosen by `Classical.choose`
+with any concrete list of weights.  The diagonal-level statements (`hasseMinkowskiInvAux_*`)
+proved here are exactly the part of the development that does not need that machinery.
 -/
 
 namespace HasseMinkowski
@@ -166,8 +165,8 @@ theorem hasseMinkowskiInvAux_prod_rank_one [HasBilinHilbertSym k] {n : ℕ} (a :
 
 The definition uses a chosen diagonalization (`Classical.choose`), so it is only meaningful once
 well-definedness under equivalence is available; that fact is not yet proved in this project, so
-no computational lemmas at this level are stated. -/
-noncomputable def hasseMinkowskiInv {V : Type*} [AddCommGroup V] [Module k V]
+the definition is `private` and no computational lemmas at this level are stated. -/
+private noncomputable def hasseMinkowskiInv {V : Type*} [AddCommGroup V] [Module k V]
     [FiniteDimensional k V] [Invertible (2 : k)]
     (Q : QuadraticForm k V) (hQ : LinearMap.SeparatingLeft Q.associated) : ℤ :=
   hasseMinkowskiInvAux

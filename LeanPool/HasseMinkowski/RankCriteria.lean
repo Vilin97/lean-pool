@@ -25,10 +25,9 @@ The proofs rest on the rank-three isotropy criterion
 computation `hilbertSym_mul_mul`, both of which are proved unconditionally here.
 
 The well-definedness of `hasseMinkowskiInv` (that equivalent diagonal forms have the same
-invariant) is *not* available in this project; every theorem at the level of `hasseMinkowskiInv`
-is therefore stated under the explicit hypothesis `hwell`, which is exactly HassePrinciple's
-`hasseMinkowskiInvAux.eq_of_equivalent`.  The invariant-free (diagonal) forms of the criteria
-are stated and proved with `hasseMinkowskiInvAux` and need no such hypothesis.
+invariant) is *not* available in this project, so no theorem at the level of that form-level
+invariant is stated.  The invariant-free (diagonal) forms of the criteria are stated and proved
+with `hasseMinkowskiInvAux` and need no such hypothesis.
 
 ## Provenance
 

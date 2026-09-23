@@ -42,9 +42,10 @@ three facts on which the place-by-place verification rests.
 ## Status
 
 This file provides the Dirichlet/CRT construction of `S`, `T`, `A`, `M`, the
-squareness/valuation lemmas at each place, and the **disjoint case** of the existence
-theorem, `exists_disjoint` (WP3.1 of `Plan-v3.md`).  The general case WP3.2 is not treated
-here.  No `sorry` is introduced.
+squareness/valuation lemmas at each place, the disjoint case of the existence theorem
+(`exists_disjoint`, WP3.1 of `Plan-v3.md`), and the general existence theorem
+(`exists_rat_hilbertSym`, WP3.2, Serre III Thm 4), which reduces to the disjoint case.  No
+`sorry` is introduced.
 
 ## Provenance
 
