@@ -3,9 +3,11 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import Mathlib.Tactic.NormNum
-import LeanPool.ACMax.Counting.LargeN
-import LeanPool.ACMax.Spectral.AlgConnK2
+module
+
+public import Mathlib.Tactic.NormNum
+public import LeanPool.ACMax.Counting.LargeN
+public import LeanPool.ACMax.Spectral.AlgConnK2
 
 /-!
 # Numerical specialization of the linear large-order bound
@@ -14,6 +16,8 @@ import LeanPool.ACMax.Spectral.AlgConnK2
 `Counting.LargeN.acmax_conjecture_large_n_sharp2` to `17692`.
 The complete all-order theorem is assembled separately in `Band.Final`.
 -/
+
+@[expose] public section
 
 namespace ACMax
 

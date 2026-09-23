@@ -3,10 +3,12 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
-import LeanPool.ACMax.Spectral.AlgConn
+module
+
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Ring
+public import LeanPool.ACMax.Spectral.AlgConn
 
 /-!
 # Lower companion of the Courant–Fischer bridge
@@ -15,6 +17,8 @@ import LeanPool.ACMax.Spectral.AlgConn
 every `x` orthogonal to the all-ones vector (`∑ i, x i = 0`), then `c ≤ algConn G`.
 This is the reverse direction used to certify the *lower* bound `algConn ≥ 2`.
 -/
+
+@[expose] public section
 
 namespace ACMax
 

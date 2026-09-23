@@ -3,7 +3,9 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Plane
+module
+
+public import LeanPool.Schoenflies.Plane
 
 /-!
 # Strongly accessible boundary points
@@ -34,6 +36,8 @@ Lemma 8.3 (density of strongly accessible points) is not formalized here: its pr
 through `C = ∂D`, i.e. through the Jordan curve theorem, which is not yet available. Its role
 is played by Proposition 8.5, which is stated with `C ⊆ closure D` as a hypothesis.
 -/
+
+@[expose] public section
 
 open Metric Set
 

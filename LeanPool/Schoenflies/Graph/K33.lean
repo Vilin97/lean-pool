@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Graph.CycleJordan
-import LeanPool.Schoenflies.Subarc
+module
+
+public import LeanPool.Schoenflies.Graph.CycleJordan
+public import LeanPool.Schoenflies.Subarc
 
 /-!
 # The utility graph `K(3,3)` inside a plane graph
@@ -82,6 +84,8 @@ that `exists_two_chords_same_side` wants. It returns two remaining edges on the 
 `chords_alternate` says their ends alternate, so `cor:alternating-crosscuts` makes them meet,
 and `chords_disjoint` says they do not.
 -/
+
+@[expose] public section
 
 open Set Schoenflies unitInterval
 open scoped Graph

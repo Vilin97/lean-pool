@@ -3,18 +3,22 @@ Copyright (c) 2026 Xiaoyu Li, Andi Han, Jiaojiao Jiang, Junbin Gao. All rights r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xiaoyu Li, Andi Han, Jiaojiao Jiang, Junbin Gao
 -/
-import LeanPool.LanguageGeneration.FiniteWitness.Width.Anchored
-import Mathlib.Data.Fintype.Powerset
-import Mathlib.Data.Fintype.Pi
-import Mathlib.Data.Fintype.Prod
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Data.Fintype.Pigeonhole
-import Mathlib.Order.Interval.Finset.Basic
-import Mathlib.Tactic.Push
+module
+
+public import LeanPool.LanguageGeneration.FiniteWitness.Width.Anchored
+public import Mathlib.Data.Fintype.Powerset
+public import Mathlib.Data.Fintype.Pi
+public import Mathlib.Data.Fintype.Prod
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Data.Fintype.Pigeonhole
+public import Mathlib.Order.Interval.Finset.Basic
+public import Mathlib.Tactic.Push
 
 /-!
 # Counting lower bounds for anchored witness assignments
 -/
+
+@[expose] public section
 
 namespace GenLimit.FiniteWitness.Anchored
 

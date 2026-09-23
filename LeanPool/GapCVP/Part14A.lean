@@ -4,9 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import LeanPool.GapCVP.Part13
+module
+
+public import LeanPool.GapCVP.Part13
 
 /-! # GapCVP proof, part 14 -/
+
+public section
 
 noncomputable section
 
@@ -168,7 +172,8 @@ abbrev sourceIrreducibleFormulaDegree (formula : ThreeCNF) : ℕ :=
       (encodeThreeCNF formula).length
       (srcFormula formula))
 
-private def sourceIrreducibleRankDegreeUnary : List Bool → List Bool :=
+/-- Encode the irreducible candidate rank's degree in unary form. -/
+def sourceIrreducibleRankDegreeUnary : List Bool → List Bool :=
   physicalFamilyFieldDegreeUnary ∘ binaryIrreducibleRankOriginal
 
 /-- GapCVP reduction support. -/
