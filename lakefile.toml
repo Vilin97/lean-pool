@@ -2,6 +2,7 @@ name = "lean-pool"
 version = "0.1.0"
 keywords = ["math"]
 defaultTargets = ["LeanPool", "Challenge", "Solution"]
+requiresModuleSystem = true
 
 [leanOptions]
 pp.unicode.fun = true # pretty-prints `fun a ↦ b`
