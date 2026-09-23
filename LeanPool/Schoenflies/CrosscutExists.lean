@@ -3,7 +3,9 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.OuterChain
+module
+
+public import LeanPool.Schoenflies.OuterChain
 
 /-!
 # Building the crosscut of the outer-chain descent
@@ -73,6 +75,8 @@ development; they are the missing companions of `Graph.IsPath.split_meet` and
 * `Graph.IsPlaneChain.crosscutExists` — **`Graph.CrosscutExists`**, the combinatorial half of
   the descent step of `lem:outer-chain`.
 -/
+
+@[expose] public section
 
 open Set Schoenflies
 open scoped Graph

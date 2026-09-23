@@ -4,9 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import LeanPool.GapCVP.Part12B
+module
+
+public import LeanPool.GapCVP.Part12B
 
 /-! # GapCVP proof, part 12, continuation 03 -/
+
+public section
 
 noncomputable section
 
@@ -31,7 +35,7 @@ open GapCVP.BinaryOrderedRefinement GapCVP.SourcePreprocessingSemantics GapCVP.F
 open GapCVP.ClauseCardinality
 
 /-- GapCVP reduction support. -/
-def sourceTypeCardWordOrder
+@[expose] def sourceTypeCardWordOrder
     (formula : ThreeCNF) :
     Fin (Fintype.card
       (sourceSATTableType (srcFormula formula))) ≃
@@ -40,7 +44,7 @@ def sourceTypeCardWordOrder
     (sourceTypeWordOrder formula)
 
 /-- GapCVP reduction support. -/
-def sourceCoordinateWordOrder
+@[expose] def sourceCoordinateWordOrder
     (encodingLength : ℕ) (formula : ThreeCNF) :
     Fin (GapCVP.Factor400BinaryConstructiveSourcePlaces.sourceFormulaDimension
       encodingLength (srcFormula formula)) ≃
@@ -69,7 +73,7 @@ private def paperVariableArityLocalVariableMomentWordOrder
           (Equiv.refl (Fin (momentBudget + 1))))
 
 /-- GapCVP reduction support. -/
-def paperShiftedClauseTagCount
+@[expose] def paperShiftedClauseTagCount
     (formula : ThreeCNF) (momentBudget : ℕ)
     (index : Fin (srcFormula formula).clauses.length) : ℕ :=
   (2 ^ paperFormulaClauseWidth formula index - 1) *
@@ -77,7 +81,7 @@ def paperShiftedClauseTagCount
       (momentBudget + 1))
 
 /-- GapCVP reduction support. -/
-def paperShiftedClauseWordOrder
+@[expose] def paperShiftedClauseWordOrder
     (formula : ThreeCNF) (momentBudget : ℕ)
     (index : Fin (srcFormula formula).clauses.length) :
     Fin (paperShiftedClauseTagCount
@@ -102,18 +106,23 @@ def paperShiftedClauseWordOrder
         (momentBudget + 1)))).symm.trans
       (Equiv.sigmaCongr
         (paperFormulaClauseTupleWordOrder formula index)
-        (fun _ => paperVariableArityLocalVariableMomentWordOrder
-          formula momentBudget index)))
+        (fun _ =>
+          (finProdFinEquiv
+            (m := paperFormulaClauseWidth formula index)
+            (n := momentBudget + 1)).symm.trans
+              ((paperFormulaClauseVariableWordOrder
+                formula index).prodCongr
+                  (Equiv.refl (Fin (momentBudget + 1)))))))
 
 /-- GapCVP reduction support. -/
-def paperShiftedFamilyTagCount
+@[expose] def paperShiftedFamilyTagCount
     (formula : ThreeCNF) (momentBudget : ℕ) : ℕ :=
   ∑ index : Fin (srcFormula formula).clauses.length,
     paperShiftedClauseTagCount
       formula momentBudget index
 
 /-- GapCVP reduction support. -/
-def paperShiftedFamilyWordOrder
+@[expose] def paperShiftedFamilyWordOrder
     (formula : ThreeCNF) (momentBudget : ℕ) :
     Fin (paperShiftedFamilyTagCount
       formula momentBudget) ≃
@@ -134,7 +143,7 @@ def paperShiftedFamilyWordOrder
         formula momentBudget clause)
 
 /-- GapCVP reduction support. -/
-def paperOrdinaryFamilyWordOrder
+@[expose] def paperOrdinaryFamilyWordOrder
     (formula : ThreeCNF) (momentBudget : ℕ) :
     Fin ((1 + paperVariableArityLocalTagCount formula) *
       (momentBudget + 1)) ≃
@@ -147,7 +156,7 @@ def paperOrdinaryFamilyWordOrder
         (Equiv.refl (Fin (momentBudget + 1))))
 
 /-- GapCVP reduction support. -/
-def paperExplicitFamilyTagCount
+@[expose] def paperExplicitFamilyTagCount
     (encodingLength : ℕ) (formula : ThreeCNF) : ℕ :=
   let budget :=
     explicitMomentBudget encodingLength
@@ -157,7 +166,7 @@ def paperExplicitFamilyTagCount
       paperShiftedFamilyTagCount formula budget))
 
 /-- GapCVP reduction support. -/
-def paperExplicitFamilyWordOrder
+@[expose] def paperExplicitFamilyWordOrder
     (encodingLength : ℕ) (formula : ThreeCNF) :
     Fin (paperExplicitFamilyTagCount
       encodingLength formula) ≃
@@ -203,7 +212,7 @@ abbrev paperExplicitBinaryRowDegree
       (srcFormula formula))
 
 /-- GapCVP reduction support. -/
-def paperExplicitBinaryFamilyBlockCount
+@[expose] def paperExplicitBinaryFamilyBlockCount
     (encodingLength : ℕ) (formula : ThreeCNF)
     (index : Fin
       (paperExplicitFamilyTagCount encodingLength formula)) : ℕ :=
@@ -214,7 +223,7 @@ def paperExplicitBinaryFamilyBlockCount
     paperExplicitBinaryRowDegree encodingLength formula
 
 /-- GapCVP reduction support. -/
-def paperExplicitBinaryRowWordCount
+@[expose] def paperExplicitBinaryRowWordCount
     (encodingLength : ℕ) (formula : ThreeCNF) : ℕ :=
   ∑ index : Fin
     (paperExplicitFamilyTagCount encodingLength formula),
@@ -222,7 +231,7 @@ def paperExplicitBinaryRowWordCount
       encodingLength formula index
 
 /-- GapCVP reduction support. -/
-def paperVariableArityExplicitBinaryRowWordOrder
+@[expose] def paperVariableArityExplicitBinaryRowWordOrder
     (encodingLength : ℕ) (formula : ThreeCNF) :
     Fin (paperExplicitBinaryRowWordCount
       encodingLength formula) ≃
@@ -252,7 +261,7 @@ def paperVariableArityExplicitBinaryRowWordOrder
           encodingLength formula)).symm))
 
 /-- GapCVP reduction support. -/
-def physicalBinarySystem
+@[expose] def physicalBinarySystem
     (encodingLength : ℕ) (formula : ThreeCNF) : BinaryAffineSystem :=
   assembledBinaryAffineSystemOrdered
     (GapCVP.Factor400BinaryConstructiveSourcePlaces.sourceFormulaFieldBasis
@@ -322,7 +331,7 @@ abbrev physicalColumnPermutation
             encodingLength (srcFormula formula))))
 
 /-- GapCVP reduction support. -/
-def physicalCoordinateIndex
+@[expose] def physicalCoordinateIndex
     (encodingLength : ℕ) (formula : ThreeCNF)
     (tableType : sourceSATTableType (srcFormula formula))
     (point : sourceSATGridPoint
@@ -631,7 +640,7 @@ open GapCVP.FourFamilySoundness GapCVP.NormalizedRecordDecoder GapCVP.PhysicalCo
 open GapCVP.PhysicalWordSoundness
 
 /-- GapCVP reduction support. -/
-def physicalFormulaSystem
+@[expose] def physicalFormulaSystem
     (encodingLength : ℕ) (formula : ThreeCNF) : BinaryAffineSystem :=
   physicalWordBinarySystem encodingLength formula
 
@@ -653,7 +662,7 @@ theorem physicalFormulaSystem_dimension_pos
     (srcFormula formula)
 
 /-- GapCVP reduction support. -/
-def physicalFormulaRadius
+@[expose] def physicalFormulaRadius
     (encodingLength : ℕ) (formula : ThreeCNF) : ℚ :=
   sourceOneHotCompletenessRadius
     (srcFormula formula)
@@ -673,7 +682,7 @@ theorem physicalFormulaRadius_pos
     (srcFormula formula)
 
 /-- GapCVP reduction support. -/
-def physicalFormulaInstance
+@[expose] def physicalFormulaInstance
     (encodingLength : ℕ) (formula : ThreeCNF) : GapCVPInstance :=
   effectiveGapCVPInstance
     (physicalFormulaSystem encodingLength formula)
@@ -814,7 +823,7 @@ theorem paperVariableArityOriginal_satisfiable_of_normalized_empty
       implies_true]
 
 /-- GapCVP reduction support. -/
-def physicalSourceInstance
+@[expose] def physicalSourceInstance
     (input : List Bool) : GapCVPInstance := by
   classical
   exact
@@ -842,7 +851,7 @@ def physicalSourceInstance
         Factor400BinaryCanonicalNo.adaptedCanonicalNoInstance
 
 /-- GapCVP reduction support. -/
-def paperVariableArityPhysicalSourceMap
+@[expose] def paperVariableArityPhysicalSourceMap
     (input : List Bool) : List Bool :=
   BinaryEncoding.encodeGapCVPInstance
     (physicalSourceInstance input)
@@ -1046,6 +1055,14 @@ noncomputable def paperVariableArityPhysicalSourceReductionOfMachine
     paperVariableArityPhysicalSourceMap_soundness input
       (fun satisfiable => unsatisfiable
         ((paperOriginalThreeSATLanguage_iff input).mpr satisfiable))
+
+/-- The reduction built from a machine uses the physical source map. -/
+theorem paperVariableArityPhysicalSourceReductionOfMachine_map
+    (machine : BitTM paperVariableArityPhysicalSourceMap)
+    (input : List Bool) :
+    (paperVariableArityPhysicalSourceReductionOfMachine machine).map input =
+      paperVariableArityPhysicalSourceMap input := by
+  rfl
 
 end Factor400BinaryConstructivePaperVariableArityPhysicalSourceMap
 
@@ -1514,7 +1531,7 @@ private noncomputable def paperVariableArityClauseOffsetFoldComputable :
     paperVariableArityClauseOffset_polynomiallyBoundedFoldStates
 
 /-- GapCVP reduction support. -/
-def sourceClauseWeight (clause : ThreeClause) : ℕ :=
+@[expose] def sourceClauseWeight (clause : ThreeClause) : ℕ :=
   2 ^ (paperSourceNormalizedClause clause).length - 1
 
 private def paperVariableAritySourceClauseOffsetRecord
@@ -1527,7 +1544,7 @@ private def paperVariableAritySourceClauseOffsetRecord
       lengthPrefixedWord (paperSourceNormalizedClauseRecord clause)))
 
 /-- GapCVP reduction support. -/
-def sourceClauseWeightSum
+@[expose] def sourceClauseWeightSum
     (clauses : List ThreeClause) : ℕ :=
   (clauses.map sourceClauseWeight).sum
 
@@ -1979,7 +1996,8 @@ structure PaperVariableArityCanonicalBinaryMatrixCellComputer
         ((shape.system (encodeThreeCNF formula).length formula).rightHandSide
           row = (1 : ZMod 2))]
 
-private def paperVariableArityCanonicalBinaryMatrixRawCheckWidth
+/-- Compute the raw check grid width from the matrix row and column dimensions. -/
+def paperVariableArityCanonicalBinaryMatrixRawCheckWidth
     (shape : PaperVariableArityCanonicalBinaryMatrixShape) :
     List Bool → List Bool :=
   fourFamilyComputedUnaryProductOutput shape.rows shape.columns
@@ -2062,7 +2080,8 @@ private theorem paperVariableArityCanonicalBinaryMatrixRhsWidth_valid
         true :=
   shape.rowsCorrect formula
 
-private def paperVariableArityCanonicalBinaryMatrixRankDimension
+/-- Read the canonical matrix column dimension from a rank query. -/
+def paperVariableArityCanonicalBinaryMatrixRankDimension
     (shape : PaperVariableArityCanonicalBinaryMatrixShape) :
     List Bool → List Bool :=
   shape.columns ∘ sourcePhysicalWordCatalogueRankOriginalSource
@@ -2077,7 +2096,8 @@ noncomputable def
     sourcePhysicalWordCatalogueRankOriginalSourceComputable
     shape.columnsComputable
 
-private def paperCanonicalBinaryMatrixRankDivisionInput
+/-- Combine a catalogue rank, column dimension, and source for row-major division. -/
+def paperCanonicalBinaryMatrixRankDivisionInput
     (shape : PaperVariableArityCanonicalBinaryMatrixShape)
     (input : List Bool) : List Bool :=
   sourcePhysicalWordCatalogueRankUnary input ++ false ::
@@ -2102,7 +2122,8 @@ noncomputable def
   exact pointwiseAppendComputable
     sourcePhysicalWordCatalogueRankUnaryComputable separator
 
-private def paperCanonicalBinaryMatrixRankDivisionOutput
+/-- Decode a catalogue rank into its row-major matrix coordinates. -/
+def paperCanonicalBinaryMatrixRankDivisionOutput
     (shape : PaperVariableArityCanonicalBinaryMatrixShape) :
     List Bool → List Bool :=
   sourceMixedRadixRowMajorPairOutput ∘
@@ -2155,7 +2176,8 @@ private noncomputable def paperVariableArityCanonicalBinaryMatrixRankColumnCompu
   exact GapCVP.TMComposition.computableInPolyTime
     hprefix dropHeadComputable
 
-private def paperVariableArityCanonicalBinaryMatrixCheckCandidate
+/-- Encode one candidate query for a canonical matrix check bit. -/
+def paperVariableArityCanonicalBinaryMatrixCheckCandidate
     (shape : PaperVariableArityCanonicalBinaryMatrixShape)
     (input : List Bool) : List Bool :=
   lengthPrefixedWord
@@ -2268,7 +2290,8 @@ private theorem paperVariableArityCanonicalBinaryMatrixCheckCandidate_query
       shape rank dimension width source hdimension hpositive,
     sourcePhysicalWordCatalogueRankOriginalSource_query]
 
-private def paperVariableArityCanonicalBinaryMatrixCheckQueryCatalogue
+/-- Enumerate candidate queries for canonical matrix check bits. -/
+def paperVariableArityCanonicalBinaryMatrixCheckQueryCatalogue
     (shape : PaperVariableArityCanonicalBinaryMatrixShape) :
     List Bool → List Bool :=
   maskDynamicGridCandidateCatalogueOutput
@@ -2285,7 +2308,8 @@ noncomputable def
     (paperCanonicalBinaryMatrixCheckWidth shape)
     (paperVariableArityCanonicalBinaryMatrixCheckCandidateComputable shape)
 
-private def paperVariableArityCanonicalBinaryMatrixRhsQueryCatalogue
+/-- Enumerate candidate queries for canonical matrix right-hand-side bits. -/
+def paperVariableArityCanonicalBinaryMatrixRhsQueryCatalogue
     (shape : PaperVariableArityCanonicalBinaryMatrixShape) :
     List Bool → List Bool :=
   maskDynamicGridCandidateCatalogueOutput
@@ -2303,7 +2327,7 @@ noncomputable def
     sourcePhysicalWordCanonicalRhsCandidateComputable
 
 /-- GapCVP reduction support. -/
-def paperCanonicalBinaryMatrixCheckQueries
+@[expose] def paperCanonicalBinaryMatrixCheckQueries
     (shape : PaperVariableArityCanonicalBinaryMatrixShape)
     (formula : ThreeCNF) : List (List Bool) :=
   let source := encodeThreeCNF formula
@@ -2313,7 +2337,7 @@ def paperCanonicalBinaryMatrixCheckQueries
       affineCellQuery row.val column.val source
 
 /-- GapCVP reduction support. -/
-def paperCanonicalBinaryMatrixRhsQueries
+@[expose] def paperCanonicalBinaryMatrixRhsQueries
     (shape : PaperVariableArityCanonicalBinaryMatrixShape)
     (formula : ThreeCNF) : List (List Bool) :=
   let source := encodeThreeCNF formula
@@ -2578,7 +2602,8 @@ private theorem paperVariableArityCanonicalBinaryMatrixRhsMarker_length
       rw [binaryGaussianFirstCellWord_valid]
       exact Nat.le_refl 1
 
-private def paperCanonicalBinaryMatrixCheckFold
+/-- Fold the canonical matrix check-bit catalogue with the cell worker. -/
+def paperCanonicalBinaryMatrixCheckFold
     {shape : PaperVariableArityCanonicalBinaryMatrixShape}
     (worker : PaperVariableArityCanonicalBinaryMatrixCellComputer shape) :
     List Bool → List Bool :=
@@ -2601,7 +2626,8 @@ noncomputable def
       (paperVariableArityCanonicalBinaryMatrixCheckMarkerComputable worker)
       (paperVariableArityCanonicalBinaryMatrixCheckMarker_length worker))
 
-private def paperCanonicalBinaryMatrixRhsFold
+/-- Fold the canonical matrix right-hand-side catalogue with the cell worker. -/
+def paperCanonicalBinaryMatrixRhsFold
     {shape : PaperVariableArityCanonicalBinaryMatrixShape}
     (worker : PaperVariableArityCanonicalBinaryMatrixCellComputer shape) :
     List Bool → List Bool :=
@@ -2922,7 +2948,7 @@ open GapCVP.GaussianAdaptivePackedTraceCorrectness GapCVP.GaussianAdaptivePhysic
 open GapCVP.GaussianAdaptivePackedStateLookupTM
 
 /-- GapCVP reduction support. -/
-def gaussianPhysicalPivotColumnQuery
+@[expose] def gaussianPhysicalPivotColumnQuery
     (column : ℕ) (state : List Bool) : List Bool :=
   lengthPrefixedWord (List.replicate column true) ++ state
 
@@ -2951,7 +2977,7 @@ private noncomputable def gaussianPhysicalPivotRowWidth :
   computer := gaussianPhysicalPivotRowWidthComputable
 
 /-- GapCVP reduction support. -/
-def gaussianPhysicalPivotRecordWord
+@[expose] def gaussianPhysicalPivotRecordWord
     (row width column : ℕ) (state : List Bool) : List Bool :=
   lengthPrefixedWord (List.replicate row true) ++
     lengthPrefixedWord (List.replicate width true) ++
@@ -3605,7 +3631,7 @@ open GapCVP.SourceFourFamilyInterpolationMembershipPredicateTM
 open GapCVP.SourceFourFamilyDiagonalMembershipPredicateTM
 
 /-- GapCVP reduction support. -/
-def gaussianPhysicalColumnCellQuery
+@[expose] def gaussianPhysicalColumnCellQuery
     (row column active : ℕ) (state : List Bool) : List Bool :=
   affineCellQuery row column
     (gaussianPhysicalPivotColumnQuery active state)
@@ -3711,7 +3737,7 @@ private noncomputable def gaussianPhysicalColumnDecisionQueryComputable :
       gaussianPhysicalColumnCellPackedState_query, gaussianPhysicalPivotColumnQuery]
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def gaussianPhysicalColumnDecisionWord : List Bool → List Bool :=
+@[expose] def gaussianPhysicalColumnDecisionWord : List Bool → List Bool :=
   gaussianPhysicalPivotDecisionOutput ∘
     gaussianPhysicalColumnDecisionQuery
 
@@ -3723,7 +3749,7 @@ private noncomputable def gaussianPhysicalColumnDecisionComputable :
     gaussianPhysicalPivotDecisionComputable
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def gaussianPhysicalColumnPivotPresentWord : List Bool → List Bool :=
+@[expose] def gaussianPhysicalColumnPivotPresentWord : List Bool → List Bool :=
   binaryGaussianFirstCellWord ∘ gaussianPhysicalColumnDecisionWord
 
 /-- GapCVP reduction support. -/
@@ -3735,7 +3761,7 @@ noncomputable def gaussianPhysicalColumnPivotPresentComputable :
     binaryGaussianFirstCellComputable
 
 /-- GapCVP reduction support. -/
-def gaussianPhysicalColumnPivotPresent
+@[expose] def gaussianPhysicalColumnPivotPresent
     (input : List Bool) : Bool :=
   (gaussianPhysicalColumnPivotPresentWord input).headD false
 
@@ -3772,7 +3798,7 @@ noncomputable def gaussianPhysicalColumnPivotSelectionComputable :
   exact hphysical
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def gaussianPhysicalColumnCandidateUnary : List Bool → List Bool :=
+@[expose] def gaussianPhysicalColumnCandidateUnary : List Bool → List Bool :=
   List.tail ∘ gaussianPhysicalColumnDecisionWord
 
 /-- Internal support shared across GapCVP continuation modules. -/
@@ -3783,7 +3809,7 @@ noncomputable def gaussianPhysicalColumnCandidateUnaryComputable :
     gaussianPhysicalColumnDecisionComputable dropHeadComputable
 
 /-- GapCVP reduction support. -/
-def gaussianPhysicalColumnNextPivotUnary : List Bool → List Bool :=
+@[expose] def gaussianPhysicalColumnNextPivotUnary : List Bool → List Bool :=
   firstFieldContents ∘ firstFieldSuffix ∘ firstFieldSuffix ∘
     gaussianPhysicalColumnCellPackedState
 
@@ -3926,7 +3952,7 @@ theorem gaussianPhysicalColumnDynamicRhsWord_effective
     state source row column.val
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def gaussianPhysicalColumnRowIsCandidateWord : List Bool → List Bool :=
+@[expose] def gaussianPhysicalColumnRowIsCandidateWord : List Bool → List Bool :=
   fourFamilyComputedUnaryEqBitOutput
     gaussianPhysicalColumnCellRow gaussianPhysicalColumnCandidateUnary
 
@@ -3938,7 +3964,7 @@ private noncomputable def gaussianPhysicalColumnRowIsCandidateComputable :
     gaussianPhysicalColumnCandidateUnaryComputable
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def gaussianPhysicalColumnRowIsPivotWord : List Bool → List Bool :=
+@[expose] def gaussianPhysicalColumnRowIsPivotWord : List Bool → List Bool :=
   fourFamilyComputedUnaryEqBitOutput
     gaussianPhysicalColumnCellRow gaussianPhysicalColumnNextPivotUnary
 

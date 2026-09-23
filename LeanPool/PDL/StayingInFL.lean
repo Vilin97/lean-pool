@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PDL formalization contributors (see project card)
 -/
 
-import LeanPool.PDL.FischerLadner
-import LeanPool.PDL.Tableau
+module
+
+public import LeanPool.PDL.FischerLadner
+public import LeanPool.PDL.Tableau
 
 /-! # Staying inside the Fischer-Ladner closure
 
@@ -19,6 +21,8 @@ FL of (L,R,O). To be precise, each side left/right stays within its own FL closu
 However, this does *not* mean that `L'` must be in the FL of `L`, because the `O` may also
 contribute to the left part. This makes `Sequent.subseteqFL` tricky to define.
 -/
+
+@[expose] public section
 
 namespace PDL
 

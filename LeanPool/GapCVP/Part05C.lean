@@ -4,9 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import LeanPool.GapCVP.Part05B
+module
+
+public import LeanPool.GapCVP.Part05B
 
 /-! # GapCVP proof, part 05, continuation 03 -/
+
+public section
 
 noncomputable section
 
@@ -442,8 +446,8 @@ open Turing GapCVP.BinaryEncoding GapCVP.SourceLatticeFormulaPreservation
 open GapCVP.SourceLatticeDependentSectionComputation GapCVP.FormulaTotalCert
 open GapCVP.OutputBoundedDependentRecordFold
 
-/-- GapCVP reduction support. -/
-def sourceVectorStructuralRecords
+/-- Encode each entry of a fixed-length vector as a separate structural record. -/
+@[expose] def sourceVectorStructuralRecords
     {α : Type*} [Encodable α]
     (n : ℕ) (values : Fin n → α) : List (List Bool) :=
   List.ofFn (fun index => encodeAtomic (values index))
@@ -465,8 +469,8 @@ theorem sourceVectorStructuralRecords_flatten
           encodeFinValues,
           List.append_cancel_left_eq] using hfull
 
-/-- GapCVP reduction support. -/
-def sourceMatrixStructuralRecords
+/-- Flatten the structural records for each row of an integer matrix. -/
+@[expose] def sourceMatrixStructuralRecords
     (m n : ℕ) (matrix : Fin m → Fin n → ℤ) :
     List (List Bool) :=
   (List.ofFn (fun row =>
@@ -512,8 +516,8 @@ theorem sourceMatrixStructuralRecords_flatten
               Nat.add_comm,
           Nat.add_left_cancel_iff] using hfull
 
-/-- GapCVP reduction support. -/
-def sourceLatticeStructuralRecords
+/-- Record a lattice instance's dimension, radius, target, and basis. -/
+@[expose] def sourceLatticeStructuralRecords
     (lattice : GapCVPInstance) : List (List Bool) :=
   [encodeAtomic lattice.dimension, encodeAtomic lattice.radius] ++
     sourceVectorStructuralRecords lattice.dimension lattice.target ++
@@ -540,6 +544,7 @@ theorem sourceLatticeStructuralRecords_flatten
   omega
 
 /-- GapCVP reduction support. -/
+@[expose]
 def constructiveCanonicalSourceMarker (input : List Bool) : Bool :=
   match decodeThreeCNF input with
   | none => false
@@ -581,12 +586,12 @@ namespace SourceWholeOutputValidBranchRecordTM
 open Turing GapCVP.BinaryEncoding GapCVP.FormulaSemanticCert
 open GapCVP.OutputBoundedDependentRecordFold GapCVP.SourceWholeOutputAssemblyTM
 
-/-- GapCVP reduction support. -/
-def sourceFlatAtomicDescriptor (record : List Bool) : List Bool :=
+/-- The length-prefixed descriptor of one atomic source record. -/
+@[expose] def sourceFlatAtomicDescriptor (record : List Bool) : List Bool :=
   lengthPrefixedWord record
 
-/-- GapCVP reduction support. -/
-def sourceFlatAtomicRecordStep (input : List Bool) : List Bool :=
+/-- Move the first length-prefixed record behind the remaining input. -/
+@[expose] def sourceFlatAtomicRecordStep (input : List Bool) : List Bool :=
   match readLengthPrefixedWord input with
   | none => []
   | some (record, pending) => pending ++ record
@@ -598,8 +603,8 @@ def sourceFlatAtomicRecordStep (input : List Bool) : List Bool :=
       pending ++ record := by
   simp only [sourceFlatAtomicRecordStep, sourceFlatAtomicDescriptor, readLengthPrefixedWord_append]
 
-/-- GapCVP reduction support. -/
-def sourceFlatAtomicDescriptorStream
+/-- Concatenate the length-prefixed descriptors of the source records. -/
+@[expose] def sourceFlatAtomicDescriptorStream
     (records : List (List Bool)) : List Bool :=
   records.flatMap sourceFlatAtomicDescriptor
 
@@ -1381,13 +1386,13 @@ namespace SourceCanonicalUnaryGridIndexTM
 
 open Turing GapCVP.BinaryEncoding GapCVP.SourceWholeOutputValidBranchRecordTM
 
-/-- GapCVP reduction support. -/
-def sourceCanonicalUnaryGridIndexDescriptor
+/-- The length-prefixed unary encoding of a grid index. -/
+@[expose] def sourceCanonicalUnaryGridIndexDescriptor
     (index : ℕ) : List Bool :=
   lengthPrefixedWord (List.replicate index true)
 
-/-- GapCVP reduction support. -/
-def sourceCanonicalUnaryGridIndexDescriptors
+/-- Concatenate the grid-index descriptors below the given count. -/
+@[expose] def sourceCanonicalUnaryGridIndexDescriptors
     (count : ℕ) : List Bool :=
   (List.range count).flatMap sourceCanonicalUnaryGridIndexDescriptor
 
@@ -1401,8 +1406,8 @@ theorem sourceCanonicalUnaryGridIndexDescriptors_succ
       List.flatMap_cons,
       List.flatMap_nil, List.append_nil]
 
-/-- GapCVP reduction support. -/
-def sourceCanonicalUnaryGridIndexOutput
+/-- Replace the leading unary count with its grid-index descriptors, preserving the source. -/
+@[expose] def sourceCanonicalUnaryGridIndexOutput
     (input : List Bool) : List Bool :=
   match readUnaryPrefix input with
   | none => []
