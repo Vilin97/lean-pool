@@ -3,7 +3,10 @@ Copyright (c) 2026 Jue Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jue Xu
 -/
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
+
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
 
 /-!
 # The entry factor `E_ν ≤ ε_ν^{(ν)}(1 + 2β)`
@@ -58,6 +61,8 @@ The constant `1 + 2β` is smaller than the paper's `1 + 4eβ`; the bound `c₀ �
 `k_o = 0` (hence `c = 0`, hence `w₁ = 0`) is the extremal case of the estimates below, not an
 exception to them; only `k_h ≥ 2`, i.e. `k_h − 1 > 0`, is required.
 -/
+
+@[expose] public section
 
 namespace Lean4LPD
 

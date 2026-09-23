@@ -3,8 +3,11 @@ Copyright (c) 2026 Jue Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jue Xu
 -/
-import LeanPool.LowWeightPauliDynamics.Constants.StepSum
-import LeanPool.LowWeightPauliDynamics.Ladder.MultiJump
+
+module
+
+public import LeanPool.LowWeightPauliDynamics.Constants.StepSum
+public import LeanPool.LowWeightPauliDynamics.Ladder.MultiJump
 
 /-!
 # Globally sampled mass of an abstract multi-jump ladder
@@ -31,6 +34,8 @@ theorem next to `ChainBound.lean`.
   uniformly in the number of layers.
 * `MultiLadder.sum_steps_le`: the bound on the globally sampled mass.
 -/
+
+@[expose] public section
 
 namespace Lean4LPD.MultiLadder
 

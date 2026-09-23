@@ -3,10 +3,13 @@ Copyright (c) 2026 Jue Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jue Xu
 -/
-import LeanPool.LowWeightPauliDynamics.Ladder.Defs
-import LeanPool.LowWeightPauliDynamics.Ladder.HockeyStick
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Tactic.Linarith
+
+module
+
+public import LeanPool.LowWeightPauliDynamics.Ladder.Defs
+public import LeanPool.LowWeightPauliDynamics.Ladder.HockeyStick
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Tactic.Linarith
 
 /-!
 # Single-jump cumulation
@@ -28,6 +31,8 @@ conclusion have the same shape.
 * `Ladder.step_iterate`: the flow recursion summed over the `g` steps.
 * `Ladder.cumulation`: `N m g ≤ C(g, m) · a^m · M`.
 -/
+
+@[expose] public section
 
 namespace Lean4LPD.Ladder
 

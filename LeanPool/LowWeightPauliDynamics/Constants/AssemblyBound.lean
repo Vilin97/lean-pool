@@ -3,9 +3,12 @@ Copyright (c) 2026 Jue Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jue Xu
 -/
-import LeanPool.LowWeightPauliDynamics.Constants.ChainWeights
-import LeanPool.LowWeightPauliDynamics.Constants.Total
-import Mathlib.NumberTheory.Harmonic.Bounds
+
+module
+
+public import LeanPool.LowWeightPauliDynamics.Constants.ChainWeights
+public import LeanPool.LowWeightPauliDynamics.Constants.Total
+public import Mathlib.NumberTheory.Harmonic.Bounds
 
 /-!
 # The product estimate and the quantitative `D`-sector assembly
@@ -47,6 +50,8 @@ its layer inflow are supplied in `Lean4LPD/Pauli/LayerError.lean`.
 * `cZero_pow_nat`, `sector_bound_le_cZero`: the passage to the `c₀` form.
 * `MultiLadder.sum_block_epsJump_le_cZero`: the `c₀`-form bound for the concrete jump norms.
 -/
+
+@[expose] public section
 
 namespace Lean4LPD
 

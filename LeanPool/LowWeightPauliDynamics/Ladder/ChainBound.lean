@@ -3,9 +3,12 @@ Copyright (c) 2026 Jue Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jue Xu
 -/
-import LeanPool.LowWeightPauliDynamics.Constants.StepSum
-import LeanPool.LowWeightPauliDynamics.Ladder.MultiJump
-import LeanPool.LowWeightPauliDynamics.Ladder.HockeyStick
+
+module
+
+public import LeanPool.LowWeightPauliDynamics.Constants.StepSum
+public import LeanPool.LowWeightPauliDynamics.Ladder.MultiJump
+public import LeanPool.LowWeightPauliDynamics.Ladder.HockeyStick
 
 /-!
 # The last-inflow sum, with the shifted chain index
@@ -43,6 +46,8 @@ Pauli evolution in `Lean4LPD/Pauli/LayerError.lean`.
 * `chain_le_weighted_choose`: the composition count,
   `chain (k+1) m ≤ C · R^{m-(k+1)} · W m · C(m-1, k)`.
 -/
+
+@[expose] public section
 
 namespace Lean4LPD.MultiLadder
 

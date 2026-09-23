@@ -3,9 +3,12 @@ Copyright (c) 2026 Jue Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jue Xu
 -/
-import LeanPool.LowWeightPauliDynamics.Pauli.LayerLadder
-import LeanPool.LowWeightPauliDynamics.Pauli.TruncationError
-import LeanPool.LowWeightPauliDynamics.Constants.AssemblyBound
+
+module
+
+public import LeanPool.LowWeightPauliDynamics.Pauli.LayerLadder
+public import LeanPool.LowWeightPauliDynamics.Pauli.TruncationError
+public import LeanPool.LowWeightPauliDynamics.Constants.AssemblyBound
 
 /-!
 # The LPD truncation error of a layered Trotter circuit, in Pauli norm
@@ -73,6 +76,8 @@ bound is assumed.
 All bounds are in the normalized Pauli 2-norm. Expectation values in a state, and the comparison
 of the Trotter circuit with the Hamiltonian evolution, are not treated here.
 -/
+
+@[expose] public section
 
 namespace Lean4LPD
 

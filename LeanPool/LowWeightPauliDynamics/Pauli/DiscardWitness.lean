@@ -3,7 +3,10 @@ Copyright (c) 2026 Jue Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jue Xu
 -/
-import LeanPool.LowWeightPauliDynamics.Pauli.TrotterTruncate
+
+module
+
+public import LeanPool.LowWeightPauliDynamics.Pauli.TrotterTruncate
 
 /-!
 # A two-qubit witness with a nonzero discarded component
@@ -32,6 +35,8 @@ proved separately, in `RotationExp` and `Pauli/Tensor`.
 * `discardedStep_zero`, `discardedStep_ne_zero`, `discardedStep_pauliNorm`: the first discarded
   operator is `Q`, it is nonzero, and its Pauli norm is one.
 -/
+
+@[expose] public section
 
 namespace Lean4LPD.DiscardWitness
 

@@ -3,9 +3,12 @@ Copyright (c) 2026 Jue Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jue Xu
 -/
-import LeanPool.LowWeightPauliDynamics.Pauli.Matrix
-import LeanPool.LowWeightPauliDynamics.Pauli.Weight
-import LeanPool.LowWeightPauliDynamics.Rotation
+
+module
+
+public import LeanPool.LowWeightPauliDynamics.Pauli.Matrix
+public import LeanPool.LowWeightPauliDynamics.Pauli.Weight
+public import LeanPool.LowWeightPauliDynamics.Rotation
 
 /-!
 # The Pauli rotation branching rule, with its case split closed
@@ -73,6 +76,8 @@ The theorems below are stated for the closed form `rot G θ` and for the entrywi
 the tensor product `P₁ ⊗ ⋯ ⊗ Pₙ` of one-qubit Pauli matrices is `toMatrix_eq_phase_tensor` in
 `Pauli/Tensor.lean`; the one-qubit case is also checked entry by entry in `Pauli/Matrix.lean`.
 -/
+
+@[expose] public section
 
 namespace Lean4LPD
 

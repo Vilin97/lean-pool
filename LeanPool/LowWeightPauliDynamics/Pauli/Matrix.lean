@@ -3,10 +3,14 @@ Copyright (c) 2026 Jue Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jue Xu
 -/
-import Mathlib.Basic.Complex.Basic
-import LeanPool.LowWeightPauliDynamics.Pauli.Basic
-import Mathlib.LinearAlgebra.LinearIndependent.Lemmas
-import Mathlib.LinearAlgebra.Matrix.ConjTranspose
+
+module
+
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.Algebra.Module.Torsion.Field
+public import LeanPool.LowWeightPauliDynamics.Pauli.Basic
+public import Mathlib.LinearAlgebra.LinearIndependent.Lemmas
+public import Mathlib.LinearAlgebra.Matrix.ConjTranspose
 
 /-!
 # The matrix model of the Pauli group
@@ -72,6 +76,8 @@ by the matrix model.
 
 `Pauli/Branch.lean` assembles these into the paper's branching rule.
 -/
+
+@[expose] public section
 
 namespace Lean4LPD
 

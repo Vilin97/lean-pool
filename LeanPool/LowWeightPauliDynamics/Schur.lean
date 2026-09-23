@@ -3,7 +3,10 @@ Copyright (c) 2026 Jue Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jue Xu
 -/
-import LeanPool.LowWeightPauliDynamics.BlockNorm
+
+module
+
+public import LeanPool.LowWeightPauliDynamics.BlockNorm
 
 /-!
 # The finite Schur test for the Euclidean operator norm
@@ -28,6 +31,8 @@ sums. No spectral theory and no nonemptiness hypothesis on the index types are n
 * `l2_opNorm_le_schur`: `‖A‖ ≤ √(R * C)` for the ℓ² operator norm.
 * `l2_opNorm_le_of_row_col_bound`: `‖A‖ ≤ B` when `B` bounds both the row and the column sums.
 -/
+
+@[expose] public section
 
 namespace Lean4LPD
 

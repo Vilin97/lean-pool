@@ -3,8 +3,11 @@ Copyright (c) 2026 Jue Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jue Xu
 -/
-import LeanPool.LowWeightPauliDynamics.Constants.C0
-import LeanPool.LowWeightPauliDynamics.Constants.StepSum
+
+module
+
+public import LeanPool.LowWeightPauliDynamics.Constants.C0
+public import LeanPool.LowWeightPauliDynamics.Constants.StepSum
 
 /-!
 # A time threshold from model parameters, and the summed truncation error
@@ -74,6 +77,8 @@ layers of each Trotter step, the absorption of the last jump into the chain belo
 caller supplies it either. All of this is at the level of the normalized Pauli 2-norm; the
 conversion to an error in expectation (`apd:thm:triangle`) is not part of this file.
 -/
+
+@[expose] public section
 
 namespace Lean4LPD
 

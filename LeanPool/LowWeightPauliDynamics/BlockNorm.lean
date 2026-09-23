@@ -3,7 +3,10 @@ Copyright (c) 2026 Jue Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jue Xu
 -/
-import Mathlib.Analysis.CStarAlgebra.Matrix
+
+module
+
+public import Mathlib.Analysis.CStarAlgebra.Matrix
 
 /-!
 # The ℓ² operator norm of a block of a matrix
@@ -58,6 +61,8 @@ block of norm `√2 > 1 = ‖1‖`; that witness is `example`-checked at the end
 open scoped Matrix.Norms.L2Operator
 
 open Matrix Finset WithLp
+
+@[expose] public section
 
 namespace Lean4LPD
 

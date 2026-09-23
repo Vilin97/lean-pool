@@ -3,9 +3,12 @@ Copyright (c) 2026 Jue Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jue Xu
 -/
-import LeanPool.LowWeightPauliDynamics.Pauli.Flow
-import LeanPool.LowWeightPauliDynamics.Pauli.LayerWitness
-import LeanPool.LowWeightPauliDynamics.Schur
+
+module
+
+public import LeanPool.LowWeightPauliDynamics.Pauli.Flow
+public import LeanPool.LowWeightPauliDynamics.Pauli.LayerWitness
+public import LeanPool.LowWeightPauliDynamics.Schur
 
 /-!
 # The `j`-jump decomposition of a Pauli layer and the layer-inflow bound
@@ -72,6 +75,8 @@ monotonicity of sine on an interval of angles is used.
 No `MultiLadder` is constructed here; the passage from the finite inflow sum to the recurrence
 with the infinite entry factor is in `LayerLadder.lean`.
 -/
+
+@[expose] public section
 
 namespace Lean4LPD.PauliString
 

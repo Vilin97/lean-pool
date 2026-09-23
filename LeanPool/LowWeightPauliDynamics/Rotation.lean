@@ -3,10 +3,13 @@ Copyright (c) 2026 Jue Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jue Xu
 -/
-import Mathlib.Analysis.Complex.Trigonometric
-import Mathlib.Algebra.Star.Unitary
-import Mathlib.Data.Matrix.Basic
-import Mathlib.Tactic.Module
+
+module
+
+public import Mathlib.Analysis.Complex.Trigonometric
+public import Mathlib.Algebra.Star.Unitary
+public import Mathlib.Data.Matrix.Basic
+public import Mathlib.Tactic.Module
 
 /-!
 # The rotation branching rule
@@ -85,6 +88,8 @@ is likewise written inline, following `Mathlib/Algebra/Star/CHSH.lean`. The Clif
 analogue of the anticommuting case is `CliffordAlgebra.ι_mul_ι_comm_of_isOrtho`, but routing
 through it would cost more than the direct proof: the conjugator there is a vector, not a rotor.
 -/
+
+@[expose] public section
 
 namespace Lean4LPD
 

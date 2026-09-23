@@ -3,12 +3,15 @@ Copyright (c) 2026 Jue Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jue Xu
 -/
-import Mathlib.Algebra.BigOperators.Intervals
-import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Basic.Real.Basic
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
+
+module
+
+public import Mathlib.Algebra.BigOperators.Intervals
+public import Mathlib.Algebra.BigOperators.Ring.Finset
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Basic.Real.Basic
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.Ring
 
 /-!
 # The multi-jump ladder and its first-passage majorant
@@ -82,6 +85,8 @@ plausible one.
 * `MultiLadder.le_majorant`: the first-passage majorant, `N m T ≤ majorant ε E M m T`.
 * `MultiLadder.majorant_mono`: the majorant is monotone in the number of layers.
 -/
+
+@[expose] public section
 
 namespace Lean4LPD
 

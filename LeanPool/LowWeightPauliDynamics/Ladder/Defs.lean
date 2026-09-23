@@ -3,7 +3,10 @@ Copyright (c) 2026 Jue Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jue Xu
 -/
-import Mathlib.Basic.Real.Basic
+
+module
+
+public import Mathlib.Basic.Real.Basic
 
 /-!
 # The abstract damped ladder
@@ -43,6 +46,8 @@ inflow from the rung below.
 * `rungWeight`: the rung weight `w_m = k_o + (m-1)(k_h-1)`.
 * `Ladder`: the damped ladder with damping factor `a` and total mass `M`.
 -/
+
+@[expose] public section
 
 namespace Lean4LPD
 

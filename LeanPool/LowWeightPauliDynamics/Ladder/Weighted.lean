@@ -3,10 +3,13 @@ Copyright (c) 2026 Jue Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jue Xu
 -/
-import LeanPool.LowWeightPauliDynamics.Ladder.HockeyStick
-import Mathlib.Algebra.BigOperators.Intervals
-import Mathlib.Algebra.Order.BigOperators.Ring.Finset
-import Mathlib.Tactic.Linarith
+
+module
+
+public import LeanPool.LowWeightPauliDynamics.Ladder.HockeyStick
+public import Mathlib.Algebra.BigOperators.Intervals
+public import Mathlib.Algebra.Order.BigOperators.Ring.Finset
+public import Mathlib.Tactic.Linarith
 
 /-!
 # The ladder with a rung-dependent damping factor
@@ -60,6 +63,8 @@ distinguished reservoir rather than a computed `rungWeight _ _ 0`.
 * `layer_cumulation`: the per-layer bound `apd:eq:layer_cumulation`.
 * `satLadder_cumulation_eq`: the cumulation bound is attained by `satLadder`.
 -/
+
+@[expose] public section
 
 namespace Lean4LPD
 

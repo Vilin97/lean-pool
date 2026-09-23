@@ -3,7 +3,10 @@ Copyright (c) 2026 Jue Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jue Xu
 -/
-import LeanPool.LowWeightPauliDynamics.Pauli.Weight
+
+module
+
+public import LeanPool.LowWeightPauliDynamics.Pauli.Weight
 
 /-!
 # The layer light cone of a Trotter step
@@ -78,6 +81,8 @@ anticommutes with `p` must overlap its support (`sympForm_eq_zero_of_disjoint_su
 layer's supports are disjoint; each contributes at most `k_h` sites, and each of them consumes at
 least one site of `p`. That is where the sharp factor `k_h` comes from rather than `k_h + 1`.
 -/
+
+@[expose] public section
 
 namespace Lean4LPD
 

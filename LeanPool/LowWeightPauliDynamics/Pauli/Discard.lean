@@ -3,7 +3,10 @@ Copyright (c) 2026 Jue Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jue Xu
 -/
-import LeanPool.LowWeightPauliDynamics.Pauli.Truncate
+
+module
+
+public import LeanPool.LowWeightPauliDynamics.Pauli.Truncate
 
 /-!
 # The operator discarded by a Pauli truncation
@@ -35,6 +38,8 @@ represented by the entrywise model `toMatrix`.
 * `pauliNorm_sub_truncOp_highSet_compl`: the operator discarded by a cut at weight `w` has Pauli
   norm `highNorm w O`.
 -/
+
+@[expose] public section
 
 namespace Lean4LPD
 

@@ -3,8 +3,11 @@ Copyright (c) 2026 Jue Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jue Xu
 -/
-import LeanPool.LowWeightPauliDynamics.Pauli.LayerFlow
-import LeanPool.LowWeightPauliDynamics.Pauli.Discard
+
+module
+
+public import LeanPool.LowWeightPauliDynamics.Pauli.LayerFlow
+public import LeanPool.LowWeightPauliDynamics.Pauli.Discard
 
 /-!
 # A nonzero discarded coefficient of weight above `w* k_h^Γ` in a second-order step
@@ -52,6 +55,8 @@ expanded; every other branch the recurrence meets is shown to vanish by the soun
 `backwardReaches` (`coeff_zero_of_not_backward`), and every sign is computed exactly from
 `partnerSign`. Nothing is evaluated numerically.
 -/
+
+@[expose] public section
 
 namespace Lean4LPD.LayerCounterexample
 

@@ -3,10 +3,13 @@ Copyright (c) 2026 Jue Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jue Xu
 -/
-import LeanPool.LowWeightPauliDynamics.Ladder.Defs
-import LeanPool.LowWeightPauliDynamics.Ladder.Weighted
-import LeanPool.LowWeightPauliDynamics.Pauli.Branch
-import LeanPool.LowWeightPauliDynamics.Pauli.Coeff
+
+module
+
+public import LeanPool.LowWeightPauliDynamics.Ladder.Defs
+public import LeanPool.LowWeightPauliDynamics.Ladder.Weighted
+public import LeanPool.LowWeightPauliDynamics.Pauli.Branch
+public import LeanPool.LowWeightPauliDynamics.Pauli.Coeff
 
 /-!
 # The damped local norm flow, and the Pauli inhabitant of `Ladder`
@@ -115,6 +118,8 @@ scalars: `coeff O p : ℂ`. It is not needed — the transformation is by real p
 `i G s` is a **Hermitian** Pauli (`isSelfAdjoint_phaseMul_one_mul`), which is what makes the
 coefficient `sin θ` on it real.
 -/
+
+@[expose] public section
 
 namespace Lean4LPD
 

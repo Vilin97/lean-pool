@@ -3,9 +3,12 @@ Copyright (c) 2026 Jue Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jue Xu
 -/
-import LeanPool.LowWeightPauliDynamics.Pauli.Trace
-import LeanPool.LowWeightPauliDynamics.Pauli.Weight
-import Mathlib.Analysis.InnerProductSpace.PiL2
+
+module
+
+public import LeanPool.LowWeightPauliDynamics.Pauli.Trace
+public import LeanPool.LowWeightPauliDynamics.Pauli.Weight
+public import Mathlib.Analysis.InnerProductSpace.PiL2
 
 /-!
 # The Pauli coefficient vector, and `‖O‖_{2,normalized} = ‖x‖_{ℓ²}`
@@ -87,6 +90,8 @@ reproducing property `coeff_truncOp`: an operator whose coefficients all vanish 
 and hence vanishing entries. Neither a `finrank` count nor an `InnerProductSpace` instance is
 needed for it.
 -/
+
+@[expose] public section
 
 namespace Lean4LPD
 

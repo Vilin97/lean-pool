@@ -3,8 +3,11 @@ Copyright (c) 2026 Jue Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jue Xu
 -/
-import Mathlib.Data.Fin.VecNotation
-import LeanPool.LowWeightPauliDynamics.Pauli.Basic
+
+module
+
+public import Mathlib.Data.Fin.VecNotation
+public import LeanPool.LowWeightPauliDynamics.Pauli.Basic
 
 /-!
 # Pauli weight, and the `k_h - 1` bound on how far a rotation can move it
@@ -74,6 +77,8 @@ the paper. Bounds of the form `|s| - (k_h - 1) ≤ …` use natural-number subtr
 harmless, because the additive forms (`weight_le_weight_mul_add`, `weight_le_weight_mul_add_kh`)
 are proved first and the subtractive ones are derived from them.
 -/
+
+@[expose] public section
 
 namespace Lean4LPD
 

@@ -3,7 +3,10 @@ Copyright (c) 2026 Jue Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jue Xu
 -/
-import LeanPool.LowWeightPauliDynamics.Pauli.Coeff
+
+module
+
+public import LeanPool.LowWeightPauliDynamics.Pauli.Coeff
 
 /-!
 # The entrywise Pauli model as a genuine tensor product
@@ -42,6 +45,8 @@ binary or lexicographic ordering of the bit strings.
   pairing, with `Tr (P Q) = 2 ^ n` if `P = Q` and `0` otherwise.
 * `bitsMatrixEquiv_star`: the change of index type preserves the adjoint.
 -/
+
+@[expose] public section
 
 namespace Lean4LPD.PauliString
 

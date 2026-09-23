@@ -3,7 +3,10 @@ Copyright (c) 2026 Jue Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jue Xu
 -/
-import LeanPool.LowWeightPauliDynamics.Pauli.Coeff
+
+module
+
+public import LeanPool.LowWeightPauliDynamics.Pauli.Coeff
 
 /-!
 # How many Paulis LPD stores: `O(n^{w*})`
@@ -42,6 +45,8 @@ matters: an upper bound on the number of stored Paulis is what bounds the runtim
 * `card_lowSet_le`: `(lowSet n w).card ≤ n.choose w * 4 ^ w` for `w ≤ n`.
 * `card_lowSet_le_pow`: `(lowSet n w).card ≤ 4 ^ w * n ^ w` for `w ≤ n`.
 -/
+
+@[expose] public section
 
 namespace Lean4LPD.PauliString
 open Finset

@@ -3,9 +3,12 @@ Copyright (c) 2026 Jue Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jue Xu
 -/
-import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.Basic.Real.Basic
-import Mathlib.Tactic.Ring
+
+module
+
+public import Mathlib.Algebra.BigOperators.Ring.Finset
+public import Mathlib.Basic.Real.Basic
+public import Mathlib.Tactic.Ring
 
 /-!
 # Hockey-stick identity, in the form the LPD cumulation proof uses
@@ -24,6 +27,8 @@ reconciling the index ranges, and avoids `ℕ`-subtraction at `g = 0`.
 * `sum_range_choose`: the identity in `ℕ`.
 * `sum_range_choose_real`: the same identity with both sides cast to `ℝ`.
 -/
+
+@[expose] public section
 
 namespace Lean4LPD
 

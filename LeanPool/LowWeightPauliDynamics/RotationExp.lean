@@ -3,10 +3,13 @@ Copyright (c) 2026 Jue Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jue Xu
 -/
-import Mathlib.Topology.Instances.Matrix
-import LeanPool.LowWeightPauliDynamics.Rotation
-import LeanPool.LowWeightPauliDynamics.Pauli.Matrix
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Series
+
+module
+
+public import Mathlib.Topology.Instances.Matrix
+public import LeanPool.LowWeightPauliDynamics.Rotation
+public import LeanPool.LowWeightPauliDynamics.Pauli.Matrix
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Series
 
 /-!
 # Closed-form Pauli rotations are genuine matrix exponentials
@@ -37,6 +40,8 @@ product of one-qubit Pauli matrices is a separate statement, proved in `Pauli/Te
 * `PauliString.rot_toMatrix_eq_exp`, `PauliString.rot_toMatrix_neg_eq_exp`: the same identities
   for the matrix of a Hermitian Pauli string.
 -/
+
+@[expose] public section
 
 namespace Lean4LPD
 

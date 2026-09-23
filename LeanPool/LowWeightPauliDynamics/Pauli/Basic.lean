@@ -3,10 +3,14 @@ Copyright (c) 2026 Jue Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jue Xu
 -/
-import Mathlib.Algebra.Star.SelfAdjoint
-import Mathlib.Data.Matrix.Mul
-import Mathlib.Data.ZMod.Basic
-import Mathlib.Tactic.LinearCombination
+
+module
+
+public import Mathlib.Algebra.Star.SelfAdjoint
+public import Mathlib.Data.Matrix.Mul
+public import Mathlib.Data.ZMod.Basic
+public import Mathlib.Tactic.LinearCombination
+public import Mathlib.Tactic.Ring
 
 /-!
 # Pauli strings: the binary symplectic representation, with phase
@@ -88,6 +92,8 @@ are self-adjoint, so this criterion does not select a canonical sign — at one 
 both `Y` and `−Y`. The canonical signless representative needs `phase = #{Y-sites} mod 4`, which
 is a finer condition than the parity one and is not used here.
 -/
+
+@[expose] public section
 
 namespace Lean4LPD
 

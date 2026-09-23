@@ -3,7 +3,10 @@ Copyright (c) 2026 Jue Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jue Xu
 -/
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
+
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
 
 /-!
 # The part factor `ρ(j,σ) ≤ (9/4)^{j-1}`
@@ -46,6 +49,8 @@ below `(9/4)^{j-1}` by an induction whose ratio bound is uniform in `j`, so the 
 every `j ≥ 2`; the only numerical input is `exp(4/3) ≤ 4.03`. The bound is attained with equality
 at `j = σ = 2`, `c = 0`.
 -/
+
+@[expose] public section
 
 namespace Lean4LPD
 

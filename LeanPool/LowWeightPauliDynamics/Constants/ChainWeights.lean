@@ -3,8 +3,11 @@ Copyright (c) 2026 Jue Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jue Xu
 -/
-import LeanPool.LowWeightPauliDynamics.Constants.PartFactor
-import LeanPool.LowWeightPauliDynamics.Ladder.ChainBound
+
+module
+
+public import LeanPool.LowWeightPauliDynamics.Constants.PartFactor
+public import LeanPool.LowWeightPauliDynamics.Ladder.ChainBound
 
 /-!
 # Concrete single-jump weights for the multi-jump chain bound
@@ -36,6 +39,8 @@ the all-ones weight. The zero angle `a = 0` is therefore included, which a state
 * `entryFactor_le_chainWeight_source`, `chain_epsJump_le_weighted_choose_source`: the same two
   bounds with the paper's entry constant `1 + 4eβ` in place of `1 + 2β`.
 -/
+
+@[expose] public section
 
 namespace Lean4LPD
 

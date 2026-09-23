@@ -3,8 +3,11 @@ Copyright (c) 2026 Jue Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jue Xu
 -/
-import LeanPool.LowWeightPauliDynamics.Pauli.Matrix
-import Mathlib.LinearAlgebra.Matrix.Trace
+
+module
+
+public import LeanPool.LowWeightPauliDynamics.Pauli.Matrix
+public import Mathlib.LinearAlgebra.Matrix.Trace
 
 /-!
 # Traces of Pauli operators, and orthogonality of the Pauli family
@@ -52,6 +55,8 @@ because the entry at `(a, a)` is non-zero only where `a = a + u.x`; so
 and the sum is `2^n` at `u.z = 0` and `0` otherwise. The pairing statement then follows from
 `toMatrix_star` and `toMatrix_mul`, since `(star s * t).x = s.x + t.x` in characteristic two.
 -/
+
+@[expose] public section
 
 namespace Lean4LPD
 

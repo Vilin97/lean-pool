@@ -3,7 +3,10 @@ Copyright (c) 2026 Jue Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jue Xu
 -/
-import LeanPool.LowWeightPauliDynamics.Constants.Entry
+
+module
+
+public import LeanPool.LowWeightPauliDynamics.Constants.Entry
 
 /-!
 # The step-sum slot count and the rung-weight product
@@ -56,6 +59,8 @@ powers and a harmonic-sum bound, and is proved in `Lean4LPD.Constants.AssemblyBo
 `prod_add_one_le_factorial_exp_rpow` (with `prod_shifted_le_factorial_exp_rpow` for the shifted
 product).
 -/
+
+@[expose] public section
 
 namespace Lean4LPD
 

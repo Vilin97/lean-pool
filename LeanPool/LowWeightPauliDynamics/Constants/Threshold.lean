@@ -3,8 +3,11 @@ Copyright (c) 2026 Jue Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jue Xu
 -/
-import LeanPool.LowWeightPauliDynamics.Constants.Total
-import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+
+module
+
+public import LeanPool.LowWeightPauliDynamics.Constants.Total
+public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
 
 /-!
 # Norm-level cutoff existence
@@ -44,6 +47,8 @@ corollary keeps these outside the family quantifier explicitly.
 Choosing a larger numerical step count is separate from constructing the corresponding gate
 angles. Nothing here assumes a fixed angle family still satisfies `a ≤ αt/r` after `r` changes.
 -/
+
+@[expose] public section
 
 namespace Lean4LPD
 

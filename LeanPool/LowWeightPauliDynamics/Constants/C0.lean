@@ -3,8 +3,11 @@ Copyright (c) 2026 Jue Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jue Xu
 -/
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Analysis.SpecialFunctions.Sqrt
+
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.Analysis.SpecialFunctions.Sqrt
 
 /-!
 # The constant `c₀` and the time threshold `t₀`
@@ -84,6 +87,8 @@ sufficient condition constraining neither `r` nor `Γ` (`cZero_le_two_of_three_l
 The script `scripts/c0_scan.py` evaluates `c₀` in floating point on a parameter grid and at the
 witness points above.
 -/
+
+@[expose] public section
 
 namespace Lean4LPD
 

@@ -3,10 +3,13 @@ Copyright (c) 2026 Jue Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jue Xu
 -/
-import LeanPool.LowWeightPauliDynamics.Pauli.LayerFlow
-import LeanPool.LowWeightPauliDynamics.Pauli.Truncate
-import LeanPool.LowWeightPauliDynamics.Constants.Entry
-import LeanPool.LowWeightPauliDynamics.Ladder.MultiJump
+
+module
+
+public import LeanPool.LowWeightPauliDynamics.Pauli.LayerFlow
+public import LeanPool.LowWeightPauliDynamics.Pauli.Truncate
+public import LeanPool.LowWeightPauliDynamics.Constants.Entry
+public import LeanPool.LowWeightPauliDynamics.Ladder.MultiJump
 
 /-!
 # The Pauli-layer inhabitant of the multi-jump ladder
@@ -53,6 +56,8 @@ step boundary, `Õ^{(d)}_{≥w*+1}` of `apd:eq:step_component`, is a different o
 high-weight
 norm before the cut. The two are related in `LayerError.lean`.
 -/
+
+@[expose] public section
 
 namespace Lean4LPD
 

@@ -3,7 +3,10 @@ Copyright (c) 2026 Jue Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jue Xu
 -/
-import LeanPool.LowWeightPauliDynamics.Pauli.Discard
+
+module
+
+public import LeanPool.LowWeightPauliDynamics.Pauli.Discard
 
 /-!
 # A repeated Trotter block with truncation at step boundaries
@@ -41,6 +44,8 @@ identification. The operator identities of this file assume neither locality of 
 nor any bound on the angles. The telescoping error estimate is in `TruncationError.lean`, and the
 layer-level version with its quantitative bound is in `LayerError.lean`.
 -/
+
+@[expose] public section
 
 namespace Lean4LPD
 namespace PauliString

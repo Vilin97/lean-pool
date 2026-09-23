@@ -3,7 +3,10 @@ Copyright (c) 2026 Jue Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jue Xu
 -/
-import LeanPool.LowWeightPauliDynamics.Pauli.Flow
+
+module
+
+public import LeanPool.LowWeightPauliDynamics.Pauli.Flow
 
 /-!
 # Truncation, and the ladder for the flow LPD actually runs
@@ -95,6 +98,8 @@ As in `Flow.lean`, everything is stated with the closed-form rotation `rot` and 
 matrices `toMatrix`; their identification with the matrix exponential and with tensor products is
 proved in `RotationExp.lean` and `Pauli/Tensor.lean`.
 -/
+
+@[expose] public section
 
 namespace Lean4LPD
 

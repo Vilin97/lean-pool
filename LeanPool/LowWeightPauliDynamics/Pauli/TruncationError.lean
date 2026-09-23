@@ -3,7 +3,10 @@ Copyright (c) 2026 Jue Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jue Xu
 -/
-import LeanPool.LowWeightPauliDynamics.Pauli.TrotterTruncate
+
+module
+
+public import LeanPool.LowWeightPauliDynamics.Pauli.TrotterTruncate
 
 /-!
 # Telescoping of the truncation error and the Pauli-norm triangle bound
@@ -41,6 +44,8 @@ needs only Hermitian generators. The step of `apd:thm:triangle` that passes from
 expectation values in a state, where the entanglement of the evolved state enters, is not
 formalized. The quantitative bound on the sum of the discarded norms is in `LayerError.lean`.
 -/
+
+@[expose] public section
 
 namespace Lean4LPD
 namespace PauliString
