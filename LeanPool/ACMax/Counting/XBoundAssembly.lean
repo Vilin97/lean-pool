@@ -3,10 +3,12 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import LeanPool.ACMax.Counting.CompactLedgers
-import LeanPool.ACMax.Counting.SigmaCloud
-import LeanPool.ACMax.Counting.CompactCell
-import LeanPool.ACMax.Counting.DoubleStar
+module
+
+public import LeanPool.ACMax.Counting.CompactLedgers
+public import LeanPool.ACMax.Counting.SigmaCloud
+public import LeanPool.ACMax.Counting.CompactCell
+public import LeanPool.ACMax.Counting.DoubleStar
 
 /-!
 # The master X-bound assembly
@@ -21,6 +23,8 @@ linearly in the number of *usable* (unsuppressed, `sigS ≤ 2`) degree-3 vertice
    dispatched through the slope-`11/2` light-anchor cover
    (`compact_covering_eleven_halves`).
 -/
+
+@[expose] public section
 
 namespace ACMax
 

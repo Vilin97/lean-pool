@@ -12,13 +12,15 @@ footprint of `WeakPNT` and `prime_between`; that upstream omission preceded this
 The source repository records the original omission in `THIRD_PARTY.md`.
 -/
 
-import Mathlib.Analysis.Fourier.RiemannLebesgueLemma
-import Mathlib.Analysis.Normed.Group.Tannery
-import Mathlib.Analysis.SumIntegralComparisons
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.LSeries.PrimesInAP
-import LeanPool.MooreBound.PrimeNumberTheoremAnd.Fourier
-import LeanPool.MooreBound.PrimeNumberTheoremAnd.SmoothExistence
+module
+
+public import Mathlib.Analysis.Fourier.RiemannLebesgueLemma
+public import Mathlib.Analysis.Normed.Group.Tannery
+public import Mathlib.Analysis.SumIntegralComparisons
+public import Mathlib.NumberTheory.Chebyshev
+public import Mathlib.NumberTheory.LSeries.PrimesInAP
+public import LeanPool.MooreBound.PrimeNumberTheoremAnd.Fourier
+public import LeanPool.MooreBound.PrimeNumberTheoremAnd.SmoothExistence
 
 /-!
 Ported for Lean Pool from PrimeNumberTheoremAnd commit
@@ -28,6 +30,8 @@ The port adds the MooreBound namespace and updates Mathlib APIs and proof style.
 Wiener and Consequences retain the PNT and prime-interval dependency closure;
 unrelated later developments and LeanArchitect annotations are omitted.
 -/
+
+@[expose] public section
 
 namespace MooreBound
 

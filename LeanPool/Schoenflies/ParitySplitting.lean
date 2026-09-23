@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.PolygonalJordan
-import LeanPool.Schoenflies.OverlayGraph
+module
+
+public import LeanPool.Schoenflies.PolygonalJordan
+public import LeanPool.Schoenflies.OverlayGraph
 
 /-!
 # Parity splitting: a crosscut adds the two crossing counts
@@ -91,6 +93,8 @@ One lemma here strengthens one on `main`: `mark_swap'` drops the non-levelness h
 `Schoenflies.mark_swap`, because a level edge is crossed from nowhere and so contributes `0`
 under either name. Its home is `Schoenflies/Parity.lean`.
 -/
+
+@[expose] public section
 
 open Metric Set
 

@@ -3,20 +3,23 @@ Copyright (c) 2026 Jonathan Conrad, Paula Muermann, Maryna Viazovska. All rights
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jonathan Conrad, Paula Muermann, Maryna Viazovska
 -/
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Combinatorics.Enumerative.Partition.GenFun
-import Mathlib.Data.Finset.Powerset
-import Mathlib.Data.Nat.Choose.Basic
-import Mathlib.Order.Interval.Finset.Nat
-import Mathlib.RingTheory.PowerSeries.Basic
-import Mathlib.RingTheory.PowerSeries.PiTopology
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Positivity
-import LeanPool.PentagonalNumberTheoremAnalytic.Franklin.Defs
+module
+
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+public import Mathlib.Algebra.BigOperators.Ring.Finset
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Combinatorics.Enumerative.Partition.GenFun
+public import Mathlib.Data.Finset.Powerset
+public import Mathlib.Data.Nat.Choose.Basic
+public import Mathlib.Order.Interval.Finset.Nat
+public import Mathlib.RingTheory.PowerSeries.Basic
+public import Mathlib.RingTheory.PowerSeries.PiTopology
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.Positivity
+public import LeanPool.PentagonalNumberTheoremAnalytic.Franklin.Defs
+
 /-!
 # Helper lemmas for Franklin's involution
 
@@ -33,6 +36,8 @@ and properties of `αOp`/`βOp`.
 * `consecutiveTopRun_Icc`, `partBase_Icc`, `partMax_Icc`, `partSlope_Icc`: the structural
   invariants of an interval, which is the shape both pentagonal families `smkSet`/`spkSet` take
 -/
+
+@[expose] public section
 
 open Finset
 

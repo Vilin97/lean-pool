@@ -3,8 +3,10 @@ Copyright (c) 2026 Boon Suan Ho. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Boon Suan Ho
 -/
-import LeanPool.FourAP.Basic
-import Mathlib.Data.Nat.Bitwise
+module
+
+public import LeanPool.FourAP.Basic
+public import Mathlib.Data.Nat.Bitwise
 
 /-!
 # The reverse binary order
@@ -15,6 +17,8 @@ unequal bit decides the comparison, with `1` preceding `0`.  Dividing by two
 removes a common least significant bit.  We use this recursive description
 both for a computable comparison and for the elementary proofs in the paper.
 -/
+
+@[expose] public section
 
 namespace FourAP
 
