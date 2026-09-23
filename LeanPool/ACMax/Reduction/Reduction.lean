@@ -3,16 +3,19 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import Mathlib.Tactic.Convert
-import Mathlib.Tactic.Ring
-import LeanPool.ACMax.Spectral.AlgConn
-import LeanPool.ACMax.Cuts.LowDegreeVertex
-import LeanPool.ACMax.Cuts.WeightedCut
-import LeanPool.ACMax.Cuts.Ind2K2
-import LeanPool.ACMax.Cuts.TriangleFree2K2
-import LeanPool.ACMax.Cuts.Disconnected
-import LeanPool.ACMax.Cuts.GoodC4
-import LeanPool.ACMax.Cuts.GoodK23
+module
+
+public import Mathlib.Tactic.Convert
+public import Mathlib.Tactic.Ring
+public import Mathlib.Combinatorics.SimpleGraph.DegreeSum
+public import LeanPool.ACMax.Spectral.AlgConn
+public import LeanPool.ACMax.Cuts.LowDegreeVertex
+public import LeanPool.ACMax.Cuts.WeightedCut
+public import LeanPool.ACMax.Cuts.Ind2K2
+public import LeanPool.ACMax.Cuts.TriangleFree2K2
+public import LeanPool.ACMax.Cuts.Disconnected
+public import LeanPool.ACMax.Cuts.GoodC4
+public import LeanPool.ACMax.Cuts.GoodK23
 
 /-!
 # The `n`-generic master reduction for the ACMAX conjecture
@@ -56,6 +59,8 @@ residual case as an explicit hypothesis. `residual_algConn_le_two` in
 `LeanPool.ACMax.Band.Final` proves that hypothesis from the unconditional
 conjecture. The numeric examples below check the cut thresholds at order 19.
 -/
+
+@[expose] public section
 
 namespace ACMax
 

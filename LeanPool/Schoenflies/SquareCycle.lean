@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.ArcComplement
-import LeanPool.Schoenflies.FaceCycles
+module
+
+public import LeanPool.Schoenflies.ArcComplement
+public import LeanPool.Schoenflies.FaceCycles
 
 /-!
 # The subdivided boundary of a square is a cycle
@@ -64,6 +66,8 @@ boundary, a number in `[0, 8r)`.  It is affine on each side, and it is the order
 * `Graph.IsIncWalk` — no blueprint statement; it is the device that makes
   `lem:polygonal-overlay`'s cut points into an ordered cycle.
 -/
+
+@[expose] public section
 
 open Metric Set
 open scoped Graph

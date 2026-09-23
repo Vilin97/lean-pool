@@ -3,9 +3,11 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.BoundaryContinuity2
-import LeanPool.Schoenflies.TargetOverlay
-import Mathlib.Topology.Separation.Connected
+module
+
+public import LeanPool.Schoenflies.BoundaryContinuity2
+public import LeanPool.Schoenflies.TargetOverlay
+public import Mathlib.Topology.Separation.Connected
 
 /-!
 # Selecting a finite dense list of fresh boundary anchors
@@ -30,6 +32,8 @@ Any connected set avoiding all selected anchors must therefore have the required
 * `Schoenflies.TargetSegmentCover.MeshOverlayTransferData.diam_targetStar_lt` — the transferred
   target stars have diameter less than twice the selected mesh scale.
 -/
+
+@[expose] public section
 
 open Metric Set Topology
 open scoped Graph

@@ -4,9 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import LeanPool.GapCVP.Part04C
+module
+
+public import LeanPool.GapCVP.Part04C
 
 /-! # GapCVP proof, part 04, continuation 04 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -22,7 +26,8 @@ namespace OutputPolynomialCompositionClosure
 
 open Turing
 
-private noncomputable def markerConditional_trueTrace
+/-- Execute the supplied computer when the input begins with a true marker. -/
+noncomputable def markerConditionalTrueTrace
     {valid : List Bool → List Bool}
     (computer : BitTM valid)
     (fallback input : List Bool) :
@@ -63,7 +68,8 @@ private noncomputable def markerConditional_trueTrace
   · have hbudget := hfull.steps_le_m
     omega
 
-private noncomputable def markerConditional_falseTrace
+/-- Return the fallback word when the input begins with a false marker. -/
+noncomputable def markerConditionalFalseTrace
     {valid : List Bool → List Bool}
     (computer : BitTM valid)
     (fallback input : List Bool) :
@@ -92,7 +98,8 @@ private noncomputable def markerConditional_falseTrace
     simp only [List.length_map] at hbudget
     omega
 
-private noncomputable def markerConditional_missingTrace
+/-- Return the fallback word in two steps when the input has no marker. -/
+noncomputable def markerConditionalMissingTrace
     {valid : List Bool → List Bool}
     (computer : BitTM valid)
     (fallback : List Bool) :
@@ -106,7 +113,8 @@ private noncomputable def markerConditional_missingTrace
   exact EvalsToInTime.trans (markerConditionalMachine computer fallback).step
     1 1 _ _ _ hstart hrest
 
-private noncomputable def markerConditional_totalTrace
+/-- A time-bounded execution of the marker-controlled choice for every input. -/
+noncomputable def markerConditionalTotalTrace
     {valid : List Bool → List Bool}
     (computer : BitTM valid)
     (fallback input : List Bool) :
@@ -124,7 +132,7 @@ private noncomputable def markerConditional_totalTrace
           2 ≤ (computer.time + Polynomial.X + 3).eval 0 := by
         simp only [Polynomial.eval_add, Polynomial.eval_X, add_zero, Polynomial.eval_ofNat,
             Nat.reduceLeDiff]
-      convert rebound (markerConditional_missingTrace computer fallback) hbudget using 1 <;>
+      convert rebound (markerConditionalMissingTrace computer fallback) hbudget using 1 <;>
         simp [markerConditionalOutput]
   | cons marker input =>
       cases marker with
@@ -136,7 +144,7 @@ private noncomputable def markerConditional_totalTrace
             simp only [Polynomial.eval_add, Polynomial.eval_X, Polynomial.eval_ofNat,
                 Nat.reduceLeDiff]
             omega
-          convert rebound (markerConditional_falseTrace computer fallback input) hbudget using 1
+          convert rebound (markerConditionalFalseTrace computer fallback input) hbudget using 1
               <;>
             simp [markerConditionalOutput]
       | true =>
@@ -152,7 +160,7 @@ private noncomputable def markerConditional_totalTrace
             simp only [Polynomial.eval_add, Polynomial.eval_X, Polynomial.eval_ofNat,
                 Order.add_one_le_iff]
             omega
-          convert rebound (markerConditional_trueTrace computer fallback input) hbudget using 1 <;>
+          convert rebound (markerConditionalTrueTrace computer fallback input) hbudget using 1 <;>
             simp [markerConditionalOutput]
 
 /-- GapCVP reduction support. -/
@@ -176,7 +184,7 @@ noncomputable def markerConditionalComputable
         (List.map computer.outputAlphabet.invFun
           (markerConditionalOutput valid fallback input))))
       ((computer.time + Polynomial.X + 3).eval input.length)
-    exact markerConditional_totalTrace computer fallback input
+    exact markerConditionalTotalTrace computer fallback input
 
 /-- GapCVP reduction support. -/
 noncomputable def sourcePreservingConditionalComputable
@@ -530,18 +538,23 @@ noncomputable def PolynomiallyBoundedFoldStates
       ∀ stage : ℕ, stage ≤ count →
         ((worker^[stage]) seed).length ≤ bound.eval input.length
   ) (Classical.propDecidable _)
-private abbrev BoundedFoldStack (tm : Turing.FinTM2) := tm.K ⊕ Bool
+/-- Worker stacks extended by a Boolean counter stack and a Boolean scratch stack. -/
+abbrev BoundedFoldStack (tm : Turing.FinTM2) := tm.K ⊕ Bool
 
-private abbrev boundedFoldAlphabet (tm : Turing.FinTM2) :
+/-- Use the worker alphabets on worker stacks and bits on the two auxiliary stacks. -/
+abbrev boundedFoldAlphabet (tm : Turing.FinTM2) :
     BoundedFoldStack tm → Type
   | .inl k => tm.Γ k
   | .inr _ => Bool
 
-private abbrev BoundedFoldLabel (tm : Turing.FinTM2) := tm.Λ ⊕ Fin 5
+/-- Worker labels extended by the five bounded-fold control phases. -/
+abbrev BoundedFoldLabel (tm : Turing.FinTM2) := tm.Λ ⊕ Fin 5
 
-private abbrev BoundedFoldState (tm : Turing.FinTM2) := Option Bool × tm.σ
+/-- The worker state together with an optional bit used by the fold controller. -/
+abbrev BoundedFoldState (tm : Turing.FinTM2) := Option Bool × tm.σ
 
-private abbrev liftBoundedFoldWorkerStatement (tm : Turing.FinTM2) :=
+/-- Embed worker statements and return to fold phase two when the worker halts. -/
+abbrev liftBoundedFoldWorkerStatement (tm : Turing.FinTM2) :=
   liftStatement (K := tm.K) (Γ := boundedFoldAlphabet tm)
     Sum.inl (Sum.inl : tm.Λ → BoundedFoldLabel tm)
     (Prod.snd : Option Bool × tm.σ → tm.σ) (fun state value => (state.1, value))
@@ -632,7 +645,8 @@ noncomputable def boundedDependentRecordFoldMachine
                 (.load (fun state => (none, state.2)) .halt))
   }
 
-private def boundedFoldStacks
+/-- Combine the worker stacks with the fold counter and scratch contents. -/
+def boundedFoldStacks
     (tm : Turing.FinTM2)
     (sourceStacks : ∀ k, List (tm.Γ k))
     (counter scratch : List Bool) :
@@ -641,7 +655,8 @@ private def boundedFoldStacks
   | .inr false => counter
   | .inr true => scratch
 
-private noncomputable def boundedFoldPhaseConfiguration
+/-- A controller-phase configuration with explicit worker and auxiliary stack contents. -/
+noncomputable def boundedFoldPhaseConfiguration
     {worker : List Bool → List Bool}
     (computer : BitTM worker)
     (phase : Fin 5)

@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Subarc
-import LeanPool.Schoenflies.Concatenate
+module
+
+public import LeanPool.Schoenflies.Subarc
+public import LeanPool.Schoenflies.Concatenate
 
 /-!
 # Two points cut a Jordan curve into two arcs
@@ -43,6 +45,8 @@ carries the same point as the start and so lands back on `s`.
   loop-to-circle bridge.
 * `IsLoop.two_arcs_at_parameters` — the parameter-level form the clause is assembled from.
 -/
+
+@[expose] public section
 
 open Set unitInterval
 
