@@ -3,8 +3,10 @@ Copyright (c) 2026 Jonathan Conrad, Paula Muermann, Maryna Viazovska. All rights
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jonathan Conrad, Paula Muermann, Maryna Viazovska
 -/
-import Mathlib.Tactic.LinearCombination
-import LeanPool.PentagonalNumberTheoremAnalytic.QSeries.EulerIdentities
+module
+
+public import Mathlib.Tactic.LinearCombination
+public import LeanPool.PentagonalNumberTheoremAnalytic.QSeries.EulerIdentities
 
 /-!
 # Key identity for the Jacobi triple product
@@ -19,6 +21,8 @@ The proof uses a recurrence:
 This forces all differences to be zero (since S_k → 1/(q;q)_∞),
 so all S_k are equal to 1/(q;q)_∞.
 -/
+
+@[expose] public section
 
 open Finset Filter
 open scoped Topology

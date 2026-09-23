@@ -3,14 +3,16 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import Mathlib.Tactic.Push
-import LeanPool.ACMax.Reduction.Residual
-import LeanPool.ACMax.Spectral.AlgConn
-import LeanPool.ACMax.Spectral.RayleighUpper
-import LeanPool.ACMax.Spectral.TestVector
-import Mathlib.Combinatorics.SimpleGraph.Metric
-import LeanPool.ACMax.Counting.CompactCell
-import LeanPool.ACMax.Counting.DoubleStar
+module
+
+public import Mathlib.Tactic.Push
+public import LeanPool.ACMax.Reduction.Residual
+public import LeanPool.ACMax.Spectral.AlgConn
+public import LeanPool.ACMax.Spectral.RayleighUpper
+public import LeanPool.ACMax.Spectral.TestVector
+public import Mathlib.Combinatorics.SimpleGraph.Metric
+public import LeanPool.ACMax.Counting.CompactCell
+public import LeanPool.ACMax.Counting.DoubleStar
 
 /-!
 # The residual-core interface lemmas
@@ -34,6 +36,8 @@ vertices.
   `e(M) = 0` normalization: with no degree-3–degree-3 edge, `D` *is* the iso-twin
   set and the twin incidence total is `3·|Iso|`.
 -/
+
+@[expose] public section
 
 namespace ACMax
 
