@@ -4,9 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import LeanPool.GapCVP.Part07C
+module
+
+public import LeanPool.GapCVP.Part07C
 
 /-! # GapCVP proof, part 07, continuation 04 -/
+
+public section
 
 noncomputable section
 
@@ -967,7 +971,7 @@ private noncomputable def flatAnnotatedCompleteTotalOrderingComputable :
     flatAnnotatedCompleteOriginalShapeDispatchInputComputable hdispatch
 
 /-- GapCVP reduction support. -/
-def annotatedCompleteTotalSourceComparison
+@[expose] def annotatedCompleteTotalSourceComparison
     (input : List Bool) : List Bool :=
   lengthPrefixedWord input ++ annotatedCompleteTotalOrderingWord input
 
@@ -1287,7 +1291,7 @@ private noncomputable def fiveFamilyForbiddenOneBitSelectionComputable
   simpa only [Function.comp_def] using physical
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def fiveForbiddenOneBitGuardedWord
+@[expose] def fiveForbiddenOneBitGuardedWord
     (marker worker : List Bool → List Bool)
     (input : List Bool) : List Bool :=
   if (marker input).headD false then worker input else []
@@ -1305,21 +1309,21 @@ noncomputable def fiveForbiddenOneBitGuardedComputable
     hworker []
 
 /-- GapCVP reduction support. -/
-def fiveFamilyForbiddenEncodedMinimum
+@[expose] def fiveFamilyForbiddenEncodedMinimum
     {α : Type} [Encodable α]
     (first second : α) : α :=
   if Encodable.encode first < Encodable.encode second
     then first else second
 
 /-- GapCVP reduction support. -/
-def fiveFamilyForbiddenEncodedMaximum
+@[expose] def fiveFamilyForbiddenEncodedMaximum
     {α : Type} [Encodable α]
     (first second : α) : α :=
   if Encodable.encode first < Encodable.encode second
     then second else first
 
 /-- GapCVP reduction support. -/
-def fiveForbiddenEncodedSortedAtoms
+@[expose] def fiveForbiddenEncodedSortedAtoms
     {α : Type} [Encodable α]
     (first second third fourth : α) : α × α × α × α :=
   let firstLow := fiveFamilyForbiddenEncodedMinimum first second
@@ -1340,7 +1344,7 @@ def fiveForbiddenEncodedSortedAtoms
     outerHigh)
 
 /-- GapCVP reduction support. -/
-def fiveForbiddenEncodedSortedAtomList
+@[expose] def fiveForbiddenEncodedSortedAtomList
     {α : Type} [Encodable α]
     (first second third fourth : α) : List α :=
   let sorted := fiveForbiddenEncodedSortedAtoms
@@ -1376,7 +1380,7 @@ theorem fiveFamilyForbiddenEncodedSortedAtomList_pairwise
     omega
 
 /-- GapCVP reduction support. -/
-def fiveForbiddenWindowSortedUniqueLiteralList
+@[expose] def fiveForbiddenWindowSortedUniqueLiteralList
     {T S : ℕ}
     (window : Window T) (symbols : WindowSymbols S) :
     List (SignedLiteral T S) :=
@@ -1504,13 +1508,13 @@ open GapCVP.CNFFiveFamilyForbiddenWindowCoordinateTM
 open GapCVP.CNFFiveFamilyForbiddenWholeClauseWorkerTM
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def fiveForbiddenRawSourceLessMarker
+@[expose] def fiveForbiddenRawSourceLessMarker
     (first second : List Bool → List Bool) :
     List Bool → List Bool :=
   fourFamilyComputedUnaryLessBitOutput first second
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def fiveForbiddenRawSourceNotLessMarker
+@[expose] def fiveForbiddenRawSourceNotLessMarker
     (first second : List Bool → List Bool) :
     List Bool → List Bool :=
   sourceFourFamilyBooleanNotOutput

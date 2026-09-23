@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.FaceCyclesLand
-import LeanPool.Schoenflies.Graph.TwoConnected
+module
+
+public import LeanPool.Schoenflies.FaceCyclesLand
+public import LeanPool.Schoenflies.Graph.TwoConnected
 
 /-!
 # The outer face of a chain of plane graphs
@@ -98,6 +100,8 @@ assumed.
   `Graph.IsPlaneChain.outer_chain'` in `Schoenflies/OuterChainClosed.lean` is the same
   statement with nothing assumed.
 -/
+
+@[expose] public section
 
 open Set Schoenflies
 open scoped Graph

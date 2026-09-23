@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PDL formalization contributors (see project card)
 -/
 
-import LeanPool.PDL.Interpolation.QuasiTableau
+module
+
+public import LeanPool.PDL.Interpolation.QuasiTableau
 
 /-! # Pre-interpolants (Definition 9.18)
 
@@ -24,6 +26,8 @@ that are not part of the data type, namely that nodes of type 2 and basic nodes 
 have a unique child. For nodes without children where the paper assumes one we return the
 placeholder `⊤`; by Remark 9.9 (`QuasiTab.build_leaf_typ`) this does not happen in `C.Q`.
 -/
+
+@[expose] public section
 
 namespace PDL
 

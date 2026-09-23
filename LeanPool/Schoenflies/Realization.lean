@@ -3,9 +3,11 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.SimpleArc
-import LeanPool.Schoenflies.PolygonalCrosscut
-import LeanPool.Schoenflies.TwoArcs
+module
+
+public import LeanPool.Schoenflies.SimpleArc
+public import LeanPool.Schoenflies.PolygonalCrosscut
+public import LeanPool.Schoenflies.TwoArcs
 
 /-!
 # Realizing a polygonal Jordan curve as a `ClosedPolygon`
@@ -77,6 +79,8 @@ realization, and no `ClosedPolygon` with that carrier has an arc ending there. A
 needs to cut at a straight point has to change the curve — bend it there — which is a different
 theorem, and is exactly the freedom `Graph.IsK33Config.not_isDrawing` reserves for itself.
 -/
+
+@[expose] public section
 
 open Metric Set unitInterval
 
