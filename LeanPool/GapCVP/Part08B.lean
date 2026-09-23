@@ -4,9 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import LeanPool.GapCVP.Part08A
+module
+
+public import LeanPool.GapCVP.Part08A
 
 /-! # GapCVP proof, part 08, continuation 02 -/
+
+public section
 
 noncomputable section
 
@@ -52,7 +56,7 @@ open GapCVP.CNFAnnotatedSourceClauseBubblePassTM
 open GapCVP.CNFAnnotatedSourceCompleteFiniteSetComparatorSourceCert
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def annotatedCompleteBubbleSortState
+@[expose] def annotatedCompleteBubbleSortState
     (pending count sorted : List Bool) : List Bool :=
   lengthPrefixedWord pending ++
     lengthPrefixedWord count ++ lengthPrefixedWord sorted
@@ -62,7 +66,7 @@ private def flatAnnotatedCompleteBubblePending
   flatAnnotatedSourceFieldAt 0 input
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def flatAnnotatedCompleteBubbleCount
+@[expose] def flatAnnotatedCompleteBubbleCount
     (input : List Bool) : List Bool :=
   flatAnnotatedSourceFieldAt 1 input
 

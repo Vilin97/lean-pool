@@ -3,7 +3,9 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Square
+module
+
+public import LeanPool.Schoenflies.Square
 
 /-!
 # Moving an interior point of the square
@@ -46,6 +48,8 @@ Supporting material, of independent use: `Plane.tent` and `Plane.bend` with thei
 `Plane.supDist_le_of_forall`, `Plane.exists_abs_sub_eq_of_supDist_eq`,
 and `Plane.interior_closedSquare`.
 -/
+
+@[expose] public section
 
 open Metric Set
 

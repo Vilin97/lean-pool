@@ -3,9 +3,11 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Curve
-import LeanPool.Schoenflies.Concatenate
-import LeanPool.Schoenflies.Topology
+module
+
+public import LeanPool.Schoenflies.Curve
+public import LeanPool.Schoenflies.Concatenate
+public import LeanPool.Schoenflies.Topology
 
 /-!
 # Separating curves, absorption, and the two cells of a crosscut
@@ -56,6 +58,8 @@ inclusion `Ω† ⊆ Wᵢ`, which is a hypothesis here. A consumer supplies it b
   `cell_subset_region_diff`, `cell_isComponent`, `closure_cell_inter_curve` stated separately
   because the bundled form carries the hypotheses of both indices at once.
 -/
+
+@[expose] public section
 
 open Bornology Set
 

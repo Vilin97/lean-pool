@@ -3,10 +3,12 @@ Copyright (c) 2026 Arthur Freitas Ramos et al. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
-import Mathlib.CategoryTheory.Action
-import Mathlib.Combinatorics.Quiver.Covering
-import Mathlib.GroupTheory.FreeGroup.NielsenSchreier
-import LeanPool.FiniteGraphFundamentalGroup.Proof
+module
+
+public import Mathlib.CategoryTheory.Action
+public import Mathlib.Combinatorics.Quiver.Covering
+public import Mathlib.GroupTheory.FreeGroup.NielsenSchreier
+public import LeanPool.FiniteGraphFundamentalGroup.Proof
 
 /-! The Schreier graph of a free-group action. Its vertices are action points,
 and a generator-labelled edge follows the corresponding left action. The
@@ -16,6 +18,8 @@ Adapted for Lean Pool from Arthur742Ramos/KuroshSubgroupTheorem,
 commit `911707126c8b9bb0c764bf853008fe1053c0aad9`: imports, API compatibility,
 and proof organization were revised.
 -/
+
+@[expose] public section
 
 open Set Function
 open CategoryTheory CategoryTheory.ActionCategory CategoryTheory.SingleObj Quiver FreeGroup

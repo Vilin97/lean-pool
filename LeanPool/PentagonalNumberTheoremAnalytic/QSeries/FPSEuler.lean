@@ -3,7 +3,9 @@ Copyright (c) 2026 Jonathan Conrad, Paula Muermann, Maryna Viazovska. All rights
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jonathan Conrad, Paula Muermann, Maryna Viazovska
 -/
-import LeanPool.PentagonalNumberTheoremAnalytic.QSeries.FPS
+module
+
+public import LeanPool.PentagonalNumberTheoremAnalytic.QSeries.FPS
 
 /-!
 # FPS Euler Second Identity
@@ -16,6 +18,8 @@ and takes the limit in the pi topology. The key step is showing that the
 Gaussian binomial coefficient `qBinom(N, k, X)` converges to `(qPochhammer(X, k))⁻¹`
 as N → ∞.
 -/
+
+@[expose] public section
 
 noncomputable section
 

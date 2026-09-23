@@ -3,12 +3,14 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import LeanPool.ACMax.Band.CertAllRange
-import LeanPool.ACMax.Band.KillSharp
-import LeanPool.ACMax.Band.Rows
-import LeanPool.ACMax.Counting.MEdgeSparse
-import LeanPool.ACMax.Cuts.LowDegreeVertex
-import LeanPool.ACMax.Spectral.AlgConnK2
+module
+
+public import LeanPool.ACMax.Band.CertAllRange
+public import LeanPool.ACMax.Band.KillSharp
+public import LeanPool.ACMax.Band.Rows
+public import LeanPool.ACMax.Counting.MEdgeSparse
+public import LeanPool.ACMax.Cuts.LowDegreeVertex
+public import LeanPool.ACMax.Spectral.AlgConnK2
 
 /-!
 # Exact Moore closure for every order at least 48
@@ -16,6 +18,8 @@ import LeanPool.ACMax.Spectral.AlgConnK2
 This assembly replaces the split between the finite exact-Moore range and the
 polynomial large-order range by one exact non-backtracking certificate.
 -/
+
+@[expose] public section
 
 namespace ACMax
 

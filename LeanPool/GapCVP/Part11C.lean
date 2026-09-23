@@ -4,9 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import LeanPool.GapCVP.Part11B
+module
+
+public import LeanPool.GapCVP.Part11B
 
 /-! # GapCVP proof, part 11, continuation 03 -/
+
+public section
 
 noncomputable section
 
@@ -1599,10 +1603,10 @@ def binaryGaussianMalformedReducedState : List Bool :=
             (binaryGaussianPackedPivotColumnWord
               [(true, true)] [])))) = [false]
   rw [binaryGaussianPackedPivotCandidateOutput_valid]
-  rfl
+  exact sourceFourFamilyBooleanNotWord_bit true
 
 /-- GapCVP reduction support. -/
-def binaryGaussianSourceConsistencyGuard
+@[expose] def binaryGaussianSourceConsistencyGuard
     (system : List Bool → Option GapCVP.Core.BinaryAffineSystem)
     (input : List Bool) : Bool :=
   match system input with
@@ -1610,7 +1614,7 @@ def binaryGaussianSourceConsistencyGuard
   | some actual => actual.effectiveReducedConsistent
 
 /-- GapCVP reduction support. -/
-def binaryGaussianExpectedReducedSourceState
+@[expose] def binaryGaussianExpectedReducedSourceState
     (system : List Bool → Option GapCVP.Core.BinaryAffineSystem)
     (input : List Bool) : List Bool :=
   match system input with
@@ -1689,20 +1693,20 @@ open Turing GapCVP.BinaryEncoding GapCVP.OutputBoundedDependentRecordFold
 open GapCVP.SourceMixedRadixOriginalSourceDescriptorRotationTM
 
 /-- GapCVP reduction support. -/
-def sourcePhysicalWordPackedCheckBits
+@[expose] def sourcePhysicalWordPackedCheckBits
     (system : GapCVP.Core.BinaryAffineSystem) : List Bool :=
   (List.finRange system.rowCount).flatMap fun row =>
     (List.finRange system.dimension).map fun column =>
       decide (system.check row column = (1 : ZMod 2))
 
 /-- GapCVP reduction support. -/
-def sourcePhysicalWordPackedRhsBits
+@[expose] def sourcePhysicalWordPackedRhsBits
     (system : GapCVP.Core.BinaryAffineSystem) : List Bool :=
   (List.finRange system.rowCount).map fun row =>
     decide (system.rightHandSide row = (1 : ZMod 2))
 
 /-- GapCVP reduction support. -/
-def sourcePhysicalWordPackedQueryPreparation
+@[expose] def sourcePhysicalWordPackedQueryPreparation
     (queries : List (List Bool)) (input : List Bool) : List Bool :=
   unaryBoundedFoldWord queries.length
     (sourceMixedRadixOriginalSourceQueryStream queries ++
@@ -1740,14 +1744,14 @@ theorem sourcePhysicalWordPackedRhsBits_eq_effective_initial
   rfl
 
 /-- GapCVP reduction support. -/
-def effectiveGaussianPackedPivotCatalogue
+@[expose] def effectiveGaussianPackedPivotCatalogue
     {m n : ℕ} (state : State m n) : List Bool :=
   binaryGaussianPivotBatchStream
     ((List.finRange n).map
       (effectiveGaussianStatePivotWord state))
 
 /-- GapCVP reduction support. -/
-def effectiveGaussianPackedStateWord
+@[expose] def effectiveGaussianPackedStateWord
     {m n : ℕ} (state : State m n) (source : List Bool) : List Bool :=
   lengthPrefixedWord (effectiveGaussianPackedCheckBits state) ++
     lengthPrefixedWord (effectiveGaussianPackedRhsBits state) ++
@@ -1851,7 +1855,7 @@ private def effectiveGaussianStateTargetTag
   | some row => [decide (state.system.rhs row = (1 : ZMod 2))]
 
 /-- GapCVP reduction support. -/
-def effectiveGaussianStateBasisTag
+@[expose] def effectiveGaussianStateBasisTag
     {m n : ℕ} (state : State m n)
     (row column : Fin n) : List Bool :=
   match effectiveGaussianStatePivotRowOption state row,
@@ -1951,7 +1955,7 @@ open GapCVP.Factor400BinaryEffectiveBasisSerializerTM GapCVP.CNFFiveFamilyOrigin
 open GapCVP.CNFFlatPhysicalBinaryAppendTM GapCVP.SourceFourFamilyBooleanPredicateTM
 
 /-- GapCVP reduction support. -/
-def gaussianPackedIndexedStateWord
+@[expose] def gaussianPackedIndexedStateWord
     (index : ℕ) (state : List Bool) : List Bool :=
   lengthPrefixedWord (List.replicate index true) ++ state
 
@@ -2123,7 +2127,7 @@ noncomputable def gaussianPackedIndexedTargetBitComputable :
     gaussianPackedIndexedPivotRhsBitComputable
 
 /-- GapCVP reduction support. -/
-def gaussianPackedIndexedTargetAtom : List Bool → List Bool :=
+@[expose] def gaussianPackedIndexedTargetAtom : List Bool → List Bool :=
   effectiveTargetPackedAtom ∘ gaussianPackedIndexedTargetBit
 
 private noncomputable def gaussianPackedIndexedTargetAtomComputable :
@@ -2261,7 +2265,7 @@ open GapCVP.SourceMixedRadixUnaryQuotientRemainderTM
 open GapCVP.GaussianAdaptiveEliminationCorrectness GapCVP.GaussianAdaptivePackedTraceCorrectness
 
 /-- GapCVP reduction support. -/
-def gaussianDenseStateCheckLengthUnary : List Bool → List Bool :=
+@[expose] def gaussianDenseStateCheckLengthUnary : List Bool → List Bool :=
   sourceInputLengthUnary ∘ gaussianPackedStateCheckBits
 
 private noncomputable def gaussianDenseStateCheckLengthUnaryComputable :
@@ -2272,7 +2276,7 @@ private noncomputable def gaussianDenseStateCheckLengthUnaryComputable :
     sourceInputLengthUnaryComputable
 
 /-- GapCVP reduction support. -/
-def gaussianDenseStateRowCountUnary : List Bool → List Bool :=
+@[expose] def gaussianDenseStateRowCountUnary : List Bool → List Bool :=
   sourceInputLengthUnary ∘ gaussianPackedStateRhsBits
 
 /-- GapCVP reduction support. -/
@@ -2284,7 +2288,7 @@ noncomputable def gaussianDenseStateRowCountUnaryComputable :
     sourceInputLengthUnaryComputable
 
 /-- GapCVP reduction support. -/
-def gaussianDenseStateDimensionDivisionQuery
+@[expose] def gaussianDenseStateDimensionDivisionQuery
     (input : List Bool) : List Bool :=
   gaussianDenseStateCheckLengthUnary input ++
     false :: (gaussianDenseStateRowCountUnary input ++
@@ -2307,7 +2311,7 @@ private noncomputable def gaussianDenseStateDimensionDivisionQueryComputable :
   simpa only [Function.comp_apply] using hphysical
 
 /-- GapCVP reduction support. -/
-def gaussianDenseStateDimensionUnary : List Bool → List Bool :=
+@[expose] def gaussianDenseStateDimensionUnary : List Bool → List Bool :=
   List.tail ∘ unaryPrefixOutput ∘ sourceUnaryDivisionOutput ∘
     gaussianDenseStateDimensionDivisionQuery
 
@@ -2785,7 +2789,7 @@ open GapCVP.SourceFourFamilyInterpolationMembershipPredicateTM
 open GapCVP.SourceFourFamilyDiagonalMembershipPredicateTM
 
 /-- GapCVP reduction support. -/
-def gaussianPackedIndexedBasisStateWord
+@[expose] def gaussianPackedIndexedBasisStateWord
     (row column : ℕ) (state : List Bool) : List Bool :=
   affineCellQuery row column state
 
@@ -3371,7 +3375,7 @@ namespace Factor400FinitePNormCorollary
 open scoped BigOperators ENNReal
 
 /-- GapCVP reduction support. -/
-def finitePNorm (p : ℚ) {n : ℕ} (x : Fin n → ℝ) : ℝ :=
+@[expose] def finitePNorm (p : ℚ) {n : ℕ} (x : Fin n → ℝ) : ℝ :=
   (∑ i : Fin n, |x i| ^ (p : ℝ)) ^ ((p : ℝ)⁻¹)
 
 theorem finitePNorm_nonneg (p : ℚ) {n : ℕ} (x : Fin n → ℝ) :
@@ -3391,21 +3395,21 @@ theorem finitePNorm_rpow (p : ℚ) (hp : 0 < p)
     hp_real.ne'
 
 /-- GapCVP reduction support. -/
-def finitePLatticeDiscrepancy (I : GapCVPInstance)
+@[expose] def finitePLatticeDiscrepancy (I : GapCVPInstance)
     (z : Fin I.dimension → ℤ) : Fin I.dimension → ℝ := fun i =>
   (I.target i : ℝ) -
     ∑ j : Fin I.dimension, (I.basis i j : ℝ) * (z j : ℝ)
 
 /-- GapCVP reduction support. -/
-def finitePLatticeDistance (p : ℚ) (I : GapCVPInstance)
+@[expose] def finitePLatticeDistance (p : ℚ) (I : GapCVPInstance)
     (z : Fin I.dimension → ℤ) : ℝ :=
   finitePNorm p (finitePLatticeDiscrepancy I z)
 
 /-- GapCVP reduction support. -/
-def finitePGapFactor (p : ℚ) (I : GapCVPInstance) : ℝ :=
+@[expose] def finitePGapFactor (p : ℚ) (I : GapCVPInstance) : ℝ :=
   (I.dimension : ℝ) ^ (((200 : ℝ) * (p : ℝ))⁻¹)
 
-private theorem finitePGapFactor_one_le (p : ℚ) (hp : 1 ≤ p)
+theorem finitePGapFactor_one_le (p : ℚ) (hp : 1 ≤ p)
     {I : GapCVPInstance} (hdimension : 0 < I.dimension) :
     1 ≤ finitePGapFactor p I := by
   unfold finitePGapFactor
@@ -3426,21 +3430,22 @@ theorem finitePRadiusScale_pos (p : ℚ) (hp : 1 ≤ p) :
   have hp_pos : (0 : ℚ) < p := lt_of_lt_of_le (by norm_num) hp
   exact mul_pos (by norm_num) hp_pos
 
-private def finitePCeilingRoot (a value : ℕ) : ℕ :=
+/-- Round a natural nth root upward when it is not exact. -/
+def finitePCeilingRoot (a value : ℕ) : ℕ :=
   let root := Nat.nthRoot a value
   if root ^ a = value then root else root + 1
 
 /-- GapCVP reduction support. -/
-def finitePRadiusNumerator (p : ℚ) (R : ℕ) : ℕ :=
+@[expose] def finitePRadiusNumerator (p : ℚ) (R : ℕ) : ℕ :=
   finitePCeilingRoot p.num.natAbs
     (finitePRadiusScale p ^ p.num.natAbs * R ^ p.den)
 
 /-- GapCVP reduction support. -/
-def finitePRadius (p : ℚ) (R : ℕ) : ℚ :=
+@[expose] def finitePRadius (p : ℚ) (R : ℕ) : ℚ :=
   (finitePRadiusNumerator p R : ℚ) / (finitePRadiusScale p : ℚ)
 
 /-- GapCVP reduction support. -/
-def finitePSignedBinarySupport {n : ℕ} (z : Fin n → ℤ) : Finset (Fin n) :=
+@[expose] def finitePSignedBinarySupport {n : ℕ} (z : Fin n → ℤ) : Finset (Fin n) :=
   Finset.univ.filter fun i => (z i : ZMod 2) ≠ 0
 
 theorem finitePSignedBinarySupport_card_le_power_sum
@@ -3474,7 +3479,7 @@ theorem finitePSignedBinarySupport_card_le_power_sum
         exact Real.rpow_nonneg (abs_nonneg _) _
 
 /-- GapCVP reduction support. -/
-def finitePGapCVPPromise (p : ℚ) (hp : 1 ≤ p) : PromiseProblem where
+@[expose] def finitePGapCVPPromise (p : ℚ) (hp : 1 ≤ p) : PromiseProblem where
   yes bits :=
     @decide (
  ∃ I : GapCVPInstance,
@@ -3609,7 +3614,7 @@ open scoped BigOperators
 open GapCVP.Factor400BinaryConstructiveSourcePlaces
 
 /-- GapCVP reduction support. -/
-def binaryWordLift {n : ℕ} (word : Fin n → ZMod 2) : Fin n → ℤ :=
+@[expose] def binaryWordLift {n : ℕ} (word : Fin n → ZMod 2) : Fin n → ℤ :=
   fun index => ((word index).val : ℤ)
 
 @[simp] theorem binaryResidue_binaryWordLift
@@ -3619,7 +3624,7 @@ def binaryWordLift {n : ℕ} (word : Fin n → ZMod 2) : Fin n → ℤ :=
   exact_mod_cast ZMod.natCast_zmod_val (word index)
 
 /-- GapCVP reduction support. -/
-noncomputable def sourceBinaryDecodingRadius
+@[expose] noncomputable def sourceBinaryDecodingRadius
     (encodingLength : ℕ) (formula : GapCVP.Core.Formula) : ℕ :=
   (formula.clauses.length + 1) *
     (sourceFormulaGrid encodingLength formula).card
@@ -3648,7 +3653,7 @@ private theorem sourceBinaryDecodingRadius_le_size_mul_field
   exact Nat.mul_le_mul hclauses hgrid
 
 /-- GapCVP reduction support. -/
-noncomputable def binaryCodeGapFactor (blockLength : ℕ) : ℝ :=
+@[expose] noncomputable def binaryCodeGapFactor (blockLength : ℕ) : ℝ :=
   (blockLength : ℝ) ^ ((1 : ℝ) / 200)
 
 private theorem binaryCodeGapFactor_eq_factor400_sq (blockLength : ℕ) :
@@ -4645,7 +4650,7 @@ open GapCVP.BinaryGaussianStructuralAtomTM GapCVP.GaussianPhysicalWordRankIndexT
 open GapCVP.GaussianPackedStateTargetAtomTM GapCVP.SourceWholeOutputAssemblyTM
 
 /-- GapCVP reduction support. -/
-def compactPhysicalGaussianRankReducedState
+@[expose] def compactPhysicalGaussianRankReducedState
     (reduced : List Bool → List Bool) : List Bool → List Bool :=
   reduced ∘ structuralRankOriginalSource
 
@@ -4659,7 +4664,7 @@ noncomputable def compactPhysicalGaussianRankReducedStateComputable
     structuralRankOriginalSourceComputable computer
 
 /-- GapCVP reduction support. -/
-def compactPhysicalGaussianRankTargetStateQuery
+@[expose] def compactPhysicalGaussianRankTargetStateQuery
     (reduced : List Bool → List Bool)
     (input : List Bool) : List Bool :=
   lengthPrefixedWord
@@ -4685,7 +4690,7 @@ noncomputable def compactPhysicalGaussianRankTargetStateQueryComputable
   simpa only [Function.comp_apply] using hphysical
 
 /-- GapCVP reduction support. -/
-def compactPhysicalGaussianRankTargetAtom
+@[expose] def compactPhysicalGaussianRankTargetAtom
     (reduced : List Bool → List Bool) : List Bool → List Bool :=
   gaussianPackedIndexedTargetAtom ∘
     compactPhysicalGaussianRankTargetStateQuery reduced
@@ -4701,7 +4706,7 @@ noncomputable def compactPhysicalGaussianRankTargetAtomComputable
     gaussianPackedIndexedTargetAtomComputable
 
 /-- GapCVP reduction support. -/
-def compactPhysicalGaussianRankRadiusAtom
+@[expose] def compactPhysicalGaussianRankRadiusAtom
     (radius : List Bool → List Bool) : List Bool → List Bool :=
   radius ∘ structuralRankOriginalSource
 
@@ -4854,7 +4859,7 @@ private theorem sourceClauseIsTautology_satisfied
       simp_all
 
 /-- GapCVP reduction support. -/
-def noTautClauses (formula : ThreeCNF) : ThreeCNF :=
+@[expose] def noTautClauses (formula : ThreeCNF) : ThreeCNF :=
   formula.filter fun clause => !(sourceClauseIsTautology clause)
 
 theorem mem_sourceClausesWithoutTautologies
@@ -4891,36 +4896,36 @@ open GapCVP.BinaryEncoding GapCVP.BinarySourceTautologyNormalizationExact
 open GapCVP.BinarySourceVariableCompaction
 
 /-- GapCVP reduction support. -/
-def paperSourceClauseLiterals (clause : ThreeClause) : List Literal :=
+@[expose] def paperSourceClauseLiterals (clause : ThreeClause) : List Literal :=
   [clause 0, clause 1, clause 2]
 
 /-- GapCVP reduction support. -/
-def paperSourceNormalizedClause (clause : ThreeClause) : List Literal :=
+@[expose] def paperSourceNormalizedClause (clause : ThreeClause) : List Literal :=
   (paperSourceClauseLiterals clause).eraseDups
 
 /-- GapCVP reduction support. -/
-def paperSourceNormalizedClauses (formula : ThreeCNF) :
+@[expose] def paperSourceNormalizedClauses (formula : ThreeCNF) :
     List (List Literal) :=
   (noTautClauses formula).map
     paperSourceNormalizedClause
 
 /-- GapCVP reduction support. -/
-def paperSourceNormalizedClauseRecord (clause : ThreeClause) : List Bool :=
+@[expose] def paperSourceNormalizedClauseRecord (clause : ThreeClause) : List Bool :=
   List.replicate (paperSourceNormalizedClause clause).length true ++
     false :: (paperSourceNormalizedClause clause).flatMap encodeLiteral
 
 /-- GapCVP reduction support. -/
-def paperSourceNormalizedClauseStream (formula : ThreeCNF) : List Bool :=
+@[expose] def paperSourceNormalizedClauseStream (formula : ThreeCNF) : List Bool :=
   (noTautClauses formula).flatMap
     paperSourceNormalizedClauseRecord
 
 /-- GapCVP reduction support. -/
-def paperSourceNormalizedVariables (formula : ThreeCNF) : List ℕ :=
+@[expose] def paperSourceNormalizedVariables (formula : ThreeCNF) : List ℕ :=
   (paperSourceNormalizedClauses formula).flatMap
     (fun clause => clause.map Prod.fst)
 
 /-- GapCVP reduction support. -/
-def paperNormalizedOccurringVariables (formula : ThreeCNF) : List ℕ :=
+@[expose] def paperNormalizedOccurringVariables (formula : ThreeCNF) : List ℕ :=
   (paperSourceNormalizedVariables formula).eraseDups
 
 private theorem paperSourceLiteralEraseDups_length_le
@@ -5089,11 +5094,11 @@ open GapCVP.Factor400BinaryConstructiveSourcePlaces GapCVP.BinaryExplicitAffineS
 open GapCVP.BinaryExplicitSourceSoundness
 
 /-- GapCVP reduction support. -/
-def paperVariableArityVariableCount (formula : ThreeCNF) : ℕ :=
+@[expose] def paperVariableArityVariableCount (formula : ThreeCNF) : ℕ :=
   (paperNormalizedOccurringVariables formula).length
 
 /-- GapCVP reduction support. -/
-def paperVariableArityVariableRank
+@[expose] def paperVariableArityVariableRank
     (formula : ThreeCNF) (name : ℕ) : ℕ :=
   (paperNormalizedOccurringVariables formula).idxOf name
 
@@ -5113,7 +5118,7 @@ theorem paperVariableArityVariableRank_lt
     List.mem_map.mpr ⟨literal, hliteral, rfl⟩⟩
 
 /-- GapCVP reduction support. -/
-def paperVariableAritySourceLiteral
+@[expose] def paperVariableAritySourceLiteral
     (formula : ThreeCNF) (clause : List Literal)
     (hclause : clause ∈ paperSourceNormalizedClauses formula)
     (literal : Literal) (hliteral : literal ∈ clause) :
@@ -5134,7 +5139,7 @@ theorem paper_retainedClause_length_le_three
   exact paperNormalizedClause_length_le_three original
 
 /-- GapCVP reduction support. -/
-def paperVariableAritySourceClause
+@[expose] def paperVariableAritySourceClause
     (formula : ThreeCNF) (clause : List Literal)
     (hclause : clause ∈ paperSourceNormalizedClauses formula) :
     GapCVP.Core.Clause (paperVariableArityVariableCount formula) where
@@ -5493,14 +5498,16 @@ theorem binaryIntegerLift_intCast_of_zero_or_one
   · simp only [hzero, Int.cast_zero, binaryIntegerLift_zero]
   · simp only [hone, Int.cast_one, binaryIntegerLift_one]
 
-private def binaryVectorOfIntegers {n : ℕ} (values : Fin n → ℤ) :
+/-- Decode an integer vector as a binary vector when every entry is zero or one. -/
+def binaryVectorOfIntegers {n : ℕ} (values : Fin n → ℤ) :
     Option (Fin n → ZMod 2) :=
   if ∀ index, values index = 0 ∨ values index = 1 then
     some (fun index => (values index : ZMod 2))
   else
     none
 
-private def binaryMatrixOfIntegers {m n : ℕ}
+/-- Decode an integer matrix as a binary matrix when every entry is zero or one. -/
+def binaryMatrixOfIntegers {m n : ℕ}
     (values : Fin m → Fin n → ℤ) :
     Option (Fin m → Fin n → ZMod 2) :=
   if ∀ row column, values row column = 0 ∨ values row column = 1 then
@@ -5524,7 +5531,7 @@ private theorem binaryMatrixOfIntegers_lift {m n : ℕ}
       binaryIntegerLift_cast]
 
 /-- GapCVP reduction support. -/
-def encodeBinaryNearestCodewordInstance
+@[expose] def encodeBinaryNearestCodewordInstance
     (record : BinaryNearestCodewordInstance) : List Bool :=
   encodeAtomic record.blockLength ++
     encodeAtomic record.generatorRank ++
@@ -5535,7 +5542,7 @@ def encodeBinaryNearestCodewordInstance
       (fun row column => ((record.generator row column).val : ℤ))
 
 /-- GapCVP reduction support. -/
-def encodeBinarySyndromeDecodingInstance
+@[expose] def encodeBinarySyndromeDecodingInstance
     (record : BinarySyndromeDecodingInstance) : List Bool :=
   encodeAtomic record.checkCount ++
     encodeAtomic record.blockLength ++
@@ -5546,7 +5553,7 @@ def encodeBinarySyndromeDecodingInstance
       (fun row column => ((record.parityCheck row column).val : ℤ))
 
 /-- GapCVP reduction support. -/
-def decodeBinaryNearestCodewordInstance
+@[expose] def decodeBinaryNearestCodewordInstance
     (bits : List Bool) : Option BinaryNearestCodewordInstance :=
   match (readAtomic bits : Option (ℕ × List Bool)) with
   | none => none
@@ -5573,7 +5580,7 @@ def decodeBinaryNearestCodewordInstance
             | _ => none
 
 /-- GapCVP reduction support. -/
-def decodeBinarySyndromeDecodingInstance
+@[expose] def decodeBinarySyndromeDecodingInstance
     (bits : List Bool) : Option BinarySyndromeDecodingInstance :=
   match (readAtomic bits : Option (ℕ × List Bool)) with
   | none => none
@@ -5636,7 +5643,7 @@ def decodeBinarySyndromeDecodingInstance
             binaryMatrixOfIntegers_lift]
 
 /-- GapCVP reduction support. -/
-def binaryNearestCodeword
+@[expose] def binaryNearestCodeword
     (record : BinaryNearestCodewordInstance)
     (coefficients : Fin record.generatorRank → ZMod 2) :
     Fin record.blockLength → ZMod 2 :=
@@ -5644,12 +5651,12 @@ def binaryNearestCodeword
     record.generator index column * coefficients column
 
 /-- GapCVP reduction support. -/
-def binaryNearestTarget (record : BinaryNearestCodewordInstance) :
+@[expose] def binaryNearestTarget (record : BinaryNearestCodewordInstance) :
     Fin record.blockLength → ZMod 2 :=
   record.target
 
 /-- GapCVP reduction support. -/
-def binarySyndromeProduct
+@[expose] def binarySyndromeProduct
     (record : BinarySyndromeDecodingInstance)
     (word : Fin record.blockLength → ZMod 2) :
     Fin record.checkCount → ZMod 2 :=
@@ -5657,7 +5664,7 @@ def binarySyndromeProduct
     record.parityCheck row column * word column
 
 /-- GapCVP reduction support. -/
-def binarySyndromeTarget (record : BinarySyndromeDecodingInstance) :
+@[expose] def binarySyndromeTarget (record : BinarySyndromeDecodingInstance) :
     Fin record.checkCount → ZMod 2 :=
   record.syndrome
 

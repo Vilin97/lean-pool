@@ -3,9 +3,13 @@ Copyright (c) 2026 Haowei Lin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Haowei Lin, Shanda Li
 -/
-import LeanPool.SumDifferenceExponent.Limit
+module
+
+public import LeanPool.SumDifferenceExponent.Limit
 
 /-! The complete sharp-supremum theorem. -/
+
+@[expose] public section
 
 open scoped BigOperators Pointwise
 open Filter Topology
