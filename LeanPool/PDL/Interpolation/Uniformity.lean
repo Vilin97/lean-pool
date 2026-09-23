@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PDL formalization contributors (see project card)
 -/
 
-import LeanPool.PDL.Local.AllLocalTab
-import LeanPool.PDL.Interpolation.ClusterSatDown
+module
+
+public import LeanPool.PDL.Local.AllLocalTab
+public import LeanPool.PDL.Interpolation.ClusterSatDown
 
 /-! # Uniformity of split tableaux (Section 8.1)
 
@@ -50,6 +52,8 @@ The file `Pdl.ClusterInterpolation` imports this file (it uses `Tableau.isUnifor
 proved there. The section `Uniformity` below therefore repeats those that are needed here,
 under different names.
 -/
+
+@[expose] public section
 
 namespace PDL
 

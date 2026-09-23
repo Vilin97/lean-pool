@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Boon Suan Ho
 -/
 
-import LeanPool.Nivat.Core.Patterns
-import LeanPool.Nivat.Dynamics.HalfPlanePair
+module
+
+public import LeanPool.Nivat.Core.Patterns
+public import LeanPool.Nivat.Dynamics.HalfPlanePair
 
 /-
 Upstream: https://github.com/boonsuan/nivat
@@ -48,6 +50,8 @@ The main results are `finite_pattern_occurs`,
 `halfPlane_pair_of_finiteRange_not_periodic`. The last theorem returns the full
 pattern-language inclusion needed for Laurent annihilator inheritance.
 -/
+
+@[expose] public section
 
 namespace Nivat.Dynamics
 

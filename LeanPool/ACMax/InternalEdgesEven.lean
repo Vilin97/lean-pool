@@ -3,8 +3,10 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import Mathlib.Algebra.Field.ZMod
-import Mathlib.Combinatorics.SimpleGraph.Finite
+module
+
+public import Mathlib.Algebra.Field.ZMod
+public import Mathlib.Combinatorics.SimpleGraph.Finite
 
 /-!
 # The internal-degree sum of a vertex set is even
@@ -12,6 +14,8 @@ import Mathlib.Combinatorics.SimpleGraph.Finite
 For any finite simple graph `G` and vertex set `s`, the sum over `v ∈ s` of the number of
 neighbours of `v` lying in `s` equals twice the number of edges internal to `s`, hence is even.
 -/
+
+@[expose] public section
 
 namespace ACMax
 

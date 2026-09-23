@@ -3,8 +3,10 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import LeanPool.ACMax.Cuts.GoodTriangle
-import LeanPool.ACMax.Reduction.Reduction
+module
+
+public import LeanPool.ACMax.Cuts.GoodTriangle
+public import LeanPool.ACMax.Reduction.Reduction
 
 /-!
 # The degree-three core at orders eight and nine
@@ -15,6 +17,8 @@ least two neighbors inside the degree-three core.  A triangle in the core is a
 good-triangle certificate; if the core is triangle-free, the standard
 small-degree lemma supplies an induced `2K₂`.
 -/
+
+@[expose] public section
 
 namespace ACMax
 

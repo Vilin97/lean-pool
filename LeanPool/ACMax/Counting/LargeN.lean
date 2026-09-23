@@ -3,18 +3,20 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Push
-import Mathlib.Tactic.Ring
-import LeanPool.ACMax.Counting.CompactLedgers
-import LeanPool.ACMax.Counting.XBoundAssembly
-import LeanPool.ACMax.Counting.CompactCell
-import LeanPool.ACMax.Cuts.TwoCut
-import LeanPool.ACMax.Counting.HubCross
-import LeanPool.ACMax.Counting.FarPair
-import LeanPool.ACMax.Reduction.Residual
+module
+
+public import Mathlib.Tactic.IntervalCases
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Push
+public import Mathlib.Tactic.Ring
+public import LeanPool.ACMax.Counting.CompactLedgers
+public import LeanPool.ACMax.Counting.XBoundAssembly
+public import LeanPool.ACMax.Counting.CompactCell
+public import LeanPool.ACMax.Cuts.TwoCut
+public import LeanPool.ACMax.Counting.HubCross
+public import LeanPool.ACMax.Counting.FarPair
+public import LeanPool.ACMax.Reduction.Residual
 
 /-!
 # The large-`n` assembly and the cloud bound
@@ -47,6 +49,8 @@ the hub-cross law, bound the cloud by the apex-tie law, and sharpen the constant
 `unblocked_gap_pos_nonadj`: a DS-unblocked pair (`dsValue ≤ 4`) of degree-`≥ 4`
 hubs with a positive private-twin gap is non-adjacent (adjacency already costs
 `1 + 1 + 1 + 2 = 5 > 4`). -/
+
+@[expose] public section
 
 namespace ACMax
 
