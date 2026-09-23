@@ -28,7 +28,8 @@ open Turing GapCVP.SourceTotalStructuralDecoder GapCVP.SourceVariableFormulaDeco
 
 open GapCVP.FormulaTuringTM GapCVP.FormulaCert
 
-private def canonical_clearMissingTrace
+/-- Reject a literal whose field has no following sign bit, clearing the remaining work stacks. -/
+def canonicalClearMissingTrace
     (position : Fin 3) (field binary : List Bool) :
     EvalsToInTime canonicalFormulaMachine.step
       (canonicalConfiguration (canonicalClearLabel position)
@@ -51,7 +52,8 @@ private def canonical_clearMissingTrace
         simp only [List.length_cons]
         omega)
 
-private def canonical_decrementNoneFailureTrace
+/-- Reject a formula when decrementing its binary clause counter fails. -/
+def canonicalDecrementNoneFailureTrace
     (bits : List Bool)
     (hdecrement : binaryStackDecrement bits = none)
     (input : List Bool) :
@@ -70,7 +72,8 @@ private def canonical_decrementNoneFailureTrace
   simp only [List.length_replicate, List.length_nil]
   omega
 
-private def canonicalBodyOutput :
+/-- Compute acceptance of a formula body from its parsing state and remaining clause count. -/
+def canonicalBodyOutput :
     List Bool → Bool → Fin 3 → ℕ → List Bool → List Bool → Bool
   | [], true, _, _, _, _ => false
   | [], false, position, 0, [], binary =>
@@ -97,18 +100,21 @@ private def canonicalBodyOutput :
             canonicalBodyOutput rest false
               (nextLiteralPosition position) 0 [] binary
 
-private def canonicalBodyPhase (payload : Bool) (position : Fin 3) : Fin 17 :=
+/-- Select the prefix or payload machine phase for the current literal position. -/
+def canonicalBodyPhase (payload : Bool) (position : Fin 3) : Fin 17 :=
   if payload then canonicalPayloadLabel position
   else canonicalPrefixLabel position
 
-private def canonicalBodyBudget
+/-- Time bound for parsing a formula body with a bounded binary counter. -/
+def canonicalBodyBudget
     (binaryBound : ℕ) (input : List Bool)
     (counterLength : ℕ) (field : List Bool) : ℕ :=
   (2 * binaryBound + 10) *
     (2 * input.length + counterLength + field.length + 1) +
     binaryBound + 4
 
-private def canonical_failFromStep
+/-- Extend a step into the failure phase to a complete rejecting execution. -/
+def canonicalFailFromStep
     (source : canonicalFormulaMachine.Cfg)
     (input counter field binary borrow : List Bool)
     (hstep : canonicalFormulaMachine.step source =
@@ -124,7 +130,8 @@ private def canonical_failFromStep
   have hfull := EvalsToInTime.trans canonicalFormulaMachine.step _ _ _ _ _ hfirst hcleanup
   exact rebound hfull (by omega)
 
-private def canonical_finalCountTrace (binary : List Bool) :
+/-- Finish parsing by accepting exactly when the remaining clause count is zero. -/
+def canonicalFinalCountTrace (binary : List Bool) :
     EvalsToInTime canonicalFormulaMachine.step (canonicalConfiguration (canonicalPrefixLabel 0)
         [] [] [] binary [] [])
       (some (Turing.haltList canonicalFormulaMachine
@@ -144,7 +151,8 @@ private def canonical_finalCountTrace (binary : List Bool) :
     have hbounded := rebound (newBudget := 2 * binary.length + 4) hfull (by omega)
     simpa only [FinTM2.step, Fin.isValue, hzero, decide_false] using hbounded
 
-private def canonicalBodyTrace
+/-- A bounded execution matching the recursive formula-body acceptance function. -/
+def canonicalBodyTrace
     (binaryBound : ℕ)
     (input : List Bool) (payload : Bool) (position : Fin 3)
     (counterLength : ℕ) (field binary : List Bool)
@@ -168,7 +176,7 @@ private def canonicalBodyTrace
           | zero =>
               by_cases hposition : position = 0
               · subst position
-                have htrace := canonical_finalCountTrace binary
+                have htrace := canonicalFinalCountTrace binary
                 have hbounded := rebound (newBudget := canonicalBodyBudget
                     binaryBound [] 0 []) htrace (by
                       simp only [canonicalBodyBudget, List.length_nil, mul_zero, add_zero,
@@ -177,7 +185,7 @@ private def canonicalBodyTrace
                 simpa only [FinTM2.step, Fin.isValue, canonicalBodyPhase, Bool.false_eq_true,
                     ↓reduceIte, List.replicate_zero,
                     canonicalBodyOutput] using hbounded
-              · have hfailure := canonical_failFromStep
+              · have hfailure := canonicalFailFromStep
                   (canonicalConfiguration
                     (canonicalPrefixLabel position)
                     [] [] [] binary [] [])
@@ -193,7 +201,7 @@ private def canonicalBodyTrace
                     ↓reduceIte, List.replicate_zero,
                     canonicalBodyOutput, hposition] using hbounded
           | succ counterLength =>
-              have hfailure := canonical_failFromStep
+              have hfailure := canonicalFailFromStep
                 (canonicalConfiguration
                   (canonicalPrefixLabel position)
                   [] (true :: List.replicate counterLength true)
@@ -216,7 +224,7 @@ private def canonicalBodyTrace
       | true =>
           cases counterLength with
           | succ counterLength =>
-              have hfailure := canonical_failFromStep
+              have hfailure := canonicalFailFromStep
                 (canonicalConfiguration
                   (canonicalPayloadLabel position)
                   [] (true :: List.replicate counterLength true)
@@ -239,7 +247,7 @@ private def canonicalBodyTrace
           | zero =>
               cases field with
               | nil =>
-                  have hfailure := canonical_failFromStep
+                  have hfailure := canonicalFailFromStep
                     (canonicalConfiguration
                       (canonicalPayloadLabel position)
                       [] [] [] binary [] [])
@@ -257,7 +265,7 @@ private def canonicalBodyTrace
               | cons fieldBit field =>
                   cases fieldBit with
                   | false =>
-                      have hfailure := canonical_failFromStep
+                      have hfailure := canonicalFailFromStep
                         (canonicalConfiguration
                           (canonicalPayloadLabel position)
                           [] [] (false :: field) binary [] [])
@@ -277,7 +285,7 @@ private def canonicalBodyTrace
                   | true =>
                       have hcheck := oneStep _ _ (canonical_literal_field_true position []
                           field binary [] [])
-                      have hcleanup := canonical_clearMissingTrace
+                      have hcleanup := canonicalClearMissingTrace
                         position (true :: field) binary
                       have hfull := EvalsToInTime.trans canonicalFormulaMachine.step _ _ _ _ _
                         hcheck hcleanup
@@ -374,7 +382,7 @@ private def canonicalBodyTrace
                         binaryStackDecrement binary with
                     | none =>
                         have hreject :=
-                          canonical_decrementNoneFailureTrace
+                          canonicalDecrementNoneFailureTrace
                             binary hdecrement input
                         have hfull :=
                           EvalsToInTime.trans canonicalFormulaMachine.step _ _ _ _ _
@@ -438,7 +446,7 @@ private def canonicalBodyTrace
               | cons fieldBit field =>
                   cases fieldBit with
                   | false =>
-                      have hfailure := canonical_failFromStep
+                      have hfailure := canonicalFailFromStep
                         (canonicalConfiguration
                           (canonicalPayloadLabel position)
                           (bit :: input) []
@@ -471,7 +479,7 @@ private def canonicalBodyTrace
                             binaryStackDecrement binary with
                         | none =>
                             have hreject :=
-                              canonical_decrementNoneFailureTrace
+                              canonicalDecrementNoneFailureTrace
                                 binary hdecrement input
                             have hfull :=
                               EvalsToInTime.trans canonicalFormulaMachine.step
@@ -536,7 +544,8 @@ private def canonicalBodyTrace
                             List.replicate_zero,
                             canonicalBodyOutput, hposition] using hbounded
 
-private def canonical_headerMissingPrefixTrace
+/-- Detect a formula header whose length prefix has no delimiter. -/
+def canonicalHeaderMissingPrefixTrace
     (count : ℕ)
     (counter field binary borrow output : List Bool) :
     EvalsToInTime canonicalFormulaMachine.step (canonicalConfiguration 0 (List.replicate count
@@ -560,12 +569,13 @@ private def canonical_headerMissingPrefixTrace
           Nat.reduceAdd,
           SourceStructuralDecoder.replicate_true_append_cons] using hfull
 
-private def canonical_headerMissingTrace (count : ℕ) :
+/-- A bounded rejecting execution for an undelimited formula header. -/
+def canonicalHeaderMissingTrace (count : ℕ) :
     EvalsToInTime canonicalFormulaMachine.step (canonicalConfiguration 0
         (List.replicate count true) [] [] [] [] [])
       (some (Turing.haltList canonicalFormulaMachine [false]))
       (2 * count + 2) := by
-  have hprefix := canonical_headerMissingPrefixTrace
+  have hprefix := canonicalHeaderMissingPrefixTrace
     count [] [] [] [] []
   simp only [List.append_nil] at hprefix
   have hcleanup := canonicalFailureTrace []
@@ -575,7 +585,8 @@ private def canonical_headerMissingTrace (count : ℕ) :
   simp only [List.length_nil, List.length_replicate]
   omega
 
-private def canonical_headerPartialCopyTrace
+/-- Copy the available header bits while retaining the unfinished length counter. -/
+def canonicalHeaderPartialCopyTrace
     (payload remaining field binary borrow output : List Bool) :
     EvalsToInTime canonicalFormulaMachine.step (canonicalConfiguration 1 payload
         (List.replicate payload.length true ++ remaining)
@@ -599,7 +610,8 @@ private def canonical_headerPartialCopyTrace
           List.cons_append,
           List.reverse_cons, List.append_assoc, List.nil_append] using hfull
 
-private def canonical_headerTruncatedTrace
+/-- Reject a formula header shorter than its declared length. -/
+def canonicalHeaderTruncatedTrace
     (payload : List Bool) (extra : ℕ) :
     EvalsToInTime canonicalFormulaMachine.step (canonicalConfiguration 0
         (List.replicate (payload.length + extra + 1) true ++
@@ -617,7 +629,7 @@ private def canonical_headerTruncatedTrace
     rw [show payload.length + extra + 1 =
       payload.length + (extra + 1) by omega,
       List.replicate_add]
-  have hcopy := canonical_headerPartialCopyTrace payload
+  have hcopy := canonicalHeaderPartialCopyTrace payload
     (List.replicate (extra + 1) true) [] [] [] []
   simp only [List.append_nil] at hcopy
   rw [← hcounter] at hcopy
@@ -652,7 +664,7 @@ def canonicalMachineOutput (input : List Bool) : List Bool :=
       else
         [false]
 
-@[simp] private theorem canonicalMachineOutput_lengthPrefixed
+@[simp] theorem canonicalMachineOutputLengthPrefixed
     (header body : List Bool) :
     canonicalMachineOutput
         (BinaryEncoding.lengthPrefixedWord header ++ body) =
@@ -665,7 +677,8 @@ def canonicalMachineOutput (input : List Bool) : List Bool :=
 def canonicalInputBudget (input : List Bool) : ℕ :=
   64 * (input.length + 1) * (input.length + 1) + 64
 
-private def canonical_headerValidTrace (header body : List Bool) :
+/-- A bounded execution parsing a length-prefixed header and its following formula body. -/
+def canonicalHeaderValidTrace (header body : List Bool) :
     EvalsToInTime canonicalFormulaMachine.step (canonicalConfiguration 0
         (BinaryEncoding.lengthPrefixedWord header ++ body)
         [] [] [] [] [])
@@ -703,7 +716,7 @@ private def canonical_headerValidTrace (header body : List Bool) :
                   List.nil_append, List.cons_append,
               List.length_cons, add_le_add_iff_right]
           nlinarith)
-      rw [canonicalMachineOutput_lengthPrefixed]
+      rw [canonicalMachineOutputLengthPrefixed]
       simp only [isCanonicalBinaryWord, List.reverse_nil, ↓reduceIte]
       simpa only [BinaryEncoding.lengthPrefixedWord,
         List.length_nil, List.replicate_zero, List.nil_append,
@@ -738,7 +751,7 @@ private def canonical_headerValidTrace (header body : List Bool) :
                 Nat.zero_le header.length,
                 Nat.zero_le body.length,
                 Nat.zero_le reversedTail.length])
-          rw [canonicalMachineOutput_lengthPrefixed, hcanonical]
+          rw [canonicalMachineOutputLengthPrefixed, hcanonical]
           simp only [Bool.false_eq_true, ↓reduceIte]
           simpa only [BinaryEncoding.lengthPrefixedWord,
             List.append_assoc, List.cons_append] using hbounded
@@ -782,17 +795,17 @@ private def canonical_headerValidTrace (header body : List Bool) :
                 Nat.zero_le header.length,
                 Nat.zero_le body.length,
                 Nat.zero_le reversedTail.length])
-          rw [canonicalMachineOutput_lengthPrefixed, hcanonical]
+          rw [canonicalMachineOutputLengthPrefixed, hcanonical]
           simp only [↓reduceIte]
           simpa only [BinaryEncoding.lengthPrefixedWord,
             List.append_assoc, List.cons_append] using hbounded
 
-@[simp] private theorem canonicalMachineOutput_missing (count : ℕ) :
+@[simp] theorem canonicalMachineOutputMissing (count : ℕ) :
     canonicalMachineOutput (List.replicate count true) = [false] := by
   simp only [canonicalMachineOutput, BinaryEncoding.readLengthPrefixedWord,
       readUnaryPrefix_missing]
 
-@[simp] private theorem canonicalMachineOutput_truncated
+@[simp] theorem canonicalMachineOutputTruncated
     (payload : List Bool) (extra : ℕ) :
     canonicalMachineOutput
       (List.replicate (payload.length + extra + 1) true ++
@@ -812,20 +825,20 @@ def canonicalTotalTrace (input : List Bool) :
   | inl witness =>
       obtain ⟨count, hinput⟩ := witness
       subst input
-      have htrace := canonical_headerMissingTrace count
+      have htrace := canonicalHeaderMissingTrace count
       have hbounded := rebound (newBudget := canonicalInputBudget
           (List.replicate count true))
         htrace (by
           simp only [canonicalInputBudget, List.length_replicate, add_le_add_iff_right]
           nlinarith)
-      simpa only [canonicalMachineOutput_missing] using hbounded
+      simpa only [canonicalMachineOutputMissing] using hbounded
   | inr witness =>
       obtain ⟨count, tail, hinput⟩ := witness
       subst input
       by_cases hlength : count ≤ tail.length
       · have hreconstruct := validInput_reconstruct count tail hlength
         rw [hreconstruct]
-        exact canonical_headerValidTrace
+        exact canonicalHeaderValidTrace
           (tail.take count) (tail.drop count)
       · have hshort : tail.length < count :=
           Nat.lt_of_not_ge hlength
@@ -834,7 +847,7 @@ def canonicalTotalTrace (input : List Bool) :
           dsimp [extra]
           omega
         rw [hcount]
-        have htrace := canonical_headerTruncatedTrace tail extra
+        have htrace := canonicalHeaderTruncatedTrace tail extra
         have hbounded := rebound (newBudget := canonicalInputBudget
             (List.replicate (tail.length + extra + 1) true ++
               false :: tail))
@@ -843,7 +856,7 @@ def canonicalTotalTrace (input : List Bool) :
                 List.length_cons,
                 add_le_add_iff_right]
             nlinarith)
-        simpa only [canonicalMachineOutput_truncated]
+        simpa only [canonicalMachineOutputTruncated]
           using hbounded
 
 end FormulaTotalCert
@@ -1360,7 +1373,7 @@ private theorem canonicalBodyOutput_eq_true_iff
     canonicalMachineOutput
       (BinaryEncoding.encodeThreeCNF clauses) = [true] := by
   rw [BinaryEncoding.encodeThreeCNF]
-  rw [canonicalMachineOutput_lengthPrefixed]
+  rw [canonicalMachineOutputLengthPrefixed]
   rw [encodeNat_canonical]
   simp only [↓reduceIte]
   congr 1
@@ -1477,7 +1490,8 @@ namespace CLStructuralNaturalBinaryWriter
 
 open Turing
 
-private def structuralBinaryIncrement : List Bool → List Bool
+/-- Increment a binary word whose least significant digit comes first. -/
+def structuralBinaryIncrement : List Bool → List Bool
   | [] => [true]
   | false :: digits => true :: digits
   | true :: digits => false :: structuralBinaryIncrement digits
@@ -1515,14 +1529,15 @@ private theorem structuralBinaryIncrement_encodeNat (number : ℕ) :
       simpa only [Computability.encodeNum, Num.succ, Num.succ'] using
           structuralBinaryIncrement_encodePosNum positive
 
-private def structuralBinaryCarrySplit : List Bool → ℕ × List Bool
+/-- Split an increment into the number of cleared low digits and the remaining high digits. -/
+def structuralBinaryCarrySplit : List Bool → ℕ × List Bool
   | [] => (0, [true])
   | false :: digits => (0, true :: digits)
   | true :: digits =>
       let result := structuralBinaryCarrySplit digits
       (result.1 + 1, result.2)
 
-private theorem structuralBinaryIncrement_eq_carrySplit
+theorem structuralBinaryIncrementEqCarrySplit
     (digits : List Bool) :
     structuralBinaryIncrement digits =
       List.replicate (structuralBinaryCarrySplit digits).1 false ++
@@ -1540,7 +1555,7 @@ private theorem structuralBinaryIncrement_eq_carrySplit
           simp only [structuralBinaryIncrement, ih, structuralBinaryCarrySplit,
               List.replicate_succ, List.cons_append]
 
-private theorem structuralBinaryCarrySplit_count_le
+theorem structuralBinaryCarrySplitCountLe
     (digits : List Bool) :
     (structuralBinaryCarrySplit digits).1 ≤ digits.length := by
   induction digits with
@@ -1564,13 +1579,14 @@ private theorem structuralBinaryIncrement_length_le
           simpa only [structuralBinaryIncrement, List.length_cons, Nat.add_assoc, Nat.reduceAdd,
               add_le_add_iff_right] using Nat.add_le_add_right ih 1
 
-private def structuralBinaryIncrementN : ℕ → List Bool → List Bool
+/-- Apply binary increment the specified number of times. -/
+def structuralBinaryIncrementN : ℕ → List Bool → List Bool
   | 0, digits => digits
   | count + 1, digits =>
       structuralBinaryIncrementN count
         (structuralBinaryIncrement digits)
 
-private theorem structuralBinaryIncrementN_encodeNat
+theorem structuralBinaryIncrementNEncodeNat
     (count number : ℕ) :
     structuralBinaryIncrementN count
         (Computability.encodeNat number) =
@@ -1584,7 +1600,7 @@ private theorem structuralBinaryIncrementN_encodeNat
       congr 1
       omega
 
-private theorem structuralBinaryIncrementN_length_le
+theorem structuralBinaryIncrementNLengthLe
     (count : ℕ) (digits : List Bool) :
     (structuralBinaryIncrementN count digits).length ≤
       digits.length + count := by
@@ -1597,7 +1613,8 @@ private theorem structuralBinaryIncrementN_length_le
       simp only [structuralBinaryIncrementN]
       omega
 
-private def naturalBinaryWriterPeek (stack : Fin 4)
+/-- Read a stack head into the state and branch on whether the stack is empty. -/
+def naturalBinaryWriterPeek (stack : Fin 4)
     (present absent : Turing.TM2.Stmt
       (fun _ : Fin 4 => Bool) (Fin 5) (Option Bool)) :
     Turing.TM2.Stmt
@@ -1605,40 +1622,46 @@ private def naturalBinaryWriterPeek (stack : Fin 4)
   .peek stack (fun _ symbol => symbol)
     (.branch (fun symbol => symbol.isSome) present absent)
 
-private def naturalBinaryWriterPop (stack : Fin 4)
+/-- Remove a stack head while preserving the bit stored in the machine state. -/
+def naturalBinaryWriterPop (stack : Fin 4)
     (continuation : Turing.TM2.Stmt
       (fun _ : Fin 4 => Bool) (Fin 5) (Option Bool)) :
     Turing.TM2.Stmt
       (fun _ : Fin 4 => Bool) (Fin 5) (Option Bool) :=
   .pop stack (fun symbol _ => symbol) continuation
 
-private def naturalBinaryWriterPushBit (stack : Fin 4)
+/-- Push the bit held in the state, defaulting to false when the state is empty. -/
+def naturalBinaryWriterPushBit (stack : Fin 4)
     (continuation : Turing.TM2.Stmt
       (fun _ : Fin 4 => Bool) (Fin 5) (Option Bool)) :
     Turing.TM2.Stmt
       (fun _ : Fin 4 => Bool) (Fin 5) (Option Bool) :=
   .push stack (fun symbol => symbol.getD false) continuation
 
-private def naturalBinaryWriterPushConstant (stack : Fin 4) (bit : Bool)
+/-- Push a fixed bit before executing the continuation. -/
+def naturalBinaryWriterPushConstant (stack : Fin 4) (bit : Bool)
     (continuation : Turing.TM2.Stmt
       (fun _ : Fin 4 => Bool) (Fin 5) (Option Bool)) :
     Turing.TM2.Stmt
       (fun _ : Fin 4 => Bool) (Fin 5) (Option Bool) :=
   .push stack (fun _ => bit) continuation
 
-private def naturalBinaryWriterGoto (phase : Fin 5) :
+/-- Clear the stored bit and transfer control to the requested phase. -/
+def naturalBinaryWriterGoto (phase : Fin 5) :
     Turing.TM2.Stmt
       (fun _ : Fin 4 => Bool) (Fin 5) (Option Bool) :=
   .load (fun _ => none) (.goto (fun _ => phase))
 
-private def naturalBinaryWriterInputStatement :
+/-- Consume one input bit and increment the counter, or begin output preparation. -/
+def naturalBinaryWriterInputStatement :
     Turing.TM2.Stmt
       (fun _ : Fin 4 => Bool) (Fin 5) (Option Bool) :=
   naturalBinaryWriterPeek 0
     (naturalBinaryWriterPop 0 (naturalBinaryWriterGoto 1))
     (naturalBinaryWriterGoto 3)
 
-private def naturalBinaryWriterCarryStatement :
+/-- Propagate a binary carry, saving cleared digits on the carry stack. -/
+def naturalBinaryWriterCarryStatement :
     Turing.TM2.Stmt
       (fun _ : Fin 4 => Bool) (Fin 5) (Option Bool) :=
   naturalBinaryWriterPeek 1
@@ -1652,7 +1675,8 @@ private def naturalBinaryWriterCarryStatement :
     (naturalBinaryWriterPushConstant 1 true
       (naturalBinaryWriterGoto 2))
 
-private def naturalBinaryWriterRestoreStatement :
+/-- Restore saved carry digits to the binary counter before reading more input. -/
+def naturalBinaryWriterRestoreStatement :
     Turing.TM2.Stmt
       (fun _ : Fin 4 => Bool) (Fin 5) (Option Bool) :=
   naturalBinaryWriterPeek 2
@@ -1661,7 +1685,8 @@ private def naturalBinaryWriterRestoreStatement :
         (naturalBinaryWriterGoto 2)))
     (naturalBinaryWriterGoto 0)
 
-private def naturalBinaryWriterPrepareStatement :
+/-- Reverse the counter onto the carry stack in preparation for output. -/
+def naturalBinaryWriterPrepareStatement :
     Turing.TM2.Stmt
       (fun _ : Fin 4 => Bool) (Fin 5) (Option Bool) :=
   naturalBinaryWriterPeek 1
@@ -1670,7 +1695,8 @@ private def naturalBinaryWriterPrepareStatement :
         (naturalBinaryWriterGoto 3)))
     (naturalBinaryWriterGoto 4)
 
-private def naturalBinaryWriterOutputStatement :
+/-- Transfer prepared digits to the output stack and halt when none remain. -/
+def naturalBinaryWriterOutputStatement :
     Turing.TM2.Stmt
       (fun _ : Fin 4 => Bool) (Fin 5) (Option Bool) :=
   naturalBinaryWriterPeek 2
@@ -1679,7 +1705,8 @@ private def naturalBinaryWriterOutputStatement :
         (naturalBinaryWriterGoto 4)))
     .halt
 
-private abbrev structuralNaturalBinaryWriter : Turing.FinTM2 where
+/-- The four-stack machine that writes the binary encoding of its input length. -/
+abbrev structuralNaturalBinaryWriter : Turing.FinTM2 where
   K := Fin 4
   k₀ := 0
   k₁ := 3
@@ -1700,7 +1727,8 @@ private abbrev structuralNaturalBinaryWriter : Turing.FinTM2 where
     else
       naturalBinaryWriterOutputStatement
 
-private def naturalBinaryWriterConfiguration (phase : Fin 5)
+/-- A writer configuration with explicit input, counter, carry, and output stacks. -/
+def naturalBinaryWriterConfiguration (phase : Fin 5)
     (input digits carry output : List Bool) :
     structuralNaturalBinaryWriter.Cfg where
   l := some phase
@@ -1737,7 +1765,7 @@ macro "naturalBinaryWriterStepTac" : tactic =>
             (first | rfl | simp [Function.update]) } <;>
           try rfl)))
 
-private theorem naturalBinaryWriter_input_step (bit : Bool)
+theorem naturalBinaryWriterInputStep (bit : Bool)
     (input digits carry output : List Bool) :
     structuralNaturalBinaryWriter.step
       (naturalBinaryWriterConfiguration 0
@@ -1746,7 +1774,7 @@ private theorem naturalBinaryWriter_input_step (bit : Bool)
         input digits carry output) := by
   cases bit <;> naturalBinaryWriterStepTac
 
-private theorem naturalBinaryWriter_input_finish
+theorem naturalBinaryWriterInputFinish
     (digits carry output : List Bool) :
     structuralNaturalBinaryWriter.step
       (naturalBinaryWriterConfiguration 0 [] digits carry output) =
@@ -1754,7 +1782,7 @@ private theorem naturalBinaryWriter_input_finish
         [] digits carry output) := by
   naturalBinaryWriterStepTac
 
-private theorem naturalBinaryWriter_carry_true_step
+theorem naturalBinaryWriterCarryTrueStep
     (input digits carry output : List Bool) :
     structuralNaturalBinaryWriter.step
       (naturalBinaryWriterConfiguration 1
@@ -1763,7 +1791,7 @@ private theorem naturalBinaryWriter_carry_true_step
         input digits (false :: carry) output) := by
   naturalBinaryWriterStepTac
 
-private theorem naturalBinaryWriter_carry_false_step
+theorem naturalBinaryWriterCarryFalseStep
     (input digits carry output : List Bool) :
     structuralNaturalBinaryWriter.step
       (naturalBinaryWriterConfiguration 1
@@ -1772,7 +1800,7 @@ private theorem naturalBinaryWriter_carry_false_step
         input (true :: digits) carry output) := by
   naturalBinaryWriterStepTac
 
-private theorem naturalBinaryWriter_carry_empty_step
+theorem naturalBinaryWriterCarryEmptyStep
     (input carry output : List Bool) :
     structuralNaturalBinaryWriter.step
       (naturalBinaryWriterConfiguration 1
@@ -1781,7 +1809,7 @@ private theorem naturalBinaryWriter_carry_empty_step
         input [true] carry output) := by
   naturalBinaryWriterStepTac
 
-private theorem naturalBinaryWriter_restore_step (bit : Bool)
+theorem naturalBinaryWriterRestoreStep (bit : Bool)
     (input digits carry output : List Bool) :
     structuralNaturalBinaryWriter.step
       (naturalBinaryWriterConfiguration 2
@@ -1790,7 +1818,7 @@ private theorem naturalBinaryWriter_restore_step (bit : Bool)
         input (bit :: digits) carry output) := by
   cases bit <;> naturalBinaryWriterStepTac
 
-private theorem naturalBinaryWriter_restore_finish
+theorem naturalBinaryWriterRestoreFinish
     (input digits output : List Bool) :
     structuralNaturalBinaryWriter.step
       (naturalBinaryWriterConfiguration 2
@@ -1799,7 +1827,7 @@ private theorem naturalBinaryWriter_restore_finish
         input digits [] output) := by
   naturalBinaryWriterStepTac
 
-private theorem naturalBinaryWriter_prepare_step (bit : Bool)
+theorem naturalBinaryWriterPrepareStep (bit : Bool)
     (digits carry output : List Bool) :
     structuralNaturalBinaryWriter.step
       (naturalBinaryWriterConfiguration 3
@@ -1808,7 +1836,7 @@ private theorem naturalBinaryWriter_prepare_step (bit : Bool)
         [] digits (bit :: carry) output) := by
   cases bit <;> naturalBinaryWriterStepTac
 
-private theorem naturalBinaryWriter_prepare_finish
+theorem naturalBinaryWriterPrepareFinish
     (carry output : List Bool) :
     structuralNaturalBinaryWriter.step
       (naturalBinaryWriterConfiguration 3 [] [] carry output) =
@@ -1816,7 +1844,7 @@ private theorem naturalBinaryWriter_prepare_finish
         [] [] carry output) := by
   naturalBinaryWriterStepTac
 
-private theorem naturalBinaryWriter_output_step (bit : Bool)
+theorem naturalBinaryWriterOutputStep (bit : Bool)
     (carry output : List Bool) :
     structuralNaturalBinaryWriter.step
       (naturalBinaryWriterConfiguration 4
@@ -1825,13 +1853,14 @@ private theorem naturalBinaryWriter_output_step (bit : Bool)
         [] [] carry (bit :: output)) := by
   cases bit <;> naturalBinaryWriterStepTac
 
-private theorem naturalBinaryWriter_output_finish (output : List Bool) :
+theorem naturalBinaryWriterOutputFinish (output : List Bool) :
     structuralNaturalBinaryWriter.step
       (naturalBinaryWriterConfiguration 4 [] [] [] output) =
       some (Turing.haltList structuralNaturalBinaryWriter output) := by
   naturalBinaryWriterStepTac
 
-private def naturalBinaryWriter_carrySearchTrace
+/-- Propagate a carry to the first zero bit or the end of the binary counter. -/
+def naturalBinaryWriterCarrySearchTrace
     (input digits carry output : List Bool) :
     EvalsToInTime structuralNaturalBinaryWriter.step (naturalBinaryWriterConfiguration 1
         input digits carry output)
@@ -1845,12 +1874,12 @@ private def naturalBinaryWriter_carrySearchTrace
   | nil =>
       simpa only [FinTM2.step, Fin.isValue, structuralBinaryCarrySplit, List.replicate_zero,
           List.nil_append,
-          List.length_nil, zero_add] using oneStep _ _ (naturalBinaryWriter_carry_empty_step input
+          List.length_nil, zero_add] using oneStep _ _ (naturalBinaryWriterCarryEmptyStep input
               carry output)
   | cons bit digits ih =>
       cases bit with
       | false =>
-          have hstep := oneStep _ _ (naturalBinaryWriter_carry_false_step
+          have hstep := oneStep _ _ (naturalBinaryWriterCarryFalseStep
               input digits carry output)
           have hbounded := rebound (newBudget := (false :: digits).length + 1)
             hstep (by simp only [List.length_cons, le_add_iff_nonneg_left, zero_le])
@@ -1858,7 +1887,7 @@ private def naturalBinaryWriter_carrySearchTrace
               List.nil_append,
               List.length_cons] using hbounded
       | true =>
-          have hfirst := oneStep _ _ (naturalBinaryWriter_carry_true_step
+          have hfirst := oneStep _ _ (naturalBinaryWriterCarryTrueStep
               input digits carry output)
           have hrest := ih (false :: carry)
           have hfull := EvalsToInTime.trans structuralNaturalBinaryWriter.step
@@ -1868,7 +1897,8 @@ private def naturalBinaryWriter_carrySearchTrace
               List.cons_append, List.nil_append, List.length_cons, Nat.add_assoc, Nat.reduceAdd]
                   using hfull
 
-private def naturalBinaryWriter_carryRestoreTrace
+/-- Restore the saved carry bits and return to the input phase. -/
+def naturalBinaryWriterCarryRestoreTrace
     (input digits carry output : List Bool) :
     EvalsToInTime structuralNaturalBinaryWriter.step (naturalBinaryWriterConfiguration 2
         input digits carry output)
@@ -1879,9 +1909,9 @@ private def naturalBinaryWriter_carryRestoreTrace
   | nil =>
       simpa only [FinTM2.step, Fin.isValue, List.reverse_nil, List.nil_append, List.length_nil,
           zero_add] using
-          oneStep _ _ (naturalBinaryWriter_restore_finish input digits output)
+          oneStep _ _ (naturalBinaryWriterRestoreFinish input digits output)
   | cons bit carry ih =>
-      have hfirst := oneStep _ _ (naturalBinaryWriter_restore_step bit
+      have hfirst := oneStep _ _ (naturalBinaryWriterRestoreStep bit
           input digits carry output)
       have hrest := ih (bit :: digits)
       have hfull := EvalsToInTime.trans structuralNaturalBinaryWriter.step _ _ _ _ _ hfirst hrest
@@ -1889,34 +1919,37 @@ private def naturalBinaryWriter_carryRestoreTrace
           List.nil_append,
           List.length_cons, Nat.add_assoc, Nat.reduceAdd] using hfull
 
-private def naturalBinaryWriter_carryTrace
+/-- Complete one binary increment within a linear bound in the counter length. -/
+def naturalBinaryWriterCarryTrace
     (input digits output : List Bool) :
     EvalsToInTime structuralNaturalBinaryWriter.step (naturalBinaryWriterConfiguration 1
         input digits [] output)
       (some (naturalBinaryWriterConfiguration 0
         input (structuralBinaryIncrement digits) [] output))
       (2 * digits.length + 2) := by
-  have hsearch := naturalBinaryWriter_carrySearchTrace
+  have hsearch := naturalBinaryWriterCarrySearchTrace
     input digits [] output
   simp only [List.append_nil] at hsearch
-  have hrestore := naturalBinaryWriter_carryRestoreTrace
+  have hrestore := naturalBinaryWriterCarryRestoreTrace
     input (structuralBinaryCarrySplit digits).2
     (List.replicate (structuralBinaryCarrySplit digits).1 false)
     output
   simp only [List.reverse_replicate, List.length_replicate] at hrestore
   have hfull := EvalsToInTime.trans structuralNaturalBinaryWriter.step _ _ _ _ _ hsearch hrestore
-  rw [← structuralBinaryIncrement_eq_carrySplit digits] at hfull
-  have hcount := structuralBinaryCarrySplit_count_le digits
+  rw [← structuralBinaryIncrementEqCarrySplit digits] at hfull
+  have hcount := structuralBinaryCarrySplitCountLe digits
   exact rebound hfull (by omega)
 
-private def naturalBinaryWriterScanBudget : List Bool → List Bool → ℕ
+/-- Recursive time bound for consuming input and incrementing the binary counter. -/
+def naturalBinaryWriterScanBudget : List Bool → List Bool → ℕ
   | [], _ => 1
   | _ :: input, digits =>
       1 + (2 * digits.length + 2) +
         naturalBinaryWriterScanBudget input
           (structuralBinaryIncrement digits)
 
-private def naturalBinaryWriter_scanTrace
+/-- Consume every input bit, incrementing the binary counter once per bit. -/
+def naturalBinaryWriterScanTrace
     (input digits output : List Bool) :
     EvalsToInTime structuralNaturalBinaryWriter.step (naturalBinaryWriterConfiguration 0
         input digits [] output)
@@ -1927,12 +1960,12 @@ private def naturalBinaryWriter_scanTrace
   induction input generalizing digits with
   | nil =>
       simpa only [FinTM2.step, Fin.isValue, List.length_nil, structuralBinaryIncrementN,
-          naturalBinaryWriterScanBudget] using oneStep _ _ (naturalBinaryWriter_input_finish digits
+          naturalBinaryWriterScanBudget] using oneStep _ _ (naturalBinaryWriterInputFinish digits
               [] output)
   | cons bit input ih =>
-      have hfirst := oneStep _ _ (naturalBinaryWriter_input_step bit
+      have hfirst := oneStep _ _ (naturalBinaryWriterInputStep bit
           input digits [] output)
-      have hcarry := naturalBinaryWriter_carryTrace
+      have hcarry := naturalBinaryWriterCarryTrace
         input digits output
       have hrest := ih (structuralBinaryIncrement digits)
       have hfirstCarry := EvalsToInTime.trans structuralNaturalBinaryWriter.step
@@ -1947,7 +1980,7 @@ private def naturalBinaryWriter_scanTrace
       simpa only [FinTM2.step, Fin.isValue, List.length_cons, structuralBinaryIncrementN]
           using hbounded
 
-private theorem naturalBinaryWriterScanBudget_le
+theorem naturalBinaryWriterScanBudgetLe
     (input digits : List Bool) :
     naturalBinaryWriterScanBudget input digits ≤
       2 * input.length * (digits.length + input.length + 1) + 1 := by
@@ -1981,7 +2014,8 @@ private theorem naturalBinaryWriterScanBudget_le
               simp only [List.length_cons]
               linarith
 
-private def naturalBinaryWriter_prepareTrace
+/-- Reverse the binary counter onto the carry stack within a linear time bound. -/
+def naturalBinaryWriterPrepareTrace
     (digits carry output : List Bool) :
     EvalsToInTime structuralNaturalBinaryWriter.step (naturalBinaryWriterConfiguration 3
         [] digits carry output)
@@ -1992,16 +2026,17 @@ private def naturalBinaryWriter_prepareTrace
   | nil =>
       simpa only [FinTM2.step, Fin.isValue, List.reverse_nil, List.nil_append, List.length_nil,
           zero_add] using
-          oneStep _ _ (naturalBinaryWriter_prepare_finish carry output)
+          oneStep _ _ (naturalBinaryWriterPrepareFinish carry output)
   | cons bit digits ih =>
-      have hfirst := oneStep _ _ (naturalBinaryWriter_prepare_step bit digits carry output)
+      have hfirst := oneStep _ _ (naturalBinaryWriterPrepareStep bit digits carry output)
       have hrest := ih (bit :: carry)
       have hfull := EvalsToInTime.trans structuralNaturalBinaryWriter.step _ _ _ _ _ hfirst hrest
       simpa only [FinTM2.step, Fin.isValue, List.reverse_cons, List.append_assoc, List.cons_append,
           List.nil_append,
           List.length_cons, Nat.add_assoc, Nat.reduceAdd] using hfull
 
-private def naturalBinaryWriter_outputTrace
+/-- Write the prepared carry stack to output and halt within a linear time bound. -/
+def naturalBinaryWriterOutputTrace
     (carry output : List Bool) :
     EvalsToInTime structuralNaturalBinaryWriter.step (naturalBinaryWriterConfiguration 4
         [] [] carry output)
@@ -2012,16 +2047,17 @@ private def naturalBinaryWriter_outputTrace
   | nil =>
       simpa only [FinTM2.step, Fin.isValue, List.reverse_nil, List.nil_append, List.length_nil,
           zero_add] using
-          oneStep _ _ (naturalBinaryWriter_output_finish output)
+          oneStep _ _ (naturalBinaryWriterOutputFinish output)
   | cons bit carry ih =>
-      have hfirst := oneStep _ _ (naturalBinaryWriter_output_step bit carry output)
+      have hfirst := oneStep _ _ (naturalBinaryWriterOutputStep bit carry output)
       have hrest := ih (bit :: output)
       have hfull := EvalsToInTime.trans structuralNaturalBinaryWriter.step _ _ _ _ _ hfirst hrest
       simpa only [FinTM2.step, Fin.isValue, List.reverse_cons, List.append_assoc, List.cons_append,
           List.nil_append,
           List.length_cons, Nat.add_assoc, Nat.reduceAdd] using hfull
 
-private def naturalBinaryWriter_totalTrace (input : List Bool) :
+/-- A quadratic-time execution writing the binary encoding of the input length. -/
+def naturalBinaryWriterTotalTrace (input : List Bool) :
     EvalsToInTime structuralNaturalBinaryWriter.step
       (naturalBinaryWriterConfiguration 0 input [] [] [])
       (some (Turing.haltList structuralNaturalBinaryWriter
@@ -2032,20 +2068,20 @@ private def naturalBinaryWriter_totalTrace (input : List Bool) :
         Computability.encodeNat input.length := by
     simpa only [Computability.encodeNat, Computability.encodeNum, CharP.cast_eq_zero, zero_add]
         using
-        structuralBinaryIncrementN_encodeNat input.length 0
-  have hscan := naturalBinaryWriter_scanTrace input [] []
+        structuralBinaryIncrementNEncodeNat input.length 0
+  have hscan := naturalBinaryWriterScanTrace input [] []
   rw [hdigits] at hscan
-  have hprepare := naturalBinaryWriter_prepareTrace
+  have hprepare := naturalBinaryWriterPrepareTrace
     (Computability.encodeNat input.length) [] []
   simp only [List.append_nil] at hprepare
-  have houtput := naturalBinaryWriter_outputTrace
+  have houtput := naturalBinaryWriterOutputTrace
     (Computability.encodeNat input.length).reverse []
   simp only [List.reverse_reverse, List.append_nil] at houtput
   have hfirst := EvalsToInTime.trans structuralNaturalBinaryWriter.step _ _ _ _ _ hscan hprepare
   have hfull := EvalsToInTime.trans structuralNaturalBinaryWriter.step _ _ _ _ _ hfirst houtput
-  have hscanBound := naturalBinaryWriterScanBudget_le input []
+  have hscanBound := naturalBinaryWriterScanBudgetLe input []
   simp only [List.length_nil, Nat.zero_add] at hscanBound
-  have hdigitBound := structuralBinaryIncrementN_length_le
+  have hdigitBound := structuralBinaryIncrementNLengthLe
     input.length []
   rw [hdigits] at hdigitBound
   simp only [List.length_nil, Nat.zero_add] at hdigitBound
@@ -2069,15 +2105,15 @@ noncomputable def structuralNaturalBinaryWriterComputable :
   outputAlphabet := Equiv.refl Bool
   time := 8 * (Polynomial.X + 1) ^ 2 + 8
   outputsFun input := {
-    steps := (naturalBinaryWriter_totalTrace input).steps
+    steps := (naturalBinaryWriterTotalTrace input).steps
     evals_in_steps := by
       simpa only [Option.bind_eq_bind, FinTM2.step, Fin.isValue, Equiv.invFun_as_coe,
           Equiv.refl_symm,
           Equiv.coe_refl, bitEncoding, id_eq, List.map_id_fun, structuralNaturalBinaryWriter_init,
               Option.map_some] using
-          (naturalBinaryWriter_totalTrace input).evals_in_steps
+          (naturalBinaryWriterTotalTrace input).evals_in_steps
     steps_le_m := by
-      have hsteps := (naturalBinaryWriter_totalTrace input).steps_le_m
+      have hsteps := (naturalBinaryWriterTotalTrace input).steps_le_m
       simpa only [FinTM2.step, Fin.isValue, bitEncoding, id_eq, Polynomial.eval_add,
           Polynomial.eval_mul,
           Polynomial.eval_ofNat, Polynomial.eval_pow, Polynomial.eval_X, Polynomial.eval_one,
