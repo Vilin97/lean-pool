@@ -3,11 +3,13 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import LeanPool.ACMax.AHL.AHLMarginals
-import Mathlib.Analysis.MeanInequalities
-import Mathlib.Analysis.Convex.Deriv
-import Mathlib.Analysis.Convex.Jensen
-import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+module
+
+public import LeanPool.ACMax.AHL.AHLMarginals
+public import Mathlib.Analysis.MeanInequalities
+public import Mathlib.Analysis.Convex.Deriv
+public import Mathlib.Analysis.Convex.Jensen
+public import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 
 /-!
 # The AHL weighted AM–GM and the degree convexity — nodes W6–W8
@@ -34,6 +36,8 @@ average-degree walk-count lower bound.
   with uniform weights `1/n` at the degrees yields `D·log((D − n)/n) ≤ ∑_v deg v·log(deg v − 1)`,
   i.e. `Λ ≥ (D − n)/n = d_avg − 1`.
 -/
+
+@[expose] public section
 
 namespace ACMax
 

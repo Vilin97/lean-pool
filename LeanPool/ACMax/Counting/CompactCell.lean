@@ -3,8 +3,10 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import LeanPool.ACMax.Counting.CherryMShape
-import LeanPool.ACMax.Reduction.Reduction
+module
+
+public import LeanPool.ACMax.Counting.CherryMShape
+public import LeanPool.ACMax.Reduction.Reduction
 
 /-!
 # The compact-cell reduction of the `Δ ≥ 5` fat side
@@ -34,6 +36,8 @@ degree excess.
 * `boundLin` packages the numerical bound `max ((151 + 11·C₀) / 2) 520` used by
   the large-order reduction. The full theorem is assembled in `Band.Final`.
 -/
+
+@[expose] public section
 
 namespace ACMax
 

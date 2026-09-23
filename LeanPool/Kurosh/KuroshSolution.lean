@@ -3,11 +3,13 @@ Copyright (c) 2026 Arthur Freitas Ramos et al. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
-import Mathlib.GroupTheory.CoprodI
-import Mathlib.GroupTheory.DoubleCoset
-import Mathlib.GroupTheory.FreeGroup.NielsenSchreier
-import Mathlib.Algebra.Group.ULift
-import LeanPool.Kurosh.KuroshTheorem
+module
+
+public import Mathlib.GroupTheory.CoprodI
+public import Mathlib.GroupTheory.DoubleCoset
+public import Mathlib.GroupTheory.FreeGroup.NielsenSchreier
+public import Mathlib.Algebra.Group.ULift
+public import LeanPool.Kurosh.KuroshTheorem
 
 /-!
 # Inclusion-preserving Kurosh decomposition
@@ -20,6 +22,8 @@ Adapted for Lean Pool from Arthur742Ramos/KuroshSubgroupTheorem,
 commit `911707126c8b9bb0c764bf853008fe1053c0aad9`: imports, API compatibility,
 and proof organization were revised.
 -/
+
+@[expose] public section
 
 noncomputable section
 

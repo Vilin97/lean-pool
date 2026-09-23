@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Boon Suan Ho
 -/
 
-import Mathlib.LinearAlgebra.Dimension.Constructions
-import Mathlib.LinearAlgebra.FiniteDimensional.Defs
-import Mathlib.Data.Set.Card
+module
+
+public import Mathlib.LinearAlgebra.Dimension.Constructions
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Mathlib.Data.Set.Card
 
 /-
 Upstream: https://github.com/boonsuan/nivat
@@ -46,6 +48,8 @@ all of its differences. `finite_fiber_budget` sums that bound over the fibers.
 The argument uses an arbitrary function between sets of vectors. The application
 to a Laurent filter is in `Nivat.Descent.ExactDescent`.
 -/
+
+@[expose] public section
 
 namespace Nivat.Descent
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.CommonSubdivision
-import LeanPool.Schoenflies.CrosscutExists
-import LeanPool.Schoenflies.FreshAccess
-import LeanPool.Schoenflies.Graph.VertexSquares
+module
+
+public import LeanPool.Schoenflies.CommonSubdivision
+public import LeanPool.Schoenflies.CrosscutExists
+public import LeanPool.Schoenflies.FreshAccess
+public import LeanPool.Schoenflies.Graph.VertexSquares
 
 /-!
 # Finite transfer, direction (b): toward the Jordan domain
@@ -54,6 +56,8 @@ incident with one unique current source face.
   `Schoenflies.finite_transfer_toward_source_of_freshInvariant` — the relative-ear induction
   and direction-(b) theorem assuming only that combinatorial invariant.
 -/
+
+@[expose] public section
 
 open Set
 open scoped Graph

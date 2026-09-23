@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Boon Suan Ho
 -/
 
-import LeanPool.Nivat.Core.Patterns
+module
+
+public import LeanPool.Nivat.Core.Patterns
 
 /-
 Upstream: https://github.com/boonsuan/nivat
@@ -43,6 +45,8 @@ Coordinate transport for Lemma 5.5 (`lem:boundary-window`) and Theorem 5.1
 A configuration and its window are transported together. The affine map `s`
 acts on sites, while its additive part `t` acts on translation and period vectors.
 -/
+
+@[expose] public section
 
 namespace Nivat
 

@@ -3,9 +3,12 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import LeanPool.ACMax.Counting.Quotient
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
+module
+
+public import LeanPool.ACMax.Counting.Quotient
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Ring
+public import Mathlib.Combinatorics.SimpleGraph.DegreeSum
 
 /-!
 # Two-cluster moat kills and the thin-twin averaging row
@@ -43,6 +46,8 @@ any root set `T`; combined with `total_excess_eq` and a multiplicity cap
 `thin_twin_exists_of_multcap`. The cap `K` stays explicit (a heavy vertex's
 multiplicity is unbounded); the clean instances are `thin_twin_exists_deg5`
 (`K = 5` when `Δ ≤ 5`) and `thin_twin_exists_iso_of_multcap` (on `isoTwins G`). -/
+
+@[expose] public section
 
 namespace ACMax
 
