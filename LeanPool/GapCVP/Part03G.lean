@@ -28,7 +28,8 @@ open Computability Turing GapCVP.BinaryEncoding GapCVP.SourceTotalStructuralDeco
 
 open GapCVP.CNFSortingDedup
 
-private def delimitedCompare_missingFirstTrace (count : ℕ) :
+/-- Reject a first word whose unary length prefix has no delimiter. -/
+def delimitedCompareMissingFirstTrace (count : ℕ) :
     EvalsToInTime delimitedPairComparisonMachine.step (delimitedCompareConfiguration 0 .invalid
         (List.replicate count true) [] [] [] [] [] [] [] [] [])
       (some (Turing.haltList delimitedPairComparisonMachine
@@ -63,7 +64,8 @@ private def delimitedCompare_missingFirstTrace (count : ℕ) :
   simp only [List.length_replicate, List.length_nil]
   omega
 
-private def delimitedCompare_truncatedFirstTrace
+/-- Reject a first word shorter than its declared length. -/
+def delimitedCompareTruncatedFirstTrace
     (count : ℕ) (payload : List Bool)
     (hshort : payload.length < count) :
     EvalsToInTime delimitedPairComparisonMachine.step (delimitedCompareConfiguration 0 .invalid
@@ -159,7 +161,8 @@ private def delimitedCompare_truncatedFirstTrace
     List.length_reverse, List.length_cons, List.length_nil]
   omega
 
-private def delimitedCompare_missingSecondTrace
+/-- Reject a second word whose unary length prefix has no delimiter. -/
+def delimitedCompareMissingSecondTrace
     (first : List Bool) (count : ℕ) :
     EvalsToInTime delimitedPairComparisonMachine.step (delimitedCompareConfiguration 0 .invalid
         (lengthPrefixedWord first ++ List.replicate count true)
@@ -233,7 +236,8 @@ private def delimitedCompare_missingSecondTrace
     lengthPrefixedWord_length]
   omega
 
-private def delimitedCompare_truncatedSecondTrace
+/-- Reject a second word shorter than its declared length. -/
+def delimitedCompareTruncatedSecondTrace
     (first : List Bool) (count : ℕ) (payload : List Bool)
     (hshort : payload.length < count) :
     EvalsToInTime delimitedPairComparisonMachine.step (delimitedCompareConfiguration 0 .invalid
@@ -400,7 +404,8 @@ def lengthPrefixedPairCases {motive : List Bool → Sort*}
                 (Nat.lt_of_not_ge hsecondLength)
       · exact truncatedFirst count tail (Nat.lt_of_not_ge hlength)
 
-private def delimitedCompare_totalTrace (input : List Bool) :
+/-- Run the pair comparison machine on every input, valid or malformed. -/
+def delimitedCompareTotalTrace (input : List Bool) :
     EvalsToInTime delimitedPairComparisonMachine.step (delimitedCompareConfiguration 0 .invalid
         input [] [] [] [] [] [] [] [] [])
       (some (Turing.haltList delimitedPairComparisonMachine
@@ -412,12 +417,12 @@ private def delimitedCompare_totalTrace (input : List Bool) :
       (some (Turing.haltList delimitedPairComparisonMachine
         (sourcePreservingDelimitedPairComparisonWord input)))
       (24 * (input.length + 1) + 24)) ?_ ?_ ?_ ?_ ?_ input
-  · exact delimitedCompare_missingFirstTrace
-  · exact delimitedCompare_truncatedFirstTrace
-  · exact delimitedCompare_missingSecondTrace
+  · exact delimitedCompareMissingFirstTrace
+  · exact delimitedCompareTruncatedFirstTrace
+  · exact delimitedCompareMissingSecondTrace
   · intro first count tail hlength
     simpa only [List.append_assoc] using
-      delimitedCompare_truncatedSecondTrace first count tail hlength
+      delimitedCompareTruncatedSecondTrace first count tail hlength
   · intro first second suffix
     simpa only [List.append_assoc] using delimitedCompareValidTrace first second suffix
 
@@ -430,15 +435,15 @@ def sourcePreservingDelimitedPairComparisonComputable :
   outputAlphabet := Equiv.refl Bool
   time := 24 * (Polynomial.X + 1) + 24
   outputsFun input := {
-    steps := (delimitedCompare_totalTrace input).steps
+    steps := (delimitedCompareTotalTrace input).steps
     evals_in_steps := by
       simpa only [Option.bind_eq_bind, FinTM2.step, Fin.isValue, Equiv.invFun_as_coe,
           Equiv.refl_symm,
           Equiv.coe_refl, bitEncoding, id_eq, List.map_id_fun, delimitedPairComparisonMachine_init,
               Option.map_some] using
-          (delimitedCompare_totalTrace input).evals_in_steps
+          (delimitedCompareTotalTrace input).evals_in_steps
     steps_le_m := by
-      have hsteps := (delimitedCompare_totalTrace input).steps_le_m
+      have hsteps := (delimitedCompareTotalTrace input).steps_le_m
       simpa only [FinTM2.step, Fin.isValue, bitEncoding, id_eq, Polynomial.eval_add,
           Polynomial.eval_mul,
           Polynomial.eval_ofNat, Polynomial.eval_X, Polynomial.eval_one, ge_iff_le] using hsteps
