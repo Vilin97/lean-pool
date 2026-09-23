@@ -3,8 +3,10 @@ Copyright (c) 2026 Jonathan Conrad, Paula Muermann, Maryna Viazovska. All rights
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jonathan Conrad, Paula Muermann, Maryna Viazovska
 -/
-import Mathlib.Analysis.Normed.Module.MultipliableUniformlyOn
-import LeanPool.PentagonalNumberTheoremAnalytic.QSeries.JacobiTripleProduct
+module
+
+public import Mathlib.Analysis.Normed.Module.MultipliableUniformlyOn
+public import LeanPool.PentagonalNumberTheoremAnalytic.QSeries.JacobiTripleProduct
 
 /-!
 # Locally uniform convergence and analytic Jacobi triple product
@@ -25,6 +27,8 @@ restriction $\|z\| < 1$).
 * `QSeries.jacobiTripleProduct'` — The analytic JTP for all
   $\|q\| < 1$ and $z \neq 0$.
 -/
+
+@[expose] public section
 
 open Finset Filter
 open scoped Topology

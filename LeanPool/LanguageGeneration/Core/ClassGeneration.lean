@@ -3,7 +3,9 @@ Copyright (c) 2026 Shuangping Li, Peng Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shuangping Li, Peng Zhang
 -/
-import LeanPool.LanguageGeneration.Core.GenericGeneration
+module
+
+public import LeanPool.LanguageGeneration.Core.GenericGeneration
 
 /-!
 # Generation properties for classes of languages
@@ -11,6 +13,8 @@ import LeanPool.LanguageGeneration.Core.GenericGeneration
 Paper-independent quantifier patterns for generation from positive data over
 an arbitrary example type.
 -/
+
+@[expose] public section
 
 namespace GenLimit.Generic
 

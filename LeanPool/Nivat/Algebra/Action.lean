@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Boon Suan Ho
 -/
 
-import LeanPool.Nivat.Core.Basic
-import Mathlib.Algebra.MonoidAlgebra.Basic
-import Mathlib.Algebra.Module.LinearMap.End
-import Mathlib.Algebra.Polynomial.Eval.Defs
+module
+
+public import LeanPool.Nivat.Core.Basic
+public import Mathlib.Algebra.MonoidAlgebra.Basic
+public import Mathlib.Algebra.Module.LinearMap.End
+public import Mathlib.Algebra.Polynomial.Eval.Defs
 
 /-
 Upstream: https://github.com/boonsuan/nivat
@@ -48,6 +50,8 @@ The principal identities are `act_apply`, `act_mul`, `act_difference`, and
 `act_lineEval_X_pow_sub_one`. The theorem `finiteRange_act` verifies that the
 class of finite-range rational configurations is closed under every operator.
 -/
+
+@[expose] public section
 
 namespace Nivat
 

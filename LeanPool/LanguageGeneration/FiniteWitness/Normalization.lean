@@ -3,11 +3,13 @@ Copyright (c) 2026 Xiaoyu Li, Andi Han, Jiaojiao Jiang, Junbin Gao. All rights r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xiaoyu Li, Andi Han, Jiaojiao Jiang, Junbin Gao
 -/
-import LeanPool.LanguageGeneration.FiniteWitness.Histories
-import Mathlib.Logic.Equiv.List
-import Mathlib.Data.Finset.Preimage
-import Mathlib.Order.WellFounded
-import Mathlib.Tactic.Push
+module
+
+public import LeanPool.LanguageGeneration.FiniteWitness.Histories
+public import Mathlib.Logic.Equiv.List
+public import Mathlib.Data.Finset.Preimage
+public import Mathlib.Order.WellFounded
+public import Mathlib.Tactic.Push
 
 /-!
 # Universal normalization by finite priorities
@@ -17,6 +19,8 @@ stage number. They replace the paper's first-k-target-element checkpoints;
 both exhaust each target and agree between a sufficiently confirmed sample
 and that target. The sample search retains the `2 * S.card` length cutoff.
 -/
+
+@[expose] public section
 
 namespace GenLimit.FiniteWitness
 

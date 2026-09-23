@@ -4,11 +4,15 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PDL formalization contributors (see project card)
 -/
 
-import LeanPool.PDL.Completeness.TableauGame
-import LeanPool.PDL.Local.Path
-import LeanPool.PDL.PdlSteps
+module
+
+public import LeanPool.PDL.Completeness.TableauGame
+public import LeanPool.PDL.Local.Path
+public import LeanPool.PDL.PdlSteps
 
 /-! # From winning strategies to model graphs, part 1: BuildTree and PreState (Section 6.3) -/
+
+@[expose] public section
 
 namespace PDL
 
