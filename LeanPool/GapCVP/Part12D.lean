@@ -10,7 +10,7 @@ public import LeanPool.GapCVP.Part12C
 
 /-! # GapCVP proof, part 12, continuation 04 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -862,7 +862,7 @@ noncomputable def gaussianPhysicalColumnActiveUnaryComputable :
   firstFieldContentsComputable
 
 /-- GapCVP reduction support. -/
-def gaussianPhysicalColumnCurrentState : List Bool → List Bool :=
+@[expose] def gaussianPhysicalColumnCurrentState : List Bool → List Bool :=
   firstFieldSuffix
 
 /-- GapCVP reduction support. -/
@@ -1407,7 +1407,8 @@ noncomputable def gaussianPhysicalColumnPivotWidthComputable :
     gaussianPhysicalColumnCurrentStateComputable
     gaussianDenseStateDimensionUnaryComputable
 
-private noncomputable def gaussianPhysicalColumnPivotWidth :
+/-- Width certificate for the physical Gaussian pivot-column catalogue. -/
+noncomputable def gaussianPhysicalColumnPivotWidth :
     SourceQaryMaskDynamicGridWidth where
   output := gaussianPhysicalColumnPivotWidthOutput
   computer := gaussianPhysicalColumnPivotWidthComputable

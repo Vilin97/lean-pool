@@ -10,7 +10,7 @@ public import LeanPool.GapCVP.Part12A
 
 /-! # GapCVP proof, part 12, continuation 02 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -50,7 +50,7 @@ open GapCVP.CNFFlatPhysicalBinaryAppendTM GapCVP.CLStructuralPrefixWriter
 open GapCVP.CLStructuralNaturalBinaryWriter GapCVP.BinaryDimensionTM
 
 /-- GapCVP reduction support. -/
-def paperSourcePreprocessingSuffixAt (index : ℕ) :
+@[expose] def paperSourcePreprocessingSuffixAt (index : ℕ) :
     List Bool → List Bool :=
   (firstFieldSuffix^[index])
 
@@ -71,7 +71,7 @@ noncomputable def paperPreprocessingSuffixAtComputable
           using physical
 
 /-- GapCVP reduction support. -/
-def paperSourcePreprocessingField (index : ℕ) :
+@[expose] def paperSourcePreprocessingField (index : ℕ) :
     List Bool → List Bool :=
   firstFieldContents ∘ paperSourcePreprocessingSuffixAt index
 
@@ -343,10 +343,11 @@ private theorem paperSourceMarkerOr_shape
     (input : List Bool) :
     ∃ bit : Bool, paperSourceMarkerOr first second input = [bit] := by
   unfold paperSourceMarkerOr
-  apply paperSourceBooleanNot_shape
-  exact paperSourceBooleanAnd_shape _ _
-    (paperSourceBooleanNot_shape first hfirst)
-    (paperSourceBooleanNot_shape second hsecond)
+  obtain ⟨left, hleft⟩ := hfirst input
+  obtain ⟨right, hright⟩ := hsecond input
+  refine ⟨left || right, ?_⟩
+  exact fourFamilyBooleanOrOutput_bits
+    first second input left right hleft hright
 
 private theorem paperSourceClauseOppositePair_shape
     (first second : Fin 3) (input : List Bool) :
@@ -416,7 +417,7 @@ private noncomputable def paperSourceClauseSelectedThirdLiteralComputable :
     (paperClauseLiteralWordComputable 2) []
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def paperSourceClauseSecondKeepUnary
+@[expose] def paperSourceClauseSecondKeepUnary
     (input : List Bool) : List Bool :=
   if (paperSourceClauseSecondKeepMarker input).headD false then [true] else []
 
@@ -430,7 +431,7 @@ private noncomputable def paperSourceClauseSecondKeepUnaryComputable :
     (sourceFixedWordComputable [true]) []
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def paperSourceClauseThirdKeepUnary
+@[expose] def paperSourceClauseThirdKeepUnary
     (input : List Bool) : List Bool :=
   if (paperSourceClauseThirdKeepMarker input).headD false then [true] else []
 
@@ -444,7 +445,7 @@ private noncomputable def paperSourceClauseThirdKeepUnaryComputable :
     (sourceFixedWordComputable [true]) []
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def paperSourceClauseNormalizedRecord
+@[expose] def paperSourceClauseNormalizedRecord
     (input : List Bool) : List Bool :=
   true ::
     (paperSourceClauseSecondKeepUnary input ++
@@ -1035,7 +1036,7 @@ private noncomputable def paperSourcePreprocessingFinalStateComputable :
     paperSourcePreprocessingFoldComputable
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def paperSourcePreprocessingFinalField
+@[expose] def paperSourcePreprocessingFinalField
     (index : ℕ) : List Bool → List Bool :=
   paperSourcePreprocessingField index ∘
     paperSourcePreprocessingFinalState
@@ -1937,7 +1938,7 @@ def paperVariableArityBooleanWordOrder (arity : ℕ) :
       Finset.card_univ]
 
 /-- GapCVP reduction support. -/
-def paperVariableArityRejectedWord
+@[expose] def paperVariableArityRejectedWord
     (arity : ℕ) (sign : Fin arity → Bool) : Fin (2 ^ arity) :=
   (paperVariableArityBooleanWordOrder arity).symm
     (fun index => Bool.not (sign index))
@@ -2117,7 +2118,7 @@ def paperLocalVariableWordOrder
         formula clause hclause⟩
 
 /-- GapCVP reduction support. -/
-def paperLocalAssignmentWordOrder
+@[expose] def paperLocalAssignmentWordOrder
     (formula : ThreeCNF) (clause : List GapCVP.Literal)
     (hclause : clause ∈ paperSourceNormalizedClauses formula) :
     (paperVariableAritySourceClause formula clause hclause).LocalAssignment ≃
@@ -2171,7 +2172,7 @@ theorem paperVariableAritySourceClause_localSatisfied_iff
             using hsatisfied
 
 /-- GapCVP reduction support. -/
-def paperVariableAritySatisfyingLocalTupleWordEquiv
+@[expose] def paperVariableAritySatisfyingLocalTupleWordEquiv
     (formula : ThreeCNF) (clause : List GapCVP.Literal)
     (hclause : clause ∈ paperSourceNormalizedClauses formula) :
     (paperVariableAritySourceClause
@@ -2185,7 +2186,7 @@ def paperVariableAritySatisfyingLocalTupleWordEquiv
       formula clause hclause)
 
 /-- GapCVP reduction support. -/
-def sourceClauseTupleWordOrder
+@[expose] def sourceClauseTupleWordOrder
     (formula : ThreeCNF) (clause : List GapCVP.Literal)
     (hclause : clause ∈ paperSourceNormalizedClauses formula) :
     Fin (2 ^ clause.length - 1) ≃
@@ -2222,13 +2223,13 @@ theorem paperFormulaRetainedClause_sourceClause
       List.getElem_map]
 
 /-- GapCVP reduction support. -/
-def paperFormulaClauseWidth
+@[expose] def paperFormulaClauseWidth
     (formula : ThreeCNF)
     (index : Fin (srcFormula formula).clauses.length) : ℕ :=
   (paperFormulaRetainedClause formula index).val.length
 
 /-- GapCVP reduction support. -/
-def paperFormulaClauseTupleWordOrder
+@[expose] def paperFormulaClauseTupleWordOrder
     (formula : ThreeCNF)
     (index : Fin (srcFormula formula).clauses.length) :
     Fin (2 ^ paperFormulaClauseWidth formula index - 1) ≃
@@ -2245,7 +2246,7 @@ def paperFormulaClauseTupleWordOrder
     formula retained.val retained.property
 
 /-- GapCVP reduction support. -/
-def paperFormulaClauseVariableWordOrder
+@[expose] def paperFormulaClauseVariableWordOrder
     (formula : ThreeCNF)
     (index : Fin (srcFormula formula).clauses.length) :
     Fin (paperFormulaClauseWidth formula index) ≃
@@ -2262,7 +2263,7 @@ def paperFormulaClauseVariableWordOrder
     formula retained.val retained.property
 
 /-- GapCVP reduction support. -/
-def paperVariableArityLocalTagCount (formula : ThreeCNF) : ℕ :=
+@[expose] def paperVariableArityLocalTagCount (formula : ThreeCNF) : ℕ :=
   ∑ index : Fin (srcFormula formula).clauses.length,
     (2 ^ paperFormulaClauseWidth formula index - 1)
 
@@ -2281,7 +2282,7 @@ def paperVariableArityLocalTagWordOrder
       (paperFormulaClauseTupleWordOrder formula))
 
 /-- GapCVP reduction support. -/
-def sourceTypeWordOrder
+@[expose] def sourceTypeWordOrder
     (formula : ThreeCNF) :
     Fin (1 + paperVariableArityLocalTagCount formula) ≃
       sourceSATTableType (srcFormula formula) :=

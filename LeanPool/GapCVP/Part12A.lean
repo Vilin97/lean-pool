@@ -10,7 +10,7 @@ public import LeanPool.GapCVP.Part11
 
 /-! # GapCVP proof, part 12 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -31,7 +31,7 @@ open GapCVP.BinaryExplicitSourceSoundness GapCVP.Factor400BinaryCodeDecodingCoro
 open GapCVP.Factor400BinaryDecodingPromiseReduction
 
 /-- GapCVP reduction support. -/
-noncomputable def paperVariableArityIntegerRadius
+@[expose] noncomputable def paperVariableArityIntegerRadius
     (encodingLength : ℕ) (formula : ThreeCNF) : ℕ :=
   sourceBinaryDecodingRadius encodingLength
     (srcFormula formula)

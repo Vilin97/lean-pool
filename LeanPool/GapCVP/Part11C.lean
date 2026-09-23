@@ -1693,14 +1693,14 @@ open Turing GapCVP.BinaryEncoding GapCVP.OutputBoundedDependentRecordFold
 open GapCVP.SourceMixedRadixOriginalSourceDescriptorRotationTM
 
 /-- GapCVP reduction support. -/
-def sourcePhysicalWordPackedCheckBits
+@[expose] def sourcePhysicalWordPackedCheckBits
     (system : GapCVP.Core.BinaryAffineSystem) : List Bool :=
   (List.finRange system.rowCount).flatMap fun row =>
     (List.finRange system.dimension).map fun column =>
       decide (system.check row column = (1 : ZMod 2))
 
 /-- GapCVP reduction support. -/
-def sourcePhysicalWordPackedRhsBits
+@[expose] def sourcePhysicalWordPackedRhsBits
     (system : GapCVP.Core.BinaryAffineSystem) : List Bool :=
   (List.finRange system.rowCount).map fun row =>
     decide (system.rightHandSide row = (1 : ZMod 2))

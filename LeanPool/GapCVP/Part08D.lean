@@ -2322,6 +2322,7 @@ private theorem adaptedCanonicalNoInstance_gapNO400 :
       Real.one_rpow, Rat.cast_inv, Rat.cast_ofNat, one_mul, inv_pow, gt_iff_lt] using h
 
 /-- GapCVP reduction support. -/
+@[expose]
 def adaptedCanonicalNoWord : List Bool :=
   (binaryFinEncoding GapCVPInstance).encode adaptedCanonicalNoInstance
 
