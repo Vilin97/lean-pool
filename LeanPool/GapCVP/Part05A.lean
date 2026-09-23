@@ -4,9 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import LeanPool.GapCVP.Part04
+module
+
+public import LeanPool.GapCVP.Part04
 
 /-! # GapCVP proof, part 05 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -22,7 +26,8 @@ namespace CNFUnaryPairIndexTotalRuntimeCert
 open Computability Turing GapCVP.SourceTotalStructuralDecoder GapCVP.CNFUnaryPairIndexTM
 open GapCVP.CNFUnaryPairIndexTotalCert
 
-private def unaryPairValidBudget (first second : ℕ) : ℕ :=
+/-- Step budget for indexing a well-formed unary pair. -/
+def unaryPairValidBudget (first second : ℕ) : ℕ :=
   (first + 1) + (second + 1) + (min first second + 1) +
     if first < second then
       ((second - first) + first + 1) + (first + 1) +
@@ -31,7 +36,8 @@ private def unaryPairValidBudget (first second : ℕ) : ℕ :=
       ((first - second) + second + 1) + (second + 1) +
         (first * (2 * first + 3) + first + 2)
 
-private def unaryPair_validTrace (first second : ℕ) :
+/-- Runs the unary-pair index machine on a well-formed pair. -/
+def unaryPairValidTrace (first second : ℕ) :
     EvalsToInTime actualUnaryPairIndexMachine.step (unaryPairConfiguration 0
         (unarySourcePairWord first second)
         [] [] [] [] [] [] [] [])
@@ -120,7 +126,8 @@ private def unaryPair_validTrace (first second : ℕ) :
         simp only [unaryPairValidBudget, hlt, ↓reduceIte]; omega)
     simpa only [FinTM2.step, Fin.isValue, unarySourcePairWord] using hbounded
 
-private def unaryPair_failureTrace
+/-- Clears the stacks after invalid unary-pair input and halts empty. -/
+def unaryPairFailureTrace
     (input first second matchedFirst matchedSecond
       base outer scratch : List Bool) :
     EvalsToInTime actualUnaryPairIndexMachine.step (unaryPairConfiguration 11 input first second
@@ -183,7 +190,8 @@ private def unaryPair_failureTrace
     h01234567 hfinish
   exact rebound hfull (by omega)
 
-private def unaryPair_firstMissingTrace
+/-- Detects a first unary component with no delimiter. -/
+def unaryPairFirstMissingTrace
     (count : ℕ)
     (first second matchedFirst matchedSecond
       base outer output scratch : List Bool) :
@@ -210,7 +218,8 @@ private def unaryPair_firstMissingTrace
           SourceStructuralDecoder.replicate_true_append_cons] using
           EvalsToInTime.trans actualUnaryPairIndexMachine.step _ _ _ _ _ hfirst hrest
 
-private def unaryPair_secondMissingTrace
+/-- Detects a second unary component with no delimiter. -/
+def unaryPairSecondMissingTrace
     (count : ℕ)
     (first second matchedFirst matchedSecond
       base outer output scratch : List Bool) :
@@ -237,7 +246,8 @@ private def unaryPair_secondMissingTrace
           SourceStructuralDecoder.replicate_true_append_cons] using
           EvalsToInTime.trans actualUnaryPairIndexMachine.step _ _ _ _ _ hfirst hrest
 
-private def unaryPairInputBudget (input : List Bool) : ℕ :=
+/-- Quadratic step budget for the unary-pair index machine on arbitrary input. -/
+def unaryPairInputBudget (input : List Bool) : ℕ :=
   64 * input.length ^ 2 + 128 * input.length + 128
 
 private theorem unaryPairValidBudget_le_quadratic
@@ -254,7 +264,8 @@ private theorem unaryPairValidBudget_le_quadratic
     rw [min_eq_right hle, Nat.sub_add_cancel hle]
     nlinarith
 
-private def unaryPair_totalTrace (input : List Bool) :
+/-- Runs the unary-pair index machine within its quadratic budget for every input. -/
+def unaryPairTotalTrace (input : List Bool) :
     EvalsToInTime actualUnaryPairIndexMachine.step (unaryPairConfiguration 0 input
         [] [] [] [] [] [] [] [])
       (some (Turing.haltList actualUnaryPairIndexMachine
@@ -264,10 +275,10 @@ private def unaryPair_totalTrace (input : List Bool) :
   | inl witness =>
       obtain ⟨count, hinput⟩ := witness
       subst input
-      have hprefix := unaryPair_firstMissingTrace count
+      have hprefix := unaryPairFirstMissingTrace count
         [] [] [] [] [] [] [] []
       simp only [List.append_nil] at hprefix
-      have hclean := unaryPair_failureTrace []
+      have hclean := unaryPairFailureTrace []
         (List.replicate count true) [] [] [] [] [] []
       have hfull := EvalsToInTime.trans actualUnaryPairIndexMachine.step _ _ _ _ _ hprefix hclean
       have hbounded := rebound (newBudget := unaryPairInputBudget
@@ -289,13 +300,13 @@ private def unaryPair_totalTrace (input : List Bool) :
             (List.replicate second true)
             [] [] [] [] [] [] [] []
           simp only [List.append_nil] at hfirst
-          have hsecond := unaryPair_secondMissingTrace second
+          have hsecond := unaryPairSecondMissingTrace second
             (List.replicate first true)
             [] [] [] [] [] [] []
           simp only [List.append_nil] at hsecond
           have hscan := EvalsToInTime.trans actualUnaryPairIndexMachine.step _ _ _ _ _
             hfirst hsecond
-          have hclean := unaryPair_failureTrace []
+          have hclean := unaryPairFailureTrace []
             (List.replicate first true)
             (List.replicate second true) [] [] [] [] []
           have hfull := EvalsToInTime.trans actualUnaryPairIndexMachine.step _ _ _ _ _
@@ -316,7 +327,7 @@ private def unaryPair_totalTrace (input : List Bool) :
           subst tail
           cases remaining with
           | nil =>
-              have hvalid := unaryPair_validTrace first second
+              have hvalid := unaryPairValidTrace first second
               have hbounded := rebound (newBudget := unaryPairInputBudget
                   (unarySourcePairWord first second))
                 hvalid (by
@@ -347,7 +358,7 @@ private def unaryPair_totalTrace (input : List Bool) :
                   [] [] [] [] [] [])
               have hreject := EvalsToInTime.trans actualUnaryPairIndexMachine.step _ _ _ _ _
                 hscan htrailing
-              have hclean := unaryPair_failureTrace
+              have hclean := unaryPairFailureTrace
                 (bit :: remaining)
                 (List.replicate first true)
                 (List.replicate second true)
@@ -376,15 +387,15 @@ noncomputable def actualUnaryPairIndexComputable :
   outputAlphabet := Equiv.refl Bool
   time := 64 * Polynomial.X ^ 2 + 128 * Polynomial.X + 128
   outputsFun input := {
-    steps := (unaryPair_totalTrace input).steps
+    steps := (unaryPairTotalTrace input).steps
     evals_in_steps := by
       simpa only [Option.bind_eq_bind, FinTM2.step, Fin.isValue, Equiv.invFun_as_coe,
           Equiv.refl_symm,
           Equiv.coe_refl, bitEncoding, id_eq, List.map_id_fun, actualUnaryPairIndexMachine_init,
               Option.map_some] using
-          (unaryPair_totalTrace input).evals_in_steps
+          (unaryPairTotalTrace input).evals_in_steps
     steps_le_m := by
-      have hsteps := (unaryPair_totalTrace input).steps_le_m
+      have hsteps := (unaryPairTotalTrace input).steps_le_m
       simpa only [FinTM2.step, Fin.isValue, unaryPairInputBudget, bitEncoding, id_eq,
           Polynomial.eval_add,
           Polynomial.eval_mul, Polynomial.eval_ofNat, Polynomial.eval_pow, Polynomial.eval_X,
@@ -452,7 +463,8 @@ def sourcePairPrefixOutput (input : List Bool) : List Bool :=
       List.nil_append,
       readUnaryPrefix_replicate]
 
-private def sourcePairPrefixPeek (stack : Fin 4)
+/-- Inspects a source-pair prefix stack and branches on whether a bit is present. -/
+def sourcePairPrefixPeek (stack : Fin 4)
     (present absent : Turing.TM2.Stmt
       (fun _ : Fin 4 => Bool) (Fin 6) (Option Bool)) :
     Turing.TM2.Stmt
@@ -460,21 +472,24 @@ private def sourcePairPrefixPeek (stack : Fin 4)
   .peek stack (fun _ symbol => symbol)
     (.branch (fun symbol => symbol.isSome) present absent)
 
-private def sourcePairPrefixPop (stack : Fin 4)
+/-- Removes the top bit of a source-pair prefix stack. -/
+def sourcePairPrefixPop (stack : Fin 4)
     (continuation : Turing.TM2.Stmt
       (fun _ : Fin 4 => Bool) (Fin 6) (Option Bool)) :
     Turing.TM2.Stmt
       (fun _ : Fin 4 => Bool) (Fin 6) (Option Bool) :=
   .pop stack (fun symbol _ => symbol) continuation
 
-private def sourcePairPrefixPush (stack : Fin 4) (bit : Bool)
+/-- Pushes the given bit onto a source-pair prefix stack. -/
+def sourcePairPrefixPush (stack : Fin 4) (bit : Bool)
     (continuation : Turing.TM2.Stmt
       (fun _ : Fin 4 => Bool) (Fin 6) (Option Bool)) :
     Turing.TM2.Stmt
       (fun _ : Fin 4 => Bool) (Fin 6) (Option Bool) :=
   .push stack (fun _ => bit) continuation
 
-private def sourcePairPrefixGoto (phase : Fin 6) :
+/-- Clears the inspected bit and enters the chosen source-pair prefix phase. -/
+def sourcePairPrefixGoto (phase : Fin 6) :
     Turing.TM2.Stmt
       (fun _ : Fin 4 => Bool) (Fin 6) (Option Bool) :=
   .load (fun _ => none) (.goto (fun _ => phase))

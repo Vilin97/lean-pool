@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.CellulationInvariants
-import LeanPool.Schoenflies.Subarc
+module
+
+public import LeanPool.Schoenflies.CellulationInvariants
+public import LeanPool.Schoenflies.Subarc
 
 /-!
 # Realizing an edge subdivision
@@ -96,6 +98,8 @@ Declarations:
 * `Schoenflies.CellStructure.SubdivData.skeletonSet_realize` — a subdivision does not move the
   realized 1-skeleton.
 -/
+
+@[expose] public section
 
 open Set unitInterval
 open scoped Graph

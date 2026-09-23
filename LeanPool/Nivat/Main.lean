@@ -4,11 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Boon Suan Ho
 -/
 
-import LeanPool.Nivat.Core.Alphabet
-import LeanPool.Nivat.Algebra.ExactLine
-import LeanPool.Nivat.Descent.ExactDescent
-import LeanPool.Nivat.Dynamics.PeriodicDifference
-import LeanPool.Nivat.TwoFactors.Main
+module
+
+public import LeanPool.Nivat.Core.Alphabet
+public import LeanPool.Nivat.Algebra.ExactLine
+public import LeanPool.Nivat.Descent.ExactDescent
+public import LeanPool.Nivat.Dynamics.PeriodicDifference
+public import LeanPool.Nivat.TwoFactors.Main
 
 /-
 Upstream: https://github.com/boonsuan/nivat
@@ -48,6 +50,8 @@ line ideal gives the smaller low-complexity rectangle of Corollary 2.3, and
 `periodic_of_periodic_line_filter` returns from the filtered configuration using
 Theorem 5.1. `nivat` then transfers periods through a rational alphabet labeling.
 -/
+
+@[expose] public section
 
 namespace Nivat
 

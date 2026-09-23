@@ -3,7 +3,9 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Graph.Drawing
+module
+
+public import LeanPool.Schoenflies.Graph.Drawing
 
 /-!
 # The outer face
@@ -26,6 +28,8 @@ been, so "the outer face" is "the face through any point far enough out".
   containing the drawing. This is the working form: it is how one proves a given point lies in
   the outer face.
 -/
+
+@[expose] public section
 
 open Metric Set Schoenflies unitInterval
 open scoped Graph

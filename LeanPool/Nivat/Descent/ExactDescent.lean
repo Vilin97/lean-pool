@@ -4,11 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Boon Suan Ho
 -/
 
-import LeanPool.Nivat.Algebra.LowComplexity
-import LeanPool.Nivat.Algebra.LineErosion
-import LeanPool.Nivat.Descent.FiberBudget
-import Mathlib.LinearAlgebra.Matrix.Dual
-import Mathlib.LinearAlgebra.Dual.Lemmas
+module
+
+public import LeanPool.Nivat.Algebra.LowComplexity
+public import LeanPool.Nivat.Algebra.LineErosion
+public import LeanPool.Nivat.Descent.FiberBudget
+public import Mathlib.LinearAlgebra.Matrix.Dual
+public import Mathlib.LinearAlgebra.Dual.Lemmas
 
 /-
 Upstream: https://github.com/boonsuan/nivat
@@ -52,6 +54,8 @@ Section 2 of `paper/nivat.tex`.
 The geometry of supported multiples is in `Nivat.Algebra.RectangleSupport`;
 the finite fiber-counting argument is in `Nivat.Descent.FiberBudget`.
 -/
+
+@[expose] public section
 
 namespace Nivat.Descent
 
@@ -103,7 +107,7 @@ theorem dotProduct_mem_dualAnnihilator_iff (d : Configuration ℚ) (R : Finset L
 
 /-- Restrict Laurent coefficients to a finite window.
 This implements the identification with `ℚ^R` at the start of Section 2. -/
-private def coefficientRestriction (R : Finset Lattice) : Laurent →ₗ[ℚ] (R → ℚ) where
+def coefficientRestriction (R : Finset Lattice) : Laurent →ₗ[ℚ] (R → ℚ) where
   toFun f z := f.coeff z.1
   map_add' _ _ := rfl
   map_smul' _ _ := rfl

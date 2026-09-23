@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.RefinementStars
-import LeanPool.Schoenflies.JordanClosed
+module
+
+public import LeanPool.Schoenflies.RefinementStars
+public import LeanPool.Schoenflies.JordanClosed
 
 /-!
 # The two cellulation invariants that need the crosscut theorem
@@ -92,6 +94,8 @@ closed walk.
   update. Not a blueprint statement: the blueprint's operation 1 does not spell the update
   out, and this is what it has to be.
 -/
+
+@[expose] public section
 
 open Set Bornology
 open scoped Graph

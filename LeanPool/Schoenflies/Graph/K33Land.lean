@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.PrePolygonArc
-import LeanPool.Schoenflies.Graph.K33Closed
+module
+
+public import LeanPool.Schoenflies.PrePolygonArc
+public import LeanPool.Schoenflies.Graph.K33Closed
 
 /-!
 # `lem:k33` and `cor:k33-subdivision`, with nothing assumed
@@ -93,6 +95,8 @@ still in the import closure:
 With this module in place `Graph.IsHexRealization`, `Graph.IsHexCrosscut`, `Graph.IsHexGeneric`
 and `Graph.Bendable` have no consumers left.
 -/
+
+@[expose] public section
 
 open Bornology Metric Set unitInterval
 open scoped Graph
