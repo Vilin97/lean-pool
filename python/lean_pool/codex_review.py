@@ -22,8 +22,8 @@ MODEL = "gpt-6-astra"
 TIER = "codex-azure"
 TIMEOUT_SECONDS = 6000
 MAX_REQUEST_BYTES = 4_000_000
-WORKER_ROOT = Path("/data/lean-pool-review/jobs")
-CODEX = "/home/vasil/.local/bin/codex-auto"
+WORKER_ROOT = Path(os.environ.get("REVIEW_WORKER_ROOT", ".review-jobs"))
+CODEX = os.environ.get("REVIEW_CODEX_BIN", "codex")
 
 
 def request_completion(

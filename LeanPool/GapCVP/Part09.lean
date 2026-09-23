@@ -4,20 +4,24 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import LeanPool.GapCVP.Part08
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Data.Int.Star
-import Mathlib.FieldTheory.RatFunc.AsPolynomial
-import Mathlib.RingTheory.Flat.TorsionFree
-import Mathlib.RingTheory.Henselian
-import Mathlib.RingTheory.MvPolynomial.Symmetric.FundamentalTheorem
-import Mathlib.RingTheory.MvPolynomial.Symmetric.NewtonIdentities
-import Mathlib.RingTheory.Polynomial.Resultant.Basic
-import Mathlib.RingTheory.Polynomial.Vieta
-import Mathlib.RingTheory.RegularLocalRing.Defs
-import Mathlib.RingTheory.SimpleRing.Principal
+module
+
+public import LeanPool.GapCVP.Part08
+public import Mathlib.Algebra.Order.Floor.Semifield
+public import Mathlib.Data.Int.Star
+public import Mathlib.FieldTheory.RatFunc.AsPolynomial
+public import Mathlib.RingTheory.Flat.TorsionFree
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.MvPolynomial.Symmetric.FundamentalTheorem
+public import Mathlib.RingTheory.MvPolynomial.Symmetric.NewtonIdentities
+public import Mathlib.RingTheory.Polynomial.Resultant.Basic
+public import Mathlib.RingTheory.Polynomial.Vieta
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Mathlib.RingTheory.SimpleRing.Principal
 
 /-! # GapCVP proof, part 09 -/
+
+public section
 
 noncomputable section
 
@@ -59,6 +63,7 @@ theorem variableCount_le_fieldWordCount
   exact hvariable.trans (hpower.trans hcard)
 
 /-- GapCVP reduction support. -/
+@[expose]
 def sourceFormulaVariableWordIndex
     (encodingLength : ℕ) (formula : Formula) :
     Fin formula.variableCount ↪
@@ -68,7 +73,7 @@ def sourceFormulaVariableWordIndex
     encodingLength formula)
 
 /-- GapCVP reduction support. -/
-def sourceFormulaVariableWord
+@[expose] def sourceFormulaVariableWord
     (encodingLength : ℕ) (formula : Formula)
     (index : Fin formula.variableCount) :
     EffectiveBinaryField.Word
@@ -78,6 +83,7 @@ def sourceFormulaVariableWord
     (sourceFormulaVariableWordIndex encodingLength formula index)
 
 /-- GapCVP reduction support. -/
+@[expose]
 def sourceFormulaVariablePlace
     (encodingLength : ℕ) (formula : Formula) :
     Fin formula.variableCount → sourceFormulaField encodingLength formula :=
@@ -98,6 +104,7 @@ theorem sourceFormulaVariablePlace_injective
     (variableCount_le_fieldWordCount encodingLength formula)).injective
 
 /-- GapCVP reduction support. -/
+@[expose]
 def sourceFormulaFieldBasis (encodingLength : ℕ) (formula : Formula) :
     Module.Basis
       (Fin (sourceFieldExponent
@@ -109,7 +116,7 @@ def sourceFormulaFieldBasis (encodingLength : ℕ) (formula : Formula) :
       (sourceSizeParameter_ge_one_hundred encodingLength formula))
 
 /-- GapCVP reduction support. -/
-def sourceFormulaGrid (encodingLength : ℕ) (formula : Formula) :
+@[expose] def sourceFormulaGrid (encodingLength : ℕ) (formula : Formula) :
     Finset (sourceFormulaField encodingLength formula) :=
   sourceSATPuncturedGrid formula
     (sourceFormulaVariablePlace encodingLength formula)
@@ -199,7 +206,7 @@ theorem sourceFormulaDimension_le
       (sourceSizeParameter_ge_one_hundred encodingLength formula)
 
 /-- GapCVP reduction support. -/
-def sourceFormulaBinarySystem
+@[expose] def sourceFormulaBinarySystem
     (encodingLength : ℕ) (formula : Formula) : BinaryAffineSystem :=
   concreteSATBinaryAffineSystem formula
     (sourceFormulaFieldBasis encodingLength formula)
@@ -247,6 +254,19 @@ def sourceFormulaFieldWordOrder
     (sourceFieldExponent_pos
       (sourceSizeParameter_ge_one_hundred encodingLength formula))
 
+/-- The field word order evaluates the binary word represented by its index. -/
+theorem sourceFormulaFieldWordOrder_apply
+    (encodingLength : ℕ) (formula : Formula)
+    (index : Fin (2 ^ sourceFormulaWordDegree encodingLength formula)) :
+    sourceFormulaFieldWordOrder encodingLength formula index =
+      EffectiveBinaryField.extensionAlgEquivGaloisField
+        (sourceFormulaWordDegree encodingLength formula)
+        (sourceFieldExponent_pos
+          (sourceSizeParameter_ge_one_hundred encodingLength formula))
+        (wordElement
+          (indexedWord (sourceFormulaWordDegree encodingLength formula) index)) := by
+  exact indexedFieldEquiv_apply _ _ index
+
 theorem sourceFormulaFieldWordOrder_card
     (encodingLength : ℕ) (formula : Formula) :
     Fintype.card
@@ -257,6 +277,7 @@ theorem sourceFormulaFieldWordOrder_card
     (sourceSizeParameter_ge_one_hundred encodingLength formula)
 
 /-- GapCVP reduction support. -/
+@[expose]
 def sourceFormulaFieldCardOrder
     (encodingLength : ℕ) (formula : Formula) :
     Fin (Fintype.card
@@ -269,6 +290,7 @@ def sourceFormulaFieldCardOrder
       (sourceFormulaFieldWordOrder encodingLength formula)
 
 /-- GapCVP reduction support. -/
+@[expose]
 def sourceFormulaEvaluationWord
     (encodingLength : ℕ) (formula : Formula)
     (index : Fin
@@ -350,7 +372,17 @@ def sourceFormulaGridWordOrder
     (sourceFormulaGridWordEmbedding encodingLength formula)
     (sourceFormulaGridWordEmbedding_bijective encodingLength formula)
 
+/-- The grid word order retains the field value of its indexed word. -/
+theorem sourceFormulaGridWordOrder_apply_val
+    (encodingLength : ℕ) (formula : Formula)
+    (index : Fin (2 ^ sourceFormulaWordDegree encodingLength formula -
+      formula.variableCount)) :
+    (sourceFormulaGridWordOrder encodingLength formula index).val =
+      sourceFormulaEvaluationWord encodingLength formula index := by
+  rfl
+
 /-- GapCVP reduction support. -/
+@[expose]
 def sourceFormulaGridOrder
     (encodingLength : ℕ) (formula : Formula) :
     Fin ((GapCVP.Factor400BinaryConstructiveSourcePlaces.sourceFormulaGrid
@@ -364,7 +396,7 @@ def sourceFormulaGridOrder
     (sourceFormulaGridWordOrder encodingLength formula)
 
 /-- GapCVP reduction support. -/
-def sourceFormulaCoordinateOrder
+@[expose] def sourceFormulaCoordinateOrder
     (encodingLength : ℕ) (formula : Formula)
     (typeOrder :
       Fin (Fintype.card (sourceSATTableType formula)) ≃
@@ -417,7 +449,7 @@ open Polynomial Matrix
 variable {K : Type*} [Field K]
 
 /-- GapCVP reduction support. -/
-def orderedInterpolationNode {p D : ℕ}
+@[expose] def orderedInterpolationNode {p D : ℕ}
     (points : Fin p → K) (hdegree : D < p) : Fin (D + 1) → K :=
   fun index => points
     (Fin.castLE (Nat.succ_le_of_lt hdegree) index)
@@ -437,7 +469,7 @@ private theorem orderedInterpolationNode_injective {p D : ℕ}
       hcast
 
 /-- GapCVP reduction support. -/
-def orderedInterpolationPrefix {p D : ℕ}
+@[expose] def orderedInterpolationPrefix {p D : ℕ}
     (hdegree : D < p) :
     (Fin p → K) →ₗ[K] (Fin (D + 1) → K) where
   toFun values index :=
@@ -450,7 +482,7 @@ def orderedInterpolationPrefix {p D : ℕ}
     rfl
 
 /-- GapCVP reduction support. -/
-def orderedInterpolationPolynomial {p D : ℕ}
+@[expose] def orderedInterpolationPolynomial {p D : ℕ}
     (points : Fin p → K) (hdegree : D < p)
     (values : Fin p → K) : K[X] :=
   Lagrange.interpolate (Finset.univ : Finset (Fin (D + 1)))
@@ -478,7 +510,7 @@ def constructiveParityLinearMap {p D : ℕ}
           (orderedInterpolationPrefix hdegree))
 
 /-- GapCVP reduction support. -/
-def constructiveParityMatrix {p D : ℕ}
+@[expose] def constructiveParityMatrix {p D : ℕ}
     (points : Fin p → K) (hdegree : D < p) :
     Matrix (Fin p) (Fin p) K :=
   LinearMap.toMatrix' (constructiveParityLinearMap points hdegree)
@@ -975,6 +1007,7 @@ private theorem recoveredHankelCoefficients_unique
 variable {K : Type*} [Field K]
 
 /-- GapCVP reduction support. -/
+@[expose]
 def rootMoment {h : ℕ} (roots : Fin h → K) (j : ℕ) : K :=
   ∑ i : Fin h, roots i ^ j
 
@@ -1278,7 +1311,8 @@ noncomputable def familySplittingPolynomial
     (family : ι → F[X]) : F[X] :=
   ∏ i : ι, family i
 
-private abbrev CommonSplittingField
+/-- Splitting field shared by a finite family of polynomials. -/
+abbrev CommonSplittingField
     {F ι : Type*} [Field F] [Fintype ι]
     (family : ι → F[X]) :=
   (familySplittingPolynomial family).SplittingField
@@ -1314,7 +1348,8 @@ noncomputable abbrev CommonAmbientSplittingField {F : Type*} [Field F]
     {t : ℕ} (polynomials : Fin t → F[X]) :=
   CommonSplittingField polynomials
 
-private noncomputable abbrev CommonSeparableSplittingField {F : Type*} [Field F]
+/-- Separable subfield of the common splitting field of a finite polynomial family. -/
+noncomputable abbrev CommonSeparableSplittingField {F : Type*} [Field F]
     {t : ℕ} (polynomials : Fin t → F[X]) :=
   separableClosure F (CommonAmbientSplittingField polynomials)
 
@@ -1354,7 +1389,8 @@ open Polynomial Matrix Finset
 
 variable {K : Type*} [Field K]
 
-private def genericMomentSupportPolynomial (h : ℕ) (moments : ℕ → K[X]) :
+/-- Polynomial whose roots encode a support of size at most the given bound. -/
+def genericMomentSupportPolynomial (h : ℕ) (moments : ℕ → K[X]) :
     (RatFunc K)[X] :=
   Polynomial.X ^ h +
     ∑ i : Fin h,
@@ -2942,7 +2978,7 @@ private theorem sourceGenericMoments_eq_rootMoments
     roots hroots
 
 /-- GapCVP reduction support. -/
-def enumeratedRootSupport
+@[expose] def enumeratedRootSupport
     {E : Type*} {h : ℕ}
     (roots : Fin h → E) : Finset E := by
   classical
@@ -5041,7 +5077,7 @@ section
 variable {E Γ₀ : Type*} [Field E] [LinearOrderedCommMonoidWithZero Γ₀]
 
 /-- GapCVP reduction support. -/
-def bitInField (b : Bool) : E := if b then 1 else 0
+@[expose] def bitInField (b : Bool) : E := if b then 1 else 0
 
 private theorem valuation_bits_unique (v : Valuation E Γ₀) (a : E)
     {b₁ b₂ : Bool}
@@ -5319,14 +5355,14 @@ theorem BinaryAffineSystem.effectiveGaussian_solves_iff
       EffectiveBinaryGaussian.eliminate_satisfies_iff H.effectiveGaussianSystem (binaryResidue z)
 
 /-- GapCVP reduction support. -/
-def BinaryAffineSystem.effectivePivotRowOption
+@[expose] def BinaryAffineSystem.effectivePivotRowOption
     (H : BinaryAffineSystem) (column : Fin H.dimension) :
     Option (Fin H.rowCount) :=
   (H.effectiveGaussianState.pivots.find?
     (fun pivot => decide (pivot.2 = column))).map Prod.fst
 
 /-- GapCVP reduction support. -/
-def BinaryAffineSystem.effectiveAffineBits
+@[expose] def BinaryAffineSystem.effectiveAffineBits
     (H : BinaryAffineSystem) : Fin H.dimension → ZMod 2 :=
   fun column =>
     match H.effectivePivotRowOption column with
@@ -5334,6 +5370,7 @@ def BinaryAffineSystem.effectiveAffineBits
     | none => 0
 
 /-- GapCVP reduction support. -/
+@[expose]
 def BinaryAffineSystem.effectiveAffineRepresentative
     (H : BinaryAffineSystem) : Fin H.dimension → ℤ :=
   fun column => ((H.effectiveAffineBits column).val : ℤ)
@@ -5367,7 +5404,7 @@ theorem BinaryAffineSystem.effectiveAffineRepresentative_eq_zero_or_one
     simp only [hone, ZMod.val_one, Nat.cast_one]
 
 /-- GapCVP reduction support. -/
-def BinaryAffineSystem.effectiveSquareBasisMatrix
+@[expose] def BinaryAffineSystem.effectiveSquareBasisMatrix
     (H : BinaryAffineSystem) :
     Matrix (Fin H.dimension) (Fin H.dimension) ℤ :=
   fun row column =>
@@ -5445,7 +5482,7 @@ theorem BinaryAffineSystem.effectiveSquareBasisMatrix_det_ne_zero
       exact (mul_eq_zero.mp hmul).resolve_left (by norm_num)
 
 /-- GapCVP reduction support. -/
-def effectiveConstructionAInstance
+@[expose] def effectiveConstructionAInstance
     (H : BinaryAffineSystem) (hdimension : 0 < H.dimension)
     (radius : ℚ) (hradius : 0 < radius) : GapCVPInstance where
   dimension := H.dimension
@@ -5483,7 +5520,7 @@ namespace EffectiveBinaryGaussian
       rw [ih, clearTarget_pivots]
 
 /-- GapCVP reduction support. -/
-noncomputable def PrefixNormal {m n : ℕ}
+@[expose] noncomputable def PrefixNormal {m n : ℕ}
     (scanned : List (Fin n)) (state : State m n) : Bool :=
   @decide
     (state.nextPivot ≤ m ∧
@@ -6054,7 +6091,7 @@ noncomputable def convolutionCoefficientComputable :
     prefixParityComputable
 
 /-- GapCVP reduction support. -/
-def convolutionCoefficientQuery
+@[expose] def convolutionCoefficientQuery
     (queries : List (List Bool)) : List Bool :=
   unaryBoundedFoldWord queries.length
     (sourceMixedRadixOriginalSourceQueryStream queries ++
@@ -6081,6 +6118,7 @@ def convolutionCoefficientQuery
       prefixParityOutput_valid false (convolutionProductMarkerStream queries) []
 
 /-- GapCVP reduction support. -/
+@[expose]
 def wordConvolutionQueries
     {e : ℕ}
     (left right : GapCVP.Core.EffectiveBinaryField.Word e)
@@ -6209,7 +6247,7 @@ private theorem wordConvolutionProductBits_foldl
     (List.finRange e) accumulator
 
 /-- GapCVP reduction support. -/
-def wordConvolutionCoefficientQuery
+@[expose] def wordConvolutionCoefficientQuery
     {e : ℕ}
     (left right : GapCVP.Core.EffectiveBinaryField.Word e)
     (coefficient : Fin (2 * e)) : List Bool :=
@@ -6236,7 +6274,7 @@ namespace GaussianXorWorker
 open Turing
 
 /-- GapCVP reduction support. -/
-def binaryGaussianXorHeadWord : List Bool → List Bool
+@[expose] def binaryGaussianXorHeadWord : List Bool → List Bool
   | first :: second :: _ => [Bool.xor first second]
   | _ => []
 
@@ -6449,7 +6487,7 @@ namespace GaussianRowWorker
 open Turing GapCVP.OutputPolynomialCompositionClosure GapCVP.SourceCanonicalFixedWordTuringTM
 
 /-- GapCVP reduction support. -/
-def binaryGaussianFirstCellWord : List Bool → List Bool :=
+@[expose] def binaryGaussianFirstCellWord : List Bool → List Bool :=
   markerConditionalOutput (fun _ : List Bool => [true]) [false]
 
 /-- GapCVP reduction support. -/
@@ -6572,7 +6610,7 @@ theorem modularReductionCellOutput_length
       List.length_nil, zero_add]
 
 /-- GapCVP reduction support. -/
-def modularReductionWordRowOutput : List Bool → List Bool :=
+@[expose] def modularReductionWordRowOutput : List Bool → List Bool :=
   boundedRecordFoldOutput
     (fourFamilyOriginalMarkerRotationOutput
       modularReductionCellOutput)
@@ -6586,7 +6624,7 @@ noncomputable def modularReductionWordRowComputable :
     (fun input => (modularReductionCellOutput_length input).le)
 
 /-- GapCVP reduction support. -/
-def finiteWordBits {d : ℕ}
+@[expose] def finiteWordBits {d : ℕ}
     (word : GapCVP.Core.EffectiveBinaryField.Word d) : List Bool :=
   (List.finRange d).map word
 
@@ -6600,7 +6638,7 @@ open GapCVP.Core hiding sourceFormulaField
 open GapCVP.Factor400BinaryConstructiveSourcePlaces GapCVP.BinaryReedSolomonParity
 
 /-- GapCVP reduction support. -/
-def explicitMomentBudget
+@[expose] def explicitMomentBudget
     (encodingLength : ℕ) (formula : Formula) : ℕ :=
   sourceSizeParameter encodingLength formula ^ 30
 
@@ -6617,7 +6655,7 @@ abbrev ExplicitGridPoint
     (sourceFormulaGrid encodingLength formula)
 
 /-- GapCVP reduction support. -/
-def sourceFormulaExplicitGridOrder
+@[expose] def sourceFormulaExplicitGridOrder
     (encodingLength : ℕ) (formula : Formula) :
     Fin (Fintype.card
       (ExplicitGridPoint encodingLength formula)) ≃
@@ -6628,7 +6666,9 @@ def sourceFormulaExplicitGridOrder
     (GapCVP.BinarySourceCoordinateOrder.sourceFormulaGridOrder
       encodingLength formula)
 
-private def explicitFiniteReindexLinearEquiv
+/-- Reindexes a field-valued coordinate function along a finite equivalence. -/
+@[expose]
+def explicitFiniteReindexLinearEquiv
     {K : Type*} [Field K]
     {α : Type*} {n : ℕ}
     (order : Fin n ≃ α) :
@@ -6695,7 +6735,7 @@ theorem explicitShiftedDegree_lt_grid
       encodingLength formula index)
 
 /-- GapCVP reduction support. -/
-def explicitFamilyLinearMap
+@[expose] def explicitFamilyLinearMap
     (encodingLength : ℕ) (formula : Formula)
     (family : ExplicitConstraintFamily encodingLength formula) :
     (Fin (sourceFormulaDimension encodingLength formula) →
@@ -6744,7 +6784,7 @@ def explicitFamilyLinearMap
                   clause tuple localVariable moment.val))
 
 /-- GapCVP reduction support. -/
-def explicitFamilyTarget
+@[expose] def explicitFamilyTarget
     (encodingLength : ℕ) (formula : Formula)
     (family : ExplicitConstraintFamily encodingLength formula) :
     Fin (explicitFamilyRowCount
@@ -6754,7 +6794,8 @@ def explicitFamilyTarget
     | .inl _ => 1
     | .inr _ => 0
 
-private def explicitFamilyFieldMatrix
+/-- Matrix encoding the linear checks of one explicit constraint family. -/
+def explicitFamilyFieldMatrix
     (encodingLength : ℕ) (formula : Formula)
     (family : ExplicitConstraintFamily encodingLength formula) :
     Matrix
@@ -6803,7 +6844,7 @@ open GapCVP.Core GapCVP.BinaryExplicitAffineSystem
 attribute [local instance] Classical.propDecidable
 
 /-- GapCVP reduction support. -/
-def sourceFormulaExplicitRefinementOrder
+@[expose] def sourceFormulaExplicitRefinementOrder
     (encodingLength : ℕ) (formula : GapCVP.Core.Formula) :
     Fin (Fintype.card
       (ExplicitGridPoint encodingLength formula ×
@@ -6942,6 +6983,7 @@ namespace BinaryOrderedRefinement
 open GapCVP.Core GapCVP.BinaryExplicitAffineSystem GapCVP.BinarySourceRowOrder
 
 /-- GapCVP reduction support. -/
+@[expose]
 def sourceFormulaPhysicalFamilyLinearMap
     (encodingLength : ℕ) (formula : GapCVP.Core.Formula)
     (family : ExplicitConstraintFamily encodingLength formula) :
@@ -6971,7 +7013,7 @@ def sourceFormulaPhysicalFamilyLinearMap
         encodingLength formula (.inr (.inr family))
 
 /-- GapCVP reduction support. -/
-def sourceFormulaPhysicalFamilyFieldMatrix
+@[expose] def sourceFormulaPhysicalFamilyFieldMatrix
     (encodingLength : ℕ) (formula : GapCVP.Core.Formula)
     (family : ExplicitConstraintFamily encodingLength formula) :
     Matrix
@@ -7687,7 +7729,7 @@ private theorem sourceFormulaSignedTable_globalOrdinaryMoment_eq_clauseSubtypeSu
           (sourceSizeParameter encodingLength F ^ 30) z hz clause ⟨point, hpoint⟩ j
 
 /-- GapCVP reduction support. -/
-def sourceFormulaGenericRank
+@[expose] def sourceFormulaGenericRank
     (encodingLength : ℕ) (F : Formula)
     (z : Fin (sourceFormulaDimension encodingLength F) → ℤ)
     (hz : (sourceFormulaBinarySystem encodingLength F).Solves z)
@@ -7698,7 +7740,7 @@ def sourceFormulaGenericRank
     (sourceSizeParameter encodingLength F ^ 4)
 
 /-- GapCVP reduction support. -/
-def sourceFormulaGenericSupportPolynomial
+@[expose] def sourceFormulaGenericSupportPolynomial
     (encodingLength : ℕ) (F : Formula)
     (z : Fin (sourceFormulaDimension encodingLength F) → ℤ)
     (hz : (sourceFormulaBinarySystem encodingLength F).Solves z)
@@ -7918,7 +7960,7 @@ theorem sourceFormulaCommonRoots_rootSupport
       encodingLength F z hz hshort tableType)).2
 
 /-- GapCVP reduction support. -/
-def sourceFormulaCommonRootSupport
+@[expose] def sourceFormulaCommonRootSupport
     (encodingLength : ℕ) (F : Formula)
     (z : Fin (sourceFormulaDimension encodingLength F) → ℤ)
     (hz : (sourceFormulaBinarySystem encodingLength F).Solves z)
@@ -8481,7 +8523,7 @@ section
 open GapCVP.Core
 
 /-- GapCVP reduction support. -/
-def sourceValuationInverseExponent (d h : ℕ) : ℕ :=
+@[expose] def sourceValuationInverseExponent (d h : ℕ) : ℕ :=
   d * h * h + (d * h * (h - 1) + 1) * h * h
 
 private theorem sourceValuationInverseExponent_le_four
@@ -8533,7 +8575,7 @@ private theorem sourceValuationInverseExponent_shifted_index_le_budget
   omega
 
 /-- GapCVP reduction support. -/
-def sourceFormulaValuationInverseExponent
+@[expose] def sourceFormulaValuationInverseExponent
     (encodingLength : ℕ) (F : Formula)
     (z : Fin (sourceFormulaDimension encodingLength F) → ℤ)
     (hz : (sourceFormulaBinarySystem encodingLength F).Solves z)

@@ -4,11 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wouter Cames van Batenburg, Samuel Korsky
 -/
 
-import LeanPool.MooreBound.DegreeDiameter.Asymptotics
-import LeanPool.MooreBound.DegreeDiameter.MooreBound
-import Mathlib.Analysis.SpecialFunctions.Pow.NthRootLemmas
-import Mathlib.Analysis.SpecificLimits.Basic
-import Mathlib.Topology.Order.LiminfLimsup
+module
+
+public import LeanPool.MooreBound.DegreeDiameter.Asymptotics
+public import LeanPool.MooreBound.DegreeDiameter.MooreBound
+public import Mathlib.Analysis.SpecialFunctions.Pow.NthRootLemmas
+public import Mathlib.Analysis.SpecificLimits.Basic
+public import Mathlib.Topology.Order.LiminfLimsup
 
 /-!
 # The asymptotic argument
@@ -21,6 +23,8 @@ prime lies in `(x,(1+ε)x)` for every sufficiently large `x`.
 Lean Pool port of wewantmoore commit d59bd80ea93fabb9faf769e790ab47692645e022.
 The port adds a namespace and adapts proofs to the current Mathlib APIs and repository style.
 -/
+
+@[expose] public section
 
 namespace MooreBound
 

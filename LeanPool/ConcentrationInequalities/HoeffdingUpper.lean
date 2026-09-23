@@ -4,11 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
 
-import Mathlib.Probability.Moments.SubGaussian
-import Mathlib.Tactic.Bound
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Measurability
+module
+
+public import Mathlib.Probability.Moments.SubGaussian
+public import Mathlib.Tactic.Bound
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.Measurability
 
 /-!
 # Hoeffding's upper-tail inequality for a sum of bounded independent variables
@@ -27,6 +29,8 @@ the optimized Chernoff bound.
 
 Sorry-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Finset
 

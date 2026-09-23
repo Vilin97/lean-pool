@@ -4,12 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PDL formalization contributors (see project card)
 -/
 
-import Mathlib.Data.Finset.Basic
+module
 
-import LeanPool.PDL.Interpolation.Def
-import LeanPool.PDL.Completeness.Theorem
+public import Mathlib.Data.Finset.Basic
+
+public import LeanPool.PDL.Interpolation.Def
+public import LeanPool.PDL.Completeness.Theorem
 
 /-! # Interpolation (Section 7) -/
+
+@[expose] public section
 
 namespace PDL
 
