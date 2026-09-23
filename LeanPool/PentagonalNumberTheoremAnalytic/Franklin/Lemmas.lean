@@ -3,21 +3,24 @@ Copyright (c) 2026 Jonathan Conrad, Paula Muermann, Maryna Viazovska. All rights
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jonathan Conrad, Paula Muermann, Maryna Viazovska
 -/
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Combinatorics.Enumerative.Partition.GenFun
-import Mathlib.Data.Finset.Powerset
-import Mathlib.Data.Nat.Choose.Basic
-import Mathlib.Order.Interval.Finset.Nat
-import Mathlib.RingTheory.PowerSeries.Basic
-import Mathlib.RingTheory.PowerSeries.PiTopology
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Positivity
-import LeanPool.PentagonalNumberTheoremAnalytic.Franklin.Defs
-import LeanPool.PentagonalNumberTheoremAnalytic.Franklin.Helpers
+module
+
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+public import Mathlib.Algebra.BigOperators.Ring.Finset
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Combinatorics.Enumerative.Partition.GenFun
+public import Mathlib.Data.Finset.Powerset
+public import Mathlib.Data.Nat.Choose.Basic
+public import Mathlib.Order.Interval.Finset.Nat
+public import Mathlib.RingTheory.PowerSeries.Basic
+public import Mathlib.RingTheory.PowerSeries.PiTopology
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.Positivity
+public import LeanPool.PentagonalNumberTheoremAnalytic.Franklin.Defs
+public import LeanPool.PentagonalNumberTheoremAnalytic.Franklin.Helpers
+
 /-!
 # Pentagonal Number Theorem — Lemmas
 
@@ -32,6 +35,8 @@ following Franklin's involution argument.
 * `parity_flip`: Franklin's involution flips even/odd parity
 * `signed_partition_main`: pe(n) - po(n) = (-1)^k for pentagonal n, 0 otherwise
 -/
+
+@[expose] public section
 
 open Finset
 

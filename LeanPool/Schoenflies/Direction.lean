@@ -3,7 +3,9 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Plane
+module
+
+public import LeanPool.Schoenflies.Plane
 
 /-!
 # Directions, and the two arcs cut out by a pair of rays
@@ -61,6 +63,8 @@ cut out by the *conjunction* (`Plane.mem_arcCCW_iff`). Lemma 1.8 needs the mirro
 for the two right germs, and there the missing second sign is exactly what "`s/t` small" buys:
 `Plane.exists_germ_threshold` supplies it, with an explicit threshold.
 -/
+
+@[expose] public section
 
 open Set
 

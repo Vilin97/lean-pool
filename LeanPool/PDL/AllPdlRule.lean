@@ -4,12 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PDL formalization contributors (see project card)
 -/
 
-import LeanPool.PDL.Tableau
+module
+
+public import LeanPool.PDL.Tableau
 
 /-! # Generating all possible PdlRule applications
 
 Similar to `LocalTableau.all`, this is needed to define `BuildTree` as a finite tree.
 -/
+
+@[expose] public section
 
 namespace PDL
 

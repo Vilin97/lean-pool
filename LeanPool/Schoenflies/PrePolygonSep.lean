@@ -3,7 +3,9 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Realization
+module
+
+public import LeanPool.Schoenflies.Realization
 
 /-!
 # Separation and crossing parity before normalization
@@ -87,6 +89,8 @@ under `List.Perm` (immediate, `parity` is a sum over the list), and a strengthen
   P.pieces ~ subdivide P'.pieces vs`, carried through the induction. The direct argument below is
 shorter than either.
 -/
+
+@[expose] public section
 
 open Bornology Metric Set
 

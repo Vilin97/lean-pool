@@ -3,7 +3,9 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.ParitySplitting
+module
+
+public import LeanPool.Schoenflies.ParitySplitting
 
 /-!
 # Theorem 2.8: two-sided polygonal crosscuts
@@ -76,6 +78,8 @@ see the note there about the `corner` field. Nothing in this file inspects `corn
   `ℝ² ∖ (C ∪ P)` has exactly three regions, with boundaries `C, J₁, J₂`".
 * `polygonal_crosscut` — Theorem 2.8, bundled.
 -/
+
+@[expose] public section
 
 open Bornology Set
 

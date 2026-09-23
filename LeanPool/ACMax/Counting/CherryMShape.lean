@@ -3,11 +3,13 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Push
-import Mathlib.Tactic.Ring
-import LeanPool.ACMax.Counting.Cherry
-import LeanPool.ACMax.Counting.PoorCorner
+module
+
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Push
+public import Mathlib.Tactic.Ring
+public import LeanPool.ACMax.Counting.Cherry
+public import LeanPool.ACMax.Counting.PoorCorner
 
 /-!
 # The M-shape analysis and the complete `Δ ≤ 4` closure
@@ -41,6 +43,8 @@ with every other degree-3 vertex an iso twin.
   `x0_corner_close`, `e(M) ≥ 2` via `caseCherry_algConn_le_two_of_sea`. Only the
   `Δ ≥ 5` ("fat") side of `ResidualCore` remains open.
 -/
+
+@[expose] public section
 
 namespace ACMax
 

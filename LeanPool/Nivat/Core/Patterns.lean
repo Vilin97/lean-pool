@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Boon Suan Ho
 -/
 
-import LeanPool.Nivat.Core.Basic
-import Mathlib.Data.Set.Card
-import Mathlib.Data.Fintype.Pi
-import Mathlib.Data.Int.Interval
+module
+
+public import LeanPool.Nivat.Core.Basic
+public import Mathlib.Data.Set.Card
+public import Mathlib.Data.Fintype.Pi
+public import Mathlib.Data.Int.Interval
 
 /-
 Upstream: https://github.com/boonsuan/nivat
@@ -47,6 +49,8 @@ The basic API proves finiteness, restriction surjectivity, monotonicity and
 invariance under translations and injective relabeling. Unique extension is
 the counting step used in Lemma 5.5 (`lem:boundary-window`).
 -/
+
+@[expose] public section
 
 namespace Nivat
 
