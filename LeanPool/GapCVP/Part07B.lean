@@ -10,7 +10,7 @@ public import LeanPool.GapCVP.Part07A
 
 /-! # GapCVP proof, part 07, continuation 02 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -934,7 +934,7 @@ noncomputable def fiveFamilyForbiddenCoordinateSourceVariableCodeComputable
   simpa only [Function.comp_def] using physical
 
 /-- GapCVP reduction support. -/
-def fiveForbiddenWindowSourceVariable
+@[expose] def fiveForbiddenWindowSourceVariable
     {T S : ℕ}
     (window : Window T)
     (symbols : WindowSymbols S) :

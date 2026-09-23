@@ -10,7 +10,7 @@ public import LeanPool.GapCVP.Part07C
 
 /-! # GapCVP proof, part 07, continuation 04 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1291,7 +1291,7 @@ private noncomputable def fiveFamilyForbiddenOneBitSelectionComputable
   simpa only [Function.comp_def] using physical
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def fiveForbiddenOneBitGuardedWord
+@[expose] def fiveForbiddenOneBitGuardedWord
     (marker worker : List Bool → List Bool)
     (input : List Bool) : List Bool :=
   if (marker input).headD false then worker input else []
@@ -1309,14 +1309,14 @@ noncomputable def fiveForbiddenOneBitGuardedComputable
     hworker []
 
 /-- GapCVP reduction support. -/
-def fiveFamilyForbiddenEncodedMinimum
+@[expose] def fiveFamilyForbiddenEncodedMinimum
     {α : Type} [Encodable α]
     (first second : α) : α :=
   if Encodable.encode first < Encodable.encode second
     then first else second
 
 /-- GapCVP reduction support. -/
-def fiveFamilyForbiddenEncodedMaximum
+@[expose] def fiveFamilyForbiddenEncodedMaximum
     {α : Type} [Encodable α]
     (first second : α) : α :=
   if Encodable.encode first < Encodable.encode second
@@ -1508,13 +1508,13 @@ open GapCVP.CNFFiveFamilyForbiddenWindowCoordinateTM
 open GapCVP.CNFFiveFamilyForbiddenWholeClauseWorkerTM
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def fiveForbiddenRawSourceLessMarker
+@[expose] def fiveForbiddenRawSourceLessMarker
     (first second : List Bool → List Bool) :
     List Bool → List Bool :=
   fourFamilyComputedUnaryLessBitOutput first second
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def fiveForbiddenRawSourceNotLessMarker
+@[expose] def fiveForbiddenRawSourceNotLessMarker
     (first second : List Bool → List Bool) :
     List Bool → List Bool :=
   sourceFourFamilyBooleanNotOutput

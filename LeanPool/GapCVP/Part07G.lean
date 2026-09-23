@@ -10,7 +10,7 @@ public import LeanPool.GapCVP.Part07F
 
 /-! # GapCVP proof, part 07, continuation 07 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

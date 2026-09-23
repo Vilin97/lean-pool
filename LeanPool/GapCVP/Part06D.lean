@@ -10,7 +10,7 @@ public import LeanPool.GapCVP.Part06C
 
 /-! # GapCVP proof, part 06, continuation 04 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -490,7 +490,7 @@ open Turing GapCVP.BinaryEncoding
 open GapCVP.SourceFormulaStructuralDecoder
 
 /-- GapCVP reduction support. -/
-def sourceMixedRadixGuardedOriginalAtomOutput
+@[expose] def sourceMixedRadixGuardedOriginalAtomOutput
     (atom : List Bool → List Bool) : List Bool → List Bool :=
   atom ∘ firstFieldContents
 
@@ -504,7 +504,7 @@ noncomputable def sourceMixedRadixGuardedOriginalAtomComputable
     firstFieldContentsComputable computer
 
 /-- GapCVP reduction support. -/
-def sourceMixedRadixOriginalSourceQueryStream
+@[expose] def sourceMixedRadixOriginalSourceQueryStream
     (queries : List (List Bool)) : List Bool :=
   queries.flatMap lengthPrefixedWord
 
@@ -1400,7 +1400,7 @@ open GapCVP.BinaryEncoding GapCVP.CLStructuralPrefixWriter GapCVP.CNFBoundedReco
 open GapCVP.CNFFlatPhysicalBinaryAppendTM GapCVP.CNFFiveFamilyFlatCandidateGenerationTM
 
 /-- GapCVP reduction support. -/
-def fiveFlatOriginalSourceAnchorWord
+@[expose] def fiveFlatOriginalSourceAnchorWord
     (bound : Polynomial ℕ)
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
@@ -2437,7 +2437,7 @@ open GapCVP.CNFFiveFamilyFlatIndexedRankArithmeticTM
 open GapCVP.CNFFiveFamilyFlatSortedLiteralFamilies
 
 /-- GapCVP reduction support. -/
-def fiveFamilyFlatRankedSourceDescriptorWord
+@[expose] def fiveFamilyFlatRankedSourceDescriptorWord
     (grid : Polynomial ℕ) (symbol : ℕ) (sign : Bool)
     (input : List Bool) : List Bool :=
   tableauSourceSignedLiteralDescriptorWord sign
@@ -2456,7 +2456,7 @@ private noncomputable def fiveFamilyFlatRankedSourceDescriptorComputable
   simpa only [Function.comp_def] using physical
 
 /-- GapCVP reduction support. -/
-def fiveFamilyFlatRankedSourceDuplicatedCodeWord
+@[expose] def fiveFamilyFlatRankedSourceDuplicatedCodeWord
     (grid : Polynomial ℕ) (symbol : ℕ) (sign : Bool)
     (input : List Bool) : List Bool :=
   duplicatedUnarySignedLiteralCodeWord sign
@@ -2476,7 +2476,7 @@ private noncomputable def fiveFamilyFlatRankedSourceDuplicatedCodeComputable
   simpa only [Function.comp_def] using physical
 
 /-- GapCVP reduction support. -/
-def fiveFlatRankedSourceDescriptorStream
+@[expose] def fiveFlatRankedSourceDescriptorStream
     (grid : Polynomial ℕ) (sign : Bool) (symbols : List ℕ)
     (input : List Bool) : List Bool :=
   symbols.flatMap fun symbol =>
@@ -2495,7 +2495,7 @@ noncomputable def fiveFamilyFlatRankedSourceDescriptorStreamComputable
           grid symbol sign) ih
 
 /-- GapCVP reduction support. -/
-def fiveFlatRankedSourceDuplicatedCodeStream
+@[expose] def fiveFlatRankedSourceDuplicatedCodeStream
     (grid : Polynomial ℕ) (sign : Bool) (symbols : List ℕ)
     (input : List Bool) : List Bool :=
   symbols.flatMap fun symbol =>
