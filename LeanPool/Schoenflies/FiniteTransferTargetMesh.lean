@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.FiniteTransferTarget
-import LeanPool.Schoenflies.SquareMeshClosed
+module
+
+public import LeanPool.Schoenflies.FiniteTransferTarget
+public import LeanPool.Schoenflies.SquareMeshClosed
 
 /-!
 # Anchored square meshes supply the boundary anchors for reverse finite transfer
@@ -37,6 +39,8 @@ condition follows with no ear-order argument.
 * `Schoenflies.finite_transfer_toward_source_squareMesh_of_outerIncidenceAtMostTwo` — the same
   conclusion reduced to propagation of one static outer-cycle invariant.
 -/
+
+@[expose] public section
 
 open Set
 open scoped Graph

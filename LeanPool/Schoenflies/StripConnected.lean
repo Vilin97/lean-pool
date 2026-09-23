@@ -3,7 +3,9 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Strip
+module
+
+public import LeanPool.Schoenflies.Strip
 
 /-!
 # The collar of a closed polygon is two-sided
@@ -47,6 +49,8 @@ polygon by supplying the two remaining global facts.
 Producing the constants is `exists_stripData`, which lives elsewhere; every statement here is
 for a given `D : StripData P`, exactly as in `Schoenflies/Strip.lean`.
 -/
+
+@[expose] public section
 
 open Metric Set
 

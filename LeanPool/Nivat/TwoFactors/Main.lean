@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Boon Suan Ho
 -/
 
-import LeanPool.Nivat.Core.Lattice
-import LeanPool.Nivat.Core.BoundedDifferences
-import LeanPool.Nivat.TwoFactors.WindowNormalization
-import LeanPool.Nivat.TwoFactors.WindowCriterion
+module
+
+public import LeanPool.Nivat.Core.Lattice
+public import LeanPool.Nivat.Core.BoundedDifferences
+public import LeanPool.Nivat.TwoFactors.WindowNormalization
+public import LeanPool.Nivat.TwoFactors.WindowCriterion
 
 /-
 Upstream: https://github.com/boonsuan/nivat
@@ -48,6 +50,8 @@ factorial common period from Corollary 5.3. Directional periods are transported
 back through both coordinate changes. The parallel case uses bounded finite
 differences. The final corollary treats sums of two periodic configurations.
 -/
+
+@[expose] public section
 
 namespace Nivat.TwoFactors
 

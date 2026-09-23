@@ -3,11 +3,13 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Concatenate
-import LeanPool.Schoenflies.Polygonal
-import LeanPool.Schoenflies.Bounded
-import Mathlib.Topology.Homeomorph.Lemmas
-import Mathlib.Topology.Maps.Basic
+module
+
+public import LeanPool.Schoenflies.Concatenate
+public import LeanPool.Schoenflies.Polygonal
+public import LeanPool.Schoenflies.Bounded
+public import Mathlib.Topology.Homeomorph.Lemmas
+public import Mathlib.Topology.Maps.Basic
 
 /-!
 # The model curve, and the parametrization of a Jordan curve by it
@@ -55,6 +57,8 @@ subsequence chase establishes, and it is one line here.
 * `IsJordanCurve.homeomorph`, `IsJordanCurve.homeomorph_modelCurve`,
   `IsJordanCurve.modelCurve_homeomorph` — Lemma 3.1, first clause.
 -/
+
+@[expose] public section
 
 open Set Topology unitInterval
 

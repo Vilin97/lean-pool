@@ -3,14 +3,16 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Push
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Tauto
-import LeanPool.ACMax.Counting.CompactCell
-import LeanPool.ACMax.Counting.DoubleStar
+module
+
+public import Mathlib.Tactic.IntervalCases
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Push
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.Tauto
+public import LeanPool.ACMax.Counting.CompactCell
+public import LeanPool.ACMax.Counting.DoubleStar
 
 /-!
 # Compact-cell counting ledgers
@@ -48,6 +50,8 @@ same-count hubs with zero internal degree, zero `mCross` and no adjacency shares
 `≥ 3` twins (`sfb_forces_sharing`); two saturated degree-6 hubs with independent
 shared twins would assemble a good `K_{2,3}` (`Σ₅deg = 21`), contradicting
 `no_good_K23` (`no_two_saturated_deg6`). -/
+
+@[expose] public section
 
 namespace ACMax
 

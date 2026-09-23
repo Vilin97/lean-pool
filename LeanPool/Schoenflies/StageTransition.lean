@@ -3,7 +3,9 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.FiniteTransferTarget
+module
+
+public import LeanPool.Schoenflies.FiniteTransferTarget
 
 /-!
 # The common output of one transferred stage
@@ -22,6 +24,8 @@ packages that shared output and proves that transitions compose.
   expose the same stage interface.
 * `Schoenflies.StageTransition.trans` — consecutive transferred refinements compose.
 -/
+
+@[expose] public section
 
 open Set
 

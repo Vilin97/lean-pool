@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wouter Cames van Batenburg, Samuel Korsky
 -/
 
-import LeanPool.MooreBound.DegreeDiameter.CompletionCount
-import LeanPool.MooreBound.DegreeDiameter.FlagSpace
-import LeanPool.MooreBound.DegreeDiameter.FlagEnumeration
+module
+
+public import LeanPool.MooreBound.DegreeDiameter.CompletionCount
+public import LeanPool.MooreBound.DegreeDiameter.FlagSpace
+public import LeanPool.MooreBound.DegreeDiameter.FlagEnumeration
 
 /-!
 # Exact order of the halved flag graph
@@ -22,6 +24,8 @@ division form of the paper's vertex-count formula.
 Lean Pool port of wewantmoore commit d59bd80ea93fabb9faf769e790ab47692645e022.
 The port adds a namespace and adapts proofs to the current Mathlib APIs and repository style.
 -/
+
+@[expose] public section
 
 namespace MooreBound
 
