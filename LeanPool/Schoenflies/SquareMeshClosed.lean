@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.GridAttach
-import LeanPool.Schoenflies.SquareCycle
+module
+
+public import LeanPool.Schoenflies.GridAttach
+public import LeanPool.Schoenflies.SquareCycle
 
 /-!
 # The anchored square mesh, closed
@@ -101,6 +103,8 @@ genuine cycle rather than a point set — `Schoenflies.squareMesh_isLongCycle_ou
 * `meshGraph_isTwoConnected`, `squareMesh_isTwoConnected` — `prop:anchored-square-mesh`
   clause 5.
 -/
+
+@[expose] public section
 
 open Metric Set
 open scoped Graph

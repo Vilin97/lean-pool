@@ -4,11 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PDL formalization contributors (see project card)
 -/
 
-import Mathlib.Data.Finset.Lattice.Fold
-import Mathlib.Logic.Relation
-import Mathlib.Tactic.DepRewrite
+module
 
-import LeanPool.PDL.Tableau
+public import Mathlib.Data.Finset.Lattice.Fold
+public import Mathlib.Logic.Relation
+public import Mathlib.Tactic.DepRewrite
+
+public import LeanPool.PDL.Tableau
 
 /-! # Navigating through tableaux with PathIn
 
@@ -16,6 +18,8 @@ To define relations between nodes in a tableau we need to represent the whole
 tableau and point to a specific node inside it. This is the `PathIn` type.
 Its values say "go to this child, then to this child, ... stop here."
 -/
+
+@[expose] public section
 
 namespace PDL
 

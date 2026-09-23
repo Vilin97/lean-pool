@@ -3,12 +3,14 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.OverlayGraph
-import LeanPool.Schoenflies.Graph.OuterFace
-import LeanPool.Schoenflies.Graph.CycleJordan
-import LeanPool.Schoenflies.TwoArcs
-import LeanPool.Schoenflies.StripConstants
-import LeanPool.Schoenflies.StripConnected
+module
+
+public import LeanPool.Schoenflies.OverlayGraph
+public import LeanPool.Schoenflies.Graph.OuterFace
+public import LeanPool.Schoenflies.Graph.CycleJordan
+public import LeanPool.Schoenflies.TwoArcs
+public import LeanPool.Schoenflies.StripConstants
+public import LeanPool.Schoenflies.StripConnected
 
 /-!
 # Composition checks
@@ -31,6 +33,8 @@ to the face machinery at all, even though both halves compiled. The overlay now 
 * `two_arcs_roundtrip` — Layer 4's cutting theorem composes with its gluing theorem.
 * `polygonal_collar` — Lemma 1.8 (a), the three strip modules composed.
 -/
+
+@[expose] public section
 
 open Set
 open scoped Graph

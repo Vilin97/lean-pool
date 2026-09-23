@@ -3,21 +3,29 @@ Copyright (c) 2026 Xiaoyu Li, Andi Han, Jiaojiao Jiang, Junbin Gao. All rights r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xiaoyu Li, Andi Han, Jiaojiao Jiang, Junbin Gao
 -/
-import LeanPool.LanguageGeneration.FiniteWitness.Width.AnchoredLower
+module
+
+public import LeanPool.LanguageGeneration.FiniteWitness.Width.AnchoredLower
 
 /-!
 # Witness assignments attaining the anchored lower bounds
 -/
 
+@[expose] public section
+
 namespace GenLimit.FiniteWitness.Anchored
 
-private def low (k : ℕ) : Finset ℕ := Finset.range ((k + 1) / 2)
-private def high (k : ℕ) : Finset ℕ := Finset.range k \ low k
+/-- The first half of the indices, rounded up. -/
+def low (k : ℕ) : Finset ℕ := Finset.range ((k + 1) / 2)
+/-- The remaining indices below the row and column count. -/
+def high (k : ℕ) : Finset ℕ := Finset.range k \ low k
 
-private noncomputable def rowWitness {k} (i : Fin k) : Finset Point :=
+/-- Left-side anchor points assigned to a row. -/
+noncomputable def rowWitness {k} (i : Fin k) : Finset Point :=
   (if i.val < (k + 1) / 2 then low k else high k).image Sum.inl
 
-private noncomputable def colWitness {k} (j : Fin k) : Finset Point :=
+/-- Right-side anchor points assigned to a column. -/
+noncomputable def colWitness {k} (j : Fin k) : Finset Point :=
   (if j.val < (k + 1) / 2 then high k else low k).image Sum.inr
 
 private theorem high_card (k : ℕ) : (high k).card = k - (k + 1) / 2 := by

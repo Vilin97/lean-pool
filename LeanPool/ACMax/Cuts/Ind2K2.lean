@@ -3,11 +3,13 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import Mathlib.Tactic.GCongr
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Tauto
-import LeanPool.ACMax.Spectral.AlgConn
-import LeanPool.ACMax.Cuts.SignedCut
+module
+
+public import Mathlib.Tactic.GCongr
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Tauto
+public import LeanPool.ACMax.Spectral.AlgConn
+public import LeanPool.ACMax.Cuts.SignedCut
 
 /-!
 # Induced-`2K₂` certificate
@@ -25,6 +27,8 @@ in `Gᶜ`, whose `4×4` Laplacian block `dI − A(C₄)` has `λ_max = d + 2`, f
 tight (`degsum = 12`), which is exactly what certifies the `n = 9` Fiedler-eigenvector
 graphs that no `±1` cut can.
 -/
+
+@[expose] public section
 
 namespace ACMax
 

@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Boon Suan Ho
 -/
 
-import LeanPool.Nivat.Algebra.Action
-import Mathlib.RingTheory.Localization.FractionRing
-import Mathlib.RingTheory.Localization.Integer
+module
+
+public import LeanPool.Nivat.Algebra.Action
+public import Mathlib.RingTheory.Localization.FractionRing
+public import Mathlib.RingTheory.Localization.Integer
 
 /-
 Upstream: https://github.com/boonsuan/nivat
@@ -45,6 +47,8 @@ separately. `finiteRange_integer_scale` and `integer_filter_scale` provide the
 two nonzero multipliers. The map `intLaurentCast` changes only the coefficient
 ring, so the resulting equations still concern the full integer lattice.
 -/
+
+@[expose] public section
 
 namespace Nivat.Algebra
 

@@ -3,12 +3,16 @@ Copyright (c) 2026 Xiaoyu Li, Andi Han, Jiaojiao Jiang, Junbin Gao. All rights r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xiaoyu Li, Andi Han, Jiaojiao Jiang, Junbin Gao
 -/
-import LeanPool.LanguageGeneration.FiniteWitness.Separation
-import Mathlib.Data.Set.Countable
-import Mathlib.Tactic.Choose
-import Mathlib.Tactic.Push
+module
+
+public import LeanPool.LanguageGeneration.FiniteWitness.Separation
+public import Mathlib.Data.Set.Countable
+public import Mathlib.Tactic.Choose
+public import Mathlib.Tactic.Push
 
 /-! Fixed-assignment interfaces and arbitrary positive separating sets. -/
+
+@[expose] public section
 
 namespace GenLimit.FiniteWitness
 
