@@ -1933,13 +1933,13 @@ def fiveFamilyRowMajorWindows (T : ℕ) : List (Window T) :=
   exact ⟨index.2, by simp only [List.mem_finRange], reconstruct⟩
 
 /-- GapCVP reduction support. -/
-def fiveFamilyRowMajorAtLeastClauses (T S : ℕ) :
+@[expose] def fiveFamilyRowMajorAtLeastClauses (T S : ℕ) :
     List (Clause T S) :=
   (fiveFamilyRowMajorTimePositionSlots T).map fun position =>
     atLeastOneClause (S := S) position.1 position.2
 
 /-- GapCVP reduction support. -/
-def fiveFamilyRowMajorAtMostClauses (T S : ℕ) :
+@[expose] def fiveFamilyRowMajorAtMostClauses (T S : ℕ) :
     List (Clause T S) :=
   (fiveFamilyRowMajorTimePositionSlots T).flatMap fun position =>
     (fiveFamilyRowMajorSymbolPairs S).map fun symbols =>
@@ -1949,18 +1949,18 @@ def fiveFamilyRowMajorAtMostClauses (T S : ℕ) :
         atLeastOneClause position.1 position.2
 
 /-- GapCVP reduction support. -/
-def fiveFamilyRowMajorInitialClauses {T S : ℕ}
+@[expose] def fiveFamilyRowMajorInitialClauses {T S : ℕ}
     (specification : Specification T S) : List (Clause T S) :=
   (List.finRange (T + 1)).map
     (initialClause specification.input)
 
 /-- GapCVP reduction support. -/
-def fiveFamilyRowMajorAcceptanceClauses {T S : ℕ}
+@[expose] def fiveFamilyRowMajorAcceptanceClauses {T S : ℕ}
     (specification : Specification T S) : List (Clause T S) :=
   [acceptanceClause specification.accept]
 
 /-- GapCVP reduction support. -/
-def fiveFamilyRowMajorForbiddenClauses {T S : ℕ}
+@[expose] def fiveFamilyRowMajorForbiddenClauses {T S : ℕ}
     (specification : Specification T S) : List (Clause T S) :=
   (fiveFamilyRowMajorWindows T).flatMap fun window =>
     (fiveFamilyRowMajorWindowSymbols S).map fun symbols =>
@@ -1970,7 +1970,7 @@ def fiveFamilyRowMajorForbiddenClauses {T S : ℕ}
         atLeastOneClause window.1.1 window.1.2
 
 /-- GapCVP reduction support. -/
-def fiveFamilyRowMajorSourceClauses {T S : ℕ}
+@[expose] def fiveFamilyRowMajorSourceClauses {T S : ℕ}
     (specification : Specification T S) : List (Clause T S) :=
   fiveFamilyRowMajorAtLeastClauses T S ++
     fiveFamilyRowMajorAtMostClauses T S ++
@@ -2587,7 +2587,7 @@ noncomputable def fiveFamilyFlatRowMajorAtLeastClauseRecordComputable
   exact physical
 
 /-- GapCVP reduction support. -/
-def fiveFamilyFlatSourceRowMajorIndex
+@[expose] def fiveFamilyFlatSourceRowMajorIndex
     {T : ℕ} (time : Time T) (position : Position T) : ℕ :=
   time.val * (T + 1) + position.val
 
@@ -2775,7 +2775,7 @@ open GapCVP.CNFUnaryPairIndexTotalRuntimeCert GapCVP.CNFFiveFamilyFlatCandidateG
 open GapCVP.CNFFiveFamilyFlatIndexedRankArithmeticTM
 
 /-- GapCVP reduction support. -/
-def fiveFamilyVerifierAcceptingSymbol
+@[expose] def fiveFamilyVerifierAcceptingSymbol
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier) :
     Symbol (completePhaseSymbolCount machine.tm) :=

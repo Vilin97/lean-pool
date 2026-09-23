@@ -10,7 +10,7 @@ public import LeanPool.GapCVP.Part08B
 
 /-! # GapCVP proof, part 08, continuation 03 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -298,7 +298,7 @@ private noncomputable def flatAnnotatedSortedDedupStepComputable :
   cases (encodedOrderingEqualityBitWord
     (annotatedSortedDedupSourceOrdering input)).headD false <;>
     cases (firstFieldSuffix (firstFieldContents input)).headD false <;>
-    rfl
+    simp only [markerConditionalOutput, fiveFamilyOriginalHeadBitWord_eq] <;> rfl
 
 private theorem flatAnnotatedSortedDedupStep_eq
     (input : List Bool) :
@@ -535,7 +535,7 @@ private theorem flatAnnotatedSortedDedupEffectiveMarker_originalSingleton
   cases (encodedOrderingEqualityBitWord
     (annotatedSortedDedupSourceOrdering
       (flatAnnotatedBubbleClauseState [first] emitted))).headD false <;>
-    rfl
+    simp only [markerConditionalOutput, fiveFamilyOriginalHeadBitWord_eq] <;> rfl
 
 @[simp] private theorem flatAnnotatedSortedDedupDropStep_originalClauseState
     {T S : ℕ} (first : Clause T S)
@@ -1496,7 +1496,7 @@ open GapCVP.CNFPairedSourceGridDescriptorTM GapCVP.CNFFlatPhysicalBinaryAppendTM
 open GapCVP.CNFAnnotatedSourceClausePairPreparationTM
 
 /-- GapCVP reduction support. -/
-def flatAnnotatedIndexedORGadgetState
+@[expose] def flatAnnotatedIndexedORGadgetState
     (clauseIndex prefixWord pending active emitted count : List Bool) :
     List Bool :=
   lengthPrefixedWord clauseIndex ++
@@ -1507,7 +1507,7 @@ def flatAnnotatedIndexedORGadgetState
             lengthPrefixedWord count
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def flatIndexedGadgetNegateLeadingBitWord : List Bool → List Bool
+@[expose] def flatIndexedGadgetNegateLeadingBitWord : List Bool → List Bool
   | [] => []
   | bit :: remaining => (!bit) :: remaining
 

@@ -1630,12 +1630,12 @@ open GapCVP.CNFFlatCappedComparisonControlledSwapTM GapCVP.CNFFlatPhysicalBinary
 open GapCVP.CNFFiveFamilyFlatCandidateGenerationTM
 
 /-- GapCVP reduction support. -/
-def flatAnnotatedBundledClauseRecord {T S : ℕ}
+@[expose] def flatAnnotatedBundledClauseRecord {T S : ℕ}
     (clause : Clause T S) : List Bool :=
   lengthPrefixedWord (flatSourceClauseAnnotatedRecord clause)
 
 /-- GapCVP reduction support. -/
-def flatAnnotatedBundledClauseStream {T S : ℕ}
+@[expose] def flatAnnotatedBundledClauseStream {T S : ℕ}
     (clauses : List (Clause T S)) : List Bool :=
   clauses.flatMap flatAnnotatedBundledClauseRecord
 
@@ -1688,7 +1688,7 @@ theorem flatAnnotatedBundledPairComparisonInput_records
       firstFieldContents_valid, firstFieldSuffix_valid]
 
 /-- GapCVP reduction support. -/
-def flatAnnotatedBubblePassState
+@[expose] def flatAnnotatedBubblePassState
     (active emitted : List Bool) : List Bool :=
   lengthPrefixedWord active ++ lengthPrefixedWord emitted
 
@@ -1905,7 +1905,7 @@ noncomputable def flatAnnotatedBubblePassFoldComputable
     (flatAnnotatedBubblePass_polynomiallyBoundedFoldStates comparison)
 
 /-- GapCVP reduction support. -/
-def flatAnnotatedBubbleClauseState {T S : ℕ}
+@[expose] def flatAnnotatedBubbleClauseState {T S : ℕ}
     (active emitted : List (Clause T S)) : List Bool :=
   flatAnnotatedBubblePassState
     (flatAnnotatedBundledClauseStream active)

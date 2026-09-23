@@ -10,7 +10,7 @@ public import LeanPool.GapCVP.Part08C
 
 /-! # GapCVP proof, part 08, continuation 04 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2358,21 +2358,21 @@ structure Formula where
   clauses : List (Clause variableCount)
 
 /-- GapCVP reduction support. -/
-noncomputable def Clause.Satisfied {variableCount : ℕ} (clause : Clause variableCount)
+@[expose] noncomputable def Clause.Satisfied {variableCount : ℕ} (clause : Clause variableCount)
     (assignment : Fin variableCount → Bool) : Bool :=
   @decide (
   ∃ literal ∈ clause.literals,
     assignment literal.variableIndex = literal.satisfyingValue
   ) (Classical.propDecidable _)
 /-- GapCVP reduction support. -/
-noncomputable def Formula.Satisfied (formula : Formula)
+@[expose] noncomputable def Formula.Satisfied (formula : Formula)
     (assignment : Fin formula.variableCount → Bool) : Bool :=
   @decide (
   ∀ i : Fin formula.clauses.length,
     (formula.clauses.get i).Satisfied assignment
   ) (Classical.propDecidable _)
 /-- GapCVP reduction support. -/
-noncomputable def Formula.Satisfiable (formula : Formula) : Bool :=
+@[expose] noncomputable def Formula.Satisfiable (formula : Formula) : Bool :=
   @decide (
   ∃ assignment : Fin formula.variableCount → Bool,
     formula.Satisfied assignment
@@ -2475,7 +2475,7 @@ structure System (m n : ℕ) where
   rhs : Fin m → ZMod 2
 
 /-- GapCVP reduction support. -/
-noncomputable def System.Satisfies {m n : ℕ} (system : System m n)
+@[expose] noncomputable def System.Satisfies {m n : ℕ} (system : System m n)
     (assignment : Fin n → ZMod 2) : Bool :=
   @decide (
   system.check.mulVec assignment = system.rhs
@@ -2609,14 +2609,14 @@ structure State (m n : ℕ) where
   operations : List (RowOperation m)
 
 /-- GapCVP reduction support. -/
-def initialState {m n : ℕ} (system : System m n) : State m n where
+@[expose] def initialState {m n : ℕ} (system : System m n) : State m n where
   system := system
   nextPivot := 0
   pivots := []
   operations := []
 
 /-- GapCVP reduction support. -/
-def applyOperation {m n : ℕ} (state : State m n)
+@[expose] def applyOperation {m n : ℕ} (state : State m n)
     (operation : RowOperation m) : State m n where
   system := operation.apply state.system
   nextPivot := state.nextPivot
@@ -2646,7 +2646,7 @@ theorem findPivotOption_some {m n : ℕ} (state : State m n)
   simpa only [Bool.decide_and, Bool.and_eq_true, decide_eq_true_eq] using hp
 
 /-- GapCVP reduction support. -/
-def clearTarget {m n : ℕ} (pivot : Fin m) (column : Fin n)
+@[expose] def clearTarget {m n : ℕ} (pivot : Fin m) (column : Fin n)
     (state : State m n) (target : Fin m) : State m n :=
   if htarget : target = pivot then
     state
@@ -2726,7 +2726,7 @@ private theorem clearTarget_check_target_zero {m n : ℕ}
     exact binary_eq_zero_of_ne_one _ hone
 
 /-- GapCVP reduction support. -/
-def clearTargets {m n : ℕ} (pivot : Fin m) (column : Fin n)
+@[expose] def clearTargets {m n : ℕ} (pivot : Fin m) (column : Fin n)
     (targets : List (Fin m)) (state : State m n) : State m n :=
   targets.foldl (clearTarget pivot column) state
 
@@ -3166,7 +3166,7 @@ private theorem finRange_list_sum {e : ℕ} (f : Fin e → ZMod 2) :
   rfl
 
 /-- GapCVP reduction support. -/
-def multiplyWords {e : ℕ} (left right : Word e) : Word (2 * e) :=
+@[expose] def multiplyWords {e : ℕ} (left right : Word e) : Word (2 * e) :=
   fun k =>
     (List.finRange e).foldl
       (fun acc i =>
@@ -3625,7 +3625,8 @@ private theorem selectedPolynomial_irreducible (e : ℕ) (he : 0 < e) :
 abbrev Extension (e : ℕ) :=
   AdjoinRoot (selectedPolynomial e)
 
-private noncomputable def extensionBasis (e : ℕ) :
+/-- Power basis of the selected binary field extension, reindexed by its degree. -/
+noncomputable def extensionBasis (e : ℕ) :
     Module.Basis (Fin e) (ZMod 2) (Extension e) :=
   (AdjoinRoot.powerBasisAux' (selectedPolynomial_monic e)).reindex
     (finCongr (selectedPolynomial_natDegree e))
@@ -3904,7 +3905,7 @@ end
 section
 
 /-- GapCVP reduction support. -/
-def binaryResidue {n : ℕ} (z : Fin n → ℤ) : Fin n → ZMod 2 :=
+@[expose] def binaryResidue {n : ℕ} (z : Fin n → ℤ) : Fin n → ZMod 2 :=
   fun i => (z i : ZMod 2)
 
 theorem binaryResidue_sub {n : ℕ} (x y : Fin n → ℤ) :
@@ -3924,7 +3925,7 @@ structure BinaryAffineSystem where
   rightHandSide : Fin rowCount → ZMod 2
 
 /-- GapCVP reduction support. -/
-noncomputable def BinaryAffineSystem.Solves (system : BinaryAffineSystem)
+@[expose] noncomputable def BinaryAffineSystem.Solves (system : BinaryAffineSystem)
     (z : Fin system.dimension → ℤ) : Bool :=
   @decide (
   system.check.mulVec (binaryResidue z) = system.rightHandSide
@@ -4138,7 +4139,7 @@ private theorem source_moment_degree_lt_punctured_grid {N q m : ℕ}
   omega
 
 /-- GapCVP reduction support. -/
-def sourcePuncturedGrid {k : Type*} [Fintype k] [DecidableEq k]
+@[expose] def sourcePuncturedGrid {k : Type*} [Fintype k] [DecidableEq k]
     (variablePlaces : Finset k) : Finset k :=
   Finset.univ \ variablePlaces
 
@@ -4376,7 +4377,7 @@ private theorem exists_assignment_interpolant {K : Type*} [Field K] {m : ℕ}
         (s := points) hinj.injOn (Finset.mem_univ i))
 
 /-- GapCVP reduction support. -/
-noncomputable def supportMoment {K : Type*} [Field K]
+@[expose] noncomputable def supportMoment {K : Type*} [Field K]
     (support : Finset K) (j : ℕ) : K :=
   ∑ a ∈ support, a ^ j
 
@@ -4467,7 +4468,7 @@ private theorem support_eq_of_supportMoments_eq_below_card_sum
       (Finset.card_union_le s t))
 
 /-- GapCVP reduction support. -/
-def paritySupport {K : Type*} [DecidableEq K] :
+@[expose] def paritySupport {K : Type*} [DecidableEq K] :
     List (Finset K) → Finset K
   | [] => ∅
   | s :: supports => s ∆ paritySupport supports
@@ -4562,7 +4563,7 @@ theorem scaled_shifted_supportMoment {K : Type*} [Field K]
     _ = _ := shifted_supportMoment_binomial support β j
 
 /-- GapCVP reduction support. -/
-noncomputable def shiftedMomentCombination {K : Type*} [Field K]
+@[expose] noncomputable def shiftedMomentCombination {K : Type*} [Field K]
     (moments : ℕ → K[X]) (β : K) (j : ℕ) : K[X] :=
   ∑ l ∈ Finset.range (j + 1),
     Polynomial.C ((j.choose l : K) * (-β) ^ (j - l)) * moments l
@@ -4698,7 +4699,7 @@ abbrev sourceSATTableCoordinate
   sourceSATTableType F × sourceSATGridPoint points × K
 
 /-- GapCVP reduction support. -/
-def sourceSATTableDimension
+@[expose] def sourceSATTableDimension
     (F : Formula) (K : Type*) [Fintype K]
     (points : Finset K) : ℕ :=
   Fintype.card (sourceSATTableCoordinate F K points)
@@ -4788,13 +4789,13 @@ private theorem sourceReedSolomonParityMap_eq_zero_iff
   exact Submodule.Quotient.mk_eq_zero _
 
 /-- GapCVP reduction support. -/
-def sourceFiniteReindexLinearEquiv
+@[expose] def sourceFiniteReindexLinearEquiv
     (α : Type*) [Fintype α] :
     (α → K) ≃ₗ[K] (Fin (Fintype.card α) → K) :=
   LinearEquiv.funCongrLeft K K (Fintype.equivFin α).symm
 
 /-- GapCVP reduction support. -/
-def sourceSATColumnIndex
+@[expose] def sourceSATColumnIndex
     (F : Formula) [Fintype K] (points : Finset K)
     (tableType : sourceSATTableType F)
     (point : sourceSATGridPoint points) (value : K) :
@@ -4803,7 +4804,7 @@ def sourceSATColumnIndex
     (tableType, point, value)
 
 /-- GapCVP reduction support. -/
-def sourceGlobalNormalizationMap
+@[expose] def sourceGlobalNormalizationMap
     (F : Formula) [Fintype K] (points : Finset K) :
     (Fin (sourceSATTableDimension F K points) → K) →ₗ[K]
       (sourceSATGridPoint points → K) where
@@ -4818,7 +4819,7 @@ def sourceGlobalNormalizationMap
     simp only [List.get_eq_getElem, Pi.smul_apply, smul_eq_mul, RingHom.id_apply, mul_sum]
 
 /-- GapCVP reduction support. -/
-def sourceClauseRefinementMap
+@[expose] def sourceClauseRefinementMap
     (F : Formula) [Fintype K] (points : Finset K)
     (clause : Fin F.clauses.length) :
     (Fin (sourceSATTableDimension F K points) → K) →ₗ[K]
@@ -4839,7 +4840,7 @@ def sourceClauseRefinementMap
     rw [Finset.mul_sum]
 
 /-- GapCVP reduction support. -/
-def sourceOrdinaryMomentMap
+@[expose] def sourceOrdinaryMomentMap
     (F : Formula) [Fintype K] (points : Finset K)
     (tableType : sourceSATTableType F) (j : ℕ) :
     (Fin (sourceSATTableDimension F K points) → K) →ₗ[K]
@@ -4860,7 +4861,7 @@ def sourceSATFieldBit (bit : Bool) : K :=
   if bit then 1 else 0
 
 /-- GapCVP reduction support. -/
-def sourceShiftedMomentMap
+@[expose] def sourceShiftedMomentMap
     (F : Formula) [Fintype K] (points : Finset K)
     (variablePlace : Fin F.variableCount → K)
     (clause : Fin F.clauses.length)
@@ -4893,7 +4894,8 @@ abbrev sourceSATConstraintFamily (F : Formula) (momentBudget : ℕ) :=
             (F.clauses.get clause).LocalVariable ×
               Fin (momentBudget + 1))))
 
-private def sourceSATFamilyRowCount
+/-- Number of field checks contributed by one SAT constraint family. -/
+def sourceSATFamilyRowCount
     (F : Formula) [Fintype K]
     (points : Finset K) (momentBudget : ℕ)
     (family : sourceSATConstraintFamily F momentBudget) : ℕ :=
@@ -4940,7 +4942,8 @@ private def sourceSATFamilyLinearMap
               (sourceShiftedMomentMap F points variablePlace
                 clause tuple localVar j.val)
 
-private def sourceSATFamilyTarget
+/-- Target values for the field checks of one SAT constraint family. -/
+def sourceSATFamilyTarget
     (F : Formula) [Fintype K]
     (points : Finset K) (momentBudget : ℕ)
     (family : sourceSATConstraintFamily F momentBudget) :
@@ -4949,7 +4952,8 @@ private def sourceSATFamilyTarget
     | .inl _ => 1
     | .inr _ => 0
 
-private def sourceSATFamilyFieldMatrix
+/-- Matrix of field checks for one SAT constraint family. -/
+def sourceSATFamilyFieldMatrix
     (F : Formula) [Fintype K]
     (points : Finset K)
     (variablePlace : Fin F.variableCount → K)
@@ -4962,7 +4966,7 @@ private def sourceSATFamilyFieldMatrix
     (sourceSATFamilyLinearMap F points variablePlace momentBudget family)
 
 /-- GapCVP reduction support. -/
-def concreteSATBinaryAffineSystem
+@[expose] def concreteSATBinaryAffineSystem
     [Algebra (ZMod 2) K] [Fintype K]
     (F : Formula)
     {e : ℕ} (fieldBasis : Module.Basis (Fin e) (ZMod 2) K)
@@ -4995,7 +4999,7 @@ private theorem concreteSATBinaryAffineSystem_solves_iff_family
   simp only [sourceSATFamilyFieldMatrix, LinearMap.toMatrix'_mulVec]
 
 /-- GapCVP reduction support. -/
-noncomputable def concreteSATFieldChecks
+@[expose] noncomputable def concreteSATFieldChecks
     (F : Formula) [Fintype K]
     (points : Finset K)
     (variablePlace : Fin F.variableCount → K)
@@ -5140,7 +5144,7 @@ theorem concreteSATBinaryAffineSystem_solves_iff
         momentBudget _)
 
 /-- GapCVP reduction support. -/
-def sourceSATPuncturedGrid
+@[expose] def sourceSATPuncturedGrid
     (F : Formula) [Fintype K]
     (variablePlace : Fin F.variableCount → K) : Finset K := by
   classical
@@ -5792,11 +5796,11 @@ theorem sourceOneHotSignedTable_squaredNorm
       simp only [one_mul, Nat.add_comm]
 
 /-- GapCVP reduction support. -/
-def integerSquaredNorm {n : ℕ} (z : Fin n → ℤ) : ℕ :=
+@[expose] def integerSquaredNorm {n : ℕ} (z : Fin n → ℤ) : ℕ :=
   ∑ i : Fin n, (z i).natAbs ^ 2
 
 /-- GapCVP reduction support. -/
-def sourceOneHotCompletenessRadius
+@[expose] def sourceOneHotCompletenessRadius
     (F : Formula) {α : Type*} (points : Finset α) : ℚ :=
   (Nat.ceil
     (Real.sqrt (((F.clauses.length + 1) * points.card : ℕ) : ℝ)) : ℚ)

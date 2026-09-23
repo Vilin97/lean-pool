@@ -49,7 +49,7 @@ open GapCVP.CNFFiveFamilyForbiddenWholeClauseExactSourceTM
 open GapCVP.CNFFiveFamilyIndependentAnchoredFamilyStreamTM
 
 /-- GapCVP reduction support. -/
-def fiveIndependentFixedFamilyStreamWord
+@[expose] def fiveIndependentFixedFamilyStreamWord
     {α : Type} (indices : List α)
     (stream : α → List Bool → List Bool)
     (original : List Bool) : List Bool :=
@@ -77,7 +77,7 @@ private noncomputable def fiveFamilyIndependentFixedFamilyStreamComputable
       exact physical
 
 /-- GapCVP reduction support. -/
-def fiveIndependentAtLeastBundledStreamWord
+@[expose] def fiveIndependentAtLeastBundledStreamWord
     (bound : Polynomial ℕ)
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier) :
@@ -107,7 +107,7 @@ private noncomputable def fiveFamilyIndependentAtLeastBundledStreamComputable
       (completePhaseSymbolCount machine.tm + 1))
 
 /-- GapCVP reduction support. -/
-def fiveIndependentAtMostFixedPairWorker
+@[expose] def fiveIndependentAtMostFixedPairWorker
     (grid : Polynomial ℕ)
     (alphabet first second : ℕ) : List Bool → List Bool :=
   if first < second then
@@ -132,7 +132,7 @@ private noncomputable def fiveFamilyIndependentAtMostFixedPairWorkerComputable
         grid alphabet
 
 /-- GapCVP reduction support. -/
-def fiveIndependentAtMostFixedPairBundledStreamWord
+@[expose] def fiveIndependentAtMostFixedPairBundledStreamWord
     (bound : Polynomial ℕ)
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
@@ -169,7 +169,7 @@ private noncomputable def fiveFamilyIndependentAtMostFixedPairBundledStreamCompu
       pair.1.val pair.2.val)
 
 /-- GapCVP reduction support. -/
-def fiveIndependentAtMostBundledStreamWord
+@[expose] def fiveIndependentAtMostBundledStreamWord
     (bound : Polynomial ℕ)
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier) :
@@ -196,7 +196,7 @@ private noncomputable def fiveFamilyIndependentAtMostBundledStreamComputable
         bound machine pair)
 
 /-- GapCVP reduction support. -/
-def fiveIndependentInitialBundledStreamWord
+@[expose] def fiveIndependentInitialBundledStreamWord
     (bound : Polynomial ℕ)
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier) :
@@ -218,7 +218,7 @@ private noncomputable def fiveFamilyIndependentInitialBundledStreamComputable
       bound machine)
 
 /-- GapCVP reduction support. -/
-def fiveIndependentAcceptanceBundledStreamWord
+@[expose] def fiveIndependentAcceptanceBundledStreamWord
     (bound : Polynomial ℕ)
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
@@ -245,7 +245,7 @@ private noncomputable def fiveFamilyIndependentAcceptanceBundledStreamComputable
   simpa only [Function.comp_def] using physical
 
 /-- GapCVP reduction support. -/
-def fiveIndependentForbiddenFixedTupleWorker
+@[expose] def fiveIndependentForbiddenFixedTupleWorker
     (bound : Polynomial ℕ)
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
@@ -282,7 +282,7 @@ private noncomputable def fiveFamilyIndependentForbiddenFixedTupleWorkerComputab
           (completePhaseSymbolCount machine.tm + 1)
 
 /-- GapCVP reduction support. -/
-def fiveIndependentForbiddenFixedTupleBundledStreamWord
+@[expose] def fiveIndependentForbiddenFixedTupleBundledStreamWord
     (bound : Polynomial ℕ)
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
@@ -313,7 +313,7 @@ private noncomputable def fiveFamilyIndependentForbiddenFixedTupleBundledStreamC
       bound machine symbols)
 
 /-- GapCVP reduction support. -/
-def fiveIndependentForbiddenBundledStreamWord
+@[expose] def fiveIndependentForbiddenBundledStreamWord
     (bound : Polynomial ℕ)
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier) :
@@ -341,7 +341,7 @@ private noncomputable def fiveFamilyIndependentForbiddenBundledStreamComputable
         bound machine symbols)
 
 /-- GapCVP reduction support. -/
-def fiveIndependentActualBundledCatalogueWord
+@[expose] def fiveIndependentActualBundledCatalogueWord
     (bound : Polynomial ℕ)
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)

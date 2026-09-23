@@ -499,7 +499,7 @@ inductive FiveFamilyForbiddenWindowCoordinate where
   | next
 
 /-- GapCVP reduction support. -/
-def fiveForbiddenUnarySuccessorWord
+@[expose] def fiveForbiddenUnarySuccessorWord
     (source : List Bool → List Bool)
     (input : List Bool) : List Bool :=
   true :: source input
@@ -573,7 +573,7 @@ private theorem fiveFamilyForbiddenComputedUnaryMinimumWord_valid
       second []
 
 /-- GapCVP reduction support. -/
-def fiveFamilyForbiddenWindowSourceRank
+@[expose] def fiveFamilyForbiddenWindowSourceRank
     {T : ℕ} (window : Window T) : ℕ :=
   fiveFamilyFlatSourceRowMajorIndex window.1.1 window.1.2
 
@@ -945,7 +945,7 @@ noncomputable def fiveFamilyForbiddenCoordinateSourceVariableCodeComputable
   | .next => (nextTime window, window.1.2, symbols.2.2.2)
 
 /-- GapCVP reduction support. -/
-def fiveFamilyForbiddenWindowSlotSymbol
+@[expose] def fiveFamilyForbiddenWindowSlotSymbol
     {S : ℕ} (symbols : WindowSymbols S) :
     FiveFamilyForbiddenWindowCoordinate → Symbol S
   | .left => symbols.1

@@ -971,7 +971,7 @@ private noncomputable def flatAnnotatedCompleteTotalOrderingComputable :
     flatAnnotatedCompleteOriginalShapeDispatchInputComputable hdispatch
 
 /-- GapCVP reduction support. -/
-def annotatedCompleteTotalSourceComparison
+@[expose] def annotatedCompleteTotalSourceComparison
     (input : List Bool) : List Bool :=
   lengthPrefixedWord input ++ annotatedCompleteTotalOrderingWord input
 
@@ -1323,7 +1323,7 @@ noncomputable def fiveForbiddenOneBitGuardedComputable
     then second else first
 
 /-- GapCVP reduction support. -/
-def fiveForbiddenEncodedSortedAtoms
+@[expose] def fiveForbiddenEncodedSortedAtoms
     {α : Type} [Encodable α]
     (first second third fourth : α) : α × α × α × α :=
   let firstLow := fiveFamilyForbiddenEncodedMinimum first second
@@ -1344,7 +1344,7 @@ def fiveForbiddenEncodedSortedAtoms
     outerHigh)
 
 /-- GapCVP reduction support. -/
-def fiveForbiddenEncodedSortedAtomList
+@[expose] def fiveForbiddenEncodedSortedAtomList
     {α : Type} [Encodable α]
     (first second third fourth : α) : List α :=
   let sorted := fiveForbiddenEncodedSortedAtoms
@@ -1380,7 +1380,7 @@ theorem fiveFamilyForbiddenEncodedSortedAtomList_pairwise
     omega
 
 /-- GapCVP reduction support. -/
-def fiveForbiddenWindowSortedUniqueLiteralList
+@[expose] def fiveForbiddenWindowSortedUniqueLiteralList
     {T S : ℕ}
     (window : Window T) (symbols : WindowSymbols S) :
     List (SignedLiteral T S) :=

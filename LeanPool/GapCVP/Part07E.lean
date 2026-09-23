@@ -139,7 +139,7 @@ private noncomputable def fiveForbiddenRawSourceMaximumComputable
   exact physical
 
 /-- GapCVP reduction support. -/
-def fiveForbiddenRawWindowSlotWord
+@[expose] def fiveForbiddenRawWindowSlotWord
     (grid : Polynomial ℕ)
     (coordinate : FiveFamilyForbiddenWindowCoordinate)
     (symbol : ℕ) : List Bool → List Bool :=
@@ -157,7 +157,7 @@ private noncomputable def fiveForbiddenRawWindowSlotComputable
     grid coordinate symbol
 
 /-- GapCVP reduction support. -/
-def fiveForbiddenRawWindowFirstLowWord
+@[expose] def fiveForbiddenRawWindowFirstLowWord
     (grid : Polynomial ℕ) (leftSymbol centerSymbol : ℕ) :
     List Bool → List Bool :=
   fiveForbiddenRawSourceMinimumWord
@@ -176,7 +176,7 @@ private noncomputable def fiveFamilyForbiddenRawWindowFirstLowComputable
       grid .center centerSymbol)
 
 /-- GapCVP reduction support. -/
-def fiveForbiddenRawWindowFirstHighWord
+@[expose] def fiveForbiddenRawWindowFirstHighWord
     (grid : Polynomial ℕ) (leftSymbol centerSymbol : ℕ) :
     List Bool → List Bool :=
   fiveForbiddenRawSourceMaximumWord
@@ -195,7 +195,7 @@ private noncomputable def fiveFamilyForbiddenRawWindowFirstHighComputable
       grid .center centerSymbol)
 
 /-- GapCVP reduction support. -/
-def fiveForbiddenRawWindowSecondLowWord
+@[expose] def fiveForbiddenRawWindowSecondLowWord
     (grid : Polynomial ℕ) (rightSymbol nextSymbol : ℕ) :
     List Bool → List Bool :=
   fiveForbiddenRawSourceMinimumWord
@@ -214,7 +214,7 @@ private noncomputable def fiveFamilyForbiddenRawWindowSecondLowComputable
       grid .next nextSymbol)
 
 /-- GapCVP reduction support. -/
-def fiveForbiddenRawWindowSecondHighWord
+@[expose] def fiveForbiddenRawWindowSecondHighWord
     (grid : Polynomial ℕ) (rightSymbol nextSymbol : ℕ) :
     List Bool → List Bool :=
   fiveForbiddenRawSourceMaximumWord
@@ -233,7 +233,7 @@ private noncomputable def fiveFamilyForbiddenRawWindowSecondHighComputable
       grid .next nextSymbol)
 
 /-- GapCVP reduction support. -/
-def fiveForbiddenRawWindowOuterLowWord
+@[expose] def fiveForbiddenRawWindowOuterLowWord
     (grid : Polynomial ℕ)
     (leftSymbol centerSymbol rightSymbol nextSymbol : ℕ) :
     List Bool → List Bool :=
@@ -256,7 +256,7 @@ private noncomputable def fiveFamilyForbiddenRawWindowOuterLowComputable
       grid rightSymbol nextSymbol)
 
 /-- GapCVP reduction support. -/
-def fiveForbiddenRawWindowMiddleLeftWord
+@[expose] def fiveForbiddenRawWindowMiddleLeftWord
     (grid : Polynomial ℕ)
     (leftSymbol centerSymbol rightSymbol nextSymbol : ℕ) :
     List Bool → List Bool :=
@@ -279,7 +279,7 @@ private noncomputable def fiveFamilyForbiddenRawWindowMiddleLeftComputable
       grid rightSymbol nextSymbol)
 
 /-- GapCVP reduction support. -/
-def fiveForbiddenRawWindowMiddleRightWord
+@[expose] def fiveForbiddenRawWindowMiddleRightWord
     (grid : Polynomial ℕ)
     (leftSymbol centerSymbol rightSymbol nextSymbol : ℕ) :
     List Bool → List Bool :=
@@ -302,7 +302,7 @@ private noncomputable def fiveFamilyForbiddenRawWindowMiddleRightComputable
       grid rightSymbol nextSymbol)
 
 /-- GapCVP reduction support. -/
-def fiveForbiddenRawWindowOuterHighWord
+@[expose] def fiveForbiddenRawWindowOuterHighWord
     (grid : Polynomial ℕ)
     (leftSymbol centerSymbol rightSymbol nextSymbol : ℕ) :
     List Bool → List Bool :=
@@ -325,7 +325,7 @@ private noncomputable def fiveFamilyForbiddenRawWindowOuterHighComputable
       grid rightSymbol nextSymbol)
 
 /-- GapCVP reduction support. -/
-def fiveForbiddenRawWindowMiddleLowWord
+@[expose] def fiveForbiddenRawWindowMiddleLowWord
     (grid : Polynomial ℕ)
     (leftSymbol centerSymbol rightSymbol nextSymbol : ℕ) :
     List Bool → List Bool :=
@@ -348,7 +348,7 @@ private noncomputable def fiveFamilyForbiddenRawWindowMiddleLowComputable
       grid leftSymbol centerSymbol rightSymbol nextSymbol)
 
 /-- GapCVP reduction support. -/
-def fiveForbiddenRawWindowMiddleHighWord
+@[expose] def fiveForbiddenRawWindowMiddleHighWord
     (grid : Polynomial ℕ)
     (leftSymbol centerSymbol rightSymbol nextSymbol : ℕ) :
     List Bool → List Bool :=
@@ -462,7 +462,7 @@ private noncomputable def fiveFamilyForbiddenRawDistinctPayloadComputable
   simpa only [Function.comp_def] using physical
 
 /-- GapCVP reduction support. -/
-def fiveForbiddenExactWindowDistinctPayloadWord
+@[expose] def fiveForbiddenExactWindowDistinctPayloadWord
     (grid : Polynomial ℕ)
     (leftSymbol centerSymbol rightSymbol nextSymbol : ℕ)
     (payload : List Bool → List Bool) : List Bool → List Bool :=
@@ -497,7 +497,7 @@ private noncomputable def fiveFamilyForbiddenExactWindowDistinctPayloadComputabl
     hpayload
 
 /-- GapCVP reduction support. -/
-def fiveForbiddenExactWindowWholeClauseRecordWord
+@[expose] def fiveForbiddenExactWindowWholeClauseRecordWord
     (grid : Polynomial ℕ)
     (leftSymbol centerSymbol rightSymbol nextSymbol : ℕ)
     (input : List Bool) : List Bool :=

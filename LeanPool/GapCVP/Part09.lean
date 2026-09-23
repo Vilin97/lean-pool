@@ -21,7 +21,7 @@ public import Mathlib.RingTheory.SimpleRing.Principal
 
 /-! # GapCVP proof, part 09 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -203,7 +203,7 @@ theorem sourceFormulaDimension_le
       (sourceSizeParameter_ge_one_hundred encodingLength formula)
 
 /-- GapCVP reduction support. -/
-def sourceFormulaBinarySystem
+@[expose] def sourceFormulaBinarySystem
     (encodingLength : ℕ) (formula : Formula) : BinaryAffineSystem :=
   concreteSATBinaryAffineSystem formula
     (sourceFormulaFieldBasis encodingLength formula)
@@ -1282,7 +1282,8 @@ noncomputable def familySplittingPolynomial
     (family : ι → F[X]) : F[X] :=
   ∏ i : ι, family i
 
-private abbrev CommonSplittingField
+/-- Splitting field shared by a finite family of polynomials. -/
+abbrev CommonSplittingField
     {F ι : Type*} [Field F] [Fintype ι]
     (family : ι → F[X]) :=
   (familySplittingPolynomial family).SplittingField
@@ -1318,7 +1319,8 @@ noncomputable abbrev CommonAmbientSplittingField {F : Type*} [Field F]
     {t : ℕ} (polynomials : Fin t → F[X]) :=
   CommonSplittingField polynomials
 
-private noncomputable abbrev CommonSeparableSplittingField {F : Type*} [Field F]
+/-- Separable subfield of the common splitting field of a finite polynomial family. -/
+noncomputable abbrev CommonSeparableSplittingField {F : Type*} [Field F]
     {t : ℕ} (polynomials : Fin t → F[X]) :=
   separableClosure F (CommonAmbientSplittingField polynomials)
 
@@ -1358,7 +1360,8 @@ open Polynomial Matrix Finset
 
 variable {K : Type*} [Field K]
 
-private def genericMomentSupportPolynomial (h : ℕ) (moments : ℕ → K[X]) :
+/-- Polynomial whose roots encode a support of size at most the given bound. -/
+def genericMomentSupportPolynomial (h : ℕ) (moments : ℕ → K[X]) :
     (RatFunc K)[X] :=
   Polynomial.X ^ h +
     ∑ i : Fin h,
@@ -6632,7 +6635,8 @@ def sourceFormulaExplicitGridOrder
     (GapCVP.BinarySourceCoordinateOrder.sourceFormulaGridOrder
       encodingLength formula)
 
-private def explicitFiniteReindexLinearEquiv
+/-- Reindexes a field-valued coordinate function along a finite equivalence. -/
+def explicitFiniteReindexLinearEquiv
     {K : Type*} [Field K]
     {α : Type*} {n : ℕ}
     (order : Fin n ≃ α) :
@@ -6699,7 +6703,7 @@ theorem explicitShiftedDegree_lt_grid
       encodingLength formula index)
 
 /-- GapCVP reduction support. -/
-def explicitFamilyLinearMap
+@[expose] def explicitFamilyLinearMap
     (encodingLength : ℕ) (formula : Formula)
     (family : ExplicitConstraintFamily encodingLength formula) :
     (Fin (sourceFormulaDimension encodingLength formula) →
@@ -6748,7 +6752,7 @@ def explicitFamilyLinearMap
                   clause tuple localVariable moment.val))
 
 /-- GapCVP reduction support. -/
-def explicitFamilyTarget
+@[expose] def explicitFamilyTarget
     (encodingLength : ℕ) (formula : Formula)
     (family : ExplicitConstraintFamily encodingLength formula) :
     Fin (explicitFamilyRowCount
@@ -6758,7 +6762,8 @@ def explicitFamilyTarget
     | .inl _ => 1
     | .inr _ => 0
 
-private def explicitFamilyFieldMatrix
+/-- Matrix encoding the linear checks of one explicit constraint family. -/
+def explicitFamilyFieldMatrix
     (encodingLength : ℕ) (formula : Formula)
     (family : ExplicitConstraintFamily encodingLength formula) :
     Matrix
