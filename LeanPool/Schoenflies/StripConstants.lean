@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Strip
-import LeanPool.Schoenflies.PolyPath
+module
+
+public import LeanPool.Schoenflies.Strip
+public import LeanPool.Schoenflies.PolyPath
 
 /-!
 # The constants of a polygonal collar exist
@@ -58,6 +60,8 @@ use whichever side is convenient. It carries enough simplicity for both statemen
 * `Schoenflies.StripData.nbhd_subset_thickening` — the collar of Lemma 1.8 lies in the
   `R`-neighbourhood of the curve, which is how the prescribed open set is honoured.
 -/
+
+@[expose] public section
 
 open Metric Set
 

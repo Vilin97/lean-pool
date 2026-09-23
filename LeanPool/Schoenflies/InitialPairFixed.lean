@@ -3,9 +3,11 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.InitialPair
-import LeanPool.Schoenflies.JordanClosed
-import LeanPool.Schoenflies.BoundaryCycles
+module
+
+public import LeanPool.Schoenflies.InitialPair
+public import LeanPool.Schoenflies.JordanClosed
+public import LeanPool.Schoenflies.BoundaryCycles
 
 /-!
 # The complete construction of `prop:initial-pair`
@@ -77,6 +79,8 @@ lists it holds are closed walks of `initSkel` whose cells are exactly `faceCells
 * `Schoenflies.exists_initialData'`, `Schoenflies.initial_pair'` — `prop:initial-pair`, with the
   anchor clause and the matched labelling in the statement.
 -/
+
+@[expose] public section
 
 open Metric Set Topology unitInterval
 open scoped Graph

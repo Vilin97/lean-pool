@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tom Adamczewski
 -/
 
-import LeanPool.Erdos548.RootedTrees
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
+module
+
+public import LeanPool.Erdos548.RootedTrees
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
 
 /-!
 # Erdős problem 548: the Erdős–Sós conjecture
@@ -35,6 +37,8 @@ target of order `t ≥ 2`. The marked-state count is exactly `2 * |E(G)| * (n - 
 (`tree_free_edge_bound`), contradicting the stated density. All counts and injections are finite
 and exact.
 -/
+
+@[expose] public section
 
 open SimpleGraph
 

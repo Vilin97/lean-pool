@@ -3,9 +3,11 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.CellulationInvariants
-import LeanPool.Schoenflies.JordanClosed
-import LeanPool.Schoenflies.Graph.PathGraph
+module
+
+public import LeanPool.Schoenflies.CellulationInvariants
+public import LeanPool.Schoenflies.JordanClosed
+public import LeanPool.Schoenflies.Graph.PathGraph
 
 /-!
 # Realizing a 2-cell split
@@ -78,6 +80,8 @@ Three facts about drawings and paths had no home on `main` and are proved here i
   applies). The induction is on `Graph.IsPath`, and the freshness clause of a path is exactly
   what rules out the returning point that would break `IsArcBetween.concatenate`.
 -/
+
+@[expose] public section
 
 open Set Schoenflies
 open scoped Graph

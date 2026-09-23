@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import Mathlib.Combinatorics.Graph.Delete
-import LeanPool.Schoenflies.Graph.Walk
+module
+
+public import Mathlib.Combinatorics.Graph.Delete
+public import LeanPool.Schoenflies.Graph.Walk
 
 /-!
 # Cycles, acyclicity and bridges
@@ -73,6 +75,8 @@ subgraph can answer differently. `Graph.IsWalk.anti` from `Walk.lean` is the eng
   step of `lem:three-leaf-tree`'s proof that says "a second neighbor on the path would close
   a cycle"; the form the tree module's longest-path argument consumes.
 -/
+
+@[expose] public section
 
 open Set
 

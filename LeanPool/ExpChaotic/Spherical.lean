@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lasse Rempe
 -/
 
-import LeanPool.ExpChaotic.Covering
-import Mathlib.Topology.Compactification.OnePoint.Sphere
-import Mathlib.Topology.UniformSpace.Uniformizable
+module
+
+public import LeanPool.ExpChaotic.Covering
+public import Mathlib.Topology.Compactification.OnePoint.Sphere
+public import Mathlib.Topology.UniformSpace.Uniformizable
+public import Mathlib.Topology.UniformSpace.OfCompactT2
 
 /-!
 # Spherical non-equicontinuity and non-normality
@@ -19,6 +22,8 @@ with generative AI assistance including Copilot, Claude, and particularly ChatGP
 The initial proof architecture uses John Harrison's HOL Light formalisation.
 See `LeanPool.ExpChaotic` for attribution and the upstream source.
 -/
+
+@[expose] public section
 
 open Function Filter Set Metric
 open scoped Topology NNReal Uniformity

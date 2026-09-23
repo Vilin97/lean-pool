@@ -4,14 +4,18 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PDL formalization contributors (see project card)
 -/
 
-import LeanPool.PDL.Semantics
-import LeanPool.PDL.Vocab
-import Mathlib.Data.Finset.Sort
+module
+
+public import LeanPool.PDL.Semantics
+public import LeanPool.PDL.Vocab
+public import Mathlib.Data.Finset.Sort
 
 /-! # (Big) Disjunction and Conjunction
 
 Here we define ⋀ and ⋁ on formulas and seveal helper lemmas.
 -/
+
+@[expose] public section
 
 namespace PDL
 

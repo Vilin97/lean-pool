@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Boon Suan Ho
 -/
 
-import LeanPool.Nivat.Core.Basic
-import LeanPool.Nivat.TwoFactors.FiniteState
-import Mathlib.Data.Finset.Max
-import Mathlib.Tactic.Linarith
+module
+
+public import LeanPool.Nivat.Core.Basic
+public import LeanPool.Nivat.TwoFactors.FiniteState
+public import Mathlib.Data.Finset.Max
+public import Mathlib.Tactic.Linarith
 
 /-
 Upstream: https://github.com/boonsuan/nivat
@@ -46,6 +48,8 @@ distinguish their restrictions to an infinite strip. A deterministic predecessor
 gives a transverse period. Otherwise the greatest disagreeing row positions
 an agreeing strip immediately above a disagreement.
 -/
+
+@[expose] public section
 
 namespace Nivat.TwoFactors
 
