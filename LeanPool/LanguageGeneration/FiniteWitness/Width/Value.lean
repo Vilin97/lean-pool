@@ -3,10 +3,14 @@ Copyright (c) 2026 Xiaoyu Li, Andi Han, Jiaojiao Jiang, Junbin Gao. All rights r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xiaoyu Li, Andi Han, Jiaojiao Jiang, Junbin Gao
 -/
-import LeanPool.LanguageGeneration.FiniteWitness.Width.Foundation
-import Mathlib.Order.WithBot
+module
+
+public import LeanPool.LanguageGeneration.FiniteWitness.Width.Foundation
+public import Mathlib.Order.WithBot
 
 /-! The ordered range 0,1,2,...,omega,omega+1, and its exact threshold. -/
+
+@[expose] public section
 
 namespace GenLimit.FiniteWitness
 

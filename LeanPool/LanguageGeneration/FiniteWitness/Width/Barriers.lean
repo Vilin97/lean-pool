@@ -3,12 +3,16 @@ Copyright (c) 2026 Xiaoyu Li, Andi Han, Jiaojiao Jiang, Junbin Gao. All rights r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xiaoyu Li, Andi Han, Jiaojiao Jiang, Junbin Gao
 -/
-import LeanPool.LanguageGeneration.FiniteWitness.Width.Endpoints
-import Mathlib.Tactic.Tauto
+module
+
+public import LeanPool.LanguageGeneration.FiniteWitness.Width.Endpoints
+public import Mathlib.Tactic.Tauto
 
 /-!
 # Obstructions to countable tests and finite observation profiles
 -/
+
+@[expose] public section
 
 namespace GenLimit.FiniteWitness
 

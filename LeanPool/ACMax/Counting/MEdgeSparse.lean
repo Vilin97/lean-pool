@@ -3,9 +3,11 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import Mathlib.Tactic.Push
-import LeanPool.ACMax.Counting.Moats
-import LeanPool.ACMax.Counting.SparseCore
+module
+
+public import Mathlib.Tactic.Push
+public import LeanPool.ACMax.Counting.Moats
+public import LeanPool.ACMax.Counting.SparseCore
 
 /-!
 # The sparse-core M-edge moat
@@ -16,6 +18,8 @@ internal ordered-pair count would be at most twice its degree excess.  The moat
 and bulk incidence ledgers would then force `2 * n + 2 ≤ 5 * |F|`, which is
 impossible from order ten onward.
 -/
+
+@[expose] public section
 
 namespace ACMax
 

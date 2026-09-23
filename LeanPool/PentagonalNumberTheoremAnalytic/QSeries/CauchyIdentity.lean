@@ -3,8 +3,10 @@ Copyright (c) 2026 Jonathan Conrad, Paula Muermann, Maryna Viazovska. All rights
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jonathan Conrad, Paula Muermann, Maryna Viazovska
 -/
-import LeanPool.PentagonalNumberTheoremAnalytic.QSeries.InfPochhammer
-import Mathlib.Analysis.Normed.Group.Tannery
+module
+
+public import LeanPool.PentagonalNumberTheoremAnalytic.QSeries.InfPochhammer
+public import Mathlib.Analysis.Normed.Group.Tannery
 
 /-!
 # The Cauchy identity (infinite q-binomial theorem)
@@ -19,6 +21,8 @@ The proof follows Heine's classical functional-equation argument.
 
 * `QSeries.hasSum_qPochhammer_div_mul_pow` — the Cauchy identity.
 -/
+
+@[expose] public section
 
 open Finset Filter
 open scoped Topology

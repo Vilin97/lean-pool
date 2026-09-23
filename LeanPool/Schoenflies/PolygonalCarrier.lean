@@ -3,7 +3,9 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.PolyPath
+module
+
+public import LeanPool.Schoenflies.PolyPath
 
 /-!
 # Polygonal connectedness over a carrier
@@ -32,6 +34,8 @@ Brick B6 of `lem:polygonal-redrawing` (H6): polygonal connectivity one level up.
 * `exists_poly_of_isPreconnected'` — the old `exists_poly_of_isPreconnected` re-derived from
   it, verbatim; the `example` below it is a machine check that the statements agree.
 -/
+
+@[expose] public section
 
 open Metric Set
 

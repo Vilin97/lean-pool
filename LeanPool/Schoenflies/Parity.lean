@@ -3,10 +3,12 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Subdivide
-import LeanPool.Schoenflies.Direction
-import LeanPool.Schoenflies.Square
-import LeanPool.Schoenflies.PolyPath
+module
+
+public import LeanPool.Schoenflies.Subdivide
+public import LeanPool.Schoenflies.Direction
+public import LeanPool.Schoenflies.Square
+public import LeanPool.Schoenflies.PolyPath
 
 /-!
 # The crossing count of a polygon, and its parity
@@ -65,6 +67,8 @@ zero over the list". `edgesOf` builds a closed chain from a cyclic vertex list, 
 * `IsClosedChain`, `edgesOf`, `isClosedChain_subdivide` — the closedness hypothesis, its
   supply from a cyclic vertex list, and its survival of subdivision.
 -/
+
+@[expose] public section
 
 open Metric Set
 
