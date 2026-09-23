@@ -3,7 +3,9 @@ Copyright (c) 2026 Xiaoyu Li, Andi Han, Jiaojiao Jiang, Junbin Gao. All rights r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xiaoyu Li, Andi Han, Jiaojiao Jiang, Junbin Gao
 -/
-import LeanPool.LanguageGeneration.FiniteWitness.Simplified.Capture
+module
+
+public import LeanPool.LanguageGeneration.FiniteWitness.Simplified.Capture
 
 /-!
 # Bounded capture for the separation-width hierarchy
@@ -12,6 +14,8 @@ The hierarchy uses the direct diagonal construction from `Simplified.Capture`.
 These compatibility theorems keep the width API without maintaining a second
 finite-state construction and a separate induction on the cardinality bound.
 -/
+
+@[expose] public section
 
 namespace GenLimit.FiniteWitness
 

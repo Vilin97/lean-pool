@@ -4,9 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PDL formalization contributors (see project card)
 -/
 
-import LeanPool.PDL.Local.Tableau
+module
+
+public import LeanPool.PDL.Local.Tableau
 
 /-! # Interpolants preserved by local tableau rules -/
+
+@[expose] public section
 
 namespace PDL
 
@@ -242,7 +246,7 @@ private theorem satisfiable_con_union {X I : Finset Formula}
   · exact hcon φ (Formula.mem_pdlSort.mpr hφ)
 
 /-- Maehara interpolation for a oneSidedL local rule. -/
-private theorem localInterpolantStep_oneSidedL (L R : Finset Formula) (o : Olf) (Lcond : Finset
+theorem localInterpolantStep_oneSidedL (L R : Finset Formula) (o : Olf) (Lcond : Finset
   Formula)
   (ress_1 C : Finset Sequent) {ress : Finset (Finset Formula)} (orule : OneSidedLocalRule Lcond
     ress)
@@ -301,7 +305,7 @@ private theorem localInterpolantStep_oneSidedL (L R : Finset Formula) (o : Olf) 
       exact w_ φ (Finset.mem_union_right _ h)
 
 /-- Maehara interpolation for a oneSidedR local rule. -/
-private theorem localInterpolantStep_oneSidedR (L R : Finset Formula) (o : Olf) (Rcond : Finset
+theorem localInterpolantStep_oneSidedR (L R : Finset Formula) (o : Olf) (Rcond : Finset
   Formula)
   (ress_1 C : Finset Sequent) {ress : Finset (Finset Formula)} (orule : OneSidedLocalRule Rcond
     ress)
@@ -362,7 +366,7 @@ private theorem localInterpolantStep_oneSidedR (L R : Finset Formula) (o : Olf) 
     · exact w_ φ (Finset.mem_union_left _ h)
 
 /-- Maehara interpolation for a loadedL local rule. -/
-private theorem localInterpolantStep_loadedL (L R : Finset Formula) (o : Olf) (ress_1 C : Finset
+theorem localInterpolantStep_loadedL (L R : Finset Formula) (o : Olf) (ress_1 C : Finset
   Sequent)
   {ress : Finset (Finset Formula × Option NegLoadFormula)} (χ : LoadFormula) (lrule : LoadRule
     (~'χ) ress)
@@ -428,7 +432,7 @@ private theorem localInterpolantStep_loadedL (L R : Finset Formula) (o : Olf) (r
       exact w_ φ (Finset.mem_union_right _ h)
 
 /-- Maehara interpolation for a loadedR local rule. -/
-private theorem localInterpolantStep_loadedR (L R : Finset Formula) (o : Olf) (ress_1 C : Finset
+theorem localInterpolantStep_loadedR (L R : Finset Formula) (o : Olf) (ress_1 C : Finset
   Sequent)
   {ress : Finset (Finset Formula × Option NegLoadFormula)} (χ : LoadFormula) (lrule : LoadRule
     (~'χ) ress)

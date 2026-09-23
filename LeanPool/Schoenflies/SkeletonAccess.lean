@@ -3,9 +3,11 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.SkeletonSectors
-import LeanPool.Schoenflies.AccessibleJoin
-import LeanPool.Schoenflies.Square
+module
+
+public import LeanPool.Schoenflies.SkeletonSectors
+public import LeanPool.Schoenflies.AccessibleJoin
+public import LeanPool.Schoenflies.Square
 
 /-!
 # The sector decomposition at every point, and polygonal-side accessibility
@@ -124,6 +126,8 @@ nothing beyond the shared hypothesis.
   `Schoenflies.frontier_openSquare_subset` — "the analogous assertion holds at every boundary
   point of a target face" of the same lemma.
 -/
+
+@[expose] public section
 
 open Metric Set
 open scoped Graph

@@ -1,3 +1,5 @@
-import Challenge.Mazur
-import Challenge.McKay
-import Challenge.Odlyzko
+module  -- shake: keep-all --deprecated_module: ignore
+
+public import Challenge.Mazur
+public import Challenge.McKay
+public import Challenge.Odlyzko

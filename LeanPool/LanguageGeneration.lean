@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xiaoyu Li, Andi Han, Jiaojiao Jiang, Junbin Gao, Shuangping Li, Peng Zhang
 -/
 
-import LeanPool.LanguageGeneration.FiniteWitness
-import LeanPool.LanguageGeneration.FiniteWitness.Simplified
-import LeanPool.LanguageGeneration.FiniteWitness.Width
+module
+
+public import LeanPool.LanguageGeneration.FiniteWitness
+public import LeanPool.LanguageGeneration.FiniteWitness.Simplified
+public import LeanPool.LanguageGeneration.FiniteWitness.Width
 
 /-!
 # Finite witnesses and the width hierarchy for language generation

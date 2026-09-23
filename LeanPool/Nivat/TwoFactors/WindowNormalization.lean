@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Boon Suan Ho
 -/
 
-import LeanPool.Nivat.TwoFactors.Window
-import LeanPool.Nivat.Core.Reindex
+module
+
+public import LeanPool.Nivat.TwoFactors.Window
+public import LeanPool.Nivat.Core.Reindex
 
 /-
 Upstream: https://github.com/boonsuan/nivat
@@ -44,6 +46,8 @@ reflection in the normal coordinate places the interior above the edge.
 The window and configuration are transported by the same affine bijection;
 the pattern inequality and row-block witnesses are preserved explicitly.
 -/
+
+@[expose] public section
 
 namespace Nivat.TwoFactors
 

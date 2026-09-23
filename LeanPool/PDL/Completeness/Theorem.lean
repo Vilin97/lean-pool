@@ -4,10 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PDL formalization contributors (see project card)
 -/
 
-import LeanPool.PDL.Soundness
-import LeanPool.PDL.Completeness.BuildTreeExistence
+module
+
+public import LeanPool.PDL.Soundness
+public import LeanPool.PDL.Completeness.BuildTreeExistence
 
 /-! # Completeness Proof (Section 6.4) -/
+
+@[expose] public section
 
 namespace PDL
 

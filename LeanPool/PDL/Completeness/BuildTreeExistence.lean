@@ -4,13 +4,17 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PDL formalization contributors (see project card)
 -/
 
-import LeanPool.PDL.Completeness.BuildTreeModel
+module
+
+public import LeanPool.PDL.Completeness.BuildTreeModel
 
 /-! # From winning strategies to model graphs, part 3: the existence lemmas (Section 6.3)
 
 This continues `Pdl/BuildTreeModel.lean`. Here we prove the existence lemmas
 6.18, 6.19 and 6.20 that are needed for Theorem 6.21 (`strmg`).
 -/
+
+@[expose] public section
 
 namespace PDL
 

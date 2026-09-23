@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.QuantitativeStages
-import LeanPool.Schoenflies.GridAttach
+module
+
+public import LeanPool.Schoenflies.QuantitativeStages
+public import LeanPool.Schoenflies.GridAttach
 
 /-!
 # Finite segment overlays on the source side
@@ -30,6 +32,8 @@ geometric core of the forward half of the quantitative-refinement recursion.
   isSourceExtension_of_source_connected_two_common` — the global properties follow from the
   carried source-connectedness invariant and two distinct common source/grid vertices.
 -/
+
+@[expose] public section
 
 open Set
 open scoped Graph

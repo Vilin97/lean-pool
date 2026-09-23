@@ -3,10 +3,12 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Tauto
-import LeanPool.ACMax.InternalEdgesEven
-import LeanPool.ACMax.Reduction.Residual
+module
+
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Tauto
+public import LeanPool.ACMax.InternalEdgesEven
+public import LeanPool.ACMax.Reduction.Residual
 
 /-!
 # Double-open-star certificates and the M-edge dispatch vocabulary
@@ -42,6 +44,8 @@ private to it / shared with `h`), `intDeg g` (non-degree-3 neighbours of `g`),
   `[DecidableEq V]`) that tolerate shared twins and `M`-crosses beyond the W1
   master arithmetic, used in the rich-sea regime.
 -/
+
+@[expose] public section
 
 namespace ACMax
 

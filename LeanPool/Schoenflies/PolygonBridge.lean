@@ -3,10 +3,12 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Strip
-import LeanPool.Schoenflies.Parity
-import LeanPool.Schoenflies.Polygonal
-import LeanPool.Schoenflies.Concatenate
+module
+
+public import LeanPool.Schoenflies.Strip
+public import LeanPool.Schoenflies.Parity
+public import LeanPool.Schoenflies.Polygonal
+public import LeanPool.Schoenflies.Concatenate
 
 /-!
 # The polygon bridge
@@ -79,6 +81,8 @@ the edge list split around the edge being crossed, which is `List.append_of_mem`
 One general lemma is stated here that does not belong here: `Schoenflies.exists_of_mem_cover`,
 the destructor matching `Schoenflies.mem_cover`, whose home is `Schoenflies/Parity.lean`.
 -/
+
+@[expose] public section
 
 open Metric Set
 

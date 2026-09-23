@@ -4,13 +4,17 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PDL formalization contributors (see project card)
 -/
 
-import LeanPool.PDL.Interpolation.ClusterInterpolation
-import LeanPool.PDL.Interpolation.SingletonCluster
+module
+
+public import LeanPool.PDL.Interpolation.ClusterInterpolation
+public import LeanPool.PDL.Interpolation.SingletonCluster
 
 /-! # Defining interpolants (Theorem 8.13)
 
 Here we put together the interpolants for singleton clusters and for proper clusters.
 -/
+
+@[expose] public section
 
 namespace PDL
 

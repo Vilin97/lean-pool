@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.CrosscutExists
-import LeanPool.Schoenflies.CrosscutEncloses
+module
+
+public import LeanPool.Schoenflies.CrosscutExists
+public import LeanPool.Schoenflies.CrosscutEncloses
 
 /-!
 # `lem:outer-chain`, with nothing assumed
@@ -28,6 +30,8 @@ fill it in, and every consumer written in the meantime would have been built on 
   every consecutive pair `Γ p ∪ Γ (p+1)`, it is in the outer face of `Γ 0 ∪ ⋯ ∪ Γ n`. Same
   statement as `Graph.IsPlaneChain.outer_chain`, with its hypothesis discharged.
 -/
+
+@[expose] public section
 
 open Set Schoenflies
 open scoped Graph
