@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
 
-import LeanPool.AsymptoticTrianglePacking.Internal.TightAssembly
+module
+
+public import LeanPool.AsymptoticTrianglePacking.Internal.TightAssembly
 
 /-!
 # LeanPool.AsymptoticTrianglePacking.Internal — existence of the tight-band schedule
@@ -36,6 +38,8 @@ The two per-round band inequalities reduce to the polynomial cores
 
 Must be sorry-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
+
+@[expose] public section
 
 open Finset
 

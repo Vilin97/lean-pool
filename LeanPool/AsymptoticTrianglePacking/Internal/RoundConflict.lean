@@ -3,9 +3,12 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Basic
-import LeanPool.AsymptoticTrianglePacking.Internal.Round
-import LeanPool.AsymptoticTrianglePacking.Internal.Conflict
+
+module
+
+public import LeanPool.AsymptoticTrianglePacking.Internal.Basic
+public import LeanPool.AsymptoticTrianglePacking.Internal.Round
+public import LeanPool.AsymptoticTrianglePacking.Internal.Conflict
 
 /-!
 # LeanPool.AsymptoticTrianglePacking.Internal — Module C4b-0' : round-matching membership via
@@ -23,6 +26,8 @@ Definitions come from `LeanPool.AsymptoticTrianglePacking.Internal.Basic`,
 `LeanPool.AsymptoticTrianglePacking.Internal.Conflict`. Must be placeholder-free and
 axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
+
+@[expose] public section
 
 open Finset
 

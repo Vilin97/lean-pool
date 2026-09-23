@@ -3,12 +3,15 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Basic
-import LeanPool.AsymptoticTrianglePacking.Internal.Greedy
-import LeanPool.AsymptoticTrianglePacking.Internal.Round
-import LeanPool.AsymptoticTrianglePacking.Internal.IterationSeq
-import LeanPool.AsymptoticTrianglePacking.Internal.Convergence
-import Mathlib.Analysis.RCLike.Basic
+
+module
+
+public import LeanPool.AsymptoticTrianglePacking.Internal.Basic
+public import LeanPool.AsymptoticTrianglePacking.Internal.Greedy
+public import LeanPool.AsymptoticTrianglePacking.Internal.Round
+public import LeanPool.AsymptoticTrianglePacking.Internal.IterationSeq
+public import LeanPool.AsymptoticTrianglePacking.Internal.Convergence
+public import Mathlib.Analysis.RCLike.Basic
 
 /-!
 # LeanPool.AsymptoticTrianglePacking.Internal — discharge of the round-dependent iteration
@@ -27,6 +30,8 @@ uncovered vertices, and the uncovered count after `T` rounds is controlled by th
 
 Must be placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
+
+@[expose] public section
 
 open Finset
 

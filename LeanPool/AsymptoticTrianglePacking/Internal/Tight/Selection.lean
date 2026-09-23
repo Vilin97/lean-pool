@@ -3,7 +3,10 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
+
+module
+
+public import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
 
 /-!
 # LeanPool.AsymptoticTrianglePacking.Internal — generic selection tools
@@ -19,6 +22,8 @@ Two elementary tools used to extract a single good outcome of a nibble round.
 
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
+
+@[expose] public section
 
 open MeasureTheory Finset
 open scoped ProbabilityTheory

@@ -3,9 +3,12 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.CoverProb
-import LeanPool.AsymptoticTrianglePacking.Internal.Measurable
-import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
+
+module
+
+public import LeanPool.AsymptoticTrianglePacking.Internal.Tight.CoverProb
+public import LeanPool.AsymptoticTrianglePacking.Internal.Measurable
+public import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
 
 /-!
 # LeanPool.AsymptoticTrianglePacking.Internal — the SAFE degree and its SHARP expectation
@@ -34,6 +37,8 @@ agree to second order, which is exactly what the loose brackets
 
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
 attribute [local instance] Classical.propDecidable

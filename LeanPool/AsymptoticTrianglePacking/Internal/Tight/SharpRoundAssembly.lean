@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
 
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.SharpRoundProof
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.SharpRound
+module
+
+public import LeanPool.AsymptoticTrianglePacking.Internal.Tight.SharpRoundProof
+public import LeanPool.AsymptoticTrianglePacking.Internal.Tight.SharpRound
 
 /-!
 # LeanPool.AsymptoticTrianglePacking.Internal — assembling the sharp round
@@ -44,6 +46,8 @@ the sharp upper bound `(1−p)^{rΔ} ≤ 1 − γ + γ²/2`
 (`LeanPool.AsymptoticTrianglePacking.Internal.one_sub_pow_le_quadratic`), which cancels
 the `(1−γ)` factor carried by the ceiling drop that `SharpRoundFor` requests.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
 attribute [local instance] Classical.propDecidable

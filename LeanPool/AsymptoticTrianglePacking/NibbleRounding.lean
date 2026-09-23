@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
 
-import LeanPool.AsymptoticTrianglePacking.Basic
-import LeanPool.AsymptoticTrianglePacking.Internal.NearRegularNibble
+module
+
+public import LeanPool.AsymptoticTrianglePacking.Basic
+public import LeanPool.AsymptoticTrianglePacking.Internal.NearRegularNibble
 
 /-!
 # Nibble rounding infrastructure
@@ -14,6 +16,8 @@ This module makes the ceiling-carrying finite nibble interface available to the 
 The full development remains internal so that the public API is limited to stable theorem-level
 statements.
 -/
+
+@[expose] public section
 
 namespace LeanPool.AsymptoticTrianglePacking
 

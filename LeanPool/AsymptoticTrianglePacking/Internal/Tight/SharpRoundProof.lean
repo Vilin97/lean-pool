@@ -3,11 +3,14 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.SharpVariance
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.CubeRetention
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.SafeRoundCheb
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.Pruning
-import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
+
+module
+
+public import LeanPool.AsymptoticTrianglePacking.Internal.Tight.SharpVariance
+public import LeanPool.AsymptoticTrianglePacking.Internal.Tight.CubeRetention
+public import LeanPool.AsymptoticTrianglePacking.Internal.Tight.SafeRoundCheb
+public import LeanPool.AsymptoticTrianglePacking.Internal.Tight.Pruning
+public import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
 
 /-!
 # LeanPool.AsymptoticTrianglePacking.Internal — the sharp round: transporting the Efron–Stein
@@ -20,6 +23,8 @@ safe-degree variance bound on the elementary Bernoulli cube.  Here it is transpo
 (`LeanPool.AsymptoticTrianglePacking.Internal.cubeRetention`), which is the form the
 Chebyshev round `LeanPool.AsymptoticTrianglePacking.Internal.exists_safe_round_cheb` consumes.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
 attribute [local instance] Classical.propDecidable

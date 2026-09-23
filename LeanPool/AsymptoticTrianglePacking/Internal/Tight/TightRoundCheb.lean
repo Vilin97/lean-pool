@@ -3,8 +3,11 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.CoverVariance
-import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
+
+module
+
+public import LeanPool.AsymptoticTrianglePacking.Internal.Tight.CoverVariance
+public import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
 
 /-!
 # LeanPool.AsymptoticTrianglePacking.Internal — the tight round with a CHEBYSHEV coverage guarantee
@@ -35,6 +38,8 @@ i.e. deviations of relative size `γ²`, whose accumulation over `γ^{-1}log(1/�
 
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
 attribute [local instance] Classical.propDecidable

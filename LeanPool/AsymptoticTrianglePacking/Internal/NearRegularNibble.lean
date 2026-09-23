@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
 
-import LeanPool.AsymptoticTrianglePacking.Internal.TightSchedule
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.SharpRoundAssembly
+module
+
+public import LeanPool.AsymptoticTrianglePacking.Internal.TightSchedule
+public import LeanPool.AsymptoticTrianglePacking.Internal.Tight.SharpRoundAssembly
 
 /-!
 # Near-regular hypergraph nibble
@@ -13,6 +15,8 @@ import LeanPool.AsymptoticTrianglePacking.Internal.Tight.SharpRoundAssembly
 A finite, ceiling-carrying nibble theorem for near-regular uniform hypergraphs.
 The module deliberately stops before application-specific graph-transfer assemblies.
 -/
+
+@[expose] public section
 
 open Finset Hypergraph
 

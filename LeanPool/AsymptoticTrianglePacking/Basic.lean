@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
 
-import LeanPool.AsymptoticTrianglePacking.Internal.RegularMost
+module
+
+public import LeanPool.AsymptoticTrianglePacking.Internal.RegularMost
 
 /-!
 # Finite near-regular hypergraph rounding: basic statement
@@ -12,6 +14,8 @@ import LeanPool.AsymptoticTrianglePacking.Internal.RegularMost
 The public statement records the finite near-regular hypergraph rounding interface used by
 the nibble method. The underlying finite definitions are kept in the internal library.
 -/
+
+@[expose] public section
 
 namespace LeanPool.AsymptoticTrianglePacking
 

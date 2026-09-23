@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
 
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.RoundExplicit
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.Pruning
+module
+
+public import LeanPool.AsymptoticTrianglePacking.Internal.Tight.RoundExplicit
+public import LeanPool.AsymptoticTrianglePacking.Internal.Tight.Pruning
 
 /-!
 # Iterable tight-band round
@@ -14,6 +16,8 @@ This module establishes the one-round estimates used by the finite near-regular 
 It packages retention, concentration, degree-band, codegree, and cover-rate bounds in a form that
 can be iterated by the schedule.
 -/
+
+@[expose] public section
 
 open Finset Hypergraph
 

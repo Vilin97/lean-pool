@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
 
-import LeanPool.AsymptoticTrianglePacking.NibbleRounding
+module
+
+public import LeanPool.AsymptoticTrianglePacking.NibbleRounding
 
 /-!
 # Finite near-regular hypergraph rounding

@@ -3,11 +3,14 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Basic
-import LeanPool.AsymptoticTrianglePacking.Internal.Round
-import LeanPool.AsymptoticTrianglePacking.Internal.Survival
-import LeanPool.AsymptoticTrianglePacking.Internal.Covered
-import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
+
+module
+
+public import LeanPool.AsymptoticTrianglePacking.Internal.Basic
+public import LeanPool.AsymptoticTrianglePacking.Internal.Round
+public import LeanPool.AsymptoticTrianglePacking.Internal.Survival
+public import LeanPool.AsymptoticTrianglePacking.Internal.Covered
+public import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
 
 /-!
 # LeanPool.AsymptoticTrianglePacking.Internal — Module C4b-3b (measurability) : the covered event is
@@ -22,6 +25,8 @@ and the round's matching / covered set are finite Boolean combinations of the re
 
 Must be placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
 attribute [local instance] Classical.propDecidable

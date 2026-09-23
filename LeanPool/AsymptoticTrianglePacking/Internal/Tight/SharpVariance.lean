@@ -3,9 +3,12 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.CubeVariance
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.FlipStability
-import Mathlib.Algebra.Order.Chebyshev
+
+module
+
+public import LeanPool.AsymptoticTrianglePacking.Internal.Tight.CubeVariance
+public import LeanPool.AsymptoticTrianglePacking.Internal.Tight.FlipStability
+public import Mathlib.Algebra.Order.Chebyshev
 
 /-!
 # LeanPool.AsymptoticTrianglePacking.Internal — the SHARP per-vertex safe-degree variance
@@ -33,6 +36,8 @@ inside `k ∪ ⋃ {f ∈ R : f meets k}`, so the safe degree at `v` moves by at 
 
 Squaring, taking expectations and summing over `k` produces exactly the three terms above.
 -/
+
+@[expose] public section
 
 open Finset Hypergraph LeanPool.AsymptoticTrianglePacking.Internal.Cube
 

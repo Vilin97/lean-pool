@@ -3,10 +3,13 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Basic
-import LeanPool.AsymptoticTrianglePacking.Internal.Round
-import LeanPool.AsymptoticTrianglePacking.Internal.Survival
-import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
+
+module
+
+public import LeanPool.AsymptoticTrianglePacking.Internal.Basic
+public import LeanPool.AsymptoticTrianglePacking.Internal.Round
+public import LeanPool.AsymptoticTrianglePacking.Internal.Survival
+public import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
 
 /-!
 # LeanPool.AsymptoticTrianglePacking.Internal — Module C4b-3b (part 1) : probability a vertex is
@@ -27,6 +30,8 @@ This union-bound estimate deliberately sidesteps the delicate correlation struct
 `retainedSet ρ ω` is the (classically decidable) set of retained edges at outcome `ω`.
 Must be placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
 

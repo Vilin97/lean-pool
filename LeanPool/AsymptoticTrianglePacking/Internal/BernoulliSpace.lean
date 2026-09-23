@@ -3,9 +3,12 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Basic
-import LeanPool.AsymptoticTrianglePacking.Internal.Survival
-import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
+
+module
+
+public import LeanPool.AsymptoticTrianglePacking.Internal.Basic
+public import LeanPool.AsymptoticTrianglePacking.Internal.Survival
+public import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
 
 /-!
 # LeanPool.AsymptoticTrianglePacking.Internal — existence of a Bernoulli retention space
@@ -21,6 +24,8 @@ coordinate events are independent (product measure) and each has probability `p`
 
 Must be placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 

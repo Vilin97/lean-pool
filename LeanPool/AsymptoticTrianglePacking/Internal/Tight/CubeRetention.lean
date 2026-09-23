@@ -3,9 +3,12 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.CubeVariance
-import LeanPool.AsymptoticTrianglePacking.Internal.Covered
-import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
+
+module
+
+public import LeanPool.AsymptoticTrianglePacking.Internal.Tight.CubeVariance
+public import LeanPool.AsymptoticTrianglePacking.Internal.Covered
+public import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
 
 /-!
 # LeanPool.AsymptoticTrianglePacking.Internal — the Bernoulli retention carried by the finite cube
@@ -32,6 +35,8 @@ for which
 * the Efron–Stein bound holds in integral form
   (`LeanPool.AsymptoticTrianglePacking.Internal.cube_centred_sq_le`).
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Finset
 

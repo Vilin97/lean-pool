@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
 
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.SharpRound
-import LeanPool.AsymptoticTrianglePacking.Internal.CeilingOracle
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.LossVariance
+module
+
+public import LeanPool.AsymptoticTrianglePacking.Internal.Tight.SharpRound
+public import LeanPool.AsymptoticTrianglePacking.Internal.CeilingOracle
+public import LeanPool.AsymptoticTrianglePacking.Internal.Tight.LossVariance
 
 /-!
 # LeanPool.AsymptoticTrianglePacking.Internal — the tight-band assembly: from one sharp round to the
@@ -52,6 +54,8 @@ The three mechanisms of the assembly are:
 
 Must be sorry-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
+
+@[expose] public section
 
 open Finset Hypergraph
 

@@ -3,9 +3,12 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-import Mathlib.Analysis.Normed.Ring.Basic
-import Mathlib.Analysis.Real.Sqrt
-import Mathlib.Tactic.ContinuousFunctionalCalculus
+
+module
+
+public import Mathlib.Analysis.Normed.Ring.Basic
+public import Mathlib.Analysis.Real.Sqrt
+public import Mathlib.Tactic.ContinuousFunctionalCalculus
 
 /-!
 # LeanPool.AsymptoticTrianglePacking.Internal — the Efron–Stein (bounded-differences) variance
@@ -35,6 +38,8 @@ The proof is the usual one-coordinate-at-a-time argument, organised through the 
 Averaging over a duplicate-free list exhausting `ι` turns `f` into the constant `Exp p f`, and the
 telescoping sum of the second bullet is exactly the statement.
 -/
+
+@[expose] public section
 
 open Finset
 

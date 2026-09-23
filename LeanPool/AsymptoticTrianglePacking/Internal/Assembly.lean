@@ -3,8 +3,11 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Basic
-import LeanPool.AsymptoticTrianglePacking.Internal.Greedy
+
+module
+
+public import LeanPool.AsymptoticTrianglePacking.Internal.Basic
+public import LeanPool.AsymptoticTrianglePacking.Internal.Greedy
 
 /-!
 # LeanPool.AsymptoticTrianglePacking.Internal — Module D2 : assembling the per-round matchings
@@ -24,6 +27,8 @@ Definitions (`IsMatching`, `support`) come from `LeanPool.AsymptoticTrianglePack
 / `LeanPool.AsymptoticTrianglePacking.Internal.Greedy`.
 Must be placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
+
+@[expose] public section
 
 open Finset
 

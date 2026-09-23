@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
 
-import LeanPool.AsymptoticTrianglePacking.Internal.AdaptiveRounds
-import LeanPool.AsymptoticTrianglePacking.Internal.RegularMost
+module
+
+public import LeanPool.AsymptoticTrianglePacking.Internal.AdaptiveRounds
+public import LeanPool.AsymptoticTrianglePacking.Internal.RegularMost
 
 /-! # Ceiling-carrying oracle interface
 
@@ -13,6 +15,8 @@ This module contains the interface and deterministic assembly shared by the
 tight-band nibble proof.  It deliberately contains no historical majority-only
 or round-oracle development: the global degree ceiling is part of every input.
 -/
+
+@[expose] public section
 
 open Finset Hypergraph
 

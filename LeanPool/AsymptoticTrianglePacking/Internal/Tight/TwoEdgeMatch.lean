@@ -3,14 +3,17 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Basic
-import LeanPool.AsymptoticTrianglePacking.Internal.Round
-import LeanPool.AsymptoticTrianglePacking.Internal.Conflict
-import LeanPool.AsymptoticTrianglePacking.Internal.Survival
-import LeanPool.AsymptoticTrianglePacking.Internal.Covered
-import LeanPool.AsymptoticTrianglePacking.Internal.CoveredExpectation
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.CoverProb
-import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
+
+module
+
+public import LeanPool.AsymptoticTrianglePacking.Internal.Basic
+public import LeanPool.AsymptoticTrianglePacking.Internal.Round
+public import LeanPool.AsymptoticTrianglePacking.Internal.Conflict
+public import LeanPool.AsymptoticTrianglePacking.Internal.Survival
+public import LeanPool.AsymptoticTrianglePacking.Internal.Covered
+public import LeanPool.AsymptoticTrianglePacking.Internal.CoveredExpectation
+public import LeanPool.AsymptoticTrianglePacking.Internal.Tight.CoverProb
+public import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
 
 /-!
 # LeanPool.AsymptoticTrianglePacking.Internal — the joint matching probability of TWO edges
@@ -35,6 +38,8 @@ the nibble's residual degrees concentrate.
 
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
 attribute [local instance] Classical.propDecidable

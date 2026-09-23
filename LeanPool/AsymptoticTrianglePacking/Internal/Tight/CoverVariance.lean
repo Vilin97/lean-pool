@@ -3,9 +3,12 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.TightRound
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.PairExcessCodegree
-import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
+
+module
+
+public import LeanPool.AsymptoticTrianglePacking.Internal.Tight.TightRound
+public import LeanPool.AsymptoticTrianglePacking.Internal.Tight.PairExcessCodegree
+public import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
 
 /-!
 # LeanPool.AsymptoticTrianglePacking.Internal — the VARIANCE of the covered count, and Chebyshev for
@@ -36,6 +39,8 @@ i.e. `≤ 1/2` as soon as `N ≥ 16/γ` and `μ ≤ γ/16` — INDEPENDENTLY of 
 
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
 attribute [local instance] Classical.propDecidable

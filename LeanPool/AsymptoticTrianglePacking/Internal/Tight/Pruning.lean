@@ -3,11 +3,14 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Basic
-import LeanPool.AsymptoticTrianglePacking.Internal.Greedy
-import Mathlib.Algebra.BigOperators.Group.Finset.Piecewise
-import Mathlib.Algebra.Group.Action.Defs
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
+
+module
+
+public import LeanPool.AsymptoticTrianglePacking.Internal.Basic
+public import LeanPool.AsymptoticTrianglePacking.Internal.Greedy
+public import Mathlib.Algebra.BigOperators.Group.Finset.Piecewise
+public import Mathlib.Algebra.Group.Action.Defs
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
 
 /-!
 # LeanPool.AsymptoticTrianglePacking.Internal — deterministic pruning counts
@@ -23,6 +26,8 @@ every other vertex the edges it shares with `B`, and this file bounds that cost:
 Pure `Finset` combinatorics, no probability.  placeholder-free and axiom-clean
 `[propext, Classical.choice, Quot.sound]`.
 -/
+
+@[expose] public section
 
 open Finset Hypergraph
 

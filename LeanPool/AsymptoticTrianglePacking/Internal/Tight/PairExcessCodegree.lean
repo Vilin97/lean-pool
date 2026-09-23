@@ -3,10 +3,13 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.TwoEdgeMatch
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.ConflictCount
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.LossVariance
-import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
+
+module
+
+public import LeanPool.AsymptoticTrianglePacking.Internal.Tight.TwoEdgeMatch
+public import LeanPool.AsymptoticTrianglePacking.Internal.Tight.ConflictCount
+public import LeanPool.AsymptoticTrianglePacking.Internal.Tight.LossVariance
+public import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
 
 /-!
 # LeanPool.AsymptoticTrianglePacking.Internal — the CODEGREE-tightened pair excess and loss variance
@@ -49,6 +52,8 @@ codegree, which the nibble hypothesis lets us choose as small as we like) below 
 
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
 attribute [local instance] Classical.propDecidable

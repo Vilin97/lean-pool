@@ -3,9 +3,12 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Regular
-import LeanPool.AsymptoticTrianglePacking.Internal.Interface
-import Mathlib.Tactic.Bound
+
+module
+
+public import LeanPool.AsymptoticTrianglePacking.Internal.Regular
+public import LeanPool.AsymptoticTrianglePacking.Internal.Interface
+public import Mathlib.Tactic.Bound
 
 /-!
 # LeanPool.AsymptoticTrianglePacking.Internal — near-regularity for the majority of vertices, and
@@ -23,6 +26,8 @@ that consume this hypothesis.
 
 Must be placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
+
+@[expose] public section
 
 open Finset
 

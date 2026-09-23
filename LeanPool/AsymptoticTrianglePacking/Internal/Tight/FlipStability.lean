@@ -3,9 +3,12 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Round
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.SafeDegree
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.LossVariance
+
+module
+
+public import LeanPool.AsymptoticTrianglePacking.Internal.Round
+public import LeanPool.AsymptoticTrianglePacking.Internal.Tight.SafeDegree
+public import LeanPool.AsymptoticTrianglePacking.Internal.Tight.LossVariance
 
 /-!
 # LeanPool.AsymptoticTrianglePacking.Internal — stability of the covered set under a single-edge
@@ -48,6 +51,8 @@ gives exactly `O_r(γΔ(1 + κ))`, the sharp bound — the arithmetic is recorde
 
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
+
+@[expose] public section
 
 open Finset Hypergraph
 

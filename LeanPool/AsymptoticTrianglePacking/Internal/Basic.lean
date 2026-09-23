@@ -3,7 +3,10 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
+
+module
+
+public import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
 
 /-!
 # LeanPool.AsymptoticTrianglePacking.Internal — hypergraph foundations and the handshake identity
@@ -18,6 +21,8 @@ Goals of this module:
 
 Everything here must be placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
+
+@[expose] public section
 
 open Finset
 
