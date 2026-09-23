@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Boon Suan Ho
 -/
 
-import Mathlib.Data.Set.Finite.Basic
-import Mathlib.Algebra.Group.Prod
-import Mathlib.Tactic.Abel
+module
+
+public import Mathlib.Data.Set.Finite.Basic
+public import Mathlib.Algebra.Group.Prod
+public import Mathlib.Tactic.Abel
 
 /-
 Upstream: https://github.com/boonsuan/nivat
@@ -45,6 +47,8 @@ The configuration, period and operator notation of Section 1.1 of
 `IsPeriod c h` permits the zero vector; `Periodic c` requires one nonzero period.
 The forward-shift convention is shared by the Laurent action and pattern pairing.
 -/
+
+@[expose] public section
 
 namespace Nivat
 
