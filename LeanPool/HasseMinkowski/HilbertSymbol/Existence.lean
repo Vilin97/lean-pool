@@ -604,7 +604,6 @@ private lemma finprod_eq_one_of_eq_off {F E : Primes → ℤ} {ℓ' : Primes}
 -- local symbols `ep i p` are almost all `1` (`h1`), have product `1` (`h2`), are locally
 -- realisable (`h3`), and the sets `S` and `T` are disjoint, then `x = A·ℓ` realises them.
 theorem exists_disjoint {I : Type*} [Finite I] (a : I → ℤ) (ha : ∀ i, a i ≠ 0)
-    (_hsq : ∀ i, Squarefree (a i))
     (εp : I → Primes → ℤ) (hε : ∀ i p, εp i p = 1 ∨ εp i p = -1)
     (h1 : ∀ i, ∀ᶠ p : Primes in cofinite, εp i p = 1)
     (h2 : ∀ i, (∏ᶠ p : Primes, εp i p) = 1)
@@ -831,7 +830,7 @@ theorem hilbertSym_cast_eq {k : Type*} [Field k] (n : ℤ) (q : ℚ) :
 -- Lemma: given a disjoint-case solution `y` for the shifted prescription `η`, the product
 -- `x' * y` realises the original prescription at every place (Serre III Thm 4, Step 5).
 private lemma combine_disjoint_solution {I : Type*} [Finite I]
-    (a : I → ℚ) (α : I → ℤ) (hαne : ∀ i, α i ≠ 0) (hαsf : ∀ i, Squarefree (α i))
+    (a : I → ℚ) (α : I → ℤ) (hαne : ∀ i, α i ≠ 0)
     (ε : I → Primes → ℤ) (εR : I → ℤ) (η : I → Primes → ℤ) (x' : ℚ) (hx'0 : x' ≠ 0)
     (hηdef : ∀ i p, η i p = ε i p * hilbertSym (α i : ℚ_[p]) (x' : ℚ_[p]))
     (hηε : ∀ i p, η i p = 1 ∨ η i p = -1)
@@ -846,7 +845,7 @@ private lemma combine_disjoint_solution {I : Type*} [Finite I]
     (hredR : ∀ i (y : ℝ), hilbertSym (a i : ℝ) y = hilbertSym (α i : ℝ) y) :
     ∃ x : ℚ, x ≠ 0 ∧ (∀ i (p : Primes), hilbertSym (a i : ℚ_[p]) x = ε i p) ∧
       ∀ i, hilbertSym (a i : ℝ) x = εR i := by
-  obtain ⟨y, hy0, hy⟩ := exists_disjoint α hαne hαsf η hηε hη1 hη2 hη3 hℓ hℓA hℓgt
+  obtain ⟨y, hy0, hy⟩ := exists_disjoint α hαne η hηε hη1 hη2 hη3 hℓ hℓA hℓgt
   refine ⟨x' * y, mul_ne_zero hx'0 hy0, ?_, ?_⟩
   · intro i p
     have hsym_sq : hilbertSym (α i : ℚ_[p]) (x' : ℚ_[p])
@@ -900,7 +899,6 @@ theorem exists_rat_hilbertSym {I : Type*} [Finite I] (a : I → ℚ) (ha : ∀ i
     obtain ⟨b, hb, t, ht, heq⟩ := exists_squarefree_mul_sq (a i) (ha i)
     exact ⟨b, t, hb, ht, heq⟩
   choose α s hp using hred
-  have hαsf : ∀ i, Squarefree (α i) := fun i => (hp i).1
   have hsne : ∀ i, s i ≠ 0 := fun i => (hp i).2.1
   have hαeq : ∀ i, a i = (α i : ℚ) * (s i) ^ 2 := fun i => (hp i).2.2
   have hαne : ∀ i, α i ≠ 0 := by
@@ -1086,7 +1084,7 @@ theorem exists_rat_hilbertSym {I : Type*} [Finite I] (a : I → ℚ) (ha : ∀ i
   have hℓgt : ∀ q ∈ S α ∪ T hηε hη1, (q : ℕ) < ℓ := fun q hq =>
     lt_of_le_of_lt (Finset.le_sup (f := fun q : Primes => (q : ℕ)) hq) hℓn
   -- Step 5: apply the disjoint case.
-  exact combine_disjoint_solution a α hαne hαsf ε εR η x' hx'0
+  exact combine_disjoint_solution a α hαne ε εR η x' hx'0
     (fun i p => by dsimp only [η]) hηε hη1 hη2 hη3 hℓ hℓA hℓgt hreal_eq hredp hredR
 
 end Existence

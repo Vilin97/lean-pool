@@ -112,10 +112,10 @@ theorem hilbertSym_mul_square_eq {k : Type*} [Field k] {a a' b b' : k}
 
 /-! ### Isotropy of `u x² + v y² = 1` over `𝔽_p` -/
 
--- Theorem: for odd `p` and units `u`, `v` in `ZMod p`, the equation `u x² + v y² = 1` has a
--- solution.  If either coefficient is a square this is immediate; otherwise the quotient
+-- Theorem: for a prime `p` and units `u`, `v` in `ZMod p`, the equation `u x² + v y² = 1` has
+-- a solution.  If either coefficient is a square this is immediate; otherwise the quotient
 -- `v / u` is a square and one reduces to `ZMod.sq_add_sq`.
-theorem zmod_sq_add_sq_eq_one {p : ℕ} [Fact (Nat.Prime p)] (_hp : p ≠ 2)
+theorem zmod_sq_add_sq_eq_one {p : ℕ} [Fact (Nat.Prime p)]
     {u v : ZMod p} (hu : u ≠ 0) (hv : v ≠ 0) :
     ∃ x y : ZMod p, u * x ^ 2 + v * y ^ 2 = 1 := by
   by_cases hu2 : IsSquare u
@@ -174,7 +174,7 @@ theorem hilbertSym_padicInt_units {p : ℕ} [Fact (Nat.Prime p)] (hp : p ≠ 2)
     (IsUnit.map (PadicInt.toZMod (p := p)) u.isUnit).ne_zero
   have hvZ : PadicInt.toZMod (p := p) (v : ℤ_[p]) ≠ 0 :=
     (IsUnit.map (PadicInt.toZMod (p := p)) v.isUnit).ne_zero
-  obtain ⟨x, y, hxy⟩ := zmod_sq_add_sq_eq_one hp huZ hvZ
+  obtain ⟨x, y, hxy⟩ := zmod_sq_add_sq_eq_one huZ hvZ
   set X : ℤ_[p] := ((x.val : ℕ) : ℤ_[p]) with hXdef
   set Y : ℤ_[p] := ((y.val : ℕ) : ℤ_[p]) with hYdef
   have hX : PadicInt.toZMod (p := p) X = x := by
@@ -819,7 +819,7 @@ private lemma padicUnit_mul (a a' : ℚ_[p]) (ha : a ≠ 0) (ha' : a' ≠ 0) :
   ring
 
 -- Theorem: reduction of the valuation modulo `2` (absorbing `(p^{α/2})²`).
-private lemma hilbertSym_reduce (a b : ℚ_[p]) (ha : a ≠ 0) (hb : b ≠ 0) :
+lemma hilbertSym_reduce (a b : ℚ_[p]) (ha : a ≠ 0) (hb : b ≠ 0) :
     hilbertSym a b
       = hilbertSym ((p : ℚ_[p]) ^ (a.valuation % 2)
             * ((padicUnit a ha : ℤ_[p]) : ℚ_[p]))

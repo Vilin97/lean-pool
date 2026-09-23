@@ -156,12 +156,13 @@ private lemma norm_mul_inv_le_one {c w : ℚ_[2]} (hw : w ≠ 0) (hc : ‖c‖ �
   rw [norm_mul, norm_inv, ← div_eq_mul_inv]
   exact (div_le_one hwpos).mpr hc
 
--- Theorem: a nontrivial rational solution of `z² - u x² - v y² = 0` for `2`-adic units
--- `u, v` rescales to an integral solution with at least one unit coordinate.
-private lemma exists_padicInt_solution_of_units {u v : ℤ_[2]ˣ} {x y z : ℚ_[2]}
+-- Theorem: a nontrivial rational solution of `z² - c₁ x² - c₂ y² = 0` with integral
+-- coefficients rescales to an integral solution with at least one unit coordinate.  The
+-- argument uses only homogeneity, so it covers the unit case `c₁ = u`, `c₂ = v` too.
+private lemma exists_padicInt_solution_coeff {c₁ c₂ : ℤ_[2]} {x y z : ℚ_[2]}
     (hnontriv : (z, x, y) ≠ (0, 0, 0))
-    (hsol : z ^ 2 - (u : ℚ_[2]) * x ^ 2 - (v : ℚ_[2]) * y ^ 2 = 0) :
-    ∃ Z X Y : ℤ_[2], Z ^ 2 - (u : ℤ_[2]) * X ^ 2 - (v : ℤ_[2]) * Y ^ 2 = 0
+    (hsol : z ^ 2 - (c₁ : ℚ_[2]) * x ^ 2 - (c₂ : ℚ_[2]) * y ^ 2 = 0) :
+    ∃ Z X Y : ℤ_[2], Z ^ 2 - c₁ * X ^ 2 - c₂ * Y ^ 2 = 0
       ∧ (IsUnit Z ∨ IsUnit X ∨ IsUnit Y) := by
   set m : ℝ := max ‖z‖ (max ‖x‖ ‖y‖) with hm
   have hm_ne_zero : m ≠ 0 := by
@@ -201,9 +202,9 @@ private lemma exists_padicInt_solution_of_units {u v : ℤ_[2]ˣ} {x y z : ℚ_[
     refine ⟨Z, X, Y, ?_, Or.inl ?_⟩
     · apply PadicInt.ext
       push_cast
-      change (z * z⁻¹) ^ 2 - (u : ℚ_[2]) * (x * z⁻¹) ^ 2
-        - (v : ℚ_[2]) * (y * z⁻¹) ^ 2 = 0
-      simpa using scaled_hom (a := (u : ℚ_[2])) (b := (v : ℚ_[2])) hsol
+      change (z * z⁻¹) ^ 2 - (c₁ : ℚ_[2]) * (x * z⁻¹) ^ 2
+        - (c₂ : ℚ_[2]) * (y * z⁻¹) ^ 2 = 0
+      simpa using scaled_hom (a := (c₁ : ℚ_[2])) (b := (c₂ : ℚ_[2])) hsol
     · exact PadicInt.isUnit_iff.mpr hZ1
   · have hx0 : x ≠ 0 := norm_pos_iff.mp (hxmax ▸ hm_pos)
     have hX1 : ‖x * x⁻¹‖ = 1 := by rw [mul_inv_cancel₀ hx0, norm_one]
@@ -215,9 +216,9 @@ private lemma exists_padicInt_solution_of_units {u v : ℤ_[2]ˣ} {x y z : ℚ_[
     refine ⟨Z, X, Y, ?_, Or.inr (Or.inl ?_)⟩
     · apply PadicInt.ext
       push_cast
-      change (z * x⁻¹) ^ 2 - (u : ℚ_[2]) * (x * x⁻¹) ^ 2
-        - (v : ℚ_[2]) * (y * x⁻¹) ^ 2 = 0
-      simpa using scaled_hom (a := (u : ℚ_[2])) (b := (v : ℚ_[2])) hsol
+      change (z * x⁻¹) ^ 2 - (c₁ : ℚ_[2]) * (x * x⁻¹) ^ 2
+        - (c₂ : ℚ_[2]) * (y * x⁻¹) ^ 2 = 0
+      simpa using scaled_hom (a := (c₁ : ℚ_[2])) (b := (c₂ : ℚ_[2])) hsol
     · exact PadicInt.isUnit_iff.mpr hX1
   · have hy0 : y ≠ 0 := norm_pos_iff.mp (hymax ▸ hm_pos)
     have hY1 : ‖y * y⁻¹‖ = 1 := by rw [mul_inv_cancel₀ hy0, norm_one]
@@ -229,9 +230,9 @@ private lemma exists_padicInt_solution_of_units {u v : ℤ_[2]ˣ} {x y z : ℚ_[
     refine ⟨Z, X, Y, ?_, Or.inr (Or.inr ?_)⟩
     · apply PadicInt.ext
       push_cast
-      change (z * y⁻¹) ^ 2 - (u : ℚ_[2]) * (x * y⁻¹) ^ 2
-        - (v : ℚ_[2]) * (y * y⁻¹) ^ 2 = 0
-      simpa using scaled_hom (a := (u : ℚ_[2])) (b := (v : ℚ_[2])) hsol
+      change (z * y⁻¹) ^ 2 - (c₁ : ℚ_[2]) * (x * y⁻¹) ^ 2
+        - (c₂ : ℚ_[2]) * (y * y⁻¹) ^ 2 = 0
+      simpa using scaled_hom (a := (c₁ : ℚ_[2])) (b := (c₂ : ℚ_[2])) hsol
     · exact PadicInt.isUnit_iff.mpr hY1
 
 -- Theorem: if two `2`-adic units are both `3` modulo `4`, their Hilbert symbol is `-1`.
@@ -243,7 +244,8 @@ theorem hilbertSym_padic_two_units_eq_neg_one_of_mod4 {u v : ℤ_[2]ˣ}
   have hno : ¬ ∃ z x y : ℚ_[2], (z, x, y) ≠ (0, 0, 0)
       ∧ z ^ 2 - (u : ℚ_[2]) * x ^ 2 - (v : ℚ_[2]) * y ^ 2 = 0 := by
     rintro ⟨z, x, y, hnontriv, hsol⟩
-    obtain ⟨Z, X, Y, hZeq, hunit⟩ := exists_padicInt_solution_of_units hnontriv hsol
+    obtain ⟨Z, X, Y, hZeq, hunit⟩ :=
+      exists_padicInt_solution_coeff (c₁ := (u : ℤ_[2])) (c₂ := (v : ℤ_[2])) hnontriv hsol
     have hmod := congrArg (PadicInt.toZModPow 2) hZeq
     simp only [map_sub, map_mul, map_pow, map_zero] at hmod
     rw [hu, hv] at hmod
@@ -489,90 +491,6 @@ private lemma norm_twoAdicUnit (a : ℚ_[2]) (ha : a ≠ 0) :
   rw [h1, h2, zpow_neg]
   exact inv_mul_cancel₀ (zpow_ne_zero _ (by norm_num : (2 : ℝ) ≠ 0))
 
-/-! ### Rescaling an arbitrary ternary zero to an integral solution
-
-The rescaling argument of `exists_padicInt_solution_of_units` never uses that the two
-coefficients are units; only homogeneity of `z² - c₁ x² - c₂ y²` matters.  We record the
-general form here, because the mixed cases involve the non-unit coefficient `2`. -/
-
--- Theorem: a nontrivial rational solution of `z² - c₁ x² - c₂ y² = 0` with integral
--- coefficients rescales to an integral solution with at least one unit coordinate.
-private lemma exists_padicInt_solution_coeff {c₁ c₂ : ℤ_[2]} {x y z : ℚ_[2]}
-    (hnontriv : (z, x, y) ≠ (0, 0, 0))
-    (hsol : z ^ 2 - (c₁ : ℚ_[2]) * x ^ 2 - (c₂ : ℚ_[2]) * y ^ 2 = 0) :
-    ∃ Z X Y : ℤ_[2], Z ^ 2 - c₁ * X ^ 2 - c₂ * Y ^ 2 = 0
-      ∧ (IsUnit Z ∨ IsUnit X ∨ IsUnit Y) := by
-  set m : ℝ := max ‖z‖ (max ‖x‖ ‖y‖) with hm
-  have hm_ne_zero : m ≠ 0 := by
-    intro h
-    have hz0 : z = 0 := by
-      refine norm_eq_zero.mp ?_
-      exact le_antisymm (le_trans (le_max_left _ _) (le_of_eq h)) (norm_nonneg _)
-    have hx0 : x = 0 := by
-      refine norm_eq_zero.mp ?_
-      exact le_antisymm
-        (le_trans (le_trans (le_max_left _ _) (le_max_right _ _)) (le_of_eq h)) (norm_nonneg _)
-    have hy0 : y = 0 := by
-      refine norm_eq_zero.mp ?_
-      exact le_antisymm
-        (le_trans (le_trans (le_max_right _ _) (le_max_right _ _)) (le_of_eq h)) (norm_nonneg _)
-    exact hnontriv (by simp [hz0, hx0, hy0])
-  have hm_pos : 0 < m := lt_of_le_of_ne (le_trans (norm_nonneg z) (le_max_left _ _))
-    (Ne.symm hm_ne_zero)
-  have hcoord : ‖z‖ = m ∨ ‖x‖ = m ∨ ‖y‖ = m := by
-    simp only [hm]
-    rcases le_total (max ‖x‖ ‖y‖) ‖z‖ with h | h
-    · exact Or.inl (Eq.symm (max_eq_left h))
-    · rcases le_total ‖x‖ ‖y‖ with hxy | hyx
-      · exact Or.inr (Or.inr (Eq.symm (by rw [max_eq_right h, max_eq_right hxy])))
-      · exact Or.inr (Or.inl (Eq.symm (by rw [max_eq_right h, max_eq_left hyx])))
-  have hzle : ‖z‖ ≤ m := le_max_left _ _
-  have hxle : ‖x‖ ≤ m := le_trans (le_max_left _ _) (le_max_right _ _)
-  have hyle : ‖y‖ ≤ m := le_trans (le_max_right _ _) (le_max_right _ _)
-  rcases hcoord with hzmax | hxmax | hymax
-  · have hz0 : z ≠ 0 := norm_pos_iff.mp (hzmax ▸ hm_pos)
-    have hZ1 : ‖z * z⁻¹‖ = 1 := by rw [mul_inv_cancel₀ hz0, norm_one]
-    have hX : ‖x * z⁻¹‖ ≤ 1 := norm_mul_inv_le_one hz0 (hzmax ▸ hxle)
-    have hY : ‖y * z⁻¹‖ ≤ 1 := norm_mul_inv_le_one hz0 (hzmax ▸ hyle)
-    let Z : ℤ_[2] := ⟨z * z⁻¹, hZ1.le⟩
-    let X : ℤ_[2] := ⟨x * z⁻¹, hX⟩
-    let Y : ℤ_[2] := ⟨y * z⁻¹, hY⟩
-    refine ⟨Z, X, Y, ?_, Or.inl ?_⟩
-    · apply PadicInt.ext
-      push_cast
-      change (z * z⁻¹) ^ 2 - (c₁ : ℚ_[2]) * (x * z⁻¹) ^ 2
-        - (c₂ : ℚ_[2]) * (y * z⁻¹) ^ 2 = 0
-      simpa using scaled_hom (a := (c₁ : ℚ_[2])) (b := (c₂ : ℚ_[2])) hsol
-    · exact PadicInt.isUnit_iff.mpr hZ1
-  · have hx0 : x ≠ 0 := norm_pos_iff.mp (hxmax ▸ hm_pos)
-    have hX1 : ‖x * x⁻¹‖ = 1 := by rw [mul_inv_cancel₀ hx0, norm_one]
-    have hZ : ‖z * x⁻¹‖ ≤ 1 := norm_mul_inv_le_one hx0 (hxmax ▸ hzle)
-    have hY : ‖y * x⁻¹‖ ≤ 1 := norm_mul_inv_le_one hx0 (hxmax ▸ hyle)
-    let Z : ℤ_[2] := ⟨z * x⁻¹, hZ⟩
-    let X : ℤ_[2] := ⟨x * x⁻¹, hX1.le⟩
-    let Y : ℤ_[2] := ⟨y * x⁻¹, hY⟩
-    refine ⟨Z, X, Y, ?_, Or.inr (Or.inl ?_)⟩
-    · apply PadicInt.ext
-      push_cast
-      change (z * x⁻¹) ^ 2 - (c₁ : ℚ_[2]) * (x * x⁻¹) ^ 2
-        - (c₂ : ℚ_[2]) * (y * x⁻¹) ^ 2 = 0
-      simpa using scaled_hom (a := (c₁ : ℚ_[2])) (b := (c₂ : ℚ_[2])) hsol
-    · exact PadicInt.isUnit_iff.mpr hX1
-  · have hy0 : y ≠ 0 := norm_pos_iff.mp (hymax ▸ hm_pos)
-    have hY1 : ‖y * y⁻¹‖ = 1 := by rw [mul_inv_cancel₀ hy0, norm_one]
-    have hZ : ‖z * y⁻¹‖ ≤ 1 := norm_mul_inv_le_one hy0 (hymax ▸ hzle)
-    have hX : ‖x * y⁻¹‖ ≤ 1 := norm_mul_inv_le_one hy0 (hymax ▸ hxle)
-    let Z : ℤ_[2] := ⟨z * y⁻¹, hZ⟩
-    let X : ℤ_[2] := ⟨x * y⁻¹, hX⟩
-    let Y : ℤ_[2] := ⟨y * y⁻¹, hY1.le⟩
-    refine ⟨Z, X, Y, ?_, Or.inr (Or.inr ?_)⟩
-    · apply PadicInt.ext
-      push_cast
-      change (z * y⁻¹) ^ 2 - (c₁ : ℚ_[2]) * (x * y⁻¹) ^ 2
-        - (c₂ : ℚ_[2]) * (y * y⁻¹) ^ 2 = 0
-      simpa using scaled_hom (a := (c₁ : ℚ_[2])) (b := (c₂ : ℚ_[2])) hsol
-    · exact PadicInt.isUnit_iff.mpr hY1
-
 /-! ### The symbol of `2` against a unit
 
 `(2, v)_2 = 1` iff `v ≡ ±1 (mod 8)`.  The two `-1` values are settled by reducing an
@@ -590,26 +508,33 @@ private lemma no_zmod8_sol_two_five : ∀ z x y : ZMod 8,
     (IsUnit z ∨ IsUnit x ∨ IsUnit y) → z ^ 2 - 2 * x ^ 2 - 5 * y ^ 2 = 0 → False := by
   decide
 
+-- Theorem: if `z² - c₁ x² - c₂ y²` has no zero modulo `8` with a unit coordinate, then it has
+-- no nontrivial rational zero.  This is the reduction modulo `8` shared by the negative cases.
+private lemma not_isotropic_of_no_zmod8 {c₁ c₂ : ℕ}
+    (h : ∀ z x y : ZMod 8, (IsUnit z ∨ IsUnit x ∨ IsUnit y) →
+      z ^ 2 - (c₁ : ZMod 8) * x ^ 2 - (c₂ : ZMod 8) * y ^ 2 = 0 → False) :
+    ¬ ∃ z x y : ℚ_[2], (z, x, y) ≠ (0, 0, 0)
+      ∧ z ^ 2 - (c₁ : ℚ_[2]) * x ^ 2 - (c₂ : ℚ_[2]) * y ^ 2 = 0 := by
+  rintro ⟨z, x, y, hnontriv, hsol⟩
+  obtain ⟨Z, X, Y, hZeq, hunit⟩ :=
+    exists_padicInt_solution_coeff (c₁ := (c₁ : ℤ_[2])) (c₂ := (c₂ : ℤ_[2]))
+      hnontriv (by push_cast; exact hsol)
+  have hmod := congrArg (PadicInt.toZModPow 3) hZeq
+  simp only [map_sub, map_mul, map_pow, map_zero] at hmod
+  rw [toZModPow_three_natCast c₁, toZModPow_three_natCast c₂] at hmod
+  refine h _ _ _ ?_ hmod
+  rcases hunit with hZ | hX | hY
+  · exact Or.inl (hZ.map (PadicInt.toZModPow 3))
+  · exact Or.inr (Or.inl (hX.map (PadicInt.toZModPow 3)))
+  · exact Or.inr (Or.inr (hY.map (PadicInt.toZModPow 3)))
+
 -- Theorem: `(2, 3)_2 = -1`.
 private theorem hilbertSym_two_three : hilbertSym (2 : ℚ_[2]) (3 : ℚ_[2]) = -1 := by
   have h2 : (2 : ℚ_[2]) ≠ 0 := two_padic_ne_zero
   have h3 : (3 : ℚ_[2]) ≠ 0 := by norm_num
   have hno : ¬ ∃ z x y : ℚ_[2], (z, x, y) ≠ (0, 0, 0)
-      ∧ z ^ 2 - 2 * x ^ 2 - 3 * y ^ 2 = 0 := by
-    rintro ⟨z, x, y, hnontriv, hsol⟩
-    obtain ⟨Z, X, Y, hZeq, hunit⟩ :=
-      exists_padicInt_solution_coeff (c₁ := 2) (c₂ := 3) hnontriv hsol
-    have hmod := congrArg (PadicInt.toZModPow 3) hZeq
-    simp only [map_sub, map_mul, map_pow, map_zero] at hmod
-    rw [show (2 : ℤ_[2]).toZModPow 3 = (2 : ZMod 8) by
-          simpa using toZModPow_three_natCast 2,
-        show (3 : ℤ_[2]).toZModPow 3 = (3 : ZMod 8) by
-          simpa using toZModPow_three_natCast 3] at hmod
-    refine no_zmod8_sol_two_three _ _ _ ?_ hmod
-    rcases hunit with hZ | hX | hY
-    · exact Or.inl (hZ.map (PadicInt.toZModPow 3))
-    · exact Or.inr (Or.inl (hX.map (PadicInt.toZModPow 3)))
-    · exact Or.inr (Or.inr (hY.map (PadicInt.toZModPow 3)))
+      ∧ z ^ 2 - 2 * x ^ 2 - 3 * y ^ 2 = 0 :=
+    not_isotropic_of_no_zmod8 (c₁ := 2) (c₂ := 3) no_zmod8_sol_two_three
   unfold hilbertSym
   rw [ite_eq_right (by rw [not_or]; exact ⟨h2, h3⟩), ite_eq_right hno]
 
@@ -618,21 +543,8 @@ private theorem hilbertSym_two_five : hilbertSym (2 : ℚ_[2]) (5 : ℚ_[2]) = -
   have h2 : (2 : ℚ_[2]) ≠ 0 := two_padic_ne_zero
   have h5 : (5 : ℚ_[2]) ≠ 0 := by norm_num
   have hno : ¬ ∃ z x y : ℚ_[2], (z, x, y) ≠ (0, 0, 0)
-      ∧ z ^ 2 - 2 * x ^ 2 - 5 * y ^ 2 = 0 := by
-    rintro ⟨z, x, y, hnontriv, hsol⟩
-    obtain ⟨Z, X, Y, hZeq, hunit⟩ :=
-      exists_padicInt_solution_coeff (c₁ := 2) (c₂ := 5) hnontriv hsol
-    have hmod := congrArg (PadicInt.toZModPow 3) hZeq
-    simp only [map_sub, map_mul, map_pow, map_zero] at hmod
-    rw [show (2 : ℤ_[2]).toZModPow 3 = (2 : ZMod 8) by
-          simpa using toZModPow_three_natCast 2,
-        show (5 : ℤ_[2]).toZModPow 3 = (5 : ZMod 8) by
-          simpa using toZModPow_three_natCast 5] at hmod
-    refine no_zmod8_sol_two_five _ _ _ ?_ hmod
-    rcases hunit with hZ | hX | hY
-    · exact Or.inl (hZ.map (PadicInt.toZModPow 3))
-    · exact Or.inr (Or.inl (hX.map (PadicInt.toZModPow 3)))
-    · exact Or.inr (Or.inr (hY.map (PadicInt.toZModPow 3)))
+      ∧ z ^ 2 - 2 * x ^ 2 - 5 * y ^ 2 = 0 :=
+    not_isotropic_of_no_zmod8 (c₁ := 2) (c₂ := 5) no_zmod8_sol_two_five
   unfold hilbertSym
   rw [ite_eq_right (by rw [not_or]; exact ⟨h2, h5⟩), ite_eq_right hno]
 
@@ -871,21 +783,8 @@ private theorem hilbertSym_six_five : hilbertSym (6 : ℚ_[2]) (5 : ℚ_[2]) = -
   have h6 : (6 : ℚ_[2]) ≠ 0 := by norm_num
   have h5 : (5 : ℚ_[2]) ≠ 0 := by norm_num
   have hno : ¬ ∃ z x y : ℚ_[2], (z, x, y) ≠ (0, 0, 0)
-      ∧ z ^ 2 - 6 * x ^ 2 - 5 * y ^ 2 = 0 := by
-    rintro ⟨z, x, y, hnontriv, hsol⟩
-    obtain ⟨Z, X, Y, hZeq, hunit⟩ :=
-      exists_padicInt_solution_coeff (c₁ := 6) (c₂ := 5) hnontriv hsol
-    have hmod := congrArg (PadicInt.toZModPow 3) hZeq
-    simp only [map_sub, map_mul, map_pow, map_zero] at hmod
-    rw [show (6 : ℤ_[2]).toZModPow 3 = (6 : ZMod 8) by
-          simpa using toZModPow_three_natCast 6,
-        show (5 : ℤ_[2]).toZModPow 3 = (5 : ZMod 8) by
-          simpa using toZModPow_three_natCast 5] at hmod
-    refine no_zmod8_sol_six_five _ _ _ ?_ hmod
-    rcases hunit with hZ | hX | hY
-    · exact Or.inl (hZ.map (PadicInt.toZModPow 3))
-    · exact Or.inr (Or.inl (hX.map (PadicInt.toZModPow 3)))
-    · exact Or.inr (Or.inr (hY.map (PadicInt.toZModPow 3)))
+      ∧ z ^ 2 - 6 * x ^ 2 - 5 * y ^ 2 = 0 :=
+    not_isotropic_of_no_zmod8 (c₁ := 6) (c₂ := 5) no_zmod8_sol_six_five
   unfold hilbertSym
   rw [ite_eq_right (by rw [not_or]; exact ⟨h6, h5⟩), ite_eq_right hno]
 
@@ -894,21 +793,8 @@ private theorem hilbertSym_six_seven : hilbertSym (6 : ℚ_[2]) (7 : ℚ_[2]) = 
   have h6 : (6 : ℚ_[2]) ≠ 0 := by norm_num
   have h7 : (7 : ℚ_[2]) ≠ 0 := by norm_num
   have hno : ¬ ∃ z x y : ℚ_[2], (z, x, y) ≠ (0, 0, 0)
-      ∧ z ^ 2 - 6 * x ^ 2 - 7 * y ^ 2 = 0 := by
-    rintro ⟨z, x, y, hnontriv, hsol⟩
-    obtain ⟨Z, X, Y, hZeq, hunit⟩ :=
-      exists_padicInt_solution_coeff (c₁ := 6) (c₂ := 7) hnontriv hsol
-    have hmod := congrArg (PadicInt.toZModPow 3) hZeq
-    simp only [map_sub, map_mul, map_pow, map_zero] at hmod
-    rw [show (6 : ℤ_[2]).toZModPow 3 = (6 : ZMod 8) by
-          simpa using toZModPow_three_natCast 6,
-        show (7 : ℤ_[2]).toZModPow 3 = (7 : ZMod 8) by
-          simpa using toZModPow_three_natCast 7] at hmod
-    refine no_zmod8_sol_six_seven _ _ _ ?_ hmod
-    rcases hunit with hZ | hX | hY
-    · exact Or.inl (hZ.map (PadicInt.toZModPow 3))
-    · exact Or.inr (Or.inl (hX.map (PadicInt.toZModPow 3)))
-    · exact Or.inr (Or.inr (hY.map (PadicInt.toZModPow 3)))
+      ∧ z ^ 2 - 6 * x ^ 2 - 7 * y ^ 2 = 0 :=
+    not_isotropic_of_no_zmod8 (c₁ := 6) (c₂ := 7) no_zmod8_sol_six_seven
   unfold hilbertSym
   rw [ite_eq_right (by rw [not_or]; exact ⟨h6, h7⟩), ite_eq_right hno]
 
@@ -917,21 +803,8 @@ private theorem hilbertSym_ten_three : hilbertSym (10 : ℚ_[2]) (3 : ℚ_[2]) =
   have h10 : (10 : ℚ_[2]) ≠ 0 := by norm_num
   have h3 : (3 : ℚ_[2]) ≠ 0 := by norm_num
   have hno : ¬ ∃ z x y : ℚ_[2], (z, x, y) ≠ (0, 0, 0)
-      ∧ z ^ 2 - 10 * x ^ 2 - 3 * y ^ 2 = 0 := by
-    rintro ⟨z, x, y, hnontriv, hsol⟩
-    obtain ⟨Z, X, Y, hZeq, hunit⟩ :=
-      exists_padicInt_solution_coeff (c₁ := 10) (c₂ := 3) hnontriv hsol
-    have hmod := congrArg (PadicInt.toZModPow 3) hZeq
-    simp only [map_sub, map_mul, map_pow, map_zero] at hmod
-    rw [show (10 : ℤ_[2]).toZModPow 3 = (10 : ZMod 8) by
-          simpa using toZModPow_three_natCast 10,
-        show (3 : ℤ_[2]).toZModPow 3 = (3 : ZMod 8) by
-          simpa using toZModPow_three_natCast 3] at hmod
-    refine no_zmod8_sol_ten_three _ _ _ ?_ hmod
-    rcases hunit with hZ | hX | hY
-    · exact Or.inl (hZ.map (PadicInt.toZModPow 3))
-    · exact Or.inr (Or.inl (hX.map (PadicInt.toZModPow 3)))
-    · exact Or.inr (Or.inr (hY.map (PadicInt.toZModPow 3)))
+      ∧ z ^ 2 - 10 * x ^ 2 - 3 * y ^ 2 = 0 :=
+    not_isotropic_of_no_zmod8 (c₁ := 10) (c₂ := 3) no_zmod8_sol_ten_three
   unfold hilbertSym
   rw [ite_eq_right (by rw [not_or]; exact ⟨h10, h3⟩), ite_eq_right hno]
 
@@ -940,21 +813,8 @@ private theorem hilbertSym_ten_five : hilbertSym (10 : ℚ_[2]) (5 : ℚ_[2]) = 
   have h10 : (10 : ℚ_[2]) ≠ 0 := by norm_num
   have h5 : (5 : ℚ_[2]) ≠ 0 := by norm_num
   have hno : ¬ ∃ z x y : ℚ_[2], (z, x, y) ≠ (0, 0, 0)
-      ∧ z ^ 2 - 10 * x ^ 2 - 5 * y ^ 2 = 0 := by
-    rintro ⟨z, x, y, hnontriv, hsol⟩
-    obtain ⟨Z, X, Y, hZeq, hunit⟩ :=
-      exists_padicInt_solution_coeff (c₁ := 10) (c₂ := 5) hnontriv hsol
-    have hmod := congrArg (PadicInt.toZModPow 3) hZeq
-    simp only [map_sub, map_mul, map_pow, map_zero] at hmod
-    rw [show (10 : ℤ_[2]).toZModPow 3 = (10 : ZMod 8) by
-          simpa using toZModPow_three_natCast 10,
-        show (5 : ℤ_[2]).toZModPow 3 = (5 : ZMod 8) by
-          simpa using toZModPow_three_natCast 5] at hmod
-    refine no_zmod8_sol_ten_five _ _ _ ?_ hmod
-    rcases hunit with hZ | hX | hY
-    · exact Or.inl (hZ.map (PadicInt.toZModPow 3))
-    · exact Or.inr (Or.inl (hX.map (PadicInt.toZModPow 3)))
-    · exact Or.inr (Or.inr (hY.map (PadicInt.toZModPow 3)))
+      ∧ z ^ 2 - 10 * x ^ 2 - 5 * y ^ 2 = 0 :=
+    not_isotropic_of_no_zmod8 (c₁ := 10) (c₂ := 5) no_zmod8_sol_ten_five
   unfold hilbertSym
   rw [ite_eq_right (by rw [not_or]; exact ⟨h10, h5⟩), ite_eq_right hno]
 
@@ -963,21 +823,8 @@ private theorem hilbertSym_fourteen_five : hilbertSym (14 : ℚ_[2]) (5 : ℚ_[2
   have h14 : (14 : ℚ_[2]) ≠ 0 := by norm_num
   have h5 : (5 : ℚ_[2]) ≠ 0 := by norm_num
   have hno : ¬ ∃ z x y : ℚ_[2], (z, x, y) ≠ (0, 0, 0)
-      ∧ z ^ 2 - 14 * x ^ 2 - 5 * y ^ 2 = 0 := by
-    rintro ⟨z, x, y, hnontriv, hsol⟩
-    obtain ⟨Z, X, Y, hZeq, hunit⟩ :=
-      exists_padicInt_solution_coeff (c₁ := 14) (c₂ := 5) hnontriv hsol
-    have hmod := congrArg (PadicInt.toZModPow 3) hZeq
-    simp only [map_sub, map_mul, map_pow, map_zero] at hmod
-    rw [show (14 : ℤ_[2]).toZModPow 3 = (14 : ZMod 8) by
-          simpa using toZModPow_three_natCast 14,
-        show (5 : ℤ_[2]).toZModPow 3 = (5 : ZMod 8) by
-          simpa using toZModPow_three_natCast 5] at hmod
-    refine no_zmod8_sol_fourteen_five _ _ _ ?_ hmod
-    rcases hunit with hZ | hX | hY
-    · exact Or.inl (hZ.map (PadicInt.toZModPow 3))
-    · exact Or.inr (Or.inl (hX.map (PadicInt.toZModPow 3)))
-    · exact Or.inr (Or.inr (hY.map (PadicInt.toZModPow 3)))
+      ∧ z ^ 2 - 14 * x ^ 2 - 5 * y ^ 2 = 0 :=
+    not_isotropic_of_no_zmod8 (c₁ := 14) (c₂ := 5) no_zmod8_sol_fourteen_five
   unfold hilbertSym
   rw [ite_eq_right (by rw [not_or]; exact ⟨h14, h5⟩), ite_eq_right hno]
 
@@ -986,21 +833,8 @@ private theorem hilbertSym_fourteen_seven : hilbertSym (14 : ℚ_[2]) (7 : ℚ_[
   have h14 : (14 : ℚ_[2]) ≠ 0 := by norm_num
   have h7 : (7 : ℚ_[2]) ≠ 0 := by norm_num
   have hno : ¬ ∃ z x y : ℚ_[2], (z, x, y) ≠ (0, 0, 0)
-      ∧ z ^ 2 - 14 * x ^ 2 - 7 * y ^ 2 = 0 := by
-    rintro ⟨z, x, y, hnontriv, hsol⟩
-    obtain ⟨Z, X, Y, hZeq, hunit⟩ :=
-      exists_padicInt_solution_coeff (c₁ := 14) (c₂ := 7) hnontriv hsol
-    have hmod := congrArg (PadicInt.toZModPow 3) hZeq
-    simp only [map_sub, map_mul, map_pow, map_zero] at hmod
-    rw [show (14 : ℤ_[2]).toZModPow 3 = (14 : ZMod 8) by
-          simpa using toZModPow_three_natCast 14,
-        show (7 : ℤ_[2]).toZModPow 3 = (7 : ZMod 8) by
-          simpa using toZModPow_three_natCast 7] at hmod
-    refine no_zmod8_sol_fourteen_seven _ _ _ ?_ hmod
-    rcases hunit with hZ | hX | hY
-    · exact Or.inl (hZ.map (PadicInt.toZModPow 3))
-    · exact Or.inr (Or.inl (hX.map (PadicInt.toZModPow 3)))
-    · exact Or.inr (Or.inr (hY.map (PadicInt.toZModPow 3)))
+      ∧ z ^ 2 - 14 * x ^ 2 - 7 * y ^ 2 = 0 :=
+    not_isotropic_of_no_zmod8 (c₁ := 14) (c₂ := 7) no_zmod8_sol_fourteen_seven
   unfold hilbertSym
   rw [ite_eq_right (by rw [not_or]; exact ⟨h14, h7⟩), ite_eq_right hno]
 
@@ -1354,39 +1188,7 @@ private lemma hilbertSym_reduce_two (a b : ℚ_[2]) (ha : a ≠ 0) (hb : b ≠ 0
             * ((twoAdicUnit a ha : ℤ_[2]) : ℚ_[2]))
           ((2 : ℚ_[2]) ^ (b.valuation % 2)
             * ((twoAdicUnit b hb : ℤ_[2]) : ℚ_[2])) := by
-  have hp0 : (2 : ℚ_[2]) ≠ 0 := two_padic_ne_zero
-  have hpα : (2 : ℚ_[2]) ^ a.valuation
-      = (2 : ℚ_[2]) ^ (a.valuation % 2) * ((2 : ℚ_[2]) ^ (a.valuation / 2)) ^ 2 := by
-    have hdec : a.valuation = a.valuation % 2 + 2 * (a.valuation / 2) := by omega
-    nth_rewrite 1 [hdec]
-    rw [zpow_add₀ hp0,
-      show (2 : ℤ) * (a.valuation / 2) = a.valuation / 2 + a.valuation / 2 by ring,
-      zpow_add₀ hp0, pow_two]
-  have hpβ : (2 : ℚ_[2]) ^ b.valuation
-      = (2 : ℚ_[2]) ^ (b.valuation % 2) * ((2 : ℚ_[2]) ^ (b.valuation / 2)) ^ 2 := by
-    have hdec : b.valuation = b.valuation % 2 + 2 * (b.valuation / 2) := by omega
-    nth_rewrite 1 [hdec]
-    rw [zpow_add₀ hp0,
-      show (2 : ℤ) * (b.valuation / 2) = b.valuation / 2 + b.valuation / 2 by ring,
-      zpow_add₀ hp0, pow_two]
-  have hA : a = ((2 : ℚ_[2]) ^ (a.valuation % 2)
-          * ((twoAdicUnit a ha : ℤ_[2]) : ℚ_[2]))
-        * ((2 : ℚ_[2]) ^ (a.valuation / 2)) ^ 2 := by
-    calc a = (2 : ℚ_[2]) ^ a.valuation * ((twoAdicUnit a ha : ℤ_[2]) : ℚ_[2]) :=
-          twoAdicUnit_spec a ha
-      _ = ((2 : ℚ_[2]) ^ (a.valuation % 2)
-            * ((twoAdicUnit a ha : ℤ_[2]) : ℚ_[2]))
-          * ((2 : ℚ_[2]) ^ (a.valuation / 2)) ^ 2 := by rw [hpα]; ring
-  have hB : b = ((2 : ℚ_[2]) ^ (b.valuation % 2)
-          * ((twoAdicUnit b hb : ℤ_[2]) : ℚ_[2]))
-        * ((2 : ℚ_[2]) ^ (b.valuation / 2)) ^ 2 := by
-    calc b = (2 : ℚ_[2]) ^ b.valuation * ((twoAdicUnit b hb : ℤ_[2]) : ℚ_[2]) :=
-          twoAdicUnit_spec b hb
-      _ = ((2 : ℚ_[2]) ^ (b.valuation % 2)
-            * ((twoAdicUnit b hb : ℤ_[2]) : ℚ_[2]))
-          * ((2 : ℚ_[2]) ^ (b.valuation / 2)) ^ 2 := by rw [hpβ]; ring
-  conv_lhs => rw [hA, hB]
-  exact hilbertSym_mul_square_eq (zpow_ne_zero _ hp0) (zpow_ne_zero _ hp0)
+  simpa only [twoAdicUnit, Nat.cast_ofNat] using hilbertSym_reduce (p := 2) a b ha hb
 
 -- Theorem: the unit--unit case agrees with `parityPow (-1) (eps u * eps v)`.
 private lemma hilbertSym_two_units_eq_parity (u v : ℤ_[2]ˣ) :

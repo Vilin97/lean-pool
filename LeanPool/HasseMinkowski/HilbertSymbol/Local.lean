@@ -535,12 +535,11 @@ private lemma exists_nonsquare_unit (p : ℕ) [Fact p.Prime] :
     rw [hnZ] at hchi1
     linarith [ha, hchi1]
 
--- Theorem: for a nonsquare `c` over `ℚ_[p]` there is a nonsquare `c₂` with `c * c₂` also
+-- Theorem: for nonzero `c` over `ℚ_[p]` there is a nonsquare `c₂` with `c * c₂` also
 -- nonsquare.
 theorem exists_not_isSquare_and_not_isSquare_mul (p : ℕ) [Fact p.Prime] {c : ℚ_[p]}
-    (hc : c ≠ 0) (hcsq : ¬ IsSquare c) :
+    (hc : c ≠ 0) :
     ∃ c₂ : ℚ_[p], ¬ IsSquare c₂ ∧ ¬ IsSquare (c * c₂) := by
-  have _ := hcsq
   by_cases hβ : Even c.valuation
   · refine ⟨(p : ℚ_[p]), ?_, ?_⟩
     · exact not_isSquare_of_odd_valuation (by rw [Padic.valuation_p]; norm_num)
@@ -798,7 +797,7 @@ theorem isotropic_weightedSumSquares_five (p : ℕ) [Fact p.Prime] (w : Fin 5 �
         simp
       exact h0val
   · have hc1ne : -(w 0 * w 1) ≠ 0 := neg_ne_zero.mpr (mul_ne_zero h0 h1)
-    obtain ⟨c2, hc2, hc1c2⟩ := exists_not_isSquare_and_not_isSquare_mul p hc1ne hc1
+    obtain ⟨c2, hc2, hc1c2⟩ := exists_not_isSquare_and_not_isSquare_mul p hc1ne
     have hc2ne : c2 ≠ 0 := fun h => hc2 (h ▸ IsSquare.zero)
     have h234 : w 2 * w 3 * w 4 ≠ 0 := mul_ne_zero (mul_ne_zero h2 h3) h4
     have hsig : hilbertSym (w 2 * w 3 * w 4) c2 = 1 ∨

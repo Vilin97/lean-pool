@@ -89,9 +89,9 @@ prime `p`, so only one of the two exponents in `padicValRat p q` is nonzero. Eve
 of the difference therefore forces evenness of each exponent separately, which by
 `isSquare_nat_iff_even_factorization` makes both `q.num` and `q.den` squares. -/
 
--- Theorem: the `p`-adic valuation of a nonzero rational is the difference of the
--- `p`-adic valuations (prime factorizations) of its numerator and denominator.
-lemma padicValRat_eq_factorization {q : ℚ} (_hq : q ≠ 0) {p : ℕ} (hp : p.Prime) :
+-- Theorem: the `p`-adic valuation of a rational is the difference of the `p`-adic
+-- valuations (prime factorizations) of its numerator and denominator.
+lemma padicValRat_eq_factorization {q : ℚ} {p : ℕ} (hp : p.Prime) :
     padicValRat p q =
       (q.num.natAbs.factorization p : ℤ) - (q.den.factorization p : ℤ) := by
   simp only [padicValRat, padicValInt]
@@ -128,7 +128,7 @@ theorem Rat.isSquare_iff_even_padicValRat {q : ℚ} :
       intro p hp
       have hdiff : Even ((q.num.natAbs.factorization p : ℤ) -
           (q.den.factorization p : ℤ)) := by
-        rw [← padicValRat_eq_factorization hq hp]
+        rw [← padicValRat_eq_factorization hp]
         exact h p hp
       rcases factorization_eq_zero_or_eq_zero_of_coprime hp hc with hA | hB
       · have hA' : Even (q.num.natAbs.factorization p) := by rw [hA]; exact Even.zero
