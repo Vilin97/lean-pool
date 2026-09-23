@@ -110,7 +110,8 @@ def littleEndianNaturalValue : List Bool → ℕ
     (Computability.encodeNum (number : Num)) = number
   rw [littleEndianNaturalValue_encodeNum, Num.to_of_nat]
 
-private def littleEndianNaturalFold :
+/-- Compare two little-endian bit words, updating the order at each higher bit. -/
+def littleEndianNaturalFold :
     EncodedWordOrdering → List Bool → List Bool → EncodedWordOrdering
   | current, [], [] => current
   | current, false :: first, [] =>
@@ -220,7 +221,8 @@ theorem delimitedNaturalPairOrdering_encodeNat
   rw [delimitedNaturalPairOrdering_valid,
     littleEndianNaturalOrdering_encodeNat]
 
-private def naturalCompareConsumeBoth
+/-- Pop the next bit from each comparator stack before continuing. -/
+def naturalCompareConsumeBoth
     (continuation : Turing.TM2.Stmt
       (fun _ : Fin 10 => Bool) (Fin 12)
       DelimitedPairComparisonState) :
@@ -338,7 +340,7 @@ macro "naturalCompareStepTac" : tactic =>
             (first | rfl | simp [Function.update]) } <;>
           try rfl)))
 
-private theorem naturalCompare_words_equalBit
+theorem naturalCompareWordsEqualBit
     (outcome : EncodedWordOrdering) (bit : Bool)
     (input firstCounter firstReversed secondCounter secondReversed
       firstForward secondForward source sourcePrefix output : List Bool) :
@@ -352,7 +354,7 @@ private theorem naturalCompare_words_equalBit
         firstForward secondForward source sourcePrefix output) := by
   cases bit <;> naturalCompareStepTac
 
-private theorem naturalCompare_words_lessBit
+theorem naturalCompareWordsLessBit
     (outcome : EncodedWordOrdering)
     (input firstCounter firstReversed secondCounter secondReversed
       firstForward secondForward source sourcePrefix output : List Bool) :
@@ -366,7 +368,7 @@ private theorem naturalCompare_words_lessBit
         firstForward secondForward source sourcePrefix output) := by
   naturalCompareStepTac
 
-private theorem naturalCompare_words_greaterBit
+theorem naturalCompareWordsGreaterBit
     (outcome : EncodedWordOrdering)
     (input firstCounter firstReversed secondCounter secondReversed
       firstForward secondForward source sourcePrefix output : List Bool) :
@@ -380,7 +382,7 @@ private theorem naturalCompare_words_greaterBit
         firstForward secondForward source sourcePrefix output) := by
   naturalCompareStepTac
 
-private theorem naturalCompare_words_firstEmpty_false
+theorem naturalCompareWordsFirstEmptyFalse
     (outcome : EncodedWordOrdering)
     (input firstCounter firstReversed secondCounter secondReversed
       secondForward source sourcePrefix output : List Bool) :
@@ -393,7 +395,7 @@ private theorem naturalCompare_words_firstEmpty_false
         [] secondForward source sourcePrefix output) := by
   naturalCompareStepTac
 
-private theorem naturalCompare_words_firstEmpty_true
+theorem naturalCompareWordsFirstEmptyTrue
     (outcome : EncodedWordOrdering)
     (input firstCounter firstReversed secondCounter secondReversed
       secondForward source sourcePrefix output : List Bool) :
@@ -406,7 +408,7 @@ private theorem naturalCompare_words_firstEmpty_true
         [] secondForward source sourcePrefix output) := by
   naturalCompareStepTac
 
-private theorem naturalCompare_words_secondEmpty_false
+theorem naturalCompareWordsSecondEmptyFalse
     (outcome : EncodedWordOrdering)
     (input firstCounter firstReversed secondCounter secondReversed
       firstForward source sourcePrefix output : List Bool) :
@@ -419,7 +421,7 @@ private theorem naturalCompare_words_secondEmpty_false
         firstForward [] source sourcePrefix output) := by
   naturalCompareStepTac
 
-private theorem naturalCompare_words_secondEmpty_true
+theorem naturalCompareWordsSecondEmptyTrue
     (outcome : EncodedWordOrdering)
     (input firstCounter firstReversed secondCounter secondReversed
       firstForward source sourcePrefix output : List Bool) :
@@ -432,7 +434,7 @@ private theorem naturalCompare_words_secondEmpty_true
         firstForward [] source sourcePrefix output) := by
   naturalCompareStepTac
 
-private theorem naturalCompare_words_bothEmpty_invalid
+theorem naturalCompareWordsBothEmptyInvalid
     (input firstCounter firstReversed secondCounter secondReversed
       source sourcePrefix output : List Bool) :
     delimitedNaturalComparisonMachine.step
@@ -444,7 +446,7 @@ private theorem naturalCompare_words_bothEmpty_invalid
         [] [] source sourcePrefix output) := by
   naturalCompareStepTac
 
-private theorem naturalCompare_words_bothEmpty
+theorem naturalCompareWordsBothEmpty
     (outcome : EncodedWordOrdering)
     (hvalid : outcome ≠ .invalid)
     (input firstCounter firstReversed secondCounter secondReversed
@@ -462,11 +464,13 @@ private theorem naturalCompare_words_bothEmpty
   | equal => naturalCompareStepTac
   | greater => naturalCompareStepTac
 
-private def naturalComparisonEffectiveOutcome
+/-- Treat an uninitialized comparison result as equality. -/
+def naturalComparisonEffectiveOutcome
     (outcome : EncodedWordOrdering) : EncodedWordOrdering :=
   if outcome = .invalid then .equal else outcome
 
-private def naturalCompare_wordsTrace
+/-- Compare both encoded natural-number words and record their final order. -/
+def naturalCompareWordsTrace
     (outcome : EncodedWordOrdering)
     (first second input firstCounter firstReversed
       secondCounter secondReversed source sourcePrefix output : List Bool) :
@@ -490,7 +494,7 @@ private def naturalCompare_wordsTrace
                   littleEndianNaturalFold,
                   List.length_nil, add_zero, zero_add] using
                   oneStep _ _
-                    (naturalCompare_words_bothEmpty_invalid input firstCounter firstReversed
+                    (naturalCompareWordsBothEmptyInvalid input firstCounter firstReversed
                         secondCounter secondReversed source
                       sourcePrefix output)
           | less =>
@@ -498,7 +502,7 @@ private def naturalCompare_wordsTrace
                   reduceCtorEq, ↓reduceIte,
                   littleEndianNaturalFold, List.length_nil, add_zero, zero_add] using
                   oneStep _ _
-                    (naturalCompare_words_bothEmpty .less (by decide) input firstCounter
+                    (naturalCompareWordsBothEmpty .less (by decide) input firstCounter
                         firstReversed secondCounter secondReversed
                       source sourcePrefix output)
           | equal =>
@@ -506,7 +510,7 @@ private def naturalCompare_wordsTrace
                   reduceCtorEq, ↓reduceIte,
                   littleEndianNaturalFold, List.length_nil, add_zero, zero_add] using
                   oneStep _ _
-                    (naturalCompare_words_bothEmpty .equal (by decide) input firstCounter
+                    (naturalCompareWordsBothEmpty .equal (by decide) input firstCounter
                         firstReversed secondCounter secondReversed
                       source sourcePrefix output)
           | greater =>
@@ -514,13 +518,13 @@ private def naturalCompare_wordsTrace
                   reduceCtorEq, ↓reduceIte,
                   littleEndianNaturalFold, List.length_nil, add_zero, zero_add] using
                   oneStep _ _
-                    (naturalCompare_words_bothEmpty .greater (by decide) input firstCounter
+                    (naturalCompareWordsBothEmpty .greater (by decide) input firstCounter
                         firstReversed secondCounter secondReversed
                       source sourcePrefix output)
       | cons bit remaining ih =>
           cases bit with
           | false =>
-              have hfirst := oneStep _ _ (naturalCompare_words_firstEmpty_false outcome
+              have hfirst := oneStep _ _ (naturalCompareWordsFirstEmptyFalse outcome
                   input firstCounter firstReversed
                   secondCounter secondReversed remaining
                   source sourcePrefix output)
@@ -531,7 +535,7 @@ private def naturalCompare_wordsTrace
                   List.length_cons, zero_add,
                   Nat.add_assoc, Nat.reduceAdd] using hfull
           | true =>
-              have hfirst := oneStep _ _ (naturalCompare_words_firstEmpty_true outcome
+              have hfirst := oneStep _ _ (naturalCompareWordsFirstEmptyTrue outcome
                   input firstCounter firstReversed
                   secondCounter secondReversed remaining
                   source sourcePrefix output)
@@ -547,7 +551,7 @@ private def naturalCompare_wordsTrace
       | nil =>
           cases bit with
           | false =>
-              have hfirst := oneStep _ _ (naturalCompare_words_secondEmpty_false outcome
+              have hfirst := oneStep _ _ (naturalCompareWordsSecondEmptyFalse outcome
                   input firstCounter firstReversed
                   secondCounter secondReversed remaining
                   source sourcePrefix output)
@@ -558,7 +562,7 @@ private def naturalCompare_wordsTrace
                   List.length_nil, add_zero,
                   Nat.add_assoc, Nat.reduceAdd] using hfull
           | true =>
-              have hfirst := oneStep _ _ (naturalCompare_words_secondEmpty_true outcome
+              have hfirst := oneStep _ _ (naturalCompareWordsSecondEmptyTrue outcome
                   input firstCounter firstReversed
                   secondCounter secondReversed remaining
                   source sourcePrefix output)
@@ -571,51 +575,55 @@ private def naturalCompare_wordsTrace
                       reduceCtorEq, ↓reduceIte] using hfull
       | cons next second =>
           cases bit <;> cases next
-          · have hfirst := oneStep _ _ (naturalCompare_words_equalBit outcome false
+          · have hfirst := oneStep _ _ (naturalCompareWordsEqualBit outcome false
                 input firstCounter firstReversed
                 secondCounter secondReversed remaining second
                 source sourcePrefix output)
             have hrest := ih (second := second) (outcome := outcome)
             have hfull := EvalsToInTime.trans delimitedNaturalComparisonMachine.step
-              _ _ _ _ _ hfirst hrest
-            exact rebound (by simpa only [FinTM2.step, Fin.isValue, littleEndianNaturalFold,
-                Nat.add_assoc, Nat.add_comm, Nat.add_left_comm,
-                                  Nat.reduceAdd] using hfull)
+              1 (remaining.length + second.length + 1) _ _ _ hfirst hrest
+            exact rebound (oldBudget := remaining.length + second.length + 2)
+              (by
+                simpa only [FinTM2.step, Fin.isValue, littleEndianNaturalFold,
+                  Nat.add_assoc, Nat.add_comm, Nat.add_left_comm, Nat.reduceAdd] using hfull)
               (by simp only [List.length_cons]; omega)
-          · have hfirst := oneStep _ _ (naturalCompare_words_lessBit outcome
+          · have hfirst := oneStep _ _ (naturalCompareWordsLessBit outcome
                 input firstCounter firstReversed
                 secondCounter secondReversed remaining second
                 source sourcePrefix output)
             have hrest := ih (second := second) (outcome := .less)
             have hfull := EvalsToInTime.trans delimitedNaturalComparisonMachine.step
-              _ _ _ _ _ hfirst hrest
-            exact rebound (by simpa only [FinTM2.step, Fin.isValue,
-                naturalComparisonEffectiveOutcome, littleEndianNaturalFold,
-                                  reduceCtorEq, ↓reduceIte, Nat.add_assoc, Nat.add_comm,
-                                      Nat.add_left_comm, Nat.reduceAdd] using hfull)
+              1 (remaining.length + second.length + 1) _ _ _ hfirst hrest
+            exact rebound (oldBudget := remaining.length + second.length + 2)
+              (by
+                simpa only [FinTM2.step, Fin.isValue, naturalComparisonEffectiveOutcome,
+                  littleEndianNaturalFold, reduceCtorEq, ↓reduceIte, Nat.add_assoc,
+                  Nat.add_comm, Nat.add_left_comm, Nat.reduceAdd] using hfull)
               (by simp only [List.length_cons]; omega)
-          · have hfirst := oneStep _ _ (naturalCompare_words_greaterBit outcome
+          · have hfirst := oneStep _ _ (naturalCompareWordsGreaterBit outcome
                 input firstCounter firstReversed
                 secondCounter secondReversed remaining second
                 source sourcePrefix output)
             have hrest := ih (second := second) (outcome := .greater)
             have hfull := EvalsToInTime.trans delimitedNaturalComparisonMachine.step
-              _ _ _ _ _ hfirst hrest
-            exact rebound (by simpa only [FinTM2.step, Fin.isValue,
-                naturalComparisonEffectiveOutcome, littleEndianNaturalFold,
-                                  reduceCtorEq, ↓reduceIte, Nat.add_assoc, Nat.add_comm,
-                                      Nat.add_left_comm, Nat.reduceAdd] using hfull)
+              1 (remaining.length + second.length + 1) _ _ _ hfirst hrest
+            exact rebound (oldBudget := remaining.length + second.length + 2)
+              (by
+                simpa only [FinTM2.step, Fin.isValue, naturalComparisonEffectiveOutcome,
+                  littleEndianNaturalFold, reduceCtorEq, ↓reduceIte, Nat.add_assoc,
+                  Nat.add_comm, Nat.add_left_comm, Nat.reduceAdd] using hfull)
               (by simp only [List.length_cons]; omega)
-          · have hfirst := oneStep _ _ (naturalCompare_words_equalBit outcome true
+          · have hfirst := oneStep _ _ (naturalCompareWordsEqualBit outcome true
                 input firstCounter firstReversed
                 secondCounter secondReversed remaining second
                 source sourcePrefix output)
             have hrest := ih (second := second) (outcome := outcome)
             have hfull := EvalsToInTime.trans delimitedNaturalComparisonMachine.step
-              _ _ _ _ _ hfirst hrest
-            exact rebound (by simpa only [FinTM2.step, Fin.isValue, littleEndianNaturalFold,
-                Nat.add_assoc, Nat.add_comm, Nat.add_left_comm,
-                                  Nat.reduceAdd] using hfull)
+              1 (remaining.length + second.length + 1) _ _ _ hfirst hrest
+            exact rebound (oldBudget := remaining.length + second.length + 2)
+              (by
+                simpa only [FinTM2.step, Fin.isValue, littleEndianNaturalFold,
+                  Nat.add_assoc, Nat.add_comm, Nat.add_left_comm, Nat.reduceAdd] using hfull)
               (by simp only [List.length_cons]; omega)
 
 /-- Internal support shared across GapCVP continuation modules. -/
@@ -634,7 +642,7 @@ def naturalCompareWordsTraceInitial
   simpa only [FinTM2.step, Fin.isValue, littleEndianNaturalOrdering,
       naturalComparisonEffectiveOutcome,
       ↓reduceIte] using
-      naturalCompare_wordsTrace .invalid first second input firstCounter firstReversed
+      naturalCompareWordsTrace .invalid first second input firstCounter firstReversed
           secondCounter secondReversed source
         sourcePrefix output
 
