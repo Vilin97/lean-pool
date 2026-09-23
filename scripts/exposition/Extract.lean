@@ -3,6 +3,9 @@ Copyright (c) 2026 Lean Pool contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin
 -/
+
+module
+
 import Lean
 
 /-!
@@ -786,7 +789,7 @@ def emitCommands (outPath : System.FilePath) (exposed : NameSet) (names : Array 
 
 end Exposition.Commands
 
-unsafe def main (args : List String) : IO UInt32 := do
+public unsafe def main (args : List String) : IO UInt32 := do
   let outPath := args[0]?.getD "exposition-dump.jsonl"
   let commandsPath := args[1]?.getD "exposition-commands.jsonl"
   -- Further arguments override the imported modules (default: the whole pool);
