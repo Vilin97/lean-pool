@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Boon Suan Ho
 -/
 
-import LeanPool.FourAP.Main
+module
+
+public import LeanPool.FourAP.Main
 
 /-!
 # A 4AP-free permutation of the positive integers

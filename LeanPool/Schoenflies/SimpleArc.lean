@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.OverlayGraph
-import LeanPool.Schoenflies.Graph.CycleJordan
+module
+
+public import LeanPool.Schoenflies.OverlayGraph
+public import LeanPool.Schoenflies.Graph.CycleJordan
 
 /-!
 # Simple polygonal arcs
@@ -68,6 +70,8 @@ list and belongs beside it in `Schoenflies/Subdivide.lean`; `Schoenflies.subset_
 is a general fact about preconnected sets. Both are here only because their homes are on
 `main`.
 -/
+
+@[expose] public section
 
 open Metric Set
 open scoped Graph

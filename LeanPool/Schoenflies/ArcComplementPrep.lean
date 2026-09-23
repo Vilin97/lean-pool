@@ -3,12 +3,14 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.PolygonalJordan
-import LeanPool.Schoenflies.ModelCurve
-import LeanPool.Schoenflies.SimpleArc
-import LeanPool.Schoenflies.SquareMover
-import LeanPool.Schoenflies.Graph.OuterFace
-import LeanPool.Schoenflies.UniformBound
+module
+
+public import LeanPool.Schoenflies.PolygonalJordan
+public import LeanPool.Schoenflies.ModelCurve
+public import LeanPool.Schoenflies.SimpleArc
+public import LeanPool.Schoenflies.SquareMover
+public import LeanPool.Schoenflies.Graph.OuterFace
+public import LeanPool.Schoenflies.UniformBound
 
 /-!
 # Scaffolding for the arc-complement theorem
@@ -70,6 +72,8 @@ outer-chain lemma (`lem:outer-chain`), so that the theorem itself becomes a shor
 * `image_subset_iUnion_closedSquare` — "Every point of `A` lies in or on one of the small
   squares".
 -/
+
+@[expose] public section
 
 open Metric Set unitInterval
 open scoped Graph

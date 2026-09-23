@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.SquareMesh
-import LeanPool.Schoenflies.FaceCycles
+module
+
+public import LeanPool.Schoenflies.SquareMesh
+public import LeanPool.Schoenflies.FaceCycles
 
 /-!
 # The inner grid of the anchored square mesh: 2-connectivity and the outer cycle
@@ -115,6 +117,8 @@ carried explicitly by every theorem below that needs it.
 * `pieceListGraph`, `pieceListGraph_union` — the list-of-segments graph, and the fact that its
   unions are concatenations.
 -/
+
+@[expose] public section
 
 open Metric Set
 open scoped Graph

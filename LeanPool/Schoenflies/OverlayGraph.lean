@@ -3,7 +3,9 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Overlay
+module
+
+public import LeanPool.Schoenflies.Overlay
 
 /-!
 # The polygonal overlay, assembled into a plane graph
@@ -42,6 +44,8 @@ The three clauses of `Graph.IsDrawing` come out as follows.
 * `overlayPieces`, `overlayGraph`, `segmentDrawing` — the graph of Lemma 3.7.
 * `polygonal_overlay` — Lemma 3.7 (polygonal overlay), the whole statement.
 -/
+
+@[expose] public section
 
 open Metric Set
 open scoped Graph

@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.BoundaryCycles
-import LeanPool.Schoenflies.CellulationInvariants
+module
+
+public import LeanPool.Schoenflies.BoundaryCycles
+public import LeanPool.Schoenflies.CellulationInvariants
 
 /-!
 # Boundary cycles under the elementary cellulation operations
@@ -20,6 +22,8 @@ each new boundary is one old boundary arc followed by the reverse of the inserte
 * `Schoenflies.CellStructure.SubdivData.boundaryCycles` — preservation under operation 1.
 * `Schoenflies.GeneratedStructure.boundaryCycles` — the closed induction.
 -/
+
+@[expose] public section
 
 open Set
 open scoped Graph

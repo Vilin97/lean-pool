@@ -3,7 +3,9 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Square
+module
+
+public import LeanPool.Schoenflies.Square
 
 /-!
 # Catching a bounded set inside a square
@@ -25,6 +27,8 @@ connectedness theorem be applied to a complement.
 * `isOpen_compl_of_finite_isCompact` — the complement of a finite union of compact sets is
   open; the exterior of a plane graph is open for this reason.
 -/
+
+@[expose] public section
 
 open Metric Set
 

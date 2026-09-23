@@ -3,12 +3,14 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import Mathlib.Analysis.Matrix.PosDef
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Ring
-import LeanPool.ACMax.Spectral.AlgConn
+module
+
+public import Mathlib.Analysis.Matrix.PosDef
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.Ring
+public import LeanPool.ACMax.Spectral.AlgConn
 
 /-!
 # Variational (Courant–Fischer) upper bound for algebraic connectivity
@@ -20,6 +22,8 @@ Rayleigh quotient of `x`, in division-free form
 
 This is the reusable bridge both clauses of the ACMAX conjecture rely on.
 -/
+
+@[expose] public section
 
 namespace ACMax
 
