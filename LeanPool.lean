@@ -6671,6 +6671,7 @@ public import LeanPool.Shannon1948Formalization.Entropy.Joint
 public import LeanPool.Shannon1948Formalization.Entropy.Properties
 public import LeanPool.Shannon1948Formalization.Entropy.Rational
 public import LeanPool.Shannon1948Formalization.Entropy.Uniform
+public import LeanPool.Shared.Schur
 public import LeanPool.SingularModuli
 public import LeanPool.SingularModuli.QuadraticOrder.Basic
 public import LeanPool.SingularModuli.QuadraticOrder.CanonicalForm

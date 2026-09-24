@@ -5,7 +5,7 @@ Authors: Alex Meiburg
 -/
 module
 
-public import Mathlib.Analysis.CStarAlgebra.Matrix
+public import LeanPool.Shared.Schur
 
 /-!
 # The Schur test for the L2 operator norm
@@ -14,11 +14,10 @@ General real-matrix lemmas about the L2 operator norm, used in Section 11.3 of `
 where the oriented overlap matrix `R` is bounded through `‖R‖₂ ≤ sqrt (‖R‖₁ ‖R‖∞)`, i.e. by the
 geometric mean of the maximum column sum and the maximum row sum.
 
-Nothing here mentions the Boolean cube: every statement is about an arbitrary real matrix, and
-none of them was found in Mathlib.  Mathlib's scoped `Matrix.Norms.L2Operator` norm has no
-transpose lemma, no converse of `Matrix.l2_opNorm_mulVec` from which to deduce an operator
-bound, no `l1_opNorm`, and no Schur test.  These are therefore upstream candidates rather than
-duplicates, and are stated in the `Matrix` namespace accordingly.
+The nonnegative real specialization below reuses `Lean4LPD.l2_opNorm_le_schur`, the pool's
+finite rectangular Schur test over any `RCLike` field. The shared module depends only on
+Mathlib. The other lemmas expose convenient real-matrix formulations
+for the spectral-sensitivity development.
 
 Adapted for Lean Pool from `Timeroot/BS_Lam` at commit
 `7bd39a8d41ee7910d3296d0477ad18f8fff9d870`; ported to Lean Pool with proof and dependency cleanup.
@@ -80,22 +79,9 @@ theorem l2_opNorm_le_sqrt_of_row_col_sums (R : Matrix m n ℝ) (hR : ∀ i j, 0 
   obtain ⟨j₀⟩ := hn
   have ha : 0 ≤ a := (Finset.sum_nonneg fun j _ ↦ hR i₀ j).trans (hrow i₀)
   have hb : 0 ≤ b := (Finset.sum_nonneg fun i _ ↦ hR i j₀).trans (hcol j₀)
-  refine l2_opNorm_le_of_sum_sq_mulVec_le R (Real.sqrt_nonneg _) fun v ↦ ?_
-  rw [Real.sq_sqrt (mul_nonneg ha hb)]
-  -- Cauchy-Schwarz row by row, with the weights `R i ·`.
-  have step (i : m) : (R *ᵥ v) i ^ 2 ≤ a * ∑ j, R i j * v j ^ 2 :=
-    (Finset.sum_sq_le_sum_mul_sum_of_sq_le_mul _ (fun j _ ↦ hR i j)
-      (fun j _ ↦ mul_nonneg (hR i j) (sq_nonneg _)) fun j _ ↦ le_of_eq (by ring)).trans <|
-      mul_le_mul_of_nonneg_right (hrow i) <|
-        Finset.sum_nonneg fun j _ ↦ mul_nonneg (hR i j) (sq_nonneg _)
-  calc ∑ i, (R *ᵥ v) i ^ 2
-      ≤ ∑ i, a * ∑ j, R i j * v j ^ 2 := Finset.sum_le_sum fun i _ ↦ step i
-    _ = a * ∑ j, (∑ i, R i j) * v j ^ 2 := by
-        rw [← Finset.mul_sum, Finset.sum_comm]
-        simp_rw [Finset.sum_mul]
-    _ ≤ a * ∑ j, b * v j ^ 2 := by
-        gcongr with j
-        exact hcol j
-    _ = a * b * ∑ j, v j ^ 2 := by rw [← Finset.mul_sum, mul_assoc]
+  apply Lean4LPD.l2_opNorm_le_schur R ha hb
+  · simpa only [Real.norm_eq_abs, abs_of_nonneg (hR _ _)] using hrow
+  · simpa only [Real.norm_eq_abs, abs_of_nonneg (hR _ _)] using hcol
+
 
 end Matrix

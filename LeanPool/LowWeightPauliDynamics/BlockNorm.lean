@@ -6,7 +6,7 @@ Authors: Jue Xu
 
 module
 
-public import Mathlib.Analysis.CStarAlgebra.Matrix
+public import LeanPool.Shared.Schur
 
 /-!
 # The ℓ² operator norm of a block of a matrix
@@ -81,13 +81,6 @@ noncomputable def restrictCLM (𝕜 : Type*) [RCLike 𝕜] {p m : Type*}
 
 @[simp] lemma restrictCLM_apply {p m : Type*} (f : p → m)
     (x : EuclideanSpace 𝕜 m) (i : p) : restrictCLM 𝕜 f x i = x (f i) := rfl
-
-/-- The continuous linear map on `EuclideanSpace` attached to a (possibly rectangular) matrix.
-This is the map whose operator norm *is* `‖A‖` for the scoped ℓ² operator norm, by
-`Matrix.l2_opNorm_def`; for square matrices it agrees with `Matrix.toEuclideanCLM`. -/
-noncomputable abbrev clm {m n : Type*} [Fintype m] [Fintype n] [DecidableEq n]
-    (A : Matrix m n 𝕜) : EuclideanSpace 𝕜 n →L[𝕜] EuclideanSpace 𝕜 m :=
-  (Matrix.toEuclideanLin (𝕜 := 𝕜) (m := m) (n := n)).trans LinearMap.toContinuousLinearMap A
 
 section Restrict
 
