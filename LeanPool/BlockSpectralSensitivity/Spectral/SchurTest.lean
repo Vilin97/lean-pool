@@ -5,7 +5,7 @@ Authors: Alex Meiburg
 -/
 module
 
-public import LeanPool.Shared.Schur
+public import LeanPool.LowWeightPauliDynamics.SchurCore
 
 /-!
 # The Schur test for the L2 operator norm

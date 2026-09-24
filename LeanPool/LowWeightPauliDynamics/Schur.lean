@@ -11,7 +11,8 @@ public import LeanPool.LowWeightPauliDynamics.BlockNorm
 /-!
 # The finite Schur test for the Euclidean operator norm
 
-The general `Lean4LPD` Schur-test API is provided by `LeanPool.Shared.Schur`, also exported
-through `BlockNorm`. This entry preserves the original imports and declaration names for
-Pauli-dynamics users while sharing one proof with the block/spectral-sensitivity project.
+The general `Lean4LPD` Schur-test API is provided by
+`LeanPool.LowWeightPauliDynamics.SchurCore`, also exported through `BlockNorm`. This entry
+preserves the original imports and declaration names for Pauli-dynamics users while sharing
+one proof with the block/spectral-sensitivity project.
 -/

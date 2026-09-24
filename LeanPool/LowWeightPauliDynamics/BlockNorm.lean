@@ -6,7 +6,7 @@ Authors: Jue Xu
 
 module
 
-public import LeanPool.Shared.Schur
+public import LeanPool.LowWeightPauliDynamics.SchurCore
 
 /-!
 # The ℓ² operator norm of a block of a matrix

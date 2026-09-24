@@ -3583,6 +3583,7 @@ public import LeanPool.LowWeightPauliDynamics.Pauli.Weight
 public import LeanPool.LowWeightPauliDynamics.Rotation
 public import LeanPool.LowWeightPauliDynamics.RotationExp
 public import LeanPool.LowWeightPauliDynamics.Schur
+public import LeanPool.LowWeightPauliDynamics.SchurCore
 public import LeanPool.MRiscX
 public import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
 public import LeanPool.MRiscX.AbstractSyntax.Instr
@@ -6671,7 +6672,6 @@ public import LeanPool.Shannon1948Formalization.Entropy.Joint
 public import LeanPool.Shannon1948Formalization.Entropy.Properties
 public import LeanPool.Shannon1948Formalization.Entropy.Rational
 public import LeanPool.Shannon1948Formalization.Entropy.Uniform
-public import LeanPool.Shared.Schur
 public import LeanPool.SingularModuli
 public import LeanPool.SingularModuli.QuadraticOrder.Basic
 public import LeanPool.SingularModuli.QuadraticOrder.CanonicalForm
