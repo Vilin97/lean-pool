@@ -6,7 +6,6 @@ Authors: Scott Armstrong, Vlad Vicol
 module
 
 public import LeanPool.CaffarelliKohnNirenberg.Foundation.Sobolev.W1p.Basic
-public import LeanPool.CaffarelliKohnNirenberg.Foundation.Sobolev.W1p.Basic
 public import LeanPool.CaffarelliKohnNirenberg.Foundation.Sobolev.Mollify.LpApproximation
 public import LeanPool.CaffarelliKohnNirenberg.Foundation.Sobolev.Mollify.Transport
 public import Mathlib.MeasureTheory.Function.L1Space.Integrable

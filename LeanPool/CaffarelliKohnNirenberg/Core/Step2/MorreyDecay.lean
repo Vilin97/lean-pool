@@ -1406,11 +1406,12 @@ theorem morreyDecay_of_thetaDecay
     n₀ hϱ rE hrE hr₂ hsumRbig
   have hlamz := morreyDecay_hlamz_13 hsol Ropen hforceBig rforce
     hrforce hforceBall Rβ N n₀ hR₀ hϱ rE hR₀base hmoveSub
-  apply morreyDecay_of_uniform_theta_bound hκ hκone hr₂ hball₂ (le_of_lt hr₂ϱ)
+  apply morreyDecay_of_uniform_theta_bound (K := κ ^ (-4 / 3 - ε) * η * ϱ ^ (-ε))
+    hκ hκone hr₂ hball₂ (le_of_lt hr₂ϱ)
   intro z hz r hr hrϱ
   have hθz := hballE (Metric.ball_subset_ball (le_of_lt hr₂E) hz)
   have hiterz := iteration_of_thetaDecay (C₂₇ := C₂₇) (C₂₈ := C₂₈)
     hsol hC₂₇ hC₂₈ hϱ (hzrhosub z hz) hθz (hlamz z hz) hThetaDecay
-  simpa [κ, η, iterationEpsilon] using hiterz.2 r hr hrϱ
+  simpa [κ, η, ε, iterationEpsilon] using hiterz.2 r hr hrϱ
 
 end CKN
