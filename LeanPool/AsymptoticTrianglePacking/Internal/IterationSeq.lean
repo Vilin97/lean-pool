@@ -9,8 +9,7 @@ module
 public import LeanPool.AsymptoticTrianglePacking.Internal.Basic
 public import LeanPool.AsymptoticTrianglePacking.Internal.Greedy
 public import LeanPool.AsymptoticTrianglePacking.Internal.Round
-public import LeanPool.AsymptoticTrianglePacking.Internal.Iteration
-public import LeanPool.AsymptoticTrianglePacking.Internal.Assemble
+public import LeanPool.AsymptoticTrianglePacking.Internal.Assembly
 
 /-!
 # LeanPool.AsymptoticTrianglePacking.Internal — round-dependent iteration of nibble rounds
@@ -26,15 +25,15 @@ does the per-round covering fraction, whose total is a convergent geometric seri
 The nibble therefore has to re-tune its retention probability from round to round
 (`p_k ≈ x / (r·d_k)`, tracking the shrinking residual degree `d_k`).  This file provides the
 corresponding deterministic scaffolding: iteration along a *sequence* `R : ℕ → strategy` of
-retention strategies, with all the round-to-round invariants of
+retention strategies. Its round-to-round invariants are the common core specialized by
 `LeanPool.AsymptoticTrianglePacking.Internal.Iteration` and
-`LeanPool.AsymptoticTrianglePacking.Internal.Assemble` re-established.
+`LeanPool.AsymptoticTrianglePacking.Internal.Assemble`.
 
 * `nibbleIterSeq`, `nibbleResidualSeq`, `nibbleMatchingSeq` — the sequence-indexed iteration.
 * `nibbleResidualSeq_subset`, `nibbleResidualSeq_uniform` — residual invariants.
 * `nibbleResidualSeq_disjoint_support`, `nibbleMatchingSeq_isMatching` — the assembly invariants.
-* `nibbleIterSeq_const` — the constant sequence recovers
-  `LeanPool.AsymptoticTrianglePacking.Internal.Iteration`.
+The fixed-strategy iteration is recovered by specializing this sequence in
+`LeanPool.AsymptoticTrianglePacking.Internal.Iteration`.
 
 Must be placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
@@ -63,20 +62,6 @@ def nibbleResidualSeq (R : ℕ → Finset (Finset V) → Finset (Finset V)) (H :
 /-- The matching accumulated over `k` rounds of a strategy sequence. -/
 def nibbleMatchingSeq (R : ℕ → Finset (Finset V) → Finset (Finset V)) (H : Finset (Finset V))
     (k : ℕ) : Finset (Finset V) := (nibbleIterSeq R H k).1
-
-/-- The constant strategy sequence recovers the single-strategy iteration. -/
-theorem nibbleIterSeq_const (R : Finset (Finset V) → Finset (Finset V)) (H : Finset (Finset V)) :
-    ∀ k, nibbleIterSeq (fun _ => R) H k = nibbleIter R H k := by
-  intro k
-  induction k with
-  | zero => rfl
-  | succ k ih =>
-      change ((nibbleIterSeq (fun _ => R) H k).1 ∪
-        roundMatching (R (nibbleIterSeq (fun _ => R) H k).2),
-        residual (nibbleIterSeq (fun _ => R) H k).2 (R (nibbleIterSeq (fun _ => R) H k).2))
-        = ((nibbleIter R H k).1 ∪ roundMatching (R (nibbleIter R H k).2),
-        residual (nibbleIter R H k).2 (R (nibbleIter R H k).2))
-      rw [ih]
 
 /-- The residual after `k` rounds is a sub-hypergraph of `H`. -/
 theorem nibbleResidualSeq_subset (R : ℕ → Finset (Finset V) → Finset (Finset V))

@@ -6,8 +6,7 @@ Authors: Juan Pablo Traverso Gianini, Aristotle
 
 module
 
-public import LeanPool.AsymptoticTrianglePacking.Internal.Basic
-public import LeanPool.AsymptoticTrianglePacking.Internal.Round
+public import LeanPool.AsymptoticTrianglePacking.Internal.IterationSeq
 
 /-!
 # LeanPool.AsymptoticTrianglePacking.Internal — Module D1 : iteration of nibble rounds
@@ -43,11 +42,14 @@ variable {V : Type*} [DecidableEq V]
 /-- Run `k` nibble rounds from `H` under retention strategy `R`, returning
 `(accumulated matching, current residual)`. -/
 def nibbleIter (R : Finset (Finset V) → Finset (Finset V)) (H : Finset (Finset V)) :
-    ℕ → Finset (Finset V) × Finset (Finset V)
-  | 0 => (∅, H)
-  | (k + 1) =>
-      ((nibbleIter R H k).1 ∪ roundMatching (R (nibbleIter R H k).2),
-        residual (nibbleIter R H k).2 (R (nibbleIter R H k).2))
+    ℕ → Finset (Finset V) × Finset (Finset V) :=
+  nibbleIterSeq (fun _ => R) H
+
+/-- The constant strategy sequence is the fixed-strategy iteration. -/
+theorem nibbleIterSeq_const (R : Finset (Finset V) → Finset (Finset V)) (H : Finset (Finset V)) :
+    ∀ k, nibbleIterSeq (fun _ => R) H k = nibbleIter R H k := by
+  intro k
+  rfl
 
 /-- The residual hypergraph after `k` rounds. -/
 def nibbleResidual (R : Finset (Finset V) → Finset (Finset V)) (H : Finset (Finset V)) (k : ℕ) :
@@ -60,20 +62,14 @@ def nibbleMatching (R : Finset (Finset V) → Finset (Finset V)) (H : Finset (Fi
 /-- **D1a — the residual is a sub-hypergraph of `H`.** -/
 theorem nibbleResidual_subset (R : Finset (Finset V) → Finset (Finset V))
     (H : Finset (Finset V)) (k : ℕ) : nibbleResidual R H k ⊆ H := by
-  induction k with
-  | zero => exact Finset.Subset.refl H
-  | succ k ih =>
-      change residual (nibbleIter R H k).2 (R (nibbleIter R H k).2) ⊆ H
-      exact (residual_subset _ _).trans ih
+  change nibbleResidualSeq (fun _ => R) H k ⊆ H
+  exact nibbleResidualSeq_subset (fun _ => R) H k
 
 /-- **D1b — the residual stays `r`-uniform.** -/
 theorem nibbleResidual_uniform {H : Finset (Finset V)} {r : ℕ} (hr : IsUniform H r)
     (R : Finset (Finset V) → Finset (Finset V)) (k : ℕ) :
     IsUniform (nibbleResidual R H k) r := by
-  induction k with
-  | zero => exact hr
-  | succ k ih =>
-      change IsUniform (residual (nibbleIter R H k).2 (R (nibbleIter R H k).2)) r
-      exact residual_uniform ih (R (nibbleIter R H k).2)
+  change IsUniform (nibbleResidualSeq (fun _ => R) H k) r
+  exact nibbleResidualSeq_uniform hr (fun _ => R) k
 
 end Hypergraph

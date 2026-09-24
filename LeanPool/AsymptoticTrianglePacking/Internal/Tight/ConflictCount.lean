@@ -8,9 +8,7 @@ module
 
 public import LeanPool.AsymptoticTrianglePacking.Internal.Basic
 public import LeanPool.AsymptoticTrianglePacking.Internal.Conflict
-public import Mathlib.Algebra.Order.Ring.Star
 public import Mathlib.Analysis.Normed.Ring.Lemmas
-public import Mathlib.Data.Int.Star
 
 /-!
 # LeanPool.AsymptoticTrianglePacking.Internal — the conflict-overlap count at two distinct vertices

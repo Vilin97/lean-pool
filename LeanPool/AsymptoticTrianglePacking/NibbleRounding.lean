@@ -7,7 +7,7 @@ Authors: Juan Pablo Traverso Gianini, Aristotle
 module
 
 public import LeanPool.AsymptoticTrianglePacking.Basic
-public import LeanPool.AsymptoticTrianglePacking.Internal.NearRegularNibble
+import LeanPool.AsymptoticTrianglePacking.Internal.NearRegularNibble
 
 /-!
 # Nibble rounding infrastructure

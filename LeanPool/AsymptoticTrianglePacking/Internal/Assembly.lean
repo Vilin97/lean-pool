@@ -36,6 +36,19 @@ namespace Hypergraph
 
 variable {V : Type*} [DecidableEq V] {ι : Type*} [DecidableEq ι]
 
+/-- Support of a union is the union of supports. -/
+theorem support_union (M₁ M₂ : Finset (Finset V)) :
+    support (M₁ ∪ M₂) = support M₁ ∪ support M₂ := by
+  ext x
+  simp only [support, Finset.mem_biUnion, id_eq, Finset.mem_union]
+  constructor
+  · rintro ⟨a, (ha | ha), hx⟩
+    · exact Or.inl ⟨a, ha, hx⟩
+    · exact Or.inr ⟨a, ha, hx⟩
+  · rintro (⟨a, ha, hx⟩ | ⟨a, ha, hx⟩)
+    · exact ⟨a, Or.inl ha, hx⟩
+    · exact ⟨a, Or.inr ha, hx⟩
+
 /-- An edge of a family is contained in the family's support. -/
 theorem subset_support {M : Finset (Finset V)} {e : Finset V} (he : e ∈ M) :
     e ⊆ support M := by

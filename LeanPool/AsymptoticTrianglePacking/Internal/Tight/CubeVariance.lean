@@ -8,7 +8,6 @@ module
 
 public import Mathlib.Analysis.Normed.Ring.Basic
 public import Mathlib.Analysis.Real.Sqrt
-public import Mathlib.Tactic.ContinuousFunctionalCalculus
 
 /-!
 # LeanPool.AsymptoticTrianglePacking.Internal — the Efron–Stein (bounded-differences) variance
