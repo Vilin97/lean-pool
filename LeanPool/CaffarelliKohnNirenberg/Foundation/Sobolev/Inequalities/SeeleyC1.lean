@@ -34,6 +34,7 @@ private theorem seeleyC1_annulus_open : IsOpen seeleyAnnulus := by
   exact (isOpen_lt continuous_const hnorm).inter
     (isOpen_lt hnorm continuous_const)
 
+/-- Derivative formula for the two-reflection Seeley extension outside the unit ball. -/
 def seeleyC1Derivative (v : Vec 3 → ℝ) (x : Vec 3) :
     Vec 3 →L[ℝ] ℝ :=
   (3 : ℝ) • ((fderiv ℝ v (seeleyReflectionOne x)) ∘SL
@@ -397,6 +398,7 @@ theorem seeleyExtension_fderiv_eq_reflection_combo_of_mem_annulus
       (isClosed_euclideanClosedBall (0 : Vec 3) 1) houtside hformula
   exact hext.fderiv
 
+/-- Seeley extension multiplied by a compactly supported spatial cutoff. -/
 def seeleyCutoffExtension (v : Vec 3 → ℝ) : Vec 3 → ℝ :=
   canonicalBallCutoff (0 : Vec 3) 1 2 * seeleyExtension v
 

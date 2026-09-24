@@ -81,22 +81,26 @@ theorem ae_eq_zero_of_morreyNorm_eq_zero
     (hf : AEMeasurable f volume) (hN : morreyNorm 1 q f = 0) :
     f =ᵐ[volume] 0 := by
   apply ae_eq_zero_of_ball_integrals hf
-  intro R hR
-  let T : ℝ := (2 * R) ^ 2 / 2
-  have hball := metricBall_subset_parabolicCylinder
-    (x := (0 : Vec3)) (t := T) (r := 2 * R) (by positivity)
-  have hcenter : ((0 : Vec3), T - (2 * R) ^ 2 / 2) = (0, 0) := by
-    dsimp [T]
-    congr 1
-    ring_nf
-  have hradius : (2 * R) / 2 = R := by ring_nf
-  rw [hcenter, hradius] at hball
-  have hcyl := cylinder_integral_eq_zero_of_morreyNorm_eq_zero hq (by positivity)
-    (hN := hN) (z := ((0 : Vec3), T)) (r := 2 * R)
-  have hcyl' : (∫⁻ w in parabolicCylinder 0 T (2 * R),
-      ENNReal.ofReal |f w|) = 0 := by
-    unfold cylinderPowerIntegral at hcyl
-    simpa using hcyl
+  on_goal 1 => intro R hR
+  on_goal 1 => let T : ℝ := (2 * R) ^ 2 / 2
+  on_goal 1 =>
+    have hball := metricBall_subset_parabolicCylinder
+      (x := (0 : Vec3)) (t := T) (r := 2 * R) (by positivity)
+  on_goal 1 =>
+    have hcenter : ((0 : Vec3), T - (2 * R) ^ 2 / 2) = (0, 0) := by
+      dsimp [T]
+      congr 1
+      ring_nf
+  on_goal 1 => have hradius : (2 * R) / 2 = R := by ring_nf
+  on_goal 1 => rw [hcenter, hradius] at hball
+  on_goal 1 =>
+    have hcyl := cylinder_integral_eq_zero_of_morreyNorm_eq_zero hq (by positivity)
+      (hN := hN) (z := ((0 : Vec3), T)) (r := 2 * R)
+  on_goal 1 =>
+    have hcyl' : (∫⁻ w in parabolicCylinder 0 T (2 * R),
+        ENNReal.ofReal |f w|) = 0 := by
+      unfold cylinderPowerIntegral at hcyl
+      simpa using hcyl
   exact le_antisymm ((lintegral_mono_set hball).trans_eq hcyl') bot_le
 
 /-- The near-field geometric constant is strictly positive. -/

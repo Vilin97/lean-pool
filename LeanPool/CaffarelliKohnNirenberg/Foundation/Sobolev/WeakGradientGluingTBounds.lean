@@ -81,7 +81,8 @@ theorem ae_glued_gradient_cell_bound_of_doubled_slice_bound
 
 /-- The same field supplies the existential cell datum required by the
 cell-transfer theorem; the witness is its own restricted spatial slice. -/
-theorem ae_glued_gradient_cell_data_of_doubled_slice_bound {B : Set Vec3} {I : Set ℝ} {p : ParabolicPoint → ℝ}
+theorem ae_glued_gradient_cell_data_of_doubled_slice_bound {B : Set Vec3} {I : Set ℝ} {p :
+  ParabolicPoint → ℝ}
     {Dp : ParabolicPoint → Vec3} {x : Vec3} {t r : ℝ} (hr : 0 < r)
     {M : ℝ → ℝ≥0∞} (hball : vec3Ball x r ⊆ B) (htime : Ioc (t - r ^ 2) t ⊆ I)
     (hfield : ∀ᵐ s ∂volume.restrict I, ∀ k : Fin 3,

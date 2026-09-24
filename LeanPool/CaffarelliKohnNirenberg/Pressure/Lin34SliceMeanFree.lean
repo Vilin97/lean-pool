@@ -27,7 +27,7 @@ namespace CKN
 # Integrability of the mean-free velocity cube on a parabolic cylinder
 
 This file supplies the integrability of the integrand of the local quantity
-`Ĉ(z,ρ)` on a contained parabolic cylinder, the estimate used in
+`C_hat(z,ρ)` on a contained parabolic cylinder, the estimate used in
 `prop:lin34` of `paper/ckn.tex` (equation `eq:Chat`).  Concretely, if the
 velocity `u` and its cube `|u|^3` are integrable on the one-sided parabolic
 cylinder `parabolicCylinder x t r`, then so is the cube of the mean-free
@@ -133,16 +133,19 @@ private lemma local_ball_meanFree_lintegral_bound
       8 * (∫⁻ y in vec3Ball x r, ‖L (u (y,s))‖ₑ ^ (3 : ℝ)) := by
     calc
       _ = ((∫⁻ y in vec3Ball x r, ‖L (u (y,s) - ⨍ z in vec3Ball x r, u (z,s))‖ₑ ^ (3 : ℝ)) /
-          volume (vec3Ball x r)) * volume (vec3Ball x r) := by rw [ENNReal.div_mul_cancel hp.ne' ht.ne]
+          volume (vec3Ball x r)) * volume (vec3Ball x r) := by rw [ENNReal.div_mul_cancel hp.ne'
+            ht.ne]
       _ ≤ ((8 : ℝ≥0∞) * (∫⁻ y in vec3Ball x r, ‖L (u (y,s))‖ₑ ^ (3 : ℝ)) /
-          volume (vec3Ball x r)) * volume (vec3Ball x r) := mul_le_mul_of_nonneg_right h'' (by positivity)
-      _ = 8 * (∫⁻ y in vec3Ball x r, ‖L (u (y,s))‖ₑ ^ (3 : ℝ)) := ENNReal.div_mul_cancel hp.ne' ht.ne
+          volume (vec3Ball x r)) * volume (vec3Ball x r) := mul_le_mul_of_nonneg_right h'' (by
+            positivity)
+      _ = 8 * (∫⁻ y in vec3Ball x r, ‖L (u (y,s))‖ₑ ^ (3 : ℝ)) := ENNReal.div_mul_cancel hp.ne'
+        ht.ne
   convert hraw using 1 <;> simp [vec3EuclideanNorm_eq_l2,
     show (L : Vec3 → L2Vec3) = WithLp.toLp 2 by rfl, ofReal_norm]
 
 /-- The cube of the mean-free velocity is integrable on a parabolic cylinder
 `parabolicCylinder x t r` whenever the velocity and its cube are.  This is the
-integrability of the integrand of `Ĉ(z,ρ)` used in `prop:lin34` of
+integrability of the integrand of `C_hat(z,ρ)` used in `prop:lin34` of
 `paper/ckn.tex` (equation `eq:Chat`). -/
 theorem lin34_integrableOn_meanFree_cube
     {u : ParabolicPoint → Vec3} {x : Vec3} {t r : ℝ} (hr : 0 < r)

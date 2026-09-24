@@ -32,7 +32,7 @@ namespace CKN.Core.Step4
 
 /-- The localized first-round source data of `eq:local-equation` in the exact
 shape consumed by the one-round velocity improvement. -/
-theorem routeA_final_source_package_of_sws : routeA_final_source_package :=
+theorem routeA_final_source_package_of_sws : routeAFinalSourcePackage :=
   first_round_source_package_of_sws
 
 /-- One round of `prop:bootstrap` on an arbitrary parabolic ball:
@@ -40,8 +40,8 @@ from `u ∈ M^{3,25/3}` and `∇u ∈ M^{2,25/8}` on `𝔅_R(z₀)` the velocity
 improves to `u ∈ M^{3,25}` on `𝔅_{R/4}(z₀)`, given the pressure-gradient
 producer and the gradient-slot heat representation. -/
 theorem routeA_one_round_velocity_improvement_of_gradient_inputs
-    (hG : routeA_gradient_producer)
-    (hL : routeA_gradient_slot_representation) :
+    (hG : routeAGradientProducer)
+    (hL : routeAGradientSlotRepresentation) :
     ∀ q : ℝ, 5 / 2 < q →
       ∀ {Ω : Set Vec3} {I : Set ℝ}
         {u : ParabolicPoint → Vec3}

@@ -10061,11 +10061,8 @@ projects:
     status: verified
     provenance: AI
     main_declarations:
-      - CKN.epsilonRegularityL3
-      - CKN.epsilonRegularityGradient
       - CKN.caffarelliKohnNirenberg
-      - CKN.isSuitableWeakSolution_iff_integrable
-      - CKN.isSuitableWeakSolutionIntegrable_shearFlow
+      - CKN.epsilonRegularityL3
     main_results:
       - declaration: CKN.epsilonRegularityL3
         informal: >-
@@ -10093,11 +10090,9 @@ projects:
           The nonzero decaying sinusoidal shear flow with zero pressure and
           force is a suitable weak solution on all space and times in (0,1).
     tags:
-      - partial differential equations
       - Navier–Stokes
-      - regularity
+      - partial differential equations
       - harmonic analysis
-      - geometric measure theory
     msc:
       - 35Q30
       - 35B65

@@ -29,15 +29,19 @@ open CKN.Foundation.Heat CKN.Foundation.Parabolic
 /-! The convolution variables are written explicitly so that the causal heat
 kernel and its spatial derivatives have one common interface. -/
 
+/-- Space-time displacement used as the argument of the translation-invariant heat kernel. -/
 def pointSub (w v : ParabolicPoint) : ParabolicPoint :=
   (w.1 - v.1, w.2 - v.2)
 
+/-- Causal heat kernel evaluated at the space-time displacement of two points. -/
 def heatPotentialKernel (w v : ParabolicPoint) : ℝ :=
   heatKernelPlus (pointSub w v)
 
+/-- Spatial derivative of the causal heat kernel at a space-time displacement. -/
 def heatPotentialSpatialKernel (i : Fin 3) (w v : ParabolicPoint) : ℝ :=
   heatKernelSpaceDerivative (w.1 - v.1) (w.2 - v.2) i
 
+/-- Heat potential of a scalar source and spatial divergence sources. -/
 def heatPotential (F : ParabolicPoint → ℝ)
     (G : Fin 3 → ParabolicPoint → ℝ) (w : ParabolicPoint) : ℝ :=
   (∫ v, heatPotentialKernel w v * F v) +

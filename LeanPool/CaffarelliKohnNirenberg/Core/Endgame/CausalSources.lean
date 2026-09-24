@@ -66,7 +66,8 @@ theorem causalGradientSourceComponent_zero_outside_intermediate
   by_cases ht : z ∈ {z : ParabolicPoint | z.2 ≤ 0}
   · obtain ⟨hv, htime, _, hlap⟩ :=
       cutoff_coefficients_zero_on_past_outside_intermediate hφ hsupp ht hz
-    simp only [causalGradientSourceComponent, indicator_of_mem ht, localizedGradientSourceG, localizedEquationG,
+    simp only [causalGradientSourceComponent, indicator_of_mem ht, localizedGradientSourceG,
+      localizedEquationG,
       hv, htime, hlap, zero_mul, add_zero, sub_zero]
   · exact indicator_of_notMem ht _
 

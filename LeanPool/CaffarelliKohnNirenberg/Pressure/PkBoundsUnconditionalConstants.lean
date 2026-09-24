@@ -27,6 +27,7 @@ namespace CKN
 
 /-! Explicit constants used by the three unconditional pressure estimates. -/
 
+/-- Combined coefficient for the three velocity-tensor pressure corrections. -/
 noncomputable def pressureP234Constant : ℝ :=
   3 *
     (9 * sobolevPoincareL6Constant.toReal *
@@ -34,15 +35,18 @@ noncomputable def pressureP234Constant : ℝ :=
       (Real.pi * 4 / 3) ^ (1 / 3 : ℝ)) *
     (4 * Real.pi / 3) ^ (2 / 3 : ℝ)
 
+/-- Combined coefficient for the two pressure-cutoff corrections. -/
 noncomputable def pressureP56Constant : ℝ :=
   2 *
     ((Real.pi * 4 / 3) ^ (1 / 3 : ℝ) *
       (18 * cutoffSecondDerivativeConstant + 240 * cutoffGradientConstant)) *
     (4 * Real.pi / 3) ^ (2 / 3 : ℝ)
 
+/-- Common coefficient dominating the velocity and pressure cutoff contributions. -/
 noncomputable def pressureP12Constant : ℝ :=
   max pressureP234Constant pressureP56Constant
 
+/-- Exponent-dependent coefficient for the force-cutoff contribution. -/
 noncomputable def pressureP13Constant (q : ℝ) : ℝ :=
   6 * cutoffGradientConstant *
     (4 * Real.pi / 3) ^ (1 - 1 / q) *

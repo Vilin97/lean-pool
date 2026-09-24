@@ -138,7 +138,7 @@ theorem integrable_mul_integral_translate {d : ℕ} {ψ G k : Vec d → ℝ}
       MeasureTheory.volume := by
   have hint := (integrable_uncurry_mul_translate hψ hψc hG hk hkc).integral_prod_left
   refine hint.congr (Filter.Eventually.of_forall fun y => ?_)
-  show (∫ x, ψ y * (G x * k (x - y)) ∂MeasureTheory.volume)
+  change (∫ x, ψ y * (G x * k (x - y)) ∂MeasureTheory.volume)
     = ψ y * ∫ x, G x * k (x - y) ∂MeasureTheory.volume
   exact MeasureTheory.integral_const_mul (ψ y) (fun x => G x * k (x - y))
 
@@ -161,7 +161,7 @@ theorem integral_mul_integral_translate_swap {d : ℕ} {ψ G k : Vec d → ℝ}
         MeasureTheory.integral_integral_swap hint
     _ = ∫ x, G x * ∫ y, ψ y * k (x - y) ∂MeasureTheory.volume ∂MeasureTheory.volume := by
         refine MeasureTheory.integral_congr_ae (Filter.Eventually.of_forall fun x => ?_)
-        show (∫ y, ψ y * (G x * k (x - y)) ∂MeasureTheory.volume)
+        change (∫ y, ψ y * (G x * k (x - y)) ∂MeasureTheory.volume)
           = G x * ∫ y, ψ y * k (x - y) ∂MeasureTheory.volume
         rw [← MeasureTheory.integral_const_mul (G x) (fun y => ψ y * k (x - y))]
         refine MeasureTheory.integral_congr_ae (Filter.Eventually.of_forall fun y => ?_)

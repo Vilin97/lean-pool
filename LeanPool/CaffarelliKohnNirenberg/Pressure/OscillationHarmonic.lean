@@ -206,6 +206,165 @@ structure PressureHarmonicPotentialData
     (fun y => spatialDeriv η j y * p (y, s))
   p6_vanishes : ∀ j y, y ∈ U → spatialDeriv η j y * p (y, s) = 0
 
+private lemma pressure_harmonic_potentials_weaklyHarmonicOn_hsum₂_1 :
+    ∀ {U : Set Vec3} {_ : ℝ} (ψ : Vec3 → ℝ) {A : Fin 3 → Fin 3 → Vec3 → ℝ},
+      (∀ (i j : Fin 3),
+          @Integrable ℝ _ _ _ MeasureSpace.toMeasurableSpace
+            (fun (x : Vec3) => A i j x * spatialLaplacian ψ x) volume) →
+        (∀ (i j : Fin 3),
+            (@integral _ _ _ _ MeasureSpace.toMeasurableSpace (Measure.restrict volume U) fun x =>
+                A i j x * spatialLaplacian ψ x) =
+              0) →
+          (@integral _ _ _ _ MeasureSpace.toMeasurableSpace (Measure.restrict volume U) fun x =>
+              (∑ i : Fin 3, ∑ j : Fin 3, A i j x) * spatialLaplacian ψ x) =
+            0
+    := by
+  intro U s ψ A hA hAzero
+  rw [show (fun x => (∑ i, ∑ j, A i j x) * spatialLaplacian ψ x) =
+    fun x => ∑ i, ∑ j, A i j x * spatialLaplacian ψ x by
+      funext x
+      simp_rw [Finset.sum_mul]]
+  calc
+    _ = ∑ i, ∫ x in U, ∑ j, A i j x * spatialLaplacian ψ x := by
+      exact integral_finsetSum (s := (Finset.univ : Finset (Fin 3)))
+        (fun i _ => integrable_finsetSum' (Finset.univ : Finset (Fin 3))
+          (fun j _ => (hA i j).integrableOn))
+    _ = ∑ i, ∑ j, ∫ x in U, A i j x * spatialLaplacian ψ x := by
+      apply Finset.sum_congr rfl
+      intro i hi
+      exact integral_finsetSum (s := (Finset.univ : Finset (Fin 3)))
+        (fun j _ => (hA i j).integrableOn)
+    _ = 0 := by simp only [hAzero, Finset.sum_const_zero]
+
+private lemma pressure_harmonic_potentials_weaklyHarmonicOn_h6sum_2 :
+    ∀ {U : Set Vec3} {η : Vec3 → ℝ} {u : ParabolicPoint → Vec3} {c : ℝ → Vec3} {s : ℝ}
+      (ψ : Vec3 → ℝ),
+      (∀ (i j : Fin 3),
+          @Integrable ℝ _ _ _ MeasureSpace.toMeasurableSpace
+            (fun (x : Vec3) =>
+              pressureNewtonianPotential
+                  (fun y => mixedSecond η i j y * pressureUTensor u c (y, s) i j) x *
+                spatialLaplacian ψ x)
+            volume) →
+        let F₂ : Vec3 → ℝ := fun x =>
+          (∑ i : Fin 3,
+              ∑ j : Fin 3,
+                pressureNewtonianPotential
+                  (fun y => mixedSecond η i j y * pressureUTensor u c (y, s) i j) x) *
+            spatialLaplacian ψ x;
+        @Integrable _ _ _ _ MeasureSpace.toMeasurableSpace F₂ (Measure.restrict volume U)
+    := by
+  intro U η u c s ψ h2int F₂
+  change Integrable (fun x => (∑ i, ∑ j, pressureNewtonianPotential
+    (fun y => mixedSecond η i j y * pressureUTensor u c (y, s) i j) x) *
+    spatialLaplacian ψ x) (volume.restrict U)
+  rw [show (fun x => (∑ i, ∑ j, pressureNewtonianPotential
+    (fun y => mixedSecond η i j y * pressureUTensor u c (y, s) i j) x) *
+    spatialLaplacian ψ x) = fun x => ∑ i, ∑ j,
+    pressureNewtonianPotential
+      (fun y => mixedSecond η i j y * pressureUTensor u c (y, s) i j) x *
+      spatialLaplacian ψ x by
+    funext x
+    simp_rw [Finset.sum_mul]]
+  exact integrable_finsetSum' (Finset.univ : Finset (Fin 3))
+    (fun i _ => integrable_finsetSum' (Finset.univ : Finset (Fin 3))
+      (fun j _ => (h2int i j).integrableOn))
+
+private lemma pressure_harmonic_potentials_weaklyHarmonicOn_hF3_3 :
+    ∀ {U : Set Vec3} {η : Vec3 → ℝ} {u : ParabolicPoint → Vec3} {c : ℝ → Vec3} {s : ℝ}
+      (ψ : Vec3 → ℝ),
+      (∀ (i j : Fin 3),
+          @Integrable ℝ _ _ _ MeasureSpace.toMeasurableSpace
+            (fun (x : Vec3) =>
+              pressureNewtonianDerivativePotential j
+                  (fun y => pressureUTensor u c (y, s) i j * spatialDeriv η i y) x *
+                spatialLaplacian ψ x)
+            volume) →
+        let F₃ : Vec3 → ℝ := fun x =>
+          (∑ i : Fin 3,
+              ∑ j : Fin 3,
+                pressureNewtonianDerivativePotential j
+                  (fun y => pressureUTensor u c (y, s) i j * spatialDeriv η i y) x) *
+            spatialLaplacian ψ x;
+        @Integrable _ _ _ _ MeasureSpace.toMeasurableSpace F₃ (Measure.restrict volume U)
+    := by
+  intro U η u c s ψ h3int F₃
+  change Integrable (fun x => (∑ i, ∑ j, pressureNewtonianDerivativePotential j
+    (fun y => pressureUTensor u c (y, s) i j * spatialDeriv η i y) x) *
+    spatialLaplacian ψ x) (volume.restrict U)
+  rw [show (fun x => (∑ i, ∑ j, pressureNewtonianDerivativePotential j
+    (fun y => pressureUTensor u c (y, s) i j * spatialDeriv η i y) x) *
+    spatialLaplacian ψ x) = fun x => ∑ i, ∑ j,
+    pressureNewtonianDerivativePotential j
+      (fun y => pressureUTensor u c (y, s) i j * spatialDeriv η i y) x *
+      spatialLaplacian ψ x by
+    funext x
+    simp_rw [Finset.sum_mul]]
+  exact integrable_finsetSum' (Finset.univ : Finset (Fin 3))
+    (fun i _ => integrable_finsetSum' (Finset.univ : Finset (Fin 3))
+      (fun j _ => (h3int i j).integrableOn))
+
+private lemma pressure_harmonic_potentials_weaklyHarmonicOn_hF4_4 :
+    ∀ {U : Set Vec3} {η : Vec3 → ℝ} {u : ParabolicPoint → Vec3} {c : ℝ → Vec3} {s : ℝ}
+      (ψ : Vec3 → ℝ),
+      (∀ (i j : Fin 3),
+          @Integrable ℝ _ _ _ MeasureSpace.toMeasurableSpace
+            (fun (x : Vec3) =>
+              pressureNewtonianDerivativePotential i
+                  (fun y => pressureUTensor u c (y, s) i j * spatialDeriv η j y) x *
+                spatialLaplacian ψ x)
+            volume) →
+        let F₄ : Vec3 → ℝ := fun x =>
+          (∑ i : Fin 3,
+              ∑ j : Fin 3,
+                pressureNewtonianDerivativePotential i
+                  (fun y => pressureUTensor u c (y, s) i j * spatialDeriv η j y) x) *
+            spatialLaplacian ψ x;
+        @Integrable _ _ _ _ MeasureSpace.toMeasurableSpace F₄ (Measure.restrict volume U)
+    := by
+  intro U η u c s ψ h4int F₄
+  change Integrable (fun x => (∑ i, ∑ j, pressureNewtonianDerivativePotential i
+    (fun y => pressureUTensor u c (y, s) i j * spatialDeriv η j y) x) *
+    spatialLaplacian ψ x) (volume.restrict U)
+  rw [show (fun x => (∑ i, ∑ j, pressureNewtonianDerivativePotential i
+    (fun y => pressureUTensor u c (y, s) i j * spatialDeriv η j y) x) *
+    spatialLaplacian ψ x) = fun x => ∑ i, ∑ j,
+    pressureNewtonianDerivativePotential i
+      (fun y => pressureUTensor u c (y, s) i j * spatialDeriv η j y) x *
+      spatialLaplacian ψ x by
+    funext x
+    simp_rw [Finset.sum_mul]]
+  exact integrable_finsetSum' (Finset.univ : Finset (Fin 3))
+    (fun i _ => integrable_finsetSum' (Finset.univ : Finset (Fin 3))
+      (fun j _ => (h4int i j).integrableOn))
+
+private lemma pressure_harmonic_potentials_weaklyHarmonicOn_hF5_5 :
+    ∀ {U : Set Vec3} {η : Vec3 → ℝ} {p : ParabolicPoint → ℝ} {s : ℝ} (ψ : Vec3 → ℝ),
+      (∀ (j : Fin 3),
+          @Integrable ℝ _ _ _ MeasureSpace.toMeasurableSpace
+            (fun (x : Vec3) =>
+              pressureNewtonianDerivativePotential j (fun y => spatialDeriv η j y * p (y, s)) x *
+                spatialLaplacian ψ x)
+            volume) →
+        let F₆ : Vec3 → ℝ := fun x =>
+          (∑ j : Fin 3,
+              pressureNewtonianDerivativePotential j (fun y => spatialDeriv η j y * p (y, s)) x) *
+            spatialLaplacian ψ x;
+        @Integrable _ _ _ _ MeasureSpace.toMeasurableSpace F₆ (Measure.restrict volume U)
+    := by
+  intro U η p s ψ h6int F₆
+  change Integrable (fun x => (∑ j, pressureNewtonianDerivativePotential j
+    (fun y => spatialDeriv η j y * p (y, s)) x) * spatialLaplacian ψ x)
+    (volume.restrict U)
+  rw [show (fun x => (∑ j, pressureNewtonianDerivativePotential j
+    (fun y => spatialDeriv η j y * p (y, s)) x) * spatialLaplacian ψ x) =
+    fun x => ∑ j, pressureNewtonianDerivativePotential j
+      (fun y => spatialDeriv η j y * p (y, s)) x * spatialLaplacian ψ x by
+    funext x
+    simp_rw [Finset.sum_mul]]
+  exact integrable_finsetSum' (Finset.univ : Finset (Fin 3))
+    (fun j _ => (h6int j).integrableOn)
+
 theorem pressure_harmonic_potentials_weaklyHarmonicOn
     {U : Set Vec3} {η : Vec3 → ℝ} {u : ParabolicPoint → Vec3}
     {c : ℝ → Vec3} {p : ParabolicPoint → ℝ} {s : ℝ}
@@ -329,23 +488,8 @@ theorem pressure_harmonic_potentials_weaklyHarmonicOn
       (fun y => spatialDeriv η j y * p (y, s)) x) * spatialLaplacian ψ x
   have hsum₂ {A : Fin 3 → Fin 3 → Vec3 → ℝ}
       (hA : ∀ i j, Integrable (fun x => A i j x * spatialLaplacian ψ x) volume)
-      (hAzero : ∀ i j, ∫ x in U, A i j x * spatialLaplacian ψ x = 0) :
-      ∫ x in U, (∑ i, ∑ j, A i j x) * spatialLaplacian ψ x = 0 := by
-    rw [show (fun x => (∑ i, ∑ j, A i j x) * spatialLaplacian ψ x) =
-      fun x => ∑ i, ∑ j, A i j x * spatialLaplacian ψ x by
-        funext x
-        simp_rw [Finset.sum_mul]]
-    calc
-      _ = ∑ i, ∫ x in U, ∑ j, A i j x * spatialLaplacian ψ x := by
-        exact integral_finsetSum (s := (Finset.univ : Finset (Fin 3)))
-          (fun i _ => integrable_finsetSum' (Finset.univ : Finset (Fin 3))
-            (fun j _ => (hA i j).integrableOn))
-      _ = ∑ i, ∑ j, ∫ x in U, A i j x * spatialLaplacian ψ x := by
-        apply Finset.sum_congr rfl
-        intro i hi
-        exact integral_finsetSum (s := (Finset.univ : Finset (Fin 3)))
-          (fun j _ => (hA i j).integrableOn)
-      _ = 0 := by simp only [hAzero, Finset.sum_const_zero]
+      (hAzero : ∀ i j, ∫ x in U, A i j x * spatialLaplacian ψ x = 0) :=
+        @pressure_harmonic_potentials_weaklyHarmonicOn_hsum₂_1 U s ψ A hA hAzero
   have hsum₁ {A : Fin 3 → Vec3 → ℝ}
       (hA : ∀ j, Integrable (fun x => A j x * spatialLaplacian ψ x) volume)
       (hAzero : ∀ j, ∫ x in U, A j x * spatialLaplacian ψ x = 0) :
@@ -361,64 +505,11 @@ theorem pressure_harmonic_potentials_weaklyHarmonicOn
   have h3sum : ∫ x in U, F₃ x = 0 := hsum₂ h3int h3zero
   have h4sum : ∫ x in U, F₄ x = 0 := hsum₂ h4int h4zero
   have h6sum : ∫ x in U, F₆ x = 0 := hsum₁ h6int h6zero
-  have hF2 : Integrable F₂ (volume.restrict U) := by
-    change Integrable (fun x => (∑ i, ∑ j, pressureNewtonianPotential
-      (fun y => mixedSecond η i j y * pressureUTensor u c (y, s) i j) x) *
-      spatialLaplacian ψ x) (volume.restrict U)
-    rw [show (fun x => (∑ i, ∑ j, pressureNewtonianPotential
-      (fun y => mixedSecond η i j y * pressureUTensor u c (y, s) i j) x) *
-      spatialLaplacian ψ x) = fun x => ∑ i, ∑ j,
-      pressureNewtonianPotential
-        (fun y => mixedSecond η i j y * pressureUTensor u c (y, s) i j) x *
-        spatialLaplacian ψ x by
-      funext x
-      simp_rw [Finset.sum_mul]]
-    exact integrable_finsetSum' (Finset.univ : Finset (Fin 3))
-      (fun i _ => integrable_finsetSum' (Finset.univ : Finset (Fin 3))
-        (fun j _ => (h2int i j).integrableOn))
-  have hF3 : Integrable F₃ (volume.restrict U) := by
-    change Integrable (fun x => (∑ i, ∑ j, pressureNewtonianDerivativePotential j
-      (fun y => pressureUTensor u c (y, s) i j * spatialDeriv η i y) x) *
-      spatialLaplacian ψ x) (volume.restrict U)
-    rw [show (fun x => (∑ i, ∑ j, pressureNewtonianDerivativePotential j
-      (fun y => pressureUTensor u c (y, s) i j * spatialDeriv η i y) x) *
-      spatialLaplacian ψ x) = fun x => ∑ i, ∑ j,
-      pressureNewtonianDerivativePotential j
-        (fun y => pressureUTensor u c (y, s) i j * spatialDeriv η i y) x *
-        spatialLaplacian ψ x by
-      funext x
-      simp_rw [Finset.sum_mul]]
-    exact integrable_finsetSum' (Finset.univ : Finset (Fin 3))
-      (fun i _ => integrable_finsetSum' (Finset.univ : Finset (Fin 3))
-        (fun j _ => (h3int i j).integrableOn))
-  have hF4 : Integrable F₄ (volume.restrict U) := by
-    change Integrable (fun x => (∑ i, ∑ j, pressureNewtonianDerivativePotential i
-      (fun y => pressureUTensor u c (y, s) i j * spatialDeriv η j y) x) *
-      spatialLaplacian ψ x) (volume.restrict U)
-    rw [show (fun x => (∑ i, ∑ j, pressureNewtonianDerivativePotential i
-      (fun y => pressureUTensor u c (y, s) i j * spatialDeriv η j y) x) *
-      spatialLaplacian ψ x) = fun x => ∑ i, ∑ j,
-      pressureNewtonianDerivativePotential i
-        (fun y => pressureUTensor u c (y, s) i j * spatialDeriv η j y) x *
-        spatialLaplacian ψ x by
-      funext x
-      simp_rw [Finset.sum_mul]]
-    exact integrable_finsetSum' (Finset.univ : Finset (Fin 3))
-      (fun i _ => integrable_finsetSum' (Finset.univ : Finset (Fin 3))
-        (fun j _ => (h4int i j).integrableOn))
+  have hF2 := @pressure_harmonic_potentials_weaklyHarmonicOn_h6sum_2 U η u c s ψ h2int
+  have hF3 := @pressure_harmonic_potentials_weaklyHarmonicOn_hF3_3 U η u c s ψ h3int
+  have hF4 := @pressure_harmonic_potentials_weaklyHarmonicOn_hF4_4 U η u c s ψ h4int
   have hF5 : Integrable F₅ (volume.restrict U) := h5int.integrableOn
-  have hF6 : Integrable F₆ (volume.restrict U) := by
-    change Integrable (fun x => (∑ j, pressureNewtonianDerivativePotential j
-      (fun y => spatialDeriv η j y * p (y, s)) x) * spatialLaplacian ψ x)
-      (volume.restrict U)
-    rw [show (fun x => (∑ j, pressureNewtonianDerivativePotential j
-      (fun y => spatialDeriv η j y * p (y, s)) x) * spatialLaplacian ψ x) =
-      fun x => ∑ j, pressureNewtonianDerivativePotential j
-        (fun y => spatialDeriv η j y * p (y, s)) x * spatialLaplacian ψ x by
-      funext x
-      simp_rw [Finset.sum_mul]]
-    exact integrable_finsetSum' (Finset.univ : Finset (Fin 3))
-      (fun j _ => (h6int j).integrableOn)
+  have hF6 := @pressure_harmonic_potentials_weaklyHarmonicOn_hF5_5 U η p s ψ h6int
   have hrewrite :
       (fun x => (pressureP2 η u c s + pressureP3 η u c s + pressureP4 η u c s +
         pressureP5 η p s + pressureP6 η p s) x * spatialLaplacian ψ x) =
@@ -506,7 +597,7 @@ theorem pressure_harmonic_potential_data_ae_of_sws
   rcases hrest with ⟨hEtaSup2, hrest⟩
   rcases hrest with ⟨hOmegaCompact, hrest⟩
   rcases hrest with ⟨hOmegaSub, hslice⟩
-  haveI : IsFiniteMeasure (volume.restrict Omega) := by
+  have : IsFiniteMeasure (volume.restrict Omega) := by
     apply isFiniteMeasure_restrict.mpr
     exact (lt_of_le_of_lt (measure_mono (μ := volume) subset_closure)
       hOmegaCompact.measure_lt_top).ne

@@ -30,6 +30,7 @@ namespace CKN.Foundation.Euclidean
 
 open CKN.Foundation.Parabolic
 
+/-- Metric-ball family used by the Euclidean Hardy–Littlewood maximal operator. -/
 abbrev hardyLittlewoodMetricBall (c : Vec3) (r : ℝ) : Set Vec3 := Metric.ball c r
 
 /-- The uncentred Hardy--Littlewood maximal function on `Vec3`. -/
@@ -130,7 +131,7 @@ private theorem measure_biUnion_le_lintegral
   have hu_countable : u.Countable := hdisj.countable_of_isOpen
       (fun i hi ↦ Metric.isOpen_ball)
       (fun i hi ↦ metricBall_nonempty (hpos i (huT hi)))
-  haveI : Countable u := hu_countable.to_subtype
+  have : Countable u := hu_countable.to_subtype
   let enlarged : Vec3 × ℝ → Set Vec3 :=
     fun i ↦ hardyLittlewoodMetricBall i.1 (5 * i.2)
   have hcover_union :
@@ -182,6 +183,7 @@ private theorem measure_biUnion_le_lintegral
     _ ≤ ENNReal.ofReal (5 ^ 3) * ∫⁻ y, f y := by
       gcongr
 
+/-- Positive-radius balls of bounded radius whose average exceeds the chosen level. -/
 def maximalLevelBalls (f : Vec3 → ℝ≥0∞)
     (l : ℝ≥0∞) (n : ℕ) : Set (Vec3 × ℝ) :=
   {i | 0 < i.2 ∧ i.2 ≤ (n : ℝ) ∧

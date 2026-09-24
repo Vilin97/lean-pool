@@ -35,12 +35,15 @@ open CKN.Foundation.Parabolic
 
 /-! The backward heat potential used to test a causal weak equation. -/
 
+/-- Product of spatial volume and time volume for backward heat integration. -/
 def backwardProductVolume : Measure (Vec3 × ℝ) :=
   (volume : Measure Vec3).prod (volume : Measure ℝ)
 
+/-- Reflected causal heat kernel used in the backward test-function convolution. -/
 def backwardTestKernel (p : Vec3 × ℝ) : ℝ :=
   heatKernelPlus (show ParabolicPoint from -p)
 
+/-- Backward heat potential of a test function, written as a product-space convolution. -/
 def backwardTestPotential (ζ : Vec3 × ℝ → ℝ) (v : Vec3 × ℝ) : ℝ :=
   MeasureTheory.convolution backwardTestKernel ζ
     (ContinuousLinearMap.lsmul ℝ ℝ) backwardProductVolume v
@@ -637,7 +640,7 @@ lemma shifted_time_green
   have hzeroTop : Tendsto (fun r : ℝ => heatKernel y r *
       ζ (x - y, t + r)) atTop (𝓝 0) := by
     apply (tendsto_congr' ?_).2
-    exact tendsto_const_nhds
+    on_goal 1 => exact tendsto_const_nhds
     filter_upwards [eventually_gt_atTop B'] with r hr
     have hrB : B < r := lt_trans hB' hr
     have hz : (x - y, t + r) ∉ tsupport ζ := by
@@ -650,15 +653,19 @@ lemma shifted_time_green
   simpa only [zero_sub] using
     (integral_Ioi_deriv_mul_eq_sub hu hv hprod hzero hzeroTop)
 
+/-- Causal heat kernel pairing a later test point with an earlier source point. -/
 def backwardHeatKernel (z v : ParabolicPoint) : ℝ :=
   heatKernelPlus (z.1 - v.1, z.2 - v.2)
 
+/-- Spatial derivative kernel in the backward heat-potential pairing. -/
 def backwardHeatSpatialKernel (i : Fin 3) (z v : ParabolicPoint) : ℝ :=
   heatKernelSpaceDerivative (z.1 - v.1) (z.2 - v.2) i
 
+/-- Backward heat potential obtained by integrating against the test variable. -/
 def backwardHeatPotential (ζ : ParabolicPoint → ℝ) (v : ParabolicPoint) : ℝ :=
   ∫ z, backwardHeatKernel z v * ζ z
 
+/-- Spatial derivative of the backward heat potential, including the differentiation sign. -/
 def backwardHeatPotentialSpatial (i : Fin 3) (ζ : ParabolicPoint → ℝ)
     (v : ParabolicPoint) : ℝ :=
   -(∫ z, backwardHeatSpatialKernel i z v * ζ z)

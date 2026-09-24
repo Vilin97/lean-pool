@@ -184,7 +184,8 @@ theorem exists_uniform_nested_cutoff_derivative_bound (a b : ℝ)
   refine ⟨ψ, C, hC, hsmooth, hc, ?_⟩
   intro Ω I hΩ hI hunit
   obtain ⟨φ, Ω', J, hφ, hbox, hφbox, hφrange, hφone, hφsupp, hφspace, hagree⟩ :=
-    exists_domain_nested_cutoff_with_box a b ha hab hb ψ hsmooth hspace hrange hone hsupp hΩ hI hunit
+    exists_domain_nested_cutoff_with_box a b ha hab hb ψ hsmooth hspace hrange hone hsupp hΩ hI
+      hunit
   exact ⟨φ, Ω', J, hφ, hbox, hφbox, hφrange, hφone, hφsupp, hφspace, hagree,
     cutoff_derivative_bound_on_past_of_eventuallyEq hbound hagree⟩
 

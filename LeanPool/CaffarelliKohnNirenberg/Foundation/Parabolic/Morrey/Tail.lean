@@ -127,6 +127,7 @@ private lemma exists_positive_shell {z w : ParabolicPoint} {R : ℝ}
   have hmem : w ∈ parabolicRieszShell R k z := mem_parabolicRieszShell hinner houter
   exact ⟨k.toNat, by simpa [Int.toNat_of_nonneg hk] using hmem⟩
 
+/-- Nonnegative-index parabolic shell for the far-field Morrey estimate. -/
 def positiveShell (R : ℝ) (n : ℕ) (z : ParabolicPoint) : Set ParabolicPoint :=
   parabolicRieszShell R (n : ℤ) z
 

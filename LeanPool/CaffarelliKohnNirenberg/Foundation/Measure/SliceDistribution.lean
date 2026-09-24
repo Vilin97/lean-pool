@@ -54,7 +54,7 @@ private theorem ae_forall_mollifier_bump {d : ℕ} {Ω : Set (Vec d)} {I : Set �
       p (fun z : Vec d =>
         mollifier (d := d) (sliceRadius n) (sliceRadius_pos n) (z - y)) s := by
   classical
-  haveI : Countable Q := hQcount.to_subtype
+  have : Countable Q := hQcount.to_subtype
   have h : ∀ᵐ s ∂(MeasureTheory.volume.restrict I), ∀ q : Q × ℕ,
       closedBall (q.1 : Vec d) (sliceRadius q.2) ⊆ Ω →
       p (fun z : Vec d => mollifier (d := d) (sliceRadius q.2)

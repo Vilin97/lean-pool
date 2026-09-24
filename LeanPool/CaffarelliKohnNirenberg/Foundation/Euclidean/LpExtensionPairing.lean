@@ -333,7 +333,7 @@ private lemma heat_derivative_integral {z : Vec3} (hz : z ≠ 0)
     all_goals ring_nf
   rw [hrpow']
   rw [newtonianKernel_spatialDeriv_formula hz i]
-  simp [vec3EuclideanNorm]
+  simp only [vec3EuclideanNorm, mul_one, one_div, mul_inv_rev, neg_mul]
   change -z i / 2 * (4 * Real.pi) ^ (-(3 / 2 : ℝ)) *
       (8 / vec3EuclideanNorm z ^ 3 * (2⁻¹ * Real.sqrt Real.pi)) =
     -(Real.pi⁻¹ * 4⁻¹ * z i * (∑ j, z j ^ 2) ^ (-(3 : ℝ) / 2))

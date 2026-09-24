@@ -28,7 +28,7 @@ namespace CKN
 /-!
 # Fubini steps for the cylinder quantities of `prop:lin34`
 
-The cylinder quantities `D(z,r)` and `Ĉ(z,ρ)` of `eq:Chat` in `paper/ckn.tex`
+The cylinder quantities `D(z,r)` and `C_hat(z,ρ)` of `eq:Chat` in `paper/ckn.tex`
 are defined as integrals over a parabolic cylinder, while the monotonicity and
 scaling statements of `prop:lin34` are phrased in terms of the spatial slice
 quantities obtained by fixing the time variable.  This file records the two

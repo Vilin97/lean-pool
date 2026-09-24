@@ -124,7 +124,8 @@ theorem duhamel_bound_of_finite_riesz
       (CKN.Core.Step4.heatPotentialSpatialKernel_abs_le_riesz₁ j z) (hhfin j)
   have hcoord : ∀ i, |duhamelPotential g h z i| ≤
       1000 * (parabolicRieszPotential 2 (fun w => vec3EuclideanNorm (g w)) z).toReal +
-        ∑ j, 300000 * (parabolicRieszPotential 1 (fun w => vec3EuclideanNorm (h j w)) z).toReal := by
+        ∑ j, 300000 * (parabolicRieszPotential 1 (fun w => vec3EuclideanNorm (h j w)) z).toReal :=
+          by
     intro i
     unfold duhamelPotential
     calc
@@ -138,7 +139,8 @@ theorem duhamel_bound_of_finite_riesz
     _ ≤ ∑ i, |duhamelPotential g h z i| := euclidean_norm_le_sum _
     _ ≤ ∑ _i : Fin 3,
         (1000 * (parabolicRieszPotential 2 (fun w => vec3EuclideanNorm (g w)) z).toReal +
-          ∑ j, 300000 * (parabolicRieszPotential 1 (fun w => vec3EuclideanNorm (h j w)) z).toReal) :=
+          ∑ j, 300000 * (parabolicRieszPotential 1 (fun w => vec3EuclideanNorm (h j w)) z).toReal)
+            :=
       Finset.sum_le_sum fun i _ => hcoord i
     _ = pointwisePotentialMajorant g h z := by
       simp only [pointwisePotentialMajorant, Finset.sum_const, Finset.card_univ,
@@ -179,12 +181,12 @@ theorem pointwisePotentialBound_ae_of_bootstrap_sources
   apply pointwisePotentialBound_ae hg hh hgn hhn _ _ hrep
   · apply riesz_potential_ae_lt_top_of_aemeasurable_morrey (β := 2) (P := 6 / 5) (τ := 25 / 11)
       (by norm_num) (by norm_num) (by norm_num) (by norm_num) hR hgn hgN
-    intro w hw
+    on_goal 1 => intro w hw
     rw [hgsupp w hw, vec3EuclideanNorm_zero]
   · intro j
     apply riesz_potential_ae_lt_top_of_aemeasurable_morrey (β := 1) (P := 3) (τ := 25 / 6)
       (by norm_num) (by norm_num) (by norm_num) (by norm_num) hR (hhn j) (hhN j)
-    intro w hw
+    on_goal 1 => intro w hw
     rw [hhsupp j w hw, vec3EuclideanNorm_zero]
 
 end CKN.Core.Endgame

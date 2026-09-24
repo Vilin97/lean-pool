@@ -159,9 +159,9 @@ theorem heatPotential_far_shell_kernel_difference_abs_le_of_positive
             _ ≤ (10000000 / R ^ 5) * |p.2 - p'.2| := by
               gcongr
         · have hp'v : p'.2 ≤ v.2 := by linarith only [lt_of_not_ge htp']
-          simp [heatPotentialKernel, pointSub,
-            heatKernelPlus_eq_zero_of_nonpos (sub_nonpos.mpr hpv),
-            heatKernelPlus_eq_zero_of_nonpos (sub_nonpos.mpr hp'v)]
+          simp only [heatPotentialKernel, pointSub, heatKernelPlus_eq_zero_of_nonpos
+            (sub_nonpos.mpr hpv),
+    heatKernelPlus_eq_zero_of_nonpos (sub_nonpos.mpr hp'v), sub_self, abs_zero, ge_iff_le]
           positivity
     · have horder' : p'.2 ≤ p.2 := le_of_not_ge horder
       by_cases htp' : 0 ≤ p'.2 - v.2
@@ -242,9 +242,9 @@ theorem heatPotential_far_shell_kernel_difference_abs_le_of_positive
             _ ≤ (10000000 / R ^ 5) * |p.2 - p'.2| := by
               gcongr
         · have hpv : p.2 ≤ v.2 := by linarith only [lt_of_not_ge htp]
-          simp [heatPotentialKernel, pointSub,
-            heatKernelPlus_eq_zero_of_nonpos (sub_nonpos.mpr hp'v),
-            heatKernelPlus_eq_zero_of_nonpos (sub_nonpos.mpr hpv)]
+          simp only [heatPotentialKernel, pointSub, heatKernelPlus_eq_zero_of_nonpos
+            (sub_nonpos.mpr hpv),
+    heatKernelPlus_eq_zero_of_nonpos (sub_nonpos.mpr hp'v), sub_self, abs_zero, ge_iff_le]
           positivity
   simpa [R, heatPotentialKernel, pointSub] using
     heatPotential_far_shell_two_step_oscillation
@@ -327,7 +327,9 @@ theorem heatPotential_far_shell_spatial_kernel_spatial_difference_abs_le_of_posi
         · have hp'v : p'.2 ≤ v.2 := by linarith only [lt_of_not_ge htp']
           have hnotp : ¬ v.2 < p.2 := by linarith only [hpv]
           have hnotp' : ¬ v.2 < p'.2 := by linarith only [hp'v]
-          simp [heatPotentialSpatialKernel, heatKernelSpaceDerivative, hnotp, hnotp']
+          simp only [heatPotentialSpatialKernel, heatKernelSpaceDerivative, sub_pos, hnotp,
+            ↓reduceIte, hnotp',
+    sub_self, abs_zero, ge_iff_le]
           positivity
     · have horder' : p'.2 ≤ p.2 := le_of_not_ge horder
       by_cases htp' : 0 ≤ p'.2 - v.2
@@ -400,14 +402,17 @@ theorem heatPotential_far_shell_spatial_kernel_spatial_difference_abs_le_of_posi
               _ = (30000000000 / R ^ 6) * |p.2 - v.2| := by
                 rw [abs_sub_comm]
           calc
-            |heatPotentialSpatialKernel i (p'.1, p.2) v - heatPotentialSpatialKernel i (p'.1, v.2) v| ≤
+            |heatPotentialSpatialKernel i (p'.1, p.2) v - heatPotentialSpatialKernel i (p'.1, v.2)
+              v| ≤
                 (30000000000 / R ^ 6) * |p.2 - v.2| := hrev'
             _ ≤ (30000000000 / R ^ 6) * |p.2 - p'.2| := by
               gcongr
         · have hpv : p.2 ≤ v.2 := by linarith only [lt_of_not_ge htp]
           have hnotp' : ¬ v.2 < p'.2 := by linarith only [hp'v]
           have hnotp : ¬ v.2 < p.2 := by linarith only [hpv]
-          simp [heatPotentialSpatialKernel, heatKernelSpaceDerivative, hnotp', hnotp]
+          simp only [heatPotentialSpatialKernel, heatKernelSpaceDerivative, sub_pos, hnotp,
+            ↓reduceIte, hnotp',
+    sub_self, abs_zero, ge_iff_le]
           positivity
   simpa [R, heatPotentialSpatialKernel, heatKernelSpaceDerivative, pointSub] using
     heatPotential_far_shell_two_step_oscillation

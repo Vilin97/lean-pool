@@ -197,7 +197,8 @@ theorem fixed_remainder_temporal_majorant_of_sws
     rw [Real.enorm_eq_ofReal_abs]
     apply (ENNReal.ofReal_le_ofReal hb').trans
     rw [ENNReal.ofReal_mul (abs_nonneg _)]
-    exact (mul_le_mul' le_rfl (spatial_integral_le_slice_norm hFmeas)).trans_eq (mul_assoc _ _ _).symm
+    exact (mul_le_mul' le_rfl (spatial_integral_le_slice_norm hFmeas)).trans_eq (mul_assoc _ _
+      _).symm
   change ‖classicalGradient (h + v) x i‖ₑ ≤ H s + W s
   rw [hgrad]
   exact (enorm_add_le _ _).trans (add_le_add hhb hvb)

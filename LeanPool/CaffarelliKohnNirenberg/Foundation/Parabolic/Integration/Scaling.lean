@@ -112,7 +112,7 @@ private theorem interval_translate_image (t : ℝ) (s₁ s₂ : ℝ) :
     refine ⟨s - t, ?_, ?_⟩
     · constructor
       · exact lt_sub_iff_add_lt.mpr (by simpa [add_comm] using hs.1)
-      · show s - t ≤ s₂
+      · change s - t ≤ s₂
         exact sub_le_iff_le_add.mpr (by simpa [add_comm] using hs.2)
     · simp
 
@@ -154,7 +154,7 @@ private theorem map_spatial_affine {a : ℝ} (ha : 0 < a) (x : Vec3) :
   change Measure.map ((fun y : Vec3 => x + y) ∘ (fun y => a • y)) volume = _
   rw [← Measure.map_map (measurable_const_add x) (measurable_const_smul a)]
   rw [Measure.map_addHaar_smul volume ha.ne', Measure.map_smul]
-  rw [MeasureTheory.map_add_left_eq_self]
+  on_goal 1 => rw [MeasureTheory.map_add_left_eq_self]
   · congr 1
     norm_num [Module.finrank_fin_fun, abs_of_pos ha, inv_pow]
   · exact (measurable_const_add x).aemeasurable
@@ -415,7 +415,7 @@ private theorem map_time_affine {a : ℝ} (ha : 0 < a) (t : ℝ) :
   change Measure.map ((fun s : ℝ => t + s) ∘ (fun s => a ^ 2 • s)) volume = _
   rw [← Measure.map_map (measurable_const_add t) (measurable_const_smul (a ^ 2))]
   rw [Measure.map_addHaar_smul volume (sq_pos_of_pos ha).ne', Measure.map_smul]
-  rw [MeasureTheory.map_add_left_eq_self]
+  on_goal 1 => rw [MeasureTheory.map_add_left_eq_self]
   · congr 1
     norm_num [Module.finrank_fin_fun, abs_of_pos ha, inv_pow]
   · exact (measurable_const_add t).aemeasurable

@@ -23,6 +23,7 @@ namespace CKN
 
 /-- A smooth compactly supported test function supported inside `U`. -/
 structure WeakTestFunction {d : ℕ} (U : Set (Vec d)) where
+  /-- Scalar test function used to express weak differentiation. -/
   toFun : Vec d → ℝ
   contDiff : ContDiff ℝ (⊤ : ℕ∞) toFun
   hasCompactSupport : HasCompactSupport toFun

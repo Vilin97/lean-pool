@@ -257,7 +257,7 @@ theorem localized_gradient_slot_duhamel_of_sws
     exact gradientSlot_tested_transfer_of_sws hsol hφ hbox hφbox hDpInt
       hDpweak hψ i
   have hrep := duhamel_of_localized_velocity hv hpotential hFg hFh hweak
-    (duhamel_support_data_of_compact_support
+    (duhamelSupportDataOfCompactSupport
       hVSupport (fun i => hGradSupport i) (fun j i => hGradHSupport j i))
   have hheat := localized_gradient_slot_heat_representation hrep
   filter_upwards [hheat] with z hz

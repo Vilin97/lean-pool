@@ -99,7 +99,8 @@ theorem theoremA_hGA_of_integral_slots
       ∀ i : Fin 3,
         (∫⁻ s in Ioc (-(R₁ ^ 2)) 0,
           eLpNorm (fun y => Dp (y, s) i) (ENNReal.ofReal (6 / 5 : ℝ))
-            (volume.restrict (vec3Ball (0 : Vec3) R₁)) ^ (6 / 5 : ℝ)) ≤ ((ENNReal.ofReal (|C_CZ| + 1) * ENNReal.ofReal (|R₀| + |R₁| + |ε| + 1)) *
+            (volume.restrict (vec3Ball (0 : Vec3) R₁)) ^ (6 / 5 : ℝ)) ≤ ((ENNReal.ofReal (|C_CZ| +
+              1) * ENNReal.ofReal (|R₀| + |R₁| + |ε| + 1)) *
         ENNReal.ofReal (max 1 ((2 * R₁ / (1 - R₁)) ^
           (5 * (1 - (6 / 5 : ℝ) / min ((1 / τ + 8 / 25)⁻¹) q)))))) :
   ∀ q τ C_CZ R₀ R₁ ε : ℝ, ∀ KU KD : ℝ≥0∞,

@@ -436,7 +436,6 @@ theorem newtonian_representation_smooth {u : Vec3 → ℝ}
         (fun t : ℝ => heatKernel (x - y) t * CKN.spatialLaplacian u y) by rfl]
     rw [integral_mul_const, heatKernel_integral_Ioi hxy]
     rfl
-
   have hright : ∫ y : Vec3, ∫ t : ℝ, F (t, y) ∂μ ∂volume =
       ∫ y : Vec3, newtonianKernel (x - y) * CKN.spatialLaplacian u y := by
     rw [integral_congr_ae hinner]

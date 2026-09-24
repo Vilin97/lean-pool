@@ -88,7 +88,8 @@ theorem pressureDivergenceCutoffSourceCentredTensor_memLp_hasCompactSupport
   refine ⟨?_, fun i => sourceMorreyCutoffVCentredTensor_hasCompactSupport hηB hdB hB i⟩
   intro i
   have hind := (memLp_indicator_iff_restrict hB.measurableSet).2 (hlocal i)
-  have heq : B.indicator (fun x => pressureDivergenceCutoffSourceCentredTensor η (spatialDeriv η) u Du c x i) =
+  have heq : B.indicator (fun x => pressureDivergenceCutoffSourceCentredTensor η (spatialDeriv η)
+    u Du c x i) =
       (fun x => pressureDivergenceCutoffSourceCentredTensor η (spatialDeriv η) u Du c x i) := by
     funext x
     by_cases hx : x ∈ B
@@ -97,7 +98,8 @@ theorem pressureDivergenceCutoffSourceCentredTensor_memLp_hasCompactSupport
       have he : η x = 0 := image_eq_zero_of_notMem_tsupport (fun h => hx (hηB h))
       have hd (j : Fin 3) : spatialDeriv η j x = 0 :=
         image_eq_zero_of_notMem_tsupport (fun h => hx (hdB j h))
-      simp only [pressureDivergenceCutoffSourceCentredTensor, he, hd, zero_mul, add_zero, Finset.sum_const_zero]
+      simp only [pressureDivergenceCutoffSourceCentredTensor, he, hd, zero_mul, add_zero,
+        Finset.sum_const_zero]
   rw [heq] at hind
   exact hind
 

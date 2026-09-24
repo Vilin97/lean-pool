@@ -67,7 +67,7 @@ theorem exists_smooth_partition_of_unity_of_isCompact {d : ℕ} {ι : Type*}
       intro a
       rw [(β a).tsupport_eq]
       exact (Metric.closedBall_subset_ball
-        (by show ee a / 2 < ee a; linarith only [hee0 a])).trans (heesub a)
+        (by change ee a / 2 < ee a; linarith only [hee0 a])).trans (heesub a)
     -- Finitely many of those balls already cover the compact set.
     have hsub : K ⊆ ⋃ a : K, Metric.ball (a : Vec d) (ee a / 3) := by
       intro x hx
@@ -133,7 +133,7 @@ theorem exists_smooth_partition_of_unity_of_isCompact {d : ℕ} {ι : Type*}
     have hn : n < N := (t.equivFin ⟨a, hat⟩).isLt
     have hfin : (⟨n, hn⟩ : Fin N) = t.equivFin ⟨a, hat⟩ := by
       apply Fin.ext
-      show n = ((t.equivFin ⟨a, hat⟩ : Fin N) : ℕ)
+      change n = ((t.equivFin ⟨a, hat⟩ : Fin N) : ℕ)
       simp only [n]
     have hsymm : t.equivFin.symm (⟨n, hn⟩ : Fin N) = ⟨a, hat⟩ := by
       rw [hfin, Equiv.symm_apply_apply]

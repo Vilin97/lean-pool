@@ -45,18 +45,19 @@ theorem caccioppoli_timePartial_contDiff
     (by simp)
   simpa only [F, timePartial, Function.uncurry] using hderiv
 
-def caccioppoli_I1_heat_cutoff_raw
+/-- Raw energy contribution from the time derivative and Laplacian of the heat cutoff. -/
+def caccioppoliI1HeatCutoffRaw
     {u : ParabolicPoint → Vec3} {x₀ : Vec3} {t₀ ρ ε r : ℝ}
     (hρ : 0 < ρ) (hε : 0 < ε) :
     ℝ :=
   (∫⁻ z in parabolicCylinder x₀ t₀ ρ,
       ENNReal.ofReal (vec3EuclideanNorm (u z)) ^ (2 : ℝ) *
         ENNReal.ofReal |timePartial (fun w : ParabolicPoint =>
-          backwardHeat_cutoff
-            (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) z +
+          backwardHeatCutoff
+            (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) z +
           ∑ i, spatialSecondPartial (fun w : ParabolicPoint =>
-            backwardHeat_cutoff
-              (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) i i z|).toReal
+            backwardHeatCutoff
+              (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) i i z|).toReal
 
 /-- Existence of an admissible time increment for the Caccioppoli heat cut-off,
 matching the choice of `ε₀` at the start of the proof of Lemma `lem:caccioppoli`
@@ -99,12 +100,12 @@ private theorem caccioppoli_heat_cutoff_support_in_carrier
     (_ : ε < r ^ 2)
     (hsub : closure (parabolicCylinder (x₀) t₀ ρ) ⊆ spaceTimeSet Ω I)
     (hfuture : Icc t₀ (t₀ + ε) ⊆ I) :
-    tsupport (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) ⊆
+    tsupport (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) ⊆
       spaceTimeSet Ω I := by
-  have hsp : ∀ z ∈ tsupport (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε),
+  have hsp : ∀ z ∈ tsupport (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε),
       z.1 ∈ Ω := by
     intro z hz
-    have hclosed : Function.support (caccioppoli_heat_cutoff
+    have hclosed : Function.support (caccioppoliHeatCutoff
         x₀ t₀ ρ ε hρ hε) ⊆
         euclideanClosedBall x₀ (3 * ρ / 4) ×ˢ
           Icc (t₀ - ρ ^ 2) (t₀ + ε) := by
@@ -132,7 +133,7 @@ private theorem caccioppoli_heat_cutoff_support_in_carrier
     exact (hsub hmem).1
   intro z hz
   refine ⟨hsp z hz, ?_⟩
-  have hclosed : Function.support (caccioppoli_heat_cutoff
+  have hclosed : Function.support (caccioppoliHeatCutoff
       x₀ t₀ ρ ε hρ hε) ⊆
       euclideanClosedBall x₀ (3 * ρ / 4) ×ˢ
         Icc (t₀ - ρ ^ 2) (t₀ + ε) := by
@@ -171,13 +172,13 @@ theorem caccioppoli_heat_cutoff_testFunction
     (hr : 0 < r) (hεr : ε < r ^ 2)
     (hsub : closure (parabolicCylinder x₀ t₀ ρ) ⊆ spaceTimeSet Ω I)
     (hfuture : Icc t₀ (t₀ + ε) ⊆ I) :
-    backwardHeat_cutoff
-        (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r ∈
+    backwardHeatCutoff
+        (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r ∈
       spaceTimeTestFunction (V := ℝ) Ω I ∧
-      (∀ z, 0 ≤ backwardHeat_cutoff
-        (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r z) := by
+      (∀ z, 0 ≤ backwardHeatCutoff
+        (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r z) := by
   exact backwardHeat_cutoff_testFunction
-    (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r hr
+    (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r hr
     (caccioppoli_heat_cutoff_smooth x₀ t₀ ρ ε hρ hε)
     (caccioppoli_heat_cutoff_hasCompactSupport x₀ t₀ ρ ε hρ hε)
     (caccioppoli_heat_cutoff_support_in_carrier hsol hρ hε hεr hsub hfuture)
@@ -193,14 +194,14 @@ theorem caccioppoli_I1_heat_cutoff_raw_bound
     (hr : 0 < r) (hscale : r ≤ ρ / 2) (hεr : ε < r ^ 2)
     (hsub : closure (parabolicCylinder x₀ t₀ ρ) ⊆ spaceTimeSet Ω I)
     (hfuture : Icc t₀ (t₀ + ε) ⊆ I) :
-    caccioppoli_I1_heat_cutoff_raw (u := u) (x₀ := x₀) (t₀ := t₀)
+    caccioppoliI1HeatCutoffRaw (u := u) (x₀ := x₀) (t₀ := t₀)
         (ρ := ρ) (ε := ε) (r := r) hρ hε ≤
       ((32 + 3 * cutoffSecondDerivativeConstant) * 8000000 +
         6 * cutoffGradientConstant * 5000000) *
         (r ^ 2 / ρ ^ 5) * (ρ ^ 3 * alpha u ⟨x₀, t₀⟩ ρ ^ 2) := by
   let F : Vec3 × ℝ → ℝ :=
-    fun z => backwardHeat_cutoff
-      (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r z
+    fun z => backwardHeatCutoff
+      (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r z
   have htest := caccioppoli_heat_cutoff_testFunction hsol hρ hε hr hεr hsub hfuture
   have hF : ContDiff ℝ (⊤ : ℕ∞) F := by
     simpa only [F] using htest.1.1
@@ -258,7 +259,7 @@ theorem caccioppoli_I1_heat_cutoff_raw_bound
     exact (not_lt_of_ge hnorm') (hbound.trans_lt hneg)
   have hCsecond : 0 ≤ cutoffSecondDerivativeConstant / ρ ^ 2 := by
     exact (abs_nonneg (spatialSecondPartial
-      (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) 0 0 (x₀, t₀))).trans
+      (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) 0 0 (x₀, t₀))).trans
       (caccioppoli_heat_cutoff_second_spatial_partial_bound
         x₀ t₀ ρ ε hρ hε (x₀, t₀) 0 0)
   let C₁ : ℝ :=
@@ -287,17 +288,17 @@ theorem caccioppoli_I1_heat_cutoff_raw_bound
       hρ hε hr hscale hεr htime' hz'
     apply ENNReal.ofReal_le_ofReal
     change |timePartial (fun w : Vec3 × ℝ =>
-      backwardHeat_cutoff
-        (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) z +
+      backwardHeatCutoff
+        (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) z +
       ∑ i, spatialSecondPartial (fun w : Vec3 × ℝ =>
-        backwardHeat_cutoff
-          (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) i i z| ≤ C₁
+        backwardHeatCutoff
+          (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) i i z| ≤ C₁
     change |timePartial (fun w : Vec3 × ℝ =>
-      backwardHeat_cutoff
-        (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) z +
+      backwardHeatCutoff
+        (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) z +
       ∑ i, spatialSecondPartial (fun w : Vec3 × ℝ =>
-        backwardHeat_cutoff
-          (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) i i z| ≤
+        backwardHeatCutoff
+          (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) i i z| ≤
       (32 / ρ ^ 2 + 3 * (cutoffSecondDerivativeConstant / ρ ^ 2)) *
           (8000000 * r ^ 2 / ρ ^ 3) +
         6 * (cutoffGradientConstant / ρ) *
@@ -323,11 +324,11 @@ theorem caccioppoli_I1_heat_cutoff_raw_bound
   change (∫⁻ z in parabolicCylinder x₀ t₀ ρ,
       ENNReal.ofReal (vec3EuclideanNorm (u z)) ^ (2 : ℝ) *
         ENNReal.ofReal |timePartial (fun w : ParabolicPoint =>
-          backwardHeat_cutoff
-            (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) z +
+          backwardHeatCutoff
+            (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) z +
           ∑ i, spatialSecondPartial (fun w : ParabolicPoint =>
-            backwardHeat_cutoff
-              (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) i i z|).toReal ≤ _
+            backwardHeatCutoff
+              (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) i i z|).toReal ≤ _
   calc
     _ ≤ (ENNReal.ofReal C₁ *
         ENNReal.ofReal (ρ ^ 3 * alpha u ⟨x₀, t₀⟩ ρ ^ 2)).toReal := hbound
@@ -346,7 +347,7 @@ theorem caccioppoli_I1_heat_cutoff_raw_normalized
     (hKbound :
       ((32 + 3 * cutoffSecondDerivativeConstant) * 8000000 +
         6 * cutoffGradientConstant * 5000000) ≤ C₂₅ ^ 2) :
-    caccioppoli_I1_heat_cutoff_raw (u := u) (x₀ := x₀) (t₀ := t₀)
+    caccioppoliI1HeatCutoffRaw (u := u) (x₀ := x₀) (t₀ := t₀)
         (ρ := ρ) (ε := ε) (r := r) hρ hε ≤
       (C₂₅ * (r / ρ) * alpha u ⟨x₀, t₀⟩ ρ) ^ 2 := by
   apply caccioppoli_I1_normalization hρ hr hKbound

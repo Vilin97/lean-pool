@@ -116,7 +116,7 @@ theorem lin34_ball_integral_le_rpow_three_halves
   have htop : volume (vec3Ball x₀ ρ) < ⊤ := by
     rw [pressure_volume_ball hρ]
     exact ENNReal.ofReal_lt_top
-  haveI : IsFiniteMeasure (volume.restrict (vec3Ball x₀ ρ)) :=
+  have : IsFiniteMeasure (volume.restrict (vec3Ball x₀ ρ)) :=
     ⟨by rw [Measure.restrict_apply MeasurableSet.univ, univ_inter]; exact htop⟩
   have hXfin : ∫⁻ y, ENNReal.ofReal (g y ^ (3 / 2 : ℝ))
       ∂(volume.restrict (vec3Ball x₀ ρ)) < ⊤ := by

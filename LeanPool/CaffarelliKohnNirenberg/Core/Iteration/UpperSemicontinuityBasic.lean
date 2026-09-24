@@ -122,7 +122,7 @@ lemma vec3Ball_subset_euclideanBall {x : Vec3} {r : ℝ} (hr : 0 < r) :
   intro y hy
   apply (mem_euclideanBall_iff_vecEuclideanNorm_lt hr).2
   have heq : vecEuclideanNorm (y - x) = vec3EuclideanNorm (y - x) := by
-    simp [CKN.vecEuclideanNorm, vec3EuclideanNorm, vecNormSq, vecDot]
+    simp only [vecEuclideanNorm, vecNormSq, vecDot, Pi.sub_apply, vec3EuclideanNorm]
     apply congrArg Real.sqrt
     apply Finset.sum_congr rfl
     intro i hi
@@ -278,7 +278,7 @@ lemma cutoff_slice_le
           have heu := (mem_euclideanBall_iff_vecEuclideanNorm_lt
             (lt_trans hr hrr)).mp (hη_support hmem)
           have heq : vecEuclideanNorm (x - x₀) = vec3EuclideanNorm (x - x₀) := by
-            simp [CKN.vecEuclideanNorm, vec3EuclideanNorm, vecNormSq, vecDot]
+            simp only [vecEuclideanNorm, vecNormSq, vecDot, Pi.sub_apply, vec3EuclideanNorm]
             apply congrArg Real.sqrt
             apply Finset.sum_congr rfl
             intro i hi

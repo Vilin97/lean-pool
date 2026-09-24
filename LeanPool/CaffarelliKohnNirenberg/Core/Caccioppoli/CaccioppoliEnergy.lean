@@ -31,7 +31,7 @@ theorem caccioppoli_heat_cutoff_lower
     (hr : 0 < r) (hscale : r ≤ ρ / 2)
     {z : ParabolicPoint} (hz : z ∈ parabolicCylinder x₀ t₀ r) :
     1 / (2000 * r) ≤
-      backwardHeat_cutoff (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε)
+      backwardHeatCutoff (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε)
         x₀ t₀ r z := by
   have hzmem := mem_parabolicCylinder.mp hz
   have hx : z.1 ∈ vec3Ball x₀ (ρ / 2) := by
@@ -46,7 +46,7 @@ theorem caccioppoli_heat_cutoff_lower
   have hψ' : 1 / (2000 * r) ≤
       backwardHeatTestFunction r (z.1 - x₀) (z.2 - t₀) := by
     simpa only [centeredBackwardHeatTest] using hψ
-  unfold backwardHeat_cutoff
+  unfold backwardHeatCutoff
   simp only [ite_eq_left htime, hη, one_mul]
   exact hψ'
 

@@ -53,7 +53,8 @@ theorem integral_mul_mollifier_sub {d : ℕ} (ψ : Vec d → ℝ) {ε : ℝ} (h�
   have hchange :
       (∫ y, ψ y * mollifier (d := d) ε hε (x - y) ∂MeasureTheory.volume) =
         ∫ t, ψ (x - t) * mollifier (d := d) ε hε t ∂MeasureTheory.volume := by
-    have h := (MeasureTheory.Measure.measurePreserving_sub_left MeasureTheory.volume x).integral_comp
+    have h := (MeasureTheory.Measure.measurePreserving_sub_left MeasureTheory.volume
+      x).integral_comp
       (Homeomorph.subLeft x).measurableEmbedding
       (fun y => ψ y * mollifier (d := d) ε hε (x - y))
     rw [← h]
@@ -91,7 +92,8 @@ theorem integral_mul_fderiv_mollifier_sub {d : ℕ} {ψ : Vec d → ℝ}
           ∂MeasureTheory.volume) =
         ∫ t, ψ (x - t) * (fderiv ℝ (mollifier (d := d) ε hε) t) (basisVec i)
           ∂MeasureTheory.volume := by
-    have h := (MeasureTheory.Measure.measurePreserving_sub_left MeasureTheory.volume x).integral_comp
+    have h := (MeasureTheory.Measure.measurePreserving_sub_left MeasureTheory.volume
+      x).integral_comp
       (Homeomorph.subLeft x).measurableEmbedding
       (fun y => ψ y * (fderiv ℝ (mollifier (d := d) ε hε) (x - y)) (basisVec i))
     rw [← h]

@@ -5,6 +5,8 @@ Authors: Scott Armstrong, Vlad Vicol
 -/
 module
 
+public import LeanPool.CaffarelliKohnNirenberg.Foundation.Sobolev.Cutoff.NormTriangle
+
 public import LeanPool.CaffarelliKohnNirenberg.Foundation.Ambient.Euclidean
 public import LeanPool.CaffarelliKohnNirenberg.Foundation.Sobolev.Cutoff.Ball
 public import LeanPool.CaffarelliKohnNirenberg.Foundation.Sobolev.Mollify.Basic
@@ -32,19 +34,8 @@ noncomputable section
 namespace CKN
 
 private lemma vecEuclideanNorm_eq_l2 (x : Vec 3) :
-    vecEuclideanNorm x = ‖WithLp.toLp 2 x‖ := by
-  rw [PiLp.norm_eq_of_L2]
-  simp [vecEuclideanNorm, vecNormSq, vecDot, Real.norm_eq_abs, sq_abs]
-  congr 1
-  apply Finset.sum_congr rfl
-  intro i _hi
-  ring
-
-private lemma vecEuclideanNorm_add_le (x y : Vec 3) :
-    vecEuclideanNorm (x + y) ≤ vecEuclideanNorm x + vecEuclideanNorm y := by
-  rw [vecEuclideanNorm_eq_l2, vecEuclideanNorm_eq_l2, vecEuclideanNorm_eq_l2]
-  rw [WithLp.toLp_add]
-  exact norm_add_le _ _
+    vecEuclideanNorm x = ‖WithLp.toLp 2 x‖ :=
+  vecEuclideanNorm_eq_norm_toLp x
 
 private lemma vecEuclideanNorm_eq_spaceEuclideanNorm (x : Vec 3) :
     vecEuclideanNorm x = spaceEuclideanNorm x := by
@@ -56,6 +47,7 @@ private lemma euclideanBall_measurable (x₀ : Vec 3) (R : ℝ) :
   exact measurableSet_Iio.preimage
     (contDiff_euclideanSqDist_left x₀).continuous.measurable
 
+/-- Indicator of a Euclidean ball, used as the source for mollified cutoffs. -/
 def ballIndicator (x₀ : Vec 3) (R : ℝ) : Vec 3 → ℝ :=
   (euclideanBall x₀ R).indicator (fun _ => 1)
 
@@ -64,6 +56,7 @@ private lemma ballIndicator_locallyIntegrable (x₀ : Vec 3) (R : ℝ) :
   exact (locallyIntegrable_const (1 : ℝ)).indicator
     (euclideanBall_measurable x₀ R)
 
+/-- Fixed smooth unit-scale cutoff obtained by mollifying a smaller ball indicator. -/
 def unitBallCutoff : Vec 3 → ℝ :=
   mollify (ballIndicator 0 (7 / 10)) (1 / 100) (by norm_num)
 

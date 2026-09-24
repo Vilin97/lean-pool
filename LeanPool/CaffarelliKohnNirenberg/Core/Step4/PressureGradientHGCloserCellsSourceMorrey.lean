@@ -97,7 +97,8 @@ theorem pressure_centred_tensor_source_morrey_lt_top
     intro j
     have hprod := morreyNorm_mul_le (p := (6 / 5 : ℝ))
       (p₁ := 2) (p₂ := 3) (q := (1 / τ + 8 / 25)⁻¹) (q₁ := 25 / 8) (q₂ := τ)
-      (by norm_num) (by norm_num) (by norm_num) (by simp only [one_div, inv_inv]; ring) (hDa i j) (hWa j)
+      (by norm_num) (by norm_num) (by norm_num) (by simp only [one_div, inv_inv]; ring) (hDa i j)
+        (hWa j)
     apply pressure_source_lower_exponent_morrey_lt_top (by norm_num) hκ hκτ hR
     · intro z hz
       have hzS : z ∉ S := fun h => hz (hS h)

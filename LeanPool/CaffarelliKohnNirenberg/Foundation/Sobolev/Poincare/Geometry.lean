@@ -60,6 +60,7 @@ theorem IsBoundedDomain.isFiniteMeasure_restrict_volume
 noncomputable def integralAverage {d : ℕ} (U : Set (Vec d)) (u : Vec d → ℝ) : ℝ :=
   MeasureTheory.average (MeasureTheory.volume.restrict U) u
 
+/-- Measurable bounded domain on which the Sobolev estimates are formulated. -/
 def IsSobolevRegularDomain {d : ℕ} (U : Set (Vec d)) : Prop :=
   MeasurableSet U ∧ IsBoundedDomain U
 
@@ -197,7 +198,7 @@ theorem measurePreserving_addRight_restrict_translateSet {d : ℕ} (z : Vec d) (
     MeasurePreserving.restrict_image_emb hμ (Homeomorph.addRight z).measurableEmbedding U
 
 theorem setIntegral_comp_subRight_translateSet {d : ℕ} {E : Type*}
-    [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
+    [NormedAddCommGroup E] [NormedSpace ℝ E]
     (z : Vec d) (U : Set (Vec d)) (f : Vec d → E) :
     ∫ x in translateSet z U, f (x - z) ∂MeasureTheory.volume =
       ∫ y in U, f y ∂MeasureTheory.volume := by
@@ -206,7 +207,7 @@ theorem setIntegral_comp_subRight_translateSet {d : ℕ} {E : Type*}
       (Homeomorph.subRight z).measurableEmbedding f
 
 theorem setIntegral_comp_addRight_translateSet {d : ℕ} {E : Type*}
-    [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
+    [NormedAddCommGroup E] [NormedSpace ℝ E]
     (z : Vec d) (U : Set (Vec d)) (f : Vec d → E) :
     ∫ y in U, f (y + z) ∂MeasureTheory.volume =
       ∫ x in translateSet z U, f x ∂MeasureTheory.volume := by

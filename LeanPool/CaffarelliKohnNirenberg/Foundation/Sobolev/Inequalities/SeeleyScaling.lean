@@ -22,6 +22,7 @@ namespace CKN
 
 noncomputable section
 
+/-- Affine map transporting the unit ball to a ball centered at `x₀` with scale `r`. -/
 def seeleyAffineMap (x₀ : Vec 3) (r : ℝ) (x : Vec 3) : Vec 3 :=
   x₀ + r • x
 
@@ -80,7 +81,7 @@ private theorem seeleyAffineMap_restrict {x₀ : Vec 3} {r : ℝ} (hr : 0 < r) :
   exact hres.symm
 
 theorem seeleyAffine_eLpNorm_comp {x₀ : Vec 3} {r : ℝ} (hr : 0 < r)
-    {β : Type*} [NormedAddCommGroup β] [NormedSpace ℝ β]
+    {β : Type*} [NormedAddCommGroup β]
     {f : Vec 3 → β} (hf : Continuous f) (p : ℝ≥0∞) :
     eLpNorm (f ∘ seeleyAffineMap x₀ r) p
         (volume.restrict (euclideanBall (0 : Vec 3) 1)) =

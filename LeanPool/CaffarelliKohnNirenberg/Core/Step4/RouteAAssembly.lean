@@ -38,7 +38,9 @@ namespace CKN.Core.Step4
 /-! This producer is the explicit global-to-local seam for a heat-potential
 core.  It records both the a.e. carrier identification and the conversion
 from scalar component norms to the vector Morrey membership used by Route A. -/
-def routeA_carrier_restriction_producer : Prop :=
+/-- Transfer a scalar norm bound to componentwise Morrey bounds after restriction and a.e.
+equality. -/
+def routeACarrierRestrictionProducer : Prop :=
   ∀ {Q₃ : Set ParabolicPoint} {u v : ParabolicPoint → Vec3},
     MeasurableSet Q₃ →
     morreyNorm 3 25 (fun z => vec3EuclideanNorm (v z)) < ∞ →
@@ -46,7 +48,7 @@ def routeA_carrier_restriction_producer : Prop :=
     morreyVecMem 3 25 Q₃ u
 
 theorem routeA_carrier_restriction_producer_of_core :
-    routeA_carrier_restriction_producer := by
+    routeACarrierRestrictionProducer := by
   intro Q₃ u v hQ hcore hcut
   exact CKN.Core.Endgame.morreyVecMem_three_twentyFive_of_ae_eq_restrict
     hQ hcut hcore
@@ -67,7 +69,8 @@ Morrey membership, so it carries no Calderón--Zygmund constant: the
 `L^{6/5}` control needed to build the selected field belongs to the
 construction that discharges this interface, not to its statement. -/
 
-def routeA_gradient_producer : Prop :=
+/-- Pressure-gradient construction interface used in the Morrey bootstrap route. -/
+def routeAGradientProducer : Prop :=
   ∀ q : ℝ, 5 / 2 < q →
     ∀ {Ω : Set Vec3} {I : Set ℝ}
       {u : ParabolicPoint → Vec3}
@@ -91,7 +94,8 @@ def routeA_gradient_producer : Prop :=
           (min ((1 / (25 / 3 : ℝ) + 8 / 25)⁻¹) q)
           (Metric.ball z₀ (R / 2)) Dp
 
-def routeA_representation_producer : Prop :=
+/-- Weak-equation interface supplying the localized heat-potential representation. -/
+def routeARepresentationProducer : Prop :=
   ∀ {Ω : Set Vec3} {I : Set ℝ} {q : ℝ}
     {u : ParabolicPoint → Vec3}
     {Du : ParabolicPoint → Fin 3 → Vec3}

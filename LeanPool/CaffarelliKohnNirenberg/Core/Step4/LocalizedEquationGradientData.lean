@@ -44,6 +44,66 @@ private lemma gradient_source_support_of_phi
   apply hzv z
   simpa only [K, Set.mem_preimage, parabolicHomeomorph_apply] using hnot
 
+private lemma localized_gradient_source_data_hF_1 :
+    ∀ {u : ParabolicPoint → Vec3} {Du : ParabolicPoint → Fin 3 → Vec3} {f : ParabolicPoint → Vec3}
+      {φ : Vec3 × ℝ → ℝ} {Dp : ParabolicPoint → Vec3},
+      let lapφ : Vec3 × ℝ → ℝ := fun z =>
+        ∑ j : Fin 3,
+          spatialSecondPartial
+            (have this : ParabolicPoint → ℝ := φ;
+            this)
+            j j z;
+      (∀ (i : Fin 3),
+          @Integrable ℝ _ _ _ MeasureSpace.toMeasurableSpace
+            (fun (z : ParabolicPoint) => u z i * timePartial φ z) volume) →
+        (∀ (i : Fin 3),
+            @Integrable ℝ _ _ _ MeasureSpace.toMeasurableSpace
+              (fun (z : ParabolicPoint) => u z i * lapφ (z.1, z.2)) volume) →
+          (∀ (i j : Fin 3),
+              @Integrable ℝ _ _ _ MeasureSpace.toMeasurableSpace
+                (fun (z : ParabolicPoint) =>
+                  (have this : ParabolicPoint → ℝ := φ;
+                        this)
+                        z *
+                      u z j *
+                    Du z i j)
+                volume) →
+            (∀ (i : Fin 3),
+                @Integrable ℝ _ _ _ MeasureSpace.toMeasurableSpace
+                  (fun (z : ParabolicPoint) =>
+                    f z i *
+                      (have this : ParabolicPoint → ℝ := φ;
+                        this)
+                        z)
+                  volume) →
+              (∀ (i : Fin 3),
+                  @Integrable ℝ _ _ _ MeasureSpace.toMeasurableSpace
+                    (fun (z : ParabolicPoint) =>
+                      (have this : ParabolicPoint → ℝ := φ;
+                          this)
+                          z *
+                        Dp z i)
+                    volume) →
+                ∀ (i : Fin 3),
+                  @Integrable ℝ _ _ _ MeasureSpace.toMeasurableSpace
+                    (fun (z : ParabolicPoint) =>
+                      Core.Step4.localizedGradientSourceG φ u Du f Dp z i)
+                    volume
+    := by
+  intro u Du f φ Dp lapφ hGt hGlap hGconv hGforce hDp i
+  have hsum := (hGt i).add ((hGlap i).sub
+    ((integrable_finsetSum (Finset.univ : Finset (Fin 3))
+      (fun j _ => hGconv i j)).sub (hGforce i)))
+  have hsum' := hsum.sub (hDp i)
+  refine hsum'.congr (Filter.Eventually.of_forall (fun z => ?_))
+  dsimp [localizedGradientSourceG, localizedEquationG, localizedConvection,
+    lapφ]
+  rw [show spatialLaplacian (fun x => φ (x, z.2)) z.1 =
+      ∑ j : Fin 3, spatialSecondPartial
+        (show ParabolicPoint → ℝ from φ) j j (z.1, z.2) by rfl]
+  simp only [Finset.sum_mul, Finset.mul_sum]
+  ring_nf
+
 theorem localized_gradient_source_data_of_sws
     {Ω : Set Vec3} {I : Set ℝ} {q : ℝ}
     {u : ParabolicPoint → Vec3} {Du : ParabolicPoint → Fin 3 → Vec3}
@@ -68,7 +128,7 @@ theorem localized_gradient_source_data_of_sws
   rcases hsol with ⟨hΩ, hI, hIord, hq, hfSol, hdata, hS2, hS3, hS4⟩
   rcases hφ with ⟨hφd, hφc, hφΩ⟩
   let μ : Measure ParabolicPoint := volume.restrict (spaceTimeSet Ω' J)
-  haveI : IsFiniteMeasure μ :=
+  have : IsFiniteMeasure μ :=
     CKN.Core.Step3.local_box_isFiniteMeasure hbox.2.1 hbox.2.2.2.2.1
   obtain ⟨hu, hDu, hpmeas, hfmeas, hEssSup, henergy, hp, hf, hgrad⟩ :=
     hdata Ω' J hbox
@@ -189,20 +249,8 @@ theorem localized_gradient_source_data_of_sws
     have h := hbox_factor (hDpInt i) hφc (by exact subset_rfl)
       hφd.continuous
     simpa [mul_comm] using h
-  have hF (i : Fin 3) : Integrable
-      (fun z => localizedGradientSourceG φ u Du f Dp z i) volume := by
-    have hsum := (hGt i).add ((hGlap i).sub
-      ((integrable_finsetSum (Finset.univ : Finset (Fin 3))
-        (fun j _ => hGconv i j)).sub (hGforce i)))
-    have hsum' := hsum.sub (hDp i)
-    refine hsum'.congr (Filter.Eventually.of_forall (fun z => ?_))
-    dsimp [localizedGradientSourceG, localizedEquationG, localizedConvection,
-      lapφ]
-    rw [show spatialLaplacian (fun x => φ (x, z.2)) z.1 =
-        ∑ j : Fin 3, spatialSecondPartial
-          (show ParabolicPoint → ℝ from φ) j j (z.1, z.2) by rfl]
-    simp only [Finset.sum_mul, Finset.mul_sum]
-    ring_nf
+  have hF (i : Fin 3) := @localized_gradient_source_data_hF_1 u Du f φ Dp hGt hGlap hGconv hGforce
+    hDp i
   have hH (j i : Fin 3) : Integrable
       (fun z => -localizedGradientSourceH φ u j z i) volume := by
     have h := hbox_factor (hUi i) (b := fun z : Vec3 × ℝ =>

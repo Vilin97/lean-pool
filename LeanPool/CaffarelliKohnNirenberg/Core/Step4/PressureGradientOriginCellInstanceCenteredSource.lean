@@ -32,7 +32,7 @@ private theorem eLpNorm_mul_two_three_le
     eLpNorm (fun x => f x * g x) (ENNReal.ofReal (6 / 5 : ℝ)) μ ≤
       eLpNorm f (ENNReal.ofReal (2 : ℝ)) μ *
         eLpNorm g (ENNReal.ofReal (3 : ℝ)) μ := by
-  haveI : (ENNReal.ofReal (2 : ℝ)).HolderTriple (ENNReal.ofReal (3 : ℝ))
+  have : (ENNReal.ofReal (2 : ℝ)).HolderTriple (ENNReal.ofReal (3 : ℝ))
       (ENNReal.ofReal (6 / 5 : ℝ)) := by
     have h : (2 : ℝ).HolderTriple 3 (6 / 5 : ℝ) := by
       rw [Real.holderTriple_iff]
@@ -54,7 +54,7 @@ private theorem eLpNorm_mul_three_three_le
     eLpNorm (fun x => f x * g x) (ENNReal.ofReal (3 / 2 : ℝ)) μ ≤
       eLpNorm f (ENNReal.ofReal (3 : ℝ)) μ *
         eLpNorm g (ENNReal.ofReal (3 : ℝ)) μ := by
-  haveI : (ENNReal.ofReal (3 : ℝ)).HolderTriple (ENNReal.ofReal (3 : ℝ))
+  have : (ENNReal.ofReal (3 : ℝ)).HolderTriple (ENNReal.ofReal (3 : ℝ))
       (ENNReal.ofReal (3 / 2 : ℝ)) := by
     have h : (3 : ℝ).HolderTriple 3 (3 / 2 : ℝ) := by
       rw [Real.holderTriple_iff]

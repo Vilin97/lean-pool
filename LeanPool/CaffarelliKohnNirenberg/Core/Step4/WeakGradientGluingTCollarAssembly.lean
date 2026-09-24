@@ -37,11 +37,12 @@ private theorem supported_riesz_finite
     (hzero : ∀ w ∉ parabolicCylinder z.1 z.2 r, X w = 0)
     (hXN : morreyNorm (6 / 5 : ℝ) κ X < ⊤)
     (hT : AEMeasurable T volume)
-    (hid : ∀ᵐ s ∂volume, (fun y => T (y,s)) =ᵐ[volume]
+    (hid : ∀ᵐ s ∂volume, (fun y => T (y, s)) =ᵐ[volume]
       rieszSecondGradientExtensionOperator (rieszSecondL2Input j i)
-        (rieszSecondL2_weak_type j i) (fun y => X (y,s))) :
+        (rieszSecondL2_weak_type j i) (fun y => X (y, s))) :
     morreyNorm (6 / 5 : ℝ) κ T < ⊤ := by
-  obtain ⟨L, hL⟩ := (CKN.Foundation.Parabolic.isCompact_closure_vec3Ball hr).isBounded.exists_norm_le
+  obtain ⟨L, hL⟩ := (CKN.Foundation.Parabolic.isCompact_closure_vec3Ball
+    hr).isBounded.exists_norm_le
   have hsupport (y : Vec3) (s : ℝ) (hy : L < ‖y‖) : X (y,s) = 0 :=
     hzero (y,s) (fun h => (not_le.mpr hy) (hL y (subset_closure h.1)))
   have hbound := pressure_riesz_restricted_morreyNorm_bound j i hκ hκhi hX
@@ -199,15 +200,16 @@ private theorem finite_cover_morrey
     rw [indicator_of_mem hw]
     calc
       |D w| = |(U a).indicator D w| := by rw [indicator_of_mem haw]
-      _ ≤ ∑ b ∈ s, |(U b).indicator D w| := Finset.single_le_sum (f := fun b => |(U b).indicator D w|) (fun _ _ => abs_nonneg _) ha
+      _ ≤ ∑ b ∈ s, |(U b).indicator D w| := Finset.single_le_sum (f := fun b => |(U b).indicator D
+        w|) (fun _ _ => abs_nonneg _) ha
   · rw [indicator_of_notMem hw, abs_zero]
     exact Finset.sum_nonneg (fun _ _ => abs_nonneg _)
 
 private theorem product_ae_eq_of_slices
     {B : Set Vec3} {J : Set ℝ} {D E : ParabolicPoint → ℝ}
     (hD : Measurable D) (hE : Measurable E)
-    (h : ∀ᵐ t ∂volume.restrict J, (fun x => D (x,t)) =ᵐ[volume.restrict B]
-      (fun x => E (x,t))) :
+    (h : ∀ᵐ t ∂volume.restrict J, (fun x => D (x, t)) =ᵐ[volume.restrict B]
+      (fun x => E (x, t))) :
     D =ᵐ[volume.restrict (B ×ˢ J)] E := by
   have hm : MeasurableSet {w : Vec3 × ℝ | D w = E w} := measurableSet_eq_fun hD hE
   rw [Measure.volume_eq_prod, ← Measure.prod_restrict]
@@ -239,7 +241,8 @@ private theorem collar_morrey_of_local_fields
   have hcover : K ⊆ ⋃ y : K, U y := by
     intro y hy
     exact mem_iUnion.mpr ⟨⟨y, hy⟩, Metric.mem_ball_self hrad⟩
-  obtain ⟨s, hs⟩ := (Core.Endgame.isCompact_parabolic_closedBall z₀ (2 * R / 3)).elim_finite_subcover
+  obtain ⟨s, hs⟩ := (Core.Endgame.isCompact_parabolic_closedBall z₀ (2 * R /
+    3)).elim_finite_subcover
     U (fun _ => Metric.isOpen_ball) hcover
   intro i
   apply finite_cover_morrey ((measurable_pi_apply i).comp hD) s U
@@ -339,7 +342,8 @@ private theorem shared_majorant_of_collar_field
     have hex := slice_selected_gradient_corrected_ae_of_sws_data
       (1000 * harmonicInteriorDisplayConstant) czP1OperatorConstant
       sliceForceGradientConstant le_rfl le_rfl le_rfl hsol (z := (c,t)) hρ hsub
-    filter_upwards [hex, ae_restrict_of_ae ((ae_restrict_iff' measurableSet_Ioo).mp hweak)] with s hs hd
+    filter_upwards [hex, ae_restrict_of_ae ((ae_restrict_iff' measurableSet_Ioo).mp hweak)] with s
+      hs hd
     by_cases hc : parabolicCylinder c t (ρ / 2) ⊆ K ∧ s ∈ Ioc (t - (ρ / 2) ^ 2) t
     · have heuc := CKN.Foundation.Parabolic.euclideanBall_eq_vec3Ball
         (x₀ := c) (by positivity : 0 < ρ / 2)
@@ -359,7 +363,8 @@ private theorem shared_majorant_of_collar_field
       simp only [N, ite_eq_left hc]
       apply le_of_eq
       apply eLpNorm_congr_ae
-      filter_upwards [ae_restrict_mem (by rw [heuc]; exact (isOpen_vec3Ball _ _).measurableSet)] with x hx
+      filter_upwards [ae_restrict_mem (by rw [heuc]; exact (isOpen_vec3Ball _ _).measurableSet)]
+        with x hx
       have hx' : x ∈ vec3Ball c (ρ / 2) := heuc ▸ hx
       have hxK : (show ParabolicPoint from (x,s)) ∈ K := hc.1 ⟨hx', hc.2⟩
       exact (indicator_of_mem hxK (fun w => D w i)).symm

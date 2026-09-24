@@ -53,7 +53,7 @@ theorem component_mem_spaceTimeTestFunction {φ : Vec3 × ℝ → Vec3}
   obtain ⟨hd, hc, hs⟩ := hφ
   refine ⟨(ContinuousLinearMap.proj i : Vec3 →L[ℝ] ℝ).contDiff.comp hd, ?_, ?_⟩
   · exact hc.comp_left (g := fun v : Vec3 => v i) rfl
-  · exact (tsupport_component_subset (V := ℝ) φ i fun z hz => by rw [hz]; rfl).trans hs
+  · exact (tsupport_component_subset φ i fun z hz => by rw [hz]; rfl).trans hs
 
 /-! ### The fields of the momentum integrand on a compact set -/
 

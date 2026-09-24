@@ -23,7 +23,7 @@ norm of `WithLp.toLp 2 x`. -/
 theorem vecEuclideanNorm_eq_norm_toLp {d : ℕ} (x : Vec d) :
     vecEuclideanNorm x = ‖WithLp.toLp 2 x‖ := by
   rw [PiLp.norm_eq_of_L2]
-  simp [vecEuclideanNorm, vecNormSq, vecDot, Real.norm_eq_abs, sq_abs]
+  simp only [vecEuclideanNorm, vecNormSq, vecDot, Real.norm_eq_abs, sq_abs]
   congr 1
   apply Finset.sum_congr rfl
   intro i _hi

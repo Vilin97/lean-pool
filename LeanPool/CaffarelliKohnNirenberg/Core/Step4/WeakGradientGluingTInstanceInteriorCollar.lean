@@ -60,10 +60,11 @@ theorem half_gap_ball_subset_outer
   intro x hx
   have ha : 0 < (R₀-R₁)/2 := by linarith only [hgap]
   have hw : ((x,z.2) : ParabolicPoint) ∈ parabolicCylinder z.1 z.2 ((R₀-R₁)/2) :=
-    ⟨hx, by constructor; nlinarith only [sq_pos_of_pos ha]; exact le_rfl⟩
+    ⟨hx, by constructor <;> nlinarith only [sq_pos_of_pos ha]⟩
   exact (half_gap_collar_closure_subset_outer hR₁ hgap hz (subset_closure hw)).1
 
-/-- The actual pressure gradient has the raw-source decomposition using the interior half-gap collar. -/
+/-- The actual pressure gradient has the raw-source decomposition using the interior half-gap
+  collar. -/
 theorem ae_actual_pressure_eq_raw_riesz_half_gap_collar
     (R₀ R₁ : ℝ) (hR₁ : 0 < R₁) (hgap : R₁ < R₀) (hR₀one : R₀ ≤ 1)
     {Ω : Set Vec3} {I : Set ℝ} {q : ℝ}
@@ -86,7 +87,8 @@ theorem ae_actual_pressure_eq_raw_riesz_half_gap_collar
     (hz : z ∈ closure (parabolicCylinder (0 : Vec3) 0 R₁)) :
     ∀ᵐ s ∂volume.restrict (Ioc (z.2-r^2) z.2 ∩ Ioc (-(R₁^2)) 0), ∀ i : Fin 3,
       (fun y => Dp (y,s) i) =ᵐ[volume.restrict (vec3Ball z.1 r ∩ vec3Ball (0 : Vec3) R₁)]
-      fun x => -(∑ j, T j i (x,s)) + rawCorrectedPressureRemainder R₀ z (show 0 < (R₀-R₁)/2 by linarith only [hgap]) u Du p f i (x,s) := by
+      fun x => -(∑ j, T j i (x,s)) + rawCorrectedPressureRemainder R₀ z (show 0 < (R₀-R₁)/2 by
+        linarith only [hgap]) u Du p f i (x,s) := by
   have ha : 0 < (R₀-R₁)/2 := by linarith only [hgap]
   have hsub : closure (parabolicCylinder z.1 z.2 ((R₀-R₁)/2)) ⊆ spaceTimeSet Ω I :=
     (half_gap_collar_closure_subset_outer hR₁ hgap hz).trans

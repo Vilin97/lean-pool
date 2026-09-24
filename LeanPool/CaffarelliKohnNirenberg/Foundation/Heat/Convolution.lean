@@ -154,11 +154,11 @@ theorem heatConv_tendsto_self_nhdsWithin_zero_smooth {u : Vec3 → ℝ}
     apply tendsto_inv_nhdsGT_zero.comp
     rw [tendsto_nhdsWithin_iff]
     refine ⟨?_, ?_⟩
-    simpa only [Real.sqrt_zero] using
-      (Real.continuous_sqrt.tendsto (0 : ℝ)).mono_left
-        (nhdsWithin_le_nhds : 𝓝[>] (0 : ℝ) ≤ 𝓝 0)
-    filter_upwards [self_mem_nhdsWithin] with t ht
-    exact Real.sqrt_pos.2 ht
+    · simpa only [Real.sqrt_zero] using
+        (Real.continuous_sqrt.tendsto (0 : ℝ)).mono_left
+          (nhdsWithin_le_nhds : 𝓝[>] (0 : ℝ) ≤ 𝓝 0)
+    · filter_upwards [self_mem_nhdsWithin] with t ht
+      exact Real.sqrt_pos.2 ht
   have hpeak :
       Tendsto (fun c : ℝ => ∫ y : Vec3,
         (c ^ Module.finrank ℝ Vec3 * heatKernel (c • (x - y)) 1) • u y)

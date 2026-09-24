@@ -25,7 +25,8 @@ noncomputable section
 
 namespace CKN
 
-/-- The regular-point predicate from paper label `def:regular`, with the Hölder representative convention of docs/DESIGN_NOTES.md. -/
+/-- The regular-point predicate from paper label `def:regular`, with the Hölder representative
+  convention of docs/DESIGN_NOTES.md. -/
 def IsRegularPoint (Ω : Set Vec3) (I : Set ℝ)
     (u : ParabolicPoint → Vec3) (z₀ : ParabolicPoint) : Prop :=
   z₀ ∈ spaceTimeSet Ω I ∧

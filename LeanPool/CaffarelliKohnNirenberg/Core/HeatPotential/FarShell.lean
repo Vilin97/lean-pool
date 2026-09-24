@@ -47,6 +47,7 @@ theorem measurable_heatPotentialSpatialKernel_translate (i : Fin 3) (w : Parabol
     exact hcoef.mul hheat
   · exact measurable_const
 
+/-- Far parabolic shell with the six-scale separation used in heat-kernel difference estimates. -/
 def heatPotentialFarShellSet (z : ParabolicPoint) (r : ℝ) (j : ℕ) :
     Set ParabolicPoint :=
   parabolicRieszShell r (j + 6 : ℤ) z
@@ -397,7 +398,8 @@ private lemma heatPotential_spatial_time_deriv {x : Vec3} {t : ℝ} (ht : 0 < t)
   rw [heatKernelTimeGradientDerivative, ite_eq_left ht]
   exact hcs.deriv
 
-private lemma heatKernelSpaceDerivative_hasDerivWithinAt_zero_right {x : Vec3} (hx : 0 < vec3EuclideanNorm x)
+private lemma heatKernelSpaceDerivative_hasDerivWithinAt_zero_right {x : Vec3} (hx : 0 <
+  vec3EuclideanNorm x)
     (i : Fin 3) :
     HasDerivWithinAt (fun t : ℝ => heatKernelSpaceDerivative x t i)
       0 (Ici 0) 0 := by
@@ -514,7 +516,7 @@ theorem heatPotential_time_kernel_difference_abs_le
     · have hkernel := heatKernelTimeDerivative_le_rho_inv_five
         (x := p'.1 - v.1) (t := s - v.2) hts
       exact hkernel.trans (by gcongr; exact hsep s (Ico_subset_Icc_self hs))
-    · simp [heatKernelTimeDerivative, hts]
+    · simp only [heatKernelTimeDerivative, hts, ↓reduceIte, abs_zero]
       positivity
   have hmean := norm_image_sub_le_of_norm_deriv_le_segment' hderiv hbound
     p'.2 (right_mem_Icc.2 hp)
@@ -551,8 +553,9 @@ theorem heatPotential_far_shell_spatial_kernel_difference_abs_le
     · exact False.elim ((not_le_of_gt ht) hzero)
     · exact hsep
   · have hzero : p.2 - v.2 ≤ 0 := le_of_not_gt ht
-    simp [heatPotentialKernel, pointSub,
-      heatKernelPlus_eq_zero_of_nonpos hzero]
+    simp only [heatPotentialKernel, pointSub, heatKernelPlus_eq_zero_of_nonpos hzero, sub_self,
+      abs_zero,
+    ge_iff_le]
     have hRj : 0 < (2 : ℝ) ^ ((j : ℝ) + 4) * r := by positivity
     exact mul_nonneg
       (div_nonneg (by norm_num) (pow_nonneg hRj.le _))
@@ -578,7 +581,9 @@ theorem heatPotential_far_shell_spatial_kernel_spatial_difference_abs_le
     · exact hsep
   · have hzero : p.2 - v.2 ≤ 0 := le_of_not_gt ht
     have hnot : ¬ v.2 < p.2 := by linarith only [hzero]
-    simp [heatPotentialSpatialKernel, heatKernelSpaceDerivative, hnot]
+    simp only [heatPotentialSpatialKernel, heatKernelSpaceDerivative, sub_pos, hnot, ↓reduceIte,
+      sub_self,
+    abs_zero, ge_iff_le]
     have hRj : 0 < (2 : ℝ) ^ ((j : ℝ) + 4) * r := by positivity
     exact mul_nonneg
       (div_nonneg (by norm_num) (pow_nonneg hRj.le 5))
@@ -676,7 +681,7 @@ theorem heatPotential_spatial_time_kernel_difference_abs_le
     · exact (heatPotentialSpatialTimeKernel_abs_le (i := i)
         (w := (p'.1, s)) (v := v) hR (hsep s
           (Ico_subset_Icc_self hs))).trans (by gcongr)
-    · simp [heatKernelTimeGradientDerivative, hts]
+    · simp only [heatKernelTimeGradientDerivative, hts, ↓reduceIte, abs_zero]
       positivity
   have hmean := norm_image_sub_le_of_norm_deriv_le_segment' hderiv hbound
     p'.2 (right_mem_Icc.2 hp)

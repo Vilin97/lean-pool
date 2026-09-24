@@ -71,16 +71,16 @@ theorem originASlot_correction_slice_eq
 satisfy the affine clipped-cell estimate above the matching threshold. -/
 theorem originASlot_literal_riesz_sum_clipped_le_slot
     (q τ C_CZ ε : ℝ) (KU KD Cbig : ℝ≥0∞)
-    (hq : 5/2 < q) (hτ : 25/3 ≤ τ) (hτhi : τ ≤ 25)
-    (hcoef : pressureRieszMorreyConstant (25/9) * Cbig ≤ ENNReal.ofReal (|C_CZ| + 1))
+    (hq : 5 / 2 < q) (hτ : 25 / 3 ≤ τ) (hτhi : τ ≤ 25)
+    (hcoef : pressureRieszMorreyConstant (25 / 9) * Cbig ≤ ENNReal.ofReal (|C_CZ| + 1))
     (i : Fin 3) {F : Fin 3 → ParabolicPoint → ℝ}
     (hF : ∀ j, AEMeasurable (F j) volume)
     (hFs : ∀ j, ∀ᵐ s ∂volume, MemLp (fun y => F j (y, s))
-      (ENNReal.ofReal (6/5 : ℝ)) volume)
+      (ENNReal.ofReal (6 / 5 : ℝ)) volume)
     {K : Set Vec3} (hK : IsCompact K)
     (hsupport : ∀ j y s, y ∉ K → F j (y, s) = 0)
-    (hN : ∀ j, morreyNorm (6/5 : ℝ) (min ((1/τ+8/25)⁻¹) q) (F j) ≤
-      Cbig * (3*KU*KD + forceSourceMorreyBound q ε))
+    (hN : ∀ j, morreyNorm (6 / 5 : ℝ) (min ((1 / τ + 8 / 25)⁻¹) q) (F j) ≤
+      Cbig * (3 * KU * KD + forceSourceMorreyBound q ε))
     (B : Set Vec3) (J : Set ℝ) (z : ParabolicPoint) {r : ℝ} (hr : 0 < r) :
     (∫⁻ s in Ioc (z.2-r^2) z.2 ∩ J,
       eLpNorm (fun y => ∑ j, rieszSecondGradientExtensionOperator (rieszSecondL2Input j i)
@@ -160,14 +160,14 @@ the clipped-cell time mass of the actual correction Riesz fields satisfies the
 affine A-slot estimate. -/
 theorem originASlot_correction_mass_of_morrey_bound
     (q τ C_CZ R₀ R₁ ε : ℝ) (KU KD Cbig : ℝ≥0∞)
-    (hq : 5/2 < q) (hτ : 25/3 ≤ τ) (hτhi : τ ≤ 25)
-    (hcoef : pressureRieszMorreyConstant (25/9) * Cbig ≤ ENNReal.ofReal (|C_CZ| + 1))
+    (hq : 5 / 2 < q) (hτ : 25 / 3 ≤ τ) (hτhi : τ ≤ 25)
+    (hcoef : pressureRieszMorreyConstant (25 / 9) * Cbig ≤ ENNReal.ofReal (|C_CZ| + 1))
     (hR₁ : 0 < R₁) (hgap : R₁ < R₀)
     {u : ParabolicPoint → Vec3} {Du : ParabolicPoint → Fin 3 → Vec3}
     {f : ParabolicPoint → Vec3}
     (z : ParabolicPoint) (hz : z ∈ closure (parabolicCylinder (0 : Vec3) 0 R₁))
-    (i : Fin 3) (r : ℝ) (hr : 0 < r) (hcell : r ≤ (R₀-R₁)/4)
-    (hρ : 0 < (R₀-R₁)/2)
+    (i : Fin 3) (r : ℝ) (hr : 0 < r) (hcell : r ≤ (R₀ - R₁) / 4)
+    (hρ : 0 < (R₀ - R₁) / 2)
     (G : Fin 3 → ParabolicPoint → ℝ)
     (hG : ∀ j : Fin 3, G j =
       (vec3Ball (0 : Vec3) R₀ ×ˢ Ioc (z.2 - ((R₀-R₁)/2) ^ 2) z.2).indicator

@@ -227,7 +227,7 @@ theorem exists_originClause_pressure_gradient_field
         intro t
         refine setIntegral_congr_fun (vec3Ball_measurable _ _) ?_
         intro x hx
-        show Dp (x, t) i * ψ (x, t) = D i (x, t) * ψ (x, t)
+        change Dp (x, t) i * ψ (x, t) = D i (x, t) * ψ (x, t)
         rw [hDpval (x, t) hx i]
       simp only [hinner2]
       exact hDpair i n ψ hψ.1 hψ.2.1 hsuppn

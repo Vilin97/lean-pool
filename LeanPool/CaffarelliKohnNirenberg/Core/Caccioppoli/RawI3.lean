@@ -31,15 +31,15 @@ theorem caccioppoli_heat_cutoff_gradient_sum_bound
     (hr : 0 < r) (_ : r ≤ ρ / 2) {z : ParabolicPoint}
     (hz : z ∈ parabolicCylinder x₀ t₀ ρ) :
     ∑ i, |spatialPartial (fun w : ParabolicPoint =>
-      backwardHeat_cutoff
-        (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) i z| ≤
+      backwardHeatCutoff
+        (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) i z| ≤
       3 * ((cutoffGradientConstant / ρ) * (1000 / r) +
         300000 * r ^ 2 / r ^ 4) := by
   have htime : z.2 - t₀ < r ^ 2 := by
     have hupper := (mem_parabolicCylinder.mp hz).2.2
     linarith only [hupper, sq_pos_of_pos hr]
   have hη : ContDiff ℝ (⊤ : ℕ∞)
-      (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) :=
+      (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) :=
     caccioppoli_heat_cutoff_smooth x₀ t₀ ρ ε hρ hε
   have hz' : (z.1 - x₀, z.2 - t₀) ∈ parabolicCylinder 0 0 ρ := by
     rw [mem_parabolicCylinder]
@@ -89,15 +89,15 @@ theorem caccioppoli_heat_cutoff_gradient_sum_bound
         field_simp [hr.ne']
   calc
     ∑ i, |spatialPartial (fun w : ParabolicPoint =>
-        backwardHeat_cutoff
-          (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) i z| ≤
+        backwardHeatCutoff
+          (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) i z| ≤
       ∑ i, ((cutoffGradientConstant / ρ) * (1000 / r) +
         |r ^ 2 * heatKernelSpaceDerivative (z.1 - x₀)
           (r ^ 2 - (z.2 - t₀)) i|) := by
       apply Finset.sum_le_sum
       intro i hi
       have hformula := caccioppoli_cutoff_heat_spatialPartial
-        (η := caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε)
+        (η := caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε)
         (x₀ := x₀) (t₀ := t₀) (r := r) (z := z) hη htime i
       have hηi := caccioppoli_heat_cutoff_spatial_partial_bound
         x₀ t₀ ρ ε hρ hε z i
@@ -106,21 +106,21 @@ theorem caccioppoli_heat_cutoff_gradient_sum_bound
       rw [hformula]
       calc
         |spatialPartial (fun w : ParabolicPoint =>
-            caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε w) i z *
+            caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε w) i z *
               backwardHeatTestFunction r (z.1 - x₀) (z.2 - t₀) +
-            caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε z *
+            caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε z *
               (r ^ 2 * heatKernelSpaceDerivative (z.1 - x₀)
                 (r ^ 2 - (z.2 - t₀)) i)| ≤
           |spatialPartial (fun w : ParabolicPoint =>
-            caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε w) i z *
+            caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε w) i z *
               backwardHeatTestFunction r (z.1 - x₀) (z.2 - t₀)| +
-            |caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε z *
+            |caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε z *
               (r ^ 2 * heatKernelSpaceDerivative (z.1 - x₀)
                 (r ^ 2 - (z.2 - t₀)) i)| := abs_add_le _ _
         _ = |spatialPartial (fun w : ParabolicPoint =>
-            caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε w) i z| *
+            caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε w) i z| *
               backwardHeatTestFunction r (z.1 - x₀) (z.2 - t₀) +
-            caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε z *
+            caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε z *
               |r ^ 2 * heatKernelSpaceDerivative (z.1 - x₀)
                 (r ^ 2 - (z.2 - t₀)) i| := by
           rw [abs_mul, abs_mul, abs_of_nonneg hψ0, abs_of_nonneg hη0]

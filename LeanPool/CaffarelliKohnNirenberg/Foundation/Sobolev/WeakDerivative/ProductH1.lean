@@ -186,6 +186,469 @@ private theorem tendsto_eLpNorm_mul_test_zero
   rw [hfun]
   simpa using hprod
 
+private lemma gradient_mul_hε_tendsto_1 :
+    ∀ (ε₀ : ℝ),
+      let ε : ℕ → ℝ := fun (n : ℕ) => ε₀ / ((↑n : ℝ) + (2 : ℝ));
+      Tendsto ε atTop (𝓝 (0 : ℝ))
+    := by
+  intro ε₀ ε
+  have hden : Tendsto (fun n : ℕ => (n : ℝ) + 2) atTop atTop := by
+    simpa only [add_comm] using
+      (tendsto_atTop_add_const_left atTop (2 : ℝ)
+        (tendsto_natCast_atTop_atTop :
+          Tendsto (fun n : ℕ => (n : ℝ)) atTop atTop))
+  have hinv : Tendsto (fun n : ℕ => ((n : ℝ) + 2)⁻¹)
+      atTop (nhds 0) := tendsto_inv_atTop_zero.comp hden
+  have hmul :=
+    (tendsto_const_nhds : Tendsto (fun _ : ℕ => ε₀) atTop (nhds ε₀)).mul hinv
+  simpa only [ε, div_eq_mul_inv, mul_zero] using hmul
+
+private lemma gradient_mul_hUmem_2 :
+    ∀ {u : Vec (3 : ℕ) → ℝ},
+      MemLp (m0 := MeasureSpace.toMeasurableSpace) u (2 : ℝ≥0∞) volume →
+        ∀ (ε₀ : ℝ),
+          let ε : ℕ → ℝ := fun (n : ℕ) => ε₀ / ((↑n : ℝ) + (2 : ℝ));
+          ∀ (hε_pos : ∀ (n : ℕ), (0 : ℝ) < ε n),
+            let Uₙ : ℕ → Vec (3 : ℕ) → ℝ := fun (n : ℕ) => mollify u (ε n) (hε_pos n);
+            ∀ (n : ℕ), MemLp (m0 := MeasureSpace.toMeasurableSpace) (Uₙ n) (2 : ℝ≥0∞) volume
+    := by
+  intro u hu ε₀ ε hε_pos Uₙ n
+  apply (memLp_iff).2
+  have hbound := young_convolution_nonneg_integral_one_of_aemeasurable
+    (p := (2 : ℝ≥0∞)) (by norm_num) (by norm_num)
+    (mollifier_nonneg (hε_pos n))
+    (integrable_of_integral_eq_one (mollifier_integral_one (hε_pos n)))
+    (mollifier_integral_one (hε_pos n))
+    (mollifier_contDiff (hε_pos n) (n := 0)).continuous.measurable
+      hu.aestronglyMeasurable.aemeasurable
+  have hbound' : eLpNorm (Uₙ n) 2 volume ≤ eLpNorm u 2 volume := by
+    simpa only [Uₙ, mollify] using hbound
+  exact hbound'.trans_lt hu.eLpNorm_lt_top
+
+private lemma gradient_mul_hVmem_3 :
+    ∀ {v : Vec (3 : ℕ) → ℝ},
+      MemLp (m0 := MeasureSpace.toMeasurableSpace) v (2 : ℝ≥0∞) volume →
+        ∀ (ε₀ : ℝ),
+          let ε : ℕ → ℝ := fun (n : ℕ) => ε₀ / ((↑n : ℝ) + (2 : ℝ));
+          ∀ (hε_pos : ∀ (n : ℕ), (0 : ℝ) < ε n),
+            let Vₙ : ℕ → Vec (3 : ℕ) → ℝ := fun (n : ℕ) => mollify v (ε n) (hε_pos n);
+            ∀ (n : ℕ), MemLp (m0 := MeasureSpace.toMeasurableSpace) (Vₙ n) (2 : ℝ≥0∞) volume
+    := by
+  intro v hv ε₀ ε hε_pos Vₙ n
+  apply (memLp_iff).2
+  have hbound := young_convolution_nonneg_integral_one_of_aemeasurable
+    (p := (2 : ℝ≥0∞)) (by norm_num) (by norm_num)
+    (mollifier_nonneg (hε_pos n))
+    (integrable_of_integral_eq_one (mollifier_integral_one (hε_pos n)))
+    (mollifier_integral_one (hε_pos n))
+    (mollifier_contDiff (hε_pos n) (n := 0)).continuous.measurable
+      hv.aestronglyMeasurable.aemeasurable
+  have hbound' : eLpNorm (Vₙ n) 2 volume ≤ eLpNorm v 2 volume := by
+    simpa only [Vₙ, mollify] using hbound
+  exact hbound'.trans_lt hv.eLpNorm_lt_top
+
+private lemma gradient_mul_hDUmem_4 :
+    ∀ {Du : Vec (3 : ℕ) → Vec (3 : ℕ)},
+      (∀ (i : Fin (3 : ℕ)),
+          MemLp (ε := ℝ) (m0 := MeasureSpace.toMeasurableSpace) (fun (x : Vec (3 : ℕ)) => Du x i)
+            (2 : ℝ≥0∞) volume) →
+        ∀ (i : Fin (3 : ℕ)) (ε₀ : ℝ),
+          let ε : ℕ → ℝ := fun (n : ℕ) => ε₀ / ((↑n : ℝ) + (2 : ℝ));
+          ∀ (hε_pos : ∀ (n : ℕ), (0 : ℝ) < ε n),
+            let DUₙ : ℕ → Vec (3 : ℕ) → ℝ := fun (n : ℕ) =>
+              mollify (fun (x : Vec (3 : ℕ)) => Du x i) (ε n) (hε_pos n);
+            ∀ (n : ℕ), MemLp (m0 := MeasureSpace.toMeasurableSpace) (DUₙ n) (2 : ℝ≥0∞) volume
+    := by
+  intro Du hDu i ε₀ ε hε_pos DUₙ n
+  apply (memLp_iff).2
+  have hbound := young_convolution_nonneg_integral_one_of_aemeasurable
+    (p := (2 : ℝ≥0∞)) (by norm_num) (by norm_num)
+    (mollifier_nonneg (hε_pos n))
+    (integrable_of_integral_eq_one (mollifier_integral_one (hε_pos n)))
+    (mollifier_integral_one (hε_pos n))
+    (mollifier_contDiff (hε_pos n) (n := 0)).continuous.measurable
+      (hDu i).aestronglyMeasurable.aemeasurable
+  have hbound' : eLpNorm (DUₙ n) 2 volume ≤ eLpNorm (fun x => Du x i) 2 volume := by
+    simpa only [DUₙ, mollify] using hbound
+  exact hbound'.trans_lt (hDu i).eLpNorm_lt_top
+
+private lemma gradient_mul_hDVmem_5 :
+    ∀ {Dv : Vec (3 : ℕ) → Vec (3 : ℕ)},
+      (∀ (i : Fin (3 : ℕ)),
+          MemLp (ε := ℝ) (m0 := MeasureSpace.toMeasurableSpace) (fun (x : Vec (3 : ℕ)) => Dv x i)
+            (2 : ℝ≥0∞) volume) →
+        ∀ (i : Fin (3 : ℕ)) (ε₀ : ℝ),
+          let ε : ℕ → ℝ := fun (n : ℕ) => ε₀ / ((↑n : ℝ) + (2 : ℝ));
+          ∀ (hε_pos : ∀ (n : ℕ), (0 : ℝ) < ε n),
+            let DVₙ : ℕ → Vec (3 : ℕ) → ℝ := fun (n : ℕ) =>
+              mollify (fun (x : Vec (3 : ℕ)) => Dv x i) (ε n) (hε_pos n);
+            ∀ (n : ℕ), MemLp (m0 := MeasureSpace.toMeasurableSpace) (DVₙ n) (2 : ℝ≥0∞) volume
+    := by
+  intro Dv hDv i ε₀ ε hε_pos DVₙ n
+  apply (memLp_iff).2
+  have hbound := young_convolution_nonneg_integral_one_of_aemeasurable
+    (p := (2 : ℝ≥0∞)) (by norm_num) (by norm_num)
+    (mollifier_nonneg (hε_pos n))
+    (integrable_of_integral_eq_one (mollifier_integral_one (hε_pos n)))
+    (mollifier_integral_one (hε_pos n))
+    (mollifier_contDiff (hε_pos n) (n := 0)).continuous.measurable
+      (hDv i).aestronglyMeasurable.aemeasurable
+  have hbound' : eLpNorm (DVₙ n) 2 volume ≤ eLpNorm (fun x => Dv x i) 2 volume := by
+    simpa only [DVₙ, mollify] using hbound
+  exact hbound'.trans_lt (hDv i).eLpNorm_lt_top
+
+private lemma gradient_mul_hidentity_6 :
+    ∀ {U : Set (Vec (3 : ℕ))},
+      IsOpen U →
+        ∀ {u v : Vec (3 : ℕ) → ℝ} {Du Dv : Vec (3 : ℕ) → Vec (3 : ℕ)},
+          HasWeakGradientOn U u Du →
+            HasWeakGradientOn U v Dv →
+              ∀ (i : Fin (3 : ℕ)) (φ : Vec (3 : ℕ) → ℝ),
+                ContDiff ℝ (⊤ : ℕ∞) φ →
+                  HasCompactSupport φ →
+                    tsupport φ ⊆ U →
+                      let K : Set (Vec (3 : ℕ)) := tsupport φ;
+                      IsCompact K →
+                        ∀ (ε₀ : ℝ),
+                          Metric.cthickening ε₀ K ⊆ U →
+                            let ε : ℕ → ℝ := fun (n : ℕ) => ε₀ / ((↑n : ℝ) + (2 : ℝ));
+                            ∀ (hε_pos : ∀ (n : ℕ), (0 : ℝ) < ε n),
+                              (∀ (n : ℕ), ε n ≤ ε₀) →
+                                LocallyIntegrable u volume →
+                                  LocallyIntegrable v volume →
+                                    (∀ (j : Fin (3 : ℕ)),
+                                        LocallyIntegrable (ε := ℝ) (fun (x : Vec (3 : ℕ)) => Du x j)
+                                          volume) →
+                                      (∀ (j : Fin (3 : ℕ)),
+                                          LocallyIntegrable (ε := ℝ)
+                                            (fun (x : Vec (3 : ℕ)) => Dv x j) volume) →
+                                        let Uₙ : ℕ → Vec (3 : ℕ) → ℝ := fun (n : ℕ) =>
+                                          mollify u (ε n) (hε_pos n);
+                                        let Vₙ : ℕ → Vec (3 : ℕ) → ℝ := fun (n : ℕ) =>
+                                          mollify v (ε n) (hε_pos n);
+                                        let DUₙ : ℕ → Vec (3 : ℕ) → ℝ := fun (n : ℕ) =>
+                                          mollify (fun (x : Vec (3 : ℕ)) => Du x i) (ε n)
+                                            (hε_pos n);
+                                        let DVₙ : ℕ → Vec (3 : ℕ) → ℝ := fun (n : ℕ) =>
+                                          mollify (fun (x : Vec (3 : ℕ)) => Dv x i) (ε n)
+                                            (hε_pos n);
+                                        ∀ (n : ℕ),
+                                          Eq (α := ℝ)
+                                            (@integral _ _ _ _ MeasureSpace.toMeasurableSpace
+                                              (Measure.restrict volume U) fun (x : Vec (3 : ℕ)) =>
+                                              HMul.hMul (β := ℝ) (Uₙ n x * Vₙ n x)
+                                                ((fderiv ℝ φ x : Vec (3 : ℕ) → ℝ) (basisVec i) : ℝ))
+                                            (-@integral _ _ _ _ MeasureSpace.toMeasurableSpace
+                                                (Measure.restrict volume U) fun (x : Vec (3 : ℕ)) =>
+                                                (DUₙ n x * Vₙ n x + Uₙ n x * DVₙ n x) * φ x)
+    := by
+  intro U hU u v Du Dv hwu hwv i φ hφ hφCompact hφU K hK ε₀ hthick ε hε_pos hε_le huLoc hvLoc
+    hDuLoc hDvLoc Uₙ
+    Vₙ DUₙ DVₙ n
+  have hUdiff : ContDiff ℝ (⊤ : ℕ∞) (Uₙ n) :=
+    mollify_contDiff (hε_pos n) huLoc
+  have hVdiff : ContDiff ℝ (⊤ : ℕ∞) (Vₙ n) :=
+    mollify_contDiff (hε_pos n) hvLoc
+  have hprodDiff : ContDiff ℝ 1 (fun x => Uₙ n x * Vₙ n x) := by
+    exact (hUdiff.mul hVdiff).of_le (by simp)
+  have hprodWeak : HasWeakGradientOn U (fun x => Uₙ n x * Vₙ n x)
+      (fun x j => (fderiv ℝ (fun y => Uₙ n y * Vₙ n y) x)
+        (basisVec j)) := HasWeakGradientOn.of_contDiff hprodDiff
+  have hraw := hprodWeak i φ hφ hφCompact hφU
+  have heps : ∀ x ∈ K, Metric.closedBall x (ε n) ⊆ U := by
+    intro x hx
+    exact (Metric.closedBall_subset_cthickening hx (ε n)).trans
+      ((Metric.cthickening_mono (hε_le n) K).trans hthick)
+  have hderivU : ∀ x ∈ K,
+      (fderiv ℝ (Uₙ n) x) (basisVec i) = DUₙ n x := by
+    intro x hx
+    simpa only [Uₙ, DUₙ] using
+      fderiv_mollify_eq_mollify_on_compact hU hK huLoc (hDuLoc i) (hwu i)
+        (hε_pos n)
+        heps hx
+  have hderivV : ∀ x ∈ K,
+      (fderiv ℝ (Vₙ n) x) (basisVec i) = DVₙ n x := by
+    intro x hx
+    simpa only [Vₙ, DVₙ] using
+      fderiv_mollify_eq_mollify_on_compact hU hK hvLoc (hDvLoc i) (hwv i)
+        (hε_pos n)
+        heps hx
+  have hφzero : ∀ x, x ∉ K → φ x = 0 := by
+    intro x hx
+    exact image_eq_zero_of_notMem_tsupport hx
+  have hdφzero : ∀ x, x ∉ K →
+      (fderiv ℝ φ x) (basisVec i) = 0 := by
+    intro x hx
+    rw [fderiv_of_notMem_tsupport (𝕜 := ℝ) hx]
+    simp
+  have hmul : ∀ x,
+      (fderiv ℝ (fun y => Uₙ n y * Vₙ n y) x) (basisVec i) =
+        (fderiv ℝ (Uₙ n) x) (basisVec i) * Vₙ n x +
+          Uₙ n x * (fderiv ℝ (Vₙ n) x) (basisVec i) := by
+    intro x
+    have hu' := hUdiff.differentiable (by simp) x
+    have hv' := hVdiff.differentiable (by simp) x
+    have h := congrArg (fun L : Vec 3 →L[ℝ] ℝ => L (basisVec i))
+      (fderiv_fun_mul hu' hv')
+    calc
+      (fderiv ℝ (fun y => Uₙ n y * Vₙ n y) x) (basisVec i) =
+          Uₙ n x * (fderiv ℝ (Vₙ n) x) (basisVec i) +
+            Vₙ n x * (fderiv ℝ (Uₙ n) x) (basisVec i) := by
+        simpa only [add_apply, smul_apply, smul_eq_mul] using h
+      _ = (fderiv ℝ (Uₙ n) x) (basisVec i) * Vₙ n x +
+            Uₙ n x * (fderiv ℝ (Vₙ n) x) (basisVec i) := by ring
+  calc
+    (∫ x in U, Uₙ n x * Vₙ n x *
+        (fderiv ℝ φ x) (basisVec i)) =
+        -∫ x in U, (fderiv ℝ (fun y => Uₙ n y * Vₙ n y) x)
+          (basisVec i) * φ x := hraw
+    _ = -∫ x in U, (DUₙ n x * Vₙ n x + Uₙ n x * DVₙ n x) * φ x := by
+      congr 1
+      apply setIntegral_congr_fun hU.measurableSet
+      intro x hx
+      by_cases hxK : x ∈ K
+      · change (fderiv ℝ (fun y => Uₙ n y * Vₙ n y) x) (basisVec i) * φ x =
+          (DUₙ n x * Vₙ n x + Uₙ n x * DVₙ n x) * φ x
+        rw [hmul x, hderivU x hxK, hderivV x hxK]
+      · change (fderiv ℝ (fun y => Uₙ n y * Vₙ n y) x) (basisVec i) * φ x =
+          (DUₙ n x * Vₙ n x + Uₙ n x * DVₙ n x) * φ x
+        rw [hφzero x hxK, mul_zero]
+        simp
+
+private lemma gradient_mul_hrightLimit_7 :
+    ∀ {U : Set (Vec (3 : ℕ))} {u v : Vec (3 : ℕ) → ℝ} {Du Dv : Vec (3 : ℕ) → Vec (3 : ℕ)}
+      (i : Fin (3 : ℕ)) (φ : Vec (3 : ℕ) → ℝ) (ε₀ : ℝ),
+      let ε : ℕ → ℝ := fun (n : ℕ) => ε₀ / ((↑n : ℝ) + (2 : ℝ));
+      ∀ (hε_pos : ∀ (n : ℕ), (0 : ℝ) < ε n),
+        let Uₙ : ℕ → Vec (3 : ℕ) → ℝ := fun (n : ℕ) => mollify u (ε n) (hε_pos n);
+        let Vₙ : ℕ → Vec (3 : ℕ) → ℝ := fun (n : ℕ) => mollify v (ε n) (hε_pos n);
+        let DUₙ : ℕ → Vec (3 : ℕ) → ℝ := fun (n : ℕ) =>
+          mollify (fun (x : Vec (3 : ℕ)) => Du x i) (ε n) (hε_pos n);
+        let DVₙ : ℕ → Vec (3 : ℕ) → ℝ := fun (n : ℕ) =>
+          mollify (fun (x : Vec (3 : ℕ)) => Dv x i) (ε n) (hε_pos n);
+        Tendsto
+            (fun (n : ℕ) =>
+              @eLpNorm _ ℝ _ _ MeasureSpace.toMeasurableSpace
+                (fun (x : Vec (3 : ℕ)) => DUₙ n x * Vₙ n x * φ x - Du x i * v x * φ x) (1 : ℝ≥0∞)
+                volume)
+            atTop (𝓝 (0 : ℝ≥0∞)) →
+          Tendsto
+              (fun (n : ℕ) =>
+                @eLpNorm _ ℝ _ _ MeasureSpace.toMeasurableSpace
+                  (fun (x : Vec (3 : ℕ)) => Uₙ n x * DVₙ n x * φ x - u x * Dv x i * φ x) (1 : ℝ≥0∞)
+                  volume)
+              atTop (𝓝 (0 : ℝ≥0∞)) →
+            (∀ (n : ℕ),
+                @Integrable ℝ _ _ _ MeasureSpace.toMeasurableSpace
+                  (fun (x : Vec (3 : ℕ)) => DUₙ n x * Vₙ n x * φ x) volume) →
+              (∀ (n : ℕ),
+                  @Integrable ℝ _ _ _ MeasureSpace.toMeasurableSpace
+                    (fun (x : Vec (3 : ℕ)) => Uₙ n x * DVₙ n x * φ x) volume) →
+                @Integrable ℝ _ _ _ MeasureSpace.toMeasurableSpace
+                    (fun (x : Vec (3 : ℕ)) => Du x i * v x * φ x) volume →
+                  @Integrable ℝ _ _ _ MeasureSpace.toMeasurableSpace
+                      (fun (x : Vec (3 : ℕ)) => u x * Dv x i * φ x) volume →
+                    Tendsto (β := ℝ)
+                      (fun (n : ℕ) =>
+                        -@integral _ _ _ _ MeasureSpace.toMeasurableSpace
+                            (Measure.restrict volume U) fun (x : Vec (3 : ℕ)) =>
+                            (DUₙ n x * Vₙ n x + Uₙ n x * DVₙ n x) * φ x)
+                      atTop
+                      (𝓝
+                        (-@integral _ _ _ _ MeasureSpace.toMeasurableSpace
+                            (Measure.restrict volume U) fun (x : Vec (3 : ℕ)) =>
+                            (Du x i * v x + u x * Dv x i) * φ x))
+    := by
+  intro U u v Du Dv i φ ε₀ ε hε_pos Uₙ Vₙ DUₙ DVₙ hrightDUzero hrightUDVzero hrightDUInt
+    hrightUDVInt hrightDUTargetInt hrightUDVTargetInt
+  have hsumLimit : Tendsto
+      (fun n => ∫ x in U, (DUₙ n x * Vₙ n x + Uₙ n x * DVₙ n x) * φ x)
+      atTop (nhds (∫ x in U, (Du x i * v x + u x * Dv x i) * φ x)) := by
+    have hsumInt : ∀ n, Integrable
+        (fun x => (DUₙ n x * Vₙ n x + Uₙ n x * DVₙ n x) * φ x) volume := by
+      intro n
+      have hA := (hrightDUInt n).mul_const (1 : ℝ)
+      have hB := hrightUDVInt n
+      have hsum0 := hA.add hB
+      have hsum : Integrable
+          (fun x => DUₙ n x * Vₙ n x * φ x + Uₙ n x * DVₙ n x * φ x) volume := by
+        convert hsum0 using 1
+        funext x
+        change DUₙ n x * Vₙ n x * φ x + Uₙ n x * DVₙ n x * φ x =
+          DUₙ n x * Vₙ n x * φ x * 1 + Uₙ n x * DVₙ n x * φ x
+        simp
+      convert hsum using 1
+      funext x
+      ring
+    have hsumTarget : Integrable
+        (fun x => (Du x i * v x + u x * Dv x i) * φ x) volume := by
+      have hsum := hrightDUTargetInt.add hrightUDVTargetInt
+      convert hsum using 1
+      funext x
+      change (Du x i * v x + u x * Dv x i) * φ x =
+        Du x i * v x * φ x + u x * Dv x i * φ x
+      ring
+    have hsumzero : Tendsto
+        (fun n => eLpNorm
+          (fun x => (DUₙ n x * Vₙ n x + Uₙ n x * DVₙ n x) * φ x -
+            (Du x i * v x + u x * Dv x i) * φ x) 1 volume)
+        atTop (nhds 0) := by
+      have hdecomp : ∀ n, (fun x =>
+          (DUₙ n x * Vₙ n x + Uₙ n x * DVₙ n x) * φ x -
+            (Du x i * v x + u x * Dv x i) * φ x) =
+          (fun x => DUₙ n x * Vₙ n x * φ x - Du x i * v x * φ x) +
+            (fun x => Uₙ n x * DVₙ n x * φ x - u x * Dv x i * φ x) := by
+        intro n
+        funext x
+        change (DUₙ n x * Vₙ n x + Uₙ n x * DVₙ n x) * φ x -
+          (Du x i * v x + u x * Dv x i) * φ x =
+          (DUₙ n x * Vₙ n x * φ x - Du x i * v x * φ x) +
+            (Uₙ n x * DVₙ n x * φ x - u x * Dv x i * φ x)
+        ring
+      have hsumBound : ∀ n, eLpNorm
+          (fun x => (DUₙ n x * Vₙ n x + Uₙ n x * DVₙ n x) * φ x -
+            (Du x i * v x + u x * Dv x i) * φ x) 1 volume ≤
+          eLpNorm (fun x => DUₙ n x * Vₙ n x * φ x - Du x i * v x * φ x) 1 volume +
+            eLpNorm (fun x => Uₙ n x * DVₙ n x * φ x - u x * Dv x i * φ x) 1 volume := by
+        intro n
+        rw [hdecomp n]
+        exact MeasureTheory.eLpNorm_add_le (p := (1 : ℝ≥0∞)) (by norm_num)
+      have hlim := hrightDUzero.add hrightUDVzero
+      have hlim' : Tendsto (fun n =>
+          eLpNorm (fun x => DUₙ n x * Vₙ n x * φ x - Du x i * v x * φ x) 1 volume +
+            eLpNorm (fun x => Uₙ n x * DVₙ n x * φ x - u x * Dv x i * φ x) 1 volume)
+          atTop (nhds 0) := by
+        simpa only [add_zero] using hlim
+      apply tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds hlim'
+        (Eventually.of_forall fun _ => zero_le)
+      filter_upwards [] with n
+      exact hsumBound n
+    exact MeasureTheory.tendsto_setIntegral_of_L1' (μ := volume)
+      (f := fun x => (Du x i * v x + u x * Dv x i) * φ x)
+      (F := fun n x => (DUₙ n x * Vₙ n x + Uₙ n x * DVₙ n x) * φ x)
+      (Eventually.of_forall fun n => hsumInt n) hsumzero U
+  exact hsumLimit.neg
+
+private lemma gradient_mul_hε_le_1 :
+    ∀ (ε₀ : ℝ),
+      (0 : ℝ) < ε₀ →
+        let ε : ℕ → ℝ := fun (n : ℕ) => ε₀ / ((↑n : ℝ) + (2 : ℝ));
+        ∀ (n : ℕ), ε n ≤ ε₀
+    := by
+  intro ε₀ hε₀ ε n
+  dsimp [ε]
+  have hn : (0 : ℝ) ≤ (n : ℝ) := by positivity
+  have hden : (1 : ℝ) ≤ (n : ℝ) + 2 := by linarith only [hn]
+  simpa only [div_one] using
+    (div_le_div_of_nonneg_left hε₀.le (by positivity) hden)
+
+private lemma gradient_mul_hleftInt_2 :
+    ∀ {u v : Vec (3 : ℕ) → ℝ} (i : Fin (3 : ℕ)) (φ : Vec (3 : ℕ) → ℝ) (ε₀ : ℝ),
+      let ε : ℕ → ℝ := fun (n : ℕ) => ε₀ / ((↑n : ℝ) + (2 : ℝ));
+      ∀ (hε_pos : ∀ (n : ℕ), (0 : ℝ) < ε n),
+        let Uₙ : ℕ → Vec (3 : ℕ) → ℝ := fun (n : ℕ) => mollify u (ε n) (hε_pos n);
+        let Vₙ : ℕ → Vec (3 : ℕ) → ℝ := fun (n : ℕ) => mollify v (ε n) (hε_pos n);
+        MemLp (ε := ℝ) (m0 := MeasureSpace.toMeasurableSpace)
+            (fun (x : Vec (3 : ℕ)) => (fderiv ℝ φ x : Vec (3 : ℕ) → ℝ) (basisVec i)) ∞ volume →
+          (∀ (n : ℕ),
+              @Integrable ℝ _ _ _ MeasureSpace.toMeasurableSpace
+                (fun (x : Vec (3 : ℕ)) => Uₙ n x * Vₙ n x) volume) →
+            ∀ (n : ℕ),
+              @Integrable ℝ _ _ _ MeasureSpace.toMeasurableSpace
+                (fun (x : Vec (3 : ℕ)) =>
+                  HMul.hMul (β := ℝ) (Uₙ n x * Vₙ n x)
+                    ((fderiv ℝ φ x : Vec (3 : ℕ) → ℝ) (basisVec i) : ℝ))
+                volume
+    := by
+  intro u v i φ ε₀ ε hε_pos Uₙ Vₙ hdφTop hUVint n
+  have h := (hUVint n).mul_of_top_right hdφTop
+  convert h using 1
+  funext x
+  change Uₙ n x * Vₙ n x * (fderiv ℝ φ x) (basisVec i) =
+    (fderiv ℝ φ x) (basisVec i) * (Uₙ n x * Vₙ n x)
+  ring
+
+private lemma gradient_mul_hleftTargetInt_3 :
+    ∀ {u v : Vec (3 : ℕ) → ℝ} (i : Fin (3 : ℕ)) (φ : Vec (3 : ℕ) → ℝ),
+      MemLp (ε := ℝ) (m0 := MeasureSpace.toMeasurableSpace)
+          (fun (x : Vec (3 : ℕ)) => (fderiv ℝ φ x : Vec (3 : ℕ) → ℝ) (basisVec i)) ∞ volume →
+        @Integrable ℝ _ _ _ MeasureSpace.toMeasurableSpace (fun (x : Vec (3 : ℕ)) => u x * v x)
+            volume →
+          @Integrable ℝ _ _ _ MeasureSpace.toMeasurableSpace
+            (fun (x : Vec (3 : ℕ)) =>
+              HMul.hMul (β := ℝ) (u x * v x) ((fderiv ℝ φ x : Vec (3 : ℕ) → ℝ) (basisVec i) : ℝ))
+            volume
+    := by
+  intro u v i φ hdφTop hUVtarget
+  have h := hUVtarget.mul_of_top_right hdφTop
+  convert h using 1
+  funext x
+  change u x * v x * (fderiv ℝ φ x) (basisVec i) =
+    (fderiv ℝ φ x) (basisVec i) * (u x * v x)
+  ring
+
+private lemma gradient_mul_hrightDUInt_4 :
+    ∀ {v : Vec (3 : ℕ) → ℝ} {Du : Vec (3 : ℕ) → Vec (3 : ℕ)} (i : Fin (3 : ℕ)) (φ : Vec (3 : ℕ) → ℝ)
+      (ε₀ : ℝ),
+      let ε : ℕ → ℝ := fun (n : ℕ) => ε₀ / ((↑n : ℝ) + (2 : ℝ));
+      ∀ (hε_pos : ∀ (n : ℕ), (0 : ℝ) < ε n),
+        let Vₙ : ℕ → Vec (3 : ℕ) → ℝ := fun (n : ℕ) => mollify v (ε n) (hε_pos n);
+        let DUₙ : ℕ → Vec (3 : ℕ) → ℝ := fun (n : ℕ) =>
+          mollify (fun (x : Vec (3 : ℕ)) => Du x i) (ε n) (hε_pos n);
+        MemLp (m0 := MeasureSpace.toMeasurableSpace) φ ∞ volume →
+          (∀ (n : ℕ),
+              @Integrable ℝ _ _ _ MeasureSpace.toMeasurableSpace
+                (fun (x : Vec (3 : ℕ)) => DUₙ n x * Vₙ n x) volume) →
+            ∀ (n : ℕ),
+              @Integrable ℝ _ _ _ MeasureSpace.toMeasurableSpace
+                (fun (x : Vec (3 : ℕ)) => DUₙ n x * Vₙ n x * φ x) volume
+    := by
+  intro v Du i φ ε₀ ε hε_pos Vₙ DUₙ hφTop hDUVint n
+  have h := (hDUVint n).mul_of_top_right hφTop
+  convert h using 1
+  funext x
+  change DUₙ n x * Vₙ n x * φ x = φ x * (DUₙ n x * Vₙ n x)
+  ring
+
+private lemma gradient_mul_hrightUDVInt_5 :
+    ∀ {u : Vec (3 : ℕ) → ℝ} {Dv : Vec (3 : ℕ) → Vec (3 : ℕ)} (i : Fin (3 : ℕ)) (φ : Vec (3 : ℕ) → ℝ)
+      (ε₀ : ℝ),
+      let ε : ℕ → ℝ := fun (n : ℕ) => ε₀ / ((↑n : ℝ) + (2 : ℝ));
+      ∀ (hε_pos : ∀ (n : ℕ), (0 : ℝ) < ε n),
+        let Uₙ : ℕ → Vec (3 : ℕ) → ℝ := fun (n : ℕ) => mollify u (ε n) (hε_pos n);
+        let DVₙ : ℕ → Vec (3 : ℕ) → ℝ := fun (n : ℕ) =>
+          mollify (fun (x : Vec (3 : ℕ)) => Dv x i) (ε n) (hε_pos n);
+        MemLp (m0 := MeasureSpace.toMeasurableSpace) φ ∞ volume →
+          (∀ (n : ℕ),
+              @Integrable ℝ _ _ _ MeasureSpace.toMeasurableSpace
+                (fun (x : Vec (3 : ℕ)) => Uₙ n x * DVₙ n x) volume) →
+            ∀ (n : ℕ),
+              @Integrable ℝ _ _ _ MeasureSpace.toMeasurableSpace
+                (fun (x : Vec (3 : ℕ)) => Uₙ n x * DVₙ n x * φ x) volume
+    := by
+  intro u Dv i φ ε₀ ε hε_pos Uₙ DVₙ hφTop hUDVint n
+  have h := (hUDVint n).mul_of_top_right hφTop
+  convert h using 1
+  funext x
+  change Uₙ n x * DVₙ n x * φ x = φ x * (Uₙ n x * DVₙ n x)
+  ring
+
+private lemma gradient_mul_hrightDUTargetInt_6 :
+    ∀ {v : Vec (3 : ℕ) → ℝ} {Du : Vec (3 : ℕ) → Vec (3 : ℕ)} (i : Fin (3 : ℕ))
+      (φ : Vec (3 : ℕ) → ℝ),
+      MemLp (m0 := MeasureSpace.toMeasurableSpace) φ ∞ volume →
+        @Integrable ℝ _ _ _ MeasureSpace.toMeasurableSpace (fun (x : Vec (3 : ℕ)) => Du x i * v x)
+            volume →
+          @Integrable ℝ _ _ _ MeasureSpace.toMeasurableSpace
+            (fun (x : Vec (3 : ℕ)) => Du x i * v x * φ x) volume
+    := by
+  intro v Du i φ hφTop hDUVtarget
+  have h := hDUVtarget.mul_of_top_right hφTop
+  convert h using 1
+  funext x
+  change Du x i * v x * φ x = φ x * (Du x i * v x)
+  ring
+
 private theorem HasWeakGradientOn.mul_of_memLp_two_global
     {U : Set (Vec 3)} (hU : IsOpen U)
     {u v : Vec 3 → ℝ} {Du Dv : Vec 3 → Vec 3}
@@ -209,24 +672,8 @@ private theorem HasWeakGradientOn.mul_of_memLp_two_global
     intro n
     dsimp [ε]
     positivity
-  have hε_le : ∀ n, ε n ≤ ε₀ := by
-    intro n
-    dsimp [ε]
-    have hn : (0 : ℝ) ≤ (n : ℝ) := by positivity
-    have hden : (1 : ℝ) ≤ (n : ℝ) + 2 := by linarith only [hn]
-    simpa only [div_one] using
-      (div_le_div_of_nonneg_left hε₀.le (by positivity) hden)
-  have hε_tendsto : Tendsto ε atTop (nhds 0) := by
-    have hden : Tendsto (fun n : ℕ => (n : ℝ) + 2) atTop atTop := by
-      simpa only [add_comm] using
-        (tendsto_atTop_add_const_left atTop (2 : ℝ)
-          (tendsto_natCast_atTop_atTop :
-            Tendsto (fun n : ℕ => (n : ℝ)) atTop atTop))
-    have hinv : Tendsto (fun n : ℕ => ((n : ℝ) + 2)⁻¹)
-        atTop (nhds 0) := tendsto_inv_atTop_zero.comp hden
-    have hmul :=
-      (tendsto_const_nhds : Tendsto (fun _ : ℕ => ε₀) atTop (nhds ε₀)).mul hinv
-    simpa only [ε, div_eq_mul_inv, mul_zero] using hmul
+  have hε_le := @gradient_mul_hε_le_1 ε₀ hε₀
+  have hε_tendsto := @gradient_mul_hε_tendsto_1 ε₀
   have huLoc : LocallyIntegrable u volume := hu.locallyIntegrable (by norm_num)
   have hvLoc : LocallyIntegrable v volume := hv.locallyIntegrable (by norm_num)
   have hDuLoc : ∀ j : Fin 3, LocallyIntegrable (fun x => Du x j) volume := by
@@ -241,58 +688,10 @@ private theorem HasWeakGradientOn.mul_of_memLp_two_global
     mollify (fun x => Du x i) (ε n) (hε_pos n)
   let DVₙ : ℕ → Vec 3 → ℝ := fun n =>
     mollify (fun x => Dv x i) (ε n) (hε_pos n)
-  have hUmem : ∀ n, MemLp (Uₙ n) 2 volume := by
-    intro n
-    apply (memLp_iff).2
-    have hbound := young_convolution_nonneg_integral_one_of_aemeasurable
-      (p := (2 : ℝ≥0∞)) (by norm_num) (by norm_num)
-      (mollifier_nonneg (hε_pos n))
-      (integrable_of_integral_eq_one (mollifier_integral_one (hε_pos n)))
-      (mollifier_integral_one (hε_pos n))
-      (mollifier_contDiff (hε_pos n) (n := 0)).continuous.measurable
-        hu.aestronglyMeasurable.aemeasurable
-    have hbound' : eLpNorm (Uₙ n) 2 volume ≤ eLpNorm u 2 volume := by
-      simpa only [Uₙ, mollify] using hbound
-    exact hbound'.trans_lt hu.eLpNorm_lt_top
-  have hVmem : ∀ n, MemLp (Vₙ n) 2 volume := by
-    intro n
-    apply (memLp_iff).2
-    have hbound := young_convolution_nonneg_integral_one_of_aemeasurable
-      (p := (2 : ℝ≥0∞)) (by norm_num) (by norm_num)
-      (mollifier_nonneg (hε_pos n))
-      (integrable_of_integral_eq_one (mollifier_integral_one (hε_pos n)))
-      (mollifier_integral_one (hε_pos n))
-      (mollifier_contDiff (hε_pos n) (n := 0)).continuous.measurable
-        hv.aestronglyMeasurable.aemeasurable
-    have hbound' : eLpNorm (Vₙ n) 2 volume ≤ eLpNorm v 2 volume := by
-      simpa only [Vₙ, mollify] using hbound
-    exact hbound'.trans_lt hv.eLpNorm_lt_top
-  have hDUmem : ∀ n, MemLp (DUₙ n) 2 volume := by
-    intro n
-    apply (memLp_iff).2
-    have hbound := young_convolution_nonneg_integral_one_of_aemeasurable
-      (p := (2 : ℝ≥0∞)) (by norm_num) (by norm_num)
-      (mollifier_nonneg (hε_pos n))
-      (integrable_of_integral_eq_one (mollifier_integral_one (hε_pos n)))
-      (mollifier_integral_one (hε_pos n))
-      (mollifier_contDiff (hε_pos n) (n := 0)).continuous.measurable
-        (hDu i).aestronglyMeasurable.aemeasurable
-    have hbound' : eLpNorm (DUₙ n) 2 volume ≤ eLpNorm (fun x => Du x i) 2 volume := by
-      simpa only [DUₙ, mollify] using hbound
-    exact hbound'.trans_lt (hDu i).eLpNorm_lt_top
-  have hDVmem : ∀ n, MemLp (DVₙ n) 2 volume := by
-    intro n
-    apply (memLp_iff).2
-    have hbound := young_convolution_nonneg_integral_one_of_aemeasurable
-      (p := (2 : ℝ≥0∞)) (by norm_num) (by norm_num)
-      (mollifier_nonneg (hε_pos n))
-      (integrable_of_integral_eq_one (mollifier_integral_one (hε_pos n)))
-      (mollifier_integral_one (hε_pos n))
-      (mollifier_contDiff (hε_pos n) (n := 0)).continuous.measurable
-        (hDv i).aestronglyMeasurable.aemeasurable
-    have hbound' : eLpNorm (DVₙ n) 2 volume ≤ eLpNorm (fun x => Dv x i) 2 volume := by
-      simpa only [DVₙ, mollify] using hbound
-    exact hbound'.trans_lt (hDv i).eLpNorm_lt_top
+  have hUmem := @gradient_mul_hUmem_2 u hu ε₀ hε_pos
+  have hVmem := @gradient_mul_hVmem_3 v hv ε₀ hε_pos
+  have hDUmem := @gradient_mul_hDUmem_4 Du hDu i ε₀ hε_pos
+  have hDVmem := @gradient_mul_hDVmem_5 Dv hDv i ε₀ hε_pos
   have hUzero : Tendsto
       (fun n => eLpNorm (fun x => Uₙ n x - u x) 2 volume)
       atTop (nhds 0) := by
@@ -317,7 +716,7 @@ private theorem HasWeakGradientOn.mul_of_memLp_two_global
     simpa only [DVₙ] using
       tendsto_eLpNorm_sub_zero_mollify (p := (2 : ℝ≥0∞)) (by norm_num) (by norm_num)
         (hDv i) hε_tendsto hε_pos
-  haveI : ENNReal.HolderTriple (2 : ℝ≥0∞) 2 1 :=
+  have : ENNReal.HolderTriple (2 : ℝ≥0∞) 2 1 :=
     ENNReal.HolderConjugate.instTwoTwo
   have hUVmem : ∀ n, MemLp (fun x => Uₙ n x * Vₙ n x) 1 volume := by
     intro n
@@ -384,46 +783,11 @@ private theorem HasWeakGradientOn.mul_of_memLp_two_global
     (hDu i).integrable_mul hv
   have hUDVtarget : Integrable (fun x => u x * Dv x i) volume :=
     hu.integrable_mul (hDv i)
-  have hleftInt : ∀ n, Integrable
-      (fun x => Uₙ n x * Vₙ n x * (fderiv ℝ φ x) (basisVec i)) volume := by
-    intro n
-    have h := (hUVint n).mul_of_top_right hdφTop
-    convert h using 1
-    funext x
-    change Uₙ n x * Vₙ n x * (fderiv ℝ φ x) (basisVec i) =
-      (fderiv ℝ φ x) (basisVec i) * (Uₙ n x * Vₙ n x)
-    ring
-  have hleftTargetInt : Integrable
-      (fun x => u x * v x * (fderiv ℝ φ x) (basisVec i)) volume := by
-    have h := hUVtarget.mul_of_top_right hdφTop
-    convert h using 1
-    funext x
-    change u x * v x * (fderiv ℝ φ x) (basisVec i) =
-      (fderiv ℝ φ x) (basisVec i) * (u x * v x)
-    ring
-  have hrightDUInt : ∀ n, Integrable
-      (fun x => DUₙ n x * Vₙ n x * φ x) volume := by
-    intro n
-    have h := (hDUVint n).mul_of_top_right hφTop
-    convert h using 1
-    funext x
-    change DUₙ n x * Vₙ n x * φ x = φ x * (DUₙ n x * Vₙ n x)
-    ring
-  have hrightUDVInt : ∀ n, Integrable
-      (fun x => Uₙ n x * DVₙ n x * φ x) volume := by
-    intro n
-    have h := (hUDVint n).mul_of_top_right hφTop
-    convert h using 1
-    funext x
-    change Uₙ n x * DVₙ n x * φ x = φ x * (Uₙ n x * DVₙ n x)
-    ring
-  have hrightDUTargetInt : Integrable
-      (fun x => Du x i * v x * φ x) volume := by
-    have h := hDUVtarget.mul_of_top_right hφTop
-    convert h using 1
-    funext x
-    change Du x i * v x * φ x = φ x * (Du x i * v x)
-    ring
+  have hleftInt := @gradient_mul_hleftInt_2 u v i φ ε₀ hε_pos hdφTop hUVint
+  have hleftTargetInt := @gradient_mul_hleftTargetInt_3 u v i φ hdφTop hUVtarget
+  have hrightDUInt := @gradient_mul_hrightDUInt_4 v Du i φ ε₀ hε_pos hφTop hDUVint
+  have hrightUDVInt := @gradient_mul_hrightUDVInt_5 u Dv i φ ε₀ hε_pos hφTop hUDVint
+  have hrightDUTargetInt := @gradient_mul_hrightDUTargetInt_6 v Du i φ hφTop hDUVtarget
   have hrightUDVTargetInt : Integrable
       (fun x => u x * Dv x i * φ x) volume := by
     have h := hUDVtarget.mul_of_top_right hφTop
@@ -453,149 +817,10 @@ private theorem HasWeakGradientOn.mul_of_memLp_two_global
       (f := fun x => u x * Dv x i * φ x)
       (F := fun n x => Uₙ n x * DVₙ n x * φ x)
       (Eventually.of_forall fun n => hrightUDVInt n) hrightUDVzero U
-  have hidentity : ∀ n, ∫ x in U, Uₙ n x * Vₙ n x *
-      (fderiv ℝ φ x) (basisVec i) =
-      -∫ x in U, (DUₙ n x * Vₙ n x + Uₙ n x * DVₙ n x) * φ x := by
-    intro n
-    have hUdiff : ContDiff ℝ (⊤ : ℕ∞) (Uₙ n) :=
-      mollify_contDiff (hε_pos n) huLoc
-    have hVdiff : ContDiff ℝ (⊤ : ℕ∞) (Vₙ n) :=
-      mollify_contDiff (hε_pos n) hvLoc
-    have hprodDiff : ContDiff ℝ 1 (fun x => Uₙ n x * Vₙ n x) := by
-      exact (hUdiff.mul hVdiff).of_le (by simp)
-    have hprodWeak : HasWeakGradientOn U (fun x => Uₙ n x * Vₙ n x)
-        (fun x j => (fderiv ℝ (fun y => Uₙ n y * Vₙ n y) x)
-          (basisVec j)) := HasWeakGradientOn.of_contDiff hprodDiff
-    have hraw := hprodWeak i φ hφ hφCompact hφU
-    have heps : ∀ x ∈ K, Metric.closedBall x (ε n) ⊆ U := by
-      intro x hx
-      exact (Metric.closedBall_subset_cthickening hx (ε n)).trans
-        ((Metric.cthickening_mono (hε_le n) K).trans hthick)
-    have hderivU : ∀ x ∈ K,
-        (fderiv ℝ (Uₙ n) x) (basisVec i) = DUₙ n x := by
-      intro x hx
-      simpa only [Uₙ, DUₙ] using
-        fderiv_mollify_eq_mollify_on_compact hU hK huLoc (hDuLoc i) (hwu i)
-          (hε_pos n)
-          heps hx
-    have hderivV : ∀ x ∈ K,
-        (fderiv ℝ (Vₙ n) x) (basisVec i) = DVₙ n x := by
-      intro x hx
-      simpa only [Vₙ, DVₙ] using
-        fderiv_mollify_eq_mollify_on_compact hU hK hvLoc (hDvLoc i) (hwv i)
-          (hε_pos n)
-          heps hx
-    have hφzero : ∀ x, x ∉ K → φ x = 0 := by
-      intro x hx
-      exact image_eq_zero_of_notMem_tsupport hx
-    have hdφzero : ∀ x, x ∉ K →
-        (fderiv ℝ φ x) (basisVec i) = 0 := by
-      intro x hx
-      rw [fderiv_of_notMem_tsupport (𝕜 := ℝ) hx]
-      simp
-    have hmul : ∀ x,
-        (fderiv ℝ (fun y => Uₙ n y * Vₙ n y) x) (basisVec i) =
-          (fderiv ℝ (Uₙ n) x) (basisVec i) * Vₙ n x +
-            Uₙ n x * (fderiv ℝ (Vₙ n) x) (basisVec i) := by
-      intro x
-      have hu' := hUdiff.differentiable (by simp) x
-      have hv' := hVdiff.differentiable (by simp) x
-      have h := congrArg (fun L : Vec 3 →L[ℝ] ℝ => L (basisVec i))
-        (fderiv_fun_mul hu' hv')
-      calc
-        (fderiv ℝ (fun y => Uₙ n y * Vₙ n y) x) (basisVec i) =
-            Uₙ n x * (fderiv ℝ (Vₙ n) x) (basisVec i) +
-              Vₙ n x * (fderiv ℝ (Uₙ n) x) (basisVec i) := by
-          simpa only [add_apply, smul_apply, smul_eq_mul] using h
-        _ = (fderiv ℝ (Uₙ n) x) (basisVec i) * Vₙ n x +
-              Uₙ n x * (fderiv ℝ (Vₙ n) x) (basisVec i) := by ring
-    calc
-      (∫ x in U, Uₙ n x * Vₙ n x *
-          (fderiv ℝ φ x) (basisVec i)) =
-          -∫ x in U, (fderiv ℝ (fun y => Uₙ n y * Vₙ n y) x)
-            (basisVec i) * φ x := hraw
-      _ = -∫ x in U, (DUₙ n x * Vₙ n x + Uₙ n x * DVₙ n x) * φ x := by
-        congr 1
-        apply setIntegral_congr_fun hU.measurableSet
-        intro x hx
-        by_cases hxK : x ∈ K
-        · change (fderiv ℝ (fun y => Uₙ n y * Vₙ n y) x) (basisVec i) * φ x =
-            (DUₙ n x * Vₙ n x + Uₙ n x * DVₙ n x) * φ x
-          rw [hmul x, hderivU x hxK, hderivV x hxK]
-        · change (fderiv ℝ (fun y => Uₙ n y * Vₙ n y) x) (basisVec i) * φ x =
-            (DUₙ n x * Vₙ n x + Uₙ n x * DVₙ n x) * φ x
-          rw [hφzero x hxK, mul_zero]
-          simp
-  have hrightLimit : Tendsto
-      (fun n => -∫ x in U, (DUₙ n x * Vₙ n x + Uₙ n x * DVₙ n x) * φ x)
-      atTop (nhds (-∫ x in U, (Du x i * v x + u x * Dv x i) * φ x)) := by
-    have hsumLimit : Tendsto
-        (fun n => ∫ x in U, (DUₙ n x * Vₙ n x + Uₙ n x * DVₙ n x) * φ x)
-        atTop (nhds (∫ x in U, (Du x i * v x + u x * Dv x i) * φ x)) := by
-      have hsumInt : ∀ n, Integrable
-          (fun x => (DUₙ n x * Vₙ n x + Uₙ n x * DVₙ n x) * φ x) volume := by
-        intro n
-        have hA := (hrightDUInt n).mul_const (1 : ℝ)
-        have hB := hrightUDVInt n
-        have hsum0 := hA.add hB
-        have hsum : Integrable
-            (fun x => DUₙ n x * Vₙ n x * φ x + Uₙ n x * DVₙ n x * φ x) volume := by
-          convert hsum0 using 1
-          funext x
-          change DUₙ n x * Vₙ n x * φ x + Uₙ n x * DVₙ n x * φ x =
-            DUₙ n x * Vₙ n x * φ x * 1 + Uₙ n x * DVₙ n x * φ x
-          simp
-        convert hsum using 1
-        funext x
-        ring
-      have hsumTarget : Integrable
-          (fun x => (Du x i * v x + u x * Dv x i) * φ x) volume := by
-        have hsum := hrightDUTargetInt.add hrightUDVTargetInt
-        convert hsum using 1
-        funext x
-        change (Du x i * v x + u x * Dv x i) * φ x =
-          Du x i * v x * φ x + u x * Dv x i * φ x
-        ring
-      have hsumzero : Tendsto
-          (fun n => eLpNorm
-            (fun x => (DUₙ n x * Vₙ n x + Uₙ n x * DVₙ n x) * φ x -
-              (Du x i * v x + u x * Dv x i) * φ x) 1 volume)
-          atTop (nhds 0) := by
-        have hdecomp : ∀ n, (fun x =>
-            (DUₙ n x * Vₙ n x + Uₙ n x * DVₙ n x) * φ x -
-              (Du x i * v x + u x * Dv x i) * φ x) =
-            (fun x => DUₙ n x * Vₙ n x * φ x - Du x i * v x * φ x) +
-              (fun x => Uₙ n x * DVₙ n x * φ x - u x * Dv x i * φ x) := by
-          intro n
-          funext x
-          change (DUₙ n x * Vₙ n x + Uₙ n x * DVₙ n x) * φ x -
-            (Du x i * v x + u x * Dv x i) * φ x =
-            (DUₙ n x * Vₙ n x * φ x - Du x i * v x * φ x) +
-              (Uₙ n x * DVₙ n x * φ x - u x * Dv x i * φ x)
-          ring
-        have hsumBound : ∀ n, eLpNorm
-            (fun x => (DUₙ n x * Vₙ n x + Uₙ n x * DVₙ n x) * φ x -
-              (Du x i * v x + u x * Dv x i) * φ x) 1 volume ≤
-            eLpNorm (fun x => DUₙ n x * Vₙ n x * φ x - Du x i * v x * φ x) 1 volume +
-              eLpNorm (fun x => Uₙ n x * DVₙ n x * φ x - u x * Dv x i * φ x) 1 volume := by
-          intro n
-          rw [hdecomp n]
-          exact MeasureTheory.eLpNorm_add_le (p := (1 : ℝ≥0∞)) (by norm_num)
-        have hlim := hrightDUzero.add hrightUDVzero
-        have hlim' : Tendsto (fun n =>
-            eLpNorm (fun x => DUₙ n x * Vₙ n x * φ x - Du x i * v x * φ x) 1 volume +
-              eLpNorm (fun x => Uₙ n x * DVₙ n x * φ x - u x * Dv x i * φ x) 1 volume)
-            atTop (nhds 0) := by
-          simpa only [add_zero] using hlim
-        apply tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds hlim'
-          (Eventually.of_forall fun _ => zero_le)
-        filter_upwards [] with n
-        exact hsumBound n
-      exact MeasureTheory.tendsto_setIntegral_of_L1' (μ := volume)
-        (f := fun x => (Du x i * v x + u x * Dv x i) * φ x)
-        (F := fun n x => (DUₙ n x * Vₙ n x + Uₙ n x * DVₙ n x) * φ x)
-        (Eventually.of_forall fun n => hsumInt n) hsumzero U
-    exact hsumLimit.neg
+  have hidentity := @gradient_mul_hidentity_6 U hU u v Du Dv hwu hwv i φ hφ hφCompact hφU hK ε₀
+    hthick hε_pos hε_le huLoc hvLoc hDuLoc hDvLoc
+  have hrightLimit := @gradient_mul_hrightLimit_7 U u v Du Dv i φ ε₀ hε_pos hrightDUzero
+    hrightUDVzero hrightDUInt hrightUDVInt hrightDUTargetInt hrightUDVTargetInt
   have hrightLimit' := hrightLimit.congr'
     (Eventually.of_forall fun n => (hidentity n).symm)
   exact tendsto_nhds_unique hleftLimit hrightLimit'

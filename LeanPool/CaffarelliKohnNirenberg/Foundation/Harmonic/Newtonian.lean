@@ -53,6 +53,197 @@ private lemma shift_fderiv_apply_basisVec {u : Vec3 → ℝ}
   dsimp at hval
   simpa [Function.comp_def, CKN.spatialDeriv] using hval
 
+private lemma heatKernel_laplacian_integral_eq_smooth_hi_1 :
+    ∀ {u : Vec3 → ℝ},
+      ContDiff ℝ (⊤ : ℕ∞) u →
+        ∀ {t : ℝ},
+          (0 : ℝ) < t →
+            ∀ (x : Vec3),
+              (Continuous (Y := ℝ) fun (y : Vec3) => heatKernel y t) →
+                (∀ (i : Fin (3 : ℕ)),
+                    Continuous (Y := ℝ) fun (y : Vec3) => heatKernelSpaceDerivative y t i) →
+                  (∀ (i : Fin (3 : ℕ)),
+                      Continuous (Y := ℝ) fun (y : Vec3) => heatKernelSpaceSecondDerivative y t i) →
+                    let h0 : Vec3 → ℝ := fun (y : Vec3) => u (x - y);
+                    Continuous h0 →
+                      HasCompactSupport h0 →
+                        (∀ (i : Fin (3 : ℕ)), ContDiff ℝ (⊤ : ℕ∞) (spatialDeriv u i)) →
+                          (∀ (i : Fin (3 : ℕ)),
+                              Continuous (Y := ℝ) fun (y : Vec3) => spatialDeriv u i (x - y)) →
+                            (∀ (i : Fin (3 : ℕ)),
+                                HasCompactSupport (β := ℝ) fun (y : Vec3) =>
+                                  spatialDeriv u i (x - y)) →
+                              (∀ (i : Fin (3 : ℕ)),
+                                  Continuous (Y := ℝ) fun (y : Vec3) =>
+                                    spatialDeriv (spatialDeriv u i) i (x - y)) →
+                                (∀ (i : Fin (3 : ℕ)),
+                                    HasCompactSupport (β := ℝ) fun (y : Vec3) =>
+                                      spatialDeriv (spatialDeriv u i) i (x - y)) →
+                                  (∀ (y : Vec3),
+                                      DifferentiableAt ℝ (F := ℝ) (fun (z : Vec3) => heatKernel z t)
+                                        y) →
+                                    (∀ (i : Fin (3 : ℕ)) (y : Vec3),
+                                        DifferentiableAt ℝ (F := ℝ)
+                                          (fun (z : Vec3) => heatKernelSpaceDerivative z t i) y) →
+                                      (∀ (v : Vec3 → ℝ),
+                                          ContDiff ℝ (⊤ : ℕ∞) v →
+                                            ∀ (y : Vec3),
+                                              DifferentiableAt ℝ (F := ℝ)
+                                                (fun (z : Vec3) => v (x - z)) y) →
+                                        (∀ (f g : Vec3 → ℝ),
+                                            Continuous f →
+                                              Continuous g →
+                                                HasCompactSupport g →
+                                                  @Integrable ℝ _ _ _ MeasureSpace.toMeasurableSpace
+                                                    (fun (y : Vec3) => f y * g y) volume) →
+                                          ∀ (i : Fin (3 : ℕ)),
+                                            Eq (α := ℝ)
+                                              (@integral _ _ _ _ MeasureSpace.toMeasurableSpace
+                                                volume fun (y : Vec3) =>
+                                                heatKernelSpaceSecondDerivative y t i * h0 y)
+                                              (@integral _ _ _ _ MeasureSpace.toMeasurableSpace
+                                                volume fun (y : Vec3) =>
+                                                heatKernel y t *
+                                                  spatialDeriv (spatialDeriv u i) i (x - y))
+    := by
+  intro u hu t ht x hk hk1 hk2 h0 h0c h0s hu1 h1c h1s h2c h2s hkernel_diff hkernel1_diff
+    hshift_diff hcompact_integrable i
+  let f : Vec3 → ℝ := fun y => heatKernel y t
+  let f1 : Vec3 → ℝ := fun y => heatKernelSpaceDerivative y t i
+  let g : Vec3 → ℝ := h0
+  have hdf : Continuous (fun y => (fderiv ℝ f y) (CKN.basisVec i)) := by
+    rw [show (fun y => (fderiv ℝ f y) (CKN.basisVec i)) =
+        fun y => heatKernelSpaceDerivative y t i by
+      funext y
+      dsimp [f]
+      exact heatKernel_fderiv_apply_basisVec ht i]
+    exact hk1 i
+  have hdf1 : Continuous (fun y => (fderiv ℝ f1 y) (CKN.basisVec i)) := by
+    rw [show (fun y => (fderiv ℝ f1 y) (CKN.basisVec i)) =
+        fun y => heatKernelSpaceSecondDerivative y t i by
+      funext y
+      dsimp [f1]
+      exact heatKernelSpaceDerivative_fderiv_apply_basisVec ht i]
+    exact hk2 i
+  have hdg : Continuous (fun y => (fderiv ℝ g y) (CKN.basisVec i)) := by
+    rw [show (fun y => (fderiv ℝ g y) (CKN.basisVec i)) =
+        fun y => -CKN.spatialDeriv u i (x - y) by
+      funext y
+      dsimp [g, h0]
+      exact shift_fderiv_apply_basisVec hu x y i]
+    exact (h1c i).neg
+  have hdgs : HasCompactSupport
+      (fun y => (fderiv ℝ g y) (CKN.basisVec i)) := by
+    rw [show (fun y => (fderiv ℝ g y) (CKN.basisVec i)) =
+        fun y => -CKN.spatialDeriv u i (x - y) by
+      funext y
+      dsimp [g, h0]
+      exact shift_fderiv_apply_basisVec hu x y i]
+    exact (h1s i).neg
+  have hIBP2 := integral_mul_fderiv_eq_neg_fderiv_mul_of_integrable
+    (f := f1) (g := g) (v := CKN.basisVec i)
+    (hcompact_integrable (fun y => (fderiv ℝ f1 y) (CKN.basisVec i)) g
+      hdf1 h0c h0s)
+    (hcompact_integrable f1 (fun y => (fderiv ℝ g y) (CKN.basisVec i))
+      (hk1 i) hdg hdgs)
+    (hcompact_integrable f1 g (hk1 i) h0c h0s)
+    (fun z _ => by simpa [f1] using hkernel1_diff i z)
+    (fun z _ => hshift_diff u hu z)
+  have hIBP3 := integral_mul_fderiv_eq_neg_fderiv_mul_of_integrable
+    (f := f) (g := fun y : Vec3 => CKN.spatialDeriv u i (x - y))
+    (v := CKN.basisVec i)
+    (hcompact_integrable (fun y => (fderiv ℝ f y) (CKN.basisVec i))
+      (fun y : Vec3 => CKN.spatialDeriv u i (x - y)) hdf (h1c i) (h1s i))
+    (hcompact_integrable f
+      (fun y => (fderiv ℝ (fun z : Vec3 => CKN.spatialDeriv u i (x - z)) y)
+        (CKN.basisVec i)) hk
+      (by
+        exact (by
+          rw [show (fun y : Vec3 =>
+              (fderiv ℝ (fun z : Vec3 => CKN.spatialDeriv u i (x - z)) y)
+                (CKN.basisVec i)) =
+              fun y => -CKN.spatialDeriv (CKN.spatialDeriv u i) i (x - y) by
+            funext y
+            exact shift_fderiv_apply_basisVec (hu1 i) x y i]
+          exact (h2c i).neg))
+      (by
+        rw [show (fun y : Vec3 =>
+            (fderiv ℝ (fun z : Vec3 => CKN.spatialDeriv u i (x - z)) y)
+              (CKN.basisVec i)) =
+            fun y => -CKN.spatialDeriv (CKN.spatialDeriv u i) i (x - y) by
+          funext y
+          exact shift_fderiv_apply_basisVec (hu1 i) x y i]
+        exact (h2s i).neg))
+    (hcompact_integrable f (fun y : Vec3 => CKN.spatialDeriv u i (x - y))
+      hk (h1c i) (h1s i))
+    (fun z _ => by simpa [f] using hkernel_diff z)
+    (fun z _ => hshift_diff (CKN.spatialDeriv u i) (hu1 i) z)
+  have hsecond : ∫ y : Vec3, (fderiv ℝ f1 y) (CKN.basisVec i) * g y =
+      ∫ y : Vec3, f1 y * CKN.spatialDeriv u i (x - y) := by
+    have h := hIBP2
+    have hderivg : (fun y : Vec3 => (fderiv ℝ g y) (CKN.basisVec i)) =
+        fun y => -CKN.spatialDeriv u i (x - y) := by
+      funext y
+      dsimp [g, h0]
+      exact shift_fderiv_apply_basisVec hu x y i
+    have hrewrite :
+        (∫ y : Vec3, f1 y * (fderiv ℝ g y) (CKN.basisVec i)) =
+          -∫ y : Vec3, f1 y * CKN.spatialDeriv u i (x - y) := by
+      calc
+        ∫ y : Vec3, f1 y * (fderiv ℝ g y) (CKN.basisVec i) =
+            ∫ y : Vec3, f1 y * (-CKN.spatialDeriv u i (x - y)) := by
+              apply integral_congr_ae
+              filter_upwards [] with y
+              rw [congrFun hderivg y]
+        _ = -∫ y : Vec3, f1 y * CKN.spatialDeriv u i (x - y) := by
+          simp only [mul_neg, integral_neg]
+    linarith only [h, hrewrite]
+  have hthird : ∫ y : Vec3, (fderiv ℝ f y) (CKN.basisVec i) *
+      CKN.spatialDeriv u i (x - y) =
+      ∫ y : Vec3, f y * CKN.spatialDeriv (CKN.spatialDeriv u i) i (x - y) := by
+    have h := hIBP3
+    have hderivh :
+        (fun y : Vec3 => (fderiv ℝ (fun z : Vec3 =>
+          CKN.spatialDeriv u i (x - z)) y) (CKN.basisVec i)) =
+        fun y => -CKN.spatialDeriv (CKN.spatialDeriv u i) i (x - y) := by
+      funext y
+      exact shift_fderiv_apply_basisVec (hu1 i) x y i
+    have hrewrite :
+        (∫ y : Vec3, f y *
+          (fderiv ℝ (fun z : Vec3 => CKN.spatialDeriv u i (x - z)) y)
+            (CKN.basisVec i)) =
+          -∫ y : Vec3, f y *
+            CKN.spatialDeriv (CKN.spatialDeriv u i) i (x - y) := by
+      calc
+        ∫ y : Vec3, f y *
+            (fderiv ℝ (fun z : Vec3 => CKN.spatialDeriv u i (x - z)) y)
+              (CKN.basisVec i) =
+            ∫ y : Vec3, f y *
+              (-CKN.spatialDeriv (CKN.spatialDeriv u i) i (x - y)) := by
+                apply integral_congr_ae
+                filter_upwards [] with y
+                rw [congrFun hderivh y]
+        _ = -∫ y : Vec3, f y *
+            CKN.spatialDeriv (CKN.spatialDeriv u i) i (x - y) := by
+          simp only [mul_neg, integral_neg]
+    linarith only [h, hrewrite]
+  dsimp [f, f1, g, h0] at hsecond hthird ⊢
+  calc
+    ∫ y : Vec3, heatKernelSpaceSecondDerivative y t i * h0 y =
+        ∫ y : Vec3, (fderiv ℝ f1 y) (CKN.basisVec i) * g y := by
+          apply integral_congr_ae
+          filter_upwards [] with y
+          rw [heatKernelSpaceDerivative_fderiv_apply_basisVec ht i]
+    _ = ∫ y : Vec3, f1 y * CKN.spatialDeriv u i (x - y) := hsecond
+    _ = ∫ y : Vec3, (fderiv ℝ f y) (CKN.basisVec i) *
+        CKN.spatialDeriv u i (x - y) := by
+          apply integral_congr_ae
+          filter_upwards [] with y
+          rw [heatKernel_fderiv_apply_basisVec ht i]
+    _ = ∫ y : Vec3, f y * CKN.spatialDeriv (CKN.spatialDeriv u i) i (x - y) := hthird
+    _ = ∫ y : Vec3, heatKernel y t *
+        CKN.spatialDeriv (CKN.spatialDeriv u i) i (x - y) := rfl
+
 /-- Integration by parts moves the heat-kernel Laplacian onto a compactly supported function. -/
 theorem heatKernel_laplacian_integral_eq_smooth {u : Vec3 → ℝ}
     (hu : ContDiff ℝ (⊤ : ℕ∞) u) (huSupport : HasCompactSupport u)
@@ -161,145 +352,8 @@ theorem heatKernel_laplacian_integral_eq_smooth {u : Vec3 → ℝ}
       (hg : Continuous g) (hgs : HasCompactSupport g) :
       Integrable (fun y : Vec3 => f y * g y) volume := by
     exact hf.mul hg |>.integrable_of_hasCompactSupport hgs.mul_left
-  have hi (i : Fin 3) :
-      ∫ y : Vec3, heatKernelSpaceSecondDerivative y t i * h0 y =
-        ∫ y : Vec3, heatKernel y t *
-          CKN.spatialDeriv (CKN.spatialDeriv u i) i (x - y) := by
-    let f : Vec3 → ℝ := fun y => heatKernel y t
-    let f1 : Vec3 → ℝ := fun y => heatKernelSpaceDerivative y t i
-    let g : Vec3 → ℝ := h0
-    have hdf : Continuous (fun y => (fderiv ℝ f y) (CKN.basisVec i)) := by
-      rw [show (fun y => (fderiv ℝ f y) (CKN.basisVec i)) =
-          fun y => heatKernelSpaceDerivative y t i by
-        funext y
-        dsimp [f]
-        exact heatKernel_fderiv_apply_basisVec ht i]
-      exact hk1 i
-    have hdf1 : Continuous (fun y => (fderiv ℝ f1 y) (CKN.basisVec i)) := by
-      rw [show (fun y => (fderiv ℝ f1 y) (CKN.basisVec i)) =
-          fun y => heatKernelSpaceSecondDerivative y t i by
-        funext y
-        dsimp [f1]
-        exact heatKernelSpaceDerivative_fderiv_apply_basisVec ht i]
-      exact hk2 i
-    have hdg : Continuous (fun y => (fderiv ℝ g y) (CKN.basisVec i)) := by
-      rw [show (fun y => (fderiv ℝ g y) (CKN.basisVec i)) =
-          fun y => -CKN.spatialDeriv u i (x - y) by
-        funext y
-        dsimp [g, h0]
-        exact shift_fderiv_apply_basisVec hu x y i]
-      exact (h1c i).neg
-    have hdgs : HasCompactSupport
-        (fun y => (fderiv ℝ g y) (CKN.basisVec i)) := by
-      rw [show (fun y => (fderiv ℝ g y) (CKN.basisVec i)) =
-          fun y => -CKN.spatialDeriv u i (x - y) by
-        funext y
-        dsimp [g, h0]
-        exact shift_fderiv_apply_basisVec hu x y i]
-      exact (h1s i).neg
-    have hIBP2 := integral_mul_fderiv_eq_neg_fderiv_mul_of_integrable
-      (f := f1) (g := g) (v := CKN.basisVec i)
-      (hcompact_integrable (fun y => (fderiv ℝ f1 y) (CKN.basisVec i)) g
-        hdf1 h0c h0s)
-      (hcompact_integrable f1 (fun y => (fderiv ℝ g y) (CKN.basisVec i))
-        (hk1 i) hdg hdgs)
-      (hcompact_integrable f1 g (hk1 i) h0c h0s)
-      (fun z _ => by simpa [f1] using hkernel1_diff i z)
-      (fun z _ => hshift_diff u hu z)
-    have hIBP3 := integral_mul_fderiv_eq_neg_fderiv_mul_of_integrable
-      (f := f) (g := fun y : Vec3 => CKN.spatialDeriv u i (x - y))
-      (v := CKN.basisVec i)
-      (hcompact_integrable (fun y => (fderiv ℝ f y) (CKN.basisVec i))
-        (fun y : Vec3 => CKN.spatialDeriv u i (x - y)) hdf (h1c i) (h1s i))
-      (hcompact_integrable f
-        (fun y => (fderiv ℝ (fun z : Vec3 => CKN.spatialDeriv u i (x - z)) y)
-          (CKN.basisVec i)) hk
-        (by
-          exact (by
-            rw [show (fun y : Vec3 =>
-                (fderiv ℝ (fun z : Vec3 => CKN.spatialDeriv u i (x - z)) y)
-                  (CKN.basisVec i)) =
-                fun y => -CKN.spatialDeriv (CKN.spatialDeriv u i) i (x - y) by
-              funext y
-              exact shift_fderiv_apply_basisVec (hu1 i) x y i]
-            exact (h2c i).neg))
-        (by
-          rw [show (fun y : Vec3 =>
-              (fderiv ℝ (fun z : Vec3 => CKN.spatialDeriv u i (x - z)) y)
-                (CKN.basisVec i)) =
-              fun y => -CKN.spatialDeriv (CKN.spatialDeriv u i) i (x - y) by
-            funext y
-            exact shift_fderiv_apply_basisVec (hu1 i) x y i]
-          exact (h2s i).neg))
-      (hcompact_integrable f (fun y : Vec3 => CKN.spatialDeriv u i (x - y))
-        hk (h1c i) (h1s i))
-      (fun z _ => by simpa [f] using hkernel_diff z)
-      (fun z _ => hshift_diff (CKN.spatialDeriv u i) (hu1 i) z)
-    have hsecond : ∫ y : Vec3, (fderiv ℝ f1 y) (CKN.basisVec i) * g y =
-        ∫ y : Vec3, f1 y * CKN.spatialDeriv u i (x - y) := by
-      have h := hIBP2
-      have hderivg : (fun y : Vec3 => (fderiv ℝ g y) (CKN.basisVec i)) =
-          fun y => -CKN.spatialDeriv u i (x - y) := by
-        funext y
-        dsimp [g, h0]
-        exact shift_fderiv_apply_basisVec hu x y i
-      have hrewrite :
-          (∫ y : Vec3, f1 y * (fderiv ℝ g y) (CKN.basisVec i)) =
-            -∫ y : Vec3, f1 y * CKN.spatialDeriv u i (x - y) := by
-        calc
-          ∫ y : Vec3, f1 y * (fderiv ℝ g y) (CKN.basisVec i) =
-              ∫ y : Vec3, f1 y * (-CKN.spatialDeriv u i (x - y)) := by
-                apply integral_congr_ae
-                filter_upwards [] with y
-                rw [congrFun hderivg y]
-          _ = -∫ y : Vec3, f1 y * CKN.spatialDeriv u i (x - y) := by
-            simp only [mul_neg, integral_neg]
-      linarith only [h, hrewrite]
-    have hthird : ∫ y : Vec3, (fderiv ℝ f y) (CKN.basisVec i) *
-        CKN.spatialDeriv u i (x - y) =
-        ∫ y : Vec3, f y * CKN.spatialDeriv (CKN.spatialDeriv u i) i (x - y) := by
-      have h := hIBP3
-      have hderivh :
-          (fun y : Vec3 => (fderiv ℝ (fun z : Vec3 =>
-            CKN.spatialDeriv u i (x - z)) y) (CKN.basisVec i)) =
-          fun y => -CKN.spatialDeriv (CKN.spatialDeriv u i) i (x - y) := by
-        funext y
-        exact shift_fderiv_apply_basisVec (hu1 i) x y i
-      have hrewrite :
-          (∫ y : Vec3, f y *
-            (fderiv ℝ (fun z : Vec3 => CKN.spatialDeriv u i (x - z)) y)
-              (CKN.basisVec i)) =
-            -∫ y : Vec3, f y *
-              CKN.spatialDeriv (CKN.spatialDeriv u i) i (x - y) := by
-        calc
-          ∫ y : Vec3, f y *
-              (fderiv ℝ (fun z : Vec3 => CKN.spatialDeriv u i (x - z)) y)
-                (CKN.basisVec i) =
-              ∫ y : Vec3, f y *
-                (-CKN.spatialDeriv (CKN.spatialDeriv u i) i (x - y)) := by
-                  apply integral_congr_ae
-                  filter_upwards [] with y
-                  rw [congrFun hderivh y]
-          _ = -∫ y : Vec3, f y *
-              CKN.spatialDeriv (CKN.spatialDeriv u i) i (x - y) := by
-            simp only [mul_neg, integral_neg]
-      linarith only [h, hrewrite]
-    dsimp [f, f1, g, h0] at hsecond hthird ⊢
-    calc
-      ∫ y : Vec3, heatKernelSpaceSecondDerivative y t i * h0 y =
-          ∫ y : Vec3, (fderiv ℝ f1 y) (CKN.basisVec i) * g y := by
-            apply integral_congr_ae
-            filter_upwards [] with y
-            rw [heatKernelSpaceDerivative_fderiv_apply_basisVec ht i]
-      _ = ∫ y : Vec3, f1 y * CKN.spatialDeriv u i (x - y) := hsecond
-      _ = ∫ y : Vec3, (fderiv ℝ f y) (CKN.basisVec i) *
-          CKN.spatialDeriv u i (x - y) := by
-            apply integral_congr_ae
-            filter_upwards [] with y
-            rw [heatKernel_fderiv_apply_basisVec ht i]
-      _ = ∫ y : Vec3, f y * CKN.spatialDeriv (CKN.spatialDeriv u i) i (x - y) := hthird
-      _ = ∫ y : Vec3, heatKernel y t *
-          CKN.spatialDeriv (CKN.spatialDeriv u i) i (x - y) := rfl
+  have hi (i : Fin 3) := @heatKernel_laplacian_integral_eq_smooth_hi_1 u hu t ht x hk hk1 hk2 h0c
+    h0s hu1 h1c h1s h2c h2s hkernel_diff hkernel1_diff hshift_diff hcompact_integrable i
   have hInt : ∀ i ∈ (Finset.univ : Finset (Fin 3)),
       Integrable (fun y : Vec3 => heatKernelSpaceSecondDerivative y t i * h0 y) volume := by
     intro i hi

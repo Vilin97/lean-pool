@@ -159,21 +159,21 @@ private theorem small_cells
     (hR : 0 < R) (hdom : Metric.ball z₀ (2 * R) ⊆ spaceTimeSet Ω I)
     (hDp : Measurable Dp)
     (hfield : ∀ᵐ s ∂volume.restrict (Ioo (z₀.2 - R ^ 2) (z₀.2 + R ^ 2)), ∀ i,
-      LocallyIntegrableOn (fun y => Dp (y,s) i) (vec3Ball z₀.1 (3 * R / 4)) volume ∧
+      LocallyIntegrableOn (fun y => Dp (y, s) i) (vec3Ball z₀.1 (3 * R / 4)) volume ∧
       HasWeakPartialDerivOn (vec3Ball z₀.1 (3 * R / 4)) i
-        (fun y => p (y,s)) (fun y => Dp (y,s) i))
+        (fun y => p (y, s)) (fun y => Dp (y, s) i))
     (N : Fin 3 → Vec3 → ℝ → ℝ → ℝ → ℝ≥0∞)
     (hslice : ∀ i c t ρ, 0 < ρ →
       closure (parabolicCylinder c t ρ) ⊆ spaceTimeSet Ω I →
       ∀ᵐ s ∂volume.restrict (Ioc (t - ρ ^ 2) t), ∃ g : Vec3 → ℝ,
         LocallyIntegrableOn g (euclideanBall c (ρ / 2)) volume ∧
-        HasWeakPartialDerivOn (euclideanBall c (ρ / 2)) i (fun y => p (y,s)) g ∧
+        HasWeakPartialDerivOn (euclideanBall c (ρ / 2)) i (fun y => p (y, s)) g ∧
         eLpNorm g (ENNReal.ofReal (6 / 5 : ℝ))
           (volume.restrict (euclideanBall c (ρ / 2))) ≤ N i c t ρ s)
     (hgrowth : ∀ (i : Fin 3) (z : ParabolicPoint) (r : ℝ), 0 < r → r ≤ R / 16 →
       (parabolicCylinder z.1 z.2 r ∩ Metric.ball z₀ (R / 2)).Nonempty →
-      (∫⁻ s in Ioc (z.2 - r ^ 2) z.2, N i z.1 z.2 (2*r) s ^ (6/5 : ℝ)) ≤
-        A * ENNReal.ofReal (r ^ (5 * (1 - (6/5 : ℝ) / κ)))) :
+      (∫⁻ s in Ioc (z.2 - r ^ 2) z.2, N i z.1 z.2 (2 * r) s ^ (6 / 5 : ℝ)) ≤
+        A * ENNReal.ofReal (r ^ (5 * (1 - (6 / 5 : ℝ) / κ)))) :
     ∀ i z r, 0 < r → r ≤ R / 16 →
       cylinderPowerIntegral (6/5 : ℝ)
         ((Metric.ball z₀ (R/2)).indicator (fun w => Dp w i)) z r ≤
@@ -214,15 +214,16 @@ private theorem carrier_power_finite
     {z₀ : ParabolicPoint} {R κ : ℝ} {Dp : ParabolicPoint → Vec3} {A : ℝ≥0∞}
     (hR : 0 < R) (hA : A < ⊤)
     (hsmall : ∀ i z r, 0 < r → r ≤ R / 16 →
-      cylinderPowerIntegral (6/5 : ℝ)
-        ((Metric.ball z₀ (R/2)).indicator (fun w => Dp w i)) z r ≤
-        A * ENNReal.ofReal (r ^ (5 * (1 - (6/5 : ℝ) / κ)))) :
+      cylinderPowerIntegral (6 / 5 : ℝ)
+        ((Metric.ball z₀ (R / 2)).indicator (fun w => Dp w i)) z r ≤
+        A * ENNReal.ofReal (r ^ (5 * (1 - (6 / 5 : ℝ) / κ)))) :
     ∀ i, (∫⁻ w in Metric.ball z₀ (R/2), ENNReal.ofReal |Dp w i| ^ (6/5 : ℝ)) < ⊤ := by
   let S := Metric.ball z₀ (R/2)
   let K : Set ParabolicPoint := parabolicHomeomorph ⁻¹'
     (closure (vec3Ball z₀.1 (R/2)) ×ˢ Icc (z₀.2-R^2/4) (z₀.2+R^2/4))
   have hK : IsCompact K := parabolicHomeomorph.isCompact_preimage.mpr
-    ((CKN.Foundation.Parabolic.isCompact_closure_vec3Ball (by positivity : 0 < R/2)).prod isCompact_Icc)
+    ((CKN.Foundation.Parabolic.isCompact_closure_vec3Ball (by positivity : 0 < R/2)).prod
+      isCompact_Icc)
   have hSK : S ⊆ K := by
     rw [show S = Metric.ball z₀ (R/2) from rfl, metricBall_eq_parabolicBall]
     intro w hw
@@ -243,7 +244,7 @@ private theorem carrier_power_finite
 private theorem integrable_of_power_finite
     {S : Set ParabolicPoint} [IsFiniteMeasure (volume.restrict S)]
     {g : ParabolicPoint → ℝ} (hg : AEMeasurable g (volume.restrict S))
-    (hfin : (∫⁻ w in S, ENNReal.ofReal |g w| ^ (6/5 : ℝ)) < ⊤) :
+    (hfin : (∫⁻ w in S, ENNReal.ofReal |g w| ^ (6 / 5 : ℝ)) < ⊤) :
     Integrable g (volume.restrict S) := by
   have hmem : MemLp g (ENNReal.ofReal (6/5 : ℝ)) (volume.restrict S) := by
     apply (eLpNorm_lt_top_iff_lintegral_rpow_enorm_lt_top (by norm_num)
@@ -401,7 +402,8 @@ theorem epsilonRegularityGradient_closer_of_small_cell_majorant
         exact hG q' (25 / 3) hq' (by norm_num) (by norm_num))
       CKN.Core.Step3.localized_gradient_slot_duhamel_of_sws)
     CKN.Core.Step3.localized_gradient_slot_duhamel_of_sws
-    localized_gradient_source_package_of_sws
+    (fun {_ _ _ _ _ _ _} hsol {_} hφ {_ _} hbox hφbox z₀ R hR hq _ =>
+      localized_gradient_source_package_of_sws hsol hφ hbox hφbox z₀ R hR hq)
     hsol z₀ (r₂ / 4) (by positivity)
     ((Metric.ball_subset_ball (by linarith only [hr₂])).trans hcarrier) hu hDu
 

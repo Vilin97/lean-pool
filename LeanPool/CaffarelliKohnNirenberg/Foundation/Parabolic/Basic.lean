@@ -31,18 +31,23 @@ noncomputable section
 
 namespace CKN.Foundation.Parabolic
 
+/-- Native three-dimensional coordinate vectors. -/
 abbrev Vec3 := Fin 3 → ℝ
 
+/-- Three-dimensional coordinate vectors equipped with their Euclidean L² norm. -/
 abbrev L2Vec3 := PiLp 2 (fun _ : Fin 3 => ℝ)
 
+/-- Space-time points, given the parabolic metric below rather than the product metric. -/
 def ParabolicPoint := Vec3 × ℝ
 
 theorem half_pos : 0 < (1 / 2 : ℝ) := by norm_num
 
 theorem half_le_one : (1 / 2 : ℝ) ≤ 1 := by norm_num
 
+/-- Time equipped with the square-root snowflake metric. -/
 abbrev SnowTime := Metric.Snowflaking ℝ (1 / 2 : ℝ) half_pos half_le_one
 
+/-- Euclidean length of a native three-dimensional coordinate vector. -/
 def vec3EuclideanNorm (v : Vec3) : ℝ := Real.sqrt (∑ i, v i ^ 2)
 
 instance : MeasurableSpace ParabolicPoint := inferInstanceAs (MeasurableSpace (Vec3 × ℝ))
@@ -51,12 +56,14 @@ instance : MeasurableSpace SnowTime := borel SnowTime
 
 instance : BorelSpace SnowTime := ⟨rfl⟩
 
+/-- Measurable equivalence to Euclidean space times snowflaked time. -/
 def parabolicMeasurableEquiv : ParabolicPoint ≃ᵐ L2Vec3 × SnowTime :=
   MeasurableEquiv.prodCongr (MeasurableEquiv.toLp 2 Vec3) {
     toEquiv := Metric.Snowflaking.toSnowflaking
     measurable_toFun := Metric.Snowflaking.continuous_toSnowflaking.measurable
     measurable_invFun := Metric.Snowflaking.homeomorph.continuous.measurable }
 
+/-- Coordinate map into the product carrying the parabolic metric. -/
 def parabolicMap (p : ParabolicPoint) :
     L2Vec3 × SnowTime := parabolicMeasurableEquiv p
 
@@ -67,6 +74,7 @@ lemma parabolicMap_injective : Function.Injective parabolicMap := by
 noncomputable instance parabolicMetricSpace : MetricSpace ParabolicPoint :=
   MetricSpace.induced parabolicMap parabolicMap_injective inferInstance
 
+/-- Pseudometric presentation of the parabolic metric for explicit metric-space arguments. -/
 abbrev parabolicPseudoMetricSpace : PseudoMetricSpace ParabolicPoint :=
   MetricSpace.toPseudoMetricSpace (self := parabolicMetricSpace)
 
@@ -97,6 +105,7 @@ lemma vec3EuclideanNorm_smul (a : ℝ) (v : Vec3) :
   rw [vec3EuclideanNorm_eq_l2, WithLp.toLp_smul, norm_smul, Real.norm_eq_abs,
     ← vec3EuclideanNorm_eq_l2]
 
+/-- Maximum of spatial Euclidean distance and square-root time separation. -/
 def parabolicDist (p q : ParabolicPoint) : ℝ :=
   max (vec3EuclideanNorm (p.1 - q.1)) (Real.sqrt |p.2 - q.2|)
 
@@ -105,9 +114,11 @@ lemma dist_eq_parabolicDist (p q : ParabolicPoint) :
   simp only [parabolicDist, vec3EuclideanNorm_eq_l2, Real.sqrt_eq_rpow]
   rfl
 
+/-- Open Euclidean ball in native spatial coordinates. -/
 def vec3Ball (x : Vec3) (r : ℝ) : Set Vec3 :=
   {y | vec3EuclideanNorm (y - x) < r}
 
+/-- Backward parabolic cylinder with spatial radius `r` and time depth `r ^ 2`. -/
 def parabolicCylinder (x : Vec3) (t r : ℝ) : Set ParabolicPoint :=
   vec3Ball x r ×ˢ Ioc (t - r ^ 2) t
 
@@ -133,9 +144,11 @@ lemma parabolicCylinder_mono {x : Vec3} {t r₁ r₂ : ℝ} (hr₁ : 0 ≤ r₁)
   have hrsq : r₁ ^ 2 ≤ r₂ ^ 2 := (sq_le_sq₀ hr₁ hr₂).2 hr
   exact (sub_le_sub_left hrsq t).trans_lt hp₂
 
+/-- Space-time translation by a spatial vector and time offset. -/
 def parabolicTranslate (a : Vec3) (τ : ℝ) (p : ParabolicPoint) : ParabolicPoint :=
   (a + p.1, τ + p.2)
 
+/-- Parabolic scaling, linear in space and quadratic in time. -/
 def parabolicScale (a : ℝ) (p : ParabolicPoint) : ParabolicPoint :=
   (a • p.1, a ^ 2 * p.2)
 
@@ -208,8 +221,7 @@ lemma parabolicCylinder_scale {x : Vec3} {t r a : ℝ} (ha : 0 < a) :
             _ = a ^ 2 * (a⁻¹ ^ 2 * s) := by field_simp [ha.ne']
         have h := lt_of_mul_lt_mul_left hmul (le_of_lt ha2)
         exact h
-      ·
-        apply le_of_mul_le_mul_left _ (sq_pos_of_pos ha)
+      · apply le_of_mul_le_mul_left _ (sq_pos_of_pos ha)
         simpa [ha.ne'] using hp₃
     · apply Prod.ext
       · simp [parabolicScale, smul_smul, ha.ne']
@@ -252,6 +264,7 @@ lemma volume_parabolicCylinder_zero (x : Vec3) (t r : ℝ) :
       volume (vec3Ball 0 r) * ENNReal.ofReal (r ^ 2) := by
   rw [volume_parabolicCylinder, volume_vec3Ball]
 
+/-- Hausdorff measure computed using the parabolic metric and the real value of the exponent. -/
 def parabolicHausdorffMeasure (d : ℝ≥0∞) : Measure ParabolicPoint :=
   MeasureTheory.Measure.hausdorffMeasure d.toReal
 

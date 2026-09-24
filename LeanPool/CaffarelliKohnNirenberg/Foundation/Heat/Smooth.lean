@@ -32,20 +32,24 @@ namespace CKN.Foundation.Heat
 
 open CKN.Foundation.Parabolic
 
+/-- Time derivative formula for the causal heat kernel. -/
 def heatKernelTimeDerivative (x : Vec3) (t : ℝ) : ℝ :=
   if 0 < t then
     heatKernel x t *
       ((∑ i, x i ^ 2) / (4 * t ^ 2) - (3 : ℝ) / (2 * t))
   else 0
 
+/-- First spatial derivative formula for the causal heat kernel. -/
 def heatKernelSpaceDerivative (x : Vec3) (t : ℝ) (i : Fin 3) : ℝ :=
   if 0 < t then -(x i) / (2 * t) * heatKernel x t else 0
 
+/-- Pure second spatial derivative formula for the causal heat kernel. -/
 def heatKernelSpaceSecondDerivative (x : Vec3) (t : ℝ) (i : Fin 3) : ℝ :=
   if 0 < t then
     ((x i) ^ 2 / (4 * t ^ 2) - 1 / (2 * t)) * heatKernel x t
   else 0
 
+/-- Mixed second spatial derivative formula for the causal heat kernel. -/
 def heatKernelSpaceMixedSecondDerivative (x : Vec3) (t : ℝ)
     (i j : Fin 3) : ℝ :=
   if 0 < t then
@@ -53,6 +57,7 @@ def heatKernelSpaceMixedSecondDerivative (x : Vec3) (t : ℝ)
       (if i = j then (1 : ℝ) / (2 * t) else 0)) * heatKernel x t
   else 0
 
+/-- Third spatial derivative formula for the causal heat kernel. -/
 def heatKernelSpaceThirdDerivative (x : Vec3) (t : ℝ)
     (i j k : Fin 3) : ℝ :=
   if 0 < t then
@@ -62,6 +67,7 @@ def heatKernelSpaceThirdDerivative (x : Vec3) (t : ℝ)
         (if j = k then x i else 0)) / (4 * t ^ 2)) * heatKernel x t
   else 0
 
+/-- Fourth spatial derivative formula for the causal heat kernel. -/
 def heatKernelSpaceFourthDerivative (x : Vec3) (t : ℝ)
     (i j k l : Fin 3) : ℝ :=
   if 0 < t then
@@ -78,6 +84,7 @@ def heatKernelSpaceFourthDerivative (x : Vec3) (t : ℝ)
         (4 * t ^ 2)) * heatKernel x t
   else 0
 
+/-- Spatial Laplacian of the heat kernel, summed over coordinate directions. -/
 def heatKernelLaplacian (x : Vec3) (t : ℝ) : ℝ :=
   ∑ i, heatKernelSpaceSecondDerivative x t i
 

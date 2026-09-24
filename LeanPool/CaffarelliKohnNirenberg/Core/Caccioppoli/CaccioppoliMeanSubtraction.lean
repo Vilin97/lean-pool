@@ -409,15 +409,15 @@ theorem caccioppoli_heat_cutoff_cancel
     (hfuture : Icc t₀ (t₀ + ε) ⊆ I) :
     ∀ᵐ s ∂volume.restrict (Ioc (t₀ - ρ ^ 2) t₀),
       ∀ x : ℝ, parametricPairing
-        (fun s y => backwardHeat_cutoff
-          (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r (y, s))
+        (fun s y => backwardHeatCutoff
+          (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r (y, s))
         (fun _ : Vec3 => 0) (fun y => u (y, s)) (fun _ => 0) x = 0 := by
   obtain ⟨R, Ω', J, hρR, hbox, hball, hT, _⟩ :=
     caccioppoli_slice_poincare_ae hsol hρ hsub
   let K : Set Vec3 := euclideanClosedBall x₀ (3 * ρ / 4)
   let F : Vec3 × ℝ → ℝ :=
-    fun z => backwardHeat_cutoff
-      (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r z
+    fun z => backwardHeatCutoff
+      (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r z
   let Ψ : ℝ → Vec3 → ℝ := fun s y => F (y, s)
   have hKcompact : IsCompact K := by
     dsimp [K]
@@ -446,10 +446,10 @@ theorem caccioppoli_heat_cutoff_cancel
   have hFsupport : Function.support F ⊆
       euclideanBall x₀ (3 * ρ / 4) ×ˢ (Set.univ : Set ℝ) := by
     intro z hz
-    have hη : caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε z ≠ 0 := by
+    have hη : caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε z ≠ 0 := by
       intro hzero
       apply hz
-      simp [F, backwardHeat_cutoff, hzero]
+      simp [F, backwardHeatCutoff, hzero]
     have hm := caccioppoli_heat_cutoff_support_subset x₀ t₀ ρ ε hρ hε
       (Function.mem_support.mpr hη)
     exact ⟨hm.1, mem_univ _⟩

@@ -5,8 +5,8 @@ Authors: Scott Armstrong, Vlad Vicol
 -/
 module
 
-public import LeanPool.CaffarelliKohnNirenberg.Core.Step4.WeakGradientGluingTGapForceAffine
-public import LeanPool.CaffarelliKohnNirenberg.Core.Step4.WeakGradientGluingTFourTermMass
+public import LeanPool.CaffarelliKohnNirenberg.Core.Step4.PressureGradientOriginASlotLargeCells
+public import LeanPool.CaffarelliKohnNirenberg.Core.Step4.WeakGradientGluingTGapForceIncrement
 
 /-! # Homogeneous time mass of the annular force increment
 
@@ -15,6 +15,130 @@ and time retain the force data power without an additive constant.
 -/
 
 @[expose] public section
+
+section
+
+/-! # Four-term pressure mass and affine absorption -/
+
+open MeasureTheory Set
+open scoped ENNReal BigOperators
+open CKN.Foundation.Parabolic
+noncomputable section
+namespace CKN.Core.Step4
+
+/-- A balanced four-term split has a uniform six-fifths power cost. -/
+theorem four_term_six_fifths (a b c d : ℝ≥0∞) :
+    (a+b+c+d)^(6/5 : ℝ) ≤
+      16*(a^(6/5 : ℝ)+b^(6/5 : ℝ)+c^(6/5 : ℝ)+d^(6/5 : ℝ)) := by
+  have htwo : (2 : ℝ≥0∞)^(6/5 : ℝ) ≤ 4 := by
+    calc
+      _ ≤ (2 : ℝ≥0∞)^(2 : ℝ) :=
+        ENNReal.rpow_le_rpow_of_exponent_le (by norm_num) (by norm_num)
+      _ = 4 := by norm_num
+  have h (x y : ℝ≥0∞) : (x+y)^(6/5 : ℝ) ≤
+      4*(x^(6/5 : ℝ)+y^(6/5 : ℝ)) :=
+    (ENNReal.add_rpow_le_two_rpow_mul_rpow_add_rpow x y (by norm_num)).trans
+      (mul_le_mul' htwo le_rfl)
+  calc
+    _ = ((a+b)+(c+d))^(6/5 : ℝ) := by simp only [add_assoc]
+    _ ≤ 4*((a+b)^(6/5 : ℝ)+(c+d)^(6/5 : ℝ)) := h _ _
+    _ ≤ 4*(4*(a^(6/5 : ℝ)+b^(6/5 : ℝ))+
+        4*(c^(6/5 : ℝ)+d^(6/5 : ℝ))) :=
+      mul_le_mul' le_rfl (add_le_add (h _ _) (h _ _))
+    _ = _ := by ring
+
+/-- The signed four-term identity controls each spatial slice norm. -/
+theorem four_term_slice_mass_le {μ : Measure Vec3} {D A B C E : Vec3 → ℝ}
+    (hid : D =ᵐ[μ] (fun x => -A x + B x + C x - E x)) :
+    eLpNorm D (ENNReal.ofReal (6/5 : ℝ)) μ^(6/5 : ℝ) ≤
+      16*(eLpNorm A (ENNReal.ofReal (6/5 : ℝ)) μ^(6/5 : ℝ)+
+        eLpNorm B (ENNReal.ofReal (6/5 : ℝ)) μ^(6/5 : ℝ)+
+        eLpNorm C (ENNReal.ofReal (6/5 : ℝ)) μ^(6/5 : ℝ)+
+        eLpNorm E (ENNReal.ofReal (6/5 : ℝ)) μ^(6/5 : ℝ)) := by
+  have hp : (1 : ℝ≥0∞) ≤ ENNReal.ofReal (6/5 : ℝ) := by norm_num
+  rw [eLpNorm_congr_ae hid]
+  have h := (eLpNorm_add_le (f := fun x => -A x+B x+C x)
+    (g := -E) (μ := μ) hp).trans
+    (add_le_add (eLpNorm_add_le (f := fun x => -A x+B x) (g := C) hp) le_rfl)
+  have hh := h.trans (add_le_add
+    (add_le_add (eLpNorm_add_le (f := -A) (g := B) hp) le_rfl) le_rfl)
+  simp only [eLpNorm_neg] at hh
+  exact (ENNReal.rpow_le_rpow hh (by norm_num)).trans (four_term_six_fifths _ _ _ _)
+
+/-- The absolute enlargement pays the triangle cost and all four component budgets. -/
+def fourTermAffineThreshold (Cbase : ℝ) : ℝ := 64*(|Cbase|+1)
+
+/-- Four component bounds at the base constant fit the enlarged affine slot. -/
+theorem four_term_affine_cost_absorbed {q ε Cbase C_CZ : ℝ} {KU KD : ℝ≥0∞}
+    (hthreshold : fourTermAffineThreshold Cbase ≤ C_CZ) :
+    (64 : ℝ≥0∞)*originKPAffineASlot q Cbase ε KU KD ≤
+      originKPAffineASlot q C_CZ ε KU KD := by
+  refine originKPAffineASlot_const_mul_le (by norm_num) ?_
+  have hc : (64 : ℝ≥0∞) = ENNReal.ofReal (64 : ℝ) := by norm_num
+  rw [hc, ← ENNReal.ofReal_mul (by norm_num)]
+  apply ENNReal.ofReal_le_ofReal
+  have ha := le_abs_self C_CZ
+  unfold fourTermAffineThreshold at hthreshold
+  linarith only [ha,hthreshold]
+
+/-- Integration preserves the four-term cost for measurable slice masses. -/
+theorem four_term_time_mass_le {ν : Measure ℝ} {D A B C E : ℝ → ℝ≥0∞}
+    (hA : AEMeasurable A ν) (hB : AEMeasurable B ν) (hC : AEMeasurable C ν)
+    (hbound : ∀ᵐ s ∂ν, D s ≤ 16 * (A s + B s + C s + E s)) :
+    (∫⁻ s, D s ∂ν) ≤ 16*((∫⁻ s, A s ∂ν)+(∫⁻ s, B s ∂ν)+
+      (∫⁻ s, C s ∂ν)+(∫⁻ s, E s ∂ν)) := by
+  calc
+    _ ≤ ∫⁻ s, 16*(A s+B s+C s+E s) ∂ν := lintegral_mono_ae hbound
+    _ = _ := by
+      rw [lintegral_const_mul' _ _ (by norm_num), lintegral_add_left' (show AEMeasurable (fun s =>
+        A s+B s+C s) ν from (hA.add hB).add hC),
+        lintegral_add_left' (show AEMeasurable (fun s => A s+B s) ν from hA.add hB),
+          lintegral_add_left' hA]
+
+/-- Four slice-mass budgets combine into one enlarged affine budget. -/
+theorem four_term_time_mass_affine {ν : Measure ℝ} {D A B C E : ℝ → ℝ≥0∞}
+    {q ε Cbase C_CZ : ℝ} {KU KD L : ℝ≥0∞}
+    (hthreshold : fourTermAffineThreshold Cbase ≤ C_CZ)
+    (hA : AEMeasurable A ν) (hB : AEMeasurable B ν) (hC : AEMeasurable C ν)
+    (hbound : ∀ᵐ s ∂ν, D s ≤ 16 * (A s + B s + C s + E s))
+    (hAm : (∫⁻ s, A s ∂ν) ≤ originKPAffineASlot q Cbase ε KU KD * L)
+    (hBm : (∫⁻ s, B s ∂ν) ≤ originKPAffineASlot q Cbase ε KU KD * L)
+    (hCm : (∫⁻ s, C s ∂ν) ≤ originKPAffineASlot q Cbase ε KU KD * L)
+    (hEm : (∫⁻ s, E s ∂ν) ≤ originKPAffineASlot q Cbase ε KU KD * L) :
+    (∫⁻ s, D s ∂ν) ≤ originKPAffineASlot q C_CZ ε KU KD*L := by
+  calc
+    _ ≤ 16*((∫⁻ s, A s ∂ν)+(∫⁻ s, B s ∂ν)+
+        (∫⁻ s, C s ∂ν)+(∫⁻ s, E s ∂ν)) := four_term_time_mass_le hA hB hC hbound
+    _ ≤ 16*(originKPAffineASlot q Cbase ε KU KD*L+
+        originKPAffineASlot q Cbase ε KU KD*L+
+        originKPAffineASlot q Cbase ε KU KD*L+
+        originKPAffineASlot q Cbase ε KU KD*L) :=
+      mul_le_mul' le_rfl (add_le_add (add_le_add (add_le_add hAm hBm) hCm) hEm)
+    _ = (64*originKPAffineASlot q Cbase ε KU KD)*L := by ring
+    _ ≤ _ := mul_le_mul' (four_term_affine_cost_absorbed hthreshold) le_rfl
+
+end CKN.Core.Step4
+end
+
+end
+
+section
+
+/-! # An absolute affine threshold for the force-potential increment -/
+
+open MeasureTheory Set
+open scoped ENNReal Topology BigOperators
+open CKN CKN.Foundation.Parabolic CKN.Foundation.Euclidean CKN.Core.Endgame
+noncomputable section
+namespace CKN.Core.Step4
+
+/-- An explicit absolute threshold for the force-potential increment. -/
+def gapForceIncrementThreshold : ℝ := 5 * gapForceIncrementCoefficient
+
+end CKN.Core.Step4
+end
+
+end
 
 open MeasureTheory Set Filter
 open scoped ENNReal Topology BigOperators
@@ -40,8 +164,8 @@ private theorem force_slice_norm_power_le
 force power and the spatial cell volume, on every interior half-collar. -/
 theorem exists_gap_force_mass_envelope_of_sws
     (ε R₁ r : ℝ) {z : ParabolicPoint} {ρ : ℝ}
-    (hρ : 0 < ρ) (hlo : 1/128 ≤ ρ) (hhi : ρ ≤ 1/2)
-    (hr : 0 < r) (hrρ : r ≤ ρ/2)
+    (hρ : 0 < ρ) (hlo : 1 / 128 ≤ ρ) (hhi : ρ ≤ 1 / 2)
+    (hr : 0 < r) (hrρ : r ≤ ρ / 2)
     {Ω : Set Vec3} {I : Set ℝ} {q : ℝ}
     {u : ParabolicPoint → Vec3} {Du : ParabolicPoint → Fin 3 → Vec3}
     {p : ParabolicPoint → ℝ} {f : ParabolicPoint → Vec3}
@@ -49,7 +173,7 @@ theorem exists_gap_force_mass_envelope_of_sws
     (hdom : closure (parabolicCylinder (0 : Vec3) 0 1) ⊆ spaceTimeSet Ω I)
     (hQ : parabolicCylinder z.1 z.2 ρ ⊆ parabolicCylinder (0 : Vec3) 0 1)
     (hforce : (∫⁻ w in parabolicCylinder (0 : Vec3) 0 1,
-      ENNReal.ofReal (vec3EuclideanNorm (f w))^q) ≤ ENNReal.ofReal ε)
+      ENNReal.ofReal (vec3EuclideanNorm (f w)) ^ q) ≤ ENNReal.ofReal ε)
     (i : Fin 3) :
     ∃ M : ℝ → ℝ≥0∞,
       AEMeasurable M (volume.restrict (Ioc (z.2-r^2) z.2 ∩ Ioc (-(R₁^2)) 0)) ∧
@@ -157,10 +281,10 @@ private theorem force_increment_coefficient_le {C_CZ : ℝ}
 /-- The force increment has a measurable mass envelope within the affine slot. -/
 theorem exists_gap_force_affine_envelope_of_sws
     (ε C_CZ τ R₁ r : ℝ) (KU KD : ℝ≥0∞)
-    (hC : gapForceIncrementThreshold ≤ C_CZ) (hτ : 25/3 ≤ τ)
+    (hC : gapForceIncrementThreshold ≤ C_CZ) (hτ : 25 / 3 ≤ τ)
     {z : ParabolicPoint} {ρ : ℝ}
-    (hρ : 0 < ρ) (hlo : 1/128 ≤ ρ) (hhi : ρ ≤ 1/2)
-    (hr : 0 < r) (hrρ : r ≤ ρ/2)
+    (hρ : 0 < ρ) (hlo : 1 / 128 ≤ ρ) (hhi : ρ ≤ 1 / 2)
+    (hr : 0 < r) (hrρ : r ≤ ρ / 2)
     {Ω : Set Vec3} {I : Set ℝ} {q : ℝ}
     {u : ParabolicPoint → Vec3} {Du : ParabolicPoint → Fin 3 → Vec3}
     {p : ParabolicPoint → ℝ} {f : ParabolicPoint → Vec3}
@@ -168,7 +292,7 @@ theorem exists_gap_force_affine_envelope_of_sws
     (hdom : closure (parabolicCylinder (0 : Vec3) 0 1) ⊆ spaceTimeSet Ω I)
     (hQ : parabolicCylinder z.1 z.2 ρ ⊆ parabolicCylinder (0 : Vec3) 0 1)
     (hforce : (∫⁻ w in parabolicCylinder (0 : Vec3) 0 1,
-      ENNReal.ofReal (vec3EuclideanNorm (f w))^q) ≤ ENNReal.ofReal ε)
+      ENNReal.ofReal (vec3EuclideanNorm (f w)) ^ q) ≤ ENNReal.ofReal ε)
     (i : Fin 3) :
     ∃ M : ℝ → ℝ≥0∞,
       AEMeasurable M (volume.restrict (Ioc (z.2-r^2) z.2 ∩ Ioc (-(R₁^2)) 0)) ∧
@@ -189,7 +313,8 @@ theorem exists_gap_force_affine_envelope_of_sws
     ring
   have hrad := harmonicRemainder_radius_power_le hr
     (show ENNReal.ofReal r ≤ 1 by simpa using ENNReal.ofReal_le_ofReal hr1) hθ
-  obtain ⟨M, hMm, hMp, hmass⟩ := exists_gap_force_mass_envelope_of_sws ε R₁ r hρ hlo hhi hr hrρ hsol hdom hQ hforce i
+  obtain ⟨M, hMm, hMp, hmass⟩ := exists_gap_force_mass_envelope_of_sws ε R₁ r hρ hlo hhi hr hrρ
+    hsol hdom hQ hforce i
   have hslot := (le_add_right (le_refl
     ((3 * ENNReal.ofReal (|C_CZ|+1))^(6/5 : ℝ) * ENNReal.ofReal ε^(6/(5*q))))).trans
       (harmonicRemainder_two_terms_le_originKPAffineASlot q C_CZ ε KU KD hq)
@@ -205,7 +330,8 @@ theorem exists_gap_force_affine_envelope_of_sws
       norm_num only [ENNReal.rpow_ofNat]
       ring
     _ ≤ (3 * ENNReal.ofReal (|C_CZ|+1))^(6/5 : ℝ) * ENNReal.ofReal ε^(6/(5*q)) *
-        ENNReal.ofReal r^θ := mul_le_mul' (mul_le_mul' (force_increment_coefficient_le hC) le_rfl) hrad
+        ENNReal.ofReal r^θ := mul_le_mul' (mul_le_mul' (force_increment_coefficient_le hC) le_rfl)
+          hrad
     _ ≤ originKPAffineASlot q C_CZ ε KU KD * ENNReal.ofReal r^θ := mul_le_mul' hslot le_rfl
     _ = _ := by rw [ENNReal.ofReal_rpow_of_pos hr]
 

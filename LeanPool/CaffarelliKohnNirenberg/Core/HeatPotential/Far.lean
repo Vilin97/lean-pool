@@ -318,7 +318,7 @@ private lemma heatKernelSpaceMixedSecondDerivative_abs_le_rho_inv_five
     have hprod : |x i * x j / (4 * t ^ 2)| ≤ s ^ 2 / (4 * t ^ 2) := by
       rw [abs_div, abs_of_pos (by positivity : 0 < (4 * t ^ 2 : ℝ)), abs_mul]
       apply div_le_div_of_nonneg_right
-      calc
+      on_goal 1 => calc
         |x i| * |x j| ≤ s * s := mul_le_mul hxi hxj (abs_nonneg _) hs
         _ = s ^ 2 := by ring
       positivity
@@ -326,7 +326,8 @@ private lemma heatKernelSpaceMixedSecondDerivative_abs_le_rho_inv_five
         (1 : ℝ) / (2 * t) := by
       split_ifs
       · rw [abs_of_pos (by positivity)]
-      · simp
+      · simp only [abs_zero, one_div, mul_inv_rev, inv_pos, Nat.ofNat_pos,
+        mul_nonneg_iff_of_pos_right, inv_nonneg]
         positivity
     calc
       |x i * x j / (4 * t ^ 2) - (if i = j then (1 : ℝ) / (2 * t) else 0)| *

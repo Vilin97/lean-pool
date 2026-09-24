@@ -52,6 +52,178 @@ theorem originASlotM2Coefficient_lt_top : originASlotM2Coefficient < ⊤ := by
   have hS := sobolevPoincareL6Constant_lt_top
   finiteness
 
+private lemma originASlot_M2_correction_mass_instances_hNraw_1 :
+    ∀ (q τ R₀ R₁ : ℝ) (KU KD : ℝ≥0∞),
+      (5 / 2 : ℝ) < q →
+        (25 / 3 : ℝ) ≤ τ →
+          ∀ {u : ParabolicPoint → Vec3} {Du : ParabolicPoint → Fin (3 : ℕ) → Vec3}
+            {f : ParabolicPoint → Vec3} (z : ParabolicPoint),
+            (0 : ℝ) < (R₀ - R₁) / (2 : ℝ) →
+              ∀ (ρ : ℝ) (hρ : (0 : ℝ) < ρ),
+                ρ ≤ (1 : ℝ) →
+                  let J : Set ℝ := Ioc (z.2 - ρ ^ (2 : ℕ)) z.2;
+                  let S : Set ParabolicPoint := vec3Ball (0 : Vec3) R₀ ×ˢ J;
+                  let S₃ : Set ParabolicPoint := vec3Ball z.1 ((3 : ℝ) * ρ / (4 : ℝ)) ×ˢ J;
+                  let Sρ : Set ParabolicPoint := parabolicCylinder z.1 z.2 ρ;
+                  MeasurableSet S →
+                    MeasurableSet S₃ →
+                      MeasurableSet Sρ →
+                        S₃ ⊆ Sρ →
+                          ((∀ (i : Fin (3 : ℕ)),
+                                AEMeasurable (fun (w : ParabolicPoint) => u w i)
+                                  (volume.restrict S)) ∧
+                              (∀ (i j : Fin (3 : ℕ)),
+                                  AEMeasurable (fun (w : ParabolicPoint) => Du w i j)
+                                    (volume.restrict S)) ∧
+                                ∀ (i : Fin (3 : ℕ)),
+                                  AEMeasurable (fun (w : ParabolicPoint) => f w i)
+                                    (volume.restrict S)) →
+                            ((∀ (i : Fin (3 : ℕ)),
+                                  AEMeasurable (fun (w : ParabolicPoint) => u w i)
+                                    (volume.restrict Sρ)) ∧
+                                (∀ (i j : Fin (3 : ℕ)),
+                                    AEMeasurable (fun (w : ParabolicPoint) => Du w i j)
+                                      (volume.restrict Sρ)) ∧
+                                  ∀ (i : Fin (3 : ℕ)),
+                                    AEMeasurable (fun (w : ParabolicPoint) => f w i)
+                                      (volume.restrict Sρ)) →
+                              ((∀ (i : Fin (3 : ℕ)),
+                                    AEMeasurable (fun (w : ParabolicPoint) => u w i)
+                                      (volume.restrict S₃)) ∧
+                                  (∀ (i j : Fin (3 : ℕ)),
+                                      AEMeasurable (fun (w : ParabolicPoint) => Du w i j)
+                                        (volume.restrict S₃)) ∧
+                                    ∀ (i : Fin (3 : ℕ)),
+                                      AEMeasurable (fun (w : ParabolicPoint) => f w i)
+                                        (volume.restrict S₃)) →
+                                (∀ (k : Fin (3 : ℕ)),
+                                    AEMeasurable
+                                      (fun (w : ParabolicPoint) =>
+                                        sourceSliceCentredMean z.1 ρ u w.2 k)
+                                      (volume.restrict S₃)) →
+                                  ∀ (Kη : ℝ),
+                                    (0 : ℝ) ≤ Kη →
+                                      (∀ (k : Fin (3 : ℕ)) (x : Vec3),
+                                          |spatialDeriv (mollifiedBallCutoff z.1 hρ) k x| ≤ Kη) →
+                                        (∀ x ∉ vec3Ball z.1 ((3 : ℝ) * ρ / (4 : ℝ)),
+                                            mollifiedBallCutoff z.1 hρ x = (0 : ℝ)) →
+                                          (∀ (k : Fin (3 : ℕ)),
+                                              ∀ x ∉ vec3Ball z.1 ((3 : ℝ) * ρ / (4 : ℝ)),
+                                                spatialDeriv (mollifiedBallCutoff z.1 hρ) k x =
+                                                  (0 : ℝ)) →
+                                            ∀ (X Mfree Mc : ℝ≥0∞),
+                                              (∀ (k : Fin (3 : ℕ)),
+                                                  AEMeasurable
+                                                    (Sρ.indicator fun (w : ParabolicPoint) =>
+                                                      u w k - sourceSliceCentredMean z.1 ρ u w.2 k)
+                                                    volume) →
+                                                (∀ (k : Fin (3 : ℕ)),
+                                                    morreyNorm (2 : ℝ) (25 / 8 : ℝ)
+                                                        (Sρ.indicator fun (w : ParabolicPoint) =>
+                                                          u w k -
+                                                            sourceSliceCentredMean z.1 ρ u w.2 k) ≤
+                                                      Mfree) →
+                                                  (∀ (k : Fin (3 : ℕ)),
+                                                      morreyNorm (3 : ℝ) τ
+                                                          (S₃.indicator fun (w : ParabolicPoint) =>
+                                                            sourceSliceCentredMean z.1 ρ u w.2 k) ≤
+                                                        Mc) →
+                                                    (∀ (j : Fin (3 : ℕ)),
+                                                        morreyNorm (3 : ℝ) τ
+                                                            (S₃.indicator
+                                                              fun (w : ParabolicPoint) => u w j) ≤
+                                                          KU) →
+                                                      (∀ (j k : Fin (3 : ℕ)),
+                                                          morreyNorm (2 : ℝ) (25 / 8 : ℝ)
+                                                              (Sρ.indicator
+                                                                fun (w : ParabolicPoint) =>
+                                                                Du w j k) ≤
+                                                            KD) →
+                                                        (∀ (j : Fin (3 : ℕ)),
+                                                            morreyNorm (6 / 5 : ℝ)
+                                                                (min ((1 : ℝ) / τ + (8 / 25 : ℝ))⁻¹
+                                                                  q)
+                                                                (S.indicator
+                                                                  fun (v : ParabolicPoint) =>
+                                                                  ∑ k : Fin (3 : ℕ),
+                                                                      Du v j k * u v k -
+                                                                    f v j) ≤
+                                                              (3 : ℝ≥0∞) * X) →
+                                                          ∀ (j : Fin (3 : ℕ)),
+                                                            morreyNorm (6 / 5 : ℝ)
+                                                                (min ((1 : ℝ) / τ + (8 / 25 : ℝ))⁻¹
+                                                                  q)
+                                                                (S.indicator
+                                                                  fun (v : ParabolicPoint) =>
+                                                                  centredRawSourceCorrection
+                                                                    (vec3Ball (0 : Vec3) R₀)
+                                                                    (mollifiedBallCutoff z.1 hρ)
+                                                                    (spatialDeriv
+                                                                      (mollifiedBallCutoff z.1 hρ))
+                                                                    (fun (y : Vec3) => u (y, v.2))
+                                                                    (fun (y : Vec3) => f (y, v.2))
+                                                                    (fun (y : Vec3) => Du (y, v.2))
+                                                                    (sourceSliceCentredMean z.1 ρ u
+                                                                      v.2)
+                                                                    j v.1) ≤
+                                                              (3 : ℝ≥0∞) * X +
+                                                                  ENNReal.ofReal Kη *
+                                                                    ((3 : ℝ≥0∞) * (KU * Mfree)) +
+                                                                (3 : ℝ≥0∞) * (KD * Mc)
+    := by
+  intro q τ R₀ R₁ KU KD hq hτ u Du f z hρ ρ hρ hρ1 J S S₃ Sρ hSm hS₃m hSρm hS₃sub hdataS hdataSρ
+    hdataS₃ hcS₃ Kη
+    hKηnn hdηb hηsupp hdηsupp X Mfree Mc hGmeas hwbound hcbound hubound hdbound hAbound j
+  refine originASlot_correction_morreyNorm_le (x₀ := z.1) (z₀ := z) (R := ρ)
+    hτ hq hKηnn hρ hρ1
+    (mollifiedBallCutoff_nonneg z.1 hρ) (mollifiedBallCutoff_le_one z.1 hρ) hdηb
+    hηsupp hdηsupp (fun w hw => hw.1) (fun w hw hc' => show w ∈ S₃ from ⟨hc', hw.2⟩) hS₃sub hS₃sub j
+    ((aemeasurable_indicator_iff hSm).mpr
+      ((Finset.aemeasurable_fun_sum _ (fun k _ => (hdataS.2.1 j k).mul (hdataS.1 k))).sub
+        (hdataS.2.2 j)))
+    ((aemeasurable_indicator_iff hS₃m).mpr (hdataS₃.1 j))
+    (fun k => hGmeas k)
+    (fun k => (aemeasurable_indicator_iff hS₃m).mpr (hcS₃ k))
+    (fun k => (aemeasurable_indicator_iff hSρm).mpr (hdataSρ.2.1 j k))
+    (hAbound j) (hubound j) hwbound hcbound (hdbound j)
+
+private lemma originASlot_M2_correction_mass_instances_hcollapse_2 :
+    ∀  (KU KD : ℝ≥0∞) (Kη : ℝ),
+      Kη = (128 : ℝ) * cutoffGradientConstant →
+        ∀ (X Mfree : ℝ≥0∞),
+          Mfree =
+              ENNReal.ofReal (Real.pi * (4 : ℝ) / (3 : ℝ)) ^ (1 / 3 : ℝ) *
+                  sobolevPoincareL6Constant *
+                ((3 : ℝ≥0∞) * KD) →
+            ∀ (Mc : ℝ≥0∞),
+              Mc = ENNReal.ofReal ((7 / 4 : ℝ) ^ (3 : ℕ)) * KU →
+                KU * KD ≤ X →
+                  (3 : ℝ≥0∞) * X + ENNReal.ofReal Kη * ((3 : ℝ≥0∞) * (KU * Mfree)) +
+                      (3 : ℝ≥0∞) * (KD * Mc) ≤
+                    originASlotM2Coefficient * X
+    := by
+  intro   KU KD Kη hKηdef X Mfree hMfreedef Mc hMcdef hKUKD
+  have e1 : ENNReal.ofReal Kη * (3 * (KU * Mfree)) =
+      (9 * ENNReal.ofReal Kη *
+        (ENNReal.ofReal (Real.pi * 4 / 3) ^ (1/3 : ℝ) * sobolevPoincareL6Constant)) *
+          (KU * KD) := by
+    rw [hMfreedef]; ring
+  have e2 : 3 * (KD * Mc) =
+      (3 * ENNReal.ofReal ((7/4 : ℝ) ^ 3)) * (KU * KD) := by
+    rw [hMcdef]; ring
+  rw [e1, e2, originASlotM2Coefficient, hKηdef]
+  calc
+    3 * X + 9 * ENNReal.ofReal (128 * cutoffGradientConstant) *
+          (ENNReal.ofReal (Real.pi * 4 / 3) ^ (1/3 : ℝ) * sobolevPoincareL6Constant) *
+          (KU * KD) + 3 * ENNReal.ofReal ((7/4 : ℝ) ^ 3) * (KU * KD)
+        ≤ 3 * X + 9 * ENNReal.ofReal (128 * cutoffGradientConstant) *
+          (ENNReal.ofReal (Real.pi * 4 / 3) ^ (1/3 : ℝ) * sobolevPoincareL6Constant) * X +
+          3 * ENNReal.ofReal ((7/4 : ℝ) ^ 3) * X := by
+      gcongr
+    _ = (3 + (9 * ENNReal.ofReal (128 * cutoffGradientConstant) *
+          (ENNReal.ofReal (Real.pi * 4 / 3) ^ (1/3 : ℝ) * sobolevPoincareL6Constant) +
+          3 * ENNReal.ofReal ((7/4 : ℝ) ^ 3))) * X := by ring
+
 theorem originASlot_M2_correction_mass_instances :
 ∀ q τ C_CZ R₀ R₁ ε : ℝ, ∀ KU KD : ℝ≥0∞,
     5 / 2 < q → 25 / 3 ≤ τ → τ ≤ 25 → 0 ≤ C_CZ → originASlotM2Threshold q ≤ C_CZ →
@@ -81,7 +253,8 @@ theorem originASlot_M2_correction_mass_instances :
           eLpNorm (fun x => ∑ j, rieszSecondGradientExtensionOperator (rieszSecondL2Input j i)
             (rieszSecondL2_weak_type j i)
             (centredRawSourceCorrection (vec3Ball (0 : Vec3) R₀) η (spatialDeriv η)
-              (fun y => u (y,s)) (fun y => f (y,s)) (fun y => Du (y,s)) (c s) j) x) (ENNReal.ofReal (6 / 5 : ℝ))
+              (fun y => u (y,s)) (fun y => f (y,s)) (fun y => Du (y,s)) (c s) j) x)
+                (ENNReal.ofReal (6 / 5 : ℝ))
             (volume.restrict (vec3Ball z.1 r ∩ vec3Ball (0 : Vec3) R₁)) ^ (6 / 5 : ℝ)) ≤
           originKPAffineASlot q C_CZ ε KU KD * ENNReal.ofReal
             (r ^ (5 * (1 - (6 / 5 : ℝ) / min ((1 / τ + 8 / 25)⁻¹) q))) := by
@@ -209,26 +382,9 @@ theorem originASlot_M2_correction_mass_instances :
     fun j => originASlot_divergence_source_morreyNorm_le q τ R₀ ε KU KD hq hτ hR₀pos hR₀le
       hsol hdom hU hD hsize hSQ j
   -- the correction's majorant
-  have hNraw : ∀ j : Fin 3, morreyNorm (6/5 : ℝ) (min ((1/τ + 8/25 : ℝ)⁻¹) q)
-      (S.indicator (fun v : ParabolicPoint =>
-        centredRawSourceCorrection (vec3Ball (0 : Vec3) R₀) (mollifiedBallCutoff z.1 hρ)
-          (spatialDeriv (mollifiedBallCutoff z.1 hρ))
-          (fun y => u (y, v.2)) (fun y => f (y, v.2)) (fun y => Du (y, v.2))
-          (sourceSliceCentredMean z.1 ρ u v.2) j v.1)) ≤
-      3 * X + ENNReal.ofReal Kη * (3 * (KU * Mfree)) + 3 * (KD * Mc) := by
-    intro j
-    refine originASlot_correction_morreyNorm_le (x₀ := z.1) (z₀ := z) (R := ρ)
-      hτ hq hKηnn hρ hρ1
-      (mollifiedBallCutoff_nonneg z.1 hρ) (mollifiedBallCutoff_le_one z.1 hρ) hdηb
-      hηsupp hdηsupp (fun w hw => hw.1) (fun w hw hc' => show w ∈ S₃ from ⟨hc', hw.2⟩) hS₃sub hS₃sub j
-      ((aemeasurable_indicator_iff hSm).mpr
-        ((Finset.aemeasurable_fun_sum _ (fun k _ => (hdataS.2.1 j k).mul (hdataS.1 k))).sub
-          (hdataS.2.2 j)))
-      ((aemeasurable_indicator_iff hS₃m).mpr (hdataS₃.1 j))
-      (fun k => hGmeas k)
-      (fun k => (aemeasurable_indicator_iff hS₃m).mpr (hcS₃ k))
-      (fun k => (aemeasurable_indicator_iff hSρm).mpr (hdataSρ.2.1 j k))
-      (hAbound j) (hubound j) hwbound hcbound (hdbound j)
+  have hNraw := @originASlot_M2_correction_mass_instances_hNraw_1 q τ R₀ R₁ KU KD hq hτ u Du f z
+    hρ ρ hρ hρ1 hSm hS₃m hSρm hS₃sub hdataS hdataSρ hdataS₃ hcS₃ Kη hKηnn hdηb hηsupp hdηsupp X
+    Mfree Mc hGmeas hwbound hcbound hubound hdbound hAbound
   -- absorb the coefficients into the source budget
   have hKUKD : KU * KD ≤ X := by
     rw [hXdef]
@@ -236,28 +392,8 @@ theorem originASlot_M2_correction_mass_instances :
     calc KU * KD = 1 * (KU * KD) := (one_mul _).symm
       _ ≤ 3 * (KU * KD) := mul_le_mul' (by norm_num) le_rfl
       _ = 3 * KU * KD := by ring
-  have hcollapse : 3 * X + ENNReal.ofReal Kη * (3 * (KU * Mfree)) + 3 * (KD * Mc)
-      ≤ originASlotM2Coefficient * X := by
-    have e1 : ENNReal.ofReal Kη * (3 * (KU * Mfree)) =
-        (9 * ENNReal.ofReal Kη *
-          (ENNReal.ofReal (Real.pi * 4 / 3) ^ (1/3 : ℝ) * sobolevPoincareL6Constant)) *
-            (KU * KD) := by
-      rw [hMfreedef]; ring
-    have e2 : 3 * (KD * Mc) =
-        (3 * ENNReal.ofReal ((7/4 : ℝ) ^ 3)) * (KU * KD) := by
-      rw [hMcdef]; ring
-    rw [e1, e2, originASlotM2Coefficient, hKηdef]
-    calc
-      3 * X + 9 * ENNReal.ofReal (128 * cutoffGradientConstant) *
-            (ENNReal.ofReal (Real.pi * 4 / 3) ^ (1/3 : ℝ) * sobolevPoincareL6Constant) *
-            (KU * KD) + 3 * ENNReal.ofReal ((7/4 : ℝ) ^ 3) * (KU * KD)
-          ≤ 3 * X + 9 * ENNReal.ofReal (128 * cutoffGradientConstant) *
-            (ENNReal.ofReal (Real.pi * 4 / 3) ^ (1/3 : ℝ) * sobolevPoincareL6Constant) * X +
-            3 * ENNReal.ofReal ((7/4 : ℝ) ^ 3) * X := by
-        gcongr
-      _ = (3 + (9 * ENNReal.ofReal (128 * cutoffGradientConstant) *
-            (ENNReal.ofReal (Real.pi * 4 / 3) ^ (1/3 : ℝ) * sobolevPoincareL6Constant) +
-            3 * ENNReal.ofReal ((7/4 : ℝ) ^ 3))) * X := by ring
+  have hcollapse := @originASlot_M2_correction_mass_instances_hcollapse_2   KU KD Kη hKηdef X
+    Mfree hMfreedef Mc hMcdef hKUKD
   have hN : ∀ j : Fin 3, morreyNorm (6/5 : ℝ) (min ((1/τ + 8/25 : ℝ)⁻¹) q)
       (S.indicator (fun v : ParabolicPoint =>
         centredRawSourceCorrection (vec3Ball (0 : Vec3) R₀) (mollifiedBallCutoff z.1 hρ)

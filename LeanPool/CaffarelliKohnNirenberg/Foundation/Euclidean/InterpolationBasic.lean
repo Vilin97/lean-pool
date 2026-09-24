@@ -61,6 +61,7 @@ private lemma measurable_rpowExt (a : ℝ) : Measurable (rpowExt a) := by
 
 /-! ### The high-frequency contribution -/
 
+/-- Weighted high-amplitude integrand used in the interpolation distribution-function argument. -/
 def weightedHighIntegrand (N : Vec3 → ℝ≥0∞) (p : ℝ) (t : ℝ) (x : Vec3) :
     ℝ≥0∞ :=
   ENNReal.ofReal (rpowExt (p - 2) t) *
@@ -253,6 +254,7 @@ private lemma weighted_high_integral {N : Vec3 → ℝ≥0∞} (hN : Measurable 
 
 /-! ### The low-frequency contribution -/
 
+/-- Weighted low-amplitude square integrand used in the interpolation argument. -/
 def weightedLowIntegrand (N : Vec3 → ℝ≥0∞) (p : ℝ) (t : ℝ) (x : Vec3) :
     ℝ≥0∞ :=
   ENNReal.ofReal (rpowExt (p - 3) t) *
@@ -585,7 +587,8 @@ lemma tail_bound {T : (Vec3 → ℝ) → (Vec3 → ℝ)} {A₁ A₂ : ℝ}
     calc volume {x : Vec3 | ENNReal.ofReal (t / 2) < absE (T (sᶜ.indicator f)) x}
         ≤ ENNReal.ofReal (A₂ ^ 2) * (∫⁻ x in sᶜ, absE f x ^ 2) /
             (ENNReal.ofReal (t / 2)) ^ 2 := hvol
-      _ = ENNReal.ofReal (4 * A₂ ^ 2 / t ^ 2) * ∫⁻ x in sᶜ, absE f x ^ 2 := CKN.Foundation.Measure.ofReal_mul_div_ofReal_half_sq ht _
+      _ = ENNReal.ofReal (4 * A₂ ^ 2 / t ^ 2) * ∫⁻ x in sᶜ, absE f x ^ 2 :=
+        CKN.Foundation.Measure.ofReal_mul_div_ofReal_half_sq ht _
   have hcalc : volume {x : Vec3 | t < |T f x|} ≤
       (ENNReal.ofReal (2 * A₁ / t) * ∫⁻ x in s, absE f x) +
         (ENNReal.ofReal (4 * A₂ ^ 2 / t ^ 2) * ∫⁻ x in sᶜ, absE f x ^ 2) := by

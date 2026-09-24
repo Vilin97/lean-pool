@@ -141,7 +141,8 @@ theorem wide_gradient_morrey_of_decay
     intro z hz r hr hrr
     have hsub := (closure_small_cylinder_subset_unit hz hr.le (hrr.trans hrquarter)).trans hQ₁
     exact cylinder_gradient_component_of_decay M hM hsol hr hsub (hdec z hz r hr hrr) i j
-  apply morreyNorm_one_sided_indicator_le_on_cylinder (11 / 16) 2 (25 / 8) r₀ (ENNReal.ofReal (M ^ 2))
+  apply morreyNorm_one_sided_indicator_le_on_cylinder (11 / 16) 2 (25 / 8) r₀ (ENNReal.ofReal (M ^
+    2))
     ((N : ℝ≥0∞) * (ENNReal.ofReal (M ^ 2) * ENNReal.ofReal ((r₀ / 2) ^ (9 / 5 : ℝ))))
     (by norm_num) (by norm_num) (by norm_num) (by norm_num) hr₀
   · intro z hz r hr hrr

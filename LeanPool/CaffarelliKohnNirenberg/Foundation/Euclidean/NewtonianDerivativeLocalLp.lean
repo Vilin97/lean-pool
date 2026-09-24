@@ -33,6 +33,7 @@ open CKN
 def scalarConvolution (f g : Vec3 → ℝ) (x : Vec3) : ℝ :=
   ∫ y : Vec3, f y * g (x - y)
 
+/-- Extended nonnegative convolution used to majorize ordinary convolution integrals. -/
 def convolutionMajorant (f g : Vec3 → ℝ≥0∞) (x : Vec3) : ℝ≥0∞ :=
   ∫⁻ y : Vec3, f y * g (x - y)
 
@@ -247,7 +248,8 @@ theorem eLpNorm_scalarConvolution_six_fifths_three_halves
       (p := ENNReal.ofReal (6 / 5 : ℝ)) (by positivity) ENNReal.ofReal_ne_top
         hf.aestronglyMeasurable,
       eLpNorm_eq_lintegral_rpow_enorm_toReal
-      (p := ENNReal.ofReal (6 / 5 : ℝ)) (by positivity) ENNReal.ofReal_ne_top hg.aestronglyMeasurable]
+      (p := ENNReal.ofReal (6 / 5 : ℝ)) (by positivity) ENNReal.ofReal_ne_top
+        hg.aestronglyMeasurable]
   simp only [ENNReal.toReal_ofReal (by norm_num : (0 : ℝ) ≤ 3 / 2),
     ENNReal.toReal_ofReal (by norm_num : (0 : ℝ) ≤ 6 / 5)]
   norm_num only [ENNReal.toReal_ofReal, ENNReal.rpow_two]
@@ -359,9 +361,10 @@ theorem truncatedNewtonianDerivative_memLp
   have hintOn : IntegrableOn kp (ball (0 : Vec3) R) volume := by
     apply integrableOn_ball_of_norm_le_rpow (E := Vec3) (F := ℝ)
       (by change 1 ≤ Module.finrank ℝ (Fin 3 → ℝ); rw [Module.finrank_fin_fun]; norm_num)
-      (by change (12 / 5 : ℝ) < (Module.finrank ℝ Vec3 : ℝ)
-          ; rw [Module.finrank_fin_fun]
-          ; norm_num)
+      (by
+        change (12 / 5 : ℝ) < (Module.finrank ℝ Vec3 : ℝ)
+        rw [Module.finrank_fin_fun]
+        norm_num)
       hdecay hkpmeas
   have hint : Integrable kp volume := by
     exact hintOn.integrable_of_forall_notMem_eq_zero (by

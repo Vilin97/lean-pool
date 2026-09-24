@@ -24,6 +24,7 @@ noncomputable section
 
 namespace CKN
 
+/-- Space-time scaling homeomorphism used for momentum and local energy transport. -/
 def s34Homeomorph (μ : ℝ) (hμ : 0 < μ) (z₀ : ParabolicPoint) :
     (Vec3 × ℝ) ≃ₜ (Vec3 × ℝ) :=
   Homeomorph.prodCongr
@@ -376,6 +377,190 @@ private theorem s34_energy_source_zero
   · simp [hψ0]
   · simp [hψ0, ht, hs, hss]
 
+private lemma s4_rescale_hDpoint_1 :
+    ∀ {u : ParabolicPoint → Vec3} {Du : ParabolicPoint → Fin 3 → Vec3} (z₀ : ParabolicPoint)
+      {μ : ℝ} (ψ ψhat : Vec3 × ℝ → ℝ),
+      let D : ParabolicPoint → ℝ := fun z => spatialGradientSq u Du z * ψhat z;
+      let Dμ : ParabolicPoint → ℝ := fun z =>
+        spatialGradientSq (rescaleVelocity μ z₀ u) (rescaleGradient μ z₀ Du) z * ψ z;
+      (∀ (z : ParabolicPoint), ψhat (scalingParabolic μ z₀ z) = ψ z) →
+        ∀ (z : ParabolicPoint), Dμ z = μ ^ 4 * D (scalingParabolic μ z₀ z)
+    := by
+  intro u Du z₀ μ ψ ψhat D Dμ heval z
+  dsimp [Dμ, D, spatialGradientSq, rescaleGradient]
+  rw [heval z]
+  change (∑ i, ∑ j, (μ ^ 2 * Du (scalingParabolic μ z₀ z) i j) ^ 2) * ψ z =
+    μ ^ 4 * ((∑ i, ∑ j, Du (scalingParabolic μ z₀ z) i j ^ 2) * ψ z)
+  have hsum : ∀ i : Fin 3,
+      (∑ j, (μ ^ 2 * Du (scalingParabolic μ z₀ z) i j) ^ 2) =
+        μ ^ 4 * ∑ j, Du (scalingParabolic μ z₀ z) i j ^ 2 := by
+    intro i
+    calc
+      (∑ j, (μ ^ 2 * Du (scalingParabolic μ z₀ z) i j) ^ 2) =
+          ∑ j, μ ^ 4 * Du (scalingParabolic μ z₀ z) i j ^ 2 := by
+            apply Finset.sum_congr rfl
+            intro j hj
+            ring
+      _ = μ ^ 4 * ∑ j, Du (scalingParabolic μ z₀ z) i j ^ 2 := by
+            rw [← Finset.mul_sum]
+  calc
+    (∑ i, ∑ j, (μ ^ 2 * Du (scalingParabolic μ z₀ z) i j) ^ 2) * ψ z =
+        (∑ i, μ ^ 4 * (∑ j, Du (scalingParabolic μ z₀ z) i j ^ 2)) * ψ z := by
+          rw [show (∑ i, ∑ j,
+              (μ ^ 2 * Du (scalingParabolic μ z₀ z) i j) ^ 2) =
+              ∑ i, μ ^ 4 * (∑ j,
+                Du (scalingParabolic μ z₀ z) i j ^ 2) by
+            apply Finset.sum_congr rfl
+            intro i hi
+            exact hsum i]
+    _ = μ ^ 4 * ((∑ i, ∑ j, Du (scalingParabolic μ z₀ z) i j ^ 2) * ψ z) := by
+          rw [← Finset.mul_sum]
+          ring
+
+private lemma s4_rescale_hRpoint_2 :
+    ∀ {Ω : Set Vec3} {I : Set ℝ} {u : ParabolicPoint → Vec3} {p : ParabolicPoint → ℝ}
+      {f : ParabolicPoint → Vec3} (z₀ : ParabolicPoint) {μ : ℝ} (hμ : 0 < μ) (ψ : Vec3 × ℝ → ℝ),
+      Membership.mem (γ := Set (Vec3 × ℝ → ℝ))
+          (spaceTimeTestFunction (rescaledSpace μ z₀.1 Ω) (rescaledTime μ z₀.2 I)) ψ →
+        let ψhat : Vec3 × ℝ → ℝ := ψ ∘ ⇑(s34Homeomorph μ hμ z₀).symm;
+        let R : ParabolicPoint → ℝ := fun z =>
+          vec3EuclideanNorm (u z) ^ 2 *
+                (timePartial ψhat z + ∑ i : Fin 3, spatialSecondPartial ψhat i i z) +
+              (vec3EuclideanNorm (u z) ^ 2 + 2 * p z) *
+                ∑ i : Fin 3, u z i * spatialPartial ψhat i z +
+            (2 * ∑ i : Fin 3, f z i * u z i) * ψhat z;
+        let Rμ : ParabolicPoint → ℝ := fun z =>
+          vec3EuclideanNorm (rescaleVelocity μ z₀ u z) ^ 2 *
+                (timePartial ψ z + ∑ i : Fin 3, spatialSecondPartial ψ i i z) +
+              (vec3EuclideanNorm (rescaleVelocity μ z₀ u z) ^ 2 + 2 * rescalePressure μ z₀ p z) *
+                ∑ i : Fin 3, rescaleVelocity μ z₀ u z i * spatialPartial ψ i z +
+            (2 * ∑ i : Fin 3, rescaleForce μ z₀ f z i * rescaleVelocity μ z₀ u z i) * ψ z;
+        (∀ (z : ParabolicPoint),
+            vec3EuclideanNorm (rescaleVelocity μ z₀ u z) =
+              μ * vec3EuclideanNorm (u (scalingParabolic μ z₀ z))) →
+          ∀ (z : ParabolicPoint), Rμ z = μ ^ 4 * R (scalingParabolic μ z₀ z)
+    := by
+  intro Ω I u p f z₀ μ hμ ψ hψ ψhat R Rμ hnorm z
+  have ht :
+      timePartial (fun w => (ψ ∘ (fun v : Vec3 × ℝ =>
+        (μ⁻¹ • (v.1 - z₀.1), (μ ^ 2)⁻¹ * (v.2 - z₀.2)))) w)
+        (scalingParabolic μ z₀ z) =
+        (μ ^ 2)⁻¹ * timePartial ψ z := by
+    exact timePartial_pullback μ hμ z₀ hψ.1 z
+  have hs : ∀ i : Fin 3,
+      spatialPartial (fun w => (ψ ∘ (fun v : Vec3 × ℝ =>
+        (μ⁻¹ • (v.1 - z₀.1), (μ ^ 2)⁻¹ * (v.2 - z₀.2)))) w) i
+          (scalingParabolic μ z₀ z) =
+        μ⁻¹ * spatialPartial ψ i z := by
+    intro i
+    exact spatialPartial_pullback μ hμ z₀ hψ.1 i z
+  have hss : ∀ i : Fin 3,
+      spatialSecondPartial
+          (fun w => (ψ ∘ (fun v : Vec3 × ℝ =>
+            (μ⁻¹ • (v.1 - z₀.1), (μ ^ 2)⁻¹ * (v.2 - z₀.2)))) w) i i
+            (scalingParabolic μ z₀ z) =
+        (μ ^ 2)⁻¹ * spatialSecondPartial ψ i i z := by
+    intro i
+    exact spatialSecondPartial_pullback μ hμ z₀ hψ.1 i i z
+  have heval' :
+      (ψ ∘ (fun v : Vec3 × ℝ =>
+        (μ⁻¹ • (v.1 - z₀.1), (μ ^ 2)⁻¹ * (v.2 - z₀.2))))
+          (scalingParabolic μ z₀ z) = ψ z := by
+    apply congrArg ψ
+    apply Prod.ext
+    · ext i
+      simp [scalingParabolic, parabolicTranslate, parabolicScale, hμ.ne']
+    · simp [scalingParabolic, parabolicTranslate, parabolicScale, hμ.ne']
+  dsimp [Rμ, R, ψhat]
+  rw [s34Inverse_eq μ hμ z₀]
+  rw [hnorm z, ht]
+  simp_rw [hs]
+  simp_rw [hss]
+  rw [heval']
+  simp only [rescalePressure, rescaleVelocity, Pi.smul_apply, smul_eq_mul, rescaleForce]
+  simp only [scalingParabolic]
+  have hforce :
+      (2 * ∑ i, μ ^ 3 * f (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i *
+          (μ * u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i)) * ψ z =
+        2 * ∑ i, μ ^ 4 * ψ z *
+          f (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i *
+          u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i := by
+    calc
+      (2 * ∑ i, μ ^ 3 * f (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i *
+          (μ * u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i)) * ψ z =
+          2 * ((∑ i, μ ^ 3 * f (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i *
+            (μ * u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i)) * ψ z) := by ring
+      _ = 2 * ∑ i, (μ ^ 3 * f (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i *
+            (μ * u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i)) * ψ z := by
+            rw [Finset.sum_mul]
+      _ = 2 * ∑ i, μ ^ 4 * ψ z *
+          f (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i *
+          u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i := by
+            apply congrArg (fun w => 2 * w)
+            apply Finset.sum_congr rfl
+            intro i hi
+            ring
+  rw [hforce]
+  ring_nf
+  have hsp :
+      (∑ i, μ * u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i *
+          spatialPartial ψ i z) =
+        μ * ∑ i, u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i *
+          spatialPartial ψ i z := by
+    calc
+      (∑ i, μ * u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i *
+          spatialPartial ψ i z) =
+          ∑ i, μ * (u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i *
+            spatialPartial ψ i z) := by
+              apply Finset.sum_congr rfl
+              intro i hi
+              ring
+      _ = μ * ∑ i, u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i *
+          spatialPartial ψ i z := by rw [Finset.mul_sum]
+  have hspInv :
+      (∑ i, μ⁻¹ * u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i *
+          spatialPartial ψ i z) =
+        μ⁻¹ * ∑ i, u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i *
+          spatialPartial ψ i z := by
+    calc
+      (∑ i, μ⁻¹ * u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i *
+          spatialPartial ψ i z) =
+          ∑ i, μ⁻¹ * (u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i *
+            spatialPartial ψ i z) := by
+              apply Finset.sum_congr rfl
+              intro i hi
+              ring
+      _ = μ⁻¹ * ∑ i, u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i *
+          spatialPartial ψ i z := by rw [Finset.mul_sum]
+  have hssInv :
+      (∑ i, μ⁻¹ ^ 2 * spatialSecondPartial ψ i i z) =
+        μ⁻¹ ^ 2 * ∑ i, spatialSecondPartial ψ i i z := by
+    rw [Finset.mul_sum]
+  have hforce2 :
+      (∑ i, μ ^ 4 * ψ z *
+          f (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i *
+          u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i) =
+        μ ^ 4 * ψ z *
+          ∑ i, f (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i *
+            u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i := by
+    calc
+      (∑ i, μ ^ 4 * ψ z *
+          f (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i *
+          u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i) =
+          ∑ i, (μ ^ 4 * ψ z) *
+            (f (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i *
+              u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i) := by
+                apply Finset.sum_congr rfl
+                intro i hi
+                ring
+      _ = μ ^ 4 * ψ z *
+          ∑ i, f (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i *
+            u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i := by
+              rw [Finset.mul_sum]
+  rw [hsp, hspInv, hssInv]
+  rw [hforce2]
+  field_simp [hμ.ne']
+
 theorem s4_rescale
     {Ω : Set Vec3} {I : Set ℝ}
     {u : ParabolicPoint → Vec3} {Du : ParabolicPoint → Fin 3 → Vec3}
@@ -485,158 +670,9 @@ theorem s4_rescale
     change vec3EuclideanNorm (μ • u (scalingParabolic μ z₀ z)) = _
     rw [vec3EuclideanNorm_smul, abs_of_pos hμ]
   have hDpoint : ∀ z, Dμ z = μ ^ 4 * D (scalingParabolic μ z₀ z) := by
-    intro z
-    dsimp [Dμ, D, spatialGradientSq, rescaleGradient]
-    rw [heval z]
-    change (∑ i, ∑ j, (μ ^ 2 * Du (scalingParabolic μ z₀ z) i j) ^ 2) * ψ z =
-      μ ^ 4 * ((∑ i, ∑ j, Du (scalingParabolic μ z₀ z) i j ^ 2) * ψ z)
-    have hsum : ∀ i : Fin 3,
-        (∑ j, (μ ^ 2 * Du (scalingParabolic μ z₀ z) i j) ^ 2) =
-          μ ^ 4 * ∑ j, Du (scalingParabolic μ z₀ z) i j ^ 2 := by
-      intro i
-      calc
-        (∑ j, (μ ^ 2 * Du (scalingParabolic μ z₀ z) i j) ^ 2) =
-            ∑ j, μ ^ 4 * Du (scalingParabolic μ z₀ z) i j ^ 2 := by
-              apply Finset.sum_congr rfl
-              intro j hj
-              ring
-        _ = μ ^ 4 * ∑ j, Du (scalingParabolic μ z₀ z) i j ^ 2 := by
-              rw [← Finset.mul_sum]
-    calc
-      (∑ i, ∑ j, (μ ^ 2 * Du (scalingParabolic μ z₀ z) i j) ^ 2) * ψ z =
-          (∑ i, μ ^ 4 * (∑ j, Du (scalingParabolic μ z₀ z) i j ^ 2)) * ψ z := by
-            rw [show (∑ i, ∑ j,
-                (μ ^ 2 * Du (scalingParabolic μ z₀ z) i j) ^ 2) =
-                ∑ i, μ ^ 4 * (∑ j,
-                  Du (scalingParabolic μ z₀ z) i j ^ 2) by
-              apply Finset.sum_congr rfl
-              intro i hi
-              exact hsum i]
-      _ = μ ^ 4 * ((∑ i, ∑ j, Du (scalingParabolic μ z₀ z) i j ^ 2) * ψ z) := by
-            rw [← Finset.mul_sum]
-            ring
+    exact @s4_rescale_hDpoint_1 u Du z₀ μ ψ ψhat heval
   have hRpoint : ∀ z, Rμ z = μ ^ 4 * R (scalingParabolic μ z₀ z) := by
-    intro z
-    have ht :
-        timePartial (fun w => (ψ ∘ (fun v : Vec3 × ℝ =>
-          (μ⁻¹ • (v.1 - z₀.1), (μ ^ 2)⁻¹ * (v.2 - z₀.2)))) w)
-          (scalingParabolic μ z₀ z) =
-          (μ ^ 2)⁻¹ * timePartial ψ z := by
-      exact timePartial_pullback μ hμ z₀ hψ.1 z
-    have hs : ∀ i : Fin 3,
-        spatialPartial (fun w => (ψ ∘ (fun v : Vec3 × ℝ =>
-          (μ⁻¹ • (v.1 - z₀.1), (μ ^ 2)⁻¹ * (v.2 - z₀.2)))) w) i
-            (scalingParabolic μ z₀ z) =
-          μ⁻¹ * spatialPartial ψ i z := by
-      intro i
-      exact spatialPartial_pullback μ hμ z₀ hψ.1 i z
-    have hss : ∀ i : Fin 3,
-        spatialSecondPartial
-            (fun w => (ψ ∘ (fun v : Vec3 × ℝ =>
-              (μ⁻¹ • (v.1 - z₀.1), (μ ^ 2)⁻¹ * (v.2 - z₀.2)))) w) i i
-              (scalingParabolic μ z₀ z) =
-          (μ ^ 2)⁻¹ * spatialSecondPartial ψ i i z := by
-      intro i
-      exact spatialSecondPartial_pullback μ hμ z₀ hψ.1 i i z
-    have heval' :
-        (ψ ∘ (fun v : Vec3 × ℝ =>
-          (μ⁻¹ • (v.1 - z₀.1), (μ ^ 2)⁻¹ * (v.2 - z₀.2))))
-            (scalingParabolic μ z₀ z) = ψ z := by
-      apply congrArg ψ
-      apply Prod.ext
-      · ext i
-        simp [scalingParabolic, parabolicTranslate, parabolicScale, hμ.ne']
-      · simp [scalingParabolic, parabolicTranslate, parabolicScale, hμ.ne']
-    dsimp [Rμ, R, ψhat]
-    rw [s34Inverse_eq μ hμ z₀]
-    rw [hnorm z, ht]
-    simp_rw [hs]
-    simp_rw [hss]
-    rw [heval']
-    simp [rescaleVelocity, rescalePressure, rescaleForce,
-      Pi.smul_apply, smul_eq_mul]
-    simp only [scalingParabolic]
-    have hforce :
-        (2 * ∑ i, μ ^ 3 * f (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i *
-            (μ * u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i)) * ψ z =
-          2 * ∑ i, μ ^ 4 * ψ z *
-            f (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i *
-            u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i := by
-      calc
-        (2 * ∑ i, μ ^ 3 * f (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i *
-            (μ * u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i)) * ψ z =
-            2 * ((∑ i, μ ^ 3 * f (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i *
-              (μ * u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i)) * ψ z) := by ring
-        _ = 2 * ∑ i, (μ ^ 3 * f (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i *
-              (μ * u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i)) * ψ z := by
-              rw [Finset.sum_mul]
-        _ = 2 * ∑ i, μ ^ 4 * ψ z *
-            f (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i *
-            u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i := by
-              apply congrArg (fun w => 2 * w)
-              apply Finset.sum_congr rfl
-              intro i hi
-              ring
-    rw [hforce]
-    ring_nf
-    have hsp :
-        (∑ i, μ * u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i *
-            spatialPartial ψ i z) =
-          μ * ∑ i, u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i *
-            spatialPartial ψ i z := by
-      calc
-        (∑ i, μ * u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i *
-            spatialPartial ψ i z) =
-            ∑ i, μ * (u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i *
-              spatialPartial ψ i z) := by
-                apply Finset.sum_congr rfl
-                intro i hi
-                ring
-        _ = μ * ∑ i, u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i *
-            spatialPartial ψ i z := by rw [Finset.mul_sum]
-    have hspInv :
-        (∑ i, μ⁻¹ * u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i *
-            spatialPartial ψ i z) =
-          μ⁻¹ * ∑ i, u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i *
-            spatialPartial ψ i z := by
-      calc
-        (∑ i, μ⁻¹ * u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i *
-            spatialPartial ψ i z) =
-            ∑ i, μ⁻¹ * (u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i *
-              spatialPartial ψ i z) := by
-                apply Finset.sum_congr rfl
-                intro i hi
-                ring
-        _ = μ⁻¹ * ∑ i, u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i *
-            spatialPartial ψ i z := by rw [Finset.mul_sum]
-    have hssInv :
-        (∑ i, μ⁻¹ ^ 2 * spatialSecondPartial ψ i i z) =
-          μ⁻¹ ^ 2 * ∑ i, spatialSecondPartial ψ i i z := by
-      rw [Finset.mul_sum]
-    have hforce2 :
-        (∑ i, μ ^ 4 * ψ z *
-            f (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i *
-            u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i) =
-          μ ^ 4 * ψ z *
-            ∑ i, f (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i *
-              u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i := by
-      calc
-        (∑ i, μ ^ 4 * ψ z *
-            f (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i *
-            u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i) =
-            ∑ i, (μ ^ 4 * ψ z) *
-              (f (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i *
-                u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i) := by
-                  apply Finset.sum_congr rfl
-                  intro i hi
-                  ring
-        _ = μ ^ 4 * ψ z *
-            ∑ i, f (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i *
-              u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)) i := by
-                rw [Finset.mul_sum]
-    rw [hsp, hspInv, hssInv]
-    rw [hforce2]
-    field_simp [hμ.ne']
+    exact @s4_rescale_hRpoint_2 Ω I u p f z₀ μ hμ ψ hψ hnorm
   have hDcomp : IntegrableOn (D ∘ scalingParabolic μ z₀)
       (spaceTimeSet (rescaledSpace μ z₀.1 Ω)
         (rescaledTime μ z₀.2 I)) volume := by

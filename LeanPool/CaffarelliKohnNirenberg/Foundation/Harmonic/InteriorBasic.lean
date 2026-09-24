@@ -34,6 +34,7 @@ noncomputable section
 
 namespace CKN.Foundation.Heat
 
+/-- Squared Euclidean radius in native three-dimensional coordinates. -/
 def q (z : Vec3) : ℝ := ∑ i : Fin 3, z i ^ 2
 
 lemma q_pos {z : Vec3} (hz : z ≠ 0) : 0 < q z := by
@@ -164,6 +165,7 @@ private lemma contDiffAt_newtonianKernel {z : Vec3} (hz : z ≠ 0) :
   rw [hkernel]
   simpa only [Function.comp_apply] using hmul
 
+/-- First derivative of the normalized Newtonian kernel, defined as zero at its singularity. -/
 def kernelDerivative (i : Fin 3) (z : Vec3) : ℝ :=
   if z = 0 then 0 else
     (4 * Real.pi)⁻¹ * z i * q z ^ (-(3 : ℝ) / 2)

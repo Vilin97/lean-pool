@@ -90,13 +90,14 @@ lemma rieszSecond_concrete_bad_additivity
   exact rieszSecond_countable_bad_additivity hL2 D hF hF₂
     ENNReal.ofReal_ne_top (rieszSecond_concrete_bad_bridge hL2 D hF₂)
 
-def rieszSecondL2_cz_certificate
+/-- Concrete Calderón–Zygmund certificate for the second-Riesz L² operator. -/
+def rieszSecondL2CzCertificate
     {i j : Fin 3} {F : Vec3 → ℝ} {level : ℝ}
     (hL2 : RieszSecondL2Input i j) (_hFmeas : Measurable F)
     (hFint : Integrable F volume)
     (hF₂ : MemLp F (2 : ℝ≥0∞) volume) (hlevel : 0 < level) :
     RieszSecondL2CZCertificate hL2 F hF₂ level := by
-  apply rieszSecondL2_cz_certificate_of_interfaces hL2 hFint hF₂ hlevel
+  apply rieszSecondL2CzCertificateOfInterfaces hL2 hFint hF₂ hlevel
   intro D
   obtain ⟨hEq, hsum⟩ := rieszSecond_concrete_bad_additivity
     hL2 D hFint hF₂
@@ -123,7 +124,7 @@ theorem rieszSecondL2_weak_type :
   intro i j f hf hfi hf₂ l hl
   exact rieszSecondL2_restricted_weak_type (rieszSecondL2Input i j)
     (fun hfm hfin hmem hlevel =>
-      rieszSecondL2_cz_certificate (rieszSecondL2Input i j)
+      rieszSecondL2CzCertificate (rieszSecondL2Input i j)
         hfm hfin hmem hlevel)
     f hf hfi hf₂ l hl
 

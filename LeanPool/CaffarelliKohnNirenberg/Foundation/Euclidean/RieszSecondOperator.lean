@@ -32,15 +32,19 @@ namespace CKN.Foundation.Euclidean
 
 open CKN
 
+/-- Real L² space on three-dimensional Euclidean volume. -/
 abbrev rieszSecondL2 := Lp ℝ 2 (volume : Measure Vec3)
 
+/-- Continuous inclusion of Schwartz functions into the L² source space. -/
 def rieszSecondSchwartzEmbedding :
     SchwartzMap Vec3 ℝ →L[ℝ] rieszSecondL2 :=
   SchwartzMap.toLpCLM ℝ ℝ 2 volume
 
 /- The smooth input map is kept as a bounded map into the completed `L²`
    space.  Its norm bound is the global endpoint estimate. -/
+/-- Schwartz-space construction and norm bound used to extend the second Riesz transform to L². -/
 structure RieszSecondL2Input (i j : Fin 3) where
+  /-- Second-Riesz operator on the dense Schwartz source space. -/
   smoothMap : SchwartzMap Vec3 ℝ →L[ℝ] rieszSecondL2
   smooth_bound : ∀ φ, ‖smoothMap φ‖ ≤ ‖rieszSecondSchwartzEmbedding φ‖
   smooth_hessian : ∀ (F : Vec3 → ℝ)
@@ -51,6 +55,7 @@ structure RieszSecondL2Input (i j : Fin 3) where
 
 /- The completion extension is made with the norm-controlled extension API;
    no choice of an approximating sequence is retained in the definition. -/
+/-- Continuous L² extension of the Schwartz second-Riesz operator. -/
 def rieszSecondL2Extension {i j : Fin 3} (hL2 : RieszSecondL2Input i j) :
     rieszSecondL2 →L[ℝ] rieszSecondL2 :=
   LinearMap.mkContinuous
@@ -121,6 +126,7 @@ theorem rieszSecondL2Extension_norm_le {i j : Fin 3}
         ‖rieszSecondSchwartzEmbedding φ‖
       simpa only [one_mul] using hL2.smooth_bound φ) f)
 
+/-- A chosen measurable representative of an L² equivalence class. -/
 def rieszSecondLpMeasurableRepresentative (u : rieszSecondL2) : Vec3 → ℝ :=
   (Lp.aestronglyMeasurable u).aemeasurable.mk u
 
@@ -138,6 +144,7 @@ theorem rieszSecondLpMeasurableRepresentative_ae_eq
 /- The endpoint map is defined on the completed `L²` class.  No value is
    assigned to a raw function outside `L²`; doing so by zero would destroy
    sublinearity on the sum of the endpoint classes. -/
+/-- Measurable representative of the second-Riesz L² output. -/
 def rieszSecondL2MeasurableOperator {i j : Fin 3}
     (hL2 : RieszSecondL2Input i j) (u : rieszSecondL2) : Vec3 → ℝ :=
   rieszSecondLpMeasurableRepresentative (rieszSecondL2Extension hL2 u)
@@ -327,13 +334,17 @@ theorem rieszSecondL2_weak_type_of_cz_certificate
 
 /- A per-input certificate packages the data needed by the dyadic assembly.
    Its kernel constant is the one supplied by the second Newtonian derivative. -/
+/-- Good and bad output decomposition with quantitative data for the weak-(1,1) estimate. -/
 structure RieszSecondL2CZCertificate {i j : Fin 3}
     (hL2 : RieszSecondL2Input i j) (F : Vec3 → ℝ)
     (hF₂ : MemLp F (2 : ℝ≥0∞) volume) (level : ℝ) where
+  /-- Finite real value of the source L¹ mass in the Calderón–Zygmund certificate. -/
   A : ℝ
   hA : 0 ≤ A
   hAeq : dyadicL1Norm F = ENNReal.ofReal A
+  /-- Good contribution to the operator output in the Calderón–Zygmund certificate. -/
   G : CZDecomposition F level → Vec3 → ℝ
+  /-- Bad contribution to the operator output in the Calderón–Zygmund certificate. -/
   B : CZDecomposition F level → Vec3 → ℝ
   hdecomp : ∀ D : CZDecomposition F level, ∀ x,
       rieszSecondL2MeasurableOperator hL2
@@ -363,6 +374,7 @@ structure RieszSecondL2CZCertificate {i j : Fin 3}
             ∫⁻ x in dyadicCubeSet Q.1,
               ENNReal.ofReal |dyadicBadPart F Q.1 x|)
 
+/-- Explicit weak-(1,1) coefficient assembled from the decomposition and kernel bounds. -/
 def rieszSecondWeakTypeConstant : ℝ :=
   32 + 32 * Real.pi * Real.sqrt 3 +
     256 * Real.pi * rieszSecondKernelC₂
@@ -375,6 +387,7 @@ theorem rieszSecondKernelC_H :
   field_simp [Real.pi_ne_zero]
   ring
 
+/-- Measurable second-Riesz operator on L² inputs, extended by zero outside L². -/
 def rieszSecondL2RawOperator {i j : Fin 3}
     (hL2 : RieszSecondL2Input i j) (f : Vec3 → ℝ) : Vec3 → ℝ := by
   classical

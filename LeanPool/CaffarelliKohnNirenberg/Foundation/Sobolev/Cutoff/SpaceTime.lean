@@ -45,6 +45,7 @@ noncomputable section
 
 namespace CKN
 
+/-- Gap between the squared inner and outer radii in the temporal cutoff. -/
 def timeGap (r R : ℝ) : ℝ :=
   R ^ 2 - r ^ 2
 
@@ -58,12 +59,14 @@ private theorem timeGap_pos {r R : ℝ}
   dsimp [timeGap]
   nlinarith only [hprod]
 
+/-- Rising temporal cutoff at the backward end of the cylinder. -/
 def timeCutoffLeft
     (t₀ r R t : ℝ) : ℝ :=
   smoothTransitionProfile
     ((t - (t₀ - R ^ 2 + timeGap r R / 2)) /
       (timeGap r R / 2))
 
+/-- Falling temporal cutoff extending slightly beyond the cylinder's terminal time. -/
 def timeCutoffRight
     (t₀ r R t : ℝ) : ℝ :=
   smoothTransitionProfile

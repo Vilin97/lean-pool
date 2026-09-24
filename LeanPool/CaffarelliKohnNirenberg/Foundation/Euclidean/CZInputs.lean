@@ -119,9 +119,9 @@ theorem eLpNorm_bound_of_l2_interpolation
         simp
   simpa only [ENNReal.toReal_ofReal hp0.le] using hres
 
+/-- Build extension data from subadditivity, weak-(1,1), measurability and an L² bound. -/
 def l2ExtensionInput
     {T : (Vec3 → ℝ) → Vec3 → ℝ} {A₁ A₂ p : ℝ}
-    [Fact (1 ≤ ENNReal.ofReal p)]
     (hTsub : ∀ f g, Measurable f → Integrable f volume → MemLp f 2 volume →
       Measurable g → MemLp g 2 volume → ∀ᵐ x ∂volume, |T (f + g) x| ≤
         |T f x| + |T g x|)
@@ -201,6 +201,7 @@ def l2ExtensionInput
     (houtput hf hf₂).coeFn_toLp,
     eLpNorm_congr_ae hf.coeFn_toLp, K, lpNorm] using hlp
 
+/-- Extension data for a second Riesz transform obtained by interpolation below exponent two. -/
 def rieszSecondExtensionInput
     {i j : Fin 3} {p A₁ : ℝ}
     [Fact (1 ≤ ENNReal.ofReal p)]
@@ -675,3 +676,7 @@ theorem hCZ_grad_of_rieszSecond_inputs
             eLpNorm G (ENNReal.ofReal ((6 : ℝ) / 5)) volume) :
     HasCZGradientOperatorBound T C_CZ :=
   hCZ_grad_of_component_bounds hCcomp hconst hcomponent
+
+end Euclidean
+end Foundation
+end CKN

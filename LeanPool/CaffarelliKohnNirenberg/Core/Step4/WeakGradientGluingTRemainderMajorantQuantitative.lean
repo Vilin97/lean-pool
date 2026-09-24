@@ -47,6 +47,88 @@ private lemma vec3EuclideanNorm_le_sqrt_three (v : Vec3) :
         simp [Finset.sum_const, Finset.card_univ, Fintype.card_fin]
   exact (sq_le_sq₀ (vec3EuclideanNorm_nonneg v) (by positivity)).mp hsq
 
+private lemma pressure_utensor_integral_le_two_energy_hGpow_1 :
+    ∀ {u : ParabolicPoint → Vec3} {c : ℝ → Vec3} {x₀ : Vec3} {ρ s : ℝ},
+      (0 : ℝ) < ρ →
+        (c s = fun (j : Fin (3 : ℕ)) => ⨍ (y : Vec3) in vec3Ball x₀ ρ, u (y, s) j) →
+          let μ : Measure Vec3 := volume.restrict (vec3Ball x₀ ρ);
+          let F : Vec3 → L2Vec3 := fun (y : Vec3) => WithLp.toLp (2 : ℝ≥0∞) (u (y, s));
+          Integrable F μ → average μ F = WithLp.toLp (2 : ℝ≥0∞) (c s)
+    := by
+  intro u c x₀ ρ s hρ hc μ F hFint
+  have hvreal : volume.real (vec3Ball x₀ ρ) ≠ 0 := by
+    exact ENNReal.toReal_ne_zero.mpr
+      ⟨ne_of_gt (volume_vec3Ball_pos hρ),
+        (volume_vec3Ball_lt_top (x := x₀) (r := ρ)).ne⟩
+  rw [MeasureTheory.average_eq, hc]
+  apply PiLp.ext
+  intro i
+  have hi := ContinuousLinearMap.integral_comp_comm
+    (PiLp.proj (2 : ℝ≥0∞) (fun _ : Fin 3 => ℝ) i :
+      L2Vec3 →L[ℝ] ℝ) hFint
+  simpa [F, μ, MeasureTheory.average_eq, smul_eq_mul,
+    Measure.restrict_apply MeasurableSet.univ, univ_inter, hvreal]
+    using hi.symm
+
+private lemma pressure_utensor_integral_le_two_energy_hosc_2 :
+    ∀ (μ : Measure Vec3) (F G : Vec3 → L2Vec3),
+      (∫⁻ (y : Vec3), ‖G y‖ₑ ^ (2 : ℝ) ∂μ) / (μ : Set Vec3 → ℝ≥0∞) univ ≤
+          (4 : ℝ≥0∞) * ((∫⁻ (y : Vec3), ‖F y‖ₑ ^ (2 : ℝ) ∂μ) / (μ : Set Vec3 → ℝ≥0∞) univ) →
+        (μ : Set Vec3 → ℝ≥0∞) univ ≠ (0 : ℝ≥0∞) →
+          (μ : Set Vec3 → ℝ≥0∞) univ ≠ ∞ →
+            ∫⁻ (y : Vec3), ‖G y‖ₑ ^ (2 : ℝ) ∂μ ≤ (4 : ℝ≥0∞) * ∫⁻ (y : Vec3), ‖F y‖ₑ ^ (2 : ℝ) ∂μ
+    := by
+  intro μ F G hosc' hμne hμtop'
+  calc
+    _ = μ Set.univ *
+        ((∫⁻ y, ‖G y‖ₑ ^ (2 : ℝ) ∂μ) / μ Set.univ) := by
+      rw [ENNReal.mul_div_cancel hμne hμtop']
+    _ ≤ μ Set.univ *
+        ((4 : ℝ≥0∞) *
+          ((∫⁻ y, ‖F y‖ₑ ^ (2 : ℝ) ∂μ) / μ Set.univ)) := by gcongr
+    _ = (4 : ℝ≥0∞) * (∫⁻ y, ‖F y‖ₑ ^ (2 : ℝ) ∂μ) := by
+      calc
+        μ Set.univ * (4 *
+            ((∫⁻ y, ‖F y‖ₑ ^ (2 : ℝ) ∂μ) / μ Set.univ)) =
+            4 * (μ Set.univ *
+              ((∫⁻ y, ‖F y‖ₑ ^ (2 : ℝ) ∂μ) / μ Set.univ)) := by ring
+        _ = 4 * (∫⁻ y, ‖F y‖ₑ ^ (2 : ℝ) ∂μ) := by
+          rw [ENNReal.mul_div_cancel hμne hμtop']
+
+private lemma pressure_utensor_integral_le_two_energy_hprodle_3 :
+    ∀ (μ : Measure Vec3) (F G : Vec3 → L2Vec3),
+      (0 : ℝ) ≤ ∫ (y : Vec3), ‖F y‖ ^ (2 : ℕ) ∂μ →
+        ∫ (y : Vec3), ‖G y‖ ^ (2 : ℕ) ∂μ ≤ (4 : ℝ) * ∫ (y : Vec3), ‖F y‖ ^ (2 : ℕ) ∂μ →
+          ∫ (y : Vec3), ‖F y‖ * ‖G y‖ ∂μ ≤
+              (∫ (y : Vec3), ‖F y‖ ^ (2 : ℕ) ∂μ) ^ (1 / 2 : ℝ) *
+                (∫ (y : Vec3), ‖G y‖ ^ (2 : ℕ) ∂μ) ^ (1 / 2 : ℝ) →
+            ∫ (y : Vec3), ‖F y‖ * ‖G y‖ ∂μ ≤ (2 : ℝ) * ∫ (y : Vec3), ‖F y‖ ^ (2 : ℕ) ∂μ
+    := by
+  intro μ F G hFnonneg hGle hholder'
+  calc
+    _ ≤ (∫ y, (‖F y‖ : ℝ) ^ (2 : ℕ) ∂μ) ^ (1 / 2 : ℝ) *
+        (∫ y, (‖G y‖ : ℝ) ^ (2 : ℕ) ∂μ) ^ (1 / 2 : ℝ) := hholder'
+    _ ≤ (∫ y, (‖F y‖ : ℝ) ^ (2 : ℕ) ∂μ) ^ (1 / 2 : ℝ) *
+        (4 * ∫ y, (‖F y‖ : ℝ) ^ (2 : ℕ) ∂μ) ^ (1 / 2 : ℝ) := by
+      gcongr
+    _ = 2 * ∫ y, (‖F y‖ : ℝ) ^ (2 : ℕ) ∂μ := by
+      have hroot :
+          (4 * ∫ y, (‖F y‖ : ℝ) ^ (2 : ℕ) ∂μ) ^ (1 / 2 : ℝ) =
+            2 * (∫ y, (‖F y‖ : ℝ) ^ (2 : ℕ) ∂μ) ^ (1 / 2 : ℝ) := by
+        rw [Real.mul_rpow (by norm_num) hFnonneg]
+        norm_num
+      rw [hroot]
+      calc
+        _ = 2 * ((∫ y, (‖F y‖ : ℝ) ^ (2 : ℕ) ∂μ) ^
+            (1 / 2 : ℝ) *
+            (∫ y, (‖F y‖ : ℝ) ^ (2 : ℕ) ∂μ) ^ (1 / 2 : ℝ)) := by ring
+        _ = _ := by
+          by_cases hI : (∫ y, (‖F y‖ : ℝ) ^ (2 : ℕ) ∂μ) = 0
+          · simp [hI]
+          · rw [← Real.rpow_add
+              (lt_of_le_of_ne hFnonneg (Ne.symm hI))]
+            norm_num
+
 private lemma pressure_utensor_integral_le_two_energy
     {u : ParabolicPoint → Vec3} {c : ℝ → Vec3} {x₀ : Vec3}
     {ρ s : ℝ} (hρ : 0 < ρ)
@@ -71,7 +153,7 @@ private lemma pressure_utensor_integral_le_two_energy
   have hμtop : μ Set.univ < ∞ := by
     simpa [μ, Measure.restrict_apply MeasurableSet.univ, univ_inter] using
       volume_vec3Ball_lt_top (x := x₀) (r := ρ)
-  haveI : IsFiniteMeasure μ := ⟨hμtop⟩
+  have : IsFiniteMeasure μ := ⟨hμtop⟩
   have humeas' : AEStronglyMeasurable (fun y : Vec3 => u (y, s)) μ :=
     humeas.aestronglyMeasurable
   have hFmeas : AEStronglyMeasurable F μ := by
@@ -80,7 +162,7 @@ private lemma pressure_utensor_integral_le_two_energy
     exact hcont.comp_aestronglyMeasurable humeas'
   have hF : MemLp F 2 μ := by
     apply hu.of_le_mul hFmeas
-    filter_upwards [] with y
+    on_goal 1 => filter_upwards [] with y
     simpa [F, vec3EuclideanNorm_eq_l2] using
       vec3EuclideanNorm_le_sqrt_three (u (y, s))
   have hGmeas : AEStronglyMeasurable G μ := by
@@ -92,20 +174,7 @@ private lemma pressure_utensor_integral_le_two_energy
     hF.integrable_norm_rpow (by norm_num) (by norm_num)
   have hGpow : Integrable (fun y => ‖G y‖ ^ (2 : ℝ)) μ :=
     hG.integrable_norm_rpow (by norm_num) (by norm_num)
-  have hmeanF : average μ F = WithLp.toLp 2 (c s) := by
-    have hvreal : volume.real (vec3Ball x₀ ρ) ≠ 0 := by
-      exact ENNReal.toReal_ne_zero.mpr
-        ⟨ne_of_gt (volume_vec3Ball_pos hρ),
-          (volume_vec3Ball_lt_top (x := x₀) (r := ρ)).ne⟩
-    rw [MeasureTheory.average_eq, hc]
-    apply PiLp.ext
-    intro i
-    have hi := ContinuousLinearMap.integral_comp_comm
-      (PiLp.proj (2 : ℝ≥0∞) (fun _ : Fin 3 => ℝ) i :
-        L2Vec3 →L[ℝ] ℝ) hFint
-    simpa [F, μ, MeasureTheory.average_eq, smul_eq_mul,
-      Measure.restrict_apply MeasurableSet.univ, univ_inter, hvreal]
-      using hi.symm
+  have hmeanF := @pressure_utensor_integral_le_two_energy_hGpow_1 u c x₀ ρ s hρ hc hFint
   have hmeanF' : (⨍ y in vec3Ball x₀ ρ, F y ∂volume) =
       WithLp.toLp 2 (c s) := by
     change average μ F = WithLp.toLp 2 (c s)
@@ -157,24 +226,7 @@ private lemma pressure_utensor_integral_le_two_energy
         (Eventually.of_forall fun y => pow_nonneg (norm_nonneg _) 2)).symm
   have hμne : μ Set.univ ≠ 0 := ne_of_gt hμpos
   have hμtop' : μ Set.univ ≠ ∞ := ne_of_lt hμtop
-  have hosc'' :
-      (∫⁻ y, ‖G y‖ₑ ^ (2 : ℝ) ∂μ) ≤
-        (4 : ℝ≥0∞) * (∫⁻ y, ‖F y‖ₑ ^ (2 : ℝ) ∂μ) := by
-    calc
-      _ = μ Set.univ *
-          ((∫⁻ y, ‖G y‖ₑ ^ (2 : ℝ) ∂μ) / μ Set.univ) := by
-        rw [ENNReal.mul_div_cancel hμne hμtop']
-      _ ≤ μ Set.univ *
-          ((4 : ℝ≥0∞) *
-            ((∫⁻ y, ‖F y‖ₑ ^ (2 : ℝ) ∂μ) / μ Set.univ)) := by gcongr
-      _ = (4 : ℝ≥0∞) * (∫⁻ y, ‖F y‖ₑ ^ (2 : ℝ) ∂μ) := by
-        calc
-          μ Set.univ * (4 *
-              ((∫⁻ y, ‖F y‖ₑ ^ (2 : ℝ) ∂μ) / μ Set.univ)) =
-              4 * (μ Set.univ *
-                ((∫⁻ y, ‖F y‖ₑ ^ (2 : ℝ) ∂μ) / μ Set.univ)) := by ring
-          _ = 4 * (∫⁻ y, ‖F y‖ₑ ^ (2 : ℝ) ∂μ) := by
-            rw [ENNReal.mul_div_cancel hμne hμtop']
+  have hosc'' := @pressure_utensor_integral_le_two_energy_hosc_2 μ F G hosc' hμne hμtop'
   have hFnonneg : 0 ≤ ∫ y, (‖F y‖ : ℝ) ^ (2 : ℕ) ∂μ :=
     integral_nonneg fun y => pow_nonneg (norm_nonneg _) _
   have hGnonneg : 0 ≤ ∫ y, (‖G y‖ : ℝ) ^ (2 : ℕ) ∂μ :=
@@ -204,32 +256,7 @@ private lemma pressure_utensor_integral_le_two_energy
           (∫ y, (‖G y‖ : ℝ) ^ (2 : ℕ) ∂μ) ^ (1 / 2 : ℝ) := by
     convert hholder using 1
     all_goals norm_num [Real.rpow_natCast]
-  have hprodle :
-      (∫ y, (‖F y‖ : ℝ) * ‖G y‖ ∂μ) ≤
-        2 * ∫ y, (‖F y‖ : ℝ) ^ (2 : ℕ) ∂μ := by
-    calc
-      _ ≤ (∫ y, (‖F y‖ : ℝ) ^ (2 : ℕ) ∂μ) ^ (1 / 2 : ℝ) *
-          (∫ y, (‖G y‖ : ℝ) ^ (2 : ℕ) ∂μ) ^ (1 / 2 : ℝ) := hholder'
-      _ ≤ (∫ y, (‖F y‖ : ℝ) ^ (2 : ℕ) ∂μ) ^ (1 / 2 : ℝ) *
-          (4 * ∫ y, (‖F y‖ : ℝ) ^ (2 : ℕ) ∂μ) ^ (1 / 2 : ℝ) := by
-        gcongr
-      _ = 2 * ∫ y, (‖F y‖ : ℝ) ^ (2 : ℕ) ∂μ := by
-        have hroot :
-            (4 * ∫ y, (‖F y‖ : ℝ) ^ (2 : ℕ) ∂μ) ^ (1 / 2 : ℝ) =
-              2 * (∫ y, (‖F y‖ : ℝ) ^ (2 : ℕ) ∂μ) ^ (1 / 2 : ℝ) := by
-          rw [Real.mul_rpow (by norm_num) hFnonneg]
-          norm_num
-        rw [hroot]
-        calc
-          _ = 2 * ((∫ y, (‖F y‖ : ℝ) ^ (2 : ℕ) ∂μ) ^
-              (1 / 2 : ℝ) *
-              (∫ y, (‖F y‖ : ℝ) ^ (2 : ℕ) ∂μ) ^ (1 / 2 : ℝ)) := by ring
-          _ = _ := by
-            by_cases hI : (∫ y, (‖F y‖ : ℝ) ^ (2 : ℕ) ∂μ) = 0
-            · simp [hI]
-            · rw [← Real.rpow_add
-                (lt_of_le_of_ne hFnonneg (Ne.symm hI))]
-              norm_num
+  have hprodle := @pressure_utensor_integral_le_two_energy_hprodle_3 μ F G hFnonneg hGle hholder'
   have hUnorm : ∀ y, pressureUTensorNorm u c s y = gu y * gv y := by
     intro y
     have hmf : meanFreeVec u x₀ ρ s y = u (y, s) - c s := by
@@ -406,7 +433,8 @@ private theorem slice_integral_power_bound {B : Set Vec3} {J : Set ℝ}
         ∫⁻ y in B, F (y,s) ^ (a * (3/2)) := by
       apply lintegral_mono_ae
       filter_upwards [hF.aestronglyMeasurable.prodMk_right] with s hs
-      simpa only [Measure.restrict_apply_univ] using integral_power_le (volume.restrict B) hs.aemeasurable a
+      simpa only [Measure.restrict_apply_univ] using integral_power_le (volume.restrict B)
+        hs.aemeasurable a
     _ = _ := by
       rw [lintegral_const_mul'' _ ((hF.pow_const _).lintegral_prod_left'),
         ← lintegral_prod_symm _ (hF.pow_const _), Measure.prod_restrict]
@@ -461,8 +489,8 @@ private theorem three_slice_mass_bound {B : Set Vec3} {J : Set ℝ}
     (hF : AEMeasurable F ((volume.restrict B).prod (volume.restrict J)))
     (a b c D : ℝ≥0∞)
     (hUD : (∫⁻ w in B ×ˢ J, U w ^ (3 : ℝ)) ≤ D)
-    (hPD : (∫⁻ w in B ×ˢ J, P w ^ (3/2 : ℝ)) ≤ D)
-    (hFD : (∫⁻ w in B ×ˢ J, F w ^ (3/2 : ℝ)) ≤ D) :
+    (hPD : (∫⁻ w in B ×ˢ J, P w ^ (3 / 2 : ℝ)) ≤ D)
+    (hFD : (∫⁻ w in B ×ˢ J, F w ^ (3 / 2 : ℝ)) ≤ D) :
     let M := fun s => a * (∫⁻ y in B, U (y,s) ^ (2 : ℝ)) +
       b * (∫⁻ y in B, P (y,s)) + c * (∫⁻ y in B, F (y,s))
     AEMeasurable M (volume.restrict J) ∧
@@ -500,7 +528,8 @@ private theorem three_slice_mass_bound {B : Set Vec3} {J : Set ℝ}
           (volume.restrict J) := by simpa only [ENNReal.rpow_ofNat] using hu.1.pow_const (3/2 : ℝ)
       rw [lintegral_const_mul' _ _ (by norm_num), lintegral_add_left' hab,
         lintegral_add_left' ha, lintegral_const_mul'' _ hum,
-        lintegral_const_mul'' _ (hp.1.pow_const (3/2 : ℝ)), lintegral_const_mul'' _ (hf.1.pow_const (3/2 : ℝ))]
+        lintegral_const_mul'' _ (hp.1.pow_const (3/2 : ℝ)), lintegral_const_mul'' _
+          (hf.1.pow_const (3/2 : ℝ))]
     _ ≤ 16 * (a ^ (3/2 : ℝ) * (volume B ^ (1/2 : ℝ) * D) +
         b ^ (3/2 : ℝ) * (volume B ^ (1/2 : ℝ) * D) +
         c ^ (3/2 : ℝ) * (volume B ^ (1/2 : ℝ) * D)) := by
@@ -518,7 +547,7 @@ theorem fixed_remainder_slice_majorant_moment_of_sws
     (hdom : closure (parabolicCylinder (0 : Vec3) 0 1) ⊆ spaceTimeSet Ω I)
     (hsmall : (∫⁻ w in parabolicCylinder (0 : Vec3) 0 1,
       ENNReal.ofReal (vec3EuclideanNorm (u w)) ^ (3 : ℝ) +
-        ENNReal.ofReal |p w| ^ (3/2 : ℝ) +
+        ENNReal.ofReal |p w| ^ (3 / 2 : ℝ) +
         ENNReal.ofReal (vec3EuclideanNorm (f w)) ^ q) ≤ ENNReal.ofReal ε)
     {z : ParabolicPoint} {ρ : ℝ}
     (hQ : parabolicCylinder z.1 z.2 ρ ⊆ parabolicCylinder (0 : Vec3) 0 1) :
@@ -539,15 +568,18 @@ theorem fixed_remainder_slice_majorant_moment_of_sws
   have hlocal : B ×ˢ J ⊆ spaceTimeSet Ω' J' := hQ.trans hsub
   have hU : AEMeasurable U ((volume.restrict B).prod (volume.restrict J)) := by
     rw [Measure.prod_restrict]
-    exact ((continuous_vec3EuclideanNorm.comp_aestronglyMeasurable hd.1).aemeasurable.ennreal_ofReal).mono_measure
+    exact ((continuous_vec3EuclideanNorm.comp_aestronglyMeasurable
+      hd.1).aemeasurable.ennreal_ofReal).mono_measure
       (Measure.restrict_mono_set volume hlocal)
   have hP : AEMeasurable P ((volume.restrict B).prod (volume.restrict J)) := by
     rw [Measure.prod_restrict]
-    exact ((continuous_abs.comp_aestronglyMeasurable hd.2.2.1).aemeasurable.ennreal_ofReal).mono_measure
+    exact ((continuous_abs.comp_aestronglyMeasurable
+      hd.2.2.1).aemeasurable.ennreal_ofReal).mono_measure
       (Measure.restrict_mono_set volume hlocal)
   have hF : AEMeasurable F ((volume.restrict B).prod (volume.restrict J)) := by
     rw [Measure.prod_restrict]
-    exact ((continuous_vec3EuclideanNorm.comp_aestronglyMeasurable hd.2.2.2.1).aemeasurable.ennreal_ofReal).mono_measure
+    exact ((continuous_vec3EuclideanNorm.comp_aestronglyMeasurable
+      hd.2.2.2.1).aemeasurable.ennreal_ofReal).mono_measure
       (Measure.restrict_mono_set volume hlocal)
   have hUε : (∫⁻ w in B ×ˢ J, U w ^ (3 : ℝ)) ≤ ENNReal.ofReal ε :=
     (lintegral_mono_set hQ).trans ((lintegral_mono (fun _ =>
@@ -568,7 +600,8 @@ theorem fixed_remainder_slice_majorant_moment_of_sws
         · exact (ENNReal.rpow_le_rpow_of_exponent_le (le_of_not_ge hw)
             (by linarith only [hsol.2.2.2.1] : (3/2 : ℝ) ≤ q)).trans le_add_self
       _ ≤ _ := by
-        rw [lintegral_add_left measurable_const, lintegral_const, one_mul, Measure.restrict_apply_univ]
+        rw [lintegral_add_left measurable_const, lintegral_const, one_mul,
+          Measure.restrict_apply_univ]
         exact add_le_add le_rfl hFε
   have h := three_slice_mass_bound hU hP hF
     (fixedRemainderCoefficients C ρ 0) (fixedRemainderCoefficients C ρ 1)
@@ -655,7 +688,8 @@ theorem exists_fixed_remainder_quantitative_majorant :
     · apply (ofReal_integral_le_mass B (fun y => vec3EuclideanNorm (u (y,s)) ^ (2 : ℕ))).trans_eq
       apply lintegral_congr
       intro y
-      rw [abs_of_nonneg (sq_nonneg _), ENNReal.ofReal_pow (vec3EuclideanNorm_nonneg _), ENNReal.rpow_ofNat]
+      rw [abs_of_nonneg (sq_nonneg _), ENNReal.ofReal_pow (vec3EuclideanNorm_nonneg _),
+        ENNReal.rpow_ofNat]
     · simpa only [abs_abs] using ofReal_integral_le_mass B (fun y => |p (y,s)|)
   have hA : 0 ≤ (cutoffGradientConstant / ρ) * ∫ y in B, vec3EuclideanNorm (f (y,s)) :=
     mul_nonneg ((vecEuclideanNorm_nonneg _).trans (mollifiedBallCutoff_gradient_bound z.1 hρ z.1))
@@ -699,8 +733,10 @@ private theorem lower_moment_le {J : Set ℝ} (M : ℝ → ℝ≥0∞) :
       intro s
       by_cases hs : M s ≤ 1
       · exact (ENNReal.rpow_le_one hs (by norm_num)).trans le_self_add
-      · exact (ENNReal.rpow_le_rpow_of_exponent_le (le_of_not_ge hs) (by norm_num)).trans le_add_self
-    _ = _ := by rw [lintegral_add_left measurable_const, lintegral_const, one_mul, Measure.restrict_apply_univ]
+      · exact (ENNReal.rpow_le_rpow_of_exponent_le (le_of_not_ge hs)
+          (by norm_num)).trans le_add_self
+    _ = _ := by rw [lintegral_add_left measurable_const, lintegral_const, one_mul,
+      Measure.restrict_apply_univ]
 
 /-- Every clipped time window obeys the explicit `6/5` remainder bound. -/
 theorem fixed_remainder_clipped_moment_of_sws
@@ -710,7 +746,7 @@ theorem fixed_remainder_clipped_moment_of_sws
     (hdom : closure (parabolicCylinder (0 : Vec3) 0 1) ⊆ spaceTimeSet Ω I)
     (hsmall : (∫⁻ w in parabolicCylinder (0 : Vec3) 0 1,
       ENNReal.ofReal (vec3EuclideanNorm (u w)) ^ (3 : ℝ) +
-        ENNReal.ofReal |p w| ^ (3/2 : ℝ) +
+        ENNReal.ofReal |p w| ^ (3 / 2 : ℝ) +
         ENNReal.ofReal (vec3EuclideanNorm (f w)) ^ q) ≤ ENNReal.ofReal ε)
     {z : ParabolicPoint} {ρ : ℝ}
     (hQ : parabolicCylinder z.1 z.2 ρ ⊆ parabolicCylinder (0 : Vec3) 0 1) (T : Set ℝ) :

@@ -27,14 +27,15 @@ noncomputable section
 
 namespace CKN
 
-def caccioppoli_I4_heat_cutoff_raw
+/-- Raw forcing contribution to the local energy estimate. -/
+def caccioppoliI4HeatCutoffRaw
     {u f : ParabolicPoint → Vec3} {x₀ : Vec3} {t₀ ρ ε r : ℝ}
     (hρ : 0 < ρ) (hε : 0 < ε) : ℝ :=
   (∫⁻ w in parabolicCylinder x₀ t₀ ρ,
       (2 : ℝ≥0∞) * ENNReal.ofReal (vec3EuclideanNorm (f w)) *
         ENNReal.ofReal (vec3EuclideanNorm (u w)) *
-        ENNReal.ofReal (backwardHeat_cutoff
-          (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w)).toReal
+        ENNReal.ofReal (backwardHeatCutoff
+          (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w)).toReal
 
 theorem caccioppoli_I4_heat_cutoff_raw_bound_of_finiteness
     {Ω : Set Vec3} {I : Set ℝ} {q : ℝ}
@@ -47,7 +48,7 @@ theorem caccioppoli_I4_heat_cutoff_raw_bound_of_finiteness
     (hvelocity :
       (∫⁻ w in parabolicCylinder x₀ t₀ ρ,
         ENNReal.ofReal (vec3EuclideanNorm (u w)) ^ (3 : ℝ)) ≠ ∞) :
-    caccioppoli_I4_heat_cutoff_raw (u := u) (f := f) (x₀ := x₀) (t₀ := t₀)
+    caccioppoliI4HeatCutoffRaw (u := u) (f := f) (x₀ := x₀) (t₀ := t₀)
         (ρ := ρ) (ε := ε) (r := r) hρ hε ≤
       2000 * (4 * Real.pi / 3) ^
           (1 / (q / (q - 1)) - 1 / 3 : ℝ) *
@@ -77,7 +78,7 @@ theorem caccioppoli_I4_heat_cutoff_raw_bound_of_finiteness
     have h := (ENNReal.continuous_ofReal.comp hc).comp_aestronglyMeasurable hf0
     exact h.mono_measure (Measure.restrict_mono hcyl le_rfl)
   have hφ : ∀ w ∈ parabolicCylinder x₀ t₀ ρ,
-      backwardHeat_cutoff (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε)
+      backwardHeatCutoff (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε)
         x₀ t₀ r w ≤ 1000 / r := by
     intro w hw
     have htime : w.2 - t₀ < r ^ 2 := by
@@ -90,10 +91,10 @@ theorem caccioppoli_I4_heat_cutoff_raw_bound_of_finiteness
     have hψ0 := backwardHeatTestFunction_nonneg
       (x := w.1 - x₀) (t := w.2 - t₀) hr htime
     have hη1 := caccioppoli_heat_cutoff_le_one x₀ t₀ ρ ε hρ hε (w.1, w.2)
-    unfold backwardHeat_cutoff
+    unfold backwardHeatCutoff
     simp only [ite_eq_left htime]
     calc
-      caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε w *
+      caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε w *
           backwardHeatTestFunction r (w.1 - x₀) (w.2 - t₀) ≤
         1 * backwardHeatTestFunction r (w.1 - x₀) (w.2 - t₀) :=
           mul_le_mul_of_nonneg_right hη1 hψ0
@@ -111,7 +112,7 @@ theorem caccioppoli_I4_heat_cutoff_raw_bound_of_finiteness
     positivity
   have hbound := caccioppoli_I4_normalization hsol.2.2.2.1 hρ hr
     hgamma hlambda hu hf hφ hforce hvelocity'
-  simpa only [caccioppoli_I4_heat_cutoff_raw] using hbound
+  simpa only [caccioppoliI4HeatCutoffRaw] using hbound
 
 theorem caccioppoli_I4_heat_cutoff_raw_normalized
     {Ω : Set Vec3} {I : Set ℝ} {q : ℝ}
@@ -127,7 +128,7 @@ theorem caccioppoli_I4_heat_cutoff_raw_normalized
     (hKbound :
       2000 * (4 * Real.pi / 3) ^
           (1 / (q / (q - 1)) - 1 / 3 : ℝ) ≤ C₂₆ ^ 2) :
-    caccioppoli_I4_heat_cutoff_raw (u := u) (f := f) (x₀ := x₀) (t₀ := t₀)
+    caccioppoliI4HeatCutoffRaw (u := u) (f := f) (x₀ := x₀) (t₀ := t₀)
         (ρ := ρ) (ε := ε) (r := r) hρ hε ≤
       (C₂₆ * (r / ρ) ^ (-1 / 2 : ℝ) *
         gamma u (x₀, t₀) ρ ^ (1 / 2 : ℝ) *

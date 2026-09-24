@@ -46,7 +46,7 @@ theorem memLp_exists_compactSupportContinuous_approx
   let g : ℕ → Vec3 → ℝ := fun n =>
     Classical.choose (hf.exists_hasCompactSupport_eLpNorm_sub_le hp
       (ε := ENNReal.ofReal (1 / (n + 1 : ℝ))) (by
-        simp
+        simp only [one_div, ne_eq, ENNReal.ofReal_eq_zero, inv_nonpos, not_le]
         positivity))
   have hg : ∀ n, HasCompactSupport (g n) ∧
       eLpNorm (f - g n) p volume ≤ ENNReal.ofReal (1 / (n + 1 : ℝ)) ∧
@@ -54,7 +54,7 @@ theorem memLp_exists_compactSupportContinuous_approx
     intro n
     exact Classical.choose_spec (hf.exists_hasCompactSupport_eLpNorm_sub_le hp
       (ε := ENNReal.ofReal (1 / (n + 1 : ℝ))) (by
-        simp
+        simp only [one_div, ne_eq, ENNReal.ofReal_eq_zero, inv_nonpos, not_le]
         positivity))
   refine ⟨g, ?_, ?_⟩
   · intro n
@@ -82,7 +82,7 @@ theorem memLp_exists_compactSupportContinuous_approx_real
     (memLp_exists_compactSupportContinuous_approx
       (p := ENNReal.ofReal p) ENNReal.ofReal_ne_top hf)
 
-/-- Hölder's estimate for the pairing against a fixed `Lᑫ` test function. -/
+/-- Hölder's estimate for the pairing against a fixed `Lq` test function. -/
 theorem integral_mul_test_le {p q : ℝ} (hpq : p.HolderConjugate q)
     {g ψ : Vec3 → ℝ} (hg : MemLp g (ENNReal.ofReal p) volume)
     (hψ : MemLp ψ (ENNReal.ofReal q) volume) :
@@ -106,7 +106,7 @@ theorem integral_mul_test_le {p q : ℝ} (hpq : p.HolderConjugate q)
     _ ≤ _ := integral_mul_norm_le_Lp_mul_Lq hpq hg hψ
 
 /-- Hölder's estimate for the difference of two pairings against a fixed
-`Lᑫ` test function.  This is the quantitative `Lᵖ` continuity used in the
+`Lq` test function.  This is the quantitative `Lᵖ` continuity used in the
 distributional limit. -/
 theorem integral_mul_test_sub_le {p q : ℝ} (hpq : p.HolderConjugate q)
     {g h ψ : Vec3 → ℝ} (hg : MemLp g (ENNReal.ofReal p) volume)
@@ -118,7 +118,7 @@ theorem integral_mul_test_sub_le {p q : ℝ} (hpq : p.HolderConjugate q)
   exact integral_mul_test_le hpq (hg.sub hh) hψ
 
 /-- The pairing estimate when the test is continuous and compactly supported.
-Such a test is automatically in every finite `Lᑫ` space. -/
+Such a test is automatically in every finite `Lq` space. -/
 theorem integral_mul_continuousCompactSupport_le {p q : ℝ}
     (hpq : p.HolderConjugate q) {g ψ : Vec3 → ℝ}
     (hg : MemLp g (ENNReal.ofReal p) volume) (hψc : Continuous ψ)

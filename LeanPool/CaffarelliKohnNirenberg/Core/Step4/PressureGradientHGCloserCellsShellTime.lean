@@ -133,7 +133,8 @@ theorem pressure_source_exterior_scale_sum_time_bound
       simpa only [one_mul] using mul_le_mul_of_nonneg_right
         (one_le_pow₀ (by norm_num : (1 : ℝ) ≤ 2) : (1 : ℝ) ≤ 2 ^ n) hr.le
     dsimp only [M]
-    rw [pressure_time_power_norm_const_mul (pressure_source_spatial_mass_aemeasurable hF x _).restrict]
+    rw [pressure_time_power_norm_const_mul (pressure_source_spatial_mass_aemeasurable hF x
+      _).restrict]
     have h := pressure_source_exterior_mass_time_bound (κ := κ) hF (x := x) (t := t) hr hrρ
     refine h.trans_eq ?_
     rw [ENNReal.ofReal_mul (by positivity : (0 : ℝ) ≤ 2 ^ n),

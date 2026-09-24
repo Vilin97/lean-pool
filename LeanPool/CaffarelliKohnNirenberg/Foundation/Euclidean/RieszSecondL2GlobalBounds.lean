@@ -138,6 +138,7 @@ lemma pressure_potential_deriv_tail_bound
       (contDiff_spatialDeriv_smooth hF i) (hFc.fderiv_apply (𝕜 := ℝ) (basisVec i))
       hR ((tsupport_fderiv_apply_subset ℝ (basisVec i)).trans hSupp) hx)
 
+/-- Error produced by applying the Laplacian to a cutoff Newtonian potential. -/
 def cutoffError (F : Vec3 → ℝ) {ρ : ℝ} (hρ : 0 < ρ) (x : Vec3) : ℝ :=
   2 * spatialGradDot (mollifiedBallCutoff 0 hρ) (pressureNewtonianPotential F) x +
     pressureNewtonianPotential F x *
@@ -189,10 +190,12 @@ lemma cutoffError_hasCompactSupport {F : Vec3 → ℝ}
     exact hhess i i
   simp [cutoffError, hgrad', hlap]
 
+/-- Source and first-derivative mass controlling the tail of the Newtonian potential. -/
 def potentialTailSize (F : Vec3 → ℝ) : ℝ :=
   2 * (4 * Real.pi)⁻¹ *
     ((∫ y, |F y|) + ∑ i : Fin 3, ∫ y, |spatialDeriv F i y|)
 
+/-- Coefficient bounding the cutoff error in terms of source tail size. -/
 def cutoffErrorConstant (F : Vec3 → ℝ) : ℝ :=
   (60 / 13) * potentialTailSize F *
     (6 * cutoffGradientConstant + 3 * cutoffSecondDerivativeConstant)

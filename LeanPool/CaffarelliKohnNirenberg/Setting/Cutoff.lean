@@ -44,11 +44,12 @@ private theorem affine_fderiv (c : ℝ) (x₀ : Vec3) :
   funext x
   change fderiv ℝ (c • (fun x : Vec3 => x - x₀)) x = _
   rw [fderiv_const_smul, fderiv_sub_const]
-  have hid : fderiv ℝ (fun x : Vec3 => x) =
-      fun _ => ContinuousLinearMap.id ℝ Vec3 := by
-    funext y
-    simp
-  rw [hid]
+  on_goal 1 =>
+    have hid : fderiv ℝ (fun x : Vec3 => x) =
+        fun _ => ContinuousLinearMap.id ℝ Vec3 := by
+      funext y
+      simp
+  on_goal 1 => rw [hid]
   fun_prop
 
 private theorem affine_iteratedFDeriv_bound (c : ℝ) (x₀ : Vec3)
@@ -66,6 +67,7 @@ private theorem affine_iteratedFDeriv_bound (c : ℝ) (x₀ : Vec3)
             iteratedFDeriv_const_of_ne (Nat.succ_ne_zero _)]
           simp
 
+/-- Fixed cutoff equal to one on the inner pressure ball and supported in the outer ball. -/
 def fixedCutoff : Vec3 → ℝ :=
   canonicalBallCutoff (0 : Vec3) (13 / 20) (3 / 4)
 

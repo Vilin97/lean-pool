@@ -49,11 +49,14 @@ theorem isMaximalMajorant_maximalMajorant (f : Vec3 → ℝ) :
 /-- The order-one Riesz kernel and its nonnegative potential. -/
 def rieszKernelOne (z w : Vec3) : ℝ≥0∞ :=
   (ENNReal.ofReal (dist z w)) ^ (-2 : ℝ)
+/-- Order-one Riesz potential of the absolute value of a scalar source. -/
 def rieszPotentialOne (f : Vec3 → ℝ) (z : Vec3) : ℝ≥0∞ :=
   ∫⁻ w, rieszKernelOne z w * ENNReal.ofReal |f w|
+/-- Dyadic shell inside the reference radius for the near-field potential estimate. -/
 def nearShell (R : ℝ) (n : ℕ) (z : Vec3) : Set Vec3 :=
   {w | (2 : ℝ) ^ (Int.negSucc n : ℝ) * R ≤ dist z w ∧
     dist z w < (2 : ℝ) ^ ((Int.negSucc n : ℝ) + 1) * R}
+/-- Dyadic shell outside the reference radius for the far-field potential estimate. -/
 def farShell (R : ℝ) (n : ℕ) (z : Vec3) : Set Vec3 :=
   {w | (2 : ℝ) ^ (n : ℝ) * R ≤ dist z w ∧
     dist z w < (2 : ℝ) ^ ((n : ℝ) + 1) * R}
@@ -256,6 +259,7 @@ private lemma ennreal_mul_rpow_of_ne_zero_of_ne_top
           ENNReal.rpow_ne_top_of_nonneg he' hytop
         exact ENNReal.mul_inv (Or.inl hxr0) (Or.inl hxrtop)
       _ = x ^ e * y ^ e := by rw [hxpow, hypow]
+/-- Geometric-series term controlling the near-field order-one potential. -/
 def nearTerm (n : ℕ) : ℝ≥0∞ :=
   (ENNReal.ofReal ((2 : ℝ) ^ (Int.negSucc n : ℝ))) ^ (-2 : ℝ) *
     ENNReal.ofReal ((4 * ((2 : ℝ) ^ (Int.negSucc n : ℝ))) ^ 3)
@@ -538,6 +542,7 @@ private lemma far_shell_integral_le
         (∫⁻ w, ENNReal.ofReal |f w| ^ (5 / 2 : ℝ)) ^ (2 / 5 : ℝ) := by
       gcongr
 
+/-- Geometric-series term controlling the far-field order-one potential. -/
 def farTerm (n : ℕ) : ℝ≥0∞ :=
   ((ENNReal.ofReal ((2 : ℝ) ^ (n : ℝ))) ^ (-(10 / 3 : ℝ)) *
     ENNReal.ofReal ((4 * ((2 : ℝ) ^ (n : ℝ))) ^ 3)) ^ (3 / 5 : ℝ)
@@ -593,6 +598,7 @@ private lemma far_shell_scale_identity {R : ℝ} (hR : 0 < R) (n : ℕ) :
   congr 1
   ring_nf
 
+/-- Summed coefficient in the far-field Hedberg estimate. -/
 def hedbergFarConstant : ℝ≥0∞ := ∑' n : ℕ, farTerm n
 
 private lemma far_integral_le_shell_sum {R : ℝ} (hR : 0 < R)

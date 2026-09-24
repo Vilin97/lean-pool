@@ -112,7 +112,7 @@ theorem contDiffOn_pressureP8_halfBall
     ContDiffOn ℝ (1 : ℕ∞) (CKN.pressureP8 (mollifiedBallCutoff x₀ hρ) f s)
       (vec3Ball x₀ (ρ / 2)) := by
   have hone : ((1 : ℕ) : WithTop ℕ∞) = ((1 : ℕ∞) : WithTop ℕ∞) := by norm_cast
-  show ContDiffOn ℝ (1 : ℕ∞)
+  change ContDiffOn ℝ (1 : ℕ∞)
     (fun x => -∑ j, CKN.pressureNewtonianPotential
       (fun y : Vec3 => spatialDeriv (mollifiedBallCutoff x₀ hρ) j y * f (y, s) j) x)
     (vec3Ball x₀ (ρ / 2))

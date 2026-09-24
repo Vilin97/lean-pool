@@ -32,7 +32,7 @@ optionally localised to a closed ball around `x`.
 section SegmentChangeOfVariables
 
 
-variable {d : ℕ} [NeZero d]
+variable {d : ℕ}
 
 /-- File-level typeclass cache for `Nontrivial (Vec d)` under `[NeZero d]`.
 Repeated inference of this head class dominates the file (~7s cumulative

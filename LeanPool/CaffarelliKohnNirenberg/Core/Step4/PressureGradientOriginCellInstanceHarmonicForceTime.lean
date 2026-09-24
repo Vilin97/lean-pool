@@ -69,7 +69,8 @@ theorem origin_harmonic_force_integrable_on_local_box
     ((subset_tsupport _).trans hs)
   have hd (j : Fin 3) := origin_cutoff_product_aestronglyMeasurable
     (vec3Ball_measurable (0 : Vec3) R) (hf j)
-    (contDiff_spatialDeriv_smooth (mollifiedBallCutoff_smooth (0 : Vec3) hR) j).continuous.aestronglyMeasurable
+    (contDiff_spatialDeriv_smooth (mollifiedBallCutoff_smooth (0 : Vec3) hR)
+      j).continuous.aestronglyMeasurable
     ((subset_tsupport _).trans ((tsupport_fderiv_apply_subset ℝ (basisVec j)).trans hs))
   have h7 (j : Fin 3) := (origin_force_growth_constants_time_aemeasurable (hη j) R).2 j
   have h8 (j : Fin 3) := (origin_force_growth_constants_time_aemeasurable (hd j) R).1
@@ -81,7 +82,8 @@ theorem origin_harmonic_force_integrable_on_local_box
       Finset.aemeasurable_sum Finset.univ (fun j _ => h8 j)
   have hm : AEMeasurable (fun s => harmonicRemainderForceBound ((0 : Vec3), 0) hR f s)
       (volume.restrict J) := by
-    simpa only [harmonicRemainderForceBound, vec3EuclideanNorm_zero, zero_add, add_zero, Pi.add_apply, η] using
+    simpa only [harmonicRemainderForceBound, vec3EuclideanNorm_zero, zero_add, add_zero,
+      Pi.add_apply, η] using
       ((h7sum.add h8sum).mul_const (1 + R)).max aemeasurable_const
   have he := origin_force_envelope_obligations_on_local_box hsol hR hbox
   apply he.2.2.mono' hm.aestronglyMeasurable

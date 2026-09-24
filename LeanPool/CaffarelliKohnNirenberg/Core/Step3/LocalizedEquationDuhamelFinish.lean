@@ -212,7 +212,7 @@ theorem duhamel_of_suitableWeakSolution_localized
     exact localized_divergence_scalar_tested_of_sws
       hsol hφ hbox hφbox i hψ
   exact duhamel_of_localized_velocity hv hpotential hFg hFh hweak
-    (duhamel_support_data_of_compact_support
+    (duhamelSupportDataOfCompactSupport
       hVSupport (fun i => hGSupport i) (fun j i => hHSupport j i))
 
 end CKN.Core.Step3

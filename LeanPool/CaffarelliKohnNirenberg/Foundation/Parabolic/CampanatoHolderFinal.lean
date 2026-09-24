@@ -24,6 +24,145 @@ noncomputable section
 
 namespace CKN.Foundation.Parabolic
 
+private lemma ballRepresentative_eq_hbound_1 :
+    ∀ {f : ParabolicPoint → ℝ} {z : ParabolicPoint} {m M α K p : ℝ},
+      0 < m →
+        0 < M →
+          0 < α →
+            1 ≤ p →
+              0 ≤ K →
+                GlobalParabolicBallCampanatoBound f α K p →
+                  GlobalParabolicBallLpData f p →
+                    (∀ (n : ℕ),
+                        |parabolicBallRepresentative f M z - ParabolicBallMeanSeq f M z n| ≤
+                          parabolicCampanatoTailConstant α * 2 ^ (5 / p) *
+                            (K * (M / 2 ^ n) ^ α)) →
+                      (∀ (n : ℕ),
+                          |parabolicBallRepresentative f m z - ParabolicBallMeanSeq f m z n| ≤
+                            parabolicCampanatoTailConstant α * 2 ^ (5 / p) *
+                              (K * (m / 2 ^ n) ^ α)) →
+                        ∀ (hex : ∃ n, M / m ≤ 2 ^ n),
+                          let k : ℕ := Nat.find (p := fun n => M / m ≤ 2 ^ n) hex;
+                          m ≤ 2 * (M / 2 ^ k) →
+                            M / 2 ^ k ≤ m →
+                              ∀ (n : ℕ),
+                                dist (parabolicBallRepresentative f M z)
+                                    (parabolicBallRepresentative f m z) ≤
+                                  (2 * parabolicCampanatoTailConstant α + 1) * 2 ^ (5 / p) *
+                                    (K * (m / 2 ^ n) ^ α)
+    := by
+  intro f z m M α K p hm hM hα hp hK hcamp hdata htailM htailm hex k hklo hbase n
+  let r₁ : ℝ := M / (2 : ℝ) ^ (n + k)
+  let r₂ : ℝ := m / (2 : ℝ) ^ n
+  have hr₁ : 0 < r₁ := by dsimp [r₁]; positivity
+  have hr₂ : 0 < r₂ := by dsimp [r₂]; positivity
+  have hrewrite : r₁ = (M / (2 : ℝ) ^ k) / (2 : ℝ) ^ n := by
+    dsimp [r₁]
+    rw [show n + k = k + n by omega, pow_add]
+    ring
+  have hsmall : r₁ ≤ r₂ := by
+    rw [hrewrite]
+    exact div_le_div_of_nonneg_right hbase (by positivity)
+  have hlarge : r₂ ≤ 2 * r₁ := by
+    rw [hrewrite]
+    calc
+      _ ≤ (2 * (M / (2 : ℝ) ^ k)) / (2 : ℝ) ^ n :=
+        div_le_div_of_nonneg_right hklo (by positivity)
+      _ = _ := by ring
+  have hsubset :
+      @Metric.closedBall ParabolicPoint parabolicPseudoMetricSpace z r₁ ⊆
+        @Metric.closedBall ParabolicPoint parabolicPseudoMetricSpace z r₂ :=
+    Metric.closedBall_subset_closedBall hsmall
+  have hd₂ := hdata z hr₂
+  have hcomp := abs_setAverage_sub_setAverage_le hsubset
+    (parabolicBall_closedBall_pos hr₂) (parabolicBall_closedBall_top hr₂)
+    (parabolicBall_closedBall_pos hr₁) (parabolicBall_closedBall_top hr₁)
+    hd₂.1 hd₂.2 hp
+    (parabolicBall_volume_ratio_le_two hr₁ hr₂ hlarge)
+  have hcamp₂ := hcamp z hr₂
+  have hcomp' :
+      |(⨍ x in @Metric.closedBall ParabolicPoint parabolicPseudoMetricSpace z r₁, f x) -
+          ⨍ x in @Metric.closedBall ParabolicPoint parabolicPseudoMetricSpace z r₂, f x| ≤
+        (2 : ℝ) ^ (5 / p) *
+          (⨍ x in @Metric.closedBall ParabolicPoint parabolicPseudoMetricSpace z r₂,
+            |f x - ⨍ y in
+              @Metric.closedBall ParabolicPoint parabolicPseudoMetricSpace z r₂, f y| ^ p) ^
+            (1 / p) := by
+    have hpow : ((2 : ℝ) ^ 5) ^ (1 / p) = (2 : ℝ) ^ (5 / p) := by
+      rw [show (2 : ℝ) ^ 5 = (2 : ℝ) ^ (5 : ℝ) by norm_num,
+        ← Real.rpow_mul (by norm_num : (0 : ℝ) ≤ 2)]
+      congr 1
+      ring
+    rw [hpow] at hcomp
+    exact hcomp
+  have hmean :
+      |ParabolicBallMeanSeq f M z (n + k) - ParabolicBallMeanSeq f m z n| ≤
+        (2 : ℝ) ^ (5 / p) * (K * r₂ ^ α) := by
+    calc
+      _ ≤ (2 : ℝ) ^ (5 / p) *
+          (⨍ x in @Metric.closedBall ParabolicPoint parabolicPseudoMetricSpace z r₂,
+            |f x - ⨍ y in
+              @Metric.closedBall ParabolicPoint parabolicPseudoMetricSpace z r₂, f y| ^ p) ^
+            (1 / p) := by
+        simpa [ParabolicBallMeanSeq, r₁, r₂] using hcomp'
+      _ ≤ _ := mul_le_mul_of_nonneg_left hcamp₂ (by positivity)
+  have htail₁ := htailM (n + k)
+  have htail₂ := htailm n
+  have htail₁' :
+      |parabolicBallRepresentative f M z - ParabolicBallMeanSeq f M z (n + k)| ≤
+        parabolicCampanatoTailConstant α * (2 : ℝ) ^ (5 / p) * (K * r₂ ^ α) := by
+    have htail₁r :
+        |parabolicBallRepresentative f M z - ParabolicBallMeanSeq f M z (n + k)| ≤
+          parabolicCampanatoTailConstant α * (2 : ℝ) ^ (5 / p) * (K * r₁ ^ α) := by
+      simpa [r₁] using htail₁
+    exact htail₁r.trans (by
+      have hp : r₁ ^ α ≤ r₂ ^ α := Real.rpow_le_rpow (by positivity) hsmall hα.le
+      have hT : 0 ≤ parabolicCampanatoTailConstant α := by
+        unfold parabolicCampanatoTailConstant
+        exact one_div_nonneg.mpr (sub_nonneg.mpr
+          (Real.rpow_lt_one_of_one_lt_of_neg (by norm_num) (by linarith only [hα])).le)
+      have hD : 0 ≤ (2 : ℝ) ^ (5 / p) := Real.rpow_nonneg (by norm_num) _
+      exact mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_left hp hK)
+        (mul_nonneg hT hD))
+  have htail₂' := htail₂
+  have hsum :
+      |parabolicBallRepresentative f M z - parabolicBallRepresentative f m z| ≤
+        (2 * parabolicCampanatoTailConstant α + 1) * (2 : ℝ) ^ (5 / p) *
+          (K * r₂ ^ α) := by
+    have hmean' := hmean
+    have htail₂''' :
+        |ParabolicBallMeanSeq f m z n - parabolicBallRepresentative f m z| ≤
+          parabolicCampanatoTailConstant α * (2 : ℝ) ^ (5 / p) * (K * r₂ ^ α) := by
+      simpa only [abs_sub_comm] using htail₂'
+    calc
+      _ ≤ |parabolicBallRepresentative f M z - ParabolicBallMeanSeq f M z (n + k)| +
+          |ParabolicBallMeanSeq f M z (n + k) - parabolicBallRepresentative f m z| :=
+        abs_sub_le _ _ _
+      _ ≤ |parabolicBallRepresentative f M z - ParabolicBallMeanSeq f M z (n + k)| +
+          (|ParabolicBallMeanSeq f M z (n + k) - ParabolicBallMeanSeq f m z n| +
+            |ParabolicBallMeanSeq f m z n - parabolicBallRepresentative f m z|) := by
+        have hmid := abs_sub_le
+          (ParabolicBallMeanSeq f M z (n + k))
+          (ParabolicBallMeanSeq f m z n)
+          (parabolicBallRepresentative f m z)
+        exact add_le_add (le_refl _) hmid
+      _ ≤ _ := by
+        have hT : 0 ≤ parabolicCampanatoTailConstant α := by
+          unfold parabolicCampanatoTailConstant
+          exact one_div_nonneg.mpr (sub_nonneg.mpr
+            (Real.rpow_lt_one_of_one_lt_of_neg (by norm_num) (by linarith only [hα])).le)
+        have hD : 0 ≤ (2 : ℝ) ^ (5 / p) := Real.rpow_nonneg (by norm_num) _
+        calc
+          _ ≤ parabolicCampanatoTailConstant α * (2 : ℝ) ^ (5 / p) * (K * r₂ ^ α) +
+              (((2 : ℝ) ^ (5 / p) * (K * r₂ ^ α)) +
+                parabolicCampanatoTailConstant α * (2 : ℝ) ^ (5 / p) *
+                  (K * r₂ ^ α)) := by
+            have hineq := add_le_add (add_le_add htail₁' hmean') htail₂'''
+            simpa only [add_assoc] using hineq
+          _ = (2 * parabolicCampanatoTailConstant α + 1) *
+              (2 : ℝ) ^ (5 / p) * (K * r₂ ^ α) := by ring
+  exact hsum
+
 private lemma parabolicBallRepresentative_eq_of_global_of_le
     {f : ParabolicPoint → ℝ} {z : ParabolicPoint}
     {m M α K p : ℝ} (hm : 0 < m) (hM : 0 < M) (hmM : m ≤ M)
@@ -160,121 +299,8 @@ private lemma parabolicBallRepresentative_eq_of_global_of_le
   have hbase : M / (2 : ℝ) ^ k ≤ m := by
     apply (div_le_iff₀ (by positivity : 0 < (2 : ℝ) ^ k)).2
     simpa [mul_comm] using (div_le_iff₀ hm).mp hkhi
-  have hbound : ∀ n : ℕ,
-      dist (parabolicBallRepresentative f M z) (parabolicBallRepresentative f m z) ≤
-        (2 * parabolicCampanatoTailConstant α + 1) * (2 : ℝ) ^ (5 / p) *
-          (K * (m / (2 : ℝ) ^ n) ^ α) := by
-    intro n
-    let r₁ : ℝ := M / (2 : ℝ) ^ (n + k)
-    let r₂ : ℝ := m / (2 : ℝ) ^ n
-    have hr₁ : 0 < r₁ := by dsimp [r₁]; positivity
-    have hr₂ : 0 < r₂ := by dsimp [r₂]; positivity
-    have hrewrite : r₁ = (M / (2 : ℝ) ^ k) / (2 : ℝ) ^ n := by
-      dsimp [r₁]
-      rw [show n + k = k + n by omega, pow_add]
-      ring
-    have hsmall : r₁ ≤ r₂ := by
-      rw [hrewrite]
-      exact div_le_div_of_nonneg_right hbase (by positivity)
-    have hlarge : r₂ ≤ 2 * r₁ := by
-      rw [hrewrite]
-      calc
-        _ ≤ (2 * (M / (2 : ℝ) ^ k)) / (2 : ℝ) ^ n :=
-          div_le_div_of_nonneg_right hklo (by positivity)
-        _ = _ := by ring
-    have hsubset :
-        @Metric.closedBall ParabolicPoint parabolicPseudoMetricSpace z r₁ ⊆
-          @Metric.closedBall ParabolicPoint parabolicPseudoMetricSpace z r₂ :=
-      Metric.closedBall_subset_closedBall hsmall
-    have hd₂ := hdata z hr₂
-    have hcomp := abs_setAverage_sub_setAverage_le hsubset
-      (parabolicBall_closedBall_pos hr₂) (parabolicBall_closedBall_top hr₂)
-      (parabolicBall_closedBall_pos hr₁) (parabolicBall_closedBall_top hr₁)
-      hd₂.1 hd₂.2 hp
-      (parabolicBall_volume_ratio_le_two hr₁ hr₂ hlarge)
-    have hcamp₂ := hcamp z hr₂
-    have hcomp' :
-        |(⨍ x in @Metric.closedBall ParabolicPoint parabolicPseudoMetricSpace z r₁, f x) -
-            ⨍ x in @Metric.closedBall ParabolicPoint parabolicPseudoMetricSpace z r₂, f x| ≤
-          (2 : ℝ) ^ (5 / p) *
-            (⨍ x in @Metric.closedBall ParabolicPoint parabolicPseudoMetricSpace z r₂,
-              |f x - ⨍ y in
-                @Metric.closedBall ParabolicPoint parabolicPseudoMetricSpace z r₂, f y| ^ p) ^
-              (1 / p) := by
-      have hpow : ((2 : ℝ) ^ 5) ^ (1 / p) = (2 : ℝ) ^ (5 / p) := by
-        rw [show (2 : ℝ) ^ 5 = (2 : ℝ) ^ (5 : ℝ) by norm_num,
-          ← Real.rpow_mul (by norm_num : (0 : ℝ) ≤ 2)]
-        congr 1
-        ring
-      rw [hpow] at hcomp
-      exact hcomp
-    have hmean :
-        |ParabolicBallMeanSeq f M z (n + k) - ParabolicBallMeanSeq f m z n| ≤
-          (2 : ℝ) ^ (5 / p) * (K * r₂ ^ α) := by
-      calc
-        _ ≤ (2 : ℝ) ^ (5 / p) *
-            (⨍ x in @Metric.closedBall ParabolicPoint parabolicPseudoMetricSpace z r₂,
-              |f x - ⨍ y in
-                @Metric.closedBall ParabolicPoint parabolicPseudoMetricSpace z r₂, f y| ^ p) ^
-              (1 / p) := by
-          simpa [ParabolicBallMeanSeq, r₁, r₂] using hcomp'
-        _ ≤ _ := mul_le_mul_of_nonneg_left hcamp₂ (by positivity)
-    have htail₁ := htailM (n + k)
-    have htail₂ := htailm n
-    have htail₁' :
-        |parabolicBallRepresentative f M z - ParabolicBallMeanSeq f M z (n + k)| ≤
-          parabolicCampanatoTailConstant α * (2 : ℝ) ^ (5 / p) * (K * r₂ ^ α) := by
-      have htail₁r :
-          |parabolicBallRepresentative f M z - ParabolicBallMeanSeq f M z (n + k)| ≤
-            parabolicCampanatoTailConstant α * (2 : ℝ) ^ (5 / p) * (K * r₁ ^ α) := by
-        simpa [r₁] using htail₁
-      exact htail₁r.trans (by
-        have hp : r₁ ^ α ≤ r₂ ^ α := Real.rpow_le_rpow (by positivity) hsmall hα.le
-        have hT : 0 ≤ parabolicCampanatoTailConstant α := by
-          unfold parabolicCampanatoTailConstant
-          exact one_div_nonneg.mpr (sub_nonneg.mpr
-            (Real.rpow_lt_one_of_one_lt_of_neg (by norm_num) (by linarith only [hα])).le)
-        have hD : 0 ≤ (2 : ℝ) ^ (5 / p) := Real.rpow_nonneg (by norm_num) _
-        exact mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_left hp hK)
-          (mul_nonneg hT hD))
-    have htail₂' := htail₂
-    have hsum :
-        |parabolicBallRepresentative f M z - parabolicBallRepresentative f m z| ≤
-          (2 * parabolicCampanatoTailConstant α + 1) * (2 : ℝ) ^ (5 / p) *
-            (K * r₂ ^ α) := by
-      have hmean' := hmean
-      have htail₂''' :
-          |ParabolicBallMeanSeq f m z n - parabolicBallRepresentative f m z| ≤
-            parabolicCampanatoTailConstant α * (2 : ℝ) ^ (5 / p) * (K * r₂ ^ α) := by
-        simpa only [abs_sub_comm] using htail₂'
-      calc
-        _ ≤ |parabolicBallRepresentative f M z - ParabolicBallMeanSeq f M z (n + k)| +
-            |ParabolicBallMeanSeq f M z (n + k) - parabolicBallRepresentative f m z| :=
-          abs_sub_le _ _ _
-        _ ≤ |parabolicBallRepresentative f M z - ParabolicBallMeanSeq f M z (n + k)| +
-            (|ParabolicBallMeanSeq f M z (n + k) - ParabolicBallMeanSeq f m z n| +
-              |ParabolicBallMeanSeq f m z n - parabolicBallRepresentative f m z|) := by
-          have hmid := abs_sub_le
-            (ParabolicBallMeanSeq f M z (n + k))
-            (ParabolicBallMeanSeq f m z n)
-            (parabolicBallRepresentative f m z)
-          exact add_le_add (le_refl _) hmid
-        _ ≤ _ := by
-          have hT : 0 ≤ parabolicCampanatoTailConstant α := by
-            unfold parabolicCampanatoTailConstant
-            exact one_div_nonneg.mpr (sub_nonneg.mpr
-              (Real.rpow_lt_one_of_one_lt_of_neg (by norm_num) (by linarith only [hα])).le)
-          have hD : 0 ≤ (2 : ℝ) ^ (5 / p) := Real.rpow_nonneg (by norm_num) _
-          calc
-            _ ≤ parabolicCampanatoTailConstant α * (2 : ℝ) ^ (5 / p) * (K * r₂ ^ α) +
-                (((2 : ℝ) ^ (5 / p) * (K * r₂ ^ α)) +
-                  parabolicCampanatoTailConstant α * (2 : ℝ) ^ (5 / p) *
-                    (K * r₂ ^ α)) := by
-              have hineq := add_le_add (add_le_add htail₁' hmean') htail₂'''
-              simpa only [add_assoc] using hineq
-            _ = (2 * parabolicCampanatoTailConstant α + 1) *
-                (2 : ℝ) ^ (5 / p) * (K * r₂ ^ α) := by ring
-    exact hsum
+  have hbound := @ballRepresentative_eq_hbound_1 f z m M α K p hm hM hα hp hK hcamp hdata htailM
+    htailm hex hklo hbase
   have hqα : (2 : ℝ) ^ (-α) < 1 :=
     Real.rpow_lt_one_of_one_lt_of_neg (by norm_num) (by linarith only [hα])
   have hlimbase : Tendsto (fun n : ℕ => (m / (2 : ℝ) ^ n) ^ α) atTop (𝓝 0) := by

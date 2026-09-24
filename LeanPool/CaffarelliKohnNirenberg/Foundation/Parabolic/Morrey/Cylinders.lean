@@ -366,6 +366,285 @@ private theorem component_sq_le_spatialGradientSq_cyl
         ENNReal.rpow_natCast, ← ENNReal.ofReal_pow (norm_nonneg (Du z i))]
     _ ≤ _ := ENNReal.ofReal_le_ofReal hnorm
 
+private lemma step2_cylinder_l3_bound_hgood_1 :
+    ∀ {Ω : Set Vec3} {I : Set ℝ} {q : ℝ} {u : ParabolicPoint → Vec3}
+      {Du : ParabolicPoint → Fin (3 : ℕ) → Vec3} {p : ParabolicPoint → ℝ}
+      {f : ParabolicPoint → Vec3},
+      IsSuitableWeakSolutionIntegrable Ω I q u Du p f →
+        ∀ {t r : ℝ} {Ω' : Set Vec3} {J : Set ℝ},
+          localBox Ω I Ω' J →
+            let T : Set ℝ := Ioc (t - r ^ (2 : ℕ)) t;
+            T ⊆ J →
+              ∀ᵐ (s : ℝ) ∂Measure.restrict volume T,
+                (MemLp (ε := Vec3) (m0 := MeasureSpace.toMeasurableSpace)
+                      (fun (y : Vec3) => u (y, s)) (2 : ℝ≥0∞) (Measure.restrict volume Ω') ∧
+                    MemLp (ε := Fin (3 : ℕ) → Vec3) (m0 := MeasureSpace.toMeasurableSpace)
+                      (fun (y : Vec3) => Du (y, s)) (2 : ℝ≥0∞) (Measure.restrict volume Ω')) ∧
+                  ∀ (i : Fin (3 : ℕ)),
+                    HasWeakGradientOn Ω' (fun (y : Vec (3 : ℕ)) => u (y, s) i)
+                      fun (y : Vec (3 : ℕ)) => Du (y, s) i
+    := by
+  intro Ω I q u Du p f hsol t r Ω' J hbox T hIocJ
+  have hslices := slice_memLp_ae_of_sws hsol hbox
+  have hgrad : ∀ i : Fin 3, ∀ᵐ s ∂volume.restrict J,
+      HasWeakGradientOn Ω' (fun y => u (y, s) i) (fun y => Du (y, s) i) :=
+    (hsol.2.2.2.2.2.1 Ω' J hbox).2.2.2.2.2.2.2.2
+  have hgrad_all : ∀ᵐ s ∂volume.restrict J, ∀ i : Fin 3,
+      HasWeakGradientOn Ω' (fun y => u (y, s) i) (fun y => Du (y, s) i) := by
+    rw [ae_all_iff]
+    intro i
+    exact hgrad i
+  filter_upwards [ae_restrict_of_ae_restrict_of_subset hIocJ hslices,
+    ae_restrict_of_ae_restrict_of_subset hIocJ hgrad_all] with s hs hg
+  exact ⟨hs, hg⟩
+
+private lemma step2_cylinder_l3_bound_hpoint_2 :
+    ∀ {u : ParabolicPoint → Vec3} {Du : ParabolicPoint → Fin (3 : ℕ) → Vec3}
+      {_ : ParabolicPoint → ℝ} {x : Vec3} {t r : ℝ},
+      (0 : ℝ) < r →
+        ∀ {Ω' : Set Vec3},
+          let outer : Set Vec3 := euclideanBall x ((2 : ℝ) * r);
+          let inner : Set Vec3 := vec3Ball x r;
+          let T : Set ℝ := Ioc (t - r ^ (2 : ℕ)) t;
+          let A : ℝ → ℝ≥0∞ := fun (s : ℝ) =>
+            (∫⁻ (y : Vec3) in outer, ‖u (y, s)‖ₑ ^ (2 : ℝ)) ^ (1 / 2 : ℝ);
+          let G : ℝ → ℝ≥0∞ := fun (s : ℝ) =>
+            (∫⁻ (y : Vec3) in outer, ENNReal.ofReal (spatialGradientSq u Du (y, s))) ^ (1 / 2 : ℝ);
+          outer ⊆ Ω' →
+            (∀ᵐ (s : ℝ) ∂Measure.restrict volume T,
+                (MemLp (ε := Vec3) (m0 := MeasureSpace.toMeasurableSpace)
+                      (fun (y : Vec3) => u (y, s)) (2 : ℝ≥0∞) (Measure.restrict volume Ω') ∧
+                    MemLp (ε := Fin (3 : ℕ) → Vec3) (m0 := MeasureSpace.toMeasurableSpace)
+                      (fun (y : Vec3) => Du (y, s)) (2 : ℝ≥0∞) (Measure.restrict volume Ω')) ∧
+                  ∀ (i : Fin (3 : ℕ)),
+                    HasWeakGradientOn Ω' (fun (y : Vec (3 : ℕ)) => u (y, s) i)
+                      fun (y : Vec (3 : ℕ)) => Du (y, s) i) →
+              ∀ᵐ (s : ℝ) ∂Measure.restrict volume T,
+                ∫⁻ (y : Vec3) in inner, ENNReal.ofReal (vec3EuclideanNorm (u (y, s))) ^ (3 : ℝ) ≤
+                  ENNReal.ofReal ((3 : ℝ) ^ ((3 / 2 : ℝ) - (1 : ℝ))) * (3 : ℝ≥0∞) *
+                        localSobolevConstant ^ (3 / 2 : ℝ) *
+                      A s ^ (3 / 2 : ℝ) *
+                    (G s + (↑((32 : ℝ) / r).toNNReal : ℝ≥0∞) * A s) ^ (3 / 2 : ℝ)
+    := by
+  intro u Du p x t r hr Ω' outer inner T A G houter hgood
+  filter_upwards [hgood] with s hs
+  have hopen : IsOpen (euclideanBall x (2 * r)) := by
+    change IsOpen {y : Vec3 | euclideanSqDist y x < (2 * r) ^ 2}
+    exact isOpen_lt (contDiff_euclideanSqDist_left x).continuous continuous_const
+  let H : ∀ i : Fin 3, H1Function (euclideanBall x (2 * r)) := fun i =>
+    { toFun := fun y => u (y, s) i
+      grad := fun y => Du (y, s) i
+      memL2 := (MemLp.eval hs.1.1 i).mono_measure
+        (Measure.restrict_mono_set volume houter)
+      gradMemL2 := fun j => (MemLp.eval (MemLp.eval hs.1.2 i) j).mono_measure
+        (Measure.restrict_mono_set volume houter)
+      hasWeakGradient := (hs.2 i).restrict hopen houter }
+  have hcomp : ∀ i : Fin 3, (H i).toFun = fun y => u (y, s) i := by
+    intro i
+    rfl
+  have hvec := h1_vec3_l3_cyl hr (u := fun y => u (y, s)) H hcomp
+  have hAi : ∀ i : Fin 3, lpNormOn 2 (euclideanBall x (2 * r))
+      (H i).toFun ≤ A s := by
+    intro i
+    rw [hcomp i]
+    calc
+      _ ≤ eLpNorm (fun y => u (y, s)) 2
+          (volume.restrict (euclideanBall x (2 * r))) := by
+        apply eLpNorm_mono_ae
+          ((MemLp.eval hs.1.1 i).mono_measure
+            (Measure.restrict_mono_set volume houter)).aestronglyMeasurable
+        filter_upwards [] with y
+        exact norm_le_pi_norm (u (y, s)) i
+      _ = A s := by
+        rw [eLpNorm_eq_lintegral_rpow_enorm_toReal
+          (p := (2 : ℝ≥0∞)) (by norm_num) ENNReal.coe_ne_top
+          (hs.1.1.mono_measure
+            (Measure.restrict_mono_set volume houter)).aestronglyMeasurable]
+        rfl
+  have hGi : ∀ i : Fin 3, weakGradientLpNormOn 2
+      (euclideanBall x (2 * r)) (H i).grad ≤ G s := by
+    intro i
+    change eLpNorm (fun y => Du (y, s) i) 2 _ ≤ _
+    have hGpoint : ∀ y : Vec3,
+        ‖Du (y, s) i‖ₑ ^ (2 : ℝ) ≤
+          ENNReal.ofReal (spatialGradientSq u Du (y, s)) := by
+      intro y
+      exact component_sq_le_spatialGradientSq_cyl (y, s) i
+    rw [eLpNorm_eq_lintegral_rpow_enorm_toReal
+      (p := (2 : ℝ≥0∞)) (by norm_num) ENNReal.coe_ne_top
+      ((MemLp.eval hs.1.2 i).mono_measure
+        (Measure.restrict_mono_set volume houter)).aestronglyMeasurable]
+    norm_num
+    have hlin : (∫⁻ y in euclideanBall x (2 * r),
+        ‖Du (y, s) i‖ₑ ^ (2 : ℝ)) ≤
+        ∫⁻ y in euclideanBall x (2 * r),
+          ENNReal.ofReal (spatialGradientSq u Du (y, s)) := by
+      apply lintegral_mono (μ := volume.restrict (euclideanBall x (2 * r)))
+      intro y
+      exact hGpoint y
+    have hpow := ENNReal.rpow_le_rpow hlin
+      (by norm_num : (0 : ℝ) ≤ 1 / 2)
+    simpa [Real.rpow_natCast, G, outer] using hpow
+  have hterm : ∀ i : Fin 3, lpNormOn 3 (euclideanBall x r)
+      (H i).toFun ^ (3 : ℕ) ≤ localSobolevConstant ^ (3 / 2 : ℝ) *
+        A s ^ (3 / 2 : ℝ) * (G s +
+          (Real.toNNReal (32 / r) : ℝ≥0∞) * A s) ^ (3 / 2 : ℝ) := by
+    intro i
+    have hi := h1InterpolationBallCubed hr (H i)
+    have hAiPow := ENNReal.rpow_le_rpow (hAi i)
+      (by norm_num : (0 : ℝ) ≤ 3 / 2)
+    have hsum : weakGradientLpNormOn 2 (euclideanBall x (2 * r)) (H i).grad +
+        (Real.toNNReal (32 / r) : ℝ≥0∞) *
+          lpNormOn 2 (euclideanBall x (2 * r)) (H i).toFun ≤
+        G s + (Real.toNNReal (32 / r) : ℝ≥0∞) * A s :=
+      add_le_add (hGi i)
+      (mul_le_mul_of_nonneg_left (hAi i) (by positivity))
+    have hsumPow := ENNReal.rpow_le_rpow hsum
+      (by norm_num : (0 : ℝ) ≤ 3 / 2)
+    calc
+      _ ≤ localSobolevConstant ^ (3 / 2 : ℝ) *
+          lpNormOn 2 (euclideanBall x (2 * r)) (H i).toFun ^ (3 / 2 : ℝ) *
+          (weakGradientLpNormOn 2 (euclideanBall x (2 * r)) (H i).grad +
+            (Real.toNNReal (32 / r) : ℝ≥0∞) *
+              lpNormOn 2 (euclideanBall x (2 * r)) (H i).toFun) ^
+            (3 / 2 : ℝ) := hi
+      _ ≤ localSobolevConstant ^ (3 / 2 : ℝ) * A s ^ (3 / 2 : ℝ) *
+          (weakGradientLpNormOn 2 (euclideanBall x (2 * r)) (H i).grad +
+            (Real.toNNReal (32 / r) : ℝ≥0∞) *
+              lpNormOn 2 (euclideanBall x (2 * r)) (H i).toFun) ^
+            (3 / 2 : ℝ) := by
+        exact mul_le_mul_of_nonneg_right
+          (mul_le_mul_of_nonneg_left hAiPow (by positivity)) (by positivity)
+      _ ≤ _ := mul_le_mul_of_nonneg_left hsumPow (by positivity)
+  calc
+    _ ≤ ENNReal.ofReal ((3 : ℝ) ^ ((3 : ℝ) / 2 - 1)) *
+        ∑ i : Fin 3, (localSobolevConstant ^ (3 / 2 : ℝ) * A s ^ (3 / 2 : ℝ) *
+          (G s + (Real.toNNReal (32 / r) : ℝ≥0∞) * A s) ^ (3 / 2 : ℝ)) := by
+      exact (hvec.trans (mul_le_mul_of_nonneg_left
+        (Finset.sum_le_sum (fun i _ => hterm i)) (by positivity)))
+    _ = _ := by simp only [Finset.sum_const, Finset.card_fin]; ring_nf
+
+private lemma step2_cylinder_l3_bound_hA0_3 :
+    ∀ {u : ParabolicPoint → Vec3} {x : Vec3} {t r : ℝ},
+      (0 : ℝ) < r →
+        let outer : Set Vec3 := euclideanBall x ((2 : ℝ) * r);
+        let T : Set ℝ := Ioc (t - r ^ (2 : ℕ)) t;
+        let A : ℝ → ℝ≥0∞ := fun (s : ℝ) =>
+          (∫⁻ (y : Vec3) in outer, ‖u (y, s)‖ₑ ^ (2 : ℝ)) ^ (1 / 2 : ℝ);
+        ∀ᵐ (s : ℝ) ∂Measure.restrict volume T,
+          A s ≤
+            HPow.hPow (α := ℝ≥0∞)
+              (@essSup _ _ _ MeasureSpace.toMeasurableSpace
+                (fun (s : ℝ) =>
+                  ∫⁻ (y : Vec3) in vec3Ball x ((2 : ℝ) * r),
+                    ENNReal.ofReal (vec3EuclideanNorm (u (y, s))) ^ (2 : ℝ))
+                (Measure.restrict volume T))
+              (1 / 2 : ℝ)
+    := by
+  intro u x t r hr outer T A
+  have hess := ENNReal.ae_le_essSup (μ := volume.restrict T)
+    (fun s => ∫⁻ y in vec3Ball x (2 * r),
+      ENNReal.ofReal (vec3EuclideanNorm (u (y, s))) ^ (2 : ℝ))
+  filter_upwards [hess] with s hs
+  change (∫⁻ y in outer, ‖u (y, s)‖ₑ ^ (2 : ℝ)) ^ (1 / 2 : ℝ) ≤ _
+  have houter_eq : outer = vec3Ball x (2 * r) := by
+    dsimp [outer]
+    exact (vec3Ball_eq_euclideanBall_cyl (x₀ := x) (r := 2 * r)
+      (by positivity)).symm
+  rw [houter_eq]
+  apply ENNReal.rpow_le_rpow
+  · exact (lintegral_mono (μ := volume.restrict (vec3Ball x (2 * r)))
+      (fun y => sup_sq_le_euclidean_sq_cyl (u (y, s)))).trans hs
+  · norm_num
+
+private lemma step2_cylinder_l3_bound_hG2_4 :
+    ∀ {u : ParabolicPoint → Vec3} {Du : ParabolicPoint → Fin (3 : ℕ) → Vec3} {x : Vec3} {t r : ℝ}
+      {J : Set ℝ},
+      let outer : Set Vec3 := euclideanBall x ((2 : ℝ) * r);
+      let T : Set ℝ := Ioc (t - r ^ (2 : ℕ)) t;
+      let G : ℝ → ℝ≥0∞ := fun (s : ℝ) =>
+        (∫⁻ (y : Vec3) in outer, ENNReal.ofReal (spatialGradientSq u Du (y, s))) ^ (1 / 2 : ℝ);
+      T ⊆ J →
+        AEMeasurable (β := ℝ≥0∞) (_m := Prod.instMeasurableSpace)
+            (fun (z : Vec3 × ℝ) => ENNReal.ofReal (spatialGradientSq u Du z))
+            (Measure.prod (Measure.restrict volume outer) (Measure.restrict volume J)) →
+          (∀ (s : ℝ),
+              G s ^ (2 : ℝ) =
+                ∫⁻ (y : Vec3) in outer, ENNReal.ofReal (spatialGradientSq u Du (y, s))) →
+            outer ×ˢ T ⊆ parabolicCylinder x t ((2 : ℝ) * r) →
+              ∫⁻ (s : ℝ) in T, G s ^ (2 : ℝ) ≤
+                ∫⁻ (w : ParabolicPoint) in parabolicCylinder x t ((2 : ℝ) * r),
+                  ENNReal.ofReal (spatialGradientSq u Du w)
+    := by
+  intro u Du x t r J outer T G hIocJ hprod_D hGsq hrect_sub
+  calc
+    _ = ∫⁻ s in T, ∫⁻ y in outer,
+        ENNReal.ofReal (spatialGradientSq u Du (y, s)) := by
+      apply lintegral_congr
+      intro s
+      exact hGsq s
+    _ = ∫⁻ z in outer ×ˢ T,
+        ENNReal.ofReal (spatialGradientSq u Du z) :=
+      (CKN.Foundation.Parabolic.Integration.prod_lintegral_swap_cyl (hprod_D.mono_measure
+        (Measure.prod_mono
+        le_rfl (Measure.restrict_mono hIocJ le_rfl)))).symm
+    _ ≤ _ := lintegral_mono_set hrect_sub
+
+private lemma step2_cylinder_l3_bound_hpoint'_5 :
+    ∀ {u : ParabolicPoint → Vec3} {Du : ParabolicPoint → Fin (3 : ℕ) → Vec3} {x : Vec3} {t r : ℝ},
+      (0 : ℝ) < r →
+        ∀ {Abar : ℝ≥0∞},
+          HPow.hPow (α := ℝ≥0∞)
+                (@essSup _ _ _ MeasureSpace.toMeasurableSpace
+                  (fun (s : ℝ) =>
+                    ∫⁻ (y : Vec3) in vec3Ball x ((2 : ℝ) * r),
+                      ENNReal.ofReal (vec3EuclideanNorm (u (y, s))) ^ (2 : ℝ))
+                  (Measure.restrict volume (Ioc (t - r ^ (2 : ℕ)) t)))
+                (1 / 2 : ℝ) ≤
+              Abar →
+            let outer : Set Vec3 := euclideanBall x ((2 : ℝ) * r);
+            let inner : Set Vec3 := vec3Ball x r;
+            let T : Set ℝ := Ioc (t - r ^ (2 : ℕ)) t;
+            let A : ℝ → ℝ≥0∞ := fun (s : ℝ) =>
+              (∫⁻ (y : Vec3) in outer, ‖u (y, s)‖ₑ ^ (2 : ℝ)) ^ (1 / 2 : ℝ);
+            let G : ℝ → ℝ≥0∞ := fun (s : ℝ) =>
+              (∫⁻ (y : Vec3) in outer, ENNReal.ofReal (spatialGradientSq u Du (y, s))) ^
+                (1 / 2 : ℝ);
+            (∀ᵐ (s : ℝ) ∂Measure.restrict volume T,
+                ∫⁻ (y : Vec3) in inner, ENNReal.ofReal (vec3EuclideanNorm (u (y, s))) ^ (3 : ℝ) ≤
+                  ENNReal.ofReal ((3 : ℝ) ^ ((3 / 2 : ℝ) - (1 : ℝ))) * (3 : ℝ≥0∞) *
+                        localSobolevConstant ^ (3 / 2 : ℝ) *
+                      A s ^ (3 / 2 : ℝ) *
+                    (G s + (↑((32 : ℝ) / r).toNNReal : ℝ≥0∞) * A s) ^ (3 / 2 : ℝ)) →
+              (∀ᵐ (s : ℝ) ∂Measure.restrict volume T,
+                  A s ≤
+                    HPow.hPow (α := ℝ≥0∞)
+                      (@essSup _ _ _ MeasureSpace.toMeasurableSpace
+                        (fun (s : ℝ) =>
+                          ∫⁻ (y : Vec3) in vec3Ball x ((2 : ℝ) * r),
+                            ENNReal.ofReal (vec3EuclideanNorm (u (y, s))) ^ (2 : ℝ))
+                        (Measure.restrict volume T))
+                      (1 / 2 : ℝ)) →
+                ∀ᵐ (s : ℝ) ∂Measure.restrict volume T,
+                  ∫⁻ (y : Vec3) in inner, ENNReal.ofReal (vec3EuclideanNorm (u (y, s))) ^ (3 : ℝ) ≤
+                    ENNReal.ofReal ((3 : ℝ) ^ ((3 / 2 : ℝ) - (1 : ℝ))) * (3 : ℝ≥0∞) *
+                          localSobolevConstant ^ (3 / 2 : ℝ) *
+                        A s ^ (3 / 2 : ℝ) *
+                      (G s + (↑((32 : ℝ) / r).toNNReal : ℝ≥0∞) * Abar) ^ (3 / 2 : ℝ)
+    := by
+  intro u Du x t r hr Abar hAbound outer inner T A G hpoint hA0
+  filter_upwards [hpoint, hA0] with s hs hAs
+  have hAs' : A s ≤ Abar := hAs.trans hAbound
+  have hsum : G s + (Real.toNNReal (32 / r) : ℝ≥0∞) * A s ≤
+      G s + (Real.toNNReal (32 / r) : ℝ≥0∞) * Abar :=
+    add_le_add le_rfl (mul_le_mul_of_nonneg_left hAs' (by positivity))
+  have hpow := ENNReal.rpow_le_rpow hsum (by norm_num : (0 : ℝ) ≤ 3 / 2)
+  calc
+    _ ≤ (ENNReal.ofReal ((3 : ℝ) ^ ((3 : ℝ) / 2 - 1)) * 3) *
+        localSobolevConstant ^ (3 / 2 : ℝ) * A s ^ (3 / 2 : ℝ) *
+        (G s + (Real.toNNReal (32 / r) : ℝ≥0∞) * A s) ^ (3 / 2 : ℝ) := hs
+    _ ≤ _ := mul_le_mul_of_nonneg_left hpow (by positivity)
+
 /-- Quantitative cylinder `L³` control obtained from the vector H¹ interpolation
 estimate.  The larger cylinder supplies the time-slice energy and gradient
 bounds; this is the analytic certificate used by the Step 2 Morrey argument. -/
@@ -449,142 +728,9 @@ theorem step2_cylinder_l3_bound
     (hprod_u.lintegral_prod_left').pow_const (1 / 2 : ℝ)
   have hGmeas : AEMeasurable G (volume.restrict J) :=
     (hprod_D.lintegral_prod_left').pow_const (1 / 2 : ℝ)
-  have hgood : ∀ᵐ s ∂volume.restrict T,
-      (MemLp (fun y => u (y, s)) 2 (volume.restrict Ω') ∧
-        MemLp (fun y => Du (y, s)) 2 (volume.restrict Ω')) ∧
-      (∀ i : Fin 3, HasWeakGradientOn Ω' (fun y => u (y, s) i)
-        (fun y => Du (y, s) i)) := by
-    have hslices := slice_memLp_ae_of_sws hsol hbox
-    have hgrad : ∀ i : Fin 3, ∀ᵐ s ∂volume.restrict J,
-        HasWeakGradientOn Ω' (fun y => u (y, s) i) (fun y => Du (y, s) i) :=
-      (hsol.2.2.2.2.2.1 Ω' J hbox).2.2.2.2.2.2.2.2
-    have hgrad_all : ∀ᵐ s ∂volume.restrict J, ∀ i : Fin 3,
-        HasWeakGradientOn Ω' (fun y => u (y, s) i) (fun y => Du (y, s) i) := by
-      rw [ae_all_iff]
-      intro i
-      exact hgrad i
-    filter_upwards [ae_restrict_of_ae_restrict_of_subset hIocJ hslices,
-      ae_restrict_of_ae_restrict_of_subset hIocJ hgrad_all] with s hs hg
-    exact ⟨hs, hg⟩
-  have hpoint : ∀ᵐ s ∂volume.restrict T,
-      (∫⁻ y in inner, ENNReal.ofReal (vec3EuclideanNorm (u (y, s))) ^ (3 : ℝ)) ≤
-      (ENNReal.ofReal ((3 : ℝ) ^ ((3 : ℝ) / 2 - 1)) * 3) *
-        localSobolevConstant ^ (3 / 2 : ℝ) * A s ^ (3 / 2 : ℝ) *
-        (G s + (Real.toNNReal (32 / r) : ℝ≥0∞) * A s) ^ (3 / 2 : ℝ) := by
-    filter_upwards [hgood] with s hs
-    have hopen : IsOpen (euclideanBall x (2 * r)) := by
-      change IsOpen {y : Vec3 | euclideanSqDist y x < (2 * r) ^ 2}
-      exact isOpen_lt (contDiff_euclideanSqDist_left x).continuous continuous_const
-    let H : ∀ i : Fin 3, H1Function (euclideanBall x (2 * r)) := fun i =>
-      { toFun := fun y => u (y, s) i
-        grad := fun y => Du (y, s) i
-        memL2 := (MemLp.eval hs.1.1 i).mono_measure
-          (Measure.restrict_mono_set volume houter)
-        gradMemL2 := fun j => (MemLp.eval (MemLp.eval hs.1.2 i) j).mono_measure
-          (Measure.restrict_mono_set volume houter)
-        hasWeakGradient := (hs.2 i).restrict hopen houter }
-    have hcomp : ∀ i : Fin 3, (H i).toFun = fun y => u (y, s) i := by
-      intro i
-      rfl
-    have hvec := h1_vec3_l3_cyl hr (u := fun y => u (y, s)) H hcomp
-    have hAi : ∀ i : Fin 3, lpNormOn 2 (euclideanBall x (2 * r))
-        (H i).toFun ≤ A s := by
-      intro i
-      rw [hcomp i]
-      calc
-        _ ≤ eLpNorm (fun y => u (y, s)) 2
-            (volume.restrict (euclideanBall x (2 * r))) := by
-          apply eLpNorm_mono_ae
-            ((MemLp.eval hs.1.1 i).mono_measure
-              (Measure.restrict_mono_set volume houter)).aestronglyMeasurable
-          filter_upwards [] with y
-          exact norm_le_pi_norm (u (y, s)) i
-        _ = A s := by
-          rw [eLpNorm_eq_lintegral_rpow_enorm_toReal
-            (p := (2 : ℝ≥0∞)) (by norm_num) ENNReal.coe_ne_top
-            (hs.1.1.mono_measure
-              (Measure.restrict_mono_set volume houter)).aestronglyMeasurable]
-          rfl
-    have hGi : ∀ i : Fin 3, weakGradientLpNormOn 2
-        (euclideanBall x (2 * r)) (H i).grad ≤ G s := by
-      intro i
-      change eLpNorm (fun y => Du (y, s) i) 2 _ ≤ _
-      have hGpoint : ∀ y : Vec3,
-          ‖Du (y, s) i‖ₑ ^ (2 : ℝ) ≤
-            ENNReal.ofReal (spatialGradientSq u Du (y, s)) := by
-        intro y
-        exact component_sq_le_spatialGradientSq_cyl (y, s) i
-      rw [eLpNorm_eq_lintegral_rpow_enorm_toReal
-        (p := (2 : ℝ≥0∞)) (by norm_num) ENNReal.coe_ne_top
-        ((MemLp.eval hs.1.2 i).mono_measure
-          (Measure.restrict_mono_set volume houter)).aestronglyMeasurable]
-      norm_num
-      have hlin : (∫⁻ y in euclideanBall x (2 * r),
-          ‖Du (y, s) i‖ₑ ^ (2 : ℝ)) ≤
-          ∫⁻ y in euclideanBall x (2 * r),
-            ENNReal.ofReal (spatialGradientSq u Du (y, s)) := by
-        apply lintegral_mono (μ := volume.restrict (euclideanBall x (2 * r)))
-        intro y
-        exact hGpoint y
-      have hpow := ENNReal.rpow_le_rpow hlin
-        (by norm_num : (0 : ℝ) ≤ 1 / 2)
-      simpa [Real.rpow_natCast, G, outer] using hpow
-    have hterm : ∀ i : Fin 3, lpNormOn 3 (euclideanBall x r)
-        (H i).toFun ^ (3 : ℕ) ≤ localSobolevConstant ^ (3 / 2 : ℝ) *
-          A s ^ (3 / 2 : ℝ) * (G s +
-            (Real.toNNReal (32 / r) : ℝ≥0∞) * A s) ^ (3 / 2 : ℝ) := by
-      intro i
-      have hi := h1InterpolationBallCubed hr (H i)
-      have hAiPow := ENNReal.rpow_le_rpow (hAi i)
-        (by norm_num : (0 : ℝ) ≤ 3 / 2)
-      have hsum : weakGradientLpNormOn 2 (euclideanBall x (2 * r)) (H i).grad +
-          (Real.toNNReal (32 / r) : ℝ≥0∞) *
-            lpNormOn 2 (euclideanBall x (2 * r)) (H i).toFun ≤
-          G s + (Real.toNNReal (32 / r) : ℝ≥0∞) * A s :=
-        add_le_add (hGi i)
-        (mul_le_mul_of_nonneg_left (hAi i) (by positivity))
-      have hsumPow := ENNReal.rpow_le_rpow hsum
-        (by norm_num : (0 : ℝ) ≤ 3 / 2)
-      calc
-        _ ≤ localSobolevConstant ^ (3 / 2 : ℝ) *
-            lpNormOn 2 (euclideanBall x (2 * r)) (H i).toFun ^ (3 / 2 : ℝ) *
-            (weakGradientLpNormOn 2 (euclideanBall x (2 * r)) (H i).grad +
-              (Real.toNNReal (32 / r) : ℝ≥0∞) *
-                lpNormOn 2 (euclideanBall x (2 * r)) (H i).toFun) ^
-              (3 / 2 : ℝ) := hi
-        _ ≤ localSobolevConstant ^ (3 / 2 : ℝ) * A s ^ (3 / 2 : ℝ) *
-            (weakGradientLpNormOn 2 (euclideanBall x (2 * r)) (H i).grad +
-              (Real.toNNReal (32 / r) : ℝ≥0∞) *
-                lpNormOn 2 (euclideanBall x (2 * r)) (H i).toFun) ^
-              (3 / 2 : ℝ) := by
-          exact mul_le_mul_of_nonneg_right
-            (mul_le_mul_of_nonneg_left hAiPow (by positivity)) (by positivity)
-        _ ≤ _ := mul_le_mul_of_nonneg_left hsumPow (by positivity)
-    calc
-      _ ≤ ENNReal.ofReal ((3 : ℝ) ^ ((3 : ℝ) / 2 - 1)) *
-          ∑ i : Fin 3, (localSobolevConstant ^ (3 / 2 : ℝ) * A s ^ (3 / 2 : ℝ) *
-            (G s + (Real.toNNReal (32 / r) : ℝ≥0∞) * A s) ^ (3 / 2 : ℝ)) := by
-        exact (hvec.trans (mul_le_mul_of_nonneg_left
-          (Finset.sum_le_sum (fun i _ => hterm i)) (by positivity)))
-      _ = _ := by simp only [Finset.sum_const, Finset.card_fin]; ring_nf
-  have hA0 : ∀ᵐ s ∂volume.restrict T,
-      A s ≤ (essSup (fun s => ∫⁻ y in vec3Ball x (2 * r),
-        ENNReal.ofReal (vec3EuclideanNorm (u (y, s))) ^ (2 : ℝ))
-        (volume.restrict T)) ^ (1 / 2 : ℝ) := by
-    have hess := ENNReal.ae_le_essSup (μ := volume.restrict T)
-      (fun s => ∫⁻ y in vec3Ball x (2 * r),
-        ENNReal.ofReal (vec3EuclideanNorm (u (y, s))) ^ (2 : ℝ))
-    filter_upwards [hess] with s hs
-    change (∫⁻ y in outer, ‖u (y, s)‖ₑ ^ (2 : ℝ)) ^ (1 / 2 : ℝ) ≤ _
-    have houter_eq : outer = vec3Ball x (2 * r) := by
-      dsimp [outer]
-      exact (vec3Ball_eq_euclideanBall_cyl (x₀ := x) (r := 2 * r)
-        (by positivity)).symm
-    rw [houter_eq]
-    apply ENNReal.rpow_le_rpow
-    · exact (lintegral_mono (μ := volume.restrict (vec3Ball x (2 * r)))
-        (fun y => sup_sq_le_euclidean_sq_cyl (u (y, s)))).trans hs
-    · norm_num
+  have hgood := @step2_cylinder_l3_bound_hgood_1 Ω I q u Du p f hsol t r Ω' J hbox hIocJ
+  have hpoint := @step2_cylinder_l3_bound_hpoint_2 u Du p x t r hr Ω' houter hgood
+  have hA0 := @step2_cylinder_l3_bound_hA0_3 u x t r hr
   have hGsq : ∀ s, G s ^ (2 : ℝ) = ∫⁻ y in outer,
       ENNReal.ofReal (spatialGradientSq u Du (y, s)) := by
     intro s
@@ -601,41 +747,13 @@ theorem step2_cylinder_l3_bound
       ((t - (2 * r) ^ 2 < z.2) ∧ z.2 ≤ t)
     exact ⟨by simpa [mem_vec3Ball] using hy',
       ⟨by nlinarith only [hs.1, hr], hs.2⟩⟩
-  have hG2 : (∫⁻ s in T, G s ^ (2 : ℝ)) ≤
-      ∫⁻ w in parabolicCylinder x t (2 * r),
-        ENNReal.ofReal (spatialGradientSq u Du w) := by
-    calc
-      _ = ∫⁻ s in T, ∫⁻ y in outer,
-          ENNReal.ofReal (spatialGradientSq u Du (y, s)) := by
-        apply lintegral_congr
-        intro s
-        exact hGsq s
-      _ = ∫⁻ z in outer ×ˢ T,
-          ENNReal.ofReal (spatialGradientSq u Du z) :=
-        (CKN.Foundation.Parabolic.Integration.prod_lintegral_swap_cyl (hprod_D.mono_measure (Measure.prod_mono
-          le_rfl (Measure.restrict_mono hIocJ le_rfl)))).symm
-      _ ≤ _ := lintegral_mono_set hrect_sub
+  have hG2 := @step2_cylinder_l3_bound_hG2_4 u Du x t r J hIocJ hprod_D hGsq hrect_sub
   have hV : volume T ≤ ENNReal.ofReal (r ^ 2) := by
     rw [Real.volume_Ioc]
     exact le_of_eq (congrArg ENNReal.ofReal (by ring_nf))
   have hAmeasT := hAmeas.mono_measure (Measure.restrict_mono hIocJ le_rfl)
   have hGmeasT := hGmeas.mono_measure (Measure.restrict_mono hIocJ le_rfl)
-  have hpoint' : ∀ᵐ s ∂volume.restrict T,
-      (∫⁻ y in inner, ENNReal.ofReal (vec3EuclideanNorm (u (y, s))) ^ (3 : ℝ)) ≤
-      (ENNReal.ofReal ((3 : ℝ) ^ ((3 : ℝ) / 2 - 1)) * 3) *
-        localSobolevConstant ^ (3 / 2 : ℝ) * A s ^ (3 / 2 : ℝ) *
-        (G s + (Real.toNNReal (32 / r) : ℝ≥0∞) * Abar) ^ (3 / 2 : ℝ) := by
-    filter_upwards [hpoint, hA0] with s hs hAs
-    have hAs' : A s ≤ Abar := hAs.trans hAbound
-    have hsum : G s + (Real.toNNReal (32 / r) : ℝ≥0∞) * A s ≤
-        G s + (Real.toNNReal (32 / r) : ℝ≥0∞) * Abar :=
-      add_le_add le_rfl (mul_le_mul_of_nonneg_left hAs' (by positivity))
-    have hpow := ENNReal.rpow_le_rpow hsum (by norm_num : (0 : ℝ) ≤ 3 / 2)
-    calc
-      _ ≤ (ENNReal.ofReal ((3 : ℝ) ^ ((3 : ℝ) / 2 - 1)) * 3) *
-          localSobolevConstant ^ (3 / 2 : ℝ) * A s ^ (3 / 2 : ℝ) *
-          (G s + (Real.toNNReal (32 / r) : ℝ≥0∞) * A s) ^ (3 / 2 : ℝ) := hs
-      _ ≤ _ := mul_le_mul_of_nonneg_left hpow (by positivity)
+  have hpoint' := @step2_cylinder_l3_bound_hpoint'_5 u Du x t r hr Abar hAbound hpoint hA0
   have htime := time_rpow_bound_cyl
     (B := (Real.toNNReal (32 / r) : ℝ≥0∞) * Abar)
     hAmeasT hGmeasT hAbar.ne
@@ -753,3 +871,5 @@ theorem step2_shifted_center_dist {w : ParabolicPoint} {r : ℝ} (hr : 0 < r) :
         simp [vec3EuclideanNorm_zero, hr.le]
       simp [parabolicDist, max_eq_right hzero,
         abs_of_nonneg (sq_nonneg r), Real.sqrt_sq (le_of_lt hr)]
+
+end CKN

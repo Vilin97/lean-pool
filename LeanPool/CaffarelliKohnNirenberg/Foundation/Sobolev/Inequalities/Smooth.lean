@@ -107,6 +107,7 @@ private theorem canonicalBallCutoff_gradient_norm_bound
     _ = 32 / r := by ring_nf
 
 /- The fixed factor is absolute because the ambient dimension is three. -/
+/-- Euclidean Sobolev coefficient inherited from Mathlib's compact-support inequality. -/
 noncomputable def localSobolevConstant : ℝ≥0∞ :=
   ((3 : NNReal) : ℝ≥0∞) *
     (SNormLESNormFDerivOfEqConst (E := Vec 3) ℝ (volume : Measure (Vec 3))

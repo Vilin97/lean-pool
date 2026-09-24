@@ -53,7 +53,7 @@ private lemma local_trace_pairing_zero
   obtain ⟨hu, hDu, -, -, -, henergy, -, -, hgrad⟩ :=
     hsol.2.2.2.2.2.1 Ω' J hbox
   let μ : Measure ParabolicPoint := volume.restrict (spaceTimeSet Ω' J)
-  haveI : IsFiniteMeasure μ := local_box_isFiniteMeasure
+  have : IsFiniteMeasure μ := local_box_isFiniteMeasure
     hbox.2.1 hbox.2.2.2.2.1
   have hLp := local_memLp_two_of_energy (hu := hu) (hDu := hDu) henergy
   have huComp (j : Fin 3) : MemLp (fun z => u z j) 2 μ :=
@@ -218,7 +218,7 @@ private lemma local_trace_zero_on_nonzero
     obtain ⟨hu, hDu, -, -, -, henergy, -, -, -⟩ :=
       hsol.2.2.2.2.2.1 Ω' J hbox
     let μ : Measure ParabolicPoint := volume.restrict (spaceTimeSet Ω' J)
-    haveI : IsFiniteMeasure μ := local_box_isFiniteMeasure
+    have : IsFiniteMeasure μ := local_box_isFiniteMeasure
       hbox.2.1 hbox.2.2.2.2.1
     have hLp := local_memLp_two_of_energy (hu := hu) (hDu := hDu) henergy
     have hDuComp (j k : Fin 3) : MemLp (fun z => Du z j k) 2 μ :=
@@ -321,7 +321,7 @@ theorem localized_convection_transfer_no_trace
   obtain ⟨hu, hDu, -, -, -, henergy, -, -, -⟩ :=
     hsol.2.2.2.2.2.1 Ω' J hbox
   let μ : Measure ParabolicPoint := volume.restrict (spaceTimeSet Ω' J)
-  haveI : IsFiniteMeasure μ := local_box_isFiniteMeasure
+  have : IsFiniteMeasure μ := local_box_isFiniteMeasure
     hbox.2.1 hbox.2.2.2.2.1
   have hLp := local_memLp_two_of_energy (hu := hu) (hDu := hDu) henergy
   have huComp (j : Fin 3) : MemLp (fun z => u z j) 2 μ :=

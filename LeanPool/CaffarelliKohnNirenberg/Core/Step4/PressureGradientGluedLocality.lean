@@ -79,7 +79,7 @@ theorem hasWeakPartialDerivOn_of_isOpen_cover {d : ℕ} {ι : Type*}
     intro x hx
     by_contra hnot
     refine hx ?_
-    show (fderiv ℝ (Φ k) x) (basisVec i) = 0
+    change (fderiv ℝ (Φ k) x) (basisVec i) = 0
     rw [fderiv_of_notMem_tsupport (𝕜 := ℝ) hnot]
     simp
   have hDcont : ∀ k, Continuous (fun x => (fderiv ℝ (Φ k) x) (basisVec i)) := fun k =>
@@ -96,7 +96,7 @@ theorem hasWeakPartialDerivOn_of_isOpen_cover {d : ℕ} {ι : Type*}
       = ∑ k ∈ Finset.range N, ∫ x in U, u x * (fderiv ℝ (Φ k) x) (basisVec i) ∂volume := by
     rw [← integral_finsetSum _ (fun k _ => hIu k)]
     refine integral_congr_ae (Filter.Eventually.of_forall fun x => ?_)
-    show u x * (fderiv ℝ φ x) (basisVec i)
+    change u x * (fderiv ℝ φ x) (basisVec i)
       = ∑ k ∈ Finset.range N, u x * (fderiv ℝ (Φ k) x) (basisVec i)
     rw [hfd x, Finset.mul_sum]
   have hpiece : ∀ k ∈ Finset.range N,
@@ -121,7 +121,7 @@ theorem hasWeakPartialDerivOn_of_isOpen_cover {d : ℕ} {ι : Type*}
       = ∑ k ∈ Finset.range N, ∫ x in U, g x * Φ k x ∂volume := by
     rw [← integral_finsetSum _ (fun k _ => hIg k)]
     refine integral_congr_ae (Filter.Eventually.of_forall fun x => ?_)
-    show g x * φ x = ∑ k ∈ Finset.range N, g x * Φ k x
+    change g x * φ x = ∑ k ∈ Finset.range N, g x * Φ k x
     rw [← Finset.mul_sum, hsum x]
   rw [hL, hR, Finset.sum_congr rfl hpiece, Finset.sum_neg_distrib]
 

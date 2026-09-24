@@ -25,6 +25,7 @@ noncomputable section
 
 namespace CKN.Foundation.Heat
 
+/-- Increasing sequence of Euclidean balls used in the Liouville argument. -/
 def liouvilleBall (n : ℕ) : Set Vec3 :=
   euclideanBall 0 ((n : ℝ) + 1)
 

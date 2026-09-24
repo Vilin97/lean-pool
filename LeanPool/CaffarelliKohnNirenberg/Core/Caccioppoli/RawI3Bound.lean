@@ -27,15 +27,141 @@ noncomputable section
 
 namespace CKN
 
-def caccioppoli_I3_heat_cutoff_raw
+/-- Raw pressure contribution paired with velocity and the spatial gradient of the heat cutoff. -/
+def caccioppoliI3HeatCutoffRaw
     {p : ParabolicPoint → ℝ} {v : ParabolicPoint → Vec3}
     {x₀ : Vec3} {t₀ ρ ε r : ℝ} (hρ : 0 < ρ) (hε : 0 < ε) : ℝ :=
   (∫⁻ w in parabolicCylinder x₀ t₀ ρ,
       (2 : ℝ≥0∞) * ENNReal.ofReal |p w| *
         ENNReal.ofReal (vec3EuclideanNorm (v w)) *
         ENNReal.ofReal (∑ i, |spatialPartial (fun y : ParabolicPoint =>
-          backwardHeat_cutoff
-            (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|)).toReal
+          backwardHeatCutoff
+            (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|)).toReal
+
+private lemma caccioppoli_I3_heat_cutoff_raw_bound_hgrad_1 :
+    ∀ {x₀ : Vec3} {t₀ ρ ε r : ℝ} (hρ : 0 < ρ) (hε : 0 < ε),
+      0 < r →
+        r ≤ ρ / 2 →
+          ∀ w ∈ parabolicCylinder x₀ t₀ ρ,
+            ∑ i : Fin 3,
+                |spatialPartial
+                    (fun y =>
+                      backwardHeatCutoff (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y)
+                    i w| ≤
+              (1500 * cutoffGradientConstant + 900000) / r ^ 2
+    := by
+  intro x₀ t₀ ρ ε r hρ hε hr hscale w hw
+  have hraw := caccioppoli_heat_cutoff_gradient_sum_bound
+    (x₀ := x₀) (t₀ := t₀) (ρ := ρ) (ε := ε) (r := r)
+    (z := w) hρ hε hr hscale hw
+  have hρr : 2 * r ≤ ρ := by
+    have hw' : r ≤ ρ / 2 := by
+      exact hscale
+    nlinarith only [hw']
+  have hC : 0 ≤ cutoffGradientConstant := by
+    by_contra hC'
+    have hneg : cutoffGradientConstant / ρ < 0 :=
+      div_neg_of_neg_of_pos (lt_of_not_ge hC') hρ
+    have hbound := caccioppoli_spatial_cutoff_gradient_bound 0 ρ hρ 0
+    have hnorm' : 0 ≤ vecEuclideanNorm (classicalGradient
+        (mollifiedBallCutoff 0 hρ) 0) := by
+      unfold vecEuclideanNorm
+      positivity
+    have hnorm'' : 0 ≤ vecEuclideanNorm (classicalGradient
+        (mollifiedBallCutoff 0 hρ) 0) := by
+      exact hnorm'
+    exact (not_lt_of_ge hnorm'') (hbound.trans_lt hneg)
+  have hfirst : cutoffGradientConstant / ρ * (1000 / r) ≤
+      500 * cutoffGradientConstant / r ^ 2 := by
+    have hρr' : 0 < ρ := hρ
+    have hpos : 0 < r := hr
+    have hmul : 1000 / (ρ * r) ≤ 500 / r ^ 2 := by
+      apply (div_le_div_iff₀ (mul_pos hρr' hpos) (sq_pos_of_pos hpos)).2
+      have hmul' := mul_le_mul_of_nonneg_right hρr hpos.le
+      nlinarith only [hmul']
+    calc
+      cutoffGradientConstant / ρ * (1000 / r) =
+          cutoffGradientConstant * (1000 / (ρ * r)) := by
+        field_simp [hρr'.ne', hpos.ne']
+      _ ≤ cutoffGradientConstant * (500 / r ^ 2) :=
+        mul_le_mul_of_nonneg_left hmul hC
+      _ = 500 * cutoffGradientConstant / r ^ 2 := by ring
+  have hsecond : 300000 * r ^ 2 / r ^ 4 = 300000 / r ^ 2 := by
+    field_simp [hr.ne']
+  calc
+    _ ≤ 3 * (500 * cutoffGradientConstant / r ^ 2 +
+        300000 / r ^ 2) := by
+      exact hraw.trans
+        (mul_le_mul_of_nonneg_left
+          (add_le_add hfirst hsecond.le) (by positivity))
+    _ = (1500 * cutoffGradientConstant + 900000) / r ^ 2 := by
+      field_simp [hr.ne']
+      ring
+
+private lemma caccioppoli_I3_heat_cutoff_raw_bound_hmono_2 :
+    ∀ {u : ParabolicPoint → Vec3} {p : ParabolicPoint → ℝ} {x₀ : Vec3} {t₀ ρ ε r : ℝ} (hρ : 0 < ρ)
+      (hε : 0 < ε),
+      0 < r →
+        (∀ w ∈ parabolicCylinder x₀ t₀ ρ,
+            ∑ i : Fin 3,
+                |spatialPartial
+                    (fun y =>
+                      backwardHeatCutoff (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y)
+                    i w| ≤
+              (1500 * cutoffGradientConstant + 900000) / r ^ 2) →
+          ∫⁻ (w : ParabolicPoint) in parabolicCylinder x₀ t₀ ρ,
+              2 * ENNReal.ofReal |p w| * ENNReal.ofReal (vec3EuclideanNorm (u w)) *
+                ENNReal.ofReal
+                  (∑ i : Fin 3,
+                    |spatialPartial
+                        (fun y =>
+                          backwardHeatCutoff (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y)
+                        i w|) ≤
+            ∫⁻ (w : ParabolicPoint) in parabolicCylinder x₀ t₀ ρ,
+              ENNReal.ofReal ((3000 * cutoffGradientConstant + 1800000) / r ^ 2) *
+                  ENNReal.ofReal |p w| *
+                ENNReal.ofReal (vec3EuclideanNorm (u w))
+    := by
+  intro u p x₀ t₀ ρ ε r hρ hε hr hgrad
+  apply lintegral_mono_ae
+  filter_upwards [ae_restrict_mem (measurableSet_parabolicCylinder _ _ _)]
+    with w hw
+  have hg := hgrad w hw
+  have hnonneg : 0 ≤ ∑ i, |spatialPartial (fun y : ParabolicPoint =>
+      backwardHeatCutoff
+        (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w| := by
+    positivity
+  have hscalar : (2 : ℝ≥0∞) * ENNReal.ofReal
+      (∑ i, |spatialPartial (fun y : ParabolicPoint =>
+      backwardHeatCutoff
+        (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|) ≤
+      ENNReal.ofReal ((3000 * cutoffGradientConstant + 1800000) / r ^ 2) := by
+    calc
+      (2 : ℝ≥0∞) * ENNReal.ofReal _ =
+          ENNReal.ofReal (2 * (∑ i, |spatialPartial (fun y : ParabolicPoint =>
+            backwardHeatCutoff
+              (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|)) := by
+        rw [ENNReal.ofReal_mul (by positivity : (0 : ℝ) ≤ 2)]
+        norm_num
+      _ ≤ ENNReal.ofReal ((3000 * cutoffGradientConstant + 1800000) / r ^ 2) :=
+        ENNReal.ofReal_le_ofReal (by
+          calc
+            2 * _ ≤ 2 * ((1500 * cutoffGradientConstant + 900000) / r ^ 2) :=
+              mul_le_mul_of_nonneg_left hg (by positivity)
+            _ = (3000 * cutoffGradientConstant + 1800000) / r ^ 2 := by
+              field_simp [hr.ne']
+              ring)
+  calc
+    _ = (2 * ENNReal.ofReal (∑ i, |spatialPartial (fun y : ParabolicPoint =>
+        backwardHeatCutoff
+          (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|) *
+        (ENNReal.ofReal |p w| *
+          ENNReal.ofReal (vec3EuclideanNorm (u w)))) := by ring
+    _ ≤ ENNReal.ofReal ((3000 * cutoffGradientConstant + 1800000) / r ^ 2) *
+        (ENNReal.ofReal |p w| *
+          ENNReal.ofReal (vec3EuclideanNorm (u w))) := by
+      exact mul_le_mul_of_nonneg_right hscalar (by positivity)
+    _ = _ := by ring
 
 theorem caccioppoli_I3_heat_cutoff_raw_bound
     {Ω : Set Vec3} {I : Set ℝ} {q : ℝ}
@@ -48,7 +174,7 @@ theorem caccioppoli_I3_heat_cutoff_raw_bound
     (hvelocity :
       (∫⁻ w in parabolicCylinder x₀ t₀ ρ,
         ENNReal.ofReal (vec3EuclideanNorm (u w)) ^ (3 : ℝ)) ≠ ∞) :
-    caccioppoli_I3_heat_cutoff_raw (p := p) (v := u) (x₀ := x₀) (t₀ := t₀)
+    caccioppoliI3HeatCutoffRaw (p := p) (v := u) (x₀ := x₀) (t₀ := t₀)
         (ρ := ρ) (ε := ε) (r := r) hρ hε ≤
       (3000 * cutoffGradientConstant + 1800000) *
         (ρ ^ 2 / r ^ 2) * delta p (x₀, t₀) ρ ^ 2 * gamma u (x₀, t₀) ρ := by
@@ -76,58 +202,7 @@ theorem caccioppoli_I3_heat_cutoff_raw_bound
       (Measure.restrict_mono hcyl le_rfl)
   have huv : AEMeasurable (fun w => ENNReal.ofReal (vec3EuclideanNorm (u w)))
       (volume.restrict (parabolicCylinder x₀ t₀ ρ)) := hnorm.aemeasurable
-  have hgrad : ∀ w ∈ parabolicCylinder x₀ t₀ ρ,
-      ∑ i, |spatialPartial (fun y : ParabolicPoint =>
-        backwardHeat_cutoff
-          (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w| ≤
-        (1500 * cutoffGradientConstant + 900000) / r ^ 2 := by
-    intro w hw
-    have hraw := caccioppoli_heat_cutoff_gradient_sum_bound
-      (x₀ := x₀) (t₀ := t₀) (ρ := ρ) (ε := ε) (r := r)
-      (z := w) hρ hε hr hscale hw
-    have hρr : 2 * r ≤ ρ := by
-      have hw' : r ≤ ρ / 2 := by
-        exact hscale
-      nlinarith only [hw']
-    have hC : 0 ≤ cutoffGradientConstant := by
-      by_contra hC'
-      have hneg : cutoffGradientConstant / ρ < 0 :=
-        div_neg_of_neg_of_pos (lt_of_not_ge hC') hρ
-      have hbound := caccioppoli_spatial_cutoff_gradient_bound 0 ρ hρ 0
-      have hnorm' : 0 ≤ vecEuclideanNorm (classicalGradient
-          (mollifiedBallCutoff 0 hρ) 0) := by
-        unfold vecEuclideanNorm
-        positivity
-      have hnorm'' : 0 ≤ vecEuclideanNorm (classicalGradient
-          (mollifiedBallCutoff 0 hρ) 0) := by
-        exact hnorm'
-      exact (not_lt_of_ge hnorm'') (hbound.trans_lt hneg)
-    have hfirst : cutoffGradientConstant / ρ * (1000 / r) ≤
-        500 * cutoffGradientConstant / r ^ 2 := by
-      have hρr' : 0 < ρ := hρ
-      have hpos : 0 < r := hr
-      have hmul : 1000 / (ρ * r) ≤ 500 / r ^ 2 := by
-        apply (div_le_div_iff₀ (mul_pos hρr' hpos) (sq_pos_of_pos hpos)).2
-        have hmul' := mul_le_mul_of_nonneg_right hρr hpos.le
-        nlinarith only [hmul']
-      calc
-        cutoffGradientConstant / ρ * (1000 / r) =
-            cutoffGradientConstant * (1000 / (ρ * r)) := by
-          field_simp [hρr'.ne', hpos.ne']
-        _ ≤ cutoffGradientConstant * (500 / r ^ 2) :=
-          mul_le_mul_of_nonneg_left hmul hC
-        _ = 500 * cutoffGradientConstant / r ^ 2 := by ring
-    have hsecond : 300000 * r ^ 2 / r ^ 4 = 300000 / r ^ 2 := by
-      field_simp [hr.ne']
-    calc
-      _ ≤ 3 * (500 * cutoffGradientConstant / r ^ 2 +
-          300000 / r ^ 2) := by
-        exact hraw.trans
-          (mul_le_mul_of_nonneg_left
-            (add_le_add hfirst hsecond.le) (by positivity))
-      _ = (1500 * cutoffGradientConstant + 900000) / r ^ 2 := by
-        field_simp [hr.ne']
-        ring
+  have hgrad := @caccioppoli_I3_heat_cutoff_raw_bound_hgrad_1 x₀ t₀ ρ ε r hρ hε hr hscale
   have hC : 0 ≤ 3000 * cutoffGradientConstant + 1800000 := by
     have hgradC : 0 ≤ cutoffGradientConstant := by
       by_contra hC'
@@ -154,56 +229,7 @@ theorem caccioppoli_I3_heat_cutoff_raw_bound
           ENNReal.ofReal (vec3EuclideanNorm (u w)) ^ (3 : ℝ)) ^
           (1 / 3 : ℝ) := by
     exact caccioppoli_I3_holder hpress huv hfactor
-  have hmono :
-      (∫⁻ w in parabolicCylinder x₀ t₀ ρ,
-        (2 : ℝ≥0∞) * ENNReal.ofReal |p w| *
-          ENNReal.ofReal (vec3EuclideanNorm (u w)) *
-          ENNReal.ofReal (∑ i, |spatialPartial (fun y : ParabolicPoint =>
-            backwardHeat_cutoff
-              (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|)) ≤
-      ∫⁻ w in parabolicCylinder x₀ t₀ ρ,
-        ENNReal.ofReal ((3000 * cutoffGradientConstant + 1800000) / r ^ 2) *
-          ENNReal.ofReal |p w| *
-          ENNReal.ofReal (vec3EuclideanNorm (u w)) := by
-    apply lintegral_mono_ae
-    filter_upwards [ae_restrict_mem (measurableSet_parabolicCylinder _ _ _)]
-      with w hw
-    have hg := hgrad w hw
-    have hnonneg : 0 ≤ ∑ i, |spatialPartial (fun y : ParabolicPoint =>
-        backwardHeat_cutoff
-          (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w| := by
-      positivity
-    have hscalar : (2 : ℝ≥0∞) * ENNReal.ofReal
-        (∑ i, |spatialPartial (fun y : ParabolicPoint =>
-        backwardHeat_cutoff
-          (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|) ≤
-        ENNReal.ofReal ((3000 * cutoffGradientConstant + 1800000) / r ^ 2) := by
-      calc
-        (2 : ℝ≥0∞) * ENNReal.ofReal _ =
-            ENNReal.ofReal (2 * (∑ i, |spatialPartial (fun y : ParabolicPoint =>
-              backwardHeat_cutoff
-                (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|)) := by
-          rw [ENNReal.ofReal_mul (by positivity : (0 : ℝ) ≤ 2)]
-          norm_num
-        _ ≤ ENNReal.ofReal ((3000 * cutoffGradientConstant + 1800000) / r ^ 2) :=
-          ENNReal.ofReal_le_ofReal (by
-            calc
-              2 * _ ≤ 2 * ((1500 * cutoffGradientConstant + 900000) / r ^ 2) :=
-                mul_le_mul_of_nonneg_left hg (by positivity)
-              _ = (3000 * cutoffGradientConstant + 1800000) / r ^ 2 := by
-                field_simp [hr.ne']
-                ring)
-    calc
-      _ = (2 * ENNReal.ofReal (∑ i, |spatialPartial (fun y : ParabolicPoint =>
-          backwardHeat_cutoff
-            (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|) *
-          (ENNReal.ofReal |p w| *
-            ENNReal.ofReal (vec3EuclideanNorm (u w)))) := by ring
-      _ ≤ ENNReal.ofReal ((3000 * cutoffGradientConstant + 1800000) / r ^ 2) *
-          (ENNReal.ofReal |p w| *
-            ENNReal.ofReal (vec3EuclideanNorm (u w))) := by
-        exact mul_le_mul_of_nonneg_right hscalar (by positivity)
-      _ = _ := by ring
+  have hmono := @caccioppoli_I3_heat_cutoff_raw_bound_hmono_2 u p x₀ t₀ ρ ε r hρ hε hr hgrad
   have hpint := caccioppoli_I3_pressure_integral_identity hsol (x₀, t₀) hρ hsub
   have hvint := caccioppoli_I2_velocity_integral_identity
     (u := u) (z := (x₀, t₀)) (ρ := ρ) hρ hvelocity
@@ -273,7 +299,7 @@ theorem caccioppoli_I3_heat_cutoff_raw_bound
       _ = _ := by rw [hrhoadd]
   rw [mul_assoc, hscale] at hreal
   convert hreal using 1
-  · unfold caccioppoli_I3_heat_cutoff_raw
+  · unfold caccioppoliI3HeatCutoffRaw
     congr 1
   · ring
 
@@ -290,7 +316,7 @@ theorem caccioppoli_I3_heat_cutoff_raw_normalized
         ENNReal.ofReal (vec3EuclideanNorm (u w)) ^ (3 : ℝ)) ≠ ∞)
     (hKbound :
       3000 * cutoffGradientConstant + 1800000 ≤ C₂₅ ^ 2) :
-    caccioppoli_I3_heat_cutoff_raw (p := p) (v := u) (x₀ := x₀) (t₀ := t₀)
+    caccioppoliI3HeatCutoffRaw (p := p) (v := u) (x₀ := x₀) (t₀ := t₀)
         (ρ := ρ) (ε := ε) (r := r) hρ hε ≤
       (C₂₅ * (r / ρ)⁻¹ * delta p (x₀, t₀) ρ *
         gamma u (x₀, t₀) ρ ^ (1 / 2 : ℝ)) ^ 2 := by

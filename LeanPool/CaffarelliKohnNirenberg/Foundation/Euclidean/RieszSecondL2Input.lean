@@ -28,6 +28,7 @@ namespace CKN.Foundation.Euclidean
 
 open CKN
 
+/-- Smooth compactly supported real test functions on the whole spatial domain. -/
 abbrev testFunction := 𝓓((⊤ : TopologicalSpace.Opens Vec3), ℝ)
 
 private lemma pressure_neg_kernel_locallyIntegrable' :
@@ -114,6 +115,7 @@ private lemma mixedSecond_smul_smooth {f : Vec3 → ℝ} (c : ℝ)
     ((contDiff_spatialDeriv_smooth hf j).differentiable (by norm_num) x)]
   simp only [_root_.smul_apply, smul_eq_mul]
 
+/-- Linear inclusion of compactly supported smooth test functions into L². -/
 def testSource : testFunction →ₗ[ℝ] rieszSecondL2 where
   toFun f := MemLp.toLp (p := (2 : ℝ≥0∞)) (f : Vec3 → ℝ)
     (f.continuous.memLp_of_hasCompactSupport (p := (2 : ℝ≥0∞))
@@ -182,7 +184,8 @@ lemma test_hessian_mem (i j : Fin 3) (f : testFunction) :
     convert hsource_int using 1
     norm_num [absE, Real.enorm_eq_ofReal_abs]
   have htarget_nat : ∫⁻ x,
-      absE (fun y => mixedSecond (pressureNewtonianPotential (f : Vec3 → ℝ)) i j y) x ^ (2 : ℕ) < ∞ := by
+      absE (fun y => mixedSecond (pressureNewtonianPotential (f : Vec3 → ℝ)) i j y) x ^ (2 : ℕ) <
+        ∞ := by
     refine lt_of_le_of_lt hbound ?_
     simpa only [one_pow, ENNReal.ofReal_one, one_mul] using hsource_nat
   have htarget_real : ∫⁻ x,
@@ -196,6 +199,7 @@ lemma test_hessian_mem (i j : Fin 3) (f : testFunction) :
   norm_num at hsqrt ⊢
   simpa [absE, Real.enorm_eq_ofReal_abs] using hsqrt
 
+/-- L² class of a second derivative of the Newtonian potential of a test function. -/
 def testHessian (i j : Fin 3) : testFunction →ₗ[ℝ] rieszSecondL2 where
   toFun f := MemLp.toLp (p := (2 : ℝ≥0∞))
     (mixedSecond (pressureNewtonianPotential (f : Vec3 → ℝ)) i j)
@@ -259,7 +263,8 @@ private lemma test_hessian_norm_le (i j : Fin 3) (f : testFunction) :
         · positivity
       · exact f.continuous.aestronglyMeasurable
     · exact (contDiff_mixedSecond_smooth
-        (pressureNewtonianPotential_smooth f.contDiff f.hasCompactSupport) i j).continuous.aestronglyMeasurable
+        (pressureNewtonianPotential_smooth f.contDiff f.hasCompactSupport) i
+          j).continuous.aestronglyMeasurable
 
 private lemma test_hessian_norm_bound (i j : Fin 3) (f : testFunction) :
     ‖testHessian i j f‖ ≤ 1 * ‖testSource f‖ := by
@@ -271,6 +276,7 @@ private lemma test_hessian_norm_bound (i j : Fin 3) (f : testFunction) :
           (μ := (volume : Measure Vec3)) f.hasCompactSupport)‖
   simpa only [one_mul] using test_hessian_norm_le i j f
 
+/-- Continuous L² extension of the test-function Hessian operator. -/
 def testHessianExtension (i j : Fin 3) :
     rieszSecondL2 →L[ℝ] rieszSecondL2 :=
   LinearMap.mkContinuous
@@ -285,6 +291,7 @@ def testHessianExtension (i j : Fin 3) :
           exact test_dense) 1
         (fun φ => test_hessian_norm_bound i j φ) f)
 
+/-- Second-Riesz map on Schwartz functions obtained from the continuous L² extension. -/
 def rieszSecondSmoothMap (i j : Fin 3) :
     SchwartzMap Vec3 ℝ →L[ℝ] rieszSecondL2 :=
   (testHessianExtension i j).comp

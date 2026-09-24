@@ -145,7 +145,7 @@ private lemma cutoff_integral_tendsto
       filter_upwards [] with z
       rw [Real.norm_eq_abs, abs_mul,
         abs_of_nonneg (backwardTimeCutoff_nonneg (t := t) (h := h) (s := z.2))]
-      exact mul_le_of_le_one_right (abs_nonneg _) 
+      exact mul_le_of_le_one_right (abs_nonneg _)
         (backwardTimeCutoff_le_one (t := t) (h := h) (s := z.2)))
       hg.norm
     (by
@@ -413,6 +413,168 @@ private lemma derivative_cutoff_tendsto
             congr 1
   exact ht.neg.congr' (heq.mono fun h hh => hh.symm)
 
+private lemma suitableWeakSolution_localEnergyInequality_ae_hfinal_global_1 :
+    ∀ {Ω : Set Vec3} {I : Set ℝ} {q : ℝ} {u : ParabolicPoint → Vec3}
+      {Du : ParabolicPoint → Fin 3 → Vec3} {p : ParabolicPoint → ℝ} {f : ParabolicPoint → Vec3},
+      IsSuitableWeakSolutionIntegrable Ω I q u Du p f →
+        ∀ {ψ : Vec3 × ℝ → ℝ},
+          Membership.mem (γ := Set (Vec3 × ℝ → ℝ)) (spaceTimeTestFunction Ω I) ψ →
+            (∀ (z : Vec3 × ℝ), 0 ≤ ψ z) →
+              @Integrable ℝ _ _ _ MeasureSpace.toMeasurableSpace
+                  (fun (z : Vec3 × ℝ) => spatialGradientSq u Du z * ψ z) volume →
+                @Integrable ℝ _ _ _ MeasureSpace.toMeasurableSpace
+                    (fun (z : Vec3 × ℝ) => localEnergyRhs u p f ψ z) volume →
+                  @Integrable ℝ _ _ _ MeasureSpace.toMeasurableSpace
+                      (fun (z : Vec3 × ℝ) => vec3EuclideanNorm (u z) ^ 2 * ψ z) volume →
+                    (∀ z ∉ spaceTimeSet Ω I, spatialGradientSq u Du z * ψ z = 0) →
+                      (∀ z ∉ spaceTimeSet Ω I, vec3EuclideanNorm (u z) ^ 2 * ψ z = 0) →
+                        (∀ z ∉ spaceTimeSet Ω I, localEnergyRhs u p f ψ z = 0) →
+                          (∀ᵐ (t : ℝ),
+                              Tendsto (β := ℝ)
+                                (fun h =>
+                                  @integral _ _ _ _ MeasureSpace.toMeasurableSpace volume
+                                    fun (z : Vec3 × ℝ) =>
+                                    vec3EuclideanNorm (u z) ^ 2 * ψ z *
+                                      deriv (backwardTimeCutoff t h) z.2)
+                                (𝓝[>] 0)
+                                (𝓝
+                                  (-@integral _ _ _ _ MeasureSpace.toMeasurableSpace volume
+                                      fun (x : Vec3) =>
+                                      vec3EuclideanNorm (u (x, t)) ^ 2 * ψ (x, t)))) →
+                            ∀ᵐ (t : ℝ),
+                              ((@integral _ _ _ _ MeasureSpace.toMeasurableSpace volume
+                                    fun (x : Vec3) =>
+                                    vec3EuclideanNorm (u (x, t)) ^ 2 * ψ (x, t)) +
+                                  2 *
+                                    @integral _ _ _ _ MeasureSpace.toMeasurableSpace
+                                      (Measure.restrict volume
+                                        (SProd.sprod (α := Set Vec3) univ (Iio t)))
+                                      fun z => spatialGradientSq u Du z * ψ z) ≤
+                                @integral _ _ _ _ MeasureSpace.toMeasurableSpace
+                                  (Measure.restrict volume
+                                    (SProd.sprod (α := Set Vec3) univ (Iio t)))
+                                  fun z => localEnergyRhs u p f ψ z
+    := by
+  intro Ω I q u Du p f hsol ψ hψ hψ_nonneg hD' hR' hE' hD_zero hE_zero hR_zero hE_lim
+  filter_upwards [hE_lim] with t ht
+  have hD_t := cutoff_integral_tendsto hD' t
+  have hR_t := cutoff_integral_tendsto hR' t
+  have hlim_left := hD_t.const_mul (2 : ℝ)
+  have hlim_right := hR_t.add ht
+  have hineq_t : ∀ᶠ h in 𝓝[>] (0 : ℝ),
+      2 * ∫ z : Vec3 × ℝ, spatialGradientSq u Du z * ψ z *
+          backwardTimeCutoff t h z.2 ≤
+        (∫ z : Vec3 × ℝ, localEnergyRhs u p f ψ z * backwardTimeCutoff t h z.2)
+          + (∫ z : Vec3 × ℝ, (vec3EuclideanNorm (u z)) ^ 2 * ψ z *
+              deriv (backwardTimeCutoff t h) z.2) := by
+    filter_upwards [self_mem_nhdsWithin] with h hh
+    have hh' : 0 < h := by simpa only [mem_Ioi] using hh
+    have hχ : ContDiff ℝ (⊤ : ℕ∞)
+        (fun z : Vec3 × ℝ => backwardTimeCutoff t h z.2) := by
+      exact (backwardTimeCutoff_smooth (t := t) (h := h)).comp contDiff_snd
+    have htest := spaceTimeTestFunction_mul_smooth hψ
+      hχ
+    have htest_nonneg : ∀ z, 0 ≤ ψ z * backwardTimeCutoff t h z.2 := by
+      intro z
+      exact mul_nonneg (hψ_nonneg z)
+        (backwardTimeCutoff_nonneg (t := t) (h := h) (s := z.2))
+    have hineq := suitableWeakSolution_energyInequality hsol htest htest_nonneg
+    have hineq' :
+        2 * ∫ z : Vec3 × ℝ in (Ω ×ˢ I),
+            spatialGradientSq u Du z * ψ z * backwardTimeCutoff t h z.2 ≤
+          ∫ z : Vec3 × ℝ in (Ω ×ˢ I),
+            localEnergyRhs u p f (fun w => ψ w * backwardTimeCutoff t h w.2) z := by
+      change 2 * ∫ z : Vec3 × ℝ in (Ω ×ˢ I),
+          spatialGradientSq u Du z * (ψ z * backwardTimeCutoff t h z.2) ≤
+        ∫ z : Vec3 × ℝ in (Ω ×ˢ I),
+          localEnergyRhs u p f (fun w => ψ w * backwardTimeCutoff t h w.2) z at hineq
+      simpa only [mul_assoc] using hineq
+    have hDzero : ∀ z : Vec3 × ℝ, z ∉ (Ω ×ˢ I) →
+        spatialGradientSq u Du z * ψ z * backwardTimeCutoff t h z.2 = 0 := by
+      intro z hz
+      have hz' : (show ParabolicPoint from z) ∉ spaceTimeSet Ω I := by
+        intro hz'
+        exact hz ⟨hz'.1, hz'.2⟩
+      simp [hD_zero z hz']
+    have hRzero : ∀ z : Vec3 × ℝ, z ∉ (Ω ×ˢ I) →
+        localEnergyRhs u p f ψ z * backwardTimeCutoff t h z.2 = 0 := by
+      intro z hz
+      have hz' : (show ParabolicPoint from z) ∉ spaceTimeSet Ω I := by
+        intro hz'
+        exact hz ⟨hz'.1, hz'.2⟩
+      simp [hR_zero z hz']
+    have hEzero : ∀ z : Vec3 × ℝ, z ∉ (Ω ×ˢ I) →
+        (vec3EuclideanNorm (u z)) ^ 2 * ψ z *
+            deriv (backwardTimeCutoff t h) z.2 = 0 := by
+      intro z hz
+      have hz' : (show ParabolicPoint from z) ∉ spaceTimeSet Ω I := by
+        intro hz'
+        exact hz ⟨hz'.1, hz'.2⟩
+      simp [hE_zero z hz']
+    have hsplit : ∫ z : Vec3 × ℝ in (Ω ×ˢ I), localEnergyRhs u p f
+        (fun w => ψ w * backwardTimeCutoff t h w.2) z =
+        ∫ z : Vec3 × ℝ in (Ω ×ˢ I),
+          (localEnergyRhs u p f ψ z * backwardTimeCutoff t h z.2
+            + (vec3EuclideanNorm (u z)) ^ 2 * ψ z *
+              deriv (backwardTimeCutoff t h) z.2) := by
+      apply integral_congr_ae
+      filter_upwards [] with z
+      exact localEnergyRhs_mul_time hψ.1
+        (backwardTimeCutoff_smooth (t := t) (h := h)) (z := z)
+    have hDset := setIntegral_eq_integral_of_forall_compl_eq_zero
+      (μ := (volume : Measure (Vec3 × ℝ))) hDzero
+    have hRset := setIntegral_eq_integral_of_forall_compl_eq_zero
+      (μ := (volume : Measure (Vec3 × ℝ))) hRzero
+    have hEset := setIntegral_eq_integral_of_forall_compl_eq_zero
+      (μ := (volume : Measure (Vec3 × ℝ))) hEzero
+    have hR_int : Integrable
+        (fun z : Vec3 × ℝ => localEnergyRhs u p f ψ z *
+          backwardTimeCutoff t h z.2) volume := by
+      apply hR'.mul_bdd
+      · exact ((backwardTimeCutoff_smooth (t := t) (h := h)).continuous.comp
+          continuous_snd).measurable.aestronglyMeasurable
+      · filter_upwards [] with z
+        rw [Real.norm_eq_abs, abs_of_nonneg
+          (backwardTimeCutoff_nonneg (t := t) (h := h) (s := z.2))]
+        exact backwardTimeCutoff_le_one (t := t) (h := h) (s := z.2)
+    have hE_int : Integrable
+        (fun z : Vec3 × ℝ => (vec3EuclideanNorm (u z)) ^ 2 * ψ z *
+          deriv (backwardTimeCutoff t h) z.2) volume := by
+      apply hE'.mul_bdd
+      · exact (((backwardTimeCutoff_smooth (t := t) (h := h)).continuous_deriv
+          (by simp)).comp continuous_snd).measurable.aestronglyMeasurable
+      · filter_upwards [] with z
+        have hbound := backwardTimeCutoff_abs_deriv_le
+          (t := t) (h := h) (s := z.2) hh'
+        simpa only [Real.norm_eq_abs] using hbound
+    calc
+      2 * ∫ z : Vec3 × ℝ,
+          spatialGradientSq u Du z * ψ z * backwardTimeCutoff t h z.2 =
+          2 * ∫ z : Vec3 × ℝ in (Ω ×ˢ I),
+            spatialGradientSq u Du z * ψ z * backwardTimeCutoff t h z.2 := by
+              rw [hDset]
+      _ ≤ ∫ z : Vec3 × ℝ in (Ω ×ˢ I),
+          localEnergyRhs u p f (fun w => ψ w * backwardTimeCutoff t h w.2) z := hineq'
+      _ = ∫ z : Vec3 × ℝ in (Ω ×ˢ I),
+          (localEnergyRhs u p f ψ z * backwardTimeCutoff t h z.2
+            + (vec3EuclideanNorm (u z)) ^ 2 * ψ z *
+              deriv (backwardTimeCutoff t h) z.2) := hsplit
+      _ = (∫ z : Vec3 × ℝ in (Ω ×ˢ I),
+            localEnergyRhs u p f ψ z * backwardTimeCutoff t h z.2)
+          + ∫ z : Vec3 × ℝ in (Ω ×ˢ I),
+            (vec3EuclideanNorm (u z)) ^ 2 * ψ z *
+              deriv (backwardTimeCutoff t h) z.2 := by
+            simpa only [Pi.add_apply] using
+              (integral_add' hR_int.integrableOn hE_int.integrableOn)
+      _ = (∫ z : Vec3 × ℝ,
+            localEnergyRhs u p f ψ z * backwardTimeCutoff t h z.2)
+          + ∫ z : Vec3 × ℝ,
+            (vec3EuclideanNorm (u z)) ^ 2 * ψ z *
+              deriv (backwardTimeCutoff t h) z.2 := by
+            rw [hRset, hEset]
+  have hlim := tendsto_le_of_eventuallyLE hlim_left hlim_right hineq_t
+  linarith only [hlim]
+
 /-- The local energy inequality for almost every time slice. -/
 theorem suitableWeakSolution_localEnergyInequality_ae
     {Ω : Set Vec3} {I : Set ℝ} {q : ℝ}
@@ -461,130 +623,8 @@ theorem suitableWeakSolution_localEnergyInequality_ae
       exact hmem''
     exact hz (hψ.2.2 hmem')
   have hE_lim := derivative_cutoff_tendsto hE'
-  have hfinal_global :
-      ∀ᵐ t ∂volume,
-        (∫ x, (vec3EuclideanNorm (u (x, t))) ^ 2 * ψ (x, t))
-          + 2 * ∫ z : Vec3 × ℝ in (Set.univ ×ˢ Iio t),
-              spatialGradientSq u Du z * ψ z
-          ≤ ∫ z : Vec3 × ℝ in (Set.univ ×ˢ Iio t), localEnergyRhs u p f ψ z := by
-    filter_upwards [hE_lim] with t ht
-    have hD_t := cutoff_integral_tendsto hD' t
-    have hR_t := cutoff_integral_tendsto hR' t
-    have hlim_left := hD_t.const_mul (2 : ℝ)
-    have hlim_right := hR_t.add ht
-    have hineq_t : ∀ᶠ h in 𝓝[>] (0 : ℝ),
-        2 * ∫ z : Vec3 × ℝ, spatialGradientSq u Du z * ψ z *
-            backwardTimeCutoff t h z.2 ≤
-          (∫ z : Vec3 × ℝ, localEnergyRhs u p f ψ z * backwardTimeCutoff t h z.2)
-            + (∫ z : Vec3 × ℝ, (vec3EuclideanNorm (u z)) ^ 2 * ψ z *
-                deriv (backwardTimeCutoff t h) z.2) := by
-      filter_upwards [self_mem_nhdsWithin] with h hh
-      have hh' : 0 < h := by simpa only [mem_Ioi] using hh
-      have hχ : ContDiff ℝ (⊤ : ℕ∞)
-          (fun z : Vec3 × ℝ => backwardTimeCutoff t h z.2) := by
-        exact (backwardTimeCutoff_smooth (t := t) (h := h)).comp contDiff_snd
-      have htest := spaceTimeTestFunction_mul_smooth hψ
-        hχ
-      have htest_nonneg : ∀ z, 0 ≤ ψ z * backwardTimeCutoff t h z.2 := by
-        intro z
-        exact mul_nonneg (hψ_nonneg z)
-          (backwardTimeCutoff_nonneg (t := t) (h := h) (s := z.2))
-      have hineq := suitableWeakSolution_energyInequality hsol htest htest_nonneg
-      have hineq' :
-          2 * ∫ z : Vec3 × ℝ in (Ω ×ˢ I),
-              spatialGradientSq u Du z * ψ z * backwardTimeCutoff t h z.2 ≤
-            ∫ z : Vec3 × ℝ in (Ω ×ˢ I),
-              localEnergyRhs u p f (fun w => ψ w * backwardTimeCutoff t h w.2) z := by
-        change 2 * ∫ z : Vec3 × ℝ in (Ω ×ˢ I),
-            spatialGradientSq u Du z * (ψ z * backwardTimeCutoff t h z.2) ≤
-          ∫ z : Vec3 × ℝ in (Ω ×ˢ I),
-            localEnergyRhs u p f (fun w => ψ w * backwardTimeCutoff t h w.2) z at hineq
-        simpa only [mul_assoc] using hineq
-      have hDzero : ∀ z : Vec3 × ℝ, z ∉ (Ω ×ˢ I) →
-          spatialGradientSq u Du z * ψ z * backwardTimeCutoff t h z.2 = 0 := by
-        intro z hz
-        have hz' : (show ParabolicPoint from z) ∉ spaceTimeSet Ω I := by
-          intro hz'
-          exact hz ⟨hz'.1, hz'.2⟩
-        simp [hD_zero z hz']
-      have hRzero : ∀ z : Vec3 × ℝ, z ∉ (Ω ×ˢ I) →
-          localEnergyRhs u p f ψ z * backwardTimeCutoff t h z.2 = 0 := by
-        intro z hz
-        have hz' : (show ParabolicPoint from z) ∉ spaceTimeSet Ω I := by
-          intro hz'
-          exact hz ⟨hz'.1, hz'.2⟩
-        simp [hR_zero z hz']
-      have hEzero : ∀ z : Vec3 × ℝ, z ∉ (Ω ×ˢ I) →
-          (vec3EuclideanNorm (u z)) ^ 2 * ψ z *
-              deriv (backwardTimeCutoff t h) z.2 = 0 := by
-        intro z hz
-        have hz' : (show ParabolicPoint from z) ∉ spaceTimeSet Ω I := by
-          intro hz'
-          exact hz ⟨hz'.1, hz'.2⟩
-        simp [hE_zero z hz']
-      have hsplit : ∫ z : Vec3 × ℝ in (Ω ×ˢ I), localEnergyRhs u p f
-          (fun w => ψ w * backwardTimeCutoff t h w.2) z =
-          ∫ z : Vec3 × ℝ in (Ω ×ˢ I),
-            (localEnergyRhs u p f ψ z * backwardTimeCutoff t h z.2
-              + (vec3EuclideanNorm (u z)) ^ 2 * ψ z *
-                deriv (backwardTimeCutoff t h) z.2) := by
-        apply integral_congr_ae
-        filter_upwards [] with z
-        exact localEnergyRhs_mul_time hψ.1
-          (backwardTimeCutoff_smooth (t := t) (h := h)) (z := z)
-      have hDset := setIntegral_eq_integral_of_forall_compl_eq_zero
-        (μ := (volume : Measure (Vec3 × ℝ))) hDzero
-      have hRset := setIntegral_eq_integral_of_forall_compl_eq_zero
-        (μ := (volume : Measure (Vec3 × ℝ))) hRzero
-      have hEset := setIntegral_eq_integral_of_forall_compl_eq_zero
-        (μ := (volume : Measure (Vec3 × ℝ))) hEzero
-      have hR_int : Integrable
-          (fun z : Vec3 × ℝ => localEnergyRhs u p f ψ z *
-            backwardTimeCutoff t h z.2) volume := by
-        apply hR'.mul_bdd
-        · exact ((backwardTimeCutoff_smooth (t := t) (h := h)).continuous.comp
-            continuous_snd).measurable.aestronglyMeasurable
-        · filter_upwards [] with z
-          rw [Real.norm_eq_abs, abs_of_nonneg
-            (backwardTimeCutoff_nonneg (t := t) (h := h) (s := z.2))]
-          exact backwardTimeCutoff_le_one (t := t) (h := h) (s := z.2)
-      have hE_int : Integrable
-          (fun z : Vec3 × ℝ => (vec3EuclideanNorm (u z)) ^ 2 * ψ z *
-            deriv (backwardTimeCutoff t h) z.2) volume := by
-        apply hE'.mul_bdd
-        · exact (((backwardTimeCutoff_smooth (t := t) (h := h)).continuous_deriv
-            (by simp)).comp continuous_snd).measurable.aestronglyMeasurable
-        · filter_upwards [] with z
-          have hbound := backwardTimeCutoff_abs_deriv_le
-            (t := t) (h := h) (s := z.2) hh'
-          simpa only [Real.norm_eq_abs] using hbound
-      calc
-        2 * ∫ z : Vec3 × ℝ,
-            spatialGradientSq u Du z * ψ z * backwardTimeCutoff t h z.2 =
-            2 * ∫ z : Vec3 × ℝ in (Ω ×ˢ I),
-              spatialGradientSq u Du z * ψ z * backwardTimeCutoff t h z.2 := by
-                rw [hDset]
-        _ ≤ ∫ z : Vec3 × ℝ in (Ω ×ˢ I),
-            localEnergyRhs u p f (fun w => ψ w * backwardTimeCutoff t h w.2) z := hineq'
-        _ = ∫ z : Vec3 × ℝ in (Ω ×ˢ I),
-            (localEnergyRhs u p f ψ z * backwardTimeCutoff t h z.2
-              + (vec3EuclideanNorm (u z)) ^ 2 * ψ z *
-                deriv (backwardTimeCutoff t h) z.2) := hsplit
-        _ = (∫ z : Vec3 × ℝ in (Ω ×ˢ I),
-              localEnergyRhs u p f ψ z * backwardTimeCutoff t h z.2)
-            + ∫ z : Vec3 × ℝ in (Ω ×ˢ I),
-              (vec3EuclideanNorm (u z)) ^ 2 * ψ z *
-                deriv (backwardTimeCutoff t h) z.2 := by
-              simpa only [Pi.add_apply] using
-                (integral_add' hR_int.integrableOn hE_int.integrableOn)
-        _ = (∫ z : Vec3 × ℝ,
-              localEnergyRhs u p f ψ z * backwardTimeCutoff t h z.2)
-            + ∫ z : Vec3 × ℝ,
-              (vec3EuclideanNorm (u z)) ^ 2 * ψ z *
-                deriv (backwardTimeCutoff t h) z.2 := by
-              rw [hRset, hEset]
-    have hlim := tendsto_le_of_eventuallyLE hlim_left hlim_right hineq_t
-    linarith only [hlim]
+  have hfinal_global := @suitableWeakSolution_localEnergyInequality_ae_hfinal_global_1 Ω I q u Du
+    p f hsol ψ hψ hψ_nonneg hD' hR' hE' hD_zero hE_zero hR_zero hE_lim
   have hfinal_restrict : ∀ᵐ t ∂(volume.restrict I),
       (∫ x, (vec3EuclideanNorm (u (x, t))) ^ 2 * ψ (x, t))
         + 2 * ∫ z in (Set.univ ×ˢ Iio t), spatialGradientSq u Du z * ψ z

@@ -121,7 +121,7 @@ private theorem integral_norm_sub_integralAverage_le_of_isOpenBoundedConvexDomai
         (fun x => B * ∫ y, g y * rieszKernel x y ∂μU) := by
     filter_upwards [MeasureTheory.ae_restrict_mem hU.measurableSet] with x hx
     have hbase :=
-      norm_sub_integralAverage_le_volumeAverage_integral_norm_fderiv_mul_rieszKernel_of_isOpenBoundedConvexDomain
+      norm_sub_average_le_gradient_riesz_integral
         hU hu huDiff hx hvol
     have hinner_nonneg : 0 ≤ ∫ y, g y * rieszKernel x y ∂μU := by
       exact MeasureTheory.integral_nonneg_of_ae

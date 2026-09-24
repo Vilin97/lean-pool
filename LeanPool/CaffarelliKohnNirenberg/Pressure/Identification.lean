@@ -28,6 +28,7 @@ namespace CKN
 
 /- The tensor pairing is kept explicit so that the distributional pressure
    identity and the eventual singular-integral identity have the same target. -/
+/-- Pairing of a tensor source with the Hessian of a scalar test function. -/
 def pressureSecondPairing (G : Fin 3 → Fin 3 → Vec3 → ℝ)
     (ψ : Vec3 → ℝ) : ℝ :=
   ∫ x, ∑ i, ∑ j, G i j x * mixedSecond ψ i j x

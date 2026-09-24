@@ -30,9 +30,11 @@ noncomputable section
 
 namespace CKN.Foundation.Parabolic
 
+/-- Parabolic metric-ball family used by the maximal operator. -/
 abbrev hardyLittlewoodParabolicMetricBall (z : ParabolicPoint) (r : ℝ) : Set ParabolicPoint :=
   @Metric.ball ParabolicPoint parabolicPseudoMetricSpace z r
 
+/-- Uncentered Hardy–Littlewood maximal function over parabolic balls. -/
 def parabolicMaximalFunction (f : ParabolicPoint → ℝ≥0∞) (z : ParabolicPoint) : ℝ≥0∞ :=
   ⨆ c : ParabolicPoint, ⨆ r : ℝ,
     (hardyLittlewoodParabolicMetricBall c r).indicator
@@ -98,7 +100,7 @@ private theorem measure_biUnion_le_lintegral
   have hu_countable : u.Countable := hdisj.countable_of_isOpen
       (fun i hi ↦ Metric.isOpen_ball)
       (fun i hi ↦ parabolicMetricBall_nonempty (hpos i (huT hi)))
-  haveI : Countable u := hu_countable.to_subtype
+  have : Countable u := hu_countable.to_subtype
   let enlarged : ParabolicPoint × ℝ → Set ParabolicPoint :=
     fun i ↦ hardyLittlewoodParabolicMetricBall i.1 (5 * i.2)
   have hcover_union :
@@ -150,6 +152,7 @@ private theorem measure_biUnion_le_lintegral
     _ ≤ ENNReal.ofReal (10 ^ 5) * ∫⁻ y, f y := by
       gcongr
 
+/-- Parabolic balls of bounded positive radius with average above a chosen level. -/
 def parabolicMaximalLevelBalls (f : ParabolicPoint → ℝ≥0∞)
     (l : ℝ≥0∞) (n : ℕ) : Set (ParabolicPoint × ℝ) :=
   {i | 0 < i.2 ∧ i.2 ≤ (n : ℝ) ∧

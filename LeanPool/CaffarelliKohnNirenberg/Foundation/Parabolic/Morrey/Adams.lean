@@ -72,6 +72,7 @@ private lemma volume_metricBall_le {z : ParabolicPoint} {R : ℝ} (hR : 0 < R) :
         ENNReal.ofReal_mul (by norm_num : (0 : ℝ) ≤ 2 ^ 5),
         ENNReal.ofReal_pow (by positivity : 0 ≤ R) 5]
 
+/-- Negative-index dyadic parabolic shell for the near-field Morrey estimate. -/
 def nearShell (R : ℝ) (n : ℕ) (z : ParabolicPoint) : Set ParabolicPoint :=
   parabolicRieszShell R (Int.negSucc n) z
 
@@ -373,7 +374,7 @@ theorem parabolicRieszPotential_hedberg_of_balance
     exact (ENNReal.rpow_pos (lt_of_le_of_ne bot_le (Ne.symm hX0)) hXtop).ne'
   have hXptop : X ^ (5 / q) ≠ ∞ := by
     apply ENNReal.rpow_ne_top_of_nonneg
-    positivity
+    on_goal 1 => positivity
     exact hXtop
   have hNθ : N ^ θ = X ^ β * (M z) ^ θ := by
     rw [← hbalance, ENNReal.mul_rpow_of_ne_top hXptop hMtop,
@@ -480,3 +481,8 @@ theorem parabolicRieszPotential_hedberg
     exact ENNReal.div_mul_cancel hM0 hMtop
   exact parabolicRieszPotential_hedberg_of_balance hβ hβ5 hq hβq hR hf hM
     rfl z hM0 hMtop hN hNtop hbalance
+
+end Morrey
+end Parabolic
+end Foundation
+end CKN

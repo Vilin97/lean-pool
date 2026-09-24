@@ -146,7 +146,8 @@ theorem morreyNorm_sum_three_abs_le {p τ : ℝ} (hp : 1 ≤ p) {g : Fin 3 → P
     intro k
     simpa only [Real.norm_eq_abs] using (hg k).norm
   have h12 := (morrey_norm_add_le (τ := τ) hp (habs 1) (habs 2)).trans
-    (add_le_add (le_of_eq (morreyNorm_abs_eq (τ := τ) hp0 (g 1))) (le_of_eq (morreyNorm_abs_eq (τ := τ) hp0 (g 2))))
+    (add_le_add (le_of_eq (morreyNorm_abs_eq (τ := τ) hp0 (g 1))) (le_of_eq (morreyNorm_abs_eq (τ
+      := τ) hp0 (g 2))))
   have h012 := (morrey_norm_add_le (τ := τ) hp (habs 0) ((habs 1).add (habs 2))).trans
     (add_le_add (le_of_eq (morreyNorm_abs_eq (τ := τ) hp0 (g 0))) h12)
   have hfun : (fun w : ParabolicPoint => ∑ k, |g k w|) =
@@ -182,7 +183,7 @@ theorem morreyNorm_le_three_terms {p τ : ℝ} (hp : 1 ≤ p) {F A B C : Parabol
   · exact le_of_eq (morreyNorm_abs_eq (τ := τ) hp0 C)
 
 /-- The endpoint Morrey exponent splits as the velocity and gradient pair. -/
-theorem originASlot_endpoint_exponent_inv {τ : ℝ} (hτ : 25/3 ≤ τ) :
+theorem originASlot_endpoint_exponent_inv {τ : ℝ} (hτ : 25 / 3 ≤ τ) :
     1 / ((1/τ + 8/25 : ℝ)⁻¹) = 1 / τ + 1 / (25/8 : ℝ) := by
   have hτpos : (0 : ℝ) < τ := by linarith only [hτ]
   rw [one_div, inv_inv]
@@ -191,13 +192,13 @@ theorem originASlot_endpoint_exponent_inv {τ : ℝ} (hτ : 25/3 ≤ τ) :
 /-- The product of an `L³` Morrey factor and an `L²` Morrey factor on nested
 carriers is an `L^{6/5}` Morrey object at the matched exponent. -/
 theorem originASlot_product_morreyNorm_le
-    {τ : ℝ} (hτ : 25/3 ≤ τ) {S T : Set ParabolicPoint}
+    {τ : ℝ} (hτ : 25 / 3 ≤ τ) {S T : Set ParabolicPoint}
     {a b : ParabolicPoint → ℝ} {KA KB : ℝ≥0∞}
     (hsub : S ⊆ T)
     (ham : AEMeasurable (S.indicator a) volume)
     (hbm : AEMeasurable (T.indicator b) volume)
     (ha : morreyNorm 3 τ (S.indicator a) ≤ KA)
-    (hb : morreyNorm 2 (25/8 : ℝ) (T.indicator b) ≤ KB) :
+    (hb : morreyNorm 2 (25 / 8 : ℝ) (T.indicator b) ≤ KB) :
     morreyNorm (6/5 : ℝ) ((1/τ + 8/25 : ℝ)⁻¹)
       (S.indicator (fun w => a w * b w)) ≤ KA * KB := by
   classical
@@ -211,12 +212,13 @@ theorem originASlot_product_morreyNorm_le
   rw [hfun]
   refine (morreyNorm_mul_le (p := (6/5 : ℝ)) (p₁ := (3 : ℝ)) (p₂ := (2 : ℝ))
     (q := ((1/τ + 8/25 : ℝ)⁻¹)) (q₁ := τ) (q₂ := (25/8 : ℝ))
-    (by norm_num) (by norm_num) (by norm_num) (originASlot_endpoint_exponent_inv hτ) ham hbm).trans ?_
+    (by norm_num) (by norm_num) (by norm_num) (originASlot_endpoint_exponent_inv hτ) ham
+      hbm).trans ?_
   exact mul_le_mul' ha hb
 
 /-- On a carrier of radius at most one the exponent-dependent Morrey
 seminorm is below the endpoint one. -/
-theorem originASlot_morreyNorm_endpoint_drop {τ q R : ℝ} (hτ : 25/3 ≤ τ) (hq : 5/2 < q)
+theorem originASlot_morreyNorm_endpoint_drop {τ q R : ℝ} (hτ : 25 / 3 ≤ τ) (hq : 5 / 2 < q)
     (hR : 0 < R) (hR1 : R ≤ 1)
     {F : ParabolicPoint → ℝ} {z₀ : ParabolicPoint}
     (hsupp : ∀ w ∉ parabolicCylinder z₀.1 z₀.2 R, F w = 0) :
@@ -249,7 +251,7 @@ theorem originASlot_correction_morreyNorm_le
     {η : Vec3 → ℝ} {dη : Fin 3 → Vec3 → ℝ}
     {u' f' : ParabolicPoint → Vec3} {Du' : ParabolicPoint → Fin 3 → Vec3} {c : ℝ → Vec3}
     {XA KU KD Mfree Mc : ℝ≥0∞}
-    (hτ : 25/3 ≤ τ) (hq : 5/2 < q) (hKη : 0 ≤ Kη)
+    (hτ : 25 / 3 ≤ τ) (hq : 5 / 2 < q) (hKη : 0 ≤ Kη)
     (hR : 0 < R) (hR1 : R ≤ 1)
     (hη0 : ∀ x, 0 ≤ η x) (hη1 : ∀ x, η x ≤ 1)
     (hdη : ∀ k x, |dη k x| ≤ Kη)

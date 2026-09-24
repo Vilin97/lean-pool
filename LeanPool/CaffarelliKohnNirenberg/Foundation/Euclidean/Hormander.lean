@@ -88,7 +88,7 @@ Euclidean norm stays above `‖x‖ / 2`, so the gradient hypothesis and the mea
 value inequality give `|K (x - y) - K x| ≤ 16 C₂ ‖y‖ ‖x‖⁻⁴`. -/
 private lemma hormander_pointwise {K : Vec3 → ℝ} {C₂ : ℝ} (hC₂ : 0 ≤ C₂)
     (hdiff : ∀ x, x ≠ 0 → DifferentiableAt ℝ K x)
-    (hgrad : ∀ x, x ≠ 0 → ‖fderiv ℝ K x‖ ≤ C₂ * (vec3EuclideanNorm x) ^ (-(4:ℝ)))
+    (hgrad : ∀ x, x ≠ 0 → ‖fderiv ℝ K x‖ ≤ C₂ * (vec3EuclideanNorm x) ^ (-(4 : ℝ)))
     {y x : Vec3} (hy : y ≠ 0) (hx : 2 * vec3EuclideanNorm y < vec3EuclideanNorm x) :
     |K (x - y) - K x| ≤ 16 * C₂ * vec3EuclideanNorm y * (vec3EuclideanNorm x) ^ (-(4:ℝ)) := by
   have ha : 0 < vec3EuclideanNorm y := vec3EuclideanNorm_pos hy
@@ -176,11 +176,13 @@ private lemma lintegral_rpow_neg_four {y : Vec3} (hy : y ≠ 0) :
     exact ⟨hk, Nat.find_min hex (by rw [hm]; exact Nat.lt_succ_self m)⟩
   have hstep1 : ∫⁻ x in {x : Vec3 | R < vec3EuclideanNorm x},
         ENNReal.ofReal ((vec3EuclideanNorm x) ^ (-(4:ℝ)))
-      ≤ ∫⁻ x in ⋃ m : ℕ, (vec3Ball (0 : Vec3) ((4/3:ℝ)^(m+1) * R) \ vec3Ball (0 : Vec3) ((4/3:ℝ)^m * R)),
+      ≤ ∫⁻ x in ⋃ m : ℕ, (vec3Ball (0 : Vec3) ((4/3:ℝ)^(m+1) * R) \ vec3Ball (0 : Vec3) ((4/3:ℝ)^m
+        * R)),
           ENNReal.ofReal ((vec3EuclideanNorm x) ^ (-(4:ℝ))) := lintegral_mono_set hcover
   have hstep2 : ∫⁻ x in {x : Vec3 | R < vec3EuclideanNorm x},
         ENNReal.ofReal ((vec3EuclideanNorm x) ^ (-(4:ℝ)))
-      ≤ ∑' m : ℕ, ∫⁻ x in (vec3Ball (0 : Vec3) ((4/3:ℝ)^(m+1) * R) \ vec3Ball (0 : Vec3) ((4/3:ℝ)^m * R)),
+      ≤ ∑' m : ℕ, ∫⁻ x in (vec3Ball (0 : Vec3) ((4/3:ℝ)^(m+1) * R) \ vec3Ball (0 : Vec3)
+        ((4/3:ℝ)^m * R)),
           ENNReal.ofReal ((vec3EuclideanNorm x) ^ (-(4:ℝ))) :=
     hstep1.trans (lintegral_iUnion_le _ _)
   refine hstep2.trans ?_
@@ -246,7 +248,8 @@ private lemma lintegral_rpow_neg_four {y : Vec3} (hy : y ≠ 0) :
             (vec3Ball_measurable (0 : Vec3) qo |>.diff (vec3Ball_measurable (0 : Vec3) qi))]
             with x hx
           exact hpoint x hx
-      _ = ENNReal.ofReal (qi ^ (-(4:ℝ))) * volume (vec3Ball (0 : Vec3) qo \ vec3Ball (0 : Vec3) qi) := by
+      _ = ENNReal.ofReal (qi ^ (-(4:ℝ))) * volume (vec3Ball (0 : Vec3) qo \ vec3Ball (0 : Vec3)
+        qi) := by
           rw [lintegral_const, restrict_apply_univ]
       _ = ENNReal.ofReal (qi ^ (-(4:ℝ))) * ENNReal.ofReal ((Real.pi * 4 / 3) * (qo^3 - qi^3)) := by
           rw [hvol]
@@ -256,7 +259,8 @@ private lemma lintegral_rpow_neg_four {y : Vec3} (hy : y ≠ 0) :
           rw [halg, hc_def]
       _ = ENNReal.ofReal c * (ENNReal.ofReal (3/4:ℝ))^m := by
           rw [ENNReal.ofReal_mul hc, ENNReal.ofReal_pow (by norm_num : (0:ℝ) ≤ 3/4)]
-  calc ∑' m : ℕ, ∫⁻ x in (vec3Ball (0 : Vec3) ((4/3:ℝ)^(m+1) * R) \ vec3Ball (0 : Vec3) ((4/3:ℝ)^m * R)),
+  calc ∑' m : ℕ, ∫⁻ x in (vec3Ball (0 : Vec3) ((4/3:ℝ)^(m+1) * R) \ vec3Ball (0 : Vec3) ((4/3:ℝ)^m
+    * R)),
             ENNReal.ofReal ((vec3EuclideanNorm x) ^ (-(4:ℝ)))
       ≤ ∑' m : ℕ, ENNReal.ofReal c * (ENNReal.ofReal (3/4:ℝ))^m := ENNReal.tsum_le_tsum hterm
     _ = ENNReal.ofReal c * ∑' m : ℕ, (ENNReal.ofReal (3/4:ℝ))^m := ENNReal.tsum_mul_left
@@ -274,7 +278,7 @@ private lemma lintegral_rpow_neg_four {y : Vec3} (hy : y ≠ 0) :
 over the region `|x| > 2 |y|` is at most `64 π C₂`, uniformly in `y`. -/
 theorem hormander_integral_bound {K : Vec3 → ℝ} {C₂ : ℝ} (hC₂ : 0 ≤ C₂)
     (hdiff : ∀ x, x ≠ 0 → DifferentiableAt ℝ K x)
-    (hgrad : ∀ x, x ≠ 0 → ‖fderiv ℝ K x‖ ≤ C₂ * (vec3EuclideanNorm x) ^ (-(4:ℝ)))
+    (hgrad : ∀ x, x ≠ 0 → ‖fderiv ℝ K x‖ ≤ C₂ * (vec3EuclideanNorm x) ^ (-(4 : ℝ)))
     {y : Vec3} (hy : y ≠ 0) :
     ∫⁻ x in {x | 2 * vec3EuclideanNorm y < vec3EuclideanNorm x},
         ENNReal.ofReal |K (x - y) - K x| ≤ ENNReal.ofReal (64 * Real.pi * C₂) := by

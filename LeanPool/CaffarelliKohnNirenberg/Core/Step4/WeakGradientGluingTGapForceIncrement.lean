@@ -76,7 +76,7 @@ theorem gap_force_increment_majorant_of_sws
     {u : ParabolicPoint → Vec3} {Du : ParabolicPoint → Fin 3 → Vec3}
     {p : ParabolicPoint → ℝ} {f : ParabolicPoint → Vec3}
     (hsol : IsSuitableWeakSolutionIntegrable Ω I q u Du p f)
-    {z : ParabolicPoint} {ρ : ℝ} (hρ : 0 < ρ) (hlo : 1/128 ≤ ρ)
+    {z : ParabolicPoint} {ρ : ℝ} (hρ : 0 < ρ) (hlo : 1 / 128 ≤ ρ)
     (hsub : closure (parabolicCylinder z.1 z.2 ρ) ⊆ spaceTimeSet Ω I) :
     ∀ᵐ s ∂volume.restrict (Ioc (z.2-ρ^2) z.2), ∀ i : Fin 3,
       ∀ x ∈ vec3Ball z.1 (ρ/2), ‖gapForceIncrement z hρ u p f i (x,s)‖ₑ ≤

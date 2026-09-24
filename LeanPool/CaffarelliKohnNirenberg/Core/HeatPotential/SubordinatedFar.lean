@@ -76,6 +76,109 @@ lemma heatPotential_kernel_integrable_on_split
         (heatPotentialNearSet z r ∪ U) volume := hnearG.union hfarG
     simpa [U] using hfullG
 
+private lemma heatPotential_near_oscillation_bound_hGdiff_1 :
+    ∀ {G : Fin 3 → ParabolicPoint → ℝ} {z p p' : ParabolicPoint} {r γ θ₁ P : ℝ},
+      0 < r →
+        1 ≤ P →
+          P ≤ θ₁ →
+            (∀ (i : Fin 3), AEMeasurable (_m := MeasureSpace.toMeasurableSpace) (G i) volume) →
+              (∀ (i : Fin 3), Morrey.morreyNorm P θ₁ (G i) < ∞) →
+                p ∈ Metric.closedBall z r →
+                  p' ∈ Metric.closedBall z r →
+                    0 < 1 - 5 / θ₁ →
+                      (∀ (i : Fin 3),
+                          ∀ q ∈ Metric.closedBall z r,
+                            (@integral _ _ _ _ MeasureSpace.toMeasurableSpace
+                                (Measure.restrict volume
+                                  (Core.HeatPotential.heatPotentialNearSet z r))
+                                fun v =>
+                                |Core.HeatPotential.heatPotentialSpatialKernel i q v * G i v|) ≤
+                              300000 *
+                                  (2 ^ (10 - 1 - 5 / θ₁) * (1 - 2 ^ (-γ))⁻¹ * 256 ^ γ *
+                                      ENNReal.toReal (volume (parabolicCylinder 0 0 1)) ^
+                                        (1 - 1 / P) *
+                                    (Morrey.morreyNorm P θ₁ (G i)).toReal) *
+                                r ^ γ) →
+                        let CG : Fin 3 → ℝ := fun i =>
+                          2 * 300000 *
+                            (2 ^ (10 - 1 - 5 / θ₁) * (1 - 2 ^ (-γ))⁻¹ * 256 ^ γ *
+                                ENNReal.toReal (volume (parabolicCylinder 0 0 1)) ^ (1 - 1 / P) *
+                              (Morrey.morreyNorm P θ₁ (G i)).toReal);
+                        ∀ (i : Fin 3),
+                          |HSub.hSub (α := ℝ)
+                                (@integral _ _ _ _ MeasureSpace.toMeasurableSpace
+                                  (Measure.restrict volume
+                                    (Core.HeatPotential.heatPotentialNearSet z r))
+                                  fun v =>
+                                  Core.HeatPotential.heatPotentialSpatialKernel i p v * G i v)
+                                (@integral _ _ _ _ MeasureSpace.toMeasurableSpace
+                                  (Measure.restrict volume
+                                    (Core.HeatPotential.heatPotentialNearSet z r))
+                                  fun v =>
+                                  Core.HeatPotential.heatPotentialSpatialKernel i p' v * G i v)| ≤
+                            CG i * r ^ γ
+    := by
+  intro G z p p' r γ θ₁ P hr hP hPθ₁ hG hNG hp hp' hδ₁ hGnear CG i
+  calc
+    _ ≤ (∫ v in heatPotentialNearSet z r,
+        |heatPotentialSpatialKernel i p v * G i v|) +
+        ∫ v in heatPotentialNearSet z r,
+          |heatPotentialSpatialKernel i p' v * G i v| := by
+      have hInt := heatPotential_near_spatial_kernel_integrable hr hP hPθ₁
+        (hG i) (hNG i) hδ₁ hp i
+      have hInt' := heatPotential_near_spatial_kernel_integrable hr hP hPθ₁
+        (hG i) (hNG i) hδ₁ hp' i
+      have hdiff : IntegrableOn (fun v => heatPotentialSpatialKernel i p v * G i v -
+          heatPotentialSpatialKernel i p' v * G i v)
+          (heatPotentialNearSet z r) volume := hInt.sub hInt'
+      have hmajor : IntegrableOn (fun v =>
+          |heatPotentialSpatialKernel i p v * G i v| +
+            |heatPotentialSpatialKernel i p' v * G i v|)
+          (heatPotentialNearSet z r) volume := hInt.norm.add hInt'.norm
+      have hpoint : ∀ᵐ v ∂(volume.restrict (heatPotentialNearSet z r)),
+          |heatPotentialSpatialKernel i p v * G i v -
+              heatPotentialSpatialKernel i p' v * G i v| ≤
+            |heatPotentialSpatialKernel i p v * G i v| +
+              |heatPotentialSpatialKernel i p' v * G i v| := by
+        filter_upwards [] with v
+        simpa using (abs_sub_le (heatPotentialSpatialKernel i p v * G i v)
+          0 (heatPotentialSpatialKernel i p' v * G i v))
+      rw [← integral_sub hInt hInt']
+      calc
+        |∫ v in heatPotentialNearSet z r,
+            (heatPotentialSpatialKernel i p v * G i v -
+              heatPotentialSpatialKernel i p' v * G i v)| ≤
+            ∫ v in heatPotentialNearSet z r,
+              |heatPotentialSpatialKernel i p v * G i v -
+                heatPotentialSpatialKernel i p' v * G i v| := by
+          simpa only [Real.norm_eq_abs] using
+            (MeasureTheory.norm_integral_le_integral_norm
+              (μ := volume.restrict (heatPotentialNearSet z r))
+              (fun v => heatPotentialSpatialKernel i p v * G i v -
+                heatPotentialSpatialKernel i p' v * G i v)).trans_eq rfl
+        _ ≤ ∫ v in heatPotentialNearSet z r,
+            (|heatPotentialSpatialKernel i p v * G i v| +
+              |heatPotentialSpatialKernel i p' v * G i v|) :=
+          MeasureTheory.integral_mono_ae hdiff.norm hmajor hpoint
+        _ = (∫ v in heatPotentialNearSet z r,
+            |heatPotentialSpatialKernel i p v * G i v|) +
+            ∫ v in heatPotentialNearSet z r,
+              |heatPotentialSpatialKernel i p' v * G i v| :=
+          MeasureTheory.integral_add hInt.norm hInt'.norm
+    _ ≤ CG i * r ^ γ := by
+      dsimp [CG]
+      calc
+        _ ≤ (300000 * ((2 : ℝ) ^ (10 - 1 - 5 / θ₁) *
+            (1 - (2 : ℝ) ^ (-γ))⁻¹ * (256 : ℝ) ^ γ *
+            (volume (parabolicCylinder 0 0 1)).toReal ^ (1 - 1 / P) *
+            (morreyNorm P θ₁ (G i)).toReal) * r ^ γ) +
+            (300000 * ((2 : ℝ) ^ (10 - 1 - 5 / θ₁) *
+            (1 - (2 : ℝ) ^ (-γ))⁻¹ * (256 : ℝ) ^ γ *
+            (volume (parabolicCylinder 0 0 1)).toReal ^ (1 - 1 / P) *
+            (morreyNorm P θ₁ (G i)).toReal) * r ^ γ) :=
+          add_le_add (hGnear i p hp) (hGnear i p' hp')
+        _ = CG i * r ^ γ := by ring
+
 lemma heatPotential_near_oscillation_bound_of_morrey
     {F : ParabolicPoint → ℝ} {G : Fin 3 → ParabolicPoint → ℝ}
     {z p p' : ParabolicPoint} {r γ θ₀ θ₁ P : ℝ}
@@ -205,71 +308,8 @@ lemma heatPotential_near_oscillation_bound_of_morrey
               (morreyNorm P θ₀ F).toReal) * r ^ γ) :=
             add_le_add (hFnear p hp) (hFnear p' hp')
           _ = CF * r ^ γ := by ring
-  have hGdiff : ∀ i : Fin 3,
-      |(∫ v in heatPotentialNearSet z r,
-          heatPotentialSpatialKernel i p v * G i v) -
-        ∫ v in heatPotentialNearSet z r,
-          heatPotentialSpatialKernel i p' v * G i v| ≤ CG i * r ^ γ := by
-    intro i
-    calc
-      _ ≤ (∫ v in heatPotentialNearSet z r,
-          |heatPotentialSpatialKernel i p v * G i v|) +
-          ∫ v in heatPotentialNearSet z r,
-            |heatPotentialSpatialKernel i p' v * G i v| := by
-        have hInt := heatPotential_near_spatial_kernel_integrable hr hP hPθ₁
-          (hG i) (hNG i) hδ₁ hp i
-        have hInt' := heatPotential_near_spatial_kernel_integrable hr hP hPθ₁
-          (hG i) (hNG i) hδ₁ hp' i
-        have hdiff : IntegrableOn (fun v => heatPotentialSpatialKernel i p v * G i v -
-            heatPotentialSpatialKernel i p' v * G i v)
-            (heatPotentialNearSet z r) volume := hInt.sub hInt'
-        have hmajor : IntegrableOn (fun v =>
-            |heatPotentialSpatialKernel i p v * G i v| +
-              |heatPotentialSpatialKernel i p' v * G i v|)
-            (heatPotentialNearSet z r) volume := hInt.norm.add hInt'.norm
-        have hpoint : ∀ᵐ v ∂(volume.restrict (heatPotentialNearSet z r)),
-            |heatPotentialSpatialKernel i p v * G i v -
-                heatPotentialSpatialKernel i p' v * G i v| ≤
-              |heatPotentialSpatialKernel i p v * G i v| +
-                |heatPotentialSpatialKernel i p' v * G i v| := by
-          filter_upwards [] with v
-          simpa using (abs_sub_le (heatPotentialSpatialKernel i p v * G i v)
-            0 (heatPotentialSpatialKernel i p' v * G i v))
-        rw [← integral_sub hInt hInt']
-        calc
-          |∫ v in heatPotentialNearSet z r,
-              (heatPotentialSpatialKernel i p v * G i v -
-                heatPotentialSpatialKernel i p' v * G i v)| ≤
-              ∫ v in heatPotentialNearSet z r,
-                |heatPotentialSpatialKernel i p v * G i v -
-                  heatPotentialSpatialKernel i p' v * G i v| := by
-            simpa only [Real.norm_eq_abs] using
-              (MeasureTheory.norm_integral_le_integral_norm
-                (μ := volume.restrict (heatPotentialNearSet z r))
-                (fun v => heatPotentialSpatialKernel i p v * G i v -
-                  heatPotentialSpatialKernel i p' v * G i v)).trans_eq rfl
-          _ ≤ ∫ v in heatPotentialNearSet z r,
-              (|heatPotentialSpatialKernel i p v * G i v| +
-                |heatPotentialSpatialKernel i p' v * G i v|) :=
-            MeasureTheory.integral_mono_ae hdiff.norm hmajor hpoint
-          _ = (∫ v in heatPotentialNearSet z r,
-              |heatPotentialSpatialKernel i p v * G i v|) +
-              ∫ v in heatPotentialNearSet z r,
-                |heatPotentialSpatialKernel i p' v * G i v| :=
-            MeasureTheory.integral_add hInt.norm hInt'.norm
-      _ ≤ CG i * r ^ γ := by
-        dsimp [CG]
-        calc
-          _ ≤ (300000 * ((2 : ℝ) ^ (10 - 1 - 5 / θ₁) *
-              (1 - (2 : ℝ) ^ (-γ))⁻¹ * (256 : ℝ) ^ γ *
-              (volume (parabolicCylinder 0 0 1)).toReal ^ (1 - 1 / P) *
-              (morreyNorm P θ₁ (G i)).toReal) * r ^ γ) +
-              (300000 * ((2 : ℝ) ^ (10 - 1 - 5 / θ₁) *
-              (1 - (2 : ℝ) ^ (-γ))⁻¹ * (256 : ℝ) ^ γ *
-              (volume (parabolicCylinder 0 0 1)).toReal ^ (1 - 1 / P) *
-              (morreyNorm P θ₁ (G i)).toReal) * r ^ γ) :=
-            add_le_add (hGnear i p hp) (hGnear i p' hp')
-          _ = CG i * r ^ γ := by ring
+  have hGdiff := @heatPotential_near_oscillation_bound_hGdiff_1 G z p p' r γ θ₁ P hr hP hPθ₁ hG
+    hNG hp hp' hδ₁ hGnear
   calc
     _ ≤ |(∫ v in heatPotentialNearSet z r,
           heatPotentialKernel p v * F v) -

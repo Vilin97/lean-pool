@@ -25,6 +25,8 @@ open CKN.Foundation.Parabolic CKN.Foundation.Euclidean
 noncomputable section
 namespace CKN.Core.Endgame
 
+/-- Continuous linear functional obtained by pairing with a fixed function of conjugate exponent.
+-/
 def lpPairingWith {p q : ℝ≥0∞} [Fact (1 ≤ p)] [Fact (1 ≤ q)]
     [ENNReal.HolderConjugate p q]
     (g : Lp ℝ q (volume : Measure Vec3)) :

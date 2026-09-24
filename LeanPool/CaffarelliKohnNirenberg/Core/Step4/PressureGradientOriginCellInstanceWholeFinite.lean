@@ -48,7 +48,8 @@ theorem origin_centered_source_memLp_ae_on_local_box
       (volume.restrict (tsupport (mollifiedBallCutoff x hρ))) := by
     have hui : MemLp (fun y => u (y, s) i) (ENNReal.ofReal (3 : ℝ))
         (volume.restrict (vec3Ball x ρ)) := by
-      apply hu3.of_le ((hs.1.eval i).mono_measure (Measure.restrict_mono hball le_rfl)).aestronglyMeasurable
+      apply hu3.of_le ((hs.1.eval i).mono_measure (Measure.restrict_mono hball
+        le_rfl)).aestronglyMeasurable
       exact Eventually.of_forall fun y => by
         rw [Real.norm_eq_abs, Real.norm_of_nonneg (vec3EuclideanNorm_nonneg _)]
         exact abs_apply_le_vec3EuclideanNorm _ i

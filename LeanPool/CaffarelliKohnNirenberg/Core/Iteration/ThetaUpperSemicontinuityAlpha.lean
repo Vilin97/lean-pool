@@ -66,7 +66,7 @@ lemma theta_usc_timeSliceEnergy_bounded
       have heq' : vec3EuclideanNorm (w.1 - z₀.1) ≤ R := by
         have hnorm : vecEuclideanNorm (w.1 - z₀.1) =
             vec3EuclideanNorm (w.1 - z₀.1) := by
-          simp [CKN.vecEuclideanNorm, vec3EuclideanNorm, vecNormSq, vecDot]
+          simp only [vecEuclideanNorm, vecNormSq, vecDot, Pi.sub_apply, vec3EuclideanNorm]
           apply congrArg Real.sqrt
           apply Finset.sum_congr rfl
           intro i hi

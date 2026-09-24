@@ -93,6 +93,113 @@ theorem lin34_double_sum_memLp_and_lpNorm_growth {G : Fin 3 → Fin 3 → Vec3 �
 
 /-! ### Steps C and D: the group `p₂ + p₃ + p₄ + p₅ + p₆` -/
 
+private lemma lin34_centred_potentials_memLp_and_growth_h6mem_1 :
+    ∀ {p : ParabolicPoint → ℝ} {x₀ : Vec3} {ρ : ℝ} (hρ : (0 : ℝ) < ρ) {s : ℝ},
+      (∀ (j : Fin (3 : ℕ)),
+          (∀ (ρ_1 : ℝ),
+              (0 : ℝ) < ρ_1 →
+                MemLp (m0 := MeasureSpace.toMeasurableSpace)
+                  (pressureNewtonianDerivativePotential j
+                    (lin34CentredPressureGradient p x₀ hρ s j))
+                  (ENNReal.ofReal (3 / 2 : ℝ))
+                  (Measure.restrict volume (euclideanBall (0 : Vec3) ρ_1))) ∧
+            ∀ (ρ_1 : ℝ),
+              (0 : ℝ) < ρ_1 →
+                lpNorm (m0 := MeasureSpace.toMeasurableSpace)
+                    (pressureNewtonianDerivativePotential j
+                      (lin34CentredPressureGradient p x₀ hρ s j))
+                    (ENNReal.ofReal (3 / 2 : ℝ))
+                    (Measure.restrict volume (euclideanBall (0 : Vec3) ρ_1)) ≤
+                  newtonianDerivativePotentialGrowthConstant j
+                      (lin34CentredPressureGradient p x₀ hρ s j) (vec3EuclideanNorm x₀ + ρ) *
+                    ((1 : ℝ) + ρ_1)) →
+        (pressureP6 (mollifiedBallCutoff x₀ hρ) p s =
+            HSMul.hSMul (β := Vec3 → ℝ) (-2 : ℝ) fun (x : Vec3) =>
+              ∑ j : Fin (3 : ℕ),
+                pressureNewtonianDerivativePotential j (lin34CentredPressureGradient p x₀ hρ s j)
+                  x) →
+          ∀ (r : ℝ),
+            (0 : ℝ) < r →
+              MemLp (m0 := MeasureSpace.toMeasurableSpace)
+                (pressureP6 (mollifiedBallCutoff x₀ hρ) p s) (ENNReal.ofReal (3 / 2 : ℝ))
+                (Measure.restrict volume (euclideanBall (0 : Vec3) r))
+    := by
+  intro p x₀ ρ hρ s hp6 hP6eq r hr
+  have hsum := memLp_euclideanBall_family_sum (s := Finset.univ)
+    (f := fun j : Fin 3 =>
+      pressureNewtonianDerivativePotential j (lin34CentredPressureGradient p x₀ hρ s j))
+    (fun j _ r hr => (hp6 j).1 r hr) r hr
+  have hsumeq : (∑ j : Fin 3,
+      pressureNewtonianDerivativePotential j (lin34CentredPressureGradient p x₀ hρ s j)) =
+      fun x => ∑ j : Fin 3,
+        pressureNewtonianDerivativePotential j (lin34CentredPressureGradient p x₀ hρ s j) x := by
+    funext x
+    simp only [Finset.sum_apply]
+  rw [hsumeq] at hsum
+  rw [hP6eq]
+  exact hsum.const_smul (-2 : ℝ)
+
+private lemma lin34_centred_potentials_memLp_and_growth_h6bound_2 :
+    ∀ {p : ParabolicPoint → ℝ} {x₀ : Vec3} {ρ : ℝ} (hρ : (0 : ℝ) < ρ) {s : ℝ},
+      (∀ (j : Fin (3 : ℕ)),
+          (∀ (ρ_1 : ℝ),
+              (0 : ℝ) < ρ_1 →
+                MemLp (m0 := MeasureSpace.toMeasurableSpace)
+                  (pressureNewtonianDerivativePotential j
+                    (lin34CentredPressureGradient p x₀ hρ s j))
+                  (ENNReal.ofReal (3 / 2 : ℝ))
+                  (Measure.restrict volume (euclideanBall (0 : Vec3) ρ_1))) ∧
+            ∀ (ρ_1 : ℝ),
+              (0 : ℝ) < ρ_1 →
+                lpNorm (m0 := MeasureSpace.toMeasurableSpace)
+                    (pressureNewtonianDerivativePotential j
+                      (lin34CentredPressureGradient p x₀ hρ s j))
+                    (ENNReal.ofReal (3 / 2 : ℝ))
+                    (Measure.restrict volume (euclideanBall (0 : Vec3) ρ_1)) ≤
+                  newtonianDerivativePotentialGrowthConstant j
+                      (lin34CentredPressureGradient p x₀ hρ s j) (vec3EuclideanNorm x₀ + ρ) *
+                    ((1 : ℝ) + ρ_1)) →
+        let C6 : Fin (3 : ℕ) → ℝ := fun (j : Fin (3 : ℕ)) =>
+          newtonianDerivativePotentialGrowthConstant j (lin34CentredPressureGradient p x₀ hρ s j)
+            (vec3EuclideanNorm x₀ + ρ);
+        (pressureP6 (mollifiedBallCutoff x₀ hρ) p s =
+            HSMul.hSMul (β := Vec3 → ℝ) (-2 : ℝ) fun (x : Vec3) =>
+              ∑ j : Fin (3 : ℕ),
+                pressureNewtonianDerivativePotential j (lin34CentredPressureGradient p x₀ hρ s j)
+                  x) →
+          ∀ (r : ℝ),
+            (0 : ℝ) < r →
+              lpNorm (m0 := MeasureSpace.toMeasurableSpace)
+                  (pressureP6 (mollifiedBallCutoff x₀ hρ) p s) (ENNReal.ofReal (3 / 2 : ℝ))
+                  (Measure.restrict volume (euclideanBall (0 : Vec3) r)) ≤
+                (∑ j : Fin (3 : ℕ), (2 : ℝ) * C6 j) * ((1 : ℝ) + r)
+    := by
+  intro p x₀ ρ hρ s hp6 C6 hP6eq r hr
+  rw [hP6eq, lpNorm_const_smul]
+  have hsum := lpNorm_euclideanBall_growth_sum (s := Finset.univ)
+    (f := fun j : Fin 3 =>
+      pressureNewtonianDerivativePotential j (lin34CentredPressureGradient p x₀ hρ s j))
+    (C := C6)
+    (fun j _ r hr => (hp6 j).1 r hr) (fun j _ r hr => (hp6 j).2 r hr) hr
+  have hsumeq : (∑ j : Fin 3,
+      pressureNewtonianDerivativePotential j (lin34CentredPressureGradient p x₀ hρ s j)) =
+      fun x => ∑ j : Fin 3,
+        pressureNewtonianDerivativePotential j (lin34CentredPressureGradient p x₀ hρ s j) x := by
+    funext x
+    simp only [Finset.sum_apply]
+  rw [hsumeq] at hsum
+  calc
+    ‖(-2 : ℝ)‖₊ * lpNorm (fun x => ∑ j : Fin 3,
+        pressureNewtonianDerivativePotential j
+          (lin34CentredPressureGradient p x₀ hρ s j) x)
+        (ENNReal.ofReal (3 / 2 : ℝ)) (volume.restrict (euclideanBall (0 : Vec3) r))
+        ≤ 2 * ((∑ j : Fin 3, C6 j) * (1 + r)) := by
+      have hle := mul_le_mul_of_nonneg_left hsum (show (0 : ℝ) ≤ 2 by norm_num)
+      simpa using hle
+    _ = (∑ j : Fin 3, 2 * C6 j) * (1 + r) := by
+      rw [← Finset.mul_sum]
+      ring
+
 /-- Local `L^{3/2}` membership on every round ball about the origin, with linear
 growth of the norm, for the five Newtonian-potential parts `p₂, p₃, p₄, p₅, p₆` of
 the pressure decomposition `prop:pressure-decomposition`, run with the mollified
@@ -243,52 +350,8 @@ theorem lin34_centred_potentials_memLp_and_growth
     intro r hr
     rw [hP5eq, lpNorm_neg]
     exact hp5.2 r hr
-  have h6mem : ∀ r : ℝ, 0 < r →
-      MemLp (pressureP6 (mollifiedBallCutoff x₀ hρ) p s) (ENNReal.ofReal (3 / 2 : ℝ))
-        (volume.restrict (euclideanBall (0 : Vec3) r)) := by
-    intro r hr
-    have hsum := memLp_euclideanBall_family_sum (s := Finset.univ)
-      (f := fun j : Fin 3 =>
-        pressureNewtonianDerivativePotential j (lin34CentredPressureGradient p x₀ hρ s j))
-      (fun j _ r hr => (hp6 j).1 r hr) r hr
-    have hsumeq : (∑ j : Fin 3,
-        pressureNewtonianDerivativePotential j (lin34CentredPressureGradient p x₀ hρ s j)) =
-        fun x => ∑ j : Fin 3,
-          pressureNewtonianDerivativePotential j (lin34CentredPressureGradient p x₀ hρ s j) x := by
-      funext x
-      simp only [Finset.sum_apply]
-    rw [hsumeq] at hsum
-    rw [hP6eq]
-    exact hsum.const_smul (-2 : ℝ)
-  have h6bound : ∀ r : ℝ, 0 < r →
-      lpNorm (pressureP6 (mollifiedBallCutoff x₀ hρ) p s) (ENNReal.ofReal (3 / 2 : ℝ))
-        (volume.restrict (euclideanBall (0 : Vec3) r)) ≤
-        (∑ j : Fin 3, 2 * C6 j) * (1 + r) := by
-    intro r hr
-    rw [hP6eq, lpNorm_const_smul]
-    have hsum := lpNorm_euclideanBall_growth_sum (s := Finset.univ)
-      (f := fun j : Fin 3 =>
-        pressureNewtonianDerivativePotential j (lin34CentredPressureGradient p x₀ hρ s j))
-      (C := C6)
-      (fun j _ r hr => (hp6 j).1 r hr) (fun j _ r hr => (hp6 j).2 r hr) hr
-    have hsumeq : (∑ j : Fin 3,
-        pressureNewtonianDerivativePotential j (lin34CentredPressureGradient p x₀ hρ s j)) =
-        fun x => ∑ j : Fin 3,
-          pressureNewtonianDerivativePotential j (lin34CentredPressureGradient p x₀ hρ s j) x := by
-      funext x
-      simp only [Finset.sum_apply]
-    rw [hsumeq] at hsum
-    calc
-      ‖(-2 : ℝ)‖₊ * lpNorm (fun x => ∑ j : Fin 3,
-          pressureNewtonianDerivativePotential j
-            (lin34CentredPressureGradient p x₀ hρ s j) x)
-          (ENNReal.ofReal (3 / 2 : ℝ)) (volume.restrict (euclideanBall (0 : Vec3) r))
-          ≤ 2 * ((∑ j : Fin 3, C6 j) * (1 + r)) := by
-        have hle := mul_le_mul_of_nonneg_left hsum (show (0 : ℝ) ≤ 2 by norm_num)
-        simpa using hle
-      _ = (∑ j : Fin 3, 2 * C6 j) * (1 + r) := by
-        rw [← Finset.mul_sum]
-        ring
+  have h6mem := @lin34_centred_potentials_memLp_and_growth_h6mem_1 p x₀ ρ hρ s hp6 hP6eq
+  have h6bound := @lin34_centred_potentials_memLp_and_growth_h6bound_2 p x₀ ρ hρ s hp6 hP6eq
   have h23mem := memLp_euclideanBall_family_add h2mem h3mem
   have h23bound : ∀ r : ℝ, 0 < r →
       lpNorm (pressureP2 (mollifiedBallCutoff x₀ hρ) (lin34CentredVelocity u x₀ ρ) 0 s +

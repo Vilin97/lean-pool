@@ -34,15 +34,18 @@ open CKN.Foundation.Parabolic
 
 /-! ### Definitions and elementary identities -/
 
+/-- Three-dimensional Gaussian heat kernel, extended by zero to nonpositive time. -/
 def heatKernel (x : Vec3) (t : ℝ) : ℝ :=
   if 0 < t then
     (4 * Real.pi * t) ^ (-(3 : ℝ) / 2) *
       Real.exp (-(∑ i, x i ^ 2) / (4 * t))
   else 0
 
+/-- Causal heat kernel on parabolic points. -/
 def heatKernelPlus (p : ParabolicPoint) : ℝ :=
   if 0 < p.2 then heatKernel p.1 p.2 else 0
 
+/-- Sum of spatial Euclidean length and the square root of time used in kernel estimates. -/
 def rhoTwo (x : Vec3) (t : ℝ) : ℝ :=
   vec3EuclideanNorm x + Real.sqrt t
 

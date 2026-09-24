@@ -241,6 +241,129 @@ theorem thmA_quarter_data_of_hyp
 interface.  The excess comparison is discharged by the established
 `pressureChat_le_eight_gamma_cube` theorem. -/
 
+private lemma thmA_start_of_smallness_hDsq_1 :
+    ∀ (q κ C₃₂ : ℝ) {u : ParabolicPoint → Vec3} {p : ParabolicPoint → ℝ} {f : ParabolicPoint → Vec3}
+      (z : Vec3 × ℝ),
+      delta p z (κ / (4 : ℝ)) ^ (3 : ℕ) ≤
+          C₃₂ *
+            (κ⁻¹ ^ (2 : ℕ) * ((8 : ℝ) * gamma u z (1 / 4 : ℝ) ^ (3 : ℕ)) +
+                κ * delta p z (1 / 4 : ℝ) ^ (3 : ℕ) +
+              κ ^ (3 / 2 : ℝ) * lambda q f z (1 / 4 : ℝ) ^ (3 / 2 : ℝ)) →
+        (0 : ℝ) ≤ delta p z (κ / (4 : ℝ)) →
+          (0 : ℝ) ≤ delta p z (κ / (4 : ℝ)) ^ (3 : ℕ) →
+            delta p z (κ / (4 : ℝ)) ^ (2 : ℕ) ≤
+              (C₃₂ *
+                  (κ⁻¹ ^ (2 : ℕ) * ((8 : ℝ) * gamma u z (1 / 4 : ℝ) ^ (3 : ℕ)) +
+                      κ * delta p z (1 / 4 : ℝ) ^ (3 : ℕ) +
+                    κ ^ (3 / 2 : ℝ) * lambda q f z (1 / 4 : ℝ) ^ (3 / 2 : ℝ))) ^
+                (2 / 3 : ℝ)
+    := by
+  intro q κ C₃₂ u p f z hD hdelta_nonneg hDnonneg
+  have hpow : delta p z (κ / 4) ^ (2 : ℕ) =
+      (delta p z (κ / 4) ^ (3 : ℕ)) ^ (2 / 3 : ℝ) := by
+    calc
+      delta p z (κ / 4) ^ (2 : ℕ) =
+          delta p z (κ / 4) ^ (2 : ℝ) :=
+        (Real.rpow_natCast (delta p z (κ / 4)) 2).symm
+      _ = (delta p z (κ / 4) ^ (3 : ℝ)) ^ (2 / 3 : ℝ) := by
+        rw [← Real.rpow_mul hdelta_nonneg]
+        norm_num
+      _ = (delta p z (κ / 4) ^ (3 : ℕ)) ^ (2 / 3 : ℝ) := by
+        exact congrArg (fun x : ℝ => x ^ (2 / 3 : ℝ))
+          (Real.rpow_natCast (delta p z (κ / 4)) 3)
+  rw [hpow]
+  exact Real.rpow_le_rpow hDnonneg hD (by norm_num)
+
+private lemma thmA_start_of_smallness_heps16_nonneg_2 :
+    ∀ (q ε₀ : ℝ) {u : ParabolicPoint → Vec3} {p : ParabolicPoint → ℝ} {f : ParabolicPoint → Vec3},
+      (∀ z ∈ vec3Ball (0 : Vec3) (3 / 4 : ℝ) ×ˢ Ioc (-(9 / 16 : ℝ)) (0 : ℝ),
+          gamma u z (1 / 4 : ℝ) ^ (3 : ℕ) ≤ (16 : ℝ) * ε₀ ∧
+            delta p z (1 / 4 : ℝ) ^ (3 : ℕ) ≤ (16 : ℝ) * ε₀ ∧
+              lambda q f z (1 / 4 : ℝ) ≤ ε₀ ^ ((1 : ℝ) / q)) →
+        ∀ z ∈ vec3Ball (0 : Vec3) (3 / 4 : ℝ) ×ˢ Ioc (-(9 / 16 : ℝ)) (0 : ℝ),
+          (0 : ℝ) ≤ gamma u z (1 / 4 : ℝ) → gamma u z (1 / 4 : ℝ) ≤ ((16 : ℝ) * ε₀) ^ (1 / 3 : ℝ)
+    := by
+  intro q ε₀ u p f hquarter z hz hgamma_nonneg
+  have hpow : gamma u z (1 / 4) =
+      (gamma u z (1 / 4) ^ (3 : ℕ)) ^ (1 / 3 : ℝ) := by
+    calc
+      gamma u z (1 / 4) = gamma u z (1 / 4) ^ (1 : ℝ) := by
+        rw [Real.rpow_one]
+      _ = (gamma u z (1 / 4) ^ (3 : ℝ)) ^ (1 / 3 : ℝ) := by
+        rw [← Real.rpow_mul hgamma_nonneg]
+        norm_num
+      _ = (gamma u z (1 / 4) ^ (3 : ℕ)) ^ (1 / 3 : ℝ) := by
+        exact congrArg (fun x : ℝ => x ^ (1 / 3 : ℝ))
+          (Real.rpow_natCast (gamma u z (1 / 4)) 3)
+  rw [hpow]
+  exact Real.rpow_le_rpow (by positivity) (hquarter z hz).1 (by norm_num)
+
+private lemma thmA_start_of_smallness_hdelta_3 :
+    ∀ (q κ ε₀ : ℝ) {u : ParabolicPoint → Vec3} {p : ParabolicPoint → ℝ} {f : ParabolicPoint → Vec3},
+      (∀ z ∈ vec3Ball (0 : Vec3) (3 / 4 : ℝ) ×ˢ Ioc (-(9 / 16 : ℝ)) (0 : ℝ),
+          gamma u z (1 / 4 : ℝ) ^ (3 : ℕ) ≤ (16 : ℝ) * ε₀ ∧
+            delta p z (1 / 4 : ℝ) ^ (3 : ℕ) ≤ (16 : ℝ) * ε₀ ∧
+              lambda q f z (1 / 4 : ℝ) ≤ ε₀ ^ ((1 : ℝ) / q)) →
+        ∀ z ∈ vec3Ball (0 : Vec3) (3 / 4 : ℝ) ×ˢ Ioc (-(9 / 16 : ℝ)) (0 : ℝ),
+          (0 : ℝ) ≤ delta p z (κ / (4 : ℝ)) →
+            (0 : ℝ) ≤ delta p z (1 / 4 : ℝ) → delta p z (1 / 4 : ℝ) ≤ ((16 : ℝ) * ε₀) ^ (1 / 3 : ℝ)
+    := by
+  intro q κ ε₀ u p f hquarter z hz hdelta_nonneg hdelta_nonneg
+  have hpow : delta p z (1 / 4) =
+      (delta p z (1 / 4) ^ (3 : ℕ)) ^ (1 / 3 : ℝ) := by
+    calc
+      delta p z (1 / 4) = delta p z (1 / 4) ^ (1 : ℝ) := by
+        rw [Real.rpow_one]
+      _ = (delta p z (1 / 4) ^ (3 : ℝ)) ^ (1 / 3 : ℝ) := by
+        rw [← Real.rpow_mul hdelta_nonneg]
+        norm_num
+      _ = (delta p z (1 / 4) ^ (3 : ℕ)) ^ (1 / 3 : ℝ) := by
+        exact congrArg (fun x : ℝ => x ^ (1 / 3 : ℝ))
+          (Real.rpow_natCast (delta p z (1 / 4)) 3)
+  rw [hpow]
+  exact Real.rpow_le_rpow (by positivity) (hquarter z hz).2.1 (by norm_num)
+
+private lemma thmA_start_of_smallness_hD_numeric_4 :
+    ∀ (q κ ε₀ C₃₂ : ℝ),
+      (0 : ℝ) < κ →
+        (0 : ℝ) ≤ C₃₂ →
+          ∀ {u : ParabolicPoint → Vec3} {p : ParabolicPoint → ℝ} {f : ParabolicPoint → Vec3},
+            (∀ z ∈ vec3Ball (0 : Vec3) (3 / 4 : ℝ) ×ˢ Ioc (-(9 / 16 : ℝ)) (0 : ℝ),
+                gamma u z (1 / 4 : ℝ) ^ (3 : ℕ) ≤ (16 : ℝ) * ε₀ ∧
+                  delta p z (1 / 4 : ℝ) ^ (3 : ℕ) ≤ (16 : ℝ) * ε₀ ∧
+                    lambda q f z (1 / 4 : ℝ) ≤ ε₀ ^ ((1 : ℝ) / q)) →
+              ∀ z ∈ vec3Ball (0 : Vec3) (3 / 4 : ℝ) ×ˢ Ioc (-(9 / 16 : ℝ)) (0 : ℝ),
+                (0 : ℝ) ≤ gamma u z (1 / 4 : ℝ) →
+                  (0 : ℝ) ≤ delta p z (1 / 4 : ℝ) →
+                    (0 : ℝ) ≤ lambda q f z (1 / 4 : ℝ) →
+                      lambda q f z (1 / 4 : ℝ) ^ (3 / 2 : ℝ) ≤ (ε₀ ^ ((1 : ℝ) / q)) ^ (3 / 2 : ℝ) →
+                        (C₃₂ *
+                              (κ⁻¹ ^ (2 : ℕ) * ((8 : ℝ) * gamma u z (1 / 4 : ℝ) ^ (3 : ℕ)) +
+                                  κ * delta p z (1 / 4 : ℝ) ^ (3 : ℕ) +
+                                κ ^ (3 / 2 : ℝ) * lambda q f z (1 / 4 : ℝ) ^ (3 / 2 : ℝ))) ^
+                            (2 / 3 : ℝ) ≤
+                          (C₃₂ *
+                              (κ⁻¹ ^ (2 : ℕ) * ((8 : ℝ) * ((16 : ℝ) * ε₀)) + κ * ((16 : ℝ) * ε₀) +
+                                κ ^ (3 / 2 : ℝ) * (ε₀ ^ ((1 : ℝ) / q)) ^ (3 / 2 : ℝ))) ^
+                            (2 / 3 : ℝ)
+    := by
+  intro q κ ε₀ C₃₂ hκ hC₃₂ u p f hquarter z hz hgamma_nonneg hdelta_nonneg hlambda_nonneg
+    hlambda_three_halves
+  apply Real.rpow_le_rpow
+  · positivity
+  · have hbase :
+        κ⁻¹ ^ (2 : ℕ) * (8 * gamma u z (1 / 4) ^ (3 : ℕ)) +
+            κ * delta p z (1 / 4) ^ (3 : ℕ) +
+            κ ^ (3 / 2 : ℝ) * lambda q f z (1 / 4) ^ (3 / 2 : ℝ) ≤
+          κ⁻¹ ^ (2 : ℕ) * (8 * (16 * ε₀)) +
+            κ * (16 * ε₀) +
+            κ ^ (3 / 2 : ℝ) * (ε₀ ^ (1 / q : ℝ)) ^ (3 / 2 : ℝ) := by
+      gcongr
+      · exact (hquarter z hz).1
+      · exact (hquarter z hz).2.1
+    exact mul_le_mul_of_nonneg_left hbase hC₃₂
+  · norm_num
+
 /-- Conditional form of `lem:thmA-start`, with the paper displays
 `eq:caccioppoli-gamma` and `eq:lin35-force` named at the
 interface. -/
@@ -337,25 +460,7 @@ private theorem thmA_start_of_smallness
     unfold delta
     positivity
   have hDnonneg : 0 ≤ delta p z (κ / 4) ^ (3 : ℕ) := by positivity
-  have hDsq : delta p z (κ / 4) ^ (2 : ℕ) ≤
-      (C₃₂ * (κ⁻¹ ^ (2 : ℕ) * (8 * gamma u z (1 / 4) ^ (3 : ℕ)) +
-        κ * delta p z (1 / 4) ^ (3 : ℕ) +
-        κ ^ (3 / 2 : ℝ) * lambda q f z (1 / 4) ^ (3 / 2 : ℝ))) ^
-          (2 / 3 : ℝ) := by
-    have hpow : delta p z (κ / 4) ^ (2 : ℕ) =
-        (delta p z (κ / 4) ^ (3 : ℕ)) ^ (2 / 3 : ℝ) := by
-      calc
-        delta p z (κ / 4) ^ (2 : ℕ) =
-            delta p z (κ / 4) ^ (2 : ℝ) :=
-          (Real.rpow_natCast (delta p z (κ / 4)) 2).symm
-        _ = (delta p z (κ / 4) ^ (3 : ℝ)) ^ (2 / 3 : ℝ) := by
-          rw [← Real.rpow_mul hdelta_nonneg]
-          norm_num
-        _ = (delta p z (κ / 4) ^ (3 : ℕ)) ^ (2 / 3 : ℝ) := by
-          exact congrArg (fun x : ℝ => x ^ (2 / 3 : ℝ))
-            (Real.rpow_natCast (delta p z (κ / 4)) 3)
-    rw [hpow]
-    exact Real.rpow_le_rpow hDnonneg hD (by norm_num)
+  have hDsq := @thmA_start_of_smallness_hDsq_1 q κ C₃₂ u p f z hD hdelta_nonneg hDnonneg
   have hgamma_nonneg : 0 ≤ gamma u z (1 / 4) := by
     unfold gamma
     positivity
@@ -366,34 +471,9 @@ private theorem thmA_start_of_smallness
     unfold lambda
     positivity
   have heps16_nonneg : 0 ≤ 16 * ε₀ := by positivity
-  have hgamma : gamma u z (1 / 4) ≤ (16 * ε₀) ^ (1 / 3 : ℝ) := by
-    have hpow : gamma u z (1 / 4) =
-        (gamma u z (1 / 4) ^ (3 : ℕ)) ^ (1 / 3 : ℝ) := by
-      calc
-        gamma u z (1 / 4) = gamma u z (1 / 4) ^ (1 : ℝ) := by
-          rw [Real.rpow_one]
-        _ = (gamma u z (1 / 4) ^ (3 : ℝ)) ^ (1 / 3 : ℝ) := by
-          rw [← Real.rpow_mul hgamma_nonneg]
-          norm_num
-        _ = (gamma u z (1 / 4) ^ (3 : ℕ)) ^ (1 / 3 : ℝ) := by
-          exact congrArg (fun x : ℝ => x ^ (1 / 3 : ℝ))
-            (Real.rpow_natCast (gamma u z (1 / 4)) 3)
-    rw [hpow]
-    exact Real.rpow_le_rpow (by positivity) (hquarter z hz).1 (by norm_num)
-  have hdelta : delta p z (1 / 4) ≤ (16 * ε₀) ^ (1 / 3 : ℝ) := by
-    have hpow : delta p z (1 / 4) =
-        (delta p z (1 / 4) ^ (3 : ℕ)) ^ (1 / 3 : ℝ) := by
-      calc
-        delta p z (1 / 4) = delta p z (1 / 4) ^ (1 : ℝ) := by
-          rw [Real.rpow_one]
-        _ = (delta p z (1 / 4) ^ (3 : ℝ)) ^ (1 / 3 : ℝ) := by
-          rw [← Real.rpow_mul hdelta_nonneg]
-          norm_num
-        _ = (delta p z (1 / 4) ^ (3 : ℕ)) ^ (1 / 3 : ℝ) := by
-          exact congrArg (fun x : ℝ => x ^ (1 / 3 : ℝ))
-            (Real.rpow_natCast (delta p z (1 / 4)) 3)
-    rw [hpow]
-    exact Real.rpow_le_rpow (by positivity) (hquarter z hz).2.1 (by norm_num)
+  have hgamma := @thmA_start_of_smallness_heps16_nonneg_2 q ε₀ u p f hquarter z hz hgamma_nonneg
+  have hdelta := @thmA_start_of_smallness_hdelta_3 q κ ε₀ u p f hquarter z hz (by assumption)
+    hdelta_nonneg
   have hgamma_half : gamma u z (1 / 4) ^ (1 / 2 : ℝ) ≤
       (16 * ε₀) ^ (1 / 6 : ℝ) := by
     calc
@@ -432,29 +512,8 @@ private theorem thmA_start_of_smallness
         C₂₆ * κ ^ (-1 / 2 : ℝ) * (16 * ε₀) ^ (1 / 6 : ℝ) *
           (ε₀ ^ (1 / q : ℝ)) ^ (1 / 2 : ℝ) := by
     gcongr
-  have hD_numeric :
-      (C₃₂ * (κ⁻¹ ^ (2 : ℕ) * (8 * gamma u z (1 / 4) ^ (3 : ℕ)) +
-          κ * delta p z (1 / 4) ^ (3 : ℕ) +
-          κ ^ (3 / 2 : ℝ) * lambda q f z (1 / 4) ^ (3 / 2 : ℝ))) ^
-          (2 / 3 : ℝ) ≤
-      (C₃₂ * (κ⁻¹ ^ (2 : ℕ) * (8 * (16 * ε₀)) +
-          κ * (16 * ε₀) +
-          κ ^ (3 / 2 : ℝ) * (ε₀ ^ (1 / q : ℝ)) ^ (3 / 2 : ℝ))) ^
-          (2 / 3 : ℝ) := by
-    apply Real.rpow_le_rpow
-    · positivity
-    · have hbase :
-          κ⁻¹ ^ (2 : ℕ) * (8 * gamma u z (1 / 4) ^ (3 : ℕ)) +
-              κ * delta p z (1 / 4) ^ (3 : ℕ) +
-              κ ^ (3 / 2 : ℝ) * lambda q f z (1 / 4) ^ (3 / 2 : ℝ) ≤
-            κ⁻¹ ^ (2 : ℕ) * (8 * (16 * ε₀)) +
-              κ * (16 * ε₀) +
-              κ ^ (3 / 2 : ℝ) * (ε₀ ^ (1 / q : ℝ)) ^ (3 / 2 : ℝ) := by
-        gcongr
-        · exact (hquarter z hz).1
-        · exact (hquarter z hz).2.1
-      exact mul_le_mul_of_nonneg_left hbase hC₃₂
-    · norm_num
+  have hD_numeric := @thmA_start_of_smallness_hD_numeric_4 q κ ε₀ C₃₂ hκ hC₃₂ u p f hquarter z hz
+    hgamma_nonneg hdelta_nonneg hlambda_nonneg hlambda_three_halves
   have hnumeric :
       C₂₅ * (κ * gamma u z (1 / 4) +
           κ ^ (-1 : ℝ) * gamma u z (1 / 4) ^ (3 / 2 : ℝ) +

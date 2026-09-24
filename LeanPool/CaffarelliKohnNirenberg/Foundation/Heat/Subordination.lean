@@ -31,11 +31,13 @@ open CKN.Foundation.Parabolic
 /-! The third spatial derivative is integrated in the heat-time variable.  This
 is the explicit kernel corresponding to a degree-one pressure multiplier. -/
 
+/-- Subordinated third-derivative heat kernel, integrated over times above the current time. -/
 def subordinatedKernel (j l m : Fin 3) (x : Vec3) (t : ℝ) : ℝ :=
   if 0 < t then
     -∫ s in Ioi t, heatKernelSpaceThirdDerivative x s m j l
   else 0
 
+/-- Spatial derivative of the subordinated kernel via the fourth heat-kernel derivative. -/
 def subordinatedKernelSpatialDerivative (j l m i : Fin 3) (x : Vec3) (t : ℝ) : ℝ :=
   if 0 < t then
     -∫ s in Ioi t, heatKernelSpaceFourthDerivative x s m j l i
@@ -146,7 +148,9 @@ private lemma rho_inv_six_integral_le {x : Vec3} {t : ℝ} (ht : 0 < t) :
       convert hderiv using 1
       · funext q
         simp [id_eq, add_comm]
-      · simp [id_eq, add_comm]
+      · simp only [add_comm, Real.rpow_neg_ofNat, Int.reduceNeg, zpow_neg, zpow_ofNat, mul_neg,
+        one_mul, id_eq,
+    neg_mul]
         rw [show -4 - 1 = (-5 : ℝ) by norm_num,
           Real.rpow_neg hbase.le]
         norm_num

@@ -29,7 +29,7 @@ namespace CKN.Core.Step4
 def caccioppoliForceAbsolute : ℝ := Real.sqrt (12000000 * (4*Real.pi/3))
 
 /-- The force coefficient is bounded uniformly for every admissible exponent. -/
-theorem caccioppoli_force_coefficient_le_absolute {q : ℝ} (hq : 5/2 < q) :
+theorem caccioppoli_force_coefficient_le_absolute {q : ℝ} (hq : 5 / 2 < q) :
     caccioppoliC₂₆ q ≤ caccioppoliForceAbsolute := by
   have hq0 : 0 < q := by linarith only [hq]
   have hq1 : q - 1 ≠ 0 := by linarith only [hq]
@@ -63,7 +63,7 @@ private theorem gamma_delta_bound {m ε ρ : ℝ} (hm : 0 ≤ m) (hmε : m ≤ �
     (Real.rpow_nonneg (Real.rpow_nonneg hρ.le _) _)
 
 private theorem force_lambda_bound {m ε ρ q : ℝ} (hm : 0 ≤ m) (hmε : m ≤ ε)
-    (hρ : 0 < ρ) (hρ1 : ρ ≤ 1) (hq : 5/2 < q) :
+    (hρ : 0 < ρ) (hρ1 : ρ ≤ 1) (hq : 5 / 2 < q) :
     ρ ^ (3-5/q) * m ^ (1/q) ≤ (ε+1) ^ (1/q) := by
   have hq0 : 0 < q := by linarith only [hq]
   have he : 0 ≤ 3-5/q := by
@@ -78,9 +78,9 @@ private theorem force_lambda_bound {m ε ρ q : ℝ} (hm : 0 ≤ m) (hmε : m �
 
 private theorem normalized_gamma_rhs_bound {G D L E A q : ℝ}
     (hG0 : 0 ≤ G) (hL0 : 0 ≤ L) (hA : 0 < A)
-    (hE : 1 ≤ E) (hq : 5/2 < q)
-    (hG : G ≤ A*E^(1/3 : ℝ)) (hD : D ≤ A*E^(1/3 : ℝ))
-    (hL : L ≤ E^(1/q)) :
+    (hE : 1 ≤ E) (hq : 5 / 2 < q)
+    (hG : G ≤ A * E ^ (1 / 3 : ℝ)) (hD : D ≤ A * E ^ (1 / 3 : ℝ))
+    (hL : L ≤ E ^ (1 / q)) :
     startGammaConstant * ((1/2 : ℝ)*G + 2*G^(3/2 : ℝ) + 2*D*G^(1/2 : ℝ)) +
       caccioppoliC₂₆ q * (1/2 : ℝ)^(-1/2 : ℝ) * G^(1/2 : ℝ) * L^(1/2 : ℝ) ≤
     (startGammaConstant * (A/2+4*A^(3/2 : ℝ)) +
@@ -152,7 +152,7 @@ theorem interior_dirichlet_bound_of_unit_data
     (hdom : closure (parabolicCylinder (0 : Vec3) 0 1) ⊆ spaceTimeSet Ω I)
     (hsmall : (∫⁻ w in parabolicCylinder (0 : Vec3) 0 1,
       ENNReal.ofReal (vec3EuclideanNorm (u w)) ^ (3 : ℝ) +
-        ENNReal.ofReal |p w| ^ (3/2 : ℝ) +
+        ENNReal.ofReal |p w| ^ (3 / 2 : ℝ) +
         ENNReal.ofReal (vec3EuclideanNorm (f w)) ^ q) ≤ ENNReal.ofReal ε)
     (hQ : parabolicCylinder z.1 z.2 ρ ⊆ parabolicCylinder (0 : Vec3) 0 1) :
     (∫⁻ w in parabolicCylinder z.1 z.2 (ρ/2),
@@ -187,7 +187,8 @@ theorem interior_dirichlet_bound_of_unit_data
     (show 1 ≤ ε+1 by linarith only [hε]) hsol.2.2.2.1 hg hp hf
   have hbeta : beta u Du z (ρ/2) ≤ interiorBetaDataConstant ρ * (ε+1)^(1/2 : ℝ) := by
     have hα := alpha_nonneg u z hhalf.le
-    exact (le_add_of_nonneg_left hα).trans (hb.trans (by simpa only [interiorBetaDataConstant, neg_div, delta] using hn))
+    exact (le_add_of_nonneg_left hα).trans (hb.trans (by simpa only [interiorBetaDataConstant,
+      neg_div, delta] using hn))
   have hc : 0 ≤ interiorBetaDataConstant ρ := by
     unfold interiorBetaDataConstant
     have hcg : 0 ≤ startGammaConstant := Real.sqrt_nonneg _

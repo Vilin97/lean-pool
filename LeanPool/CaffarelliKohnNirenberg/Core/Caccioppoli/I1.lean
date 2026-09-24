@@ -35,9 +35,9 @@ theorem caccioppoli_I1_heat_operator
     {z : ParabolicPoint} (hη : ContDiff ℝ (⊤ : ℕ∞) η)
     (ht : z.2 - t₀ < r ^ 2) :
     timePartial (fun w : ParabolicPoint =>
-        backwardHeat_cutoff η x₀ t₀ r w) z +
+        backwardHeatCutoff η x₀ t₀ r w) z +
         ∑ i, spatialSecondPartial (fun w : ParabolicPoint =>
-          backwardHeat_cutoff η x₀ t₀ r w) i i z =
+          backwardHeatCutoff η x₀ t₀ r w) i i z =
       (timePartial (fun w : ParabolicPoint => η w) z +
           ∑ i, spatialSecondPartial (fun w : ParabolicPoint => η w) i i z) *
           backwardHeatTestFunction r (z.1 - x₀) (z.2 - t₀) +
@@ -62,25 +62,25 @@ theorem caccioppoli_I1_heat_operator
   have htime := caccioppoli_cutoff_heat_timePartial
     (η := η) (x₀ := x₀) (t₀ := t₀) (r := r) (z := z) hη ht
   have htime' : timePartial (fun w : ParabolicPoint =>
-      backwardHeat_cutoff η x₀ t₀ r w) z =
+      backwardHeatCutoff η x₀ t₀ r w) z =
       timePartial (fun w : ParabolicPoint => η w) z *
           backwardHeatTestFunction r (z.1 - x₀) (z.2 - t₀) +
         η z * (-r ^ 2 * heatKernelTimeDerivative (z.1 - x₀)
           (r ^ 2 - (z.2 - t₀))) := by
     simpa only [ParabolicPoint] using htime
   have hfun : (fun x : Vec3 =>
-      backwardHeat_cutoff η x₀ t₀ r (x, z.2)) =
+      backwardHeatCutoff η x₀ t₀ r (x, z.2)) =
       (fun x : Vec3 => η (x, z.2) *
         backwardHeatTestFunction r (x - x₀) (z.2 - t₀)) := by
     funext x
-    simp only [backwardHeat_cutoff, ht, ↓reduceIte]
+    simp only [backwardHeatCutoff, ht, ↓reduceIte]
   have hsum :
       ∑ i, spatialSecondPartial (fun w : ParabolicPoint =>
-          backwardHeat_cutoff η x₀ t₀ r w) i i z =
+          backwardHeatCutoff η x₀ t₀ r w) i i z =
         spatialLaplacian (fun x : Vec3 => η (x, z.2) *
           backwardHeatTestFunction r (x - x₀) (z.2 - t₀)) z.1 := by
     change ∑ i, mixedSecond (fun x : Vec3 =>
-        backwardHeat_cutoff η x₀ t₀ r (x, z.2)) i i z.1 = _
+        backwardHeatCutoff η x₀ t₀ r (x, z.2)) i i z.1 = _
     rw [hfun]
     rfl
   rw [htime', hsum]
@@ -272,10 +272,10 @@ theorem caccioppoli_I1_cutoff_annulus_pointwise
     (hp : (z.1 - x₀, z.2 - t₀) ∈
       parabolicCylinder 0 0 ρ \ parabolicCylinder 0 0 (ρ / 2)) :
     |timePartial (fun w : ParabolicPoint =>
-        backwardHeat_cutoff (caccioppoli_cutoff x₀ t₀ ρ R hρ hR)
+        backwardHeatCutoff (caccioppoliCutoff x₀ t₀ ρ R hρ hR)
           x₀ t₀ r w) z +
         ∑ i, spatialSecondPartial (fun w : ParabolicPoint =>
-          backwardHeat_cutoff (caccioppoli_cutoff x₀ t₀ ρ R hρ hR)
+          backwardHeatCutoff (caccioppoliCutoff x₀ t₀ ρ R hρ hR)
             x₀ t₀ r w) i i z| ≤
       (32 / (R ^ 2 - (ρ / 2) ^ 2) +
         3 * (cutoffSecondDerivativeConstant / ρ ^ 2)) *
@@ -286,7 +286,7 @@ theorem caccioppoli_I1_cutoff_annulus_pointwise
     have hp' := (mem_parabolicCylinder.mp hp.1).2.2
     exact lt_of_le_of_lt (by simpa only [sub_zero] using hp') (sq_pos_of_pos hr)
   have hht := caccioppoli_I1_heat_operator
-    (η := caccioppoli_cutoff x₀ t₀ ρ R hρ hR) (x₀ := x₀)
+    (η := caccioppoliCutoff x₀ t₀ ρ R hρ hR) (x₀ := x₀)
     (t₀ := t₀) (r := r) (z := z)
     (caccioppoli_cutoff_smooth x₀ t₀ ρ R hρ hR) hhtime
   have hηop := caccioppoli_cutoff_time_plus_laplacian_bound
@@ -307,7 +307,7 @@ theorem caccioppoli_I1_cutoff_annulus_pointwise
   have hCρ : 0 ≤ cutoffGradientConstant / ρ := div_nonneg hC hρ.le
   have hcross : ∀ i : Fin 3,
       |spatialPartial (fun w : ParabolicPoint =>
-          caccioppoli_cutoff x₀ t₀ ρ R hρ hR w) i z| *
+          caccioppoliCutoff x₀ t₀ ρ R hρ hR w) i z| *
         |r ^ 2 * heatKernelSpaceDerivative (z.1 - x₀)
           (r ^ 2 - (z.2 - t₀)) i| ≤
       (cutoffGradientConstant / ρ) *
@@ -319,25 +319,25 @@ theorem caccioppoli_I1_cutoff_annulus_pointwise
       (abs_nonneg _) hCρ
   have hsumabs :
       |∑ i, spatialPartial (fun w : ParabolicPoint =>
-          caccioppoli_cutoff x₀ t₀ ρ R hρ hR w) i z *
+          caccioppoliCutoff x₀ t₀ ρ R hρ hR w) i z *
           (r ^ 2 * heatKernelSpaceDerivative (z.1 - x₀)
             (r ^ 2 - (z.2 - t₀)) i)| ≤
         ∑ i, |spatialPartial (fun w : ParabolicPoint =>
-          caccioppoli_cutoff x₀ t₀ ρ R hρ hR w) i z| *
+          caccioppoliCutoff x₀ t₀ ρ R hρ hR w) i z| *
         |r ^ 2 * heatKernelSpaceDerivative (z.1 - x₀)
             (r ^ 2 - (z.2 - t₀)) i| := by
     calc
       |∑ i, spatialPartial (fun w : ParabolicPoint =>
-          caccioppoli_cutoff x₀ t₀ ρ R hρ hR w) i z *
+          caccioppoliCutoff x₀ t₀ ρ R hρ hR w) i z *
           (r ^ 2 * heatKernelSpaceDerivative (z.1 - x₀)
             (r ^ 2 - (z.2 - t₀)) i)| ≤
           ∑ i, |spatialPartial (fun w : ParabolicPoint =>
-            caccioppoli_cutoff x₀ t₀ ρ R hρ hR w) i z *
+            caccioppoliCutoff x₀ t₀ ρ R hρ hR w) i z *
             (r ^ 2 * heatKernelSpaceDerivative (z.1 - x₀)
               (r ^ 2 - (z.2 - t₀)) i)| := by
         exact (Finset.abs_sum_le_sum_abs
           (fun i : Fin 3 => spatialPartial (fun w : ParabolicPoint =>
-            caccioppoli_cutoff x₀ t₀ ρ R hρ hR w) i z *
+            caccioppoliCutoff x₀ t₀ ρ R hρ hR w) i z *
             (r ^ 2 * heatKernelSpaceDerivative (z.1 - x₀)
               (r ^ 2 - (z.2 - t₀)) i)) Finset.univ)
       _ = _ := by
@@ -345,24 +345,24 @@ theorem caccioppoli_I1_cutoff_annulus_pointwise
         intro i hi
         rw [abs_mul, abs_mul, abs_of_nonneg (sq_nonneg r)]
   have hht' : timePartial (fun w : ParabolicPoint =>
-      backwardHeat_cutoff (caccioppoli_cutoff x₀ t₀ ρ R hρ hR)
+      backwardHeatCutoff (caccioppoliCutoff x₀ t₀ ρ R hρ hR)
         x₀ t₀ r w) z +
       ∑ i, spatialSecondPartial (fun w : ParabolicPoint =>
-        backwardHeat_cutoff (caccioppoli_cutoff x₀ t₀ ρ R hρ hR)
+        backwardHeatCutoff (caccioppoliCutoff x₀ t₀ ρ R hρ hR)
           x₀ t₀ r w) i i z =
     (timePartial (fun w : ParabolicPoint =>
-        caccioppoli_cutoff x₀ t₀ ρ R hρ hR w) z +
+        caccioppoliCutoff x₀ t₀ ρ R hρ hR w) z +
         ∑ i, spatialSecondPartial (fun w : ParabolicPoint =>
-          caccioppoli_cutoff x₀ t₀ ρ R hρ hR w) i i z) *
+          caccioppoliCutoff x₀ t₀ ρ R hρ hR w) i i z) *
       backwardHeatTestFunction r (z.1 - x₀) (z.2 - t₀) +
       2 * ∑ i, spatialPartial (fun w : ParabolicPoint =>
-        caccioppoli_cutoff x₀ t₀ ρ R hρ hR w) i z *
+        caccioppoliCutoff x₀ t₀ ρ R hρ hR w) i z *
         (r ^ 2 * heatKernelSpaceDerivative (z.1 - x₀)
           (r ^ 2 - (z.2 - t₀)) i) := by
     simpa only [ParabolicPoint] using hht
   have hS : 0 ≤ cutoffSecondDerivativeConstant / ρ ^ 2 := by
     exact (abs_nonneg (spatialSecondPartial
-      (caccioppoli_cutoff x₀ t₀ ρ R hρ hR) 0 0 z)).trans
+      (caccioppoliCutoff x₀ t₀ ρ R hρ hR) 0 0 z)).trans
       (caccioppoli_cutoff_second_spatial_partial_bound x₀ t₀ ρ R hρ hR z 0 0)
   have hA0 : 0 ≤ 32 / (R ^ 2 - (ρ / 2) ^ 2) +
       3 * (cutoffSecondDerivativeConstant / ρ ^ 2) := by
@@ -371,46 +371,46 @@ theorem caccioppoli_I1_cutoff_annulus_pointwise
     positivity
   calc
     |timePartial (fun w : ParabolicPoint =>
-        backwardHeat_cutoff (caccioppoli_cutoff x₀ t₀ ρ R hρ hR)
+        backwardHeatCutoff (caccioppoliCutoff x₀ t₀ ρ R hρ hR)
           x₀ t₀ r w) z +
         ∑ i, spatialSecondPartial (fun w : ParabolicPoint =>
-          backwardHeat_cutoff (caccioppoli_cutoff x₀ t₀ ρ R hρ hR)
+          backwardHeatCutoff (caccioppoliCutoff x₀ t₀ ρ R hρ hR)
             x₀ t₀ r w) i i z| =
       |(timePartial (fun w : ParabolicPoint =>
-          caccioppoli_cutoff x₀ t₀ ρ R hρ hR w) z +
+          caccioppoliCutoff x₀ t₀ ρ R hρ hR w) z +
           ∑ i, spatialSecondPartial (fun w : ParabolicPoint =>
-            caccioppoli_cutoff x₀ t₀ ρ R hρ hR w) i i z) *
+            caccioppoliCutoff x₀ t₀ ρ R hρ hR w) i i z) *
         backwardHeatTestFunction r (z.1 - x₀) (z.2 - t₀) +
         2 * ∑ i, spatialPartial (fun w : ParabolicPoint =>
-          caccioppoli_cutoff x₀ t₀ ρ R hρ hR w) i z *
+          caccioppoliCutoff x₀ t₀ ρ R hρ hR w) i z *
           (r ^ 2 * heatKernelSpaceDerivative (z.1 - x₀)
             (r ^ 2 - (z.2 - t₀)) i)| := by rw [hht']
     _ ≤ |timePartial (fun w : ParabolicPoint =>
-          caccioppoli_cutoff x₀ t₀ ρ R hρ hR w) z +
+          caccioppoliCutoff x₀ t₀ ρ R hρ hR w) z +
           ∑ i, spatialSecondPartial (fun w : ParabolicPoint =>
-            caccioppoli_cutoff x₀ t₀ ρ R hρ hR w) i i z| *
+            caccioppoliCutoff x₀ t₀ ρ R hρ hR w) i i z| *
         backwardHeatTestFunction r (z.1 - x₀) (z.2 - t₀) +
         2 * |∑ i, spatialPartial (fun w : ParabolicPoint =>
-          caccioppoli_cutoff x₀ t₀ ρ R hρ hR w) i z *
+          caccioppoliCutoff x₀ t₀ ρ R hρ hR w) i z *
           (r ^ 2 * heatKernelSpaceDerivative (z.1 - x₀)
             (r ^ 2 - (z.2 - t₀)) i)| := by
       calc
         |(timePartial (fun w : ParabolicPoint =>
-            caccioppoli_cutoff x₀ t₀ ρ R hρ hR w) z +
+            caccioppoliCutoff x₀ t₀ ρ R hρ hR w) z +
             ∑ i, spatialSecondPartial (fun w : ParabolicPoint =>
-              caccioppoli_cutoff x₀ t₀ ρ R hρ hR w) i i z) *
+              caccioppoliCutoff x₀ t₀ ρ R hρ hR w) i i z) *
           backwardHeatTestFunction r (z.1 - x₀) (z.2 - t₀) +
           2 * ∑ i, spatialPartial (fun w : ParabolicPoint =>
-            caccioppoli_cutoff x₀ t₀ ρ R hρ hR w) i z *
+            caccioppoliCutoff x₀ t₀ ρ R hρ hR w) i z *
             (r ^ 2 * heatKernelSpaceDerivative (z.1 - x₀)
               (r ^ 2 - (z.2 - t₀)) i)| ≤
           |(timePartial (fun w : ParabolicPoint =>
-              caccioppoli_cutoff x₀ t₀ ρ R hρ hR w) z +
+              caccioppoliCutoff x₀ t₀ ρ R hρ hR w) z +
               ∑ i, spatialSecondPartial (fun w : ParabolicPoint =>
-                caccioppoli_cutoff x₀ t₀ ρ R hρ hR w) i i z) *
+                caccioppoliCutoff x₀ t₀ ρ R hρ hR w) i i z) *
             backwardHeatTestFunction r (z.1 - x₀) (z.2 - t₀)| +
           |2 * ∑ i, spatialPartial (fun w : ParabolicPoint =>
-            caccioppoli_cutoff x₀ t₀ ρ R hρ hR w) i z *
+            caccioppoliCutoff x₀ t₀ ρ R hρ hR w) i z *
             (r ^ 2 * heatKernelSpaceDerivative (z.1 - x₀)
               (r ^ 2 - (z.2 - t₀)) i)| := abs_add_le _ _
         _ = _ := by
@@ -420,7 +420,7 @@ theorem caccioppoli_I1_cutoff_annulus_pointwise
         3 * (cutoffSecondDerivativeConstant / ρ ^ 2)) *
           (8000000 * r ^ 2 / ρ ^ 3) +
         2 * ∑ i, |spatialPartial (fun w : ParabolicPoint =>
-          caccioppoli_cutoff x₀ t₀ ρ R hρ hR w) i z| *
+          caccioppoliCutoff x₀ t₀ ρ R hρ hR w) i z| *
           |r ^ 2 * heatKernelSpaceDerivative (z.1 - x₀)
             (r ^ 2 - (z.2 - t₀)) i| := by
       exact add_le_add
@@ -434,7 +434,7 @@ theorem caccioppoli_I1_cutoff_annulus_pointwise
             (5000000 * r ^ 2 / ρ ^ 4) := by
       have hsumcross :
           (∑ i, |spatialPartial (fun w : ParabolicPoint =>
-            caccioppoli_cutoff x₀ t₀ ρ R hρ hR w) i z| *
+            caccioppoliCutoff x₀ t₀ ρ R hρ hR w) i z| *
             |r ^ 2 * heatKernelSpaceDerivative (z.1 - x₀)
               (r ^ 2 - (z.2 - t₀)) i|) ≤
           ∑ _i : Fin 3, (cutoffGradientConstant / ρ) *
@@ -456,11 +456,11 @@ theorem caccioppoli_I1_heat_cutoff_annulus_pointwise
     (hp : (z.1 - x₀, z.2 - t₀) ∈
       parabolicCylinder 0 0 ρ \ parabolicCylinder 0 0 (ρ / 2)) :
     |timePartial (fun w : ParabolicPoint =>
-        backwardHeat_cutoff
-          (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) z +
+        backwardHeatCutoff
+          (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) z +
         ∑ i, spatialSecondPartial (fun w : ParabolicPoint =>
-          backwardHeat_cutoff
-            (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) i i z| ≤
+          backwardHeatCutoff
+            (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) i i z| ≤
       (32 / ρ ^ 2 + 3 * (cutoffSecondDerivativeConstant / ρ ^ 2)) *
           (8000000 * r ^ 2 / ρ ^ 3) +
         6 * (cutoffGradientConstant / ρ) *
@@ -469,7 +469,7 @@ theorem caccioppoli_I1_heat_cutoff_annulus_pointwise
     have hsq : 0 < r ^ 2 := sq_pos_of_pos hr
     linarith only [ht, hsq]
   have hht := caccioppoli_I1_heat_operator
-    (η := caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) (x₀ := x₀)
+    (η := caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) (x₀ := x₀)
     (t₀ := t₀) (r := r) (z := z)
     (caccioppoli_heat_cutoff_smooth x₀ t₀ ρ ε hρ hε) hhtime
   have hηop := caccioppoli_heat_cutoff_time_plus_laplacian_bound_on_left
@@ -490,7 +490,7 @@ theorem caccioppoli_I1_heat_cutoff_annulus_pointwise
   have hCρ : 0 ≤ cutoffGradientConstant / ρ := div_nonneg hC hρ.le
   have hcross : ∀ i : Fin 3,
       |spatialPartial (fun w : ParabolicPoint =>
-          caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε w) i z| *
+          caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε w) i z| *
         |r ^ 2 * heatKernelSpaceDerivative (z.1 - x₀)
           (r ^ 2 - (z.2 - t₀)) i| ≤
       (cutoffGradientConstant / ρ) *
@@ -503,16 +503,16 @@ theorem caccioppoli_I1_heat_cutoff_annulus_pointwise
       (abs_nonneg _) hCρ
   have hsumabs :
       |∑ i, spatialPartial (fun w : ParabolicPoint =>
-          caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε w) i z *
+          caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε w) i z *
           (r ^ 2 * heatKernelSpaceDerivative (z.1 - x₀)
             (r ^ 2 - (z.2 - t₀)) i)| ≤
         ∑ i, |spatialPartial (fun w : ParabolicPoint =>
-          caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε w) i z| *
+          caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε w) i z| *
         |r ^ 2 * heatKernelSpaceDerivative (z.1 - x₀)
             (r ^ 2 - (z.2 - t₀)) i| := by
     calc
       _ ≤ ∑ i, |spatialPartial (fun w : ParabolicPoint =>
-            caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε w) i z *
+            caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε w) i z *
             (r ^ 2 * heatKernelSpaceDerivative (z.1 - x₀)
               (r ^ 2 - (z.2 - t₀)) i)| :=
         Finset.abs_sum_le_sum_abs _ _
@@ -521,24 +521,24 @@ theorem caccioppoli_I1_heat_cutoff_annulus_pointwise
         intro i hi
         rw [abs_mul, abs_mul, abs_of_nonneg (sq_nonneg r)]
   have hht' : timePartial (fun w : ParabolicPoint =>
-      backwardHeat_cutoff
-        (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) z +
+      backwardHeatCutoff
+        (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) z +
       ∑ i, spatialSecondPartial (fun w : ParabolicPoint =>
-        backwardHeat_cutoff
-          (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) i i z =
+        backwardHeatCutoff
+          (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) i i z =
     (timePartial (fun w : ParabolicPoint =>
-        caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε w) z +
+        caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε w) z +
         ∑ i, spatialSecondPartial (fun w : ParabolicPoint =>
-          caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε w) i i z) *
+          caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε w) i i z) *
       backwardHeatTestFunction r (z.1 - x₀) (z.2 - t₀) +
       2 * ∑ i, spatialPartial (fun w : ParabolicPoint =>
-        caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε w) i z *
+        caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε w) i z *
         (r ^ 2 * heatKernelSpaceDerivative (z.1 - x₀)
           (r ^ 2 - (z.2 - t₀)) i) := by
     simpa only [ParabolicPoint] using hht
   have hS : 0 ≤ cutoffSecondDerivativeConstant / ρ ^ 2 := by
     exact (abs_nonneg (spatialSecondPartial
-      (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) 0 0 z)).trans
+      (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) 0 0 z)).trans
       (caccioppoli_heat_cutoff_second_spatial_partial_bound
         x₀ t₀ ρ ε hρ hε z 0 0)
   have hA0 : 0 ≤ 32 / ρ ^ 2 +
@@ -546,31 +546,31 @@ theorem caccioppoli_I1_heat_cutoff_annulus_pointwise
     positivity
   calc
     _ = |(timePartial (fun w : ParabolicPoint =>
-          caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε w) z +
+          caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε w) z +
           ∑ i, spatialSecondPartial (fun w : ParabolicPoint =>
-            caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε w) i i z) *
+            caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε w) i i z) *
         backwardHeatTestFunction r (z.1 - x₀) (z.2 - t₀) +
         2 * ∑ i, spatialPartial (fun w : ParabolicPoint =>
-          caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε w) i z *
+          caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε w) i z *
           (r ^ 2 * heatKernelSpaceDerivative (z.1 - x₀)
             (r ^ 2 - (z.2 - t₀)) i)| := by rw [hht']
     _ ≤ |timePartial (fun w : ParabolicPoint =>
-          caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε w) z +
+          caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε w) z +
           ∑ i, spatialSecondPartial (fun w : ParabolicPoint =>
-            caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε w) i i z| *
+            caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε w) i i z| *
         backwardHeatTestFunction r (z.1 - x₀) (z.2 - t₀) +
         2 * |∑ i, spatialPartial (fun w : ParabolicPoint =>
-          caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε w) i z *
+          caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε w) i z *
           (r ^ 2 * heatKernelSpaceDerivative (z.1 - x₀)
             (r ^ 2 - (z.2 - t₀)) i)| := by
       calc
         _ ≤ |(timePartial (fun w : ParabolicPoint =>
-              caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε w) z +
+              caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε w) z +
               ∑ i, spatialSecondPartial (fun w : ParabolicPoint =>
-                caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε w) i i z) *
+                caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε w) i i z) *
             backwardHeatTestFunction r (z.1 - x₀) (z.2 - t₀)| +
           |2 * ∑ i, spatialPartial (fun w : ParabolicPoint =>
-            caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε w) i z *
+            caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε w) i z *
             (r ^ 2 * heatKernelSpaceDerivative (z.1 - x₀)
               (r ^ 2 - (z.2 - t₀)) i)| := abs_add_le _ _
         _ = _ := by
@@ -579,7 +579,7 @@ theorem caccioppoli_I1_heat_cutoff_annulus_pointwise
     _ ≤ (32 / ρ ^ 2 + 3 * (cutoffSecondDerivativeConstant / ρ ^ 2)) *
           (8000000 * r ^ 2 / ρ ^ 3) +
         2 * ∑ i, |spatialPartial (fun w : ParabolicPoint =>
-          caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε w) i z| *
+          caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε w) i z| *
           |r ^ 2 * heatKernelSpaceDerivative (z.1 - x₀)
             (r ^ 2 - (z.2 - t₀)) i| := by
       exact add_le_add
@@ -592,7 +592,7 @@ theorem caccioppoli_I1_heat_cutoff_annulus_pointwise
             (5000000 * r ^ 2 / ρ ^ 4) := by
       have hsumcross :
           (∑ i, |spatialPartial (fun w : ParabolicPoint =>
-            caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε w) i z| *
+            caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε w) i z| *
             |r ^ 2 * heatKernelSpaceDerivative (z.1 - x₀)
               (r ^ 2 - (z.2 - t₀)) i|) ≤
           ∑ _i : Fin 3, (cutoffGradientConstant / ρ) *
@@ -613,15 +613,15 @@ theorem caccioppoli_I1_heat_cutoff_inner_zero
     {z : ParabolicPoint} (hx : z.1 ∈ vec3Ball x₀ (ρ / 2))
     (ht : z.2 ∈ Ioc (t₀ - r ^ 2) t₀) :
     timePartial (fun w : ParabolicPoint =>
-        backwardHeat_cutoff
-          (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) z +
+        backwardHeatCutoff
+          (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) z +
         ∑ i, spatialSecondPartial (fun w : ParabolicPoint =>
-          backwardHeat_cutoff
-            (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) i i z = 0 := by
+          backwardHeatCutoff
+            (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) i i z = 0 := by
   have hhtime : z.2 - t₀ < r ^ 2 := by
     linarith only [ht.2, sq_pos_of_pos hr]
   have hht := caccioppoli_I1_heat_operator
-    (η := caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) (x₀ := x₀)
+    (η := caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) (x₀ := x₀)
     (t₀ := t₀) (r := r) (z := z)
     (caccioppoli_heat_cutoff_smooth x₀ t₀ ρ ε hρ hε) hhtime
   obtain ⟨hT, hS, hSS⟩ := caccioppoli_heat_cutoff_derivatives_zero_on_inner
@@ -637,11 +637,11 @@ theorem caccioppoli_I1_heat_cutoff_pointwise_on_cylinder
     {z : ParabolicPoint} (ht : z.2 ≤ t₀)
     (hz : (z.1 - x₀, z.2 - t₀) ∈ parabolicCylinder 0 0 ρ) :
     |timePartial (fun w : ParabolicPoint =>
-        backwardHeat_cutoff
-          (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) z +
+        backwardHeatCutoff
+          (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) z +
         ∑ i, spatialSecondPartial (fun w : ParabolicPoint =>
-          backwardHeat_cutoff
-            (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) i i z| ≤
+          backwardHeatCutoff
+            (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) i i z| ≤
       (32 / ρ ^ 2 + 3 * (cutoffSecondDerivativeConstant / ρ ^ 2)) *
           (8000000 * r ^ 2 / ρ ^ 3) +
         6 * (cutoffGradientConstant / ρ) *
@@ -660,7 +660,7 @@ theorem caccioppoli_I1_heat_cutoff_pointwise_on_cylinder
     have hhtime : z.2 - t₀ < r ^ 2 := by
       linarith only [ht, sq_pos_of_pos hr]
     have hht := caccioppoli_I1_heat_operator
-      (η := caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) (x₀ := x₀)
+      (η := caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) (x₀ := x₀)
       (t₀ := t₀) (r := r) (z := z)
       (caccioppoli_heat_cutoff_smooth x₀ t₀ ρ ε hρ hε) hhtime
     obtain ⟨hT, hS, hSS⟩ :=
@@ -679,7 +679,7 @@ theorem caccioppoli_I1_heat_cutoff_pointwise_on_cylinder
       exact (not_lt_of_ge hnorm) (hbound.trans_lt hneg)
     have hSbound : 0 ≤ cutoffSecondDerivativeConstant / ρ ^ 2 := by
       exact (abs_nonneg (spatialSecondPartial
-        (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) 0 0 z)).trans
+        (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) 0 0 z)).trans
         (caccioppoli_heat_cutoff_second_spatial_partial_bound
           x₀ t₀ ρ ε hρ hε z 0 0)
     have hCρ : 0 ≤ cutoffGradientConstant / ρ := div_nonneg hC hρ.le

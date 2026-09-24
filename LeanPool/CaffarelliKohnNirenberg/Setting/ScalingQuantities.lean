@@ -114,7 +114,7 @@ private theorem map_spatialAffine (a : ℝ) (ha : 0 < a) (x : Vec3) :
     simp [spatialAffine]
   rw [h, ← Measure.map_map (measurable_const_add x) (measurable_const_smul a)]
   rw [Measure.map_addHaar_smul (μ := (volume : Measure Vec3)) ha.ne', Measure.map_smul]
-  rw [MeasureTheory.map_add_left_eq_self]
+  on_goal 1 => rw [MeasureTheory.map_add_left_eq_self]
   · congr 1
     rw [Module.finrank_fin_fun, abs_of_pos (inv_pos.mpr (pow_pos ha 3)), ← inv_pow]
   · exact (measurable_const_add x).aemeasurable
@@ -128,7 +128,7 @@ private theorem map_timeAffine (a : ℝ) (ha : 0 < a) (t : ℝ) :
   rw [h, ← Measure.map_map (measurable_const_add t) (measurable_const_smul (a ^ 2))]
   rw [Measure.map_addHaar_smul (μ := (volume : Measure ℝ)) (sq_pos_of_pos ha).ne',
     Measure.map_smul]
-  rw [MeasureTheory.map_add_left_eq_self]
+  on_goal 1 => rw [MeasureTheory.map_add_left_eq_self]
   · congr 1
     rw [Module.finrank_self]
     norm_num

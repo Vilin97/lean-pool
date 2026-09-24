@@ -30,6 +30,7 @@ namespace CKN
 
 open CKN.Foundation.Euclidean
 
+/-- Pressure reconstruction operator from the continuous second-Riesz tensor extension. -/
 def pressureSecondExtensionOperator
     (hL2 : ∀ i j : Fin 3, RieszSecondL2Input i j)
     (hWeak11 : ∀ i j : Fin 3, ∀ f, Measurable f → Integrable f volume →

@@ -32,8 +32,8 @@ theorem caccioppoli_heat_cutoff_eq_one_on
     {z : Vec3 × ℝ}
     (hx : z.1 ∈ vec3Ball x₀ (ρ / 2))
     (ht : z.2 ∈ Ioc (t₀ - r ^ 2) (t₀ + ε / 2)) :
-    caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε z = 1 := by
-  unfold caccioppoli_heat_cutoff
+    caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε z = 1 := by
+  unfold caccioppoliHeatCutoff
   rw [mollifiedBallCutoff_eq_one_on_inner x₀ hρ]
   · rw [caccioppoli_asymmetricTimeCutoff_eq_one_on hρ hε hr hscale
       ⟨ht.1.le, ht.2.trans (by linarith only [hε])⟩]
@@ -54,7 +54,7 @@ private theorem caccioppoli_heat_cutoff_eq_one_near
     (hx : z.1 ∈ vec3Ball x₀ (ρ / 2))
     (ht : z.2 ∈ Ioc (t₀ - r ^ 2) t₀) :
     ∀ᶠ y in 𝓝 z,
-      caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε y = 1 := by
+      caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε y = 1 := by
   have hopen : IsOpen (vec3Ball x₀ (ρ / 2)) := by
     have hnorm : Continuous (vec3EuclideanNorm : Vec3 → ℝ) := by
       unfold vec3EuclideanNorm
@@ -79,40 +79,40 @@ theorem caccioppoli_heat_cutoff_derivatives_zero_on_inner
     (hr : 0 < r) (hscale : r ≤ ρ / 2) {z : ParabolicPoint}
     (hx : z.1 ∈ vec3Ball x₀ (ρ / 2))
     (ht : z.2 ∈ Ioc (t₀ - r ^ 2) t₀) :
-    timePartial (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) z = 0 ∧
+    timePartial (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) z = 0 ∧
       (∀ i : Fin 3,
-        spatialPartial (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) i z = 0) ∧
+        spatialPartial (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) i z = 0) ∧
       (∀ i j : Fin 3,
-        spatialSecondPartial (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) i j z = 0) := by
+        spatialSecondPartial (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) i j z = 0) := by
   have hev := caccioppoli_heat_cutoff_eq_one_near x₀ t₀ ρ ε r hρ hε hr hscale hx ht
   have hev_time : (fun s : ℝ =>
-      caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε (z.1, s)) =ᶠ[𝓝 z.2]
+      caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε (z.1, s)) =ᶠ[𝓝 z.2]
         (fun _ => (1 : ℝ)) := by
     have hmap : Continuous (fun s : ℝ => (z.1, s)) :=
       continuous_const.prodMk continuous_id
     filter_upwards [hmap.continuousAt.preimage_mem_nhds hev] with s hs
     exact hs
-  have htime : timePartial (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) z = 0 := by
+  have htime : timePartial (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) z = 0 := by
     unfold timePartial
     rw [hev_time.fderiv_eq, fderiv_const_apply]
     simp
   have hspace (i : Fin 3) :
-      spatialPartial (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) i z = 0 := by
+      spatialPartial (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) i z = 0 := by
     unfold spatialPartial
     have hmap : Continuous (fun x : Vec3 => (x, z.2)) :=
       continuous_id.prodMk continuous_const
     have hev_space : (fun x : Vec3 =>
-        caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε (x, z.2)) =ᶠ[𝓝 z.1]
+        caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε (x, z.2)) =ᶠ[𝓝 z.1]
           (fun _ => (1 : ℝ)) := by
       filter_upwards [hmap.continuousAt.preimage_mem_nhds hev] with x hx'
       exact hx'
     rw [hev_space.fderiv_eq, fderiv_const_apply]
     simp
   have hsecond (i j : Fin 3) :
-      spatialSecondPartial (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) i j z = 0 := by
+      spatialSecondPartial (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) i j z = 0 := by
     unfold spatialSecondPartial
     change (fderiv ℝ (fun x : Vec3 =>
-      spatialPartial (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) i (x, z.2))
+      spatialPartial (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) i (x, z.2))
       z.1) (basisVec j) = 0
     have hopen : IsOpen (vec3Ball x₀ (ρ / 2)) := by
       have hnorm : Continuous (vec3EuclideanNorm : Vec3 → ℝ) := by
@@ -123,19 +123,19 @@ theorem caccioppoli_heat_cutoff_derivatives_zero_on_inner
       have hset : vec3Ball x₀ (ρ / 2) ∈ 𝓝 z.1 := hopen.mem_nhds hx
       exact continuous_id.continuousAt.preimage_mem_nhds hset
     have hnear : (fun x : Vec3 =>
-        spatialPartial (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) i (x, z.2)) =ᶠ[𝓝 z.1]
+        spatialPartial (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) i (x, z.2)) =ᶠ[𝓝 z.1]
           (fun _ => (0 : ℝ)) := by
       filter_upwards [hinner] with x hxin
       unfold spatialPartial
       change (fderiv ℝ (fun y : Vec3 =>
-        caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε (y, z.2)) x) (basisVec i) = 0
+        caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε (y, z.2)) x) (basisVec i) = 0
       have hlocal := caccioppoli_heat_cutoff_eq_one_near x₀ t₀ ρ ε r
         (z := (x, z.2)) hρ hε hr hscale hxin
         ⟨ht.1, ht.2.trans (by linarith only [hε])⟩
       have hmap : Continuous (fun y : Vec3 => (y, z.2)) :=
         continuous_id.prodMk continuous_const
       have hconst : (fun y : Vec3 =>
-          caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε (y, z.2)) =ᶠ[𝓝 x]
+          caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε (y, z.2)) =ᶠ[𝓝 x]
             (fun _ => (1 : ℝ)) :=
         hmap.continuousAt.preimage_mem_nhds hlocal
       rw [hconst.fderiv_eq, fderiv_const_apply]
@@ -194,7 +194,7 @@ theorem caccioppoli_cutoff_heat_spatialPartial
     {η : Vec3 × ℝ → ℝ} {x₀ : Vec3} {t₀ r : ℝ}
     {z : ParabolicPoint} (hη : ContDiff ℝ (⊤ : ℕ∞) η)
     (ht : z.2 - t₀ < r ^ 2) (i : Fin 3) :
-    spatialPartial (backwardHeat_cutoff η x₀ t₀ r) i z =
+    spatialPartial (backwardHeatCutoff η x₀ t₀ r) i z =
       spatialPartial η i z *
           backwardHeatTestFunction r (z.1 - x₀) (z.2 - t₀) +
         η z * (r ^ 2 * heatKernelSpaceDerivative (z.1 - x₀)
@@ -248,7 +248,7 @@ theorem caccioppoli_cutoff_heat_timePartial
     {η : Vec3 × ℝ → ℝ} {x₀ : Vec3} {t₀ r : ℝ}
     {z : ParabolicPoint} (hη : ContDiff ℝ (⊤ : ℕ∞) η)
     (ht : z.2 - t₀ < r ^ 2) :
-    timePartial (backwardHeat_cutoff η x₀ t₀ r) z =
+    timePartial (backwardHeatCutoff η x₀ t₀ r) z =
       timePartial η z *
           backwardHeatTestFunction r (z.1 - x₀) (z.2 - t₀) +
         η z * (-r ^ 2 * heatKernelTimeDerivative (z.1 - x₀)
@@ -304,8 +304,8 @@ theorem caccioppoli_cutoff_heat_timePartial
 theorem caccioppoli_cutoff_le_one
     {x₀ : Vec3} {t₀ ρ R : ℝ} (hρ : 0 < ρ) (hR : ρ / 2 < R)
     (z : Vec3 × ℝ) :
-    caccioppoli_cutoff x₀ t₀ ρ R hρ hR z ≤ 1 := by
-  unfold caccioppoli_cutoff
+    caccioppoliCutoff x₀ t₀ ρ R hρ hR z ≤ 1 := by
+  unfold caccioppoliCutoff
   calc
     mollifiedBallCutoff x₀ hρ z.1 * timeCutoff t₀ (ρ / 2) R z.2 ≤
         1 * timeCutoff t₀ (ρ / 2) R z.2 :=
@@ -360,12 +360,12 @@ theorem caccioppoli_cutoff_spatial_partial_abs_on_annulus
     (hr : 0 < r) (hscale : r ≤ ρ / 2) {z : ParabolicPoint} (i : Fin 3)
     (hp : (z.1 - x₀, z.2 - t₀) ∈
       parabolicCylinder 0 0 ρ \ parabolicCylinder 0 0 (ρ / 2)) :
-    |spatialPartial (backwardHeat_cutoff
-        (caccioppoli_cutoff x₀ t₀ ρ R hρ hR) x₀ t₀ r) i z| ≤
+    |spatialPartial (backwardHeatCutoff
+        (caccioppoliCutoff x₀ t₀ ρ R hρ hR) x₀ t₀ r) i z| ≤
       5000000 * r ^ 2 / ρ ^ 4 +
         8000000 * cutoffGradientConstant * r ^ 2 / ρ ^ 4 := by
   have hht := caccioppoli_cutoff_heat_spatialPartial
-    (η := caccioppoli_cutoff x₀ t₀ ρ R hρ hR) (x₀ := x₀) (t₀ := t₀) (r := r)
+    (η := caccioppoliCutoff x₀ t₀ ρ R hρ hR) (x₀ := x₀) (t₀ := t₀) (r := r)
     (z := z) (caccioppoli_cutoff_smooth x₀ t₀ ρ R hρ hR)
     (by
       have hp' := (mem_parabolicCylinder.mp hp.1).2.2
@@ -392,19 +392,19 @@ theorem caccioppoli_cutoff_spatial_partial_abs_on_annulus
   have hCρ : 0 ≤ cutoffGradientConstant / ρ := div_nonneg hC hρ.le
   rw [hht]
   calc
-    |spatialPartial (caccioppoli_cutoff x₀ t₀ ρ R hρ hR) i z *
+    |spatialPartial (caccioppoliCutoff x₀ t₀ ρ R hρ hR) i z *
           backwardHeatTestFunction r (z.1 - x₀) (z.2 - t₀) +
-        caccioppoli_cutoff x₀ t₀ ρ R hρ hR z *
+        caccioppoliCutoff x₀ t₀ ρ R hρ hR z *
           (r ^ 2 * heatKernelSpaceDerivative (z.1 - x₀)
             (r ^ 2 - (z.2 - t₀)) i)| ≤
-      |spatialPartial (caccioppoli_cutoff x₀ t₀ ρ R hρ hR) i z *
+      |spatialPartial (caccioppoliCutoff x₀ t₀ ρ R hρ hR) i z *
           backwardHeatTestFunction r (z.1 - x₀) (z.2 - t₀)| +
-        |caccioppoli_cutoff x₀ t₀ ρ R hρ hR z *
+        |caccioppoliCutoff x₀ t₀ ρ R hρ hR z *
           (r ^ 2 * heatKernelSpaceDerivative (z.1 - x₀)
             (r ^ 2 - (z.2 - t₀)) i)| := abs_add_le _ _
-    _ = |spatialPartial (caccioppoli_cutoff x₀ t₀ ρ R hρ hR) i z| *
+    _ = |spatialPartial (caccioppoliCutoff x₀ t₀ ρ R hρ hR) i z| *
           backwardHeatTestFunction r (z.1 - x₀) (z.2 - t₀) +
-        caccioppoli_cutoff x₀ t₀ ρ R hρ hR z *
+        caccioppoliCutoff x₀ t₀ ρ R hρ hR z *
           |r ^ 2 * heatKernelSpaceDerivative (z.1 - x₀)
             (r ^ 2 - (z.2 - t₀)) i| := by
       rw [abs_mul, abs_mul, abs_of_nonneg hΓ0, abs_of_nonneg hη0]

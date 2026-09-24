@@ -70,8 +70,8 @@ private theorem memLp_mul_cutoff_le
     exact (hηMeas.aestronglyMeasurable.mul hf.aestronglyMeasurable)
   have hmul : MemLp (fun x => η x * f x) p (volume.restrict U) := by
     apply MemLp.of_le_mul hf hmeas
-    filter_upwards [] with x
-    rw [norm_mul]
+    on_goal 1 => filter_upwards [] with x
+    on_goal 1 => rw [norm_mul]
     exact mul_le_mul_of_nonneg_right (hη x) (norm_nonneg (f x))
   have hglob : MemLp (U.indicator (fun x => η x * f x)) p volume :=
     (memLp_indicator_iff_restrict hU).2 hmul
@@ -148,7 +148,7 @@ private theorem eLpNorm_interpolate_three_h1
     simpa [w, Function.comp_def] using
       ((Real.continuous_rpow_const (q := (1 / 2 : ℝ)) (by norm_num)).aemeasurable.comp_aemeasurable
         hu.aemeasurable.norm).aestronglyMeasurable
-  haveI : ENNReal.HolderTriple (4 : ℝ≥0∞) (12 : ℝ≥0∞) (3 : ℝ≥0∞) :=
+  have : ENNReal.HolderTriple (4 : ℝ≥0∞) (12 : ℝ≥0∞) (3 : ℝ≥0∞) :=
     ⟨by
       have h : (4 : NNReal)⁻¹ + (12 : NNReal)⁻¹ = (3 : NNReal)⁻¹ := by norm_num
       change (((4 : NNReal) : ENNReal)⁻¹ + ((12 : NNReal) : ENNReal)⁻¹ =
@@ -197,6 +197,351 @@ private theorem eLpNorm_interpolate_three_h1
   rw [hprod, hpow2, hpow6] at hholder
   rw [eLpNorm_norm u hu] at hholder
   exact hholder
+private lemma h1_global_sobolev_bound_hGbound_1 :
+    ∀ {x₀ : Vec (3 : ℕ)} {r : ℝ},
+      (0 : ℝ) < r →
+        ∀ (u : H1Function (euclideanBall x₀ ((2 : ℝ) * r))),
+          let U : Set (Vec (3 : ℕ)) := euclideanBall x₀ ((2 : ℝ) * r);
+          let η : Vec (3 : ℕ) → ℝ := canonicalBallCutoff x₀ r ((2 : ℝ) * r);
+          let G : Vec (3 : ℕ) → Vec (3 : ℕ) := fun (x : Vec (3 : ℕ)) =>
+            η x • u.grad (U := euclideanBall x₀ ((2 : ℝ) * r)) x +
+              u.toFun (U := euclideanBall x₀ ((2 : ℝ) * r)) x • classicalGradient η x;
+          MeasurableSet U →
+            Measurable η →
+              tsupport η ⊆ U →
+                (∀ (x : Vec (3 : ℕ)), ‖η x‖ ≤ (1 : ℝ)) →
+                  (∀ (x : Vec (3 : ℕ)), ‖classicalGradient η x‖ ≤ (32 : ℝ) / r) →
+                    (∀ (i : Fin (3 : ℕ)),
+                        Measurable (β := ℝ) fun (x : Vec (3 : ℕ)) => classicalGradient η x i) →
+                      (∀ (i : Fin (3 : ℕ)),
+                          (tsupport (α := ℝ) fun (x : Vec (3 : ℕ)) => classicalGradient η x i) ⊆
+                            U) →
+                        (∀ (i : Fin (3 : ℕ)) (x : Vec (3 : ℕ)),
+                            ‖classicalGradient η x i‖ ≤ (32 : ℝ) / r) →
+                          @eLpNorm _ _ _ _ MeasureSpace.toMeasurableSpace G (2 : ℝ≥0∞) volume ≤
+                            weakGradientLpNormOn (2 : ℝ≥0∞) U
+                                (u.grad (U := euclideanBall x₀ ((2 : ℝ) * r))) +
+                              (↑((32 : ℝ) / r).toNNReal : ℝ≥0∞) *
+                                lpNormOn (2 : ℝ≥0∞) U
+                                  (u.toFun (U := euclideanBall x₀ ((2 : ℝ) * r)))
+    := by
+  intro x₀ r hr u U η G hUmeas hηMeas hηU hηBound hgradη hgradηMeas hgradηSupport hgradηBound
+  let A : Vec 3 → Vec 3 := fun x => η x • u.grad x
+  let B : Vec 3 → Vec 3 := fun x => u.toFun x • classicalGradient η x
+  have hA_i (i : Fin 3) : MemLp (fun x => A x i) 2 volume := by
+    simpa [A, Pi.smul_apply, smul_eq_mul] using
+      (memLp_mul_cutoff_le hUmeas (u.grad_memL2 i) hηMeas hηU hηBound)
+  have hB_i (i : Fin 3) : MemLp (fun x => B x i) 2 volume := by
+    simpa [B, Pi.smul_apply, smul_eq_mul, mul_comm] using
+      (memLp_mul_cutoff_le hUmeas u.memL2 (hgradηMeas i) (hgradηSupport i)
+        (hgradηBound i))
+  have hA : MemLp A 2 volume := (memLp_pi_iff).2 hA_i
+  have hB : MemLp B 2 volume := (memLp_pi_iff).2 hB_i
+  have hA_bound : eLpNorm A 2 volume ≤ eLpNorm (U.indicator u.grad) 2 volume := by
+    apply eLpNorm_mono_ae hA.aestronglyMeasurable
+    filter_upwards [] with x
+    by_cases hx : x ∈ U
+    · simp only [Set.indicator_of_mem hx]
+      rw [norm_smul]
+      simpa only [one_mul] using
+        (mul_le_mul_of_nonneg_right (hηBound x) (norm_nonneg (u.grad x)))
+    · have hη0 : η x = 0 := image_eq_zero_of_notMem_tsupport (fun hxt => hx (hηU hxt))
+      simp [A, hη0]
+  have hB_bound : eLpNorm B 2 volume ≤
+      (Real.toNNReal (32 / r) : ℝ≥0∞) • eLpNorm (U.indicator u.toFun) 2 volume := by
+    refine eLpNorm_le_nnreal_smul_eLpNorm_of_ae_le_mul' hB.aestronglyMeasurable ?_ 2
+    filter_upwards [] with x
+    by_cases hx : x ∈ U
+    · simp only [Set.indicator_of_mem hx]
+      simp only [enorm_eq_nnnorm]
+      rw [← ENNReal.coe_mul]
+      have hpoint : ‖B x‖₊ ≤
+        Real.toNNReal (32 / r) * ‖u.toFun x‖₊ := by
+        rw [nnnorm_smul]
+        have hgradη' : ‖classicalGradient η x‖₊ ≤ Real.toNNReal (32 / r) := by
+          rw [← NNReal.coe_le_coe]
+          have hscale : (Real.toNNReal (32 / r) : ℝ) = 32 / r := by
+            exact Real.coe_toNNReal (32 / r) (by positivity)
+          simpa [hscale] using hgradη x
+        calc
+          ‖u.toFun x‖₊ * ‖classicalGradient η x‖₊ ≤
+              ‖u.toFun x‖₊ * Real.toNNReal (32 / r) :=
+            mul_le_mul_of_nonneg_left hgradη' bot_le
+          _ = Real.toNNReal (32 / r) * ‖u.toFun x‖₊ := by ac_rfl
+      exact_mod_cast hpoint
+    · have hη0 : η x = 0 := image_eq_zero_of_notMem_tsupport (fun hxt => hx (hηU hxt))
+      have hgradη0 : classicalGradient η x = 0 := by
+        funext i
+        rw [classicalGradient_apply, fderiv_of_notMem_tsupport ℝ
+          (fun hxt => hx (hηU hxt))]
+        simp
+      simp [B, hgradη0, hx]
+  have houterIndicatorG : eLpNorm (U.indicator u.grad) 2 volume =
+      weakGradientLpNormOn 2 U u.grad := by
+    rw [eLpNorm_indicator_eq_eLpNorm_restrict hUmeas]
+    rfl
+  have houterIndicatorU : eLpNorm (U.indicator u.toFun) 2 volume = lpNormOn 2 U u.toFun := by
+    rw [eLpNorm_indicator_eq_eLpNorm_restrict hUmeas]
+    rfl
+  rw [show G = A + B by rfl]
+  calc
+    eLpNorm (A + B) 2 volume ≤ eLpNorm A 2 volume + eLpNorm B 2 volume :=
+      eLpNorm_add_le (by norm_num)
+    _ ≤ eLpNorm (U.indicator u.grad) 2 volume +
+        (Real.toNNReal (32 / r) : ℝ≥0∞) • eLpNorm (U.indicator u.toFun) 2 volume :=
+      add_le_add hA_bound hB_bound
+    _ = weakGradientLpNormOn 2 U u.grad +
+        (Real.toNNReal (32 / r) : ℝ≥0∞) * lpNormOn 2 U u.toFun := by
+      rw [houterIndicatorG, houterIndicatorU]
+      simp [smul_eq_mul]
+
+private lemma h1_global_sobolev_bound_hDmemVec_2 :
+    ∀ {x₀ : Vec (3 : ℕ)} {r : ℝ} (u : H1Function (euclideanBall x₀ ((2 : ℝ) * r))),
+      let η : Vec (3 : ℕ) → ℝ := canonicalBallCutoff x₀ r ((2 : ℝ) * r);
+      let v : Vec (3 : ℕ) → ℝ := fun (x : Vec (3 : ℕ)) =>
+        η x * u.toFun (U := euclideanBall x₀ ((2 : ℝ) * r)) x;
+      let G : Vec (3 : ℕ) → Vec (3 : ℕ) := fun (x : Vec (3 : ℕ)) =>
+        η x • u.grad (U := euclideanBall x₀ ((2 : ℝ) * r)) x +
+          u.toFun (U := euclideanBall x₀ ((2 : ℝ) * r)) x • classicalGradient η x;
+      MemLp (m0 := MeasureSpace.toMeasurableSpace) G (2 : ℝ≥0∞) volume →
+        let ε : ℕ → ℝ := fun (n : ℕ) => (1 : ℝ) / ((↑n : ℝ) + (1 : ℝ));
+        ∀ (hεpos : ∀ (n : ℕ), (0 : ℝ) < ε n),
+          (∀ (i : Fin (3 : ℕ)),
+              Tendsto
+                (fun (n : ℕ) =>
+                  @eLpNorm _ ℝ _ _ MeasureSpace.toMeasurableSpace
+                    (fun (x : Vec (3 : ℕ)) =>
+                      mollify (fun (x : Vec (3 : ℕ)) => G x i) (ε n) (hεpos n) x - G x i)
+                    (2 : ℝ≥0∞) volume)
+                atTop (nhds (0 : ℝ≥0∞))) →
+            let D : ℕ → Vec (3 : ℕ) → Vec (3 : ℕ) := fun (n : ℕ) (x : Vec (3 : ℕ)) =>
+              classicalGradient (mollify v (ε n) (hεpos n)) x;
+            (∀ (n : ℕ) (i : Fin (3 : ℕ)),
+                Eq (α := Vec (3 : ℕ) → ℝ) (fun (x : Vec (3 : ℕ)) => D n x i)
+                  (mollify (fun (y : Vec (3 : ℕ)) => G y i) (ε n) (hεpos n))) →
+              (∀ (n : ℕ), MemLp (m0 := MeasureSpace.toMeasurableSpace) (D n) (2 : ℝ≥0∞) volume) →
+                Tendsto
+                  (fun (n : ℕ) =>
+                    @eLpNorm _ _ _ _ MeasureSpace.toMeasurableSpace (D n - G) (2 : ℝ≥0∞) volume)
+                  atTop (nhds (0 : ℝ≥0∞))
+    := by
+  intro x₀ r u η v G hG ε hεpos hGApprox D hD_i hDmemVec
+  have hle : ∀ n, eLpNorm (D n - G) 2 volume ≤
+      ∑ i : Fin 3, eLpNorm (fun x => mollify (fun y => G y i)
+        (ε n) (hεpos n) x - G x i) 2 volume := by
+    intro n
+    have hmeas : AEStronglyMeasurable (D n - G) volume :=
+      (hDmemVec n).sub hG |>.aestronglyMeasurable
+    calc
+      eLpNorm (D n - G) 2 volume ≤
+          ∑ i : Fin 3, eLpNorm (fun x => (D n - G) x i) 2 volume :=
+        eLpNorm_pi_le_sum hmeas
+      _ = _ := by
+        congr 1
+        funext i
+        apply eLpNorm_congr_ae
+        filter_upwards [] with x
+        simp only [Pi.sub_apply]
+        rw [show D n x i = mollify (fun y => G y i) (ε n) (hεpos n) x by
+          exact congrFun (hD_i n i) x]
+  have hsum : Tendsto (fun n => ∑ i : Fin 3, eLpNorm (fun x => mollify
+      (fun y => G y i) (ε n) (hεpos n) x - G x i) 2 volume) atTop (nhds 0) := by
+    apply tendsto_sum_zero_of_fin_three
+    intro i
+    exact hGApprox i
+  exact tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds hsum
+    (Eventually.of_forall fun _ => zero_le) (Eventually.of_forall hle)
+
+private lemma h1_global_sobolev_bound_hvBound_3 :
+    ∀ {x₀ : Vec (3 : ℕ)} {r : ℝ} (u : H1Function (euclideanBall x₀ ((2 : ℝ) * r))),
+      let U : Set (Vec (3 : ℕ)) := euclideanBall x₀ ((2 : ℝ) * r);
+      let η : Vec (3 : ℕ) → ℝ := canonicalBallCutoff x₀ r ((2 : ℝ) * r);
+      let v : Vec (3 : ℕ) → ℝ := fun (x : Vec (3 : ℕ)) =>
+        η x * u.toFun (U := euclideanBall x₀ ((2 : ℝ) * r)) x;
+      MeasurableSet U →
+        tsupport η ⊆ U →
+          (∀ (x : Vec (3 : ℕ)), ‖η x‖ ≤ (1 : ℝ)) →
+            MemLp (m0 := MeasureSpace.toMeasurableSpace) v (2 : ℝ≥0∞) volume →
+              @eLpNorm _ _ _ _ MeasureSpace.toMeasurableSpace v (2 : ℝ≥0∞) volume ≤
+                lpNormOn (2 : ℝ≥0∞) U (u.toFun (U := euclideanBall x₀ ((2 : ℝ) * r)))
+    := by
+  intro x₀ r u U η v hUmeas hηU hηBound hv
+  calc
+    eLpNorm v 2 volume ≤ eLpNorm (U.indicator u.toFun) 2 volume := by
+      apply eLpNorm_mono_ae hv.aestronglyMeasurable
+      filter_upwards [] with x
+      by_cases hx : x ∈ U
+      · simp only [Set.indicator_of_mem hx]
+        rw [norm_mul]
+        simpa only [one_mul] using
+          (mul_le_mul_of_nonneg_right (hηBound x) (norm_nonneg (u.toFun x)))
+      · have hη0 : η x = 0 := image_eq_zero_of_notMem_tsupport
+          (fun hxt => hx (hηU hxt))
+        simp [v, hη0]
+    _ = lpNormOn 2 U u.toFun := by
+      rw [eLpNorm_indicator_eq_eLpNorm_restrict hUmeas]
+      rfl
+
+private lemma h1_global_sobolev_bound_hboundEventually_4 :
+    ∀ {x₀ : Vec (3 : ℕ)} {r : ℝ} (u : H1Function (euclideanBall x₀ ((2 : ℝ) * r))),
+      let U : Set (Vec (3 : ℕ)) := euclideanBall x₀ ((2 : ℝ) * r);
+      let inner : Set (Vec (3 : ℕ)) := euclideanBall x₀ r;
+      let η : Vec (3 : ℕ) → ℝ := canonicalBallCutoff x₀ r ((2 : ℝ) * r);
+      let v : Vec (3 : ℕ) → ℝ := fun (x : Vec (3 : ℕ)) =>
+        η x * u.toFun (U := euclideanBall x₀ ((2 : ℝ) * r)) x;
+      let G : Vec (3 : ℕ) → Vec (3 : ℕ) := fun (x : Vec (3 : ℕ)) =>
+        η x • u.grad (U := euclideanBall x₀ ((2 : ℝ) * r)) x +
+          u.toFun (U := euclideanBall x₀ ((2 : ℝ) * r)) x • classicalGradient η x;
+      HasCompactSupport v →
+        MemLp (m0 := MeasureSpace.toMeasurableSpace) v (2 : ℝ≥0∞) volume →
+          let ε : ℕ → ℝ := fun (n : ℕ) => (1 : ℝ) / ((↑n : ℝ) + (1 : ℝ));
+          ∀ (hεpos : ∀ (n : ℕ), (0 : ℝ) < ε n),
+            let D : ℕ → Vec (3 : ℕ) → Vec (3 : ℕ) := fun (n : ℕ) (x : Vec (3 : ℕ)) =>
+              classicalGradient (mollify v (ε n) (hεpos n)) x;
+            Tendsto
+                (fun (n : ℕ) =>
+                  @eLpNorm _ _ _ _ MeasureSpace.toMeasurableSpace (D n - G) (2 : ℝ≥0∞) volume)
+                atTop (nhds (0 : ℝ≥0∞)) →
+              ∀ (ns : ℕ → ℕ),
+                StrictMono ns →
+                  let A : ℝ≥0∞ :=
+                    weakGradientLpNormOn (2 : ℝ≥0∞) U
+                        (u.grad (U := euclideanBall x₀ ((2 : ℝ) * r))) +
+                      (↑((32 : ℝ) / r).toNNReal : ℝ≥0∞) *
+                        lpNormOn (2 : ℝ≥0∞) U (u.toFun (U := euclideanBall x₀ ((2 : ℝ) * r)));
+                  (∀ (n : ℕ),
+                      @eLpNorm _ _ _ _ MeasureSpace.toMeasurableSpace (D n) (2 : ℝ≥0∞) volume ≤
+                        A +
+                          @eLpNorm _ _ _ _ MeasureSpace.toMeasurableSpace (D n - G) (2 : ℝ≥0∞)
+                            volume) →
+                    ∀ (δ : ℝ≥0∞),
+                      δ ≠ ∞ →
+                        (0 : ℝ≥0∞) < δ →
+                          ∀ᶠ (k : ℕ) in atTop,
+                            @eLpNorm _ _ _ _ MeasureSpace.toMeasurableSpace
+                                (mollify v (ε (ns k)) (hεpos (ns k))) (6 : ℝ≥0∞)
+                                (Measure.restrict volume inner) ≤
+                              localSobolevConstant * (A + δ)
+    := by
+  intro x₀ r u U inner η v G hvSupport hv ε hεpos D hDerr ns hns_mono A hDnBound δ hδtop hδpos
+  have hgradSmall : ∀ᶠ k in atTop, eLpNorm (D (ns k) - G) 2 volume ≤ δ :=
+    (ENNReal.tendsto_nhds_zero.1 (hDerr.comp (hns_mono.tendsto_atTop)) δ hδpos)
+  filter_upwards [hgradSmall] with k hgrad
+  let m : Vec 3 → ℝ := mollify v (ε (ns k)) (hεpos (ns k))
+  have hm : ContDiff ℝ 1 m := by
+    exact mollify_contDiff (hεpos (ns k))
+      (hv.locallyIntegrable (by norm_num)) (n := 1)
+  have hmSupport : HasCompactSupport m := by
+    change HasCompactSupport
+      (mollifier (ε (ns k)) (hεpos (ns k)) ⋆[
+        ContinuousLinearMap.lsmul ℝ ℝ, volume] v)
+    exact (mollifier_hasCompactSupport (hεpos (ns k))).convolution
+      (ContinuousLinearMap.lsmul ℝ ℝ) hvSupport
+  have hglobal : eLpNorm m 6 volume ≤
+      (SNormLESNormFDerivOfEqConst (E := Vec 3) ℝ (volume : Measure (Vec 3))
+        (2 : ℝ) : ℝ≥0∞) * eLpNorm (fderiv ℝ m) 2 volume := by
+    simpa using
+      (MeasureTheory.eLpNorm_le_eLpNorm_fderiv_of_eq
+        (volume : Measure (Vec 3)) hm hmSupport
+        (by norm_num : (1 : NNReal) ≤ 2)
+        (by norm_num : 0 < Module.finrank ℝ (Vec 3))
+        (by norm_num : ((6 : NNReal) : ℝ)⁻¹ =
+          ((2 : NNReal) : ℝ)⁻¹ - ((Module.finrank ℝ (Vec 3) : ℝ)⁻¹)))
+  have hderivBound : eLpNorm (fderiv ℝ m) 2 volume ≤
+      (3 : NNReal) • eLpNorm (D (ns k)) 2 volume := by
+    refine eLpNorm_le_nnreal_smul_eLpNorm_of_ae_le_mul'
+      (hm.continuous_fderiv (by norm_num)).aestronglyMeasurable ?_ 2
+    exact Filter.Eventually.of_forall (fun x => by
+      simp only [enorm_eq_nnnorm]
+      rw [← ENNReal.coe_mul]
+      have hpoint : ‖fderiv ℝ m x‖₊ ≤
+          (3 : NNReal) * ‖D (ns k) x‖₊ := by
+        exact_mod_cast fderiv_norm_le_three_classicalGradient_h1 x
+      exact_mod_cast hpoint)
+  change eLpNorm m 6 (volume.restrict inner) ≤ _
+  change eLpNorm (mollify v (ε (ns k)) (hεpos (ns k))) 6
+      (volume.restrict inner) ≤ _
+  calc
+    eLpNorm m 6 (volume.restrict inner) ≤ eLpNorm m 6 volume :=
+      eLpNorm_mono_measure _ Measure.restrict_le_self
+    _ ≤ (SNormLESNormFDerivOfEqConst (E := Vec 3) ℝ
+        (volume : Measure (Vec 3)) (2 : ℝ) : ℝ≥0∞) *
+        eLpNorm (fderiv ℝ m) 2 volume := hglobal
+    _ ≤ (SNormLESNormFDerivOfEqConst (E := Vec 3) ℝ
+        (volume : Measure (Vec 3)) (2 : ℝ) : ℝ≥0∞) *
+        ((3 : NNReal) • eLpNorm (D (ns k)) 2 volume) := by
+      gcongr
+    _ = localSobolevConstant * eLpNorm (D (ns k)) 2 volume := by
+      rw [localSobolevConstant]
+      simp [ENNReal.smul_def, smul_eq_mul]
+      ring
+    _ ≤ localSobolevConstant * (A + δ) := by
+      gcongr
+      exact (hDnBound (ns k)).trans (add_le_add_right hgrad A)
+
+private lemma h1_global_sobolev_bound_hfinal_5 :
+    ∀ {x₀ : Vec (3 : ℕ)} {r : ℝ} (u : H1Function (euclideanBall x₀ ((2 : ℝ) * r))),
+      let U : Set (Vec (3 : ℕ)) := euclideanBall x₀ ((2 : ℝ) * r);
+      let inner : Set (Vec (3 : ℕ)) := euclideanBall x₀ r;
+      let η : Vec (3 : ℕ) → ℝ := canonicalBallCutoff x₀ r ((2 : ℝ) * r);
+      let v : Vec (3 : ℕ) → ℝ := fun (x : Vec (3 : ℕ)) =>
+        η x * u.toFun (U := euclideanBall x₀ ((2 : ℝ) * r)) x;
+      let ε : ℕ → ℝ := fun (n : ℕ) => (1 : ℝ) / ((↑n : ℝ) + (1 : ℝ));
+      ∀ (hεpos : ∀ (n : ℕ), (0 : ℝ) < ε n) (ns : ℕ → ℕ),
+        lpNormOn (6 : ℝ≥0∞) inner (u.toFun (U := euclideanBall x₀ ((2 : ℝ) * r))) ≤
+            liminf
+              (fun (k : ℕ) =>
+                @eLpNorm _ _ _ _ MeasureSpace.toMeasurableSpace
+                  (mollify v (ε (ns k)) (hεpos (ns k))) (6 : ℝ≥0∞) (Measure.restrict volume inner))
+              atTop →
+          let A : ℝ≥0∞ :=
+            weakGradientLpNormOn (2 : ℝ≥0∞) U (u.grad (U := euclideanBall x₀ ((2 : ℝ) * r))) +
+              (↑((32 : ℝ) / r).toNNReal : ℝ≥0∞) *
+                lpNormOn (2 : ℝ≥0∞) U (u.toFun (U := euclideanBall x₀ ((2 : ℝ) * r)));
+          (∀ (δ : ℝ≥0∞),
+              δ ≠ ∞ →
+                (0 : ℝ≥0∞) < δ →
+                  ∀ᶠ (k : ℕ) in atTop,
+                    @eLpNorm _ _ _ _ MeasureSpace.toMeasurableSpace
+                        (mollify v (ε (ns k)) (hεpos (ns k))) (6 : ℝ≥0∞)
+                        (Measure.restrict volume inner) ≤
+                      localSobolevConstant * (A + δ)) →
+            lpNormOn (6 : ℝ≥0∞) inner (u.toFun (U := euclideanBall x₀ ((2 : ℝ) * r))) ≤
+              localSobolevConstant * A
+    := by
+  intro x₀ r u U inner η v ε hεpos ns hliminf A hboundEventually
+  apply ENNReal.le_of_forall_pos_le_add
+  intro δ hδ _
+  have hCtop : localSobolevConstant ≠ ∞ := by
+    unfold localSobolevConstant
+    finiteness
+  have hqtop : localSobolevConstant + 1 ≠ ∞ :=
+    ENNReal.add_ne_top.mpr ⟨hCtop, ENNReal.one_ne_top⟩
+  have hδ' : δ / (localSobolevConstant + 1) ≠ ∞ := by
+    exact ENNReal.div_ne_top (by finiteness) (by positivity)
+  have hδpos : 0 < δ / (localSobolevConstant + 1) := by
+    exact ENNReal.div_pos (by exact_mod_cast hδ.ne') (by finiteness)
+  have hlim := hboundEventually (δ / (localSobolevConstant + 1)) hδ' hδpos
+  have hle : atTop.liminf (fun k => eLpNorm (mollify v (ε (ns k))
+      (hεpos (ns k))) 6 (volume.restrict inner)) ≤
+      localSobolevConstant * (A + δ / (localSobolevConstant + 1)) := by
+    exact liminf_le_of_frequently_le' hlim.frequently
+  refine hliminf.trans (hle.trans ?_)
+  calc
+    localSobolevConstant * (A + δ / (localSobolevConstant + 1)) =
+        localSobolevConstant * A +
+          localSobolevConstant * (δ / (localSobolevConstant + 1)) := by
+      rw [mul_add]
+    _ ≤ localSobolevConstant * A + δ := by
+      apply add_le_add_right
+      calc
+        localSobolevConstant * (δ / (localSobolevConstant + 1)) ≤
+            (localSobolevConstant + 1) * (δ / (localSobolevConstant + 1)) := by
+          exact mul_le_mul_of_nonneg_right
+            (le_add_of_nonneg_right (by norm_num)) (by positivity)
+        _ = δ := by
+          exact ENNReal.mul_div_cancel (by positivity) (by finiteness)
+
 private theorem h1_global_sobolev_bound
     {x₀ : Vec 3} {r : ℝ} (hr : 0 < r)
     (u : H1Function (euclideanBall x₀ (2 * r))) :
@@ -277,78 +622,8 @@ private theorem h1_global_sobolev_bound
     intro i
     exact memLpOn_mono subset_rfl (u.grad_memL2 i)
   have huOuter : MemLp u.toFun 2 (volume.restrict U) := u.memL2
-  have hGbound :
-      eLpNorm G 2 volume ≤
-        weakGradientLpNormOn 2 U u.grad +
-          (Real.toNNReal (32 / r) : ℝ≥0∞) * lpNormOn 2 U u.toFun := by
-    let A : Vec 3 → Vec 3 := fun x => η x • u.grad x
-    let B : Vec 3 → Vec 3 := fun x => u.toFun x • classicalGradient η x
-    have hA_i (i : Fin 3) : MemLp (fun x => A x i) 2 volume := by
-      simpa [A, Pi.smul_apply, smul_eq_mul] using
-        (memLp_mul_cutoff_le hUmeas (u.grad_memL2 i) hηMeas hηU hηBound)
-    have hB_i (i : Fin 3) : MemLp (fun x => B x i) 2 volume := by
-      simpa [B, Pi.smul_apply, smul_eq_mul, mul_comm] using
-        (memLp_mul_cutoff_le hUmeas u.memL2 (hgradηMeas i) (hgradηSupport i)
-          (hgradηBound i))
-    have hA : MemLp A 2 volume := (memLp_pi_iff).2 hA_i
-    have hB : MemLp B 2 volume := (memLp_pi_iff).2 hB_i
-    have hA_bound : eLpNorm A 2 volume ≤ eLpNorm (U.indicator u.grad) 2 volume := by
-      apply eLpNorm_mono_ae hA.aestronglyMeasurable
-      filter_upwards [] with x
-      by_cases hx : x ∈ U
-      · simp only [Set.indicator_of_mem hx]
-        rw [norm_smul]
-        simpa only [one_mul] using
-          (mul_le_mul_of_nonneg_right (hηBound x) (norm_nonneg (u.grad x)))
-      · have hη0 : η x = 0 := image_eq_zero_of_notMem_tsupport (fun hxt => hx (hηU hxt))
-        simp [A, hη0]
-    have hB_bound : eLpNorm B 2 volume ≤
-        (Real.toNNReal (32 / r) : ℝ≥0∞) • eLpNorm (U.indicator u.toFun) 2 volume := by
-      refine eLpNorm_le_nnreal_smul_eLpNorm_of_ae_le_mul' hB.aestronglyMeasurable ?_ 2
-      filter_upwards [] with x
-      by_cases hx : x ∈ U
-      · simp only [Set.indicator_of_mem hx]
-        simp only [enorm_eq_nnnorm]
-        rw [← ENNReal.coe_mul]
-        have hpoint : ‖B x‖₊ ≤
-          Real.toNNReal (32 / r) * ‖u.toFun x‖₊ := by
-          rw [nnnorm_smul]
-          have hgradη' : ‖classicalGradient η x‖₊ ≤ Real.toNNReal (32 / r) := by
-            rw [← NNReal.coe_le_coe]
-            have hscale : (Real.toNNReal (32 / r) : ℝ) = 32 / r := by
-              exact Real.coe_toNNReal (32 / r) (by positivity)
-            simpa [hscale] using hgradη x
-          calc
-            ‖u.toFun x‖₊ * ‖classicalGradient η x‖₊ ≤
-                ‖u.toFun x‖₊ * Real.toNNReal (32 / r) :=
-              mul_le_mul_of_nonneg_left hgradη' bot_le
-            _ = Real.toNNReal (32 / r) * ‖u.toFun x‖₊ := by ac_rfl
-        exact_mod_cast hpoint
-      · have hη0 : η x = 0 := image_eq_zero_of_notMem_tsupport (fun hxt => hx (hηU hxt))
-        have hgradη0 : classicalGradient η x = 0 := by
-          funext i
-          rw [classicalGradient_apply, fderiv_of_notMem_tsupport ℝ
-            (fun hxt => hx (hηU hxt))]
-          simp
-        simp [B, hgradη0, hx]
-    have houterIndicatorG : eLpNorm (U.indicator u.grad) 2 volume =
-        weakGradientLpNormOn 2 U u.grad := by
-      rw [eLpNorm_indicator_eq_eLpNorm_restrict hUmeas]
-      rfl
-    have houterIndicatorU : eLpNorm (U.indicator u.toFun) 2 volume = lpNormOn 2 U u.toFun := by
-      rw [eLpNorm_indicator_eq_eLpNorm_restrict hUmeas]
-      rfl
-    rw [show G = A + B by rfl]
-    calc
-      eLpNorm (A + B) 2 volume ≤ eLpNorm A 2 volume + eLpNorm B 2 volume :=
-        eLpNorm_add_le (by norm_num)
-      _ ≤ eLpNorm (U.indicator u.grad) 2 volume +
-          (Real.toNNReal (32 / r) : ℝ≥0∞) • eLpNorm (U.indicator u.toFun) 2 volume :=
-        add_le_add hA_bound hB_bound
-      _ = weakGradientLpNormOn 2 U u.grad +
-          (Real.toNNReal (32 / r) : ℝ≥0∞) * lpNormOn 2 U u.toFun := by
-        rw [houterIndicatorG, houterIndicatorU]
-        simp [smul_eq_mul]
+  have hGbound := @h1_global_sobolev_bound_hGbound_1 x₀ r hr u hUmeas hηMeas hηU hηBound hgradη
+    hgradηMeas hgradηSupport hgradηBound
   let ε : ℕ → ℝ := fun n => 1 / ((n : ℝ) + 1)
   have hεpos : ∀ n, 0 < ε n := by
     intro n
@@ -385,32 +660,7 @@ private theorem h1_global_sobolev_bound
     rw [memLp_iff]
     simpa only [mollify] using hconv.trans_lt (hG_i i)
   have hDmemVec (n : ℕ) : MemLp (D n) 2 volume := (memLp_pi_iff).2 (hDmem n)
-  have hDerr : Tendsto (fun n => eLpNorm (D n - G) 2 volume) atTop (nhds 0) := by
-    have hle : ∀ n, eLpNorm (D n - G) 2 volume ≤
-        ∑ i : Fin 3, eLpNorm (fun x => mollify (fun y => G y i)
-          (ε n) (hεpos n) x - G x i) 2 volume := by
-      intro n
-      have hmeas : AEStronglyMeasurable (D n - G) volume :=
-        (hDmemVec n).sub hG |>.aestronglyMeasurable
-      calc
-        eLpNorm (D n - G) 2 volume ≤
-            ∑ i : Fin 3, eLpNorm (fun x => (D n - G) x i) 2 volume :=
-          eLpNorm_pi_le_sum hmeas
-        _ = _ := by
-          congr 1
-          funext i
-          apply eLpNorm_congr_ae
-          filter_upwards [] with x
-          simp only [Pi.sub_apply]
-          rw [show D n x i = mollify (fun y => G y i) (ε n) (hεpos n) x by
-            exact congrFun (hD_i n i) x]
-    have hsum : Tendsto (fun n => ∑ i : Fin 3, eLpNorm (fun x => mollify
-        (fun y => G y i) (ε n) (hεpos n) x - G x i) 2 volume) atTop (nhds 0) := by
-      apply tendsto_sum_zero_of_fin_three
-      intro i
-      exact hGApprox i
-    exact tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds hsum
-      (Eventually.of_forall fun _ => zero_le) (Eventually.of_forall hle)
+  have hDerr := @h1_global_sobolev_bound_hDmemVec_2 x₀ r u hG hεpos hGApprox hD_i hDmemVec
   obtain ⟨ns, hns_mono, hns_ae⟩ :=
     (tendstoInMeasure_of_tendsto_eLpNorm (μ := (volume : Measure (Vec 3)))
       (p := (2 : ENNReal)) (by norm_num) hvApprox).exists_seq_tendsto_ae
@@ -436,22 +686,7 @@ private theorem h1_global_sobolev_bound
       exact hx
   let A : ℝ≥0∞ := weakGradientLpNormOn 2 U u.grad +
     (Real.toNNReal (32 / r) : ℝ≥0∞) * lpNormOn 2 U u.toFun
-  have hvBound : eLpNorm v 2 volume ≤ lpNormOn 2 U u.toFun := by
-    calc
-      eLpNorm v 2 volume ≤ eLpNorm (U.indicator u.toFun) 2 volume := by
-        apply eLpNorm_mono_ae hv.aestronglyMeasurable
-        filter_upwards [] with x
-        by_cases hx : x ∈ U
-        · simp only [Set.indicator_of_mem hx]
-          rw [norm_mul]
-          simpa only [one_mul] using
-            (mul_le_mul_of_nonneg_right (hηBound x) (norm_nonneg (u.toFun x)))
-        · have hη0 : η x = 0 := image_eq_zero_of_notMem_tsupport
-            (fun hxt => hx (hηU hxt))
-          simp [v, hη0]
-      _ = lpNormOn 2 U u.toFun := by
-        rw [eLpNorm_indicator_eq_eLpNorm_restrict hUmeas]
-        rfl
+  have hvBound := @h1_global_sobolev_bound_hvBound_3 x₀ r u hUmeas hηU hηBound hv
   have hDnBound (n : ℕ) :
       eLpNorm (D n) 2 volume ≤ A + eLpNorm (D n - G) 2 volume := by
     calc
@@ -467,96 +702,9 @@ private theorem h1_global_sobolev_bound
           simpa [A] using hGbound
         exact add_le_add_right hGbound' _
       _ = A + eLpNorm (D n - G) 2 volume := by ac_rfl
-  have hboundEventually : ∀ δ : ℝ≥0∞, δ ≠ ∞ → 0 < δ →
-      ∀ᶠ k in atTop, eLpNorm (mollify v (ε (ns k)) (hεpos (ns k))) 6
-        (volume.restrict inner) ≤ localSobolevConstant * (A + δ) := by
-    intro δ hδtop hδpos
-    have hgradSmall : ∀ᶠ k in atTop, eLpNorm (D (ns k) - G) 2 volume ≤ δ :=
-      (ENNReal.tendsto_nhds_zero.1 (hDerr.comp (hns_mono.tendsto_atTop)) δ hδpos)
-    filter_upwards [hgradSmall] with k hgrad
-    let m : Vec 3 → ℝ := mollify v (ε (ns k)) (hεpos (ns k))
-    have hm : ContDiff ℝ 1 m := by
-      exact mollify_contDiff (hεpos (ns k))
-        (hv.locallyIntegrable (by norm_num)) (n := 1)
-    have hmSupport : HasCompactSupport m := by
-      change HasCompactSupport
-        (mollifier (ε (ns k)) (hεpos (ns k)) ⋆[
-          ContinuousLinearMap.lsmul ℝ ℝ, volume] v)
-      exact (mollifier_hasCompactSupport (hεpos (ns k))).convolution
-        (ContinuousLinearMap.lsmul ℝ ℝ) hvSupport
-    have hglobal : eLpNorm m 6 volume ≤
-        (SNormLESNormFDerivOfEqConst (E := Vec 3) ℝ (volume : Measure (Vec 3))
-          (2 : ℝ) : ℝ≥0∞) * eLpNorm (fderiv ℝ m) 2 volume := by
-      simpa using
-        (MeasureTheory.eLpNorm_le_eLpNorm_fderiv_of_eq
-          (volume : Measure (Vec 3)) hm hmSupport
-          (by norm_num : (1 : NNReal) ≤ 2)
-          (by norm_num : 0 < Module.finrank ℝ (Vec 3))
-          (by norm_num : ((6 : NNReal) : ℝ)⁻¹ =
-            ((2 : NNReal) : ℝ)⁻¹ - ((Module.finrank ℝ (Vec 3) : ℝ)⁻¹)))
-    have hderivBound : eLpNorm (fderiv ℝ m) 2 volume ≤
-        (3 : NNReal) • eLpNorm (D (ns k)) 2 volume := by
-      refine eLpNorm_le_nnreal_smul_eLpNorm_of_ae_le_mul'
-        (hm.continuous_fderiv (by norm_num)).aestronglyMeasurable ?_ 2
-      exact Filter.Eventually.of_forall (fun x => by
-        simp only [enorm_eq_nnnorm]
-        rw [← ENNReal.coe_mul]
-        have hpoint : ‖fderiv ℝ m x‖₊ ≤
-            (3 : NNReal) * ‖D (ns k) x‖₊ := by
-          exact_mod_cast fderiv_norm_le_three_classicalGradient_h1 x
-        exact_mod_cast hpoint)
-    change eLpNorm m 6 (volume.restrict inner) ≤ _
-    change eLpNorm (mollify v (ε (ns k)) (hεpos (ns k))) 6
-        (volume.restrict inner) ≤ _
-    calc
-      eLpNorm m 6 (volume.restrict inner) ≤ eLpNorm m 6 volume :=
-        eLpNorm_mono_measure _ Measure.restrict_le_self
-      _ ≤ (SNormLESNormFDerivOfEqConst (E := Vec 3) ℝ
-          (volume : Measure (Vec 3)) (2 : ℝ) : ℝ≥0∞) *
-          eLpNorm (fderiv ℝ m) 2 volume := hglobal
-      _ ≤ (SNormLESNormFDerivOfEqConst (E := Vec 3) ℝ
-          (volume : Measure (Vec 3)) (2 : ℝ) : ℝ≥0∞) *
-          ((3 : NNReal) • eLpNorm (D (ns k)) 2 volume) := by
-        gcongr
-      _ = localSobolevConstant * eLpNorm (D (ns k)) 2 volume := by
-        rw [localSobolevConstant]
-        simp [ENNReal.smul_def, smul_eq_mul]
-        ring
-      _ ≤ localSobolevConstant * (A + δ) := by
-        gcongr
-        exact (hDnBound (ns k)).trans (add_le_add_right hgrad A)
-  have hfinal : lpNormOn 6 inner u.toFun ≤ localSobolevConstant * A := by
-    apply ENNReal.le_of_forall_pos_le_add
-    intro δ hδ _
-    have hCtop : localSobolevConstant ≠ ∞ := by
-      unfold localSobolevConstant
-      finiteness
-    have hqtop : localSobolevConstant + 1 ≠ ∞ :=
-      ENNReal.add_ne_top.mpr ⟨hCtop, ENNReal.one_ne_top⟩
-    have hδ' : δ / (localSobolevConstant + 1) ≠ ∞ := by
-      exact ENNReal.div_ne_top (by finiteness) (by positivity)
-    have hδpos : 0 < δ / (localSobolevConstant + 1) := by
-      exact ENNReal.div_pos (by exact_mod_cast hδ.ne') (by finiteness)
-    have hlim := hboundEventually (δ / (localSobolevConstant + 1)) hδ' hδpos
-    have hle : atTop.liminf (fun k => eLpNorm (mollify v (ε (ns k))
-        (hεpos (ns k))) 6 (volume.restrict inner)) ≤
-        localSobolevConstant * (A + δ / (localSobolevConstant + 1)) := by
-      exact liminf_le_of_frequently_le' hlim.frequently
-    refine hliminf.trans (hle.trans ?_)
-    calc
-      localSobolevConstant * (A + δ / (localSobolevConstant + 1)) =
-          localSobolevConstant * A +
-            localSobolevConstant * (δ / (localSobolevConstant + 1)) := by
-        rw [mul_add]
-      _ ≤ localSobolevConstant * A + δ := by
-        apply add_le_add_right
-        calc
-          localSobolevConstant * (δ / (localSobolevConstant + 1)) ≤
-              (localSobolevConstant + 1) * (δ / (localSobolevConstant + 1)) := by
-            exact mul_le_mul_of_nonneg_right
-              (le_add_of_nonneg_right (by norm_num)) (by positivity)
-          _ = δ := by
-            exact ENNReal.mul_div_cancel (by positivity) (by finiteness)
+  have hboundEventually := @h1_global_sobolev_bound_hboundEventually_4 x₀ r u hvSupport hv hεpos
+    hDerr ns hns_mono hDnBound
+  have hfinal := @h1_global_sobolev_bound_hfinal_5 x₀ r u hεpos ns hliminf hboundEventually
   simpa [A, inner, U, weakGradientLpNormOn] using hfinal
 /-- Local `L⁶` Sobolev control for an `H¹` representative on concentric balls. -/
 theorem h1SobolevBall

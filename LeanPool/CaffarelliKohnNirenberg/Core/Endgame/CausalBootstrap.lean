@@ -97,7 +97,7 @@ theorem causal_bootstrap_morrey_le_of_local_representation
   have hcomp : (fun z => u z i) =ᵐ[volume.restrict (parabolicCylinder (0 : Vec3) 0 (5 / 8))]
       (fun z => duhamelPotential g h z i) := hlocal.fun_comp (fun v => v i)
   rw [morrey_norm_congr_ae ((ae_eq_restrict_iff_indicator_ae_eq hQ).mp hcomp)]
-  apply le_trans (morreyNorm_indicator_le (by norm_num) _ _) 
+  apply le_trans (morreyNorm_indicator_le (by norm_num) _ _)
   apply le_trans (morreyNorm_mono (by norm_num) ?_) hbound
   intro z
   rw [abs_of_nonneg (vec3EuclideanNorm_nonneg _)]

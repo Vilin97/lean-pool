@@ -36,16 +36,20 @@ namespace CKN.Foundation.Euclidean
 
 open CKN.Foundation.Parabolic
 
+/-- Explicit strong-type coefficient for the Euclidean maximal operator. -/
 def maximalStrongConstant (p : ℝ) : ℝ≥0∞ :=
   (2 : ℝ≥0∞) ^ p * ENNReal.ofReal (5 ^ 3) * ENNReal.ofReal p /
     ENNReal.ofReal (p - 1)
 
+/-- Metric-ball family used in the maximal operator's strong-type estimate. -/
 abbrev strongTypeMetricBall (z : Vec3) (r : ℝ) : Set Vec3 :=
   Metric.ball z r
 
+/-- Part of an extended nonnegative function strictly above a truncation level. -/
 def highPart (f : Vec3 → ℝ≥0∞) (a : ℝ≥0∞) :
     Vec3 → ℝ≥0∞ := {z | a < f z}.indicator f
 
+/-- Part of an extended nonnegative function at or below a truncation level. -/
 def lowPart (f : Vec3 → ℝ≥0∞) (a : ℝ≥0∞) :
     Vec3 → ℝ≥0∞ := {z | f z ≤ a}.indicator f
 
@@ -172,9 +176,11 @@ private lemma maximalFunction_high_tail
       congr 1
       exact lintegral_indicator (measurableSet_Ioi.preimage hf) f
 
+/-- The weight `t ^ (p - 2)` on positive inputs, extended by zero elsewhere. -/
 def positiveRpow (p t : ℝ) : ℝ :=
   if 0 < t then Real.exp ((p - 2) * Real.log t) else 0
 
+/-- Weighted upper-tail integrand in the strong-type maximal-function estimate. -/
 def weightedTailIntegrand (f : Vec3 → ℝ≥0∞) (p : ℝ)
     (t : ℝ) (z : Vec3) : ℝ≥0∞ :=
   ENNReal.ofReal (positiveRpow p t) *

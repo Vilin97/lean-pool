@@ -108,7 +108,7 @@ theorem heat_kernel_mul_compact_integrable {g : Vec3 → ℝ} {y : Vec3}
               _ = C * heatKernel (p.2-y) p.1 := by ring
           _ = _ := by ring
       · have hz : g p.2 = 0 := image_eq_zero_of_notMem_tsupport hp
-        simp [F, hz]
+        simp only [hz, mul_zero, norm_zero, ge_iff_le, F]
         exact mul_nonneg hC0 (heatKernel_nonneg _ _)
     simpa only [Measure.restrict_univ] using hi
   have ht2 : Integrable (fun t : ℝ => t ^ (-(3 : ℝ) / 2))
@@ -281,7 +281,7 @@ theorem heat_derivative_mul_compact_integrable {g : Vec3 → ℝ} {y : Vec3}
               (by unfold heatKernelGradientNorm; positivity)
           _ = C * heatKernelGradientNorm (p.2-y) p.1 := by ring
       · have hz : g p.2 = 0 := image_eq_zero_of_notMem_tsupport hp
-        simp [F, hz]
+        simp only [hz, mul_zero, norm_zero, ge_iff_le, F]
         exact mul_nonneg hC0 (by unfold heatKernelGradientNorm; positivity)
     simpa only [Measure.restrict_univ] using hi
   have ht2 : Integrable (fun t : ℝ => t ^ (-2 : ℝ))

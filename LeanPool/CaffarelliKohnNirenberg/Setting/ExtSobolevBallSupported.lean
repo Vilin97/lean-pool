@@ -116,7 +116,8 @@ theorem extSobolevBall_timeTenThirds
         lpNormOn (ENNReal.ofReal (10 / 3 : ℝ)) (euclideanBall x₀ r) (u t).toFun ^ (10 / 3 : ℝ) ≤
           C₆ * D t * M t ^ (4 / 3 : ℝ) +
             C₆ * Q * M t ^ (10 / 3 : ℝ) := by
-      change lpNormOn (ENNReal.ofReal (10 / 3 : ℝ)) (euclideanBall x₀ r) (u t).toFun ^ (10 / 3 : ℝ) ≤
+      change lpNormOn (ENNReal.ofReal (10 / 3 : ℝ)) (euclideanBall x₀ r) (u t).toFun ^ (10 / 3 :
+        ℝ) ≤
           C₆ * weakGradientLpNormOn 2 (euclideanBall x₀ r) (u t).grad ^
               (2 * (3 * ((10 / 3 : ℝ) - 2) / 4)) *
             lpNormOn 2 (euclideanBall x₀ r) (u t).toFun ^

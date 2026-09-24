@@ -70,7 +70,7 @@ theorem lin34_centredP1_cz_data_ae_of_sws
       (fun x hx => hbox.2.2.1 (subset_closure (hballsub hx)))
   obtain ⟨Ω', hΩ'open, hηΩ', -, hΩ'compact, hΩ'Ω, hLp⟩ :=
     decomposition_slice_integrability hsol hηc hηΩ hηc hηΩ
-  haveI : IsFiniteMeasure (volume.restrict Ω') := by
+  have : IsFiniteMeasure (volume.restrict Ω') := by
     refine isFiniteMeasure_restrict.mpr ?_
     exact (lt_of_le_of_lt (measure_mono (μ := volume) subset_closure)
       hΩ'compact.measure_lt_top).ne

@@ -56,7 +56,7 @@ theorem glued_slice_norm_power_integral {B : Set Vec3} {J : Set ℝ}
 /-- Finite fixed coefficients preserve the `3/2` time bound. -/
 theorem glued_time_const_mul_power {J : Set ℝ} {K : ℝ → ℝ≥0∞}
     (hm : AEMeasurable K (volume.restrict J))
-    (hp : (∫⁻ t in J, K t ^ (3/2 : ℝ)) < ⊤)
+    (hp : (∫⁻ t in J, K t ^ (3 / 2 : ℝ)) < ⊤)
     (C : ℝ≥0∞) (hC : C < ⊤) :
     AEMeasurable (fun t => C * K t) (volume.restrict J) ∧
     (∫⁻ t in J, (C * K t) ^ (3/2 : ℝ)) < ⊤ := by
@@ -69,7 +69,7 @@ theorem glued_time_const_mul_power {J : Set ℝ} {K : ℝ → ℝ≥0∞}
 with finite `3/2` time power integral. -/
 theorem glued_time_indicator_power {J : Set ℝ} {K : ℝ → ℝ≥0∞}
     (hJ : MeasurableSet J) (hm : AEMeasurable K (volume.restrict J))
-    (hp : (∫⁻ t in J, K t ^ (3/2 : ℝ)) < ⊤) :
+    (hp : (∫⁻ t in J, K t ^ (3 / 2 : ℝ)) < ⊤) :
     AEMeasurable (J.indicator K) volume ∧
     (∫⁻ t, J.indicator K t ^ (3/2 : ℝ)) < ⊤ := by
   refine ⟨(aemeasurable_indicator_iff hJ).mpr hm, ?_⟩

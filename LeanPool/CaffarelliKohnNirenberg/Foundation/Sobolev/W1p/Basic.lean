@@ -44,7 +44,9 @@ def GradMemLpOn {d : ℕ}
 
 /-- A concrete representative and a chosen coordinate weak gradient. -/
 structure W1pFunction {d : ℕ} (U : Set (Vec d)) (p : ℝ≥0∞) where
+  /-- Chosen scalar representative of the W¹ᵖ function. -/
   toFun : Vec d → ℝ
+  /-- Chosen weak gradient of the W¹ᵖ representative. -/
   grad : Vec d → Vec d
   memLp : MemLpOn U p toFun
   gradMemLp : GradMemLpOn U p grad

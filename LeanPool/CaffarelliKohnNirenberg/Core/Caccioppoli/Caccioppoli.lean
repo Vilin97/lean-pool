@@ -28,6 +28,8 @@ noncomputable section
 
 namespace CKN
 
+/-- Squared common coefficient collecting the velocity and pressure terms in the Caccioppoli
+estimate. -/
 def caccioppoliC₂₅BaseSquared : ℝ :=
   max ((32 + 3 * cutoffSecondDerivativeConstant) * 8000000 +
     6 * cutoffGradientConstant * 5000000)
@@ -35,10 +37,14 @@ def caccioppoliC₂₅BaseSquared : ℝ :=
       (1500 * cutoffGradientConstant + 900000))
       (3000 * cutoffGradientConstant + 1800000))
 
+/-- Square root of the common Caccioppoli coefficient, used before the final energy normalization.
+-/
 def caccioppoliC₂₅Base : ℝ := Real.sqrt caccioppoliC₂₅BaseSquared
 
+/-- Velocity and pressure coefficient after normalizing the Caccioppoli energy bound. -/
 def caccioppoliC₂₅ : ℝ := Real.sqrt (6000 * caccioppoliC₂₅BaseSquared)
 
+/-- Force coefficient in the Caccioppoli estimate for local integrability exponent `q`. -/
 def caccioppoliC₂₆ (q : ℝ) : ℝ :=
   Real.sqrt (6000 * (2000 * (4 * Real.pi / 3) ^
     (1 / (q / (q - 1)) - 1 / 3 : ℝ)))
@@ -151,22 +157,22 @@ theorem caccioppoli
   have hlower := caccioppoli_energy_lower_of_raw hsol hρ hε hr hrr hεr
     hsub hfuture hA hcm hcenter hcc
   have hlower' : (alpha u z₀ r + beta u Du z₀ r) ^ 2 ≤
-      6000 * caccioppoli_I1_heat_cutoff_raw (u := u) (x₀ := z₀.1)
+      6000 * caccioppoliI1HeatCutoffRaw (u := u) (x₀ := z₀.1)
         (t₀ := z₀.2) (ρ := ρ) (ε := ε) (r := r) hρ hε +
-      6000 * caccioppoli_I2_heat_cutoff_raw (u := u) (c := c)
+      6000 * caccioppoliI2HeatCutoffRaw (u := u) (c := c)
         (x₀ := z₀.1) (t₀ := z₀.2) (ρ := ρ) (ε := ε) (r := r) hρ hε +
-      6000 * caccioppoli_I3_heat_cutoff_raw (p := p) (v := u)
+      6000 * caccioppoliI3HeatCutoffRaw (p := p) (v := u)
         (x₀ := z₀.1) (t₀ := z₀.2) (ρ := ρ) (ε := ε) (r := r) hρ hε +
-      6000 * caccioppoli_I4_heat_cutoff_raw (u := u) (f := f)
+      6000 * caccioppoliI4HeatCutoffRaw (u := u) (f := f)
         (x₀ := z₀.1) (t₀ := z₀.2) (ρ := ρ) (ε := ε) (r := r) hρ hε := by
     calc
-      _ ≤ 6000 * (caccioppoli_I1_heat_cutoff_raw (u := u) (x₀ := z₀.1)
+      _ ≤ 6000 * (caccioppoliI1HeatCutoffRaw (u := u) (x₀ := z₀.1)
           (t₀ := z₀.2) (ρ := ρ) (ε := ε) (r := r) hρ hε +
-        caccioppoli_I2_heat_cutoff_raw (u := u) (c := c) (x₀ := z₀.1)
+        caccioppoliI2HeatCutoffRaw (u := u) (c := c) (x₀ := z₀.1)
           (t₀ := z₀.2) (ρ := ρ) (ε := ε) (r := r) hρ hε +
-        caccioppoli_I3_heat_cutoff_raw (p := p) (v := u) (x₀ := z₀.1)
+        caccioppoliI3HeatCutoffRaw (p := p) (v := u) (x₀ := z₀.1)
           (t₀ := z₀.2) (ρ := ρ) (ε := ε) (r := r) hρ hε +
-        caccioppoli_I4_heat_cutoff_raw (u := u) (f := f) (x₀ := z₀.1)
+        caccioppoliI4HeatCutoffRaw (u := u) (f := f) (x₀ := z₀.1)
           (t₀ := z₀.2) (ρ := ρ) (ε := ε) (r := r) hρ hε) := hlower
       _ = _ := by ring
   have hz₀ : (z₀.1, z₀.2) = z₀ := by

@@ -101,7 +101,8 @@ theorem exists_cutoff_derivative_bound
   have hΔzero : ∀ z ∉ tsupport ψ, spatialLaplacian (fun x => ψ (x, z.2)) z.1 = 0 := by
     intro z hz
     rw [laplacian_eq_sum_second]
-    exact Finset.sum_eq_zero fun i _ => spatialSecondPartial_zero_of_not_mem_tsupport_public hψ hz i i
+    exact Finset.sum_eq_zero fun i _ => spatialSecondPartial_zero_of_not_mem_tsupport_public hψ hz
+      i i
   obtain ⟨CΔ, hCΔ, hbΔ⟩ := exists_abs_bound_of_compact_zero hc hΔ hΔzero
   have hsum : 0 ≤ ∑ i, Cx i := Finset.sum_nonneg fun i _ => hCx i
   refine ⟨1 + C₀ + Ct + (∑ i, Cx i) + CΔ, by linarith only [hC₀, hCt, hsum, hCΔ], ?_⟩

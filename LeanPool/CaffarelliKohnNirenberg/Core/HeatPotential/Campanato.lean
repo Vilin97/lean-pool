@@ -31,6 +31,7 @@ open CKN.Foundation.Heat CKN.Foundation.Parabolic
 
 
 
+/-- Contribution of scalar and divergence sources restricted to one integration shell. -/
 def heatPotentialShellValue (F : ParabolicPoint → ℝ)
     (G : Fin 3 → ParabolicPoint → ℝ) (S : Set ParabolicPoint)
     (w : ParabolicPoint) : ℝ :=

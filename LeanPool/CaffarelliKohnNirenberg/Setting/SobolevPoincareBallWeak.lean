@@ -36,7 +36,7 @@ attribute [local instance] Classical.propDecidable
 private theorem native_euclidean_norm_eq_l2 (x : Vec 3) :
     vecEuclideanNorm x = ‖WithLp.toLp 2 x‖ := by
   rw [PiLp.norm_eq_of_L2]
-  simp [vecEuclideanNorm, vecNormSq, vecDot, Real.norm_eq_abs, sq_abs]
+  simp only [vecEuclideanNorm, vecNormSq, vecDot, Real.norm_eq_abs, sq_abs]
   congr 1
   apply Finset.sum_congr rfl
   intro i _hi
@@ -221,6 +221,283 @@ private theorem mollify_memLp_two
   rw [memLp_iff]
   simpa [mollify] using hconv.trans_lt hf
 
+private lemma sobolevPoincare_L6_ball_weak_inner_hclosed_subset_1 :
+    ∀ (x₀ : Vec 3) {r s : ℝ},
+      0 < r →
+        0 < s →
+          s < r →
+            let U : Set (Vec 3) := euclideanBall x₀ r;
+            let K : Set (Vec 3) := euclideanClosedBall x₀ s;
+            let ε₀ : ℝ := (r - s) / (2 * √3);
+            let ε : ℕ → ℝ := fun n => ε₀ / (↑n + 1);
+            0 < √3 →
+              (∀ (n : ℕ), √3 * ε n ≤ (r - s) / 2) →
+                ∀ (n : ℕ), ∀ x ∈ K, Metric.closedBall x (ε n) ⊆ U
+    := by
+  intro x₀ r s hr hs hsr U K ε₀ ε hsqrt hsqrtε n x hx y hy
+  apply (mem_euclideanBall_iff_vecEuclideanNorm_lt hr).2
+  have hxy : ‖y - x‖ ≤ ε n := by
+    simpa [Metric.mem_closedBall, dist_eq_norm] using hy
+  have hx0 : vecEuclideanNorm (x - x₀) ≤ s :=
+    (mem_euclideanClosedBall_iff_vecEuclideanNorm_le hs.le).1 hx
+  have hyx : vecEuclideanNorm (y - x) ≤ Real.sqrt 3 * ‖y - x‖ :=
+    native_euclidean_norm_le_sqrt_three_norm (y - x)
+  have hsum : vecEuclideanNorm (y - x₀) ≤
+      Real.sqrt 3 * ‖y - x‖ + vecEuclideanNorm (x - x₀) := by
+    calc
+      vecEuclideanNorm (y - x₀) = vecEuclideanNorm ((y - x) + (x - x₀)) := by
+        congr 1
+        abel
+      _ ≤ vecEuclideanNorm (y - x) + vecEuclideanNorm (x - x₀) :=
+        native_euclidean_norm_add_le _ _
+      _ ≤ Real.sqrt 3 * ‖y - x‖ + vecEuclideanNorm (x - x₀) :=
+        by simpa [add_comm] using add_le_add_right hyx (vecEuclideanNorm (x - x₀))
+  calc
+    vecEuclideanNorm (y - x₀) ≤ Real.sqrt 3 * ε n + s := by
+      exact hsum.trans (add_le_add (mul_le_mul_of_nonneg_left hxy hsqrt.le) hx0)
+    _ ≤ (r + s) / 2 := by linarith only [hsqrtε n]
+    _ < r := by linarith only [hsr]
+
+private lemma sobolevPoincare_L6_ball_weak_inner_hweakExt_2 :
+    ∀ (x₀ : Vec 3) {r : ℝ} (u : H1Function (euclideanBall x₀ r)),
+      let U : Set (Vec 3) := euclideanBall x₀ r;
+      MeasurableSet U →
+        ∀ (i : Fin 3),
+          HasWeakPartialDerivOn U i (U.indicator (u.toFun (U := euclideanBall x₀ r)))
+            (U.indicator fun x => u.grad (U := euclideanBall x₀ r) x i)
+    := by
+  intro x₀ r u U hUmeas i φ hφ hcompact hsupport
+  calc
+    ∫ x in U, U.indicator u.toFun x * (fderiv ℝ φ x) (basisVec i) ∂volume =
+        ∫ x in U, u.toFun x * (fderiv ℝ φ x) (basisVec i) ∂volume := by
+          apply MeasureTheory.setIntegral_congr_fun hUmeas
+          intro x hx
+          simp [Set.indicator_of_mem hx]
+    _ = -∫ x in U, u.grad x i * φ x ∂volume :=
+      u.hasWeakPartialDerivOn i φ hφ hcompact hsupport
+    _ = -∫ x in U, U.indicator (fun x => u.grad x i) x * φ x ∂volume := by
+          congr 1
+          apply MeasureTheory.setIntegral_congr_fun hUmeas
+          intro x hx
+          simp [Set.indicator_of_mem hx]
+
+private lemma sobolevPoincare_L6_ball_weak_inner_hvalLocal_3 :
+    ∀ (x₀ : Vec 3) {r s : ℝ} (u : H1Function (euclideanBall x₀ r)),
+      let U : Set (Vec 3) := euclideanBall x₀ r;
+      let B : Set (Vec 3) := euclideanBall x₀ s;
+      let K : Set (Vec 3) := euclideanClosedBall x₀ s;
+      MeasurableSet B →
+        B ⊆ K →
+          K ⊆ U →
+            let μB : Measure (Vec 3) := Measure.restrict volume B;
+            let ε₀ : ℝ := (r - s) / (2 * √3);
+            let ε : ℕ → ℝ := fun n => ε₀ / (↑n + 1);
+            ∀ (hε_pos : ∀ (n : ℕ), 0 < ε n),
+              let v : ℕ → Vec 3 → ℝ := fun n =>
+                mollify (U.indicator (u.toFun (U := euclideanBall x₀ r))) (ε n) (hε_pos n);
+              Tendsto
+                  (fun (n : ℕ) =>
+                    @eLpNorm _ ℝ _ _ MeasureSpace.toMeasurableSpace
+                      (fun (x : Vec 3) =>
+                        v n x - U.indicator (u.toFun (U := euclideanBall x₀ r)) x)
+                      2 volume)
+                  atTop (𝓝 0) →
+                Tendsto
+                  (fun (n : ℕ) =>
+                    eLpNorm (ε := ℝ) (fun x => v n x - u.toFun (U := euclideanBall x₀ r) x) 2 μB)
+                  atTop (𝓝 0)
+    := by
+  intro x₀ r s u U B K hBmeas hBsubK hKsubU μB ε₀ ε hε_pos v hvalGlobal
+  apply tendsto_of_tendsto_of_tendsto_of_le_of_le'
+    tendsto_const_nhds hvalGlobal
+    (Eventually.of_forall (fun _ => bot_le))
+  filter_upwards [] with n
+  calc
+    eLpNorm (fun x => v n x - u.toFun x) 2 μB =
+        eLpNorm (fun x => v n x - U.indicator u.toFun x) 2 μB := by
+          apply eLpNorm_congr_ae
+          filter_upwards [ae_restrict_mem hBmeas] with x hx
+          simp [Set.indicator_of_mem (hKsubU (hBsubK hx))]
+    _ ≤ eLpNorm (fun x => v n x - U.indicator u.toFun x) 2 volume :=
+      eLpNorm_mono_measure _ Measure.restrict_le_self
+
+private lemma sobolevPoincare_L6_ball_weak_inner_hgradLocal_4 :
+    ∀ (x₀ : Vec 3) {r s : ℝ} (u : H1Function (euclideanBall x₀ r)),
+      let U : Set (Vec 3) := euclideanBall x₀ r;
+      let B : Set (Vec 3) := euclideanBall x₀ s;
+      let K : Set (Vec 3) := euclideanClosedBall x₀ s;
+      MeasurableSet B →
+        B ⊆ K →
+          K ⊆ U →
+            let μB : Measure (Vec 3) := Measure.restrict volume B;
+            let ε₀ : ℝ := (r - s) / (2 * √3);
+            let ε : ℕ → ℝ := fun n => ε₀ / (↑n + 1);
+            ∀ (hε_pos : ∀ (n : ℕ), 0 < ε n),
+              let w : Fin 3 → ℕ → Vec 3 → ℝ := fun i n =>
+                mollify (U.indicator fun x => u.grad (U := euclideanBall x₀ r) x i) (ε n)
+                  (hε_pos n);
+              (∀ (i : Fin 3),
+                  Tendsto
+                    (fun (n : ℕ) =>
+                      @eLpNorm _ ℝ _ _ MeasureSpace.toMeasurableSpace
+                        (fun (x : Vec 3) =>
+                          w i n x - U.indicator (fun y => u.grad (U := euclideanBall x₀ r) y i) x)
+                        2 volume)
+                    atTop (𝓝 0)) →
+                ∀ (i : Fin 3),
+                  Tendsto
+                    (fun (n : ℕ) =>
+                      eLpNorm (ε := ℝ) (fun x => w i n x - u.grad (U := euclideanBall x₀ r) x i) 2
+                        μB)
+                    atTop (𝓝 0)
+    := by
+  intro x₀ r s u U B K hBmeas hBsubK hKsubU μB ε₀ ε hε_pos w hgradGlobal i
+  apply tendsto_of_tendsto_of_tendsto_of_le_of_le'
+    tendsto_const_nhds (hgradGlobal i)
+    (Eventually.of_forall (fun _ => bot_le))
+  filter_upwards [] with n
+  calc
+    eLpNorm (fun x => w i n x - u.grad x i) 2 μB =
+        eLpNorm (fun x => w i n x - U.indicator (fun y => u.grad y i) x)
+          2 μB := by
+          apply eLpNorm_congr_ae
+          filter_upwards [ae_restrict_mem hBmeas] with x hx
+          simp [Set.indicator_of_mem (hKsubU (hBsubK hx))]
+    _ ≤ eLpNorm
+        (fun x => w i n x - U.indicator (fun y => u.grad y i) x) 2 volume :=
+      eLpNorm_mono_measure _ Measure.restrict_le_self
+
+private lemma sobolevPoincare_L6_ball_weak_inner_hWerr_5 :
+    ∀ (x₀ : Vec 3) {r s : ℝ} (u : H1Function (euclideanBall x₀ r)),
+      let U : Set (Vec 3) := euclideanBall x₀ r;
+      let B : Set (Vec 3) := euclideanBall x₀ s;
+      let μB : Measure (Vec 3) := Measure.restrict volume B;
+      let ε₀ : ℝ := (r - s) / (2 * √3);
+      let ε : ℕ → ℝ := fun n => ε₀ / (↑n + 1);
+      ∀ (hε_pos : ∀ (n : ℕ), 0 < ε n),
+        let w : Fin 3 → ℕ → Vec 3 → ℝ := fun i n =>
+          mollify (U.indicator fun x => u.grad (U := euclideanBall x₀ r) x i) (ε n) (hε_pos n);
+        let W : ℕ → Vec 3 → Vec 3 := fun n x i => w i n x;
+        (∀ (n : ℕ), MemLp (m0 := MeasureSpace.toMeasurableSpace) (W n) 2 volume) →
+          MemLp (u.grad (U := euclideanBall x₀ r)) 2 μB →
+            (∀ (i : Fin 3),
+                Tendsto
+                  (fun (n : ℕ) =>
+                    eLpNorm (ε := ℝ) (fun x => w i n x - u.grad (U := euclideanBall x₀ r) x i) 2
+                      μB)
+                  atTop (𝓝 0)) →
+              Tendsto
+                (fun (n : ℕ) =>
+                  eLpNorm (ε := Vec 3) (fun x => W n x - u.grad (U := euclideanBall x₀ r) x) 2 μB)
+                atTop (𝓝 0)
+    := by
+  intro x₀ r s u U B μB ε₀ ε hε_pos w W hWmem hGmem hgradLocal
+  have hsum : Tendsto
+      (fun n => ∑ i : Fin 3,
+        eLpNorm (fun x => w i n x - u.grad x i) 2 μB)
+        atTop (nhds 0) := by
+    exact tendsto_sum_zero_fin_three_weak (fun i => hgradLocal i)
+  apply tendsto_of_tendsto_of_tendsto_of_le_of_le'
+    tendsto_const_nhds hsum (Eventually.of_forall (fun _ => bot_le))
+  filter_upwards [] with n
+  have hWloc : MemLp (W n) 2 μB :=
+    (hWmem n).mono_measure Measure.restrict_le_self
+  calc
+    eLpNorm (fun x => W n x - u.grad x) 2 μB ≤
+        ∑ i : Fin 3, eLpNorm (fun x => (W n x - u.grad x) i) 2 μB := by
+          apply eLpNorm_pi_le_sum_weak
+          exact (hWloc.sub hGmem).aestronglyMeasurable
+    _ = ∑ i : Fin 3, eLpNorm (fun x => w i n x - u.grad x i) 2 μB := by
+          congr 1
+
+private lemma sobolevPoincare_L6_ball_weak_inner_havg_6 :
+    ∀ (x₀ : Vec 3) {r s : ℝ} (u : H1Function (euclideanBall x₀ r)),
+      let U : Set (Vec 3) := euclideanBall x₀ r;
+      let B : Set (Vec 3) := euclideanBall x₀ s;
+      let μB : Measure (Vec 3) := Measure.restrict volume B;
+      let ε₀ : ℝ := (r - s) / (2 * √3);
+      let ε : ℕ → ℝ := fun n => ε₀ / (↑n + 1);
+      ∀ (hε_pos : ∀ (n : ℕ), 0 < ε n),
+        let v : ℕ → Vec 3 → ℝ := fun n =>
+          mollify (U.indicator (u.toFun (U := euclideanBall x₀ r))) (ε n) (hε_pos n);
+        Tendsto (fun (n : ℕ) => ∫ (x : Vec 3), v n x - u.toFun (U := euclideanBall x₀ r) x ∂μB)
+            atTop (𝓝 0) →
+          (∀ (n : ℕ),
+              average μB (v n) - average μB (u.toFun (U := euclideanBall x₀ r)) =
+                (ENNReal.toReal (μB univ))⁻¹ *
+                  ∫ (x : Vec 3), v n x - u.toFun (U := euclideanBall x₀ r) x ∂μB) →
+            Tendsto (fun (n : ℕ) => average μB (v n)) atTop
+              (𝓝 (average μB (u.toFun (U := euclideanBall x₀ r))))
+    := by
+  intro x₀ r s u U B μB ε₀ ε hε_pos v hInt havgDiff
+  have hdiff : Tendsto
+      (fun n => average μB (v n) - average μB u.toFun) atTop (nhds 0) := by
+    rw [show (fun n => average μB (v n) - average μB u.toFun) =
+        (fun n => (μB Set.univ).toReal⁻¹ *
+          ∫ x, v n x - u.toFun x ∂μB) by
+          funext n; exact havgDiff n]
+    simpa using (tendsto_const_nhds.mul hInt)
+  have hsum := (tendsto_const_nhds :
+    Tendsto (fun _ : ℕ => average μB u.toFun)
+      atTop (nhds (average μB u.toFun))).add hdiff
+  simpa [sub_eq_add_neg, add_assoc, add_left_comm, add_comm] using hsum
+
+private lemma sobolevPoincare_L6_ball_weak_inner_hineq_7 :
+    ∀ (x₀ : Vec 3) {r s : ℝ},
+      0 < s →
+        ∀ (u : H1Function (euclideanBall x₀ r)),
+          let U : Set (Vec 3) := euclideanBall x₀ r;
+          let B : Set (Vec 3) := euclideanBall x₀ s;
+          let μB : Measure (Vec 3) := Measure.restrict volume B;
+          let ε₀ : ℝ := (r - s) / (2 * √3);
+          let ε : ℕ → ℝ := fun n => ε₀ / (↑n + 1);
+          ∀ (hε_pos : ∀ (n : ℕ), 0 < ε n),
+            MemLp (m0 := MeasureSpace.toMeasurableSpace)
+                (U.indicator (u.toFun (U := euclideanBall x₀ r))) 2 volume →
+              let v : ℕ → Vec 3 → ℝ := fun n =>
+                mollify (U.indicator (u.toFun (U := euclideanBall x₀ r))) (ε n) (hε_pos n);
+              let D : ℕ → Vec 3 → Vec 3 := fun n x i => (fderiv ℝ (v n) x) (basisVec i);
+              let F : ℕ → Vec 3 → ℝ := fun n x => v n x - average μB (v n);
+              (∀ (n : ℕ), D n = classicalGradient (v n)) →
+                ∀ (n : ℕ), eLpNorm (F n) 6 μB ≤ sobolevPoincareL6Constant * eLpNorm (D n) 2 μB
+    := by
+  intro x₀ r s hs u U B μB ε₀ ε hε_pos huExt v D F hD_eq n
+  have hsmooth := sobolevPoincare_L6_ball x₀ hs (v n)
+    (mollify_contDiff (hε_pos n) (huExt.locallyIntegrable (by norm_num)) (n := 1))
+  calc
+    eLpNorm (F n) 6 μB =
+        lpNormOn 6 B (fun x => v n x - average μB (v n)) := by
+          simp [F, μB, lpNormOn]
+    _ ≤ sobolevPoincareL6Constant * gradientLpNormOn 2 B (v n) := by
+      simpa [μB] using hsmooth
+    _ = sobolevPoincareL6Constant * eLpNorm (D n) 2 μB := by
+      rw [hD_eq n]
+      rfl
+
+private lemma sobolevPoincare_L6_ball_weak_inner_hCtop_8 :
+    sobolevPoincareL6Constant ≠ ∞
+    := by
+  unfold sobolevPoincareL6Constant
+  apply ENNReal.mul_ne_top
+  · unfold localSobolevConstant
+    finiteness
+  · apply ENNReal.add_ne_top.mpr
+    constructor
+    · apply ENNReal.rpow_ne_top_of_nonneg (by positivity)
+      apply ENNReal.add_ne_top.mpr
+      constructor
+      · norm_num
+      · apply ENNReal.mul_ne_top
+        · norm_num
+        · simp [euclideanBallPoincareConstant]
+    · apply ENNReal.mul_ne_top
+      · norm_num
+      · apply ENNReal.mul_ne_top
+        · apply ENNReal.rpow_ne_top_of_nonneg (by positivity)
+          norm_num
+        · apply ENNReal.rpow_ne_top_of_nonneg (by positivity)
+          simp [euclideanBallPoincareConstant]
+
 theorem sobolevPoincare_L6_ball_weak_inner
     (x₀ : Vec 3) {r s : ℝ} (hr : 0 < r) (hs : 0 < s) (hsr : s < r)
     (u : H1Function (euclideanBall x₀ r)) :
@@ -293,53 +570,15 @@ theorem sobolevPoincare_L6_ball_weak_inner
       _ = (r - s) / 2 := by
         dsimp [ε₀]
         field_simp [ne_of_gt hsqrt]
-  have hclosed_subset : ∀ n, ∀ x ∈ K, Metric.closedBall x (ε n) ⊆ U := by
-    intro n x hx y hy
-    apply (mem_euclideanBall_iff_vecEuclideanNorm_lt hr).2
-    have hxy : ‖y - x‖ ≤ ε n := by
-      simpa [Metric.mem_closedBall, dist_eq_norm] using hy
-    have hx0 : vecEuclideanNorm (x - x₀) ≤ s :=
-      (mem_euclideanClosedBall_iff_vecEuclideanNorm_le hs.le).1 hx
-    have hyx : vecEuclideanNorm (y - x) ≤ Real.sqrt 3 * ‖y - x‖ :=
-      native_euclidean_norm_le_sqrt_three_norm (y - x)
-    have hsum : vecEuclideanNorm (y - x₀) ≤
-        Real.sqrt 3 * ‖y - x‖ + vecEuclideanNorm (x - x₀) := by
-      calc
-        vecEuclideanNorm (y - x₀) = vecEuclideanNorm ((y - x) + (x - x₀)) := by
-          congr 1
-          abel
-        _ ≤ vecEuclideanNorm (y - x) + vecEuclideanNorm (x - x₀) :=
-          native_euclidean_norm_add_le _ _
-        _ ≤ Real.sqrt 3 * ‖y - x‖ + vecEuclideanNorm (x - x₀) :=
-          by simpa [add_comm] using add_le_add_right hyx (vecEuclideanNorm (x - x₀))
-    calc
-      vecEuclideanNorm (y - x₀) ≤ Real.sqrt 3 * ε n + s := by
-        exact hsum.trans (add_le_add (mul_le_mul_of_nonneg_left hxy hsqrt.le) hx0)
-      _ ≤ (r + s) / 2 := by linarith only [hsqrtε n]
-      _ < r := by linarith only [hsr]
+  have hclosed_subset := @sobolevPoincare_L6_ball_weak_inner_hclosed_subset_1 x₀ r s hr hs hsr
+    hsqrt hsqrtε
   have huExt : MemLp (U.indicator u.toFun) 2 (volume : Measure (Vec 3)) := by
     exact (memLp_indicator_iff_restrict hUmeas).2 u.memL2
   have hgExt (i : Fin 3) :
       MemLp (U.indicator (fun x => u.grad x i)) 2
         (volume : Measure (Vec 3)) := by
     exact (memLp_indicator_iff_restrict hUmeas).2 (u.grad_memL2 i)
-  have hweakExt (i : Fin 3) :
-      HasWeakPartialDerivOn U i (U.indicator u.toFun)
-        (U.indicator (fun x => u.grad x i)) := by
-    intro φ hφ hcompact hsupport
-    calc
-      ∫ x in U, U.indicator u.toFun x * (fderiv ℝ φ x) (basisVec i) ∂volume =
-          ∫ x in U, u.toFun x * (fderiv ℝ φ x) (basisVec i) ∂volume := by
-            apply MeasureTheory.setIntegral_congr_fun hUmeas
-            intro x hx
-            simp [Set.indicator_of_mem hx]
-      _ = -∫ x in U, u.grad x i * φ x ∂volume :=
-        u.hasWeakPartialDerivOn i φ hφ hcompact hsupport
-      _ = -∫ x in U, U.indicator (fun x => u.grad x i) x * φ x ∂volume := by
-            congr 1
-            apply MeasureTheory.setIntegral_congr_fun hUmeas
-            intro x hx
-            simp [Set.indicator_of_mem hx]
+  have hweakExt (i : Fin 3) := @sobolevPoincare_L6_ball_weak_inner_hweakExt_2 x₀ r u hUmeas i
   let v : ℕ → Vec 3 → ℝ := fun n =>
     mollify (U.indicator u.toFun) (ε n) (hε_pos n)
   let w : Fin 3 → ℕ → Vec 3 → ℝ := fun i n =>
@@ -381,64 +620,17 @@ theorem sobolevPoincare_L6_ball_weak_inner
     simpa [v, sub_eq_add_neg] using
       (tendsto_eLpNorm_sub_zero_mollify (p := (2 : ENNReal)) (by norm_num)
         ENNReal.coe_ne_top huExt hε_tendsto hε_pos)
-  have hvalLocal : Tendsto
-      (fun n => eLpNorm (fun x => v n x - u.toFun x) 2 μB)
-        atTop (nhds 0) := by
-    apply tendsto_of_tendsto_of_tendsto_of_le_of_le'
-      tendsto_const_nhds hvalGlobal
-      (Eventually.of_forall (fun _ => bot_le))
-    filter_upwards [] with n
-    calc
-      eLpNorm (fun x => v n x - u.toFun x) 2 μB =
-          eLpNorm (fun x => v n x - U.indicator u.toFun x) 2 μB := by
-            apply eLpNorm_congr_ae
-            filter_upwards [ae_restrict_mem hBmeas] with x hx
-            simp [Set.indicator_of_mem (hKsubU (hBsubK hx))]
-      _ ≤ eLpNorm (fun x => v n x - U.indicator u.toFun x) 2 volume :=
-        eLpNorm_mono_measure _ Measure.restrict_le_self
+  have hvalLocal := @sobolevPoincare_L6_ball_weak_inner_hvalLocal_3 x₀ r s u hBmeas hBsubK hKsubU
+    hε_pos hvalGlobal
   have hgradGlobal (i : Fin 3) : Tendsto
       (fun n => eLpNorm (fun x => w i n x - U.indicator (fun y => u.grad y i) x)
         2 volume) atTop (nhds 0) := by
     simpa [w, sub_eq_add_neg] using
       (tendsto_eLpNorm_sub_zero_mollify (p := (2 : ENNReal)) (by norm_num)
         ENNReal.coe_ne_top (hgExt i) hε_tendsto hε_pos)
-  have hgradLocal (i : Fin 3) : Tendsto
-      (fun n => eLpNorm (fun x => w i n x - u.grad x i) 2 μB)
-        atTop (nhds 0) := by
-    apply tendsto_of_tendsto_of_tendsto_of_le_of_le'
-      tendsto_const_nhds (hgradGlobal i)
-      (Eventually.of_forall (fun _ => bot_le))
-    filter_upwards [] with n
-    calc
-      eLpNorm (fun x => w i n x - u.grad x i) 2 μB =
-          eLpNorm (fun x => w i n x - U.indicator (fun y => u.grad y i) x)
-            2 μB := by
-            apply eLpNorm_congr_ae
-            filter_upwards [ae_restrict_mem hBmeas] with x hx
-            simp [Set.indicator_of_mem (hKsubU (hBsubK hx))]
-      _ ≤ eLpNorm
-          (fun x => w i n x - U.indicator (fun y => u.grad y i) x) 2 volume :=
-        eLpNorm_mono_measure _ Measure.restrict_le_self
-  have hWerr : Tendsto
-      (fun n => eLpNorm (fun x => W n x - u.grad x) 2 μB)
-        atTop (nhds 0) := by
-    have hsum : Tendsto
-        (fun n => ∑ i : Fin 3,
-          eLpNorm (fun x => w i n x - u.grad x i) 2 μB)
-          atTop (nhds 0) := by
-      exact tendsto_sum_zero_fin_three_weak (fun i => hgradLocal i)
-    apply tendsto_of_tendsto_of_tendsto_of_le_of_le'
-      tendsto_const_nhds hsum (Eventually.of_forall (fun _ => bot_le))
-    filter_upwards [] with n
-    have hWloc : MemLp (W n) 2 μB :=
-      (hWmem n).mono_measure Measure.restrict_le_self
-    calc
-      eLpNorm (fun x => W n x - u.grad x) 2 μB ≤
-          ∑ i : Fin 3, eLpNorm (fun x => (W n x - u.grad x) i) 2 μB := by
-            apply eLpNorm_pi_le_sum_weak
-            exact (hWloc.sub hGmem).aestronglyMeasurable
-      _ = ∑ i : Fin 3, eLpNorm (fun x => w i n x - u.grad x i) 2 μB := by
-            congr 1
+  have hgradLocal (i : Fin 3) := @sobolevPoincare_L6_ball_weak_inner_hgradLocal_4 x₀ r s u hBmeas
+    hBsubK hKsubU hε_pos hgradGlobal i
+  have hWerr := @sobolevPoincare_L6_ball_weak_inner_hWerr_5 x₀ r s u hε_pos hWmem hGmem hgradLocal
   have hDerr : Tendsto
       (fun n => eLpNorm (fun x => D n x - u.grad x) 2 μB)
         atTop (nhds 0) := by
@@ -447,7 +639,7 @@ theorem sobolevPoincare_L6_ball_weak_inner
       apply eLpNorm_congr_ae
       filter_upwards [ae_restrict_mem hBmeas] with x hx
       funext i
-      simp only [Pi.sub_apply, D, W]
+      simp only [Pi.sub_apply, D]
       simpa using congrArg (fun z => z - u.grad x i)
         (hderiv n i (hBsubK hx)).symm)
   have hgradTendsto : Tendsto
@@ -467,19 +659,7 @@ theorem sobolevPoincare_L6_ball_weak_inner
     rw [← average_sub ((hvB n).integrable (by norm_num))
       (huB.integrable (by norm_num)), average_eq]
     simp [Measure.real, smul_eq_mul]
-  have havg : Tendsto (fun n => average μB (v n)) atTop
-      (nhds (average μB u.toFun)) := by
-    have hdiff : Tendsto
-        (fun n => average μB (v n) - average μB u.toFun) atTop (nhds 0) := by
-      rw [show (fun n => average μB (v n) - average μB u.toFun) =
-          (fun n => (μB Set.univ).toReal⁻¹ *
-            ∫ x, v n x - u.toFun x ∂μB) by
-            funext n; exact havgDiff n]
-      simpa using (tendsto_const_nhds.mul hInt)
-    have hsum := (tendsto_const_nhds :
-      Tendsto (fun _ : ℕ => average μB u.toFun)
-        atTop (nhds (average μB u.toFun))).add hdiff
-    simpa [sub_eq_add_neg, add_assoc, add_left_comm, add_comm] using hsum
+  have havg := @sobolevPoincare_L6_ball_weak_inner_havg_6 x₀ r s u hε_pos hInt havgDiff
   let F : ℕ → Vec 3 → ℝ := fun n =>
     fun x => v n x - average μB (v n)
   let F₀ : Vec 3 → ℝ := fun x => u.toFun x - average μB u.toFun
@@ -501,44 +681,12 @@ theorem sobolevPoincare_L6_ball_weak_inner
   have hD_eq (n : ℕ) : D n = classicalGradient (v n) := by
     funext x i
     simp [D, classicalGradient_apply]
-  have hineq (n : ℕ) : eLpNorm (F n) 6 μB ≤
-      sobolevPoincareL6Constant * eLpNorm (D n) 2 μB := by
-    have hsmooth := sobolevPoincare_L6_ball x₀ hs (v n)
-      (mollify_contDiff (hε_pos n) (huExt.locallyIntegrable (by norm_num)) (n := 1))
-    calc
-      eLpNorm (F n) 6 μB =
-          lpNormOn 6 B (fun x => v n x - average μB (v n)) := by
-            simp [F, μB, lpNormOn]
-      _ ≤ sobolevPoincareL6Constant * gradientLpNormOn 2 B (v n) := by
-        simpa [μB] using hsmooth
-      _ = sobolevPoincareL6Constant * eLpNorm (D n) 2 μB := by
-        rw [hD_eq n]
-        rfl
+  have hineq (n : ℕ) := @sobolevPoincare_L6_ball_weak_inner_hineq_7 x₀ r s hs u hε_pos huExt hD_eq n
   have hRhs : Tendsto
       (fun n => sobolevPoincareL6Constant * eLpNorm (D n) 2 μB) atTop
         (nhds (sobolevPoincareL6Constant * eLpNorm u.grad 2 μB)) :=
     by
-      have hCtop : sobolevPoincareL6Constant ≠ ∞ := by
-        unfold sobolevPoincareL6Constant
-        apply ENNReal.mul_ne_top
-        · unfold localSobolevConstant
-          finiteness
-        · apply ENNReal.add_ne_top.mpr
-          constructor
-          · apply ENNReal.rpow_ne_top_of_nonneg (by positivity)
-            apply ENNReal.add_ne_top.mpr
-            constructor
-            · norm_num
-            · apply ENNReal.mul_ne_top
-              · norm_num
-              · simp [euclideanBallPoincareConstant]
-          · apply ENNReal.mul_ne_top
-            · norm_num
-            · apply ENNReal.mul_ne_top
-              · apply ENNReal.rpow_ne_top_of_nonneg (by positivity)
-                norm_num
-              · apply ENNReal.rpow_ne_top_of_nonneg (by positivity)
-                simp [euclideanBallPoincareConstant]
+      have hCtop := @sobolevPoincare_L6_ball_weak_inner_hCtop_8
       simpa using ENNReal.Tendsto.const_mul hgradTendsto (Or.inr hCtop)
   apply ENNReal.le_of_forall_pos_le_add
   intro δ hδpos hδtop
@@ -557,6 +705,120 @@ theorem sobolevPoincare_L6_ball_weak_inner
     liminf_le_of_frequently_le'
       (hupper.mono (fun k hk => (hineq (ns k)).trans hk.le)).frequently
   simpa [F₀, μB, lpNormOn, weakGradientLpNormOn] using hleft.trans hlimδ
+
+private lemma sobolevPoincare_L6_ball_weak_hρ_tendsto_1 :
+    let ρ : ℕ → ℝ := fun n => (↑n + 1) / (↑n + 2);
+    Tendsto ρ atTop (𝓝 1)
+    := by
+  intro ρ
+  have hden : Tendsto (fun n : ℕ => (n : ℝ) + 2) atTop atTop := by
+    simpa only [add_comm] using
+      (tendsto_atTop_add_const_left atTop (2 : ℝ)
+        (tendsto_natCast_atTop_atTop :
+          Tendsto (fun n : ℕ => (n : ℝ)) atTop atTop))
+  have hinv : Tendsto (fun n : ℕ => ((n : ℝ) + 2)⁻¹) atTop (nhds 0) :=
+    tendsto_inv_atTop_zero.comp hden
+  have hlim : Tendsto
+      (fun n : ℕ => (1 : ℝ) - ((n : ℝ) + 2)⁻¹) atTop (nhds 1) := by
+    simpa using
+      ((tendsto_const_nhds : Tendsto (fun _ : ℕ => (1 : ℝ)) atTop (nhds 1)).sub hinv)
+  convert hlim using 1
+  funext n
+  dsimp [ρ, div_eq_mul_inv]
+  field_simp
+  ring
+
+private lemma sobolevPoincare_L6_ball_weak_havg_2 :
+    ∀ (x₀ : Vec 3) {r : ℝ} (u : H1Function (euclideanBall x₀ r)),
+      let B : Set (Vec 3) := euclideanBall x₀ r;
+      let ρ : ℕ → ℝ := fun n => (↑n + 1) / (↑n + 2);
+      let s : ℕ → ℝ := fun n => r * ρ n;
+      let Bn : ℕ → Set (Vec 3) := fun n => euclideanBall x₀ (s n);
+      let μB : Measure (Vec 3) := Measure.restrict volume B;
+      Tendsto (β := ℝ)
+          (fun (n : ℕ) =>
+            @integral _ _ _ _ MeasureSpace.toMeasurableSpace (Measure.restrict volume (Bn n))
+              fun x => u.toFun (U := euclideanBall x₀ r) x)
+          atTop
+          (𝓝
+            (@integral _ _ _ _ MeasureSpace.toMeasurableSpace (Measure.restrict volume B) fun x =>
+              u.toFun (U := euclideanBall x₀ r) x)) →
+        0 < ENNReal.toReal (volume B) →
+          Tendsto (fun (n : ℕ) => ENNReal.toReal (volume (Bn n))) atTop
+              (𝓝 (ENNReal.toReal (volume B))) →
+            Tendsto
+              (fun (n : ℕ) =>
+                average (m0 := MeasureSpace.toMeasurableSpace) (Measure.restrict volume (Bn n))
+                  (u.toFun (U := euclideanBall x₀ r)))
+              atTop (𝓝 (average μB (u.toFun (U := euclideanBall x₀ r))))
+    := by
+  intro x₀ r u B ρ s Bn μB hnum hB_real_pos hmeasure
+  have hinv : Tendsto (fun n => (volume (Bn n)).toReal⁻¹) atTop
+      (nhds (volume B).toReal⁻¹) :=
+    (tendsto_inv₀ hB_real_pos.ne').comp hmeasure
+  have hmul := hinv.mul hnum
+  have hformula (n : ℕ) :
+      average (volume.restrict (Bn n)) u.toFun =
+        (volume (Bn n)).toReal⁻¹ * ∫ x in Bn n, u.toFun x ∂volume := by
+    change (⨍ x in Bn n, u.toFun x ∂volume) = _
+    rw [MeasureTheory.setAverage_eq]
+    simp [Measure.real, smul_eq_mul]
+  have hformulaB : average μB u.toFun =
+      (volume B).toReal⁻¹ * ∫ x in B, u.toFun x ∂volume := by
+    change (⨍ x in B, u.toFun x ∂volume) = _
+    rw [MeasureTheory.setAverage_eq]
+    simp [Measure.real, smul_eq_mul]
+  rw [show (fun n => average (volume.restrict (Bn n)) u.toFun) =
+      (fun n => (volume (Bn n)).toReal⁻¹ * ∫ x in Bn n, u.toFun x ∂volume) by
+        funext n; exact hformula n, hformulaB]
+  exact hmul
+
+private lemma sobolevPoincare_L6_ball_weak_hFae_3 :
+    ∀ (x₀ : Vec 3) {r : ℝ},
+      0 < r →
+        ∀ (u : H1Function (euclideanBall x₀ r)),
+          let B : Set (Vec 3) := euclideanBall x₀ r;
+          let ρ : ℕ → ℝ := fun n => (↑n + 1) / (↑n + 2);
+          let s : ℕ → ℝ := fun n => r * ρ n;
+          let Bn : ℕ → Set (Vec 3) := fun n => euclideanBall x₀ (s n);
+          (∀ (n : ℕ), 0 < s n) →
+            Tendsto s atTop (𝓝 r) →
+              (∀ (n : ℕ), Bn n ⊆ B) →
+                let μB : Measure (Vec 3) := Measure.restrict volume B;
+                Tendsto
+                    (fun (n : ℕ) =>
+                      average (m0 := MeasureSpace.toMeasurableSpace)
+                        (Measure.restrict volume (Bn n)) (u.toFun (U := euclideanBall x₀ r)))
+                    atTop (𝓝 (average μB (u.toFun (U := euclideanBall x₀ r)))) →
+                  let F : ℕ → Vec 3 → ℝ := fun n =>
+                    (Bn n).indicator fun x =>
+                      u.toFun (U := euclideanBall x₀ r) x -
+                        average (m0 := MeasureSpace.toMeasurableSpace)
+                          (Measure.restrict volume (Bn n)) (u.toFun (U := euclideanBall x₀ r));
+                  let F₀ : Vec 3 → ℝ :=
+                    B.indicator fun x =>
+                      u.toFun (U := euclideanBall x₀ r) x -
+                        average μB (u.toFun (U := euclideanBall x₀ r));
+                  ∀ᵐ (x : Vec 3), Tendsto (fun (n : ℕ) => F n x) atTop (𝓝 (F₀ x))
+    := by
+  intro x₀ r hr u B ρ s Bn hs_pos hs_tendsto hBn_sub_B μB havg F F₀
+  filter_upwards [] with x
+  by_cases hx : x ∈ B
+  · have hxnorm : vecEuclideanNorm (x - x₀) < r :=
+      (mem_euclideanBall_iff_vecEuclideanNorm_lt hr).1 hx
+    have hev : ∀ᶠ n in atTop, x ∈ Bn n := by
+      filter_upwards [hs_tendsto.eventually (Ioi_mem_nhds hxnorm)] with n hn
+      exact (mem_euclideanBall_iff_vecEuclideanNorm_lt (hs_pos n)).2 hn
+    have hsub : Tendsto
+        (fun n => u.toFun x - average (volume.restrict (Bn n)) u.toFun) atTop
+          (nhds (u.toFun x - average μB u.toFun)) :=
+      (tendsto_const_nhds : Tendsto (fun _ : ℕ => u.toFun x) atTop (nhds (u.toFun x))).sub havg
+    have hF0x : F₀ x = u.toFun x - average μB u.toFun := by
+      simp [F₀, hx]
+    rw [hF0x]
+    exact hsub.congr' (hev.mono (fun n hn => by simp [F, hn]))
+  · have hnot (n : ℕ) : x ∉ Bn n := fun hxn => hx (hBn_sub_B n hxn)
+    simp [F, F₀, hx, hnot]
 
 theorem sobolevPoincare_L6_ball_weak
     (x₀ : Vec 3) {r : ℝ} (hr : 0 < r)
@@ -601,23 +863,7 @@ theorem sobolevPoincare_L6_ball_weak
     apply (mem_euclideanBall_iff_vecEuclideanNorm_lt (hs_pos m)).2
     exact ((mem_euclideanBall_iff_vecEuclideanNorm_lt (hs_pos n)).1 hx).trans_le
       (hs_mono hnm)
-  have hρ_tendsto : Tendsto ρ atTop (nhds 1) := by
-    have hden : Tendsto (fun n : ℕ => (n : ℝ) + 2) atTop atTop := by
-      simpa only [add_comm] using
-        (tendsto_atTop_add_const_left atTop (2 : ℝ)
-          (tendsto_natCast_atTop_atTop :
-            Tendsto (fun n : ℕ => (n : ℝ)) atTop atTop))
-    have hinv : Tendsto (fun n : ℕ => ((n : ℝ) + 2)⁻¹) atTop (nhds 0) :=
-      tendsto_inv_atTop_zero.comp hden
-    have hlim : Tendsto
-        (fun n : ℕ => (1 : ℝ) - ((n : ℝ) + 2)⁻¹) atTop (nhds 1) := by
-      simpa using
-        ((tendsto_const_nhds : Tendsto (fun _ : ℕ => (1 : ℝ)) atTop (nhds 1)).sub hinv)
-    convert hlim using 1
-    funext n
-    dsimp [ρ, div_eq_mul_inv]
-    field_simp
-    ring
+  have hρ_tendsto := @sobolevPoincare_L6_ball_weak_hρ_tendsto_1
   have hs_tendsto : Tendsto s atTop (nhds r) := by
     simpa [s] using
       (tendsto_const_nhds.mul hρ_tendsto : Tendsto
@@ -683,27 +929,7 @@ theorem sobolevPoincare_L6_ball_weak
     have h := tendsto_measure_iUnion_atTop (μ := volume) hBn_mono
     rw [hB_union] at h
     exact (ENNReal.tendsto_toReal hBfinite.ne).comp h
-  have havg : Tendsto (fun n => average (volume.restrict (Bn n)) u.toFun) atTop
-      (nhds (average μB u.toFun)) := by
-    have hinv : Tendsto (fun n => (volume (Bn n)).toReal⁻¹) atTop
-        (nhds (volume B).toReal⁻¹) :=
-      (tendsto_inv₀ hB_real_pos.ne').comp hmeasure
-    have hmul := hinv.mul hnum
-    have hformula (n : ℕ) :
-        average (volume.restrict (Bn n)) u.toFun =
-          (volume (Bn n)).toReal⁻¹ * ∫ x in Bn n, u.toFun x ∂volume := by
-      change (⨍ x in Bn n, u.toFun x ∂volume) = _
-      rw [MeasureTheory.setAverage_eq]
-      simp [Measure.real, smul_eq_mul]
-    have hformulaB : average μB u.toFun =
-        (volume B).toReal⁻¹ * ∫ x in B, u.toFun x ∂volume := by
-      change (⨍ x in B, u.toFun x ∂volume) = _
-      rw [MeasureTheory.setAverage_eq]
-      simp [Measure.real, smul_eq_mul]
-    rw [show (fun n => average (volume.restrict (Bn n)) u.toFun) =
-        (fun n => (volume (Bn n)).toReal⁻¹ * ∫ x in Bn n, u.toFun x ∂volume) by
-          funext n; exact hformula n, hformulaB]
-    exact hmul
+  have havg := @sobolevPoincare_L6_ball_weak_havg_2 x₀ r u hnum hB_real_pos hmeasure
   let F : ℕ → Vec 3 → ℝ := fun n =>
     (Bn n).indicator (fun x => u.toFun x - average (volume.restrict (Bn n)) u.toFun)
   let F₀ : Vec 3 → ℝ := B.indicator
@@ -720,25 +946,7 @@ theorem sobolevPoincare_L6_ball_weak
   have hF0mem : MemLp F₀ 2 (volume : Measure (Vec 3)) := by
     apply (memLp_indicator_iff_restrict hBmeas).2
     exact huB.sub (memLp_const (μ := μB) _)
-  have hFae : ∀ᵐ x ∂(volume : Measure (Vec 3)),
-      Tendsto (fun n => F n x) atTop (nhds (F₀ x)) := by
-    filter_upwards [] with x
-    by_cases hx : x ∈ B
-    · have hxnorm : vecEuclideanNorm (x - x₀) < r :=
-        (mem_euclideanBall_iff_vecEuclideanNorm_lt hr).1 hx
-      have hev : ∀ᶠ n in atTop, x ∈ Bn n := by
-        filter_upwards [hs_tendsto.eventually (Ioi_mem_nhds hxnorm)] with n hn
-        exact (mem_euclideanBall_iff_vecEuclideanNorm_lt (hs_pos n)).2 hn
-      have hsub : Tendsto
-          (fun n => u.toFun x - average (volume.restrict (Bn n)) u.toFun) atTop
-            (nhds (u.toFun x - average μB u.toFun)) :=
-        (tendsto_const_nhds : Tendsto (fun _ : ℕ => u.toFun x) atTop (nhds (u.toFun x))).sub havg
-      have hF0x : F₀ x = u.toFun x - average μB u.toFun := by
-        simp [F₀, hx]
-      rw [hF0x]
-      exact hsub.congr' (hev.mono (fun n hn => by simp [F, hn]))
-    · have hnot (n : ℕ) : x ∉ Bn n := fun hxn => hx (hBn_sub_B n hxn)
-      simp [F, F₀, hx, hnot]
+  have hFae := @sobolevPoincare_L6_ball_weak_hFae_3 x₀ r hr u hs_pos hs_tendsto hBn_sub_B havg
   have hleft : eLpNorm F₀ 6 volume ≤
       atTop.liminf (fun n => eLpNorm (F n) 6 volume) := by
     apply MeasureTheory.Lp.eLpNorm_lim_le_liminf_eLpNorm

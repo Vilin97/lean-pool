@@ -36,6 +36,7 @@ namespace CKN.Core.Step4
 ball is the region on which the slice weak derivative is supplied; the norm
 bound is recorded on the inner half-ball exactly as in display (3.5). -/
 
+/-- One-time-slice weak pressure gradient and its local Calderón–Zygmund estimate. -/
 def pressureGradientOneScaleAt
     (C_CZ R₀ : ℝ) (V : ParabolicPoint → Vec3)
     (p : ParabolicPoint → ℝ) (t : ℝ) : Prop :=
@@ -54,6 +55,7 @@ def pressureGradientOneScaleAt
               eLpNorm (fun y => p (y, t)) (ENNReal.ofReal (3 / 2 : ℝ))
                 (volume.restrict (vec3Ball x ρ)))
 
+/-- Almost-everywhere-in-time version of the one-scale pressure-gradient estimate. -/
 def pressureGradientOneScaleBound
     {J : Set ℝ} (C_CZ R₀ : ℝ)
     (V : ParabolicPoint → Vec3) (p : ParabolicPoint → ℝ) : Prop :=
@@ -169,6 +171,8 @@ theorem pressure_integrable_on_of_suitable_local_box
 local-integrability conjunct is the interface used by localized equation
 representations on arbitrary sub-boxes. -/
 
+/-- Quantitative Morrey bound assembled from velocity, gradient, forcing and harmonic remainders.
+-/
 def oneSidedPressureGradientKP
     (q τ C_CZ R₀ R₁ ε : ℝ) (KU KD : ℝ≥0∞) : ℝ≥0∞ :=
   let κ := min ((1 / τ + 8 / 25)⁻¹) q
@@ -205,6 +209,8 @@ theorem oneSidedPressureGradientKP_lt_top
   dsimp [oneSidedPressureGradientKP]
   apply oneSidedMorreyBound_lt_top (by norm_num) hA hB
 
+/-- Uniform quantitative pressure-gradient conclusion on the prescribed range of Morrey exponents.
+-/
 def oneSidedPressureGradientQuantitative : Prop :=
   ∀ q τ C_CZ R₀ R₁ ε : ℝ, ∀ KU KD : ℝ≥0∞,
     5 / 2 < q → 25 / 3 ≤ τ → τ ≤ 25 →
@@ -294,8 +300,7 @@ theorem initial_pressure_gradient_of_quantitative
     (by norm_num) (by norm_num) hε₀ hKU hKD
   refine ⟨KP, ?_, ?_⟩
   · simpa only [KP] using hKP
-  ·
-    intro Ω I u Du p f hsol hdom hU hD hsmall
+  · intro Ω I u Du p f hsol hdom hU hD hsmall
     obtain ⟨Dp, hAE, hInt, hweak, hN⟩ := hout hsol hdom hU hD hsmall
     refine ⟨Dp, hAE, hInt, hweak, ?_⟩
     intro i

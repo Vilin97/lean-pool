@@ -36,9 +36,9 @@ inverse reading of those definitions, expressing the unnormalized slice
 integrals directly in terms of the scale quantities:
 
 * the time-slice energy essential supremum of `u` is `r * α(z,r)²`,
-* the Dirichlet energy `∬_{Q_r} |∇u|²` is `r * β(z,r)²`,
-* the pressure integral `∬_{Q_r} |p|^{3/2}` is `r² * δ(z,r)³`,
-* the force integral `∬_{Q_r} |f|^q` is `(r^{5/q-3} λ(z,r))^q`, where
+* the Dirichlet energy `∫∫_{Q_r} |∇u|²` is `r * β(z,r)²`,
+* the pressure integral `∫∫_{Q_r} |p|^{3/2}` is `r² * δ(z,r)³`,
+* the force integral `∫∫_{Q_r} |f|^q` is `(r^{5/q-3} λ(z,r))^q`, where
   `σ = 3 - 5/q` is the exponent of `paper/ckn.tex` equation `eq:lambda`.
 
 The definitions pass the underlying `ℝ≥0∞` integral to `ℝ≥0` with
@@ -137,7 +137,7 @@ theorem integral_spatialGradientSq_eq_beta_sq
 /-! ### The pressure integral identity for `delta` -/
 
 /-- Paper equation `eq:slice-norm-bounds`, pressure line: the pressure integral
-`∬_{Q_r} |p|^{3/2}` is `r² * δ(z,r)³`. -/
+`∫∫_{Q_r} |p|^{3/2}` is `r² * δ(z,r)³`. -/
 theorem lintegral_abs_pow_eq_ofReal_delta_cube
     (p : ParabolicPoint → ℝ) (z : ParabolicPoint) {r : ℝ} (hr : 0 < r)
     (hfin : (∫⁻ w in parabolicCylinder z.1 z.2 r,
@@ -156,7 +156,7 @@ theorem lintegral_abs_pow_eq_ofReal_delta_cube
   rw [hmul, ENNReal.ofReal_toReal hfin]
 
 /-- The real Bochner form of the pressure line of `eq:slice-norm-bounds`: the
-pressure integral `∬_{Q_r} |p|^{3/2}` is `r² * δ(z,r)³`. -/
+pressure integral `∫∫_{Q_r} |p|^{3/2}` is `r² * δ(z,r)³`. -/
 theorem integral_abs_pow_eq_delta_cube
     (p : ParabolicPoint → ℝ) (z : ParabolicPoint) {r : ℝ} (hr : 0 < r)
     (hint : IntegrableOn (fun w => |p w| ^ (3 / 2 : ℝ))
@@ -179,7 +179,7 @@ theorem integral_abs_pow_eq_delta_cube
 /-! ### The force integral identity for `lambda` -/
 
 /-- Paper equation `eq:slice-norm-bounds`, force line: with `σ = 3 - 5/q`, the
-force integral `∬_{Q_r} |f|^q` is `(r^{-σ} λ(z,r))^q`. -/
+force integral `∫∫_{Q_r} |f|^q` is `(r^{-σ} λ(z,r))^q`. -/
 theorem lintegral_vec3EuclideanNorm_pow_eq_ofReal_lambda_pow
     (q : ℝ) (f : ParabolicPoint → Vec3) (z : ParabolicPoint) {r : ℝ}
     (hr : 0 < r) (hq : 0 < q)
@@ -250,7 +250,7 @@ theorem sws_lintegral_spatialGradientSq_eq_ofReal_beta_sq
 
 /-- Paper equation `eq:slice-norm-bounds`, pressure line, for a suitable weak
 solution whose cylinder has closure in the carrier: the pressure integral
-`∬_{Q_r} |p|^{3/2}` is `r² * δ(z,r)³`. -/
+`∫∫_{Q_r} |p|^{3/2}` is `r² * δ(z,r)³`. -/
 theorem sws_lintegral_abs_pow_eq_ofReal_delta_cube
     {Ω : Set Vec3} {I : Set ℝ} {q : ℝ}
     {u : ParabolicPoint → Vec3} {Du : ParabolicPoint → Fin 3 → Vec3}
@@ -265,7 +265,7 @@ theorem sws_lintegral_abs_pow_eq_ofReal_delta_cube
 
 /-- Paper equation `eq:slice-norm-bounds`, force line, for a suitable weak
 solution whose cylinder has closure in the carrier: with `σ = 3 - 5/q`, the force
-integral `∬_{Q_r} |f|^q` is `(r^{-σ} λ(z,r))^q`. -/
+integral `∫∫_{Q_r} |f|^q` is `(r^{-σ} λ(z,r))^q`. -/
 theorem sws_lintegral_vec3EuclideanNorm_pow_eq_ofReal_lambda_pow
     {Ω : Set Vec3} {I : Set ℝ} {q : ℝ}
     {u : ParabolicPoint → Vec3} {Du : ParabolicPoint → Fin 3 → Vec3}
@@ -282,7 +282,7 @@ theorem sws_lintegral_vec3EuclideanNorm_pow_eq_ofReal_lambda_pow
 /-! ### The real Bochner identities for suitable weak solutions -/
 
 /-- Paper equation `eq:slice-norm-bounds`, pressure line, in real Bochner form for
-a suitable weak solution: the pressure integral `∬_{Q_r} |p|^{3/2}` is
+a suitable weak solution: the pressure integral `∫∫_{Q_r} |p|^{3/2}` is
 `r² * δ(z,r)³`. -/
 theorem sws_integral_abs_pow_eq_delta_cube
     {Ω : Set Vec3} {I : Set ℝ} {q : ℝ}

@@ -120,6 +120,7 @@ lemma eta_spatialSecond_bound_global (x₀ : Vec3) {ρ : ℝ} (hρ : 0 < ρ)
       cutoffSecondDerivativeConstant / ρ ^ 2 :=
   eta_second_derivative_bound x₀ hρ y i j
 
+/-- Annulus containing the derivatives of the interior harmonic cutoff. -/
 def cutoffAnnulus (x₀ : Vec3) (ρ : ℝ) : Set Vec3 :=
   euclideanBall x₀ (3 * ρ / 4) \ euclideanClosedBall x₀ (13 * ρ / 20)
 
@@ -307,19 +308,24 @@ private lemma kernel_cutoff_derivative_bound
                 ]
             gcongr
 
+/-- Coefficient for the cutoff contribution to the interior harmonic value bound. -/
 noncomputable def harmonicInteriorValueConstant : ℝ :=
   (4 * Real.pi)⁻¹ * 30 * (3 / 4) * cutoffGradientConstant
 
+/-- Coefficient for first-derivative terms in the interior harmonic representation. -/
 noncomputable def harmonicInteriorGradientConstant : ℝ :=
   (4 * Real.pi)⁻¹ * 900 * (3 / 4) * cutoffGradientConstant +
     (4 * Real.pi)⁻¹ * 30 * (9 / 16) * cutoffSecondDerivativeConstant
 
+/-- Coefficient for the Laplacian-cutoff source in the harmonic representation. -/
 noncomputable def harmonicInteriorSourceConstant : ℝ :=
   (4 * Real.pi)⁻¹ * 30 * (27 / 16) * cutoffSecondDerivativeConstant
 
+/-- Coefficient for the gradient of the Laplacian-cutoff source term. -/
 noncomputable def harmonicInteriorSourceGradientConstant : ℝ :=
   (4 * Real.pi)⁻¹ * 900 * (27 / 16) * cutoffSecondDerivativeConstant
 
+/-- Coefficient for spatial differentiation of the harmonic representation kernel. -/
 noncomputable def harmonicInteriorKernelXGradientConstant : ℝ :=
   (4 * Real.pi)⁻¹ * 4 * 27000 * (3 / 4) * cutoffGradientConstant +
     (4 * Real.pi)⁻¹ * 900 * (9 / 16) * cutoffSecondDerivativeConstant
@@ -718,9 +724,9 @@ lemma lpNorm_bound_on
     apply lpNorm_mono_real hconst
     intro x
     by_cases hx : x ∈ s
-    · simp [fi, hx]
+    · simp only [hx, indicator_of_mem, Real.norm_eq_abs, fi]
       exact hbound x hx
-    · simp [fi, hx]
+    · simp only [hx, not_false_eq_true, indicator_of_notMem, norm_zero, fi]
       exact hC
   calc
     lpNorm f p (volume.restrict s) = lpNorm fi p (volume.restrict s) := by
@@ -761,7 +767,7 @@ lemma volume_root_bound
 
 lemma integral_mul_memLp_bound_on
     {A : Set Vec3} (hAmeas : MeasurableSet A)
-    [IsFiniteMeasure (volume.restrict A)] {f k : Vec3 → ℝ}
+    {f k : Vec3 → ℝ}
     (hf : MemLp f (ENNReal.ofReal (3 / 2 : ℝ)) (volume.restrict A))
     (hk : MemLp k (ENNReal.ofReal (3 : ℝ)) (volume.restrict A))
     (hk_zero : ∀ y, y ∉ A → k y = 0) :

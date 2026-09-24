@@ -24,6 +24,7 @@ noncomputable section
 
 namespace CKN
 
+/-- Space-time scaling homeomorphism used for the divergence-free weak equation. -/
 def s2Homeomorph (μ : ℝ) (hμ : 0 < μ) (z₀ : ParabolicPoint) :
     (Vec3 × ℝ) ≃ₜ (Vec3 × ℝ) :=
   Homeomorph.prodCongr

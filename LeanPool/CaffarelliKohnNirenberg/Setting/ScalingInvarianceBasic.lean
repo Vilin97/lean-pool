@@ -27,19 +27,24 @@ noncomputable section
 
 namespace CKN
 
+/-- Spatial part of the parabolic change of variables. -/
 def scalingSpace (μ : ℝ) (x₀ : Vec3) : Vec3 → Vec3 :=
   fun y => x₀ + μ • y
 
+/-- Temporal part of the parabolic change of variables. -/
 def scalingTime (μ : ℝ) (t₀ : ℝ) : ℝ → ℝ :=
   fun s => t₀ + μ ^ 2 * s
 
+/-- Parabolic dilation followed by space-time translation. -/
 def scalingParabolic (μ : ℝ) (z₀ : ParabolicPoint) :
     ParabolicPoint → ParabolicPoint :=
   fun z => parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)
 
+/-- Spatial domain pulled back under the parabolic change of variables. -/
 def rescaledSpace (μ : ℝ) (x₀ : Vec3) (Ω : Set Vec3) : Set Vec3 :=
   scalingSpace μ x₀ ⁻¹' Ω
 
+/-- Time domain pulled back under the parabolic change of variables. -/
 def rescaledTime (μ : ℝ) (t₀ : ℝ) (I : Set ℝ) : Set ℝ :=
   scalingTime μ t₀ ⁻¹' I
 
@@ -92,6 +97,7 @@ theorem rescaledTime_ordConnected {μ : ℝ} (_ : 0 < μ) (t₀ : ℝ)
   simpa [add_comm] using
     (add_le_add_left (mul_le_mul_of_nonneg_left hab (sq_nonneg μ)) t₀)
 
+/-- Homeomorphism underlying the spatial scaling map. -/
 def scalingSpaceHomeomorph (μ : ℝ) (hμ : 0 < μ) (x₀ : Vec3) :
     Vec3 ≃ₜ Vec3 :=
   (Homeomorph.smulOfNeZero μ hμ.ne').trans (Homeomorph.addLeft x₀)
@@ -101,6 +107,7 @@ private theorem scalingSpace_eq_homeomorph (μ : ℝ) (hμ : 0 < μ) (x₀ : Vec
   funext y
   simp [scalingSpace, scalingSpaceHomeomorph]
 
+/-- Homeomorphism underlying the temporal scaling map. -/
 def scalingTimeHomeomorph (μ : ℝ) (hμ : 0 < μ) (t₀ : ℝ) :
     ℝ ≃ₜ ℝ :=
   (Homeomorph.smulOfNeZero (μ ^ 2) (sq_pos_of_pos hμ).ne').trans
@@ -111,6 +118,7 @@ private theorem scalingTime_eq_homeomorph (μ : ℝ) (hμ : 0 < μ) (t₀ : ℝ)
   funext s
   simp [scalingTime, scalingTimeHomeomorph, smul_eq_mul]
 
+/-- Inverse temporal affine map used in scaling the weak equations. -/
 def scalingTimeInv (μ : ℝ) (t₀ : ℝ) : ℝ → ℝ :=
   fun s => (μ ^ 2)⁻¹ * (s - t₀)
 
@@ -156,7 +164,7 @@ theorem map_scalingSpace (μ : ℝ) (hμ : 0 < μ) (x₀ : Vec3) :
   rw [h, ← Measure.map_map (measurable_const_add x₀) (measurable_const_smul μ)]
   rw [Measure.map_addHaar_smul (μ := (volume : Measure Vec3)) hμ.ne',
     Measure.map_smul]
-  rw [MeasureTheory.map_add_left_eq_self]
+  on_goal 1 => rw [MeasureTheory.map_add_left_eq_self]
   · congr 1
     rw [Module.finrank_fin_fun, abs_of_pos (inv_pos.mpr (pow_pos hμ 3)), ← inv_pow]
   · exact (measurable_const_add x₀).aemeasurable
@@ -172,7 +180,7 @@ theorem map_scalingTime (μ : ℝ) (hμ : 0 < μ) (t₀ : ℝ) :
     (measurable_const_smul (μ ^ 2))]
   rw [Measure.map_addHaar_smul (μ := (volume : Measure ℝ))
     (sq_pos_of_pos hμ).ne', Measure.map_smul]
-  rw [MeasureTheory.map_add_left_eq_self]
+  on_goal 1 => rw [MeasureTheory.map_add_left_eq_self]
   · congr 1
     rw [Module.finrank_self]
     norm_num

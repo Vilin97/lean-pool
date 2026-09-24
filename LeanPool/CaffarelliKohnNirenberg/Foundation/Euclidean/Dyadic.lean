@@ -28,24 +28,33 @@ noncomputable section
 
 namespace CKN.Foundation.Euclidean
 
+/-- Integer lattice coordinates locating a dyadic cube in three dimensions. -/
 abbrev DyadicCorner := Fin 3 → ℤ
 
+/-- Integer scale and lattice corner specifying a half-open dyadic cube. -/
 structure DyadicIndex where
+  /-- Dyadic scale index, with side length `2 ^ (-scale)`. -/
   scale : ℤ
+  /-- Integer lattice corner of the dyadic cube. -/
   corner : DyadicCorner
 
+/-- Side length of the dyadic grid at integer scale `k`. -/
 def dyadicScale (k : ℤ) : ℝ := (2 : ℝ) ^ (-k : ℤ)
 
+/-- Half-open dyadic cube with scale index `k` and lattice corner `a`. -/
 def dyadicCube (k : ℤ) (a : DyadicCorner) : Set Vec3 :=
   Set.univ.pi (fun i => Ico ((a i : ℝ) * dyadicScale k)
     (((a i : ℝ) + 1) * dyadicScale k))
 
+/-- Center of a dyadic cube in native Euclidean coordinates. -/
 def dyadicCubeCenter (k : ℤ) (a : DyadicCorner) : Vec3 :=
   fun i => ((a i : ℝ) + 1 / 2) * dyadicScale k
 
+/-- Lattice corner of the unique grid cube containing a point. -/
 def dyadicCorner (k : ℤ) (x : Vec3) : DyadicCorner :=
   fun i => ⌊x i / dyadicScale k⌋
 
+/-- Immediate containing dyadic cube at the next coarser scale. -/
 def dyadicParent (Q : DyadicIndex) : DyadicIndex :=
   { scale := Q.scale - 1
     corner := fun i => Q.corner i / 2 }

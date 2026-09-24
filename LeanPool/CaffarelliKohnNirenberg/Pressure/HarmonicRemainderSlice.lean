@@ -5,6 +5,8 @@ Authors: Scott Armstrong, Vlad Vicol
 -/
 module
 
+public import LeanPool.CaffarelliKohnNirenberg.Foundation.Sobolev.Cutoff.NormTriangle
+
 public import LeanPool.CaffarelliKohnNirenberg.Foundation.Harmonic.InteriorDisplays
 public import LeanPool.CaffarelliKohnNirenberg.Pressure.HarmonicPartDerivatives
 public import LeanPool.CaffarelliKohnNirenberg.Pressure.Lin34Slices
@@ -40,13 +42,8 @@ private lemma euclideanBall_measurable_harmonic (x₀ : Vec3) (r : ℝ) :
     continuous_const).measurableSet
 
 private lemma harmonic_vecEuclideanNorm_eq_l2 (a : Vec3) :
-    vecEuclideanNorm a = ‖WithLp.toLp 2 a‖ := by
-  rw [PiLp.norm_eq_of_L2]
-  simp [vecEuclideanNorm, vecNormSq, vecDot, Real.norm_eq_abs, sq_abs]
-  congr 1
-  apply Finset.sum_congr rfl
-  intro i _hi
-  ring
+    vecEuclideanNorm a = ‖WithLp.toLp 2 a‖ :=
+  vecEuclideanNorm_eq_norm_toLp a
 
 private lemma harmonic_vecNorm_add_le (a b : Vec3) :
     vecEuclideanNorm (a + b) ≤ vecEuclideanNorm a + vecEuclideanNorm b := by

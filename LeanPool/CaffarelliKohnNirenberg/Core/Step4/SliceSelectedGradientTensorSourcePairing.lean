@@ -95,7 +95,8 @@ theorem pressureDivergenceCutoffSourceCentredTensor_pairing_of_divfree
   let W (i j : Fin 3) (x : Vec3) :=
     η x * B i j x + A i j x * spatialDeriv η j x
   have hA (i j : Fin 3) : LocallyIntegrableOn (A i j) U volume :=
-    (loc (p := 1) (by norm_num) ((hu i).mul (hu j))).sub (loc (by norm_num) ((hu i).const_mul (c j)))
+    (loc (p := 1) (by norm_num) ((hu i).mul (hu j))).sub (loc (by norm_num) ((hu i).const_mul (c
+      j)))
   have hB (i j : Fin 3) : LocallyIntegrableOn (B i j) U volume :=
     ((loc (p := 1) (by norm_num) ((hDu i j).mul (hu j))).add
       (loc (p := 1) (by norm_num) ((hu i).mul (hDu j j)))).sub
@@ -153,7 +154,8 @@ theorem pressureDivergenceCutoffSourceCentredTensor_pairing_of_divfree
       have heq : (∑ j, W i j x) =
           pressureDivergenceCutoffSourceCentredTensor η (spatialDeriv η) u Du c x i +
             η x * u x i * ∑ j, Du x j j := by
-        simp only [pressureDivergenceCutoffSourceCentredTensor, Finset.mul_sum, ← Finset.sum_add_distrib]
+        simp only [pressureDivergenceCutoffSourceCentredTensor, Finset.mul_sum, ←
+          Finset.sum_add_distrib]
         apply Finset.sum_congr rfl
         intro j _
         dsimp [W, A, B]

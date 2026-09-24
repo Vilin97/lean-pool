@@ -344,7 +344,7 @@ private lemma pressure_heat_derivative_integral {z : Vec3} (hz : z ≠ 0)
     all_goals ring_nf
   rw [hrpow']
   rw [newtonianKernel_spatialDeriv_formula hz i]
-  simp [vec3EuclideanNorm]
+  simp only [vec3EuclideanNorm, mul_one, one_div, mul_inv_rev, neg_mul]
   change -z i / 2 * (4 * Real.pi) ^ (-(3 / 2 : ℝ)) *
       (8 / vec3EuclideanNorm z ^ 3 * (2⁻¹ * Real.sqrt Real.pi)) =
     -(Real.pi⁻¹ * 4⁻¹ * z i * (∑ j, z j ^ 2) ^ (-(3 : ℝ) / 2))
@@ -477,7 +477,7 @@ private lemma pressure_heat_derivative_integrable {ψ : Vec3 → ℝ} {y : Vec3}
               (by unfold heatKernelGradientNorm; positivity)
           _ = C * heatKernelGradientNorm (p.2-y) p.1 := by ring
       · have hz : g p.2 = 0 := image_eq_zero_of_notMem_tsupport hp
-        simp [F, hz]
+        simp only [hz, mul_zero, norm_zero, ge_iff_le, F]
         exact mul_nonneg hC0 (by unfold heatKernelGradientNorm; positivity)
     simpa only [Measure.restrict_univ] using hnear0
   have ht2 : Integrable (fun t : ℝ => t ^ (-2 : ℝ))

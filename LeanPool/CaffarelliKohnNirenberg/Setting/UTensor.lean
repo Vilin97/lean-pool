@@ -328,7 +328,7 @@ theorem U_bounds_of_sobolevPoincare
     rw [isFiniteMeasure_restrict, volume_vec3Ball_eq]
     exact (ENNReal.mul_lt_top (ENNReal.pow_lt_top ENNReal.ofReal_lt_top)
       ENNReal.ofReal_lt_top).ne
-  haveI : IsFiniteMeasure μ := hμfin
+  have : IsFiniteMeasure μ := hμfin
   have hmeanfree : meanFreeVec u x₀ ρ t = fun y : Vec3 => u (y, t) - cvec := rfl
   have hcmeas : AEMeasurable (fun y : Vec3 => u (y, t) - cvec) μ :=
     humeas.sub aemeasurable_const
@@ -371,12 +371,12 @@ theorem U_bounds_of_sobolevPoincare
   have hIntEq : (∫ y in vec3Ball x₀ ρ, (utensorNorm u x₀ ρ t y) ^ (3 / 2 : ℝ)) =
       ∫ y, (gu y * gv y) ^ (3 / 2 : ℝ) ∂μ := by
     refine integral_congr_ae (Eventually.of_forall (fun y => ?_))
-    show utensorNorm u x₀ ρ t y ^ (3 / 2 : ℝ) = (gu y * gv y) ^ (3 / 2 : ℝ)
+    change utensorNorm u x₀ ρ t y ^ (3 / 2 : ℝ) = (gu y * gv y) ^ (3 / 2 : ℝ)
     rw [hUnorm y]
   have hIntEq1 : (∫ y in vec3Ball x₀ ρ, utensorNorm u x₀ ρ t y) =
       ∫ y, gu y * gv y ∂μ := by
     refine integral_congr_ae (Eventually.of_forall (fun y => ?_))
-    show utensorNorm u x₀ ρ t y = gu y * gv y
+    change utensorNorm u x₀ ρ t y = gu y * gv y
     rw [hUnorm y]
   have hmid : (∫ y, (gu y * gv y) ^ (3 / 2 : ℝ) ∂μ) ^ (2 / 3 : ℝ) ≤
       C₅ * (∫ y, gu y ^ (2 : ℕ) ∂μ) ^ (1 / 2 : ℝ) * G := by
@@ -515,7 +515,7 @@ theorem U_bounds
         rw [volume_vec3Ball_eq]
         exact ENNReal.mul_lt_top (ENNReal.pow_lt_top ENNReal.ofReal_lt_top)
           ENNReal.ofReal_lt_top : volume (vec3Ball z.1 ρ) < ∞)
-  haveI : IsFiniteMeasure μ := ⟨hμtop⟩
+  have : IsFiniteMeasure μ := ⟨hμtop⟩
   have huB : MemLp (fun x : Vec3 => u (x, t)) 2 μ := by
     simpa [μ] using hts.1.mono_measure (Measure.restrict_mono_set volume hball)
   have hDuB : MemLp (fun x : Vec3 => Du (x, t)) 2
@@ -528,8 +528,8 @@ theorem U_bounds
     exact (continuous_vec3EuclideanNorm.measurable.comp_aemeasurable humeas).aestronglyMeasurable
   have hu2 : MemLp (fun x : Vec3 => vec3EuclideanNorm (u (x, t))) 2 μ := by
     apply huB.of_le_mul humeasNorm
-    filter_upwards [] with y
-    rw [Real.norm_of_nonneg (vec3EuclideanNorm_nonneg _)]
+    on_goal 1 => filter_upwards [] with y
+    on_goal 1 => rw [Real.norm_of_nonneg (vec3EuclideanNorm_nonneg _)]
     exact vec3EuclideanNorm_le_sqrt_three_native_utensor (u (y, t))
   let huH1 : ∀ i : Fin 3, H1Function (euclideanBall z.1 ρ) := fun i =>
     { toFun := fun x => u (x, t) i

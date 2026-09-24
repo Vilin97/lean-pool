@@ -196,7 +196,7 @@ private theorem w1p_euclideanBall_gradient_integral_le_sqrt_three
         (ae_of_all (volume.restrict B) hGbound)
     _ = Real.sqrt 3 * ∫ x, vec3EuclideanNorm (u.grad x) ∂volume.restrict B :=
       integral_const_mul _ _
-  
+
 /-- The full scale-explicit (L^1) Poincaré clause on every Euclidean ball. -/
 theorem sobolevPoincare_ball_L1_faithful
     (x₀ : Vec3) {r : ℝ} (hr : 0 < r)

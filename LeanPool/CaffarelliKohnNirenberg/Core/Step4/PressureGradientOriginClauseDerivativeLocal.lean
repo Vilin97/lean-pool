@@ -28,16 +28,16 @@ noncomputable section
 namespace CKN.Core.Step4
 
 private theorem derivative_local_source
-    {τ q : ℝ} (hq : 5/2 < q) (hτ : 25/3 ≤ τ) (hτhi : τ ≤ 25)
+    {τ q : ℝ} (hq : 5 / 2 < q) (hτ : 25 / 3 ≤ τ) (hτhi : τ ≤ 25)
     {Ω : Set Vec3} {I : Set ℝ}
     {u : ParabolicPoint → Vec3} {Du : ParabolicPoint → Fin 3 → Vec3}
     {p : ParabolicPoint → ℝ} {f : ParabolicPoint → Vec3}
     (hsol : IsSuitableWeakSolutionIntegrable Ω I q u Du p f)
     {z : ParabolicPoint} {ρ : ℝ} (hρ : 0 < ρ)
-    (hbox : localBox Ω I (vec3Ball z.1 ρ) (Ioc (z.2-ρ^2) z.2))
+    (hbox : localBox Ω I (vec3Ball z.1 ρ) (Ioc (z.2 - ρ ^ 2) z.2))
     (hU : ∀ j, morreyNorm 3 τ
       ((parabolicCylinder z.1 z.2 ρ).indicator (fun w => u w j)) < ⊤)
-    (hD : ∀ j k, morreyNorm 2 (25/8 : ℝ)
+    (hD : ∀ j k, morreyNorm 2 (25 / 8 : ℝ)
       ((parabolicCylinder z.1 z.2 ρ).indicator (fun w => Du w j k)) < ⊤)
     (i : Fin 3) :
     morreyNorm (6/5 : ℝ) (min ((1/τ+8/25)⁻¹) q)
@@ -84,13 +84,13 @@ private theorem derivative_local_source
     (fun j => (hW j).1) hDa hU (fun j => (hW j).2) hD i
 
 private theorem derivative_local_force
-    {κ q : ℝ} (hκ : 6/5 ≤ κ) (hκq : κ ≤ q)
+    {κ q : ℝ} (hκ : 6 / 5 ≤ κ) (hκq : κ ≤ q)
     {Ω : Set Vec3} {I : Set ℝ}
     {u : ParabolicPoint → Vec3} {Du : ParabolicPoint → Fin 3 → Vec3}
     {p : ParabolicPoint → ℝ} {f : ParabolicPoint → Vec3}
     (hsol : IsSuitableWeakSolutionIntegrable Ω I q u Du p f)
     {z : ParabolicPoint} {ρ : ℝ} (hρ : 0 < ρ)
-    (hbox : localBox Ω I (vec3Ball z.1 ρ) (Ioc (z.2-ρ^2) z.2)) (j : Fin 3) :
+    (hbox : localBox Ω I (vec3Ball z.1 ρ) (Ioc (z.2 - ρ ^ 2) z.2)) (j : Fin 3) :
     morreyNorm (6/5 : ℝ) κ
       ((parabolicCylinder z.1 z.2 ρ).indicator
         (fun w => mollifiedBallCutoff z.1 hρ w.1 * f w j)) < ⊤ := by
@@ -119,7 +119,6 @@ private theorem derivative_local_force
           (mollifiedBallCutoff_le_one z.1 hρ w.1)
       exact (norm_mul (η w.1) (f w j)).le.trans
         (mul_le_of_le_one_left (norm_nonneg _) he)
-
   exact pressure_source_morrey_lt_top_of_memLp (by norm_num) hκ
     ((memLp_indicator_iff_restrict hQ).mpr hprod)
 
@@ -128,14 +127,14 @@ Morrey control of the same selected weak derivative on its spatial half-ball.
 The source and force classes are derived from suitability and the stated
 velocity and gradient Morrey data on the localization cylinder. -/
 theorem originClause_local_derivative_morrey_of_remainder
-    {τ q : ℝ} (hq : 5/2 < q) (hτ : 25/3 ≤ τ) (hτhi : τ ≤ 25)
+    {τ q : ℝ} (hq : 5 / 2 < q) (hτ : 25 / 3 ≤ τ) (hτhi : τ ≤ 25)
     {Ω : Set Vec3} {I : Set ℝ}
     {u : ParabolicPoint → Vec3} {Du : ParabolicPoint → Fin 3 → Vec3}
     {p : ParabolicPoint → ℝ} {f : ParabolicPoint → Vec3}
     {z : ParabolicPoint} {ρ : ℝ} (hρ : 0 < ρ)
     (hrem : ∃ M : ℝ → ℝ≥0∞, AEMeasurable M volume ∧
-      (∫⁻ s, M s ^ (3/2 : ℝ)) < ⊤ ∧
-      ∀ᵐ s ∂volume.restrict (Ioc (z.2-ρ^2) z.2),
+      (∫⁻ s, M s ^ (3 / 2 : ℝ)) < ⊤ ∧
+      ∀ᵐ s ∂volume.restrict (Ioc (z.2 - ρ ^ 2) z.2),
         ∀ i : Fin 3, ∀ x ∈ vec3Ball z.1 (ρ/2),
           ‖classicalGradient
             (harmonicPressurePart (mollifiedBallCutoff z.1 hρ) u

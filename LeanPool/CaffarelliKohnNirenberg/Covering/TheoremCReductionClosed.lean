@@ -126,6 +126,201 @@ private lemma spatialGradientSq_enorm_le
 end CKN
 namespace CKN
 
+private lemma singularSet_null_of_gradient_criterion_closed_hSA_1 :
+    ∀ {Ω : Set Vec3} {I : Set ℝ} {q : ℝ} (ε₁ : ℝ),
+      (0 : ℝ) < ε₁ →
+        ∀ {u : ParabolicPoint → Vec3} {Du : ParabolicPoint → Fin (3 : ℕ) → Vec3}
+          {p : ParabolicPoint → ℝ} {f : ParabolicPoint → Vec3},
+          (∀ z₀ ∈ spaceTimeSet Ω I,
+              limsup
+                    (fun (r : ℝ) =>
+                      (ENNReal.ofReal r)⁻¹ *
+                        ∫⁻ (w : ParabolicPoint) in parabolicCylinder z₀.1 z₀.2 r,
+                          ENNReal.ofReal (spatialGradientSq u Du w))
+                    (𝓝[>] (0 : ℝ)) <
+                  ENNReal.ofReal (ε₁ ^ (2 : ℕ)) →
+                IsRegularPoint Ω I u z₀) →
+            (∀ (Ω' : Set Vec3) (J : Set ℝ),
+                localBox Ω I Ω' J →
+                  AEStronglyMeasurable u (volume.restrict (spaceTimeSet Ω' J)) ∧
+                    AEStronglyMeasurable Du (volume.restrict (spaceTimeSet Ω' J)) ∧
+                      AEStronglyMeasurable p (volume.restrict (spaceTimeSet Ω' J)) ∧
+                        AEStronglyMeasurable f (volume.restrict (spaceTimeSet Ω' J)) ∧
+                          essSup (fun (s : ℝ) => ∫⁻ (x : Vec3) in Ω', ‖u (x, s)‖ₑ ^ (2 : ℝ))
+                                (volume.restrict J) <
+                              ∞ ∧
+                            ∫⁻ (z : ParabolicPoint) in spaceTimeSet Ω' J,
+                                  ‖u z‖ₑ ^ (2 : ℝ) + ‖Du z‖ₑ ^ (2 : ℝ) <
+                                ∞ ∧
+                              MemLp p (ENNReal.ofReal (3 / 2 : ℝ))
+                                  (volume.restrict (spaceTimeSet Ω' J)) ∧
+                                MemLp f (ENNReal.ofReal q) (volume.restrict (spaceTimeSet Ω' J)) ∧
+                                  ∀ (i : Fin (3 : ℕ)),
+                                    ∀ᵐ (s : ℝ) ∂volume.restrict J,
+                                      HasWeakGradientOn Ω' (fun (x : Vec (3 : ℕ)) => u (x, s) i)
+                                        fun (x : Vec (3 : ℕ)) => Du (x, s) i) →
+              ∀ (Ω' : { z : ParabolicPoint // z ∈ spaceTimeSet Ω I } → Set Vec3)
+                (J : { z : ParabolicPoint // z ∈ spaceTimeSet Ω I } → Set ℝ),
+                (∀ (z : { z : ParabolicPoint // z ∈ spaceTimeSet Ω I }),
+                    localBox Ω I (Ω' z) (J z) ∧
+                      IsOpen (J z) ∧ (↑z : ParabolicPoint) ∈ spaceTimeSet (Ω' z) (J z)) →
+                  let U : { z : ParabolicPoint // z ∈ spaceTimeSet Ω I } → Set ParabolicPoint :=
+                    fun (z : { z : ParabolicPoint // z ∈ spaceTimeSet Ω I }) =>
+                    spaceTimeSet (Ω' z) (J z);
+                  (∀ (z : { z : ParabolicPoint // z ∈ spaceTimeSet Ω I }), IsOpen (U z)) →
+                    ∀ (A : Set { z : ParabolicPoint // z ∈ spaceTimeSet Ω I }) (z : (↑A : Type)),
+                      (parabolicHausdorffMeasure (1 : ℝ≥0∞) : Set ParabolicPoint → ℝ≥0∞)
+                          (SingularSet Ω I u ∩
+                            U (↑z : { z : ParabolicPoint // z ∈ spaceTimeSet Ω I })) =
+                        (0 : ℝ≥0∞)
+    := by
+  intro Ω I q ε₁ hε u Du p f hcrit hloc Ω' J hΩJ U hUopen A z
+  have hboxz := hΩJ z.1
+  rcases hloc (Ω' z.1) (J z.1) hboxz.1 with
+    ⟨hu, hDu, hp, hf, hslic, henergy, hpLp, hfLp, hgrad⟩
+  let Du' : ParabolicPoint → Fin 3 → Vec3 := hDu.mk Du
+  let G : ParabolicPoint → ℝ≥0∞ :=
+    (U z.1).indicator (fun w => (9 : ℝ≥0∞) * ‖Du' w‖ₑ ^ (2 : ℝ))
+  have hUmeas : MeasurableSet (U z.1) := (hUopen z.1).measurableSet
+  have hG : Measurable G := by
+    apply Measurable.indicator
+    · have hnorm : Measurable (fun w => ‖Du' w‖ₑ) := hDu.measurable_mk.enorm
+      have hpow : Measurable (fun w => ‖Du' w‖ₑ ^ (2 : ℝ)) :=
+        (ENNReal.continuous_rpow_const (y := (2 : ℝ))).measurable.comp hnorm
+      exact hpow.const_mul (9 : ℝ≥0∞)
+    · exact hUmeas
+  have hDuInt :
+      (∫⁻ w in U z.1, ‖Du w‖ₑ ^ (2 : ℝ)) < ∞ := by
+    calc
+      (∫⁻ w in U z.1, ‖Du w‖ₑ ^ (2 : ℝ)) ≤
+          ∫⁻ w in U z.1,
+            ‖u w‖ₑ ^ (2 : ℝ) + ‖Du w‖ₑ ^ (2 : ℝ) := by
+        apply lintegral_mono_ae
+        exact Eventually.of_forall (fun w =>
+          le_add_of_nonneg_left (by positivity))
+      _ < ∞ := henergy
+  have hGfin : (∫⁻ w, G w) < ∞ := by
+    rw [show G = (U z.1).indicator
+        (fun w => (9 : ℝ≥0∞) * ‖Du' w‖ₑ ^ (2 : ℝ)) by rfl,
+      lintegral_indicator hUmeas]
+    have hAE : Du =ᵐ[volume.restrict (U z.1)] Du' := hDu.ae_eq_mk
+    have hAEpow :
+        (fun w => (9 : ℝ≥0∞) * ‖Du' w‖ₑ ^ (2 : ℝ)) =ᵐ[
+          volume.restrict (U z.1)]
+        (fun w => (9 : ℝ≥0∞) * ‖Du w‖ₑ ^ (2 : ℝ)) := by
+      filter_upwards [hAE] with w hw
+      rw [hw]
+    calc
+      (∫⁻ w in U z.1, (9 : ℝ≥0∞) * ‖Du' w‖ₑ ^ (2 : ℝ)) =
+          ∫⁻ w in U z.1, (9 : ℝ≥0∞) * ‖Du w‖ₑ ^ (2 : ℝ) :=
+        lintegral_congr_ae hAEpow
+      _ = (9 : ℝ≥0∞) * (∫⁻ w in U z.1, ‖Du w‖ₑ ^ (2 : ℝ)) := by
+        exact lintegral_const_mul' (μ := volume.restrict (U z.1))
+          (9 : ℝ≥0∞) (fun w => ‖Du w‖ₑ ^ (2 : ℝ)) ENNReal.coe_ne_top
+      _ < ∞ := ENNReal.mul_lt_top (by norm_num) hDuInt
+  have hsmall : ∀ y ∈ SingularSet Ω I u ∩ U z.1, ∀ n : ℕ, ∃ r : ℝ,
+      0 < r ∧ r < 1 / ((n + 1 : ℕ) : ℝ) ∧
+        parabolicCylinder y.1 y.2 r ⊆ U z.1 ∧
+          ((NNReal.mk (ε₁ ^ (2 : ℕ) / 2) (by positivity) : NNReal) : ℝ≥0∞) *
+              ENNReal.ofReal r <
+            ∫⁻ w in parabolicCylinder y.1 y.2 r, G w := by
+    intro y hy n
+    have hyS : y ∈ SingularSet Ω I u := hy.1
+    have hyO : y ∈ spaceTimeSet Ω I := hyS.1
+    have hyreg : ¬ IsRegularPoint Ω I u y := hyS.2
+    have hnot : ¬ Filter.limsup (fun r : ℝ =>
+        (ENNReal.ofReal r)⁻¹ *
+          ∫⁻ w in parabolicCylinder y.1 y.2 r,
+            ENNReal.ofReal (spatialGradientSq u Du w))
+        (𝓝[>] (0 : ℝ)) < ENNReal.ofReal (ε₁ ^ (2 : ℕ)) := by
+      intro hlim
+      exact hyreg (hcrit y hyO hlim)
+    have hlim : ENNReal.ofReal (ε₁ ^ (2 : ℕ)) ≤
+        Filter.limsup (fun r : ℝ =>
+          (ENNReal.ofReal r)⁻¹ *
+            ∫⁻ w in parabolicCylinder y.1 y.2 r,
+              ENNReal.ofReal (spatialGradientSq u Du w))
+          (𝓝[>] (0 : ℝ)) := le_of_not_gt hnot
+    have hhalf : 0 < ε₁ ^ (2 : ℕ) / 2 := by positivity
+    have hhalf_lt : ε₁ ^ (2 : ℕ) / 2 < ε₁ ^ (2 : ℕ) := by
+      linarith only [hhalf]
+    have hfreq : ∃ᶠ r in (𝓝[>] (0 : ℝ)),
+        ENNReal.ofReal (ε₁ ^ (2 : ℕ) / 2) <
+          (ENNReal.ofReal r)⁻¹ *
+            ∫⁻ w in parabolicCylinder y.1 y.2 r,
+              ENNReal.ofReal (spatialGradientSq u Du w) := by
+      refine frequently_lt_of_lt_limsup (hu := by isBoundedDefault) (h := ?_)
+      exact (ENNReal.ofReal_lt_ofReal_iff (by positivity)).2 hhalf_lt |>.trans_le hlim
+    rcases Metric.mem_nhds_iff.mp ((hUopen z.1).mem_nhds hy.2) with
+      ⟨δ, hδ, hδU⟩
+    have hev : ∀ᶠ r in (𝓝[>] (0 : ℝ)),
+        0 < r ∧ r < 1 / ((n + 1 : ℕ) : ℝ) ∧
+          parabolicCylinder y.1 y.2 r ⊆ U z.1 := by
+      have hδev : ∀ᶠ r in (𝓝[>] (0 : ℝ)), r ∈ Ioo (0 : ℝ) δ :=
+        Ioo_mem_nhdsGT hδ
+      have hnev : ∀ᶠ r in (𝓝[>] (0 : ℝ)),
+          r ∈ Ioo (0 : ℝ) (1 / ((n + 1 : ℕ) : ℝ)) :=
+        Ioo_mem_nhdsGT (by positivity)
+      filter_upwards [hδev, hnev] with r hrδ hrn
+      refine ⟨hrδ.1, hrn.2, ?_⟩
+      exact (parabolicCylinder_subset_metricBall_self hrδ.1).trans
+        ((Metric.ball_subset_ball hrδ.2.le).trans hδU)
+    rcases (hfreq.and_eventually hev).exists with ⟨r, hrE, hr⟩
+    have hr0 : ENNReal.ofReal r ≠ 0 := (ENNReal.ofReal_pos.mpr hr.1).ne'
+    have hmul := ENNReal.mul_lt_mul_right hr0 ENNReal.ofReal_ne_top hrE
+    have hmul' : ENNReal.ofReal (ε₁ ^ (2 : ℕ) / 2) * ENNReal.ofReal r <
+        ∫⁻ w in parabolicCylinder y.1 y.2 r,
+          ENNReal.ofReal (spatialGradientSq u Du w) := by
+      calc
+        ENNReal.ofReal (ε₁ ^ (2 : ℕ) / 2) * ENNReal.ofReal r =
+            ENNReal.ofReal r * ENNReal.ofReal (ε₁ ^ (2 : ℕ) / 2) := by
+              rw [mul_comm]
+        _ < ENNReal.ofReal r *
+            ((ENNReal.ofReal r)⁻¹ *
+              ∫⁻ w in parabolicCylinder y.1 y.2 r,
+                ENNReal.ofReal (spatialGradientSq u Du w)) := hmul
+        _ = ∫⁻ w in parabolicCylinder y.1 y.2 r,
+            ENNReal.ofReal (spatialGradientSq u Du w) := by
+              rw [← mul_assoc, ENNReal.mul_inv_cancel hr0 ENNReal.ofReal_ne_top,
+                one_mul]
+    have hCmeas : MeasurableSet (parabolicCylinder y.1 y.2 r) := by
+      rw [parabolicCylinder]
+      exact (vec3Ball_measurable _ _).prod measurableSet_Ioc
+    have hAE_C : Du =ᵐ[volume.restrict (parabolicCylinder y.1 y.2 r)] Du' :=
+      Eventually.filter_mono (ae_mono (Measure.restrict_mono hr.2.2 le_rfl))
+        hDu.ae_eq_mk
+    have hgradG :
+        (∫⁻ w in parabolicCylinder y.1 y.2 r,
+            ENNReal.ofReal (spatialGradientSq u Du w)) ≤
+          ∫⁻ w in parabolicCylinder y.1 y.2 r, G w := by
+      apply lintegral_mono_ae
+      filter_upwards [hAE_C, ae_restrict_mem hCmeas] with w hw hwC
+      change ENNReal.ofReal (spatialGradientSq u Du w) ≤
+        (U z.1).indicator (fun w => (9 : ℝ≥0∞) * ‖Du' w‖ₑ ^ (2 : ℝ)) w
+      rw [Set.indicator_of_mem (hr.2.2 hwC)]
+      calc
+        ENNReal.ofReal (spatialGradientSq u Du w) =
+            ENNReal.ofReal (spatialGradientSq u Du' w) := by
+              congr 1
+              unfold spatialGradientSq
+              rw [hw]
+        _ ≤ 9 * ‖Du' w‖ₑ ^ (2 : ℝ) := spatialGradientSq_enorm_le u Du' w
+    have hmulG := hmul'.trans_le hgradG
+    refine ⟨r, hr.1, hr.2.1, hr.2.2, ?_⟩
+    have hcoe :
+        ((NNReal.mk (ε₁ ^ (2 : ℕ) / 2) (by positivity) : NNReal) : ℝ≥0∞) =
+          ENNReal.ofReal (ε₁ ^ (2 : ℕ) / 2) := by
+      symm
+      exact ENNReal.ofReal_eq_coe_nnreal (by positivity)
+    rw [hcoe]
+    exact hmulG
+  have hεNN : 0 < (NNReal.mk (ε₁ ^ (2 : ℕ) / 2) (by positivity) : NNReal) := by
+    change 0 < ε₁ ^ (2 : ℕ) / 2
+    positivity
+  exact parabolicHausdorffMeasure_one_eq_zero_of_small_cylinders
+    hG (hUopen z.1) inter_subset_right
+    hεNN hsmall hGfin
+
 theorem singularSet_null_of_gradient_criterion_closed
     {Ω : Set Vec3} {I : Set ℝ} {q : ℝ}
     (hq : 5 / 2 < q) (ε₁ : ℝ) (hε : 0 < ε₁)
@@ -161,154 +356,8 @@ theorem singularSet_null_of_gradient_criterion_closed
     exact hΩJ z |>.2.2
   obtain ⟨A, hAcount, hAcov⟩ := countable_cover_nhds hVnhds
   let _ : Countable A := hAcount.to_subtype
-  have hSA : ∀ z : A,
-      parabolicHausdorffMeasure 1 (SingularSet Ω I u ∩ U z) = 0 := by
-    intro z
-    have hboxz := hΩJ z.1
-    rcases hloc (Ω' z.1) (J z.1) hboxz.1 with
-      ⟨hu, hDu, hp, hf, hslic, henergy, hpLp, hfLp, hgrad⟩
-    let Du' : ParabolicPoint → Fin 3 → Vec3 := hDu.mk Du
-    let G : ParabolicPoint → ℝ≥0∞ :=
-      (U z.1).indicator (fun w => (9 : ℝ≥0∞) * ‖Du' w‖ₑ ^ (2 : ℝ))
-    have hUmeas : MeasurableSet (U z.1) := (hUopen z.1).measurableSet
-    have hG : Measurable G := by
-      apply Measurable.indicator
-      · have hnorm : Measurable (fun w => ‖Du' w‖ₑ) := hDu.measurable_mk.enorm
-        have hpow : Measurable (fun w => ‖Du' w‖ₑ ^ (2 : ℝ)) :=
-          (ENNReal.continuous_rpow_const (y := (2 : ℝ))).measurable.comp hnorm
-        exact hpow.const_mul (9 : ℝ≥0∞)
-      · exact hUmeas
-    have hDuInt :
-        (∫⁻ w in U z.1, ‖Du w‖ₑ ^ (2 : ℝ)) < ∞ := by
-      calc
-        (∫⁻ w in U z.1, ‖Du w‖ₑ ^ (2 : ℝ)) ≤
-            ∫⁻ w in U z.1,
-              ‖u w‖ₑ ^ (2 : ℝ) + ‖Du w‖ₑ ^ (2 : ℝ) := by
-          apply lintegral_mono_ae
-          exact Eventually.of_forall (fun w =>
-            le_add_of_nonneg_left (by positivity))
-        _ < ∞ := henergy
-    have hGfin : (∫⁻ w, G w) < ∞ := by
-      rw [show G = (U z.1).indicator
-          (fun w => (9 : ℝ≥0∞) * ‖Du' w‖ₑ ^ (2 : ℝ)) by rfl,
-        lintegral_indicator hUmeas]
-      have hAE : Du =ᵐ[volume.restrict (U z.1)] Du' := hDu.ae_eq_mk
-      have hAEpow :
-          (fun w => (9 : ℝ≥0∞) * ‖Du' w‖ₑ ^ (2 : ℝ)) =ᵐ[
-            volume.restrict (U z.1)]
-          (fun w => (9 : ℝ≥0∞) * ‖Du w‖ₑ ^ (2 : ℝ)) := by
-        filter_upwards [hAE] with w hw
-        rw [hw]
-      calc
-        (∫⁻ w in U z.1, (9 : ℝ≥0∞) * ‖Du' w‖ₑ ^ (2 : ℝ)) =
-            ∫⁻ w in U z.1, (9 : ℝ≥0∞) * ‖Du w‖ₑ ^ (2 : ℝ) :=
-          lintegral_congr_ae hAEpow
-        _ = (9 : ℝ≥0∞) * (∫⁻ w in U z.1, ‖Du w‖ₑ ^ (2 : ℝ)) := by
-          exact lintegral_const_mul' (μ := volume.restrict (U z.1))
-            (9 : ℝ≥0∞) (fun w => ‖Du w‖ₑ ^ (2 : ℝ)) ENNReal.coe_ne_top
-        _ < ∞ := ENNReal.mul_lt_top (by norm_num) hDuInt
-    have hsmall : ∀ y ∈ SingularSet Ω I u ∩ U z.1, ∀ n : ℕ, ∃ r : ℝ,
-        0 < r ∧ r < 1 / ((n + 1 : ℕ) : ℝ) ∧
-          parabolicCylinder y.1 y.2 r ⊆ U z.1 ∧
-            ((NNReal.mk (ε₁ ^ (2 : ℕ) / 2) (by positivity) : NNReal) : ℝ≥0∞) *
-                ENNReal.ofReal r <
-              ∫⁻ w in parabolicCylinder y.1 y.2 r, G w := by
-      intro y hy n
-      have hyS : y ∈ SingularSet Ω I u := hy.1
-      have hyO : y ∈ spaceTimeSet Ω I := hyS.1
-      have hyreg : ¬ IsRegularPoint Ω I u y := hyS.2
-      have hnot : ¬ Filter.limsup (fun r : ℝ =>
-          (ENNReal.ofReal r)⁻¹ *
-            ∫⁻ w in parabolicCylinder y.1 y.2 r,
-              ENNReal.ofReal (spatialGradientSq u Du w))
-          (𝓝[>] (0 : ℝ)) < ENNReal.ofReal (ε₁ ^ (2 : ℕ)) := by
-        intro hlim
-        exact hyreg (hcrit y hyO hlim)
-      have hlim : ENNReal.ofReal (ε₁ ^ (2 : ℕ)) ≤
-          Filter.limsup (fun r : ℝ =>
-            (ENNReal.ofReal r)⁻¹ *
-              ∫⁻ w in parabolicCylinder y.1 y.2 r,
-                ENNReal.ofReal (spatialGradientSq u Du w))
-            (𝓝[>] (0 : ℝ)) := le_of_not_gt hnot
-      have hhalf : 0 < ε₁ ^ (2 : ℕ) / 2 := by positivity
-      have hhalf_lt : ε₁ ^ (2 : ℕ) / 2 < ε₁ ^ (2 : ℕ) := by
-        linarith only [hhalf]
-      have hfreq : ∃ᶠ r in (𝓝[>] (0 : ℝ)),
-          ENNReal.ofReal (ε₁ ^ (2 : ℕ) / 2) <
-            (ENNReal.ofReal r)⁻¹ *
-              ∫⁻ w in parabolicCylinder y.1 y.2 r,
-                ENNReal.ofReal (spatialGradientSq u Du w) := by
-        refine frequently_lt_of_lt_limsup (hu := by isBoundedDefault) (h := ?_)
-        exact (ENNReal.ofReal_lt_ofReal_iff (by positivity)).2 hhalf_lt |>.trans_le hlim
-      rcases Metric.mem_nhds_iff.mp ((hUopen z.1).mem_nhds hy.2) with
-        ⟨δ, hδ, hδU⟩
-      have hev : ∀ᶠ r in (𝓝[>] (0 : ℝ)),
-          0 < r ∧ r < 1 / ((n + 1 : ℕ) : ℝ) ∧
-            parabolicCylinder y.1 y.2 r ⊆ U z.1 := by
-        have hδev : ∀ᶠ r in (𝓝[>] (0 : ℝ)), r ∈ Ioo (0 : ℝ) δ :=
-          Ioo_mem_nhdsGT hδ
-        have hnev : ∀ᶠ r in (𝓝[>] (0 : ℝ)),
-            r ∈ Ioo (0 : ℝ) (1 / ((n + 1 : ℕ) : ℝ)) :=
-          Ioo_mem_nhdsGT (by positivity)
-        filter_upwards [hδev, hnev] with r hrδ hrn
-        refine ⟨hrδ.1, hrn.2, ?_⟩
-        exact (parabolicCylinder_subset_metricBall_self hrδ.1).trans
-          ((Metric.ball_subset_ball hrδ.2.le).trans hδU)
-      rcases (hfreq.and_eventually hev).exists with ⟨r, hrE, hr⟩
-      have hr0 : ENNReal.ofReal r ≠ 0 := (ENNReal.ofReal_pos.mpr hr.1).ne'
-      have hmul := ENNReal.mul_lt_mul_right hr0 ENNReal.ofReal_ne_top hrE
-      have hmul' : ENNReal.ofReal (ε₁ ^ (2 : ℕ) / 2) * ENNReal.ofReal r <
-          ∫⁻ w in parabolicCylinder y.1 y.2 r,
-            ENNReal.ofReal (spatialGradientSq u Du w) := by
-        calc
-          ENNReal.ofReal (ε₁ ^ (2 : ℕ) / 2) * ENNReal.ofReal r =
-              ENNReal.ofReal r * ENNReal.ofReal (ε₁ ^ (2 : ℕ) / 2) := by
-                rw [mul_comm]
-          _ < ENNReal.ofReal r *
-              ((ENNReal.ofReal r)⁻¹ *
-                ∫⁻ w in parabolicCylinder y.1 y.2 r,
-                  ENNReal.ofReal (spatialGradientSq u Du w)) := hmul
-          _ = ∫⁻ w in parabolicCylinder y.1 y.2 r,
-              ENNReal.ofReal (spatialGradientSq u Du w) := by
-                rw [← mul_assoc, ENNReal.mul_inv_cancel hr0 ENNReal.ofReal_ne_top,
-                  one_mul]
-      have hCmeas : MeasurableSet (parabolicCylinder y.1 y.2 r) := by
-        rw [parabolicCylinder]
-        exact (vec3Ball_measurable _ _).prod measurableSet_Ioc
-      have hAE_C : Du =ᵐ[volume.restrict (parabolicCylinder y.1 y.2 r)] Du' :=
-        Eventually.filter_mono (ae_mono (Measure.restrict_mono hr.2.2 le_rfl))
-          hDu.ae_eq_mk
-      have hgradG :
-          (∫⁻ w in parabolicCylinder y.1 y.2 r,
-              ENNReal.ofReal (spatialGradientSq u Du w)) ≤
-            ∫⁻ w in parabolicCylinder y.1 y.2 r, G w := by
-        apply lintegral_mono_ae
-        filter_upwards [hAE_C, ae_restrict_mem hCmeas] with w hw hwC
-        change ENNReal.ofReal (spatialGradientSq u Du w) ≤
-          (U z.1).indicator (fun w => (9 : ℝ≥0∞) * ‖Du' w‖ₑ ^ (2 : ℝ)) w
-        rw [Set.indicator_of_mem (hr.2.2 hwC)]
-        calc
-          ENNReal.ofReal (spatialGradientSq u Du w) =
-              ENNReal.ofReal (spatialGradientSq u Du' w) := by
-                congr 1
-                unfold spatialGradientSq
-                rw [hw]
-          _ ≤ 9 * ‖Du' w‖ₑ ^ (2 : ℝ) := spatialGradientSq_enorm_le u Du' w
-      have hmulG := hmul'.trans_le hgradG
-      refine ⟨r, hr.1, hr.2.1, hr.2.2, ?_⟩
-      have hcoe :
-          ((NNReal.mk (ε₁ ^ (2 : ℕ) / 2) (by positivity) : NNReal) : ℝ≥0∞) =
-            ENNReal.ofReal (ε₁ ^ (2 : ℕ) / 2) := by
-        symm
-        exact ENNReal.ofReal_eq_coe_nnreal (by positivity)
-      rw [hcoe]
-      exact hmulG
-    have hεNN : 0 < (NNReal.mk (ε₁ ^ (2 : ℕ) / 2) (by positivity) : NNReal) := by
-      change 0 < ε₁ ^ (2 : ℕ) / 2
-      positivity
-    exact parabolicHausdorffMeasure_one_eq_zero_of_small_cylinders
-      hG (hUopen z.1) inter_subset_right
-      hεNN hsmall hGfin
+  have hSA := @singularSet_null_of_gradient_criterion_closed_hSA_1 Ω I q ε₁ hε u Du p f hcrit hloc
+    Ω' J hΩJ hUopen A
   have hUclosureData (z : A) :
       IsCompact (closure (U z.1)) ∧
         closure (U z.1) ⊆ spaceTimeSet Ω I := by

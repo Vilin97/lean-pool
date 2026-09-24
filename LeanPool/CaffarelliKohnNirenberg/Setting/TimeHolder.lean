@@ -27,6 +27,7 @@ noncomputable section
 
 namespace CKN
 
+/-- Backward time interval of parabolic length `r ^ 2` ending at `t`. -/
 def backwardInterval (t r : ℝ) : Set ℝ := Ioc (t - r ^ 2) t
 
 private lemma backwardInterval_subset {t r ρ : ℝ} (hr : 0 < r)

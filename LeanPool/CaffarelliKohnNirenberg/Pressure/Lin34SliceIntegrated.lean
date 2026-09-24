@@ -235,7 +235,7 @@ theorem lin34J_integral_bound
 /-- **`eq:lin35-force` of `prop:lin34`(ii-b) for a suitable weak solution.**
 
 The pressure quantity `D(z₀,r)` is bounded by the velocity oscillation
-`Ĉ(z₀,ρ)` with the factor `(ρ/r)²`, the pressure quantity `D(z₀,ρ)` with the
+`C_hat(z₀,ρ)` with the factor `(ρ/r)²`, the pressure quantity `D(z₀,ρ)` with the
 factor `r/ρ`, and the force quantity `λ(z₀,ρ)^{3/2}` with the factor
 `(r/ρ)^{3/2}`.  The only named analytic input is the Calderón--Zygmund bound
 `ext:CZ` for the centred first potential. -/

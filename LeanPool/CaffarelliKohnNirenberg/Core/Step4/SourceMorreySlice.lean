@@ -28,6 +28,7 @@ namespace CKN.Core.Step4
 spatial cutoff.  These bounds are source estimates only; they do not select a
 weak pressure gradient or prove its spacetime pairing. -/
 
+/-- Cutoff pressure-Poisson source used to estimate the selected gradient in Morrey spaces. -/
 def sourceMorreyCutoffV
     (η : Vec3 → ℝ) (dη : Fin 3 → Vec3 → ℝ)
     (u : Vec3 → Vec3) (Du : Vec3 → Fin 3 → Vec3) (f : Vec3 → Vec3) : Vec3 → Vec3 :=

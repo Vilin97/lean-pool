@@ -41,8 +41,10 @@ theorem canonical_spaceTime_cutoff_box {r R t₀ : ℝ}
     exact spaceTimeCutoff_smooth (0 : Vec3) t₀ r R hr hrR
   have hχcompact : HasCompactSupport χ := by
     apply HasCompactSupport.intro
-      (isCompact_euclideanClosedBall (0 : Vec3) (R := R)
-        (lt_of_le_of_lt hr hrR).le |>.prod isCompact_Icc)
+      (show IsCompact (euclideanClosedBall (0 : Vec3) R ×ˢ
+        Icc (t₀ - R ^ 2) (t₀ + (R ^ 2 - r ^ 2))) from
+          (isCompact_euclideanClosedBall (0 : Vec3) (R := R)
+            (lt_of_le_of_lt hr hrR).le).prod isCompact_Icc)
     intro z hz
     by_contra hne
     have hsupp : z ∈ Function.support χ := hne
@@ -147,17 +149,22 @@ private lemma canonical_cutoff_potential_agreement
 
 /-! The causal heat potential with a divergence-form source. -/
 
+/-- Vector Duhamel potential with the sign convention for the localized divergence equation. -/
 def duhamelPotential (g : ParabolicPoint → Vec3)
     (h : Fin 3 → ParabolicPoint → Vec3) (z : ParabolicPoint) : Vec3 :=
   fun i =>
     (∫ v, heatPotentialKernel z v * g v i) -
       ∑ j, ∫ v, heatPotentialSpatialKernel j z v * h j v i
 
+/-- Common interior cylinder containing the supports needed for the localized Duhamel argument. -/
 structure DuhamelSupportData
     (v g : ParabolicPoint → Vec3)
     (h : Fin 3 → ParabolicPoint → Vec3) where
+  /-- Inner radius on which the common Duhamel cutoff is one. -/
   r : ℝ
+  /-- Outer radius containing the supports of all localized sources. -/
   R : ℝ
+  /-- Reference time for the common Duhamel support cylinder. -/
   t₀ : ℝ
   hr : 0 ≤ r
   hrR : r < R

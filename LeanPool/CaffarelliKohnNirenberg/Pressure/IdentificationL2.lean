@@ -158,7 +158,8 @@ private lemma hessian_laplacian_pairing {u ψ : Vec3 → ℝ}
     rw [integral_finsetSum]
     intro k hk
     exact ((hu.continuous.mul
-      (contDiff_spatialDeriv_smooth (contDiff_spatialDeriv_smooth hψm k) k).continuous).integrable_of_hasCompactSupport
+      (contDiff_spatialDeriv_smooth (contDiff_spatialDeriv_smooth hψm k)
+        k).continuous).integrable_of_hasCompactSupport
       (hasCompactSupport_spatialDeriv
         (hasCompactSupport_spatialDeriv hψmc k) k |>.mul_left (f := u)))
   rw [hleftSum, hrightSum]

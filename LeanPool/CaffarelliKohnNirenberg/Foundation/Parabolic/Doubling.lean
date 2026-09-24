@@ -30,6 +30,7 @@ noncomputable section
 
 namespace CKN.Foundation.Parabolic
 
+/-- Linear spatial dilation used in the parabolic doubling calculation. -/
 def doublingVec3ScaleLinear (a : ℝ) : Vec3 →ₗ[ℝ] Vec3 :=
   a • LinearMap.id
 

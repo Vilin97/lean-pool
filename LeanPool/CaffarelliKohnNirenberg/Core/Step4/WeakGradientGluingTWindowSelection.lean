@@ -39,7 +39,8 @@ theorem memLp_product_indicator_slices
   · have heq : (fun y => (B ×ˢ J).indicator F (y, s)) =
         B.indicator (fun y => F (y, s)) := by
       funext y
-      by_cases hy : y ∈ B <;> simp only [Set.indicator, mem_prod, hy, hsj, and_self, false_and, ↓reduceIte]
+      by_cases hy : y ∈ B <;> simp only [Set.indicator, mem_prod, hy, hsj, and_self, false_and,
+        ↓reduceIte]
     rw [heq]
     exact (hs hsj).indicator hB
   · have heq : (fun y => (B ×ˢ J).indicator F (y, s)) = fun _ => 0 := by

@@ -251,7 +251,7 @@ theorem lin34_slice_pointwise_bound
   have hone : (1 : ENNReal) ≤ ENNReal.ofReal (3 / 2 : ℝ) := by
     rw [show (1 : ENNReal) = ENNReal.ofReal (1 : ℝ) by simp]
     exact ENNReal.ofReal_le_ofReal (by norm_num)
-  haveI : IsFiniteMeasure (volume.restrict (vec3Ball x₀ ρ)) := by
+  have : IsFiniteMeasure (volume.restrict (vec3Ball x₀ ρ)) := by
     refine isFiniteMeasure_restrict.mpr ?_
     rw [volume_vec3Ball_eq]
     exact (ENNReal.mul_lt_top (ENNReal.pow_lt_top ENNReal.ofReal_lt_top)

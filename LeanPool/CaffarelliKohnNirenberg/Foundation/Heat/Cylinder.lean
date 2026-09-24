@@ -27,6 +27,7 @@ namespace CKN.Foundation.Heat
 
 open CKN.Foundation.Parabolic
 
+/-- Spatial-gradient bound for the rescaled backward heat test function. -/
 def backwardHeatTestGradientNorm (r : ℝ) (x : Vec3) (t : ℝ) : ℝ :=
   r ^ 2 * heatKernelGradientNorm x (r ^ 2 - t)
 

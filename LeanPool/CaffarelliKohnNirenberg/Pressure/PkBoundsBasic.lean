@@ -29,6 +29,7 @@ namespace CKN
 
 /-! Common annular and time-integration facts for the pressure terms. -/
 
+/-- Spatial annulus supporting derivatives of the pressure cutoff. -/
 def pressureAnnulus (x₀ : Vec3) (ρ : ℝ) : Set Vec3 :=
   vec3Ball x₀ (3 * ρ / 4) \ vec3Ball x₀ (13 * ρ / 20)
 
@@ -209,6 +210,7 @@ theorem pressure_cylinder_eLpNorm_le {P : Vec3 × ℝ → ℝ} {G : ℝ → ℝ}
       rw [hlin]
       simp [μx, μt]
 
+/-- Euclidean tensor norm of the partially centered pressure source. -/
 def pressureUTensorNorm (u : ParabolicPoint → Vec3) (c : ℝ → Vec3)
     (s : ℝ) (y : Vec3) : ℝ :=
   Real.sqrt (∑ i : Fin 3, ∑ j : Fin 3,

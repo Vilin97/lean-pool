@@ -267,7 +267,7 @@ the Newtonian potentials of display (3.5) of the pressure-gradient section. -/
 theorem hasCompactSupport_cutoff_mul_force
     (x₀ : Vec3) {ρ : ℝ} (hρ : 0 < ρ) (f : ParabolicPoint → Vec3) (s : ℝ) (j : Fin 3) :
     HasCompactSupport (fun y : Vec3 => mollifiedBallCutoff x₀ hρ y * f (y, s) j) := by
-  show HasCompactSupport (mollifiedBallCutoff x₀ hρ * fun y : Vec3 => f (y, s) j)
+  change HasCompactSupport (mollifiedBallCutoff x₀ hρ * fun y : Vec3 => f (y, s) j)
   exact (mollifiedBallCutoff_hasCompactSupport x₀ hρ).mul_right
 
 /-- The slice data of the two force densities of `eq:pk` on a ball, given only that the

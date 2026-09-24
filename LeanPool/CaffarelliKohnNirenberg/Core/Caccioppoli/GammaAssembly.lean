@@ -31,6 +31,175 @@ namespace CKN
 `lem:caccioppoli-gamma`.  The lower energy certificate remains explicit until
 the unconditional Caccioppoli producer supplies it. -/
 
+private lemma caccioppoli_gamma_hI₂b_1 :
+    ∀ {u : ParabolicPoint → Vec3} {x₀ : Vec3} {t₀ ρ r ε C₂₅ : ℝ} (hρ : (0 : ℝ) < ρ)
+      (hε : (0 : ℝ) < ε),
+      (0 : ℝ) < r →
+        ∀ {c : ParabolicPoint → ℝ} {I₂ : ℝ},
+          I₂ =
+              caccioppoliI2HeatCutoffRaw (u := u) (c := c) (x₀ := x₀) (t₀ := t₀) (r := r) hρ
+                hε →
+            (3 : ℝ) * ((1500 : ℝ) * cutoffGradientConstant + (900000 : ℝ)) ≤
+                (C₂₅ / √(6000 : ℝ)) ^ (2 : ℕ) →
+              caccioppoliI2HeatCutoffRaw (u := u) (c := c) (x₀ := x₀) (t₀ := t₀) (r := r) hρ
+                    hε ≤
+                  (3 : ℝ) * ((1500 : ℝ) * cutoffGradientConstant + (900000 : ℝ)) *
+                      (ρ ^ (2 : ℕ) / r ^ (2 : ℕ)) *
+                    gamma u (x₀, t₀) ρ ^ (3 : ℕ) →
+                (0 : ℝ) ≤ gamma u (x₀, t₀) ρ →
+                  ρ ^ (2 : ℕ) / r ^ (2 : ℕ) = ((r / ρ) ^ (-1 : ℝ)) ^ (2 : ℕ) →
+                    (gamma u (x₀, t₀) ρ ^ (3 / 2 : ℝ)) ^ (2 : ℕ) = gamma u (x₀, t₀) ρ ^ (3 : ℕ) →
+                      I₂ ≤
+                        (C₂₅ / √(6000 : ℝ) * (r / ρ) ^ (-1 : ℝ) *
+                            gamma u (x₀, t₀) ρ ^ (3 / 2 : ℝ)) ^
+                          (2 : ℕ)
+    := by
+  intro u x₀ t₀ ρ r ε C₂₅ hρ hε hr c I₂ hI₂ hK₂' hI₂raw hγ hratio hγpow
+  rw [hI₂]
+  have hfactor : 0 ≤ ((r / ρ) ^ (-1 : ℝ)) ^ (2 : ℕ) *
+      gamma u (x₀, t₀) ρ ^ (3 : ℕ) := by positivity
+  calc
+    _ ≤ 3 * (1500 * cutoffGradientConstant + 900000) *
+        ((r / ρ) ^ (-1 : ℝ)) ^ (2 : ℕ) *
+        gamma u (x₀, t₀) ρ ^ (3 : ℕ) := by
+      rw [← hratio]
+      exact hI₂raw
+    _ ≤ (C₂₅ / Real.sqrt (6000 : ℝ)) ^ 2 *
+        ((r / ρ) ^ (-1 : ℝ)) ^ (2 : ℕ) *
+        gamma u (x₀, t₀) ρ ^ (3 : ℕ) := by
+      calc
+        _ = (3 * (1500 * cutoffGradientConstant + 900000)) *
+            (((r / ρ) ^ (-1 : ℝ)) ^ (2 : ℕ) *
+              gamma u (x₀, t₀) ρ ^ (3 : ℕ)) := by ring
+        _ ≤ (C₂₅ / Real.sqrt (6000 : ℝ)) ^ 2 *
+            (((r / ρ) ^ (-1 : ℝ)) ^ (2 : ℕ) *
+            gamma u (x₀, t₀) ρ ^ (3 : ℕ)) :=
+          mul_le_mul_of_nonneg_right hK₂' hfactor
+        _ = _ := by ring
+    _ = _ := by
+      calc
+        _ = (C₂₅ / Real.sqrt (6000 : ℝ)) ^ 2 *
+            ((r / ρ) ^ (-1 : ℝ)) ^ 2 *
+            (gamma u (x₀, t₀) ρ ^ (3 / 2 : ℝ)) ^ 2 := by
+          rw [← hγpow]
+        _ = _ := by ring
+
+private lemma caccioppoli_gamma_hI₁_2 :
+    ∀ {u : ParabolicPoint → Vec3} {x₀ : Vec3} {t₀ ρ r ε C₂₅ : ℝ} (hρ : (0 : ℝ) < ρ)
+      (hε : (0 : ℝ) < ε) {I₁ : ℝ},
+      I₁ = caccioppoliI1HeatCutoffRaw (u := u) (x₀ := x₀) (t₀ := t₀) (r := r) hρ hε →
+        (∀ (a : ℝ), (6000 : ℝ) * (C₂₅ / √(6000 : ℝ) * a) ^ (2 : ℕ) = (C₂₅ * a) ^ (2 : ℕ)) →
+          caccioppoliI1HeatCutoffRaw (u := u) (x₀ := x₀) (t₀ := t₀) (r := r) hρ hε ≤
+              (C₂₅ / √(6000 : ℝ) * (r / ρ) * gamma u (x₀, t₀) ρ) ^ (2 : ℕ) →
+            (6000 : ℝ) * I₁ ≤ (C₂₅ * (r / ρ) * gamma u (x₀, t₀) ρ) ^ (2 : ℕ)
+    := by
+  intro u x₀ t₀ ρ r ε C₂₅ hρ hε I₁ hI₁ hscale₂₅ hI₁b
+  rw [hI₁]
+  calc
+    6000 * caccioppoliI1HeatCutoffRaw (u := u) (x₀ := x₀)
+        (t₀ := t₀) (ρ := ρ) (ε := ε) (r := r) hρ hε ≤
+        6000 * (C₂₅ / Real.sqrt (6000 : ℝ) * (r / ρ) *
+          gamma u (x₀, t₀) ρ) ^ 2 :=
+      mul_le_mul_of_nonneg_left hI₁b (by norm_num)
+    _ = _ := by
+      simpa only [mul_assoc] using
+        hscale₂₅ ((r / ρ) * gamma u (x₀, t₀) ρ)
+
+private lemma caccioppoli_gamma_hI₃_3 :
+    ∀ {u : ParabolicPoint → Vec3} {p : ParabolicPoint → ℝ} {x₀ : Vec3} {t₀ ρ r ε C₂₅ : ℝ}
+      (hρ : (0 : ℝ) < ρ) (hε : (0 : ℝ) < ε) {I₃ : ℝ},
+      I₃ = caccioppoliI3HeatCutoffRaw (p := p) (v := u) (x₀ := x₀) (t₀ := t₀) (r := r) hρ hε →
+        (∀ (a : ℝ), (6000 : ℝ) * (C₂₅ / √(6000 : ℝ) * a) ^ (2 : ℕ) = (C₂₅ * a) ^ (2 : ℕ)) →
+          caccioppoliI3HeatCutoffRaw (p := p) (v := u) (x₀ := x₀) (t₀ := t₀) (r := r) hρ hε ≤
+              (C₂₅ / √(6000 : ℝ) * (r / ρ) ^ (-1 : ℝ) * delta p (x₀, t₀) ρ *
+                  gamma u (x₀, t₀) ρ ^ (1 / 2 : ℝ)) ^
+                (2 : ℕ) →
+            (6000 : ℝ) * I₃ ≤
+              (C₂₅ * (r / ρ) ^ (-1 : ℝ) * delta p (x₀, t₀) ρ * gamma u (x₀, t₀) ρ ^ (1 / 2 : ℝ)) ^
+                (2 : ℕ)
+    := by
+  intro u p x₀ t₀ ρ r ε C₂₅ hρ hε I₃ hI₃ hscale₂₅ hI₃b'
+  rw [hI₃]
+  calc
+    6000 * caccioppoliI3HeatCutoffRaw (p := p) (v := u)
+        (x₀ := x₀) (t₀ := t₀) (ρ := ρ) (ε := ε) (r := r) hρ hε ≤
+        6000 * (C₂₅ / Real.sqrt (6000 : ℝ) * (r / ρ) ^ (-1 : ℝ) *
+          delta p (x₀, t₀) ρ * gamma u (x₀, t₀) ρ ^ (1 / 2 : ℝ)) ^ 2 :=
+      mul_le_mul_of_nonneg_left hI₃b' (by norm_num)
+    _ = _ := by
+      simpa only [mul_assoc] using
+        hscale₂₅ ((r / ρ) ^ (-1 : ℝ) * delta p (x₀, t₀) ρ *
+          gamma u (x₀, t₀) ρ ^ (1 / 2 : ℝ))
+
+private lemma caccioppoli_gamma_hI₄_4 :
+    ∀ {q : ℝ} {u f : ParabolicPoint → Vec3} {x₀ : Vec3} {t₀ ρ r ε C₂₆ : ℝ} (hρ : (0 : ℝ) < ρ)
+      (hε : (0 : ℝ) < ε) {I₄ : ℝ},
+      I₄ = caccioppoliI4HeatCutoffRaw (u := u) (f := f) (x₀ := x₀) (t₀ := t₀) (r := r) hρ hε →
+        (∀ (a : ℝ), (6000 : ℝ) * (C₂₆ / √(6000 : ℝ) * a) ^ (2 : ℕ) = (C₂₆ * a) ^ (2 : ℕ)) →
+          caccioppoliI4HeatCutoffRaw (u := u) (f := f) (x₀ := x₀) (t₀ := t₀) (r := r) hρ hε ≤
+              (C₂₆ / √(6000 : ℝ) * (r / ρ) ^ (-1 / 2 : ℝ) * gamma u (x₀, t₀) ρ ^ (1 / 2 : ℝ) *
+                  lambda q f (x₀, t₀) ρ ^ (1 / 2 : ℝ)) ^
+                (2 : ℕ) →
+            (6000 : ℝ) * I₄ ≤
+              (C₂₆ * (r / ρ) ^ (-1 / 2 : ℝ) * gamma u (x₀, t₀) ρ ^ (1 / 2 : ℝ) *
+                  lambda q f (x₀, t₀) ρ ^ (1 / 2 : ℝ)) ^
+                (2 : ℕ)
+    := by
+  intro q u f x₀ t₀ ρ r ε C₂₆ hρ hε I₄ hI₄ hscale₂₆ hI₄b
+  rw [hI₄]
+  calc
+    6000 * caccioppoliI4HeatCutoffRaw (u := u) (f := f)
+        (x₀ := x₀) (t₀ := t₀) (ρ := ρ) (ε := ε) (r := r) hρ hε ≤
+        6000 * (C₂₆ / Real.sqrt (6000 : ℝ) * (r / ρ) ^ (-1 / 2 : ℝ) *
+          gamma u (x₀, t₀) ρ ^ (1 / 2 : ℝ) *
+            lambda q f (x₀, t₀) ρ ^ (1 / 2 : ℝ)) ^ 2 :=
+      mul_le_mul_of_nonneg_left hI₄b (by norm_num)
+    _ = _ := by
+      simpa only [mul_assoc] using
+        hscale₂₆ ((r / ρ) ^ (-1 / 2 : ℝ) *
+          gamma u (x₀, t₀) ρ ^ (1 / 2 : ℝ) *
+          lambda q f (x₀, t₀) ρ ^ (1 / 2 : ℝ))
+
+private lemma caccioppoli_gamma_hroot_5 :
+    ∀ {q : ℝ} {u : ParabolicPoint → Vec3} {Du : ParabolicPoint → Fin (3 : ℕ) → Vec3}
+      {p : ParabolicPoint → ℝ} {f : ParabolicPoint → Vec3} {x₀ : Vec3} {t₀ ρ r C₂₅ C₂₆ : ℝ},
+      (0 : ℝ) ≤ C₂₅ * (r / ρ) * gamma u (x₀, t₀) ρ →
+        (0 : ℝ) ≤ C₂₅ * (r / ρ) ^ (-1 : ℝ) * gamma u (x₀, t₀) ρ ^ (3 / 2 : ℝ) →
+          (0 : ℝ) ≤
+              C₂₅ * (r / ρ) ^ (-1 : ℝ) * delta p (x₀, t₀) ρ * gamma u (x₀, t₀) ρ ^ (1 / 2 : ℝ) →
+            (0 : ℝ) ≤
+                C₂₆ * (r / ρ) ^ (-1 / 2 : ℝ) * gamma u (x₀, t₀) ρ ^ (1 / 2 : ℝ) *
+                  lambda q f (x₀, t₀) ρ ^ (1 / 2 : ℝ) →
+              (alpha u (x₀, t₀) r + beta u Du (x₀, t₀) r) ^ (2 : ℕ) ≤
+                  (C₂₅ * (r / ρ) * gamma u (x₀, t₀) ρ +
+                          C₂₅ * (r / ρ) ^ (-1 : ℝ) * gamma u (x₀, t₀) ρ ^ (3 / 2 : ℝ) +
+                        C₂₅ * (r / ρ) ^ (-1 : ℝ) * delta p (x₀, t₀) ρ *
+                          gamma u (x₀, t₀) ρ ^ (1 / 2 : ℝ) +
+                      C₂₆ * (r / ρ) ^ (-1 / 2 : ℝ) * gamma u (x₀, t₀) ρ ^ (1 / 2 : ℝ) *
+                        lambda q f (x₀, t₀) ρ ^ (1 / 2 : ℝ)) ^
+                    (2 : ℕ) →
+                (0 : ℝ) ≤ alpha u (x₀, t₀) r →
+                  (0 : ℝ) ≤ beta u Du (x₀, t₀) r →
+                    alpha u (x₀, t₀) r + beta u Du (x₀, t₀) r ≤
+                      C₂₅ * (r / ρ) * gamma u (x₀, t₀) ρ +
+                            C₂₅ * (r / ρ) ^ (-1 : ℝ) * gamma u (x₀, t₀) ρ ^ (3 / 2 : ℝ) +
+                          C₂₅ * (r / ρ) ^ (-1 : ℝ) * delta p (x₀, t₀) ρ *
+                            gamma u (x₀, t₀) ρ ^ (1 / 2 : ℝ) +
+                        C₂₆ * (r / ρ) ^ (-1 / 2 : ℝ) * gamma u (x₀, t₀) ρ ^ (1 / 2 : ℝ) *
+                          lambda q f (x₀, t₀) ρ ^ (1 / 2 : ℝ)
+    := by
+  intro q u Du p f x₀ t₀ ρ r C₂₅ C₂₆ hy₁ hy₂ hy₃ hy₄ hmain hα hβ
+  have hright : 0 ≤
+      C₂₅ * (r / ρ) * gamma u (x₀, t₀) ρ +
+        C₂₅ * (r / ρ) ^ (-1 : ℝ) * gamma u (x₀, t₀) ρ ^
+          (3 / 2 : ℝ) +
+        C₂₅ * (r / ρ) ^ (-1 : ℝ) * delta p (x₀, t₀) ρ *
+          gamma u (x₀, t₀) ρ ^ (1 / 2 : ℝ) +
+        C₂₆ * (r / ρ) ^ (-1 / 2 : ℝ) * gamma u (x₀, t₀) ρ ^
+          (1 / 2 : ℝ) * lambda q f (x₀, t₀) ρ ^ (1 / 2 : ℝ) := by
+    exact add_nonneg (add_nonneg (add_nonneg hy₁ hy₂) hy₃) hy₄
+  nlinarith only [hmain, hα, hβ, hright]
+
 /-- Assemble the gamma form from the two gamma replacements and the raw
 pressure and force estimates. -/
 theorem caccioppoli_gamma_of_raw_bounds
@@ -65,15 +234,15 @@ theorem caccioppoli_gamma_of_raw_bounds
     {I₁ I₂ I₃ I₄ : ℝ}
     (hLower : (alpha u (x₀, t₀) r + beta u Du (x₀, t₀) r) ^ 2 ≤
       6000 * (I₁ + I₂ + I₃ + I₄))
-    (hI₁ : I₁ = caccioppoli_I1_heat_cutoff_raw
+    (hI₁ : I₁ = caccioppoliI1HeatCutoffRaw
       (u := u) (x₀ := x₀) (t₀ := t₀) (ρ := ρ) (ε := ε) (r := r) hρ hε)
-    (hI₂ : I₂ = caccioppoli_I2_heat_cutoff_raw
+    (hI₂ : I₂ = caccioppoliI2HeatCutoffRaw
       (u := u) (c := c) (x₀ := x₀) (t₀ := t₀) (ρ := ρ) (ε := ε) (r := r)
       hρ hε)
-    (hI₃ : I₃ = caccioppoli_I3_heat_cutoff_raw
+    (hI₃ : I₃ = caccioppoliI3HeatCutoffRaw
       (p := p) (v := u) (x₀ := x₀) (t₀ := t₀) (ρ := ρ) (ε := ε) (r := r)
       hρ hε)
-    (hI₄ : I₄ = caccioppoli_I4_heat_cutoff_raw
+    (hI₄ : I₄ = caccioppoliI4HeatCutoffRaw
       (u := u) (f := f) (x₀ := x₀) (t₀ := t₀) (ρ := ρ) (ε := ε) (r := r)
       hρ hε) :
     alpha u (x₀, t₀) r + beta u Du (x₀, t₀) r ≤
@@ -155,37 +324,8 @@ theorem caccioppoli_gamma_of_raw_bounds
       _ = gamma u (x₀, t₀) ρ ^ ((3 / 2 : ℝ) * 2) := by
         rw [← Real.rpow_mul hγ]
       _ = _ := by norm_num
-  have hI₂b : I₂ ≤
-      ((C₂₅ / Real.sqrt (6000 : ℝ)) * (r / ρ) ^ (-1 : ℝ) *
-        gamma u (x₀, t₀) ρ ^ (3 / 2 : ℝ)) ^ 2 := by
-    rw [hI₂]
-    have hfactor : 0 ≤ ((r / ρ) ^ (-1 : ℝ)) ^ (2 : ℕ) *
-        gamma u (x₀, t₀) ρ ^ (3 : ℕ) := by positivity
-    calc
-      _ ≤ 3 * (1500 * cutoffGradientConstant + 900000) *
-          ((r / ρ) ^ (-1 : ℝ)) ^ (2 : ℕ) *
-          gamma u (x₀, t₀) ρ ^ (3 : ℕ) := by
-        rw [← hratio]
-        exact hI₂raw
-      _ ≤ (C₂₅ / Real.sqrt (6000 : ℝ)) ^ 2 *
-          ((r / ρ) ^ (-1 : ℝ)) ^ (2 : ℕ) *
-          gamma u (x₀, t₀) ρ ^ (3 : ℕ) := by
-        calc
-          _ = (3 * (1500 * cutoffGradientConstant + 900000)) *
-              (((r / ρ) ^ (-1 : ℝ)) ^ (2 : ℕ) *
-                gamma u (x₀, t₀) ρ ^ (3 : ℕ)) := by ring
-          _ ≤ (C₂₅ / Real.sqrt (6000 : ℝ)) ^ 2 *
-              (((r / ρ) ^ (-1 : ℝ)) ^ (2 : ℕ) *
-              gamma u (x₀, t₀) ρ ^ (3 : ℕ)) :=
-            mul_le_mul_of_nonneg_right hK₂' hfactor
-          _ = _ := by ring
-      _ = _ := by
-        calc
-          _ = (C₂₅ / Real.sqrt (6000 : ℝ)) ^ 2 *
-              ((r / ρ) ^ (-1 : ℝ)) ^ 2 *
-              (gamma u (x₀, t₀) ρ ^ (3 / 2 : ℝ)) ^ 2 := by
-            rw [← hγpow]
-          _ = _ := by ring
+  have hI₂b := @caccioppoli_gamma_hI₂b_1 u x₀ t₀ ρ r ε C₂₅ hρ hε hr c I₂ hI₂ hK₂' hI₂raw hγ hratio
+    hγpow
   have hI₃b := caccioppoli_I3_heat_cutoff_raw_normalized hsol hρ hε hr
     (C₂₅ := C₂₅ / Real.sqrt (6000 : ℝ)) hscale hsub hvelocity hK₃'
   have hI₄b := caccioppoli_I4_heat_cutoff_raw_normalized hsol hρ hε hr
@@ -193,18 +333,7 @@ theorem caccioppoli_gamma_of_raw_bounds
   have hq : 0 < q := lt_trans (by norm_num) hsol.2.2.2.1
   have hI₃b' := hI₃b
   rw [← hri] at hI₃b'
-  have hI₁' : 6000 * I₁ ≤
-      (C₂₅ * (r / ρ) * gamma u (x₀, t₀) ρ) ^ 2 := by
-    rw [hI₁]
-    calc
-      6000 * caccioppoli_I1_heat_cutoff_raw (u := u) (x₀ := x₀)
-          (t₀ := t₀) (ρ := ρ) (ε := ε) (r := r) hρ hε ≤
-          6000 * (C₂₅ / Real.sqrt (6000 : ℝ) * (r / ρ) *
-            gamma u (x₀, t₀) ρ) ^ 2 :=
-        mul_le_mul_of_nonneg_left hI₁b (by norm_num)
-      _ = _ := by
-        simpa only [mul_assoc] using
-          hscale₂₅ ((r / ρ) * gamma u (x₀, t₀) ρ)
+  have hI₁' := @caccioppoli_gamma_hI₁_2 u x₀ t₀ ρ r ε C₂₅ hρ hε I₁ hI₁ hscale₂₅ hI₁b
   have hI₂' : 6000 * I₂ ≤
       (C₂₅ * (r / ρ) ^ (-1 : ℝ) *
         gamma u (x₀, t₀) ρ ^ (3 / 2 : ℝ)) ^ 2 := by
@@ -217,37 +346,8 @@ theorem caccioppoli_gamma_of_raw_bounds
         simpa only [mul_assoc] using
           hscale₂₅ ((r / ρ) ^ (-1 : ℝ) *
             gamma u (x₀, t₀) ρ ^ (3 / 2 : ℝ))
-  have hI₃' : 6000 * I₃ ≤
-      (C₂₅ * (r / ρ) ^ (-1 : ℝ) * delta p (x₀, t₀) ρ *
-        gamma u (x₀, t₀) ρ ^ (1 / 2 : ℝ)) ^ 2 := by
-    rw [hI₃]
-    calc
-      6000 * caccioppoli_I3_heat_cutoff_raw (p := p) (v := u)
-          (x₀ := x₀) (t₀ := t₀) (ρ := ρ) (ε := ε) (r := r) hρ hε ≤
-          6000 * (C₂₅ / Real.sqrt (6000 : ℝ) * (r / ρ) ^ (-1 : ℝ) *
-            delta p (x₀, t₀) ρ * gamma u (x₀, t₀) ρ ^ (1 / 2 : ℝ)) ^ 2 :=
-        mul_le_mul_of_nonneg_left hI₃b' (by norm_num)
-      _ = _ := by
-        simpa only [mul_assoc] using
-          hscale₂₅ ((r / ρ) ^ (-1 : ℝ) * delta p (x₀, t₀) ρ *
-            gamma u (x₀, t₀) ρ ^ (1 / 2 : ℝ))
-  have hI₄' : 6000 * I₄ ≤
-      (C₂₆ * (r / ρ) ^ (-1 / 2 : ℝ) *
-        gamma u (x₀, t₀) ρ ^ (1 / 2 : ℝ) *
-        lambda q f (x₀, t₀) ρ ^ (1 / 2 : ℝ)) ^ 2 := by
-    rw [hI₄]
-    calc
-      6000 * caccioppoli_I4_heat_cutoff_raw (u := u) (f := f)
-          (x₀ := x₀) (t₀ := t₀) (ρ := ρ) (ε := ε) (r := r) hρ hε ≤
-          6000 * (C₂₆ / Real.sqrt (6000 : ℝ) * (r / ρ) ^ (-1 / 2 : ℝ) *
-            gamma u (x₀, t₀) ρ ^ (1 / 2 : ℝ) *
-              lambda q f (x₀, t₀) ρ ^ (1 / 2 : ℝ)) ^ 2 :=
-        mul_le_mul_of_nonneg_left hI₄b (by norm_num)
-      _ = _ := by
-        simpa only [mul_assoc] using
-          hscale₂₆ ((r / ρ) ^ (-1 / 2 : ℝ) *
-            gamma u (x₀, t₀) ρ ^ (1 / 2 : ℝ) *
-            lambda q f (x₀, t₀) ρ ^ (1 / 2 : ℝ))
+  have hI₃' := @caccioppoli_gamma_hI₃_3 u p x₀ t₀ ρ r ε C₂₅ hρ hε I₃ hI₃ hscale₂₅ hI₃b'
+  have hI₄' := @caccioppoli_gamma_hI₄_4 q u f x₀ t₀ ρ r ε C₂₆ hρ hε I₄ hI₄ hscale₂₆ hI₄b
   have hδ : 0 ≤ delta p (x₀, t₀) ρ := by unfold delta; positivity
   have hLambda : 0 ≤ lambda q f (x₀, t₀) ρ := by unfold lambda; positivity
   have hγ32 : 0 ≤ gamma u (x₀, t₀) ρ ^ (3 / 2 : ℝ) :=
@@ -296,24 +396,7 @@ theorem caccioppoli_gamma_of_raw_bounds
   have hmain := hLower.trans hsum'
   have hα : 0 ≤ alpha u (x₀, t₀) r := by unfold alpha; positivity
   have hβ : 0 ≤ beta u Du (x₀, t₀) r := by unfold beta; positivity
-  have hroot : alpha u (x₀, t₀) r + beta u Du (x₀, t₀) r ≤
-      C₂₅ * (r / ρ) * gamma u (x₀, t₀) ρ +
-        C₂₅ * (r / ρ) ^ (-1 : ℝ) * gamma u (x₀, t₀) ρ ^
-          (3 / 2 : ℝ) +
-        C₂₅ * (r / ρ) ^ (-1 : ℝ) * delta p (x₀, t₀) ρ *
-          gamma u (x₀, t₀) ρ ^ (1 / 2 : ℝ) +
-        C₂₆ * (r / ρ) ^ (-1 / 2 : ℝ) * gamma u (x₀, t₀) ρ ^
-          (1 / 2 : ℝ) * lambda q f (x₀, t₀) ρ ^ (1 / 2 : ℝ) := by
-    have hright : 0 ≤
-        C₂₅ * (r / ρ) * gamma u (x₀, t₀) ρ +
-          C₂₅ * (r / ρ) ^ (-1 : ℝ) * gamma u (x₀, t₀) ρ ^
-            (3 / 2 : ℝ) +
-          C₂₅ * (r / ρ) ^ (-1 : ℝ) * delta p (x₀, t₀) ρ *
-            gamma u (x₀, t₀) ρ ^ (1 / 2 : ℝ) +
-          C₂₆ * (r / ρ) ^ (-1 / 2 : ℝ) * gamma u (x₀, t₀) ρ ^
-            (1 / 2 : ℝ) * lambda q f (x₀, t₀) ρ ^ (1 / 2 : ℝ) := by
-      exact add_nonneg (add_nonneg (add_nonneg hy₁ hy₂) hy₃) hy₄
-    nlinarith only [hmain, hα, hβ, hright]
+  have hroot := @caccioppoli_gamma_hroot_5 q u Du p f x₀ t₀ ρ r C₂₅ C₂₆ hy₁ hy₂ hy₃ hy₄ hmain hα hβ
   convert hroot using 1
   ring
 

@@ -87,14 +87,14 @@ theorem caccioppoli_force_abs_le
 theorem caccioppoli_heat_cutoff_tsupport_subset
     {x₀ : Vec3} {t₀ ρ ε r : ℝ} (hρ : 0 < ρ) (hε : 0 < ε)
     (_ : ContDiff ℝ (⊤ : ℕ∞)
-      (backwardHeat_cutoff (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε)
+      (backwardHeatCutoff (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε)
         x₀ t₀ r)) :
-    tsupport (backwardHeat_cutoff
-        (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r) ⊆
+    tsupport (backwardHeatCutoff
+        (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r) ⊆
       euclideanClosedBall x₀ (3 * ρ / 4) ×ˢ
         Icc (t₀ - ρ ^ 2) (t₀ + ε) := by
   let η : Vec3 × ℝ → ℝ :=
-    caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε
+    caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε
   have hη : tsupport η ⊆
       euclideanClosedBall x₀ (3 * ρ / 4) ×ˢ
         Icc (t₀ - ρ ^ 2) (t₀ + ε) := by
@@ -129,15 +129,15 @@ theorem caccioppoli_I1_heat_cutoff_raw_ne_top
     (∫⁻ z in parabolicCylinder x₀ t₀ ρ,
       ENNReal.ofReal (vec3EuclideanNorm (u z)) ^ (2 : ℝ) *
         ENNReal.ofReal |timePartial (fun w : ParabolicPoint =>
-          backwardHeat_cutoff
-            (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) z +
+          backwardHeatCutoff
+            (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) z +
           ∑ i, spatialSecondPartial (fun w : ParabolicPoint =>
-            backwardHeat_cutoff
-              (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) i i z|) ≠ ∞ := by
+            backwardHeatCutoff
+              (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) i i z|) ≠ ∞ := by
   let Q : Set ParabolicPoint := parabolicCylinder x₀ t₀ ρ
   let F : Vec3 × ℝ → ℝ := fun z =>
-    backwardHeat_cutoff
-      (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r z
+    backwardHeatCutoff
+      (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r z
   let C : ℝ := (32 / ρ ^ 2 + 3 * (cutoffSecondDerivativeConstant / ρ ^ 2)) *
       (8000000 * r ^ 2 / ρ ^ 3) +
         6 * (cutoffGradientConstant / ρ) * (5000000 * r ^ 2 / ρ ^ 4)
@@ -219,8 +219,8 @@ theorem caccioppoli_I2_heat_cutoff_raw_ne_top
       ENNReal.ofReal |(vec3EuclideanNorm (u w)) ^ 2 - c w| *
         ENNReal.ofReal (vec3EuclideanNorm (u w)) *
         ENNReal.ofReal (∑ i, |spatialPartial (fun y : ParabolicPoint =>
-          backwardHeat_cutoff
-            (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|)) ≠ ∞ := by
+          backwardHeatCutoff
+            (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|)) ≠ ∞ := by
   let Q : Set ParabolicPoint := parabolicCylinder x₀ t₀ ρ
   let G : ℝ := 3 * ((cutoffGradientConstant / ρ) * (1000 / r) +
     300000 * r ^ 2 / r ^ 4)
@@ -238,8 +238,8 @@ theorem caccioppoli_I2_heat_cutoff_raw_ne_top
     positivity
   have hgrad : ∀ w ∈ Q,
       ∑ i, |spatialPartial (fun y : ParabolicPoint =>
-        backwardHeat_cutoff
-          (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w| ≤ G := by
+        backwardHeatCutoff
+          (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w| ≤ G := by
     intro w hw
     exact caccioppoli_heat_cutoff_gradient_sum_bound
       (x₀ := x₀) (t₀ := t₀) (ρ := ρ) (ε := ε) (r := r)
@@ -247,8 +247,8 @@ theorem caccioppoli_I2_heat_cutoff_raw_ne_top
   have hU := (caccioppoli_cutoff_norm_measurable hsol hρ hsub).1
   have hGbound : ∀ᵐ w ∂(volume.restrict Q),
       ENNReal.ofReal (∑ i, |spatialPartial (fun y : ParabolicPoint =>
-        backwardHeat_cutoff
-          (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|) ≤
+        backwardHeatCutoff
+          (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|) ≤
         ENNReal.ofReal G := by
     filter_upwards [ae_restrict_mem (measurableSet_parabolicCylinder _ _ _)]
       with w hw
@@ -278,8 +278,8 @@ theorem caccioppoli_I2_heat_cutoff_raw_ne_top
       ENNReal.ofReal |(vec3EuclideanNorm (u w)) ^ 2 - c w| *
         ENNReal.ofReal (vec3EuclideanNorm (u w)) *
         ENNReal.ofReal (∑ i, |spatialPartial (fun y : ParabolicPoint =>
-          backwardHeat_cutoff
-            (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|) ≤
+          backwardHeatCutoff
+            (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|) ≤
       ENNReal.ofReal G *
         ENNReal.ofReal |(vec3EuclideanNorm (u w)) ^ 2 - c w| *
         ENNReal.ofReal (vec3EuclideanNorm (u w)) := by
@@ -288,8 +288,8 @@ theorem caccioppoli_I2_heat_cutoff_raw_ne_top
       _ = (ENNReal.ofReal |(vec3EuclideanNorm (u w)) ^ 2 - c w| *
           ENNReal.ofReal (vec3EuclideanNorm (u w))) *
           ENNReal.ofReal (∑ i, |spatialPartial (fun y : ParabolicPoint =>
-            backwardHeat_cutoff
-              (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|) := by ring
+            backwardHeatCutoff
+              (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|) := by ring
       _ ≤ (ENNReal.ofReal |(vec3EuclideanNorm (u w)) ^ 2 - c w| *
           ENNReal.ofReal (vec3EuclideanNorm (u w))) * ENNReal.ofReal G :=
         mul_le_mul_of_nonneg_left hw (by positivity)
@@ -305,15 +305,15 @@ theorem caccioppoli_I2_heat_cutoff_raw_ne_top
       ENNReal.ofReal |(vec3EuclideanNorm (u w)) ^ 2 - c w| *
         ENNReal.ofReal (vec3EuclideanNorm (u w)) *
         ENNReal.ofReal (∑ i, |spatialPartial (fun y : ParabolicPoint =>
-          backwardHeat_cutoff
-            (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|)) < ∞ :=
+          backwardHeatCutoff
+            (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|)) < ∞ :=
     lt_of_le_of_lt hle hfinite
   change (∫⁻ w in Q,
       ENNReal.ofReal |(vec3EuclideanNorm (u w)) ^ 2 - c w| *
         ENNReal.ofReal (vec3EuclideanNorm (u w)) *
         ENNReal.ofReal (∑ i, |spatialPartial (fun y : ParabolicPoint =>
-          backwardHeat_cutoff
-            (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|)) ≠ ∞
+          backwardHeatCutoff
+            (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|)) ≠ ∞
   exact ne_of_lt hstrict
 
 theorem caccioppoli_I3_heat_cutoff_raw_ne_top
@@ -330,8 +330,8 @@ theorem caccioppoli_I3_heat_cutoff_raw_ne_top
       (2 : ℝ≥0∞) * ENNReal.ofReal |p w| *
         ENNReal.ofReal (vec3EuclideanNorm (u w)) *
         ENNReal.ofReal (∑ i, |spatialPartial (fun y : ParabolicPoint =>
-          backwardHeat_cutoff
-            (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|)) ≠ ∞ := by
+          backwardHeatCutoff
+            (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|)) ≠ ∞ := by
   let Q : Set ParabolicPoint := parabolicCylinder x₀ t₀ ρ
   let H : ℝ := 3 * ((cutoffGradientConstant / ρ) * (1000 / r) +
     300000 * r ^ 2 / r ^ 4)
@@ -352,8 +352,8 @@ theorem caccioppoli_I3_heat_cutoff_raw_ne_top
     dsimp [G]
     positivity
   have hgrad : ∀ w ∈ Q, ∑ i, |spatialPartial (fun y : ParabolicPoint =>
-      backwardHeat_cutoff
-        (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w| ≤ H := by
+      backwardHeatCutoff
+        (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w| ≤ H := by
     intro w hw
     have hbase := caccioppoli_heat_cutoff_gradient_sum_bound
       (x₀ := x₀) (t₀ := t₀) (ρ := ρ) (ε := ε) (r := r)
@@ -364,8 +364,8 @@ theorem caccioppoli_I3_heat_cutoff_raw_ne_top
   have hD : ∀ᵐ w ∂(volume.restrict Q),
       (2 : ℝ≥0∞) * ENNReal.ofReal (∑ i, |spatialPartial
         (fun y : ParabolicPoint =>
-          backwardHeat_cutoff
-            (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|) ≤
+          backwardHeatCutoff
+            (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|) ≤
         ENNReal.ofReal G := by
     filter_upwards [ae_restrict_mem (measurableSet_parabolicCylinder _ _ _)]
       with w hw
@@ -373,12 +373,12 @@ theorem caccioppoli_I3_heat_cutoff_raw_ne_top
     calc
       (2 : ℝ≥0∞) * ENNReal.ofReal (∑ i, |spatialPartial
           (fun y : ParabolicPoint =>
-            backwardHeat_cutoff
-              (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|) =
+            backwardHeatCutoff
+              (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|) =
           ENNReal.ofReal 2 * ENNReal.ofReal (∑ i, |spatialPartial
             (fun y : ParabolicPoint =>
-              backwardHeat_cutoff
-                (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|) := by
+              backwardHeatCutoff
+                (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|) := by
             rw [ENNReal.ofReal_ofNat]
       _ ≤ ENNReal.ofReal 2 * ENNReal.ofReal H :=
         mul_le_mul_of_nonneg_left hbase (by positivity)
@@ -403,8 +403,8 @@ theorem caccioppoli_I3_heat_cutoff_raw_ne_top
       (2 : ℝ≥0∞) * ENNReal.ofReal |p w| *
           ENNReal.ofReal (vec3EuclideanNorm (u w)) *
           ENNReal.ofReal (∑ i, |spatialPartial (fun y : ParabolicPoint =>
-            backwardHeat_cutoff
-              (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|) ≤
+            backwardHeatCutoff
+              (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|) ≤
         ENNReal.ofReal G * ENNReal.ofReal |p w| *
           ENNReal.ofReal (vec3EuclideanNorm (u w)) := by
     filter_upwards [hD] with w hw
@@ -412,8 +412,8 @@ theorem caccioppoli_I3_heat_cutoff_raw_ne_top
       _ = ENNReal.ofReal |p w| * ENNReal.ofReal (vec3EuclideanNorm (u w)) *
           ((2 : ℝ≥0∞) * ENNReal.ofReal (∑ i, |spatialPartial
             (fun y : ParabolicPoint =>
-              backwardHeat_cutoff
-                (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|)) := by
+              backwardHeatCutoff
+                (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|)) := by
             ring
       _ ≤ ENNReal.ofReal |p w| * ENNReal.ofReal (vec3EuclideanNorm (u w)) *
           ENNReal.ofReal G :=
@@ -429,15 +429,15 @@ theorem caccioppoli_I3_heat_cutoff_raw_ne_top
       (2 : ℝ≥0∞) * ENNReal.ofReal |p w| *
         ENNReal.ofReal (vec3EuclideanNorm (u w)) *
         ENNReal.ofReal (∑ i, |spatialPartial (fun y : ParabolicPoint =>
-          backwardHeat_cutoff
-            (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|)) < ∞ :=
+          backwardHeatCutoff
+            (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|)) < ∞ :=
     lt_of_le_of_lt hle hfinite
   change (∫⁻ w in Q,
       (2 : ℝ≥0∞) * ENNReal.ofReal |p w| *
         ENNReal.ofReal (vec3EuclideanNorm (u w)) *
         ENNReal.ofReal (∑ i, |spatialPartial (fun y : ParabolicPoint =>
-          backwardHeat_cutoff
-            (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|)) ≠ ∞
+          backwardHeatCutoff
+            (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|)) ≠ ∞
   exact ne_of_lt hstrict
 
 theorem caccioppoli_I4_heat_cutoff_raw_ne_top
@@ -452,15 +452,15 @@ theorem caccioppoli_I4_heat_cutoff_raw_ne_top
     (∫⁻ w in parabolicCylinder x₀ t₀ ρ,
       (2 : ℝ≥0∞) * ENNReal.ofReal (vec3EuclideanNorm (f w)) *
         ENNReal.ofReal (vec3EuclideanNorm (u w)) *
-        ENNReal.ofReal (backwardHeat_cutoff
-          (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w)) ≠ ∞ := by
+        ENNReal.ofReal (backwardHeatCutoff
+          (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w)) ≠ ∞ := by
   let Q : Set ParabolicPoint := parabolicCylinder x₀ t₀ ρ
   let C : ℝ := 2000 / r
   have hC : 0 ≤ C := by
     dsimp [C]
     positivity
-  have hφ : ∀ w ∈ Q, backwardHeat_cutoff
-      (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w ≤ 1000 / r := by
+  have hφ : ∀ w ∈ Q, backwardHeatCutoff
+      (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w ≤ 1000 / r := by
     intro w hw
     have htime : w.2 - t₀ < r ^ 2 := by
       have hupper := (mem_parabolicCylinder.mp hw).2.2
@@ -473,17 +473,17 @@ theorem caccioppoli_I4_heat_cutoff_raw_ne_top
     have hψ0 := backwardHeatTestFunction_nonneg
       (x := w.1 - x₀) (t := w.2 - t₀) hr htime
     have hη1 := caccioppoli_heat_cutoff_le_one x₀ t₀ ρ ε hρ hε (w.1, w.2)
-    unfold backwardHeat_cutoff
+    unfold backwardHeatCutoff
     simp only [ite_eq_left htime]
     calc
-      caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε w *
+      caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε w *
           backwardHeatTestFunction r (w.1 - x₀) (w.2 - t₀) ≤
         1 * backwardHeatTestFunction r (w.1 - x₀) (w.2 - t₀) :=
           mul_le_mul_of_nonneg_right hη1 hψ0
       _ ≤ 1 * (1000 / r) := mul_le_mul_of_nonneg_left hψ (by positivity)
       _ = 1000 / r := by ring
-  have hφ0 : ∀ w ∈ Q, 0 ≤ backwardHeat_cutoff
-      (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w := by
+  have hφ0 : ∀ w ∈ Q, 0 ≤ backwardHeatCutoff
+      (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w := by
     intro w hw
     have htime : w.2 - t₀ < r ^ 2 := by
       have hupper := (mem_parabolicCylinder.mp hw).2.2
@@ -491,24 +491,24 @@ theorem caccioppoli_I4_heat_cutoff_raw_ne_top
     have hη0 := caccioppoli_heat_cutoff_nonneg x₀ t₀ ρ ε hρ hε (w.1, w.2)
     have hψ0 := backwardHeatTestFunction_nonneg
       (x := w.1 - x₀) (t := w.2 - t₀) hr htime
-    unfold backwardHeat_cutoff
+    unfold backwardHeatCutoff
     simp only [ite_eq_left htime]
     exact mul_nonneg hη0 hψ0
   have hF := (caccioppoli_cutoff_norm_measurable hsol hρ hsub).2.2
   have hU := (caccioppoli_cutoff_norm_measurable hsol hρ hsub).1
   have hD : ∀ᵐ w ∂(volume.restrict Q),
-      (2 : ℝ≥0∞) * ENNReal.ofReal (backwardHeat_cutoff
-        (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) ≤
+      (2 : ℝ≥0∞) * ENNReal.ofReal (backwardHeatCutoff
+        (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) ≤
         ENNReal.ofReal C := by
     filter_upwards [ae_restrict_mem (measurableSet_parabolicCylinder _ _ _)]
       with w hw
     have hnonneg := hφ0 w hw
     have hupper := hφ w hw
     calc
-      (2 : ℝ≥0∞) * ENNReal.ofReal (backwardHeat_cutoff
-          (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) =
-          ENNReal.ofReal 2 * ENNReal.ofReal (backwardHeat_cutoff
-            (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) := by
+      (2 : ℝ≥0∞) * ENNReal.ofReal (backwardHeatCutoff
+          (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) =
+          ENNReal.ofReal 2 * ENNReal.ofReal (backwardHeatCutoff
+            (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) := by
         rw [ENNReal.ofReal_ofNat]
       _ ≤ ENNReal.ofReal 2 * ENNReal.ofReal (1000 / r) :=
         mul_le_mul_of_nonneg_left (ENNReal.ofReal_le_ofReal hupper) (by positivity)
@@ -574,16 +574,16 @@ theorem caccioppoli_I4_heat_cutoff_raw_ne_top
   have hpoint : ∀ᵐ w ∂(volume.restrict Q),
       (2 : ℝ≥0∞) * ENNReal.ofReal (vec3EuclideanNorm (f w)) *
         ENNReal.ofReal (vec3EuclideanNorm (u w)) *
-        ENNReal.ofReal (backwardHeat_cutoff
-          (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) ≤
+        ENNReal.ofReal (backwardHeatCutoff
+          (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) ≤
       ENNReal.ofReal C * ENNReal.ofReal (vec3EuclideanNorm (f w)) *
         ENNReal.ofReal (vec3EuclideanNorm (u w)) := by
     filter_upwards [hD] with w hw
     calc
       _ = ENNReal.ofReal (vec3EuclideanNorm (f w)) *
           ENNReal.ofReal (vec3EuclideanNorm (u w)) *
-          ((2 : ℝ≥0∞) * ENNReal.ofReal (backwardHeat_cutoff
-            (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w)) := by ring
+          ((2 : ℝ≥0∞) * ENNReal.ofReal (backwardHeatCutoff
+            (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w)) := by ring
       _ ≤ ENNReal.ofReal (vec3EuclideanNorm (f w)) *
           ENNReal.ofReal (vec3EuclideanNorm (u w)) * ENNReal.ofReal C :=
         mul_le_mul_of_nonneg_left hw (by positivity)
@@ -598,14 +598,14 @@ theorem caccioppoli_I4_heat_cutoff_raw_ne_top
   have hstrict : (∫⁻ w in Q,
       (2 : ℝ≥0∞) * ENNReal.ofReal (vec3EuclideanNorm (f w)) *
         ENNReal.ofReal (vec3EuclideanNorm (u w)) *
-        ENNReal.ofReal (backwardHeat_cutoff
-          (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w)) < ∞ :=
+        ENNReal.ofReal (backwardHeatCutoff
+          (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w)) < ∞ :=
     lt_of_le_of_lt hle hfinite
   change (∫⁻ w in Q,
       (2 : ℝ≥0∞) * ENNReal.ofReal (vec3EuclideanNorm (f w)) *
         ENNReal.ofReal (vec3EuclideanNorm (u w)) *
-        ENNReal.ofReal (backwardHeat_cutoff
-          (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w)) ≠ ∞
+        ENNReal.ofReal (backwardHeatCutoff
+          (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w)) ≠ ∞
   exact ne_of_lt hstrict
 
 end CKN

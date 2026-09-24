@@ -39,7 +39,7 @@ theorem divfree_slice_weak_countable
       tsupport ψ ⊆ Ω) :
     ∀ᵐ s ∂volume.restrict I, ∀ ψ ∈ C,
       ∫ x in Ω, ∑ i, u (x, s) i * (fderiv ℝ ψ x) (basisVec i) = 0 := by
-  haveI : Countable {ψ // ψ ∈ C} := hC.to_subtype
+  have : Countable {ψ // ψ ∈ C} := hC.to_subtype
   have hsub : ∀ᵐ s ∂volume.restrict I, ∀ ψ : C,
       ∫ x in Ω, ∑ i, u (x, s) i * (fderiv ℝ ψ x) (basisVec i) = 0 := by
     rw [ae_all_iff]

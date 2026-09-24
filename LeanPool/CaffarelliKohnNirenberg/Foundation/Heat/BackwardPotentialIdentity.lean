@@ -63,6 +63,254 @@ private lemma slice_laplacian_eq_second
   rw [hfirst i]
   rfl
 
+private lemma backward_green_truncated_hW_1 :
+    ∀ {ζ : Vec3 × ℝ → ℝ} (x : Vec3) (t ε : ℝ),
+      (0 : ℝ) < ε →
+        let K : Set (Vec3 × ℝ) := (fun (z : Vec3 × ℝ) => (x - z.1, z.2 - t)) '' tsupport ζ;
+        ∀ (C : ℝ),
+          let B : ℝ := C - t;
+          let B' : ℝ := max B ε + (1 : ℝ);
+          let S : Set (Vec3 × ℝ) := K ∩ SProd.sprod (α := Set Vec3) univ (Icc ε B');
+          ContinuousOn (Y := ℝ) (fun (p : Vec3 × ℝ) => heatKernel p.1 p.2) S
+    := by
+  intro ζ x t ε hε K C B B' S p hp
+  have hp0 : 0 < p.2 := lt_of_lt_of_le hε hp.2.2.1
+  let F : Vec3 × ℝ → ℝ := fun q => (4 * Real.pi * q.2) ^ (-(3 : ℝ) / 2) *
+    Real.exp (-(∑ i, q.1 i ^ 2) / (4 * q.2))
+  have hF : ContinuousAt F p := by
+    have hbase : 4 * Real.pi * p.2 ≠ 0 := by positivity
+    have hpow : ContinuousAt (fun s : ℝ =>
+        (4 * Real.pi * s) ^ (-(3 : ℝ) / 2)) p.2 := by
+      exact (Real.continuousAt_rpow_const (4 * Real.pi * p.2)
+        (-(3 : ℝ) / 2) (Or.inl hbase)).comp (by fun_prop)
+    have hpow' : ContinuousAt (fun q : Vec3 × ℝ =>
+        (4 * Real.pi * q.2) ^ (-(3 : ℝ) / 2)) p :=
+      hpow.comp continuous_snd.continuousAt
+    have hexp : ContinuousAt (fun q : Vec3 × ℝ =>
+        Real.exp (-(∑ i, q.1 i ^ 2) / (4 * q.2))) p := by
+      apply (Real.continuous_exp.continuousAt).comp
+      fun_prop (disch := positivity)
+    change ContinuousAt ((fun q : Vec3 × ℝ =>
+      (4 * Real.pi * q.2) ^ (-(3 : ℝ) / 2)) *
+      (fun q : Vec3 × ℝ => Real.exp (-(∑ i, q.1 i ^ 2) / (4 * q.2)))) p
+    simpa [F] using hpow'.mul hexp
+  have hEq : (fun q : Vec3 × ℝ => heatKernel q.1 q.2) =ᶠ[𝓝 p] F := by
+    have hnh : {q : Vec3 × ℝ | 0 < q.2} ∈ 𝓝 p := by
+      exact (isOpen_lt continuous_const continuous_snd).mem_nhds hp0
+    filter_upwards [hnh] with q hq
+    exact heatKernel_eq_formula_sum hq
+  exact hF.congr_of_eventuallyEq hEq |>.continuousWithinAt
+
+private lemma backward_green_truncated_hWt_2 :
+    ∀ {ζ : Vec3 × ℝ → ℝ} (x : Vec3) (t ε : ℝ),
+      (0 : ℝ) < ε →
+        let K : Set (Vec3 × ℝ) := (fun (z : Vec3 × ℝ) => (x - z.1, z.2 - t)) '' tsupport ζ;
+        ∀ (C : ℝ),
+          let B : ℝ := C - t;
+          let B' : ℝ := max B ε + (1 : ℝ);
+          let S : Set (Vec3 × ℝ) := K ∩ SProd.sprod (α := Set Vec3) univ (Icc ε B');
+          ContinuousOn (Y := ℝ) (fun (p : Vec3 × ℝ) => heatKernelTimeDerivative p.1 p.2) S
+    := by
+  intro ζ x t ε hε K C B B' S p hp
+  have hp0 : 0 < p.2 := lt_of_lt_of_le hε hp.2.2.1
+  let F : Vec3 × ℝ → ℝ := fun q =>
+    ((4 * Real.pi * q.2) ^ (-(3 : ℝ) / 2) *
+      Real.exp (-(∑ i, q.1 i ^ 2) / (4 * q.2))) *
+      ((∑ i, q.1 i ^ 2) / (4 * q.2 ^ 2) - (3 : ℝ) / (2 * q.2))
+  have hF : ContinuousAt F p := by
+    have hbase : 4 * Real.pi * p.2 ≠ 0 := by positivity
+    have hpow : ContinuousAt (fun s : ℝ =>
+        (4 * Real.pi * s) ^ (-(3 : ℝ) / 2)) p.2 := by
+      exact (Real.continuousAt_rpow_const (4 * Real.pi * p.2)
+        (-(3 : ℝ) / 2) (Or.inl hbase)).comp (by fun_prop)
+    have hpow' : ContinuousAt (fun q : Vec3 × ℝ =>
+        (4 * Real.pi * q.2) ^ (-(3 : ℝ) / 2)) p :=
+      hpow.comp continuous_snd.continuousAt
+    have hexp : ContinuousAt (fun q : Vec3 × ℝ =>
+        Real.exp (-(∑ i, q.1 i ^ 2) / (4 * q.2))) p := by
+      apply (Real.continuous_exp.continuousAt).comp
+      fun_prop (disch := positivity)
+    have hfrac : ContinuousAt (fun q : Vec3 × ℝ =>
+        (∑ i, q.1 i ^ 2) / (4 * q.2 ^ 2) - (3 : ℝ) / (2 * q.2)) p := by
+      fun_prop (disch := positivity)
+    let G : Vec3 × ℝ → ℝ := fun q =>
+      ((4 * Real.pi * q.2) ^ (-(3 : ℝ) / 2) *
+        Real.exp (-(∑ i, q.1 i ^ 2) / (4 * q.2))) *
+        ((∑ i, q.1 i ^ 2) / (4 * q.2 ^ 2) - (3 : ℝ) / (2 * q.2))
+    have hG : ContinuousAt G p := by
+      dsimp [G]
+      exact (hpow'.mul hexp).mul hfrac
+    simpa [F, G] using hG
+  have hEq : (fun q : Vec3 × ℝ => heatKernelTimeDerivative q.1 q.2) =ᶠ[𝓝 p] F := by
+    have hnh : {q : Vec3 × ℝ | 0 < q.2} ∈ 𝓝 p := by
+      exact (isOpen_lt continuous_const continuous_snd).mem_nhds hp0
+    filter_upwards [hnh] with q hq
+    rw [heatKernelTimeDerivative, ite_eq_left hq,
+      heatKernel_eq_formula_sum hq]
+  exact hF.congr_of_eventuallyEq hEq |>.continuousWithinAt
+
+private lemma backward_green_truncated_hslice_3 :
+    ∀ {ζ : Vec3 × ℝ → ℝ},
+      ContDiff ℝ (⊤ : ℕ∞) ζ →
+        HasCompactSupport ζ →
+          ∀ (x : Vec3) (t ε : ℝ),
+            (0 : ℝ) < ε →
+              let A : Vec3 × ℝ → ℝ := fun (p : Vec3 × ℝ) =>
+                heatKernelTimeDerivative p.1 p.2 * ζ (x - p.1, t + p.2) +
+                  heatKernel p.1 p.2 *
+                    timePartial
+                      (have this : ParabolicPoint → ℝ := ζ;
+                      this)
+                      (x - p.1, t + p.2);
+              (Continuous (Y := ℝ) fun (z : Vec3 × ℝ) =>
+                  timePartial
+                    (have this : ParabolicPoint → ℝ := ζ;
+                    this)
+                    z) →
+                ∀ (s : ℝ),
+                  ε < s →
+                    (@integral _ _ _ _ MeasureSpace.toMeasurableSpace volume fun (y : Vec3) =>
+                        A (y, s)) =
+                      heatConv s
+                        (fun (y : Vec3) =>
+                          timePartial
+                              (have this : ParabolicPoint → ℝ := ζ;
+                              this)
+                              (y, t + s) +
+                            spatialLaplacian (fun (w : Vec3) => ζ (w, t + s)) y)
+                        x
+    := by
+  intro ζ hζ hζc x t ε hε A htimecont s hs
+  have hs0 : 0 < s := lt_trans hε hs
+  let u : Vec3 → ℝ := fun y => ζ (y, t + s)
+  have hu : ContDiff ℝ (⊤ : ℕ∞) u := test_slice_contDiff hζ (t + s)
+  have huc : HasCompactSupport u := test_slice_hasCompactSupport hζc (t + s)
+  have hWlap := heatKernel_laplacian_integral_eq_smooth hu huc hs0 x
+  have hkernel : Continuous (fun y : Vec3 => heatKernel y s) := by
+    rw [show (fun y : Vec3 => heatKernel y s) = fun y : Vec3 =>
+        (4 * Real.pi * s) ^ (-(3 : ℝ) / 2) *
+          Real.exp (-(∑ i, y i ^ 2) / (4 * s)) by
+      funext y
+      exact heatKernel_eq_formula_sum hs0]
+    fun_prop (disch := positivity)
+  have hlap : Continuous (fun y : Vec3 => heatKernelLaplacian y s) := by
+    unfold heatKernelLaplacian
+    apply continuous_finsetSum
+    intro i hi
+    rw [show (fun y : Vec3 => heatKernelSpaceSecondDerivative y s i) =
+        fun y : Vec3 =>
+          ((y i) ^ 2 / (4 * s ^ 2) - 1 / (2 * s)) *
+            ((4 * Real.pi * s) ^ (-(3 : ℝ) / 2) *
+              Real.exp (-(∑ j, y j ^ 2) / (4 * s))) by
+      funext y
+      rw [heatKernelSpaceSecondDerivative, ite_eq_left hs0,
+        heatKernel_eq_formula_sum hs0]]
+    fun_prop (disch := positivity)
+  have hsp : Integrable (fun y : Vec3 =>
+      heatKernelLaplacian y s * u (x - y)) volume := by
+    have hcomp : HasCompactSupport (fun y : Vec3 => u (x - y)) :=
+      huc.comp_homeomorph (Homeomorph.subLeft x)
+    have hux : Continuous (fun y : Vec3 => u (x - y)) :=
+      hu.continuous.comp (Homeomorph.subLeft x).continuous
+    exact (hlap.mul hux).integrable_of_hasCompactSupport hcomp.mul_left
+  have hpartc : HasCompactSupport (fun y : Vec3 =>
+      CKN.timePartial (show ParabolicPoint → ℝ from ζ) (y, t + s)) := by
+    let Kslice : Set Vec3 := (fun z : Vec3 × ℝ => z.1) '' tsupport ζ
+    have hKslice : IsCompact Kslice := hζc.isCompact.image continuous_fst
+    apply HasCompactSupport.intro hKslice
+    intro y hy
+    by_contra hne
+    have hz : (y, t + s) ∉ tsupport ζ := by
+      intro hz
+      apply hy
+      exact ⟨(y, t + s), hz, rfl⟩
+    apply hne
+    rw [timePartial_eq_fderiv_apply hζ y (t + s)]
+    rw [fderiv_of_notMem_tsupport ℝ hz]
+    simp
+  have htime : Integrable (fun y : Vec3 =>
+      heatKernel y s * CKN.timePartial
+        (show ParabolicPoint → ℝ from ζ) (x - y, t + s)) volume := by
+    have hcomp : HasCompactSupport (fun y : Vec3 =>
+        CKN.timePartial (show ParabolicPoint → ℝ from ζ) (x - y, t + s)) :=
+      hpartc.comp_homeomorph (Homeomorph.subLeft x)
+    have htc : Continuous (fun y : Vec3 =>
+        CKN.timePartial (show ParabolicPoint → ℝ from ζ) (x - y, t + s)) := by
+      exact htimecont.comp (by fun_prop)
+    exact (hkernel.mul htc).integrable_of_hasCompactSupport hcomp.mul_left
+  have hdeltaC : HasCompactSupport (CKN.spatialLaplacian u) := by
+    change HasCompactSupport (fun y : Vec3 =>
+      ∑ i, CKN.spatialDeriv (CKN.spatialDeriv u i) i y)
+    have hterm : ∀ i : Fin 3, HasCompactSupport
+        (fun y : Vec3 => CKN.spatialDeriv (CKN.spatialDeriv u i) i y) := by
+      intro i
+      change HasCompactSupport (fun y : Vec3 =>
+        (fderiv ℝ (CKN.spatialDeriv u i) y) (CKN.basisVec i))
+      exact (huc.fderiv_apply (𝕜 := ℝ) (CKN.basisVec i)).fderiv_apply
+        (𝕜 := ℝ) (CKN.basisVec i)
+    have hsum := HasCompactSupport.finset_sum
+      (s := (Finset.univ : Finset (Fin 3)))
+      (f := fun i : Fin 3 => CKN.spatialDeriv (CKN.spatialDeriv u i) i)
+      (fun i hi => hterm i)
+    convert hsum using 1
+    funext y
+    simp only [Finset.sum_apply]
+  have hdeltaCont : Continuous (CKN.spatialLaplacian u) :=
+    (contDiff_spatialLaplacian_smooth hu).continuous
+  have hdelta : Integrable (fun y : Vec3 =>
+      heatKernel y s * CKN.spatialLaplacian u (x - y)) volume := by
+    have hcomp : HasCompactSupport (fun y : Vec3 =>
+        CKN.spatialLaplacian u (x - y)) :=
+      hdeltaC.comp_homeomorph (Homeomorph.subLeft x)
+    exact (hkernel.mul (hdeltaCont.comp (by fun_prop))).integrable_of_hasCompactSupport
+      hcomp.mul_left
+  have hkernelLap : ∫ y : Vec3, heatKernelTimeDerivative y s * u (x - y) =
+      heatConv s (CKN.spatialLaplacian u) x := by
+    rw [show (∫ y : Vec3, heatKernelTimeDerivative y s * u (x - y)) =
+        ∫ y : Vec3, heatKernelLaplacian y s * u (x - y) by
+      apply integral_congr_ae
+      filter_upwards [] with y
+      rw [heatKernel_heat_equation hs0]]
+    exact hWlap
+  have hwtInt : Integrable (fun y : Vec3 =>
+      heatKernelTimeDerivative y s * u (x - y)) volume := by
+    apply hsp.congr
+    filter_upwards [] with y
+    rw [heatKernel_heat_equation hs0]
+  calc
+    ∫ y : Vec3, A (y, s) =
+        (∫ y : Vec3, heatKernelTimeDerivative y s * u (x - y)) +
+          ∫ y : Vec3, heatKernel y s *
+            CKN.timePartial (show ParabolicPoint → ℝ from ζ) (x - y, t + s) := by
+      rw [← integral_add hwtInt htime]
+    _ = heatConv s (CKN.spatialLaplacian u) x +
+        heatConv s (fun y : Vec3 =>
+          CKN.timePartial (show ParabolicPoint → ℝ from ζ) (y, t + s)) x := by
+      rw [hkernelLap, heatConv_eq_integral, heatConv_eq_integral]
+    _ = heatConv s (fun y : Vec3 =>
+        CKN.timePartial (show ParabolicPoint → ℝ from ζ) (y, t + s) +
+          CKN.spatialLaplacian (fun w : Vec3 => ζ (w, t + s)) y) x := by
+      calc
+        heatConv s (CKN.spatialLaplacian u) x +
+            heatConv s (fun y : Vec3 =>
+              CKN.timePartial (show ParabolicPoint → ℝ from ζ) (y, t + s)) x =
+            (∫ y : Vec3, heatKernel y s * CKN.spatialLaplacian u (x - y)) +
+              ∫ y : Vec3, heatKernel y s *
+                CKN.timePartial (show ParabolicPoint → ℝ from ζ) (x - y, t + s) := by
+          rw [heatConv_eq_integral, heatConv_eq_integral]
+        _ = ∫ y : Vec3, (heatKernel y s * CKN.spatialLaplacian u (x - y) +
+              heatKernel y s * CKN.timePartial
+                (show ParabolicPoint → ℝ from ζ) (x - y, t + s)) :=
+          (integral_add hdelta htime).symm
+        _ = heatConv s (fun y : Vec3 =>
+            CKN.timePartial (show ParabolicPoint → ℝ from ζ) (y, t + s) +
+              CKN.spatialLaplacian (fun w : Vec3 => ζ (w, t + s)) y) x := by
+          rw [heatConv_eq_integral]
+          apply integral_congr_ae
+          filter_upwards [] with y
+          simp only [u]
+          ring
+
 private lemma backward_green_truncated
     {ζ : Vec3 × ℝ → ℝ} (hζ : ContDiff ℝ (⊤ : ℕ∞) ζ)
     (hζc : HasCompactSupport ζ) (x : Vec3) (t ε : ℝ) (hε : 0 < ε) :
@@ -100,73 +348,8 @@ private lemma backward_green_truncated
       funext z
       simpa using timePartial_eq_fderiv_apply hζ z.1 z.2]
     exact (hζ.continuous_fderiv (by simp)).clm_apply continuous_const
-  have hW : ContinuousOn (fun p : Vec3 × ℝ => heatKernel p.1 p.2) S := by
-    intro p hp
-    have hp0 : 0 < p.2 := lt_of_lt_of_le hε hp.2.2.1
-    let F : Vec3 × ℝ → ℝ := fun q => (4 * Real.pi * q.2) ^ (-(3 : ℝ) / 2) *
-      Real.exp (-(∑ i, q.1 i ^ 2) / (4 * q.2))
-    have hF : ContinuousAt F p := by
-      have hbase : 4 * Real.pi * p.2 ≠ 0 := by positivity
-      have hpow : ContinuousAt (fun s : ℝ =>
-          (4 * Real.pi * s) ^ (-(3 : ℝ) / 2)) p.2 := by
-        exact (Real.continuousAt_rpow_const (4 * Real.pi * p.2)
-          (-(3 : ℝ) / 2) (Or.inl hbase)).comp (by fun_prop)
-      have hpow' : ContinuousAt (fun q : Vec3 × ℝ =>
-          (4 * Real.pi * q.2) ^ (-(3 : ℝ) / 2)) p :=
-        hpow.comp continuous_snd.continuousAt
-      have hexp : ContinuousAt (fun q : Vec3 × ℝ =>
-          Real.exp (-(∑ i, q.1 i ^ 2) / (4 * q.2))) p := by
-        apply (Real.continuous_exp.continuousAt).comp
-        fun_prop (disch := positivity)
-      change ContinuousAt ((fun q : Vec3 × ℝ =>
-        (4 * Real.pi * q.2) ^ (-(3 : ℝ) / 2)) *
-        (fun q : Vec3 × ℝ => Real.exp (-(∑ i, q.1 i ^ 2) / (4 * q.2)))) p
-      simpa [F] using hpow'.mul hexp
-    have hEq : (fun q : Vec3 × ℝ => heatKernel q.1 q.2) =ᶠ[𝓝 p] F := by
-      have hnh : {q : Vec3 × ℝ | 0 < q.2} ∈ 𝓝 p := by
-        exact (isOpen_lt continuous_const continuous_snd).mem_nhds hp0
-      filter_upwards [hnh] with q hq
-      exact heatKernel_eq_formula_sum hq
-    exact hF.congr_of_eventuallyEq hEq |>.continuousWithinAt
-  have hWt : ContinuousOn
-      (fun p : Vec3 × ℝ => heatKernelTimeDerivative p.1 p.2) S := by
-    intro p hp
-    have hp0 : 0 < p.2 := lt_of_lt_of_le hε hp.2.2.1
-    let F : Vec3 × ℝ → ℝ := fun q =>
-      ((4 * Real.pi * q.2) ^ (-(3 : ℝ) / 2) *
-        Real.exp (-(∑ i, q.1 i ^ 2) / (4 * q.2))) *
-        ((∑ i, q.1 i ^ 2) / (4 * q.2 ^ 2) - (3 : ℝ) / (2 * q.2))
-    have hF : ContinuousAt F p := by
-      have hbase : 4 * Real.pi * p.2 ≠ 0 := by positivity
-      have hpow : ContinuousAt (fun s : ℝ =>
-          (4 * Real.pi * s) ^ (-(3 : ℝ) / 2)) p.2 := by
-        exact (Real.continuousAt_rpow_const (4 * Real.pi * p.2)
-          (-(3 : ℝ) / 2) (Or.inl hbase)).comp (by fun_prop)
-      have hpow' : ContinuousAt (fun q : Vec3 × ℝ =>
-          (4 * Real.pi * q.2) ^ (-(3 : ℝ) / 2)) p :=
-        hpow.comp continuous_snd.continuousAt
-      have hexp : ContinuousAt (fun q : Vec3 × ℝ =>
-          Real.exp (-(∑ i, q.1 i ^ 2) / (4 * q.2))) p := by
-        apply (Real.continuous_exp.continuousAt).comp
-        fun_prop (disch := positivity)
-      have hfrac : ContinuousAt (fun q : Vec3 × ℝ =>
-          (∑ i, q.1 i ^ 2) / (4 * q.2 ^ 2) - (3 : ℝ) / (2 * q.2)) p := by
-        fun_prop (disch := positivity)
-      let G : Vec3 × ℝ → ℝ := fun q =>
-        ((4 * Real.pi * q.2) ^ (-(3 : ℝ) / 2) *
-          Real.exp (-(∑ i, q.1 i ^ 2) / (4 * q.2))) *
-          ((∑ i, q.1 i ^ 2) / (4 * q.2 ^ 2) - (3 : ℝ) / (2 * q.2))
-      have hG : ContinuousAt G p := by
-        dsimp [G]
-        exact (hpow'.mul hexp).mul hfrac
-      simpa [F, G] using hG
-    have hEq : (fun q : Vec3 × ℝ => heatKernelTimeDerivative q.1 q.2) =ᶠ[𝓝 p] F := by
-      have hnh : {q : Vec3 × ℝ | 0 < q.2} ∈ 𝓝 p := by
-        exact (isOpen_lt continuous_const continuous_snd).mem_nhds hp0
-      filter_upwards [hnh] with q hq
-      rw [heatKernelTimeDerivative, ite_eq_left hq,
-        heatKernel_eq_formula_sum hq]
-    exact hF.congr_of_eventuallyEq hEq |>.continuousWithinAt
+  have hW := @backward_green_truncated_hW_1 ζ x t ε hε C
+  have hWt := @backward_green_truncated_hWt_2 ζ x t ε hε C
   have hsource : Continuous (fun p : Vec3 × ℝ =>
       ζ (x - p.1, t + p.2)) := by
     fun_prop
@@ -266,141 +449,7 @@ private lemma backward_green_truncated
       funext y
       exact hpoint y]
     rw [integral_neg]
-  have hslice : ∀ s : ℝ, ε < s →
-      (∫ y : Vec3, A (y, s)) =
-        heatConv s (fun y : Vec3 =>
-          CKN.timePartial (show ParabolicPoint → ℝ from ζ) (y, t + s) +
-            CKN.spatialLaplacian (fun w : Vec3 => ζ (w, t + s)) y) x := by
-    intro s hs
-    have hs0 : 0 < s := lt_trans hε hs
-    let u : Vec3 → ℝ := fun y => ζ (y, t + s)
-    have hu : ContDiff ℝ (⊤ : ℕ∞) u := test_slice_contDiff hζ (t + s)
-    have huc : HasCompactSupport u := test_slice_hasCompactSupport hζc (t + s)
-    have hWlap := heatKernel_laplacian_integral_eq_smooth hu huc hs0 x
-    have hkernel : Continuous (fun y : Vec3 => heatKernel y s) := by
-      rw [show (fun y : Vec3 => heatKernel y s) = fun y : Vec3 =>
-          (4 * Real.pi * s) ^ (-(3 : ℝ) / 2) *
-            Real.exp (-(∑ i, y i ^ 2) / (4 * s)) by
-        funext y
-        exact heatKernel_eq_formula_sum hs0]
-      fun_prop (disch := positivity)
-    have hlap : Continuous (fun y : Vec3 => heatKernelLaplacian y s) := by
-      unfold heatKernelLaplacian
-      apply continuous_finsetSum
-      intro i hi
-      rw [show (fun y : Vec3 => heatKernelSpaceSecondDerivative y s i) =
-          fun y : Vec3 =>
-            ((y i) ^ 2 / (4 * s ^ 2) - 1 / (2 * s)) *
-              ((4 * Real.pi * s) ^ (-(3 : ℝ) / 2) *
-                Real.exp (-(∑ j, y j ^ 2) / (4 * s))) by
-        funext y
-        rw [heatKernelSpaceSecondDerivative, ite_eq_left hs0,
-          heatKernel_eq_formula_sum hs0]]
-      fun_prop (disch := positivity)
-    have hsp : Integrable (fun y : Vec3 =>
-        heatKernelLaplacian y s * u (x - y)) volume := by
-      have hcomp : HasCompactSupport (fun y : Vec3 => u (x - y)) :=
-        huc.comp_homeomorph (Homeomorph.subLeft x)
-      have hux : Continuous (fun y : Vec3 => u (x - y)) :=
-        hu.continuous.comp (Homeomorph.subLeft x).continuous
-      exact (hlap.mul hux).integrable_of_hasCompactSupport hcomp.mul_left
-    have hpartc : HasCompactSupport (fun y : Vec3 =>
-        CKN.timePartial (show ParabolicPoint → ℝ from ζ) (y, t + s)) := by
-      let Kslice : Set Vec3 := (fun z : Vec3 × ℝ => z.1) '' tsupport ζ
-      have hKslice : IsCompact Kslice := hζc.isCompact.image continuous_fst
-      apply HasCompactSupport.intro hKslice
-      intro y hy
-      by_contra hne
-      have hz : (y, t + s) ∉ tsupport ζ := by
-        intro hz
-        apply hy
-        exact ⟨(y, t + s), hz, rfl⟩
-      apply hne
-      rw [timePartial_eq_fderiv_apply hζ y (t + s)]
-      rw [fderiv_of_notMem_tsupport ℝ hz]
-      simp
-    have htime : Integrable (fun y : Vec3 =>
-        heatKernel y s * CKN.timePartial
-          (show ParabolicPoint → ℝ from ζ) (x - y, t + s)) volume := by
-      have hcomp : HasCompactSupport (fun y : Vec3 =>
-          CKN.timePartial (show ParabolicPoint → ℝ from ζ) (x - y, t + s)) :=
-        hpartc.comp_homeomorph (Homeomorph.subLeft x)
-      have htc : Continuous (fun y : Vec3 =>
-          CKN.timePartial (show ParabolicPoint → ℝ from ζ) (x - y, t + s)) := by
-        exact htimecont.comp (by fun_prop)
-      exact (hkernel.mul htc).integrable_of_hasCompactSupport hcomp.mul_left
-    have hdeltaC : HasCompactSupport (CKN.spatialLaplacian u) := by
-      change HasCompactSupport (fun y : Vec3 =>
-        ∑ i, CKN.spatialDeriv (CKN.spatialDeriv u i) i y)
-      have hterm : ∀ i : Fin 3, HasCompactSupport
-          (fun y : Vec3 => CKN.spatialDeriv (CKN.spatialDeriv u i) i y) := by
-        intro i
-        change HasCompactSupport (fun y : Vec3 =>
-          (fderiv ℝ (CKN.spatialDeriv u i) y) (CKN.basisVec i))
-        exact (huc.fderiv_apply (𝕜 := ℝ) (CKN.basisVec i)).fderiv_apply
-          (𝕜 := ℝ) (CKN.basisVec i)
-      have hsum := HasCompactSupport.finset_sum
-        (s := (Finset.univ : Finset (Fin 3)))
-        (f := fun i : Fin 3 => CKN.spatialDeriv (CKN.spatialDeriv u i) i)
-        (fun i hi => hterm i)
-      convert hsum using 1
-      funext y
-      simp only [Finset.sum_apply]
-    have hdeltaCont : Continuous (CKN.spatialLaplacian u) :=
-      (contDiff_spatialLaplacian_smooth hu).continuous
-    have hdelta : Integrable (fun y : Vec3 =>
-        heatKernel y s * CKN.spatialLaplacian u (x - y)) volume := by
-      have hcomp : HasCompactSupport (fun y : Vec3 =>
-          CKN.spatialLaplacian u (x - y)) :=
-        hdeltaC.comp_homeomorph (Homeomorph.subLeft x)
-      exact (hkernel.mul (hdeltaCont.comp (by fun_prop))).integrable_of_hasCompactSupport
-        hcomp.mul_left
-    have hkernelLap : ∫ y : Vec3, heatKernelTimeDerivative y s * u (x - y) =
-        heatConv s (CKN.spatialLaplacian u) x := by
-      rw [show (∫ y : Vec3, heatKernelTimeDerivative y s * u (x - y)) =
-          ∫ y : Vec3, heatKernelLaplacian y s * u (x - y) by
-        apply integral_congr_ae
-        filter_upwards [] with y
-        rw [heatKernel_heat_equation hs0]]
-      exact hWlap
-    have hwtInt : Integrable (fun y : Vec3 =>
-        heatKernelTimeDerivative y s * u (x - y)) volume := by
-      apply hsp.congr
-      filter_upwards [] with y
-      rw [heatKernel_heat_equation hs0]
-    calc
-      ∫ y : Vec3, A (y, s) =
-          (∫ y : Vec3, heatKernelTimeDerivative y s * u (x - y)) +
-            ∫ y : Vec3, heatKernel y s *
-              CKN.timePartial (show ParabolicPoint → ℝ from ζ) (x - y, t + s) := by
-        rw [← integral_add hwtInt htime]
-      _ = heatConv s (CKN.spatialLaplacian u) x +
-          heatConv s (fun y : Vec3 =>
-            CKN.timePartial (show ParabolicPoint → ℝ from ζ) (y, t + s)) x := by
-        rw [hkernelLap, heatConv_eq_integral, heatConv_eq_integral]
-      _ = heatConv s (fun y : Vec3 =>
-          CKN.timePartial (show ParabolicPoint → ℝ from ζ) (y, t + s) +
-            CKN.spatialLaplacian (fun w : Vec3 => ζ (w, t + s)) y) x := by
-        calc
-          heatConv s (CKN.spatialLaplacian u) x +
-              heatConv s (fun y : Vec3 =>
-                CKN.timePartial (show ParabolicPoint → ℝ from ζ) (y, t + s)) x =
-              (∫ y : Vec3, heatKernel y s * CKN.spatialLaplacian u (x - y)) +
-                ∫ y : Vec3, heatKernel y s *
-                  CKN.timePartial (show ParabolicPoint → ℝ from ζ) (x - y, t + s) := by
-            rw [heatConv_eq_integral, heatConv_eq_integral]
-          _ = ∫ y : Vec3, (heatKernel y s * CKN.spatialLaplacian u (x - y) +
-                heatKernel y s * CKN.timePartial
-                  (show ParabolicPoint → ℝ from ζ) (x - y, t + s)) :=
-            (integral_add hdelta htime).symm
-          _ = heatConv s (fun y : Vec3 =>
-              CKN.timePartial (show ParabolicPoint → ℝ from ζ) (y, t + s) +
-                CKN.spatialLaplacian (fun w : Vec3 => ζ (w, t + s)) y) x := by
-            rw [heatConv_eq_integral]
-            apply integral_congr_ae
-            filter_upwards [] with y
-            simp only [u]
-            ring
+  have hslice := @backward_green_truncated_hslice_3 ζ hζ hζc x t ε hε htimecont
   calc
     ∫ s : ℝ in Ioi ε, heatConv s (fun y : Vec3 =>
         CKN.timePartial (show ParabolicPoint → ℝ from ζ) (y, t + s) +

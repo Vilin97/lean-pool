@@ -63,12 +63,12 @@ private lemma tail_bound_of_pieces {T : (Vec3 → ℝ) → (Vec3 → ℝ)} {A₁
     rcases lt_or_ge (t / 2) (|T (s.indicator f) x|) with ha | ha
     · left
       simp only [Set.mem_ofPred_eq]
-      show ENNReal.ofReal (t / 2) < ENNReal.ofReal |T (s.indicator f) x|
+      change ENNReal.ofReal (t / 2) < ENNReal.ofReal |T (s.indicator f) x|
       rw [ENNReal.ofReal_lt_ofReal_iff_of_nonneg ht2.le]
       exact ha
     · right
       simp only [Set.mem_ofPred_eq]
-      show ENNReal.ofReal (t / 2) < ENNReal.ofReal |T (sᶜ.indicator f) x|
+      change ENNReal.ofReal (t / 2) < ENNReal.ofReal |T (sᶜ.indicator f) x|
       rw [ENNReal.ofReal_lt_ofReal_iff_of_nonneg ht2.le]
       linarith only [hx', ha]
   have h1 : volume {x : Vec3 | ENNReal.ofReal (t / 2) < absE (T (s.indicator f)) x} ≤
@@ -77,7 +77,7 @@ private lemma tail_bound_of_pieces {T : (Vec3 → ℝ) → (Vec3 → ℝ)} {A₁
         {x : Vec3 | ENNReal.ofReal (t / 2) < absE (T (s.indicator f)) x} := by
       ext x
       simp only [Set.mem_ofPred_eq]
-      show t / 2 < |T (s.indicator f) x| ↔
+      change t / 2 < |T (s.indicator f) x| ↔
         ENNReal.ofReal (t / 2) < ENNReal.ofReal |T (s.indicator f) x|
       rw [ENNReal.ofReal_lt_ofReal_iff_of_nonneg ht2.le]
     rw [hset] at hweak
@@ -85,7 +85,8 @@ private lemma tail_bound_of_pieces {T : (Vec3 → ℝ) → (Vec3 → ℝ)} {A₁
         ≤ ENNReal.ofReal A₁ * (∫⁻ x in s, absE f x) / ENNReal.ofReal (t / 2) := by
           rw [← lintegral_absE_indicator hsm f]
           exact hweak
-      _ = ENNReal.ofReal (2 * A₁ / t) * ∫⁻ x in s, absE f x := CKN.Foundation.Measure.ofReal_mul_div_ofReal_half ht _
+      _ = ENNReal.ofReal (2 * A₁ / t) * ∫⁻ x in s, absE f x :=
+        CKN.Foundation.Measure.ofReal_mul_div_ofReal_half ht _
   have h2 : volume {x : Vec3 | ENNReal.ofReal (t / 2) < absE (T (sᶜ.indicator f)) x} ≤
       ENNReal.ofReal (4 * A₂ ^ 2 / t ^ 2) * ∫⁻ x in sᶜ, absE f x ^ 2 := by
     have hmarkov := mul_meas_ge_le_lintegral (μ := volume)

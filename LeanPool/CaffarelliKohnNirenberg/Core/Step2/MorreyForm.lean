@@ -28,11 +28,17 @@ private theorem morreyBallNorm_le_of_cell_bound' {P τ : ℝ} {g : ParabolicPoin
     morreyBallNorm P τ g ≤ K := by
   unfold morreyBallNorm
   refine iSup_le fun z => iSup_le fun r => hcell z r.1 r.2
-def pressureSmallConstant (M : ℝ) : ℝ≥0∞ := ENNReal.ofReal (M ^ (3 / 2 : ℝ) * (8 : ℝ) ^ (13 / 5 : ℝ))
+/-- Pressure coefficient controlling the small-scale Morrey integral bounds. -/
+def pressureSmallConstant (M : ℝ) : ℝ≥0∞ := ENNReal.ofReal (M ^ (3 / 2 : ℝ) * (8 : ℝ) ^ (13 / 5 :
+  ℝ))
+/-- Gradient coefficient controlling the small-scale Morrey integral bounds. -/
 def gradientSmallConstant (M : ℝ) : ℝ≥0∞ := ENNReal.ofReal (M ^ 2 * (8 : ℝ) ^ (9 / 5 : ℝ))
+/-- Velocity coefficient obtained from Sobolev interpolation in the small-scale Morrey estimate.
+-/
 def velocitySmallConstant (M : ℝ) : ℝ≥0∞ := ((ENNReal.ofReal ((3 : ℝ) ^ ((3 : ℝ) / 2 - 1)) * 3) *
     localSobolevConstant ^ (3 / 2 : ℝ)) * ENNReal.ofReal (M ^ 3 * (2 : ℝ) ^ (1 / 2 : ℝ) *
-      ((2 : ℝ) ^ (27 / 10 : ℝ) + (32 : ℝ) ^ (3 / 2 : ℝ) * (2 : ℝ) ^ (27 / 10 : ℝ)) * (4 : ℝ) ^ (16 / 5 : ℝ))
+      ((2 : ℝ) ^ (27 / 10 : ℝ) + (32 : ℝ) ^ (3 / 2 : ℝ) * (2 : ℝ) ^ (27 / 10 : ℝ)) * (4 : ℝ) ^ (16
+        / 5 : ℝ))
 private theorem negative_scale {r₀ r d : ℝ} (hr₀ : 0 < r₀) (hrr : r₀ ≤ r) (hd : 0 ≤ d) :
     (ENNReal.ofReal r) ^ (-d) ≤ (ENNReal.ofReal r₀) ^ (-d) := by
   have hr : 0 < r := lt_of_lt_of_le hr₀ hrr
@@ -50,7 +56,8 @@ private theorem negative_scale {r₀ r d : ℝ} (hr₀ : 0 < r₀) (hrr : r₀ �
 private theorem cell_bound_global {p q : ℝ} {r₀ r : ℝ} {I : ℝ≥0∞}
     {g : ParabolicPoint → ℝ} {z : ParabolicPoint} (hp : 0 < p) (hpq : p ≤ q)
     (hr₀ : 0 < r₀) (hrr : r₀ ≤ r) (hI : ballPowerIntegral p g z r ≤ I) :
-    morreyBallCell p q g z r ≤ (ENNReal.ofReal r₀) ^ (-(5 * (1 / p - 1 / q))) * I ^ (1 / p : ℝ) := by
+    morreyBallCell p q g z r ≤ (ENNReal.ofReal r₀) ^ (-(5 * (1 / p - 1 / q))) * I ^ (1 / p : ℝ) :=
+      by
   have hq : 0 < q := lt_of_lt_of_le hp hpq
   have hd : 0 ≤ 5 * (1 / p - 1 / q) := by
     exact mul_nonneg (by norm_num)
@@ -100,7 +107,8 @@ private theorem cell_bound_ennreal {p q a : ℝ} {K : ℝ≥0∞} {g : Parabolic
               ac_rfl
         _ = _ := by rw [hcancel, mul_one]
 private theorem ballPowerIntegral_zero {p : ℝ} {Q : Set ParabolicPoint} {g : ParabolicPoint → ℝ}
-    {z : ParabolicPoint} {r : ℝ} (hp : 0 < p) (hdis : Metric.ball z r ∩ Q = ∅) : ballPowerIntegral p (Q.indicator g) z r = 0 := by
+    {z : ParabolicPoint} {r : ℝ} (hp : 0 < p) (hdis : Metric.ball z r ∩ Q = ∅) : ballPowerIntegral
+      p (Q.indicator g) z r = 0 := by
   unfold ballPowerIntegral
   apply le_antisymm
   · have heq : (∫⁻ y in Metric.ball z r,
@@ -117,7 +125,8 @@ private theorem ballPowerIntegral_zero {p : ℝ} {Q : Set ParabolicPoint} {g : P
   · exact bot_le
 private theorem local_step2_setup {Ω : Set Vec3} {I : Set ℝ} {q : ℝ}
     {u : ParabolicPoint → Vec3} {Du : ParabolicPoint → Fin 3 → Vec3}
-    {p : ParabolicPoint → ℝ} {f : ParabolicPoint → Vec3} (hsol : IsSuitableWeakSolutionIntegrable Ω I q u Du p f)
+    {p : ParabolicPoint → ℝ} {f : ParabolicPoint → Vec3} (hsol : IsSuitableWeakSolutionIntegrable
+      Ω I q u Du p f)
     {z₀ : ParabolicPoint} {r₂ M ρ : ℝ} (_ : 0 < r₂) (hρ : 0 < ρ)
     (hρsmall : 128 * ρ ≤ r₂) (hcarrier : Metric.ball z₀ (2 * r₂) ⊆ spaceTimeSet Ω I)
     (hdecay : ∀ z : ParabolicPoint, z ∈ Metric.ball z₀ r₂ → ∀ r, 0 < r → r < r₂ →
@@ -403,8 +412,12 @@ private theorem gradient_small_cell {Ω : Set Vec3} {I : Set ℝ} {q : ℝ}
       ring_nf
 private theorem interp_scale_ennreal {M R : ℝ} (hM : 0 ≤ M) (hR : 0 < R) :
     (ENNReal.ofReal (M * (2 * R) ^ (9 / 10 : ℝ))) ^ (3 / 2 : ℝ) * (2 : ℝ≥0∞) ^ (1 / 2 : ℝ) *
-      ((ENNReal.ofReal (M ^ 2 * (2 * R) ^ (9 / 5 : ℝ))) ^ (3 / 4 : ℝ) * ENNReal.ofReal (R ^ 2) ^ (1 / 4 : ℝ) + ENNReal.ofReal (R ^ 2) * ((Real.toNNReal (32 / R) : ℝ≥0∞) * ENNReal.ofReal (M * (2 * R) ^ (9 / 10 : ℝ))) ^ (3 / 2 : ℝ)) =
-      ENNReal.ofReal ((M * (2 * R) ^ (9 / 10 : ℝ)) ^ (3 / 2 : ℝ) * (2 : ℝ) ^ (1 / 2 : ℝ) * ((M ^ 2 * (2 * R) ^ (9 / 5 : ℝ)) ^ (3 / 4 : ℝ) * (R ^ 2) ^ (1 / 4 : ℝ) + R ^ 2 * ((32 / R) * (M * (2 * R) ^ (9 / 10 : ℝ))) ^ (3 / 2 : ℝ))) := by
+      ((ENNReal.ofReal (M ^ 2 * (2 * R) ^ (9 / 5 : ℝ))) ^ (3 / 4 : ℝ) * ENNReal.ofReal (R ^ 2) ^
+        (1 / 4 : ℝ) + ENNReal.ofReal (R ^ 2) * ((Real.toNNReal (32 / R) : ℝ≥0∞) * ENNReal.ofReal
+        (M * (2 * R) ^ (9 / 10 : ℝ))) ^ (3 / 2 : ℝ)) =
+      ENNReal.ofReal ((M * (2 * R) ^ (9 / 10 : ℝ)) ^ (3 / 2 : ℝ) * (2 : ℝ) ^ (1 / 2 : ℝ) * ((M ^ 2
+        * (2 * R) ^ (9 / 5 : ℝ)) ^ (3 / 4 : ℝ) * (R ^ 2) ^ (1 / 4 : ℝ) + R ^ 2 * ((32 / R) * (M *
+        (2 * R) ^ (9 / 10 : ℝ))) ^ (3 / 2 : ℝ))) := by
   have hto : (Real.toNNReal (32 / R) : ℝ≥0∞) = ENNReal.ofReal (32 / R) :=
     ENNReal.ofNNReal_toNNReal _
   rw [hto]
@@ -571,7 +584,8 @@ private theorem velocity_small_cell {Ω : Set Vec3} {I : Set ℝ} {q : ℝ}
             (by norm_num)
         · simp [Set.indicator_of_notMem hy]
       _ ≤ _ := lintegral_mono_set hball
-  let C : ℝ≥0∞ := (ENNReal.ofReal ((3 : ℝ) ^ ((3 : ℝ) / 2 - 1)) * 3) * localSobolevConstant ^ (3 / 2 : ℝ)
+  let C : ℝ≥0∞ := (ENNReal.ofReal ((3 : ℝ) ^ ((3 : ℝ) / 2 - 1)) * 3) * localSobolevConstant ^ (3 /
+    2 : ℝ)
   have hscale := interp_scale_ennreal (M := M) (R := 4 * ρ) (by linarith only [hM]) (by positivity)
   have hpower := power_expression (M := M) (R := 4 * ρ) (by linarith only [hM]) (by positivity)
   have hfour : (4 * ρ) ^ (16 / 5 : ℝ) = (4 : ℝ) ^ (16 / 5 : ℝ) * ρ ^ (16 / 5 : ℝ) := by
@@ -579,7 +593,8 @@ private theorem velocity_small_cell {Ω : Set Vec3} {I : Set ℝ} {q : ℝ}
   let E : ℝ≥0∞ := ENNReal.ofReal (M * (2 * (4 * ρ)) ^ (9 / 10 : ℝ)) ^ (3 / 2 : ℝ) *
       (2 : ℝ≥0∞) ^ (1 / 2 : ℝ) * (ENNReal.ofReal (M ^ 2 * (2 * (4 * ρ)) ^ (9 / 5 : ℝ)) ^
         (3 / 4 : ℝ) * ENNReal.ofReal ((4 * ρ) ^ 2) ^ (1 / 4 : ℝ) + ENNReal.ofReal ((4 * ρ) ^ 2) *
-          ((Real.toNNReal (32 / (4 * ρ)) : ℝ≥0∞) * ENNReal.ofReal (M * (2 * (4 * ρ)) ^ (9 / 10 : ℝ))) ^ (3 / 2 : ℝ))
+          ((Real.toNNReal (32 / (4 * ρ)) : ℝ≥0∞) * ENNReal.ofReal (M * (2 * (4 * ρ)) ^ (9 / 10 :
+            ℝ))) ^ (3 / 2 : ℝ))
   calc
     _ ≤ C * E := by
       exact hballint.trans (by simpa [E, C, mul_assoc] using hinter)
@@ -612,7 +627,8 @@ private theorem velocity_small_cell {Ω : Set Vec3} {I : Set ℝ} {q : ℝ}
 private theorem ballPowerIntegral_le_of_subset {p : ℝ} {Q C : Set ParabolicPoint}
     {g : ParabolicPoint → ℝ} {F : ParabolicPoint → ℝ≥0∞} {z : ParabolicPoint} {r : ℝ}
     (hp : 0 < p) (hQ : MeasurableSet Q) (hQC : Q ⊆ C)
-    (hpoint : ∀ y, ENNReal.ofReal |g y| ^ p ≤ F y) : ballPowerIntegral p (Q.indicator g) z r ≤ ∫⁻ y in C, F y := by
+    (hpoint : ∀ y, ENNReal.ofReal |g y| ^ p ≤ F y) : ballPowerIntegral p (Q.indicator g) z r ≤ ∫⁻
+      y in C, F y := by
   unfold ballPowerIntegral
   have hind : (fun y => ENNReal.ofReal |Q.indicator g y| ^ p) =
       Q.indicator (fun y => ENNReal.ofReal |g y| ^ p) := by
@@ -661,7 +677,9 @@ private theorem cylinder_velocity_integral_lt_top {Ω : Set Vec3} {I : Set ℝ} 
   have hA : A < ⊤ := by
     dsimp [A]; exact ENNReal.add_lt_top.mpr ⟨
       ENNReal.rpow_lt_top_of_nonneg (by positivity) hE.ne, ENNReal.coe_lt_top⟩
-  have hG' : G < ⊤ := by dsimp [G]; exact ENNReal.add_lt_top.mpr ⟨hG, ENNReal.coe_lt_top⟩
+  have hG' : G < ⊤ := by
+    dsimp [G]
+    exact ENNReal.add_lt_top.mpr ⟨hG, ENNReal.coe_lt_top⟩
   have hC : (ENNReal.ofReal ((3 : ℝ) ^ ((3 : ℝ) / 2 - 1)) * 3) *
       localSobolevConstant ^ (3 / 2 : ℝ) < ⊤ := by
     apply ENNReal.mul_lt_top
@@ -695,8 +713,10 @@ theorem step2_morrey_form
       morreyVecMem 3 (25 / 3 : ℝ) (Metric.ball z₀ (r₂ / 4)) u ∧
       (∀ i : Fin 3, morreyVecMem 2 (25 / 8 : ℝ) (Metric.ball z₀ (r₂ / 4)) (fun z => Du z i)) ∧
       morreyBallNorm (3 / 2 : ℝ) (25 / 8 : ℝ) ((Metric.ball z₀ (r₂ / 4)).indicator p) < ⊤ ∧
-      (∀ i : Fin 3, morreyBallNorm 3 (25 / 3 : ℝ) ((Metric.ball z₀ (r₂ / 4)).indicator (fun z => u z i)) ≤ Kᵤ) ∧
-      (∀ i : Fin 3, ∀ j : Fin 3, morreyBallNorm 2 (25 / 8 : ℝ) ((Metric.ball z₀ (r₂ / 4)).indicator (fun z => Du z i j)) ≤ K_Du) ∧
+      (∀ i : Fin 3, morreyBallNorm 3 (25 / 3 : ℝ) ((Metric.ball z₀ (r₂ / 4)).indicator (fun z => u
+        z i)) ≤ Kᵤ) ∧
+      (∀ i : Fin 3, ∀ j : Fin 3, morreyBallNorm 2 (25 / 8 : ℝ) ((Metric.ball z₀ (r₂ /
+        4)).indicator (fun z => Du z i j)) ≤ K_Du) ∧
       morreyBallNorm (3 / 2 : ℝ) (25 / 8 : ℝ) ((Metric.ball z₀ (r₂ / 4)).indicator p) ≤ Kₚ := by
   let Q₂ : Set ParabolicPoint := Metric.ball z₀ (r₂ / 4)
   let r₀ : ℝ := r₂ / 128
@@ -705,29 +725,39 @@ theorem step2_morrey_form
     dsimp [zG]; exact step2_shifted_center_dist (w := z₀) (r := r₂ / 4) (by positivity)
   have hclose : closure (parabolicCylinder zG.1 zG.2 r₂) ⊆ Metric.ball z₀ (2 * r₂) := by
     intro y hy
-    have hyc := step2_closure_cylinder_subset_closedBall (x := zG.1) (t := zG.2) (r := r₂) (by positivity) hy
+    have hyc := step2_closure_cylinder_subset_closedBall (x := zG.1) (t := zG.2) (r := r₂) (by
+      positivity) hy
     have htri := dist_triangle y zG z₀; rw [Metric.mem_ball]
     nlinarith only [htri, Metric.mem_closedBall.mp hyc, hzG, hr₂]
-  obtain ⟨Ω', J, hbox, hcylbig⟩ := exists_localBox_of_closure_subset hsol.1 hsol.2.1 hr₂ (hclose.trans hcarrier)
+  obtain ⟨Ω', J, hbox, hcylbig⟩ := exists_localBox_of_closure_subset hsol.1 hsol.2.1 hr₂
+    (hclose.trans hcarrier)
   have hcyl : parabolicCylinder zG.1 zG.2 (r₂ / 2) ⊆ spaceTimeSet Ω' J :=
     (parabolicCylinder_mono (by positivity) (by nlinarith only [hr₂])).trans hcylbig
   have hcover : Q₂ ⊆ parabolicCylinder zG.1 zG.2 (r₂ / 2) := by
     intro y hy; change y ∈ Metric.ball z₀ (r₂ / 4) at hy
     have h := metricBall_subset_parabolicCylinder_doubled z₀ (r := r₂ / 4) (by positivity) hy
     dsimp [zG]; convert h using 1; ring_nf
-  let IU := ∫⁻ w in parabolicCylinder zG.1 zG.2 (r₂ / 2), ENNReal.ofReal (vec3EuclideanNorm (u w)) ^ (3 : ℝ)
+  let IU := ∫⁻ w in parabolicCylinder zG.1 zG.2 (r₂ / 2), ENNReal.ofReal (vec3EuclideanNorm (u w))
+    ^ (3 : ℝ)
   let ID := ∫⁻ w in parabolicCylinder zG.1 zG.2 (r₂ / 2), ENNReal.ofReal (spatialGradientSq u Du w)
   let IP := ∫⁻ w in parabolicCylinder zG.1 zG.2 (r₂ / 2), ENNReal.ofReal |p w| ^ (3 / 2 : ℝ)
   have hsubsmall : closure (parabolicCylinder zG.1 zG.2 (r₂ / 2)) ⊆ spaceTimeSet Ω I :=
-    (closure_mono (parabolicCylinder_mono (by positivity) (by nlinarith only [hr₂]))).trans (hclose.trans hcarrier)
+    (closure_mono (parabolicCylinder_mono (by positivity) (by nlinarith only [hr₂]))).trans
+      (hclose.trans hcarrier)
   have hsubhelper : closure (parabolicCylinder zG.1 zG.2 (2 * (r₂ / 2))) ⊆ spaceTimeSet Ω I := by
     apply (closure_mono (parabolicCylinder_mono (x := zG.1) (t := zG.2) (r₁ := 2 * (r₂ / 2))
       (r₂ := r₂) (by positivity) (by nlinarith only))).trans; exact hclose.trans hcarrier
   have hcylbig' : parabolicCylinder zG.1 zG.2 (2 * (r₂ / 2)) ⊆ spaceTimeSet Ω' J := by
     convert hcylbig using 1; ring_nf
-  have hIU : IU < ⊤ := by dsimp [IU]; exact cylinder_velocity_integral_lt_top hsol (by positivity) hbox hcylbig' hsubhelper
-  have hID : ID < ⊤ := by dsimp [ID]; exact sws_gradient_integral_lt_top hsol (by positivity) hsubsmall
-  have hIP : IP < ⊤ := by dsimp [IP]; exact sws_pressure_integral_lt_top hsol (by positivity) hsubsmall
+  have hIU : IU < ⊤ := by
+    dsimp [IU]
+    exact cylinder_velocity_integral_lt_top hsol (by positivity) hbox hcylbig' hsubhelper
+  have hID : ID < ⊤ := by
+    dsimp [ID]
+    exact sws_gradient_integral_lt_top hsol (by positivity) hsubsmall
+  have hIP : IP < ⊤ := by
+    dsimp [IP]
+    exact sws_pressure_integral_lt_top hsol (by positivity) hsubsmall
   let KU := max ((velocitySmallConstant M) ^ (1 / 3 : ℝ))
     ((ENNReal.ofReal r₀) ^ (-(5 * (1 / 3 - 1 / (25 / 3 : ℝ)))) * IU ^ (1 / 3 : ℝ))
   let KD := max ((gradientSmallConstant M) ^ (1 / 2 : ℝ))
@@ -735,27 +765,41 @@ theorem step2_morrey_form
   let KP := max ((pressureSmallConstant M) ^ (2 / 3 : ℝ))
     ((ENNReal.ofReal r₀) ^ (-(5 * (1 / (3 / 2) - 1 / (25 / 8 : ℝ)))) * IP ^ (2 / 3 : ℝ))
   have hr₀ : 0 < r₀ := by dsimp [r₀]; positivity
-  have hC : (ENNReal.ofReal ((3 : ℝ) ^ ((3 : ℝ) / 2 - 1)) * 3) * localSobolevConstant ^ (3 / 2 : ℝ) < ⊤ := by
+  have hC : (ENNReal.ofReal ((3 : ℝ) ^ ((3 : ℝ) / 2 - 1)) * 3) * localSobolevConstant ^ (3 / 2 :
+    ℝ) < ⊤ := by
     exact ENNReal.mul_lt_top (ENNReal.mul_lt_top ENNReal.ofReal_lt_top ENNReal.coe_lt_top)
       (ENNReal.rpow_lt_top_of_nonneg (by norm_num) (by unfold localSobolevConstant; finiteness))
-  have hVel : velocitySmallConstant M < ⊤ := by dsimp [velocitySmallConstant]; exact ENNReal.mul_lt_top hC ENNReal.ofReal_lt_top
-  have hGrad : gradientSmallConstant M < ⊤ := by dsimp [gradientSmallConstant]; exact ENNReal.ofReal_lt_top
-  have hPres : pressureSmallConstant M < ⊤ := by dsimp [pressureSmallConstant]; exact ENNReal.ofReal_lt_top
-  have hKU : KU < ⊤ := by dsimp [KU]; exact max_lt (ENNReal.rpow_lt_top_of_nonneg (by positivity) hVel.ne) (by finiteness)
-  have hKD : KD < ⊤ := by dsimp [KD]; exact max_lt (ENNReal.rpow_lt_top_of_nonneg (by positivity) hGrad.ne) (by finiteness)
-  have hKP : KP < ⊤ := by dsimp [KP]; exact max_lt (ENNReal.rpow_lt_top_of_nonneg (by positivity) hPres.ne) (by finiteness)
-  have hu : ∀ i : Fin 3, ∀ z : ParabolicPoint, ∀ r : ℝ, 0 < r → morreyBallCell 3 (25 / 3 : ℝ) (Q₂.indicator (fun w => u w i)) z r ≤ KU := by
+  have hVel : velocitySmallConstant M < ⊤ := by
+    dsimp [velocitySmallConstant]
+    exact ENNReal.mul_lt_top hC ENNReal.ofReal_lt_top
+  have hGrad : gradientSmallConstant M < ⊤ := by dsimp [gradientSmallConstant]; exact
+    ENNReal.ofReal_lt_top
+  have hPres : pressureSmallConstant M < ⊤ := by dsimp [pressureSmallConstant]; exact
+    ENNReal.ofReal_lt_top
+  have hKU : KU < ⊤ := by
+    dsimp [KU]
+    exact max_lt (ENNReal.rpow_lt_top_of_nonneg (by positivity) hVel.ne) (by finiteness)
+  have hKD : KD < ⊤ := by
+    dsimp [KD]
+    exact max_lt (ENNReal.rpow_lt_top_of_nonneg (by positivity) hGrad.ne) (by finiteness)
+  have hKP : KP < ⊤ := by
+    dsimp [KP]
+    exact max_lt (ENNReal.rpow_lt_top_of_nonneg (by positivity) hPres.ne) (by finiteness)
+  have hu : ∀ i : Fin 3, ∀ z : ParabolicPoint, ∀ r : ℝ, 0 < r → morreyBallCell 3 (25 / 3 : ℝ)
+    (Q₂.indicator (fun w => u w i)) z r ≤ KU := by
     intro i z r hr
     by_cases hdis : Metric.ball z r ∩ Q₂ = ∅
     · unfold morreyBallCell; rw [ballPowerIntegral_zero (by norm_num) hdis]; simp
     by_cases hs : 128 * r ≤ r₂
     · exact (cell_bound_ennreal (p := 3) (q := 25 / 3) (a := 16 / 5) (K := velocitySmallConstant M)
-        (g := Q₂.indicator (fun w => u w i)) (z := z) (r := r) (by norm_num) hr (by norm_num) (by norm_num)
+        (g := Q₂.indicator (fun w => u w i)) (z := z) (r := r) (by norm_num) hr (by norm_num) (by
+          norm_num)
         (velocity_small_cell hsol hr₂ hM hr hs hcarrier hdecay rfl hdis)).trans (le_max_left _ _)
     · have hrr : r₀ ≤ r := by dsimp [r₀]; nlinarith only [hr₂, hr, hs]
       exact (cell_bound_global (p := 3) (q := 25 / 3) (r₀ := r₀) (I := IU)
         (g := Q₂.indicator (fun w => u w i)) (z := z) (r := r) (by norm_num) (by norm_num) hr₀ hrr
-        (ballPowerIntegral_le_of_subset (p := 3) (Q := Q₂) (C := parabolicCylinder zG.1 zG.2 (r₂ / 2))
+        (ballPowerIntegral_le_of_subset (p := 3) (Q := Q₂) (C := parabolicCylinder zG.1 zG.2 (r₂ /
+          2))
           (g := fun w => u w i) (F := fun w => ENNReal.ofReal (vec3EuclideanNorm (u w)) ^ (3 : ℝ))
           (z := z) (r := r) (by norm_num) measurableSet_ball hcover (by
             intro y
@@ -763,19 +807,24 @@ theorem step2_morrey_form
               (ENNReal.ofReal_le_ofReal (component_abs_le_vec3norm (u y) i))
               (by norm_num)))).trans
         (le_max_right _ _)
-  have hDu : ∀ i : Fin 3, ∀ j : Fin 3, ∀ z : ParabolicPoint, ∀ r : ℝ, 0 < r → morreyBallCell 2 (25 / 8 : ℝ) (Q₂.indicator (fun w => Du w i j)) z r ≤ KD := by
+  have hDu : ∀ i : Fin 3, ∀ j : Fin 3, ∀ z : ParabolicPoint, ∀ r : ℝ, 0 < r → morreyBallCell 2 (25
+    / 8 : ℝ) (Q₂.indicator (fun w => Du w i j)) z r ≤ KD := by
     intro i j z r hr
     by_cases hdis : Metric.ball z r ∩ Q₂ = ∅
     · unfold morreyBallCell; rw [ballPowerIntegral_zero (by norm_num) hdis]; simp
     by_cases hs : 128 * r ≤ r₂
     · exact (cell_bound_ennreal (p := 2) (q := 25 / 8) (a := 9 / 5) (K := gradientSmallConstant M)
-        (g := Q₂.indicator (fun w => Du w i j)) (z := z) (r := r) (by norm_num) hr (by norm_num) (by norm_num)
+        (g := Q₂.indicator (fun w => Du w i j)) (z := z) (r := r) (by norm_num) hr (by norm_num)
+          (by norm_num)
         (gradient_small_cell hsol hr₂ hM hr hs hcarrier hdecay rfl hdis)).trans (le_max_left _ _)
     · have hrr : r₀ ≤ r := by dsimp [r₀]; nlinarith only [hr₂, hr, hs]
       exact (cell_bound_global (p := 2) (q := 25 / 8) (r₀ := r₀) (I := ID)
-        (g := Q₂.indicator (fun w => Du w i j)) (z := z) (r := r) (by norm_num) (by norm_num) hr₀ hrr
-        (ballPowerIntegral_le_of_subset (p := 2) (Q := Q₂) (C := parabolicCylinder zG.1 zG.2 (r₂ / 2))
-          (g := fun w => Du w i j) (F := fun w => ENNReal.ofReal (spatialGradientSq u Du w)) (z := z) (r := r)
+        (g := Q₂.indicator (fun w => Du w i j)) (z := z) (r := r) (by norm_num) (by norm_num) hr₀
+          hrr
+        (ballPowerIntegral_le_of_subset (p := 2) (Q := Q₂) (C := parabolicCylinder zG.1 zG.2 (r₂ /
+          2))
+          (g := fun w => Du w i j) (F := fun w => ENNReal.ofReal (spatialGradientSq u Du w)) (z :=
+            z) (r := r)
           (by norm_num) measurableSet_ball hcover (by
             intro y
             rw [ENNReal.ofReal_rpow_of_nonneg (abs_nonneg _) (by norm_num)]
@@ -783,25 +832,34 @@ theorem step2_morrey_form
               unfold spatialGradientSq
               have hterm : (Du y i j) ^ 2 ≤ ∑ k : Fin 3, ∑ l : Fin 3, (Du y k l) ^ 2 :=
                 (Finset.single_le_sum (fun l _ => sq_nonneg (Du y i l)) (Finset.mem_univ j)).trans
-                  (Finset.single_le_sum (fun k _ => Finset.sum_nonneg (fun l _ => sq_nonneg (Du y k l)))
+                  (Finset.single_le_sum (fun k _ => Finset.sum_nonneg (fun l _ => sq_nonneg (Du y
+                    k l)))
                     (Finset.mem_univ i))
               simpa [sq_abs] using hterm)))).trans
         (le_max_right _ _)
-  have hp : ∀ z : ParabolicPoint, ∀ r : ℝ, 0 < r → morreyBallCell (3 / 2 : ℝ) (25 / 8 : ℝ) (Q₂.indicator p) z r ≤ KP := by
+  have hp : ∀ z : ParabolicPoint, ∀ r : ℝ, 0 < r → morreyBallCell (3 / 2 : ℝ) (25 / 8 : ℝ)
+    (Q₂.indicator p) z r ≤ KP := by
     intro z r hr
     by_cases hdis : Metric.ball z r ∩ Q₂ = ∅
     · unfold morreyBallCell; rw [ballPowerIntegral_zero (by norm_num) hdis]; simp
     by_cases hs : 128 * r ≤ r₂
-    · exact (cell_bound_ennreal (p := 3 / 2) (q := 25 / 8) (a := 13 / 5) (K := pressureSmallConstant M)
+    · exact (cell_bound_ennreal (p := 3 / 2) (q := 25 / 8) (a := 13 / 5) (K :=
+      pressureSmallConstant M)
         (g := Q₂.indicator p) (z := z) (r := r) (by norm_num) hr (by norm_num) (by norm_num)
-        (pressure_small_cell hsol hr₂ hM hr hs hcarrier hdecay rfl hdis)).trans (by dsimp [KP]; norm_num)
+        (pressure_small_cell hsol hr₂ hM hr hs hcarrier hdecay rfl hdis)).trans (by
+          dsimp [KP]
+          norm_num)
     · have hrr : r₀ ≤ r := by dsimp [r₀]; nlinarith only [hr₂, hr, hs]
       exact (cell_bound_global (p := 3 / 2) (q := 25 / 8) (r₀ := r₀) (I := IP)
         (g := Q₂.indicator p) (z := z) (r := r) (by norm_num) (by norm_num) hr₀ hrr
-        (ballPowerIntegral_le_of_subset (p := 3 / 2) (Q := Q₂) (C := parabolicCylinder zG.1 zG.2 (r₂ / 2))
+        (ballPowerIntegral_le_of_subset (p := 3 / 2) (Q := Q₂) (C := parabolicCylinder zG.1 zG.2
+          (r₂ / 2))
           (g := p) (F := fun w => ENNReal.ofReal |p w| ^ (3 / 2 : ℝ)) (z := z) (r := r)
-          (by norm_num) measurableSet_ball hcover (by intro y; rfl))).trans (by dsimp [KP]; norm_num)
-  have hmem := step2_morrey_balls hKU hKD hKP (by simpa [Q₂] using hu) (by simpa [Q₂] using hDu) (by simpa [Q₂] using hp)
+          (by norm_num) measurableSet_ball hcover (by intro y; rfl))).trans (by
+          dsimp [KP]
+          norm_num)
+  have hmem := step2_morrey_balls hKU hKD hKP (by simpa [Q₂] using hu) (by simpa [Q₂] using hDu)
+    (by simpa [Q₂] using hp)
   refine ⟨KU, KD, KP, hKU, hKD, hKP, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · simpa [Q₂] using hmem.1
   · intro i; simpa [Q₂] using hmem.2.1 i

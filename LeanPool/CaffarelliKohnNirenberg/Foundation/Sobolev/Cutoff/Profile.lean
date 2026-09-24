@@ -190,7 +190,7 @@ private theorem real_smoothTransition_hasDerivAt (x : ℝ) :
   have hq := ha.div hD hDne
   simp only [Pi.add_apply, Function.comp_apply] at hq
   convert hq using 1
-  congr 1
+  on_goal 1 => congr 1
   ring
 
 private theorem real_smoothTransition_abs_deriv_le (x : ℝ) :

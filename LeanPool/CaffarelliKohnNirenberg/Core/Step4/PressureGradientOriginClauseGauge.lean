@@ -375,7 +375,8 @@ theorem originClauseGauge_doubleRadius_subset_unit
   originClause_doubleRadius_subset_unit hR₁ hR₁one hr hmargin hz
 
 /-- Suitability supplies the doubled-radius slice estimate for a clipped
-origin cell with its fixed carrier pressure mean removed, while the fixed derivative is required only on the carrier ball. -/
+origin cell with its fixed carrier pressure mean removed, while the fixed derivative is required
+  only on the carrier ball. -/
 theorem originClauseGaugeCarrierCellIntegral_le_of_sws
     {Ω : Set Vec3} {I : Set ℝ} {q R₁ : ℝ}
     {u : ParabolicPoint → Vec3} {Du : ParabolicPoint → Fin 3 → Vec3}

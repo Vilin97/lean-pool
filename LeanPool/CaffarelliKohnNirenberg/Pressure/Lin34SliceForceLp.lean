@@ -215,7 +215,7 @@ private theorem force_sources_memLp_of_slice_data_local
       (ENNReal.ofReal q) volume) := by
   let B : Set Vec3 := vec3Ball x₀ ρ
   have hq0 : 0 < q := by linarith only [hq]
-  haveI : IsFiniteMeasure (volume.restrict B) :=
+  have : IsFiniteMeasure (volume.restrict B) :=
     ⟨by
       simpa only [Measure.restrict_apply_univ, B] using
         (CKN.Foundation.Parabolic.Integration.volume_vec3Ball_lt_top

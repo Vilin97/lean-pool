@@ -50,6 +50,164 @@ private theorem euclideanBall_eq_vec3Ball_faithful {x₀ : Vec3} {r : ℝ}
   simpa [vec3EuclideanNorm, vecEuclideanNorm, vecNormSq, vecDot, pow_two] using
     (mem_euclideanBall_iff_vecEuclideanNorm_lt hr)
 
+private lemma w1p_euclideanBall_poincareL1_faithful_hDunion_1 :
+    ∀ (x₀ : Vec3) {r : ℝ},
+      0 < r →
+        let B : Set Vec3 := euclideanBall x₀ r;
+        ∀ (s : ℕ → ℝ),
+          let D : ℕ → Set Vec3 := fun n => euclideanBall x₀ (s n);
+          (∀ (v : Vec3), vecEuclideanNorm v = vec3EuclideanNorm v) →
+            (∀ (n : ℕ), 0 < s n) → (∀ (n : ℕ), s n < r) → Tendsto s atTop (𝓝 r) → ⋃ n, D n = B
+    := by
+  intro x₀ r hr B s D hnormEq hspos hslt hstendsto
+  apply Set.Subset.antisymm
+  · intro x hx
+    rcases Set.mem_iUnion.1 hx with ⟨n, hxn⟩
+    apply (mem_euclideanBall_iff_vecEuclideanNorm_lt hr).2
+    exact ((mem_euclideanBall_iff_vecEuclideanNorm_lt (hspos n)).1 hxn).trans_le
+      (hslt n).le
+  · intro x hx
+    have hxnorm : vecEuclideanNorm (x - x₀) < r :=
+      (mem_euclideanBall_iff_vecEuclideanNorm_lt hr).1 hx
+    have hxnorm3 : vec3EuclideanNorm (x - x₀) < r := by
+      simpa [hnormEq] using hxnorm
+    have hev : ∀ᶠ n in atTop, vec3EuclideanNorm (x - x₀) < s n :=
+      hstendsto.eventually (Ioi_mem_nhds hxnorm3)
+    rcases hev.exists with ⟨n, hn⟩
+    have hn' : vecEuclideanNorm (x - x₀) < s n := by
+      simpa [hnormEq] using hn
+    exact Set.mem_iUnion.2 ⟨n,
+      (mem_euclideanBall_iff_vecEuclideanNorm_lt (hspos n)).2 hn'⟩
+
+private lemma w1p_euclideanBall_poincareL1_faithful_hleft_2 :
+    ∀ (x₀ : Vec3) {r : ℝ},
+      0 < r →
+        ∀ (u : W1pFunction (euclideanBall x₀ r) 1),
+          let B : Set Vec3 := euclideanBall x₀ r;
+          ∀ (s : ℕ → ℝ),
+            let D : ℕ → Set Vec3 := fun n => euclideanBall x₀ (s n);
+            ∀ (a₀ : ℝ) (a : ℕ → ℝ),
+              (∀ (n : ℕ), 0 < s n) →
+                (∀ (n : ℕ), s n < r) →
+                  @Integrable _ _ _ _ MeasureSpace.toMeasurableSpace
+                      (u.toFun (U := euclideanBall x₀ r)) (Measure.restrict volume B) →
+                    Tendsto (β := ℝ)
+                        (fun (n : ℕ) =>
+                          @integral _ _ _ _ MeasureSpace.toMeasurableSpace
+                            (Measure.restrict volume (D n)) fun x =>
+                            |u.toFun (U := euclideanBall x₀ r) x - a₀|)
+                        atTop
+                        (𝓝
+                          (@integral _ _ _ _ MeasureSpace.toMeasurableSpace
+                            (Measure.restrict volume B) fun x =>
+                            |u.toFun (U := euclideanBall x₀ r) x - a₀|)) →
+                      Tendsto (fun (n : ℕ) => ENNReal.toReal (volume (D n)) * |a n - a₀|) atTop
+                          (𝓝 0) →
+                        Tendsto (β := ℝ)
+                          (fun (n : ℕ) =>
+                            @integral _ _ _ _ MeasureSpace.toMeasurableSpace
+                              (Measure.restrict volume (D n)) fun x =>
+                              |u.toFun (U := euclideanBall x₀ r) x - a n|)
+                          atTop
+                          (𝓝
+                            (@integral _ _ _ _ MeasureSpace.toMeasurableSpace
+                              (Measure.restrict volume B) fun x =>
+                              |u.toFun (U := euclideanBall x₀ r) x - a₀|))
+    := by
+  intro x₀ r hr u B s D a₀ a hspos hslt huInt hJ hvolavg
+  have hbound (n : ℕ) : |(∫ x in D n, |u.toFun x - a n| ∂volume) -
+      ∫ x in D n, |u.toFun x - a₀| ∂volume| ≤
+      (volume (D n)).toReal * |a n - a₀| := by
+    let μn : Measure Vec3 := volume.restrict (D n)
+    have hDvol : volume (D n) < ∞ := by
+      change volume (euclideanBall x₀ (s n)) < ∞
+      rw [euclideanBall_eq_vec3Ball_faithful (hspos n), volume_vec3Ball_eq]
+      finiteness
+    let _ : IsFiniteMeasure μn := by
+      refine ⟨?_⟩
+      simpa [μn, Measure.restrict_apply_univ] using hDvol
+    have huDn : Integrable u.toFun μn := huInt.mono_measure
+      (Measure.restrict_mono_set volume (by
+        intro x hx
+        have hxB : x ∈ B := by
+          exact (mem_euclideanBall_iff_vecEuclideanNorm_lt hr).2
+            ((mem_euclideanBall_iff_vecEuclideanNorm_lt (hspos n)).1 hx |>.trans_le
+              (hslt n).le)
+        exact hxB))
+    have hIa : Integrable (fun x => |u.toFun x - a n|) μn :=
+      (huDn.sub (integrable_const (a n))).abs
+    have hI₀ : Integrable (fun x => |u.toFun x - a₀|) μn :=
+      (huDn.sub (integrable_const a₀)).abs
+    have hC : Integrable (fun _ : Vec3 => |a n - a₀|) μn := integrable_const _
+    have hpoint₁ (x : Vec3) : |u.toFun x - a n| ≤
+        |u.toFun x - a₀| + |a n - a₀| := by
+      calc
+        |u.toFun x - a n| = |(u.toFun x - a₀) + (a₀ - a n)| := by
+          congr 1
+          ring
+        _ ≤ |u.toFun x - a₀| + |a₀ - a n| := abs_add_le _ _
+        _ = |u.toFun x - a₀| + |a n - a₀| := by
+          congr 1
+          exact abs_sub_comm _ _
+    have hpoint₂ (x : Vec3) : |u.toFun x - a₀| ≤
+        |u.toFun x - a n| + |a n - a₀| := by
+      calc
+        |u.toFun x - a₀| = |(u.toFun x - a n) + (a n - a₀)| := by
+          congr 1
+          ring
+        _ ≤ |u.toFun x - a n| + |a n - a₀| := abs_add_le _ _
+    have hconst : ∫ x, |a n - a₀| ∂μn =
+        |a n - a₀| * (volume (D n)).toReal := by
+      rw [integral_const]
+      simp [μn, Measure.real_def, mul_comm]
+    have hupper : (∫ x, |u.toFun x - a n| ∂μn) ≤
+        (∫ x, |u.toFun x - a₀| ∂μn) +
+          |a n - a₀| * (volume (D n)).toReal := by
+      have h := integral_mono_ae hIa (hI₀.add hC)
+        (ae_of_all μn hpoint₁)
+      calc
+        (∫ x, |u.toFun x - a n| ∂μn) ≤
+            ∫ x, |u.toFun x - a₀| + |a n - a₀| ∂μn := h
+        _ = (∫ x, |u.toFun x - a₀| ∂μn) +
+            ∫ x, |a n - a₀| ∂μn := integral_add hI₀ hC
+        _ = _ := by rw [hconst]
+    have hlower : (∫ x, |u.toFun x - a₀| ∂μn) ≤
+        (∫ x, |u.toFun x - a n| ∂μn) +
+          |a n - a₀| * (volume (D n)).toReal := by
+      have h := integral_mono_ae hI₀ (hIa.add hC)
+        (ae_of_all μn hpoint₂)
+      calc
+        (∫ x, |u.toFun x - a₀| ∂μn) ≤
+            ∫ x, |u.toFun x - a n| + |a n - a₀| ∂μn := h
+        _ = (∫ x, |u.toFun x - a n| ∂μn) +
+            ∫ x, |a n - a₀| ∂μn := integral_add hIa hC
+        _ = _ := by rw [hconst]
+    have hEq₁ : ∫ x, |u.toFun x - a n| ∂μn =
+        ∫ x in D n, |u.toFun x - a n| ∂volume := rfl
+    have hEq₂ : ∫ x, |u.toFun x - a₀| ∂μn =
+        ∫ x in D n, |u.toFun x - a₀| ∂volume := rfl
+    rw [← hEq₁, ← hEq₂]
+    exact (abs_le).2 ⟨
+      (neg_le_sub_iff_le_add).2 (by simpa [mul_comm] using hlower),
+      (sub_le_iff_le_add).2 (by simpa [add_comm, mul_comm] using hupper)⟩
+  have hdiff : Tendsto (fun n =>
+      (∫ x in D n, |u.toFun x - a n| ∂volume) -
+        ∫ x in D n, |u.toFun x - a₀| ∂volume) atTop (nhds 0) := by
+    rw [tendsto_zero_iff_norm_tendsto_zero]
+    apply tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds hvolavg
+      (Eventually.of_forall fun _ => norm_nonneg _)
+    filter_upwards [] with n
+    simpa [Real.norm_eq_abs] using hbound n
+  have hsum := hdiff.add hJ
+  have hfun : (fun n => ∫ x in D n, |u.toFun x - a n| ∂volume) =
+      (fun n => (∫ x in D n, |u.toFun x - a n| ∂volume -
+        ∫ x in D n, |u.toFun x - a₀| ∂volume) +
+        ∫ x in D n, |u.toFun x - a₀| ∂volume) := by
+    funext n
+    ring
+  rw [hfun]
+  simpa using hsum
+
 /-- W¹,¹ Poincaré on an arbitrary Euclidean ball, with the volume-scaled constant. -/
 theorem w1p_euclideanBall_poincareL1_faithful
     (x₀ : Vec3) {r : ℝ} (hr : 0 < r)
@@ -133,25 +291,8 @@ theorem w1p_euclideanBall_poincareL1_faithful
     change IsOpen (euclideanBall x₀ (s n))
     change IsOpen {x : Vec3 | euclideanSqDist x x₀ < (s n) ^ 2}
     exact isOpen_lt (contDiff_euclideanSqDist_left x₀).continuous continuous_const
-  have hDunion : (⋃ n, D n) = B := by
-    apply Set.Subset.antisymm
-    · intro x hx
-      rcases Set.mem_iUnion.1 hx with ⟨n, hxn⟩
-      apply (mem_euclideanBall_iff_vecEuclideanNorm_lt hr).2
-      exact ((mem_euclideanBall_iff_vecEuclideanNorm_lt (hspos n)).1 hxn).trans_le
-        (hslt n).le
-    · intro x hx
-      have hxnorm : vecEuclideanNorm (x - x₀) < r :=
-        (mem_euclideanBall_iff_vecEuclideanNorm_lt hr).1 hx
-      have hxnorm3 : vec3EuclideanNorm (x - x₀) < r := by
-        simpa [hnormEq] using hxnorm
-      have hev : ∀ᶠ n in atTop, vec3EuclideanNorm (x - x₀) < s n :=
-        hstendsto.eventually (Ioi_mem_nhds hxnorm3)
-      rcases hev.exists with ⟨n, hn⟩
-      have hn' : vecEuclideanNorm (x - x₀) < s n := by
-        simpa [hnormEq] using hn
-      exact Set.mem_iUnion.2 ⟨n,
-        (mem_euclideanBall_iff_vecEuclideanNorm_lt (hspos n)).2 hn'⟩
+  have hDunion := @w1p_euclideanBall_poincareL1_faithful_hDunion_1 x₀ r hr s hnormEq hspos hslt
+    hstendsto
   have huB : MemLp u.toFun 1 (volume.restrict B) := by
     change MemLp u.toFun 1 (volumeOn B)
     exact u.memLp
@@ -224,101 +365,8 @@ theorem w1p_euclideanBall_poincareL1_faithful
     have habs := (continuous_abs.tendsto 0).comp hdiff
     have hm := hvol.mul habs
     simpa using hm
-  have hleft : Tendsto
-      (fun n => ∫ x in D n, |u.toFun x - a n| ∂volume) atTop
-      (nhds (∫ x in B, |u.toFun x - a₀| ∂volume)) := by
-    have hbound (n : ℕ) : |(∫ x in D n, |u.toFun x - a n| ∂volume) -
-        ∫ x in D n, |u.toFun x - a₀| ∂volume| ≤
-        (volume (D n)).toReal * |a n - a₀| := by
-      let μn : Measure Vec3 := volume.restrict (D n)
-      have hDvol : volume (D n) < ∞ := by
-        change volume (euclideanBall x₀ (s n)) < ∞
-        rw [euclideanBall_eq_vec3Ball_faithful (hspos n), volume_vec3Ball_eq]
-        finiteness
-      let _ : IsFiniteMeasure μn := by
-        refine ⟨?_⟩
-        simpa [μn, Measure.restrict_apply_univ] using hDvol
-      have huDn : Integrable u.toFun μn := huInt.mono_measure
-        (Measure.restrict_mono_set volume (by
-          intro x hx
-          have hxB : x ∈ B := by
-            exact (mem_euclideanBall_iff_vecEuclideanNorm_lt hr).2
-              ((mem_euclideanBall_iff_vecEuclideanNorm_lt (hspos n)).1 hx |>.trans_le
-                (hslt n).le)
-          exact hxB))
-      have hIa : Integrable (fun x => |u.toFun x - a n|) μn :=
-        (huDn.sub (integrable_const (a n))).abs
-      have hI₀ : Integrable (fun x => |u.toFun x - a₀|) μn :=
-        (huDn.sub (integrable_const a₀)).abs
-      have hC : Integrable (fun _ : Vec3 => |a n - a₀|) μn := integrable_const _
-      have hpoint₁ (x : Vec3) : |u.toFun x - a n| ≤
-          |u.toFun x - a₀| + |a n - a₀| := by
-        calc
-          |u.toFun x - a n| = |(u.toFun x - a₀) + (a₀ - a n)| := by
-            congr 1
-            ring
-          _ ≤ |u.toFun x - a₀| + |a₀ - a n| := abs_add_le _ _
-          _ = |u.toFun x - a₀| + |a n - a₀| := by
-            congr 1
-            exact abs_sub_comm _ _
-      have hpoint₂ (x : Vec3) : |u.toFun x - a₀| ≤
-          |u.toFun x - a n| + |a n - a₀| := by
-        calc
-          |u.toFun x - a₀| = |(u.toFun x - a n) + (a n - a₀)| := by
-            congr 1
-            ring
-          _ ≤ |u.toFun x - a n| + |a n - a₀| := abs_add_le _ _
-      have hconst : ∫ x, |a n - a₀| ∂μn =
-          |a n - a₀| * (volume (D n)).toReal := by
-        rw [integral_const]
-        simp [μn, Measure.real_def, mul_comm]
-      have hupper : (∫ x, |u.toFun x - a n| ∂μn) ≤
-          (∫ x, |u.toFun x - a₀| ∂μn) +
-            |a n - a₀| * (volume (D n)).toReal := by
-        have h := integral_mono_ae hIa (hI₀.add hC)
-          (ae_of_all μn hpoint₁)
-        calc
-          (∫ x, |u.toFun x - a n| ∂μn) ≤
-              ∫ x, |u.toFun x - a₀| + |a n - a₀| ∂μn := h
-          _ = (∫ x, |u.toFun x - a₀| ∂μn) +
-              ∫ x, |a n - a₀| ∂μn := integral_add hI₀ hC
-          _ = _ := by rw [hconst]
-      have hlower : (∫ x, |u.toFun x - a₀| ∂μn) ≤
-          (∫ x, |u.toFun x - a n| ∂μn) +
-            |a n - a₀| * (volume (D n)).toReal := by
-        have h := integral_mono_ae hI₀ (hIa.add hC)
-          (ae_of_all μn hpoint₂)
-        calc
-          (∫ x, |u.toFun x - a₀| ∂μn) ≤
-              ∫ x, |u.toFun x - a n| + |a n - a₀| ∂μn := h
-          _ = (∫ x, |u.toFun x - a n| ∂μn) +
-              ∫ x, |a n - a₀| ∂μn := integral_add hIa hC
-          _ = _ := by rw [hconst]
-      have hEq₁ : ∫ x, |u.toFun x - a n| ∂μn =
-          ∫ x in D n, |u.toFun x - a n| ∂volume := rfl
-      have hEq₂ : ∫ x, |u.toFun x - a₀| ∂μn =
-          ∫ x in D n, |u.toFun x - a₀| ∂volume := rfl
-      rw [← hEq₁, ← hEq₂]
-      exact (abs_le).2 ⟨
-        (neg_le_sub_iff_le_add).2 (by simpa [mul_comm] using hlower),
-        (sub_le_iff_le_add).2 (by simpa [add_comm, mul_comm] using hupper)⟩
-    have hdiff : Tendsto (fun n =>
-        (∫ x in D n, |u.toFun x - a n| ∂volume) -
-          ∫ x in D n, |u.toFun x - a₀| ∂volume) atTop (nhds 0) := by
-      rw [tendsto_zero_iff_norm_tendsto_zero]
-      apply tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds hvolavg
-        (Eventually.of_forall fun _ => norm_nonneg _)
-      filter_upwards [] with n
-      simpa [Real.norm_eq_abs] using hbound n
-    have hsum := hdiff.add hJ
-    have hfun : (fun n => ∫ x in D n, |u.toFun x - a n| ∂volume) =
-        (fun n => (∫ x in D n, |u.toFun x - a n| ∂volume -
-          ∫ x in D n, |u.toFun x - a₀| ∂volume) +
-          ∫ x in D n, |u.toFun x - a₀| ∂volume) := by
-      funext n
-      ring
-    rw [hfun]
-    simpa using hsum
+  have hleft := @w1p_euclideanBall_poincareL1_faithful_hleft_2 x₀ r hr u s a₀ a hspos hslt huInt
+    hJ hvolavg
   have hroot : Tendsto (fun n => (volume (D n)).toReal ^ (1 / 3 : ℝ)) atTop
       (nhds ((volume B).toReal ^ (1 / 3 : ℝ))) := by
     have hpair : Tendsto (fun n => ((volume (D n)).toReal, (1 / 3 : ℝ))) atTop

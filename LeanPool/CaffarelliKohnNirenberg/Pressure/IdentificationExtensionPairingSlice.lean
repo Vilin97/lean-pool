@@ -43,7 +43,7 @@ theorem pressureCutoff_slice_data_ae_of_sws
   classical
   obtain ⟨Ω', _hΩ'open, hηΩ', _hηΩ'', hΩ'compact, _hΩ'Ω, hLp⟩ :=
     decomposition_slice_integrability hsol hηc hηΩ hηc hηΩ
-  haveI : IsFiniteMeasure (volume.restrict Ω') := by
+  have : IsFiniteMeasure (volume.restrict Ω') := by
     apply isFiniteMeasure_restrict.mpr
     exact (lt_of_le_of_lt (measure_mono (μ := volume) subset_closure)
       hΩ'compact.measure_lt_top).ne

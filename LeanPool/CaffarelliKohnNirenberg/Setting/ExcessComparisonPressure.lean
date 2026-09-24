@@ -158,7 +158,7 @@ private lemma scalar_spatial_excess_lintegral_bound
     have hbase := hh.ennreal_ofReal
     have hbase' := hbase.congr (Filter.Eventually.of_forall fun w =>
       (ENNReal.ofReal_rpow_of_nonneg (abs_nonneg _) (by norm_num)).symm)
-    simpa [spatialAverage, B] using hbase' 
+    simpa [spatialAverage, B] using hbase'
   have hslice := hp'.prod_left_ae
   have hpslice := hpp'.prod_left_ae
   have hgood : ∀ᵐ s ∂volume.restrict T, (∫⁻ y in B,

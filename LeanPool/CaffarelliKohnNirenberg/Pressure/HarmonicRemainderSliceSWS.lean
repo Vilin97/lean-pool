@@ -32,6 +32,7 @@ private theorem harmonic_remainder_vec3_norm_add_le (v w : Vec3) :
     vec3EuclideanNorm_eq_l2, WithLp.toLp_add]
   exact norm_add_le _ _
 
+/-- Nonnegative growth coefficient for the forcing part of the harmonic pressure remainder. -/
 def harmonicRemainderForceBound (z : ParabolicPoint) {ρ : ℝ}
     (hρ : 0 < ρ) (f : ParabolicPoint → Vec3) (s : ℝ) : ℝ :=
   max

@@ -25,6 +25,7 @@ namespace CKN.Foundation.Heat
 
 open CKN.Foundation.Parabolic
 
+/-- Rescaled backward heat test function centered at time `r ^ 2`. -/
 def backwardHeatTestFunction (r : ℝ) (x : Vec3) (t : ℝ) : ℝ :=
   r ^ 2 * heatKernel x (r ^ 2 - t)
 

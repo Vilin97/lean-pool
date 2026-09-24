@@ -25,12 +25,14 @@ noncomputable section
 
 namespace CKN.Foundation.Parabolic
 
+/-- Pointwise Hölder seminorm bound with respect to parabolic distance. -/
 def ParabolicHolderSeminormLE
     (U : Set ParabolicPoint) (g : ParabolicPoint → ℝ)
     (α K : ℝ) : Prop :=
   ∀ x ∈ U, ∀ y ∈ U,
     |g x - g y| ≤ K * parabolicDist x y ^ α
 
+/-- Existence of an a.e.-equal representative satisfying a parabolic Hölder bound. -/
 def HasParabolicHolderRepresentativeOn
     (U : Set ParabolicPoint) (f : ParabolicPoint → ℝ)
     (α K : ℝ) : Prop :=

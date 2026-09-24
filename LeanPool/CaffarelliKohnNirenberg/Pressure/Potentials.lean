@@ -100,7 +100,8 @@ private lemma pressure_setIntegral_norm_shift_le
   have hright := hright0.integrable_indicator hL.measurableSet
   have hcomp := (measurePreserving_add_right (volume : Measure Vec3) (-y)).integrable_comp
     hright.aestronglyMeasurable |>.mpr hright
-  have hcomp' : Integrable (fun x : Vec3 => L.indicator (fun z : Vec3 => ‖k z‖) (x + -y)) volume := by
+  have hcomp' : Integrable (fun x : Vec3 => L.indicator (fun z : Vec3 => ‖k z‖) (x + -y)) volume
+    := by
     change Integrable (fun x : Vec3 => L.indicator (fun z : Vec3 => ‖k z‖) (x + -y)) volume at hcomp
     exact hcomp
   have hle : ∀ᵐ x : Vec3, K.indicator (fun z : Vec3 => ‖k (z-y)‖) x ≤
@@ -216,7 +217,7 @@ private lemma pressure_potential_pairing_of_compact
     {k g φ H : Vec3 → ℝ} (hk : LocallyIntegrable k volume)
     (hkm : Measurable k) (hg : Integrable g volume) (hgc : HasCompactSupport g)
     (hφ : Continuous φ) (hφc : HasCompactSupport φ)
-    (hinner : ∀ y, ∫ x, k (x-y) * φ x = H y) :
+    (hinner : ∀ y, ∫ x, k (x - y) * φ x = H y) :
     ∫ x, (∫ y, k (x-y) * g y) * φ x = ∫ y, g y * H y := by
   let K : Set Vec3 := tsupport φ
   have hK : IsCompact K := hφc.isCompact
@@ -361,7 +362,8 @@ theorem pressureNewtonianDerivativePotential_mul_smooth_integrable {i : Fin 3}
     (hφ : ContDiff ℝ (⊤ : ℕ∞) φ) (hφc : HasCompactSupport φ) :
     Integrable (fun x => pressureNewtonianDerivativePotential i g x * φ x) volume := by
   simpa only [smul_eq_mul, mul_comm] using
-    (pressureNewtonianDerivativePotential_locallyIntegrable i hg hgc).integrable_smul_right_of_hasCompactSupport
+    (pressureNewtonianDerivativePotential_locallyIntegrable i hg
+      hgc).integrable_smul_right_of_hasCompactSupport
       hφ.continuous hφc
 
 theorem pressureNewtonianPotential_pairing {g φ : Vec3 → ℝ}
@@ -401,7 +403,7 @@ theorem pressureNewtonianPotential_distributional_pairing {g ψ : Vec3 → ℝ}
 theorem pressureNewtonianDerivativePotential_pairing {i : Fin 3} {g φ H : Vec3 → ℝ}
     (hg : Integrable g volume) (hgc : HasCompactSupport g)
     (hφ : ContDiff ℝ (⊤ : ℕ∞) φ) (hφc : HasCompactSupport φ)
-    (hinner : ∀ y, ∫ x, CKN.spatialDeriv newtonianKernel i (x-y) * φ x = H y) :
+    (hinner : ∀ y, ∫ x, CKN.spatialDeriv newtonianKernel i (x - y) * φ x = H y) :
     ∫ x, pressureNewtonianDerivativePotential i g x * φ x = ∫ y,
       g y * H y := by
   exact pressure_potential_pairing_of_compact (k := fun z => CKN.spatialDeriv newtonianKernel i z)
@@ -412,7 +414,7 @@ theorem pressureNewtonianDerivativePotential_pairing {i : Fin 3} {g φ H : Vec3 
 theorem pressureNewtonianDerivativePotential_distributional_pairing {i : Fin 3}
     {g ψ : Vec3 → ℝ} (hg : Integrable g volume) (hgc : HasCompactSupport g)
     (hψ : ContDiff ℝ (⊤ : ℕ∞) ψ) (hψc : HasCompactSupport ψ)
-    (hinner : ∀ y, ∫ x, CKN.spatialDeriv newtonianKernel i (x-y) *
+    (hinner : ∀ y, ∫ x, CKN.spatialDeriv newtonianKernel i (x - y) *
       CKN.spatialLaplacian ψ x = CKN.spatialDeriv ψ i y) :
     ∫ x, pressureNewtonianDerivativePotential i g x * CKN.spatialLaplacian ψ x =
       ∫ y, g y * CKN.spatialDeriv ψ i y := by

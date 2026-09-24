@@ -22,7 +22,9 @@ Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 
 open MeasureTheory Set Filter CKN.Foundation.Parabolic CKN.Foundation.Parabolic.Integration
 open scoped ENNReal NNReal Topology
-noncomputable section namespace CKN
+noncomputable section
+
+namespace CKN
 private theorem caccioppoli_spatial_l3_bound_fixed
     {x₀ : Vec3} {r : ℝ} (hr : 0 < r) {u : Vec3 → Vec3}
     {C₆ : ℝ≥0∞}

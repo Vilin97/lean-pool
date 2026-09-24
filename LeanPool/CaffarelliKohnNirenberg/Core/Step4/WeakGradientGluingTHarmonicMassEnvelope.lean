@@ -5,7 +5,7 @@ Authors: Scott Armstrong, Vlad Vicol
 -/
 module
 
-public import LeanPool.CaffarelliKohnNirenberg.Core.Step4.PressureGradientOriginGapHarmonicMoment
+public import LeanPool.CaffarelliKohnNirenberg.Core.Step4.PressureGradientOriginKPHarmonicCells
 public import LeanPool.CaffarelliKohnNirenberg.Core.Step4.WeakGradientGluingTForceMassEnvelope
 
 /-! # Harmonic pressure estimates on the fixed gap collars
@@ -15,6 +15,65 @@ chosen before the numerical data and the suitable solution.
 -/
 
 @[expose] public section
+
+section
+
+/-!
+# Pressure Gradient Origin Gap Harmonic Moment
+
+Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
+-/
+
+open MeasureTheory Set Filter
+open scoped ENNReal
+open CKN.Foundation.Parabolic CKN.Foundation.Heat
+noncomputable section
+namespace CKN.Core.Step4
+
+/-- The harmonic moment coefficient is uniform on the admissible fixed collars. -/
+theorem origin_harmonic_moment_constant_le_gap_absolute
+    (C ρ : ℝ) (x : Vec3) (hC : 0 ≤ C) (hρlo : 1 / 128 ≤ ρ) (hρhi : ρ ≤ 1) :
+    originHarmonicMomentConstant C ρ x ≤ originHarmonicAbsoluteMomentConstant (65536*C) := by
+  have hρ : 0 < ρ := lt_of_lt_of_le (by norm_num) hρlo
+  have hpow : ρ^(-4 : ℝ) ≤ 268435456 := by
+    have hh := Real.rpow_le_rpow_of_nonpos (by norm_num : (0 : ℝ) < 1/128) hρlo
+      (by norm_num : (-4 : ℝ) ≤ 0)
+    exact hh.trans_eq (by norm_num)
+  have he : C*ρ^(-3 : ℝ)/ρ = C*ρ^(-4 : ℝ) := by
+    norm_num [Real.rpow_neg, Real.rpow_natCast]
+    field_simp
+  have hfirst : C*ρ^(-3 : ℝ)/ρ ≤ 268435456*C := by
+    rw [he]
+    simpa only [mul_comm] using mul_le_mul_of_nonneg_left hpow hC
+  have hsecond : C*ρ^(-3 : ℝ)/((Real.pi*4/3)^(1/3 : ℝ)*ρ) ≤
+      268435456*C/(Real.pi*4/3)^(1/3 : ℝ) := by
+    have hh := div_le_div_of_nonneg_right hfirst
+      (Real.rpow_nonneg (by positivity : (0 : ℝ) ≤ Real.pi*4/3) (1/3 : ℝ))
+    convert hh using 1
+    ring
+  have hv : volume (vec3Ball x ρ) ≤ ENNReal.ofReal (Real.pi*4/3) := by
+    rw [volume_vec3Ball_eq]
+    have hh : ENNReal.ofReal ρ ≤ 1 := by
+      exact (ENNReal.ofReal_le_ofReal hρhi).trans_eq (by simp)
+    exact (mul_le_mul' (pow_le_one₀ (by positivity) hh) le_rfl).trans_eq (one_mul _)
+  unfold originHarmonicMomentConstant originHarmonicAbsoluteMomentConstant
+  apply mul_le_mul'
+  · exact mul_le_mul' le_rfl (ENNReal.rpow_le_rpow hv (by norm_num))
+  · apply add_le_add
+    · apply ENNReal.rpow_le_rpow _ (by norm_num)
+      change ENNReal.ofReal (C*ρ^(-3 : ℝ)/ρ) ≤ _
+      simpa only [show (4096 : ℝ)*(65536*C) = 268435456*C by ring] using
+        ENNReal.ofReal_le_ofReal hfirst
+    · apply ENNReal.rpow_le_rpow _ (by norm_num)
+      change ENNReal.ofReal (C*ρ^(-3 : ℝ)/((Real.pi*4/3)^(1/3 : ℝ)*ρ)) ≤ _
+      simpa only [show (4096 : ℝ)*(65536*C) = 268435456*C by ring] using
+        ENNReal.ofReal_le_ofReal hsecond
+
+
+end CKN.Core.Step4
+end
+
+end
 
 open MeasureTheory Set Filter
 open scoped ENNReal
@@ -38,7 +97,7 @@ private theorem envelope_slice_norm_power_le
 
 private theorem harmonic_volume_radius_bound
     (C ε κ r : ℝ) (x : Vec3) (S : Set Vec3)
-    (hr : 0 < r) (hrhi : r ≤ 1) (hκ : 0 < κ) (hκhi : κ ≤ 25/9)
+    (hr : 0 < r) (hrhi : r ≤ 1) (hκ : 0 < κ) (hκhi : κ ≤ 25 / 9)
     (hS : S ⊆ vec3Ball x r) :
     volume S * originHarmonicAbsoluteMomentConstant C^(4/5 : ℝ) *
       ENNReal.ofReal ε^(4/5 : ℝ) * ENNReal.ofReal r^(2/5 : ℝ) ≤
@@ -88,7 +147,8 @@ theorem exists_gap_harmonic_mass_envelope_coefficient :
       ∀ i : Fin 3,
       ∃ M : ℝ → ℝ≥0∞,
         AEMeasurable M (volume.restrict (Ioc (t-r^2) t ∩ Ioc (-(R₁^2)) 0)) ∧
-        (∀ᵐ s ∂volume.restrict (Ioc (t-r^2) t ∩ Ioc (-(R₁^2)) 0), eLpNorm (fun y => classicalGradient
+        (∀ᵐ s ∂volume.restrict (Ioc (t-r^2) t ∩ Ioc (-(R₁^2)) 0), eLpNorm (fun y =>
+          classicalGradient
           (harmonicPressurePart (mollifiedBallCutoff z.1
             (show 0 < ρ from lt_of_lt_of_le (by norm_num) hρlo)) u
             (sourceSliceCentredMean z.1 ρ u) p s) y i)
@@ -110,7 +170,8 @@ theorem exists_gap_harmonic_mass_envelope_coefficient :
   obtain ⟨hm,hMass⟩ := origin_harmonic_majorant_moment_of_sws C ε hsol hdom hsmall hQ
   have hMass' : (∫⁻ s in J, M s^(3/2 : ℝ)) ≤
       originHarmonicAbsoluteMomentConstant (65536*C) * ENNReal.ofReal ε :=
-    hMass.trans (mul_le_mul' (origin_harmonic_moment_constant_le_gap_absolute C ρ z.1 hC hρlo hρhi) le_rfl)
+    hMass.trans (mul_le_mul' (origin_harmonic_moment_constant_le_gap_absolute C ρ z.1 hC hρlo
+      hρhi) le_rfl)
   have hb : ∀ᵐ s ∂volume.restrict J, ∀ᵐ y ∂volume.restrict S, ‖F (y,s)‖ₑ ≤ M s := by
     filter_upwards [hbound hsol hρ hsub] with s hs
     filter_upwards [ae_restrict_mem hS] with y hy
@@ -120,7 +181,8 @@ theorem exists_gap_harmonic_mass_envelope_coefficient :
     filter_upwards [slice_harmonic_part_contDiffOn_ae_of_sws hsol hρ hsub] with s hs
     rw [euclideanBall_eq_vec3Ball_display (by positivity : 0 < ρ/2)] at hs
     have hd : ContinuousOn (fun y => F (y,s)) (vec3Ball z.1 (ρ/2)) := by
-      exact (hs.continuousOn_fderiv_of_isOpen (isOpen_vec3Ball _ _) (by simp)).clm_apply continuousOn_const
+      exact (hs.continuousOn_fderiv_of_isOpen (isOpen_vec3Ball _ _) (by simp)).clm_apply
+        continuousOn_const
     exact (hd.mono hShalf).aestronglyMeasurable hS
   have htime : Ioc (t-r^2) t ∩ Ioc (-(R₁^2)) 0 ⊆ Ioc (t-r^2) t ∩ J :=
     fun s hs => ⟨hs.1,hwin hs⟩
@@ -173,7 +235,8 @@ theorem exists_gap_harmonic_affine_envelope_of_sws :
       ∀ i : Fin 3,
       ∃ M : ℝ → ℝ≥0∞,
         AEMeasurable M (volume.restrict (Ioc (t-r^2) t ∩ Ioc (-(R₁^2)) 0)) ∧
-        (∀ᵐ s ∂volume.restrict (Ioc (t-r^2) t ∩ Ioc (-(R₁^2)) 0), eLpNorm (fun y => classicalGradient
+        (∀ᵐ s ∂volume.restrict (Ioc (t-r^2) t ∩ Ioc (-(R₁^2)) 0), eLpNorm (fun y =>
+          classicalGradient
           (harmonicPressurePart (mollifiedBallCutoff z.1
             (show 0 < ρ from lt_of_lt_of_le (by norm_num) hρlo)) u
             (sourceSliceCentredMean z.1 ρ u) p s) y i)
@@ -183,11 +246,13 @@ theorem exists_gap_harmonic_affine_envelope_of_sws :
           ENNReal.ofReal (r^(5*(1-(6/5 : ℝ)/κ))) := by
   intro q ε C_CZ κ ρ R₁ t r x z KU KD S hCZ hκ hκhi hρlo hρhi hr hrhi hS hSball hShalf hwin
     Ω I u f Du p hsol hdom hsub hQ hsmall i
-  obtain ⟨M, hMm, hMp, hb⟩ := (Classical.choose_spec exists_gap_harmonic_mass_envelope_coefficient).2
+  obtain ⟨M, hMm, hMp, hb⟩ := (Classical.choose_spec
+    exists_gap_harmonic_mass_envelope_coefficient).2
     q ε κ ρ R₁ t r x z S hκ hκhi hρlo hρhi hr hrhi hS hSball hShalf hwin
     hsol hdom hsub hQ hsmall i
   exact ⟨M, hMm, hMp, hb.trans (mul_le_mul'
-    (origin_harmonic_coefficient_le_affine_slot gapHarmonicEnvelopeCoefficient C_CZ q ε KU KD hCZ) le_rfl)⟩
+    (origin_harmonic_coefficient_le_affine_slot gapHarmonicEnvelopeCoefficient C_CZ q ε KU KD hCZ)
+      le_rfl)⟩
 
 
 end CKN.Core.Step4

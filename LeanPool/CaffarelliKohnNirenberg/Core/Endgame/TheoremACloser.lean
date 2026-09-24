@@ -678,7 +678,8 @@ theorem theoremA_hGA_of_full_sum_comparison :
   obtain ⟨htop, hint⟩ := origin_carrier_slice_time_obligations_of_sws
     hR₁ (hR₁R₀.trans hR₀) hsol hdom Dp hm hw
   have hgrowth := fun i z r (hr : 0 < r) =>
-    theoremA_clipped_growth_of_carrier_morrey (κ := min ((1 / τ + 8 / 25)⁻¹) q') (R₁ := R₁) hm i z hr
+    theoremA_clipped_growth_of_carrier_morrey (κ := min ((1 / τ + 8 / 25)⁻¹) q') (R₁ := R₁) hm i z
+      hr
   have hglobal : ∀ i : Fin 3,
       (∫⁻ s in Ioc (-(R₁ ^ 2)) 0, M i (0 : Vec3) R₁ s ^ (6 / 5 : ℝ)) ≤ B := by
     intro j

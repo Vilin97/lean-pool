@@ -12,7 +12,7 @@ public import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 The pressure-gradient slice estimate of `ss:step3` carries, on a cell of
 radius `r` and at doubled spatial radius `ρ = 2 r`, the positive term
-`ρ⁻¹ᐟ² ‖p(·,s)‖_{L^{3/2}(B_ρ)}`.  Raising it to the power `6/5` and
+`ρ⁻¹/² ‖p(·,s)‖_{L^{3/2}(B_ρ)}`.  Raising it to the power `6/5` and
 integrating over the backward window `(t - r², t]` produces a power of `r`
 that has to dominate the power `5 - 6/κ` demanded by membership of the
 gradient in the parabolic Morrey class `M^{6/5,κ}` of `def:parabolic-morrey`.

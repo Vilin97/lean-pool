@@ -27,6 +27,7 @@ noncomputable section
 
 namespace CKN.Foundation.Parabolic
 
+/-- Explicit parabolic metric-ball family used in the covering argument. -/
 abbrev coveringParabolicMetricBall (c : ParabolicPoint) (r : ℝ) : Set ParabolicPoint :=
   @Metric.ball ParabolicPoint parabolicPseudoMetricSpace c r
 
@@ -57,7 +58,8 @@ private lemma parabolicMetricBall_ediam_le (c : ParabolicPoint) (r : ℝ) :
   calc
     @dist ParabolicPoint (PseudoMetricSpace.toDist (self := parabolicPseudoMetricSpace)) x y ≤
         @dist ParabolicPoint (PseudoMetricSpace.toDist (self := parabolicPseudoMetricSpace)) x c +
-          @dist ParabolicPoint (PseudoMetricSpace.toDist (self := parabolicPseudoMetricSpace)) c y := hxy
+          @dist ParabolicPoint (PseudoMetricSpace.toDist (self := parabolicPseudoMetricSpace)) c y
+            := hxy
     _ < r + r := add_lt_add hx hcy
     _ = 2 * r := by ring
 
@@ -133,6 +135,143 @@ instance coveringParabolicVolumeIsLocallyFinite :
         @Metric.ball_mem_nhds ParabolicPoint parabolicPseudoMetricSpace p 1 one_pos,
         volume_parabolicMetricBall_finite p⟩ }
 
+private lemma hausdorff_covering_diameter_integral_le_1 :
+    ∀ {g : ParabolicPoint → ℝ≥0∞} {U S : Set ParabolicPoint} {ε : ℝ≥0},
+      (0 : ℝ≥0) < ε →
+        ∀ (radius : ℕ → (↑S : Type) → ℝ),
+          (∀ (n : ℕ) (z : (↑S : Type)),
+              (0 : ℝ) < radius n z ∧
+                radius n z < (1 : ℝ) / (↑(n + (1 : ℕ)) : ℝ) ∧
+                  parabolicCylinder (↑z : ParabolicPoint).1 (↑z : ParabolicPoint).2 (radius n z) ⊆
+                      U ∧
+                    (↑ε : ℝ≥0∞) * ENNReal.ofReal (radius n z) <
+                      ∫⁻ (y : ParabolicPoint) in
+                        parabolicCylinder (↑z : ParabolicPoint).1 (↑z : ParabolicPoint).2
+                          (radius n z),
+                        g y) →
+            ∀ (center : ℕ → (↑S : Type) → ParabolicPoint),
+              let ball : ℕ → (↑S : Type) → Set ParabolicPoint := fun (n : ℕ) (z : (↑S : Type)) =>
+                coveringParabolicMetricBall (center n z) (radius n z);
+              ∀
+                (vitali :
+                  ∀ (n : ℕ),
+                    ∃ (u : Set (↑S : Type)),
+                      u.PairwiseDisjoint (ball n) ∧
+                        ∀ (a : (↑S : Type)),
+                          ∃ b ∈ u,
+                            (ball n a ∩ ball n b).Nonempty ∧ radius n a ≤ (2 : ℝ) * radius n b),
+                let selected : ℕ → Set (↑S : Type) := fun (n : ℕ) => Classical.choose (vitali n);
+                let index : ℕ → Type := fun (n : ℕ) => { z : (↑S : Type) // z ∈ selected n };
+                let cylinder : (n : ℕ) → index n → Set ParabolicPoint :=
+                  fun (n : ℕ) (i : index n) =>
+                  parabolicCylinder (↑(↑i : (↑S : Type)) : ParabolicPoint).1
+                    (↑(↑i : (↑S : Type)) : ParabolicPoint).2 (radius n (↑i : (↑S : Type)));
+                let enlarged : (n : ℕ) → index n → Set ParabolicPoint :=
+                  fun (n : ℕ) (i : index n) =>
+                  coveringParabolicMetricBall (center n (↑i : (↑S : Type)))
+                    ((5 : ℝ) * radius n (↑i : (↑S : Type)));
+                (∀ (n : ℕ) (i : index n),
+                    ediam (enlarged n i) ≤
+                      (10 : ℝ≥0∞) * ENNReal.ofReal (radius n (↑i : (↑S : Type)))) →
+                  let K : ℝ≥0∞ := (10 : ℝ≥0∞) / (↑ε : ℝ≥0∞);
+                  ∀ (n : ℕ) (i : index n),
+                    ediam (enlarged n i) ≤ K * ∫⁻ (y : ParabolicPoint) in cylinder n i, g y
+    := by
+  intro g U S ε hε radius radius_spec center ball vitali selected index cylinder enlarged
+    diameter_le K n i
+  have hε0 : (ε : ℝ≥0∞) ≠ 0 := ENNReal.coe_ne_zero.mpr hε.ne'
+  have hεtop : (ε : ℝ≥0∞) ≠ ∞ := ENNReal.coe_ne_top
+  have hmul : (ε : ℝ≥0∞) * ENNReal.ofReal (radius n i.1) ≤
+      ∫⁻ y in cylinder n i, g y :=
+    (radius_spec n i.1).2.2.2.le
+  have hfactor : (10 : ℝ≥0∞) * ENNReal.ofReal (radius n i.1) =
+      K * ((ε : ℝ≥0∞) * ENNReal.ofReal (radius n i.1)) := by
+    dsimp [K]
+    rw [ENNReal.div_eq_inv_mul]
+    calc
+      (10 : ℝ≥0∞) * ENNReal.ofReal (radius n i.1) =
+          1 * ((10 : ℝ≥0∞) * ENNReal.ofReal (radius n i.1)) := by simp
+      _ = ((ε : ℝ≥0∞)⁻¹ * (ε : ℝ≥0∞)) *
+          ((10 : ℝ≥0∞) * ENNReal.ofReal (radius n i.1)) := by
+        rw [ENNReal.inv_mul_cancel hε0 hεtop]
+      _ = ((ε : ℝ≥0∞)⁻¹ * (10 : ℝ≥0∞)) *
+          ((ε : ℝ≥0∞) * ENNReal.ofReal (radius n i.1)) := by ac_rfl
+  calc
+    ediam (enlarged n i) ≤ (10 : ℝ≥0∞) * ENNReal.ofReal (radius n i.1) :=
+      diameter_le n i
+    _ = K * ((ε : ℝ≥0∞) * ENNReal.ofReal (radius n i.1)) := hfactor
+    _ ≤ K * (∫⁻ y in cylinder n i, g y) :=
+      mul_le_mul_of_nonneg_left hmul bot_le
+
+private lemma hausdorff_covering_hausdorff_bound_2 :
+    ∀ {g : ParabolicPoint → ℝ≥0∞} {U S : Set ParabolicPoint} {ε : ℝ≥0}
+      (radius : ℕ → (↑S : Type) → ℝ),
+      (∀ (n : ℕ) (z : (↑S : Type)),
+          (0 : ℝ) < radius n z ∧
+            radius n z < (1 : ℝ) / (↑(n + (1 : ℕ)) : ℝ) ∧
+              parabolicCylinder (↑z : ParabolicPoint).1 (↑z : ParabolicPoint).2 (radius n z) ⊆ U ∧
+                (↑ε : ℝ≥0∞) * ENNReal.ofReal (radius n z) <
+                  ∫⁻ (y : ParabolicPoint) in
+                    parabolicCylinder (↑z : ParabolicPoint).1 (↑z : ParabolicPoint).2 (radius n z),
+                    g y) →
+        ∀ (center : ℕ → (↑S : Type) → ParabolicPoint),
+          let ball : ℕ → (↑S : Type) → Set ParabolicPoint := fun (n : ℕ) (z : (↑S : Type)) =>
+            coveringParabolicMetricBall (center n z) (radius n z);
+          ∀
+            (vitali :
+              ∀ (n : ℕ),
+                ∃ (u : Set (↑S : Type)),
+                  u.PairwiseDisjoint (ball n) ∧
+                    ∀ (a : (↑S : Type)),
+                      ∃ b ∈ u, (ball n a ∩ ball n b).Nonempty ∧ radius n a ≤ (2 : ℝ) * radius n b),
+            let selected : ℕ → Set (↑S : Type) := fun (n : ℕ) => Classical.choose (vitali n);
+            let index : ℕ → Type := fun (n : ℕ) => { z : (↑S : Type) // z ∈ selected n };
+            (∀ (n : ℕ), Countable (index n)) →
+              let enlarged : (n : ℕ) → index n → Set ParabolicPoint := fun (n : ℕ) (i : index n) =>
+                coveringParabolicMetricBall (center n (↑i : (↑S : Type)))
+                  ((5 : ℝ) * radius n (↑i : (↑S : Type)));
+              (∀ (n : ℕ) (i : index n),
+                  ediam (enlarged n i) ≤
+                    (10 : ℝ≥0∞) * ENNReal.ofReal (radius n (↑i : (↑S : Type)))) →
+                ∀ (K : ℝ≥0∞),
+                  (∀ (n : ℕ) (a : (↑S : Type)),
+                      (↑a : ParabolicPoint) ∈ ⋃ (i : index n), enlarged n i) →
+                    (∀ (n : ℕ),
+                        ∑' (i : index n), ediam (enlarged n i) ^ (1 : ℝ) ≤
+                          K * ∫⁻ (y : ParabolicPoint) in U, g y) →
+                      (μH[(1 : ℝ)] : Set ParabolicPoint → ℝ≥0∞) S ≤
+                        K * ∫⁻ (y : ParabolicPoint) in U, g y
+    := by
+  intro g U S ε radius radius_spec center ball vitali selected index this enlarged diameter_le K
+    enlarged_contains diameter_sum_le
+  have hdiam : ∀ᶠ (n : ℕ) in atTop, ∀ i : index n,
+      ediam (enlarged n i) ≤ (10 : ℝ≥0∞) *
+        ENNReal.ofReal (1 / ((n + 1 : ℕ) : ℝ)) := by
+    filter_upwards [] with n i
+    calc
+      ediam (enlarged n i) ≤ (10 : ℝ≥0∞) * ENNReal.ofReal (radius n i.1) :=
+        diameter_le n i
+      _ ≤ (10 : ℝ≥0∞) * ENNReal.ofReal
+          (1 / ((n + 1 : ℕ) : ℝ)) := by
+        exact mul_le_mul_of_nonneg_left (ENNReal.ofReal_le_ofReal
+          (radius_spec n i.1).2.1.le) bot_le
+  have hcover : ∀ᶠ (n : ℕ) in atTop, S ⊆ ⋃ i : index n, enlarged n i := by
+    filter_upwards [] with n
+    intro z hz
+    exact enlarged_contains n ⟨z, hz⟩
+  have hhaus := Measure.hausdorffMeasure_le_liminf_tsum (1 : ℝ) S
+    (fun n : ℕ => (10 : ℝ≥0∞) *
+      ENNReal.ofReal (1 / ((n + 1 : ℕ) : ℝ)))
+    tendsto_parabolicCoverRadius (fun n i => enlarged n i) hdiam hcover
+  have hliminf : liminf
+      (fun n => ∑' i : index n, ediam (enlarged n i) ^ (1 : ℝ)) atTop ≤
+      K * (∫⁻ y in U, g y) := by
+    refine Filter.liminf_le_of_le (hf := by isBoundedDefault) ?_
+    intro b hb
+    obtain ⟨n, hn⟩ := hb.exists
+    exact hn.trans (diameter_sum_le n)
+  exact hhaus.trans hliminf
+
 theorem parabolicHausdorffMeasure_one_le_integral_of_small_cylinders
     {g : ParabolicPoint → ℝ≥0∞} {U S : Set ParabolicPoint}
     (_ : Measurable g) (_ : IsOpen U) (_ : S ⊆ U)
@@ -153,12 +292,10 @@ theorem parabolicHausdorffMeasure_one_le_integral_of_small_cylinders
           (ε : ℝ≥0∞) * ENNReal.ofReal (radius n z) <
             ∫⁻ y in parabolicCylinder z.1.1 z.1.2 (radius n z), g y := by
     exact Classical.choose_spec (hsmall z z.property n)
-
   let center : ℕ → S → ParabolicPoint := fun n z =>
     (z.1.1, z.1.2 - (radius n z) ^ 2 / 2)
   let ball : ℕ → S → Set ParabolicPoint := fun n z =>
     coveringParabolicMetricBall (center n z) (radius n z)
-
   have ball_mem (n : ℕ) (z : S) : z.1 ∈ ball n z := by
     have hzc : z.1 ∈ parabolicCylinder z.1.1 z.1.2 (radius n z) := by
       rcases z with ⟨⟨x, t⟩, hz⟩
@@ -170,10 +307,8 @@ theorem parabolicHausdorffMeasure_one_le_integral_of_small_cylinders
       · exact sub_lt_self _ (sq_pos_of_pos (radius_spec n ⟨(x, t), hz⟩).1)
     simpa [ball, center] using
       (parabolicCylinder_subset_metricBall (radius_spec n z).1 hzc)
-
   have ball_nonempty (n : ℕ) (z : S) : (ball n z).Nonempty :=
     ⟨z.1, ball_mem n z⟩
-
   have radius_le_one (n : ℕ) (z : S) : radius n z ≤ 1 := by
     have hden : 0 < ((n + 1 : ℕ) : ℝ) := by positivity
     have hfrac : 1 / ((n + 1 : ℕ) : ℝ) ≤ 1 := by
@@ -182,7 +317,6 @@ theorem parabolicHausdorffMeasure_one_le_integral_of_small_cylinders
         exact_mod_cast Nat.succ_le_succ (Nat.zero_le n)
       simpa only [one_mul] using hden1
     exact ((radius_spec n z).2.1.trans_le hfrac).le
-
   have vitali (n : ℕ) :
       ∃ u : Set S, u.PairwiseDisjoint (ball n) ∧
         ∀ a : S, ∃ b ∈ u,
@@ -193,16 +327,14 @@ theorem parabolicHausdorffMeasure_one_le_integral_of_small_cylinders
         (fun a _ => (radius_spec n a).1.le) 1
         (fun a _ => radius_le_one n a) (fun a _ => ball_nonempty n a)
     exact ⟨u, hdisj, fun a => hcover a trivial⟩
-
   let selected : ℕ → Set S := fun n => Classical.choose (vitali n)
   have selected_spec (n : ℕ) :
       (selected n).PairwiseDisjoint (ball n) ∧
         ∀ a : S, ∃ b ∈ selected n,
           (ball n a ∩ ball n b).Nonempty ∧ radius n a ≤ 2 * radius n b := by
     exact Classical.choose_spec (vitali n)
-
   let index : ℕ → Type := fun n => {z : S // z ∈ selected n}
-  haveI : ∀ n, Countable (index n) := by
+  have : ∀ n, Countable (index n) := by
     intro n
     dsimp [index]
     refine (selected_spec n).1.countable_of_isOpen ?_ ?_
@@ -211,21 +343,17 @@ theorem parabolicHausdorffMeasure_one_le_integral_of_small_cylinders
       exact Metric.isOpen_ball
     · intro z hz
       simpa [ball] using ball_nonempty n z
-
   let cylinder : ∀ n, index n → Set ParabolicPoint := fun n i =>
     parabolicCylinder i.1.1.1 i.1.1.2 (radius n i.1)
   let enlarged : ∀ n, index n → Set ParabolicPoint := fun n i =>
     coveringParabolicMetricBall (center n i.1) (5 * radius n i.1)
-
   have cylinder_measurable (n : ℕ) (i : index n) :
       MeasurableSet (cylinder n i) := by
     exact measurableSet_parabolicCylinder _ _ _
-
   have cylinder_subset_ball (n : ℕ) (i : index n) :
       cylinder n i ⊆ ball n i.1 := by
     simpa [cylinder, ball, center] using
       (parabolicCylinder_subset_metricBall (radius_spec n i.1).1)
-
   have cylinder_disjoint (n : ℕ) {i j : index n} (hij : i ≠ j) :
       Disjoint (cylinder n i) (cylinder n j) := by
     apply Set.disjoint_of_subset (cylinder_subset_ball n i) (cylinder_subset_ball n j)
@@ -233,11 +361,9 @@ theorem parabolicHausdorffMeasure_one_le_integral_of_small_cylinders
     intro hij'
     apply hij
     exact Subtype.ext hij'
-
   have cylinder_subset_U (n : ℕ) (i : index n) :
       cylinder n i ⊆ U := by
     exact (radius_spec n i.1).2.2.1
-
   have sum_integral_le (n : ℕ) :
       (∑' i : index n, ∫⁻ y in cylinder n i, g y) ≤ ∫⁻ y in U, g y := by
     calc
@@ -253,7 +379,6 @@ theorem parabolicHausdorffMeasure_one_le_integral_of_small_cylinders
         intro y hy
         rcases mem_iUnion.mp hy with ⟨i, hi⟩
         exact cylinder_subset_U n i hi
-
   have diameter_le (n : ℕ) (i : index n) :
       ediam (enlarged n i) ≤ (10 : ℝ≥0∞) * ENNReal.ofReal (radius n i.1) := by
     calc
@@ -263,35 +388,9 @@ theorem parabolicHausdorffMeasure_one_le_integral_of_small_cylinders
         rw [show 2 * (5 * radius n i.1) = 10 * radius n i.1 by ring]
         rw [ENNReal.ofReal_mul (by norm_num)]
         norm_num
-
   let K : ℝ≥0∞ := (10 : ℝ≥0∞) / (ε : ℝ≥0∞)
-  have diameter_integral_le (n : ℕ) (i : index n) :
-      ediam (enlarged n i) ≤ K *
-        (∫⁻ y in cylinder n i, g y) := by
-    have hε0 : (ε : ℝ≥0∞) ≠ 0 := ENNReal.coe_ne_zero.mpr hε.ne'
-    have hεtop : (ε : ℝ≥0∞) ≠ ∞ := ENNReal.coe_ne_top
-    have hmul : (ε : ℝ≥0∞) * ENNReal.ofReal (radius n i.1) ≤
-        ∫⁻ y in cylinder n i, g y :=
-      (radius_spec n i.1).2.2.2.le
-    have hfactor : (10 : ℝ≥0∞) * ENNReal.ofReal (radius n i.1) =
-        K * ((ε : ℝ≥0∞) * ENNReal.ofReal (radius n i.1)) := by
-      dsimp [K]
-      rw [ENNReal.div_eq_inv_mul]
-      calc
-        (10 : ℝ≥0∞) * ENNReal.ofReal (radius n i.1) =
-            1 * ((10 : ℝ≥0∞) * ENNReal.ofReal (radius n i.1)) := by simp
-        _ = ((ε : ℝ≥0∞)⁻¹ * (ε : ℝ≥0∞)) *
-            ((10 : ℝ≥0∞) * ENNReal.ofReal (radius n i.1)) := by
-          rw [ENNReal.inv_mul_cancel hε0 hεtop]
-        _ = ((ε : ℝ≥0∞)⁻¹ * (10 : ℝ≥0∞)) *
-            ((ε : ℝ≥0∞) * ENNReal.ofReal (radius n i.1)) := by ac_rfl
-    calc
-      ediam (enlarged n i) ≤ (10 : ℝ≥0∞) * ENNReal.ofReal (radius n i.1) :=
-        diameter_le n i
-      _ = K * ((ε : ℝ≥0∞) * ENNReal.ofReal (radius n i.1)) := hfactor
-      _ ≤ K * (∫⁻ y in cylinder n i, g y) :=
-        mul_le_mul_of_nonneg_left hmul bot_le
-
+  have diameter_integral_le (n : ℕ) (i : index n) := @hausdorff_covering_diameter_integral_le_1 g
+    U S ε hε radius radius_spec center vitali diameter_le n i
   have enlarged_contains (n : ℕ) (a : S) :
       a.1 ∈ ⋃ i : index n, enlarged n i := by
     obtain ⟨b, hb, hab, hrad⟩ := (selected_spec n).2 a
@@ -315,7 +414,6 @@ theorem parabolicHausdorffMeasure_one_le_integral_of_small_cylinders
     refine mem_iUnion.2 ⟨⟨b, hb⟩, ?_⟩
     apply hsubset
     exact ball_mem n a
-
   have diameter_sum_le (n : ℕ) :
       (∑' i : index n, ediam (enlarged n i) ^ (1 : ℝ)) ≤
         K * (∫⁻ y in U, g y) := by
@@ -329,41 +427,13 @@ theorem parabolicHausdorffMeasure_one_le_integral_of_small_cylinders
         ENNReal.tsum_mul_left
       _ ≤ K * (∫⁻ y in U, g y) :=
         mul_le_mul_of_nonneg_left (sum_integral_le n) bot_le
-
-  have hausdorff_bound :
-      Measure.hausdorffMeasure (1 : ℝ) S ≤ K * (∫⁻ y in U, g y) := by
-    have hdiam : ∀ᶠ (n : ℕ) in atTop, ∀ i : index n,
-        ediam (enlarged n i) ≤ (10 : ℝ≥0∞) *
-          ENNReal.ofReal (1 / ((n + 1 : ℕ) : ℝ)) := by
-      filter_upwards [] with n i
-      calc
-        ediam (enlarged n i) ≤ (10 : ℝ≥0∞) * ENNReal.ofReal (radius n i.1) :=
-          diameter_le n i
-        _ ≤ (10 : ℝ≥0∞) * ENNReal.ofReal
-            (1 / ((n + 1 : ℕ) : ℝ)) := by
-          exact mul_le_mul_of_nonneg_left (ENNReal.ofReal_le_ofReal
-            (radius_spec n i.1).2.1.le) bot_le
-    have hcover : ∀ᶠ (n : ℕ) in atTop, S ⊆ ⋃ i : index n, enlarged n i := by
-      filter_upwards [] with n
-      intro z hz
-      exact enlarged_contains n ⟨z, hz⟩
-    have hhaus := Measure.hausdorffMeasure_le_liminf_tsum (1 : ℝ) S
-      (fun n : ℕ => (10 : ℝ≥0∞) *
-        ENNReal.ofReal (1 / ((n + 1 : ℕ) : ℝ)))
-      tendsto_parabolicCoverRadius (fun n i => enlarged n i) hdiam hcover
-    have hliminf : liminf
-        (fun n => ∑' i : index n, ediam (enlarged n i) ^ (1 : ℝ)) atTop ≤
-        K * (∫⁻ y in U, g y) := by
-      refine Filter.liminf_le_of_le (hf := by isBoundedDefault) ?_
-      intro b hb
-      obtain ⟨n, hn⟩ := hb.exists
-      exact hn.trans (diameter_sum_le n)
-    exact hhaus.trans hliminf
-
+  have hausdorff_bound := @hausdorff_covering_hausdorff_bound_2 g U S ε radius radius_spec center
+    vitali (by infer_instance) diameter_le K enlarged_contains diameter_sum_le
   rw [parabolicHausdorffMeasure]
   norm_num
   simpa [K] using hausdorff_bound
 
+/-- Volume coefficient for the parabolic covering estimates. -/
 noncomputable def parabolicVolumeConstant : ℝ≥0∞ :=
   ENNReal.ofReal ((4 : ℝ) ^ 5) * volume (parabolicCylinder 0 0 1)
 
@@ -542,7 +612,6 @@ theorem parabolicHausdorffMeasure_one_eq_zero_of_small_cylinders
       _ < ∞ := ENNReal.mul_lt_top hKtop hfinU
   have hS : volume S = 0 :=
     parabolicHausdorffMeasure_one_lt_top_imp_volume_zero hfiniteH
-
   have hsmall_integral (η : ℝ≥0∞) (hη : 0 < η) (hηtop : η ≠ ∞) :
       ∃ V : Set ParabolicPoint, S ⊆ V ∧ IsOpen V ∧
         (∫⁻ y in V, g y) < η / K := by
@@ -552,7 +621,6 @@ theorem parabolicHausdorffMeasure_one_eq_zero_of_small_cylinders
     obtain ⟨V, hSV, hVopen, hVvol⟩ :=
       Set.exists_isOpen_lt_of_lt (μ := volume) S δ (by simpa [hS] using hδ)
     exact ⟨V, hSV, hVopen, hδint V hVvol⟩
-
   apply le_antisymm
   · apply le_of_forall_pos_le_add
     intro η hη

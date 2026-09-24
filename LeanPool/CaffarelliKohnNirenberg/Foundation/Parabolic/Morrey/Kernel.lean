@@ -373,6 +373,7 @@ private lemma shell_kernel_integral_le {β : ℝ} (hβ : 0 < β) (hβ5 : β < 5)
               (ENNReal.ofReal (2 ^ 5) * volume (parabolicCylinder 0 0 1)) := by
           rw [shell_power_identity ha hβ.le hβ5.le]
 
+/-- Dyadic parabolic shell strictly below the reference scale. -/
 def negativeShell (R : ℝ) (n : ℕ) (z : ParabolicPoint) : Set ParabolicPoint :=
   parabolicRieszShell R (Int.negSucc n) z
 

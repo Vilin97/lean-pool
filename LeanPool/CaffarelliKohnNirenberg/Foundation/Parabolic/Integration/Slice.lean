@@ -213,7 +213,8 @@ theorem setLaverage_abs_sub_setAverage_rpow_le {α : Type*} [MeasurableSpace α]
     (setLaverage_norm_sub_setAverage_rpow_le hp hsPos hsTop hf hfp)
 
 /-- Scalar mean oscillation on a positive-radius spatial ball. -/
-theorem ball_setLaverage_abs_sub_spatialAverage_rpow_le {x : Vec3} {r s : ℝ} {g : ParabolicPoint → ℝ}
+theorem ball_setLaverage_abs_sub_spatialAverage_rpow_le {x : Vec3} {r s : ℝ} {g : ParabolicPoint →
+  ℝ}
     {p c : ℝ} (hp : 1 ≤ p) (hr : 0 < r)
     (hg : IntegrableOn (fun y => g (y, s)) (vec3Ball x r) volume)
     (hgp : IntegrableOn (fun y => |g (y, s) - c| ^ p) (vec3Ball x r) volume) :

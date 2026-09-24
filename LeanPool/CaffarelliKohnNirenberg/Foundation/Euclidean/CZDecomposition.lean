@@ -43,6 +43,7 @@ instance dyadicIndexCountable : Countable DyadicIndex := by
   cases hc.2
   rfl
 
+/-- Iterated dyadic parent, with the original cube at generation zero. -/
 def dyadicAncestor (Q : DyadicIndex) : ℕ → DyadicIndex
   | 0 => Q
   | n + 1 => dyadicParent (dyadicAncestor Q n)
@@ -125,36 +126,46 @@ private theorem dyadicAncestor_eq_of_intersect_of_scale_le
   apply dyadicIndex_eq_of_same_scale_intersect hancscale
   exact ⟨x, hsubset hxR, hxQ⟩
 
+/-- Half-open geometric cube represented by a dyadic index. -/
 def dyadicCubeSet (Q : DyadicIndex) : Set Vec3 :=
   dyadicCube Q.scale Q.corner
 
+/-- Geometric cube corresponding to the immediate dyadic parent. -/
 def dyadicParentSet (Q : DyadicIndex) : Set Vec3 :=
   dyadicCubeSet (dyadicParent Q)
 
+/-- Signed average of a scalar function on a dyadic cube. -/
 def dyadicAverage (F : Vec3 → ℝ) (Q : DyadicIndex) : ℝ :=
   ⨍ x in dyadicCubeSet Q, F x
 
+/-- Average absolute value on a dyadic cube, used in the stopping criterion. -/
 def dyadicAbsAverage (F : Vec3 → ℝ) (Q : DyadicIndex) : ℝ :=
   ⨍ x in dyadicCubeSet Q, |F x|
 
+/-- Extended nonnegative integral of the absolute value for the dyadic decomposition. -/
 def dyadicL1Norm (F : Vec3 → ℝ) : ℝ≥0∞ :=
   ∫⁻ x, ENNReal.ofReal |F x|
 
+/-- Membership in the union of a chosen family of dyadic cubes. -/
 def dyadicCubeMember (D : Set DyadicIndex) (x : Vec3) : Prop :=
   ∃ Q, Q ∈ D ∧ x ∈ dyadicCubeSet Q
 
+/-- Good part obtained by replacing the function by its average on each selected cube. -/
 noncomputable def dyadicGoodPart (F : Vec3 → ℝ) (D : Set DyadicIndex) : Vec3 → ℝ := by
   classical
   exact fun x => if hx : dyadicCubeMember D x then
     dyadicAverage F (Classical.choose hx)
   else F x
 
+/-- Mean-zero bad part supported on one selected dyadic cube. -/
 def dyadicBadPart (F : Vec3 → ℝ) (Q : DyadicIndex) : Vec3 → ℝ :=
   (dyadicCubeSet Q).indicator (fun x => F x - dyadicAverage F Q)
 
+/-- Stopping condition that the dyadic absolute average exceeds the chosen height. -/
 def dyadicHigh (F : Vec3 → ℝ) (height : ℝ) (Q : DyadicIndex) : Prop :=
   height < dyadicAbsAverage F Q
 
+/-- High-average cubes whose strict ancestors all fail the stopping condition. -/
 def dyadicMaximalCubes (F : Vec3 → ℝ) (height : ℝ) : Set DyadicIndex :=
   {Q | dyadicHigh F height Q ∧
     ∀ n : ℕ, 0 < n → ¬dyadicHigh F height (dyadicAncestor Q n)}
@@ -664,9 +675,11 @@ theorem dyadicMaximalCubes_spec
   · exact dyadic_maximal_off_cubes_le_ae hF hheight
   · exact dyadic_maximal_good_part_bound_ae hF hheight
 
+/-- Dyadic Calderón–Zygmund decomposition with quantitative good and bad part estimates. -/
 structure CZDecomposition (F : Vec3 → ℝ) (height : ℝ) where
   height_pos : 0 < height
   integrable : Integrable F
+  /-- Selected dyadic cubes supporting the bad pieces of the decomposition. -/
   cubes : Set DyadicIndex
   cubes_countable : cubes.Countable
   cubes_pairwise_disjoint : cubes.Pairwise (Function.onFun Disjoint dyadicCubeSet)

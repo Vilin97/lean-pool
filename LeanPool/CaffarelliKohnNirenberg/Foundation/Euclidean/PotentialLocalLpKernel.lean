@@ -79,9 +79,10 @@ theorem truncatedNewtonianPotentialKernel_memLp {R s : ℝ} (_ : 0 < R)
   have hintOn : IntegrableOn kp (ball (0 : Vec3) R) volume := by
     apply integrableOn_ball_of_norm_le_rpow (E := Vec3) (F := ℝ)
       (by change 1 ≤ Module.finrank ℝ (Fin 3 → ℝ); rw [Module.finrank_fin_fun]; norm_num)
-      (by change s < (Module.finrank ℝ Vec3 : ℝ)
-          ; rw [Module.finrank_fin_fun]
-          ; exact hs3)
+      (by
+        change s < (Module.finrank ℝ Vec3 : ℝ)
+        rw [Module.finrank_fin_fun]
+        exact hs3)
       hdecay hkpmeas
   have hint : Integrable kp volume := by
     exact hintOn.integrable_of_forall_notMem_eq_zero (by
@@ -133,10 +134,11 @@ theorem truncatedNewtonianDerivative_memLp_of_lt_three_halves {R s : ℝ} (_ : 0
   have hintOn : IntegrableOn kp (ball (0 : Vec3) R) volume := by
     apply integrableOn_ball_of_norm_le_rpow (E := Vec3) (F := ℝ)
       (by change 1 ≤ Module.finrank ℝ (Fin 3 → ℝ); rw [Module.finrank_fin_fun]; norm_num)
-      (by change (2 * s) < (Module.finrank ℝ Vec3 : ℝ)
-          ; rw [Module.finrank_fin_fun]
-          ; norm_num
-          ; linarith only [hs3])
+      (by
+        change (2 * s) < (Module.finrank ℝ Vec3 : ℝ)
+        rw [Module.finrank_fin_fun]
+        norm_num
+        linarith only [hs3])
       hdecay hkpmeas
   have hint : Integrable kp volume := by
     exact hintOn.integrable_of_forall_notMem_eq_zero (by

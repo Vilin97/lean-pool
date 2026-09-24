@@ -84,7 +84,8 @@ theorem fixed_centred_source_eq_zero_off_ball
       (pressure_cutoff_support_subset_ball x hρ
         ((tsupport_fderiv_apply_subset ℝ (basisVec j)) h)))
   simp only [sourceMorreyCutoffVCentredTensorSpacetime,
-    sourceMorreyCutoffVCentredTensor, pressureDivergenceCutoffSourceCentredTensor, he, hd, zero_mul, add_zero,
+    sourceMorreyCutoffVCentredTensor, pressureDivergenceCutoffSourceCentredTensor, he, hd,
+      zero_mul, add_zero,
     Finset.sum_const_zero]
 
 /-- On each time in the localization window, the spatial cutoff makes both

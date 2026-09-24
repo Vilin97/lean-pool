@@ -62,7 +62,7 @@ private lemma heatKernelPlus_integral_time_strip {T : ℝ} (hT : 0 < T) :
     exact heatKernel_integral t ht.1
   rw [integral_congr_ae hinner, integral_const]
   rw [Measure.real_def, Measure.restrict_apply_univ, Real.volume_Ioc]
-  simp
+  simp only [sub_zero, smul_eq_mul, mul_one, ENNReal.toReal_ofReal_eq_iff, ge_iff_le]
   exact hT.le
 
 private lemma heatKernelPlus_setIntegral_pos {R : ℝ} :

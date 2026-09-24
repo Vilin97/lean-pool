@@ -75,13 +75,13 @@ theorem caccioppoli_spatial_cutoff_second_derivative_bound (x₀ : Vec3) (ρ : �
 
 theorem caccioppoli_cutoff_spatial_partial_bound (x₀ : Vec3) (t₀ ρ R : ℝ)
     (hρ : 0 < ρ) (hR : ρ / 2 < R) (z : Vec3 × ℝ) (i : Fin 3) :
-    |spatialPartial (caccioppoli_cutoff x₀ t₀ ρ R hρ hR) i z| ≤
+    |spatialPartial (caccioppoliCutoff x₀ t₀ ρ R hρ hR) i z| ≤
       cutoffGradientConstant / ρ := by
   have hη := caccioppoli_cutoff_smooth x₀ t₀ ρ R hρ hR
   have hsp : ContDiff ℝ (⊤ : ℕ∞)
       (fun z : Vec3 × ℝ => mollifiedBallCutoff x₀ hρ z.1) := by
     exact (mollifiedBallCutoff_smooth x₀ hρ).comp contDiff_fst
-  unfold caccioppoli_cutoff
+  unfold caccioppoliCutoff
   change |spatialPartial (fun z : ParabolicPoint =>
       mollifiedBallCutoff x₀ hρ z.1 * timeCutoff t₀ (ρ / 2) R z.2) i z| ≤
     cutoffGradientConstant / ρ
@@ -124,14 +124,14 @@ theorem caccioppoli_cutoff_spatial_partial_bound (x₀ : Vec3) (t₀ ρ R : ℝ)
 
 theorem caccioppoli_cutoff_time_partial_bound (x₀ : Vec3) (t₀ ρ R : ℝ)
     (hρ : 0 < ρ) (hR : ρ / 2 < R) (z : Vec3 × ℝ) :
-    |timePartial (caccioppoli_cutoff x₀ t₀ ρ R hρ hR) z| ≤
+    |timePartial (caccioppoliCutoff x₀ t₀ ρ R hρ hR) z| ≤
       32 / (R ^ 2 - (ρ / 2) ^ 2) := by
   have hsp : ContDiff ℝ (⊤ : ℕ∞)
       (fun z : Vec3 × ℝ => mollifiedBallCutoff x₀ hρ z.1) := by
     exact (mollifiedBallCutoff_smooth x₀ hρ).comp contDiff_fst
   have hχ : ContDiff ℝ (⊤ : ℕ∞) (timeCutoff t₀ (ρ / 2) R) :=
     timeCutoff_smooth (caccioppoli_cutoff_time_parameters hρ hR).1 hR
-  unfold caccioppoli_cutoff
+  unfold caccioppoliCutoff
   change |timePartial (fun z : ParabolicPoint =>
       mollifiedBallCutoff x₀ hρ z.1 * timeCutoff t₀ (ρ / 2) R z.2) z| ≤
       32 / (R ^ 2 - (ρ / 2) ^ 2)
@@ -202,12 +202,12 @@ private lemma spatialSecondPartial_spatial (g : Vec3 → ℝ) (z : ParabolicPoin
 theorem caccioppoli_cutoff_second_spatial_partial_bound
     (x₀ : Vec3) (t₀ ρ R : ℝ) (hρ : 0 < ρ) (hR : ρ / 2 < R)
     (z : Vec3 × ℝ) (i j : Fin 3) :
-    |spatialSecondPartial (caccioppoli_cutoff x₀ t₀ ρ R hρ hR) i j z| ≤
+    |spatialSecondPartial (caccioppoliCutoff x₀ t₀ ρ R hρ hR) i j z| ≤
       cutoffSecondDerivativeConstant / ρ ^ 2 := by
   have hsp : ContDiff ℝ (⊤ : ℕ∞)
       (fun z : Vec3 × ℝ => mollifiedBallCutoff x₀ hρ z.1) := by
     exact (mollifiedBallCutoff_smooth x₀ hρ).comp contDiff_fst
-  unfold caccioppoli_cutoff
+  unfold caccioppoliCutoff
   change |spatialSecondPartial (fun z : ParabolicPoint =>
       mollifiedBallCutoff x₀ hρ z.1 * timeCutoff t₀ (ρ / 2) R z.2) i j z| ≤
       cutoffSecondDerivativeConstant / ρ ^ 2
@@ -241,12 +241,12 @@ theorem caccioppoli_cutoff_second_spatial_partial_bound
 
 theorem caccioppoli_cutoff_laplacian_bound (x₀ : Vec3) (t₀ ρ R : ℝ)
     (hρ : 0 < ρ) (hR : ρ / 2 < R) (z : Vec3 × ℝ) :
-    |∑ i, spatialSecondPartial (caccioppoli_cutoff x₀ t₀ ρ R hρ hR) i i z| ≤
+    |∑ i, spatialSecondPartial (caccioppoliCutoff x₀ t₀ ρ R hρ hR) i i z| ≤
       3 * (cutoffSecondDerivativeConstant / ρ ^ 2) := by
   calc
-    |∑ i, spatialSecondPartial (caccioppoli_cutoff x₀ t₀ ρ R hρ hR) i i z| ≤
+    |∑ i, spatialSecondPartial (caccioppoliCutoff x₀ t₀ ρ R hρ hR) i i z| ≤
         ∑ i, |spatialSecondPartial
-          (caccioppoli_cutoff x₀ t₀ ρ R hρ hR) i i z| :=
+          (caccioppoliCutoff x₀ t₀ ρ R hρ hR) i i z| :=
       Finset.abs_sum_le_sum_abs _ _
     _ ≤ ∑ _i : Fin 3, cutoffSecondDerivativeConstant / ρ ^ 2 := by
       apply Finset.sum_le_sum
@@ -258,23 +258,25 @@ theorem caccioppoli_cutoff_laplacian_bound (x₀ : Vec3) (t₀ ρ R : ℝ)
 
 theorem caccioppoli_cutoff_time_plus_laplacian_bound (x₀ : Vec3) (t₀ ρ R : ℝ)
     (hρ : 0 < ρ) (hR : ρ / 2 < R) (z : Vec3 × ℝ) :
-    |timePartial (caccioppoli_cutoff x₀ t₀ ρ R hρ hR) z +
-        ∑ i, spatialSecondPartial (caccioppoli_cutoff x₀ t₀ ρ R hρ hR) i i z| ≤
+    |timePartial (caccioppoliCutoff x₀ t₀ ρ R hρ hR) z +
+        ∑ i, spatialSecondPartial (caccioppoliCutoff x₀ t₀ ρ R hρ hR) i i z| ≤
       32 / (R ^ 2 - (ρ / 2) ^ 2) +
         3 * (cutoffSecondDerivativeConstant / ρ ^ 2) := by
   calc
-    |timePartial (caccioppoli_cutoff x₀ t₀ ρ R hρ hR) z +
+    |timePartial (caccioppoliCutoff x₀ t₀ ρ R hρ hR) z +
         ∑ i, spatialSecondPartial
-          (caccioppoli_cutoff x₀ t₀ ρ R hρ hR) i i z| ≤
-        |timePartial (caccioppoli_cutoff x₀ t₀ ρ R hρ hR) z| +
+          (caccioppoliCutoff x₀ t₀ ρ R hρ hR) i i z| ≤
+        |timePartial (caccioppoliCutoff x₀ t₀ ρ R hρ hR) z| +
           |∑ i, spatialSecondPartial
-            (caccioppoli_cutoff x₀ t₀ ρ R hρ hR) i i z| := abs_add_le _ _
+            (caccioppoliCutoff x₀ t₀ ρ R hρ hR) i i z| := abs_add_le _ _
     _ ≤ 32 / (R ^ 2 - (ρ / 2) ^ 2) +
         3 * (cutoffSecondDerivativeConstant / ρ ^ 2) := add_le_add
       (caccioppoli_cutoff_time_partial_bound x₀ t₀ ρ R hρ hR z)
       (caccioppoli_cutoff_laplacian_bound x₀ t₀ ρ R hρ hR z)
 
-def caccioppoli_asymmetricTimeCutoff (t₀ ρ ε t : ℝ) : ℝ :=
+/-- Temporal cutoff with separate backward-cylinder and forward regularization transition
+intervals. -/
+def caccioppoliAsymmetricTimeCutoff (t₀ ρ ε t : ℝ) : ℝ :=
   smoothTransitionProfile
       ((t - (t₀ - ρ ^ 2 / 2)) / (ρ ^ 2 / 4)) *
     smoothTransitionProfile
@@ -282,22 +284,22 @@ def caccioppoli_asymmetricTimeCutoff (t₀ ρ ε t : ℝ) : ℝ :=
 
 theorem caccioppoli_asymmetricTimeCutoff_smooth {t₀ ρ ε : ℝ}
     (_ : 0 < ρ) (_ : 0 < ε) :
-    ContDiff ℝ (⊤ : ℕ∞) (caccioppoli_asymmetricTimeCutoff t₀ ρ ε) := by
-  unfold caccioppoli_asymmetricTimeCutoff
+    ContDiff ℝ (⊤ : ℕ∞) (caccioppoliAsymmetricTimeCutoff t₀ ρ ε) := by
+  unfold caccioppoliAsymmetricTimeCutoff
   apply (smoothTransitionProfile.smooth.comp ?_).mul
     (smoothTransitionProfile.smooth.comp ?_)
   · fun_prop
   · fun_prop
 
 theorem caccioppoli_asymmetricTimeCutoff_nonneg (t₀ ρ ε t : ℝ) :
-    0 ≤ caccioppoli_asymmetricTimeCutoff t₀ ρ ε t := by
-  unfold caccioppoli_asymmetricTimeCutoff
+    0 ≤ caccioppoliAsymmetricTimeCutoff t₀ ρ ε t := by
+  unfold caccioppoliAsymmetricTimeCutoff
   exact mul_nonneg (smoothTransitionProfile.nonneg _)
     (smoothTransitionProfile.nonneg _)
 
 theorem caccioppoli_asymmetricTimeCutoff_le_one (t₀ ρ ε t : ℝ) :
-    caccioppoli_asymmetricTimeCutoff t₀ ρ ε t ≤ 1 := by
-  unfold caccioppoli_asymmetricTimeCutoff
+    caccioppoliAsymmetricTimeCutoff t₀ ρ ε t ≤ 1 := by
+  unfold caccioppoliAsymmetricTimeCutoff
   calc
     _ ≤ 1 * smoothTransitionProfile ((t₀ + ε - t) / (ε / 2)) :=
       mul_le_mul_of_nonneg_right (smoothTransitionProfile.le_one _)
@@ -308,7 +310,7 @@ theorem caccioppoli_asymmetricTimeCutoff_le_one (t₀ ρ ε t : ℝ) :
 
 theorem caccioppoli_asymmetricTimeCutoff_support_subset {t₀ ρ ε : ℝ}
     (hρ : 0 < ρ) (hε : 0 < ε) :
-    Function.support (caccioppoli_asymmetricTimeCutoff t₀ ρ ε) ⊆
+    Function.support (caccioppoliAsymmetricTimeCutoff t₀ ρ ε) ⊆
       Ioo (t₀ - ρ ^ 2) (t₀ + ε) := by
   intro t ht
   constructor
@@ -321,7 +323,7 @@ theorem caccioppoli_asymmetricTimeCutoff_support_subset {t₀ ρ ε : ℝ}
       · positivity
     have hzero := smoothTransitionProfile.zero_of_nonpos harg
     apply ht
-    simp only [caccioppoli_asymmetricTimeCutoff, hzero, zero_mul]
+    simp only [caccioppoliAsymmetricTimeCutoff, hzero, zero_mul]
   · by_contra hright
     have harg : (t₀ + ε - t) / (ε / 2) ≤ 0 := by
       apply (div_nonpos_iff).2
@@ -331,11 +333,11 @@ theorem caccioppoli_asymmetricTimeCutoff_support_subset {t₀ ρ ε : ℝ}
       · positivity
     have hzero := smoothTransitionProfile.zero_of_nonpos harg
     apply ht
-    simp only [caccioppoli_asymmetricTimeCutoff, hzero, mul_zero]
+    simp only [caccioppoliAsymmetricTimeCutoff, hzero, mul_zero]
 
 theorem caccioppoli_asymmetricTimeCutoff_tsupport_subset {t₀ ρ ε r : ℝ}
     (hρ : 0 < ρ) (hε : 0 < ε) (hεr : ε < r ^ 2) :
-    tsupport (caccioppoli_asymmetricTimeCutoff t₀ ρ ε) ⊆
+    tsupport (caccioppoliAsymmetricTimeCutoff t₀ ρ ε) ⊆
       {t : ℝ | t < t₀ + r ^ 2} := by
   intro t ht
   have hclosed : t ∈ Iic (t₀ + ε) := by
@@ -350,7 +352,7 @@ theorem caccioppoli_asymmetricTimeCutoff_tsupport_subset {t₀ ρ ε r : ℝ}
 
 theorem caccioppoli_asymmetricTimeCutoff_hasCompactSupport {t₀ ρ ε : ℝ}
     (hρ : 0 < ρ) (hε : 0 < ε) :
-    HasCompactSupport (caccioppoli_asymmetricTimeCutoff t₀ ρ ε) := by
+    HasCompactSupport (caccioppoliAsymmetricTimeCutoff t₀ ρ ε) := by
   refine HasCompactSupport.intro
     (isCompact_Icc : IsCompact (Icc (t₀ - ρ ^ 2) (t₀ + ε))) ?_
   intro t ht
@@ -373,21 +375,21 @@ private theorem caccioppoli_asymmetricTimeCutoff_right_eq_one_near
 
 theorem caccioppoli_asymmetricTimeCutoff_abs_deriv_le_on_left
     {t₀ ρ ε t : ℝ} (hρ : 0 < ρ) (hε : 0 < ε) (ht : t ≤ t₀) :
-    |deriv (caccioppoli_asymmetricTimeCutoff t₀ ρ ε) t| ≤ 32 / ρ ^ 2 := by
+    |deriv (caccioppoliAsymmetricTimeCutoff t₀ ρ ε) t| ≤ 32 / ρ ^ 2 := by
   have hcongr : ∀ᶠ s in 𝓝 t,
-      caccioppoli_asymmetricTimeCutoff t₀ ρ ε s =
+      caccioppoliAsymmetricTimeCutoff t₀ ρ ε s =
         smoothTransitionProfile
           ((s - (t₀ - ρ ^ 2 / 2)) / (ρ ^ 2 / 4)) := by
     filter_upwards [caccioppoli_asymmetricTimeCutoff_right_eq_one_near hε ht]
       with s hs
-    simp only [caccioppoli_asymmetricTimeCutoff, hs, mul_one]
+    simp only [caccioppoliAsymmetricTimeCutoff, hs, mul_one]
   have harg := ((hasDerivAt_id t).sub_const
     (t₀ - ρ ^ 2 / 2)).div_const (ρ ^ 2 / 4)
   have hbase := (smoothTransitionProfile.smooth.differentiable (by simp)
     ((t - (t₀ - ρ ^ 2 / 2)) / (ρ ^ 2 / 4))).hasDerivAt.comp t harg
   have htest := hbase.congr_of_eventuallyEq hcongr
   calc
-    |deriv (caccioppoli_asymmetricTimeCutoff t₀ ρ ε) t| =
+    |deriv (caccioppoliAsymmetricTimeCutoff t₀ ρ ε) t| =
         |deriv smoothTransitionProfile
           ((t - (t₀ - ρ ^ 2 / 2)) / (ρ ^ 2 / 4))| /
           (ρ ^ 2 / 4) := by
@@ -400,31 +402,33 @@ theorem caccioppoli_asymmetricTimeCutoff_abs_deriv_le_on_left
         (smoothTransitionProfile.abs_deriv_le_eight _) (by positivity)
     _ = 32 / ρ ^ 2 := by field_simp [hρ.ne']; ring
 
-def caccioppoli_heat_cutoff (x₀ : Vec3) (t₀ ρ ε : ℝ)
+/-- Product cutoff used to test the local energy inequality with a regularized backward heat
+kernel. -/
+def caccioppoliHeatCutoff (x₀ : Vec3) (t₀ ρ ε : ℝ)
     (hρ : 0 < ρ) (_hε : 0 < ε) (z : Vec3 × ℝ) : ℝ :=
   mollifiedBallCutoff x₀ hρ z.1 *
-    caccioppoli_asymmetricTimeCutoff t₀ ρ ε z.2
+    caccioppoliAsymmetricTimeCutoff t₀ ρ ε z.2
 
 theorem caccioppoli_heat_cutoff_smooth (x₀ : Vec3) (t₀ ρ ε : ℝ)
     (hρ : 0 < ρ) (hε : 0 < ε) :
-    ContDiff ℝ (⊤ : ℕ∞) (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) := by
-  unfold caccioppoli_heat_cutoff
+    ContDiff ℝ (⊤ : ℕ∞) (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) := by
+  unfold caccioppoliHeatCutoff
   exact (mollifiedBallCutoff_smooth x₀ hρ).comp contDiff_fst |>.mul
     ((caccioppoli_asymmetricTimeCutoff_smooth hρ hε).comp contDiff_snd)
 
 theorem caccioppoli_heat_cutoff_nonneg (x₀ : Vec3) (t₀ ρ ε : ℝ)
     (hρ : 0 < ρ) (hε : 0 < ε) (z : Vec3 × ℝ) :
-    0 ≤ caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε z := by
-  unfold caccioppoli_heat_cutoff
+    0 ≤ caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε z := by
+  unfold caccioppoliHeatCutoff
   exact mul_nonneg (mollifiedBallCutoff_nonneg x₀ hρ _)
     (caccioppoli_asymmetricTimeCutoff_nonneg t₀ ρ ε z.2)
 
 theorem caccioppoli_heat_cutoff_le_one (x₀ : Vec3) (t₀ ρ ε : ℝ)
     (hρ : 0 < ρ) (hε : 0 < ε) (z : Vec3 × ℝ) :
-    caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε z ≤ 1 := by
-  unfold caccioppoli_heat_cutoff
+    caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε z ≤ 1 := by
+  unfold caccioppoliHeatCutoff
   calc
-    _ ≤ 1 * caccioppoli_asymmetricTimeCutoff t₀ ρ ε z.2 :=
+    _ ≤ 1 * caccioppoliAsymmetricTimeCutoff t₀ ρ ε z.2 :=
       mul_le_mul_of_nonneg_right (mollifiedBallCutoff_le_one x₀ hρ _)
         (caccioppoli_asymmetricTimeCutoff_nonneg t₀ ρ ε z.2)
     _ ≤ 1 * 1 := mul_le_mul_of_nonneg_left
@@ -433,7 +437,7 @@ theorem caccioppoli_heat_cutoff_le_one (x₀ : Vec3) (t₀ ρ ε : ℝ)
 
 theorem caccioppoli_heat_cutoff_support_subset (x₀ : Vec3) (t₀ ρ ε : ℝ)
     (hρ : 0 < ρ) (hε : 0 < ε) :
-    Function.support (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) ⊆
+    Function.support (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) ⊆
       euclideanBall x₀ (3 * ρ / 4) ×ˢ Ioo (t₀ - ρ ^ 2) (t₀ + ε) := by
   intro z hz
   constructor
@@ -441,22 +445,22 @@ theorem caccioppoli_heat_cutoff_support_subset (x₀ : Vec3) (t₀ ρ ε : ℝ)
     apply subset_tsupport
     intro hzero
     apply hz
-    simp [caccioppoli_heat_cutoff, hzero]
+    simp [caccioppoliHeatCutoff, hzero]
   · apply caccioppoli_asymmetricTimeCutoff_support_subset hρ hε
     intro hzero
     apply hz
-    simp [caccioppoli_heat_cutoff, hzero]
+    simp [caccioppoliHeatCutoff, hzero]
 
 theorem caccioppoli_heat_cutoff_hasCompactSupport (x₀ : Vec3) (t₀ ρ ε : ℝ)
     (hρ : 0 < ρ) (hε : 0 < ε) :
-    HasCompactSupport (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) := by
+    HasCompactSupport (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) := by
   refine HasCompactSupport.intro
     ((isCompact_euclideanClosedBall x₀ (R := 3 * ρ / 4) (by positivity)).prod
       (isCompact_Icc : IsCompact (Icc (t₀ - ρ ^ 2) (t₀ + ε)))) ?_
   intro z hz
   by_contra hne
   have hmem := caccioppoli_heat_cutoff_support_subset x₀ t₀ ρ ε hρ hε
-    (show z ∈ Function.support (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) from
+    (show z ∈ Function.support (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) from
       Function.mem_support.mpr hne)
   by_cases hx : z.1 ∈ euclideanClosedBall x₀ (3 * ρ / 4)
   · have ht : z.2 ∉ Icc (t₀ - ρ ^ 2) (t₀ + ε) := by
@@ -470,7 +474,7 @@ theorem caccioppoli_heat_cutoff_hasCompactSupport (x₀ : Vec3) (t₀ ρ ε : �
 theorem caccioppoli_heat_cutoff_time_support_bound
     (x₀ : Vec3) (t₀ ρ ε r : ℝ) (hρ : 0 < ρ) (hε : 0 < ε)
     (_ : 0 < r) (hεr : ε < r ^ 2) :
-    tsupport (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) ⊆
+    tsupport (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) ⊆
       {z : Vec3 × ℝ | z.2 < t₀ + r ^ 2} := by
   intro z hz
   have hupper_mem : z ∈ {y : Vec3 × ℝ | y.2 ≤ t₀ + ε} := by
@@ -486,27 +490,27 @@ theorem caccioppoli_heat_cutoff_time_support_bound
 theorem caccioppoli_heat_cutoff_spatial_partial_bound
     (x₀ : Vec3) (t₀ ρ ε : ℝ) (hρ : 0 < ρ) (hε : 0 < ε)
     (z : Vec3 × ℝ) (i : Fin 3) :
-    |spatialPartial (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) i z| ≤
+    |spatialPartial (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) i z| ≤
       cutoffGradientConstant / ρ := by
   have hsp : ContDiff ℝ (⊤ : ℕ∞)
       (fun z : Vec3 × ℝ => mollifiedBallCutoff x₀ hρ z.1) := by
     exact (mollifiedBallCutoff_smooth x₀ hρ).comp contDiff_fst
-  unfold caccioppoli_heat_cutoff
+  unfold caccioppoliHeatCutoff
   change |spatialPartial (fun z : ParabolicPoint =>
       mollifiedBallCutoff x₀ hρ z.1 *
-        caccioppoli_asymmetricTimeCutoff t₀ ρ ε z.2) i z| ≤
+        caccioppoliAsymmetricTimeCutoff t₀ ρ ε z.2) i z| ≤
     cutoffGradientConstant / ρ
   have hformula₀ := spatialPartial_mul_time
     (ψ := fun z : Vec3 × ℝ => mollifiedBallCutoff x₀ hρ z.1)
-    (χ := caccioppoli_asymmetricTimeCutoff t₀ ρ ε) hsp i z
+    (χ := caccioppoliAsymmetricTimeCutoff t₀ ρ ε) hsp i z
   have hformula : spatialPartial (fun z : ParabolicPoint =>
       mollifiedBallCutoff x₀ hρ z.1 *
-        caccioppoli_asymmetricTimeCutoff t₀ ρ ε z.2) i z =
+        caccioppoliAsymmetricTimeCutoff t₀ ρ ε z.2) i z =
       spatialPartial (fun z : ParabolicPoint => mollifiedBallCutoff x₀ hρ z.1) i z *
-        caccioppoli_asymmetricTimeCutoff t₀ ρ ε z.2 := by
+        caccioppoliAsymmetricTimeCutoff t₀ ρ ε z.2 := by
     simpa [ParabolicPoint] using hformula₀
   rw [hformula, abs_mul]
-  have hχ : |caccioppoli_asymmetricTimeCutoff t₀ ρ ε z.2| ≤ 1 := by
+  have hχ : |caccioppoliAsymmetricTimeCutoff t₀ ρ ε z.2| ≤ 1 := by
     rw [abs_of_nonneg (caccioppoli_asymmetricTimeCutoff_nonneg t₀ ρ ε z.2)]
     exact caccioppoli_asymmetricTimeCutoff_le_one t₀ ρ ε z.2
   have hcoord :
@@ -521,9 +525,9 @@ theorem caccioppoli_heat_cutoff_spatial_partial_bound
     (caccioppoli_spatial_cutoff_gradient_bound x₀ ρ hρ z.1)
   calc
     |(fderiv ℝ (mollifiedBallCutoff x₀ hρ) z.1 (basisVec i))| *
-        |caccioppoli_asymmetricTimeCutoff t₀ ρ ε z.2| ≤
+        |caccioppoliAsymmetricTimeCutoff t₀ ρ ε z.2| ≤
         (cutoffGradientConstant / ρ) *
-          |caccioppoli_asymmetricTimeCutoff t₀ ρ ε z.2| :=
+          |caccioppoliAsymmetricTimeCutoff t₀ ρ ε z.2| :=
       mul_le_mul_of_nonneg_right hcoord' (abs_nonneg _)
     _ ≤ (cutoffGradientConstant / ρ) * 1 :=
       mul_le_mul_of_nonneg_left hχ
@@ -534,28 +538,28 @@ theorem caccioppoli_heat_cutoff_spatial_partial_bound
 theorem caccioppoli_heat_cutoff_time_partial_bound_on_left
     (x₀ : Vec3) (t₀ ρ ε : ℝ) (hρ : 0 < ρ) (hε : 0 < ε)
     {z : Vec3 × ℝ} (ht : z.2 ≤ t₀) :
-    |timePartial (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) z| ≤
+    |timePartial (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) z| ≤
       32 / ρ ^ 2 := by
   have hsp : ContDiff ℝ (⊤ : ℕ∞)
       (fun z : Vec3 × ℝ => mollifiedBallCutoff x₀ hρ z.1) := by
     exact (mollifiedBallCutoff_smooth x₀ hρ).comp contDiff_fst
   have hχ : ContDiff ℝ (⊤ : ℕ∞)
-      (caccioppoli_asymmetricTimeCutoff t₀ ρ ε) :=
+      (caccioppoliAsymmetricTimeCutoff t₀ ρ ε) :=
     caccioppoli_asymmetricTimeCutoff_smooth hρ hε
-  unfold caccioppoli_heat_cutoff
+  unfold caccioppoliHeatCutoff
   change |timePartial (fun z : ParabolicPoint =>
       mollifiedBallCutoff x₀ hρ z.1 *
-        caccioppoli_asymmetricTimeCutoff t₀ ρ ε z.2) z| ≤ 32 / ρ ^ 2
+        caccioppoliAsymmetricTimeCutoff t₀ ρ ε z.2) z| ≤ 32 / ρ ^ 2
   have hformula₀ := timePartial_mul_time
     (ψ := fun z : Vec3 × ℝ => mollifiedBallCutoff x₀ hρ z.1)
-    (χ := caccioppoli_asymmetricTimeCutoff t₀ ρ ε) hsp hχ z
+    (χ := caccioppoliAsymmetricTimeCutoff t₀ ρ ε) hsp hχ z
   have hformula : timePartial (fun z : ParabolicPoint =>
       mollifiedBallCutoff x₀ hρ z.1 *
-        caccioppoli_asymmetricTimeCutoff t₀ ρ ε z.2) z =
+        caccioppoliAsymmetricTimeCutoff t₀ ρ ε z.2) z =
       timePartial (fun z : ParabolicPoint => mollifiedBallCutoff x₀ hρ z.1) z *
-        caccioppoli_asymmetricTimeCutoff t₀ ρ ε z.2 +
+        caccioppoliAsymmetricTimeCutoff t₀ ρ ε z.2 +
       mollifiedBallCutoff x₀ hρ z.1 *
-        deriv (caccioppoli_asymmetricTimeCutoff t₀ ρ ε) z.2 := by
+        deriv (caccioppoliAsymmetricTimeCutoff t₀ ρ ε) z.2 := by
     simpa [ParabolicPoint] using hformula₀
   rw [hformula]
   have hzero : timePartial (fun w : ParabolicPoint =>
@@ -572,11 +576,11 @@ theorem caccioppoli_heat_cutoff_time_partial_bound_on_left
   rw [abs_of_nonneg hη]
   calc
     mollifiedBallCutoff x₀ hρ z.1 *
-        |deriv (caccioppoli_asymmetricTimeCutoff t₀ ρ ε) z.2| ≤
-        1 * |deriv (caccioppoli_asymmetricTimeCutoff t₀ ρ ε) z.2| := by
+        |deriv (caccioppoliAsymmetricTimeCutoff t₀ ρ ε) z.2| ≤
+        1 * |deriv (caccioppoliAsymmetricTimeCutoff t₀ ρ ε) z.2| := by
       gcongr
       exact mollifiedBallCutoff_le_one x₀ hρ _
-    _ = |deriv (caccioppoli_asymmetricTimeCutoff t₀ ρ ε) z.2| := by ring
+    _ = |deriv (caccioppoliAsymmetricTimeCutoff t₀ ρ ε) z.2| := by ring
     _ ≤ 32 / ρ ^ 2 :=
       caccioppoli_asymmetricTimeCutoff_abs_deriv_le_on_left hρ hε ht
 
@@ -593,27 +597,27 @@ private lemma caccioppoli_heat_cutoff_spatialSecondPartial_spatial
 theorem caccioppoli_heat_cutoff_second_spatial_partial_bound
     (x₀ : Vec3) (t₀ ρ ε : ℝ) (hρ : 0 < ρ) (hε : 0 < ε)
     (z : Vec3 × ℝ) (i j : Fin 3) :
-    |spatialSecondPartial (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) i j z| ≤
+    |spatialSecondPartial (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) i j z| ≤
       cutoffSecondDerivativeConstant / ρ ^ 2 := by
   have hsp : ContDiff ℝ (⊤ : ℕ∞)
       (fun z : Vec3 × ℝ => mollifiedBallCutoff x₀ hρ z.1) := by
     exact (mollifiedBallCutoff_smooth x₀ hρ).comp contDiff_fst
-  unfold caccioppoli_heat_cutoff
+  unfold caccioppoliHeatCutoff
   change |spatialSecondPartial (fun z : ParabolicPoint =>
       mollifiedBallCutoff x₀ hρ z.1 *
-        caccioppoli_asymmetricTimeCutoff t₀ ρ ε z.2) i j z| ≤
+        caccioppoliAsymmetricTimeCutoff t₀ ρ ε z.2) i j z| ≤
       cutoffSecondDerivativeConstant / ρ ^ 2
   have hformula₀ := spatialSecondPartial_mul_time
     (ψ := fun z : Vec3 × ℝ => mollifiedBallCutoff x₀ hρ z.1)
-    (χ := caccioppoli_asymmetricTimeCutoff t₀ ρ ε) hsp i j z
+    (χ := caccioppoliAsymmetricTimeCutoff t₀ ρ ε) hsp i j z
   have hformula : spatialSecondPartial (fun z : ParabolicPoint =>
       mollifiedBallCutoff x₀ hρ z.1 *
-        caccioppoli_asymmetricTimeCutoff t₀ ρ ε z.2) i j z =
+        caccioppoliAsymmetricTimeCutoff t₀ ρ ε z.2) i j z =
       spatialSecondPartial (fun z : ParabolicPoint => mollifiedBallCutoff x₀ hρ z.1) i j z *
-        caccioppoli_asymmetricTimeCutoff t₀ ρ ε z.2 := by
+        caccioppoliAsymmetricTimeCutoff t₀ ρ ε z.2 := by
     simpa [ParabolicPoint] using hformula₀
   rw [hformula, abs_mul]
-  have hχ : |caccioppoli_asymmetricTimeCutoff t₀ ρ ε z.2| ≤ 1 := by
+  have hχ : |caccioppoliAsymmetricTimeCutoff t₀ ρ ε z.2| ≤ 1 := by
     rw [abs_of_nonneg (caccioppoli_asymmetricTimeCutoff_nonneg t₀ ρ ε z.2)]
     exact caccioppoli_asymmetricTimeCutoff_le_one t₀ ρ ε z.2
   have hcoord := caccioppoli_spatial_cutoff_second_derivative_bound
@@ -624,9 +628,9 @@ theorem caccioppoli_heat_cutoff_second_spatial_partial_bound
   calc
     |(fderiv ℝ (classicalGradient (mollifiedBallCutoff x₀ hρ)) z.1
         (basisVec j)) i| *
-        |caccioppoli_asymmetricTimeCutoff t₀ ρ ε z.2| ≤
+        |caccioppoliAsymmetricTimeCutoff t₀ ρ ε z.2| ≤
         (cutoffSecondDerivativeConstant / ρ ^ 2) *
-          |caccioppoli_asymmetricTimeCutoff t₀ ρ ε z.2| :=
+          |caccioppoliAsymmetricTimeCutoff t₀ ρ ε z.2| :=
       mul_le_mul_of_nonneg_right hcoord (abs_nonneg _)
     _ ≤ (cutoffSecondDerivativeConstant / ρ ^ 2) * 1 :=
       mul_le_mul_of_nonneg_left hχ
@@ -637,13 +641,13 @@ theorem caccioppoli_heat_cutoff_laplacian_bound
     (x₀ : Vec3) (t₀ ρ ε : ℝ) (hρ : 0 < ρ) (hε : 0 < ε)
     (z : Vec3 × ℝ) :
     |∑ i, spatialSecondPartial
-        (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) i i z| ≤
+        (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) i i z| ≤
       3 * (cutoffSecondDerivativeConstant / ρ ^ 2) := by
   calc
     |∑ i, spatialSecondPartial
-        (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) i i z| ≤
+        (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) i i z| ≤
         ∑ i, |spatialSecondPartial
-          (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) i i z| :=
+          (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) i i z| :=
       Finset.abs_sum_le_sum_abs _ _
     _ ≤ ∑ _i : Fin 3, cutoffSecondDerivativeConstant / ρ ^ 2 := by
       apply Finset.sum_le_sum
@@ -657,14 +661,14 @@ theorem caccioppoli_heat_cutoff_laplacian_bound
 theorem caccioppoli_heat_cutoff_time_plus_laplacian_bound_on_left
     (x₀ : Vec3) (t₀ ρ ε : ℝ) (hρ : 0 < ρ) (hε : 0 < ε)
     {z : Vec3 × ℝ} (ht : z.2 ≤ t₀) :
-    |timePartial (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) z +
+    |timePartial (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) z +
         ∑ i, spatialSecondPartial
-          (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) i i z| ≤
+          (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) i i z| ≤
       32 / ρ ^ 2 + 3 * (cutoffSecondDerivativeConstant / ρ ^ 2) := by
   calc
-    _ ≤ |timePartial (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) z| +
+    _ ≤ |timePartial (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) z| +
         |∑ i, spatialSecondPartial
-          (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) i i z| := abs_add_le _ _
+          (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) i i z| := abs_add_le _ _
     _ ≤ 32 / ρ ^ 2 + 3 * (cutoffSecondDerivativeConstant / ρ ^ 2) := add_le_add
       (caccioppoli_heat_cutoff_time_partial_bound_on_left x₀ t₀ ρ ε hρ hε ht)
       (caccioppoli_heat_cutoff_laplacian_bound x₀ t₀ ρ ε hρ hε z)
@@ -673,8 +677,8 @@ theorem caccioppoli_asymmetricTimeCutoff_eq_one_on
     {t₀ ρ ε r t : ℝ} (hρ : 0 < ρ) (hε : 0 < ε)
     (hr : 0 < r) (hscale : r ≤ ρ / 2)
     (ht : t ∈ Icc (t₀ - r ^ 2) (t₀ + ε / 2)) :
-    caccioppoli_asymmetricTimeCutoff t₀ ρ ε t = 1 := by
-  unfold caccioppoli_asymmetricTimeCutoff
+    caccioppoliAsymmetricTimeCutoff t₀ ρ ε t = 1 := by
+  unfold caccioppoliAsymmetricTimeCutoff
   have hleft : 1 ≤ (t - (t₀ - ρ ^ 2 / 2)) / (ρ ^ 2 / 4) := by
     apply (le_div_iff₀ (by positivity)).2
     have hsq : r ^ 2 ≤ (ρ / 2) ^ 2 :=

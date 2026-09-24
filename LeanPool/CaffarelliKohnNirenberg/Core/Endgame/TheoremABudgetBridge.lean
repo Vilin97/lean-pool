@@ -127,7 +127,8 @@ private theorem norm_power_integral_eq
   apply lintegral_congr
   intro s
   have hs : AEStronglyMeasurable (fun y => Dp (y, s) i) (volume.restrict E) :=
-    (((measurable_pi_apply i).comp hDp).comp (measurable_id.prodMk measurable_const)).aestronglyMeasurable
+    (((measurable_pi_apply i).comp hDp).comp (measurable_id.prodMk
+      measurable_const)).aestronglyMeasurable
   rw [eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) ENNReal.ofReal_ne_top hs]
   norm_num only [ENNReal.toReal_ofReal (by norm_num : (0 : ℝ) ≤ 6 / 5)]
   rw [← ENNReal.rpow_mul]

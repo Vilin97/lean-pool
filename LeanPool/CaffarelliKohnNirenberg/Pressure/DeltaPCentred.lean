@@ -25,9 +25,255 @@ namespace CKN
 
 /-! The centred tensor and its distributional pressure identity. -/
 
+/-- Fully centered velocity tensor used in the pressure-pairing identities. -/
 def pressureUHat (u : ParabolicPoint → Vec3) (c : ℝ → Vec3)
     (z : ParabolicPoint) (i j : Fin 3) : ℝ :=
   -(u z i - c z.2 i) * (u z j - c z.2 j)
+
+private lemma pressure_delta_p_centred_ae_hmixedZero_1 :
+    ∀ {Ω : Set Vec3} {_ : ParabolicPoint → Vec3} {_ : ℝ → Vec3} {ψ : Vec3 → ℝ},
+      ContDiff ℝ (⊤ : ℕ∞) ψ →
+        HasCompactSupport ψ →
+          ∀ (Ω' : Set Vec3),
+            closure Ω' ⊆ Ω →
+              (∀ (i j : Fin (3 : ℕ)), tsupport (mixedSecond ψ i j) ⊆ Ω') →
+                (∀ (i j : Fin (3 : ℕ)),
+                    @Integrable _ _ _ _ MeasureSpace.toMeasurableSpace (mixedSecond ψ i j) volume) →
+                  ∀ (i j : Fin (3 : ℕ)),
+                    (@integral _ _ _ _ MeasureSpace.toMeasurableSpace (Measure.restrict volume Ω)
+                        fun (x : Vec3) => mixedSecond ψ i j x) =
+                      (0 : ℝ)
+    := by
+  intro Ω f c ψ hψ hψc Ω' hΩ'Ω hmixedΩ hMixedInt i j
+  have hleft : Integrable
+      (fun x : Vec3 => (1 : ℝ) * mixedSecond ψ i j x) volume := by
+    exact (hMixedInt i j).const_mul 1
+  have hright : Integrable
+      (fun x : Vec3 => (fderiv ℝ (fun _ : Vec3 => (1 : ℝ)) x)
+        (basisVec i) * spatialDeriv ψ j x) volume := by
+    have hz : Integrable (fun _ : Vec3 => (0 : ℝ)) volume := by
+      fun_prop
+    simpa only [fderiv_const_apply, zero_apply, zero_mul] using hz
+  have hprod : Integrable (fun x : Vec3 => (1 : ℝ) * spatialDeriv ψ j x) volume := by
+    simpa only [one_mul] using
+      (contDiff_spatialDeriv_smooth hψ j).continuous.integrable_of_hasCompactSupport
+        (hψc.fderiv_apply (𝕜 := ℝ) (basisVec j))
+  have hIBP := integral_mul_fderiv_eq_neg_fderiv_mul_of_integrable
+    (f := fun _ : Vec3 => (1 : ℝ)) (g := spatialDeriv ψ j)
+    (v := basisVec i) hright
+    (by simpa [mixedSecond, spatialDeriv] using hleft) hprod
+    (fun x _ => differentiableAt_const (c := (1 : ℝ)))
+    (fun x _ => (contDiff_spatialDeriv_smooth hψ j).differentiable (by simp) x)
+  have hfull : ∫ x, mixedSecond ψ i j x = 0 := by
+    have hconst : ∀ x : Vec3,
+        fderiv ℝ (fun _ : Vec3 => (1 : ℝ)) x = 0 := by
+      intro x
+      exact fderiv_const_apply 1
+    have hz : ∫ x : Vec3,
+        (fderiv ℝ (fun _ : Vec3 => (1 : ℝ)) x) (basisVec i) *
+          spatialDeriv ψ j x = 0 := by
+      apply integral_eq_zero_of_ae
+      filter_upwards [] with x
+      rw [hconst x]
+      simp
+    rw [hz] at hIBP
+    simpa only [one_mul, mixedSecond, spatialDeriv, neg_zero] using hIBP
+  calc
+    (∫ x in Ω, mixedSecond ψ i j x) =
+        ∫ x, mixedSecond ψ i j x := by
+      apply MeasureTheory.setIntegral_eq_integral_of_forall_compl_eq_zero
+      intro x hx
+      exact image_eq_zero_of_notMem_tsupport (fun hxt =>
+        hx ((hmixedΩ i j).trans (subset_closure.trans hΩ'Ω) hxt))
+    _ = 0 := hfull
+
+private lemma pressure_delta_p_centred_ae_hCzero_2 :
+    ∀ {Ω : Set Vec3} {u : ParabolicPoint → Vec3} {c : ℝ → Vec3} {ψ : Vec3 → ℝ} (Ω' : Set Vec3)
+      (s : ℝ),
+      (∀ (i : Fin (3 : ℕ)),
+          (@integral _ _ _ _ MeasureSpace.toMeasurableSpace (Measure.restrict volume Ω)
+              fun (x : Vec3) => ∑ j : Fin (3 : ℕ), u (x, s) j * mixedSecond ψ j i x) =
+            (0 : ℝ)) →
+        (∀ {i : Fin (3 : ℕ)} {g : Vec3 → ℝ},
+            Continuous g →
+              HasCompactSupport g →
+                tsupport g ⊆ Ω' →
+                  IntegrableOn (ε := ℝ) (mα := MeasureSpace.toMeasurableSpace)
+                    (fun (x : Vec3) => u (x, s) i * g x) Ω volume) →
+          (∀ (i j : Fin (3 : ℕ)), ContDiff ℝ (⊤ : ℕ∞) (mixedSecond ψ i j)) →
+            (∀ (i j : Fin (3 : ℕ)), HasCompactSupport (mixedSecond ψ i j)) →
+              (∀ (i j : Fin (3 : ℕ)), tsupport (mixedSecond ψ i j) ⊆ Ω') →
+                (@integral _ _ _ _ MeasureSpace.toMeasurableSpace (Measure.restrict volume Ω)
+                    fun (x : Vec3) =>
+                    ∑ i : Fin (3 : ℕ),
+                      ∑ j : Fin (3 : ℕ), c s j * (u (x, s) i * mixedSecond ψ i j x)) =
+                  (0 : ℝ)
+    := by
+  intro Ω u c ψ Ω' s hdiv_s huScalar hmixedCont hmixedC hmixedΩ
+  have hswap : (fun x : Vec3 => ∑ i, ∑ j,
+      c s j * (u (x, s) i * mixedSecond ψ i j x)) =
+      (fun x : Vec3 => ∑ j, ∑ i,
+        c s j * (u (x, s) i * mixedSecond ψ i j x)) := by
+    funext x
+    rw [Finset.sum_comm]
+  calc
+    (∫ x in Ω, ∑ i, ∑ j,
+        c s j * (u (x, s) i * mixedSecond ψ i j x)) =
+        ∫ x in Ω, ∑ j, ∑ i,
+          c s j * (u (x, s) i * mixedSecond ψ i j x) := by
+      apply integral_congr_ae
+      filter_upwards [] with x
+      exact congrFun hswap x
+    _ =
+        ∑ j, ∫ x in Ω, ∑ i,
+          c s j * (u (x, s) i * mixedSecond ψ i j x) := by
+      simpa using integral_finsetSum (μ := volume.restrict Ω)
+        (Finset.univ : Finset (Fin 3)) (fun j _ =>
+          integrable_finsetSum' (Finset.univ : Finset (Fin 3))
+            (fun i _ => (huScalar (i := i) (hmixedCont i j).continuous
+              (hmixedC i j) (hmixedΩ i j)).const_mul (c s j)))
+    _ = ∑ j, c s j * (∫ x in Ω, ∑ i,
+        u (x, s) i * mixedSecond ψ i j x) := by
+      apply Finset.sum_congr rfl
+      intro j hj
+      rw [show (fun x => ∑ i, c s j *
+          (u (x, s) i * mixedSecond ψ i j x)) =
+          (fun x => c s j * ∑ i, u (x, s) i * mixedSecond ψ i j x) by
+            funext x; rw [Finset.mul_sum]]
+      rw [integral_const_mul]
+    _ = 0 := by
+      apply Finset.sum_eq_zero
+      intro j hj
+      rw [hdiv_s j, mul_zero]
+
+private lemma pressure_delta_p_centred_ae_hcenter_3 :
+    ∀ {Ω : Set Vec3} {u : ParabolicPoint → Vec3} {c : ℝ → Vec3} {ψ : Vec3 → ℝ} (s : ℝ),
+      IntegrableOn (ε := ℝ) (mα := MeasureSpace.toMeasurableSpace)
+          (fun (x : Vec3) =>
+            ∑ i : Fin (3 : ℕ), ∑ j : Fin (3 : ℕ), u (x, s) i * u (x, s) j * mixedSecond ψ i j x)
+          Ω volume →
+        IntegrableOn (ε := ℝ) (mα := MeasureSpace.toMeasurableSpace)
+            (fun (x : Vec3) =>
+              ∑ i : Fin (3 : ℕ), ∑ j : Fin (3 : ℕ), c s i * (u (x, s) j * mixedSecond ψ i j x))
+            Ω volume →
+          IntegrableOn (ε := ℝ) (mα := MeasureSpace.toMeasurableSpace)
+              (fun (x : Vec3) =>
+                ∑ i : Fin (3 : ℕ), ∑ j : Fin (3 : ℕ), c s j * (u (x, s) i * mixedSecond ψ i j x))
+              Ω volume →
+            IntegrableOn (ε := ℝ) (mα := MeasureSpace.toMeasurableSpace)
+                (fun (x : Vec3) =>
+                  ∑ i : Fin (3 : ℕ), ∑ j : Fin (3 : ℕ), c s i * c s j * mixedSecond ψ i j x)
+                Ω volume →
+              (@integral _ _ _ _ MeasureSpace.toMeasurableSpace (Measure.restrict volume Ω)
+                    fun (x : Vec3) =>
+                    ∑ i : Fin (3 : ℕ),
+                      ∑ j : Fin (3 : ℕ), c s i * (u (x, s) j * mixedSecond ψ i j x)) =
+                  (0 : ℝ) →
+                (@integral _ _ _ _ MeasureSpace.toMeasurableSpace (Measure.restrict volume Ω)
+                      fun (x : Vec3) =>
+                      ∑ i : Fin (3 : ℕ),
+                        ∑ j : Fin (3 : ℕ), c s j * (u (x, s) i * mixedSecond ψ i j x)) =
+                    (0 : ℝ) →
+                  (@integral _ _ _ _ MeasureSpace.toMeasurableSpace (Measure.restrict volume Ω)
+                        fun (x : Vec3) =>
+                        ∑ i : Fin (3 : ℕ), ∑ j : Fin (3 : ℕ), c s i * c s j * mixedSecond ψ i j x) =
+                      (0 : ℝ) →
+                    Eq (α := ℝ)
+                      (@integral _ _ _ _ MeasureSpace.toMeasurableSpace (Measure.restrict volume Ω)
+                        fun (x : Vec3) =>
+                        ∑ i : Fin (3 : ℕ),
+                          ∑ j : Fin (3 : ℕ), pressureUHat u c (x, s) i j * mixedSecond ψ i j x)
+                      (-@integral _ _ _ _ MeasureSpace.toMeasurableSpace (Measure.restrict volume Ω)
+                          fun (x : Vec3) =>
+                          ∑ i : Fin (3 : ℕ),
+                            ∑ j : Fin (3 : ℕ), u (x, s) i * u (x, s) j * mixedSecond ψ i j x)
+    := by
+  intro Ω u c ψ s hA hB hC hD hBzero hCzero hDzero
+  have hpoint : ∀ x : Vec3, (∑ i, ∑ j,
+      pressureUHat u c ((x, s) : ParabolicPoint) i j * mixedSecond ψ i j x) =
+      (-(∑ i, ∑ j, u (x, s) i * u (x, s) j * mixedSecond ψ i j x) +
+        ∑ i, ∑ j, c s i * (u (x, s) j * mixedSecond ψ i j x) +
+        ∑ i, ∑ j, c s j * (u (x, s) i * mixedSecond ψ i j x) -
+        ∑ i, ∑ j, c s i * c s j * mixedSecond ψ i j x) := by
+    intro x
+    change (∑ i, ∑ j,
+      (-(u ((x, s) : ParabolicPoint) i - c s i) *
+        (u ((x, s) : ParabolicPoint) j - c s j)) * mixedSecond ψ i j x) = _
+    calc
+      _ = ∑ i, ∑ j, (
+          -(u ((x, s) : ParabolicPoint) i * u ((x, s) : ParabolicPoint) j *
+              mixedSecond ψ i j x) +
+            c s i * (u ((x, s) : ParabolicPoint) j * mixedSecond ψ i j x) +
+            c s j * (u ((x, s) : ParabolicPoint) i * mixedSecond ψ i j x) -
+            c s i * c s j * mixedSecond ψ i j x) := by
+        apply Finset.sum_congr rfl
+        intro i hi
+        apply Finset.sum_congr rfl
+        intro j hj
+        ring
+      _ = _ := by
+        simp only [Finset.sum_add_distrib, Finset.sum_sub_distrib,
+          Finset.sum_neg_distrib]
+  calc
+    (∫ x in Ω, ∑ i, ∑ j,
+        pressureUHat u c ((x, s) : ParabolicPoint) i j * mixedSecond ψ i j x) =
+        ∫ x in Ω,
+          (-(∑ i, ∑ j, u (x, s) i * u (x, s) j * mixedSecond ψ i j x) +
+            ∑ i, ∑ j, c s i * (u (x, s) j * mixedSecond ψ i j x) +
+            ∑ i, ∑ j, c s j * (u (x, s) i * mixedSecond ψ i j x) -
+            ∑ i, ∑ j, c s i * c s j * mixedSecond ψ i j x) := by
+      apply integral_congr_ae
+      filter_upwards [] with x
+      exact hpoint x
+    _ = ∫ x in Ω,
+        ((-(∑ i, ∑ j, u (x, s) i * u (x, s) j * mixedSecond ψ i j x) +
+          ∑ i, ∑ j, c s i * (u (x, s) j * mixedSecond ψ i j x)) +
+          ∑ i, ∑ j, c s j * (u (x, s) i * mixedSecond ψ i j x)) -
+          ∑ i, ∑ j, c s i * c s j * mixedSecond ψ i j x := by
+      apply integral_congr_ae
+      filter_upwards [] with x
+      ring
+    _ = (∫ x in Ω,
+        ((-(∑ i, ∑ j, u (x, s) i * u (x, s) j * mixedSecond ψ i j x) +
+          ∑ i, ∑ j, c s i * (u (x, s) j * mixedSecond ψ i j x)) +
+          ∑ i, ∑ j, c s j * (u (x, s) i * mixedSecond ψ i j x))) -
+        ∫ x in Ω, ∑ i, ∑ j, c s i * c s j * mixedSecond ψ i j x := by
+      have hsplit := integral_sub ((hA.neg.add hB).add hC) hD
+      simpa only [Pi.add_apply, Pi.sub_apply, Pi.neg_apply] using hsplit
+    _ = -(∫ x in Ω, ∑ i, ∑ j,
+        u (x, s) i * u (x, s) j * mixedSecond ψ i j x) +
+        (∫ x in Ω, ∑ i, ∑ j,
+          c s i * (u (x, s) j * mixedSecond ψ i j x)) +
+        (∫ x in Ω, ∑ i, ∑ j,
+          c s j * (u (x, s) i * mixedSecond ψ i j x)) -
+        (∫ x in Ω, ∑ i, ∑ j,
+          c s i * c s j * mixedSecond ψ i j x) := by
+      have hABC := integral_add (hA.neg.add hB) hC
+      have hAB := integral_add hA.neg hB
+      have hABC' : (∫ x in Ω,
+          ((-(∑ i, ∑ j, u (x, s) i * u (x, s) j * mixedSecond ψ i j x) +
+            ∑ i, ∑ j, c s i * (u (x, s) j * mixedSecond ψ i j x)) +
+            ∑ i, ∑ j, c s j * (u (x, s) i * mixedSecond ψ i j x))) =
+          (∫ x in Ω, (-(∑ i, ∑ j,
+            u (x, s) i * u (x, s) j * mixedSecond ψ i j x) +
+            ∑ i, ∑ j, c s i * (u (x, s) j * mixedSecond ψ i j x))) +
+            ∫ x in Ω, ∑ i, ∑ j,
+              c s j * (u (x, s) i * mixedSecond ψ i j x) := by
+        simpa only [Pi.add_apply, Pi.neg_apply] using hABC
+      have hAB' : (∫ x in Ω, (-(∑ i, ∑ j,
+            u (x, s) i * u (x, s) j * mixedSecond ψ i j x) +
+            ∑ i, ∑ j, c s i * (u (x, s) j * mixedSecond ψ i j x))) =
+          (∫ x in Ω, -(∑ i, ∑ j,
+            u (x, s) i * u (x, s) j * mixedSecond ψ i j x)) +
+            ∫ x in Ω, ∑ i, ∑ j,
+              c s i * (u (x, s) j * mixedSecond ψ i j x) := by
+        simpa only [Pi.add_apply, Pi.neg_apply] using hAB
+      rw [hABC', hAB']
+      rw [integral_neg]
+    _ = -(∫ x in Ω, ∑ i, ∑ j,
+        u (x, s) i * u (x, s) j * mixedSecond ψ i j x) := by
+      rw [hBzero, hCzero, hDzero]
+      ring
 
 theorem pressure_delta_p_centred_ae
     {Ω : Set Vec3} {I : Set ℝ} {q : ℝ}
@@ -44,7 +290,7 @@ theorem pressure_delta_p_centred_ae
           ∫ x in Ω, ∑ i, f (x, s) i * spatialDeriv ψ i x := by
   obtain ⟨Ω', _hΩ'open, _hψΩ₁, hψΩ', _hΩ'compact, hΩ'Ω, hLp⟩ :=
     decomposition_slice_integrability hsol hψc hψΩ hψc hψΩ
-  haveI : IsFiniteMeasure (volume.restrict Ω') := by
+  have : IsFiniteMeasure (volume.restrict Ω') := by
     apply isFiniteMeasure_restrict.mpr
     exact (lt_of_le_of_lt (measure_mono (μ := volume) subset_closure)
       _hΩ'compact.measure_lt_top).ne
@@ -138,48 +384,8 @@ theorem pressure_delta_p_centred_ae
         intro j hj
         rw [mixedSecond_swap hψ i j x]
       _ = 0 := hdiv_s i
-  have hmixedZero (i j : Fin 3) : ∫ x in Ω, mixedSecond ψ i j x = 0 := by
-    have hleft : Integrable
-        (fun x : Vec3 => (1 : ℝ) * mixedSecond ψ i j x) volume := by
-      exact (hMixedInt i j).const_mul 1
-    have hright : Integrable
-        (fun x : Vec3 => (fderiv ℝ (fun _ : Vec3 => (1 : ℝ)) x)
-          (basisVec i) * spatialDeriv ψ j x) volume := by
-      have hz : Integrable (fun _ : Vec3 => (0 : ℝ)) volume := by
-        fun_prop
-      simpa only [fderiv_const_apply, zero_apply, zero_mul] using hz
-    have hprod : Integrable (fun x : Vec3 => (1 : ℝ) * spatialDeriv ψ j x) volume := by
-      simpa only [one_mul] using
-        (contDiff_spatialDeriv_smooth hψ j).continuous.integrable_of_hasCompactSupport
-          (hψc.fderiv_apply (𝕜 := ℝ) (basisVec j))
-    have hIBP := integral_mul_fderiv_eq_neg_fderiv_mul_of_integrable
-      (f := fun _ : Vec3 => (1 : ℝ)) (g := spatialDeriv ψ j)
-      (v := basisVec i) hright
-      (by simpa [mixedSecond, spatialDeriv] using hleft) hprod
-      (fun x _ => differentiableAt_const (c := (1 : ℝ)))
-      (fun x _ => (contDiff_spatialDeriv_smooth hψ j).differentiable (by simp) x)
-    have hfull : ∫ x, mixedSecond ψ i j x = 0 := by
-      have hconst : ∀ x : Vec3,
-          fderiv ℝ (fun _ : Vec3 => (1 : ℝ)) x = 0 := by
-        intro x
-        exact fderiv_const_apply 1
-      have hz : ∫ x : Vec3,
-          (fderiv ℝ (fun _ : Vec3 => (1 : ℝ)) x) (basisVec i) *
-            spatialDeriv ψ j x = 0 := by
-        apply integral_eq_zero_of_ae
-        filter_upwards [] with x
-        rw [hconst x]
-        simp
-      rw [hz] at hIBP
-      simpa only [one_mul, mixedSecond, spatialDeriv, neg_zero] using hIBP
-    calc
-      (∫ x in Ω, mixedSecond ψ i j x) =
-          ∫ x, mixedSecond ψ i j x := by
-        apply MeasureTheory.setIntegral_eq_integral_of_forall_compl_eq_zero
-        intro x hx
-        exact image_eq_zero_of_notMem_tsupport (fun hxt =>
-          hx ((hmixedΩ i j).trans (subset_closure.trans hΩ'Ω) hxt))
-      _ = 0 := hfull
+  have hmixedZero (i j : Fin 3) := @pressure_delta_p_centred_ae_hmixedZero_1 Ω f c ψ hψ hψc Ω'
+    hΩ'Ω hmixedΩ hMixedInt i j
   have hBzero : ∫ x in Ω, ∑ i, ∑ j,
       c s i * (u (x, s) j * mixedSecond ψ i j x) = 0 := by
     calc
@@ -205,43 +411,8 @@ theorem pressure_delta_p_centred_ae
         apply Finset.sum_eq_zero
         intro i hi
         rw [hdivSwap i, mul_zero]
-  have hCzero : ∫ x in Ω, ∑ i, ∑ j,
-      c s j * (u (x, s) i * mixedSecond ψ i j x) = 0 := by
-    have hswap : (fun x : Vec3 => ∑ i, ∑ j,
-        c s j * (u (x, s) i * mixedSecond ψ i j x)) =
-        (fun x : Vec3 => ∑ j, ∑ i,
-          c s j * (u (x, s) i * mixedSecond ψ i j x)) := by
-      funext x
-      rw [Finset.sum_comm]
-    calc
-      (∫ x in Ω, ∑ i, ∑ j,
-          c s j * (u (x, s) i * mixedSecond ψ i j x)) =
-          ∫ x in Ω, ∑ j, ∑ i,
-            c s j * (u (x, s) i * mixedSecond ψ i j x) := by
-        apply integral_congr_ae
-        filter_upwards [] with x
-        exact congrFun hswap x
-      _ =
-          ∑ j, ∫ x in Ω, ∑ i,
-            c s j * (u (x, s) i * mixedSecond ψ i j x) := by
-        simpa using integral_finsetSum (μ := volume.restrict Ω)
-          (Finset.univ : Finset (Fin 3)) (fun j _ =>
-            integrable_finsetSum' (Finset.univ : Finset (Fin 3))
-              (fun i _ => (huScalar (i := i) (hmixedCont i j).continuous
-                (hmixedC i j) (hmixedΩ i j)).const_mul (c s j)))
-      _ = ∑ j, c s j * (∫ x in Ω, ∑ i,
-          u (x, s) i * mixedSecond ψ i j x) := by
-        apply Finset.sum_congr rfl
-        intro j hj
-        rw [show (fun x => ∑ i, c s j *
-            (u (x, s) i * mixedSecond ψ i j x)) =
-            (fun x => c s j * ∑ i, u (x, s) i * mixedSecond ψ i j x) by
-              funext x; rw [Finset.mul_sum]]
-        rw [integral_const_mul]
-      _ = 0 := by
-        apply Finset.sum_eq_zero
-        intro j hj
-        rw [hdiv_s j, mul_zero]
+  have hCzero := @pressure_delta_p_centred_ae_hCzero_2 Ω u c ψ Ω' s hdiv_s huScalar hmixedCont
+    hmixedC hmixedΩ
   have hDzero : ∫ x in Ω, ∑ i, ∑ j,
       c s i * c s j * mixedSecond ψ i j x = 0 := by
     calc
@@ -272,95 +443,7 @@ theorem pressure_delta_p_centred_ae
         apply Finset.sum_eq_zero
         intro j hj
         rw [hmixedZero i j, mul_zero]
-  have hcenter : ∫ x in Ω, ∑ i, ∑ j,
-      pressureUHat u c ((x, s) : ParabolicPoint) i j * mixedSecond ψ i j x =
-      -(∫ x in Ω, ∑ i, ∑ j,
-        u (x, s) i * u (x, s) j * mixedSecond ψ i j x) := by
-    have hpoint : ∀ x : Vec3, (∑ i, ∑ j,
-        pressureUHat u c ((x, s) : ParabolicPoint) i j * mixedSecond ψ i j x) =
-        (-(∑ i, ∑ j, u (x, s) i * u (x, s) j * mixedSecond ψ i j x) +
-          ∑ i, ∑ j, c s i * (u (x, s) j * mixedSecond ψ i j x) +
-          ∑ i, ∑ j, c s j * (u (x, s) i * mixedSecond ψ i j x) -
-          ∑ i, ∑ j, c s i * c s j * mixedSecond ψ i j x) := by
-      intro x
-      change (∑ i, ∑ j,
-        (-(u ((x, s) : ParabolicPoint) i - c s i) *
-          (u ((x, s) : ParabolicPoint) j - c s j)) * mixedSecond ψ i j x) = _
-      calc
-        _ = ∑ i, ∑ j, (
-            -(u ((x, s) : ParabolicPoint) i * u ((x, s) : ParabolicPoint) j *
-                mixedSecond ψ i j x) +
-              c s i * (u ((x, s) : ParabolicPoint) j * mixedSecond ψ i j x) +
-              c s j * (u ((x, s) : ParabolicPoint) i * mixedSecond ψ i j x) -
-              c s i * c s j * mixedSecond ψ i j x) := by
-          apply Finset.sum_congr rfl
-          intro i hi
-          apply Finset.sum_congr rfl
-          intro j hj
-          ring
-        _ = _ := by
-          simp only [Finset.sum_add_distrib, Finset.sum_sub_distrib,
-            Finset.sum_neg_distrib]
-    calc
-      (∫ x in Ω, ∑ i, ∑ j,
-          pressureUHat u c ((x, s) : ParabolicPoint) i j * mixedSecond ψ i j x) =
-          ∫ x in Ω,
-            (-(∑ i, ∑ j, u (x, s) i * u (x, s) j * mixedSecond ψ i j x) +
-              ∑ i, ∑ j, c s i * (u (x, s) j * mixedSecond ψ i j x) +
-              ∑ i, ∑ j, c s j * (u (x, s) i * mixedSecond ψ i j x) -
-              ∑ i, ∑ j, c s i * c s j * mixedSecond ψ i j x) := by
-        apply integral_congr_ae
-        filter_upwards [] with x
-        exact hpoint x
-      _ = ∫ x in Ω,
-          ((-(∑ i, ∑ j, u (x, s) i * u (x, s) j * mixedSecond ψ i j x) +
-            ∑ i, ∑ j, c s i * (u (x, s) j * mixedSecond ψ i j x)) +
-            ∑ i, ∑ j, c s j * (u (x, s) i * mixedSecond ψ i j x)) -
-            ∑ i, ∑ j, c s i * c s j * mixedSecond ψ i j x := by
-        apply integral_congr_ae
-        filter_upwards [] with x
-        ring
-      _ = (∫ x in Ω,
-          ((-(∑ i, ∑ j, u (x, s) i * u (x, s) j * mixedSecond ψ i j x) +
-            ∑ i, ∑ j, c s i * (u (x, s) j * mixedSecond ψ i j x)) +
-            ∑ i, ∑ j, c s j * (u (x, s) i * mixedSecond ψ i j x))) -
-          ∫ x in Ω, ∑ i, ∑ j, c s i * c s j * mixedSecond ψ i j x := by
-        have hsplit := integral_sub ((hA.neg.add hB).add hC) hD
-        simpa only [Pi.add_apply, Pi.sub_apply, Pi.neg_apply] using hsplit
-      _ = -(∫ x in Ω, ∑ i, ∑ j,
-          u (x, s) i * u (x, s) j * mixedSecond ψ i j x) +
-          (∫ x in Ω, ∑ i, ∑ j,
-            c s i * (u (x, s) j * mixedSecond ψ i j x)) +
-          (∫ x in Ω, ∑ i, ∑ j,
-            c s j * (u (x, s) i * mixedSecond ψ i j x)) -
-          (∫ x in Ω, ∑ i, ∑ j,
-            c s i * c s j * mixedSecond ψ i j x) := by
-        have hABC := integral_add (hA.neg.add hB) hC
-        have hAB := integral_add hA.neg hB
-        have hABC' : (∫ x in Ω,
-            ((-(∑ i, ∑ j, u (x, s) i * u (x, s) j * mixedSecond ψ i j x) +
-              ∑ i, ∑ j, c s i * (u (x, s) j * mixedSecond ψ i j x)) +
-              ∑ i, ∑ j, c s j * (u (x, s) i * mixedSecond ψ i j x))) =
-            (∫ x in Ω, (-(∑ i, ∑ j,
-              u (x, s) i * u (x, s) j * mixedSecond ψ i j x) +
-              ∑ i, ∑ j, c s i * (u (x, s) j * mixedSecond ψ i j x))) +
-              ∫ x in Ω, ∑ i, ∑ j,
-                c s j * (u (x, s) i * mixedSecond ψ i j x) := by
-          simpa only [Pi.add_apply, Pi.neg_apply] using hABC
-        have hAB' : (∫ x in Ω, (-(∑ i, ∑ j,
-              u (x, s) i * u (x, s) j * mixedSecond ψ i j x) +
-              ∑ i, ∑ j, c s i * (u (x, s) j * mixedSecond ψ i j x))) =
-            (∫ x in Ω, -(∑ i, ∑ j,
-              u (x, s) i * u (x, s) j * mixedSecond ψ i j x)) +
-              ∫ x in Ω, ∑ i, ∑ j,
-                c s i * (u (x, s) j * mixedSecond ψ i j x) := by
-          simpa only [Pi.add_apply, Pi.neg_apply] using hAB
-        rw [hABC', hAB']
-        rw [integral_neg]
-      _ = -(∫ x in Ω, ∑ i, ∑ j,
-          u (x, s) i * u (x, s) j * mixedSecond ψ i j x) := by
-        rw [hBzero, hCzero, hDzero]
-        ring
+  have hcenter := @pressure_delta_p_centred_ae_hcenter_3 Ω u c ψ s hA hB hC hD hBzero hCzero hDzero
   rw [hraw_s, hcenter]
 
 end CKN

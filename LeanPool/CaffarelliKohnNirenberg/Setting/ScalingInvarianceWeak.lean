@@ -26,6 +26,7 @@ noncomputable section
 
 namespace CKN
 
+/-- Spatial scaling homeomorphism used to transport weak derivatives. -/
 def weakSpatialHomeomorph (μ : ℝ) (hμ : 0 < μ) (x₀ : Vec3) :
     Vec3 ≃ₜ Vec3 :=
   (Homeomorph.smulOfNeZero μ hμ.ne').trans (Homeomorph.addLeft x₀)
@@ -40,7 +41,7 @@ private theorem weakSpatialInverse_deriv (μ : ℝ) (_ : 0 < μ) (x₀ y : Vec3)
       μ⁻¹ • ContinuousLinearMap.id ℝ Vec3 := by
   change fderiv ℝ (μ⁻¹ • (fun y : Vec3 => y - x₀)) y = _
   rw [fderiv_const_smul, fderiv_sub_const]
-  rw [show (fun y : Vec3 => y) = id from rfl, fderiv_id]
+  on_goal 1 => rw [show (fun y : Vec3 => y) = id from rfl, fderiv_id]
   simp
 
 private theorem weakSpatialInverse_eq (μ : ℝ) (hμ : 0 < μ) (x₀ : Vec3) :

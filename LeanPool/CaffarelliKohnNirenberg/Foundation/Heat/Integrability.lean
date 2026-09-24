@@ -89,6 +89,7 @@ private lemma abs_mul_exp_neg_sq_le {b y : ℝ} (hb : 0 < b) :
       congr 2
       ring_nf
 
+/-- Wider Gaussian majorant for the spatial heat-kernel gradient. -/
 def heatKernelGradientMajorant (x : Vec3) (t : ℝ) : ℝ :=
   if 0 < t then
     (Real.sqrt t)⁻¹ * (4 * Real.pi * t) ^ (-(3 : ℝ) / 2) *

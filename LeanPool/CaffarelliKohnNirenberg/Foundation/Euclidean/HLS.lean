@@ -117,8 +117,7 @@ theorem rieszPotentialOne_hls_of_good
         norm_num
       rw [hA15]
       simp [hBpow0, hprod0]
-    ·
-      calc
+    · calc
         (∫⁻ z, rieszPotentialOne f z ^ (15 : ℝ)) ≤
             ∫⁻ z, A ^ (15 : ℝ) * M z ^ (5 / 2 : ℝ) * B ^ (25 / 2 : ℝ) :=
           lintegral_mono_ae hpoint

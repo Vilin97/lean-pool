@@ -82,7 +82,8 @@ theorem origin_margin_cell_integral_le_of_sws
     have hx : x ∈ vec3Ball x (2 * r) := by
       change vec3EuclideanNorm (x - x) < 2 * r
       simpa only [sub_self, vec3EuclideanNorm_zero] using hdouble
-    exact (hsub (subset_closure (show (x, s) ∈ parabolicCylinder x t (2 * r) from ⟨hx, hlow, hs.2⟩))).2
+    exact (hsub (subset_closure (show (x, s) ∈ parabolicCylinder x t (2 * r) from ⟨hx, hlow,
+      hs.2⟩))).2
   apply cylinderPowerIntegral_le_of_double_radius_slice_bounds hr
     (origin_margin_cell_subset_intermediate_ball hmargin hmeet)
     ((measurable_pi_apply i).comp hmeas).aemeasurable.restrict

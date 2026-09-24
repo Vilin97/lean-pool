@@ -76,7 +76,7 @@ theorem velocity_norm_memLp_three_on_ball_of_slices
         rw [volume_vec3Ball_eq]
         exact ENNReal.mul_lt_top (ENNReal.pow_lt_top ENNReal.ofReal_lt_top)
           ENNReal.ofReal_lt_top : volume (vec3Ball x₀ ρ) < ∞)
-  haveI : IsFiniteMeasure μ := ⟨hμtop⟩
+  have : IsFiniteMeasure μ := ⟨hμtop⟩
   have huB : MemLp (fun x : Vec3 => u (x, t)) 2 μ := by
     simpa [μ] using hts.mono_measure (Measure.restrict_mono_set volume hball)
   have humeas : AEMeasurable (fun x : Vec3 => u (x, t)) μ :=
@@ -86,8 +86,8 @@ theorem velocity_norm_memLp_three_on_ball_of_slices
     (continuous_vec3EuclideanNorm.measurable.comp_aemeasurable humeas).aestronglyMeasurable
   have hu2 : MemLp (fun x : Vec3 => vec3EuclideanNorm (u (x, t))) 2 μ := by
     apply huB.of_le_mul humeasNorm
-    filter_upwards [] with y
-    rw [Real.norm_of_nonneg (vec3EuclideanNorm_nonneg _)]
+    on_goal 1 => filter_upwards [] with y
+    on_goal 1 => rw [Real.norm_of_nonneg (vec3EuclideanNorm_nonneg _)]
     exact vec3_norm_le_sqrt_three_slice_velocity (u (y, t))
   have hopen : IsOpen (euclideanBall x₀ ρ) := by
     change IsOpen {x : Vec3 | euclideanSqDist x x₀ < ρ ^ 2}
@@ -251,7 +251,7 @@ theorem pressureUTensor_source_data_of_memLp_three
         rw [volume_vec3Ball_eq]
         exact ENNReal.mul_lt_top (ENNReal.pow_lt_top ENNReal.ofReal_lt_top)
           ENNReal.ofReal_lt_top : volume (vec3Ball x₀ ρ) < ∞)
-  haveI : IsFiniteMeasure μ := ⟨hμtop⟩
+  have : IsFiniteMeasure μ := ⟨hμtop⟩
   have hu' : MemLp (fun y : Vec3 => vec3EuclideanNorm (u (y, s)))
       (ENNReal.ofReal (3 : ℝ)) μ := by
     simpa [B, μ] using hu
@@ -263,7 +263,7 @@ theorem pressureUTensor_source_data_of_memLp_three
   have hsum3 : MemLp (fun y => gu y + vec3EuclideanNorm (c s))
       (ENNReal.ofReal (3 : ℝ)) μ := by
     exact hu'.add hc3
-  haveI : (ENNReal.ofReal (3 : ℝ)).HolderTriple
+  have : (ENNReal.ofReal (3 : ℝ)).HolderTriple
       (ENNReal.ofReal (3 : ℝ)) (ENNReal.ofReal (3 / 2 : ℝ)) := by
     have h : (3 : ℝ).HolderTriple 3 (3 / 2 : ℝ) := by
       rw [Real.holderTriple_iff]
@@ -322,7 +322,7 @@ theorem pressureUTensor_source_data_of_memLp_three
       (fun y => η y * pressureUTensor u c (y, s) i j)
       (ENNReal.ofReal (3 / 2 : ℝ)) μ := by
     apply (hU32 i j).of_le_mul (hηmeas'.mul (hUmeas i j))
-    filter_upwards [] with y
+    on_goal 1 => filter_upwards [] with y
     change |η y * pressureUTensor u c (y, s) i j| ≤
       1 * ‖pressureUTensor u c (y, s) i j‖
     rw [abs_mul, Real.norm_eq_abs]

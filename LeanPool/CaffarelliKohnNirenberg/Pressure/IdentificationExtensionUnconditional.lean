@@ -33,6 +33,7 @@ namespace CKN
 
 open CKN.Foundation.Euclidean
 
+/-- Three-halves integrability exponent for pressure. -/
 def pressureExponent : ℝ≥0∞ := ENNReal.ofReal (3 / 2 : ℝ)
 
 /- The global extension is already an `L^(3/2)` function.  This adapter

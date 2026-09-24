@@ -150,6 +150,7 @@ def canonicalBallCutoff {d : ℕ}
   smoothTransitionProfile ∘
     ballCutoffArgument x₀ r (ballCutoffMidRadius r R)
 
+/-- Smooth spatial cutoff with separately specified inner and support radii. -/
 def ballCutoffWithSupportRadius {d : ℕ}
     (x₀ : Vec d) (r s : ℝ) : Vec d → ℝ :=
   smoothTransitionProfile ∘ ballCutoffArgument x₀ r s

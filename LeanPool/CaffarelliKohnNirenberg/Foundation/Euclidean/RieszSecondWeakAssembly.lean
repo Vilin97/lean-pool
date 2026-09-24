@@ -28,9 +28,11 @@ namespace CKN.Foundation.Euclidean
 
 open CKN
 
+/-- Good function supplied by a chosen Calderón–Zygmund decomposition. -/
 def czGood {level : ℝ} (F : Vec3 → ℝ) (D : CZDecomposition F level) : Vec3 → ℝ :=
   dyadicGoodPart F D.cubes
 
+/-- Mean-zero bad piece associated with one cube of a Calderón–Zygmund decomposition. -/
 def czBad {level : ℝ} (F : Vec3 → ℝ) (D : CZDecomposition F level)
     (Q : {Q // Q ∈ D.cubes}) : Vec3 → ℝ :=
   dyadicBadPart F Q.1
@@ -50,7 +52,8 @@ theorem dyadic_good_part_memLp_two
         (dyadicCubeSet Q.1).indicator (fun _ => dyadicAverage F Q.1) x) := by
     apply AEMeasurable.tsum
     intro Q
-    exact (measurable_const : Measurable (fun _ : Vec3 => dyadicAverage F Q.1)).aemeasurable.indicator
+    exact (measurable_const : Measurable (fun _ : Vec3 => dyadicAverage F
+      Q.1)).aemeasurable.indicator
       (dyadicCube_measurable Q.1.scale Q.1.corner)
   have hrep : AEMeasurable (fun x : Vec3 =>
       U.indicator (fun x => ∑' Q : {Q // Q ∈ D.cubes},
@@ -97,7 +100,7 @@ theorem dyadic_good_part_memLp_two
       have hnot : x ∉ Uᶜ := by
         exact not_not_intro hxU
       simp only [Set.indicator_of_mem hxU, Set.indicator_of_notMem hnot]
-      simp
+      simp only [add_zero]
       rw [hgood, hsum]
     · have hxmem : ¬dyadicCubeMember D.cubes x := by
         intro hxmem
@@ -361,6 +364,7 @@ theorem rieszSecond_good_output_l2
     exact hbound'
   simpa only [g, u] using And.intro hmem_op hreal
 
+/-- Second-Riesz kernel with the sign convention for pressure reconstruction. -/
 def rieszSecondPressureKernel (i j : Fin 3) : Vec3 → ℝ :=
   fun z => -rieszSecondKernel i j z
 
@@ -424,7 +428,8 @@ lemma dyadicL1Norm_lt_top_of_integrable {F : Vec3 → ℝ}
     (ae_of_all _ (fun x => abs_nonneg (F x)))).2 hF.norm
   exact lt_top_iff_ne_top.mpr hne
 
-def rieszSecondL2_cz_certificate_of_interfaces
+/-- Assemble a Calderón–Zygmund certificate from countable additivity and exterior estimates. -/
+def rieszSecondL2CzCertificateOfInterfaces
     {i j : Fin 3} {F : Vec3 → ℝ} {level : ℝ}
     (hL2 : RieszSecondL2Input i j) (hF : Integrable F volume)
     (hF₂ : MemLp F (2 : ℝ≥0∞) volume) (hlevel : 0 < level)

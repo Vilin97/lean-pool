@@ -224,7 +224,8 @@ private lemma lin34_mixedSecond_cutoff_aestronglyMeasurable (x₀ : Vec3) {ρ : 
     (hρ : 0 < ρ) (i j : Fin 3) :
     AEStronglyMeasurable (mixedSecond (mollifiedBallCutoff x₀ hρ) i j)
       (volume.restrict (vec3Ball x₀ ρ)) :=
-  (contDiff_mixedSecond_smooth (mollifiedBallCutoff_smooth x₀ hρ) i j).continuous.aestronglyMeasurable.mono_measure
+  (contDiff_mixedSecond_smooth (mollifiedBallCutoff_smooth x₀ hρ) i
+    j).continuous.aestronglyMeasurable.mono_measure
     Measure.restrict_le_self
 
 /-- The first spatial derivative of the mollified cut-off is almost everywhere strongly
@@ -233,7 +234,8 @@ private lemma lin34_spatialDeriv_cutoff_aestronglyMeasurable (x₀ : Vec3) {ρ :
     (hρ : 0 < ρ) (i : Fin 3) :
     AEStronglyMeasurable (spatialDeriv (mollifiedBallCutoff x₀ hρ) i)
       (volume.restrict (vec3Ball x₀ ρ)) :=
-  (contDiff_spatialDeriv_smooth (mollifiedBallCutoff_smooth x₀ hρ) i).continuous.aestronglyMeasurable.mono_measure
+  (contDiff_spatialDeriv_smooth (mollifiedBallCutoff_smooth x₀ hρ)
+    i).continuous.aestronglyMeasurable.mono_measure
     Measure.restrict_le_self
 
 /-- The spatial Laplacian of the mollified cut-off is almost everywhere strongly
@@ -242,7 +244,8 @@ private lemma lin34_spatialLaplacian_cutoff_aestronglyMeasurable (x₀ : Vec3) {
     (hρ : 0 < ρ) :
     AEStronglyMeasurable (spatialLaplacian (mollifiedBallCutoff x₀ hρ))
       (volume.restrict (vec3Ball x₀ ρ)) :=
-  (contDiff_spatialLaplacian_smooth (mollifiedBallCutoff_smooth x₀ hρ)).continuous.aestronglyMeasurable.mono_measure
+  (contDiff_spatialLaplacian_smooth (mollifiedBallCutoff_smooth x₀
+    hρ)).continuous.aestronglyMeasurable.mono_measure
     Measure.restrict_le_self
 
 /-- The entry of the centred tensor `eq:Uhat` is almost everywhere strongly measurable
@@ -347,7 +350,7 @@ theorem lin34CentredTensorHessian_memLp_and_zero
       hy (lin34_tsupport_mixedSecond_subset (lin34_cutoff_tsupport_subset_ball x₀ hρ) i j hmem)
     have hz : mixedSecond (mollifiedBallCutoff x₀ hρ) i j y = 0 :=
       image_eq_zero_of_notMem_tsupport hout
-    show mixedSecond (mollifiedBallCutoff x₀ hρ) i j y *
+    change mixedSecond (mollifiedBallCutoff x₀ hρ) i j y *
       pressureUTensor (lin34CentredVelocity u x₀ ρ) 0 ((y, s) : ParabolicPoint) i j = 0
     rw [hz, zero_mul]
   have hmeas : AEStronglyMeasurable (lin34CentredTensorHessian u x₀ hρ s i j) volume :=
@@ -364,7 +367,7 @@ theorem lin34CentredTensorHessian_memLp_and_zero
         vec3EuclideanNorm (meanFreeVec u x₀ ρ s y) ^ (2 : ℕ) :=
       (pressure_component_abs_le_utensorNorm (lin34CentredVelocity u x₀ ρ) 0 s y i j).trans_eq
         (lin34_pressureUTensorNorm_centred u x₀ ρ s y)
-    show |mixedSecond (mollifiedBallCutoff x₀ hρ) i j y *
+    change |mixedSecond (mollifiedBallCutoff x₀ hρ) i j y *
       pressureUTensor (lin34CentredVelocity u x₀ ρ) 0 ((y, s) : ParabolicPoint) i j| ≤ _
     rw [abs_mul]
     exact mul_le_mul hm hU (abs_nonneg _) hM
@@ -401,7 +404,7 @@ theorem lin34CentredTensorGradientI_memLp_and_zero
       hy (lin34_tsupport_spatialDeriv_subset (lin34_cutoff_tsupport_subset_ball x₀ hρ) i hmem)
     have hz : spatialDeriv (mollifiedBallCutoff x₀ hρ) i y = 0 :=
       image_eq_zero_of_notMem_tsupport hout
-    show pressureUTensor (lin34CentredVelocity u x₀ ρ) 0 ((y, s) : ParabolicPoint) i j *
+    change pressureUTensor (lin34CentredVelocity u x₀ ρ) 0 ((y, s) : ParabolicPoint) i j *
       spatialDeriv (mollifiedBallCutoff x₀ hρ) i y = 0
     rw [hz, mul_zero]
   have hmeas : AEStronglyMeasurable (lin34CentredTensorGradientI u x₀ hρ s i j) volume :=
@@ -418,7 +421,7 @@ theorem lin34CentredTensorGradientI_memLp_and_zero
         vec3EuclideanNorm (meanFreeVec u x₀ ρ s y) ^ (2 : ℕ) :=
       (pressure_component_abs_le_utensorNorm (lin34CentredVelocity u x₀ ρ) 0 s y i j).trans_eq
         (lin34_pressureUTensorNorm_centred u x₀ ρ s y)
-    show |pressureUTensor (lin34CentredVelocity u x₀ ρ) 0 ((y, s) : ParabolicPoint) i j *
+    change |pressureUTensor (lin34CentredVelocity u x₀ ρ) 0 ((y, s) : ParabolicPoint) i j *
       spatialDeriv (mollifiedBallCutoff x₀ hρ) i y| ≤ _
     rw [abs_mul]
     calc
@@ -460,7 +463,7 @@ theorem lin34CentredTensorGradientJ_memLp_and_zero
       hy (lin34_tsupport_spatialDeriv_subset (lin34_cutoff_tsupport_subset_ball x₀ hρ) j hmem)
     have hz : spatialDeriv (mollifiedBallCutoff x₀ hρ) j y = 0 :=
       image_eq_zero_of_notMem_tsupport hout
-    show pressureUTensor (lin34CentredVelocity u x₀ ρ) 0 ((y, s) : ParabolicPoint) i j *
+    change pressureUTensor (lin34CentredVelocity u x₀ ρ) 0 ((y, s) : ParabolicPoint) i j *
       spatialDeriv (mollifiedBallCutoff x₀ hρ) j y = 0
     rw [hz, mul_zero]
   have hmeas : AEStronglyMeasurable (lin34CentredTensorGradientJ u x₀ hρ s i j) volume :=
@@ -477,7 +480,7 @@ theorem lin34CentredTensorGradientJ_memLp_and_zero
         vec3EuclideanNorm (meanFreeVec u x₀ ρ s y) ^ (2 : ℕ) :=
       (pressure_component_abs_le_utensorNorm (lin34CentredVelocity u x₀ ρ) 0 s y i j).trans_eq
         (lin34_pressureUTensorNorm_centred u x₀ ρ s y)
-    show |pressureUTensor (lin34CentredVelocity u x₀ ρ) 0 ((y, s) : ParabolicPoint) i j *
+    change |pressureUTensor (lin34CentredVelocity u x₀ ρ) 0 ((y, s) : ParabolicPoint) i j *
       spatialDeriv (mollifiedBallCutoff x₀ hρ) j y| ≤ _
     rw [abs_mul]
     calc
@@ -517,9 +520,9 @@ theorem lin34CentredPressureLaplacian_memLp_and_zero
         image_eq_zero_of_notMem_tsupport (fun hmem =>
           hy (lin34_tsupport_mixedSecond_subset (lin34_cutoff_tsupport_subset_ball x₀ hρ)
             i i hmem))
-      show (∑ i : Fin 3, mixedSecond (mollifiedBallCutoff x₀ hρ) i i y) = 0
+      change (∑ i : Fin 3, mixedSecond (mollifiedBallCutoff x₀ hρ) i i y) = 0
       simp [hmix]
-    show p (y, s) * spatialLaplacian (mollifiedBallCutoff x₀ hρ) y = 0
+    change p (y, s) * spatialLaplacian (mollifiedBallCutoff x₀ hρ) y = 0
     rw [hz, mul_zero]
   have hmeas : AEStronglyMeasurable (lin34CentredPressureLaplacian p x₀ hρ s) volume :=
     lin34_product_aestronglyMeasurable_of_zero_off hρ
@@ -573,7 +576,7 @@ theorem lin34CentredPressureGradient_memLp_and_zero
       hy (lin34_tsupport_spatialDeriv_subset (lin34_cutoff_tsupport_subset_ball x₀ hρ) j hmem)
     have hz : spatialDeriv (mollifiedBallCutoff x₀ hρ) j y = 0 :=
       image_eq_zero_of_notMem_tsupport hout
-    show spatialDeriv (mollifiedBallCutoff x₀ hρ) j y * p (y, s) = 0
+    change spatialDeriv (mollifiedBallCutoff x₀ hρ) j y * p (y, s) = 0
     rw [hz, zero_mul]
   have hmeas : AEStronglyMeasurable (lin34CentredPressureGradient p x₀ hρ s j) volume :=
     lin34_product_aestronglyMeasurable_of_zero_off hρ

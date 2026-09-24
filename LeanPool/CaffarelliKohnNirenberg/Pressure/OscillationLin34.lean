@@ -36,6 +36,7 @@ def pressureChat (u : ParabolicPoint → Vec3) (z : ParabolicPoint) (r : ℝ) : 
 def pressureD (p : ParabolicPoint → ℝ) (z : ParabolicPoint) (r : ℝ) : ℝ :=
   r⁻¹ ^ 2 * ∫ w in parabolicCylinder z.1 z.2 r, |p w| ^ (3 / 2 : ℝ)
 
+/-- Coefficient combining the singular-integral and harmonic pressure estimates. -/
 noncomputable def lin34Constant (C₁₁ : ℝ) : ℝ :=
   (Real.sqrt 2 + 2 * (Real.pi * 4 / 3) *
       weakHarmonicInteriorSupConstant ^ (3 / 2 : ℝ)) *
@@ -196,6 +197,7 @@ theorem pressureD_integrated_from_slices
     _ = C * (a * pressureChat u z ρ + b * pressureD p z ρ) := by
       rw [hChat, hDρ]
 
+/-- Coefficient for the forcing term in the localized pressure estimate. -/
 noncomputable def lin34ForceConstant (C₁₃ : ℝ) : ℝ :=
   Real.sqrt 2 * (1 + C₁₃ ^ (3 / 2 : ℝ))
 

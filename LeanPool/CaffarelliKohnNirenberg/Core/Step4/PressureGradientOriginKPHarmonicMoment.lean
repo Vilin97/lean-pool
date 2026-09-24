@@ -48,7 +48,8 @@ private theorem slice_integral_power_bound {B : Set Vec3} {J : Set ℝ}
         ∫⁻ y in B, F (y,s) ^ (a * (3/2)) := by
       apply lintegral_mono_ae
       filter_upwards [hF.aestronglyMeasurable.prodMk_right] with s hs
-      simpa only [Measure.restrict_apply_univ] using integral_power_le (volume.restrict B) hs.aemeasurable a
+      simpa only [Measure.restrict_apply_univ] using integral_power_le (volume.restrict B)
+        hs.aemeasurable a
     _ = _ := by
       rw [lintegral_const_mul'' _ ((hF.pow_const _).lintegral_prod_left'),
         ← lintegral_prod_symm _ (hF.pow_const _), Measure.prod_restrict]
@@ -79,8 +80,8 @@ private theorem three_slice_mass_bound {B : Set Vec3} {J : Set ℝ}
     (hF : AEMeasurable F ((volume.restrict B).prod (volume.restrict J)))
     (a b c D : ℝ≥0∞)
     (hUD : (∫⁻ w in B ×ˢ J, U w ^ (3 : ℝ)) ≤ D)
-    (hPD : (∫⁻ w in B ×ˢ J, P w ^ (3/2 : ℝ)) ≤ D)
-    (hFD : (∫⁻ w in B ×ˢ J, F w ^ (3/2 : ℝ)) ≤ D) :
+    (hPD : (∫⁻ w in B ×ˢ J, P w ^ (3 / 2 : ℝ)) ≤ D)
+    (hFD : (∫⁻ w in B ×ˢ J, F w ^ (3 / 2 : ℝ)) ≤ D) :
     let M := fun s => a * (∫⁻ y in B, U (y,s) ^ (2 : ℝ)) +
       b * (∫⁻ y in B, P (y,s)) + c * (∫⁻ y in B, F (y,s))
     AEMeasurable M (volume.restrict J) ∧
@@ -118,7 +119,8 @@ private theorem three_slice_mass_bound {B : Set Vec3} {J : Set ℝ}
           (volume.restrict J) := by simpa only [ENNReal.rpow_ofNat] using hu.1.pow_const (3/2 : ℝ)
       rw [lintegral_const_mul' _ _ (by norm_num), lintegral_add_left' hab,
         lintegral_add_left' ha, lintegral_const_mul'' _ hum,
-        lintegral_const_mul'' _ (hp.1.pow_const (3/2 : ℝ)), lintegral_const_mul'' _ (hf.1.pow_const (3/2 : ℝ))]
+        lintegral_const_mul'' _ (hp.1.pow_const (3/2 : ℝ)), lintegral_const_mul'' _
+          (hf.1.pow_const (3/2 : ℝ))]
     _ ≤ 16 * (a ^ (3/2 : ℝ) * (volume B ^ (1/2 : ℝ) * D) +
         b ^ (3/2 : ℝ) * (volume B ^ (1/2 : ℝ) * D) +
         c ^ (3/2 : ℝ) * (volume B ^ (1/2 : ℝ) * D)) := by
@@ -152,7 +154,7 @@ theorem origin_harmonic_majorant_moment_of_sws
     (hdom : closure (parabolicCylinder (0 : Vec3) 0 1) ⊆ spaceTimeSet Ω I)
     (hsmall : (∫⁻ w in parabolicCylinder (0 : Vec3) 0 1,
       ENNReal.ofReal (vec3EuclideanNorm (u w)) ^ (3 : ℝ) +
-        ENNReal.ofReal |p w| ^ (3/2 : ℝ) +
+        ENNReal.ofReal |p w| ^ (3 / 2 : ℝ) +
         ENNReal.ofReal (vec3EuclideanNorm (f w)) ^ q) ≤ ENNReal.ofReal ε)
     {z : ParabolicPoint} {ρ : ℝ}
     (hQ : parabolicCylinder z.1 z.2 ρ ⊆ parabolicCylinder (0 : Vec3) 0 1) :
@@ -171,11 +173,13 @@ theorem origin_harmonic_majorant_moment_of_sws
   have hlocal : B ×ˢ J ⊆ spaceTimeSet Ω' J' := hQ.trans hsub
   have hU : AEMeasurable U ((volume.restrict B).prod (volume.restrict J)) := by
     rw [Measure.prod_restrict]
-    exact ((continuous_vec3EuclideanNorm.comp_aestronglyMeasurable hd.1).aemeasurable.ennreal_ofReal).mono_measure
+    exact ((continuous_vec3EuclideanNorm.comp_aestronglyMeasurable
+      hd.1).aemeasurable.ennreal_ofReal).mono_measure
       (Measure.restrict_mono_set volume hlocal)
   have hP : AEMeasurable P ((volume.restrict B).prod (volume.restrict J)) := by
     rw [Measure.prod_restrict]
-    exact ((continuous_abs.comp_aestronglyMeasurable hd.2.2.1).aemeasurable.ennreal_ofReal).mono_measure
+    exact ((continuous_abs.comp_aestronglyMeasurable
+      hd.2.2.1).aemeasurable.ennreal_ofReal).mono_measure
       (Measure.restrict_mono_set volume hlocal)
   have hUε : (∫⁻ w in B ×ˢ J, U w ^ (3 : ℝ)) ≤ ENNReal.ofReal ε :=
     (lintegral_mono_set hQ).trans ((lintegral_mono (fun _ =>
@@ -253,12 +257,13 @@ theorem exists_origin_harmonic_gradient_majorant :
   · apply (ofReal_integral_le_mass B (fun y => vec3EuclideanNorm (u (y,s)) ^ (2 : ℕ))).trans_eq
     apply lintegral_congr
     intro y
-    rw [abs_of_nonneg (sq_nonneg _), ENNReal.ofReal_pow (vec3EuclideanNorm_nonneg _), ENNReal.rpow_ofNat]
+    rw [abs_of_nonneg (sq_nonneg _), ENNReal.ofReal_pow (vec3EuclideanNorm_nonneg _),
+      ENNReal.rpow_ofNat]
   · simpa only [abs_abs] using ofReal_integral_le_mass B (fun y => |p (y,s)|)
 
 private theorem clipped_time_power_le {J : Set ℝ} {P : ℝ → ℝ≥0∞}
     {E : ℝ≥0∞} (hJ : MeasurableSet J) (hP : AEMeasurable P (volume.restrict J))
-    (hmassJ : (∫⁻ s in J, P s^(3/2 : ℝ)) ≤ E) {t r : ℝ} (hr : 0 < r) :
+    (hmassJ : (∫⁻ s in J, P s ^ (3 / 2 : ℝ)) ≤ E) {t r : ℝ} (hr : 0 < r) :
     (∫⁻ s in Ioc (t-r^2) t ∩ J, P s^(6/5 : ℝ)) ≤
       E^(4/5 : ℝ) * ENNReal.ofReal r^(2/5 : ℝ) := by
   have hH : AEMeasurable (J.indicator P) volume :=
@@ -294,7 +299,7 @@ theorem origin_harmonic_majorant_clipped_time_of_sws
     (hdom : closure (parabolicCylinder (0 : Vec3) 0 1) ⊆ spaceTimeSet Ω I)
     (hsmall : (∫⁻ w in parabolicCylinder (0 : Vec3) 0 1,
       ENNReal.ofReal (vec3EuclideanNorm (u w)) ^ (3 : ℝ) +
-        ENNReal.ofReal |p w| ^ (3/2 : ℝ) +
+        ENNReal.ofReal |p w| ^ (3 / 2 : ℝ) +
         ENNReal.ofReal (vec3EuclideanNorm (f w)) ^ q) ≤ ENNReal.ofReal ε)
     {z : ParabolicPoint} {ρ : ℝ}
     (hQ : parabolicCylinder z.1 z.2 ρ ⊆ parabolicCylinder (0 : Vec3) 0 1) :
@@ -315,7 +320,7 @@ def originHarmonicAbsoluteMomentConstant (C : ℝ) : ℝ≥0∞ :=
 
 /-- The harmonic moment coefficient is uniform on the admissible fixed collars. -/
 theorem origin_harmonic_moment_constant_le_absolute
-    (C ρ : ℝ) (x : Vec3) (hC : 0 ≤ C) (hρlo : 1/8 ≤ ρ) (hρhi : ρ ≤ 1) :
+    (C ρ : ℝ) (x : Vec3) (hC : 0 ≤ C) (hρlo : 1 / 8 ≤ ρ) (hρhi : ρ ≤ 1) :
     originHarmonicMomentConstant C ρ x ≤ originHarmonicAbsoluteMomentConstant C := by
   have hρ : 0 < ρ := lt_of_lt_of_le (by norm_num) hρlo
   have hpow : ρ^(-4 : ℝ) ≤ 4096 := by
@@ -370,9 +375,11 @@ theorem origin_harmonic_clipped_slice_norm_bound
     (C ε : ℝ) (S : Set Vec3) (J : Set ℝ) (t r : ℝ) (hr : 0 < r)
     {M : ℝ → ℝ≥0∞} {F : Vec3 × ℝ → ℝ}
     (hJ : MeasurableSet J) (hm : AEMeasurable M (volume.restrict J))
-    (hMass : (∫⁻ s in J, M s^(3/2 : ℝ)) ≤ CKN.Core.Step4.originHarmonicAbsoluteMomentConstant C * ENNReal.ofReal ε)
-    (hf : ∀ᵐ s ∂volume.restrict J, AEStronglyMeasurable (fun y => F (y,s)) (volume.restrict S))
-    (hb : ∀ᵐ s ∂volume.restrict J, ∀ᵐ y ∂volume.restrict S, ‖F (y,s)‖ₑ ≤ M s) :
+    (hMass : (∫⁻ s in J, M s ^ (3 / 2 : ℝ)) ≤ CKN.Core.Step4.originHarmonicAbsoluteMomentConstant
+      C *
+      ENNReal.ofReal ε)
+    (hf : ∀ᵐ s ∂volume.restrict J, AEStronglyMeasurable (fun y => F (y, s)) (volume.restrict S))
+    (hb : ∀ᵐ s ∂volume.restrict J, ∀ᵐ y ∂volume.restrict S, ‖F (y, s)‖ₑ ≤ M s) :
     (∫⁻ s in Ioc (t-r^2) t ∩ J,
       eLpNorm (fun y => F (y,s)) (ENNReal.ofReal (6/5 : ℝ)) (volume.restrict S)^(6/5 : ℝ)) ≤
       volume S * originHarmonicAbsoluteMomentConstant C^(4/5 : ℝ) *

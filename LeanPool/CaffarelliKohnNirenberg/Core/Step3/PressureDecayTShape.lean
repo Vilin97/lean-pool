@@ -173,6 +173,447 @@ private lemma pressure_five_group_bound_T
     _ ≤ B₁ + B₂ + B₃ + B₄ + B₅ := by
       exact add_le_add (add_le_add (add_le_add (add_le_add h₁ h₂) h₃) h₄) h₅
 
+private lemma pressureDecay_one_scale_Thterms_1_htri'_1 :
+    ∀ {u : ParabolicPoint → Vec3} {p : ParabolicPoint → ℝ} {f : ParabolicPoint → Vec3}
+      {z : ParabolicPoint} {ρ r : ℝ} (hρ : (0 : ℝ) < ρ),
+      let η : Vec3 → ℝ := mollifiedBallCutoff z.1 hρ;
+      let c : ℝ → Vec3 := fun (t : ℝ) (j : Fin (3 : ℕ)) =>
+        ⨍ (y : Vec3) in vec3Ball z.1 ρ, u (y, t) j;
+      @eLpNorm' _ _ _ MeasureSpace.toMeasurableSpace p (3 / 2 : ℝ)
+            (Measure.restrict volume (parabolicCylinder z.1 z.2 r)) ≤
+          ∑ k : Fin (8 : ℕ),
+            @eLpNorm' _ ℝ _ MeasureSpace.toMeasurableSpace
+              (fun (z : ParabolicPoint) =>
+                match k with
+                | (0 : Fin (8 : ℕ)) => pressureP1 η u c p f z.2 z.1
+                | (1 : Fin (8 : ℕ)) => pressureP2 η u c z.2 z.1
+                | (2 : Fin (8 : ℕ)) => pressureP3 η u c z.2 z.1
+                | (3 : Fin (8 : ℕ)) => pressureP4 η u c z.2 z.1
+                | (4 : Fin (8 : ℕ)) => pressureP5 η p z.2 z.1
+                | (5 : Fin (8 : ℕ)) => pressureP6 η p z.2 z.1
+                | (6 : Fin (8 : ℕ)) => pressureP7 η f z.2 z.1
+                | (7 : Fin (8 : ℕ)) => pressureP8 η f z.2 z.1)
+              (3 / 2 : ℝ) (Measure.restrict volume (parabolicCylinder z.1 z.2 r)) →
+        let μ : Measure ParabolicPoint := Measure.restrict volume (parabolicCylinder z.1 z.2 r);
+        eLpNorm' p (3 / 2 : ℝ) μ ≤
+          eLpNorm' (ε := ℝ) (fun (w : ParabolicPoint) => pressureP1 η u c p f w.2 w.1) (3 / 2 : ℝ)
+                    μ +
+                  (eLpNorm' (ε := ℝ) (fun (w : ParabolicPoint) => pressureP2 η u c w.2 w.1)
+                        (3 / 2 : ℝ) μ +
+                      eLpNorm' (ε := ℝ) (fun (w : ParabolicPoint) => pressureP3 η u c w.2 w.1)
+                        (3 / 2 : ℝ) μ +
+                    eLpNorm' (ε := ℝ) (fun (w : ParabolicPoint) => pressureP4 η u c w.2 w.1)
+                      (3 / 2 : ℝ) μ) +
+                (eLpNorm' (ε := ℝ) (fun (w : ParabolicPoint) => pressureP5 η p w.2 w.1) (3 / 2 : ℝ)
+                    μ +
+                  eLpNorm' (ε := ℝ) (fun (w : ParabolicPoint) => pressureP6 η p w.2 w.1) (3 / 2 : ℝ)
+                    μ) +
+              eLpNorm' (ε := ℝ) (fun (w : ParabolicPoint) => pressureP7 η f w.2 w.1) (3 / 2 : ℝ) μ +
+            eLpNorm' (ε := ℝ) (fun (w : ParabolicPoint) => pressureP8 η f w.2 w.1) (3 / 2 : ℝ) μ
+    := by
+  intro u p f z ρ r hρ η c htri μ
+  calc
+    _ ≤ ∑ k : Fin 8, eLpNorm'
+        (fun w : ParabolicPoint => match k with
+          | 0 => pressureP1 η u c p f w.2 w.1
+          | 1 => pressureP2 η u c w.2 w.1
+          | 2 => pressureP3 η u c w.2 w.1
+          | 3 => pressureP4 η u c w.2 w.1
+          | 4 => pressureP5 η p w.2 w.1
+          | 5 => pressureP6 η p w.2 w.1
+          | 6 => pressureP7 η f w.2 w.1
+          | 7 => pressureP8 η f w.2 w.1)
+        (3 / 2 : ℝ) μ := by exact htri
+    _ = _ := by simp [Fin.sum_univ_succ]; ring
+
+private lemma pressureDecay_one_scale_Thterms_1_hP234'_2 :
+    ∀ {u : ParabolicPoint → Vec3} {Du : ParabolicPoint → Fin (3 : ℕ) → Vec3} (C₁₂_p1 : ℝ)
+      {z : ParabolicPoint} {ρ r : ℝ} (hρ : (0 : ℝ) < ρ),
+      let pressureP12Constant : ℝ := max CKN.pressureP12Constant C₁₂_p1;
+      let η : Vec3 → ℝ := mollifiedBallCutoff z.1 hρ;
+      let c : ℝ → Vec3 := fun (t : ℝ) (j : Fin (3 : ℕ)) =>
+        ⨍ (y : Vec3) in vec3Ball z.1 ρ, u (y, t) j;
+      let N : ℝ≥0∞ := ENNReal.ofReal (r ^ (-4 / 3 : ℝ));
+      let μ : Measure ParabolicPoint := Measure.restrict volume (parabolicCylinder z.1 z.2 r);
+      ENNReal.ofReal (r ^ (-4 / 3 : ℝ)) *
+            (@eLpNorm' _ ℝ _ MeasureSpace.toMeasurableSpace
+                  (fun (w : ParabolicPoint) =>
+                    pressureP2 (mollifiedBallCutoff z.1 hρ) u
+                      (fun (t : ℝ) (j : Fin (3 : ℕ)) => ⨍ (y : Vec3) in vec3Ball z.1 ρ, u (y, t) j)
+                      w.2 w.1)
+                  (3 / 2 : ℝ) (Measure.restrict volume (parabolicCylinder z.1 z.2 r)) +
+                @eLpNorm' _ ℝ _ MeasureSpace.toMeasurableSpace
+                  (fun (w : ParabolicPoint) =>
+                    pressureP3 (mollifiedBallCutoff z.1 hρ) u
+                      (fun (t : ℝ) (j : Fin (3 : ℕ)) => ⨍ (y : Vec3) in vec3Ball z.1 ρ, u (y, t) j)
+                      w.2 w.1)
+                  (3 / 2 : ℝ) (Measure.restrict volume (parabolicCylinder z.1 z.2 r)) +
+              @eLpNorm' _ ℝ _ MeasureSpace.toMeasurableSpace
+                (fun (w : ParabolicPoint) =>
+                  pressureP4 (mollifiedBallCutoff z.1 hρ) u
+                    (fun (t : ℝ) (j : Fin (3 : ℕ)) => ⨍ (y : Vec3) in vec3Ball z.1 ρ, u (y, t) j)
+                    w.2 w.1)
+                (3 / 2 : ℝ) (Measure.restrict volume (parabolicCylinder z.1 z.2 r))) ≤
+          ENNReal.ofReal (CKN.pressureP12Constant * (r / ρ) * alpha u z ρ * beta u Du z ρ) →
+        (∀ {a b x y z : ℝ},
+            a ≤ b → (0 : ℝ) ≤ x → (0 : ℝ) ≤ y → (0 : ℝ) ≤ z → a * x * y * z ≤ b * x * y * z) →
+          (0 : ℝ) < r / ρ →
+            (0 : ℝ) ≤ alpha u z ρ →
+              (0 : ℝ) ≤ beta u Du z ρ →
+                N *
+                    (eLpNorm' (ε := ℝ) (fun (w : ParabolicPoint) => pressureP2 η u c w.2 w.1)
+                          (3 / 2 : ℝ) μ +
+                        eLpNorm' (ε := ℝ) (fun (w : ParabolicPoint) => pressureP3 η u c w.2 w.1)
+                          (3 / 2 : ℝ) μ +
+                      eLpNorm' (ε := ℝ) (fun (w : ParabolicPoint) => pressureP4 η u c w.2 w.1)
+                        (3 / 2 : ℝ) μ) ≤
+                  ENNReal.ofReal (pressureP12Constant * (r / ρ) * alpha u z ρ * beta u Du z ρ)
+    := by
+  intro u Du C₁₂_p1 z ρ r hρ pressureP12Constant η c N μ hP234 hmul4 hratio_pos halpha hbeta
+  have hP234old : N * (eLpNorm' (fun w : ParabolicPoint => pressureP2 η u c w.2 w.1)
+      (3 / 2 : ℝ) μ + eLpNorm' (fun w : ParabolicPoint => pressureP3 η u c w.2 w.1)
+      (3 / 2 : ℝ) μ + eLpNorm' (fun w : ParabolicPoint => pressureP4 η u c w.2 w.1)
+      (3 / 2 : ℝ) μ) ≤ ENNReal.ofReal (CKN.pressureP12Constant * (r / ρ) *
+        alpha u z ρ * beta u Du z ρ) := by exact hP234
+  calc
+    _ ≤ ENNReal.ofReal (CKN.pressureP12Constant * (r / ρ) *
+        alpha u z ρ * beta u Du z ρ) := hP234old
+    _ ≤ _ := by
+      apply ENNReal.ofReal_mono
+      exact hmul4 (le_max_left CKN.pressureP12Constant C₁₂_p1)
+        hratio_pos.le halpha hbeta
+
+private lemma pressureDecay_one_scale_Thterms_1_hP56'_3 :
+    ∀ {p : ParabolicPoint → ℝ} (C₁₂_p1 : ℝ) {z : ParabolicPoint} {ρ r : ℝ} (hρ : (0 : ℝ) < ρ),
+      let pressureP12Constant : ℝ := max CKN.pressureP12Constant C₁₂_p1;
+      let η : Vec3 → ℝ := mollifiedBallCutoff z.1 hρ;
+      let N : ℝ≥0∞ := ENNReal.ofReal (r ^ (-4 / 3 : ℝ));
+      let μ : Measure ParabolicPoint := Measure.restrict volume (parabolicCylinder z.1 z.2 r);
+      ENNReal.ofReal (r ^ (-4 / 3 : ℝ)) *
+            (@eLpNorm' _ ℝ _ MeasureSpace.toMeasurableSpace
+                (fun (w : ParabolicPoint) => pressureP5 (mollifiedBallCutoff z.1 hρ) p w.2 w.1)
+                (3 / 2 : ℝ) (Measure.restrict volume (parabolicCylinder z.1 z.2 r)) +
+              @eLpNorm' _ ℝ _ MeasureSpace.toMeasurableSpace
+                (fun (w : ParabolicPoint) => pressureP6 (mollifiedBallCutoff z.1 hρ) p w.2 w.1)
+                (3 / 2 : ℝ) (Measure.restrict volume (parabolicCylinder z.1 z.2 r))) ≤
+          ENNReal.ofReal (CKN.pressureP12Constant * (r / ρ) ^ (2 / 3 : ℝ) * delta p z ρ ^ (2 : ℕ)) →
+        (∀ {a b x y : ℝ}, a ≤ b → (0 : ℝ) ≤ x → (0 : ℝ) ≤ y → a * x * y ≤ b * x * y) →
+          (0 : ℝ) ≤ (r / ρ) ^ (2 / 3 : ℝ) →
+            (0 : ℝ) ≤ delta p z ρ ^ (2 : ℕ) →
+              N *
+                  (eLpNorm' (ε := ℝ) (fun (w : ParabolicPoint) => pressureP5 η p w.2 w.1)
+                      (3 / 2 : ℝ) μ +
+                    eLpNorm' (ε := ℝ) (fun (w : ParabolicPoint) => pressureP6 η p w.2 w.1)
+                      (3 / 2 : ℝ) μ) ≤
+                ENNReal.ofReal (pressureP12Constant * (r / ρ) ^ (2 / 3 : ℝ) * delta p z ρ ^ (2 : ℕ))
+    := by
+  intro p C₁₂_p1 z ρ r hρ pressureP12Constant η N μ hP56 hmul3 hpow hdelta_sq
+  have hP56old : N * (eLpNorm' (fun w : ParabolicPoint => pressureP5 η p w.2 w.1)
+      (3 / 2 : ℝ) μ + eLpNorm' (fun w : ParabolicPoint => pressureP6 η p w.2 w.1)
+      (3 / 2 : ℝ) μ) ≤ ENNReal.ofReal (CKN.pressureP12Constant * (r / ρ) ^ (2 / 3 : ℝ) *
+        (delta p z ρ) ^ 2) := by exact hP56
+  calc
+    _ ≤ ENNReal.ofReal (CKN.pressureP12Constant * (r / ρ) ^ (2 / 3 : ℝ) *
+        (delta p z ρ) ^ 2) := hP56old
+    _ ≤ _ := by
+      apply ENNReal.ofReal_mono
+      exact hmul3 (le_max_left CKN.pressureP12Constant C₁₂_p1)
+        hpow hdelta_sq
+
+private lemma pressureDecay_one_scale_T_hterms_1 :
+    ∀ {q : ℝ} {u : ParabolicPoint → Vec3} {Du : ParabolicPoint → Fin (3 : ℕ) → Vec3}
+      {p : ParabolicPoint → ℝ} {f : ParabolicPoint → Vec3} (C₁₂_p1 : ℝ) {z : ParabolicPoint}
+      {ρ r : ℝ} (hρ : (0 : ℝ) < ρ),
+      (0 : ℝ) < r →
+        ENNReal.ofReal (r ^ (-4 / 3 : ℝ)) *
+              @eLpNorm' _ ℝ _ MeasureSpace.toMeasurableSpace
+                (fun (w : ParabolicPoint) =>
+                  pressureP1 (mollifiedBallCutoff z.1 hρ) u
+                    (fun (t : ℝ) (j : Fin (3 : ℕ)) => ⨍ (y : Vec3) in vec3Ball z.1 ρ, u (y, t) j) p
+                    f w.2 w.1)
+                (3 / 2 : ℝ) (Measure.restrict volume (parabolicCylinder z.1 z.2 r)) ≤
+            ENNReal.ofReal (C₁₂_p1 * (r / ρ)⁻¹ * alpha u z ρ * beta u Du z ρ) →
+          let pressureP12Constant : ℝ := max CKN.pressureP12Constant C₁₂_p1;
+          let pressureP13Constant : ℝ → ℝ := fun (_ : ℝ) =>
+            max (CKN.pressureP13Constant q) (pressureP7SolutionConstant q).toReal;
+          ENNReal.ofReal (r ^ (-4 / 3 : ℝ)) *
+                @eLpNorm' _ ℝ _ MeasureSpace.toMeasurableSpace
+                  (fun (w : ParabolicPoint) => pressureP7 (mollifiedBallCutoff z.1 hρ) f w.2 w.1)
+                  (3 / 2 : ℝ) (Measure.restrict volume (parabolicCylinder z.1 z.2 r)) ≤
+              ENNReal.ofReal (pressureP13Constant q * (r / ρ) * lambda q f z ρ) →
+            let η : Vec3 → ℝ := mollifiedBallCutoff z.1 hρ;
+            let c : ℝ → Vec3 := fun (t : ℝ) (j : Fin (3 : ℕ)) =>
+              ⨍ (y : Vec3) in vec3Ball z.1 ρ, u (y, t) j;
+            AEStronglyMeasurable (β := ℝ) (m₀ := MeasureSpace.toMeasurableSpace)
+                (fun (w : ParabolicPoint) => pressureP8 (mollifiedBallCutoff z.1 hρ) f w.2 w.1)
+                (Measure.restrict volume (parabolicCylinder z.1 z.2 ρ)) →
+              @eLpNorm' _ _ _ MeasureSpace.toMeasurableSpace p (3 / 2 : ℝ)
+                    (Measure.restrict volume (parabolicCylinder z.1 z.2 r)) ≤
+                  ∑ k : Fin (8 : ℕ),
+                    @eLpNorm' _ ℝ _ MeasureSpace.toMeasurableSpace
+                      (fun (z : ParabolicPoint) =>
+                        match k with
+                        | (0 : Fin (8 : ℕ)) => pressureP1 η u c p f z.2 z.1
+                        | (1 : Fin (8 : ℕ)) => pressureP2 η u c z.2 z.1
+                        | (2 : Fin (8 : ℕ)) => pressureP3 η u c z.2 z.1
+                        | (3 : Fin (8 : ℕ)) => pressureP4 η u c z.2 z.1
+                        | (4 : Fin (8 : ℕ)) => pressureP5 η p z.2 z.1
+                        | (5 : Fin (8 : ℕ)) => pressureP6 η p z.2 z.1
+                        | (6 : Fin (8 : ℕ)) => pressureP7 η f z.2 z.1
+                        | (7 : Fin (8 : ℕ)) => pressureP8 η f z.2 z.1)
+                      (3 / 2 : ℝ) (Measure.restrict volume (parabolicCylinder z.1 z.2 r)) →
+                let N : ℝ≥0∞ := ENNReal.ofReal (r ^ (-4 / 3 : ℝ));
+                let μ : Measure ParabolicPoint :=
+                  Measure.restrict volume (parabolicCylinder z.1 z.2 r);
+                ENNReal.ofReal (r ^ (-4 / 3 : ℝ)) *
+                      (@eLpNorm' _ ℝ _ MeasureSpace.toMeasurableSpace
+                            (fun (w : ParabolicPoint) =>
+                              pressureP2 (mollifiedBallCutoff z.1 hρ) u
+                                (fun (t : ℝ) (j : Fin (3 : ℕ)) =>
+                                  ⨍ (y : Vec3) in vec3Ball z.1 ρ, u (y, t) j)
+                                w.2 w.1)
+                            (3 / 2 : ℝ) (Measure.restrict volume (parabolicCylinder z.1 z.2 r)) +
+                          @eLpNorm' _ ℝ _ MeasureSpace.toMeasurableSpace
+                            (fun (w : ParabolicPoint) =>
+                              pressureP3 (mollifiedBallCutoff z.1 hρ) u
+                                (fun (t : ℝ) (j : Fin (3 : ℕ)) =>
+                                  ⨍ (y : Vec3) in vec3Ball z.1 ρ, u (y, t) j)
+                                w.2 w.1)
+                            (3 / 2 : ℝ) (Measure.restrict volume (parabolicCylinder z.1 z.2 r)) +
+                        @eLpNorm' _ ℝ _ MeasureSpace.toMeasurableSpace
+                          (fun (w : ParabolicPoint) =>
+                            pressureP4 (mollifiedBallCutoff z.1 hρ) u
+                              (fun (t : ℝ) (j : Fin (3 : ℕ)) =>
+                                ⨍ (y : Vec3) in vec3Ball z.1 ρ, u (y, t) j)
+                              w.2 w.1)
+                          (3 / 2 : ℝ) (Measure.restrict volume (parabolicCylinder z.1 z.2 r))) ≤
+                    ENNReal.ofReal
+                      (CKN.pressureP12Constant * (r / ρ) * alpha u z ρ * beta u Du z ρ) →
+                  ENNReal.ofReal (r ^ (-4 / 3 : ℝ)) *
+                        (@eLpNorm' _ ℝ _ MeasureSpace.toMeasurableSpace
+                            (fun (w : ParabolicPoint) =>
+                              pressureP5 (mollifiedBallCutoff z.1 hρ) p w.2 w.1)
+                            (3 / 2 : ℝ) (Measure.restrict volume (parabolicCylinder z.1 z.2 r)) +
+                          @eLpNorm' _ ℝ _ MeasureSpace.toMeasurableSpace
+                            (fun (w : ParabolicPoint) =>
+                              pressureP6 (mollifiedBallCutoff z.1 hρ) p w.2 w.1)
+                            (3 / 2 : ℝ) (Measure.restrict volume (parabolicCylinder z.1 z.2 r))) ≤
+                      ENNReal.ofReal
+                        (CKN.pressureP12Constant * (r / ρ) ^ (2 / 3 : ℝ) * delta p z ρ ^ (2 : ℕ)) →
+                    ENNReal.ofReal (r ^ (-4 / 3 : ℝ)) *
+                          @eLpNorm' _ ℝ _ MeasureSpace.toMeasurableSpace
+                            (fun (w : ParabolicPoint) =>
+                              pressureP8 (mollifiedBallCutoff z.1 hρ) f w.2 w.1)
+                            (3 / 2 : ℝ) (Measure.restrict volume (parabolicCylinder z.1 z.2 r)) ≤
+                        ENNReal.ofReal (CKN.pressureP13Constant q * (r / ρ) * lambda q f z ρ) →
+                      N * eLpNorm' p (3 / 2 : ℝ) μ ≤
+                        ENNReal.ofReal
+                                  (pressureP12Constant * (r / ρ)⁻¹ * alpha u z ρ * beta u Du z ρ) +
+                                ENNReal.ofReal
+                                  (pressureP12Constant * (r / ρ) * alpha u z ρ * beta u Du z ρ) +
+                              ENNReal.ofReal
+                                (pressureP12Constant * (r / ρ) ^ (2 / 3 : ℝ) *
+                                  delta p z ρ ^ (2 : ℕ)) +
+                            ENNReal.ofReal (pressureP13Constant q * (r / ρ) * lambda q f z ρ) +
+                          ENNReal.ofReal (pressureP13Constant q * (r / ρ) * lambda q f z ρ)
+    := by
+  intro q u Du p f C₁₂_p1 z ρ r hρ hr hCZ_p1 pressureP12Constant pressureP13Constant hP7common η c
+    hP8' htri N μ hP234 hP56 hP8
+  have htri' := @pressureDecay_one_scale_Thterms_1_htri'_1 u p f z ρ r hρ htri
+  have hmul := mul_le_mul_of_nonneg_left htri' (by positivity : 0 ≤ N)
+  have hCZbase : N * eLpNorm' (fun w : ParabolicPoint => pressureP1 η u c p f w.2 w.1)
+      (3 / 2 : ℝ) μ ≤ ENNReal.ofReal (C₁₂_p1 * (r / ρ)⁻¹ *
+        alpha u z ρ * beta u Du z ρ) := by exact hCZ_p1
+  have hmul3 {a b x y : ℝ} (hab : a ≤ b) (hx : 0 ≤ x) (hy : 0 ≤ y) :
+      a * x * y ≤ b * x * y := by
+    exact mul_le_mul_of_nonneg_right
+      (mul_le_mul_of_nonneg_right hab hx) hy
+  have hmul4 {a b x y z : ℝ} (hab : a ≤ b) (hx : 0 ≤ x)
+      (hy : 0 ≤ y) (hz : 0 ≤ z) :
+      a * x * y * z ≤ b * x * y * z := by
+    exact mul_le_mul_of_nonneg_right
+      (mul_le_mul_of_nonneg_right
+        (mul_le_mul_of_nonneg_right hab hx) hy) hz
+  have hratio_pos : 0 < r / ρ := div_pos hr hρ
+  have hratio_inv_nonneg : 0 ≤ (r / ρ)⁻¹ := (inv_pos.mpr hratio_pos).le
+  have halpha : 0 ≤ alpha u z ρ := by
+    unfold alpha
+    positivity
+  have hbeta : 0 ≤ beta u Du z ρ := by
+    unfold beta
+    positivity
+  have hpow : 0 ≤ (r / ρ) ^ (2 / 3 : ℝ) := by
+    exact Real.rpow_nonneg hratio_pos.le _
+  have hdelta_sq : 0 ≤ (delta p z ρ) ^ 2 := sq_nonneg _
+  have hlam : 0 ≤ lambda q f z ρ := by
+    unfold lambda
+    positivity
+  have hCZ' : N * eLpNorm' (fun w : ParabolicPoint => pressureP1 η u c p f w.2 w.1)
+      (3 / 2 : ℝ) μ ≤ ENNReal.ofReal (pressureP12Constant * (r / ρ)⁻¹ *
+        alpha u z ρ * beta u Du z ρ) := by
+    calc
+      _ ≤ ENNReal.ofReal (C₁₂_p1 * (r / ρ)⁻¹ *
+          alpha u z ρ * beta u Du z ρ) := hCZbase
+      _ ≤ _ := by
+        apply ENNReal.ofReal_mono
+        exact hmul4 (le_max_right CKN.pressureP12Constant C₁₂_p1)
+          hratio_inv_nonneg halpha hbeta
+  have hP234' := @pressureDecay_one_scale_Thterms_1_hP234'_2 u Du C₁₂_p1 z ρ r hρ hP234 hmul4
+    hratio_pos halpha hbeta
+  have hP56' := @pressureDecay_one_scale_Thterms_1_hP56'_3 p C₁₂_p1 z ρ r hρ hP56 hmul3 hpow
+    hdelta_sq
+  have hP7'' : N * eLpNorm' (fun w : ParabolicPoint => pressureP7 η f w.2 w.1)
+      (3 / 2 : ℝ) μ ≤ ENNReal.ofReal (pressureP13Constant q * (r / ρ) *
+        lambda q f z ρ) := by exact hP7common
+  have hP8' : N * eLpNorm' (fun w : ParabolicPoint => pressureP8 η f w.2 w.1)
+      (3 / 2 : ℝ) μ ≤ ENNReal.ofReal (pressureP13Constant q * (r / ρ) *
+        lambda q f z ρ) := by
+    have hP8old := hP8
+    calc
+      _ ≤ ENNReal.ofReal (CKN.pressureP13Constant q * (r / ρ) *
+          lambda q f z ρ) := by exact hP8old
+      _ ≤ _ := by
+        apply ENNReal.ofReal_mono
+        exact hmul3 (le_max_left (CKN.pressureP13Constant q)
+          (pressureP7SolutionConstant q).toReal) hratio_pos.le hlam
+  let A : ℝ≥0∞ := eLpNorm' (fun w : ParabolicPoint =>
+    pressureP1 η u c p f w.2 w.1) (3 / 2 : ℝ) μ
+  let B : ℝ≥0∞ := eLpNorm' (fun w : ParabolicPoint =>
+    pressureP2 η u c w.2 w.1) (3 / 2 : ℝ) μ +
+    eLpNorm' (fun w : ParabolicPoint => pressureP3 η u c w.2 w.1)
+      (3 / 2 : ℝ) μ + eLpNorm' (fun w : ParabolicPoint =>
+    pressureP4 η u c w.2 w.1) (3 / 2 : ℝ) μ
+  let C : ℝ≥0∞ := eLpNorm' (fun w : ParabolicPoint =>
+    pressureP5 η p w.2 w.1) (3 / 2 : ℝ) μ +
+    eLpNorm' (fun w : ParabolicPoint => pressureP6 η p w.2 w.1)
+      (3 / 2 : ℝ) μ
+  let D : ℝ≥0∞ := eLpNorm' (fun w : ParabolicPoint =>
+    pressureP7 η f w.2 w.1) (3 / 2 : ℝ) μ
+  let E : ℝ≥0∞ := eLpNorm' (fun w : ParabolicPoint =>
+    pressureP8 η f w.2 w.1) (3 / 2 : ℝ) μ
+  have hmul' : N * eLpNorm' p (3 / 2 : ℝ) μ ≤ N * (A + B + C + D + E) := by
+    exact hmul
+  have hgroup := pressure_five_group_bound_T hCZ' hP234' hP56' hP7'' hP8'
+  have hgroup' : N * (A + B + C + D + E) ≤
+      ENNReal.ofReal (pressureP12Constant * (r / ρ)⁻¹ *
+          alpha u z ρ * beta u Du z ρ) +
+        ENNReal.ofReal (pressureP12Constant * (r / ρ) *
+          alpha u z ρ * beta u Du z ρ) +
+        ENNReal.ofReal (pressureP12Constant * (r / ρ) ^ (2 / 3 : ℝ) *
+          (delta p z ρ) ^ 2) +
+        ENNReal.ofReal (pressureP13Constant q * (r / ρ) *
+          lambda q f z ρ) +
+        ENNReal.ofReal (pressureP13Constant q * (r / ρ) *
+          lambda q f z ρ) := by
+    exact hgroup
+  exact hmul'.trans hgroup'
+
+private lemma pressureDecay_one_scale_T_hrightfin_2 :
+    ∀ {q : ℝ} {u : ParabolicPoint → Vec3} {Du : ParabolicPoint → Fin (3 : ℕ) → Vec3}
+      {p : ParabolicPoint → ℝ} {f : ParabolicPoint → Vec3} (C₁₂_p1 : ℝ) {z : ParabolicPoint}
+      {ρ r : ℝ},
+      let pressureP12Constant : ℝ := max CKN.pressureP12Constant C₁₂_p1;
+      let pressureP13Constant : ℝ → ℝ := fun (_ : ℝ) =>
+        max (CKN.pressureP13Constant q) (pressureP7SolutionConstant q).toReal;
+      ENNReal.ofReal (pressureP12Constant * (r / ρ)⁻¹ * alpha u z ρ * beta u Du z ρ) +
+                ENNReal.ofReal (pressureP12Constant * (r / ρ) * alpha u z ρ * beta u Du z ρ) +
+              ENNReal.ofReal (pressureP12Constant * (r / ρ) ^ (2 / 3 : ℝ) * delta p z ρ ^ (2 : ℕ)) +
+            ENNReal.ofReal (pressureP13Constant q * (r / ρ) * lambda q f z ρ) +
+          ENNReal.ofReal (pressureP13Constant q * (r / ρ) * lambda q f z ρ) ≠
+        ∞
+    := by
+  intro q u Du p f C₁₂_p1 z ρ r pressureP12Constant pressureP13Constant
+  apply ENNReal.add_ne_top.mpr
+  constructor
+  · apply ENNReal.add_ne_top.mpr
+    constructor
+    · apply ENNReal.add_ne_top.mpr
+      constructor
+      · apply ENNReal.add_ne_top.mpr
+        exact ⟨ENNReal.ofReal_ne_top, ENNReal.ofReal_ne_top⟩
+      · exact ENNReal.ofReal_ne_top
+    · exact ENNReal.ofReal_ne_top
+  · exact ENNReal.ofReal_ne_top
+
+private lemma pressureDecay_one_scale_T_hrhs_toReal_3 :
+    ∀ {q : ℝ} {u : ParabolicPoint → Vec3} {Du : ParabolicPoint → Fin (3 : ℕ) → Vec3}
+      {p : ParabolicPoint → ℝ} {f : ParabolicPoint → Vec3} (C₁₂_p1 : ℝ) {z : ParabolicPoint}
+      {ρ r : ℝ},
+      (0 : ℝ) < ρ →
+        (0 : ℝ) < r →
+          let pressureP12Constant : ℝ := max CKN.pressureP12Constant C₁₂_p1;
+          let pressureP13Constant : ℝ → ℝ := fun (_ : ℝ) =>
+            max (CKN.pressureP13Constant q) (pressureP7SolutionConstant q).toReal;
+          (0 : ℝ) ≤ CKN.pressureP12Constant →
+            (0 : ℝ) ≤ CKN.pressureP13Constant q →
+              (ENNReal.ofReal (pressureP12Constant * (r / ρ)⁻¹ * alpha u z ρ * beta u Du z ρ) +
+                          ENNReal.ofReal
+                            (pressureP12Constant * (r / ρ) * alpha u z ρ * beta u Du z ρ) +
+                        ENNReal.ofReal
+                          (pressureP12Constant * (r / ρ) ^ (2 / 3 : ℝ) * delta p z ρ ^ (2 : ℕ)) +
+                      ENNReal.ofReal (pressureP13Constant q * (r / ρ) * lambda q f z ρ) +
+                    ENNReal.ofReal (pressureP13Constant q * (r / ρ) * lambda q f z ρ)).toReal =
+                pressureP12Constant * (r / ρ)⁻¹ * alpha u z ρ * beta u Du z ρ +
+                        pressureP12Constant * (r / ρ) * alpha u z ρ * beta u Du z ρ +
+                      pressureP12Constant * (r / ρ) ^ (2 / 3 : ℝ) * delta p z ρ ^ (2 : ℕ) +
+                    pressureP13Constant q * (r / ρ) * lambda q f z ρ +
+                  pressureP13Constant q * (r / ρ) * lambda q f z ρ
+    := by
+  intro q u Du p f C₁₂_p1 z ρ r hρ hr pressureP12Constant pressureP13Constant hP12base hP13base
+  have hA : ENNReal.ofReal (pressureP12Constant * (r / ρ)⁻¹ *
+      alpha u z ρ * beta u Du z ρ) ≠ ∞ := ENNReal.ofReal_ne_top
+  have hB : ENNReal.ofReal (pressureP12Constant * (r / ρ) *
+      alpha u z ρ * beta u Du z ρ) ≠ ∞ := ENNReal.ofReal_ne_top
+  have hC : ENNReal.ofReal (pressureP12Constant * (r / ρ) ^ (2 / 3 : ℝ) *
+      (delta p z ρ) ^ 2) ≠ ∞ := ENNReal.ofReal_ne_top
+  have hD : ENNReal.ofReal (pressureP13Constant q * (r / ρ) *
+      lambda q f z ρ) ≠ ∞ := ENNReal.ofReal_ne_top
+  have hα : 0 ≤ alpha u z ρ := by
+    unfold alpha
+    positivity
+  have hβ : 0 ≤ beta u Du z ρ := by
+    unfold beta
+    positivity
+  have hlam : 0 ≤ lambda q f z ρ := by
+    unfold lambda
+    positivity
+  have hAn : 0 ≤ pressureP12Constant * (r / ρ)⁻¹ *
+      alpha u z ρ * beta u Du z ρ := by positivity
+  have hBn : 0 ≤ pressureP12Constant * (r / ρ) *
+      alpha u z ρ * beta u Du z ρ := by positivity
+  have hCn : 0 ≤ pressureP12Constant * (r / ρ) ^ (2 / 3 : ℝ) *
+      (delta p z ρ) ^ 2 := by positivity
+  have hDn : 0 ≤ pressureP13Constant q * (r / ρ) *
+      lambda q f z ρ := by positivity
+  have hAB :
+      (ENNReal.ofReal (pressureP12Constant * (r / ρ)⁻¹ *
+        alpha u z ρ * beta u Du z ρ) +
+        ENNReal.ofReal (pressureP12Constant * (r / ρ) *
+          alpha u z ρ * beta u Du z ρ)) ≠ ∞ :=
+    ENNReal.add_ne_top.mpr ⟨hA, hB⟩
+  have hABC :
+      (ENNReal.ofReal (pressureP12Constant * (r / ρ)⁻¹ *
+        alpha u z ρ * beta u Du z ρ) +
+        ENNReal.ofReal (pressureP12Constant * (r / ρ) *
+          alpha u z ρ * beta u Du z ρ) +
+        ENNReal.ofReal (pressureP12Constant * (r / ρ) ^ (2 / 3 : ℝ) *
+          (delta p z ρ) ^ 2)) ≠ ∞ :=
+    ENNReal.add_ne_top.mpr ⟨hAB, hC⟩
+  have hABCD :
+      (ENNReal.ofReal (pressureP12Constant * (r / ρ)⁻¹ *
+        alpha u z ρ * beta u Du z ρ) +
+        ENNReal.ofReal (pressureP12Constant * (r / ρ) *
+          alpha u z ρ * beta u Du z ρ) +
+        ENNReal.ofReal (pressureP12Constant * (r / ρ) ^ (2 / 3 : ℝ) *
+          (delta p z ρ) ^ 2) +
+        ENNReal.ofReal (pressureP13Constant q * (r / ρ) *
+          lambda q f z ρ)) ≠ ∞ :=
+    ENNReal.add_ne_top.mpr ⟨hABC, hD⟩
+  rw [ENNReal.toReal_add hABCD hD, ENNReal.toReal_add hABC hD,
+    ENNReal.toReal_add hAB hC, ENNReal.toReal_add hA hB]
+  rw [ENNReal.toReal_ofReal hAn, ENNReal.toReal_ofReal hBn,
+    ENNReal.toReal_ofReal hCn, ENNReal.toReal_ofReal hDn]
+
 theorem pressureDecay_one_scale_T
     {Ω : Set Vec3} {I : Set ℝ} {q : ℝ}
     {u : ParabolicPoint → Vec3} {Du : ParabolicPoint → Fin 3 → Vec3}
@@ -298,177 +739,9 @@ theorem pressureDecay_one_scale_T
   have hP234 := pressureP234_bound hsol hρ hr hhalf hsub
   have hP56 := pressureP56_bound hsol hρ hr hhalf hsub
   have hP8 := pressureP8_bound hsol hρ hr hhalf hsub
-  have hterms :
-      N * eLpNorm' p (3 / 2 : ℝ) μ ≤
-        ENNReal.ofReal (pressureP12Constant * (r / ρ)⁻¹ *
-            alpha u z ρ * beta u Du z ρ) +
-          ENNReal.ofReal (pressureP12Constant * (r / ρ) *
-            alpha u z ρ * beta u Du z ρ) +
-          ENNReal.ofReal (pressureP12Constant * (r / ρ) ^ (2 / 3 : ℝ) *
-            (delta p z ρ) ^ 2) +
-          ENNReal.ofReal (pressureP13Constant q * (r / ρ) *
-            lambda q f z ρ) +
-          ENNReal.ofReal (pressureP13Constant q * (r / ρ) *
-            lambda q f z ρ) := by
-    have htri' : eLpNorm' p (3 / 2 : ℝ) μ ≤
-        eLpNorm' (fun w : ParabolicPoint => pressureP1 η u c p f w.2 w.1)
-            (3 / 2 : ℝ) μ +
-          (eLpNorm' (fun w : ParabolicPoint => pressureP2 η u c w.2 w.1)
-              (3 / 2 : ℝ) μ + eLpNorm' (fun w : ParabolicPoint => pressureP3 η u c w.2 w.1)
-              (3 / 2 : ℝ) μ + eLpNorm' (fun w : ParabolicPoint => pressureP4 η u c w.2 w.1)
-              (3 / 2 : ℝ) μ) +
-          (eLpNorm' (fun w : ParabolicPoint => pressureP5 η p w.2 w.1)
-              (3 / 2 : ℝ) μ + eLpNorm' (fun w : ParabolicPoint => pressureP6 η p w.2 w.1)
-              (3 / 2 : ℝ) μ) +
-          eLpNorm' (fun w : ParabolicPoint => pressureP7 η f w.2 w.1)
-              (3 / 2 : ℝ) μ + eLpNorm' (fun w : ParabolicPoint => pressureP8 η f w.2 w.1)
-              (3 / 2 : ℝ) μ := by
-      calc
-        _ ≤ ∑ k : Fin 8, eLpNorm'
-            (fun w : ParabolicPoint => match k with
-              | 0 => pressureP1 η u c p f w.2 w.1
-              | 1 => pressureP2 η u c w.2 w.1
-              | 2 => pressureP3 η u c w.2 w.1
-              | 3 => pressureP4 η u c w.2 w.1
-              | 4 => pressureP5 η p w.2 w.1
-              | 5 => pressureP6 η p w.2 w.1
-              | 6 => pressureP7 η f w.2 w.1
-              | 7 => pressureP8 η f w.2 w.1)
-            (3 / 2 : ℝ) μ := by exact htri
-        _ = _ := by simp [Fin.sum_univ_succ]; ring
-    have hmul := mul_le_mul_of_nonneg_left htri' (by positivity : 0 ≤ N)
-    have hCZbase : N * eLpNorm' (fun w : ParabolicPoint => pressureP1 η u c p f w.2 w.1)
-        (3 / 2 : ℝ) μ ≤ ENNReal.ofReal (C₁₂_p1 * (r / ρ)⁻¹ *
-          alpha u z ρ * beta u Du z ρ) := by exact hCZ_p1
-    have hmul3 {a b x y : ℝ} (hab : a ≤ b) (hx : 0 ≤ x) (hy : 0 ≤ y) :
-        a * x * y ≤ b * x * y := by
-      exact mul_le_mul_of_nonneg_right
-        (mul_le_mul_of_nonneg_right hab hx) hy
-    have hmul4 {a b x y z : ℝ} (hab : a ≤ b) (hx : 0 ≤ x)
-        (hy : 0 ≤ y) (hz : 0 ≤ z) :
-        a * x * y * z ≤ b * x * y * z := by
-      exact mul_le_mul_of_nonneg_right
-        (mul_le_mul_of_nonneg_right
-          (mul_le_mul_of_nonneg_right hab hx) hy) hz
-    have hratio_pos : 0 < r / ρ := div_pos hr hρ
-    have hratio_inv_nonneg : 0 ≤ (r / ρ)⁻¹ := (inv_pos.mpr hratio_pos).le
-    have halpha : 0 ≤ alpha u z ρ := by
-      unfold alpha
-      positivity
-    have hbeta : 0 ≤ beta u Du z ρ := by
-      unfold beta
-      positivity
-    have hpow : 0 ≤ (r / ρ) ^ (2 / 3 : ℝ) := by
-      exact Real.rpow_nonneg hratio_pos.le _
-    have hdelta_sq : 0 ≤ (delta p z ρ) ^ 2 := sq_nonneg _
-    have hlam : 0 ≤ lambda q f z ρ := by
-      unfold lambda
-      positivity
-    have hCZ' : N * eLpNorm' (fun w : ParabolicPoint => pressureP1 η u c p f w.2 w.1)
-        (3 / 2 : ℝ) μ ≤ ENNReal.ofReal (pressureP12Constant * (r / ρ)⁻¹ *
-          alpha u z ρ * beta u Du z ρ) := by
-      calc
-        _ ≤ ENNReal.ofReal (C₁₂_p1 * (r / ρ)⁻¹ *
-            alpha u z ρ * beta u Du z ρ) := hCZbase
-        _ ≤ _ := by
-          apply ENNReal.ofReal_mono
-          exact hmul4 (le_max_right CKN.pressureP12Constant C₁₂_p1)
-            hratio_inv_nonneg halpha hbeta
-    have hP234' : N * (eLpNorm' (fun w : ParabolicPoint => pressureP2 η u c w.2 w.1)
-        (3 / 2 : ℝ) μ + eLpNorm' (fun w : ParabolicPoint => pressureP3 η u c w.2 w.1)
-        (3 / 2 : ℝ) μ + eLpNorm' (fun w : ParabolicPoint => pressureP4 η u c w.2 w.1)
-        (3 / 2 : ℝ) μ) ≤ ENNReal.ofReal (pressureP12Constant * (r / ρ) *
-          alpha u z ρ * beta u Du z ρ) := by
-      have hP234old : N * (eLpNorm' (fun w : ParabolicPoint => pressureP2 η u c w.2 w.1)
-          (3 / 2 : ℝ) μ + eLpNorm' (fun w : ParabolicPoint => pressureP3 η u c w.2 w.1)
-          (3 / 2 : ℝ) μ + eLpNorm' (fun w : ParabolicPoint => pressureP4 η u c w.2 w.1)
-          (3 / 2 : ℝ) μ) ≤ ENNReal.ofReal (CKN.pressureP12Constant * (r / ρ) *
-            alpha u z ρ * beta u Du z ρ) := by exact hP234
-      calc
-        _ ≤ ENNReal.ofReal (CKN.pressureP12Constant * (r / ρ) *
-            alpha u z ρ * beta u Du z ρ) := hP234old
-        _ ≤ _ := by
-          apply ENNReal.ofReal_mono
-          exact hmul4 (le_max_left CKN.pressureP12Constant C₁₂_p1)
-            hratio_pos.le halpha hbeta
-    have hP56' : N * (eLpNorm' (fun w : ParabolicPoint => pressureP5 η p w.2 w.1)
-        (3 / 2 : ℝ) μ + eLpNorm' (fun w : ParabolicPoint => pressureP6 η p w.2 w.1)
-        (3 / 2 : ℝ) μ) ≤ ENNReal.ofReal (pressureP12Constant * (r / ρ) ^ (2 / 3 : ℝ) *
-          (delta p z ρ) ^ 2) := by
-      have hP56old : N * (eLpNorm' (fun w : ParabolicPoint => pressureP5 η p w.2 w.1)
-          (3 / 2 : ℝ) μ + eLpNorm' (fun w : ParabolicPoint => pressureP6 η p w.2 w.1)
-          (3 / 2 : ℝ) μ) ≤ ENNReal.ofReal (CKN.pressureP12Constant * (r / ρ) ^ (2 / 3 : ℝ) *
-            (delta p z ρ) ^ 2) := by exact hP56
-      calc
-        _ ≤ ENNReal.ofReal (CKN.pressureP12Constant * (r / ρ) ^ (2 / 3 : ℝ) *
-            (delta p z ρ) ^ 2) := hP56old
-        _ ≤ _ := by
-          apply ENNReal.ofReal_mono
-          exact hmul3 (le_max_left CKN.pressureP12Constant C₁₂_p1)
-            hpow hdelta_sq
-    have hP7'' : N * eLpNorm' (fun w : ParabolicPoint => pressureP7 η f w.2 w.1)
-        (3 / 2 : ℝ) μ ≤ ENNReal.ofReal (pressureP13Constant q * (r / ρ) *
-          lambda q f z ρ) := by exact hP7common
-    have hP8' : N * eLpNorm' (fun w : ParabolicPoint => pressureP8 η f w.2 w.1)
-        (3 / 2 : ℝ) μ ≤ ENNReal.ofReal (pressureP13Constant q * (r / ρ) *
-          lambda q f z ρ) := by
-      have hP8old := hP8
-      calc
-        _ ≤ ENNReal.ofReal (CKN.pressureP13Constant q * (r / ρ) *
-            lambda q f z ρ) := by exact hP8old
-        _ ≤ _ := by
-          apply ENNReal.ofReal_mono
-          exact hmul3 (le_max_left (CKN.pressureP13Constant q)
-            (pressureP7SolutionConstant q).toReal) hratio_pos.le hlam
-    let A : ℝ≥0∞ := eLpNorm' (fun w : ParabolicPoint =>
-      pressureP1 η u c p f w.2 w.1) (3 / 2 : ℝ) μ
-    let B : ℝ≥0∞ := eLpNorm' (fun w : ParabolicPoint =>
-      pressureP2 η u c w.2 w.1) (3 / 2 : ℝ) μ +
-      eLpNorm' (fun w : ParabolicPoint => pressureP3 η u c w.2 w.1)
-        (3 / 2 : ℝ) μ + eLpNorm' (fun w : ParabolicPoint =>
-      pressureP4 η u c w.2 w.1) (3 / 2 : ℝ) μ
-    let C : ℝ≥0∞ := eLpNorm' (fun w : ParabolicPoint =>
-      pressureP5 η p w.2 w.1) (3 / 2 : ℝ) μ +
-      eLpNorm' (fun w : ParabolicPoint => pressureP6 η p w.2 w.1)
-        (3 / 2 : ℝ) μ
-    let D : ℝ≥0∞ := eLpNorm' (fun w : ParabolicPoint =>
-      pressureP7 η f w.2 w.1) (3 / 2 : ℝ) μ
-    let E : ℝ≥0∞ := eLpNorm' (fun w : ParabolicPoint =>
-      pressureP8 η f w.2 w.1) (3 / 2 : ℝ) μ
-    have hmul' : N * eLpNorm' p (3 / 2 : ℝ) μ ≤ N * (A + B + C + D + E) := by
-      exact hmul
-    have hgroup := pressure_five_group_bound_T hCZ' hP234' hP56' hP7'' hP8'
-    have hgroup' : N * (A + B + C + D + E) ≤
-        ENNReal.ofReal (pressureP12Constant * (r / ρ)⁻¹ *
-            alpha u z ρ * beta u Du z ρ) +
-          ENNReal.ofReal (pressureP12Constant * (r / ρ) *
-            alpha u z ρ * beta u Du z ρ) +
-          ENNReal.ofReal (pressureP12Constant * (r / ρ) ^ (2 / 3 : ℝ) *
-            (delta p z ρ) ^ 2) +
-          ENNReal.ofReal (pressureP13Constant q * (r / ρ) *
-            lambda q f z ρ) +
-          ENNReal.ofReal (pressureP13Constant q * (r / ρ) *
-            lambda q f z ρ) := by
-      exact hgroup
-    exact hmul'.trans hgroup'
-  have hrightfin :
-      (ENNReal.ofReal (pressureP12Constant * (r / ρ)⁻¹ * alpha u z ρ * beta u Du z ρ) +
-        ENNReal.ofReal (pressureP12Constant * (r / ρ) * alpha u z ρ * beta u Du z ρ) +
-        ENNReal.ofReal (pressureP12Constant * (r / ρ) ^ (2 / 3 : ℝ) *
-          (delta p z ρ) ^ 2) +
-        ENNReal.ofReal (pressureP13Constant q * (r / ρ) * lambda q f z ρ) +
-        ENNReal.ofReal (pressureP13Constant q * (r / ρ) * lambda q f z ρ)) ≠ ∞ := by
-    apply ENNReal.add_ne_top.mpr
-    constructor
-    · apply ENNReal.add_ne_top.mpr
-      constructor
-      · apply ENNReal.add_ne_top.mpr
-        constructor
-        · apply ENNReal.add_ne_top.mpr
-          exact ⟨ENNReal.ofReal_ne_top, ENNReal.ofReal_ne_top⟩
-        · exact ENNReal.ofReal_ne_top
-      · exact ENNReal.ofReal_ne_top
-    · exact ENNReal.ofReal_ne_top
+  have hterms := @pressureDecay_one_scale_T_hterms_1 q u Du p f C₁₂_p1 z ρ r hρ hr hCZ_p1
+    hP7common hP8' htri hP234 hP56 hP8
+  have hrightfin := @pressureDecay_one_scale_T_hrightfin_2 q u Du p f C₁₂_p1 z ρ r
   have hleft : N * eLpNorm' p (3 / 2 : ℝ) μ ≠ ∞ := by
     exact ne_of_lt (lt_of_le_of_lt hterms (lt_top_iff_ne_top.mpr hrightfin))
   have hnormR := (ENNReal.toReal_le_toReal hleft hrightfin).2 hterms
@@ -477,71 +750,8 @@ theorem pressureDecay_one_scale_T
   have hP12nonneg : 0 ≤ pressureP12Constant := by
     exact hC12
   have hP13nonneg : 0 ≤ pressureP13Constant q := hC13
-  have hrhs_toReal :
-      (ENNReal.ofReal (pressureP12Constant * (r / ρ)⁻¹ * alpha u z ρ * beta u Du z ρ) +
-        ENNReal.ofReal (pressureP12Constant * (r / ρ) * alpha u z ρ * beta u Du z ρ) +
-        ENNReal.ofReal (pressureP12Constant * (r / ρ) ^ (2 / 3 : ℝ) *
-          (delta p z ρ) ^ 2) +
-        ENNReal.ofReal (pressureP13Constant q * (r / ρ) * lambda q f z ρ) +
-        ENNReal.ofReal (pressureP13Constant q * (r / ρ) * lambda q f z ρ)).toReal =
-      pressureP12Constant * (r / ρ)⁻¹ * alpha u z ρ * beta u Du z ρ +
-        pressureP12Constant * (r / ρ) * alpha u z ρ * beta u Du z ρ +
-        pressureP12Constant * (r / ρ) ^ (2 / 3 : ℝ) * (delta p z ρ) ^ 2 +
-        pressureP13Constant q * (r / ρ) * lambda q f z ρ +
-        pressureP13Constant q * (r / ρ) * lambda q f z ρ := by
-    have hA : ENNReal.ofReal (pressureP12Constant * (r / ρ)⁻¹ *
-        alpha u z ρ * beta u Du z ρ) ≠ ∞ := ENNReal.ofReal_ne_top
-    have hB : ENNReal.ofReal (pressureP12Constant * (r / ρ) *
-        alpha u z ρ * beta u Du z ρ) ≠ ∞ := ENNReal.ofReal_ne_top
-    have hC : ENNReal.ofReal (pressureP12Constant * (r / ρ) ^ (2 / 3 : ℝ) *
-        (delta p z ρ) ^ 2) ≠ ∞ := ENNReal.ofReal_ne_top
-    have hD : ENNReal.ofReal (pressureP13Constant q * (r / ρ) *
-        lambda q f z ρ) ≠ ∞ := ENNReal.ofReal_ne_top
-    have hα : 0 ≤ alpha u z ρ := by
-      unfold alpha
-      positivity
-    have hβ : 0 ≤ beta u Du z ρ := by
-      unfold beta
-      positivity
-    have hlam : 0 ≤ lambda q f z ρ := by
-      unfold lambda
-      positivity
-    have hAn : 0 ≤ pressureP12Constant * (r / ρ)⁻¹ *
-        alpha u z ρ * beta u Du z ρ := by positivity
-    have hBn : 0 ≤ pressureP12Constant * (r / ρ) *
-        alpha u z ρ * beta u Du z ρ := by positivity
-    have hCn : 0 ≤ pressureP12Constant * (r / ρ) ^ (2 / 3 : ℝ) *
-        (delta p z ρ) ^ 2 := by positivity
-    have hDn : 0 ≤ pressureP13Constant q * (r / ρ) *
-        lambda q f z ρ := by positivity
-    have hAB :
-        (ENNReal.ofReal (pressureP12Constant * (r / ρ)⁻¹ *
-          alpha u z ρ * beta u Du z ρ) +
-          ENNReal.ofReal (pressureP12Constant * (r / ρ) *
-            alpha u z ρ * beta u Du z ρ)) ≠ ∞ :=
-      ENNReal.add_ne_top.mpr ⟨hA, hB⟩
-    have hABC :
-        (ENNReal.ofReal (pressureP12Constant * (r / ρ)⁻¹ *
-          alpha u z ρ * beta u Du z ρ) +
-          ENNReal.ofReal (pressureP12Constant * (r / ρ) *
-            alpha u z ρ * beta u Du z ρ) +
-          ENNReal.ofReal (pressureP12Constant * (r / ρ) ^ (2 / 3 : ℝ) *
-            (delta p z ρ) ^ 2)) ≠ ∞ :=
-      ENNReal.add_ne_top.mpr ⟨hAB, hC⟩
-    have hABCD :
-        (ENNReal.ofReal (pressureP12Constant * (r / ρ)⁻¹ *
-          alpha u z ρ * beta u Du z ρ) +
-          ENNReal.ofReal (pressureP12Constant * (r / ρ) *
-            alpha u z ρ * beta u Du z ρ) +
-          ENNReal.ofReal (pressureP12Constant * (r / ρ) ^ (2 / 3 : ℝ) *
-            (delta p z ρ) ^ 2) +
-          ENNReal.ofReal (pressureP13Constant q * (r / ρ) *
-            lambda q f z ρ)) ≠ ∞ :=
-      ENNReal.add_ne_top.mpr ⟨hABC, hD⟩
-    rw [ENNReal.toReal_add hABCD hD, ENNReal.toReal_add hABC hD,
-      ENNReal.toReal_add hAB hC, ENNReal.toReal_add hA hB]
-    rw [ENNReal.toReal_ofReal hAn, ENNReal.toReal_ofReal hBn,
-      ENNReal.toReal_ofReal hCn, ENNReal.toReal_ofReal hDn]
+  have hrhs_toReal := @pressureDecay_one_scale_T_hrhs_toReal_3 q u Du p f C₁₂_p1 z ρ r hρ hr
+    hP12base hP13base
   have hsq : (delta p z r) ^ 2 ≤
       pressureP12Constant * (r / ρ)⁻¹ * alpha u z ρ * beta u Du z ρ +
       pressureP12Constant * (r / ρ) * alpha u z ρ * beta u Du z ρ +

@@ -47,7 +47,8 @@ theorem glued_clipped_slice_time_bound
   refine ⟨hmeas, heq.le.trans ?_⟩
   have hsub : (vec3Ball z.1 r ∩ B) ×ˢ (Ioc (z.2 - r ^ 2) z.2 ∩ J) ⊆
       parabolicCylinder z.1 z.2 r := fun _ h => ⟨h.1.1, h.2.1⟩
-  have hi := lintegral_mono_set (μ := volume) (f := fun w : ParabolicPoint => ‖F w‖ₑ ^ (6/5 : ℝ)) hsub
+  have hi := lintegral_mono_set (μ := volume) (f := fun w : ParabolicPoint => ‖F w‖ₑ ^ (6/5 : ℝ))
+    hsub
   apply hi.trans
   simpa only [cylinderPowerIntegral, Real.enorm_eq_ofReal_abs] using
     (cylinderPowerIntegral_le_morreyNorm_pow (q := κ) (by norm_num) hF hr)
@@ -56,7 +57,7 @@ theorem glued_clipped_slice_time_bound
 `6/5` slices at almost every time. -/
 theorem glued_supported_source_slice_memLp
     {F : ParabolicPoint → ℝ} {κ : ℝ} (hF : AEMeasurable F volume)
-    (hN : morreyNorm (6/5 : ℝ) κ F < ⊤)
+    (hN : morreyNorm (6 / 5 : ℝ) κ F < ⊤)
     {z₀ : ParabolicPoint} {R : ℝ} (hR : 0 < R)
     (hs : ∀ w ∉ parabolicCylinder z₀.1 z₀.2 R, F w = 0) :
     ∀ᵐ t ∂volume, MemLp (fun x : Vec3 => F (x,t))
@@ -75,7 +76,8 @@ theorem glued_supported_source_slice_memLp
     · simp [indicator_of_notMem hw, hs w hw]
   have hmass : (∫⁻ w, ‖F w‖ₑ ^ (6/5 : ℝ)) < ⊤ := by
     rw [← heq, lintegral_indicator (measurableSet_parabolicCylinder _ _ _)]
-    have hb := cylinderPowerIntegral_le_morreyNorm_pow (p := (6/5 : ℝ)) (q := κ) (z := z₀) (by norm_num) hF hR
+    have hb := cylinderPowerIntegral_le_morreyNorm_pow (p := (6/5 : ℝ)) (q := κ) (z := z₀) (by
+      norm_num) hF hR
     apply (show (∫⁻ w in parabolicCylinder z₀.1 z₀.2 R, ‖F w‖ₑ ^ (6/5 : ℝ)) ≤ _ from
       by simpa only [cylinderPowerIntegral, Real.enorm_eq_ofReal_abs] using hb).trans_lt
     exact ENNReal.mul_lt_top

@@ -29,10 +29,11 @@ open CKN
 private lemma finite_bad_sum_memLp_two_countable
     {F : Vec3 → ℝ} {level : ℝ} (D : CZDecomposition F level)
     (hF₂ : MemLp F (2 : ℝ≥0∞) volume)
-    {ι : Type*} [DecidableEq ι] (s : Finset ι)
+    {ι : Type*} (s : Finset ι)
     (q : ι → {Q // Q ∈ D.cubes}) :
     MemLp (fun x => ∑ k ∈ s, dyadicBadPart F (q k).1 x)
       (2 : ℝ≥0∞) volume := by
+  classical
   apply memLp_finsetSum
   intro k hk
   exact dyadic_bad_part_memLp_two D hF₂ (q k)
@@ -255,7 +256,7 @@ private lemma bad_partial_eLpNorm_tendsto_zero_countable
         intro x
         rw [ENNReal.ofReal_mul (by positivity), ENNReal.ofReal_rpow_of_nonneg
           (abs_nonneg _)]
-        norm_num
+        on_goal 1 => norm_num
         positivity
       _ < ∞ := hdomtop'
   have hlim : ∀ᵐ x ∂volume, Tendsto
@@ -312,7 +313,7 @@ private lemma operator_finset_bad_sum_ae_countable
     {i j : Fin 3} (hL2 : RieszSecondL2Input i j)
     {F : Vec3 → ℝ} {level : ℝ} (D : CZDecomposition F level)
     (hF₂ : MemLp F (2 : ℝ≥0∞) volume)
-    {ι : Type*} [DecidableEq ι] (s : Finset ι)
+    {ι : Type*} (s : Finset ι)
     (q : ι → {Q // Q ∈ D.cubes}) :
     rieszSecondL2MeasurableOperator hL2
         (MemLp.toLp
@@ -398,6 +399,153 @@ private lemma measurableSet_rieszSecondCubeStar_countable (Q : DyadicIndex) :
     fun_prop
   exact (isClosed_Iic.preimage hc).measurableSet
 
+private lemma rieszSecond_countable_bad_additivity_infinite_hsumstar_1 :
+    ∀ {i j : Fin 3} (hL2 : Foundation.Euclidean.RieszSecondL2Input i j) {F : Vec3 → ℝ} {level : ℝ}
+      (D : Foundation.Euclidean.CZDecomposition F level)
+      (hF₂ : MemLp (m0 := MeasureSpace.toMeasurableSpace) F 2 volume) {C_H : ℝ≥0∞},
+      (∀ (Q : { Q : Foundation.Euclidean.DyadicIndex // Q ∈ D.cubes }),
+          ∫⁻ (x : Vec3) in (Foundation.Euclidean.rieszSecondCubeStar ↑Q)ᶜ,
+              ENNReal.ofReal
+                |Foundation.Euclidean.rieszSecondL2MeasurableOperator hL2
+                    (MemLp.toLp (Foundation.Euclidean.dyadicBadPart F ↑Q)
+                      (Foundation.Euclidean.dyadic_bad_part_memLp_two D hF₂ Q))
+                    x| ≤
+            C_H *
+              ∫⁻ (x : Vec3) in Foundation.Euclidean.dyadicCubeSet ↑Q,
+                ENNReal.ofReal |Foundation.Euclidean.dyadicBadPart F (↑Q) x|) →
+        let b : { Q : Foundation.Euclidean.DyadicIndex // Q ∈ D.cubes } → Vec3 → ℝ := fun Q =>
+          Foundation.Euclidean.dyadicBadPart F ↑Q;
+        let Tbad : { Q : Foundation.Euclidean.DyadicIndex // Q ∈ D.cubes } → Vec3 → ℝ := fun Q =>
+          Foundation.Euclidean.rieszSecondL2MeasurableOperator hL2
+            (MemLp.toLp (b Q) (Foundation.Euclidean.dyadic_bad_part_memLp_two D hF₂ Q));
+        ∑' (Q : { Q : Foundation.Euclidean.DyadicIndex // Q ∈ D.cubes }),
+            ∫⁻ (x : Vec3) in (Foundation.Euclidean.rieszSecondCubeStar ↑Q)ᶜ,
+              ENNReal.ofReal |Tbad Q x| ≤
+          C_H * (2 * Foundation.Euclidean.dyadicL1Norm F)
+    := by
+  intro i j hL2 F level D hF₂ C_H hbridge b Tbad
+  calc
+    (∑' Q : {Q // Q ∈ D.cubes},
+        ∫⁻ x in (rieszSecondCubeStar Q.1)ᶜ,
+          ENNReal.ofReal |Tbad Q x|) ≤
+        ∑' Q : {Q // Q ∈ D.cubes}, C_H *
+          ∫⁻ x in dyadicCubeSet Q.1,
+            ENNReal.ofReal |dyadicBadPart F Q.1 x| := by
+      apply ENNReal.tsum_le_tsum
+      intro Q
+      exact hbridge Q
+    _ = C_H * (∑' Q : {Q // Q ∈ D.cubes},
+        ∫⁻ x in dyadicCubeSet Q.1,
+          ENNReal.ofReal |dyadicBadPart F Q.1 x|) := by
+      rw [ENNReal.tsum_mul_left]
+    _ ≤ C_H * (2 * dyadicL1Norm F) := by
+      gcongr
+      exact D.bad_part_l1_sum_le
+
+private lemma rieszSecond_countable_bad_additivity_infinite_hinput_2 :
+    ∀ {F : Vec3 → ℝ} {level : ℝ} (D : Foundation.Euclidean.CZDecomposition F level)
+      [Infinite { Q : Foundation.Euclidean.DyadicIndex // Q ∈ D.cubes }],
+      let H : Vec3 → ℝ := fun x => F x - Foundation.Euclidean.dyadicGoodPart F D.cubes x;
+      let b : { Q : Foundation.Euclidean.DyadicIndex // Q ∈ D.cubes } → Vec3 → ℝ := fun Q =>
+        Foundation.Euclidean.dyadicBadPart F ↑Q;
+      ∀ (hHmem : MemLp (m0 := MeasureSpace.toMeasurableSpace) H 2 volume),
+        let uH : ↥Foundation.Euclidean.rieszSecondL2 := MemLp.toLp H hHmem;
+        let e : ℕ ≃ { Q : Foundation.Euclidean.DyadicIndex // Q ∈ D.cubes } :=
+          Classical.choice nonempty_equiv_of_countable;
+        let S : ℕ → Vec3 → ℝ := fun n x => ∑ k ∈ Finset.range n, b (e k) x;
+        ∀ (hS : ∀ (n : ℕ), MemLp (m0 := MeasureSpace.toMeasurableSpace) (S n) 2 volume),
+          let uₙ : ℕ → ↥Foundation.Euclidean.rieszSecondL2 := fun n => MemLp.toLp (S n) (hS n);
+          Tendsto
+              (fun (n : ℕ) => @eLpNorm _ _ _ _ MeasureSpace.toMeasurableSpace (S n - H) 2 volume)
+              atTop (𝓝 0) →
+            Tendsto
+              (fun (n : ℕ) =>
+                @eLpNorm _ _ _ _ MeasureSpace.toMeasurableSpace (↑↑(uₙ n - uH)) 2 volume)
+              atTop (𝓝 0)
+    := by
+  intro F level D localHypothesis3 H b hHmem uH e S hS uₙ hpartial'
+  apply tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds hpartial'
+  · intro n
+    exact bot_le
+  · intro n
+    have hdiffmem : MemLp (S n - H) (2 : ℝ≥0∞) volume := (hS n).sub hHmem
+    have hdiff : MemLp.toLp (S n - H) hdiffmem =
+        uₙ n - uH := by
+      simpa [uₙ, uH] using MemLp.toLp_sub (hS n) hHmem
+    calc
+      eLpNorm (uₙ n - uH)
+          (2 : ℝ≥0∞) volume =
+          eLpNorm (MemLp.toLp (S n - H) hdiffmem)
+            (2 : ℝ≥0∞) volume := by rw [hdiff]
+      _ = eLpNorm (S n - H) (2 : ℝ≥0∞) volume :=
+        eLpNorm_congr_ae (MemLp.coeFn_toLp hdiffmem)
+      _ ≤ (fun n => eLpNorm (S n - H)
+          (2 : ℝ≥0∞) volume) n := by rfl
+
+private lemma rieszSecond_countable_bad_additivity_infinite_hTout_3 :
+    ∀ {i j : Fin 3} (hL2 : Foundation.Euclidean.RieszSecondL2Input i j) {F : Vec3 → ℝ} {level : ℝ}
+      (D : Foundation.Euclidean.CZDecomposition F level)
+      [Infinite { Q : Foundation.Euclidean.DyadicIndex // Q ∈ D.cubes }],
+      let H : Vec3 → ℝ := fun x => F x - Foundation.Euclidean.dyadicGoodPart F D.cubes x;
+      let b : { Q : Foundation.Euclidean.DyadicIndex // Q ∈ D.cubes } → Vec3 → ℝ := fun Q =>
+        Foundation.Euclidean.dyadicBadPart F ↑Q;
+      ∀ (hHmem : MemLp (m0 := MeasureSpace.toMeasurableSpace) H 2 volume),
+        let uH : ↥Foundation.Euclidean.rieszSecondL2 := MemLp.toLp H hHmem;
+        let e : ℕ ≃ { Q : Foundation.Euclidean.DyadicIndex // Q ∈ D.cubes } :=
+          Classical.choice nonempty_equiv_of_countable;
+        let S : ℕ → Vec3 → ℝ := fun n x => ∑ k ∈ Finset.range n, b (e k) x;
+        ∀ (hS : ∀ (n : ℕ), MemLp (m0 := MeasureSpace.toMeasurableSpace) (S n) 2 volume),
+          let uₙ : ℕ → ↥Foundation.Euclidean.rieszSecondL2 := fun n => MemLp.toLp (S n) (hS n);
+          Tendsto
+              (fun (n : ℕ) =>
+                @eLpNorm _ _ _ _ MeasureSpace.toMeasurableSpace (↑↑(uₙ n - uH)) 2 volume)
+              atTop (𝓝 0) →
+            Tendsto
+              (fun (n : ℕ) =>
+                @eLpNorm _ _ _ _ MeasureSpace.toMeasurableSpace
+                  (Foundation.Euclidean.rieszSecondL2MeasurableOperator hL2 (uₙ n) -
+                    Foundation.Euclidean.rieszSecondL2MeasurableOperator hL2 uH)
+                  2 volume)
+              atTop (𝓝 0)
+    := by
+  intro i j hL2 F level D localHypothesis6 H b hHmem uH e S hS uₙ hinput
+  apply tendsto_of_tendsto_of_tendsto_of_le_of_le
+    tendsto_const_nhds hinput (fun _ => bot_le)
+  intro n
+  have hadd := rieszSecondL2MeasurableOperator_add_ae hL2
+    (uₙ n - uH) uH
+  rw [show (uₙ n - uH) + uH = uₙ n by abel] at hadd
+  have hTdiff : rieszSecondL2MeasurableOperator hL2 (uₙ n - uH) =ᵐ[volume]
+      rieszSecondL2MeasurableOperator hL2 (uₙ n) -
+        rieszSecondL2MeasurableOperator hL2 uH := by
+    filter_upwards [hadd] with x hx
+    calc
+      rieszSecondL2MeasurableOperator hL2 (uₙ n - uH) x =
+          (rieszSecondL2MeasurableOperator hL2 (uₙ n - uH) x +
+            rieszSecondL2MeasurableOperator hL2 uH x) -
+            rieszSecondL2MeasurableOperator hL2 uH x := by ring
+      _ = rieszSecondL2MeasurableOperator hL2 (uₙ n) x -
+          rieszSecondL2MeasurableOperator hL2 uH x := by
+        have hx' : rieszSecondL2MeasurableOperator hL2 (uₙ n) x =
+            rieszSecondL2MeasurableOperator hL2 (uₙ n - uH) x +
+              rieszSecondL2MeasurableOperator hL2 uH x := by
+          simpa only [Pi.add_apply] using hx
+        rw [← hx']
+  have hdiffmem : MemLp (S n - H) (2 : ℝ≥0∞) volume := (hS n).sub hHmem
+  have hdiff : MemLp.toLp (S n - H) hdiffmem = uₙ n - uH := by
+    simpa [uₙ, uH] using MemLp.toLp_sub (hS n) hHmem
+  calc
+    eLpNorm (rieszSecondL2MeasurableOperator hL2 (uₙ n) -
+        rieszSecondL2MeasurableOperator hL2 uH)
+        (2 : ℝ≥0∞) volume =
+        eLpNorm (rieszSecondL2MeasurableOperator hL2 (uₙ n - uH))
+          (2 : ℝ≥0∞) volume := eLpNorm_congr_ae hTdiff.symm
+    _ ≤ eLpNorm (MemLp.toLp (S n - H) hdiffmem : Vec3 → ℝ)
+          (2 : ℝ≥0∞) volume := by
+      rw [← hdiff]
+      exact rieszSecondL2MeasurableOperator_eLpNorm_le hL2 _
+    _ = eLpNorm (uₙ n - uH) (2 : ℝ≥0∞) volume := by rw [hdiff]
+
 theorem rieszSecond_countable_bad_additivity_infinite
     {i j : Fin 3} (hL2 : RieszSecondL2Input i j)
     {F : Vec3 → ℝ} {level : ℝ} (D : CZDecomposition F level)
@@ -446,26 +594,8 @@ theorem rieszSecond_countable_bad_additivity_infinite
       hF.norm.aestronglyMeasurable
       (ae_of_all _ (fun x => abs_nonneg (F x)))).2 hF.norm
     exact lt_top_iff_ne_top.mpr hne
-  have hsumstar : (∑' Q : {Q // Q ∈ D.cubes},
-      ∫⁻ x in (rieszSecondCubeStar Q.1)ᶜ,
-        ENNReal.ofReal |Tbad Q x|) ≤ C_H * (2 * dyadicL1Norm F) := by
-    calc
-      (∑' Q : {Q // Q ∈ D.cubes},
-          ∫⁻ x in (rieszSecondCubeStar Q.1)ᶜ,
-            ENNReal.ofReal |Tbad Q x|) ≤
-          ∑' Q : {Q // Q ∈ D.cubes}, C_H *
-            ∫⁻ x in dyadicCubeSet Q.1,
-              ENNReal.ofReal |dyadicBadPart F Q.1 x| := by
-        apply ENNReal.tsum_le_tsum
-        intro Q
-        exact hbridge Q
-      _ = C_H * (∑' Q : {Q // Q ∈ D.cubes},
-          ∫⁻ x in dyadicCubeSet Q.1,
-            ENNReal.ofReal |dyadicBadPart F Q.1 x|) := by
-        rw [ENNReal.tsum_mul_left]
-      _ ≤ C_H * (2 * dyadicL1Norm F) := by
-        gcongr
-        exact D.bad_part_l1_sum_le
+  have hsumstar := @rieszSecond_countable_bad_additivity_infinite_hsumstar_1 i j hL2 F level D hF₂
+    C_H hbridge
   have hsumtop : C_H * (2 * dyadicL1Norm F) < ∞ := by
     exact ENNReal.mul_lt_top (by exact lt_top_iff_ne_top.mpr hC_H)
       (ENNReal.mul_lt_top (by norm_num) hnormtop)
@@ -522,67 +652,10 @@ theorem rieszSecond_countable_bad_additivity_infinite
   have hpartial' : Tendsto (fun n => eLpNorm (S n - H)
       (2 : ℝ≥0∞) volume) atTop (𝓝 0) := by
     simpa only [S, b, H] using hpartial
-  have hinput : Tendsto (fun n => eLpNorm
-      (uₙ n - uH)
-      (2 : ℝ≥0∞) volume) atTop (𝓝 0) := by
-    apply tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds hpartial'
-    · intro n
-      exact bot_le
-    · intro n
-      have hdiffmem : MemLp (S n - H) (2 : ℝ≥0∞) volume := (hS n).sub hHmem
-      have hdiff : MemLp.toLp (S n - H) hdiffmem =
-          uₙ n - uH := by
-        simpa [uₙ, uH] using MemLp.toLp_sub (hS n) hHmem
-      calc
-        eLpNorm (uₙ n - uH)
-            (2 : ℝ≥0∞) volume =
-            eLpNorm (MemLp.toLp (S n - H) hdiffmem)
-              (2 : ℝ≥0∞) volume := by rw [hdiff]
-        _ = eLpNorm (S n - H) (2 : ℝ≥0∞) volume :=
-          eLpNorm_congr_ae (MemLp.coeFn_toLp hdiffmem)
-        _ ≤ (fun n => eLpNorm (S n - H)
-            (2 : ℝ≥0∞) volume) n := by rfl
-  have hTout : Tendsto (fun n => eLpNorm
-      (rieszSecondL2MeasurableOperator hL2
-        (uₙ n) -
-        rieszSecondL2MeasurableOperator hL2 uH)
-      (2 : ℝ≥0∞) volume) atTop (𝓝 0) := by
-    apply tendsto_of_tendsto_of_tendsto_of_le_of_le
-      tendsto_const_nhds hinput (fun _ => bot_le)
-    intro n
-    have hadd := rieszSecondL2MeasurableOperator_add_ae hL2
-      (uₙ n - uH) uH
-    rw [show (uₙ n - uH) + uH = uₙ n by abel] at hadd
-    have hTdiff : rieszSecondL2MeasurableOperator hL2 (uₙ n - uH) =ᵐ[volume]
-        rieszSecondL2MeasurableOperator hL2 (uₙ n) -
-          rieszSecondL2MeasurableOperator hL2 uH := by
-      filter_upwards [hadd] with x hx
-      calc
-        rieszSecondL2MeasurableOperator hL2 (uₙ n - uH) x =
-            (rieszSecondL2MeasurableOperator hL2 (uₙ n - uH) x +
-              rieszSecondL2MeasurableOperator hL2 uH x) -
-              rieszSecondL2MeasurableOperator hL2 uH x := by ring
-        _ = rieszSecondL2MeasurableOperator hL2 (uₙ n) x -
-            rieszSecondL2MeasurableOperator hL2 uH x := by
-          have hx' : rieszSecondL2MeasurableOperator hL2 (uₙ n) x =
-              rieszSecondL2MeasurableOperator hL2 (uₙ n - uH) x +
-                rieszSecondL2MeasurableOperator hL2 uH x := by
-            simpa only [Pi.add_apply] using hx
-          rw [← hx']
-    have hdiffmem : MemLp (S n - H) (2 : ℝ≥0∞) volume := (hS n).sub hHmem
-    have hdiff : MemLp.toLp (S n - H) hdiffmem = uₙ n - uH := by
-      simpa [uₙ, uH] using MemLp.toLp_sub (hS n) hHmem
-    calc
-      eLpNorm (rieszSecondL2MeasurableOperator hL2 (uₙ n) -
-          rieszSecondL2MeasurableOperator hL2 uH)
-          (2 : ℝ≥0∞) volume =
-          eLpNorm (rieszSecondL2MeasurableOperator hL2 (uₙ n - uH))
-            (2 : ℝ≥0∞) volume := eLpNorm_congr_ae hTdiff.symm
-      _ ≤ eLpNorm (MemLp.toLp (S n - H) hdiffmem : Vec3 → ℝ)
-            (2 : ℝ≥0∞) volume := by
-        rw [← hdiff]
-        exact rieszSecondL2MeasurableOperator_eLpNorm_le hL2 _
-      _ = eLpNorm (uₙ n - uH) (2 : ℝ≥0∞) volume := by rw [hdiff]
+  have hinput := @rieszSecond_countable_bad_additivity_infinite_hinput_2 F level D (by
+    infer_instance) hHmem hS hpartial'
+  have hTout := @rieszSecond_countable_bad_additivity_infinite_hTout_3 i j hL2 F level D (by
+    infer_instance) hHmem hS hinput
   obtain ⟨ns, hns, htae⟩ :=
     ae_subsequence_of_eLpNorm_tendsto_zero (p := (2 : ℝ≥0∞))
       (by norm_num) hTout
@@ -695,11 +768,11 @@ theorem rieszSecond_countable_bad_additivity
             (dyadic_bad_part_memLp_two D hF₂ Q)) x|)) := by
   classical
   by_cases hInf : Infinite {Q // Q ∈ D.cubes}
-  · letI := hInf
+  · have := hInf
     exact rieszSecond_countable_bad_additivity_infinite hL2 D hF hF₂ hC_H hbridge
   · have hFin : Finite {Q // Q ∈ D.cubes} := not_infinite_iff_finite.mp hInf
-    letI : Finite {Q // Q ∈ D.cubes} := hFin
-    letI : Fintype {Q // Q ∈ D.cubes} := Fintype.ofFinite _
+    have : Finite {Q // Q ∈ D.cubes} := hFin
+    have : Fintype {Q // Q ∈ D.cubes} := Fintype.ofFinite _
     let U : Set Vec3 := ⋃ Q : {Q // Q ∈ D.cubes}, rieszSecondCubeStar Q.1
     let b : {Q // Q ∈ D.cubes} → Vec3 → ℝ := fun Q =>
       dyadicBadPart F Q.1
@@ -729,7 +802,7 @@ theorem rieszSecond_countable_bad_additivity
           (dyadic_good_part_memLp_two D hF₂) : rieszSecondL2) +
           MemLp.toLp (fun x => ∑ Q, b Q x) hsumMem := by
       apply MemLp.toLp_congr hF₂
-      exact (dyadic_good_part_memLp_two D hF₂).add hsumMem
+      on_goal 1 => exact (dyadic_good_part_memLp_two D hF₂).add hsumMem
       filter_upwards [hsumEq] with x hx
       dsimp [H] at hx
       change F x = dyadicGoodPart F D.cubes x + ∑ Q, b Q x

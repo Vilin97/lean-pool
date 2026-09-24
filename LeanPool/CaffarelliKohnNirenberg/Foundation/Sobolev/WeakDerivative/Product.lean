@@ -169,7 +169,7 @@ theorem HasWeakPartialDerivOn.mul_smooth_zeroExtend
       congr 1
       apply setIntegral_eq_integral_of_forall_compl_eq_zero
       exact hrightOutside
-  
+
 
 theorem HasWeakGradientOn.mul_smooth_zeroExtend
     {d : ℕ} {U : Set (Vec d)} (hU : IsOpen U)

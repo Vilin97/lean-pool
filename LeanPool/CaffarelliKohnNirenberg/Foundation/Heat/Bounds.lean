@@ -97,9 +97,11 @@ private lemma heat_rpow_neg_three (z : ℝ) (hz : 0 < z) :
   rw [Real.rpow_neg hz.le]
   exact congrArg Inv.inv (Real.rpow_natCast z 3)
 
+/-- Sum of absolute spatial derivatives of the heat kernel. -/
 def heatKernelGradientNorm (x : Vec3) (t : ℝ) : ℝ :=
   ∑ i, |heatKernelSpaceDerivative x t i|
 
+/-- Time derivative of a spatial heat-kernel derivative, extended by zero to nonpositive time. -/
 def heatKernelTimeGradientDerivative (x : Vec3) (t : ℝ) (i : Fin 3) : ℝ :=
   if 0 < t then
     (x i) / (2 * t ^ 2) * heatKernel x t +
@@ -107,6 +109,7 @@ def heatKernelTimeGradientDerivative (x : Vec3) (t : ℝ) (i : Fin 3) : ℝ :=
         heatKernelTimeDerivative x t
   else 0
 
+/-- Sum of absolute time derivatives of the spatial heat-kernel gradient. -/
 def heatKernelTimeGradientNorm (x : Vec3) (t : ℝ) : ℝ :=
   ∑ i, |heatKernelTimeGradientDerivative x t i|
 

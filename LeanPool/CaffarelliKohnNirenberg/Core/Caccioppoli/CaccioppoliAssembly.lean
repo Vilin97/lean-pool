@@ -259,19 +259,19 @@ theorem caccioppoli_raw_term_bounds
           (3 / 2 : ℝ)) ^ (2 / 3 : ℝ) ≤
         ENNReal.ofReal (C_PS * ρ ^ (4 / 3 : ℝ) *
           alpha u (x₀, t₀) ρ * beta u Du (x₀, t₀) ρ)) :
-    caccioppoli_I1_heat_cutoff_raw (u := u) (x₀ := x₀) (t₀ := t₀)
+    caccioppoliI1HeatCutoffRaw (u := u) (x₀ := x₀) (t₀ := t₀)
         (ρ := ρ) (ε := ε) (r := r) hρ hε ≤
           (C₂₅ * (r / ρ) * alpha u (x₀, t₀) ρ) ^ 2 ∧
-    caccioppoli_I2_heat_cutoff_raw (u := u) (c := c) (x₀ := x₀)
+    caccioppoliI2HeatCutoffRaw (u := u) (c := c) (x₀ := x₀)
         (t₀ := t₀) (ρ := ρ) (ε := ε) (r := r) hρ hε ≤
           (C₂₅ * (r / ρ)⁻¹ * alpha u (x₀, t₀) ρ ^ (1 / 2 : ℝ) *
             beta u Du (x₀, t₀) ρ ^ (1 / 2 : ℝ) *
             gamma u (x₀, t₀) ρ ^ (1 / 2 : ℝ)) ^ 2 ∧
-    caccioppoli_I3_heat_cutoff_raw (p := p) (v := u) (x₀ := x₀)
+    caccioppoliI3HeatCutoffRaw (p := p) (v := u) (x₀ := x₀)
         (t₀ := t₀) (ρ := ρ) (ε := ε) (r := r) hρ hε ≤
           (C₂₅ * (r / ρ)⁻¹ * delta p (x₀, t₀) ρ *
             gamma u (x₀, t₀) ρ ^ (1 / 2 : ℝ)) ^ 2 ∧
-    caccioppoli_I4_heat_cutoff_raw (u := u) (f := f) (x₀ := x₀)
+    caccioppoliI4HeatCutoffRaw (u := u) (f := f) (x₀ := x₀)
         (t₀ := t₀) (ρ := ρ) (ε := ε) (r := r) hρ hε ≤
           (C₂₆ * (r / ρ) ^ (-1 / 2 : ℝ) *
             gamma u (x₀, t₀) ρ ^ (1 / 2 : ℝ) *

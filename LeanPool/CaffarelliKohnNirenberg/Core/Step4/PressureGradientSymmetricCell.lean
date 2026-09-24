@@ -5,8 +5,8 @@ Authors: Scott Armstrong, Vlad Vicol
 -/
 module
 
+public import LeanPool.CaffarelliKohnNirenberg.Core.Step4.PressureGradient
 public import LeanPool.CaffarelliKohnNirenberg.Core.Step4.RouteAAssembly
-public import LeanPool.CaffarelliKohnNirenberg.Core.Step4.PressureGradientMorreyBridge
 public import LeanPool.CaffarelliKohnNirenberg.Core.Step4.PressureGradientOneSided
 public import LeanPool.CaffarelliKohnNirenberg.Core.Step4.SliceSelectedGradient
 public import LeanPool.CaffarelliKohnNirenberg.Core.Step3.LocalizedEquationBasics
@@ -20,6 +20,44 @@ Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
 @[expose] public section
+
+section
+
+/-!
+# Pressure Gradient Morrey Bridge
+
+Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
+-/
+
+open MeasureTheory MeasureTheory.Measure Set Filter Metric
+open scoped BigOperators ENNReal NNReal Topology
+open CKN.Foundation.Parabolic
+open CKN.Foundation.Parabolic.Morrey
+
+noncomputable section
+
+namespace CKN.Core.Step4
+
+/-- The same bridge with the scalar exponent written as an explicit real
+number; this is convenient when the exponent is
+`min ((1 / τ + 8 / 25)⁻¹) q`. -/
+theorem pressure_gradient_morreyVecMem_of_cell_bounds_real
+    {S : Set ParabolicPoint} {κ C : ℝ}
+    {Dp : ParabolicPoint → Vec3}
+    (hκ : 6 / 5 ≤ κ) (hC : ENNReal.ofReal C < ⊤)
+    (hcell : ∀ i : Fin 3, ∀ z : ParabolicPoint,
+      ∀ r : {r : ℝ // 0 < r},
+      morreyCell (6 / 5 : ℝ) κ
+        (S.indicator (fun w => Dp w i)) z r.1 ≤ ENNReal.ofReal C) :
+    morreyVecMem (6 / 5 : ℝ) κ S Dp := by
+  rw [morreyVecMem_iff_cylinder_lt_top (by norm_num) hκ]
+  intro i
+  exact (pressure_gradient_morrey_bound (fun z r => hcell i z r)).trans_lt hC
+
+end CKN.Core.Step4
+end
+
+end
 
 open MeasureTheory MeasureTheory.Measure Set Filter Metric
 open scoped BigOperators ENNReal NNReal Topology
@@ -35,6 +73,7 @@ namespace CKN.Core.Step4
 the exact inner-ball interface consumed by `exists_spacetime_weak_gradient_of_slices`.
 This is the space-time form of the paper's display (3.5). -/
 
+/-- Existence interface for pressure-gradient slices on symmetric interior parabolic balls. -/
 def symmetricPressureGradientSliceProducer : Prop :=
   ∀ q : ℝ, 5 / 2 < q →
     ∀ {Ω : Set Vec3} {I : Set ℝ}

@@ -43,7 +43,9 @@ abbrev GradMemL2On {d : ℕ}
 /-- A concrete scalar representative and a chosen coordinate weak gradient in
 `L²(U)`. -/
 structure H1Function {d : ℕ} (U : Set (Vec d)) where
+  /-- Chosen scalar representative of the H¹ function. -/
   toFun : Vec d → ℝ
+  /-- Chosen weak gradient of the H¹ representative. -/
   grad : Vec d → Vec d
   memL2 : MemL2On U toFun
   gradMemL2 : GradMemL2On U grad

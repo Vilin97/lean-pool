@@ -30,7 +30,8 @@ noncomputable section
 
 namespace CKN
 
-/-- Theorem C, paper label `thm:C`; as explained in docs/DESIGN_NOTES.md, it uses Mathlib's parabolic Hausdorff measure. -/
+/-- Theorem C, paper label `thm:C`; as explained in docs/DESIGN_NOTES.md, it uses Mathlib's
+  parabolic Hausdorff measure. -/
 theorem caffarelliKohnNirenberg (q : ℝ) (hq : 5 / 2 < q) :
     ∀ (Ω : Set Vec3) (I : Set ℝ) (u : ParabolicPoint → Vec3)
       (Du : ParabolicPoint → Fin 3 → Vec3)

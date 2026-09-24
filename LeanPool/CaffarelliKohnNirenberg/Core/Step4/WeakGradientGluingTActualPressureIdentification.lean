@@ -183,7 +183,8 @@ theorem ae_actual_pressure_eq_raw_riesz_corrected_on_clipped_cell
   have hts' (j : Fin 3) : (fun y => T j i (y,s)) =ᵐ[volume]
       rieszSecondGradientExtensionOperator (rieszSecondL2Input j i)
         (rieszSecondL2_weak_type j i)
-        ((vec3Ball (0 : Vec3) R₀).indicator (fun y => (∑ k, Du (y,s) j k*u (y,s) k)-f (y,s) j)) := by
+        ((vec3Ball (0 : Vec3) R₀).indicator (fun y => (∑ k, Du (y,s) j k*u (y,s) k)-f (y,s) j)) :=
+          by
     have hj := hts j i
     have heq : (fun y => (parabolicCylinder (0 : Vec3) 0 R₀).indicator
         (fun w => (∑ k, Du w j k*u w k)-f w j) (y,s)) =
@@ -195,17 +196,20 @@ theorem ae_actual_pressure_eq_raw_riesz_corrected_on_clipped_cell
           (show ((y,s) : ParabolicPoint) ∈ parabolicCylinder (0 : Vec3) 0 R₀ from ⟨hy, hs⟩) _).trans
           (Set.indicator_of_mem hy (fun y => (∑ k, Du (y,s) j k*u (y,s) k)-f (y,s) j)).symm
       · exact (Set.indicator_of_notMem (α := ParabolicPoint)
-          (show ((y,s) : ParabolicPoint) ∉ parabolicCylinder (0 : Vec3) 0 R₀ from fun h => hy h.1) _).trans
+          (show ((y,s) : ParabolicPoint) ∉ parabolicCylinder (0 : Vec3) 0 R₀ from fun h => hy h.1)
+            _).trans
           (Set.indicator_of_notMem hy (fun y => (∑ k, Du (y,s) j k*u (y,s) k)-f (y,s) j)).symm
     simpa only [heq] using hj
   have hall : ∀ᵐ x ∂volume.restrict A, ∀ j : Fin 3,
       T j i (x,s) = rieszSecondGradientExtensionOperator (rieszSecondL2Input j i)
         (rieszSecondL2_weak_type j i)
-        ((vec3Ball (0 : Vec3) R₀).indicator (fun y => (∑ k, Du (y,s) j k*u (y,s) k)-f (y,s) j)) x := by
+        ((vec3Ball (0 : Vec3) R₀).indicator (fun y => (∑ k, Du (y,s) j k*u (y,s) k)-f (y,s) j)) x
+          := by
     rw [ae_all_iff]
     exact fun j => ae_restrict_of_ae (hts' j)
   filter_upwards [hds i, hcorr, hall] with x hx hc htj
-  have hsum := Finset.sum_congr (rfl : (Finset.univ : Finset (Fin 3)) = Finset.univ) (fun j _ => htj j)
+  have hsum := Finset.sum_congr (rfl : (Finset.univ : Finset (Fin 3)) = Finset.univ) (fun j _ =>
+    htj j)
   dsimp only [rawCorrectedPressureRemainder]
   rw [hsum]
   change Dp (x,s) i = _ at hx

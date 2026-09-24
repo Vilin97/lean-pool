@@ -33,11 +33,12 @@ open CKN
 
 /- The dense domain consists of `L^p` classes which also have an `L²`
    representative. -/
-def lpInterL2Submodule (p : ℝ≥0∞) [Fact (1 ≤ p)] :
+/-- Submodule of Lᵖ classes whose representatives also belong to L². -/
+def lpInterL2Submodule (p : ℝ≥0∞) :
     Submodule ℝ (Lp ℝ p (volume : Measure Vec3)) where
   carrier := {u | MemLp (u : Vec3 → ℝ) (2 : ℝ≥0∞) volume}
   zero_mem' := by
-    show MemLp ((0 : Lp ℝ p volume) : Vec3 → ℝ) (2 : ℝ≥0∞) volume
+    change MemLp ((0 : Lp ℝ p volume) : Vec3 → ℝ) (2 : ℝ≥0∞) volume
     exact memLp_congr_ae (Lp.coeFn_zero ℝ p volume :
       ((0 : Lp ℝ p volume) : Vec3 → ℝ) =ᵐ[volume] 0) |>.2 MemLp.zero
   add_mem' := by
@@ -80,7 +81,10 @@ private lemma lpInterL2_dense {p : ℝ≥0∞} [Fact (1 ≤ p)] (hp : p ≠ ∞)
     (Lp.memLp u).sub (Lp.memLp v) |>.eLpNorm_ne_top
   exact (ENNReal.le_ofReal_iff_toReal_le hfinite hε.le).1 hsub
 
+/-- Representative-level operator data sufficient to construct a bounded continuous Lᵖ extension.
+-/
 structure LpExtensionInput (p : ℝ≥0∞) (C : ℝ) where
+  /-- Operator on scalar representatives to be extended from the Lᵖ–L² intersection. -/
   T : (Vec3 → ℝ) → Vec3 → ℝ
   measurable : ∀ {f : Vec3 → ℝ}, MemLp f (2 : ℝ≥0∞) volume → Measurable (T f)
   output_mem : ∀ {f : Vec3 → ℝ}, MemLp f p volume →
@@ -97,6 +101,7 @@ structure LpExtensionInput (p : ℝ≥0∞) (C : ℝ) where
     ‖(output_mem hf hf₂).toLp (T f)‖ ≤
       C * ‖hf.toLp f‖
 
+/-- Linear operator on the dense Lᵖ–L² intersection induced by the extension data. -/
 def lpInterL2Map {p : ℝ≥0∞} [Fact (1 ≤ p)]
     {C : ℝ} (h : LpExtensionInput p C) :
     lpInterL2Submodule p →ₗ[ℝ] Lp ℝ p (volume : Measure Vec3) where
@@ -193,6 +198,7 @@ private lemma lpInterL2Map_bound_subtype {p : ℝ≥0∞} [Fact (1 ≤ p)]
   simpa only [Submodule.subtype_apply, Submodule.norm_coe] using
     lpInterL2Map_bound h v
 
+/-- Continuous extension of the bounded operator from the dense Lᵖ–L² intersection. -/
 def lpExtensionCore {p : ℝ≥0∞} [Fact (1 ≤ p)] {C : ℝ} (hp : p ≠ ∞)
     (h : LpExtensionInput p C) :
     Lp ℝ p (volume : Measure Vec3) →L[ℝ] Lp ℝ p (volume : Measure Vec3) :=
@@ -223,6 +229,7 @@ theorem lpExtensionCore_norm_le {p : ℝ≥0∞} [Fact (1 ≤ p)]
     (denseRange_subtype_val.mpr (lpInterL2_dense (p := p) hp))
     C (lpInterL2Map_bound_subtype h) u)
 
+/-- Measurable representative of the extended operator, defined as zero outside its Lᵖ domain. -/
 def lpExtensionRepresentative {p : ℝ≥0∞} [Fact (1 ≤ p)] {C : ℝ}
     (hp : p ≠ ∞) (h : LpExtensionInput p C) (f : Vec3 → ℝ) : Vec3 → ℝ := by
   classical
@@ -272,6 +279,7 @@ theorem lpExtensionRepresentative_norm_le {p : ℝ≥0∞} [Fact (1 ≤ p)]
   rw [lpExtensionRepresentative_toLp_eq_core hp h hf]
   exact lpExtensionCore_norm_le hp h _
 
+/-- Pointwise presentation of the continuous Lᵖ extension. -/
 def lpExtensionOperator {p : ℝ≥0∞} [Fact (1 ≤ p)] {C : ℝ}
     (hp : p ≠ ∞) (h : LpExtensionInput p C) (f : Vec3 → ℝ) : Vec3 → ℝ :=
   lpExtensionRepresentative hp h f
@@ -289,6 +297,7 @@ theorem lpExtensionOperator_toLp_bound {p : ℝ≥0∞} [Fact (1 ≤ p)]
         (lpExtensionOperator hp h f)‖ ≤ C * ‖hf.toLp f‖ :=
   lpExtensionRepresentative_norm_le hp h hf
 
+/-- Sum of the componentwise extended operators acting on a tensor source. -/
 def lpExtensionTensorOperator {p : ℝ≥0∞} [Fact (1 ≤ p)]
     {C : Fin 3 → Fin 3 → ℝ} (hp : p ≠ ∞)
     (h : ∀ i j, LpExtensionInput p (C i j))
@@ -346,6 +355,7 @@ theorem lpExtensionTensorOperator_eLpNorm_le {p : ℝ≥0∞} [Fact (1 ≤ p)]
       exact Finset.sum_le_sum fun i _ =>
         Finset.sum_le_sum fun j _ => hcomponent i j
 
+/-- View a function belonging to both Lᵖ and L² as an element of the intersection submodule. -/
 def lpInterL2Input {p : ℝ≥0∞} [Fact (1 ≤ p)] {f : Vec3 → ℝ}
     (hf : MemLp f p volume) (hf₂ : MemLp f (2 : ℝ≥0∞) volume) :
     lpInterL2Submodule p := by
@@ -455,6 +465,7 @@ theorem lpExtensionRepresentative_congr_ae {p : ℝ≥0∞} [Fact (1 ≤ p)]
     _ =ᵐ[volume] lpExtensionRepresentative hp h g :=
       (lpExtensionRepresentative_ae_eq_core hp h hg).symm
 
+/-- Continuous linear pairing against a fixed function in the conjugate Lᵖ space. -/
 def lpPairingWith {p q : ℝ≥0∞} [Fact (1 ≤ p)] [Fact (1 ≤ q)]
     [ENNReal.HolderConjugate p q]
     (g : Lp ℝ q (volume : Measure Vec3)) :

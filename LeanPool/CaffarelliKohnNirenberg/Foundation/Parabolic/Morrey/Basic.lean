@@ -30,6 +30,7 @@ noncomputable section
 
 namespace CKN.Foundation.Parabolic.Morrey
 
+/-- Homogeneous dimension of three-dimensional parabolic space-time. -/
 abbrev Q := (5 : ℝ)
 
 /-- The integral part of a Morrey cell on a parabolic cylinder. -/

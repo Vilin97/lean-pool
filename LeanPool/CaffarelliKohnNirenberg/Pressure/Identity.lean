@@ -335,6 +335,136 @@ private theorem identity_restrict_isFiniteMeasure {K : Set Vec3}
   exact (lt_of_le_of_lt (measure_mono (μ := volume) subset_closure)
     hK.measure_lt_top).ne
 
+private lemma pressure_viscous_slice_zero_hgrad_all_1 :
+    ∀ {Ω : Set Vec3} {I : Set ℝ} {q : ℝ} {u : ParabolicPoint → Vec3}
+      {Du : ParabolicPoint → Fin (3 : ℕ) → Vec3} {p : ParabolicPoint → ℝ}
+      {f : ParabolicPoint → Vec3},
+      IsSuitableWeakSolutionIntegrable Ω I q u Du p f →
+        ∀ {ψ : Vec3 → ℝ},
+          ContDiff ℝ (⊤ : ℕ∞) ψ →
+            HasCompactSupport ψ →
+              tsupport ψ ⊆ Ω →
+                ∀ᵐ (s : ℝ) ∂Measure.restrict volume I,
+                  ∀ (i j : Fin (3 : ℕ)),
+                    Eq (α := ℝ)
+                      (@integral _ _ _ _ MeasureSpace.toMeasurableSpace (Measure.restrict volume Ω)
+                        fun (x : Vec3) => u (x, s) i * spatialDeriv (mixedSecond ψ j i) j x)
+                      (-@integral _ _ _ _ MeasureSpace.toMeasurableSpace (Measure.restrict volume Ω)
+                          fun (x : Vec3) => Du (x, s) i j * mixedSecond ψ j i x)
+    := by
+  intro Ω I q u Du p f h ψ hψ hψc hψΩ
+  rw [ae_all_iff]
+  intro i
+  rw [ae_all_iff]
+  intro j
+  have hm : ContDiff ℝ (⊤ : ℕ∞) (mixedSecond ψ j i) :=
+    (contDiff_mixedSecond_smooth hψ j i).of_le (by simp)
+  have hg := weakGradient_slice_ae_of_sws h hm
+    (hasCompactSupport_mixedSecond hψc j i)
+    ((tsupport_mixedSecond_subset j i).trans hψΩ)
+  filter_upwards [hg] with s hs
+  simpa only [spatialDeriv] using hs i j
+
+private lemma pressure_viscous_slice_zero_hvisc_zero_out_2 :
+    ∀ {Ω : Set Vec3} {I : Set ℝ} {Du : ParabolicPoint → Fin (3 : ℕ) → Vec3} {ψ : Vec3 → ℝ},
+      ContDiff ℝ (⊤ : ℕ∞) ψ →
+        tsupport ψ ⊆ Ω →
+          ∀ {θ : ℝ → ℝ},
+            tsupport θ ⊆ I →
+              ∀ z ∉ spaceTimeSet Ω I,
+                ∑ i : Fin (3 : ℕ),
+                    ∑ j : Fin (3 : ℕ),
+                      Du z i j *
+                        spatialPartial (fun (w : ParabolicPoint) => pressureTestParabolic ψ θ w i) j
+                          z =
+                  (0 : ℝ)
+    := by
+  intro Ω I Du ψ hψ hψΩ θ hθI z hz
+  by_cases hx : z.1 ∈ Ω
+  · have ht : z.2 ∉ I := fun ht => hz ⟨hx, ht⟩
+    have htθ : z.2 ∉ tsupport θ := fun htθ => ht (hθI htθ)
+    have hsp : ∀ i j : Fin 3,
+        spatialPartial (fun w => pressureTestParabolic ψ θ w i) j z = 0 := by
+      intro i j
+      rw [pressureTest_spatialPartial hψ i j z]
+      rw [image_eq_zero_of_notMem_tsupport htθ, zero_mul]
+    refine Finset.sum_eq_zero (fun i _ => ?_)
+    refine Finset.sum_eq_zero (fun j _ => ?_)
+    rw [hsp i j, mul_zero]
+  · have hxψ : z.1 ∉ tsupport ψ := fun hxψ => hx (hψΩ hxψ)
+    have hsp : ∀ i j : Fin 3,
+        spatialPartial (fun w => pressureTestParabolic ψ θ w i) j z = 0 := by
+      intro i j
+      rw [pressureTest_spatialPartial hψ i j z]
+      rw [image_eq_zero_of_notMem_tsupport
+        (fun hm => hxψ (tsupport_mixedSecond_subset j i hm)), mul_zero]
+    refine Finset.sum_eq_zero (fun i _ => ?_)
+    refine Finset.sum_eq_zero (fun j _ => ?_)
+    rw [hsp i j, mul_zero]
+
+private lemma pressure_viscous_slice_zero_huTerm_3 :
+    ∀ {u : ParabolicPoint → Vec3} {ψ : Vec3 → ℝ},
+      ContDiff ℝ (⊤ : ℕ∞) ψ →
+        HasCompactSupport ψ →
+          ∀ (Ω' : Set Vec3),
+            tsupport ψ ⊆ Ω' →
+              ∀ (s : ℝ),
+                (∀ (i : Fin (3 : ℕ)),
+                    @Integrable ℝ _ _ _ MeasureSpace.toMeasurableSpace
+                      (fun (x : Vec3) => u (x, s) i) (Measure.restrict volume Ω')) →
+                  ∀ (i j : Fin (3 : ℕ)),
+                    @Integrable ℝ _ _ _ MeasureSpace.toMeasurableSpace
+                      (fun (x : Vec3) => u (x, s) i * spatialDeriv (mixedSecond ψ j i) j x) volume
+    := by
+  intro u ψ hψ hψc Ω' hψΩ' s huInt i j
+  obtain ⟨C, hC⟩ :=
+    (hasCompactSupport_spatialDeriv (hasCompactSupport_mixedSecond hψc j i)
+      j).exists_bound_of_continuous
+      (contDiff_spatialDeriv_smooth (contDiff_mixedSecond_smooth hψ j i) j).continuous
+  have hfac : AEStronglyMeasurable
+      (fun x : Vec3 => spatialDeriv (mixedSecond ψ j i) j x)
+      (volume.restrict Ω') :=
+    ((contDiff_spatialDeriv_smooth (contDiff_mixedSecond_smooth hψ j i)
+      j).continuous).measurable.aestronglyMeasurable
+  have hmul := (huInt i).mul_bdd hfac
+    (Filter.Eventually.of_forall fun x => by simpa only [Real.norm_eq_abs] using hC x)
+  have hmulOn : IntegrableOn (fun x : Vec3 =>
+      u (x, s) i * spatialDeriv (mixedSecond ψ j i) j x) Ω' volume := hmul
+  exact hmulOn.integrable_of_forall_notMem_eq_zero (by
+      intro x hx
+      rw [image_eq_zero_of_notMem_tsupport
+        (fun hm => hx (hψΩ' (tsupport_mixedSecond_subset j i
+          (tsupport_spatialDeriv_subset j hm)))), mul_zero])
+
+private lemma pressure_viscous_slice_zero_hDuTerm_4 :
+    ∀ {Du : ParabolicPoint → Fin (3 : ℕ) → Vec3} {ψ : Vec3 → ℝ},
+      ContDiff ℝ (⊤ : ℕ∞) ψ →
+        HasCompactSupport ψ →
+          ∀ (Ω' : Set Vec3),
+            tsupport ψ ⊆ Ω' →
+              ∀ (s : ℝ),
+                (∀ (i j : Fin (3 : ℕ)),
+                    @Integrable ℝ _ _ _ MeasureSpace.toMeasurableSpace
+                      (fun (x : Vec3) => Du (x, s) i j) (Measure.restrict volume Ω')) →
+                  ∀ (i j : Fin (3 : ℕ)),
+                    @Integrable ℝ _ _ _ MeasureSpace.toMeasurableSpace
+                      (fun (x : Vec3) => Du (x, s) i j * mixedSecond ψ j i x) volume
+    := by
+  intro Du ψ hψ hψc Ω' hψΩ' s hDuInt i j
+  obtain ⟨C, hC⟩ := (hasCompactSupport_mixedSecond hψc j i).exists_bound_of_continuous
+    (contDiff_mixedSecond_smooth hψ j i).continuous
+  have hfac : AEStronglyMeasurable (fun x : Vec3 => mixedSecond ψ j i x)
+      (volume.restrict Ω') :=
+    (contDiff_mixedSecond_smooth hψ j i).continuous.measurable.aestronglyMeasurable
+  have hmul := (hDuInt i j).mul_bdd hfac
+    (Filter.Eventually.of_forall fun x => by simpa only [Real.norm_eq_abs] using hC x)
+  have hmulOn : IntegrableOn (fun x : Vec3 =>
+      Du (x, s) i j * mixedSecond ψ j i x) Ω' volume := hmul
+  exact hmulOn.integrable_of_forall_notMem_eq_zero (by
+      intro x hx
+      rw [image_eq_zero_of_notMem_tsupport
+        (fun hm => hx (hψΩ' (tsupport_mixedSecond_subset j i hm))), mul_zero])
+
 private theorem pressure_viscous_slice_zero
     {Ω : Set Vec3} {I : Set ℝ} {q : ℝ}
     {u : ParabolicPoint → Vec3} {Du : ParabolicPoint → Fin 3 → Vec3}
@@ -348,20 +478,7 @@ private theorem pressure_viscous_slice_zero
         Du z i j * spatialPartial (fun w => pressureTestParabolic ψ θ w i) j z = 0 := by
   have hΩ : IsOpen Ω := h.1
   have hI : IsOpen I := h.2.1
-  have hgrad_all : ∀ᵐ s ∂volume.restrict I, ∀ i j : Fin 3,
-      ∫ x in Ω, u (x, s) i * spatialDeriv (mixedSecond ψ j i) j x =
-        -∫ x in Ω, Du (x, s) i j * mixedSecond ψ j i x := by
-    rw [ae_all_iff]
-    intro i
-    rw [ae_all_iff]
-    intro j
-    have hm : ContDiff ℝ (⊤ : ℕ∞) (mixedSecond ψ j i) :=
-      (contDiff_mixedSecond_smooth hψ j i).of_le (by simp)
-    have hg := weakGradient_slice_ae_of_sws h hm
-      (hasCompactSupport_mixedSecond hψc j i)
-      ((tsupport_mixedSecond_subset j i).trans hψΩ)
-    filter_upwards [hg] with s hs
-    simpa only [spatialDeriv] using hs i j
+  have hgrad_all := @pressure_viscous_slice_zero_hgrad_all_1 Ω I q u Du p f h ψ hψ hψc hψΩ
   have hdiv_all : ∀ᵐ s ∂volume.restrict I, ∀ j : Fin 3,
       ∫ x in Ω, ∑ i, u (x, s) i * spatialDeriv (mixedSecond ψ j j) i x = 0 := by
     rw [ae_all_iff]
@@ -375,7 +492,7 @@ private theorem pressure_viscous_slice_zero
     simpa only [spatialDeriv] using hs
   obtain ⟨Ω', hΩ'open, hψΩ', hΩ'compact, hΩ'Ω, hLp⟩ :=
     slice_memLp_on_support_ae h hψc hψΩ
-  haveI : IsFiniteMeasure (volume.restrict Ω') :=
+  have : IsFiniteMeasure (volume.restrict Ω') :=
     identity_restrict_isFiniteMeasure hΩ'compact
   have hgood : ∀ᵐ s ∂volume.restrict I,
       (MemLp (fun x : Vec3 => u (x, s)) 2 (volume.restrict Ω') ∧
@@ -392,31 +509,7 @@ private theorem pressure_viscous_slice_zero
       (fun z => ∑ i, ∑ j,
         Du z i j * spatialPartial (fun w => pressureTestParabolic ψ θ w i) j z) volume :=
     (pressure_test_terms_integrable h hψ hψc hψΩ hθ hθc hθI).2.1
-  have hvisc_zero_out : ∀ z ∉ spaceTimeSet Ω I,
-      (∑ i, ∑ j,
-        Du z i j * spatialPartial (fun w => pressureTestParabolic ψ θ w i) j z) = 0 := by
-    intro z hz
-    by_cases hx : z.1 ∈ Ω
-    · have ht : z.2 ∉ I := fun ht => hz ⟨hx, ht⟩
-      have htθ : z.2 ∉ tsupport θ := fun htθ => ht (hθI htθ)
-      have hsp : ∀ i j : Fin 3,
-          spatialPartial (fun w => pressureTestParabolic ψ θ w i) j z = 0 := by
-        intro i j
-        rw [pressureTest_spatialPartial hψ i j z]
-        rw [image_eq_zero_of_notMem_tsupport htθ, zero_mul]
-      refine Finset.sum_eq_zero (fun i _ => ?_)
-      refine Finset.sum_eq_zero (fun j _ => ?_)
-      rw [hsp i j, mul_zero]
-    · have hxψ : z.1 ∉ tsupport ψ := fun hxψ => hx (hψΩ hxψ)
-      have hsp : ∀ i j : Fin 3,
-          spatialPartial (fun w => pressureTestParabolic ψ θ w i) j z = 0 := by
-        intro i j
-        rw [pressureTest_spatialPartial hψ i j z]
-        rw [image_eq_zero_of_notMem_tsupport
-          (fun hm => hxψ (tsupport_mixedSecond_subset j i hm)), mul_zero]
-      refine Finset.sum_eq_zero (fun i _ => ?_)
-      refine Finset.sum_eq_zero (fun j _ => ?_)
-      rw [hsp i j, mul_zero]
+  have hvisc_zero_out := @pressure_viscous_slice_zero_hvisc_zero_out_2 Ω I Du ψ hψ hψΩ θ hθI
   have hvisc_set : ∫ z in spaceTimeSet Ω I,
       ∑ i, ∑ j, Du z i j *
         spatialPartial (fun w => pressureTestParabolic ψ θ w i) j z =
@@ -447,39 +540,10 @@ private theorem pressure_viscous_slice_zero
       exact ((hLp_s.2.continuousLinearMap_comp
         (ContinuousLinearMap.proj i : (Fin 3 → Vec3) →L[ℝ] Vec3)).continuousLinearMap_comp
         (ContinuousLinearMap.proj j : Vec3 →L[ℝ] ℝ)).integrable (by norm_num)
-    have huTerm (i j : Fin 3) : Integrable (fun x : Vec3 =>
-        u (x, s) i * spatialDeriv (mixedSecond ψ j i) j x) volume := by
-      obtain ⟨C, hC⟩ :=
-        (hasCompactSupport_spatialDeriv (hasCompactSupport_mixedSecond hψc j i) j).exists_bound_of_continuous
-          (contDiff_spatialDeriv_smooth (contDiff_mixedSecond_smooth hψ j i) j).continuous
-      have hfac : AEStronglyMeasurable
-          (fun x : Vec3 => spatialDeriv (mixedSecond ψ j i) j x)
-          (volume.restrict Ω') :=
-        ((contDiff_spatialDeriv_smooth (contDiff_mixedSecond_smooth hψ j i) j).continuous).measurable.aestronglyMeasurable
-      have hmul := (huInt i).mul_bdd hfac
-        (Filter.Eventually.of_forall fun x => by simpa only [Real.norm_eq_abs] using hC x)
-      have hmulOn : IntegrableOn (fun x : Vec3 =>
-          u (x, s) i * spatialDeriv (mixedSecond ψ j i) j x) Ω' volume := hmul
-      exact hmulOn.integrable_of_forall_notMem_eq_zero (by
-          intro x hx
-          rw [image_eq_zero_of_notMem_tsupport
-            (fun hm => hx (hψΩ' (tsupport_mixedSecond_subset j i
-              (tsupport_spatialDeriv_subset j hm)))), mul_zero])
-    have hDuTerm (i j : Fin 3) : Integrable (fun x : Vec3 =>
-        Du (x, s) i j * mixedSecond ψ j i x) volume := by
-      obtain ⟨C, hC⟩ := (hasCompactSupport_mixedSecond hψc j i).exists_bound_of_continuous
-        (contDiff_mixedSecond_smooth hψ j i).continuous
-      have hfac : AEStronglyMeasurable (fun x : Vec3 => mixedSecond ψ j i x)
-          (volume.restrict Ω') :=
-        (contDiff_mixedSecond_smooth hψ j i).continuous.measurable.aestronglyMeasurable
-      have hmul := (hDuInt i j).mul_bdd hfac
-        (Filter.Eventually.of_forall fun x => by simpa only [Real.norm_eq_abs] using hC x)
-      have hmulOn : IntegrableOn (fun x : Vec3 =>
-          Du (x, s) i j * mixedSecond ψ j i x) Ω' volume := hmul
-      exact hmulOn.integrable_of_forall_notMem_eq_zero (by
-          intro x hx
-          rw [image_eq_zero_of_notMem_tsupport
-            (fun hm => hx (hψΩ' (tsupport_mixedSecond_subset j i hm))), mul_zero])
+    have huTerm (i j : Fin 3) := @pressure_viscous_slice_zero_huTerm_3 u ψ hψ hψc Ω' hψΩ' s huInt
+      i j
+    have hDuTerm (i j : Fin 3) := @pressure_viscous_slice_zero_hDuTerm_4 Du ψ hψ hψc Ω' hψΩ' s
+      hDuInt i j
     have hgrad_sum (j : Fin 3) :
         ∫ x in Ω, ∑ i, u (x, s) i * spatialDeriv (mixedSecond ψ j i) j x =
           -∑ i, ∫ x in Ω, Du (x, s) i j * mixedSecond ψ j i x := by

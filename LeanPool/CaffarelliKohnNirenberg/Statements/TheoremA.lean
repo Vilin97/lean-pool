@@ -30,7 +30,8 @@ noncomputable section
 
 namespace CKN
 
-/-- Theorem A, paper label `thm:A`; the Hölder-representative convention of docs/DESIGN_NOTES.md retains the open-cylinder regular-point conclusion and the quantitative Hölder representative. -/
+/-- Theorem A, paper label `thm:A`; the Hölder-representative convention of docs/DESIGN_NOTES.md
+  retains the open-cylinder regular-point conclusion and the quantitative Hölder representative. -/
 theorem epsilonRegularityL3 (q : ℝ) (hq : 5 / 2 < q) :
     ∃ ε₀ γ₀ C₄ : ℝ, 0 < ε₀ ∧ 0 < γ₀ ∧ γ₀ ≤ 2 / 3 ∧ 0 ≤ C₄ ∧
       ∀ (Ω : Set Vec3) (I : Set ℝ) (u : ParabolicPoint → Vec3)

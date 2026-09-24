@@ -45,7 +45,7 @@ theorem euclideanBall_eq_vec3Ball_timeSobolev
 
 private theorem eLpNorm_two_sq_eq_lintegral
     {α E : Type*} [MeasurableSpace α] [MeasurableSpace E]
-    [NormedAddCommGroup E] [BorelSpace E] {μ : Measure α} {f : α → E}
+    [NormedAddCommGroup E] {μ : Measure α} {f : α → E}
     (hf : AEStronglyMeasurable f μ) :
     eLpNorm f (2 : ℝ≥0∞) μ ^ (2 : ℝ) =
       ∫⁻ x, ‖f x‖ₑ ^ (2 : ℝ) ∂μ := by
@@ -55,6 +55,7 @@ private theorem eLpNorm_two_sq_eq_lintegral
     ENNReal.toReal_ofNat, ← ENNReal.rpow_mul]
   norm_num
 
+/-- Zero H¹ function on the whole spatial domain, used as a default slice. -/
 noncomputable def zeroH1Whole : H1Function (Set.univ : Set Vec3) where
   toFun := fun _ => 0
   grad := fun _ => 0
@@ -71,6 +72,7 @@ noncomputable def zeroH1Whole : H1Function (Set.univ : Set Vec3) where
       (f := fun _ : Vec3 => (0 : ℝ)) (contDiff_const (𝕜 := ℝ))
     simpa [HasWeakGradientOn] using h i
 
+/-- Selected H¹ time slice when one exists, with zero as the default on exceptional times. -/
 noncomputable def timeSobolevSlice
     (x₀ : Vec3) (r : ℝ) (hr : 0 < r)
     (g : Vec3 × ℝ → ℝ) (Dg : Vec3 × ℝ → Vec3) :
@@ -192,6 +194,414 @@ private theorem timeSobolevSlice_gradient_eq
   unfold weakGradientLpNormOn
   rw [eLpNorm_two_sq_eq_lintegral hgradMeas, hIntEq]
 
+private lemma ball_time_sobolev_hM₂total_1 :
+    ∀ (x₀ : Vec3) (r : ℝ) (J : Set ℝ) (g : Vec3 × ℝ → ℝ),
+      let E : Set Vec3 := euclideanBall x₀ r;
+      AEStronglyMeasurable g ((volume.restrict E).prod (volume.restrict J)) →
+        MemLp g (2 : ℝ≥0∞) ((volume.restrict E).prod (volume.restrict J)) →
+          ∫⁻ (z : Vec3 × ℝ) in E ×ˢ J, ‖g z‖ₑ ^ (2 : ℝ) < ∞
+    := by
+  intro x₀ r J g E hgProd hgLpProd
+  have hprodE : volume.restrict (E ×ˢ J) =
+      (volume.restrict E).prod (volume.restrict J) := by
+    rw [show (volume : Measure (Vec3 × ℝ)) =
+      (volume : Measure Vec3).prod (volume : Measure ℝ) from
+        Measure.volume_eq_prod Vec3 ℝ]
+    exact (Measure.prod_restrict E J).symm
+  have hfinite := (eLpNorm_lt_top_iff_lintegral_rpow_enorm_lt_top
+    (by norm_num : (2 : ℝ≥0∞) ≠ 0) (by norm_num : (2 : ℝ≥0∞) ≠ ∞)
+    hgProd).mp hgLpProd.eLpNorm_lt_top
+  simpa [hprodE, ENNReal.toReal_ofNat] using hfinite
+
+private lemma ball_time_sobolev_hDgint_2 :
+    ∀ (x₀ : Vec3) (r : ℝ) (J : Set ℝ) (Dg : Vec3 × ℝ → Vec3),
+      let E : Set Vec3 := euclideanBall x₀ r;
+      MemLp Dg (2 : ℝ≥0∞) ((volume.restrict E).prod (volume.restrict J)) →
+        ∫⁻ (z : Vec3 × ℝ) in E ×ˢ J, ‖Dg z‖ₑ ^ (2 : ℝ) < ∞
+    := by
+  intro x₀ r J Dg E hDgLpProd
+  have hprodE : volume.restrict (E ×ˢ J) =
+      (volume.restrict E).prod (volume.restrict J) := by
+    rw [show (volume : Measure (Vec3 × ℝ)) =
+      (volume : Measure Vec3).prod (volume : Measure ℝ) from
+        Measure.volume_eq_prod Vec3 ℝ]
+    exact (Measure.prod_restrict E J).symm
+  have hfinite := (eLpNorm_lt_top_iff_lintegral_rpow_enorm_lt_top
+    (by norm_num : (2 : ℝ≥0∞) ≠ 0) (by norm_num : (2 : ℝ≥0∞) ≠ ∞)
+    hDgLpProd.aestronglyMeasurable).mp hDgLpProd.eLpNorm_lt_top
+  simpa [hprodE, ENNReal.toReal_ofNat] using hfinite
+
+private lemma ball_time_sobolev_hspatial_3 :
+    ∀ (K : ℝ≥0∞),
+      (∀ (q : ℝ),
+          (2 : ℝ) ≤ q →
+            q ≤ (6 : ℝ) →
+              ∀ {x₀ : Vec (3 : ℕ)} {r : ℝ},
+                (0 : ℝ) < r →
+                  ∀ (v : H1Function (euclideanBall x₀ r)),
+                    lpNormOn (ENNReal.ofReal q) (euclideanBall x₀ r) v.toFun ^ q ≤
+                      K *
+                            weakGradientLpNormOn (2 : ℝ≥0∞) (euclideanBall x₀ r) v.grad ^
+                              ((2 : ℝ) * interpolationExponent q) *
+                          lpNormOn (2 : ℝ≥0∞) (euclideanBall x₀ r) v.toFun ^
+                            (q - (2 : ℝ) * interpolationExponent q) +
+                        K * ENNReal.ofReal r ^ (-((2 : ℝ) * interpolationExponent q)) *
+                          lpNormOn (2 : ℝ≥0∞) (euclideanBall x₀ r) v.toFun ^ q) →
+        ∀ (_ : Vec3) (r : ℝ),
+          (0 : ℝ) < r →
+            ∀ {x₀ : Vec3} {r : ℝ},
+              (0 : ℝ) < r →
+                ∀ (v : H1Function (euclideanBall x₀ r)),
+                  lpNormOn (ENNReal.ofReal (10 / 3 : ℝ)) (euclideanBall x₀ r) v.toFun ^
+                      (10 / 3 : ℝ) ≤
+                    K * weakGradientLpNormOn (2 : ℝ≥0∞) (euclideanBall x₀ r) v.grad ^ (2 : ℕ) *
+                        lpNormOn (2 : ℝ≥0∞) (euclideanBall x₀ r) v.toFun ^ (4 / 3 : ℝ) +
+                      K * ENNReal.ofReal r ^ (-2 : ℝ) *
+                        lpNormOn (2 : ℝ≥0∞) (euclideanBall x₀ r) v.toFun ^ (10 / 3 : ℝ)
+    := by
+  intro K hKinterp x₀ r hr x₀ r hr v
+  have h := hKinterp (10 / 3) (by norm_num) (by norm_num) hr v
+  change lpNormOn (ENNReal.ofReal (10 / 3 : ℝ)) (euclideanBall x₀ r) v.toFun ^ (10 / 3 : ℝ) ≤
+      K * weakGradientLpNormOn 2 (euclideanBall x₀ r) v.grad ^
+          (2 * (3 * ((10 / 3 : ℝ) - 2) / 4)) *
+        lpNormOn 2 (euclideanBall x₀ r) v.toFun ^
+          ((10 / 3 : ℝ) - 2 * (3 * ((10 / 3 : ℝ) - 2) / 4)) +
+      K * (ENNReal.ofReal r) ^ (-(2 * (3 * ((10 / 3 : ℝ) - 2) / 4))) *
+        lpNormOn 2 (euclideanBall x₀ r) v.toFun ^ (10 / 3 : ℝ) at h
+  norm_num at h
+  exact h
+
+private lemma ball_time_sobolev_hpointTime_4 :
+    ∀ (K : ℝ≥0∞) (x₀ : Vec3) (r : ℝ),
+      (0 : ℝ) < r →
+        ∀ (A : ℝ≥0∞),
+          let E : Set Vec3 := euclideanBall x₀ r;
+          ∀ (ν : Measure ℝ) (u : ℝ → H1Function E),
+            let D : ℝ → ℝ≥0∞ := fun (s : ℝ) =>
+              weakGradientLpNormOn (2 : ℝ≥0∞) E (u s).grad ^ (2 : ℝ);
+            ∀ (Q : ℝ≥0∞),
+              let q : ℝ≥0∞ := ENNReal.ofReal (10 / 3 : ℝ);
+              (∀ᵐ (s : ℝ) ∂ν, lpNormOn (2 : ℝ≥0∞) E (u s).toFun ≤ A) →
+                (∀ {x₀ : Vec3} {r : ℝ},
+                    (0 : ℝ) < r →
+                      ∀ (v : H1Function (euclideanBall x₀ r)),
+                        lpNormOn (ENNReal.ofReal (10 / 3 : ℝ)) (euclideanBall x₀ r) v.toFun ^
+                            (10 / 3 : ℝ) ≤
+                          K *
+                                weakGradientLpNormOn (2 : ℝ≥0∞) (euclideanBall x₀ r) v.grad ^
+                                  (2 : ℕ) *
+                              lpNormOn (2 : ℝ≥0∞) (euclideanBall x₀ r) v.toFun ^ (4 / 3 : ℝ) +
+                            K * ENNReal.ofReal r ^ (-2 : ℝ) *
+                              lpNormOn (2 : ℝ≥0∞) (euclideanBall x₀ r) v.toFun ^ (10 / 3 : ℝ)) →
+                  Q = ENNReal.ofReal (r ^ (-2 : ℝ)) →
+                    ENNReal.ofReal r ^ (-2 : ℝ) = ENNReal.ofReal (r ^ (-2 : ℝ)) →
+                      ∀ᵐ (s : ℝ) ∂ν,
+                        lpNormOn q E (u s).toFun ^ (10 / 3 : ℝ) ≤
+                          K * A ^ (4 / 3 : ℝ) * D s + K * Q * A ^ (10 / 3 : ℝ)
+    := by
+  intro K x₀ r hr A E ν u D Q q hUbound hspatial hQ hRadius
+  filter_upwards [hUbound] with s hs
+  have hsp := hspatial (x₀ := x₀) (r := r) hr (u s)
+  have hpow₁ : lpNormOn 2 E (u s).toFun ^ (4 / 3 : ℝ) ≤ A ^ (4 / 3 : ℝ) :=
+    ENNReal.rpow_le_rpow hs (by norm_num)
+  have hpow₂ : lpNormOn 2 E (u s).toFun ^ (10 / 3 : ℝ) ≤ A ^ (10 / 3 : ℝ) :=
+    ENNReal.rpow_le_rpow hs (by norm_num)
+  have hfirst : K * weakGradientLpNormOn 2 E (u s).grad ^ (2 : ℕ) *
+      lpNormOn 2 E (u s).toFun ^ (4 / 3 : ℝ) ≤
+        K * A ^ (4 / 3 : ℝ) * D s := by
+    calc
+      _ ≤ K * weakGradientLpNormOn 2 E (u s).grad ^ (2 : ℕ) *
+            A ^ (4 / 3 : ℝ) := by gcongr
+      _ = K * A ^ (4 / 3 : ℝ) * D s := by
+        simp [D, mul_assoc, mul_left_comm, mul_comm]
+  have hsecond : K * ENNReal.ofReal r ^ (-(2 : ℝ)) *
+      lpNormOn 2 E (u s).toFun ^ (10 / 3 : ℝ) ≤
+        K * Q * A ^ (10 / 3 : ℝ) := by
+    calc
+      _ = K * ENNReal.ofReal (r ^ (-(2 : ℝ))) *
+            lpNormOn 2 E (u s).toFun ^ (10 / 3 : ℝ) := by rw [hRadius]
+      _ ≤ K * ENNReal.ofReal (r ^ (-(2 : ℝ))) * A ^ (10 / 3 : ℝ) := by
+        gcongr
+      _ = K * Q * A ^ (10 / 3 : ℝ) := by rw [hQ]
+  calc
+    _ = lpNormOn (ENNReal.ofReal (10 / 3 : ℝ))
+        (euclideanBall x₀ r) (u s).toFun ^ (10 / 3 : ℝ) := by simp [q, E]
+    _ ≤ K * A ^ (4 / 3 : ℝ) * D s + K * Q * A ^ (10 / 3 : ℝ) := by
+      calc
+        _ ≤ K * weakGradientLpNormOn 2 E (u s).grad ^ (2 : ℕ) *
+              lpNormOn 2 E (u s).toFun ^ (4 / 3 : ℝ) +
+            K * ENNReal.ofReal r ^ (-(2 : ℝ)) *
+              lpNormOn 2 E (u s).toFun ^ (10 / 3 : ℝ) := by
+          simpa [E] using hsp
+        _ ≤ _ := add_le_add hfirst hsecond
+
+private lemma ball_time_sobolev_hpointFinite_5 :
+    ∀ (K : ℝ≥0∞) (x₀ : Vec3) (r : ℝ) (hr : (0 : ℝ) < r) (g : Vec3 × ℝ → ℝ) (Dg : Vec3 × ℝ → Vec3)
+      (A : ℝ≥0∞),
+      let E : Set Vec3 := euclideanBall x₀ r;
+      ∀ (ν : Measure ℝ),
+        let u : ℝ → H1Function E := timeSobolevSlice x₀ r hr g Dg;
+        let D : ℝ → ℝ≥0∞ := fun (s : ℝ) => weakGradientLpNormOn (2 : ℝ≥0∞) E (u s).grad ^ (2 : ℝ);
+        ∀ (M₂ : ℝ → ℝ≥0∞) (Q : ℝ≥0∞),
+          let q : ℝ≥0∞ := ENNReal.ofReal (10 / 3 : ℝ);
+          (∀ᵐ (s : ℝ) ∂ν, lpNormOn (2 : ℝ≥0∞) E (u s).toFun ≤ A) →
+            (∀ᵐ (s : ℝ) ∂ν, M₂ s = lpNormOn (2 : ℝ≥0∞) E (u s).toFun ^ (2 : ℝ)) →
+              (∀ {x₀ : Vec3} {r : ℝ},
+                  (0 : ℝ) < r →
+                    ∀ (v : H1Function (euclideanBall x₀ r)),
+                      lpNormOn (ENNReal.ofReal (10 / 3 : ℝ)) (euclideanBall x₀ r) v.toFun ^
+                          (10 / 3 : ℝ) ≤
+                        K * weakGradientLpNormOn (2 : ℝ≥0∞) (euclideanBall x₀ r) v.grad ^ (2 : ℕ) *
+                            lpNormOn (2 : ℝ≥0∞) (euclideanBall x₀ r) v.toFun ^ (4 / 3 : ℝ) +
+                          K * ENNReal.ofReal r ^ (-2 : ℝ) *
+                            lpNormOn (2 : ℝ≥0∞) (euclideanBall x₀ r) v.toFun ^ (10 / 3 : ℝ)) →
+                Q = ENNReal.ofReal (r ^ (-2 : ℝ)) →
+                  ENNReal.ofReal r ^ (-2 : ℝ) = ENNReal.ofReal (r ^ (-2 : ℝ)) →
+                    ∀ᵐ (s : ℝ) ∂ν,
+                      lpNormOn q E (u s).toFun ^ (10 / 3 : ℝ) ≤
+                        K * A ^ (4 / 3 : ℝ) * D s + K * Q * A ^ (4 / 3 : ℝ) * M₂ s
+    := by
+  intro K x₀ r hr g Dg A E ν u D M₂ Q q hUbound hgradMass hspatial hQ hRadius
+  filter_upwards [hUbound, hgradMass] with s hs hmass
+  have hsp := hspatial (x₀ := x₀) (r := r) hr (u s)
+  have hpow : lpNormOn 2 E (u s).toFun ^ (10 / 3 : ℝ) =
+      lpNormOn 2 E (u s).toFun ^ (4 / 3 : ℝ) *
+        lpNormOn 2 E (u s).toFun ^ (2 : ℝ) := by
+    rw [show (10 / 3 : ℝ) = 4 / 3 + 2 by norm_num,
+      ENNReal.rpow_add_of_nonneg (x := lpNormOn 2 E (u s).toFun)
+        (y := (4 / 3 : ℝ)) (z := (2 : ℝ)) (by norm_num) (by norm_num)]
+  have hpowBound : lpNormOn 2 E (u s).toFun ^ (10 / 3 : ℝ) ≤
+      A ^ (4 / 3 : ℝ) * M₂ s := by
+    rw [hpow, hmass]
+    exact mul_le_mul_of_nonneg_right
+      (ENNReal.rpow_le_rpow hs (by norm_num)) (by positivity)
+  have hsp := hspatial (x₀ := x₀) (r := r) hr (u s)
+  have hfirst : K * weakGradientLpNormOn 2 E (u s).grad ^ (2 : ℕ) *
+      lpNormOn 2 E (u s).toFun ^ (4 / 3 : ℝ) ≤ K * A ^ (4 / 3 : ℝ) * D s := by
+    calc
+      _ ≤ K * weakGradientLpNormOn 2 E (u s).grad ^ (2 : ℕ) * A ^ (4 / 3 : ℝ) := by
+        gcongr
+      _ = K * A ^ (4 / 3 : ℝ) * D s := by
+        simp [D, mul_assoc, mul_left_comm, mul_comm]
+  have hsecond : K * ENNReal.ofReal r ^ (-(2 : ℝ)) *
+      lpNormOn 2 E (u s).toFun ^ (10 / 3 : ℝ) ≤
+        K * Q * A ^ (4 / 3 : ℝ) * M₂ s := by
+    calc
+      _ = K * ENNReal.ofReal (r ^ (-(2 : ℝ))) *
+            lpNormOn 2 E (u s).toFun ^ (10 / 3 : ℝ) := by rw [hRadius]
+      _ ≤ K * ENNReal.ofReal (r ^ (-(2 : ℝ))) *
+            (A ^ (4 / 3 : ℝ) * M₂ s) := by gcongr
+      _ = K * Q * A ^ (4 / 3 : ℝ) * M₂ s := by rw [hQ]; ac_rfl
+  calc
+    _ = lpNormOn (ENNReal.ofReal (10 / 3 : ℝ))
+        (euclideanBall x₀ r) (u s).toFun ^ (10 / 3 : ℝ) := by simp [q, E]
+    _ ≤ K * A ^ (4 / 3 : ℝ) * D s + K * Q * A ^ (4 / 3 : ℝ) * M₂ s := by
+      calc
+        _ ≤ K * weakGradientLpNormOn 2 E (u s).grad ^ (2 : ℕ) *
+              lpNormOn 2 E (u s).toFun ^ (4 / 3 : ℝ) +
+            K * ENNReal.ofReal r ^ (-(2 : ℝ)) *
+              lpNormOn 2 E (u s).toFun ^ (10 / 3 : ℝ) := by
+          simpa [E] using hsp
+        _ ≤ _ := add_le_add hfirst hsecond
+
+private lemma ball_time_sobolev_hRhsFinite_6 :
+    ∀ (K : ℝ≥0∞),
+      K ≠ ∞ →
+        ∀ (x₀ : Vec3) (r : ℝ) (J : Set ℝ) (g : Vec3 × ℝ → ℝ),
+          let U : Set Vec3 := vec3Ball x₀ r;
+          let A : ℝ≥0∞ :=
+            essSup
+              (fun (s : ℝ) => eLpNorm (fun (x : Vec3) => g (x, s)) (2 : ℝ≥0∞) (volume.restrict U))
+              (volume.restrict J);
+          A < ∞ →
+            let E : Set Vec3 := euclideanBall x₀ r;
+            ∀ (ν : Measure ℝ) (u : ℝ → H1Function E),
+              let D : ℝ → ℝ≥0∞ := fun (s : ℝ) =>
+                weakGradientLpNormOn (2 : ℝ≥0∞) E (u s).grad ^ (2 : ℝ);
+              let M₂ : ℝ → ℝ≥0∞ := fun (s : ℝ) => ∫⁻ (x : Vec3) in E, ‖g (x, s)‖ₑ ^ (2 : ℝ);
+              let Q : ℝ≥0∞ := ENNReal.ofReal r ^ (-2 : ℝ);
+              AEMeasurable M₂ ν →
+                AEMeasurable D ν →
+                  ∫⁻ (s : ℝ), D s ∂ν < ∞ →
+                    ∫⁻ (s : ℝ), M₂ s ∂ν < ∞ →
+                      Q ≠ ∞ →
+                        ∫⁻ (s : ℝ), K * A ^ (4 / 3 : ℝ) * D s + K * Q * A ^ (4 / 3 : ℝ) * M₂ s ∂ν <
+                          ∞
+    := by
+  intro K hKtop x₀ r J g U A hA E ν u D M₂ Q hM₂meas hDmeas hDtotalFinite hM₂totalFinite hQtop
+  have hfirstMeas : AEMeasurable (fun s =>
+      (K * A ^ (4 / 3 : ℝ)) * D s) ν := hDmeas.const_mul _
+  have hsecondMeas : AEMeasurable (fun s =>
+      (K * Q * A ^ (4 / 3 : ℝ)) * M₂ s) ν := hM₂meas.const_mul _
+  have hKfin : K * A ^ (4 / 3 : ℝ) ≠ ⊤ := by
+    exact ENNReal.mul_ne_top hKtop
+      (ENNReal.rpow_ne_top_of_nonneg (by norm_num) (ne_of_lt hA))
+  have hKQfin : K * Q * A ^ (4 / 3 : ℝ) ≠ ⊤ := by
+    exact ENNReal.mul_ne_top (ENNReal.mul_ne_top hKtop hQtop)
+      (ENNReal.rpow_ne_top_of_nonneg (by norm_num) (ne_of_lt hA))
+  have hfirst : (∫⁻ s, K * A ^ (4 / 3 : ℝ) * D s ∂ν) < ⊤ := by
+    rw [show (fun s => K * A ^ (4 / 3 : ℝ) * D s) =
+      fun s => (K * A ^ (4 / 3 : ℝ)) * D s by funext s; ring,
+      lintegral_const_mul'' _ hDmeas]
+    exact ENNReal.mul_lt_top (lt_top_iff_ne_top.mpr hKfin) hDtotalFinite
+  have hsecond : (∫⁻ s, K * Q * A ^ (4 / 3 : ℝ) * M₂ s ∂ν) < ⊤ := by
+    rw [show (fun s => K * Q * A ^ (4 / 3 : ℝ) * M₂ s) =
+      fun s => (K * Q * A ^ (4 / 3 : ℝ)) * M₂ s by funext s; ring,
+      lintegral_const_mul'' _ hM₂meas]
+    exact ENNReal.mul_lt_top (lt_top_iff_ne_top.mpr hKQfin) hM₂totalFinite
+  rw [lintegral_add_left' hfirstMeas]
+  exact ENNReal.add_lt_top.mpr ⟨hfirst, hsecond⟩
+
+private lemma ball_time_sobolev_hDcompare_7 :
+    ∀ (x₀ : Vec3) (r : ℝ) (J : Set ℝ) (Dg : Vec3 × ℝ → Vec3),
+      let U : Set Vec3 := vec3Ball x₀ r;
+      AEStronglyMeasurable Dg (volume.restrict (U ×ˢ J)) →
+        let E : Set Vec3 := euclideanBall x₀ r;
+        E = U →
+          ∫⁻ (z : Vec3 × ℝ) in E ×ˢ J, ‖Dg z‖ₑ ^ (2 : ℝ) ≤
+            eLpNorm (fun (z : Vec3 × ℝ) => vec3EuclideanNorm (Dg z)) (2 : ℝ≥0∞)
+                (volume.restrict (U ×ˢ J)) ^
+              (2 : ℝ)
+    := by
+  intro x₀ r J Dg U hDg E hBall
+  have hEmeas : AEStronglyMeasurable
+      (fun z : Vec3 × ℝ => vec3EuclideanNorm (Dg z))
+      (volume.restrict (U ×ˢ J)) :=
+    (continuous_vec3EuclideanNorm.comp_aestronglyMeasurable hDg)
+  have hEid := eLpNorm_two_sq_eq_lintegral hEmeas
+  have hProductSet : E ×ˢ J = U ×ˢ J := by rw [hBall]
+  calc
+    (∫⁻ z in E ×ˢ J, ‖Dg z‖ₑ ^ (2 : ℝ)) =
+        ∫⁻ z in U ×ˢ J, ‖Dg z‖ₑ ^ (2 : ℝ) := by rw [hProductSet]
+    _ ≤ ∫⁻ z in U ×ˢ J, ‖vec3EuclideanNorm (Dg z)‖ₑ ^ (2 : ℝ) := by
+      apply lintegral_mono
+      intro z
+      have hnorm : ‖Dg z‖ₑ ≤ ‖vec3EuclideanNorm (Dg z)‖ₑ := by
+        calc
+          ‖Dg z‖ₑ = ENNReal.ofReal ‖Dg z‖ := by rw [← ofReal_norm]
+          _ ≤ ENNReal.ofReal (vec3EuclideanNorm (Dg z)) :=
+            ENNReal.ofReal_le_ofReal (norm_le_vec3EuclideanNorm (Dg z))
+          _ = ‖vec3EuclideanNorm (Dg z)‖ₑ :=
+            (Real.enorm_eq_ofReal (vec3EuclideanNorm_nonneg (Dg z))).symm
+      exact ENNReal.rpow_le_rpow hnorm (by norm_num)
+    _ = eLpNorm (fun z => vec3EuclideanNorm (Dg z)) 2
+          (volume.restrict (U ×ˢ J)) ^ (2 : ℝ) := hEid.symm
+
+private lemma ball_time_sobolev_hIntegralBound_8 :
+    ∀ (K : ℝ≥0∞) (C : ℝ),
+      K ≤ ENNReal.ofReal C →
+        ∀ (x₀ : Vec3) (r : ℝ),
+          (0 : ℝ) < r →
+            ∀ (J : Set ℝ) (g : Vec3 × ℝ → ℝ) (Dg : Vec3 × ℝ → Vec3),
+              let U : Set Vec3 := vec3Ball x₀ r;
+              ∀ (A : ℝ≥0∞),
+                let E : Set Vec3 := euclideanBall x₀ r;
+                let ν : Measure ℝ := volume.restrict J;
+                ∀ (u : ℝ → H1Function E) (D : ℝ → ℝ≥0∞) (Q : ℝ≥0∞),
+                  let q : ℝ≥0∞ := ENNReal.ofReal (10 / 3 : ℝ);
+                  E = U →
+                    AEMeasurable D ν →
+                      ∫⁻ (s : ℝ), D s ∂ν = ∫⁻ (z : Vec3 × ℝ) in E ×ˢ J, ‖Dg z‖ₑ ^ (2 : ℝ) →
+                        Q = ENNReal.ofReal (r ^ (-2 : ℝ)) →
+                          ∫⁻ (z : Vec (3 : ℕ) × ℝ) in euclideanBall x₀ r ×ˢ J,
+                                ‖g z‖ₑ ^ (10 / 3 : ℝ) =
+                              ∫⁻ (s : ℝ) in J,
+                                lpNormOn (ENNReal.ofReal (10 / 3 : ℝ)) (euclideanBall x₀ r)
+                                    (u s).toFun ^
+                                  (10 / 3 : ℝ) →
+                            (∀ᵐ (s : ℝ) ∂ν,
+                                lpNormOn q E (u s).toFun ^ (10 / 3 : ℝ) ≤
+                                  K * A ^ (4 / 3 : ℝ) * D s + K * Q * A ^ (10 / 3 : ℝ)) →
+                              AEStronglyMeasurable g (volume.restrict (U ×ˢ J)) →
+                                ∫⁻ (z : Vec3 × ℝ) in E ×ˢ J, ‖Dg z‖ₑ ^ (2 : ℝ) ≤
+                                    eLpNorm (fun (z : Vec3 × ℝ) => vec3EuclideanNorm (Dg z))
+                                        (2 : ℝ≥0∞) (volume.restrict (U ×ˢ J)) ^
+                                      (2 : ℝ) →
+                                  eLpNorm g q (volume.restrict (U ×ˢ J)) ^ (10 / 3 : ℝ) ≤
+                                    ENNReal.ofReal C *
+                                      (A ^ (4 / 3 : ℝ) *
+                                          eLpNorm (fun (z : Vec3 × ℝ) => vec3EuclideanNorm (Dg z))
+                                              (2 : ℝ≥0∞) (volume.restrict (U ×ˢ J)) ^
+                                            (2 : ℝ) +
+                                        ENNReal.ofReal (r ^ (-2 : ℝ)) * A ^ (10 / 3 : ℝ) *
+                                          (volume : Set ℝ → ℝ≥0∞) J)
+    := by
+  intro K C hKle x₀ r hr J g Dg U A E ν u D Q q hBall hDmeas hDtotal hQ hqtime hpointTime
+    hqMeasTarget hDcompare
+  have htargetId' : eLpNorm g q (volume.restrict (U ×ˢ J)) ^ (10 / 3 : ℝ) =
+      ∫⁻ z in U ×ˢ J, ‖g z‖ₑ ^ (10 / 3 : ℝ) := by
+    rw [eLpNorm_eq_lintegral_rpow_enorm_toReal
+      (by dsimp [q]; norm_num) (by dsimp [q]; norm_num) hqMeasTarget,
+      ENNReal.toReal_ofReal (by norm_num : (0 : ℝ) ≤ 10 / 3),
+      ← ENNReal.rpow_mul]
+    norm_num
+  rw [htargetId']
+  have hBoundOnProduct :
+      (∫⁻ z in E ×ˢ J, ‖g z‖ₑ ^ (10 / 3 : ℝ)) ≤
+        K * A ^ (4 / 3 : ℝ) * (∫⁻ s, D s ∂ν) +
+          K * Q * A ^ (10 / 3 : ℝ) * volume J := by
+    rw [hqtime]
+    have hfirstMeas : AEMeasurable (fun s =>
+        (K * A ^ (4 / 3 : ℝ)) * D s) ν := hDmeas.const_mul _
+    have hsum :
+        (∫⁻ s, K * D s * A ^ (4 / 3 : ℝ) +
+          K * Q * A ^ (10 / 3 : ℝ) ∂ν) =
+        K * A ^ (4 / 3 : ℝ) * (∫⁻ s, D s ∂ν) +
+          K * Q * A ^ (10 / 3 : ℝ) * volume J := by
+      calc
+        _ = ∫⁻ s, (K * A ^ (4 / 3 : ℝ)) * D s +
+              K * Q * A ^ (10 / 3 : ℝ) ∂ν := by
+          congr 1
+          funext s
+          ring
+        _ = _ := by
+          rw [lintegral_add_left' hfirstMeas]
+          rw [lintegral_const_mul'' _ hDmeas]
+          simp only [lintegral_const]
+          simp [ν, volume.restrict_apply_univ]
+    have hpointTime' : ∀ᵐ s ∂ν,
+        lpNormOn (ENNReal.ofReal (10 / 3 : ℝ)) E (u s).toFun ^ (10 / 3 : ℝ) ≤
+          K * A ^ (4 / 3 : ℝ) * D s + K * Q * A ^ (10 / 3 : ℝ) := by
+      simpa [q] using hpointTime
+    calc
+      _ ≤ ∫⁻ s, K * D s * A ^ (4 / 3 : ℝ) +
+            K * Q * A ^ (10 / 3 : ℝ) ∂ν := by
+        apply lintegral_mono_ae
+        filter_upwards [hpointTime'] with s hs
+        calc
+          _ ≤ K * A ^ (4 / 3 : ℝ) * D s + K * Q * A ^ (10 / 3 : ℝ) := hs
+          _ = _ := by congr 1; ac_rfl
+      _ = _ := hsum
+  have hProductSet : E ×ˢ J = U ×ˢ J := by rw [hBall]
+  calc
+    _ = ∫⁻ z in E ×ˢ J, ‖g z‖ₑ ^ (10 / 3 : ℝ) := by
+      rw [← hProductSet]
+    _ ≤ K * A ^ (4 / 3 : ℝ) * (∫⁻ s, D s ∂ν) +
+          K * Q * A ^ (10 / 3 : ℝ) * volume J := hBoundOnProduct
+    _ ≤ K * A ^ (4 / 3 : ℝ) *
+          eLpNorm (fun z => vec3EuclideanNorm (Dg z)) 2
+            (volume.restrict (U ×ˢ J)) ^ (2 : ℝ) +
+        K * Q * A ^ (10 / 3 : ℝ) * volume J := by
+      have hDtime : (∫⁻ s, D s ∂ν) ≤
+          eLpNorm (fun z => vec3EuclideanNorm (Dg z)) 2
+            (volume.restrict (U ×ˢ J)) ^ (2 : ℝ) := by
+        rw [hDtotal]
+        exact hDcompare
+      apply add_le_add
+      · exact mul_le_mul_of_nonneg_left hDtime (by positivity)
+      · exact le_rfl
+    _ ≤ _ := by
+      rw [hQ]
+      let S : ℝ≥0∞ :=
+        A ^ (4 / 3 : ℝ) *
+            eLpNorm (fun z => vec3EuclideanNorm (Dg z)) 2
+              (volume.restrict (U ×ˢ J)) ^ (2 : ℝ) +
+          ENNReal.ofReal (r ^ (-2 : ℝ)) * A ^ (10 / 3 : ℝ) * volume J
+      calc
+        _ = K * S := by dsimp [S]; ring
+        _ ≤ ENNReal.ofReal C * S :=
+          mul_le_mul_of_nonneg_right hKle (by dsimp [S]; positivity)
+
 /-- The Euclidean-ball form of clause (iv) of the external Sobolev
 input, with one absolute constant. -/
 theorem ball_time_sobolev :
@@ -311,28 +721,8 @@ theorem ball_time_sobolev :
   have hM₂total : (∫⁻ s, M₂ s ∂ν) =
       ∫⁻ z in E ×ˢ J, ‖g z‖ₑ ^ (2 : ℝ) :=
     (prod_lintegral_swap_cyl hG₂fun).symm
-  have hGint : (∫⁻ z in E ×ˢ J, ‖g z‖ₑ ^ (2 : ℝ)) < ⊤ := by
-    have hprodE : volume.restrict (E ×ˢ J) =
-        (volume.restrict E).prod (volume.restrict J) := by
-      rw [show (volume : Measure (Vec3 × ℝ)) =
-        (volume : Measure Vec3).prod (volume : Measure ℝ) from
-          Measure.volume_eq_prod Vec3 ℝ]
-      exact (Measure.prod_restrict E J).symm
-    have hfinite := (eLpNorm_lt_top_iff_lintegral_rpow_enorm_lt_top
-      (by norm_num : (2 : ℝ≥0∞) ≠ 0) (by norm_num : (2 : ℝ≥0∞) ≠ ∞)
-      hgProd).mp hgLpProd.eLpNorm_lt_top
-    simpa [hprodE, ENNReal.toReal_ofNat] using hfinite
-  have hDgint : (∫⁻ z in E ×ˢ J, ‖Dg z‖ₑ ^ (2 : ℝ)) < ⊤ := by
-    have hprodE : volume.restrict (E ×ˢ J) =
-        (volume.restrict E).prod (volume.restrict J) := by
-      rw [show (volume : Measure (Vec3 × ℝ)) =
-        (volume : Measure Vec3).prod (volume : Measure ℝ) from
-          Measure.volume_eq_prod Vec3 ℝ]
-      exact (Measure.prod_restrict E J).symm
-    have hfinite := (eLpNorm_lt_top_iff_lintegral_rpow_enorm_lt_top
-      (by norm_num : (2 : ℝ≥0∞) ≠ 0) (by norm_num : (2 : ℝ≥0∞) ≠ ∞)
-      hDgLpProd.aestronglyMeasurable).mp hDgLpProd.eLpNorm_lt_top
-    simpa [hprodE, ENNReal.toReal_ofNat] using hfinite
+  have hGint := @ball_time_sobolev_hM₂total_1 x₀ r J g hgProd hgLpProd
+  have hDgint := @ball_time_sobolev_hDgint_2 x₀ r J Dg hDgLpProd
   have hDtotalFinite : (∫⁻ s, D s ∂ν) < ⊤ := by
     rw [hDtotal]
     exact hDgint
@@ -348,24 +738,7 @@ theorem ball_time_sobolev :
   have hgradMass : ∀ᵐ s ∂ν, M₂ s = lpNormOn 2 E (u s).toFun ^ (2 : ℝ) := by
     filter_upwards [hgood] with s hs
     exact timeSobolevSlice_mass_eq x₀ r hr s hs
-  have hspatial : ∀ {x₀ : Vec3} {r : ℝ}, 0 < r →
-      ∀ v : H1Function (euclideanBall x₀ r),
-        lpNormOn (ENNReal.ofReal (10 / 3 : ℝ)) (euclideanBall x₀ r) v.toFun ^ (10 / 3 : ℝ) ≤
-          K * weakGradientLpNormOn 2 (euclideanBall x₀ r) v.grad ^ (2 : ℕ) *
-              lpNormOn 2 (euclideanBall x₀ r) v.toFun ^ (4 / 3 : ℝ) +
-            K * (ENNReal.ofReal r) ^ (-(2 : ℝ)) *
-              lpNormOn 2 (euclideanBall x₀ r) v.toFun ^ (10 / 3 : ℝ) := by
-    intro x₀ r hr v
-    have h := hKinterp (10 / 3) (by norm_num) (by norm_num) hr v
-    change lpNormOn (ENNReal.ofReal (10 / 3 : ℝ)) (euclideanBall x₀ r) v.toFun ^ (10 / 3 : ℝ) ≤
-        K * weakGradientLpNormOn 2 (euclideanBall x₀ r) v.grad ^
-            (2 * (3 * ((10 / 3 : ℝ) - 2) / 4)) *
-          lpNormOn 2 (euclideanBall x₀ r) v.toFun ^
-            ((10 / 3 : ℝ) - 2 * (3 * ((10 / 3 : ℝ) - 2) / 4)) +
-        K * (ENNReal.ofReal r) ^ (-(2 * (3 * ((10 / 3 : ℝ) - 2) / 4))) *
-          lpNormOn 2 (euclideanBall x₀ r) v.toFun ^ (10 / 3 : ℝ) at h
-    norm_num at h
-    exact h
+  have hspatial := @ball_time_sobolev_hspatial_3 K hKinterp x₀ r hr
   have hQ : Q = ENNReal.ofReal (r ^ (-(2 : ℝ))) := by
     dsimp [Q]
     rw [← ENNReal.ofReal_rpow_of_pos hr]
@@ -381,112 +754,11 @@ theorem ball_time_sobolev :
     exact hgProd.enorm.pow_const (10 / 3 : ℝ)
   have hqtime := extSobolevBall_productIntegral_eq_timeSlices
     (x₀ := x₀) (r := r) (J := J) (g := g) (u := u) hqfun hrepG
-  have hpointTime : ∀ᵐ s ∂ν,
-      lpNormOn q E (u s).toFun ^ (10 / 3 : ℝ) ≤
-        K * A ^ (4 / 3 : ℝ) * D s + K * Q * A ^ (10 / 3 : ℝ) := by
-    filter_upwards [hUbound] with s hs
-    have hsp := hspatial (x₀ := x₀) (r := r) hr (u s)
-    have hpow₁ : lpNormOn 2 E (u s).toFun ^ (4 / 3 : ℝ) ≤ A ^ (4 / 3 : ℝ) :=
-      ENNReal.rpow_le_rpow hs (by norm_num)
-    have hpow₂ : lpNormOn 2 E (u s).toFun ^ (10 / 3 : ℝ) ≤ A ^ (10 / 3 : ℝ) :=
-      ENNReal.rpow_le_rpow hs (by norm_num)
-    have hfirst : K * weakGradientLpNormOn 2 E (u s).grad ^ (2 : ℕ) *
-        lpNormOn 2 E (u s).toFun ^ (4 / 3 : ℝ) ≤
-          K * A ^ (4 / 3 : ℝ) * D s := by
-      calc
-        _ ≤ K * weakGradientLpNormOn 2 E (u s).grad ^ (2 : ℕ) *
-              A ^ (4 / 3 : ℝ) := by gcongr
-        _ = K * A ^ (4 / 3 : ℝ) * D s := by
-          simp [D, mul_assoc, mul_left_comm, mul_comm]
-    have hsecond : K * ENNReal.ofReal r ^ (-(2 : ℝ)) *
-        lpNormOn 2 E (u s).toFun ^ (10 / 3 : ℝ) ≤
-          K * Q * A ^ (10 / 3 : ℝ) := by
-      calc
-        _ = K * ENNReal.ofReal (r ^ (-(2 : ℝ))) *
-              lpNormOn 2 E (u s).toFun ^ (10 / 3 : ℝ) := by rw [hRadius]
-        _ ≤ K * ENNReal.ofReal (r ^ (-(2 : ℝ))) * A ^ (10 / 3 : ℝ) := by
-          gcongr
-        _ = K * Q * A ^ (10 / 3 : ℝ) := by rw [hQ]
-    calc
-      _ = lpNormOn (ENNReal.ofReal (10 / 3 : ℝ))
-          (euclideanBall x₀ r) (u s).toFun ^ (10 / 3 : ℝ) := by simp [q, E]
-      _ ≤ K * A ^ (4 / 3 : ℝ) * D s + K * Q * A ^ (10 / 3 : ℝ) := by
-        calc
-          _ ≤ K * weakGradientLpNormOn 2 E (u s).grad ^ (2 : ℕ) *
-                lpNormOn 2 E (u s).toFun ^ (4 / 3 : ℝ) +
-              K * ENNReal.ofReal r ^ (-(2 : ℝ)) *
-                lpNormOn 2 E (u s).toFun ^ (10 / 3 : ℝ) := by
-            simpa [E] using hsp
-          _ ≤ _ := add_le_add hfirst hsecond
-  have hpointFinite : ∀ᵐ s ∂ν,
-      lpNormOn q E (u s).toFun ^ (10 / 3 : ℝ) ≤
-        K * A ^ (4 / 3 : ℝ) * D s + K * Q * A ^ (4 / 3 : ℝ) * M₂ s := by
-    filter_upwards [hUbound, hgradMass] with s hs hmass
-    have hsp := hspatial (x₀ := x₀) (r := r) hr (u s)
-    have hpow : lpNormOn 2 E (u s).toFun ^ (10 / 3 : ℝ) =
-        lpNormOn 2 E (u s).toFun ^ (4 / 3 : ℝ) *
-          lpNormOn 2 E (u s).toFun ^ (2 : ℝ) := by
-      rw [show (10 / 3 : ℝ) = 4 / 3 + 2 by norm_num,
-        ENNReal.rpow_add_of_nonneg (x := lpNormOn 2 E (u s).toFun)
-          (y := (4 / 3 : ℝ)) (z := (2 : ℝ)) (by norm_num) (by norm_num)]
-    have hpowBound : lpNormOn 2 E (u s).toFun ^ (10 / 3 : ℝ) ≤
-        A ^ (4 / 3 : ℝ) * M₂ s := by
-      rw [hpow, hmass]
-      exact mul_le_mul_of_nonneg_right
-        (ENNReal.rpow_le_rpow hs (by norm_num)) (by positivity)
-    have hsp := hspatial (x₀ := x₀) (r := r) hr (u s)
-    have hfirst : K * weakGradientLpNormOn 2 E (u s).grad ^ (2 : ℕ) *
-        lpNormOn 2 E (u s).toFun ^ (4 / 3 : ℝ) ≤ K * A ^ (4 / 3 : ℝ) * D s := by
-      calc
-        _ ≤ K * weakGradientLpNormOn 2 E (u s).grad ^ (2 : ℕ) * A ^ (4 / 3 : ℝ) := by
-          gcongr
-        _ = K * A ^ (4 / 3 : ℝ) * D s := by
-          simp [D, mul_assoc, mul_left_comm, mul_comm]
-    have hsecond : K * ENNReal.ofReal r ^ (-(2 : ℝ)) *
-        lpNormOn 2 E (u s).toFun ^ (10 / 3 : ℝ) ≤
-          K * Q * A ^ (4 / 3 : ℝ) * M₂ s := by
-      calc
-        _ = K * ENNReal.ofReal (r ^ (-(2 : ℝ))) *
-              lpNormOn 2 E (u s).toFun ^ (10 / 3 : ℝ) := by rw [hRadius]
-        _ ≤ K * ENNReal.ofReal (r ^ (-(2 : ℝ))) *
-              (A ^ (4 / 3 : ℝ) * M₂ s) := by gcongr
-        _ = K * Q * A ^ (4 / 3 : ℝ) * M₂ s := by rw [hQ]; ac_rfl
-    calc
-      _ = lpNormOn (ENNReal.ofReal (10 / 3 : ℝ))
-          (euclideanBall x₀ r) (u s).toFun ^ (10 / 3 : ℝ) := by simp [q, E]
-      _ ≤ K * A ^ (4 / 3 : ℝ) * D s + K * Q * A ^ (4 / 3 : ℝ) * M₂ s := by
-        calc
-          _ ≤ K * weakGradientLpNormOn 2 E (u s).grad ^ (2 : ℕ) *
-                lpNormOn 2 E (u s).toFun ^ (4 / 3 : ℝ) +
-              K * ENNReal.ofReal r ^ (-(2 : ℝ)) *
-                lpNormOn 2 E (u s).toFun ^ (10 / 3 : ℝ) := by
-            simpa [E] using hsp
-          _ ≤ _ := add_le_add hfirst hsecond
-  have hRhsFinite :
-      (∫⁻ s, K * A ^ (4 / 3 : ℝ) * D s +
-        K * Q * A ^ (4 / 3 : ℝ) * M₂ s ∂ν) < ⊤ := by
-    have hfirstMeas : AEMeasurable (fun s =>
-        (K * A ^ (4 / 3 : ℝ)) * D s) ν := hDmeas.const_mul _
-    have hsecondMeas : AEMeasurable (fun s =>
-        (K * Q * A ^ (4 / 3 : ℝ)) * M₂ s) ν := hM₂meas.const_mul _
-    have hKfin : K * A ^ (4 / 3 : ℝ) ≠ ⊤ := by
-      exact ENNReal.mul_ne_top hKtop
-        (ENNReal.rpow_ne_top_of_nonneg (by norm_num) (ne_of_lt hA))
-    have hKQfin : K * Q * A ^ (4 / 3 : ℝ) ≠ ⊤ := by
-      exact ENNReal.mul_ne_top (ENNReal.mul_ne_top hKtop hQtop)
-        (ENNReal.rpow_ne_top_of_nonneg (by norm_num) (ne_of_lt hA))
-    have hfirst : (∫⁻ s, K * A ^ (4 / 3 : ℝ) * D s ∂ν) < ⊤ := by
-      rw [show (fun s => K * A ^ (4 / 3 : ℝ) * D s) =
-        fun s => (K * A ^ (4 / 3 : ℝ)) * D s by funext s; ring,
-        lintegral_const_mul'' _ hDmeas]
-      exact ENNReal.mul_lt_top (lt_top_iff_ne_top.mpr hKfin) hDtotalFinite
-    have hsecond : (∫⁻ s, K * Q * A ^ (4 / 3 : ℝ) * M₂ s ∂ν) < ⊤ := by
-      rw [show (fun s => K * Q * A ^ (4 / 3 : ℝ) * M₂ s) =
-        fun s => (K * Q * A ^ (4 / 3 : ℝ)) * M₂ s by funext s; ring,
-        lintegral_const_mul'' _ hM₂meas]
-      exact ENNReal.mul_lt_top (lt_top_iff_ne_top.mpr hKQfin) hM₂totalFinite
-    rw [lintegral_add_left' hfirstMeas]
-    exact ENNReal.add_lt_top.mpr ⟨hfirst, hsecond⟩
+  have hpointTime := @ball_time_sobolev_hpointTime_4 K x₀ r hr A ν u Q hUbound hspatial hQ hRadius
+  have hpointFinite := @ball_time_sobolev_hpointFinite_5 K x₀ r hr g Dg A ν M₂ Q hUbound hgradMass
+    hspatial hQ hRadius
+  have hRhsFinite := @ball_time_sobolev_hRhsFinite_6 K hKtop x₀ r J g hA ν u hM₂meas hDmeas
+    hDtotalFinite hM₂totalFinite hQtop
   have hqIntegralFinite :
       (∫⁻ z in E ×ˢ J, ‖g z‖ₑ ^ (10 / 3 : ℝ)) < ⊤ := by
     rw [hqtime]
@@ -503,112 +775,9 @@ theorem ball_time_sobolev :
     exact (eLpNorm_lt_top_iff_lintegral_rpow_enorm_lt_top
       (by dsimp [q]; norm_num) (by dsimp [q]; norm_num) hqMeasTarget).2
       hqIntegralFiniteTarget
-  have hDcompare :
-      (∫⁻ z in E ×ˢ J, ‖Dg z‖ₑ ^ (2 : ℝ)) ≤
-        eLpNorm (fun z => vec3EuclideanNorm (Dg z)) 2
-          (volume.restrict (U ×ˢ J)) ^ (2 : ℝ) := by
-    have hEmeas : AEStronglyMeasurable
-        (fun z : Vec3 × ℝ => vec3EuclideanNorm (Dg z))
-        (volume.restrict (U ×ˢ J)) :=
-      (continuous_vec3EuclideanNorm.comp_aestronglyMeasurable hDg)
-    have hEid := eLpNorm_two_sq_eq_lintegral hEmeas
-    have hProductSet : E ×ˢ J = U ×ˢ J := by rw [hBall]
-    calc
-      (∫⁻ z in E ×ˢ J, ‖Dg z‖ₑ ^ (2 : ℝ)) =
-          ∫⁻ z in U ×ˢ J, ‖Dg z‖ₑ ^ (2 : ℝ) := by rw [hProductSet]
-      _ ≤ ∫⁻ z in U ×ˢ J, ‖vec3EuclideanNorm (Dg z)‖ₑ ^ (2 : ℝ) := by
-        apply lintegral_mono
-        intro z
-        have hnorm : ‖Dg z‖ₑ ≤ ‖vec3EuclideanNorm (Dg z)‖ₑ := by
-          calc
-            ‖Dg z‖ₑ = ENNReal.ofReal ‖Dg z‖ := by rw [← ofReal_norm]
-            _ ≤ ENNReal.ofReal (vec3EuclideanNorm (Dg z)) :=
-              ENNReal.ofReal_le_ofReal (norm_le_vec3EuclideanNorm (Dg z))
-            _ = ‖vec3EuclideanNorm (Dg z)‖ₑ :=
-              (Real.enorm_eq_ofReal (vec3EuclideanNorm_nonneg (Dg z))).symm
-        exact ENNReal.rpow_le_rpow hnorm (by norm_num)
-      _ = eLpNorm (fun z => vec3EuclideanNorm (Dg z)) 2
-            (volume.restrict (U ×ˢ J)) ^ (2 : ℝ) := hEid.symm
-  have hIntegralBound :
-      eLpNorm g q (volume.restrict (U ×ˢ J)) ^ (10 / 3 : ℝ) ≤
-        ENNReal.ofReal C *
-          (A ^ (4 / 3 : ℝ) *
-            eLpNorm (fun z => vec3EuclideanNorm (Dg z)) 2
-              (volume.restrict (U ×ˢ J)) ^ (2 : ℝ) +
-          ENNReal.ofReal (r ^ (-2 : ℝ)) * A ^ (10 / 3 : ℝ) * volume J) := by
-    have htargetId' : eLpNorm g q (volume.restrict (U ×ˢ J)) ^ (10 / 3 : ℝ) =
-        ∫⁻ z in U ×ˢ J, ‖g z‖ₑ ^ (10 / 3 : ℝ) := by
-      rw [eLpNorm_eq_lintegral_rpow_enorm_toReal
-        (by dsimp [q]; norm_num) (by dsimp [q]; norm_num) hqMeasTarget,
-        ENNReal.toReal_ofReal (by norm_num : (0 : ℝ) ≤ 10 / 3),
-        ← ENNReal.rpow_mul]
-      norm_num
-    rw [htargetId']
-    have hBoundOnProduct :
-        (∫⁻ z in E ×ˢ J, ‖g z‖ₑ ^ (10 / 3 : ℝ)) ≤
-          K * A ^ (4 / 3 : ℝ) * (∫⁻ s, D s ∂ν) +
-            K * Q * A ^ (10 / 3 : ℝ) * volume J := by
-      rw [hqtime]
-      have hfirstMeas : AEMeasurable (fun s =>
-          (K * A ^ (4 / 3 : ℝ)) * D s) ν := hDmeas.const_mul _
-      have hsum :
-          (∫⁻ s, K * D s * A ^ (4 / 3 : ℝ) +
-            K * Q * A ^ (10 / 3 : ℝ) ∂ν) =
-          K * A ^ (4 / 3 : ℝ) * (∫⁻ s, D s ∂ν) +
-            K * Q * A ^ (10 / 3 : ℝ) * volume J := by
-        calc
-          _ = ∫⁻ s, (K * A ^ (4 / 3 : ℝ)) * D s +
-                K * Q * A ^ (10 / 3 : ℝ) ∂ν := by
-            congr 1
-            funext s
-            ring
-          _ = _ := by
-            rw [lintegral_add_left' hfirstMeas]
-            rw [lintegral_const_mul'' _ hDmeas]
-            simp only [lintegral_const]
-            simp [ν, volume.restrict_apply_univ]
-      have hpointTime' : ∀ᵐ s ∂ν,
-          lpNormOn (ENNReal.ofReal (10 / 3 : ℝ)) E (u s).toFun ^ (10 / 3 : ℝ) ≤
-            K * A ^ (4 / 3 : ℝ) * D s + K * Q * A ^ (10 / 3 : ℝ) := by
-        simpa [q] using hpointTime
-      calc
-        _ ≤ ∫⁻ s, K * D s * A ^ (4 / 3 : ℝ) +
-              K * Q * A ^ (10 / 3 : ℝ) ∂ν := by
-          apply lintegral_mono_ae
-          filter_upwards [hpointTime'] with s hs
-          calc
-            _ ≤ K * A ^ (4 / 3 : ℝ) * D s + K * Q * A ^ (10 / 3 : ℝ) := hs
-            _ = _ := by congr 1; ac_rfl
-        _ = _ := hsum
-    have hProductSet : E ×ˢ J = U ×ˢ J := by rw [hBall]
-    calc
-      _ = ∫⁻ z in E ×ˢ J, ‖g z‖ₑ ^ (10 / 3 : ℝ) := by
-        rw [← hProductSet]
-      _ ≤ K * A ^ (4 / 3 : ℝ) * (∫⁻ s, D s ∂ν) +
-            K * Q * A ^ (10 / 3 : ℝ) * volume J := hBoundOnProduct
-      _ ≤ K * A ^ (4 / 3 : ℝ) *
-            eLpNorm (fun z => vec3EuclideanNorm (Dg z)) 2
-              (volume.restrict (U ×ˢ J)) ^ (2 : ℝ) +
-          K * Q * A ^ (10 / 3 : ℝ) * volume J := by
-        have hDtime : (∫⁻ s, D s ∂ν) ≤
-            eLpNorm (fun z => vec3EuclideanNorm (Dg z)) 2
-              (volume.restrict (U ×ˢ J)) ^ (2 : ℝ) := by
-          rw [hDtotal]
-          exact hDcompare
-        apply add_le_add
-        · exact mul_le_mul_of_nonneg_left hDtime (by positivity)
-        · exact le_rfl
-      _ ≤ _ := by
-        rw [hQ]
-        let S : ℝ≥0∞ :=
-          A ^ (4 / 3 : ℝ) *
-              eLpNorm (fun z => vec3EuclideanNorm (Dg z)) 2
-                (volume.restrict (U ×ˢ J)) ^ (2 : ℝ) +
-            ENNReal.ofReal (r ^ (-2 : ℝ)) * A ^ (10 / 3 : ℝ) * volume J
-        calc
-          _ = K * S := by dsimp [S]; ring
-          _ ≤ ENNReal.ofReal C * S :=
-            mul_le_mul_of_nonneg_right hKle (by dsimp [S]; positivity)
+  have hDcompare := @ball_time_sobolev_hDcompare_7 x₀ r J Dg hDg hBall
+  have hIntegralBound := @ball_time_sobolev_hIntegralBound_8 K C hKle x₀ r hr J g Dg A u D Q hBall
+    hDmeas hDtotal hQ hqtime hpointTime hqMeasTarget hDcompare
   exact ⟨hmemq, hIntegralBound⟩
 
 end CKN

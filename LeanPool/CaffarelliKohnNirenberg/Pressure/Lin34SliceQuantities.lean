@@ -34,11 +34,11 @@ The integrated estimate `eq:lin35-force` of `paper/ckn.tex` is obtained by
 integrating `eq:lin34-pointwise` over `J_ρ = (t₀ - ρ², t₀)`.  This file names
 the four functions of time that appear in that integration, proves that they
 are integrable on `J_ρ`, and identifies their integrals with the cylinder
-quantities `D(z₀, r)` and `D(z₀, ρ)` of `eq:ABCDE`, and `Ĉ(z₀, ρ)` of `eq:Chat`.
+quantities `D(z₀, r)` and `D(z₀, ρ)` of `eq:ABCDE`, and `C_hat(z₀, ρ)` of `eq:Chat`.
 -/
 
 /-- The spatial `L³` mass of the mean-free velocity on `B_ρ` at time `s`,
-the slice integrand of `Ĉ(z₀,ρ)` in `eq:Chat`. -/
+the slice integrand of `C_hat(z₀,ρ)` in `eq:Chat`. -/
 def lin34VelocitySlice (u : ParabolicPoint → Vec3) (z : ParabolicPoint)
     (ρ s : ℝ) : ℝ :=
   ∫ y in vec3Ball z.1 ρ, vec3EuclideanNorm (meanFreeVec u z.1 ρ s y) ^ (3 : ℕ)
@@ -166,7 +166,7 @@ theorem lin34J_integrable
     (lin34_time_subset hr (by linarith only [hhalf, hρ]))
     (hslice.const_mul _)
 
-/-- `Ĉ(z₀,ρ)` of `eq:Chat` is the time integral of the velocity slice
+/-- `C_hat(z₀,ρ)` of `eq:Chat` is the time integral of the velocity slice
 quantity. -/
 theorem lin34_pressureChat_eq_integral
     {Ω : Set Vec3} {I : Set ℝ} {q : ℝ}

@@ -209,10 +209,10 @@ private lemma shifted_gradient_integrable
           (fun q : Vec3 × ℝ => |ζ (x - q.1, t + q.2)|)
           ((volume : Measure (Vec3 × ℝ)).restrict S) from
         hmeas.restrict)
-    filter_upwards [ae_restrict_mem
-      (MeasurableSet.prod MeasurableSet.univ measurableSet_Ioc)] with q hq
-    simpa only [Real.norm_eq_abs, abs_abs] using
-      hB ⟨(x - q.1, t + q.2), rfl⟩
+    · filter_upwards [ae_restrict_mem
+        (MeasurableSet.prod MeasurableSet.univ measurableSet_Ioc)] with q hq
+      simpa only [Real.norm_eq_abs, abs_abs] using
+        hB ⟨(x - q.1, t + q.2), rfl⟩
   have hG : Integrable G volume := by
     apply hG_S.integrable_of_forall_notMem_eq_zero
     intro q hq
@@ -265,6 +265,180 @@ private lemma heatKernelSpaceDerivative_neg (y : Vec3) (s : ℝ) (i : Fin 3) :
       heatKernelSpaceDerivative, ite_eq_right (not_lt.mpr (le_of_not_gt hs))]
     simp
 
+private lemma backwardPotential_derivative_hconv_1 :
+    ∀ {ζ : Vec3 × ℝ → ℝ},
+      ContDiff ℝ (⊤ : ℕ∞) ζ →
+        HasCompactSupport ζ →
+          ∀ (i : Fin (3 : ℕ)) (x : Vec3) (t : ℝ),
+            let η : Vec3 × ℝ → ℝ := fun (z : Vec3 × ℝ) =>
+              spatialPartial
+                (have this : ParabolicPoint → ℝ := ζ;
+                this)
+                i z;
+            ∀ (s : ℝ),
+              (0 : ℝ) < s →
+                heatConv s (fun (y : Vec3) => η (y, t + s)) x =
+                  @integral _ _ _ _ MeasureSpace.toMeasurableSpace volume fun (y : Vec3) =>
+                    heatKernelSpaceDerivative y s i * ζ (x - y, t + s)
+    := by
+  intro ζ hζ hζc i x t η s hs
+  let us : Vec3 → ℝ := fun y => ζ (y, t + s)
+  have hus : ContDiff ℝ (⊤ : ℕ∞) us := by
+    exact test_slice_contDiff hζ (t + s)
+  have husc : HasCompactSupport us := by
+    exact test_slice_hasCompactSupport hζc (t + s)
+  have heq : (fun y : Vec3 => η (y, t + s)) =
+      (fun y => (fderiv ℝ us y) (CKN.basisVec i)) := by
+    funext y
+    change CKN.spatialPartial (show ParabolicPoint → ℝ from ζ) i
+        (y, t + s) = (fderiv ℝ us y) (CKN.basisVec i)
+    rw [spatialPartial_eq_fderiv_apply hζ i y (t + s)]
+    have hinner : HasFDerivAt (fun z : Vec3 => (z, t + s))
+        (ContinuousLinearMap.inl ℝ Vec3 ℝ) y := by
+      have hinl : ContinuousLinearMap.inl ℝ Vec3 ℝ =
+          (ContinuousLinearMap.id ℝ Vec3).prod (0 : Vec3 →L[ℝ] ℝ) := by
+        ext z <;> rfl
+      convert (hasFDerivAt_id y).prodMk
+        (hasFDerivAt_const (x := y) (c := t + s)) using 1
+      · ext z <;> simp
+    have houter : HasFDerivAt ζ (fderiv ℝ ζ (y, t + s))
+        (y, t + s) :=
+      (hζ.differentiable (by simp) (y, t + s)).hasFDerivAt
+    have hcomp := houter.comp y hinner
+    have hcf := hcomp.fderiv
+    have hcf' : (fderiv ℝ us y) (CKN.basisVec i) =
+        (fderiv ℝ ζ (y, t + s)) (CKN.basisVec i, 0) := by
+      change (fderiv ℝ (ζ ∘ fun z : Vec3 => (z, t + s)) y)
+          (CKN.basisVec i) = _
+      rw [hcf]
+      rfl
+    exact hcf'.symm
+  rw [heq, heatConv_spatial_kernel_transfer hus husc hs i x]
+
+private lemma backwardPotential_derivative_hfuture'_2 :
+    ∀ {ζ : Vec3 × ℝ → ℝ} (i : Fin (3 : ℕ)) (x : Vec3) (t : ℝ),
+      let F : Vec3 × ℝ → ℝ := fun (q : Vec3 × ℝ) =>
+        heatKernelSpaceDerivative q.1 q.2 i * ζ (x - q.1, t + q.2);
+      Measure.prod volume (Measure.restrict volume (Ioi (0 : ℝ))) =
+          Measure.restrict volume (SProd.sprod (α := Set Vec3) univ (Ioi (0 : ℝ))) →
+        Eq (α := ℝ)
+            (@integral _ _ _ _ Prod.instMeasurableSpace
+              (Measure.prod volume (Measure.restrict volume (Ioi (0 : ℝ)))) fun (q : Vec3 × ℝ) =>
+              F q)
+            (@integral _ _ _ _ MeasureSpace.toMeasurableSpace
+              (Measure.restrict volume (Ioi (0 : ℝ))) fun (s : ℝ) =>
+              @integral _ _ _ _ MeasureSpace.toMeasurableSpace volume fun (y : Vec3) => F (y, s)) →
+          Eq (α := ℝ)
+            (@integral _ _ _ _ MeasureSpace.toMeasurableSpace
+              (Measure.restrict volume (Ioi (0 : ℝ))) fun (s : ℝ) =>
+              @integral _ _ _ _ MeasureSpace.toMeasurableSpace volume fun (y : Vec3) => F (y, s))
+            (@integral _ _ _ _ MeasureSpace.toMeasurableSpace volume fun (q : Vec3 × ℝ) => F q)
+    := by
+  intro ζ i x t F hmeasure hswap
+  rw [← hswap]
+  calc
+    (∫ q : Vec3 × ℝ, F q ∂
+        ((volume : Measure Vec3).prod (volume.restrict (Ioi (0 : ℝ))))) =
+        ∫ q : Vec3 × ℝ, F q ∂
+          ((volume : Measure (Vec3 × ℝ)).restrict
+            ((Set.univ : Set Vec3) ×ˢ Ioi (0 : ℝ))) := by
+      rw [hmeasure]
+    _ = ∫ q : Vec3 × ℝ, F q := by
+      have hset : MeasurableSet ((Set.univ : Set Vec3) ×ˢ Ioi (0 : ℝ)) :=
+        MeasurableSet.prod MeasurableSet.univ measurableSet_Ioi
+      have hzero : ∀ᵐ q : Vec3 × ℝ ∂(volume : Measure (Vec3 × ℝ)),
+          F q = ((Set.univ : Set Vec3) ×ˢ Ioi (0 : ℝ)).indicator F q := by
+        filter_upwards [] with q
+        by_cases hq : 0 < q.2
+        · have hmem : q ∈ (Set.univ : Set Vec3) ×ˢ Ioi (0 : ℝ) :=
+            ⟨Set.mem_univ _, hq⟩
+          rw [Set.indicator_of_mem hmem]
+        · have hFzero : F q = 0 := by
+            dsimp [F]
+            rw [heatKernelSpaceDerivative]
+            simp [not_lt.mpr (le_of_not_gt hq)]
+          simp [hFzero, hq]
+      rw [← integral_indicator hset]
+      apply integral_congr_ae
+      filter_upwards [hzero] with q hq
+      exact hq.symm
+
+private lemma backwardPotential_derivative_hspatial_3 :
+    ∀ {ζ : Vec3 × ℝ → ℝ} (i : Fin (3 : ℕ)) (x : Vec3) (t : ℝ),
+      let F : Vec3 × ℝ → ℝ := fun (q : Vec3 × ℝ) =>
+        heatKernelSpaceDerivative q.1 q.2 i * ζ (x - q.1, t + q.2);
+      let e : Vec3 × ℝ ≃ᵐ Vec3 × ℝ :=
+        MeasurableEquiv.prodCongr (MeasurableEquiv.neg Vec3) (MeasurableEquiv.refl ℝ);
+      MeasurePreserving (α := Vec3 × ℝ) (β := Vec3 × ℝ) (⇑e : Vec3 × ℝ → Vec3 × ℝ) volume volume →
+        let _ : Vec3 × ℝ → ℝ := fun (q : Vec3 × ℝ) =>
+          heatKernelSpaceDerivative q.1 q.2 i * ζ (x + q.1, t + q.2);
+        let v : Vec3 × ℝ := (x, t);
+        let _ : Vec3 × ℝ → ℝ := fun (z : Vec3 × ℝ) =>
+          heatKernelSpaceDerivative (z.1 - v.1) (z.2 - v.2) i * ζ z;
+        backwardHeatPotentialSpatial i
+            (have this : ParabolicPoint → ℝ := ζ;
+            this)
+            (x, t) =
+          @integral _ _ _ _ MeasureSpace.toMeasurableSpace volume fun (q : Vec3 × ℝ) => F q
+    := by
+  intro ζ i x t F e he H v G
+  unfold backwardHeatPotentialSpatial backwardHeatSpatialKernel
+  change -∫ z : Vec3 × ℝ,
+    heatKernelSpaceDerivative (z.1 - x) (z.2 - t) i * ζ z = _
+  change -∫ z : Vec3 × ℝ,
+      heatKernelSpaceDerivative (z.1 - x) (z.2 - t) i * ζ z
+      ∂backwardProductVolume =
+    ∫ q : Vec3 × ℝ, F q ∂backwardProductVolume
+  let _ : backwardProductVolume.IsAddLeftInvariant := by
+    dsimp [backwardProductVolume]
+    infer_instance
+  have hadd0 := measurePreserving_add_left
+    backwardProductVolume v
+  let hadd : MeasurePreserving (MeasurableEquiv.addLeft v :
+      Vec3 × ℝ → Vec3 × ℝ) backwardProductVolume backwardProductVolume := by
+    convert hadd0 using 1
+    funext q
+    rfl
+  have haddint := hadd.integral_comp' G
+  have hGtoH : (fun q : Vec3 × ℝ => G (v + q)) = H := by
+    funext q
+    dsimp [G, H, v]
+    congr 2 <;> simp [sub_eq_add_neg]
+  calc
+    -∫ z : Vec3 × ℝ,
+        heatKernelSpaceDerivative (z.1 - x) (z.2 - t) i * ζ z
+        ∂backwardProductVolume =
+        -∫ z : Vec3 × ℝ, G z ∂backwardProductVolume := by
+          congr 1
+    _ = -∫ q : Vec3 × ℝ, H q ∂backwardProductVolume := by
+      rw [← haddint]
+      congr 1
+      apply integral_congr_ae
+      filter_upwards [] with q
+      exact congrFun hGtoH q
+    _ = ∫ q : Vec3 × ℝ, F q := by
+      have heint := he.integral_comp' H
+      have heint' :
+          (∫ q : Vec3 × ℝ, H (e q) ∂backwardProductVolume) =
+            ∫ q : Vec3 × ℝ, H q ∂backwardProductVolume := by
+        change (∫ q : Vec3 × ℝ, H (e q) ∂backwardProductVolume) =
+          ∫ q : Vec3 × ℝ, H q ∂backwardProductVolume at heint
+        exact heint
+      calc
+        -∫ q : Vec3 × ℝ, H q ∂backwardProductVolume =
+            -∫ q : Vec3 × ℝ, H (e q) ∂backwardProductVolume := by rw [heint']
+        _ = -∫ q : Vec3 × ℝ, -F q := by
+          congr 1
+          apply integral_congr_ae
+          filter_upwards [] with q
+          change heatKernelSpaceDerivative (-q.1) q.2 i *
+              ζ (x + -q.1, t + q.2) =
+            -(heatKernelSpaceDerivative q.1 q.2 i *
+              ζ (x - q.1, t + q.2))
+          rw [heatKernelSpaceDerivative_neg]
+          ring_nf
+        _ = ∫ q : Vec3 × ℝ, F q := by rw [integral_neg]; simp
+
 theorem backwardTestPotential_spatialPartial_eq_backwardHeatPotentialSpatial
     {ζ : Vec3 × ℝ → ℝ} (hζ : ContDiff ℝ (⊤ : ℕ∞) ζ)
     (hζc : HasCompactSupport ζ) (i : Fin 3) (x : Vec3) (t : ℝ) :
@@ -300,42 +474,7 @@ theorem backwardTestPotential_spatialPartial_eq_backwardHeatPotentialSpatial
         ζ (x - q.1, t + q.2)) :=
       hζ.continuous.comp hmap |>.measurable
     exact (hkmeas.mul hzmeas).aestronglyMeasurable
-  have hconv (s : ℝ) (hs : 0 < s) :
-      heatConv s (fun y : Vec3 => η (y, t + s)) x =
-        ∫ y : Vec3, heatKernelSpaceDerivative y s i *
-          ζ (x - y, t + s) := by
-    let us : Vec3 → ℝ := fun y => ζ (y, t + s)
-    have hus : ContDiff ℝ (⊤ : ℕ∞) us := by
-      exact test_slice_contDiff hζ (t + s)
-    have husc : HasCompactSupport us := by
-      exact test_slice_hasCompactSupport hζc (t + s)
-    have heq : (fun y : Vec3 => η (y, t + s)) =
-        (fun y => (fderiv ℝ us y) (CKN.basisVec i)) := by
-      funext y
-      change CKN.spatialPartial (show ParabolicPoint → ℝ from ζ) i
-          (y, t + s) = (fderiv ℝ us y) (CKN.basisVec i)
-      rw [spatialPartial_eq_fderiv_apply hζ i y (t + s)]
-      have hinner : HasFDerivAt (fun z : Vec3 => (z, t + s))
-          (ContinuousLinearMap.inl ℝ Vec3 ℝ) y := by
-        have hinl : ContinuousLinearMap.inl ℝ Vec3 ℝ =
-            (ContinuousLinearMap.id ℝ Vec3).prod (0 : Vec3 →L[ℝ] ℝ) := by
-          ext z <;> rfl
-        convert (hasFDerivAt_id y).prodMk
-          (hasFDerivAt_const (x := y) (c := t + s)) using 1
-        · ext z <;> simp
-      have houter : HasFDerivAt ζ (fderiv ℝ ζ (y, t + s))
-          (y, t + s) :=
-        (hζ.differentiable (by simp) (y, t + s)).hasFDerivAt
-      have hcomp := houter.comp y hinner
-      have hcf := hcomp.fderiv
-      have hcf' : (fderiv ℝ us y) (CKN.basisVec i) =
-          (fderiv ℝ ζ (y, t + s)) (CKN.basisVec i, 0) := by
-        change (fderiv ℝ (ζ ∘ fun z : Vec3 => (z, t + s)) y)
-            (CKN.basisVec i) = _
-        rw [hcf]
-        rfl
-      exact hcf'.symm
-    rw [heq, heatConv_spatial_kernel_transfer hus husc hs i x]
+  have hconv (s : ℝ) (hs : 0 < s) := @backwardPotential_derivative_hconv_1 ζ hζ hζc i x t s hs
   have hfuture :
       CKN.spatialPartial (show ParabolicPoint → ℝ from
           fun z => backwardTestPotential ζ z) i (x, t) =
@@ -374,36 +513,7 @@ theorem backwardTestPotential_spatialPartial_eq_backwardHeatPotentialSpatial
             ((volume.restrict (Ioi (0 : ℝ))).prod volume) := hs.symm
       _ = ∫ s : ℝ in Ioi 0, ∫ y : Vec3, F (y, s) := by
         simpa only [Prod.swap_prod_mk] using hp
-  have hfuture' :
-      (∫ s : ℝ in Ioi 0, ∫ y : Vec3, F (y, s)) =
-        ∫ q : Vec3 × ℝ, F q := by
-    rw [← hswap]
-    calc
-      (∫ q : Vec3 × ℝ, F q ∂
-          ((volume : Measure Vec3).prod (volume.restrict (Ioi (0 : ℝ))))) =
-          ∫ q : Vec3 × ℝ, F q ∂
-            ((volume : Measure (Vec3 × ℝ)).restrict
-              ((Set.univ : Set Vec3) ×ˢ Ioi (0 : ℝ))) := by
-        rw [hmeasure]
-      _ = ∫ q : Vec3 × ℝ, F q := by
-        have hset : MeasurableSet ((Set.univ : Set Vec3) ×ˢ Ioi (0 : ℝ)) :=
-          MeasurableSet.prod MeasurableSet.univ measurableSet_Ioi
-        have hzero : ∀ᵐ q : Vec3 × ℝ ∂(volume : Measure (Vec3 × ℝ)),
-            F q = ((Set.univ : Set Vec3) ×ˢ Ioi (0 : ℝ)).indicator F q := by
-          filter_upwards [] with q
-          by_cases hq : 0 < q.2
-          · have hmem : q ∈ (Set.univ : Set Vec3) ×ˢ Ioi (0 : ℝ) :=
-              ⟨Set.mem_univ _, hq⟩
-            rw [Set.indicator_of_mem hmem]
-          · have hFzero : F q = 0 := by
-              dsimp [F]
-              rw [heatKernelSpaceDerivative]
-              simp [not_lt.mpr (le_of_not_gt hq)]
-            simp [hFzero, hq]
-        rw [← integral_indicator hset]
-        apply integral_congr_ae
-        filter_upwards [hzero] with q hq
-        exact hq.symm
+  have hfuture' := @backwardPotential_derivative_hfuture'_2 ζ i x t hmeasure hswap
   let e : (Vec3 × ℝ) ≃ᵐ (Vec3 × ℝ) :=
     (MeasurableEquiv.neg Vec3).prodCongr (MeasurableEquiv.refl ℝ)
   have he : MeasurePreserving e
@@ -466,66 +576,7 @@ theorem backwardTestPotential_spatialPartial_eq_backwardHeatPotentialSpatial
     funext q
     dsimp [H, G, v]
     congr 2 <;> simp
-  have hspatial :
-      backwardHeatPotentialSpatial i
-          (show ParabolicPoint → ℝ from ζ) (x, t) =
-        ∫ q : Vec3 × ℝ, F q := by
-    unfold backwardHeatPotentialSpatial backwardHeatSpatialKernel
-    change -∫ z : Vec3 × ℝ,
-      heatKernelSpaceDerivative (z.1 - x) (z.2 - t) i * ζ z = _
-    change -∫ z : Vec3 × ℝ,
-        heatKernelSpaceDerivative (z.1 - x) (z.2 - t) i * ζ z
-        ∂backwardProductVolume =
-      ∫ q : Vec3 × ℝ, F q ∂backwardProductVolume
-    let _ : backwardProductVolume.IsAddLeftInvariant := by
-      dsimp [backwardProductVolume]
-      infer_instance
-    have hadd0 := measurePreserving_add_left
-      backwardProductVolume v
-    let hadd : MeasurePreserving (MeasurableEquiv.addLeft v :
-        Vec3 × ℝ → Vec3 × ℝ) backwardProductVolume backwardProductVolume := by
-      convert hadd0 using 1
-      funext q
-      rfl
-    have haddint := hadd.integral_comp' G
-    have hGtoH : (fun q : Vec3 × ℝ => G (v + q)) = H := by
-      funext q
-      dsimp [G, H, v]
-      congr 2 <;> simp [sub_eq_add_neg]
-    calc
-      -∫ z : Vec3 × ℝ,
-          heatKernelSpaceDerivative (z.1 - x) (z.2 - t) i * ζ z
-          ∂backwardProductVolume =
-          -∫ z : Vec3 × ℝ, G z ∂backwardProductVolume := by
-            congr 1
-      _ = -∫ q : Vec3 × ℝ, H q ∂backwardProductVolume := by
-        rw [← haddint]
-        congr 1
-        apply integral_congr_ae
-        filter_upwards [] with q
-        exact congrFun hGtoH q
-      _ = ∫ q : Vec3 × ℝ, F q := by
-        have heint := he.integral_comp' H
-        have heint' :
-            (∫ q : Vec3 × ℝ, H (e q) ∂backwardProductVolume) =
-              ∫ q : Vec3 × ℝ, H q ∂backwardProductVolume := by
-          change (∫ q : Vec3 × ℝ, H (e q) ∂backwardProductVolume) =
-            ∫ q : Vec3 × ℝ, H q ∂backwardProductVolume at heint
-          exact heint
-        calc
-          -∫ q : Vec3 × ℝ, H q ∂backwardProductVolume =
-              -∫ q : Vec3 × ℝ, H (e q) ∂backwardProductVolume := by rw [heint']
-          _ = -∫ q : Vec3 × ℝ, -F q := by
-            congr 1
-            apply integral_congr_ae
-            filter_upwards [] with q
-            change heatKernelSpaceDerivative (-q.1) q.2 i *
-                ζ (x + -q.1, t + q.2) =
-              -(heatKernelSpaceDerivative q.1 q.2 i *
-                ζ (x - q.1, t + q.2))
-            rw [heatKernelSpaceDerivative_neg]
-            ring_nf
-          _ = ∫ q : Vec3 × ℝ, F q := by rw [integral_neg]; simp
+  have hspatial := @backwardPotential_derivative_hspatial_3 ζ i x t he
   calc
     CKN.spatialPartial (show ParabolicPoint → ℝ from
         fun z => backwardTestPotential ζ z) i (x, t) =

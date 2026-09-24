@@ -26,7 +26,7 @@ namespace CKN
 
 /-! The two cylinder bounds for the force terms `p₇` and `p₈` are added into a
 single `L^{3/2}` bound on the parabolic cylinder.  This is the estimate
-`r^{-2} ∬_{Q_r} |p₇ + p₈|^{3/2} ≤ (C₁₃(q) κ λ(z₀,ρ))^{3/2}` appearing in the
+`r^{-2} ∫∫_{Q_r} |p₇ + p₈|^{3/2} ≤ (C₁₃(q) κ λ(z₀,ρ))^{3/2}` appearing in the
 proof of `prop:lin34`(ii-b) of `paper/ckn.tex`. -/
 
 /-- The force term `p₈` is a.e. strongly measurable on the parabolic cylinder

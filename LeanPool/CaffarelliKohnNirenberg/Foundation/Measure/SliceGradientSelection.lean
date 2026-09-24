@@ -95,7 +95,7 @@ theorem isCompact_slice_of_isCompact {K : Set (Vec3 × ℝ)} (hK : IsCompact K) 
     · rintro ⟨z, ⟨hzK, hzt⟩, rfl⟩
       have hz2 : z.2 = t := hzt
       have hzeq : (z.1, t) = z := Prod.ext rfl hz2.symm
-      show (z.1, t) ∈ K
+      change (z.1, t) ∈ K
       rw [hzeq]
       exact hzK
   rw [hEq]
@@ -142,6 +142,140 @@ theorem setIntegral_prod_eq_of_iterated {B' : Set Vec3} {J : Set ℝ}
       ((volume : Measure ℝ).restrict J)) by rw [← hprod],
     integral_prod_symm F hF', integral_prod_symm H hH']
   exact h
+
+private lemma exists_spacetime_weak_gradient_hkey_1 :
+    ∀ (k : Fin 3) {B B' : Set Vec3} {J : Set ℝ} {p : Vec3 × ℝ → ℝ},
+      MeasurableSet B' →
+        ∀ (W : Set (Vec 3)) (δ : ℝ),
+          IsCompact (closure W) →
+            closure W ⊆ B →
+              (∀ x ∈ closure B', ∀ (ε : ℝ), 0 < ε → ε ≤ δ → Metric.closedBall x ε ⊆ W) →
+                B' ⊆ W →
+                  MeasurableSet W →
+                    W ⊆ B →
+                      ∀
+                        (hpmk :
+                          AEStronglyMeasurable (m₀ := MeasureSpace.toMeasurableSpace) p
+                            (Measure.restrict volume (B ×ˢ J))),
+                        let p₀ : Vec3 × ℝ → ℝ := AEStronglyMeasurable.mk p hpmk;
+                        let P : Vec3 × ℝ → ℝ := (SProd.sprod (β := Set ℝ) W univ).indicator p₀;
+                        let Kn : ℕ → Vec3 → ℝ := fun n y =>
+                          (fderiv ℝ (mollifier (sliceRadius n) (sliceRadius_pos n)) y)
+                            (basisVec k);
+                        let G : ℕ → Vec3 × ℝ → ℝ := fun n z =>
+                          @integral _ _ _ _ MeasureSpace.toMeasurableSpace volume
+                            fun (y : Vec3) => Kn n y * P (z.1 - y, z.2);
+                        (∀ᶠ (n : ℕ) in atTop, sliceRadius n ≤ δ) →
+                          (∀ᵐ (t : ℝ) ∂Measure.restrict volume J,
+                              IntegrableOn (ε := ℝ) (mα := MeasureSpace.toMeasurableSpace)
+                                (fun x => p (x, t)) B volume) →
+                            (∀ᵐ (t : ℝ) ∂Measure.restrict volume J,
+                                (fun x => p (x, t)) =ᵐ[Measure.restrict volume B] fun x =>
+                                  p₀ (x, t)) →
+                              ∀ᵐ (t : ℝ) ∂Measure.restrict volume J,
+                                ∀ (g : Vec3 → ℝ),
+                                  LocallyIntegrableOn g B volume →
+                                    HasWeakPartialDerivOn B k (fun x => p (x, t)) g →
+                                      ∀ᵐ (x : Vec3) ∂Measure.restrict volume B',
+                                        Tendsto (fun (n : ℕ) => G n (x, t)) atTop (𝓝 (g x))
+    := by
+  intro k B B' J p hB' W δ hWcompact hWB hWball hB'sub hWmeas hWsubB hpmk p₀ P Kn G hradius
+    hpslice hp₀slice
+  filter_upwards [hpslice, hp₀slice] with t htint htmk g hgloc hgweak
+  set u : Vec3 → ℝ := W.indicator (fun x => p₀ (x, t)) with hudef
+  have huW : ∀ x ∈ W, u x = p₀ (x, t) := by
+    intro x hx
+    change W.indicator (fun x => p₀ (x, t)) x = p₀ (x, t)
+    exact Set.indicator_of_mem hx _
+  have hPu : ∀ x : Vec3, P (x, t) = u x := by
+    intro x
+    by_cases hx : x ∈ W
+    · change (W ×ˢ (univ : Set ℝ)).indicator p₀ (x, t) = u x
+      rw [Set.indicator_of_mem (show ((x, t) : Vec3 × ℝ) ∈ W ×ˢ (univ : Set ℝ) from
+        ⟨hx, Set.mem_univ t⟩), huW x hx]
+    · change (W ×ˢ (univ : Set ℝ)).indicator p₀ (x, t) = u x
+      rw [Set.indicator_of_notMem (show ((x, t) : Vec3 × ℝ) ∉ W ×ˢ (univ : Set ℝ) from
+        fun h => hx h.1)]
+      change (0 : ℝ) = W.indicator (fun x => p₀ (x, t)) x
+      rw [Set.indicator_of_notMem hx]
+  have hGval : ∀ (n : ℕ) (x : Vec3), G n (x, t) = ∫ y, Kn n y * u (x - y) ∂volume := by
+    intro n x
+    change (∫ y, Kn n y * P (x - y, t) ∂volume) = ∫ y, Kn n y * u (x - y) ∂volume
+    refine integral_congr_ae (Eventually.of_forall fun y => ?_)
+    change Kn n y * P (x - y, t) = Kn n y * u (x - y)
+    rw [hPu (x - y)]
+  have hpW : IntegrableOn (fun x => p (x, t)) W volume := htint.mono_set hWsubB
+  have hp₀W : IntegrableOn (fun x => p₀ (x, t)) W volume :=
+    hpW.congr (htmk.filter_mono (ae_mono (Measure.restrict_mono hWsubB le_rfl)))
+  have huInt : Integrable u volume := hp₀W.integrable_indicator hWmeas
+  have huLoc : LocallyIntegrable u volume := huInt.locallyIntegrable
+  have hgW : IntegrableOn g W volume :=
+    (hgloc.integrableOn_compact_subset hWB hWcompact).mono_set subset_closure
+  have hgWind : Integrable (W.indicator g) volume := hgW.integrable_indicator hWmeas
+  have hgWloc : LocallyIntegrable (W.indicator g) volume := hgWind.locallyIntegrable
+  have hgWval : ∀ x ∈ W, (W.indicator g) x = g x := fun x hx => Set.indicator_of_mem hx g
+  -- the weak-derivative identity for the truncated data
+  have hweakW : HasWeakPartialDerivOn W k u (W.indicator g) := by
+    intro ψ hψ hψc hψW
+    have hDψzero : ∀ x, x ∉ W → (fderiv ℝ ψ x) (basisVec k) = 0 := by
+      intro x hx
+      rw [fderiv_of_notMem_tsupport (𝕜 := ℝ) (fun h => hx (hψW h))]
+      simp
+    have hψzero : ∀ x, x ∉ W → ψ x = 0 := fun x hx =>
+      image_eq_zero_of_notMem_tsupport (fun h => hx (hψW h))
+    have h1 : ∫ x in W, u x * (fderiv ℝ ψ x) (basisVec k) ∂volume
+        = ∫ x in W, p₀ (x, t) * (fderiv ℝ ψ x) (basisVec k) ∂volume := by
+      refine setIntegral_congr_fun hWmeas ?_
+      intro x hx
+      change u x * (fderiv ℝ ψ x) (basisVec k) = p₀ (x, t) * (fderiv ℝ ψ x) (basisVec k)
+      rw [huW x hx]
+    have h2 : ∫ x in W, p₀ (x, t) * (fderiv ℝ ψ x) (basisVec k) ∂volume
+        = ∫ x in W, p (x, t) * (fderiv ℝ ψ x) (basisVec k) ∂volume := by
+      refine integral_congr_ae ?_
+      filter_upwards [htmk.filter_mono (ae_mono (Measure.restrict_mono hWsubB le_rfl))]
+        with x hx
+      rw [hx]
+    have hLW : ∫ x in W, u x * (fderiv ℝ ψ x) (basisVec k) ∂volume
+        = ∫ x, p (x, t) * (fderiv ℝ ψ x) (basisVec k) ∂volume := by
+      rw [h1, h2]
+      exact setIntegral_eq_integral_of_forall_compl_eq_zero
+        (fun x hx => by rw [hDψzero x hx, mul_zero])
+    have hLB : ∫ x in B, p (x, t) * (fderiv ℝ ψ x) (basisVec k) ∂volume
+        = ∫ x, p (x, t) * (fderiv ℝ ψ x) (basisVec k) ∂volume :=
+      setIntegral_eq_integral_of_forall_compl_eq_zero
+        (fun x hx => by rw [hDψzero x (fun h => hx (hWsubB h)), mul_zero])
+    have hRB : ∫ x in B, g x * ψ x ∂volume = ∫ x, g x * ψ x ∂volume :=
+      setIntegral_eq_integral_of_forall_compl_eq_zero
+        (fun x hx => by rw [hψzero x (fun h => hx (hWsubB h)), mul_zero])
+    have h3 : ∫ x in W, (W.indicator g) x * ψ x ∂volume
+        = ∫ x in W, g x * ψ x ∂volume := by
+      refine setIntegral_congr_fun hWmeas ?_
+      intro x hx
+      change (W.indicator g) x * ψ x = g x * ψ x
+      rw [hgWval x hx]
+    have hRW : ∫ x in W, (W.indicator g) x * ψ x ∂volume = ∫ x, g x * ψ x ∂volume := by
+      rw [h3]
+      exact setIntegral_eq_integral_of_forall_compl_eq_zero
+        (fun x hx => by rw [hψzero x hx, mul_zero])
+    have hweak := hgweak ψ hψ hψc (hψW.trans hWsubB)
+    rw [hLW, hRW, ← hLB, ← hRB]
+    exact hweak
+  -- the mollified identity at points of the inner box
+  have hmoll : ∀ x ∈ closure B', ∀ n : ℕ, sliceRadius n ≤ δ →
+      G n (x, t) = mollify (W.indicator g) (sliceRadius n) (sliceRadius_pos n) x := by
+    intro x hx n hn
+    rw [hGval n x]
+    exact integral_fderiv_mollifier_mul_eq_mollify huLoc hgWloc hweakW (sliceRadius_pos n)
+      (hWball x hx (sliceRadius n) (sliceRadius_pos n) hn)
+  have haeB' : ∀ᵐ x ∂(volume.restrict B'), Tendsto
+      (fun n => mollify (W.indicator g) (sliceRadius n) (sliceRadius_pos n) x)
+      atTop (𝓝 ((W.indicator g) x)) :=
+    ae_restrict_of_ae (ae_tendsto_mollify_sliceRadius (d := 3) hgWloc)
+  filter_upwards [haeB', self_mem_ae_restrict hB'] with x hx hxB'
+  rw [hgWval x (hB'sub hxB')] at hx
+  refine hx.congr' ?_
+  filter_upwards [hradius] with n hn
+  exact (hmoll x (subset_closure hxB') n hn).symm
 
 /-- Existence of a jointly measurable space-time weak spatial derivative, given slice-wise weak
 derivatives for almost every time.  The four conclusions are joint measurability on the inner
@@ -222,104 +356,8 @@ theorem exists_spacetime_weak_gradient_of_slices (k : Fin 3)
       rw [← hprodB]; exact hp₀ae
     exact ae_ae_of_ae_prod_snd h
   -- The core slice-wise convergence statement.
-  have hkey : ∀ᵐ t ∂(volume.restrict J), ∀ g : Vec3 → ℝ,
-      LocallyIntegrableOn g B volume → HasWeakPartialDerivOn B k (fun x => p (x, t)) g →
-      ∀ᵐ x ∂(volume.restrict B'), Tendsto (fun n => G n (x, t)) atTop (𝓝 (g x)) := by
-    filter_upwards [hpslice, hp₀slice] with t htint htmk g hgloc hgweak
-    set u : Vec3 → ℝ := W.indicator (fun x => p₀ (x, t)) with hudef
-    have huW : ∀ x ∈ W, u x = p₀ (x, t) := by
-      intro x hx
-      show W.indicator (fun x => p₀ (x, t)) x = p₀ (x, t)
-      exact Set.indicator_of_mem hx _
-    have hPu : ∀ x : Vec3, P (x, t) = u x := by
-      intro x
-      by_cases hx : x ∈ W
-      · show (W ×ˢ (univ : Set ℝ)).indicator p₀ (x, t) = u x
-        rw [Set.indicator_of_mem (show ((x, t) : Vec3 × ℝ) ∈ W ×ˢ (univ : Set ℝ) from
-          ⟨hx, Set.mem_univ t⟩), huW x hx]
-      · show (W ×ˢ (univ : Set ℝ)).indicator p₀ (x, t) = u x
-        rw [Set.indicator_of_notMem (show ((x, t) : Vec3 × ℝ) ∉ W ×ˢ (univ : Set ℝ) from
-          fun h => hx h.1)]
-        show (0 : ℝ) = W.indicator (fun x => p₀ (x, t)) x
-        rw [Set.indicator_of_notMem hx]
-    have hGval : ∀ (n : ℕ) (x : Vec3), G n (x, t) = ∫ y, Kn n y * u (x - y) ∂volume := by
-      intro n x
-      show (∫ y, Kn n y * P (x - y, t) ∂volume) = ∫ y, Kn n y * u (x - y) ∂volume
-      refine integral_congr_ae (Eventually.of_forall fun y => ?_)
-      show Kn n y * P (x - y, t) = Kn n y * u (x - y)
-      rw [hPu (x - y)]
-    have hpW : IntegrableOn (fun x => p (x, t)) W volume := htint.mono_set hWsubB
-    have hp₀W : IntegrableOn (fun x => p₀ (x, t)) W volume :=
-      hpW.congr (htmk.filter_mono (ae_mono (Measure.restrict_mono hWsubB le_rfl)))
-    have huInt : Integrable u volume := hp₀W.integrable_indicator hWmeas
-    have huLoc : LocallyIntegrable u volume := huInt.locallyIntegrable
-    have hgW : IntegrableOn g W volume :=
-      (hgloc.integrableOn_compact_subset hWB hWcompact).mono_set subset_closure
-    have hgWind : Integrable (W.indicator g) volume := hgW.integrable_indicator hWmeas
-    have hgWloc : LocallyIntegrable (W.indicator g) volume := hgWind.locallyIntegrable
-    have hgWval : ∀ x ∈ W, (W.indicator g) x = g x := fun x hx => Set.indicator_of_mem hx g
-    -- the weak-derivative identity for the truncated data
-    have hweakW : HasWeakPartialDerivOn W k u (W.indicator g) := by
-      intro ψ hψ hψc hψW
-      have hDψzero : ∀ x, x ∉ W → (fderiv ℝ ψ x) (basisVec k) = 0 := by
-        intro x hx
-        rw [fderiv_of_notMem_tsupport (𝕜 := ℝ) (fun h => hx (hψW h))]
-        simp
-      have hψzero : ∀ x, x ∉ W → ψ x = 0 := fun x hx =>
-        image_eq_zero_of_notMem_tsupport (fun h => hx (hψW h))
-      have h1 : ∫ x in W, u x * (fderiv ℝ ψ x) (basisVec k) ∂volume
-          = ∫ x in W, p₀ (x, t) * (fderiv ℝ ψ x) (basisVec k) ∂volume := by
-        refine setIntegral_congr_fun hWmeas ?_
-        intro x hx
-        show u x * (fderiv ℝ ψ x) (basisVec k) = p₀ (x, t) * (fderiv ℝ ψ x) (basisVec k)
-        rw [huW x hx]
-      have h2 : ∫ x in W, p₀ (x, t) * (fderiv ℝ ψ x) (basisVec k) ∂volume
-          = ∫ x in W, p (x, t) * (fderiv ℝ ψ x) (basisVec k) ∂volume := by
-        refine integral_congr_ae ?_
-        filter_upwards [htmk.filter_mono (ae_mono (Measure.restrict_mono hWsubB le_rfl))]
-          with x hx
-        rw [hx]
-      have hLW : ∫ x in W, u x * (fderiv ℝ ψ x) (basisVec k) ∂volume
-          = ∫ x, p (x, t) * (fderiv ℝ ψ x) (basisVec k) ∂volume := by
-        rw [h1, h2]
-        exact setIntegral_eq_integral_of_forall_compl_eq_zero
-          (fun x hx => by rw [hDψzero x hx, mul_zero])
-      have hLB : ∫ x in B, p (x, t) * (fderiv ℝ ψ x) (basisVec k) ∂volume
-          = ∫ x, p (x, t) * (fderiv ℝ ψ x) (basisVec k) ∂volume :=
-        setIntegral_eq_integral_of_forall_compl_eq_zero
-          (fun x hx => by rw [hDψzero x (fun h => hx (hWsubB h)), mul_zero])
-      have hRB : ∫ x in B, g x * ψ x ∂volume = ∫ x, g x * ψ x ∂volume :=
-        setIntegral_eq_integral_of_forall_compl_eq_zero
-          (fun x hx => by rw [hψzero x (fun h => hx (hWsubB h)), mul_zero])
-      have h3 : ∫ x in W, (W.indicator g) x * ψ x ∂volume
-          = ∫ x in W, g x * ψ x ∂volume := by
-        refine setIntegral_congr_fun hWmeas ?_
-        intro x hx
-        show (W.indicator g) x * ψ x = g x * ψ x
-        rw [hgWval x hx]
-      have hRW : ∫ x in W, (W.indicator g) x * ψ x ∂volume = ∫ x, g x * ψ x ∂volume := by
-        rw [h3]
-        exact setIntegral_eq_integral_of_forall_compl_eq_zero
-          (fun x hx => by rw [hψzero x hx, mul_zero])
-      have hweak := hgweak ψ hψ hψc (hψW.trans hWsubB)
-      rw [hLW, hRW, ← hLB, ← hRB]
-      exact hweak
-    -- the mollified identity at points of the inner box
-    have hmoll : ∀ x ∈ closure B', ∀ n : ℕ, sliceRadius n ≤ δ →
-        G n (x, t) = mollify (W.indicator g) (sliceRadius n) (sliceRadius_pos n) x := by
-      intro x hx n hn
-      rw [hGval n x]
-      exact integral_fderiv_mollifier_mul_eq_mollify huLoc hgWloc hweakW (sliceRadius_pos n)
-        (hWball x hx (sliceRadius n) (sliceRadius_pos n) hn)
-    have haeB' : ∀ᵐ x ∂(volume.restrict B'), Tendsto
-        (fun n => mollify (W.indicator g) (sliceRadius n) (sliceRadius_pos n) x)
-        atTop (𝓝 ((W.indicator g) x)) :=
-      ae_restrict_of_ae (ae_tendsto_mollify_sliceRadius (d := 3) hgWloc)
-    filter_upwards [haeB', self_mem_ae_restrict hB'] with x hx hxB'
-    rw [hgWval x (hB'sub hxB')] at hx
-    refine hx.congr' ?_
-    filter_upwards [hradius] with n hn
-    exact (hmoll x (subset_closure hxB') n hn).symm
+  have hkey := @exists_spacetime_weak_gradient_hkey_1 k B B' J p hB' W δ hWcompact hWB hWball
+    hB'sub hWmeas hWsubB hpmk hradius hpslice hp₀slice
   -- Almost-everywhere convergence on the inner box, in both variables jointly.
   have hprodB' : (volume : Measure (Vec3 × ℝ)).restrict (B' ×ˢ J)
       = ((volume : Measure Vec3).restrict B').prod ((volume : Measure ℝ).restrict J) := by
@@ -379,10 +417,10 @@ theorem exists_spacetime_weak_gradient_of_slices (k : Fin 3)
       filter_upwards [hidt g hgloc hgweak] with x hx
       rw [hx]
     have hweak := hgweak _ hψsmooth hψcompact (hψsupport.trans hB'subB)
-    show ∫ x in B', p (x, t) * spatialPartial Ψ k (x, t) ∂volume
+    change ∫ x in B', p (x, t) * spatialPartial Ψ k (x, t) ∂volume
       = -∫ x in B', Dp (x, t) * Ψ (x, t) ∂volume
     rw [hDpEq, hRB', ← hRB]
-    show ∫ x in B', p (x, t) * (fderiv ℝ (fun y : Vec3 => Ψ (y, t)) x) (basisVec k) ∂volume
+    change ∫ x in B', p (x, t) * (fderiv ℝ (fun y : Vec3 => Ψ (y, t)) x) (basisVec k) ∂volume
       = -∫ x in B, g x * Ψ (x, t) ∂volume
     rw [hLB', ← hLB]
     exact hweak

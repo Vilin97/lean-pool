@@ -155,6 +155,236 @@ private lemma delta_le_kappa_sq_sqrt {κ δ T : ℝ} (hκ : 0 < κ)
 
 /-! ### The combination step -/
 
+private lemma thetaDecay_algebra_hγsqrt_1 :
+    ∀ {κ C₉ α β γ δ : ℝ},
+      (0 : ℝ) ≤ C₉ →
+        γ ≤ C₉ * √α * √β + C₉ * α →
+          let T : ℝ := α + β + κ ^ (-4 : ℝ) * δ ^ (2 : ℕ);
+          (0 : ℝ) ≤ T → α ≤ T → √γ ≤ √C₉ * (√√T * √√β + √T)
+    := by
+  intro κ C₉ α β γ δ hC₉ hC T hT_nonneg hαT
+  have hγ' : γ ≤ C₉ * (Real.sqrt T * Real.sqrt β + T) := by
+    have h1 : C₉ * Real.sqrt α * Real.sqrt β ≤ C₉ * (Real.sqrt T * Real.sqrt β) := by
+      have h : Real.sqrt α * Real.sqrt β ≤ Real.sqrt T * Real.sqrt β :=
+        mul_le_mul (Real.sqrt_le_sqrt hαT) le_rfl (Real.sqrt_nonneg β)
+          (Real.sqrt_nonneg T)
+      calc C₉ * Real.sqrt α * Real.sqrt β = C₉ * (Real.sqrt α * Real.sqrt β) := by ring
+        _ ≤ C₉ * (Real.sqrt T * Real.sqrt β) := mul_le_mul_of_nonneg_left h hC₉
+    have h2 : C₉ * α ≤ C₉ * T := mul_le_mul_of_nonneg_left hαT hC₉
+    calc γ ≤ C₉ * Real.sqrt α * Real.sqrt β + C₉ * α := hC
+      _ ≤ C₉ * (Real.sqrt T * Real.sqrt β) + C₉ * T := add_le_add h1 h2
+      _ = C₉ * (Real.sqrt T * Real.sqrt β + T) := by ring
+  calc Real.sqrt γ ≤ Real.sqrt (C₉ * (Real.sqrt T * Real.sqrt β + T)) :=
+        Real.sqrt_le_sqrt hγ'
+    _ = Real.sqrt C₉ * Real.sqrt (Real.sqrt T * Real.sqrt β + T) := by
+        rw [Real.sqrt_mul hC₉]
+    _ ≤ Real.sqrt C₉ * (Real.sqrt (Real.sqrt T * Real.sqrt β) + Real.sqrt T) :=
+        mul_le_mul_of_nonneg_left
+          (sqrt_add_le' (mul_nonneg (Real.sqrt_nonneg T) (Real.sqrt_nonneg β))
+            hT_nonneg)
+          (Real.sqrt_nonneg C₉)
+    _ = Real.sqrt C₉ *
+          (Real.sqrt (Real.sqrt T) * Real.sqrt (Real.sqrt β) + Real.sqrt T) := by
+        rw [Real.sqrt_mul (Real.sqrt_nonneg T)]
+
+private lemma thetaDecay_algebra_hT2_2 :
+    ∀ {κ C₉ C₂₅ α β γ δ : ℝ},
+      (0 : ℝ) < κ →
+        (0 : ℝ) ≤ C₂₅ →
+          let T : ℝ := α + β + κ ^ (-4 : ℝ) * δ ^ (2 : ℕ);
+          (0 : ℝ) ≤ T →
+            α ≤ T →
+              √T * √√T * √√β ≤ T →
+                κ ^ (-1 : ℝ) ≤ κ ^ (-5 : ℝ) →
+                  √γ ≤ √C₉ * (√√T * √√β + √T) →
+                    C₂₅ * κ ^ (-1 : ℝ) * √α * √β * √γ ≤ (2 : ℝ) * C₂₅ * √C₉ * κ ^ (-5 : ℝ) * √β * T
+    := by
+  intro κ C₉ C₂₅ α β γ δ hκ hC₂₅ T hT_nonneg hαT hcore hκinv_le hγsqrt
+  have hprod : Real.sqrt α * Real.sqrt β * Real.sqrt γ ≤
+      2 * Real.sqrt C₉ * Real.sqrt β * T := by
+    have h1 : Real.sqrt α * Real.sqrt β * Real.sqrt γ ≤ Real.sqrt C₉ *
+        (Real.sqrt T * Real.sqrt (Real.sqrt T) * Real.sqrt (Real.sqrt β) * Real.sqrt β
+          + Real.sqrt T * Real.sqrt β * Real.sqrt T) := by
+      calc Real.sqrt α * Real.sqrt β * Real.sqrt γ
+          ≤ Real.sqrt T * Real.sqrt β *
+              (Real.sqrt C₉ *
+                (Real.sqrt (Real.sqrt T) * Real.sqrt (Real.sqrt β) + Real.sqrt T)) :=
+            mul_le_mul
+              (mul_le_mul (Real.sqrt_le_sqrt hαT) le_rfl (Real.sqrt_nonneg β)
+                (Real.sqrt_nonneg T))
+              hγsqrt (Real.sqrt_nonneg γ)
+              (mul_nonneg (Real.sqrt_nonneg T) (Real.sqrt_nonneg β))
+        _ = Real.sqrt C₉ *
+              (Real.sqrt T * Real.sqrt (Real.sqrt T) * Real.sqrt (Real.sqrt β)
+                  * Real.sqrt β
+                + Real.sqrt T * Real.sqrt β * Real.sqrt T) := by ring
+    have hb1 : Real.sqrt T * Real.sqrt (Real.sqrt T) * Real.sqrt (Real.sqrt β)
+          * Real.sqrt β ≤ T * Real.sqrt β :=
+      mul_le_mul_of_nonneg_right hcore (Real.sqrt_nonneg β)
+    have hb2 : Real.sqrt T * Real.sqrt β * Real.sqrt T ≤ T * Real.sqrt β := by
+      have heq : Real.sqrt T * Real.sqrt β * Real.sqrt T = T * Real.sqrt β := by
+        rw [mul_assoc, mul_comm (Real.sqrt β) (Real.sqrt T), ← mul_assoc,
+          Real.mul_self_sqrt hT_nonneg]
+      exact le_of_eq heq
+    have h2 : Real.sqrt C₉ *
+          (Real.sqrt T * Real.sqrt (Real.sqrt T) * Real.sqrt (Real.sqrt β) * Real.sqrt β
+            + Real.sqrt T * Real.sqrt β * Real.sqrt T) ≤
+        Real.sqrt C₉ * (T * Real.sqrt β + T * Real.sqrt β) :=
+      mul_le_mul_of_nonneg_left (add_le_add hb1 hb2) (Real.sqrt_nonneg C₉)
+    calc Real.sqrt α * Real.sqrt β * Real.sqrt γ ≤ _ := h1
+      _ ≤ Real.sqrt C₉ * (T * Real.sqrt β + T * Real.sqrt β) := h2
+      _ = 2 * Real.sqrt C₉ * Real.sqrt β * T := by ring
+  have hcoef : C₂₅ * κ ^ (-1 : ℝ) ≤ C₂₅ * κ ^ (-5 : ℝ) :=
+    mul_le_mul_of_nonneg_left hκinv_le hC₂₅
+  calc C₂₅ * κ ^ (-1 : ℝ) * Real.sqrt α * Real.sqrt β * Real.sqrt γ
+      = C₂₅ * κ ^ (-1 : ℝ) * (Real.sqrt α * Real.sqrt β * Real.sqrt γ) := by ring
+    _ ≤ C₂₅ * κ ^ (-1 : ℝ) * (2 * Real.sqrt C₉ * Real.sqrt β * T) :=
+        mul_le_mul_of_nonneg_left hprod
+          (mul_nonneg hC₂₅ (Real.rpow_nonneg hκ.le _))
+    _ = 2 * C₂₅ * Real.sqrt C₉ * κ ^ (-1 : ℝ) * Real.sqrt β * T := by ring
+    _ ≤ 2 * C₂₅ * Real.sqrt C₉ * κ ^ (-5 : ℝ) * Real.sqrt β * T := by
+        calc 2 * C₂₅ * Real.sqrt C₉ * κ ^ (-1 : ℝ) * Real.sqrt β * T
+            = (2 * Real.sqrt C₉ * Real.sqrt β * T) * (C₂₅ * κ ^ (-1 : ℝ)) := by ring
+          _ ≤ (2 * Real.sqrt C₉ * Real.sqrt β * T) * (C₂₅ * κ ^ (-5 : ℝ)) :=
+              mul_le_mul_of_nonneg_left hcoef
+                (mul_nonneg (mul_nonneg (mul_nonneg (by norm_num) (Real.sqrt_nonneg C₉))
+                  (Real.sqrt_nonneg β)) hT_nonneg)
+          _ = 2 * C₂₅ * Real.sqrt C₉ * κ ^ (-5 : ℝ) * Real.sqrt β * T := by ring
+
+private lemma thetaDecay_algebra_hT3_3 :
+    ∀ {κ C₉ C₂₅ : ℝ}  {β γ δ : ℝ},
+      (0 : ℝ) < κ →
+        (0 : ℝ) ≤ C₂₅ →
+          ∀ (T : ℝ),
+            (0 : ℝ) ≤ T →
+              δ ≤ κ ^ (2 : ℝ) * √T →
+                √T * √√T * √√β ≤ T →
+                  κ ≤ κ ^ (2 / 3 : ℝ) →
+                    √γ ≤ √C₉ * (√√T * √√β + √T) →
+                      C₂₅ * κ ^ (-1 : ℝ) * δ * √γ ≤ (2 : ℝ) * C₂₅ * √C₉ * κ ^ (2 / 3 : ℝ) * T
+    := by
+  intro κ C₉ C₂₅  β γ δ hκ hC₂₅ T hT_nonneg hδT hcore hκpow23 hγsqrt
+  have hprod : δ * Real.sqrt γ ≤ 2 * Real.sqrt C₉ * κ ^ (2 : ℝ) * T := by
+    have h1 : δ * Real.sqrt γ ≤ Real.sqrt C₉ * κ ^ (2 : ℝ) *
+        (Real.sqrt T * (Real.sqrt (Real.sqrt T) * Real.sqrt (Real.sqrt β))
+          + Real.sqrt T * Real.sqrt T) := by
+      calc δ * Real.sqrt γ
+          ≤ (κ ^ (2 : ℝ) * Real.sqrt T) *
+              (Real.sqrt C₉ *
+                (Real.sqrt (Real.sqrt T) * Real.sqrt (Real.sqrt β) + Real.sqrt T)) :=
+            mul_le_mul hδT hγsqrt (Real.sqrt_nonneg γ)
+              (mul_nonneg (Real.rpow_nonneg hκ.le _) (Real.sqrt_nonneg T))
+        _ = Real.sqrt C₉ * κ ^ (2 : ℝ) *
+              (Real.sqrt T * (Real.sqrt (Real.sqrt T) * Real.sqrt (Real.sqrt β))
+                + Real.sqrt T * Real.sqrt T) := by ring
+    rw [Real.mul_self_sqrt hT_nonneg] at h1
+    have hcore' : Real.sqrt T * (Real.sqrt (Real.sqrt T) * Real.sqrt (Real.sqrt β)) ≤ T := by
+      rw [← mul_assoc]; exact hcore
+    have h2 : Real.sqrt C₉ * κ ^ (2 : ℝ) *
+          (Real.sqrt T * (Real.sqrt (Real.sqrt T) * Real.sqrt (Real.sqrt β)) + T) ≤
+        Real.sqrt C₉ * κ ^ (2 : ℝ) * (T + T) :=
+      mul_le_mul_of_nonneg_left (add_le_add hcore' le_rfl)
+        (mul_nonneg (Real.sqrt_nonneg C₉) (Real.rpow_nonneg hκ.le _))
+    calc δ * Real.sqrt γ ≤ _ := h1
+      _ ≤ Real.sqrt C₉ * κ ^ (2 : ℝ) * (T + T) := h2
+      _ = 2 * Real.sqrt C₉ * κ ^ (2 : ℝ) * T := by ring
+  have hpow : κ ^ (-1 : ℝ) * κ ^ (2 : ℝ) = κ := by
+    rw [rpow_mul_of_add hκ (by norm_num : (-1 : ℝ) + 2 = 1), Real.rpow_one]
+  calc C₂₅ * κ ^ (-1 : ℝ) * δ * Real.sqrt γ
+      = C₂₅ * κ ^ (-1 : ℝ) * (δ * Real.sqrt γ) := by ring
+    _ ≤ C₂₅ * κ ^ (-1 : ℝ) * (2 * Real.sqrt C₉ * κ ^ (2 : ℝ) * T) :=
+        mul_le_mul_of_nonneg_left hprod (mul_nonneg hC₂₅ (Real.rpow_nonneg hκ.le _))
+    _ = 2 * C₂₅ * Real.sqrt C₉ * (κ ^ (-1 : ℝ) * κ ^ (2 : ℝ)) * T := by ring
+    _ = 2 * C₂₅ * Real.sqrt C₉ * κ * T := by rw [hpow]
+    _ ≤ 2 * C₂₅ * Real.sqrt C₉ * κ ^ (2 / 3 : ℝ) * T := by
+        have hcoefnn : 0 ≤ 2 * C₂₅ * Real.sqrt C₉ * T :=
+          mul_nonneg (mul_nonneg (mul_nonneg (by norm_num) hC₂₅) (Real.sqrt_nonneg C₉))
+            hT_nonneg
+        calc 2 * C₂₅ * Real.sqrt C₉ * κ * T
+            = (2 * C₂₅ * Real.sqrt C₉ * T) * κ := by ring
+          _ ≤ (2 * C₂₅ * Real.sqrt C₉ * T) * κ ^ (2 / 3 : ℝ) :=
+              mul_le_mul_of_nonneg_left hκpow23 hcoefnn
+          _ = 2 * C₂₅ * Real.sqrt C₉ * κ ^ (2 / 3 : ℝ) * T := by ring
+
+private lemma thetaDecay_algebra_hP_4 :
+    ∀ {κ C₁₄ C₁₅ α β δ lam δr : ℝ},
+      (0 : ℝ) < κ →
+        (0 : ℝ) ≤ δr →
+          δr ≤
+              C₁₄ * κ ^ (-1 / 2 : ℝ) * √α * √β + C₁₄ * κ ^ (1 / 3 : ℝ) * δ +
+                C₁₅ * κ ^ (1 / 2 : ℝ) * √lam →
+            ∀ (T : ℝ),
+              κ ^ (-4 : ℝ) * (C₁₄ * κ ^ (-1 / 2 : ℝ) * √α * √β) ^ (2 : ℕ) ≤
+                  C₁₄ ^ (2 : ℕ) * κ ^ (-5 : ℝ) * β * T →
+                κ ^ (-4 : ℝ) * (C₁₄ * κ ^ (1 / 3 : ℝ) * δ) ^ (2 : ℕ) ≤
+                    C₁₄ ^ (2 : ℕ) * κ ^ (2 / 3 : ℝ) * T →
+                  κ ^ (-4 : ℝ) * (C₁₅ * κ ^ (1 / 2 : ℝ) * √lam) ^ (2 : ℕ) ≤
+                      C₁₅ ^ (2 : ℕ) * κ ^ (-3 : ℝ) * lam →
+                    κ ^ (-4 : ℝ) * δr ^ (2 : ℕ) ≤
+                      (3 : ℝ) * C₁₄ ^ (2 : ℕ) * κ ^ (-5 : ℝ) * β * T +
+                          (3 : ℝ) * C₁₄ ^ (2 : ℕ) * κ ^ (2 / 3 : ℝ) * T +
+                        (3 : ℝ) * C₁₅ ^ (2 : ℕ) * κ ^ (-3 : ℝ) * lam
+    := by
+  intro κ C₁₄ C₁₅ α β δ lam δr hκ hδr hB T hX2 hY2 hZ2
+  have hδr2 : δr ^ 2 ≤ 3 * ((C₁₄ * κ ^ (-1 / 2 : ℝ) * Real.sqrt α * Real.sqrt β) ^ 2
+      + (C₁₄ * κ ^ (1 / 3 : ℝ) * δ) ^ 2
+      + (C₁₅ * κ ^ (1 / 2 : ℝ) * Real.sqrt lam) ^ 2) := by
+    have h1 : δr ^ 2 ≤ (C₁₄ * κ ^ (-1 / 2 : ℝ) * Real.sqrt α * Real.sqrt β
+        + C₁₄ * κ ^ (1 / 3 : ℝ) * δ + C₁₅ * κ ^ (1 / 2 : ℝ) * Real.sqrt lam) ^ 2 :=
+      pow_le_pow_left₀ hδr hB 2
+    have h2 := sq_sum_three_le (C₁₄ * κ ^ (-1 / 2 : ℝ) * Real.sqrt α * Real.sqrt β)
+      (C₁₄ * κ ^ (1 / 3 : ℝ) * δ) (C₁₅ * κ ^ (1 / 2 : ℝ) * Real.sqrt lam)
+    linarith only [h1, h2]
+  calc κ ^ (-4 : ℝ) * δr ^ 2
+      ≤ κ ^ (-4 : ℝ) * (3 * ((C₁₄ * κ ^ (-1 / 2 : ℝ) * Real.sqrt α * Real.sqrt β) ^ 2
+          + (C₁₄ * κ ^ (1 / 3 : ℝ) * δ) ^ 2
+          + (C₁₅ * κ ^ (1 / 2 : ℝ) * Real.sqrt lam) ^ 2)) :=
+        mul_le_mul_of_nonneg_left hδr2 (Real.rpow_nonneg hκ.le _)
+    _ = 3 * (κ ^ (-4 : ℝ) * (C₁₄ * κ ^ (-1 / 2 : ℝ) * Real.sqrt α * Real.sqrt β) ^ 2
+          + κ ^ (-4 : ℝ) * (C₁₄ * κ ^ (1 / 3 : ℝ) * δ) ^ 2
+          + κ ^ (-4 : ℝ) * (C₁₅ * κ ^ (1 / 2 : ℝ) * Real.sqrt lam) ^ 2) := by ring
+    _ ≤ 3 * (C₁₄ ^ 2 * κ ^ (-5 : ℝ) * β * T + C₁₄ ^ 2 * κ ^ (2 / 3 : ℝ) * T
+          + C₁₅ ^ 2 * κ ^ (-3 : ℝ) * lam) := by
+        apply mul_le_mul_of_nonneg_left _ (by norm_num : (0 : ℝ) ≤ 3)
+        exact add_le_add (add_le_add hX2 hY2) hZ2
+    _ = 3 * C₁₄ ^ 2 * κ ^ (-5 : ℝ) * β * T + 3 * C₁₄ ^ 2 * κ ^ (2 / 3 : ℝ) * T
+          + 3 * C₁₅ ^ 2 * κ ^ (-3 : ℝ) * lam := by ring
+
+private lemma thetaDecay_algebra_hg2_5 :
+    ∀ {κ C₉ C₁₄ C₂₅ α β δ : ℝ},
+      (0 : ℝ) ≤ β →
+        let T : ℝ := α + β + κ ^ (-4 : ℝ) * δ ^ (2 : ℕ);
+        (0 : ℝ) ≤ T →
+          (0 : ℝ) ≤ κ ^ (-5 : ℝ) →
+            (2 : ℝ) * C₂₅ * √C₉ ≤ thetaDecayC₂₇ C₉ C₁₄ C₂₅ →
+              (3 : ℝ) * C₁₄ ^ (2 : ℕ) ≤ thetaDecayC₂₇ C₉ C₁₄ C₂₅ →
+                (2 : ℝ) * C₂₅ * √C₉ * κ ^ (-5 : ℝ) * √β * T +
+                    (3 : ℝ) * C₁₄ ^ (2 : ℕ) * κ ^ (-5 : ℝ) * β * T ≤
+                  thetaDecayC₂₇ C₉ C₁₄ C₂₅ * κ ^ (-5 : ℝ) * (√β + β) * T
+    := by
+  intro κ C₉ C₁₄ C₂₅ α β δ hβ T hT_nonneg hκn5nn hcoefB1 hcoefB2
+  have hcoefB : 2 * C₂₅ * Real.sqrt C₉ * Real.sqrt β + 3 * C₁₄ ^ 2 * β ≤
+      thetaDecayC₂₇ C₉ C₁₄ C₂₅ * (Real.sqrt β + β) := by
+    have h1 : 2 * C₂₅ * Real.sqrt C₉ * Real.sqrt β ≤
+        thetaDecayC₂₇ C₉ C₁₄ C₂₅ * Real.sqrt β :=
+      mul_le_mul_of_nonneg_right hcoefB1 (Real.sqrt_nonneg β)
+    have h2 : 3 * C₁₄ ^ 2 * β ≤ thetaDecayC₂₇ C₉ C₁₄ C₂₅ * β :=
+      mul_le_mul_of_nonneg_right hcoefB2 hβ
+    calc 2 * C₂₅ * Real.sqrt C₉ * Real.sqrt β + 3 * C₁₄ ^ 2 * β
+        ≤ thetaDecayC₂₇ C₉ C₁₄ C₂₅ * Real.sqrt β + thetaDecayC₂₇ C₉ C₁₄ C₂₅ * β :=
+          add_le_add h1 h2
+      _ = thetaDecayC₂₇ C₉ C₁₄ C₂₅ * (Real.sqrt β + β) := by ring
+  rw [show 2 * C₂₅ * Real.sqrt C₉ * κ ^ (-5 : ℝ) * Real.sqrt β * T
+        + 3 * C₁₄ ^ 2 * κ ^ (-5 : ℝ) * β * T
+      = (2 * C₂₅ * Real.sqrt C₉ * Real.sqrt β + 3 * C₁₄ ^ 2 * β) * κ ^ (-5 : ℝ) * T
+      from by ring]
+  calc (2 * C₂₅ * Real.sqrt C₉ * Real.sqrt β + 3 * C₁₄ ^ 2 * β) * κ ^ (-5 : ℝ) * T
+      = (2 * C₂₅ * Real.sqrt C₉ * Real.sqrt β + 3 * C₁₄ ^ 2 * β)
+          * (κ ^ (-5 : ℝ) * T) := by ring
+    _ ≤ thetaDecayC₂₇ C₉ C₁₄ C₂₅ * (Real.sqrt β + β) * (κ ^ (-5 : ℝ) * T) :=
+        mul_le_mul_of_nonneg_right hcoefB (mul_nonneg hκn5nn hT_nonneg)
+    _ = thetaDecayC₂₇ C₉ C₁₄ C₂₅ * κ ^ (-5 : ℝ) * (Real.sqrt β + β) * T := by ring
+
 /-- **The combination step of `lem:theta-decay`.**  The three analytic inputs of
 the lemma — the Caccioppoli inequality `eq:caccioppoli` (constants `C₂₅`,
 `C₂₆`), the pressure decay estimate `eq:pressure-decay` (constants `C₁₄`,
@@ -215,31 +445,7 @@ theorem thetaDecay_algebra
   have hθ₂₈nn : 0 ≤ thetaDecayC₂₈ C₉ C₁₅ C₂₆ := by
     rw [thetaDecayC₂₈]; positivity
   -- The square root of the Gagliardo–Nirenberg output.
-  have hγsqrt : Real.sqrt γ ≤ Real.sqrt C₉ *
-      (Real.sqrt (Real.sqrt T) * Real.sqrt (Real.sqrt β) + Real.sqrt T) := by
-    have hγ' : γ ≤ C₉ * (Real.sqrt T * Real.sqrt β + T) := by
-      have h1 : C₉ * Real.sqrt α * Real.sqrt β ≤ C₉ * (Real.sqrt T * Real.sqrt β) := by
-        have h : Real.sqrt α * Real.sqrt β ≤ Real.sqrt T * Real.sqrt β :=
-          mul_le_mul (Real.sqrt_le_sqrt hαT) le_rfl (Real.sqrt_nonneg β)
-            (Real.sqrt_nonneg T)
-        calc C₉ * Real.sqrt α * Real.sqrt β = C₉ * (Real.sqrt α * Real.sqrt β) := by ring
-          _ ≤ C₉ * (Real.sqrt T * Real.sqrt β) := mul_le_mul_of_nonneg_left h hC₉
-      have h2 : C₉ * α ≤ C₉ * T := mul_le_mul_of_nonneg_left hαT hC₉
-      calc γ ≤ C₉ * Real.sqrt α * Real.sqrt β + C₉ * α := hC
-        _ ≤ C₉ * (Real.sqrt T * Real.sqrt β) + C₉ * T := add_le_add h1 h2
-        _ = C₉ * (Real.sqrt T * Real.sqrt β + T) := by ring
-    calc Real.sqrt γ ≤ Real.sqrt (C₉ * (Real.sqrt T * Real.sqrt β + T)) :=
-          Real.sqrt_le_sqrt hγ'
-      _ = Real.sqrt C₉ * Real.sqrt (Real.sqrt T * Real.sqrt β + T) := by
-          rw [Real.sqrt_mul hC₉]
-      _ ≤ Real.sqrt C₉ * (Real.sqrt (Real.sqrt T * Real.sqrt β) + Real.sqrt T) :=
-          mul_le_mul_of_nonneg_left
-            (sqrt_add_le' (mul_nonneg (Real.sqrt_nonneg T) (Real.sqrt_nonneg β))
-              hT_nonneg)
-            (Real.sqrt_nonneg C₉)
-      _ = Real.sqrt C₉ *
-            (Real.sqrt (Real.sqrt T) * Real.sqrt (Real.sqrt β) + Real.sqrt T) := by
-          rw [Real.sqrt_mul (Real.sqrt_nonneg T)]
+  have hγsqrt := @thetaDecay_algebra_hγsqrt_1 κ C₉ α β γ δ hC₉ hC hT_nonneg hαT
   -- The four Caccioppoli terms.
   have hT1 : C₂₅ * κ * α ≤ C₂₅ * κ ^ (2 / 3 : ℝ) * T := by
     have h1 : C₂₅ * κ * α ≤ C₂₅ * κ * T :=
@@ -247,101 +453,9 @@ theorem thetaDecay_algebra
     have h2 : C₂₅ * κ * T ≤ C₂₅ * κ ^ (2 / 3 : ℝ) * T :=
       mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hκpow23 hC₂₅) hT_nonneg
     linarith only [h1, h2]
-  have hT2 : C₂₅ * κ ^ (-1 : ℝ) * Real.sqrt α * Real.sqrt β * Real.sqrt γ ≤
-      2 * C₂₅ * Real.sqrt C₉ * κ ^ (-5 : ℝ) * Real.sqrt β * T := by
-    have hprod : Real.sqrt α * Real.sqrt β * Real.sqrt γ ≤
-        2 * Real.sqrt C₉ * Real.sqrt β * T := by
-      have h1 : Real.sqrt α * Real.sqrt β * Real.sqrt γ ≤ Real.sqrt C₉ *
-          (Real.sqrt T * Real.sqrt (Real.sqrt T) * Real.sqrt (Real.sqrt β) * Real.sqrt β
-            + Real.sqrt T * Real.sqrt β * Real.sqrt T) := by
-        calc Real.sqrt α * Real.sqrt β * Real.sqrt γ
-            ≤ Real.sqrt T * Real.sqrt β *
-                (Real.sqrt C₉ *
-                  (Real.sqrt (Real.sqrt T) * Real.sqrt (Real.sqrt β) + Real.sqrt T)) :=
-              mul_le_mul
-                (mul_le_mul (Real.sqrt_le_sqrt hαT) le_rfl (Real.sqrt_nonneg β)
-                  (Real.sqrt_nonneg T))
-                hγsqrt (Real.sqrt_nonneg γ)
-                (mul_nonneg (Real.sqrt_nonneg T) (Real.sqrt_nonneg β))
-          _ = Real.sqrt C₉ *
-                (Real.sqrt T * Real.sqrt (Real.sqrt T) * Real.sqrt (Real.sqrt β)
-                    * Real.sqrt β
-                  + Real.sqrt T * Real.sqrt β * Real.sqrt T) := by ring
-      have hb1 : Real.sqrt T * Real.sqrt (Real.sqrt T) * Real.sqrt (Real.sqrt β)
-            * Real.sqrt β ≤ T * Real.sqrt β :=
-        mul_le_mul_of_nonneg_right hcore (Real.sqrt_nonneg β)
-      have hb2 : Real.sqrt T * Real.sqrt β * Real.sqrt T ≤ T * Real.sqrt β := by
-        have heq : Real.sqrt T * Real.sqrt β * Real.sqrt T = T * Real.sqrt β := by
-          rw [mul_assoc, mul_comm (Real.sqrt β) (Real.sqrt T), ← mul_assoc,
-            Real.mul_self_sqrt hT_nonneg]
-        exact le_of_eq heq
-      have h2 : Real.sqrt C₉ *
-            (Real.sqrt T * Real.sqrt (Real.sqrt T) * Real.sqrt (Real.sqrt β) * Real.sqrt β
-              + Real.sqrt T * Real.sqrt β * Real.sqrt T) ≤
-          Real.sqrt C₉ * (T * Real.sqrt β + T * Real.sqrt β) :=
-        mul_le_mul_of_nonneg_left (add_le_add hb1 hb2) (Real.sqrt_nonneg C₉)
-      calc Real.sqrt α * Real.sqrt β * Real.sqrt γ ≤ _ := h1
-        _ ≤ Real.sqrt C₉ * (T * Real.sqrt β + T * Real.sqrt β) := h2
-        _ = 2 * Real.sqrt C₉ * Real.sqrt β * T := by ring
-    have hcoef : C₂₅ * κ ^ (-1 : ℝ) ≤ C₂₅ * κ ^ (-5 : ℝ) :=
-      mul_le_mul_of_nonneg_left hκinv_le hC₂₅
-    calc C₂₅ * κ ^ (-1 : ℝ) * Real.sqrt α * Real.sqrt β * Real.sqrt γ
-        = C₂₅ * κ ^ (-1 : ℝ) * (Real.sqrt α * Real.sqrt β * Real.sqrt γ) := by ring
-      _ ≤ C₂₅ * κ ^ (-1 : ℝ) * (2 * Real.sqrt C₉ * Real.sqrt β * T) :=
-          mul_le_mul_of_nonneg_left hprod
-            (mul_nonneg hC₂₅ (Real.rpow_nonneg hκ.le _))
-      _ = 2 * C₂₅ * Real.sqrt C₉ * κ ^ (-1 : ℝ) * Real.sqrt β * T := by ring
-      _ ≤ 2 * C₂₅ * Real.sqrt C₉ * κ ^ (-5 : ℝ) * Real.sqrt β * T := by
-          calc 2 * C₂₅ * Real.sqrt C₉ * κ ^ (-1 : ℝ) * Real.sqrt β * T
-              = (2 * Real.sqrt C₉ * Real.sqrt β * T) * (C₂₅ * κ ^ (-1 : ℝ)) := by ring
-            _ ≤ (2 * Real.sqrt C₉ * Real.sqrt β * T) * (C₂₅ * κ ^ (-5 : ℝ)) :=
-                mul_le_mul_of_nonneg_left hcoef
-                  (mul_nonneg (mul_nonneg (mul_nonneg (by norm_num) (Real.sqrt_nonneg C₉))
-                    (Real.sqrt_nonneg β)) hT_nonneg)
-            _ = 2 * C₂₅ * Real.sqrt C₉ * κ ^ (-5 : ℝ) * Real.sqrt β * T := by ring
-  have hT3 : C₂₅ * κ ^ (-1 : ℝ) * δ * Real.sqrt γ ≤
-      2 * C₂₅ * Real.sqrt C₉ * κ ^ (2 / 3 : ℝ) * T := by
-    have hprod : δ * Real.sqrt γ ≤ 2 * Real.sqrt C₉ * κ ^ (2 : ℝ) * T := by
-      have h1 : δ * Real.sqrt γ ≤ Real.sqrt C₉ * κ ^ (2 : ℝ) *
-          (Real.sqrt T * (Real.sqrt (Real.sqrt T) * Real.sqrt (Real.sqrt β))
-            + Real.sqrt T * Real.sqrt T) := by
-        calc δ * Real.sqrt γ
-            ≤ (κ ^ (2 : ℝ) * Real.sqrt T) *
-                (Real.sqrt C₉ *
-                  (Real.sqrt (Real.sqrt T) * Real.sqrt (Real.sqrt β) + Real.sqrt T)) :=
-              mul_le_mul hδT hγsqrt (Real.sqrt_nonneg γ)
-                (mul_nonneg (Real.rpow_nonneg hκ.le _) (Real.sqrt_nonneg T))
-          _ = Real.sqrt C₉ * κ ^ (2 : ℝ) *
-                (Real.sqrt T * (Real.sqrt (Real.sqrt T) * Real.sqrt (Real.sqrt β))
-                  + Real.sqrt T * Real.sqrt T) := by ring
-      rw [Real.mul_self_sqrt hT_nonneg] at h1
-      have hcore' : Real.sqrt T * (Real.sqrt (Real.sqrt T) * Real.sqrt (Real.sqrt β)) ≤ T := by
-        rw [← mul_assoc]; exact hcore
-      have h2 : Real.sqrt C₉ * κ ^ (2 : ℝ) *
-            (Real.sqrt T * (Real.sqrt (Real.sqrt T) * Real.sqrt (Real.sqrt β)) + T) ≤
-          Real.sqrt C₉ * κ ^ (2 : ℝ) * (T + T) :=
-        mul_le_mul_of_nonneg_left (add_le_add hcore' le_rfl)
-          (mul_nonneg (Real.sqrt_nonneg C₉) (Real.rpow_nonneg hκ.le _))
-      calc δ * Real.sqrt γ ≤ _ := h1
-        _ ≤ Real.sqrt C₉ * κ ^ (2 : ℝ) * (T + T) := h2
-        _ = 2 * Real.sqrt C₉ * κ ^ (2 : ℝ) * T := by ring
-    have hpow : κ ^ (-1 : ℝ) * κ ^ (2 : ℝ) = κ := by
-      rw [rpow_mul_of_add hκ (by norm_num : (-1 : ℝ) + 2 = 1), Real.rpow_one]
-    calc C₂₅ * κ ^ (-1 : ℝ) * δ * Real.sqrt γ
-        = C₂₅ * κ ^ (-1 : ℝ) * (δ * Real.sqrt γ) := by ring
-      _ ≤ C₂₅ * κ ^ (-1 : ℝ) * (2 * Real.sqrt C₉ * κ ^ (2 : ℝ) * T) :=
-          mul_le_mul_of_nonneg_left hprod (mul_nonneg hC₂₅ (Real.rpow_nonneg hκ.le _))
-      _ = 2 * C₂₅ * Real.sqrt C₉ * (κ ^ (-1 : ℝ) * κ ^ (2 : ℝ)) * T := by ring
-      _ = 2 * C₂₅ * Real.sqrt C₉ * κ * T := by rw [hpow]
-      _ ≤ 2 * C₂₅ * Real.sqrt C₉ * κ ^ (2 / 3 : ℝ) * T := by
-          have hcoefnn : 0 ≤ 2 * C₂₅ * Real.sqrt C₉ * T :=
-            mul_nonneg (mul_nonneg (mul_nonneg (by norm_num) hC₂₅) (Real.sqrt_nonneg C₉))
-              hT_nonneg
-          calc 2 * C₂₅ * Real.sqrt C₉ * κ * T
-              = (2 * C₂₅ * Real.sqrt C₉ * T) * κ := by ring
-            _ ≤ (2 * C₂₅ * Real.sqrt C₉ * T) * κ ^ (2 / 3 : ℝ) :=
-                mul_le_mul_of_nonneg_left hκpow23 hcoefnn
-            _ = 2 * C₂₅ * Real.sqrt C₉ * κ ^ (2 / 3 : ℝ) * T := by ring
+  have hT2 := @thetaDecay_algebra_hT2_2 κ C₉ C₂₅ α β γ δ hκ hC₂₅ hT_nonneg hαT hcore hκinv_le hγsqrt
+  have hT3 := @thetaDecay_algebra_hT3_3 κ C₉ C₂₅  β γ δ hκ hC₂₅ T hT_nonneg hδT hcore hκpow23
+    hγsqrt
   have hT4 : C₂₆ * κ ^ (-1 / 2 : ℝ) * Real.sqrt γ * Real.sqrt lam ≤
       2 * C₂₆ * Real.sqrt C₉ * κ ^ (-1 / 2 : ℝ) * Real.sqrt T * Real.sqrt lam := by
     have hγle : Real.sqrt γ ≤ 2 * Real.sqrt C₉ * Real.sqrt T := by
@@ -367,7 +481,8 @@ theorem thetaDecay_algebra
   -- The pressure square, via `(s₁+s₂+s₃)² ≤ 3(s₁²+s₂²+s₃²)`.
   have hXsq : (C₁₄ * κ ^ (-1 / 2 : ℝ) * Real.sqrt α * Real.sqrt β) ^ 2
       = C₁₄ ^ 2 * κ ^ (-1 : ℝ) * α * β := by
-    rw [mul_pow, mul_pow, mul_pow, CKN.Foundation.Euclidean.rpow_neg_half_sq hκ, Real.sq_sqrt hα, Real.sq_sqrt hβ]
+    rw [mul_pow, mul_pow, mul_pow, CKN.Foundation.Euclidean.rpow_neg_half_sq hκ, Real.sq_sqrt hα,
+      Real.sq_sqrt hβ]
   have hYsq : (C₁₄ * κ ^ (1 / 3 : ℝ) * δ) ^ 2 = C₁₄ ^ 2 * κ ^ (2 / 3 : ℝ) * δ ^ 2 := by
     rw [mul_pow, mul_pow, CKN.Foundation.Euclidean.rpow_third_sq hκ]
   have hZsq : (C₁₅ * κ ^ (1 / 2 : ℝ) * Real.sqrt lam) ^ 2 = C₁₅ ^ 2 * κ * lam := by
@@ -397,32 +512,7 @@ theorem thetaDecay_algebra
       rw [show κ ^ (-4 : ℝ) * (C₁₅ ^ 2 * κ * lam) = C₁₅ ^ 2 * (κ ^ (-4 : ℝ) * κ) * lam
             from by ring, rpow_neg_four_mul_one hκ]
     rw [hcongr]
-  have hP : κ ^ (-4 : ℝ) * δr ^ 2 ≤ 3 * C₁₄ ^ 2 * κ ^ (-5 : ℝ) * β * T
-      + 3 * C₁₄ ^ 2 * κ ^ (2 / 3 : ℝ) * T
-      + 3 * C₁₅ ^ 2 * κ ^ (-3 : ℝ) * lam := by
-    have hδr2 : δr ^ 2 ≤ 3 * ((C₁₄ * κ ^ (-1 / 2 : ℝ) * Real.sqrt α * Real.sqrt β) ^ 2
-        + (C₁₄ * κ ^ (1 / 3 : ℝ) * δ) ^ 2
-        + (C₁₅ * κ ^ (1 / 2 : ℝ) * Real.sqrt lam) ^ 2) := by
-      have h1 : δr ^ 2 ≤ (C₁₄ * κ ^ (-1 / 2 : ℝ) * Real.sqrt α * Real.sqrt β
-          + C₁₄ * κ ^ (1 / 3 : ℝ) * δ + C₁₅ * κ ^ (1 / 2 : ℝ) * Real.sqrt lam) ^ 2 :=
-        pow_le_pow_left₀ hδr hB 2
-      have h2 := sq_sum_three_le (C₁₄ * κ ^ (-1 / 2 : ℝ) * Real.sqrt α * Real.sqrt β)
-        (C₁₄ * κ ^ (1 / 3 : ℝ) * δ) (C₁₅ * κ ^ (1 / 2 : ℝ) * Real.sqrt lam)
-      linarith only [h1, h2]
-    calc κ ^ (-4 : ℝ) * δr ^ 2
-        ≤ κ ^ (-4 : ℝ) * (3 * ((C₁₄ * κ ^ (-1 / 2 : ℝ) * Real.sqrt α * Real.sqrt β) ^ 2
-            + (C₁₄ * κ ^ (1 / 3 : ℝ) * δ) ^ 2
-            + (C₁₅ * κ ^ (1 / 2 : ℝ) * Real.sqrt lam) ^ 2)) :=
-          mul_le_mul_of_nonneg_left hδr2 (Real.rpow_nonneg hκ.le _)
-      _ = 3 * (κ ^ (-4 : ℝ) * (C₁₄ * κ ^ (-1 / 2 : ℝ) * Real.sqrt α * Real.sqrt β) ^ 2
-            + κ ^ (-4 : ℝ) * (C₁₄ * κ ^ (1 / 3 : ℝ) * δ) ^ 2
-            + κ ^ (-4 : ℝ) * (C₁₅ * κ ^ (1 / 2 : ℝ) * Real.sqrt lam) ^ 2) := by ring
-      _ ≤ 3 * (C₁₄ ^ 2 * κ ^ (-5 : ℝ) * β * T + C₁₄ ^ 2 * κ ^ (2 / 3 : ℝ) * T
-            + C₁₅ ^ 2 * κ ^ (-3 : ℝ) * lam) := by
-          apply mul_le_mul_of_nonneg_left _ (by norm_num : (0 : ℝ) ≤ 3)
-          exact add_le_add (add_le_add hX2 hY2) hZ2
-      _ = 3 * C₁₄ ^ 2 * κ ^ (-5 : ℝ) * β * T + 3 * C₁₄ ^ 2 * κ ^ (2 / 3 : ℝ) * T
-            + 3 * C₁₅ ^ 2 * κ ^ (-3 : ℝ) * lam := by ring
+  have hP := @thetaDecay_algebra_hP_4 κ C₁₄ C₁₅ α β δ lam δr hκ hδr hB T hX2 hY2 hZ2
   have hS : αr + βr + κ ^ (-4 : ℝ) * δr ^ 2 ≤
       (C₂₅ * κ ^ (2 / 3 : ℝ) * T
         + 2 * C₂₅ * Real.sqrt C₉ * κ ^ (-5 : ℝ) * Real.sqrt β * T
@@ -458,30 +548,7 @@ theorem thetaDecay_algebra
       _ ≤ thetaDecayC₂₇ C₉ C₁₄ C₂₅ * (κ ^ (2 / 3 : ℝ) * T) :=
           mul_le_mul_of_nonneg_right hcoefA (mul_nonneg hκ23nn hT_nonneg)
       _ = thetaDecayC₂₇ C₉ C₁₄ C₂₅ * κ ^ (2 / 3 : ℝ) * T := by ring
-  have hg2 : 2 * C₂₅ * Real.sqrt C₉ * κ ^ (-5 : ℝ) * Real.sqrt β * T
-      + 3 * C₁₄ ^ 2 * κ ^ (-5 : ℝ) * β * T ≤
-      thetaDecayC₂₇ C₉ C₁₄ C₂₅ * κ ^ (-5 : ℝ) * (Real.sqrt β + β) * T := by
-    have hcoefB : 2 * C₂₅ * Real.sqrt C₉ * Real.sqrt β + 3 * C₁₄ ^ 2 * β ≤
-        thetaDecayC₂₇ C₉ C₁₄ C₂₅ * (Real.sqrt β + β) := by
-      have h1 : 2 * C₂₅ * Real.sqrt C₉ * Real.sqrt β ≤
-          thetaDecayC₂₇ C₉ C₁₄ C₂₅ * Real.sqrt β :=
-        mul_le_mul_of_nonneg_right hcoefB1 (Real.sqrt_nonneg β)
-      have h2 : 3 * C₁₄ ^ 2 * β ≤ thetaDecayC₂₇ C₉ C₁₄ C₂₅ * β :=
-        mul_le_mul_of_nonneg_right hcoefB2 hβ
-      calc 2 * C₂₅ * Real.sqrt C₉ * Real.sqrt β + 3 * C₁₄ ^ 2 * β
-          ≤ thetaDecayC₂₇ C₉ C₁₄ C₂₅ * Real.sqrt β + thetaDecayC₂₇ C₉ C₁₄ C₂₅ * β :=
-            add_le_add h1 h2
-        _ = thetaDecayC₂₇ C₉ C₁₄ C₂₅ * (Real.sqrt β + β) := by ring
-    rw [show 2 * C₂₅ * Real.sqrt C₉ * κ ^ (-5 : ℝ) * Real.sqrt β * T
-          + 3 * C₁₄ ^ 2 * κ ^ (-5 : ℝ) * β * T
-        = (2 * C₂₅ * Real.sqrt C₉ * Real.sqrt β + 3 * C₁₄ ^ 2 * β) * κ ^ (-5 : ℝ) * T
-        from by ring]
-    calc (2 * C₂₅ * Real.sqrt C₉ * Real.sqrt β + 3 * C₁₄ ^ 2 * β) * κ ^ (-5 : ℝ) * T
-        = (2 * C₂₅ * Real.sqrt C₉ * Real.sqrt β + 3 * C₁₄ ^ 2 * β)
-            * (κ ^ (-5 : ℝ) * T) := by ring
-      _ ≤ thetaDecayC₂₇ C₉ C₁₄ C₂₅ * (Real.sqrt β + β) * (κ ^ (-5 : ℝ) * T) :=
-          mul_le_mul_of_nonneg_right hcoefB (mul_nonneg hκn5nn hT_nonneg)
-      _ = thetaDecayC₂₇ C₉ C₁₄ C₂₅ * κ ^ (-5 : ℝ) * (Real.sqrt β + β) * T := by ring
+  have hg2 := @thetaDecay_algebra_hg2_5 κ C₉ C₁₄ C₂₅ α β δ hβ hT_nonneg hκn5nn hcoefB1 hcoefB2
   have hg3 : 2 * C₂₆ * Real.sqrt C₉ * κ ^ (-1 / 2 : ℝ) * Real.sqrt T * Real.sqrt lam ≤
       thetaDecayC₂₈ C₉ C₁₅ C₂₆ * κ ^ (-1 / 2 : ℝ) * Real.sqrt T * Real.sqrt lam := by
     calc 2 * C₂₆ * Real.sqrt C₉ * κ ^ (-1 / 2 : ℝ) * Real.sqrt T * Real.sqrt lam

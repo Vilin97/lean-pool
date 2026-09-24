@@ -33,7 +33,7 @@ noncomputable section
 
 namespace CKN
 
-/-- Tsai's velocity excess `C̃` on the one-sided parabolic cylinder. -/
+/-- Tsai's velocity excess `C_tilde` on the one-sided parabolic cylinder. -/
 noncomputable def tsaiVelocityExcess (u : ParabolicPoint → Vec3)
     (z : ParabolicPoint) (r : ℝ) : ℝ :=
   r⁻¹ ^ (2 : ℕ) *
@@ -41,7 +41,7 @@ noncomputable def tsaiVelocityExcess (u : ParabolicPoint → Vec3)
       vec3EuclideanNorm
         (u w - ⨍ y in parabolicCylinder z.1 z.2 r, u y) ^ (3 : ℕ))
 
-/-- Tsai's pressure excess `D̃` on the one-sided parabolic cylinder. -/
+/-- Tsai's pressure excess `D_tilde` on the one-sided parabolic cylinder. -/
 noncomputable def tsaiPressureExcess (p : ParabolicPoint → ℝ)
     (z : ParabolicPoint) (r : ℝ) : ℝ :=
   r⁻¹ ^ (2 : ℕ) *
@@ -97,7 +97,7 @@ private theorem sws_integrable_velocity_on_cylinder
       (lintegral_mono (fun w => le_add_right le_rfl)) henergy
   have husq := integrable_sq_of_energy hu huenergy
   let S : Set ParabolicPoint := parabolicCylinder z.1 z.2 r
-  haveI : IsFiniteMeasure (volume.restrict S) := by
+  have : IsFiniteMeasure (volume.restrict S) := by
     refine ⟨?_⟩
     simpa [S] using
       (volume_parabolicCylinder_lt_top (x := z.1) (t := z.2) (r := r))
@@ -423,10 +423,13 @@ private lemma ball_vec_excess_lintegral_bound
       8 * (∫⁻ y in vec3Ball x r, ‖L (u (y,s))‖ₑ ^ (3 : ℝ)) := by
     calc
       _ = ((∫⁻ y in vec3Ball x r, ‖L (u (y,s) - ⨍ z in vec3Ball x r, u (z,s))‖ₑ ^ (3 : ℝ)) /
-          volume (vec3Ball x r)) * volume (vec3Ball x r) := by rw [ENNReal.div_mul_cancel hp.ne' ht.ne]
+          volume (vec3Ball x r)) * volume (vec3Ball x r) := by rw [ENNReal.div_mul_cancel hp.ne'
+            ht.ne]
       _ ≤ ((8 : ℝ≥0∞) * (∫⁻ y in vec3Ball x r, ‖L (u (y,s))‖ₑ ^ (3 : ℝ)) /
-          volume (vec3Ball x r)) * volume (vec3Ball x r) := mul_le_mul_of_nonneg_right h'' (by positivity)
-      _ = 8 * (∫⁻ y in vec3Ball x r, ‖L (u (y,s))‖ₑ ^ (3 : ℝ)) := ENNReal.div_mul_cancel hp.ne' ht.ne
+          volume (vec3Ball x r)) * volume (vec3Ball x r) := mul_le_mul_of_nonneg_right h'' (by
+            positivity)
+      _ = 8 * (∫⁻ y in vec3Ball x r, ‖L (u (y,s))‖ₑ ^ (3 : ℝ)) := ENNReal.div_mul_cancel hp.ne'
+        ht.ne
   convert hraw using 1 <;> simp [vec3EuclideanNorm_eq_l2,
     show (L : Vec3 → L2Vec3) = WithLp.toLp 2 by rfl, ofReal_norm]
 
@@ -468,6 +471,87 @@ private lemma meanFreeVec_aemeasurable
   apply aemeasurable_pi_iff.mpr
   intro i
   exact (hcoord i).aemeasurable
+
+private lemma pressureChat_le_eight_hrawprod_1 :
+    ∀ {u : ParabolicPoint → Vec3} {z : ParabolicPoint} {r : ℝ},
+      let B : Set Vec3 := vec3Ball z.1 r;
+      let T : Set ℝ := Ioc (z.2 - r ^ (2 : ℕ)) z.2;
+      (∀ᵐ (s : ℝ) ∂volume.restrict T,
+          ∫⁻ (v : Vec3) in B,
+              ENNReal.ofReal (vec3EuclideanNorm (meanFreeVec u z.1 r s v)) ^ (3 : ℝ) ≤
+            (8 : ℝ≥0∞) *
+              ∫⁻ (v : Vec3) in B, ENNReal.ofReal (vec3EuclideanNorm (u (v, s))) ^ (3 : ℝ)) →
+        AEMeasurable
+            (fun (w : Vec3 × ℝ) =>
+              ENNReal.ofReal (vec3EuclideanNorm (meanFreeVec u z.1 r w.2 w.1)) ^ (3 : ℝ))
+            ((volume.prod volume).restrict (B ×ˢ T)) →
+          AEMeasurable (fun (w : Vec3 × ℝ) => ENNReal.ofReal (vec3EuclideanNorm (u w)) ^ (3 : ℝ))
+              ((volume.prod volume).restrict (B ×ˢ T)) →
+            ∫⁻ (w : Vec3 × ℝ) in B ×ˢ T,
+                ENNReal.ofReal (vec3EuclideanNorm (meanFreeVec u z.1 r w.2 w.1)) ^ (3 : ℝ) ≤
+              (8 : ℝ≥0∞) *
+                ∫⁻ (w : Vec3 × ℝ) in B ×ˢ T, ENNReal.ofReal (vec3EuclideanNorm (u w)) ^ (3 : ℝ)
+    := by
+  intro u z r B T hgood' hFmeas' hU3meas'
+  change (∫⁻ w in B ×ˢ T, ENNReal.ofReal
+    (vec3EuclideanNorm (meanFreeVec u z.1 r w.2 w.1)) ^ (3 : ℝ) ∂
+      ((volume : Measure Vec3).prod (volume : Measure ℝ))) ≤
+    8 * (∫⁻ w in B ×ˢ T, ENNReal.ofReal
+      (vec3EuclideanNorm (u w)) ^ (3 : ℝ) ∂
+      ((volume : Measure Vec3).prod (volume : Measure ℝ)))
+  have hFub := setLIntegral_prod_symm
+    (fun w : Vec3 × ℝ => ENNReal.ofReal
+      (vec3EuclideanNorm (meanFreeVec u z.1 r w.2 w.1)) ^ (3 : ℝ)) hFmeas'
+  have hU3ub := setLIntegral_prod_symm
+    (fun w : Vec3 × ℝ => ENNReal.ofReal
+      (vec3EuclideanNorm (u w)) ^ (3 : ℝ)) hU3meas'
+  have hFub' : (∫⁻ w in B ×ˢ T, ENNReal.ofReal
+      (vec3EuclideanNorm (meanFreeVec u z.1 r w.2 w.1)) ^ (3 : ℝ) ∂
+        ((volume : Measure Vec3).prod (volume : Measure ℝ))) =
+      ∫⁻ s in T, ∫⁻ v in B, ENNReal.ofReal
+        (vec3EuclideanNorm (meanFreeVec u z.1 r s v)) ^ (3 : ℝ) := by
+    simpa only [Prod.fst, Prod.snd] using hFub
+  have hU3ub' : (∫⁻ w in B ×ˢ T, ENNReal.ofReal
+      (vec3EuclideanNorm (u w)) ^ (3 : ℝ) ∂
+        ((volume : Measure Vec3).prod (volume : Measure ℝ))) =
+      ∫⁻ s in T, ∫⁻ v in B, ENNReal.ofReal
+        (vec3EuclideanNorm (u (v,s))) ^ (3 : ℝ) := by
+    simpa only [Prod.fst, Prod.snd] using hU3ub
+  calc
+    _ = ∫⁻ s in T, ∫⁻ v in B, ENNReal.ofReal
+        (vec3EuclideanNorm (meanFreeVec u z.1 r s v)) ^ (3 : ℝ) := by
+          exact hFub'
+    _ ≤ ∫⁻ s in T, 8 * (∫⁻ v in B, ENNReal.ofReal
+        (vec3EuclideanNorm (u (v,s))) ^ (3 : ℝ)) := lintegral_mono_ae hgood'
+    _ = 8 * (∫⁻ s in T, ∫⁻ v in B, ENNReal.ofReal
+        (vec3EuclideanNorm (u (v,s))) ^ (3 : ℝ)) := by rw [lintegral_const_mul' 8 _ (by norm_num)]
+    _ = 8 * (∫⁻ w in B ×ˢ T, ENNReal.ofReal
+        (vec3EuclideanNorm (u w)) ^ (3 : ℝ)) := by
+          exact congrArg (fun x => 8 * x) hU3ub'.symm
+
+private lemma pressureChat_le_eight_hChatMeas_2 :
+    ∀ {u : ParabolicPoint → Vec3} {z : ParabolicPoint} {r : ℝ},
+      let _ : Set Vec3 := vec3Ball z.1 r;
+      let T : Set ℝ := Ioc (z.2 - r ^ (2 : ℕ)) z.2;
+      AEStronglyMeasurable (fun (w : Vec3 × ℝ) => meanFreeVec u z.1 r w.2 w.1)
+          ((volume.restrict (vec3Ball z.1 r)).prod (volume.restrict T)) →
+        AEStronglyMeasurable
+          (fun (w : ParabolicPoint) => vec3EuclideanNorm (meanFreeVec u z.1 r w.2 w.1) ^ (3 : ℕ))
+          (volume.restrict (parabolicCylinder z.1 z.2 r))
+    := by
+  intro u z r B T hmeanfree
+  rw [parabolicCylinder, volume_parabolicPoint_eq_prod]
+  change AEStronglyMeasurable
+    (fun w : Vec3 × ℝ => vec3EuclideanNorm
+      (meanFreeVec u z.1 r w.2 w.1) ^ (3 : ℕ))
+    (((volume : Measure Vec3).prod (volume : Measure ℝ)).restrict
+      (B ×ˢ T))
+  rw [← Measure.prod_restrict]
+  simpa [B, T] using (by
+    have hc : Continuous (fun v : Vec3 => vec3EuclideanNorm v) := by
+      unfold vec3EuclideanNorm
+      fun_prop
+    exact (hc.comp_aestronglyMeasurable hmeanfree).pow 3)
 
 lemma pressureChat_le_eight_of_integrability
     {u : ParabolicPoint → Vec3} {z : ParabolicPoint} {r : ℝ}
@@ -532,44 +616,7 @@ lemma pressureChat_le_eight_of_integrability
       (((volume : Measure Vec3).prod (volume : Measure ℝ)).restrict (B ×ˢ T)) := by
     rw [← Measure.prod_restrict]
     exact hU3meas
-  have hrawprod : (∫⁻ w in B ×ˢ T, ENNReal.ofReal
-      (vec3EuclideanNorm (meanFreeVec u z.1 r w.2 w.1)) ^ (3 : ℝ)) ≤
-      8 * (∫⁻ w in B ×ˢ T, ENNReal.ofReal (vec3EuclideanNorm (u w)) ^ (3 : ℝ)) := by
-    change (∫⁻ w in B ×ˢ T, ENNReal.ofReal
-      (vec3EuclideanNorm (meanFreeVec u z.1 r w.2 w.1)) ^ (3 : ℝ) ∂
-        ((volume : Measure Vec3).prod (volume : Measure ℝ))) ≤
-      8 * (∫⁻ w in B ×ˢ T, ENNReal.ofReal
-        (vec3EuclideanNorm (u w)) ^ (3 : ℝ) ∂
-        ((volume : Measure Vec3).prod (volume : Measure ℝ)))
-    have hFub := setLIntegral_prod_symm
-      (fun w : Vec3 × ℝ => ENNReal.ofReal
-        (vec3EuclideanNorm (meanFreeVec u z.1 r w.2 w.1)) ^ (3 : ℝ)) hFmeas'
-    have hU3ub := setLIntegral_prod_symm
-      (fun w : Vec3 × ℝ => ENNReal.ofReal
-        (vec3EuclideanNorm (u w)) ^ (3 : ℝ)) hU3meas'
-    have hFub' : (∫⁻ w in B ×ˢ T, ENNReal.ofReal
-        (vec3EuclideanNorm (meanFreeVec u z.1 r w.2 w.1)) ^ (3 : ℝ) ∂
-          ((volume : Measure Vec3).prod (volume : Measure ℝ))) =
-        ∫⁻ s in T, ∫⁻ v in B, ENNReal.ofReal
-          (vec3EuclideanNorm (meanFreeVec u z.1 r s v)) ^ (3 : ℝ) := by
-      simpa only [Prod.fst, Prod.snd] using hFub
-    have hU3ub' : (∫⁻ w in B ×ˢ T, ENNReal.ofReal
-        (vec3EuclideanNorm (u w)) ^ (3 : ℝ) ∂
-          ((volume : Measure Vec3).prod (volume : Measure ℝ))) =
-        ∫⁻ s in T, ∫⁻ v in B, ENNReal.ofReal
-          (vec3EuclideanNorm (u (v,s))) ^ (3 : ℝ) := by
-      simpa only [Prod.fst, Prod.snd] using hU3ub
-    calc
-      _ = ∫⁻ s in T, ∫⁻ v in B, ENNReal.ofReal
-          (vec3EuclideanNorm (meanFreeVec u z.1 r s v)) ^ (3 : ℝ) := by
-            exact hFub'
-      _ ≤ ∫⁻ s in T, 8 * (∫⁻ v in B, ENNReal.ofReal
-          (vec3EuclideanNorm (u (v,s))) ^ (3 : ℝ)) := lintegral_mono_ae hgood'
-      _ = 8 * (∫⁻ s in T, ∫⁻ v in B, ENNReal.ofReal
-          (vec3EuclideanNorm (u (v,s))) ^ (3 : ℝ)) := by rw [lintegral_const_mul' 8 _ (by norm_num)]
-      _ = 8 * (∫⁻ w in B ×ˢ T, ENNReal.ofReal
-          (vec3EuclideanNorm (u w)) ^ (3 : ℝ)) := by
-            exact congrArg (fun x => 8 * x) hU3ub'.symm
+  have hrawprod := @pressureChat_le_eight_hrawprod_1 u z r hgood' hFmeas' hU3meas'
   have hraw : (∫⁻ w in parabolicCylinder z.1 z.2 r, ENNReal.ofReal
       (vec3EuclideanNorm (meanFreeVec u z.1 r w.2 w.1)) ^ (3 : ℝ)) ≤
       8 * (∫⁻ w in parabolicCylinder z.1 z.2 r, ENNReal.ofReal
@@ -582,22 +629,7 @@ lemma pressureChat_le_eight_of_integrability
         (vec3EuclideanNorm (u w)) ^ (3 : ℝ) ∂
         ((volume : Measure Vec3).prod (volume : Measure ℝ)))
     exact hrawprod
-  have hChatMeas : AEStronglyMeasurable
-      (fun w : ParabolicPoint => vec3EuclideanNorm
-        (meanFreeVec u z.1 r w.2 w.1) ^ (3 : ℕ))
-      (volume.restrict (parabolicCylinder z.1 z.2 r)) := by
-    rw [parabolicCylinder, volume_parabolicPoint_eq_prod]
-    change AEStronglyMeasurable
-      (fun w : Vec3 × ℝ => vec3EuclideanNorm
-        (meanFreeVec u z.1 r w.2 w.1) ^ (3 : ℕ))
-      (((volume : Measure Vec3).prod (volume : Measure ℝ)).restrict
-        (B ×ˢ T))
-    rw [← Measure.prod_restrict]
-    simpa [B, T] using (by
-      have hc : Continuous (fun v : Vec3 => vec3EuclideanNorm v) := by
-        unfold vec3EuclideanNorm
-        fun_prop
-      exact (hc.comp_aestronglyMeasurable hmeanfree).pow 3)
+  have hChatMeas := @pressureChat_le_eight_hChatMeas_2 u z r hmeanfree
   have hU3MeasCyl : AEStronglyMeasurable
       (fun w : ParabolicPoint => vec3EuclideanNorm (u w) ^ (3 : ℕ))
       (volume.restrict (parabolicCylinder z.1 z.2 r)) := by

@@ -38,7 +38,8 @@ theorem origin_harmonic_coefficient_le_affine_slot
       ENNReal.ofReal ε^(4/5 : ℝ) ≤ originKPAffineASlot q C_CZ ε KU KD := by
   have hfin : ENNReal.ofReal (Real.pi*4/3) * originHarmonicAbsoluteMomentConstant C^(4/5 : ℝ) ≠ ⊤ :=
     ENNReal.mul_ne_top ENNReal.ofReal_ne_top
-      (ENNReal.rpow_ne_top_of_nonneg (by norm_num) (originHarmonicAbsoluteMomentConstant_lt_top C).ne)
+      (ENNReal.rpow_ne_top_of_nonneg (by norm_num) (originHarmonicAbsoluteMomentConstant_lt_top
+        C).ne)
   have hc : ENNReal.ofReal (Real.pi*4/3) * originHarmonicAbsoluteMomentConstant C^(4/5 : ℝ) ≤
       ENNReal.ofReal (|C_CZ|+1) := by
     rw [← ENNReal.ofReal_toReal hfin]
@@ -51,7 +52,7 @@ theorem origin_harmonic_coefficient_le_affine_slot
 
 private theorem harmonic_volume_radius_bound
     (C ε κ r : ℝ) (x : Vec3) (S : Set Vec3)
-    (hr : 0 < r) (hrhi : r ≤ 1) (hκ : 0 < κ) (hκhi : κ ≤ 25/9)
+    (hr : 0 < r) (hrhi : r ≤ 1) (hκ : 0 < κ) (hκhi : κ ≤ 25 / 9)
     (hS : S ⊆ vec3Ball x r) :
     volume S * originHarmonicAbsoluteMomentConstant C^(4/5 : ℝ) *
       ENNReal.ofReal ε^(4/5 : ℝ) * ENNReal.ofReal r^(2/5 : ℝ) ≤
@@ -121,7 +122,8 @@ theorem exists_origin_harmonic_clipped_coefficient_bound_of_sws :
   obtain ⟨hm,hMass⟩ := origin_harmonic_majorant_moment_of_sws C ε hsol hdom hsmall hQ
   have hMass' : (∫⁻ s in J, M s^(3/2 : ℝ)) ≤
       originHarmonicAbsoluteMomentConstant C * ENNReal.ofReal ε :=
-    hMass.trans (mul_le_mul' (origin_harmonic_moment_constant_le_absolute C ρ z.1 hC hρlo hρhi) le_rfl)
+    hMass.trans (mul_le_mul' (origin_harmonic_moment_constant_le_absolute C ρ z.1 hC hρlo hρhi)
+      le_rfl)
   have hb : ∀ᵐ s ∂volume.restrict J, ∀ᵐ y ∂volume.restrict S, ‖F (y,s)‖ₑ ≤ M s := by
     filter_upwards [hbound hsol hρ hsub] with s hs
     filter_upwards [ae_restrict_mem hS] with y hy
@@ -131,9 +133,11 @@ theorem exists_origin_harmonic_clipped_coefficient_bound_of_sws :
     filter_upwards [slice_harmonic_part_contDiffOn_ae_of_sws hsol hρ hsub] with s hs
     rw [euclideanBall_eq_vec3Ball_display (by positivity : 0 < ρ/2)] at hs
     have hd : ContinuousOn (fun y => F (y,s)) (vec3Ball z.1 (ρ/2)) := by
-      exact (hs.continuousOn_fderiv_of_isOpen (isOpen_vec3Ball _ _) (by simp)).clm_apply continuousOn_const
+      exact (hs.continuousOn_fderiv_of_isOpen (isOpen_vec3Ball _ _) (by simp)).clm_apply
+        continuousOn_const
     exact (hd.mono hShalf).aestronglyMeasurable hS
-  have hh := origin_harmonic_clipped_slice_norm_bound C ε S J t r hr measurableSet_Ioc hm hMass' hf hb
+  have hh := origin_harmonic_clipped_slice_norm_bound C ε S J t r hr measurableSet_Ioc hm hMass'
+    hf hb
   have htime : Ioc (t-r^2) t ∩ Ioc (-(R₁^2)) 0 ⊆ Ioc (t-r^2) t ∩ J :=
     fun s hs => ⟨hs.1,hwin hs⟩
   have hh' := (lintegral_mono_set htime).trans hh

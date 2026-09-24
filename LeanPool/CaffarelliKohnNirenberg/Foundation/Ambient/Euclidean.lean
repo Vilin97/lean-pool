@@ -44,7 +44,6 @@ theorem space_norm_le_euclideanNorm (x : Space) :
   have hsqrt := Real.sqrt_nonneg (∑ j, (x j) ^ 2)
   have habs : |x k| ≤ Real.sqrt (∑ j, (x j) ^ 2) := by
     exact abs_le_of_sq_le_sq (by simpa only [hsq] using hk) hsqrt
-    
   simpa only [Real.norm_eq_abs] using
     habs
 

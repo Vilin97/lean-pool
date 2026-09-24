@@ -18,7 +18,7 @@ term `|u|² u · ∇ψ` and the pressure term `p u · ∇ψ` - are not integrabl
 field that is merely square integrable, so those two terms need the parabolic
 interpolation
 
-`L^∞_t L²_x ∩ L²_t Ḣ¹_x ↪ L^{10/3}_{t,x}`,
+`L^∞_t L²_x ∩ L²_t homogeneous H¹_x ↪ L^{10/3}_{t,x}`,
 
 which is the content of `CKN.ball_time_sobolev`.  This file turns that estimate
 into the three local statements the energy inequality actually consumes: the

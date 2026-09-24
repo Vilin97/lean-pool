@@ -31,6 +31,7 @@ namespace CKN.Foundation.Euclidean
 
 open CKN.Foundation.Parabolic
 
+/-- Continuous test-function pairing used to pass operator identities through Lᵖ limits. -/
 def testPairing {p q : ℝ≥0∞} [Fact (1 ≤ p)] [Fact (1 ≤ q)]
     [ENNReal.HolderConjugate p q]
     (g : Lp ℝ q (volume : Measure Vec3)) :

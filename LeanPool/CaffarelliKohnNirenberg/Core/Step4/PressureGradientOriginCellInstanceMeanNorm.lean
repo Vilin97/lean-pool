@@ -46,7 +46,8 @@ theorem origin_slice_mean_free_component_norm_bound
     rw [meanFreeVec_eq_sub_spatialAverage hu]
     exact hu.aestronglyMeasurable.sub aestronglyMeasurable_const
   have hvN := hcont.comp_aestronglyMeasurable hvM
-  have hj := eLpNorm_mono_ae (p := ENNReal.ofReal (3 : ℝ)) ((ContinuousLinearMap.proj j : Vec3 →L[ℝ] ℝ).continuous.comp_aestronglyMeasurable hvM)
+  have hj := eLpNorm_mono_ae (p := ENNReal.ofReal (3 : ℝ)) ((ContinuousLinearMap.proj j : Vec3
+    →L[ℝ] ℝ).continuous.comp_aestronglyMeasurable hvM)
     (Eventually.of_forall (fun y => show ‖meanFreeVec u x r s y j‖ ≤
       ‖vec3EuclideanNorm (meanFreeVec u x r s y)‖ from by
       rw [Real.norm_of_nonneg (vec3EuclideanNorm_nonneg _), Real.norm_eq_abs]

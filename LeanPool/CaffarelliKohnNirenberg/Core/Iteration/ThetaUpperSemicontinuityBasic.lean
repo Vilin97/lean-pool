@@ -30,6 +30,7 @@ noncomputable section
 
 namespace CKN
 
+/-- Continuous translation by the negative of a fixed parabolic point in product coordinates. -/
 def subtractMapProd (z : ParabolicPoint) :
     C(Vec3 × ℝ, Vec3 × ℝ) :=
   ContinuousMap.mk (fun w : Vec3 × ℝ => (w.1 - z.1, w.2 - z.2))
@@ -465,7 +466,7 @@ lemma mem_euclideanClosedBall_of_vec3Norm_le
     y ∈ euclideanClosedBall x R := by
   apply (mem_euclideanClosedBall_iff_vecEuclideanNorm_le hR).2
   have heq : vecEuclideanNorm (y - x) = vec3EuclideanNorm (y - x) := by
-    simp [CKN.vecEuclideanNorm, vec3EuclideanNorm, vecNormSq, vecDot]
+    simp only [vecEuclideanNorm, vecNormSq, vecDot, Pi.sub_apply, vec3EuclideanNorm]
     apply congrArg Real.sqrt
     apply Finset.sum_congr rfl
     intro i hi

@@ -5,10 +5,11 @@ Authors: Scott Armstrong, Vlad Vicol
 -/
 module
 
+public import LeanPool.CaffarelliKohnNirenberg.Core.Step4.PressureGradientOriginKPAffineSlot
+public import LeanPool.CaffarelliKohnNirenberg.Core.Step4.PressureGradientOriginKPComparison
 public import LeanPool.CaffarelliKohnNirenberg.Core.Step4.WeakGradientGluingTRemainderMajorantQuantitative
 public import LeanPool.CaffarelliKohnNirenberg.Core.Step4.PressureGradientGluedRemainderBounds
 public import LeanPool.CaffarelliKohnNirenberg.Core.Step4.PressureGradientHGCloserCellsRiesz
-public import LeanPool.CaffarelliKohnNirenberg.Core.Step4.PressureGradientOriginKPAffineSource
 public import LeanPool.CaffarelliKohnNirenberg.Core.Step4.WeakGradientGluingTWindowSelection
 public import LeanPool.CaffarelliKohnNirenberg.Core.Step4.PressureGradientGaugeMajorantExponents
 
@@ -19,6 +20,76 @@ affine cell budget; the source contains both convection and force.
 -/
 
 @[expose] public section
+
+section
+
+/-!
+# Pressure Gradient Origin KPAffine Source
+
+Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
+-/
+
+open MeasureTheory Set Filter
+open scoped ENNReal BigOperators
+open CKN.Foundation.Parabolic CKN.Foundation.Parabolic.Morrey
+open CKN.Core.Endgame
+
+noncomputable section
+
+namespace CKN.Core.Step4
+
+/-!
+# The divergence source meets the enlarged small-cell budget
+
+For a suitable weak solution with velocity budgets `KU`, `KD` on `Q_{R₀}` and
+data size `ε`, the `6/5` power of the Morrey norm of the divergence source
+`Du·u - f` of the pressure equation is bounded by `X^{6/5}`, where
+`X = 3·KU·KD + forceSourceMorreyBound q ε`
+(`origin_divergence_source_numerical_bounds_of_sws`). That coefficient lies
+below `originKPAffineASlot`, so the source meets the enlarged budget with no
+further analytic input. The linear budget `c·3X` of
+`oneSidedPressureGradientKP` does not dominate `X^{6/5}` once `X > 3c`, which
+is the scaling defect the enlarged budget removes.
+-/
+
+/-- **The source Morrey norm against the enlarged budget.** Under the
+hypotheses of the origin pressure-gradient obligation, the `6/5` power of the
+Morrey norm of the vector divergence source on `Q_{R₁}` lies below
+`originKPAffineASlot q C_CZ ε KU KD`. -/
+theorem origin_divergence_source_morrey_rpow_le_KPAffine_slot
+    (q τ C_CZ R₀ R₁ ε : ℝ) (KU KD : ℝ≥0∞)
+    (hq : 5 / 2 < q) (hτ : 25 / 3 ≤ τ) (hR : 0 < R₁) (hR₁₀ : R₁ ≤ R₀) (hR₀le : R₀ ≤ 1)
+    {Ω : Set Vec3} {I : Set ℝ}
+    {u : ParabolicPoint → Vec3} {Du : ParabolicPoint → Fin 3 → Vec3}
+    {p : ParabolicPoint → ℝ} {f : ParabolicPoint → Vec3}
+    (hsol : IsSuitableWeakSolutionIntegrable Ω I q u Du p f)
+    (hdom : closure (parabolicCylinder (0 : Vec3) 0 1) ⊆ spaceTimeSet Ω I)
+    (hU : ∀ i, morreyNorm 3 τ
+      ((parabolicCylinder (0 : Vec3) 0 R₀).indicator (fun z => u z i)) ≤ KU)
+    (hD : ∀ i j, morreyNorm 2 (25 / 8 : ℝ)
+      ((parabolicCylinder (0 : Vec3) 0 R₀).indicator (fun z => Du z i j)) ≤ KD)
+    (hsize : (∫⁻ z in parabolicCylinder (0 : Vec3) 0 1,
+      ENNReal.ofReal (vec3EuclideanNorm (u z)) ^ (3 : ℝ) +
+        ENNReal.ofReal |p z| ^ (3 / 2 : ℝ) +
+        ENNReal.ofReal (vec3EuclideanNorm (f z)) ^ q) ≤ ENNReal.ofReal ε) :
+    morreyNorm (6 / 5 : ℝ) (min ((1 / τ + 8 / 25)⁻¹) q)
+        (fun z => vec3EuclideanNorm
+          ((parabolicCylinder (0 : Vec3) 0 R₁).indicator
+            (fun w => fun i => ∑ j, Du w i j * u w j - f w i) z)) ^ (6 / 5 : ℝ) ≤
+      originKPAffineASlot q C_CZ ε KU KD := by
+  apply rpow_le_originKPAffineASlot_of_le
+  calc
+    _ ≤ 3 * (3 * KU * KD + forceSourceMorreyBound q ε) :=
+      (origin_divergence_source_numerical_bounds_of_sws q τ R₀ R₁ ε KU KD
+        hq hτ hR hR₁₀ hR₀le hsol hdom hU hD hsize).1
+    _ = 1 * (3 * (3 * KU * KD + forceSourceMorreyBound q ε)) := (one_mul _).symm
+    _ ≤ _ := mul_le_mul' (one_le_ofReal_abs_add_one C_CZ) le_rfl
+
+end CKN.Core.Step4
+
+end
+
+end
 
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal Topology BigOperators
@@ -33,7 +104,7 @@ def rieszSourceThresholdA : ℝ :=
 
 /-- The Riesz coefficient is uniformly bounded over the admitted exponent range. -/
 theorem pressureRieszMorreyConstant_le_endpoint {κ : ℝ}
-    (hκ : 0 < κ) (hκhi : κ ≤ 25/9) :
+    (hκ : 0 < κ) (hκhi : κ ≤ 25 / 9) :
     pressureRieszMorreyConstant κ ≤ pressureRieszMorreyConstant (25/9) := by
   have hd : (5 : ℝ) / (25/9) ≤ 5 / κ :=
     div_le_div_of_nonneg_left (by norm_num) hκ hκhi
@@ -43,7 +114,7 @@ theorem pressureRieszMorreyConstant_le_endpoint {κ : ℝ}
 
 /-- The fixed threshold absorbs the sum of three component operator constants. -/
 theorem three_riesz_constants_le_affine_coefficient {κ C_CZ : ℝ}
-    (hκ : 0 < κ) (hκhi : κ ≤ 25/9) (hC : rieszSourceThresholdA ≤ C_CZ) :
+    (hκ : 0 < κ) (hκhi : κ ≤ 25 / 9) (hC : rieszSourceThresholdA ≤ C_CZ) :
     3 * pressureRieszMorreyConstant κ ≤ ENNReal.ofReal (|C_CZ| + 1) := by
   calc
     _ ≤ 3 * pressureRieszMorreyConstant (25/9) :=
@@ -59,19 +130,19 @@ theorem three_riesz_constants_le_affine_coefficient {κ C_CZ : ℝ}
 budget satisfy every clipped-cell A estimate above the absolute threshold. -/
 theorem riesz_source_sum_clipped_le_affine_slot
     (q τ C_CZ ε : ℝ) (KU KD : ℝ≥0∞)
-    (hq : 5/2 < q) (hτ : 25/3 ≤ τ) (hτhi : τ ≤ 25)
+    (hq : 5 / 2 < q) (hτ : 25 / 3 ≤ τ) (hτhi : τ ≤ 25)
     (hC : rieszSourceThresholdA ≤ C_CZ)
     (i : Fin 3) {F T : Fin 3 → ParabolicPoint → ℝ}
     (hF : ∀ j, AEMeasurable (F j) volume)
-    (hFs : ∀ j, ∀ᵐ s ∂volume, MemLp (fun y => F j (y,s))
-      (ENNReal.ofReal (6/5 : ℝ)) volume)
-    {L : ℝ} (hsupport : ∀ j y s, L < ‖y‖ → F j (y,s) = 0)
+    (hFs : ∀ j, ∀ᵐ s ∂volume, MemLp (fun y => F j (y, s))
+      (ENNReal.ofReal (6 / 5 : ℝ)) volume)
+    {L : ℝ} (hsupport : ∀ j y s, L < ‖y‖ → F j (y, s) = 0)
     (hT : ∀ j, AEMeasurable (T j) volume)
-    (hident : ∀ j, ∀ᵐ s ∂volume, (fun y => T j (y,s)) =ᵐ[volume]
+    (hident : ∀ j, ∀ᵐ s ∂volume, (fun y => T j (y, s)) =ᵐ[volume]
       rieszSecondGradientExtensionOperator
-        (rieszSecondL2Input j i) (rieszSecondL2_weak_type j i) (fun y => F j (y,s)))
-    (hN : ∀ j, morreyNorm (6/5 : ℝ) (min ((1/τ+8/25)⁻¹) q) (F j) ≤
-      3 * (3*KU*KD + forceSourceMorreyBound q ε))
+        (rieszSecondL2Input j i) (rieszSecondL2_weak_type j i) (fun y => F j (y, s)))
+    (hN : ∀ j, morreyNorm (6 / 5 : ℝ) (min ((1 / τ + 8 / 25)⁻¹) q) (F j) ≤
+      3 * (3 * KU * KD + forceSourceMorreyBound q ε))
     (B : Set Vec3) (J : Set ℝ) (z : ParabolicPoint) {r : ℝ} (hr : 0 < r) :
     (∫⁻ s in Ioc (z.2-r^2) z.2 ∩ J,
       eLpNorm (fun y => ∑ j, T j (y,s)) (ENNReal.ofReal (6/5 : ℝ))
@@ -150,7 +221,7 @@ private theorem indicator_component_morrey_le_vector
 
 private theorem origin_riesz_source_data
     (q τ R₀ R₁ ε : ℝ) (KU KD : ℝ≥0∞)
-    (hq : 5/2 < q) (hτ : 25/3 ≤ τ)
+    (hq : 5 / 2 < q) (hτ : 25 / 3 ≤ τ)
     (hR : 0 < R₁) (hR₁₀ : R₁ ≤ R₀) (hR₀le : R₀ ≤ 1)
     {Ω : Set Vec3} {I : Set ℝ}
     {u : ParabolicPoint → Vec3} {Du : ParabolicPoint → Fin 3 → Vec3}
@@ -159,11 +230,11 @@ private theorem origin_riesz_source_data
     (hdom : closure (parabolicCylinder (0 : Vec3) 0 1) ⊆ spaceTimeSet Ω I)
     (hU : ∀ i, morreyNorm 3 τ
       ((parabolicCylinder (0 : Vec3) 0 R₀).indicator (fun z => u z i)) ≤ KU)
-    (hD : ∀ i j, morreyNorm 2 (25/8 : ℝ)
+    (hD : ∀ i j, morreyNorm 2 (25 / 8 : ℝ)
       ((parabolicCylinder (0 : Vec3) 0 R₀).indicator (fun z => Du z i j)) ≤ KD)
     (hsize : (∫⁻ z in parabolicCylinder (0 : Vec3) 0 1,
       ENNReal.ofReal (vec3EuclideanNorm (u z)) ^ (3 : ℝ) +
-        ENNReal.ofReal |p z| ^ (3/2 : ℝ) +
+        ENNReal.ofReal |p z| ^ (3 / 2 : ℝ) +
         ENNReal.ofReal (vec3EuclideanNorm (f z)) ^ q) ≤ ENNReal.ofReal ε) :
     let F := fun j : Fin 3 => (parabolicCylinder (0 : Vec3) 0 R₁).indicator
       (fun w => ∑ k, Du w j k * u w k - f w j)
@@ -186,13 +257,13 @@ private theorem origin_riesz_source_data
 
 private theorem exists_supported_riesz_affine_bound
     (q τ C_CZ ε : ℝ) (KU KD : ℝ≥0∞)
-    (hq : 5/2 < q) (hτ : 25/3 ≤ τ) (hτhi : τ ≤ 25)
+    (hq : 5 / 2 < q) (hτ : 25 / 3 ≤ τ) (hτhi : τ ≤ 25)
     (hC : rieszSourceThresholdA ≤ C_CZ)
     {R₁ : ℝ} (hR : 0 < R₁) (hKU : KU < ⊤) (hKD : KD < ⊤)
     {F : Fin 3 → ParabolicPoint → ℝ}
     (hF : ∀ j, AEMeasurable (F j) volume)
-    (hN : ∀ j, morreyNorm (6/5 : ℝ) (min ((1/τ+8/25)⁻¹) q) (F j) ≤
-      3 * (3*KU*KD + forceSourceMorreyBound q ε))
+    (hN : ∀ j, morreyNorm (6 / 5 : ℝ) (min ((1 / τ + 8 / 25)⁻¹) q) (F j) ≤
+      3 * (3 * KU * KD + forceSourceMorreyBound q ε))
     (hsupport : ∀ j w, w ∉ parabolicCylinder (0 : Vec3) 0 R₁ → F j w = 0) :
     ∃ T : Fin 3 → Fin 3 → ParabolicPoint → ℝ,
       (∀ j i, Measurable (T j i)) ∧
@@ -227,7 +298,8 @@ private theorem exists_supported_riesz_affine_bound
   refine ⟨T, hTm, hTi, ?_⟩
   intro i B J z r hr
   exact riesz_source_sum_clipped_le_affine_slot q τ C_CZ ε KU KD hq hτ hτhi hC i
-    hF hFs (fun j y s hy => hsupport j (y,s) (fun hw => (not_le.mpr hy) (hL y (subset_closure hw.1))))
+    hF hFs (fun j y s hy => hsupport j (y,s) (fun hw => (not_le.mpr hy) (hL y (subset_closure
+      hw.1))))
     (fun j => (hTm j i).aemeasurable) (fun j => hTi j i) hN
     B J z hr
 
@@ -236,7 +308,7 @@ whose three-component sum satisfies the affine A slot on every clipped cell.
 The source is the outer origin-cylinder restriction of `Du·u - f`. -/
 theorem exists_origin_riesz_source_affine_bound_of_sws
     (q τ C_CZ R₀ R₁ ε : ℝ) (KU KD : ℝ≥0∞)
-    (hq : 5/2 < q) (hτ : 25/3 ≤ τ) (hτhi : τ ≤ 25)
+    (hq : 5 / 2 < q) (hτ : 25 / 3 ≤ τ) (hτhi : τ ≤ 25)
     (hC : rieszSourceThresholdA ≤ C_CZ)
     (hR : 0 < R₁) (hR₁₀ : R₁ ≤ R₀) (hR₀le : R₀ ≤ 1)
     (hKU : KU < ⊤) (hKD : KD < ⊤)
@@ -247,11 +319,11 @@ theorem exists_origin_riesz_source_affine_bound_of_sws
     (hdom : closure (parabolicCylinder (0 : Vec3) 0 1) ⊆ spaceTimeSet Ω I)
     (hU : ∀ i, morreyNorm 3 τ
       ((parabolicCylinder (0 : Vec3) 0 R₀).indicator (fun z => u z i)) ≤ KU)
-    (hD : ∀ i j, morreyNorm 2 (25/8 : ℝ)
+    (hD : ∀ i j, morreyNorm 2 (25 / 8 : ℝ)
       ((parabolicCylinder (0 : Vec3) 0 R₀).indicator (fun z => Du z i j)) ≤ KD)
     (hsize : (∫⁻ z in parabolicCylinder (0 : Vec3) 0 1,
       ENNReal.ofReal (vec3EuclideanNorm (u z)) ^ (3 : ℝ) +
-        ENNReal.ofReal |p z| ^ (3/2 : ℝ) +
+        ENNReal.ofReal |p z| ^ (3 / 2 : ℝ) +
         ENNReal.ofReal (vec3EuclideanNorm (f z)) ^ q) ≤ ENNReal.ofReal ε) :
     let F := fun j : Fin 3 => (parabolicCylinder (0 : Vec3) 0 R₀).indicator
       (fun w => ∑ k, Du w j k * u w k - f w j)

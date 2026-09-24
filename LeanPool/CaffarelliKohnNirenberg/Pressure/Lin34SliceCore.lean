@@ -97,7 +97,7 @@ theorem lin34_centredVelocity_memLp
     (hu : MemLp (fun y : Vec3 => u (y, s)) 2 (volume.restrict (vec3Ball x₀ ρ))) :
     MemLp (fun y : Vec3 => lin34CentredVelocity u x₀ ρ (y, s)) 2
       (volume.restrict (vec3Ball x₀ ρ)) := by
-  haveI : IsFiniteMeasure (volume.restrict (vec3Ball x₀ ρ)) :=
+  have : IsFiniteMeasure (volume.restrict (vec3Ball x₀ ρ)) :=
     lin34_isFiniteMeasure_ball
   rw [lin34_centredVelocity_slice_eq]
   exact hu.sub (memLp_const _)

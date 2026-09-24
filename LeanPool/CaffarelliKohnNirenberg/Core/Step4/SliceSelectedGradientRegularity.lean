@@ -51,7 +51,7 @@ theorem contDiffOn_harmonicPressurePart_of_terms
     (h5 : ContDiffOn ℝ (1 : ℕ∞) (pressureP5 η p s) B)
     (h6 : ContDiffOn ℝ (1 : ℕ∞) (pressureP6 η p s) B) :
     ContDiffOn ℝ (1 : ℕ∞) (harmonicPressurePart η u c p s) B := by
-  show ContDiffOn ℝ (1 : ℕ∞) (fun x => pressureP2 η u c s x + pressureP3 η u c s x +
+  change ContDiffOn ℝ (1 : ℕ∞) (fun x => pressureP2 η u c s x + pressureP3 η u c s x +
     pressureP4 η u c s x + pressureP5 η p s x + pressureP6 η p s x) B
   exact (((h2.add h3).add h4).add h5).add h6
 

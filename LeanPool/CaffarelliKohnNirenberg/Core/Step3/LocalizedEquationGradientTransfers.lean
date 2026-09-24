@@ -5,9 +5,9 @@ Authors: Scott Armstrong, Vlad Vicol
 -/
 module
 
+public import LeanPool.CaffarelliKohnNirenberg.Core.Step3.LocalizedEquationLaplacian
 public import LeanPool.CaffarelliKohnNirenberg.Core.Step4.SourceMorreyGradientPackage
 public import LeanPool.CaffarelliKohnNirenberg.Core.Step4.PressureGradientProduct
-public import LeanPool.CaffarelliKohnNirenberg.Core.Step3.LocalizedEquationGradientTransfer
 public import LeanPool.CaffarelliKohnNirenberg.Pressure.SliceIntegrability
 public import LeanPool.CaffarelliKohnNirenberg.Setting.DivergenceFreeSlice
 public import LeanPool.CaffarelliKohnNirenberg.Foundation.Measure.SliceGradientSelection
@@ -19,6 +19,118 @@ Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
 @[expose] public section
+
+section
+
+/-!
+# Localized Equation Gradient Transfer
+
+Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
+-/
+
+open scoped BigOperators ENNReal NNReal Topology
+
+open MeasureTheory MeasureTheory.Measure Set Metric Filter
+
+open CKN.Foundation.Parabolic
+
+
+noncomputable section
+
+namespace CKN.Core.Step3
+
+/-! A spacetime version of the slice weak-gradient integration-by-parts rule. -/
+
+lemma spacetime_weak_partial_transfer
+    {Ω' : Set Vec3} {J : Set ℝ} {a d : ParabolicPoint → ℝ}
+    {b : Vec3 × ℝ → ℝ} {j : Fin 3}
+    (hJ : MeasurableSet J)
+    (hleft : Integrable (fun z => d z * b z) volume)
+    (hright : Integrable (fun z => a z * spatialPartial b j z) volume)
+    (hzero_left : ∀ z ∉ spaceTimeSet Ω' J, d z * b z = 0)
+    (hzero_right : ∀ z ∉ spaceTimeSet Ω' J,
+      a z * spatialPartial b j z = 0)
+    (hgrad : ∀ᵐ t ∂volume.restrict J,
+      HasWeakPartialDerivOn Ω' j (fun x => a (x, t))
+        (fun x => d (x, t)))
+    (hb : ∀ t : ℝ, ContDiff ℝ (⊤ : ℕ∞) (fun x : Vec3 => b (x, t)))
+    (hbc : ∀ t : ℝ, HasCompactSupport (fun x : Vec3 => b (x, t)))
+    (hbΩ : ∀ t : ℝ, tsupport (fun x : Vec3 => b (x, t)) ⊆ Ω') :
+    (∫ z, d z * b z) = -(∫ z, a z * spatialPartial b j z) := by
+  have hleft_box := hleft.mono_measure
+    (Measure.restrict_le_self :
+      volume.restrict (spaceTimeSet Ω' J) ≤ volume)
+  have hright_box := hright.mono_measure
+    (Measure.restrict_le_self :
+      volume.restrict (spaceTimeSet Ω' J) ≤ volume)
+  change Integrable (fun q : Vec3 × ℝ => d (q.1, q.2) * b q)
+      (((volume : Measure Vec3).prod volume).restrict (Ω' ×ˢ J)) at hleft_box
+  change Integrable (fun q : Vec3 × ℝ => a (q.1, q.2) * spatialPartial b j q)
+      (((volume : Measure Vec3).prod volume).restrict (Ω' ×ˢ J)) at hright_box
+  rw [← Measure.prod_restrict Ω' J] at hleft_box hright_box
+  have hleft_slice := hleft_box.prod_left_ae
+  have hright_slice := hright_box.prod_left_ae
+  have hslice : ∀ᵐ t ∂volume.restrict J,
+      (∫ x in Ω', d (x, t) * b (x, t)) =
+        -(∫ x in Ω', a (x, t) * spatialPartial b j (x, t)) := by
+    filter_upwards [hgrad, hleft_slice, hright_slice]
+      with t hgt hleft_t hright_t
+    have htest := hgt (fun x : Vec3 => b (x, t))
+      (hb t) (hbc t) (hbΩ t)
+    have hpartial : ∀ x : Vec3,
+        spatialPartial b j (x, t) =
+          (fderiv ℝ (fun y : Vec3 => b (y, t)) x) (basisVec j) := by
+      intro x
+      rfl
+    calc
+      (∫ x in Ω', d (x, t) * b (x, t)) =
+          -(-(∫ x in Ω', d (x, t) * b (x, t))) := by ring
+      _ = -(∫ x in Ω', a (x, t) *
+          (fderiv ℝ (fun y : Vec3 => b (y, t)) x) (basisVec j)) := by
+        rw [← htest]
+      _ = -(∫ x in Ω', a (x, t) * spatialPartial b j (x, t)) := by
+        congr 1
+  calc
+    (∫ z, d z * b z) =
+        ∫ t, ∫ x in Ω', d (x, t) * b (x, t) :=
+      global_integral_eq_box_slices hleft hzero_left
+    _ = ∫ t, -(∫ x in Ω', a (x, t) * spatialPartial b j (x, t)) := by
+      apply integral_congr_ae
+      have hslice' := (ae_restrict_iff' hJ).mp hslice
+      filter_upwards [hslice'] with t ht
+      by_cases htJ : t ∈ J
+      · exact ht htJ
+      · have hleft_zero : (∫ x in Ω', d (x, t) * b (x, t)) = 0 := by
+          calc
+            (∫ x in Ω', d (x, t) * b (x, t)) = ∫ x in Ω', (0 : ℝ) := by
+              apply integral_congr_ae
+              filter_upwards [] with x
+              apply hzero_left (x, t)
+              intro hbox
+              exact htJ hbox.2
+            _ = 0 := by simp
+        have hright_zero :
+            (∫ x in Ω', a (x, t) * spatialPartial b j (x, t)) = 0 := by
+          calc
+            (∫ x in Ω', a (x, t) * spatialPartial b j (x, t)) =
+                ∫ x in Ω', (0 : ℝ) := by
+              apply integral_congr_ae
+              filter_upwards [] with x
+              apply hzero_right (x, t)
+              intro hbox
+              exact htJ hbox.2
+            _ = 0 := by simp
+        rw [hleft_zero, hright_zero]
+        simp
+    _ = -(∫ z, a z * spatialPartial b j z) := by
+      rw [integral_neg]
+      congr 1
+      exact (global_integral_eq_box_slices hright hzero_right).symm
+
+end CKN.Core.Step3
+end
+
+end
 
 open scoped BigOperators ENNReal NNReal Topology
 open MeasureTheory MeasureTheory.Measure Set Metric Filter
@@ -78,7 +190,7 @@ theorem localized_convection_transfer_of_sws
   obtain ⟨hu, hDu, -, -, -, henergy, -, -, hgrad⟩ :=
     hsol.2.2.2.2.2.1 Ω' J hbox
   let μ : Measure ParabolicPoint := volume.restrict (spaceTimeSet Ω' J)
-  haveI : IsFiniteMeasure μ := local_box_isFiniteMeasure
+  have : IsFiniteMeasure μ := local_box_isFiniteMeasure
     hbox.2.1 hbox.2.2.2.2.1
   have hLp := local_memLp_two_of_energy (hu := hu) (hDu := hDu) henergy
   have huComp (k : Fin 3) : MemLp (fun z => u z k) 2 μ :=
@@ -206,6 +318,140 @@ theorem localized_convection_transfer_of_sws
     _ = -(∫ z, (Du z i j * u z j + u z i * Du z j j) *
         (φ z * ψ z i)) := by rw [htransfer']
 
+private lemma localized_diffusion_transfer_htransfer'_1 :
+    ∀ {u : ParabolicPoint → Vec3} {Du : ParabolicPoint → Fin (3 : ℕ) → Vec3}
+      {_ : ParabolicPoint → Vec3} {φ : Vec3 × ℝ → ℝ} {ψ : Vec3 × ℝ → Vec3} (i j : Fin (3 : ℕ)),
+      ContDiff ℝ (⊤ : ℕ∞) ψ →
+        (ContDiff ℝ (F := ℝ) (⊤ : ℕ∞) fun (z : Vec3 × ℝ) => spatialPartial φ j z) →
+          let b : Vec3 × ℝ → ℝ := fun (z : Vec3 × ℝ) => spatialPartial φ j z * ψ z i;
+          Eq (α := ℝ)
+              (@integral _ _ _ _ MeasureSpace.toMeasurableSpace volume fun (z : ParabolicPoint) =>
+                Du z i j * b z)
+              (-@integral _ _ _ _ MeasureSpace.toMeasurableSpace volume fun (z : ParabolicPoint) =>
+                  u z i * spatialPartial b j z) →
+            Eq (α := ℝ)
+              (@integral _ _ _ _ MeasureSpace.toMeasurableSpace volume fun (z : ParabolicPoint) =>
+                Du z i j * spatialPartial φ j z * ψ z i)
+              (-@integral _ _ _ _ MeasureSpace.toMeasurableSpace volume fun (z : ParabolicPoint) =>
+                  u z i *
+                    (spatialSecondPartial
+                          (have this : ParabolicPoint → ℝ := φ;
+                          this)
+                          j j z *
+                        ψ z i +
+                      spatialPartial φ j z *
+                        spatialPartial (fun (w : ParabolicPoint) => ψ w i) j z))
+    := by
+  intro u Du f φ ψ i j hψd hφsp b htransfer
+  calc
+    (∫ z, Du z i j * spatialPartial φ j z * ψ z i) =
+        ∫ z, Du z i j * b z := by
+          apply integral_congr_ae
+          filter_upwards [] with z
+          dsimp [b]
+          ring
+    _ = -(∫ z, u z i * spatialPartial b j z) := htransfer
+    _ = -(∫ z, u z i *
+        (spatialSecondPartial (show ParabolicPoint → ℝ from φ) j j z * ψ z i +
+          spatialPartial φ j z * spatialPartial (fun w => ψ w i) j z)) := by
+      congr 1
+      apply integral_congr_ae
+      filter_upwards [] with z
+      have hprod := spatialPartial_mul_full hφsp
+        ((contDiff_apply ℝ ℝ i).comp hψd) j (z.1, z.2)
+      change u z i * spatialPartial b j z =
+        u z i *
+          (spatialSecondPartial (show ParabolicPoint → ℝ from φ) j j z * ψ z i +
+            spatialPartial φ j z * spatialPartial (fun w => ψ w i) j z)
+      dsimp [b] at hprod ⊢
+      have hψcomp : ((fun f : Vec3 => f i) ∘ ψ) =
+          (fun w => ψ w i) := by
+        funext w
+        rfl
+      rw [hψcomp] at hprod
+      have hprod' := congrArg (fun x : ℝ => u z i * x) hprod
+      convert hprod' using 1 <;> rfl
+
+private lemma localized_diffusion_transfer_hsplit_2 :
+    ∀ {u : ParabolicPoint → Vec3} {_ : ParabolicPoint → Vec3} {φ : Vec3 × ℝ → ℝ} {Ω' : Set Vec3}
+      {J : Set ℝ},
+      tsupport φ ⊆ Ω' ×ˢ J →
+        ∀ {ψ : Vec3 × ℝ → Vec3} (i j : Fin (3 : ℕ)),
+          let μ : Measure ParabolicPoint := Measure.restrict volume (spaceTimeSet Ω' J);
+          Integrable (ε := ℝ) (fun (z : ParabolicPoint) => u z i) μ →
+            ContDiff ℝ (⊤ : ℕ∞) φ →
+              ContDiff ℝ (⊤ : ℕ∞) ψ →
+                (ContDiff ℝ (F := ℝ) (⊤ : ℕ∞) fun (z : Vec3 × ℝ) => spatialPartial φ j z) →
+                  (HasCompactSupport (β := ℝ) fun (z : Vec3 × ℝ) => spatialPartial φ j z) →
+                    (tsupport (α := ℝ) fun (z : Vec3 × ℝ) => spatialPartial φ j z) ⊆ tsupport φ →
+                      (HasCompactSupport (β := ℝ) fun (z : Vec3 × ℝ) =>
+                          spatialSecondPartial φ j j z) →
+                        (tsupport (α := ℝ) fun (z : Vec3 × ℝ) => spatialSecondPartial φ j j z) ⊆
+                            tsupport φ →
+                          let _ : Vec3 × ℝ → ℝ := fun (z : Vec3 × ℝ) =>
+                            spatialPartial φ j z * ψ z i;
+                          (@integral _ _ _ _ MeasureSpace.toMeasurableSpace volume
+                              fun (z : ParabolicPoint) =>
+                              u z i *
+                                (spatialSecondPartial
+                                      (have this : ParabolicPoint → ℝ := φ;
+                                      this)
+                                      j j z *
+                                    ψ z i +
+                                  spatialPartial φ j z *
+                                    spatialPartial (fun (w : ParabolicPoint) => ψ w i) j z)) =
+                            HAdd.hAdd (α := ℝ)
+                              (@integral _ _ _ _ MeasureSpace.toMeasurableSpace volume
+                                fun (z : ParabolicPoint) =>
+                                u z i *
+                                  (spatialSecondPartial
+                                      (have this : ParabolicPoint → ℝ := φ;
+                                      this)
+                                      j j z *
+                                    ψ z i))
+                              (@integral _ _ _ _ MeasureSpace.toMeasurableSpace volume
+                                fun (z : ParabolicPoint) =>
+                                u z i *
+                                  (spatialPartial φ j z *
+                                    spatialPartial (fun (w : ParabolicPoint) => ψ w i) j z))
+    := by
+  intro u f φ Ω' J hφbox ψ i j μ hUi hφd hψd hφsp hφspc hφspts hφsecondc hφseconds b
+  have hA := compact_factor_integrable (a := fun z => u z i)
+    (b := fun z : Vec3 × ℝ => spatialSecondPartial φ j j z * ψ z i)
+    hUi ((spatialSecondPartial_contDiff_full hφd j j).mul
+      ((contDiff_apply ℝ ℝ i).comp hψd)).continuous
+    (hφsecondc.mul_right (f' := fun z => ψ z i))
+    ((tsupport_mul_subset_left
+      (f := fun z : Vec3 × ℝ => spatialSecondPartial φ j j z)
+      (g := fun z => ψ z i)).trans (hφseconds.trans hφbox))
+  have hB := compact_factor_integrable (a := fun z => u z i)
+    (b := fun z : Vec3 × ℝ => spatialPartial φ j z *
+      spatialPartial (fun w => ψ w i) j z)
+    hUi ((hφsp.mul (spatialPartial_contDiff
+      ((contDiff_apply ℝ ℝ i).comp hψd) j))).continuous
+    (hφspc.mul_right (f' := fun z : Vec3 × ℝ =>
+      spatialPartial (fun w : Vec3 × ℝ => ψ w i) j z))
+    ((tsupport_mul_subset_left
+      (f := fun z : Vec3 × ℝ => spatialPartial φ j z)
+      (g := fun z : Vec3 × ℝ =>
+        spatialPartial (fun w : Vec3 × ℝ => ψ w i) j z)).trans
+        (hφspts.trans hφbox))
+  calc
+    (∫ z, u z i *
+        (spatialSecondPartial (show ParabolicPoint → ℝ from φ) j j z * ψ z i +
+          spatialPartial φ j z * spatialPartial (fun w => ψ w i) j z)) =
+        (∫ z, (u z i * spatialSecondPartial
+          (show ParabolicPoint → ℝ from φ) j j z * ψ z i +
+          u z i * spatialPartial φ j z * spatialPartial (fun w => ψ w i) j z)) := by
+      apply integral_congr_ae
+      filter_upwards [] with z
+      ring
+    _ = (∫ z, u z i *
+          (spatialSecondPartial (show ParabolicPoint → ℝ from φ) j j z * ψ z i)) +
+        (∫ z, u z i *
+          (spatialPartial φ j z * spatialPartial (fun w => ψ w i) j z)) := by
+          simpa only [mul_assoc] using (integral_add hA hB)
+
 theorem localized_diffusion_transfer_of_sws
     {Ω : Set Vec3} {I : Set ℝ} {q : ℝ}
     {u : ParabolicPoint → Vec3} {Du : ParabolicPoint → Fin 3 → Vec3}
@@ -228,7 +474,7 @@ theorem localized_diffusion_transfer_of_sws
   obtain ⟨hu, hDu, -, -, -, henergy, -, -, hgrad⟩ :=
     hsol.2.2.2.2.2.1 Ω' J hbox
   let μ : Measure ParabolicPoint := volume.restrict (spaceTimeSet Ω' J)
-  haveI : IsFiniteMeasure μ := local_box_isFiniteMeasure
+  have : IsFiniteMeasure μ := local_box_isFiniteMeasure
     hbox.2.1 hbox.2.2.2.2.1
   have hLp := local_memLp_two_of_energy (hu := hu) (hDu := hDu) henergy
   have huComp (k : Fin 3) : MemLp (fun z => u z k) 2 μ :=
@@ -338,82 +584,9 @@ theorem localized_diffusion_transfer_of_sws
       (fun t => (CKN.slice_testFunction hb hbc hbs t).1)
       (fun t => (CKN.slice_testFunction hb hbc hbs t).2.1)
       (fun t => (CKN.slice_testFunction hb hbc hbs t).2.2)
-  have htransfer' :
-    (∫ z, Du z i j * spatialPartial φ j z * ψ z i) =
-        -(∫ z, u z i *
-        (spatialSecondPartial (show ParabolicPoint → ℝ from φ) j j z * ψ z i +
-            spatialPartial φ j z * spatialPartial (fun w => ψ w i) j z)) := by
-    calc
-      (∫ z, Du z i j * spatialPartial φ j z * ψ z i) =
-          ∫ z, Du z i j * b z := by
-            apply integral_congr_ae
-            filter_upwards [] with z
-            dsimp [b]
-            ring
-      _ = -(∫ z, u z i * spatialPartial b j z) := htransfer
-      _ = -(∫ z, u z i *
-          (spatialSecondPartial (show ParabolicPoint → ℝ from φ) j j z * ψ z i +
-            spatialPartial φ j z * spatialPartial (fun w => ψ w i) j z)) := by
-        congr 1
-        apply integral_congr_ae
-        filter_upwards [] with z
-        have hprod := spatialPartial_mul_full hφsp
-          ((contDiff_apply ℝ ℝ i).comp hψd) j (z.1, z.2)
-        change u z i * spatialPartial b j z =
-          u z i *
-            (spatialSecondPartial (show ParabolicPoint → ℝ from φ) j j z * ψ z i +
-              spatialPartial φ j z * spatialPartial (fun w => ψ w i) j z)
-        dsimp [b] at hprod ⊢
-        have hψcomp : ((fun f : Vec3 => f i) ∘ ψ) =
-            (fun w => ψ w i) := by
-          funext w
-          rfl
-        rw [hψcomp] at hprod
-        have hprod' := congrArg (fun x : ℝ => u z i * x) hprod
-        convert hprod' using 1 <;> rfl
-  have hsplit :
-      (∫ z, u z i *
-          (spatialSecondPartial (show ParabolicPoint → ℝ from φ) j j z * ψ z i +
-            spatialPartial φ j z * spatialPartial (fun w => ψ w i) j z)) =
-        (∫ z, u z i *
-          (spatialSecondPartial (show ParabolicPoint → ℝ from φ) j j z * ψ z i)) +
-          (∫ z, u z i *
-            (spatialPartial φ j z * spatialPartial (fun w => ψ w i) j z)) := by
-    have hA := compact_factor_integrable (a := fun z => u z i)
-      (b := fun z : Vec3 × ℝ => spatialSecondPartial φ j j z * ψ z i)
-      hUi ((spatialSecondPartial_contDiff_full hφd j j).mul
-        ((contDiff_apply ℝ ℝ i).comp hψd)).continuous
-      (hφsecondc.mul_right (f' := fun z => ψ z i))
-      ((tsupport_mul_subset_left
-        (f := fun z : Vec3 × ℝ => spatialSecondPartial φ j j z)
-        (g := fun z => ψ z i)).trans (hφseconds.trans hφbox))
-    have hB := compact_factor_integrable (a := fun z => u z i)
-      (b := fun z : Vec3 × ℝ => spatialPartial φ j z *
-        spatialPartial (fun w => ψ w i) j z)
-      hUi ((hφsp.mul (spatialPartial_contDiff
-        ((contDiff_apply ℝ ℝ i).comp hψd) j))).continuous
-      (hφspc.mul_right (f' := fun z : Vec3 × ℝ =>
-        spatialPartial (fun w : Vec3 × ℝ => ψ w i) j z))
-      ((tsupport_mul_subset_left
-        (f := fun z : Vec3 × ℝ => spatialPartial φ j z)
-        (g := fun z : Vec3 × ℝ =>
-          spatialPartial (fun w : Vec3 × ℝ => ψ w i) j z)).trans
-          (hφspts.trans hφbox))
-    calc
-      (∫ z, u z i *
-          (spatialSecondPartial (show ParabolicPoint → ℝ from φ) j j z * ψ z i +
-            spatialPartial φ j z * spatialPartial (fun w => ψ w i) j z)) =
-          (∫ z, (u z i * spatialSecondPartial
-            (show ParabolicPoint → ℝ from φ) j j z * ψ z i +
-            u z i * spatialPartial φ j z * spatialPartial (fun w => ψ w i) j z)) := by
-        apply integral_congr_ae
-        filter_upwards [] with z
-        ring
-      _ = (∫ z, u z i *
-            (spatialSecondPartial (show ParabolicPoint → ℝ from φ) j j z * ψ z i)) +
-          (∫ z, u z i *
-            (spatialPartial φ j z * spatialPartial (fun w => ψ w i) j z)) := by
-            simpa only [mul_assoc] using (integral_add hA hB)
+  have htransfer' := @localized_diffusion_transfer_htransfer'_1 u Du f φ ψ i j hψd hφsp htransfer
+  have hsplit := @localized_diffusion_transfer_hsplit_2 u f φ Ω' J hφbox ψ i j hUi hφd hψd hφsp
+    hφspc hφspts hφsecondc hφseconds
   have hfinal :
       -(∫ z, Du z i j * spatialPartial φ j z * ψ z i) +
           (∫ z, u z i *
@@ -439,3 +612,7 @@ theorem localized_diffusion_transfer_of_sws
           rw [hsplit]
           ring
   simpa only [mul_assoc] using hfinal
+
+end Step3
+end Core
+end CKN

@@ -82,7 +82,8 @@ theorem theoremA_hGA_of_integral_slots_threshold
       ∀ i : Fin 3,
         (∫⁻ s in Ioc (-(R₁ ^ 2)) 0,
           eLpNorm (fun y => Dp (y, s) i) (ENNReal.ofReal (6 / 5 : ℝ))
-            (volume.restrict (vec3Ball (0 : Vec3) R₁)) ^ (6 / 5 : ℝ)) ≤ ((ENNReal.ofReal (|C_CZ| + 1) * ENNReal.ofReal (|R₀| + |R₁| + |ε| + 1)) *
+            (volume.restrict (vec3Ball (0 : Vec3) R₁)) ^ (6 / 5 : ℝ)) ≤ ((ENNReal.ofReal (|C_CZ| +
+              1) * ENNReal.ofReal (|R₀| + |R₁| + |ε| + 1)) *
         ENNReal.ofReal (max 1 ((2 * R₁ / (1 - R₁)) ^
           (5 * (1 - (6 / 5 : ℝ) / min ((1 / τ + 8 / 25)⁻¹) q)))))) :
   ∀ q τ C_CZ R₀ R₁ ε : ℝ, ∀ KU KD : ℝ≥0∞,
@@ -139,7 +140,8 @@ theorem theoremA_hGA_of_integral_slots_threshold
       (volume.restrict (vec3Ball x r ∩ vec3Ball (0 : Vec3) R₁))
   obtain ⟨htop, hint⟩ := origin_carrier_slice_time_obligations_of_sws
     hR₁ (hR₁R₀.trans hR₀) hsol hdom Dp hm hw
-  have hgrowth := hAIntegral q' τ C_CZ R₀ R₁ ε KU KD hq' hτ hτu hC hthreshold hR₁ hR₁R₀ hR₀ hε hKU hKD
+  have hgrowth := hAIntegral q' τ C_CZ R₀ R₁ ε KU KD hq' hτ hτu hC hthreshold hR₁ hR₁R₀ hR₀ hε hKU
+    hKD
     hsol hdom hU hD hsize Dp hm hw
   have hglobal : ∀ i : Fin 3,
       (∫⁻ s in Ioc (-(R₁ ^ 2)) 0, M i (0 : Vec3) R₁ s ^ (6 / 5 : ℝ)) ≤ B := by
@@ -224,7 +226,8 @@ theorem epsilonRegularityL3_of_threshold_slots
       ∀ i : Fin 3,
         (∫⁻ s in Ioc (-(R₁ ^ 2)) 0,
           eLpNorm (fun y => Dp (y, s) i) (ENNReal.ofReal (6 / 5 : ℝ))
-            (volume.restrict (vec3Ball (0 : Vec3) R₁)) ^ (6 / 5 : ℝ)) ≤ ((ENNReal.ofReal (|C_CZ| + 1) * ENNReal.ofReal (|R₀| + |R₁| + |ε| + 1)) *
+            (volume.restrict (vec3Ball (0 : Vec3) R₁)) ^ (6 / 5 : ℝ)) ≤ ((ENNReal.ofReal (|C_CZ| +
+              1) * ENNReal.ofReal (|R₀| + |R₁| + |ε| + 1)) *
         ENNReal.ofReal (max 1 ((2 * R₁ / (1 - R₁)) ^
           (5 * (1 - (6 / 5 : ℝ) / min ((1 / τ + 8 / 25)⁻¹) q))))))
     (q : ℝ) (hq : 5 / 2 < q) :
@@ -326,7 +329,8 @@ theorem epsilonRegularityL3_of_separate_threshold_slots
       ∀ i : Fin 3,
         (∫⁻ s in Ioc (-(R₁ ^ 2)) 0,
           eLpNorm (fun y => Dp (y, s) i) (ENNReal.ofReal (6 / 5 : ℝ))
-            (volume.restrict (vec3Ball (0 : Vec3) R₁)) ^ (6 / 5 : ℝ)) ≤ ((ENNReal.ofReal (|C_CZ| + 1) * ENNReal.ofReal (|R₀| + |R₁| + |ε| + 1)) *
+            (volume.restrict (vec3Ball (0 : Vec3) R₁)) ^ (6 / 5 : ℝ)) ≤ ((ENNReal.ofReal (|C_CZ| +
+              1) * ENNReal.ofReal (|R₀| + |R₁| + |ε| + 1)) *
         ENNReal.ofReal (max 1 ((2 * R₁ / (1 - R₁)) ^
           (5 * (1 - (6 / 5 : ℝ) / min ((1 / τ + 8 / 25)⁻¹) q))))))
     (q : ℝ) (hq : 5 / 2 < q) :

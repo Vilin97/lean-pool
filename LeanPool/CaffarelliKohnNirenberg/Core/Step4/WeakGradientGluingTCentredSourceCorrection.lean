@@ -51,8 +51,8 @@ theorem centred_source_sub_force_eq_raw_add_correction
 
 /-- The completed gradient Riesz operator is additive on its actual domain. -/
 theorem gradient_riesz_add_ae (j i : Fin 3) {a b : Vec3 → ℝ}
-    (ha : MemLp a (ENNReal.ofReal (6/5 : ℝ)) volume)
-    (hb : MemLp b (ENNReal.ofReal (6/5 : ℝ)) volume) :
+    (ha : MemLp a (ENNReal.ofReal (6 / 5 : ℝ)) volume)
+    (hb : MemLp b (ENNReal.ofReal (6 / 5 : ℝ)) volume) :
     rieszSecondGradientExtensionOperator (rieszSecondL2Input j i)
       (rieszSecondL2_weak_type j i) (a+b) =ᵐ[volume]
     rieszSecondGradientExtensionOperator (rieszSecondL2Input j i)
@@ -66,8 +66,8 @@ theorem gradient_riesz_add_ae (j i : Fin 3) {a b : Vec3 → ℝ}
 
 /-- Subtraction is respected almost everywhere on the completed operator domain. -/
 theorem gradient_riesz_sub_ae (j i : Fin 3) {a b : Vec3 → ℝ}
-    (ha : MemLp a (ENNReal.ofReal (6/5 : ℝ)) volume)
-    (hb : MemLp b (ENNReal.ofReal (6/5 : ℝ)) volume) :
+    (ha : MemLp a (ENNReal.ofReal (6 / 5 : ℝ)) volume)
+    (hb : MemLp b (ENNReal.ofReal (6 / 5 : ℝ)) volume) :
     rieszSecondGradientExtensionOperator (rieszSecondL2Input j i)
       (rieszSecondL2_weak_type j i) (a-b) =ᵐ[volume]
     rieszSecondGradientExtensionOperator (rieszSecondL2Input j i)
@@ -86,10 +86,10 @@ theorem centredRawSourceCorrection_memLp
     (B : Set Vec3) (η : Vec3 → ℝ) (dη : Fin 3 → Vec3 → ℝ)
     (u f : Vec3 → Vec3) (Du : Vec3 → Fin 3 → Vec3) (c : Vec3) (j : Fin 3)
     (hV : MemLp (fun x => pressureDivergenceCutoffSourceCentredTensor η dη u Du c x j)
-      (ENNReal.ofReal (6/5 : ℝ)) volume)
-    (hF : MemLp (fun x => η x * f x j) (ENNReal.ofReal (6/5 : ℝ)) volume)
+      (ENNReal.ofReal (6 / 5 : ℝ)) volume)
+    (hF : MemLp (fun x => η x * f x j) (ENNReal.ofReal (6 / 5 : ℝ)) volume)
     (hG : MemLp (B.indicator (fun x => (∑ k, Du x j k * u x k) - f x j))
-      (ENNReal.ofReal (6/5 : ℝ)) volume) :
+      (ENNReal.ofReal (6 / 5 : ℝ)) volume) :
     MemLp (centredRawSourceCorrection B η dη u f Du c j)
       (ENNReal.ofReal (6/5 : ℝ)) volume := by
   have heq : centredRawSourceCorrection B η dη u f Du c j =
@@ -108,10 +108,10 @@ theorem centred_riesz_eq_raw_add_correction_ae
     (B : Set Vec3) (η : Vec3 → ℝ) (dη : Fin 3 → Vec3 → ℝ)
     (u f : Vec3 → Vec3) (Du : Vec3 → Fin 3 → Vec3) (c : Vec3) (j i : Fin 3)
     (hV : MemLp (fun x => pressureDivergenceCutoffSourceCentredTensor η dη u Du c x j)
-      (ENNReal.ofReal (6/5 : ℝ)) volume)
-    (hF : MemLp (fun x => η x * f x j) (ENNReal.ofReal (6/5 : ℝ)) volume)
+      (ENNReal.ofReal (6 / 5 : ℝ)) volume)
+    (hF : MemLp (fun x => η x * f x j) (ENNReal.ofReal (6 / 5 : ℝ)) volume)
     (hG : MemLp (B.indicator (fun x => (∑ k, Du x j k * u x k) - f x j))
-      (ENNReal.ofReal (6/5 : ℝ)) volume) :
+      (ENNReal.ofReal (6 / 5 : ℝ)) volume) :
     rieszSecondGradientExtensionOperator (rieszSecondL2Input j i)
       (rieszSecondL2_weak_type j i)
       (fun x => pressureDivergenceCutoffSourceCentredTensor η dη u Du c x j - η x * f x j)
@@ -135,10 +135,10 @@ theorem signed_centred_riesz_eq_raw_corrected_ae
     (B A : Set Vec3) (η : Vec3 → ℝ) (dη : Fin 3 → Vec3 → ℝ)
     (u f : Vec3 → Vec3) (Du : Vec3 → Fin 3 → Vec3) (c : Vec3) (i : Fin 3)
     (hV : ∀ j, MemLp (fun x => pressureDivergenceCutoffSourceCentredTensor η dη u Du c x j)
-      (ENNReal.ofReal (6/5 : ℝ)) volume)
-    (hF : ∀ j, MemLp (fun x => η x * f x j) (ENNReal.ofReal (6/5 : ℝ)) volume)
+      (ENNReal.ofReal (6 / 5 : ℝ)) volume)
+    (hF : ∀ j, MemLp (fun x => η x * f x j) (ENNReal.ofReal (6 / 5 : ℝ)) volume)
     (hG : ∀ j, MemLp (B.indicator (fun x => (∑ k, Du x j k * u x k) - f x j))
-      (ENNReal.ofReal (6/5 : ℝ)) volume) :
+      (ENNReal.ofReal (6 / 5 : ℝ)) volume) :
     (fun x => -(∑ j, rieszSecondGradientExtensionOperator (rieszSecondL2Input j i)
         (rieszSecondL2_weak_type j i)
         (fun y => pressureDivergenceCutoffSourceCentredTensor η dη u Du c y j) x) +

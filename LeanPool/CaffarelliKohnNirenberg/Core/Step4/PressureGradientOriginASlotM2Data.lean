@@ -112,7 +112,7 @@ theorem morreyNorm_indicator_component_le_vector {p κ : ℝ} (hp : 0 ≤ p)
 established affine Morrey budget. -/
 theorem originASlot_divergence_source_morreyNorm_le
     (q τ R₀ ε : ℝ) (KU KD : ℝ≥0∞)
-    (hq : 5/2 < q) (hτ : 25/3 ≤ τ) (hR₀ : 0 < R₀) (hR₀le : R₀ ≤ 1)
+    (hq : 5 / 2 < q) (hτ : 25 / 3 ≤ τ) (hR₀ : 0 < R₀) (hR₀le : R₀ ≤ 1)
     {Ω : Set Vec3} {I : Set ℝ}
     {u : ParabolicPoint → Vec3} {Du : ParabolicPoint → Fin 3 → Vec3}
     {p : ParabolicPoint → ℝ} {f : ParabolicPoint → Vec3}

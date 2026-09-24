@@ -26,6 +26,7 @@ noncomputable section
 namespace CKN.Foundation.Heat
 
 
+/-- Common coefficient for the displayed harmonic value, gradient and integral estimates. -/
 noncomputable def harmonicInteriorDisplayConstant : ℝ :=
   max (max weakHarmonicInteriorSupConstant
     (576 * weakHarmonicInteriorSupConstant))
@@ -73,10 +74,10 @@ lemma convex_euclideanBall {x₀ : Vec3} {R : ℝ} (hR : 0 < R) :
         have hθ1 : θ ≤ 1 := hθ.2
         rw [abs_of_nonneg hθ0, abs_of_nonneg (sub_nonneg.mpr hθ1)]
         by_cases hθz : θ = 0
-        · simp [hθz]
+        · simp only [hθz, sub_zero, one_mul, zero_mul, add_zero, gt_iff_lt]
           exact hx'
         by_cases hθo : θ = 1
-        · simp [hθo]
+        · simp only [hθo, sub_self, zero_mul, one_mul, zero_add, gt_iff_lt]
           exact hy'
         have hθpos : 0 < θ := lt_of_le_of_ne hθ0 (Ne.symm hθz)
         have hθlt : θ < 1 := lt_of_le_of_ne hθ1 hθo
@@ -368,7 +369,7 @@ lemma euclideanBall_pair_distance_le
       _ = ‖WithLp.toLp 2 (y - x₀)‖ +
           ‖WithLp.toLp 2 (x - x₀)‖ := by
         rw [show x₀ - x = -(x - x₀) by module]
-        simp
+        simp only [WithLp.toLp_sub, neg_sub, _root_.add_right_inj]
         rw [norm_sub_rev]
   nlinarith only [htri, hx', hy']
 

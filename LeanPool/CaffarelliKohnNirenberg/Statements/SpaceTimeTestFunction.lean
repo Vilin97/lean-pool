@@ -24,7 +24,8 @@ noncomputable section
 
 namespace CKN
 
-/-- The smooth compactly supported test-function class on `Ω × I` from paper label `def:sws`; its ordinary product space follows the test-function convention of docs/DESIGN_NOTES.md. -/
+/-- The smooth compactly supported test-function class on `Ω × I` from paper label `def:sws`; its
+  ordinary product space follows the test-function convention of docs/DESIGN_NOTES.md. -/
 def spaceTimeTestFunction {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V]
     (Ω : Set Vec3) (I : Set ℝ) : Set (Vec3 × ℝ → V) :=
   {φ | ContDiff ℝ (⊤ : ℕ∞) φ ∧ HasCompactSupport φ ∧

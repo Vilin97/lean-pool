@@ -25,7 +25,8 @@ noncomputable section
 
 namespace CKN
 
-/-- The gradient quantity β from the manuscript, `eq:alpha-beta`; `Du` is the explicit gradient datum. -/
+/-- The gradient quantity β from the manuscript, `eq:alpha-beta`; `Du` is the explicit gradient
+  datum. -/
 noncomputable def beta (u : ParabolicPoint → Vec3)
     (Du : ParabolicPoint → Fin 3 → Vec3) (z : ParabolicPoint) (r : ℝ) : ℝ :=
   (r⁻¹ * (∫⁻ w in parabolicCylinder z.1 z.2 r,

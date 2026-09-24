@@ -26,6 +26,7 @@ namespace CKN.Core.Step3
 open CKN.Foundation.Heat CKN.Foundation.Parabolic
 open CKN.Core.HeatPotential
 /-! These are the divergence-form sources obtained directly from the tested equation. -/
+/-- Non-divergence source in the localized momentum equation, including pressure and forcing. -/
 def localizedDivergenceG (φ : Vec3 × ℝ → ℝ) (u : ParabolicPoint → Vec3)
     (Du : ParabolicPoint → Fin 3 → Vec3)
     (p : ParabolicPoint → ℝ) (f : ParabolicPoint → Vec3) : ParabolicPoint → Vec3 :=
@@ -33,12 +34,14 @@ def localizedDivergenceG (φ : Vec3 × ℝ → ℝ) (u : ParabolicPoint → Vec3
     + ∑ j, u z i * u z j * spatialPartial (show ParabolicPoint → ℝ from φ) j z
     - ∑ j, Du z i j * spatialPartial (show ParabolicPoint → ℝ from φ) j z
     + p z * spatialPartial (show ParabolicPoint → ℝ from φ) i z + f z i * φ z
+/-- Tensor divergence source in the localized momentum equation. -/
 def localizedDivergenceH (φ : Vec3 × ℝ → ℝ) (u : ParabolicPoint → Vec3)
     (p : ParabolicPoint → ℝ) : Fin 3 → ParabolicPoint → Vec3 :=
   fun j z i => φ z * u z i * u z j + u z i * spatialPartial φ j z
     + if i = j then p z * φ z else 0
 lemma timePartial_mul_full {a b : Vec3 × ℝ → ℝ} (ha : ContDiff ℝ (⊤ : ℕ∞) a)
-    (hb : ContDiff ℝ (⊤ : ℕ∞) b) (z : Vec3 × ℝ) : timePartial (fun w => a w * b w) z = timePartial a z * b z + a z * timePartial b z := by
+    (hb : ContDiff ℝ (⊤ : ℕ∞) b) (z : Vec3 × ℝ) : timePartial (fun w => a w * b w) z = timePartial
+      a z * b z + a z * timePartial b z := by
   unfold timePartial
   have ha' : DifferentiableAt ℝ (fun s : ℝ => a (z.1, s)) z.2 := by
     exact (ha.differentiable (by simp)).differentiableAt.comp z.2
@@ -51,7 +54,8 @@ lemma timePartial_mul_full {a b : Vec3 × ℝ → ℝ} (ha : ContDiff ℝ (⊤ :
   simp only [_root_.add_apply, _root_.smul_apply, smul_eq_mul, Prod.eta]
   ring
 lemma spatialPartial_mul_full {a b : Vec3 × ℝ → ℝ} (ha : ContDiff ℝ (⊤ : ℕ∞) a)
-    (hb : ContDiff ℝ (⊤ : ℕ∞) b) (j : Fin 3) (z : Vec3 × ℝ) : spatialPartial (fun w => a w * b w) j z = spatialPartial a j z * b z + a z * spatialPartial b j z := by
+    (hb : ContDiff ℝ (⊤ : ℕ∞) b) (j : Fin 3) (z : Vec3 × ℝ) : spatialPartial (fun w => a w * b w)
+      j z = spatialPartial a j z * b z + a z * spatialPartial b j z := by
   unfold spatialPartial
   have ha' : DifferentiableAt ℝ (fun x : Vec3 => a (x, z.2)) z.1 := by
     exact (ha.differentiable (by simp)).differentiableAt.comp z.1

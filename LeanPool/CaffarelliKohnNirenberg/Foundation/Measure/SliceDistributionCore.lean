@@ -169,7 +169,7 @@ theorem slice_pairing_zero_of_mollifier_family {d : ℕ} {ι : Type*} [Fintype �
         (hκcont n i) (hκcompact n i)]
       refine MeasureTheory.integral_congr_ae
         (Filter.Eventually.of_forall fun x => ?_)
-      show G i x * (∫ y, ψ y * κ n i (x - y) ∂MeasureTheory.volume)
+      change G i x * (∫ y, ψ y * κ n i (x - y) ∂MeasureTheory.volume)
         = G i x * mollify (T i) (sliceRadius n) (sliceRadius_pos n) x
       rw [hid n i x]
     have hGkey : ∀ y ∈ tsupport ψ, ∀ i : ι,
@@ -178,7 +178,7 @@ theorem slice_pairing_zero_of_mollifier_family {d : ℕ} {ι : Type*} [Fintype �
       intro y hy i
       refine MeasureTheory.integral_congr_ae
         (Filter.Eventually.of_forall fun x => ?_)
-      show G i x * κ n i (x - y) = g x i * κ n i (x - y)
+      change G i x * κ n i (x - y) = g x i * κ n i (x - y)
       by_cases hx : x ∈ K
       · rw [hGeq i x hx]
       · have hxb : sliceRadius n < ‖x - y‖ := by

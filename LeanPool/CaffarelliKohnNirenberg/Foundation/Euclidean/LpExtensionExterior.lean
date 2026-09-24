@@ -30,6 +30,7 @@ namespace CKN.Foundation.Euclidean
 open CKN
 open CKN.Foundation.Heat
 
+/-- Negative second spatial derivative of the Newtonian kernel for the exterior representation. -/
 def lpExtensionExteriorExteriorKernel (i j : Fin 3) : Vec3 → ℝ :=
   -spatialDeriv (spatialDeriv newtonianKernel i) j
 
@@ -74,12 +75,10 @@ private lemma thickening_separated {A U : Set Vec3} {δ : ℝ}
   rcases Set.mem_add.mp hy with ⟨z, hz, a, ha, rfl⟩
   have hcl : ∀ a ∈ closure A, δ ≤ vec3EuclideanNorm (x - a) := by
     intro a ha
-    apply closure_minimal (hsep x hx)
     have hcont : Continuous (fun a : Vec3 => vec3EuclideanNorm (x - a)) := by
       unfold vec3EuclideanNorm
       fun_prop
-    exact isClosed_le continuous_const hcont
-    exact ha
+    exact closure_minimal (hsep x hx) (isClosed_le continuous_const hcont) ha
   have hz' : ‖z‖ ≤ δ / 12 := by
     simpa [Metric.mem_closedBall, dist_zero_right] using hz
   have hza : vec3EuclideanNorm z ≤ δ / 4 := by
@@ -143,6 +142,197 @@ private lemma integral_norm_le_eLpNorm_of_zero_outside
       rw [ENNReal.toReal_ofReal]
       positivity
 
+private lemma lpExtension_exterior_hTsource_1 :
+    ∀ {p C : ℝ},
+      0 ≤ C →
+        ∀ {h : Foundation.Euclidean.LpExtensionInput (ENNReal.ofReal p) C} {G : Vec3 → ℝ},
+          MemLp (m0 := MeasureSpace.toMeasurableSpace) G (ENNReal.ofReal p) volume →
+            ∀ (_ : Fact (1 ≤ ENNReal.ofReal p)) (Gₙ : ℕ → Vec3 → ℝ),
+              (∀ (n : ℕ),
+                  MemLp (m0 := MeasureSpace.toMeasurableSpace) (Gₙ n) (ENNReal.ofReal p) volume) →
+                Tendsto
+                    (fun (n : ℕ) =>
+                      @eLpNorm _ _ _ _ MeasureSpace.toMeasurableSpace (Gₙ n - G)
+                        (ENNReal.ofReal p) volume)
+                    atTop (𝓝 0) →
+                  Tendsto
+                    (fun (n : ℕ) =>
+                      @eLpNorm _ _ _ _ MeasureSpace.toMeasurableSpace
+                        (Foundation.Euclidean.lpExtensionOperator ENNReal.ofReal_ne_top h (Gₙ n) -
+                          Foundation.Euclidean.lpExtensionOperator ENNReal.ofReal_ne_top h G)
+                        (ENNReal.ofReal p) volume)
+                    atTop (𝓝 0)
+    := by
+  intro p C hC h G hG this Gₙ hGₙp hsource
+  have hbound : ∀ n, eLpNorm
+      (lpExtensionOperator (ENNReal.ofReal_ne_top) h (Gₙ n) -
+        lpExtensionOperator (ENNReal.ofReal_ne_top) h G)
+      (ENNReal.ofReal p) volume ≤
+        ENNReal.ofReal C * eLpNorm (Gₙ n - G) (ENNReal.ofReal p) volume := by
+    intro n
+    have hdiff := (hGₙp n).sub hG
+    have hmem := lpExtensionOperator_memLp (ENNReal.ofReal_ne_top) h hdiff
+    have hadd := lpExtensionRepresentative_add_ae
+      (ENNReal.ofReal_ne_top) h hdiff hG
+    have hdiff_ae : lpExtensionOperator (ENNReal.ofReal_ne_top) h (Gₙ n) -
+        lpExtensionOperator (ENNReal.ofReal_ne_top) h G =ᵐ[volume]
+        lpExtensionOperator (ENNReal.ofReal_ne_top) h (Gₙ n - G) := by
+      have hsum : lpExtensionOperator (ENNReal.ofReal_ne_top) h (Gₙ n) =ᵐ[volume]
+          lpExtensionOperator (ENNReal.ofReal_ne_top) h (Gₙ n - G) +
+            lpExtensionOperator (ENNReal.ofReal_ne_top) h G := by
+        simpa only [lpExtensionOperator, sub_add_cancel] using hadd
+      filter_upwards [hsum] with x hx
+      have hx' : lpExtensionOperator (ENNReal.ofReal_ne_top) h (Gₙ n) x =
+          lpExtensionOperator (ENNReal.ofReal_ne_top) h (Gₙ n - G) x +
+            lpExtensionOperator (ENNReal.ofReal_ne_top) h G x := by
+        exact hx
+      calc
+        lpExtensionOperator (ENNReal.ofReal_ne_top) h (Gₙ n) x -
+            lpExtensionOperator (ENNReal.ofReal_ne_top) h G x =
+            (lpExtensionOperator (ENNReal.ofReal_ne_top) h (Gₙ n - G) x +
+              lpExtensionOperator (ENNReal.ofReal_ne_top) h G x) -
+              lpExtensionOperator (ENNReal.ofReal_ne_top) h G x := by rw [hx']
+        _ = lpExtensionOperator (ENNReal.ofReal_ne_top) h (Gₙ n - G) x := by ring
+    rw [eLpNorm_congr_ae hdiff_ae]
+    exact CKN.Core.Endgame.eLpNorm_le_of_toLp_norm_le hdiff hmem hC
+      (lpExtensionOperator_toLp_bound (ENNReal.ofReal_ne_top) h hdiff)
+  have hmul : Tendsto
+      (fun n => ENNReal.ofReal C *
+        eLpNorm (Gₙ n - G) (ENNReal.ofReal p) volume) atTop
+      (nhds (ENNReal.ofReal C * 0)) :=
+    ENNReal.Tendsto.const_mul hsource (Or.inr ENNReal.ofReal_ne_top)
+  apply tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds
+    (by simpa only [mul_zero] using hmul)
+  · intro n
+    exact bot_le
+  · exact hbound
+
+private lemma lpExtension_exterior_hkernel_tendsto_2 :
+    ∀ {i j : Fin 3} {G : Vec3 → ℝ} {A U : Set Vec3},
+      IsOpen U →
+        ∀ {δ : ℝ},
+          0 < δ →
+            let Kset : Set Vec3 := Metric.closedBall 0 (δ / 12) + closure A;
+            (∀ x ∈ U, ∀ y ∈ Kset, δ / 2 ≤ vec3EuclideanNorm (x - y)) →
+              (∀ y ∉ Kset, G y = 0) →
+                @Integrable _ _ _ _ MeasureSpace.toMeasurableSpace G volume →
+                  ∀ (Gₙ : ℕ → Vec3 → ℝ),
+                    (∀ (n : ℕ), Function.support (Gₙ n) ⊆ Kset) →
+                      (∀ (n : ℕ),
+                          @Integrable _ _ _ _ MeasureSpace.toMeasurableSpace (Gₙ n) volume) →
+                        (∀ (n : ℕ),
+                            @Integrable ℝ _ _ _ MeasureSpace.toMeasurableSpace
+                              (fun (y : Vec3) => Gₙ n y - G y) volume) →
+                          Tendsto
+                              (fun (n : ℕ) =>
+                                @integral _ _ _ _ MeasureSpace.toMeasurableSpace volume
+                                  fun (y : Vec3) => ‖Gₙ n y - G y‖)
+                              atTop (𝓝 0) →
+                            ∀ x ∈ U,
+                              Tendsto (β := ℝ)
+                                (fun (n : ℕ) =>
+                                  @integral _ _ _ _ MeasureSpace.toMeasurableSpace volume
+                                    fun (y : Vec3) =>
+                                    Foundation.Euclidean.lpExtensionExteriorExteriorKernel i j
+                                        (x - y) *
+                                      Gₙ n y)
+                                atTop
+                                (𝓝
+                                  (@integral _ _ _ _ MeasureSpace.toMeasurableSpace volume
+                                    fun (y : Vec3) =>
+                                    Foundation.Euclidean.lpExtensionExteriorExteriorKernel i j
+                                        (x - y) *
+                                      G y))
+    := by
+  intro i j G A U hU δ hδ Kset hsepK hGzeroK hGint Gₙ hGₙsupp hGₙint hGdiffint hL1 x hx
+  have hbound : ∀ n, ‖(∫ y, lpExtensionExteriorExteriorKernel i j (x - y) * Gₙ n y) -
+      ∫ y, lpExtensionExteriorExteriorKernel i j (x - y) * G y‖ ≤
+      4 * (4 * Real.pi)⁻¹ * (((δ / 2) / 3) ^ 3)⁻¹ *
+        ∫ y, ‖Gₙ n y - G y‖ := by
+    intro n
+    have hKbd : ∀ y ∈ Kset, ‖lpExtensionExteriorExteriorKernel i j (x - y)‖ ≤
+        4 * (4 * Real.pi)⁻¹ * (((δ / 2) / 3) ^ 3)⁻¹ := by
+      intro y hy
+      have hnorm := euclideanNorm_le_three_mul_space_norm (x - y)
+      have hnorm' : vec3EuclideanNorm (x - y) ≤ 3 * ‖x - y‖ := by
+        simpa only [CKN.spaceEuclideanNorm, vec3EuclideanNorm] using hnorm
+      have hspace : (δ / 2) / 3 ≤ ‖x - y‖ := by
+        linarith only [hsepK x hx y hy, hnorm']
+      have hne : x - y ≠ 0 := by
+        intro hzero
+        rw [hzero] at hspace
+        simp only [norm_zero] at hspace
+        exact (not_lt_of_ge hspace) (by positivity)
+      have hpow := inv_pow_le_inv_pow_of_le (by positivity : 0 < (δ / 2) / 3)
+        hspace 3
+      have hcoef : 0 ≤ 4 * (4 * Real.pi)⁻¹ := by positivity
+      dsimp [lpExtensionExteriorExteriorKernel]
+      rw [abs_neg]
+      calc
+        |spatialDeriv (spatialDeriv newtonianKernel i) j (x - y)| ≤
+            4 * (4 * Real.pi)⁻¹ * (‖x - y‖ ^ 3)⁻¹ :=
+          newtonianKernel_spatialDeriv_second_size_bound hne i j
+        _ ≤ 4 * (4 * Real.pi)⁻¹ * (((δ / 2) / 3) ^ 3)⁻¹ :=
+          mul_le_mul_of_nonneg_left hpow hcoef
+    have hIntₙ := integrable_smul_kernel_shift (K := lpExtensionExteriorExteriorKernel i j)
+      (g := Gₙ n) (A := Kset) (x := x) (exterior_kernel_continuous i j)
+      (hGₙint n) (fun y hy => by
+        by_contra hne
+        exact hy (hGₙsupp n hne)) hKbd
+    have hInt := integrable_smul_kernel_shift (K := lpExtensionExteriorExteriorKernel i j)
+      (g := G) (A := Kset) (x := x) (exterior_kernel_continuous i j)
+      hGint hGzeroK hKbd
+    have hIntdiff := integrable_smul_kernel_shift (K := lpExtensionExteriorExteriorKernel i j)
+      (g := fun y => Gₙ n y - G y) (A := Kset) (x := x)
+      (exterior_kernel_continuous i j) (hGdiffint n)
+      (fun y hy => by
+        have h₁ : Gₙ n y = 0 := by
+          by_contra hne
+          exact hy (hGₙsupp n hne)
+        rw [h₁, hGzeroK y hy, sub_zero]) hKbd
+    have hsub' :
+        (∫ y, Gₙ n y • lpExtensionExteriorExteriorKernel i j (x - y)) -
+            ∫ y, G y • lpExtensionExteriorExteriorKernel i j (x - y) =
+          ∫ y, (Gₙ n y - G y) • lpExtensionExteriorExteriorKernel i j (x - y) := by
+      rw [← integral_sub hIntₙ hInt]
+      apply integral_congr_ae
+      filter_upwards [] with y
+      ring
+    have hsub :
+        (∫ y, lpExtensionExteriorExteriorKernel i j (x - y) * Gₙ n y) -
+            ∫ y, lpExtensionExteriorExteriorKernel i j (x - y) * G y =
+          ∫ y, lpExtensionExteriorExteriorKernel i j (x - y) * (Gₙ n y - G y) := by
+      simpa [smul_eq_mul, mul_comm] using hsub'
+    rw [hsub]
+    have hpot := rieszSecondL2_exterior_potential_bound (i := i) (j := j)
+      (hGdiffint n) hU (fun y hy => by
+        have h₁ : Gₙ n y = 0 := by
+          by_contra hne
+          exact hy (hGₙsupp n hne)
+        rw [h₁, hGzeroK y hy, sub_zero]) (δ := δ / 2) (by positivity) hsepK hx
+    simpa only [Pi.sub_apply, lpExtensionExteriorExteriorKernel, smul_eq_mul, mul_sub] using hpot
+  have hQ : Tendsto
+      (fun n => 4 * (4 * Real.pi)⁻¹ * (((δ / 2) / 3) ^ 3)⁻¹ *
+        ∫ y, ‖Gₙ n y - G y‖) atTop (nhds 0) := by
+    simpa only [mul_assoc, mul_zero] using
+      (tendsto_const_nhds.mul (tendsto_const_nhds.mul
+        (tendsto_const_nhds.mul hL1)))
+  have hD : Tendsto
+      (fun n => (∫ y, lpExtensionExteriorExteriorKernel i j (x - y) * Gₙ n y) -
+        ∫ y, lpExtensionExteriorExteriorKernel i j (x - y) * G y) atTop (nhds 0) := by
+    apply tendsto_of_tendsto_of_tendsto_of_le_of_le
+      (by simpa only [neg_zero] using hQ.neg) hQ
+    · intro n
+      have hn := hbound n
+      simpa only [Real.norm_eq_abs] using neg_le_of_abs_le hn
+    · intro n
+      have hn := hbound n
+      simpa only [Real.norm_eq_abs] using le_of_abs_le hn
+  simpa only [sub_add_cancel, zero_add] using
+    hD.add (tendsto_const_nhds : Tendsto (fun _ : ℕ =>
+      ∫ y, lpExtensionExteriorExteriorKernel i j (x - y) * G y) atTop
+      (nhds (∫ y, lpExtensionExteriorExteriorKernel i j (x - y) * G y)))
+
 private theorem lpExtension_exterior_of_real
     {i j : Fin 3} {p q C : ℝ} [Fact (1 ≤ ENNReal.ofReal p)]
     (hpq : p.HolderConjugate q)
@@ -156,7 +346,7 @@ private theorem lpExtension_exterior_of_real
     (hsep : ∀ x ∈ U, ∀ y ∈ A, δ ≤ vec3EuclideanNorm (x - y)) :
     lpExtensionOperator (ENNReal.ofReal_ne_top) h G =ᵐ[volume.restrict U]
       (fun x => ∫ y, (-spatialDeriv (spatialDeriv newtonianKernel i) j) (x - y) * G y) := by
-  letI : Fact (1 ≤ ENNReal.ofReal p) := ⟨ENNReal.one_le_ofReal.mpr hp⟩
+  have : Fact (1 ≤ ENNReal.ofReal p) := ⟨ENNReal.one_le_ofReal.mpr hp⟩
   have hp0 : 0 < p := hpq.pos
   let Kset : Set Vec3 := Metric.closedBall (0 : Vec3) (δ / 12) + closure A
   have hKcompact : IsCompact Kset := thickening_compact hAb
@@ -170,7 +360,7 @@ private theorem lpExtension_exterior_of_real
     have hycl : y ∉ closure A := by
       intro hycl
       apply hy
-      exact ⟨0, by simp [Metric.mem_closedBall]; positivity, y, hycl, by simp⟩
+      exact ⟨0, by simp only [mem_closedBall, dist_self]; positivity, y, hycl, by simp⟩
     exact hGA y (fun hya => hycl (subset_closure hya))
   have hGint : Integrable G volume :=
     integrable_of_memLp_hasCompactSupport (ENNReal.one_le_ofReal.mpr hp) hG hGc
@@ -259,144 +449,10 @@ private theorem lpExtension_exterior_of_real
         simpa [CK] using (integral_nonneg (fun y => norm_nonneg (Gₙ n y - G y)))
       · exact hbound
     simpa only [zero_mul] using hL1'
-  have hTsource : Tendsto
-      (fun n => eLpNorm
-        (lpExtensionOperator (ENNReal.ofReal_ne_top) h (Gₙ n) -
-          lpExtensionOperator (ENNReal.ofReal_ne_top) h G)
-        (ENNReal.ofReal p) volume) atTop (nhds 0) := by
-    have hbound : ∀ n, eLpNorm
-        (lpExtensionOperator (ENNReal.ofReal_ne_top) h (Gₙ n) -
-          lpExtensionOperator (ENNReal.ofReal_ne_top) h G)
-        (ENNReal.ofReal p) volume ≤
-          ENNReal.ofReal C * eLpNorm (Gₙ n - G) (ENNReal.ofReal p) volume := by
-      intro n
-      have hdiff := (hGₙp n).sub hG
-      have hmem := lpExtensionOperator_memLp (ENNReal.ofReal_ne_top) h hdiff
-      have hadd := lpExtensionRepresentative_add_ae
-        (ENNReal.ofReal_ne_top) h hdiff hG
-      have hdiff_ae : lpExtensionOperator (ENNReal.ofReal_ne_top) h (Gₙ n) -
-          lpExtensionOperator (ENNReal.ofReal_ne_top) h G =ᵐ[volume]
-          lpExtensionOperator (ENNReal.ofReal_ne_top) h (Gₙ n - G) := by
-        have hsum : lpExtensionOperator (ENNReal.ofReal_ne_top) h (Gₙ n) =ᵐ[volume]
-            lpExtensionOperator (ENNReal.ofReal_ne_top) h (Gₙ n - G) +
-              lpExtensionOperator (ENNReal.ofReal_ne_top) h G := by
-          simpa only [lpExtensionOperator, sub_add_cancel] using hadd
-        filter_upwards [hsum] with x hx
-        have hx' : lpExtensionOperator (ENNReal.ofReal_ne_top) h (Gₙ n) x =
-            lpExtensionOperator (ENNReal.ofReal_ne_top) h (Gₙ n - G) x +
-              lpExtensionOperator (ENNReal.ofReal_ne_top) h G x := by
-          exact hx
-        calc
-          lpExtensionOperator (ENNReal.ofReal_ne_top) h (Gₙ n) x -
-              lpExtensionOperator (ENNReal.ofReal_ne_top) h G x =
-              (lpExtensionOperator (ENNReal.ofReal_ne_top) h (Gₙ n - G) x +
-                lpExtensionOperator (ENNReal.ofReal_ne_top) h G x) -
-                lpExtensionOperator (ENNReal.ofReal_ne_top) h G x := by rw [hx']
-          _ = lpExtensionOperator (ENNReal.ofReal_ne_top) h (Gₙ n - G) x := by ring
-      rw [eLpNorm_congr_ae hdiff_ae]
-      exact CKN.Core.Endgame.eLpNorm_le_of_toLp_norm_le hdiff hmem hC
-        (lpExtensionOperator_toLp_bound (ENNReal.ofReal_ne_top) h hdiff)
-    have hmul : Tendsto
-        (fun n => ENNReal.ofReal C *
-          eLpNorm (Gₙ n - G) (ENNReal.ofReal p) volume) atTop
-        (nhds (ENNReal.ofReal C * 0)) :=
-      ENNReal.Tendsto.const_mul hsource (Or.inr ENNReal.ofReal_ne_top)
-    apply tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds
-      (by simpa only [mul_zero] using hmul)
-    · intro n
-      exact bot_le
-    · exact hbound
-  have hkernel_tendsto : ∀ x ∈ U, Tendsto
-      (fun n => ∫ y, lpExtensionExteriorExteriorKernel i j (x - y) * Gₙ n y) atTop
-      (nhds (∫ y, lpExtensionExteriorExteriorKernel i j (x - y) * G y)) := by
-    intro x hx
-    have hbound : ∀ n, ‖(∫ y, lpExtensionExteriorExteriorKernel i j (x - y) * Gₙ n y) -
-        ∫ y, lpExtensionExteriorExteriorKernel i j (x - y) * G y‖ ≤
-        4 * (4 * Real.pi)⁻¹ * (((δ / 2) / 3) ^ 3)⁻¹ *
-          ∫ y, ‖Gₙ n y - G y‖ := by
-      intro n
-      have hKbd : ∀ y ∈ Kset, ‖lpExtensionExteriorExteriorKernel i j (x - y)‖ ≤
-          4 * (4 * Real.pi)⁻¹ * (((δ / 2) / 3) ^ 3)⁻¹ := by
-        intro y hy
-        have hnorm := euclideanNorm_le_three_mul_space_norm (x - y)
-        have hnorm' : vec3EuclideanNorm (x - y) ≤ 3 * ‖x - y‖ := by
-          simpa only [CKN.spaceEuclideanNorm, vec3EuclideanNorm] using hnorm
-        have hspace : (δ / 2) / 3 ≤ ‖x - y‖ := by
-          linarith only [hsepK x hx y hy, hnorm']
-        have hne : x - y ≠ 0 := by
-          intro hzero
-          rw [hzero] at hspace
-          simp at hspace
-          exact (not_lt_of_ge hspace) (by positivity)
-        have hpow := inv_pow_le_inv_pow_of_le (by positivity : 0 < (δ / 2) / 3)
-          hspace 3
-        have hcoef : 0 ≤ 4 * (4 * Real.pi)⁻¹ := by positivity
-        dsimp [lpExtensionExteriorExteriorKernel]
-        rw [abs_neg]
-        calc
-          |spatialDeriv (spatialDeriv newtonianKernel i) j (x - y)| ≤
-              4 * (4 * Real.pi)⁻¹ * (‖x - y‖ ^ 3)⁻¹ :=
-            newtonianKernel_spatialDeriv_second_size_bound hne i j
-          _ ≤ 4 * (4 * Real.pi)⁻¹ * (((δ / 2) / 3) ^ 3)⁻¹ :=
-            mul_le_mul_of_nonneg_left hpow hcoef
-      have hIntₙ := integrable_smul_kernel_shift (K := lpExtensionExteriorExteriorKernel i j)
-        (g := Gₙ n) (A := Kset) (x := x) (exterior_kernel_continuous i j)
-        (hGₙint n) (fun y hy => by
-          by_contra hne
-          exact hy (hGₙsupp n hne)) hKbd
-      have hInt := integrable_smul_kernel_shift (K := lpExtensionExteriorExteriorKernel i j)
-        (g := G) (A := Kset) (x := x) (exterior_kernel_continuous i j)
-        hGint hGzeroK hKbd
-      have hIntdiff := integrable_smul_kernel_shift (K := lpExtensionExteriorExteriorKernel i j)
-        (g := fun y => Gₙ n y - G y) (A := Kset) (x := x)
-        (exterior_kernel_continuous i j) (hGdiffint n)
-        (fun y hy => by
-          have h₁ : Gₙ n y = 0 := by
-            by_contra hne
-            exact hy (hGₙsupp n hne)
-          rw [h₁, hGzeroK y hy, sub_zero]) hKbd
-      have hsub' :
-          (∫ y, Gₙ n y • lpExtensionExteriorExteriorKernel i j (x - y)) -
-              ∫ y, G y • lpExtensionExteriorExteriorKernel i j (x - y) =
-            ∫ y, (Gₙ n y - G y) • lpExtensionExteriorExteriorKernel i j (x - y) := by
-        rw [← integral_sub hIntₙ hInt]
-        apply integral_congr_ae
-        filter_upwards [] with y
-        ring
-      have hsub :
-          (∫ y, lpExtensionExteriorExteriorKernel i j (x - y) * Gₙ n y) -
-              ∫ y, lpExtensionExteriorExteriorKernel i j (x - y) * G y =
-            ∫ y, lpExtensionExteriorExteriorKernel i j (x - y) * (Gₙ n y - G y) := by
-        simpa [smul_eq_mul, mul_comm] using hsub'
-      rw [hsub]
-      have hpot := rieszSecondL2_exterior_potential_bound (i := i) (j := j)
-        (hGdiffint n) hU (fun y hy => by
-          have h₁ : Gₙ n y = 0 := by
-            by_contra hne
-            exact hy (hGₙsupp n hne)
-          rw [h₁, hGzeroK y hy, sub_zero]) (δ := δ / 2) (by positivity) hsepK hx
-      simpa only [Pi.sub_apply, lpExtensionExteriorExteriorKernel, smul_eq_mul, mul_sub] using hpot
-    have hQ : Tendsto
-        (fun n => 4 * (4 * Real.pi)⁻¹ * (((δ / 2) / 3) ^ 3)⁻¹ *
-          ∫ y, ‖Gₙ n y - G y‖) atTop (nhds 0) := by
-      simpa only [mul_assoc, mul_zero] using
-        (tendsto_const_nhds.mul (tendsto_const_nhds.mul
-          (tendsto_const_nhds.mul hL1)))
-    have hD : Tendsto
-        (fun n => (∫ y, lpExtensionExteriorExteriorKernel i j (x - y) * Gₙ n y) -
-          ∫ y, lpExtensionExteriorExteriorKernel i j (x - y) * G y) atTop (nhds 0) := by
-      apply tendsto_of_tendsto_of_tendsto_of_le_of_le
-        (by simpa only [neg_zero] using hQ.neg) hQ
-      · intro n
-        have hn := hbound n
-        simpa only [Real.norm_eq_abs] using neg_le_of_abs_le hn
-      · intro n
-        have hn := hbound n
-        simpa only [Real.norm_eq_abs] using le_of_abs_le hn
-    simpa only [sub_add_cancel, zero_add] using
-      hD.add (tendsto_const_nhds : Tendsto (fun _ : ℕ =>
-        ∫ y, lpExtensionExteriorExteriorKernel i j (x - y) * G y) atTop
-        (nhds (∫ y, lpExtensionExteriorExteriorKernel i j (x - y) * G y)))
+  have hTsource := @lpExtension_exterior_hTsource_1 p C hC h G hG (by infer_instance) Gₙ hGₙp
+    hsource
+  have hkernel_tendsto := @lpExtension_exterior_hkernel_tendsto_2 i j G A U hU δ hδ hsepK hGzeroK
+    hGint Gₙ hGₙsupp hGₙint hGdiffint hL1
   have hTn_kernel : ∀ n,
       lpExtensionOperator (ENNReal.ofReal_ne_top) h (Gₙ n) =ᵐ[
         volume.restrict U] (fun x =>
@@ -455,7 +511,7 @@ theorem rieszSecondP1ExtensionOperator_agrees_exterior
     (hsep : ∀ x ∈ U, ∀ y ∈ A, δ ≤ vec3EuclideanNorm (x - y)) :
     rieszSecondP1ExtensionOperator hL2 hWeak11 G =ᵐ[volume.restrict U]
       (fun x => ∫ y, (-spatialDeriv (spatialDeriv newtonianKernel i) j) (x - y) * G y) := by
-  letI : Fact (1 ≤ ENNReal.ofReal ((3 : ℝ) / 2)) := ⟨by norm_num⟩
+  have : Fact (1 ≤ ENNReal.ofReal ((3 : ℝ) / 2)) := ⟨by norm_num⟩
   have hT : (rieszSecondP1ExtensionInput hL2 hWeak11).T =
       rieszSecondL2RawOperator hL2 := by
     simp only [rieszSecondP1ExtensionInput]
@@ -486,7 +542,7 @@ theorem rieszSecondGradientExtensionOperator_agrees_exterior
     (hsep : ∀ x ∈ U, ∀ y ∈ A, δ ≤ vec3EuclideanNorm (x - y)) :
     rieszSecondGradientExtensionOperator hL2 hWeak11 G =ᵐ[volume.restrict U]
       (fun x => ∫ y, (-spatialDeriv (spatialDeriv newtonianKernel i) j) (x - y) * G y) := by
-  letI : Fact (1 ≤ ENNReal.ofReal ((6 : ℝ) / 5)) := ⟨by norm_num⟩
+  have : Fact (1 ≤ ENNReal.ofReal ((6 : ℝ) / 5)) := ⟨by norm_num⟩
   have hT : (rieszSecondGradientExtensionInput hL2 hWeak11).T =
       rieszSecondL2RawOperator hL2 :=
     rieszSecondGradientExtensionInput_T hL2 hWeak11

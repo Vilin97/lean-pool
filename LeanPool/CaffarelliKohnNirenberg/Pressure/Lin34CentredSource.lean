@@ -50,7 +50,7 @@ theorem lin34CentredSource_eq_zero_of_notMem
     hy (hsub (mollifiedBallCutoff_tsupport_subset_outer x₀ hρ hmem))
   have hzero : mollifiedBallCutoff x₀ hρ y = 0 :=
     image_eq_zero_of_notMem_tsupport hout
-  show mollifiedBallCutoff x₀ hρ y *
+  change mollifiedBallCutoff x₀ hρ y *
     pressureUTensor (lin34CentredVelocity u x₀ ρ) 0 ((y, s) : ParabolicPoint) i j = 0
   rw [hzero, zero_mul]
 
@@ -67,13 +67,13 @@ theorem lin34CentredSource_hasCompactSupport
   have hball : y ∉ euclideanBall x₀ (3 * ρ / 4) := by
     intro hmem
     apply hy
-    show euclideanSqDist y x₀ ≤ (3 * ρ / 4) ^ 2
+    change euclideanSqDist y x₀ ≤ (3 * ρ / 4) ^ 2
     exact (hmem : euclideanSqDist y x₀ < (3 * ρ / 4) ^ 2).le
   have hout : y ∉ tsupport (mollifiedBallCutoff x₀ hρ) := fun hmem =>
     hball (mollifiedBallCutoff_tsupport_subset_outer x₀ hρ hmem)
   have hzero : mollifiedBallCutoff x₀ hρ y = 0 :=
     image_eq_zero_of_notMem_tsupport hout
-  show mollifiedBallCutoff x₀ hρ y *
+  change mollifiedBallCutoff x₀ hρ y *
     pressureUTensor (lin34CentredVelocity u x₀ ρ) 0 ((y, s) : ParabolicPoint) i j = 0
   rw [hzero, zero_mul]
 
@@ -139,7 +139,7 @@ private lemma lin34CentredSource_abs_le
     mollifiedBallCutoff_le_one x₀ hρ y
   have hcomp := pressure_component_abs_le_utensorNorm
     (lin34CentredVelocity u x₀ ρ) 0 s y i j
-  show |mollifiedBallCutoff x₀ hρ y *
+  change |mollifiedBallCutoff x₀ hρ y *
     pressureUTensor (lin34CentredVelocity u x₀ ρ) 0 ((y, s) : ParabolicPoint) i j| ≤ _
   rw [abs_mul, abs_of_nonneg hη0]
   calc

@@ -237,7 +237,8 @@ theorem originASlot_meanFree_morreyNorm_le
   refine iSup_le fun z' => iSup_le fun rr => ?_
   set r : ℝ := rr.1 with hrdef
   have hr : 0 < r := rr.2
-  have hslice := originASlot_meanFree_clipped_slice_bound (u := u) (Du := Du) (z := z) hρ k hpoin hmeas z'.1 hr
+  have hslice := originASlot_meanFree_clipped_slice_bound (u := u) (Du := Du) (z := z) hρ k hpoin
+    hmeas z'.1 hr
   have hprodm : AEStronglyMeasurable G
       ((volume.restrict (vec3Ball z'.1 r)).prod (volume.restrict (Ioc (z'.2 - r ^ 2) z'.2))) := by
     rw [← originClauseRestrict_prod_eq]
@@ -258,7 +259,8 @@ theorem originASlot_meanFree_morreyNorm_le
     calc
       (∫⁻ t in Ioc (z'.2 - r ^ 2) z'.2,
           eLpNorm (fun y => G (y, t)) 2 (volume.restrict (vec3Ball z'.1 r)) ^ (2 : ℝ))
-          ≤ ∫⁻ t in Ioc (z'.2 - r ^ 2) z'.2, A ^ (2 : ℝ) * J.indicator (fun t => E t ^ (2 : ℝ)) t := by
+          ≤ ∫⁻ t in Ioc (z'.2 - r ^ 2) z'.2, A ^ (2 : ℝ) * J.indicator (fun t => E t ^ (2 : ℝ)) t
+            := by
         refine lintegral_mono_ae ?_
         filter_upwards [ae_restrict_of_ae hslice] with t htb
         have hind : A ^ (2 : ℝ) * J.indicator (fun t => E t ^ (2 : ℝ)) t =

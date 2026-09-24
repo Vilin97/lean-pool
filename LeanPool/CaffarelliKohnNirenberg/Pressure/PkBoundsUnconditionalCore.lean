@@ -616,3 +616,5 @@ theorem pressureP8_fixed_bound
     (fun j {x} hx' => pressure_potential_source_integrable (hI j)
       (fun w hw => hAnn j w hw) hρ hr hhalf hx')
     (fun j w hw => hAnn j w hw) hr hhalf hx
+
+end CKN

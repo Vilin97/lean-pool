@@ -276,7 +276,7 @@ theorem sws_timeSliceBallEnergy_essSup_lt_top
     intro x hx
     have hxclosed : x ∈ euclideanClosedBall x₀ R := by
       have heq : vecEuclideanNorm (x - x₀) = vec3EuclideanNorm (x - x₀) := by
-        simp [CKN.vecEuclideanNorm, vec3EuclideanNorm, vecNormSq, vecDot]
+        simp only [vecEuclideanNorm, vecNormSq, vecDot, Pi.sub_apply, vec3EuclideanNorm]
         apply congrArg Real.sqrt
         apply Finset.sum_congr rfl
         intro i hi

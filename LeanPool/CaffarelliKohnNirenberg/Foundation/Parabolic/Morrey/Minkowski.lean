@@ -420,6 +420,7 @@ private theorem morreyENorm_const_mul (p q : ℝ) (c : ℝ≥0∞)
         morreyENormCell p q (fun w => c * f w) z' r'.1) :=
         le_iSup_of_le z (le_iSup_of_le r le_rfl)
 
+/-- Extended nonnegative convolution with respect to parabolic translation. -/
 def parabolicConvolution (K f : ParabolicPoint → ℝ≥0∞) (z : ParabolicPoint) : ℝ≥0∞ :=
   ∫⁻ w, K w * f (parabolicTranslate (-w.1) (-w.2) z) ∂volume
 
@@ -455,6 +456,7 @@ theorem morreyENorm_parabolicConvolution_le
     _ = (∫⁻ w, K w ∂volume) * morreyENorm p q f := by
       exact lintegral_mul_const' _ _ hfinit
 
+/-- Spatial convolution of a parabolic source at each fixed time. -/
 def spatialConvolution (K : Vec3 → ℝ≥0∞) (f : ParabolicPoint → ℝ≥0∞)
     (z : ParabolicPoint) : ℝ≥0∞ :=
   ∫⁻ y, K y * f (parabolicTranslate (-y) 0 z) ∂volume

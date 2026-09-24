@@ -42,11 +42,16 @@ private theorem decomposition_integral_seven {f₁ f₂ f₃ f₄ f₅ f₆ f₇
   let F : Fin 7 → Vec3 → ℝ := ![f₁, f₂, f₃, f₄, f₅, f₆, f₇]
   have hF : ∀ i, Integrable (F i) volume := by
     intro i
-    fin_cases i <;> simp [F] <;> assumption
+    fin_cases i <;> simp only [Fin.mk_one, Fin.isValue, Matrix.cons_val_one, Matrix.cons_val_zero,
+      F] <;> assumption
   have hsum := integral_finsetSum (μ := volume) (Finset.univ : Finset (Fin 7))
     (fun i hi => hF i)
   have hsum' := hsum
-  simp [F, Fin.sum_univ_succ] at hsum'
+  simp only [Matrix.cons_val', Matrix.cons_val_fin_one, Fin.sum_univ_succ, Fin.isValue,
+    Matrix.cons_val_zero,
+    Matrix.cons_val_succ, Finset.univ_unique, Fin.default_eq_zero, Finset.sum_const,
+      Finset.card_singleton, one_smul,
+    F] at hsum'
   calc
     _ = ∫ x, f₁ x + (f₂ x + (f₃ x + (f₄ x +
         (f₅ x + (f₆ x + f₇ x))))) := by
@@ -56,6 +61,7 @@ private theorem decomposition_integral_seven {f₁ f₂ f₃ f₄ f₅ f₆ f₇
     _ = _ := hsum'
     _ = _ := by ring
 
+/-- Integral identities and integrability data assembling the first pressure component. -/
 structure PressureP1DistributionalData
     {Ω : Set Vec3} {u : ParabolicPoint → Vec3} {c : ℝ → Vec3}
     {p : ParabolicPoint → ℝ} {f : ParabolicPoint → Vec3}

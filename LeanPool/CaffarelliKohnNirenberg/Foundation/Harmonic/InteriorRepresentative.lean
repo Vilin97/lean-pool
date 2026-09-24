@@ -26,6 +26,8 @@ namespace CKN.Foundation.Heat
 
 /-! The fixed-annulus representative used for weakly harmonic functions. -/
 
+/-- Interior representative constructed from a weakly harmonic function by Newtonian integration.
+-/
 noncomputable def weakHarmonicInteriorRepresentative
     (h : Vec3 → ℝ) (x₀ : Vec3) {ρ : ℝ} (hρ : 0 < ρ) (x : Vec3) : ℝ :=
   (-∫ y : Vec3, newtonianKernel (x - y) *
@@ -33,25 +35,31 @@ noncomputable def weakHarmonicInteriorRepresentative
     2 * ∑ i : Fin 3, ∫ y : Vec3,
       h y * CKN.spatialDeriv (kernelCutoffDerivative x x₀ hρ i) i y
 
+/-- Source coefficient in the weakly harmonic interior representation estimate. -/
 noncomputable def weakHarmonicInteriorSourceConstant : ℝ :=
   (4 * Real.pi)⁻¹ * 60 * cutoffSecondDerivativeConstant
 
+/-- Cutoff-derivative coefficient in the weakly harmonic representation estimate. -/
 noncomputable def weakHarmonicInteriorCutoffConstant : ℝ :=
   (4 * Real.pi)⁻¹ * (400 * cutoffGradientConstant +
     20 * cutoffSecondDerivativeConstant)
 
+/-- Spatial-gradient coefficient for the cutoff part of the weak harmonic representation. -/
 noncomputable def weakHarmonicInteriorXGradientConstant : ℝ :=
   (4 * Real.pi)⁻¹ * (32000 * cutoffGradientConstant +
     400 * cutoffSecondDerivativeConstant)
 
+/-- Spatial-gradient coefficient for the source part of the weak harmonic representation. -/
 noncomputable def weakHarmonicInteriorSourceXGradientConstant : ℝ :=
   (4 * Real.pi)⁻¹ * (1200 * cutoffSecondDerivativeConstant)
 
+/-- Supremum coefficient for the weakly harmonic interior representative. -/
 noncomputable def weakHarmonicInteriorSupConstant : ℝ :=
   (Real.pi * 4 / 3) ^ (1 / (3 : ℝ)) *
     (weakHarmonicInteriorSourceConstant +
       6 * weakHarmonicInteriorCutoffConstant)
 
+/-- Gradient coefficient for the weakly harmonic interior representative. -/
 noncomputable def weakHarmonicInteriorGradientConstant : ℝ :=
   (Real.pi * 4 / 3) ^ (1 / (3 : ℝ)) *
     (weakHarmonicInteriorSourceConstant +

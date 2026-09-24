@@ -126,6 +126,7 @@ lemma heatPotentialSpatialKernel_abs_le_riesz₁ (i : Fin 3)
 
 
 
+/-- Riesz-potential majorant for the localized scalar and divergence heat sources. -/
 def pointwisePotentialMajorant (g : ParabolicPoint → Vec3)
     (h : Fin 3 → ParabolicPoint → Vec3) : ParabolicPoint → ℝ :=
   fun z =>

@@ -22,6 +22,7 @@ namespace CKN
 
 noncomputable section
 
+/-- Translation and dilation map transporting unit-ball inequalities to arbitrary balls. -/
 def euclideanAffineMap (x₀ : Vec 3) (r : ℝ) (x : Vec 3) : Vec 3 :=
   x₀ + r • x
 
@@ -411,7 +412,6 @@ theorem poincareSobolevL1_ball (x₀ : Vec 3) {r : ℝ} (hr : 0 < r)
         (2 / 3 : ℝ) =
       (r ^ (2 : ℕ)) *
         ((r ^ (2 : ℕ))⁻¹ *
-
           (∫ y in euclideanBall x₀ r,
             |g y - integralAverage (euclideanBall x₀ r) g| ^ (3 / 2 : ℝ) ∂volume) ^
             (2 / 3 : ℝ)) := by

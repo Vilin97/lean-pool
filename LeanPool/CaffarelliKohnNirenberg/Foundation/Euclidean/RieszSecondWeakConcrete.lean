@@ -140,7 +140,7 @@ private lemma rieszSecond_bad_term_integrable
     have hne : x - y ≠ 0 := by
       intro hzero'
       rw [hzero'] at hspace
-      simp at hspace
+      simp only [norm_zero] at hspace
       exact (not_lt_of_ge hspace) (by positivity)
     have hpow := inv_pow_le_inv_pow_of_le (by positivity : 0 < δ / 3)
       hspace 3

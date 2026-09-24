@@ -21,13 +21,13 @@ replacement bounds as standalone theorems about the same raw integrals that
 `CKN.Core.Caccioppoli.RawI1` and `CKN.Core.Caccioppoli.RawI2Bound` bound.
 
 * `I₁`: the test-function weight `|∂ₛφ + Δφ|` is bounded pointwise by
-  `C r² ρ⁻⁵`, and `∬_{Q_ρ}|u|²` is estimated by Hölder with `1 = 2/3 + 1/3`,
-  `∬_{Q_ρ}|u|² ≤ |Q_ρ|^{1/3} (∬_{Q_ρ}|u|³)^{2/3} = C ρ³ γ(ρ)²`.  Hence
+  `C r² ρ⁻⁵`, and `∫∫_{Q_ρ}|u|²` is estimated by Hölder with `1 = 2/3 + 1/3`,
+  `∫∫_{Q_ρ}|u|² ≤ |Q_ρ|^{1/3} (∫∫_{Q_ρ}|u|³)^{2/3} = C ρ³ γ(ρ)²`.  Hence
   `I₁ ≤ C κ² γ(ρ)²` with `κ = r/ρ` (`caccioppoli_I1_gamma_heat_cutoff_raw_bound`).
 * `I₂`: the Poincaré input is dropped; instead
-  `||u|² − ⨍_{B_ρ}|u|²| |u| ≤ 2|u|³ + (⍊_{B_ρ}|u|²)^{3/2}` pointwise, the
+  `||u|² − ⨍_{B_ρ}|u|²| |u| ≤ 2|u|³ + (⨍_{B_ρ}|u|²)^{3/2}` pointwise, the
   spatial average enters through the Jensen bound
-  `⍊_{B_ρ}|u|² ≤ (⍊_{B_ρ}|u|³)^{2/3}`, and `∬_{Q_ρ}|u|³ = ρ² γ(ρ)³` gives
+  `⨍_{B_ρ}|u|² ≤ (⨍_{B_ρ}|u|³)^{2/3}`, and `∫∫_{Q_ρ}|u|³ = ρ² γ(ρ)³` gives
   `I₂ ≤ C κ⁻² γ(ρ)³` (`caccioppoli_I2_gamma_heat_cutoff_raw_bound`).
 
 The remaining two terms `I₃`, `I₄` keep their proved bounds, so the conclusion
@@ -120,7 +120,7 @@ theorem caccioppoli_abs_sq_sub_mul_le (N m : ℝ) (hN : 0 ≤ N) (hm : 0 ≤ m) 
 
 /-- The `ℝ≥0∞` form of `caccioppoli_abs_sq_sub_mul_le`, ready for integration.
 The two `N³` terms are kept separate so that each can be matched against the
-velocity integral `∬_{Q_ρ}|u|³`, and the exponent `3` of `N` is the real one so
+velocity integral `∫∫_{Q_ρ}|u|³`, and the exponent `3` of `N` is the real one so
 that the term is literally `(ENNReal.ofReal N) ^ (3 : ℝ)`, the integrand of the
 velocity identity `caccioppoli_I2_velocity_integral_identity`. -/
 theorem caccioppoli_ennreal_abs_sq_sub_mul_le (N m : ℝ) (hN : 0 ≤ N)
@@ -150,8 +150,8 @@ theorem caccioppoli_ennreal_abs_sq_sub_mul_le (N m : ℝ) (hN : 0 ≤ N)
 
 /-- The `L²` estimate for the velocity in the `γ`-form Caccioppoli inequality:
 Hölder's inequality on `Q_ρ` with `1 = 2/3 + 1/3` combined with
-`∬_{Q_ρ}|u|³ = ρ² γ(ρ)³` gives
-`∬_{Q_ρ}|u|² ≤ |Q_ρ|^{1/3} (∬_{Q_ρ}|u|³)^{2/3} = (4π/3)^{1/3} ρ³ γ(ρ)²`. -/
+`∫∫_{Q_ρ}|u|³ = ρ² γ(ρ)³` gives
+`∫∫_{Q_ρ}|u|² ≤ |Q_ρ|^{1/3} (∫∫_{Q_ρ}|u|³)^{2/3} = (4π/3)^{1/3} ρ³ γ(ρ)²`. -/
 theorem caccioppoli_velocity_l2_gamma_bound
     {u : ParabolicPoint → Vec3} {x₀ : Vec3} {t₀ ρ : ℝ} (hρ : 0 < ρ)
     (hvelocity : (∫⁻ w in parabolicCylinder x₀ t₀ ρ,
@@ -253,11 +253,11 @@ private theorem caccioppoli_I1_cutoff_operator_dominated
     (hr : 0 < r) (hscale : r ≤ ρ / 2) (hεr : ε < r ^ 2) :
     (fun z : ParabolicPoint => ENNReal.ofReal
         |timePartial (fun w : ParabolicPoint =>
-            backwardHeat_cutoff
-              (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) z +
+            backwardHeatCutoff
+              (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) z +
           ∑ i, spatialSecondPartial (fun w : ParabolicPoint =>
-            backwardHeat_cutoff
-              (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) i i z|)
+            backwardHeatCutoff
+              (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) i i z|)
       ≤ᵐ[volume.restrict (parabolicCylinder x₀ t₀ ρ)]
         (fun _ => ENNReal.ofReal
           ((32 / ρ ^ 2 + 3 * (cutoffSecondDerivativeConstant / ρ ^ 2)) *
@@ -274,7 +274,7 @@ private theorem caccioppoli_I1_cutoff_operator_dominated
   exact ENNReal.ofReal_le_ofReal hp
 
 /-- The `I₁` error term of the Caccioppoli inequality, as a function of any
-upper bound `E` for the velocity energy `∬_{Q_ρ}|u|²` with `E ≥ 0`.  This is the
+upper bound `E` for the velocity energy `∫∫_{Q_ρ}|u|²` with `E ≥ 0`.  This is the
 established `I₁` estimate with the energy bound left as a parameter, so that the
 `γ`-form velocity bound can be substituted for the `α`-form one. -/
 private theorem caccioppoli_I1_raw_of_energy_bound
@@ -284,7 +284,7 @@ private theorem caccioppoli_I1_raw_of_energy_bound
     (hE : (∫⁻ w in parabolicCylinder x₀ t₀ ρ,
         ENNReal.ofReal (vec3EuclideanNorm (u w)) ^ (2 : ℝ)) ≤
         ENNReal.ofReal E) :
-    caccioppoli_I1_heat_cutoff_raw (u := u) (x₀ := x₀) (t₀ := t₀)
+    caccioppoliI1HeatCutoffRaw (u := u) (x₀ := x₀) (t₀ := t₀)
         (ρ := ρ) (ε := ε) (r := r) hρ hε ≤
       ((32 / ρ ^ 2 + 3 * (cutoffSecondDerivativeConstant / ρ ^ 2)) *
           (8000000 * r ^ 2 / ρ ^ 3) +
@@ -293,7 +293,7 @@ private theorem caccioppoli_I1_raw_of_energy_bound
     (32 / ρ ^ 2 + 3 * (cutoffSecondDerivativeConstant / ρ ^ 2)) *
         (8000000 * r ^ 2 / ρ ^ 3) +
       6 * (cutoffGradientConstant / ρ) * (5000000 * r ^ 2 / ρ ^ 4)
-  change caccioppoli_I1_heat_cutoff_raw (u := u) (x₀ := x₀) (t₀ := t₀)
+  change caccioppoliI1HeatCutoffRaw (u := u) (x₀ := x₀) (t₀ := t₀)
       (ρ := ρ) (ε := ε) (r := r) hρ hε ≤ C₁ * E
   have hCgrad : 0 ≤ cutoffGradientConstant := by
     by_contra hC'
@@ -307,7 +307,7 @@ private theorem caccioppoli_I1_raw_of_energy_bound
     exact (not_lt_of_ge hnorm) (hbound.trans_lt hneg)
   have hCsecond : 0 ≤ cutoffSecondDerivativeConstant / ρ ^ 2 :=
     (abs_nonneg (spatialSecondPartial
-      (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) 0 0 (x₀, t₀))).trans
+      (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) 0 0 (x₀, t₀))).trans
       (caccioppoli_heat_cutoff_second_spatial_partial_bound
         x₀ t₀ ρ ε hρ hε (x₀, t₀) 0 0)
   have hC₁ : 0 ≤ C₁ := by
@@ -318,11 +318,11 @@ private theorem caccioppoli_I1_raw_of_energy_bound
     positivity
   have hHC : (fun z : ParabolicPoint => ENNReal.ofReal
       |timePartial (fun w : ParabolicPoint =>
-          backwardHeat_cutoff
-            (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) z +
+          backwardHeatCutoff
+            (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) z +
         ∑ i, spatialSecondPartial (fun w : ParabolicPoint =>
-          backwardHeat_cutoff
-            (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) i i z|)
+          backwardHeatCutoff
+            (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) i i z|)
       ≤ᵐ[volume.restrict (parabolicCylinder x₀ t₀ ρ)]
         (fun _ => ENNReal.ofReal C₁) := by
     have h := caccioppoli_I1_cutoff_operator_dominated (x₀ := x₀) (t₀ := t₀)
@@ -338,18 +338,18 @@ private theorem caccioppoli_I1_raw_of_energy_bound
   change (∫⁻ z in parabolicCylinder x₀ t₀ ρ,
       ENNReal.ofReal (vec3EuclideanNorm (u z)) ^ (2 : ℝ) *
         ENNReal.ofReal |timePartial (fun w : ParabolicPoint =>
-          backwardHeat_cutoff
-            (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) z +
+          backwardHeatCutoff
+            (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) z +
           ∑ i, spatialSecondPartial (fun w : ParabolicPoint =>
-            backwardHeat_cutoff
-              (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) i i z|).toReal ≤
+            backwardHeatCutoff
+              (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r w) i i z|).toReal ≤
       C₁ * E
   exact hbound.trans_eq hright
 
 /-- **The `I₁` replacement bound of Lemma `lem:caccioppoli-gamma`.**  Combining
 the pointwise bound on the heat-cut-off weight with Hölder's inequality
 `1 = 2/3 + 1/3` on `Q_ρ` and the `γ`-form velocity bound
-`∬_{Q_ρ}|u|² ≤ (4π/3)^{1/3} ρ³ γ(ρ)²`, the first error term satisfies
+`∫∫_{Q_ρ}|u|² ≤ (4π/3)^{1/3} ρ³ γ(ρ)²`, the first error term satisfies
 `I₁ ≤ C r²ρ⁻⁵ ρ³γ(ρ)² = C κ²γ(ρ)²` with `κ = r/ρ`, the constant being the same
 one that appears in the established `I₁` bound times `(4π/3)^{1/3}`. -/
 theorem caccioppoli_I1_gamma_heat_cutoff_raw_bound
@@ -361,7 +361,7 @@ theorem caccioppoli_I1_gamma_heat_cutoff_raw_bound
     (hA : AEMeasurable (fun w =>
         ENNReal.ofReal (vec3EuclideanNorm (u w)) ^ (2 : ℝ))
       (volume.restrict (parabolicCylinder x₀ t₀ ρ))) :
-    caccioppoli_I1_heat_cutoff_raw (u := u) (x₀ := x₀) (t₀ := t₀)
+    caccioppoliI1HeatCutoffRaw (u := u) (x₀ := x₀) (t₀ := t₀)
         (ρ := ρ) (ε := ε) (r := r) hρ hε ≤
       ((32 + 3 * cutoffSecondDerivativeConstant) * 8000000 +
           6 * cutoffGradientConstant * 5000000) *
@@ -381,7 +381,7 @@ theorem caccioppoli_I1_gamma_heat_cutoff_raw_bound
     apply congrArg ENNReal.ofReal
     ring
   calc
-    caccioppoli_I1_heat_cutoff_raw (u := u) (x₀ := x₀) (t₀ := t₀)
+    caccioppoliI1HeatCutoffRaw (u := u) (x₀ := x₀) (t₀ := t₀)
         (ρ := ρ) (ε := ε) (r := r) hρ hε
         ≤ ((32 / ρ ^ 2 + 3 * (cutoffSecondDerivativeConstant / ρ ^ 2)) *
               (8000000 * r ^ 2 / ρ ^ 3) +
@@ -410,10 +410,10 @@ theorem caccioppoli_I1_gamma_normalized
     (hKbound : (Real.pi * 4 / 3) ^ (1 / 3 : ℝ) *
         ((32 + 3 * cutoffSecondDerivativeConstant) * 8000000 +
           6 * cutoffGradientConstant * 5000000) ≤ C₂₅ ^ 2) :
-    caccioppoli_I1_heat_cutoff_raw (u := u) (x₀ := x₀) (t₀ := t₀)
+    caccioppoliI1HeatCutoffRaw (u := u) (x₀ := x₀) (t₀ := t₀)
         (ρ := ρ) (ε := ε) (r := r) hρ hε ≤
       (C₂₅ * (r / ρ) * gamma u (x₀, t₀) ρ) ^ 2 := by
-  have hraw : caccioppoli_I1_heat_cutoff_raw (u := u) (x₀ := x₀) (t₀ := t₀)
+  have hraw : caccioppoliI1HeatCutoffRaw (u := u) (x₀ := x₀) (t₀ := t₀)
         (ρ := ρ) (ε := ε) (r := r) hρ hε ≤
       ((Real.pi * 4 / 3) ^ (1 / 3 : ℝ) *
           ((32 + 3 * cutoffSecondDerivativeConstant) * 8000000 +
@@ -434,8 +434,8 @@ theorem caccioppoli_I1_gamma_normalized
 /-- **The `I₂` replacement bound of Lemma `lem:caccioppoli-gamma`.**  Here the
 Poincaré input used by the established `I₂` bound is replaced by the pointwise bound
 `||u|² − c| |u| ≤ 2|u|³ + c^{3/2}` together with the Jensen bound `hmean` on the
-spatial average `c` (in the application `c` is `⍍_{B_ρ}|u|²`).  Since
-`∬_{Q_ρ}|u|³ = ρ²γ(ρ)³` and the cut-off gradient contributes a factor `r⁻²`,
+spatial average `c` (in the application `c` is `⨍_{B_ρ}|u|²`).  Since
+`∫∫_{Q_ρ}|u|³ = ρ²γ(ρ)³` and the cut-off gradient contributes a factor `r⁻²`,
 this gives `I₂ ≤ C r⁻²ρ²γ(ρ)³ = C κ⁻²γ(ρ)³` with `κ = r/ρ`, matching the
 displayed bound in the proof of Lemma `lem:caccioppoli-gamma`. -/
 theorem caccioppoli_I2_gamma_heat_cutoff_raw_bound
@@ -453,7 +453,7 @@ theorem caccioppoli_I2_gamma_heat_cutoff_raw_bound
       ENNReal.ofReal (ρ ^ 2 * gamma u (x₀, t₀) ρ ^ 3))
     (hvelocity : (∫⁻ w in parabolicCylinder x₀ t₀ ρ,
         ENNReal.ofReal (vec3EuclideanNorm (u w)) ^ (3 : ℝ)) ≠ ∞) :
-    caccioppoli_I2_heat_cutoff_raw (u := u) (c := c) (x₀ := x₀) (t₀ := t₀)
+    caccioppoliI2HeatCutoffRaw (u := u) (c := c) (x₀ := x₀) (t₀ := t₀)
         (ρ := ρ) (ε := ε) (r := r) hρ hε ≤
       3 * (1500 * cutoffGradientConstant + 900000) * (ρ ^ 2 / r ^ 2) *
         gamma u (x₀, t₀) ρ ^ 3 := by
@@ -480,8 +480,8 @@ theorem caccioppoli_I2_gamma_heat_cutoff_raw_bound
     exact (not_lt_of_ge hnorm) (hbound.trans_lt hneg)
   have hgrad : ∀ w ∈ parabolicCylinder x₀ t₀ ρ,
       ∑ i, |spatialPartial (fun y : ParabolicPoint =>
-        backwardHeat_cutoff
-          (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w| ≤
+        backwardHeatCutoff
+          (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w| ≤
         (1500 * cutoffGradientConstant + 900000) / r ^ 2 := by
     intro w hw
     have hraw := caccioppoli_heat_cutoff_gradient_sum_bound
@@ -528,8 +528,8 @@ theorem caccioppoli_I2_gamma_heat_cutoff_raw_bound
       ENNReal.ofReal |(vec3EuclideanNorm (u w)) ^ 2 - c w| *
         ENNReal.ofReal (vec3EuclideanNorm (u w)) *
         ENNReal.ofReal (∑ i, |spatialPartial (fun y : ParabolicPoint =>
-          backwardHeat_cutoff
-            (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|) ≤
+          backwardHeatCutoff
+            (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|) ≤
       ENNReal.ofReal G *
         ((ENNReal.ofReal (vec3EuclideanNorm (u w)) ^ (3 : ℝ) +
           ENNReal.ofReal (vec3EuclideanNorm (u w)) ^ (3 : ℝ)) +
@@ -540,13 +540,13 @@ theorem caccioppoli_I2_gamma_heat_cutoff_raw_bound
     have hcore := caccioppoli_ennreal_abs_sq_sub_mul_le
       (vec3EuclideanNorm (u w)) (c w) hN (hc w)
     have hscalar : ENNReal.ofReal (∑ i, |spatialPartial (fun y : ParabolicPoint =>
-        backwardHeat_cutoff
-          (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|) ≤
+        backwardHeatCutoff
+          (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|) ≤
         ENNReal.ofReal G := ENNReal.ofReal_le_ofReal (hgrad w hw)
     calc
       _ = ENNReal.ofReal (∑ i, |spatialPartial (fun y : ParabolicPoint =>
-            backwardHeat_cutoff
-              (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|) *
+            backwardHeatCutoff
+              (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|) *
             (ENNReal.ofReal |(vec3EuclideanNorm (u w)) ^ 2 - c w| *
               ENNReal.ofReal (vec3EuclideanNorm (u w))) := by ring
       _ ≤ ENNReal.ofReal G *
@@ -565,8 +565,8 @@ theorem caccioppoli_I2_gamma_heat_cutoff_raw_bound
       ENNReal.ofReal |(vec3EuclideanNorm (u w)) ^ 2 - c w| *
         ENNReal.ofReal (vec3EuclideanNorm (u w)) *
         ENNReal.ofReal (∑ i, |spatialPartial (fun y : ParabolicPoint =>
-          backwardHeat_cutoff
-            (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|)) ≤
+          backwardHeatCutoff
+            (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|)) ≤
       ENNReal.ofReal (G * (3 * (ρ ^ 2 * gamma u (x₀, t₀) ρ ^ 3))) := by
     calc
       _ ≤ ∫⁻ w in parabolicCylinder x₀ t₀ ρ, ENNReal.ofReal G *
@@ -615,13 +615,13 @@ theorem caccioppoli_I2_gamma_heat_cutoff_raw_bound
       ENNReal.ofReal |(vec3EuclideanNorm (u w)) ^ 2 - c w| *
         ENNReal.ofReal (vec3EuclideanNorm (u w)) *
         ENNReal.ofReal (∑ i, |spatialPartial (fun y : ParabolicPoint =>
-          backwardHeat_cutoff
-            (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|)).toReal ≤
+          backwardHeatCutoff
+            (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|)).toReal ≤
       G * (3 * (ρ ^ 2 * gamma u (x₀, t₀) ρ ^ 3)) := by
     have h := ENNReal.toReal_mono ENNReal.ofReal_ne_top hchain
     rwa [ENNReal.toReal_ofReal (mul_nonneg hG (mul_nonneg (by norm_num) hV))] at h
   calc
-    caccioppoli_I2_heat_cutoff_raw (u := u) (c := c) (x₀ := x₀) (t₀ := t₀)
+    caccioppoliI2HeatCutoffRaw (u := u) (c := c) (x₀ := x₀) (t₀ := t₀)
         (ρ := ρ) (ε := ε) (r := r) hρ hε
         ≤ G * (3 * (ρ ^ 2 * gamma u (x₀, t₀) ρ ^ 3)) := hfinal
     _ = 3 * (1500 * cutoffGradientConstant + 900000) * (ρ ^ 2 / r ^ 2) *

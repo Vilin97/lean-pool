@@ -381,20 +381,24 @@ theorem lin34_centredP1_pairing_of_slice_data
       (fun y : Vec3 => pressureUTensor u (lin34MeanVelocity u x₀ ρ) ((y, s) : ParabolicPoint) i j)
       (tsupport (mollifiedBallCutoff x₀ hρ)) volume)
     (hUhat : ∀ i j : Fin 3, IntegrableOn
-      (fun y : Vec3 => pressureUTensor (lin34CentredVelocity u x₀ ρ) 0 ((y, s) : ParabolicPoint) i j)
+      (fun y : Vec3 => pressureUTensor (lin34CentredVelocity u x₀ ρ) 0 ((y, s) : ParabolicPoint) i
+        j)
       (tsupport (mollifiedBallCutoff x₀ hρ)) volume)
     (hum : ∀ j : Fin 3, IntegrableOn (fun y : Vec3 => u (y, s) j) Ω' volume)
     (hdivΩ' : ∀ φ : Vec3 → ℝ, ContDiff ℝ (⊤ : ℕ∞) φ → HasCompactSupport φ →
       tsupport φ ⊆ Ω' →
       ∫ x in Ω', ∑ i, u (x, s) i * (fderiv ℝ φ x) (basisVec i) = 0)
     (hP1 : ∀ χ : Vec3 → ℝ, ContDiff ℝ (⊤ : ℕ∞) χ → HasCompactSupport χ →
-      Integrable (fun x => pressureP1 (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) p f s x *
+      Integrable (fun x => pressureP1 (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) p f
+        s x *
         spatialLaplacian χ x) volume →
-      ∫ x, pressureP1 (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) p f s x * spatialLaplacian χ x =
+      ∫ x, pressureP1 (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) p f s x *
+        spatialLaplacian χ x =
         pressureSecondPairing (fun i j x => (mollifiedBallCutoff x₀ hρ) x *
           pressureUTensor u (lin34MeanVelocity u x₀ ρ) ((x, s) : ParabolicPoint) i j) χ)
     (hP1Int : ∀ χ : Vec3 → ℝ, ContDiff ℝ (⊤ : ℕ∞) χ → HasCompactSupport χ →
-      Integrable (fun x => pressureP1 (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) p f s x *
+      Integrable (fun x => pressureP1 (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) p f
+        s x *
         spatialLaplacian χ x) volume)
     {ψ : Vec3 → ℝ} (hψ : ContDiff ℝ (⊤ : ℕ∞) ψ) (hψc : HasCompactSupport ψ) :
     Integrable (fun x => lin34CentredP1 u p f x₀ ρ hρ s x *
@@ -407,20 +411,28 @@ theorem lin34_centredP1_pairing_of_slice_data
     mollifiedBallCutoff_hasCompactSupport x₀ hρ
   obtain ⟨hIntU, hAU⟩ := lin34_P234_pairing hη hηc hU hψ hψc
   obtain ⟨hIntH, hAH⟩ := lin34_P234_pairing hη hηc hUhat hψ hψc
-  have hsplitU := lin34_hessian_sum_split (T := fun i j y => pressureUTensor u (lin34MeanVelocity u x₀ ρ) ((y, s) : ParabolicPoint) i j) hη hηc hψ hU
-  have hsplitH := lin34_hessian_sum_split (T := fun i j y => pressureUTensor (lin34CentredVelocity u x₀ ρ) 0 ((y, s) : ParabolicPoint) i j) hη hηc hψ hUhat
-  have hSDU := lin34_secondPairing_eq_sum (T := fun i j y => pressureUTensor u (lin34MeanVelocity u x₀ ρ) ((y, s) : ParabolicPoint) i j) hη hηc hU hψ
-  have hSDH := lin34_secondPairing_eq_sum (T := fun i j y => pressureUTensor (lin34CentredVelocity u x₀ ρ) 0 ((y, s) : ParabolicPoint) i j) hη hηc hUhat hψ
+  have hsplitU := lin34_hessian_sum_split (T := fun i j y => pressureUTensor u (lin34MeanVelocity
+    u x₀ ρ) ((y, s) : ParabolicPoint) i j) hη hηc hψ hU
+  have hsplitH := lin34_hessian_sum_split (T := fun i j y => pressureUTensor (lin34CentredVelocity
+    u x₀ ρ) 0 ((y, s) : ParabolicPoint) i j) hη hηc hψ hUhat
+  have hSDU := lin34_secondPairing_eq_sum (T := fun i j y => pressureUTensor u (lin34MeanVelocity
+    u x₀ ρ) ((y, s) : ParabolicPoint) i j) hη hηc hU hψ
+  have hSDH := lin34_secondPairing_eq_sum (T := fun i j y => pressureUTensor (lin34CentredVelocity
+    u x₀ ρ) 0 ((y, s) : ParabolicPoint) i j) hη hηc hUhat hψ
   -- the correction pairing vanishes
   have hF : ContDiff ℝ (⊤ : ℕ∞) (fun y => mollifiedBallCutoff x₀ hρ y * ψ y) := hη.mul hψ
-  have hFc : HasCompactSupport (fun y => mollifiedBallCutoff x₀ hρ y * ψ y) := hηc.mul_right (f' := ψ)
-  have hFη : tsupport (fun y => mollifiedBallCutoff x₀ hρ y * ψ y) ⊆ tsupport (mollifiedBallCutoff x₀ hρ) :=
+  have hFc : HasCompactSupport (fun y => mollifiedBallCutoff x₀ hρ y * ψ y) := hηc.mul_right (f'
+    := ψ)
+  have hFη : tsupport (fun y => mollifiedBallCutoff x₀ hρ y * ψ y) ⊆ tsupport (mollifiedBallCutoff
+    x₀ hρ) :=
     tsupport_mul_subset_left (f := mollifiedBallCutoff x₀ hρ) (g := ψ)
   have hFΩ : tsupport (fun y => mollifiedBallCutoff x₀ hρ y * ψ y) ⊆ Ω' := hFη.trans hηΩ'
   have hint : ∀ j : Fin 3, IntegrableOn (fun x : Vec3 => u (x, s) j)
-      (tsupport (fun y => mollifiedBallCutoff x₀ hρ y * ψ y)) volume := fun j => (hum j).mono_set hFΩ
+      (tsupport (fun y => mollifiedBallCutoff x₀ hρ y * ψ y)) volume := fun j => (hum j).mono_set
+        hFΩ
   have hdivF : ∀ i : Fin 3,
-      ∫ x in Ω', ∑ j, u (x, s) j * mixedSecond (fun y => mollifiedBallCutoff x₀ hρ y * ψ y) j i x = 0 := by
+      ∫ x in Ω', ∑ j, u (x, s) j * mixedSecond (fun y => mollifiedBallCutoff x₀ hρ y * ψ y) j i x
+        = 0 := by
     intro i
     have hφ := contDiff_spatialDeriv_smooth hF i
     have hφc : HasCompactSupport (spatialDeriv (fun y => mollifiedBallCutoff x₀ hρ y * ψ y) i) :=
@@ -432,9 +444,11 @@ theorem lin34_centredP1_pairing_of_slice_data
   have hzero := lin34_constant_hessian_pairing_zero
     (b := lin34MeanVelocity u x₀ ρ s) hF hFc hFΩ hint hdivF
   -- the two Hessian pairings agree
-  have hmc : ∀ i j : Fin 3, ContDiff ℝ (⊤ : ℕ∞) (mixedSecond (fun y => mollifiedBallCutoff x₀ hρ y * ψ y) i j) :=
+  have hmc : ∀ i j : Fin 3, ContDiff ℝ (⊤ : ℕ∞) (mixedSecond (fun y => mollifiedBallCutoff x₀ hρ y
+    * ψ y) i j) :=
     fun i j => contDiff_mixedSecond_smooth hF i j
-  have hmsub : ∀ i j : Fin 3, tsupport (mixedSecond (fun y => mollifiedBallCutoff x₀ hρ y * ψ y) i j) ⊆
+  have hmsub : ∀ i j : Fin 3, tsupport (mixedSecond (fun y => mollifiedBallCutoff x₀ hρ y * ψ y) i
+    j) ⊆
       tsupport (mollifiedBallCutoff x₀ hρ) := fun i j => (lin34_tsupport_mixedSecond i j).trans hFη
   have hUm : ∀ i j : Fin 3, Integrable (fun y =>
       pressureUTensor u (lin34MeanVelocity u x₀ ρ) ((y, s) : ParabolicPoint) i j *
@@ -451,7 +465,8 @@ theorem lin34_centredP1_pairing_of_slice_data
           mixedSecond (fun y => mollifiedBallCutoff x₀ hρ y * ψ y) i j y) -
         (∫ y, pressureUTensor (lin34CentredVelocity u x₀ ρ) 0 ((y, s) : ParabolicPoint) i j *
           mixedSecond (fun y => mollifiedBallCutoff x₀ hρ y * ψ y) i j y) =
-      -(∫ y, (lin34MeanVelocity u x₀ ρ) s i * (u (y, s) j - (lin34MeanVelocity u x₀ ρ) s j) * mixedSecond (fun y => mollifiedBallCutoff x₀ hρ y * ψ y) i j y) := by
+      -(∫ y, (lin34MeanVelocity u x₀ ρ) s i * (u (y, s) j - (lin34MeanVelocity u x₀ ρ) s j) *
+        mixedSecond (fun y => mollifiedBallCutoff x₀ hρ y * ψ y) i j y) := by
     intro i j
     rw [← MeasureTheory.integral_sub (hUm i j) (hUhm i j),
       ← MeasureTheory.integral_neg]
@@ -475,21 +490,46 @@ theorem lin34_centredP1_pairing_of_slice_data
     simp only [Finset.sum_sub_distrib] at hcancel
     linarith only [hcancel]
   -- the pressure difference
-  have hdiffI : Integrable (fun x => (pressureP2 (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) s x + pressureP3 (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) s x + pressureP4 (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) s x) * spatialLaplacian ψ x -
-      (pressureP2 (mollifiedBallCutoff x₀ hρ) (lin34CentredVelocity u x₀ ρ) 0 s x + pressureP3 (mollifiedBallCutoff x₀ hρ) (lin34CentredVelocity u x₀ ρ) 0 s x + pressureP4 (mollifiedBallCutoff x₀ hρ) (lin34CentredVelocity u x₀ ρ) 0 s x) * spatialLaplacian ψ x) volume := hIntU.sub hIntH
+  have hdiffI : Integrable (fun x => (pressureP2 (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity
+    u x₀ ρ) s x + pressureP3 (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) s x +
+    pressureP4 (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) s x) * spatialLaplacian ψ
+    x -
+      (pressureP2 (mollifiedBallCutoff x₀ hρ) (lin34CentredVelocity u x₀ ρ) 0 s x + pressureP3
+        (mollifiedBallCutoff x₀ hρ) (lin34CentredVelocity u x₀ ρ) 0 s x + pressureP4
+        (mollifiedBallCutoff x₀ hρ) (lin34CentredVelocity u x₀ ρ) 0 s x) * spatialLaplacian ψ x)
+        volume := hIntU.sub hIntH
   have hpt : ∀ x : Vec3, lin34CentredP1 u p f x₀ ρ hρ s x *
         spatialLaplacian ψ x =
-      pressureP1 (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) p f s x * spatialLaplacian ψ x +
-        ((pressureP2 (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) s x + pressureP3 (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) s x + pressureP4 (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) s x) * spatialLaplacian ψ x - (pressureP2 (mollifiedBallCutoff x₀ hρ) (lin34CentredVelocity u x₀ ρ) 0 s x + pressureP3 (mollifiedBallCutoff x₀ hρ) (lin34CentredVelocity u x₀ ρ) 0 s x + pressureP4 (mollifiedBallCutoff x₀ hρ) (lin34CentredVelocity u x₀ ρ) 0 s x) * spatialLaplacian ψ x) := by
+      pressureP1 (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) p f s x *
+        spatialLaplacian ψ x +
+        ((pressureP2 (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) s x + pressureP3
+          (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) s x + pressureP4
+          (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) s x) * spatialLaplacian ψ x -
+          (pressureP2 (mollifiedBallCutoff x₀ hρ) (lin34CentredVelocity u x₀ ρ) 0 s x + pressureP3
+          (mollifiedBallCutoff x₀ hρ) (lin34CentredVelocity u x₀ ρ) 0 s x + pressureP4
+          (mollifiedBallCutoff x₀ hρ) (lin34CentredVelocity u x₀ ρ) 0 s x) * spatialLaplacian ψ x)
+          := by
     intro x
     have hx : lin34CentredP1 u p f x₀ ρ hρ s x =
-        pressureP1 (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) p f s x + ((pressureP2 (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) s x + pressureP3 (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) s x + pressureP4 (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) s x) - (pressureP2 (mollifiedBallCutoff x₀ hρ) (lin34CentredVelocity u x₀ ρ) 0 s x + pressureP3 (mollifiedBallCutoff x₀ hρ) (lin34CentredVelocity u x₀ ρ) 0 s x + pressureP4 (mollifiedBallCutoff x₀ hρ) (lin34CentredVelocity u x₀ ρ) 0 s x)) := by
+        pressureP1 (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) p f s x + ((pressureP2
+          (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) s x + pressureP3
+          (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) s x + pressureP4
+          (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) s x) - (pressureP2
+          (mollifiedBallCutoff x₀ hρ) (lin34CentredVelocity u x₀ ρ) 0 s x + pressureP3
+          (mollifiedBallCutoff x₀ hρ) (lin34CentredVelocity u x₀ ρ) 0 s x + pressureP4
+          (mollifiedBallCutoff x₀ hρ) (lin34CentredVelocity u x₀ ρ) 0 s x)) := by
       linarith only [lin34_centredP1_sub_pressureP1 u p f x₀ hρ s x]
     rw [hx]
     ring
   have hsumI : Integrable (fun x =>
-      pressureP1 (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) p f s x * spatialLaplacian ψ x +
-        ((pressureP2 (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) s x + pressureP3 (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) s x + pressureP4 (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) s x) * spatialLaplacian ψ x - (pressureP2 (mollifiedBallCutoff x₀ hρ) (lin34CentredVelocity u x₀ ρ) 0 s x + pressureP3 (mollifiedBallCutoff x₀ hρ) (lin34CentredVelocity u x₀ ρ) 0 s x + pressureP4 (mollifiedBallCutoff x₀ hρ) (lin34CentredVelocity u x₀ ρ) 0 s x) * spatialLaplacian ψ x))
+      pressureP1 (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) p f s x *
+        spatialLaplacian ψ x +
+        ((pressureP2 (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) s x + pressureP3
+          (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) s x + pressureP4
+          (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) s x) * spatialLaplacian ψ x -
+          (pressureP2 (mollifiedBallCutoff x₀ hρ) (lin34CentredVelocity u x₀ ρ) 0 s x + pressureP3
+          (mollifiedBallCutoff x₀ hρ) (lin34CentredVelocity u x₀ ρ) 0 s x + pressureP4
+          (mollifiedBallCutoff x₀ hρ) (lin34CentredVelocity u x₀ ρ) 0 s x) * spatialLaplacian ψ x))
       volume := (hP1Int ψ hψ hψc).add hdiffI
   have hcI : Integrable (fun x => lin34CentredP1 u p f x₀ ρ hρ s x *
       spatialLaplacian ψ x) volume :=
@@ -497,9 +537,15 @@ theorem lin34_centredP1_pairing_of_slice_data
   refine ⟨hcI, ?_⟩
   have hintval : (∫ x, lin34CentredP1 u p f x₀ ρ hρ s x *
         spatialLaplacian ψ x) =
-      (∫ x, pressureP1 (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) p f s x * spatialLaplacian ψ x) +
-        ((∫ x, (pressureP2 (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) s x + pressureP3 (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) s x + pressureP4 (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) s x) * spatialLaplacian ψ x) -
-          ∫ x, (pressureP2 (mollifiedBallCutoff x₀ hρ) (lin34CentredVelocity u x₀ ρ) 0 s x + pressureP3 (mollifiedBallCutoff x₀ hρ) (lin34CentredVelocity u x₀ ρ) 0 s x + pressureP4 (mollifiedBallCutoff x₀ hρ) (lin34CentredVelocity u x₀ ρ) 0 s x) * spatialLaplacian ψ x) := by
+      (∫ x, pressureP1 (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) p f s x *
+        spatialLaplacian ψ x) +
+        ((∫ x, (pressureP2 (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) s x +
+          pressureP3 (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) s x + pressureP4
+          (mollifiedBallCutoff x₀ hρ) u (lin34MeanVelocity u x₀ ρ) s x) * spatialLaplacian ψ x) -
+          ∫ x, (pressureP2 (mollifiedBallCutoff x₀ hρ) (lin34CentredVelocity u x₀ ρ) 0 s x +
+            pressureP3 (mollifiedBallCutoff x₀ hρ) (lin34CentredVelocity u x₀ ρ) 0 s x +
+            pressureP4 (mollifiedBallCutoff x₀ hρ) (lin34CentredVelocity u x₀ ρ) 0 s x) *
+            spatialLaplacian ψ x) := by
     rw [MeasureTheory.integral_congr_ae (Filter.Eventually.of_forall hpt),
       MeasureTheory.integral_add (hP1Int ψ hψ hψc) hdiffI,
       MeasureTheory.integral_sub hIntU hIntH]

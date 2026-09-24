@@ -79,7 +79,8 @@ theorem halfCylinder_velocity_average_of_small_data
     rw [integral_eq_lintegral_of_nonneg_ae
       (Filter.Eventually.of_forall fun x => Real.rpow_nonneg (vec3EuclideanNorm_nonneg _) _)
       hu3.aestronglyMeasurable]
-    simp_rw [← ENNReal.ofReal_rpow_of_nonneg (vec3EuclideanNorm_nonneg _) (by norm_num : (0 : ℝ) ≤ 3)]
+    simp_rw [← ENNReal.ofReal_rpow_of_nonneg (vec3EuclideanNorm_nonneg _) (by norm_num : (0 : ℝ) ≤
+      3)]
     exact (ENNReal.toReal_le_toReal (ne_of_lt (lt_of_le_of_lt hvel ENNReal.ofReal_lt_top))
       ENNReal.ofReal_ne_top).mpr hvel |>.trans_eq (ENNReal.toReal_ofReal hε₀)
   apply Real.rpow_le_rpow

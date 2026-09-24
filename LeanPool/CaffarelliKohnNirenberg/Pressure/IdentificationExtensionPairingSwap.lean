@@ -93,7 +93,7 @@ theorem ae_slice_second_pairing_zero_of_forall_test
       ∫ x, ∑ i, ∑ j, G s i j x * mixedSecond ψ i j x = 0 := by
   classical
   obtain ⟨Q, hQcount, hQdense⟩ := TopologicalSpace.exists_countable_dense Vec3
-  haveI : Countable Q := hQcount.to_subtype
+  have : Countable Q := hQcount.to_subtype
   have hfam : ∀ᵐ s ∂volume.restrict I, ∀ q : Q × ℕ,
       ∫ x, ∑ i, ∑ j, G s i j x * mixedSecond (fun z : Vec3 =>
         mollifier (d := 3) (sliceRadius q.2) (sliceRadius_pos q.2)

@@ -35,8 +35,8 @@ slice estimate, retaining its spatial power mass on that same window. -/
 theorem originClause_pressure_clipped_holder
     {P : ParabolicPoint → ℝ} {x : Vec3} {t r R : ℝ} (hr : 0 < r)
     (hm : AEStronglyMeasurable P
-      ((volume.restrict (vec3Ball x (2*r))).prod
-        (volume.restrict (Ioc (t-r^2) t ∩ Ioc (-R^2) 0)))) :
+      ((volume.restrict (vec3Ball x (2 * r))).prod
+        (volume.restrict (Ioc (t - r ^ 2) t ∩ Ioc (-R ^ 2) 0)))) :
     (∫⁻ s in Ioc (t-r^2) t ∩ Ioc (-R^2) 0,
       (ENNReal.ofReal ((2*r) ^ (-1/2 : ℝ)) *
         eLpNorm (fun y => P (y,s)) (ENNReal.ofReal (3/2 : ℝ))
@@ -81,11 +81,11 @@ theorem originClause_pressure_clipped_growth
     {P : ParabolicPoint → ℝ} {x : Vec3} {t r R κ : ℝ} {K : ℝ≥0∞}
     (hr : 0 < r)
     (hm : AEStronglyMeasurable P
-      ((volume.restrict (vec3Ball x (2*r))).prod
-        (volume.restrict (Ioc (t-r^2) t ∩ Ioc (-R^2) 0))))
-    (hpressure : (∫⁻ s in Ioc (t-r^2) t ∩ Ioc (-R^2) 0,
-      ∫⁻ y in vec3Ball x (2*r), ‖P (y,s)‖ₑ ^ (3/2 : ℝ)) ≤
-        K * ENNReal.ofReal (r ^ (13/2 - 15/(2*κ)))) :
+      ((volume.restrict (vec3Ball x (2 * r))).prod
+        (volume.restrict (Ioc (t - r ^ 2) t ∩ Ioc (-R ^ 2) 0))))
+    (hpressure : (∫⁻ s in Ioc (t - r ^ 2) t ∩ Ioc (-R ^ 2) 0,
+      ∫⁻ y in vec3Ball x (2 * r), ‖P (y, s)‖ₑ ^ (3 / 2 : ℝ)) ≤
+        K * ENNReal.ofReal (r ^ (13 / 2 - 15 / (2 * κ)))) :
     (∫⁻ s in Ioc (t-r^2) t ∩ Ioc (-R^2) 0,
       (ENNReal.ofReal ((2*r) ^ (-1/2 : ℝ)) *
         eLpNorm (fun y => P (y,s)) (ENNReal.ofReal (3/2 : ℝ))

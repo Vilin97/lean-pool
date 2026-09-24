@@ -29,7 +29,7 @@ noncomputable section
 # Causality of the heat potential
 
 Step 3 of the proof of `thm:A` splits every localized source at `t = 0`,
-writing `F = F⁻ + F⁺` and `G_k = G_k⁻ + G_k⁺` with `F⁻ = 𝟏_{t ≤ 0} F`, and
+writing `F = F⁻ + F⁺` and `G_k = G_k⁻ + G_k⁺` with `F⁻ = 1_{t ≤ 0} F`, and
 observes that the positive-time kernel `W₊` annihilates the future part, so
 that on `{t ≤ 0}` the localized velocity is the potential of the past part
 alone. `heatPotential_time_truncation` is that statement in the equivalent

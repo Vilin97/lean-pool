@@ -26,15 +26,16 @@ noncomputable section
 
 namespace CKN
 
-def caccioppoli_I2_heat_cutoff_raw
+/-- Raw transport contribution after subtracting the chosen scalar energy center. -/
+def caccioppoliI2HeatCutoffRaw
     {u : ParabolicPoint → Vec3} {c : ParabolicPoint → ℝ} {x₀ : Vec3} {t₀ ρ ε r : ℝ}
     (hρ : 0 < ρ) (hε : 0 < ε) : ℝ :=
   (∫⁻ w in parabolicCylinder x₀ t₀ ρ,
       ENNReal.ofReal |(vec3EuclideanNorm (u w)) ^ 2 - c w| *
         ENNReal.ofReal (vec3EuclideanNorm (u w)) *
         ENNReal.ofReal (∑ i, |spatialPartial (fun y : ParabolicPoint =>
-          backwardHeat_cutoff
-            (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|)).toReal
+          backwardHeatCutoff
+            (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|)).toReal
 
 theorem caccioppoli_I2_heat_cutoff_raw_bound
     {Ω : Set Vec3} {I : Set ℝ} {q : ℝ}
@@ -57,7 +58,7 @@ theorem caccioppoli_I2_heat_cutoff_raw_bound
     (hvelocity :
       (∫⁻ w in parabolicCylinder x₀ t₀ ρ,
         ENNReal.ofReal (vec3EuclideanNorm (u w)) ^ (3 : ℝ)) ≠ ∞) :
-    caccioppoli_I2_heat_cutoff_raw (u := u) (c := c) (x₀ := x₀) (t₀ := t₀)
+    caccioppoliI2HeatCutoffRaw (u := u) (c := c) (x₀ := x₀) (t₀ := t₀)
         (ρ := ρ) (ε := ε) (r := r) hρ hε ≤
       (C_PS * (1500 * cutoffGradientConstant + 900000)) *
         (ρ ^ 2 / r ^ 2) * alpha u (x₀, t₀) ρ * beta u Du (x₀, t₀) ρ *
@@ -87,8 +88,8 @@ theorem caccioppoli_I2_heat_cutoff_raw_bound
     exact (not_lt_of_ge hnorm) (hbound.trans_lt hneg)
   have hgrad : ∀ w ∈ parabolicCylinder x₀ t₀ ρ,
       ∑ i, |spatialPartial (fun y : ParabolicPoint =>
-        backwardHeat_cutoff
-          (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w| ≤
+        backwardHeatCutoff
+          (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w| ≤
         (1500 * cutoffGradientConstant + 900000) / r ^ 2 := by
     intro w hw
     have hraw := caccioppoli_heat_cutoff_gradient_sum_bound
@@ -135,8 +136,8 @@ theorem caccioppoli_I2_heat_cutoff_raw_bound
         ENNReal.ofReal |(vec3EuclideanNorm (u w)) ^ 2 - c w| *
           ENNReal.ofReal (vec3EuclideanNorm (u w)) *
           ENNReal.ofReal (∑ i, |spatialPartial (fun y : ParabolicPoint =>
-            backwardHeat_cutoff
-              (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|)) ≤
+            backwardHeatCutoff
+              (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|)) ≤
       ∫⁻ w in parabolicCylinder x₀ t₀ ρ,
         ENNReal.ofReal G *
           ENNReal.ofReal |(vec3EuclideanNorm (u w)) ^ 2 - c w| *
@@ -146,14 +147,14 @@ theorem caccioppoli_I2_heat_cutoff_raw_bound
       with w hw
     have hscalar : ENNReal.ofReal
         (∑ i, |spatialPartial (fun y : ParabolicPoint =>
-          backwardHeat_cutoff
-            (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|) ≤
+          backwardHeatCutoff
+            (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|) ≤
         ENNReal.ofReal G := ENNReal.ofReal_le_ofReal (hgrad w hw)
     calc
       _ = (ENNReal.ofReal
           (∑ i, |spatialPartial (fun y : ParabolicPoint =>
-            backwardHeat_cutoff
-              (caccioppoli_heat_cutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|) *
+            backwardHeatCutoff
+              (caccioppoliHeatCutoff x₀ t₀ ρ ε hρ hε) x₀ t₀ r y) i w|) *
           (ENNReal.ofReal |(vec3EuclideanNorm (u w)) ^ 2 - c w| *
             ENNReal.ofReal (vec3EuclideanNorm (u w)))) := by ring
       _ ≤ ENNReal.ofReal G *
@@ -219,7 +220,7 @@ theorem caccioppoli_I2_heat_cutoff_raw_bound
       _ = _ := by rw [hrho']
   rw [mul_assoc, hscale'] at hreal
   convert hreal using 1
-  · unfold caccioppoli_I2_heat_cutoff_raw
+  · unfold caccioppoliI2HeatCutoffRaw
     congr 1
   · dsimp [G]
     ring
@@ -247,7 +248,7 @@ theorem caccioppoli_I2_heat_cutoff_raw_normalized
         ENNReal.ofReal (vec3EuclideanNorm (u w)) ^ (3 : ℝ)) ≠ ∞)
     (hKbound :
       C_PS * (1500 * cutoffGradientConstant + 900000) ≤ C₂₅ ^ 2) :
-    caccioppoli_I2_heat_cutoff_raw (u := u) (c := c) (x₀ := x₀) (t₀ := t₀)
+    caccioppoliI2HeatCutoffRaw (u := u) (c := c) (x₀ := x₀) (t₀ := t₀)
         (ρ := ρ) (ε := ε) (r := r) hρ hε ≤
       (C₂₅ * (r / ρ)⁻¹ * alpha u (x₀, t₀) ρ ^ (1 / 2 : ℝ) *
         beta u Du (x₀, t₀) ρ ^ (1 / 2 : ℝ) *

@@ -39,7 +39,8 @@ theorem origin_time_velocity_gradient_product_bound
     (hU.pow_const (6 / 5 : ℝ)) (hD.pow_const (6 / 5 : ℝ))
   simp only [Pi.mul_apply, ← ENNReal.rpow_mul] at h
   norm_num at h
-  simpa only [ENNReal.rpow_ofNat, ENNReal.mul_rpow_of_nonneg _ _ (by norm_num : (0 : ℝ) ≤ 6 / 5)] using h
+  simpa only [ENNReal.rpow_ofNat, ENNReal.mul_rpow_of_nonneg _ _ (by norm_num : (0 : ℝ) ≤ 6 / 5)]
+    using h
 
 /-- Temporal Hölder for the four-fifths power of the tensor energy. -/
 theorem origin_time_energy_four_fifths_bound

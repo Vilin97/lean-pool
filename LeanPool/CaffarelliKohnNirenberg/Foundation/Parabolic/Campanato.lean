@@ -39,17 +39,20 @@ instance campanatoParabolicVolumeIsLocallyFinite :
         @Metric.ball_mem_nhds ParabolicPoint parabolicPseudoMetricSpace p 1 one_pos,
         volume_parabolicBall_lt_top one_pos⟩ }
 
+/-- Normalized Lᵖ oscillation about the mean on a backward parabolic cylinder. -/
 def ParabolicCylinderLpOscillation
     (f : ParabolicPoint → ℝ) (x : Vec3) (t r p : ℝ) : ℝ :=
   (⨍ z in parabolicCylinder x t r,
     |f z - Integration.cylinderAverage x t r f| ^ p) ^ (1 / p)
 
+/-- Uniform power-decay bound for cylinder oscillations up to a prescribed radius. -/
 def ParabolicCylinderCampanatoBoundOn
     (f : ParabolicPoint → ℝ) (U : Set ParabolicPoint)
     (R α K p : ℝ) : Prop :=
   ∀ z ∈ U, ∀ {r : ℝ}, 0 < r → r ≤ R →
     ParabolicCylinderLpOscillation f z.1 z.2 r p ≤ K * r ^ α
 
+/-- Geometric-series coefficient for summing dyadic Campanato oscillations. -/
 def parabolicCampanatoTailConstant (α : ℝ) : ℝ :=
   1 / (1 - (2 : ℝ) ^ (-α))
 

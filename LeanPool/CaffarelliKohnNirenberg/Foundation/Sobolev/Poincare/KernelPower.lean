@@ -279,7 +279,8 @@ theorem integrable_rpow_integral_mul_rieszKernel_of_isSobolevRegularDomain
   have hpointwise :
       (fun x => (∫ y, g y * rieszKernel x y ∂μU) ^ p) ≤ᵐ[μU]
         (fun x => M ^ (p - 1) * ∫ y, (g y) ^ p * rieszKernel x y ∂μU) := by
-    filter_upwards [MeasureTheory.ae_restrict_mem hU.measurableSet, hgpK_prod_int'.prod_right_ae] with
+    filter_upwards [MeasureTheory.ae_restrict_mem hU.measurableSet, hgpK_prod_int'.prod_right_ae]
+      with
       x hx hxgpK
     simpa [μU, M, MeasureTheory.IntegrableOn] using
       (integral_mul_rieszKernel_rpow_le_bound_of_isSobolevRegularDomain
@@ -366,7 +367,8 @@ theorem integral_rpow_integral_mul_rieszKernel_le_bound_of_isSobolevRegularDomai
   have hpointwise :
       (fun x => (∫ y, g y * rieszKernel x y ∂μU) ^ p) ≤ᵐ[μU]
         (fun x => M ^ (p - 1) * ∫ y, (g y) ^ p * rieszKernel x y ∂μU) := by
-    filter_upwards [MeasureTheory.ae_restrict_mem hU.measurableSet, hgpK_prod_int'.prod_right_ae] with
+    filter_upwards [MeasureTheory.ae_restrict_mem hU.measurableSet, hgpK_prod_int'.prod_right_ae]
+      with
       x hx hxgpK
     simpa [μU, M, MeasureTheory.IntegrableOn] using
       (integral_mul_rieszKernel_rpow_le_bound_of_isSobolevRegularDomain

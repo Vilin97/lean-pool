@@ -28,20 +28,25 @@ namespace CKN.Foundation.Euclidean
 
 open CKN
 
+/-- Explicit coefficient controlling the second Riesz kernel's size estimates. -/
 def rieszSecondKernelC₂ : ℝ := 72 / (4 * Real.pi)
 
+/-- Second spatial derivative of the Newtonian kernel in the chosen coordinates. -/
 def rieszSecondKernel (i j : Fin 3) (z : Vec3) : ℝ :=
   CKN.spatialDeriv (CKN.spatialDeriv CKN.Foundation.Heat.newtonianKernel i) j z
 
+/-- Algebraic Hessian formula for the inverse Euclidean radius, before Newtonian normalization. -/
 def heatSecondFormula (i j : Fin 3) (z : Vec3) : ℝ :=
   3 * z i * z j * CKN.Foundation.Heat.q z ^ (-(5 : ℝ) / 2) -
     (if i = j then 1 else 0) * CKN.Foundation.Heat.q z ^ (-(3 : ℝ) / 2)
 
+/-- Continuous linear differential of the power of the squared Euclidean norm. -/
 def heatQDerivative (p : ℝ) (x : Vec3) : Vec3 →L[ℝ] ℝ :=
   (p * CKN.Foundation.Heat.q x ^ (p - 1)) •
     ∑ k : Fin 3, (2 * x k) •
       (ContinuousLinearMap.proj k : Vec3 →L[ℝ] ℝ)
 
+/-- Continuous linear differential of the algebraic Newtonian Hessian formula. -/
 def heatSecondDerivative (i j : Fin 3) (x : Vec3) : Vec3 →L[ℝ] ℝ :=
   3 • ((x i * x j) • heatQDerivative (-(5 : ℝ) / 2) x +
     (CKN.Foundation.Heat.q x ^ (-(5 : ℝ) / 2)) •
@@ -199,7 +204,10 @@ private lemma second_component_eq_neg_third {x : Vec3} (hx : x ≠ 0)
         simp [vec3EuclideanNorm, CKN.vecEuclideanNorm, CKN.vecNormSq,
           CKN.vecDot, pow_two]
       rw [hnorm]
-      simp [CKN.Foundation.Harmonic.Commutator.inverseThirdFormula]
+      simp only [mul_inv_rev, mul_ite, mul_one, mul_zero, ite_mul, zero_mul,
+    Harmonic.Commutator.inverseThirdFormula, neg_mul, one_mul, neg_neg, mul_eq_mul_left_iff,
+      mul_eq_zero, inv_eq_zero,
+    Real.pi_ne_zero, OfNat.ofNat_ne_zero, or_self, or_false]
       rw [← inv_pow, ← inv_pow]
       simp only [eq_comm]
       split_ifs <;> ring

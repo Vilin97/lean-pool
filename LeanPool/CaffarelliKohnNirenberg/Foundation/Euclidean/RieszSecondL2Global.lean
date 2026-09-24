@@ -24,6 +24,80 @@ noncomputable section
 
 namespace CKN.Foundation.Euclidean
 
+private lemma cutoffError_pointwise_bound_hq_1 :
+    ∀ {F : Vec3 → ℝ} {ρ : ℝ} (hρ : 0 < ρ) {x : Vec3},
+      let B : ℝ := 60 / 13 * Foundation.Euclidean.potentialTailSize F;
+      0 ≤ Foundation.Euclidean.potentialTailSize F →
+        1 ≤ ρ →
+          |pressureNewtonianPotential F x| ≤ B / ρ →
+            0 ≤ cutoffGradientConstant →
+              0 ≤ cutoffSecondDerivativeConstant →
+                |spatialGradDot (mollifiedBallCutoff 0 hρ) (pressureNewtonianPotential F) x| ≤
+                    3 * cutoffGradientConstant * B / ρ ^ 2 →
+                  |spatialLaplacian (mollifiedBallCutoff 0 hρ) x| ≤
+                      3 * cutoffSecondDerivativeConstant / ρ ^ 2 →
+                    |Foundation.Euclidean.cutoffError F hρ x| ≤
+                      B * (6 * cutoffGradientConstant + 3 * cutoffSecondDerivativeConstant) /
+                        ρ ^ 2
+    := by
+  intro F ρ hρ x B htail hρone hpot0 hgradConst hsecondConst hgradDot hlap
+  rw [cutoffError]
+  calc
+    |2 * spatialGradDot (mollifiedBallCutoff 0 hρ)
+        (pressureNewtonianPotential F) x +
+        pressureNewtonianPotential F x *
+          spatialLaplacian (mollifiedBallCutoff 0 hρ) x| ≤
+        2 * |spatialGradDot (mollifiedBallCutoff 0 hρ)
+          (pressureNewtonianPotential F) x| +
+          |pressureNewtonianPotential F x| *
+            |spatialLaplacian (mollifiedBallCutoff 0 hρ) x| := by
+      calc
+        |2 * spatialGradDot (mollifiedBallCutoff 0 hρ)
+            (pressureNewtonianPotential F) x +
+            pressureNewtonianPotential F x *
+              spatialLaplacian (mollifiedBallCutoff 0 hρ) x| ≤
+            |2 * spatialGradDot (mollifiedBallCutoff 0 hρ)
+              (pressureNewtonianPotential F) x| +
+              |pressureNewtonianPotential F x *
+                spatialLaplacian (mollifiedBallCutoff 0 hρ) x| :=
+          abs_add_le _ _
+        _ = 2 * |spatialGradDot (mollifiedBallCutoff 0 hρ)
+              (pressureNewtonianPotential F) x| +
+              |pressureNewtonianPotential F x| *
+                |spatialLaplacian (mollifiedBallCutoff 0 hρ) x| := by
+          rw [abs_mul, abs_mul]
+          norm_num
+    _ ≤ 2 * (3 * cutoffGradientConstant * B / ρ ^ 2) +
+        (B / ρ) * (3 * cutoffSecondDerivativeConstant / ρ ^ 2) := by
+      gcongr
+    _ ≤ B * (6 * cutoffGradientConstant + 3 * cutoffSecondDerivativeConstant) /
+        ρ ^ 2 := by
+      have hconst : 0 ≤ 6 * cutoffGradientConstant +
+          3 * cutoffSecondDerivativeConstant := by
+        positivity
+      have hρpow : ρ ^ 2 ≤ ρ ^ 3 := by
+        nlinarith only [hρone, sq_nonneg (ρ - 1)]
+      have hterm :
+          (B / ρ) * (3 * cutoffSecondDerivativeConstant / ρ ^ 2) ≤
+            3 * B * cutoffSecondDerivativeConstant / ρ ^ 2 := by
+        calc
+          (B / ρ) * (3 * cutoffSecondDerivativeConstant / ρ ^ 2) =
+              3 * B * cutoffSecondDerivativeConstant / ρ ^ 3 := by
+            field_simp [ne_of_gt hρ]
+          _ ≤ 3 * B * cutoffSecondDerivativeConstant / ρ ^ 2 := by
+            gcongr
+      calc
+        2 * (3 * cutoffGradientConstant * B / ρ ^ 2) +
+            (B / ρ) * (3 * cutoffSecondDerivativeConstant / ρ ^ 2) ≤
+            2 * (3 * cutoffGradientConstant * B / ρ ^ 2) +
+              3 * B * cutoffSecondDerivativeConstant / ρ ^ 2 :=
+          (add_le_add_right hterm
+            (2 * (3 * cutoffGradientConstant * B / ρ ^ 2))).trans_eq
+            (by ring)
+        _ = B * (6 * cutoffGradientConstant +
+            3 * cutoffSecondDerivativeConstant) / ρ ^ 2 := by
+          ring
+
 private lemma cutoffError_pointwise_bound {F : Vec3 → ℝ}
     (hF : ContDiff ℝ (⊤ : ℕ∞) F) (hFc : HasCompactSupport F)
     {R ρ : ℝ} (hR : 0 < R) (hρ : 0 < ρ) (hlarge : 10 * R ≤ ρ)
@@ -179,65 +253,8 @@ private lemma cutoffError_pointwise_bound {F : Vec3 → ℝ}
       _ = 3 * cutoffSecondDerivativeConstant / ρ ^ 2 := by
         simp only [Finset.sum_const, Finset.card_univ, Fintype.card_fin]
         ring
-  have hq : |cutoffError F hρ x| ≤
-      B * (6 * cutoffGradientConstant + 3 * cutoffSecondDerivativeConstant) /
-        ρ ^ 2 := by
-    rw [cutoffError]
-    calc
-      |2 * spatialGradDot (mollifiedBallCutoff 0 hρ)
-          (pressureNewtonianPotential F) x +
-          pressureNewtonianPotential F x *
-            spatialLaplacian (mollifiedBallCutoff 0 hρ) x| ≤
-          2 * |spatialGradDot (mollifiedBallCutoff 0 hρ)
-            (pressureNewtonianPotential F) x| +
-            |pressureNewtonianPotential F x| *
-              |spatialLaplacian (mollifiedBallCutoff 0 hρ) x| := by
-        calc
-          |2 * spatialGradDot (mollifiedBallCutoff 0 hρ)
-              (pressureNewtonianPotential F) x +
-              pressureNewtonianPotential F x *
-                spatialLaplacian (mollifiedBallCutoff 0 hρ) x| ≤
-              |2 * spatialGradDot (mollifiedBallCutoff 0 hρ)
-                (pressureNewtonianPotential F) x| +
-                |pressureNewtonianPotential F x *
-                  spatialLaplacian (mollifiedBallCutoff 0 hρ) x| :=
-            abs_add_le _ _
-          _ = 2 * |spatialGradDot (mollifiedBallCutoff 0 hρ)
-                (pressureNewtonianPotential F) x| +
-                |pressureNewtonianPotential F x| *
-                  |spatialLaplacian (mollifiedBallCutoff 0 hρ) x| := by
-            rw [abs_mul, abs_mul]
-            norm_num
-      _ ≤ 2 * (3 * cutoffGradientConstant * B / ρ ^ 2) +
-          (B / ρ) * (3 * cutoffSecondDerivativeConstant / ρ ^ 2) := by
-        gcongr
-      _ ≤ B * (6 * cutoffGradientConstant + 3 * cutoffSecondDerivativeConstant) /
-          ρ ^ 2 := by
-        have hconst : 0 ≤ 6 * cutoffGradientConstant +
-            3 * cutoffSecondDerivativeConstant := by
-          positivity
-        have hρpow : ρ ^ 2 ≤ ρ ^ 3 := by
-          nlinarith only [hρone, sq_nonneg (ρ - 1)]
-        have hterm :
-            (B / ρ) * (3 * cutoffSecondDerivativeConstant / ρ ^ 2) ≤
-              3 * B * cutoffSecondDerivativeConstant / ρ ^ 2 := by
-          calc
-            (B / ρ) * (3 * cutoffSecondDerivativeConstant / ρ ^ 2) =
-                3 * B * cutoffSecondDerivativeConstant / ρ ^ 3 := by
-              field_simp [ne_of_gt hρ]
-            _ ≤ 3 * B * cutoffSecondDerivativeConstant / ρ ^ 2 := by
-              gcongr
-        calc
-          2 * (3 * cutoffGradientConstant * B / ρ ^ 2) +
-              (B / ρ) * (3 * cutoffSecondDerivativeConstant / ρ ^ 2) ≤
-              2 * (3 * cutoffGradientConstant * B / ρ ^ 2) +
-                3 * B * cutoffSecondDerivativeConstant / ρ ^ 2 :=
-            (add_le_add_right hterm
-              (2 * (3 * cutoffGradientConstant * B / ρ ^ 2))).trans_eq
-              (by ring)
-          _ = B * (6 * cutoffGradientConstant +
-              3 * cutoffSecondDerivativeConstant) / ρ ^ 2 := by
-            ring
+  have hq := @cutoffError_pointwise_bound_hq_1 F ρ hρ x htail hρone hpot0 hgradConst hsecondConst
+    hgradDot hlap
   calc
     |cutoffError F hρ x| ≤
         B * (6 * cutoffGradientConstant + 3 * cutoffSecondDerivativeConstant) /
@@ -659,7 +676,8 @@ private lemma riesz_second_l2_bound_global_ofReal {F : Vec3 → ℝ}
         (mixedSecond (pressureNewtonianPotential F) i j x) ^ 2)
         (volume.restrict K) := by
       exact ((contDiff_mixedSecond_smooth
-        (pressureNewtonianPotential_smooth hF hFc) i j).continuous.pow 2).continuousOn.integrableOn_compact
+        (pressureNewtonianPotential_smooth hF hFc) i j).continuous.pow
+          2).continuousOn.integrableOn_compact
           hKcompact
     have hwi_nn : 0 ≤ᵐ[volume.restrict K] (fun x =>
         (mixedSecond (pressureNewtonianPotential F) i j x) ^ 2) :=

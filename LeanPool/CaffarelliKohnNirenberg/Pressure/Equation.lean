@@ -29,6 +29,7 @@ noncomputable section
 
 namespace CKN
 
+/-- Space-time vector test built from a spatial gradient and a temporal scalar test. -/
 def pressureTest (ψ : Vec3 → ℝ) (θ : ℝ → ℝ) : Vec3 × ℝ → Vec3 :=
   fun z i => θ z.2 * spatialDeriv ψ i z.1
 
@@ -450,6 +451,172 @@ private theorem theta_mul_spatial_zero
   · have hxψ : z.1 ∉ tsupport ψ := fun hxψ => hx (hψΩ' hxψ)
     rw [hg z.1 hxψ, mul_zero]
 
+private lemma pressure_test_terms_integrable_hpressOn_1 :
+    ∀ {p : ParabolicPoint → ℝ} {ψ : Vec3 → ℝ},
+      ContDiff ℝ (⊤ : ℕ∞) ψ →
+        ∀ {θ : ℝ → ℝ},
+          ContDiff ℝ (⊤ : ℕ∞) θ →
+            ∀ (Ω' : Set Vec3) (J : Set ℝ),
+              let μ : Measure ParabolicPoint := Measure.restrict volume (spaceTimeSet Ω' J);
+              Integrable p μ →
+                (∀ (i j : Fin (3 : ℕ)),
+                    ∃ (C : ℝ), ∀ (z : ParabolicPoint), ‖θ z.2 * mixedSecond ψ i j z.1‖ ≤ C) →
+                  IntegrableOn (ε := ℝ) (mα := MeasureSpace.toMeasurableSpace)
+                    (fun (z : ParabolicPoint) =>
+                      p z *
+                        ∑ i : Fin (3 : ℕ),
+                          spatialPartial (fun (w : ParabolicPoint) => pressureTestParabolic ψ θ w i)
+                            i z)
+                    (spaceTimeSet Ω' J) volume
+    := by
+  intro p ψ hψ θ hθ Ω' J μ hpInt hmixBound
+  change Integrable (fun z => p z * ∑ i,
+    spatialPartial (fun w => pressureTestParabolic ψ θ w i) i z) μ
+  have hi (i : Fin 3) : Integrable
+      (fun z => p z * spatialPartial
+      (fun w => pressureTestParabolic ψ θ w i) i z) μ := by
+    have htermEq : (fun z => p z * spatialPartial
+        (fun w => pressureTestParabolic ψ θ w i) i z) =
+        (fun z => p z * (θ z.2 * mixedSecond ψ i i z.1)) := by
+      funext z
+      rw [pressureTest_spatialPartial hψ i i z]
+    rw [htermEq]
+    obtain ⟨C, hC⟩ := hmixBound i i
+    have hmeas : AEStronglyMeasurable
+        (fun z : ParabolicPoint => θ z.2 * mixedSecond ψ i i z.1) μ :=
+      ((hθ.continuous.comp continuous_snd).mul
+        ((contDiff_mixedSecond_smooth hψ i i).continuous.comp
+          continuous_fst)).measurable.aestronglyMeasurable
+    exact hpInt.mul_bdd hmeas
+      (Filter.Eventually.of_forall fun z => by
+        simpa only [Real.norm_eq_abs] using hC z)
+  have hs := integrable_finsetSum' (Finset.univ : Finset (Fin 3))
+    (fun i _ => hi i)
+  have heq : (fun z => p z * ∑ i, spatialPartial
+      (fun w => pressureTestParabolic ψ θ w i) i z) =
+      ∑ i, (fun z => p z * spatialPartial
+        (fun w => pressureTestParabolic ψ θ w i) i z) := by
+    funext z
+    simp only [Finset.sum_apply]
+    rw [Finset.mul_sum]
+  rw [heq]
+  exact hs
+
+private lemma pressure_test_terms_integrable_hconv_2 :
+    ∀ {u : ParabolicPoint → Vec3} {ψ : Vec3 → ℝ} {θ : ℝ → ℝ} (Ω' : Set Vec3) (J : Set ℝ),
+      (∀ (i j : Fin (3 : ℕ)) {z : ParabolicPoint},
+          z ∉ spaceTimeSet Ω' J →
+            spatialPartial (fun (w : ParabolicPoint) => pressureTestParabolic ψ θ w i) j z =
+              (0 : ℝ)) →
+        (∀ (i j : Fin (3 : ℕ)),
+            IntegrableOn (ε := ℝ) (mα := MeasureSpace.toMeasurableSpace)
+              (fun (z : ParabolicPoint) =>
+                u z i * u z j *
+                  spatialPartial (fun (w : ParabolicPoint) => pressureTestParabolic ψ θ w i) j z)
+              (spaceTimeSet Ω' J) volume) →
+          @Integrable ℝ _ _ _ MeasureSpace.toMeasurableSpace
+            (fun (z : ParabolicPoint) =>
+              ∑ i : Fin (3 : ℕ),
+                ∑ j : Fin (3 : ℕ),
+                  u z i * u z j *
+                    spatialPartial (fun (w : ParabolicPoint) => pressureTestParabolic ψ θ w i) j z)
+            volume
+    := by
+  intro u ψ θ Ω' J hspzero hconvOn
+  have hi (i : Fin 3) : IntegrableOn
+      (fun z => ∑ j, u z i * u z j * spatialPartial
+        (fun w => pressureTestParabolic ψ θ w i) j z)
+      (spaceTimeSet Ω' J) volume := by
+    have hj (j : Fin 3) := hconvOn i j
+    have hs := integrable_finsetSum' (Finset.univ : Finset (Fin 3))
+      (fun j _ => hj j)
+    have heq : (fun z => ∑ j, u z i * u z j * spatialPartial
+        (fun w => pressureTestParabolic ψ θ w i) j z) =
+        ∑ j, (fun z => u z i * u z j * spatialPartial
+          (fun w => pressureTestParabolic ψ θ w i) j z) := by
+      funext z
+      simp only [Finset.sum_apply]
+    rw [heq]
+    exact hs
+  have hs := integrable_finsetSum' (Finset.univ : Finset (Fin 3))
+    (fun i _ => hi i)
+  have heq : (fun z => ∑ i, ∑ j, u z i * u z j * spatialPartial
+      (fun w => pressureTestParabolic ψ θ w i) j z) =
+      ∑ i, (fun z => ∑ j, u z i * u z j * spatialPartial
+        (fun w => pressureTestParabolic ψ θ w i) j z) := by
+    funext z
+    simp only [Finset.sum_apply]
+  have hsumOn : IntegrableOn (fun z => ∑ i, ∑ j, u z i * u z j *
+      spatialPartial (fun w => pressureTestParabolic ψ θ w i) j z)
+      (spaceTimeSet Ω' J) volume := by
+    rw [heq]
+    exact hs
+  exact hsumOn.integrable_of_forall_notMem_eq_zero (by
+    intro z hz
+    refine Finset.sum_eq_zero ?_
+    intro i hi
+    refine Finset.sum_eq_zero ?_
+    intro j hj
+    rw [hspzero i j hz, mul_zero])
+
+private lemma pressure_test_terms_integrable_hvisc_3 :
+    ∀ {Du : ParabolicPoint → Fin (3 : ℕ) → Vec3} {ψ : Vec3 → ℝ} {θ : ℝ → ℝ} (Ω' : Set Vec3)
+      (J : Set ℝ),
+      (∀ (i j : Fin (3 : ℕ)) {z : ParabolicPoint},
+          z ∉ spaceTimeSet Ω' J →
+            spatialPartial (fun (w : ParabolicPoint) => pressureTestParabolic ψ θ w i) j z =
+              (0 : ℝ)) →
+        (∀ (i j : Fin (3 : ℕ)),
+            IntegrableOn (ε := ℝ) (mα := MeasureSpace.toMeasurableSpace)
+              (fun (z : ParabolicPoint) =>
+                Du z i j *
+                  spatialPartial (fun (w : ParabolicPoint) => pressureTestParabolic ψ θ w i) j z)
+              (spaceTimeSet Ω' J) volume) →
+          @Integrable ℝ _ _ _ MeasureSpace.toMeasurableSpace
+            (fun (z : ParabolicPoint) =>
+              ∑ i : Fin (3 : ℕ),
+                ∑ j : Fin (3 : ℕ),
+                  Du z i j *
+                    spatialPartial (fun (w : ParabolicPoint) => pressureTestParabolic ψ θ w i) j z)
+            volume
+    := by
+  intro Du ψ θ Ω' J hspzero hviscOn
+  have hi (i : Fin 3) : IntegrableOn
+      (fun z => ∑ j, Du z i j * spatialPartial
+        (fun w => pressureTestParabolic ψ θ w i) j z)
+      (spaceTimeSet Ω' J) volume := by
+    have hj (j : Fin 3) := hviscOn i j
+    have hs := integrable_finsetSum' (Finset.univ : Finset (Fin 3))
+      (fun j _ => hj j)
+    have heq : (fun z => ∑ j, Du z i j * spatialPartial
+        (fun w => pressureTestParabolic ψ θ w i) j z) =
+        ∑ j, (fun z => Du z i j * spatialPartial
+          (fun w => pressureTestParabolic ψ θ w i) j z) := by
+      funext z
+      simp only [Finset.sum_apply]
+    rw [heq]
+    exact hs
+  have hs := integrable_finsetSum' (Finset.univ : Finset (Fin 3))
+    (fun i _ => hi i)
+  have heq : (fun z => ∑ i, ∑ j, Du z i j * spatialPartial
+      (fun w => pressureTestParabolic ψ θ w i) j z) =
+      ∑ i, (fun z => ∑ j, Du z i j * spatialPartial
+        (fun w => pressureTestParabolic ψ θ w i) j z) := by
+    funext z
+    simp only [Finset.sum_apply]
+  have hsumOn : IntegrableOn (fun z => ∑ i, ∑ j, Du z i j * spatialPartial
+      (fun w => pressureTestParabolic ψ θ w i) j z)
+      (spaceTimeSet Ω' J) volume := by
+    rw [heq]
+    exact hs
+  exact hsumOn.integrable_of_forall_notMem_eq_zero (by
+    intro z hz
+    refine Finset.sum_eq_zero ?_
+    intro i hi
+    refine Finset.sum_eq_zero ?_
+    intro j hj
+    rw [hspzero i j hz, mul_zero])
+
 /-- The four spatial terms generated by a separated test field are integrable. -/
 theorem pressure_test_terms_integrable
     {Ω : Set Vec3} {I : Set ℝ} {q : ℝ}
@@ -475,7 +642,7 @@ theorem pressure_test_terms_integrable
   have hbox : localBox Ω I Ω' J :=
     ⟨hΩ'open, hΩ'compact, hΩ'Ω, hJord, hJcompact, hJI⟩
   let μ : Measure ParabolicPoint := volume.restrict (spaceTimeSet Ω' J)
-  haveI : IsFiniteMeasure μ := local_restrict_isFiniteMeasure hΩ'compact hJcompact
+  have : IsFiniteMeasure μ := local_restrict_isFiniteMeasure hΩ'compact hJcompact
   obtain ⟨hu, hDu, _hpmeas, _hfmeas, _hsup, henergy, hp, hf, _hgrad⟩ :=
     hdata Ω' J hbox
   have hLp := local_memLp_two_of_energy (hU := hu) (hD := hDu) henergy
@@ -544,7 +711,8 @@ theorem pressure_test_terms_integrable
     have hmeas : AEStronglyMeasurable
         (fun z : ParabolicPoint => θ z.2 * mixedSecond ψ j i z.1) μ :=
       ((hθ.continuous.comp continuous_snd).mul
-        ((contDiff_mixedSecond_smooth hψ j i).continuous.comp continuous_fst)).measurable.aestronglyMeasurable
+        ((contDiff_mixedSecond_smooth hψ j i).continuous.comp
+          continuous_fst)).measurable.aestronglyMeasurable
     exact ((huComp i).integrable_mul (huComp j)).mul_bdd hmeas
       (Filter.Eventually.of_forall fun z => by simpa only [Real.norm_eq_abs] using hC z)
   have hviscOn (i j : Fin 3) : IntegrableOn
@@ -563,43 +731,11 @@ theorem pressure_test_terms_integrable
     have hmeas : AEStronglyMeasurable
         (fun z : ParabolicPoint => θ z.2 * mixedSecond ψ j i z.1) μ :=
       ((hθ.continuous.comp continuous_snd).mul
-        ((contDiff_mixedSecond_smooth hψ j i).continuous.comp continuous_fst)).measurable.aestronglyMeasurable
+        ((contDiff_mixedSecond_smooth hψ j i).continuous.comp
+          continuous_fst)).measurable.aestronglyMeasurable
     exact (hDuComp i j).integrable (by norm_num) |>.mul_bdd hmeas
       (Filter.Eventually.of_forall fun z => by simpa only [Real.norm_eq_abs] using hC z)
-  have hpressOn : IntegrableOn
-      (fun z => p z * ∑ i, spatialPartial
-        (fun w => pressureTestParabolic ψ θ w i) i z)
-      (spaceTimeSet Ω' J) volume := by
-    change Integrable (fun z => p z * ∑ i,
-      spatialPartial (fun w => pressureTestParabolic ψ θ w i) i z) μ
-    have hi (i : Fin 3) : Integrable
-        (fun z => p z * spatialPartial
-        (fun w => pressureTestParabolic ψ θ w i) i z) μ := by
-      have htermEq : (fun z => p z * spatialPartial
-          (fun w => pressureTestParabolic ψ θ w i) i z) =
-          (fun z => p z * (θ z.2 * mixedSecond ψ i i z.1)) := by
-        funext z
-        rw [pressureTest_spatialPartial hψ i i z]
-      rw [htermEq]
-      obtain ⟨C, hC⟩ := hmixBound i i
-      have hmeas : AEStronglyMeasurable
-          (fun z : ParabolicPoint => θ z.2 * mixedSecond ψ i i z.1) μ :=
-        ((hθ.continuous.comp continuous_snd).mul
-          ((contDiff_mixedSecond_smooth hψ i i).continuous.comp continuous_fst)).measurable.aestronglyMeasurable
-      exact hpInt.mul_bdd hmeas
-        (Filter.Eventually.of_forall fun z => by
-          simpa only [Real.norm_eq_abs] using hC z)
-    have hs := integrable_finsetSum' (Finset.univ : Finset (Fin 3))
-      (fun i _ => hi i)
-    have heq : (fun z => p z * ∑ i, spatialPartial
-        (fun w => pressureTestParabolic ψ θ w i) i z) =
-        ∑ i, (fun z => p z * spatialPartial
-          (fun w => pressureTestParabolic ψ θ w i) i z) := by
-      funext z
-      simp only [Finset.sum_apply]
-      rw [Finset.mul_sum]
-    rw [heq]
-    exact hs
+  have hpressOn := @pressure_test_terms_integrable_hpressOn_1 p ψ hψ θ hθ Ω' J hpInt hmixBound
   have hforceOn (i : Fin 3) : IntegrableOn
       (fun z => f z i * pressureTestParabolic ψ θ z i)
       (spaceTimeSet Ω' J) volume := by
@@ -608,86 +744,13 @@ theorem pressure_test_terms_integrable
     have hmeas : AEStronglyMeasurable
         (fun z : ParabolicPoint => θ z.2 * spatialDeriv ψ i z.1) μ :=
       ((hθ.continuous.comp continuous_snd).mul
-        ((contDiff_spatialDeriv_smooth hψ i).continuous.comp continuous_fst)).measurable.aestronglyMeasurable
+        ((contDiff_spatialDeriv_smooth hψ i).continuous.comp
+          continuous_fst)).measurable.aestronglyMeasurable
     exact ((hfComp i).integrable hqE).mul_bdd hmeas
       (Filter.Eventually.of_forall fun z => by
         simpa only [Real.norm_eq_abs] using hC z)
-  have hconv : Integrable
-      (fun z => ∑ i, ∑ j, u z i * u z j * spatialPartial
-        (fun w => pressureTestParabolic ψ θ w i) j z) volume := by
-    have hi (i : Fin 3) : IntegrableOn
-        (fun z => ∑ j, u z i * u z j * spatialPartial
-          (fun w => pressureTestParabolic ψ θ w i) j z)
-        (spaceTimeSet Ω' J) volume := by
-      have hj (j : Fin 3) := hconvOn i j
-      have hs := integrable_finsetSum' (Finset.univ : Finset (Fin 3))
-        (fun j _ => hj j)
-      have heq : (fun z => ∑ j, u z i * u z j * spatialPartial
-          (fun w => pressureTestParabolic ψ θ w i) j z) =
-          ∑ j, (fun z => u z i * u z j * spatialPartial
-            (fun w => pressureTestParabolic ψ θ w i) j z) := by
-        funext z
-        simp only [Finset.sum_apply]
-      rw [heq]
-      exact hs
-    have hs := integrable_finsetSum' (Finset.univ : Finset (Fin 3))
-      (fun i _ => hi i)
-    have heq : (fun z => ∑ i, ∑ j, u z i * u z j * spatialPartial
-        (fun w => pressureTestParabolic ψ θ w i) j z) =
-        ∑ i, (fun z => ∑ j, u z i * u z j * spatialPartial
-          (fun w => pressureTestParabolic ψ θ w i) j z) := by
-      funext z
-      simp only [Finset.sum_apply]
-    have hsumOn : IntegrableOn (fun z => ∑ i, ∑ j, u z i * u z j *
-        spatialPartial (fun w => pressureTestParabolic ψ θ w i) j z)
-        (spaceTimeSet Ω' J) volume := by
-      rw [heq]
-      exact hs
-    exact hsumOn.integrable_of_forall_notMem_eq_zero (by
-      intro z hz
-      refine Finset.sum_eq_zero ?_
-      intro i hi
-      refine Finset.sum_eq_zero ?_
-      intro j hj
-      rw [hspzero i j hz, mul_zero])
-  have hvisc : Integrable
-      (fun z => ∑ i, ∑ j, Du z i j * spatialPartial
-        (fun w => pressureTestParabolic ψ θ w i) j z) volume := by
-    have hi (i : Fin 3) : IntegrableOn
-        (fun z => ∑ j, Du z i j * spatialPartial
-          (fun w => pressureTestParabolic ψ θ w i) j z)
-        (spaceTimeSet Ω' J) volume := by
-      have hj (j : Fin 3) := hviscOn i j
-      have hs := integrable_finsetSum' (Finset.univ : Finset (Fin 3))
-        (fun j _ => hj j)
-      have heq : (fun z => ∑ j, Du z i j * spatialPartial
-          (fun w => pressureTestParabolic ψ θ w i) j z) =
-          ∑ j, (fun z => Du z i j * spatialPartial
-            (fun w => pressureTestParabolic ψ θ w i) j z) := by
-        funext z
-        simp only [Finset.sum_apply]
-      rw [heq]
-      exact hs
-    have hs := integrable_finsetSum' (Finset.univ : Finset (Fin 3))
-      (fun i _ => hi i)
-    have heq : (fun z => ∑ i, ∑ j, Du z i j * spatialPartial
-        (fun w => pressureTestParabolic ψ θ w i) j z) =
-        ∑ i, (fun z => ∑ j, Du z i j * spatialPartial
-          (fun w => pressureTestParabolic ψ θ w i) j z) := by
-      funext z
-      simp only [Finset.sum_apply]
-    have hsumOn : IntegrableOn (fun z => ∑ i, ∑ j, Du z i j * spatialPartial
-        (fun w => pressureTestParabolic ψ θ w i) j z)
-        (spaceTimeSet Ω' J) volume := by
-      rw [heq]
-      exact hs
-    exact hsumOn.integrable_of_forall_notMem_eq_zero (by
-      intro z hz
-      refine Finset.sum_eq_zero ?_
-      intro i hi
-      refine Finset.sum_eq_zero ?_
-      intro j hj
-      rw [hspzero i j hz, mul_zero])
+  have hconv := @pressure_test_terms_integrable_hconv_2 u ψ θ Ω' J hspzero hconvOn
+  have hvisc := @pressure_test_terms_integrable_hvisc_3 Du ψ θ Ω' J hspzero hviscOn
   have hpress : Integrable
       (fun z => p z * ∑ i, spatialPartial
         (fun w => pressureTestParabolic ψ θ w i) i z) volume := by

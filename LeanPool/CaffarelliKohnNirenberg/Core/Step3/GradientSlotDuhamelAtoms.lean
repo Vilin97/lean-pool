@@ -97,7 +97,7 @@ theorem gradientSlot_tested_integrable_of_sws
   rcases hφ with ⟨hφd, hφc, _hφΩ⟩
   rcases hψ with ⟨hψd, _hψc, _hψΩ⟩
   let μ : Measure ParabolicPoint := volume.restrict (spaceTimeSet Ω' J)
-  haveI : IsFiniteMeasure μ :=
+  have : IsFiniteMeasure μ :=
     local_box_isFiniteMeasure hbox.2.1 hbox.2.2.2.2.1
   obtain ⟨hu, hDu, _hpmeas, _hfmeas, _hEssSup, henergy, hp, hf, _hgrad⟩ :=
     hdata Ω' J hbox

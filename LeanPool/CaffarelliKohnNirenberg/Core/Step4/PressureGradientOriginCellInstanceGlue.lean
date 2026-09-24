@@ -42,12 +42,14 @@ theorem originUnitBall_subset_of_dom {Ω : Set Vec3} {I : Set ℝ}
   rw [closure_parabolicCylinder (by norm_num : (0:ℝ) < 1)] at hdom
   constructor
   · intro y hy
-    have : ((y, (0:ℝ)) : ParabolicPoint) ∈ ({y : Vec3 | vec3EuclideanNorm (y - 0) ≤ 1} ×ˢ Icc ((0:ℝ) - 1 ^ 2) 0) := by
+    have : ((y, (0:ℝ)) : ParabolicPoint) ∈ ({y : Vec3 | vec3EuclideanNorm (y - 0) ≤ 1} ×ˢ Icc
+      ((0:ℝ) - 1 ^ 2) 0) := by
       refine ⟨hy, ?_⟩
       constructor <;> norm_num
     exact (hdom this).1
   · intro t ht
-    have : (((0 : Vec3), t) : ParabolicPoint) ∈ ({y : Vec3 | vec3EuclideanNorm (y - 0) ≤ 1} ×ˢ Icc ((0:ℝ) - 1 ^ 2) 0) := by
+    have : (((0 : Vec3), t) : ParabolicPoint) ∈ ({y : Vec3 | vec3EuclideanNorm (y - 0) ≤ 1} ×ˢ Icc
+      ((0:ℝ) - 1 ^ 2) 0) := by
       refine ⟨by simp [vec3EuclideanNorm_zero], ?_⟩
       constructor
       · have := ht.1; norm_num; linarith only [this]

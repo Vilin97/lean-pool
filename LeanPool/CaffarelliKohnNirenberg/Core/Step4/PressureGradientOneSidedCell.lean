@@ -25,10 +25,12 @@ noncomputable section
 
 namespace CKN.Core.Step4
 
+/-- Origin used for the normalized pressure-gradient estimate. -/
 def oneSidedPressureGradientOrigin : ParabolicPoint := ((0 : Vec3), 0)
 
 /-! The cell is carried by the inner half of a symmetric parabolic ball. -/
 
+/-- Componentwise Morrey-cell bound for the gradient restricted to a smaller parabolic ball. -/
 def oneSidedPressureGradientCellOutput
     (z₀ : ParabolicPoint) (R κ : ℝ) (KP : ℝ≥0∞)
     (Dp : ParabolicPoint → Vec3) : Prop :=
@@ -48,6 +50,7 @@ of `eq:pressure-gradient-morrey` with the indicator of that backward
 cylinder; the Morrey seminorm is recovered as the supremum of the cells.
 -/
 
+/-- Componentwise Morrey-cell bound for the gradient restricted to the normalized cylinder. -/
 def oneSidedPressureGradientOriginCellOutput
     (R₁ κ : ℝ) (KP : ℝ≥0∞) (Dp : ParabolicPoint → Vec3) : Prop :=
   ∀ i : Fin 3, ∀ z : ParabolicPoint, ∀ r : {r : ℝ // 0 < r},

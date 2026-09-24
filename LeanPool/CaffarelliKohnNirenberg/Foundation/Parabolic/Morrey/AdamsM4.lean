@@ -129,6 +129,96 @@ private theorem test_cylinder_integral_le
     ENNReal.rpow_ne_top_of_nonneg (lt_trans zero_lt_one hP).le hNtop
   exact hUint.trans hcy
 
+private lemma maximal_morrey_hfarint_1 :
+    ∀ {P τ : ℝ},
+      1 < P →
+        P ≤ τ →
+          ∀ {f : ParabolicPoint → ℝ},
+            Morrey.morreyNorm P τ f ≠ ∞ →
+              ∀ {z₀ : ParabolicPoint} {r : ℝ},
+                0 < r →
+                  let F : ParabolicPoint → ℝ≥0∞ := fun w => ENNReal.ofReal |f w|;
+                  let c : ParabolicPoint := (z₀.1, z₀.2 - r ^ 2 / 2);
+                  let U : Set ParabolicPoint := Metric.ball c (4 * r);
+                  let F₂ : ParabolicPoint → ℝ≥0∞ := Uᶜ.indicator F;
+                  let N : ℝ≥0∞ := Morrey.morreyNorm P τ f;
+                  let V : ℝ≥0∞ := volume (parabolicCylinder 0 0 1);
+                  let e : ℝ := 5 * (1 - P / τ);
+                  let K : ℝ≥0∞ := ENNReal.ofReal 2 ^ (5 * (1 - 1 / τ)) / V * V ^ (1 - 1 / P);
+                  0 < P →
+                    0 < τ →
+                      MeasurableSet (parabolicCylinder z₀.1 z₀.2 r) →
+                        (∀ w ∈ parabolicCylinder z₀.1 z₀.2 r,
+                            parabolicMaximalFunction F₂ w ≤
+                              K * ENNReal.ofReal r ^ (-(5 / τ)) * N) →
+                          ∫⁻ (w : ParabolicPoint) in parabolicCylinder z₀.1 z₀.2 r,
+                              parabolicMaximalFunction F₂ w ^ P ≤
+                            V * K ^ P * ENNReal.ofReal r ^ e * N ^ P
+    := by
+  intro P τ hP hPτ f hNtop z₀ r hr F c U F₂ N V e K hP0 hτ0 hQmeas hfar
+  let B : ℝ≥0∞ := K * ENNReal.ofReal r ^ (-(5 / τ)) * N
+  have hB : ∀ᵐ w ∂volume.restrict (parabolicCylinder z₀.1 z₀.2 r),
+      parabolicMaximalFunction F₂ w ^ P ≤ B ^ P := by
+    filter_upwards [ae_restrict_mem
+      hQmeas] with w hw
+    exact ENNReal.rpow_le_rpow (hfar w hw) (by positivity)
+  calc
+    _ ≤ ∫⁻ w in parabolicCylinder z₀.1 z₀.2 r, B ^ P :=
+      lintegral_mono_ae hB
+    _ = B ^ P * volume (parabolicCylinder z₀.1 z₀.2 r) := by
+      rw [setLIntegral_const]
+    _ = V * K ^ P * ENNReal.ofReal r ^ e * N ^ P := by
+      have hV0 : V ≠ 0 := by
+        dsimp [V]
+        exact (Integration.volume_parabolicCylinder_pos (by norm_num)).ne'
+      have hVtop : V ≠ ∞ := by
+        dsimp [V]
+        exact Integration.volume_parabolicCylinder_lt_top.ne
+      have hKtop : K ≠ ∞ := by
+        dsimp [K]
+        have hPpow : 0 ≤ 1 - 1 / P := by
+          exact sub_nonneg.mpr ((div_le_one hP0).2 hP.le)
+        have hτpow : 0 ≤ 5 * (1 - 1 / τ) := by
+          exact mul_nonneg (by norm_num)
+            (sub_nonneg.mpr ((div_le_one hτ0).2 (hP.le.trans hPτ)))
+        apply ENNReal.mul_ne_top
+        · exact ENNReal.div_ne_top
+            (ENNReal.rpow_ne_top_of_nonneg hτpow ENNReal.ofReal_ne_top)
+            hV0
+        · exact ENNReal.rpow_ne_top_of_nonneg hPpow hVtop
+      have hAtop : ENNReal.ofReal r ≠ ∞ := ENNReal.ofReal_ne_top
+      have hA0 : ENNReal.ofReal r ≠ 0 :=
+        (ENNReal.ofReal_pos.mpr hr).ne'
+      have hAnegTop : ENNReal.ofReal r ^ (-(5 / τ)) ≠ ∞ :=
+        ENNReal.rpow_ne_top_of_ne_zero hA0 hAtop
+      have hBpow : B ^ P = K ^ P *
+          (ENNReal.ofReal r ^ (-(5 / τ))) ^ P * N ^ P := by
+        dsimp [B, N]
+        rw [ENNReal.mul_rpow_of_ne_top
+          (ENNReal.mul_ne_top hKtop
+            hAnegTop) hNtop]
+        rw [ENNReal.mul_rpow_of_ne_top hKtop hAnegTop]
+      have hQvol := test_volume_parabolicCylinder_eq_unit (z := z₀) hr
+      have hQvol' : volume (parabolicCylinder z₀.1 z₀.2 r) =
+          V * ENNReal.ofReal r ^ (5 : ℝ) := by
+        rw [hQvol, ENNReal.ofReal_pow hr.le, ← ENNReal.rpow_natCast]
+        ac_rfl
+      rw [hBpow, hQvol']
+      rw [← ENNReal.rpow_mul]
+      have hexp : (-(5 / τ)) * P + 5 = e := by
+        dsimp [e]
+        field_simp [hτ0.ne']
+        ring_nf
+      calc
+        K ^ P * ENNReal.ofReal r ^ (-(5 / τ) * P) * N ^ P *
+            (V * ENNReal.ofReal r ^ (5 : ℝ)) =
+            V * K ^ P * N ^ P *
+              (ENNReal.ofReal r ^ (-(5 / τ) * P) *
+                ENNReal.ofReal r ^ (5 : ℝ)) := by ac_rfl
+        _ = V * K ^ P * N ^ P * ENNReal.ofReal r ^ e := by
+          rw [← ENNReal.rpow_add _ _ hA0 hAtop, hexp]
+        _ = V * K ^ P * ENNReal.ofReal r ^ e * N ^ P := by ac_rfl
+
 private theorem test_setLIntegral_rpow_parabolicMaximalFunction_morrey_le
     {P τ : ℝ} (hP : 1 < P) (hPτ : P ≤ τ) {f : ParabolicPoint → ℝ}
     (hf : Measurable f) (hNtop : morreyNorm P τ f ≠ ∞)
@@ -254,72 +344,7 @@ private theorem test_setLIntegral_rpow_parabolicMaximalFunction_morrey_le
         exact mul_le_mul_right hUbound _
       _ = parabolicMaximalStrongConstant P *
           (ENNReal.ofReal (8 * r)) ^ e * N ^ P := by ac_rfl
-  have hfarint :
-      (∫⁻ w in parabolicCylinder z₀.1 z₀.2 r,
-          parabolicMaximalFunction F₂ w ^ P) ≤
-        V * K ^ P * ENNReal.ofReal r ^ e * N ^ P := by
-    let B : ℝ≥0∞ := K * ENNReal.ofReal r ^ (-(5 / τ)) * N
-    have hB : ∀ᵐ w ∂volume.restrict (parabolicCylinder z₀.1 z₀.2 r),
-        parabolicMaximalFunction F₂ w ^ P ≤ B ^ P := by
-      filter_upwards [ae_restrict_mem
-        hQmeas] with w hw
-      exact ENNReal.rpow_le_rpow (hfar w hw) (by positivity)
-    calc
-      _ ≤ ∫⁻ w in parabolicCylinder z₀.1 z₀.2 r, B ^ P :=
-        lintegral_mono_ae hB
-      _ = B ^ P * volume (parabolicCylinder z₀.1 z₀.2 r) := by
-        rw [setLIntegral_const]
-      _ = V * K ^ P * ENNReal.ofReal r ^ e * N ^ P := by
-        have hV0 : V ≠ 0 := by
-          dsimp [V]
-          exact (Integration.volume_parabolicCylinder_pos (by norm_num)).ne'
-        have hVtop : V ≠ ∞ := by
-          dsimp [V]
-          exact Integration.volume_parabolicCylinder_lt_top.ne
-        have hKtop : K ≠ ∞ := by
-          dsimp [K]
-          have hPpow : 0 ≤ 1 - 1 / P := by
-            exact sub_nonneg.mpr ((div_le_one hP0).2 hP.le)
-          have hτpow : 0 ≤ 5 * (1 - 1 / τ) := by
-            exact mul_nonneg (by norm_num)
-              (sub_nonneg.mpr ((div_le_one hτ0).2 (hP.le.trans hPτ)))
-          apply ENNReal.mul_ne_top
-          · exact ENNReal.div_ne_top
-              (ENNReal.rpow_ne_top_of_nonneg hτpow ENNReal.ofReal_ne_top)
-              hV0
-          · exact ENNReal.rpow_ne_top_of_nonneg hPpow hVtop
-        have hAtop : ENNReal.ofReal r ≠ ∞ := ENNReal.ofReal_ne_top
-        have hA0 : ENNReal.ofReal r ≠ 0 :=
-          (ENNReal.ofReal_pos.mpr hr).ne'
-        have hAnegTop : ENNReal.ofReal r ^ (-(5 / τ)) ≠ ∞ :=
-          ENNReal.rpow_ne_top_of_ne_zero hA0 hAtop
-        have hBpow : B ^ P = K ^ P *
-            (ENNReal.ofReal r ^ (-(5 / τ))) ^ P * N ^ P := by
-          dsimp [B, N]
-          rw [ENNReal.mul_rpow_of_ne_top
-            (ENNReal.mul_ne_top hKtop
-              hAnegTop) hNtop]
-          rw [ENNReal.mul_rpow_of_ne_top hKtop hAnegTop]
-        have hQvol := test_volume_parabolicCylinder_eq_unit (z := z₀) hr
-        have hQvol' : volume (parabolicCylinder z₀.1 z₀.2 r) =
-            V * ENNReal.ofReal r ^ (5 : ℝ) := by
-          rw [hQvol, ENNReal.ofReal_pow hr.le, ← ENNReal.rpow_natCast]
-          ac_rfl
-        rw [hBpow, hQvol']
-        rw [← ENNReal.rpow_mul]
-        have hexp : (-(5 / τ)) * P + 5 = e := by
-          dsimp [e]
-          field_simp [hτ0.ne']
-          ring_nf
-        calc
-          K ^ P * ENNReal.ofReal r ^ (-(5 / τ) * P) * N ^ P *
-              (V * ENNReal.ofReal r ^ (5 : ℝ)) =
-              V * K ^ P * N ^ P *
-                (ENNReal.ofReal r ^ (-(5 / τ) * P) *
-                  ENNReal.ofReal r ^ (5 : ℝ)) := by ac_rfl
-          _ = V * K ^ P * N ^ P * ENNReal.ofReal r ^ e := by
-            rw [← ENNReal.rpow_add _ _ hA0 hAtop, hexp]
-          _ = V * K ^ P * ENNReal.ofReal r ^ e * N ^ P := by ac_rfl
+  have hfarint := @maximal_morrey_hfarint_1 P τ hP hPτ f hNtop z₀ r hr hP0 hτ0 hQmeas hfar
   have h8scale : ENNReal.ofReal (8 * r) ^ e =
       ENNReal.ofReal (8 : ℝ) ^ e * ENNReal.ofReal r ^ e := by
     rw [ENNReal.ofReal_mul (by norm_num),
@@ -341,6 +366,80 @@ private theorem test_setLIntegral_rpow_parabolicMaximalFunction_morrey_le
       dsimp [parabolicAdamsMaximalConstant, K, e, V]
       rw [mul_add]
       ring
+
+private lemma parabolicRieszPotential_adams_finite_hIint_1 :
+    ∀ {P τ β : ℝ},
+      1 < P →
+        P ≤ τ →
+          ∀ {f : ParabolicPoint → ℝ},
+            Measurable f →
+              Morrey.morreyNorm P τ f ≠ 0 →
+                Morrey.morreyNorm P τ f ≠ ∞ →
+                  let theta : ℝ := β * τ / 5;
+                  let lam : ℝ := 1 - theta;
+                  let s : ℝ := P / lam;
+                  let N : ℝ≥0∞ := Morrey.morreyNorm P τ f;
+                  let D : ℝ≥0∞ :=
+                    HPow.hPow (α := ℝ≥0∞) (volume (parabolicCylinder 0 0 1) : ℝ≥0∞) (1 - 1 / P);
+                  let C₀ : ℝ≥0∞ :=
+                    (Morrey.parabolicHedbergNearConstant β +
+                        Morrey.parabolicTailKernelConstant β τ) *
+                      D ^ theta;
+                  let M : ParabolicPoint → ℝ≥0∞ :=
+                    parabolicMaximalFunction fun w => ENNReal.ofReal |f w|;
+                  let I : ParabolicPoint → ℝ≥0∞ := fun w => Morrey.parabolicRieszPotential β f w;
+                  theta * s + P = s →
+                    C₀ ^ s * N ^ (theta * s) ≠ ∞ →
+                      (∀ (w : ParabolicPoint), I w ^ s ≤ C₀ ^ s * M w ^ P * N ^ (theta * s)) →
+                        ∀ {z : ParabolicPoint} {r : ℝ},
+                          0 < r →
+                            ∫⁻ (w : ParabolicPoint) in parabolicCylinder z.1 z.2 r, I w ^ s ≤
+                              C₀ ^ s * Morrey.parabolicAdamsMaximalConstant P τ *
+                                  ENNReal.ofReal r ^ (5 * (1 - P / τ)) *
+                                N ^ s
+    := by
+  intro P τ β hP hPτ f hf hN0 hNtop theta lam s N D C₀ M I htheta_s hfacTop hpoint z r hr
+  have hQmeas : MeasurableSet (parabolicCylinder z.1 z.2 r) := by
+    rw [parabolicCylinder]
+    exact (vec3Ball_measurable z.1 r).prod measurableSet_Ioc
+  have hMlocal := test_setLIntegral_rpow_parabolicMaximalFunction_morrey_le
+    hP hPτ hf hNtop (z₀ := z) (r := r) hr
+  have hmono :
+      (∫⁻ w in parabolicCylinder z.1 z.2 r, I w ^ s) ≤
+        ∫⁻ w in parabolicCylinder z.1 z.2 r,
+          C₀ ^ s * M w ^ P * N ^ (theta * s) := by
+    apply lintegral_mono_ae
+    filter_upwards [ae_restrict_mem hQmeas] with w hw
+    exact hpoint w
+  calc
+    _ ≤ ∫⁻ w in parabolicCylinder z.1 z.2 r,
+        (C₀ ^ s * N ^ (theta * s)) * M w ^ P := by
+      exact hmono.trans_eq (by
+        apply congrArg
+        funext w
+        ac_rfl)
+    _ = (C₀ ^ s * N ^ (theta * s)) *
+        ∫⁻ w in parabolicCylinder z.1 z.2 r, M w ^ P := by
+      rw [lintegral_const_mul' _ _ hfacTop]
+    _ ≤ (C₀ ^ s * N ^ (theta * s)) *
+        (parabolicAdamsMaximalConstant P τ *
+          ENNReal.ofReal r ^ (5 * (1 - P / τ)) * N ^ P) := by
+      gcongr
+    _ = (C₀ ^ s * parabolicAdamsMaximalConstant P τ) *
+        ENNReal.ofReal r ^ (5 * (1 - P / τ)) * N ^ s := by
+      have hNcombine : N ^ (theta * s) * N ^ P = N ^ s := by
+        rw [← ENNReal.rpow_add _ _ (by simpa [N] using hN0) hNtop,
+          htheta_s]
+      calc
+        C₀ ^ s * N ^ (theta * s) *
+            (parabolicAdamsMaximalConstant P τ *
+              ENNReal.ofReal r ^ (5 * (1 - P / τ)) * N ^ P) =
+            C₀ ^ s * parabolicAdamsMaximalConstant P τ *
+              ENNReal.ofReal r ^ (5 * (1 - P / τ)) *
+              (N ^ (theta * s) * N ^ P) := by ac_rfl
+        _ = C₀ ^ s * parabolicAdamsMaximalConstant P τ *
+              ENNReal.ofReal r ^ (5 * (1 - P / τ)) * N ^ s := by
+          rw [hNcombine]
 
 private theorem parabolicRieszPotential_adams_finite
     {P τ β : ℝ} (hP : 1 < P) (hPτ : P ≤ τ) (hβ : 0 < β)
@@ -456,48 +555,8 @@ private theorem parabolicRieszPotential_adams_finite
       (∫⁻ w in parabolicCylinder z.1 z.2 r, I w ^ s) ≤
         (C₀ ^ s * parabolicAdamsMaximalConstant P τ) *
           ENNReal.ofReal r ^ (5 * (1 - P / τ)) * N ^ s := by
-    intro z r hr
-    have hQmeas : MeasurableSet (parabolicCylinder z.1 z.2 r) := by
-      rw [parabolicCylinder]
-      exact (vec3Ball_measurable z.1 r).prod measurableSet_Ioc
-    have hMlocal := test_setLIntegral_rpow_parabolicMaximalFunction_morrey_le
-      hP hPτ hf hNtop (z₀ := z) (r := r) hr
-    have hmono :
-        (∫⁻ w in parabolicCylinder z.1 z.2 r, I w ^ s) ≤
-          ∫⁻ w in parabolicCylinder z.1 z.2 r,
-            C₀ ^ s * M w ^ P * N ^ (theta * s) := by
-      apply lintegral_mono_ae
-      filter_upwards [ae_restrict_mem hQmeas] with w hw
-      exact hpoint w
-    calc
-      _ ≤ ∫⁻ w in parabolicCylinder z.1 z.2 r,
-          (C₀ ^ s * N ^ (theta * s)) * M w ^ P := by
-        exact hmono.trans_eq (by
-          apply congrArg
-          funext w
-          ac_rfl)
-      _ = (C₀ ^ s * N ^ (theta * s)) *
-          ∫⁻ w in parabolicCylinder z.1 z.2 r, M w ^ P := by
-        rw [lintegral_const_mul' _ _ hfacTop]
-      _ ≤ (C₀ ^ s * N ^ (theta * s)) *
-          (parabolicAdamsMaximalConstant P τ *
-            ENNReal.ofReal r ^ (5 * (1 - P / τ)) * N ^ P) := by
-        gcongr
-      _ = (C₀ ^ s * parabolicAdamsMaximalConstant P τ) *
-          ENNReal.ofReal r ^ (5 * (1 - P / τ)) * N ^ s := by
-        have hNcombine : N ^ (theta * s) * N ^ P = N ^ s := by
-          rw [← ENNReal.rpow_add _ _ (by simpa [N] using hN0) hNtop,
-            htheta_s]
-        calc
-          C₀ ^ s * N ^ (theta * s) *
-              (parabolicAdamsMaximalConstant P τ *
-                ENNReal.ofReal r ^ (5 * (1 - P / τ)) * N ^ P) =
-              C₀ ^ s * parabolicAdamsMaximalConstant P τ *
-                ENNReal.ofReal r ^ (5 * (1 - P / τ)) *
-                (N ^ (theta * s) * N ^ P) := by ac_rfl
-          _ = C₀ ^ s * parabolicAdamsMaximalConstant P τ *
-                ENNReal.ofReal r ^ (5 * (1 - P / τ)) * N ^ s := by
-            rw [hNcombine]
+    exact @parabolicRieszPotential_adams_finite_hIint_1 P τ β hP hPτ f hf hN0 hNtop htheta_s
+      hfacTop hpoint
   unfold morreyNorm
   refine iSup_le fun z ↦ iSup_le fun r ↦ ?_
   have hcell := morreyCell_toReal_le_lintegral_rpow
@@ -682,8 +741,7 @@ theorem parabolicRieszPotential_adams
       constructor
       · exact ENNReal.mul_ne_top hstrongtop
           (ENNReal.rpow_ne_top_of_nonneg he ENNReal.ofReal_ne_top)
-      ·
-        have hkexp : 0 ≤ 5 * (1 - 1 / τ) := by
+      · have hkexp : 0 ≤ 5 * (1 - 1 / τ) := by
           exact mul_nonneg (by norm_num)
             (sub_nonneg.mpr ((div_le_one hτ0).2 hτ1.le))
         have hV0 : volume (parabolicCylinder 0 0 1) ≠ 0 := hVpos.ne'

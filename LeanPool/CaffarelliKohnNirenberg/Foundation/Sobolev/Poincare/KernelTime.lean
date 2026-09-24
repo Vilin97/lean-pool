@@ -222,8 +222,7 @@ private theorem intervalIntegrable_inv_pow_if_le_mul
       MeasureTheory.volume 0 1 := by
   rw [intervalIntegrable_iff_integrableOn_Ioc_of_le zero_le_one]
   by_cases hρ_zero : ρ = 0
-  · simpa [hρ_zero] using
-      (MeasureTheory.integrableOn_const (s := Set.Ioc (0 : ℝ) 1) (C := (0 : ℝ)))
+  · simp [hρ_zero]
   · have hρ_pos : 0 < ρ := lt_of_le_of_ne hρ (by simpa [eq_comm] using hρ_zero)
     by_cases hρ_ltR : ρ < R
     · let a : ℝ := 1 - ρ / R
@@ -310,7 +309,7 @@ private theorem intervalIntegrable_inv_pow_if_le_mul
         constructor
         · intro ht
           rcases ht with ht | ht
-          exact ⟨ht.1, le_trans ht.2 ha_le_one⟩
+          on_goal 1 => exact ⟨ht.1, le_trans ht.2 ha_le_one⟩
           exact ⟨lt_of_le_of_lt ha_nonneg ht.1, ht.2⟩
         · intro ht
           by_cases hta : t ≤ a

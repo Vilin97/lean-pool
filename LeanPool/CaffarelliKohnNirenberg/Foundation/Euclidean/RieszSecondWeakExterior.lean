@@ -114,8 +114,7 @@ theorem rieszSecond_exterior_operator_bad_bridge
       {A U : Set Vec3}, IsOpen U → (∀ y ∉ A, b y = 0)
       → Bornology.IsBounded A → {δ : ℝ} → 0 < δ
       → (∀ x ∈ U, ∀ y ∈ A, δ ≤ vec3EuclideanNorm (x - y))
-      → rieszSecondL2MeasurableOperator hL2 (MemLp.toLp b hb₂) =ᵐ[
-          volume.restrict U]
+      → rieszSecondL2MeasurableOperator hL2 (MemLp.toLp b hb₂) =ᵐ[volume.restrict U]
         (fun x => ∫ y, rieszSecondPressureKernel i j (x - y) * b y))
     (hkernelBridge : ∀ Q : {Q // Q ∈ D.cubes},
       (∫⁻ x in (rieszSecondCubeStar Q.1)ᶜ,

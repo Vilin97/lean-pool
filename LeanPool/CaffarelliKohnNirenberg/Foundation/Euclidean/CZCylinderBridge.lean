@@ -106,6 +106,110 @@ is the slice form of `eq:slice-norm-bounds`: the factor `9` is the concrete
 `U`-tensor constant, and the numerical coefficient is fixed before the fields.
 -/
 
+private lemma utensor_slice_scale_bound_hscale_1 :
+    ∀ {u : ParabolicPoint → Vec3} {Du : ParabolicPoint → Fin (3 : ℕ) → Vec3} {z : ParabolicPoint}
+      {ρ r : ℝ},
+      (0 : ℝ) < ρ →
+        (0 : ℝ) < r →
+          ∀ {C : ℝ},
+            (0 : ℝ) ≤ C →
+              let Bρ : Set Vec3 := vec3Ball z.1 ρ;
+              let Tr : Set ℝ := Ioc (z.2 - r ^ (2 : ℕ)) z.2;
+              ∀ (F : Vec3 × ℝ → ℝ),
+                let G : ℝ → ℝ := fun (s : ℝ) => |∫ (x : Vec3) in Bρ, F (x, s)| ^ (1 / 2 : ℝ);
+                ∀ (U : ℝ → ℝ),
+                  let A : ℝ := (9 : ℝ) * sobolevPoincareL6Constant.toReal * √ρ * alpha u z ρ;
+                  (0 : ℝ) ≤ alpha u z ρ →
+                    (0 : ℝ) ≤ A →
+                      (∀ᵐ (x : ℝ) ∂volume.restrict Tr, (0 : ℝ) ≤ U x ∧ U x ≤ A * G x) →
+                        (∫⁻ (s : ℝ) in Tr, ‖G s‖ₑ ^ (3 / 2 : ℝ)) ^ (2 / 3 : ℝ) ≤
+                            ENNReal.ofReal (r ^ (1 / 3 : ℝ)) * ENNReal.ofReal (√ρ * beta u Du z ρ) →
+                          (∫⁻ (s : ℝ) in Tr, ENNReal.ofReal (C * U s) ^ (3 / 2 : ℝ)) ^ (2 / 3 : ℝ) ≤
+                            ENNReal.ofReal
+                              (C * ((9 : ℝ) * sobolevPoincareL6Constant.toReal) * r ^ (1 / 3 : ℝ) *
+                                    ρ *
+                                  alpha u z ρ *
+                                beta u Du z ρ)
+    := by
+  intro u Du z ρ r hρ hr C hC Bρ Tr F G U A hα hA hpointTr hX
+  have hpoint' : ∀ᵐ s ∂volume.restrict Tr,
+      ENNReal.ofReal (C * U s) ^ (3 / 2 : ℝ) ≤
+        ENNReal.ofReal (C * A) ^ (3 / 2 : ℝ) *
+          (‖G s‖ₑ ^ (3 / 2 : ℝ)) := by
+    filter_upwards [hpointTr] with s hs
+    have hCU : C * U s ≤ C * (A * G s) :=
+      mul_le_mul_of_nonneg_left hs.2 hC
+    have hCA : ENNReal.ofReal (C * U s) ≤
+        ENNReal.ofReal (C * A) * ‖G s‖ₑ := by
+      have hGs : 0 ≤ G s := by
+        dsimp [G]
+        exact Real.rpow_nonneg (abs_nonneg _) _
+      rw [Real.enorm_eq_ofReal hGs]
+      calc
+        ENNReal.ofReal (C * U s) ≤ ENNReal.ofReal (C * (A * G s)) :=
+          ENNReal.ofReal_le_ofReal hCU
+        _ = ENNReal.ofReal (C * A) * ENNReal.ofReal (G s) := by
+          calc
+            ENNReal.ofReal (C * (A * G s)) =
+                ENNReal.ofReal C *
+                  (ENNReal.ofReal A * ENNReal.ofReal (G s)) := by
+              rw [ENNReal.ofReal_mul hC, ENNReal.ofReal_mul hA]
+            _ = ENNReal.ofReal (C * A) * ENNReal.ofReal (G s) := by
+              rw [ENNReal.ofReal_mul hC]
+              ac_rfl
+    calc
+      ENNReal.ofReal (C * U s) ^ (3 / 2 : ℝ) ≤
+          (ENNReal.ofReal (C * A) * ‖G s‖ₑ) ^ (3 / 2 : ℝ) :=
+        ENNReal.rpow_le_rpow hCA (by norm_num)
+      _ = ENNReal.ofReal (C * A) ^ (3 / 2 : ℝ) *
+          ‖G s‖ₑ ^ (3 / 2 : ℝ) := by
+        rw [ENNReal.mul_rpow_of_nonneg _ _ (by norm_num)]
+  have hDint :
+      (∫⁻ s in Tr, ENNReal.ofReal (C * U s) ^ (3 / 2 : ℝ)) ≤
+        ENNReal.ofReal (C * A) ^ (3 / 2 : ℝ) *
+          (∫⁻ s in Tr, ‖G s‖ₑ ^ (3 / 2 : ℝ)) := by
+    calc
+      _ ≤ ∫⁻ s in Tr, ENNReal.ofReal (C * A) ^ (3 / 2 : ℝ) *
+          ‖G s‖ₑ ^ (3 / 2 : ℝ) := lintegral_mono_ae hpoint'
+      _ = _ := by
+        exact lintegral_const_mul' (μ := volume.restrict Tr)
+          (ENNReal.ofReal (C * A) ^ (3 / 2 : ℝ))
+          (fun s => ‖G s‖ₑ ^ (3 / 2 : ℝ))
+          (ENNReal.rpow_ne_top_of_nonneg (by norm_num)
+            ENNReal.ofReal_ne_top)
+  have hroot := ENNReal.rpow_le_rpow hDint (by norm_num : (0 : ℝ) ≤ 2 / 3)
+  calc
+    _ ≤ (ENNReal.ofReal (C * A) ^ (3 / 2 : ℝ) *
+        (∫⁻ s in Tr, ‖G s‖ₑ ^ (3 / 2 : ℝ))) ^ (2 / 3 : ℝ) := hroot
+    _ = ENNReal.ofReal (C * A) *
+        (∫⁻ s in Tr, ‖G s‖ₑ ^ (3 / 2 : ℝ)) ^ (2 / 3 : ℝ) := by
+      rw [ENNReal.mul_rpow_of_nonneg _ _ (by norm_num), ← ENNReal.rpow_mul]
+      have hq : (3 / 2 : ℝ) * (2 / 3 : ℝ) = 1 := by norm_num
+      rw [hq, ENNReal.rpow_one]
+    _ ≤ ENNReal.ofReal (C * A) *
+        (ENNReal.ofReal (r ^ (1 / 3 : ℝ)) *
+          ENNReal.ofReal (Real.sqrt ρ * beta u Du z ρ)) :=
+      mul_le_mul_of_nonneg_left hX (by positivity)
+    _ = ENNReal.ofReal (C * (9 * sobolevPoincareL6Constant.toReal) *
+        r ^ (1 / 3 : ℝ) * ρ * alpha u z ρ * beta u Du z ρ) := by
+      have hsqrt : (Real.sqrt ρ) * Real.sqrt ρ = ρ := by
+        nlinarith only [Real.sq_sqrt hρ.le]
+      have hreal :
+          (C * (9 * sobolevPoincareL6Constant.toReal * Real.sqrt ρ *
+            alpha u z ρ)) *
+            (r ^ (1 / 3 : ℝ) * (Real.sqrt ρ * beta u Du z ρ)) =
+          C * (9 * sobolevPoincareL6Constant.toReal) *
+            r ^ (1 / 3 : ℝ) * ρ * alpha u z ρ * beta u Du z ρ := by
+        calc
+          _ = C * (9 * sobolevPoincareL6Constant.toReal) *
+              r ^ (1 / 3 : ℝ) *
+              (Real.sqrt ρ * Real.sqrt ρ) *
+              (alpha u z ρ * beta u Du z ρ) := by ring
+          _ = _ := by rw [hsqrt]; ring
+      rw [← ENNReal.ofReal_mul (by positivity : 0 ≤ r ^ (1 / 3 : ℝ)),
+        ← ENNReal.ofReal_mul (by positivity :
+          0 ≤ C * A), ← hreal]
+
 theorem utensor_slice_scale_bound
     {Ω : Set Vec3} {I : Set ℝ} {q : ℝ}
     {u : ParabolicPoint → Vec3} {Du : ParabolicPoint → Fin 3 → Vec3}
@@ -151,7 +255,7 @@ theorem utensor_slice_scale_bound
     have hc : Continuous (fun x : ℝ => |x| ^ (1 / 2 : ℝ)) :=
       continuous_abs.rpow_const (fun _ => Or.inr (by norm_num))
     have htmp := (hc.measurable.comp_aemeasurable hGae).aestronglyMeasurable
-    convert htmp using 1 ; dsimp [G, Function.comp_def]
+    convert htmp using 1; dsimp [G, Function.comp_def]
   have hGnonneg : 0 ≤ᵐ[volume.restrict Tρ] G :=
     Eventually.of_forall (fun s => Real.rpow_nonneg (abs_nonneg _) _)
   have hGbound : eLpNorm' G 2 (volume.restrict Tρ) ≤
@@ -272,88 +376,7 @@ theorem utensor_slice_scale_bound
           ENNReal.ofReal_rpow_of_nonneg hr.le (by norm_num)
         rw [hrpow]
         gcongr
-  have hscale :
-      (∫⁻ s in Tr, ENNReal.ofReal (C * U s) ^ (3 / 2 : ℝ)) ^
-          (2 / 3 : ℝ) ≤
-        ENNReal.ofReal (C * (9 * sobolevPoincareL6Constant.toReal) *
-          r ^ (1 / 3 : ℝ) * ρ * alpha u z ρ * beta u Du z ρ) := by
-    have hpoint' : ∀ᵐ s ∂volume.restrict Tr,
-        ENNReal.ofReal (C * U s) ^ (3 / 2 : ℝ) ≤
-          ENNReal.ofReal (C * A) ^ (3 / 2 : ℝ) *
-            (‖G s‖ₑ ^ (3 / 2 : ℝ)) := by
-      filter_upwards [hpointTr] with s hs
-      have hCU : C * U s ≤ C * (A * G s) :=
-        mul_le_mul_of_nonneg_left hs.2 hC
-      have hCA : ENNReal.ofReal (C * U s) ≤
-          ENNReal.ofReal (C * A) * ‖G s‖ₑ := by
-        have hGs : 0 ≤ G s := by
-          dsimp [G]
-          exact Real.rpow_nonneg (abs_nonneg _) _
-        rw [Real.enorm_eq_ofReal hGs]
-        calc
-          ENNReal.ofReal (C * U s) ≤ ENNReal.ofReal (C * (A * G s)) :=
-            ENNReal.ofReal_le_ofReal hCU
-          _ = ENNReal.ofReal (C * A) * ENNReal.ofReal (G s) := by
-            calc
-              ENNReal.ofReal (C * (A * G s)) =
-                  ENNReal.ofReal C *
-                    (ENNReal.ofReal A * ENNReal.ofReal (G s)) := by
-                rw [ENNReal.ofReal_mul hC, ENNReal.ofReal_mul hA]
-              _ = ENNReal.ofReal (C * A) * ENNReal.ofReal (G s) := by
-                rw [ENNReal.ofReal_mul hC]
-                ac_rfl
-      calc
-        ENNReal.ofReal (C * U s) ^ (3 / 2 : ℝ) ≤
-            (ENNReal.ofReal (C * A) * ‖G s‖ₑ) ^ (3 / 2 : ℝ) :=
-          ENNReal.rpow_le_rpow hCA (by norm_num)
-        _ = ENNReal.ofReal (C * A) ^ (3 / 2 : ℝ) *
-            ‖G s‖ₑ ^ (3 / 2 : ℝ) := by
-          rw [ENNReal.mul_rpow_of_nonneg _ _ (by norm_num)]
-    have hDint :
-        (∫⁻ s in Tr, ENNReal.ofReal (C * U s) ^ (3 / 2 : ℝ)) ≤
-          ENNReal.ofReal (C * A) ^ (3 / 2 : ℝ) *
-            (∫⁻ s in Tr, ‖G s‖ₑ ^ (3 / 2 : ℝ)) := by
-      calc
-        _ ≤ ∫⁻ s in Tr, ENNReal.ofReal (C * A) ^ (3 / 2 : ℝ) *
-            ‖G s‖ₑ ^ (3 / 2 : ℝ) := lintegral_mono_ae hpoint'
-        _ = _ := by
-          exact lintegral_const_mul' (μ := volume.restrict Tr)
-            (ENNReal.ofReal (C * A) ^ (3 / 2 : ℝ))
-            (fun s => ‖G s‖ₑ ^ (3 / 2 : ℝ))
-            (ENNReal.rpow_ne_top_of_nonneg (by norm_num)
-              ENNReal.ofReal_ne_top)
-    have hroot := ENNReal.rpow_le_rpow hDint (by norm_num : (0 : ℝ) ≤ 2 / 3)
-    calc
-      _ ≤ (ENNReal.ofReal (C * A) ^ (3 / 2 : ℝ) *
-          (∫⁻ s in Tr, ‖G s‖ₑ ^ (3 / 2 : ℝ))) ^ (2 / 3 : ℝ) := hroot
-      _ = ENNReal.ofReal (C * A) *
-          (∫⁻ s in Tr, ‖G s‖ₑ ^ (3 / 2 : ℝ)) ^ (2 / 3 : ℝ) := by
-        rw [ENNReal.mul_rpow_of_nonneg _ _ (by norm_num), ← ENNReal.rpow_mul]
-        have hq : (3 / 2 : ℝ) * (2 / 3 : ℝ) = 1 := by norm_num
-        rw [hq, ENNReal.rpow_one]
-      _ ≤ ENNReal.ofReal (C * A) *
-          (ENNReal.ofReal (r ^ (1 / 3 : ℝ)) *
-            ENNReal.ofReal (Real.sqrt ρ * beta u Du z ρ)) :=
-        mul_le_mul_of_nonneg_left hX (by positivity)
-      _ = ENNReal.ofReal (C * (9 * sobolevPoincareL6Constant.toReal) *
-          r ^ (1 / 3 : ℝ) * ρ * alpha u z ρ * beta u Du z ρ) := by
-        have hsqrt : (Real.sqrt ρ) * Real.sqrt ρ = ρ := by
-          nlinarith only [Real.sq_sqrt hρ.le]
-        have hreal :
-            (C * (9 * sobolevPoincareL6Constant.toReal * Real.sqrt ρ *
-              alpha u z ρ)) *
-              (r ^ (1 / 3 : ℝ) * (Real.sqrt ρ * beta u Du z ρ)) =
-            C * (9 * sobolevPoincareL6Constant.toReal) *
-              r ^ (1 / 3 : ℝ) * ρ * alpha u z ρ * beta u Du z ρ := by
-          calc
-            _ = C * (9 * sobolevPoincareL6Constant.toReal) *
-                r ^ (1 / 3 : ℝ) *
-                (Real.sqrt ρ * Real.sqrt ρ) *
-                (alpha u z ρ * beta u Du z ρ) := by ring
-            _ = _ := by rw [hsqrt]; ring
-        rw [← ENNReal.ofReal_mul (by positivity : 0 ≤ r ^ (1 / 3 : ℝ)),
-          ← ENNReal.ofReal_mul (by positivity :
-            0 ≤ C * A), ← hreal]
+  have hscale := @utensor_slice_scale_bound_hscale_1 u Du z ρ r hρ hr C hC F U hα hA hpointTr hX
   simpa [Bρ, Tρ, Tr, U] using hscale
 
 /-! The solution-level export below is the exact cylinder shape consumed by

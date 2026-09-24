@@ -20,18 +20,22 @@ open scoped ENNReal NNReal Topology
 open MeasureTheory MeasureTheory.Measure Set Metric Filter
 noncomputable section
 namespace CKN.Foundation.Parabolic
+/-- Normalized Lᵖ oscillation about the mean on a closed parabolic ball. -/
 def ParabolicBallLpOscillation (f : ParabolicPoint → ℝ) (z : ParabolicPoint)
     (r p : ℝ) : ℝ :=
   (⨍ y in @Metric.closedBall ParabolicPoint parabolicPseudoMetricSpace z r,
     |f y - ⨍ x in @Metric.closedBall ParabolicPoint parabolicPseudoMetricSpace z r, f x| ^ p) ^
       (1 / p)
+/-- Uniform Campanato oscillation bound for balls centered in a given set. -/
 def ParabolicBallCampanatoBoundOn (f : ParabolicPoint → ℝ) (U : Set ParabolicPoint)
     (R α K p : ℝ) : Prop :=
   ∀ z ∈ U, ∀ {r : ℝ}, 0 < r → r ≤ R →
     ParabolicBallLpOscillation f z r p ≤ K * r ^ α
+/-- Campanato oscillation bound at every point and positive radius. -/
 def GlobalParabolicBallCampanatoBound (f : ParabolicPoint → ℝ) (α K p : ℝ) : Prop :=
   ∀ z : ParabolicPoint, ∀ {r : ℝ}, 0 < r →
     ParabolicBallLpOscillation f z r p ≤ K * r ^ α
+/-- Local integrability data needed to use ball averages and Lᵖ oscillations. -/
 def ParabolicBallLpDataOn (f : ParabolicPoint → ℝ) (U : Set ParabolicPoint)
     (R p : ℝ) : Prop :=
   ∀ z ∈ U, ∀ {r : ℝ}, 0 < r → r ≤ R →
@@ -39,9 +43,11 @@ def ParabolicBallLpDataOn (f : ParabolicPoint → ℝ) (U : Set ParabolicPoint)
     IntegrableOn (fun q => |f q - ⨍ x in
       @Metric.closedBall ParabolicPoint parabolicPseudoMetricSpace z r, f x| ^ p)
       (@Metric.closedBall ParabolicPoint parabolicPseudoMetricSpace z r) volume
+/-- Averages over a dyadically shrinking sequence of closed parabolic balls. -/
 def ParabolicBallMeanSeq (f : ParabolicPoint → ℝ) (R : ℝ) (z : ParabolicPoint)
     (n : ℕ) : ℝ :=
   ⨍ y in @Metric.closedBall ParabolicPoint parabolicPseudoMetricSpace z (R / (2 : ℝ) ^ n), f y
+/-- Candidate regular representative obtained as the limit of shrinking-ball averages. -/
 def parabolicBallRepresentative (f : ParabolicPoint → ℝ) (R : ℝ) (z : ParabolicPoint) : ℝ :=
   limUnder atTop (ParabolicBallMeanSeq f R z)
 private lemma ball_dyadic_pos {R : ℝ} (hR : 0 < R) (n : ℕ) : 0 < R / (2 : ℝ) ^ n := by positivity
@@ -62,10 +68,14 @@ private lemma ball_dyadic_rpow {R : ℝ} (hR : 0 ≤ R) (α : ℝ) : ∀ n : ℕ
       rw [hsplit, Real.div_rpow hrn (by norm_num), ball_dyadic_rpow hR α n,
         pow_succ, Real.rpow_neg (by norm_num)]
       field_simp
-private lemma closedBall_pos {z : ParabolicPoint} {r : ℝ} (hr : 0 < r) : 0 < volume (@Metric.closedBall ParabolicPoint parabolicPseudoMetricSpace z r) := by
+private lemma closedBall_pos {z : ParabolicPoint} {r : ℝ} (hr : 0 < r) : 0 < volume
+  (@Metric.closedBall ParabolicPoint parabolicPseudoMetricSpace z r) := by
   exact (volume_parabolicBall_pos hr).trans_le (measure_mono Metric.ball_subset_closedBall)
-private lemma closedBall_top {z : ParabolicPoint} {r : ℝ} (hr : 0 < r) : volume (@Metric.closedBall ParabolicPoint parabolicPseudoMetricSpace z r) < ∞ := by
-  exact (measure_mono (Metric.closedBall_subset_ball (x := z) (ε₁ := r) (ε₂ := 2 * r) (by linarith only [hr]))).trans_lt (volume_parabolicBall_lt_top (by positivity))
+private lemma closedBall_top {z : ParabolicPoint} {r : ℝ} (hr : 0 < r) : volume
+  (@Metric.closedBall ParabolicPoint parabolicPseudoMetricSpace z r) < ∞ := by
+  exact (measure_mono (Metric.closedBall_subset_ball (x := z) (ε₁ := r) (ε₂ := 2 * r) (by linarith
+    only [hr]))).trans_lt (volume_parabolicBall_lt_top (by positivity))
+/-- Closed Euclidean ball in native spatial coordinates. -/
 def vec3ClosedBall (x : Vec3) (r : ℝ) : Set Vec3 :=
   {y | vec3EuclideanNorm (y - x) ≤ r}
 private lemma vec3ClosedBall_measurable (x : Vec3) (r : ℝ) :
@@ -88,6 +98,7 @@ private lemma volume_vec3ClosedBall (x : Vec3) (r : ℝ) :
     (vec3ClosedBall_measurable x r).nullMeasurableSet
   rw [hpre] at h
   exact h.symm
+/-- Linear spatial dilation used to compute the volumes of scaled balls. -/
 def campanatoHolderVec3ScaleLinear (a : ℝ) : Vec3 →ₗ[ℝ] Vec3 :=
   a • LinearMap.id
 private lemma vec3ScaleLinear_apply (a : ℝ) (v : Vec3) :
@@ -213,7 +224,8 @@ private lemma closedBall_volume_ratio_two {z w : ParabolicPoint} {r : ℝ} (hr :
             rw [hscale]
     _ = (2 : ℝ) ^ 5 := by
       rw [ENNReal.toReal_mul, ENNReal.toReal_ofReal (by positivity : (0 : ℝ) ≤ 2 ^ 5)]
-      have hne : (volume (@Metric.closedBall ParabolicPoint parabolicPseudoMetricSpace w r)).toReal ≠ 0 :=
+      have hne : (volume (@Metric.closedBall ParabolicPoint parabolicPseudoMetricSpace w
+        r)).toReal ≠ 0 :=
         ENNReal.toReal_ne_zero.mpr ⟨ne_of_gt (closedBall_pos (z := w) hr),
           ne_of_lt (closedBall_top (z := w) hr)⟩
       field_simp [hne]
@@ -241,7 +253,8 @@ private lemma closedBall_volume_ratio_le_two
             rw [← har, hscale, ENNReal.toReal_mul,
               ENNReal.toReal_ofReal (by positivity : (0 : ℝ) ≤ a ^ 5)]
     _ = a ^ 5 := by
-      have hne : (volume (@Metric.closedBall ParabolicPoint parabolicPseudoMetricSpace z r)).toReal ≠ 0 :=
+      have hne : (volume (@Metric.closedBall ParabolicPoint parabolicPseudoMetricSpace z
+        r)).toReal ≠ 0 :=
         ENNReal.toReal_ne_zero.mpr ⟨ne_of_gt (closedBall_pos (z := z) hr),
           ne_of_lt (closedBall_top (z := z) hr)⟩
       rw [ENNReal.toReal_mul, ENNReal.toReal_ofReal (by positivity : (0 : ℝ) ≤ a ^ 5)]
@@ -438,6 +451,7 @@ theorem abs_parabolicBallRepresentative_sub_meanSeq_le
   refine hbase.trans_eq ?_
   unfold parabolicCampanatoTailConstant
   field_simp
+/-- Integrability data for ball averages and oscillations at all points and radii. -/
 def GlobalParabolicBallLpData
     (f : ParabolicPoint → ℝ) (p : ℝ) : Prop :=
   ∀ z : ParabolicPoint, ∀ {r : ℝ}, 0 < r →
@@ -447,6 +461,7 @@ def GlobalParabolicBallLpData
       (fun q => |f q - ⨍ x in
         @Metric.closedBall ParabolicPoint parabolicPseudoMetricSpace z r, f x| ^ p)
       (@Metric.closedBall ParabolicPoint parabolicPseudoMetricSpace z r) volume
+/-- Explicit coefficient converting a Campanato bound to a Hölder bound. -/
 def parabolicCampanatoHolderConstant (α p : ℝ) : ℝ :=
   (2 * parabolicCampanatoTailConstant α + 1) *
     (2 : ℝ) ^ (5 / p) * (8 : ℝ) ^ α
@@ -489,6 +504,70 @@ private lemma parabolicBallMeanSeq_step_of_campanato
           ((2 : ℝ) ^ (-α)) ^ n := by
       rw [ball_dyadic_rpow hR.le α n]
       ring
+private lemma ballRepresentative_holder_at_scale_hjhi_1 :
+    ∀ {R : ℝ}  (ρ : ℝ),
+      2 < R / (2 * ρ) →
+        ∀ (hex : ∃ n, R / (2 * ρ) ≤ 2 ^ (n + 1)),
+          let j : ℕ := Nat.find (p := fun n => R / (2 * ρ) ≤ 2 ^ (n + 1)) hex;
+          R / (2 * ρ) ≤ 2 ^ (j + 1) → 2 ^ j < R / (2 * ρ)
+    := by
+  intro R   ρ hqtwo hex j hjhi
+  have hjne : j ≠ 0 := by
+    intro hj0
+    have := hjhi
+    simp [hj0] at this
+    linarith only [hqtwo, this]
+  cases hj : j with
+  | zero => contradiction
+  | succ k =>
+    have hnot : ¬ R / (2 * ρ) ≤ (2 : ℝ) ^ (k + 1) := by
+      intro h
+      have hmin := Nat.find_min' hex h
+      have hmin' : j ≤ k := by simpa [j] using hmin
+      exact (Nat.not_succ_le_self k) (by omega)
+    simpa [hj] using (lt_of_not_ge hnot)
+
+private lemma ballRepresentative_holder_at_scale_hsum_2 :
+    ∀ {f : ParabolicPoint → ℝ} {R α K p : ℝ} (z z' : ParabolicPoint) (ρ : ℝ) (k : ℕ),
+      |parabolicBallRepresentative f R z - ParabolicBallMeanSeq f R z k| ≤
+          parabolicCampanatoTailConstant α * 2 ^ (5 / p) * (K * (8 * ρ) ^ α) →
+        |ParabolicBallMeanSeq f R z k - ParabolicBallMeanSeq f R z' (k + 1)| ≤
+            2 ^ (5 / p) * (K * (8 * ρ) ^ α) →
+          |ParabolicBallMeanSeq f R z' (k + 1) - parabolicBallRepresentative f R z'| ≤
+              parabolicCampanatoTailConstant α * 2 ^ (5 / p) * (K * (8 * ρ) ^ α) →
+            |parabolicBallRepresentative f R z - parabolicBallRepresentative f R z'| ≤
+              (2 * parabolicCampanatoTailConstant α + 1) * 2 ^ (5 / p) * (K * (8 * ρ) ^ α)
+    := by
+  intro f R α K p z z' ρ k htail_z_le hcomp_le' htail_z'_le'
+  calc
+    _ ≤ |parabolicBallRepresentative f R z - ParabolicBallMeanSeq f R z k| +
+        |ParabolicBallMeanSeq f R z k -
+          parabolicBallRepresentative f R z'| :=
+      abs_sub_le _ _ _
+    _ ≤ |parabolicBallRepresentative f R z - ParabolicBallMeanSeq f R z k| +
+        (|ParabolicBallMeanSeq f R z k - ParabolicBallMeanSeq f R z' (k + 1)| +
+          |ParabolicBallMeanSeq f R z' (k + 1) -
+            parabolicBallRepresentative f R z'|) := by
+      have hmid := abs_sub_le
+        (ParabolicBallMeanSeq f R z k)
+        (ParabolicBallMeanSeq f R z' (k + 1))
+        (parabolicBallRepresentative f R z')
+      exact add_le_add_right hmid _
+    _ = |parabolicBallRepresentative f R z - ParabolicBallMeanSeq f R z k| +
+        |ParabolicBallMeanSeq f R z k - ParabolicBallMeanSeq f R z' (k + 1)| +
+        |ParabolicBallMeanSeq f R z' (k + 1) -
+          parabolicBallRepresentative f R z'| := by ring
+    _ ≤ (2 * parabolicCampanatoTailConstant α + 1) *
+        (2 : ℝ) ^ (5 / p) * (K * (8 * ρ) ^ α) := by
+      calc
+        _ ≤ parabolicCampanatoTailConstant α * (2 : ℝ) ^ (5 / p) *
+            (K * (8 * ρ) ^ α) +
+            ((2 : ℝ) ^ (5 / p) * (K * (8 * ρ) ^ α)) +
+            parabolicCampanatoTailConstant α * (2 : ℝ) ^ (5 / p) *
+              (K * (8 * ρ) ^ α) :=
+          add_le_add (add_le_add htail_z_le hcomp_le') htail_z'_le'
+        _ = _ := by ring_nf
+
 theorem parabolicBallRepresentative_holder_at_scale
     {f : ParabolicPoint → ℝ} {U : Set ParabolicPoint}
     {R α K p : ℝ} (hα : 0 < α) (hR : 0 < R) (hp : 1 ≤ p) (hK : 0 ≤ K)
@@ -515,8 +594,7 @@ theorem parabolicBallRepresentative_holder_at_scale
   by_cases hzz' : z = z'
   · subst z'
     simp [parabolicDist, vec3EuclideanNorm_zero, hα.ne']
-  ·
-    let ρ : ℝ := dist z z'
+  · let ρ : ℝ := dist z z'
     have hρpos : 0 < ρ := dist_pos.mpr hzz'
     have hρsmall : ρ < R / 4 := hdist
     have hqone : 1 < R / (2 * ρ) := by
@@ -540,20 +618,7 @@ theorem parabolicBallRepresentative_holder_at_scale
     let j : ℕ := Nat.find hex
     have hjhi : R / (2 * ρ) ≤ (2 : ℝ) ^ (j + 1) := Nat.find_spec hex
     have hjlo : (2 : ℝ) ^ j < R / (2 * ρ) := by
-      have hjne : j ≠ 0 := by
-        intro hj0
-        have := hjhi
-        simp [hj0] at this
-        linarith only [hqtwo, this]
-      cases hj : j with
-      | zero => contradiction
-      | succ k =>
-        have hnot : ¬ R / (2 * ρ) ≤ (2 : ℝ) ^ (k + 1) := by
-          intro h
-          have hmin := Nat.find_min' hex h
-          have hmin' : j ≤ k := by simpa [j] using hmin
-          exact (Nat.not_succ_le_self k) (by omega)
-        simpa [hj] using (lt_of_not_ge hnot)
+      exact @ballRepresentative_holder_at_scale_hjhi_1 R   ρ hqtwo hex hjhi
     obtain ⟨k, hk⟩ : ∃ k : ℕ, j = k + 1 :=
       Nat.exists_eq_succ_of_ne_zero (by
         intro hj0
@@ -676,38 +741,8 @@ theorem parabolicBallRepresentative_holder_at_scale
           parabolicCampanatoTailConstant α * (2 : ℝ) ^ (5 / p) *
             (K * (8 * ρ) ^ α) := by
       simpa only [abs_sub_comm] using htail_z'_le
-    have hsum :
-        |parabolicBallRepresentative f R z - parabolicBallRepresentative f R z'| ≤
-          (2 * parabolicCampanatoTailConstant α + 1) *
-            (2 : ℝ) ^ (5 / p) * (K * (8 * ρ) ^ α) := by
-      calc
-        _ ≤ |parabolicBallRepresentative f R z - ParabolicBallMeanSeq f R z k| +
-            |ParabolicBallMeanSeq f R z k -
-              parabolicBallRepresentative f R z'| :=
-          abs_sub_le _ _ _
-        _ ≤ |parabolicBallRepresentative f R z - ParabolicBallMeanSeq f R z k| +
-            (|ParabolicBallMeanSeq f R z k - ParabolicBallMeanSeq f R z' (k + 1)| +
-              |ParabolicBallMeanSeq f R z' (k + 1) -
-                parabolicBallRepresentative f R z'|) := by
-          have hmid := abs_sub_le
-            (ParabolicBallMeanSeq f R z k)
-            (ParabolicBallMeanSeq f R z' (k + 1))
-            (parabolicBallRepresentative f R z')
-          exact add_le_add_right hmid _
-        _ = |parabolicBallRepresentative f R z - ParabolicBallMeanSeq f R z k| +
-            |ParabolicBallMeanSeq f R z k - ParabolicBallMeanSeq f R z' (k + 1)| +
-            |ParabolicBallMeanSeq f R z' (k + 1) -
-              parabolicBallRepresentative f R z'| := by ring
-        _ ≤ (2 * parabolicCampanatoTailConstant α + 1) *
-            (2 : ℝ) ^ (5 / p) * (K * (8 * ρ) ^ α) := by
-          calc
-            _ ≤ parabolicCampanatoTailConstant α * (2 : ℝ) ^ (5 / p) *
-                (K * (8 * ρ) ^ α) +
-                ((2 : ℝ) ^ (5 / p) * (K * (8 * ρ) ^ α)) +
-                parabolicCampanatoTailConstant α * (2 : ℝ) ^ (5 / p) *
-                  (K * (8 * ρ) ^ α) :=
-              add_le_add (add_le_add htail_z_le hcomp_le') htail_z'_le'
-            _ = _ := by ring_nf
+    have hsum := @ballRepresentative_holder_at_scale_hsum_2 f R α K p z z' ρ k htail_z_le
+      hcomp_le' htail_z'_le'
     rw [show (8 * ρ) ^ α = (8 : ℝ) ^ α * ρ ^ α by
       rw [Real.mul_rpow (by positivity) hρpos.le]] at hsum
     simpa [parabolicCampanatoHolderConstant, ρ, mul_assoc, mul_left_comm, mul_comm,

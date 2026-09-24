@@ -78,7 +78,6 @@ private theorem eLpNorm_two_le_of_energy {β : Type*} [NormedAddCommGroup β]
         (eLpNorm f 2 (volume.restrict s) ^ (2 : ℕ)) ^ (1 / 2 : ℝ) := by
       rw [← ENNReal.rpow_natCast, ← ENNReal.rpow_mul]
       norm_num
-
     _ ≤ (K * eLpNorm g 2 (volume.restrict t) ^ (2 : ℕ)) ^
         (1 / 2 : ℝ) := hsq'
     _ = K ^ (1 / 2 : ℝ) * eLpNorm g 2 (volume.restrict t) := by
@@ -341,7 +340,7 @@ private theorem seeleyCutoffExtension_gradient_energy_ball_two_le
         ENNReal.ofReal_le_ofReal hsq
       _ = 2 * ENNReal.ofReal (‖classicalGradient e x‖ ^ 2) +
           (2 * 32 ^ 2 : ℝ≥0∞) * ENNReal.ofReal |e x| ^ 2 := by
-        simp [ENNReal.ofReal_pow, norm_nonneg]
+        simp only [norm_nonneg, ENNReal.ofReal_pow, ofReal_norm]
         norm_num
         rw [ENNReal.ofReal_add (by positivity) (by positivity),
           ENNReal.ofReal_mul (by positivity), ENNReal.ofReal_mul (by positivity)]
@@ -478,6 +477,7 @@ theorem seeleyLocalizedSobolevBound (v : Vec 3 → ℝ) (c : ℝ)
       convert hsob using 1
       all_goals norm_num
 
+/-- Finite coefficient in the L⁶ Poincare–Sobolev estimate on a Euclidean ball. -/
 noncomputable def sobolevPoincareL6Constant : ℝ≥0∞ :=
   let Cg : ℝ≥0∞ :=
     2 * (1 + 2 * 675 ^ 2 * 64 + 2 * 3042 ^ 2 * 648) +

@@ -25,6 +25,7 @@ namespace CKN.Foundation.Harmonic.Commutator
 
 noncomputable section
 
+/-- Squared Euclidean radius used in Newtonian derivative formulas. -/
 def q (x : CKN.Vec 3) : ℝ := CKN.vecNormSq x
 
 private theorem hasFDerivAt_q (x : CKN.Vec 3) :
@@ -92,6 +93,7 @@ theorem spatialDeriv_radialInverse {x : CKN.Vec 3} (hx : x ≠ 0)
   simp
   ring_nf
 
+/-- First derivative formula for the inverse Euclidean radius. -/
 def firstFormula (i : Fin 3) (x : CKN.Vec 3) : ℝ :=
   -x i * q x ^ (-(3 : ℝ) / 2)
 
@@ -164,15 +166,18 @@ private theorem spatialDeriv_second_radialInverse {x : CKN.Vec 3} (hx : x ≠ 0)
     ring
   · simp [h']
 
+/-- Second derivative formula for the inverse Euclidean radius. -/
 def secondFormula (i j : Fin 3) (x : CKN.Vec 3) : ℝ :=
   3 * x i * x j * q x ^ (-(5 : ℝ) / 2) -
     (if i = j then 1 else 0) * q x ^ (-(3 : ℝ) / 2)
 
+/-- Continuous linear differential of a power of the squared radius. -/
 def qDerivative (p : ℝ) (x : CKN.Vec 3) : CKN.Vec 3 →L[ℝ] ℝ :=
   (p * q x ^ (p - 1)) •
     ∑ k : Fin 3, (2 * x k) •
       (ContinuousLinearMap.proj k : CKN.Vec 3 →L[ℝ] ℝ)
 
+/-- Continuous linear differential of the second inverse-radius derivative formula. -/
 def secondDerivative (i j : Fin 3) (x : CKN.Vec 3) : CKN.Vec 3 →L[ℝ] ℝ :=
   3 • ((x i * x j) • qDerivative (-(5 : ℝ) / 2) x +
     (q x ^ (-(5 : ℝ) / 2)) •
@@ -334,12 +339,14 @@ theorem third_derivative_inverse_norm {x : CKN.Vec 3} (hx : x ≠ 0)
   ring
 
 
+/-- Third inverse-radius derivative expressed using powers of the squared radius. -/
 def inverseThirdFormulaQ (m j l : Fin 3) (x : CKN.Vec 3) : ℝ :=
   -15 * x m * x j * x l * q x ^ (-(7 : ℝ) / 2) +
     3 * ((if m = l then 1 else 0) * x j +
       (if m = j then 1 else 0) * x l +
       (if l = j then 1 else 0) * x m) * q x ^ (-(5 : ℝ) / 2)
 
+/-- Continuous linear differential of the third inverse-radius derivative formula. -/
 def inverseThirdFormulaQDerivative (m j l : Fin 3) (x : CKN.Vec 3) :
     CKN.Vec 3 →L[ℝ] ℝ :=
   (-15 : ℝ) • (
@@ -397,8 +404,123 @@ private theorem hasFDerivAt_inverseThirdFormulaQ {x : CKN.Vec 3} (hx : x ≠ 0)
 def newtonianPotential (x : CKN.Vec 3) : ℝ :=
   -(4 * Real.pi)⁻¹ * radialInverse x
 
+/-- Normalized third Newtonian derivative kernel used in the commutator estimates. -/
 def newtonianKernel (m j l : Fin 3) (x : CKN.Vec 3) : ℝ :=
   -(4 * Real.pi)⁻¹ * inverseThirdFormula m j l x
+
+private lemma newtonianKernel_spatialDeriv_size_bound_habs8_1 :
+    ∀ (a b c d e f g h : ℝ),
+      |a + b + c + d + e + f + g + h| ≤ |a| + |b| + |c| + |d| + |e| + |f| + |g| + |h|
+    := by
+  intro a b c d e f g h
+  calc
+    |a + b + c + d + e + f + g + h| ≤
+        |a| + |b + c + d + e + f + g + h| := by
+      simpa [add_assoc] using (abs_add_le a (b + c + d + e + f + g + h))
+    _ ≤ |a| + (|b| + |c + d + e + f + g + h|) := by
+      gcongr
+      simpa [add_assoc] using (abs_add_le b (c + d + e + f + g + h))
+    _ ≤ |a| + (|b| + (|c| + |d + e + f + g + h|)) := by
+      gcongr
+      simpa [add_assoc] using (abs_add_le c (d + e + f + g + h))
+    _ ≤ |a| + (|b| + (|c| + (|d| + |e + f + g + h|))) := by
+      gcongr
+      simpa [add_assoc] using (abs_add_le d (e + f + g + h))
+    _ ≤ |a| + (|b| + (|c| + (|d| + (|e| + |f + g + h|)))) := by
+      gcongr
+      simpa [add_assoc] using (abs_add_le e (f + g + h))
+    _ ≤ |a| + (|b| + (|c| + (|d| + (|e| + (|f| + |g + h|))))) := by
+      gcongr
+      simpa [add_assoc] using (abs_add_le f (g + h))
+    _ ≤ |a| + |b| + |c| + |d| + |e| + |f| + |g| + |h| := by
+      calc
+        _ ≤ |a| + (|b| + (|c| + (|d| + (|e| + (|f| + (|g| + |h|)))))) := by
+          gcongr
+          exact abs_add_le g h
+        _ = _ := by ring
+
+private lemma newtonianKernel_spatialDeriv_size_bound_hA4_2 :
+    ∀ {x : Vec 3} (m j l n : Fin 3) (r : ℝ),
+      0 < r →
+        (∀ (i : Fin 3), |x i| ≤ r) →
+          |(-(15 * (x m * x j * x l * (-7 / 2 * (r ^ 9)⁻¹ * (2 * x n)))))| ≤ 105 * (r ^ 5)⁻¹
+    := by
+  intro x m j l n r hr hcoord
+  rw [abs_neg, abs_mul, abs_mul, abs_mul, abs_mul, abs_mul, abs_mul]
+  norm_num [abs_of_nonneg (inv_nonneg.mpr (pow_nonneg hr.le _))]
+  calc
+    15 * (|x m| * |x j| * |x l| *
+          ((7 / 2 : ℝ) * (r ^ 9)⁻¹ * (2 * |x n|))) ≤
+        15 * (r * r * r * ((7 / 2 : ℝ) * (r ^ 9)⁻¹ * (2 * r))) := by
+      gcongr
+      · exact hcoord m
+      · exact hcoord j
+      · exact hcoord l
+      · exact hcoord n
+    _ = 105 * (r ^ 5)⁻¹ := by
+      field_simp [hr.ne']
+      ring
+
+private lemma newtonianKernel_spatialDeriv_size_bound_hS_3 :
+    ∀ {x : Vec 3} (m j l : Fin 3) (r : ℝ),
+      (∀ (i : Fin 3), |x i| ≤ r) →
+        (∀ (p : Prop) [Decidable p] (a : ℝ), |if p then a else 0| ≤ |a|) →
+          (∀ (a b c : ℝ), |a + b + c| ≤ |a| + |b| + |c|) →
+            |((if m = l then x j else 0) + if m = j then x l else 0) + if l = j then x m else 0| ≤
+              3 * r
+    := by
+  intro x m j l r hcoord hdelta habs3
+  have hml : |if m = l then x j else 0| ≤ |x j| := hdelta _ _
+  have hmj : |if m = j then x l else 0| ≤ |x l| := hdelta _ _
+  have hlj : |if l = j then x m else 0| ≤ |x m| := hdelta _ _
+  calc
+    _ ≤ |if m = l then x j else 0| +
+        |if m = j then x l else 0| +
+        |if l = j then x m else 0| := habs3 _ _ _
+    _ ≤ |x j| + |x l| + |x m| := by
+      exact add_le_add (add_le_add hml hmj) hlj
+    _ ≤ r + r + r := by gcongr <;> exact hcoord _
+    _ = 3 * r := by ring
+
+private lemma newtonianKernel_spatialDeriv_size_bound_hB4_4 :
+    ∀ {x : Vec 3} (m j l n : Fin 3) (r : ℝ),
+      0 < r →
+        (∀ (i : Fin 3), |x i| ≤ r) →
+          |((if m = l then x j else 0) + if m = j then x l else 0) + if l = j then x m else 0| ≤
+              3 * r →
+            |3 *
+                    (((if m = l then x j else 0) + if m = j then x l else 0) +
+                      if l = j then x m else 0) *
+                  (-5 / 2 * (r ^ 7)⁻¹ * (2 * x n))| ≤
+              45 * (r ^ 5)⁻¹
+    := by
+  intro x m j l n r hr hcoord hS
+  rw [abs_mul, abs_mul]
+  norm_num [abs_of_nonneg (inv_nonneg.mpr (pow_nonneg hr.le _))]
+  have hfactor : 0 ≤ (5 / 2 : ℝ) * (r ^ 7)⁻¹ * (2 * |x n|) := by
+    positivity
+  calc
+    3 * |((if m = l then x j else 0) + if m = j then x l else 0) +
+          if l = j then x m else 0| *
+          ((5 / 2 : ℝ) * (r ^ 7)⁻¹ * (2 * |x n|)) ≤
+        3 * (3 * r * ((5 / 2 : ℝ) * (r ^ 7)⁻¹ * (2 * r))) := by
+      calc
+        _ ≤ 3 * (3 * r) *
+            ((5 / 2 : ℝ) * (r ^ 7)⁻¹ * (2 * |x n|)) := by
+          exact mul_le_mul_of_nonneg_right
+            (mul_le_mul_of_nonneg_left hS (by norm_num)) hfactor
+        _ ≤ _ := by
+          have hc : 0 ≤ (5 / 2 : ℝ) * (r ^ 7)⁻¹ := by positivity
+          have hfactor_le :
+              (5 / 2 : ℝ) * (r ^ 7)⁻¹ * (2 * |x n|) ≤
+                (5 / 2 : ℝ) * (r ^ 7)⁻¹ * (2 * r) := by
+            exact mul_le_mul_of_nonneg_left
+              (mul_le_mul_of_nonneg_left (hcoord n) (by norm_num)) hc
+          have houter : 0 ≤ 3 * (3 * r) := by positivity
+          simpa [mul_assoc] using mul_le_mul_of_nonneg_left hfactor_le houter
+    _ = 45 * (r ^ 5)⁻¹ := by
+      field_simp [hr.ne']
+      ring
 
 theorem newtonianKernel_spatialDeriv_size_bound {x : CKN.Vec 3} (hx : x ≠ 0)
     (m j l n : Fin 3) :
@@ -444,8 +566,13 @@ theorem newtonianKernel_spatialDeriv_size_bound {x : CKN.Vec 3} (hx : x ≠ 0)
       rw [show -(7 : ℝ) / 2 - 1 = -(9 : ℝ) / 2 by norm_num, hq9]
     have hq5' : q x ^ (-(5 : ℝ) / 2 - 1) = (r ^ 7)⁻¹ := by
       rw [show -(5 : ℝ) / 2 - 1 = -(7 : ℝ) / 2 by norm_num, hq7]
-    simp [inverseThirdFormulaQDerivative, qDerivative, sum_apply,
-      ContinuousLinearMap.proj_apply, CKN.basisVec_apply, smul_eq_mul, hite]
+    simp only [inverseThirdFormulaQDerivative, smul_add, qDerivative, neg_smul, ite_smul,
+      one_smul, zero_nsmul,
+      smul_ite, smul_zero, ite_mul, one_mul, zero_mul, add_apply, neg_apply, smul_apply,
+        ContinuousLinearMap.proj_apply,
+      basisVec_apply, smul_eq_mul, mul_ite, mul_one, mul_zero, sum_apply, Finset.sum_ite_eq',
+        Finset.mem_univ, ↓reduceIte,
+      hite, Real.rpow_neg_ofNat, Int.reduceNeg, zpow_neg, zpow_ofNat, ge_iff_le]
     rw [hq5, hq7, hq7', hq5']
     rw [show CKN.vecEuclideanNorm x = r by rfl]
     have hdelta (p : Prop) [Decidable p] (a : ℝ) :
@@ -469,41 +596,18 @@ theorem newtonianKernel_spatialDeriv_size_bound {x : CKN.Vec 3} (hx : x ≠ 0)
       by_cases hp : p
       · by_cases hq' : q'
         · simp [hp, hq', abs_of_pos hr]
-        · simp [hp, hq']
+        · simp only [hp, ↓reduceIte, hq', abs_zero, Nat.ofNat_pos, mul_nonneg_iff_of_pos_left,
+          inv_nonneg]
           positivity
       · by_cases hq' : q'
-        · simp [hp]
+        · simp only [hp, ↓reduceIte, abs_zero, Nat.ofNat_pos, mul_nonneg_iff_of_pos_left,
+          inv_nonneg]
           positivity
-        · simp [hp]
+        · simp only [hp, ↓reduceIte, abs_zero, Nat.ofNat_pos, mul_nonneg_iff_of_pos_left,
+          inv_nonneg]
           positivity
-    have habs8 (a b c d e f g h : ℝ) :
-        |a + b + c + d + e + f + g + h| ≤
-          |a| + |b| + |c| + |d| + |e| + |f| + |g| + |h| := by
-      calc
-        |a + b + c + d + e + f + g + h| ≤
-            |a| + |b + c + d + e + f + g + h| := by
-          simpa [add_assoc] using (abs_add_le a (b + c + d + e + f + g + h))
-        _ ≤ |a| + (|b| + |c + d + e + f + g + h|) := by
-          gcongr
-          simpa [add_assoc] using (abs_add_le b (c + d + e + f + g + h))
-        _ ≤ |a| + (|b| + (|c| + |d + e + f + g + h|)) := by
-          gcongr
-          simpa [add_assoc] using (abs_add_le c (d + e + f + g + h))
-        _ ≤ |a| + (|b| + (|c| + (|d| + |e + f + g + h|))) := by
-          gcongr
-          simpa [add_assoc] using (abs_add_le d (e + f + g + h))
-        _ ≤ |a| + (|b| + (|c| + (|d| + (|e| + |f + g + h|)))) := by
-          gcongr
-          simpa [add_assoc] using (abs_add_le e (f + g + h))
-        _ ≤ |a| + (|b| + (|c| + (|d| + (|e| + (|f| + |g + h|))))) := by
-          gcongr
-          simpa [add_assoc] using (abs_add_le f (g + h))
-        _ ≤ |a| + |b| + |c| + |d| + |e| + |f| + |g| + |h| := by
-          calc
-            _ ≤ |a| + (|b| + (|c| + (|d| + (|e| + (|f| + (|g| + |h|)))))) := by
-              gcongr
-              exact abs_add_le g h
-            _ = _ := by ring
+    have habs8 (a b c d e f g h : ℝ) := @newtonianKernel_spatialDeriv_size_bound_habs8_1 a b c d e
+      f g h
     have hsum := habs8
       (-if m = n then 15 * ((r ^ 7)⁻¹ * (x j * x l)) else 0)
       (-if j = n then 15 * ((r ^ 7)⁻¹ * (x m * x l)) else 0)
@@ -535,23 +639,7 @@ theorem newtonianKernel_spatialDeriv_size_bound {x : CKN.Vec 3} (hx : x ≠ 0)
         _ = |if l = n then 15 * ((r ^ 7)⁻¹ * (x m * x j)) else 0| := abs_neg _
         _ ≤ |15 * ((r ^ 7)⁻¹ * (x m * x j))| := hdelta _ _
         _ ≤ _ := hA m j
-    have hA4 :
-        |-(15 * (x m * x j * x l * (-7 / 2 * (r ^ 9)⁻¹ * (2 * x n))))| ≤
-          105 * (r ^ 5)⁻¹ := by
-      rw [abs_neg, abs_mul, abs_mul, abs_mul, abs_mul, abs_mul, abs_mul]
-      norm_num [abs_of_nonneg (inv_nonneg.mpr (pow_nonneg hr.le _))]
-      calc
-        15 * (|x m| * |x j| * |x l| *
-              ((7 / 2 : ℝ) * (r ^ 9)⁻¹ * (2 * |x n|))) ≤
-            15 * (r * r * r * ((7 / 2 : ℝ) * (r ^ 9)⁻¹ * (2 * r))) := by
-          gcongr
-          · exact hcoord m
-          · exact hcoord j
-          · exact hcoord l
-          · exact hcoord n
-        _ = 105 * (r ^ 5)⁻¹ := by
-          field_simp [hr.ne']
-          ring
+    have hA4 := @newtonianKernel_spatialDeriv_size_bound_hA4_2 x m j l n r hr hcoord
     have habs3 (a b c : ℝ) : |a + b + c| ≤ |a| + |b| + |c| := by
       calc
         |a + b + c| ≤ |a + b| + |c| := abs_add_le _ _
@@ -559,51 +647,8 @@ theorem newtonianKernel_spatialDeriv_size_bound {x : CKN.Vec 3} (hx : x ≠ 0)
           gcongr
           exact abs_add_le _ _
         _ = |a| + |b| + |c| := by ring
-    have hS :
-        |((if m = l then x j else 0) + if m = j then x l else 0) +
-            if l = j then x m else 0| ≤ 3 * r := by
-      have hml : |if m = l then x j else 0| ≤ |x j| := hdelta _ _
-      have hmj : |if m = j then x l else 0| ≤ |x l| := hdelta _ _
-      have hlj : |if l = j then x m else 0| ≤ |x m| := hdelta _ _
-      calc
-        _ ≤ |if m = l then x j else 0| +
-            |if m = j then x l else 0| +
-            |if l = j then x m else 0| := habs3 _ _ _
-        _ ≤ |x j| + |x l| + |x m| := by
-          exact add_le_add (add_le_add hml hmj) hlj
-        _ ≤ r + r + r := by gcongr <;> exact hcoord _
-        _ = 3 * r := by ring
-    have hB4 :
-        |3 * (((if m = l then x j else 0) + if m = j then x l else 0) +
-            if l = j then x m else 0) *
-            (-5 / 2 * (r ^ 7)⁻¹ * (2 * x n))| ≤
-          45 * (r ^ 5)⁻¹ := by
-      rw [abs_mul, abs_mul]
-      norm_num [abs_of_nonneg (inv_nonneg.mpr (pow_nonneg hr.le _))]
-      have hfactor : 0 ≤ (5 / 2 : ℝ) * (r ^ 7)⁻¹ * (2 * |x n|) := by
-        positivity
-      calc
-        3 * |((if m = l then x j else 0) + if m = j then x l else 0) +
-              if l = j then x m else 0| *
-              ((5 / 2 : ℝ) * (r ^ 7)⁻¹ * (2 * |x n|)) ≤
-            3 * (3 * r * ((5 / 2 : ℝ) * (r ^ 7)⁻¹ * (2 * r))) := by
-          calc
-            _ ≤ 3 * (3 * r) *
-                ((5 / 2 : ℝ) * (r ^ 7)⁻¹ * (2 * |x n|)) := by
-              exact mul_le_mul_of_nonneg_right
-                (mul_le_mul_of_nonneg_left hS (by norm_num)) hfactor
-            _ ≤ _ := by
-              have hc : 0 ≤ (5 / 2 : ℝ) * (r ^ 7)⁻¹ := by positivity
-              have hfactor_le :
-                  (5 / 2 : ℝ) * (r ^ 7)⁻¹ * (2 * |x n|) ≤
-                    (5 / 2 : ℝ) * (r ^ 7)⁻¹ * (2 * r) := by
-                exact mul_le_mul_of_nonneg_left
-                  (mul_le_mul_of_nonneg_left (hcoord n) (by norm_num)) hc
-              have houter : 0 ≤ 3 * (3 * r) := by positivity
-              simpa [mul_assoc] using mul_le_mul_of_nonneg_left hfactor_le houter
-        _ = 45 * (r ^ 5)⁻¹ := by
-          field_simp [hr.ne']
-          ring
+    have hS := @newtonianKernel_spatialDeriv_size_bound_hS_3 x m j l r hcoord hdelta habs3
+    have hB4 := @newtonianKernel_spatialDeriv_size_bound_hB4_4 x m j l n r hr hcoord hS
     have hB1 := hB (m = l) (j = n)
     have hB2 := hB (m = j) (l = n)
     have hB3 := hB (l = j) (m = n)

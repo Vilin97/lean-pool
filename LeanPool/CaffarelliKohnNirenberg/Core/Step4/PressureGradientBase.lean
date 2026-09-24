@@ -30,6 +30,8 @@ namespace CKN.Core.Step4
 
 /-! The distributional pressure-Laplacian pairing. -/
 
+/-- Distributional pressure Poisson identity on a spatial domain, retaining the force
+contribution. -/
 def HasPressureDeltaOn {U : Set Vec3} (p : Vec3 → ℝ)
     (u : Vec3 → Vec3) (f : Vec3 → Vec3) : Prop :=
   ∀ ψ : Vec3 → ℝ, ContDiff ℝ (⊤ : ℕ∞) ψ → HasCompactSupport ψ → tsupport ψ ⊆ U →

@@ -26,9 +26,11 @@ noncomputable section
 
 namespace CKN
 
+/-- Interpolation weight relating the velocity exponent to the L² and L⁶ endpoints. -/
 def interpolationTheta (q : ℝ) : ℝ :=
   3 * (q - 2) / (2 * q)
 
+/-- Exponent of the gradient contribution in the velocity interpolation estimate. -/
 def interpolationExponent (q : ℝ) : ℝ :=
   3 * (q - 2) / 4
 
@@ -77,18 +79,20 @@ private theorem eLpNorm_interpolate_two_six
   have hqE : qE⁻¹ = ENNReal.ofReal q⁻¹ := by
     dsimp [qE]
     exact (ENNReal.ofReal_inv_of_pos hq).symm
-  letI : ENNReal.HolderTriple pE sE qE := by
+  have : ENNReal.HolderTriple pE sE qE := by
     refine ⟨?_⟩
     rw [hpE, hsE, hqE, ← ENNReal.ofReal_add (by positivity) (by positivity), hrecip]
   let w : Vec 3 → ℝ := fun x => ‖f x‖ ^ (1 - θ)
   let z : Vec 3 → ℝ := fun x => ‖f x‖ ^ θ
   have hw : AEStronglyMeasurable w μ := by
     simpa [w, Function.comp_def] using
-      ((Real.continuous_rpow_const (q := 1 - θ) (by linarith only [hθ'.2])).aemeasurable.comp_aemeasurable
+      ((Real.continuous_rpow_const (q := 1 - θ) (by linarith only
+        [hθ'.2])).aemeasurable.comp_aemeasurable
         hf.aemeasurable.norm).aestronglyMeasurable
   have hz : AEStronglyMeasurable z μ := by
     simpa [z, Function.comp_def] using
-      ((Real.continuous_rpow_const (q := θ) (by linarith only [hθ'.1])).aemeasurable.comp_aemeasurable
+      ((Real.continuous_rpow_const (q := θ) (by linarith only
+        [hθ'.1])).aemeasurable.comp_aemeasurable
         hf.aemeasurable.norm).aestronglyMeasurable
   have hholder : eLpNorm (fun x => w x * z x) qE μ ≤
       eLpNorm w pE μ * eLpNorm z sE μ := by

@@ -5,6 +5,8 @@ Authors: Scott Armstrong, Vlad Vicol
 -/
 module
 
+public import LeanPool.CaffarelliKohnNirenberg.Foundation.Sobolev.Cutoff.NormTriangle
+
 public import LeanPool.CaffarelliKohnNirenberg.Foundation.Sobolev.Inequalities.SeeleyGradient
 public import LeanPool.CaffarelliKohnNirenberg.Foundation.Sobolev.Poincare.Lp
 public import LeanPool.CaffarelliKohnNirenberg.Foundation.Ambient.Euclidean
@@ -25,17 +27,13 @@ namespace CKN
 
 noncomputable section
 
+/-- Unit Euclidean ball used as the reference domain for the Seeley construction. -/
 def seeleyUnitEuclideanBall : Set (Vec 3) :=
   euclideanBall (0 : Vec 3) 1
 
 private theorem seeleyVecEuclideanNorm_eq_l2 (x : Vec 3) :
-    vecEuclideanNorm x = ‖WithLp.toLp 2 x‖ := by
-  rw [PiLp.norm_eq_of_L2]
-  simp [vecEuclideanNorm, vecNormSq, vecDot, Real.norm_eq_abs, sq_abs]
-  congr 1
-  apply Finset.sum_congr rfl
-  intro i _hi
-  ring
+    vecEuclideanNorm x = ‖WithLp.toLp 2 x‖ :=
+  vecEuclideanNorm_eq_norm_toLp x
 
 private theorem seeleyVecEuclideanNorm_add_le (x y : Vec 3) :
     vecEuclideanNorm (x + y) ≤ vecEuclideanNorm x + vecEuclideanNorm y := by
@@ -172,6 +170,7 @@ theorem euclideanClosedBall_one_ae_eq_euclideanBall :
       exact (hxnot hxle).elim
     exact measure_mono_null hsub measure_empty
 
+/-- Explicit L² Poincare coefficient on the unit Euclidean ball. -/
 noncomputable def euclideanBallPoincareConstant : ℝ≥0∞ :=
   let A : ℝ :=
     (MeasureTheory.volume seeleyUnitEuclideanBall).toReal⁻¹ *

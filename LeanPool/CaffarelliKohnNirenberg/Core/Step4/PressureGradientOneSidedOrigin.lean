@@ -32,6 +32,8 @@ namespace CKN.Core.Step4
 the pressure construction is therefore consumed directly on that carrier;
 there is no symmetric time window in this interface. -/
 
+/-- Existence interface for a measurable weak pressure gradient with normalized-cylinder cell
+bounds. -/
 def oneSidedPressureGradientOriginCellProducer : Prop :=
   ∀ q τ C_CZ R₀ R₁ ε : ℝ, ∀ KU KD : ℝ≥0∞,
     5 / 2 < q → 25 / 3 ≤ τ → τ ≤ 25 →

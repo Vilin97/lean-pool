@@ -252,7 +252,7 @@ theorem pressure_utensor_integrable_on_ball
     rw [volume_vec3Ball_eq]
     exact ENNReal.mul_lt_top (ENNReal.pow_lt_top ENNReal.ofReal_lt_top)
       ENNReal.ofReal_lt_top
-  haveI : IsFiniteMeasure μ := ⟨hμtop⟩
+  have : IsFiniteMeasure μ := ⟨hμtop⟩
   have humeas' : AEStronglyMeasurable (fun y : Vec3 => u (y, s)) μ :=
     humeas.aestronglyMeasurable
   have hnormmeas : AEStronglyMeasurable
@@ -261,7 +261,7 @@ theorem pressure_utensor_integrable_on_ball
       humeas).aestronglyMeasurable
   have huE : MemLp (fun y : Vec3 => vec3EuclideanNorm (u (y, s))) 2 μ := by
     apply hu.of_le_mul hnormmeas
-    filter_upwards [] with y
+    on_goal 1 => filter_upwards [] with y
     simpa only [Real.norm_eq_abs, abs_of_nonneg (vec3EuclideanNorm_nonneg _)] using
       pressure_vec3EuclideanNorm_le_sqrt_three (u (y, s))
   let cvec : Vec3 := c s
@@ -271,7 +271,7 @@ theorem pressure_utensor_integrable_on_ball
     apply hsub.of_le_mul
       ((pressure_continuous_vec3EuclideanNorm.measurable.comp_aemeasurable
         (hsub.aestronglyMeasurable.aemeasurable)).aestronglyMeasurable)
-    filter_upwards [] with y
+    on_goal 1 => filter_upwards [] with y
     simpa only [Function.comp_apply, Real.norm_eq_abs,
       abs_of_nonneg (vec3EuclideanNorm_nonneg _)] using
       pressure_vec3EuclideanNorm_le_sqrt_three (u (y, s) - cvec)
@@ -332,7 +332,7 @@ theorem pressureP234_fixed_bound
         (18 * cutoffSecondDerivativeConstant + 720 * cutoffGradientConstant) /
             ρ ^ 3 * ∫ y in vec3Ball x₀ ρ, pressureUTensorNorm u c s y := by
   let μ : Measure Vec3 := volume.restrict (vec3Ball x₀ ρ)
-  haveI : IsFiniteMeasure μ := by
+  have : IsFiniteMeasure μ := by
     apply isFiniteMeasure_restrict.mpr
     rw [volume_vec3Ball_eq]
     exact (ENNReal.mul_lt_top (ENNReal.pow_lt_top ENNReal.ofReal_lt_top)

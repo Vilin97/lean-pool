@@ -234,7 +234,7 @@ private theorem integral_slice_spatialPartial_eq_zero {G : Vec3 × ℝ → ℝ}
     have hx' : (x, t) ∉ tsupport G := by
       intro hmem
       exact hx ⟨(x, t), hmem, rfl⟩
-    show G (x, t) = 0
+    change G (x, t) = 0
     exact image_eq_zero_of_notMem_tsupport hx'
   have hgD : Differentiable ℝ g := hgdiff.differentiable (by simp)
   have hcont : Continuous (fun x : Vec3 => (fderiv ℝ g x) (basisVec i)) :=
@@ -391,8 +391,8 @@ theorem timePartial_eq_zero_off_tsupport {ψ : Vec3 × ℝ → ℝ}
 
 /-- A component of a vector-valued test function has support inside the support
 of the test function. -/
-theorem tsupport_component_subset {V : Type} [NormedAddCommGroup V]
-    [NormedSpace ℝ V] {ι : Type} (φ : Vec3 × ℝ → ι → ℝ) (i : ι)
+theorem tsupport_component_subset
+    {ι : Type} (φ : Vec3 × ℝ → ι → ℝ) (i : ι)
     (hzero : ∀ z, φ z = 0 → φ z i = 0) :
     tsupport (fun w => φ w i) ⊆ tsupport φ := by
   refine closure_mono ?_
@@ -530,7 +530,7 @@ theorem gauge_divergence_pairing
     (contDiff_apply ℝ ℝ i).comp hφd
   have hcompsupp : ∀ i : Fin 3, tsupport (fun w : Vec3 × ℝ => φ w i) ⊆ tsupport φ := by
     intro i
-    refine tsupport_component_subset (V := Vec3) (ι := Fin 3) φ i ?_
+    refine tsupport_component_subset (ι := Fin 3) φ i ?_
     intro z hz
     rw [hz]
     rfl
@@ -569,7 +569,7 @@ theorem gauge_divergence_pairing
     by_contra hcon
     refine hz ?_
     have hz' : z ∉ tsupport φ := fun hmem => hcon (hsub hmem)
-    show c z.2 * D z = 0
+    change c z.2 * D z = 0
     rw [hDzero z hz', mul_zero]
   have hInt : Integrable (fun z : Vec3 × ℝ => c z.2 * D z) volume :=
     (integrableOn_iff_integrable_of_support_subset hsupp).mp hIntBox
@@ -682,7 +682,7 @@ theorem gauge_velocity_pairing
     by_contra hcon
     refine hz ?_
     have hz' : z ∉ tsupport ψ := fun hmem => hcon (hsub hmem)
-    show c z.2 * g z = 0
+    change c z.2 * g z = 0
     rw [hgzero z hz', mul_zero]
   have hInt : Integrable (fun z : Vec3 × ℝ => c z.2 * g z) volume :=
     (integrableOn_iff_integrable_of_support_subset hsupp).mp hIntBox

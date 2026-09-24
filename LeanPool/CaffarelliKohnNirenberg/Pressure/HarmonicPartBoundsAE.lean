@@ -52,6 +52,65 @@ private lemma vec3EuclideanNorm_le_sqrt_three (v : Vec3) :
         simp [Finset.sum_const, Finset.card_univ, Fintype.card_fin]
   exact (sq_le_sq₀ (vec3EuclideanNorm_nonneg v) (by positivity)).mp hsq
 
+private lemma pressure_utensor_integral_le_two_energy_hosc_1 :
+    ∀ (μ : Measure Vec3) (F G : Vec3 → L2Vec3),
+      (∫⁻ (y : Vec3), ‖G y‖ₑ ^ (2 : ℝ) ∂μ) / (μ : Set Vec3 → ℝ≥0∞) univ ≤
+          (4 : ℝ≥0∞) * ((∫⁻ (y : Vec3), ‖F y‖ₑ ^ (2 : ℝ) ∂μ) / (μ : Set Vec3 → ℝ≥0∞) univ) →
+        (μ : Set Vec3 → ℝ≥0∞) univ ≠ (0 : ℝ≥0∞) →
+          (μ : Set Vec3 → ℝ≥0∞) univ ≠ ∞ →
+            ∫⁻ (y : Vec3), ‖G y‖ₑ ^ (2 : ℝ) ∂μ ≤ (4 : ℝ≥0∞) * ∫⁻ (y : Vec3), ‖F y‖ₑ ^ (2 : ℝ) ∂μ
+    := by
+  intro μ F G hosc' hμne hμtop'
+  calc
+    _ = μ Set.univ *
+        ((∫⁻ y, ‖G y‖ₑ ^ (2 : ℝ) ∂μ) / μ Set.univ) := by
+      rw [ENNReal.mul_div_cancel hμne hμtop']
+    _ ≤ μ Set.univ *
+        ((4 : ℝ≥0∞) *
+          ((∫⁻ y, ‖F y‖ₑ ^ (2 : ℝ) ∂μ) / μ Set.univ)) := by gcongr
+    _ = (4 : ℝ≥0∞) * (∫⁻ y, ‖F y‖ₑ ^ (2 : ℝ) ∂μ) := by
+      calc
+        μ Set.univ * (4 *
+            ((∫⁻ y, ‖F y‖ₑ ^ (2 : ℝ) ∂μ) / μ Set.univ)) =
+            4 * (μ Set.univ *
+              ((∫⁻ y, ‖F y‖ₑ ^ (2 : ℝ) ∂μ) / μ Set.univ)) := by ring
+        _ = 4 * (∫⁻ y, ‖F y‖ₑ ^ (2 : ℝ) ∂μ) := by
+          rw [ENNReal.mul_div_cancel hμne hμtop']
+
+private lemma pressure_utensor_integral_le_two_energy_hprodle_2 :
+    ∀ (μ : Measure Vec3) (F G : Vec3 → L2Vec3),
+      (0 : ℝ) ≤ ∫ (y : Vec3), ‖F y‖ ^ (2 : ℕ) ∂μ →
+        ∫ (y : Vec3), ‖G y‖ ^ (2 : ℕ) ∂μ ≤ (4 : ℝ) * ∫ (y : Vec3), ‖F y‖ ^ (2 : ℕ) ∂μ →
+          ∫ (y : Vec3), ‖F y‖ * ‖G y‖ ∂μ ≤
+              (∫ (y : Vec3), ‖F y‖ ^ (2 : ℕ) ∂μ) ^ (1 / 2 : ℝ) *
+                (∫ (y : Vec3), ‖G y‖ ^ (2 : ℕ) ∂μ) ^ (1 / 2 : ℝ) →
+            ∫ (y : Vec3), ‖F y‖ * ‖G y‖ ∂μ ≤ (2 : ℝ) * ∫ (y : Vec3), ‖F y‖ ^ (2 : ℕ) ∂μ
+    := by
+  intro μ F G hFnonneg hGle hholder'
+  calc
+    _ ≤ (∫ y, (‖F y‖ : ℝ) ^ (2 : ℕ) ∂μ) ^ (1 / 2 : ℝ) *
+        (∫ y, (‖G y‖ : ℝ) ^ (2 : ℕ) ∂μ) ^ (1 / 2 : ℝ) := hholder'
+    _ ≤ (∫ y, (‖F y‖ : ℝ) ^ (2 : ℕ) ∂μ) ^ (1 / 2 : ℝ) *
+        (4 * ∫ y, (‖F y‖ : ℝ) ^ (2 : ℕ) ∂μ) ^ (1 / 2 : ℝ) := by
+      gcongr
+    _ = 2 * ∫ y, (‖F y‖ : ℝ) ^ (2 : ℕ) ∂μ := by
+      have hroot :
+          (4 * ∫ y, (‖F y‖ : ℝ) ^ (2 : ℕ) ∂μ) ^ (1 / 2 : ℝ) =
+            2 * (∫ y, (‖F y‖ : ℝ) ^ (2 : ℕ) ∂μ) ^ (1 / 2 : ℝ) := by
+        rw [Real.mul_rpow (by norm_num) hFnonneg]
+        norm_num
+      rw [hroot]
+      calc
+        _ = 2 * ((∫ y, (‖F y‖ : ℝ) ^ (2 : ℕ) ∂μ) ^
+            (1 / 2 : ℝ) *
+            (∫ y, (‖F y‖ : ℝ) ^ (2 : ℕ) ∂μ) ^ (1 / 2 : ℝ)) := by ring
+        _ = _ := by
+          by_cases hI : (∫ y, (‖F y‖ : ℝ) ^ (2 : ℕ) ∂μ) = 0
+          · simp [hI]
+          · rw [← Real.rpow_add
+              (lt_of_le_of_ne hFnonneg (Ne.symm hI))]
+            norm_num
+
 private lemma pressure_utensor_integral_le_two_energy
     {u : ParabolicPoint → Vec3} {c : ℝ → Vec3} {x₀ : Vec3}
     {ρ s : ℝ} (hρ : 0 < ρ)
@@ -76,7 +135,7 @@ private lemma pressure_utensor_integral_le_two_energy
   have hμtop : μ Set.univ < ∞ := by
     simpa [μ, Measure.restrict_apply MeasurableSet.univ, univ_inter] using
       volume_vec3Ball_lt_top (x := x₀) (r := ρ)
-  haveI : IsFiniteMeasure μ := ⟨hμtop⟩
+  have : IsFiniteMeasure μ := ⟨hμtop⟩
   have humeas' : AEStronglyMeasurable (fun y : Vec3 => u (y, s)) μ :=
     humeas.aestronglyMeasurable
   have hFmeas : AEStronglyMeasurable F μ := by
@@ -85,7 +144,7 @@ private lemma pressure_utensor_integral_le_two_energy
     exact hcont.comp_aestronglyMeasurable humeas'
   have hF : MemLp F 2 μ := by
     apply hu.of_le_mul hFmeas
-    filter_upwards [] with y
+    on_goal 1 => filter_upwards [] with y
     simpa [F, vec3EuclideanNorm_eq_l2] using
       vec3EuclideanNorm_le_sqrt_three (u (y, s))
   have hGmeas : AEStronglyMeasurable G μ := by
@@ -162,24 +221,7 @@ private lemma pressure_utensor_integral_le_two_energy
         (Eventually.of_forall fun y => pow_nonneg (norm_nonneg _) 2)).symm
   have hμne : μ Set.univ ≠ 0 := ne_of_gt hμpos
   have hμtop' : μ Set.univ ≠ ∞ := ne_of_lt hμtop
-  have hosc'' :
-      (∫⁻ y, ‖G y‖ₑ ^ (2 : ℝ) ∂μ) ≤
-        (4 : ℝ≥0∞) * (∫⁻ y, ‖F y‖ₑ ^ (2 : ℝ) ∂μ) := by
-    calc
-      _ = μ Set.univ *
-          ((∫⁻ y, ‖G y‖ₑ ^ (2 : ℝ) ∂μ) / μ Set.univ) := by
-        rw [ENNReal.mul_div_cancel hμne hμtop']
-      _ ≤ μ Set.univ *
-          ((4 : ℝ≥0∞) *
-            ((∫⁻ y, ‖F y‖ₑ ^ (2 : ℝ) ∂μ) / μ Set.univ)) := by gcongr
-      _ = (4 : ℝ≥0∞) * (∫⁻ y, ‖F y‖ₑ ^ (2 : ℝ) ∂μ) := by
-        calc
-          μ Set.univ * (4 *
-              ((∫⁻ y, ‖F y‖ₑ ^ (2 : ℝ) ∂μ) / μ Set.univ)) =
-              4 * (μ Set.univ *
-                ((∫⁻ y, ‖F y‖ₑ ^ (2 : ℝ) ∂μ) / μ Set.univ)) := by ring
-          _ = 4 * (∫⁻ y, ‖F y‖ₑ ^ (2 : ℝ) ∂μ) := by
-            rw [ENNReal.mul_div_cancel hμne hμtop']
+  have hosc'' := @pressure_utensor_integral_le_two_energy_hosc_1 μ F G hosc' hμne hμtop'
   have hFnonneg : 0 ≤ ∫ y, (‖F y‖ : ℝ) ^ (2 : ℕ) ∂μ :=
     integral_nonneg fun y => pow_nonneg (norm_nonneg _) _
   have hGnonneg : 0 ≤ ∫ y, (‖G y‖ : ℝ) ^ (2 : ℕ) ∂μ :=
@@ -209,32 +251,7 @@ private lemma pressure_utensor_integral_le_two_energy
           (∫ y, (‖G y‖ : ℝ) ^ (2 : ℕ) ∂μ) ^ (1 / 2 : ℝ) := by
     convert hholder using 1
     all_goals norm_num [Real.rpow_natCast]
-  have hprodle :
-      (∫ y, (‖F y‖ : ℝ) * ‖G y‖ ∂μ) ≤
-        2 * ∫ y, (‖F y‖ : ℝ) ^ (2 : ℕ) ∂μ := by
-    calc
-      _ ≤ (∫ y, (‖F y‖ : ℝ) ^ (2 : ℕ) ∂μ) ^ (1 / 2 : ℝ) *
-          (∫ y, (‖G y‖ : ℝ) ^ (2 : ℕ) ∂μ) ^ (1 / 2 : ℝ) := hholder'
-      _ ≤ (∫ y, (‖F y‖ : ℝ) ^ (2 : ℕ) ∂μ) ^ (1 / 2 : ℝ) *
-          (4 * ∫ y, (‖F y‖ : ℝ) ^ (2 : ℕ) ∂μ) ^ (1 / 2 : ℝ) := by
-        gcongr
-      _ = 2 * ∫ y, (‖F y‖ : ℝ) ^ (2 : ℕ) ∂μ := by
-        have hroot :
-            (4 * ∫ y, (‖F y‖ : ℝ) ^ (2 : ℕ) ∂μ) ^ (1 / 2 : ℝ) =
-              2 * (∫ y, (‖F y‖ : ℝ) ^ (2 : ℕ) ∂μ) ^ (1 / 2 : ℝ) := by
-          rw [Real.mul_rpow (by norm_num) hFnonneg]
-          norm_num
-        rw [hroot]
-        calc
-          _ = 2 * ((∫ y, (‖F y‖ : ℝ) ^ (2 : ℕ) ∂μ) ^
-              (1 / 2 : ℝ) *
-              (∫ y, (‖F y‖ : ℝ) ^ (2 : ℕ) ∂μ) ^ (1 / 2 : ℝ)) := by ring
-          _ = _ := by
-            by_cases hI : (∫ y, (‖F y‖ : ℝ) ^ (2 : ℕ) ∂μ) = 0
-            · simp [hI]
-            · rw [← Real.rpow_add
-                (lt_of_le_of_ne hFnonneg (Ne.symm hI))]
-              norm_num
+  have hprodle := @pressure_utensor_integral_le_two_energy_hprodle_2 μ F G hFnonneg hGle hholder'
   have hUnorm : ∀ y, pressureUTensorNorm u c s y = gu y * gv y := by
     intro y
     have hmf : meanFreeVec u x₀ ρ s y = u (y, s) - c s := by
@@ -348,7 +365,7 @@ private lemma harmonic_pressure_integral_le_lpNorm
   have hμtop : μ Set.univ < ∞ := by
     simpa [μ, Measure.restrict_apply MeasurableSet.univ, univ_inter] using
       volume_vec3Ball_lt_top (x := x₀) (r := r)
-  haveI : IsFiniteMeasure μ := ⟨hμtop⟩
+  have : IsFiniteMeasure μ := ⟨hμtop⟩
   have hfmeas : AEMeasurable (fun x : Vec3 => |f x|) μ :=
     (continuous_abs.comp_aestronglyMeasurable hf.aestronglyMeasurable).aemeasurable
   have hfint : Integrable (fun x : Vec3 => |f x|) μ := by

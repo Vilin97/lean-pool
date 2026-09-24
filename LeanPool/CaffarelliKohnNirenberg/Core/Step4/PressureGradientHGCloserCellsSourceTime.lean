@@ -95,7 +95,8 @@ theorem pressure_source_exterior_mass_time_bound
       ENNReal.ofReal (Real.pi * 4 / 3) ^ (1 / 6 : ℝ) *
         ENNReal.ofReal ρ ^ (5 / 3 - 5 / κ) * morreyNorm (6 / 5 : ℝ) κ F := by
   have hρ : 0 < ρ := hr.trans_le hrρ
-  have h := ENNReal.rpow_le_rpow (pressure_source_spatial_mass_time_power_bound hF (x := x) (t := t) hr hrρ)
+  have h := ENNReal.rpow_le_rpow (pressure_source_spatial_mass_time_power_bound hF (x := x) (t :=
+    t) hr hrρ)
     (by norm_num : (0 : ℝ) ≤ 5 / 6)
   have hc : morreyCell (6 / 5 : ℝ) κ F (x, t) ρ ≤ morreyNorm (6 / 5 : ℝ) κ F :=
     le_iSup_of_le ((x, t) : ParabolicPoint) (le_iSup_of_le ⟨ρ, hρ⟩ le_rfl)

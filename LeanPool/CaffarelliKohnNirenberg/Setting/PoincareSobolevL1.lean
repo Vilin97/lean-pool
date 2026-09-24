@@ -5,6 +5,8 @@ Authors: Scott Armstrong, Vlad Vicol
 -/
 module
 
+public import LeanPool.CaffarelliKohnNirenberg.Foundation.Sobolev.Cutoff.NormTriangle
+
 public import LeanPool.CaffarelliKohnNirenberg.Foundation.Ambient.Euclidean
 public import LeanPool.CaffarelliKohnNirenberg.Foundation.Sobolev.Inequalities.SeeleyL1
 public import LeanPool.CaffarelliKohnNirenberg.Foundation.Sobolev.Inequalities.Smooth
@@ -39,23 +41,13 @@ noncomputable section
 
 attribute [local instance] Classical.propDecidable
 
+/-- Unit Euclidean ball used for the L¹ Poincare–Sobolev inequality. -/
 def unitEuclideanBall : Set (Vec 3) :=
   euclideanBall (0 : Vec 3) 1
 
 private theorem vecEuclideanNorm_eq_l2 (x : Vec 3) :
-    vecEuclideanNorm x = ‖WithLp.toLp 2 x‖ := by
-  rw [PiLp.norm_eq_of_L2]
-  simp [vecEuclideanNorm, vecNormSq, vecDot, Real.norm_eq_abs, sq_abs]
-  congr 1
-  apply Finset.sum_congr rfl
-  intro i _hi
-  ring
-
-private theorem vecEuclideanNorm_add_le (x y : Vec 3) :
-    vecEuclideanNorm (x + y) ≤ vecEuclideanNorm x + vecEuclideanNorm y := by
-  rw [vecEuclideanNorm_eq_l2, vecEuclideanNorm_eq_l2, vecEuclideanNorm_eq_l2]
-  rw [WithLp.toLp_add]
-  exact norm_add_le _ _
+    vecEuclideanNorm x = ‖WithLp.toLp 2 x‖ :=
+  vecEuclideanNorm_eq_norm_toLp x
 
 private theorem unitEuclideanBall_measurable :
     MeasurableSet unitEuclideanBall := by
@@ -203,6 +195,7 @@ private theorem unitEuclideanBall_volume_pos :
     unitEuclideanBall_bounded.volume_lt_top
   exact ENNReal.toReal_pos (lt_of_lt_of_le hpos (measure_mono hball)).ne' htop.ne
 
+/-- Explicit L¹ Poincare coefficient on the unit Euclidean ball. -/
 noncomputable def unitL1PoincareConstant : ℝ :=
   (volume unitEuclideanBall).toReal⁻¹ *
       (((2 * Classical.choose unitEuclideanBall_bounded) ^ 3) / (3 : ℝ)) *
@@ -700,10 +693,12 @@ theorem poincareSobolevL1_unit (g : Vec 3 → ℝ) (hg : ContDiff ℝ 1 g) :
     have hcompact : IsCompact (closure U) := by
       exact unitEuclideanBall_bounded.isBounded.isCompact_closure
     have hgv : IntegrableOn (fun x => |g x - c|) U := by
-      exact ((hg.continuous.sub continuous_const).norm.continuousOn.integrableOn_compact hcompact).mono_set
+      exact ((hg.continuous.sub continuous_const).norm.continuousOn.integrableOn_compact
+        hcompact).mono_set
         subset_closure
     have hgg : IntegrableOn (fun x => ‖fderiv ℝ g x‖) U := by
-      exact ((hg.continuous_fderiv (by norm_num)).norm.continuousOn.integrableOn_compact hcompact).mono_set
+      exact ((hg.continuous_fderiv (by norm_num)).norm.continuousOn.integrableOn_compact
+        hcompact).mono_set
         subset_closure
     have hreal := unit_value_poincare g hg
     calc
