@@ -100,15 +100,7 @@ private lemma smooth_harmonic_interior_gradient_bound_hF₀'cont_1 :
               let D : Vec3 → ℝ :=
                 spatialLaplacian
                   (eta x₀
-                    (div_pos
-                      (mul_pos
-                        (Mathlib.Meta.Positivity.pos_of_isNat
-                          (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (4 : ℝ)))
-                          (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 4))))
-                        hρ)
-                      (Mathlib.Meta.Positivity.pos_of_isNat
-                        (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (3 : ℝ)))
-                        (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 3))))));
+                    (by positivity : (0 : ℝ) < 4 * ρ / 3));
               Continuous D →
                 let F₀' : ℝ → Vec3 → ℝ := fun (t : ℝ) (y : Vec3) =>
                   H y * spatialDeriv newtonianKernel j (z t - y) * D y;
@@ -158,15 +150,7 @@ private lemma smooth_harmonic_interior_gradient_bound_hF₀'bound_2 :
           let D : Vec3 → ℝ :=
             spatialLaplacian
               (eta x₀
-                (div_pos
-                  (mul_pos
-                    (Mathlib.Meta.Positivity.pos_of_isNat
-                      (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (4 : ℝ)))
-                      (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 4))))
-                    hρ)
-                  (Mathlib.Meta.Positivity.pos_of_isNat
-                    (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (3 : ℝ)))
-                    (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 3))))));
+                (by positivity : (0 : ℝ) < 4 * ρ / 3));
           let F₀' : ℝ → Vec3 → ℝ := fun (t : ℝ) (y : Vec3) =>
             H y * spatialDeriv newtonianKernel j (z t - y) * D y;
           ∀ᵐ (y : Vec3) ∂Measure.restrict volume A,
@@ -207,15 +191,7 @@ private lemma smooth_harmonic_interior_gradient_bound_hF₀'diff_3 :
           let D : Vec3 → ℝ :=
             spatialLaplacian
               (eta x₀
-                (div_pos
-                  (mul_pos
-                    (Mathlib.Meta.Positivity.pos_of_isNat
-                      (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (4 : ℝ)))
-                      (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 4))))
-                    hρ)
-                  (Mathlib.Meta.Positivity.pos_of_isNat
-                    (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (3 : ℝ)))
-                    (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 3))))));
+                (by positivity : (0 : ℝ) < 4 * ρ / 3));
           let F₀ : ℝ → Vec3 → ℝ := fun (t : ℝ) (y : Vec3) => H y * newtonianKernel (z t - y) * D y;
           let F₀' : ℝ → Vec3 → ℝ := fun (t : ℝ) (y : Vec3) =>
             H y * spatialDeriv newtonianKernel j (z t - y) * D y;
@@ -246,15 +222,7 @@ private lemma smooth_harmonic_interior_gradient_bound_hGdiff_4 :
             H y *
               spatialDeriv
                 (kernelCutoffDerivative (z t) x₀
-                  (div_pos
-                    (mul_pos
-                      (Mathlib.Meta.Positivity.pos_of_isNat
-                        (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (4 : ℝ)))
-                        (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 4))))
-                      hρ)
-                    (Mathlib.Meta.Positivity.pos_of_isNat
-                      (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (3 : ℝ)))
-                      (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 3)))))
+                  (by positivity : (0 : ℝ) < 4 * ρ / 3)
                   i)
                 i y;
           let G' : Fin (3 : ℕ) → ℝ → Vec3 → ℝ := fun (i : Fin (3 : ℕ)) (t : ℝ) (y : Vec3) =>
@@ -262,29 +230,13 @@ private lemma smooth_harmonic_interior_gradient_bound_hGdiff_4 :
               (-spatialDeriv (spatialDeriv newtonianKernel i) j (z t - y) *
                   spatialDeriv
                     (eta x₀
-                      (div_pos
-                        (mul_pos
-                          (Mathlib.Meta.Positivity.pos_of_isNat
-                            (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (4 : ℝ)))
-                            (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 4))))
-                          hρ)
-                        (Mathlib.Meta.Positivity.pos_of_isNat
-                          (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (3 : ℝ)))
-                          (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 3))))))
+                      (by positivity : (0 : ℝ) < 4 * ρ / 3))
                     i y +
                 spatialDeriv newtonianKernel j (z t - y) *
                   spatialDeriv
                     (spatialDeriv
                       (eta x₀
-                        (div_pos
-                          (mul_pos
-                            (Mathlib.Meta.Positivity.pos_of_isNat
-                              (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (4 : ℝ)))
-                              (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 4))))
-                            hρ)
-                          (Mathlib.Meta.Positivity.pos_of_isNat
-                            (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (3 : ℝ)))
-                            (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 3))))))
+                        (by positivity : (0 : ℝ) < 4 * ρ / 3))
                       i)
                     i y);
           ∀ (i : Fin (3 : ℕ)),
@@ -347,15 +299,7 @@ private lemma smooth_harmonic_interior_gradient_bound_hGmeas_5 :
                 H y *
                   spatialDeriv
                     (kernelCutoffDerivative (z t) x₀
-                      (div_pos
-                        (mul_pos
-                          (Mathlib.Meta.Positivity.pos_of_isNat
-                            (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (4 : ℝ)))
-                            (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 4))))
-                          hρ)
-                        (Mathlib.Meta.Positivity.pos_of_isNat
-                          (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (3 : ℝ)))
-                          (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 3)))))
+                      (by positivity : (0 : ℝ) < 4 * ρ / 3)
                       i)
                     i y;
               ∀ (i : Fin (3 : ℕ)),
@@ -389,29 +333,13 @@ private lemma smooth_harmonic_interior_gradient_bound_hG'cont_6 :
                   (-spatialDeriv (spatialDeriv newtonianKernel i) j (z t - y) *
                       spatialDeriv
                         (eta x₀
-                          (div_pos
-                            (mul_pos
-                              (Mathlib.Meta.Positivity.pos_of_isNat
-                                (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (4 : ℝ)))
-                                (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 4))))
-                              hρ)
-                            (Mathlib.Meta.Positivity.pos_of_isNat
-                              (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (3 : ℝ)))
-                              (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 3))))))
+                          (by positivity : (0 : ℝ) < 4 * ρ / 3))
                         i y +
                     spatialDeriv newtonianKernel j (z t - y) *
                       spatialDeriv
                         (spatialDeriv
                           (eta x₀
-                            (div_pos
-                              (mul_pos
-                                (Mathlib.Meta.Positivity.pos_of_isNat
-                                  (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (4 : ℝ)))
-                                  (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 4))))
-                                hρ)
-                              (Mathlib.Meta.Positivity.pos_of_isNat
-                                (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (3 : ℝ)))
-                                (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 3))))))
+                            (by positivity : (0 : ℝ) < 4 * ρ / 3))
                           i)
                         i y);
               ∀ (i : Fin (3 : ℕ)), ContinuousOn (G' i (0 : ℝ)) A
@@ -484,29 +412,13 @@ private lemma smooth_harmonic_interior_gradient_bound_hGbound_7 :
               (-spatialDeriv (spatialDeriv newtonianKernel i) j (z t - y) *
                   spatialDeriv
                     (eta x₀
-                      (div_pos
-                        (mul_pos
-                          (Mathlib.Meta.Positivity.pos_of_isNat
-                            (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (4 : ℝ)))
-                            (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 4))))
-                          hρ)
-                        (Mathlib.Meta.Positivity.pos_of_isNat
-                          (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (3 : ℝ)))
-                          (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 3))))))
+                      (by positivity : (0 : ℝ) < 4 * ρ / 3))
                     i y +
                 spatialDeriv newtonianKernel j (z t - y) *
                   spatialDeriv
                     (spatialDeriv
                       (eta x₀
-                        (div_pos
-                          (mul_pos
-                            (Mathlib.Meta.Positivity.pos_of_isNat
-                              (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (4 : ℝ)))
-                              (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 4))))
-                            hρ)
-                          (Mathlib.Meta.Positivity.pos_of_isNat
-                            (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (3 : ℝ)))
-                            (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 3))))))
+                        (by positivity : (0 : ℝ) < 4 * ρ / 3))
                       i)
                     i y);
           ∀ (i : Fin (3 : ℕ)),
@@ -547,30 +459,14 @@ private lemma smooth_harmonic_interior_gradient_bound_hrep_t_8 :
                 let D : Vec3 → ℝ :=
                   spatialLaplacian
                     (eta x₀
-                      (div_pos
-                        (mul_pos
-                          (Mathlib.Meta.Positivity.pos_of_isNat
-                            (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (4 : ℝ)))
-                            (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 4))))
-                          hρ)
-                        (Mathlib.Meta.Positivity.pos_of_isNat
-                          (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (3 : ℝ)))
-                          (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 3))))));
+                      (by positivity : (0 : ℝ) < 4 * ρ / 3));
                 let F₀ : ℝ → Vec3 → ℝ := fun (t : ℝ) (y : Vec3) =>
                   H y * newtonianKernel (z t - y) * D y;
                 let G : Fin (3 : ℕ) → ℝ → Vec3 → ℝ := fun (i : Fin (3 : ℕ)) (t : ℝ) (y : Vec3) =>
                   H y *
                     spatialDeriv
                       (kernelCutoffDerivative (z t) x₀
-                        (div_pos
-                          (mul_pos
-                            (Mathlib.Meta.Positivity.pos_of_isNat
-                              (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (4 : ℝ)))
-                              (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 4))))
-                            hρ)
-                          (Mathlib.Meta.Positivity.pos_of_isNat
-                            (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (3 : ℝ)))
-                            (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 3)))))
+                        (by positivity : (0 : ℝ) < 4 * ρ / 3)
                         i)
                       i y;
                 (∀ (t : ℝ),
@@ -667,15 +563,7 @@ private lemma smooth_harmonic_interior_gradient_bound_hk₀'cont_10 :
           let D : Vec3 → ℝ :=
             spatialLaplacian
               (eta x₀
-                (div_pos
-                  (mul_pos
-                    (Mathlib.Meta.Positivity.pos_of_isNat
-                      (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (4 : ℝ)))
-                      (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 4))))
-                    hρ)
-                  (Mathlib.Meta.Positivity.pos_of_isNat
-                    (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (3 : ℝ)))
-                    (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 3))))));
+                (by positivity : (0 : ℝ) < 4 * ρ / 3));
           Continuous D →
             let k₀' : Vec3 → ℝ := fun (y : Vec3) => spatialDeriv newtonianKernel j (x - y) * D y;
             ContinuousOn k₀' A
@@ -708,15 +596,7 @@ private lemma smooth_harmonic_interior_gradient_bound_hsource_deriv_bound_11 :
               let D : Vec3 → ℝ :=
                 spatialLaplacian
                   (eta x₀
-                    (div_pos
-                      (mul_pos
-                        (Mathlib.Meta.Positivity.pos_of_isNat
-                          (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (4 : ℝ)))
-                          (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 4))))
-                        hρ)
-                      (Mathlib.Meta.Positivity.pos_of_isNat
-                        (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (3 : ℝ)))
-                        (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 3))))));
+                    (by positivity : (0 : ℝ) < 4 * ρ / 3));
               let F₀' : ℝ → Vec3 → ℝ := fun (t : ℝ) (y : Vec3) =>
                 H y * spatialDeriv newtonianKernel j (z t - y) * D y;
               let k₀' : Vec3 → ℝ := fun (y : Vec3) => spatialDeriv newtonianKernel j (x - y) * D y;
@@ -783,29 +663,13 @@ private lemma smooth_harmonic_interior_gradient_bound_hkGcont_12 :
             -spatialDeriv (spatialDeriv newtonianKernel i) j (x - y) *
                 spatialDeriv
                   (eta x₀
-                    (div_pos
-                      (mul_pos
-                        (Mathlib.Meta.Positivity.pos_of_isNat
-                          (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (4 : ℝ)))
-                          (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 4))))
-                        hρ)
-                      (Mathlib.Meta.Positivity.pos_of_isNat
-                        (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (3 : ℝ)))
-                        (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 3))))))
+                    (by positivity : (0 : ℝ) < 4 * ρ / 3))
                   i y +
               spatialDeriv newtonianKernel j (x - y) *
                 spatialDeriv
                   (spatialDeriv
                     (eta x₀
-                      (div_pos
-                        (mul_pos
-                          (Mathlib.Meta.Positivity.pos_of_isNat
-                            (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (4 : ℝ)))
-                            (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 4))))
-                          hρ)
-                        (Mathlib.Meta.Positivity.pos_of_isNat
-                          (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (3 : ℝ)))
-                          (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 3))))))
+                      (by positivity : (0 : ℝ) < 4 * ρ / 3))
                     i)
                   i y;
           ∀ (i : Fin (3 : ℕ)), ContinuousOn (kG i) A
@@ -855,58 +719,26 @@ private lemma smooth_harmonic_interior_gradient_bound_hG_deriv_bound_13 :
                   (-spatialDeriv (spatialDeriv newtonianKernel i) j (z t - y) *
                       spatialDeriv
                         (eta x₀
-                          (div_pos
-                            (mul_pos
-                              (Mathlib.Meta.Positivity.pos_of_isNat
-                                (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (4 : ℝ)))
-                                (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 4))))
-                              hρ)
-                            (Mathlib.Meta.Positivity.pos_of_isNat
-                              (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (3 : ℝ)))
-                              (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 3))))))
+                          (by positivity : (0 : ℝ) < 4 * ρ / 3))
                         i y +
                     spatialDeriv newtonianKernel j (z t - y) *
                       spatialDeriv
                         (spatialDeriv
                           (eta x₀
-                            (div_pos
-                              (mul_pos
-                                (Mathlib.Meta.Positivity.pos_of_isNat
-                                  (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (4 : ℝ)))
-                                  (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 4))))
-                                hρ)
-                              (Mathlib.Meta.Positivity.pos_of_isNat
-                                (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (3 : ℝ)))
-                                (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 3))))))
+                            (by positivity : (0 : ℝ) < 4 * ρ / 3))
                           i)
                         i y);
               let kG : Fin (3 : ℕ) → Vec3 → ℝ := fun (i : Fin (3 : ℕ)) (y : Vec3) =>
                 -spatialDeriv (spatialDeriv newtonianKernel i) j (x - y) *
                     spatialDeriv
                       (eta x₀
-                        (div_pos
-                          (mul_pos
-                            (Mathlib.Meta.Positivity.pos_of_isNat
-                              (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (4 : ℝ)))
-                              (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 4))))
-                            hρ)
-                          (Mathlib.Meta.Positivity.pos_of_isNat
-                            (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (3 : ℝ)))
-                            (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 3))))))
+                        (by positivity : (0 : ℝ) < 4 * ρ / 3))
                       i y +
                   spatialDeriv newtonianKernel j (x - y) *
                     spatialDeriv
                       (spatialDeriv
                         (eta x₀
-                          (div_pos
-                            (mul_pos
-                              (Mathlib.Meta.Positivity.pos_of_isNat
-                                (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (4 : ℝ)))
-                                (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 4))))
-                              hρ)
-                            (Mathlib.Meta.Positivity.pos_of_isNat
-                              (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (3 : ℝ)))
-                              (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 3))))))
+                          (by positivity : (0 : ℝ) < 4 * ρ / 3))
                         i)
                       i y;
               (∀ (i : Fin (3 : ℕ)),
@@ -967,29 +799,13 @@ private lemma smooth_harmonic_interior_gradient_bound_hsumG_14 :
           (-spatialDeriv (spatialDeriv newtonianKernel i) j (z t - y) *
               spatialDeriv
                 (eta x₀
-                  (div_pos
-                    (mul_pos
-                      (Mathlib.Meta.Positivity.pos_of_isNat
-                        (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (4 : ℝ)))
-                        (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 4))))
-                      hρ)
-                    (Mathlib.Meta.Positivity.pos_of_isNat
-                      (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (3 : ℝ)))
-                      (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 3))))))
+                  (by positivity : (0 : ℝ) < 4 * ρ / 3))
                 i y +
             spatialDeriv newtonianKernel j (z t - y) *
               spatialDeriv
                 (spatialDeriv
                   (eta x₀
-                    (div_pos
-                      (mul_pos
-                        (Mathlib.Meta.Positivity.pos_of_isNat
-                          (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (4 : ℝ)))
-                          (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 4))))
-                        hρ)
-                      (Mathlib.Meta.Positivity.pos_of_isNat
-                        (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (3 : ℝ)))
-                        (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 3))))))
+                    (by positivity : (0 : ℝ) < 4 * ρ / 3))
                   i)
                 i y);
       (∀ (i : Fin (3 : ℕ)),
@@ -1051,15 +867,7 @@ private lemma smooth_harmonic_interior_gradient_bound_hF₀full_2 :
       let D : Vec3 → ℝ :=
         spatialLaplacian
           (eta x₀
-            (div_pos
-              (mul_pos
-                (Mathlib.Meta.Positivity.pos_of_isNat
-                  (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (4 : ℝ)))
-                  (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 4))))
-                hρ)
-              (Mathlib.Meta.Positivity.pos_of_isNat
-                (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (3 : ℝ)))
-                (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 3))))));
+            (by positivity : (0 : ℝ) < 4 * ρ / 3));
       (Continuous (Y := ℝ) fun (y : Vec3) => H y * D y) →
         (HasCompactSupport (β := ℝ) fun (y : Vec3) => H y * D y) →
           let F₀ : ℝ → Vec3 → ℝ := fun (t : ℝ) (y : Vec3) => H y * newtonianKernel (z t - y) * D y;
@@ -1082,15 +890,7 @@ private lemma smooth_harmonic_interior_gradient_bound_hGint_3 :
               H y *
                 spatialDeriv
                   (kernelCutoffDerivative (z t) x₀
-                    (div_pos
-                      (mul_pos
-                        (Mathlib.Meta.Positivity.pos_of_isNat
-                          (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (4 : ℝ)))
-                          (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 4))))
-                        hρ)
-                      (Mathlib.Meta.Positivity.pos_of_isNat
-                        (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (3 : ℝ)))
-                        (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 3)))))
+                    (by positivity : (0 : ℝ) < 4 * ρ / 3)
                     i)
                   i y;
             ∀ (i : Fin (3 : ℕ)),
@@ -1111,15 +911,7 @@ private lemma smooth_harmonic_interior_gradient_bound_hF₀zero_4 :
       let D : Vec3 → ℝ :=
         spatialLaplacian
           (eta x₀
-            (div_pos
-              (mul_pos
-                (Mathlib.Meta.Positivity.pos_of_isNat
-                  (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (4 : ℝ)))
-                  (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 4))))
-                hρ)
-              (Mathlib.Meta.Positivity.pos_of_isNat
-                (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (3 : ℝ)))
-                (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 3))))));
+            (by positivity : (0 : ℝ) < 4 * ρ / 3));
       let F₀ : ℝ → Vec3 → ℝ := fun (t : ℝ) (y : Vec3) => H y * newtonianKernel (z t - y) * D y;
       ∀ (t : ℝ), ∀ y ∉ A, F₀ t y = (0 : ℝ)
     := by
@@ -1139,15 +931,7 @@ private lemma smooth_harmonic_interior_gradient_bound_hGzero_5 :
           H y *
             spatialDeriv
               (kernelCutoffDerivative (z t) x₀
-                (div_pos
-                  (mul_pos
-                    (Mathlib.Meta.Positivity.pos_of_isNat
-                      (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (4 : ℝ)))
-                      (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 4))))
-                    hρ)
-                  (Mathlib.Meta.Positivity.pos_of_isNat
-                    (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (3 : ℝ)))
-                    (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 3)))))
+                (by positivity : (0 : ℝ) < 4 * ρ / 3)
                 i)
               i y;
         ∀ (i : Fin (3 : ℕ)), ∀ t ∈ S, ∀ y ∉ A, G i t y = (0 : ℝ)
@@ -1166,15 +950,7 @@ private lemma smooth_harmonic_interior_gradient_bound_hF₀restrict_6 :
         let D : Vec3 → ℝ :=
           spatialLaplacian
             (eta x₀
-              (div_pos
-                (mul_pos
-                  (Mathlib.Meta.Positivity.pos_of_isNat
-                    (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (4 : ℝ)))
-                    (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 4))))
-                  hρ)
-                (Mathlib.Meta.Positivity.pos_of_isNat
-                  (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (3 : ℝ)))
-                  (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 3))))));
+              (by positivity : (0 : ℝ) < 4 * ρ / 3));
         let F₀ : ℝ → Vec3 → ℝ := fun (t : ℝ) (y : Vec3) => H y * newtonianKernel (z t - y) * D y;
         (∀ (t : ℝ), ∀ y ∉ A, F₀ t y = (0 : ℝ)) →
           ∀ (t : ℝ),
@@ -1201,15 +977,7 @@ private lemma smooth_harmonic_interior_gradient_bound_hGrestrict_7 :
           H y *
             spatialDeriv
               (kernelCutoffDerivative (z t) x₀
-                (div_pos
-                  (mul_pos
-                    (Mathlib.Meta.Positivity.pos_of_isNat
-                      (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (4 : ℝ)))
-                      (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 4))))
-                    hρ)
-                  (Mathlib.Meta.Positivity.pos_of_isNat
-                    (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (3 : ℝ)))
-                    (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 3)))))
+                (by positivity : (0 : ℝ) < 4 * ρ / 3)
                 i)
               i y;
         (∀ (i : Fin (3 : ℕ)), ∀ t ∈ S, ∀ y ∉ A, G i t y = (0 : ℝ)) →
@@ -1265,15 +1033,7 @@ private lemma smooth_harmonic_interior_gradient_bound_hright_10 :
       let D : Vec3 → ℝ :=
         spatialLaplacian
           (eta x₀
-            (div_pos
-              (mul_pos
-                (Mathlib.Meta.Positivity.pos_of_isNat
-                  (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (4 : ℝ)))
-                  (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 4))))
-                hρ)
-              (Mathlib.Meta.Positivity.pos_of_isNat
-                (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (3 : ℝ)))
-                (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 3))))));
+            (by positivity : (0 : ℝ) < 4 * ρ / 3));
       let F₀ : ℝ → Vec3 → ℝ := fun (t : ℝ) (y : Vec3) => H y * newtonianKernel (z t - y) * D y;
       let F₀' : ℝ → Vec3 → ℝ := fun (t : ℝ) (y : Vec3) =>
         H y * spatialDeriv newtonianKernel j (z t - y) * D y;
@@ -1289,15 +1049,7 @@ private lemma smooth_harmonic_interior_gradient_bound_hright_10 :
           H y *
             spatialDeriv
               (kernelCutoffDerivative (z t) x₀
-                (div_pos
-                  (mul_pos
-                    (Mathlib.Meta.Positivity.pos_of_isNat
-                      (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (4 : ℝ)))
-                      (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 4))))
-                    hρ)
-                  (Mathlib.Meta.Positivity.pos_of_isNat
-                    (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (3 : ℝ)))
-                    (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 3)))))
+                (by positivity : (0 : ℝ) < 4 * ρ / 3)
                 i)
               i y;
         let G' : Fin (3 : ℕ) → ℝ → Vec3 → ℝ := fun (i : Fin (3 : ℕ)) (t : ℝ) (y : Vec3) =>
@@ -1305,29 +1057,13 @@ private lemma smooth_harmonic_interior_gradient_bound_hright_10 :
             (-spatialDeriv (spatialDeriv newtonianKernel i) j (z t - y) *
                 spatialDeriv
                   (eta x₀
-                    (div_pos
-                      (mul_pos
-                        (Mathlib.Meta.Positivity.pos_of_isNat
-                          (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (4 : ℝ)))
-                          (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 4))))
-                        hρ)
-                      (Mathlib.Meta.Positivity.pos_of_isNat
-                        (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (3 : ℝ)))
-                        (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 3))))))
+                    (by positivity : (0 : ℝ) < 4 * ρ / 3))
                   i y +
               spatialDeriv newtonianKernel j (z t - y) *
                 spatialDeriv
                   (spatialDeriv
                     (eta x₀
-                      (div_pos
-                        (mul_pos
-                          (Mathlib.Meta.Positivity.pos_of_isNat
-                            (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (4 : ℝ)))
-                            (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 4))))
-                          hρ)
-                        (Mathlib.Meta.Positivity.pos_of_isNat
-                          (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (3 : ℝ)))
-                          (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 3))))))
+                      (by positivity : (0 : ℝ) < 4 * ρ / 3))
                     i)
                   i y);
         (∀ (i : Fin (3 : ℕ)),
@@ -1372,15 +1108,7 @@ private lemma smooth_harmonic_interior_gradient_bound_hF₀'zero_11 :
       let D : Vec3 → ℝ :=
         spatialLaplacian
           (eta x₀
-            (div_pos
-              (mul_pos
-                (Mathlib.Meta.Positivity.pos_of_isNat
-                  (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (4 : ℝ)))
-                  (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 4))))
-                hρ)
-              (Mathlib.Meta.Positivity.pos_of_isNat
-                (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (3 : ℝ)))
-                (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 3))))));
+            (by positivity : (0 : ℝ) < 4 * ρ / 3));
       let F₀' : ℝ → Vec3 → ℝ := fun (t : ℝ) (y : Vec3) =>
         H y * spatialDeriv newtonianKernel j (z t - y) * D y;
       ∀ y ∉ A, F₀' (0 : ℝ) y = (0 : ℝ)
@@ -1399,15 +1127,7 @@ private lemma smooth_harmonic_interior_gradient_bound_hF₀'full_12 :
         let D : Vec3 → ℝ :=
           spatialLaplacian
             (eta x₀
-              (div_pos
-                (mul_pos
-                  (Mathlib.Meta.Positivity.pos_of_isNat
-                    (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (4 : ℝ)))
-                    (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 4))))
-                  hρ)
-                (Mathlib.Meta.Positivity.pos_of_isNat
-                  (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (3 : ℝ)))
-                  (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 3))))));
+              (by positivity : (0 : ℝ) < 4 * ρ / 3));
         let F₀' : ℝ → Vec3 → ℝ := fun (t : ℝ) (y : Vec3) =>
           H y * spatialDeriv newtonianKernel j (z t - y) * D y;
         (∀ y ∉ A, F₀' (0 : ℝ) y = (0 : ℝ)) →
@@ -1432,29 +1152,13 @@ private lemma smooth_harmonic_interior_gradient_bound_hkGzero_13 :
         -spatialDeriv (spatialDeriv newtonianKernel i) j (x - y) *
             spatialDeriv
               (eta x₀
-                (div_pos
-                  (mul_pos
-                    (Mathlib.Meta.Positivity.pos_of_isNat
-                      (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (4 : ℝ)))
-                      (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 4))))
-                    hρ)
-                  (Mathlib.Meta.Positivity.pos_of_isNat
-                    (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (3 : ℝ)))
-                    (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 3))))))
+                (by positivity : (0 : ℝ) < 4 * ρ / 3))
               i y +
           spatialDeriv newtonianKernel j (x - y) *
             spatialDeriv
               (spatialDeriv
                 (eta x₀
-                  (div_pos
-                    (mul_pos
-                      (Mathlib.Meta.Positivity.pos_of_isNat
-                        (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (4 : ℝ)))
-                        (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 4))))
-                      hρ)
-                    (Mathlib.Meta.Positivity.pos_of_isNat
-                      (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl (3 : ℝ)))
-                      (Eq.refl (Nat.ble (1 : ℕ) (nat_lit 3))))))
+                  (by positivity : (0 : ℝ) < 4 * ρ / 3))
                 i)
               i y;
       ∀ (i : Fin (3 : ℕ)), ∀ y ∉ A, kG i y = (0 : ℝ)
