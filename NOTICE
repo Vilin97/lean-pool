@@ -130,6 +130,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/LocalComplexGeometry      https://github.com/BochaoKong/nullstellensatz
   LeanPool/LongGapsBetweenPrimes     https://github.com/openai/LongGapsBetweenPrimes
   LeanPool/LowDimSolvClassification  https://github.com/LieLean/LowDimSolvClassification
+  LeanPool/LowWeightPauliDynamics    https://github.com/Jue-Xu/Lean4LPD
   LeanPool/MRiscX                    https://github.com/JulsDE/MRiscX
   LeanPool/MassFormula               https://github.com/0stellensatz/MassFormula
   LeanPool/MatchingLogic             https://github.com/eveil-labs/matching-logic-lean
