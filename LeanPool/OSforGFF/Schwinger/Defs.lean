@@ -50,22 +50,23 @@ S_n(f₁,...,fₙ) = (-i)ⁿ (coefficient of (iJ)ⁿ/n! in Z[J])
     in the infinite sequence of Schwinger functions {S_n}_{n=1}^∞.
 -/
 def SchwingerFunction (dμ_config : ProbabilityMeasure FieldConfiguration) (n : ℕ)
-  (f : Fin n → TestFunction) : ℝ :=
+  (f : Fin n → OSforGFF.TestFunction) : ℝ :=
   ∫ ω, (∏ i, distributionPairing ω (f i)) ∂dμ_config.toMeasure
 
 /-- The 1-point Schwinger function: the mean field -/
 def SchwingerFunction₁ (dμ_config : ProbabilityMeasure FieldConfiguration)
-  (f : TestFunction) : ℝ :=
+  (f : OSforGFF.TestFunction) : ℝ :=
   SchwingerFunction dμ_config 1 ![f]
 
 /-- The 2-point Schwinger function: the covariance -/
 def SchwingerFunction₂ (dμ_config : ProbabilityMeasure FieldConfiguration)
-  (f g : TestFunction) : ℝ :=
+  (f g : OSforGFF.TestFunction) : ℝ :=
   SchwingerFunction dμ_config 2 ![f, g]
 
 
 /-- The Schwinger function equals the GJ mean for n=1 -/
-lemma schwinger_eq_mean (dμ_config : ProbabilityMeasure FieldConfiguration) (f : TestFunction) :
+lemma schwinger_eq_mean (dμ_config : ProbabilityMeasure FieldConfiguration)
+    (f : OSforGFF.TestFunction) :
   SchwingerFunction₁ dμ_config f = GJMean dμ_config f := by
   unfold SchwingerFunction₁ SchwingerFunction GJMean
   classical
@@ -73,7 +74,7 @@ lemma schwinger_eq_mean (dμ_config : ProbabilityMeasure FieldConfiguration) (f 
 
 /-- The Schwinger function equals the direct covariance integral for n=2 -/
 lemma schwinger_eq_covariance (dμ_config : ProbabilityMeasure FieldConfiguration) (f g :
-  TestFunction) :
+  OSforGFF.TestFunction) :
   SchwingerFunction₂ dμ_config f g = ∫ ω, (distributionPairing ω f) * (distributionPairing ω g)
     ∂dμ_config.toMeasure := by
   unfold SchwingerFunction₂ SchwingerFunction
@@ -82,7 +83,7 @@ lemma schwinger_eq_covariance (dμ_config : ProbabilityMeasure FieldConfiguratio
 
 /-- For centered measures (zero mean), the 1-point function vanishes -/
 lemma schwinger_vanishes_centered (dμ_config : ProbabilityMeasure FieldConfiguration)
-  (h_centered : ∀ f : TestFunction, GJMean dμ_config f = 0) (f : TestFunction) :
+  (h_centered : ∀ f : OSforGFF.TestFunction, GJMean dμ_config f = 0) (f : OSforGFF.TestFunction) :
   SchwingerFunction₁ dμ_config f = 0 := by
   rw [schwinger_eq_mean]
   exact h_centered f
@@ -241,8 +242,8 @@ This approach is more elementary and constructive than functional derivatives.
 /-- A (centered) Gaussian field measure: the generating functional is an exponential of a
 quadratic form. -/
 def IsGaussianMeasure (dμ : ProbabilityMeasure FieldConfiguration) : Prop :=
-  ∃ (Cov : TestFunction → TestFunction → ℝ),
-    ∀ J : TestFunction,
+  ∃ (Cov : OSforGFF.TestFunction → OSforGFF.TestFunction → ℝ),
+    ∀ J : OSforGFF.TestFunction,
       GJGeneratingFunctional dμ J = Complex.exp ((-(1 : ℂ) / 2) * (Cov J J : ℂ))
 
 /-! ## Basic Distribution Framework

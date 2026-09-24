@@ -300,10 +300,10 @@ noncomputable def euclideanAction (g : E) (f : TestFunctionℂ) : TestFunction�
     (hg_upper := euclidean_pullback_polynomial_bounds g) f
 
 /-- Action of Euclidean group on real test functions via pullback.
-    For g ∈ E and f ∈ TestFunction, define (g • f)(x) = f(g⁻¹ • x).
-    This is the real version of euclideanAction for TestFunction = SchwartzMap SpaceTime ℝ.
+    For g ∈ E and f ∈ OSforGFF.TestFunction, define (g • f)(x) = f(g⁻¹ • x).
+    This is the real version of euclideanAction for OSforGFF.TestFunction = SchwartzMap SpaceTime ℝ.
 -/
-noncomputable def euclideanActionReal (g : E) (f : TestFunction) : TestFunction :=
+noncomputable def euclideanActionReal (g : E) (f : OSforGFF.TestFunction) : OSforGFF.TestFunction :=
   SchwartzMap.compCLM (𝕜 := ℝ)
     (hg := euclidean_pullback_temperate_growth g)
     (hg_upper := euclidean_pullback_polynomial_bounds g) f
