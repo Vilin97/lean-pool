@@ -24,7 +24,7 @@ import Mathlib.Data.Nat.Factorial.DoubleFactorial
 Core type definitions for the formalization:
 
 - `SpaceTime` = EuclideanSpace ℝ (Fin 4), the Euclidean 4-space ℝ⁴
-- `TestFunction` / `TestFunctionℂ` = real/complex Schwartz functions on ℝ⁴
+- `OSforGFF.TestFunction` / `TestFunctionℂ` = real/complex Schwartz functions on ℝ⁴
 - `FieldConfiguration` = tempered distributions S'(ℝ⁴) (WeakDual of Schwartz space)
 - `distributionPairing` / `distributionPairingℂReal` = ⟨ω, f⟩ pairings
 - `GJGeneratingFunctional` = Z[J] = ∫ exp(i⟨ω, J⟩) dμ(ω)
@@ -61,8 +61,8 @@ abbrev μ : Measure SpaceTime := volume    -- Lebesgue, just named “μ”
 
 /- Distributions and test functions -/
 
-/-- The `TestFunction` declaration. -/
-abbrev TestFunction : Type := SchwartzMap SpaceTime ℝ
+/-- The `OSforGFF.TestFunction` declaration. -/
+abbrev OSforGFF.TestFunction : Type := SchwartzMap SpaceTime ℝ
 /-- Test functions over an arbitrary scalar field. -/
 abbrev TestFunction𝕜 : Type := SchwartzMap SpaceTime 𝕜
 /-- The `TestFunctionℂ` declaration. -/
@@ -101,7 +101,8 @@ the existing L2 framework for comparison and gradual transition.
 -/
 abbrev FieldConfiguration := WeakDual ℝ (SchwartzMap SpaceTime ℝ)
 
--- MeasurableSpace on FieldConfiguration = WeakDual ℝ TestFunction is the cylinder σ-algebra
+-- MeasurableSpace on FieldConfiguration = WeakDual ℝ OSforGFF.TestFunction
+-- is the cylinder σ-algebra
 -- provided by the bochner library: ⨆ f, (borel ℝ).comap (eval f)
 
 /-- The fundamental pairing between a field configuration (distribution) and a test function.
@@ -110,23 +111,24 @@ abbrev FieldConfiguration := WeakDual ℝ (SchwartzMap SpaceTime ℝ)
     Note: FieldConfiguration = WeakDual ℝ (SchwartzMap SpaceTime ℝ) has the correct
     weak-* topology, making evaluation maps x ↦ ω(x) continuous for each test function x.
 -/
-def distributionPairing (ω : FieldConfiguration) (f : TestFunction) : ℝ := ω f
+def distributionPairing (ω : FieldConfiguration) (f : OSforGFF.TestFunction) : ℝ := ω f
 
-@[simp] lemma distributionPairing_add (ω₁ ω₂ : FieldConfiguration) (a : TestFunction) :
+@[simp] lemma distributionPairing_add (ω₁ ω₂ : FieldConfiguration) (a : OSforGFF.TestFunction) :
     distributionPairing (ω₁ + ω₂) a = distributionPairing ω₁ a + distributionPairing ω₂ a := rfl
 
-@[simp] lemma distributionPairing_smul (s : ℝ) (ω : FieldConfiguration) (a : TestFunction) :
+@[simp] lemma distributionPairing_smul (s : ℝ) (ω : FieldConfiguration)
+    (a : OSforGFF.TestFunction) :
     distributionPairing (s • ω) a = s * distributionPairing ω a :=
   -- This follows from the definition of scalar multiplication in WeakDual
   rfl
 
-lemma pairing_smul_real (ω : FieldConfiguration) (s : ℝ) (a : TestFunction) :
+lemma pairing_smul_real (ω : FieldConfiguration) (s : ℝ) (a : OSforGFF.TestFunction) :
   ω (s • a) = s * (ω a) :=
   -- This follows from the linearity of the dual pairing
   map_smul ω s a
 
 /-- The `distributionPairingCLM` declaration. -/
-@[simp] def distributionPairingCLM (a : TestFunction) : FieldConfiguration →L[ℝ] ℝ where
+@[simp] def distributionPairingCLM (a : OSforGFF.TestFunction) : FieldConfiguration →L[ℝ] ℝ where
   toFun ω := distributionPairing ω a
   map_add' ω₁ ω₂ := by
     -- WeakDual addition is pointwise: (ω₁ + ω₂) a = ω₁ a + ω₂ a
@@ -138,7 +140,7 @@ lemma pairing_smul_real (ω : FieldConfiguration) (s : ℝ) (a : TestFunction) :
     -- The evaluation map is continuous by definition of WeakDual topology
     exact WeakDual.eval_continuous a
 
-lemma distributionPairingCLM_apply (a : TestFunction) (ω : FieldConfiguration) :
+lemma distributionPairingCLM_apply (a : OSforGFF.TestFunction) (ω : FieldConfiguration) :
     distributionPairingCLM a ω = distributionPairing ω a := rfl
 
 variable [SigmaFinite μ]
@@ -154,14 +156,14 @@ where the integral is over field configurations ω (distributions).
     This is the fundamental object in constructive QFT.
 -/
 def GJGeneratingFunctional (dμ_config : ProbabilityMeasure FieldConfiguration)
-  (J : TestFunction) : ℂ :=
+  (J : OSforGFF.TestFunction) : ℂ :=
   ∫ ω, Complex.exp (Complex.I * (distributionPairing ω J : ℂ)) ∂dμ_config.toMeasure
 
 /-- Helper function to create a Schwartz map from a complex test function by applying a
     continuous linear map.
     This factors out the common pattern for extracting real/imaginary parts.
 -/
-def schwartzCompCLM (f : TestFunctionℂ) (L : ℂ →L[ℝ] ℝ) : TestFunction :=
+def schwartzCompCLM (f : TestFunctionℂ) (L : ℂ →L[ℝ] ℝ) : OSforGFF.TestFunction :=
   SchwartzMap.mk (fun x => L (f x)) (by
     -- L is a continuous linear map, hence smooth
     exact ContDiff.comp L.contDiff f.smooth'
@@ -196,7 +198,8 @@ omit [SigmaFinite μ]
 /-- Decompose a complex test function into its real and imaginary parts as real test functions.
     This is more efficient than separate extraction functions.
 -/
-def complexTestFunctionDecompose (f : TestFunctionℂ) : TestFunction × TestFunction :=
+def complexTestFunctionDecompose (f : TestFunctionℂ) :
+    OSforGFF.TestFunction × OSforGFF.TestFunction :=
   (schwartzCompCLM f Complex.reCLM, schwartzCompCLM f Complex.imCLM)
 
 /-- First component of the decomposition evaluates to the real part pointwise. -/
@@ -248,7 +251,7 @@ def GJGeneratingFunctionalℂ (dμ_config : ProbabilityMeasure FieldConfiguratio
 
 /-- The mean field in the Glimm-Jaffe framework -/
 def GJMean (dμ_config : ProbabilityMeasure FieldConfiguration)
-  (φ : TestFunction) : ℝ :=
+  (φ : OSforGFF.TestFunction) : ℝ :=
   ∫ ω, distributionPairing ω φ ∂dμ_config.toMeasure
 
 /-! ## Spatial Geometry and Energy Operators -/
