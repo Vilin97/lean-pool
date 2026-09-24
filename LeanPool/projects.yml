@@ -10109,36 +10109,63 @@ projects:
     msc:
       - '90C35'
       - '05C21'
-  - title: Local and global class field theory
-    summary: Formalizes local and global reciprocity and existence theorems, Hasse–Arf, Hilbert pairings,
-      the cyclic Hasse norm theorem, conductors, ray class fields, Hilbert class fields, and Kronecker–Weber,
-      together with the valuation, cohomology, and profinite-group support used in their proofs.
-    branch: algebraic number theory
-    main_declarations:
-    - ClassFieldTheory.finiteAbelianLocalReciprocity
-    - ClassFieldTheory.topologicalGlobalReciprocity
-    main_results:
-    - declaration: ClassFieldTheory.finiteAbelianLocalReciprocity
-      informal: For a finite abelian extension of nonarchimedean local fields, there is a surjective
-        continuous Artin map with kernel equal to the field-norm subgroup.
-    - declaration: ClassFieldTheory.topologicalGlobalReciprocity
-      informal: The idèle-class quotient by its identity component is topologically isomorphic to the
-        abelianized absolute Galois group.
-    tags:
-    - class-field-theory
-    - local-fields
-    - number-fields
-    - galois-cohomology
-    msc:
-    - 11R37
-    - 11S31
-    slug: classfieldtheory
-    entry_module: LeanPool.ClassFieldTheory
+
+  - slug: caffarelli-kohn-nirenberg
+    title: Caffarelli–Kohn–Nirenberg partial regularity
+    summary: >-
+      Partial regularity for three-dimensional incompressible Navier–Stokes
+      suitable weak solutions with locally L^q forcing, q > 5/2: quantitative
+      epsilon regularity and vanishing parabolic one-dimensional Hausdorff
+      measure of the singular set. Includes the supporting Sobolev, singular
+      integral, pressure, heat-potential and parabolic Morrey infrastructure,
+      equivalence of suitable-solution formulations, and a nonzero shear-flow
+      example. Imports the dependency closure of these completed results.
+    branch: Analysis
+    entry_module: LeanPool.CaffarelliKohnNirenberg
     authors:
-    - n-yamaguchi-0729
+      - Scott Armstrong
+      - Vlad Vicol
     source:
-      url: https://github.com/n-yamaguchi-0729/ClassFieldTheory
-      github_repo: n-yamaguchi-0729/ClassFieldTheory
-      commit: 01b4614ee76fa6f50e7f3ea3e1cff93b85693345
+      github_repo: scottnarmstrong/CaffarelliKohnNirenberg
+      url: https://github.com/scottnarmstrong/CaffarelliKohnNirenberg/tree/635fa6376aa3d46ae5251cb1d276a8589163f332
     license: Apache-2.0
     status: verified
+    provenance: AI
+    main_declarations:
+      - CKN.caffarelliKohnNirenberg
+      - CKN.epsilonRegularityL3
+    main_results:
+      - declaration: CKN.epsilonRegularityL3
+        informal: >-
+          For q > 5/2, sufficiently small unit-cylinder L^3 velocity, L^(3/2)
+          pressure and L^q force masses give an almost-everywhere equal
+          quantitatively bounded parabolic Holder representative on the closed
+          half-cylinder and regularity at each point of its open interior.
+      - declaration: CKN.epsilonRegularityGradient
+        informal: >-
+          A sufficiently small extended nonnegative limsup of the normalized
+          squared weak-gradient mass implies regularity at an interior point
+          of a suitable weak solution.
+      - declaration: CKN.caffarelliKohnNirenberg
+        informal: >-
+          The singular set of a suitable weak solution with locally L^q
+          forcing, q > 5/2, has zero one-dimensional Hausdorff measure in the
+          parabolic metric.
+      - declaration: CKN.isSuitableWeakSolution_iff_integrable
+        informal: >-
+          The manuscript's suitable weak-solution predicate is equivalent to
+          the predicate that explicitly requires integrability of all tested
+          weak-equation and local-energy integrands.
+      - declaration: CKN.isSuitableWeakSolutionIntegrable_shearFlow
+        informal: >-
+          The nonzero decaying sinusoidal shear flow with zero pressure and
+          force is a suitable weak solution on all space and times in (0,1).
+    tags:
+      - Navier–Stokes
+      - partial differential equations
+      - harmonic analysis
+    msc:
+      - 35Q30
+      - 35B65
+      - 42B20
+      - 28A78
