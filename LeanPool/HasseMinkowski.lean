@@ -3,8 +3,9 @@ Copyright (c) 2026 jayyswan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: jayyswan
 -/
+module
 
-import LeanPool.HasseMinkowski.Main
+public import LeanPool.HasseMinkowski.Main
 
 /-!
 # The Hasse–Minkowski theorem over ℚ
@@ -16,3 +17,6 @@ Main declarations: `HasseMinkowski.hasseMinkowski`, `HasseMinkowski.meyer`
 Tags: number-theory, quadratic-forms, local-global, p-adic
 MSC: 11E12, 11E08, 11E88
 -/
+
+@[expose] public section
+

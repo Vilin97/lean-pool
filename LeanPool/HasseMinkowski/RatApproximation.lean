@@ -3,14 +3,16 @@ Copyright (c) 2026 jayyswan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: jayyswan
 -/
-import Mathlib.NumberTheory.Padics.PadicNumbers
-import Mathlib.NumberTheory.Padics.PadicVal.Basic
-import Mathlib.Data.Nat.Cast.Field
-import Mathlib.Data.Nat.ChineseRemainder
-import Mathlib.Data.Rat.Lemmas
-import Mathlib.Algebra.Order.Archimedean.Basic
-import Mathlib.Topology.MetricSpace.Pseudo.Pi
-import Mathlib.Topology.MetricSpace.Pseudo.Constructions
+module
+
+public import Mathlib.NumberTheory.Padics.PadicNumbers
+public import Mathlib.NumberTheory.Padics.PadicVal.Basic
+public import Mathlib.Data.Nat.Cast.Field
+public import Mathlib.Data.Nat.ChineseRemainder
+public import Mathlib.Data.Rat.Lemmas
+public import Mathlib.Algebra.Order.Archimedean.Basic
+public import Mathlib.Topology.MetricSpace.Pseudo.Pi
+public import Mathlib.Topology.MetricSpace.Pseudo.Constructions
 
 /-!
 # Weak approximation for ℚ
@@ -27,6 +29,8 @@ preserves the `p`-adic congruences as long as the multiplier is `p`-adically int
 multiplier of the form `s / L^j` with `L` a prime outside the finite set is `p`-adically
 integral for every `p` in the set while being dense in `ℝ`.  This gives the real approximation.
 -/
+
+@[expose] public section
 
 namespace Rat
 

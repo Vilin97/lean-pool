@@ -3,10 +3,12 @@ Copyright (c) 2026 jayyswan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: jayyswan
 -/
-import LeanPool.HasseMinkowski.HilbertSymbol.Defs
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Algebra.Group.Int.Units
-import Mathlib.LinearAlgebra.QuadraticForm.IsometryEquiv
+module
+
+public import LeanPool.HasseMinkowski.HilbertSymbol.Defs
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+public import Mathlib.Algebra.Group.Int.Units
+public import Mathlib.LinearAlgebra.QuadraticForm.IsometryEquiv
 
 /-!
 # Layer 2c of the Hasse–Minkowski development: the Hasse–Minkowski invariant
@@ -51,6 +53,8 @@ omitted.  In particular the reference development's `hasseMinkowskiInv.weightedS
 with any concrete list of weights.  The diagonal-level statements (`hasseMinkowskiInvAux_*`)
 proved here are exactly the part of the development that does not need that machinery.
 -/
+
+@[expose] public section
 
 namespace HasseMinkowski
 

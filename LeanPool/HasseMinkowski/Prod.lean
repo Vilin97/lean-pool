@@ -3,11 +3,13 @@ Copyright (c) 2026 jayyswan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: jayyswan
 -/
-import LeanPool.HasseMinkowski.Basic
-import Mathlib.LinearAlgebra.QuadraticForm.Prod
-import Mathlib.LinearAlgebra.QuadraticForm.IsometryEquiv
-import Mathlib.LinearAlgebra.QuadraticForm.TensorProduct
-import Mathlib.LinearAlgebra.TensorProduct.Prod
+module
+
+public import LeanPool.HasseMinkowski.Basic
+public import Mathlib.LinearAlgebra.QuadraticForm.Prod
+public import Mathlib.LinearAlgebra.QuadraticForm.IsometryEquiv
+public import Mathlib.LinearAlgebra.QuadraticForm.TensorProduct
+public import Mathlib.LinearAlgebra.TensorProduct.Prod
 
 /-!
 # Orthogonal sums and base change for quadratic forms
@@ -25,6 +27,8 @@ and base change `QuadraticForm.baseChange`:
 The proofs mirror the reference development, adapted to Mathlib 4.33's API
 (`baseChange_ext` on pure tensors avoids the bilinear-form machinery of the original).
 -/
+
+@[expose] public section
 
 open Module QuadraticMap TensorProduct
 

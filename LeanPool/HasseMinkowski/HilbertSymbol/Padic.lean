@@ -3,9 +3,11 @@ Copyright (c) 2026 jayyswan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: jayyswan
 -/
-import LeanPool.HasseMinkowski.HilbertSymbol.Defs
-import LeanPool.HasseMinkowski.Padics.Squares
-import Mathlib.NumberTheory.LegendreSymbol.QuadraticChar.Basic
+module
+
+public import LeanPool.HasseMinkowski.HilbertSymbol.Defs
+public import LeanPool.HasseMinkowski.Padics.Squares
+public import Mathlib.NumberTheory.LegendreSymbol.QuadraticChar.Basic
 
 /-!
 # The `p`-adic Hilbert symbol at an odd prime
@@ -27,6 +29,8 @@ We prove this here as `hilbertSym_padicInt_units`.  The remaining cases `10` / `
 are recorded in `HANDOFF-hilbertpadic.md` as the outstanding work; only `p = 2` is out of
 scope entirely.
 -/
+
+@[expose] public section
 
 namespace HasseMinkowski
 

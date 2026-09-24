@@ -3,10 +3,12 @@ Copyright (c) 2026 jayyswan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: jayyswan
 -/
-import LeanPool.HasseMinkowski.Locally
-import LeanPool.HasseMinkowski.RatSquares
-import Mathlib.Analysis.Real.Sqrt
-import Mathlib.LinearAlgebra.Dimension.Constructions
+module
+
+public import LeanPool.HasseMinkowski.Locally
+public import LeanPool.HasseMinkowski.RatSquares
+public import Mathlib.Analysis.Real.Sqrt
+public import Mathlib.LinearAlgebra.Dimension.Constructions
 
 /-!
 # Layer 2b of the Hasse–Minkowski development: ranks one and two
@@ -29,6 +31,8 @@ are direct adaptations of the classical arguments.
 * `isotropic_of_rank_one`, `isotropic_of_rank_two`.
 * `QuadraticMap.Equivalent.represents_iff`: equivalent forms represent the same values.
 -/
+
+@[expose] public section
 
 open Module QuadraticMap TensorProduct
 

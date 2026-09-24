@@ -3,13 +3,15 @@ Copyright (c) 2026 jayyswan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: jayyswan
 -/
-import LeanPool.HasseMinkowski.HilbertSymbol.Local
-import LeanPool.HasseMinkowski.Legendre
-import LeanPool.HasseMinkowski.Prod
-import LeanPool.HasseMinkowski.RankCriteria
-import LeanPool.HasseMinkowski.RatApproximation
-import LeanPool.HasseMinkowski.Padics.Squares
-import Mathlib.Analysis.Real.Sqrt
+module
+
+public import LeanPool.HasseMinkowski.HilbertSymbol.Local
+public import LeanPool.HasseMinkowski.Legendre
+public import LeanPool.HasseMinkowski.Prod
+public import LeanPool.HasseMinkowski.RankCriteria
+public import LeanPool.HasseMinkowski.RatApproximation
+public import LeanPool.HasseMinkowski.Padics.Squares
+public import Mathlib.Analysis.Real.Sqrt
 
 /-!
 # WP5 toolkit: diagonal Hasse–Minkowski for rank ≥ 5
@@ -26,6 +28,8 @@ This file collects the two "one-step" tools of the rank-`n ≥ 5` induction of S
 The rank-three criterion of `RankCriteria.lean` together with `hilbertSym_padicInt_units`
 turns the local isotropy into the vanishing of a Hilbert symbol of two `p`-adic units.
 -/
+
+@[expose] public section
 
 open Module QuadraticMap
 

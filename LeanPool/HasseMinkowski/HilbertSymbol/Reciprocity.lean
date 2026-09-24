@@ -3,12 +3,14 @@ Copyright (c) 2026 jayyswan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: jayyswan
 -/
-import LeanPool.HasseMinkowski.HilbertSymbol.Padic
-import LeanPool.HasseMinkowski.HilbertSymbol.Two
-import LeanPool.HasseMinkowski.HilbertSymbol.Real
-import LeanPool.HasseMinkowski.RatSquares
-import Mathlib.Order.Filter.Cofinite
-import Mathlib.NumberTheory.LegendreSymbol.QuadraticReciprocity
+module
+
+public import LeanPool.HasseMinkowski.HilbertSymbol.Padic
+public import LeanPool.HasseMinkowski.HilbertSymbol.Two
+public import LeanPool.HasseMinkowski.HilbertSymbol.Real
+public import LeanPool.HasseMinkowski.RatSquares
+public import Mathlib.Order.Filter.Cofinite
+public import Mathlib.NumberTheory.LegendreSymbol.QuadraticReciprocity
 
 /-!
 # Global properties of the Hilbert symbol over `ℚ`
@@ -28,6 +30,8 @@ This file records the two global properties:
   square-class generators `-1` and the primes, using the case in which one argument is a
   square (`prod_eq_one_of_isSquare`, where every local symbol is `1`) as a step.
 -/
+
+@[expose] public section
 
 namespace HasseMinkowski
 

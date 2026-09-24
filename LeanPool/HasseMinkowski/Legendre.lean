@@ -3,17 +3,19 @@ Copyright (c) 2026 jayyswan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: jayyswan
 -/
-import LeanPool.HasseMinkowski.HilbertSymbol.Norm
-import LeanPool.HasseMinkowski.HilbertSymbol.Padic
-import LeanPool.HasseMinkowski.HilbertSymbol.Real
-import LeanPool.HasseMinkowski.RankThree
-import Mathlib.LinearAlgebra.Dimension.Constructions
-import Mathlib.Data.Nat.Squarefree
-import Mathlib.Data.Nat.PrimeFin
-import Mathlib.Data.Nat.ChineseRemainder
-import Mathlib.RingTheory.Coprime.Lemmas
-import Mathlib.Data.Rat.Lemmas
-import Mathlib.Tactic
+module
+
+public import LeanPool.HasseMinkowski.HilbertSymbol.Norm
+public import LeanPool.HasseMinkowski.HilbertSymbol.Padic
+public import LeanPool.HasseMinkowski.HilbertSymbol.Real
+public import LeanPool.HasseMinkowski.RankThree
+public import Mathlib.LinearAlgebra.Dimension.Constructions
+public import Mathlib.Data.Nat.Squarefree
+public import Mathlib.Data.Nat.PrimeFin
+public import Mathlib.Data.Nat.ChineseRemainder
+public import Mathlib.RingTheory.Coprime.Lemmas
+public import Mathlib.Data.Rat.Lemmas
+public import Mathlib.Tactic
 
 /-!
 # WP1 1.1 — norm transfer for the Hilbert symbol
@@ -26,6 +28,8 @@ Geometrically, `t + √a` has norm `t ^ 2 - a = b * b'` in `k(√a)`, so if `b` 
 `b'` (divide the norm identity by `b`), and conversely. Since a nonzero nonsquare `a` satisfies
 `(b, a)_k = 1` exactly when `b` is a norm from `k(√a)`, the two symbols agree.
 -/
+
+@[expose] public section
 
 namespace HasseMinkowski
 

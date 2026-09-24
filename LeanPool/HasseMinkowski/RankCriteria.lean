@@ -3,10 +3,12 @@ Copyright (c) 2026 Nirvana Coppola, María Inés de Frutos-Fernández. All right
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nirvana Coppola, María Inés de Frutos-Fernández, jayyswan
 -/
-import LeanPool.HasseMinkowski.HasseInvariant
-import LeanPool.HasseMinkowski.Prod
-import LeanPool.HasseMinkowski.HilbertSymbol.Padic
-import Mathlib.LinearAlgebra.QuadraticForm.IsometryEquiv
+module
+
+public import LeanPool.HasseMinkowski.HasseInvariant
+public import LeanPool.HasseMinkowski.Prod
+public import LeanPool.HasseMinkowski.HilbertSymbol.Padic
+public import Mathlib.LinearAlgebra.QuadraticForm.IsometryEquiv
 
 /-!
 # Rank criteria for the Hasse–Minkowski invariant
@@ -40,6 +42,8 @@ Mathlib without upstream's module system, and the development is extended beyond
 what upstream proves.  Upstream declaration names are kept so that the two
 developments can be compared side by side.  See the repository NOTICE file.
 -/
+
+@[expose] public section
 
 open Module QuadraticMap
 

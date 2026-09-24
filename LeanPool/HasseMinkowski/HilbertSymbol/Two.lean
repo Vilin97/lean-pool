@@ -3,8 +3,9 @@ Copyright (c) 2026 jayyswan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: jayyswan
 -/
+module
 
-import LeanPool.HasseMinkowski.HilbertSymbol.Padic
+public import LeanPool.HasseMinkowski.HilbertSymbol.Padic
 
 /-!
 # The `2`-adic Hilbert symbol: units
@@ -28,6 +29,8 @@ representatives the symbol is decided either by an explicit rational point
 Note that the "two units have symbol `1`" statement that holds for odd `p` is **false**
 at `p = 2`: `(3,3)_2 = -1`.
 -/
+
+@[expose] public section
 
 namespace HasseMinkowski
 

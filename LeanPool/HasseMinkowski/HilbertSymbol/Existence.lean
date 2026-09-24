@@ -3,21 +3,23 @@ Copyright (c) 2026 Nirvana Coppola, María Inés de Frutos-Fernández. All right
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nirvana Coppola, María Inés de Frutos-Fernández, jayyswan
 -/
-import LeanPool.HasseMinkowski.HilbertSymbol.Defs
-import LeanPool.HasseMinkowski.HilbertSymbol.Padic
-import LeanPool.HasseMinkowski.HilbertSymbol.Real
-import LeanPool.HasseMinkowski.HilbertSymbol.Reciprocity
-import LeanPool.HasseMinkowski.HilbertSymbol.Local
-import LeanPool.HasseMinkowski.Legendre
-import LeanPool.HasseMinkowski.RatApproximation
-import LeanPool.HasseMinkowski.Padics.Squares
-import LeanPool.HasseMinkowski.RatSquares
-import Mathlib.NumberTheory.LSeries.PrimesInAP
-import Mathlib.NumberTheory.Padics.RingHoms
-import Mathlib.Data.Nat.PrimeFin
-import Mathlib.Data.Rat.Lemmas
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Tactic
+module
+
+public import LeanPool.HasseMinkowski.HilbertSymbol.Defs
+public import LeanPool.HasseMinkowski.HilbertSymbol.Padic
+public import LeanPool.HasseMinkowski.HilbertSymbol.Real
+public import LeanPool.HasseMinkowski.HilbertSymbol.Reciprocity
+public import LeanPool.HasseMinkowski.HilbertSymbol.Local
+public import LeanPool.HasseMinkowski.Legendre
+public import LeanPool.HasseMinkowski.RatApproximation
+public import LeanPool.HasseMinkowski.Padics.Squares
+public import LeanPool.HasseMinkowski.RatSquares
+public import Mathlib.NumberTheory.LSeries.PrimesInAP
+public import Mathlib.NumberTheory.Padics.RingHoms
+public import Mathlib.Data.Nat.PrimeFin
+public import Mathlib.Data.Rat.Lemmas
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+public import Mathlib.Tactic
 
 /-!
 # Hilbert-symbol existence theorem
@@ -58,6 +60,8 @@ Mathlib without upstream's module system, and the development is extended beyond
 what upstream proves.  Upstream declaration names are kept so that the two
 developments can be compared side by side.  See the repository NOTICE file.
 -/
+
+@[expose] public section
 
 namespace HasseMinkowski
 

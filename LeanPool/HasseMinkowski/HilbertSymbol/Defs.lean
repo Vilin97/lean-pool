@@ -3,9 +3,11 @@ Copyright (c) 2026 jayyswan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: jayyswan
 -/
-import Mathlib.Algebra.Field.Defs
-import Mathlib.Data.Int.Basic
-import Mathlib.Tactic
+module
+
+public import Mathlib.Algebra.Field.Defs
+public import Mathlib.Data.Int.Basic
+public import Mathlib.Tactic
 
 /-!
 # The Hilbert symbol
@@ -14,6 +16,8 @@ Defines the Hilbert symbol `(a,b)_k`, valued in `{0, ±1}`, for a field `k`, tog
 basic vanishing, symmetry and value-set properties, and the class `HasBilinHilbertSym`
 recording multiplicativity in the first argument.
 -/
+
+@[expose] public section
 
 namespace HasseMinkowski
 

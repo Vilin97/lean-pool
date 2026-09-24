@@ -3,12 +3,14 @@ Copyright (c) 2026 Nirvana Coppola, María Inés de Frutos-Fernández. All right
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nirvana Coppola, María Inés de Frutos-Fernández, jayyswan
 -/
-import Mathlib.NumberTheory.Padics.PadicVal.Basic
-import Mathlib.NumberTheory.Padics.PadicNumbers
-import Mathlib.NumberTheory.Padics.RingHoms
-import Mathlib.NumberTheory.Padics.Hensel
-import Mathlib.Analysis.Normed.Module.Ball.Pointwise
-import Mathlib.Topology.Algebra.IsOpenUnits
+module
+
+public import Mathlib.NumberTheory.Padics.PadicVal.Basic
+public import Mathlib.NumberTheory.Padics.PadicNumbers
+public import Mathlib.NumberTheory.Padics.RingHoms
+public import Mathlib.NumberTheory.Padics.Hensel
+public import Mathlib.Analysis.Normed.Module.Ball.Pointwise
+public import Mathlib.Topology.Algebra.IsOpenUnits
 
 /-!
 # Padic unit squares form an open subgroup
@@ -34,6 +36,8 @@ Mathlib without upstream's module system, and the development is extended beyond
 what upstream proves.  Upstream declaration names are kept so that the two
 developments can be compared side by side.  See the repository NOTICE file.
 -/
+
+@[expose] public section
 
 open Polynomial
 

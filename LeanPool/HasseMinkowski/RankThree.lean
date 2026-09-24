@@ -3,9 +3,11 @@ Copyright (c) 2026 jayyswan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: jayyswan
 -/
-import LeanPool.HasseMinkowski.RankCriteria
-import LeanPool.HasseMinkowski.RankTwo
-import LeanPool.HasseMinkowski.HilbertSymbol.Reciprocity
+module
+
+public import LeanPool.HasseMinkowski.RankCriteria
+public import LeanPool.HasseMinkowski.RankTwo
+public import LeanPool.HasseMinkowski.HilbertSymbol.Reciprocity
 
 /-!
 # Rank-three Hasse–Minkowski over `ℚ` (Legendre descent)
@@ -35,6 +37,8 @@ reduction below is independent of the descent proof.  Every declaration below is
 * `HilbertSymLocalGlobal`: the missing local–global input.
 * `isotropic_of_rank_three`: the rank-three case, conditional on `HilbertSymLocalGlobal`.
 -/
+
+@[expose] public section
 
 open Module QuadraticMap TensorProduct
 

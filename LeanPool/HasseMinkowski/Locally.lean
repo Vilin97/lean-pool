@@ -3,12 +3,14 @@ Copyright (c) 2026 jayyswan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: jayyswan
 -/
-import LeanPool.HasseMinkowski.Basic
-import Mathlib.Algebra.CharP.Invertible
-import Mathlib.NumberTheory.Padics.PadicNumbers
-import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
-import Mathlib.RingTheory.TensorProduct.Finite
-import Mathlib.LinearAlgebra.TensorProduct.Pi
+module
+
+public import LeanPool.HasseMinkowski.Basic
+public import Mathlib.Algebra.CharP.Invertible
+public import Mathlib.NumberTheory.Padics.PadicNumbers
+public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
+public import Mathlib.RingTheory.TensorProduct.Finite
+public import Mathlib.LinearAlgebra.TensorProduct.Pi
 
 /-!
 # Layer 2a of the Hasse–Minkowski development: local isotropy
@@ -26,6 +28,8 @@ fields `ℚ_[p]` for all primes `p`.  This file supplies the local side of the s
 The tensor-product object `Q.baseChange A` is Mathlib's `QuadraticForm.baseChange A Q`, a form
 on `A ⊗[ℚ] V`.
 -/
+
+@[expose] public section
 
 open Module QuadraticMap TensorProduct
 

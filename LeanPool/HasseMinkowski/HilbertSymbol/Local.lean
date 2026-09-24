@@ -3,12 +3,14 @@ Copyright (c) 2026 jayyswan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: jayyswan
 -/
-import LeanPool.HasseMinkowski.Basic
-import LeanPool.HasseMinkowski.Prod
-import LeanPool.HasseMinkowski.RankCriteria
-import LeanPool.HasseMinkowski.HilbertSymbol.Padic
-import LeanPool.HasseMinkowski.HilbertSymbol.Real
-import LeanPool.HasseMinkowski.HilbertSymbol.Two
+module
+
+public import LeanPool.HasseMinkowski.Basic
+public import LeanPool.HasseMinkowski.Prod
+public import LeanPool.HasseMinkowski.RankCriteria
+public import LeanPool.HasseMinkowski.HilbertSymbol.Padic
+public import LeanPool.HasseMinkowski.HilbertSymbol.Real
+public import LeanPool.HasseMinkowski.HilbertSymbol.Two
 
 /-!
 # Local Hilbert symbols at the completions of `ℚ`
@@ -21,6 +23,8 @@ first argument, `HasBilinHilbertSym ℚ_[p]`, which makes the generic rank crite
 The two-adic case is imported from `HilbertSymbol/Two.lean`; for odd `p` the result is
 `hilbertSym_padic_odd_mul_left`.
 -/
+
+@[expose] public section
 
 open Module QuadraticMap
 

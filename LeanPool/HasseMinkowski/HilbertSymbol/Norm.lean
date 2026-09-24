@@ -3,9 +3,11 @@ Copyright (c) 2026 jayyswan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: jayyswan
 -/
-import LeanPool.HasseMinkowski.HilbertSymbol.Defs
-import Mathlib.Algebra.QuadraticAlgebra.Basic
-import Mathlib.Tactic
+module
+
+public import LeanPool.HasseMinkowski.HilbertSymbol.Defs
+public import Mathlib.Algebra.QuadraticAlgebra.Basic
+public import Mathlib.Tactic
 
 /-!
 # The Hilbert symbol and norms from `k(√b)`
@@ -21,6 +23,8 @@ and `a` being a norm: if `x ≠ 0` we divide the equation by `x²`; if `x = 0` t
 reads `z² = b y²`, which forces `b` to be a square unless `y = z = 0`, contradicting
 nontriviality.
 -/
+
+@[expose] public section
 
 namespace HasseMinkowski
 

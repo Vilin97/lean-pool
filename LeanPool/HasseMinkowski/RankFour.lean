@@ -3,12 +3,14 @@ Copyright (c) 2026 jayyswan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: jayyswan
 -/
-import LeanPool.HasseMinkowski.HighRank
-import LeanPool.HasseMinkowski.HilbertSymbol.Existence
-import LeanPool.HasseMinkowski.HilbertSymbol.Local
-import LeanPool.HasseMinkowski.Legendre
-import LeanPool.HasseMinkowski.Prod
-import LeanPool.HasseMinkowski.RankCriteria
+module
+
+public import LeanPool.HasseMinkowski.HighRank
+public import LeanPool.HasseMinkowski.HilbertSymbol.Existence
+public import LeanPool.HasseMinkowski.HilbertSymbol.Local
+public import LeanPool.HasseMinkowski.Legendre
+public import LeanPool.HasseMinkowski.Prod
+public import LeanPool.HasseMinkowski.RankCriteria
 
 /-!
 # Rank-4 Hasse–Minkowski over ℚ
@@ -22,6 +24,8 @@ behaviour, and then `isotropic_of_rank_three'` shows each half represents `x` ov
 (WP4.2).  Diagonalizing an arbitrary nondegenerate rank-four form gives the general theorem
 (WP4.3).
 -/
+
+@[expose] public section
 
 open Module QuadraticMap
 

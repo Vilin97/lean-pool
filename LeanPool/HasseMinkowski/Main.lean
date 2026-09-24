@@ -3,10 +3,12 @@ Copyright (c) 2026 jayyswan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: jayyswan
 -/
-import LeanPool.HasseMinkowski.RankFour
-import LeanPool.HasseMinkowski.RankTwo
-import LeanPool.HasseMinkowski.Legendre
-import LeanPool.HasseMinkowski.HighRank
+module
+
+public import LeanPool.HasseMinkowski.RankFour
+public import LeanPool.HasseMinkowski.RankTwo
+public import LeanPool.HasseMinkowski.Legendre
+public import LeanPool.HasseMinkowski.HighRank
 
 /-!
 # Assembly of the Hasse–Minkowski principle over `ℚ` (WP6)
@@ -32,6 +34,8 @@ and `meyer` below specialise them with `rankFourDiagonalHM` and
 * `hasseMinkowski_of` (WP6.2): `Isotropic Q ↔ EverywhereLocallyIsotropic Q`.
 * `meyer_of` (WP6.3): an indefinite form of rank `≥ 5` over `ℚ` is isotropic.
 -/
+
+@[expose] public section
 
 open Module QuadraticMap
 

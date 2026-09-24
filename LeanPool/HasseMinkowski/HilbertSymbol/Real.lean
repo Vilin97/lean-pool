@@ -3,10 +3,12 @@ Copyright (c) 2026 jayyswan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: jayyswan
 -/
-import LeanPool.HasseMinkowski.HilbertSymbol.Defs
-import Mathlib.Analysis.Real.Sqrt
-import Mathlib.Basic.Real.Basic
-import Mathlib.Tactic
+module
+
+public import LeanPool.HasseMinkowski.HilbertSymbol.Defs
+public import Mathlib.Analysis.Real.Sqrt
+public import Mathlib.Basic.Real.Basic
+public import Mathlib.Tactic
 
 /-!
 ### The archimedean Hilbert symbol over `ℝ`
@@ -17,6 +19,8 @@ are negative, and `1` otherwise (for nonzero arguments). Geometrically, the coni
 `a, b` is positive: a positive `a` gives `(√a, 1, 0)`, a positive `b` gives
 `(√b, 0, 1)`, while two negative coefficients force `z² ≤ 0`, hence `z = x = y = 0`.
 -/
+
+@[expose] public section
 
 namespace HasseMinkowski
 

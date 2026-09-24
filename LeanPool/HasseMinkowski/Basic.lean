@@ -3,15 +3,17 @@ Copyright (c) 2026 jayyswan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: jayyswan
 -/
-import Mathlib.LinearAlgebra.QuadraticForm.Basic
-import Mathlib.LinearAlgebra.QuadraticForm.Radical
-import Mathlib.LinearAlgebra.QuadraticForm.Prod
-import Mathlib.LinearAlgebra.QuadraticForm.IsometryEquiv
-import Mathlib.LinearAlgebra.QuadraticForm.TensorProduct
-import Mathlib.LinearAlgebra.TensorProduct.Tower
-import Mathlib.Topology.Algebra.Order.Field
-import Mathlib.Topology.Instances.Real.Lemmas
-import Mathlib.Topology.Order.IntermediateValue
+module
+
+public import Mathlib.LinearAlgebra.QuadraticForm.Basic
+public import Mathlib.LinearAlgebra.QuadraticForm.Radical
+public import Mathlib.LinearAlgebra.QuadraticForm.Prod
+public import Mathlib.LinearAlgebra.QuadraticForm.IsometryEquiv
+public import Mathlib.LinearAlgebra.QuadraticForm.TensorProduct
+public import Mathlib.LinearAlgebra.TensorProduct.Tower
+public import Mathlib.Topology.Algebra.Order.Field
+public import Mathlib.Topology.Instances.Real.Lemmas
+public import Mathlib.Topology.Order.IntermediateValue
 
 /-!
 # Layer 0 of the Hasse–Minkowski development
@@ -38,6 +40,8 @@ nondegeneracy with orthogonal sums and base change.  This file supplies them.
 * `IsometryEquiv.baseChange`, `Equivalent.baseChange`.
 * `Indefinite.isotropic`: an indefinite real form is isotropic (intermediate value theorem).
 -/
+
+@[expose] public section
 
 open Module QuadraticMap
 

@@ -3,12 +3,14 @@ Copyright (c) 2026 jayyswan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: jayyswan
 -/
-import Mathlib.NumberTheory.Padics.PadicVal.Basic
-import Mathlib.Data.Rat.Lemmas
-import Mathlib.Data.Nat.Factorization.Basic
-import Mathlib.Data.Nat.Squarefree
-import Mathlib.Algebra.Ring.Int.Parity
-import Mathlib.Algebra.Ring.Parity
+module
+
+public import Mathlib.NumberTheory.Padics.PadicVal.Basic
+public import Mathlib.Data.Rat.Lemmas
+public import Mathlib.Data.Nat.Factorization.Basic
+public import Mathlib.Data.Nat.Squarefree
+public import Mathlib.Algebra.Ring.Int.Parity
+public import Mathlib.Algebra.Ring.Parity
 
 /-!
 # Rational square classes via `p`-adic valuations
@@ -23,6 +25,8 @@ divisible by any given prime, so the evenness of the difference
 `padicValRat p q = (q.num).factorization p - (q.den).factorization p`
 forces the two exponents to be even individually.
 -/
+
+@[expose] public section
 
 namespace HasseMinkowski
 
