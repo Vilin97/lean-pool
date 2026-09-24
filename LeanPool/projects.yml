@@ -10169,3 +10169,40 @@ projects:
       - 35B65
       - 42B20
       - 28A78
+
+  - title: Coarse-graining theory for elliptic equations
+    summary: Develops the function-space, deterministic, probabilistic, and homogenization-scale machinery
+      of quantitative stochastic homogenization. Includes the quenched minimal-scale theorem and a uniformly
+      elliptic, isotropic specialization of the homogenization comparison estimate.
+    branch: partial differential equations
+    main_declarations:
+    - Homogenization.Book.MainResults.homogenizationComparison_uniformEllipticity
+    - Homogenization.Book.MainResults.annealedConvergence_uniformEllipticity
+    main_results:
+    - declaration: Homogenization.Book.MainResults.homogenizationComparison_uniformEllipticity
+      informal: For a stationary unit-range isotropic uniformly elliptic coefficient law, heterogeneous
+        and homogenized elliptic solutions satisfy a quantitative comparison estimate above a random
+        minimal scale with stretched-exponential tails.
+    - declaration: Homogenization.Book.MainResults.annealedConvergence_uniformEllipticity
+      informal: Uniform ellipticity supplies quantitative annealed convergence at the homogenization
+        scale.
+    tags:
+    - elliptic-pde
+    - stochastic-homogenization
+    - probability
+    - functional-analysis
+    msc:
+    - 35B27
+    - 60H25
+    provenance: AI
+    slug: coarsegraining
+    entry_module: LeanPool.CoarseGraining
+    authors:
+    - Scott Armstrong
+    - Tuomo Kuusi
+    source:
+      url: https://github.com/scottnarmstrong/coarsegraining
+      github_repo: scottnarmstrong/coarsegraining
+      commit: 28ca42c02fd286c8f63a45be3344f6f82d026db3
+    license: Apache-2.0
+    status: verified
