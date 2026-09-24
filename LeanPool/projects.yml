@@ -10169,3 +10169,41 @@ projects:
       - 35B65
       - 42B20
       - 28A78
+
+  - title: Riemannian curvature and geometric analysis toward Ricci flow
+    summary: 'Preserves the proof-bearing geometry packages: curvature and Levi–Civita connections,
+      Bianchi identities, Hamilton–Ivey reaction estimates, Bonnet–Myers, Schur rigidity, almost-Schur,
+      Lichnerowicz–Obata, scalar comparison, and symmetric tensor heat infrastructure. The upstream
+      Poincaré roadmap remains incomplete and this project does not claim the Poincaré conjecture.'
+    branch: differential geometry
+    main_declarations:
+    - HamiltonIveyReaction.hamiltonIvey_reaction_coercive
+    - HamiltonIveyReaction.hamiltonIvey_ode_pinching
+    main_results:
+    - declaration: HamiltonIveyReaction.hamiltonIvey_reaction_coercive
+      informal: The Hamilton–Ivey reaction term obeys the coercivity estimate at a negative minimum
+        of the pinching quantity.
+    - declaration: HamiltonIveyReaction.hamiltonIvey_ode_pinching
+      informal: The eigenvalue reaction ODE preserves the Hamilton–Ivey pinching inequality under the
+        stated initial bounds.
+    tags:
+    - riemannian-geometry
+    - curvature
+    - ricci-flow
+    - geometric-analysis
+    msc:
+    - 53C21
+    - 53E20
+    provenance: AI
+    slug: lean-poincare-formalization-plan
+    entry_module: LeanPool.PoincareGeometry
+    authors:
+    - Arthur Freitas Ramos
+    - David Barros Hulak
+    - Ruy J. G. B. de Queiroz
+    source:
+      url: https://github.com/arthur742ramos/lean-poincare-formalization-plan
+      github_repo: arthur742ramos/lean-poincare-formalization-plan
+      commit: 065c4335e2a23838cebed51417bb2fb0429007bc
+    license: Apache-2.0
+    status: verified
