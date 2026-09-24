@@ -1,4 +1,75 @@
 projects:
+  - slug: block-spectral-sensitivity
+    title: Block sensitivity can exceed spectral sensitivity squared
+    summary: >-
+      Constructs a total Boolean function on 14011 blocks of 144 bits with
+      block sensitivity at least 14011 and squared spectral sensitivity at
+      most U = 7149 + 2 sqrt(150108). Proves the strict separation
+      lambda(f)^2.12 < bs(f), multiplicativity of spectral sensitivity under
+      arbitrary block composition, and an exponential lower bound with
+      factor 14011/U > 1.768 for the self-composed family. Includes reusable
+      finite product probability, an asymmetric Lovasz local lemma, partial
+      Boolean assignments, certificate-family spectral bounds, and a Paley
+      doubly regular tournament. The formalized explicit exponent is 2.12;
+      the exact logarithmic exponent is also retained.
+    branch: computational complexity
+    entry_module: LeanPool.BlockSpectralSensitivity
+    authors:
+      - Alex Meiburg
+    source:
+      title: Block Sensitivity can exceed Spectral Sensitivity Squared
+      arxiv: '2608.00851'
+      url: https://github.com/Timeroot/BS_Lam/tree/7bd39a8d41ee7910d3296d0477ad18f8fff9d870
+      github_repo: Timeroot/BS_Lam
+      commit: 7bd39a8d41ee7910d3296d0477ad18f8fff9d870
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - BSLambda.Final.exists_bs_gt_lam_rpow
+    main_results:
+      - declaration: BSLambda.Final.exists_bs_gt_lam_rpow
+        informal: >-
+          There exists a total Boolean function on ZMod 14011 times Fin 144
+          whose block sensitivity strictly exceeds its spectral sensitivity
+          raised to the real exponent 2.12.
+        source_ref: Upstream Main.lean; bs_lambda.txt Sections 5-12 and 14.
+      - declaration: BSLambda.Final.exists_counterexample
+        informal: >-
+          There exists a gate labelling whose certificate-union indicator f
+          has bs(f) at least 14011, lambda(f)^2 at most
+          U = 7149 + 2 sqrt(150108), and lambda(f)^alpha at most bs(f),
+          where alpha = 2 log(14011)/log(U) > 2.
+        source_ref: Upstream Main.lean; bs_lambda.txt Sections 5-12 and 14.
+      - declaration: BSLambda.Final.exists_ratio_blowup
+        informal: >-
+          A single gate labelling yields, for every natural m, an m-fold
+          self-composition F_m satisfying
+          (14011/U)^m * lambda(F_m)^2 <= bs(F_m).
+          The auxiliary theorem ratio_gt proves 14011/U > 1.768.
+        source_ref: Upstream Main.lean; bs_lambda.txt Section 14, division-free bound.
+      - declaration: BSLambda.lam_comp
+        informal: >-
+          For any Boolean functions on finite coordinate types, spectral
+          sensitivity of their block composition equals the product of
+          their spectral sensitivities, including the degenerate cases.
+        source_ref: Upstream Spectral/Multiplicative.lean; composition theorem used in Section 14.
+      - declaration: BSLambda.LLL.pr_avoid_pos
+        informal: >-
+          In a finite uniform product of nonempty alphabets, events supported
+          on specified coordinate sets have positive probability of all being
+          avoided if each event probability is at most its weight times the
+          product of one minus the weights of its dependent neighbours,
+          with every weight strictly between zero and one.
+        source_ref: Upstream LLL/Asymmetric.lean; asymmetric local lemma in Section 10.
+    tags:
+      - boolean-functions
+      - complexity
+      - probabilistic-method
+    msc:
+      - 68Q17
+      - 05D40
+      - 05C50
   - slug: low-weight-pauli-dynamics
     title: Low-weight Pauli dynamics and truncation error
     summary: >-
