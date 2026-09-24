@@ -10109,49 +10109,63 @@ projects:
     msc:
       - '90C35'
       - '05C21'
-  - title: Davis–Kahan rotation of eigenvectors
-    summary: Formalizes the sin-Theta, tan-Theta, sin-two-Theta, and tan-two-Theta theorem families
-      from Section 2 of Davis and Kahan (1970), for real or complex separable Hilbert spaces, including
-      common-domain unbounded operators and symmetric-norm estimates.
-    branch: operator theory
-    main_declarations:
-    - RotationOfEigenvectors.sinTheta
-    - RotationOfEigenvectors.tanTheta
-    - RotationOfEigenvectors.sinTwoTheta_directed
-    - RotationOfEigenvectors.sinTwoTheta_ambient
-    - RotationOfEigenvectors.tanTwoTheta
-    main_results:
-    - declaration: RotationOfEigenvectors.sinTheta
-      informal: A spectral gap controls the symmetric norm of the sine of the subspace angle by the
-        corresponding residual norm.
-    - declaration: RotationOfEigenvectors.tanTheta
-      informal: A directed spectral gap gives the tangent-angle residual estimate together with tangent
-        pole exclusion.
-    - declaration: RotationOfEigenvectors.sinTwoTheta_directed
-      informal: Under the printed oriented gap and common-domain self-adjointness hypotheses, twice
-        the residual norm bounds the gap times the sine-double-angle norm.
-    - declaration: RotationOfEigenvectors.sinTwoTheta_ambient
-      informal: The whole-space perturbation gives the ambient sine-double-angle bound.
-    - declaration: RotationOfEigenvectors.tanTwoTheta
-      informal: The residual tangent-double-angle estimate holds with the theorem’s source-facing block
-        hypotheses.
-    tags:
-    - operator-theory
-    - spectral-perturbation
-    - hilbert-spaces
-    msc:
-    - 47A55
-    - 47A15
-    - 15A42
-    provenance: AI
-    slug: aiq-davis-kahan-1970-rotation-eigenvectgors-perturbation-formalization
-    entry_module: LeanPool.DavisKahan
+
+  - slug: caffarelli-kohn-nirenberg
+    title: Caffarelli–Kohn–Nirenberg partial regularity
+    summary: >-
+      Partial regularity for three-dimensional incompressible Navier–Stokes
+      suitable weak solutions with locally L^q forcing, q > 5/2: quantitative
+      epsilon regularity and vanishing parabolic one-dimensional Hausdorff
+      measure of the singular set. Includes the supporting Sobolev, singular
+      integral, pressure, heat-potential and parabolic Morrey infrastructure,
+      equivalence of suitable-solution formulations, and a nonzero shear-flow
+      example. Imports the dependency closure of these completed results.
+    branch: Analysis
+    entry_module: LeanPool.CaffarelliKohnNirenberg
     authors:
-    - Jon Crall
-    - Edward Wang
+      - Scott Armstrong
+      - Vlad Vicol
     source:
-      url: https://github.com/aiq-kitware/aiq-davis-kahan-1970-rotation-eigenvectgors-perturbation-formalization
-      github_repo: aiq-kitware/aiq-davis-kahan-1970-rotation-eigenvectgors-perturbation-formalization
-      commit: 38e37da6e147cd0016da1eb05987c3edf7d95b39
+      github_repo: scottnarmstrong/CaffarelliKohnNirenberg
+      url: https://github.com/scottnarmstrong/CaffarelliKohnNirenberg/tree/635fa6376aa3d46ae5251cb1d276a8589163f332
     license: Apache-2.0
     status: verified
+    provenance: AI
+    main_declarations:
+      - CKN.caffarelliKohnNirenberg
+      - CKN.epsilonRegularityL3
+    main_results:
+      - declaration: CKN.epsilonRegularityL3
+        informal: >-
+          For q > 5/2, sufficiently small unit-cylinder L^3 velocity, L^(3/2)
+          pressure and L^q force masses give an almost-everywhere equal
+          quantitatively bounded parabolic Holder representative on the closed
+          half-cylinder and regularity at each point of its open interior.
+      - declaration: CKN.epsilonRegularityGradient
+        informal: >-
+          A sufficiently small extended nonnegative limsup of the normalized
+          squared weak-gradient mass implies regularity at an interior point
+          of a suitable weak solution.
+      - declaration: CKN.caffarelliKohnNirenberg
+        informal: >-
+          The singular set of a suitable weak solution with locally L^q
+          forcing, q > 5/2, has zero one-dimensional Hausdorff measure in the
+          parabolic metric.
+      - declaration: CKN.isSuitableWeakSolution_iff_integrable
+        informal: >-
+          The manuscript's suitable weak-solution predicate is equivalent to
+          the predicate that explicitly requires integrability of all tested
+          weak-equation and local-energy integrands.
+      - declaration: CKN.isSuitableWeakSolutionIntegrable_shearFlow
+        informal: >-
+          The nonzero decaying sinusoidal shear flow with zero pressure and
+          force is a suitable weak solution on all space and times in (0,1).
+    tags:
+      - Navier–Stokes
+      - partial differential equations
+      - harmonic analysis
+    msc:
+      - 35Q30
+      - 35B65
+      - 42B20
+      - 28A78
