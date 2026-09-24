@@ -44,7 +44,7 @@ theorem euclideanBall_eq_vec3Ball_timeSobolev
     (mem_euclideanBall_iff_vecEuclideanNorm_lt hr)
 
 private theorem eLpNorm_two_sq_eq_lintegral
-    {α E : Type*} [MeasurableSpace α] [MeasurableSpace E]
+    {α E : Type*} [MeasurableSpace α]
     [NormedAddCommGroup E] {μ : Measure α} {f : α → E}
     (hf : AEStronglyMeasurable f μ) :
     eLpNorm f (2 : ℝ≥0∞) μ ^ (2 : ℝ) =

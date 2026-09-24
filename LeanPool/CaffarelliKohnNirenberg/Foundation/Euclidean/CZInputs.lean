@@ -204,7 +204,6 @@ def l2ExtensionInput
 /-- Extension data for a second Riesz transform obtained by interpolation below exponent two. -/
 def rieszSecondExtensionInput
     {i j : Fin 3} {p A₁ : ℝ}
-    [Fact (1 ≤ ENNReal.ofReal p)]
     (hL2 : RieszSecondL2Input i j)
     (hWeak11 : ∀ f, Measurable f → Integrable f volume → MemLp f 2 volume →
       ∀ l : ℝ, 0 < l →

@@ -102,7 +102,7 @@ structure LpExtensionInput (p : ℝ≥0∞) (C : ℝ) where
       C * ‖hf.toLp f‖
 
 /-- Linear operator on the dense Lᵖ–L² intersection induced by the extension data. -/
-def lpInterL2Map {p : ℝ≥0∞} [Fact (1 ≤ p)]
+def lpInterL2Map {p : ℝ≥0∞}
     {C : ℝ} (h : LpExtensionInput p C) :
     lpInterL2Submodule p →ₗ[ℝ] Lp ℝ p (volume : Measure Vec3) where
   toFun u :=
@@ -356,7 +356,7 @@ theorem lpExtensionTensorOperator_eLpNorm_le {p : ℝ≥0∞} [Fact (1 ≤ p)]
         Finset.sum_le_sum fun j _ => hcomponent i j
 
 /-- View a function belonging to both Lᵖ and L² as an element of the intersection submodule. -/
-def lpInterL2Input {p : ℝ≥0∞} [Fact (1 ≤ p)] {f : Vec3 → ℝ}
+def lpInterL2Input {p : ℝ≥0∞} {f : Vec3 → ℝ}
     (hf : MemLp f p volume) (hf₂ : MemLp f (2 : ℝ≥0∞) volume) :
     lpInterL2Submodule p := by
   let hu₂ : MemLp (hf.toLp f : Vec3 → ℝ) (2 : ℝ≥0∞) volume :=
