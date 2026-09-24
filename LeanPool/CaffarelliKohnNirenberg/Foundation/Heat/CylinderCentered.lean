@@ -71,28 +71,6 @@ private lemma mem_parabolicCylinder_diff_sub_center {x₀ : Vec3} {t₀ ρ : ℝ
     exact ⟨mem_parabolicCylinder_sub_center.mpr hz.1,
       fun h => hz.2 (mem_parabolicCylinder_sub_center.mp h)⟩
 
-private lemma coord_fderiv_eq_deriv_update {f : Vec3 → ℝ} {x : Vec3}
-    (hf : DifferentiableAt ℝ f x) (i : Fin 3) :
-    (fderiv ℝ f x) (basisVec i) =
-      deriv (fun s => f (Function.update x i s)) (x i) := by
-  have hcomp := HasFDerivAt.comp (x i)
-    (by simpa only [Function.update_eq_self] using hf.hasFDerivAt)
-    (hasFDerivAt_update (𝕜 := ℝ) (i := i) x (x i))
-  have hderiv := hcomp.hasDerivAt
-  have hderiv' : HasDerivAt (fun s : ℝ => f (Function.update x i s))
-      ((fderiv ℝ f x ∘SL ContinuousLinearMap.pi
-        (Pi.single i (ContinuousLinearMap.id ℝ ℝ))) 1) (x i) := by
-    simpa only [Function.comp_def] using hderiv
-  rw [hderiv'.deriv]
-  have hb : ContinuousLinearMap.pi (Pi.single i (ContinuousLinearMap.id ℝ ℝ)) 1 =
-      basisVec i := by
-    ext j
-    by_cases hji : j = i <;> simp [basisVec, hji]
-  rw [show (fderiv ℝ f x ∘SL
-      ContinuousLinearMap.pi (Pi.single i (ContinuousLinearMap.id ℝ ℝ))) 1 =
-      (fderiv ℝ f x) (ContinuousLinearMap.pi
-        (Pi.single i (ContinuousLinearMap.id ℝ ℝ)) 1) by rfl, hb]
-
 private lemma heatKernel_fderiv_apply_basisVec_local {x : Vec3} {t : ℝ}
     (ht : 0 < t) (i : Fin 3) :
     (fderiv ℝ (fun y : Vec3 => heatKernel y t) x) (basisVec i) =

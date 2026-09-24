@@ -234,7 +234,7 @@ lemma heatKernel_space_deriv {x : Vec3} {t : ℝ} (ht : 0 < t) (i : Fin 3) :
   rw [hq]
   field_simp [ht.ne']
 
-private lemma coord_fderiv_eq_deriv_update {f : Vec3 → ℝ} {x : Vec3}
+lemma coord_fderiv_eq_deriv_update {f : Vec3 → ℝ} {x : Vec3}
     (hf : DifferentiableAt ℝ f x) (i : Fin 3) :
     (fderiv ℝ f x) (CKN.basisVec i) =
       deriv (fun s => f (Function.update x i s)) (x i) := by

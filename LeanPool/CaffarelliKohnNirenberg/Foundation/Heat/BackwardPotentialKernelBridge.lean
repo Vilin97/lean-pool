@@ -33,24 +33,6 @@ private lemma hcompact_integrable (f g : Vec3 → ℝ) (hf : Continuous f)
     Integrable (fun y : Vec3 => f y * g y) volume := by
   exact hf.mul hg |>.integrable_of_hasCompactSupport hgs.mul_left
 
-private lemma shift_fderiv_apply_basisVec {u : Vec3 → ℝ}
-    (hu : ContDiff ℝ (⊤ : ℕ∞) u) (x y : Vec3) (i : Fin 3) :
-    (fderiv ℝ (fun z : Vec3 => u (x - z)) y) (CKN.basisVec i) =
-      -CKN.spatialDeriv u i (x - y) := by
-  have houter : HasFDerivAt u (fderiv ℝ u (x - y)) (x - y) :=
-    ((hu.differentiable (by simp)) (x - y)).hasFDerivAt
-  have hinner : HasFDerivAt (fun z : Vec3 => x - z)
-      (-ContinuousLinearMap.id ℝ Vec3) y := by
-    convert (hasFDerivAt_const x y).sub (hasFDerivAt_id y) using 1
-    · funext z
-      rfl
-    · ext z
-      simp
-  have hcomp := HasFDerivAt.comp y houter hinner
-  have hval := congrArg (fun L : Vec3 →L[ℝ] ℝ => L (CKN.basisVec i)) hcomp.fderiv
-  dsimp at hval
-  simpa [Function.comp_def, CKN.spatialDeriv] using hval
-
 lemma heatConv_spatial_kernel_transfer
     {u : Vec3 → ℝ} (hu : ContDiff ℝ (⊤ : ℕ∞) u)
     (huSupport : HasCompactSupport u) {t : ℝ} (ht : 0 < t)

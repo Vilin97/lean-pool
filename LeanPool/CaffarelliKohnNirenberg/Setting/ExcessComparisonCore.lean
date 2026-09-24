@@ -433,7 +433,7 @@ private lemma ball_vec_excess_lintegral_bound
   convert hraw using 1 <;> simp [vec3EuclideanNorm_eq_l2,
     show (L : Vec3 → L2Vec3) = WithLp.toLp 2 by rfl, ofReal_norm]
 
-private lemma meanFreeVec_aemeasurable
+lemma meanFreeVec_aemeasurable
     {u : ParabolicPoint → Vec3} {x : Vec3} {r : ℝ} {T : Set ℝ}
     (hU : AEStronglyMeasurable u
       ((volume.restrict (vec3Ball x r)).prod (volume.restrict T))) :

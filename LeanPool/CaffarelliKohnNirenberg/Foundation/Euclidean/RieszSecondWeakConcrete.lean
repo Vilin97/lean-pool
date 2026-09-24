@@ -35,22 +35,7 @@ private lemma rieszSecond_kernel_continuousOn_off_zero (i j : Fin 3) :
 
 private lemma vec3_euclidean_norm_le_sqrt_three_concrete (v : Vec3) :
     vec3EuclideanNorm v ≤ Real.sqrt 3 * ‖v‖ := by
-  have hv : vec3EuclideanNorm v ^ 2 = ∑ k : Fin 3, v k ^ 2 := by
-    unfold vec3EuclideanNorm
-    exact Real.sq_sqrt (Finset.sum_nonneg (fun k _hk => sq_nonneg (v k)))
-  have hsq : vec3EuclideanNorm v ^ 2 ≤ (Real.sqrt 3 * ‖v‖) ^ 2 := by
-    rw [hv, mul_pow, Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 3)]
-    calc
-      ∑ k : Fin 3, v k ^ 2 ≤ ∑ _k : Fin 3, ‖v‖ ^ 2 := by
-        apply Finset.sum_le_sum
-        intro k _hk
-        rw [← sq_abs]
-        exact pow_le_pow_left₀ (abs_nonneg _) (norm_le_pi_norm v k) 2
-      _ = 3 * ‖v‖ ^ 2 := by
-        simp [Finset.sum_const, Finset.card_univ, Fintype.card_fin]
-  have h2 : |vec3EuclideanNorm v| ≤ |Real.sqrt 3 * ‖v‖| := sq_le_sq.mp hsq
-  rwa [abs_of_nonneg (vec3EuclideanNorm_nonneg v),
-    abs_of_nonneg (mul_nonneg (Real.sqrt_nonneg 3) (norm_nonneg v))] at h2
+  exact _root_.CKN.Foundation.Euclidean.vec3_euclidean_norm_le_sqrt_three v
 
 private lemma cube_star_sep_for_concrete {Q : DyadicIndex}
     {x : Vec3} (hx : x ∈ (rieszSecondCubeStar Q)ᶜ) :

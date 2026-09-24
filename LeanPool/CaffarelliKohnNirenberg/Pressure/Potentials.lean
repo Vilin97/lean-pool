@@ -194,7 +194,7 @@ private lemma pressure_kernel_reflection (x y : Vec3) :
   rw [hcoord]
   ring
 
-private lemma pressure_laplacian_hasCompactSupport {ψ : Vec3 → ℝ}
+lemma pressure_laplacian_hasCompactSupport {ψ : Vec3 → ℝ}
     (hψc : HasCompactSupport ψ) : HasCompactSupport (spatialLaplacian ψ) := by
   have hdiag (i : Fin 3) : HasCompactSupport
       (spatialDeriv (spatialDeriv ψ i) i) :=

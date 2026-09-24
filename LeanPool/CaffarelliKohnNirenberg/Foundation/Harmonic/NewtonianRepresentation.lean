@@ -32,7 +32,7 @@ open CKN.Foundation.Parabolic
 def newtonianKernel (z : Vec3) : ℝ :=
   1 / (4 * Real.pi * vec3EuclideanNorm z)
 
-private lemma newtonianKernel_locallyIntegrable :
+lemma newtonianKernel_locallyIntegrable :
     LocallyIntegrable newtonianKernel volume := by
   have hnorm : Continuous (fun z : Vec3 => vec3EuclideanNorm z) := by
     unfold vec3EuclideanNorm

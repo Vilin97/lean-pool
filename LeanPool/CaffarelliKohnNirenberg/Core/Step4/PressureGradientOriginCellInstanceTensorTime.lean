@@ -36,52 +36,7 @@ theorem origin_slice_mean_free_cube_bound
       (vec3EuclideanNorm (u (y,s) - ⨍ z in vec3Ball x r, u (z,s))) ^ (3 : ℝ)) ≤
       8 * (∫⁻ y in vec3Ball x r, ENNReal.ofReal
         (vec3EuclideanNorm (u (y,s))) ^ (3 : ℝ)) := by
-  let L := (PiLp.continuousLinearEquiv (2 : ℝ≥0∞) ℝ
-    (fun _ : Fin 3 => ℝ)).symm
-  have hLint : IntegrableOn (fun y : Vec3 => L (u (y,s)))
-      (vec3Ball x r) volume := L.toContinuousLinearMap.integrable_comp hu.integrable
-  have hL3 : IntegrableOn (fun y : Vec3 => ‖L (u (y,s))‖ ^ (3 : ℕ))
-      (vec3Ball x r) volume := by
-    simpa only [vec3EuclideanNorm_eq_l2,
-      show (L : Vec3 → L2Vec3) = WithLp.toLp 2 by rfl] using hu3
-  have h := CKN.Foundation.Parabolic.Integration.setLaverage_norm_sub_setAverage_rpow_le
-    (f := fun y : Vec3 => L (u (y,s))) (p := (3 : ℝ)) (c := (0 : L2Vec3))
-    (by norm_num) (CKN.Foundation.Parabolic.Integration.volume_vec3Ball_pos hr)
-    (CKN.Foundation.Parabolic.Integration.volume_vec3Ball_lt_top (x := x) (r := r))
-    hLint (by simpa using hL3)
-  have hmap : L (⨍ y in vec3Ball x r, u (y,s)) =
-      ⨍ y in vec3Ball x r, L (u (y,s)) := by
-    rw [MeasureTheory.setAverage_eq, MeasureTheory.setAverage_eq]
-    change L ((volume (vec3Ball x r)).toReal⁻¹ • ∫ y in vec3Ball x r, u (y,s)) =
-      (volume (vec3Ball x r)).toReal⁻¹ • ∫ y in vec3Ball x r, L (u (y,s))
-    rw [map_smul, L.integral_comp_comm]
-  rw [← hmap] at h
-  simp only [← map_sub] at h
-  rw [MeasureTheory.setLAverage_eq, MeasureTheory.setLAverage_eq] at h
-  have h' := h
-  norm_num [ENNReal.rpow_natCast] at h'
-  have h'' :
-      (∫⁻ y in vec3Ball x r, ‖L (u (y,s) - ⨍ z in vec3Ball x r, u (z,s))‖ₑ ^ (3 : ℝ)) /
-        volume (vec3Ball x r) ≤
-      (8 * (∫⁻ y in vec3Ball x r, ‖L (u (y,s))‖ₑ ^ (3 : ℝ))) /
-        volume (vec3Ball x r) := by
-    simpa [map_sub, sub_zero, mul_div_assoc, Real.rpow_natCast] using h'
-  have hp := CKN.Foundation.Parabolic.Integration.volume_vec3Ball_pos (x := x) (r := r) hr
-  have ht := CKN.Foundation.Parabolic.Integration.volume_vec3Ball_lt_top (x := x) (r := r)
-  have hraw :
-      (∫⁻ y in vec3Ball x r, ‖L (u (y,s) - ⨍ z in vec3Ball x r, u (z,s))‖ₑ ^ (3 : ℝ)) ≤
-      8 * (∫⁻ y in vec3Ball x r, ‖L (u (y,s))‖ₑ ^ (3 : ℝ)) := by
-    calc
-      _ = ((∫⁻ y in vec3Ball x r, ‖L (u (y,s) - ⨍ z in vec3Ball x r, u (z,s))‖ₑ ^ (3 : ℝ)) /
-          volume (vec3Ball x r)) * volume (vec3Ball x r) := by rw [ENNReal.div_mul_cancel hp.ne'
-            ht.ne]
-      _ ≤ ((8 : ℝ≥0∞) * (∫⁻ y in vec3Ball x r, ‖L (u (y,s))‖ₑ ^ (3 : ℝ)) /
-          volume (vec3Ball x r)) * volume (vec3Ball x r) := mul_le_mul_of_nonneg_right h'' (by
-            positivity)
-      _ = 8 * (∫⁻ y in vec3Ball x r, ‖L (u (y,s))‖ₑ ^ (3 : ℝ)) := ENNReal.div_mul_cancel hp.ne'
-        ht.ne
-  convert hraw using 1 <;> simp [vec3EuclideanNorm_eq_l2,
-    show (L : Vec3 → L2Vec3) = WithLp.toLp 2 by rfl, ofReal_norm]
+  exact _root_.CKN.local_ball_meanFree_lintegral_bound hr hu hu3
 
 /-- The tensor's three-halves energy is bounded by the velocity cube,
 with the square root of eight from subtraction of the spatial average. -/

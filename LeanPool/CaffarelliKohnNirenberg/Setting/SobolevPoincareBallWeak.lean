@@ -78,37 +78,7 @@ private theorem eLpNorm_pi_le_sum_weak
     {f : Vec 3 → Vec 3} {μ : Measure (Vec 3)}
     (hf : AEStronglyMeasurable f μ) :
     eLpNorm f 2 μ ≤ ∑ i : Fin 3, eLpNorm (fun x => f x i) 2 μ := by
-  have hpoint : ∀ x, ‖f x‖ ≤ ∑ i : Fin 3, ‖f x i‖ := by
-    intro x
-    rw [Pi.norm_def]
-    have hsup : Finset.univ.sup (fun i => ‖f x i‖₊) ≤
-        ∑ i : Fin 3, ‖f x i‖₊ := by
-      apply Finset.sup_le
-      intro i hi
-      have hnonneg : ∀ j : Fin 3, j ∈ Finset.univ → 0 ≤ ‖f x j‖₊ := by
-        intro j hj
-        exact bot_le
-      simpa only [Finset.sum_filter, Finset.mem_univ, ite_true] using
-        (Finset.single_le_sum hnonneg (Finset.mem_univ i))
-    exact_mod_cast hsup
-  calc
-    eLpNorm f 2 μ ≤ eLpNorm (fun x => ∑ i : Fin 3, ‖f x i‖) 2 μ := by
-      apply eLpNorm_mono_ae hf
-      filter_upwards [] with x
-      rw [Real.norm_eq_abs, abs_of_nonneg (Finset.sum_nonneg
-        (fun i _ => norm_nonneg (f x i)))]
-      exact hpoint x
-    _ = eLpNorm (∑ i : Fin 3, (fun x => ‖f x i‖)) 2 μ := by rfl
-    _ ≤ ∑ i : Fin 3, eLpNorm (fun x => ‖f x i‖) 2 μ := by
-      simpa using (eLpNorm_sum_le (p := (2 : ENNReal)) (s := Finset.univ)
-        (f := fun i : Fin 3 => (fun x => ‖f x i‖)) (by norm_num))
-    _ = ∑ i : Fin 3, eLpNorm (fun x => f x i) 2 μ := by
-      congr 1
-      funext i
-      have hfi : AEStronglyMeasurable (fun x => f x i) μ := by
-        simpa only [ContinuousLinearMap.proj_apply] using
-          (ContinuousLinearMap.proj (R := ℝ) i).continuous.comp_aestronglyMeasurable hf
-      rw [eLpNorm_norm _ hfi]
+  exact _root_.CKN.eLpNorm_pi_le_sum hf
 
 private theorem tendsto_sum_zero_fin_three_weak
     {f : Fin 3 → ℕ → ℝ≥0∞}

@@ -189,22 +189,7 @@ theorem pressureP8_locallyIntegrable {η : Vec3 → ℝ}
 
 private theorem decomposition_laplacian_hasCompactSupport {ψ : Vec3 → ℝ}
     (hψc : HasCompactSupport ψ) : HasCompactSupport (spatialLaplacian ψ) := by
-  have hdiag (i : Fin 3) : HasCompactSupport
-      (spatialDeriv (spatialDeriv ψ i) i) :=
-    (hψc.fderiv_apply (𝕜 := ℝ) (basisVec i)).fderiv_apply
-      (𝕜 := ℝ) (basisVec i)
-  have h01 : HasCompactSupport (fun y : Vec3 =>
-      spatialDeriv (spatialDeriv ψ (0 : Fin 3)) 0 y +
-        spatialDeriv (spatialDeriv ψ (1 : Fin 3)) 1 y) := by
-    convert (hdiag (0 : Fin 3)).add (hdiag (1 : Fin 3)) using 1
-  have hsum : HasCompactSupport (fun y : Vec3 =>
-      spatialDeriv (spatialDeriv ψ (0 : Fin 3)) 0 y +
-        spatialDeriv (spatialDeriv ψ (1 : Fin 3)) 1 y +
-          spatialDeriv (spatialDeriv ψ (2 : Fin 3)) 2 y) := by
-    convert h01.add (hdiag (2 : Fin 3)) using 1
-  change HasCompactSupport (fun y : Vec3 =>
-    ∑ i : Fin 3, spatialDeriv (spatialDeriv ψ i) i y)
-  simpa only [Fin.sum_univ_three] using hsum
+  exact _root_.CKN.pressure_laplacian_hasCompactSupport hψc
 
 private theorem pressure_derivative_sum_distributional_pairing
     {G : Fin 3 → Vec3 → ℝ} {ψ : Vec3 → ℝ}

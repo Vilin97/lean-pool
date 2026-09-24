@@ -36,30 +36,8 @@ def weakGradientLpNormOn (p : ℝ≥0∞) (s : Set (Vec 3)) (Du : Vec 3 → Vec 
 private theorem fderiv_norm_le_three_classicalGradient_h1
     {f : Vec 3 → ℝ} (x : Vec 3) :
     ‖fderiv ℝ f x‖ ≤ 3 * ‖classicalGradient f x‖ := by
-  apply ContinuousLinearMap.opNorm_le_bound _ (by positivity)
-  intro z
-  calc
-    ‖(fderiv ℝ f x) z‖ =
-        ‖∑ i : Fin 3, z i • (fderiv ℝ f x) (basisVec i)‖ := by
-      have hz : z = ∑ i : Fin 3, z i • basisVec i :=
-        (sum_smul_basisVec z).symm
-      rw [hz, map_sum]
-      simp [Pi.smul_apply, smul_eq_mul]
-    _ ≤ ∑ i : Fin 3, ‖z i • (fderiv ℝ f x) (basisVec i)‖ :=
-      norm_sum_le _ _
-    _ ≤ ∑ i : Fin 3, ‖z‖ * ‖classicalGradient f x‖ := by
-      apply Finset.sum_le_sum
-      intro i hi
-      rw [norm_smul, Real.norm_eq_abs]
-      have hz : |z i| ≤ ‖z‖ := by
-        simpa only [Real.norm_eq_abs] using norm_le_pi_norm z i
-      have hg : |(fderiv ℝ f x) (basisVec i)| ≤ ‖classicalGradient f x‖ := by
-        simpa only [classicalGradient_apply, Real.norm_eq_abs] using
-          norm_le_pi_norm (classicalGradient f x) i
-      exact mul_le_mul hz hg (abs_nonneg _) (norm_nonneg _)
-    _ = 3 * ‖classicalGradient f x‖ * ‖z‖ := by
-      simp only [Finset.sum_const, Finset.card_fin, nsmul_eq_mul]
-      ring
+  exact _root_.CKN.fderiv_norm_le_three_classicalGradient x
+
 private theorem memLp_mul_cutoff_le
     {d : ℕ} {U : Set (Vec d)} (hU : MeasurableSet U)
     {p : ENNReal} {f : Vec d → ℝ} (hf : MemLp f p (volume.restrict U))
@@ -98,7 +76,7 @@ private theorem fderiv_component_tsupport_subset
       simp
     exact hx hzero
   · exact isClosed_tsupport (f := η)
-private theorem eLpNorm_pi_le_sum
+theorem eLpNorm_pi_le_sum
     {f : Vec 3 → Vec 3} {μ : Measure (Vec 3)}
     (hf : AEStronglyMeasurable f μ) :
     eLpNorm f 2 μ ≤ ∑ i : Fin 3, eLpNorm (fun x => f x i) 2 μ := by

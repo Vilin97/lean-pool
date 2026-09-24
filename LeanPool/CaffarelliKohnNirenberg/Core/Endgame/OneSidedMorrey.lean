@@ -52,7 +52,7 @@ private theorem cylinderPowerIntegral_indicator_eq
   rw [cylinderPowerIntegral, heq, lintegral_indicator hS,
     Measure.restrict_restrict hS, inter_comm S]
 
-private theorem cylinder_morrey_cell_le
+theorem cylinder_morrey_cell_le
     {P τ : ℝ} {K : ℝ≥0∞} {g : ParabolicPoint → ℝ}
     {z : ParabolicPoint} {r : ℝ} (hP : 0 < P) (hr : 0 < r)
     (hI : cylinderPowerIntegral P g z r ≤

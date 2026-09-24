@@ -171,18 +171,7 @@ private theorem aestronglyMeasurable_of_restrict_of_support_local
     (hmeas : AEStronglyMeasurable h (volume.restrict s))
     (hsupp : Function.support h ⊆ s) :
     AEStronglyMeasurable h volume := by
-  have h1 : AEMeasurable (s.indicator h) volume :=
-    (aemeasurable_indicator_iff hs).2 hmeas.aemeasurable
-  have heq : s.indicator h = h := by
-    funext y
-    by_cases hy : y ∈ s
-    · simp [Set.indicator_of_mem hy]
-    · have hz : h y = 0 := by
-        by_contra hne
-        exact hy (hsupp hne)
-      simp [Set.indicator_of_notMem hy, hz]
-  rw [heq] at h1
-  exact h1.aestronglyMeasurable
+  exact _root_.CKN.Foundation.Measure.aestronglyMeasurable_of_restrict_of_support hs hmeas hsupp
 
 /-- An `L^q` function on a restricted measure whose support is contained in the restricting
 set is `L^q` on the full measure. -/

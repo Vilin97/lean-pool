@@ -47,23 +47,7 @@ private lemma coord_fderiv_eq_deriv_update {f : Vec3 → ℝ} {x : Vec3}
     (hf : DifferentiableAt ℝ f x) (i : Fin 3) :
     (fderiv ℝ f x) (basisVec i) =
       deriv (fun s => f (Function.update x i s)) (x i) := by
-  have hcomp := HasFDerivAt.comp (x i)
-    (by simpa only [Function.update_eq_self] using hf.hasFDerivAt)
-    (hasFDerivAt_update (𝕜 := ℝ) (i := i) x (x i))
-  have hderiv := hcomp.hasDerivAt
-  have hderiv' : HasDerivAt (fun s => f (Function.update x i s))
-      ((fderiv ℝ f x ∘SL ContinuousLinearMap.pi
-        (Pi.single i (ContinuousLinearMap.id ℝ ℝ))) 1) (x i) := by
-    simpa only [Function.comp_def] using hderiv
-  rw [hderiv'.deriv]
-  have hb : ContinuousLinearMap.pi (Pi.single i (ContinuousLinearMap.id ℝ ℝ)) 1 =
-      basisVec i := by
-    ext j
-    by_cases hji : j = i <;> simp [basisVec, hji]
-  rw [show (fderiv ℝ f x ∘SL
-      ContinuousLinearMap.pi (Pi.single i (ContinuousLinearMap.id ℝ ℝ))) 1 =
-      (fderiv ℝ f x) (ContinuousLinearMap.pi
-      (Pi.single i (ContinuousLinearMap.id ℝ ℝ)) 1) by rfl, hb]
+  exact _root_.CKN.pressure_coord_fderiv_eq_deriv_update hf i
 
 private lemma heatKernel_fderiv_apply {x : Vec3} {t : ℝ}
     (ht : 0 < t) (i : Fin 3) :
@@ -447,27 +431,7 @@ private lemma smooth_ibp {u φ : Vec3 → ℝ}
     (hφc : HasCompactSupport φ) (i : Fin 3) :
     ∫ x, u x * spatialDeriv φ i x =
       -∫ x, spatialDeriv u i x * φ x := by
-  have hφd : ContDiff ℝ (⊤ : ℕ∞) (spatialDeriv φ i) :=
-    contDiff_spatialDeriv_smooth hφ i
-  have hud : ContDiff ℝ (⊤ : ℕ∞) (spatialDeriv u i) :=
-    contDiff_spatialDeriv_smooth hu i
-  have hφdc : HasCompactSupport (spatialDeriv φ i) := by
-    change HasCompactSupport (fun x => (fderiv ℝ φ x) (basisVec i))
-    exact hφc.fderiv_apply (𝕜 := ℝ) (basisVec i)
-  have hleft : Integrable (fun x => u x * spatialDeriv φ i x) volume :=
-    (hu.continuous.mul hφd.continuous).integrable_of_hasCompactSupport
-      (hφdc.mul_left (f := u))
-  have hright : Integrable (fun x => spatialDeriv u i x * φ x) volume :=
-    (hud.continuous.mul hφ.continuous).integrable_of_hasCompactSupport
-      (hφc.mul_left (f := spatialDeriv u i))
-  have hprod : Integrable (fun x => u x * φ x) volume :=
-    (hu.continuous.mul hφ.continuous).integrable_of_hasCompactSupport
-      (hφc.mul_left (f := u))
-  have h := integral_mul_fderiv_eq_neg_fderiv_mul_of_integrable
-    (μ := (volume : Measure Vec3)) (v := basisVec i) hright hleft hprod
-    (fun x _ => hu.differentiable (by norm_num) x)
-    (fun x _ => hφ.differentiable (by norm_num) x)
-  simpa only [spatialDeriv] using h
+  exact _root_.CKN.smooth_integration_by_parts hu hφ hφc i
 
 private lemma smooth_mixed_pairing {u ψ : Vec3 → ℝ}
     (hu : ContDiff ℝ (⊤ : ℕ∞) u)

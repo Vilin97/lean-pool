@@ -24,7 +24,7 @@ noncomputable section
 
 namespace CKN
 
-private lemma pressure_integral_mul_le_volume_rpow {μ : Measure Vec3}
+lemma pressure_integral_mul_le_volume_rpow {μ : Measure Vec3}
     [IsFiniteMeasure μ] {f g : Vec3 → ℝ}
     (hf : AEMeasurable f μ) (hg : AEMeasurable g μ)
     (hf0 : ∀ y, 0 ≤ f y) (hg0 : ∀ y, 0 ≤ g y)

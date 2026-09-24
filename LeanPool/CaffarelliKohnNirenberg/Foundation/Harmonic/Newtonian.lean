@@ -34,7 +34,7 @@ namespace CKN.Foundation.Heat
 
 open CKN.Foundation.Parabolic
 
-private lemma shift_fderiv_apply_basisVec {u : Vec3 → ℝ}
+lemma shift_fderiv_apply_basisVec {u : Vec3 → ℝ}
     (hu : ContDiff ℝ (⊤ : ℕ∞) u)
     (x y : Vec3) (i : Fin 3) :
     (fderiv ℝ (fun z : Vec3 => u (x - z)) y) (CKN.basisVec i) =

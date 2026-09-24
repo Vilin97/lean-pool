@@ -35,39 +35,7 @@ open CKN.Foundation.Parabolic.Morrey
 lemma positive_shell_exists {z w : ParabolicPoint} {R : ℝ}
     (hR : 0 < R) (hRρ : R ≤ parabolicRho₂ z w) :
     ∃ k : ℕ, w ∈ parabolicRieszShell R (k : ℤ) z := by
-  let x : ℝ := parabolicRho₂ z w / R
-  let L : ℝ := Real.log 2
-  let k : ℤ := ⌊Real.log x / L⌋
-  have hL : 0 < L := Real.log_pos (by norm_num)
-  have hx : 1 ≤ x := by
-    dsimp [x]
-    exact (one_le_div hR).2 hRρ
-  have hk : 0 ≤ k := by
-    apply (Int.floor_nonneg).2
-    exact div_nonneg (Real.log_nonneg hx) hL.le
-  have hklo : (k : ℝ) ≤ Real.log x / L := Int.floor_le _
-  have hkhi : Real.log x / L < (k : ℝ) + 1 := Int.lt_floor_add_one _
-  have hpowlo : (2 : ℝ) ^ (k : ℝ) ≤ x := by
-    apply (Real.strictMonoOn_log.le_iff_le
-      (Real.rpow_pos_of_pos (by norm_num) _) (by positivity : 0 < x)).mp
-    rw [Real.log_rpow (by norm_num)]
-    calc
-      (k : ℝ) * Real.log 2 ≤ (Real.log x / L) * L :=
-        mul_le_mul_of_nonneg_right hklo hL.le
-      _ = Real.log x := by field_simp [hL.ne']
-  have hpowhi : x < (2 : ℝ) ^ ((k : ℝ) + 1) := by
-    apply (Real.strictMonoOn_log.lt_iff_lt
-      (by positivity : 0 < x) (Real.rpow_pos_of_pos (by norm_num) _)).mp
-    rw [Real.log_rpow (by norm_num)]
-    calc
-      Real.log x = (Real.log x / L) * L := by field_simp [hL.ne']
-      _ < ((k : ℝ) + 1) * L := mul_lt_mul_of_pos_right hkhi hL
-  have hinner : (2 : ℝ) ^ (k : ℝ) * R ≤ parabolicRho₂ z w := by
-    simpa [x] using (le_div_iff₀ hR).mp hpowlo
-  have houter : parabolicRho₂ z w < (2 : ℝ) ^ ((k : ℝ) + 1) * R := by
-    simpa [x] using (div_lt_iff₀ hR).mp hpowhi
-  have hmem : w ∈ parabolicRieszShell R k z := mem_parabolicRieszShell hinner houter
-  exact ⟨k.toNat, by simpa [Int.toNat_of_nonneg hk] using hmem⟩
+  exact _root_.CKN.Foundation.Parabolic.Morrey.exists_positive_shell hR hRρ
 
 lemma shell_scale_sixtyfour {z w : ParabolicPoint} {r : ℝ} (hr : 0 < r)
     (n : ℕ) :

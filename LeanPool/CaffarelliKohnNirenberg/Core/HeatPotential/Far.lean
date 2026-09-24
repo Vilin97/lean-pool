@@ -133,25 +133,7 @@ private lemma heatPotential_one_add_pow_exp_neg_le {n : ℕ} {a : ℝ} (ha : 0 �
 
 private lemma heatPotential_heat_prefactor_le {t : ℝ} (ht : 0 < t) :
     (4 * Real.pi * t) ^ (-(3 : ℝ) / 2) ≤ (Real.sqrt t) ^ (-(3 : ℝ)) := by
-  have hbase : t ≤ 4 * Real.pi * t := by
-    have hpi : (1 : ℝ) ≤ 4 * Real.pi := by
-      nlinarith only [Real.two_le_pi]
-    simpa only [one_mul] using mul_le_mul_of_nonneg_right hpi ht.le
-  have hpow : t ^ ((3 : ℝ) / 2) ≤ (4 * Real.pi * t) ^ ((3 : ℝ) / 2) := by
-    exact Real.rpow_le_rpow ht.le hbase (by positivity)
-  have hsqrt : (Real.sqrt t) ^ (3 : ℕ) = t ^ ((3 : ℝ) / 2) := by
-    rw [Real.sqrt_eq_rpow, ← Real.rpow_natCast, ← Real.rpow_mul ht.le]
-    norm_num
-  calc
-    (4 * Real.pi * t) ^ (-(3 : ℝ) / 2) =
-        ((4 * Real.pi * t) ^ ((3 : ℝ) / 2))⁻¹ := by
-      rw [show -(3 : ℝ) / 2 = -((3 : ℝ) / 2) by ring,
-        Real.rpow_neg (by positivity)]
-    _ ≤ (t ^ ((3 : ℝ) / 2))⁻¹ :=
-      (inv_le_inv₀ (by positivity) (by positivity)).2 hpow
-    _ = (Real.sqrt t) ^ (-(3 : ℝ)) := by
-      rw [← hsqrt, Real.rpow_neg (by positivity)]
-      exact congrArg Inv.inv (Real.rpow_natCast (Real.sqrt t) 3).symm
+  exact _root_.CKN.Foundation.Heat.heat_prefactor_le ht
 
 private lemma heatPotential_heat_rpow_neg_three (z : ℝ) (hz : 0 < z) :
     z ^ (-(3 : ℝ)) = (z ^ (3 : ℕ))⁻¹ := by
@@ -243,23 +225,7 @@ private lemma heatPotential_coord_fderiv_eq_deriv_update {f : Vec3 → ℝ} {x :
     (hf : DifferentiableAt ℝ f x) (i : Fin 3) :
     (fderiv ℝ f x) (CKN.basisVec i) =
       deriv (fun s => f (Function.update x i s)) (x i) := by
-  have hcomp := HasFDerivAt.comp (x i)
-    (by simpa only [Function.update_eq_self] using hf.hasFDerivAt)
-    (hasFDerivAt_update (𝕜 := ℝ) (i := i) x (x i))
-  have hderiv := hcomp.hasDerivAt
-  have hderiv' : HasDerivAt (fun s : ℝ => f (Function.update x i s))
-      ((fderiv ℝ f x ∘SL
-        ContinuousLinearMap.pi (Pi.single i (ContinuousLinearMap.id ℝ ℝ))) 1) (x i) := by
-    simpa only [Function.comp_def] using hderiv
-  rw [hderiv'.deriv]
-  have hb : ContinuousLinearMap.pi (Pi.single i (ContinuousLinearMap.id ℝ ℝ)) 1 =
-      CKN.basisVec i := by
-    ext j
-    by_cases hji : j = i <;> simp [CKN.basisVec, hji]
-  rw [show (fderiv ℝ f x ∘SL
-      ContinuousLinearMap.pi (Pi.single i (ContinuousLinearMap.id ℝ ℝ))) 1 =
-      (fderiv ℝ f x) (ContinuousLinearMap.pi
-      (Pi.single i (ContinuousLinearMap.id ℝ ℝ)) 1) by rfl, hb]
+  exact _root_.CKN.Foundation.Heat.coord_fderiv_eq_deriv_update hf i
 
 private lemma heatKernelSpaceMixedSecondDerivative_abs_le_rho_inv_five
     {x : Vec3} {t : ℝ} (ht : 0 < t) (i j : Fin 3) :

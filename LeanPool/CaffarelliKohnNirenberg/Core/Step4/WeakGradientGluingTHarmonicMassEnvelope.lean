@@ -95,35 +95,6 @@ private theorem envelope_slice_norm_power_le
   norm_num at hp
   simpa only [mul_comm] using hp
 
-private theorem harmonic_volume_radius_bound
-    (C ε κ r : ℝ) (x : Vec3) (S : Set Vec3)
-    (hr : 0 < r) (hrhi : r ≤ 1) (hκ : 0 < κ) (hκhi : κ ≤ 25 / 9)
-    (hS : S ⊆ vec3Ball x r) :
-    volume S * originHarmonicAbsoluteMomentConstant C^(4/5 : ℝ) *
-      ENNReal.ofReal ε^(4/5 : ℝ) * ENNReal.ofReal r^(2/5 : ℝ) ≤
-      (ENNReal.ofReal (Real.pi*4/3) * originHarmonicAbsoluteMomentConstant C^(4/5 : ℝ) *
-        ENNReal.ofReal ε^(4/5 : ℝ)) *
-      ENNReal.ofReal (r^(5*(1-(6/5 : ℝ)/κ))) := by
-  have hθ : 5*(1-(6/5 : ℝ)/κ) ≤ 17/5 := by
-    have hd := div_le_div_of_nonneg_left (by norm_num : (0 : ℝ) ≤ 6/5) hκ hκhi
-    norm_num at hd
-    linarith only [hd]
-  have hrE : ENNReal.ofReal r ≤ 1 := by
-    exact (ENNReal.ofReal_le_ofReal hrhi).trans_eq (by simp)
-  calc
-    _ ≤ volume (vec3Ball x r) * originHarmonicAbsoluteMomentConstant C^(4/5 : ℝ) *
-      ENNReal.ofReal ε^(4/5 : ℝ) * ENNReal.ofReal r^(2/5 : ℝ) :=
-        mul_le_mul' (mul_le_mul' (mul_le_mul' (measure_mono hS) le_rfl) le_rfl) le_rfl
-    _ = (ENNReal.ofReal (Real.pi*4/3) * originHarmonicAbsoluteMomentConstant C^(4/5 : ℝ) *
-        ENNReal.ofReal ε^(4/5 : ℝ)) * ENNReal.ofReal r^(17/5 : ℝ) := by
-      rw [volume_vec3Ball_eq]
-      rw [show (17/5 : ℝ) = 3+2/5 by norm_num,
-        ENNReal.rpow_add_of_nonneg _ _ (by norm_num) (by norm_num), ENNReal.rpow_ofNat]
-      ring
-    _ ≤ _ := by
-      rw [← ENNReal.ofReal_rpow_of_pos hr]
-      exact mul_le_mul' le_rfl (ENNReal.rpow_le_rpow_of_exponent_ge hrE hθ)
-
 /-- The actual harmonic gradient satisfies the affine A-slot estimate on
 any clipped cell contained in a fixed source collar. All numerical parameters
 and the absolute harmonic coefficient precede the suitable solution. -/

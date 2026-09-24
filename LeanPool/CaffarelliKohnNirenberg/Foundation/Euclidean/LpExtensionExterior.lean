@@ -34,32 +34,11 @@ open CKN.Foundation.Heat
 def lpExtensionExteriorExteriorKernel (i j : Fin 3) : Vec3 → ℝ :=
   -spatialDeriv (spatialDeriv newtonianKernel i) j
 
-private lemma support_subset_closure_of_zero_outside {b : Vec3 → ℝ} {A : Set Vec3}
-    (hbA : ∀ y ∉ A, b y = 0) : Function.support b ⊆ closure A := by
-  intro y hy
-  by_contra hya
-  exact hy (hbA y (fun ha => hya (subset_closure ha)))
-
-private lemma mollifier_tsupp_eq_closedBall {ε : ℝ} (hε : 0 < ε) :
-    tsupport (mollifier (d := 3) ε hε) = Metric.closedBall 0 ε := by
-  exact (standardMollifier ε hε).tsupport_normed_eq
-
 private lemma mollify_support_subset {b : Vec3 → ℝ} {A : Set Vec3} {δ ε : ℝ}
     (hε : 0 < ε) (hbA : ∀ y ∉ A, b y = 0) (hεA : ε ≤ δ) :
     Function.support (mollify b ε hε) ⊆
       Metric.closedBall (0 : Vec3) δ + closure A := by
-  calc
-    Function.support (mollify b ε hε) ⊆
-        Function.support (mollifier (d := 3) ε hε) + Function.support b := by
-      simpa [mollify] using
-        (support_convolution_subset (L := ContinuousLinearMap.lsmul ℝ ℝ)
-          (f := mollifier (d := 3) ε hε) (g := b))
-    _ ⊆ Metric.closedBall (0 : Vec3) δ + closure A := by
-      apply Set.add_subset_add
-      · exact (subset_tsupport _).trans (by
-          rw [mollifier_tsupp_eq_closedBall hε]
-          exact Metric.closedBall_subset_closedBall hεA)
-      · exact support_subset_closure_of_zero_outside hbA
+  exact _root_.CKN.mollify_support_subset hε hbA hεA
 
 private lemma thickening_compact {A : Set Vec3} (hAb : Bornology.IsBounded A)
     {δ : ℝ} :

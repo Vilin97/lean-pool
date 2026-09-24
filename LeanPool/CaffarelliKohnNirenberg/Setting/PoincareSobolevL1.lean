@@ -247,30 +247,7 @@ private theorem seeleyExtension_eq_exterior_on_closedAnnulus
 private theorem fderiv_norm_le_three_classicalGradient_l1
     {f : Vec 3 → ℝ} (x : Vec 3) :
     ‖fderiv ℝ f x‖ ≤ 3 * ‖classicalGradient f x‖ := by
-  apply ContinuousLinearMap.opNorm_le_bound _ (by positivity)
-  intro z
-  calc
-    ‖(fderiv ℝ f x) z‖ =
-        ‖∑ i : Fin 3, z i • (fderiv ℝ f x) (basisVec i)‖ := by
-      have hz : z = ∑ i : Fin 3, z i • basisVec i :=
-        (sum_smul_basisVec z).symm
-      rw [hz, map_sum]
-      simp [Pi.smul_apply, smul_eq_mul]
-    _ ≤ ∑ i : Fin 3, ‖z i • (fderiv ℝ f x) (basisVec i)‖ := norm_sum_le _ _
-    _ ≤ ∑ i : Fin 3, ‖z‖ * ‖classicalGradient f x‖ := by
-      apply Finset.sum_le_sum
-      intro i hi
-      rw [norm_smul, Real.norm_eq_abs]
-      have hz : |z i| ≤ ‖z‖ := by
-        simpa only [Real.norm_eq_abs] using norm_le_pi_norm z i
-      have hg : |(fderiv ℝ f x) (basisVec i)| ≤
-          ‖classicalGradient f x‖ := by
-        simpa only [classicalGradient_apply, Real.norm_eq_abs] using
-          norm_le_pi_norm (classicalGradient f x) i
-      exact mul_le_mul hz hg (abs_nonneg _) (norm_nonneg _)
-    _ = 3 * ‖classicalGradient f x‖ * ‖z‖ := by
-      simp only [Finset.sum_const, Finset.card_fin, nsmul_eq_mul]
-      ring
+  exact _root_.CKN.fderiv_norm_le_three_classicalGradient x
 
 private theorem seeley_extension_value_pointwise_annulus
     (g : Vec 3 → ℝ) (c : ℝ) {x : Vec 3}

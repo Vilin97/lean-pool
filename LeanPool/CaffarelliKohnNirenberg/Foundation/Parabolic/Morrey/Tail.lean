@@ -90,7 +90,7 @@ private lemma positive_shell_cylinder_subset {R : ℝ} (hR : 0 < R)
   have hresult := hshell_ball.trans hball
   simpa [b] using hresult
 
-private lemma exists_positive_shell {z w : ParabolicPoint} {R : ℝ}
+lemma exists_positive_shell {z w : ParabolicPoint} {R : ℝ}
     (hR : 0 < R) (hRρ : R ≤ parabolicRho₂ z w) :
     ∃ k : ℕ, w ∈ parabolicRieszShell R (k : ℤ) z := by
   let x : ℝ := parabolicRho₂ z w / R

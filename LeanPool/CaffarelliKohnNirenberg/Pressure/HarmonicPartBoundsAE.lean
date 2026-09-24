@@ -36,7 +36,7 @@ private lemma euclideanBall_eq_vec3Ball_harmonic {x₀ : Vec3} {r : ℝ} (hr : 0
   simpa [vec3EuclideanNorm, vecEuclideanNorm, vecNormSq, vecDot, pow_two] using
     (mem_euclideanBall_iff_vecEuclideanNorm_lt hr)
 
-private lemma vec3EuclideanNorm_le_sqrt_three (v : Vec3) :
+lemma vec3EuclideanNorm_le_sqrt_three (v : Vec3) :
     vec3EuclideanNorm v ≤ Real.sqrt 3 * ‖v‖ := by
   have hsq : vec3EuclideanNorm v ^ 2 ≤ (Real.sqrt 3 * ‖v‖) ^ 2 := by
     unfold vec3EuclideanNorm
@@ -301,42 +301,7 @@ private lemma harmonic_integral_mul_le_volume_rpow {μ : Measure Vec3}
     ∫ y, f y * g y ∂μ ≤
       (μ Set.univ).toReal ^ (1 / 3 : ℝ) *
         (∫ y, (f y * g y) ^ (3 / 2 : ℝ) ∂μ) ^ (2 / 3 : ℝ) := by
-  have hprod0 : ∀ y, 0 ≤ f y * g y := fun y => mul_nonneg (hf0 y) (hg0 y)
-  have hmul : AEMeasurable (fun y => (f y * g y) ^ (3 / 2 : ℝ)) μ :=
-    (hf.mul hg).pow_const (3 / 2)
-  have hF : AEMeasurable
-      (fun y => ENNReal.ofReal ((f y * g y) ^ (3 / 2 : ℝ))) μ :=
-    hmul.ennreal_ofReal
-  have hOne : AEMeasurable (fun _ : Vec3 => (1 : ℝ≥0∞)) μ := aemeasurable_const
-  have hHolder := ENNReal.lintegral_mul_norm_pow_le hF hOne
-    (show (0 : ℝ) ≤ 2 / 3 by norm_num) (show (0 : ℝ) ≤ 1 / 3 by norm_num)
-    (show (2 : ℝ) / 3 + 1 / 3 = 1 by norm_num)
-  have hLHS : ∫⁻ y, ENNReal.ofReal ((f y * g y) ^ (3 / 2 : ℝ)) ^
-        (2 / 3 : ℝ) * (1 : ℝ≥0∞) ^ (1 / 3 : ℝ) ∂μ =
-      ∫⁻ y, ENNReal.ofReal (f y * g y) ∂μ := by
-    apply lintegral_congr
-    intro y
-    rw [ENNReal.one_rpow, mul_one,
-      ENNReal.ofReal_rpow_of_nonneg (Real.rpow_nonneg (hprod0 y) (3 / 2))
-        (show (0 : ℝ) ≤ 2 / 3 by norm_num),
-      ← Real.rpow_mul (hprod0 y), show (3 : ℝ) / 2 * (2 / 3) = 1 by norm_num,
-      Real.rpow_one]
-  rw [hLHS, lintegral_one] at hHolder
-  have hRfin : (∫⁻ y, ENNReal.ofReal ((f y * g y) ^ (3 / 2 : ℝ)) ∂μ) ^
-        (2 / 3 : ℝ) * (μ Set.univ) ^ (1 / 3 : ℝ) ≠ ⊤ :=
-    (ENNReal.mul_lt_top
-      (ENNReal.rpow_lt_top_of_nonneg (by norm_num) hXfin.ne)
-      (ENNReal.rpow_lt_top_of_nonneg (by norm_num)
-        (IsFiniteMeasure.measure_univ_lt_top.ne))).ne
-  have htoReal := ENNReal.toReal_mono hRfin hHolder
-  rw [ENNReal.toReal_mul, ← ENNReal.toReal_rpow, ← ENNReal.toReal_rpow] at htoReal
-  rw [← integral_eq_lintegral_of_nonneg_ae (Eventually.of_forall hprod0)
-        (hf.mul hg).aestronglyMeasurable,
-      ← integral_eq_lintegral_of_nonneg_ae
-        (Eventually.of_forall (fun y => Real.rpow_nonneg (hprod0 y) (3 / 2)))
-        hmul.aestronglyMeasurable] at htoReal
-  rw [mul_comm] at htoReal
-  exact htoReal
+  exact _root_.CKN.pressure_integral_mul_le_volume_rpow hf hg hf0 hg0 hXfin
 
 private lemma harmonic_pressure_integral_eq_lpNorm_rpow
     {f : Vec3 → ℝ} {x₀ : Vec3} {r : ℝ}

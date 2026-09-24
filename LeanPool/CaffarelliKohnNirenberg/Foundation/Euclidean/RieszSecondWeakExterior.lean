@@ -39,7 +39,7 @@ private lemma cube_bounded_for_exterior (Q : DyadicIndex) :
   obtain ⟨c, hc⟩ := dyadicCube_nonempty Q.scale Q.corner
   exact Metric.isBounded_closedBall.subset (dyadicCube_subset_closedBall hc)
 
-private lemma vec3_euclidean_norm_le_sqrt_three (v : Vec3) :
+lemma vec3_euclidean_norm_le_sqrt_three (v : Vec3) :
     vec3EuclideanNorm v ≤ Real.sqrt 3 * ‖v‖ := by
   have hv : vec3EuclideanNorm v ^ 2 = ∑ k : Fin 3, v k ^ 2 := by
     unfold vec3EuclideanNorm

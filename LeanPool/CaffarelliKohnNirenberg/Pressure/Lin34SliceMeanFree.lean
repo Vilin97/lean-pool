@@ -49,44 +49,13 @@ private lemma local_meanFreeVec_aemeasurable
       ((volume.restrict (vec3Ball x r)).prod (volume.restrict T))) :
     AEStronglyMeasurable (fun w : Vec3 × ℝ => meanFreeVec u x r w.2 w.1)
       ((volume.restrict (vec3Ball x r)).prod (volume.restrict T)) := by
-  let μ := (volume.restrict (vec3Ball x r)).prod (volume.restrict T)
-  have hcomp : ∀ i : Fin 3, AEStronglyMeasurable (fun w : Vec3 × ℝ => u w i) μ := by
-    intro i
-    exact (ContinuousLinearMap.proj i : Vec3 →L[ℝ] ℝ).continuous.comp_aestronglyMeasurable hU
-  have havg : ∀ i : Fin 3, AEStronglyMeasurable
-      (fun s : ℝ => average (volume.restrict (vec3Ball x r))
-        (fun y : Vec3 => u (y,s) i)) (volume.restrict T) := by
-    intro i
-    have hi := (hcomp i).prod_swap.integral_prod_right'
-    convert hi.const_smul ((volume (vec3Ball x r)).toReal⁻¹) using 1
-    · funext s
-      rw [MeasureTheory.average_eq (μ := volume.restrict (vec3Ball x r))]
-      simp only [MeasureTheory.measureReal_restrict_apply_univ]
-      rfl
-  have hcoord : ∀ i : Fin 3, AEStronglyMeasurable
-      (fun w : Vec3 × ℝ => u w i - average (volume.restrict (vec3Ball x r))
-        (fun y : Vec3 => u (y,w.2) i)) μ := by
-    intro i
-    have hsnd := Measure.quasiMeasurePreserving_snd
-      (μ := volume.restrict (vec3Ball x r)) (ν := volume.restrict T)
-    have hm := (havg i).comp_quasiMeasurePreserving hsnd
-    change AEStronglyMeasurable ((fun w : Vec3 × ℝ => u w i) -
-      (fun w : Vec3 × ℝ => average (volume.restrict (vec3Ball x r))
-        (fun y : Vec3 => u (y,w.2) i))) μ
-    simpa [Function.comp_def, Prod.swap_prod_mk] using (hcomp i).sub hm
-  change AEStronglyMeasurable (fun w : Vec3 × ℝ => fun i =>
-    u w i - average (volume.restrict (vec3Ball x r))
-      (fun y : Vec3 => u (y,w.2) i)) μ
-  apply aestronglyMeasurable_iff_aemeasurable.mpr
-  apply aemeasurable_pi_iff.mpr
-  intro i
-  exact (hcoord i).aemeasurable
+  exact _root_.CKN.meanFreeVec_aemeasurable hU
 
 /-- On a spatial slice at time `s` on which `u(·,s)` and `|u(·,s)|^3` are
 integrable, the `L³` mean oscillation of `u(·,s)` over the ball `vec3Ball x r`
 is bounded by `8` times the `L³` norm of `u(·,s)`.  This is the slicewise
 form of the mean-oscillation estimate behind `eq:Chat` in `paper/ckn.tex`. -/
-private lemma local_ball_meanFree_lintegral_bound
+lemma local_ball_meanFree_lintegral_bound
     {u : ParabolicPoint → Vec3} {x : Vec3} {r s : ℝ}
     (hr : 0 < r)
     (hu : IntegrableOn (fun y : Vec3 => u (y,s)) (vec3Ball x r) volume)

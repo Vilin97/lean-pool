@@ -615,68 +615,6 @@ theorem weak_harmonic_interior_representative_bound
         weakHarmonicInteriorSupConstant * (ρ ^ 2)⁻¹ *
           lpNorm h (ENNReal.ofReal (3 / 2 : ℝ))
             (volume.restrict (euclideanBall x₀ ρ)) := by
-  intro x hx
-  have hsource := weak_rep_source_integral_bound hρ hx hmem
-  have hcutoff : ∀ i : Fin 3, |∫ y, h y * CKN.spatialDeriv
-      (kernelCutoffDerivative x x₀ hρ i) i y| ≤
-      weakHarmonicInteriorCutoffConstant *
-        (Real.pi * 4 / 3) ^ (1 / (3 : ℝ)) * (ρ ^ 2)⁻¹ *
-        lpNorm h (ENNReal.ofReal (3 / 2 : ℝ))
-          (volume.restrict (euclideanBall x₀ ρ)) := by
-    intro i
-    exact weak_rep_cutoff_integral_bound hρ hx i hmem
-  have hsum : |2 * ∑ i : Fin 3, ∫ y, h y * CKN.spatialDeriv
-      (kernelCutoffDerivative x x₀ hρ i) i y| ≤
-      6 * weakHarmonicInteriorCutoffConstant *
-        (Real.pi * 4 / 3) ^ (1 / (3 : ℝ)) * (ρ ^ 2)⁻¹ *
-        lpNorm h (ENNReal.ofReal (3 / 2 : ℝ))
-          (volume.restrict (euclideanBall x₀ ρ)) := by
-    rw [abs_mul, abs_of_nonneg (by norm_num : 0 ≤ (2 : ℝ))]
-    let I : Fin 3 → ℝ := fun i => ∫ y, h y * CKN.spatialDeriv
-      (kernelCutoffDerivative x x₀ hρ i) i y
-    change 2 * |∑ i : Fin 3, I i| ≤ _
-    have habs : |∑ i : Fin 3, I i| ≤ ∑ i : Fin 3, |I i| := by
-      simpa only [Fin.sum_univ_three] using
-        (Finset.abs_sum_le_sum_abs I (Finset.univ : Finset (Fin 3)))
-    calc
-      2 * |∑ i : Fin 3, I i| ≤ 2 * ∑ i : Fin 3, |I i| :=
-        mul_le_mul_of_nonneg_left habs (by positivity)
-      _ ≤ 2 * ∑ i : Fin 3,
-          (weakHarmonicInteriorCutoffConstant *
-            (Real.pi * 4 / 3) ^ (1 / (3 : ℝ)) * (ρ ^ 2)⁻¹ *
-            lpNorm h (ENNReal.ofReal (3 / 2 : ℝ))
-              (volume.restrict (euclideanBall x₀ ρ))) := by
-        refine mul_le_mul_of_nonneg_left ?_ (by norm_num : 0 ≤ (2 : ℝ))
-        apply Finset.sum_le_sum
-        intro i hi
-        exact hcutoff i
-      _ = _ := by simp; ring
-  rw [weakHarmonicInteriorRepresentative]
-  have hsource_eq : (∫ y : Vec3, newtonianKernel (x - y) *
-        (h y * CKN.spatialLaplacian (eta x₀ hρ) y)) =
-      ∫ y : Vec3, h y * (newtonianKernel (x - y) *
-        CKN.spatialLaplacian (eta x₀ hρ) y) := by
-    congr 1
-    funext y
-    ring
-  rw [hsource_eq]
-  calc
-    |(-∫ y : Vec3, h y * (newtonianKernel (x - y) *
-        CKN.spatialLaplacian (eta x₀ hρ) y)) +
-        2 * ∑ i : Fin 3, ∫ y : Vec3,
-          h y * CKN.spatialDeriv (kernelCutoffDerivative x x₀ hρ i) i y| ≤
-        |∫ y, h y * (newtonianKernel (x - y) *
-          CKN.spatialLaplacian (eta x₀ hρ) y)| +
-        |2 * ∑ i : Fin 3, ∫ y, h y *
-          CKN.spatialDeriv (kernelCutoffDerivative x x₀ hρ i) i y| := by
-      exact (abs_add_le _ _).trans_eq (by rw [abs_neg])
-    _ ≤ weakHarmonicInteriorSupConstant * (ρ ^ 2)⁻¹ *
-        lpNorm h (ENNReal.ofReal (3 / 2 : ℝ))
-          (volume.restrict (euclideanBall x₀ ρ)) := by
-      rw [show weakHarmonicInteriorSupConstant =
-        (Real.pi * 4 / 3) ^ (1 / (3 : ℝ)) *
-          (weakHarmonicInteriorSourceConstant +
-            6 * weakHarmonicInteriorCutoffConstant) by rfl]
-      exact (add_le_add hsource hsum).trans_eq (by ring)
+  exact weak_harmonic_interior_representative_bound_internal hρ hmem
 
 end CKN.Foundation.Heat

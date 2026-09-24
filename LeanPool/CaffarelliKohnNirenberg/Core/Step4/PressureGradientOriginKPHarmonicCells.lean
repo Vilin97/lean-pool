@@ -50,7 +50,7 @@ theorem origin_harmonic_coefficient_le_affine_slot
   apply le_trans ?_ le_add_self
   exact mul_le_mul' le_rfl (le_mul_of_one_le_left' (by norm_num))
 
-private theorem harmonic_volume_radius_bound
+theorem harmonic_volume_radius_bound
     (C ε κ r : ℝ) (x : Vec3) (S : Set Vec3)
     (hr : 0 < r) (hrhi : r ≤ 1) (hκ : 0 < κ) (hκhi : κ ≤ 25 / 9)
     (hS : S ⊆ vec3Ball x r) :

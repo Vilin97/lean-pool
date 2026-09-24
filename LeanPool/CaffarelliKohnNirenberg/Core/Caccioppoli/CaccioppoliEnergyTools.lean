@@ -180,22 +180,7 @@ theorem caccioppoli_energy_nested_integral_eq
     (hg : IntegrableOn g (Ω ×ˢ T) ((volume : Measure Vec3).prod volume)) :
     ∫ s in T, ∫ x in Ω, g (x, s) =
       ∫ z in Ω ×ˢ T, g z ∂((volume : Measure Vec3).prod volume) := by
-  have hswap : IntegrableOn (fun z : ℝ × Vec3 =>
-      g (show ParabolicPoint from z.swap))
-      (T ×ˢ Ω) ((volume : Measure ℝ).prod volume) := hg.swap
-  calc
-    ∫ s in T, ∫ x in Ω, g (show ParabolicPoint from (x, s)) =
-        ∫ z in T ×ˢ Ω, g (show ParabolicPoint from z.swap)
-          ∂((volume : Measure ℝ).prod volume) := by
-      have hp := setIntegral_prod
-        (f := fun z : ℝ × Vec3 =>
-          g (show ParabolicPoint from z.swap)) hswap
-      convert hp.symm using 1
-      rfl
-    _ = ∫ z in Ω ×ˢ T, g z ∂((volume : Measure Vec3).prod volume) := by
-      simpa using
-        (setIntegral_prod_swap T Ω (fun z : ℝ × Vec3 =>
-          g (show ParabolicPoint from z.swap))).symm
+  exact _root_.CKN.caccioppoli_nested_integral_eq hg
 
 lemma caccioppoli_pairing_zero_to_slice_integral
     {Ω K : Set Vec3} {s : ℝ} {F : Vec3 × ℝ → ℝ}

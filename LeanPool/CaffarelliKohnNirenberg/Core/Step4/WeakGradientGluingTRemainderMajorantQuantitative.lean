@@ -33,19 +33,7 @@ private lemma euclideanBall_eq_vec3Ball_harmonic {x₀ : Vec3} {r : ℝ} (hr : 0
 
 private lemma vec3EuclideanNorm_le_sqrt_three (v : Vec3) :
     vec3EuclideanNorm v ≤ Real.sqrt 3 * ‖v‖ := by
-  have hsq : vec3EuclideanNorm v ^ 2 ≤ (Real.sqrt 3 * ‖v‖) ^ 2 := by
-    unfold vec3EuclideanNorm
-    rw [Real.sq_sqrt (Finset.sum_nonneg (fun i _ => sq_nonneg _)), mul_pow,
-      Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 3)]
-    calc
-      ∑ i : Fin 3, v i ^ 2 ≤ ∑ _i : Fin 3, ‖v‖ ^ 2 := by
-        apply Finset.sum_le_sum
-        intro i _hi
-        rw [← sq_abs]
-        exact pow_le_pow_left₀ (abs_nonneg _) (norm_le_pi_norm v i) 2
-      _ = 3 * ‖v‖ ^ 2 := by
-        simp [Finset.sum_const, Finset.card_univ, Fintype.card_fin]
-  exact (sq_le_sq₀ (vec3EuclideanNorm_nonneg v) (by positivity)).mp hsq
+  exact _root_.CKN.vec3EuclideanNorm_le_sqrt_three v
 
 private lemma pressure_utensor_integral_le_two_energy_hGpow_1 :
     ∀ {u : ParabolicPoint → Vec3} {c : ℝ → Vec3} {x₀ : Vec3} {ρ s : ℝ},
@@ -421,7 +409,7 @@ private theorem integral_power_le {α : Type*} [MeasurableSpace α] (μ : Measur
   norm_num at ht
   simpa only [mul_comm] using ht
 
-private theorem slice_integral_power_bound {B : Set Vec3} {J : Set ℝ}
+theorem slice_integral_power_bound {B : Set Vec3} {J : Set ℝ}
     {F : Vec3 × ℝ → ℝ≥0∞}
     (hF : AEMeasurable F ((volume.restrict B).prod (volume.restrict J))) (a : ℝ) :
     AEMeasurable (fun s => ∫⁻ y in B, F (y,s) ^ a) (volume.restrict J) ∧
@@ -440,7 +428,7 @@ private theorem slice_integral_power_bound {B : Set Vec3} {J : Set ℝ}
         ← lintegral_prod_symm _ (hF.pow_const _), Measure.prod_restrict]
       rfl
 
-private theorem three_terms_power_bound (a b c : ℝ≥0∞) :
+theorem three_terms_power_bound (a b c : ℝ≥0∞) :
     (a + b + c) ^ (3/2 : ℝ) ≤
       16 * (a ^ (3/2 : ℝ) + b ^ (3/2 : ℝ) + c ^ (3/2 : ℝ)) := by
   have htwo : (2 : ℝ≥0∞) ^ (3/2 : ℝ) ≤ 4 := by
@@ -482,7 +470,7 @@ def fixedRemainderMomentConstant (C ρ : ℝ) (x : Vec3) : ℝ≥0∞ :=
       fixedRemainderCoefficients C ρ 2 ^ (3/2 : ℝ)) *
     (volume (parabolicCylinder (0 : Vec3) 0 1) + 1)
 
-private theorem three_slice_mass_bound {B : Set Vec3} {J : Set ℝ}
+theorem three_slice_mass_bound {B : Set Vec3} {J : Set ℝ}
     {U P F : Vec3 × ℝ → ℝ≥0∞}
     (hU : AEMeasurable U ((volume.restrict B).prod (volume.restrict J)))
     (hP : AEMeasurable P ((volume.restrict B).prod (volume.restrict J)))

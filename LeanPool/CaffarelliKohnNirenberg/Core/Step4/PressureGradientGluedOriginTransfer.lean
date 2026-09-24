@@ -67,27 +67,7 @@ private theorem cylinder_morrey_cell_le'
     (hI : cylinderPowerIntegral P g z r ≤
       K * ENNReal.ofReal (r ^ (5 * (1 - P / τ)))) :
     morreyCell P τ g z r ≤ K ^ (1 / P : ℝ) := by
-  have hroot := ENNReal.rpow_le_rpow hI (one_div_nonneg.mpr hP.le)
-  have hroot' : (cylinderPowerIntegral P g z r) ^ (1 / P : ℝ) ≤
-      K ^ (1 / P : ℝ) * (ENNReal.ofReal r) ^ (5 * (1 - P / τ) / P) := by
-    calc
-      _ ≤ (K * ENNReal.ofReal (r ^ (5 * (1 - P / τ)))) ^ (1 / P : ℝ) := hroot
-      _ = _ := by
-        rw [ENNReal.mul_rpow_of_nonneg _ _ (one_div_nonneg.mpr hP.le),
-          ← ENNReal.ofReal_rpow_of_pos hr, ← ENNReal.rpow_mul]
-        congr 2
-        ring
-  have hcancel : (ENNReal.ofReal r) ^ (-(5 * (1 - P / τ) / P)) *
-      (ENNReal.ofReal r) ^ (5 * (1 - P / τ) / P) = 1 := by
-    rw [← ENNReal.rpow_add _ _ (ENNReal.ofReal_pos.mpr hr).ne'
-      ENNReal.ofReal_ne_top, neg_add_cancel, ENNReal.rpow_zero]
-  rw [morreyCell_eq]
-  calc
-    _ ≤ (ENNReal.ofReal r) ^ (-(5 * (1 - P / τ) / P)) *
-        (K ^ (1 / P : ℝ) * (ENNReal.ofReal r) ^ (5 * (1 - P / τ) / P)) :=
-      mul_le_mul_of_nonneg_left hroot' (by positivity)
-    _ = K ^ (1 / P : ℝ) := by
-      rw [← mul_left_comm, hcancel, mul_one]
+  exact _root_.CKN.Core.Endgame.cylinder_morrey_cell_le hP hr hI
 
 /-- Small-scale cylinder estimates at carrier centres and a total integral
 bound on the carrier imply an explicit Morrey estimate for the one-sided

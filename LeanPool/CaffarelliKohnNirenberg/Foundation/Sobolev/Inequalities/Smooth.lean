@@ -66,7 +66,7 @@ private theorem classicalGradient_mul
   rw [hfun]
   simpa [Pi.mul_apply, smul_eq_mul, classicalGradient_apply, add_comm] using h
 
-private theorem fderiv_norm_le_three_classicalGradient
+theorem fderiv_norm_le_three_classicalGradient
     {f : Vec 3 → ℝ} (x : Vec 3) :
     ‖fderiv ℝ f x‖ ≤ 3 * ‖classicalGradient f x‖ := by
   apply ContinuousLinearMap.opNorm_le_bound _ (by positivity)

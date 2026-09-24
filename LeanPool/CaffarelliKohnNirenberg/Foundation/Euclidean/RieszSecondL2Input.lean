@@ -33,23 +33,7 @@ abbrev testFunction := 𝓓((⊤ : TopologicalSpace.Opens Vec3), ℝ)
 
 private lemma pressure_neg_kernel_locallyIntegrable' :
     LocallyIntegrable (fun z : Vec3 => -Foundation.Heat.newtonianKernel z) volume := by
-  have hbound : ∀ᵐ z : Vec3, ‖-Foundation.Heat.newtonianKernel z‖ ≤
-      (4 * Real.pi)⁻¹ * ‖z‖ ^ (-1 : ℝ) := by
-    filter_upwards [Measure.ae_ne volume (0 : Vec3)] with z hz
-    have hb := Foundation.Heat.newtonianKernel_size_bound hz
-    rw [norm_neg, Real.rpow_neg (norm_nonneg _), Real.rpow_one]
-    simpa only [Real.norm_eq_abs] using hb
-  have hmeas : Measurable (fun z : Vec3 => -Foundation.Heat.newtonianKernel z) := by
-    have hnorm : Measurable (fun z : Vec3 => vec3EuclideanNorm z) := by
-      unfold vec3EuclideanNorm
-      fun_prop
-    have hk : Measurable (Foundation.Heat.newtonianKernel : Vec3 → ℝ) := by
-      unfold Foundation.Heat.newtonianKernel
-      exact measurable_const.div (measurable_const.mul hnorm)
-    exact hk.neg
-  refine locallyIntegrable_of_norm_le_rpow (E := Vec3) (F := ℝ)
-    (by change 1 ≤ Module.finrank ℝ (Fin 3 → ℝ); rw [Module.finrank_fin_fun]; norm_num)
-    (by norm_num) hbound hmeas.aestronglyMeasurable
+  exact _root_.CKN.pressure_neg_kernel_locallyIntegrable
 
 private lemma test_potential_conv (f : testFunction) :
     pressureNewtonianPotential (f : Vec3 → ℝ) =

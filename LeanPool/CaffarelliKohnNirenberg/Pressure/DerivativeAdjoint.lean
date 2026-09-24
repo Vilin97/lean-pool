@@ -28,7 +28,7 @@ noncomputable section
 
 namespace CKN
 
-private lemma pressure_coord_fderiv_eq_deriv_update {f : Vec3 → ℝ} {x : Vec3}
+lemma pressure_coord_fderiv_eq_deriv_update {f : Vec3 → ℝ} {x : Vec3}
     (hf : DifferentiableAt ℝ f x) (i : Fin 3) :
     (fderiv ℝ f x) (basisVec i) =
       deriv (fun s => f (Function.update x i s)) (x i) := by

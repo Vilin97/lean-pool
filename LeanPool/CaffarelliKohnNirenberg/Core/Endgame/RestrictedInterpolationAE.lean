@@ -148,49 +148,7 @@ private lemma interpolation_of_tail_bound {T : (Vec3 → ℝ) → (Vec3 → ℝ)
     ∫⁻ x, absE (T f) x ^ p ≤
       ENNReal.ofReal (p * (2 ^ p * (A₁ / (p - 1) + A₂ ^ 2 / (2 - p)))) *
         ∫⁻ x, absE f x ^ p := by
-  have hp0 : (0 : ℝ) ≤ p := by linarith only [hp1]
-  have hM : Measurable (absE f) := measurable_absE hf
-  have hMfin : ∀ x, absE f x < ∞ := fun _ => ENNReal.ofReal_lt_top
-  let _ : SFinite (volume : Measure Vec3) := inferInstance
-  have hF1 : AEMeasurable (fun t : ℝ => ENNReal.ofReal (2 * A₁) *
-      (ENNReal.ofReal (rpowExt (p - 2) t) * highTail (absE f) t))
-      (volume.restrict (Ioi (0 : ℝ))) :=
-    ((measurable_weightedHighIntegrand hM (p := p)).lintegral_prod_right.congr
-      (Eventually.of_forall fun t => inner_High_eq hM t)).const_mul _
-  calc ∫⁻ x, absE (T f) x ^ p
-      = ∫⁻ t in Ioi (0 : ℝ), volume {x | t < |T f x|} * ENNReal.ofReal (p * t ^ (p - 1)) :=
-        layer_cake hTf hp1
-    _ ≤ ∫⁻ t in Ioi (0 : ℝ),
-          (ENNReal.ofReal (2 * A₁ / t) * highTail (absE f) t +
-            ENNReal.ofReal (4 * A₂ ^ 2 / t ^ 2) * lowTail (absE f) t) *
-          ENNReal.ofReal (p * t ^ (p - 1)) := by
-        apply lintegral_mono_ae
-        filter_upwards [self_mem_ae_restrict measurableSet_Ioi] with t ht
-        exact mul_le_mul_left (htail t ht) _
-    _ = ENNReal.ofReal p * ∫⁻ t in Ioi (0 : ℝ),
-          (ENNReal.ofReal (2 * A₁) *
-              (ENNReal.ofReal (rpowExt (p - 2) t) * highTail (absE f) t) +
-            ENNReal.ofReal (4 * A₂ ^ 2) *
-              (ENNReal.ofReal (rpowExt (p - 3) t) * lowTail (absE f) t)) := by
-        rw [← lintegral_const_mul' _ _ ENNReal.ofReal_ne_top]
-        apply lintegral_congr_ae
-        filter_upwards [self_mem_ae_restrict measurableSet_Ioi] with t ht
-        rw [interp_integrand hA₁ hp1 ht, ← rpowExt_eq (a := p - 2) ht,
-          ← rpowExt_eq (a := p - 3) ht]
-    _ = ENNReal.ofReal p *
-          ((∫⁻ t in Ioi (0 : ℝ), ENNReal.ofReal (2 * A₁) *
-              (ENNReal.ofReal (rpowExt (p - 2) t) * highTail (absE f) t)) +
-            (∫⁻ t in Ioi (0 : ℝ), ENNReal.ofReal (4 * A₂ ^ 2) *
-              (ENNReal.ofReal (rpowExt (p - 3) t) * lowTail (absE f) t))) := by
-        rw [lintegral_add_left' hF1]
-    _ = ENNReal.ofReal p *
-          (ENNReal.ofReal (2 ^ p * (A₁ / (p - 1) + A₂ ^ 2 / (2 - p))) *
-            ∫⁻ x, absE f x ^ p) := by
-        rw [weighted_combined hM hMfin hA₁ hp1 hp2]
-    _ = ENNReal.ofReal (p * (2 ^ p * (A₁ / (p - 1) + A₂ ^ 2 / (2 - p)))) *
-          ∫⁻ x, absE f x ^ p := by
-        rw [← mul_assoc, ← ENNReal.ofReal_mul hp0]
-
+  exact _root_.CKN.Foundation.Euclidean.interpolation_of_tail_bound hA₁ hp1 hp2 hf hTf htail
 
 /-- Restricted weak and strong endpoint bounds interpolate when sublinearity
 holds almost everywhere on the actual L² input class. -/

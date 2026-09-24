@@ -29,7 +29,7 @@ noncomputable section
 
 namespace CKN
 
-private lemma pressure_neg_kernel_locallyIntegrable :
+lemma pressure_neg_kernel_locallyIntegrable :
     LocallyIntegrable (fun z : Vec3 => -Foundation.Heat.newtonianKernel z) volume := by
   have hbound : ∀ᵐ z : Vec3, ‖-Foundation.Heat.newtonianKernel z‖ ≤
       (4 * Real.pi)⁻¹ * ‖z‖ ^ (-1 : ℝ) := by
@@ -49,7 +49,7 @@ private lemma pressure_neg_kernel_locallyIntegrable :
     (by change 1 ≤ Module.finrank ℝ (Fin 3 → ℝ); rw [Module.finrank_fin_fun]; norm_num)
     (by norm_num) hbound hmeas.aestronglyMeasurable
 
-private lemma local_ibp {u φ : Vec3 → ℝ}
+lemma smooth_integration_by_parts {u φ : Vec3 → ℝ}
     (hu : ContDiff ℝ (⊤ : ℕ∞) u) (hφ : ContDiff ℝ (⊤ : ℕ∞) φ)
     (hφc : HasCompactSupport φ) (i : Fin 3) :
     ∫ x, u x * spatialDeriv φ i x =
@@ -97,8 +97,8 @@ private lemma potential_laplacian_pairing {u : Vec3 → ℝ}
     exact (contDiff_spatialDeriv_smooth (contDiff_spatialDeriv_smooth hu i) i).continuous.mul
       hψ.continuous |>.integrable_of_hasCompactSupport
         (hψc.mul_left (f := spatialDeriv (spatialDeriv u i) i))
-  have hfirst (i : Fin 3) := local_ibp hu (hψd i) (hψdc i) i
-  have hsecond (i : Fin 3) := local_ibp
+  have hfirst (i : Fin 3) := smooth_integration_by_parts hu (hψd i) (hψdc i) i
+  have hsecond (i : Fin 3) := smooth_integration_by_parts
     (contDiff_spatialDeriv_smooth hu i) hψ hψc i
   have hsumleft : ∫ x, u x * spatialLaplacian ψ x =
       ∑ i : Fin 3, ∫ x, u x * spatialDeriv (spatialDeriv ψ i) i x := by
