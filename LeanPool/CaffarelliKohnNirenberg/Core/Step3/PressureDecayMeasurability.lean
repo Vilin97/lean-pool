@@ -32,6 +32,13 @@ The solution fields have measurable representatives there; the representatives
 are used only to discharge the certificates needed by the `eLpNorm'` triangle
 inequality. -/
 
+private lemma pressure_tensor_measurable {u : ParabolicPoint → Vec3} {c : ℝ → Vec3}
+    (hu : Measurable u) (hc : Measurable c) (i j : Fin 3) :
+    Measurable (fun z => pressureUTensor u c z i j) := by
+  exact ((measurable_pi_apply i).comp hu).neg.mul
+    (((measurable_pi_apply j).comp hu).sub
+      (((measurable_pi_apply j).comp hc).comp measurable_snd))
+
 private lemma pressure_kernel_measurable :
     Measurable (newtonianKernel : Vec3 → ℝ) := by
   have hnorm : Measurable (fun z : Vec3 => vec3EuclideanNorm z) := by
@@ -754,13 +761,13 @@ private lemma pressure_source_measurable_on_cylinder_hR2ij_5 :
                       volume
     := by
   intro u z ρ hρ B η c Ω' J hu hcmeas cm hcm um hum hηdd hkernel0 hIntegral i j
-  convert hIntegral (g := fun w : ParabolicPoint × Vec3 =>
+  exact hIntegral (g := fun w : ParabolicPoint × Vec3 =>
     -newtonianKernel (w.1.1 - w.2) *
       (mixedSecond η i j w.2 *
         pressureUTensor um cm (w.2, w.1.2) i j)) (by
-    apply hkernel0.mul
-    unfold pressureUTensor
-    fun_prop) using 1
+    exact hkernel0.mul (((hηdd i j).comp measurable_snd).mul
+      ((pressure_tensor_measurable hum hcm i j).comp
+        (measurable_snd.prodMk (measurable_snd.comp measurable_fst)))))
 
 private lemma pressure_source_measurable_on_cylinder_hR2_6 :
     ∀ {u : ParabolicPoint → Vec3} {z : ParabolicPoint} {ρ : ℝ} (hρ : 0 < ρ),
@@ -841,12 +848,12 @@ private lemma pressure_source_measurable_on_cylinder_hR3ij_7 :
                       volume
     := by
   intro u z ρ hρ B η c Ω' J hu hcmeas cm hcm um hum hηd hkernel1 hIntegral i j
-  convert hIntegral (g := fun w : ParabolicPoint × Vec3 =>
+  exact hIntegral (g := fun w : ParabolicPoint × Vec3 =>
     spatialDeriv newtonianKernel j (w.1.1 - w.2) *
       (pressureUTensor um cm (w.2, w.1.2) i j * spatialDeriv η i w.2)) (by
-    apply hkernel1 j |>.mul
-    unfold pressureUTensor
-    fun_prop) using 1
+    exact (hkernel1 j).mul (((pressure_tensor_measurable hum hcm i j).comp
+      (measurable_snd.prodMk (measurable_snd.comp measurable_fst))).mul
+        ((hηd i).comp measurable_snd)))
 
 private lemma pressure_source_measurable_on_cylinder_hR3_8 :
     ∀ {u : ParabolicPoint → Vec3} {z : ParabolicPoint} {ρ : ℝ} (hρ : 0 < ρ),
@@ -927,12 +934,12 @@ private lemma pressure_source_measurable_on_cylinder_hR4ij_9 :
                       volume
     := by
   intro u z ρ hρ B η c Ω' J hu hcmeas cm hcm um hum hηd hkernel1 hIntegral i j
-  convert hIntegral (g := fun w : ParabolicPoint × Vec3 =>
+  exact hIntegral (g := fun w : ParabolicPoint × Vec3 =>
     spatialDeriv newtonianKernel i (w.1.1 - w.2) *
       (pressureUTensor um cm (w.2, w.1.2) i j * spatialDeriv η j w.2)) (by
-    apply hkernel1 i |>.mul
-    unfold pressureUTensor
-    fun_prop) using 1
+    exact (hkernel1 i).mul (((pressure_tensor_measurable hum hcm i j).comp
+      (measurable_snd.prodMk (measurable_snd.comp measurable_fst))).mul
+        ((hηd j).comp measurable_snd)))
 
 private lemma pressure_source_measurable_on_cylinder_hR4_10 :
     ∀ {u : ParabolicPoint → Vec3} {z : ParabolicPoint} {ρ : ℝ} (hρ : 0 < ρ),
@@ -1036,12 +1043,12 @@ private lemma pressure_source_measurable_on_cylinder_hR6j_12 :
                     volume
     := by
   intro p z ρ hρ η Ω' J hp pm hpm hηd hkernel1 hIntegral j
-  convert hIntegral (g := fun w : ParabolicPoint × Vec3 =>
+  exact hIntegral (g := fun w : ParabolicPoint × Vec3 =>
     spatialDeriv newtonianKernel j (w.1.1 - w.2) *
       (spatialDeriv η j w.2 * pm (w.2, w.1.2))) (by
     apply hkernel1 j |>.mul
     exact (hηd j).comp measurable_snd |>.mul
-      (hpm.comp (measurable_snd.prodMk (measurable_snd.comp measurable_fst)))) using 1
+      (hpm.comp (measurable_snd.prodMk (measurable_snd.comp measurable_fst))))
 
 private lemma pressure_source_measurable_on_cylinder_hR6_13 :
     ∀ {p : ParabolicPoint → ℝ} {z : ParabolicPoint} {ρ : ℝ} (hρ : 0 < ρ),
@@ -1101,14 +1108,14 @@ private lemma pressure_source_measurable_on_cylinder_hR7j_14 :
                     volume
     := by
   intro f z ρ hρ η Ω' J hf fm hfm hηm hkernel1 hIntegral j
-  convert hIntegral (g := fun w : ParabolicPoint × Vec3 =>
+  exact hIntegral (g := fun w : ParabolicPoint × Vec3 =>
     spatialDeriv newtonianKernel j (w.1.1 - w.2) *
       (η w.2 * fm (w.2, w.1.2) j)) (by
     apply hkernel1 j |>.mul
     exact (hηm.comp measurable_snd).mul
       ((ContinuousLinearMap.proj j : Vec3 →L[ℝ] ℝ).measurable.comp
         (hfm.comp (measurable_snd.prodMk (measurable_snd.comp measurable_fst))))
-  ) using 1
+  )
 
 private lemma pressure_source_measurable_on_cylinder_hR7_15 :
     ∀ {f : ParabolicPoint → Vec3} {z : ParabolicPoint} {ρ : ℝ} (hρ : 0 < ρ),
@@ -1165,14 +1172,14 @@ private lemma pressure_source_measurable_on_cylinder_hR8j_16 :
                     volume
     := by
   intro f z ρ hρ η Ω' J hf fm hfm hηd hkernel0 hIntegral j
-  convert hIntegral (g := fun w : ParabolicPoint × Vec3 =>
+  exact hIntegral (g := fun w : ParabolicPoint × Vec3 =>
     -newtonianKernel (w.1.1 - w.2) *
       (spatialDeriv η j w.2 * fm (w.2, w.1.2) j)) (by
     apply hkernel0.mul
     exact (hηd j).comp measurable_snd |>.mul
       ((ContinuousLinearMap.proj j : Vec3 →L[ℝ] ℝ).measurable.comp
         (hfm.comp (measurable_snd.prodMk (measurable_snd.comp measurable_fst))))
-  ) using 1
+  )
 
 private lemma pressure_source_measurable_on_cylinder_hR8_17 :
     ∀ {f : ParabolicPoint → Vec3} {z : ParabolicPoint} {ρ : ℝ} (hρ : 0 < ρ),
@@ -1643,6 +1650,7 @@ theorem pressure_source_measurable_on_cylinder
   have hR6 := @pressure_source_measurable_on_cylinder_hR6_13 p z ρ hρ Ω' J hp hR6j
   have hR7j (j : Fin 3) := @pressure_source_measurable_on_cylinder_hR7j_14 f z ρ hρ Ω' J hf hfm
     hηm hkernel1 hIntegral j
+  have hR7 := @pressure_source_measurable_on_cylinder_hR7_15 f z ρ hρ Ω' J hf hR7j
   have hR8j (j : Fin 3) := @pressure_source_measurable_on_cylinder_hR8j_16 f z ρ hρ Ω' J hf hfm
     hηd hkernel0 hIntegral j
   have hR8 := @pressure_source_measurable_on_cylinder_hR8_17 f z ρ hρ Ω' J hf hR8j
@@ -1692,8 +1700,8 @@ theorem pressure_source_measurable_on_cylinder
     η w.1 * pm (w.1, w.2) -
       (R2 w + R3 w + R4 w + R5 w + R6 w + R7 w + R8 w)
   have hR1 : AEMeasurable R1 volume := by
-    dsimp [R1]
-    fun_prop
+    exact ((hηm.comp measurable_fst).mul hpm).aemeasurable.sub
+      ((((((hR2.add hR3).add hR4).add hR5).add hR6).add hR7).add hR8)
   have hpQ := @pressure_source_measurable_on_cylinder_hpQ_19 p z ρ Ω' J hp hpBT
   have hP1ae := @pressure_source_measurable_on_cylinder_hP1ae_20 u p f z ρ hρ Ω' J hu hp hf hp'
     hcmeas hQ2 hQ3 hQ4 hQ5 hQ6 hQ7 hQ8 hpQ
