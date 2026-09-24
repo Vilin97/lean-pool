@@ -41,7 +41,7 @@ private lemma tendsto_of_tendsto_succ {α : Type*} {f : ℕ → α} {L : Filter 
     This produces the L¹-normalized version φ.normed volume, which integrates to 1.
     Bump functions have compact support and are smooth, so they are Schwartz.
 -/
-noncomputable def bumpToSchwartz (φ : ContDiffBump (0 : SpaceTime)) : TestFunction :=
+noncomputable def bumpToSchwartz (φ : ContDiffBump (0 : SpaceTime)) : OSforGFF.TestFunction :=
   -- The normed bump has compact support and is C^∞, hence Schwartz
   (φ.hasCompactSupport_normed (μ := volume)).toSchwartzMap φ.contDiff_normed
 
@@ -56,7 +56,8 @@ theorem bumpToSchwartz_apply (φ : ContDiffBump (0 : SpaceTime)) (x : SpaceTime)
     Translation preserves smoothness and decay properties.
     See `SchwartzMap.translate` in FunctionalAnalysis.lean for the general version.
 -/
-noncomputable def translateSchwartz (f : TestFunction) (a : SpaceTime) : TestFunction :=
+noncomputable def translateSchwartz (f : OSforGFF.TestFunction) (a : SpaceTime) :
+    OSforGFF.TestFunction :=
   f.translate a
 
 /-- The smeared two-point function using a bump function.
@@ -141,7 +142,7 @@ theorem smearedTwoPoint_tendsto_schwingerTwoPoint
     (C : SpaceTime → ℝ)
     (hC : ContinuousOn C {y | y ≠ 0})
     -- The SchwingerFunction₂ computes the double integral against C
-    (hS₂ : ∀ (f g : TestFunction),
+    (hS₂ : ∀ (f g : OSforGFF.TestFunction),
       SchwingerFunction₂ dμ_config f g = ∫ u, ∫ v, f u * C (u - v) * g v) :
     Filter.Tendsto (fun i => SmearedTwoPointFunction dμ_config (φ i) x)
       l (nhds (C x)) := by
@@ -174,7 +175,7 @@ theorem schwingerTwoPointFunction_eq_kernel
     (dμ_config : ProbabilityMeasure FieldConfiguration) (x : SpaceTime) (hx : x ≠ 0)
     (C : SpaceTime → ℝ)
     (hC : ContinuousOn C {y | y ≠ 0})
-    (hS₂ : ∀ (f g : TestFunction),
+    (hS₂ : ∀ (f g : OSforGFF.TestFunction),
       SchwingerFunction₂ dμ_config f g = ∫ u, ∫ v, f u * C (u - v) * g v) :
     SchwingerTwoPointFunction dμ_config x = C x := by
   unfold SchwingerTwoPointFunction

@@ -91,7 +91,7 @@ theorem schwingerTwoPointFunction_eq_GFF (m : ℝ) [Fact (0 < m)] (x : SpaceTime
   -- Use schwingerTwoPointFunction_eq_kernel
   have h_cont : ContinuousOn (freeCovarianceKernel m) {y : SpaceTime | y ≠ 0} :=
     freeCovarianceKernel_continuousOn m (Fact.elim ‹Fact (0 < m)›)
-  have h_S₂ : ∀ (f g : TestFunction),
+  have h_S₂ : ∀ (f g : OSforGFF.TestFunction),
       SchwingerFunction₂ (gaussianFreeFieldFree m) f g =
       ∫ u, ∫ v, f u * freeCovarianceKernel m (u - v) * g v := by
     -- Chain: S₂(f,g) = ∫ω (ωf)(ωg) dμ = freeCovarianceFormR m f g = ∫∫ f(u) C(u,v) g(v)
