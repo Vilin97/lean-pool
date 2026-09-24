@@ -161,33 +161,10 @@ section OddPrime
 
 variable {p : ℕ} [Fact p.Prime]
 
--- Theorem: `p` is nonzero as an element of `ℚ_[p]`.
-private lemma padic_p_ne_zero_local : (p : ℚ_[p]) ≠ 0 := by
-  intro h
-  have hnorm : ‖(p : ℚ_[p])‖ = 0 := by rw [h, norm_zero]
-  rw [Padic.norm_p] at hnorm
-  exact (inv_ne_zero (Nat.cast_ne_zero.mpr (Nat.Prime.ne_zero Fact.out))) hnorm
-
--- Theorem: the underlying `p`-adic number of `padicUnit a ha` is `a * p ^ (-(a.valuation))`.
-private lemma coe_padicUnit_local (a : ℚ_[p]) (ha : a ≠ 0) :
-    ((padicUnit a ha : ℤ_[p]) : ℚ_[p]) = a * (p : ℚ_[p]) ^ (-(a.valuation)) := by
-  rw [padicUnit]
-  exact congrArg (fun t : ℤ_[p] => (t : ℚ_[p])) (IsUnit.unit_spec _)
-
--- Theorem: every nonzero `p`-adic number is `p ^ a.valuation` times its unit part.
-private lemma padicUnit_spec_local (a : ℚ_[p]) (ha : a ≠ 0) :
-    a = (p : ℚ_[p]) ^ a.valuation * ((padicUnit a ha : ℤ_[p]) : ℚ_[p]) := by
-  have hp0 := padic_p_ne_zero_local (p := p)
-  rw [coe_padicUnit_local]
-  calc a = a * 1 := (mul_one a).symm
-    _ = a * ((p : ℚ_[p]) ^ a.valuation * (p : ℚ_[p]) ^ (-(a.valuation))) := by
-          rw [← zpow_add₀ hp0, add_neg_cancel, zpow_zero]
-    _ = (p : ℚ_[p]) ^ a.valuation * (a * (p : ℚ_[p]) ^ (-(a.valuation))) := by ring
-
 -- Theorem: a nonzero element of valuation `0` is its own unit part.
 private lemma coe_padicUnit_of_valuation_zero (a : ℚ_[p]) (ha : a ≠ 0) (h0 : a.valuation = 0) :
     ((padicUnit a ha : ℤ_[p]) : ℚ_[p]) = a := by
-  rw [coe_padicUnit_local, h0, neg_zero, zpow_zero, mul_one]
+  rw [coe_padicUnit, h0, neg_zero, zpow_zero, mul_one]
 
 -- Theorem: the unit part of a natural number of valuation `0` is that natural number.
 private lemma padicUnit_eq_natCast_of_valuation_zero {a : ℚ_[p]} (ha : a ≠ 0)
@@ -225,10 +202,10 @@ private lemma hilbertSym_padic_odd_p_of_nonresidue (hp : p ≠ 2) {c : ℚ_[p]} 
     (hchi : (quadraticChar (ZMod p))
       (PadicInt.toZMod (padicUnit c hc : ℤ_[p])) = -1) :
     hilbertSym (p : ℚ_[p]) c = -1 := by
-  have hx := padic_p_ne_zero_local (p := p)
+  have hx := padic_p_ne_zero (p := p)
   have hup : PadicInt.toZMod (padicUnit (p : ℚ_[p]) hx : ℤ_[p]) = 1 := by
     have hcoe : ((padicUnit (p : ℚ_[p]) hx : ℤ_[p]) : ℚ_[p]) = 1 := by
-      rw [coe_padicUnit_local, Padic.valuation_p]
+      rw [coe_padicUnit, Padic.valuation_p]
       rw [show (-(1 : ℤ)) = -1 by norm_num, zpow_neg_one]
       exact mul_inv_cancel₀ hx
     have hone : (padicUnit (p : ℚ_[p]) hx : ℤ_[p]) = 1 := by
@@ -256,7 +233,7 @@ private theorem exists_hilbertSym_eq_neg_one_odd (hp : p ≠ 2) {c : ℚ_[p]}
     ∃ x : ℚ_[p], x ≠ 0 ∧ hilbertSym x c = -1 := by
   by_cases hβ : Even c.valuation
   · -- even valuation: use `x = p`, the unit part of `c` is a non-residue
-    refine ⟨(p : ℚ_[p]), padic_p_ne_zero_local (p := p), ?_⟩
+    refine ⟨(p : ℚ_[p]), padic_p_ne_zero (p := p), ?_⟩
     refine hilbertSym_padic_odd_p_of_nonresidue hp hc hβ ?_
     rw [quadraticChar_neg_one_iff_not_isSquare]
     intro hmod
@@ -268,9 +245,9 @@ private theorem exists_hilbertSym_eq_neg_one_odd (hp : p ≠ 2) {c : ℚ_[p]}
     have hv : ((padicUnit c hc : ℤ_[p]) : ℚ_[p]) = (z : ℚ_[p]) ^ 2 := by
       rw [hz]; push_cast; ring
     have hpβ : (p : ℚ_[p]) ^ c.valuation = ((p : ℚ_[p]) ^ k) ^ 2 := by
-      rw [hk, pow_two, ← zpow_add₀ (padic_p_ne_zero_local (p := p))]
+      rw [hk, pow_two, ← zpow_add₀ (padic_p_ne_zero (p := p))]
     refine (hcsq ⟨(z : ℚ_[p]) * (p : ℚ_[p]) ^ k, ?_⟩)
-    rw [padicUnit_spec_local c hc, hpβ, hv]
+    rw [padicUnit_spec c hc, hpβ, hv]
     ring
   · -- odd valuation: use a quadratic non-residue `x` of valuation `0`
     have hring : ringChar (ZMod p) ≠ 2 := by
@@ -307,7 +284,7 @@ section TwoAdic
 -- Theorem: every nonzero `2`-adic number is `2 ^ a.valuation` times its unit part.
 private lemma twoAdicUnit_spec_local (a : ℚ_[2]) (ha : a ≠ 0) :
     a = (2 : ℚ_[2]) ^ a.valuation * ((twoAdicUnit a ha : ℤ_[2]) : ℚ_[2]) := by
-  simpa [twoAdicUnit] using padicUnit_spec_local (p := 2) a ha
+  simpa [twoAdicUnit] using padicUnit_spec (p := 2) a ha
 
 -- Theorem: `(5, c)_2` is the parity of `c.valuation` (`5 ≡ 1 (mod 4)`, `5 ≢ ±1 (mod 8)`).
 private lemma hilbertSym_two_five_eq {c : ℚ_[2]} (hc : c ≠ 0) :
@@ -364,7 +341,7 @@ private lemma hilbertSym_two_two_eq {c : ℚ_[2]} (hc : c ≠ 0) :
   have hval : ((2 : ℚ_[2])).valuation = 1 := Padic.valuation_p (p := 2)
   have hunit : (twoAdicUnit (2 : ℚ_[2]) hx : ℤ_[2]) = 1 := by
     apply PadicInt.ext
-    rw [twoAdicUnit, coe_padicUnit_local (p := 2), hval]
+    rw [twoAdicUnit, coe_padicUnit (p := 2), hval]
     rw [show (-(1 : ℤ)) = -1 by norm_num, zpow_neg_one]
     simp
   have heps : eps (twoAdicUnit (2 : ℚ_[2]) hx) = 0 := by
@@ -548,7 +525,7 @@ theorem exists_not_isSquare_and_not_isSquare_mul (p : ℕ) [Fact p.Prime] {c : �
   · refine ⟨(p : ℚ_[p]), ?_, ?_⟩
     · exact not_isSquare_of_odd_valuation (by rw [Padic.valuation_p]; norm_num)
     · apply not_isSquare_of_odd_valuation
-      rw [Padic.valuation_mul hc (padic_p_ne_zero_local (p := p)), Padic.valuation_p]
+      rw [Padic.valuation_mul hc (padic_p_ne_zero (p := p)), Padic.valuation_p]
       intro h
       obtain ⟨k, hk⟩ := hβ
       obtain ⟨m, hm⟩ := h

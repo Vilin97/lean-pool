@@ -525,12 +525,6 @@ of the unit part of a rational prime with Mathlib's `legendreSym`. -/
 /-- The prime `2`, bundled as an element of `Nat.Primes`. -/
 private abbrev twoPrime : Nat.Primes := ⟨2, Nat.prime_two⟩
 
--- Theorem: unfolding `padicUnit` to its underlying `p`-adic number.
-private lemma coe_padicUnit' {ℓ : ℕ} [Fact (Nat.Prime ℓ)] (a : ℚ_[ℓ]) (ha : a ≠ 0) :
-    ((padicUnit a ha : ℤ_[ℓ]) : ℚ_[ℓ]) = a * (ℓ : ℚ_[ℓ]) ^ (-(a.valuation)) := by
-  rw [padicUnit]
-  exact congrArg (fun t : ℤ_[ℓ] => (t : ℚ_[ℓ])) (IsUnit.unit_spec _)
-
 -- Theorem: the `p`-adic valuation of a natural number cast into `ℚ_[p]` is `0` when `p` does
 -- not divide it.
 private lemma padic_valuation_natCast_cast {ℓ : ℕ} [Fact (Nat.Prime ℓ)] {n : ℕ}
@@ -577,7 +571,7 @@ private lemma quadraticChar_padicUnit_nat {ℓ : ℕ} [Fact (Nat.Prime ℓ)] {n 
   have hval := padic_valuation_natCast_cast (ℓ := ℓ) h
   have hcoe : ((padicUnit ((n : ℚ) : ℚ_[ℓ]) (by exact_mod_cast hn) : ℤ_[ℓ]) : ℚ_[ℓ])
       = (n : ℚ_[ℓ]) := by
-    rw [coe_padicUnit', hval, neg_zero, zpow_zero, mul_one]
+    rw [coe_padicUnit, hval, neg_zero, zpow_zero, mul_one]
     norm_cast
   have heq : (padicUnit ((n : ℚ) : ℚ_[ℓ]) (by exact_mod_cast hn) : ℤ_[ℓ])
       = (n : ℤ_[ℓ]) := by
@@ -595,7 +589,7 @@ private lemma quadraticChar_padicUnit_neg_one {ℓ : ℕ} [Fact (Nat.Prime ℓ)]
       = legendreSym ℓ (-1) := by
   have hcoe : ((padicUnit (((-1 : ℚ) : ℚ_[ℓ])) (by norm_num) : ℤ_[ℓ]) : ℚ_[ℓ])
       = (-1 : ℚ_[ℓ]) := by
-    rw [coe_padicUnit', padic_valuation_neg_one, neg_zero, zpow_zero, mul_one]
+    rw [coe_padicUnit, padic_valuation_neg_one, neg_zero, zpow_zero, mul_one]
     norm_cast
   have heq : (padicUnit (((-1 : ℚ) : ℚ_[ℓ])) (by norm_num) : ℤ_[ℓ])
       = (-1 : ℤ_[ℓ]) := by

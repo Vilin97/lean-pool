@@ -378,9 +378,10 @@ theorem exists_sq_mod_of_hilbertSym (a b : ℤ) (hb : Squarefree b) (p : ℕ) [F
 
 /-! ### WP1 1.5 — the integral descent (Legendre's theorem)
 
-Serre's proof (Cours d'arithmétique, IV.3.3) that a squarefree integer `a` which is a square
-modulo every prime dividing `b` is the norm of an element of `ℚ(√b)` — equivalently that
-`(a, b)_ℚ = 1` once `(a, b)_v = 1` at every place `v`. The argument is an elementary descent on
+The local–global principle for the Hilbert symbol at the integral place (Serre, Cours
+d'arithmétique, IV §3.2, Theorem 8): for squarefree integers `a`, `b`, if `(a, b)_v = 1` at
+every place `v` — every prime and the real place — then `(a, b)_ℚ = 1`. The argument is an
+elementary descent on
 `|a| + |b|`: by symmetry assume `|a| ≤ |b|`; for `|b| ≤ 1` all cases are immediate, while for
 `|b| ≥ 2` CRT (`exists_sq_mod_squarefree`) produces `t` with `t ^ 2 ≡ a (mod b)`, the size bound
 `2|t| ≤ |b|` makes `b' = (t ^ 2 - a) / b` strictly smaller than `b`, the norm-transfer lemma

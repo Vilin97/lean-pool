@@ -403,12 +403,6 @@ theorem hilbertSym_A_mul_ell_eq_one_of_mem_S (ha : ∀ i, a i ≠ 0)
 For odd `p`, if the first argument is a unit then only the parity of the valuation of the
 second argument matters: `(u,b)_p = χ(u)` for odd valuation and `= 1` for even valuation. -/
 
--- Theorem: unfolding `padicUnit` to its underlying `p`-adic number.
-private lemma coe_padicUnitE {p : ℕ} [Fact (Nat.Prime p)] (a : ℚ_[p]) (ha : a ≠ 0) :
-    ((padicUnit a ha : ℤ_[p]) : ℚ_[p]) = a * (p : ℚ_[p]) ^ (-(a.valuation)) := by
-  rw [padicUnit]
-  exact congrArg (fun t : ℤ_[p] => (t : ℚ_[p])) (IsUnit.unit_spec _)
-
 -- Theorem: the valuation of a `p`-adic unit is `0`.
 private lemma valuation_unit_eq_zero {p : ℕ} [Fact (Nat.Prime p)] (u : ℤ_[p]ˣ) :
     Padic.valuation ((u : ℤ_[p]) : ℚ_[p]) = 0 := by
@@ -430,7 +424,7 @@ private lemma padicUnit_unit {p : ℕ} [Fact (Nat.Prime p)] (u : ℤ_[p]ˣ)
     padicUnit ((u : ℤ_[p]) : ℚ_[p]) hu = u := by
   apply Units.ext
   apply Subtype.ext
-  rw [coe_padicUnitE, valuation_unit_eq_zero, neg_zero, zpow_zero, mul_one]
+  rw [coe_padicUnit, valuation_unit_eq_zero, neg_zero, zpow_zero, mul_one]
 
 -- Theorem: for odd `p`, `(u,b)_p` for a unit `u` depends only on the parity of `b`'s
 -- valuation: it is `χ(u)` for odd valuation and `1` for even valuation.
@@ -452,7 +446,7 @@ private lemma hilbertSym_val_zero_eq_parity {p : ℕ} [Fact (Nat.Prime p)] (hp :
     hilbertSym a b = if Even (Padic.valuation b) then 1
       else (quadraticChar (ZMod p)) (PadicInt.toZMod (padicUnit a ha : ℤ_[p])) := by
   have hpu : (padicUnit a ha : ℚ_[p]) = a := by
-    rw [coe_padicUnitE, hva, neg_zero, zpow_zero, mul_one]
+    rw [coe_padicUnit, hva, neg_zero, zpow_zero, mul_one]
   have h1 := hilbertSym_unit_eq_parity hp (padicUnit a ha) hb
   rw [hpu] at h1
   exact h1

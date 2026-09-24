@@ -278,7 +278,7 @@ private lemma norm_mul_pow_neg_valuation_eq_one_gen {w : ℚ_[p]} (hw : w ≠ 0)
 
 -- Theorem: a nontrivial solution of `z² - c₁ x² - c₂ y² = 0` (arbitrary coefficients)
 -- rescales to an integral solution at least one of whose coordinates is a unit.
-private lemma exists_padicInt_solution_gen {c₁ c₂ x y z : ℚ_[p]}
+lemma exists_padicInt_solution_gen {c₁ c₂ x y z : ℚ_[p]}
     (hnontriv : (x, y, z) ≠ (0, 0, 0)) (hsol : z ^ 2 - c₁ * x ^ 2 - c₂ * y ^ 2 = 0) :
     ∃ Z X Y : ℤ_[p], (Z : ℚ_[p]) ^ 2 - c₁ * (X : ℚ_[p]) ^ 2 - c₂ * (Y : ℚ_[p]) ^ 2 = 0
       ∧ (IsUnit Z ∨ IsUnit X ∨ IsUnit Y) := by
@@ -719,7 +719,7 @@ section General
 variable {p : ℕ} [Fact (Nat.Prime p)]
 
 -- Theorem: `p` is nonzero as an element of `ℚ_[p]`.
-private lemma padic_p_ne_zero : (p : ℚ_[p]) ≠ 0 := by
+lemma padic_p_ne_zero : (p : ℚ_[p]) ≠ 0 := by
   intro h
   have hnorm : ‖(p : ℚ_[p])‖ = 0 := by rw [h, norm_zero]
   rw [Padic.norm_p] at hnorm
@@ -740,19 +740,19 @@ noncomputable def padicUnit (a : ℚ_[p]) (ha : a ≠ 0) : ℤ_[p]ˣ :=
   hAu.unit
 
 -- Theorem: the underlying `p`-adic number of `padicUnit a ha` is `a * p ^ (-(a.valuation))`.
-private lemma coe_padicUnit (a : ℚ_[p]) (ha : a ≠ 0) :
+lemma coe_padicUnit (a : ℚ_[p]) (ha : a ≠ 0) :
     ((padicUnit a ha : ℤ_[p]) : ℚ_[p]) = a * (p : ℚ_[p]) ^ (-(a.valuation)) := by
   rw [padicUnit]
   exact congrArg (fun t : ℤ_[p] => (t : ℚ_[p])) (IsUnit.unit_spec _)
 
 -- Theorem: the unit part of a nonzero `p`-adic number has norm `1`.
-private lemma norm_padicUnit (a : ℚ_[p]) (ha : a ≠ 0) :
+lemma norm_padicUnit (a : ℚ_[p]) (ha : a ≠ 0) :
     ‖((padicUnit a ha : ℤ_[p]) : ℚ_[p])‖ = 1 := by
   rw [coe_padicUnit]
   exact norm_mul_pow_neg_valuation_eq_one_gen ha
 
 -- Theorem: every nonzero `p`-adic number is `p ^ a.valuation` times its unit part.
-private lemma padicUnit_spec (a : ℚ_[p]) (ha : a ≠ 0) :
+lemma padicUnit_spec (a : ℚ_[p]) (ha : a ≠ 0) :
     a = (p : ℚ_[p]) ^ a.valuation * ((padicUnit a ha : ℤ_[p]) : ℚ_[p]) := by
   have hp0 := padic_p_ne_zero (p := p)
   rw [coe_padicUnit]
@@ -811,7 +811,7 @@ private lemma norm_p_mul_unit (u : ℤ_[p]ˣ) :
   rw [norm_mul, Padic.norm_p, hu1, mul_one]
 
 -- Theorem: multiplication of units is compatible with `padicUnit`.
-private lemma padicUnit_mul (a a' : ℚ_[p]) (ha : a ≠ 0) (ha' : a' ≠ 0) :
+lemma padicUnit_mul (a a' : ℚ_[p]) (ha : a ≠ 0) (ha' : a' ≠ 0) :
     (padicUnit (a * a') (mul_ne_zero ha ha') : ℤ_[p])
       = (padicUnit a ha : ℤ_[p]) * (padicUnit a' ha' : ℤ_[p]) := by
   apply PadicInt.ext

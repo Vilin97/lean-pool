@@ -139,104 +139,30 @@ theorem hilbertSym_padic_two_units_of_toZModPow_eq_one {u v : ℤ_[2]ˣ}
 
 The homogeneity of `z² - a x² - b y²` lets us rescale any nontrivial rational solution by
 the inverse of a coordinate of maximal norm, producing an integral solution with a unit
-coordinate.  Reducing that solution modulo `4` then contradicts `no_zmod4_sol` whenever
-both coefficients are `3` mod `4`.
+coordinate.  This is the `p = 2` specialization of the generic rescaling
+`exists_padicInt_solution_gen`.  Reducing that solution modulo `4` then contradicts
+`no_zmod4_sol` whenever both coefficients are `3` mod `4`.
 -/
 
--- Theorem: multiplying the three coordinates of a solution by a common scalar preserves
--- the equation `z² - a x² - b y² = 0`.
-private lemma scaled_hom {a b c x y z : ℚ_[2]}
-    (h : z ^ 2 - a * x ^ 2 - b * y ^ 2 = 0) :
-    (z * c) ^ 2 - a * (x * c) ^ 2 - b * (y * c) ^ 2 = 0 := by
-  have : (z * c) ^ 2 - a * (x * c) ^ 2 - b * (y * c) ^ 2
-      = c ^ 2 * (z ^ 2 - a * x ^ 2 - b * y ^ 2) := by ring
-  rw [this, h, mul_zero]
-
--- Theorem: if `‖c‖ ≤ ‖w‖` and `w ≠ 0`, then `‖c * w⁻¹‖ ≤ 1`.
-private lemma norm_mul_inv_le_one {c w : ℚ_[2]} (hw : w ≠ 0) (hc : ‖c‖ ≤ ‖w‖) :
-    ‖c * w⁻¹‖ ≤ 1 := by
-  have hwpos : 0 < ‖w‖ := norm_pos_iff.mpr hw
-  rw [norm_mul, norm_inv, ← div_eq_mul_inv]
-  exact (div_le_one hwpos).mpr hc
-
 -- Theorem: a nontrivial rational solution of `z² - c₁ x² - c₂ y² = 0` with integral
--- coefficients rescales to an integral solution with at least one unit coordinate.  The
--- argument uses only homogeneity, so it covers the unit case `c₁ = u`, `c₂ = v` too.
+-- coefficients rescales to an integral solution with at least one unit coordinate.
 private lemma exists_padicInt_solution_coeff {c₁ c₂ : ℤ_[2]} {x y z : ℚ_[2]}
     (hnontriv : (z, x, y) ≠ (0, 0, 0))
     (hsol : z ^ 2 - (c₁ : ℚ_[2]) * x ^ 2 - (c₂ : ℚ_[2]) * y ^ 2 = 0) :
     ∃ Z X Y : ℤ_[2], Z ^ 2 - c₁ * X ^ 2 - c₂ * Y ^ 2 = 0
       ∧ (IsUnit Z ∨ IsUnit X ∨ IsUnit Y) := by
-  set m : ℝ := max ‖z‖ (max ‖x‖ ‖y‖) with hm
-  have hm_ne_zero : m ≠ 0 := by
+  have hnontriv' : (x, y, z) ≠ (0, 0, 0) := by
     intro h
-    have hz0 : z = 0 := by
-      refine norm_eq_zero.mp ?_
-      exact le_antisymm (le_trans (le_max_left _ _) (le_of_eq h)) (norm_nonneg _)
-    have hx0 : x = 0 := by
-      refine norm_eq_zero.mp ?_
-      exact le_antisymm
-        (le_trans (le_trans (le_max_left _ _) (le_max_right _ _)) (le_of_eq h)) (norm_nonneg _)
-    have hy0 : y = 0 := by
-      refine norm_eq_zero.mp ?_
-      exact le_antisymm
-        (le_trans (le_trans (le_max_right _ _) (le_max_right _ _)) (le_of_eq h)) (norm_nonneg _)
-    exact hnontriv (by simp [hz0, hx0, hy0])
-  have hm_pos : 0 < m := lt_of_le_of_ne (le_trans (norm_nonneg z) (le_max_left _ _))
-    (Ne.symm hm_ne_zero)
-  have hcoord : ‖z‖ = m ∨ ‖x‖ = m ∨ ‖y‖ = m := by
-    simp only [hm]
-    rcases le_total (max ‖x‖ ‖y‖) ‖z‖ with h | h
-    · exact Or.inl (Eq.symm (max_eq_left h))
-    · rcases le_total ‖x‖ ‖y‖ with hxy | hyx
-      · exact Or.inr (Or.inr (Eq.symm (by rw [max_eq_right h, max_eq_right hxy])))
-      · exact Or.inr (Or.inl (Eq.symm (by rw [max_eq_right h, max_eq_left hyx])))
-  have hzle : ‖z‖ ≤ m := le_max_left _ _
-  have hxle : ‖x‖ ≤ m := le_trans (le_max_left _ _) (le_max_right _ _)
-  have hyle : ‖y‖ ≤ m := le_trans (le_max_right _ _) (le_max_right _ _)
-  rcases hcoord with hzmax | hxmax | hymax
-  · have hz0 : z ≠ 0 := norm_pos_iff.mp (hzmax ▸ hm_pos)
-    have hZ1 : ‖z * z⁻¹‖ = 1 := by rw [mul_inv_cancel₀ hz0, norm_one]
-    have hX : ‖x * z⁻¹‖ ≤ 1 := norm_mul_inv_le_one hz0 (hzmax ▸ hxle)
-    have hY : ‖y * z⁻¹‖ ≤ 1 := norm_mul_inv_le_one hz0 (hzmax ▸ hyle)
-    let Z : ℤ_[2] := ⟨z * z⁻¹, hZ1.le⟩
-    let X : ℤ_[2] := ⟨x * z⁻¹, hX⟩
-    let Y : ℤ_[2] := ⟨y * z⁻¹, hY⟩
-    refine ⟨Z, X, Y, ?_, Or.inl ?_⟩
-    · apply PadicInt.ext
-      push_cast
-      change (z * z⁻¹) ^ 2 - (c₁ : ℚ_[2]) * (x * z⁻¹) ^ 2
-        - (c₂ : ℚ_[2]) * (y * z⁻¹) ^ 2 = 0
-      simpa using scaled_hom (a := (c₁ : ℚ_[2])) (b := (c₂ : ℚ_[2])) hsol
-    · exact PadicInt.isUnit_iff.mpr hZ1
-  · have hx0 : x ≠ 0 := norm_pos_iff.mp (hxmax ▸ hm_pos)
-    have hX1 : ‖x * x⁻¹‖ = 1 := by rw [mul_inv_cancel₀ hx0, norm_one]
-    have hZ : ‖z * x⁻¹‖ ≤ 1 := norm_mul_inv_le_one hx0 (hxmax ▸ hzle)
-    have hY : ‖y * x⁻¹‖ ≤ 1 := norm_mul_inv_le_one hx0 (hxmax ▸ hyle)
-    let Z : ℤ_[2] := ⟨z * x⁻¹, hZ⟩
-    let X : ℤ_[2] := ⟨x * x⁻¹, hX1.le⟩
-    let Y : ℤ_[2] := ⟨y * x⁻¹, hY⟩
-    refine ⟨Z, X, Y, ?_, Or.inr (Or.inl ?_)⟩
-    · apply PadicInt.ext
-      push_cast
-      change (z * x⁻¹) ^ 2 - (c₁ : ℚ_[2]) * (x * x⁻¹) ^ 2
-        - (c₂ : ℚ_[2]) * (y * x⁻¹) ^ 2 = 0
-      simpa using scaled_hom (a := (c₁ : ℚ_[2])) (b := (c₂ : ℚ_[2])) hsol
-    · exact PadicInt.isUnit_iff.mpr hX1
-  · have hy0 : y ≠ 0 := norm_pos_iff.mp (hymax ▸ hm_pos)
-    have hY1 : ‖y * y⁻¹‖ = 1 := by rw [mul_inv_cancel₀ hy0, norm_one]
-    have hZ : ‖z * y⁻¹‖ ≤ 1 := norm_mul_inv_le_one hy0 (hymax ▸ hzle)
-    have hX : ‖x * y⁻¹‖ ≤ 1 := norm_mul_inv_le_one hy0 (hymax ▸ hxle)
-    let Z : ℤ_[2] := ⟨z * y⁻¹, hZ⟩
-    let X : ℤ_[2] := ⟨x * y⁻¹, hX⟩
-    let Y : ℤ_[2] := ⟨y * y⁻¹, hY1.le⟩
-    refine ⟨Z, X, Y, ?_, Or.inr (Or.inr ?_)⟩
-    · apply PadicInt.ext
-      push_cast
-      change (z * y⁻¹) ^ 2 - (c₁ : ℚ_[2]) * (x * y⁻¹) ^ 2
-        - (c₂ : ℚ_[2]) * (y * y⁻¹) ^ 2 = 0
-      simpa using scaled_hom (a := (c₁ : ℚ_[2])) (b := (c₂ : ℚ_[2])) hsol
-    · exact PadicInt.isUnit_iff.mpr hY1
+    apply hnontriv
+    simp only [Prod.mk.injEq] at h ⊢
+    tauto
+  obtain ⟨Z, X, Y, hZeq, hunit⟩ :=
+    exists_padicInt_solution_gen (p := 2) (c₁ := (c₁ : ℚ_[2])) (c₂ := (c₂ : ℚ_[2]))
+      hnontriv' hsol
+  refine ⟨Z, X, Y, ?_, hunit⟩
+  apply PadicInt.ext
+  push_cast
+  exact hZeq
 
 -- Theorem: if two `2`-adic units are both `3` modulo `4`, their Hilbert symbol is `-1`.
 theorem hilbertSym_padic_two_units_eq_neg_one_of_mod4 {u v : ℤ_[2]ˣ}
@@ -470,29 +396,17 @@ noncomputable def twoAdicUnit (a : ℚ_[2]) (ha : a ≠ 0) : ℤ_[2]ˣ :=
 -- Theorem: the underlying `2`-adic number of `twoAdicUnit a ha` is `a * 2 ^ (-(a.valuation))`.
 private lemma coe_twoAdicUnit (a : ℚ_[2]) (ha : a ≠ 0) :
     ((twoAdicUnit a ha : ℤ_[2]) : ℚ_[2]) = a * (2 : ℚ_[2]) ^ (-(a.valuation)) := by
-  simp only [twoAdicUnit, padicUnit]
-  exact congrArg (fun t : ℤ_[2] => (t : ℚ_[2])) (IsUnit.unit_spec _)
+  simpa only [twoAdicUnit, Nat.cast_ofNat] using coe_padicUnit (p := 2) a ha
 
 -- Theorem: every nonzero `2`-adic number is `2 ^ a.valuation` times its unit part.
 private lemma twoAdicUnit_spec (a : ℚ_[2]) (ha : a ≠ 0) :
     a = (2 : ℚ_[2]) ^ a.valuation * ((twoAdicUnit a ha : ℤ_[2]) : ℚ_[2]) := by
-  rw [coe_twoAdicUnit]
-  calc a = a * 1 := (mul_one a).symm
-    _ = a * ((2 : ℚ_[2]) ^ a.valuation * (2 : ℚ_[2]) ^ (-(a.valuation))) := by
-          rw [← zpow_add₀ two_padic_ne_zero, add_neg_cancel, zpow_zero]
-    _ = (2 : ℚ_[2]) ^ a.valuation * (a * (2 : ℚ_[2]) ^ (-(a.valuation))) := by ring
+  simpa only [twoAdicUnit, Nat.cast_ofNat] using padicUnit_spec (p := 2) a ha
 
 -- Theorem: the unit part of a nonzero `2`-adic number has norm `1`.
 private lemma norm_twoAdicUnit (a : ℚ_[2]) (ha : a ≠ 0) :
     ‖((twoAdicUnit a ha : ℤ_[2]) : ℚ_[2])‖ = 1 := by
-  rw [coe_twoAdicUnit, norm_mul]
-  have h1 : ‖a‖ = (2 : ℝ) ^ (-(a.valuation)) := by
-    simpa using Padic.norm_eq_zpow_neg_valuation ha
-  have h2 : ‖(2 : ℚ_[2]) ^ (-(a.valuation))‖ = (2 : ℝ) ^ a.valuation := by
-    rw [show (2 : ℚ_[2]) = ((2 : ℕ) : ℚ_[2]) by norm_num, Padic.norm_p_zpow, neg_neg]
-    norm_num
-  rw [h1, h2, zpow_neg]
-  exact inv_mul_cancel₀ (zpow_ne_zero _ (by norm_num : (2 : ℝ) ≠ 0))
+  simpa only [twoAdicUnit] using norm_padicUnit (p := 2) a ha
 
 /-! ### The symbol of `2` against a unit
 
@@ -1315,13 +1229,7 @@ built from the two valuations and the two unit characters `ε`, `ω`.  Multiplic
 private lemma twoAdicUnit_mul (a a' : ℚ_[2]) (ha : a ≠ 0) (ha' : a' ≠ 0) :
     (twoAdicUnit (a * a') (mul_ne_zero ha ha') : ℤ_[2])
       = (twoAdicUnit a ha : ℤ_[2]) * (twoAdicUnit a' ha' : ℤ_[2]) := by
-  apply PadicInt.ext
-  rw [PadicInt.coe_mul, coe_twoAdicUnit, coe_twoAdicUnit, coe_twoAdicUnit,
-    Padic.valuation_mul ha ha']
-  have hp0 := two_padic_ne_zero
-  have hneg : -(a.valuation + a'.valuation) = -a.valuation + -a'.valuation := by ring
-  rw [hneg, zpow_add₀ hp0]
-  ring
+  simpa only [twoAdicUnit] using padicUnit_mul (p := 2) a a' ha ha'
 
 -- Theorem: `ε(u * v) - ε(u) - ε(v)` is even, checked on the units of `ZMod 8`.
 private lemma even_eps_mul_sub_aux :
