@@ -207,10 +207,10 @@ jobs:
             echo "Mathlib already present from cache"
           fi
 
-      - name: Check that LeanPool.lean is up to date
+      - name: Check library indexes use the module system and are up to date
         run: |
-          if ! ~/.elan/bin/lake exe mk_all --check; then
-            echo "::error::LeanPool.lean is out of date. Run 'lake exe mk_all' locally and commit the result."
+          if ! ~/.elan/bin/lake exe mk_all --module --check; then
+            echo "::error::Library indexes are out of date or missing module headers. Run 'lake exe mk_all --module' locally and commit the result."
             exit 1
           fi
 
@@ -440,10 +440,10 @@ jobs:
             fi
           done
 
-      - name: Check that LeanPool.lean is up to date
+      - name: Check library indexes use the module system and are up to date
         run: |
-          if ! ~/.elan/bin/lake exe mk_all --check; then
-            echo "::error::LeanPool.lean is out of date. Run 'lake exe mk_all' locally and commit the result."
+          if ! ~/.elan/bin/lake exe mk_all --module --check; then
+            echo "::error::Library indexes are out of date or missing module headers. Run 'lake exe mk_all --module' locally and commit the result."
             exit 1
           fi
 
