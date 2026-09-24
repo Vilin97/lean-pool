@@ -5,6 +5,7 @@ Authors: Scott Armstrong, Vlad Vicol
 -/
 module
 
+public import LeanPool.CaffarelliKohnNirenberg.Foundation.Measure.SupportRestrict
 public import LeanPool.CaffarelliKohnNirenberg.Foundation.Harmonic.InteriorSmooth
 public import LeanPool.CaffarelliKohnNirenberg.Foundation.Harmonic.InteriorEstimates
 public import LeanPool.CaffarelliKohnNirenberg.Foundation.Parabolic.BallDisplays
@@ -612,32 +613,18 @@ theorem pressure_harmonic_potential_data_ae_of_sws
   have hUScalar {i j : Fin 3} {g : Vec3 → ℝ} (hg : Continuous g)
       (hgc : HasCompactSupport g) (hgΩ : tsupport g ⊆ Omega) : IntegrableOn
       (fun x => pressureUTensor u c (x, s) i j * g x) Omega volume := by
-    obtain ⟨C, hC⟩ := hgc.exists_bound_of_continuous hg
-    have h' := ((huComp i).integrable_mul (huComp j)).mul_bdd
-      hg.measurable.aestronglyMeasurable
-      (Filter.Eventually.of_forall fun x => by
-        simpa only [Real.norm_eq_abs] using hC x)
-    have h'int : Integrable
-        (fun x => u (x, s) i * u (x, s) j * g x)
-        (volume.restrict Omega) := ⟨h'.1, h'.2⟩
-    have hi := (huInt i).mul_bdd hg.measurable.aestronglyMeasurable
-      (Filter.Eventually.of_forall fun x => by
-        simpa only [Real.norm_eq_abs] using hC x)
-    have hi' : IntegrableOn (fun x => u (x, s) i * g x) Omega volume :=
-      ⟨hi.1, hi.2⟩
+    have h'int := (CKN.Foundation.Measure.integrable_mul_of_tsupport_subset
+      ((huComp i).integrable_mul (huComp j)) hg hgc hgΩ).integrableOn (s := Omega)
+    have hi' := (CKN.Foundation.Measure.integrable_mul_of_tsupport_subset
+      (huInt i) hg hgc hgΩ).integrableOn (s := Omega)
     exact (h'int.neg.add (hi'.const_mul (c s j))).congr
       (Filter.Eventually.of_forall fun x => by
-        simp only [pressureUTensor, Pi.neg_apply, Pi.add_apply]
+        simp only [pressureUTensor, Pi.neg_apply, Pi.add_apply, Pi.mul_apply]
         ring)
   have hpScalar {g : Vec3 → ℝ} (hg : Continuous g)
       (hgc : HasCompactSupport g) (hgΩ : tsupport g ⊆ Omega) : IntegrableOn
       (fun x => p (x, s) * g x) Omega volume := by
-    obtain ⟨C, hC⟩ := hgc.exists_bound_of_continuous hg
-    have h' := hp.mul_bdd hg.measurable.aestronglyMeasurable
-      (Filter.Eventually.of_forall fun x => by
-        simpa only [Real.norm_eq_abs] using hC x)
-    exact (show Integrable (fun x => p (x, s) * g x)
-        (volume.restrict Omega) from ⟨h'.1, h'.2⟩)
+    exact (CKN.Foundation.Measure.integrable_mul_of_tsupport_subset hp hg hgc hgΩ).integrableOn
   have hsource {g : Vec3 → ℝ} (hg : IntegrableOn g Omega volume)
       (hgs : tsupport g ⊆ Omega) : Integrable g volume :=
     decomposition_full_of_on_sws hg hgs

@@ -7,6 +7,7 @@ module
 
 public import LeanPool.CaffarelliKohnNirenberg.Foundation.Parabolic.Basic
 public import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
+public import Mathlib.MeasureTheory.Integral.IntegrableOn
 
 /-!
 # Support Restrict
@@ -57,5 +58,18 @@ theorem memLp_volume_of_memLp_restrict_of_support
     MemLp h p volume := by
   rw [memLp_iff] at hh ⊢
   rwa [eLpNorm_restrict_eq_of_support_subset hmeas hsupp] at hh
+
+/-- A continuous compactly supported multiplier localizes an integrable function. -/
+theorem integrable_mul_of_tsupport_subset {α : Type*}
+    [TopologicalSpace α] [MeasurableSpace α] [OpensMeasurableSpace α]
+    {μ : Measure α} {s : Set α} {f g : α → ℝ}
+    (hf : IntegrableOn f s μ) (hg : Continuous g) (hgc : HasCompactSupport g)
+    (hsupport : tsupport g ⊆ s) : Integrable (fun x => f x * g x) μ := by
+  obtain ⟨C, hC⟩ := hgc.exists_bound_of_continuous hg
+  have hmul : IntegrableOn (fun x => f x * g x) s μ :=
+    hf.mul_bdd hg.measurable.aestronglyMeasurable
+      (Filter.Eventually.of_forall fun x => by simpa only [Real.norm_eq_abs] using hC x)
+  exact hmul.integrable_of_forall_notMem_eq_zero (fun x hx => by
+    rw [image_eq_zero_of_notMem_tsupport (f := g) (fun h => hx (hsupport h)), mul_zero])
 
 end CKN.Foundation.Measure

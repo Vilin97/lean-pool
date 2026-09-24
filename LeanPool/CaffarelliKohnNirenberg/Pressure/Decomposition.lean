@@ -5,6 +5,7 @@ Authors: Scott Armstrong, Vlad Vicol
 -/
 module
 
+public import LeanPool.CaffarelliKohnNirenberg.Foundation.Measure.SupportRestrict
 public import LeanPool.CaffarelliKohnNirenberg.Pressure.SliceIdentity
 public import LeanPool.CaffarelliKohnNirenberg.Pressure.LeibnizLaplacian
 public import LeanPool.CaffarelliKohnNirenberg.Setting.Cutoff
@@ -239,17 +240,8 @@ private lemma pressure_laplace_cutoff_identity_ae_hscalar_2 :
                   (fun (x : Vec3) => p (x, s) * g x) Ω volume
     := by
   intro Ω u p f Ω' s hLp_s g hg hgc hgΩ
-  obtain ⟨C, hC⟩ := hgc.exists_bound_of_continuous hg
-  have hgm : AEStronglyMeasurable g (volume.restrict Ω') :=
-    hg.measurable.aestronglyMeasurable
-  have h' := hLp_s.2.1.mul_bdd hgm
-    (Filter.Eventually.of_forall fun x => by simpa only [Real.norm_eq_abs] using hC x)
-  have h'On : IntegrableOn (fun x => p (x, s) * g x) Ω' volume := h'
-  have hfull : Integrable (fun x => p (x, s) * g x) volume :=
-    h'On.integrable_of_forall_notMem_eq_zero (by
-      intro x hx
-      rw [image_eq_zero_of_notMem_tsupport (fun hm => hx (hgΩ hm)), mul_zero])
-  exact hfull.integrableOn
+  exact (CKN.Foundation.Measure.integrable_mul_of_tsupport_subset
+    hLp_s.2.1 hg hgc hgΩ).integrableOn
 
 private lemma pressure_laplace_cutoff_identity_ae_huScalar_3 :
     ∀ {Ω : Set Vec3} {u : ParabolicPoint → Vec3} (Ω' : Set Vec3) (s : ℝ),
@@ -264,17 +256,8 @@ private lemma pressure_laplace_cutoff_identity_ae_huScalar_3 :
                   (fun (x : Vec3) => u (x, s) i * g x) Ω volume
     := by
   intro Ω u Ω' s huInt i g hg hgc hgΩ
-  obtain ⟨C, hC⟩ := hgc.exists_bound_of_continuous hg
-  have hgm : AEStronglyMeasurable g (volume.restrict Ω') :=
-    hg.measurable.aestronglyMeasurable
-  have h' := (huInt i).mul_bdd hgm
-    (Filter.Eventually.of_forall fun x => by simpa only [Real.norm_eq_abs] using hC x)
-  have h'On : IntegrableOn (fun x => u (x, s) i * g x) Ω' volume := h'
-  have hfull : Integrable (fun x => u (x, s) i * g x) volume :=
-    h'On.integrable_of_forall_notMem_eq_zero (by
-      intro x hx
-      rw [image_eq_zero_of_notMem_tsupport (fun hm => hx (hgΩ hm)), mul_zero])
-  exact hfull.integrableOn
+  exact (CKN.Foundation.Measure.integrable_mul_of_tsupport_subset
+    (huInt i) hg hgc hgΩ).integrableOn
 
 private lemma pressure_laplace_cutoff_identity_ae_huuScalar_4 :
     ∀ {Ω : Set Vec3} {u : ParabolicPoint → Vec3} (Ω' : Set Vec3) (s : ℝ),
@@ -289,21 +272,8 @@ private lemma pressure_laplace_cutoff_identity_ae_huuScalar_4 :
                   (fun (x : Vec3) => u (x, s) i * u (x, s) j * g x) Ω volume
     := by
   intro Ω u Ω' s huComp i j g hg hgc hgΩ
-  obtain ⟨C, hC⟩ := hgc.exists_bound_of_continuous hg
-  have hgm : AEStronglyMeasurable g (volume.restrict Ω') :=
-    hg.measurable.aestronglyMeasurable
-  have h' := ((huComp i).integrable_mul (huComp j)).mul_bdd hgm
-    (Filter.Eventually.of_forall fun x => by simpa only [Real.norm_eq_abs] using hC x)
-  have h'On : IntegrableOn
-      (fun x => u (x, s) i * u (x, s) j * g x) Ω' volume := by
-    change Integrable (fun x => u (x, s) i * u (x, s) j * g x)
-      (volume.restrict Ω')
-    exact h'
-  have hfull :=
-    h'On.integrable_of_forall_notMem_eq_zero (by
-      intro x hx
-      rw [image_eq_zero_of_notMem_tsupport (fun hm => hx (hgΩ hm)), mul_zero])
-  exact hfull.integrableOn
+  exact (CKN.Foundation.Measure.integrable_mul_of_tsupport_subset
+    ((huComp i).integrable_mul (huComp j)) hg hgc hgΩ).integrableOn
 
 private lemma pressure_laplace_cutoff_identity_ae_hfScalar_5 :
     ∀ {Ω : Set Vec3} {f : ParabolicPoint → Vec3} (Ω' : Set Vec3) (s : ℝ),
@@ -318,17 +288,8 @@ private lemma pressure_laplace_cutoff_identity_ae_hfScalar_5 :
                   (fun (x : Vec3) => f (x, s) i * g x) Ω volume
     := by
   intro Ω f Ω' s hfInt i g hg hgc hgΩ
-  obtain ⟨C, hC⟩ := hgc.exists_bound_of_continuous hg
-  have hgm : AEStronglyMeasurable g (volume.restrict Ω') :=
-    hg.measurable.aestronglyMeasurable
-  have h' := (hfInt i).mul_bdd hgm
-    (Filter.Eventually.of_forall fun x => by simpa only [Real.norm_eq_abs] using hC x)
-  have h'On : IntegrableOn (fun x => f (x, s) i * g x) Ω' volume := h'
-  have hfull : Integrable (fun x => f (x, s) i * g x) volume :=
-    h'On.integrable_of_forall_notMem_eq_zero (by
-      intro x hx
-      rw [image_eq_zero_of_notMem_tsupport (fun hm => hx (hgΩ hm)), mul_zero])
-  exact hfull.integrableOn
+  exact (CKN.Foundation.Measure.integrable_mul_of_tsupport_subset
+    (hfInt i) hg hgc hgΩ).integrableOn
 
 private lemma pressure_laplace_cutoff_identity_ae_hLapExpand_6 :
     ∀ {Ω : Set Vec3} {p : ParabolicPoint → ℝ} {η : Vec3 → ℝ},

@@ -5,6 +5,7 @@ Authors: Scott Armstrong, Vlad Vicol
 -/
 module
 
+public import LeanPool.CaffarelliKohnNirenberg.Foundation.Measure.SupportRestrict
 public import LeanPool.CaffarelliKohnNirenberg.Pressure.PkBoundsP234
 public import LeanPool.CaffarelliKohnNirenberg.Pressure.PkBoundsP56
 public import LeanPool.CaffarelliKohnNirenberg.Pressure.PkBoundsP8
@@ -346,23 +347,11 @@ theorem pressureP234_fixed_bound
       (hgc : HasCompactSupport g) (hgΩ : tsupport g ⊆ vec3Ball x₀ ρ) :
       IntegrableOn (fun y => pressureUTensor u c (y, s) i j * g y)
         (vec3Ball x₀ ρ) volume := by
-    obtain ⟨C, hC⟩ := hgc.exists_bound_of_continuous hg
-    have hi := (huInt i).mul_bdd hg.measurable.aestronglyMeasurable
-      (Filter.Eventually.of_forall fun y => by
-        simpa only [Real.norm_eq_abs] using hC y)
-    have hj := (huInt j).mul_bdd hg.measurable.aestronglyMeasurable
-      (Filter.Eventually.of_forall fun y => by
-        simpa only [Real.norm_eq_abs] using hC y)
-    have hprod : Integrable (fun y => u (y, s) i * u (y, s) j * g y) μ := by
-      exact ((huComp i).integrable_mul (huComp j)).mul_bdd
-        hg.measurable.aestronglyMeasurable
-        (Filter.Eventually.of_forall fun y => by
-          simpa only [Real.norm_eq_abs] using hC y)
-    have hprod' : IntegrableOn
-        (fun y => u (y, s) i * u (y, s) j * g y)
-        (vec3Ball x₀ ρ) volume := hprod
-    have hlin : IntegrableOn
-        (fun y => u (y, s) i * g y) (vec3Ball x₀ ρ) volume := hi
+    have hprod' := (CKN.Foundation.Measure.integrable_mul_of_tsupport_subset
+      ((huComp i).integrable_mul (huComp j)) hg hgc hgΩ).integrableOn
+        (s := vec3Ball x₀ ρ)
+    have hlin := (CKN.Foundation.Measure.integrable_mul_of_tsupport_subset
+      (huInt i) hg hgc hgΩ).integrableOn (s := vec3Ball x₀ ρ)
     have hsum : IntegrableOn
         (fun y => -(u (y, s) i * u (y, s) j * g y) +
           c s j * (u (y, s) i * g y)) (vec3Ball x₀ ρ) volume :=

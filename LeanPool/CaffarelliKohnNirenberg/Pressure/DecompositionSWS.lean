@@ -5,6 +5,7 @@ Authors: Scott Armstrong, Vlad Vicol
 -/
 module
 
+public import LeanPool.CaffarelliKohnNirenberg.Foundation.Measure.SupportRestrict
 public import LeanPool.CaffarelliKohnNirenberg.Pressure.DecompositionIdentity
 public import LeanPool.CaffarelliKohnNirenberg.Pressure.DecompositionSWSBasic
 
@@ -64,17 +65,8 @@ private lemma pressureP1_distributional_identity_huuScalar_2 :
                   (fun (x : Vec3) => u (x, s) i * u (x, s) j * g x) Ω volume
     := by
   intro Ω u f Ω' s huComp i j g hg hgc hgΩ
-  obtain ⟨C, hC⟩ := hgc.exists_bound_of_continuous hg
-  have h' := ((huComp i).integrable_mul (huComp j)).mul_bdd
-    hg.measurable.aestronglyMeasurable
-    (Filter.Eventually.of_forall fun x => by simpa only [Real.norm_eq_abs] using hC x)
-  have h'int : Integrable (fun x => u (x, s) i * u (x, s) j * g x)
-      (volume.restrict Ω') := ⟨h'.1, h'.2⟩
-  have h'On : IntegrableOn (fun x => u (x, s) i * u (x, s) j * g x)
-      Ω' volume := h'int
-  exact (h'On.integrable_of_forall_notMem_eq_zero (fun x hx => by
-    rw [image_eq_zero_of_notMem_tsupport (f := g) (fun hxt => hx (hgΩ hxt)),
-      mul_zero])).integrableOn
+  exact (CKN.Foundation.Measure.integrable_mul_of_tsupport_subset
+    ((huComp i).integrable_mul (huComp j)) hg hgc hgΩ).integrableOn
 
 private lemma pressureP1_distributional_identity_hB_3 :
     ∀ {Ω : Set Vec3} {u : ParabolicPoint → Vec3} {_ : ParabolicPoint → Vec3} {η : Vec3 → ℝ},
@@ -861,15 +853,8 @@ private lemma pressureP1_distributional_identity_hpScalar_1 :
                   (fun (x : Vec3) => p (x, s) * g x) Ω volume
     := by
   intro Ω u p f Ω' s hLp_s g hg hgc hgΩ
-  obtain ⟨C, hC⟩ := hgc.exists_bound_of_continuous hg
-  have h' := hLp_s.2.1.mul_bdd hg.measurable.aestronglyMeasurable
-    (Filter.Eventually.of_forall fun x => by simpa only [Real.norm_eq_abs] using hC x)
-  have h'int : Integrable (fun x => p (x, s) * g x) (volume.restrict Ω') :=
-    ⟨h'.1, h'.2⟩
-  have h'On : IntegrableOn (fun x => p (x, s) * g x) Ω' volume := h'int
-  exact (h'On.integrable_of_forall_notMem_eq_zero (fun x hx => by
-    rw [image_eq_zero_of_notMem_tsupport (f := g) (fun hxt => hx (hgΩ hxt)),
-      mul_zero])).integrableOn
+  exact (CKN.Foundation.Measure.integrable_mul_of_tsupport_subset
+    hLp_s.2.1 hg hgc hgΩ).integrableOn
 
 private lemma pressureP1_distributional_identity_huScalar_2 :
     ∀ {Ω : Set Vec3} {u : ParabolicPoint → Vec3} {_ : ParabolicPoint → Vec3} (Ω' : Set Vec3)
@@ -885,15 +870,8 @@ private lemma pressureP1_distributional_identity_huScalar_2 :
                   (fun (x : Vec3) => u (x, s) i * g x) Ω volume
     := by
   intro Ω u f Ω' s huInt i g hg hgc hgΩ
-  obtain ⟨C, hC⟩ := hgc.exists_bound_of_continuous hg
-  have h' := (huInt i).mul_bdd hg.measurable.aestronglyMeasurable
-    (Filter.Eventually.of_forall fun x => by simpa only [Real.norm_eq_abs] using hC x)
-  have h'int : Integrable (fun x => u (x, s) i * g x) (volume.restrict Ω') :=
-    ⟨h'.1, h'.2⟩
-  have h'On : IntegrableOn (fun x => u (x, s) i * g x) Ω' volume := h'int
-  exact (h'On.integrable_of_forall_notMem_eq_zero (fun x hx => by
-    rw [image_eq_zero_of_notMem_tsupport (f := g) (fun hxt => hx (hgΩ hxt)),
-      mul_zero])).integrableOn
+  exact (CKN.Foundation.Measure.integrable_mul_of_tsupport_subset
+    (huInt i) hg hgc hgΩ).integrableOn
 
 private lemma pressureP1_distributional_identity_hfScalar_3 :
     ∀ {Ω : Set Vec3} {f : ParabolicPoint → Vec3} (Ω' : Set Vec3) (s : ℝ),
@@ -908,15 +886,8 @@ private lemma pressureP1_distributional_identity_hfScalar_3 :
                   (fun (x : Vec3) => f (x, s) i * g x) Ω volume
     := by
   intro Ω f Ω' s hfInt i g hg hgc hgΩ
-  obtain ⟨C, hC⟩ := hgc.exists_bound_of_continuous hg
-  have h' := (hfInt i).mul_bdd hg.measurable.aestronglyMeasurable
-    (Filter.Eventually.of_forall fun x => by simpa only [Real.norm_eq_abs] using hC x)
-  have h'int : Integrable (fun x => f (x, s) i * g x) (volume.restrict Ω') :=
-    ⟨h'.1, h'.2⟩
-  have h'On : IntegrableOn (fun x => f (x, s) i * g x) Ω' volume := h'int
-  exact (h'On.integrable_of_forall_notMem_eq_zero (fun x hx => by
-    rw [image_eq_zero_of_notMem_tsupport (f := g) (fun hxt => hx (hgΩ hxt)),
-      mul_zero])).integrableOn
+  exact (CKN.Foundation.Measure.integrable_mul_of_tsupport_subset
+    (hfInt i) hg hgc hgΩ).integrableOn
 
 private lemma pressureP1_distributional_identity_hUScalar_4 :
     ∀ {Ω : Set Vec3} {u : ParabolicPoint → Vec3} {c : ℝ → Vec3} (Ω' : Set Vec3) (s : ℝ),

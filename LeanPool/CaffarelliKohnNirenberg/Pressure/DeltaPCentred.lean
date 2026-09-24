@@ -5,6 +5,7 @@ Authors: Scott Armstrong, Vlad Vicol
 -/
 module
 
+public import LeanPool.CaffarelliKohnNirenberg.Foundation.Measure.SupportRestrict
 public import LeanPool.CaffarelliKohnNirenberg.Pressure.DecompositionSWS
 
 /-!
@@ -315,30 +316,13 @@ theorem pressure_delta_p_centred_ae
   have huScalar {i : Fin 3} {g : Vec3 → ℝ} (hg : Continuous g)
       (hgc : HasCompactSupport g) (hgΩ : tsupport g ⊆ Ω') : IntegrableOn
       (fun x => u (x, s) i * g x) Ω volume := by
-    obtain ⟨C, hC⟩ := hgc.exists_bound_of_continuous hg
-    have h' := (huInt i).mul_bdd hg.measurable.aestronglyMeasurable
-      (Filter.Eventually.of_forall fun x => by
-        simpa only [Real.norm_eq_abs] using hC x)
-    have h'On : IntegrableOn (fun x => u (x, s) i * g x) Ω' volume := h'
-    have hfull : Integrable (fun x => u (x, s) i * g x) volume :=
-      h'On.integrable_of_forall_notMem_eq_zero (fun x hx => by
-        rw [image_eq_zero_of_notMem_tsupport (fun hxt => hx (hgΩ hxt)), mul_zero])
-    exact hfull.integrableOn
+    exact (CKN.Foundation.Measure.integrable_mul_of_tsupport_subset
+      (huInt i) hg hgc hgΩ).integrableOn
   have huuScalar {i j : Fin 3} {g : Vec3 → ℝ} (hg : Continuous g)
       (hgc : HasCompactSupport g) (hgΩ : tsupport g ⊆ Ω') : IntegrableOn
       (fun x => u (x, s) i * u (x, s) j * g x) Ω volume := by
-    obtain ⟨C, hC⟩ := hgc.exists_bound_of_continuous hg
-    have h' := ((huComp i).integrable_mul (huComp j)).mul_bdd
-      hg.measurable.aestronglyMeasurable
-      (Filter.Eventually.of_forall fun x => by
-        simpa only [Real.norm_eq_abs] using hC x)
-    have h'On : IntegrableOn
-        (fun x => u (x, s) i * u (x, s) j * g x) Ω' volume := h'
-    have hfull : Integrable
-        (fun x => u (x, s) i * u (x, s) j * g x) volume :=
-      h'On.integrable_of_forall_notMem_eq_zero (fun x hx => by
-        rw [image_eq_zero_of_notMem_tsupport (fun hxt => hx (hgΩ hxt)), mul_zero])
-    exact hfull.integrableOn
+    exact (CKN.Foundation.Measure.integrable_mul_of_tsupport_subset
+      ((huComp i).integrable_mul (huComp j)) hg hgc hgΩ).integrableOn
   have hmixedCont (i j : Fin 3) : ContDiff ℝ (⊤ : ℕ∞) (mixedSecond ψ i j) :=
     contDiff_mixedSecond_smooth hψ i j
   have hmixedC (i j : Fin 3) : HasCompactSupport (mixedSecond ψ i j) := by
