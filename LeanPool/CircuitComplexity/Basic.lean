@@ -29,7 +29,7 @@ establishes the circuit size complexity measure for Boolean functions.
 * `Circuit.size_complexity_pos` — for complete bases, size complexity is positive
 -/
 
-@[expose] public section
+public section
 
 namespace CircuitComplexity
 
@@ -50,7 +50,7 @@ inductive Arity where
   deriving Repr, DecidableEq
 
 /-- Whether `n` satisfies an arity constraint. -/
-def Arity.satisfiedBy : Arity → Nat → Prop
+@[expose] def Arity.satisfiedBy : Arity → Nat → Prop
   | .unbounded, _ => True
   | .exactly k, n => n = k
   | .upto k, n => n ≤ k
@@ -90,7 +90,7 @@ structure Gate (B : Basis) (W : Nat) where
   negated : Fin fanIn → Bool
 
 /-- Evaluate a gate given a wire-value assignment. -/
-def Gate.eval (g : Gate B W) (wireVal : BitString W) : Bool :=
+@[expose] def Gate.eval (g : Gate B W) (wireVal : BitString W) : Bool :=
   B.eval g.op g.fanIn g.arityOk (fun i => (g.negated i).xor (wireVal (g.inputs i)))
 
 /--
@@ -186,11 +186,11 @@ def depth (c : Circuit B N M G) : Nat :=
   Fin.foldl M (fun acc j => max acc (c.outputDepth j)) 0
 
 /-- Evaluate a circuit: map an `N`-bit input to an `M`-bit output. -/
-def eval (c : Circuit B N M G) (input : BitString N) : BitString M :=
+@[expose] def eval (c : Circuit B N M G) (input : BitString N) : BitString M :=
   fun j => (c.outputs j).eval (c.wireValue input)
 
 /-- The size of a circuit is its total number of gates (internal + output). -/
-def size (c : Circuit B N M G) : Nat :=
+@[expose] def size (c : Circuit B N M G) : Nat :=
   G + M + (c.outputs 0).fanIn * 0
 
 end Circuit

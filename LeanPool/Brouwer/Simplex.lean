@@ -16,12 +16,13 @@ when reasoning about mixed strategies, including the key inequality
 `wsum_magic_ineq` relating a weighted sum to a uniform bound.
 -/
 
-@[expose] public section
+public section
 
 namespace Brouwer
 
 /-- The standard simplex as a set of coordinate functions. Keeping this representation gives
 its points the subspace topology of the finite product used in the fixed-point proof. -/
+@[expose]
 def standardSimplex (k α : Type*) [Semiring k] [PartialOrder k] [Fintype α] : Set (α → k) :=
   {f | (∀ i, 0 ≤ f i) ∧ ∑ i, f i = 1}
 

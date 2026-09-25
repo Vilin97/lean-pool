@@ -28,7 +28,7 @@ This module provides the AND/OR basis definitions and completeness results.
   from `unboundedAON`, using `CompleteBasis.of_simulation`
 -/
 
-@[expose] public section
+public section
 
 namespace CircuitComplexity
 

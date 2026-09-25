@@ -37,7 +37,7 @@ for column functions, AND/OR combining layers. Total ≤ `18 · 2^N / N`
 gates for `N ≥ 16`.
 -/
 
-@[expose] public section
+public section
 
 namespace CircuitComplexity
 

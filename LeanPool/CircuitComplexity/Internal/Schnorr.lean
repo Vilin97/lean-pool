@@ -19,7 +19,7 @@ The public definitions (`Schnorr.xorBool`, `Schnorr.xorBool_flip`,
 `schnorr_lower_bound_circuit` is accessible through `Circ.Schnorr`.
 -/
 
-@[expose] public section
+public section
 
 namespace CircuitComplexity
 

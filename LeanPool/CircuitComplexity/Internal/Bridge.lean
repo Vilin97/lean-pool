@@ -27,7 +27,7 @@ The public theorems `shannon_lower_bound_circuit` and
 `Circ.Schnorr` respectively.
 -/
 
-@[expose] public section
+public section
 
 namespace CircuitComplexity
 

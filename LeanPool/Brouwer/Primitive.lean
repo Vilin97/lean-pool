@@ -22,7 +22,7 @@ algorithm. It relates the room/door combinatorics developed in `Scarf` to this
 primitive-set picture used by the path-following termination argument.
 -/
 
-@[expose] public section
+public section
 
 attribute [local instance] Classical.propDecidable
 open Finset
@@ -55,6 +55,7 @@ def fromMissing (X : Finset (ExtendedGoods T I)) : Finset I :=
   Finset.univ.filter (fun i : I => Sum.inr i ∉ X)
 
 /-- The room/door cell associated to a subset of `T ∪ I`. -/
+@[expose]
 def associatedCell (X : Finset (ExtendedGoods T I)) : GiCell T I :=
   (fromGoods (T := T) (I := I) X, fromMissing (T := T) (I := I) X)
 
@@ -923,6 +924,7 @@ theorem internal_almostPrimitive_replacementStep {Y : Finset (ExtendedGoods T I)
   exact ⟨X₁, X₂, ⟨hPrim₁, hPrim₂, hNe, Y, hY, hSub₁, hSub₂⟩, hSub₁, hSub₂⟩
 
 /-- Extend a coloring of goods by coloring each slack vector by its own index. -/
+@[expose]
 def extendedColoring (c : T → I) : ExtendedGoods T I → I
   | Sum.inl t => c t
   | Sum.inr i => i
@@ -1660,6 +1662,7 @@ def slackVector (M : I → ℝ) (i : I) : I → ℝ :=
   fun j => if j = i then 0 else M i
 
 /-- Interpret the enlarged set `T ∪ I` as points in `ℝ^I`. -/
+@[expose]
 def extendedCoordinatePoint (u : I → T → ℝ) (M : I → ℝ) :
     ExtendedGoods T I → I → ℝ
   | Sum.inl x => utilityVector (I := I) u x

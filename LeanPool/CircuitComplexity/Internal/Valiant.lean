@@ -25,7 +25,7 @@ labeling argument, the edge partition by first-differing bit, the
 averaging step, and the relabeling-after-removal bound.
 -/
 
-@[expose] public section
+public section
 
 namespace Digraph
 
@@ -349,6 +349,7 @@ variable [DecidableEq V]
 
 /-- Edges whose canonical-label endpoints' `k`-bit binary
 representations first disagree at MSB position `i`. -/
+@[expose]
 noncomputable def levelEdges
     (G : Digraph V) [DecidableRel G.Adj] (k i : ℕ) : Finset (V × V) :=
   G.edgeFinset.filter (fun e =>

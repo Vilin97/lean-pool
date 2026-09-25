@@ -35,7 +35,7 @@ Tags: circuit-complexity, boolean-functions, lower-bounds, shannon-bound, parity
 MSC: 68Q06, 94C11
 -/
 
-@[expose] public section
+public section
 
 /-!
 # Circuit Complexity

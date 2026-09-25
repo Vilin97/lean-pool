@@ -21,7 +21,7 @@ This module defines the N-input XOR function and its key properties.
 * `Schnorr.xorBool_essential` — XOR depends on all inputs
 -/
 
-@[expose] public section
+public section
 
 namespace CircuitComplexity
 
@@ -29,7 +29,7 @@ namespace CircuitComplexity
 namespace Schnorr
 
 /-- The N-input XOR (parity) function. -/
-def xorBool : (N : Nat) → BitString N → Bool
+@[expose] def xorBool : (N : Nat) → BitString N → Bool
   | 0, _ => false
   | _ + 1, x => (x 0).xor (xorBool _ (x ∘ Fin.succ))
 
