@@ -3,7 +3,9 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.DoubleAngle.SpectralCutoff
+module
+
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.DoubleAngle.SpectralCutoff
 
 /-!
 # The unbounded, residual-form, branch-free `tan 2Θ` theorem, at the operator norm
@@ -64,6 +66,8 @@ see the `DK-6-appendix` census row for what blocks it.
   theorem and the reflection `Z = 2Q - 1`, equation (7.6) for the block system,
   and the Appendix to Section 6 for the unbounded passage.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan1970

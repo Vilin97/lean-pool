@@ -59,7 +59,7 @@ partial isometry; adding invertibility of the modulus buys it back as an
 isometry. That is the whole hierarchy.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 
@@ -93,7 +93,6 @@ variable {F : Type*} [NormedAddCommGroup F] [InnerProductSpace 𝕜 F]
 
 /-- The **modulus** `|A| = (A⋆A)^{1/2}` of an operator, via the spectral square root of the
 positive operator `A⋆A`. HJ 7.3.1 (`Q = (A⋆A)^{1/2}`). -/
-@[expose]
 noncomputable def operatorAbs (A : E →ₗ[𝕜] F) : E →ₗ[𝕜] E :=
   (LinearMap.isPositive_adjoint_comp_self A).sqrt
 
@@ -173,7 +172,6 @@ noncomputable def operatorAbsRestrict (A : E →ₗ[𝕜] E) : ↥((ker A)ᗮ) �
 
 /-- The **polar factor** `U` of `A`: the partial isometry that is the isometry `|A| x ↦ A x` on
 `range |A| = (ker A)ᗮ`, extended by `0` on `ker A`. Conway VI.3.9. -/
-@[expose]
 noncomputable def polarFactor (A : E →ₗ[𝕜] E) : E →ₗ[𝕜] E :=
   A ∘ₗ ((ker A)ᗮ).subtype ∘ₗ (operatorAbsRestrict A).symm.toLinearMap
     ∘ₗ (((ker A)ᗮ).orthogonalProjectionOnto : E →L[𝕜] ↥((ker A)ᗮ)).toLinearMap
@@ -265,7 +263,6 @@ theorem isPartialIsometry_polarFactor (A : E →ₗ[𝕜] E) :
 
 /-- When `A` is invertible, `|A|` is invertible and the polar factor is the unitary `U = A |A|⁻¹`,
 packaged as a `LinearIsometryEquiv`. HJ 7.3.1(b) (`U` uniquely determined if `A` nonsingular). -/
-@[expose]
 noncomputable def polarUnitaryEquiv {A : E →ₗ[𝕜] E} (hA : IsUnit A) : E ≃ₗᵢ[𝕜] E :=
   have hinj : Function.Injective (polarFactor A) := by
     rw [← LinearMap.ker_eq_bot, ker_polarFactor]
@@ -311,7 +308,7 @@ committing to the selection. -/
 
 /-- The polar factor restricted to `(ker A)ᗮ`, its initial space, where it is a
 genuine linear isometry. -/
-private noncomputable def polarIsometryOnOrthogonal (A : E →ₗ[𝕜] E) :
+noncomputable def polarIsometryOnOrthogonal (A : E →ₗ[𝕜] E) :
     ↥((ker A)ᗮ) →ₗᵢ[𝕜] E where
   toLinearMap := (polarFactor A) ∘ₗ ((ker A)ᗮ).subtype
   norm_map' x := norm_polarFactor_apply_of_mem x.2

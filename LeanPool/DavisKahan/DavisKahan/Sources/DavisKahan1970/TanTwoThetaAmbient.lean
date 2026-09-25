@@ -3,16 +3,20 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.TanAngleFunctionalCalculus
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.AmbientBlockVocabulary
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.CanonicalTangentBridge
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.SelectedBranchSymmetricNorming
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.QuarterAcuteFormGap
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SharpIdeal
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanThetaAmbient
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.TanAngleFunctionalCalculus
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.AmbientBlockVocabulary
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.CanonicalTangentBridge
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.SelectedBranchSymmetricNorming
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.QuarterAcuteFormGap
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SharpIdeal
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanThetaAmbient
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
 
 /-! # Tan Two Theta Ambient -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

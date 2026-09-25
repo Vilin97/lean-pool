@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
+module
 
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.AngleGeometry
-import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63FiniteSource
+
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.AngleGeometry
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63FiniteSource
 
 /-!
 # Audit: the Theorem 6.3 dimension hypothesis does not imply acuteness
@@ -24,6 +26,8 @@ The theorem below is a permanent regression test for the bad distillation.
 Even a strict finite-dimensional inclusion admits an isometric embedding while
 failing symmetric acuteness.
 -/
+
+@[expose] public section
 
 open Module (finrank)
 

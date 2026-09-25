@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.DoubleAngleTangentOperator
-import LeanPool.DavisKahan.DavisKahan.Riccati.BoundedSharpEstimates
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.DoubleAngleTangentOperator
+public import LeanPool.DavisKahan.DavisKahan.Riccati.BoundedSharpEstimates
 
 /-!
 # Stable paired-singular-vector Riccati estimate
@@ -15,6 +17,8 @@ operator norm.  This file supplies the missing stable coefficient estimate.
 Both singular equations may have residual at most `ε`; every error term is
 written explicitly and vanishes with `ε`.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

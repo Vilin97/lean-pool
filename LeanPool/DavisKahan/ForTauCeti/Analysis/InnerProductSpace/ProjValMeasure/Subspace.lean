@@ -39,7 +39,7 @@ they adapt rather than in a bridge that no longer bridges anything.
   `TauCeti` and `ForTauCeti` (enforced by `scripts/check_dependency_layers.py`).
 -/
 
-public section
+@[expose] public section
 
 open scoped InnerProductSpace
 
@@ -50,7 +50,6 @@ variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
 
 /-- The range of a measurable projection from a Spectra projection-valued
 measure, packaged as a submodule. -/
-@[expose]
 noncomputable def pvmRangeSubspace (P : TauCeti.ProjValMeasure H)
     (B : Set ℝ) (hB : MeasurableSet B) : Submodule ℂ H :=
   (P.proj B hB).range

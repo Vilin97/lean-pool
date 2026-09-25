@@ -3,12 +3,14 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, GPT 5.6 High
 -/
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Spectral.Subspace
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.FrameFactorization
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Residual.Ritz
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Residual.TrialMap
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Residual.AngleEmbedding
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.Interval
+module
+
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Spectral.Subspace
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.FrameFactorization
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Residual.Ritz
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Residual.TrialMap
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Residual.AngleEmbedding
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.Interval
 
 /-!
 # Generalized finite-dimensional Davis--Kahan theorems
@@ -28,6 +30,8 @@ spectral separation, and the continuation argument selecting the acute branch
 of a double-angle estimate.  These are kept separate from the sharp clean API
 so their conditioning losses are visible in theorem statements.
 -/
+
+@[expose] public section
 
 
 /-! ## Construction status

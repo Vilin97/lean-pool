@@ -3,10 +3,12 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SymmetricNormingFanDominance
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section4Real
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Proposition32
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.SourceDirectRotation
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SymmetricNormingFanDominance
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section4Real
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Proposition32
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.SourceDirectRotation
 
 /-!
 # Section 4 on the source's own object: the direct rotation
@@ -41,6 +43,8 @@ Proposition 4.2 needs no façade: its canonical statement already takes
 `CrossedDefectsEquivalent` and never names a rotation, because its conclusion is
 about the principal angles and an arbitrary competitor.
 -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

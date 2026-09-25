@@ -3,12 +3,14 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, GPT 5.6 High
 -/
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Spectral.Subspace
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.AngleGeometry
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Residual.Ritz
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Residual.AngleEmbedding
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Singular.System
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Singular.Subspace
+module
+
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Spectral.Subspace
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.AngleGeometry
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Residual.Ritz
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Residual.AngleEmbedding
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Singular.System
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Singular.Subspace
 
 /-!
 # The paper-exact finite Davis--Kahan `tan Θ` theorem
@@ -24,6 +26,8 @@ Fan dominance then gives every rectangular unitarily invariant norm.  This is
 intentionally separate from the later relaxed spectral-norm theorem and from
 an ordered graph-Sylvester formulation.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan.FiniteDimensional

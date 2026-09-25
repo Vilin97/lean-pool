@@ -3,13 +3,17 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotationBlocks
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotationBlocks
 -- supplies the block estimates these three statements run on: diagonal-block self-adjointness,
 -- the `√2/2` norm bound on the source subspace, the half-angle inequality for the Halmos cosine
 -- square, and `reflectionOperator_reflectedSubspace`.
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.Section3Nonacute
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.Section3Nonacute
 
 /-! # Section3Proposition34Presentation -/
+
+@[expose] public section
 -- supplies the completed nonacute direct-rotation construction the acute forms specialise.
 
 /-!

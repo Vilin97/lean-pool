@@ -3,10 +3,12 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Fable 5
 -/
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.ResolventOperator
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.BoundedSelfAdjointSpectralProjection
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Integral
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Isometric
+module
+
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.ResolventOperator
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.BoundedSelfAdjointSpectralProjection
+public import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Integral
+public import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Isometric
 
 /-!
 # Selector bridge for bounded spectral projections
@@ -30,6 +32,8 @@ group calculus of the selector could be recognised as `cfcL`.  The native
 `TauCeti.BorelCalculus.boundedPVM_proj_eq_cfcHom` states that identification
 directly, and no Cayley transform is needed for a bounded operator.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahanExt

@@ -39,7 +39,7 @@ so that the caller supplies the lower bound the non-real case gets for free.
 lower bound abstracted out of it.
 -/
 
-public section
+@[expose] public section
 
 open scoped InnerProductSpace
 

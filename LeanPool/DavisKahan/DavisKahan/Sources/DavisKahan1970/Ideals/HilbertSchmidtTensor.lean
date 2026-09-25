@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking, Claude Opus 5
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.HilbertSchmidtBasis
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.HilbertSchmidt.Space
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.HilbertSchmidtBasis
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.HilbertSchmidt.Space
 
 /-!
 # The `ℓ²` model of the paper Hilbert--Schmidt ideal
@@ -38,6 +40,8 @@ basis it is, because `hilbertSchmidtEnergy_indep` says the energy does not.
 `hilbertSchmidtTensor` also stops being a `Classical.choose`: the column family is
 available directly, so it is that family.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

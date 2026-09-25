@@ -3,10 +3,12 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
+module
 
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.OperatorNorm
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.CanonicalRealView
-import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
+
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.OperatorNorm
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.CanonicalRealView
+public import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
 
 /-!
 # Banach spaces carried by rectangular symmetric ideals
@@ -26,6 +28,8 @@ The construction is completely generic.  Once the rectangular Hilbert--Schmidt,
 trace, or Schatten family has been supplied, no additional completeness or
 integration argument is needed for that family.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

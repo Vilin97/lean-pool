@@ -3,11 +3,13 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.Majorization.WeakSubmajorization
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.NormCorrespondence
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.UnitaryInvariantNormInstances
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.RankOneNormalization
-import Mathlib.Topology.Compactness.Compact
+module
+
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.Majorization.WeakSubmajorization
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.NormCorrespondence
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.UnitaryInvariantNormInstances
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.RankOneNormalization
+public import Mathlib.Topology.Compactness.Compact
 
 /-!
 # The sequence gauge of a coherent symmetric norm, and its Riesz splitting
@@ -26,6 +28,8 @@ The proof is not an assumption and does not use a separation theorem.  It
 applies the repository's constructive Hardy--Littlewood--Pólya descent to the
 Minkowski sum of two symmetric-convex gauge balls.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace Majorization

@@ -35,7 +35,7 @@ while still below `k` — they are at most `ε`
 * Spectra influence: **none.**
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 namespace ApproximationNumber

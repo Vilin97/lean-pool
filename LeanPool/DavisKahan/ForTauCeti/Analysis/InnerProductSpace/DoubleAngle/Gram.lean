@@ -81,7 +81,7 @@ method; nothing here asserts that the `tan 2θ` extension is false.
   and the final paragraph of Section 8 for the extension this file supports.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

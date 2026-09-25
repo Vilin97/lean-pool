@@ -3,7 +3,9 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81UnboundedBranch
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81UnboundedBranch
 
 /-!
 # Theorem 8.1 part (i) at unbounded scope
@@ -21,6 +23,8 @@ part nonpositive, and what is left is the claim.  Nothing about `P` is used: the
 inequality holds for every domain vector, and the paper's `Pᗮ` is only where it
 is read.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace
 

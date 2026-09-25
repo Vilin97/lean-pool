@@ -3,7 +3,9 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Edward Wang
 -/
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.TwoDimensionalSingularValues
+module
+
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.TwoDimensionalSingularValues
 
 /-!
 # Davis--Kahan 1970, Example 6.1
@@ -36,6 +38,8 @@ The tangent quantity is recorded as the equality of the trial and orthogonal
 components of the eigenvector rather than through an arctangent: they are both
 `1 / sqrt 2`, so the ratio defining `tan Theta_0` is `1`.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan1970

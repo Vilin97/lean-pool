@@ -29,7 +29,7 @@ operator makes the condition easier to satisfy.
 but neither of the two lemmas below.
 -/
 
-public section
+@[expose] public section
 
 open scoped InnerProductSpace
 

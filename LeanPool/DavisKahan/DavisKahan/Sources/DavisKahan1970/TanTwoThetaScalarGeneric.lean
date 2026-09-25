@@ -3,13 +3,15 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Sol
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedAmbientExact
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedReducingReal
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedReducing
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.TangentOperatorGeneric
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.DirectedAngleGeneric
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.ScalarTransport
-import LeanPool.DavisKahan.DavisKahan.TanTheta.ScalarTransport
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedAmbientExact
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedReducingReal
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedReducing
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.TangentOperatorGeneric
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.DirectedAngleGeneric
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.ScalarTransport
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.ScalarTransport
 
 /-!
 # Scalar-generic unbounded `tan 2Θ`
@@ -25,6 +27,8 @@ complete approximation-number sequence is `tan (arcsin a_n(sin 2Θ₀))`; this i
 the invariant content of the directed tangent in every source unitarily
 invariant norm and avoids exposing field-specific inverse machinery.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace TauCeti.CompleteSubspace
 

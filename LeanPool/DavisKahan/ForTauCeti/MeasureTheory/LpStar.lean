@@ -40,7 +40,7 @@ layer carries `[Fact (1 ≤ p)]`, matching Mathlib's normed-topological `Lp` str
 * Spectra influence: **none** -- the implementation uses only Mathlib's `Lp` API.
 -/
 
-public section
+@[expose] public section
 
 open MeasureTheory
 

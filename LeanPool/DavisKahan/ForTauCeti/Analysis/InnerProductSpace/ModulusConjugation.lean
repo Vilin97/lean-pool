@@ -37,7 +37,7 @@ the reconstruction step of Davis--Kahan 1970 Theorem 3.1.
 * `ContinuousLinearMap.modulus_conj_apply`: the pointwise form.
 -/
 
-public section
+@[expose] public section
 
 namespace ContinuousLinearMap
 

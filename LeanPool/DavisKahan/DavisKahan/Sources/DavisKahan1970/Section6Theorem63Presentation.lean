@@ -3,17 +3,21 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.TanTheta.Spectrum
-import LeanPool.DavisKahan.DavisKahan.TanTheta.UnboundedGraphAngle
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.TanTheta.RitzResidual
-import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63FiniteSource
-import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63InfiniteTrial
-import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63Unbounded
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section2TanThetaPerturbation
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Resolvent
+
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.Spectrum
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.UnboundedGraphAngle
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.TanTheta.RitzResidual
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63FiniteSource
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63InfiniteTrial
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63Unbounded
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section2TanThetaPerturbation
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Resolvent
 
 /-! # Section6Theorem63Presentation -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 

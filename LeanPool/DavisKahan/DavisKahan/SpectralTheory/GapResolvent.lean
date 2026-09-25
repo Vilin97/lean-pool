@@ -3,15 +3,19 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Fable 5, Claude Opus 5
 -/
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Closed
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Constructions
-import LeanPool.DavisKahan.DavisKahan.BoundedOperator.Problem
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
-import LeanPool.DavisKahan.DavisKahan.Sylvester.ShiftedInverseGauge
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SelfAdjointResolvent
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.RealLowerBound
+module
+
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Closed
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Constructions
+public import LeanPool.DavisKahan.DavisKahan.BoundedOperator.Problem
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.ShiftedInverseGauge
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SelfAdjointResolvent
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.RealLowerBound
 
 /-! # Gap Resolvent -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 

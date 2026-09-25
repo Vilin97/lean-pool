@@ -45,7 +45,7 @@ lives in `ForTauCeti.Analysis.Convex.Majorization`.
   `ForTauCeti` staging modules.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 
@@ -56,7 +56,6 @@ namespace FiniteVector
 variable {n m : ℕ}
 
 /-- The finite real `ℓᵖ` gauge. -/
-@[expose]
 noncomputable def lpGauge (p : ℝ) (x : Fin n → ℝ) : ℝ :=
   (∑ i, |x i| ^ p) ^ (1 / p)
 

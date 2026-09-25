@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.TwoProjections
-import Mathlib.Analysis.InnerProductSpace.ProdL2
+
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.TwoProjections
+public import Mathlib.Analysis.InnerProductSpace.ProdL2
 
 /-!
 # Orthogonal-summand coordinates
@@ -16,6 +18,8 @@ the assembly layer on top of it that the nonacute two-projection classification
 needs: once isometries have been constructed on mutually orthogonal summands,
 they can be joined into one ambient unitary without repeating projection algebra.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace
 

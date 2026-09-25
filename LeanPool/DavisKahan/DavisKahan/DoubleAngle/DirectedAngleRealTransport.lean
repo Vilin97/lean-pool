@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.AngleTransport
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.RealAngleIdentification
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.ComplexificationGauge
+module
+
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.AngleTransport
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.RealAngleIdentification
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.ComplexificationGauge
 
 /-!
 # The real directed `sin 2Θ` and the ideal block
@@ -20,6 +22,8 @@ about them is a tangent fact, and leaving them there made the scalar-generic dir
 layer (`DoubleAngle/DirectedAngleGeneric.lean`) import the whole source-facing `tan 2Θ` stack
 to reach one lemma about `sin 2Θ`.  `TangentTransport.lean` imports this module instead.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

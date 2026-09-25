@@ -3,11 +3,15 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Fable 5
 -/
-import LeanPool.DavisKahan.DavisKahan.TanTheta.Vector
-import LeanPool.DavisKahan.DavisKahan.Sylvester.Spectrum
-import LeanPool.DavisKahan.ForTauCeti.Analysis.CStarAlgebra.SelfAdjointGapInverse
+module
+
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.Vector
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.Spectrum
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.CStarAlgebra.SelfAdjointGapInverse
 
 /-! # Spectrum -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 

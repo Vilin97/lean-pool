@@ -3,18 +3,22 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Proposition61
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoTheta
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.AmbientReal
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.ReflectionRestriction
-import LeanPool.DavisKahan.DavisKahan.TanTheta.RitzPair
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.DoubleAngleFunctionalCalculus
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.OperatorAngleGeneric
-import LeanPool.DavisKahan.DavisKahan.Sylvester.ScalarTransport
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SymmetricNormingFanDominance
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.ScalarTransport
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Proposition61
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoTheta
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.AmbientReal
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.ReflectionRestriction
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.RitzPair
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.DoubleAngleFunctionalCalculus
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.OperatorAngleGeneric
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.ScalarTransport
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SymmetricNormingFanDominance
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.ScalarTransport
 
 /-! # Sin Two Theta Ambient Unbounded -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

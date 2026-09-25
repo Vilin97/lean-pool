@@ -54,7 +54,7 @@ the form `g ∘ Prod.fst`; combined with the Radon--Nikodym unitary this gives t
 * Spectra influence: **none** -- this module imports only Mathlib and `ForTauCeti`.
 -/
 
-public section
+@[expose] public section
 
 open MeasureTheory
 

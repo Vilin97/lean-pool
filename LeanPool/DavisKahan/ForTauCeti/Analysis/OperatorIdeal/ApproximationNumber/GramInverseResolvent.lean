@@ -76,7 +76,7 @@ The band is entered through `Q` itself: `E((r'²,∞)) w = 0` is *derived* from
   angles.
 -/
 
-public section
+@[expose] public section
 
 open scoped InnerProductSpace
 

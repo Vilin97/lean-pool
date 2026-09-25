@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamDoubleTangent
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedGramMiddle
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamDoubleTangent
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedGramMiddle
 
 /-!
 # Section 9, the 2-norm sentence of equation (9.7)
@@ -50,6 +52,8 @@ do.
   SIAM J. Numer. Anal. 7 (1970), 1--46, Section 9, the sentence after equation
   (9.7).
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace
 

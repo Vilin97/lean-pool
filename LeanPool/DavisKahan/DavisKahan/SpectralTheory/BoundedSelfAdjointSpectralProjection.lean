@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.PVM
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Real.SpectralRestriction
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
+module
+
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.PVM
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Real.SpectralRestriction
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
 
 /-!
 # Canonical spectral projections
@@ -23,6 +25,8 @@ uniform `RCLike` PVM would require mathematical structure not present in the
 pinned dependencies.  Downstream contour theory should identify its Riesz
 operator with `boundedSelfAdjointSpectralProjection` instead.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahanExt

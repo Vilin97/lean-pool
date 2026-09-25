@@ -3,15 +3,17 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CoerciveUnit
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.PVM
-import Mathlib.Analysis.InnerProductSpace.Positive
-import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.Rpow.Basic
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Order
-import Mathlib.Analysis.Normed.Operator.ContinuousAlgEquiv
-import Mathlib.Analysis.CStarAlgebra.ContinuousLinearMap
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Instances
-import Mathlib.Analysis.InnerProductSpace.StarOrder
+module
+
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CoerciveUnit
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.PVM
+public import Mathlib.Analysis.InnerProductSpace.Positive
+public import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.Rpow.Basic
+public import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Order
+public import Mathlib.Analysis.Normed.Operator.ContinuousAlgEquiv
+public import Mathlib.Analysis.CStarAlgebra.ContinuousLinearMap
+public import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Instances
+public import Mathlib.Analysis.InnerProductSpace.StarOrder
 
 /-!
 # A Lyapunov positivity criterion
@@ -30,6 +32,8 @@ operator `-X` is bounded below by `β`, and running the classical argument there
 forces the compression of `G` to have spectrum `{0}`, hence to vanish -- which
 injectivity forbids.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace ContinuousLinearMap

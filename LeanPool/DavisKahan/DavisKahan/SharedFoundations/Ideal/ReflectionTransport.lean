@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.SharedFoundations.Ideal.TwoWayFactorization
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.CanonicalRealView
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.DoubleAngle
+module
+
+public import LeanPool.DavisKahan.DavisKahan.SharedFoundations.Ideal.TwoWayFactorization
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.CanonicalRealView
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.DoubleAngle
 
 /-!
 # Ideal transport through subspace reflections
@@ -21,6 +23,8 @@ The companion file `TwoWayFactorization` proves the general two-way contraction
 principle these use; this one supplies the reflection instance of it and the
 double-angle consequence.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

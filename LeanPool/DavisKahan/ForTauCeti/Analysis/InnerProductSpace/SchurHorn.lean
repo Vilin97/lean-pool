@@ -88,7 +88,7 @@ forward direction in the self-contained convex-function form.
   `ForTauCeti` staging modules.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

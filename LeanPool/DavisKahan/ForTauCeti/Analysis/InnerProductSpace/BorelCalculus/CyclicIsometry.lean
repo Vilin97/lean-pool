@@ -49,7 +49,7 @@ norm bound.  It is stated here in its own right, in the `‖f x‖²` form rathe
 * Spectra influence: **none** — this module imports only Mathlib and `ForTauCeti`.
 -/
 
-public section
+@[expose] public section
 
 open scoped InnerProductSpace
 open MeasureTheory

@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Ideals.Symmetric
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.CanonicalRealView
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.OperatorNorm
+module
+
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Ideals.Symmetric
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.CanonicalRealView
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.OperatorNorm
 
 /-!
 # Gauge transport through two-way contraction factorizations
@@ -15,6 +17,8 @@ It is enough to factor each operator through the other using contractions.
 This applies to polar partial isometries, reflections, inclusions, projections,
 and zero-extended rectangular blocks.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

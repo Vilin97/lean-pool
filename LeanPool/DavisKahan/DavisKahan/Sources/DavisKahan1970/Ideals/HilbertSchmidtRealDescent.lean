@@ -3,12 +3,16 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.HilbertSchmidtComplexFamily
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.HilbertSchmidtFiniteRank
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.PartialMap.Complexification
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.HilbertSchmidtComplexFamily
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.HilbertSchmidtFiniteRank
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.PartialMap.Complexification
 
 /-! # Hilbert Schmidt Real Descent -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 

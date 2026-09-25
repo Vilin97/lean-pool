@@ -3,12 +3,16 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.SpectralRestrictionLocalization
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Unbounded.SpectrumGap
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Resolvent
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Constructions
+module
+
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.SpectralRestrictionLocalization
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Unbounded.SpectrumGap
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Resolvent
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Constructions
 
 /-! # Bounded Perturbation -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 

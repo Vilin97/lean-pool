@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedResidual
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.KyFanOrthonormal
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.ScalarGeneric
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedResidual
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.KyFanOrthonormal
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.ScalarGeneric
 
 /-!
 # The unbounded, residual-form `tan 2Θ` theorem at every Ky Fan prefix
@@ -70,6 +72,8 @@ a consequence of the eigenvector relation together with `C² + S² = 1`.
   theorem and the reflection `Z = 2Q - 1`, equation (7.6) for the block system,
   and the Appendix to Section 6 for the unbounded passage.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan1970

@@ -3,7 +3,9 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.Riccati.UnboundedBasic
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Riccati.UnboundedBasic
 
 /-!
 # Product-domain core for unbounded block operators
@@ -16,6 +18,8 @@ Riccati reduction.
 The direct sum itself, together with its density and closed-graph facts, is
 the canonical `TauCeti.LinearPMap.directSum`; nothing is re-derived here.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahanExt

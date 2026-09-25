@@ -52,7 +52,7 @@ Y3(b2) and Y3(b3) are what made that possible, since before them this import
 closure crossed `ForMathlib`, which the `ForTauCeti` layer rule forbids.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

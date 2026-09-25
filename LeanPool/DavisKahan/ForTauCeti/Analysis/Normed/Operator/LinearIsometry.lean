@@ -41,7 +41,7 @@ ambient coercion is available for `coe_ofEq_apply` to rewrite under.
   `ForTauCeti` staging modules.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

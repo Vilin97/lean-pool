@@ -3,88 +3,92 @@ Copyright (c) 2026 Jon Crall, Edward Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Edward Wang
 -/
+module
 
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.AlignedBasis
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.AngleGeometry
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.AngleGeometryBlockSum
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Basic
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BasisDiagonal
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BasisSpan
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BlockLowerBound
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BoundedOperator
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CoerciveUnit
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CompactApproximationEigenvalues
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CompactSelfAdjointClassification
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CompactSingularSubspaces
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CompactSpectralDecomposition
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Complexification
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CourantFischer
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.DiagonalOperator
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.DoubleAngle
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.EigenblockSpan
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.EigenvalueChange
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.FiniteFrame
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.FrameFactorization
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Gram
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.HilbertSchmidt
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.HilbertSumIntertwine
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.HoffmanWielandt
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.IntertwiningUnitary
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.KyFan
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LpIndexCongr
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LyapunovPositivity
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.ModulusConjugation
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.ModulusTransport
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.MoorePenroseInverse
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.NearIsometry
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.OneParameterUnitaryGroup
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.OperatorModulus
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.OperatorRealAlgebra
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.OperatorUnitaryEquiv
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.OrthogonalGluing
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.OrthogonalSeries
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.PartialIsometry
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Polar
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.PositiveSqrt
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.PrincipalAngleSequence
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.PrincipalAngles
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.PrincipalSineSequence
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.ProjValMeasure
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Projection
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.QuadraticFormBounds
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RankOneSinTheta
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RealContinuousFunctionalCalculus
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RealSpectrumBorelSymbols
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RealSpectrumCyclicDecomposition
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RealSpectrumCyclicModel
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RealSpectrumDiagonalMeasure
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RealSpectrumIntertwining
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RectangularPartialIsometry
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RectangularSingularValues
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.ReducedExtension
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.ReducingSubspace
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Residual
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Rosenblum
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SandwichMajorization
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SchattenNorm
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SchurHorn
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SelfAdjointFunctionalCalculus
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SeparableOrthonormal
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SeparatedIntertwiner
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SinTheta
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Singular
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SkewAdjointExponential
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Spectral
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SpectralOrder
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Spectrum
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SphericalPythagoras
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.TwoDimensionalSingularValues
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.TwoLevelOperator
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.UnitarilyInvariantSeminorm
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.VectorAngle
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.ZeroExtension
+
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.AlignedBasis
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.AngleGeometry
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.AngleGeometryBlockSum
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Basic
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BasisDiagonal
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BasisSpan
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BlockLowerBound
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BoundedOperator
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CoerciveUnit
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CompactApproximationEigenvalues
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CompactSelfAdjointClassification
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CompactSingularSubspaces
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CompactSpectralDecomposition
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Complexification
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CourantFischer
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.DiagonalOperator
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.DoubleAngle
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.EigenblockSpan
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.EigenvalueChange
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.FiniteFrame
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.FrameFactorization
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Gram
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.HilbertSchmidt
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.HilbertSumIntertwine
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.HoffmanWielandt
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.IntertwiningUnitary
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.KyFan
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LpIndexCongr
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LyapunovPositivity
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.ModulusConjugation
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.ModulusTransport
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.MoorePenroseInverse
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.NearIsometry
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.OneParameterUnitaryGroup
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.OperatorModulus
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.OperatorRealAlgebra
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.OperatorUnitaryEquiv
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.OrthogonalGluing
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.OrthogonalSeries
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.PartialIsometry
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Polar
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.PositiveSqrt
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.PrincipalAngleSequence
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.PrincipalAngles
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.PrincipalSineSequence
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.ProjValMeasure
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Projection
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.QuadraticFormBounds
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RankOneSinTheta
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RealContinuousFunctionalCalculus
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RealSpectrumBorelSymbols
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RealSpectrumCyclicDecomposition
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RealSpectrumCyclicModel
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RealSpectrumDiagonalMeasure
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RealSpectrumIntertwining
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RectangularPartialIsometry
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RectangularSingularValues
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.ReducedExtension
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.ReducingSubspace
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Residual
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Rosenblum
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SandwichMajorization
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SchattenNorm
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SchurHorn
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SelfAdjointFunctionalCalculus
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SeparableOrthonormal
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SeparatedIntertwiner
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SinTheta
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Singular
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SkewAdjointExponential
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Spectral
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SpectralOrder
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Spectrum
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SphericalPythagoras
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.TwoDimensionalSingularValues
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.TwoLevelOperator
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.UnitarilyInvariantSeminorm
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.VectorAngle
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.ZeroExtension
 
 /-! Supporting modules for Davis–Kahan rotation of eigenvectors. -/
+
+@[expose] public section

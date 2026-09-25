@@ -17,7 +17,7 @@ public import Mathlib.Analysis.CStarAlgebra.ContinuousLinearMap
 
 /-! # CFCBridge -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

@@ -58,7 +58,7 @@ the provenance of the route itself.
 for the provenance of the route as a whole.
 -/
 
-public section
+@[expose] public section
 
 open scoped InnerProductSpace ENNReal CompactlySupported
 open MeasureTheory

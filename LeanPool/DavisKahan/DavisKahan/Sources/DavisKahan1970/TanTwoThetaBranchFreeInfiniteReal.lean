@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaBranchFree
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.FormTransport
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.ComplexificationGauge
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaBranchFree
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.FormTransport
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.ComplexificationGauge
 
 /-!
 # The branch-free `tan 2Θ` theorem over a real Hilbert space, arbitrary dimension
@@ -35,6 +37,8 @@ that the *graph-invariance* relation `hinv` transports.  Both are coordinatewise
 because a complexified operator acts coordinatewise and a complexified subspace
 is characterised by its two real coordinates.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan1970

@@ -3,13 +3,17 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Sol
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanThetaAmbient
-import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63UnboundedInfiniteTrial
-import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63UnboundedCompression
-import LeanPool.DavisKahan.DavisKahan.TanTheta.RitzPair
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SymmetricNormingFanDominance
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanThetaAmbient
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63UnboundedInfiniteTrial
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63UnboundedCompression
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.RitzPair
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SymmetricNormingFanDominance
 
 /-! # Tan Theta Unbounded Ambient -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

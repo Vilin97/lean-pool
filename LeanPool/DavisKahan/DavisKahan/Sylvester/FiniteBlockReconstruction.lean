@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.Sylvester.OrthogonalIdempotentExp
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.OrthogonalIdempotentExp
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 
 /-!
@@ -18,6 +20,8 @@ identity, so it is independent of the particular Haagerup--Zsido construction.
 promotable only after the modules it imported were promoted earlier in this lane.  Nothing is
 restated; names and namespace are unchanged.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan.Sylvester

@@ -63,7 +63,7 @@ unproved.
 * Spectra influence: **none** -- this module imports only Mathlib and `ForTauCeti`.
 -/
 
-public section
+@[expose] public section
 
 open MeasureTheory
 

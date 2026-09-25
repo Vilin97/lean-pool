@@ -42,7 +42,7 @@ correspondence between lower frame bounds and spectral floors of the Gram operat
   `ForTauCeti` staging modules.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

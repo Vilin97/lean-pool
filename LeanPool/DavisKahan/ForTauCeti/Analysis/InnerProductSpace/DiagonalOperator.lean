@@ -14,7 +14,7 @@ This module contains no norm structure. It supplies the diagonal operators used 
 both rectangular orbit majorization and square symmetric-gauge representation.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

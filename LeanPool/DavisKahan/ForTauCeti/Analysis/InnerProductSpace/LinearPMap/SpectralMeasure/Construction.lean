@@ -72,7 +72,7 @@ comparison against Spectra's Herglotz/Poisson route that chose it.  The target i
 the Spectra endpoint `Spectra.QuantumMechanics.SpectralTheory.spectralPVM`.
 -/
 
-public section
+@[expose] public section
 
 open scoped InnerProductSpace
 open MeasureTheory

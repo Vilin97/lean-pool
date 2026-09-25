@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.SpectralRestriction
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.YosidaApproximation
+module
+
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.SpectralRestriction
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.YosidaApproximation
 
 /-!
 # Self-adjoint operators on spectral ranges
@@ -36,6 +38,8 @@ calculus of the Cayley transform).  See
 exports downstream are unchanged; the group-theoretic scaffolding that
 supported them is gone.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace
 open Filter Topology

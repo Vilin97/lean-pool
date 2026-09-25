@@ -3,7 +3,9 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, GPT 5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.Riccati.BoundedBasic
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Riccati.BoundedBasic
 
 /-!
 # Bounded graph invariance and the operator Riccati equation
@@ -14,6 +16,8 @@ the graph of an angular operator is equivalent to vanishing of its Riccati
 defect.  The later reduction, existence, uniqueness, and block-diagonalization
 steps can build on this result without repeating direct-sum coordinate algebra.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahanExt

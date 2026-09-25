@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.Riccati.UnboundedExistence
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.BoundedGraphAcute
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Riccati.UnboundedExistence
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.BoundedGraphAcute
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
 
 /-!
 # Canonical graph-rotation transport for unbounded block operators
@@ -16,6 +18,8 @@ It keeps the transported operator domain explicit and records the projection
 intertwining needed before the transformed operator can be identified with a
 block-diagonal direct sum.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahanExt

@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.SameSequence
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.ScalarGeneric
+module
+
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.SameSequence
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.ScalarGeneric
 
 /-!
 # Complete singular-value transport for the paper-facing sine operators
@@ -16,6 +18,8 @@ replacement for the finite singular-value list. This module proves that equal
 approximation-number sequences give exactly the same membership and gauge in
 every Ky-Fan-dominant unitarily invariant ideal family.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

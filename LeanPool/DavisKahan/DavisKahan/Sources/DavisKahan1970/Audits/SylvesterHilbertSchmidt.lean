@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.UnitaryInvariantNormInstances
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Sylvester.HilbertSchmidtPairwise
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.UnitaryInvariantNormInstances
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Sylvester.HilbertSchmidtPairwise
 
 /-!
 # Audit surface for the literal square-norm Sylvester theorem
@@ -30,6 +32,8 @@ Born-rule module was reached anyway, transitively, through
 `Sylvester.HilbertSchmidtPairwise`, so the explicit import bought nothing and
 made this file look like an independent Spectra consumer when it is not.
 -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 

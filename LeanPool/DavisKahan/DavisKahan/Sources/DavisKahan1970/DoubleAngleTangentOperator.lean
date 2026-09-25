@@ -3,13 +3,17 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.AlignedBasis
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.SpectralSelection
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.TanTwoThetaKyFan
-import LeanPool.DavisKahan.ForTauCeti.Analysis.CStarAlgebra.SelfAdjointGapInverse
-import LeanPool.DavisKahan.ForTauCeti.Analysis.Matrix.EntrywiseOpNorm
+module
+
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.AlignedBasis
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.SpectralSelection
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.TanTwoThetaKyFan
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.CStarAlgebra.SelfAdjointGapInverse
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.Matrix.EntrywiseOpNorm
 
 /-! # Double Angle Tangent Operator -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 

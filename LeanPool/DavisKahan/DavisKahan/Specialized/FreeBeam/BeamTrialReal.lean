@@ -3,15 +3,19 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Sol
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamSpectrumReal
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.ExactData
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.TrialSubspace
-import LeanPool.DavisKahan.DavisKahan.SinTheta.BoundedPerturbation
-import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.RadonNikodymL2
-import Mathlib.Tactic
+
+public import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamSpectrumReal
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.ExactData
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.TrialSubspace
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.BoundedPerturbation
+public import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.RadonNikodymL2
+public import Mathlib.Tactic
 
 /-! # Beam Trial Real -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 

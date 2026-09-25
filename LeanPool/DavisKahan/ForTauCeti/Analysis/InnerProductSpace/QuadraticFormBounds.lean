@@ -29,7 +29,7 @@ well beyond Davis--Kahan perturbation theory.
   Mathlib, `TauCeti` and `ForTauCeti` (enforced by `scripts/check_dependency_layers.py`).
 -/
 
-public section
+@[expose] public section
 
 
 open scoped InnerProductSpace
@@ -51,12 +51,10 @@ namespace ContinuousLinearMap
 open TauCeti
 
 /-- Lower quadratic-form bound on a subspace. -/
-@[expose]
 def LowerFormBoundOn (A : E →L[𝕜] E) (U : Submodule 𝕜 E) (c : ℝ) : Prop :=
   ∀ x ∈ U, c * ‖x‖ ^ 2 ≤ RCLike.re ⟪A x, x⟫_𝕜
 
 /-- Upper quadratic-form bound on a subspace. -/
-@[expose]
 def UpperFormBoundOn (A : E →L[𝕜] E) (U : Submodule 𝕜 E) (c : ℝ) : Prop :=
   ∀ x ∈ U, RCLike.re ⟪A x, x⟫_𝕜 ≤ c * ‖x‖ ^ 2
 

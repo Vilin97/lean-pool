@@ -3,17 +3,21 @@ Copyright (c) 2026 Jon Crall, Edward Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Edward Wang
 -/
+module
+
 
 /-
 Copyright (c) 2026 Kitware, Inc. All rights reserved.Released under Apache 2.0 license as described in the file LICENSE.Authors: Jon Crall, OpenAI GPT-5.6 Thinking, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.HilbertSchmidtTensor
-import LeanPool.DavisKahan.DavisKahan.Sylvester.HomogeneousUniqueness
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.Generator
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.StoneUniqueness
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SpectralGapInverse
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.HilbertSchmidtTensor
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.HomogeneousUniqueness
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.Generator
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.StoneUniqueness
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SpectralGapInverse
 
 /-! # Hilbert Schmidt Defect First -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 

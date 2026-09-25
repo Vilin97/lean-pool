@@ -10,7 +10,7 @@ public import Mathlib.Analysis.Normed.Operator.LinearIsometry
 
 /-! # Approximation numbers under isometric changes of coordinates -/
 
-public section
+@[expose] public section
 
 namespace ContinuousLinearMap
 

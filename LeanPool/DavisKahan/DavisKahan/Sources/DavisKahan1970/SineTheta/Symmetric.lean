@@ -3,14 +3,18 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Lemma61
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.OperatorAngleBridge
-import
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Lemma61
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.OperatorAngleBridge
+public import
   LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.SubspaceSingularTransport
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.ReducingSubspace.RestrictionExtras
-import LeanPool.DavisKahan.DavisKahan.Sylvester.Unbounded.FormBoundedGap
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.ReducingSubspace.RestrictionExtras
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.Unbounded.FormBoundedGap
 
 /-! # Symmetric -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 

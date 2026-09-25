@@ -49,7 +49,7 @@ existed.  Retargeting it is a follow-up: that proof is delicate and the
 duplication is inert, not load-bearing.
 -/
 
-public section
+@[expose] public section
 
 open Module (finrank)
 open Module.End (eigenspace)

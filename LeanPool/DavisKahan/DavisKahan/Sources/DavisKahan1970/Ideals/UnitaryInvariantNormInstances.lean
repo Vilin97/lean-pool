@@ -3,7 +3,9 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.NormCorrespondence
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.NormCorrespondence
 
 /-!
 # Concrete witnesses for the Davis--Kahan source norm class
@@ -18,6 +20,8 @@ The construction is independent of matrix coordinates.  Its finite gauge is
 majorization is the final-prefix inequality.  Consequently this is also a
 small end-to-end regression test for the source-norm correspondence.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

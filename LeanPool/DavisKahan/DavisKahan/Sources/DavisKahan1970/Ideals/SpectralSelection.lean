@@ -3,14 +3,16 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.GramSpectralRank
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.FinitePVMSelection
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.LeadingCutoff
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.FiniteValueSeparation
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.FiniteValueFibers
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.GramBandPolar
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.TanTwoThetaKyFan
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.StandardInstances
+module
+
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.GramSpectralRank
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.FinitePVMSelection
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.LeadingCutoff
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.FiniteValueSeparation
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.FiniteValueFibers
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.GramBandPolar
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.TanTwoThetaKyFan
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.StandardInstances
 
 /-!
 # Approximate leading singular families
@@ -25,6 +27,8 @@ The polar partial isometry converts the resulting Gram residuals into both
 approximate singular equations.  No compactness, singular-value attainment,
 or tactic search is used.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

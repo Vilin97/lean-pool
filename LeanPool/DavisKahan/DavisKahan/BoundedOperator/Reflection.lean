@@ -3,11 +3,15 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, GPT 5.6 High
 -/
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BoundedOperator.Projector
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Projection.Blocks
-import LeanPool.DavisKahan.DavisKahan.BoundedOperator.Problem
+module
+
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BoundedOperator.Projector
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Projection.Blocks
+public import LeanPool.DavisKahan.DavisKahan.BoundedOperator.Problem
 
 /-! # Reflection defects for bounded operators -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

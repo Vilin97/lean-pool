@@ -65,7 +65,7 @@ number is the rank.
 * Spectra influence: **none** (imports only Mathlib).
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti.Matrix
 

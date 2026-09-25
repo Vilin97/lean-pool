@@ -36,7 +36,7 @@ the spectral-projection argument consumes.
 *New.*
 -/
 
-public section
+@[expose] public section
 
 noncomputable section
 

@@ -3,12 +3,16 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.GenericReconstruction
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RealContinuousFunctionalCalculus
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Real.SpectralMultiplicityClassification
-import LeanPool.DavisKahan.ForTauCeti.Analysis.RCLike.ScalarTransportFunctionalCalculus
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.GenericReconstruction
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RealContinuousFunctionalCalculus
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Real.SpectralMultiplicityClassification
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.RCLike.ScalarTransportFunctionalCalculus
 
 /-! # Section3Classification -/
+
+@[expose] public section
 attribute [local instance 100] ContinuousLinearMap.realAlgebra
   ContinuousLinearMap.realIsScalarTower ContinuousLinearMap.continuousFunctionalCalculusReal
   ContinuousLinearMap.instStarOrderedRingRCLike

@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.BoundedTruncation
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.ScalarGeneric
+module
+
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.BoundedTruncation
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.ScalarGeneric
 
 /-!
 # Interface-level cutoff mechanics for the ordered unbounded Sylvester proof
@@ -15,6 +17,8 @@ before the finite bounded Sylvester estimate.  That remaining estimate is a
 separate dependency seam and can be completed without reopening the Spectra
 cutoff proofs.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace Topology
 open TauCeti.DavisKahan.ExactSinTheta

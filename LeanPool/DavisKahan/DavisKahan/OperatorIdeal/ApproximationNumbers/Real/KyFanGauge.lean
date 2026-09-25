@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, GPT-5.6 Thinking, Claude Opus 5
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.Core
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.MinMaxReal
+
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.Core
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.MinMaxReal
 
 /-!
 # Strong cutoffs and finite Ky Fan gauges over real Hilbert spaces
@@ -31,6 +33,8 @@ different proof and stays.  It is now isolated as
 predicate, and this module is what remains: three instantiations at
 `TauCeti.ApproximationNumber.hasMinMaxLowerBound_real`.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace Topology
 

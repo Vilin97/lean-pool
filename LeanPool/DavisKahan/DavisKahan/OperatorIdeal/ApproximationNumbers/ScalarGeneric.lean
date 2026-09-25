@@ -3,10 +3,12 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.Core
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.Real
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.CanonicalRealView
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.KyFan
+module
+
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.Core
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.Real
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.CanonicalRealView
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.KyFan
 
 /-!
 # Scalar-generic approximation-number endpoints and ideal families
@@ -36,6 +38,8 @@ because the Davis--Kahan estimates subtract gauges and finish with `linarith`.
 The bridge is `TauCeti.SymmetricOperatorIdealFamily.gaugeReal`; see the
 "ideal interface" section below.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

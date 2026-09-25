@@ -3,7 +3,9 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.Riccati.UnboundedCore
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Riccati.UnboundedCore
 
 /-!
 # Strong unbounded Riccati graph reduction
@@ -14,6 +16,8 @@ equation.  Operator-domain membership, graph membership, and coordinate action
 are kept as separate lemmas so later existence and diagonalization arguments
 can reuse the same core calculation.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahanExt

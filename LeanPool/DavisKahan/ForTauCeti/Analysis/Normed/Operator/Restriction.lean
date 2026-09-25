@@ -11,7 +11,7 @@ public import Mathlib.Analysis.Normed.Operator.ContinuousAlgEquiv
 
 /-! # Norm and spectrum of restricted operators -/
 
-public section
+@[expose] public section
 
 namespace ContinuousLinearMap
 

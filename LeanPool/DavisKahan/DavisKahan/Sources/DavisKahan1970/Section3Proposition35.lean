@@ -3,10 +3,14 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Sol
 -/
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.Proposition35Exponential
-import LeanPool.DavisKahan.ForTauCeti.Analysis.RCLike.ScalarTransportFunctionalCalculus
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.Proposition35Exponential
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.RCLike.ScalarTransportFunctionalCalculus
 
 /-! # Section3Proposition35 -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 

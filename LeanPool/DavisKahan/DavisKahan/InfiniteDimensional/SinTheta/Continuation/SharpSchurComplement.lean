@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.SharpDiagonalResolvents
-import Mathlib.Analysis.Normed.Ring.Units
+module
+
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.SharpDiagonalResolvents
+public import Mathlib.Analysis.Normed.Ring.Units
 
 /-!
 # Schur-complement inversion for the sharp continuation argument
@@ -19,6 +21,8 @@ Multiplication notation is reserved for endomorphisms. This distinction keeps
 all intermediate expressions well typed when the two coordinate Hilbert spaces
 are different.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahanExt

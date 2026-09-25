@@ -22,7 +22,7 @@ The second hypothesis is deliberately weaker than `J * J = -1`: it allows `J` to
 the kernel of `T`, as happens for polar quarter turns.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

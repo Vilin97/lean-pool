@@ -79,7 +79,7 @@ resolvent estimate consumes.
   theorems.
 -/
 
-public section
+@[expose] public section
 
 open scoped InnerProductSpace
 

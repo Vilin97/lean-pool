@@ -3,12 +3,16 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, GPT 5.6 High
 -/
-import LeanPool.DavisKahan.DavisKahan.BoundedOperator.Reflection
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.CompatibilitySinTwoTheta
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.General
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
+module
+
+public import LeanPool.DavisKahan.DavisKahan.BoundedOperator.Reflection
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.CompatibilitySinTwoTheta
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.General
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
 
 /-! # Double Angle -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

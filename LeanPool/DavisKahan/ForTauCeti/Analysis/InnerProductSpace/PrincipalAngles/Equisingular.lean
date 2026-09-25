@@ -54,7 +54,7 @@ modulus, hence the same value under every unitarily invariant norm.
   operator `f(Θ) = f(Θ₀) ⊕ f(Θ₁)`.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

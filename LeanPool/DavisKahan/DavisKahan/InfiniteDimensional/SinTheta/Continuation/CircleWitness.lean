@@ -3,15 +3,19 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.CircleRieszIntegral
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.CircleContour
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.CentralBand
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.SharpDiagonalResolvents
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.SharpSchurComplement
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.ContinuationWitnessOrientedBlocks
+
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.CircleRieszIntegral
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.CircleContour
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.CentralBand
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.SharpDiagonalResolvents
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.SharpSchurComplement
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.ContinuationWitnessOrientedBlocks
 
 /-! # Circle Witness -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

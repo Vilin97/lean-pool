@@ -3,15 +3,19 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.SinTheta.FrameFactorizationGeneric
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Complexification.FunctionalCalculus
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CoerciveUnit
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Basic
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Instances
-import Mathlib.Analysis.InnerProductSpace.StarOrder
-import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.Rpow.Basic
+module
+
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.FrameFactorizationGeneric
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Complexification.FunctionalCalculus
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CoerciveUnit
+public import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Basic
+public import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Instances
+public import Mathlib.Analysis.InnerProductSpace.StarOrder
+public import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.Rpow.Basic
 
 /-! # Frame Factorization -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.FiniteMultiplicity
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.NormalizedUnitaryInvariantNorm
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.ArctanDeriv
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.FiniteMultiplicity
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.NormalizedUnitaryInvariantNorm
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.ArctanDeriv
 
 /-!
 # The Section 2 sharpness paragraph, proved
@@ -64,6 +66,8 @@ ratios; no linear parametrisation of the perturbation needs to be fixed, because
 whatever it is, the angle tends to zero with it and these ratios are what
 compare the four bounds.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan1970

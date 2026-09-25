@@ -57,7 +57,7 @@ independent source and target universes of a `ContinuousLinearMap`.
 * Spectra influence: **none** — this module imports only Mathlib.
 -/
 
-public section
+@[expose] public section
 
 noncomputable section
 

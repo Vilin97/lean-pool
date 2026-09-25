@@ -3,10 +3,12 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
-import Mathlib.Analysis.Real.Pi.Bounds
-import Mathlib.Analysis.Complex.ExponentialBounds
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+public import Mathlib.Analysis.Real.Pi.Bounds
+public import Mathlib.Analysis.Complex.ExponentialBounds
 
 /-!
 # The free-beam characteristic function has no root below `3π/2`
@@ -45,6 +47,8 @@ product is `≤ 0`.
 * `TauCeti.DavisKahan1970.Section9.cos_mul_cosh_lt_one_of_le_pi_div_two`
 * `TauCeti.DavisKahan1970.Section9.cos_mul_cosh_lt_one_of_le_three_pi_div_two`
 -/
+
+@[expose] public section
 
 open Real
 

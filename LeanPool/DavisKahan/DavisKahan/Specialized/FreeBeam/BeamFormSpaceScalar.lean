@@ -3,14 +3,18 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Fable 5
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.ShiftedBeamRealization
-import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.IntervalSecondPrimitiveCompact
-import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.IntervalSecondPrimitiveDeriv
-import Mathlib.Analysis.InnerProductSpace.ProdL2
-import Mathlib.Tactic
+
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.ShiftedBeamRealization
+public import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.IntervalSecondPrimitiveCompact
+public import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.IntervalSecondPrimitiveDeriv
+public import Mathlib.Analysis.InnerProductSpace.ProdL2
+public import Mathlib.Tactic
 
 /-! # Beam Form Space Scalar -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 

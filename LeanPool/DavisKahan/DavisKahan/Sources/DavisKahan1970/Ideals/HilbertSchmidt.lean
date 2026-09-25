@@ -3,11 +3,13 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.SingularValueTransport
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.OperatorModulus
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ComplexificationApproximation
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Data.ENNReal.Inv
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.SingularValueTransport
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.OperatorModulus
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ComplexificationApproximation
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.Data.ENNReal.Inv
 
 /-!
 # The source square or Hilbert--Schmidt norm
@@ -22,6 +24,8 @@ The extended energy is `sum_n a_n(A)^2`.  Membership means this extended sum is
 finite, and the norm is its square root.  This is basis free and immediately
 compatible with every singular-value transport theorem in the repository.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

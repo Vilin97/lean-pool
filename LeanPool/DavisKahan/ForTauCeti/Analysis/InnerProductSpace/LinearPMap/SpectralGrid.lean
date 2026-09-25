@@ -42,7 +42,7 @@ exactly the three facts (measurable, disjoint, covering) the decomposition uses.
 directly from `Int.floor` rather than transported.
 -/
 
-public section
+@[expose] public section
 
 open Set
 

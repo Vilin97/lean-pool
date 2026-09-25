@@ -79,7 +79,7 @@ Bessel's inequality; going through the adjoint would import an API for one inequ
 
 open scoped ENNReal NNReal InnerProductSpace
 
-public section
+@[expose] public section
 
 namespace ContinuousLinearMap
 

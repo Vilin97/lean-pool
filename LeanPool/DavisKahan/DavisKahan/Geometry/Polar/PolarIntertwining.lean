@@ -3,10 +3,12 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
+module
 
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Polar.PartialIsometry
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotation
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
+
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Polar.PartialIsometry
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotation
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
 
 /-!
 # Polar factors and reducing projections
@@ -18,6 +20,8 @@ its polar partial isometry.  The proof is carried out first on `range |T|`,
 then on its closure, and finally on the orthogonal complement, where the polar
 factor vanishes.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace InnerProduct
 

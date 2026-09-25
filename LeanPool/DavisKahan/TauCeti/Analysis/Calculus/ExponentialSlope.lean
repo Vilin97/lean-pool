@@ -18,7 +18,7 @@ small shared calculus fact used by both semigroup generator shifts and resolvent
 * `TauCeti.tendsto_exp_mul_sub_one_div`: `(exp (a * t) - 1) / t` tends to `a` as `t → 0⁺`.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

@@ -3,7 +3,9 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81UnboundedReal
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81UnboundedReal
 
 /-!
 # Theorem 8.1 on the source's own objects, at unbounded ambient scope
@@ -44,6 +46,8 @@ is unfolding, and part (i) uses only that `H` is fully off-diagonal, so its form
 vanishes on `P` and on `Pᗮ` and the ambient form of `A + H` there is the form of
 `A`.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace
 

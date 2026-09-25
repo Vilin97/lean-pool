@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.General
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.BoundedSelfAdjointSpectralProjection
+module
+
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.General
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.BoundedSelfAdjointSpectralProjection
 
 /-!
 # The complex instance of the bounded Borel projection hypothesis
@@ -46,6 +48,8 @@ outcome.  The hypothesis was chosen to demand exactly what a projection-valued
 measure already supplies, and no more: it says nothing about countable
 additivity or about multiplicativity in `s`, both of which the PVM also has.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahanExt

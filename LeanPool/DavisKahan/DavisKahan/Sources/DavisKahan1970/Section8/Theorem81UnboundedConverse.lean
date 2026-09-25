@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81UnboundedBranch
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SpectralProjectionNaturality
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81UnboundedBranch
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SpectralProjectionNaturality
 
 /-!
 # Theorem 8.1's printed characterization, both directions, at unbounded scope
@@ -40,6 +42,8 @@ Davis--Kahan 1970, Theorem 8.1, the `only if` half of the printed
 characterization, at the paper's ambient unbounded scope.  The bounded sibling is
 `theorem8_1_eq_canonicalBranch_of_maximalAngle_le`.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan1970

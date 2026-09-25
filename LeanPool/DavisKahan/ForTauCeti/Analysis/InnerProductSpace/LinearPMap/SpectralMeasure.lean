@@ -53,7 +53,7 @@ provenance of the route, and the Spectra-removal plan for the
 comparison against Spectra's Herglotz/Poisson route that chose it.
 -/
 
-public section
+@[expose] public section
 
 open scoped InnerProductSpace
 open MeasureTheory

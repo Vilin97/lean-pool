@@ -3,7 +3,9 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaDirectedRCLike
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaDirectedRCLike
 
 /-!
 # Double-angle residual bounds on a common dense domain
@@ -28,6 +30,8 @@ clause*. It does not inherit a residual hypothesis or a bounded trial block.
 The norm boundary includes the source-cited, where-defined Fan comparison law;
 this file does not claim to derive that law from bare unitary invariance.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan1970

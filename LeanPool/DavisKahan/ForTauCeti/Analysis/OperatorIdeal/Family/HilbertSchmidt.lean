@@ -52,7 +52,7 @@ literature reaches for first.
 
 open scoped ENNReal NNReal InnerProductSpace
 
-public section
+@[expose] public section
 
 namespace ENNReal
 
@@ -383,7 +383,6 @@ real statement into the extended one for a Hilbert--Schmidt operator, and
 `hilbertSchmidtNorm_eq_toReal` is the definition. -/
 
 /-- The real-valued Hilbert--Schmidt norm.  Zero off the ideal. -/
-@[expose]
 noncomputable def hilbertSchmidtNorm (T : E →L[𝕜] F) : ℝ := T.hilbertSchmidtENorm.toReal
 
 omit [CompleteSpace F] in
@@ -476,7 +475,6 @@ This is the second instance of `TauCeti.SymmetricOperatorIdealFamily`, after the
 families of `DavisKahan/OperatorIdeal/ApproximationNumbers/ScalarGeneric.lean`.  The two are
 built from unrelated mathematics — approximation numbers there, orthonormal expansions here
 — which is the evidence that the structure captures the right notion. -/
-@[expose]
 noncomputable def hilbertSchmidtIdealFamily (𝕜 : Type u) [RCLike 𝕜] :
     SymmetricOperatorIdealFamily.{u, v} 𝕜 where
   gauge A := A.hilbertSchmidtENorm

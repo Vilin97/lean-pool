@@ -34,7 +34,7 @@ norm *is* an angle, with no coordinates in sight.
   difference.
 -/
 
-public section
+@[expose] public section
 
 open Module (finrank)
 open Module.End (eigenspace)

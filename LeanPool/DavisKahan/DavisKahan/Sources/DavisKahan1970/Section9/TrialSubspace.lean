@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.ExactData
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.ExactData
 
 /-!
 # Davis--Kahan 1970, Section 9: affine trial subspace
@@ -18,6 +20,8 @@ This is a transformative finite-moment reconstruction, not a copy of the
 source prose.  A later integration lemma may identify these forms with actual
 Lebesgue integrals on the unit interval.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan1970

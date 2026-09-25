@@ -65,7 +65,7 @@ argument.
 * Spectra influence: **none** — imports only Mathlib.
 -/
 
-public section
+@[expose] public section
 
 namespace ContinuousLinearMap
 

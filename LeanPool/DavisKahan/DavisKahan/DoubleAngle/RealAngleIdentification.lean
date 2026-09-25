@@ -3,11 +3,15 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.RealUnboundedIdeal
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.AngleFunctionalCalculusReal
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotationReal
+module
+
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.RealUnboundedIdeal
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.AngleFunctionalCalculusReal
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotationReal
 
 /-! # Real Angle Identification -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

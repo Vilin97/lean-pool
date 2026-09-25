@@ -3,13 +3,17 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.SpectralGapFormBounds
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.OffDiagonalSpectralRepulsion
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotation
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.OperatorAngle
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SpectralOrder
+module
+
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.SpectralGapFormBounds
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.OffDiagonalSpectralRepulsion
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotation
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.OperatorAngle
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SpectralOrder
 
 /-! # Theorem81 -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

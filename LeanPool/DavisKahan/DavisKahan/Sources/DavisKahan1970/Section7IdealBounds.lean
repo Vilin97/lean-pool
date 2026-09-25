@@ -3,11 +3,13 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.UnboundedIdeal
-import LeanPool.DavisKahan.DavisKahan.TanTwoTheta.UnboundedIdeal
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.CanonicalRealView
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.OperatorNorm
+
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.UnboundedIdeal
+public import LeanPool.DavisKahan.DavisKahan.TanTwoTheta.UnboundedIdeal
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.CanonicalRealView
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.OperatorNorm
 
 /-!
 # Davis--Kahan 1970, Section 7, at arbitrary rectangular ideal-gauge scope
@@ -18,6 +20,8 @@ paper's norm scope -- an arbitrary rectangular ideal gauge rather than the
 operator norm -- with the residual taken against a trial subspace of the
 domain.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace
 open Set

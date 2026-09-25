@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.OrthogonalSummandCoordinates
+
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.OrthogonalSummandCoordinates
 
 /-!
 # Operator-level classification of two projections
@@ -16,6 +18,8 @@ projections on the generic part form a complete invariant.  This file proves
 that core statement by joining an equivalence on the trivial part with an
 equivalence on the generic part.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace
 

@@ -47,7 +47,7 @@ closed range, and a trivial orthogonal complement of the range.
   Mathlib, `TauCeti` and `ForTauCeti` (enforced by `scripts/check_dependency_layers.py`).
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 namespace ContinuousLinearMap

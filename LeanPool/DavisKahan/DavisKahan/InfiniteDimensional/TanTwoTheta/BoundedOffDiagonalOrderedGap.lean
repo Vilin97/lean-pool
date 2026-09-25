@@ -3,10 +3,14 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.BoundedOffDiagonalSpectrumNonempty
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
+module
+
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.BoundedOffDiagonalSpectrumNonempty
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
 
 /-! # Bounded Off Diagonal Ordered Gap -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 

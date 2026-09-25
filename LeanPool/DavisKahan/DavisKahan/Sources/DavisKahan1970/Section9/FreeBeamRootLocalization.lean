@@ -3,10 +3,12 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.FreeBeamCharacteristic
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.FreeBeamRootExclusion
-import Mathlib.Tactic
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.FreeBeamCharacteristic
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.FreeBeamRootExclusion
+public import Mathlib.Tactic
 
 /-!
 # Reduction of free-beam root localization to scalar certificates
@@ -19,6 +21,8 @@ It deliberately does not claim a numerical transcendental estimate that has
 not yet been proved.  Instead it supplies exact constructors showing which
 finite set of scalar facts is sufficient for `PositiveRootLocalization`.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

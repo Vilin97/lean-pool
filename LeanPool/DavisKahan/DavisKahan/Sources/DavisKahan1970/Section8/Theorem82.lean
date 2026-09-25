@@ -3,14 +3,18 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem82Branch
-import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.CrossedDefectGap
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaAmbient
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.AngleGeometry
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.DirectedAngleGeneric
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SymmetricNormingFanDominance
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem82Branch
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.CrossedDefectGap
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaAmbient
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.AngleGeometry
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.DirectedAngleGeneric
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SymmetricNormingFanDominance
 
 /-! # Theorem82 -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

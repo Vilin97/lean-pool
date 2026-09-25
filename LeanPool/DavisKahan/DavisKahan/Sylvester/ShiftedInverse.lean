@@ -3,7 +3,9 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Unbounded.Core
+module
+
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Unbounded.Core
 
 /-!
 # Shifted-inverse bounds for closed operators
@@ -12,6 +14,8 @@ The one- and two-sided shifted-inverse predicates, the form-bound estimate for a
 shifted closed operator, and the resulting operator-norm bounds on the solution
 of a closed Sylvester equation in both interval/exterior orientations.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

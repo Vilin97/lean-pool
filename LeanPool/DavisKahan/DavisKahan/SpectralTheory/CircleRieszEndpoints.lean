@@ -3,10 +3,12 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.CircleRieszProjection
-import Mathlib.Analysis.Complex.CauchyIntegral
-import Mathlib.Analysis.Calculus.FDeriv.Mul
-import Mathlib.Analysis.Normed.Algebra.Spectrum
+module
+
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.CircleRieszProjection
+public import Mathlib.Analysis.Complex.CauchyIntegral
+public import Mathlib.Analysis.Calculus.FDeriv.Mul
+public import Mathlib.Analysis.Normed.Algebra.Spectrum
 
 /-!
 # The two endpoints of the circle Riesz projection
@@ -42,6 +44,8 @@ Everything here is stated for a complex **Banach** space.  No proof below uses
 an inner product: they run on `Ring.inverse`, `DiffContOnCl.circleIntegral_eq_zero`,
 the annulus deformation, and `spectrum.resolvent_tendsto_cobounded`.
 -/
+
+@[expose] public section
 
 open Metric Set Filter Complex
 open scoped Topology Real

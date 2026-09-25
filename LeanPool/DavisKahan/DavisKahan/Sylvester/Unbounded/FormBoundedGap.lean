@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.Sylvester.Unbounded.AllGap
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.PartialMap.RealSpectrum
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.Unbounded.AllGap
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.PartialMap.RealSpectrum
 
 /-!
 # Form-bounded gap hypotheses discharge the spectral ones
@@ -31,6 +33,8 @@ So `FormBoundedSylvesterGap` is the **weaker** hypothesis and
 holds an unqualified name: they are the same mathematics stated two ways, and
 each name says which way.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

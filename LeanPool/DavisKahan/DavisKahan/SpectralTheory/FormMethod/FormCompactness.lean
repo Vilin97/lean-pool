@@ -3,10 +3,12 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.CoerciveFormResolvent
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.CompactGraphEmbedding
-import Mathlib.Tactic
+
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.CoerciveFormResolvent
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.CompactGraphEmbedding
+public import Mathlib.Tactic
 
 /-!
 # Compact form embeddings give compact resolvents
@@ -17,6 +19,8 @@ Cauchy subsequences, then the variational resolvent `j A⁻¹ j*` is compact in
 the same sequential sense.  Consequently the associated unbounded operator
 has compact graph embedding.
 -/
+
+@[expose] public section
 
 open Set Filter Topology
 open scoped InnerProductSpace

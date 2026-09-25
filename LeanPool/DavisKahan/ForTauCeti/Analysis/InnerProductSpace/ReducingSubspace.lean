@@ -28,7 +28,7 @@ Davis--Kahan theory.
   Mathlib, `TauCeti` and `ForTauCeti` (enforced by `scripts/check_dependency_layers.py`).
 -/
 
-public section
+@[expose] public section
 
 
 open scoped InnerProductSpace
@@ -40,7 +40,6 @@ namespace ContinuousLinearMap
 
 /-- A subspace reduces a bounded operator when it and its orthogonal complement
 are invariant. -/
-@[expose]
 def Reduces (A : E →L[𝕜] E) (U : Submodule 𝕜 E) : Prop :=
   (∀ x ∈ U, A x ∈ U) ∧ (∀ x ∈ Uᗮ, A x ∈ Uᗮ)
 

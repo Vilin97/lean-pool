@@ -20,7 +20,7 @@ The construction is standard in the Hille--Yosida theory of C₀-semigroups; see
 Engel--Nagel, *One-Parameter Semigroups for Linear Evolution Equations*, Ch. II.
 -/
 
-public section
+@[expose] public section
 
 noncomputable section
 

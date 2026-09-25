@@ -3,7 +3,9 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.Core
+module
+
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.Core
 
 /-!
 # The paper library's spelling of the approximation-number foundation
@@ -38,6 +40,8 @@ add it to the `export` list below.
 * Original module: this path held the mathematics itself until it moved to `ForTauCeti`.
 * Extraction class: **not for extraction** — this is paper-library vocabulary.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

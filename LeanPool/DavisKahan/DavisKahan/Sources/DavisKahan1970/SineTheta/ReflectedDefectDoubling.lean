@@ -3,15 +3,19 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.BoundedOperator.Reflection
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.DoubleAngle
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.ReflectionRestriction
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Lemma61
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.ProjectionBlocks
-import LeanPool.DavisKahan.DavisKahan.Sylvester.ScalarTransport
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.ScalarTransport
+module
+
+public import LeanPool.DavisKahan.DavisKahan.BoundedOperator.Reflection
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.DoubleAngle
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.ReflectionRestriction
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Lemma61
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.ProjectionBlocks
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.ScalarTransport
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.ScalarTransport
 
 /-! # Reflected Defect Doubling -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 

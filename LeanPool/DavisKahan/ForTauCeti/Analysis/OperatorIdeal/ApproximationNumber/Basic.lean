@@ -108,7 +108,7 @@ choice, flagged for Tau Ceti maintainer review.
   did; it imports only Mathlib.
 -/
 
-public section
+@[expose] public section
 
 noncomputable section
 

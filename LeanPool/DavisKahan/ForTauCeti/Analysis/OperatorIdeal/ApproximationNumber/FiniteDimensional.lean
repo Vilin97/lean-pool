@@ -71,7 +71,7 @@ maintainer review.
   sibling `Basic` and `CourantFischer` staging modules.
 -/
 
-public section
+@[expose] public section
 
 namespace ContinuousLinearMap
 

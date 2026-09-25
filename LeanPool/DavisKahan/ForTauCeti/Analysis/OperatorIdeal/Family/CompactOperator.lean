@@ -53,7 +53,7 @@ operator-norm family does not:
   `ForTauCeti` staging modules.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 
@@ -74,7 +74,6 @@ open scoped Classical in
 /-- **The compact operators, gauged by the operator norm**, as an operator ideal
 family.  The gauge is `∞` off the compact operators, which is how
 `OperatorIdealFamily` records the carrier. -/
-@[expose]
 noncomputable def compactOperatorIdealFamily (𝕜 : Type u) [RCLike 𝕜] :
     OperatorIdealFamily.{u, v, w} 𝕜 where
   gauge A := if IsCompactOperator A then ‖A‖ₑ else ⊤
@@ -236,7 +235,6 @@ Adjoint-invariance of the carrier is Schauder's theorem
 (`ContinuousLinearMap.isCompactOperator_adjoint_iff`); adjoint-invariance of the
 gauge is then the isometry of the adjoint, exactly as for the operator-norm
 family. -/
-@[expose]
 noncomputable def compactOperatorFamily (𝕜 : Type u) [RCLike 𝕜] :
     SymmetricOperatorIdealFamily.{u, v} 𝕜 where
   toOperatorIdealFamily := compactOperatorIdealFamily 𝕜

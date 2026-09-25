@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.BoundedOperator.TrialResidual
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.CanonicalRealView
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.DoubleAngleSpectrum
+module
+
+public import LeanPool.DavisKahan.DavisKahan.BoundedOperator.TrialResidual
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.CanonicalRealView
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.DoubleAngleSpectrum
 
 /-!
 # Ideal-gauge residual control for reflection defects
@@ -15,6 +17,8 @@ Obtaining the sharp factor two for arbitrary symmetric gauges requires an
 additional off-diagonal block theorem and should not be hidden in the basic
 ideal interface.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

@@ -3,13 +3,17 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.PartialMap.Complexification
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Complexification.FunctionalCalculus
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.Subspace
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.ReducingSubspace.Restriction
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.SpectralRestrictionOperator
+module
+
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.PartialMap.Complexification
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Complexification.FunctionalCalculus
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.Subspace
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.ReducingSubspace.Restriction
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.SpectralRestrictionOperator
 
 /-! # Spectral Restriction -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 

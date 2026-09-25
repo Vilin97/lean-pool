@@ -3,12 +3,14 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Closed
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Constructions
-import LeanPool.DavisKahan.DavisKahan.BoundedOperator.Problem
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.ProjValMeasure.Subspace
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SpectralMeasure
+module
+
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Closed
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Constructions
+public import LeanPool.DavisKahan.DavisKahan.BoundedOperator.Problem
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.ProjValMeasure.Subspace
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SpectralMeasure
 
 /-!
 # Spectral-subspace domain and intertwining adapters
@@ -47,6 +49,8 @@ both of which fall out of one observation: the spectral projections and the
 resolvent `(A + i)⁻¹` are both images of the same (commutative) Borel calculus.
 The statements here are unchanged.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace
 

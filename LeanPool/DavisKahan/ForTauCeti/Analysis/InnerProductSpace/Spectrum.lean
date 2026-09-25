@@ -43,7 +43,7 @@ are controlled by the perturbation `S - T` divided by the eigenvalue gap.
   `ForTauCeti` staging modules.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

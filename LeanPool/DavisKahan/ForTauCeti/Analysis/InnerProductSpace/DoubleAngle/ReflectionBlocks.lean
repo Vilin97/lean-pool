@@ -61,7 +61,7 @@ the single-angle Gram operator.
   block system its commutation with the operator produces.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

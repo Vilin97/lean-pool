@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Canonical
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Real.Canonical
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.SingularValueTransport
+module
+
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Canonical
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Real.Canonical
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.SingularValueTransport
 
 /-!
 # Literal Davis--Kahan Theorem 6.1 surface
@@ -18,6 +20,8 @@ the literal paper statement by transporting membership and gauge along the
 complete singular-value sequence, without changing the spectral, domain,
 residual, or lower-frame hypotheses.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

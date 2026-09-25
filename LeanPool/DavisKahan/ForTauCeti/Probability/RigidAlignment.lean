@@ -37,7 +37,7 @@ distances to coordinates goes through a spectral embedding and an eigenvalue per
 which needs an eigengap that the statement being proved never mentions.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

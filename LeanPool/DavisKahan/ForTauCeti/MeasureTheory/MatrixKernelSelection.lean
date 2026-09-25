@@ -59,7 +59,7 @@ argument would need a partition by rank and by pivot pattern.
 * Spectra influence: **none** -- this module imports only Mathlib.
 -/
 
-public section
+@[expose] public section
 
 open MeasureTheory Matrix
 

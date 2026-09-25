@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.SequenceGauge
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.UnitaryInvariantNormLaws
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.NormCorrespondence
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.SequenceGauge
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.UnitaryInvariantNormLaws
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.NormCorrespondence
 
 /-!
 # Fan dominance for standard symmetric ideals
@@ -25,6 +27,8 @@ predicates.  Until that order-continuity/density bridge is proved, the standard
 `.minimal` completion uses the honest fully symmetric envelope rather than
 claiming an unproved property of the raw closure.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace SymmetricIdeal

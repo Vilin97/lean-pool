@@ -3,13 +3,17 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Sylvester.Basic
-import LeanPool.DavisKahan.ForTauCeti.Analysis.Normed.Operator.Restriction
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.ScalarGeneric
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
-import LeanPool.DavisKahan.DavisKahan.SinTheta.SpectralBridge
+module
+
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Sylvester.Basic
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.Normed.Operator.Restriction
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.ScalarGeneric
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.SpectralBridge
 
 /-! # Restriction -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 

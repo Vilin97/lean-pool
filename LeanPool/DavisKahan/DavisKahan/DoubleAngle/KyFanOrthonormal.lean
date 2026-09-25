@@ -3,7 +3,9 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Fable 5
 -/
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.Core
+module
+
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.Core
 
 /-!
 # The Ky Fan variational bound for approximation-number prefixes
@@ -25,6 +27,8 @@ that the orthogonal projection and the subspace inclusion are contractions.
 This closes the max–min gap in the approximation-number layer; the natural
 upstream home is `DavisKahan/OperatorIdeal/ApproximationNumbers/Core.lean`.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

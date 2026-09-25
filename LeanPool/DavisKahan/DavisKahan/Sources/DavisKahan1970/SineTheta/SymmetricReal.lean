@@ -3,14 +3,18 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Anthropic Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.FullAngleReal
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Lemma61
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.HeterogeneousRepresentative
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.SubspaceSingularTransport
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.ReducingSubspace.RestrictionExtras
-import LeanPool.DavisKahan.DavisKahan.Sylvester.RealUnbounded
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.FullAngleReal
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Lemma61
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.HeterogeneousRepresentative
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.SubspaceSingularTransport
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.ReducingSubspace.RestrictionExtras
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.RealUnbounded
 
 /-! # Symmetric Real -/
+
+@[expose] public section
 
 
 open TauCeti.DavisKahan.Sylvester

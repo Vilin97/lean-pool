@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.GenericPosition
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.ModulusConjugation
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.GenericPosition
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.ModulusConjugation
 
 /-!
 # Brick (1): the generic part is reconstructed from its cosine block
@@ -56,6 +58,8 @@ Kahan state Theorem 3.1 for, and multiplicity theory left the critical path.
   equivalence, assembled with the four elementary summand isometries through
   `Assembly.lean`.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace
 

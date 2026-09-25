@@ -19,7 +19,7 @@ decaying factor on the positive half-line.
 * `TauCeti.integral_pow_mul_exp_neg_mul_Ioi`: evaluation in terms of a factorial.
 -/
 
-public section
+@[expose] public section
 
 noncomputable section
 

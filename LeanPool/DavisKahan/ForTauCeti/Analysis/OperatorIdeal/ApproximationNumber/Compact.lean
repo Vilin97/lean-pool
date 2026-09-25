@@ -55,7 +55,7 @@ approximation-number API and Mathlib's compact-operator closure lemma.
   staging module.
 -/
 
-public section
+@[expose] public section
 
 namespace ContinuousLinearMap
 

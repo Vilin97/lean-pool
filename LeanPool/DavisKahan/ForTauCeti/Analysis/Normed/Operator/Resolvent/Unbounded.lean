@@ -112,7 +112,7 @@ Theorem II.3.5; Pazy, *Semigroups of Linear Operators and Applications to Partia
 Equations*, Chapter 1.
 -/
 
-public section
+@[expose] public section
 
 noncomputable section
 
@@ -206,7 +206,9 @@ hypothesis `lambda ∈ resolventSet A`. Uniqueness of the inverse
 resolvent set: `TauCeti.LinearPMap.resolvent_eq_of_isResolventAt` identifies it with
 any inverse one can exhibit. -/
 noncomputable def resolvent (A : E →ₗ.[𝕜] E) (lambda : 𝕜) : E →L[𝕜] E :=
-  (exists_isResolventAt_of_mem A lambda).choose
+  Classical.choose (show ∃ R : E →L[𝕜] E,
+      lambda ∈ resolventSet A → IsResolventAt A lambda R from by
+    exact exists_isResolventAt_of_mem A lambda)
 
 /-- On the resolvent set, `resolvent A lambda` really does invert `lambda • I - A`. -/
 theorem isResolventAt_resolvent (h : lambda ∈ resolventSet A) :

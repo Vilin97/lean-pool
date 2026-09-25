@@ -50,7 +50,7 @@ canonical, and without one it genuinely is not.
   intrinsic `PointInternalGap` used by the residual estimates.
 -/
 
-public section
+@[expose] public section
 
 open Module (finrank)
 open Module.End (eigenspace)

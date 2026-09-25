@@ -3,11 +3,13 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.Assembly
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.BoundedSelfAdjointSpectralProjection
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.CayleySelectorBridge
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Integral
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Isometric
+module
+
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.Assembly
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.BoundedSelfAdjointSpectralProjection
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.CayleySelectorBridge
+public import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Integral
+public import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Isometric
 
 /-!
 # Spectral-projection target for contour continuation
@@ -25,6 +27,8 @@ half transports the contour integral through Mathlib's continuous calculus and
 reads the identification straight off
 `boundedSelfAdjointSpectralProjection_eq_cfcL_of_selector`.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahanExt

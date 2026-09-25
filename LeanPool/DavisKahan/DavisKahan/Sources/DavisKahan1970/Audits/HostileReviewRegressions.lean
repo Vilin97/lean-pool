@@ -3,7 +3,9 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.All
+module
+
+public import LeanPool.DavisKahan.DavisKahan.All
 
 /-!
 # Regression invariants for the hostile-review repairs
@@ -31,6 +33,8 @@ lake build DavisKahan.Sources.DavisKahan1970.Audits.HostileReviewRegressions
 
 It is outside `DavisKahan.All` and inside `DavisKahan.Audits.All`.
 -/
+
+@[expose] public section
 
 namespace TauCeti.DavisKahan1970.Audits.HostileReviewRegressions
 

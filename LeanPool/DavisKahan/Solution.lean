@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall
 -/
-import LeanPool.DavisKahan.Palomar.DKSectionTwo.SolutionPrelude
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SectionTwo
+module
+
+public import LeanPool.DavisKahan.Palomar.DKSectionTwo.SolutionPrelude
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SectionTwo
 
 /-!
 # Davis--Kahan 1970: Palomar solution bridge
@@ -16,6 +18,8 @@ of the larger Davis--Kahan import environment makes its exported constants
 identical to the Challenge constants.  This module then adds only the bridge to
 the compiled formalization and the five proofs.
 -/
+
+@[expose] public section
 
 namespace RotationOfEigenvectors
 

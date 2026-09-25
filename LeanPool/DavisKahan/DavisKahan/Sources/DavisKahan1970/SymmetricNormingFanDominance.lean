@@ -3,15 +3,19 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.KyFanNorm
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section4Real
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section5
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.UnitaryInvariantNormLaws
-import LeanPool.DavisKahan.DavisKahan.Sylvester.ScalarTransport
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.ScalarTransport
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.NormalizedUnitaryInvariantNorm
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.KyFanNorm
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section4Real
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section5
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.UnitaryInvariantNormLaws
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.ScalarTransport
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.ScalarTransport
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.NormalizedUnitaryInvariantNorm
 
 /-! # Symmetric Norming Fan Dominance -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

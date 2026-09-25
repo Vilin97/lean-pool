@@ -110,7 +110,7 @@ whose recorded obligation names an "operator-order resolvent sandwich"; the
 generic statement is deliberately free of everything beam-specific.
 -/
 
-public section
+@[expose] public section
 
 open scoped InnerProductSpace
 

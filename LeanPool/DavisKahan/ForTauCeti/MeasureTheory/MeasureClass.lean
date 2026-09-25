@@ -51,7 +51,7 @@ multiplicity invariant needs only the conjunction, but the canonical form needs 
 * Spectra influence: **none** -- this module imports only Mathlib.
 -/
 
-public section
+@[expose] public section
 
 open MeasureTheory
 

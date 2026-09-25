@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Sol
 -/
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Complexification.SpectralDescent
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.Subspace
+module
+
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Complexification.SpectralDescent
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.Subspace
 
 /-!
 # Complexification of real `LinearPMap` spectral ranges
@@ -18,6 +20,8 @@ The main theorem says that complexifying the descended real spectral range gives
 exactly the canonical complex spectral range.  This is the representation bridge
 needed by real perturbation theorems that reuse complex subspace geometry.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

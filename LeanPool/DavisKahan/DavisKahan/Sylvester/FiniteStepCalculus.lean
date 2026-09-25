@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.SelfAdjointBorelCalculus
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
+module
+
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.SelfAdjointBorelCalculus
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
 
 
 /-!
@@ -30,6 +32,8 @@ lane row listed as promotable, this is the only one that passes: it imports
 six carry 1, 2, 3, 4, 8 and 24 Experimental modules in closure and stay where
 they are until those clear.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan.Sylvester

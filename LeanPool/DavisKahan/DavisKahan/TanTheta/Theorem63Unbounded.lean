@@ -3,13 +3,17 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Fable 5
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63TrialData
-import LeanPool.DavisKahan.DavisKahan.TanTheta.UnboundedSpectrum
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.ReflectionRestriction
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.GramSpectralRank
+
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63TrialData
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.UnboundedSpectrum
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.ReflectionRestriction
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.GramSpectralRank
 
 /-! # Theorem63Unbounded -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 

@@ -3,12 +3,14 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.Sylvester.Gap
-import LeanPool.DavisKahan.DavisKahan.Sylvester.Unbounded.IntervalExterior
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.OrderedHalfLine
-import LeanPool.DavisKahan.DavisKahan.Sylvester.CutoffInterface
-import LeanPool.DavisKahan.DavisKahan.Sylvester.Unbounded.OrderedEngineDirect
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Resolvent
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.Gap
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.Unbounded.IntervalExterior
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.OrderedHalfLine
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.CutoffInterface
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.Unbounded.OrderedEngineDirect
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Resolvent
 
 /-!
 # Spectral all-gap unbounded Sylvester theorem
@@ -24,6 +26,8 @@ cutoffs came from the vendored Spectra package until it was retired on
 The file is intentionally independent of the continuation and Section 8 graph
 selection developments.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace
 open TauCeti.DavisKahan.ExactSinTheta

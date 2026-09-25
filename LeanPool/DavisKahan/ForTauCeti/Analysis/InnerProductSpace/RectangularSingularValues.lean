@@ -58,7 +58,7 @@ spots, and that variant does not elaborate on the pinned toolchain (its `calc` f
 file rewrote that proof.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

@@ -3,17 +3,21 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BoundedOperator.Projector
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Projection.Blocks
-import LeanPool.DavisKahan.DavisKahan.BoundedOperator.Problem
-import LeanPool.DavisKahan.DavisKahan.Sylvester.Bounded
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.CanonicalRealView
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CoerciveUnit
-import Mathlib.Analysis.InnerProductSpace.StarOrder
-import Mathlib.Analysis.Normed.Group.Uniform
-import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.Rpow.Basic
+module
+
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BoundedOperator.Projector
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Projection.Blocks
+public import LeanPool.DavisKahan.DavisKahan.BoundedOperator.Problem
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.Bounded
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.CanonicalRealView
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CoerciveUnit
+public import Mathlib.Analysis.InnerProductSpace.StarOrder
+public import Mathlib.Analysis.Normed.Group.Uniform
+public import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.Rpow.Basic
 
 /-! # Frame Factorization -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 

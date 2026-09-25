@@ -46,7 +46,7 @@ Literature bridge for the group as a whole:
 `prose/distilled_literature/AlbeverioMakarovMotovilov2001_sylvester_fourier_pi_over_two.tex`.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

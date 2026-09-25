@@ -3,18 +3,22 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Sol
 -/
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Complexification.Spectrum
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedAmbientExact
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedReducing
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.RealAngleIdentification
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedGramReal
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.ComplexificationGauge
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.TangentTransport
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.AmbientReal
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SymmetricNormingFanDominance
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Real.RealCyclicDecomposition
+module
+
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Complexification.Spectrum
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedAmbientExact
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedReducing
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.RealAngleIdentification
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedGramReal
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.ComplexificationGauge
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.TangentTransport
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.AmbientReal
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SymmetricNormingFanDominance
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Real.RealCyclicDecomposition
 
 /-! # Tan Two Theta Unbounded Exact Real -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

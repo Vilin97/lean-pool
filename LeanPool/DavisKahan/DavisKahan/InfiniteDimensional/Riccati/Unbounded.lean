@@ -3,7 +3,9 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.UnboundedPublic
+module
+
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.UnboundedPublic
 
 /-!
 # Public strong unbounded Riccati API
@@ -23,6 +25,8 @@ Hilbert spaces.  Its orientation is from the coordinate-diagonal pullback to
 the original block operator, matching the forward graph rotation from the zero
 coordinate graph to the Riccati graph.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahanExt

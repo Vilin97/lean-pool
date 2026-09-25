@@ -31,7 +31,7 @@ one family now has one convention.  Path change and import repoint only — no s
 signature, proof, attribute, declaration name or namespace changed.
 -/
 
-public section
+@[expose] public section
 
 
 /-! The Sylvester operator is a statement about composition, so it is declared
@@ -47,7 +47,6 @@ variable [NormedAddCommGroup F] [NormedSpace 𝕜 F]
 namespace ContinuousLinearMap
 
 /-- The Sylvester operator `X ↦ A X - X B`. -/
-@[expose]
 def sylvesterOperator (A : F →L[𝕜] F) (B : E →L[𝕜] E)
     (X : E →L[𝕜] F) : E →L[𝕜] F :=
   A ∘L X - X ∘L B
@@ -59,7 +58,6 @@ the Sylvester operator be *called* injective, bounded below, or invertible:
 those are statements about an operator, not about a family of values.  It is a
 difference of the two one-sided composition maps, each of which is continuous
 and linear in `X`. -/
-@[expose]
 noncomputable def sylvesterOperatorL (A : F →L[𝕜] F) (B : E →L[𝕜] E) :
     (E →L[𝕜] F) →L[𝕜] (E →L[𝕜] F) :=
   compL 𝕜 E F F A - (compL 𝕜 E E F).flip B

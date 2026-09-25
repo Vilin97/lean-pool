@@ -3,10 +3,12 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
+module
 
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-import Mathlib.Analysis.Calculus.Deriv.Mul
-import Mathlib.Tactic
+
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+public import Mathlib.Analysis.Calculus.Deriv.Mul
+public import Mathlib.Tactic
 
 /-!
 # Smooth-core Green identities for the free--free beam
@@ -30,6 +32,8 @@ closed-operator symmetry and positivity proofs.  The complex version follows
 by applying the real result to real and imaginary parts, or by repeating the
 same proof with conjugation as a real-linear operation.
 -/
+
+@[expose] public section
 
 open Set
 open scoped Interval

@@ -20,7 +20,7 @@ formalization (Kitware, Inc.). The vector majorization descent remains in
 `ForTauCeti.Analysis.Convex.Majorization`.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

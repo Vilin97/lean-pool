@@ -3,13 +3,17 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.RestrictedDisplacementExtremal
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.BlockSum
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.Pinching
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.GramSquare
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotationSquare
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.RestrictedDisplacementExtremal
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.BlockSum
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.Pinching
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.GramSquare
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotationSquare
 
 /-! # Displacement Square Extremal -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 

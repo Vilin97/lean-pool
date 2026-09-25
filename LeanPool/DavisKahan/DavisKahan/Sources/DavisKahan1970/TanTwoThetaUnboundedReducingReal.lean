@@ -3,11 +3,15 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedExactReal
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TangentSingularValues
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaAmbientUnbounded
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedExactReal
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TangentSingularValues
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaAmbientUnbounded
 
 /-! # Tan Two Theta Unbounded Reducing Real -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

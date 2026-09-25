@@ -3,12 +3,14 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Fable 5
 -/
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Closed
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Constructions
-import LeanPool.DavisKahan.DavisKahan.BoundedOperator.Problem
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.PartialMap.BoundedRealization
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SpectralSupport
+module
+
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Closed
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Constructions
+public import LeanPool.DavisKahan.DavisKahan.BoundedOperator.Problem
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.PartialMap.BoundedRealization
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SpectralSupport
 
 /-!
 # Boundedness from a bounded spectrum
@@ -37,6 +39,8 @@ This is the missing seam for the fully unbounded interval/exterior orientation
 of Davis--Kahan Theorem 5.2: the interval block of the configuration is
 secretly a bounded operator.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace
 

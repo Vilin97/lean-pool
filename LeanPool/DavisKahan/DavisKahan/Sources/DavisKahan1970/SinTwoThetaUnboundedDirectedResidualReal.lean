@@ -3,17 +3,21 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.RealUnboundedIdeal
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.TrialReflection
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.ReflectedDefectDoubling
-import
+module
+
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.RealUnboundedIdeal
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.TrialReflection
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.ReflectedDefectDoubling
+public import
   LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.SubspaceSingularTransport
-import
+public import
   LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.HeterogeneousRepresentative
-import
+public import
   LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.UnitaryInvariantNormLaws
 
 /-! # Sin Two Theta Unbounded Directed Residual Real -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 

@@ -29,7 +29,7 @@ step composes with contractions on both sides, so all approximation numbers are 
 exactly.
 -/
 
-public section
+@[expose] public section
 
 open scoped InnerProductSpace
 open Submodule

@@ -3,7 +3,9 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81AngleForms
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81AngleForms
 
 /-!
 # Theorem 8.1 (ii) and (iii) on the printed eigenvalue sequences
@@ -30,6 +32,8 @@ The symmetry that names the eigenvalue sequences is *derived* here, from `A`
 Hermitian, and not asked of the caller: Davis and Kahan do not assume it, so it
 must not appear as a hypothesis.
 -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 open TauCeti.DavisKahan.Sylvester

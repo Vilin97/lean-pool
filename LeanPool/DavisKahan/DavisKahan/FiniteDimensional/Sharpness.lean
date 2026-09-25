@@ -3,15 +3,17 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, GPT 5.6 High
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.Davis1963.RotationEnergy
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.AngleGeometry
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.Core.AngleOperatorBlockSum
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Spectral.Gap
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SinTheta.UnitarilyInvariant
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DoubleAngle.SinTheta
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.TwoDimensionalSingularValues
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.UnitarilyInvariantSeminorm
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SinTheta.Perturbation
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.Davis1963.RotationEnergy
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.AngleGeometry
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.Core.AngleOperatorBlockSum
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Spectral.Gap
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SinTheta.UnitarilyInvariant
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DoubleAngle.SinTheta
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.TwoDimensionalSingularValues
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.UnitarilyInvariantSeminorm
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SinTheta.Perturbation
 
 /-!
 # Sharpness and two-dimensional extremizers
@@ -30,6 +32,8 @@ respect the multiplicity convention of each angle operator: the one-sided
 `sin (2Θ)` map has one nonzero singular value per principal plane, unlike the
 symmetric off-diagonal perturbations used by the full-space tangent models.
 -/
+
+@[expose] public section
 
 
 /-! ## Remaining construction plan

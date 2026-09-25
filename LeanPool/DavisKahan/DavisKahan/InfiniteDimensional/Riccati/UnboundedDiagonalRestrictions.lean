@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.UnboundedCoordinateRestrictions
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
+module
+
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.UnboundedCoordinateRestrictions
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
 
 /-!
 # Coordinate restrictions of a reduced unbounded direct-sum operator
@@ -19,6 +21,8 @@ rather than fields, matching the canonical `LinearPMap` representation: the
 restriction itself is defined without either hypothesis, and each property is
 inherited from the corresponding property of the ambient map.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahanExt

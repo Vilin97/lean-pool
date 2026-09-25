@@ -3,15 +3,19 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotationAcute
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotationReal
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotationSquare
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.PrincipalSquareRoot
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.AngleGeometry
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RealContinuousFunctionalCalculus
-import LeanPool.DavisKahan.ForTauCeti.Analysis.RCLike.ScalarTransportFunctionalCalculus
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotationAcute
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotationReal
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotationSquare
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.PrincipalSquareRoot
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.AngleGeometry
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RealContinuousFunctionalCalculus
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.RCLike.ScalarTransportFunctionalCalculus
 
 /-! # Section3Acute Direct Rotation -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 

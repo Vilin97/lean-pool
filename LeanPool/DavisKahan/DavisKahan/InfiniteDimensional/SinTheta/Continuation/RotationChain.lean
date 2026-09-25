@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.SpectralIdentification
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
+module
+
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.SpectralIdentification
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
 
 /-!
 # Finite composition of local direct rotations
@@ -20,6 +22,8 @@ identification.  The lower-level Riesz-path theorem accepts
 orthogonal-projectionhood explicitly, while the final specialization discharges
 that input from a common family of spectral-separation witnesses.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahanExt

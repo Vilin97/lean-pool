@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.OperatorNorm
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.CanonicalRealView
-import Mathlib.Topology.Algebra.InfiniteSum.Basic
+module
+
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.OperatorNorm
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.CanonicalRealView
+public import Mathlib.Topology.Algebra.InfiniteSum.Basic
 
 /-!
 # Bound/inverse Sylvester estimates
@@ -14,6 +16,8 @@ This module isolates the exact dimension-free form of Davis--Kahan Theorem 5.1.
 The Neumann construction and ideal-norm convergence are separated so that the
 analytic difficulty is visible in the dependency graph.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

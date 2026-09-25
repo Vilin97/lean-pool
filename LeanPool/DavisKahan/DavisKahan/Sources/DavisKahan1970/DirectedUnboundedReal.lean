@@ -3,11 +3,15 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.DirectedReal
-import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63UnboundedInfiniteTrial
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Real.SpectralRestriction
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.DirectedReal
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63UnboundedInfiniteTrial
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Real.SpectralRestriction
 
 /-! # Directed Unbounded Real -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

@@ -71,7 +71,7 @@ repointing of one import in `DkpsQuench2026/Spectral/GramSpectrum.lean` — no
 statement, signature, proof, attribute, declaration name or namespace changed.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

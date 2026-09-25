@@ -3,6 +3,8 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
+module
+
 
 /-
 The proof architecture of the self-adjointness criterion below is adapted from
@@ -13,11 +15,11 @@ modular operator to an arbitrary densely recoverable positive symmetric
 partial operator.  The original and adapted files are Apache-2.0 licensed.
 -/
 
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Closed
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Constructions
-import LeanPool.DavisKahan.DavisKahan.BoundedOperator.Problem
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
-import Mathlib.Tactic
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Closed
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Constructions
+public import LeanPool.DavisKahan.DavisKahan.BoundedOperator.Problem
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
+public import Mathlib.Tactic
 
 /-!
 # A positive-surjective self-adjointness criterion
@@ -34,6 +36,8 @@ This theorem is a central reusable target for the free-beam form realization.
 A Lax--Milgram construction only has to produce the positive symmetric partial
 operator and solve `(A + 1)x = h`; the theorem below supplies maximality.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace
 open Set

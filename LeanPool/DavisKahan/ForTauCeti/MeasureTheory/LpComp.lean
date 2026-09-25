@@ -46,7 +46,7 @@ alone, so `G ∘ f = G` and the intertwining law becomes a plain commutation.
 * Spectra influence: **none** -- this module imports only Mathlib and `ForTauCeti`.
 -/
 
-public section
+@[expose] public section
 
 open MeasureTheory
 

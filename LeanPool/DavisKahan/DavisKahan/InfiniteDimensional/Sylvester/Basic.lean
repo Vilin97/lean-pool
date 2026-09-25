@@ -3,15 +3,19 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Ideals.Symmetric
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Ideals.CompactIntegral
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Sylvester.FourierSemigroup
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Sylvester.OrderedSemigroup
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.Operator
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.UnitarilyInvariantSeminorm
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
+module
+
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Ideals.Symmetric
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Ideals.CompactIntegral
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Sylvester.FourierSemigroup
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Sylvester.OrderedSemigroup
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.Operator
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.UnitarilyInvariantSeminorm
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
 
 /-! # Basic -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

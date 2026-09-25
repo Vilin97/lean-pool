@@ -3,16 +3,20 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.AngleTransport
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.DirectedAngleRealTransport
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedKyFan
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaReflectionAmbient
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.RealAngleIdentification
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.ComplexificationGauge
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedGramReal
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotationReal
+module
+
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.AngleTransport
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.DirectedAngleRealTransport
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedKyFan
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaReflectionAmbient
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.RealAngleIdentification
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.ComplexificationGauge
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedGramReal
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotationReal
 
 /-! # Tangent Transport -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

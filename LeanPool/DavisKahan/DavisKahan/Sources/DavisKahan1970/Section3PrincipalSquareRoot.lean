@@ -3,16 +3,20 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Sol
 -/
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.PrincipalSquareRoot
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.PrincipalSquareRoot
 -- supplies `IsPrincipalUnitarySquareRoot` together with both halves of Proposition 3.3 at
 -- the arbitrary-pair scope.  It is a `Geometry` module.
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotationBlocks
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotationBlocks
 -- supplies the two reflection/projection identities this file needs,
 -- `projection_mul_reflectionOperator_self` and `reflectionOperator_mul_projection_self`.
 -- It is a `Geometry` module.
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotationReal
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotationReal
 
 /-! # Section3Principal Square Root -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

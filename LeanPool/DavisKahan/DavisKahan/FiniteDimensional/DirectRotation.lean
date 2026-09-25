@@ -3,10 +3,12 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation.Majorization
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.Core.AngleOperators
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SinTheta.UnitarilyInvariant
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.MoorePenroseInverse
+module
+
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation.Majorization
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.Core.AngleOperators
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SinTheta.UnitarilyInvariant
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.MoorePenroseInverse
 
 /-!
 # Finite direct rotation: trigonometric and extremal formulas
@@ -22,6 +24,8 @@ and the unrestricted source-restricted displacement theorem.  The historical
 real `pi / 3` claim for the full displacement is false when principal-angle
 multiplicity spaces are mixed by the competitor; it is not reintroduced.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan.FiniteDimensional

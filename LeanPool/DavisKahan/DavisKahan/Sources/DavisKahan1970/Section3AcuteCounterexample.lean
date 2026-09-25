@@ -3,10 +3,12 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Sol
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.TwoProjections
-import Mathlib.Analysis.InnerProductSpace.l2Space
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.AngleGeometry
+
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.TwoProjections
+public import Mathlib.Analysis.InnerProductSpace.l2Space
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.AngleGeometry
 
 /-!
 # Printed acuteness is weaker than a uniform projection gap
@@ -22,6 +24,8 @@ Consequently the projection gap is exactly one.
 This proves, inside Lean, that the finite-dimensional hypothesis in
 `projectionGap_lt_one_of_isAcute` cannot be removed.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace
 open scoped lp

@@ -3,16 +3,20 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.DoubleAngleFunctionalCalculus
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.UnboundedIdeal
-import LeanPool.DavisKahan.DavisKahan.BoundedOperator.TrialResidual
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.DoubleAngleSpectrum
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Lemma61
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.ReflectedDefectDoubling
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.UnitaryInvariantNormLaws
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.HeterogeneousRepresentative
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.DoubleAngleFunctionalCalculus
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.UnboundedIdeal
+public import LeanPool.DavisKahan.DavisKahan.BoundedOperator.TrialResidual
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.DoubleAngleSpectrum
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Lemma61
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.ReflectedDefectDoubling
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.UnitaryInvariantNormLaws
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.HeterogeneousRepresentative
 
 /-! # Sin Two Theta Ambient -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

@@ -58,7 +58,7 @@ the continuous-symbol half is
 the Cayley singularity is new.
 -/
 
-public section
+@[expose] public section
 
 open scoped InnerProductSpace
 open Filter Topology MeasureTheory

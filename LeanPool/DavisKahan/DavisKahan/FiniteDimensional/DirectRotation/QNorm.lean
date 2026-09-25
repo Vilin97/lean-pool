@@ -3,7 +3,9 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Claude Opus 4.8, Jon Crall
 -/
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation.Majorization
+module
+
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation.Majorization
 
 /-!
 # The `Q`-norm repair of the short-rotation full-displacement claim
@@ -34,6 +36,8 @@ The counterexample and this theorem fit together exactly: `kyFanSum` at the
 full rank is the trace norm, and `kyFan_not_isQNorm` below turns the
 counterexample around to show that it is *not* a `Q`-norm.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan.FiniteDimensional

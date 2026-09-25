@@ -49,7 +49,7 @@ measures, so the gap has to be closed somewhere.
   comparison that chose it.
 -/
 
-public section
+@[expose] public section
 
 open scoped InnerProductSpace ENNReal CompactlySupported
 open MeasureTheory

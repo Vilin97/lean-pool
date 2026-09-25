@@ -3,10 +3,12 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.AngleFunctionalCalculusReal
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.ReflectionRestriction
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.SameSequence
-import LeanPool.DavisKahan.ForTauCeti.Analysis.RCLike.ScalarTransportFunctionalCalculus
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.AngleFunctionalCalculusReal
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.ReflectionRestriction
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.SameSequence
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.RCLike.ScalarTransportFunctionalCalculus
 
 /-!
 # The operator angle at an arbitrary `RCLike` field
@@ -38,6 +40,8 @@ arbitrary `RCLike` field to its real-like or complex-like case and reusing the f
 analytic proofs.  `clm_sinTwoAngleOperator` and its siblings carry the objects across the
 scalar transport that makes the dispatch possible.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan.Angle

@@ -28,7 +28,7 @@ diagonal measures occurring in it.
 *New*; see `ForTauCeti/Analysis/InnerProductSpace/BorelCalculus/DiagonalMeasure.lean`.
 -/
 
-public section
+@[expose] public section
 
 open scoped InnerProductSpace ENNReal CompactlySupported
 open MeasureTheory

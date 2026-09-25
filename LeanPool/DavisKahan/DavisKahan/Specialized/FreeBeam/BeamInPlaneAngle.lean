@@ -3,11 +3,15 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamEigenbasis
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.IndividualAngles
+
+public import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamEigenbasis
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.IndividualAngles
 
 /-! # Beam In Plane Angle -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

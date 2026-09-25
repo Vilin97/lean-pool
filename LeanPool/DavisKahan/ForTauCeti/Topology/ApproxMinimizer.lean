@@ -56,7 +56,7 @@ Formalized by Claude Opus 4.8 (claude-opus-4-8[1m]).
   `scripts/check_dependency_layers.py`); this module imports Mathlib only.
 -/
 
-public section
+@[expose] public section
 
 /-!
 ### Provenance

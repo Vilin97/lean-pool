@@ -3,7 +3,9 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, GPT 5.6 High
 -/
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Projection.Gap
+module
+
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Projection.Gap
 
 /-!
 # Bounded invariant-pair problems
@@ -12,6 +14,8 @@ The residual and sine block belong to an approximate invariant pair. Projection,
 reducing-subspace, symmetry, and norm estimates are used directly from their
 canonical `Submodule` and `ContinuousLinearMap` APIs.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

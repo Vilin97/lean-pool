@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DoubleAngle.SinTheta
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SinTheta.Perturbation
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.Residual.AngleEmbeddings
+module
+
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DoubleAngle.SinTheta
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SinTheta.Perturbation
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.Residual.AngleEmbeddings
 
 /-!
 # Experimental residual `sin (2 Theta)` interface
@@ -24,6 +26,8 @@ of `A` does not control an arbitrary trial pair `(X,M)`, and the former direct
 Sylvester body was not type-correct: its displayed right-hand side consisted
 of ambient endomorphisms while the norm had rectangular type `F → E`.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan.FiniteDimensional

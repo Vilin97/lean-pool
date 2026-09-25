@@ -53,7 +53,7 @@ could have been.
 
 open Filter MeasureTheory Topology
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

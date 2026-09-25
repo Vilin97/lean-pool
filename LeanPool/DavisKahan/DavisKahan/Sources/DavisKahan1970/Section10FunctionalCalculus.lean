@@ -3,16 +3,20 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.AmbientBlockVocabulary
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.OperatorAngleComplex
-import LeanPool.DavisKahan.DavisKahan.Sylvester.Spectrum
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BoundedOperator.Projector
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Projection.Blocks
-import LeanPool.DavisKahan.DavisKahan.BoundedOperator.Problem
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Spectral.GapProjection
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.PrincipalSineSequence
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.AmbientBlockVocabulary
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.OperatorAngleComplex
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.Spectrum
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BoundedOperator.Projector
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Projection.Blocks
+public import LeanPool.DavisKahan.DavisKahan.BoundedOperator.Problem
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Spectral.GapProjection
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.PrincipalSineSequence
 
 /-! # Section10Functional Calculus -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

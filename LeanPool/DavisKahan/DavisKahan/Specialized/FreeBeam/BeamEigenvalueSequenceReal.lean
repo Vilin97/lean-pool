@@ -3,10 +3,12 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Sol
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamTrialReal
-import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.LpInfiniteDimensional
-import LeanPool.DavisKahan.ForTauCeti.Order.DiscreteEnumeration
+
+public import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamTrialReal
+public import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.LpInfiniteDimensional
+public import LeanPool.DavisKahan.ForTauCeti.Order.DiscreteEnumeration
 
 /-!
 # The real free beam's increasing eigenvalue sequence
@@ -16,6 +18,8 @@ real Hilbert space.  Its positive eigenvalues are unbounded and locally finite, 
 strictly increasing enumeration printed by Davis--Kahan.  The full real spectrum is exactly
 zero together with those positive eigenvalues.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open scoped InnerProductSpace

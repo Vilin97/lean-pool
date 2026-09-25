@@ -70,7 +70,7 @@ consumers need nothing.
 * Spectra influence: **none**.
 -/
 
-public section
+@[expose] public section
 namespace ContinuousLinearMap
 
 variable {𝕜 : Type*} [RCLike 𝕜]
@@ -78,7 +78,7 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [Complete
 
 /-- **The operator algebra over an `RCLike` field is a real algebra**, by restriction of
 scalars along `algebraMap ℝ 𝕜`.  Not an instance; see the module docstring. -/
-@[expose, instance_reducible]
+@[instance_reducible]
 noncomputable def realAlgebra : Algebra ℝ (E →L[𝕜] E) :=
   RestrictScalars.algebra ℝ 𝕜 (E →L[𝕜] E)
 

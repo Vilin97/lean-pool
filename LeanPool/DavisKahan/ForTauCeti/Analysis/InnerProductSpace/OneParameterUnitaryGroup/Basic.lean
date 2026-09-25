@@ -53,7 +53,7 @@ Davis--Kahan spectral flow needs.
   reformulation.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 
@@ -114,7 +114,6 @@ lemma norm_one [Nontrivial H] (U : OneParameterUnitaryGroup (H := H)) (t : ℝ) 
 /-! ### The difference quotient -/
 
 /-- The difference quotient whose limit is the generator: `t ↦ (U t ψ - ψ)/(it)`. -/
-@[expose]
 noncomputable def genDiffQuot (U : OneParameterUnitaryGroup (H := H)) (ψ : H) : ℝ → H :=
   fun t => ((I * (t : ℂ))⁻¹) • (U.U t ψ - ψ)
 
@@ -149,7 +148,6 @@ lemma genDiffQuot_smul (U : OneParameterUnitaryGroup (H := H)) (c : ℂ) (a : H)
 -- reduces to `generatorDomain U`; and `generator`'s own body projects `.choose` out of
 -- that membership, so exposing one without the other does not elaborate. This is the
 -- `api-design` carve-out for a consumer that must unfold, not blanket exposure.
-@[expose]
 def generatorDomain (U : OneParameterUnitaryGroup (H := H)) : Submodule ℂ H where
   carrier := {ψ | ∃ η, Tendsto (genDiffQuot U ψ) (𝓝[≠] 0) (𝓝 η)}
   add_mem' := by
@@ -172,7 +170,6 @@ uniqueness of limits in the Hausdorff space `H`. -/
 -- reduces to `generatorDomain U`; and `generator`'s own body projects `.choose` out of
 -- that membership, so exposing one without the other does not elaborate. This is the
 -- `api-design` carve-out for a consumer that must unfold, not blanket exposure.
-@[expose]
 noncomputable def generator (U : OneParameterUnitaryGroup (H := H)) : H →ₗ.[ℂ] H where
   domain := generatorDomain U
   toFun :=

@@ -21,7 +21,7 @@ majorization. The concrete instances below follow directly from their gauges.
 
 open scoped ENNReal InnerProductSpace
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

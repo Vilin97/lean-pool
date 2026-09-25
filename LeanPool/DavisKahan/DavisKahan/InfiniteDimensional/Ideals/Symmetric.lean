@@ -3,18 +3,20 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, GPT 5.6 High
 -/
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.OperatorAngle
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.ScalarGeneric
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.CanonicalRealView
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.CompactOperator
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.HilbertSchmidt
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.KyFan
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.Schatten
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.SymmetricGauge
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.TraceClass
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
-import LeanPool.DavisKahan.DavisKahan.Sylvester.ScalarTransport
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.ScalarTransport
+module
+
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.OperatorAngle
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.ScalarGeneric
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.CanonicalRealView
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.CompactOperator
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.HilbertSchmidt
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.KyFan
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.Schatten
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.SymmetricGauge
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.TraceClass
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.ScalarTransport
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.ScalarTransport
 
 /-!
 # Symmetric norm ideals
@@ -26,6 +28,8 @@ Hilbert--Schmidt, and general symmetric ideals.
 
 Literature writeup: local TeX, Section 9.
 -/
+
+@[expose] public section
 
 
 /-! ## Construction plan

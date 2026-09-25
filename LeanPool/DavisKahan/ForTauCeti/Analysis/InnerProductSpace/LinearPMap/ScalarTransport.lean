@@ -37,7 +37,7 @@ let a theorem proved at `ℝ` and at `ℂ` be read at an arbitrary `RCLike` fiel
 * Spectra influence: **none**.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 namespace ScalarTransport

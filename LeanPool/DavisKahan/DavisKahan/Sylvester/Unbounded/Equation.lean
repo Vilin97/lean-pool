@@ -3,7 +3,9 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.Sylvester.ClosedSylvesterEquation
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.ClosedSylvesterEquation
 
 /-!
 # The one-unbounded Sylvester equation
@@ -13,6 +15,8 @@ This is not a second equation model.  It is the closed Sylvester equation of
 a full-domain closed operator, so every lemma about the closed equation applies
 verbatim.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

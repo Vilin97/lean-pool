@@ -3,12 +3,16 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.PartialMap.UnitaryConjugation
-import LeanPool.DavisKahan.DavisKahan.SinTheta.SpectralProjection
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.OperatorAngleComplex
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Projection.Gap
+module
+
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.PartialMap.UnitaryConjugation
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.SpectralProjection
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.OperatorAngleComplex
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Projection.Gap
 
 /-! # Reflection Restriction -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

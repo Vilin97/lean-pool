@@ -36,7 +36,7 @@ The target structure `TauCeti.ProjValMeasure` is Spectra's, ported in
 construction filling it here is not.
 -/
 
-public section
+@[expose] public section
 
 open scoped InnerProductSpace ENNReal CompactlySupported
 open MeasureTheory

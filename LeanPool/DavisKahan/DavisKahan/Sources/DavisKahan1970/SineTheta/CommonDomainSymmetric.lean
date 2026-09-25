@@ -3,14 +3,18 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.HeterogeneousRepresentative
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Symmetric
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.SymmetricReal
-import LeanPool.DavisKahan.DavisKahan.Sylvester.ScalarGeneric
-import LeanPool.DavisKahan.DavisKahan.Sylvester.ScalarTransport
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.ScalarTransport
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.HeterogeneousRepresentative
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Symmetric
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.SymmetricReal
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.ScalarGeneric
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.ScalarTransport
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.ScalarTransport
 
 /-! # Common Domain Symmetric -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

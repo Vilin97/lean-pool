@@ -61,7 +61,7 @@ become theorems rather than axioms.
   `PVMSubspace.lean` and `BoundedSelfAdjointSpectralProjection.lean`.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

@@ -54,7 +54,7 @@ concentration — no matrix Bernstein/Hoeffding needed (at the cost of the loose
   `ForTauCeti` staging modules.
 -/
 
-public section
+@[expose] public section
 
 open scoped Matrix ENNReal
 open MeasureTheory

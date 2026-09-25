@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Real.RealCyclicDecomposition
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.MultiplicityModelReal
+module
+
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Real.RealCyclicDecomposition
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.MultiplicityModelReal
 
 /-!
 # Real Hahn--Hellinger: the existence of a real multiplicity model
@@ -43,6 +45,8 @@ is carried by the real axis (`TauCeti.MultiplicityDatum.starFixedInvariant_iff_b
 is the reason that matters), and reality of the base is a *hypothesis* of the descent, never a
 field of the datum.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Natural.Reducing
-import LeanPool.DavisKahan.DavisKahan.SinTheta.BoundedPerturbation
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Polar.SelfAdjointCompletion
+module
+
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Natural.Reducing
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.BoundedPerturbation
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Polar.SelfAdjointCompletion
 
 /-!
 # The unbounded `sin Θ` estimate at the operator norm
@@ -19,6 +21,8 @@ It is a generic foundation, not a source façade: the moving-band Lipschitz
 estimate for Theorem 8.2's homotopy consumes it, and so does the static branch
 bound.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan1970

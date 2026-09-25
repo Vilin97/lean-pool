@@ -3,10 +3,14 @@ Copyright (c) 2026 Jon Crall, Edward Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Edward Wang
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.Sources.Davis1963.All
-import LeanPool.DavisKahan.DavisKahan.Sources.Davis1963.DoubleAngle
-import LeanPool.DavisKahan.DavisKahan.Sources.Davis1963.RotationBound
-import LeanPool.DavisKahan.DavisKahan.Sources.Davis1963.RotationEnergy
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.Davis1963.All
+public import LeanPool.DavisKahan.DavisKahan.Sources.Davis1963.DoubleAngle
+public import LeanPool.DavisKahan.DavisKahan.Sources.Davis1963.RotationBound
+public import LeanPool.DavisKahan.DavisKahan.Sources.Davis1963.RotationEnergy
 
 /-! Supporting modules for Davis–Kahan rotation of eigenvectors. -/
+
+@[expose] public section

@@ -3,6 +3,8 @@ Copyright (c) 2026 Jon Crall, Edward Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Edward Wang
 -/
+module
+
 
 /-
 Staged for Mathlib: additions to `Mathlib/Analysis/InnerProductSpace/` (new file
@@ -50,11 +52,11 @@ named the other.
 To be re-authored per Mathlib's AI-contribution policy at PR time.
 -/
 
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.PrincipalAngles
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.DoubleAngle.Vector
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.Bound
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.ReducingSubspace
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Projection.Geometry
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.PrincipalAngles
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.DoubleAngle.Vector
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.Bound
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.ReducingSubspace
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Projection.Geometry
 
 /-! # The Davis–Kahan tan Θ theorem (gated statement)
 
@@ -125,6 +127,8 @@ Points the gate had to settle, and how the sources settle them:
 * A. K. Motovilov, *Comment on 'The tan θ theorem with relaxed conditions'*,
   arXiv:1204.4441.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 

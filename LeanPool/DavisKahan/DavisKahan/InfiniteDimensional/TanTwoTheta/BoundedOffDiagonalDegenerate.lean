@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.BoundedOffDiagonalReverseGap
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
+module
+
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.BoundedOffDiagonalReverseGap
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
 
 /-!
 # Degenerate coordinate blocks in the bounded off-diagonal estimate
@@ -16,6 +18,8 @@ the rectangular angular coordinate is the zero operator and the sharp
 contractive Riccati inequality is immediate.  Otherwise the nontrivial
 ordered-gap theorem applies.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahanExt

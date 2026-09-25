@@ -52,7 +52,7 @@ moment beyond the two affine ones, and Weierstrass approximation finishes.
   theorem.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

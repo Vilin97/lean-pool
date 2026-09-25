@@ -3,20 +3,24 @@ Copyright (c) 2026 Jon Crall, Edward Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Edward Wang
 -/
+module
+
 
 /-
 Copyright (c) 2026 Kitware, Inc. All rights reserved.Released under Apache 2.0 license as
   described in the file LICENSE.Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.HilbertSchmidtApproximationNorm
-import LeanPool.DavisKahan.DavisKahan.Sylvester.PairwiseSpectrumGap
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.PartialMap.Complexification
-import LeanPool.DavisKahan.DavisKahan.Sylvester.PairwiseHomogeneousUniqueness
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Sylvester.HilbertSchmidtDefectFirst
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Resolvent
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.SpectralGap
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.HilbertSchmidtApproximationNorm
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.PairwiseSpectrumGap
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.PartialMap.Complexification
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.PairwiseHomogeneousUniqueness
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Sylvester.HilbertSchmidtDefectFirst
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Resolvent
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.SpectralGap
 
 /-! # Hilbert Schmidt Pairwise -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 

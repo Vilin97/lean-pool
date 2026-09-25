@@ -51,7 +51,7 @@ short consequences of `ofLp_columns` and `columns_ofLp`, where the donor's go
 through the universal property of the tensor product.
 -/
 
-public section
+@[expose] public section
 
 open scoped ENNReal NNReal
 

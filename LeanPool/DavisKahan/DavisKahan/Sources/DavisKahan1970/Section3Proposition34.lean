@@ -3,10 +3,14 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Proposition34Presentation
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Proposition32
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Proposition34Presentation
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Proposition32
 
 /-! # Section3Proposition34 -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 

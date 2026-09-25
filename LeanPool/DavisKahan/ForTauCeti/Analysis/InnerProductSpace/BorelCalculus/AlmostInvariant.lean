@@ -40,7 +40,7 @@ combination of one band estimate per subinterval.
   `FiniteDimensional` in scope recover the projection form by minimality.
 -/
 
-public section
+@[expose] public section
 
 open scoped InnerProductSpace
 open MeasureTheory

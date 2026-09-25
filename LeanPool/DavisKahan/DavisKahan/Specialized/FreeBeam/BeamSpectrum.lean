@@ -3,11 +3,13 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Fable 5
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamFormSpace
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.FreeBeamModeUniqueness
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.FreeBeamRootLocalization
-import Mathlib.Tactic
+
+public import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamFormSpace
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.FreeBeamModeUniqueness
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.FreeBeamRootLocalization
+public import Mathlib.Tactic
 
 /-!
 # Kernel and eigenfunctions of the free-beam operator
@@ -21,6 +23,8 @@ With the operator in hand (`BeamFormSpace`), this file starts its spectral analy
 
 The eigenfunction bootstrap and the full spectrum characterization build on these.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace ENNReal
 open MeasureTheory TauCeti

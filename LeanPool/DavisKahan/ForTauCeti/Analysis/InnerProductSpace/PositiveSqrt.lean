@@ -50,7 +50,7 @@ on `E →L[ℂ] E`; the RCLike operator route needs it because the C⋆-algebra/
   `ForTauCeti` staging modules.
 -/
 
-public section
+@[expose] public section
 
 open scoped InnerProductSpace
 open InnerProductSpace

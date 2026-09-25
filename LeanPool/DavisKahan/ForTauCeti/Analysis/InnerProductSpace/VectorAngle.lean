@@ -50,7 +50,7 @@ scalar-restriction instance at every use site.
 * Spectra influence: **none** — this module imports only Mathlib.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

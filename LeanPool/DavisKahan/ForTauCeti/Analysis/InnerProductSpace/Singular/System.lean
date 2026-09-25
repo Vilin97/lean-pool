@@ -51,7 +51,7 @@ copied verbatim.
   `ForTauCeti` staging modules.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

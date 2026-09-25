@@ -62,7 +62,7 @@ entries are harmless: if `f i = 0` the line is trivial and both sides see a zero
 open Filter Topology
 open scoped BigOperators InnerProductSpace
 
-public section
+@[expose] public section
 
 namespace TauCeti.OrthogonalSeries
 

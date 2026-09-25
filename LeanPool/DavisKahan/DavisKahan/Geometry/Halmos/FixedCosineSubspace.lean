@@ -3,16 +3,20 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BoundedOperator.Projector
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Projection.Blocks
-import LeanPool.DavisKahan.DavisKahan.BoundedOperator.Problem
+module
+
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BoundedOperator.Projector
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Projection.Blocks
+public import LeanPool.DavisKahan.DavisKahan.BoundedOperator.Problem
 -- supplies `IsUniformlyAcute`, carried only by the archival
 -- `proposition3_5_fixedAngle_maximal_uniformlyAcute_form` below.  It is a leaf module
 -- over `ForTauCeti`, and `TwoProjections` already reaches it, so the import is explicit
 -- rather than load-bearing.
-import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.TwoProjections
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.TwoProjections
 
 /-! # Fixed Cosine Subspace -/
+
+@[expose] public section
 -- supplies `halmosCosineSq` and the two-projection calculus this module extends.
 
 /-!

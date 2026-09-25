@@ -3,15 +3,17 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
+module
 
-import Mathlib.Analysis.Real.Sqrt
-import Mathlib.Tactic.Ext
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Ring
+
+public import Mathlib.Analysis.Real.Sqrt
+public import Mathlib.Tactic.Ext
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.LinearCombination
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.Ring
 
 /-!
 # Davis--Kahan 1970, Section 9: exact finite data
@@ -26,6 +28,8 @@ exactly the data defined here.
 The primary quantities are kept in radical form.  Decimal values used in the
 paper are derived later as rational upper bounds.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan1970

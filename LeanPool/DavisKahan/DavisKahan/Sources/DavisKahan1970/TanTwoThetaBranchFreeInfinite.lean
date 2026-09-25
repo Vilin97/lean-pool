@@ -3,11 +3,15 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.TanTwoThetaApproximatePair
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.SpectralSelection
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.SubspaceSingularTransport
+module
+
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.TanTwoThetaApproximatePair
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.SpectralSelection
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.SubspaceSingularTransport
 
 /-! # Tan Two Theta Branch Free Infinite -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.ExactSinTheta
 

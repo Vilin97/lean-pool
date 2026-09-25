@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Presentation
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81MajorizationReal
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Presentation
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81MajorizationReal
 
 /-!
 # Dependency audit for Davis--Kahan 1970 Section 8
@@ -24,6 +26,8 @@ Every target below should report exactly
 
 and nothing project-local.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan1970

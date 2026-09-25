@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.Sylvester.Unbounded.OrderedEngine
-import LeanPool.DavisKahan.DavisKahan.Sylvester.Unbounded.OrderedCutoff
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.Unbounded.OrderedEngine
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.Unbounded.OrderedCutoff
 
 /-!
 # Direct genuine ordered Sylvester engine
@@ -12,6 +14,8 @@ import LeanPool.DavisKahan.DavisKahan.Sylvester.Unbounded.OrderedCutoff
 This leaf instantiates the interface-parametric ordered cutoff proof with the
 direct vendored-Spectra cutoff and bounded truncation implementations.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace
 open TauCeti.DavisKahan.ExactSinTheta

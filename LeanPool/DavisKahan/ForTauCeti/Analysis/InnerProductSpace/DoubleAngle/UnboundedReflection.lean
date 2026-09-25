@@ -62,7 +62,7 @@ sign of `cos 2θ` is inside `C x`, and only `C` appears.
   not written out.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

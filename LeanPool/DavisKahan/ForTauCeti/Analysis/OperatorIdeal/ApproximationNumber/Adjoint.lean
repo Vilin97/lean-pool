@@ -49,7 +49,7 @@ This module is on the migration list, not an exception to the rule.
   did; it imports only Mathlib and the sibling `Basic` staging module.
 -/
 
-public section
+@[expose] public section
 
 noncomputable section
 

@@ -3,16 +3,20 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation.ShortRotationCounterexample
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.RestrictedDisplacementExtremal
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DisplacementSquareExtremal
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.BasisAngleEnergy
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CompactSpectralDecomposition
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.VectorAngle
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.GramGauge
+module
+
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation.ShortRotationCounterexample
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.RestrictedDisplacementExtremal
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DisplacementSquareExtremal
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.BasisAngleEnergy
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CompactSpectralDecomposition
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.VectorAngle
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.GramGauge
 
 /-! # Section4 -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

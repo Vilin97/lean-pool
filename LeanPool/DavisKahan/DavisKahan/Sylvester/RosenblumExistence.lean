@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.CircleRieszEndpoints
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.Operator
+module
+
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.CircleRieszEndpoints
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.Operator
 
 /-!
 # Rosenblum's theorem: solving the Sylvester equation
@@ -43,6 +45,8 @@ Both endpoints come from `DavisKahan.SpectralTheory.CircleRieszEndpoints` and
 need no self-adjointness, so the results here hold for arbitrary bounded
 operators.
 -/
+
+@[expose] public section
 
 open Metric Set Filter Complex ContinuousLinearMap
 open scoped Topology

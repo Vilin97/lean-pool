@@ -3,6 +3,8 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
+module
+
 
 /-
 The dense-range lemma below is adapted from Adam Bornemann's private lemma
@@ -13,9 +15,9 @@ it is the exact bounded-to-unbounded bridge used by variational resolvents.
 The original and adapted files are Apache-2.0 licensed.
 -/
 
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.PositiveSurjectiveCriterion
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CoerciveUnit
-import Mathlib.Tactic
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.PositiveSurjectiveCriterion
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CoerciveUnit
+public import Mathlib.Tactic
 
 /-!
 # Unbounded inverse of a bounded positive resolvent
@@ -29,6 +31,8 @@ This file constructs the inverse as a genuine `DavisKahanExt.PartialMap`
 and proves the required properties.  It converts the form method into the
 operator model already used throughout the Davis--Kahan development.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace
 open Set Filter Topology

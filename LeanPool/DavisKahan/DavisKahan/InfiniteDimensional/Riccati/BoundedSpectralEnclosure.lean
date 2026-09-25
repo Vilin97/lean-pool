@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.BoundedBlockSpectrum
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
+module
+
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.BoundedBlockSpectrum
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
 
 
 /-!
@@ -26,6 +28,8 @@ enclosures as hypotheses.  Proving that an off-diagonal continuation branch
 satisfies those enclosures is the later spectral-repulsion input; it does not
 follow from diagonalization of an arbitrary Riccati solution alone.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahanExt

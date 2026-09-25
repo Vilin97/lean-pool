@@ -3,8 +3,12 @@ Copyright (c) 2026 Jon Crall, Edward Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Edward Wang
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Bounded.All
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Bounded.Core
+
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Bounded.All
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Bounded.Core
 
 /-! Supporting modules for Davis–Kahan rotation of eigenvectors. -/
+
+@[expose] public section

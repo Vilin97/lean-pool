@@ -3,6 +3,8 @@ Copyright (c) 2026 Jon Crall, Edward Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Edward Wang
 -/
+module
+
 
 /-
 Staged for Mathlib: additions to `Mathlib/Analysis/InnerProductSpace/` (new file
@@ -25,8 +27,8 @@ unitaries, uniform over `ℝ` and `ℂ`).
 To be re-authored per Mathlib's AI-contribution policy at PR time.
 -/
 
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CourantFischer
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.DoubleAngle.Vector
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CourantFischer
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.DoubleAngle.Vector
 
 /-! # The subspace tan 2Θ theorem: block identities and the gated statement
 
@@ -100,6 +102,8 @@ together are equivalent to `tan 2θ_max ≤ 2ε/(b − a)`.
 * A. Seelmann, *Notes on the sin 2Θ theorem*, Integr. Equ. Oper. Theory 79
   (2014); arXiv:1310.2036 (for the operator-angle formalism).
 -/
+
+@[expose] public section
 
 namespace TauCeti
 open scoped InnerProductSpace

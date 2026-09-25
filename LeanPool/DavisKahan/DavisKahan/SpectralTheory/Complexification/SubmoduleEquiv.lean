@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.FormTransport
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.Subspace
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.Spectrum
+module
+
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.FormTransport
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.Subspace
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.Spectrum
 
 /-!
 # Complexifying a real subspace commutes with taking the subspace
@@ -44,6 +46,8 @@ It is the shared adapter for two separate open lifts:
 * the real `tan Θ` (Theorem 6.3) family, whose trial compression and residual
   both live on the trial subspace.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

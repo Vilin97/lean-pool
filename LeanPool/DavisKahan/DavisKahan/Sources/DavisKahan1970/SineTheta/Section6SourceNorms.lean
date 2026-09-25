@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SymmetricNormingFanDominance
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.NormalizedUnitaryInvariantNormExamples
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Lemma61
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SymmetricNormingFanDominance
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.NormalizedUnitaryInvariantNormExamples
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Lemma61
 
 /-!
 # Section 6's lemmas over the literal source norm class
@@ -28,6 +30,8 @@ and that step needs the class to contain the Ky Fan norms, which is
 `kyFanNormalizedUnitaryInvariantNorm`.  Without an inhabitant the printed premise
 could not be used at all.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan1970

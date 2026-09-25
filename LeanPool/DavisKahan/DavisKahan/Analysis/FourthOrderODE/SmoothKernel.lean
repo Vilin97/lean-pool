@@ -3,11 +3,13 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.Analysis.FourthOrderODE.SmoothGreenIdentity
-import LeanPool.DavisKahan.DavisKahan.Analysis.FourthOrderODE.ComplexGreenIdentity
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-import Mathlib.Tactic
+
+public import LeanPool.DavisKahan.DavisKahan.Analysis.FourthOrderODE.SmoothGreenIdentity
+public import LeanPool.DavisKahan.DavisKahan.Analysis.FourthOrderODE.ComplexGreenIdentity
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+public import Mathlib.Tactic
 
 /-!
 # The smooth kernel of the free--free fourth derivative
@@ -20,6 +22,8 @@ No polynomial classification theorem is required.  Starting from `u'''' = 0`,
 the endpoint conditions give `u''' = 0` and `u'' = 0`; hence `u'` is constant
 and `u` is affine.  Both real- and complex-valued versions are included.
 -/
+
+@[expose] public section
 
 open Set
 open scoped Interval

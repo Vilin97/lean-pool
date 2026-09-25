@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Bounded.Core
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.CanonicalRealView
+module
+
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Bounded.Core
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.CanonicalRealView
 
 /-!
 # Scalar-generic lower-frame transport from explicit polar data
@@ -34,6 +36,8 @@ was recorded as misleading by lane DK-FRAME (2026-07-30) and kept, because a
 rename would repoint imports for a wording problem this paragraph fixes.
 
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

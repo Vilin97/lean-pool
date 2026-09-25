@@ -51,7 +51,7 @@ Mathlib's `ContinuousLinearMap.add_compLp` and `ContinuousLinearMap.smul_compLp`
 * Spectra influence: **none** -- this module imports only Mathlib.
 -/
 
-public section
+@[expose] public section
 
 open MeasureTheory
 

@@ -14,7 +14,7 @@ The scalar-free infinity endpoint of the Schatten scale, on the canonical
 The finite-gauge proofs originate in `Analysis.OperatorIdeal.SymmetricGauge`.
 -/
 
-public section
+@[expose] public section
 
 open scoped NNReal ENNReal
 

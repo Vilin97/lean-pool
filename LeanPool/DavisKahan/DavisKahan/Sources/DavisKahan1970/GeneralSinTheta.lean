@@ -3,10 +3,12 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Unbounded.FormBoundedGap
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Specializations
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Real.Specializations
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Natural.Real
+module
+
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Unbounded.FormBoundedGap
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Specializations
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Real.Specializations
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Natural.Real
 
 /-!
 # Davis--Kahan 1970 general sine-theta manuscript surface
@@ -18,6 +20,8 @@ aliases are exposed explicitly.  The complex and real routes share the same
 legacy statement surface but use the direct genuine engine and exact finite
 Ky Fan transport underneath.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan1970

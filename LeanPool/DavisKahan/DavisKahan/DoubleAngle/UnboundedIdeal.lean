@@ -3,13 +3,17 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.ScalarGeneric
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.CanonicalRealView
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.Unbounded
-import LeanPool.DavisKahan.DavisKahan.SinTheta.BoundedPerturbationIdeal
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Resolvent
+module
+
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.ScalarGeneric
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.CanonicalRealView
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.Unbounded
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.BoundedPerturbationIdeal
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Resolvent
 
 /-! # Unbounded Ideal -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

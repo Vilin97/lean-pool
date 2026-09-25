@@ -93,7 +93,7 @@ can be read side by side.
   the Spectra port surface.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 namespace LinearPMap

@@ -3,6 +3,8 @@ Copyright (c) 2026 Jon Crall, Edward Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Edward Wang
 -/
+module
+
 
 /-
 Staged for Mathlib: additions to `Mathlib/Analysis/InnerProductSpace/` (new file
@@ -12,9 +14,9 @@ Davis Result B: the sharper total-rotation estimate (Davis 1963, Theorem 3.2, eq
 corollary combining with Result A (Theorem 4.1). Tickets PD-18 + BL1/BL2/BL4/BL5/BL6.
 -/
 
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.IntertwiningUnitary
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.EigenvalueChange
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Spectrum
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.IntertwiningUnitary
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.EigenvalueChange
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Spectrum
 
 /-! # Davis's sharper total-rotation estimate (Davis 1963, Theorem 3.2)
 
@@ -51,6 +53,8 @@ eigenvector rotation is controlled by the *off-diagonal* part of the perturbatio
 * Chandler Davis, *The rotation of eigenvectors by a perturbation*, J. Math. Anal. Appl.
   6 (1963), 159–173, Theorem 3.2 and §5.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 open scoped InnerProductSpace

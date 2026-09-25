@@ -3,11 +3,15 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.SpectralBridge
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.CanonicalRealView
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Bounded.Core
+module
+
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.SpectralBridge
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.CanonicalRealView
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Bounded.Core
 
 /-! # Bounded -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 

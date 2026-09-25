@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.SingularValueTransport
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.SubspaceTransport
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.SingularValueTransport
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.SubspaceTransport
 
 /-!
 # Singular-value transport across canonical subspace coordinates
@@ -28,6 +30,8 @@ source layer, in the source layer's spelling of the relation.  The move was
 forced by `DavisKahan/Geometry/Polar/RestrictedDisplacementExtremal.lean`, a
 generic geometry module that used to reach backwards into this file.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

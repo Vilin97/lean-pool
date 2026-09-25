@@ -57,7 +57,7 @@ characterisation, are this library's own and are explained in the module docstri
 since the construction is a different one.
 -/
 
-public section
+@[expose] public section
 
 open scoped ENNReal NNReal
 open ContinuousLinearMap

@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.RotationChain
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.SpectralIdentification
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
+module
+
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.RotationChain
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.SpectralIdentification
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
 
 /-!
 # Selected spectral subspaces along a fixed contour
@@ -22,6 +24,8 @@ The hard analytic identification of the contour integral with the spectral
 calculus remains an explicit input.  This leaf therefore does not assume the
 conclusion that still has to be proved in the spectral-identification branch.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahanExt

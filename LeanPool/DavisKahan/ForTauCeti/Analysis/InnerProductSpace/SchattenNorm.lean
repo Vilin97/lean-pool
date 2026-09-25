@@ -46,7 +46,7 @@ dominance bridges, and operator-ideal inequalities.
   `ForTauCeti` staging modules.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

@@ -52,7 +52,7 @@ empty-spectrum element is a subsingleton and the claim is `Subsingleton.elim`.
 * Spectra influence: **none** -- this module imports only Mathlib and `ForTauCeti`.
 -/
 
-public section
+@[expose] public section
 
 open MeasureTheory
 

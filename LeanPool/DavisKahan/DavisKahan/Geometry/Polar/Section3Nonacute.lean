@@ -3,13 +3,17 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.Section3Elementary
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.PolarIntertwining
-import LeanPool.DavisKahan.ForTauCeti.Analysis.Normed.Operator.LinearIsometry
-import LeanPool.DavisKahan.ForTauCeti.Analysis.RCLike.ScalarTransportFunctionalCalculus
+
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.Section3Elementary
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.PolarIntertwining
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.Normed.Operator.LinearIsometry
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.RCLike.ScalarTransportFunctionalCalculus
 
 /-! # Section3Nonacute -/
+
+@[expose] public section
 
 attribute [local instance 100] ContinuousLinearMap.realAlgebra
   ContinuousLinearMap.realIsScalarTower ContinuousLinearMap.continuousFunctionalCalculusReal

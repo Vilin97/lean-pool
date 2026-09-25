@@ -32,7 +32,7 @@ stated with no projections, no spectral theory and no convergence hypothesis.
 *New.*
 -/
 
-public section
+@[expose] public section
 
 open scoped ENNReal NNReal
 

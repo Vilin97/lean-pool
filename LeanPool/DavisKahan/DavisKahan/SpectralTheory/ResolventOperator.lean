@@ -3,11 +3,13 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, GPT 5.6 High
 -/
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.BoundedSelfAdjointSpectralProjection
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Basic
-import Mathlib.Analysis.CStarAlgebra.ContinuousLinearMap
-import Mathlib.Topology.MetricSpace.Lipschitz
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
+module
+
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.BoundedSelfAdjointSpectralProjection
+public import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Basic
+public import Mathlib.Analysis.CStarAlgebra.ContinuousLinearMap
+public import Mathlib.Topology.MetricSpace.Lipschitz
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
 
 /-!
 # Resolvents, Riesz projections, and spectral continuation
@@ -16,6 +18,8 @@ Literature writeup: local TeX, Sections 6, 11, and 20.  This module records the
 analytic bridge from Banach-algebra resolvents to projection-valued spectral
 subspaces and continuation under perturbation.
 -/
+
+@[expose] public section
 
 
 /-! ## Construction plan

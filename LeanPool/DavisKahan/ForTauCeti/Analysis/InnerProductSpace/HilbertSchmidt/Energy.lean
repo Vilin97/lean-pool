@@ -65,7 +65,7 @@ for.
 
 open scoped ENNReal InnerProductSpace
 
-public section
+@[expose] public section
 
 variable {𝕜 : Type*} [RCLike 𝕜]
 variable {E F G : Type*}
@@ -109,7 +109,6 @@ namespace ContinuousLinearMap
 the sum of the squared norms of the columns of `T`.  It is the square of the
 Hilbert--Schmidt norm, and by `hilbertSchmidtEnergy_indep` it does not in fact depend on
 `b`. -/
-@[expose]
 noncomputable def hilbertSchmidtEnergy (T : E →L[𝕜] F) (b : HilbertBasis ι 𝕜 E) : ℝ≥0∞ :=
   ∑' i, ‖T (b i)‖ₑ ^ 2
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.TanTheta.Vector
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.SpectralRestriction
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.BoundedFromSpectrum
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Projection.Geometry
+module
+
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.Vector
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.SpectralRestriction
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.BoundedFromSpectrum
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Projection.Geometry
 
 /-!
 # The unbounded Davis--Kahan tangent theorem, per-vector form
@@ -31,6 +33,8 @@ calculus supplies its full-domain inclusion, invariance, and sharp centered
 norm bound.  The resulting exact target is the orthogonal complement of that
 interval spectral range.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace
 

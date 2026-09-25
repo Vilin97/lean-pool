@@ -21,7 +21,7 @@ prescribed tangent value `C`, and continuity at every point of `[0, 1)`.
 Everything here is real analysis about one function; no operator theory enters.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 namespace TanArcsin

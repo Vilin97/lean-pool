@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Fable 5
 -/
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.TanTheta.RitzResidual
-import LeanPool.DavisKahan.DavisKahan.TanTheta.All
+module
+
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.TanTheta.RitzResidual
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.All
 
 /-!
 # Literal Davis--Kahan 1970 Theorem 6.3 surface
@@ -68,6 +70,8 @@ compression* of the Appendix: the trial-block records carry the compression as a
 bounded field, so the source's `Ω(τ) A₀ Ω(τ)` truncation is not reproduced. That
 obligation is tracked on census row `DK-6-appendix`, not here.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan1970

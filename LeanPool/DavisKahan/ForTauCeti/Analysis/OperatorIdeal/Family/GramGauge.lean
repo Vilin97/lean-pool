@@ -50,7 +50,7 @@ Hilbert--Schmidt, in which case both sides are `∞`.
 * Spectra influence: **none** — this module imports only Mathlib and `ForTauCeti`.
 -/
 
-public section
+@[expose] public section
 
 open scoped ENNReal InnerProductSpace
 

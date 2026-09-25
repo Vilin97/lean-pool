@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.BoundedSpectralTransport
-import Mathlib.Analysis.Normed.Operator.Banach
+module
+
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.BoundedSpectralTransport
+public import Mathlib.Analysis.Normed.Operator.Banach
 
 /-!
 # Spectrum of a bounded block-diagonal operator
@@ -24,6 +26,8 @@ Combining this with the previously proved spectrum transport theorem yields
 an exact spectral decomposition of every bounded complex block operator which
 admits a Riccati solution.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahanExt

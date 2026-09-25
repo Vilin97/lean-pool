@@ -3,10 +3,14 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Sol
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Proposition34
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotationReal
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Proposition34
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotationReal
 
 /-! # Section3Proposition34Real -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

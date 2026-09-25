@@ -54,7 +54,7 @@ infinite-dimensional polar factorization.
 * Spectra influence: **none**.
 -/
 
-public section
+@[expose] public section
 
 open scoped InnerProductSpace ComplexConjugate Topology
 
@@ -114,7 +114,6 @@ theorem restrictedReal_smul_operator_eq
 /-! ## Canonical conjugation on the complexification -/
 
 /-- Canonical conjugation, bundled as an antiunitary involution. -/
-@[expose]
 noncomputable def canonicalConjugation :
     RealComplexification E ≃ₗᵢ⋆[ℂ] RealComplexification E where
   toFun := conjugation
@@ -514,7 +513,6 @@ theorem complexify_algebraMapReal (r : ℝ) :
 /-- **Complexification bundled as a unital real `⋆`-algebra homomorphism.**  Its target carries
 the scoped real algebra structure `complexOperatorRealAlgebra`, so a consumer needs
 `open scoped TauCeti.RealComplexification`. -/
-@[expose]
 noncomputable def complexifyStarAlgHom :
     (E →L[ℝ] E) →⋆ₐ[ℝ] (RealComplexification E →L[ℂ] RealComplexification E) where
   toFun := complexify

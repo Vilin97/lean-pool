@@ -3,7 +3,9 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.Subspace
+module
+
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.Subspace
 
 /-!
 # Transporting Davis--Kahan hypotheses across real complexification
@@ -33,6 +35,8 @@ The bounds are *exactly* preserved -- no constant is lost -- which matters,
 because these feed the ordered-gap hypotheses of the quarter-angle and
 double-angle theorems, where a lossy transport would not close the gap.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

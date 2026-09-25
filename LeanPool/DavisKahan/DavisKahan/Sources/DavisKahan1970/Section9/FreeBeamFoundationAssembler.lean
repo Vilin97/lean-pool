@@ -3,12 +3,14 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.MaximalDomainTransport
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.GraphClosedness
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.CompactGraphEmbedding
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.FreeBeamAnalyticFoundation
-import Mathlib.Tactic
+
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.MaximalDomainTransport
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.GraphClosedness
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.CompactGraphEmbedding
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.FreeBeamAnalyticFoundation
+public import Mathlib.Tactic
 
 /-!
 # Assembly of the paper-facing free-beam analytic foundation
@@ -23,6 +25,8 @@ After this reduction, the remaining genuinely analytic obligations are Green
 symmetry, self-adjointness, compactness, affine-kernel identification,
 root localization, and ODE-to-spectrum identification.
 -/
+
+@[expose] public section
 
 open Set
 open scoped InnerProductSpace

@@ -3,6 +3,8 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Sol
 -/
+module
+
 
 
 /-
@@ -82,27 +84,27 @@ layer and retarget the canonical Davis--Kahan façades to the vacuous conclusion
 Do not attempt to prove unconditional `HasFanDominance` from the base record;
 the countermodel proves that implication false.
 -/
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.NormalizedUnitaryInvariantNorm
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.SymmetricGauge
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.PrescribedSequence
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.SameSequence
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CompactApproximationEigenvalues
-import LeanPool.DavisKahan.DavisKahan.SharedFoundations.Ideal.ModulusTransport
-import
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.NormalizedUnitaryInvariantNorm
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.SymmetricGauge
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.PrescribedSequence
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.SameSequence
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CompactApproximationEigenvalues
+public import LeanPool.DavisKahan.DavisKahan.SharedFoundations.Ideal.ModulusTransport
+public import
   LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.UnitarilyInvariantSeminorm.Majorization
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Singular.System
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SeparableOrthonormal
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.BlockSum
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.OperatorNorm
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.RankOneNormalization
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.KyFanNorm
-import
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Singular.System
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SeparableOrthonormal
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.BlockSum
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.OperatorNorm
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.RankOneNormalization
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.KyFanNorm
+public import
   LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.NormalizedUnitaryInvariantNormExamples
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Presentation
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaAmbientUnbounded
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaDirectedAngle
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaDirectedRCLike
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SectionTwo
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Presentation
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaAmbientUnbounded
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaDirectedAngle
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaDirectedRCLike
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SectionTwo
 
 /-!
 # Exploration: Fan dominance at the Davis--Kahan source norm boundary
@@ -131,6 +133,8 @@ remain.
 
 No `sorry`, `axiom`, or replacement source structure is introduced here.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

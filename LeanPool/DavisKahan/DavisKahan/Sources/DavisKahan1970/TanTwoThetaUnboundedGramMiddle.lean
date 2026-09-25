@@ -3,10 +3,14 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedGramBridge
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SharpKyFan
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedGramBridge
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SharpKyFan
 
 /-! # Tan Two Theta Unbounded Gram Middle -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

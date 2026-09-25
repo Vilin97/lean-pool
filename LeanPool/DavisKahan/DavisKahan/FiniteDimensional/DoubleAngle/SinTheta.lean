@@ -3,6 +3,8 @@ Copyright (c) 2026 Jon Crall, Edward Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Edward Wang
 -/
+module
+
 
 /-
 Staged for Mathlib: additions to `Mathlib/Analysis/InnerProductSpace/` (new file
@@ -30,11 +32,11 @@ commutes with `S`.
 To be re-authored per Mathlib's AI-contribution policy at PR time.
 -/
 
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SinTheta.UnitarilyInvariant
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.UnitarilyInvariantSeminorm
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.AngleGeometry
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Spectral.Gap
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Spectral.Subspace
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SinTheta.UnitarilyInvariant
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.UnitarilyInvariantSeminorm
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.AngleGeometry
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Spectral.Gap
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Spectral.Subspace
 
 /-! # The subspace Davis–Kahan sin 2Θ theorem, every unitarily invariant norm
 
@@ -87,6 +89,8 @@ at all, only the reflection.
   Appl. 6 (1963), 159–173 (the per-vector case, formalized in
   `RotationSharp.lean`).
 -/
+
+@[expose] public section
 
 namespace TauCeti
 open scoped InnerProductSpace

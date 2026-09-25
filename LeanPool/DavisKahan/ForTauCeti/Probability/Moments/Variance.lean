@@ -41,7 +41,7 @@ below, applied to error norms `Y = ‖Xᵢ - μᵢ‖`.
   `ForTauCeti` staging modules.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

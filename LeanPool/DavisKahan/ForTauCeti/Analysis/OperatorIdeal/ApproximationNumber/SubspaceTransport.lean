@@ -54,7 +54,7 @@ statements use the heterogeneous relation
 * Spectra influence: none.
 -/
 
-public section
+@[expose] public section
 
 open scoped InnerProductSpace
 open scoped TauCeti.CompleteSubspace

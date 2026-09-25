@@ -76,7 +76,7 @@ turns "equal Gram data" into an isometry of spans:
   frames are unitarily equivalent iff their Gram matrices coincide.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

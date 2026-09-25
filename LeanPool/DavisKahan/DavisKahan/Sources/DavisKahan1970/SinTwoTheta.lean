@@ -3,18 +3,22 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Fable 5
 -/
-import LeanPool.DavisKahan.DavisKahan.BoundedOperator.Reflection
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.UnboundedIdeal
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.UnboundedIdealFormGap
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.AngleTransport
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.RealAngleIdentification
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.RealUnboundedIdeal
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.TangentTransport
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.SingularValueTransport
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.UnitaryInvariantNorm
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Resolvent
+module
+
+public import LeanPool.DavisKahan.DavisKahan.BoundedOperator.Reflection
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.UnboundedIdeal
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.UnboundedIdealFormGap
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.AngleTransport
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.RealAngleIdentification
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.RealUnboundedIdeal
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.TangentTransport
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.SingularValueTransport
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.UnitaryInvariantNorm
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Resolvent
 
 /-! # Sin Two Theta -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

@@ -3,14 +3,18 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SharpKyFan
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.StandardFanDominance
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SharpKyFan
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.StandardFanDominance
 -- branch selection: the canonical contractive Riccati solution, and the
 -- spectrum-to-form-bound bridge that feeds it the paper's hypotheses
-import LeanPool.DavisKahan.DavisKahan.Riccati.BoundedCanonicalSolution
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SpectralOrder
+public import LeanPool.DavisKahan.DavisKahan.Riccati.BoundedCanonicalSolution
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SpectralOrder
 
 /-! # Sharp Ideal -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

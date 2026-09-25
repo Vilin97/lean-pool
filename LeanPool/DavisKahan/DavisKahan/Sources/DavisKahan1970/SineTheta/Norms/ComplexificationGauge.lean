@@ -3,10 +3,14 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.UnitaryInvariantNorm
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ComplexificationApproximation
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.UnitaryInvariantNorm
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ComplexificationApproximation
 
 /-! # Complexification Gauge -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 

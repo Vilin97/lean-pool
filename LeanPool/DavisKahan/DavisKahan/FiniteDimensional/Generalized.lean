@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, GPT 5.6 High, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.SinTheta.TrialMap
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.Residual.AngleEmbeddings
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DoubleAngle.SinTwoThetaResidual
+module
+
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.SinTheta.TrialMap
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.Residual.AngleEmbeddings
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DoubleAngle.SinTwoThetaResidual
 
 /-!
 # Generalized finite-dimensional residual theorems
@@ -16,6 +18,8 @@ uses the correctly whitened coordinate operator.  Infinite-dimensional
 contour continuation belongs to the concrete `Continuation*` hierarchy and is
 not imported through this finite module.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan.FiniteDimensional

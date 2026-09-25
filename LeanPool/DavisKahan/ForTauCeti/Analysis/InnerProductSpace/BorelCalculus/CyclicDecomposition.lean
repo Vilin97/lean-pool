@@ -80,7 +80,7 @@ the uniform-multiplicity form, which replaces the separable normal form
 * Spectra influence: **none** — this module imports only Mathlib and `ForTauCeti`.
 -/
 
-public section
+@[expose] public section
 
 open scoped InnerProductSpace
 open MeasureTheory

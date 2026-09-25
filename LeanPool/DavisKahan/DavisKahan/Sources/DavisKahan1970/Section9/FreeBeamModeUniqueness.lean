@@ -3,11 +3,13 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Fable 5
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.FreeBeamCharacteristic
-import Mathlib.Analysis.ODE.ExistUnique
-import Mathlib.Analysis.Calculus.Deriv.Prod
-import Mathlib.Tactic
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.FreeBeamCharacteristic
+public import Mathlib.Analysis.ODE.ExistUnique
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+public import Mathlib.Tactic
 
 /-!
 # Every solution of the free-beam ODE is a classical mode
@@ -26,6 +28,8 @@ free-beam spectral realization needs: any eigenfunction of the fourth-derivative
 once bootstrapped to a classical solution with free boundary conditions, has `cos β cosh β = 1`
 — so its eigenvalue `β⁴` exceeds `500` by the root exclusion already in the build.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

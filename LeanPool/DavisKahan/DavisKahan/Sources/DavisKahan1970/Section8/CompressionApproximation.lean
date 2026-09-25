@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.ScalarGeneric
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.GramSquare
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.SameSequence
+module
+
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.ScalarGeneric
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.GramSquare
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.SameSequence
 
 /-!
 # The compression sandwich bound behind Theorem 8.1(ii)
@@ -53,6 +55,8 @@ through the bounded projection-valued measure of a self-adjoint operator.  Since
 statement by complexification rather than re-elaborating this proof over `ℝ`;
 see `DavisKahan/Sources/DavisKahan1970/Section8/Theorem81ApproximationReal.lean`.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan1970

@@ -3,16 +3,20 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Sol
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamFormSpaceReal
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.FreeBeamModeUniqueness
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.FreeBeamCharacteristicConverse
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.FreeBeamOrthogonality
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.FreeBeamRootLocalization
-import Mathlib.Analysis.Real.Pi.Bounds
-import Mathlib.Tactic
+
+public import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamFormSpaceReal
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.FreeBeamModeUniqueness
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.FreeBeamCharacteristicConverse
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.FreeBeamOrthogonality
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.FreeBeamRootLocalization
+public import Mathlib.Analysis.Real.Pi.Bounds
+public import Mathlib.Tactic
 
 /-! # Beam Classical Real -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 

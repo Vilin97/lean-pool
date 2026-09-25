@@ -67,7 +67,7 @@ second-order Duhamel estimate brings in `‖Aₙ² ψ‖`, which blows up with `
 * **Semantic differences from a donor:** not applicable.
 -/
 
-public section
+@[expose] public section
 
 open scoped InnerProductSpace
 open Filter Topology Complex MeasureTheory intervalIntegral

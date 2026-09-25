@@ -3,15 +3,19 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking, Claude Opus 5
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.Realization
-import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.UnitaryEquivalence
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RealContinuousFunctionalCalculus
-import LeanPool.DavisKahan.ForTauCeti.Analysis.RCLike.ScalarTransportFunctionalCalculus
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.SpectralMultiplicityEquiv
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Real.SpectralMultiplicityClassification
+
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.Realization
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.UnitaryEquivalence
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RealContinuousFunctionalCalculus
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.RCLike.ScalarTransportFunctionalCalculus
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.SpectralMultiplicityEquiv
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Real.SpectralMultiplicityClassification
 
 /-! # Section3Theorem31Realization -/
+
+@[expose] public section
 
 attribute [local instance 100] ContinuousLinearMap.realAlgebra
   ContinuousLinearMap.realIsScalarTower ContinuousLinearMap.continuousFunctionalCalculusReal

@@ -3,7 +3,9 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.Sylvester.ClosedSylvesterEquation
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.ClosedSylvesterEquation
 
 /-!
 # Interfaces for spectral cutoffs and bounded truncations
@@ -15,6 +17,8 @@ legacy construction remained an open obligation; the implementation that did so
 came from the vendored Spectra package, retired on 2026-07-29, and the native
 spectral calculus supplies it now.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

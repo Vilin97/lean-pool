@@ -77,7 +77,7 @@ one convexity application and one closure property.
 * Spectra influence: **none** — this module imports only Mathlib.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 
@@ -91,7 +91,6 @@ variable {n m : ℕ}
 
 /-- Sum of the first `k` coordinates of a finite vector.  For `k ≥ n` this is
 its full sum. -/
-@[expose]
 def prefixSum (k : ℕ) (x : Fin n → ℝ) : ℝ :=
   ∑ i ∈ Finset.univ.filter (fun i : Fin n => (i : ℕ) < k), x i
 
@@ -199,7 +198,6 @@ end WeaklyMajorized
 /-! ### Zero padding -/
 
 /-- Right zero-padding from length `n` to length `n + m`. -/
-@[expose]
 def zeroPadRight (x : Fin n → ℝ) : Fin (n + m) → ℝ :=
   fun i => if hi : (i : ℕ) < n then x ⟨i, hi⟩ else 0
 
@@ -726,7 +724,6 @@ axioms.
 -/
 
 /-- `Fin.rev` as a permutation: it is an involution. -/
-@[expose]
 def revPerm (n : ℕ) : Equiv.Perm (Fin n) :=
   Function.Involutive.toPerm Fin.rev Fin.rev_rev
 

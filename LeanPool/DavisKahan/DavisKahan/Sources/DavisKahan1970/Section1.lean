@@ -3,9 +3,13 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.BoundedOperator.TrialResidual
+module
+
+public import LeanPool.DavisKahan.DavisKahan.BoundedOperator.TrialResidual
 
 /-! # Section1 -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 

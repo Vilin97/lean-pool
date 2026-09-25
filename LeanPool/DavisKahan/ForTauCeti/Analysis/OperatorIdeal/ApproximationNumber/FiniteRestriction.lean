@@ -57,7 +57,7 @@ linearly dependent ones are harmless, contributing restrictions to smaller subsp
   nothing here touched Spectra and the module belonged in the staging layer.
 -/
 
-public section
+@[expose] public section
 
 namespace ContinuousLinearMap
 
@@ -112,7 +112,6 @@ available for operators on the space itself, it is transported through the compl
 Everything downstream — the finite-restriction localization, the least-upper-bound
 characterisation, and through them the Ky Fan triangle inequality — is stated once against
 this predicate rather than twice, once per field. -/
-@[expose]
 def HasMinMaxLowerBound (𝕜 : Type u) [RCLike 𝕜] (E : Type v) (F : Type w)
     [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
     [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] : Prop :=

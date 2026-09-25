@@ -3,7 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.SharedFoundations.Residual.ReflectionDefect
-import LeanPool.DavisKahan.DavisKahan.SharedFoundations.Residual.ReflectionDefectIdeal
+module
+
+public import LeanPool.DavisKahan.DavisKahan.SharedFoundations.Residual.ReflectionDefect
+public import LeanPool.DavisKahan.DavisKahan.SharedFoundations.Residual.ReflectionDefectIdeal
 
 /-! # `DavisKahan/SharedFoundations/Residual` -/
+
+@[expose] public section

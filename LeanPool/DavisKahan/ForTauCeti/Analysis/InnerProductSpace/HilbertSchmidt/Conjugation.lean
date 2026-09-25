@@ -40,7 +40,7 @@ argument needs; no source is followed for its presentation.
 `U ⊗ conj V` of the conjugation map; nothing of that is used or reproduced.
 -/
 
-public section
+@[expose] public section
 
 open scoped ENNReal NNReal
 

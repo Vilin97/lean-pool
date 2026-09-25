@@ -3,11 +3,15 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamWeinberger
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.SchurComplement
+
+public import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamWeinberger
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.SchurComplement
 
 /-! # Beam Eigenbasis -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

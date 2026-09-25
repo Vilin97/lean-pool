@@ -3,13 +3,15 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Sol
 -/
-import LeanPool.DavisKahan.DavisKahan.TanTheta.RitzPair
-import LeanPool.DavisKahan.DavisKahan.Sylvester.ScalarTransport
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.SymmetricNormingScalarTransport
-import LeanPool.DavisKahan.ForTauCeti.Analysis.RCLike.ScalarTransportIsometry
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.UnitaryTransport
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.ScalarTransport
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.ReducingSubspace
+module
+
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.RitzPair
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.ScalarTransport
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.SymmetricNormingScalarTransport
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.RCLike.ScalarTransportIsometry
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.UnitaryTransport
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.ScalarTransport
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.ReducingSubspace
 
 /-!
 # Scalar transport for unbounded Ritz-compression data
@@ -26,6 +28,8 @@ subtype and the subtype of the transported subspace.  The bounded residual is
 transported in the same coordinates, so its complete approximation-number
 sequence and every symmetric-norming gauge are unchanged.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace TauCeti.CompleteSubspace
 

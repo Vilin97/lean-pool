@@ -3,13 +3,17 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, GPT-5.6 Sol
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.BoundedGapProjection
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.FormTransport
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.SubmoduleEquiv
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormSpectrumBounds
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.BoundedGapProjection
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.FormTransport
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.SubmoduleEquiv
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormSpectrumBounds
 
 /-! # Theorem81Real -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

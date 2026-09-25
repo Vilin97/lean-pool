@@ -19,7 +19,7 @@ finite rank lower bound in the operator-norm topology.
 This implements OI-A24 using the canonical real-valued `approximationNumber` API.
 -/
 
-public section
+@[expose] public section
 
 namespace ContinuousLinearMap
 

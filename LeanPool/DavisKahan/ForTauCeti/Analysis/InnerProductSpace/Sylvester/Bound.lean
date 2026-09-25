@@ -53,7 +53,7 @@ taken in the `LinearMap.IsSymmetric` sense, with no reference to adjoints.
   perturbation. III*, SIAM J. Numer. Anal. 7 (1970), 1–46.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

@@ -14,7 +14,7 @@ public import Mathlib.Analysis.InnerProductSpace.ProdL2
 The embedding into the orthogonal direct sum preserves the singular-value sequence.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 
@@ -30,7 +30,7 @@ variable {G : Type*} [NormedAddCommGroup G] [InnerProductSpace 𝕜 G]
   [FiniteDimensional 𝕜 G]
 
 /-- Product-coordinate form of the zero extension, `(x,y) ↦ (0,A x)`. -/
-private noncomputable def zeroExtensionProd (A : E →ₗ[𝕜] F) :
+noncomputable def zeroExtensionProd (A : E →ₗ[𝕜] F) :
     (E × F) →ₗ[𝕜] (E × F) where
   toFun z := (0, A z.1)
   map_add' x y := by ext <;> simp

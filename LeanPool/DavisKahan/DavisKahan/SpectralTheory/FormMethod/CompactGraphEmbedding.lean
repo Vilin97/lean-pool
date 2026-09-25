@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.BoundedInverseRealization
-import Mathlib.Tactic
+
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.BoundedInverseRealization
+public import Mathlib.Tactic
 
 /-!
 # Compact resolvents and compact graph embeddings
@@ -19,6 +21,8 @@ This file proves the exact bridge in both directions.  It deliberately uses a
 small sequential compactness predicate so the result does not depend on a
 particular bundled compact-operator API.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace
 open Set Filter Topology

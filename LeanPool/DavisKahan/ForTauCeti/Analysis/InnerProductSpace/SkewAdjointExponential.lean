@@ -63,7 +63,7 @@ is followed for the presentation.
      *non-commutative* algebra.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

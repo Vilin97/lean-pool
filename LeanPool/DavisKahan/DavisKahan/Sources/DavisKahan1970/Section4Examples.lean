@@ -3,7 +3,9 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI GPT-5.6 Sol, Jon Crall
 -/
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.TwoDimensionalSingularValues
+module
+
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.TwoDimensionalSingularValues
 
 /-!
 # Davis--Kahan 1970, Examples 4.1 and 4.2
@@ -19,6 +21,8 @@ rotation.  In that basis the direct rotation is `diag(e^{i theta},e^{-i theta})`
 multiplication by the global phase `e^{i delta}` gives the source competitor
 `V = e^{i delta} U` without changing its singular values.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan1970

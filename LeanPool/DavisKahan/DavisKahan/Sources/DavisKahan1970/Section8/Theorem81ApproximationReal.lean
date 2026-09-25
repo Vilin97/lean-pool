@@ -3,12 +3,16 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81Approximation
-import LeanPool.DavisKahan.DavisKahan.BoundedOperator.BlockShift
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ComplexificationApproximation
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81Real
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81Approximation
+public import LeanPool.DavisKahan.DavisKahan.BoundedOperator.BlockShift
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ComplexificationApproximation
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81Real
 
 /-! # Theorem81Approximation Real -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 

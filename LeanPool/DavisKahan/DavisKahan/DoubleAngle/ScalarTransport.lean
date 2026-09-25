@@ -3,13 +3,15 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Sol
 -/
-import LeanPool.DavisKahan.DavisKahan.TanTheta.RitzPair
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Lemma61
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.SymmetricNormingScalarTransport
-import LeanPool.DavisKahan.ForTauCeti.Analysis.RCLike.ScalarTransportFunctionalCalculus
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.ScalarTransport
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.DoubleAngle.UnboundedReflection
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.ReducingSubspace
+module
+
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.RitzPair
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Lemma61
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.SymmetricNormingScalarTransport
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.RCLike.ScalarTransportFunctionalCalculus
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.ScalarTransport
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.DoubleAngle.UnboundedReflection
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.ReducingSubspace
 
 /-!
 # Scalar transport for the unbounded double-angle hypotheses
@@ -19,6 +21,8 @@ data: a reducing subspace, an off-diagonal bounded perturbation, and ordered
 quadratic-form bounds on the two reducing summands.  This file records that each
 piece is invariant under `RCLikeIso` transport.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace TauCeti.CompleteSubspace
 

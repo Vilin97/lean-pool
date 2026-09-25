@@ -3,12 +3,14 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.CircleRieszProjection
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.BoundedSelfAdjointSpectralProjection
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.CayleySelectorBridge
-import Mathlib.MeasureTheory.Integral.CircleIntegral
-import Mathlib.Analysis.Complex.CauchyIntegral
+
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.CircleRieszProjection
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.BoundedSelfAdjointSpectralProjection
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.CayleySelectorBridge
+public import Mathlib.MeasureTheory.Integral.CircleIntegral
+public import Mathlib.Analysis.Complex.CauchyIntegral
 
 /-!
 # Circle Riesz projections for the Section 8 continuation argument
@@ -18,6 +20,8 @@ is the minimum analytic surface required by the Davis--Kahan continuation
 stack and intentionally avoids an abstract contour, rectifiability, or winding
 number framework.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace Topology
 open Set Filter

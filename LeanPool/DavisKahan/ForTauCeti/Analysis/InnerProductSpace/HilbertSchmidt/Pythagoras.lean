@@ -49,7 +49,7 @@ substitutes under a `tsum` with no summability side-condition.
 *New.*
 -/
 
-public section
+@[expose] public section
 
 open scoped ENNReal NNReal
 

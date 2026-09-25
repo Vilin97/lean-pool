@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.OperatorAngleGeneric
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.AngleTransport
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.DirectedAngleRealTransport
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.OperatorAngleGeneric
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.AngleTransport
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.DirectedAngleRealTransport
 /-! ## The block representation, at every field
 
 `sinTwoThetaIdealBlock U V = P_U ∘ P_{J_V Uᗮ}` is the object the unbounded directed `sin 2Θ`
@@ -20,6 +22,8 @@ of an existing concept".  `directedSinTwoAngleOperator` is now that operator at 
 it is not a second spelling: it is the one definition, of which the `...C` and `...RC` objects
 are the instance and the complexification.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan.Angle

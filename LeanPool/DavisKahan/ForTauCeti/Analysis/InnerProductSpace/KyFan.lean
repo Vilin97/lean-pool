@@ -57,7 +57,7 @@ For operators on finite-dimensional inner product spaces over `𝕜 = ℝ, ℂ`:
   transformations I*, Proc. Nat. Acad. Sci. USA 35 (1949), 652–655.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

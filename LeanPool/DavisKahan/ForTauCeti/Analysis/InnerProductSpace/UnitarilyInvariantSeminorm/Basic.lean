@@ -23,7 +23,7 @@ Davis--Kahan/DKPS formalization (Kitware, Inc.). The finite orbit and isometric-
 proofs were originally part of the rectangular module.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

@@ -40,7 +40,7 @@ Bhatia--Davis--McIntosh; see
 *New.*
 -/
 
-public section
+@[expose] public section
 
 open scoped ENNReal NNReal
 

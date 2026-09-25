@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.OperatorModulus
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.SameSequence
+module
+
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.OperatorModulus
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.SameSequence
 
 /-!
 # Approximation singular values of the rectangular operator modulus
@@ -19,6 +21,8 @@ characterization shows that pointwise equality of norms determines every
 approximation number, while the square-root identity gives
 `norm (|T| x) = norm (T x)`.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

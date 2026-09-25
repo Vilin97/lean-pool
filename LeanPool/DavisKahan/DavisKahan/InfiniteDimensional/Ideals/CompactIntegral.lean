@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Ideals.Symmetric
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
+module
+
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Ideals.Symmetric
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Bochner integration of compact-operator-valued functions
@@ -14,6 +16,8 @@ bounded rectangular operator space.  Therefore the Bochner integral of an
 integrable, almost-everywhere compact-valued function is compact.  This is the
 closure fact needed by the Fourier Sylvester inverse.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahanExt

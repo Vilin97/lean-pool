@@ -36,7 +36,7 @@ closure crossed `ForMathlib`, which the `ForTauCeti` layer rule forbids.
 
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 
@@ -50,7 +50,6 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
 variable {F : Type*} [NormedAddCommGroup F] [InnerProductSpace 𝕜 F]
   [FiniteDimensional 𝕜 F]
 /-- Sylvester operator `X ↦ A X - X B`. -/
-@[expose]
 noncomputable def sylvesterOperator (A : F →ₗ[𝕜] F) (B : E →ₗ[𝕜] E) :
     (E →ₗ[𝕜] F) →ₗ[𝕜] (E →ₗ[𝕜] F) where
   toFun X := A ∘ₗ X - X ∘ₗ B
@@ -65,14 +64,12 @@ noncomputable def sylvesterOperator (A : F →ₗ[𝕜] F) (B : E →ₗ[𝕜] E
       map_smul, smul_sub, RingHom.id_apply]
 
 /-- Ordered spectral separation for the Sylvester equation. -/
-@[expose]
 def OrderedSylvesterGap (A : F →ₗ[𝕜] F) (B : E →ₗ[𝕜] E)
     (δ : ℝ) : Prop :=
   OrderedGap B ⊤ A ⊤ δ ∨ OrderedGap A ⊤ B ⊤ δ
 
 /-- Interval/exterior separation with the spectrum of `B` in `[a,b]` and the
 spectrum of `A` outside `(a-δ,b+δ)`. -/
-@[expose]
 def IntervalSylvesterGap (A : F →ₗ[𝕜] F) (B : E →ₗ[𝕜] E)
     (a b δ : ℝ) : Prop :=
   PointSpectrumIn B ⊤ (Set.Icc a b) ∧
@@ -81,7 +78,6 @@ def IntervalSylvesterGap (A : F →ₗ[𝕜] F) (B : E →ₗ[𝕜] E)
 /-- Interval/exterior separation in either orientation.  The first branch has
 the spectrum of `B` in `[a,b]` and that of `A` outside the enlarged interval;
 the second branch reverses those roles. -/
-@[expose]
 def UnorderedIntervalSylvesterGap (A : F →ₗ[𝕜] F) (B : E →ₗ[𝕜] E)
     (a b δ : ℝ) : Prop :=
   IntervalSylvesterGap A B a b δ ∨ IntervalSylvesterGap B A a b δ

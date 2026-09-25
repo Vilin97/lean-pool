@@ -3,11 +3,15 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63UnboundedInfiniteTrial
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.BoundedTruncation
+
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63UnboundedInfiniteTrial
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.BoundedTruncation
 
 /-! # Theorem63Unbounded Compression -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

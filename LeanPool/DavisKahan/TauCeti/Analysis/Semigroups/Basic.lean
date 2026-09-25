@@ -22,7 +22,7 @@ Ported and adapted (Apache 2.0) from `mrdouglasny/hille-yosida`; references incl
 Engel--Nagel, Linares, Pazy, Hille, and Yosida.
 -/
 
-public section
+@[expose] public section
 
 noncomputable section
 

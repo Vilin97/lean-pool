@@ -3,18 +3,22 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.BoundedSelfAdjointSpectralProjection
-import LeanPool.DavisKahan.DavisKahan.Sylvester.FiniteBlockReconstruction
-import LeanPool.DavisKahan.ForTauCeti.Analysis.Fourier.HaagerupZsido.Kernel
-import Mathlib.Analysis.CStarAlgebra.ContinuousLinearMap
-import Mathlib.Analysis.SpecialFunctions.Exponential
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
-import Mathlib.MeasureTheory.Integral.ExpDecay
-import Mathlib.Topology.MetricSpace.ProperSpace.Real
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
+module
+
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.BoundedSelfAdjointSpectralProjection
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.FiniteBlockReconstruction
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.Fourier.HaagerupZsido.Kernel
+public import Mathlib.Analysis.CStarAlgebra.ContinuousLinearMap
+public import Mathlib.Analysis.SpecialFunctions.Exponential
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
+public import Mathlib.MeasureTheory.Integral.ExpDecay
+public import Mathlib.Topology.MetricSpace.ProperSpace.Real
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
 
 /-! # Fourier Semigroup -/
+
+@[expose] public section
 
 
 open TauCeti.DavisKahan.Sylvester

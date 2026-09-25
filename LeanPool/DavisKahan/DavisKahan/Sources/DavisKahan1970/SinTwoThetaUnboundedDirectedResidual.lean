@@ -3,11 +3,15 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaAmbient
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.TrialReflection
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.UnboundedIdealFormGap
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaAmbient
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.TrialReflection
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.UnboundedIdealFormGap
 
 /-! # Sin Two Theta Unbounded Directed Residual -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 

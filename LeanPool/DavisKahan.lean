@@ -3,961 +3,963 @@ Copyright (c) 2026 Jon Crall, Edward Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Edward Wang
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan
-import LeanPool.DavisKahan.DavisKahan.All
-import LeanPool.DavisKahan.DavisKahan.Alternative.All
-import LeanPool.DavisKahan.DavisKahan.Alternative.FiniteDimensional.API.All
-import LeanPool.DavisKahan.DavisKahan.Alternative.FiniteDimensional.API.ClassicalProseLike
-import LeanPool.DavisKahan.DavisKahan.Alternative.FiniteDimensional.API.ProseLike
-import LeanPool.DavisKahan.DavisKahan.Alternative.FiniteDimensional.All
-import LeanPool.DavisKahan.DavisKahan.Alternative.FiniteDimensional.EigenbasisFrobenius
-import LeanPool.DavisKahan.DavisKahan.Analysis.All
-import LeanPool.DavisKahan.DavisKahan.Analysis.FourthOrderODE.AffineModes
-import LeanPool.DavisKahan.DavisKahan.Analysis.FourthOrderODE.All
-import LeanPool.DavisKahan.DavisKahan.Analysis.FourthOrderODE.ComplexGreenIdentity
-import LeanPool.DavisKahan.DavisKahan.Analysis.FourthOrderODE.SmoothGreenIdentity
-import LeanPool.DavisKahan.DavisKahan.Analysis.FourthOrderODE.SmoothKernel
-import LeanPool.DavisKahan.DavisKahan.Audits.All
-import LeanPool.DavisKahan.DavisKahan.Audits.Section8
-import LeanPool.DavisKahan.DavisKahan.BoundedOperator.All
-import LeanPool.DavisKahan.DavisKahan.BoundedOperator.BlockShift
-import LeanPool.DavisKahan.DavisKahan.BoundedOperator.IsometricRangeProjection
-import LeanPool.DavisKahan.DavisKahan.BoundedOperator.Problem
-import LeanPool.DavisKahan.DavisKahan.BoundedOperator.Reflection
-import LeanPool.DavisKahan.DavisKahan.BoundedOperator.TrialResidual
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.All
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.AngleTransport
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.CompatibilitySinTwoTheta
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.DirectedAngleGeneric
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.DirectedAngleRealTransport
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.KyFanOrthonormal
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.RealAngleIdentification
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.RealUnboundedIdeal
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.ReflectionTangentKyFan
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.ScalarDoubleAngleTangent
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.ScalarTransport
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.TanTwoThetaApproximatePair
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.TanTwoThetaBranchFree
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.TanTwoThetaKyFan
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.TanTwoThetaKyFanFiniteCarrier
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.TangentTransport
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.Unbounded
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.UnboundedIdeal
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.UnboundedIdealFormGap
-import LeanPool.DavisKahan.DavisKahan.Explorations.SourceUnitaryInvariantNormFanDominance
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.All
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.Core.All
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.Core.AngleOperatorBlockSum
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.Core.AngleOperators
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.Core.OperatorBlocks
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation.All
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation.Basic
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation.EigenvectorAngle
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation.Exponential
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation.Majorization
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation.PrincipalPlanes
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation.PrincipalPlanes.All
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation.PrincipalPlanes.Basic
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation.PrincipalPlanes.Spectrum
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation.PrincipalPlanes.Variational
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation.QNorm
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation.ShortRotationCounterexample
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DoubleAngle.All
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DoubleAngle.SinTheta
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DoubleAngle.SinTwoThetaResidual
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DoubleAngle.TanTheta
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.Generalized
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.Residual.All
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.Residual.AngleEmbeddings
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.Sharpness
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.SinTheta.All
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.SinTheta.TrialMap
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.Sylvester.All
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.Sylvester.Internal.All
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.TanTheta.All
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.TanTheta.CanonicalEmbedding
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.TanTheta.GraphOperator
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.TanTheta.RitzResidual
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.TanTheta.Vector
-import LeanPool.DavisKahan.DavisKahan.Geometry.All
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.All
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.AngleFunctionalCalculus
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.AngleFunctionalCalculusReal
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.BasisAngleEnergy
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.DoubleAngleFunctionalCalculus
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.DoubleAngleGapBound
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.OperatorAngleComplex
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.OperatorAngleGeneric
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.OperatorAngleReal
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.Proposition35Exponential
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.Proposition35Infinite
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.Proposition35Nonacute
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.SinAngle
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.TanAngleFunctionalCalculus
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.TangentOperatorGeneric
-import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.All
-import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.AngleSequenceRealization
-import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.Assembly
-import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.BilateralShiftExample
-import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.Classification
-import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.CompactClassification
-import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.CrossedDefectGap
-import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.FixedCosineSubspace
-import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.GenericPosition
-import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.GenericReconstruction
-import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.GenericRotationPredicates
-import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.Realization
-import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.TwoProjections
-import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.UnitaryEquivalence
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.All
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotation
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotationAcute
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotationBlocks
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotationReal
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotationSquare
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DisplacementSquareExtremal
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.OrthogonalSummandCoordinates
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.PolarIntertwining
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.PrincipalSquareRoot
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.RestrictedDisplacementExtremal
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.Section3Elementary
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.Section3Nonacute
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.SourceDirectRotation
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.TwoProjectionOperatorClassification
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.All
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.DoubleAngle
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.DoubleAngleSpectrum
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Ideals.All
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Ideals.CompactIntegral
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Ideals.Symmetric
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.All
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.Bounded
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.BoundedBlockSpectrum
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.BoundedDiagonalization
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.BoundedGraphAcute
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.BoundedSpectralEnclosure
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.BoundedSpectralTransport
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.ContinuationWitnessEffectiveBlocks
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.ContinuationWitnessOrientedBlocks
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.Unbounded
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.UnboundedCoordinateRestrictions
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.UnboundedDiagonalRestrictions
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.UnboundedPublic
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.UnboundedReductionTransport
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.UnboundedRotationTransport
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.UnboundedSelectedGraphBridge
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.All
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Bounded
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.BoundedBorelProjectionComplex
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.All
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.Assembly
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.CircleWitness
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.Core
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.Endpoints
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.QuarterAcute
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.Roadmap
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.RotationChain
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.SelectedBranch
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.SelectedGraph
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.SelectedReduction
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.SelectedSubspace
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.SharpBlockPath
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.SharpDiagonalResolvents
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.SharpRadius
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.SharpSchurComplement
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.SharpSourceSpectrum
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.SharpThreshold
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.SpectralIdentification
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.Theorem
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.Transport
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.WitnessGraph
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.WitnessOffDiagonal
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.WitnessRiccati
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.General
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.RCLikeSpectralBridge
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Restriction
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.SpectralBridge
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SpectraBridge.All
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SpectraBridge.DirectRotationAPI
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Sylvester.All
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Sylvester.Basic
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Sylvester.FourierSemigroup
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Sylvester.GeneralSeparationKyFan
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Sylvester.MathPass
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Sylvester.OrderedSemigroup
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTheta.All
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTheta.ContinuationWitnessAPriori
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.All
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.BoundedOffDiagonalDegenerate
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.BoundedOffDiagonalEstimate
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.BoundedOffDiagonalHalfLine
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.BoundedOffDiagonalOrderedGap
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.BoundedOffDiagonalOrderedSets
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.BoundedOffDiagonalRestrictionSpectrum
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.BoundedOffDiagonalReverseGap
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.BoundedOffDiagonalRiccati
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.BoundedOffDiagonalSpectrumNonempty
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.BoundedRiccatiShift
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.CanonicalTangentBridge
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.OffDiagonalSpectralRepulsion
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.OffDiagonalSpectralRepulsionUnbounded
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.QuarterAcuteFormGap
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.QuarterAngleUnbounded
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.SelectedBranchSymmetricNorming
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.SelectedBranchSymmetricNormingReal
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.All
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.All
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.BlockSum
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.Core
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.FiniteSourceSingularSystem
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.OperatorModulus
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.Real
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.Real.All
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.Real.KyFanGauge
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.RestrictedDisplacementDominance
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.ScalarGeneric
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.CanonicalRealView
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ComplexificationApproximation
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.Majorization.All
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.Majorization.WeakSubmajorization
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.NormalizedUnitaryInvariantNorm
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.SymmetricNormingScalarTransport
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.UnitarilyInvariant.All
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.UnitarilyInvariant.FamilyCore
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.UnitarilyInvariant.IdealBanach
-import LeanPool.DavisKahan.DavisKahan.Riccati.All
-import LeanPool.DavisKahan.DavisKahan.Riccati.BoundedBasic
-import LeanPool.DavisKahan.DavisKahan.Riccati.BoundedCanonicalGraph
-import LeanPool.DavisKahan.DavisKahan.Riccati.BoundedCanonicalSolution
-import LeanPool.DavisKahan.DavisKahan.Riccati.BoundedCore
-import LeanPool.DavisKahan.DavisKahan.Riccati.BoundedEstimates
-import LeanPool.DavisKahan.DavisKahan.Riccati.BoundedExistence
-import LeanPool.DavisKahan.DavisKahan.Riccati.BoundedReduction
-import LeanPool.DavisKahan.DavisKahan.Riccati.BoundedSharpEstimates
-import LeanPool.DavisKahan.DavisKahan.Riccati.BoundedStability
-import LeanPool.DavisKahan.DavisKahan.Riccati.UnboundedAdjointRiccati
-import LeanPool.DavisKahan.DavisKahan.Riccati.UnboundedBasic
-import LeanPool.DavisKahan.DavisKahan.Riccati.UnboundedCore
-import LeanPool.DavisKahan.DavisKahan.Riccati.UnboundedExistence
-import LeanPool.DavisKahan.DavisKahan.Riccati.UnboundedReduction
-import LeanPool.DavisKahan.DavisKahan.SharedFoundations.All
-import LeanPool.DavisKahan.DavisKahan.SharedFoundations.Ideal.All
-import LeanPool.DavisKahan.DavisKahan.SharedFoundations.Ideal.ModulusTransport
-import LeanPool.DavisKahan.DavisKahan.SharedFoundations.Ideal.ReflectionTransport
-import LeanPool.DavisKahan.DavisKahan.SharedFoundations.Ideal.TwoWayFactorization
-import LeanPool.DavisKahan.DavisKahan.SharedFoundations.Residual.All
-import LeanPool.DavisKahan.DavisKahan.SharedFoundations.Residual.ReflectionDefect
-import LeanPool.DavisKahan.DavisKahan.SharedFoundations.Residual.ReflectionDefectIdeal
-import LeanPool.DavisKahan.DavisKahan.SharedFoundations.Spectral.All
-import LeanPool.DavisKahan.DavisKahan.SharedFoundations.Spectral.BoundedSelection
-import LeanPool.DavisKahan.DavisKahan.SinTheta.All
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Bounded.All
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Bounded.Core
-import LeanPool.DavisKahan.DavisKahan.SinTheta.BoundedPerturbation
-import LeanPool.DavisKahan.DavisKahan.SinTheta.BoundedPerturbationIdeal
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Canonical
-import LeanPool.DavisKahan.DavisKahan.SinTheta.FrameFactorization
-import LeanPool.DavisKahan.DavisKahan.SinTheta.FrameFactorizationGeneric
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Natural.All
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Natural.Bounded
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Natural.Examples
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Natural.GapConvenience
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Natural.Generalized
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Natural.Real
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Natural.Reducing
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Natural.SpectralSubspace
-import LeanPool.DavisKahan.DavisKahan.SinTheta.NaturalTwoSubspace
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Real.All
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Real.Canonical
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Real.FrameFactorization
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Real.Generalized
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Real.Specializations
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Real.Unbounded
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Specializations
-import LeanPool.DavisKahan.DavisKahan.SinTheta.SpectralBridge
-import LeanPool.DavisKahan.DavisKahan.SinTheta.SpectralProjection
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Unbounded.All
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Unbounded.AllGap
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Unbounded.Core
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Unbounded.FormBoundedGap
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Unbounded.Gauge
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Unbounded.IntervalExterior
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Unbounded.OpNorm
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Unbounded.SpectrumGap
-import LeanPool.DavisKahan.DavisKahan.Sources.All
-import LeanPool.DavisKahan.DavisKahan.Sources.Davis1963.All
-import LeanPool.DavisKahan.DavisKahan.Sources.Davis1963.DoubleAngle
-import LeanPool.DavisKahan.DavisKahan.Sources.Davis1963.RotationBound
-import LeanPool.DavisKahan.DavisKahan.Sources.Davis1963.RotationEnergy
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.All
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.AmbientBlockVocabulary
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.AmbientReal
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.All
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.Correspondence
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.DoubleAngleTangent
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.GeneralSinThetaExtensions
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.HostileReviewRegressions
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.ResultSemanticSurface
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.Section3
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.Section8
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.Section9
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.SinTwoThetaCommonDomainUsage
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.SineThetaSourceInventory
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.SylvesterHilbertSchmidt
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.Theorem63Distillation
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.Unbounded
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Directed
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.DirectedReal
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.DirectedUnboundedReal
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.DoubleAngleTangentOperator
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.GeneralSinTheta
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.GeneralSinThetaExtensions
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.All
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.HilbertSchmidt
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.HilbertSchmidtApproximationNorm
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.HilbertSchmidtBasis
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.HilbertSchmidtComplexFamily
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.HilbertSchmidtFiniteRank
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.HilbertSchmidtFrobenius
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.HilbertSchmidtRealDescent
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.HilbertSchmidtTensor
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.KyFanNorm
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.NormCorrespondence
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.NormalizedUnitaryInvariantNormExamples
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.RankOneNormalization
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.SequenceGauge
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.SpectralSelection
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.StandardFanDominance
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.StandardInstances
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.UnitaryInvariantNormDefinite
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.UnitaryInvariantNormInstances
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.PartIII
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.PartIIIPresentation
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Proposition61
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.ScalarGenericFinite
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section1
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section10FunctionalCalculus
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section1UnitaryInvariantNorms
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section2TanThetaPerturbation
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3AcuteCounterexample
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3AcuteDirectRotation
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Classification
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Corollary31
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Corollary32
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3PrincipalSquareRoot
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Proposition32
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Proposition34
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Proposition34Presentation
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Proposition34Real
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Proposition35
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Theorem31Realization
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section4
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section4BasisAngleEnergy
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section4DirectRotationSource
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section4Dominance
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section4Examples
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section4FiniteSurface
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section4Real
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section5
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section5BanachSylvester
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section6AppendixLeakage
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section6AppendixLeakageReal
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section6Example61
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section6SourceNormClass
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section6SourceScope
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section6Theorem63Presentation
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section7IdealBounds
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section7SwapAsymmetry
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.All
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.BranchRepulsion
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.CompressionApproximation
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.CompressionRepulsion
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Presentation
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.SelectedBranch
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Smallness
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81AngleForms
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81Approximation
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81ApproximationReal
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81BlockEigenvalue
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81EigenvalueSource
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81Majorization
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81MajorizationReal
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81Real
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81SourceUnbounded
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81UnboundedBranch
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81UnboundedCompression
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81UnboundedConverse
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81UnboundedReal
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem82
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem82Branch
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem82Real
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem82SourceUnbounded
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem82Unbounded
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem82UnboundedBranchBound
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem82UnboundedPath
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.All
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.BeamDoubleTangentKyFan
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.DomainLimitation
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.ExactData
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.ExampleCertificateSurface
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.FreeBeamAnalyticFoundation
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.FreeBeamCharacteristic
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.FreeBeamCharacteristicConverse
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.FreeBeamEigenmodeReduction
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.FreeBeamFoundationAssembler
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.FreeBeamModeData
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.FreeBeamModeUniqueness
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.FreeBeamOrthogonality
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.FreeBeamRootExclusion
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.FreeBeamRootLocalization
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.IndividualAngles
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.NumericalBounds
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.NumericalResults
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.RankOneCorrection
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.RealModel
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.SchurComplement
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.TrialSubspace
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.WeinbergerAngle
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.WeinbergerComparison
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SectionTwo
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SectionTwoSharpness
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SectionTwoUsage
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SeparableSourceScope
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SharpIdeal
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SharpKyFan
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoTheta
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaAmbient
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaAmbientUnbounded
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaCommonDomain
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaDirectedAngle
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaDirectedRCLike
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaUnboundedDirectedResidual
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaUnboundedDirectedResidualReal
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.All
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.AngleIdentity
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.CommonCore
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.CommonCoreTheorems
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.CommonDomain
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.CommonDomainSymmetric
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.CommonDomainTheorems
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.CosineAngle
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.CosineAngleReal
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.FiniteMultiplicity
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.FullAngle
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.FullAngleReal
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Lemma61
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.All
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.ComplexificationGauge
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.HeterogeneousRepresentative
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.SingularValueTransport
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.SubspaceSingularTransport
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.UnitaryInvariantNorm
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.UnitaryInvariantNormLaws
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.OperatorAngleBridge
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Presentation
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.ProjectionBlocks
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.ReflectedDefectDoubling
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.ScalarGeneric
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Section6SourceNorms
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Sharpness
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Symmetric
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.SymmetricReal
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Theorem61
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Theorem61Universal
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Theorem62
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.TrialReflection
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineThetaSourceInventory
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.StableRiccatiPair
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Sylvester.All
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Sylvester.HilbertSchmidtDefectFirst
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Sylvester.HilbertSchmidtEstimate
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Sylvester.HilbertSchmidtPairwise
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Sylvester.OperatorNormEstimate
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SymmetricNormingFanDominance
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTheta
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanThetaAmbient
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanThetaDirectedUnbounded
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanThetaScalarGeneric
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanThetaUnboundedAmbient
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanThetaUnboundedAmbientReal
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoTheta
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaAmbient
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaAmbientBranchFree
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaBranchFree
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaBranchFreeInfinite
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaBranchFreeInfiniteReal
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaReflectionAmbient
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaScalarGeneric
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedAmbientExact
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedExact
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedExactReal
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedGramBridge
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedGramMiddle
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedGramReal
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedKyFan
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedReducing
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedReducingReal
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedResidual
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TangentSingularValues
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TangentSingularValuesReal
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Theorem61
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.UnboundedCompressionReal
-import LeanPool.DavisKahan.DavisKahan.Specialized.All
-import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.All
-import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamClassicalReal
-import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamDoubleTangent
-import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamEigenbasis
-import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamEigenvalueSequence
-import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamEigenvalueSequenceReal
-import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamFormSpace
-import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamFormSpaceReal
-import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamFormSpaceScalar
-import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamInPlaneAngle
-import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamSection9
-import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamSection9Real
-import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamSpectrum
-import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamSpectrumReal
-import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamTangent
-import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamTrialReal
-import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamWeinberger
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.All
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.BoundedFromSpectrum
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.BoundedSelfAdjointSpectralProjection
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.BoundedTruncation
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.CayleySelectorBridge
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.CentralBand
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.CircleContour
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.CircleRieszEndpoints
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.CircleRieszIntegral
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.CircleRieszProjection
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.All
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.BoundedGapProjection
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.FormTransport
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.LinearPMapSpectralDescent
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.ReducingRestrictionDescent
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.Spectrum
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.SubmoduleEquiv
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.Subspace
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.ContinuationContour
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.ContinuationRieszIntegral
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.All
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.BoundedGraphCompactness
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.BoundedInverseRealization
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.CoerciveFormResolvent
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.CompactGraphEmbedding
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.FormCompactness
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.GraphClosedness
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.MaximalDomainTransport
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.PositiveSurjectiveCriterion
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.ShiftedBeamRealization
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.TraceKernelModel
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormSpectrumBounds
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.GapResolvent
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.GraphSubspace
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.OperatorAngle
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.OrderedHalfLine
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.PartialMap.All
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.PartialMap.BoundedRealization
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.PartialMap.Complexification
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.PartialMap.RealSpectrum
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.PartialMap.UnitaryConjugation
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Real.All
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Real.BoundedAlmostInvariant
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Real.RealCyclicDecomposition
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Real.RealMultiplicityModel
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Real.SpectralCutoff
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Real.SpectralMultiplicityClassification
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Real.SpectralRestriction
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.ReducingSpectrumUnion
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.ReducingSubspace.All
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.ReducingSubspace.Restriction
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.ReducingSubspace.RestrictionExtras
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.ReflectionRestriction
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.ResolventOperator
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.SelfAdjointBorelCalculus
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.SpectralCutoff
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.SpectralGapFormBounds
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.SpectralRestriction
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.SpectralRestrictionLocalization
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.SpectralRestrictionOperator
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.UnboundedBandLipschitz
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.UnboundedCentralBand
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.UnboundedDirectedGapBound
-import LeanPool.DavisKahan.DavisKahan.Sylvester.All
-import LeanPool.DavisKahan.DavisKahan.Sylvester.Bounded
-import LeanPool.DavisKahan.DavisKahan.Sylvester.ClosedSylvesterEquation
-import LeanPool.DavisKahan.DavisKahan.Sylvester.CutoffInterface
-import LeanPool.DavisKahan.DavisKahan.Sylvester.FilledTruncation
-import LeanPool.DavisKahan.DavisKahan.Sylvester.FiniteBlockReconstruction
-import LeanPool.DavisKahan.DavisKahan.Sylvester.FiniteStepCalculus
-import LeanPool.DavisKahan.DavisKahan.Sylvester.Gap
-import LeanPool.DavisKahan.DavisKahan.Sylvester.HomogeneousUniqueness
-import LeanPool.DavisKahan.DavisKahan.Sylvester.OrthogonalIdempotentExp
-import LeanPool.DavisKahan.DavisKahan.Sylvester.PairwiseHomogeneousUniqueness
-import LeanPool.DavisKahan.DavisKahan.Sylvester.PairwiseSpectrumGap
-import LeanPool.DavisKahan.DavisKahan.Sylvester.RealUnbounded
-import LeanPool.DavisKahan.DavisKahan.Sylvester.RosenblumExistence
-import LeanPool.DavisKahan.DavisKahan.Sylvester.ScalarGeneric
-import LeanPool.DavisKahan.DavisKahan.Sylvester.ScalarTransport
-import LeanPool.DavisKahan.DavisKahan.Sylvester.ShiftedInverse
-import LeanPool.DavisKahan.DavisKahan.Sylvester.ShiftedInverseGauge
-import LeanPool.DavisKahan.DavisKahan.Sylvester.Spectrum
-import LeanPool.DavisKahan.DavisKahan.Sylvester.Unbounded.All
-import LeanPool.DavisKahan.DavisKahan.Sylvester.Unbounded.AllGap
-import LeanPool.DavisKahan.DavisKahan.Sylvester.Unbounded.Equation
-import LeanPool.DavisKahan.DavisKahan.Sylvester.Unbounded.FormBoundedGap
-import LeanPool.DavisKahan.DavisKahan.Sylvester.Unbounded.IntervalExterior
-import LeanPool.DavisKahan.DavisKahan.Sylvester.Unbounded.Neumann
-import LeanPool.DavisKahan.DavisKahan.Sylvester.Unbounded.OrderedCutoff
-import LeanPool.DavisKahan.DavisKahan.Sylvester.Unbounded.OrderedEngine
-import LeanPool.DavisKahan.DavisKahan.Sylvester.Unbounded.OrderedEngineDirect
-import LeanPool.DavisKahan.DavisKahan.Sylvester.Unbounded.OrderedFromCutoffs
-import LeanPool.DavisKahan.DavisKahan.TanTheta.All
-import LeanPool.DavisKahan.DavisKahan.TanTheta.RitzPair
-import LeanPool.DavisKahan.DavisKahan.TanTheta.ScalarTransport
-import LeanPool.DavisKahan.DavisKahan.TanTheta.Spectrum
-import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63DirectedAngleBridge
-import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63FiniteSource
-import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63InfiniteTrial
-import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63TrialData
-import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63Unbounded
-import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63UnboundedCompression
-import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63UnboundedInfiniteTrial
-import LeanPool.DavisKahan.DavisKahan.TanTheta.UnboundedGraphAngle
-import LeanPool.DavisKahan.DavisKahan.TanTheta.UnboundedSpectrum
-import LeanPool.DavisKahan.DavisKahan.TanTheta.UnboundedVector
-import LeanPool.DavisKahan.DavisKahan.TanTheta.Vector
-import LeanPool.DavisKahan.DavisKahan.TanTwoTheta.All
-import LeanPool.DavisKahan.DavisKahan.TanTwoTheta.BoundedOffDiagonal
-import LeanPool.DavisKahan.DavisKahan.TanTwoTheta.Unbounded
-import LeanPool.DavisKahan.DavisKahan.TanTwoTheta.UnboundedIdeal
-import LeanPool.DavisKahan.DavisKahan.TanTwoTheta.UnboundedVector
-import LeanPool.DavisKahan.ForTauCeti
-import LeanPool.DavisKahan.ForTauCeti.Analysis.CStarAlgebra.ContinuousFunctionalCalculusTransport
-import LeanPool.DavisKahan.ForTauCeti.Analysis.CStarAlgebra.PositiveSquareRootCommute
-import LeanPool.DavisKahan.ForTauCeti.Analysis.CStarAlgebra.RealSpectrumFunctionalCalculus
-import LeanPool.DavisKahan.ForTauCeti.Analysis.CStarAlgebra.SelfAdjointGapInverse
-import LeanPool.DavisKahan.ForTauCeti.Analysis.CStarAlgebra.TrigonometricSeries
-import LeanPool.DavisKahan.ForTauCeti.Analysis.Calculus.FourthOrderGreensIdentity
-import LeanPool.DavisKahan.ForTauCeti.Analysis.Convex.Majorization
-import LeanPool.DavisKahan.ForTauCeti.Analysis.Fourier.ExponentialAbs
-import LeanPool.DavisKahan.ForTauCeti.Analysis.Fourier.HaagerupZsido.Defs
-import LeanPool.DavisKahan.ForTauCeti.Analysis.Fourier.HaagerupZsido.Fourier
-import LeanPool.DavisKahan.ForTauCeti.Analysis.Fourier.HaagerupZsido.Integrability
-import LeanPool.DavisKahan.ForTauCeti.Analysis.Fourier.HaagerupZsido.Kernel
-import LeanPool.DavisKahan.ForTauCeti.Analysis.Fourier.Poisson.CauchyLattice
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.AlignedBasis
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.AngleGeometry
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.AngleGeometryBlockSum
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Basic
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BasisDiagonal
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BasisSpan
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BlockLowerBound
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.AlmostInvariant
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.BorelNatural
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.CyclicDecomposition
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.CyclicIsometry
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.CyclicModel
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.DiagMeasureMulLp
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.DiagMeasureNatural
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.DiagonalMeasure
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.MulLpBorel
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.Multiplicative
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.MultiplicityLevelUniqueness
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.MultiplicityModel
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.MultiplicityModelReal
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.MultiplicityUniqueness
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.Operator
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.PVM
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.Polarization
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.Restriction
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.SeparableCyclic
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.SpectralMultiplicityEquiv
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BoundedOperator.Projector
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BoundedOperator.SinTheta
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CoerciveUnit
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CompactApproximationEigenvalues
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CompactSelfAdjointClassification
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CompactSingularSubspaces
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CompactSpectralDecomposition
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Complexification.Basic
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Complexification.FunctionalCalculus
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Complexification.Spectrum
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CourantFischer
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.DiagonalOperator
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.DoubleAngle.Gram
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.DoubleAngle.ReducingCutoff
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.DoubleAngle.Reflection
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.DoubleAngle.ReflectionBlocks
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.DoubleAngle.SpectralCutoff
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.DoubleAngle.UnboundedPole
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.DoubleAngle.UnboundedReflection
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.DoubleAngle.Vector
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.EigenblockSpan
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.EigenvalueChange
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.FiniteFrame
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.FrameFactorization
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Gram.Matrix
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Gram.Operator
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.HilbertSchmidt.Block
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.HilbertSchmidt.Conjugation
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.HilbertSchmidt.Energy
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.HilbertSchmidt.Lp
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.HilbertSchmidt.Pythagoras
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.HilbertSchmidt.Space
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.HilbertSumIntertwine
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.HoffmanWielandt
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.IntertwiningUnitary
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.KyFan
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Closed
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Complexification
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Complexification.SpectralDescent
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Constructions
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.DiagonalMultiplication
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.GraphCore
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.RayleighRitz
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.RealLowerBound
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Resolvent
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.ResolventBound
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.ResolventOpen
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.ResolventSandwich
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.ScalarTransport
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SelfAdjointMaximal
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SelfAdjointResolvent
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Shift
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SpectralCutOperator
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SpectralFormBounds
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SpectralGapInverse
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SpectralGrid
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SpectralMeasure
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SpectralMeasure.Construction
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SpectralProjectionGroup
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SpectralProjectionNaturality
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SpectralSupport
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SpectralVectorBounds
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.StoneUniqueness
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SubmoduleAdjoint
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Sylvester
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.UnitaryTransport
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.YosidaApproximation
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LpIndexCongr
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LyapunovPositivity
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.ModulusConjugation
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.ModulusTransport
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.MoorePenroseInverse
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.NearIsometry
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.OneParameterUnitaryGroup.Basic
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.OneParameterUnitaryGroup.Commutant
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.OneParameterUnitaryGroup.SemigroupBridge
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.OneParameterUnitaryGroup.Stone
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.OperatorModulus
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.OperatorRealAlgebra
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.OperatorUnitaryEquiv
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.OrthogonalGluing
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.OrthogonalSeries
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.PartialIsometry
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Polar.CFCBridge
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Polar.Decomposition
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Polar.GramContraction
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Polar.Isometry
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Polar.PartialIsometry
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Polar.SelfAdjointCompletion
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.PositiveSqrt
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.PrincipalAngleSequence
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.PrincipalAngles
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.PrincipalAngles.Equisingular
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.PrincipalSineSequence
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.ProjValMeasure.Additivity
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.ProjValMeasure.Basic
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.ProjValMeasure.Subspace
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Projection.Blocks
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Projection.Gap
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Projection.Geometry
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Projection.ScalarTransport
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.QuadraticFormBounds
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RankOneSinTheta
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RealContinuousFunctionalCalculus
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RealSpectrumBorelSymbols
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RealSpectrumCyclicDecomposition
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RealSpectrumCyclicModel
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RealSpectrumDiagonalMeasure
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RealSpectrumIntertwining
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RectangularPartialIsometry
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RectangularSingularValues
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.ReducedExtension
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.ReducingSubspace
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Residual.AngleEmbedding
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Residual.Ritz
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Residual.TrialMap
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Rosenblum
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SandwichMajorization
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SchattenNorm
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SchurHorn
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SelfAdjointFunctionalCalculus
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SeparableOrthonormal
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SeparatedIntertwiner
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SinTheta.DirectedBounds
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SinTheta.Frobenius
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SinTheta.OperatorNorm
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SinTheta.Perturbation
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SinTheta.UnitarilyInvariant
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Singular.Subspace
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Singular.System
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Singular.Values
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SkewAdjointExponential
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Spectral.Cutoff
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Spectral.EigenFrame
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Spectral.Gap
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Spectral.GapProjection
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Spectral.ResidualGap
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Spectral.Subspace
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SpectralOrder
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Spectrum
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SphericalPythagoras
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.Basic
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.BlockEstimate
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.BlockIdentity
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.Bound
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.Generator
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.Group
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.Internal.ReciprocalMultiplier
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.Internal.ReciprocalMultiplier.DoubledPhase
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.Internal.ReciprocalMultiplier.Fourier
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.Internal.ReciprocalMultiplier.OrbitAction
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.Internal.SpectralBounds
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.Interval
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.Operator
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.SpectralDistance
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.SpectralGap
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.TwoDimensionalSingularValues
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.TwoLevelOperator
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.UnitarilyInvariantSeminorm
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.UnitarilyInvariantSeminorm.Basic
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.UnitarilyInvariantSeminorm.BlockSum
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.UnitarilyInvariantSeminorm.Gauge
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.UnitarilyInvariantSeminorm.Instances
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.UnitarilyInvariantSeminorm.Majorization
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.VectorAngle
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.ZeroExtension
-import LeanPool.DavisKahan.ForTauCeti.Analysis.Matrix.EntrywiseEigenvalue
-import LeanPool.DavisKahan.ForTauCeti.Analysis.Matrix.EntrywiseOpNorm
-import LeanPool.DavisKahan.ForTauCeti.Analysis.Matrix.SpectralFunctionMeasurable
-import LeanPool.DavisKahan.ForTauCeti.Analysis.Matrix.SpectralProjection
-import LeanPool.DavisKahan.ForTauCeti.Analysis.Matrix.Spectrum
-import LeanPool.DavisKahan.ForTauCeti.Analysis.Normed.Algebra.TrigonometricSeries
-import LeanPool.DavisKahan.ForTauCeti.Analysis.Normed.FiniteLpGauge
-import LeanPool.DavisKahan.ForTauCeti.Analysis.Normed.Operator.FiniteRankCompact
-import LeanPool.DavisKahan.ForTauCeti.Analysis.Normed.Operator.LinearIsometry
-import LeanPool.DavisKahan.ForTauCeti.Analysis.Normed.Operator.PartialSylvesterBoundedInverse
-import LeanPool.DavisKahan.ForTauCeti.Analysis.Normed.Operator.Resolvent.Unbounded
-import LeanPool.DavisKahan.ForTauCeti.Analysis.Normed.Operator.Restriction
-import LeanPool.DavisKahan.ForTauCeti.Analysis.Normed.Operator.SylvesterBoundedInverse
-import LeanPool.DavisKahan.ForTauCeti.Analysis.Normed.SchattenGauge
-import LeanPool.DavisKahan.ForTauCeti.Analysis.Normed.SupGauge
-import LeanPool.DavisKahan.ForTauCeti.Analysis.Normed.SymmetricGauge
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.Adjoint
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.Basic
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.Compact
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.CompactHilbert
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.Core
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.DiagonalExample
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.DiagonalSequence
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.EnergyComparison
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.Examples
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.FiniteDimensional
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.FinitePVMSelection
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.FiniteRestriction
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.FiniteValueFibers
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.FiniteValueSeparation
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.GramBandPolar
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.GramInverseResolvent
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.GramResolvent
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.GramSpectralRank
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.GramSquare
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.Isometry
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.KyFan
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.KyFanBochner
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.LeadingCutoff
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.MinMax
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.MinMaxReal
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.MinMaxUpper
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.Pinching
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.PrescribedSequence
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.Rank
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.SameSequence
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.ScalarTransport
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.SubspaceTransport
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.TangentTransfer
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.Basic
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.CompactOperator
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.GramGauge
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.HilbertSchmidt
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.KyFan
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.KyFanDominance
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.OperatorNorm
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.Schatten
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.SymmetricGauge
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.TraceClass
-import LeanPool.DavisKahan.ForTauCeti.Analysis.RCLike.ScalarTransport
-import LeanPool.DavisKahan.ForTauCeti.Analysis.RCLike.ScalarTransportFunctionalCalculus
-import LeanPool.DavisKahan.ForTauCeti.Analysis.RCLike.ScalarTransportIsometry
-import LeanPool.DavisKahan.ForTauCeti.Analysis.SpecialFunctions.Integral.RationalQuadratic
-import LeanPool.DavisKahan.ForTauCeti.Analysis.SpecialFunctions.Integral.SineLaplace
-import LeanPool.DavisKahan.ForTauCeti.Analysis.SpecialFunctions.Sqrt
-import LeanPool.DavisKahan.ForTauCeti.Analysis.SpecialFunctions.TanArcsin
-import LeanPool.DavisKahan.ForTauCeti.LinearAlgebra.Dimension.RankComp
-import LeanPool.DavisKahan.ForTauCeti.LinearAlgebra.Matrix.PosDef
-import LeanPool.DavisKahan.ForTauCeti.LinearAlgebra.Matrix.RankFactorization
-import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.CfcMeasurable
-import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.CompactExists
-import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.Function.ConvergenceInMeasure
-import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.HellySelection
-import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.IntervalSecondPrimitiveCompact
-import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.IntervalSecondPrimitiveDeriv
-import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.IntervalWeakSecondDeriv
-import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.LpComp
-import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.LpInfiniteDimensional
-import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.LpNonvanishing
-import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.LpRealPart
-import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.LpRestrict
-import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.LpSliceSum
-import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.LpStar
-import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.MatrixKernelSelection
-import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.Measure.Typeclasses.Probability
-import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.MeasureClass
-import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.MulLpAlgebra
-import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.MulLpCfc
-import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.MulLpSpectrum
-import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.MultiplicityLevels
-import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.RadonNikodymL2
-import LeanPool.DavisKahan.ForTauCeti.Order.DiscreteEnumeration
-import LeanPool.DavisKahan.ForTauCeti.Probability.AverageError
-import LeanPool.DavisKahan.ForTauCeti.Probability.Moments.CenteredScatter
-import LeanPool.DavisKahan.ForTauCeti.Probability.Moments.MatrixConcentration
-import LeanPool.DavisKahan.ForTauCeti.Probability.Moments.SampleMean
-import LeanPool.DavisKahan.ForTauCeti.Probability.Moments.SampleSecondMoment
-import LeanPool.DavisKahan.ForTauCeti.Probability.Moments.Variance
-import LeanPool.DavisKahan.ForTauCeti.Probability.ProductConvergence
-import LeanPool.DavisKahan.ForTauCeti.Probability.RigidAlignment
-import LeanPool.DavisKahan.ForTauCeti.Probability.VStatistic
-import LeanPool.DavisKahan.ForTauCeti.SetTheory.Cardinal.Lift
-import LeanPool.DavisKahan.ForTauCeti.Topology.ApproxMinimizer
-import LeanPool.DavisKahan.ForTauCeti.Topology.Berge
-import LeanPool.DavisKahan.ForTauCeti.Topology.ENNRealLiminf
-import LeanPool.DavisKahan.Palomar.DKSectionTwo.SolutionPrelude
-import LeanPool.DavisKahan.Solution
-import LeanPool.DavisKahan.TauCeti.Analysis.Calculus.ExponentialSlope
-import LeanPool.DavisKahan.TauCeti.Analysis.Semigroups.Basic
-import LeanPool.DavisKahan.TauCeti.Analysis.Semigroups.ExponentialShift
-import LeanPool.DavisKahan.TauCeti.Analysis.Semigroups.Generator.Basic
-import LeanPool.DavisKahan.TauCeti.Analysis.Semigroups.GrowthBound
-import LeanPool.DavisKahan.TauCeti.Analysis.Semigroups.Resolvent.Basic
-import LeanPool.DavisKahan.TauCeti.MeasureTheory.Integral.ExpDecay
+
+public import LeanPool.DavisKahan.DavisKahan
+public import LeanPool.DavisKahan.DavisKahan.All
+public import LeanPool.DavisKahan.DavisKahan.Alternative.All
+public import LeanPool.DavisKahan.DavisKahan.Alternative.FiniteDimensional.API.All
+public import LeanPool.DavisKahan.DavisKahan.Alternative.FiniteDimensional.API.ClassicalProseLike
+public import LeanPool.DavisKahan.DavisKahan.Alternative.FiniteDimensional.API.ProseLike
+public import LeanPool.DavisKahan.DavisKahan.Alternative.FiniteDimensional.All
+public import LeanPool.DavisKahan.DavisKahan.Alternative.FiniteDimensional.EigenbasisFrobenius
+public import LeanPool.DavisKahan.DavisKahan.Analysis.All
+public import LeanPool.DavisKahan.DavisKahan.Analysis.FourthOrderODE.AffineModes
+public import LeanPool.DavisKahan.DavisKahan.Analysis.FourthOrderODE.All
+public import LeanPool.DavisKahan.DavisKahan.Analysis.FourthOrderODE.ComplexGreenIdentity
+public import LeanPool.DavisKahan.DavisKahan.Analysis.FourthOrderODE.SmoothGreenIdentity
+public import LeanPool.DavisKahan.DavisKahan.Analysis.FourthOrderODE.SmoothKernel
+public import LeanPool.DavisKahan.DavisKahan.Audits.All
+public import LeanPool.DavisKahan.DavisKahan.Audits.Section8
+public import LeanPool.DavisKahan.DavisKahan.BoundedOperator.All
+public import LeanPool.DavisKahan.DavisKahan.BoundedOperator.BlockShift
+public import LeanPool.DavisKahan.DavisKahan.BoundedOperator.IsometricRangeProjection
+public import LeanPool.DavisKahan.DavisKahan.BoundedOperator.Problem
+public import LeanPool.DavisKahan.DavisKahan.BoundedOperator.Reflection
+public import LeanPool.DavisKahan.DavisKahan.BoundedOperator.TrialResidual
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.All
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.AngleTransport
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.CompatibilitySinTwoTheta
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.DirectedAngleGeneric
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.DirectedAngleRealTransport
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.KyFanOrthonormal
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.RealAngleIdentification
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.RealUnboundedIdeal
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.ReflectionTangentKyFan
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.ScalarDoubleAngleTangent
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.ScalarTransport
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.TanTwoThetaApproximatePair
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.TanTwoThetaBranchFree
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.TanTwoThetaKyFan
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.TanTwoThetaKyFanFiniteCarrier
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.TangentTransport
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.Unbounded
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.UnboundedIdeal
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.UnboundedIdealFormGap
+public import LeanPool.DavisKahan.DavisKahan.Explorations.SourceUnitaryInvariantNormFanDominance
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.All
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.Core.All
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.Core.AngleOperatorBlockSum
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.Core.AngleOperators
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.Core.OperatorBlocks
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation.All
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation.Basic
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation.EigenvectorAngle
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation.Exponential
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation.Majorization
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation.PrincipalPlanes
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation.PrincipalPlanes.All
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation.PrincipalPlanes.Basic
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation.PrincipalPlanes.Spectrum
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation.PrincipalPlanes.Variational
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation.QNorm
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation.ShortRotationCounterexample
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DoubleAngle.All
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DoubleAngle.SinTheta
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DoubleAngle.SinTwoThetaResidual
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DoubleAngle.TanTheta
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.Generalized
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.Residual.All
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.Residual.AngleEmbeddings
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.Sharpness
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.SinTheta.All
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.SinTheta.TrialMap
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.Sylvester.All
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.Sylvester.Internal.All
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.TanTheta.All
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.TanTheta.CanonicalEmbedding
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.TanTheta.GraphOperator
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.TanTheta.RitzResidual
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.TanTheta.Vector
+public import LeanPool.DavisKahan.DavisKahan.Geometry.All
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.All
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.AngleFunctionalCalculus
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.AngleFunctionalCalculusReal
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.BasisAngleEnergy
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.DoubleAngleFunctionalCalculus
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.DoubleAngleGapBound
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.OperatorAngleComplex
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.OperatorAngleGeneric
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.OperatorAngleReal
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.Proposition35Exponential
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.Proposition35Infinite
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.Proposition35Nonacute
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.SinAngle
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.TanAngleFunctionalCalculus
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.TangentOperatorGeneric
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.All
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.AngleSequenceRealization
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.Assembly
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.BilateralShiftExample
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.Classification
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.CompactClassification
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.CrossedDefectGap
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.FixedCosineSubspace
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.GenericPosition
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.GenericReconstruction
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.GenericRotationPredicates
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.Realization
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.TwoProjections
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.UnitaryEquivalence
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.All
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotation
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotationAcute
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotationBlocks
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotationReal
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotationSquare
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DisplacementSquareExtremal
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.OrthogonalSummandCoordinates
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.PolarIntertwining
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.PrincipalSquareRoot
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.RestrictedDisplacementExtremal
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.Section3Elementary
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.Section3Nonacute
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.SourceDirectRotation
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.TwoProjectionOperatorClassification
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.All
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.DoubleAngle
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.DoubleAngleSpectrum
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Ideals.All
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Ideals.CompactIntegral
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Ideals.Symmetric
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.All
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.Bounded
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.BoundedBlockSpectrum
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.BoundedDiagonalization
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.BoundedGraphAcute
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.BoundedSpectralEnclosure
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.BoundedSpectralTransport
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.ContinuationWitnessEffectiveBlocks
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.ContinuationWitnessOrientedBlocks
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.Unbounded
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.UnboundedCoordinateRestrictions
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.UnboundedDiagonalRestrictions
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.UnboundedPublic
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.UnboundedReductionTransport
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.UnboundedRotationTransport
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.UnboundedSelectedGraphBridge
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.All
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Bounded
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.BoundedBorelProjectionComplex
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.All
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.Assembly
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.CircleWitness
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.Core
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.Endpoints
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.QuarterAcute
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.Roadmap
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.RotationChain
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.SelectedBranch
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.SelectedGraph
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.SelectedReduction
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.SelectedSubspace
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.SharpBlockPath
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.SharpDiagonalResolvents
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.SharpRadius
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.SharpSchurComplement
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.SharpSourceSpectrum
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.SharpThreshold
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.SpectralIdentification
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.Theorem
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.Transport
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.WitnessGraph
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.WitnessOffDiagonal
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.WitnessRiccati
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.General
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.RCLikeSpectralBridge
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Restriction
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.SpectralBridge
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SpectraBridge.All
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SpectraBridge.DirectRotationAPI
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Sylvester.All
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Sylvester.Basic
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Sylvester.FourierSemigroup
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Sylvester.GeneralSeparationKyFan
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Sylvester.MathPass
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Sylvester.OrderedSemigroup
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTheta.All
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTheta.ContinuationWitnessAPriori
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.All
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.BoundedOffDiagonalDegenerate
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.BoundedOffDiagonalEstimate
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.BoundedOffDiagonalHalfLine
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.BoundedOffDiagonalOrderedGap
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.BoundedOffDiagonalOrderedSets
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.BoundedOffDiagonalRestrictionSpectrum
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.BoundedOffDiagonalReverseGap
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.BoundedOffDiagonalRiccati
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.BoundedOffDiagonalSpectrumNonempty
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.BoundedRiccatiShift
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.CanonicalTangentBridge
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.OffDiagonalSpectralRepulsion
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.OffDiagonalSpectralRepulsionUnbounded
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.QuarterAcuteFormGap
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.QuarterAngleUnbounded
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.SelectedBranchSymmetricNorming
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.SelectedBranchSymmetricNormingReal
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.All
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.All
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.BlockSum
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.Core
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.FiniteSourceSingularSystem
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.OperatorModulus
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.Real
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.Real.All
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.Real.KyFanGauge
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.RestrictedDisplacementDominance
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.ScalarGeneric
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.CanonicalRealView
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ComplexificationApproximation
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.Majorization.All
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.Majorization.WeakSubmajorization
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.NormalizedUnitaryInvariantNorm
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.SymmetricNormingScalarTransport
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.UnitarilyInvariant.All
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.UnitarilyInvariant.FamilyCore
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.UnitarilyInvariant.IdealBanach
+public import LeanPool.DavisKahan.DavisKahan.Riccati.All
+public import LeanPool.DavisKahan.DavisKahan.Riccati.BoundedBasic
+public import LeanPool.DavisKahan.DavisKahan.Riccati.BoundedCanonicalGraph
+public import LeanPool.DavisKahan.DavisKahan.Riccati.BoundedCanonicalSolution
+public import LeanPool.DavisKahan.DavisKahan.Riccati.BoundedCore
+public import LeanPool.DavisKahan.DavisKahan.Riccati.BoundedEstimates
+public import LeanPool.DavisKahan.DavisKahan.Riccati.BoundedExistence
+public import LeanPool.DavisKahan.DavisKahan.Riccati.BoundedReduction
+public import LeanPool.DavisKahan.DavisKahan.Riccati.BoundedSharpEstimates
+public import LeanPool.DavisKahan.DavisKahan.Riccati.BoundedStability
+public import LeanPool.DavisKahan.DavisKahan.Riccati.UnboundedAdjointRiccati
+public import LeanPool.DavisKahan.DavisKahan.Riccati.UnboundedBasic
+public import LeanPool.DavisKahan.DavisKahan.Riccati.UnboundedCore
+public import LeanPool.DavisKahan.DavisKahan.Riccati.UnboundedExistence
+public import LeanPool.DavisKahan.DavisKahan.Riccati.UnboundedReduction
+public import LeanPool.DavisKahan.DavisKahan.SharedFoundations.All
+public import LeanPool.DavisKahan.DavisKahan.SharedFoundations.Ideal.All
+public import LeanPool.DavisKahan.DavisKahan.SharedFoundations.Ideal.ModulusTransport
+public import LeanPool.DavisKahan.DavisKahan.SharedFoundations.Ideal.ReflectionTransport
+public import LeanPool.DavisKahan.DavisKahan.SharedFoundations.Ideal.TwoWayFactorization
+public import LeanPool.DavisKahan.DavisKahan.SharedFoundations.Residual.All
+public import LeanPool.DavisKahan.DavisKahan.SharedFoundations.Residual.ReflectionDefect
+public import LeanPool.DavisKahan.DavisKahan.SharedFoundations.Residual.ReflectionDefectIdeal
+public import LeanPool.DavisKahan.DavisKahan.SharedFoundations.Spectral.All
+public import LeanPool.DavisKahan.DavisKahan.SharedFoundations.Spectral.BoundedSelection
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.All
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Bounded.All
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Bounded.Core
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.BoundedPerturbation
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.BoundedPerturbationIdeal
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Canonical
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.FrameFactorization
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.FrameFactorizationGeneric
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Natural.All
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Natural.Bounded
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Natural.Examples
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Natural.GapConvenience
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Natural.Generalized
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Natural.Real
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Natural.Reducing
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Natural.SpectralSubspace
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.NaturalTwoSubspace
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Real.All
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Real.Canonical
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Real.FrameFactorization
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Real.Generalized
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Real.Specializations
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Real.Unbounded
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Specializations
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.SpectralBridge
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.SpectralProjection
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Unbounded.All
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Unbounded.AllGap
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Unbounded.Core
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Unbounded.FormBoundedGap
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Unbounded.Gauge
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Unbounded.IntervalExterior
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Unbounded.OpNorm
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Unbounded.SpectrumGap
+public import LeanPool.DavisKahan.DavisKahan.Sources.All
+public import LeanPool.DavisKahan.DavisKahan.Sources.Davis1963.All
+public import LeanPool.DavisKahan.DavisKahan.Sources.Davis1963.DoubleAngle
+public import LeanPool.DavisKahan.DavisKahan.Sources.Davis1963.RotationBound
+public import LeanPool.DavisKahan.DavisKahan.Sources.Davis1963.RotationEnergy
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.All
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.AmbientBlockVocabulary
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.AmbientReal
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.All
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.Correspondence
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.DoubleAngleTangent
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.GeneralSinThetaExtensions
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.HostileReviewRegressions
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.ResultSemanticSurface
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.Section3
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.Section8
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.Section9
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.SinTwoThetaCommonDomainUsage
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.SineThetaSourceInventory
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.SylvesterHilbertSchmidt
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.Theorem63Distillation
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.Unbounded
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Directed
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.DirectedReal
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.DirectedUnboundedReal
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.DoubleAngleTangentOperator
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.GeneralSinTheta
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.GeneralSinThetaExtensions
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.All
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.HilbertSchmidt
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.HilbertSchmidtApproximationNorm
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.HilbertSchmidtBasis
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.HilbertSchmidtComplexFamily
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.HilbertSchmidtFiniteRank
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.HilbertSchmidtFrobenius
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.HilbertSchmidtRealDescent
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.HilbertSchmidtTensor
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.KyFanNorm
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.NormCorrespondence
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.NormalizedUnitaryInvariantNormExamples
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.RankOneNormalization
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.SequenceGauge
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.SpectralSelection
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.StandardFanDominance
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.StandardInstances
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.UnitaryInvariantNormDefinite
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.UnitaryInvariantNormInstances
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.PartIII
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.PartIIIPresentation
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Proposition61
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.ScalarGenericFinite
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section1
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section10FunctionalCalculus
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section1UnitaryInvariantNorms
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section2TanThetaPerturbation
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3AcuteCounterexample
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3AcuteDirectRotation
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Classification
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Corollary31
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Corollary32
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3PrincipalSquareRoot
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Proposition32
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Proposition34
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Proposition34Presentation
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Proposition34Real
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Proposition35
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Theorem31Realization
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section4
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section4BasisAngleEnergy
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section4DirectRotationSource
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section4Dominance
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section4Examples
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section4FiniteSurface
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section4Real
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section5
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section5BanachSylvester
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section6AppendixLeakage
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section6AppendixLeakageReal
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section6Example61
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section6SourceNormClass
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section6SourceScope
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section6Theorem63Presentation
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section7IdealBounds
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section7SwapAsymmetry
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.All
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.BranchRepulsion
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.CompressionApproximation
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.CompressionRepulsion
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Presentation
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.SelectedBranch
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Smallness
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81AngleForms
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81Approximation
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81ApproximationReal
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81BlockEigenvalue
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81EigenvalueSource
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81Majorization
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81MajorizationReal
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81Real
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81SourceUnbounded
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81UnboundedBranch
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81UnboundedCompression
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81UnboundedConverse
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81UnboundedReal
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem82
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem82Branch
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem82Real
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem82SourceUnbounded
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem82Unbounded
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem82UnboundedBranchBound
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem82UnboundedPath
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.All
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.BeamDoubleTangentKyFan
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.DomainLimitation
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.ExactData
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.ExampleCertificateSurface
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.FreeBeamAnalyticFoundation
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.FreeBeamCharacteristic
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.FreeBeamCharacteristicConverse
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.FreeBeamEigenmodeReduction
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.FreeBeamFoundationAssembler
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.FreeBeamModeData
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.FreeBeamModeUniqueness
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.FreeBeamOrthogonality
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.FreeBeamRootExclusion
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.FreeBeamRootLocalization
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.IndividualAngles
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.NumericalBounds
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.NumericalResults
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.RankOneCorrection
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.RealModel
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.SchurComplement
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.TrialSubspace
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.WeinbergerAngle
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.WeinbergerComparison
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SectionTwo
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SectionTwoSharpness
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SectionTwoUsage
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SeparableSourceScope
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SharpIdeal
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SharpKyFan
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoTheta
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaAmbient
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaAmbientUnbounded
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaCommonDomain
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaDirectedAngle
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaDirectedRCLike
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaUnboundedDirectedResidual
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaUnboundedDirectedResidualReal
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.All
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.AngleIdentity
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.CommonCore
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.CommonCoreTheorems
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.CommonDomain
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.CommonDomainSymmetric
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.CommonDomainTheorems
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.CosineAngle
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.CosineAngleReal
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.FiniteMultiplicity
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.FullAngle
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.FullAngleReal
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Lemma61
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.All
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.ComplexificationGauge
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.HeterogeneousRepresentative
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.SingularValueTransport
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.SubspaceSingularTransport
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.UnitaryInvariantNorm
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.UnitaryInvariantNormLaws
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.OperatorAngleBridge
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Presentation
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.ProjectionBlocks
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.ReflectedDefectDoubling
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.ScalarGeneric
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Section6SourceNorms
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Sharpness
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Symmetric
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.SymmetricReal
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Theorem61
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Theorem61Universal
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Theorem62
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.TrialReflection
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineThetaSourceInventory
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.StableRiccatiPair
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Sylvester.All
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Sylvester.HilbertSchmidtDefectFirst
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Sylvester.HilbertSchmidtEstimate
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Sylvester.HilbertSchmidtPairwise
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Sylvester.OperatorNormEstimate
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SymmetricNormingFanDominance
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTheta
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanThetaAmbient
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanThetaDirectedUnbounded
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanThetaScalarGeneric
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanThetaUnboundedAmbient
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanThetaUnboundedAmbientReal
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoTheta
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaAmbient
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaAmbientBranchFree
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaBranchFree
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaBranchFreeInfinite
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaBranchFreeInfiniteReal
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaReflectionAmbient
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaScalarGeneric
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedAmbientExact
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedExact
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedExactReal
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedGramBridge
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedGramMiddle
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedGramReal
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedKyFan
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedReducing
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedReducingReal
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedResidual
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TangentSingularValues
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TangentSingularValuesReal
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Theorem61
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.UnboundedCompressionReal
+public import LeanPool.DavisKahan.DavisKahan.Specialized.All
+public import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.All
+public import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamClassicalReal
+public import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamDoubleTangent
+public import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamEigenbasis
+public import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamEigenvalueSequence
+public import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamEigenvalueSequenceReal
+public import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamFormSpace
+public import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamFormSpaceReal
+public import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamFormSpaceScalar
+public import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamInPlaneAngle
+public import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamSection9
+public import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamSection9Real
+public import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamSpectrum
+public import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamSpectrumReal
+public import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamTangent
+public import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamTrialReal
+public import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamWeinberger
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.All
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.BoundedFromSpectrum
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.BoundedSelfAdjointSpectralProjection
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.BoundedTruncation
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.CayleySelectorBridge
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.CentralBand
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.CircleContour
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.CircleRieszEndpoints
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.CircleRieszIntegral
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.CircleRieszProjection
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.All
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.BoundedGapProjection
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.FormTransport
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.LinearPMapSpectralDescent
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.ReducingRestrictionDescent
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.Spectrum
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.SubmoduleEquiv
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.Subspace
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.ContinuationContour
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.ContinuationRieszIntegral
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.All
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.BoundedGraphCompactness
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.BoundedInverseRealization
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.CoerciveFormResolvent
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.CompactGraphEmbedding
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.FormCompactness
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.GraphClosedness
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.MaximalDomainTransport
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.PositiveSurjectiveCriterion
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.ShiftedBeamRealization
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.TraceKernelModel
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormSpectrumBounds
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.GapResolvent
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.GraphSubspace
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.OperatorAngle
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.OrderedHalfLine
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.PartialMap.All
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.PartialMap.BoundedRealization
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.PartialMap.Complexification
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.PartialMap.RealSpectrum
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.PartialMap.UnitaryConjugation
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Real.All
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Real.BoundedAlmostInvariant
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Real.RealCyclicDecomposition
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Real.RealMultiplicityModel
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Real.SpectralCutoff
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Real.SpectralMultiplicityClassification
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Real.SpectralRestriction
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.ReducingSpectrumUnion
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.ReducingSubspace.All
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.ReducingSubspace.Restriction
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.ReducingSubspace.RestrictionExtras
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.ReflectionRestriction
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.ResolventOperator
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.SelfAdjointBorelCalculus
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.SpectralCutoff
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.SpectralGapFormBounds
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.SpectralRestriction
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.SpectralRestrictionLocalization
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.SpectralRestrictionOperator
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.UnboundedBandLipschitz
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.UnboundedCentralBand
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.UnboundedDirectedGapBound
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.All
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.Bounded
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.ClosedSylvesterEquation
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.CutoffInterface
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.FilledTruncation
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.FiniteBlockReconstruction
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.FiniteStepCalculus
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.Gap
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.HomogeneousUniqueness
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.OrthogonalIdempotentExp
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.PairwiseHomogeneousUniqueness
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.PairwiseSpectrumGap
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.RealUnbounded
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.RosenblumExistence
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.ScalarGeneric
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.ScalarTransport
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.ShiftedInverse
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.ShiftedInverseGauge
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.Spectrum
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.Unbounded.All
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.Unbounded.AllGap
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.Unbounded.Equation
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.Unbounded.FormBoundedGap
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.Unbounded.IntervalExterior
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.Unbounded.Neumann
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.Unbounded.OrderedCutoff
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.Unbounded.OrderedEngine
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.Unbounded.OrderedEngineDirect
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.Unbounded.OrderedFromCutoffs
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.All
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.RitzPair
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.ScalarTransport
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.Spectrum
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63DirectedAngleBridge
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63FiniteSource
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63InfiniteTrial
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63TrialData
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63Unbounded
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63UnboundedCompression
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63UnboundedInfiniteTrial
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.UnboundedGraphAngle
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.UnboundedSpectrum
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.UnboundedVector
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.Vector
+public import LeanPool.DavisKahan.DavisKahan.TanTwoTheta.All
+public import LeanPool.DavisKahan.DavisKahan.TanTwoTheta.BoundedOffDiagonal
+public import LeanPool.DavisKahan.DavisKahan.TanTwoTheta.Unbounded
+public import LeanPool.DavisKahan.DavisKahan.TanTwoTheta.UnboundedIdeal
+public import LeanPool.DavisKahan.DavisKahan.TanTwoTheta.UnboundedVector
+public import LeanPool.DavisKahan.ForTauCeti
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.CStarAlgebra.ContinuousFunctionalCalculusTransport
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.CStarAlgebra.PositiveSquareRootCommute
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.CStarAlgebra.RealSpectrumFunctionalCalculus
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.CStarAlgebra.SelfAdjointGapInverse
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.CStarAlgebra.TrigonometricSeries
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.Calculus.FourthOrderGreensIdentity
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.Convex.Majorization
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.Fourier.ExponentialAbs
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.Fourier.HaagerupZsido.Defs
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.Fourier.HaagerupZsido.Fourier
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.Fourier.HaagerupZsido.Integrability
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.Fourier.HaagerupZsido.Kernel
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.Fourier.Poisson.CauchyLattice
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.AlignedBasis
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.AngleGeometry
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.AngleGeometryBlockSum
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Basic
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BasisDiagonal
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BasisSpan
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BlockLowerBound
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.AlmostInvariant
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.BorelNatural
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.CyclicDecomposition
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.CyclicIsometry
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.CyclicModel
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.DiagMeasureMulLp
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.DiagMeasureNatural
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.DiagonalMeasure
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.MulLpBorel
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.Multiplicative
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.MultiplicityLevelUniqueness
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.MultiplicityModel
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.MultiplicityModelReal
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.MultiplicityUniqueness
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.Operator
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.PVM
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.Polarization
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.Restriction
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.SeparableCyclic
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.SpectralMultiplicityEquiv
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BoundedOperator.Projector
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BoundedOperator.SinTheta
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CoerciveUnit
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CompactApproximationEigenvalues
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CompactSelfAdjointClassification
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CompactSingularSubspaces
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CompactSpectralDecomposition
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Complexification.Basic
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Complexification.FunctionalCalculus
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Complexification.Spectrum
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CourantFischer
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.DiagonalOperator
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.DoubleAngle.Gram
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.DoubleAngle.ReducingCutoff
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.DoubleAngle.Reflection
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.DoubleAngle.ReflectionBlocks
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.DoubleAngle.SpectralCutoff
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.DoubleAngle.UnboundedPole
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.DoubleAngle.UnboundedReflection
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.DoubleAngle.Vector
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.EigenblockSpan
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.EigenvalueChange
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.FiniteFrame
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.FrameFactorization
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Gram.Matrix
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Gram.Operator
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.HilbertSchmidt.Block
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.HilbertSchmidt.Conjugation
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.HilbertSchmidt.Energy
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.HilbertSchmidt.Lp
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.HilbertSchmidt.Pythagoras
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.HilbertSchmidt.Space
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.HilbertSumIntertwine
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.HoffmanWielandt
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.IntertwiningUnitary
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.KyFan
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Closed
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Complexification
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Complexification.SpectralDescent
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Constructions
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.DiagonalMultiplication
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.GraphCore
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.RayleighRitz
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.RealLowerBound
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Resolvent
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.ResolventBound
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.ResolventOpen
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.ResolventSandwich
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.ScalarTransport
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SelfAdjointMaximal
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SelfAdjointResolvent
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Shift
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SpectralCutOperator
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SpectralFormBounds
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SpectralGapInverse
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SpectralGrid
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SpectralMeasure
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SpectralMeasure.Construction
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SpectralProjectionGroup
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SpectralProjectionNaturality
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SpectralSupport
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SpectralVectorBounds
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.StoneUniqueness
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SubmoduleAdjoint
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Sylvester
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.UnitaryTransport
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.YosidaApproximation
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LpIndexCongr
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LyapunovPositivity
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.ModulusConjugation
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.ModulusTransport
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.MoorePenroseInverse
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.NearIsometry
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.OneParameterUnitaryGroup.Basic
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.OneParameterUnitaryGroup.Commutant
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.OneParameterUnitaryGroup.SemigroupBridge
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.OneParameterUnitaryGroup.Stone
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.OperatorModulus
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.OperatorRealAlgebra
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.OperatorUnitaryEquiv
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.OrthogonalGluing
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.OrthogonalSeries
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.PartialIsometry
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Polar.CFCBridge
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Polar.Decomposition
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Polar.GramContraction
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Polar.Isometry
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Polar.PartialIsometry
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Polar.SelfAdjointCompletion
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.PositiveSqrt
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.PrincipalAngleSequence
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.PrincipalAngles
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.PrincipalAngles.Equisingular
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.PrincipalSineSequence
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.ProjValMeasure.Additivity
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.ProjValMeasure.Basic
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.ProjValMeasure.Subspace
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Projection.Blocks
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Projection.Gap
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Projection.Geometry
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Projection.ScalarTransport
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.QuadraticFormBounds
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RankOneSinTheta
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RealContinuousFunctionalCalculus
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RealSpectrumBorelSymbols
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RealSpectrumCyclicDecomposition
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RealSpectrumCyclicModel
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RealSpectrumDiagonalMeasure
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RealSpectrumIntertwining
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RectangularPartialIsometry
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RectangularSingularValues
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.ReducedExtension
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.ReducingSubspace
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Residual.AngleEmbedding
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Residual.Ritz
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Residual.TrialMap
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Rosenblum
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SandwichMajorization
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SchattenNorm
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SchurHorn
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SelfAdjointFunctionalCalculus
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SeparableOrthonormal
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SeparatedIntertwiner
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SinTheta.DirectedBounds
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SinTheta.Frobenius
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SinTheta.OperatorNorm
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SinTheta.Perturbation
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SinTheta.UnitarilyInvariant
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Singular.Subspace
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Singular.System
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Singular.Values
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SkewAdjointExponential
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Spectral.Cutoff
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Spectral.EigenFrame
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Spectral.Gap
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Spectral.GapProjection
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Spectral.ResidualGap
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Spectral.Subspace
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SpectralOrder
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Spectrum
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SphericalPythagoras
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.Basic
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.BlockEstimate
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.BlockIdentity
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.Bound
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.Generator
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.Group
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.Internal.ReciprocalMultiplier
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.Internal.ReciprocalMultiplier.DoubledPhase
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.Internal.ReciprocalMultiplier.Fourier
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.Internal.ReciprocalMultiplier.OrbitAction
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.Internal.SpectralBounds
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.Interval
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.Operator
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.SpectralDistance
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.SpectralGap
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.TwoDimensionalSingularValues
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.TwoLevelOperator
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.UnitarilyInvariantSeminorm
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.UnitarilyInvariantSeminorm.Basic
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.UnitarilyInvariantSeminorm.BlockSum
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.UnitarilyInvariantSeminorm.Gauge
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.UnitarilyInvariantSeminorm.Instances
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.UnitarilyInvariantSeminorm.Majorization
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.VectorAngle
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.ZeroExtension
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.Matrix.EntrywiseEigenvalue
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.Matrix.EntrywiseOpNorm
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.Matrix.SpectralFunctionMeasurable
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.Matrix.SpectralProjection
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.Matrix.Spectrum
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.Normed.Algebra.TrigonometricSeries
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.Normed.FiniteLpGauge
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.Normed.Operator.FiniteRankCompact
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.Normed.Operator.LinearIsometry
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.Normed.Operator.PartialSylvesterBoundedInverse
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.Normed.Operator.Resolvent.Unbounded
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.Normed.Operator.Restriction
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.Normed.Operator.SylvesterBoundedInverse
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.Normed.SchattenGauge
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.Normed.SupGauge
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.Normed.SymmetricGauge
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.Adjoint
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.Basic
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.Compact
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.CompactHilbert
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.Core
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.DiagonalExample
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.DiagonalSequence
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.EnergyComparison
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.Examples
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.FiniteDimensional
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.FinitePVMSelection
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.FiniteRestriction
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.FiniteValueFibers
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.FiniteValueSeparation
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.GramBandPolar
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.GramInverseResolvent
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.GramResolvent
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.GramSpectralRank
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.GramSquare
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.Isometry
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.KyFan
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.KyFanBochner
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.LeadingCutoff
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.MinMax
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.MinMaxReal
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.MinMaxUpper
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.Pinching
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.PrescribedSequence
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.Rank
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.SameSequence
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.ScalarTransport
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.SubspaceTransport
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.TangentTransfer
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.Basic
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.CompactOperator
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.GramGauge
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.HilbertSchmidt
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.KyFan
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.KyFanDominance
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.OperatorNorm
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.Schatten
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.SymmetricGauge
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Family.TraceClass
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.RCLike.ScalarTransport
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.RCLike.ScalarTransportFunctionalCalculus
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.RCLike.ScalarTransportIsometry
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.SpecialFunctions.Integral.RationalQuadratic
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.SpecialFunctions.Integral.SineLaplace
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.SpecialFunctions.Sqrt
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.SpecialFunctions.TanArcsin
+public import LeanPool.DavisKahan.ForTauCeti.LinearAlgebra.Dimension.RankComp
+public import LeanPool.DavisKahan.ForTauCeti.LinearAlgebra.Matrix.PosDef
+public import LeanPool.DavisKahan.ForTauCeti.LinearAlgebra.Matrix.RankFactorization
+public import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.CfcMeasurable
+public import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.CompactExists
+public import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.Function.ConvergenceInMeasure
+public import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.HellySelection
+public import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.IntervalSecondPrimitiveCompact
+public import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.IntervalSecondPrimitiveDeriv
+public import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.IntervalWeakSecondDeriv
+public import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.LpComp
+public import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.LpInfiniteDimensional
+public import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.LpNonvanishing
+public import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.LpRealPart
+public import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.LpRestrict
+public import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.LpSliceSum
+public import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.LpStar
+public import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.MatrixKernelSelection
+public import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.Measure.Typeclasses.Probability
+public import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.MeasureClass
+public import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.MulLpAlgebra
+public import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.MulLpCfc
+public import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.MulLpSpectrum
+public import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.MultiplicityLevels
+public import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.RadonNikodymL2
+public import LeanPool.DavisKahan.ForTauCeti.Order.DiscreteEnumeration
+public import LeanPool.DavisKahan.ForTauCeti.Probability.AverageError
+public import LeanPool.DavisKahan.ForTauCeti.Probability.Moments.CenteredScatter
+public import LeanPool.DavisKahan.ForTauCeti.Probability.Moments.MatrixConcentration
+public import LeanPool.DavisKahan.ForTauCeti.Probability.Moments.SampleMean
+public import LeanPool.DavisKahan.ForTauCeti.Probability.Moments.SampleSecondMoment
+public import LeanPool.DavisKahan.ForTauCeti.Probability.Moments.Variance
+public import LeanPool.DavisKahan.ForTauCeti.Probability.ProductConvergence
+public import LeanPool.DavisKahan.ForTauCeti.Probability.RigidAlignment
+public import LeanPool.DavisKahan.ForTauCeti.Probability.VStatistic
+public import LeanPool.DavisKahan.ForTauCeti.SetTheory.Cardinal.Lift
+public import LeanPool.DavisKahan.ForTauCeti.Topology.ApproxMinimizer
+public import LeanPool.DavisKahan.ForTauCeti.Topology.Berge
+public import LeanPool.DavisKahan.ForTauCeti.Topology.ENNRealLiminf
+public import LeanPool.DavisKahan.Palomar.DKSectionTwo.SolutionPrelude
+public import LeanPool.DavisKahan.Solution
+public import LeanPool.DavisKahan.TauCeti.Analysis.Calculus.ExponentialSlope
+public import LeanPool.DavisKahan.TauCeti.Analysis.Semigroups.Basic
+public import LeanPool.DavisKahan.TauCeti.Analysis.Semigroups.ExponentialShift
+public import LeanPool.DavisKahan.TauCeti.Analysis.Semigroups.Generator.Basic
+public import LeanPool.DavisKahan.TauCeti.Analysis.Semigroups.GrowthBound
+public import LeanPool.DavisKahan.TauCeti.Analysis.Semigroups.Resolvent.Basic
+public import LeanPool.DavisKahan.TauCeti.MeasureTheory.Integral.ExpDecay
 
 /-!
 # Davis–Kahan rotation of eigenvectors
@@ -969,3 +971,5 @@ Main declarations: `RotationOfEigenvectors.sinTheta`, `RotationOfEigenvectors.ta
 Tags: operator-theory, spectral-perturbation, hilbert-spaces
 MSC: 47A55, 47A15, 15A42
 -/
+
+@[expose] public section

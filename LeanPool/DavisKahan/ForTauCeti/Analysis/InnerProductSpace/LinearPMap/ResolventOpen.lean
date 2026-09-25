@@ -47,7 +47,7 @@ and closedness is how that is obtained.
 * **Semantic differences from a donor:** not applicable.
 -/
 
-public section
+@[expose] public section
 
 open scoped Topology
 

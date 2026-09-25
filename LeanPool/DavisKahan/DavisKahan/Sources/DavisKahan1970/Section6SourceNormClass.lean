@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SymmetricNormingFanDominance
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Proposition61
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Theorem61
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SymmetricNormingFanDominance
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Proposition61
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Theorem61
 
 /-!
 # Proposition 6.1 and Theorem 6.1 over the literal source norm class
@@ -23,6 +25,8 @@ it is the gap the compiled theorems take, it subsumes the printed interval
 geometry, and narrowing it here would make the façade state *less* than what is
 proved without bringing it closer to the paper.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan1970

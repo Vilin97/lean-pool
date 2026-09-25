@@ -3,13 +3,17 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedExact
-import LeanPool.DavisKahan.DavisKahan.TanTheta.RitzPair
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.DoubleAngle
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotation
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.DoubleAngle.ReducingCutoff
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedExact
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.RitzPair
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.DoubleAngle
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotation
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.DoubleAngle.ReducingCutoff
 
 /-! # Tan Two Theta Unbounded Reducing -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

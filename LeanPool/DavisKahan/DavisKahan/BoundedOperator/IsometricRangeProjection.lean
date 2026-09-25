@@ -3,10 +3,12 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.SinTheta.FrameFactorization
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BoundedOperator.Projector
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Projection.Blocks
-import LeanPool.DavisKahan.DavisKahan.BoundedOperator.Problem
+module
+
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.FrameFactorization
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BoundedOperator.Projector
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Projection.Blocks
+public import LeanPool.DavisKahan.DavisKahan.BoundedOperator.Problem
 
 /-!
 # Range projections of isometric embeddings
@@ -15,6 +17,8 @@ An isometric embedding has closed range, Gram operator equal to the identity,
 and range projection `X X*`.  These identities are shared by residual,
 generalized tangent, reflection-defect, and finite-rank comparison arguments.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

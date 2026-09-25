@@ -18,4 +18,4 @@ Ky Fan dominance applies on every such map space. Symmetric gauges, adjoints of
 endomorphisms, and operator absolute value use the specialization `E = F`.
 -/
 
-public section
+@[expose] public section

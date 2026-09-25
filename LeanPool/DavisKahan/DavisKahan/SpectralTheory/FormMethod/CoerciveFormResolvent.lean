@@ -3,10 +3,12 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.BoundedInverseRealization
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CoerciveUnit
-import Mathlib.Tactic
+
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.BoundedInverseRealization
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CoerciveUnit
+public import Mathlib.Tactic
 
 /-!
 # Bounded resolvent produced by a coercive form operator
@@ -31,6 +33,8 @@ represent the shifted bending form.
 The scalar field is an arbitrary `RCLike` `𝕜`, so the whole form method is
 available over `ℝ` as well as over `ℂ`.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace
 

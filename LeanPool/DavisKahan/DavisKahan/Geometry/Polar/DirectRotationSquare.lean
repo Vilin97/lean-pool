@@ -3,12 +3,14 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotation
-import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.TwoProjections
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Unitary
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Commute
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CoerciveUnit
-import LeanPool.DavisKahan.ForTauCeti.Analysis.CStarAlgebra.PositiveSquareRootCommute
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotation
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.TwoProjections
+public import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Unitary
+public import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Commute
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CoerciveUnit
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.CStarAlgebra.PositiveSquareRootCommute
 
 /-!
 # Principal-square-root completion of the Spectra direct rotation
@@ -38,6 +40,8 @@ on the spectral arc avoiding `-1`.  The scalar identity
 on the unit circle gives `W^2 = R`.  Conjugation of that scalar function gives
 reversal, and the positive-real-part branch characterizes the same square root.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace ComplexConjugate ComplexOrder
 

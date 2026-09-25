@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Sol
 -/
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.OperatorAngleGeneric
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.TanAngleFunctionalCalculus
-import LeanPool.DavisKahan.ForTauCeti.Analysis.RCLike.ScalarTransportFunctionalCalculus
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.OperatorAngleGeneric
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.TanAngleFunctionalCalculus
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.RCLike.ScalarTransportFunctionalCalculus
 
 /-!
 # Tangent angle operators over an arbitrary `RCLike` field
@@ -20,6 +22,8 @@ fixed-field objects do.  The theorems that identify and transport them require
 exactly the source-side pole exclusion that says the displayed tangent exists.
 Thus no scalar-specific proof capability leaks into a public theorem.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan.Angle

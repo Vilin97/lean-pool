@@ -70,7 +70,7 @@ the concrete operators the roadmap names.
   modules.
 -/
 
-public section
+@[expose] public section
 
 namespace ContinuousLinearMap
 

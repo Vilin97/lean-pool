@@ -3,7 +3,9 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, GPT 5.6 High
 -/
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Spectral.Subspace
+module
+
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Spectral.Subspace
 
 /-!
 # Operator blocks relative to an orthogonal decomposition
@@ -11,6 +13,8 @@ import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Spectral.Subspa
 Pinching, off-diagonal parts, and zero-compression predicates used by the
 finite double-angle and tangent theories.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan.FiniteDimensional

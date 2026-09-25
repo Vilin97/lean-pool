@@ -55,7 +55,7 @@ operator ideal to *separable* spaces, because the obvious instance to reach for 
 
 open scoped ENNReal
 
-public section
+@[expose] public section
 
 namespace ENNReal
 

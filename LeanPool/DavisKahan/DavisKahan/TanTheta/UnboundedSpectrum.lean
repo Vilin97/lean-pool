@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.TanTheta.UnboundedVector
-import LeanPool.DavisKahan.DavisKahan.TanTheta.Spectrum
-import LeanPool.DavisKahan.ForTauCeti.Analysis.CStarAlgebra.SelfAdjointGapInverse
+module
+
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.UnboundedVector
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.Spectrum
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.CStarAlgebra.SelfAdjointGapInverse
 
 /-!
 # The unbounded tangent theorem with a genuine trial spectrum
@@ -21,6 +23,8 @@ supplies the columnwise residual bound through its operator norm.  Combining
 those two facts with the canonical interval spectral range of the exact
 operator yields a genuine-spectrum unbounded tangent estimate.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace
 

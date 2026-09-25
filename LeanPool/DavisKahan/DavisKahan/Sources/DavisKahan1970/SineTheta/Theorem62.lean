@@ -3,13 +3,17 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Sylvester.HilbertSchmidtPairwise
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.HilbertSchmidtFiniteRank
-import LeanPool.DavisKahan.DavisKahan.SinTheta.FrameFactorization
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Real.FrameFactorization
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.OperatorAngleBridge
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Sylvester.HilbertSchmidtPairwise
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.HilbertSchmidtFiniteRank
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.FrameFactorization
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Real.FrameFactorization
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.OperatorAngleBridge
 
 /-! # Theorem62 -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

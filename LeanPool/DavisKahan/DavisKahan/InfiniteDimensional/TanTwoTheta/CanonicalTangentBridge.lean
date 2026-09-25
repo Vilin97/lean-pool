@@ -3,14 +3,18 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.DoubleAngleTangentOperator
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.BoundedOffDiagonalRiccati
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.OperatorAngleComplex
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.GraphSubspace
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.OperatorModulus
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.SubspaceSingularTransport
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.DoubleAngleTangentOperator
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.BoundedOffDiagonalRiccati
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.OperatorAngleComplex
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.GraphSubspace
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.OperatorModulus
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.SubspaceSingularTransport
 
 /-! # Canonical Tangent Bridge -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

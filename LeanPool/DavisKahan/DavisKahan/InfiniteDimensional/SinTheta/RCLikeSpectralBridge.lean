@@ -3,11 +3,15 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 4.8
 -/
-import LeanPool.DavisKahan.DavisKahan.SinTheta.SpectralBridge
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Restriction
-import Mathlib.Analysis.InnerProductSpace.Rayleigh
+module
+
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.SpectralBridge
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Restriction
+public import Mathlib.Analysis.InnerProductSpace.Rayleigh
 
 /-! # RCLike Spectral Bridge -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

@@ -3,15 +3,19 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Natural.SpectralSubspace
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Natural.Real
-import LeanPool.DavisKahan.DavisKahan.Sylvester.Unbounded.OrderedEngineDirect
-import LeanPool.DavisKahan.DavisKahan.Sylvester.RealUnbounded
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Real.Specializations
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.GeneralSinTheta
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.PartIIIPresentation
+module
+
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Natural.SpectralSubspace
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Natural.Real
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.Unbounded.OrderedEngineDirect
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.RealUnbounded
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Real.Specializations
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.GeneralSinTheta
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.PartIIIPresentation
 
 /-! # Unbounded -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 

@@ -3,19 +3,21 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.WeinbergerAngle
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.DiagonalMultiplication
-import Mathlib.Analysis.Normed.Lp.lpSpace
-import Mathlib.Analysis.SpecificLimits.Basic
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Geometry.Euclidean.Angle.Unoriented.Basic
-import Mathlib.Topology.Algebra.Module.LinearPMap
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Ring
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.WeinbergerAngle
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.DiagonalMultiplication
+public import Mathlib.Analysis.Normed.Lp.lpSpace
+public import Mathlib.Analysis.SpecificLimits.Basic
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.Geometry.Euclidean.Angle.Unoriented.Basic
+public import Mathlib.Topology.Algebra.Module.LinearPMap
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.Ring
 
 /-!
 # Davis--Kahan 1970, Section 9: domain limitation example
@@ -42,6 +44,8 @@ That is the contrast the paragraph exists to draw: every residual-based theorem
 of the paper is silent here because the residual does not exist, while the
 form/Rayleigh lower-bound method still gives a bound.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan1970

@@ -3,7 +3,9 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.ScalarGeneric
+module
+
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.ScalarGeneric
 
 /-!
 # Normalized symmetric operator ideal families
@@ -54,6 +56,8 @@ not establish a representation theorem for every norm satisfying only bare
 unitary invariance. Davis--Kahan Section 1 cites Fan comparison as mathematical
 background; source audits must record that choice explicitly.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

@@ -3,14 +3,18 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.BoundedSelfAdjointSpectralProjection
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.BoundedFromSpectrum
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.PartialMap.RealSpectrum
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Resolvent
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Constructions
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
+module
+
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.BoundedSelfAdjointSpectralProjection
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.BoundedFromSpectrum
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.PartialMap.RealSpectrum
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Resolvent
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Constructions
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
 
 /-! # Self Adjoint Borel Calculus -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 

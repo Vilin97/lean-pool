@@ -45,7 +45,7 @@ not — this file proves the consumer-facing statement and never states an
 integrability fact at all.
 -/
 
-public section
+@[expose] public section
 
 open scoped InnerProductSpace
 open MeasureTheory

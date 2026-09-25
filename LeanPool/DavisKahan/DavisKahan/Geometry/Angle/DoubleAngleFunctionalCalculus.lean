@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.AngleFunctionalCalculus
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.DoubleAngle.Reflection
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.DoubleAngle.Gram
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.AngleFunctionalCalculus
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.DoubleAngle.Reflection
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.DoubleAngle.Gram
 
 /-!
 # The literal ambient `sin 2Θ` of Davis--Kahan, and the reflection identity
@@ -44,6 +46,8 @@ ordinary `sin Θ` theorem applied to the reflected pair.
 * C. Davis and W. M. Kahan, *The rotation of eigenvectors by a perturbation.
   III*, SIAM J. Numer. Anal. 7 (1970), 1--46, Section 7, equations (7.1)--(7.5).
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan.Angle

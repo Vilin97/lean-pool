@@ -42,7 +42,7 @@ eigenspace — the point of `TauCeti.IsEigenFamily`.
   lower bound.
 -/
 
-public section
+@[expose] public section
 
 open Module (finrank)
 open scoped InnerProductSpace BigOperators

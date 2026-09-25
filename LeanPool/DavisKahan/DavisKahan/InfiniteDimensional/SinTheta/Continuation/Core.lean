@@ -3,12 +3,16 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, GPT 5.6 High
 -/
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.DoubleAngle
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SpectraBridge.DirectRotationAPI
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.ResolventOperator
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
+module
+
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.DoubleAngle
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SpectraBridge.DirectRotationAPI
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.ResolventOperator
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
 
 /-! # Core -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

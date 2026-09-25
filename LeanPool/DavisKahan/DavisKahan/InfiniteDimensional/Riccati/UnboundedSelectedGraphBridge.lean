@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.UnboundedPublic
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.BoundedGraphAcute
+module
+
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.UnboundedPublic
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.BoundedGraphAcute
 
 /-!
 # Rectangular extraction from an ambient selected graph
@@ -21,6 +23,8 @@ unbounded block graph is exactly the ambient graph subspace.  Domain
 preservation and reduction of the closed block operator remain separate,
 genuinely unbounded obligations.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahanExt

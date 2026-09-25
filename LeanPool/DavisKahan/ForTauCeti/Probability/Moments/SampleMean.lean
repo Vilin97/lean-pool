@@ -65,7 +65,7 @@ is the coordinatewise reduction over an orthonormal basis.
   `ForTauCeti` staging modules.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

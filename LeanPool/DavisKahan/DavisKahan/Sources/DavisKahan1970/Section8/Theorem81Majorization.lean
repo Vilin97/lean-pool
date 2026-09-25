@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81Approximation
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SandwichMajorization
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81Approximation
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SandwichMajorization
 
 /-!
 # Davis--Kahan 1970, Theorem 8.1(iii), both blocks
@@ -82,6 +84,8 @@ corollary, proved below by the same two-link chain against the mirrored objects
 No eigenvalue/angle facade is assembled here; that dictionary is
 `Section8SourceDictionary.lean`.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan1970

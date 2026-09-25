@@ -3,7 +3,9 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.TanAngleFunctionalCalculus
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.TanAngleFunctionalCalculus
 
 /-!
 # Ambient block vocabulary for the Davis--Kahan 1970 whole-space estimates
@@ -23,6 +25,8 @@ does not.
 The declarations keep their original `TauCeti.DavisKahan1970` names; only the
 module boundary moved.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan1970

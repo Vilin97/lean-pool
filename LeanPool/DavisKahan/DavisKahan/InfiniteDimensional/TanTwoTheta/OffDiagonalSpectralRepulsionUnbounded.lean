@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.OffDiagonalSpectralRepulsion
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.GapResolvent
-import LeanPool.DavisKahan.DavisKahan.SinTheta.BoundedPerturbation
+module
+
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.OffDiagonalSpectralRepulsion
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.GapResolvent
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.BoundedPerturbation
 
 /-!
 # Off-diagonal spectral repulsion for an unbounded ambient operator
@@ -38,6 +40,8 @@ through `U`:
 No compactness, no discreteness, no norm-attaining eigenvector, and no
 boundedness of `A`.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

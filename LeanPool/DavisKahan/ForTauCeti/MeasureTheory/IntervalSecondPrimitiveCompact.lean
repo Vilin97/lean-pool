@@ -34,7 +34,7 @@ are available over `ℝ`.
 * `TauCeti.isCompactOperator_secondPrimitiveCLM`: compactness.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

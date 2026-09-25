@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.ReducingSubspace
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotation
-import Mathlib.Analysis.InnerProductSpace.Projection.Submodule
+module
+
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.ReducingSubspace
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotation
+public import Mathlib.Analysis.InnerProductSpace.Projection.Submodule
 
 /-!
 # Halmos two-projection decomposition
@@ -29,6 +31,8 @@ spectral theorem to the positive cosine on the generic summand.  Keeping the
 geometric decomposition and the operator algebra separate avoids duplicating
 the two-projection argument.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace
 

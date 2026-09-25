@@ -47,7 +47,7 @@ public theorem memℓp_comp_equiv (e : ι ≃ ι') {f : ι → 𝕜} (hf : Mem�
 
 Composition with `e.symm` on functions; the two `Memℓp` obligations and the norm identity are
 `Equiv.summable_iff` and `Equiv.tsum_eq` respectively. -/
-public noncomputable def lpIndexCongr (𝕜 : Type*) [RCLike 𝕜] (e : ι ≃ ι') :
+@[expose] public noncomputable def lpIndexCongr (𝕜 : Type*) [RCLike 𝕜] (e : ι ≃ ι') :
     lp (fun _ : ι => 𝕜) 2 ≃ₗᵢ[𝕜] lp (fun _ : ι' => 𝕜) 2 where
   toFun f := ⟨fun i' => (f : ι → 𝕜) (e.symm i'), memℓp_comp_equiv e (lp.memℓp f)⟩
   invFun g := ⟨fun i => (g : ι' → 𝕜) (e i), by

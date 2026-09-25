@@ -29,7 +29,7 @@ them; they are not bundled into a parallel operator structure.
 * Spectra influence: none.  This module imports only Mathlib.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 namespace LinearPMap
@@ -81,7 +81,6 @@ def SameDomain (A B : E →ₗ.[𝕜] E) : Prop :=
 -- consumers *apply* it (`h x : X x ∈ A.domain`), which is unfolding by definition. The
 -- `api-design` carve-out for a consumer that must unfold, not blanket exposure.
 /-- A bounded map sends the domain of `B` into the domain of `A`. -/
-@[expose]
 def MapsDomainTo (A : E →ₗ.[𝕜] E) (B : F →ₗ.[𝕜] F)
     (X : F →L[𝕜] E) : Prop :=
   ∀ x : B.domain, X (x : F) ∈ A.domain
@@ -108,7 +107,6 @@ theorem MapsDomainTo.comp
 -- `@[expose]` for the same reason as `MapsDomainTo` above: consumers *apply* the
 -- statement (`h x hx : A x ∈ U`), which is unfolding by definition.
 /-- A subspace is invariant under a partial linear map on its domain. -/
-@[expose]
 def InvariantSubspace
     (A : E →ₗ.[𝕜] E) (U : Submodule 𝕜 E) : Prop :=
   ∀ x : A.domain, (x : E) ∈ U → A x ∈ U
@@ -894,7 +892,6 @@ domain.  Closedness remains a separate property of the resulting map. -/
 -- *stated* without `.domain` reducing, since it indexes its argument by this map's
 -- domain and applies the underlying map to it. That is the `api-design` rubric's own
 -- carve-out — a consumer that must unfold — not the blanket exposure it rejects.
-@[expose]
 noncomputable def addBounded (A : E →ₗ.[𝕜] E) (V : E →L[𝕜] E) :
     E →ₗ.[𝕜] E where
   domain := A.domain

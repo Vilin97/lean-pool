@@ -20,7 +20,7 @@ declarations are moved verbatim and remain in the `TauCeti.HaagerupZsido`
 namespace.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 namespace HaagerupZsido

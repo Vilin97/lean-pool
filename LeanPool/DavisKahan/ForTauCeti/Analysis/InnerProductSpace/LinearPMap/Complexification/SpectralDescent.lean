@@ -35,7 +35,7 @@ This module deliberately works directly with Mathlib `LinearPMap`.  It introduce
 no parallel closed-operator bundle and no theorem-specific compatibility wrapper.
 -/
 
-public section
+@[expose] public section
 
 open scoped InnerProductSpace ComplexConjugate
 

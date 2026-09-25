@@ -55,7 +55,7 @@ This includes `n = 0` without a nonnegativity assumption on the entry bound.
   `ForTauCeti` staging modules.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

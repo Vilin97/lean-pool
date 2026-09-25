@@ -3,11 +3,15 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.BoundedBorelProjectionComplex
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SpectralOrder
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.SelectedReduction
+module
+
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.BoundedBorelProjectionComplex
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SpectralOrder
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.SelectedReduction
 
 /-! # Spectral Gap Form Bounds -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 

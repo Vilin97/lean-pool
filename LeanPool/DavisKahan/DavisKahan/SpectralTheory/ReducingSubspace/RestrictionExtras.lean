@@ -3,7 +3,9 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.ReducingSubspace.Restriction
+module
+
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.ReducingSubspace.Restriction
 
 /-!
 # Convenience laws for reducing restrictions
@@ -12,6 +14,8 @@ This leaf keeps optional compatibility lemmas separate from the compiler-accepte
 core restriction construction.  In particular, it records orthogonal-complement
 closure and agreement with the ordinary bounded restriction.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahanExt

@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81EigenvalueSource
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.PrescribedSequence
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81EigenvalueSource
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.PrescribedSequence
 
 /-!
 # Theorem 8.1 (ii) and (iii) on the blocks themselves
@@ -30,6 +32,8 @@ facts that put the printed statements on them.
   projection gap strictly inside the quarter turn, which is acuteness, which is
   injectivity of each projection on the other subspace in both directions.
 -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

@@ -3,12 +3,14 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
+module
 
-import Mathlib.Analysis.Calculus.IteratedDeriv.Defs
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
-import Mathlib.Tactic
+
+public import Mathlib.Analysis.Calculus.IteratedDeriv.Defs
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+public import Mathlib.Tactic
 
 /-!
 # Characteristic equation for the free--free beam
@@ -26,6 +28,8 @@ Consequently a nonzero positive-frequency mode satisfies
 `cos beta * cosh beta = 1`.  This algebraic reduction is independent of the
 Sobolev realization of the fourth-derivative operator.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

@@ -3,7 +3,9 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.CommonDomain
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.CommonDomain
 
 /-!
 # Graph-core form of the unbounded residual hypothesis
@@ -20,6 +22,8 @@ residual identity holds on such a graph core, then the trial map sends all of
 Thus the accepted unbounded sine-theta theorem applies without strengthening a
 source statement that was intended only on a core.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

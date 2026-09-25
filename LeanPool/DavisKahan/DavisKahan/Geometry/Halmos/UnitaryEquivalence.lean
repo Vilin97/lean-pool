@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.TwoProjections
+
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.TwoProjections
 
 /-!
 # Unitary equivalence of subspace pairs and bounded operators
@@ -14,6 +16,8 @@ frontier.  They express unitary equivalence of ordered pairs of subspaces and of
 bounded operators acting on possibly different Hilbert spaces, stated as bare
 existential propositions so they carry no computational datum.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace
 

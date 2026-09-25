@@ -66,7 +66,7 @@ the operator norm itself.
   Mathlib, `TauCeti` and `ForTauCeti`.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 namespace ContinuousLinearMap

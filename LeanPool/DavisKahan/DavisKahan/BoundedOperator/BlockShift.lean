@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ComplexificationApproximation
-import LeanPool.DavisKahan.DavisKahan.Sylvester.Spectrum
+
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ComplexificationApproximation
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.Spectrum
 
 /-!
 # Shifted diagonal blocks and cosine blocks of a subspace pair
@@ -30,6 +32,8 @@ branch, a perturbation or an angle, so all of it is `RCLike`-generic.  The last
 section records that each of the four blocks commutes with complexification,
 which is what lets a real statement descend from its complex companion.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

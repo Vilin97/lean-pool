@@ -130,7 +130,7 @@ therefore has only the Hilbert-space and completeness assumptions below.  Result
 their public signatures.
 -/
 
-public section
+@[expose] public section
 
 namespace ContinuousLinearMap
 

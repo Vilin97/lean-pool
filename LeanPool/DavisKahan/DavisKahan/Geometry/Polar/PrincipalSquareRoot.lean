@@ -3,15 +3,19 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.TwoProjections
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.TwoProjections
 -- supplies the two crossed intersections `halmosSourceDefect`/`halmosTargetDefect`, the
 -- projection calculus they are described by, and `complementaryProjection_mul_projection`.
-import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.GenericRotationPredicates
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.GenericRotationPredicates
 -- supplies `IsDirectRotation`, the five-field predicate whose characterisation this
 -- module proves.  It lives in `TauCeti.DavisKahan`.
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotation
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotation
 
 /-! # Principal Square Root -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 -- supplies `spectraReflectionProduct`, `spectraCanonicalIntertwiner`, the operator absolute

@@ -3,10 +3,14 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Fable 5
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63FiniteSource
+
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63FiniteSource
 
 /-! # Theorem63Trial Data -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 

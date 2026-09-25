@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.SinTheta.SpectralBridge
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.CanonicalRealView
-import LeanPool.DavisKahan.DavisKahan.SinTheta.FrameFactorization
+module
+
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.SpectralBridge
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.CanonicalRealView
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.FrameFactorization
 
 /-!
 # Bounded `sin Θ` problem data and angle identification
@@ -18,6 +20,8 @@ operator with its isometry and ideal-transport lemmas.
 Keeping them apart from the endpoint theorems makes this file independent of
 which engine supplies the Sylvester estimate.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

@@ -3,7 +3,9 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Anthropic Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Sylvester.RealUnbounded
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.RealUnbounded
 
 /-!
 # The unbounded Sylvester Ky Fan estimate as a property of the scalar field
@@ -40,6 +42,8 @@ dominance recovers the arbitrary-ideal conclusion, which is how both
 `davisKahan1970_sylvester_real` and the source-facing `SymmetricNormingFunction`
 statements are already built.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

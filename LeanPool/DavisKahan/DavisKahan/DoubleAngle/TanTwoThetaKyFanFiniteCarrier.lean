@@ -3,11 +3,15 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Fable 5
 -/
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.TanTwoThetaBranchFree
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.KyFanOrthonormal
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.ScalarGeneric
+module
+
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.TanTwoThetaBranchFree
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.KyFanOrthonormal
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.ScalarGeneric
 
 /-! # Tan Two Theta Ky Fan Finite Carrier -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.ExactSinTheta
 

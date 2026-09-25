@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.BoundedOperator.TrialResidual
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.DoubleAngleSpectrum
+module
+
+public import LeanPool.DavisKahan.DavisKahan.BoundedOperator.TrialResidual
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.DoubleAngleSpectrum
 
 /-!
 # Reflection defect controlled by an isometric trial residual
@@ -13,6 +15,8 @@ This is the shared algebraic bridge needed by residual forms of the
 `sin 2Θ` theorem.  It turns the off-diagonal reflection estimate into a
 residual estimate without any spectral assumptions.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

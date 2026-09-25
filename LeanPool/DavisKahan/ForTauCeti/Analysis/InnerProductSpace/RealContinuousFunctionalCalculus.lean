@@ -72,7 +72,7 @@ ambiguous, so this file routes through `complexifyStarAlgHom` and `map_mul` / `m
 separate, mechanical piece of work.
 -/
 
-public section
+@[expose] public section
 
 open scoped InnerProductSpace
 
@@ -87,7 +87,6 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteS
 
 /-- The identity, read as a map from the spectrum of `complexify a` to the spectrum of `a`.
 It is a bijection, by `spectrum_complexify`. -/
-@[expose]
 def spectrumComplexifyMap (a : E →L[ℝ] E) :
     C(spectrum ℝ (complexify a), spectrum ℝ a) :=
   ⟨Set.inclusion (spectrum_complexify a).subset, continuous_inclusion _⟩
@@ -111,7 +110,6 @@ theorem spectrumComplexifyMap_surjective (a : E →L[ℝ] E) :
 /-- The real continuous functional calculus of `a`, taken in the complexified operator
 algebra: a symbol on `spectrum ℝ a` is read as a symbol on `spectrum ℝ (complexify a)` and fed
 to the calculus that `Complexification/FunctionalCalculus.lean` already registers there. -/
-@[expose]
 def complexifiedCfcHom {a : E →L[ℝ] E} (ha : IsSelfAdjoint a) :
     C(spectrum ℝ a, ℝ) →⋆ₐ[ℝ] (RealComplexification E →L[ℂ] RealComplexification E) :=
   (cfcHom ((complexify_isSelfAdjoint_iff a).2 ha)).comp
@@ -177,7 +175,6 @@ theorem conjugateOperator_complexifiedCfcHom {a : E →L[ℝ] E} (ha : IsSelfAdj
 /-- The real continuous functional calculus of a self-adjoint `a : E →L[ℝ] E`, as a function on
 symbols: `complexifiedCfcHom` followed by the descent of a conjugation-fixed operator to the
 real copy.  `complexifyStarAlgHom_realCfcFun` says the descent is exact. -/
-@[expose]
 def realCfcFun {a : E →L[ℝ] E} (ha : IsSelfAdjoint a) (f : C(spectrum ℝ a, ℝ)) : E →L[ℝ] E :=
   realPartOperator (complexifiedCfcHom ha f)
 
@@ -195,7 +192,6 @@ theorem complexifyStarAlgHom_injective :
 
 /-- **The real continuous functional calculus of a self-adjoint bounded operator on a real
 Hilbert space**, bundled as a `⋆`-algebra homomorphism over `ℝ`. -/
-@[expose]
 def realCfcHom {a : E →L[ℝ] E} (ha : IsSelfAdjoint a) :
     C(spectrum ℝ a, ℝ) →⋆ₐ[ℝ] (E →L[ℝ] E) where
   toFun := realCfcFun ha

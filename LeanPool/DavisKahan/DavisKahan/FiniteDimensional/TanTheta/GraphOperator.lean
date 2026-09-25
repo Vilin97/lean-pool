@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.Residual.AngleEmbeddings
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.UnitarilyInvariantSeminorm
+module
+
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.Residual.AngleEmbeddings
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.UnitarilyInvariantSeminorm
 
 /-!
 # Finite coordinate tangent perturbation bounds
@@ -14,6 +16,8 @@ trial-coordinate maps.  The canonical finite theorem is rectangular: the graph
 operator is `S |C|⁺ : F → E`, its singular values are the directed principal
 tangents, and the ordered Ritz gap controls it through the trial residual.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan.FiniteDimensional

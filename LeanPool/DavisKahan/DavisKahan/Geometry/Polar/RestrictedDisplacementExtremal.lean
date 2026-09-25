@@ -3,18 +3,22 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.RestrictedDisplacementDominance
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.SelectedReduction
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.FiniteRestriction
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotationSquare
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.Section3Nonacute
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.SubspaceTransport
+module
+
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.RestrictedDisplacementDominance
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.SelectedReduction
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.FiniteRestriction
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotationSquare
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.Section3Nonacute
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.SubspaceTransport
 -- supplies `hasSameApproximationNumbers_extendDomainByZero`, promoted out of
 -- `Sources/DavisKahan1970/SineTheta/Norms/SubspaceSingularTransport.lean`: it is a statement
 -- about `Submodule.subtypeL` and approximation numbers, with nothing paper-specific in it.
-import LeanPool.DavisKahan.DavisKahan.Sylvester.Spectrum
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.Spectrum
 
 /-! # Restricted Displacement Extremal -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

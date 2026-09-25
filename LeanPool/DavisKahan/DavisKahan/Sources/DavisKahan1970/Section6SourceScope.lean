@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section6SourceNormClass
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section6AppendixLeakage
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section6AppendixLeakageReal
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section6SourceNormClass
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section6AppendixLeakage
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section6AppendixLeakageReal
 
 /-!
 # Section 6 at the paper's own scope
@@ -39,6 +41,8 @@ hypothesis.  `theorem6_2_vacuity_sourceExact_*` states the inequality in
 inequality is vacuously true.  The finite-norm statement stays as the useful
 nonvacuous specialization.
 -/
+
+@[expose] public section
 
 open scoped ENNReal
 

@@ -50,13 +50,12 @@ decomposition); Reed–Simon, *Methods of Modern Mathematical Physics I*, §VI (
   `ForTauCeti` staging modules.
 -/
 
-public section
+@[expose] public section
 
 open scoped InnerProductSpace
 open LinearMap
 
 /-- **Partial isometry** (algebraic form): `u * star u * u = u`. -/
-@[expose]
 def IsPartialIsometry {R : Type*} [Monoid R] [StarMul R] (u : R) : Prop :=
   u * star u * u = u
 

@@ -3,13 +3,17 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, GPT-5.6 Sol
 -/
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.KyFanOrthonormal
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.SpectralSelection
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SharpKyFan
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Polar.Isometry
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.GramBandPolar
+module
+
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.KyFanOrthonormal
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.SpectralSelection
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SharpKyFan
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Polar.Isometry
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.GramBandPolar
 
 /-! # Reflection Tangent Ky Fan -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

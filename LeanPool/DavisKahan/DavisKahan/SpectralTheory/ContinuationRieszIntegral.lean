@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.ContinuationContour
-import Mathlib.Analysis.Normed.Operator.NormedSpace
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
+module
+
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.ContinuationContour
+public import Mathlib.Analysis.Normed.Operator.NormedSpace
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
 
 /-!
 # Riesz integrals on proof-carrying continuation contours
@@ -25,6 +27,8 @@ the contour.
 promotable only after the modules it imported were promoted earlier in this lane.  Nothing is
 restated; names and namespace are unchanged.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahanExt

@@ -3,12 +3,14 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.TwoProjections
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.SpectralRestriction
+
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.TwoProjections
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.SpectralRestriction
 -- supplies `compressOperator`
-import LeanPool.DavisKahan.DavisKahan.Sylvester.Spectrum
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.Basic
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.Spectrum
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.Basic
 
 /-!
 # Grounded generic direct-rotation predicates for Davis--Kahan 1970
@@ -25,6 +27,8 @@ is retained verbatim so that the fully-qualified names are unchanged; only the
 module path has moved.  De-experimentalizing the namespace is a deliberately
 deferred later pass.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace
 

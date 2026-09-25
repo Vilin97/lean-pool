@@ -3,11 +3,13 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.OperatorAngleComplex
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.OperatorAngleReal
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Inverse
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Instances
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Complexification.FunctionalCalculus
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.OperatorAngleComplex
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.OperatorAngleReal
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Inverse
+public import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Instances
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Complexification.FunctionalCalculus
 
 /-!
 # The literal operator angle of Davis--Kahan
@@ -24,6 +26,8 @@ sine operator.  For real Hilbert spaces the literal angle is the same object
 on the canonical complexification; this is the construction used elsewhere in
 the repository for real operator functional calculus.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan.Angle

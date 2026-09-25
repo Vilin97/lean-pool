@@ -14,7 +14,7 @@ public import Mathlib.Analysis.InnerProductSpace.LinearPMap
 
 /-! # Submodule Adjoint -/
 
-public section
+@[expose] public section
 
 /-!
 # The double adjoint of a submodule

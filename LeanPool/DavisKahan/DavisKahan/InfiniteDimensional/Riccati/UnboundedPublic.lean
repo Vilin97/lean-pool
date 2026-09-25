@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.Riccati.UnboundedExistence
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.UnboundedDiagonalRestrictions
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Riccati.UnboundedExistence
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.UnboundedDiagonalRestrictions
 
 /-!
 # Proof-complete public surface for unbounded Riccati reduction
@@ -20,6 +22,8 @@ below follows that map: the forward unitary carries the zero coordinate graph
 to the Riccati graph.  The two coordinate restrictions are exposed as a
 separate identity-unitary equivalence with the rotated pullback.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahanExt

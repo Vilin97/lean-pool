@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.Riccati.BoundedReduction
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SpectraBridge.DirectRotationAPI
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Riccati.BoundedReduction
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SpectraBridge.DirectRotationAPI
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
 
 /-!
 # Bounded Riccati block diagonalization
@@ -24,6 +26,8 @@ The remaining local geometric input is that every bounded graph is acute to
 the zero graph.  It is intentionally left as an explicit hypothesis of the
 last theorem so that its proof can be isolated from the block algebra.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahanExt

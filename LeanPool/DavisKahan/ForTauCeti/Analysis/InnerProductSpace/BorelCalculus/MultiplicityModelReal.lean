@@ -67,7 +67,7 @@ of the operator, not a well-formedness condition on presentations in general.
 * Spectra influence: **none** -- this module imports only Mathlib and `ForTauCeti`.
 -/
 
-public section
+@[expose] public section
 
 open MeasureTheory
 

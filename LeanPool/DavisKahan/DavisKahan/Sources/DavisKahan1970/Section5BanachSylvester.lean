@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
+module
 
-import LeanPool.DavisKahan.ForTauCeti.Analysis.Normed.Operator.PartialSylvesterBoundedInverse
+
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.Normed.Operator.PartialSylvesterBoundedInverse
 
 /-!
 # Davis--Kahan 1970, Theorem 5.1, on a Banach space
@@ -20,6 +22,8 @@ and its four printed variants: the exact form, the interchanged form the paper
 obtains from the symmetry of `A` and `B`, its exact companion, and the
 unbounded-`A` form the paper's remark asserts its proof already covers.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace
 open Set

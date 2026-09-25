@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation
-import Mathlib.Analysis.Normed.Algebra.Exponential
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Series
+module
+
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation
+public import Mathlib.Analysis.Normed.Algebra.Exponential
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Series
 
 /-!
 # The direct rotation as an exponential: `U = exp (J Θ)`
@@ -28,6 +30,8 @@ The proof is the classical one, carried out on the eigenbasis of `sin Θ`:
 Everything is stated on `E →L[𝕜] E`, since that — and not `E →ₗ[𝕜] E` — is where
 Mathlib's `NormedSpace.exp` lives.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan.FiniteDimensional

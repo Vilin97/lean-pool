@@ -3,7 +3,9 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.RankOneNormalization
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.RankOneNormalization
 
 /-!
 # Definiteness of the source-defined norm
@@ -15,6 +17,8 @@ is exactly the operator norm, so the canonical extension is a genuine norm on
 its ideal.  This closes the definition-level correspondence with the norm class
 used by Davis and Kahan.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

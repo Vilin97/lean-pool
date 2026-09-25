@@ -110,7 +110,7 @@ coordinate.
   Mathlib, `TauCeti` and `ForTauCeti`.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

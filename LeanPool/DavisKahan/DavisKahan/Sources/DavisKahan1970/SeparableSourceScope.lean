@@ -3,15 +3,17 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3AcuteDirectRotation
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Proposition32
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3PrincipalSquareRoot
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Proposition34
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Proposition34Real
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Corollary31
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Proposition35
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section4
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section4Real
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3AcuteDirectRotation
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Proposition32
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3PrincipalSquareRoot
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Proposition34
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Proposition34Real
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Corollary31
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Proposition35
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section4
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section4Real
 
 /-!
 # Section 3 and Proposition 4.2 at the paper's separable ambient scope
@@ -29,6 +31,8 @@ theorems remain the mathematics; these are the source boundary.
 Rows that stay `generalized`, with their reasons, are recorded in the policy
 table rather than wrapped here.
 -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 open TauCeti.DavisKahan.Angle

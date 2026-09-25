@@ -3,7 +3,9 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.UnboundedRotationTransport
+module
+
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.UnboundedRotationTransport
 
 /-!
 # Transport of reducing subspaces through an unbounded graph rotation
@@ -24,6 +26,8 @@ The three projection-intertwining lemmas below are pure orthogonal-projection
 facts: they mention no operator at all, and are stated here only because this
 is where the reduction transport first needs them.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahanExt

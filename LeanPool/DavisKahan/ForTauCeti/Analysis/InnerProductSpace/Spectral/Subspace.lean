@@ -20,7 +20,7 @@ The point-spectrum predicates name eigenvalue data explicitly; the quadratic-for
 reduce to the generic bounded spectral-order API after restricting to an invariant subspace.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 
@@ -40,7 +40,6 @@ reader meeting `IsInvariant A U` in a docstring could not tell which.  For a
 symmetric operator the two coincide, and `isInvariant_orthogonal_of_isSymmetric`
 is what supplies that; but the implication is one-directional in general, which
 is exactly why the names had to be separated. -/
-@[expose]
 def IsInvariant (A : E →ₗ[𝕜] E) (U : Submodule 𝕜 E) : Prop :=
   ∀ x ∈ U, A x ∈ U
 
@@ -91,31 +90,26 @@ theorem mem_restrictedPointSpectrum {A : E →ₗ[𝕜] E} {U : Submodule 𝕜 E
   mem_restrictedPointSpectrum_iff.mpr ⟨x, hxU, hx0, hxEig⟩
 
 /-- Every eigenvalue of `A` carried by `U` lies in `Ω`. -/
-@[expose]
 def PointSpectrumIn (A : E →ₗ[𝕜] E) (U : Submodule 𝕜 E) (Ω : Set ℝ) : Prop :=
   restrictedPointSpectrum A U ⊆ Ω
 
 /-- Canonical finite-dimensional spectral subspace selected by a real set. -/
-@[expose]
 noncomputable def pointSpectralSubspace (A : E →ₗ[𝕜] E) (Ω : Set ℝ) :
     Submodule 𝕜 E :=
   Submodule.span 𝕜 {x | ∃ lam ∈ Ω, Module.End.HasEigenvector A (lam : 𝕜) x}
 
 /-- Canonical orthogonal spectral projector. -/
-@[expose]
 noncomputable def spectralProjection (A : E →ₗ[𝕜] E) (Ω : Set ℝ) :
     E →ₗ[𝕜] E :=
   ((pointSpectralSubspace A Ω).starProjection : E →L[𝕜] E)
 
 /-- The orthogonal projector onto a finite-dimensional subspace, as a linear
 map. -/
-@[expose]
 noncomputable def projection (U : Submodule 𝕜 E) [U.HasOrthogonalProjection] :
     E →ₗ[𝕜] E :=
   ((U.starProjection : E →L[𝕜] E) : E →ₗ[𝕜] E)
 
 /-- The complementary projector. -/
-@[expose]
 noncomputable def complementaryProjection (U : Submodule 𝕜 E)
     [U.HasOrthogonalProjection] : E →ₗ[𝕜] E :=
   projection Uᗮ

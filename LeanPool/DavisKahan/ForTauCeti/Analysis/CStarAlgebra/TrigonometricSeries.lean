@@ -33,7 +33,7 @@ The transport argument follows the same continuous-homomorphism pattern used by 
 `ForTauCeti.Analysis.Normed.Algebra.TrigonometricSeries`.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

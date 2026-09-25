@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.HilbertSchmidtApproximationNorm
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.UnitarilyInvariantSeminorm
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.HilbertSchmidtApproximationNorm
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.UnitarilyInvariantSeminorm
 
 /-!
 # Finite-dimensional Frobenius realization of the paper square norm
@@ -25,6 +27,8 @@ written out.  They cost the caller nothing: `CompleteSpace` is a `Prop` class,
 so proof irrelevance identifies whatever instance a call site already carries
 with one produced by `letI : CompleteSpace E := FiniteDimensional.complete 𝕜 E`.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

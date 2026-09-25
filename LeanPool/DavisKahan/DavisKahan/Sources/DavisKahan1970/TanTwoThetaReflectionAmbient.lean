@@ -3,14 +3,18 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, GPT-5.6 Sol
 -/
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.ReflectionTangentKyFan
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.DoubleAngle
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaAmbient
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.DoubleAngle.ReflectionBlocks
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.DoubleAngle.UnboundedPole
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SpectralOrder
+module
+
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.ReflectionTangentKyFan
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.DoubleAngle
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaAmbient
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.DoubleAngle.ReflectionBlocks
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.DoubleAngle.UnboundedPole
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SpectralOrder
 
 /-! # Tan Two Theta Reflection Ambient -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

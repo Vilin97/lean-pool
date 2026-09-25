@@ -24,7 +24,7 @@ Adapted from the square and rectangular norm-instance modules in the Davis--Kaha
 formalization (Kitware, Inc.).
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

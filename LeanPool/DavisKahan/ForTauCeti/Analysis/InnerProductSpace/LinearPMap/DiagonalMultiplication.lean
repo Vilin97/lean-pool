@@ -53,7 +53,7 @@ Written for the Davis--Kahan 1970 Section 9 example, whose trial vector is in th
 form domain of such an operator but not in its operator domain.
 -/
 
-public section
+@[expose] public section
 
 open scoped InnerProductSpace ENNReal
 

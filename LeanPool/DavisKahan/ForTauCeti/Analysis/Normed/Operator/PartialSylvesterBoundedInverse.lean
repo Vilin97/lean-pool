@@ -19,7 +19,7 @@ The proof is the same fixed-point estimate as for a bounded left block.  No
 inner product, completeness, closedness, or spectral theory enters the bound.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 namespace LinearPMap

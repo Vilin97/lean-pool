@@ -68,7 +68,7 @@ place: an instance, discharged once, invisible to every caller.
 * Spectra influence: **none**.
 -/
 
-public section
+@[expose] public section
 
 open scoped InnerProductSpace
 
@@ -131,7 +131,6 @@ and `adjoint_clm` is exactly that statement. -/
 
 Composition, the adjoint and the norm are all preserved because the transport changes no
 function and no metric; only the field the scalars are named in moves. -/
-@[expose]
 noncomputable def clmStarAlgEquiv (e : RCLikeIso 𝕜 𝕂) (E : Type v) [NormedAddCommGroup E]
     [InnerProductSpace 𝕜 E] [CompleteSpace E] :
     (E →L[𝕜] E) ≃⋆ₐ[ℝ] (ScalarTransport e E →L[𝕂] ScalarTransport e E) where

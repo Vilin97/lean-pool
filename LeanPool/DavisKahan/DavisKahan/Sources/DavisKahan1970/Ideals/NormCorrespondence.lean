@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.UnitaryInvariantNormDefinite
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.KyFan
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.UnitaryInvariantNormDefinite
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.KyFan
 
 /-!
 # Exact correspondence with the norm class of Davis--Kahan 1970
@@ -25,6 +27,8 @@ values of its diagonal.  That is established here as
 `exists_perm_singularValues_diagOp`, from the Gram identity for diagonal
 operators together with the basis-permutation unitary.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

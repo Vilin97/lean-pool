@@ -7,8 +7,8 @@ module
 
 public import LeanPool.DavisKahan.TauCeti.Analysis.Semigroups.Generator.Basic
 public import LeanPool.DavisKahan.TauCeti.Analysis.Semigroups.ExponentialShift
-import LeanPool.DavisKahan.TauCeti.Analysis.Calculus.ExponentialSlope
-import LeanPool.DavisKahan.TauCeti.MeasureTheory.Integral.ExpDecay
+public import LeanPool.DavisKahan.TauCeti.Analysis.Calculus.ExponentialSlope
+public import LeanPool.DavisKahan.TauCeti.MeasureTheory.Integral.ExpDecay
 public import Mathlib.MeasureTheory.Integral.ExpDecay
 public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 public import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
@@ -28,7 +28,7 @@ Ported and adapted (Apache 2.0) from `mrdouglasny/hille-yosida`; references incl
 Engel--Nagel, Linares, Pazy, Hille, and Yosida.
 -/
 
-public section
+@[expose] public section
 
 noncomputable section
 

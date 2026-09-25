@@ -3,7 +3,9 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.Sylvester.FiniteStepCalculus
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.FiniteStepCalculus
 
 
 /-!
@@ -19,6 +21,8 @@ the finite sum.
 that was its only Experimental import, so clearing one module cleared this one.  Nothing is
 restated; names and namespace (`TauCeti.DavisKahanExt`) are unchanged.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan.Sylvester

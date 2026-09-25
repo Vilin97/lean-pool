@@ -31,7 +31,7 @@ same construction. The power-sum identification supplies their completeness and
 the trace-class and Hilbert--Schmidt identifications.
 -/
 
-public section
+@[expose] public section
 
 open scoped NNReal ENNReal
 

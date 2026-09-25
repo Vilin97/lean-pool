@@ -3,12 +3,14 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotationSquare
+
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotationSquare
 -- the principal-angle sequence and its basis-sum dictionary, used below to
 -- identify the right-hand side with the printed `∑ₖ sin² θₖ`
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.AngleGeometry
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.PrincipalAngleSequence
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.AngleGeometry
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.PrincipalAngleSequence
 
 /-!
 # Davis--Kahan 1970, Proposition 4.2: displacement-angle energy over a basis
@@ -91,6 +93,8 @@ over an orthonormal **basis** of `U`, and the inequality is a statement about
 total energy, which no proper subfamily inherits.  Summing the same `ℂ⁴` example
 over the full basis `{(e₁ ± e₂)/√2}` restores it: `1.025 < 1.125`.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace BigOperators
 

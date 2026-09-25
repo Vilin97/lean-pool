@@ -35,7 +35,7 @@ block argument for the Sylvester spectral gap uses.
 *New.*
 -/
 
-public section
+@[expose] public section
 
 open scoped ENNReal NNReal InnerProductSpace
 open MeasureTheory

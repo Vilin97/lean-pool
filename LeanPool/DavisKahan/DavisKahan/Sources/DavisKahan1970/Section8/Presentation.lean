@@ -3,13 +3,17 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81AngleForms
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTheta.ContinuationWitnessAPriori
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.WitnessGraph
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem82
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem82Real
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81AngleForms
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTheta.ContinuationWitnessAPriori
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.WitnessGraph
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem82
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem82Real
 
 /-! # Presentation -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 

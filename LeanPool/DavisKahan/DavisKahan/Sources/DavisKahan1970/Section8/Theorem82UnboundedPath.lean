@@ -3,12 +3,14 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.UnboundedBandLipschitz
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem82Unbounded
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.DoubleAngleGapBound
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.ReducingSpectrumUnion
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.ReducingRestrictionDescent
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Polar.SelfAdjointCompletion
+module
+
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.UnboundedBandLipschitz
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem82Unbounded
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.DoubleAngleGapBound
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.ReducingSpectrumUnion
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.ReducingRestrictionDescent
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Polar.SelfAdjointCompletion
 
 /-!
 # The homotopy path for Theorem 8.2 at unbounded scope
@@ -31,6 +33,8 @@ Along `B t = A + (1 − t) H` the moving branch is the band spectral range
 
 The two endpoints come from `le_of_band_exterior_spectra`.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace
 

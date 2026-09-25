@@ -3,15 +3,19 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking, Claude Opus 5
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Classification
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Theorem31Realization
-import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.AngleSequenceRealization
-import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.CompactClassification
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CompactApproximationEigenvalues
-import LeanPool.DavisKahan.ForTauCeti.Analysis.RCLike.ScalarTransportFunctionalCalculus
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Classification
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Theorem31Realization
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.AngleSequenceRealization
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.CompactClassification
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CompactApproximationEigenvalues
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.RCLike.ScalarTransportFunctionalCalculus
 
 /-! # Section3Corollary31 -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 

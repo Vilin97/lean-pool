@@ -79,7 +79,7 @@ no scalars — it renames the field.
 * Spectra influence: **none**.
 -/
 
-public section
+@[expose] public section
 
 open scoped InnerProductSpace
 
@@ -172,7 +172,6 @@ theorem isometry (e : RCLikeIso 𝕜 𝕂) : Isometry (e : 𝕜 → 𝕂) :=
   AddMonoidHomClass.isometry_of_norm (e.toRingEquiv : 𝕜 →+* 𝕂) e.norm_map
 
 /-- The field isomorphism is a homeomorphism. -/
-@[expose]
 noncomputable def homeomorph (e : RCLikeIso 𝕜 𝕂) : 𝕜 ≃ₜ 𝕂 where
   toEquiv := e.toRingEquiv.toEquiv
   continuous_toFun := e.isometry.continuous
@@ -196,7 +195,6 @@ end RCLikeIso
 
 The type, the additive group, the topology and the norm are unchanged; only the
 scalar action and the inner product's field of values move. -/
-@[expose]
 def ScalarTransport {𝕜 : Type u} {𝕂 : Type w} [RCLike 𝕜] [RCLike 𝕂]
     (_e : RCLikeIso 𝕜 𝕂) (E : Type v) : Type v := E
 
@@ -207,11 +205,9 @@ variable {E : Type v} [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
 variable {F : Type v'} [NormedAddCommGroup F] [InnerProductSpace 𝕜 F]
 
 /-- The identity, as the passage from `E` to its transport. -/
-@[expose]
 def of (x : E) : ScalarTransport e E := x
 
 /-- The identity, as the passage back. -/
-@[expose]
 def out (x : ScalarTransport e E) : E := x
 
 omit [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] in
@@ -286,7 +282,6 @@ theorem re_inner_of (x y : E) :
 /-! ### Subspaces -/
 
 /-- A `𝕜`-subspace of `E`, as a `𝕂`-subspace of the transport, with the same carrier. -/
-@[expose]
 def submodule (S : Submodule 𝕜 E) : Submodule 𝕂 (ScalarTransport e E) where
   carrier := {x | out x ∈ S}
   add_mem' := S.add_mem
@@ -298,7 +293,6 @@ def submodule (S : Submodule 𝕜 E) : Submodule 𝕂 (ScalarTransport e E) wher
     x ∈ submodule (e := e) S ↔ out x ∈ S := Iff.rfl
 
 /-- and back again. -/
-@[expose]
 def submoduleSymm (S : Submodule 𝕂 (ScalarTransport e E)) : Submodule 𝕜 E where
   carrier := {x | of (e := e) x ∈ S}
   add_mem' := S.add_mem
@@ -337,7 +331,6 @@ def submoduleSymm (S : Submodule 𝕂 (ScalarTransport e E)) : Submodule 𝕜 E 
 /-! ### Bounded operators -/
 
 /-- A `𝕜`-linear continuous map, as a `𝕂`-linear one on the transports. -/
-@[expose]
 def clm (T : E →L[𝕜] F) : ScalarTransport e E →L[𝕂] ScalarTransport e F where
   toFun x := of (e := e) (T (out x))
   map_add' _ _ := T.map_add _ _
@@ -360,7 +353,6 @@ def clm (T : E →L[𝕜] F) : ScalarTransport e E →L[𝕂] ScalarTransport e 
   · exact (clm (e := e) T).le_opNorm (of x)
 
 /-- The transport of a bounded operator is a bijection onto the `𝕂`-operators. -/
-@[expose]
 def clmEquiv : (E →L[𝕜] F) ≃ (ScalarTransport e E →L[𝕂] ScalarTransport e F) where
   toFun := clm
   invFun T :=
@@ -380,7 +372,6 @@ def clmEquiv : (E →L[𝕜] F) ≃ (ScalarTransport e E →L[𝕂] ScalarTransp
 /-! ### Rank -/
 
 /-- The additive identity `E ≃+ ScalarTransport e E`. -/
-@[expose]
 def addEquiv : E ≃+ ScalarTransport e E where
   toFun := of
   invFun := out
@@ -483,13 +474,11 @@ theorem isSelfAdjoint_clm_iff {T : E →L[𝕜] E} :
 /-! ### Partial maps -/
 
 /-- A point of the transported domain, read back in `A.domain`. -/
-@[expose]
 def domainOut (A : E →ₗ.[𝕜] F) (x : submodule (e := e) A.domain) : A.domain :=
   ⟨out (x : ScalarTransport e E), x.2⟩
 
 /-- A `𝕜`-linear partial map, as a `𝕂`-linear one on the transports:
 the same domain and the same function. -/
-@[expose]
 def pmap (A : E →ₗ.[𝕜] F) : ScalarTransport e E →ₗ.[𝕂] ScalarTransport e F where
   domain := submodule (e := e) A.domain
   toFun :=

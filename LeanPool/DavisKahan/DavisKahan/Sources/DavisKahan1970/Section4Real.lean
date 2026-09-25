@@ -3,15 +3,19 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section4
-import
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section4
+public import
   LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.SubspaceSingularTransport
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.BasisAngleEnergy
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotationReal
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ComplexificationApproximation
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RealContinuousFunctionalCalculus
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.BasisAngleEnergy
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotationReal
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ComplexificationApproximation
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RealContinuousFunctionalCalculus
 
 /-! # Section4Real -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

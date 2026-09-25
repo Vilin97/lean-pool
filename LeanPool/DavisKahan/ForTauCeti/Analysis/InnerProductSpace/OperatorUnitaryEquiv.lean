@@ -31,7 +31,7 @@ finite-dimensionality hypothesis that none of the source statements have.
 * Spectra influence: **none** -- this module imports only Mathlib.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

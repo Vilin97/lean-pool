@@ -64,7 +64,7 @@ and the infimum statement is derived from it.
 * Spectra influence: **none** (imports only Mathlib).
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

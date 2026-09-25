@@ -3,16 +3,18 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
+module
+
 
 /-
 The proof route uses the bounded polar decomposition, taken from `ForTauCeti`,
 originally authored by Adam Bornemann.  The declaration-level mapping is
 recorded in the accompanying provenance ledger.
 -/
-import LeanPool.DavisKahan.DavisKahan.SharedFoundations.Ideal.TwoWayFactorization
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.CanonicalRealView
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.OperatorModulus
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Polar.PartialIsometry
+public import LeanPool.DavisKahan.DavisKahan.SharedFoundations.Ideal.TwoWayFactorization
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.CanonicalRealView
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.OperatorModulus
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Polar.PartialIsometry
 
 /-!
 # Absolute-value transport for square symmetric ideals
@@ -25,6 +27,8 @@ the two-way principle of `TwoWayFactorization` applies directly.  No unitary
 argument work on an arbitrary Hilbert space rather than only where `U` extends
 to a unitary.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

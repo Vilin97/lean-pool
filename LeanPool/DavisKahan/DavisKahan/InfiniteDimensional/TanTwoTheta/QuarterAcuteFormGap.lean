@@ -3,15 +3,19 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking, Claude Opus 5
 -/
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.DoubleAngle.Vector
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotation
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.BoundedSpectralTransport
-import LeanPool.DavisKahan.DavisKahan.SinTheta.FrameFactorization
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CoerciveUnit
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.DiagonalMeasure
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.OperatorAngle
+module
+
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.DoubleAngle.Vector
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotation
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.BoundedSpectralTransport
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.FrameFactorization
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CoerciveUnit
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.DiagonalMeasure
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.OperatorAngle
 
 /-! # Quarter Acute Form Gap -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.StandardFanDominance
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.UnitaryInvariantNormInstances
-import LeanPool.DavisKahan.ForTauCeti.Analysis.Normed.FiniteLpGauge
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.StandardFanDominance
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.UnitaryInvariantNormInstances
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.Normed.FiniteLpGauge
 
 /-!
 # Standard coherent norming-function instances
@@ -14,6 +16,8 @@ This file constructs the finite `ell^p` and `ell^infinity` coherent source
 norms from the existing proved finite symmetric gauges.  The generic Fan
 result then applies to both their maximal and minimal completions.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace SymmetricIdeal

@@ -3,23 +3,27 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Sol
 -/
-import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotationAcute
-import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.TwoProjections
-import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.FixedCosineSubspace
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotationAcute
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.TwoProjections
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.FixedCosineSubspace
 -- supplies the fixed-cosine eigenspace this file identifies with `Ω({θ})H`, together
 -- with the `halmosCosineSq` commutation lemmas underneath it.
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.AngleGeometry
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.AngleGeometry
 -- supplies `TauCeti.IsAcute` and `TauCeti.isAcute_iff_inf_orthogonal_eq_bot`, which this
 -- file used to receive indirectly through the former `DavisKahan.Section3`.
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RealContinuousFunctionalCalculus
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.VectorAngle
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SeparatedIntertwiner
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.PositiveSqrt
-import LeanPool.DavisKahan.ForTauCeti.Analysis.CStarAlgebra.PositiveSquareRootCommute
-import LeanPool.DavisKahan.ForTauCeti.Analysis.CStarAlgebra.SelfAdjointGapInverse
-import LeanPool.DavisKahan.ForTauCeti.Analysis.RCLike.ScalarTransportFunctionalCalculus
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.RealContinuousFunctionalCalculus
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.VectorAngle
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SeparatedIntertwiner
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.PositiveSqrt
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.CStarAlgebra.PositiveSquareRootCommute
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.CStarAlgebra.SelfAdjointGapInverse
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.RCLike.ScalarTransportFunctionalCalculus
 
 /-! # Proposition35Infinite -/
+
+@[expose] public section
 
 attribute [local instance 100] ContinuousLinearMap.realAlgebra
   ContinuousLinearMap.realIsScalarTower ContinuousLinearMap.continuousFunctionalCalculusReal

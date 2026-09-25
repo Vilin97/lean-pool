@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.TanTwoThetaKyFanFiniteCarrier
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaBranchFreeInfinite
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.UnitaryInvariantNorm
+module
+
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.TanTwoThetaKyFanFiniteCarrier
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaBranchFreeInfinite
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.UnitaryInvariantNorm
 
 /-!
 # The unrestricted Section 2 `tan 2Θ` theorem at the source norm scope
@@ -59,6 +61,8 @@ are not antitone, while the approximation numbers of an operator always are.
 A unitarily invariant norm sees only the multiset of singular values, which
 is exactly the paper's own representative freedom for `tan 2Θ₀`.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan1970

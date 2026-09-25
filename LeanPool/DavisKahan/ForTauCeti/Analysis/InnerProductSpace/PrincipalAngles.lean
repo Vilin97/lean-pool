@@ -59,7 +59,7 @@ Davis–Kahan development.
   aligned-basis bound restated as `∑ⱼ ‖wⱼ − uⱼ‖² ≤ 2 ‖sin Θ‖²_F`.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

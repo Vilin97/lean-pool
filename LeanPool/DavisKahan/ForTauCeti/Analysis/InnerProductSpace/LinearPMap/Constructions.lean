@@ -50,7 +50,7 @@ that used them do not need a spectral-theory dependency for bookkeeping.
      wrappers rather than adding one.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 namespace LinearPMap
@@ -65,7 +65,6 @@ variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace 𝕜 H]
 -- *stated* without `.domain` reducing, since it indexes its argument by this map's
 -- domain and applies the underlying map to it. That is the `api-design` rubric's own
 -- carve-out — a consumer that must unfold — not the blanket exposure it rejects.
-@[expose]
 def perturb (A : H →ₗ.[𝕜] H) (V : A.domain →ₗ[𝕜] H) : H →ₗ.[𝕜] H where
   domain := A.domain
   toFun := A.toFun + V
@@ -170,7 +169,6 @@ variable {H' : Type*} [NormedAddCommGroup H'] [InnerProductSpace 𝕜 H']
 -- *stated* without `.domain` reducing, since it indexes its argument by this map's
 -- domain and applies the underlying map to it. That is the `api-design` rubric's own
 -- carve-out — a consumer that must unfold — not the blanket exposure it rejects.
-@[expose]
 noncomputable def unitaryConj (U : H ≃ₗᵢ[𝕜] H') (A : H →ₗ.[𝕜] H) : H' →ₗ.[𝕜] H' where
   domain := A.domain.comap (U.symm.toLinearEquiv : H' →ₗ[𝕜] H)
   toFun :=

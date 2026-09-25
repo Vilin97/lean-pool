@@ -23,7 +23,7 @@ public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.Approximatio
 
 /-! # Scalar Transport -/
 
-public section
+@[expose] public section
 
 /-! # Approximation numbers under a scalar transport
 

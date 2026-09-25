@@ -3,11 +3,13 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaAmbientUnbounded
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.QuarterAngleUnbounded
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.NormalizedUnitaryInvariantNormExamples
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.RealAngleIdentification
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.DoubleAngleGapBound
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaAmbientUnbounded
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.QuarterAngleUnbounded
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.NormalizedUnitaryInvariantNormExamples
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.RealAngleIdentification
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.DoubleAngleGapBound
 
 /-!
 # Theorem 8.2's acute branch at unbounded scope
@@ -95,6 +97,8 @@ paper's connectedness step, not a missing translation.
 `Theorem82UnboundedBranchBound.lean` discharges it from the printed hypotheses
 alone on `2‖H‖ ≤ (√2/2) δ`, using the first of the two static bounds above.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan1970

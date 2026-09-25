@@ -3,12 +3,14 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
+module
 
-import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.Tactic.Abel
-import Mathlib.Tactic.Ext
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
+
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Tactic.Abel
+public import Mathlib.Tactic.Ext
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.Ring
 
 /-!
 # Davis--Kahan 1970, Section 9: Schur-complement reduction
@@ -38,6 +40,8 @@ Because the lower block never appears except through the vector `A₁ y`, these
 statements carry no domain hypothesis and apply verbatim to an unbounded lower
 block.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan1970

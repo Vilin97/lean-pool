@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking, Claude Fable 5
 -/
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation.PrincipalPlanes.Basic
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CourantFischer
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.KyFan
+module
+
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation.PrincipalPlanes.Basic
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CourantFischer
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.KyFan
 
 /-!
 # The spectrum of the direct displacement `I - R`
@@ -20,6 +22,8 @@ Gram identity `(I-R)⋆(I-R) = 2 (I - |S|)`, and the closed forms
   (`sigma_k (I-R) = 2 sin(theta_{k/2}/2)`, each chord twice) and
 * `kyFanSum_directRotation_displacement_eq_principalChords`.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan.FiniteDimensional

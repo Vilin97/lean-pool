@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.UnboundedCentralBand
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.OffDiagonalSpectralRepulsionUnbounded
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.QuarterAngleUnbounded
+module
+
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.UnboundedCentralBand
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.OffDiagonalSpectralRepulsionUnbounded
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.QuarterAngleUnbounded
 
 /-!
 # Theorem 8.1's canonical branch at unbounded scope
@@ -29,6 +31,8 @@ one-sided limit:
 The repulsion is `notMem_spectrum_addBounded_of_offDiagonal_form_gap`, which is
 the unbounded half already proved; nothing here re-derives it.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace
 

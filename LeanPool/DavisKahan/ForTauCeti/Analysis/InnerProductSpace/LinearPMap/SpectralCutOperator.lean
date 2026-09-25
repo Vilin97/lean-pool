@@ -36,7 +36,7 @@ operators.
 *New.*  Everything here is a repackaging of `specProjection_apply_sub_smul`.
 -/
 
-public section
+@[expose] public section
 
 open scoped InnerProductSpace
 

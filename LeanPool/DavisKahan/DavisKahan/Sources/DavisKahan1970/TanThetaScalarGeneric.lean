@@ -3,11 +3,13 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Sol
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanThetaUnboundedAmbient
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanThetaUnboundedAmbientReal
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanThetaDirectedUnbounded
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.TangentOperatorGeneric
-import LeanPool.DavisKahan.DavisKahan.TanTheta.ScalarTransport
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanThetaUnboundedAmbient
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanThetaUnboundedAmbientReal
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanThetaDirectedUnbounded
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.TangentOperatorGeneric
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.ScalarTransport
 
 /-!
 # Scalar-generic unbounded `tan Θ`
@@ -24,6 +26,8 @@ The strong symmetric-norming endpoints and the source-shaped Ritz wrappers are
 corollaries of that transport, just as the scalar-generic sine theorem is built
 on its Ky Fan majorization core.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace BigOperators TauCeti.CompleteSubspace
 

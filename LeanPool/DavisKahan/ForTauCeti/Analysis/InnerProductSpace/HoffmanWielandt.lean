@@ -60,7 +60,7 @@ the rearrangement inequality recorded here.
   `ForTauCeti` staging modules.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

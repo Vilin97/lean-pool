@@ -36,7 +36,7 @@ operators, and the Spectra-removal plan for the route comparison).
 *New*; see `ForTauCeti/Analysis/InnerProductSpace/BorelCalculus/DiagonalMeasure.lean`.
 -/
 
-public section
+@[expose] public section
 
 open scoped InnerProductSpace ENNReal CompactlySupported
 open MeasureTheory

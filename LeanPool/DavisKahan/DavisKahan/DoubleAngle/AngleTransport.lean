@@ -3,12 +3,16 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.Unbounded
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.UnboundedIdeal
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.SameSequence
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.UnitaryInvariantNorm
+module
+
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.Unbounded
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.UnboundedIdeal
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.SameSequence
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.UnitaryInvariantNorm
 
 /-! # Angle Transport -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

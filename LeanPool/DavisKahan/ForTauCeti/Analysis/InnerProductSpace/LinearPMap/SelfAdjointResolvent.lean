@@ -41,7 +41,7 @@ The argument is the classical one, in three steps:
   Spectra's, which routes through the Cayley transform and Yosida--Hille.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 namespace LinearPMap

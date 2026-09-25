@@ -35,7 +35,7 @@ chosen to avoid installing a second topology on the domain subtype.
 * Spectra influence: none.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 namespace LinearPMap

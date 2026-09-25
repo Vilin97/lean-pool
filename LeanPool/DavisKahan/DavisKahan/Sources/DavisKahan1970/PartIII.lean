@@ -3,15 +3,17 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, GPT 5.6 High
 -/
+module
 
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.Interval
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation.Basic
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SinTheta.Perturbation
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.SinTheta.TrialMap
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.TanTheta.RitzResidual
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.TanTheta.Vector
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DoubleAngle.SinTheta
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DoubleAngle.TanTheta
+
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Sylvester.Interval
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation.Basic
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SinTheta.Perturbation
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.SinTheta.TrialMap
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.TanTheta.RitzResidual
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.TanTheta.Vector
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DoubleAngle.SinTheta
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DoubleAngle.TanTheta
 
 /-!
 # Finite Davis--Kahan Part III specialization surface
@@ -49,6 +51,8 @@ canonical continuation and spectral-repulsion package, and the planar
 sharpness/numerical examples require separate source modules and proof audits.
 Those developments must not be inferred merely from the quartet aliases below.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan.FiniteDimensional

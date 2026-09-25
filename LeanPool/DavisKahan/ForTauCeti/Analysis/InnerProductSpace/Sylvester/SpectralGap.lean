@@ -48,7 +48,7 @@ one family now has one convention.  Path change and import repoint only — no s
 signature, proof, attribute, declaration name or namespace changed.
 -/
 
-public section
+@[expose] public section
 
 open scoped InnerProductSpace ENNReal
 open TauCeti.OneParameterUnitaryGroup (generator)

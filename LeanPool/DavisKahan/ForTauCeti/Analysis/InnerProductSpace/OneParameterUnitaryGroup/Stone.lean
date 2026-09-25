@@ -62,7 +62,7 @@ unitary group through Bochner's theorem and a GNS construction instead, and
 none of that subtree is used or needed here.
 -/
 
-public section
+@[expose] public section
 
 noncomputable section
 

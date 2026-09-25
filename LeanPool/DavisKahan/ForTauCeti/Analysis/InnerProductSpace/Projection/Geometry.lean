@@ -16,7 +16,7 @@ Reusable projection and Parseval identities for spans of finite orthonormal
 subfamilies.  These results are independent of Davis--Kahan perturbation theory.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

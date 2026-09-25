@@ -80,7 +80,7 @@ kernel pair and needs this one.
   that the continuous functional calculus already in Mathlib suffices.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

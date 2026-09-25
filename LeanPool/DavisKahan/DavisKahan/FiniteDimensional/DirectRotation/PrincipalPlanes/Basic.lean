@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking, Claude Fable 5
 -/
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation.Basic
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Singular.System
+module
+
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation.Basic
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Singular.System
 
 /-!
 # Principal planes of an acute pair: definitions and rotation block
@@ -22,6 +24,8 @@ This is the first of three topic modules split out of the former monolithic
 directions and the spectrum of `I - R`) and `PrincipalPlanes.Variational`
 (Davis's variational theorem for the restricted displacement).
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan.FiniteDimensional

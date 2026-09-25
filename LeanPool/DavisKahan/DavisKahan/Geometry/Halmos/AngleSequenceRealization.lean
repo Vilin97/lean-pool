@@ -3,12 +3,16 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.CompactClassification
-import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.Realization
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.DiagonalSequence
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.PrescribedSequence
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.CompactClassification
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.Realization
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.DiagonalSequence
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.PrescribedSequence
 
 /-! # Angle Sequence Realization -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.Assembly
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Polar.PartialIsometry
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.Assembly
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Polar.PartialIsometry
 
 /-!
 # The generic Halmos summand is in generic position
@@ -23,6 +25,8 @@ That reconstruction is carried out in `GenericReconstruction.lean`, and with
 `Assembly.lean` supplying brick (2) it completes Davis--Kahan Theorem 3.1's
 constructive spine in both directions.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Fable 5
 -/
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.OperatorModulus
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BoundedOperator.Projector
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Projection.Blocks
-import LeanPool.DavisKahan.DavisKahan.BoundedOperator.Problem
+module
+
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.OperatorModulus
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BoundedOperator.Projector
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Projection.Blocks
+public import LeanPool.DavisKahan.DavisKahan.BoundedOperator.Problem
 
 /-!
 # The complex operator angle calculus: honest first rungs
@@ -24,6 +26,8 @@ is itself source-specific.
 * `norm_sinAngleOperatorC_apply`: the pointwise identity
   `‖sin Θ(U, V) x‖ = ‖(P_U - P_V) x‖`.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan.Angle

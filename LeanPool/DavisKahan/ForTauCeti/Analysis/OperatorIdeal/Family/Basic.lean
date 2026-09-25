@@ -128,7 +128,7 @@ reads the structure's type, where it is invisible.
   are defined.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 
@@ -311,7 +311,6 @@ theorem gauge_comp_le_of_norm_le_one {L : F →L[𝕜] G} {A : E →L[𝕜] F} {
 
 Closure under `0`, `+` and `•` is a consequence of the gauge laws, so the
 module structure of the ideal does not have to be assumed. -/
-@[expose]
 def carrier : Submodule 𝕜 (E →L[𝕜] F) where
   carrier := {A | N.gauge A ≠ ∞}
   zero_mem' := by simp
@@ -358,7 +357,6 @@ inferred in other modules"*.  That is not the `api-design` rubric's
 expose-instead-of-a-lemma anti-pattern, which is about proofs relying on defeq;
 no lemma can substitute for a type's representation.
 -/
-@[expose]
 def Elem (N : OperatorIdealFamily.{u, v, w} 𝕜) (E : Type v) (F : Type w)
     [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
     [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F] : Type max v w :=
@@ -372,7 +370,6 @@ variable {N}
 -- `@[expose]` forced by the same compiler limitation as `Elem` above: accessors on an
 -- unexposed type synonym re-infer a different compilation type downstream. Revisit when
 -- the limitation the compiler reports is lifted.
-@[expose]
 def val (A : N.Elem E F) : E →L[𝕜] F := Subtype.val (p := fun A => A ∈ N.carrier) A
 
 /-- The underlying operator of an ideal element lies in the ideal. -/
@@ -385,7 +382,6 @@ theorem gauge_val_ne_top (A : N.Elem E F) : N.gauge A.val ≠ ∞ := A.val_mem
 /-- An operator of finite gauge, as an element of the ideal. -/
 -- `@[expose]` forced by the same compiler limitation as `Elem`: constructors and accessors
 -- on an unexposed type synonym re-infer a different compilation type downstream.
-@[expose]
 def mk {A : E →L[𝕜] F} (hA : A ∈ N.carrier) : N.Elem E F := ⟨A, hA⟩
 
 /-- Building an ideal element and taking its value is the identity. -/

@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.Subspace
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.OperatorAngleComplex
+module
+
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.Subspace
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.OperatorAngleComplex
 
 /-!
 # Real operator angles through complexification
@@ -20,6 +22,8 @@ operators preserve the canonical real copy and therefore bundle as real
 operators.  All norm-level and projection-geometric content is already exact
 here.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan.Angle

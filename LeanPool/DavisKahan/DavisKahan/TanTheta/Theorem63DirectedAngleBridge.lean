@@ -3,14 +3,18 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Sol
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63FiniteSource
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.AngleIdentity
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Polar.CFCBridge
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.PrincipalAngles.Equisingular
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63FiniteSource
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.AngleIdentity
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Polar.CFCBridge
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.PrincipalAngles.Equisingular
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
 
 /-! # Theorem63Directed Angle Bridge -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

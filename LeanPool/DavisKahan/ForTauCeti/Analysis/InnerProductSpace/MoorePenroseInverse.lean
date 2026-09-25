@@ -56,7 +56,7 @@ be constructed from the singular system.
   `ForTauCeti` staging modules.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Sol
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Proposition35
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3AcuteCounterexample
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Proposition35
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3AcuteCounterexample
 
 /-!
 # Dependency audit for Davis--Kahan 1970, Proposition 3.5
@@ -14,6 +16,8 @@ finite-dimensional restriction.  This audit checks the arbitrary-dimensional
 `RCLike` source surface and instantiates its commutation theorem over both real
 and complex Hilbert spaces, so neither scalar field is covered merely by prose.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace
 

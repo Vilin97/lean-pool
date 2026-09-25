@@ -3,12 +3,14 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, GPT 5.6 High
 -/
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BoundedOperator.Projector
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Projection.Blocks
-import LeanPool.DavisKahan.DavisKahan.BoundedOperator.Problem
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Closed
-import Mathlib.Analysis.InnerProductSpace.Spectrum
-import LeanPool.DavisKahan.ForTauCeti.Analysis.Normed.Operator.Restriction
+module
+
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BoundedOperator.Projector
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Projection.Blocks
+public import LeanPool.DavisKahan.DavisKahan.BoundedOperator.Problem
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Closed
+public import Mathlib.Analysis.InnerProductSpace.Spectrum
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.Normed.Operator.Restriction
 
 /-!
 # Restricted-operator spectra and provisional embedding interfaces
@@ -19,6 +21,8 @@ Banach-algebra spectrum, so continuous spectral components are retained in
 infinite dimension.  The double-angle embedding remains a provisional target
 and should eventually be built from the closed range of an isometric embedding.
 -/
+
+@[expose] public section
 
 
 /-! ## Construction plan

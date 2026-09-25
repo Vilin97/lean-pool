@@ -3,11 +3,13 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.DomainLimitation
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.IndividualAngles
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.TrialSubspace
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.WeinbergerComparison
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.DomainLimitation
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.IndividualAngles
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.TrialSubspace
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.WeinbergerComparison
 
 /-!
 # Davis--Kahan 1970, Section 9: end-to-end certificate surface
@@ -21,6 +23,8 @@ Keeping this boundary explicit prevents a finite numerical calculation from
 being mistaken for a construction of the unbounded fourth-derivative operator
 or a proof of its third-eigenvalue gap.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan1970

@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.FreeBeamCharacteristic
-import LeanPool.DavisKahan.ForTauCeti.Analysis.Calculus.FourthOrderGreensIdentity
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.FreeBeamCharacteristic
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.Calculus.FourthOrderGreensIdentity
 
 /-!
 # Free-beam eigenmodes at distinct frequencies are `L²`-orthogonal
@@ -34,6 +36,8 @@ It does not build the operator.  Remaining for that: completeness of the mode
 family in `L²(0,1)`, and the passage from the classical modes to a densely
 defined self-adjoint operator.  Both are open; this is the brick they rest on.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

@@ -3,14 +3,18 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, GPT 5.6 High
 -/
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Restriction
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.SpectralBridge
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.Spectrum
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.OperatorModulus
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Polar.GramContraction
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
+module
+
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Restriction
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.SpectralBridge
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.Spectrum
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.OperatorModulus
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Polar.GramContraction
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
 
 /-! # General -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

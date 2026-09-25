@@ -3,10 +3,12 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, GPT-5.6 Sol
 -/
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.Spectrum
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.Subspace
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.SpectralGapFormBounds
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Complexification.SpectralDescent
+module
+
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.Spectrum
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.Subspace
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.SpectralGapFormBounds
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Complexification.SpectralDescent
 
 
 /-!
@@ -30,6 +32,8 @@ subspace.  This is the bridge needed by real forms of Davis--Kahan Section 8,
 and it deliberately lives in spectral complexification rather than in the
 source theorem.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

@@ -59,7 +59,7 @@ a concrete operator the roadmap names.
 * Spectra influence: **none** — imports only sibling `ForTauCeti` modules.
 -/
 
-public section
+@[expose] public section
 
 namespace ContinuousLinearMap
 

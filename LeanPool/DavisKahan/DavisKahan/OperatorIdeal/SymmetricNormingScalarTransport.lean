@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Sol
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.UnitaryInvariantNorm
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.ScalarTransport
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.UnitaryInvariantNorm
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.ScalarTransport
 
 /-!
 # Symmetric norming functions under `RCLike` scalar transport
@@ -18,6 +20,8 @@ These lemmas are the norm-side adapter for scalar-generic source theorems proved
 by dispatching an arbitrary `RCLike` field to its real or complex model.  They
 are intentionally independent of Davis--Kahan tangent geometry.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace
 

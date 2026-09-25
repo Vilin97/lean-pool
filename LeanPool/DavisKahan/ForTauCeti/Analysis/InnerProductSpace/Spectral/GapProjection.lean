@@ -84,7 +84,7 @@ because the value on the gap is immaterial — no spectrum is there.
 * Spectra influence: **none** — this module imports only Mathlib and `ForTauCeti`.
 -/
 
-public section
+@[expose] public section
 
 open scoped InnerProductSpace
 

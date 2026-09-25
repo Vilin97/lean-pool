@@ -3,13 +3,17 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Fable 5
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63FiniteSource
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.AlmostInvariant
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.PrescribedSequence
-import LeanPool.DavisKahan.ForTauCeti.Analysis.SpecialFunctions.TanArcsin
+
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63FiniteSource
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BorelCalculus.AlmostInvariant
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.PrescribedSequence
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.SpecialFunctions.TanArcsin
 
 /-! # Theorem63Infinite Trial -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 

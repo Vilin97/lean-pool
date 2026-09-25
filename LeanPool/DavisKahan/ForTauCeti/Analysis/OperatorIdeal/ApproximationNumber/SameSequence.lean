@@ -53,7 +53,7 @@ carried the hypothesis, so this is a small generalisation.
 * Spectra influence: none.
 -/
 
-public section
+@[expose] public section
 
 namespace ContinuousLinearMap
 

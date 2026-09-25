@@ -62,7 +62,7 @@ here; it needs an infinite orthonormal family to exhibit one.
 
 open scoped ENNReal NNReal InnerProductSpace
 
-public section
+@[expose] public section
 
 namespace ContinuousLinearMap
 

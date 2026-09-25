@@ -3,21 +3,25 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.TanAngleFunctionalCalculus
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.AmbientBlockVocabulary
-import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.CrossedDefectGap
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.TanAngleFunctionalCalculus
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.AmbientBlockVocabulary
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.CrossedDefectGap
 -- supplies the standing assumption (3.5) and the gap identity it buys, which is what
 -- turns this file's directed sine estimate into the ambient uniform transversality the
 -- tangent theorem consumes.  That module imports only `BoundedOperator/Compat` and
 -- `Geometry/Halmos/GenericRotationPredicates`, so the dependency is acyclic.
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Lemma61
-import
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Lemma61
+public import
   LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.UnitaryInvariantNormLaws
-import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63InfiniteTrial
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.GramResolvent
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63InfiniteTrial
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.GramResolvent
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
 
 /-! # Tan Theta Ambient -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

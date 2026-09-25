@@ -74,7 +74,7 @@ the inverse identity `√(dμ/dν) * √(dν/dμ) = 1` a statement about real nu
 * Spectra influence: **none** -- this module imports only Mathlib.
 -/
 
-public section
+@[expose] public section
 
 open MeasureTheory
 

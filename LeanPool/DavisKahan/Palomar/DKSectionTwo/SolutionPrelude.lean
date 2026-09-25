@@ -3,10 +3,12 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall
 -/
-import Mathlib.Analysis.InnerProductSpace.LinearPMap
-import Mathlib.Order.CompletePartialOrder
-import Mathlib.RingTheory.PicardGroup
-import Mathlib.Tactic
+module
+
+public import Mathlib.Analysis.InnerProductSpace.LinearPMap
+public import Mathlib.Order.CompletePartialOrder
+public import Mathlib.RingTheory.PicardGroup
+public import Mathlib.Tactic
 
 /-!
 # Davis--Kahan 1970: the four Section 2 theorems
@@ -22,6 +24,8 @@ trigonometric functions of singular values.  And `‖tan Θ‖` is evaluated on 
 tangent *sequence*, with each tangent theorem *concluding* that the tangent has
 no pole rather than assuming it away.
 -/
+
+@[expose] public section
 
 namespace RotationOfEigenvectors
 

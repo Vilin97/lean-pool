@@ -3,10 +3,12 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Sol
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamClassicalReal
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CompactSelfAdjointClassification
-import Mathlib.Tactic
+
+public import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamClassicalReal
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CompactSelfAdjointClassification
+public import Mathlib.Tactic
 
 /-!
 # Spectrum of the real free-beam realization
@@ -15,6 +17,8 @@ This file runs the compact-resolvent/Fredholm argument directly on the real Sect
 It proves that every real spectral point is an eigenvalue, classifies the positive spectrum by
 the free-beam characteristic equation, and obtains the source gap `{0} ∪ (500, ∞)`.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace ENNReal
 open MeasureTheory TauCeti

@@ -3,10 +3,12 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.NumericalBounds
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.SchurComplement
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SphericalPythagoras
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.NumericalBounds
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.SchurComplement
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SphericalPythagoras
 
 /-!
 # Davis--Kahan 1970, Section 9: individual eigenvectors inside a cluster
@@ -25,6 +27,8 @@ from the corresponding tangent bounds rather than assumed: on the branch
 `0 ≤ psi < pi / 4` selected by the Schur-complement rotation one has
 `psi ≤ tan (2 psi) / 2`, and on `0 ≤ eta < pi / 2` one has `eta ≤ tan eta`.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan1970

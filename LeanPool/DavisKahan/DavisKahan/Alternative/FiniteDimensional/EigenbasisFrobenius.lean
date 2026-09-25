@@ -3,11 +3,13 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Fable 5, Claude Opus 4.8
 -/
-import Mathlib.Analysis.InnerProductSpace.Spectrum
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Spectrum
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CourantFischer
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Projection.Geometry
+module
+
+public import Mathlib.Analysis.InnerProductSpace.Spectrum
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Spectrum
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.CourantFischer
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Projection.Geometry
 
 /-!
 # Elementary eigenbasis and Frobenius Davis--Kahan bounds
@@ -16,6 +18,8 @@ Specialized finite-dimensional endpoints proved directly from eigenbasis
 cross-term identities and Parseval.  These results are useful lightweight
 alternatives to the canonical arbitrary-UI-norm theorem family.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 open scoped InnerProductSpace BigOperators

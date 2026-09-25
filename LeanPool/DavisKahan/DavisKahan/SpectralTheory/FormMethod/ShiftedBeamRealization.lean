@@ -3,14 +3,18 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.CoerciveFormResolvent
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.FormCompactness
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.BoundedGraphCompactness
-import LeanPool.DavisKahan.DavisKahan.SinTheta.BoundedPerturbation
-import Mathlib.Tactic
+
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.CoerciveFormResolvent
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.FormCompactness
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.BoundedGraphCompactness
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.BoundedPerturbation
+public import Mathlib.Tactic
 
 /-! # Shifted Beam Realization -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 

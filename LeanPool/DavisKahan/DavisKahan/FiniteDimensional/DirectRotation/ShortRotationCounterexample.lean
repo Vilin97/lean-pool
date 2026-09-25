@@ -3,7 +3,9 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Claude Fable 5, Jon Crall
 -/
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation.QNorm
+module
+
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DirectRotation.QNorm
 
 /-!
 # The short-rotation full-displacement claim is false
@@ -39,6 +41,8 @@ restricted-displacement theorems (`uiNorm_restrictedDisplacement_le`) and
 the displacement-square majorization
 (`directRotation_displacementSquare_uiNorm`).
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan.FiniteDimensional

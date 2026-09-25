@@ -3,7 +3,9 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.Riccati.UnboundedReduction
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Riccati.UnboundedReduction
 
 /-!
 # Strong unbounded Riccati solutions from selected reducing graphs
@@ -18,6 +20,8 @@ The construction of the selected branch itself remains spectral-continuation
 work.  Keeping that dependency explicit prevents arbitrary block
 diagonalization from being mistaken for branch selection.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahanExt

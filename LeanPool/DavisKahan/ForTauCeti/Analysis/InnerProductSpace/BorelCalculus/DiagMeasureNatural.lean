@@ -61,7 +61,7 @@ here but in `BorelNatural.lean` and `MultiplicityLevelUniqueness.lean`, built on
 * Spectra influence: **none** -- this module imports only Mathlib and `ForTauCeti`.
 -/
 
-public section
+@[expose] public section
 
 open scoped InnerProductSpace
 

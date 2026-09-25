@@ -36,7 +36,7 @@ and the proof are unchanged apart from spelling the compatibility aliases
 to. Consumers now use these canonical declarations directly.
 -/
 
-public section
+@[expose] public section
 
 namespace Submodule
 

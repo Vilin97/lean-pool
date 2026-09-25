@@ -3,14 +3,18 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Sol
 -/
-import LeanPool.DavisKahan.DavisKahan.SinTheta.BoundedPerturbation
-import LeanPool.DavisKahan.DavisKahan.Sylvester.ScalarGeneric
-import LeanPool.DavisKahan.DavisKahan.Sylvester.ScalarTransport
-import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.ScalarTransport
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Unbounded.FormBoundedGap
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.UnitaryInvariantNorm
+module
+
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.BoundedPerturbation
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.ScalarGeneric
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.ScalarTransport
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.ScalarTransport
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Unbounded.FormBoundedGap
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.UnitaryInvariantNorm
 
 /-! # Scalar Generic -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 

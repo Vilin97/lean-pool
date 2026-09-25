@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Complexification.Spectrum
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
+module
+
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Complexification.Spectrum
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
 
 /-!
 # The spectrum survives complexification
@@ -18,6 +20,8 @@ The local `complexify_mul` and `complexify_one` lemmas remain because this Davis
 complexification namespace has existing operator-algebra callers that use those spellings.  The
 invertibility and native spectrum theorems are not repeated here.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

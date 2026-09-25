@@ -3,7 +3,9 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.SpectralIdentification
+module
+
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.SpectralIdentification
 
 /-!
 # Endpoint identification for spectral continuation
@@ -12,6 +14,8 @@ This leaf records the exact affine-path endpoint formulas and rewrites the
 fixed-contour Riesz operators at those endpoints as the genuine orthogonal
 projections onto the selected bounded spectral subspaces.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahanExt

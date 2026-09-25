@@ -35,7 +35,7 @@ totalized tangent functions used by finite-dimensional operator-angle theory.
   `ForTauCeti` staging modules.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 
@@ -48,7 +48,6 @@ variable {𝕜 E : Type*} [RCLike 𝕜]
 
 /-- Apply a real function to the spectrum of a finite-dimensional symmetric
 endomorphism. -/
-@[expose]
 noncomputable def selfAdjointFunctionalCalculus
     {T : E →ₗ[𝕜] E} (hT : T.IsSymmetric) (f : ℝ → ℝ) : E →ₗ[𝕜] E :=
   ∑ i : Fin (finrank 𝕜 E),
@@ -520,7 +519,6 @@ duplicate has been collapsed; the uniqueness theory that only the square root
 has (`sqrt_unique`, `ker_sqrt`, `range_sqrt`, `sqrt_mul_self`) is unchanged and
 still lives in `ForTauCeti/Analysis/InnerProductSpace/PositiveSqrt.lean`, which now
 imports this module rather than the other way round. -/
-@[expose]
 noncomputable def _root_.LinearMap.IsPositive.sqrt
     {T : E →ₗ[𝕜] E} (hT : T.IsPositive) : E →ₗ[𝕜] E :=
   selfAdjointFunctionalCalculus hT.isSymmetric Real.sqrt

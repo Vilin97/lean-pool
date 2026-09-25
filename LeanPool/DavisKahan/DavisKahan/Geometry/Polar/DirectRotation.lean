@@ -3,15 +3,19 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.BoundedOperator.Reflection
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Polar.PartialIsometry
-import Mathlib.Analysis.Normed.Ring.Units
-import Mathlib.Algebra.Group.Commute.Units
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Commute
-import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.Abs
-import LeanPool.DavisKahan.ForTauCeti.Analysis.RCLike.ScalarTransportFunctionalCalculus
+module
+
+public import LeanPool.DavisKahan.DavisKahan.BoundedOperator.Reflection
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Polar.PartialIsometry
+public import Mathlib.Analysis.Normed.Ring.Units
+public import Mathlib.Algebra.Group.Commute.Units
+public import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Commute
+public import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.Abs
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.RCLike.ScalarTransportFunctionalCalculus
 
 /-! # Direct Rotation -/
+
+@[expose] public section
 
 attribute [local instance 100] ContinuousLinearMap.realAlgebra
   ContinuousLinearMap.realIsScalarTower ContinuousLinearMap.continuousFunctionalCalculusReal

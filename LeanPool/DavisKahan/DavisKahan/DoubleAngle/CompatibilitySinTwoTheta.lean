@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BoundedOperator.Projector
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Projection.Blocks
-import LeanPool.DavisKahan.DavisKahan.BoundedOperator.Problem
+module
+
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.BoundedOperator.Projector
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Projection.Blocks
+public import LeanPool.DavisKahan.DavisKahan.BoundedOperator.Problem
 
 /-!
 # Infinite-dimensional double-angle residual embedding
@@ -22,6 +24,8 @@ hypothesis is needed to define it.
 **Promoted 2026-07-30 under lane `EXP-PROMOTE-MISC`**, from
 `DavisKahan/Experimental/InfiniteDimensional/Core/`.  Nothing is restated.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahanExt

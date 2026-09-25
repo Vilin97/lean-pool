@@ -33,7 +33,7 @@ inner-product-space component into `ForTauCeti`: before that this file's import
 closure crossed `ForMathlib`, which the `ForTauCeti` layer rule forbids.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 
@@ -47,7 +47,6 @@ variable {F : Type*} [NormedAddCommGroup F] [InnerProductSpace 𝕜 F]
   [FiniteDimensional 𝕜 F]
 
 /-- Two restricted spectra are separated by at least `δ`. -/
-@[expose]
 def PointSpectraSeparated (A : E →ₗ[𝕜] E) (U : Submodule 𝕜 E)
     (B : F →ₗ[𝕜] F) (V : Submodule 𝕜 F) (δ : ℝ) : Prop :=
   ∀ lam μ, lam ∈ restrictedPointSpectrum A U → μ ∈ restrictedPointSpectrum B V →
@@ -55,7 +54,6 @@ def PointSpectraSeparated (A : E →ₗ[𝕜] E) (U : Submodule 𝕜 E)
 
 /-- The mixed separation used by the `sin Θ` theorem: the selected block of
 `A` is separated from the complementary block of `B`. -/
-@[expose]
 def HybridGap (A B : E →ₗ[𝕜] E) (U V : Submodule 𝕜 E) (δ : ℝ) : Prop :=
   PointSpectraSeparated A U B Vᗮ δ
 
@@ -67,7 +65,6 @@ the sharp `tan (2Θ)` theorem: interlacing spectra can satisfy absolute
 separation while an off-diagonal perturbation produces a quarter-turn angle.
 That theorem requires `OrderedInternalGap` (or an equivalent two-sided form
 ordering). -/
-@[expose]
 def PointInternalGap (A : E →ₗ[𝕜] E) (U : Submodule 𝕜 E) (δ : ℝ) : Prop :=
   IsInvariant A U ∧ PointSpectraSeparated A U A Uᗮ δ
 
@@ -83,14 +80,12 @@ def TwoBlockFormGap (A : E →ₗ[𝕜] E) (U : Submodule 𝕜 E)
 
 /-- Point spectra in an interval and its enlarged exterior, on possibly different spaces.
 The complementary subspace, when needed, is supplied explicitly by the caller. -/
-@[expose]
 def PointIntervalExteriorGap (A : E →ₗ[𝕜] E) (U : Submodule 𝕜 E)
     (B : F →ₗ[𝕜] F) (V : Submodule 𝕜 F) (a b δ : ℝ) : Prop :=
   PointSpectrumIn A U (Set.Icc a b) ∧
     PointSpectrumIn B V {lam | lam ∉ Set.Ioo (a - δ) (b + δ)}
 
 /-- The one-sided gap used by the tangent theorems. -/
-@[expose]
 def OrderedGap (A : E →ₗ[𝕜] E) (U : Submodule 𝕜 E)
     (B : F →ₗ[𝕜] F) (V : Submodule 𝕜 F) (δ : ℝ) : Prop :=
   ∀ lam μ, lam ∈ restrictedPointSpectrum A U → μ ∈ restrictedPointSpectrum B V →

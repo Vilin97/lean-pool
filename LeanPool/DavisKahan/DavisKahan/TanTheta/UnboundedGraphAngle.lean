@@ -3,7 +3,9 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.TanTheta.UnboundedSpectrum
+module
+
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.UnboundedSpectrum
 
 /-!
 # Graph-angle form of the unbounded tangent theorem
@@ -22,6 +24,8 @@ operator-norm tangent bound.
 No continuation theorem is used here.  A later branch-continuation result can
 construct the coordinate equivalence and then apply these theorems directly.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace
 

@@ -36,7 +36,7 @@ scalar field.
 * Spectra influence: **none**.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 namespace ScalarTransport

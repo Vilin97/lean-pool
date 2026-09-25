@@ -47,7 +47,7 @@ policy has always allowed (`ForTauCeti` may import Mathlib / TauCeti /
 ForTauCeti) but which nothing had needed until convergence work began.
 -/
 
-public section
+@[expose] public section
 
 open scoped InnerProductSpace NNReal
 open Filter Topology Complex

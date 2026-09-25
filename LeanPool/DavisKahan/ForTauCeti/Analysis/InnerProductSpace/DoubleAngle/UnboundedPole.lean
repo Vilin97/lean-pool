@@ -65,7 +65,7 @@ kills the product; only then is `τ → ∞` taken.  The cutoff data is packaged
   Section 6.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

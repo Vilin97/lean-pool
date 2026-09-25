@@ -3,15 +3,19 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking, Claude Opus 5
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.CircleWitness
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.DoubleAngleGapBound
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.CentralBand
-import LeanPool.DavisKahan.DavisKahan.BoundedOperator.TrialResidual
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Polar.SelfAdjointCompletion
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.CircleWitness
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.DoubleAngleGapBound
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.CentralBand
+public import LeanPool.DavisKahan.DavisKahan.BoundedOperator.TrialResidual
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Polar.SelfAdjointCompletion
 
 /-! # Theorem82Branch -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

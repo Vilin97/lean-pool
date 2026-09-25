@@ -3,10 +3,12 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.SpectralRestrictionLocalization
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.GapResolvent
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.CentralBand
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.RayleighRitz
+module
+
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.SpectralRestrictionLocalization
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.GapResolvent
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.CentralBand
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.RayleighRitz
 
 /-!
 # The central band of an unbounded self-adjoint operator
@@ -31,6 +33,8 @@ is the bookkeeping that combines the two sets; there is no general
 
 This is step (b) of the unbounded Theorem 8.2 path recorded in `GOAL.md` §10.4.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace
 

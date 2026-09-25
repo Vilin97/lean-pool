@@ -3,12 +3,14 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.OffDiagonalSpectralRepulsionUnbounded
-import LeanPool.DavisKahan.DavisKahan.TanTheta.RitzPair
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LyapunovPositivity
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.DoubleAngleGapBound
-import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.CrossedDefectGap
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81
+module
+
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.OffDiagonalSpectralRepulsionUnbounded
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.RitzPair
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LyapunovPositivity
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.DoubleAngleGapBound
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.CrossedDefectGap
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81
 
 /-!
 # The quarter angle for an unbounded ambient operator
@@ -46,6 +48,8 @@ inverse `G = C⁻¹` that Section 6.2 supplies.  Writing `S = A + H − c`,
   conjugating by the unitary `W` gives `G W + W* G ≥ 0`;
 * adding them is `X G + G X ≥ 0` for `X = W + W*`, and `X = 2 − 4 (P_U − P_V)²`.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

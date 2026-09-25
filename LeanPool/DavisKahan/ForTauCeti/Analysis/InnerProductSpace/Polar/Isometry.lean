@@ -122,7 +122,7 @@ partial isometry; adding invertibility of the modulus buys it back as an
 isometry. That is the whole hierarchy.
 -/
 
-public section
+@[expose] public section
 
 namespace ContinuousLinearMap
 

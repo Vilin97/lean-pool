@@ -3,17 +3,21 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.Correspondence
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.DoubleAngleTangent
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.SineThetaSourceInventory
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.GeneralSinThetaExtensions
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.HostileReviewRegressions
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.ResultSemanticSurface
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.Section3
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.Section8
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.Section9
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.SylvesterHilbertSchmidt
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.Theorem63Distillation
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.Unbounded
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.Correspondence
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.DoubleAngleTangent
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.SineThetaSourceInventory
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.GeneralSinThetaExtensions
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.HostileReviewRegressions
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.ResultSemanticSurface
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.Section3
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.Section8
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.Section9
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.SylvesterHilbertSchmidt
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.Theorem63Distillation
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Audits.Unbounded
 
 /-! # `DavisKahan/Sources/DavisKahan1970/Audits` -/
+
+@[expose] public section

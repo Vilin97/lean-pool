@@ -45,7 +45,7 @@ this file read `in progress`.  Path change and repointing of imports only — no
 statement, signature, proof, attribute, declaration name or namespace changed.
 -/
 
-public section
+@[expose] public section
 
 open scoped ENNReal NNReal
 open Filter Topology
@@ -197,7 +197,6 @@ theorem adjoint_U_neg (t : ℝ) : (V.U (-t)).adjoint = V.U t := by
   exact h.symm
 
 /-- The Sylvester flow on operators: `Z ↦ U t ∘ Z ∘ (V t)⋆`. -/
-@[expose]
 noncomputable def conjOp (t : ℝ) (f : lp (fun _ : ι => E) 2) : F →L[ℂ] E :=
   ((U.U t).comp (ofLp b f)).comp (V.U (-t))
 

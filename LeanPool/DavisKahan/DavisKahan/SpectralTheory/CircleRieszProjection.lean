@@ -3,9 +3,11 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.SpectralRestriction
-import Mathlib.MeasureTheory.Integral.CircleIntegral
+
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.SpectralRestriction
+public import Mathlib.MeasureTheory.Integral.CircleIntegral
 
 /-!
 # Circle Riesz projection and spectral separation by a circle
@@ -16,6 +18,8 @@ a chosen measurable part of the real spectrum of a self-adjoint operator, while
 `circleRieszProjection` is the corresponding circle-integral Riesz projection
 `(2 π i)⁻¹ ∮_{|z-c|=r} (z - A)⁻¹ dz`.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.KyFanOrthonormal
-import Mathlib.Analysis.InnerProductSpace.ProdL2
+module
+
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.KyFanOrthonormal
+public import Mathlib.Analysis.InnerProductSpace.ProdL2
 
 /-!
 # Davis--Kahan 1970, Section 1: the Rayleigh--Ritz principle for the `ν`-norms
@@ -59,6 +61,8 @@ carrying the localization as the explicit hypothesis
 everything below is that theorem instantiated and packaged.  The `≤` halves are
 `RCLike`-generic already and are cited, not reproved.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace
 

@@ -79,7 +79,7 @@ the spectral base to `Measure ℝ` is neither required nor supplied by this modu
 * Spectra influence: **none** -- this module imports only Mathlib and `ForTauCeti`.
 -/
 
-public section
+@[expose] public section
 
 open MeasureTheory
 

@@ -35,7 +35,7 @@ collided with its own target once this file moved into `Submodule`.
 Consumers use the canonical declarations directly.
 -/
 
-public section
+@[expose] public section
 
 namespace Submodule
 

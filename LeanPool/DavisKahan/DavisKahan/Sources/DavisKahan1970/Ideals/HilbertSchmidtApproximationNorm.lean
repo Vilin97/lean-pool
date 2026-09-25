@@ -3,7 +3,9 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.HilbertSchmidtBasis
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.HilbertSchmidtBasis
 
 /-!
 # The Hilbert--Schmidt norm, read from the approximation-number sequence
@@ -20,6 +22,8 @@ homogeneity, adjoint invariance, the triangle inequality and the two-sided ideal
 bound -- are the canonical `ContinuousLinearMap.hilbertSchmidtNorm_*` lemmas and
 are not restated.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

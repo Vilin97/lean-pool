@@ -48,7 +48,7 @@ them without either importing the other.
 * Spectra influence: **none** — this module imports only Mathlib.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti.Real
 

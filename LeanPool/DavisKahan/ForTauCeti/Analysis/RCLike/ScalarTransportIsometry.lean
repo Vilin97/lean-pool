@@ -32,7 +32,7 @@ standing condition (3.5), for instance — therefore does not see the scalar fie
 * Spectra influence: **none**.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 namespace ScalarTransport

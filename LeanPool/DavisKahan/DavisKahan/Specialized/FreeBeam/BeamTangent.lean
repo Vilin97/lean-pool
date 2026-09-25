@@ -3,12 +3,16 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamSection9
-import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63Unbounded
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.NumericalBounds
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.RealLowerBound
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Specialized.FreeBeam.BeamSection9
+public import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63Unbounded
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.NumericalBounds
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.RealLowerBound
 
 /-! # Beam Tangent -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

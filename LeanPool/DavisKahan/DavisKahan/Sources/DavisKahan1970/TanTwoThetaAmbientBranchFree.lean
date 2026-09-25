@@ -3,10 +3,14 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, GPT-5.6 Sol
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaAmbient
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.TanTwoThetaApproximatePair
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaAmbient
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.TanTwoThetaApproximatePair
 
 /-! # Tan Two Theta Ambient Branch Free -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

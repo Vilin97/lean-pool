@@ -48,7 +48,7 @@ matrices are entrywise `ε`-close, their sorted eigenvalues differ by at most
   `ForTauCeti` staging modules.
 -/
 
-public section
+@[expose] public section
 
 open scoped Matrix
 open Module

@@ -3,10 +3,12 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.Analysis.FourthOrderODE.SmoothKernel
-import Mathlib.Analysis.Complex.RealDeriv
-import Mathlib.Tactic
+
+public import LeanPool.DavisKahan.DavisKahan.Analysis.FourthOrderODE.SmoothKernel
+public import Mathlib.Analysis.Complex.RealDeriv
+public import Mathlib.Tactic
 
 /-!
 # Explicit affine zero modes of the free--free beam
@@ -15,6 +17,8 @@ import Mathlib.Tactic
 constructs the reverse inclusion and records injectivity of the two-parameter
 representation.  Together the two files identify the smooth kernel exactly.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

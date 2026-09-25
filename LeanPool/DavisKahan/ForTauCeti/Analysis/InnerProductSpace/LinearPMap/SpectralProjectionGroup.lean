@@ -39,7 +39,7 @@ spectral projections and the flow.
 composition none of them performs.
 -/
 
-public section
+@[expose] public section
 
 open scoped InnerProductSpace
 open Complex Filter Topology

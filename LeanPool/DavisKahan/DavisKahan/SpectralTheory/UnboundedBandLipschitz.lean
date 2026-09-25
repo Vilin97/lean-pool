@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.UnboundedCentralBand
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.UnboundedDirectedGapBound
+module
+
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.UnboundedCentralBand
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.UnboundedDirectedGapBound
 
 /-!
 # The moving band is Lipschitz in the perturbation, with no Riesz projector
@@ -21,6 +23,8 @@ separation it consumes is `formBoundedSylvesterGap_band_exterior`.
 This is what replaces the bounded proof's Riesz-projection continuity: no
 contour, no continuation API, and the constant depends only on the gap.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace
 

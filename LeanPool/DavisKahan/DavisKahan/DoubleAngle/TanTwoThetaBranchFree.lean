@@ -3,7 +3,9 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.DoubleAngle.TanTwoThetaKyFan
+module
+
+public import LeanPool.DavisKahan.DavisKahan.DoubleAngle.TanTwoThetaKyFan
 
 /-!
 # The unrestricted, branch-free `tan 2Θ` theorem
@@ -64,6 +66,8 @@ Accordingly the branch-free Ky Fan root here is proved for an **arbitrary**
 finite index set (`sum_absDoubleAngleTangent_le`), which is strictly stronger
 than a prefix statement and is what a rearranged representative needs.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan.FiniteDimensional

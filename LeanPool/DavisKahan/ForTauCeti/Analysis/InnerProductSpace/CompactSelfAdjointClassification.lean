@@ -49,7 +49,7 @@ sidesteps needing one.
   outside any subspace whose orthogonal complement is nontrivial.
 -/
 
-public section
+@[expose] public section
 
 open Module (finrank)
 open Module.End (eigenspace)

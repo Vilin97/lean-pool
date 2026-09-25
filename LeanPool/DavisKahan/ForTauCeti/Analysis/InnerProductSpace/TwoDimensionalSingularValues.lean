@@ -17,7 +17,7 @@ lemma compares a Gram operator with a real diagonal operator; the matrix
 corollaries are the symmetric off-diagonal and one-sided rank-one blocks.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 

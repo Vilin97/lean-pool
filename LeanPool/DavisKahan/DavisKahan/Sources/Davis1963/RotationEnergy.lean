@@ -3,10 +3,12 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, GPT 5.6 High
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.Davis1963.RotationBound
-import LeanPool.DavisKahan.DavisKahan.Sources.Davis1963.DoubleAngle
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.Core.OperatorBlocks
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.UnitarilyInvariantSeminorm
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.Davis1963.RotationBound
+public import LeanPool.DavisKahan.DavisKahan.Sources.Davis1963.DoubleAngle
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.Core.OperatorBlocks
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.UnitarilyInvariantSeminorm
 
 /-!
 # Davis's 1963 finite-dimensional rotation theory
@@ -21,6 +23,8 @@ Literature map:
 These declarations provide basis-independent endpoints around the existing
 `RotationBound.lean` and `RotationSharp.lean` proofs.
 -/
+
+@[expose] public section
 
 
 /-! ## Remaining construction plan

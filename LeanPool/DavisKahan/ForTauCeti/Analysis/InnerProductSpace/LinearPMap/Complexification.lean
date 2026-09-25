@@ -52,7 +52,7 @@ The construction is rectangular (`E → F`) even though the first spectral consu
 are square.  That avoids repeating the same migration later for Sylvester-type maps.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 namespace LinearPMap
@@ -89,7 +89,6 @@ private theorem continuous_im_target : Continuous (im : Fℂ → F) :=
 
 /-- The complexified domain of a real partial map: both coordinates belong to
 its original real domain. -/
-@[expose]
 def complexificationDomain (A : E →ₗ.[ℝ] F) : Submodule ℂ Eℂ where
   carrier := {z | re z ∈ A.domain ∧ im z ∈ A.domain}
   zero_mem' := by simp
@@ -123,7 +122,6 @@ def complexificationDomainIm
 
 /-- Coordinatewise complex-linear action of a real partial map on its
 complexified domain. -/
-@[expose]
 def complexificationLinearMap
     (A : E →ₗ.[ℝ] F) : complexificationDomain A →ₗ[ℂ] Fℂ where
   toFun z := mk (A (complexificationDomainRe A z))
@@ -156,7 +154,6 @@ def complexificationLinearMap
 This is the canonical generalized replacement for the historical
 closed-operator-specific complexification.  Closedness and density are not
 stored; they are transported by separate theorems below. -/
-@[expose]
 def complexifyReal (A : E →ₗ.[ℝ] F) : Eℂ →ₗ.[ℂ] Fℂ where
   domain := complexificationDomain A
   toFun := complexificationLinearMap A
@@ -182,7 +179,6 @@ theorem mem_complexifyReal_domain_iff
     im (complexifyReal A z) = A (complexificationDomainIm A z) := rfl
 
 /-- The embedded real copy of a domain vector belongs to the complexified domain. -/
-@[expose]
 def complexifyRealOfRealDomain
     (A : E →ₗ.[ℝ] F) (x : A.domain) : (complexifyReal A).domain :=
   ⟨ofReal (x : E), by

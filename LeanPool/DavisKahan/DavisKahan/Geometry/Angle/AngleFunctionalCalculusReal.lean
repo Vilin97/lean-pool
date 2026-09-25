@@ -3,10 +3,12 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.TanAngleFunctionalCalculus
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.DoubleAngleFunctionalCalculus
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.FormTransport
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.ModulusTransport
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.TanAngleFunctionalCalculus
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.DoubleAngleFunctionalCalculus
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.FormTransport
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.ModulusTransport
 
 /-!
 # The paper's operator angle between two **real** subspaces
@@ -54,6 +56,8 @@ complexification:
   III*, SIAM J. Numer. Anal. 7 (1970), 1--46: standing assumption 1, and the
   angle operators of Sections 1 and 2.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan.Angle

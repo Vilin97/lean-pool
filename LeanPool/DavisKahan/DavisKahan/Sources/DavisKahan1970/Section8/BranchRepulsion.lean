@@ -3,19 +3,23 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.CircleWitness
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.SelectedBranch
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Smallness
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.CompressionRepulsion
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.CompressionApproximation
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SpectralOrder
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.SharpDiagonalResolvents
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.SharpSchurComplement
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.ContinuationWitnessOrientedBlocks
+
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.CircleWitness
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Theorem81
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.SelectedBranch
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.Smallness
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.CompressionRepulsion
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.CompressionApproximation
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.SpectralOrder
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.SharpDiagonalResolvents
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.SharpSchurComplement
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.ContinuationWitnessOrientedBlocks
 
 /-! # Branch Repulsion -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Angle
 

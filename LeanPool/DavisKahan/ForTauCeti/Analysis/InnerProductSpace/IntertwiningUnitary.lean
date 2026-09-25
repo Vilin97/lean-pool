@@ -42,7 +42,7 @@ Source: **Davis (1963)**, "The Rotation of Eigenvectors by a Perturbation", §2,
 Deferred (source Davis 1958 §7 unavailable, off critical path): the minimality theorems 2.1/2.3.
 -/
 
-public section
+@[expose] public section
 
 open scoped InnerProductSpace
 open LinearMap InnerProductSpace

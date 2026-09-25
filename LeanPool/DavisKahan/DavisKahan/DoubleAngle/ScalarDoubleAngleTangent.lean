@@ -3,7 +3,9 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # The scalar double-angle tangent
@@ -19,6 +21,8 @@ dimension-free `tan 2Θ` files had to open the finite-dimensional namespace in
 order to name a quotient of two reals.  They belong to the `tan 2Θ` vocabulary,
 and the finite-dimensional theorems consume them from here.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan.TanTwoTheta

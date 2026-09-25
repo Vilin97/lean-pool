@@ -43,7 +43,7 @@ completeness of `E →L[𝕜] F`.
   `ForTauCeti` staging modules.
 -/
 
-public section
+@[expose] public section
 
 namespace TauCeti
 
@@ -84,7 +84,6 @@ theorem ContinuousLinearMap.opNorm_comp_comp_le
 
 /-- The operator norm, as an operator ideal family: every bounded operator is a
 member, and the gauge is the operator norm. -/
-@[expose]
 noncomputable def operatorNormIdealFamily (𝕜 : Type u) [RCLike 𝕜] :
     OperatorIdealFamily.{u, v, w} 𝕜 where
   gauge A := ‖A‖ₑ
@@ -156,7 +155,6 @@ variable [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
 
 /-- The operator norm, as a *symmetric* ideal family: the adjoint is an
 isometry, so the operator norm is adjoint-invariant. -/
-@[expose]
 noncomputable def operatorNormFamily (𝕜 : Type u) [RCLike 𝕜] :
     SymmetricOperatorIdealFamily.{u, v} 𝕜 where
   toOperatorIdealFamily := operatorNormIdealFamily 𝕜

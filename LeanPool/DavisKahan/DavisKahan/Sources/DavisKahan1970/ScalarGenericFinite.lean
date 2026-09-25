@@ -3,11 +3,13 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Sol
 -/
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.ScalarGeneric
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.UnitaryInvariantNormLaws
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.TanTheta.RitzResidual
-import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DoubleAngle.SinTwoThetaResidual
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaBranchFree
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.ScalarGeneric
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.UnitaryInvariantNormLaws
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.TanTheta.RitzResidual
+public import LeanPool.DavisKahan.DavisKahan.FiniteDimensional.DoubleAngle.SinTwoThetaResidual
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaBranchFree
 
 /-!
 # Scalar-generic headline review surfaces
@@ -25,6 +27,8 @@ The single-angle sine theorem lives in `SineTheta/ScalarGeneric.lean` because
 its unbounded scalar-generic engine is substantial enough to merit its own
 module.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan1970

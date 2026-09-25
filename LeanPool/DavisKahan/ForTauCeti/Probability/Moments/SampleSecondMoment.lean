@@ -44,7 +44,7 @@ public import LeanPool.DavisKahan.ForTauCeti.Probability.Moments.SampleMean
   `ForTauCeti` staging modules.
 -/
 
-public section
+@[expose] public section
 
 
 open scoped Matrix ENNReal

@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.Sylvester.Unbounded.FormBoundedGap
-import LeanPool.DavisKahan.DavisKahan.Sylvester.RealUnbounded
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.Unbounded.FormBoundedGap
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.RealUnbounded
 
 /-!
 # Bounded homogeneous Sylvester uniqueness
@@ -19,6 +21,8 @@ This is the uniqueness seam needed by the defect-first Hilbert--Schmidt proof.
 It avoids first assuming that the unknown bounded solution belongs to the
 square ideal.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

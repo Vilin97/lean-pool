@@ -3,10 +3,12 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.Sylvester.PairwiseSpectrumGap
-import LeanPool.DavisKahan.DavisKahan.Sylvester.ClosedSylvesterEquation
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Resolvent
-import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Rosenblum
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.PairwiseSpectrumGap
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.ClosedSylvesterEquation
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Resolvent
+public import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.Rosenblum
 
 /-!
 # Homogeneous Sylvester uniqueness at arbitrary spectral separation
@@ -24,6 +26,8 @@ layer was pure overhead — the intertwining relation *is* the Sylvester equatio
 `TauCeti.LinearPMap.eq_zero_of_intertwines_of_disjoint_spectrum` is applied
 directly.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan

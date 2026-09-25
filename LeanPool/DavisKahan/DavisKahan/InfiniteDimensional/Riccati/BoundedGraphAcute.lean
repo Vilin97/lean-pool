@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.BoundedDiagonalization
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
+module
+
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.Riccati.BoundedDiagonalization
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.AbstractSpectrum
 
 /-!
 # Bounded graphs are acute
@@ -19,6 +21,8 @@ places every bounded block graph in the acute case.
 The final theorem removes the acuteness hypothesis from the complex bounded
 Riccati block diagonalization result.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahanExt

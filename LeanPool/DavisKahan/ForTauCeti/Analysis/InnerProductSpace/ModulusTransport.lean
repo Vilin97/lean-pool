@@ -24,7 +24,7 @@ Keeping them here prevents the foundational functional-calculus modules from dep
 `OperatorModulus.lean`.
 -/
 
-public section
+@[expose] public section
 
 open scoped InnerProductSpace
 

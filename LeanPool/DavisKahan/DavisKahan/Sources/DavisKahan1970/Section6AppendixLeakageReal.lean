@@ -3,11 +3,15 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
+module
 
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section6AppendixLeakage
-import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.Subspace
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section6AppendixLeakage
+public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.Complexification.Subspace
 
 /-! # Section6Appendix Leakage Real -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 

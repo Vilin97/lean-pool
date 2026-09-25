@@ -3,7 +3,9 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.Theorem
+module
+
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.SinTheta.Continuation.Theorem
 
 /-!
 # Spectral-continuation implementation index
@@ -29,3 +31,5 @@ This import-only module preserves the old roadmap path while exposing the
 completed implementation.  New developments should depend on the concrete
 modules directly rather than introducing another contour representation.
 -/
+
+@[expose] public section

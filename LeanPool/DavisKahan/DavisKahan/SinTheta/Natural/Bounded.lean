@@ -3,10 +3,14 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Natural.Generalized
-import LeanPool.DavisKahan.DavisKahan.SinTheta.Natural.Real
+module
+
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Natural.Generalized
+public import LeanPool.DavisKahan.DavisKahan.SinTheta.Natural.Real
 
 /-! # Bounded -/
+
+@[expose] public section
 
 open TauCeti.DavisKahan.Sylvester
 

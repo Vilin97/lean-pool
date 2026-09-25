@@ -3,11 +3,13 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.ScalarGeneric
-import LeanPool.DavisKahan.DavisKahan.Sylvester.Unbounded.OrderedEngineDirect
-import LeanPool.DavisKahan.DavisKahan.Sylvester.RealUnbounded
+module
+
+public import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ApproximationNumbers.ScalarGeneric
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.Unbounded.OrderedEngineDirect
+public import LeanPool.DavisKahan.DavisKahan.Sylvester.RealUnbounded
 -- the section's two displayed inequalities, (5.1) and (5.2)
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Sylvester.OperatorNormEstimate
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Sylvester.OperatorNormEstimate
 
 /-!
 # Davis--Kahan 1970, Section 5: the cutoff lemma and the ordered Sylvester theorem
@@ -20,6 +22,8 @@ so nothing is silently overstated.
 Theorem 5.2 is a hard prerequisite for the Section 2 unbounded-scope claim, which names it
 as one of its two halves.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan1970

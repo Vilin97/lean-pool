@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
-import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.AngleFunctionalCalculus
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.AngleFunctionalCalculus
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
 
 /-!
 # The literal ambient `tan Θ` of Davis--Kahan
@@ -58,6 +60,8 @@ forms of both, and the real counterparts of the operators defined here, are in
   III*, SIAM J. Numer. Anal. 7 (1970), 1--46: the `tan θ` theorem of Section 2
   and Theorem 6.3.
 -/
+
+@[expose] public section
 
 namespace TauCeti
 namespace DavisKahan.Angle

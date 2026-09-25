@@ -89,7 +89,7 @@ both versions share it; only the property proofs differ.
   Mathlib, `TauCeti` and `ForTauCeti`.
 -/
 
-public section
+@[expose] public section
 
 namespace ContinuousLinearMap
 

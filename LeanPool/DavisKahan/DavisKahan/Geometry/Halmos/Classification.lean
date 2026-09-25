@@ -3,8 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 4.8
 -/
-import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.UnitaryEquivalence
-import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.GenericRotationPredicates
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.UnitaryEquivalence
+public import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.GenericRotationPredicates
 
 /-!
 # Operator-level Halmos two-projection classification
@@ -22,6 +24,8 @@ The results now live in the stable geometry API; the frontier statement
 `DavisKahan1970.twoProjection_operator_classification` is grounded by
 `:=` on top of these lemmas so there is a single source of truth.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace
 
