@@ -29,15 +29,8 @@ private theorem hasBinaryNat_parked {t : Tape} {value : ℕ}
   ⟨by rw [h.2.1], h.2.hasBinaryContent.cells_ne_start⟩
 
 private theorem hasBinaryPrefix_parked {t : Tape} {bits : List Bool}
-    (h : t.HasBinaryPrefix bits) : TM.Parked t := by
-  refine ⟨by rw [h.1]; omega, ?_⟩
-  intro j hj
-  obtain ⟨i, rfl⟩ : ∃ i, j = i + 1 := ⟨j - 1, by omega⟩
-  by_cases hi : i < bits.length
-  · rw [h.2.1 i hi]
-    exact Γ.ofBool_ne_start _
-  · rw [h.2.2 i (Nat.le_of_not_gt hi)]
-    decide
+    (h : t.HasBinaryPrefix bits) : TM.Parked t :=
+  TM.hasBinaryPrefix_parked h
 
 private theorem phaseTransition_of_parked
     {inp out : Tape} {work : Fin n → Tape}
@@ -46,8 +39,7 @@ private theorem phaseTransition_of_parked
     TM.transitionInput inp = inp ∧
       (fun i => TM.transitionTape (work i)) = work ∧
       TM.transitionTape out = out :=
-  TM.phaseTransition_eq_self_of_reads_ne_start hinput.read_ne_start
-    (fun i => (hwork i).read_ne_start) houtput.read_ne_start
+  TM.phaseTransition_of_parked hinput hwork houtput
 
 private theorem denseScanner_rhs_of_lhs
     (tapes : BinaryInstructionTapes n) (input : List Bool)

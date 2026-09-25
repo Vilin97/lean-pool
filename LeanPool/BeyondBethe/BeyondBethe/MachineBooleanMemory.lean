@@ -7,6 +7,7 @@ module
 
 
 public import LeanPool.BeyondBethe.BeyondBethe.MachineListUpdate
+public import LeanPool.BeyondBethe.BeyondBethe.MachineNestedMatrixMemory
 public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalCompare
 
 /-!
@@ -68,32 +69,11 @@ theorem machineBoolVectorUpdateAtUnary_mem_FP :
 
 /-- Input: `pair rowUnary (pair columnUnary boolMatrixCode)`. -/
 def machineBoolMatrixEntryAtUnary (word : List Bool) : List Bool :=
-  let rowUnary := machinePairFirst word
-  let rest := machinePairSecond word
-  let columnUnary := machinePairFirst rest
-  let matrixCode := machinePairSecond rest
-  let rowCode := machineListIndex (pair rowUnary matrixCode)
-  machineListIndex (pair columnUnary rowCode)
+  machineNestedMatrixEntryAtUnary word
 
 theorem machineBoolMatrixEntryAtUnary_mem_FP :
-    machineBoolMatrixEntryAtUnary ∈ Complexity.FP := by
-  have hrow : (fun word : List Bool => machinePairFirst word) ∈
-      Complexity.FP := machinePairFirst_mem_FP
-  have hrest : (fun word : List Bool => machinePairSecond word) ∈
-      Complexity.FP := machinePairSecond_mem_FP
-  have hcolumn :
-      (fun word : List Bool => machinePairFirst (machinePairSecond word)) ∈
-        Complexity.FP :=
-    machineCompose_mem_FP hrest machinePairFirst_mem_FP
-  have hmatrix :
-      (fun word : List Bool => machinePairSecond (machinePairSecond word)) ∈
-        Complexity.FP :=
-    machineCompose_mem_FP hrest machinePairSecond_mem_FP
-  have hrowPayload := machinePair_mem_FP hrow hmatrix
-  have hrowCode := machineCompose_mem_FP hrowPayload machineListIndex_mem_FP
-  have hentryPayload := machinePair_mem_FP hcolumn hrowCode
-  simpa only [machineBoolMatrixEntryAtUnary] using!
-    machineCompose_mem_FP hentryPayload machineListIndex_mem_FP
+    machineBoolMatrixEntryAtUnary ∈ Complexity.FP :=
+  machineNestedMatrixEntryAtUnary_mem_FP
 
 @[simp] theorem machineBoolMatrixEntryAtUnary_encode
     (M : List (List Bool)) (i j : ℕ)
@@ -102,60 +82,17 @@ theorem machineBoolMatrixEntryAtUnary_mem_FP :
         (pair (List.replicate i true)
           (pair (List.replicate j true) (boolMatrixCode M))) =
       [M[i][j]] := by
-  rw [machineBoolMatrixEntryAtUnary]
-  simp only [machinePairFirst_pair, machinePairSecond_pair, boolMatrixCode]
-  rw [machineListIndex_binaryListCode boolVectorCode M i hi]
-  simp only [boolVectorCode]
-  exact machineListIndex_binaryListCode boolElementCode M[i] j hj
+  simpa only [machineBoolMatrixEntryAtUnary, boolMatrixCode, boolVectorCode, boolElementCode] using
+    machineNestedMatrixEntryAtUnary_encode boolElementCode M i j hi hj
 
 /-- Input:
 `pair rowUnary (pair columnUnary (pair replacementBit boolMatrixCode))`. -/
 def machineBoolMatrixUpdateAtUnary (word : List Bool) : List Bool :=
-  let rowUnary := machinePairFirst word
-  let restOne := machinePairSecond word
-  let columnUnary := machinePairFirst restOne
-  let restTwo := machinePairSecond restOne
-  let replacement := machinePairFirst restTwo
-  let matrixCode := machinePairSecond restTwo
-  let rowCode := machineListIndex (pair rowUnary matrixCode)
-  let updatedRow := machineListUpdate
-    (pair columnUnary (pair replacement rowCode))
-  machineListUpdate (pair rowUnary (pair updatedRow matrixCode))
+  machineNestedMatrixUpdateAtUnary word
 
 theorem machineBoolMatrixUpdateAtUnary_mem_FP :
-    machineBoolMatrixUpdateAtUnary ∈ Complexity.FP := by
-  have hrow : (fun word : List Bool => machinePairFirst word) ∈
-      Complexity.FP := machinePairFirst_mem_FP
-  have hrestOne : (fun word : List Bool => machinePairSecond word) ∈
-      Complexity.FP := machinePairSecond_mem_FP
-  have hcolumn :
-      (fun word : List Bool => machinePairFirst (machinePairSecond word)) ∈
-        Complexity.FP :=
-    machineCompose_mem_FP hrestOne machinePairFirst_mem_FP
-  have hrestTwo :
-      (fun word : List Bool => machinePairSecond (machinePairSecond word)) ∈
-        Complexity.FP :=
-    machineCompose_mem_FP hrestOne machinePairSecond_mem_FP
-  have hreplacement :
-      (fun word : List Bool =>
-        machinePairFirst (machinePairSecond (machinePairSecond word))) ∈
-        Complexity.FP :=
-    machineCompose_mem_FP hrestTwo machinePairFirst_mem_FP
-  have hmatrix :
-      (fun word : List Bool =>
-        machinePairSecond (machinePairSecond (machinePairSecond word))) ∈
-        Complexity.FP :=
-    machineCompose_mem_FP hrestTwo machinePairSecond_mem_FP
-  have hrowPayload := machinePair_mem_FP hrow hmatrix
-  have hrowCode := machineCompose_mem_FP hrowPayload machineListIndex_mem_FP
-  have hupdateRowPayload := machinePair_mem_FP hcolumn
-    (machinePair_mem_FP hreplacement hrowCode)
-  have hupdatedRow := machineCompose_mem_FP hupdateRowPayload
-    machineListUpdate_mem_FP
-  have hupdateMatrixPayload := machinePair_mem_FP hrow
-    (machinePair_mem_FP hupdatedRow hmatrix)
-  simpa only [machineBoolMatrixUpdateAtUnary] using!
-    machineCompose_mem_FP hupdateMatrixPayload machineListUpdate_mem_FP
+    machineBoolMatrixUpdateAtUnary ∈ Complexity.FP :=
+  machineNestedMatrixUpdateAtUnary_mem_FP
 
 @[simp] theorem machineBoolMatrixUpdateAtUnary_encode
     (M : List (List Bool)) (i j : ℕ) (replacement : Bool)
@@ -165,23 +102,8 @@ theorem machineBoolMatrixUpdateAtUnary_mem_FP :
           (pair (List.replicate j true)
             (pair [replacement] (boolMatrixCode M)))) =
       boolMatrixCode (M.set i (M[i].set j replacement)) := by
-  rw [machineBoolMatrixUpdateAtUnary]
-  simp only [machinePairFirst_pair, machinePairSecond_pair, boolMatrixCode]
-  rw [machineListIndex_binaryListCode boolVectorCode M i hi]
-  change machineListUpdate
-    (pair (List.replicate i true)
-      (pair
-        (machineListUpdate
-          (machineListUpdateCanonicalInput boolElementCode M[i]
-            replacement j))
-        (binaryListCode boolVectorCode M))) = _
-  rw [machineListUpdate_binaryListCode boolElementCode M[i]
-    replacement j hj]
-  change machineListUpdate
-    (machineListUpdateCanonicalInput boolVectorCode M
-      (M[i].set j replacement) i) = _
-  exact machineListUpdate_binaryListCode boolVectorCode M
-    (M[i].set j replacement) i hi
+  simpa only [machineBoolMatrixUpdateAtUnary, boolMatrixCode, boolVectorCode, boolElementCode] using
+    machineNestedMatrixUpdateAtUnary_encode boolElementCode M i j replacement hi hj
 
 /-! ## Rational support queries -/
 

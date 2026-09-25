@@ -96,8 +96,7 @@ private theorem phaseTransition_of_parked
     TM.transitionInput inp = inp ∧
       (fun i => TM.transitionTape (work i)) = work ∧
       TM.transitionTape out = out :=
-  TM.phaseTransition_eq_self_of_reads_ne_start hinput.read_ne_start
-    (fun i => (hwork i).read_ne_start) houtput.read_ne_start
+  TM.phaseTransition_of_parked hinput hwork houtput
 
 /-- Scanner reset, source rewind, and count restoration form one reusable tail
 whose endpoint is the original blank-query scanner ABI. -/

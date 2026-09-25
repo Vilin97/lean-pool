@@ -394,21 +394,8 @@ private theorem bitlen_succ_le (value : ℕ) :
   omega
 
 private theorem binaryAddConstTime_zero_le (fixedValue : ℕ) :
-    TM.binaryAddConstTime fixedValue 0 ≤ 4 * (fixedValue + 1) ^ 2 := by
-  induction fixedValue with
-  | zero => simp [TM.binaryAddConstTime]
-  | succ fixedValue ih =>
-      rw [TM.binaryAddConstTime]
-      have hsucc := TM.binarySuccTime_le fixedValue
-      have hsize := size_le_self fixedValue
-      calc
-        TM.binaryAddConstTime fixedValue 0 + 1 +
-            TM.binarySuccTime (0 + fixedValue) ≤
-            4 * (fixedValue + 1) ^ 2 + 1 + (2 * fixedValue + 2) := by
-          simp only [Nat.zero_add]
-          exact Nat.add_le_add (Nat.add_le_add ih le_rfl)
-            (le_trans hsucc (by omega))
-        _ ≤ 4 * (fixedValue + 1 + 1) ^ 2 := by nlinarith
+    TM.binaryAddConstTime fixedValue 0 ≤ 4 * (fixedValue + 1) ^ 2 :=
+  TM.binaryAddConstTime_zero_le fixedValue
 
 private theorem binaryInstructionArithmeticTime_le_width
     (op : BinaryInstrOp) (lhs rhs width : ℕ)

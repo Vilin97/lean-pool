@@ -24,15 +24,8 @@ namespace Machine
 variable {n : ℕ}
 
 private theorem hasBinaryPrefix_parked {t : Tape} {bits : List Bool}
-    (h : t.HasBinaryPrefix bits) : TM.Parked t := by
-  refine ⟨by rw [h.1]; omega, ?_⟩
-  intro j hj
-  obtain ⟨i, rfl⟩ : ∃ i, j = i + 1 := ⟨j - 1, by omega⟩
-  by_cases hi : i < bits.length
-  · rw [h.2.1 i hi]
-    exact Γ.ofBool_ne_start _
-  · rw [h.2.2 i (Nat.le_of_not_gt hi)]
-    decide
+    (h : t.HasBinaryPrefix bits) : TM.Parked t :=
+  TM.hasBinaryPrefix_parked h
 
 theorem taggedEntryUpdateTM_hoareTime_frame_internal
     (tapes : EntryUpdateTapes n) (overlay : Store) (address value : ℕ)

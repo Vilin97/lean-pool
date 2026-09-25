@@ -6,6 +6,7 @@ Authors: Samuel Schlesinger
 
 module
 public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Subroutines.Counter
+public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Tape.Encoding
 
 /-!
 # Unary registers
@@ -49,6 +50,18 @@ namespace TM
 def Parked (t : Tape) : Prop :=
   1 ≤ t.head ∧ ∀ j, 1 ≤ j → t.cells j ≠ Γ.start
 
+/-- A binary prefix has its head past the start marker and no later start cells. -/
+theorem hasBinaryPrefix_parked {t : Tape} {bits : List Bool}
+    (h : t.HasBinaryPrefix bits) : Parked t := by
+  refine ⟨by rw [h.1]; omega, ?_⟩
+  intro j hj
+  obtain ⟨i, rfl⟩ : ∃ i, j = i + 1 := ⟨j - 1, by omega⟩
+  by_cases hi : i < bits.length
+  · rw [h.2.1 i hi]
+    exact Γ.ofBool_ne_start _
+  · rw [h.2.2 i (Nat.le_of_not_gt hi)]
+    decide
+
 /-- A parked tape never reads the start symbol `▷`. -/
 theorem Parked.read_ne_start {t : Tape} (h : Parked t) : t.read ≠ Γ.start :=
   h.2 t.head h.1
@@ -72,6 +85,18 @@ theorem Parked.transitionTape_eq_self {t : Tape} (h : Parked t) : transitionTape
 /-- Parked input tapes pass through combinator phase boundaries unchanged. -/
 theorem Parked.transitionInput_eq_self {t : Tape} (h : Parked t) : transitionInput t = t :=
   TM.transitionInput_eq_self h.read_ne_start
+
+/-- Parked input, work, and output tapes are fixed by a phase transition. -/
+theorem phaseTransition_of_parked {n : ℕ}
+    {inp out : Tape} {work : Fin n → Tape}
+    (hinput : Parked inp) (hwork : ∀ i, Parked (work i))
+    (houtput : Parked out) :
+    transitionInput inp = inp ∧
+      (fun i => transitionTape (work i)) = work ∧
+      transitionTape out = out :=
+  ⟨hinput.transitionInput_eq_self,
+    funext fun i => (hwork i).transitionTape_eq_self,
+    houtput.transitionTape_eq_self⟩
 
 -- ════════════════════════════════════════════════════════════════════════
 -- Registers

@@ -32,15 +32,8 @@ private theorem hasBinaryNat_parked {t : Tape} {value : ℕ}
   ⟨by rw [h.2.1], h.2.hasBinaryContent.cells_ne_start⟩
 
 private theorem hasBinaryPrefix_parked {t : Tape} {bits : List Bool}
-    (h : t.HasBinaryPrefix bits) : TM.Parked t := by
-  refine ⟨by rw [h.1]; omega, ?_⟩
-  intro j hj
-  obtain ⟨i, rfl⟩ : ∃ i, j = i + 1 := ⟨j - 1, by omega⟩
-  by_cases hi : i < bits.length
-  · rw [h.2.1 i hi]
-    exact Γ.ofBool_ne_start _
-  · rw [h.2.2 i (Nat.le_of_not_gt hi)]
-    decide
+    (h : t.HasBinaryPrefix bits) : TM.Parked t :=
+  TM.hasBinaryPrefix_parked h
 
 private theorem arithmeticResult_of_threeTape
     (tapes : BinaryInstructionTapes n) (op : BinaryInstrOp) (lhs rhs : ℕ)

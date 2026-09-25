@@ -31,6 +31,26 @@ namespace TM
 
 variable {n : ℕ}
 
+/-- Adding a fixed constant to zero has a quadratic time bound. -/
+theorem binaryAddConstTime_zero_le (fixedValue : ℕ) :
+    binaryAddConstTime fixedValue 0 ≤ 4 * (fixedValue + 1) ^ 2 := by
+  induction fixedValue with
+  | zero => simp [binaryAddConstTime]
+  | succ fixedValue ih =>
+      rw [binaryAddConstTime]
+      have hsucc := binarySuccTime_le fixedValue
+      have hsize : fixedValue.size ≤ fixedValue := by
+        rw [Nat.size_le]
+        exact Nat.lt_pow_self (by decide)
+      calc
+        binaryAddConstTime fixedValue 0 + 1 +
+            binarySuccTime (0 + fixedValue) ≤
+            4 * (fixedValue + 1) ^ 2 + 1 + (2 * fixedValue + 2) := by
+          simp only [Nat.zero_add]
+          exact Nat.add_le_add (Nat.add_le_add ih le_rfl)
+            (le_trans hsucc (by omega))
+        _ ≤ 4 * (fixedValue + 1 + 1) ^ 2 := by nlinarith
+
 /-- Fixed-constant addition has the advertised exact runtime and changes only
 the destination tape. -/
 theorem binaryAddConstTM_reachesIn_frame

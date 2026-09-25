@@ -31,15 +31,8 @@ private theorem hasBinaryNat_parked {t : Tape} {value : ℕ}
   exact Tape.HasBinaryContent.cells_ne_start h.2.2
 
 private theorem hasBinaryPrefix_parked {t : Tape} {bits : List Bool}
-    (h : t.HasBinaryPrefix bits) : TM.Parked t := by
-  refine ⟨by rw [h.1]; omega, ?_⟩
-  intro j hj
-  obtain ⟨i, rfl⟩ : ∃ i, j = i + 1 := ⟨j - 1, by omega⟩
-  by_cases hi : i < bits.length
-  · rw [h.2.1 i hi]
-    exact Γ.ofBool_ne_start _
-  · rw [h.2.2 i (Nat.le_of_not_gt hi)]
-    decide
+    (h : t.HasBinaryPrefix bits) : TM.Parked t :=
+  TM.hasBinaryPrefix_parked h
 
 /-- Restrict the lifted clean lookup ABI to the original data-tape family. -/
 theorem instructionExecutionReady_baseLookup_internal
