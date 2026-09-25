@@ -101,7 +101,7 @@ def localizationRamificationGroupsAbsoluteValueDecompositionGroupEquiv :
         (absoluteValueExtensionValuationSubring vK w hw) where
   toFun sigma :=
     ⟨(sigma : L ≃ₐ[K] L),
-      mem_extensionValuationSubring_smul vK (hvK := hvK) w hw sigma⟩
+      by exact mem_extensionValuationSubring_smul vK (hvK := hvK) w hw sigma⟩
   invFun sigma := by
     refine ⟨(sigma : L ≃ₐ[K] L), ?_⟩
     intro x

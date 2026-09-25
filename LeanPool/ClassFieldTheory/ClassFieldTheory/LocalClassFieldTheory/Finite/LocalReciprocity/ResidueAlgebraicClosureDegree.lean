@@ -45,18 +45,22 @@ variable (Omega : Type v) [Field Omega] [Algebra k Omega]
   [Algebra.IsAlgebraic k Omega] [IsAlgClosed Omega]
 
 omit [Fintype k] in
-private instance finiteResidueBaseRingCharPrime [Finite k] : Fact (ringChar k).Prime :=
+/-- The finite residue base has prime characteristic. -/
+instance finiteResidueBaseRingCharPrime [Finite k] : Fact (ringChar k).Prime :=
   ⟨CharP.char_is_prime k (ringChar k)⟩
 
-private instance residueAlgebraicClosureIsAlgClosure : IsAlgClosure k Omega :=
+/-- An algebraically closed algebraic residue extension is an algebraic closure. -/
+instance residueAlgebraicClosureIsAlgClosure : IsAlgClosure k Omega :=
   ⟨inferInstance, inferInstance⟩
 
 omit [Fintype k] in
-private instance residueAlgebraicClosureIsGalois [Finite k] : IsGalois k Omega := by
+/-- An algebraic closure of a finite residue field is Galois over that field. -/
+instance residueAlgebraicClosureIsGalois [Finite k] : IsGalois k Omega := by
   let := Fintype.ofFinite k
   infer_instance
 
-private instance residueAlgebraicClosureGaloisT2 :
+/-- The residue absolute Galois group has a Hausdorff Krull topology. -/
+instance residueAlgebraicClosureGaloisT2 :
     T2Space (Omega ≃ₐ[k] Omega) := by
   infer_instance
 

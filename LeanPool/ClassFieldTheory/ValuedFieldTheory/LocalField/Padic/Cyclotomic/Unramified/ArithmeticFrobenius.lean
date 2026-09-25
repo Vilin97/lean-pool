@@ -211,8 +211,8 @@ noncomputable def padicCyclotomicUnramifiedGalIntegerRingEquiv
   have hclosure : W = (integralClosure V L).toSubring := by
     change Wv.toSubring = (integralClosure Vv L).toSubring
     exact hclosureVv
-  letI : IsIntegralClosure W V L :=
-    padicCyclotomicUnramified_isIntegralClosure_of_subring_eq V W hclosure
+  letI : IsIntegralClosure W V L := by
+    exact padicCyclotomicUnramified_isIntegralClosure_of_subring_eq V W hclosure
   have hmem (τ : Gal(L/K)) (x : W) : τ (x : L) ∈ W := by
     have hx : IsIntegral V (x : L) :=
       (IsIntegralClosure.isIntegral_iff

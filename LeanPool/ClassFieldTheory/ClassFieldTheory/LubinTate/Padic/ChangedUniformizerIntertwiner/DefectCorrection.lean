@@ -156,7 +156,8 @@ private theorem exists_padicChangedUniformizerNormalizedDefect
   rcases hmem with ⟨b, hb⟩
   exact ⟨b, hb.symm⟩
 
-private noncomputable def padicChangedUniformizerNormalizedDefect
+/-- The degree-`m` changed-uniformizer defect coefficient divided by `p`. -/
+noncomputable def padicChangedUniformizerNormalizedDefect
     (p : ℕ) [Fact p.Prime]
     (u : (padicLocalField p).valuationSubringˣ)
     (H : PowerSeries (padicCompletedUnramifiedWittRing p))
@@ -164,7 +165,10 @@ private noncomputable def padicChangedUniformizerNormalizedDefect
     (m : ℕ) :
     padicCompletedUnramifiedWittRing p :=
   Classical.choose
-    (exists_padicChangedUniformizerNormalizedDefect p u H hH m)
+    (show ∃ b : padicCompletedUnramifiedWittRing p,
+        (p : padicCompletedUnramifiedWittRing p) * b =
+          PowerSeries.coeff m (padicChangedUniformizerDefect p u H) from by
+      exact exists_padicChangedUniformizerNormalizedDefect p u H hH m)
 
 private theorem padicChangedUniformizerNormalizedDefect_spec
     (p : ℕ) [Fact p.Prime]

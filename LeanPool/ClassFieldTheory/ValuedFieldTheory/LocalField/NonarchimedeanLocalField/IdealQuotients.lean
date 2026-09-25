@@ -900,8 +900,7 @@ theorem principalUnitsSuccQuotUniformizerCoordAddHom_eq_zero_iff_mem_maximalIdea
 /-- Every successive principal-unit quotient has cardinality equal to that of the residue field. -/
 theorem principalUnitsSuccQuot_card_eq_residue
     (K : Type u) [Field K] [ValuativeRel K] [TopologicalSpace K]
-    [IsNonarchimedeanLocalField K] (n : Nat) (hn : 1 ≤ n)
-    [Finite (PrincipalUnitsSuccQuot K n)] :
+    [IsNonarchimedeanLocalField K] (n : Nat) (hn : 1 ≤ n) :
     Nat.card (PrincipalUnitsSuccQuot K n) = Nat.card 𝓀[K] := by
   exact Nat.card_congr
     (Additive.ofMul.trans (principalUnitsSuccQuotAddEquivResidue K n hn).toEquiv)

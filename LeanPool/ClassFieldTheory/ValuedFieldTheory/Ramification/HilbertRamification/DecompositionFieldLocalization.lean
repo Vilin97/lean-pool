@@ -58,11 +58,8 @@ local instance proposition98CompletionBaseSMul : SMul K w.1.Completion :=
 local instance proposition98CompletionAlgebra : Algebra vK.Completion w.1.Completion :=
   AbsoluteValue.completionAlgebra vK w.1 w.2
 
-private abbrev localization : IntermediateField vK.Completion w.1.Completion :=
-  AbsoluteValue.algebraicLocalization vK w.1 w.2
-
-private abbrev toLocalization : L →+* localization vK w :=
-  AbsoluteValue.toAlgebraicLocalization vK w.1 w.2
+/- The localization and its embedding are shared with `LocalizationDensity`; the two
+source aliases used the same absolute-value constructions. -/
 
 /-- The algebraic localization is a `K`-algebra through the completed base field. -/
 local instance proposition98LocalizationBaseAlgebra : Algebra K (localization vK w) :=

@@ -41,7 +41,7 @@ variable [MulDistribMulAction G A] [MulDistribMulAction G B]
 low-degree multiplicative Tate quotients.  The finiteness assumptions prevent
 `Nat.card` from silently taking the value `0` on infinite quotients. -/
 noncomputable def herbrandQuotient (σ : G)
-    [Finite (HerbrandH0 G A)] [Finite (HerbrandHMinusOne G A σ)] : ℚ :=
+    : ℚ :=
   (Nat.card (HerbrandH0 G A) : ℚ) / (Nat.card (HerbrandHMinusOne G A σ) : ℚ)
 
 /-- The Herbrand quotient is definitionally the ratio `#H⁰ / #H^{-1}`. -/

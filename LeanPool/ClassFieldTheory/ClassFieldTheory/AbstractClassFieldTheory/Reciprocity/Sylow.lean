@@ -147,7 +147,7 @@ order, so the `n`-fold map is a bijection on `S`; a preimage in `S` is in
 particular a preimage in `B`. -/
 theorem sylowAddSubgroup_le_nsmul_range_of_coprime
     {B : Type*} [AddCommGroup B]
-    {p n : ℕ} [Fact p.Prime]
+    {p n : ℕ}
     (S : Sylow p (Multiplicative B)) (hn : Nat.Coprime n p) :
     Subgroup.toAddSubgroup'
         (S : Subgroup (Multiplicative B)) ≤

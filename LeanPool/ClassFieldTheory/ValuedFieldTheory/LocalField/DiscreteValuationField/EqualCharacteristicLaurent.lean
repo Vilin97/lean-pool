@@ -906,6 +906,9 @@ noncomputable def laurentSeriesEquivLaurentImageSubfield
     (adicLaurentSeriesEvalHom
       (F := F.toCompleteDVF) p hcard π hπ)
 
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.EqualCharacteristicLaurent
+  (adicLaurentSeriesEvalHom) in
+
 /--
 Establishes the identity `((F.laurentSeriesEquivLaurentImageSubfield p hcard π hπ x :
 F.laurentImageSubfield p hcard π hπ) : K) =

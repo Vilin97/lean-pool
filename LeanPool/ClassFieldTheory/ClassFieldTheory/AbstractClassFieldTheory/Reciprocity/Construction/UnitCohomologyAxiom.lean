@@ -323,8 +323,8 @@ noncomputable def unitRepresentation
   letI := hnormal
   letI : Representation.IsTrivial
       ((v.unitRepresentationOverK E hnormal).ρ.comp
-        (extensionSubgroup E.base.field E.field.field E.below).subtype) :=
-    v.unitRepresentationOverK_isTrivialOnExtension E hnormal
+        (extensionSubgroup E.base.field E.field.field E.below).subtype) := by
+    exact v.unitRepresentationOverK_isTrivialOnExtension E hnormal
   exact (v.unitRepresentationOverK E hnormal).ofQuotient
     (extensionSubgroup E.base.field E.field.field E.below)
 

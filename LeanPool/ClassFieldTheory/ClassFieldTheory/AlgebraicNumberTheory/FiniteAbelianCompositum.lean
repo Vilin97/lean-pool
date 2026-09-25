@@ -67,7 +67,6 @@ variable {Omega : Type v} [Field Omega] [Algebra K Omega]
 intermediate fields is again abelian Galois over the base. -/
 theorem isAbelianGalois_sup
     (A B : IntermediateField K Omega)
-    [FiniteDimensional K A] [FiniteDimensional K B]
     [IsAbelianGalois K A] [IsAbelianGalois K B] :
     IsAbelianGalois K (A ⊔ B : IntermediateField K Omega) := by
   let M : IntermediateField K Omega := A ⊔ B

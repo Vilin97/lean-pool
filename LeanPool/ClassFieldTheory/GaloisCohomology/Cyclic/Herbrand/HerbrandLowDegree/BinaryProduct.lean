@@ -184,9 +184,7 @@ theorem herbrandHMinusOneProdFinite
     (herbrandHMinusOneProdEquiv A B σ).symm.toEquiv
 
 /-- Cardinality of degree-zero Tate cohomology for a binary product. -/
-theorem herbrandH0Prod_card
-    [Finite (HerbrandH0 G A)]
-    [Finite (HerbrandH0 G B)] :
+theorem herbrandH0Prod_card :
     letI : Finite (HerbrandH0 G (A × B)) :=
       herbrandH0ProdFinite A B
     Nat.card (HerbrandH0 G (A × B)) =
@@ -198,9 +196,7 @@ theorem herbrandH0Prod_card
 /-- Cardinality of degree-minus-one Tate cohomology for a binary
 product. -/
 theorem herbrandHMinusOneProd_card
-    (σ : G)
-    [Finite (HerbrandHMinusOne G A σ)]
-    [Finite (HerbrandHMinusOne G B σ)] :
+    (σ : G) :
     letI : Finite (HerbrandHMinusOne G (A × B) σ) :=
       herbrandHMinusOneProdFinite A B σ
     Nat.card (HerbrandHMinusOne G (A × B) σ) =

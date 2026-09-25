@@ -444,8 +444,7 @@ noncomputable instance principalUnitGradedPieceFinite
 /-- Cardinality bridge between the adjacent named subquotient and the graded
 piece wrapper. -/
 theorem card_principalUnitSubquotient_succ_eq_gradedPiece
-    (n : ℕ) [(U.principalUnitSubgroup (n + 1)).Normal]
-    :
+    (n : ℕ) [(U.principalUnitSubgroup (n + 1)).Normal] :
     Nat.card (U.principalUnitSubquotient n (n + 1)) =
       Nat.card (U.principalUnitGradedPiece n) :=
   Nat.card_congr (U.principalUnitGradedPieceEquivSubquotient n).symm.toEquiv
@@ -835,10 +834,7 @@ filtration: `#(U^l/U^n) = #(U^m/U^n) * #(U^l/U^m)`. -/
 theorem card_principalUnitClassInQuotient_eq_mul_of_le {l m n : ℕ}
     (hlm : l ≤ m) (hmn : m ≤ n)
     [(U.principalUnitSubgroup n).Normal]
-    [(U.principalUnitSubgroup m).Normal]
-    [Finite (U.principalUnitSubgroupClassInQuotient l n)]
-    [Finite (U.principalUnitSubgroupClassInQuotient m n)]
-    [Finite (U.principalUnitSubgroupClassInQuotient l m)] :
+    [(U.principalUnitSubgroup m).Normal] :
     Nat.card (U.principalUnitSubgroupClassInQuotient l n) =
       Nat.card (U.principalUnitSubgroupClassInQuotient m n) *
         Nat.card (U.principalUnitSubgroupClassInQuotient l m) := by
@@ -861,8 +857,7 @@ theorem card_principalUnitClassInQuotient_eq_mul_of_le {l m n : ℕ}
 
 /-- Cardinality form of the class/subquotient identification. -/
 theorem card_principalUnitSubquotient_eq_classInQuotient_of_le
-    {m n : ℕ} (hmn : m ≤ n) [(U.principalUnitSubgroup n).Normal]
-    [Finite (U.principalUnitSubgroupClassInQuotient m n)] :
+    {m n : ℕ} (hmn : m ≤ n) [(U.principalUnitSubgroup n).Normal] :
     Nat.card (U.principalUnitSubquotient m n) =
       Nat.card (U.principalUnitSubgroupClassInQuotient m n) := by
   rw [Nat.card_congr
@@ -870,8 +865,7 @@ theorem card_principalUnitSubquotient_eq_classInQuotient_of_le
 
 /-- The degenerate subquotient `U^n/U^n` has cardinality one. -/
 theorem card_principalUnitSubquotient_self
-    (n : ℕ)
-    :
+    (n : ℕ) :
     Nat.card (U.principalUnitSubquotient n n) = 1 := by
   have htop :
       (U.principalUnitSubgroup n).subgroupOf

@@ -151,7 +151,6 @@ theorem maximalUnramifiedNormClass_add_eq_of_relativeNorm
     (D : DegreeData G) (A : Rep ℤ G)
     (K : FiniteResidueAbstractField D) (L : ClosedSubgroup G)
     (hLK : L.toSubgroup ≤ K.field.toSubgroup)
-    [Finite (K.field.toSubgroup ⧸ extensionSubgroup K.field L hLK)]
     [Finite
       ((D.maximalUnramifiedField K.field).toSubgroup ⧸
         extensionSubgroup (D.maximalUnramifiedField K.field)

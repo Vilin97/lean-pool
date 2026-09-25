@@ -37,7 +37,8 @@ private theorem semilinear_symm_algebraMap (e : K ≃+* M) (E : Ω ≃+* Ψ)
   apply E.injective
   rw [E.apply_symm_apply, hE, e.apply_symm_apply]
 
-private def semilinearGaloisConjugate (e : K ≃+* M) (E : Ω ≃+* Ψ)
+/-- Transport a Galois automorphism through compatible semilinear field identifications. -/
+def semilinearGaloisConjugate (e : K ≃+* M) (E : Ω ≃+* Ψ)
     (hE : ∀ x : K, E (algebraMap K Ω x) = algebraMap M Ψ (e x))
     (σ : Gal(Ω/K)) : Gal(Ψ/M) where
   toRingEquiv := (E.symm.trans σ.toRingEquiv).trans E
@@ -47,12 +48,13 @@ private def semilinearGaloisConjugate (e : K ≃+* M) (E : Ω ≃+* Ψ)
     rw [semilinear_symm_algebraMap e E hE y, σ.commutes, hE,
       e.apply_symm_apply]
 
-private def semilinearGaloisEquiv (e : K ≃+* M) (E : Ω ≃+* Ψ)
+/-- Semilinear field identifications induce an equivalence of Galois groups. -/
+def semilinearGaloisEquiv (e : K ≃+* M) (E : Ω ≃+* Ψ)
     (hE : ∀ x : K, E (algebraMap K Ω x) = algebraMap M Ψ (e x)) :
     Gal(Ω/K) ≃* Gal(Ψ/M) where
   toFun := semilinearGaloisConjugate e E hE
   invFun := semilinearGaloisConjugate e.symm E.symm
-    (semilinear_symm_algebraMap e E hE)
+    (by exact semilinear_symm_algebraMap e E hE)
   left_inv σ := by
     apply AlgEquiv.ext
     intro x
@@ -66,15 +68,16 @@ private def semilinearGaloisEquiv (e : K ≃+* M) (E : Ω ≃+* Ψ)
     intro x
     simp [semilinearGaloisConjugate, AlgEquiv.mul_apply]
 
-private def semilinearGaloisContinuousEquiv (e : K ≃+* M) (E : Ω ≃+* Ψ)
+/-- The semilinear Galois equivalence preserves the Krull topologies. -/
+def semilinearGaloisContinuousEquiv (e : K ≃+* M) (E : Ω ≃+* Ψ)
     (hE : ∀ x : K, E (algebraMap K Ω x) = algebraMap M Ψ (e x)) :
     Gal(Ω/K) ≃ₜ* Gal(Ψ/M) where
   toMulEquiv := semilinearGaloisEquiv e E hE
-  continuous_toFun :=
-    RamificationTheory.Field.absoluteGaloisGroup.semilinear_conjugation_continuous
+  continuous_toFun := by
+    exact RamificationTheory.Field.absoluteGaloisGroup.semilinear_conjugation_continuous
       e E hE (semilinearGaloisEquiv e E hE).toMonoidHom (by intro σ; rfl)
-  continuous_invFun :=
-    RamificationTheory.Field.absoluteGaloisGroup.semilinear_conjugation_continuous
+  continuous_invFun := by
+    exact RamificationTheory.Field.absoluteGaloisGroup.semilinear_conjugation_continuous
       e.symm E.symm (semilinear_symm_algebraMap e E hE)
       (semilinearGaloisEquiv e.symm E.symm
         (semilinear_symm_algebraMap e E hE)).toMonoidHom (by intro σ; rfl)

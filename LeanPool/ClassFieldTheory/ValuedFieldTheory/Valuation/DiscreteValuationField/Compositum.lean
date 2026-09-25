@@ -562,11 +562,11 @@ theorem finiteDimensional_compositum_over_right_of_left
   change FiniteDimensional K' (L ⊔ K' : IntermediateField K Ω)
   exact finiteDimensional_sup_over_right_of_left L K'
 
-/-- The compositum is finite over the right factor when both factors are
+/-- The compositum is finite over the right factor when the left factor is
 finite over the base. -/
 theorem finiteDimensional_compositum_over_right
     (L K' : IntermediateField K Ω)
-    [FiniteDimensional K L] [FiniteDimensional K K'] :
+    [FiniteDimensional K L] :
     FiniteDimensional K'
       (IntermediateField.extendScalars (show K' ≤ L ⊔ K' from le_sup_right)) := by
   exact finiteDimensional_compositum_over_right_of_left L K'
@@ -588,7 +588,7 @@ theorem finiteDimensional_compositum_over_left
 /-- The common top field `L ⊔ K'` is finite over the right factor. -/
 theorem finiteDimensional_sup_over_right
     (L K' : IntermediateField K Ω)
-    [FiniteDimensional K L] [FiniteDimensional K K'] :
+    [FiniteDimensional K L] :
     FiniteDimensional K' (L ⊔ K' : IntermediateField K Ω) := by
   exact finiteDimensional_sup_over_right_of_left L K'
 
@@ -603,7 +603,7 @@ theorem finiteDimensional_sup_over_left
 the degree of `L / K`. -/
 theorem compositum_finrank_over_right_le_left
     (L K' : IntermediateField K Ω)
-    [FiniteDimensional K L] [FiniteDimensional K K'] :
+    [FiniteDimensional K K'] :
     Module.finrank K'
         (IntermediateField.extendScalars (show K' ≤ L ⊔ K' from le_sup_right)) ≤
       Module.finrank K L := by
@@ -627,7 +627,7 @@ theorem compositum_finrank_over_right_le_left
 /-- Symmetric bound for the degree of the compositum over the left factor. -/
 theorem compositum_finrank_over_left_le_right
     (L K' : IntermediateField K Ω)
-    [FiniteDimensional K L] [FiniteDimensional K K'] :
+    [FiniteDimensional K L] :
     Module.finrank L
         (IntermediateField.extendScalars (show L ≤ L ⊔ K' from le_sup_left)) ≤
       Module.finrank K K' := by
@@ -650,7 +650,7 @@ theorem compositum_finrank_over_left_le_right
 /-- Common-top form of the degree bound for `L ⊔ K' / K'`. -/
 theorem sup_finrank_over_right_le_left
     (L K' : IntermediateField K Ω)
-    [FiniteDimensional K L] [FiniteDimensional K K'] :
+    [FiniteDimensional K K'] :
     Module.finrank K' (L ⊔ K' : IntermediateField K Ω) ≤
       Module.finrank K L := by
   have hformula :
@@ -675,7 +675,7 @@ theorem sup_finrank_over_right_le_left
 /-- Common-top form of the degree bound for `L ⊔ K' / L`. -/
 theorem sup_finrank_over_left_le_right
     (L K' : IntermediateField K Ω)
-    [FiniteDimensional K L] [FiniteDimensional K K'] :
+    [FiniteDimensional K L] :
     Module.finrank L (L ⊔ K' : IntermediateField K Ω) ≤
       Module.finrank K K' := by
   have hformula :
@@ -843,7 +843,7 @@ theorem compositum_finrank_over_left_eq_right_of_linearDisjoint
 disjointness. -/
 theorem sup_finrank_over_right_eq_left_of_linearDisjoint
     (L K' : IntermediateField K Ω)
-    [FiniteDimensional K L] [FiniteDimensional K K']
+    [FiniteDimensional K K']
     (hlin : L.LinearDisjoint K') :
     Module.finrank K' (L ⊔ K' : IntermediateField K Ω) =
       Module.finrank K L := by
@@ -869,7 +869,7 @@ theorem sup_finrank_over_right_eq_left_of_linearDisjoint
 disjointness. -/
 theorem sup_finrank_over_left_eq_right_of_linearDisjoint
     (L K' : IntermediateField K Ω)
-    [FiniteDimensional K L] [FiniteDimensional K K']
+    [FiniteDimensional K L]
     (hlin : L.LinearDisjoint K') :
     Module.finrank L (L ⊔ K' : IntermediateField K Ω) =
       Module.finrank K K' := by
@@ -932,7 +932,7 @@ theorem sup_finrank_over_left_eq_right_of_finrank_coprime
   sup_finrank_over_left_eq_right_of_linearDisjoint L K'
     (linearDisjoint_of_finrank_coprime L K' hcop)
 
-/-- Field-level source for unramified base change: after arbitrary finite
+/-- Field-level source for unramified base change: after arbitrary
 base change `K'/K`, the common top `L ⊔ K'` is separable over `K'` as soon as
 `L/K` is separable.
 
@@ -940,7 +940,7 @@ This uses formal unramifiedness of separable field extensions, stability under
 base change, and the surjective product map `K' ⊗_K L -> L ⊔ K'`. -/
 theorem isSeparable_sup_over_right_of_left
     (L K' : IntermediateField K Ω)
-    [FiniteDimensional K L] [FiniteDimensional K K']
+    [FiniteDimensional K L]
     [Algebra.IsSeparable K L] :
     Algebra.IsSeparable K' (L ⊔ K' : IntermediateField K Ω) := by
   have : Algebra.FormallyUnramified K L :=

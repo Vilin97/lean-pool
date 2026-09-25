@@ -498,8 +498,6 @@ noncomputable def chosenMixedFirstPrincipalUnitAlgebraicData
   letI hTModule : Module R T := Submodule.module T
   letI : Finite T := exactData.finiteTorsion
   letI hqAddGroup : AddGroup q := inferInstance
-  have hcyclic : IsAddCyclic T :=
-    isAddCyclic_principalUnit_torsion F.toCompleteDVF R
   let tproj : T →ₗ[R] q := exactData.torsionProjection
   have hqP : IsPGroup p (Multiplicative q) :=
     F.discretePrincipalUnitQuotient_isPGroup n
@@ -513,7 +511,8 @@ noncomputable def chosenMixedFirstPrincipalUnitAlgebraicData
     { a := a
       moduleFinite := exactData.moduleFinite
       finiteTorsion := exactData.finiteTorsion
-      cyclicTorsion := hcyclic
+      cyclicTorsion := by
+        exact isAddCyclic_principalUnit_torsion F.toCompleteDVF R
       cardTorsion := hcard
       finrankFree := exactData.finrankFree }
 

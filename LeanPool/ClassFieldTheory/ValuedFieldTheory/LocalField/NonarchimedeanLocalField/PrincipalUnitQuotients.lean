@@ -636,8 +636,7 @@ theorem principalUnitsSuccQuotMk_mem_range
 
 /-- The range of the canonical quotient map has the same finite cardinality as `U^n/U^(n+1)`. -/
 theorem principalUnitsSuccQuotMk_range_card_eq
-    (K : Type u) [Field K] [ValuativeRel K] (n : Nat)
-    [Finite (PrincipalUnitsSuccQuot K n)] :
+    (K : Type u) [Field K] [ValuativeRel K] (n : Nat) :
     Nat.card (MonoidHom.range (principalUnitsSuccQuotMk K n)) =
       Nat.card (PrincipalUnitsSuccQuot K n) := by
   refine Nat.card_congr ?_

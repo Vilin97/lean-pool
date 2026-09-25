@@ -149,8 +149,19 @@ noncomputable def standardLubinTateChangedLevelCompositumCompleteDVF
     CompleteDVF.{u, 0}
       (standardLubinTateChangedLevelCompositumField hπ u n) :=
   Classical.choose
-    (standardLubinTateChangedLevelCompositumCompleteDVFData_exists
-      hπ u n)
+    (show ∃ target : CompleteDVF.{u, 0}
+        (standardLubinTateChangedLevelCompositumField hπ u n),
+      ∃ hExt :
+          F.toCompleteDVF.valuation.HasExtension target.valuation,
+        letI :
+            F.toCompleteDVF.valuation.HasExtension target.valuation :=
+          hExt
+        IsIntegralClosure target.valuationSubring F.valuationSubring
+            (standardLubinTateChangedLevelCompositumField hπ u n) ∧
+          degree F.toCompleteDVF.toDVF target.toDVF =
+            ramificationIndex F.toCompleteDVF.toDVF target.toDVF *
+              residueDegree F.toCompleteDVF.toDVF target.toDVF from by
+      exact standardLubinTateChangedLevelCompositumCompleteDVFData_exists hπ u n)
 
 /-- The compositum valuation extends the base valuation. -/
 theorem

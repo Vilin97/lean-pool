@@ -336,9 +336,7 @@ def integerUnitsModPrincipalUnitsIsoResidueUnits
 
 /-- Cardinality statement transported from the quotient equivalence with residue units. -/
 theorem integerUnitsModPrincipalUnits_card_eq_residueUnits_card
-    (K : Type u) [Field K] [ValuativeRel K]
-    [Finite (IntegerUnitsModPrincipalUnits K)]
-    [Finite (ResidueUnits K)] :
+    (K : Type u) [Field K] [ValuativeRel K] :
     Nat.card (IntegerUnitsModPrincipalUnits K) = Nat.card (ResidueUnits K) :=
   Nat.card_congr (integerUnitsModPrincipalUnitsEquivResidueUnits K).toEquiv
 

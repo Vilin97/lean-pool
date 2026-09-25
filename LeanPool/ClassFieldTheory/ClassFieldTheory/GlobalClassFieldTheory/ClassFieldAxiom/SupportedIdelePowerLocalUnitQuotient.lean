@@ -30,7 +30,8 @@ namespace GlobalClassFieldTheory.ClassFieldAxiom
 variable {K : Type*} [Field K] [NumberField K]
 
 open scoped Classical in
-private noncomputable def quotientEquivOfSurjectiveWithKernel
+/-- A surjective homomorphism identifies the quotient by its specified kernel with the target. -/
+noncomputable def quotientEquivOfSurjectiveWithKernel
     {G H : Type*} [Group G] [Group H]
     (f : G →* H)
     (N : Subgroup G) [N.Normal]

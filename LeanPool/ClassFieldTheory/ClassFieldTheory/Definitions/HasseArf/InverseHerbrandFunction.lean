@@ -33,7 +33,6 @@ def inverseHerbrandFunction
     (K : Type u) (L : Type v) [Field K] [Field L] [Algebra K L]
     [ValuativeRel K] [TopologicalSpace K]
     [ValuativeRel L] [TopologicalSpace L]
-    [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     (t : ℝ) : ℝ :=
   Function.invFun
     (herbrandFunction K (ValuativeRel.valuation L).valuationSubring) t

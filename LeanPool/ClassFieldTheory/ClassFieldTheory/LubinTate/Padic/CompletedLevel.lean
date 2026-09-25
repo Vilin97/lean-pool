@@ -245,7 +245,7 @@ noncomputable def padicCompletedPrimitiveRoot
   Polynomial.rootOfSplits
     (Polynomial.SplittingField.splits
       (padicCompletedPrimitivePolynomial p n))
-    (padicCompletedPrimitivePolynomial_map_degree_ne_zero p n)
+    (by exact padicCompletedPrimitivePolynomial_map_degree_ne_zero p n)
 
 /-- The chosen completed primitive point is a root of the genuine
 base-changed primitive polynomial. -/

@@ -33,7 +33,7 @@ variable {K : Type*} [Field K] [NumberField K]
 open scoped Classical in
 /-- The dependent archimedean value which is `x` at `v` and `1`
 elsewhere. -/
-private def infinitePlaceValue
+def infinitePlaceValue
     (v : InfinitePlace K)
     (x : v.Completionˣ) :
     (w : InfinitePlace K) → w.Completionˣ :=
@@ -196,7 +196,7 @@ def infinitePlaceIdeleClass
 
 open scoped Classical in
 /-- The dependent local value which is `x` at `v` and `1` elsewhere. -/
-private def finitePlaceValue
+def finitePlaceValue
     (v : HeightOneSpectrum (𝓞 K))
     (x : (v.adicCompletion K)ˣ)
     (w : HeightOneSpectrum (𝓞 K)) :
@@ -315,7 +315,7 @@ variable
 open scoped Classical in
 /-- The dependent archimedean tensor value which is `z` at `v` and
 `1` elsewhere. -/
-private def relativeInfinitePlaceValue
+def relativeInfinitePlaceValue
     (v : InfinitePlace K)
     (z : (v.Completion ⊗[K] L)ˣ)
     (w : InfinitePlace K) :
@@ -343,7 +343,7 @@ private theorem relativeInfinitePlaceValue_of_ne
 
 open scoped Classical in
 /-- Restricted local tensor data supported at one archimedean place. -/
-private noncomputable def relativeInfinitePlaceData
+noncomputable def relativeInfinitePlaceData
     (v : InfinitePlace K)
     (z : (v.Completion ⊗[K] L)ˣ) :
     RelativeLocalIdeleData (K := K) (L := L) where
@@ -447,7 +447,7 @@ theorem relativeInfinitePlaceIdele_finiteComponent
 open scoped Classical in
 /-- The dependent local tensor value which is `z` at `v` and `1`
 elsewhere. -/
-private def relativeFinitePlaceValue
+def relativeFinitePlaceValue
     (v : HeightOneSpectrum (𝓞 K))
     (z : (v.adicCompletion K ⊗[K] L)ˣ)
     (w : HeightOneSpectrum (𝓞 K)) :
@@ -475,7 +475,7 @@ private theorem relativeFinitePlaceValue_of_ne
 
 open scoped Classical in
 /-- Restricted local data supported at one finite place. -/
-private noncomputable def relativeFinitePlaceData
+noncomputable def relativeFinitePlaceData
     (v : HeightOneSpectrum (𝓞 K))
     (z : (v.adicCompletion K ⊗[K] L)ˣ) :
     RelativeLocalIdeleData (K := K) (L := L) where

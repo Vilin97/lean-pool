@@ -288,7 +288,7 @@ def maximalUnramifiedToFiniteNormQuotient
       FiniteNormQuotient A K L hLK :=
   D.maximalUnramifiedNormQuotientLift A K L
     (finiteNormClassHom A K L hLK)
-    (D.maximalUnramifiedNormSubgroup_le_finiteNormClassHom_ker A K L hLK)
+    (by exact D.maximalUnramifiedNormSubgroup_le_finiteNormClassHom_ker A K L hLK)
 
 /-- The comparison to a finite norm quotient carries the maximal-unramified
 class to its finite-level class. -/

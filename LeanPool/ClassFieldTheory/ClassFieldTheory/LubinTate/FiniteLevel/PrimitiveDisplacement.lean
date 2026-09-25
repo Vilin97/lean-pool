@@ -236,19 +236,22 @@ end FormalFactors
 
 section AnalyticValuation
 
-private noncomputable local instance
+/-- Use the discrete uniform structure on the coefficient valuation ring. -/
+noncomputable local instance
     standardLubinTatePrimitiveDisplacementCoefficientUniformSpace :
     UniformSpace F.valuationSubring :=
   ⊥
 
-private noncomputable local instance
+/-- Use the target maximal ideal for its adic topology. -/
+noncomputable local instance
     standardLubinTatePrimitiveDisplacementTargetWithIdeal
     (hπ : F.toCompleteDVF.valuation.IsUniformizer (π : K)) (n : ℕ) :
     WithIdeal
       (standardLubinTateLevelCompleteDVF hπ n).valuationSubring where
   i := (standardLubinTateLevelCompleteDVF hπ n).maximalIdeal
 
-private noncomputable local instance
+/-- The target valuation ring is complete in its adic topology. -/
+noncomputable local instance
     standardLubinTatePrimitiveDisplacementTargetCompleteSpace
     (hπ : F.toCompleteDVF.valuation.IsUniformizer (π : K)) (n : ℕ) :
     CompleteSpace
@@ -257,7 +260,8 @@ private noncomputable local instance
   have hadic : IsAdic target.maximalIdeal := rfl
   exact (hadic.isAdicComplete_iff.mp target.isAdicComplete).1
 
-private noncomputable local instance
+/-- The target valuation ring has a Hausdorff adic topology. -/
+noncomputable local instance
     standardLubinTatePrimitiveDisplacementTargetT2Space
     (hπ : F.toCompleteDVF.valuation.IsUniformizer (π : K)) (n : ℕ) :
     T2Space
@@ -266,7 +270,8 @@ private noncomputable local instance
   have hadic : IsAdic target.maximalIdeal := rfl
   exact (hadic.isAdicComplete_iff.mp target.isAdicComplete).2
 
-private noncomputable local instance
+/-- The level coefficient map gives the target valuation ring its coefficient algebra. -/
+noncomputable local instance
     standardLubinTatePrimitiveDisplacementAlgebra
     (hπ : F.toCompleteDVF.valuation.IsUniformizer (π : K)) (n : ℕ) :
     Algebra F.valuationSubring
@@ -783,13 +788,15 @@ theorem
 
 section ParameterDisplacement
 
-private noncomputable local instance
+/-- The standard Lubin–Tate level field is finite-dimensional over the base. -/
+noncomputable local instance
     standardLubinTateLevelField_finiteDimensional_forPrimitiveDisplacement
     (hπ : F.toCompleteDVF.valuation.IsUniformizer (π : K)) (n : ℕ) :
     FiniteDimensional K (standardLubinTateLevelField hπ n) :=
   standardLubinTateLevelField_finiteDimensional hπ n
 
-private noncomputable local instance
+/-- The standard Lubin–Tate level field is Galois over the base. -/
+noncomputable local instance
     standardLubinTateLevelField_isGalois_forPrimitiveDisplacement
     (hπ : F.toCompleteDVF.valuation.IsUniformizer (π : K)) (n : ℕ) :
     IsGalois K (standardLubinTateLevelField hπ n) :=

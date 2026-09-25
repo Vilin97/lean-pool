@@ -139,7 +139,7 @@ abbrev rationalFractionalIdeal (I : FractionalIdealGroup ℚ) :
 open scoped Classical in
 /-- An arbitrary principal generator of a nonzero rational fractional
 ideal, before choosing its sign. -/
-private noncomputable def rawRationalIdealGenerator
+noncomputable def rawRationalIdealGenerator
     (I : FractionalIdealGroup ℚ) : ℚ :=
   Submodule.IsPrincipal.generator
     ((rationalFractionalIdeal I : FractionalIdeal
